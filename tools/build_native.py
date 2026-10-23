@@ -50,6 +50,13 @@ TARGETS = {
         'ldflags': ['-m32', '-no-pie', '-Wl,--gc-sections', '-Wl,--print-gc-sections'],
         'libs': ['-lSDL2', '-lm', '-ldl'],
     },
+    'linux32asan': {        # AddressSanitizer: code that relies on locals or globals being adjacent
+        'cc': 'gcc',
+        'exe': 'civ2-linux32asan',
+        'cflags': ['-m32', '-fsanitize=address', '-fsanitize-recover=address', '-fno-omit-frame-pointer'],
+        'ldflags': ['-m32', '-rdynamic', '-no-pie', '-fsanitize=address'],
+        'libs': ['-lSDL2', '-lm', '-ldl'],
+    },
     'linux32clang': {       # cross-check: the linux32 build compiled by clang (needs clang installed)
         'cc': 'clang',
         'exe': 'civ2-linux32clang',

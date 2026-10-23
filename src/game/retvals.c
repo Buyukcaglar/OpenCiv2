@@ -6,12 +6,6 @@
 
 /* 0x00452315 */
 #define text_file_handle (*(FILE * *)((u8 *)&g.d_0062cd20))
-#define local_1110 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_110c (*(char (*)[4096])(frame_ + FRAME_OFF(4)))
-#define local_10c (*(char * *)(frame_ + FRAME_OFF(4100)))
-#define local_108 (*(char (*)[2])(frame_ + FRAME_OFF(4104)))
-#define local_106 (*(i8 *)(frame_ + FRAME_OFF(4106)))
-#define local_104 (*(i8 (*)[228])(frame_ + FRAME_OFF(4108)))
 /* _strrchr is declared __thiscall without parameters in protos.h; it is the
    plain cdecl CRT strrchr. */
 #define STRRCHR ((char *(__cdecl *)(const char *, int))_strrchr)
@@ -29,7 +23,11 @@ void __thiscall pedia_load_description(void *this, int param_1)
   char *pcVar3;
   size_t sVar4;
   size_t sVar5;
-  i8 frame_[FRAME_OFF(4368)] __attribute__((aligned(8)));  /* original stack frame */
+  int local_1110;
+  char local_110c[4096];
+  char *local_10c;
+  char local_108[3];
+  i8 local_104[228];
   
   str_clear(local_104);
   pedia_clear_links((void *)self);
@@ -69,7 +67,7 @@ void __thiscall pedia_load_description(void *this, int param_1)
   iVar2 = text_open_section(s_Describe_006268e8,local_104);
   if (iVar2 == 0) {
     local_1110 = param_1 + 1;
-    local_106 = 0;
+    local_108[2] = 0;
     bVar1 = true;
     do {
       while( true ) {
@@ -121,12 +119,6 @@ LAB_00452724:
   return;
 }
 #undef text_file_handle
-#undef local_1110
-#undef local_110c
-#undef local_10c
-#undef local_108
-#undef local_106
-#undef local_104
 
 /* 0x00475666 */
 #define scenario_events_loaded (*(i32 *)((u8 *)&g.d_00627670))
@@ -158,29 +150,6 @@ LAB_00452724:
 #define loaded_file_name (*(i8 *)((u8 *)&g.d_006ad6ae))
 #define loaded_file_subdir (*(i8 *)((u8 *)&g.d_006ad7b2))
 #define DAT_006d1da0 (*(int *)((u8 *)&g.d_006d1da0))
-#define local_74c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_748 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_744 (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_73c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_738 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_734 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_730 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_728 (*(i8 (*)[12])(frame_ + FRAME_OFF(40)))
-#define local_71c (*(short (*)[4])(frame_ + FRAME_OFF(52)))
-#define asStack_714 (*(short (*)[494])(frame_ + FRAME_OFF(60)))
-#define local_338 (*(int *)(frame_ + FRAME_OFF(1048)))
-#define local_334 (*(uint *)(frame_ + FRAME_OFF(1052)))
-#define local_330 (*(int *)(frame_ + FRAME_OFF(1056)))
-#define local_32c (*(uint *)(frame_ + FRAME_OFF(1060)))
-#define local_328 (*(int *)(frame_ + FRAME_OFF(1064)))
-#define local_324 (*(char (*)[260])(frame_ + FRAME_OFF(1068)))
-#define local_220 (*(int *)(frame_ + FRAME_OFF(1328)))
-#define local_21c (*(int *)(frame_ + FRAME_OFF(1332)))
-#define local_218 (*(char (*)[260])(frame_ + FRAME_OFF(1336)))
-#define local_114 (*(char (*)[4])(frame_ + FRAME_OFF(1596)))
-#define local_110 (*(int *)(frame_ + FRAME_OFF(1600)))
-#define local_10c (*(char * *)(frame_ + FRAME_OFF(1604)))
-#define local_108 (*(i8 (*)[260])(frame_ + FRAME_OFF(1608)))
 int __cdecl save_read_game(char *param_1)
 
 {
@@ -193,7 +162,27 @@ int __cdecl save_read_game(char *param_1)
   void *pvVar6;
   i32 uVar7;
   int iVar8;
-  i8 frame_[FRAME_OFF(1872)] __attribute__((aligned(8)));  /* original stack frame */
+  int local_74c;
+  int local_748;
+  int local_744;
+  int local_73c;
+  int local_738;
+  int local_734;
+  int local_730;
+  i8 local_728[0x3f0];  /* 21 tribes x 0x30 bytes read from the file */
+  int local_338;
+  uint local_334;
+  int local_330;
+  uint local_32c;
+  int local_328;
+  char local_324[260];
+  int local_220;
+  int local_21c;
+  char local_218[260];
+  char local_114[4];
+  int local_110;
+  char *local_10c;
+  i8 local_108[260];
   
   local_338 = 1;
   local_110 = 0;
@@ -478,17 +467,17 @@ int __cdecl save_read_game(char *param_1)
     if (game.multiplayer == 0) {
       leaders[civs[(char)game.player_civ].tribe].leader_name =
            -leaders[civs[(char)game.player_civ].tribe].leader_name;
-      if (local_71c[0] < 0) {
+      if (((short *)(local_728 + 12))[0] < 0) {
         leaders[civs[(char)game.player_civ].tribe].plural =
              -leaders[civs[(char)game.player_civ].tribe].plural;
       }
-      if (local_71c[1] < 0) {
+      if (((short *)(local_728 + 12))[1] < 0) {
         leaders[civs[(char)game.player_civ].tribe].adjective =
              -leaders[civs[(char)game.player_civ].tribe].adjective;
       }
       for (local_21c = 0; local_21c < 7; local_21c = local_21c + 1) {
         for (local_738 = 0; local_738 < 2; local_738 = local_738 + 1) {
-          if (local_71c[local_738 + local_21c * 2 + 4] < 0) {
+          if (((short *)(local_728 + 12))[local_738 + local_21c * 2 + 4] < 0) {
             leaders[civs[(char)game.player_civ].tribe].titles[local_21c][local_738]
                  = -leaders[civs[(char)game.player_civ].tribe].titles[local_21c][local_738];
           }
@@ -501,15 +490,15 @@ int __cdecl save_read_game(char *param_1)
           game.player_civ = (byte)local_748;
           leaders[civs[(char)(byte)local_748].tribe].leader_name =
                -leaders[civs[(char)(byte)local_748].tribe].leader_name;
-          if (local_71c[civs[(char)game.player_civ].tribe * 0x18] < 0) {
+          if (((short *)(local_728 + 12))[civs[(char)game.player_civ].tribe * 0x18] < 0) {
             leaders[civs[(char)game.player_civ].tribe].plural = -leaders[civs[(char)game.player_civ].tribe].plural;
           }
-          if (local_71c[civs[(char)game.player_civ].tribe * 0x18 + 1] < 0) {
+          if (((short *)(local_728 + 12))[civs[(char)game.player_civ].tribe * 0x18 + 1] < 0) {
             leaders[civs[(char)game.player_civ].tribe].adjective = -leaders[civs[(char)game.player_civ].tribe].adjective;
           }
           for (local_21c = 0; local_21c < 7; local_21c = local_21c + 1) {
             for (local_738 = 0; local_738 < 2; local_738 = local_738 + 1) {
-              if (local_71c[local_21c * 2 +
+              if (((short *)(local_728 + 12))[local_21c * 2 +
                             local_738 +
                             civs[(char)game.player_civ].tribe * 0x18 + 4] < 0)
               {
@@ -659,29 +648,6 @@ LAB_00477352:
 #undef loaded_file_name
 #undef loaded_file_subdir
 #undef DAT_006d1da0
-#undef local_74c
-#undef local_748
-#undef local_744
-#undef local_73c
-#undef local_738
-#undef local_734
-#undef local_730
-#undef local_728
-#undef local_71c
-#undef asStack_714
-#undef local_338
-#undef local_334
-#undef local_330
-#undef local_32c
-#undef local_328
-#undef local_324
-#undef local_220
-#undef local_21c
-#undef local_218
-#undef local_114
-#undef local_110
-#undef local_10c
-#undef local_108
 
 
 /* wnd_get_style_flags is declared to return i8 but returns the whole window
@@ -722,20 +688,6 @@ void __cdecl wnd_obj_set_topmost_child(int param_1,int param_2)
 
 
 /* 0x005dbe88 */
-#define local_a0 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_98 (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(8)))
-#define local_58 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_54 (*(void * *)(frame_ + FRAME_OFF(76)))
-#define local_50 (*(HDC *)(frame_ + FRAME_OFF(80)))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_48 (*(int *)(frame_ + FRAME_OFF(88)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(92)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(96)))
-#define local_3c (*(int *)(frame_ + FRAME_OFF(100)))
-#define local_38 (*(RECT *)(frame_ + FRAME_OFF(104)))
-#define local_28 (*(tagRECT *)(frame_ + FRAME_OFF(120)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(136)))
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(140)))
 LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
 
 {
@@ -749,7 +701,20 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint
   int iVar7;
   tagRECT *ptVar8;
   tagRECT *ptVar9;
-  i8 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
+  int local_a0;
+  tagPAINTSTRUCT local_98;
+  int local_58;
+  void *local_54;
+  HDC local_50;
+  int local_4c;
+  int local_48;
+  int local_44;
+  int local_40;
+  int local_3c;
+  RECT local_38;
+  tagRECT local_28;
+  int local_18;
+  tagRECT local_14;
   
   if (param_2 < 0x10) {
     if (param_2 == 0xf) {
@@ -1094,38 +1059,9 @@ switchD_005dc5f2_caseD_4:
   }
   return local_a0;
 }
-#undef local_a0
-#undef local_98
-#undef local_58
-#undef local_54
-#undef local_50
-#undef local_4c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_28
-#undef local_18
-#undef local_14
 
 
 /* 0x005eacc0 */
-#define local_4c (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_3c (*(HWND *)(frame_ + FRAME_OFF(20)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_34 (*(HWND *)(frame_ + FRAME_OFF(28)))
-#define local_30 (*(HWND *)(frame_ + FRAME_OFF(32)))
-#define local_2c (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_28 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_24 (*(void * *)(frame_ + FRAME_OFF(44)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(48)))
-#define local_1c (*(LONG *)(frame_ + FRAME_OFF(52)))
-#define local_18 (*(void * *)(frame_ + FRAME_OFF(56)))
-#define local_14 (*(LONG *)(frame_ + FRAME_OFF(60)))
-#define local_10 (*(HWND *)(frame_ + FRAME_OFF(64)))
-#define local_c (*(HWND *)(frame_ + FRAME_OFF(68)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(72)))
 LRESULT __stdcall wnd_frame_wndproc(HWND param_1,uint param_2,uint param_3,HWND param_4)
 
 {
@@ -1139,7 +1075,21 @@ LRESULT __stdcall wnd_frame_wndproc(HWND param_1,uint param_2,uint param_3,HWND 
   uint uVar8;
   DWORD DVar9;
   int iVar10;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT local_4c;
+  HWND local_3c;
+  int local_38;
+  HWND local_34;
+  HWND local_30;
+  i32 local_2c;
+  i32 local_28;
+  void *local_24;
+  int local_20;
+  LONG local_1c;
+  void *local_18;
+  LONG local_14;
+  HWND local_10;
+  HWND local_c;
+  int local_8;
   
   local_18 = (void *)GetWindowLongA(param_1,8);
   if (local_18 == (void *)0x0) {
@@ -1302,36 +1252,20 @@ LAB_005eb241:
   LVar3 = wnd_child_wndproc(param_1,param_2,param_3,param_4);
   return LVar3;
 }
-#undef local_4c
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
 
 
 /* 0x0048aa24 */
 #define DAT_006d1da0 (*(int *)((u8 *)&g.d_006d1da0))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 uint __cdecl game_turn_start_popups(void)
 
 {
   uint uVar1;
   int iVar2;
   i32 uVar3;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int local_14;
+  int local_10;
+  int local_c;
+  int local_8;
   
   local_10 = -1;
   uVar1 = (uint)(short)game.turn;
@@ -1417,10 +1351,6 @@ uint __cdecl game_turn_start_popups(void)
   return uVar1;
 }
 #undef DAT_006d1da0
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
 
 
 /* 0x004eb4ed */
@@ -1462,9 +1392,6 @@ int __cdecl city_recalc(int param_1,int param_2)
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define DAT_006d1da0 (*(i32 *)((u8 *)&g.d_006d1da0))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
 int __cdecl city_process_pollution(int param_1)
 
 {
@@ -1473,7 +1400,9 @@ int __cdecl city_process_pollution(int param_1)
   i32 uVar3;
   int iVar4;
   uint uVar5;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int local_20;
+  int local_1c;
+  int local_14;
   
   cVar1 = cities[param_1].owner;
   local_14 = (int)((uint)(byte)civs[cVar1].num_advances * (uint)game.difficulty) >> 1;
@@ -1561,26 +1490,10 @@ int __cdecl city_process_pollution(int param_1)
 #undef scenario_flags
 #undef autoplay_active
 #undef DAT_006d1da0
-#undef local_20
-#undef local_1c
-#undef local_14
 
 
 /* 0x0058f040 */
 #define DAT_006d1da0 (*(uint *)((u8 *)&g.d_006d1da0))
-#define local_60 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define local_50 (*(uint *)(frame_ + FRAME_OFF(16)))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_48 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_3c (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_38 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_28 (*(i32 *)(frame_ + FRAME_OFF(56)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(64)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(76)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(84)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(88)))
 uint __cdecl unit_enter_hut(int param_1)
 
 {
@@ -1594,7 +1507,19 @@ uint __cdecl unit_enter_hut(int param_1)
   i32 uVar8;
   int iVar9;
   uint uVar10;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 local_60;
+  uint local_50;
+  int local_4c;
+  int local_48;
+  int local_40;
+  i32 local_3c;
+  i32 local_38;
+  i32 local_28;
+  int local_20;
+  i32 local_14;
+  int local_10;
+  i32 local_c;
+  int local_8;
   
   bVar2 = units[param_1].owner;
   uVar3 = (uint)(char)bVar2;
@@ -1928,17 +1853,4 @@ LAB_0058f939:
   return local_50;
 }
 #undef DAT_006d1da0
-#undef local_60
-#undef local_50
-#undef local_4c
-#undef local_48
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_28
-#undef local_20
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
 

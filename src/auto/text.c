@@ -117,12 +117,11 @@ iptr __cdecl file_build_open_path(iptr dest,i32 name2)
 
 /* 0041508c auto */
 #define error_last_open_failed (*(uint *)((u8 *)&g.d_00634810))
-#define path (*(char (*)[136])(frame_ + FRAME_OFF(4)))
 FILE * __cdecl file_open_path(iptr name2,iptr mode)
 
 {
   FILE *pFVar1;
-  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  char path[136];
   
   file_build_open_path((iptr)path,name2);
   crt_strcpy(&error_last_open_path,path);
@@ -131,15 +130,13 @@ FILE * __cdecl file_open_path(iptr name2,iptr mode)
   return pFVar1;
 }
 #undef error_last_open_failed
-#undef path
 
 /* 00415133 auto */
-#define exists (*(i32 *)(frame_ + FRAME_OFF(0)))
 uint __cdecl file_exists(iptr name2)
 
 {
   FILE *_File;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 exists;
   
   _File = (FILE *)file_open_path(name2,(iptr)((u8 *)&g.d_00625118));
   if (_File != (FILE *)0x0) {
@@ -148,7 +145,6 @@ uint __cdecl file_exists(iptr name2)
   exists = (uint)(_File != (FILE *)0x0);
   return exists;
 }
-#undef exists
 
 /* 004190a0 auto */
 void __cdecl text_append_spaces(i32 count)
@@ -250,16 +246,15 @@ void __cdecl text_append_year(i32 year)
 }
 
 /* 00426ff0 auto */
-#define tag (*(char * *)(frame_ + FRAME_OFF(4)))
-#define pad_i (*(uint *)(frame_ + FRAME_OFF(8)))
-#define num_buf (*(char (*)[40])(frame_ + FRAME_OFF(12)))
 void __cdecl text_expand_vars(iptr src,iptr dest)
 
 {
   char *percent_pos;
   int arg_index;
   size_t len;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  char *tag;
+  uint pad_i;
+  char num_buf[40];
   
   *(i8 *)dest = 0;
   do {
@@ -315,9 +310,6 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
   } while (tag != (char *)0x0);
   return;
 }
-#undef tag
-#undef pad_i
-#undef num_buf
 
 /* 004271e8 auto */
 i32 __cdecl text_set_label_arg(i32 index,i32 label_id)
@@ -399,11 +391,10 @@ int __cdecl strpool_add(iptr text)
 #undef strpool_last_string
 
 /* 00428b0c auto */
-#define cursor (*(char * *)(frame_ + FRAME_OFF(0)))
 char * __cdecl label_string(int index)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  char *cursor;
   
   cursor = strpool_data;
   for (; index != 0; index--) {
@@ -414,18 +405,16 @@ char * __cdecl label_string(int index)
   }
   return cursor;
 }
-#undef cursor
 
 /* 00428b68 auto */
 #define strpool_count (*(int *)((u8 *)&g.d_00625e60))
 #define strpool_last_string (*(char * *)((u8 *)&g.d_0063e4b8))
-#define alloc_size (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl strpool_add_padded(iptr text,uint min_size)
 
 {
   int string_id;
   size_t len;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 alloc_size;
   
   len = _strlen((char *)text);
   if ((int)min_size < (int)(len + 1)) {
@@ -448,7 +437,6 @@ int __cdecl strpool_add_padded(iptr text,uint min_size)
 }
 #undef strpool_count
 #undef strpool_last_string
-#undef alloc_size
 
 /* 0043c430 auto */
 /* Library Function - Single Match
@@ -512,11 +500,10 @@ void __cdecl text_append_city_name(iptr city)
 }
 
 /* 0043cda6 auto */
-#define pop (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl str_append_population(iptr dest,iptr civ,int population)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int pop;
   
   if (population < 0) {
     pop = civ_total_population(civ);
@@ -536,14 +523,12 @@ void __cdecl str_append_population(iptr dest,iptr civ,int population)
   crt_strcat(dest,s_0_000_00626240);
   return;
 }
-#undef pop
 
 /* 0043ce5a auto */
-#define pop (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl str_append_city_population(iptr dest,iptr city)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int pop;
   
   pop = city_population_units(city);
   if (99 < pop) {
@@ -558,7 +543,6 @@ void __cdecl str_append_city_population(iptr dest,iptr city)
   crt_strcat(dest,s_0_000_00626250);
   return;
 }
-#undef pop
 
 /* 0043f444 auto */
 void __cdecl str_append_city_name(iptr dest,int city)
@@ -634,15 +618,14 @@ void __cdecl labels_free(void)
 /* 0046a78d auto */
 #define label_count (*(int *)((u8 *)&g.d_00628424))
 #define label_ids_handle (*(iptr *)((u8 *)&g.d_0062841c))
-#define saved_dir (*(i8 (*)[260])(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(260)))
-#define result (*(int *)(frame_ + FRAME_OFF(264)))
 int __cdecl labels_load(void)
 
 {
   int status;
   i32 string_id;
-  i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 saved_dir[260];
+  int i;
+  int result;
   
   result = -1;
   status = text_open_section((iptr)((u8 *)&g.d_00628430),(iptr)((u8 *)&g.d_00628428));
@@ -701,19 +684,15 @@ int __cdecl labels_load(void)
 }
 #undef label_count
 #undef label_ids_handle
-#undef saved_dir
-#undef i
-#undef result
 
 /* 0046e8f0 auto */
-#define value (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl str_parse_hex(iptr text)
 
 {
   char ch;
   int _C;
   int is_digit;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 value;
   
   value = 0;
   while (*(char *)text != '\0') {
@@ -736,18 +715,16 @@ int __cdecl str_parse_hex(iptr text)
   }
   return value;
 }
-#undef value
 
 /* 00485208 auto */
 #define scenario_year_increment (*(short *)((u8 *)&g.d_0064bcb4))
-#define abs_year (*(uint *)(frame_ + FRAME_OFF(4)))
-#define abs_years (*(int *)(frame_ + FRAME_OFF(8)))
-#define month_neg (*(int *)(frame_ + FRAME_OFF(12)))
-#define month_pos (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl str_append_year(iptr dest,uint year)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint abs_year;
+  int abs_years;
+  int month_neg;
+  int month_pos;
   
   if (((game.game_flags & 0x80) == 0) || (-1 < scenario_year_increment)) {
     if ((-1 < (int)year) && (game_language == 0)) {
@@ -801,10 +778,6 @@ void __cdecl str_append_year(iptr dest,uint year)
   return;
 }
 #undef scenario_year_increment
-#undef abs_year
-#undef abs_years
-#undef month_neg
-#undef month_pos
 
 /* 004929c0 auto */
 /* Library Function - Multiple Matches With Same Base Name
@@ -875,11 +848,6 @@ void __cdecl text_close_file(void)
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define text_file_handle (*(FILE * *)((u8 *)&g.d_0062cd20))
 #define text_line_cursor (*(i8 * *)((u8 *)&g.d_00673f14))
-#define section_tag (*(char (*)[80])(frame_ + FRAME_OFF(4)))
-#define result (*(int *)(frame_ + FRAME_OFF(84)))
-#define name2 (*(char (*)[260])(frame_ + FRAME_OFF(88)))
-#define saved_cwd (*(char (*)[260])(frame_ + FRAME_OFF(348)))
-#define section_offset (*(int *)(frame_ + FRAME_OFF(608)))
 int __cdecl text_open_file_section(int filename,int section)
 
 {
@@ -888,7 +856,11 @@ int __cdecl text_open_file_section(int filename,int section)
   size_t len;
   char *line;
   int cmp;
-  i8 frame_[FRAME_OFF(616)] __attribute__((aligned(8)));  /* original stack frame */
+  char section_tag[80];
+  int result;
+  char name2[260];
+  char saved_cwd[260];
+  int section_offset;
   
   result = 1;
   allow_rewind = false;
@@ -960,19 +932,13 @@ LAB_004a2348:
 #undef text_buffer
 #undef text_file_handle
 #undef text_line_cursor
-#undef section_tag
-#undef result
-#undef name2
-#undef saved_cwd
-#undef section_offset
 
 /* 004a2379 auto */
-#define saved_dir (*(i8 (*)[260])(frame_ + FRAME_OFF(4)))
-#define result (*(int *)(frame_ + FRAME_OFF(264)))
 int __cdecl text_open_section(iptr filename,iptr section)
 
 {
-  i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 saved_dir[260];
+  int result;
   
   result = text_open_file_section(filename,section);
   if (result != 0) {
@@ -983,19 +949,16 @@ int __cdecl text_open_section(iptr filename,iptr section)
   }
   return result;
 }
-#undef saved_dir
-#undef result
 
 /* 004a23fc auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define text_file_handle (*(FILE * *)((u8 *)&g.d_0062cd20))
 #define text_line_cursor (*(i8 * *)((u8 *)&g.d_00673f14))
-#define result (*(i8 * *)(frame_ + FRAME_OFF(0)))
 i8 * __cdecl text_read_line(int trim)
 
 {
   char *line;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *result;
   
   result = (i8 *)0x0;
   if (((CRT_FEOF(text_file_handle)) == 0) &&
@@ -1016,16 +979,14 @@ i8 * __cdecl text_read_line(int trim)
 #undef text_buffer
 #undef text_file_handle
 #undef text_line_cursor
-#undef result
 
 /* 004a24b1 auto */
 #define text_line_cursor (*(char * *)((u8 *)&g.d_00673f14))
 #define text_token_buf (*(i8 *)((u8 *)&g.d_00673e10))
-#define dest (*(char * *)(frame_ + FRAME_OFF(0)))
 i8 * __cdecl text_next_token(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  char *dest;
   
   dest = &text_token_buf;
   for (; (*text_line_cursor != '\0' && (*text_line_cursor != ',')); text_line_cursor++) {
@@ -1041,7 +1002,6 @@ i8 * __cdecl text_next_token(void)
 }
 #undef text_line_cursor
 #undef text_token_buf
-#undef dest
 
 /* 004a2534 auto */
 i32 __cdecl text_next_int(void)
@@ -1079,12 +1039,11 @@ i32 __cdecl text_next_token_pooled(void)
 
 /* 004a25d5 auto */
 #define text_token_buf (*(i8 *)((u8 *)&g.d_00673e10))
-#define cursor (*(char * *)(frame_ + FRAME_OFF(4)))
 short __cdecl text_next_binary(void)
 
 {
   short value;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  char *cursor;
   
   value = 0;
   text_next_token();
@@ -1097,16 +1056,14 @@ short __cdecl text_next_binary(void)
   return value;
 }
 #undef text_token_buf
-#undef cursor
 
 /* 004a2645 auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl text_read_section_line(iptr filename,iptr section,iptr line_index)
 
 {
   int status;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
+  int i;
   
   result = 1;
   status = text_open_section(filename,section);
@@ -1119,8 +1076,6 @@ i32 __cdecl text_read_section_line(iptr filename,iptr section,iptr line_index)
   text_close_file();
   return result;
 }
-#undef result
-#undef i
 
 /* 004a26bf auto */
 i32 __cdecl text_next_token_str_id(i32 min_size)
@@ -1150,18 +1105,16 @@ void __cdecl str_append_space(iptr dest)
 }
 
 /* 004aef57 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl str_append_spaces(iptr dest,int count)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; i < count; i++) {
     str_append_space(dest);
   }
   return;
 }
-#undef i
 
 /* 004aef96 auto */
 void __cdecl str_append_comma(iptr dest)
@@ -1247,31 +1200,27 @@ void __cdecl str_concat(iptr dest,iptr src)
 }
 
 /* 004af1d5 auto */
-#define num_buf (*(char (*)[20])(frame_ + FRAME_OFF(0)))
 i32 __cdecl str_append_int(iptr dest,int value)
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  char num_buf[20];
   
   __itoa(value,num_buf,10);
   result = crt_strcat(dest,num_buf);
   return result;
 }
-#undef num_buf
 
 /* 004af284 auto */
-#define num_buf (*(char (*)[20])(frame_ + FRAME_OFF(0)))
 void __cdecl str_append_long(iptr dest,long value)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  char num_buf[20];
   
   __ltoa(value,num_buf,10);
   crt_strcat(dest,num_buf);
   return;
 }
-#undef num_buf
 
 /* 004af2b9 auto */
 void __cdecl str_append_gold(iptr dest,i32 gold)
@@ -1326,27 +1275,24 @@ void __cdecl text_set_number_arg_u8(int index,uint value)
 
 /* 004ccdb6 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define num_buf (*(char (*)[20])(frame_ + FRAME_OFF(0)))
 void __cdecl text_append_int_2d(i32 value)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  char num_buf[20];
   
   _sprintf(num_buf,&int_2d_fmt,value);
   crt_strcat(&text_buffer,num_buf);
   return;
 }
 #undef text_buffer
-#undef num_buf
 
 /* 004ccdef auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define len (*(size_t *)(frame_ + FRAME_OFF(0)))
 void __cdecl text_append_advance_abbrev(iptr advance,int with_comma)
 
 {
   size_t abbrev_len;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  size_t len;
   
   if (advance == -2) {
     crt_strcat(&text_buffer,&advance_abbrev_no_strs + ((with_comma != 0) - 1 & 8));
@@ -1374,15 +1320,13 @@ void __cdecl text_append_advance_abbrev(iptr advance,int with_comma)
   return;
 }
 #undef text_buffer
-#undef len
 
 /* 004cfff0 auto */
-#define cursor (*(char * *)(frame_ + FRAME_OFF(0)))
 void __cdecl str_trim_trailing(iptr str)
 
 {
   uptr len;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  char *cursor;
   
   len = _strlen((char *)str);
   if (len != 0) {
@@ -1394,15 +1338,13 @@ void __cdecl str_trim_trailing(iptr str)
   }
   return;
 }
-#undef cursor
 
 /* 004d007e auto */
-#define start (*(char * *)(frame_ + FRAME_OFF(0)))
-#define buf (*(i8 (*)[256])(frame_ + FRAME_OFF(4)))
 void __cdecl str_trim(iptr str)
 
 {
-  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  char *start;
+  i8 buf[256];
   
   str_trim_trailing(str);
   for (start = (char *)str;
@@ -1413,8 +1355,6 @@ void __cdecl str_trim(iptr str)
   crt_strcpy(str,buf);
   return;
 }
-#undef start
-#undef buf
 
 /* 004db210 auto */
 void __cdecl text_section_index_global_init(void)
@@ -1435,9 +1375,6 @@ void __cdecl text_section_index_static_init(void)
 /* 004db23f auto */
 #define text_section_index_count (*(int *)((u8 *)&g.d_0062e610))
 #define text_section_index_valid (*(i32 *)((u8 *)&g.d_0062e60c))
-#define line_buf (*(char *)(frame_ + FRAME_OFF(0)))
-#define line_char1 (*(char *)(frame_ + FRAME_OFF(1)))
-#define entry_size (*(uint *)(frame_ + FRAME_OFF(256)))
 void __cdecl text_section_index_build(iptr filename,uint pool_size)
 
 {
@@ -1446,7 +1383,8 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
   char *line;
   size_t len;
   long *entry;
-  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  char line_buf[256];
+  uint entry_size;
   
   memblock_free((iptr)((u8 *)&g.d_006a5b38));
   memblock_init((iptr)((u8 *)&g.d_006a5b38),1,pool_size);
@@ -1463,17 +1401,17 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
   else {
     while ((CRT_FEOF(_File)) == 0) {
       line_offset = _ftell(_File);
-      line = _fgets(&line_buf,0xff,_File);
+      line = _fgets(line_buf,0xff,_File);
       if (line == (char *)0x0) break;
-      str_strip_newline((iptr)&line_buf);
-      str_trim((iptr)&line_buf);
-      if (((line_buf == '@') && ('@' < line_char1)) && (line_char1 < '[')) {
-        len = _strlen(&line_buf);
+      str_strip_newline((iptr)line_buf);
+      str_trim((iptr)line_buf);
+      if (((line_buf[0] == '@') && ('@' < line_buf[1])) && (line_buf[1] < '[')) {
+        len = _strlen(line_buf);
         entry_size = len + 5;
         if ((int)(uint)text_section_pool_free_bytes < (int)entry_size) break;
         entry = (long *)memblock_alloc((iptr)((u8 *)&g.d_006a5b38),entry_size);
         *entry = line_offset;
-        crt_strcpy(entry + 1,&line_buf);
+        crt_strcpy(entry + 1,line_buf);
         text_section_index_count++;
       }
     }
@@ -1484,9 +1422,6 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
 }
 #undef text_section_index_count
 #undef text_section_index_valid
-#undef line_buf
-#undef line_char1
-#undef entry_size
 
 /* 004db450 auto */
 #define text_section_index_count (*(i32 *)((u8 *)&g.d_0062e610))
@@ -1505,15 +1440,14 @@ void __cdecl text_section_index_free(void)
 /* 004db481 auto */
 #define text_section_index_count (*(int *)((u8 *)&g.d_0062e610))
 #define text_section_index_valid (*(int *)((u8 *)&g.d_0062e60c))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define entry (*(char * *)(frame_ + FRAME_OFF(12)))
-#define full_path (*(char (*)[260])(frame_ + FRAME_OFF(16)))
 i32 __cdecl text_section_index_lookup(iptr filename,iptr section)
 
 {
   char *next;
   int cmp;
-  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  char *entry;
+  char full_path[260];
   
   if (text_section_index_valid != 0) {
     __getcwd(full_path,0x104);
@@ -1539,12 +1473,8 @@ i32 __cdecl text_section_index_lookup(iptr filename,iptr section)
 }
 #undef text_section_index_count
 #undef text_section_index_valid
-#undef i
-#undef entry
-#undef full_path
 
 /* 00506448 auto */
-#define city (*(uint *)(frame_ + FRAME_OFF(4)))
 void __cdecl text_set_unit_info_args(iptr unit)
 
 {
@@ -1552,7 +1482,7 @@ void __cdecl text_set_unit_info_args(iptr unit)
   int x;
   int y;
   int city_here;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint city;
   
   text_clear();
   adjective = civ_get_adjective((int)units[unit].owner);
@@ -1600,7 +1530,6 @@ void __cdecl text_set_unit_info_args(iptr unit)
   text_set_string_arg(2,(iptr)((u8 *)&g.d_00679640));
   return;
 }
-#undef city
 
 /* 00511430 auto */
 void __cdecl text_append_plus(void)
@@ -1632,14 +1561,13 @@ int __cdecl str_find_bad_filename_char(iptr filename)
 /* 00564470 auto */
 #define app_hinstance (*(HMODULE *)((u8 *)&g.d_006e4ff0))
 #define dlg_help_pressed (*(int *)((u8 *)&g.d_00631edc))
-#define attempt (*(int *)(frame_ + FRAME_OFF(4)))
-#define cursor (*(char * *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl file_require_cdrom(iptr filename)
 
 {
   iptr len;
   int found;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int attempt;
+  char *cursor;
   
   GetModuleFileNameA(app_hinstance,&exe_dir_path,0x80);
   len = lstrlenA(&exe_dir_path);
@@ -1662,8 +1590,6 @@ i32 __cdecl file_require_cdrom(iptr filename)
 }
 #undef app_hinstance
 #undef dlg_help_pressed
-#undef attempt
-#undef cursor
 
 /* 00564574 auto */
 #define fallback_drive_root (*(i8 *)((u8 *)&g.d_006ab680))
@@ -1685,20 +1611,19 @@ i8 * __cdecl file_get_fallback_drive(void)
 /* 0056459f auto */
 #define fallback_drive_root (*(i8 *)((u8 *)&g.d_006ab680))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define drive (*(int *)(frame_ + FRAME_OFF(0)))
-#define of_struct (*(_OFSTRUCT *)(frame_ + FRAME_OFF(4)))
-#define drive_type (*(UINT *)(frame_ + FRAME_OFF(140)))
-#define drive_strings (*(CHAR (*)[256])(frame_ + FRAME_OFF(144)))
-#define drive_bit (*(uint *)(frame_ + FRAME_OFF(400)))
-#define drive_root (*(char * *)(frame_ + FRAME_OFF(404)))
-#define hfile (*(HFILE *)(frame_ + FRAME_OFF(408)))
 i8 * __cdecl file_find_fallback_drive(iptr filename)
 
 {
   UINT uMode;
   DWORD DVar1;
   i8 *result;
-  i8 frame_[FRAME_OFF(416)] __attribute__((aligned(8)));  /* original stack frame */
+  int drive;
+  _OFSTRUCT of_struct;
+  UINT drive_type;
+  CHAR drive_strings[256];
+  uint drive_bit;
+  char *drive_root;
+  HFILE hfile;
   
   uMode = SetErrorMode(1);
   DVar1 = GetLogicalDrives();
@@ -1740,23 +1665,9 @@ LAB_005646e1:
 }
 #undef fallback_drive_root
 #undef text_buffer
-#undef drive
-#undef of_struct
-#undef drive_type
-#undef drive_strings
-#undef drive_bit
-#undef drive_root
-#undef hfile
 
 /* 00564713 auto */
 #define fallback_drive_root (*(char *)((u8 *)&g.d_006ab680))
-#define alt_path (*(CHAR (*)[128])(frame_ + FRAME_OFF(0)))
-#define base_name (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
-#define of_struct (*(_OFSTRUCT *)(frame_ + FRAME_OFF(144)))
-#define try_path (*(CHAR (*)[128])(frame_ + FRAME_OFF(280)))
-#define name_offset (*(int *)(frame_ + FRAME_OFF(408)))
-#define cursor (*(char * *)(frame_ + FRAME_OFF(412)))
-#define result (*(HFILE *)(frame_ + FRAME_OFF(416)))
 i32 __cdecl file_resolve_path(iptr path)
 
 {
@@ -1764,7 +1675,13 @@ i32 __cdecl file_resolve_path(iptr path)
   char ch;
   iptr len;
   UINT uMode;
-  i8 frame_[FRAME_OFF(424)] __attribute__((aligned(8)));  /* original stack frame */
+  CHAR alt_path[128];
+  i8 base_name[16];
+  _OFSTRUCT of_struct;
+  CHAR try_path[128];
+  int name_offset;
+  char *cursor;
+  HFILE result;
   
   len = lstrlenA((LPCSTR)path);
   cursor = (char *)(path + len);
@@ -1837,22 +1754,14 @@ i32 __cdecl file_resolve_path(iptr path)
   return result;
 }
 #undef fallback_drive_root
-#undef alt_path
-#undef base_name
-#undef of_struct
-#undef try_path
-#undef name_offset
-#undef cursor
-#undef result
 
 /* 00564bf0 auto */
-#define value (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl str_parse_int_prefixed(iptr text)
 
 {
   char prefix;
   i32 upper;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 value;
   
   if (*(char *)text == '0') {
     upper = crt_toupper((uint)*(byte *)(text + 1));
@@ -1875,14 +1784,12 @@ int __cdecl str_parse_int_prefixed(iptr text)
   }
   return value;
 }
-#undef value
 
 /* 00578abd auto */
-#define cursor (*(char * *)(frame_ + FRAME_OFF(0)))
 void __cdecl str_pipes_to_tabs(char *str)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  char *cursor;
   
   for (cursor = str; *cursor != '\0'; cursor++) {
     if (*cursor == '|') {
@@ -1891,19 +1798,17 @@ void __cdecl str_pipes_to_tabs(char *str)
   }
   return;
 }
-#undef cursor
 
 /* 00589fc9 auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define line_buf (*(char (*)[80])(frame_ + FRAME_OFF(12)))
 i32 __cdecl file_read_nth_line(iptr dest,iptr filename,int line_num)
 
 {
   FILE *_File;
   char *line;
   size_t len;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
+  iptr i;
+  char line_buf[80];
   
   result = 1;
   _File = (FILE *)file_open_path(filename,(iptr)((u8 *)&g.d_00634840));
@@ -1926,20 +1831,16 @@ LAB_0058a0bc:
   }
   return result;
 }
-#undef result
-#undef i
-#undef line_buf
 
 /* 0058a80d auto */
-#define buf (*(i8 (*)[1024])(frame_ + FRAME_OFF(0)))
-#define src_file (*(FILE * *)(frame_ + FRAME_OFF(1024)))
-#define bytes_read (*(size_t *)(frame_ + FRAME_OFF(1028)))
-#define dest_file (*(FILE * *)(frame_ + FRAME_OFF(1032)))
 void __cdecl file_copy(iptr src_path,iptr dest_path)
 
 {
   int cmp;
-  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 buf[1024];
+  FILE *src_file;
+  size_t bytes_read;
+  FILE *dest_file;
   
   cmp = _strcmp((char *)src_path,(char *)dest_path);
   if (cmp != 0) {
@@ -1961,19 +1862,14 @@ void __cdecl file_copy(iptr src_path,iptr dest_path)
   }
   return;
 }
-#undef buf
-#undef src_file
-#undef bytes_read
-#undef dest_file
 
 /* 005bad40 auto */
-#define value (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl str_parse_binary(iptr text)
 
 {
   char ch;
   int upper;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 value;
   
   value = 0;
   while (*(char *)text != '\0') {
@@ -1990,7 +1886,6 @@ int __cdecl str_parse_binary(iptr text)
   }
   return value;
 }
-#undef value
 
 /* 005baeb0 auto */
 void __cdecl text_set_surface(iptr surface)
@@ -2071,12 +1966,11 @@ int __cdecl text_draw_shadowed(iptr surface,iptr text,int x,int y)
 #define text_fake_bold (*(int *)((u8 *)&g.d_006366c0))
 #define text_shadow_color (*(int *)((u8 *)&g.d_006366b4))
 #define text_shadow_dx (*(uint *)((u8 *)&g.d_006366b8))
-#define width2 (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl text_draw_centered(iptr surface,iptr text,int x,iptr y,int box_width)
 
 {
   int total_width;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int width2;
   
   width2 = font_text_width(text_draw_font,text);
   if (-1 < text_shadow_color) {
@@ -2095,19 +1989,17 @@ int __cdecl text_draw_centered(iptr surface,iptr text,int x,iptr y,int box_width
 #undef text_fake_bold
 #undef text_shadow_color
 #undef text_shadow_dx
-#undef width2
 
 /* 005bb0af auto */
 #define text_draw_font (*(GameFont * *)((u8 *)&g.d_006366ac))
 #define text_fake_bold (*(int *)((u8 *)&g.d_006366c0))
 #define text_shadow_color (*(int *)((u8 *)&g.d_006366b4))
 #define text_shadow_dx (*(uint *)((u8 *)&g.d_006366b8))
-#define width2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl text_draw_right_aligned(iptr surface,iptr text,int x,i32 y,int box_width)
 
 {
   int draw_x;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 width2;
   
   width2 = font_text_width(text_draw_font,text);
   if (-1 < text_shadow_color) {
@@ -2126,7 +2018,6 @@ int __cdecl text_draw_right_aligned(iptr surface,iptr text,int x,i32 y,int box_w
 #undef text_fake_bold
 #undef text_shadow_color
 #undef text_shadow_dx
-#undef width2
 
 /* 005c5520 auto */
 void __cdecl res_free(i32 handle)
@@ -2183,14 +2074,13 @@ i32 __thiscall file_obj_close(FileObject *this)
 }
 
 /* 005d8270 auto */
-#define full_path (*(char (*)[260])(frame_ + FRAME_OFF(0)))
 i32 __cdecl file_obj_open_path(char *filename,iptr file_obj)
 
 {
   char *sep;
   HFILE HVar2;
   i32 result;
-  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  char full_path[260];
   
   sep = _strchr(filename,0x5c);
   if (sep == (char *)0x0) {
@@ -2226,7 +2116,6 @@ i32 __cdecl file_obj_open_path(char *filename,iptr file_obj)
   }
   return result;
 }
-#undef full_path
 
 /* 005d83d6 auto */
 uint __cdecl file_obj_create_path(LPCSTR filename,iptr file_obj)
@@ -2279,13 +2168,12 @@ i32 __cdecl file_obj_close_handle(iptr file_obj)
 }
 
 /* 005d84f6 auto */
-#define bytes_read (*(DWORD *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl file_obj_read_bytes(iptr file_obj,LPVOID buf,DWORD size)
 
 {
   i32 result;
   BOOL BVar2;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  DWORD bytes_read;
   
   if (*(int *)(file_obj + 4) == 0) {
     result = 0;
@@ -2301,7 +2189,6 @@ i32 __cdecl file_obj_read_bytes(iptr file_obj,LPVOID buf,DWORD size)
   }
   return result;
 }
-#undef bytes_read
 
 /* 005d8622 auto */
 i32 __cdecl file_obj_seek_rel(iptr file_obj,LONG offset)
@@ -2326,13 +2213,12 @@ i32 __cdecl file_obj_seek_rel(iptr file_obj,LONG offset)
 }
 
 /* 005d8721 auto */
-#define bytes_written (*(DWORD *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl file_obj_write_bytes(iptr file_obj,iptr buf,DWORD size)
 
 {
   i32 result;
   BOOL BVar2;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  DWORD bytes_written;
   
   if (*(int *)(file_obj + 4) == 0) {
     result = 0;
@@ -2352,18 +2238,16 @@ i32 __cdecl file_obj_write_bytes(iptr file_obj,iptr buf,DWORD size)
   }
   return result;
 }
-#undef bytes_written
 
 /* 005d881c auto */
-#define ok (*(int *)(frame_ + FRAME_OFF(0)))
-#define len (*(int *)(frame_ + FRAME_OFF(4)))
-#define bytes_read (*(DWORD *)(frame_ + FRAME_OFF(8)))
-#define dest (*(char * *)(frame_ + FRAME_OFF(12)))
-#define ch (*(char (*)[4])(frame_ + FRAME_OFF(16)))
 int __cdecl file_obj_read_line_impl(iptr file_obj,char *buf,int max_len)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int ok;
+  int len;
+  DWORD bytes_read;
+  char *dest;
+  char ch[4];
   
   len = 0;
   dest = buf;
@@ -2398,11 +2282,6 @@ int __cdecl file_obj_read_line_impl(iptr file_obj,char *buf,int max_len)
   }
   return ok;
 }
-#undef ok
-#undef len
-#undef bytes_read
-#undef dest
-#undef ch
 
 /* 005d898e auto */
 DWORD __cdecl file_obj_get_size_impl(iptr file_obj)
@@ -2440,12 +2319,11 @@ i32 __cdecl file_obj_close_mapping(iptr file_obj)
 
 /* 005db140 auto */
 #define res_dll_module_count (*(int *)((u8 *)&g.d_006387cc))
-#define msg (*(i8 (*)[128])(frame_ + FRAME_OFF(4)))
 HMODULE __cdecl res_dll_load_library(LPCSTR filename)
 
 {
   HMODULE pHVar1;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 msg[128];
   
   pHVar1 = LoadLibraryExA(filename,(HANDLE)0x0,2);
   if (pHVar1 == (HMODULE)0x0) {
@@ -2462,7 +2340,6 @@ HMODULE __cdecl res_dll_load_library(LPCSTR filename)
   return pHVar1;
 }
 #undef res_dll_module_count
-#undef msg
 
 /* 005db1e0 auto */
 void __cdecl res_free_impl(HGLOBAL handle)
@@ -2475,31 +2352,26 @@ void __cdecl res_free_impl(HGLOBAL handle)
 /* 005db1fa auto */
 #define app_hinstance (*(HMODULE *)((u8 *)&g.d_006e4ff0))
 #define res_dll_module_count (*(uint *)((u8 *)&g.d_006387cc))
-#define hmodule2 (*(HMODULE *)(frame_ + FRAME_OFF(4)))
-#define dll_index (*(uint *)(frame_ + FRAME_OFF(12)))
-#define hrsrc (*(HRSRC *)(frame_ + FRAME_OFF(16)))
-#define type_buf (*(CHAR *)(frame_ + FRAME_OFF(20)))
-#define type_c1 (*(CHAR *)(frame_ + FRAME_OFF(21)))
-#define type_c2 (*(CHAR *)(frame_ + FRAME_OFF(22)))
-#define type_c3 (*(CHAR *)(frame_ + FRAME_OFF(23)))
-#define type_nul (*(i8 *)(frame_ + FRAME_OFF(24)))
 HGLOBAL __cdecl res_load_impl(CHAR *res_type,LPCSTR res_name)
 
 {
   HGLOBAL handle;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  HMODULE hmodule2;
+  uint dll_index;
+  HRSRC hrsrc;
+  CHAR type_buf[5];
   
-  type_buf = *res_type;
-  type_c1 = res_type[1];
-  type_c2 = res_type[2];
-  type_c3 = res_type[3];
-  type_nul = 0;
+  type_buf[0] = *res_type;
+  type_buf[1] = res_type[1];
+  type_buf[2] = res_type[2];
+  type_buf[3] = res_type[3];
+  type_buf[4] = 0;
   dll_index = 0xffffffff;
-  hrsrc = FindResourceA(app_hinstance,res_name,&type_buf);
+  hrsrc = FindResourceA(app_hinstance,res_name,type_buf);
   if (hrsrc == (HRSRC)0x0) {
     dll_index = 0;
     while ((dll_index < res_dll_module_count &&
-           (hrsrc = FindResourceA(*(HMODULE *)(&res_dll_modules + dll_index * 4),res_name,&type_buf),
+           (hrsrc = FindResourceA(*(HMODULE *)(&res_dll_modules + dll_index * 4),res_name,type_buf),
            hrsrc == (HRSRC)0x0))) {
       dll_index++;
     }
@@ -2520,14 +2392,6 @@ HGLOBAL __cdecl res_load_impl(CHAR *res_type,LPCSTR res_name)
 }
 #undef app_hinstance
 #undef res_dll_module_count
-#undef hmodule2
-#undef dll_index
-#undef hrsrc
-#undef type_buf
-#undef type_c1
-#undef type_c2
-#undef type_c3
-#undef type_nul
 
 /* 005db531 auto */
 LPVOID __cdecl res_lock_impl(HGLOBAL handle)
@@ -2548,11 +2412,10 @@ void __cdecl res_unlock_impl(i32 handle)
 
 /* 005db55b auto */
 #define res_dll_module_count (*(uint *)((u8 *)&g.d_006387cc))
-#define i (*(uint *)(frame_ + FRAME_OFF(0)))
 void __cdecl dll_unload(HMODULE hmodule)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uint i;
   
   for (i = 0;
       (*(HMODULE *)(&res_dll_modules + i * 4) != hmodule && (i < res_dll_module_count));
@@ -2568,4 +2431,3 @@ void __cdecl dll_unload(HMODULE hmodule)
   return;
 }
 #undef res_dll_module_count
-#undef i

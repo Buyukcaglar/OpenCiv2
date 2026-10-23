@@ -8,11 +8,10 @@
 /* ------------------------------------------------------------------------ */
 /* 0x005c8791: unload a font resource: delete its cached GDI fonts, remove
  * the font file, then free the resource block. */
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl font_file_unload(i32 param_1)
 {
     char *font;
-    i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+    int local_c;
 
     font = (char *)mem_handle_lock(param_1);
     for (local_c = 0; local_c < *(int *)(font + 0x100); local_c = local_c + 1) {
@@ -25,14 +24,12 @@ void __cdecl font_file_unload(i32 param_1)
     mem_handle_unlock(param_1);
     mem_handle_free(param_1);
 }
-#undef local_c
 
 /* ------------------------------------------------------------------------ */
 #define g_btn_hover     (*(int *)((u8 *)&g.d_00637c9c))
 #define g_btn_pressed   (*(int *)((u8 *)&g.d_00637ca0))
 
 /* 0x005c8caf: hover-tracking button window procedure. */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 i32 __stdcall hotspot_wndproc(HWND param_1,i32 param_2,i32 param_3,uint param_4)
 {
     void *this;
@@ -41,7 +38,7 @@ i32 __stdcall hotspot_wndproc(HWND param_1,i32 param_2,i32 param_3,uint param_4)
     BOOL BVar3;
     i32 uVar4;
     POINT pt;
-    i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+    tagRECT local_14;
 
     iVar1 = wnd_from_hwnd(param_1);
     this = *(void **)(iVar1 + 4);
@@ -127,22 +124,10 @@ i32 __stdcall hotspot_wndproc(HWND param_1,i32 param_2,i32 param_3,uint param_4)
     }
     return 0;
 }
-#undef local_14
 
 /* ------------------------------------------------------------------------ */
 /* 0x005cacd4: bitmap push-button window procedure (normal / pressed /
  * disabled bitmaps, focus frame, space bar activation). */
-#define local_84 (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(4)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_40 (*(HDC *)(frame_ + FRAME_OFF(72)))
-#define local_3c (*(HGDIOBJ *)(frame_ + FRAME_OFF(76)))
-#define local_38 (*(tagRECT *)(frame_ + FRAME_OFF(80)))
-#define local_28 (*(void * *)(frame_ + FRAME_OFF(96)))
-#define local_24 (*(HDC *)(frame_ + FRAME_OFF(100)))
-#define local_20 (*(uint *)(frame_ + FRAME_OFF(104)))
-#define local_1c (*(HBRUSH *)(frame_ + FRAME_OFF(108)))
-#define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(112)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(128)))
 i32 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
 {
     char cVar1;
@@ -156,7 +141,17 @@ i32 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param
     void *pvVar8;
     i32 uVar9;
     POINT pt;
-    i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+    tagPAINTSTRUCT local_84;
+    int local_44;
+    HDC local_40;
+    HGDIOBJ local_3c;
+    tagRECT local_38;
+    void *local_28;
+    HDC local_24;
+    uint local_20;
+    HBRUSH local_1c;
+    tagRECT local_18;
+    i32 local_8;
 
     local_44 = wnd_from_hwnd(param_1);
     if (local_44 == 0)
@@ -307,28 +302,11 @@ i32 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param
     }
     return 0;
 }
-#undef local_84
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_8
 
 /* ------------------------------------------------------------------------ */
 #define g_palette_mode  (*(int *)((u8 *)&g.d_00638b48))
 
 /* 0x005cb6eb: sprite push-button window procedure (left and right click). */
-#define local_64 (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(4)))
-#define local_24 (*(HDC *)(frame_ + FRAME_OFF(68)))
-#define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(72)))
-#define local_10 (*(void * *)(frame_ + FRAME_OFF(88)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(92)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(96)))
 i32 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
 {
     char cVar1;
@@ -342,7 +320,12 @@ i32 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint pa
     HDC hdcSrc;
     BOOL BVar12;
     POINT pt;
-    i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+    tagPAINTSTRUCT local_64;
+    HDC local_24;
+    tagRECT local_20;
+    void *local_10;
+    uint local_c;
+    i32 local_8;
 
     iVar3 = wnd_from_hwnd(param_1);
     if (iVar3 == 0)
@@ -489,12 +472,6 @@ i32 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint pa
     }
     return 0;
 }
-#undef local_64
-#undef local_24
-#undef local_20
-#undef local_10
-#undef local_c
-#undef local_8
 
 /* ------------------------------------------------------------------------ */
 #define g_video_ic          (*(HIC *)((u8 *)&g.d_00638db0))
@@ -564,11 +541,10 @@ typedef HRESULT (__stdcall *dd_getcaps_fn)(void *dd, void *driver_caps, void *he
 
 /* 0x005e89d0: register the DirectDraw window class, create DirectDraw and
  * check the hardware capabilities. */
-#define local_2c (*(WNDCLASSA *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl ddraw_init(void)
 {
     HRESULT hr;
-    i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+    WNDCLASSA local_2c;
 
     local_2c.style = 0xb;
     local_2c.lpfnWndProc = (WNDPROC)ddwin_native_wndproc;
@@ -600,21 +576,12 @@ i32 __cdecl ddraw_init(void)
         dbg_log(s_Direct_Draw__Device_is_Bank_Swit_00639578);
     return 1;
 }
-#undef local_2c
 
 /* ------------------------------------------------------------------------ */
 #define g_active_child  (*(void * *)((u8 *)&g.d_00637ea4))
 
 /* 0x005eb447: MDI-style child window procedure: forwards input, sizing,
  * scrolling and palette messages to the window object (GWL 4). */
-#define local_24 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_18 (*(HDC *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(void * *)(frame_ + FRAME_OFF(20)))
-#define local_10 (*(UINT *)(frame_ + FRAME_OFF(24)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
 uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint param_4)
 {
     int iVar4;
@@ -624,7 +591,14 @@ uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint par
     WPARAM wp = (WPARAM)param_3;
     short x = (short)param_4;
     short y = (short)(param_4 >> 0x10);
-    i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+    int local_24;
+    int local_20;
+    int local_1c;
+    HDC local_18;
+    void *local_14;
+    UINT local_10;
+    int local_c;
+    int local_8;
 
     local_14 = (void *)GetWindowLongA(param_1, 4);
     if (local_14 == (void *)0x0)
@@ -895,11 +869,3 @@ uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint par
     }
     return 0;
 }
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8

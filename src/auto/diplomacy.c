@@ -45,12 +45,11 @@ void __cdecl diplo_status_icons_static_dtor(void)
 
 /* 00456f8b auto */
 #define diplo_cur_attitude (*(int *)((u8 *)&g.d_0064b114))
-#define limit (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl diplo_patience_limit(iptr civ2,iptr civ)
 
 {
   int has_wonder;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 limit;
   
   limit = 2;
   if (diplo_cur_attitude < 0x19) {
@@ -75,7 +74,6 @@ int __cdecl diplo_patience_limit(iptr civ2,iptr civ)
   return limit;
 }
 #undef diplo_cur_attitude
-#undef limit
 
 /* 0045705e auto */
 #define diplo_ai_declare_war (*(int *)((u8 *)&g.d_0064b0e8))
@@ -86,11 +84,6 @@ int __cdecl diplo_patience_limit(iptr civ2,iptr civ)
 #define diplo_opening_eval_active (*(int *)((u8 *)&g.d_00626a20))
 #define diplo_strongest_enemy (*(iptr *)((u8 *)&g.d_0064b0fc))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define alliance_count (*(int *)(frame_ + FRAME_OFF(0)))
-#define civ3 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define continent (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define war_count (*(int *)(frame_ + FRAME_OFF(20)))
 void __cdecl diplo_eval_ai_stance(iptr civ2,iptr civ)
 
 {
@@ -100,7 +93,11 @@ void __cdecl diplo_eval_ai_stance(iptr civ2,iptr civ)
   ushort min_strength;
   int value;
   uint strength;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int alliance_count;
+  iptr civ3;
+  iptr city;
+  iptr continent;
+  int war_count;
   
   diplo_space_race_threat = ai_spaceship_race_behind(civ);
   war_count = 0;
@@ -481,11 +478,6 @@ LAB_00457d0d:
 #undef diplo_opening_eval_active
 #undef diplo_strongest_enemy
 #undef scenario_flags
-#undef alliance_count
-#undef civ3
-#undef city
-#undef continent
-#undef war_count
 
 /* 00458a3b auto */
 #define diplo_cur_attitude (*(i32 *)((u8 *)&g.d_0064b114))
@@ -511,13 +503,6 @@ void __cdecl diplo_set_attitude_arg(iptr civ2,iptr civ)
 
 /* 00458ab1 auto */
 #define diplo_session_active (*(i32 *)((u8 *)&g.d_00626a24))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(4)))
-#define screen_rect2 (*(i8 (*)[8])(frame_ + FRAME_OFF(760)))
-#define screen_width2 (*(int *)(frame_ + FRAME_OFF(768)))
-#define screen_height2 (*(int *)(frame_ + FRAME_OFF(772)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(776)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(780)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(784)))
 void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
 
 {
@@ -525,16 +510,20 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
   int offset_x;
   int offset_y;
   iptr str;
-  i8 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
+  Dialog dlg;
+  RECT screen_rect2;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
   seh_state = 0;
   diplo_session_active = 1;
   if (((*(i8 *)((char *)&game.game_options + 2)) & 4) != 0) {
-    gfx_get_screen_rect((iptr)screen_rect2);
-    offset_x = int_clamp((screen_width2 - 0x280) / 3,1,9999);
-    offset_y = int_clamp((screen_height2 - 0x1e0) / 3,1,9999);
+    gfx_get_screen_rect((iptr)((i8 *)&screen_rect2.left));
+    offset_x = int_clamp((screen_rect2.right - 0x280) / 3,1,9999);
+    offset_y = int_clamp((screen_rect2.bottom - 0x1e0) / 3,1,9999);
     dialog_set_default_offset(-offset_x,-offset_y);
     dialog_set_position((DialogCore *)&dlg,-offset_x,-offset_y);
     diplo_leader_wnd_launch(civ2,civ);
@@ -580,26 +569,12 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
   return;
 }
 #undef diplo_session_active
-#undef dlg
-#undef screen_rect2
-#undef screen_width2
-#undef screen_height2
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 00458df9 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define diplo_emissary_asked (*(int *)((u8 *)&g.d_00626a30))
 #define diplo_emissary_response (*(int *)((u8 *)&g.d_00626a34))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define accepted (*(uint *)(frame_ + FRAME_OFF(4)))
-#define result (*(uint *)(frame_ + FRAME_OFF(8)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(16)))
-#define refused (*(int *)(frame_ + FRAME_OFF(772)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(776)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(780)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(784)))
 uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
 
 {
@@ -607,7 +582,13 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
   iptr str;
   iptr option_id;
   i32 option_flags;
-  i8 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
+  uint accepted;
+  uint result;
+  Dialog dlg;
+  int refused;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   refused = 0;
@@ -683,13 +664,6 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
 #undef diplo_emissary_asked
 #undef diplo_emissary_response
 #undef human_civ
-#undef accepted
-#undef result
-#undef dlg
-#undef refused
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 0045918e auto */
 #define diplo_emissary_asked (*(i32 *)((u8 *)&g.d_00626a30))
@@ -713,14 +687,13 @@ void __cdecl diplo_session_reset(void)
 
 /* 004591cb auto */
 #define diplo_cur_attitude (*(int *)((u8 *)&g.d_0064b114))
-#define choice (*(int *)(frame_ + FRAME_OFF(0)))
-#define price (*(int *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl diplo_offer_sell_tech(iptr civ,iptr civ2,int mode)
 
 {
   i32 result;
   int known_count;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int choice;
+  int price;
   
   if (diplo_wanted_tech < 0) {
     result = 0;
@@ -792,30 +765,9 @@ i32 __cdecl diplo_offer_sell_tech(iptr civ,iptr civ2,int mode)
   return result;
 }
 #undef diplo_cur_attitude
-#undef choice
-#undef price
 
 /* 0045950b auto */
 #define diplo_cur_attitude (*(i32 *)((u8 *)&g.d_0064b114))
-#define ai_tech_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define offer2_value (*(int *)(frame_ + FRAME_OFF(8)))
-#define offer_value (*(int *)(frame_ + FRAME_OFF(12)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(44)))
-#define civ_has (*(int *)(frame_ + FRAME_OFF(800)))
-#define civ_tech_count (*(int *)(frame_ + FRAME_OFF(804)))
-#define blocking_wonder (*(iptr *)(frame_ + FRAME_OFF(808)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(812)))
-#define label_buf (*(i8 (*)[80])(frame_ + FRAME_OFF(816)))
-#define wanted_value (*(int *)(frame_ + FRAME_OFF(896)))
-#define attitude_cost (*(int *)(frame_ + FRAME_OFF(900)))
-#define wonder_group (*(iptr *)(frame_ + FRAME_OFF(904)))
-#define value (*(int *)(frame_ + FRAME_OFF(908)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(912)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(916)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(920)))
 int __cdecl
 diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
             )
@@ -828,7 +780,25 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
   bool allied;
   int ret;
   iptr str;
-  i8 frame_[FRAME_OFF(928)] __attribute__((aligned(8)));  /* original stack frame */
+  int ai_tech_count;
+  int offer2_value;
+  int offer_value;
+  iptr advance;
+  iptr city;
+  iptr advance2;
+  Dialog dlg;
+  int civ_has;
+  int civ_tech_count;
+  iptr blocking_wonder;
+  iptr wonder;
+  i8 label_buf[80];
+  int wanted_value;
+  int attitude_cost;
+  iptr wonder_group;
+  int value;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -1151,25 +1121,6 @@ LAB_0045a526:
   return mode;
 }
 #undef diplo_cur_attitude
-#undef ai_tech_count
-#undef offer2_value
-#undef offer_value
-#undef advance
-#undef city
-#undef advance2
-#undef dlg
-#undef civ_has
-#undef civ_tech_count
-#undef blocking_wonder
-#undef wonder
-#undef label_buf
-#undef wanted_value
-#undef attitude_cost
-#undef wonder_group
-#undef value
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 0045a535 auto */
 #define diplo_ai_declare_war (*(i32 *)((u8 *)&g.d_0064b0e8))
@@ -1226,7 +1177,6 @@ void __cdecl diplo_sign_peace_treaty(iptr civ2,iptr civ)
 }
 
 /* 0045a7a8 auto */
-#define other (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl diplo_agree_ceasefire(iptr civ2,iptr civ)
 
 {
@@ -1234,7 +1184,7 @@ void __cdecl diplo_agree_ceasefire(iptr civ2,iptr civ)
   iptr str;
   i32 attitude;
   i32 max_attitude;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 other;
   
   diplo_set_treaty_flags(civ,civ2,0x4002);
   diplo_clear_treaty_flags(civ,civ2,0x40000);
@@ -1258,17 +1208,15 @@ void __cdecl diplo_agree_ceasefire(iptr civ2,iptr civ)
   }
   return;
 }
-#undef other
 
 /* 0045a8e3 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define civ3 (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl diplo_allies_join_war(iptr civ,iptr civ2)
 
 {
   uint *treaty;
   iptr name2;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ3;
   
   if ((*(byte *)&civs[civ].treaties[civ2] & 1) != 0) {
     for (civ3 = 1; civ3 < 8; civ3++) {
@@ -1328,7 +1276,6 @@ void __cdecl diplo_allies_join_war(iptr civ,iptr civ2)
   return;
 }
 #undef human_civ
-#undef civ3
 
 /* 0045ac71 auto */
 void __cdecl diplo_declare_war(iptr civ,iptr civ3,iptr civ2)
@@ -1414,10 +1361,6 @@ void __cdecl diplo_declare_war(iptr civ,iptr civ3,iptr civ2)
 /* 0045b0d6 auto */
 #define diplo_cur_attitude (*(int *)((u8 *)&g.d_0064b114))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define choice (*(int *)(frame_ + FRAME_OFF(0)))
-#define threat (*(int *)(frame_ + FRAME_OFF(8)))
-#define continent (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define human_byte (*(byte *)(frame_ + FRAME_OFF(16)))
 void __cdecl diplo_ally_demand_help(iptr civ,iptr civ2)
 
 {
@@ -1425,7 +1368,10 @@ void __cdecl diplo_ally_demand_help(iptr civ,iptr civ2)
   iptr name2;
   int gold_units;
   iptr civ3;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int choice;
+  int threat;
+  iptr continent;
+  byte human_byte;
   
   civ3 = human_civ;
   human_byte = (byte)human_civ;
@@ -1491,20 +1437,15 @@ void __cdecl diplo_ally_demand_help(iptr civ,iptr civ2)
 }
 #undef diplo_cur_attitude
 #undef human_civ
-#undef choice
-#undef threat
-#undef continent
-#undef human_byte
 
 /* 0045b472 auto */
-#define step (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define value (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define divisor (*(int *)(frame_ + FRAME_OFF(8)))
 int __cdecl diplo_gold_attitude_value(int gold)
 
 {
   int chunk;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 step;
+  i32 value;
+  int divisor;
   
   value = 0;
   divisor = 10;
@@ -1518,9 +1459,6 @@ int __cdecl diplo_gold_attitude_value(int gold)
   }
   return value;
 }
-#undef step
-#undef value
-#undef divisor
 
 /* 0045b4da auto */
 #define diplo_ai_declare_war (*(int *)((u8 *)&g.d_0064b0e8))
@@ -1528,21 +1466,6 @@ int __cdecl diplo_gold_attitude_value(int gold)
 #define diplo_cur_attitude (*(int *)((u8 *)&g.d_0064b114))
 #define diplo_had_ceasefire (*(int *)((u8 *)&g.d_0064b138))
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define units_moved (*(int *)(frame_ + FRAME_OFF(0)))
-#define attitude_delta (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define other (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define gold_offer (*(int *)(frame_ + FRAME_OFF(16)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define target (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define ally_count (*(int *)(frame_ + FRAME_OFF(32)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define result (*(uint *)(frame_ + FRAME_OFF(52)))
-#define reasons (*(uint *)(frame_ + FRAME_OFF(60)))
-#define best_rank (*(int *)(frame_ + FRAME_OFF(64)))
-#define score (*(uint *)(frame_ + FRAME_OFF(68)))
-#define tribute (*(int *)(frame_ + FRAME_OFF(72)))
-#define at_war (*(uint *)(frame_ + FRAME_OFF(76)))
 i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
 
 {
@@ -1558,7 +1481,21 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
   int city;
   uint rnd;
   uint rnd_sign;
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  int units_moved;
+  i32 attitude_delta;
+  iptr unit;
+  iptr other;
+  int gold_offer;
+  int y2;
+  iptr target;
+  int ally_count;
+  int x2;
+  uint result;
+  uint reasons;
+  int best_rank;
+  uint score;
+  int tribute;
+  uint at_war;
   
   result = 0;
   paid = false;
@@ -2237,40 +2174,10 @@ LAB_0045d5d2:
 #undef diplo_cur_attitude
 #undef diplo_had_ceasefire
 #undef unit_blink_active
-#undef units_moved
-#undef attitude_delta
-#undef unit
-#undef other
-#undef gold_offer
-#undef y2
-#undef target
-#undef ally_count
-#undef x2
-#undef result
-#undef reasons
-#undef best_rank
-#undef score
-#undef tribute
-#undef at_war
 
 /* 0045dd7f auto */
 #define diplo_cur_attitude (*(int *)((u8 *)&g.d_0064b114))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define civ4 (*(int *)(frame_ + FRAME_OFF(8)))
-#define choice (*(int *)(frame_ + FRAME_OFF(12)))
-#define civ2_mask_byte (*(byte *)(frame_ + FRAME_OFF(16)))
-#define civ_mask_byte (*(byte *)(frame_ + FRAME_OFF(20)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define distrust (*(int *)(frame_ + FRAME_OFF(28)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(44)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(52)))
-#define i (*(int *)(frame_ + FRAME_OFF(808)))
-#define price (*(int *)(frame_ + FRAME_OFF(812)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(816)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(820)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(824)))
 void __cdecl diplo_favor_menu(iptr civ2,iptr civ)
 
 {
@@ -2289,7 +2196,21 @@ void __cdecl diplo_favor_menu(iptr civ2,iptr civ)
   i32 arg_a;
   i32 arg_b;
   iptr target_civ;
-  i8 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int civ4;
+  int choice;
+  byte civ2_mask_byte;
+  byte civ_mask_byte;
+  iptr city;
+  int distrust;
+  uint y2;
+  uint x2;
+  Dialog dlg;
+  int i;
+  int price;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -2615,40 +2536,10 @@ LAB_0045f0a3:
 }
 #undef diplo_cur_attitude
 #undef human_civ
-#undef unit
-#undef civ4
-#undef choice
-#undef civ2_mask_byte
-#undef civ_mask_byte
-#undef city
-#undef distrust
-#undef y2
-#undef x2
-#undef dlg
-#undef i
-#undef price
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 0045f0b1 auto */
 #define diplo_cur_attitude (*(i32 *)((u8 *)&g.d_0064b114))
 #define diplo_gifts_this_meeting (*(int *)((u8 *)&g.d_0064b0f0))
-#define choice (*(int *)(frame_ + FRAME_OFF(0)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define advance_idx (*(int *)(frame_ + FRAME_OFF(8)))
-#define city_count (*(int *)(frame_ + FRAME_OFF(12)))
-#define advance2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define attitude_cost (*(int *)(frame_ + FRAME_OFF(24)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(32)))
-#define gold_amount (*(int *)(frame_ + FRAME_OFF(788)))
-#define i (*(int *)(frame_ + FRAME_OFF(792)))
-#define prev_amount (*(int *)(frame_ + FRAME_OFF(796)))
-#define city4 (*(iptr *)(frame_ + FRAME_OFF(800)))
-#define value (*(int *)(frame_ + FRAME_OFF(804)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(808)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(812)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(816)))
 void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
 
 {
@@ -2665,7 +2556,21 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
   uint rnd;
   uint rnd_sign;
   iptr city3;
-  i8 frame_[FRAME_OFF(824)] __attribute__((aligned(8)));  /* original stack frame */
+  int choice;
+  iptr city2;
+  int advance_idx;
+  int city_count;
+  int advance2;
+  int attitude_cost;
+  Dialog dlg;
+  int gold_amount;
+  int i;
+  int prev_amount;
+  iptr city4;
+  int value;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -2889,21 +2794,6 @@ LAB_0045fd59:
 }
 #undef diplo_cur_attitude
 #undef diplo_gifts_this_meeting
-#undef choice
-#undef city2
-#undef advance_idx
-#undef city_count
-#undef advance2
-#undef attitude_cost
-#undef dlg
-#undef gold_amount
-#undef i
-#undef prev_amount
-#undef city4
-#undef value
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 0045fd67 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
@@ -2932,18 +2822,17 @@ void __cdecl diplo_ai_senate_hawks_notice(iptr civ,iptr civ2)
 #undef scenario_flags
 
 /* 0045fe19 auto */
-#define choice (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(12)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(768)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(776)))
 i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
 
 {
   bool at_peace;
   bool allied;
   int err;
-  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 choice;
+  Dialog dlg;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   choice = 0;
@@ -3000,11 +2889,6 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
   /* inlined unwind funclet 00460104 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
   return choice;
 }
-#undef choice
-#undef dlg
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 00460129 auto */
 #define diplo_ai_declare_war (*(int *)((u8 *)&g.d_0064b0e8))
@@ -3024,21 +2908,6 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
 #define diplo_ai_meeting_active_i32 (*(i32 *)((u8 *)&g.d_00626a28))
-#define roll2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define roll (*(int *)(frame_ + FRAME_OFF(8)))
-#define choice (*(int *)(frame_ + FRAME_OFF(16)))
-#define other (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define continent (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define distrust (*(int *)(frame_ + FRAME_OFF(48)))
-#define civ_ally_count (*(int *)(frame_ + FRAME_OFF(52)))
-#define ally_count (*(int *)(frame_ + FRAME_OFF(60)))
-#define stance_idx (*(iptr *)(frame_ + FRAME_OFF(72)))
-#define hostile (*(uint *)(frame_ + FRAME_OFF(76)))
-#define threat_count (*(int *)(frame_ + FRAME_OFF(100)))
-#define variant (*(int *)(frame_ + FRAME_OFF(108)))
-#define threshold (*(int *)(frame_ + FRAME_OFF(112)))
-#define civ3 (*(iptr *)(frame_ + FRAME_OFF(116)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl
@@ -3067,7 +2936,21 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
   int advance2;
   uint rnd_sign;
   bool no_contact;
-  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  int roll2;
+  int roll;
+  int choice;
+  iptr other;
+  iptr advance;
+  iptr continent;
+  int distrust;
+  int civ_ally_count;
+  int ally_count;
+  iptr stance_idx;
+  uint hostile;
+  int threat_count;
+  int variant;
+  int threshold;
+  iptr civ3;
   
   declared_war = false;
   ended = false;
@@ -4213,21 +4096,6 @@ LAB_00463d3b:
 #undef scenario_events_loaded
 #undef scenario_flags
 #undef diplo_ai_meeting_active_i32
-#undef roll2
-#undef roll
-#undef choice
-#undef other
-#undef advance
-#undef continent
-#undef distrust
-#undef civ_ally_count
-#undef ally_count
-#undef stance_idx
-#undef hostile
-#undef threat_count
-#undef variant
-#undef threshold
-#undef civ3
 
 /* 00467750 auto */
 void __cdecl diplo_clear_treaty_flags(iptr civ,iptr civ2,uint flags)
@@ -4341,10 +4209,6 @@ uint __cdecl diplo_is_hostile(iptr civ,iptr civ2)
 #define map_cursor_x (*(i16 *)((u8 *)&g.d_0064b1b4))
 #define map_cursor_y (*(i16 *)((u8 *)&g.d_0064b1b0))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define best_dist (*(int *)(frame_ + FRAME_OFF(32)))
 void __cdecl diplo_expel_units(int civ2,int civ)
 
 {
@@ -4353,7 +4217,10 @@ void __cdecl diplo_expel_units(int civ2,int civ)
   iptr city3;
   iptr landmass;
   int ret;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr city2;
+  iptr city;
+  int best_dist;
   
   for (unit = 0; unit < game.num_units; unit++) {
     if ((units[unit].id != 0) && (units[unit].owner == civ2)) {
@@ -4400,10 +4267,6 @@ void __cdecl diplo_expel_units(int civ2,int civ)
 #undef map_cursor_x
 #undef map_cursor_y
 #undef moving_units_mode
-#undef unit
-#undef city2
-#undef city
-#undef best_dist
 
 /* 00467ef2 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
@@ -4481,19 +4344,18 @@ void __cdecl diplo_greeting_sound_done_cb(void)
 #define diplo_greeting_sound_id (*(int *)((u8 *)&g.d_0062ca44))
 #define diplo_leader_sound_ids (*(int *)((u8 *)&g.d_0062ca48))
 #define diplo_leader_wnd_open (*(i8 *)((u8 *)&g.d_0062ca38))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define tribe_idx (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define view (*(DiploLeaderView * *)(frame_ + FRAME_OFF(12)))
-#define i (*(int *)(frame_ + FRAME_OFF(28)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(36)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(40)))
 void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
 
 {
   DiploLeaderWindow *this;
   int ok;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  iptr tribe_idx;
+  DiploLeaderView *view;
+  int i;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   diplo_leader_wnd_open = 0;
@@ -4543,13 +4405,6 @@ void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
 #undef diplo_greeting_sound_id
 #undef diplo_leader_sound_ids
 #undef diplo_leader_wnd_open
-#undef parent_wnd2
-#undef tribe_idx
-#undef view
-#undef i
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 00494148 auto */
 #define diplo_greeting_sound_id (*(i32 *)((u8 *)&g.d_0062ca44))
@@ -4597,13 +4452,12 @@ void __cdecl diplo_leader_play_reaction(int reaction)
 #undef diplo_leader_video_active
 
 /* 004942a3 auto */
-#define eh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_frame;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   wnd_ctor((ModalMenuWindow *)this);
@@ -4617,26 +4471,22 @@ DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *this)
   dll_handle_init((DllHandle *)(this->leader_dll));
   (*(i8 *)((char *)&eh_state + 0)) = 4;
   mmwnd_ctor((DocumentWindow *)(this->leader_video_wnd));
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),5);
+  eh_state = (eh_state & 0xffffff00 | (byte)(5));
   gfx_get_screen_rect((iptr)&this->control_list);
   this->pending_flag_1088 = '\0';
   return this;
 }
-#undef eh_frame
-#undef eh_prev
-#undef eh_state
 
 /* 004943c9 auto */
 #define diplo_leader_video_active (*(i8 *)((u8 *)&g.d_0062ca40))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall diplo_leader_wnd_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_handler;
+  i8 *eh_prev;
+  int eh_state;
   
-  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  eh_state = eh_state & 0xff;
   diplo_leader_video_active = 0;
   (*(i8 *)((char *)&eh_state + 0)) = 4;
   /* inlined unwind funclet 0049444f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x65c)); }
@@ -4646,27 +4496,23 @@ void __thiscall diplo_leader_wnd_dtor(void *this)
   /* inlined unwind funclet 0049446d */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x224)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 0049447c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1dc)); }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 0049448b */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 200)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0049449a */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
 #undef diplo_leader_video_active
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 004944bb auto */
 #define diplo_leader_video_active (*(i8 *)((u8 *)&g.d_0062ca40))
-#define saved_rgb2 (*(i8 (*)[96])(frame_ + FRAME_OFF(4)))
-#define dll_path (*(i8 (*)[128])(frame_ + FRAME_OFF(100)))
 i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,i32 viewer_civ,iptr leader_civ)
 
 {
   int ok;
   i32 result;
-  i8 frame_[FRAME_OFF(232)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 saved_rgb2[96];
+  i8 dll_path[128];
   
   diplo_leader_video_active = 0;
   palette_get_rgb((GamePalette *)&game_palette,(iptr)saved_rgb2,10,0x20);
@@ -4734,8 +4580,6 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,i32 viewer_civ,iptr l
   return result;
 }
 #undef diplo_leader_video_active
-#undef saved_rgb2
-#undef dll_path
 
 /* 00494704 auto */
 #define diplo_greeting_sound_id (*(iptr *)((u8 *)&g.d_0062ca44))
@@ -4809,16 +4653,6 @@ i32 __thiscall diplo_leader_init_background(DiploLeaderView *this)
 }
 
 /* 00494949 auto */
-#define rgb_buf (*(i8 (*)[120])(frame_ + FRAME_OFF(0)))
-#define wnd_y (*(int *)(frame_ + FRAME_OFF(120)))
-#define wnd_x (*(int *)(frame_ + FRAME_OFF(124)))
-#define green (*(i32 *)(frame_ + FRAME_OFF(128)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(132)))
-#define red (*(i32 *)(frame_ + FRAME_OFF(1208)))
-#define blue (*(i32 *)(frame_ + FRAME_OFF(1212)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1216)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1220)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1224)))
 uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
 
 {
@@ -4827,7 +4661,16 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
   i32 *red_ptr;
   i32 *green_ptr;
   i32 *blue_ptr;
-  i8 frame_[FRAME_OFF(1232)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rgb_buf[120];
+  int wnd_y;
+  int wnd_x;
+  i32 green;
+  GamePalette palette;
+  i32 red;
+  i32 blue;
+  i32 eh_handler;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -4861,37 +4704,26 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
   }
   return (uint)(loaded != 0);
 }
-#undef rgb_buf
-#undef wnd_y
-#undef wnd_x
-#undef green
-#undef palette
-#undef red
-#undef blue
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 00494b5f auto */
-#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define fail_result (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define icon_count (*(int *)(frame_ + FRAME_OFF(28)))
-#define step_y (*(int *)(frame_ + FRAME_OFF(32)))
-#define draw_y (*(int *)(frame_ + FRAME_OFF(36)))
-#define i (*(int *)(frame_ + FRAME_OFF(40)))
-#define draw_x (*(int *)(frame_ + FRAME_OFF(44)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(48)))
-#define surface (*(DibSurface *)(frame_ + FRAME_OFF(108)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(180)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1256)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1260)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(1264)))
 i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
 
 {
   int loaded;
-  i8 frame_[FRAME_OFF(1272)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_ctx[16];
+  i32 fail_result;
+  i32 result;
+  int icon_count;
+  int step_y;
+  int draw_y;
+  int i;
+  int draw_x;
+  Sprite sprite;
+  DibSurface surface;
+  GamePalette palette;
+  i32 eh_handler;
+  i8 *eh_prev;
+  int eh_state;
   
   eh_state = 0xffffffff;
   sprite_init(&sprite);
@@ -4905,7 +4737,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
     result = 1;
     (*(i8 *)((char *)&eh_state + 0)) = 1;
     /* inlined unwind funclet 00494d71 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-    eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+    eh_state = eh_state & 0xffffff00;
     /* inlined unwind funclet 00494d7d */ { palette_destroy((GamePalette *)((iptr)&palette)); }
     eh_state = 0xffffffff;
     /* inlined unwind funclet 00494d89 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
@@ -4916,7 +4748,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
       fail_result = 0;
       (*(i8 *)((char *)&eh_state + 0)) = 1;
       /* inlined unwind funclet 00494d71 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-      eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+      eh_state = eh_state & 0xffffff00;
       /* inlined unwind funclet 00494d7d */ { palette_destroy((GamePalette *)((iptr)&palette)); }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00494d89 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
@@ -4936,7 +4768,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
       }
       (*(i8 *)((char *)&eh_state + 0)) = 1;
       /* inlined unwind funclet 00494d71 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-      eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+      eh_state = eh_state & 0xffffff00;
       /* inlined unwind funclet 00494d7d */ { palette_destroy((GamePalette *)((iptr)&palette)); }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00494d89 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
@@ -4945,58 +4777,9 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
   }
   return result;
 }
-#undef draw_ctx
-#undef fail_result
-#undef result
-#undef icon_count
-#undef step_y
-#undef draw_y
-#undef i
-#undef draw_x
-#undef sprite
-#undef surface
-#undef palette
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 00494e2a auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define fail_result (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define swap_depth (*(int *)(frame_ + FRAME_OFF(24)))
-#define swap_tech (*(int *)(frame_ + FRAME_OFF(28)))
-#define truncated (*(int *)(frame_ + FRAME_OFF(32)))
-#define words (*(CHAR (*)[252])(frame_ + FRAME_OFF(36)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(288)))
-#define tech_count (*(int *)(frame_ + FRAME_OFF(292)))
-#define slot (*(int *)(frame_ + FRAME_OFF(296)))
-#define step_y (*(int *)(frame_ + FRAME_OFF(300)))
-#define word2 (*(int *)(frame_ + FRAME_OFF(304)))
-#define draw_y (*(int *)(frame_ + FRAME_OFF(308)))
-#define adv_category (*(int *)(frame_ + FRAME_OFF(312)))
-#define draw_rect (*(tagRECT *)(frame_ + FRAME_OFF(316)))
-#define j (*(int *)(frame_ + FRAME_OFF(332)))
-#define font2 (*(GameFont *)(frame_ + FRAME_OFF(336)))
-#define draw_x (*(i32 *)(frame_ + FRAME_OFF(344)))
-#define line2_buf (*(CHAR (*)[51])(frame_ + FRAME_OFF(348)))
-#define char_pos (*(char *)(frame_ + FRAME_OFF(452)))
-#define depth (*(int *)(frame_ + FRAME_OFF(456)))
-#define category_sprites (*(Sprite (*)[4])(frame_ + FRAME_OFF(460)))
-#define frame_sprite (*(Sprite *)(frame_ + FRAME_OFF(700)))
-#define surface (*(DibSurface *)(frame_ + FRAME_OFF(760)))
-#define top_techs (*(int (*)[13])(frame_ + FRAME_OFF(832)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(884)))
-#define text_width (*(int *)(frame_ + FRAME_OFF(1960)))
-#define text_rect (*(tagRECT *)(frame_ + FRAME_OFF(1964)))
-#define text_colors (*(i8 *)(frame_ + FRAME_OFF(1980)))
-#define text_color_1 (*(i8 *)(frame_ + FRAME_OFF(1981)))
-#define text_color_2 (*(i8 *)(frame_ + FRAME_OFF(1982)))
-#define text_color_3 (*(i8 *)(frame_ + FRAME_OFF(1983)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1984)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1988)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(1992)))
 i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
 
 {
@@ -5004,7 +4787,37 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
   iptr label;
   int rect_height2;
   CHAR aCStack_641 [53];
-  i8 frame_[FRAME_OFF(2000)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_ctx[16];
+  i32 fail_result;
+  i32 result;
+  int swap_depth;
+  int swap_tech;
+  int truncated;
+  CHAR words[252];
+  iptr advance;
+  int tech_count;
+  int slot;
+  int step_y;
+  int word2;
+  int draw_y;
+  int adv_category;
+  tagRECT draw_rect;
+  int j;
+  GameFont font2;
+  i32 draw_x;
+  CHAR line2_buf[51];
+  char char_pos;
+  int depth;
+  Sprite category_sprites[5];
+  DibSurface surface;
+  int top_techs[13];
+  GamePalette palette;
+  int text_width;
+  tagRECT text_rect;
+  i8 text_colors[4];
+  i32 eh_handler;
+  i8 *eh_prev;
+  int eh_state;
   
   eh_state = 0xffffffff;
   font_init(&font2,0,0xb);
@@ -5014,11 +4827,11 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
   palette_init(&palette);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
   surface_ctor(&surface);
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),3);
-  text_colors = 0x13;
-  text_color_1 = 0x62;
-  text_color_2 = 0x13;
-  text_color_3 = 0x25;
+  eh_state = (eh_state & 0xffffff00 | (byte)(3));
+  text_colors[0] = 0x13;
+  text_colors[1] = 0x62;
+  text_colors[2] = 0x13;
+  text_colors[3] = 0x25;
   top_techs[0] = -1;
   top_techs[1] = -1;
   top_techs[2] = 0xffffffff;
@@ -5081,8 +4894,8 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
     /* inlined unwind funclet 00495be2 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
     (*(i8 *)((char *)&eh_state + 0)) = 1;
     /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&palette)); }
-    eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
-    /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)&category_sprites,0x3c,5,sprite_destroy); }
+    eh_state = eh_state & 0xffffff00;
+    /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)category_sprites,0x3c,5,sprite_destroy); }
     eh_state = 0xffffffff;
     /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&font2)); }
   }
@@ -5094,8 +4907,8 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       /* inlined unwind funclet 00495be2 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
       (*(i8 *)((char *)&eh_state + 0)) = 1;
       /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&palette)); }
-      eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
-      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)&category_sprites,0x3c,5,sprite_destroy); }
+      eh_state = eh_state & 0xffffff00;
+      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)category_sprites,0x3c,5,sprite_destroy); }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&font2)); }
       result = fail_result;
@@ -5112,7 +4925,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       draw_y += 0x1f;
       sprite_grab_from_surface(category_sprites + 2,(iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
       draw_y += 0x1f;
-      sprite_grab_from_surface(&frame_sprite,(iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
+      sprite_grab_from_surface((category_sprites + 4),(iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
       step_y = 0x1f;
       draw_x = 0x1e5;
       draw_y = 0x82;
@@ -5177,7 +4990,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
                         ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
                          (iptr)&draw_rect,0);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(*(i32 *)(&text_colors + this->style_era));
+              gfx_set_text_color_index(text_colors[this->style_era]);
               surface_draw_text_in_rect
                         ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
                          (iptr)&draw_rect,0);
@@ -5218,7 +5031,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
                         ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
                          (iptr)&draw_rect,1);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(*(i32 *)(&text_colors + this->style_era));
+              gfx_set_text_color_index(text_colors[this->style_era]);
               surface_draw_text_in_rect
                         ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
                          (iptr)&draw_rect,1);
@@ -5249,7 +5062,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
                         ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)line2_buf,
                          (iptr)&draw_rect,1);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(*(i32 *)(&text_colors + this->style_era));
+              gfx_set_text_color_index(text_colors[this->style_era]);
               surface_draw_text_in_rect
                         ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)line2_buf,
                          (iptr)&draw_rect,1);
@@ -5263,8 +5076,8 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       /* inlined unwind funclet 00495be2 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
       (*(i8 *)((char *)&eh_state + 0)) = 1;
       /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&palette)); }
-      eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
-      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)&category_sprites,0x3c,5,sprite_destroy); }
+      eh_state = eh_state & 0xffffff00;
+      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)category_sprites,0x3c,5,sprite_destroy); }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&font2)); }
       result = 1;
@@ -5273,57 +5086,21 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
   return result;
 }
 #undef human_civ
-#undef draw_ctx
-#undef fail_result
-#undef result
-#undef swap_depth
-#undef swap_tech
-#undef truncated
-#undef words
-#undef advance
-#undef tech_count
-#undef slot
-#undef step_y
-#undef word2
-#undef draw_y
-#undef adv_category
-#undef draw_rect
-#undef j
-#undef font2
-#undef draw_x
-#undef line2_buf
-#undef char_pos
-#undef depth
-#undef category_sprites
-#undef frame_sprite
-#undef surface
-#undef top_techs
-#undef palette
-#undef text_width
-#undef text_rect
-#undef text_colors
-#undef text_color_1
-#undef text_color_2
-#undef text_color_3
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 00495c35 auto */
-#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define rgb_buf (*(i8 (*)[192])(frame_ + FRAME_OFF(24)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(216)))
-#define surface (*(DibSurface *)(frame_ + FRAME_OFF(276)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(348)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1424)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1428)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(1432)))
 i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
 
 {
   int loaded;
-  i8 frame_[FRAME_OFF(1440)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_ctx[16];
+  i32 result;
+  i8 rgb_buf[192];
+  Sprite sprite;
+  DibSurface surface;
+  GamePalette palette;
+  i32 eh_handler;
+  i8 *eh_prev;
+  int eh_state;
   
   eh_state = 0xffffffff;
   sprite_init(&sprite);
@@ -5339,7 +5116,7 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
     result = 0;
     (*(i8 *)((char *)&eh_state + 0)) = 1;
     /* inlined unwind funclet 00495dcf */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-    eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+    eh_state = eh_state & 0xffffff00;
     /* inlined unwind funclet 00495ddb */ { palette_destroy((GamePalette *)((iptr)&palette)); }
     eh_state = 0xffffffff;
     /* inlined unwind funclet 00495de7 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
@@ -5353,7 +5130,7 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
     sprite_draw(&sprite,(iptr)draw_ctx,(iptr)this->leader_surface,0xd0,0x39);
     (*(i8 *)((char *)&eh_state + 0)) = 1;
     /* inlined unwind funclet 00495dcf */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-    eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+    eh_state = eh_state & 0xffffff00;
     /* inlined unwind funclet 00495ddb */ { palette_destroy((GamePalette *)((iptr)&palette)); }
     eh_state = 0xffffffff;
     /* inlined unwind funclet 00495de7 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
@@ -5361,32 +5138,21 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
   }
   return result;
 }
-#undef draw_ctx
-#undef result
-#undef rgb_buf
-#undef sprite
-#undef surface
-#undef palette
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 00495e0c auto */
-#define file_stem (*(i8 (*)[7])(frame_ + FRAME_OFF(0)))
-#define code_term (*(i8 *)(frame_ + FRAME_OFF(7)))
-#define rgb_buf (*(i8 (*)[300])(frame_ + FRAME_OFF(20)))
-#define video_path (*(i8 (*)[128])(frame_ + FRAME_OFF(320)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(448)))
-#define open_err (*(int *)(frame_ + FRAME_OFF(1524)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1528)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1532)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1536)))
 i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
 
 {
   i8 result;
   int found;
-  i8 frame_[FRAME_OFF(1544)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 file_stem[20];
+  i8 rgb_buf[300];
+  i8 video_path[128];
+  GamePalette palette;
+  int open_err;
+  i32 eh_handler;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -5397,7 +5163,7 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
   str_clear((iptr)file_stem);
   str_append((iptr)file_stem,(iptr)((u8 *)&g.d_0062cba0));
   str_append((iptr)file_stem,(iptr)(&leader_video_tribe_codes)[civs[this->leader_civ].tribe]);
-  code_term = 0;
+  file_stem[7] = 0;
   str_append((iptr)video_path,(iptr)file_stem);
   str_append((iptr)video_path,(iptr)((u8 *)&g.d_0062cba8));
   found = file_resolve_path((iptr)video_path);
@@ -5439,15 +5205,6 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
   }
   return result;
 }
-#undef file_stem
-#undef code_term
-#undef rgb_buf
-#undef video_path
-#undef palette
-#undef open_err
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 00496125 auto */
 #define diplo_leader_sound_ids (*(i32 *)((u8 *)&g.d_0062ca48))
@@ -5494,11 +5251,10 @@ void * __thiscall diplo_leader_wnd_scalar_dtor(void *this,uint flags)
 }
 
 /* 004b75fb auto */
-#define wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl diplo_wnd_escape_close(i32 unused)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 wnd2;
   
   wnd2 = wnd_get_active_child();
   if (wnd2 == 0) {
@@ -5511,20 +5267,18 @@ void __cdecl diplo_wnd_escape_close(i32 unused)
   diplo_wnd_close_active();
   return;
 }
-#undef wnd2
 
 /* 004b76d5 auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define mp_meeting_pending (*(i32 *)((u8 *)&g.d_00626a2c))
 #define nm_parley_cancel_count (*(int *)((u8 *)&g.d_006c91e4))
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
-#define wnd2 (*(i8 * *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl diplo_wnd_close_active(void)
 
 {
   int child;
   iptr civ_name;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -5565,7 +5319,6 @@ i32 __cdecl diplo_wnd_close_active(void)
 #undef mp_meeting_pending
 #undef nm_parley_cancel_count
 #undef parley_other_civ
-#undef wnd2
 
 /* 004c59f0 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
@@ -5693,10 +5446,6 @@ void __cdecl diplo_espionage_incident(iptr civ,iptr civ2)
 #undef scenario_flags
 
 /* 0055bbc0 auto */
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define intruders (*(int *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define tile (*(iptr *)(frame_ + FRAME_OFF(24)))
 int __cdecl diplo_count_border_intruders(iptr civ,iptr intruder_civ)
 
 {
@@ -5704,7 +5453,10 @@ int __cdecl diplo_count_border_intruders(iptr civ,iptr intruder_civ)
   int y;
   int check;
   uint improvements2;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int intruders;
+  iptr city;
+  iptr tile;
   
   border_intruder_city = -1;
   diplo_border_intruded_cities = 0;
@@ -5776,20 +5528,15 @@ LAB_0055bc98:
   tile++;
   goto LAB_0055bc9b;
 }
-#undef unit
-#undef intruders
-#undef city
-#undef tile
 
 /* 0055bef9 auto */
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define bonus (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl diplo_senate_intervenes(iptr civ,iptr civ2)
 
 {
   i32 result;
   int threshold;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int bonus;
   
   if (civs[civ].government < 5) {
     result = 0;
@@ -5825,23 +5572,21 @@ i32 __cdecl diplo_senate_intervenes(iptr civ,iptr civ2)
   return result;
 }
 #undef scenario_flags
-#undef bonus
 
 /* 0055cbd5 auto */
-#define their_strength (*(int *)(frame_ + FRAME_OFF(4)))
-#define civ3 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define our_attack (*(int *)(frame_ + FRAME_OFF(12)))
-#define continent (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define other_civ (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define security (*(int *)(frame_ + FRAME_OFF(28)))
-#define shared_cities (*(int *)(frame_ + FRAME_OFF(32)))
 i32 __cdecl diplo_ai_feels_secure(iptr civ,iptr civ2)
 
 {
   byte treaty_flags;
   i32 result;
   int check;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int their_strength;
+  iptr civ3;
+  int our_attack;
+  iptr continent;
+  iptr other_civ;
+  int security;
+  int shared_cities;
   
   treaty_flags = *(byte *)&civs[civ].treaties[civ2];
   if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 8) == 0) {
@@ -5935,22 +5680,9 @@ i32 __cdecl diplo_ai_feels_secure(iptr civ,iptr civ2)
   }
   return result;
 }
-#undef their_strength
-#undef civ3
-#undef our_attack
-#undef continent
-#undef other_civ
-#undef security
-#undef shared_cities
 
 /* 0055d1e2 auto */
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define advance3 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define best_value2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define best_value (*(int *)(frame_ + FRAME_OFF(20)))
-#define found_mask (*(uint *)(frame_ + FRAME_OFF(24)))
 i32 __cdecl diplo_ai_swap_advances(uptr civ,uptr civ2)
 
 {
@@ -5958,7 +5690,12 @@ i32 __cdecl diplo_ai_swap_advances(uptr civ,uptr civ2)
   i32 result;
   int check;
   int adv_value;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance3;
+  iptr advance2;
+  iptr advance;
+  int best_value2;
+  int best_value;
+  uint found_mask;
   
   best_value = 0;
   best_value2 = 0;
@@ -6035,12 +5772,6 @@ i32 __cdecl diplo_ai_swap_advances(uptr civ,uptr civ2)
   return result;
 }
 #undef scenario_flags
-#undef advance3
-#undef advance2
-#undef advance
-#undef best_value2
-#undef best_value
-#undef found_mask
 
 /* 0055d685 auto */
 i32 __cdecl diplo_ally_join_war(iptr civ,iptr civ2,iptr civ3)
@@ -6104,10 +5835,6 @@ i32 __cdecl diplo_ally_join_war(iptr civ,iptr civ2,iptr civ3)
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
 #define mp_meeting_wait_start_i32 (*(i32 *)((u8 *)&g.d_0063e4e8))
-#define civ3 (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define civ4 (*(uptr *)(frame_ + FRAME_OFF(8)))
-#define joined_war (*(uint *)(frame_ + FRAME_OFF(20)))
-#define allied_count (*(int *)(frame_ + FRAME_OFF(28)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
@@ -6121,7 +5848,10 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
   uint joined_war2;
   bool first_or_allied;
   bool was_allied;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr civ3;
+  uptr civ4;
+  uint joined_war;
+  int allied_count;
   
   if (civ == 0) {
     return;
@@ -6573,23 +6303,12 @@ LAB_0055ecb6:
 #undef scenario_events_loaded
 #undef scenario_flags
 #undef mp_meeting_wait_start_i32
-#undef civ3
-#undef civ4
-#undef joined_war
-#undef allied_count
 
 /* 0055f5a3: written by hand in src/game/bigframes.c */
 
 /* 0055f7d1 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define civ3 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define war_count (*(int *)(frame_ + FRAME_OFF(36)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(44)))
 void __cdecl diplo_ai_military_aid(iptr civ)
 
 {
@@ -6604,7 +6323,13 @@ void __cdecl diplo_ai_military_aid(iptr civ)
   iptr tile_owner2;
   int city2;
   iptr civ_name;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit2;
+  iptr unit;
+  iptr civ3;
+  iptr city;
+  int war_count;
+  iptr civ2;
+  int best_score;
   
   war_count = 0;
   for (civ2 = 1; civ2 < 8; civ2++) {
@@ -6732,27 +6457,10 @@ void __cdecl diplo_ai_military_aid(iptr civ)
 }
 #undef autoplay_active
 #undef human_civ
-#undef unit2
-#undef unit
-#undef civ3
-#undef city
-#undef war_count
-#undef civ2
-#undef best_score
 
 /* 00560d95 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define roll (*(int *)(frame_ + FRAME_OFF(0)))
-#define attitude_delta (*(int *)(frame_ + FRAME_OFF(4)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define choice (*(int *)(frame_ + FRAME_OFF(12)))
-#define civ3 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define rank_diff (*(int *)(frame_ + FRAME_OFF(24)))
-#define ahead_count (*(int *)(frame_ + FRAME_OFF(28)))
-#define rank_adjust (*(int *)(frame_ + FRAME_OFF(40)))
-#define hostile_count (*(int *)(frame_ + FRAME_OFF(44)))
-#define war_score (*(int *)(frame_ + FRAME_OFF(48)))
 void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
 
 {
@@ -6764,7 +6472,16 @@ void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
   int value;
   uint sign;
   iptr city;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  int roll;
+  int attitude_delta;
+  iptr unit;
+  int choice;
+  iptr civ3;
+  int rank_diff;
+  int ahead_count;
+  int rank_adjust;
+  int hostile_count;
+  int war_score;
   attitude_delta = 0x6715d7a0;  /* stale stack the original reads (FRAME_PRESETS) */
   
   diplo_count_border_intruders(civ,civ2);
@@ -7076,25 +6793,9 @@ LAB_00561668:
 }
 #undef human_civ
 #undef scenario_flags
-#undef roll
-#undef attitude_delta
-#undef unit
-#undef choice
-#undef civ3
-#undef rank_diff
-#undef ahead_count
-#undef rank_adjust
-#undef hostile_count
-#undef war_score
 
 /* 00562021 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define civ3 (*(uptr *)(frame_ + FRAME_OFF(12)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define msg_key (*(i8 (*)[80])(frame_ + FRAME_OFF(20)))
-#define best_value (*(int *)(frame_ + FRAME_OFF(100)))
-#define adv_value (*(int *)(frame_ + FRAME_OFF(104)))
 void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
 
 {
@@ -7103,7 +6804,12 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
   int value;
   int check;
   iptr civ_name;
-  i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance2;
+  uptr civ3;
+  iptr advance;
+  i8 msg_key[80];
+  int best_value;
+  int adv_value;
   
   if ((((int)game.turn & 0x1fU) == civ2 << 2) &&
      ((int)((uint)civs[civ].reputation - (int)civs[civ2].reputation_credit[civ]) <
@@ -7241,20 +6947,13 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
   return;
 }
 #undef human_civ
-#undef advance2
-#undef civ3
-#undef advance
-#undef msg_key
-#undef best_value
-#undef adv_value
 
 /* 00579c40 auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl diplo_force_war(iptr civ,iptr civ2)
 
 {
   uint *flags_ptr;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
   
   result = 0;
   diplo_clear_treaty_flags(civ,civ2,0x60);
@@ -7277,17 +6976,15 @@ i32 __cdecl diplo_force_war(iptr civ,iptr civ2)
   }
   return result;
 }
-#undef result
 
 /* 00579ed0 auto */
-#define choice (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl diplo_confirm_attack(iptr civ,iptr civ2,uint treaty_mask)
 
 {
   i32 result;
   iptr civ_name;
   int check;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int choice;
   
   if ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) == 0) {
     if ((treaty_mask & civs[civ].treaties[civ2]) == 0) {
@@ -7362,4 +7059,3 @@ i32 __cdecl diplo_confirm_attack(iptr civ,iptr civ2,uint treaty_mask)
   }
   return result;
 }
-#undef choice

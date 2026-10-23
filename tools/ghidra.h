@@ -123,15 +123,4 @@ static inline code *swi(int n) { (void)n; __builtin_trap(); return (code *)0; }
 #define CRT_GETC(f) getc(f)
 #define CRT_FEOF(f) (feof(f) ? 0x10 : 0)
 
-/* Emulated stack frames (see emulate_frame in tools/gen_c.py) keep each
- * local at its original offset.  Native builds double the offsets: every
- * original 4-byte slot gets 8 bytes, room for anything that grows with
- * pointer size. */
-#if defined(__LP64__) || defined(_WIN64)
-#define FRAME_OFF(n) ((n) * 2)
-#else
-#define FRAME_OFF(n) (n)
-#endif
-
-
 #endif

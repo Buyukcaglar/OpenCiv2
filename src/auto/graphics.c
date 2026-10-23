@@ -606,36 +606,35 @@ void __cdecl gfx_sheet_surface_static_dtor(void)
 }
 
 /* 00449030 auto */
-#define grab_rect_d (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define grab_rect_c (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define grab_rect_b (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define grab_rect_a (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
-#define coast_idx (*(int *)(frame_ + FRAME_OFF(64)))
-#define blank_sprite (*(Sprite *)(frame_ + FRAME_OFF(68)))
-#define base_y (*(int *)(frame_ + FRAME_OFF(128)))
-#define quarter (*(int *)(frame_ + FRAME_OFF(132)))
-#define res2_x (*(i32 *)(frame_ + FRAME_OFF(136)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(140)))
-#define res_x (*(i32 *)(frame_ + FRAME_OFF(144)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(148)))
-#define base_x (*(int *)(frame_ + FRAME_OFF(152)))
-#define terrain2 (*(int *)(frame_ + FRAME_OFF(156)))
-#define i (*(uint *)(frame_ + FRAME_OFF(160)))
-#define dither_mask (*(Sprite *)(frame_ + FRAME_OFF(164)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(224)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(228)))
-#define eh_state (*(uint *)(frame_ + FRAME_OFF(232)))
 void __cdecl gfx_load_terrain_sprites(void)
 
 {
   int loaded;
-  i8 frame_[FRAME_OFF(240)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 grab_rect_d[16];
+  i8 grab_rect_c[16];
+  i8 grab_rect_b[16];
+  i8 grab_rect_a[16];
+  int coast_idx;
+  Sprite blank_sprite;
+  int base_y;
+  int quarter;
+  i32 res2_x;
+  int y2;
+  i32 res_x;
+  int x2;
+  int base_x;
+  int terrain2;
+  uint i;
+  Sprite dither_mask;
+  i32 seh_prev;
+  i8 *seh_handler;
+  uint eh_state;
   
   eh_state = 0xffffffff;
   sprite_init(&dither_mask);
   eh_state = 0;
   sprite_init(&blank_sprite);
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),1);
+  eh_state = (eh_state & 0xffffff00 | (byte)(1));
   __chdir(&scenario_dir_path);
   loaded = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_006266e0),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
   if (loaded == 0) {
@@ -790,25 +789,6 @@ void __cdecl gfx_load_terrain_sprites(void)
   /* inlined unwind funclet 0044997b */ { sprite_destroy((Sprite *)((iptr)&dither_mask)); }
   return;
 }
-#undef grab_rect_d
-#undef grab_rect_c
-#undef grab_rect_b
-#undef grab_rect_a
-#undef coast_idx
-#undef blank_sprite
-#undef base_y
-#undef quarter
-#undef res2_x
-#undef y2
-#undef res_x
-#undef x2
-#undef base_x
-#undef terrain2
-#undef i
-#undef dither_mask
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 0044999c auto */
 void __cdecl sprite_grab_tile_cell(iptr sprite,i32 x,i32 y)
@@ -832,24 +812,23 @@ sprite_grab_from_sheet(iptr sprite,i32 x,i32 y,i32 width,
 
 /* 00449a0e auto */
 #define dlg_client_tile_surface (*(i8 * *)((u8 *)&g.d_00635aa4))
-#define civ (*(int *)(frame_ + FRAME_OFF(4)))
-#define col (*(int *)(frame_ + FRAME_OFF(12)))
-#define frame_count (*(int *)(frame_ + FRAME_OFF(16)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(20)))
-#define k (*(int *)(frame_ + FRAME_OFF(1096)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(1100)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(1104)))
-#define j (*(int *)(frame_ + FRAME_OFF(1108)))
-#define i (*(int *)(frame_ + FRAME_OFF(1112)))
-#define row (*(int *)(frame_ + FRAME_OFF(1116)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1120)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1124)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1128)))
 void __cdecl gfx_load_icon_sprites(void)
 
 {
   int loaded;
-  i8 frame_[FRAME_OFF(1136)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
+  int col;
+  int frame_count;
+  GamePalette palette;
+  int k;
+  int y2;
+  int x2;
+  int j;
+  int i;
+  int row;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -1150,19 +1129,6 @@ void __cdecl gfx_load_icon_sprites(void)
   return;
 }
 #undef dlg_client_tile_surface
-#undef civ
-#undef col
-#undef frame_count
-#undef palette
-#undef k
-#undef y2
-#undef x2
-#undef j
-#undef i
-#undef row
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 0044ab72 auto */
 void __cdecl sprite_grab_icon_cell_keyed(iptr sprite,i32 x,i32 y)
@@ -1199,17 +1165,16 @@ void __cdecl sprite_grab_city_cell(iptr sprite,i32 x,i32 y)
 }
 
 /* 0044ae4c auto */
-#define style2 (*(int *)(frame_ + FRAME_OFF(0)))
-#define civ (*(int *)(frame_ + FRAME_OFF(4)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define flag_x (*(int *)(frame_ + FRAME_OFF(28)))
-#define size_idx (*(int *)(frame_ + FRAME_OFF(32)))
 void __cdecl gfx_load_city_sprites(void)
 
 {
   int cell_x;
   i32 color;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int style2;
+  int civ;
+  int y2;
+  int flag_x;
+  int size_idx;
   
   __chdir(&scenario_dir_path);
   cell_x = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_00626798),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
@@ -1269,22 +1234,16 @@ void __cdecl gfx_load_city_sprites(void)
   surface_release((DibSurface *)&gfx_sheet_surface);
   return;
 }
-#undef style2
-#undef civ
-#undef y2
-#undef flag_x
-#undef size_idx
 
 /* 0044b30e auto */
-#define col (*(int *)(frame_ + FRAME_OFF(0)))
-#define unit_type (*(int *)(frame_ + FRAME_OFF(4)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(12)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl gfx_load_unit_sprites(void)
 
 {
   int loaded;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int col;
+  int unit_type;
+  int y2;
+  int x2;
   
   __chdir(&scenario_dir_path);
   loaded = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_006267bc),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
@@ -1321,20 +1280,15 @@ void __cdecl gfx_load_unit_sprites(void)
   surface_release((DibSurface *)&gfx_sheet_surface);
   return;
 }
-#undef col
-#undef unit_type
-#undef y2
-#undef x2
 
 /* 0044b49e auto */
-#define surf_wnd2 (*(SurfaceWindow *)(frame_ + FRAME_OFF(4)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(280)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(284)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(288)))
 void __cdecl gfx_load_game_sprites(void)
 
 {
-  i8 frame_[FRAME_OFF(296)] __attribute__((aligned(8)));  /* original stack frame */
+  SurfaceWindow surf_wnd2;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   surfwnd_ctor(&surf_wnd2);
@@ -1347,10 +1301,6 @@ void __cdecl gfx_load_game_sprites(void)
   /* inlined unwind funclet 0044b4f6 */ { surfwnd_dtor((SurfaceWindow *)((iptr)&surf_wnd2)); }
   return;
 }
-#undef surf_wnd2
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 00451830 auto */
 i32 __thiscall sprite_get_width(Sprite *this)
@@ -1415,7 +1365,6 @@ void __cdecl grey_palette_atexit_dtor(void)
 
 /* 0046ea3b auto */
 #define grey_remap_handle (*(int *)((u8 *)&g.d_0066c408))
-#define offset (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl gfx_build_grey_remap(void)
 
 {
@@ -1427,7 +1376,7 @@ void __cdecl gfx_build_grey_remap(void)
   iptr full_rgb;
   iptr remap_table;
   UINT UVar4;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr offset;
   
   rgb_handle = mem_handle_alloc(0x2c4);
   if (rgb_handle == 0) {
@@ -1506,7 +1455,6 @@ void __cdecl gfx_build_grey_remap(void)
   return;
 }
 #undef grey_remap_handle
-#undef offset
 
 /* 0046ee1e auto */
 #define grey_remap_handle (*(int *)((u8 *)&g.d_0066c408))
@@ -1522,12 +1470,11 @@ void __cdecl gfx_free_grey_remap(void)
 
 /* 0046ee4e auto */
 #define grey_remap_handle (*(i32 *)((u8 *)&g.d_0066c408))
-#define view (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl gfx_grey_out_windows(void)
 
 {
   int remap_table;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   remap_table = mem_handle_lock(grey_remap_handle);
   if (remap_table != 0) {
@@ -1546,14 +1493,12 @@ void __cdecl gfx_grey_out_windows(void)
   return;
 }
 #undef grey_remap_handle
-#undef view
 
 /* 0046ef3f auto */
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl gfx_repaint_main_windows(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   for (view = 0; view < 8; view++) {
     if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
@@ -1566,15 +1511,13 @@ void __cdecl gfx_repaint_main_windows(void)
   wnd_flush_paint();
   return;
 }
-#undef view
 
 /* 0046efd6 auto */
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define step (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl screen_fade_out(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int step;
   
   unit_blink_active = 0;
   if (gfx_palettized_display != 0) {
@@ -1594,14 +1537,12 @@ void __cdecl screen_fade_out(void)
   return;
 }
 #undef unit_blink_active
-#undef step
 
 /* 0046f06f auto */
-#define step (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl screen_fade_in(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int step;
   
   if (gfx_palettized_display != 0) {
     palette_fade_begin((GamePalette *)&game_palette,10,0xec,10,(iptr)((u8 *)&g.d_0066bfd0));
@@ -1619,15 +1560,13 @@ void __cdecl screen_fade_in(void)
   }
   return;
 }
-#undef step
 
 /* 0046f108 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl palette_set_nocollapse_all(void)
 
 {
   iptr logpal;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   logpal = palette_get_logpalette((GamePalette *)&game_palette);
   if (logpal == 0) {
@@ -1639,7 +1578,6 @@ void __cdecl palette_set_nocollapse_all(void)
   palette_commit_range((GamePalette *)&game_palette,10,0xec);
   return;
 }
-#undef i
 
 /* 0046f440 auto */
 GamePalette * __thiscall palette_get_logpalette(GamePalette *this)
@@ -1649,26 +1587,6 @@ GamePalette * __thiscall palette_get_logpalette(GamePalette *this)
 }
 
 /* 0046f460 auto */
-#define pixel (*(char *)(frame_ + FRAME_OFF(0)))
-#define info_size (*(int *)(frame_ + FRAME_OFF(4)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(12)))
-#define bit_count (*(short *)(frame_ + FRAME_OFF(18)))
-#define compression (*(int *)(frame_ + FRAME_OFF(20)))
-#define colors_used (*(int *)(frame_ + FRAME_OFF(36)))
-#define file (*(FILE * *)(frame_ + FRAME_OFF(44)))
-#define ok (*(int *)(frame_ + FRAME_OFF(48)))
-#define src_index (*(int *)(frame_ + FRAME_OFF(52)))
-#define i (*(int *)(frame_ + FRAME_OFF(56)))
-#define row (*(int *)(frame_ + FRAME_OFF(60)))
-#define col (*(int *)(frame_ + FRAME_OFF(64)))
-#define run_value (*(uint *)(frame_ + FRAME_OFF(68)))
-#define dst (*(char * *)(frame_ + FRAME_OFF(72)))
-#define file_header (*(uint (*)[4])(frame_ + FRAME_OFF(76)))
-#define code (*(uint *)(frame_ + FRAME_OFF(92)))
-#define error_msg (*(char * *)(frame_ + FRAME_OFF(96)))
-#define bmp_palette (*(i8 (*)[2])(frame_ + FRAME_OFF(100)))
-#define bmp_palette_rest (*(i32 (*)[255])(frame_ + FRAME_OFF(102)))
 int __cdecl gfx_load_bmp_640x480(iptr surface,iptr filename,int first_color,int num_colors,iptr palette)
 
 {
@@ -1679,7 +1597,26 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,iptr filename,int first_color,int 
   i32 blue;
   i32 green;
   i32 red;
-  i8 frame_[FRAME_OFF(1128)] __attribute__((aligned(8)));  /* original stack frame */
+  char pixel;
+  int info_size;
+  int width2;
+  int height2;
+  short bit_count;
+  int compression;
+  int colors_used;
+  FILE *file;
+  int ok;
+  int src_index;
+  int i;
+  int row;
+  int col;
+  uint run_value;
+  char *dst;
+  uint file_header[4];
+  uint code;
+  char *error_msg;
+  i8 bmp_palette[2];
+  i32 bmp_palette_rest[255];
   
   error_msg = &gfx_load_bmp_no_error_str;
   ok = 0;
@@ -1814,54 +1751,8 @@ LAB_0046fbb4:
   }
   return ok;
 }
-#undef pixel
-#undef info_size
-#undef width2
-#undef height2
-#undef bit_count
-#undef compression
-#undef colors_used
-#undef file
-#undef ok
-#undef src_index
-#undef i
-#undef row
-#undef col
-#undef run_value
-#undef dst
-#undef file_header
-#undef code
-#undef error_msg
-#undef bmp_palette
-#undef bmp_palette_rest
 
 /* 0046fbf3 auto */
-#define info_size (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define planes (*(i16 *)(frame_ + FRAME_OFF(12)))
-#define bit_count (*(i16 *)(frame_ + FRAME_OFF(14)))
-#define compression (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define image_size (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define x_ppm (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define y_ppm (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define colors_used (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define colors_important (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define file (*(FILE * *)(frame_ + FRAME_OFF(40)))
-#define ok (*(int *)(frame_ + FRAME_OFF(44)))
-#define dst_index (*(int *)(frame_ + FRAME_OFF(48)))
-#define i (*(int *)(frame_ + FRAME_OFF(52)))
-#define row (*(int *)(frame_ + FRAME_OFF(56)))
-#define col (*(int *)(frame_ + FRAME_OFF(60)))
-#define src (*(byte * *)(frame_ + FRAME_OFF(64)))
-#define file_type (*(i16 *)(frame_ + FRAME_OFF(68)))
-#define file_size (*(i32 *)(frame_ + FRAME_OFF(70)))
-#define reserved1 (*(i16 *)(frame_ + FRAME_OFF(74)))
-#define reserved2 (*(i16 *)(frame_ + FRAME_OFF(76)))
-#define bits_offset (*(i32 *)(frame_ + FRAME_OFF(78)))
-#define pixel (*(int *)(frame_ + FRAME_OFF(84)))
-#define error_msg (*(char * *)(frame_ + FRAME_OFF(88)))
-#define bmp_palette (*(i8 (*)[1024])(frame_ + FRAME_OFF(92)))
 int __cdecl gfx_save_bmp_640x480(iptr surface,iptr filename,int first_color,int num_colors,iptr palette)
 
 {
@@ -1871,7 +1762,32 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,iptr filename,int first_color,int 
   i8 *red_ptr;
   i8 *green_ptr;
   i8 *blue_ptr;
-  i8 frame_[FRAME_OFF(1120)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 info_size;
+  int width2;
+  int height2;
+  i16 planes;
+  i16 bit_count;
+  i32 compression;
+  i32 image_size;
+  i32 x_ppm;
+  i32 y_ppm;
+  i32 colors_used;
+  i32 colors_important;
+  FILE *file;
+  int ok;
+  int dst_index;
+  int i;
+  int row;
+  int col;
+  byte *src;
+  i16 file_type;
+  i32 file_size;
+  i16 reserved1;
+  i16 reserved2;
+  i32 bits_offset;
+  int pixel;
+  char *error_msg;
+  i8 bmp_palette[1024];
   
   ok = 0;
   error_msg = &gfx_save_bmp_no_error_str;
@@ -1967,32 +1883,6 @@ LAB_0046ffb7:
   }
   return ok;
 }
-#undef info_size
-#undef width2
-#undef height2
-#undef planes
-#undef bit_count
-#undef compression
-#undef image_size
-#undef x_ppm
-#undef y_ppm
-#undef colors_used
-#undef colors_important
-#undef file
-#undef ok
-#undef dst_index
-#undef i
-#undef row
-#undef col
-#undef src
-#undef file_type
-#undef file_size
-#undef reserved1
-#undef reserved2
-#undef bits_offset
-#undef pixel
-#undef error_msg
-#undef bmp_palette
 
 /* 00471070 auto */
 /* Library Function - Single Match
@@ -2081,13 +1971,12 @@ void __cdecl rect_intersect_into(LPRECT dest,iptr rect_a,iptr rect_b)
 }
 
 /* 0049621d auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
@@ -2097,21 +1986,15 @@ PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *this)
   button_ctor((Control *)this->parley_title);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
   button_ctor((Control *)(this->accept_button_2));
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),3);
+  eh_state = (eh_state & 0xffffff00 | (byte)(3));
   dll_handle_init((DllHandle *)(this->portrait_dll));
   this->vtable = (u32)&PTR_FUN_0061d6c0;
   this->portrait_civ = 0;
   this->show_turn_timer = 0;
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 0049632a auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: virtual __thiscall CCommandLineInfo::~CCommandLineInfo(void)
    
@@ -2120,25 +2003,24 @@ PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *this)
 void __thiscall portrait_dlg_dtor(PortraitDlgDtorView *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  int eh_state;
   
   *(i8 ***)this->window_base = &PTR_FUN_0061d6c0;
-  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 3;
   /* inlined unwind funclet 004963a5 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x1d4)); }
   (*(i8 *)((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 004963b4 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x198)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 004963c3 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x15c)); }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004963d2 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x114)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004963e1 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 00496402 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
@@ -2164,13 +2046,12 @@ i32 __thiscall portrait_dlg_create(PortraitDialog *this)
 /* 004964b3 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define parent_b (*(WindowObjectView * *)(frame_ + FRAME_OFF(4)))
-#define parent_a (*(WindowObjectView * *)(frame_ + FRAME_OFF(8)))
-#define button_rect (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __thiscall portrait_dlg_create_buttons(WindowObjectView *this)
 
 {
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  WindowObjectView *parent_b;
+  WindowObjectView *parent_a;
+  tagRECT button_rect;
   
   SetRect(&button_rect,frame_border_width + 2,frame_border_width * 3 + frame_caption_height + frame_bevel_width + 0x14a,
           (frame_border_width * 8 + 0x276 >> 1) - 2,
@@ -2198,9 +2079,6 @@ void __thiscall portrait_dlg_create_buttons(WindowObjectView *this)
 }
 #undef frame_border_width
 #undef frame_caption_height
-#undef parent_b
-#undef parent_a
-#undef button_rect
 
 /* 004965ff auto */
 void __thiscall portrait_dlg_run(PortraitDialog *this)
@@ -2225,14 +2103,6 @@ void __thiscall portrait_dlg_run(PortraitDialog *this)
 /* 004966c4 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define col (*(int *)(frame_ + FRAME_OFF(4)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define i (*(int *)(frame_ + FRAME_OFF(12)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define b (*(int *)(frame_ + FRAME_OFF(20)))
-#define dst_rect (*(tagRECT *)(frame_ + FRAME_OFF(24)))
-#define src_rect (*(tagRECT *)(frame_ + FRAME_OFF(40)))
-#define title (*(iptr *)(frame_ + FRAME_OFF(56)))
 void __thiscall portrait_dlg_paint(PortraitDialog *this)
 
 {
@@ -2243,7 +2113,14 @@ void __thiscall portrait_dlg_paint(PortraitDialog *this)
   int tmp_c;
   int tmp_d;
   RECT *lprcSrc;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  int col;
+  int y2;
+  int i;
+  int x2;
+  int b;
+  tagRECT dst_rect;
+  tagRECT src_rect;
+  iptr title;
   
   title = label_string(*(i32 *)(label_string_ids + 0x4a8));
   dll_handle_load((DllHandle *)(this->portrait_dll),(iptr)((u8 *)&g.d_0062cbd8));
@@ -2327,32 +2204,23 @@ void __thiscall portrait_dlg_paint(PortraitDialog *this)
 }
 #undef frame_border_width
 #undef frame_caption_height
-#undef col
-#undef y2
-#undef i
-#undef x2
-#undef b
-#undef dst_rect
-#undef src_rect
-#undef title
 
 /* 00496c3c auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define old_rect (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define old_y (*(int *)(frame_ + FRAME_OFF(16)))
-#define new_rect (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define new_y (*(int *)(frame_ + FRAME_OFF(36)))
-#define old_x (*(int *)(frame_ + FRAME_OFF(40)))
-#define old_sel (*(u32 *)(frame_ + FRAME_OFF(44)))
-#define new_x (*(int *)(frame_ + FRAME_OFF(48)))
-#define b (*(int *)(frame_ + FRAME_OFF(52)))
-#define dlg (*(DibSurface * *)(frame_ + FRAME_OFF(56)))
 void __cdecl portrait_dlg_on_click(int x,int y)
 
 {
   int tmp;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT old_rect;
+  int old_y;
+  tagRECT new_rect;
+  int new_y;
+  int old_x;
+  u32 old_sel;
+  int new_x;
+  int b;
+  DibSurface *dlg;
   
   tmp = wnd_get_active_child();
   if (tmp == 0) {
@@ -2389,24 +2257,14 @@ void __cdecl portrait_dlg_on_click(int x,int y)
 }
 #undef frame_border_width
 #undef frame_caption_height
-#undef old_rect
-#undef old_y
-#undef new_rect
-#undef new_y
-#undef old_x
-#undef old_sel
-#undef new_x
-#undef b
-#undef dlg
 
 /* 00496e5d auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
-#define dlg (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl portrait_dlg_on_dblclick(i32 x,int y)
 
 {
   int tmp;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr dlg;
   
   tmp = wnd_get_active_child();
   if (tmp == 0) {
@@ -2423,15 +2281,13 @@ void __cdecl portrait_dlg_on_dblclick(i32 x,int y)
   return;
 }
 #undef frame_border_width
-#undef dlg
 
 /* 00496ecf auto */
-#define dlg (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl portrait_dlg_on_button(int button_id)
 
 {
   iptr child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr dlg;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -2448,7 +2304,6 @@ void __cdecl portrait_dlg_on_button(int button_id)
   wnd_end_modal_loop((ModalMenuWindow *)(dlg + 0x48));
   return;
 }
-#undef dlg
 
 /* 00497c40 auto */
 void __thiscall
@@ -2822,10 +2677,6 @@ void __cdecl rect_inflate(iptr rect,int dx,int dy)
 }
 
 /* 004ccb6a auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define rect (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
-#define rect_top2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define rect_bottom2 (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl gfx_draw_tiled_frame(iptr surface,int x,int y,int width,int height,int border)
 
 {
@@ -2833,38 +2684,35 @@ void __cdecl gfx_draw_tiled_frame(iptr surface,int x,int y,int width,int height,
   int top;
   i32 extent;
   int offset;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  RECT rect;
   
   left = x - border;
   top = y - border;
-  rect_set_xywh((iptr)rect,left,top,width + border * 2,height + border * 2);
-  extent = rect_width((iptr)rect);
+  rect_set_xywh((iptr)((i8 *)&rect.left),left,top,width + border * 2,height + border * 2);
+  extent = rect_width((iptr)((i8 *)&rect.left));
   gfx_tile_fill(surface,(iptr)((u8 *)&g.d_00647f18),left,top + 2,extent,border - 4,0,2);
-  offset = rect_height((iptr)rect);
+  offset = rect_height((iptr)((i8 *)&rect.left));
   offset -= (border - 2);
   gfx_tile_fill(surface,(iptr)((u8 *)&g.d_00647f18),left,offset + top,extent,border - 4,0,offset);
-  extent = rect_height((iptr)rect);
+  extent = rect_height((iptr)((i8 *)&rect.left));
   gfx_tile_fill(surface,(iptr)((u8 *)&g.d_00647f18),left + 2,top,border - 4,extent,2,0);
-  offset = rect_width((iptr)rect);
+  offset = rect_width((iptr)((i8 *)&rect.left));
   offset -= (border - 2);
   gfx_tile_fill(surface,(iptr)((u8 *)&g.d_00647f18),offset + left,top,border - 4,extent,offset,0);
   for (i = 0; i < 2; i++) {
-    gfx_draw_bevel_rect(surface,(iptr)rect,0x25,0x12);
-    rect_deflate((iptr)rect,1,1);
+    gfx_draw_bevel_rect(surface,(iptr)((i8 *)&rect.left),0x25,0x12);
+    rect_deflate((iptr)((i8 *)&rect.left),1,1);
   }
-  rect_deflate((iptr)rect,border - 4,0);
-  rect_top2 = rect_top2 + border - 4;
-  rect_bottom2 -= (border - 4);
+  rect_deflate((iptr)((i8 *)&rect.left),border - 4,0);
+  rect.top = rect.top + border - 4;
+  rect.bottom -= (border - 4);
   for (i = 0; i < 2; i++) {
-    gfx_draw_bevel_rect(surface,(iptr)rect,0x12,0x25);
-    rect_deflate((iptr)rect,1,1);
+    gfx_draw_bevel_rect(surface,(iptr)((i8 *)&rect.left),0x12,0x25);
+    rect_deflate((iptr)((i8 *)&rect.left),1,1);
   }
   return;
 }
-#undef i
-#undef rect
-#undef rect_top2
-#undef rect_bottom2
 
 /* 004d8af0 auto */
 u32 __thiscall font_get_handle(GameFont *this)
@@ -2874,23 +2722,17 @@ u32 __thiscall font_get_handle(GameFont *this)
 }
 
 /* 00548c78 auto */
-#define clip_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define remainder (*(int *)(frame_ + FRAME_OFF(20)))
-#define error_acc (*(int *)(frame_ + FRAME_OFF(24)))
-#define i (*(int *)(frame_ + FRAME_OFF(28)))
-#define orig_slots (*(int *)(frame_ + FRAME_OFF(32)))
 void __cdecl
 sprite_draw_spaced_row(iptr surface,iptr sprite,int x,i32 y,int count,int slots,
             int spacing,i32 item_width,int spread_extra)
 
 {
   int limit;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
-  u32 pargs_[4] = {(u32)(uptr)slots, (u32)(uptr)spacing, (u32)(uptr)item_width, (u32)(uptr)spread_extra};  /* the arguments, contiguous as on the original stack */
-#define slots (*(int *)&pargs_[0])
-#define spacing (*(int *)&pargs_[1])
-#define item_width (*(i32 *)&pargs_[2])
-#define spread_extra (*(int *)&pargs_[3])
+  i8 clip_rect[16];
+  int remainder;
+  int error_acc;
+  int i;
+  int orig_slots;
   
   error_acc = 0;
   orig_slots = slots;
@@ -2917,23 +2759,13 @@ sprite_draw_spaced_row(iptr surface,iptr sprite,int x,i32 y,int count,int slots,
   }
   return;
 }
-#undef clip_rect
-#undef remainder
-#undef error_acc
-#undef i
-#undef orig_slots
-#undef slots
-#undef spacing
-#undef item_width
-#undef spread_extra
 
 /* 0054a874 auto */
-#define bit (*(i32 *)(frame_ + FRAME_OFF(0)))
 uint __cdecl bits_nth_set(int n,uint mask)
 
 {
   bool more;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 bit;
   
   bit = 0;
   do {
@@ -2950,14 +2782,12 @@ uint __cdecl bits_nth_set(int n,uint mask)
   } while (more);
   return bit;
 }
-#undef bit
 
 /* 0054a8d3 auto */
-#define index (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl bits_index_of(uint bit,uint mask)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 index;
   
   index = 0;
   while (bit = bit >> 1, bit != 0) {
@@ -2967,7 +2797,6 @@ int __cdecl bits_index_of(uint bit,uint mask)
   }
   return index;
 }
-#undef index
 
 /* 0055a930 auto */
 void __cdecl
@@ -2980,12 +2809,6 @@ gfx_copy_rect_same_pos(iptr src,iptr dst,i32 x,i32 y,i32 width,
 }
 
 /* 005683c5 auto */
-#define row (*(uint *)(frame_ + FRAME_OFF(4)))
-#define col (*(uint *)(frame_ + FRAME_OFF(12)))
-#define remaining (*(int *)(frame_ + FRAME_OFF(20)))
-#define area2 (*(tagRECT *)(frame_ + FRAME_OFF(32)))
-#define cell_rect (*(tagRECT *)(frame_ + FRAME_OFF(48)))
-#define cells (*(LPVOID *)(frame_ + FRAME_OFF(64)))
 i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
 
 {
@@ -2999,7 +2822,12 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
   int cell_y;
   int cell_right;
   int right_edge;
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  uint row;
+  uint col;
+  int remaining;
+  tagRECT area2;
+  tagRECT cell_rect;
+  LPVOID cells;
   
   if (rect == 0) {
     lo = surface_get_height((DibSurface *)surface);
@@ -3118,19 +2946,12 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
   }
   return result;
 }
-#undef row
-#undef col
-#undef remaining
-#undef area2
-#undef cell_rect
-#undef cells
 
 /* 0056b90b auto */
-#define font_size (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl gfx_select_zoom_font(i32 zoom)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int font_size;
   
   font_size = gfx_zoom_scale(0x20,zoom);
   font_size = font_size / 3;
@@ -3143,53 +2964,10 @@ void __cdecl gfx_select_zoom_font(i32 zoom)
   }
   return;
 }
-#undef font_size
 
 /* 0056baff auto */
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
-#define abs_dx (*(uint *)(frame_ + FRAME_OFF(4)))
-#define clip_fortress (*(i8 (*)[16])(frame_ + FRAME_OFF(8)))
-#define clip_fortify (*(i8 (*)[16])(frame_ + FRAME_OFF(24)))
-#define clip_unit (*(i8 (*)[16])(frame_ + FRAME_OFF(40)))
-#define clip_silhouette (*(i8 (*)[16])(frame_ + FRAME_OFF(56)))
-#define clip_shield (*(i8 (*)[16])(frame_ + FRAME_OFF(72)))
-#define clip_shield_shadow (*(i8 (*)[16])(frame_ + FRAME_OFF(88)))
-#define clip_stack (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
-#define clip_stack_shadow (*(i8 (*)[16])(frame_ + FRAME_OFF(120)))
-#define order (*(uptr *)(frame_ + FRAME_OFF(136)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(140)))
-#define shield_x (*(int *)(frame_ + FRAME_OFF(144)))
-#define stack_dy (*(int *)(frame_ + FRAME_OFF(148)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(152)))
-#define stack_dx (*(uint *)(frame_ + FRAME_OFF(156)))
-#define shield_height (*(iptr *)(frame_ + FRAME_OFF(160)))
-#define silhouette (*(uint *)(frame_ + FRAME_OFF(164)))
-#define dmg (*(uint *)(frame_ + FRAME_OFF(168)))
-#define shield_rect (*(int *)(frame_ + FRAME_OFF(172)))
-#define shield_top (*(int *)(frame_ + FRAME_OFF(176)))
-#define shield_bottom (*(int *)(frame_ + FRAME_OFF(184)))
-#define band_rect (*(i32 *)(frame_ + FRAME_OFF(188)))
-#define band_top (*(i32 *)(frame_ + FRAME_OFF(192)))
-#define band_right (*(int *)(frame_ + FRAME_OFF(196)))
-#define band_bottom (*(i32 *)(frame_ + FRAME_OFF(200)))
-#define sprite_type (*(uint *)(frame_ + FRAME_OFF(204)))
-#define unit_type (*(uint *)(frame_ + FRAME_OFF(208)))
-#define shield_width (*(iptr *)(frame_ + FRAME_OFF(212)))
-#define max_hp (*(int *)(frame_ + FRAME_OFF(216)))
-#define bar_width (*(int *)(frame_ + FRAME_OFF(220)))
-#define color_mid (*(i32 *)(frame_ + FRAME_OFF(224)))
-#define hp_color (*(i32 *)(frame_ + FRAME_OFF(228)))
-#define color_primary (*(i32 *)(frame_ + FRAME_OFF(232)))
-#define shield_y (*(int *)(frame_ + FRAME_OFF(236)))
-#define order_text (*(u8 (*)[80])(frame_ + FRAME_OFF(240)))
-#define hp_width (*(int *)(frame_ + FRAME_OFF(320)))
-#define side (*(int *)(frame_ + FRAME_OFF(324)))
-#define order_char (*(u8 *)(frame_ + FRAME_OFF(328)))
-#define hp_rect (*(i32 *)(frame_ + FRAME_OFF(332)))
-#define hp_top (*(i32 *)(frame_ + FRAME_OFF(336)))
-#define hp_right (*(int *)(frame_ + FRAME_OFF(340)))
-#define hp_bottom (*(i32 *)(frame_ + FRAME_OFF(344)))
 void __cdecl
 gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int no_fortress)
 
@@ -3198,7 +2976,40 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   iptr scaled;
   int text_y;
   i32 value;
-  i8 frame_[FRAME_OFF(352)] __attribute__((aligned(8)));  /* original stack frame */
+  uint abs_dx;
+  i8 clip_fortress[16];
+  i8 clip_fortify[16];
+  i8 clip_unit[16];
+  i8 clip_silhouette[16];
+  i8 clip_shield[16];
+  i8 clip_shield_shadow[16];
+  i8 clip_stack[16];
+  i8 clip_stack_shadow[16];
+  uptr order;
+  iptr civ;
+  int shield_x;
+  int stack_dy;
+  iptr unit2;
+  uint stack_dx;
+  iptr shield_height;
+  uint silhouette;
+  uint dmg;
+  RECT shield_rect;
+  RECT band_rect;
+  uint sprite_type;
+  uint unit_type;
+  iptr shield_width;
+  int max_hp;
+  int bar_width;
+  i32 color_mid;
+  i32 hp_color;
+  i32 color_primary;
+  int shield_y;
+  u8 order_text[80];
+  int hp_width;
+  int side;
+  u8 order_char;
+  RECT hp_rect;
   
   order_char = '\0';
   gfx_set_zoom_scale(zoom);
@@ -3228,7 +3039,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     tmp = gfx_zoom_scale(4,zoom);
     stack_dx = tmp * side;
     stack_dy = 0;
-    rect_set_xywh((iptr)&shield_rect,stack_dx + shield_x,shield_y,shield_width,shield_height);
+    rect_set_xywh((iptr)&shield_rect.left,stack_dx + shield_x,shield_y,shield_width,shield_height);
     if ((int)stack_dx < 1) {
       abs_dx = ~stack_dx + 1;
     }
@@ -3239,44 +3050,44 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
       sprite_draw
                 ((Sprite *)&unit_shield_sprite,(iptr)clip_stack_shadow,surface,
                  side + stack_dx + shield_x,stack_dy + shield_y + 1);
-      rect_offset((iptr)&shield_rect,side,1);
-      surface_replace_color((DibSurface *)surface,(iptr)&shield_rect,0x106,0xf);
-      surface_replace_color((DibSurface *)surface,(iptr)&shield_rect,0x105,0xf);
-      rect_offset((iptr)&shield_rect,-side,0xffffffff);
+      rect_offset((iptr)&shield_rect.left,side,1);
+      surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x106,0xf);
+      surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x105,0xf);
+      rect_offset((iptr)&shield_rect.left,-side,0xffffffff);
     }
     sprite_draw
               ((Sprite *)&unit_shield_sprite,(iptr)clip_stack,surface,stack_dx + shield_x,
                stack_dy + shield_y);
-    surface_replace_color((DibSurface *)surface,(iptr)&shield_rect,0x106,color_mid);
-    surface_replace_color((DibSurface *)surface,(iptr)&shield_rect,0x105,color_mid);
+    surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x106,color_mid);
+    surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x105,color_mid);
   }
-  rect_set_xywh((iptr)&shield_rect,shield_x,shield_y,shield_width,shield_height);
+  rect_set_xywh((iptr)&shield_rect.left,shield_x,shield_y,shield_width,shield_height);
   sprite_draw
             ((Sprite *)&unit_shield_sprite,(iptr)clip_shield_shadow,surface,side + shield_x,shield_y + 1
             );
-  rect_offset((iptr)&shield_rect,side,1);
-  surface_replace_color((DibSurface *)surface,(iptr)&shield_rect,0x106,0x10);
-  surface_replace_color((DibSurface *)surface,(iptr)&shield_rect,0x105,0x10);
-  rect_offset((iptr)&shield_rect,-side,0xffffffff);
+  rect_offset((iptr)&shield_rect.left,side,1);
+  surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x106,0x10);
+  surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x105,0x10);
+  rect_offset((iptr)&shield_rect.left,-side,0xffffffff);
   sprite_draw
             ((Sprite *)&unit_shield_sprite,(iptr)clip_shield,surface,shield_x,shield_y);
-  surface_replace_color((DibSurface *)surface,(iptr)&shield_rect,0x106,color_primary);
-  surface_replace_color((DibSurface *)surface,(iptr)&shield_rect,0x105,color_mid);
+  surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x106,color_primary);
+  surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x105,color_mid);
   scaled = gfx_zoom_scale(2,zoom);
-  rect_set_xywh((iptr)&band_rect,shield_x,shield_y,shield_width,scaled);
-  gfx_fill_rect(surface,(iptr)&band_rect,10);
-  tmp = rect_height((iptr)&band_rect);
-  shield_top += tmp;
+  rect_set_xywh((iptr)&band_rect.left,shield_x,shield_y,shield_width,scaled);
+  gfx_fill_rect(surface,(iptr)&band_rect.left,10);
+  tmp = rect_height((iptr)&band_rect.left);
+  shield_rect.top += tmp;
   scaled = gfx_zoom_scale(3,zoom);
-  rect_set_xywh((iptr)&hp_rect,shield_x,shield_top,shield_width,scaled);
-  tmp = rect_height((iptr)&hp_rect);
-  shield_top += tmp;
+  rect_set_xywh((iptr)&hp_rect.left,shield_x,shield_rect.top,shield_width,scaled);
+  tmp = rect_height((iptr)&hp_rect.left);
+  shield_rect.top += tmp;
   scaled = gfx_zoom_scale(2,zoom);
-  rect_set_xywh((iptr)&band_rect,shield_x,shield_top,shield_width,scaled);
-  gfx_fill_rect(surface,(iptr)&band_rect,10);
-  tmp = rect_height((iptr)&band_rect);
-  shield_top += tmp;
-  bar_width = rect_width((iptr)&hp_rect);
+  rect_set_xywh((iptr)&band_rect.left,shield_x,shield_rect.top,shield_width,scaled);
+  gfx_fill_rect(surface,(iptr)&band_rect.left,10);
+  tmp = rect_height((iptr)&band_rect.left);
+  shield_rect.top += tmp;
+  bar_width = rect_width((iptr)&hp_rect.left);
   max_hp = (int)(char)unit_types[units[unit2].type].hit_points;
   dmg = (uint)units[unit2].damage;
   if (max_hp == 0) {
@@ -3302,14 +3113,14 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     hp_color = 0x6a;
   }
   if (bar_width != hp_width) {
-    gfx_fill_rect(surface,(iptr)&hp_rect,10);
+    gfx_fill_rect(surface,(iptr)&hp_rect.left,10);
   }
   if (hp_width != 0) {
-    band_rect = hp_rect;
-    band_top = hp_top;
-    band_bottom = hp_bottom;
-    band_right = hp_right - (bar_width - hp_width);
-    gfx_fill_rect(surface,(iptr)&band_rect,hp_color);
+    band_rect.left = hp_rect.left;
+    band_rect.top = hp_rect.top;
+    band_rect.bottom = hp_rect.bottom;
+    band_rect.right = hp_rect.right - (bar_width - hp_width);
+    gfx_fill_rect(surface,(iptr)&band_rect.left,hp_color);
   }
   order = (int)units[unit2].orders & 0xf;
   if (units[unit2].orders == 16) {
@@ -3344,13 +3155,13 @@ LAB_0056c269:
     order_text[0] = order_char;
     order_text[1] = 0;
     tmp = gfx_zoom_scale(3,zoom);
-    shield_bottom -= tmp;
+    shield_rect.bottom -= tmp;
     tmp = crt_toupper((int)(char)order_char);
     if (tmp == 0x4d) {
       tmp = gfx_zoom_scale(1,zoom);
-      shield_top -= tmp;
+      shield_rect.top -= tmp;
       tmp = gfx_zoom_scale(1,zoom);
-      shield_bottom -= tmp;
+      shield_rect.bottom -= tmp;
     }
     gfx_select_zoom_font(zoom);
     gfx_set_text_color_index(10);
@@ -3358,11 +3169,11 @@ LAB_0056c269:
       gfx_set_text_color_index(0x1d);
     }
     value = 0;
-    tmp = rect_height((iptr)&shield_rect);
-    text_y = shield_top + tmp / 2;
-    tmp = rect_width((iptr)&shield_rect);
+    tmp = rect_height((iptr)&shield_rect.left);
+    text_y = shield_rect.top + tmp / 2;
+    tmp = rect_width((iptr)&shield_rect.left);
     surface_draw_text
-              ((DibSurface *)surface,(iptr)((u8 *)&g.d_006ac090),(iptr)order_text,shield_rect + tmp / 2,text_y,value);
+              ((DibSurface *)surface,(iptr)((u8 *)&g.d_006ac090),(iptr)order_text,shield_rect.left + tmp / 2,text_y,value);
   }
   silhouette = (uint)(units[unit2].orders == 3);
   if ((((unit_types[units[unit2].type].domain == 1) &&
@@ -3398,48 +3209,6 @@ LAB_0056c5e8:
 }
 #undef moving_units_mode
 #undef unit_blink_active
-#undef abs_dx
-#undef clip_fortress
-#undef clip_fortify
-#undef clip_unit
-#undef clip_silhouette
-#undef clip_shield
-#undef clip_shield_shadow
-#undef clip_stack
-#undef clip_stack_shadow
-#undef order
-#undef civ
-#undef shield_x
-#undef stack_dy
-#undef unit2
-#undef stack_dx
-#undef shield_height
-#undef silhouette
-#undef dmg
-#undef shield_rect
-#undef shield_top
-#undef shield_bottom
-#undef band_rect
-#undef band_top
-#undef band_right
-#undef band_bottom
-#undef sprite_type
-#undef unit_type
-#undef shield_width
-#undef max_hp
-#undef bar_width
-#undef color_mid
-#undef hp_color
-#undef color_primary
-#undef shield_y
-#undef order_text
-#undef hp_width
-#undef side
-#undef order_char
-#undef hp_rect
-#undef hp_top
-#undef hp_right
-#undef hp_bottom
 
 /* 0056c5fc auto */
 void __cdecl
@@ -3481,27 +3250,6 @@ gfx_copy_rect_clipped(iptr src,iptr dst,int src_x,int src_y,int src_origin_x,int
 /* 0056d289 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define clip_disorder (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define clip_flag (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define clip_city (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define style2 (*(int *)(frame_ + FRAME_OFF(56)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(60)))
-#define width2 (*(iptr *)(frame_ + FRAME_OFF(64)))
-#define size_idx (*(int *)(frame_ + FRAME_OFF(68)))
-#define color_mid (*(i32 *)(frame_ + FRAME_OFF(72)))
-#define flag_y (*(int *)(frame_ + FRAME_OFF(76)))
-#define color_primary (*(i32 *)(frame_ + FRAME_OFF(80)))
-#define scale_factor (*(int *)(frame_ + FRAME_OFF(84)))
-#define flag_x (*(int *)(frame_ + FRAME_OFF(88)))
-#define pad (*(int *)(frame_ + FRAME_OFF(92)))
-#define template_text (*(i8 (*)[8])(frame_ + FRAME_OFF(96)))
-#define occupied (*(uint *)(frame_ + FRAME_OFF(104)))
-#define walled (*(int *)(frame_ + FRAME_OFF(108)))
-#define size_text (*(char (*)[8])(frame_ + FRAME_OFF(112)))
-#define label_rect (*(int *)(frame_ + FRAME_OFF(120)))
-#define label_top (*(iptr *)(frame_ + FRAME_OFF(124)))
-#define city_size (*(int *)(frame_ + FRAME_OFF(136)))
 void __cdecl
 gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
 
@@ -3511,13 +3259,32 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
   int tmp;
   size_t text_len;
   int box_dx;
-  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 clip_disorder[16];
+  i8 clip_flag[16];
+  i8 clip_city[16];
+  iptr civ;
+  int style2;
+  int height2;
+  iptr width2;
+  int size_idx;
+  i32 color_mid;
+  int flag_y;
+  i32 color_primary;
+  int scale_factor;
+  int flag_x;
+  int pad;
+  i8 template_text[8];
+  uint occupied;
+  int walled;
+  char size_text[8];
+  struct { int left; iptr top; i32 right; i32 bottom; } label_rect;
+  int city_size;
   
   gfx_set_zoom_scale(zoom);
   width2 = gfx_zoom_scale(0x40,zoom);
   height2 = gfx_zoom_scale(0x30,zoom);
   civ = (iptr)cities[city].owner;
-  rect_set_xywh((iptr)&label_rect,px,py,width2,height2);
+  rect_set_xywh((iptr)&label_rect.left,px,py,width2,height2);
   gfx_set_draw_target(surface);
   color_mid = civ_color_mid(civ);
   color_primary = civ_color_primary(civ);
@@ -3637,7 +3404,7 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
       }
       width2 = width2 + pad + 5;
       height2 += 2;
-      rect_set_xywh((iptr)&label_rect,0,0,width2,height2);
+      rect_set_xywh((iptr)&label_rect.left,0,0,width2,height2);
       tmp = gfx_zoom_scale(*(i32 *)
                                   (&city_label_y_offsets + style2 * 0x20 + walled * 4 + size_idx * 8),
                                  zoom);
@@ -3645,17 +3412,17 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
       box_dx = gfx_zoom_scale(*(i32 *)
                                   (&city_size_box_x_offsets + style2 * 0x20 + walled * 4 + size_idx * 8),
                                  zoom);
-      rect_offset((iptr)&label_rect,px + box_dx,tmp);
-      gfx_draw_rect_frame(surface,(iptr)&label_rect,10);
-      rect_deflate((iptr)&label_rect,1,1);
-      gfx_fill_rect(surface,(iptr)&label_rect,color_primary);
+      rect_offset((iptr)&label_rect.left,px + box_dx,tmp);
+      gfx_draw_rect_frame(surface,(iptr)&label_rect.left,10);
+      rect_deflate((iptr)&label_rect.left,1,1);
+      gfx_fill_rect(surface,(iptr)&label_rect.left,color_primary);
       text_set_colors(10,10,1,0);
-      gfx_draw_text((iptr)size_text,label_rect + (pad >> 1) + 1,label_top);
+      gfx_draw_text((iptr)size_text,label_rect.left + (pad >> 1) + 1,label_rect.top);
     }
     else {
       sprite_draw
                 ((Sprite *)&city_disorder_icon_sprite,(iptr)clip_disorder,surface,px,py);
-      surface_replace_color((DibSurface *)surface,(iptr)&label_rect,0x106,color_primary);
+      surface_replace_color((DibSurface *)surface,(iptr)&label_rect.left,0x106,color_primary);
     }
   }
   gfx_reset_zoom_scale();
@@ -3663,27 +3430,6 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
 }
 #undef human_civ
 #undef scenario_flags
-#undef clip_disorder
-#undef clip_flag
-#undef clip_city
-#undef civ
-#undef style2
-#undef height2
-#undef width2
-#undef size_idx
-#undef color_mid
-#undef flag_y
-#undef color_primary
-#undef scale_factor
-#undef flag_x
-#undef pad
-#undef template_text
-#undef occupied
-#undef walled
-#undef size_text
-#undef label_rect
-#undef label_top
-#undef city_size
 
 /* 0056e1c0 auto */
 int __cdecl gfx_zoom_scale_round(int value,int zoom)
@@ -3983,14 +3729,13 @@ void __cdecl sprite_picker_window_static_dtor(void)
 }
 
 /* 0056fbfd auto */
-#define dy (*(int *)(frame_ + FRAME_OFF(4)))
-#define dx (*(int *)(frame_ + FRAME_OFF(12)))
 void __cdecl sprite_sheet_draw_shield_marks(int unit_type,int x,int y)
 
 {
   int left;
   int top;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int dy;
+  int dx;
   
   left = x - 1;
   top = y - 1;
@@ -4008,23 +3753,8 @@ void __cdecl sprite_sheet_draw_shield_marks(int unit_type,int x,int y)
              4);
   return;
 }
-#undef dy
-#undef dx
 
 /* 0056fce4 auto */
-#define clip_unit (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define clip_backdrop (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define row (*(int *)(frame_ + FRAME_OFF(32)))
-#define col (*(int *)(frame_ + FRAME_OFF(36)))
-#define unit_type (*(int *)(frame_ + FRAME_OFF(40)))
-#define start_x2 (*(int *)(frame_ + FRAME_OFF(44)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(48)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(52)))
-#define saved_dir (*(char (*)[260])(frame_ + FRAME_OFF(1128)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(1388)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1392)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1396)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1400)))
 void __cdecl sprite_sheet_save_units(void)
 
 {
@@ -4033,7 +3763,19 @@ void __cdecl sprite_sheet_save_units(void)
   iptr height;
   i32 width;
   uint fill_color;
-  i8 frame_[FRAME_OFF(1408)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 clip_unit[16];
+  i8 clip_backdrop[16];
+  int row;
+  int col;
+  int unit_type;
+  int start_x2;
+  int y2;
+  GamePalette palette;
+  char saved_dir[260];
+  int x2;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -4095,49 +3837,8 @@ LAB_0056ff8c:
   /* inlined unwind funclet 0056ffb6 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
-#undef clip_unit
-#undef clip_backdrop
-#undef row
-#undef col
-#undef unit_type
-#undef start_x2
-#undef y2
-#undef palette
-#undef saved_dir
-#undef x2
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 0056ffda auto */
-#define clip_airbase_occ (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define clip_airbase_occ_bg (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define clip_airbase (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
-#define clip_airbase_bg (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
-#define clip_fortress (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
-#define clip_fortress_bg (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
-#define clip_fortify (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
-#define clip_fortify_bg (*(i8 (*)[16])(frame_ + FRAME_OFF(116)))
-#define clip_flag_dark (*(i8 (*)[16])(frame_ + FRAME_OFF(132)))
-#define clip_flag (*(i8 (*)[16])(frame_ + FRAME_OFF(148)))
-#define clip_walled (*(i8 (*)[16])(frame_ + FRAME_OFF(164)))
-#define clip_walled_bg (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
-#define clip_city (*(i8 (*)[16])(frame_ + FRAME_OFF(196)))
-#define clip_city_bg (*(i8 (*)[16])(frame_ + FRAME_OFF(212)))
-#define style2 (*(int *)(frame_ + FRAME_OFF(228)))
-#define civ (*(int *)(frame_ + FRAME_OFF(232)))
-#define cell_x (*(int *)(frame_ + FRAME_OFF(236)))
-#define flag_dark_y (*(i32 *)(frame_ + FRAME_OFF(240)))
-#define flag_y (*(i32 *)(frame_ + FRAME_OFF(244)))
-#define walled_x (*(int *)(frame_ + FRAME_OFF(248)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(252)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(256)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(260)))
-#define saved_dir (*(char (*)[260])(frame_ + FRAME_OFF(1336)))
-#define size_idx (*(int *)(frame_ + FRAME_OFF(1596)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1600)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1604)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1608)))
 void __cdecl sprite_sheet_save_cities(void)
 
 {
@@ -4146,7 +3847,34 @@ void __cdecl sprite_sheet_save_cities(void)
   iptr height;
   i32 width;
   uint fill_color;
-  i8 frame_[FRAME_OFF(1616)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 clip_airbase_occ[16];
+  i8 clip_airbase_occ_bg[16];
+  i8 clip_airbase[16];
+  i8 clip_airbase_bg[16];
+  i8 clip_fortress[16];
+  i8 clip_fortress_bg[16];
+  i8 clip_fortify[16];
+  i8 clip_fortify_bg[16];
+  i8 clip_flag_dark[16];
+  i8 clip_flag[16];
+  i8 clip_walled[16];
+  i8 clip_walled_bg[16];
+  i8 clip_city[16];
+  i8 clip_city_bg[16];
+  int style2;
+  int civ;
+  int cell_x;
+  i32 flag_dark_y;
+  i32 flag_y;
+  int walled_x;
+  int y2;
+  int x2;
+  GamePalette palette;
+  char saved_dir[260];
+  int size_idx;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -4269,65 +3997,8 @@ LAB_00570732:
   /* inlined unwind funclet 0057075c */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
-#undef clip_airbase_occ
-#undef clip_airbase_occ_bg
-#undef clip_airbase
-#undef clip_airbase_bg
-#undef clip_fortress
-#undef clip_fortress_bg
-#undef clip_fortify
-#undef clip_fortify_bg
-#undef clip_flag_dark
-#undef clip_flag
-#undef clip_walled
-#undef clip_walled_bg
-#undef clip_city
-#undef clip_city_bg
-#undef style2
-#undef civ
-#undef cell_x
-#undef flag_dark_y
-#undef flag_y
-#undef walled_x
-#undef y2
-#undef x2
-#undef palette
-#undef saved_dir
-#undef size_idx
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 00570780 auto */
-#define rail_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define rail_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define road_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define road_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
-#define hut_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
-#define hut_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
-#define shield_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(96)))
-#define shield_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
-#define pollution_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
-#define pollution_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(144)))
-#define impr_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(160)))
-#define impr_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(176)))
-#define res2_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(192)))
-#define res2_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(208)))
-#define res_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(224)))
-#define res_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(240)))
-#define base_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(256)))
-#define base_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(272)))
-#define res2_x (*(i32 *)(frame_ + FRAME_OFF(288)))
-#define res_x (*(i32 *)(frame_ + FRAME_OFF(292)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(296)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(300)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(304)))
-#define saved_cwd (*(char (*)[260])(frame_ + FRAME_OFF(1380)))
-#define terrain2 (*(int *)(frame_ + FRAME_OFF(1640)))
-#define i (*(int *)(frame_ + FRAME_OFF(1644)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(1648)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(1652)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(1656)))
 void __cdecl sprite_sheet_save_terrain1(void)
 
 {
@@ -4336,7 +4007,35 @@ void __cdecl sprite_sheet_save_terrain1(void)
   iptr height;
   i32 width;
   uint fill_color;
-  i8 frame_[FRAME_OFF(1664)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rail_rect[16];
+  i8 rail_bg_rect[16];
+  i8 road_rect[16];
+  i8 road_bg_rect[16];
+  i8 hut_rect[16];
+  i8 hut_bg_rect[16];
+  i8 shield_rect[16];
+  i8 shield_bg_rect[16];
+  i8 pollution_rect[16];
+  i8 pollution_bg_rect[16];
+  i8 impr_rect[16];
+  i8 impr_bg_rect[16];
+  i8 res2_rect[16];
+  i8 res2_bg_rect[16];
+  i8 res_rect[16];
+  i8 res_bg_rect[16];
+  i8 base_rect[16];
+  i8 base_bg_rect[16];
+  i32 res2_x;
+  i32 res_x;
+  int y2;
+  int x2;
+  GamePalette palette;
+  char saved_cwd[260];
+  int terrain2;
+  int i;
+  i32 seh_handler;
+  i8 *seh_next;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   palette_init(&palette);
@@ -4478,62 +4177,8 @@ LAB_00570f78:
   /* inlined unwind funclet 00570fa2 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
-#undef rail_rect
-#undef rail_bg_rect
-#undef road_rect
-#undef road_bg_rect
-#undef hut_rect
-#undef hut_bg_rect
-#undef shield_rect
-#undef shield_bg_rect
-#undef pollution_rect
-#undef pollution_bg_rect
-#undef impr_rect
-#undef impr_bg_rect
-#undef res2_rect
-#undef res2_bg_rect
-#undef res_rect
-#undef res_bg_rect
-#undef base_rect
-#undef base_bg_rect
-#undef res2_x
-#undef res_x
-#undef y2
-#undef x2
-#undef palette
-#undef saved_cwd
-#undef terrain2
-#undef i
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 00570fc6 auto */
-#define coast_w_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define coast_s_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define coast_e_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define coast_n_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
-#define mouth_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
-#define mouth_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
-#define hill_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(96)))
-#define hill_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
-#define mountain_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
-#define mountain_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(144)))
-#define forest_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(160)))
-#define forest_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(176)))
-#define river_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(192)))
-#define river_bg_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(208)))
-#define coast_idx (*(int *)(frame_ + FRAME_OFF(224)))
-#define base_y (*(int *)(frame_ + FRAME_OFF(228)))
-#define cell_y (*(int *)(frame_ + FRAME_OFF(232)))
-#define cell_x (*(int *)(frame_ + FRAME_OFF(236)))
-#define base_x (*(int *)(frame_ + FRAME_OFF(240)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(244)))
-#define saved_cwd (*(char (*)[260])(frame_ + FRAME_OFF(1320)))
-#define i (*(uint *)(frame_ + FRAME_OFF(1580)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(1584)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(1588)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(1592)))
 void __cdecl sprite_sheet_save_terrain2(void)
 
 {
@@ -4542,7 +4187,31 @@ void __cdecl sprite_sheet_save_terrain2(void)
   iptr height;
   i32 width;
   uint fill_color;
-  i8 frame_[FRAME_OFF(1600)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 coast_w_rect[16];
+  i8 coast_s_rect[16];
+  i8 coast_e_rect[16];
+  i8 coast_n_rect[16];
+  i8 mouth_rect[16];
+  i8 mouth_bg_rect[16];
+  i8 hill_rect[16];
+  i8 hill_bg_rect[16];
+  i8 mountain_rect[16];
+  i8 mountain_bg_rect[16];
+  i8 forest_rect[16];
+  i8 forest_bg_rect[16];
+  i8 river_rect[16];
+  i8 river_bg_rect[16];
+  int coast_idx;
+  int base_y;
+  int cell_y;
+  int cell_x;
+  int base_x;
+  GamePalette palette;
+  char saved_cwd[260];
+  uint i;
+  i32 seh_handler;
+  i8 *seh_next;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   palette_init(&palette);
@@ -4683,43 +4352,8 @@ LAB_005718c2:
   /* inlined unwind funclet 005718ec */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
-#undef coast_w_rect
-#undef coast_s_rect
-#undef coast_e_rect
-#undef coast_n_rect
-#undef mouth_rect
-#undef mouth_bg_rect
-#undef hill_rect
-#undef hill_bg_rect
-#undef mountain_rect
-#undef mountain_bg_rect
-#undef forest_rect
-#undef forest_bg_rect
-#undef river_rect
-#undef river_bg_rect
-#undef coast_idx
-#undef base_y
-#undef cell_y
-#undef cell_x
-#undef base_x
-#undef palette
-#undef saved_cwd
-#undef i
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 00571910 auto */
-#define icon_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(20)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(1096)))
-#define saved_cwd (*(char (*)[260])(frame_ + FRAME_OFF(1100)))
-#define category2 (*(int *)(frame_ + FRAME_OFF(1360)))
-#define row (*(int *)(frame_ + FRAME_OFF(1364)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(1368)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(1372)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(1376)))
 void __cdecl sprite_sheet_save_tech_icons(void)
 
 {
@@ -4728,7 +4362,16 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   iptr height;
   i32 width;
   uint fill_color;
-  i8 frame_[FRAME_OFF(1384)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 icon_rect[16];
+  int y2;
+  GamePalette palette;
+  int x2;
+  char saved_cwd[260];
+  int category2;
+  int row;
+  i32 seh_handler;
+  i8 *seh_next;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   palette_init(&palette);
@@ -4783,31 +4426,8 @@ LAB_00571b80:
   /* inlined unwind funclet 00571baa */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
-#undef icon_rect
-#undef y2
-#undef palette
-#undef x2
-#undef saved_cwd
-#undef category2
-#undef row
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 00571bce auto */
-#define explosion_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define cursor_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define wonder_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define improvement_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
-#define column (*(int *)(frame_ + FRAME_OFF(64)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(68)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(72)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(1148)))
-#define saved_cwd (*(char (*)[260])(frame_ + FRAME_OFF(1152)))
-#define i (*(int *)(frame_ + FRAME_OFF(1412)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(1416)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(1420)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(1424)))
 void __cdecl sprite_sheet_save_building_icons(void)
 
 {
@@ -4816,7 +4436,19 @@ void __cdecl sprite_sheet_save_building_icons(void)
   iptr height;
   i32 width;
   uint fill_color;
-  i8 frame_[FRAME_OFF(1432)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 explosion_rect[16];
+  i8 cursor_rect[16];
+  i8 wonder_rect[16];
+  i8 improvement_rect[16];
+  int column;
+  int y2;
+  GamePalette palette;
+  int x2;
+  char saved_cwd[260];
+  int i;
+  i32 seh_handler;
+  i8 *seh_next;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   palette_init(&palette);
@@ -4911,19 +4543,6 @@ LAB_0057203b:
   /* inlined unwind funclet 00572065 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
-#undef explosion_rect
-#undef cursor_rect
-#undef wonder_rect
-#undef improvement_rect
-#undef column
-#undef y2
-#undef palette
-#undef x2
-#undef saved_cwd
-#undef i
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 00572089 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
@@ -4935,8 +4554,6 @@ LAB_0057203b:
 #define sprite_editor_title_font_i32 (*(i32 *)((u8 *)&g.d_006ac47c))
 #define sprite_editor_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006ac480))
 #define sprite_editor_text_font_i32 (*(i32 *)((u8 *)&g.d_006ac484))
-#define parent_hwnd (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define wnd_style (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Removing unreachable block (ram,0x0057228e) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -4945,7 +4562,8 @@ sprite_editor_create_window(int title,uint style_flags,int x,int y,int width,int
             int caption_height,int border_width)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_hwnd;
+  uint wnd_style;
   
   if (title == 0) {
     crt_strcpy(&sprite_editor_title,&sprite_editor_default_title);
@@ -5014,8 +4632,6 @@ sprite_editor_create_window(int title,uint style_flags,int x,int y,int width,int
 #undef sprite_editor_title_font_i32
 #undef sprite_editor_title_small_font_i32
 #undef sprite_editor_text_font_i32
-#undef parent_hwnd
-#undef wnd_style
 
 /* 005722ab auto */
 #define sprite_editor_flag_x (*(i32 *)((u8 *)&g.d_006ac0f4))
@@ -5024,11 +4640,10 @@ sprite_editor_create_window(int title,uint style_flags,int x,int y,int width,int
 #define sprite_editor_ok_callback (*(code * *)((u8 *)&g.d_006ac888))
 #define sprite_editor_running (*(i32 *)((u8 *)&g.d_006ac88c))
 #define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl sprite_editor_ok_clicked(void)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   rect_set_xywh((iptr)rect,0,0,sprite_editor_width,sprite_editor_height);
   surface_replace_color_clip((DibSurface *)&sprite_editor_surface,0x109,0x107);
@@ -5049,7 +4664,6 @@ void __cdecl sprite_editor_ok_clicked(void)
 #undef sprite_editor_ok_callback
 #undef sprite_editor_running
 #undef sprite_editor_width
-#undef rect
 
 /* 00572364 auto */
 #define sprite_editor_running (*(i32 *)((u8 *)&g.d_006ac88c))
@@ -5069,11 +4683,10 @@ void __cdecl sprite_editor_cancel_clicked(void)
 #define sprite_editor_undo_flag_x (*(i32 *)((u8 *)&g.d_006ac0a4))
 #define sprite_editor_undo_flag_y (*(i32 *)((u8 *)&g.d_006ac0a0))
 #define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl sprite_editor_rebuild_sprite(void)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   sprite_free((Sprite *)&sprite_editor_result_sprite);
   rect_set_xywh((iptr)rect,0,0,sprite_editor_width,sprite_editor_height);
@@ -5088,20 +4701,18 @@ void __cdecl sprite_editor_rebuild_sprite(void)
 #undef sprite_editor_undo_flag_x
 #undef sprite_editor_undo_flag_y
 #undef sprite_editor_width
-#undef rect
 
 /* 005723ee auto */
 #define sprite_editor_key_color (*(int *)((u8 *)&g.d_006ac874))
 #define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
-#define prev_right_color (*(int *)(frame_ + FRAME_OFF(4)))
-#define prev_left_color (*(int *)(frame_ + FRAME_OFF(8)))
-#define left_color (*(int *)(frame_ + FRAME_OFF(12)))
-#define right_color (*(int *)(frame_ + FRAME_OFF(16)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl sprite_editor_draw_swatches(void)
 
 {
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int prev_right_color;
+  int prev_left_color;
+  int left_color;
+  int right_color;
+  i8 rect[16];
   
   if (sprite_editor_right_color == 0) {
     right_color = sprite_editor_key_color;
@@ -5143,21 +4754,15 @@ void __cdecl sprite_editor_draw_swatches(void)
 }
 #undef sprite_editor_key_color
 #undef sprite_sheet_mode
-#undef prev_right_color
-#undef prev_left_color
-#undef left_color
-#undef right_color
-#undef rect
 
 /* 0057261a auto */
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl sprite_editor_draw_palette_cell(iptr surface,int origin_x,int origin_y,int color)
 
 {
   int col;
   int row;
   uint sign;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   if ((9 < color) && (color < 0xca)) {
     sign = (int)(color - 10U) >> 0x1f;
@@ -5178,7 +4783,6 @@ void __cdecl sprite_editor_draw_palette_cell(iptr surface,int origin_x,int origi
   }
   return;
 }
-#undef rect
 
 /* 00572740 auto */
 int __cdecl sprite_editor_tool_hit_test(int x,int y)
@@ -5202,12 +4806,11 @@ int __cdecl sprite_editor_tool_hit_test(int x,int y)
 /* 005727d8 auto */
 #define sprite_editor_key_color (*(i32 *)((u8 *)&g.d_006ac874))
 #define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
-#define tile_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define unit_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl sprite_editor_draw_backdrop(void)
 
 {
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 tile_rect[16];
+  i8 unit_rect[16];
   
   surface_fill((DibSurface *)&sprite_editor_surface,sprite_editor_key_color);
   switch(sprite_sheet_mode) {
@@ -5230,29 +4833,26 @@ void __cdecl sprite_editor_draw_backdrop(void)
 }
 #undef sprite_editor_key_color
 #undef sprite_sheet_mode
-#undef tile_rect
-#undef unit_rect
 
 /* 00572887 auto */
 #define sprite_editor_brush_size (*(int *)((u8 *)&g.d_006ac124))
 #define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
 #define sprite_editor_key_color (*(int *)((u8 *)&g.d_006ac874))
 #define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
-#define color8 (*(int *)(frame_ + FRAME_OFF(4)))
-#define color7 (*(int *)(frame_ + FRAME_OFF(8)))
-#define color6 (*(int *)(frame_ + FRAME_OFF(12)))
-#define color5 (*(int *)(frame_ + FRAME_OFF(16)))
-#define color4 (*(int *)(frame_ + FRAME_OFF(20)))
-#define color3 (*(int *)(frame_ + FRAME_OFF(24)))
-#define color2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define color1 (*(int *)(frame_ + FRAME_OFF(32)))
-#define screen_color (*(int *)(frame_ + FRAME_OFF(36)))
-#define pixel_color (*(int *)(frame_ + FRAME_OFF(40)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(44)))
 i8 * __cdecl sprite_editor_plot_pixel(int px,int py)
 
 {
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  int color8;
+  int color7;
+  int color6;
+  int color5;
+  int color4;
+  int color3;
+  int color2;
+  int color1;
+  int screen_color;
+  int pixel_color;
+  i8 saved_clip[16];
   
   if (sprite_editor_brush_size == 0) {
     if (sprite_editor_paint_color == 0) {
@@ -5364,30 +4964,18 @@ i8 * __cdecl sprite_editor_plot_pixel(int px,int py)
 #undef sprite_editor_height
 #undef sprite_editor_key_color
 #undef sprite_editor_width
-#undef color8
-#undef color7
-#undef color6
-#undef color5
-#undef color4
-#undef color3
-#undef color2
-#undef color1
-#undef screen_color
-#undef pixel_color
-#undef saved_clip
 
 /* 00572da0 auto */
 #define sprite_editor_flag_x (*(int *)((u8 *)&g.d_006ac0f4))
 #define sprite_editor_flag_y (*(int *)((u8 *)&g.d_006ac0f0))
 #define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
 #define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define flag_x (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl sprite_editor_draw_flag_marker(void)
 
 {
   int flag_y;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 saved_clip[16];
+  int flag_x;
   
   wnd_repaint((SurfaceWindow *)&sprite_editor_window);
   flag_y = sprite_editor_flag_y;
@@ -5422,8 +5010,6 @@ void __cdecl sprite_editor_draw_flag_marker(void)
 #undef sprite_editor_flag_y
 #undef sprite_editor_height
 #undef sprite_editor_width
-#undef saved_clip
-#undef flag_x
 
 /* 00572fff auto */
 #define sprite_editor_brush_size (*(i32 *)((u8 *)&g.d_006ac124))
@@ -5438,17 +5024,6 @@ void __cdecl sprite_editor_draw_flag_marker(void)
 #define sprite_editor_undo_flag_y (*(iptr *)((u8 *)&g.d_006ac0a0))
 #define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
 #define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
-#define draw_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define old_color (*(int *)(frame_ + FRAME_OFF(16)))
-#define saved_flag_y (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define saved_flag_x (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define dirty_rect (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define new_color (*(int *)(frame_ + FRAME_OFF(32)))
-#define grab_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
-#define temp_sprite (*(Sprite *)(frame_ + FRAME_OFF(52)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(112)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(116)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(120)))
 void __cdecl sprite_editor_on_mouse_down(int x,int y)
 
 {
@@ -5459,7 +5034,17 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
   i32 tool_index;
   int temp_x;
   int temp_y;
-  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_rect[16];
+  int old_color;
+  iptr saved_flag_y;
+  iptr saved_flag_x;
+  iptr dirty_rect;
+  int new_color;
+  i8 grab_rect[16];
+  Sprite temp_sprite;
+  i32 seh_handler;
+  i8 *seh_next;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   sprite_init(&temp_sprite);
@@ -5771,17 +5356,6 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
 #undef sprite_editor_undo_flag_y
 #undef sprite_editor_width
 #undef sprite_sheet_mode
-#undef draw_rect
-#undef old_color
-#undef saved_flag_y
-#undef saved_flag_x
-#undef dirty_rect
-#undef new_color
-#undef grab_rect
-#undef temp_sprite
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 00573afd auto */
 #define sprite_editor_painting (*(i32 *)((u8 *)&g.d_006ac8a4))
@@ -5800,10 +5374,6 @@ void __cdecl sprite_editor_on_mouse_up(void)
 #define sprite_editor_painting (*(int *)((u8 *)&g.d_006ac8a4))
 #define sprite_editor_tool (*(int *)((u8 *)&g.d_006ac120))
 #define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
-#define prev_x (*(int *)(frame_ + FRAME_OFF(0)))
-#define fixed_y (*(int *)(frame_ + FRAME_OFF(4)))
-#define fixed_x (*(int *)(frame_ + FRAME_OFF(8)))
-#define prev_y (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl sprite_editor_on_mouse_move(int x,int y)
 
 {
@@ -5814,7 +5384,10 @@ void __cdecl sprite_editor_on_mouse_move(int x,int y)
   int dy;
   int cur_x;
   int cur_y;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int prev_x;
+  int fixed_y;
+  int fixed_x;
+  int prev_y;
   
   x -= sprite_editor_origin_x;
   y -= sprite_editor_origin_y;
@@ -5901,10 +5474,6 @@ void __cdecl sprite_editor_on_mouse_move(int x,int y)
 #undef sprite_editor_painting
 #undef sprite_editor_tool
 #undef sprite_editor_width
-#undef prev_x
-#undef fixed_y
-#undef fixed_x
-#undef prev_y
 
 /* 00573e59 auto */
 #define sprite_editor_brush_size (*(i32 *)((u8 *)&g.d_006ac124))
@@ -5923,17 +5492,6 @@ void __cdecl sprite_editor_on_mouse_move(int x,int y)
 #define sprite_editor_width (*(i32 *)((u8 *)&g.d_006ac878))
 #define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
 #define sprite_editor_client_height_i32 (*(i32 *)((u8 *)&g.d_006ac2e0))
-#define draw_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define button_y2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define cancel_button (*(Control *)(frame_ + FRAME_OFF(20)))
-#define button_height (*(int *)(frame_ + FRAME_OFF(80)))
-#define button_x (*(int *)(frame_ + FRAME_OFF(84)))
-#define button_width2 (*(int *)(frame_ + FRAME_OFF(88)))
-#define button_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(92)))
-#define ok_button (*(Control *)(frame_ + FRAME_OFF(108)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(168)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(172)))
-#define seh_state (*(uint *)(frame_ + FRAME_OFF(176)))
 /* WARNING: Removing unreachable block (ram,0x0057405e) */
 /* WARNING: Removing unreachable block (ram,0x005740e7) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -5944,13 +5502,23 @@ void __cdecl sprite_editor_run(iptr sprite,i32 title,i32 sheet_mode,iptr ok_call
   byte key_color;
   int line_height;
   iptr label;
-  i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_rect[16];
+  int button_y2;
+  Control cancel_button;
+  int button_height;
+  int button_x;
+  int button_width2;
+  i8 button_rect[16];
+  Control ok_button;
+  i32 seh_handler;
+  i8 *seh_next;
+  uint seh_state;
   
   seh_state = 0xffffffff;
   button_ctor(&ok_button);
   seh_state = 0;
   button_ctor(&cancel_button);
-  seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),1);
+  seh_state = (seh_state & 0xffffff00 | (byte)(1));
   sprite_sheet_mode = sheet_mode;
   sprite_editor_target_sprite = (Sprite *)sprite;
   sprite_editor_width = sprite_width((Sprite *)sprite);
@@ -6027,37 +5595,25 @@ void __cdecl sprite_editor_run(iptr sprite,i32 title,i32 sheet_mode,iptr ok_call
 #undef sprite_editor_width
 #undef sprite_sheet_mode
 #undef sprite_editor_client_height_i32
-#undef draw_rect
-#undef button_y2
-#undef cancel_button
-#undef button_height
-#undef button_x
-#undef button_width2
-#undef button_rect
-#undef ok_button
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 00574239 auto */
 #define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
 #define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
 #define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
-#define tool_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define row (*(int *)(frame_ + FRAME_OFF(32)))
-#define col (*(int *)(frame_ + FRAME_OFF(36)))
-#define i (*(int *)(frame_ + FRAME_OFF(40)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(44)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(48)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(52)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(56)))
-#define grab_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(60)))
 void __cdecl sprite_editor_redraw(void)
 
 {
   byte key_color;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 tool_rect[16];
+  i8 sprite_rect[16];
+  int row;
+  int col;
+  int i;
+  int y2;
+  int x2;
+  int height2;
+  int width2;
+  i8 grab_rect[16];
   
   frame_wnd_draw_caption((FrameWindow *)&sprite_editor_window);
   gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac46c),0x1d);
@@ -6109,31 +5665,20 @@ void __cdecl sprite_editor_redraw(void)
 #undef sprite_editor_height
 #undef sprite_editor_key_color
 #undef sprite_editor_width
-#undef tool_rect
-#undef sprite_rect
-#undef row
-#undef col
-#undef i
-#undef y2
-#undef x2
-#undef height2
-#undef width2
-#undef grab_rect
 
 /* 00574522 auto */
 #define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
-#define draw_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define button_height (*(int *)(frame_ + FRAME_OFF(20)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define hscroll_height (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall sprite_picker_draw(FrameWindow *this)
 
 {
   byte key_color;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_rect[16];
+  int button_height;
+  int y2;
+  int x2;
+  int height2;
+  int width2;
+  int hscroll_height;
   
   frame_wnd_draw_caption(this);
   gfx_fill_rect((iptr)this,(iptr)&this->client_rect,0x1d);
@@ -6162,13 +5707,6 @@ void __thiscall sprite_picker_draw(FrameWindow *this)
   return;
 }
 #undef sprite_editor_key_color
-#undef draw_rect
-#undef button_height
-#undef y2
-#undef x2
-#undef height2
-#undef width2
-#undef hscroll_height
 
 /* 00574686 auto */
 #define sprite_picker_dialog (*(FrameWindow * *)((u8 *)&g.d_006ac11c))
@@ -6182,12 +5720,11 @@ void __cdecl sprite_picker_redraw_cb(void)
 
 /* 005746a1 auto */
 #define sprite_sheet_mode (*(uint *)((u8 *)&g.d_006ac924))
-#define cell_count (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl sprite_editor_cell_rect(uint cell,iptr out_x,iptr out_y,iptr out_width,iptr out_height)
 
 {
   uint sign;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 cell_count;
   
   *(i32 *)out_height = 0;
   *(i32 *)out_width = *(i32 *)out_height;
@@ -6327,17 +5864,15 @@ i32 __cdecl sprite_editor_cell_rect(uint cell,iptr out_x,iptr out_y,iptr out_wid
   return cell_count;
 }
 #undef sprite_sheet_mode
-#undef cell_count
 
 /* 00574c47 auto */
-#define y2 (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define x2 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define height2 (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define width2 (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __cdecl sprite_picker_select_cell(i32 cell)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 y2;
+  i32 x2;
+  i32 height2;
+  i32 width2;
   
   sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2);
   sprite_free((Sprite *)&sprite_picker_sprite);
@@ -6346,10 +5881,6 @@ void __cdecl sprite_picker_select_cell(i32 cell)
   sprite_picker_redraw_cb();
   return;
 }
-#undef y2
-#undef x2
-#undef height2
-#undef width2
 
 /* 00574ca6 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
@@ -6361,7 +5892,6 @@ void __cdecl sprite_picker_select_cell(i32 cell)
 #define sprite_picker_title_font_i32 (*(i32 *)((u8 *)&g.d_006ac754))
 #define sprite_picker_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006ac758))
 #define sprite_picker_text_font_i32 (*(i32 *)((u8 *)&g.d_006ac75c))
-#define wnd_style (*(uint *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Removing unreachable block (ram,0x00574e18) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -6370,7 +5900,7 @@ sprite_picker_create_window(int title,uint style_flags,int x,int y,int width,int
             int caption_height,int border_width)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uint wnd_style;
   
   if (title == 0) {
     crt_strcpy(&sprite_picker_title,&sprite_picker_default_title);
@@ -6432,21 +5962,19 @@ sprite_picker_create_window(int title,uint style_flags,int x,int y,int width,int
 #undef sprite_picker_title_font_i32
 #undef sprite_picker_title_small_font_i32
 #undef sprite_picker_text_font_i32
-#undef wnd_style
 
 /* 00574e98 auto */
 #define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
 #define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
 #define sprite_picker_running (*(i32 *)((u8 *)&g.d_006ac890))
-#define draw_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define height2 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define width2 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define grab_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(28)))
 void __cdecl sprite_picker_ok_clicked(void)
 
 {
   byte key_color;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_rect[16];
+  iptr height2;
+  iptr width2;
+  i8 grab_rect[16];
   
   sprite_replace_color((Sprite *)&sprite_picker_sprite,9,7);
   width2 = sprite_width((Sprite *)&sprite_picker_sprite);
@@ -6465,10 +5993,6 @@ void __cdecl sprite_picker_ok_clicked(void)
 #undef sprite_editor_key_color
 #undef sprite_picker_dialog
 #undef sprite_picker_running
-#undef draw_rect
-#undef height2
-#undef width2
-#undef grab_rect
 
 /* 00574f50 auto */
 #define sprite_editor_height (*(i32 *)((u8 *)&g.d_006ac87c))
@@ -6476,24 +6000,23 @@ void __cdecl sprite_picker_ok_clicked(void)
 #define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
 #define sprite_picker_running (*(i32 *)((u8 *)&g.d_006ac890))
 #define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
-#define draw_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define sheet_half (*(int *)(frame_ + FRAME_OFF(20)))
-#define size_col (*(int *)(frame_ + FRAME_OFF(24)))
-#define era_row (*(int *)(frame_ + FRAME_OFF(28)))
-#define cell (*(uint *)(frame_ + FRAME_OFF(32)))
-#define y2 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define x2 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define height2 (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define width2 (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define half_cell (*(uint *)(frame_ + FRAME_OFF(52)))
-#define answer (*(int *)(frame_ + FRAME_OFF(56)))
 /* WARNING: Removing unreachable block (ram,0x00574f76) */
 
 void __cdecl sprite_picker_import_all_clicked(void)
 
 {
   uint sign;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_rect[16];
+  int sheet_half;
+  int size_col;
+  int era_row;
+  uint cell;
+  i32 y2;
+  i32 x2;
+  i32 height2;
+  i32 width2;
+  uint half_cell;
+  int answer;
   
   dlg_push_parent_window((iptr)((u8 *)&g.d_006ac4d0));
   answer = popup_text_flags((iptr)((u8 *)&g.d_006359dc),(iptr)((u8 *)&g.d_006341f8),1);
@@ -6710,17 +6233,6 @@ void __cdecl sprite_picker_import_all_clicked(void)
 #undef sprite_picker_dialog
 #undef sprite_picker_running
 #undef sprite_sheet_mode
-#undef draw_rect
-#undef sheet_half
-#undef size_col
-#undef era_row
-#undef cell
-#undef y2
-#undef x2
-#undef height2
-#undef width2
-#undef half_cell
-#undef answer
 
 /* 00575d89 auto */
 void __cdecl
@@ -6750,15 +6262,6 @@ void __cdecl sprite_picker_cancel_clicked(void)
 #define sprite_picker_dialog (*(ViewWindow * *)((u8 *)&g.d_006ac11c))
 #define sprite_picker_running (*(int *)((u8 *)&g.d_006ac890))
 #define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
-#define cancel_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define import_parent (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define ok_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define scroll_parent (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define dummy_out (*(i8 (*)[4])(frame_ + FRAME_OFF(20)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define scroll_height (*(iptr *)(frame_ + FRAME_OFF(48)))
 void __thiscall sprite_picker_run(ViewWindow *this)
 
 {
@@ -6773,7 +6276,15 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   i32 resize_border;
   i32 caption_height;
   i32 border_width;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *cancel_parent;
+  u8 *import_parent;
+  u8 *ok_parent;
+  u8 *scroll_parent;
+  i8 dummy_out[4];
+  int y2;
+  int x2;
+  i8 rect[16];
+  iptr scroll_height;
   
   sprite_picker_dialog = this;
   this->rates_civ = 0xf0;
@@ -6868,15 +6379,6 @@ void __thiscall sprite_picker_run(ViewWindow *this)
 #undef sprite_picker_dialog
 #undef sprite_picker_running
 #undef sprite_sheet_mode
-#undef cancel_parent
-#undef import_parent
-#undef ok_parent
-#undef scroll_parent
-#undef dummy_out
-#undef y2
-#undef x2
-#undef rect
-#undef scroll_height
 
 /* 0057624d auto */
 void __cdecl sprite_picker_show(void)
@@ -6888,17 +6390,6 @@ void __cdecl sprite_picker_show(void)
 
 /* 00576267 auto */
 #define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
-#define prompt (*(char (*)[132])(frame_ + FRAME_OFF(0)))
-#define retry (*(int *)(frame_ + FRAME_OFF(132)))
-#define file_path (*(char (*)[260])(frame_ + FRAME_OFF(136)))
-#define sheet_name (*(char * *)(frame_ + FRAME_OFF(396)))
-#define filter (*(char (*)[260])(frame_ + FRAME_OFF(400)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(660)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(1736)))
-#define file_name (*(char * *)(frame_ + FRAME_OFF(2492)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(2496)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(2500)))
-#define seh_state (*(uint *)(frame_ + FRAME_OFF(2504)))
 /* WARNING: Removing unreachable block (ram,0x0057656d) */
 /* WARNING: Removing unreachable block (ram,0x005763fb) */
 /* WARNING: Removing unreachable block (ram,0x00576601) */
@@ -6919,13 +6410,23 @@ void __cdecl sprite_editor_import_sheet(void)
   LPCSTR pCVar10;
   i32 arg_c;
   UINT UVar12;
-  i8 frame_[FRAME_OFF(2512)] __attribute__((aligned(8)));  /* original stack frame */
+  char prompt[132];
+  int retry;
+  char file_path[260];
+  char *sheet_name;
+  char filter[260];
+  GamePalette palette;
+  Dialog dialog2;
+  char *file_name;
+  i32 seh_handler;
+  i8 *seh_next;
+  uint seh_state;
   
   seh_state = 0xffffffff;
   palette_init(&palette);
   seh_state = 0;
   dialog_ctor(&dialog2,0x4000);
-  seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),1);
+  seh_state = (seh_state & 0xffffff00 | (byte)(1));
   switch(sprite_sheet_mode) {
   case 0:
   case 4:
@@ -7053,22 +6554,8 @@ LAB_00576783:
   return;
 }
 #undef sprite_sheet_mode
-#undef prompt
-#undef retry
-#undef file_path
-#undef sheet_name
-#undef filter
-#undef palette
-#undef dialog2
-#undef file_name
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 00578390 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: virtual __thiscall CBitmapButton::~CBitmapButton(void)
    
@@ -7077,33 +6564,31 @@ LAB_00576783:
 void __thiscall sprite_picker_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_next;
+  int seh_state;
   
-  (*(i32 *)((char *)&seh_state + 1)) = 0;
+  seh_state = seh_state & 0xff;
   (*(i8 *)((char *)&seh_state + 0)) = 3;
   /* inlined unwind funclet 00578402 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x3b0)); }
   (*(i8 *)((char *)&seh_state + 0)) = 2;
   /* inlined unwind funclet 00578411 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x374)); }
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   /* inlined unwind funclet 00578420 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x338)); }
-  seh_state = (uint)(*(i32 *)((char *)&seh_state + 1)) << 8;
+  seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 0057842f */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x2f8)); }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 0057843e */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 005784a0 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_next;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
@@ -7113,14 +6598,11 @@ ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *this)
   button_ctor((Control *)&this->sci_label_y);
   (*(i8 *)((char *)&seh_state + 0)) = 2;
   button_ctor((Control *)(this->import_all_button));
-  seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),3);
+  seh_state = (seh_state & 0xffffff00 | (byte)(3));
   button_ctor((Control *)&this->fill_rect_top);
   this->vtable = (u32)&PTR_FUN_0061d6fc;
   return this;
 }
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 005a9780 auto */
 #define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
@@ -7144,32 +6626,28 @@ gfx_draw_line_color(iptr surface,i32 x1,i32 y1,i32 x2,
 }
 
 /* 005a97cc auto */
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
 gfx_draw_hline(iptr surface,i32 x1,int x2,int y,i32 color)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   rect_set((iptr)rect,x1,y,x2 + 1,y + 1);
   gfx_fill_rect(surface,(iptr)rect,color);
   return;
 }
-#undef rect
 
 /* 005a9858 auto */
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
 gfx_draw_vline(iptr surface,int x,i32 y1,int y2,i32 color)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   rect_set((iptr)rect,x,y1,x + 1,y2 + 1);
   gfx_fill_rect(surface,(iptr)rect,color);
   return;
 }
-#undef rect
 
 /* 005a98e4 auto */
 void __cdecl
@@ -7220,45 +6698,34 @@ void __cdecl gfx_fill_surface(iptr surface,i32 color)
 }
 
 /* 005a9abf auto */
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
 gfx_fill_rect_xywh(iptr surface,i32 x,i32 y,iptr width,iptr height,
             i32 color)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   rect_set_xywh((iptr)rect,x,y,width,height);
   surface_fill_rect((DibSurface *)surface,(iptr)rect,color);
   return;
 }
-#undef rect
 
 /* 005a9afe auto */
-#define dest_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define src_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl
 gfx_copy_rect_xywh(iptr src,iptr dest,i32 src_x,i32 src_y,i32 dest_x,
             i32 dest_y,iptr width,iptr height)
 
 {
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 dest_rect[16];
+  i8 src_rect[16];
   
   rect_set_xywh((iptr)src_rect,src_x,src_y,width,height);
   rect_set_xywh((iptr)dest_rect,dest_x,dest_y,width,height);
   surface_blit((DibSurface *)src,dest,(iptr)src_rect,(iptr)dest_rect);
   return;
 }
-#undef dest_rect
-#undef src_rect
 
 /* 005a9b5d auto */
-#define dist_y (*(int *)(frame_ + FRAME_OFF(0)))
-#define dist_x (*(int *)(frame_ + FRAME_OFF(4)))
-#define cur_x (*(int *)(frame_ + FRAME_OFF(8)))
-#define src_y (*(int *)(frame_ + FRAME_OFF(12)))
-#define src_x (*(int *)(frame_ + FRAME_OFF(16)))
-#define cur_y (*(int *)(frame_ + FRAME_OFF(48)))
 int __cdecl
 gfx_tile_fill(iptr dest,iptr tile,int x,int y,int width,int height,int origin_x,
             int origin_y)
@@ -7270,7 +6737,12 @@ gfx_tile_fill(iptr dest,iptr tile,int x,int y,int width,int height,int origin_x,
   int bottom;
   int end_x;
   int span;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  int dist_y;
+  int dist_x;
+  int cur_x;
+  int src_y;
+  int src_x;
+  int cur_y;
   
   tile_width = surface_width((DibSurface *)tile);
   tile_height = surface_height((DibSurface *)tile);
@@ -7313,20 +6785,13 @@ gfx_tile_fill(iptr dest,iptr tile,int x,int y,int width,int height,int origin_x,
   }
   return cur_y;
 }
-#undef dist_y
-#undef dist_x
-#undef cur_x
-#undef src_y
-#undef src_x
-#undef cur_y
 
 /* 005ae006 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define count (*(i32 *)(frame_ + FRAME_OFF(8)))
 int __cdecl bits_count8(uint bits)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  i32 count;
   
   count = 0;
   for (i = 0; i < 8; i++) {
@@ -7337,8 +6802,6 @@ int __cdecl bits_count8(uint bits)
   }
   return count;
 }
-#undef i
-#undef count
 
 /* 005ae3bf auto */
 void __cdecl bit_index_split(iptr bit_index,iptr out_byte,iptr out_mask)
@@ -7406,17 +6869,15 @@ DibSurface * __thiscall surface_ctor(DibSurface *this)
 }
 
 /* 005bd65c auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall surface_create(DibSurface *this,int width,int height)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   SetRect(&rect,0,0,width,height);
   surface_alloc_dib8(this,(iptr)&rect);
   return;
 }
-#undef rect
 
 /* 005bd696 auto */
 i32 __thiscall surface_alloc_dib8(DibSurface *this,iptr rect)
@@ -7508,20 +6969,6 @@ DibSurface * __thiscall surface_dtor(DibSurface *this)
 #undef draw_current_surface
 
 /* 005bf071 auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define mem (*(int *)(frame_ + FRAME_OFF(20)))
-#define buffer (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define file (*(FileObject *)(frame_ + FRAME_OFF(32)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(184)))
-#define lzw_min_code (*(byte *)(frame_ + FRAME_OFF(188)))
-#define data (*(char * *)(frame_ + FRAME_OFF(192)))
-#define cursor (*(char * *)(frame_ + FRAME_OFF(196)))
-#define image_desc (*(char * *)(frame_ + FRAME_OFF(200)))
-#define image_data (*(char * *)(frame_ + FRAME_OFF(204)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(208)))
-#define seh_next (*(i8 * *)(frame_ + FRAME_OFF(212)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(216)))
 i32 __thiscall
 surface_load_gif_file(DibSurface *this,iptr filename,uint first_color,uint color_count,iptr palette)
 
@@ -7529,7 +6976,20 @@ surface_load_gif_file(DibSurface *this,iptr filename,uint first_color,uint color
   int result;
   i32 ret;
   uint table_size;
-  i8 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
+  int mem;
+  iptr buffer;
+  int height2;
+  FileObject file;
+  int width2;
+  byte lzw_min_code;
+  char *data;
+  char *cursor;
+  char *image_desc;
+  char *image_data;
+  i32 seh_handler;
+  i8 *seh_next;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   file_obj_init(&file);
@@ -7656,35 +7116,8 @@ surface_load_gif_file(DibSurface *this,iptr filename,uint first_color,uint color
   }
   return ret;
 }
-#undef rect
-#undef mem
-#undef buffer
-#undef height2
-#undef file
-#undef width2
-#undef lzw_min_code
-#undef data
-#undef cursor
-#undef image_desc
-#undef image_data
-#undef seh_handler
-#undef seh_next
-#undef seh_state
 
 /* 005bf5e1 auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define res (*(int *)(frame_ + FRAME_OFF(16)))
-#define res_type (*(i8 *)(frame_ + FRAME_OFF(20)))
-#define res_type_1 (*(i8 *)(frame_ + FRAME_OFF(21)))
-#define res_type_2 (*(i8 *)(frame_ + FRAME_OFF(22)))
-#define res_type_3 (*(i8 *)(frame_ + FRAME_OFF(23)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define lzw_min_code (*(byte *)(frame_ + FRAME_OFF(32)))
-#define data (*(char * *)(frame_ + FRAME_OFF(36)))
-#define cursor (*(char * *)(frame_ + FRAME_OFF(40)))
-#define image_desc (*(char * *)(frame_ + FRAME_OFF(44)))
-#define image_data (*(char * *)(frame_ + FRAME_OFF(48)))
 i32 __thiscall
 surface_load_gif_resource(DibSurface *this,iptr res_id,uint first_color,uint color_count,iptr palette)
 
@@ -7692,13 +7125,22 @@ surface_load_gif_resource(DibSurface *this,iptr res_id,uint first_color,uint col
   i32 ret;
   int result;
   uint table_size;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
+  int res;
+  char res_type[4];
+  int height2;
+  int width2;
+  byte lzw_min_code;
+  char *data;
+  char *cursor;
+  char *image_desc;
+  char *image_data;
   
-  res_type = 0x47;
-  res_type_1 = 0x49;
-  res_type_2 = 0x46;
-  res_type_3 = 0x53;
-  res = res_load((iptr)&res_type,res_id);
+  res_type[0] = 0x47;
+  res_type[1] = 0x49;
+  res_type[2] = 0x46;
+  res_type[3] = 0x53;
+  res = res_load((iptr)res_type,res_id);
   if (res == 0) {
     dbg_logf((iptr)((u8 *)&g.d_00636db0),res_id);
     err_report((ErrorContext *)&err_report_ctx,3,(iptr)((u8 *)&g.d_00636dec),(iptr)((u8 *)&g.d_00636dd4),0x3f4);
@@ -7771,19 +7213,6 @@ surface_load_gif_resource(DibSurface *this,iptr res_id,uint first_color,uint col
   }
   return ret;
 }
-#undef rect
-#undef res
-#undef res_type
-#undef res_type_1
-#undef res_type_2
-#undef res_type_3
-#undef height2
-#undef width2
-#undef lzw_min_code
-#undef data
-#undef cursor
-#undef image_desc
-#undef image_data
 
 /* 005c0034 auto */
 void __thiscall surface_reset_clip(DibSurface *this)
@@ -7850,14 +7279,13 @@ i32 __thiscall surface_resize(DibSurface *this,iptr rect)
 }
 
 /* 005c01c1 auto */
-#define row (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall surface_lock(DibSurface *this)
 
 {
   uptr new_bits;
   void *offsets;
   int top_down;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int row;
   
   if (this->bits == 0) {
     new_bits = dib_get_bits(this->dib);
@@ -7884,7 +7312,6 @@ void __thiscall surface_lock(DibSurface *this)
   }
   return;
 }
-#undef row
 
 /* 005c02e0 auto */
 void __thiscall surface_unlock(DibSurface *this)
@@ -7901,10 +7328,6 @@ void __thiscall surface_unlock(DibSurface *this)
 }
 
 /* 005c0333 auto */
-#define clipped (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define was_locked (*(i32 *)(frame_ + FRAME_OFF(24)))
 void __thiscall surface_fill_rect(DibSurface *this,iptr rect,i32 color)
 
 {
@@ -7913,7 +7336,10 @@ void __thiscall surface_fill_rect(DibSurface *this,iptr rect,i32 color)
   iptr dib;
   int top_down;
   int pitch;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT clipped;
+  int height2;
+  int width2;
+  i32 was_locked;
   
   was_locked = 1;
   locked = surface_is_locked(this);
@@ -7934,10 +7360,6 @@ void __thiscall surface_fill_rect(DibSurface *this,iptr rect,i32 color)
   }
   return;
 }
-#undef clipped
-#undef height2
-#undef width2
-#undef was_locked
 
 /* 005c041f auto */
 void __thiscall surface_fill(DibSurface *this,i32 color)
@@ -7957,12 +7379,6 @@ surface_replace_color_clip(DibSurface *this,i32 from_color,i32 to_color)
 }
 
 /* 005c0479 auto */
-#define pixel (*(char * *)(frame_ + FRAME_OFF(0)))
-#define clipped (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define row (*(int *)(frame_ + FRAME_OFF(20)))
-#define col (*(int *)(frame_ + FRAME_OFF(24)))
-#define width2 (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define was_locked (*(int *)(frame_ + FRAME_OFF(32)))
 void __thiscall
 surface_replace_color(DibSurface *this,iptr rect,i32 from_color,i32 to_color)
 
@@ -7971,7 +7387,12 @@ surface_replace_color(DibSurface *this,iptr rect,i32 from_color,i32 to_color)
   iptr height;
   iptr row_width;
   int next_row;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  char *pixel;
+  tagRECT clipped;
+  int row;
+  int col;
+  iptr width2;
+  int was_locked;
   
   was_locked = 1;
   locked = surface_is_locked(this);
@@ -8006,19 +7427,8 @@ surface_replace_color(DibSurface *this,iptr rect,i32 from_color,i32 to_color)
   }
   return;
 }
-#undef pixel
-#undef clipped
-#undef row
-#undef col
-#undef width2
-#undef was_locked
 
 /* 005c0593 auto */
-#define src_clip (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define dest_clip (*(tagRECT *)(frame_ + FRAME_OFF(16)))
-#define src_was_locked (*(int *)(frame_ + FRAME_OFF(32)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
 surface_blit(DibSurface *this,iptr src,iptr dest_rect,iptr src_rect)
 
@@ -8035,7 +7445,11 @@ surface_blit(DibSurface *this,iptr src,iptr dest_rect,iptr src_rect)
   i32 src_bits;
   i32 dest_bits;
   bool was_unlocked;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT src_clip;
+  tagRECT dest_clip;
+  int src_was_locked;
+  int height2;
+  int width2;
   
   src_was_locked = 1;
   was_unlocked = this->bits == 0;
@@ -8086,11 +7500,6 @@ surface_blit(DibSurface *this,iptr src,iptr dest_rect,iptr src_rect)
   }
   return;
 }
-#undef src_clip
-#undef dest_clip
-#undef src_was_locked
-#undef height2
-#undef width2
 
 /* 005c0979 auto */
 void __thiscall
@@ -8204,7 +7613,6 @@ void __thiscall surface_apply_palette(DibSurface *this,PaletteVersionView *palet
 
 /* 005c0d69 auto */
 #define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
-#define saved_color (*(i32 *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 text,int x,int y,uint flags)
 
@@ -8212,7 +7620,7 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 text,int x,int y,uin
   i8 old_color;
   int font_height;
   int shadow_offset;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 saved_color;
   
   if (draw_current_font == (i8 *)0x0) {
     dbg_log((iptr)((u8 *)&g.d_006372a0));
@@ -8223,7 +7631,7 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 text,int x,int y,uin
       font_height += (font_height >> 0x1f & 7U);
       shadow_offset = font_height >> 3;
       old_color = gfx_set_text_color_index(CONCAT31((int3)(font_height >> 0xb),gfx_black_color_index));
-      saved_color = CONCAT31((*(i32 *)((char *)&saved_color + 1)),old_color);
+      saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
       dib_draw_text_at(this->dib,*(i32 *)draw_current_font,text,shadow_offset + x,
                    shadow_offset + y,(iptr)(this->clip_rect_2),flags);
       gfx_set_text_color_index(saved_color);
@@ -8234,11 +7642,9 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 text,int x,int y,uin
   return;
 }
 #undef gfx_black_color_index
-#undef saved_color
 
 /* 005c0f57 auto */
 #define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
-#define saved_color (*(i32 *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 surface_draw_text
           (DibSurface *this,iptr font,iptr text,iptr x,int y,uint flags)
@@ -8247,7 +7653,7 @@ surface_draw_text
   i8 old_color;
   int font_height;
   int shadow_offset;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 saved_color;
   
   if (this->dib != 0) {
     if ((flags & 0x10) != 0) {
@@ -8255,7 +7661,7 @@ surface_draw_text
       font_height += (font_height >> 0x1f & 7U);
       shadow_offset = font_height >> 3;
       old_color = gfx_set_text_color_index(CONCAT31((int3)(font_height >> 0xb),gfx_black_color_index));
-      saved_color = CONCAT31((*(i32 *)((char *)&saved_color + 1)),old_color);
+      saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
       dib_draw_text_at(this->dib,*(i32 *)font,text,x + shadow_offset,y + shadow_offset,
                    (iptr)&this->clip_left,flags);
       gfx_set_text_color_index(saved_color);
@@ -8266,12 +7672,9 @@ surface_draw_text
   return;
 }
 #undef gfx_black_color_index
-#undef saved_color
 
 /* 005c1020 auto */
 #define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
-#define saved_color (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define shadow_rect (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __thiscall
 surface_draw_text_in_rect(DibSurface *this,iptr font,iptr text,iptr rect,uint flags)
 
@@ -8279,7 +7682,8 @@ surface_draw_text_in_rect(DibSurface *this,iptr font,iptr text,iptr rect,uint fl
   i8 old_color;
   int shadow_offset;
   BOOL BVar3;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 saved_color;
+  tagRECT shadow_rect;
   
   if (this->dib != 0) {
     if ((flags & 0x10) != 0) {
@@ -8291,7 +7695,7 @@ surface_draw_text_in_rect(DibSurface *this,iptr font,iptr text,iptr rect,uint fl
       shadow_rect.bottom = *(LONG *)(rect + 0xc);
       BVar3 = OffsetRect(&shadow_rect,shadow_offset,shadow_offset);
       old_color = gfx_set_text_color_index(CONCAT31((int3)((uint)BVar3 >> 8),gfx_black_color_index));
-      saved_color = CONCAT31((*(i32 *)((char *)&saved_color + 1)),old_color);
+      saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
       dib_draw_text_rect(this->dib,*(i32 *)font,text,(iptr)&shadow_rect,flags);
       gfx_set_text_color_index(saved_color);
     }
@@ -8300,8 +7704,6 @@ surface_draw_text_in_rect(DibSurface *this,iptr font,iptr text,iptr rect,uint fl
   return;
 }
 #undef gfx_black_color_index
-#undef saved_color
-#undef shadow_rect
 
 /* 005c1167 auto */
 void __thiscall
@@ -8438,14 +7840,13 @@ i8 __thiscall surface_in_clip(DibSurface *this,int x,int y)
 }
 
 /* 005c1a62 auto */
-#define pixel (*(byte * *)(frame_ + FRAME_OFF(0)))
-#define col (*(int *)(frame_ + FRAME_OFF(4)))
-#define row (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall
 surface_remap_colors(DibSurface *this,iptr remap_table,iptr base_index,i32 unused)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  byte *pixel;
+  int col;
+  int row;
   
   if (this->bits != 0) {
     pixel = (byte *)this->bits;
@@ -8461,9 +7862,6 @@ surface_remap_colors(DibSurface *this,iptr remap_table,iptr base_index,i32 unuse
   }
   return;
 }
-#undef pixel
-#undef col
-#undef row
 
 /* 005c1b47 auto */
 i32 __thiscall surface_alloc_dib16(DibSurface *this,iptr rect)
@@ -8706,10 +8104,6 @@ GamePalette * __thiscall palette_destroy(GamePalette *this)
 }
 
 /* 005c65f9 auto */
-#define type_c (*(i8 *)(frame_ + FRAME_OFF(0)))
-#define type_t (*(i8 *)(frame_ + FRAME_OFF(1)))
-#define type_a (*(i8 *)(frame_ + FRAME_OFF(2)))
-#define type_b (*(i8 *)(frame_ + FRAME_OFF(3)))
 void __thiscall palette_load_ctab_res(GamePalette *this,i32 res_id)
 
 {
@@ -8717,13 +8111,13 @@ void __thiscall palette_load_ctab_res(GamePalette *this,i32 res_id)
   i32 *data;
   i32 first;
   i32 count;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  char res_type[4];
   
-  type_c = 0x43;
-  type_t = 0x54;
-  type_a = 0x41;
-  type_b = 0x42;
-  res = res_load((iptr)&type_c,res_id);
+  res_type[0] = 0x43;
+  res_type[1] = 0x54;
+  res_type[2] = 0x41;
+  res_type[3] = 0x42;
+  res = res_load((iptr)res_type,res_id);
   if (res == 0) {
     dbg_logf_noret((iptr)((u8 *)&g.d_00637bec),res_id);
   }
@@ -8737,10 +8131,6 @@ void __thiscall palette_load_ctab_res(GamePalette *this,i32 res_id)
   }
   return;
 }
-#undef type_c
-#undef type_t
-#undef type_a
-#undef type_b
 
 /* 005c6a42 auto */
 void __thiscall palette_new_version(GamePalette *this)
@@ -8789,13 +8179,12 @@ palette_set_entry
 }
 
 /* 005c6da8 auto */
-#define index (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 palette_set_rgb(GamePalette *this,int first,int count,iptr rgb)
 
 {
   i32 hi_bits;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 index;
   
   if (0x100 < count + first) {
     count = 0x100 - first;
@@ -8810,7 +8199,6 @@ palette_set_rgb(GamePalette *this,int first,int count,iptr rgb)
   palette_commit_range(this,first,count);
   return;
 }
-#undef index
 
 /* 005c71f3 auto */
 void __thiscall
@@ -8860,10 +8248,6 @@ void __thiscall palette_fade_end(GamePalette *this)
 }
 
 /* 005c738e auto */
-#define offset (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define green (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define red (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define blue (*(i32 *)(frame_ + FRAME_OFF(12)))
 void __thiscall palette_fade_step(GamePalette *this,int step)
 
 {
@@ -8871,7 +8255,10 @@ void __thiscall palette_fade_step(GamePalette *this,int step)
   char src_weight;
   iptr src_buf;
   iptr dst_buf;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr offset;
+  i32 green;
+  i32 red;
+  i32 blue;
   
   if ((step < 0) || ((int)this->fade_steps < step)) {
     dbg_logf((iptr)((u8 *)&g.d_00637c54),step);
@@ -8882,21 +8269,21 @@ void __thiscall palette_fade_step(GamePalette *this,int step)
     src_buf = mem_handle_lock(this->fade_src_rgb);
     dst_buf = mem_handle_lock(this->fade_dst_rgb);
     for (offset = 0; offset < (int)(this->fade_count * 3); offset += 3) {
-      red = CONCAT31((*(i32 *)((char *)&red + 1)),
+      red = (red & 0xffffff00 | (byte)(
                           (char)((longlong)(ulonglong)*(byte *)(offset + dst_buf) /
                                 (longlong)(int)this->fade_steps) * dst_weight +
                           (char)((longlong)(ulonglong)*(byte *)(offset + src_buf) /
-                                (longlong)(int)this->fade_steps) * src_weight);
-      green = CONCAT31((*(i32 *)((char *)&green + 1)),
+                                (longlong)(int)this->fade_steps) * src_weight));
+      green = (green & 0xffffff00 | (byte)(
                           (char)((longlong)(ulonglong)*(byte *)(offset + 1 + src_buf) /
                                 (longlong)(int)this->fade_steps) * src_weight +
                           (char)((longlong)(ulonglong)*(byte *)(offset + 1 + dst_buf) /
-                                (longlong)(int)this->fade_steps) * dst_weight);
-      blue = CONCAT31((*(i32 *)((char *)&blue + 1)),
+                                (longlong)(int)this->fade_steps) * dst_weight));
+      blue = (blue & 0xffffff00 | (byte)(
                          (char)((longlong)(ulonglong)*(byte *)(offset + 2 + dst_buf) /
                                (longlong)(int)this->fade_steps) * dst_weight +
                          (char)((longlong)(ulonglong)*(byte *)(offset + 2 + src_buf) /
-                               (longlong)(int)this->fade_steps) * src_weight);
+                               (longlong)(int)this->fade_steps) * src_weight));
       logpal_set_entry((iptr)this,this->fade_first + offset / 3,red,green,blue);
     }
     palette_animate((iptr)this,this->hpalette,this->fade_first,this->fade_count);
@@ -8905,20 +8292,15 @@ void __thiscall palette_fade_step(GamePalette *this,int step)
   }
   return;
 }
-#undef offset
-#undef green
-#undef red
-#undef blue
 
 /* 005c8200 auto */
-#define logfont (*(LOGFONTA *)(frame_ + FRAME_OFF(4)))
-#define handle (*(i32 *)(frame_ + FRAME_OFF(64)))
-#define hfont2 (*(HFONT *)(frame_ + FRAME_OFF(68)))
-#define data (*(i32 * *)(frame_ + FRAME_OFF(72)))
 i32 __cdecl font_handle_create(i32 face,int size,i32 style)
 
 {
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  LOGFONTA logfont;
+  i32 handle;
+  HFONT hfont2;
+  i32 *data;
   
   logfont.lfHeight = -size;
   logfont.lfWidth = 0;
@@ -8965,10 +8347,6 @@ i32 __cdecl font_handle_create(i32 face,int size,i32 style)
   }
   return handle;
 }
-#undef logfont
-#undef handle
-#undef hfont2
-#undef data
 
 /* 005c841d auto */
 i32 __cdecl font_handle_destroy(i32 handle)
@@ -8992,15 +8370,14 @@ i32 __cdecl font_handle_destroy(i32 handle)
 }
 
 /* 005c847f auto */
-#define metrics (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(0)))
-#define data (*(i32 * *)(frame_ + FRAME_OFF(56)))
 LONG __cdecl font_measure_height(i32 handle)
 
 {
   int size;
   HDC hdc;
   HGDIOBJ h;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  tagTEXTMETRICA metrics;
+  i32 *data;
   
   size = mem_handle_size(handle);
   if (size == 0) {
@@ -9017,18 +8394,15 @@ LONG __cdecl font_measure_height(i32 handle)
   }
   return metrics.tmHeight;
 }
-#undef metrics
-#undef data
 
 /* 005c8514 auto */
-#define metrics (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(0)))
-#define data (*(i32 * *)(frame_ + FRAME_OFF(56)))
 int __cdecl font_handle_line_spacing(i32 handle)
 
 {
   HDC hdc;
   HGDIOBJ h;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  tagTEXTMETRICA metrics;
+  i32 *data;
   
   data = (i32 *)mem_handle_lock(handle);
   hdc = GetDC((HWND)0x0);
@@ -9039,12 +8413,8 @@ int __cdecl font_handle_line_spacing(i32 handle)
   mem_handle_unlock(handle);
   return metrics.tmExternalLeading + metrics.tmHeight;
 }
-#undef metrics
-#undef data
 
 /* 005c858e auto */
-#define extent (*(tagSIZE *)(frame_ + FRAME_OFF(0)))
-#define data (*(i32 * *)(frame_ + FRAME_OFF(8)))
 LONG __cdecl font_measure_width(i32 handle,iptr text)
 
 {
@@ -9052,7 +8422,8 @@ LONG __cdecl font_measure_width(i32 handle,iptr text)
   HGDIOBJ h;
   size_t c;
   tagSIZE *lpsz;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  tagSIZE extent;
+  i32 *data;
   
   data = (i32 *)mem_handle_lock(handle);
   hdc = GetDC((HWND)0x0);
@@ -9065,8 +8436,6 @@ LONG __cdecl font_measure_width(i32 handle,iptr text)
   mem_handle_unlock(handle);
   return extent.cx;
 }
-#undef extent
-#undef data
 
 /* 005c8791: written by hand in src/game/fixups.c */
 
@@ -9095,11 +8464,10 @@ u32 __thiscall palette_get_hpalette(PaletteHandleView *this)
 }
 
 /* 005cd6e0 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl gfx_scale_init(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; i < 0x10; i++) {
     *(i32 *)(&gfx_scale_cache_last_used + i * 0x100c) = 0;
@@ -9110,21 +8478,19 @@ void __cdecl gfx_scale_init(void)
   gfx_set_scale_tables(1,1,1,1);
   return;
 }
-#undef i
 
 /* 005cd775 auto */
 #define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
 #define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
-#define index (*(int *)(frame_ + FRAME_OFF(4)))
-#define oldest_tick (*(int *)(frame_ + FRAME_OFF(8)))
-#define accum (*(int *)(frame_ + FRAME_OFF(12)))
-#define value (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl gfx_set_scale_ratio(int num,int den)
 
 {
   i32 now;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
+  int index;
+  int oldest_tick;
+  int accum;
+  int value;
   
   if (num < 2) {
     num = 1;
@@ -9188,11 +8554,6 @@ LAB_005cda01:
 }
 #undef gfx_scale_den
 #undef gfx_scale_num
-#undef slot
-#undef index
-#undef oldest_tick
-#undef accum
-#undef value
 
 /* 005cda06 auto */
 #define gfx_scale_den (*(i32 *)((u8 *)&g.d_00637f9c))
@@ -9210,15 +8571,14 @@ void __cdecl gfx_get_scale_ratio(iptr out_num,iptr out_den)
 /* 005cda2a auto */
 #define gfx_scale_x_table (*(i8 * *)((u8 *)&g.d_006e47c0))
 #define gfx_scale_y_table (*(i8 * *)((u8 *)&g.d_006e47c4))
-#define index (*(int *)(frame_ + FRAME_OFF(4)))
-#define oldest_tick (*(int *)(frame_ + FRAME_OFF(8)))
-#define y_slot (*(int *)(frame_ + FRAME_OFF(12)))
-#define x_slot (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
 
 {
   i32 now;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  int oldest_tick;
+  int y_slot;
+  int x_slot;
   
   if (x_num < 2) {
     x_num = 1;
@@ -9280,20 +8640,15 @@ LAB_005cdcd6:
 }
 #undef gfx_scale_x_table
 #undef gfx_scale_y_table
-#undef index
-#undef oldest_tick
-#undef y_slot
-#undef x_slot
 
 /* 005cdcdb auto */
-#define index (*(int *)(frame_ + FRAME_OFF(0)))
-#define accum (*(int *)(frame_ + FRAME_OFF(4)))
-#define value (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl gfx_scale_build_table(int slot,int num,int den)
 
 {
   i32 now;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  int accum;
+  int value;
   
   *(int *)(&gfx_scale_cache_num + slot * 0x100c) = num;
   *(int *)(&gfx_scale_cache_den + slot * 0x100c) = den;
@@ -9326,9 +8681,6 @@ void __cdecl gfx_scale_build_table(int slot,int num,int den)
   }
   return;
 }
-#undef index
-#undef accum
-#undef value
 
 /* 005cde2c auto */
 /* Library Function - Single Match
@@ -9360,15 +8712,14 @@ Sprite * __thiscall sprite_destroy(Sprite *this)
 }
 
 /* 005cdea1 auto */
-#define surface (*(DibSurface *)(frame_ + FRAME_OFF(0)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(72)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(76)))
-#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(80)))
 i32 __thiscall
 sprite_create_solid(Sprite *this,i32 width,i32 height,uint color)
 
 {
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  DibSurface surface;
+  i32 result;
+  i8 *seh_handler;
+  i32 unwind_state;
   
   unwind_state = 0xffffffff;
   surface_ctor(&surface);
@@ -9381,10 +8732,6 @@ sprite_create_solid(Sprite *this,i32 width,i32 height,uint color)
   /* inlined unwind funclet 005cdf2d */ { surface_dtor((DibSurface *)((iptr)&surface)); }
   return result;
 }
-#undef surface
-#undef result
-#undef seh_handler
-#undef unwind_state
 
 /* 005cdf50 auto */
 void __thiscall sprite_free(Sprite *this)
@@ -9418,14 +8765,13 @@ void __thiscall sprite_grab_surface_rect(Sprite *this,iptr surface,iptr rect)
 }
 
 /* 005cebec auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 sprite_encode_rect
           (Sprite *this,iptr surface,int x,int y,int width,int height)
 
 {
   u32 handle;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   SetRect(&rect,x,y,x + width,height + y);
   handle = sprite_encode_from_surface(this,surface,0xffffffff,(iptr)&rect);
@@ -9433,7 +8779,6 @@ sprite_encode_rect
   sprite_lock(this);
   return;
 }
-#undef rect
 
 /* 005cec44 auto */
 void __thiscall
@@ -9449,7 +8794,6 @@ sprite_grab_rect(Sprite *this,iptr surface,uint key_color,iptr rect)
 }
 
 /* 005cedad auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 sprite_grab_from_surface
           (Sprite *this,iptr surface,uint key_color,int x,int y,int width,
@@ -9457,7 +8801,7 @@ sprite_grab_from_surface
 
 {
   u32 handle;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   SetRect(&rect,x,y,width + x,height + y);
   handle = sprite_encode_from_surface(this,surface,key_color & 0xff,(iptr)&rect);
@@ -9465,7 +8809,6 @@ sprite_grab_from_surface
   sprite_lock(this);
   return;
 }
-#undef rect
 
 /* 005cef31 auto */
 iptr __thiscall
@@ -9559,9 +8902,6 @@ void __thiscall sprite_get_origin(SpriteOriginGetView *this,iptr out_x,iptr out_
 }
 
 /* 005cf467 auto */
-#define cursor (*(char * *)(frame_ + FRAME_OFF(4)))
-#define run_len (*(int *)(frame_ + FRAME_OFF(12)))
-#define rows (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
 sprite_replace_color(Sprite *this,i32 old_color,i32 new_color)
 
@@ -9569,7 +8909,9 @@ sprite_replace_color(Sprite *this,i32 old_color,i32 new_color)
   int rows_left;
   int *len_ptr;
   char had_data;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  char *cursor;
+  int run_len;
+  int rows;
   
   had_data = sprite_has_data(this);
   if (had_data == '\0') {
@@ -9595,32 +8937,8 @@ sprite_replace_color(Sprite *this,i32 old_color,i32 new_color)
   }
   return;
 }
-#undef cursor
-#undef run_len
-#undef rows
 
 /* 005cf64c auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define scan (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define out (*(i32 * *)(frame_ + FRAME_OFF(28)))
-#define all_empty (*(int *)(frame_ + FRAME_OFF(32)))
-#define row (*(int *)(frame_ + FRAME_OFF(36)))
-#define key2 (*(u8 *)(frame_ + FRAME_OFF(40)))
-#define col (*(int *)(frame_ + FRAME_OFF(44)))
-#define run_lens (*(void * *)(frame_ + FRAME_OFF(48)))
-#define was_locked (*(int *)(frame_ + FRAME_OFF(52)))
-#define handle (*(int *)(frame_ + FRAME_OFF(56)))
-#define top_row (*(u8 * *)(frame_ + FRAME_OFF(60)))
-#define bottom_row (*(u8 * *)(frame_ + FRAME_OFF(64)))
-#define width2 (*(iptr *)(frame_ + FRAME_OFF(68)))
-#define run_starts (*(void * *)(frame_ + FRAME_OFF(72)))
-#define min_left (*(int *)(frame_ + FRAME_OFF(76)))
-#define first_row2 (*(int *)(frame_ + FRAME_OFF(80)))
-#define max_right (*(int *)(frame_ + FRAME_OFF(84)))
-#define last_row (*(int *)(frame_ + FRAME_OFF(88)))
-#define total_size (*(int *)(frame_ + FRAME_OFF(92)))
-#define run_ptrs (*(void * *)(frame_ + FRAME_OFF(96)))
 int __thiscall
 sprite_encode_from_surface(Sprite *this,iptr surface,int key_mode,iptr src_rect)
 
@@ -9629,7 +8947,27 @@ sprite_encode_from_surface(Sprite *this,iptr surface,int key_mode,iptr src_rect)
   int rect_h;
   int rect_w;
   u32 freed;
-  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
+  u8 *scan;
+  int height2;
+  i32 *out;
+  int all_empty;
+  int row;
+  u8 key2;
+  int col;
+  void *run_lens;
+  int was_locked;
+  int handle;
+  u8 *top_row;
+  u8 *bottom_row;
+  iptr width2;
+  void *run_starts;
+  int min_left;
+  int first_row2;
+  int max_right;
+  int last_row;
+  int total_size;
+  void *run_ptrs;
   
   was_locked = 1;
   all_empty = 1;
@@ -9815,38 +9153,10 @@ sprite_encode_from_surface(Sprite *this,iptr surface,int key_mode,iptr src_rect)
   }
   return handle;
 }
-#undef rect
-#undef scan
-#undef height2
-#undef out
-#undef all_empty
-#undef row
-#undef key2
-#undef col
-#undef run_lens
-#undef was_locked
-#undef handle
-#undef top_row
-#undef bottom_row
-#undef width2
-#undef run_starts
-#undef min_left
-#undef first_row2
-#undef max_right
-#undef last_row
-#undef total_size
-#undef run_ptrs
 
 /* 005d056c auto */
 #define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
 #define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
-#define skip_x (*(int *)(frame_ + FRAME_OFF(0)))
-#define dst_y (*(int *)(frame_ + FRAME_OFF(4)))
-#define dst_x (*(int *)(frame_ + FRAME_OFF(8)))
-#define key2 (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define clip_rect (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define skip_y (*(int *)(frame_ + FRAME_OFF(36)))
-#define trim_x (*(int *)(frame_ + FRAME_OFF(40)))
 int * __thiscall
 sprite_blit_to_surface
           (Sprite *this,int *out_rect,DibSurface *surface,int key_arg,int x,
@@ -9867,14 +9177,20 @@ sprite_blit_to_surface
   i32 bits;
   iptr scale_tbl;
   i32 clip_h;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  int skip_x;
+  int dst_y;
+  int dst_x;
+  i32 key2;
+  tagRECT clip_rect;
+  int skip_y;
+  int trim_x;
   
   if (key_arg == -1) {
     (*(i8 *)((char *)&key_arg + 0)) = this->key_color;
   }
   else {
   }
-  key2 = CONCAT31((*(i32 *)((char *)&key2 + 1)),(u8)key_arg);
+  key2 = (key2 & 0xffffff00 | (byte)((u8)key_arg));
   trim_x = this->bounds_rect - this->frame_rect;
   trim_y = this->bounds_top - this->frame_top;
   tmp = sprite_width(this);
@@ -9938,24 +9254,10 @@ sprite_blit_to_surface
 }
 #undef gfx_scale_den
 #undef gfx_scale_num
-#undef skip_x
-#undef dst_y
-#undef dst_x
-#undef key2
-#undef clip_rect
-#undef skip_y
-#undef trim_x
 
 /* 005d10cd auto */
 #define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
 #define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
-#define skip_x (*(int *)(frame_ + FRAME_OFF(0)))
-#define dst_y (*(int *)(frame_ + FRAME_OFF(4)))
-#define dst_x (*(int *)(frame_ + FRAME_OFF(8)))
-#define key2 (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define clip_rect (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define skip_y (*(int *)(frame_ + FRAME_OFF(36)))
-#define trim_x (*(int *)(frame_ + FRAME_OFF(40)))
 int * __thiscall
 sprite_blit_silhouette_to_surface
           (Sprite *this,int *out_rect,DibSurface *surface,int key_arg,int x,
@@ -9976,14 +9278,20 @@ sprite_blit_silhouette_to_surface
   i32 bits;
   iptr scale_tbl;
   i32 clip_h;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  int skip_x;
+  int dst_y;
+  int dst_x;
+  i32 key2;
+  tagRECT clip_rect;
+  int skip_y;
+  int trim_x;
   
   if (key_arg == -1) {
     (*(i8 *)((char *)&key_arg + 0)) = this->key_color;
   }
   else {
   }
-  key2 = CONCAT31((*(i32 *)((char *)&key2 + 1)),(u8)key_arg);
+  key2 = (key2 & 0xffffff00 | (byte)((u8)key_arg));
   trim_x = this->bounds_rect - this->frame_rect;
   trim_y = this->bounds_top - this->frame_top;
   tmp = sprite_width(this);
@@ -10047,23 +9355,8 @@ sprite_blit_silhouette_to_surface
 }
 #undef gfx_scale_den
 #undef gfx_scale_num
-#undef skip_x
-#undef dst_y
-#undef dst_x
-#undef key2
-#undef clip_rect
-#undef skip_y
-#undef trim_x
 
 /* 005d1612 auto */
-#define written (*(int *)(frame_ + FRAME_OFF(0)))
-#define dst_cursor (*(int * *)(frame_ + FRAME_OFF(4)))
-#define src_cursor (*(int * *)(frame_ + FRAME_OFF(12)))
-#define row (*(int *)(frame_ + FRAME_OFF(32)))
-#define col (*(int *)(frame_ + FRAME_OFF(44)))
-#define cols_left (*(int *)(frame_ + FRAME_OFF(60)))
-#define out (*(int * *)(frame_ + FRAME_OFF(64)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(76)))
 void __thiscall
 sprite_merge_at
           (Sprite *this,iptr src,Sprite *dst,i32 unused,int dx,
@@ -10085,7 +9378,14 @@ sprite_merge_at
   int src_start;
   int src_end;
   u32 freed;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  int written;
+  int *dst_cursor;
+  int *src_cursor;
+  int row;
+  int col;
+  int cols_left;
+  int *out;
+  tagRECT rect;
   
   if (*(int *)(src + 0x34) != 0) {
     if (dst->data_handle == 0) {
@@ -10227,14 +9527,6 @@ sprite_merge_at
   }
   return;
 }
-#undef written
-#undef dst_cursor
-#undef src_cursor
-#undef row
-#undef col
-#undef cols_left
-#undef out
-#undef rect
 
 /* 005d1b38 auto */
 void __thiscall sprite_clear_fields(Sprite *this)
@@ -10255,13 +9547,12 @@ void __thiscall sprite_clear_fields(Sprite *this)
 /* 005d1d00 auto */
 #define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
 #define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
-#define index (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl gfx_scale_length(int length,int start,int round_up)
 
 {
   int result;
   bool positive;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
   
   if (length == 0) {
     result = 0;
@@ -10292,18 +9583,16 @@ int __cdecl gfx_scale_length(int length,int start,int round_up)
 }
 #undef gfx_scale_den
 #undef gfx_scale_num
-#undef index
 
 /* 005de780 auto */
-#define sys_color (*(i8 * *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl logpal_init_from_system(iptr logpal)
 
 {
   HDC hdc;
   uint raster_caps;
   int num_reserved;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *sys_color;
+  int i;
   
   *(i16 *)logpal = 0x300;
   *(i16 *)(logpal + 2) = 0x100;
@@ -10348,15 +9637,12 @@ void __cdecl logpal_init_from_system(iptr logpal)
   ReleaseDC((HWND)0x0,hdc);
   return;
 }
-#undef sys_color
-#undef i
 
 /* 005de984 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl logpal_reserve_range(iptr logpal,int first,int count)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (0x100 < count + first) {
     count = 0x100 - first;
@@ -10366,7 +9652,6 @@ void __cdecl logpal_reserve_range(iptr logpal,int first,int count)
   }
   return;
 }
-#undef i
 
 /* 005dea62 auto */
 void __cdecl palette_animate(iptr logpal,HPALETTE hpal,UINT first,UINT count)
@@ -10400,12 +9685,11 @@ logpal_set_entry(iptr logpal,int index,i32 red,i32 green,i32 blue)
 }
 
 /* 005deb12 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl
 palette_set_entry_rgb(iptr logpal,int index,i32 red,i32 green,i32 blue)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   *(char *)(logpal + 4 + index * 4) = (char)red;
   *(char *)(logpal + 5 + index * 4) = (char)green;
@@ -10427,14 +9711,12 @@ palette_set_entry_rgb(iptr logpal,int index,i32 red,i32 green,i32 blue)
   }
   return;
 }
-#undef i
 
 /* 005dec4e auto */
-#define hpal (*(i32 *)(frame_ + FRAME_OFF(0)))
 HPALETTE __cdecl logpal_create_hpalette(iptr logpal)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 hpal;
   
   if (gfx_palettized_display == 1) {
     hpal = CreatePalette((LOGPALETTE *)logpal);
@@ -10444,7 +9726,6 @@ HPALETTE __cdecl logpal_create_hpalette(iptr logpal)
   }
   return hpal;
 }
-#undef hpal
 
 /* 005dec8a auto */
 void __cdecl logpal_delete_hpalette(HGDIOBJ hpal)
@@ -10467,12 +9748,11 @@ void __cdecl logpal_apply_range(iptr logpal,HPALETTE hpal,UINT first,UINT count)
 }
 
 /* 005ded12 auto */
-#define index (*(int *)(frame_ + FRAME_OFF(4)))
-#define offset (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl palette_copy_rgb_range(iptr logpal,iptr dest,int first,int count)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  iptr offset;
   
   offset = 0;
   for (index = first; index < count + first; index++) {
@@ -10483,15 +9763,9 @@ void __cdecl palette_copy_rgb_range(iptr logpal,iptr dest,int first,int count)
   }
   return;
 }
-#undef index
-#undef offset
 
 /* 005e35b0 auto */
 #define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
-#define dib2 (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define bmi (*(BITMAPINFO (*)[24])(frame_ + FRAME_OFF(20)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(1084)))
-#define bits2 (*(void * *)(frame_ + FRAME_OFF(1088)))
 i32 * __cdecl dib_create(iptr rect)
 
 {
@@ -10500,7 +9774,10 @@ i32 * __cdecl dib_create(iptr rect)
   HBITMAP h;
   HGLOBAL hMem;
   HGDIOBJ old_bitmap;
-  i8 frame_[FRAME_OFF(1096)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *dib2;
+  struct { BITMAPINFOHEADER bmiHeader; RGBQUAD bmiColors[256]; } bmi;  /* 8-bit, 256 colours */
+  int height2;
+  void *bits2;
   
   dib2 = (i32 *)0x0;
   width = *(int *)(rect + 8) - *(int *)rect;
@@ -10514,29 +9791,29 @@ i32 * __cdecl dib_create(iptr rect)
       dbg_log((iptr)((u8 *)&g.d_00638e74));
     }
     else {
-      _memset(bmi,0,0x28);
-      bmi[0].bmiHeader.biSize = 0x28;
-      bmi[0].bmiHeader.biPlanes = 1;
-      bmi[0].bmiHeader.biBitCount = 8;
-      bmi[0].bmiHeader.biHeight = 1;
-      bmi[0].bmiHeader.biWidth = dib_row_align4(width);
-      if (0 < bmi[0].bmiHeader.biHeight) {
+      _memset(&bmi,0,0x28);
+      bmi.bmiHeader.biSize = 0x28;
+      bmi.bmiHeader.biPlanes = 1;
+      bmi.bmiHeader.biBitCount = 8;
+      bmi.bmiHeader.biHeight = 1;
+      bmi.bmiHeader.biWidth = dib_row_align4(width);
+      if (0 < bmi.bmiHeader.biHeight) {
         if (dib_bottom_up_logged == 0) {
           dbg_log((iptr)((u8 *)&g.d_00638e20));
         }
         dib_bottom_up_logged = 1;
       }
       if (dib_row_order == -1) {
-        bmi[0].bmiHeader.biHeight = height2;
+        bmi.bmiHeader.biHeight = height2;
       }
       else if (dib_row_order == 1) {
-        bmi[0].bmiHeader.biHeight = -height2;
+        bmi.bmiHeader.biHeight = -height2;
       }
       else {
-        bmi[0].bmiHeader.biHeight = bmi[0].bmiHeader.biHeight * height2;
+        bmi.bmiHeader.biHeight = bmi.bmiHeader.biHeight * height2;
       }
-      _memset(bmi[0].bmiColors,0,0x400);
-      h = CreateDIBSection(hdc,bmi,0,&bits2,(HANDLE)0x0,0);
+      _memset(bmi.bmiColors,0,0x400);
+      h = CreateDIBSection(hdc,(BITMAPINFO *)&bmi,0,&bits2,(HANDLE)0x0,0);
       if (h == (HBITMAP)0x0) {
         dbg_log((iptr)((u8 *)&g.d_00638e44));
         DeleteDC(hdc);
@@ -10548,13 +9825,13 @@ i32 * __cdecl dib_create(iptr rect)
         dib2[1] = hdc;
         dib2[2] = 0;
         dib2[3] = h;
-        dib2[8] = bmi[0].bmiHeader.biWidth;
+        dib2[8] = bmi.bmiHeader.biWidth;
         dib2[6] = width;
         dib2[7] = height2;
         old_bitmap = SelectObject(hdc,h);
         dib2[4] = old_bitmap;
         dib2[9] = bits2;
-        if (bmi[0].bmiHeader.biHeight < 0) {
+        if (bmi.bmiHeader.biHeight < 0) {
           dib2[5] = 1;
         }
         else {
@@ -10567,10 +9844,6 @@ i32 * __cdecl dib_create(iptr rect)
   return dib2;
 }
 #undef dib_row_order
-#undef dib2
-#undef bmi
-#undef height2
-#undef bits2
 
 /* 005e388f auto */
 i32 __cdecl dib_destroy(iptr dib)
@@ -10617,15 +9890,14 @@ uint __cdecl dib_is_top_down(iptr dib)
 }
 
 /* 005e3988 auto */
-#define row (*(int *)(frame_ + FRAME_OFF(0)))
-#define bottom_row (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define top_row (*(i32 *)(frame_ + FRAME_OFF(12)))
 void __cdecl dib_flip_vertical(iptr dib)
 
 {
   i32 tmp_handle;
   i32 tmp_row;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int row;
+  i32 bottom_row;
+  i32 top_row;
   
   top_row = dib_get_bits(dib);
   tmp_handle = mem_handle_alloc(*(i32 *)(dib + 0x20));
@@ -10642,9 +9914,6 @@ void __cdecl dib_flip_vertical(iptr dib)
   mem_handle_free(tmp_handle);
   return;
 }
-#undef row
-#undef bottom_row
-#undef top_row
 
 /* 005e3a81 auto */
 i32 __cdecl dib_get_bits(iptr dib)
@@ -10669,12 +9938,11 @@ i32 __cdecl dib_unlock_bits(int dib)
 }
 
 /* 005e3b4c auto */
-#define colors (*(RGBQUAD (*)[256])(frame_ + FRAME_OFF(0)))
-#define index (*(uptr *)(frame_ + FRAME_OFF(1024)))
 void __cdecl dib_set_color_table_range(iptr dib,GamePalette *palette,UINT first,UINT count)
 
 {
-  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  RGBQUAD colors[256];
+  uptr index;
   
   for (index = first; (int)index < (int)(count + first); index++) {
     palette_get_entry
@@ -10685,8 +9953,6 @@ void __cdecl dib_set_color_table_range(iptr dib,GamePalette *palette,UINT first,
   SetDIBColorTable(*(HDC *)(dib + 4),first,count,colors);
   return;
 }
-#undef colors
-#undef index
 
 /* 005e3bdc auto */
 void __cdecl dib_set_palette(iptr dib,iptr palette)
@@ -10698,11 +9964,6 @@ void __cdecl dib_set_palette(iptr dib,iptr palette)
 
 /* 005e3cb4 auto */
 #define gfx_text_color_index (*(byte *)((u8 *)&g.d_00637e78))
-#define color2 (*(RGBQUAD *)(frame_ + FRAME_OFF(4)))
-#define old_font (*(HGDIOBJ *)(frame_ + FRAME_OFF(8)))
-#define old_align (*(UINT *)(frame_ + FRAME_OFF(12)))
-#define text_rect (*(tagRECT *)(frame_ + FRAME_OFF(16)))
-#define font_data (*(i32 * *)(frame_ + FRAME_OFF(32)))
 void __cdecl
 dib_draw_text_at(iptr dib,int font,char *text,int x,int y,iptr clip_rect,
             uint align)
@@ -10713,7 +9974,11 @@ dib_draw_text_at(iptr dib,int font,char *text,int x,int y,iptr clip_rect,
   size_t cchText;
   tagRECT *lprc;
   UINT format;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  RGBQUAD color2;
+  HGDIOBJ old_font;
+  UINT old_align;
+  tagRECT text_rect;
+  i32 *font_data;
   
   if (font == 0) {
     dbg_log((iptr)((u8 *)&g.d_00638ea0));
@@ -10760,23 +10025,17 @@ dib_draw_text_at(iptr dib,int font,char *text,int x,int y,iptr clip_rect,
   return;
 }
 #undef gfx_text_color_index
-#undef color2
-#undef old_font
-#undef old_align
-#undef text_rect
-#undef font_data
 
 /* 005e3eca auto */
 #define gfx_text_color_index (*(byte *)((u8 *)&g.d_00637e78))
-#define format (*(uint *)(frame_ + FRAME_OFF(4)))
-#define color2 (*(RGBQUAD *)(frame_ + FRAME_OFF(8)))
-#define old_font (*(HGDIOBJ *)(frame_ + FRAME_OFF(12)))
-#define font_data (*(i32 * *)(frame_ + FRAME_OFF(16)))
 void __cdecl dib_draw_text_rect(iptr dib,int font,char *text,iptr rect,uint align)
 
 {
   size_t cchText;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint format;
+  RGBQUAD color2;
+  HGDIOBJ old_font;
+  i32 *font_data;
   
   if (font == 0) {
     dbg_log((iptr)((u8 *)&g.d_00638ec4));
@@ -10807,22 +10066,17 @@ void __cdecl dib_draw_text_rect(iptr dib,int font,char *text,iptr rect,uint alig
   return;
 }
 #undef gfx_text_color_index
-#undef format
-#undef color2
-#undef old_font
-#undef font_data
 
 /* 005e3feb auto */
 #define gfx_text_color_index (*(byte *)((u8 *)&g.d_00637e78))
-#define format (*(UINT *)(frame_ + FRAME_OFF(4)))
-#define color2 (*(RGBQUAD *)(frame_ + FRAME_OFF(8)))
-#define old_font (*(HGDIOBJ *)(frame_ + FRAME_OFF(12)))
-#define font_data (*(i32 * *)(frame_ + FRAME_OFF(16)))
 void __cdecl dib_draw_text_wrap(iptr dib,int font,char *text,LPRECT rect,uint align)
 
 {
   size_t cchText;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  UINT format;
+  RGBQUAD color2;
+  HGDIOBJ old_font;
+  i32 *font_data;
   
   if (font == 0) {
     dbg_log((iptr)((u8 *)&g.d_00638ee8));
@@ -10848,20 +10102,15 @@ void __cdecl dib_draw_text_wrap(iptr dib,int font,char *text,LPRECT rect,uint al
   return;
 }
 #undef gfx_text_color_index
-#undef format
-#undef color2
-#undef old_font
-#undef font_data
 
 /* 005e40fb auto */
 #define gfx_text_color_index (*(byte *)((u8 *)&g.d_00637e78))
-#define color2 (*(RGBQUAD *)(frame_ + FRAME_OFF(0)))
-#define pen (*(HPEN *)(frame_ + FRAME_OFF(4)))
-#define old_pen (*(HGDIOBJ *)(frame_ + FRAME_OFF(8)))
 void __cdecl dib_draw_line(iptr dib,int x1,int y1,int x2,int y2)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  RGBQUAD color2;
+  HPEN pen;
+  HGDIOBJ old_pen;
   
   if (dib != 0) {
     GetDIBColorTable(*(HDC *)(dib + 4),(uint)gfx_text_color_index,1,&color2);
@@ -10876,17 +10125,9 @@ void __cdecl dib_draw_line(iptr dib,int x1,int y1,int x2,int y2)
   return;
 }
 #undef gfx_text_color_index
-#undef color2
-#undef pen
-#undef old_pen
 
 /* 005e41ba auto */
 #define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
-#define dib2 (*(i32 * *)(frame_ + FRAME_OFF(0)))
-#define bmi (*(BITMAPINFO *)(frame_ + FRAME_OFF(20)))
-#define green_mask (*(i32 *)(frame_ + FRAME_OFF(64)))
-#define blue_mask (*(i32 *)(frame_ + FRAME_OFF(68)))
-#define bits2 (*(void * *)(frame_ + FRAME_OFF(72)))
 i32 * __cdecl dib_create16(iptr rect)
 
 {
@@ -10897,7 +10138,9 @@ i32 * __cdecl dib_create16(iptr rect)
   HBITMAP h;
   HGLOBAL hMem;
   HGDIOBJ old_bitmap;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *dib2;
+  struct { BITMAPINFOHEADER bmiHeader; DWORD masks[3]; } bmi;  /* 16-bit BI_BITFIELDS */
+  void *bits2;
   
   dib2 = (i32 *)0x0;
   width = *(int *)(rect + 8) - *(int *)rect;
@@ -10917,12 +10160,9 @@ i32 * __cdecl dib_create16(iptr rect)
       bmi.bmiHeader.biBitCount = 0x10;
       bmi.bmiHeader.biHeight = 1;
       bmi.bmiHeader.biCompression = 3;
-      bmi.bmiColors[0].rgbBlue = '\0';
-      bmi.bmiColors[0].rgbGreen = '|';
-      bmi.bmiColors[0].rgbRed = '\0';
-      bmi.bmiColors[0].rgbReserved = '\0';
-      green_mask = 0x3e0;
-      blue_mask = 0x1f;
+      bmi.masks[0] = 0x7c00;
+      bmi.masks[1] = 0x3e0;
+      bmi.masks[2] = 0x1f;
       bmi.bmiHeader.biWidth = dib_row_align4(width);
       bmp_height = height;
       if (dib_row_order != -1) {
@@ -10934,7 +10174,7 @@ i32 * __cdecl dib_create16(iptr rect)
         }
       }
       bmi.bmiHeader.biHeight = bmp_height;
-      h = CreateDIBSection(hdc,&bmi,0,&bits2,(HANDLE)0x0,0);
+      h = CreateDIBSection(hdc,(BITMAPINFO *)&bmi,0,&bits2,(HANDLE)0x0,0);
       if (h == (HBITMAP)0x0) {
         dbg_log((iptr)((u8 *)&g.d_00638f08));
         DeleteDC(hdc);
@@ -10965,17 +10205,9 @@ i32 * __cdecl dib_create16(iptr rect)
   return dib2;
 }
 #undef dib_row_order
-#undef dib2
-#undef bmi
-#undef green_mask
-#undef blue_mask
-#undef bits2
 
 /* 005e43c5 auto */
 #define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
-#define dib2 (*(i32 * *)(frame_ + FRAME_OFF(0)))
-#define bmi (*(BITMAPINFO *)(frame_ + FRAME_OFF(20)))
-#define bits2 (*(void * *)(frame_ + FRAME_OFF(64)))
 i32 * __cdecl dib_create24(iptr rect)
 
 {
@@ -10986,7 +10218,9 @@ i32 * __cdecl dib_create24(iptr rect)
   HBITMAP h;
   HGLOBAL hMem;
   HGDIOBJ old_bitmap;
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *dib2;
+  BITMAPINFO bmi;
+  void *bits2;
   
   dib2 = (i32 *)0x0;
   width = *(int *)(rect + 8) - *(int *)rect;
@@ -11047,15 +10281,9 @@ i32 * __cdecl dib_create24(iptr rect)
   return dib2;
 }
 #undef dib_row_order
-#undef dib2
-#undef bmi
-#undef bits2
 
 /* 005e45b5 auto */
 #define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
-#define dib2 (*(i32 * *)(frame_ + FRAME_OFF(0)))
-#define bmi (*(BITMAPINFO *)(frame_ + FRAME_OFF(20)))
-#define bits2 (*(void * *)(frame_ + FRAME_OFF(64)))
 i32 * __cdecl dib_create32(iptr rect)
 
 {
@@ -11066,7 +10294,9 @@ i32 * __cdecl dib_create32(iptr rect)
   HBITMAP h;
   HGLOBAL hMem;
   HGDIOBJ old_bitmap;
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *dib2;
+  BITMAPINFO bmi;
+  void *bits2;
   
   dib2 = (i32 *)0x0;
   width = *(int *)(rect + 8) - *(int *)rect;
@@ -11127,12 +10357,8 @@ i32 * __cdecl dib_create32(iptr rect)
   return dib2;
 }
 #undef dib_row_order
-#undef dib2
-#undef bmi
-#undef bits2
 
 /* 005e4d60 auto */
-#define code (*(i16 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl
 gif_lzw_decode(iptr src,uint code_base,i32 min_code_size,uint pitch,int width,uint height,
             iptr dest)
@@ -11141,7 +10367,7 @@ gif_lzw_decode(iptr src,uint code_base,i32 min_code_size,uint pitch,int width,ui
   int table_handle;
   i32 result;
   iptr table;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i16 code;
   
   table_handle = mem_handle_alloc(0x6000);
   if (table_handle == 0) {
@@ -11162,7 +10388,6 @@ gif_lzw_decode(iptr src,uint code_base,i32 min_code_size,uint pitch,int width,ui
   }
   return result;
 }
-#undef code
 
 /* 005e4e60 auto */
 void __cdecl
@@ -11205,7 +10430,6 @@ dib_fill_rect8(iptr bits,uint color,int x,int y,uint width,int height,int pitch,
 }
 
 /* 005e4f9b auto */
-#define rows_left (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl
 gfx_copy_pixels(int src_bits,int dst_bits,int src_x,int src_y,int dst_x,int dst_y,uint width,
             int height,int src_height,int dst_height,int src_pitch,int dst_pitch)
@@ -11216,7 +10440,7 @@ gfx_copy_pixels(int src_bits,int dst_bits,int src_x,int src_y,int dst_x,int dst_
   int abs_pitch;
   i32 *src;
   i32 *dst;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int rows_left;
   
   abs_pitch = src_pitch;
   if (src_pitch < 1) {
@@ -11252,10 +10476,8 @@ gfx_copy_pixels(int src_bits,int dst_bits,int src_x,int src_y,int dst_x,int dst_
   } while (rows_left != 0);
   return;
 }
-#undef rows_left
 
 /* 005e518e auto */
-#define row_map (*(int * *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Unable to use type for symbol run_start */
 
 void __cdecl
@@ -11272,7 +10494,7 @@ sprite_blit_rows_keyed(iptr sprite_data,int dst_bits,iptr scale_tbl,i32 key,int 
   char *dst_row;
   char *dst;
   int run_start;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int *row_map;
   
   run_len = pitch;
   if (pitch < 1) {
@@ -11317,10 +10539,8 @@ sprite_blit_rows_keyed(iptr sprite_data,int dst_bits,iptr scale_tbl,i32 key,int 
     }
   } while( true );
 }
-#undef row_map
 
 /* 005e52bf auto */
-#define row_map (*(int * *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Unable to use type for symbol run_start */
 
 void __cdecl
@@ -11337,7 +10557,7 @@ sprite_blit_rows_solid(iptr sprite_data,int dst_bits,iptr scale_tbl,i32 key,int 
   i8 *dst_row;
   i8 *dst;
   int run_start;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int *row_map;
   
   run_len = pitch;
   if (pitch < 1) {
@@ -11382,21 +10602,8 @@ sprite_blit_rows_solid(iptr sprite_data,int dst_bits,iptr scale_tbl,i32 key,int 
     }
   } while( true );
 }
-#undef row_map
 
 /* 005e53f3 auto */
-#define src_ptr (*(byte * *)(frame_ + FRAME_OFF(4)))
-#define out_ptr (*(i8 * *)(frame_ + FRAME_OFF(8)))
-#define next_code (*(ushort *)(frame_ + FRAME_OFF(12)))
-#define code_bits (*(ushort *)(frame_ + FRAME_OFF(16)))
-#define cur_code (*(ushort *)(frame_ + FRAME_OFF(20)))
-#define bit_buf (*(uint *)(frame_ + FRAME_OFF(28)))
-#define row_pos (*(ushort *)(frame_ + FRAME_OFF(32)))
-#define dst (*(i8 * *)(frame_ + FRAME_OFF(60)))
-#define code_mask (*(ushort *)(frame_ + FRAME_OFF(64)))
-#define bit_count (*(ushort *)(frame_ + FRAME_OFF(76)))
-#define prev_code (*(ushort *)(frame_ + FRAME_OFF(84)))
-#define block_end (*(byte * *)(frame_ + FRAME_OFF(88)))
 void __cdecl
 gif_lzw_decode_stream(byte *src,i8 *dest,iptr prefix_tbl,int pitch,uint width,uint height,
             i32 min_code_size)
@@ -11417,7 +10624,18 @@ gif_lzw_decode_stream(byte *src,i8 *dest,iptr prefix_tbl,int pitch,uint width,ui
   i8 *from;
   i8 *row_next;
   i8 *to;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  byte *src_ptr;
+  i8 *out_ptr;
+  ushort next_code;
+  ushort code_bits;
+  ushort cur_code;
+  uint bit_buf;
+  ushort row_pos;
+  i8 *dst;
+  ushort code_mask;
+  ushort bit_count;
+  ushort prev_code;
+  byte *block_end;
   
   suffix_tbl = prefix_tbl + 0x2000;
   length_tbl = prefix_tbl + 0x4000;
@@ -11543,18 +10761,6 @@ LAB_005e549a:
     } while (cur_code != 0xffff);
   } while( true );
 }
-#undef src_ptr
-#undef out_ptr
-#undef next_code
-#undef code_bits
-#undef cur_code
-#undef bit_buf
-#undef row_pos
-#undef dst
-#undef code_mask
-#undef bit_count
-#undef prev_code
-#undef block_end
 
 /* 005e5869 auto */
 void __cdecl

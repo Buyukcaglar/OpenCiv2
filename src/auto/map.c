@@ -18,11 +18,10 @@ i32 __cdecl map_in_bounds(iptr x,iptr y)
 }
 
 /* 00408830 auto */
-#define i (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl map_fill_tile_byte(iptr ptr,i32 value)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 i;
   
   for (i = 0; i < map.area; i++) {
     *(i8 *)ptr = (i8)value;
@@ -30,14 +29,12 @@ void __cdecl map_fill_tile_byte(iptr ptr,i32 value)
   }
   return;
 }
-#undef i
 
 /* 00408903 auto */
-#define i (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl map_copy_tile_byte(iptr dst,iptr src)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 i;
   
   for (i = 0; i < map.area; i++) {
     *(i8 *)dst = *(i8 *)src;
@@ -46,20 +43,8 @@ void __cdecl map_copy_tile_byte(iptr dst,iptr src)
   }
   return;
 }
-#undef i
 
 /* 0040897f auto */
-#define nbr_terrain (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define terrain_score (*(int (*)[22])(frame_ + FRAME_OFF(8)))
-#define landmass2 (*(int *)(frame_ + FRAME_OFF(96)))
-#define y3 (*(uint *)(frame_ + FRAME_OFF(100)))
-#define x3 (*(uint *)(frame_ + FRAME_OFF(104)))
-#define terrain2 (*(uptr *)(frame_ + FRAME_OFF(108)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(112)))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(116)))
-#define tile_idx (*(iptr *)(frame_ + FRAME_OFF(120)))
-#define total_score (*(int *)(frame_ + FRAME_OFF(124)))
-#define tile_score (*(int *)(frame_ + FRAME_OFF(128)))
 void __cdecl mapgen_calc_fertility(void)
 
 {
@@ -68,7 +53,17 @@ void __cdecl mapgen_calc_fertility(void)
   int tmp;
   byte *tile;
   iptr terrain;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr nbr_terrain;
+  int terrain_score[22];
+  int landmass2;
+  uint y3;
+  uint x3;
+  uptr terrain2;
+  int y2;
+  iptr x2;
+  iptr tile_idx;
+  int total_score;
+  int tile_score;
   
   for (landmass2 = 0; landmass2 < 0x40; landmass2++) {
     *(i16 *)(&landmass_fertile_tiles + landmass2 * 0x10) = 0;
@@ -153,60 +148,11 @@ void __cdecl mapgen_calc_fertility(void)
   }
   return;
 }
-#undef nbr_terrain
-#undef terrain_score
-#undef landmass2
-#undef y3
-#undef x3
-#undef terrain2
-#undef y2
-#undef x2
-#undef tile_idx
-#undef total_score
-#undef tile_score
 
 /* 00408d33 auto */
 #define mapgen_min_x (*(i32 *)((u8 *)&g.d_0063cb9c))
 #define mapgen_min_y (*(i32 *)((u8 *)&g.d_0063cba0))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define rand_x4 (*(int *)(frame_ + FRAME_OFF(4)))
-#define rand_x3 (*(int *)(frame_ + FRAME_OFF(12)))
-#define rand_x2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define rand_x1 (*(int *)(frame_ + FRAME_OFF(28)))
-#define rand_col2 (*(int *)(frame_ + FRAME_OFF(52)))
-#define rand_col (*(int *)(frame_ + FRAME_OFF(56)))
-#define lat_diff3 (*(int *)(frame_ + FRAME_OFF(60)))
-#define lat_diff2 (*(int *)(frame_ + FRAME_OFF(64)))
-#define lat_diff1 (*(int *)(frame_ + FRAME_OFF(68)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(88)))
-#define last_terrain (*(uptr *)(frame_ + FRAME_OFF(96)))
-#define terrain_votes (*(int (*)[11])(frame_ + FRAME_OFF(104)))
-#define land_type (*(uint *)(frame_ + FRAME_OFF(148)))
-#define landmass_count (*(int *)(frame_ + FRAME_OFF(152)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(156)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(160)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(916)))
-#define temp_bias (*(int *)(frame_ + FRAME_OFF(920)))
-#define rain (*(int *)(frame_ + FRAME_OFF(924)))
-#define tile (*(Tile * *)(frame_ + FRAME_OFF(928)))
-#define lat_band (*(int *)(frame_ + FRAME_OFF(932)))
-#define i (*(uint *)(frame_ + FRAME_OFF(936)))
-#define coin (*(int *)(frame_ + FRAME_OFF(940)))
-#define terr (*(uptr *)(frame_ + FRAME_OFF(944)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(948)))
-#define new_terrain (*(uint *)(frame_ + FRAME_OFF(952)))
-#define tile_rev (*(Tile * *)(frame_ + FRAME_OFF(956)))
-#define idx (*(uptr *)(frame_ + FRAME_OFF(960)))
-#define is_hilly (*(uint *)(frame_ + FRAME_OFF(964)))
-#define lat (*(int *)(frame_ + FRAME_OFF(968)))
-#define extra_masses (*(int *)(frame_ + FRAME_OFF(972)))
-#define area_units (*(int *)(frame_ + FRAME_OFF(976)))
-#define best_votes (*(int *)(frame_ + FRAME_OFF(980)))
-#define has_land (*(int *)(frame_ + FRAME_OFF(984)))
-#define land_target (*(int *)(frame_ + FRAME_OFF(988)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(992)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(996)))
-#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(1000)))
 void __cdecl map_generate(int keep_map)
 
 {
@@ -222,7 +168,44 @@ void __cdecl map_generate(int keep_map)
   uptr sign2;
   uint sign3;
   int equator;
-  i8 frame_[FRAME_OFF(1008)] __attribute__((aligned(8)));  /* original stack frame */
+  int rand_x4;
+  int rand_x3;
+  int rand_x2;
+  int rand_x1;
+  int rand_col2;
+  int rand_col;
+  int lat_diff3;
+  int lat_diff2;
+  int lat_diff1;
+  iptr civ;
+  uptr last_terrain;
+  int terrain_votes[11];
+  uint land_type;
+  int landmass_count;
+  uint y2;
+  Dialog dialog2;
+  uint x2;
+  int temp_bias;
+  int rain;
+  Tile *tile;
+  int lat_band;
+  uint i;
+  int coin;
+  uptr terr;
+  int y3;
+  uint new_terrain;
+  Tile *tile_rev;
+  uptr idx;
+  uint is_hilly;
+  int lat;
+  int extra_masses;
+  int area_units;
+  int best_votes;
+  int has_land;
+  int land_target;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 unwind_state;
   
   unwind_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -821,58 +804,19 @@ void __cdecl map_generate(int keep_map)
 #undef mapgen_min_x
 #undef mapgen_min_y
 #undef screen_height
-#undef rand_x4
-#undef rand_x3
-#undef rand_x2
-#undef rand_x1
-#undef rand_col2
-#undef rand_col
-#undef lat_diff3
-#undef lat_diff2
-#undef lat_diff1
-#undef civ
-#undef last_terrain
-#undef terrain_votes
-#undef land_type
-#undef landmass_count
-#undef y2
-#undef dialog2
-#undef x2
-#undef temp_bias
-#undef rain
-#undef tile
-#undef lat_band
-#undef i
-#undef coin
-#undef terr
-#undef y3
-#undef new_terrain
-#undef tile_rev
-#undef idx
-#undef is_hilly
-#undef lat
-#undef extra_masses
-#undef area_units
-#undef best_votes
-#undef has_land
-#undef land_target
-#undef seh_prev
-#undef seh_handler
-#undef unwind_state
 
 /* 0040a572 auto */
-#define roll (*(int *)(frame_ + FRAME_OFF(0)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define owner_ptr (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define count_ptr (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define i (*(int *)(frame_ + FRAME_OFF(32)))
 void __cdecl mapgen_add_landmass(int islet)
 
 {
   iptr tile;
   int rnd;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int roll;
+  int y2;
+  int x2;
+  u8 *owner_ptr;
+  u8 *count_ptr;
+  int i;
   
   map_fill_tile_byte((iptr)&map_tiles->owner,0);
   do {
@@ -935,15 +879,8 @@ void __cdecl mapgen_add_landmass(int islet)
   ui_pump_messages_net();
   return;
 }
-#undef roll
-#undef y2
-#undef x2
-#undef owner_ptr
-#undef count_ptr
-#undef i
 
 /* 0040a763 auto */
-#define steps (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapgen_land_walk(int x,int y)
 
 {
@@ -952,7 +889,7 @@ void __cdecl mapgen_land_walk(int x,int y)
   iptr tile;
   iptr in_bounds;
   uint sign;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int steps;
   
   rnd = _rand();
   sign = (int)rnd >> 0x1f;
@@ -977,7 +914,6 @@ void __cdecl mapgen_land_walk(int x,int y)
   ui_pump_messages_net();
   return;
 }
-#undef steps
 
 /* 0040a824 auto */
 #define mapgen_min_x (*(int *)((u8 *)&g.d_0063cb9c))
@@ -1032,7 +968,6 @@ void __cdecl mapgen_mark_tile(iptr raw_x,iptr y)
 }
 
 /* 0040a92f auto */
-#define steps (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapgen_land_walk_wide(int x,int y)
 
 {
@@ -1041,7 +976,7 @@ void __cdecl mapgen_land_walk_wide(int x,int y)
   iptr in_bounds;
   uint rnd;
   uint sign;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int steps;
   
   steps = _rand();
   steps = steps % 0x30;
@@ -1085,10 +1020,8 @@ void __cdecl mapgen_land_walk_wide(int x,int y)
   ui_pump_messages_net();
   return;
 }
-#undef steps
 
 /* 0040aaa4 auto */
-#define steps (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapgen_islet_walk(int x,int y)
 
 {
@@ -1096,7 +1029,7 @@ void __cdecl mapgen_islet_walk(int x,int y)
   iptr in_bounds;
   uint sign;
   iptr dir_idx;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int steps;
   
   rnd = _rand();
   sign = (int)rnd >> 0x1f;
@@ -1116,7 +1049,6 @@ void __cdecl mapgen_islet_walk(int x,int y)
   ui_pump_messages_net();
   return;
 }
-#undef steps
 
 /* 0040ab41 auto */
 i32 __cdecl mapgen_try_place_lake(int x,int y)
@@ -1167,15 +1099,6 @@ i32 __cdecl mapgen_try_place_lake(int x,int y)
 }
 
 /* 0040ac5a auto */
-#define half_x (*(int *)(frame_ + FRAME_OFF(4)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(12)))
-#define rivers_placed (*(int *)(frame_ + FRAME_OFF(20)))
-#define attempts (*(int *)(frame_ + FRAME_OFF(24)))
-#define river_len (*(uint *)(frame_ + FRAME_OFF(28)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define equator_dist (*(int *)(frame_ + FRAME_OFF(60)))
 void __cdecl mapgen_place_rivers(void)
 
 {
@@ -1192,7 +1115,15 @@ void __cdecl mapgen_place_rivers(void)
   iptr nb_is_ocean;
   int in_bounds;
   uint sign;
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  int half_x;
+  uptr dir;
+  int rivers_placed;
+  int attempts;
+  uint river_len;
+  uint y2;
+  iptr x2;
+  iptr i;
+  int equator_dist;
   
   rivers_placed = 0;
   attempts = 0;
@@ -1317,15 +1248,6 @@ void __cdecl mapgen_place_rivers(void)
   } while ((attempts < 0x400) && (rivers_placed < mapgen_land_mass * 2 + mapgen_climate * 2 + 0xc));
   return;
 }
-#undef half_x
-#undef dir
-#undef rivers_placed
-#undef attempts
-#undef river_len
-#undef y2
-#undef x2
-#undef i
-#undef equator_dist
 
 /* 0040bcb0 auto */
 uint __cdecl tile_grassland_has_shield(int x,int y)
@@ -1389,14 +1311,6 @@ uint __cdecl map_set_cursor_pos(iptr x,iptr y)
 #define blocked_input_arg2_i32 (*(i32 *)((u8 *)&g.d_006c31b4))
 #define blocked_input_arg3_i32 (*(i32 *)((u8 *)&g.d_006c31b8))
 #define blocked_input_window_i32 (*(i32 *)((u8 *)&g.d_006c31cc))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define paradrop_active (*(int *)(frame_ + FRAME_OFF(8)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(20)))
-#define y2 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define view (*(ViewWindow * *)(frame_ + FRAME_OFF(28)))
-#define goto_mode (*(uint *)(frame_ + FRAME_OFF(32)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl map_window_click(i32 screen_x,i32 screen_y,int alt_click)
@@ -1405,7 +1319,14 @@ void __cdecl map_window_click(i32 screen_x,i32 screen_y,int alt_click)
   iptr flush_pending;
   iptr child_wnd;
   int result;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr x2;
+  int paradrop_active;
+  iptr unit;
+  iptr city;
+  uptr dir;
+  iptr y2;
+  ViewWindow *view;
+  uint goto_mode;
   
   if ((game.multiplayer == '\0') || (ui_input_busy == 0)) {
     flush_pending = XD_InFlushSendBuffer();
@@ -1595,14 +1516,6 @@ void __cdecl map_window_click(i32 screen_x,i32 screen_y,int alt_click)
 #undef blocked_input_arg2_i32
 #undef blocked_input_arg3_i32
 #undef blocked_input_window_i32
-#undef x2
-#undef paradrop_active
-#undef unit
-#undef city
-#undef dir
-#undef y2
-#undef view
-#undef goto_mode
 
 /* 00411705 auto */
 #define blocked_input_kind (*(i32 *)((u8 *)&g.d_006c31ac))
@@ -1629,7 +1542,6 @@ void __cdecl map_window_click(i32 screen_x,i32 screen_y,int alt_click)
 #define blocked_input_arg1_i32 (*(i32 *)((u8 *)&g.d_006c31b0))
 #define blocked_input_arg2_i32 (*(i32 *)((u8 *)&g.d_006c31b4))
 #define blocked_input_window_i32 (*(i32 *)((u8 *)&g.d_006c31cc))
-#define resource (*(uint *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl map_window_double_click(i32 screen_x,i32 screen_y)
@@ -1640,7 +1552,7 @@ void __cdecl map_window_double_click(i32 screen_x,i32 screen_y)
   iptr y;
   byte terrain;
   int result;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uint resource;
   
   was_busy = false;
   if ((game.multiplayer != '\0') && (ui_input_busy != 0)) {
@@ -1725,7 +1637,6 @@ void __cdecl map_window_double_click(i32 screen_x,i32 screen_y)
 #undef blocked_input_arg1_i32
 #undef blocked_input_arg2_i32
 #undef blocked_input_window_i32
-#undef resource
 
 /* 00411a13 auto */
 #define map_cursor_x (*(short *)((u8 *)&g.d_0064b1b4))
@@ -2133,7 +2044,6 @@ switchD_00412142_caseD_e:
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
 #define blocked_input_arg1_i32 (*(i32 *)((u8 *)&g.d_006c31b0))
-#define move_dir (*(uptr *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl map_window_key(int cmd)
@@ -2141,7 +2051,7 @@ void __cdecl map_window_key(int cmd)
 {
   SHORT SVar1;
   int result;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr move_dir;
   
   if (game_session_active == 0) {
     return;
@@ -2532,17 +2442,8 @@ switchD_00412ef0_default:
 #undef unit_stack_link_busy
 #undef unit_stack_unlink_busy
 #undef blocked_input_arg1_i32
-#undef move_dir
 
 /* 0041dd0e auto */
-#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define filename (*(char (*)[256])(frame_ + FRAME_OFF(4)))
-#define filter (*(iptr *)(frame_ + FRAME_OFF(260)))
-#define file (*(FILE * *)(frame_ + FRAME_OFF(264)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(268)))
-#define tile (*(Tile * *)(frame_ + FRAME_OFF(272)))
-#define has_starts (*(int *)(frame_ + FRAME_OFF(276)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(280)))
 i32 __cdecl map_load_dialog(void)
 
 {
@@ -2553,7 +2454,14 @@ i32 __cdecl map_load_dialog(void)
   i8 *default_ext;
   i32 dlg_flag;
   i32 dlg_arg;
-  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
+  char filename[256];
+  iptr filter;
+  FILE *file;
+  i32 result;
+  Tile *tile;
+  int has_starts;
+  iptr i;
   
   result = 1;
   file = (FILE *)0x0;
@@ -2625,14 +2533,6 @@ i32 __cdecl map_load_dialog(void)
   }
   return result;
 }
-#undef civ
-#undef filename
-#undef filter
-#undef file
-#undef result
-#undef tile
-#undef has_starts
-#undef i
 
 /* 004272d0 auto */
 void __cdecl tile_reveal_to_civ(iptr x,iptr y,int civ)
@@ -3526,9 +3426,6 @@ void __cdecl map_views_atexit_dtor(void)
 }
 
 /* 0047a747 auto */
-#define terrain2 (*(char *)(frame_ + FRAME_OFF(4)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(12)))
-#define land_count (*(int *)(frame_ + FRAME_OFF(16)))
 int __cdecl tile_calc_coast_masks(iptr base_x,int base_y)
 
 {
@@ -3539,7 +3436,9 @@ int __cdecl tile_calc_coast_masks(iptr base_x,int base_y)
   uptr quarter;
   int quarter_a;
   uptr quarter_b;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  char terrain2;
+  uptr dir;
+  int land_count;
   
   land_count = 0;
   for (dir = 0; (int)dir < 4; dir++) {
@@ -3577,9 +3476,6 @@ int __cdecl tile_calc_coast_masks(iptr base_x,int base_y)
   }
   return land_count;
 }
-#undef terrain2
-#undef dir
-#undef land_count
 
 /* 0047c2f2 auto */
 i32 __cdecl map_x_in_span(int x,int left,int width)
@@ -3633,13 +3529,12 @@ map_tile_in_box(i32 x,int y,iptr left,iptr top,i32 width,int height
 }
 
 /* 0047ce1e auto */
-#define view_idx (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl
 map_redraw_area_all_views(i32 x,i32 y,i32 radius,iptr civ,
             i32 full_redraw)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view_idx;
   
   for (view_idx = 0; view_idx < 8; view_idx++) {
     if ((view_idx == 0) || (*(short *)(&map_view_open_flags + view_idx * 0x3f0) != 0)) {
@@ -3650,14 +3545,12 @@ map_redraw_area_all_views(i32 x,i32 y,i32 radius,iptr civ,
   }
   return;
 }
-#undef view_idx
 
 /* 0047cea6 auto */
-#define view_idx (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl map_redraw_tile_all_views(i32 x,i32 y)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view_idx;
   
   for (view_idx = 0; view_idx < 8; view_idx++) {
     if ((view_idx == 0) || (*(short *)(&map_view_open_flags + view_idx * 0x3f0) != 0)) {
@@ -3667,14 +3560,12 @@ void __cdecl map_redraw_tile_all_views(i32 x,i32 y)
   }
   return;
 }
-#undef view_idx
 
 /* 0047cf22 auto */
-#define view_idx (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl map_redraw_neighbors_all_views(i32 x,iptr y)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view_idx;
   
   for (view_idx = 0; view_idx < 8; view_idx++) {
     if ((view_idx == 0) || (*(short *)(&map_view_open_flags + view_idx * 0x3f0) != 0)) {
@@ -3684,14 +3575,12 @@ void __cdecl map_redraw_neighbors_all_views(i32 x,iptr y)
   }
   return;
 }
-#undef view_idx
 
 /* 0047cf9e auto */
-#define view_idx (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl map_redraw_all_views(iptr civ,i32 full_redraw)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view_idx;
   
   for (view_idx = 0; view_idx < 8; view_idx++) {
     if ((view_idx == 0) || (*(short *)(&map_view_open_flags + view_idx * 0x3f0) != 0)) {
@@ -3701,7 +3590,6 @@ void __cdecl map_redraw_all_views(iptr civ,i32 full_redraw)
   }
   return;
 }
-#undef view_idx
 
 /* 00484d3b auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -3716,12 +3604,6 @@ void __cdecl map_display_disable(void)
 /* 004868fb auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define civ (*(int *)(frame_ + FRAME_OFF(4)))
-#define tile_idx (*(int *)(frame_ + FRAME_OFF(8)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(12)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(16)))
-#define ocean_count (*(int *)(frame_ + FRAME_OFF(20)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(32)))
 void __cdecl map_apply_global_warming(uint severity)
 
 {
@@ -3730,7 +3612,12 @@ void __cdecl map_apply_global_warming(uint severity)
   iptr x;
   int result;
   byte *known;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
+  int tile_idx;
+  uint y2;
+  uint x2;
+  int ocean_count;
+  iptr dir;
   
   if (autoplay_active == 0) {
     if (2 < game.multiplayer) {
@@ -3804,23 +3691,16 @@ void __cdecl map_apply_global_warming(uint severity)
 }
 #undef autoplay_active
 #undef human_civ
-#undef civ
-#undef tile_idx
-#undef y2
-#undef x2
-#undef ocean_count
-#undef dir
 
 /* 00487007 auto */
 #define net_tile_sync_enabled (*(i8 *)((u8 *)&g.d_006ad699))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define tile_idx (*(int *)(frame_ + FRAME_OFF(8)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(12)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(16)))
 void __cdecl map_rebuild_unit_flags(void)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int tile_idx;
+  uint y2;
+  uint x2;
   
   net_tile_sync_enabled = 0;
   y2 = 0;
@@ -3843,10 +3723,6 @@ void __cdecl map_rebuild_unit_flags(void)
   return;
 }
 #undef net_tile_sync_enabled
-#undef unit
-#undef tile_idx
-#undef y2
-#undef x2
 
 /* 00488a45 auto */
 #define path_goal_x (*(int *)((u8 *)&g.d_00673fa0))
@@ -3854,9 +3730,6 @@ void __cdecl map_rebuild_unit_flags(void)
 #define path_owner_civ (*(i32 *)((u8 *)&g.d_0062d044))
 #define path_road_planning (*(i32 *)((u8 *)&g.d_0062d040))
 #define path_roads_only (*(i32 *)((u8 *)&g.d_0062d048))
-#define steps (*(int *)(frame_ + FRAME_OFF(0)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(8)))
-#define x3 (*(int *)(frame_ + FRAME_OFF(16)))
 i32 __cdecl map_road_connection(iptr civ,int x,int y,int x2,int y2)
 
 {
@@ -3867,7 +3740,9 @@ i32 __cdecl map_road_connection(iptr civ,int x,int y,int x2,int y2)
   i32 result;
   int dir;
   uint improvements2;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int steps;
+  int y3;
+  int x3;
   
   x3 = x;
   y3 = y;
@@ -3938,19 +3813,15 @@ LAB_00488ca7:
 #undef path_owner_civ
 #undef path_road_planning
 #undef path_roads_only
-#undef steps
-#undef y3
-#undef x3
 
 /* 004abea0 auto */
-#define sign_dy (*(int *)(frame_ + FRAME_OFF(4)))
-#define sign_dx (*(int *)(frame_ + FRAME_OFF(8)))
-#define result_dir (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(16)))
 iptr __cdecl map_dir_from_delta(int dx,int dy)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int sign_dy;
+  int sign_dx;
+  iptr result_dir;
+  iptr dir;
   
   result_dir = 8;
   if (dx < 1) {
@@ -4006,10 +3877,6 @@ iptr __cdecl map_dir_from_delta(int dx,int dy)
   }
   return result_dir;
 }
-#undef sign_dy
-#undef sign_dx
-#undef result_dir
-#undef dir
 
 /* 004abfe5 auto */
 #define map_view_center_x (*(i16 *)((u8 *)&g.d_0066ca88))
@@ -4021,21 +3888,6 @@ iptr __cdecl map_dir_from_delta(int dx,int dy)
 #define path_owner_civ (*(int *)((u8 *)&g.d_0062d044))
 #define path_road_planning (*(int *)((u8 *)&g.d_0062d040))
 #define path_roads_only (*(int *)((u8 *)&g.d_0062d048))
-#define abs_dy2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define abs_dy (*(int *)(frame_ + FRAME_OFF(8)))
-#define dist_y (*(int *)(frame_ + FRAME_OFF(20)))
-#define civ (*(int *)(frame_ + FRAME_OFF(24)))
-#define dist_x (*(int *)(frame_ + FRAME_OFF(28)))
-#define col (*(int *)(frame_ + FRAME_OFF(56)))
-#define step_cost (*(int *)(frame_ + FRAME_OFF(64)))
-#define row (*(int *)(frame_ + FRAME_OFF(68)))
-#define best_dir (*(iptr *)(frame_ + FRAME_OFF(72)))
-#define rel_x (*(int *)(frame_ + FRAME_OFF(88)))
-#define nb_rel_x (*(int *)(frame_ + FRAME_OFF(92)))
-#define new_cost (*(int *)(frame_ + FRAME_OFF(104)))
-#define best_dist (*(int *)(frame_ + FRAME_OFF(120)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(124)))
-#define best_cost (*(int *)(frame_ + FRAME_OFF(136)))
 iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
 
 {
@@ -4059,7 +3911,21 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
   iptr x2;
   int debug_mode;
   bool is_naval;
-  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  int abs_dy2;
+  int abs_dy;
+  int dist_y;
+  int civ;
+  int dist_x;
+  int col;
+  int step_cost;
+  int row;
+  iptr best_dir;
+  int rel_x;
+  int nb_rel_x;
+  int new_cost;
+  int best_dist;
+  iptr dir;
+  int best_cost;
   civ = 0;  /* stale stack the original reads (FRAME_PRESETS) */
   
   debug_mode = path_debug_pending;
@@ -4411,35 +4277,19 @@ LAB_004ac936: ;
 #undef path_owner_civ
 #undef path_road_planning
 #undef path_roads_only
-#undef abs_dy2
-#undef abs_dy
-#undef dist_y
-#undef civ
-#undef dist_x
-#undef col
-#undef step_cost
-#undef row
-#undef best_dir
-#undef rel_x
-#undef nb_rel_x
-#undef new_cost
-#undef best_dist
-#undef dir
-#undef best_cost
 
 /* 004ad0d1 auto */
 #define path_goal_x (*(int *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
 #define path_owner_civ (*(i32 *)((u8 *)&g.d_0062d044))
-#define dy (*(int *)(frame_ + FRAME_OFF(0)))
-#define dx (*(int *)(frame_ + FRAME_OFF(4)))
 int __cdecl
 map_path_length(int x,int y,int goal_x,int goal_y,int by_sea,i32 max_cost)
 
 {
   i32 saved_owner;
   int result;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int dy;
+  int dx;
   
   saved_owner = path_owner_civ;
   if (x == goal_x || x - goal_x < 0) {
@@ -4485,18 +4335,15 @@ map_path_length(int x,int y,int goal_x,int goal_y,int by_sea,i32 max_cost)
 #undef path_goal_x
 #undef path_goal_y
 #undef path_owner_civ
-#undef dy
-#undef dx
 
 /* 004ad784 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl map_diag_tile_by_ocean(int base_x,int base_y,iptr out_x,iptr out_y,int want_ocean)
 
 {
   iptr x;
   int y;
   int check;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   i = 0;
   while( true ) {
@@ -4513,7 +4360,6 @@ i32 __cdecl map_diag_tile_by_ocean(int base_x,int base_y,iptr out_x,iptr out_y,i
   *(int *)out_y = y;
   return 1;
 }
-#undef i
 
 /* 004aee90 auto */
 u8 * __cdecl map_coarse0_at(int x,int y)
@@ -4537,26 +4383,19 @@ u8 * __cdecl map_coarse2_at(int x,int y)
 }
 
 /* 004b3110 auto */
-#define byte_idx (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define bit_mask (*(byte (*)[4])(frame_ + FRAME_OFF(8)))
 void __cdecl landmass_set_border_bit(int landmass,iptr bit)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr byte_idx;
+  byte bit_mask[4];
   
   bit_index_split(bit,(iptr)&byte_idx,(iptr)bit_mask);
   (&landmass_border_bits)[landmass * 0x10 + byte_idx] = (&landmass_border_bits)[landmass * 0x10 + byte_idx] | bit_mask[0]
   ;
   return;
 }
-#undef byte_idx
-#undef bit_mask
 
 /* 004b315c auto */
-#define landmass_idx (*(int *)(frame_ + FRAME_OFF(0)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl landmass_compute_borders(void)
 
 {
@@ -4565,7 +4404,10 @@ void __cdecl landmass_compute_borders(void)
   iptr x;
   int check;
   i32 ocean_id;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int landmass_idx;
+  uint y2;
+  uint x2;
+  uptr dir;
   
   for (landmass_idx = 0; landmass_idx < 0x40; landmass_idx++) {
     for (dir = 0; (int)dir < 8; dir++) {
@@ -4594,28 +4436,8 @@ void __cdecl landmass_compute_borders(void)
   }
   return;
 }
-#undef landmass_idx
-#undef y2
-#undef x2
-#undef dir
 
 /* 004b32fe auto */
-#define col_x (*(uint *)(frame_ + FRAME_OFF(0)))
-#define cur_id (*(uint *)(frame_ + FRAME_OFF(20)))
-#define i (*(int *)(frame_ + FRAME_OFF(24)))
-#define ids_handle (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define overflow_mask (*(uint *)(frame_ + FRAME_OFF(36)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define tile_landmass2 (*(u8 * *)(frame_ + FRAME_OFF(48)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(52)))
-#define merged_count (*(int *)(frame_ + FRAME_OFF(56)))
-#define id_ptr (*(ushort * *)(frame_ + FRAME_OFF(64)))
-#define j (*(int *)(frame_ + FRAME_OFF(72)))
-#define row_y (*(uint *)(frame_ + FRAME_OFF(76)))
-#define ocean_pass (*(int *)(frame_ + FRAME_OFF(80)))
-#define next_id2 (*(uint *)(frame_ + FRAME_OFF(84)))
-#define idx (*(int *)(frame_ + FRAME_OFF(88)))
-#define merged_id (*(uint *)(frame_ + FRAME_OFF(96)))
 uint __cdecl map_assign_landmass_ids(void)
 
 {
@@ -4628,7 +4450,22 @@ uint __cdecl map_assign_landmass_ids(void)
   int check;
   uptr dir;
   uint nb_id;
-  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  uint col_x;
+  uint cur_id;
+  int i;
+  iptr ids_handle;
+  uint overflow_mask;
+  uint y2;
+  u8 *tile_landmass2;
+  uint x2;
+  int merged_count;
+  ushort *id_ptr;
+  int j;
+  uint row_y;
+  int ocean_pass;
+  uint next_id2;
+  int idx;
+  uint merged_id;
   
   overflow_mask = 0;
   ids_handle = 0;
@@ -4805,32 +4642,15 @@ uint __cdecl map_assign_landmass_ids(void)
   mem_free_handle(counts_handle);
   return overflow_mask;
 }
-#undef col_x
-#undef cur_id
-#undef i
-#undef ids_handle
-#undef overflow_mask
-#undef y2
-#undef tile_landmass2
-#undef x2
-#undef merged_count
-#undef id_ptr
-#undef j
-#undef row_y
-#undef ocean_pass
-#undef next_id2
-#undef idx
-#undef merged_id
 
 /* 00519200 auto */
-#define i (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define terrain2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl terrain_editor_load_rules(void)
 
 {
   char *_Source;
   size_t _Count;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
+  iptr terrain2;
   
   for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
     _Count = 0x28;
@@ -4859,19 +4679,16 @@ void __cdecl terrain_editor_load_rules(void)
   }
   return;
 }
-#undef i
-#undef terrain2
 
 /* 005193ed auto */
-#define i (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define terrain2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl terrain_editor_store_rules(void)
 
 {
   char *_Dest;
   char *_Source;
   size_t _Count;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
+  iptr terrain2;
   
   for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
     _Count = 0xf;
@@ -4900,8 +4717,6 @@ void __cdecl terrain_editor_store_rules(void)
   }
   return;
 }
-#undef i
-#undef terrain2
 
 /* 005195c4 auto */
 int __cdecl terrain_editor_terrain_to_sel(int terrain)
@@ -4930,14 +4745,13 @@ int __cdecl terrain_editor_sel_to_terrain(int sel)
 }
 
 /* 0051961e auto */
-#define field (*(int *)(frame_ + FRAME_OFF(4)))
-#define text (*(char (*)[8])(frame_ + FRAME_OFF(8)))
-#define sel (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl terrain_editor_load_controls(void)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int field;
+  char text[8];
+  int sel;
   
   for (field = 1; field < 0xf; field++) {
     if (*(int *)(&terrain_editor_ctrl_kinds + field * 8) == 9) {
@@ -4972,21 +4786,17 @@ void __cdecl terrain_editor_load_controls(void)
   }
   return;
 }
-#undef field
-#undef text
-#undef sel
 
 /* 005197af auto */
-#define field (*(int *)(frame_ + FRAME_OFF(0)))
-#define err_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define text (*(char (*)[8])(frame_ + FRAME_OFF(8)))
-#define value (*(int *)(frame_ + FRAME_OFF(16)))
 int __cdecl terrain_editor_store_controls(void)
 
 {
   int ctrl_id;
   i32 clamped;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int field;
+  int err_count;
+  char text[8];
+  int value;
   
   err_count = 0;
   for (field = 1; field < 0xf; field++) {
@@ -5028,10 +4838,6 @@ int __cdecl terrain_editor_store_controls(void)
   }
   return err_count;
 }
-#undef field
-#undef err_count
-#undef text
-#undef value
 
 /* 005199a9 auto */
 void __cdecl terrain_editor_redraw(void)
@@ -5067,15 +4873,14 @@ void __cdecl terrain_editor_append_rule_ref(iptr terrain,int with_comma)
 
 /* 00519ab0 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define name_len (*(size_t *)(frame_ + FRAME_OFF(0)))
-#define terrain2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl terrain_editor_write_section(FILE *file)
 
 {
   char *name2;
   size_t len;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  size_t name_len;
+  iptr terrain2;
+  iptr i;
   
   for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
     text_clear();
@@ -5125,14 +4930,9 @@ i32 __cdecl terrain_editor_write_section(FILE *file)
   return 1;
 }
 #undef text_buffer
-#undef name_len
-#undef terrain2
-#undef i
 
 /* 00519d67 auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define msg (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl terrain_editor_on_ok(void)
 
 {
@@ -5143,7 +4943,8 @@ void __cdecl terrain_editor_on_ok(void)
   char *lpText;
   char *lpCaption;
   UINT uType;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  char msg[32];
   
   errors = terrain_editor_store_controls();
   if (errors == 0) {
@@ -5180,30 +4981,26 @@ void __cdecl terrain_editor_on_ok(void)
   return;
 }
 #undef editor_running
-#undef parent_wnd2
-#undef msg
 
 /* 00519e74 auto */
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define old_name (*(char (*)[14])(frame_ + FRAME_OFF(4)))
-#define old_name_end (*(i8 *)(frame_ + FRAME_OFF(18)))
-#define new_name (*(char (*)[260])(frame_ + FRAME_OFF(24)))
-#define sel4 (*(iptr *)(frame_ + FRAME_OFF(284)))
-#define terrain2 (*(int *)(frame_ + FRAME_OFF(288)))
-#define sel3 (*(iptr *)(frame_ + FRAME_OFF(292)))
-#define sel2 (*(iptr *)(frame_ + FRAME_OFF(296)))
-#define sel1 (*(iptr *)(frame_ + FRAME_OFF(300)))
-#define result (*(int *)(frame_ + FRAME_OFF(304)))
 void __cdecl terrain_editor_on_rename(void)
 
 {
   size_t len;
   iptr label;
-  i8 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  char old_name[15];
+  char new_name[260];
+  iptr sel4;
+  int terrain2;
+  iptr sel3;
+  iptr sel2;
+  iptr sel1;
+  int result;
   
   terrain2 = *(int *)(active_editor_wnd + 0x2ec);
   _strncpy(old_name,&editor_item_names + terrain2 * 0x28,0xf);
-  old_name_end = 0;
+  old_name[14] = 0;
   do {
     if (active_editor_wnd == 0) {
       parent_wnd2 = 0;
@@ -5259,23 +5056,12 @@ void __cdecl terrain_editor_on_rename(void)
   }
   return;
 }
-#undef parent_wnd2
-#undef old_name
-#undef old_name_end
-#undef new_name
-#undef sel4
-#undef terrain2
-#undef sel3
-#undef sel2
-#undef sel1
-#undef result
 
 /* 0051a1e5 auto */
-#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl terrain_editor_on_help(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 parent_wnd2;
   
   if (active_editor_wnd == 0) {
     parent_wnd2 = 0;
@@ -5288,7 +5074,6 @@ void __cdecl terrain_editor_on_help(void)
   dlg_set_parent_window(0);
   return;
 }
-#undef parent_wnd2
 
 /* 0051a244 auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
@@ -5303,18 +5088,17 @@ void __cdecl terrain_editor_on_cancel(void)
 
 /* 0051a26c auto */
 #define dlg_help_pressed (*(int *)((u8 *)&g.d_00631edc))
-#define parent_wnd3 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define parent_wnd1 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define sprites (*(i8 * *)(frame_ + FRAME_OFF(16)))
-#define sheet_id (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define save_fn (*(i8 * *)(frame_ + FRAME_OFF(32)))
 void __cdecl terrain_editor_on_edit_icon(void)
 
 {
   int choice;
   i32 title;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd3;
+  iptr parent_wnd2;
+  iptr parent_wnd1;
+  i8 *sprites;
+  i32 sheet_id;
+  i8 *save_fn;
   
   sprites = (i8 *)0x0;
   save_fn = ((void *)(iptr)sprite_sheet_save_terrain1);
@@ -5420,17 +5204,9 @@ void __cdecl terrain_editor_on_edit_icon(void)
   return;
 }
 #undef dlg_help_pressed
-#undef parent_wnd3
-#undef parent_wnd2
-#undef parent_wnd1
-#undef sprites
-#undef sheet_id
-#undef save_fn
 
 /* 0051a678 auto */
 #define dlg_help_pressed (*(int *)((u8 *)&g.d_00631edc))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define sprites (*(i8 * *)(frame_ + FRAME_OFF(8)))
 void __cdecl terrain_editor_on_edit_river(void)
 
 {
@@ -5438,7 +5214,8 @@ void __cdecl terrain_editor_on_edit_river(void)
   i32 title;
   i32 sheet_id;
   i8 *save_fn;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  i8 *sprites;
   
   sprites = (i8 *)0x0;
   if (active_editor_wnd == 0) {
@@ -5473,13 +5250,9 @@ void __cdecl terrain_editor_on_edit_river(void)
   return;
 }
 #undef dlg_help_pressed
-#undef parent_wnd2
-#undef sprites
 
 /* 0051a797 auto */
 #define dlg_help_pressed (*(int *)((u8 *)&g.d_00631edc))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define sprites (*(i8 * *)(frame_ + FRAME_OFF(8)))
 void __cdecl terrain_editor_on_edit_coast(void)
 
 {
@@ -5488,7 +5261,8 @@ void __cdecl terrain_editor_on_edit_coast(void)
   uint sign;
   i32 sheet_id;
   i8 *save_fn;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  i8 *sprites;
   
   sprites = (i8 *)0x0;
   if (active_editor_wnd == 0) {
@@ -5521,13 +5295,9 @@ void __cdecl terrain_editor_on_edit_coast(void)
   return;
 }
 #undef dlg_help_pressed
-#undef parent_wnd2
-#undef sprites
 
 /* 0051a8b7 auto */
 #define dlg_help_pressed (*(int *)((u8 *)&g.d_00631edc))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define sprites (*(i8 * *)(frame_ + FRAME_OFF(8)))
 void __cdecl terrain_editor_on_edit_misc(void)
 
 {
@@ -5535,7 +5305,8 @@ void __cdecl terrain_editor_on_edit_misc(void)
   i32 title;
   i32 sheet_id;
   i8 *save_fn;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  i8 *sprites;
   
   sprites = (i8 *)0x0;
   if (active_editor_wnd == 0) {
@@ -5579,16 +5350,13 @@ void __cdecl terrain_editor_on_edit_misc(void)
   return;
 }
 #undef dlg_help_pressed
-#undef parent_wnd2
-#undef sprites
 
 /* 0051aa4e auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl terrain_editor_update_visibility(void)
 
 {
   int sel;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (*(int *)(active_editor_wnd + 0x2ec) < 0xb) {
     ctrl_show_and_redraw((Control *)(active_editor_wnd + 0x334));
@@ -5637,17 +5405,15 @@ void __cdecl terrain_editor_update_visibility(void)
   }
   return;
 }
-#undef i
 
 /* 0051acdc auto */
-#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(4)))
 void __cdecl terrain_editor_on_combo(int ctrl_id)
 
 {
   int errors;
   HWND hWnd;
   i32 terrain;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 parent_wnd2;
   
   if (ctrl_id == 0xc9) {
     errors = terrain_editor_store_controls();
@@ -5683,20 +5449,18 @@ void __cdecl terrain_editor_on_combo(int ctrl_id)
   }
   return;
 }
-#undef parent_wnd2
 
 /* 0051adfd auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
-#define parent2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define terrain2 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall terrain_editor_create_combo(ViewWindow *this,int combo_idx)
 
 {
   int left;
   int top;
   iptr label;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent2;
+  iptr terrain2;
+  i8 rect[16];
   
   left = *(int *)(&terrain_editor_combo_pos_x + combo_idx * 8) + this->client_x;
   top = *(int *)(&terrain_editor_combo_pos_y + combo_idx * 8) + this->client_y;
@@ -5762,21 +5526,17 @@ void __thiscall terrain_editor_create_combo(ViewWindow *this,int combo_idx)
   return;
 }
 #undef editor_next_ctrl_id
-#undef parent2
-#undef terrain2
-#undef rect
 
 /* 0051b1c2 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define terrain_editor_field_pos_x (*(i32 *)((u8 *)&g.d_00631bb0))
 #define terrain_editor_field_pos_y (*(i32 *)((u8 *)&g.d_00631bb4))
-#define parent2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall terrain_editor_create_edit(ViewWindow *this,int field_idx)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent2;
+  i8 rect[16];
   
   rect_set_xywh((iptr)rect,(&terrain_editor_field_pos_x)[field_idx * 2] + this->client_x,
                      (&terrain_editor_field_pos_y)[field_idx * 2] + this->client_y,0x30,this->sci_rate_sel + 6);
@@ -5798,21 +5558,12 @@ void __thiscall terrain_editor_create_edit(ViewWindow *this,int field_idx)
 #undef editor_next_ctrl_id
 #undef terrain_editor_field_pos_x
 #undef terrain_editor_field_pos_y
-#undef parent2
-#undef rect
 
 /* 0051b2b6 auto */
 #define editor_bg_surface (*(int *)((u8 *)&g.d_0062e018))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define terrain_editor_field_pos_x (*(int *)((u8 *)&g.d_00631bb0))
 #define terrain_editor_field_pos_y (*(int *)((u8 *)&g.d_00631bb4))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define base_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define sprite (*(Sprite * *)(frame_ + FRAME_OFF(32)))
-#define label_y (*(int *)(frame_ + FRAME_OFF(36)))
-#define label_x (*(int *)(frame_ + FRAME_OFF(40)))
-#define icon_y (*(int *)(frame_ + FRAME_OFF(44)))
-#define icon_x (*(int *)(frame_ + FRAME_OFF(48)))
 void __thiscall terrain_editor_draw(ViewWindow *this)
 
 {
@@ -5821,7 +5572,13 @@ void __thiscall terrain_editor_draw(ViewWindow *this)
   i32 width;
   uint color;
   i32 frame_style;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 sprite_rect[16];
+  i8 base_rect[16];
+  Sprite *sprite;
+  int label_y;
+  int label_x;
+  int icon_y;
+  int icon_x;
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((editor_bg_surface == 0) || (editor_running == 0)) {
@@ -5964,33 +5721,11 @@ void __thiscall terrain_editor_draw(ViewWindow *this)
 #undef editor_running
 #undef terrain_editor_field_pos_x
 #undef terrain_editor_field_pos_y
-#undef sprite_rect
-#undef base_rect
-#undef sprite
-#undef label_y
-#undef label_x
-#undef icon_y
-#undef icon_x
 
 /* 0051bba1 auto */
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
 #define editor_next_ctrl_id (*(i32 *)((u8 *)&g.d_006a1d80))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
-#define misc_parent (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define coast_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define river_parent (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define icon_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define cancel_parent (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define help_parent (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define rename_parent (*(u8 * *)(frame_ + FRAME_OFF(24)))
-#define ok_parent (*(u8 * *)(frame_ + FRAME_OFF(28)))
-#define new_surface (*(DibSurface * *)(frame_ + FRAME_OFF(40)))
-#define ctrl_idx (*(int *)(frame_ + FRAME_OFF(48)))
-#define btn_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(60)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(76)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1152)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1156)))
-#define seh_state (*(int *)(frame_ + FRAME_OFF(1160)))
 void __thiscall terrain_editor_run(ViewWindow *this)
 
 {
@@ -6008,7 +5743,21 @@ void __thiscall terrain_editor_run(ViewWindow *this)
   i32 create_arg7;
   i32 create_arg8;
   i32 create_arg9;
-  i8 frame_[FRAME_OFF(1168)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *misc_parent;
+  u8 *coast_parent;
+  u8 *river_parent;
+  u8 *icon_parent;
+  u8 *cancel_parent;
+  u8 *help_parent;
+  u8 *rename_parent;
+  u8 *ok_parent;
+  DibSurface *new_surface;
+  int ctrl_idx;
+  i8 btn_rect[16];
+  GamePalette palette;
+  i32 seh_prev;
+  i8 *seh_handler;
+  int seh_state;
   
   seh_state = 0xffffffff;
   palette_init(&palette);
@@ -6023,7 +5772,7 @@ void __thiscall terrain_editor_run(ViewWindow *this)
   else {
     new_surface = (DibSurface *)surface_ctor(this_00);
   }
-  seh_state = (uint)(*(i32 *)((char *)&seh_state + 1)) << 8;
+  seh_state = seh_state & 0xffffff00;
   editor_bg_surface = new_surface;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font((iptr)((u8 *)&g.d_006a4f90));
@@ -6190,31 +5939,15 @@ void __thiscall terrain_editor_run(ViewWindow *this)
 #undef editor_bg_surface
 #undef editor_next_ctrl_id
 #undef editor_running
-#undef misc_parent
-#undef coast_parent
-#undef river_parent
-#undef icon_parent
-#undef cancel_parent
-#undef help_parent
-#undef rename_parent
-#undef ok_parent
-#undef new_surface
-#undef ctrl_idx
-#undef btn_rect
-#undef palette
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0051c635 auto */
-#define editor_wnd (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(2888)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(2892)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl terrain_editor_open(void)
 
 {
-  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  EditorWindow editor_wnd;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   editor_wnd_ctor(&editor_wnd);
@@ -6225,35 +5958,30 @@ void __cdecl terrain_editor_open(void)
   /* inlined unwind funclet 0051c68e */ { editor_wnd_dtor((EditorWindow *)((iptr)&editor_wnd)); }
   return;
 }
-#undef editor_wnd
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0055a980 auto */
 #define path_road_planning (*(i32 *)((u8 *)&g.d_0062d040))
-#define nbr_y (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define nbr_x (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define pass (*(int *)(frame_ + FRAME_OFF(12)))
-#define path_len (*(int *)(frame_ + FRAME_OFF(16)))
-#define cx (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define y2 (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define want_ocean (*(uint *)(frame_ + FRAME_OFF(28)))
-#define x2 (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define tile_y (*(int *)(frame_ + FRAME_OFF(36)))
-#define cy (*(int *)(frame_ + FRAME_OFF(40)))
-#define tile_x (*(int *)(frame_ + FRAME_OFF(44)))
-#define landmass2 (*(int *)(frame_ + FRAME_OFF(48)))
-#define adj_y (*(int *)(frame_ + FRAME_OFF(52)))
-#define adj_x (*(iptr *)(frame_ + FRAME_OFF(56)))
-#define nbr_landmass (*(int *)(frame_ + FRAME_OFF(60)))
-#define grid (*(u8 * *)(frame_ + FRAME_OFF(64)))
 void __cdecl map_build_coarse_connectivity(void)
 
 {
   int in_bounds;
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 nbr_y;
+  iptr dir;
+  i32 nbr_x;
+  int pass;
+  int path_len;
+  iptr cx;
+  i32 y2;
+  uint want_ocean;
+  i32 x2;
+  int tile_y;
+  int cy;
+  int tile_x;
+  int landmass2;
+  int adj_y;
+  iptr adj_x;
+  int nbr_landmass;
+  u8 *grid;
   
   path_road_planning = 1;
   for (pass = 0; pass < 2; pass++) {
@@ -6302,26 +6030,8 @@ void __cdecl map_build_coarse_connectivity(void)
   return;
 }
 #undef path_road_planning
-#undef nbr_y
-#undef dir
-#undef nbr_x
-#undef pass
-#undef path_len
-#undef cx
-#undef y2
-#undef want_ocean
-#undef x2
-#undef tile_y
-#undef cy
-#undef tile_x
-#undef landmass2
-#undef adj_y
-#undef adj_x
-#undef nbr_landmass
-#undef grid
 
 /* 0055ac37 auto */
-#define offset (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl map_coarse_cell_landmass(iptr base_x,int base_y,iptr out_x,iptr out_y,int want_ocean)
 
 {
@@ -6329,7 +6039,7 @@ i32 __cdecl map_coarse_cell_landmass(iptr base_x,int base_y,iptr out_x,iptr out_
   int y;
   int ok;
   i32 landmass;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int offset;
   
   offset = 0;
   while( true ) {
@@ -6347,7 +6057,6 @@ i32 __cdecl map_coarse_cell_landmass(iptr base_x,int base_y,iptr out_x,iptr out_
   *(int *)out_y = y;
   return landmass;
 }
-#undef offset
 
 /* 0056b8a0 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -6399,44 +6108,6 @@ void __cdecl map_label_font_static_dtor(void)
 #define mapview_zoom (*(i16 *)((u8 *)&g.d_0066ca8c))
 #define net_move_anim_sound (*(i32 *)((u8 *)&g.d_006ad6a4))
 #define net_move_anim_sound_arg (*(i32 *)((u8 *)&g.d_006ad6a8))
-#define step_x (*(int (*)[8])(frame_ + FRAME_OFF(4)))
-#define to_y (*(int *)(frame_ + FRAME_OFF(36)))
-#define save_h (*(i32 (*)[8])(frame_ + FRAME_OFF(40)))
-#define dx (*(int *)(frame_ + FRAME_OFF(72)))
-#define to_x (*(i32 *)(frame_ + FRAME_OFF(76)))
-#define rect_bottom2 (*(int (*)[8])(frame_ + FRAME_OFF(80)))
-#define rect_top2 (*(int (*)[8])(frame_ + FRAME_OFF(112)))
-#define frame_delay (*(int *)(frame_ + FRAME_OFF(144)))
-#define dirty_left (*(int *)(frame_ + FRAME_OFF(148)))
-#define dirty_top (*(int *)(frame_ + FRAME_OFF(152)))
-#define dirty_right (*(int *)(frame_ + FRAME_OFF(156)))
-#define dirty_bottom (*(int *)(frame_ + FRAME_OFF(160)))
-#define save_w (*(i32 (*)[8])(frame_ + FRAME_OFF(164)))
-#define rect_right2 (*(int (*)[8])(frame_ + FRAME_OFF(196)))
-#define to_sy (*(int *)(frame_ + FRAME_OFF(228)))
-#define rect_left2 (*(int (*)[8])(frame_ + FRAME_OFF(232)))
-#define cur_sy (*(int (*)[8])(frame_ + FRAME_OFF(264)))
-#define from_sy (*(int *)(frame_ + FRAME_OFF(296)))
-#define cur_sx (*(int (*)[8])(frame_ + FRAME_OFF(300)))
-#define view_active (*(char (*)[8])(frame_ + FRAME_OFF(332)))
-#define now (*(DWORD *)(frame_ + FRAME_OFF(340)))
-#define saved_bg (*(DibSurface (*)[8])(frame_ + FRAME_OFF(344)))
-#define frame2 (*(int *)(frame_ + FRAME_OFF(920)))
-#define last_time (*(DWORD *)(frame_ + FRAME_OFF(924)))
-#define num_frames (*(int *)(frame_ + FRAME_OFF(928)))
-#define to_sx (*(int *)(frame_ + FRAME_OFF(932)))
-#define step (*(int (*)[8])(frame_ + FRAME_OFF(936)))
-#define view (*(iptr *)(frame_ + FRAME_OFF(968)))
-#define any_visible (*(int *)(frame_ + FRAME_OFF(972)))
-#define saved_origin_y (*(int (*)[8])(frame_ + FRAME_OFF(976)))
-#define from_sx (*(int *)(frame_ + FRAME_OFF(1008)))
-#define sound_played (*(int *)(frame_ + FRAME_OFF(1012)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(1016)))
-#define step_y (*(int (*)[8])(frame_ + FRAME_OFF(1032)))
-#define saved_origin_x (*(int (*)[8])(frame_ + FRAME_OFF(1064)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1096)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1100)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(1104)))
 void __cdecl
 map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr sound_arg)
 
@@ -6444,7 +6115,41 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
   char dy;
   int tmp;
   i32 dim;
-  i8 frame_[FRAME_OFF(1112)] __attribute__((aligned(8)));  /* original stack frame */
+  int step_x[8];
+  int to_y;
+  i32 save_h[8];
+  int dx;
+  i32 to_x;
+  int rect_bottom2[8];
+  int rect_top2[8];
+  int frame_delay;
+  RECT dirty_rect;
+  i32 save_w[8];
+  int rect_right2[8];
+  int to_sy;
+  int rect_left2[8];
+  int cur_sy[8];
+  int from_sy;
+  int cur_sx[8];
+  char view_active[8];
+  DWORD now;
+  DibSurface saved_bg[8];
+  int frame2;
+  DWORD last_time;
+  int num_frames;
+  int to_sx;
+  int step[8];
+  iptr view;
+  int any_visible;
+  int saved_origin_y[8];
+  int from_sx;
+  int sound_played;
+  i8 rect[16];
+  int step_y[8];
+  int saved_origin_x[8];
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   any_visible = 0;
@@ -6566,33 +6271,33 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
             gfx_draw_unit((iptr)(&map_views + view * 0x3f0),unit,5,
                                cur_sx[view],cur_sy[view],
                                (int)(short)(&mapview_zoom)[view * 0x1f8],1);
-            rect_set_xywh((iptr)&dirty_left,cur_sx[view] + step[view] * -2,
+            rect_set_xywh((iptr)&dirty_rect,cur_sx[view] + step[view] * -2,
                                cur_sy[view] + step[view] * -2,
                                step[view] * 4 + *(int *)(&mapview_tile_width + view * 0x3f0)
                                ,step[view] * 4 +
                                 *(int *)(&mapview_unit_sprite_height + view * 0x3f0));
             tmp = rect_left2[view];
-            if (rect_left2[view] <= dirty_left) {
-              tmp = dirty_left;
+            if (rect_left2[view] <= dirty_rect.left) {
+              tmp = dirty_rect.left;
             }
-            dirty_left = tmp;
+            dirty_rect.left = tmp;
             tmp = rect_top2[view];
-            if (rect_top2[view] <= dirty_top) {
-              tmp = dirty_top;
+            if (rect_top2[view] <= dirty_rect.top) {
+              tmp = dirty_rect.top;
             }
-            dirty_top = tmp;
+            dirty_rect.top = tmp;
             tmp = rect_right2[view] + 1;
-            if (dirty_right <= rect_right2[view] + 1) {
-              tmp = dirty_right;
+            if (dirty_rect.right <= rect_right2[view] + 1) {
+              tmp = dirty_rect.right;
             }
-            dirty_right = tmp;
+            dirty_rect.right = tmp;
             tmp = rect_bottom2[view] + 1;
-            if (dirty_bottom <= rect_bottom2[view] + 1) {
-              tmp = dirty_bottom;
+            if (dirty_rect.bottom <= rect_bottom2[view] + 1) {
+              tmp = dirty_rect.bottom;
             }
-            dirty_bottom = tmp;
+            dirty_rect.bottom = tmp;
             wnd_blit_surface_rect
-                      ((DibSurface *)(&map_views + view * 0x3f0),(iptr)&dirty_left);
+                      ((DibSurface *)(&map_views + view * 0x3f0),(iptr)&dirty_rect);
             gfx_copy_rect_clipped((iptr)(saved_bg + view),(iptr)(&map_views + view * 0x3f0)
                                ,cur_sx[view] - rect_left2[view],
                                cur_sy[view] - rect_top2[view],0,0,
@@ -6630,44 +6335,6 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
 #undef mapview_zoom
 #undef net_move_anim_sound
 #undef net_move_anim_sound_arg
-#undef step_x
-#undef to_y
-#undef save_h
-#undef dx
-#undef to_x
-#undef rect_bottom2
-#undef rect_top2
-#undef frame_delay
-#undef dirty_left
-#undef dirty_top
-#undef dirty_right
-#undef dirty_bottom
-#undef save_w
-#undef rect_right2
-#undef to_sy
-#undef rect_left2
-#undef cur_sy
-#undef from_sy
-#undef cur_sx
-#undef view_active
-#undef now
-#undef saved_bg
-#undef frame2
-#undef last_time
-#undef num_frames
-#undef to_sx
-#undef step
-#undef view
-#undef any_visible
-#undef saved_origin_y
-#undef from_sx
-#undef sound_played
-#undef rect
-#undef step_y
-#undef saved_origin_x
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0056e180 auto */
 i32 __thiscall map_view_zoom_scale_round(MapViewZoomView *this,i32 value)
@@ -6684,31 +6351,30 @@ i32 __thiscall map_view_zoom_scale_round(MapViewZoomView *this,i32 value)
 #define mapview_origin_x (*(i32 *)((u8 *)&g.d_0066ca90))
 #define mapview_origin_y (*(i32 *)((u8 *)&g.d_0066ca94))
 #define mapview_zoom (*(i16 *)((u8 *)&g.d_0066ca8c))
-#define clip_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define sprite_h (*(iptr (*)[8])(frame_ + FRAME_OFF(20)))
-#define sprite_w (*(iptr (*)[8])(frame_ + FRAME_OFF(52)))
-#define last_time (*(DWORD *)(frame_ + FRAME_OFF(84)))
-#define screen_y (*(i32 (*)[8])(frame_ + FRAME_OFF(88)))
-#define screen_x (*(int (*)[8])(frame_ + FRAME_OFF(120)))
-#define any_visible (*(int *)(frame_ + FRAME_OFF(152)))
-#define now (*(DWORD *)(frame_ + FRAME_OFF(156)))
-#define view_active (*(int (*)[8])(frame_ + FRAME_OFF(160)))
-#define saved_bg (*(DibSurface (*)[8])(frame_ + FRAME_OFF(192)))
-#define frame2 (*(int *)(frame_ + FRAME_OFF(768)))
-#define saved_origin_y (*(int (*)[8])(frame_ + FRAME_OFF(772)))
-#define view (*(iptr *)(frame_ + FRAME_OFF(804)))
-#define view_rects (*(i8 (*)[128])(frame_ + FRAME_OFF(808)))
-#define saved_origin_x (*(int (*)[8])(frame_ + FRAME_OFF(936)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(968)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(972)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(976)))
 i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
 
 {
   int in_view;
   iptr scaled;
-  i8 frame_[FRAME_OFF(984)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 clip_rect[16];
+  i32 result;
+  iptr sprite_h[8];
+  iptr sprite_w[8];
+  DWORD last_time;
+  i32 screen_y[8];
+  int screen_x[8];
+  int any_visible;
+  DWORD now;
+  int view_active[8];
+  DibSurface saved_bg[8];
+  int frame2;
+  int saved_origin_y[8];
+  iptr view;
+  i8 view_rects[128];
+  int saved_origin_x[8];
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   crt_vector_ctor_iterator(saved_bg,0x48,8,surface_ctor,surface_dtor);
@@ -6836,53 +6502,32 @@ LAB_0057f5f8:
 #undef mapview_origin_x
 #undef mapview_origin_y
 #undef mapview_zoom
-#undef clip_rect
-#undef result
-#undef sprite_h
-#undef sprite_w
-#undef last_time
-#undef screen_y
-#undef screen_x
-#undef any_visible
-#undef now
-#undef view_active
-#undef saved_bg
-#undef frame2
-#undef saved_origin_y
-#undef view
-#undef view_rects
-#undef saved_origin_x
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0057f657 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define map_redraw_busy (*(i32 *)((u8 *)&g.d_006ad908))
 #define mapview_half_tile_height (*(int *)((u8 *)&g.d_0066cabc))
-#define clip_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define new_surface (*(DibSurface * *)(frame_ + FRAME_OFF(16)))
-#define alloc (*(DibSurface * *)(frame_ + FRAME_OFF(20)))
-#define screen_x (*(int *)(frame_ + FRAME_OFF(24)))
-#define anim_h (*(int *)(frame_ + FRAME_OFF(28)))
-#define anim_y (*(int *)(frame_ + FRAME_OFF(32)))
-#define last_time (*(DWORD *)(frame_ + FRAME_OFF(36)))
-#define anim_w (*(int *)(frame_ + FRAME_OFF(40)))
-#define frame2 (*(int *)(frame_ + FRAME_OFF(44)))
-#define anim_x (*(int *)(frame_ + FRAME_OFF(48)))
-#define now (*(DWORD *)(frame_ + FRAME_OFF(52)))
-#define screen_y (*(int *)(frame_ + FRAME_OFF(56)))
-#define saved_bg (*(DibSurface * *)(frame_ + FRAME_OFF(60)))
-#define dirty_left (*(int *)(frame_ + FRAME_OFF(64)))
-#define dirty_top (*(int *)(frame_ + FRAME_OFF(68)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(80)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(84)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(88)))
 void __cdecl map_animate_nuke(iptr x,iptr y)
 
 {
   int ok;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 clip_rect[16];
+  DibSurface *new_surface;
+  DibSurface *alloc;
+  int screen_x;
+  int anim_h;
+  int anim_y;
+  DWORD last_time;
+  int anim_w;
+  int frame2;
+  int anim_x;
+  DWORD now;
+  int screen_y;
+  DibSurface *saved_bg;
+  RECT dirty_rect;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ok = map_in_bounds(x,y);
@@ -6921,22 +6566,22 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
     anim_y = (mapview_half_tile_height + screen_y) - (anim_h >> 1);
     gfx_copy_rect_clipped((iptr)((u8 *)&g.d_0066c7a8),(iptr)saved_bg,anim_x,anim_y,mapview_client_origin_x,mapview_client_origin_y,0,0,0,0,
                        anim_w,anim_h);
-    rect_set_xywh((iptr)&dirty_left,anim_x,anim_y,anim_w,anim_h);
-    if (dirty_left < 0) {
-      dirty_left = 0;
+    rect_set_xywh((iptr)&dirty_rect,anim_x,anim_y,anim_w,anim_h);
+    if (dirty_rect.left < 0) {
+      dirty_rect.left = 0;
     }
-    if (dirty_top < 0) {
-      dirty_top = 0;
+    if (dirty_rect.top < 0) {
+      dirty_rect.top = 0;
     }
-    ok = rect_width((iptr)&dirty_left);
-    if ((0 < ok) && (ok = rect_height((iptr)&dirty_left), 0 < ok)) {
+    ok = rect_width((iptr)&dirty_rect);
+    if ((0 < ok) && (ok = rect_height((iptr)&dirty_rect), 0 < ok)) {
       last_time = timeGetTime();
       mapview_apply_zoom((ViewWindow *)&map_views);
       for (frame2 = 0; frame2 < 0xb; frame2++) {
         sprite_draw
                   ((Sprite *)(&nuke_anim_sprites + frame2 * 0x3c),(iptr)clip_rect,(iptr)((u8 *)&g.d_0066c7a8),
                    anim_x,anim_y);
-        wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&dirty_left);
+        wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&dirty_rect);
         do {
           win_flush_pending_msgs();
           if (2 < game.multiplayer) {
@@ -6949,7 +6594,7 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
                            mapview_client_origin_y,anim_w,anim_h);
       }
       gfx_reset_zoom_scale();
-      wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&dirty_left);
+      wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&dirty_rect);
     }
     if (saved_bg != (DibSurface *)0x0) {
       surface_delete(saved_bg,1);
@@ -6961,24 +6606,6 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
 #undef human_civ
 #undef map_redraw_busy
 #undef mapview_half_tile_height
-#undef clip_rect
-#undef new_surface
-#undef alloc
-#undef screen_x
-#undef anim_h
-#undef anim_y
-#undef last_time
-#undef anim_w
-#undef frame2
-#undef anim_x
-#undef now
-#undef screen_y
-#undef saved_bg
-#undef dirty_left
-#undef dirty_top
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 005802fd auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -6993,7 +6620,6 @@ map_redraw_combat_tiles(i32 att_x,i32 att_y,i32 def_x,i32 def_y)
 #undef human_civ
 
 /* 0058c56c auto */
-#define dir (*(iptr *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl tile_has_irrigation_source(int x2,int y2)
 
 {
@@ -7002,7 +6628,7 @@ i32 __cdecl tile_has_irrigation_source(int x2,int y2)
   int ok;
   byte *tile;
   uint improvements2;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr dir;
   
   dir = 0;
   do {
@@ -7029,11 +6655,9 @@ i32 __cdecl tile_has_irrigation_source(int x2,int y2)
     dir++;
   } while( true );
 }
-#undef dir
 
 /* 0058fda9 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl map_reveal_adjacent_units(int x,int y,iptr civ)
 
 {
@@ -7041,7 +6665,7 @@ void __cdecl map_reveal_adjacent_units(int x,int y,iptr civ)
   iptr x2;
   int y2;
   int ok;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr dir;
   
   is_ocean = tile_is_ocean(x,y);
   net_batch_begin();
@@ -7060,7 +6684,6 @@ void __cdecl map_reveal_adjacent_units(int x,int y,iptr civ)
   return;
 }
 #undef human_civ
-#undef dir
 
 /* 005ae052 auto */
 iptr __cdecl map_wrap_x(iptr x)
@@ -7078,11 +6701,10 @@ iptr __cdecl map_wrap_x(iptr x)
 }
 
 /* 005ae10e auto */
-#define dx (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl map_dx_wrapped(int x1,int x2)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int dx;
   
   if (x1 == x2 || x1 - x2 < 0) {
     dx = ~(x1 - x2) + 1;
@@ -7095,15 +6717,13 @@ int __cdecl map_dx_wrapped(int x1,int x2)
   }
   return dx;
 }
-#undef dx
 
 /* 005ae1b0 auto */
-#define dy (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define dx (*(int *)(frame_ + FRAME_OFF(8)))
 int __cdecl map_distance(int x1,int y1,int x2,int y2)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 dy;
+  int dx;
   
   if (x1 == x2 || x1 - x2 < 0) {
     dx = ~(x1 - x2) + 1;
@@ -7122,16 +6742,13 @@ int __cdecl map_distance(int x1,int y1,int x2,int y2)
   }
   return dy + dx >> 1;
 }
-#undef dy
-#undef dx
 
 /* 005ae31d auto */
-#define dy (*(i32 *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl map_distance_diag(i32 x1,int y1,i32 x2,int y2)
 
 {
   i32 dist;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 dy;
   
   dist = map_dx_wrapped(x1,x2);
   if (y1 == y2 || y1 - y2 < 0) {
@@ -7143,18 +6760,16 @@ i32 __cdecl map_distance_diag(i32 x1,int y1,i32 x2,int y2)
   dist = dist_from_deltas(dist,dy);
   return dist;
 }
-#undef dy
 
 /* 005b2e69 auto */
 #define unit_move_anim_active (*(int *)((u8 *)&g.d_00636058))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl tile_first_unit(int x,int y)
 
 {
   int owner;
   i32 result;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr unit2;
   
   unit2 = -1;
   if ((unit_move_anim_active == 0) || (owner = tile_unit_owner(x,y), -1 < owner)) {
@@ -7175,14 +6790,8 @@ i32 __cdecl tile_first_unit(int x,int y)
   return result;
 }
 #undef unit_move_anim_active
-#undef unit
-#undef unit2
 
 /* 005b49cf auto */
-#define nbr_civ (*(int *)(frame_ + FRAME_OFF(0)))
-#define is_ocean (*(int *)(frame_ + FRAME_OFF(4)))
-#define nbr_ocean (*(int *)(frame_ + FRAME_OFF(20)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(24)))
 uint __cdecl tile_adjacent_nonallied_civ(iptr x,int y,iptr civ)
 
 {
@@ -7190,7 +6799,10 @@ uint __cdecl tile_adjacent_nonallied_civ(iptr x,int y,iptr civ)
   iptr x2;
   int y2;
   int ok;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int nbr_civ;
+  int is_ocean;
+  int nbr_ocean;
+  iptr dir;
   
   is_ocean = tile_is_ocean(x,y);
   city_owner = tile_city_owner(x,y);
@@ -7221,20 +6833,15 @@ uint __cdecl tile_adjacent_nonallied_civ(iptr x,int y,iptr civ)
   }
   return (uint)(-1 < adjacent_foreign_civ);
 }
-#undef nbr_civ
-#undef is_ocean
-#undef nbr_ocean
-#undef dir
 
 /* 005b4b66 auto */
-#define dir (*(iptr *)(frame_ + FRAME_OFF(0)))
 uint __cdecl tile_adjacent_nonallied_unit(int x2,int y,iptr civ)
 
 {
   char dy;
   iptr x;
   int owner;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr dir;
   
   adjacent_foreign_civ = -1;
   for (dir = 0; (adjacent_foreign_civ < 0 && (dir < 8)); dir++) {
@@ -7249,10 +6856,8 @@ uint __cdecl tile_adjacent_nonallied_unit(int x2,int y,iptr civ)
   }
   return (uint)(-1 < adjacent_foreign_civ);
 }
-#undef dir
 
 /* 005b4c63 auto */
-#define dir (*(iptr *)(frame_ + FRAME_OFF(0)))
 uint __cdecl tile_zoc_unit_adjacent(int x,int y,iptr civ)
 
 {
@@ -7260,7 +6865,7 @@ uint __cdecl tile_zoc_unit_adjacent(int x,int y,iptr civ)
   iptr x2;
   int y2;
   int owner;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr dir;
   
   adjacent_foreign_civ = -1;
   is_ocean = tile_is_ocean(x,y);
@@ -7277,15 +6882,13 @@ uint __cdecl tile_zoc_unit_adjacent(int x,int y,iptr civ)
   }
   return (uint)(-1 < adjacent_foreign_civ);
 }
-#undef dir
 
 /* 005b4d8c auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl tile_in_enemy_zoc(iptr x,i32 y,iptr civ)
 
 {
   int city_owner;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
   
   result = 0;
   adjacent_foreign_civ = -1;
@@ -7295,19 +6898,17 @@ i32 __cdecl tile_in_enemy_zoc(iptr x,i32 y,iptr civ)
   }
   return result;
 }
-#undef result
 
 /* 005b7fe0 auto */
-#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define tile (*(Tile * *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(12)))
-#define alloc_size (*(uint *)(frame_ + FRAME_OFF(16)))
 void __cdecl map_alloc(void)
 
 {
   void *handle;
   u8 *buf;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
+  Tile *tile;
+  int i;
+  uint alloc_size;
   
   map.quarter_w = (i16)(map.width + 3 >> 2);
   map.quarter_h = (i16)(map.height + 3 >> 2);
@@ -7390,19 +6991,14 @@ void __cdecl map_alloc(void)
   map_allocated = 1;
   return;
 }
-#undef civ
-#undef tile
-#undef i
-#undef alloc_size
 
 /* 005b8416 auto */
-#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl map_free(void)
 
 {
   u8 *buf;
   void *handle;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
   
   if (map_allocated != '\0') {
     if (map_coarse[3] != (u8 *)0x0) {
@@ -7449,7 +7045,6 @@ void __cdecl map_free(void)
   }
   return;
 }
-#undef civ
 
 /* 005b85fe auto */
 void __cdecl map_new_seed(void)
@@ -7466,13 +7061,12 @@ void __cdecl map_new_seed(void)
 }
 
 /* 005b8635 auto */
-#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl map_write(iptr file,int is_scenario)
 
 {
   size_t written;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
+  i32 result;
   
   result = 1;
   written = _fwrite(&map,0xe,1,(FILE *)file);
@@ -7502,18 +7096,15 @@ i32 __cdecl map_write(iptr file,int is_scenario)
   }
   return result;
 }
-#undef civ
-#undef result
 
 /* 005b8783 auto */
-#define civ (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define header (*(i8 (*)[36])(frame_ + FRAME_OFF(16)))
 i32 __cdecl map_read(iptr file,int is_scenario)
 
 {
   size_t nread;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
+  i32 result;
+  i8 header[36];
   
   result = 1;
   nread = _fread(header,0xe,1,(FILE *)file);
@@ -7552,9 +7143,6 @@ i32 __cdecl map_read(iptr file,int is_scenario)
   }
   return result;
 }
-#undef civ
-#undef result
-#undef header
 
 /* 005b8931 auto */
 Tile * __cdecl tile_at(iptr x,iptr y)
@@ -7602,13 +7190,12 @@ uint __cdecl tile_is_ocean(i32 x,i32 y)
 }
 
 /* 005b8a1d auto */
-#define owner2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl tile_owner(iptr x,iptr y)
 
 {
   iptr in_bounds;
   iptr tile;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 owner2;
   
   in_bounds = map_in_bounds(x,y);
   if (in_bounds == 0) {
@@ -7623,7 +7210,6 @@ int __cdecl tile_owner(iptr x,iptr y)
   }
   return owner2;
 }
-#undef owner2
 
 /* 005b8a81 auto */
 uint __cdecl tile_landmass(iptr x,iptr y)
@@ -7636,12 +7222,11 @@ uint __cdecl tile_landmass(iptr x,iptr y)
 }
 
 /* 005b8aa8 auto */
-#define landmass2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl tile_land_landmass(iptr x,iptr y)
 
 {
   int is_ocean;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 landmass2;
   
   landmass2 = 0xffffffff;
   is_ocean = tile_is_ocean(x,y);
@@ -7650,7 +7235,6 @@ i32 __cdecl tile_land_landmass(iptr x,iptr y)
   }
   return landmass2;
 }
-#undef landmass2
 
 /* 005b8af0 auto */
 int __cdecl tile_radius_civ(iptr x,iptr y)
@@ -7708,11 +7292,10 @@ uint __cdecl tile_get_fertility(iptr x,iptr y)
 }
 
 /* 005b8c42 auto */
-#define result (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl tile_owner_or_fertility(i32 x,iptr y)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int result;
   
   result = tile_radius_civ(x,y);
   if (((result == 0) && (result = tile_get_fertility(x,y), result != 0)) &&
@@ -7721,7 +7304,6 @@ int __cdecl tile_owner_or_fertility(i32 x,iptr y)
   }
   return result;
 }
-#undef result
 
 /* 005b8ca6 auto */
 i32 __cdecl tile_city_owner(iptr x,iptr y)
@@ -7812,7 +7394,6 @@ i32 __cdecl tile_owner_at_peace(iptr x,iptr y,iptr civ)
 }
 
 /* 005b8ee1 auto */
-#define resource (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl tile_resource(int x,int y)
 
 {
@@ -7821,7 +7402,7 @@ i32 __cdecl tile_resource(int x,int y)
   uint diag_u;
   uint diag_v;
   uint bit_mask;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 resource;
   
   in_bounds = map_in_bounds(x,y);
   if (in_bounds == 0) {
@@ -7855,7 +7436,6 @@ i32 __cdecl tile_resource(int x,int y)
   }
   return resource;
 }
-#undef resource
 
 /* 005b8ffa auto */
 i32 __cdecl tile_has_hut(int x,int y)
@@ -7896,13 +7476,12 @@ i32 __cdecl tile_has_hut(int x,int y)
 }
 
 /* 005b90df auto */
-#define civ (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl tile_add_pollution(iptr x,iptr y)
 
 {
   int in_bounds;
   uint improvements2;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
   
   in_bounds = map_in_bounds(x,y);
   if ((in_bounds != 0) && (improvements2 = tile_improvements(x,y), (improvements2 & 0x80) == 0)) {
@@ -7914,30 +7493,25 @@ void __cdecl tile_add_pollution(iptr x,iptr y)
   }
   return;
 }
-#undef civ
 
 /* 005b9431 auto */
-#define byte_idx (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define bit_mask (*(uint *)(frame_ + FRAME_OFF(8)))
 uint __cdecl landmass_borders_body(int landmass,iptr other_body)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr byte_idx;
+  uint bit_mask;
   
   bit_index_split(other_body,(iptr)&byte_idx,(iptr)&bit_mask);
   return (uint)((bit_mask & (byte)(&landmass_border_bits)[byte_idx + landmass * 0x10]) != 0);
 }
-#undef byte_idx
-#undef bit_mask
 
 /* 005b947f auto */
-#define landmass2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define count (*(i32 *)(frame_ + FRAME_OFF(8)))
 int __cdecl landmass_count_bordering(iptr body)
 
 {
   int borders;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int landmass2;
+  i32 count;
   
   count = 0;
   for (landmass2 = 1; landmass2 < 0x3f; landmass2++) {
@@ -7948,8 +7522,6 @@ int __cdecl landmass_count_bordering(iptr body)
   }
   return count;
 }
-#undef landmass2
-#undef count
 
 /* 005b94d5 auto */
 uint __cdecl tile_improvements(iptr x,iptr y)

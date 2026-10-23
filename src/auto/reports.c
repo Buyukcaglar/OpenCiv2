@@ -3,13 +3,12 @@
 #include "auto_common.h"
 
 /* 00419ed3 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define j (*(int *)(frame_ + FRAME_OFF(4)))
-#define leader (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl leaders_fixup_names(void)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  int j;
+  iptr leader;
   
   for (leader = 0; leader < 0x15; leader++) {
     leaders[leader].leader_name =
@@ -31,9 +30,6 @@ void __cdecl leaders_fixup_names(void)
   }
   return;
 }
-#undef i
-#undef j
-#undef leader
 
 /* 0042a380 auto */
 void __cdecl credits_font_global_init(void)
@@ -301,12 +297,11 @@ void __cdecl casualty_window_static_dtor(void)
 }
 
 /* 0042ac4e auto */
-#define window (*(PictureWindowCore * *)(frame_ + FRAME_OFF(0)))
 void __cdecl advisor_on_close_clicked(void)
 
 {
   int active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  PictureWindowCore *window;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -323,18 +318,16 @@ void __cdecl advisor_on_close_clicked(void)
   }
   return;
 }
-#undef window
 
 /* 0042acb0 auto */
-#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define button_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __thiscall advisor_add_close_button(ViewWindow *this)
 
 {
   u32 top_y;
   int rect_h;
   iptr label;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent_wnd2;
+  i8 button_rect[16];
   
   rect_set_xywh((iptr)button_rect,2,0,0x254,0x18);
   top_y = this->client_y;
@@ -354,19 +347,9 @@ void __thiscall advisor_add_close_button(ViewWindow *this)
   ctrl_set_cancel_button((Control *)&this->bar_height);
   return;
 }
-#undef parent_wnd2
-#undef button_rect
 
 /* 0042d781 auto */
 #define city_specialist_count (*(uint *)((u8 *)&g.d_006a6604))
-#define specialist_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define unhappy_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define content_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
-#define happy_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
-#define sprite_row (*(int *)(frame_ + FRAME_OFF(68)))
-#define spacing (*(int *)(frame_ + FRAME_OFF(72)))
-#define i (*(int *)(frame_ + FRAME_OFF(76)))
-#define citizen_index (*(uint *)(frame_ + FRAME_OFF(80)))
 int __cdecl
 advisor_draw_city_citizens(iptr city,int x,i32 y,i32 width,int happy_count,int unhappy_count,
             int angry_count)
@@ -378,7 +361,14 @@ advisor_draw_city_citizens(iptr city,int x,i32 y,i32 width,int happy_count,int u
   i8 *surface;
   int draw_x;
   i32 draw_y;
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 specialist_rect[16];
+  i8 unhappy_rect[16];
+  i8 content_rect[16];
+  i8 happy_rect[16];
+  int sprite_row;
+  int spacing;
+  int i;
+  uint citizen_index;
   
   spacing = ui_calc_item_spacing((int)cities[city].size,0x1c,width,0,0);
   citizen_index = 0;
@@ -441,14 +431,6 @@ advisor_draw_city_citizens(iptr city,int x,i32 y,i32 width,int happy_count,int u
   return spacing;
 }
 #undef city_specialist_count
-#undef specialist_rect
-#undef unhappy_rect
-#undef content_rect
-#undef happy_rect
-#undef sprite_row
-#undef spacing
-#undef i
-#undef citizen_index
 
 /* 0042da1d auto */
 #define advisor_client_width (*(i32 *)((u8 *)&g.d_0063ec3c))
@@ -458,12 +440,6 @@ advisor_draw_city_citizens(iptr city,int x,i32 y,i32 width,int happy_count,int u
 #define advisor_page_count_i32 (*(i32 *)((u8 *)&g.d_0063ef68))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
-#define row_y (*(int *)(frame_ + FRAME_OFF(0)))
-#define row_index (*(uint *)(frame_ + FRAME_OFF(24)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define city_count (*(int *)(frame_ + FRAME_OFF(44)))
-#define scroll_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(56)))
-#define rows_per_page (*(int *)(frame_ + FRAME_OFF(72)))
 /* WARNING: Removing unreachable block (ram,0x0042dfd1) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -479,7 +455,12 @@ void __cdecl attitude_advisor_draw(void)
   int gov_index;
   i32 max_row;
   iptr civ;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  int row_y;
+  uint row_index;
+  iptr city;
+  int city_count;
+  i8 scroll_rect[16];
+  int rows_per_page;
   
   civ = advisor_report_civ;
   recalc_flag = game.transient_flags & 4;
@@ -585,12 +566,6 @@ void __cdecl attitude_advisor_draw(void)
 #undef advisor_page_count_i32
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
-#undef row_y
-#undef row_index
-#undef city
-#undef city_count
-#undef scroll_rect
-#undef rows_per_page
 
 /* 0042e07f auto */
 #define advisor_first_row (*(i32 *)((u8 *)&g.d_0063ef70))
@@ -607,8 +582,6 @@ void __cdecl attitude_advisor_on_scroll(i32 scroll_pos)
 #define advisor_first_row (*(int *)((u8 *)&g.d_0063ef70))
 #define advisor_row_height (*(int *)((u8 *)&g.d_0063ef80))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define row_index (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl attitude_advisor_on_click(i32 click_x,int click_y)
@@ -616,7 +589,8 @@ void __cdecl attitude_advisor_on_click(i32 click_x,int click_y)
 {
   int row;
   bool is_match;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
+  int row_index;
   
   if ((-1 < click_y - advisor_list_top_i32) &&
      (row = (click_y - advisor_list_top_i32) / advisor_row_height, row < advisor_rows_per_page)) {
@@ -634,8 +608,6 @@ void __cdecl attitude_advisor_on_click(i32 click_x,int click_y)
 #undef advisor_first_row
 #undef advisor_row_height
 #undef advisor_list_top_i32
-#undef city
-#undef row_index
 
 /* 0042e185 auto */
 void __cdecl attitude_advisor_show(iptr report_civ)
@@ -675,18 +647,6 @@ void __cdecl defense_append_ability_label(i32 label_id)
 #define advisor_page_count_i32 (*(i32 *)((u8 *)&g.d_0063ef68))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
-#define row_y (*(int *)(frame_ + FRAME_OFF(4)))
-#define row_index (*(uint *)(frame_ + FRAME_OFF(32)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define type_listed (*(char (*)[64])(frame_ + FRAME_OFF(40)))
-#define text_y2 (*(int *)(frame_ + FRAME_OFF(104)))
-#define type_count (*(int *)(frame_ + FRAME_OFF(108)))
-#define col_x (*(int *)(frame_ + FRAME_OFF(112)))
-#define civ2 (*(int *)(frame_ + FRAME_OFF(116)))
-#define lost_x (*(int *)(frame_ + FRAME_OFF(120)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(124)))
-#define frame_rect2 (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
-#define rows_per_page (*(int *)(frame_ + FRAME_OFF(144)))
 /* WARNING: Removing unreachable block (ram,0x0042ef32) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -707,7 +667,18 @@ void __cdecl defense_minister_draw(void)
   i32 shadow_color;
   i32 shadow_color2;
   iptr civ;
-  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  int row_y;
+  uint row_index;
+  iptr unit_type;
+  char type_listed[64];
+  int text_y2;
+  int type_count;
+  int col_x;
+  int civ2;
+  int lost_x;
+  int line_height;
+  i8 frame_rect2[16];
+  int rows_per_page;
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -988,18 +959,6 @@ void __cdecl defense_minister_draw(void)
 #undef advisor_page_count_i32
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
-#undef row_y
-#undef row_index
-#undef unit_type
-#undef type_listed
-#undef text_y2
-#undef type_count
-#undef col_x
-#undef civ2
-#undef lost_x
-#undef line_height
-#undef frame_rect2
-#undef rows_per_page
 
 /* 0042efe3 auto */
 #define advisor_first_row (*(i32 *)((u8 *)&g.d_0063ef70))
@@ -1034,7 +993,6 @@ void __cdecl defense_minister_on_toggle_view(void)
 /* 0042f079 auto */
 #define advisor_client_x (*(i32 *)((u8 *)&g.d_0063ec34))
 #define advisor_report_param (*(i32 *)((u8 *)&g.d_0063efac))
-#define button_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 /* WARNING: Removing unreachable block (ram,0x0042f1bc) */
 /* WARNING: Removing unreachable block (ram,0x0042f131) */
 /* WARNING: Removing unreachable block (ram,0x0042f21a) */
@@ -1045,7 +1003,7 @@ void __cdecl defense_minister_show(iptr report_civ)
   int client_y;
   int rect_h;
   iptr label;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 button_rect[16];
   
   picwnd_open((PictureWindow *)&advisor_window,2,2,0,600,400,0,0);
   advisor_report_civ = report_civ;
@@ -1078,7 +1036,6 @@ void __cdecl defense_minister_show(iptr report_civ)
 }
 #undef advisor_client_x
 #undef advisor_report_param
-#undef button_rect
 
 /* 0042f293 auto */
 #define advisor_client_width (*(int *)((u8 *)&g.d_0063ec3c))
@@ -1092,32 +1049,6 @@ void __cdecl defense_minister_show(iptr report_civ)
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
 #define advisor_list_left_i32 (*(i32 *)((u8 *)&g.d_0063ef90))
-#define icon_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define civ3 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define item_y (*(int *)(frame_ + FRAME_OFF(20)))
-#define list_bottom (*(int *)(frame_ + FRAME_OFF(24)))
-#define first_item (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define item_x (*(int *)(frame_ + FRAME_OFF(32)))
-#define civ2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(40)))
-#define item_index (*(int *)(frame_ + FRAME_OFF(44)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(48)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define scroll_height (*(int *)(frame_ + FRAME_OFF(56)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(60)))
-#define attitude_level (*(iptr *)(frame_ + FRAME_OFF(64)))
-#define leader (*(iptr *)(frame_ + FRAME_OFF(68)))
-#define right_x (*(int *)(frame_ + FRAME_OFF(72)))
-#define left_x (*(int *)(frame_ + FRAME_OFF(76)))
-#define advance_count (*(int *)(frame_ + FRAME_OFF(80)))
-#define text_x2 (*(int *)(frame_ + FRAME_OFF(84)))
-#define column (*(int *)(frame_ + FRAME_OFF(88)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define row (*(int *)(frame_ + FRAME_OFF(96)))
-#define buf (*(char (*)[80])(frame_ + FRAME_OFF(100)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(180)))
-#define scroll_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(184)))
-#define rows_per_page (*(int *)(frame_ + FRAME_OFF(200)))
 /* WARNING: Removing unreachable block (ram,0x004301aa) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -1131,7 +1062,32 @@ void __cdecl intel_report_draw(void)
   i32 bg_color;
   i32 shadow_color;
   i32 shadow_color2;
-  i8 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 icon_rect[16];
+  iptr civ3;
+  int item_y;
+  int list_bottom;
+  iptr first_item;
+  int item_x;
+  int civ2;
+  int y2;
+  int item_index;
+  iptr city;
+  iptr advance;
+  int scroll_height;
+  iptr city2;
+  iptr attitude_level;
+  iptr leader;
+  int right_x;
+  int left_x;
+  int advance_count;
+  int text_x2;
+  int column;
+  iptr civ;
+  int row;
+  char buf[80];
+  int line_height;
+  i8 scroll_rect[16];
+  int rows_per_page;
   
   civ3 = advisor_report_civ;
   civ = advisor_report_param;
@@ -1453,32 +1409,6 @@ void __cdecl intel_report_draw(void)
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
 #undef advisor_list_left_i32
-#undef icon_rect
-#undef civ3
-#undef item_y
-#undef list_bottom
-#undef first_item
-#undef item_x
-#undef civ2
-#undef y2
-#undef item_index
-#undef city
-#undef advance
-#undef scroll_height
-#undef city2
-#undef attitude_level
-#undef leader
-#undef right_x
-#undef left_x
-#undef advance_count
-#undef text_x2
-#undef column
-#undef civ
-#undef row
-#undef buf
-#undef line_height
-#undef scroll_rect
-#undef rows_per_page
 
 /* 00430267 auto */
 #define advisor_first_row (*(int *)((u8 *)&g.d_0063ef70))
@@ -1497,8 +1427,6 @@ void __cdecl intel_report_on_scroll(int scroll_pos)
 #define advisor_row_height (*(int *)((u8 *)&g.d_0063ef80))
 #define intel_report_reopen (*(i32 *)((u8 *)&g.d_00625ec4))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
-#define advance_id (*(int *)(frame_ + FRAME_OFF(0)))
-#define item_index (*(int *)(frame_ + FRAME_OFF(4)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl intel_report_on_click(int click_x,int click_y)
@@ -1509,7 +1437,8 @@ void __cdecl intel_report_on_click(int click_x,int click_y)
   int column;
   int has_adv;
   bool is_match;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int advance_id;
+  int item_index;
   
   civ = advisor_report_param;
   if ((((-1 < click_y - advisor_list_top_i32) &&
@@ -1534,25 +1463,22 @@ void __cdecl intel_report_on_click(int click_x,int click_y)
 #undef advisor_row_height
 #undef intel_report_reopen
 #undef advisor_list_top_i32
-#undef advance_id
-#undef item_index
 
 /* 0043039d auto */
 #define advisor_report_param (*(iptr *)((u8 *)&g.d_0063efac))
 #define intel_report_reopen (*(i32 *)((u8 *)&g.d_00625ec4))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(8)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(764)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(768)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl intel_report_on_cities_clicked(void)
 
 {
   iptr civ_name;
   int has_palace;
-  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr improvement;
+  iptr city;
+  Dialog dialog2;
+  iptr civ;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -1600,20 +1526,12 @@ void __cdecl intel_report_on_cities_clicked(void)
 }
 #undef advisor_report_param
 #undef intel_report_reopen
-#undef improvement
-#undef city
-#undef dialog2
-#undef civ
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0043060b auto */
 #define advisor_client_x (*(i32 *)((u8 *)&g.d_0063ec34))
 #define advisor_report_param (*(iptr *)((u8 *)&g.d_0063efac))
 #define intel_report_reopen (*(int *)((u8 *)&g.d_00625ec4))
 #define advisor_modal_start_ticks_i32 (*(i32 *)((u8 *)&g.d_00625ec0))
-#define button_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 /* WARNING: Removing unreachable block (ram,0x004306c1) */
 /* WARNING: Removing unreachable block (ram,0x0043074c) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -1624,7 +1542,7 @@ void __cdecl intel_report_show(iptr report_civ,iptr target_civ)
   int client_y;
   int rect_h;
   iptr label;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 button_rect[16];
   
   picwnd_open((PictureWindow *)&advisor_window,3,3,1,600,400,0,0);
   advisor_report_civ = report_civ;
@@ -1664,7 +1582,6 @@ void __cdecl intel_report_show(iptr report_civ,iptr target_civ)
 #undef advisor_report_param
 #undef intel_report_reopen
 #undef advisor_modal_start_ticks_i32
-#undef button_rect
 
 /* 004308ae auto */
 #define diplo_cur_attitude (*(i32 *)((u8 *)&g.d_0064b114))
@@ -1677,19 +1594,6 @@ void __cdecl intel_report_show(iptr report_civ,iptr target_civ)
 #define parley_other_civ (*(iptr *)((u8 *)&g.d_0067a8c0))
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
 #define mp_meeting_wait_start_i32 (*(i32 *)((u8 *)&g.d_0063e4e8))
-#define cur_level (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define attitude_values (*(byte (*)[12])(frame_ + FRAME_OFF(4)))
-#define popup_result (*(int *)(frame_ + FRAME_OFF(16)))
-#define has_embassy_wonder (*(int *)(frame_ + FRAME_OFF(20)))
-#define choice (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define contact_count (*(int *)(frame_ + FRAME_OFF(28)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(32)))
-#define both_human (*(int *)(frame_ + FRAME_OFF(788)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(792)))
-#define sees_all (*(int *)(frame_ + FRAME_OFF(796)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(800)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(804)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(808)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl foreign_minister_show(iptr civ)
@@ -1700,7 +1604,19 @@ void __cdecl foreign_minister_show(iptr civ)
   iptr text;
   i32 option_flags;
   iptr option_id;
-  i8 frame_[FRAME_OFF(816)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr cur_level;
+  byte attitude_values[12];
+  int popup_result;
+  int has_embassy_wonder;
+  iptr choice;
+  int contact_count;
+  Dialog dialog2;
+  int both_human;
+  iptr civ2;
+  int sees_all;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -1991,51 +1907,9 @@ LAB_00431565:
 #undef parley_other_civ
 #undef scenario_events_loaded
 #undef mp_meeting_wait_start_i32
-#undef cur_level
-#undef attitude_values
-#undef popup_result
-#undef has_embassy_wonder
-#undef choice
-#undef contact_count
-#undef dialog2
-#undef both_human
-#undef civ2
-#undef sees_all
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00431d22 auto */
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define palette (*(GamePalette * *)(frame_ + FRAME_OFF(0)))
-#define surface (*(DibSurface * *)(frame_ + FRAME_OFF(8)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define legend_row (*(int *)(frame_ + FRAME_OFF(20)))
-#define legend_font (*(GameFont *)(frame_ + FRAME_OFF(24)))
-#define origin_x2 (*(u32 *)(frame_ + FRAME_OFF(32)))
-#define prev_y (*(int *)(frame_ + FRAME_OFF(36)))
-#define prev_x (*(int *)(frame_ + FRAME_OFF(40)))
-#define grid_x (*(int *)(frame_ + FRAME_OFF(44)))
-#define graph_wnd (*(i8 (*)[736])(frame_ + FRAME_OFF(48)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(784)))
-#define year2 (*(i32 *)(frame_ + FRAME_OFF(1540)))
-#define civ_color (*(i32 *)(frame_ + FRAME_OFF(1544)))
-#define point_y (*(int *)(frame_ + FRAME_OFF(1548)))
-#define point_x (*(int *)(frame_ + FRAME_OFF(1552)))
-#define sample (*(int *)(frame_ + FRAME_OFF(1556)))
-#define origin_y2 (*(u32 *)(frame_ + FRAME_OFF(1560)))
-#define grid_step (*(int *)(frame_ + FRAME_OFF(1564)))
-#define sample_count (*(iptr *)(frame_ + FRAME_OFF(1568)))
-#define rect_left2 (*(u32 *)(frame_ + FRAME_OFF(1572)))
-#define rect_top2 (*(int *)(frame_ + FRAME_OFF(1576)))
-#define rect_right2 (*(u8 (*)[4])(frame_ + FRAME_OFF(1580)))
-#define rect_bottom2 (*(u8 (*)[4])(frame_ + FRAME_OFF(1584)))
-#define max_power (*(uint *)(frame_ + FRAME_OFF(1588)))
-#define bg_surface2 (*(DibSurface * *)(frame_ + FRAME_OFF(1592)))
-#define bg_palette (*(GamePalette * *)(frame_ + FRAME_OFF(1596)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1600)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1604)))
-#define seh_state (*(int *)(frame_ + FRAME_OFF(1608)))
 void __cdecl powergraph_show(void)
 
 {
@@ -2054,7 +1928,32 @@ void __cdecl powergraph_show(void)
   i32 wnd_arg6;
   i32 wnd_arg7;
   i32 wnd_arg8;
-  i8 frame_[FRAME_OFF(1616)] __attribute__((aligned(8)));  /* original stack frame */
+  GamePalette *palette;
+  DibSurface *surface;
+  iptr civ;
+  int legend_row;
+  GameFont legend_font;
+  u32 origin_x2;
+  int prev_y;
+  int prev_x;
+  int grid_x;
+  i8 graph_wnd[736];
+  Dialog dialog2;
+  i32 year2;
+  i32 civ_color;
+  int point_y;
+  int point_x;
+  int sample;
+  u32 origin_y2;
+  int grid_step;
+  iptr sample_count;
+  struct { u32 left; int top; i32 right; i32 bottom; } rect2;
+  uint max_power;
+  DibSurface *bg_surface2;
+  GamePalette *bg_palette;
+  i32 seh_prev;
+  i8 *seh_handler;
+  int seh_state;
   
   seh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)graph_wnd);
@@ -2087,7 +1986,7 @@ void __cdecl powergraph_show(void)
   else {
     palette = (GamePalette *)palette_init(this_00);
   }
-  seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),3);
+  seh_state = (seh_state & 0xffffff00 | (byte)(3));
   bg_palette = palette;
   surface_load_gif_resource(bg_surface2,0x33,10,0xc0,(iptr)palette);
   wnd_arg8 = 0;
@@ -2108,19 +2007,19 @@ void __cdecl powergraph_show(void)
   frame_wnd_layout((FrameWindow *)graph_wnd);
   frame_wnd_draw_caption((FrameWindow *)graph_wnd);
   gfx_copy_rect_xywh((iptr)bg_surface2,(iptr)graph_wnd,0,0,origin_x2,origin_y2,600,400);
-  rect_left2 = (*(i32 *)((char *)&graph_wnd + 700));
-  rect_right2[0] = graph_wnd[0x2c4];
-  rect_right2[1] = graph_wnd[0x2c5];
-  rect_right2[2] = graph_wnd[0x2c6];
-  rect_right2[3] = graph_wnd[0x2c7];
-  rect_bottom2[0] = graph_wnd[0x2c8];
-  rect_bottom2[1] = graph_wnd[0x2c9];
-  rect_bottom2[2] = graph_wnd[0x2ca];
-  rect_bottom2[3] = graph_wnd[0x2cb];
-  rect_top2 = (*(i32 *)((char *)&graph_wnd + 704)) + 400;
-  gfx_fill_rect((iptr)graph_wnd,(iptr)&rect_left2,0x14);
-  rect_set_xywh((iptr)&rect_left2,origin_x2 + 8,origin_y2 + 2,0x248,0x16e);
-  gfx_draw_rect_frame((iptr)graph_wnd,(iptr)&rect_left2,10);
+  rect2.left = (*(i32 *)((char *)&graph_wnd + 700));
+  ((u8 *)&rect2.right)[0] = graph_wnd[0x2c4];
+  ((u8 *)&rect2.right)[1] = graph_wnd[0x2c5];
+  ((u8 *)&rect2.right)[2] = graph_wnd[0x2c6];
+  ((u8 *)&rect2.right)[3] = graph_wnd[0x2c7];
+  ((u8 *)&rect2.bottom)[0] = graph_wnd[0x2c8];
+  ((u8 *)&rect2.bottom)[1] = graph_wnd[0x2c9];
+  ((u8 *)&rect2.bottom)[2] = graph_wnd[0x2ca];
+  ((u8 *)&rect2.bottom)[3] = graph_wnd[0x2cb];
+  rect2.top = (*(i32 *)((char *)&graph_wnd + 704)) + 400;
+  gfx_fill_rect((iptr)graph_wnd,(iptr)&rect2,0x14);
+  rect_set_xywh((iptr)&rect2,origin_x2 + 8,origin_y2 + 2,0x248,0x16e);
+  gfx_draw_rect_frame((iptr)graph_wnd,(iptr)&rect2,10);
   if (((game.game_flags & 0x80) == 0) || ((scenario_flags & 2) == 0)) {
     sample_count = (int)((int)game.turn + ((int)game.turn >> 0x1f & 3U)) >> 2;
   }
@@ -2160,7 +2059,7 @@ void __cdecl powergraph_show(void)
       gfx_draw_text((iptr)((u8 *)&g.d_00679640),grid_x + origin_x2,origin_y2 + 0x172);
     }
   }
-  surface_set_clip((DibSurface *)graph_wnd,(iptr)&rect_left2);
+  surface_set_clip((DibSurface *)graph_wnd,(iptr)&rect2);
   for (civ = 1; civ < 8; civ++) {
     if (((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) ||
        ((1 << ((byte)civ & 0x1f) & (uint)game.civs_at_start) != 0)) {
@@ -2221,67 +2120,37 @@ void __cdecl powergraph_show(void)
   /* inlined unwind funclet 004325c9 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   /* inlined unwind funclet 004325d5 */ { font_destroy((GameFont *)((iptr)&legend_font)); }
-  seh_state = (uint)(*(i32 *)((char *)&seh_state + 1)) << 8;
+  seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 004325e1 */ { font_destroy((GameFont *)((iptr)((u8 *)&graph_wnd + 0x2d8))); }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 004325ed */ { frame_wnd_dtor((DibSurface *)((iptr)&graph_wnd)); }
   return;
 }
 #undef scenario_flags
-#undef palette
-#undef surface
-#undef civ
-#undef legend_row
-#undef legend_font
-#undef origin_x2
-#undef prev_y
-#undef prev_x
-#undef grid_x
-#undef graph_wnd
-#undef dialog2
-#undef year2
-#undef civ_color
-#undef point_y
-#undef point_x
-#undef sample
-#undef origin_y2
-#undef grid_step
-#undef sample_count
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
-#undef max_power
-#undef bg_surface2
-#undef bg_palette
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00432611 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define i (*(int *)(frame_ + FRAME_OFF(12)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define advance (*(int *)(frame_ + FRAME_OFF(20)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(24)))
-#define quote_index (*(int *)(frame_ + FRAME_OFF(780)))
-#define rank (*(int *)(frame_ + FRAME_OFF(784)))
-#define title_buf (*(i8 (*)[80])(frame_ + FRAME_OFF(788)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(868)))
-#define scores (*(int (*)[8])(frame_ + FRAME_OFF(872)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(904)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(908)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(912)))
 void __cdecl historian_report_show(void)
 
 {
   int category;
   int has_adv;
   iptr civ_name;
-  i8 frame_[FRAME_OFF(920)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
+  iptr civ2;
+  int i;
+  iptr city;
+  int advance;
+  Dialog dialog2;
+  int quote_index;
+  int rank;
+  i8 title_buf[80];
+  int best_score;
+  int scores[8];
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x2000);
@@ -2387,20 +2256,6 @@ void __cdecl historian_report_show(void)
 }
 #undef human_civ
 #undef text_buffer
-#undef civ
-#undef civ2
-#undef i
-#undef city
-#undef advance
-#undef dialog2
-#undef quote_index
-#undef rank
-#undef title_buf
-#undef best_score
-#undef scores
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00432c1c auto */
 #define advisor_client_width (*(int *)((u8 *)&g.d_0063ec3c))
@@ -2408,27 +2263,6 @@ void __cdecl historian_report_show(void)
 #define advisor_row_height (*(i32 *)((u8 *)&g.d_0063ef80))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
-#define icon_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define top_cities (*(iptr (*)[5])(frame_ + FRAME_OFF(20)))
-#define bottom (*(int *)(frame_ + FRAME_OFF(40)))
-#define city_x (*(int *)(frame_ + FRAME_OFF(44)))
-#define box_bottom (*(int *)(frame_ + FRAME_OFF(48)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(52)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(56)))
-#define box_top (*(int *)(frame_ + FRAME_OFF(60)))
-#define mid_x (*(int *)(frame_ + FRAME_OFF(64)))
-#define span_width (*(int *)(frame_ + FRAME_OFF(68)))
-#define right_x (*(int *)(frame_ + FRAME_OFF(72)))
-#define citizens_x (*(int *)(frame_ + FRAME_OFF(76)))
-#define wonder_x (*(int *)(frame_ + FRAME_OFF(80)))
-#define shift (*(iptr *)(frame_ + FRAME_OFF(84)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(88)))
-#define rank (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(96)))
-#define top_scores (*(iptr *)(frame_ + FRAME_OFF(100)))
-#define top_scores_rest (*(int (*)[4])(frame_ + FRAME_OFF(104)))
-#define score (*(int *)(frame_ + FRAME_OFF(120)))
-#define box_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(124)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl top_cities_draw(void)
@@ -2439,11 +2273,30 @@ void __cdecl top_cities_draw(void)
   i32 bg_color;
   i32 shadow_color;
   i32 shadow_color2;
-  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 icon_rect[16];
+  iptr top_cities[5];
+  int bottom;
+  int city_x;
+  int box_bottom;
+  int y2;
+  iptr city;
+  int box_top;
+  int mid_x;
+  int span_width;
+  int right_x;
+  int citizens_x;
+  int wonder_x;
+  iptr shift;
+  iptr wonder;
+  iptr rank;
+  int line_height;
+  iptr top_scores[5];
+  int score;
+  i8 box_rect[16];
   
   for (rank = 0; rank < 5; rank++) {
     top_cities[rank] = -1;
-    (&top_scores)[rank] = top_cities[rank];
+    top_scores[rank] = top_cities[rank];
   }
   city = 0;
   while( true ) {
@@ -2532,12 +2385,12 @@ LAB_00432c6b:
   rank = 0;
 LAB_00432d26:
   if (rank < 5) {
-    if (score <= (&top_scores)[rank]) goto LAB_00432d23;
+    if (score <= top_scores[rank]) goto LAB_00432d23;
     for (shift = 3; rank <= shift; shift--) {
-      (&top_scores)[shift + 1] = (&top_scores)[shift];
+      top_scores[shift + 1] = top_scores[shift];
       top_cities[shift + 1] = top_cities[shift];
     }
-    (&top_scores)[rank] = score;
+    top_scores[rank] = score;
     top_cities[rank] = city;
   }
   goto LAB_00432c6b;
@@ -2550,27 +2403,6 @@ LAB_00432d23:
 #undef advisor_row_height
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
-#undef icon_rect
-#undef top_cities
-#undef bottom
-#undef city_x
-#undef box_bottom
-#undef y2
-#undef city
-#undef box_top
-#undef mid_x
-#undef span_width
-#undef right_x
-#undef citizens_x
-#undef wonder_x
-#undef shift
-#undef wonder
-#undef rank
-#undef line_height
-#undef top_scores
-#undef top_scores_rest
-#undef score
-#undef box_rect
 
 /* 00433122 auto */
 #define advisor_modal_start_ticks_i32 (*(i32 *)((u8 *)&g.d_00625ec0))
@@ -2598,10 +2430,6 @@ void __cdecl top_cities_show(iptr report_civ)
 
 /* 004331d1 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define best_value (*(uint *)(frame_ + FRAME_OFF(4)))
-#define rank (*(int *)(frame_ + FRAME_OFF(8)))
-#define rival (*(int *)(frame_ + FRAME_OFF(12)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl
 demographics_draw_rank(iptr values,iptr civ,uint y,iptr unit_suffix,int left_x,int right_x)
 
@@ -2612,7 +2440,10 @@ demographics_draw_rank(iptr values,iptr civ,uint y,iptr unit_suffix,int left_x,i
   i32 bg_color;
   i32 shadow_color;
   i32 shadow_color2;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint best_value;
+  int rank;
+  int rival;
+  iptr civ2;
   
   rank = 1;
   best_value = 0xffffd8f1;
@@ -2667,10 +2498,6 @@ demographics_draw_rank(iptr values,iptr civ,uint y,iptr unit_suffix,int left_x,i
   return;
 }
 #undef human_civ
-#undef best_value
-#undef rank
-#undef rival
-#undef civ2
 
 /* 00433434 auto */
 #define advisor_client_width (*(int *)((u8 *)&g.d_0063ec3c))
@@ -2684,33 +2511,6 @@ demographics_draw_rank(iptr values,iptr civ,uint y,iptr unit_suffix,int left_x,i
 #define city_yield_totals (*(int *)((u8 *)&g.d_006a65c8))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
-#define pollution (*(int (*)[8])(frame_ + FRAME_OFF(0)))
-#define land_area (*(int (*)[8])(frame_ + FRAME_OFF(32)))
-#define bottom (*(int *)(frame_ + FRAME_OFF(64)))
-#define right_x (*(int *)(frame_ + FRAME_OFF(68)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(72)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(76)))
-#define rank_x (*(int *)(frame_ + FRAME_OFF(80)))
-#define approval (*(int (*)[8])(frame_ + FRAME_OFF(84)))
-#define value_x (*(int *)(frame_ + FRAME_OFF(116)))
-#define label_x (*(int *)(frame_ + FRAME_OFF(120)))
-#define food_surplus (*(int (*)[8])(frame_ + FRAME_OFF(124)))
-#define shields2 (*(int (*)[8])(frame_ + FRAME_OFF(156)))
-#define city_pollution2 (*(int *)(frame_ + FRAME_OFF(188)))
-#define tile_owner2 (*(u8 * *)(frame_ + FRAME_OFF(192)))
-#define income (*(int (*)[8])(frame_ + FRAME_OFF(196)))
-#define gnp (*(int (*)[8])(frame_ + FRAME_OFF(228)))
-#define label_color (*(i32 *)(frame_ + FRAME_OFF(260)))
-#define civ2 (*(uptr *)(frame_ + FRAME_OFF(264)))
-#define values (*(int (*)[8])(frame_ + FRAME_OFF(268)))
-#define tile (*(int *)(frame_ + FRAME_OFF(300)))
-#define suffix_buf (*(i8 (*)[80])(frame_ + FRAME_OFF(304)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(384)))
-#define population (*(int (*)[8])(frame_ + FRAME_OFF(388)))
-#define life_expect (*(int (*)[8])(frame_ + FRAME_OFF(420)))
-#define line_left (*(int *)(frame_ + FRAME_OFF(452)))
-#define literacy (*(int (*)[8])(frame_ + FRAME_OFF(456)))
-#define line_right (*(int *)(frame_ + FRAME_OFF(488)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl demographics_draw(void)
@@ -2721,7 +2521,33 @@ void __cdecl demographics_draw(void)
   int value;
   int text_y;
   iptr civ;
-  i8 frame_[FRAME_OFF(496)] __attribute__((aligned(8)));  /* original stack frame */
+  int pollution[8];
+  int land_area[8];
+  int bottom;
+  int right_x;
+  int y2;
+  iptr city;
+  int rank_x;
+  int approval[8];
+  int value_x;
+  int label_x;
+  int food_surplus[8];
+  int shields2[8];
+  int city_pollution2;
+  u8 *tile_owner2;
+  int income[8];
+  int gnp[8];
+  i32 label_color;
+  uptr civ2;
+  int values[8];
+  int tile;
+  i8 suffix_buf[80];
+  int row_height;
+  int population[8];
+  int life_expect[8];
+  int line_left;
+  int literacy[8];
+  int line_right;
   
   civ = advisor_report_civ;
   for (civ2 = 0; (int)civ2 < 8; civ2++) {
@@ -3112,33 +2938,6 @@ void __cdecl demographics_draw(void)
 #undef city_yield_totals
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
-#undef pollution
-#undef land_area
-#undef bottom
-#undef right_x
-#undef y2
-#undef city
-#undef rank_x
-#undef approval
-#undef value_x
-#undef label_x
-#undef food_surplus
-#undef shields2
-#undef city_pollution2
-#undef tile_owner2
-#undef income
-#undef gnp
-#undef label_color
-#undef civ2
-#undef values
-#undef tile
-#undef suffix_buf
-#undef row_height
-#undef population
-#undef life_expect
-#undef line_left
-#undef literacy
-#undef line_right
 
 /* 00434d8a auto */
 #define advisor_modal_start_ticks_i32 (*(i32 *)((u8 *)&g.d_00625ec0))
@@ -3187,19 +2986,6 @@ void __cdecl advisor_refresh_if_open(iptr report_id)
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
-#define year2 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define abs_year (*(uint *)(frame_ + FRAME_OFF(4)))
-#define abs_year2 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define month_index (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define month (*(int *)(frame_ + FRAME_OFF(16)))
-#define year_step (*(int *)(frame_ + FRAME_OFF(20)))
-#define entry_y (*(int *)(frame_ + FRAME_OFF(28)))
-#define entry (*(int *)(frame_ + FRAME_OFF(44)))
-#define line (*(int *)(frame_ + FRAME_OFF(52)))
-#define line_buf (*(i8 (*)[80])(frame_ + FRAME_OFF(56)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(136)))
-#define open_err (*(int *)(frame_ + FRAME_OFF(140)))
-#define title_buf (*(i8 (*)[132])(frame_ + FRAME_OFF(144)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl hall_of_fame_draw(void)
@@ -3210,7 +2996,19 @@ void __cdecl hall_of_fame_draw(void)
   int bottom;
   iptr text;
   int font_height;
-  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  uint year2;
+  uint abs_year;
+  uint abs_year2;
+  iptr month_index;
+  int month;
+  int year_step;
+  int entry_y;
+  int entry;
+  int line;
+  i8 line_buf[80];
+  int line_height;
+  int open_err;
+  i8 title_buf[132];
   
   highlight = advisor_report_param;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -3387,19 +3185,6 @@ void __cdecl hall_of_fame_draw(void)
 #undef text_buffer
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
-#undef year2
-#undef abs_year
-#undef abs_year2
-#undef month_index
-#undef month
-#undef year_step
-#undef entry_y
-#undef entry
-#undef line
-#undef line_buf
-#undef line_height
-#undef open_err
-#undef title_buf
 
 /* 00436b92 auto */
 void __cdecl hall_of_fame_on_clear_clicked(void)
@@ -3414,7 +3199,6 @@ void __cdecl hall_of_fame_on_clear_clicked(void)
 #define advisor_client_x (*(i32 *)((u8 *)&g.d_0063ec34))
 #define advisor_report_param (*(int *)((u8 *)&g.d_0063efac))
 #define advisor_modal_start_ticks_i32 (*(i32 *)((u8 *)&g.d_00625ec0))
-#define button_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 /* WARNING: Removing unreachable block (ram,0x00436c7e) */
 /* WARNING: Removing unreachable block (ram,0x00436d09) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -3425,7 +3209,7 @@ iptr __cdecl hall_of_fame_show(int highlight)
   int client_y;
   int rect_h;
   iptr label;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 button_rect[16];
   
   hall_of_fame_load();
   picwnd_open((PictureWindow *)&advisor_window,8,8,1,600,400,0,0);
@@ -3467,14 +3251,12 @@ iptr __cdecl hall_of_fame_show(int highlight)
 #undef advisor_client_x
 #undef advisor_report_param
 #undef advisor_modal_start_ticks_i32
-#undef button_rect
 
 /* 00436dd7 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl hall_of_fame_clear(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; i < 6; i++) {
     *(i16 *)(&hall_of_fame_entries + i * 0x48) = 0xffff;
@@ -3482,17 +3264,15 @@ void __cdecl hall_of_fame_clear(void)
   }
   return;
 }
-#undef i
 
 /* 00436e28 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl hall_of_fame_load(void)
 
 {
   bool read_failed;
   FILE *_File;
   size_t read_count;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   hall_of_fame_clear();
   _File = _fopen(s_HALLFAME_DAT_00626124,&hall_of_fame_read_mode);
@@ -3512,16 +3292,14 @@ void __cdecl hall_of_fame_load(void)
   }
   return;
 }
-#undef i
 
 /* 00436ed2 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl hall_of_fame_save(void)
 
 {
   FILE *_File;
   size_t written;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   _File = _fopen(s_HALLFAME_DAT_00626138,&hall_of_fame_write_mode);
   if (_File != (FILE *)0x0) {
@@ -3534,7 +3312,6 @@ void __cdecl hall_of_fame_save(void)
   }
   return;
 }
-#undef i
 
 /* 00436f5a auto */
 #define civ_rating_percent (*(i32 *)((u8 *)&g.d_0063ea18))
@@ -3555,9 +3332,6 @@ void __cdecl hall_of_fame_save(void)
 #define hof_new_title_index_i16 (*(i16 *)((u8 *)&g.d_0063eade))
 #define hof_last_entry_score_i16 (*(i16 *)((u8 *)&g.d_0063f230))
 #define hof_last_entry_rating_i16 (*(i16 *)((u8 *)&g.d_0063f242))
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
-#define new_rank (*(int *)(frame_ + FRAME_OFF(4)))
-#define insert_pos (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl hall_of_fame_add_entry(iptr civ)
@@ -3565,7 +3339,9 @@ void __cdecl hall_of_fame_add_entry(iptr civ)
 {
   i32 value;
   int score;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
+  int new_rank;
+  int insert_pos;
   
   new_rank = -1;
   score = score_total;
@@ -3639,9 +3415,6 @@ LAB_00437186:
 #undef hof_new_title_index_i16
 #undef hof_last_entry_score_i16
 #undef hof_last_entry_rating_i16
-#undef slot
-#undef new_rank
-#undef insert_pos
 
 /* 004371b3 auto */
 void __cdecl credits_text_global_init(void)
@@ -3697,11 +3470,10 @@ int __cdecl credits_add_line(char *line)
 #undef credits_line_count
 
 /* 00437284 auto */
-#define cursor (*(char * *)(frame_ + FRAME_OFF(0)))
 char * __cdecl credits_get_line(int line_index)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  char *cursor;
   
   cursor = credits_text_data;
   for (; line_index != 0; line_index--) {
@@ -3711,16 +3483,14 @@ char * __cdecl credits_get_line(int line_index)
   }
   return cursor;
 }
-#undef cursor
 
 /* 004372cd auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define result (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl credits_load_section(i32 section)
 
 {
   int status;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
   
   result = 1;
   switch(section) {
@@ -3754,7 +3524,6 @@ switchD_004373ad_default:
   return result;
 }
 #undef text_buffer
-#undef result
 
 /* 0043742f auto */
 #define advisor_client_width (*(int *)((u8 *)&g.d_0063ec3c))
@@ -3766,39 +3535,6 @@ switchD_004373ad_default:
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
-#define clip_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define dead_surface (*(DibSurface * *)(frame_ + FRAME_OFF(20)))
-#define dead_surface2 (*(DibSurface * *)(frame_ + FRAME_OFF(24)))
-#define new_sprite (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define sprite_mem (*(Sprite * *)(frame_ + FRAME_OFF(32)))
-#define new_surface (*(DibSurface * *)(frame_ + FRAME_OFF(36)))
-#define surface_mem (*(DibSurface * *)(frame_ + FRAME_OFF(40)))
-#define old_sprite (*(Sprite * *)(frame_ + FRAME_OFF(44)))
-#define old_sprite2 (*(Sprite * *)(frame_ + FRAME_OFF(48)))
-#define saved_scroll (*(int *)(frame_ + FRAME_OFF(52)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(56)))
-#define bottom (*(int *)(frame_ + FRAME_OFF(60)))
-#define left_x (*(int *)(frame_ + FRAME_OFF(64)))
-#define top (*(int *)(frame_ + FRAME_OFF(68)))
-#define line (*(int *)(frame_ + FRAME_OFF(72)))
-#define text_width (*(int *)(frame_ + FRAME_OFF(76)))
-#define center_x (*(int *)(frame_ + FRAME_OFF(80)))
-#define drawn_right (*(int *)(frame_ + FRAME_OFF(84)))
-#define drawn_left (*(int *)(frame_ + FRAME_OFF(88)))
-#define max_width2 (*(int *)(frame_ + FRAME_OFF(92)))
-#define line_text (*(char * *)(frame_ + FRAME_OFF(96)))
-#define free_slot (*(int *)(frame_ + FRAME_OFF(100)))
-#define line_surface (*(DibSurface * *)(frame_ + FRAME_OFF(104)))
-#define slot (*(int *)(frame_ + FRAME_OFF(108)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(112)))
-#define rect_left2 (*(int *)(frame_ + FRAME_OFF(116)))
-#define rect_top2 (*(int *)(frame_ + FRAME_OFF(120)))
-#define rect_right2 (*(i32 *)(frame_ + FRAME_OFF(124)))
-#define rect_bottom2 (*(i32 *)(frame_ + FRAME_OFF(128)))
-#define found_slot (*(int *)(frame_ + FRAME_OFF(132)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(136)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(140)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(144)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl credits_draw_scroll(int full_redraw)
@@ -3806,7 +3542,36 @@ void __cdecl credits_draw_scroll(int full_redraw)
 {
   i32 rect_h;
   i32 rect_w;
-  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 clip_rect[16];
+  DibSurface *dead_surface;
+  DibSurface *dead_surface2;
+  i32 new_sprite;
+  Sprite *sprite_mem;
+  DibSurface *new_surface;
+  DibSurface *surface_mem;
+  Sprite *old_sprite;
+  Sprite *old_sprite2;
+  int saved_scroll;
+  int y2;
+  int bottom;
+  int left_x;
+  int top;
+  int line;
+  int text_width;
+  int center_x;
+  int drawn_right;
+  int drawn_left;
+  int max_width2;
+  char *line_text;
+  int free_slot;
+  DibSurface *line_surface;
+  int slot;
+  int line_height;
+  RECT rect2;
+  int found_slot;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   if (credits_partial_redraw_ok == 0) {
@@ -3935,17 +3700,17 @@ void __cdecl credits_draw_scroll(int full_redraw)
     center_x = (advisor_client_width >> 1) + advisor_client_x;
     drawn_left = center_x - (max_width2 >> 1);
     drawn_right = max_width2 + drawn_left;
-    rect_set((iptr)&rect_left2,drawn_left,top,drawn_right,bottom);
-    credits_drawn_rect = rect_left2;
-    credits_drawn_rect_top = rect_top2;
-    credits_drawn_rect_right = rect_right2;
-    credits_drawn_rect_bottom = rect_bottom2;
+    rect_set((iptr)&rect2,drawn_left,top,drawn_right,bottom);
+    credits_drawn_rect = rect2.left;
+    credits_drawn_rect_top = rect2.top;
+    credits_drawn_rect_right = rect2.right;
+    credits_drawn_rect_bottom = rect2.bottom;
     if (advisor_client_width <= max_width2) {
       full_redraw = 1;
     }
     credits_partial_redraw_ok = (uint)(advisor_client_width > max_width2);
     if (full_redraw == 0) {
-      wnd_blit_surface_rect((DibSurface *)&advisor_window,(iptr)&rect_left2);
+      wnd_blit_surface_rect((DibSurface *)&advisor_window,(iptr)&rect2);
     }
     else {
       frame_wnd_draw_caption((FrameWindow *)&advisor_window);
@@ -3967,39 +3732,6 @@ LAB_00437a02:
 #undef text_buffer
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
-#undef clip_rect
-#undef dead_surface
-#undef dead_surface2
-#undef new_sprite
-#undef sprite_mem
-#undef new_surface
-#undef surface_mem
-#undef old_sprite
-#undef old_sprite2
-#undef saved_scroll
-#undef y2
-#undef bottom
-#undef left_x
-#undef top
-#undef line
-#undef text_width
-#undef center_x
-#undef drawn_right
-#undef drawn_left
-#undef max_width2
-#undef line_text
-#undef free_slot
-#undef line_surface
-#undef slot
-#undef line_height
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
-#undef found_slot
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00437a10 auto */
 void __cdecl credits_on_redraw(void)
@@ -4024,15 +3756,14 @@ void __cdecl credits_on_timer(void)
 #define credits_partial_redraw_ok (*(i32 *)((u8 *)&g.d_00625ed0))
 #define credits_scroll_pos (*(i32 *)((u8 *)&g.d_00625ecc))
 #define advisor_modal_start_ticks_i32 (*(i32 *)((u8 *)&g.d_00625ec0))
-#define timer_id (*(int *)(frame_ + FRAME_OFF(4)))
-#define slot (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl credits_show(int section)
 
 {
   int load_failed;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int timer_id;
+  int slot;
   
   timer_id = -1;
   credits_text_init(0x1000);
@@ -4085,8 +3816,6 @@ void __cdecl credits_show(int section)
 #undef credits_partial_redraw_ok
 #undef credits_scroll_pos
 #undef advisor_modal_start_ticks_i32
-#undef timer_id
-#undef slot
 
 /* 00437c6f auto */
 void __cdecl intel_report_end_modal(void)
@@ -4134,12 +3863,6 @@ void __cdecl casualty_scrollbar_on_scroll(i32 scroll_pos)
 #define casualty_page_count_i32 (*(i32 *)((u8 *)&g.d_0063e950))
 #define casualty_list_height_i32 (*(i32 *)((u8 *)&g.d_0063e964))
 #define casualty_vscroll_width_i32 (*(i32 *)((u8 *)&g.d_0063e98c))
-#define row_y (*(int *)(frame_ + FRAME_OFF(0)))
-#define log_index (*(int *)(frame_ + FRAME_OFF(24)))
-#define entry (*(int *)(frame_ + FRAME_OFF(32)))
-#define entry_count2 (*(int *)(frame_ + FRAME_OFF(44)))
-#define scroll_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(56)))
-#define rows_per_page (*(int *)(frame_ + FRAME_OFF(72)))
 /* WARNING: Removing unreachable block (ram,0x004384ab) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -4159,7 +3882,12 @@ void __cdecl casualty_timeline_draw(void)
   size_t len3;
   i32 max_row;
   iptr civ;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  int row_y;
+  int log_index;
+  int entry;
+  int entry_count2;
+  i8 scroll_rect[16];
+  int rows_per_page;
   
   civ = casualty_window_civ;
   frame_wnd_layout((FrameWindow *)&casualty_window);
@@ -4317,17 +4045,10 @@ void __cdecl casualty_timeline_draw(void)
 #undef casualty_page_count_i32
 #undef casualty_list_height_i32
 #undef casualty_vscroll_width_i32
-#undef row_y
-#undef log_index
-#undef entry
-#undef entry_count2
-#undef scroll_rect
-#undef rows_per_page
 
 /* 0043856b auto */
 #define casualty_client_x (*(i32 *)((u8 *)&g.d_0063e61c))
 #define casualty_report_param_i32 (*(i32 *)((u8 *)&g.d_0063e994))
-#define button_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 /* WARNING: Removing unreachable block (ram,0x00438634) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -4337,7 +4058,7 @@ void __cdecl casualty_timeline_show(iptr civ)
   int client_y;
   int rect_h;
   iptr label;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 button_rect[16];
   
   if (casualty_window_report_id < 0) {
     picwnd_open((PictureWindow *)&casualty_window,2,0xc,0,600,400,0,0);
@@ -4365,16 +4086,14 @@ void __cdecl casualty_timeline_show(iptr civ)
 }
 #undef casualty_client_x
 #undef casualty_report_param_i32
-#undef button_rect
 
 /* 004386b8 auto */
 #define casualty_row_height (*(int *)((u8 *)&g.d_0063e968))
 #define casualty_scroll_pos (*(int *)((u8 *)&g.d_0063e958))
-#define log_index (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl casualty_timeline_on_dblclick(i32 click_x,int click_y)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int log_index;
   
   click_y -= (casualty_first_row_y - casualty_row_height / 2);
   if ((-1 < click_y) && (click_y = click_y / casualty_row_height, click_y < casualty_rows_per_page)) {
@@ -4396,17 +4115,15 @@ void __cdecl casualty_timeline_on_dblclick(i32 click_x,int click_y)
 }
 #undef casualty_row_height
 #undef casualty_scroll_pos
-#undef log_index
 
 /* 0044ce16 auto */
-#define i (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(12)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(16)))
 ThroneRoomWindow * __thiscall throneroom_ctor(ThroneRoomWindow *this,iptr civ)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   wnd_ctor((ModalMenuWindow *)this);
@@ -4424,7 +4141,7 @@ ThroneRoomWindow * __thiscall throneroom_ctor(ThroneRoomWindow *this,iptr civ)
   dialog_ctor((Dialog *)this->choice_dialog_2,0x4000);
   (*(i8 *)((char *)&try_level + 0)) = 6;
   font_init_empty((GameFont *)((u8 *)&this->click_prompt_font));
-  try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),7);
+  try_level = (try_level & 0xffffff00 | (byte)(7));
   gfx_get_screen_rect((iptr)(this->media_wnd));
   this->throne_civ = civ;
   throneroom_wnd = (iptr)this;
@@ -4438,21 +4155,16 @@ ThroneRoomWindow * __thiscall throneroom_ctor(ThroneRoomWindow *this,iptr civ)
   font_set_styled((GameFont *)((u8 *)&this->click_prompt_font),0,0x12,3);
   return this;
 }
-#undef i
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 0044d027 auto */
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall throneroom_dtor(ThroneRoomDtorView *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
-  (*(i32 *)((char *)&try_level + 1)) = 0;
+  try_level = try_level & 0xff;
   (*(i8 *)((char *)&try_level + 0)) = 7;
   throneroom_wnd = 0;
   dll_handle_free((DllHandle *)(this->graphics_dll));
@@ -4468,23 +4180,19 @@ void __thiscall throneroom_dtor(ThroneRoomDtorView *this)
   /* inlined unwind funclet 0044d114 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 0x504)); }
   (*(i8 *)((char *)&try_level + 0)) = 1;
   /* inlined unwind funclet 0044d123 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x4fc)); }
-  try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+  try_level = try_level & 0xffffff00;
   /* inlined unwind funclet 0044d132 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xb8)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 0044d141 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 0044d162 auto */
-#define path (*(i8 (*)[128])(frame_ + FRAME_OFF(4)))
 uint __thiscall throneroom_create_windows(PictureFrameWindow *this)
 
 {
   int found;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 path[128];
   
   str_clear((iptr)path);
   str_append((iptr)path,(iptr)((u8 *)&g.d_00626814));
@@ -4504,22 +4212,20 @@ uint __thiscall throneroom_create_windows(PictureFrameWindow *this)
   }
   return (uint)(found != 0);
 }
-#undef path
 
 /* 0044d296 auto */
 #define text_line_cursor (*(iptr *)((u8 *)&g.d_00673f14))
-#define font2 (*(GameFont *)(frame_ + FRAME_OFF(0)))
-#define text_buf (*(i8 (*)[1024])(frame_ + FRAME_OFF(8)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(1032)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(1048)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1052)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(1056)))
 void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
 
 {
   int result;
   char *line;
-  i8 frame_[FRAME_OFF(1064)] __attribute__((aligned(8)));  /* original stack frame */
+  GameFont font2;
+  i8 text_buf[1024];
+  tagRECT rect;
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   result = throneroom_create_windows((PictureFrameWindow *)this);
@@ -4648,12 +4354,6 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
   return;
 }
 #undef text_line_cursor
-#undef font2
-#undef text_buf
-#undef rect
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 0044d9c1 auto */
 void __thiscall throneroom_run_view(ThroneRoomWindow *this)
@@ -4709,36 +4409,35 @@ void __thiscall throneroom_draw_click_prompt(WndBase *this)
 }
 
 /* 0044db92 auto */
-#define draw_tmp9 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define fail8 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define draw_tmp8 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define fail7 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define draw_tmp7 (*(i8 (*)[16])(frame_ + FRAME_OFF(40)))
-#define fail6 (*(i32 *)(frame_ + FRAME_OFF(56)))
-#define draw_tmp6 (*(i8 (*)[16])(frame_ + FRAME_OFF(60)))
-#define fail5 (*(i32 *)(frame_ + FRAME_OFF(76)))
-#define draw_tmp5 (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
-#define fail4 (*(i32 *)(frame_ + FRAME_OFF(96)))
-#define draw_tmp4 (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
-#define fail3 (*(i32 *)(frame_ + FRAME_OFF(116)))
-#define draw_tmp3 (*(i8 (*)[16])(frame_ + FRAME_OFF(120)))
-#define fail2 (*(i32 *)(frame_ + FRAME_OFF(136)))
-#define draw_tmp2 (*(i8 (*)[16])(frame_ + FRAME_OFF(140)))
-#define fail1 (*(i32 *)(frame_ + FRAME_OFF(156)))
-#define draw_tmp1 (*(i8 (*)[16])(frame_ + FRAME_OFF(160)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(176)))
-#define surface (*(DibSurface *)(frame_ + FRAME_OFF(180)))
-#define slot (*(iptr *)(frame_ + FRAME_OFF(252)))
-#define level (*(int *)(frame_ + FRAME_OFF(256)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(260)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(320)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(324)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(328)))
 i32 __thiscall throneroom_render(ThroneRoomWindow *this)
 
 {
   int loaded;
-  i8 frame_[FRAME_OFF(336)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_tmp9[16];
+  i32 fail8;
+  i8 draw_tmp8[16];
+  i32 fail7;
+  i8 draw_tmp7[16];
+  i32 fail6;
+  i8 draw_tmp6[16];
+  i32 fail5;
+  i8 draw_tmp5[16];
+  i32 fail4;
+  i8 draw_tmp4[16];
+  i32 fail3;
+  i8 draw_tmp3[16];
+  i32 fail2;
+  i8 draw_tmp2[16];
+  i32 fail1;
+  i8 draw_tmp1[16];
+  i32 result;
+  DibSurface surface;
+  iptr slot;
+  int level;
+  Sprite sprite;
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
   try_level = 0xffffffff;
   surface_ctor(&surface);
@@ -4753,7 +4452,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                         (&surface,slot * 5 + level + 0x69,10,0xec,(iptr)&this->control_list);
       if (loaded == 0) {
         result = 0;
-        try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+        try_level = try_level & 0xffffff00;
         /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
         try_level = 0xffffffff;
         /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4777,7 +4476,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
     loaded = surface_load_gif_resource(&surface,0xa0,10,0xec,(iptr)&this->control_list);
     if (loaded == 0) {
       fail1 = 0;
-      try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+      try_level = try_level & 0xffffff00;
       /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4798,7 +4497,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                        (iptr)&this->control_list);
     if (loaded == 0) {
       fail2 = 0;
-      try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+      try_level = try_level & 0xffffff00;
       /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4825,7 +4524,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
         ;
         if (loaded == 0) {
           fail3 = 0;
-          try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+          try_level = try_level & 0xffffff00;
           /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
           try_level = 0xffffffff;
           /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4851,7 +4550,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                        (iptr)&this->control_list);
     if (loaded == 0) {
       fail4 = 0;
-      try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+      try_level = try_level & 0xffffff00;
       /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4874,7 +4573,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
     loaded = surface_load_gif_resource(&surface,0xa3,10,0xec,(iptr)&this->control_list);
     if (loaded == 0) {
       fail5 = 0;
-      try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+      try_level = try_level & 0xffffff00;
       /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4895,7 +4594,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                         (&surface,slot * 5 + level + 0x69,10,0xec,(iptr)&this->control_list);
       if (loaded == 0) {
         fail6 = 0;
-        try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+        try_level = try_level & 0xffffff00;
         /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
         try_level = 0xffffffff;
         /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4923,7 +4622,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
         ;
         if (loaded == 0) {
           fail7 = 0;
-          try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+          try_level = try_level & 0xffffff00;
           /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
           try_level = 0xffffffff;
           /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4949,7 +4648,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                        (iptr)&this->control_list);
     if (loaded == 0) {
       fail8 = 0;
-      try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+      try_level = try_level & 0xffffff00;
       /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4968,7 +4667,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                *(int *)(&throneroom_piece7_rect_y + level * 0x10) - 1);
   }
   win_flush_pending_msgs();
-  try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+  try_level = try_level & 0xffffff00;
   /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -4976,59 +4675,33 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
 LAB_0044e781:
   return result;
 }
-#undef draw_tmp9
-#undef fail8
-#undef draw_tmp8
-#undef fail7
-#undef draw_tmp7
-#undef fail6
-#undef draw_tmp6
-#undef fail5
-#undef draw_tmp5
-#undef fail4
-#undef draw_tmp4
-#undef fail3
-#undef draw_tmp3
-#undef fail2
-#undef draw_tmp2
-#undef fail1
-#undef draw_tmp1
-#undef result
-#undef surface
-#undef slot
-#undef level
-#undef sprite
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 0044e790 auto */
-#define draw_tmp2 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define fail2 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define draw_tmp1 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define fail1 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define surface (*(DibSurface *)(frame_ + FRAME_OFF(44)))
-#define region_cursors (*(i32 (*)[34])(frame_ + FRAME_OFF(116)))
-#define idx (*(iptr *)(frame_ + FRAME_OFF(252)))
-#define piece_rects (*(int (*)[60])(frame_ + FRAME_OFF(256)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(496)))
-#define region_rects (*(i32 (*)[136])(frame_ + FRAME_OFF(556)))
-#define bonus_bits (*(byte *)(frame_ + FRAME_OFF(1100)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(1104)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1108)))
-#define try_level (*(uint *)(frame_ + FRAME_OFF(1112)))
 i32 __thiscall throneroom_render_choices(ThroneRoomWindow *this)
 
 {
   int loaded;
-  i8 frame_[FRAME_OFF(1120)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_tmp2[16];
+  i32 fail2;
+  i8 draw_tmp1[16];
+  i32 fail1;
+  i32 result;
+  DibSurface surface;
+  i32 region_cursors[34];
+  iptr idx;
+  int piece_rects[60];
+  Sprite sprite;
+  i32 region_rects[136];
+  byte bonus_bits;
+  i32 seh_next;
+  i8 *seh_handler;
+  uint try_level;
   
   try_level = 0xffffffff;
   surface_ctor(&surface);
   try_level = 0;
   sprite_init(&sprite);
-  try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),1);
+  try_level = (try_level & 0xffffff00 | (byte)(1));
   piece_rects[0] = 0xd4;
   piece_rects[1] = 1;
   piece_rects[2] = 0xb3;
@@ -5338,32 +5011,16 @@ i32 __thiscall throneroom_render_choices(ThroneRoomWindow *this)
 LAB_0044f4ba:
   return result;
 }
-#undef draw_tmp2
-#undef fail2
-#undef draw_tmp1
-#undef fail1
-#undef result
-#undef surface
-#undef region_cursors
-#undef idx
-#undef piece_rects
-#undef sprite
-#undef region_rects
-#undef bonus_bits
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 0044f4c9 auto */
-#define hit_buf (*(i8 (*)[4])(frame_ + FRAME_OFF(0)))
-#define bonus_bits (*(byte *)(frame_ + FRAME_OFF(4)))
-#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl throneroom_on_click(i32 x,i32 y)
 
 {
   int hit;
   iptr civ;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 hit_buf[4];
+  byte bonus_bits;
+  iptr wnd2;
   
   wnd2 = throneroom_wnd;
   civ = *(iptr *)(throneroom_wnd + 0x500);
@@ -5420,9 +5077,6 @@ void __cdecl throneroom_on_click(i32 x,i32 y)
   }
   return;
 }
-#undef hit_buf
-#undef bonus_bits
-#undef wnd2
 
 /* 0044f717 auto */
 void __cdecl throneroom_on_key(int key)
@@ -5451,16 +5105,15 @@ void __cdecl throneroom_close(void)
 
 /* 004702e0 auto */
 #define endgame_movie_window (*(SpaceshipWindow * *)((u8 *)&g.d_0062b804))
-#define window (*(SpaceshipWindow * *)(frame_ + FRAME_OFF(0)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(12)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __cdecl endgame_defeat_movie(iptr civ)
 
 {
   SpaceshipWindow *this;
   int created;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  SpaceshipWindow *window;
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   this = operator_new(0x137c);
@@ -5486,19 +5139,14 @@ void __cdecl endgame_defeat_movie(iptr civ)
   return;
 }
 #undef endgame_movie_window
-#undef window
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 004703d4 auto */
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(8)))
 SpaceshipWindow * __thiscall defeat_movie_wnd_ctor(SpaceshipWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   wnd_ctor((ModalMenuWindow *)this);
@@ -5510,25 +5158,21 @@ SpaceshipWindow * __thiscall defeat_movie_wnd_ctor(SpaceshipWindow *this)
   dll_handle_init((DllHandle *)(this->movie_dll));
   (*(i8 *)((char *)&try_level + 0)) = 3;
   font_init_empty((GameFont *)this->movie_caption_font);
-  try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),4);
+  try_level = (try_level & 0xffffff00 | (byte)(4));
   surface_ctor((DibSurface *)(((ThroneRoomWindow *)this)->movie_frame_surface));
   this->advance_civ = 0;
   return this;
 }
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 004704ec auto */
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall defeat_movie_wnd_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
-  (*(i32 *)((char *)&try_level + 1)) = 0;
+  try_level = try_level & 0xff;
   (*(i8 *)((char *)&try_level + 0)) = 4;
   /* inlined unwind funclet 0047056b */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1324)); }
   (*(i8 *)((char *)&try_level + 0)) = 3;
@@ -5537,34 +5181,27 @@ void __thiscall defeat_movie_wnd_dtor(void *this)
   /* inlined unwind funclet 00470589 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0xf14)); }
   (*(i8 *)((char *)&try_level + 0)) = 1;
   /* inlined unwind funclet 00470598 */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x4ec)); }
-  try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+  try_level = try_level & 0xffffff00;
   /* inlined unwind funclet 004705a7 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xb8)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 004705b6 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 004705d7 auto */
-#define dll_path (*(CHAR (*)[128])(frame_ + FRAME_OFF(0)))
-#define of_struct (*(_OFSTRUCT *)(frame_ + FRAME_OFF(128)))
-#define screen_left (*(int *)(frame_ + FRAME_OFF(264)))
-#define screen_top (*(int *)(frame_ + FRAME_OFF(268)))
-#define screen_right (*(int *)(frame_ + FRAME_OFF(272)))
-#define screen_bottom (*(int *)(frame_ + FRAME_OFF(276)))
-#define open_err (*(int *)(frame_ + FRAME_OFF(280)))
-#define avi_path (*(CHAR (*)[128])(frame_ + FRAME_OFF(284)))
 i32 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint civ)
 
 {
   HFILE HVar1;
   i32 result;
   i32 width;
-  i8 frame_[FRAME_OFF(416)] __attribute__((aligned(8)));  /* original stack frame */
+  CHAR dll_path[128];
+  _OFSTRUCT of_struct;
+  RECT screen_bounds;
+  int open_err;
+  CHAR avi_path[128];
   
-  gfx_get_screen_rect((iptr)&screen_left);
+  gfx_get_screen_rect((iptr)&screen_bounds);
   str_clear((iptr)avi_path);
   str_append((iptr)avi_path,(iptr)((u8 *)&g.d_00655020));
   str_append((iptr)avi_path,(iptr)((u8 *)&g.d_0062b808));
@@ -5589,8 +5226,8 @@ i32 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint civ)
         this->advance_civ = civ;
       }
       wnd_create_with_handlers
-                ((WndBase *)this,(iptr)((u8 *)&g.d_0062b824),0x800,screen_left,screen_top,screen_right - screen_left,
-                 (screen_bottom - screen_top) + 5,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
+                ((WndBase *)this,(iptr)((u8 *)&g.d_0062b824),0x800,screen_bounds.left,screen_bounds.top,screen_bounds.right - screen_bounds.left,
+                 (screen_bounds.bottom - screen_bounds.top) + 5,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
       wnd_set_bg_color((WndBase *)this,0);
       surface_load_gif_resource
                 ((DibSurface *)(this->media_wnd),4000,10,0xec,(iptr)&this->control_list);
@@ -5621,26 +5258,17 @@ i32 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint civ)
   }
   return result;
 }
-#undef dll_path
-#undef of_struct
-#undef screen_left
-#undef screen_top
-#undef screen_right
-#undef screen_bottom
-#undef open_err
-#undef avi_path
 
 /* 004708db auto */
 #define text_line_cursor (*(iptr *)((u8 *)&g.d_00673f14))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define page (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall defeat_movie_wnd_play(SpaceshipWindow *this)
 
 {
   int status;
   iptr str;
   char *line;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance;
+  int page;
   
   music_play_track(2,1);
   wnd_handle_show_raise((WndBase *)this);
@@ -5705,8 +5333,6 @@ void __thiscall defeat_movie_wnd_play(SpaceshipWindow *this)
   return;
 }
 #undef text_line_cursor
-#undef advance
-#undef page
 
 /* 00470c1c auto */
 #define endgame_movie_window (*(int *)((u8 *)&g.d_0062b804))
@@ -5758,18 +5384,17 @@ WndBase * __thiscall defeat_movie_wnd_scalar_dtor(WndBase *this,uint flags)
 }
 
 /* 004710d0 auto */
-#define window (*(SpaceshipWindow * *)(frame_ + FRAME_OFF(4)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(12)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(768)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl endgame_spaceship_arrival(iptr civ)
 
 {
   SpaceshipWindow *this;
   int created;
   iptr str;
-  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  SpaceshipWindow *window;
+  Dialog dialog2;
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   if (civ < 0) {
@@ -5823,20 +5448,14 @@ void __cdecl endgame_spaceship_arrival(iptr civ)
   }
   return;
 }
-#undef window
-#undef dialog2
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 00471362 auto */
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(8)))
 SpaceshipWindow * __thiscall arrival_movie_wnd_ctor(SpaceshipWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   wnd_ctor((ModalMenuWindow *)this);
@@ -5848,25 +5467,21 @@ SpaceshipWindow * __thiscall arrival_movie_wnd_ctor(SpaceshipWindow *this)
   dll_handle_init((DllHandle *)(this->movie_dll));
   (*(i8 *)((char *)&try_level + 0)) = 3;
   font_init_empty((GameFont *)this->movie_caption_font);
-  try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),4);
+  try_level = (try_level & 0xffffff00 | (byte)(4));
   surface_ctor((DibSurface *)(((ThroneRoomWindow *)this)->movie_frame_surface));
   this->advance_civ = 0;
   return this;
 }
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 0047147a auto */
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall arrival_movie_wnd_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
-  (*(i32 *)((char *)&try_level + 1)) = 0;
+  try_level = try_level & 0xff;
   (*(i8 *)((char *)&try_level + 0)) = 4;
   /* inlined unwind funclet 004714f9 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1324)); }
   (*(i8 *)((char *)&try_level + 0)) = 3;
@@ -5875,31 +5490,24 @@ void __thiscall arrival_movie_wnd_dtor(void *this)
   /* inlined unwind funclet 00471517 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0xf14)); }
   (*(i8 *)((char *)&try_level + 0)) = 1;
   /* inlined unwind funclet 00471526 */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x4ec)); }
-  try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+  try_level = try_level & 0xffffff00;
   /* inlined unwind funclet 00471535 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xb8)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 00471544 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 00471565 auto */
-#define dll_path (*(i8 (*)[128])(frame_ + FRAME_OFF(0)))
-#define screen_left (*(int *)(frame_ + FRAME_OFF(128)))
-#define screen_top (*(int *)(frame_ + FRAME_OFF(132)))
-#define screen_right (*(int *)(frame_ + FRAME_OFF(136)))
-#define screen_bottom (*(int *)(frame_ + FRAME_OFF(140)))
-#define open_err (*(int *)(frame_ + FRAME_OFF(144)))
-#define avi_path (*(i8 (*)[128])(frame_ + FRAME_OFF(148)))
 i32 __thiscall arrival_movie_wnd_create(SpaceshipWindow *this,iptr civ)
 
 {
   int found;
   i32 result;
   i32 width;
-  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 dll_path[128];
+  RECT screen_bounds;
+  int open_err;
+  i8 avi_path[128];
   
   if (civ < 1) {
     this->advance_civ = ~civ + 1;
@@ -5907,7 +5515,7 @@ i32 __thiscall arrival_movie_wnd_create(SpaceshipWindow *this,iptr civ)
   else {
     this->advance_civ = civ;
   }
-  gfx_get_screen_rect((iptr)&screen_left);
+  gfx_get_screen_rect((iptr)&screen_bounds);
   file_require_cdrom((iptr)((u8 *)&g.d_0062b894));
   str_clear((iptr)avi_path);
   str_append((iptr)avi_path,(iptr)((u8 *)&g.d_0062b8a4));
@@ -5925,8 +5533,8 @@ i32 __thiscall arrival_movie_wnd_create(SpaceshipWindow *this,iptr civ)
     else {
       dll_handle_load((DllHandle *)(this->movie_dll),(iptr)dll_path);
       wnd_create_with_handlers
-                ((WndBase *)this,(iptr)((u8 *)&g.d_0062b8d0),0x800,screen_left,screen_top,screen_right - screen_left,
-                 (screen_bottom - screen_top) + 5,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
+                ((WndBase *)this,(iptr)((u8 *)&g.d_0062b8d0),0x800,screen_bounds.left,screen_bounds.top,screen_bounds.right - screen_bounds.left,
+                 (screen_bounds.bottom - screen_bounds.top) + 5,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
       wnd_set_bg_color((WndBase *)this,0);
       surface_load_gif_resource
                 ((DibSurface *)(this->media_wnd),2000,10,0xec,(iptr)&this->control_list);
@@ -5958,24 +5566,16 @@ i32 __thiscall arrival_movie_wnd_create(SpaceshipWindow *this,iptr civ)
   }
   return result;
 }
-#undef dll_path
-#undef screen_left
-#undef screen_top
-#undef screen_right
-#undef screen_bottom
-#undef open_err
-#undef avi_path
 
 /* 00471856 auto */
 #define text_line_cursor (*(iptr *)((u8 *)&g.d_00673f14))
-#define page (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall arrival_movie_wnd_play(SpaceshipWindow *this)
 
 {
   iptr str;
   int status;
   char *line;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int page;
   
   wnd_handle_show_raise((WndBase *)this);
   wnd_flush_paint();
@@ -6047,22 +5647,17 @@ void __thiscall arrival_movie_wnd_play(SpaceshipWindow *this)
   return;
 }
 #undef text_line_cursor
-#undef page
 
 /* 00471c2a auto */
 #define text_line_cursor (*(iptr *)((u8 *)&g.d_00673f14))
-#define text_y2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define dirty_left (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define dirty_top (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define dirty_right (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define dirty_bottom (*(int *)(frame_ + FRAME_OFF(24)))
 void __cdecl arrival_movie_on_frame(void)
 
 {
   int status;
   char *line;
   i32 width;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int text_y2;
+  RECT dirty_rect;
   
   *(i32 *)(spaceship_arrival_window + 0xa98) = 0;
   str_clear(spaceship_arrival_window + 0xf24);
@@ -6084,21 +5679,16 @@ void __cdecl arrival_movie_on_frame(void)
       status = font_line_spacing((GameFont *)(spaceship_arrival_window + 0xf1c));
       text_y2 += status;
     }
-    dirty_left = *(i32 *)(spaceship_arrival_window + 0x136c);
-    dirty_right = *(i32 *)(spaceship_arrival_window + 0x1374);
-    dirty_top = 0xc;
-    dirty_bottom = text_y2;
-    gfx_dissolve_blit(spaceship_arrival_window + 0x4ec,(iptr)&dirty_left,4,5);
+    dirty_rect.left = *(i32 *)(spaceship_arrival_window + 0x136c);
+    dirty_rect.right = *(i32 *)(spaceship_arrival_window + 0x1374);
+    dirty_rect.top = 0xc;
+    dirty_rect.bottom = text_y2;
+    gfx_dissolve_blit(spaceship_arrival_window + 0x4ec,(iptr)&dirty_rect,4,5);
     text_close_file();
   }
   return;
 }
 #undef text_line_cursor
-#undef text_y2
-#undef dirty_left
-#undef dirty_top
-#undef dirty_right
-#undef dirty_bottom
 
 /* 00471db7 auto */
 void __cdecl arrival_movie_on_video_end(void)
@@ -6111,30 +5701,26 @@ void __cdecl arrival_movie_on_video_end(void)
 /* 00471dd8 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_line_cursor (*(iptr *)((u8 *)&g.d_00673f14))
-#define surface_wnd (*(i8 (*)[276])(frame_ + FRAME_OFF(0)))
-#define frame_wnd (*(ModalMenuWindow *)(frame_ + FRAME_OFF(276)))
-#define text_rect (*(tagRECT *)(frame_ + FRAME_OFF(460)))
-#define page (*(int *)(frame_ + FRAME_OFF(476)))
-#define backup_surface (*(DibSurface *)(frame_ + FRAME_OFF(480)))
-#define font2 (*(GameFont *)(frame_ + FRAME_OFF(552)))
-#define text_buf (*(i8 (*)[256])(frame_ + FRAME_OFF(560)))
-#define dll (*(DllHandle *)(frame_ + FRAME_OFF(816)))
-#define screen_left (*(int *)(frame_ + FRAME_OFF(820)))
-#define screen_top (*(int *)(frame_ + FRAME_OFF(824)))
-#define screen_right (*(int *)(frame_ + FRAME_OFF(828)))
-#define screen_bottom (*(int *)(frame_ + FRAME_OFF(832)))
-#define dll_path (*(i8 (*)[128])(frame_ + FRAME_OFF(836)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(964)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(2040)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(2044)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(2048)))
 void __cdecl endgame_show_centauri_beaten(uptr civ)
 
 {
   int status;
   iptr str;
   char *line;
-  i8 frame_[FRAME_OFF(2056)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 surface_wnd[276];
+  ModalMenuWindow frame_wnd;
+  tagRECT text_rect;
+  int page;
+  DibSurface backup_surface;
+  GameFont font2;
+  i8 text_buf[256];
+  DllHandle dll;
+  RECT screen_bounds;
+  i8 dll_path[128];
+  GamePalette palette;
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
   try_level = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)surface_wnd);
@@ -6165,19 +5751,19 @@ void __cdecl endgame_show_centauri_beaten(uptr civ)
     /* inlined unwind funclet 004723ab */ { palette_destroy((GamePalette *)((iptr)&palette)); }
     (*(i8 *)((char *)&try_level + 0)) = 1;
     /* inlined unwind funclet 004723b7 */ { wnd_dtor((WndBase *)((iptr)&frame_wnd)); }
-    try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+    try_level = try_level & 0xffffff00;
     /* inlined unwind funclet 004723c3 */ { dll_free((DllHandle *)((iptr)&dll)); }
     try_level = 0xffffffff;
     /* inlined unwind funclet 004723cf */ { surfwnd_dtor((SurfaceWindow *)((iptr)&surface_wnd)); }
   }
   else {
     dll_handle_load(&dll,(iptr)dll_path);
-    gfx_get_screen_rect((iptr)&screen_left);
+    gfx_get_screen_rect((iptr)&screen_bounds);
     SetRect(&text_rect,0,0,0x280,0xf0);
     InflateRect(&text_rect,-10,0);
     wnd_create_with_handlers
-              ((WndBase *)&frame_wnd,(iptr)((u8 *)&g.d_0062b924),0x800,screen_left,screen_top,screen_right - screen_left,
-               (screen_bottom - screen_top) + 5,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
+              ((WndBase *)&frame_wnd,(iptr)((u8 *)&g.d_0062b924),0x800,screen_bounds.left,screen_bounds.top,screen_bounds.right - screen_bounds.left,
+               (screen_bounds.bottom - screen_bounds.top) + 5,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
     wnd_set_bg_color((WndBase *)&frame_wnd,0);
     surface_wnd_create
               ((DibSurface *)surface_wnd,(iptr)((u8 *)&g.d_0062b928),0x800,0,0,0x280,0xf0,(iptr)&palette);
@@ -6252,7 +5838,7 @@ void __cdecl endgame_show_centauri_beaten(uptr civ)
     /* inlined unwind funclet 004723ab */ { palette_destroy((GamePalette *)((iptr)&palette)); }
     (*(i8 *)((char *)&try_level + 0)) = 1;
     /* inlined unwind funclet 004723b7 */ { wnd_dtor((WndBase *)((iptr)&frame_wnd)); }
-    try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+    try_level = try_level & 0xffffff00;
     /* inlined unwind funclet 004723c3 */ { dll_free((DllHandle *)((iptr)&dll)); }
     try_level = 0xffffffff;
     /* inlined unwind funclet 004723cf */ { surfwnd_dtor((SurfaceWindow *)((iptr)&surface_wnd)); }
@@ -6261,23 +5847,6 @@ void __cdecl endgame_show_centauri_beaten(uptr civ)
 }
 #undef human_civ
 #undef text_line_cursor
-#undef surface_wnd
-#undef frame_wnd
-#undef text_rect
-#undef page
-#undef backup_surface
-#undef font2
-#undef text_buf
-#undef dll
-#undef screen_left
-#undef screen_top
-#undef screen_right
-#undef screen_bottom
-#undef dll_path
-#undef palette
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 004728c0 auto */
 void * __thiscall arrival_movie_wnd_scalar_dtor(void *this,uint flags)
@@ -6292,11 +5861,10 @@ void * __thiscall arrival_movie_wnd_scalar_dtor(void *this,uint flags)
 
 /* 004a76f5 auto */
 #define destroyed_civ_count (*(i16 *)((u8 *)&g.d_00655128))
-#define i (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl destroyed_civs_clear(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
   
   destroyed_civ_count = 0;
   for (i = 0; i < 0xc; i++) {
@@ -6307,28 +5875,26 @@ void __cdecl destroyed_civs_clear(void)
   return;
 }
 #undef destroyed_civ_count
-#undef i
 
 /* 004bc480 auto */
-#define barracks_count (*(int *)(frame_ + FRAME_OFF(0)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define air_strength (*(int (*)[8])(frame_ + FRAME_OFF(8)))
-#define city_count (*(int *)(frame_ + FRAME_OFF(40)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(44)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(48)))
-#define land_rivals (*(int *)(frame_ + FRAME_OFF(52)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(56)))
-#define unit_count (*(int *)(frame_ + FRAME_OFF(60)))
-#define war_count (*(int *)(frame_ + FRAME_OFF(64)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(68)))
-#define air_rivals (*(int *)(frame_ + FRAME_OFF(72)))
-#define land_strength (*(int (*)[8])(frame_ + FRAME_OFF(76)))
 i32 __cdecl council_military_advice(iptr civ,i32 era)
 
 {
   int has;
   i32 result;
-  i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
+  int barracks_count;
+  iptr unit;
+  int air_strength[8];
+  int city_count;
+  iptr city2;
+  iptr city;
+  int land_rivals;
+  iptr unit_type;
+  int unit_count;
+  int war_count;
+  iptr civ2;
+  int air_rivals;
+  int land_strength[8];
   
   barracks_count = 0;
   city_count = 0;
@@ -6432,34 +5998,20 @@ i32 __cdecl council_military_advice(iptr civ,i32 era)
   }
   return result;
 }
-#undef barracks_count
-#undef unit
-#undef air_strength
-#undef city_count
-#undef city2
-#undef city
-#undef land_rivals
-#undef unit_type
-#undef unit_count
-#undef war_count
-#undef civ2
-#undef air_rivals
-#undef land_strength
 
 /* 004bc8aa auto */
-#define city_count (*(int *)(frame_ + FRAME_OFF(0)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define built_count (*(int *)(frame_ + FRAME_OFF(12)))
-#define rivals_ahead (*(int *)(frame_ + FRAME_OFF(16)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define route_total (*(int *)(frame_ + FRAME_OFF(24)))
 i32 __cdecl council_science_advice(iptr civ,int era)
 
 {
   i32 result;
   int has;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int city_count;
+  iptr improvement;
+  iptr city;
+  int built_count;
+  int rivals_ahead;
+  iptr civ2;
+  int route_total;
   
   rivals_ahead = 0;
   for (civ2 = 1; civ2 < 8; civ2++) {
@@ -6523,32 +6075,24 @@ i32 __cdecl council_science_advice(iptr civ,int era)
   }
   return result;
 }
-#undef city_count
-#undef improvement
-#undef city
-#undef built_count
-#undef rivals_ahead
-#undef civ2
-#undef route_total
 
 /* 004bcb9b auto */
-#define built_count (*(int *)(frame_ + FRAME_OFF(0)))
-#define city_count (*(int *)(frame_ + FRAME_OFF(8)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define needed_advance (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define upkeep_total (*(int *)(frame_ + FRAME_OFF(28)))
-#define tax_total (*(int *)(frame_ + FRAME_OFF(32)))
-#define improvement_counts (*(int (*)[39])(frame_ + FRAME_OFF(36)))
-#define target_improvement (*(iptr *)(frame_ + FRAME_OFF(192)))
-#define ratio_divisor (*(int *)(frame_ + FRAME_OFF(196)))
-#define route_total (*(int *)(frame_ + FRAME_OFF(200)))
 i32 __cdecl council_trade_advice(iptr civ,int era)
 
 {
   int value;
   i32 result;
-  i8 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
+  int built_count;
+  int city_count;
+  iptr improvement;
+  iptr city;
+  iptr needed_advance;
+  int upkeep_total;
+  int tax_total;
+  int improvement_counts[39];
+  iptr target_improvement;
+  int ratio_divisor;
+  int route_total;
   
   tax_total = 0;
   upkeep_total = 0;
@@ -6627,32 +6171,20 @@ i32 __cdecl council_trade_advice(iptr civ,int era)
   }
   return result;
 }
-#undef built_count
-#undef city_count
-#undef improvement
-#undef city
-#undef needed_advance
-#undef upkeep_total
-#undef tax_total
-#undef improvement_counts
-#undef target_improvement
-#undef ratio_divisor
-#undef route_total
 
 /* 004bcfcf auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define embassy_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define needed_advance (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define war_count (*(int *)(frame_ + FRAME_OFF(12)))
-#define alliance_count (*(int *)(frame_ + FRAME_OFF(16)))
-#define other_civ (*(int *)(frame_ + FRAME_OFF(20)))
-#define contact_count (*(int *)(frame_ + FRAME_OFF(24)))
 i32 __cdecl council_foreign_advice(iptr civ,int era)
 
 {
   int has;
   i32 result;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int embassy_count;
+  iptr needed_advance;
+  int war_count;
+  int alliance_count;
+  int other_civ;
+  int contact_count;
   
   war_count = 0;
   embassy_count = 0;
@@ -6720,26 +6252,19 @@ i32 __cdecl council_foreign_advice(iptr civ,int era)
   return result;
 }
 #undef human_civ
-#undef embassy_count
-#undef needed_advance
-#undef war_count
-#undef alliance_count
-#undef other_civ
-#undef contact_count
 
 /* 004bd2a3 auto */
-#define city (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define content_count (*(int *)(frame_ + FRAME_OFF(8)))
-#define celebrate_count (*(int *)(frame_ + FRAME_OFF(12)))
-#define unhappy_count (*(int *)(frame_ + FRAME_OFF(16)))
-#define disorder_count (*(int *)(frame_ + FRAME_OFF(20)))
 i32 __cdecl council_attitude_advice(iptr civ,i32 era)
 
 {
   bool rates_off;
   ushort recalc_flag;
   i32 result;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
+  int content_count;
+  int celebrate_count;
+  int unhappy_count;
+  int disorder_count;
   
   recalc_flag = game.transient_flags & 4;
   game.transient_flags = game.transient_flags & 0xfffb;
@@ -6802,25 +6327,19 @@ i32 __cdecl council_attitude_advice(iptr civ,i32 era)
   }
   return result;
 }
-#undef city
-#undef content_count
-#undef celebrate_count
-#undef unhappy_count
-#undef disorder_count
 
 /* 0050a2f7 auto */
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define draw_x (*(int *)(frame_ + FRAME_OFF(16)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(28)))
-#define score (*(int *)(frame_ + FRAME_OFF(32)))
 i32 __cdecl
 foreign_minister_draw_civ_city(i32 ctx,iptr surface,int civ,byte flags,int x,int y,
             int height)
 
 {
   int value;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city2;
+  iptr city;
+  int draw_x;
+  int best_score;
+  int score;
   
   best_score = 0;
   city2 = -1;
@@ -6850,11 +6369,6 @@ foreign_minister_draw_civ_city(i32 ctx,iptr surface,int civ,byte flags,int x,int
   }
   return 0;
 }
-#undef city2
-#undef city
-#undef draw_x
-#undef best_score
-#undef score
 
 /* 00514e10 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -6898,16 +6412,14 @@ void __cdecl destroyed_civs_text_bg_atexit_dtor(void)
 }
 
 /* 00514e7b auto */
-#define window (*(i8 (*)[1808])(frame_ + FRAME_OFF(0)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(1808)))
 void __cdecl destroyed_civs_show(iptr killer_civ)
 
 {
   int created;
-  i8 frame_[FRAME_OFF(1816)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 window[1808];
+  i32 try_level;
   
   try_level = 0xffffffff;
-  (*(i32 *)((char *)&window + 1804)) = &LAB_00514efe;
   destroyed_civs_wnd_ctor((DestroyedCivsWindow *)window);
   try_level = 0;
   created = destroyed_civs_wnd_create((DestroyedCivsWindow *)window,killer_civ);
@@ -6922,18 +6434,15 @@ void __cdecl destroyed_civs_show(iptr killer_civ)
   }
   return;
 }
-#undef window
-#undef try_level
 
 /* 00514f16 auto */
 #define victory_screen_wnd (*(DestroyedCivsWindow * *)((u8 *)&g.d_00631a98))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(8)))
 DestroyedCivsWindow * __thiscall destroyed_civs_wnd_ctor(DestroyedCivsWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   wnd_ctor((ModalMenuWindow *)this);
@@ -6951,7 +6460,7 @@ DestroyedCivsWindow * __thiscall destroyed_civs_wnd_ctor(DestroyedCivsWindow *th
   sprite_init((Sprite *)(this->portrait_sprite));
   (*(i8 *)((char *)&try_level + 0)) = 6;
   font_init_empty((GameFont *)this->caption_font_2);
-  try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),7);
+  try_level = (try_level & 0xffffff00 | (byte)(7));
   this->killer_civ = 0;
   victory_screen_wnd = this;
   this->slide_y = 0;
@@ -6960,21 +6469,17 @@ DestroyedCivsWindow * __thiscall destroyed_civs_wnd_ctor(DestroyedCivsWindow *th
   return this;
 }
 #undef victory_screen_wnd
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 005150b9 auto */
 #define victory_screen_wnd (*(i32 *)((u8 *)&g.d_00631a98))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall destroyed_civs_wnd_dtor(DestroyedCivsWindowCore *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
-  (*(i32 *)((char *)&try_level + 1)) = 0;
+  try_level = try_level & 0xff;
   (*(i8 *)((char *)&try_level + 0)) = 7;
   dll_handle_free((DllHandle *)(this->art_dll_2));
   victory_screen_wnd = 0;
@@ -6990,35 +6495,28 @@ void __thiscall destroyed_civs_wnd_dtor(DestroyedCivsWindowCore *this)
   /* inlined unwind funclet 005151a6 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x600)); }
   (*(i8 *)((char *)&try_level + 0)) = 1;
   /* inlined unwind funclet 005151b5 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 0x4ec)); }
-  try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+  try_level = try_level & 0xffffff00;
   /* inlined unwind funclet 005151c4 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xb8)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 005151d3 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
 #undef victory_screen_wnd
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 005151f4 auto */
 #define destroyed_civs_show_date (*(i32 *)((u8 *)&g.d_00631a9c))
-#define entry (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define dll_path (*(i8 (*)[128])(frame_ + FRAME_OFF(4)))
-#define screen_left (*(int *)(frame_ + FRAME_OFF(132)))
-#define screen_top (*(int *)(frame_ + FRAME_OFF(136)))
-#define screen_right (*(int *)(frame_ + FRAME_OFF(140)))
-#define screen_bottom (*(int *)(frame_ + FRAME_OFF(144)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(148)))
 i32 __thiscall destroyed_civs_wnd_create(DestroyedCivsWindow *this,uint killer)
 
 {
   int found;
   i32 result;
   i32 width;
-  i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr entry;
+  i8 dll_path[128];
+  RECT screen_bounds;
+  tagRECT rect;
   
-  gfx_get_screen_rect((iptr)&screen_left);
+  gfx_get_screen_rect((iptr)&screen_bounds);
   str_clear((iptr)dll_path);
   str_append((iptr)dll_path,(iptr)((u8 *)&g.d_00631aa0));
   found = file_resolve_path((iptr)dll_path);
@@ -7029,8 +6527,8 @@ i32 __thiscall destroyed_civs_wnd_create(DestroyedCivsWindow *this,uint killer)
     dll_handle_load((DllHandle *)(this->improvement_art_surface),(iptr)dll_path);
     this->killer_civ = killer;
     wnd_create_with_handlers
-              ((WndBase *)this,(iptr)((u8 *)&g.d_00631aac),0x800,screen_left,screen_top,screen_right - screen_left,
-               (screen_bottom - screen_top) + 5,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
+              ((WndBase *)this,(iptr)((u8 *)&g.d_00631aac),0x800,screen_bounds.left,screen_bounds.top,screen_bounds.right - screen_bounds.left,
+               (screen_bounds.bottom - screen_bounds.top) + 5,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
     wnd_set_bg_color((WndBase *)this,0);
     wnd_create_with_surface
               ((DibSurface *)(this->media_wnd),(iptr)((u8 *)&g.d_00631ab0),0x800,0,0,0x280,0x1e0,
@@ -7068,24 +6566,10 @@ i32 __thiscall destroyed_civs_wnd_create(DestroyedCivsWindow *this,uint killer)
   return result;
 }
 #undef destroyed_civs_show_date
-#undef entry
-#undef dll_path
-#undef screen_left
-#undef screen_top
-#undef screen_right
-#undef screen_bottom
-#undef rect
 
 /* 00515516 auto */
 #define destroyed_civs_show_date (*(i32 *)((u8 *)&g.d_00631a9c))
 #define text_line_cursor (*(iptr *)((u8 *)&g.d_00673f14))
-#define entry (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define text_buf (*(i8 (*)[256])(frame_ + FRAME_OFF(4)))
-#define now (*(DWORD *)(frame_ + FRAME_OFF(260)))
-#define font2 (*(GameFont *)(frame_ + FRAME_OFF(264)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(272)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(276)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(280)))
 void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
 
 {
@@ -7093,7 +6577,13 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
   int status;
   char *line;
   i32 width;
-  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr entry;
+  i8 text_buf[256];
+  DWORD now;
+  GameFont font2;
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   font_init_empty(&font2);
@@ -7171,13 +6661,6 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
 }
 #undef destroyed_civs_show_date
 #undef text_line_cursor
-#undef entry
-#undef text_buf
-#undef now
-#undef font2
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 00515999 auto */
 #define destroyed_civs_show_date (*(int *)((u8 *)&g.d_00631a9c))
@@ -7242,17 +6725,16 @@ void __thiscall destroyed_civs_draw_entry(WndBase *this,iptr entry)
 #undef destroyed_civs_show_date
 
 /* 00515c15 auto */
-#define draw_tmp (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define portrait_surface (*(DibSurface *)(frame_ + FRAME_OFF(20)))
-#define rgb_buf (*(i8 (*)[192])(frame_ + FRAME_OFF(92)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(284)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(1360)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1364)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(1368)))
 void __thiscall destroyed_civs_draw_portrait(PictureFrameWindow *this,iptr entry)
 
 {
-  i8 frame_[FRAME_OFF(1376)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_tmp[16];
+  DibSurface portrait_surface;
+  i8 rgb_buf[192];
+  GamePalette palette;
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
   try_level = 0xffffffff;
   surface_ctor(&portrait_surface);
@@ -7273,90 +6755,65 @@ void __thiscall destroyed_civs_draw_portrait(PictureFrameWindow *this,iptr entry
             ((Sprite *)(this->portrait_sprite),(iptr)draw_tmp,(iptr)((u8 *)&this->media_wnd),
              0xd0,0x39);
   SetRect((LPRECT)&this->panel_clip_rect,0xd0,0x39,0x1b1,0x14c);
-  try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+  try_level = try_level & 0xffffff00;
   /* inlined unwind funclet 00515d96 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 00515da2 */ { surface_dtor((DibSurface *)((iptr)&portrait_surface)); }
   return;
 }
-#undef draw_tmp
-#undef portrait_surface
-#undef rgb_buf
-#undef palette
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 00515dc8 auto */
-#define draw_tmp2 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define draw_tmp1 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define gap_left (*(u32 *)(frame_ + FRAME_OFF(36)))
-#define gap_top (*(u32 *)(frame_ + FRAME_OFF(40)))
-#define gap_right (*(u32 *)(frame_ + FRAME_OFF(44)))
-#define gap_bottom (*(int *)(frame_ + FRAME_OFF(48)))
-#define dirty_left (*(u32 *)(frame_ + FRAME_OFF(52)))
-#define dirty_top (*(u32 *)(frame_ + FRAME_OFF(56)))
-#define dirty_right (*(u32 *)(frame_ + FRAME_OFF(60)))
-#define dirty_bottom (*(u32 *)(frame_ + FRAME_OFF(64)))
 void __thiscall destroyed_civs_slide_step(DestroyedCivsWindow *this,int delta)
 
 {
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_tmp2[16];
+  i8 draw_tmp1[16];
+  struct { u32 left; u32 top; u32 right; int bottom; } gap_rect;
+  struct { u32 left; u32 top; u32 right; u32 bottom; } dirty_rect;
   
-  dirty_left = this->slide_rect;
-  dirty_top = this->slide_top;
-  dirty_right = this->slide_right;
-  dirty_bottom = this->resource_dll;
+  dirty_rect.left = this->slide_rect;
+  dirty_rect.top = this->slide_top;
+  dirty_rect.right = this->slide_right;
+  dirty_rect.bottom = this->resource_dll;
   if (delta < 0) {
-    dirty_top -= delta;
+    dirty_rect.top -= delta;
   }
   else {
-    dirty_bottom += delta;
+    dirty_rect.bottom += delta;
   }
   surface_blit
-            ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),(iptr)&dirty_left,
-             (iptr)&dirty_left);
+            ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),(iptr)&dirty_rect,
+             (iptr)&dirty_rect);
   sprite_draw
             ((Sprite *)(this->portrait_sprite),(iptr)draw_tmp1,(iptr)(this->media_wnd),
              0xd0,0x39);
   if (0 < delta) {
-    gap_left = this->panel_clip_rect;
-    gap_right = this->panel_clip_right;
-    gap_top = this->slide_y;
-    gap_bottom = this->slide_y + delta;
+    gap_rect.left = this->panel_clip_rect;
+    gap_rect.right = this->panel_clip_right;
+    gap_rect.top = this->slide_y;
+    gap_rect.bottom = this->slide_y + delta;
     surface_blit
-              ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),(iptr)&gap_left
-               ,(iptr)&gap_left);
+              ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),(iptr)&gap_rect
+               ,(iptr)&gap_rect);
   }
   sprite_draw
             ((Sprite *)(this->panel_sprite),(iptr)draw_tmp2,(iptr)(this->media_wnd),
              0xab,this->slide_y + delta);
   OffsetRect((LPRECT)&this->slide_rect,0,delta);
-  if ((int)dirty_top < 1) {
-    dirty_top = 0;
+  if ((int)dirty_rect.top < 1) {
+    dirty_rect.top = 0;
   }
-  wnd_blit_surface_rect((DibSurface *)(this->media_wnd),(iptr)&dirty_left);
+  wnd_blit_surface_rect((DibSurface *)(this->media_wnd),(iptr)&dirty_rect);
   this->slide_y += delta;
   return;
 }
-#undef draw_tmp2
-#undef draw_tmp1
-#undef gap_left
-#undef gap_top
-#undef gap_right
-#undef gap_bottom
-#undef dirty_left
-#undef dirty_top
-#undef dirty_right
-#undef dirty_bottom
 
 /* 00515f3c auto */
-#define start_time (*(DWORD *)(frame_ + FRAME_OFF(0)))
 void __thiscall destroyed_civs_slide_down(DestroyedCivsWindow *this)
 
 {
   DWORD DVar1;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  DWORD start_time;
   
   surface_blit
             ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),
@@ -7376,7 +6833,6 @@ void __thiscall destroyed_civs_slide_down(DestroyedCivsWindow *this)
   }
   return;
 }
-#undef start_time
 
 /* 00516005 auto */
 void __thiscall destroyed_civs_slide_up(DestroyedCivsWindow *this)
@@ -7413,26 +6869,25 @@ void __cdecl victory_screen_on_key(int key)
 
 /* 00516570 auto */
 #define council_active (*(i8 *)((u8 *)&g.d_00631ad0))
-#define council (*(ListPaneWindow (*)[17])(frame_ + FRAME_OFF(0)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(4904)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4908)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(4912)))
 void __cdecl council_show(iptr civ,i32 cheat_mode)
 
 {
   int ok;
   i32 ret_addr;
-  i8 frame_[FRAME_OFF(4920)] __attribute__((aligned(8)));  /* original stack frame */
+  CouncilWindow council;
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   council_active = 1;
-  council_wnd_ctor(council);
+  council_wnd_ctor((ListPaneWindow *)&council);
   try_level = 0;
   snd_cd_stop();
   ret_addr = 0x5165c6;
-  ok = council_wnd_init(council,civ,cheat_mode);
+  ok = council_wnd_init((ListPaneWindow *)&council,civ,cheat_mode);
   if (ok != 0) {
-    council_wnd_run_modal(council);
+    council_wnd_run_modal((ListPaneWindow *)&council);
   }
   snd_sync_music_option();
   council_active = 0;
@@ -7441,19 +6896,14 @@ void __cdecl council_show(iptr civ,i32 cheat_mode)
   return;
 }
 #undef council_active
-#undef council
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 0051661a auto */
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(8)))
 ListPaneWindow * __thiscall council_wnd_ctor(ListPaneWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
@@ -7473,7 +6923,7 @@ ListPaneWindow * __thiscall council_wnd_ctor(ListPaneWindow *this)
   button_ctor((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_2));
   (*(i8 *)((char *)&try_level + 0)) = 7;
   button_ctor((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_0));
-  try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),8);
+  try_level = (try_level & 0xffffff00 | (byte)(8));
   button_ctor((Control *)&((PictureWindow *)this)->council_close_button);
   this->vtable = (u32)&PTR_FUN_0061d6d8;
   ((PictureWindow *)this)->speech_line_y[0] = 0xb0;
@@ -7484,21 +6934,17 @@ ListPaneWindow * __thiscall council_wnd_ctor(ListPaneWindow *this)
   council_wnd = (iptr)this;
   return this;
 }
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 005167d9 auto */
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall council_wnd_dtor(CouncilWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
   *(i8 ***)this->window_base = &PTR_FUN_0061d6d8;
-  (*(i32 *)((char *)&try_level + 1)) = 0;
+  try_level = try_level & 0xff;
   council_wnd = 0;
   (*(i8 *)((char *)&try_level + 0)) = 8;
   /* inlined unwind funclet 0051689f */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x12ec)); }
@@ -7516,24 +6962,17 @@ void __thiscall council_wnd_dtor(CouncilWindow *this)
   /* inlined unwind funclet 005168f9 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0xe30)); }
   (*(i8 *)((char *)&try_level + 0)) = 1;
   /* inlined unwind funclet 00516908 */ { dialog_dtor((Dialog *)(*(int *)((iptr)&this) + 0xb3c)); }
-  try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+  try_level = try_level & 0xffffff00;
   /* inlined unwind funclet 00516917 */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x114)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 00516926 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return;
 }
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 00516947 auto */
 #define dlg_help_pressed (*(int *)((u8 *)&g.d_00631edc))
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define advisor (*(int *)(frame_ + FRAME_OFF(0)))
-#define number (*(int *)(frame_ + FRAME_OFF(4)))
-#define avi_path (*(i8 (*)[128])(frame_ + FRAME_OFF(8)))
-#define open_err (*(int *)(frame_ + FRAME_OFF(136)))
 i32 __thiscall council_wnd_init(ListPaneWindow *this,u32 civ,int cheat_mode)
 
 {
@@ -7541,7 +6980,10 @@ i32 __thiscall council_wnd_init(ListPaneWindow *this,u32 civ,int cheat_mode)
   i32 result;
   int cancelled;
   int choice;
-  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  int advisor;
+  int number;
+  i8 avi_path[128];
+  int open_err;
   
   ((PictureWindow *)this)->council_civ = civ;
   result = civ_city_art_era(((PictureWindow *)this)->council_civ);
@@ -7659,10 +7101,6 @@ LAB_00516b87:
 #undef dlg_help_pressed
 #undef frame_border_width
 #undef frame_caption_height
-#undef advisor
-#undef number
-#undef avi_path
-#undef open_err
 
 /* 00516fd4 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
@@ -7711,10 +7149,6 @@ void __thiscall council_wnd_run_modal(ListPaneWindow *this)
 /* 00517158 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define panel_x (*(int *)(frame_ + FRAME_OFF(4)))
-#define j (*(int *)(frame_ + FRAME_OFF(8)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __thiscall council_draw_background(DibSurface *this)
 
 {
@@ -7724,7 +7158,10 @@ void __thiscall council_draw_background(DibSurface *this)
   int inner_top;
   RECT *lprcSrc;
   iptr str;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  int panel_x;
+  int j;
+  tagRECT rect;
   
   extent = frame_caption_height + frame_bevel_width * -2;
   size = surface_get_width(this);
@@ -7808,21 +7245,10 @@ void __thiscall council_draw_background(DibSurface *this)
 }
 #undef frame_border_width
 #undef frame_caption_height
-#undef i
-#undef panel_x
-#undef j
-#undef rect
 
 /* 00517673 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define parent6 (*(DibSurface * *)(frame_ + FRAME_OFF(4)))
-#define parent5 (*(DibSurface * *)(frame_ + FRAME_OFF(8)))
-#define parent4 (*(DibSurface * *)(frame_ + FRAME_OFF(12)))
-#define parent3 (*(DibSurface * *)(frame_ + FRAME_OFF(16)))
-#define parent2 (*(DibSurface * *)(frame_ + FRAME_OFF(20)))
-#define parent1 (*(DibSurface * *)(frame_ + FRAME_OFF(24)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(36)))
 void __thiscall council_create_buttons(DibSurface *this)
 
 {
@@ -7830,7 +7256,13 @@ void __thiscall council_create_buttons(DibSurface *this)
   iptr label;
   int right;
   int height;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  DibSurface *parent6;
+  DibSurface *parent5;
+  DibSurface *parent4;
+  DibSurface *parent3;
+  DibSurface *parent2;
+  DibSurface *parent1;
+  tagRECT rect;
   
   y = (frame_caption_height - 0x16 >> 1) + frame_caption_height;
   SetRect(&rect,frame_border_width + 7,y + 0x79,frame_border_width + 0x52,y + 0x8f);
@@ -7908,20 +7340,9 @@ void __thiscall council_create_buttons(DibSurface *this)
 }
 #undef frame_border_width
 #undef frame_caption_height
-#undef parent6
-#undef parent5
-#undef parent4
-#undef parent3
-#undef parent2
-#undef parent1
-#undef rect
 
 /* 005179a3 auto */
 #define text_line_cursor (*(char * *)((u8 *)&g.d_00673f14))
-#define i (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define line_idx (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define used_mask (*(uint *)(frame_ + FRAME_OFF(16)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(24)))
 i32 __thiscall council_load_speech(WindowObjectView *this,uptr advisor)
 
 {
@@ -7931,7 +7352,10 @@ i32 __thiscall council_load_speech(WindowObjectView *this,uptr advisor)
   u32 value;
   i8 *token;
   int roll;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
+  iptr line_idx;
+  uint used_mask;
+  i32 result;
   
   used_mask = 0;
   result = 0;
@@ -8038,22 +7462,17 @@ switchD_00517c0c_caseD_52:
   goto LAB_00517ae5;
 }
 #undef text_line_cursor
-#undef i
-#undef line_idx
-#undef used_mask
-#undef result
 
 /* 00517dd3 auto */
-#define font2 (*(GameFont *)(frame_ + FRAME_OFF(0)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(8)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(28)))
-#define try_level (*(i32 *)(frame_ + FRAME_OFF(32)))
 void __thiscall council_draw_speech(SurfaceWindow *this,int mode)
 
 {
   int spacing;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  GameFont font2;
+  tagRECT rect;
+  i32 seh_next;
+  i8 *seh_handler;
+  i32 try_level;
   
   try_level = 0xffffffff;
   font_init(&font2,0,0xe);
@@ -8113,27 +7532,21 @@ void __thiscall council_draw_speech(SurfaceWindow *this,int mode)
   }
   return;
 }
-#undef font2
-#undef rect
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 00518007 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define advisor (*(int *)(frame_ + FRAME_OFF(0)))
-#define surface (*(DibSurface *)(frame_ + FRAME_OFF(4)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(76)))
-#define seh_next (*(i32 *)(frame_ + FRAME_OFF(136)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(140)))
-#define try_level (*(int *)(frame_ + FRAME_OFF(144)))
 void __thiscall council_draw_advisor_frames(ListPaneWindow *this)
 
 {
   int status;
   i32 frame_no;
-  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  int advisor;
+  DibSurface surface;
+  Sprite sprite;
+  i32 seh_next;
+  i8 *seh_handler;
+  int try_level;
   
   try_level = 0xffffffff;
   surface_ctor(&surface);
@@ -8145,7 +7558,7 @@ void __thiscall council_draw_advisor_frames(ListPaneWindow *this)
       status = text_open_section((iptr)(((PictureWindow *)this)->council_text_file),
                                  (iptr)(((PictureWindow *)this)->advisor_code_slots + advisor * 3 - 0x40));
       if (status != 0) {
-        try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+        try_level = try_level & 0xffffff00;
         /* inlined unwind funclet 005181ab */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
         try_level = 0xffffffff;
         /* inlined unwind funclet 005181b4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -8153,7 +7566,7 @@ void __thiscall council_draw_advisor_frames(ListPaneWindow *this)
       }
       status = text_read_line(1);
       if (status == 0) {
-        try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+        try_level = try_level & 0xffffff00;
         /* inlined unwind funclet 005181ab */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
         try_level = 0xffffffff;
         /* inlined unwind funclet 005181b4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -8172,7 +7585,7 @@ void __thiscall council_draw_advisor_frames(ListPaneWindow *this)
     avi_player_draw_to
               ((DibSurface *)&this->style_flags,(iptr)this,frame_border_width + 2,frame_caption_height + 2);
   }
-  try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
+  try_level = try_level & 0xffffff00;
   /* inlined unwind funclet 005181ab */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 005181b4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
@@ -8181,12 +7594,6 @@ LAB_005181ca:
 }
 #undef frame_border_width
 #undef frame_caption_height
-#undef advisor
-#undef surface
-#undef sprite
-#undef seh_next
-#undef seh_handler
-#undef try_level
 
 /* 005181d8 auto */
 #define council_video_busy_i32 (*(i32 *)((u8 *)&g.d_00631ac8))
@@ -8320,12 +7727,11 @@ void __cdecl council_on_video_end(void)
 #undef council_video_busy_i32
 
 /* 00518582 auto */
-#define era (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl council_advisor_opinion(iptr civ,i32 advisor)
 
 {
   i32 opinion;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 era;
   
   if (council_wnd != 0) {
     era = *(i32 *)(council_wnd + 0xe54);
@@ -8348,15 +7754,13 @@ i32 __cdecl council_advisor_opinion(iptr civ,i32 advisor)
   }
   return opinion;
 }
-#undef era
 
 /* 00522dfa auto */
-#define leader (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl leaders_reset_custom_names(void)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr leader;
+  int i;
   
   for (leader = 0; leader < 0x15; leader++) {
     if (leaders[leader].leader_name < 1) {
@@ -8381,8 +7785,6 @@ void __cdecl leaders_reset_custom_names(void)
   }
   return;
 }
-#undef leader
-#undef i
 
 /* 0059c575 auto */
 void __cdecl casualty_log_add(iptr unit,iptr unit2,iptr year,iptr x,i32 y)

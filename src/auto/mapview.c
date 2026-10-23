@@ -155,13 +155,12 @@ void __cdecl minimap_calc_layout(void)
 #define minimap_origin_x (*(int *)((u8 *)&g.d_0063c814))
 #define minimap_origin_y (*(int *)((u8 *)&g.d_0063c810))
 #define minimap_margin_y_i32 (*(i32 *)((u8 *)&g.d_0063caf0))
-#define dx (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl minimap_tile_to_screen(int x,uint y,iptr out_x,iptr out_y)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int dx;
   
   dx = x - minimap_origin_x;
   if (((game.rules & 0x8000) == 0) && (dx < 0)) {
@@ -179,7 +178,6 @@ void __cdecl minimap_tile_to_screen(int x,uint y,iptr out_x,iptr out_y)
 #undef minimap_origin_x
 #undef minimap_origin_y
 #undef minimap_margin_y_i32
-#undef dx
 
 /* 00406e61 auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
@@ -188,14 +186,13 @@ void __cdecl minimap_tile_to_screen(int x,uint y,iptr out_x,iptr out_y)
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
-#define color2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl minimap_tile_color(int x,int y)
 
 {
   iptr in_bounds;
   iptr visible;
   int city;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 color2;
   
   in_bounds = map_in_bounds(x,y);
   if (in_bounds == 0) {
@@ -239,20 +236,18 @@ i32 __cdecl minimap_tile_color(int x,int y)
 #undef moving_units_mode
 #undef unit_blink_active
 #undef unit_blink_phase
-#undef color2
 
 /* 0040701e auto */
 #define mapview_origin_x (*(i32 *)((u8 *)&g.d_0066ca90))
 #define mapview_origin_y (*(i32 *)((u8 *)&g.d_0066ca94))
-#define bottom (*(int *)(frame_ + FRAME_OFF(4)))
-#define top (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define right (*(int *)(frame_ + FRAME_OFF(12)))
-#define left (*(int *)(frame_ + FRAME_OFF(16)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl minimap_draw_view_rect(void)
 
 {
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int bottom;
+  i32 top;
+  int right;
+  int left;
+  i8 rect[16];
   
   if ((mapview_margin_x == 0) && (mapview_margin_y == 0)) {
     minimap_tile_to_screen(mapview_origin_x,mapview_origin_y,(iptr)&left,(iptr)&top);
@@ -270,11 +265,6 @@ void __cdecl minimap_draw_view_rect(void)
 }
 #undef mapview_origin_x
 #undef mapview_origin_y
-#undef bottom
-#undef top
-#undef right
-#undef left
-#undef rect
 
 /* 0040733c auto */
 #define game_loop_active (*(char *)((u8 *)&g.d_00628044))
@@ -282,12 +272,6 @@ void __cdecl minimap_draw_view_rect(void)
 #define minimap_origin_x (*(int *)((u8 *)&g.d_0063c814))
 #define minimap_origin_y (*(int *)((u8 *)&g.d_0063c810))
 #define minimap_margin_y_i32 (*(i32 *)((u8 *)&g.d_0063caf0))
-#define row_offset (*(int *)(frame_ + FRAME_OFF(4)))
-#define row (*(int *)(frame_ + FRAME_OFF(8)))
-#define col (*(int *)(frame_ + FRAME_OFF(12)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(20)))
-#define screen_y (*(int *)(frame_ + FRAME_OFF(24)))
-#define screen_x (*(int *)(frame_ + FRAME_OFF(28)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl minimap_redraw(void)
@@ -296,7 +280,12 @@ void __cdecl minimap_redraw(void)
   uint y;
   int in_bounds;
   i32 color;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int row_offset;
+  int row;
+  int col;
+  uint x2;
+  int screen_y;
+  int screen_x;
   
   if ((minimap_hidden == '\0') && (game_loop_active != '\0')) {
     frame_wnd_layout((FrameWindow *)&minimap_window);
@@ -343,20 +332,12 @@ void __cdecl minimap_redraw(void)
 #undef minimap_origin_x
 #undef minimap_origin_y
 #undef minimap_margin_y_i32
-#undef row_offset
-#undef row
-#undef col
-#undef x2
-#undef screen_y
-#undef screen_x
 
 /* 004074dc auto */
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 #define minimap_origin_x (*(int *)((u8 *)&g.d_0063c814))
 #define minimap_origin_y (*(int *)((u8 *)&g.d_0063c810))
 #define minimap_margin_y_i32 (*(i32 *)((u8 *)&g.d_0063caf0))
-#define row_offset (*(int *)(frame_ + FRAME_OFF(4)))
-#define tile_x (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl minimap_on_lbuttonup(int mouse_x,int mouse_y)
@@ -365,7 +346,8 @@ void __cdecl minimap_on_lbuttonup(int mouse_x,int mouse_y)
   uint tile_y;
   iptr col_x;
   int in_bounds;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int row_offset;
+  uint tile_x;
   
   mouse_x -= minimap_client_x;
   mouse_y -= minimap_client_y;
@@ -404,18 +386,12 @@ void __cdecl minimap_on_lbuttonup(int mouse_x,int mouse_y)
 #undef minimap_origin_x
 #undef minimap_origin_y
 #undef minimap_margin_y_i32
-#undef row_offset
-#undef tile_x
 
 /* 00407658 auto */
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 #define minimap_origin_x (*(int *)((u8 *)&g.d_0063c814))
 #define minimap_origin_y (*(int *)((u8 *)&g.d_0063c810))
 #define minimap_margin_y_i32 (*(i32 *)((u8 *)&g.d_0063caf0))
-#define row_offset (*(int *)(frame_ + FRAME_OFF(4)))
-#define tile_x (*(uint *)(frame_ + FRAME_OFF(8)))
-#define free_view (*(int *)(frame_ + FRAME_OFF(16)))
-#define view (*(int *)(frame_ + FRAME_OFF(20)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl minimap_on_rbuttonup(int mouse_x,int mouse_y)
@@ -424,7 +400,10 @@ void __cdecl minimap_on_rbuttonup(int mouse_x,int mouse_y)
   uint tile_y;
   iptr col_x;
   int in_bounds;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int row_offset;
+  uint tile_x;
+  int free_view;
+  int view;
   
   mouse_x -= minimap_client_x;
   mouse_y -= minimap_client_y;
@@ -474,23 +453,18 @@ void __cdecl minimap_on_rbuttonup(int mouse_x,int mouse_y)
 #undef minimap_origin_x
 #undef minimap_origin_y
 #undef minimap_margin_y_i32
-#undef row_offset
-#undef tile_x
-#undef free_view
-#undef view
 
 /* 0040785b auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 #define main_frame_nonclient_width (*(int *)((u8 *)&g.d_006acbb0))
-#define height2 (*(int *)(frame_ + FRAME_OFF(0)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define top (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl minimap_calc_rect(void)
 
 {
   int client_w;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int height2;
+  int width2;
+  int top;
   
   client_w = wnd_client_width((WndBase *)&main_frame_wnd);
   width2 = 0xa0;
@@ -513,9 +487,6 @@ void __cdecl minimap_calc_rect(void)
 #undef frame_border_width
 #undef frame_caption_height
 #undef main_frame_nonclient_width
-#undef height2
-#undef width2
-#undef top
 
 /* 0040795a auto */
 void __cdecl minimap_on_size(void)
@@ -618,11 +589,10 @@ void __thiscall mapview_redraw_cursor_tile(ViewWindow *this)
 #undef map_cursor_y
 
 /* 0041033a auto */
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapviews_redraw_cursor(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   for (view = 0; view < 8; view++) {
     if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
@@ -631,16 +601,14 @@ void __cdecl mapviews_redraw_cursor(void)
   }
   return;
 }
-#undef view
 
 /* 004103ae auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_redraw(void)
 
 {
   int child_wnd;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ViewWindow *this2;
   
   city_window_bring_to_top((WindowObjectView *)&city_window);
   child_wnd = wnd_get_active_child();
@@ -654,7 +622,6 @@ void __cdecl mapview_on_redraw(void)
   return;
 }
 #undef human_civ
-#undef this2
 
 /* 00410402 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -681,7 +648,6 @@ void __thiscall mapview_center_on(ViewWindow *this,iptr x,i32 y)
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_phase (*(i8 *)((u8 *)&g.d_00628054))
 #define unit_blink_skip_tick (*(i8 *)((u8 *)&g.d_0062805c))
-#define need_scroll (*(int *)(frame_ + FRAME_OFF(4)))
 int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
 
 {
@@ -689,7 +655,7 @@ int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
   uptr view_top;
   u32 view_cols;
   u32 view_bottom;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int need_scroll;
   
   need_scroll = 0;
   view_left = this->sci_rate_sel;
@@ -723,19 +689,17 @@ int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
 #undef moving_units_mode
 #undef unit_blink_phase
 #undef unit_blink_skip_tick
-#undef need_scroll
 
 /* 004105f8 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define map_redraw_busy (*(i32 *)((u8 *)&g.d_006ad908))
-#define result (*(uint *)(frame_ + FRAME_OFF(4)))
-#define view (*(int *)(frame_ + FRAME_OFF(8)))
 uint __cdecl mapviews_ensure_visible(i32 x,i32 y,iptr civ)
 
 {
   ushort track_mask;
   uint scrolled;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uint result;
+  int view;
   
   result = 1;
   map_redraw_busy = 1;
@@ -765,14 +729,8 @@ uint __cdecl mapviews_ensure_visible(i32 x,i32 y,iptr civ)
 }
 #undef human_civ
 #undef map_redraw_busy
-#undef result
-#undef view
 
 /* 004106fd auto */
-#define tile_sx (*(int (*)[2])(frame_ + FRAME_OFF(0)))
-#define off_y (*(int *)(frame_ + FRAME_OFF(8)))
-#define off_x (*(int *)(frame_ + FRAME_OFF(12)))
-#define tile_sy (*(int *)(frame_ + FRAME_OFF(16)))
 int __thiscall
 mapview_point_unit_dir
           (ViewWindow *this,int mouse_x,int mouse_y,i32 unit_x,i32 unit_y)
@@ -781,7 +739,10 @@ mapview_point_unit_dir
   short client_dx;
   short client_dy;
   int dir;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int tile_sx[2];
+  int off_y;
+  int off_x;
+  int tile_sy;
   
   mapview_tile_to_screen(this,(iptr)tile_sx,(iptr)&tile_sy,unit_x,unit_y);
   if (((short)mouse_x < tile_sx[0]) || ((short)mouse_y < tile_sy)) {
@@ -809,27 +770,22 @@ mapview_point_unit_dir
   }
   return dir;
 }
-#undef tile_sx
-#undef off_y
-#undef off_x
-#undef tile_sy
 
 /* 00410835 auto */
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define y2 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define civ (*(int *)(frame_ + FRAME_OFF(12)))
-#define cursor_id (*(uptr *)(frame_ + FRAME_OFF(16)))
-#define view (*(ViewWindow * *)(frame_ + FRAME_OFF(20)))
-#define dir (*(int *)(frame_ + FRAME_OFF(24)))
 void __cdecl mapview_on_mousemove(int mouse_x,int mouse_y)
 
 {
   iptr child_wnd;
   int check;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr x2;
+  iptr unit;
+  iptr y2;
+  int civ;
+  uptr cursor_id;
+  ViewWindow *view;
+  int dir;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
@@ -888,13 +844,6 @@ void __cdecl mapview_on_mousemove(int mouse_x,int mouse_y)
 }
 #undef city_turn_processing
 #undef moving_units_mode
-#undef x2
-#undef unit
-#undef y2
-#undef civ
-#undef cursor_id
-#undef view
-#undef dir
 
 /* 00410a64 auto */
 #define mapview_cursor_id (*(i32 *)((u8 *)&g.d_0066cb00))
@@ -942,14 +891,13 @@ void __cdecl mapview_drag_hold_expired(void)
 #define mapview_cursor_id (*(i32 *)((u8 *)&g.d_0066cb00))
 #define mapview_drag_hold_timer (*(i32 *)((u8 *)&g.d_00624f54))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
-#define view (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_lbuttondown(void)
 
 {
   SHORT SVar1;
   iptr child_wnd;
   int paradrop;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr view;
   
   if ((city_turn_processing == 0) && ((game.multiplayer == '\0' || (ui_input_busy == 0)))) {
     ui_input_busy = 1;
@@ -982,16 +930,14 @@ void __cdecl mapview_on_lbuttondown(void)
 #undef mapview_cursor_id
 #undef mapview_drag_hold_timer
 #undef moving_units_mode
-#undef view
 
 /* 00410cfa auto */
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 #define mapview_drag_hold_timer (*(int *)((u8 *)&g.d_00624f54))
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_lbuttonup_any(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   if ((city_turn_processing == 0) && ((game.multiplayer == '\0' || (ui_input_busy == 0)))) {
     ui_input_busy = 1;
@@ -1012,15 +958,13 @@ void __cdecl mapview_on_lbuttonup_any(void)
 }
 #undef city_turn_processing
 #undef mapview_drag_hold_timer
-#undef view
 
 /* 00410e46 auto */
 #define mapview_cursor_id (*(i32 *)((u8 *)&g.d_0066cb00))
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapviews_set_paradrop_cursor(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   for (view = 0; view < 8; view++) {
     if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
@@ -1031,16 +975,14 @@ void __cdecl mapviews_set_paradrop_cursor(void)
   return;
 }
 #undef mapview_cursor_id
-#undef view
 
 /* 00410ed8 auto */
 #define mapview_cursor_id (*(i32 *)((u8 *)&g.d_0066cb00))
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapviews_reset_cursor(void)
 
 {
   int paradrop;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   paradrop = ui_paradrop_cursor_active();
   if (paradrop != 0) {
@@ -1054,7 +996,6 @@ void __cdecl mapviews_reset_cursor(void)
   return;
 }
 #undef mapview_cursor_id
-#undef view
 
 /* 004116c1 auto */
 void __cdecl mapview_on_lbuttonup(i32 x,i32 y)
@@ -1073,14 +1014,13 @@ void __cdecl mapview_on_rbuttonup(i32 x,i32 y)
 }
 
 /* 004132b7 auto */
-#define height2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define top (*(int *)(frame_ + FRAME_OFF(12)))
 void __cdecl mapview_calc_rect(void)
 
 {
   int client_w;
   int minimap_w;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr height2;
+  int top;
   
   client_w = wnd_client_width((WndBase *)&main_frame_wnd);
   minimap_w = rect_width((iptr)((u8 *)&g.d_00655324));
@@ -1094,17 +1034,14 @@ void __cdecl mapview_calc_rect(void)
   rect_set_xywh((iptr)((u8 *)&g.d_006552a4),0,top,client_w - minimap_w,height2);
   return;
 }
-#undef height2
-#undef top
 
 /* 00413350 auto */
-#define view (*(iptr *)(frame_ + FRAME_OFF(0)))
 bool __cdecl mapview_on_close(void)
 
 {
   iptr child_wnd;
   bool is_main;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr view;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
@@ -1122,15 +1059,13 @@ bool __cdecl mapview_on_close(void)
   }
   return !is_main;
 }
-#undef view
 
 /* 004133c2 auto */
-#define view (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_size(void)
 
 {
   iptr child_wnd;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr view;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
@@ -1144,15 +1079,13 @@ void __cdecl mapview_on_size(void)
              (iptr)(&map_view_saved_rects + *(int *)(view + 0x2d8) * 0x10));
   return;
 }
-#undef view
 
 /* 0041341c auto */
-#define view (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_move(void)
 
 {
   iptr child_wnd;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr view;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
@@ -1166,18 +1099,16 @@ void __cdecl mapview_on_move(void)
              (iptr)(&map_view_saved_rects + *(int *)(view + 0x2d8) * 0x10));
   return;
 }
-#undef view
 
 /* 00413476 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define view (*(int *)(frame_ + FRAME_OFF(4)))
-#define mode (*(uint *)(frame_ + FRAME_OFF(8)))
 void __thiscall mapview_update_title(FrameWindow *this)
 
 {
   bool show_mode;
   iptr adjective;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
+  uint mode;
   
   mode = (uint)((this->max_rate_value & 0x10000) != 0);
   if ((this->max_rate_value & 0x20000) != 0) {
@@ -1213,17 +1144,14 @@ void __thiscall mapview_update_title(FrameWindow *this)
   return;
 }
 #undef human_civ
-#undef view
-#undef mode
 
 /* 004135ab auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_caption_button(i32 button)
 
 {
   iptr child_wnd;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ViewWindow *this2;
   
   if ((game.multiplayer == '\0') || (ui_input_busy == 0)) {
     ui_input_busy = 1;
@@ -1263,15 +1191,10 @@ void __cdecl mapview_on_caption_button(i32 button)
   return;
 }
 #undef human_civ
-#undef this2
 
 /* 00413717 auto */
 #define saved_layout_valid (*(int *)((u8 *)&g.d_00655280))
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
-#define height2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define top (*(int *)(frame_ + FRAME_OFF(12)))
-#define left (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall mapview_create(ViewWindow *this)
 
 {
@@ -1280,7 +1203,10 @@ void __thiscall mapview_create(ViewWindow *this)
   i32 create_arg7;
   i32 create_arg8;
   i32 create_arg9;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int height2;
+  int width2;
+  int top;
+  int left;
   
   mapview_init_state(this,this->rates_civ);
   if ((turn_resume_civ == '\0') || (saved_layout_valid == 0)) {
@@ -1358,10 +1284,6 @@ void __thiscall mapview_create(ViewWindow *this)
 }
 #undef saved_layout_valid
 #undef turn_resume_civ
-#undef height2
-#undef width2
-#undef top
-#undef left
 
 /* 00413a90 auto */
 #define main_view_timer_shown (*(i32 *)((u8 *)&g.d_0066c988))
@@ -1370,13 +1292,12 @@ void __thiscall mapview_create(ViewWindow *this)
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
 #define main_view_status_shown_i32 (*(i32 *)((u8 *)&g.d_0066c98c))
 #define map_view_open_flags_i32 (*(i32 *)((u8 *)&g.d_0066ca84))
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl mapviews_create_all(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   for (view = 0; view < 8; view++) {
     mapview_init_state((ViewWindow *)(&map_views + view * 0x3f0),view);
@@ -1408,15 +1329,13 @@ void __cdecl mapviews_create_all(void)
 #undef turn_resume_civ
 #undef main_view_status_shown_i32
 #undef map_view_open_flags_i32
-#undef view
 
 /* 00413bd1 auto */
 #define timer_alt_kind_request (*(i32 *)((u8 *)&g.d_00637ef8))
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapviews_destroy_all(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   timer_alt_kind_request = 1;
   game_timer_destroy(unit_blink_timer);
@@ -1430,7 +1349,6 @@ void __cdecl mapviews_destroy_all(void)
   return;
 }
 #undef timer_alt_kind_request
-#undef view
 
 /* 0046ab30 auto */
 void * __thiscall clickmap_ctor(void *this)
@@ -1460,14 +1378,13 @@ void __thiscall clickmap_clear(ClickMapClearView *this)
 }
 
 /* 0046ab82 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int index)
 
 {
   int n;
   u8 *src;
   u8 *dst;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = index; i < (int)(this->entry_count - 1); i++) {
     src = this->hit_regions + i * 0x18 + 0x18;
@@ -1481,16 +1398,14 @@ void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int index)
   this->entry_count--;
   return;
 }
-#undef i
 
 /* 0046ac89 auto */
-#define idx (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall clickmap_remove_by_id(ClickMapRemoveView *this,int id)
 
 {
   u32 count;
   iptr offset;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 idx;
   
   count = this->entry_count;
   while (idx = count - 1, -1 < (int)idx) {
@@ -1502,17 +1417,15 @@ void __thiscall clickmap_remove_by_id(ClickMapRemoveView *this,int id)
   }
   return;
 }
-#undef idx
 
 /* 0046ace7 auto */
-#define index (*(u32 *)(frame_ + FRAME_OFF(0)))
 u32 __thiscall
 clickmap_add
           (ClickMap *this,iptr id,i32 value,i32 x,i32 y,
           iptr width,iptr height)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 index;
   
   index = 0xffffffff;
   if ((int)this->entry_count < 200) {
@@ -1524,16 +1437,14 @@ clickmap_add
   }
   return index;
 }
-#undef index
 
 /* 0046ad85 auto */
-#define hit (*(int *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
 int __thiscall
 clickmap_hit_test(ClickMapHitTestView *this,int x,int y,iptr out_id,iptr out_value)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int hit;
+  int i;
   
   hit = -1;
   i = 0;
@@ -1560,22 +1471,19 @@ LAB_0046ae34:
     i++;
   } while( true );
 }
-#undef hit
-#undef i
 
 /* 00472b0a auto */
 #define mapview_zoom (*(short *)((u8 *)&g.d_0066ca8c))
-#define screen_y (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define screen_x (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define num_text (*(char (*)[80])(frame_ + FRAME_OFF(12)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(92)))
 void __cdecl mapview_draw_tile_number(i32 x,i32 y,int number,i32 color)
 
 {
   int in_view;
   iptr width;
   iptr height;
-  i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 screen_y;
+  i32 screen_x;
+  char num_text[80];
+  i8 rect[16];
   
   in_view = mapview_tile_in_view((ViewWindow *)&map_views,x,y);
   if (in_view != 0) {
@@ -1601,10 +1509,6 @@ void __cdecl mapview_draw_tile_number(i32 x,i32 y,int number,i32 color)
   return;
 }
 #undef mapview_zoom
-#undef screen_y
-#undef screen_x
-#undef num_text
-#undef rect
 
 /* 00479ede auto */
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
@@ -1636,9 +1540,6 @@ void __thiscall mapview_init_state(ViewWindow *this,u32 view_index)
 #undef turn_resume_civ
 
 /* 00479fbe auto */
-#define dir_mask_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define pick_mask_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define font_size (*(uptr *)(frame_ + FRAME_OFF(32)))
 void __thiscall mapview_update_layout(ViewWindow *this)
 
 {
@@ -1646,7 +1547,9 @@ void __thiscall mapview_update_layout(ViewWindow *this)
   i32 wrapped_x;
   uptr wrapped;
   uint clamped;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 dir_mask_rect[16];
+  i8 pick_mask_rect[16];
+  uptr font_size;
   
   this->button_area_height = this->client_width;
   this->row_spacing_value = this->client_height;
@@ -1730,13 +1633,8 @@ void __thiscall mapview_update_layout(ViewWindow *this)
   }
   return;
 }
-#undef dir_mask_rect
-#undef pick_mask_rect
-#undef font_size
 
 /* 0047a540 auto */
-#define tile_x (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define tile_y (*(short *)(frame_ + FRAME_OFF(8)))
 i32 __thiscall
 mapview_screen_to_tile
           (MapViewHitView *this,iptr out_x,iptr out_y,i32 mouse_x,i32 mouse_y)
@@ -1747,7 +1645,8 @@ mapview_screen_to_tile
   i32 result;
   iptr pixel;
   iptr quadrant;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr tile_x;
+  short tile_y;
   
   px = (short)mouse_x - (short)this->client_x;
   py = (short)mouse_y - (short)this->client_y;
@@ -1778,8 +1677,6 @@ mapview_screen_to_tile
   }
   return result;
 }
-#undef tile_x
-#undef tile_y
 
 /* 0047a6b0 auto */
 void __thiscall
@@ -1800,71 +1697,6 @@ mapview_tile_to_screen(ViewWindow *this,iptr out_x,iptr out_y,int x,int y)
 
 /* 0047a8c9 auto */
 #define map_show_hidden_terrain (*(int *)((u8 *)&g.d_0062bcd8))
-#define unexp_dy (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define unexp_dx (*(u32 *)(frame_ + FRAME_OFF(8)))
-#define dither_dy (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define dither_dx (*(u32 *)(frame_ + FRAME_OFF(16)))
-#define unexp_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define airbase_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
-#define fortress_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
-#define hut_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
-#define pollution_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
-#define mine_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
-#define road_dot_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(116)))
-#define rail_dot_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(132)))
-#define rail_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(148)))
-#define road_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(164)))
-#define resource_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
-#define shield_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(196)))
-#define farm_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(212)))
-#define irrig_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(228)))
-#define river_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(244)))
-#define farmland_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(260)))
-#define hill_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(276)))
-#define mountain_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(292)))
-#define forest_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(308)))
-#define dither_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(324)))
-#define base_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(340)))
-#define mouth_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(356)))
-#define coast_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(372)))
-#define ocean_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(388)))
-#define hidden_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(404)))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(420)))
-#define abs_dy (*(int *)(frame_ + FRAME_OFF(424)))
-#define terrain_byte (*(uint *)(frame_ + FRAME_OFF(428)))
-#define nbr_terrain (*(uint *)(frame_ + FRAME_OFF(432)))
-#define hidden (*(uint *)(frame_ + FRAME_OFF(436)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(440)))
-#define rail_count (*(int *)(frame_ + FRAME_OFF(444)))
-#define road_count (*(int *)(frame_ + FRAME_OFF(448)))
-#define variant (*(int *)(frame_ + FRAME_OFF(452)))
-#define improvements2 (*(uint *)(frame_ + FRAME_OFF(456)))
-#define quad (*(iptr *)(frame_ + FRAME_OFF(460)))
-#define tile (*(byte * *)(frame_ + FRAME_OFF(464)))
-#define abs_dx (*(int *)(frame_ + FRAME_OFF(468)))
-#define river_mask (*(int *)(frame_ + FRAME_OFF(472)))
-#define nbr_tile (*(byte * *)(frame_ + FRAME_OFF(476)))
-#define half_w (*(u32 *)(frame_ + FRAME_OFF(480)))
-#define terrain2 (*(uint *)(frame_ + FRAME_OFF(484)))
-#define nbr_improvements (*(uint *)(frame_ + FRAME_OFF(488)))
-#define nbr_hidden (*(int *)(frame_ + FRAME_OFF(492)))
-#define y2 (*(iptr *)(frame_ + FRAME_OFF(496)))
-#define half_h (*(u32 *)(frame_ + FRAME_OFF(500)))
-#define draw_y (*(int *)(frame_ + FRAME_OFF(504)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(508)))
-#define tile_w (*(u32 *)(frame_ + FRAME_OFF(512)))
-#define draw_x (*(int *)(frame_ + FRAME_OFF(516)))
-#define nbr_byte (*(uint *)(frame_ + FRAME_OFF(520)))
-#define quarter_y (*(int *)(frame_ + FRAME_OFF(524)))
-#define has_rail (*(int *)(frame_ + FRAME_OFF(528)))
-#define irrig_flags (*(uint *)(frame_ + FRAME_OFF(532)))
-#define resource (*(int *)(frame_ + FRAME_OFF(536)))
-#define airbase_area (*(i8 (*)[16])(frame_ + FRAME_OFF(540)))
-#define quarter_x (*(int *)(frame_ + FRAME_OFF(556)))
-#define has_river (*(uint *)(frame_ + FRAME_OFF(560)))
-#define quarter (*(iptr *)(frame_ + FRAME_OFF(564)))
-#define tile_h (*(u32 *)(frame_ + FRAME_OFF(568)))
-#define dither_terrain (*(uint (*)[4])(frame_ + FRAME_OFF(572)))
 void __thiscall
 mapview_draw_tile_terrain
           (ViewWindow *this,iptr surface,int screen_x,int screen_y,iptr x,int y,
@@ -1877,7 +1709,71 @@ mapview_draw_tile_terrain
   byte *known;
   iptr civ;
   i32 color;
-  i8 frame_[FRAME_OFF(592)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 unexp_dy;
+  u32 unexp_dx;
+  u32 dither_dy;
+  u32 dither_dx;
+  i8 unexp_rect[16];
+  i8 airbase_rect[16];
+  i8 fortress_rect[16];
+  i8 hut_rect[16];
+  i8 pollution_rect[16];
+  i8 mine_rect[16];
+  i8 road_dot_rect[16];
+  i8 rail_dot_rect[16];
+  i8 rail_rect[16];
+  i8 road_rect[16];
+  i8 resource_rect[16];
+  i8 shield_rect[16];
+  i8 farm_rect[16];
+  i8 irrig_rect[16];
+  i8 river_rect[16];
+  i8 farmland_rect[16];
+  i8 hill_rect[16];
+  i8 mountain_rect[16];
+  i8 forest_rect[16];
+  i8 dither_rect[16];
+  i8 base_rect[16];
+  i8 mouth_rect[16];
+  i8 coast_rect[16];
+  i8 ocean_rect[16];
+  i8 hidden_rect[16];
+  iptr x2;
+  int abs_dy;
+  uint terrain_byte;
+  uint nbr_terrain;
+  uint hidden;
+  iptr unit;
+  int rail_count;
+  int road_count;
+  int variant;
+  uint improvements2;
+  iptr quad;
+  byte *tile;
+  int abs_dx;
+  int river_mask;
+  byte *nbr_tile;
+  u32 half_w;
+  uint terrain2;
+  uint nbr_improvements;
+  int nbr_hidden;
+  iptr y2;
+  u32 half_h;
+  int draw_y;
+  iptr dir;
+  u32 tile_w;
+  int draw_x;
+  uint nbr_byte;
+  int quarter_y;
+  int has_rail;
+  uint irrig_flags;
+  int resource;
+  i8 airbase_area[16];
+  int quarter_x;
+  uint has_river;
+  iptr quarter;
+  u32 tile_h;
+  uint dither_terrain[4];
   
   if ((short)this->lux_rate_sel == zoom) {
     tile_w = this->total_tax;
@@ -2274,76 +2170,10 @@ LAB_0047ba07:
   return;
 }
 #undef map_show_hidden_terrain
-#undef unexp_dy
-#undef unexp_dx
-#undef dither_dy
-#undef dither_dx
-#undef unexp_rect
-#undef airbase_rect
-#undef fortress_rect
-#undef hut_rect
-#undef pollution_rect
-#undef mine_rect
-#undef road_dot_rect
-#undef rail_dot_rect
-#undef rail_rect
-#undef road_rect
-#undef resource_rect
-#undef shield_rect
-#undef farm_rect
-#undef irrig_rect
-#undef river_rect
-#undef farmland_rect
-#undef hill_rect
-#undef mountain_rect
-#undef forest_rect
-#undef dither_rect
-#undef base_rect
-#undef mouth_rect
-#undef coast_rect
-#undef ocean_rect
-#undef hidden_rect
-#undef x2
-#undef abs_dy
-#undef terrain_byte
-#undef nbr_terrain
-#undef hidden
-#undef unit
-#undef rail_count
-#undef road_count
-#undef variant
-#undef improvements2
-#undef quad
-#undef tile
-#undef abs_dx
-#undef river_mask
-#undef nbr_tile
-#undef half_w
-#undef terrain2
-#undef nbr_improvements
-#undef nbr_hidden
-#undef y2
-#undef half_h
-#undef draw_y
-#undef dir
-#undef tile_w
-#undef draw_x
-#undef nbr_byte
-#undef quarter_y
-#undef has_rail
-#undef irrig_flags
-#undef resource
-#undef airbase_area
-#undef quarter_x
-#undef has_river
-#undef quarter
-#undef tile_h
-#undef dither_terrain
 
 /* 0047ba1d auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define visible2 (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 mapview_draw_tile_city
           (ViewWindow *this,i32 screen_x,int screen_y,iptr x,iptr y)
@@ -2351,7 +2181,7 @@ mapview_draw_tile_city
 {
   iptr city;
   int in_bounds;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int visible2;
   
   city = city_at(x,y);
   if ((-1 < city) && (in_bounds = map_in_bounds(x,y), in_bounds != 0)) {
@@ -2377,7 +2207,6 @@ mapview_draw_tile_city
 }
 #undef human_civ
 #undef scenario_flags
-#undef visible2
 
 /* 0047bba5 auto */
 void __thiscall
@@ -2411,12 +2240,11 @@ mapview_draw_unit_blinking
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
-#define screen_y (*(int *)(frame_ + FRAME_OFF(4)))
-#define screen_x (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall mapview_draw_unit_at(ViewWindow *this,iptr unit)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int screen_y;
+  i32 screen_x;
   
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
     mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,(int)units[unit].x,
@@ -2429,8 +2257,6 @@ void __thiscall mapview_draw_unit_at(ViewWindow *this,iptr unit)
 #undef moving_units_mode
 #undef unit_blink_active
 #undef unit_blink_phase
-#undef screen_y
-#undef screen_x
 
 /* 0047bd04 auto */
 #define anim_combat_defender (*(int *)((u8 *)&g.d_00633e48))
@@ -2469,8 +2295,6 @@ mapview_draw_stack_unit
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define visible2 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall
 mapview_draw_tile_units
           (ViewWindow *this,i32 screen_x,int screen_y,int x,int y)
@@ -2478,7 +2302,8 @@ mapview_draw_tile_units
 {
   int draw_y;
   int result;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int visible2;
   
   draw_y = screen_y - this->margin_value;
   result = map_in_bounds(x,y);
@@ -2543,23 +2368,20 @@ mapview_draw_tile_units
 #undef human_civ
 #undef moving_units_mode
 #undef unit_blink_active
-#undef unit
-#undef visible2
 
 /* 0047c103 auto */
 #define map_show_hidden_terrain (*(int *)((u8 *)&g.d_0062bcd8))
-#define grid_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define radius_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define screen_y (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define screen_x (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define near_city (*(int *)(frame_ + FRAME_OFF(48)))
 void __thiscall
 mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
 
 {
   int result;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 grid_rect[16];
+  i8 radius_rect[16];
+  iptr city;
+  i32 screen_y;
+  i32 screen_x;
+  int near_city;
   
   mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,x,y);
   mapview_draw_tile_terrain(this,(iptr)this,screen_x,screen_y,x,y,civ,
@@ -2599,12 +2421,6 @@ mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
   return;
 }
 #undef map_show_hidden_terrain
-#undef grid_rect
-#undef radius_rect
-#undef city
-#undef screen_y
-#undef screen_x
-#undef near_city
 
 /* 0047c3e0 auto */
 i32 __thiscall
@@ -2622,15 +2438,6 @@ mapview_tile_in_view(ViewWindow *this,i32 tile_x,i32 tile_y)
 /* 0047c443 auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define map_show_hidden_terrain (*(int *)((u8 *)&g.d_0062bcd8))
-#define shadow_offset (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define shadow_y (*(int *)(frame_ + FRAME_OFF(8)))
-#define screen_y (*(int *)(frame_ + FRAME_OFF(16)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define screen_x (*(int *)(frame_ + FRAME_OFF(24)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define visible2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define label_y (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
 mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
 
@@ -2641,7 +2448,15 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
   int name_width;
   i32 text_color;
   i32 shadow_depth;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 shadow_offset;
+  int shadow_y;
+  int screen_y;
+  iptr city;
+  int screen_x;
+  int y2;
+  int x2;
+  int visible2;
+  int label_y;
   
   if (map_show_hidden_terrain == 0) {
     if (-1 < radius) {
@@ -2710,27 +2525,17 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
 }
 #undef human_civ
 #undef map_show_hidden_terrain
-#undef shadow_offset
-#undef shadow_y
-#undef screen_y
-#undef city
-#undef screen_x
-#undef y2
-#undef x2
-#undef visible2
-#undef label_y
 
 /* 0047c7aa auto */
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define top (*(int *)(frame_ + FRAME_OFF(20)))
-#define left (*(int *)(frame_ + FRAME_OFF(24)))
 void __thiscall
 mapview_tile_radius_rect
           (ViewWindow *this,i32 tile_x,i32 tile_y,int radius,iptr out_rect)
 
 {
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
+  int width2;
+  int top;
+  int left;
   
   mapview_tile_to_screen(this,(iptr)&left,(iptr)&top,tile_x,tile_y);
   top -= (radius * 2 + 1) * this->margin_value;
@@ -2740,17 +2545,8 @@ mapview_tile_radius_rect
   rect_intersect_into(out_rect,(iptr)rect,(iptr)&this->client_rect);
   return;
 }
-#undef rect
-#undef width2
-#undef top
-#undef left
 
 /* 0047c869 auto */
-#define dx_abs (*(uint *)(frame_ + FRAME_OFF(4)))
-#define dy (*(uint *)(frame_ + FRAME_OFF(12)))
-#define dx (*(uint *)(frame_ + FRAME_OFF(20)))
-#define row_extent (*(int *)(frame_ + FRAME_OFF(32)))
-#define clip_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
 void __thiscall
 mapview_draw_tile_radius
           (ViewWindow *this,int center_x,int center_y,int radius,i32 civ)
@@ -2760,7 +2556,11 @@ mapview_draw_tile_radius
   uint row_abs;
   i32 x;
   int in_view;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  uint dx_abs;
+  uint dy;
+  uint dx;
+  int row_extent;
+  i8 clip_rect[16];
   
   mapview_tile_radius_rect(this,center_x,center_y,radius,(iptr)clip_rect);
   surface_set_clip((DibSurface *)this,(iptr)clip_rect);
@@ -2793,23 +2593,17 @@ mapview_draw_tile_radius
   surface_set_clip((DibSurface *)this,(iptr)&this->client_rect);
   return;
 }
-#undef dx_abs
-#undef dy
-#undef dx
-#undef row_extent
-#undef clip_rect
 
 /* 0047c9d4 auto */
-#define row (*(uint *)(frame_ + FRAME_OFF(4)))
-#define col (*(int *)(frame_ + FRAME_OFF(8)))
-#define row_width (*(int *)(frame_ + FRAME_OFF(12)))
 void __thiscall mapview_draw_all_tiles(ViewWindow *this,i32 civ)
 
 {
   uptr origin_y;
   uptr origin_x;
   i32 x;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  uint row;
+  int col;
+  int row_width;
   
   if ((this->tax_label_y != 0) || (this->lux_label_y != 0)) {
     gfx_fill_surface((iptr)this,10);
@@ -2832,24 +2626,19 @@ void __thiscall mapview_draw_all_tiles(ViewWindow *this,i32 civ)
   mapview_draw_city_names(this,0,0,0xffffffff);
   return;
 }
-#undef row
-#undef col
-#undef row_width
 
 /* 0047caea auto */
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __thiscall
 mapview_blit_tile_radius
           (ViewWindow *this,i32 tile_x,i32 tile_y,i32 radius)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   mapview_tile_radius_rect(this,tile_x,tile_y,radius,(iptr)rect);
   wnd_blit_surface_rect((DibSurface *)this,(iptr)rect);
   return;
 }
-#undef rect
 
 /* 0047cb26 auto */
 void __thiscall
@@ -2884,10 +2673,6 @@ void __thiscall mapview_blit_with_net_pump(DibSurface *this)
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define cursor_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(24)))
 void __thiscall
 mapview_redraw_area
           (ViewWindow *this,i32 tile_x,i32 tile_y,i32 radius,
@@ -2895,7 +2680,10 @@ mapview_redraw_area
 
 {
   int in_view;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
+  i8 cursor_rect[16];
+  i32 cursor_x;
+  i32 cursor_y;
   
   if (game_loop_active != '\0') {
     map_redraw_busy = 1;
@@ -2929,10 +2717,6 @@ mapview_redraw_area
 #undef moving_units_mode
 #undef unit_blink_active
 #undef unit_blink_phase
-#undef civ
-#undef cursor_rect
-#undef cursor_x
-#undef cursor_y
 
 /* 0047cced auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -2961,11 +2745,10 @@ mapview_redraw_tile_neighbors(ViewWindow *this,i32 tile_x,i32 tile_y)
 #define map_click_in_progress (*(int *)((u8 *)&g.d_0062bcb0))
 #define map_redraw_busy (*(i32 *)((u8 *)&g.d_006ad908))
 #define mp_simultaneous_moves (*(char *)((u8 *)&g.d_006ad684))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall mapview_redraw(ViewWindow *this,iptr viewer_civ,int do_blit)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
   
   if (game_loop_active != '\0') {
     map_redraw_busy = 1;
@@ -2994,16 +2777,14 @@ void __thiscall mapview_redraw(ViewWindow *this,iptr viewer_civ,int do_blit)
 #undef map_click_in_progress
 #undef map_redraw_busy
 #undef mp_simultaneous_moves
-#undef civ
 
 /* 0047dce0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 ViewWindow * __thiscall mapview_ctor(ViewWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
@@ -3013,19 +2794,13 @@ ViewWindow * __thiscall mapview_ctor(ViewWindow *this)
   font_init_empty((GameFont *)&this->conceal_button_value);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
   surface_ctor((DibSurface *)&this->counter_button_value);
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),3);
+  eh_state = (eh_state & 0xffffff00 | (byte)(3));
   surface_ctor((DibSurface *)&this->right_agreed_button);
   this->vtable = (u32)&PTR_FUN_0061d1e4;
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 0047de10 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: virtual __thiscall CBitmapButton::~CBitmapButton(void)
    
@@ -3034,24 +2809,23 @@ ViewWindow * __thiscall mapview_ctor(ViewWindow *this)
 void __thiscall mapview_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  int eh_state;
   
-  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 3;
   /* inlined unwind funclet 0047de82 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x3a8)); }
   (*(i8 *)((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 0047de91 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x360)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 0047dea0 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x340)); }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 0047deaf */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x338)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0047debe */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 0047dfb0 auto */
 i32 __thiscall mapview_zoom_scale(ViewWindow *this,i32 value)
@@ -3073,12 +2847,11 @@ void __thiscall mapview_apply_zoom(ViewWindow *this)
 
 /* 0047e030 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define view_index (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl mapviews_tile_visible(iptr x,iptr y)
 
 {
   int visible;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view_index;
   
   visible = tile_visible_to(x,y,human_civ);
   if (visible != 0) {
@@ -3094,7 +2867,6 @@ i32 __cdecl mapviews_tile_visible(iptr x,iptr y)
   return 0;
 }
 #undef human_civ
-#undef view_index
 
 /* 00489b9b auto */
 #define map_view_center_x (*(short *)((u8 *)&g.d_0066ca88))

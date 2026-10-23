@@ -25,16 +25,15 @@ void __thiscall avi_player_set_end_callback(AviPlayerEndCbSetView *this,iptr cal
 }
 
 /* 0046e020 auto */
-#define wav_name (*(char (*)[16])(frame_ + FRAME_OFF(0)))
-#define wav_path (*(char (*)[128])(frame_ + FRAME_OFF(16)))
-#define local_path (*(i8 (*)[128])(frame_ + FRAME_OFF(144)))
-#define snd_flags (*(uint *)(frame_ + FRAME_OFF(272)))
 void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
 
 {
   int result;
   char *drive;
-  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  char wav_name[16];
+  char wav_path[128];
+  i8 local_path[128];
+  uint snd_flags;
   
   snd_last_effect_id = effect;
   snd_last_effect_arg = play_mode;
@@ -87,10 +86,6 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
   }
   return;
 }
-#undef wav_name
-#undef wav_path
-#undef local_path
-#undef snd_flags
 
 /* 0046e2f4 auto */
 #define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
@@ -112,15 +107,14 @@ void __cdecl snd_cd_on_notify(void)
 #define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
 #define cd_music_current_track (*(uint *)((u8 *)&g.d_0062b428))
 #define cd_music_unknown_disc (*(i32 *)((u8 *)&g.d_0062b424))
-#define rand_offset (*(int *)(frame_ + FRAME_OFF(0)))
-#define rand_offset_alt (*(int *)(frame_ + FRAME_OFF(4)))
-#define track (*(uint *)(frame_ + FRAME_OFF(8)))
-#define track_count (*(int *)(frame_ + FRAME_OFF(12)))
-#define tries (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl snd_cd_play_random_track(void)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int rand_offset;
+  int rand_offset_alt;
+  uint track;
+  int track_count;
+  int tries;
   
   tries = 0;
   while (tries < 10) {
@@ -169,11 +163,6 @@ void __cdecl snd_cd_play_random_track(void)
 #undef cd_music_continue
 #undef cd_music_current_track
 #undef cd_music_unknown_disc
-#undef rand_offset
-#undef rand_offset_alt
-#undef track
-#undef track_count
-#undef tries
 
 /* 0046e4a9 auto */
 #define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
@@ -210,12 +199,11 @@ void __cdecl snd_cd_detect_layout(void)
 #define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
 #define cd_music_current_track (*(uint *)((u8 *)&g.d_0062b428))
 #define cd_music_unknown_disc (*(int *)((u8 *)&g.d_0062b424))
-#define track_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define tries (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl music_play_track(uint track,int force)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int track_count;
+  int tries;
   
   if (((byte)game.game_options & 8) == 0) {
     if (cd_music_available == 0) {
@@ -249,8 +237,6 @@ void __cdecl music_play_track(uint track,int force)
 #undef cd_music_continue
 #undef cd_music_current_track
 #undef cd_music_unknown_disc
-#undef track_count
-#undef tries
 
 /* 0046e6a9 auto */
 #define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
@@ -368,15 +354,14 @@ void __cdecl snd_show_error(int error_code)
 #define snd_wave_block_align (*(i32 *)((u8 *)&g.d_006385ac))
 #define snd_wave_format (*(i32 *)((u8 *)&g.d_006385a0))
 #define snd_wave_out_handle (*(i32 *)((u8 *)&g.d_00638578))
-#define chosen_device (*(UINT *)(frame_ + FRAME_OFF(4)))
-#define device (*(UINT_PTR *)(frame_ + FRAME_OFF(8)))
-#define result (*(uint *)(frame_ + FRAME_OFF(16)))
 uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle)
 
 {
   bool use_fallback;
   UINT UVar2;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  UINT chosen_device;
+  UINT_PTR device;
+  uint result;
   
   use_fallback = false;
   if (snd_wave_device_open == 0) {
@@ -403,7 +388,7 @@ uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle
       if (use_fallback) {
         snd_wave_format = CONCAT22(1,(i16)snd_wave_format);
         snd_wave_avg_bytes_per_sec = 0x5622;
-        snd_wave_block_align = CONCAT22((*(i16 *)((char *)&snd_wave_block_align + 2)),1);
+        snd_wave_block_align = (snd_wave_block_align & 0xffff0000 | (ushort)(1));
       }
       result = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,chosen_device,(LPCWAVEFORMATEX)&snd_wave_format,
                             callback,0,0x10000);
@@ -430,17 +415,13 @@ uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle
 #undef snd_wave_block_align
 #undef snd_wave_format
 #undef snd_wave_out_handle
-#undef chosen_device
-#undef device
-#undef result
 
 /* 005d4bcb auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(0)))
 uint __cdecl snd_wave_close_device(HWAVEOUT wave_out)
 
 {
   MMRESULT MVar1;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
   
   result = 0;
   if (snd_wave_device_open != 0) {
@@ -450,35 +431,20 @@ uint __cdecl snd_wave_close_device(HWAVEOUT wave_out)
   snd_wave_device_open = 0;
   return result;
 }
-#undef result
 
 /* 005d4c18 auto */
-#define error_text (*(CHAR (*)[200])(frame_ + FRAME_OFF(4)))
 void __cdecl snd_waveout_error_box(uint error_code)
 
 {
-  i8 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
+  CHAR error_text[200];
   
   waveOutGetErrorTextA(error_code & 0xffff,error_text,200);
   MessageBoxA((HWND)0x0,error_text,s_Wave_Out_Error_0063862c,0x40);
   return;
 }
-#undef error_text
 
 /* 005d4c5f auto */
 #define snd_wave_total_buffer_bytes (*(LONG *)((u8 *)&g.d_006385cc))
-#define chunk (*(_MMCKINFO *)(frame_ + FRAME_OFF(0)))
-#define mmio_info (*(_MMIOINFO *)(frame_ + FRAME_OFF(20)))
-#define node2 (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define fmt_size (*(DWORD *)(frame_ + FRAME_OFF(96)))
-#define source (*(FOURCC * *)(frame_ + FRAME_OFF(100)))
-#define mem_handle2 (*(HGLOBAL *)(frame_ + FRAME_OFF(104)))
-#define format_tag (*(FOURCC *)(frame_ + FRAME_OFF(108)))
-#define samples_per_sec (*(FOURCC *)(frame_ + FRAME_OFF(112)))
-#define avg_bytes_per_sec (*(FOURCC *)(frame_ + FRAME_OFF(116)))
-#define block_align (*(i32 *)(frame_ + FRAME_OFF(120)))
-#define riff_chunk (*(_MMCKINFO *)(frame_ + FRAME_OFF(124)))
-#define mmio (*(HMMIO *)(frame_ + FRAME_OFF(144)))
 i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_id)
 
 {
@@ -490,7 +456,15 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
   _MMCKINFO *p_Var6;
   DWORD *pDVar7;
   FOURCC *pFVar8;
-  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  _MMCKINFO chunk;
+  _MMIOINFO mmio_info;
+  iptr node2;
+  DWORD fmt_size;
+  FOURCC *source;
+  HGLOBAL mem_handle2;
+  WAVEFORMATEX wave_format;
+  _MMCKINFO riff_chunk;
+  HMMIO mmio;
   
   _memset(&mmio_info,0,0x48);
   mmio_info.cchBuffer = snd_wave_total_buffer_bytes;
@@ -506,9 +480,9 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
       MVar2 = mmioDescend(mmio,&chunk,&riff_chunk,0x10);
       if (MVar2 == 0) {
         fmt_size = chunk.cksize;
-        DVar3 = mmioRead(mmio,(HPSTR)&format_tag,chunk.cksize);
+        DVar3 = mmioRead(mmio,(HPSTR)&wave_format,chunk.cksize);
         if (DVar3 == fmt_size) {
-          if ((samples_per_sec == 0x5622) && ((*(i16 *)((char *)&block_align + 2)) == 8)) {
+          if ((wave_format.nSamplesPerSec == 0x5622) && (wave_format.wBitsPerSample == 8)) {
             mmioAscend(mmio,&chunk,0);
             chunk.ckid = 0x61746164;
             MVar2 = mmioDescend(mmio,&chunk,&riff_chunk,0x10);
@@ -545,10 +519,10 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
                     p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                   }
                   *(i16 *)((int)source + 0x8a) = (i16)flags;
-                  source[0x1d] = format_tag;
-                  source[0x1e] = samples_per_sec;
-                  source[0x1f] = avg_bytes_per_sec;
-                  source[0x20] = block_align;
+                  source[0x1d] = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
+                  source[0x1e] = wave_format.nSamplesPerSec;
+                  source[0x1f] = wave_format.nAvgBytesPerSec;
+                  source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
                   *(i16 *)(source + 0x22) = 1;
                   source[0x2d] = sound_id;
                   if (snd_wave_sources == 0) {
@@ -593,34 +567,9 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
   return result;
 }
 #undef snd_wave_total_buffer_bytes
-#undef chunk
-#undef mmio_info
-#undef node2
-#undef fmt_size
-#undef source
-#undef mem_handle2
-#undef format_tag
-#undef samples_per_sec
-#undef avg_bytes_per_sec
-#undef block_align
-#undef riff_chunk
-#undef mmio
 
 /* 005d4f6a auto */
 #define snd_wave_total_buffer_bytes (*(LONG *)((u8 *)&g.d_006385cc))
-#define chunk (*(_MMCKINFO *)(frame_ + FRAME_OFF(4)))
-#define mmio_info (*(_MMIOINFO *)(frame_ + FRAME_OFF(24)))
-#define node2 (*(iptr *)(frame_ + FRAME_OFF(96)))
-#define fmt_size (*(DWORD *)(frame_ + FRAME_OFF(100)))
-#define source (*(FOURCC * *)(frame_ + FRAME_OFF(104)))
-#define mem_handle2 (*(HGLOBAL *)(frame_ + FRAME_OFF(108)))
-#define format_tag (*(FOURCC *)(frame_ + FRAME_OFF(112)))
-#define samples_per_sec (*(FOURCC *)(frame_ + FRAME_OFF(116)))
-#define avg_bytes_per_sec (*(FOURCC *)(frame_ + FRAME_OFF(120)))
-#define block_align (*(i32 *)(frame_ + FRAME_OFF(124)))
-#define riff_chunk (*(_MMCKINFO *)(frame_ + FRAME_OFF(128)))
-#define file_mmio (*(HMMIO *)(frame_ + FRAME_OFF(148)))
-#define mem_mmio (*(HMMIO *)(frame_ + FRAME_OFF(152)))
 i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
 
 {
@@ -632,7 +581,16 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
   _MMCKINFO *p_Var6;
   DWORD *pDVar7;
   FOURCC *pFVar8;
-  i8 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
+  _MMCKINFO chunk;
+  _MMIOINFO mmio_info;
+  iptr node2;
+  DWORD fmt_size;
+  FOURCC *source;
+  HGLOBAL mem_handle2;
+  WAVEFORMATEX wave_format;
+  _MMCKINFO riff_chunk;
+  HMMIO file_mmio;
+  HMMIO mem_mmio;
   
   file_mmio = mmioOpenA(filename,(LPMMIOINFO)0x0,0);
   if (file_mmio == (HMMIO)0x0) {
@@ -646,9 +604,9 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
       MVar2 = mmioDescend(file_mmio,&chunk,&riff_chunk,0x10);
       if (MVar2 == 0) {
         fmt_size = chunk.cksize;
-        DVar3 = mmioRead(file_mmio,(HPSTR)&format_tag,chunk.cksize);
+        DVar3 = mmioRead(file_mmio,(HPSTR)&wave_format,chunk.cksize);
         if (DVar3 == fmt_size) {
-          if ((samples_per_sec == 0x5622) && ((*(i16 *)((char *)&block_align + 2)) == 8)) {
+          if ((wave_format.nSamplesPerSec == 0x5622) && (wave_format.wBitsPerSample == 8)) {
             mmioAscend(file_mmio,&chunk,0);
             chunk.ckid = 0x61746164;
             MVar2 = mmioDescend(file_mmio,&chunk,&riff_chunk,0x10);
@@ -677,10 +635,10 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
                     _memset(source,0,0xbc);
                     source[0x1b] = (FOURCC)mem_handle2;
                     *(i16 *)(source + 0x22) = 1;
-                    source[0x1d] = format_tag;
-                    source[0x1e] = samples_per_sec;
-                    source[0x1f] = avg_bytes_per_sec;
-                    source[0x20] = block_align;
+                    source[0x1d] = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
+                    source[0x1e] = wave_format.nSamplesPerSec;
+                    source[0x1f] = wave_format.nAvgBytesPerSec;
+                    source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
                     *source = (FOURCC)mem_mmio;
                     source[0x18] = (FOURCC)file_mmio;
                     p_Var5 = &mmio_info;
@@ -742,19 +700,6 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
   return result;
 }
 #undef snd_wave_total_buffer_bytes
-#undef chunk
-#undef mmio_info
-#undef node2
-#undef fmt_size
-#undef source
-#undef mem_handle2
-#undef format_tag
-#undef samples_per_sec
-#undef avg_bytes_per_sec
-#undef block_align
-#undef riff_chunk
-#undef file_mmio
-#undef mem_mmio
 
 /* 005d52a2 auto */
 #define snd_wave_format (*(i8 *)((u8 *)&g.d_006385a0))
@@ -762,23 +707,6 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 #define snd_wave_source_count (*(short *)((u8 *)&g.d_0063858c))
 #define snd_wave_total_buffer_bytes (*(uint *)((u8 *)&g.d_006385cc))
-#define mmio_info (*(_MMIOINFO *)(frame_ + FRAME_OFF(4)))
-#define format_tag (*(i32 *)(frame_ + FRAME_OFF(76)))
-#define samples_per_sec (*(i32 *)(frame_ + FRAME_OFF(80)))
-#define avg_bytes_per_sec (*(i32 *)(frame_ + FRAME_OFF(84)))
-#define block_align (*(i32 *)(frame_ + FRAME_OFF(88)))
-#define source (*(i32 * *)(frame_ + FRAME_OFF(92)))
-#define mem_handle2 (*(HGLOBAL *)(frame_ + FRAME_OFF(96)))
-#define sample_buf (*(i8 (*)[4])(frame_ + FRAME_OFF(100)))
-#define bytes_per_buffer (*(uint *)(frame_ + FRAME_OFF(104)))
-#define total_bytes (*(int *)(frame_ + FRAME_OFF(108)))
-#define format_size (*(i32 *)(frame_ + FRAME_OFF(112)))
-#define size_bits (*(uint *)(frame_ + FRAME_OFF(116)))
-#define stream_info (*(int (*)[8])(frame_ + FRAME_OFF(120)))
-#define stream_length (*(int *)(frame_ + FRAME_OFF(152)))
-#define sample_size (*(int *)(frame_ + FRAME_OFF(168)))
-#define mmio (*(HMMIO *)(frame_ + FRAME_OFF(260)))
-#define rate_mode (*(i32 *)(frame_ + FRAME_OFF(264)))
 i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
 
 {
@@ -786,7 +714,18 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
   int n;
   _MMIOINFO *p_Var3;
   DWORD *pDVar4;
-  i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
+  _MMIOINFO mmio_info;
+  WAVEFORMATEX wave_format;
+  i32 *source;
+  HGLOBAL mem_handle2;
+  i8 sample_buf[4];
+  uint bytes_per_buffer;
+  int total_bytes;
+  i32 format_size;
+  uint size_bits;
+  AVISTREAMINFOA stream_info;
+  HMMIO mmio;
+  i32 rate_mode;
   
   format_size = 0xe;
   if (snd_wave_out_handle == 0) {
@@ -796,24 +735,24 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
     result = 0xc;
   }
   else if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
-    AVIStreamInfoA(avi_stream,stream_info,0x8c);
-    if (stream_info[0] == 0x73647561) {
+    AVIStreamInfoA(avi_stream,&stream_info,0x8c);
+    if (stream_info.fccType == 0x73647561) {
       AVIStreamRead(avi_stream,0,1,0,0,sample_buf,0);
-      total_bytes = sample_size * stream_length;
-      AVIStreamReadFormat(avi_stream,0,&format_tag,&format_size);
+      total_bytes = stream_info.dwSampleSize * stream_info.dwLength;
+      AVIStreamReadFormat(avi_stream,0,&wave_format,&format_size);
       if ((*(i16 *)((char *)&snd_wave_format + 2)) == 1) {
-        if ((*(i16 *)((char *)&format_tag + 2)) == 2) {
-          rate_mode = CONCAT22((*(i16 *)((char *)&rate_mode + 2)),1);
+        if (wave_format.nChannels == 2) {
+          rate_mode = (rate_mode & 0xffff0000 | (ushort)(1));
         }
         else {
-          rate_mode = CONCAT22((*(i16 *)((char *)&rate_mode + 2)),2);
+          rate_mode = (rate_mode & 0xffff0000 | (ushort)(2));
         }
       }
-      else if ((*(i16 *)((char *)&format_tag + 2)) == 2) {
-        rate_mode = (uint)(*(i16 *)((char *)&rate_mode + 2)) << 0x10;
+      else if (wave_format.nChannels == 2) {
+        rate_mode = rate_mode & 0xffff0000;
       }
       else {
-        rate_mode = CONCAT22((*(i16 *)((char *)&rate_mode + 2)),3);
+        rate_mode = (rate_mode & 0xffff0000 | (ushort)(3));
       }
       _memset(&mmio_info,0,0x48);
       if ((rate_mode & 0xffff) == 1) {
@@ -848,10 +787,10 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
             _memset(source,0,0xbc);
             source[0x1b] = mem_handle2;
             *(i16 *)(source + 0x22) = 4;
-            source[0x1d] = format_tag;
-            source[0x1e] = samples_per_sec;
-            source[0x1f] = avg_bytes_per_sec;
-            source[0x20] = block_align;
+            source[0x1d] = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
+            source[0x1e] = wave_format.nSamplesPerSec;
+            source[0x1f] = wave_format.nAvgBytesPerSec;
+            source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
             *source = mmio;
             p_Var3 = &mmio_info;
             pDVar4 = source + 6;
@@ -860,7 +799,7 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
               p_Var3 = (_MMIOINFO *)&p_Var3->fccIOProc;
               pDVar4++;
             }
-            source[1] = stream_info[0];
+            source[1] = stream_info.fccType;
             source[2] = total_bytes;
             source[0x21] = avi_stream;
             source[0x1c] = source[0x1c] | 2;
@@ -891,23 +830,6 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
 #undef snd_wave_out_handle
 #undef snd_wave_source_count
 #undef snd_wave_total_buffer_bytes
-#undef mmio_info
-#undef format_tag
-#undef samples_per_sec
-#undef avg_bytes_per_sec
-#undef block_align
-#undef source
-#undef mem_handle2
-#undef sample_buf
-#undef bytes_per_buffer
-#undef total_bytes
-#undef format_size
-#undef size_bits
-#undef stream_info
-#undef stream_length
-#undef sample_size
-#undef mmio
-#undef rate_mode
 
 /* 005d5643: written by hand in src/game/sound_position.c */
 
@@ -919,10 +841,6 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
 #define snd_avi_feed_count_i32 (*(i32 *)((u8 *)&g.d_00638590))
 #define snd_avi_fill_count_i32 (*(i32 *)((u8 *)&g.d_00638594))
 #define snd_avi_feed_samples_i32 (*(i32 *)((u8 *)&g.d_00638598))
-#define byte_count (*(uint *)(frame_ + FRAME_OFF(4)))
-#define i (*(uint *)(frame_ + FRAME_OFF(8)))
-#define buffer (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define bytes_read (*(int *)(frame_ + FRAME_OFF(32)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl snd_avi_stream_feed(uint sample_count)
@@ -931,7 +849,10 @@ i32 __cdecl snd_avi_stream_feed(uint sample_count)
   i32 result;
   uint limit;
   iptr source;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  uint byte_count;
+  uint i;
+  iptr buffer;
+  int bytes_read;
   
   source = snd_wave_sources;
   if (snd_wave_out_handle == 0) {
@@ -1019,10 +940,6 @@ i32 __cdecl snd_avi_stream_feed(uint sample_count)
 #undef snd_avi_feed_count_i32
 #undef snd_avi_fill_count_i32
 #undef snd_avi_feed_samples_i32
-#undef byte_count
-#undef i
-#undef buffer
-#undef bytes_read
 
 /* 005d5b88 auto */
 #define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
@@ -1044,14 +961,13 @@ i32 __cdecl snd_avi_stream_stop(void)
 #undef snd_avi_stream_started
 
 /* 005d5bec auto */
-#define byte_count (*(uint *)(frame_ + FRAME_OFF(0)))
-#define bytes_read (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl snd_avi_stream_refill(iptr source)
 
 {
   uint remaining;
   int shortfall;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uint byte_count;
+  int bytes_read;
   
   bytes_read = 0;
   if ((*(int *)(source + 0x3c) == *(int *)(source + 0x34)) ||
@@ -1075,23 +991,20 @@ void __cdecl snd_avi_stream_refill(iptr source)
   }
   return;
 }
-#undef byte_count
-#undef bytes_read
 
 /* 005d5d11 auto */
 #define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
-#define byte_length (*(int *)(frame_ + FRAME_OFF(0)))
-#define i (*(uint *)(frame_ + FRAME_OFF(4)))
-#define buffer (*(i32 * *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr)
 
 {
   i32 result;
   int start_byte;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int byte_length;
+  uint i;
+  i32 *buffer;
   
   if (snd_wave_out_handle == 0) {
     result = 3;
@@ -1158,9 +1071,6 @@ i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr)
 #undef snd_wave_buffer_count
 #undef snd_wave_max_buffers
 #undef snd_wave_out_handle
-#undef byte_length
-#undef i
-#undef buffer
 
 /* 005d5f91 auto */
 #define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
@@ -1189,14 +1099,13 @@ i16 __cdecl snd_avi_stream_start(void)
 #define snd_wave_notify_hwnd (*(i32 *)((u8 *)&g.d_0063857c))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 #define snd_wave_source_count (*(ushort *)((u8 *)&g.d_0063858c))
-#define i (*(uint *)(frame_ + FRAME_OFF(0)))
-#define buffer (*(i32 * *)(frame_ + FRAME_OFF(8)))
 short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
 
 {
   short result;
   int status;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uint i;
+  i32 *buffer;
   
   if (snd_wave_out_handle == 0) {
     result = 3;
@@ -1233,16 +1142,13 @@ short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
 #undef snd_wave_notify_hwnd
 #undef snd_wave_out_handle
 #undef snd_wave_source_count
-#undef i
-#undef buffer
 
 /* 005d61ab auto */
-#define source (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define prev (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl snd_wave_free_by_id(i32 sound_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr source;
+  iptr prev;
   
   prev = 0;
   source = snd_wave_sources;
@@ -1257,78 +1163,62 @@ void __cdecl snd_wave_free_by_id(i32 sound_id)
   }
   return;
 }
-#undef source
-#undef prev
 
 /* 005d6283 auto */
-#define mmio_info (*(i32 (*)[5])(frame_ + FRAME_OFF(4)))
-#define buffer_size (*(int *)(frame_ + FRAME_OFF(24)))
-#define buffer_start (*(HPSTR *)(frame_ + FRAME_OFF(28)))
-#define read_ptr (*(HPSTR *)(frame_ + FRAME_OFF(32)))
-#define buffer_end (*(int *)(frame_ + FRAME_OFF(40)))
-#define done (*(int *)(frame_ + FRAME_OFF(76)))
-#define remaining (*(int *)(frame_ + FRAME_OFF(80)))
-#define leftover (*(int *)(frame_ + FRAME_OFF(84)))
-#define space (*(int *)(frame_ + FRAME_OFF(88)))
 void __cdecl snd_wave_stream_refill(iptr source)
 
 {
   int n;
   i32 *src;
   i32 *dst;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  MMIOINFO mmio_info;
+  int done;
+  int remaining;
+  int leftover;
+  int space;
   
   remaining = 0;
   done = 0;
   src = (i32 *)(source + 0x18);
-  dst = mmio_info;
+  dst = (i32 *)&mmio_info;
   for (n = 0x12; n != 0; n--) {
     *dst = *src;
     src++;
     dst++;
   }
-  if (buffer_start == read_ptr) {
+  if (mmio_info.pchBuffer == mmio_info.pchNext) {
     leftover = 0;
-    space = buffer_size;
+    space = mmio_info.cchBuffer;
   }
   else {
-    leftover = buffer_end - (int)read_ptr;
-    space = buffer_size - leftover;
+    leftover = (int)mmio_info.pchEndWrite - (int)mmio_info.pchNext;
+    space = mmio_info.cchBuffer - leftover;
   }
   if (leftover == 0) {
-    read_ptr = buffer_start;
+    mmio_info.pchNext = mmio_info.pchBuffer;
   }
   else {
-    crt_memmove(buffer_start,read_ptr,leftover);
-    read_ptr = buffer_start + leftover;
+    crt_memmove(mmio_info.pchBuffer,mmio_info.pchNext,leftover);
+    mmio_info.pchNext = mmio_info.pchBuffer + leftover;
   }
   while (done == 0) {
     remaining = *(int *)(source + 8) - *(int *)(source + 0x68);
     if (space < remaining) {
-      mmioRead(*(HMMIO *)(source + 0x60),read_ptr,space);
+      mmioRead(*(HMMIO *)(source + 0x60),mmio_info.pchNext,space);
       *(int *)(source + 0x68) = *(int *)(source + 0x68) + space;
-      *(HPSTR *)(source + 0x34) = buffer_start;
+      *(HPSTR *)(source + 0x34) = mmio_info.pchBuffer;
       done = 1;
     }
     else {
-      mmioRead(*(HMMIO *)(source + 0x60),read_ptr,remaining);
+      mmioRead(*(HMMIO *)(source + 0x60),mmio_info.pchNext,remaining);
       *(i32 *)(source + 0x68) = 0;
-      read_ptr += remaining;
-      space = buffer_end - (int)read_ptr;
+      mmio_info.pchNext += remaining;
+      space = (int)mmio_info.pchEndWrite - (int)mmio_info.pchNext;
       mmioSeek(*(HMMIO *)(source + 0x60),*(LONG *)(source + 0x10),0);
     }
   }
   return;
 }
-#undef mmio_info
-#undef buffer_size
-#undef buffer_start
-#undef read_ptr
-#undef buffer_end
-#undef done
-#undef remaining
-#undef leftover
-#undef space
 
 /* 005d63c5 auto */
 LPVOID __cdecl snd_global_alloc_lock(SIZE_T size,iptr handle_out)
@@ -1366,12 +1256,6 @@ void __cdecl snd_global_free(HGLOBAL handle)
 /* 005d645e auto */
 #define snd_wave_total_buffer_bytes (*(uint *)((u8 *)&g.d_006385cc))
 #define snd_wave_buffers_ready_i32 (*(i32 *)((u8 *)&g.d_006385b4))
-#define mem_handle2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define prev (*(int * *)(frame_ + FRAME_OFF(8)))
-#define i (*(uint *)(frame_ + FRAME_OFF(12)))
-#define result (*(MMRESULT *)(frame_ + FRAME_OFF(16)))
-#define bytes_per_buffer (*(uint *)(frame_ + FRAME_OFF(20)))
-#define buffer (*(int * *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
@@ -1379,7 +1263,12 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint 
 
 {
   int data;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int mem_handle2;
+  int *prev;
+  uint i;
+  MMRESULT result;
+  uint bytes_per_buffer;
+  int *buffer;
   
   buffer = (int *)0x0;
   bytes_per_buffer = total_bytes / buffer_count;
@@ -1439,23 +1328,16 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint 
 }
 #undef snd_wave_total_buffer_bytes
 #undef snd_wave_buffers_ready_i32
-#undef mem_handle2
-#undef prev
-#undef i
-#undef result
-#undef bytes_per_buffer
-#undef buffer
 
 /* 005d6685 auto */
 #define snd_wave_buffer_count (*(int *)((u8 *)&g.d_00638588))
-#define i (*(uint *)(frame_ + FRAME_OFF(0)))
-#define tail2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define buffer (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl snd_wave_add_buffers(int count)
 
 {
   iptr next_spare;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uint i;
+  iptr tail2;
+  iptr buffer;
   
   buffer = snd_wave_spare_buffers;
   *(uint *)(snd_wave_spare_buffers + 0xc) = *(uint *)(snd_wave_spare_buffers + 0xc) & 0xfffffffe;
@@ -1475,19 +1357,15 @@ void __cdecl snd_wave_add_buffers(int count)
   return;
 }
 #undef snd_wave_buffer_count
-#undef i
-#undef tail2
-#undef buffer
 
 /* 005d673a auto */
 #define snd_wave_buffer_count (*(int *)((u8 *)&g.d_00638588))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define buffer (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl snd_wave_remove_buffers(int count)
 
 {
   iptr removed;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  iptr buffer;
   
   buffer = snd_wave_buffer_ring;
   if ((uint)(snd_wave_buffer_count - count) <= (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7 & 0xff)) {
@@ -1519,8 +1397,6 @@ void __cdecl snd_wave_remove_buffers(int count)
   return;
 }
 #undef snd_wave_buffer_count
-#undef i
-#undef buffer
 
 /* 005d687b auto */
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
@@ -1553,14 +1429,13 @@ void __cdecl snd_wave_set_buffer_count(uint count)
 
 /* 005d6947 auto */
 #define snd_wave_out_handle (*(HWAVEOUT *)((u8 *)&g.d_00638578))
-#define i (*(uint *)(frame_ + FRAME_OFF(4)))
-#define result (*(uint *)(frame_ + FRAME_OFF(8)))
-#define sample (*(byte * *)(frame_ + FRAME_OFF(12)))
 i32 __cdecl snd_wave_write_pending(iptr buffer)
 
 {
   MMRESULT MVar1;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint i;
+  uint result;
+  byte *sample;
   
   result = result & 0xffff0000;
   while ((*(uint *)(buffer + 0xc) >> 6 & 1) != 0) {
@@ -1570,7 +1445,7 @@ i32 __cdecl snd_wave_write_pending(iptr buffer)
       sample++;
     }
     MVar1 = waveOutWrite(snd_wave_out_handle,*(LPWAVEHDR *)buffer,0x20);
-    result = CONCAT22((*(i16 *)((char *)&result + 2)),(short)MVar1);
+    result = (result & 0xffff0000 | (ushort)((short)MVar1));
     if ((short)MVar1 == 0) {
       *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 0x20;
       *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffbf;
@@ -1586,9 +1461,6 @@ i32 __cdecl snd_wave_write_pending(iptr buffer)
   return 0;
 }
 #undef snd_wave_out_handle
-#undef i
-#undef result
-#undef sample
 
 /* 005d6a2c auto */
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
@@ -1596,18 +1468,17 @@ i32 __cdecl snd_wave_write_pending(iptr buffer)
 #define snd_wave_out_handle (*(HWAVEOUT *)((u8 *)&g.d_00638578))
 #define snd_wave_stop_pending_i16 (*(i16 *)((u8 *)&g.d_006385b8))
 #define snd_stop_drained_msg_count_i32 (*(i32 *)((u8 *)&g.d_006385d4))
-#define msg (*(tagMSG *)(frame_ + FRAME_OFF(0)))
-#define source (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define i (*(uint *)(frame_ + FRAME_OFF(32)))
-#define prev (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define buffer (*(iptr *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl snd_wave_stop_all(void)
 
 {
   BOOL BVar1;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  tagMSG msg;
+  iptr source;
+  uint i;
+  iptr prev;
+  iptr buffer;
   
   prev = 0;
   snd_wave_stop_pending_i16 = 0;
@@ -1642,33 +1513,23 @@ void __cdecl snd_wave_stop_all(void)
 #undef snd_wave_out_handle
 #undef snd_wave_stop_pending_i16
 #undef snd_stop_drained_msg_count_i32
-#undef msg
-#undef source
-#undef i
-#undef prev
-#undef buffer
 
 /* 005d6b4c auto */
-#define i (*(uptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl snd_fill_silence_u8(iptr dest,uint length)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr i;
   
   for (i = 0; i < length; i++) {
     *(i8 *)(i + dest) = 0x80;
   }
   return;
 }
-#undef i
 
 /* 005d6b89 auto */
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
 #define snd_wave_stop_pending_i16 (*(i16 *)((u8 *)&g.d_006385b8))
-#define i (*(uint *)(frame_ + FRAME_OFF(4)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define buffer (*(int * *)(frame_ + FRAME_OFF(16)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
@@ -1676,7 +1537,9 @@ i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
 {
   int *next;
   iptr ring;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint i;
+  i32 result;
+  int *buffer;
   
   ring = snd_wave_buffer_ring;
   buffer = (int *)snd_wave_buffer_ring;
@@ -1708,22 +1571,11 @@ i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
 #undef snd_wave_buffer_count
 #undef snd_wave_max_buffers
 #undef snd_wave_stop_pending_i16
-#undef i
-#undef result
-#undef buffer
 
 /* 005d6c99 auto */
 #define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_avi_fill_count_i32 (*(i32 *)((u8 *)&g.d_00638594))
-#define source (*(i32 * *)(frame_ + FRAME_OFF(0)))
-#define i (*(uint *)(frame_ + FRAME_OFF(4)))
-#define sample (*(byte * *)(frame_ + FRAME_OFF(8)))
-#define buffer (*(int * *)(frame_ + FRAME_OFF(16)))
-#define prev (*(i32 * *)(frame_ + FRAME_OFF(24)))
-#define active_count (*(int *)(frame_ + FRAME_OFF(28)))
-#define result (*(uint *)(frame_ + FRAME_OFF(32)))
-#define done_callback (*(code * *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
@@ -1734,7 +1586,14 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
   int src;
   MMRESULT MVar5;
   iptr first_source;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *source;
+  uint i;
+  byte *sample;
+  int *buffer;
+  i32 *prev;
+  int active_count;
+  uint result;
+  code *done_callback;
   
   first_source = snd_wave_sources;
   result = result & 0xffff0000;
@@ -1800,7 +1659,7 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
             sample++;
           }
           MVar5 = waveOutWrite(wave_out,(LPWAVEHDR)*buffer,0x20);
-          result = CONCAT22((*(i16 *)((char *)&result + 2)),(short)MVar5);
+          result = (result & 0xffff0000 | (ushort)((short)MVar5));
           if ((short)MVar5 == 0) {
             buffer[3] = buffer[3] & 0xffffffbf;
             buffer[3] = buffer[3] | 0x20;
@@ -1855,19 +1714,9 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
 #undef snd_wave_block_align
 #undef snd_wave_buffer_count
 #undef snd_avi_fill_count_i32
-#undef source
-#undef i
-#undef sample
-#undef buffer
-#undef prev
-#undef active_count
-#undef result
-#undef done_callback
 
 /* 005d717f auto */
 #define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
-#define source (*(i32 * *)(frame_ + FRAME_OFF(0)))
-#define prev (*(i32 * *)(frame_ + FRAME_OFF(20)))
 i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
 
 {
@@ -1875,7 +1724,8 @@ i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
   i32 result;
   int src;
   iptr buffer;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *source;
+  i32 *prev;
   
   finished = false;
   if (snd_wave_device_open == 0) {
@@ -1959,8 +1809,6 @@ i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
   return result;
 }
 #undef snd_wave_block_align
-#undef source
-#undef prev
 
 /* 005d7494 auto */
 #define snd_wave_source_count (*(short *)((u8 *)&g.d_0063858c))
@@ -1995,8 +1843,6 @@ iptr __cdecl snd_wave_free(iptr prev,iptr source)
 
 /* 005d753e auto */
 #define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
-#define count (*(uint *)(frame_ + FRAME_OFF(4)))
-#define remaining (*(uint *)(frame_ + FRAME_OFF(12)))
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
 i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
@@ -2006,7 +1852,8 @@ i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
   uint want;
   uint avail;
   i32 result;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint count;
+  uint remaining;
   
   want = length / (ushort)snd_wave_block_align;
   if ((source == 0) || ((*(byte *)(source + 0x70) & 1) != 0)) {
@@ -2064,14 +1911,9 @@ i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
   return result;
 }
 #undef snd_wave_block_align
-#undef count
-#undef remaining
 
 /* 005d778c auto */
 #define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
-#define advance (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define count (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define remaining (*(uint *)(frame_ + FRAME_OFF(12)))
 i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
 
 {
@@ -2080,7 +1922,9 @@ i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
   uint want;
   uptr flags;
   i32 result;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 advance;
+  i32 count;
+  uint remaining;
   
   if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
     remaining = *(int *)(source + 8) - *(int *)(source + 100);
@@ -2126,21 +1970,17 @@ i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
   return result;
 }
 #undef snd_wave_block_align
-#undef advance
-#undef count
-#undef remaining
 
 /* 005d791b auto */
-#define byte_count (*(uint *)(frame_ + FRAME_OFF(4)))
-#define i (*(uint *)(frame_ + FRAME_OFF(8)))
-#define bytes_read (*(int *)(frame_ + FRAME_OFF(16)))
 i32 __cdecl snd_avi_fill_buffer(iptr buffer,iptr source)
 
 {
   i32 result;
   uint limit;
   iptr head;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint byte_count;
+  uint i;
+  int bytes_read;
   
   head = snd_wave_sources;
   if (*(int *)(source + 0x98) == buffer) {
@@ -2192,21 +2032,17 @@ i32 __cdecl snd_avi_fill_buffer(iptr buffer,iptr source)
   }
   return result;
 }
-#undef byte_count
-#undef i
-#undef bytes_read
 
 /* 005dd010 auto */
 #define avi_current_player_i32 (*(i32 *)((u8 *)&g.d_006389d0))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_next;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
@@ -2214,7 +2050,7 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
   avi_audio_ctor((AviAudio *)&this->border_width);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   palette_init((GamePalette *)&this->client_x);
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),2);
+  eh_state = (eh_state & 0xffffff00 | (byte)(2));
   surface_ctor((DibSurface *)(this->movie_surface));
   this->vtable = (u32)&PTR_FUN_0061d718;
   this->style_flags = 0;
@@ -2235,24 +2071,20 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
   return this;
 }
 #undef avi_current_player_i32
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 005dd1a0 auto */
 #define avi_current_player_i32 (*(i32 *)((u8 *)&g.d_006389d0))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __thiscall avi_player_dtor(AviPlayer *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_next;
+  i8 *eh_handler;
+  int eh_state;
   
   *(i8 ***)this->media_window_base = &PTR_FUN_0061d718;
-  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 3;
   avi_play_pause((iptr)this);
   avi_close((iptr)this);
@@ -2261,16 +2093,13 @@ i32 __thiscall avi_player_dtor(AviPlayer *this)
   /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x558)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 005dd23f */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x124)); }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 005dd24e */ { avi_audio_release((AviAudioReleaseView *)(*(int *)((iptr)&this) + 0x11c)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 005dd25d */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return eh_next;
 }
 #undef avi_current_player_i32
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 005dd27e auto */
 void __thiscall
@@ -2288,14 +2117,13 @@ avi_player_create
 }
 
 /* 005dd2e3 auto */
-#define target_dib (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 avi_player_create_child
           (MediaWindow *this,iptr parent,i32 style,u32 x,u32 y,iptr target
           )
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr target_dib;
   
   if (target == 0) {
     target_dib = 0;
@@ -2312,7 +2140,6 @@ avi_player_create_child
   this->pos_y = y;
   return;
 }
-#undef target_dib
 
 /* 005dd377 auto */
 int __thiscall avi_player_open(AviPlayerOpenView *this,iptr filename)
@@ -2393,15 +2220,14 @@ void __thiscall avi_player_set_palette(DibSurface *this,iptr palette)
 }
 
 /* 005dd64c auto */
-#define src_rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define dst_rect (*(tagRECT *)(frame_ + FRAME_OFF(20)))
 void __thiscall
 avi_player_draw_to(DibSurface *this,iptr dest,int x,int y)
 
 {
   int dest_size;
   int src_size;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT src_rect;
+  tagRECT dst_rect;
   
   if ((-1 < x) && (-1 < y)) {
     dest_size = surface_width((DibSurface *)dest);
@@ -2422,8 +2248,6 @@ avi_player_draw_to(DibSurface *this,iptr dest,int x,int y)
   }
   return;
 }
-#undef src_rect
-#undef dst_rect
 
 /* 005dd71e auto */
 void __thiscall avi_player_set_double_size(MediaWindow *this,i32 enable)
@@ -2460,11 +2284,10 @@ void __thiscall avi_player_set_transparent(AviPlayerSetTransparentView *this,int
 /* 005dd8a0 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 #define snd_mci_notify_hwnd (*(HWND *)((u8 *)&g.d_006e4ff8))
-#define wnd_class (*(WNDCLASSA *)(frame_ + FRAME_OFF(4)))
 void __cdecl snd_system_init(void)
 
 {
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  WNDCLASSA wnd_class;
   
   wnd_class.style = 0;
   wnd_class.lpfnWndProc = snd_mci_notify_wndproc;
@@ -2485,7 +2308,6 @@ void __cdecl snd_system_init(void)
 }
 #undef app_hinstance
 #undef snd_mci_notify_hwnd
-#undef wnd_class
 
 /* 005dd93f auto */
 #define snd_cd_device_id (*(uint *)((u8 *)&g.d_006389d8))
@@ -2526,19 +2348,15 @@ void __cdecl snd_stop_sndplaysound(void)
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
 #define snd_cd_track_count (*(uint *)((u8 *)&g.d_006389e0))
 #define snd_mci_notify_hwnd (*(i32 *)((u8 *)&g.d_006e4ff8))
-#define play_parms (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define from_track (*(uint *)(frame_ + FRAME_OFF(4)))
-#define to_track (*(uint *)(frame_ + FRAME_OFF(8)))
-#define play_flags (*(DWORD_PTR *)(frame_ + FRAME_OFF(12)))
-#define set_parms (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define time_format_item (*(uint *)(frame_ + FRAME_OFF(20)))
-#define device_id (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
 i32 __cdecl snd_cd_play_track(uint track)
 
 {
   MCIERROR MVar1;
   i32 result;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  MCI_PLAY_PARMS play_parms;
+  DWORD_PTR play_flags;
+  MCI_SEEK_PARMS seek_parms;
+  MCIDEVICEID device_id;
   
   if (snd_cd_device_id == 0) {
     snd_cd_open();
@@ -2551,9 +2369,9 @@ i32 __cdecl snd_cd_play_track(uint track)
     device_id = snd_cd_device_id;
     mciSendCommandA(snd_cd_device_id,0x808,0,0);
   }
-  set_parms = 0;
-  time_format_item = track & 0xff;
-  MVar1 = mciSendCommandA(device_id,0x807,8,(DWORD_PTR)&set_parms);
+  seek_parms.dwCallback = 0;
+  seek_parms.dwTo = track & 0xff;
+  MVar1 = mciSendCommandA(device_id,0x807,8,(DWORD_PTR)&seek_parms);
   if (MVar1 == 0) {
     if ((track & 0xff) == snd_cd_track_count) {
       play_flags = 5;
@@ -2561,9 +2379,9 @@ i32 __cdecl snd_cd_play_track(uint track)
     else {
       play_flags = 0xd;
     }
-    from_track = track & 0xff;
-    to_track = (uint)(byte)((char)track + 1);
-    play_parms = snd_mci_notify_hwnd;
+    play_parms.dwFrom = track & 0xff;
+    play_parms.dwTo = (uint)(byte)((char)track + 1);
+    play_parms.dwCallback = snd_mci_notify_hwnd;
     MVar1 = mciSendCommandA(device_id,0x806,play_flags,(DWORD_PTR)&play_parms);
     if (MVar1 == 0) {
       result = 1;
@@ -2584,13 +2402,6 @@ i32 __cdecl snd_cd_play_track(uint track)
 #undef snd_cd_device_id
 #undef snd_cd_track_count
 #undef snd_mci_notify_hwnd
-#undef play_parms
-#undef from_track
-#undef to_track
-#undef play_flags
-#undef set_parms
-#undef time_format_item
-#undef device_id
 
 /* 005ddd12 auto */
 #define snd_midi_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d4))
@@ -2608,35 +2419,28 @@ void __cdecl snd_midi_close(void)
 /* 005ddd4e auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
 #define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
-#define open_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
-#define device_id (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
-#define device_type (*(char * *)(frame_ + FRAME_OFF(12)))
-#define set_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(24)))
-#define time_format (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define status_parms (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define track_count (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define status_item (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define status_track (*(i32 *)(frame_ + FRAME_OFF(48)))
 void __cdecl snd_cd_open(void)
 
 {
   MCIERROR MVar1;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  MCI_OPEN_PARMSA open_parms;
+  MCI_SET_PARMS set_parms;
+  MCI_STATUS_PARMS status_parms;
   
   if (snd_cd_device_id == 0) {
-    device_type = s_cdaudio_00638acc;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)open_parms);
+    open_parms.lpstrDeviceType = s_cdaudio_00638acc;
+    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)&open_parms);
     if (MVar1 == 0) {
-      snd_cd_device_id = device_id;
-      time_format = 10;
-      MVar1 = mciSendCommandA(device_id,0x80d,0x400,(DWORD_PTR)set_parms);
+      snd_cd_device_id = open_parms.wDeviceID;
+      set_parms.dwTimeFormat = 10;
+      MVar1 = mciSendCommandA(open_parms.wDeviceID,0x80d,0x400,(DWORD_PTR)&set_parms);
       if (MVar1 == 0) {
-        status_parms = 0;
-        track_count = 0;
-        status_track = 0;
-        status_item = 3;
+        status_parms.dwCallback = 0;
+        status_parms.dwReturn = 0;
+        status_parms.dwTrack = 0;
+        status_parms.dwItem = 3;
         mciSendCommandA(snd_cd_device_id,0x814,0x100,(DWORD_PTR)&status_parms);
-        snd_cd_track_count = track_count;
+        snd_cd_track_count = status_parms.dwReturn;
       }
       else {
         mciSendCommandA(snd_cd_device_id,0x804,0,0);
@@ -2652,15 +2456,6 @@ void __cdecl snd_cd_open(void)
 }
 #undef snd_cd_device_id
 #undef snd_cd_track_count
-#undef open_parms
-#undef device_id
-#undef device_type
-#undef set_parms
-#undef time_format
-#undef status_parms
-#undef track_count
-#undef status_item
-#undef status_track
 
 /* 005dde57 auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
@@ -2707,31 +2502,26 @@ void __cdecl snd_system_shutdown(void)
 /* 005ddeff auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
 #define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
-#define open_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
-#define opened_id (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
-#define device_type (*(char * *)(frame_ + FRAME_OFF(12)))
-#define device_id (*(MCIDEVICEID *)(frame_ + FRAME_OFF(28)))
-#define set_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(32)))
-#define time_format (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define status_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(44)))
-#define track_count (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define status_item (*(i32 *)(frame_ + FRAME_OFF(52)))
 i32 __cdecl snd_cd_get_track_count(void)
 
 {
   MCIERROR MVar1;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  MCI_OPEN_PARMSA open_parms;
+  MCIDEVICEID device_id;
+  MCI_SET_PARMS set_parms;
+  MCI_STATUS_PARMS status_parms;
+  i32 track_count;
   
   if (snd_cd_device_id == 0) {
-    device_type = s_cdaudio_00638b18;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)open_parms);
+    open_parms.lpstrDeviceType = s_cdaudio_00638b18;
+    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)&open_parms);
     if (MVar1 != 0) {
       return 0xffffffff;
     }
-    device_id = opened_id;
-    snd_cd_device_id = opened_id;
-    time_format = 10;
-    MVar1 = mciSendCommandA(opened_id,0x80d,0x400,(DWORD_PTR)set_parms);
+    device_id = open_parms.wDeviceID;
+    snd_cd_device_id = open_parms.wDeviceID;
+    set_parms.dwTimeFormat = 10;
+    MVar1 = mciSendCommandA(open_parms.wDeviceID,0x80d,0x400,(DWORD_PTR)&set_parms);
     if (MVar1 != 0) {
       mciSendCommandA(device_id,0x804,0,0);
       snd_cd_device_id = 0;
@@ -2741,9 +2531,10 @@ i32 __cdecl snd_cd_get_track_count(void)
   else {
     device_id = snd_cd_device_id;
   }
-  status_item = 3;
-  MVar1 = mciSendCommandA(device_id,0x814,0x100,(DWORD_PTR)status_parms);
+  status_parms.dwItem = 3;
+  MVar1 = mciSendCommandA(device_id,0x814,0x100,(DWORD_PTR)&status_parms);
   if (MVar1 == 0) {
+    track_count = status_parms.dwReturn;
     snd_cd_track_count = track_count;
   }
   else {
@@ -2754,15 +2545,6 @@ i32 __cdecl snd_cd_get_track_count(void)
 }
 #undef snd_cd_device_id
 #undef snd_cd_track_count
-#undef open_parms
-#undef opened_id
-#undef device_type
-#undef device_id
-#undef set_parms
-#undef time_format
-#undef status_parms
-#undef track_count
-#undef status_item
 
 /* 005de6bd auto */
 #define snd_midi_notify_callback (*(code * *)((u8 *)&g.d_006e5004))
@@ -2841,15 +2623,6 @@ void __cdecl avi_update_current_frame(void)
 #define avi_view_rect_height_i32 (*(i32 *)((u8 *)&g.d_006e50d4))
 #define avi_frames_per_second_i32 (*(i32 *)((u8 *)&g.d_006e50d8))
 #define avi_indeo_frame_extra_i32 (*(i32 *)((u8 *)&g.d_006e50dc))
-#define palette_rgb (*(i8 (*)[708])(frame_ + FRAME_OFF(0)))
-#define stream_info (*(i8 (*)[4])(frame_ + FRAME_OFF(708)))
-#define codec_handler (*(i32 *)(frame_ + FRAME_OFF(712)))
-#define time_scale (*(uint *)(frame_ + FRAME_OFF(728)))
-#define time_rate (*(uint *)(frame_ + FRAME_OFF(732)))
-#define suggested_buffer_size (*(SIZE_T *)(frame_ + FRAME_OFF(748)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(848)))
-#define format_size (*(i32 *)(frame_ + FRAME_OFF(852)))
-#define result (*(int *)(frame_ + FRAME_OFF(856)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 int __cdecl avi_open_file(iptr player,i32 filename)
@@ -2860,7 +2633,11 @@ int __cdecl avi_open_file(iptr player,i32 filename)
   int value;
   iptr dib;
   HGLOBAL mem_handle;
-  i8 frame_[FRAME_OFF(864)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 palette_rgb[708];
+  AVISTREAMINFOA stream_info;
+  iptr i;
+  i32 format_size;
+  int result;
   
   if (avi_vfw_initialized == 0) {
     AVIFileInit();
@@ -2911,10 +2688,10 @@ int __cdecl avi_open_file(iptr player,i32 filename)
       result = value;
       format_size = 0x28;
       AVIStreamReadFormat(avi_video_stream,1,player + 0x5c0,&format_size);
-      AVIStreamInfoA(avi_video_stream,stream_info,0x8c);
-      *(SIZE_T *)(player + 0x5d4) = suggested_buffer_size;
-      avi_frames_per_second_i32 = time_rate / time_scale;
-      avi_decompressor = ICLocate(0x63646976,codec_handler,player + 0x5c0,0,2);
+      AVIStreamInfoA(avi_video_stream,&stream_info,0x8c);
+      *(SIZE_T *)(player + 0x5d4) = stream_info.dwSuggestedBufferSize;
+      avi_frames_per_second_i32 = stream_info.dwRate / stream_info.dwScale;
+      avi_decompressor = ICLocate(0x63646976,stream_info.fccHandler,player + 0x5c0,0,2);
       if (avi_decompressor == 0) {
         avi_close(player);
         result = 0;
@@ -2943,14 +2720,14 @@ int __cdecl avi_open_file(iptr player,i32 filename)
         else {
           wnd_resize_clamped((WindowObjectView *)player,avi_frame_width * 2,avi_frame_height * 2);
         }
-        if (suggested_buffer_size == 0) {
+        if (stream_info.dwSuggestedBufferSize == 0) {
           value = (uint)*(ushort *)(player + 0x5ce) * *(int *)(player + 0x5c4) *
                   *(int *)(player + 0x5c8);
           mem_handle = GlobalAlloc(0x40,(int)(value + (value >> 0x1f & 7U)) >> 3);
           avi_frame_buffer = GlobalLock(mem_handle);
         }
         else {
-          mem_handle = GlobalAlloc(0x40,suggested_buffer_size);
+          mem_handle = GlobalAlloc(0x40,stream_info.dwSuggestedBufferSize);
           avi_frame_buffer = GlobalLock(mem_handle);
         }
         if (avi_frame_buffer == (LPVOID)0x0) {
@@ -3043,32 +2820,10 @@ int __cdecl avi_open_file(iptr player,i32 filename)
 #undef avi_view_rect_height_i32
 #undef avi_frames_per_second_i32
 #undef avi_indeo_frame_extra_i32
-#undef palette_rgb
-#undef stream_info
-#undef codec_handler
-#undef time_scale
-#undef time_rate
-#undef suggested_buffer_size
-#undef i
-#undef format_size
-#undef result
 
 /* 005e22ed: written by hand in src/game/fixups.c */
 
 /* 005e250c auto */
-#define ex_flags (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define ex_bi_src (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define ex_src_bits (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define ex_bi_dst (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define ex_dst_bits (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define ex_x_dst (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define ex_y_dst (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define ex_width_dst (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define ex_height_dst (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define ex_x_src (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define ex_y_src (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define ex_width_src (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define ex_height_src (*(i32 *)(frame_ + FRAME_OFF(48)))
 i32
 __stdcall avi_ic_decompress_ex_begin(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
             i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst
@@ -3077,52 +2832,26 @@ __stdcall avi_ic_decompress_ex_begin(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  ICDECOMPRESSEX ex;
   
-  ex_flags = flags;
-  ex_bi_src = bi_src;
-  ex_src_bits = src_bits;
-  ex_x_src = x_src;
-  ex_y_src = y_src;
-  ex_width_src = width_src;
-  ex_height_src = height_src;
-  ex_bi_dst = bi_dst;
-  ex_dst_bits = dst_bits;
-  ex_x_dst = x_dst;
-  ex_y_dst = y_dst;
-  ex_width_dst = width_dst;
-  ex_height_dst = height_dst;
-  result = ICSendMessage(hic,0x403c,&ex_flags,0x34);
+  ex.dwFlags = flags;
+  ex.lpbiSrc = (BITMAPINFOHEADER *)bi_src;
+  ex.lpSrc = (void *)src_bits;
+  ex.xSrc = x_src;
+  ex.ySrc = y_src;
+  ex.dxSrc = width_src;
+  ex.dySrc = height_src;
+  ex.lpbiDst = (BITMAPINFOHEADER *)bi_dst;
+  ex.lpDst = (void *)dst_bits;
+  ex.xDst = x_dst;
+  ex.yDst = y_dst;
+  ex.dxDst = width_dst;
+  ex.dyDst = height_dst;
+  result = ICSendMessage(hic,0x403c,&ex,0x34);
   return result;
 }
-#undef ex_flags
-#undef ex_bi_src
-#undef ex_src_bits
-#undef ex_bi_dst
-#undef ex_dst_bits
-#undef ex_x_dst
-#undef ex_y_dst
-#undef ex_width_dst
-#undef ex_height_dst
-#undef ex_x_src
-#undef ex_y_src
-#undef ex_width_src
-#undef ex_height_src
 
 /* 005e2583 auto */
-#define ex_flags (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define ex_bi_src (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define ex_src_bits (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define ex_bi_dst (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define ex_dst_bits (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define ex_x_dst (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define ex_y_dst (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define ex_width_dst (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define ex_height_dst (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define ex_x_src (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define ex_y_src (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define ex_width_src (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define ex_height_src (*(i32 *)(frame_ + FRAME_OFF(48)))
 i32
 __stdcall avi_ic_decompress_ex_query(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
             i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst
@@ -3131,37 +2860,24 @@ __stdcall avi_ic_decompress_ex_query(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  ICDECOMPRESSEX ex;
   
-  ex_flags = flags;
-  ex_bi_src = bi_src;
-  ex_src_bits = src_bits;
-  ex_x_src = x_src;
-  ex_y_src = y_src;
-  ex_width_src = width_src;
-  ex_height_src = height_src;
-  ex_bi_dst = bi_dst;
-  ex_dst_bits = dst_bits;
-  ex_x_dst = x_dst;
-  ex_y_dst = y_dst;
-  ex_width_dst = width_dst;
-  ex_height_dst = height_dst;
-  result = ICSendMessage(hic,0x403d,&ex_flags,0x34);
+  ex.dwFlags = flags;
+  ex.lpbiSrc = (BITMAPINFOHEADER *)bi_src;
+  ex.lpSrc = (void *)src_bits;
+  ex.xSrc = x_src;
+  ex.ySrc = y_src;
+  ex.dxSrc = width_src;
+  ex.dySrc = height_src;
+  ex.lpbiDst = (BITMAPINFOHEADER *)bi_dst;
+  ex.lpDst = (void *)dst_bits;
+  ex.xDst = x_dst;
+  ex.yDst = y_dst;
+  ex.dxDst = width_dst;
+  ex.dyDst = height_dst;
+  result = ICSendMessage(hic,0x403d,&ex,0x34);
   return result;
 }
-#undef ex_flags
-#undef ex_bi_src
-#undef ex_src_bits
-#undef ex_bi_dst
-#undef ex_dst_bits
-#undef ex_x_dst
-#undef ex_y_dst
-#undef ex_width_dst
-#undef ex_height_dst
-#undef ex_x_src
-#undef ex_y_src
-#undef ex_width_src
-#undef ex_height_src
 
 /* 005e2675 auto */
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
@@ -3254,12 +2970,11 @@ void __cdecl avi_close(iptr player)
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
 #define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
-#define target_frame (*(uint *)(frame_ + FRAME_OFF(0)))
 void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
 
 {
   i32 key_frame;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uint target_frame;
   
   if ((player != 0) && (avi_file_loaded != 0)) {
     if (avi_playing != 0) {
@@ -3287,7 +3002,6 @@ void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
 #undef avi_file_loaded
 #undef avi_playing
 #undef avi_video_stream
-#undef target_frame
 
 /* 005e2997 auto */
 #define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
@@ -3298,9 +3012,6 @@ void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
 #define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
 #define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
-#define message (*(CHAR (*)[80])(frame_ + FRAME_OFF(4)))
-#define bytes_read (*(i32 *)(frame_ + FRAME_OFF(84)))
-#define result (*(int *)(frame_ + FRAME_OFF(88)))
 int __cdecl avi_decode_frame(iptr player,int decode_flags)
 
 {
@@ -3309,7 +3020,9 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
   i32 y_dst;
   int dst_dim_a;
   int dst_dim_b;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  CHAR message[80];
+  i32 bytes_read;
+  int result;
   
   result = 0;
   bytes_read = 0;
@@ -3385,24 +3098,8 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
 #undef avi_frame_width
 #undef avi_playing
 #undef avi_video_stream
-#undef message
-#undef bytes_read
-#undef result
 
 /* 005e2c5a auto */
-#define ex_flags (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define ex_bi_src (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define ex_src_bits (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define ex_bi_dst (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define ex_dst_bits (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define ex_x_dst (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define ex_y_dst (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define ex_width_dst (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define ex_height_dst (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define ex_x_src (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define ex_y_src (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define ex_width_src (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define ex_height_src (*(i32 *)(frame_ + FRAME_OFF(48)))
 i32
 __stdcall avi_ic_decompress_ex(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
             i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst
@@ -3411,37 +3108,24 @@ __stdcall avi_ic_decompress_ex(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  ICDECOMPRESSEX ex;
   
-  ex_flags = flags;
-  ex_bi_src = bi_src;
-  ex_src_bits = src_bits;
-  ex_x_src = x_src;
-  ex_y_src = y_src;
-  ex_width_src = width_src;
-  ex_height_src = height_src;
-  ex_bi_dst = bi_dst;
-  ex_dst_bits = dst_bits;
-  ex_x_dst = x_dst;
-  ex_y_dst = y_dst;
-  ex_width_dst = width_dst;
-  ex_height_dst = height_dst;
-  result = ICSendMessage(hic,0x403e,&ex_flags,0x34);
+  ex.dwFlags = flags;
+  ex.lpbiSrc = (BITMAPINFOHEADER *)bi_src;
+  ex.lpSrc = (void *)src_bits;
+  ex.xSrc = x_src;
+  ex.ySrc = y_src;
+  ex.dxSrc = width_src;
+  ex.dySrc = height_src;
+  ex.lpbiDst = (BITMAPINFOHEADER *)bi_dst;
+  ex.lpDst = (void *)dst_bits;
+  ex.xDst = x_dst;
+  ex.yDst = y_dst;
+  ex.dxDst = width_dst;
+  ex.dyDst = height_dst;
+  result = ICSendMessage(hic,0x403e,&ex,0x34);
   return result;
 }
-#undef ex_flags
-#undef ex_bi_src
-#undef ex_src_bits
-#undef ex_bi_dst
-#undef ex_dst_bits
-#undef ex_x_dst
-#undef ex_y_dst
-#undef ex_width_dst
-#undef ex_height_dst
-#undef ex_x_src
-#undef ex_y_src
-#undef ex_width_src
-#undef ex_height_src
 
 /* 005e2cd1 auto */
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
@@ -3454,10 +3138,6 @@ __stdcall avi_ic_decompress_ex(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
 #define avi_update_tick_count_i32 (*(i32 *)((u8 *)&g.d_00638dec))
 #define avi_view_rect_width_i32 (*(i32 *)((u8 *)&g.d_006e50d0))
 #define avi_view_rect_height_i32 (*(i32 *)((u8 *)&g.d_006e50d4))
-#define target_frame (*(uint *)(frame_ + FRAME_OFF(0)))
-#define dirty_rect (*(RECT *)(frame_ + FRAME_OFF(4)))
-#define key_frame (*(int *)(frame_ + FRAME_OFF(20)))
-#define now (*(DWORD *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl avi_update_frame(iptr player)
@@ -3465,7 +3145,10 @@ void __cdecl avi_update_frame(iptr player)
 {
   int sample;
   i32 audio_pos_ms;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  uint target_frame;
+  RECT dirty_rect;
+  int key_frame;
+  DWORD now;
   
   if (player == 0) {
     return;
@@ -3575,21 +3258,16 @@ void __cdecl avi_update_frame(iptr player)
 #undef avi_update_tick_count_i32
 #undef avi_view_rect_width_i32
 #undef avi_view_rect_height_i32
-#undef target_frame
-#undef dirty_rect
-#undef key_frame
-#undef now
 
 /* 005e30a1 auto */
 #define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define palette_rgb (*(i8 (*)[708])(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(708)))
-#define result (*(int *)(frame_ + FRAME_OFF(712)))
 void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
 
 {
-  i8 frame_[FRAME_OFF(720)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 palette_rgb[708];
+  int i;
+  int result;
   
   if ((player != 0) && (avi_file_loaded != 0)) {
     ICSendMessage(avi_decompressor,0x403f,0,0);
@@ -3623,9 +3301,6 @@ void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
 }
 #undef avi_decompressor
 #undef avi_file_loaded
-#undef palette_rgb
-#undef i
-#undef result
 
 /* 005e32b2 auto */
 #define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
@@ -3634,10 +3309,6 @@ void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
 #define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
 #define avi_indeo_frame_flags_i32 (*(i32 *)((u8 *)&g.d_006e503c))
 #define avi_indeo_seq_flags_i32 (*(i32 *)((u8 *)&g.d_006e50ac))
-#define dst_rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define src_rect (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define cur_frame (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define result (*(int *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl avi_restart_decompress(iptr player,int transparent)
@@ -3645,7 +3316,10 @@ void __cdecl avi_restart_decompress(iptr player,int transparent)
 {
   int yBottom;
   int xRight;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT dst_rect;
+  tagRECT src_rect;
+  i32 cur_frame;
+  int result;
   
   if ((player != 0) && (avi_file_loaded != 0)) {
     ICSendMessage(avi_decompressor,0x403f,0,0);
@@ -3708,10 +3382,6 @@ void __cdecl avi_restart_decompress(iptr player,int transparent)
 #undef avi_frame_width
 #undef avi_indeo_frame_flags_i32
 #undef avi_indeo_seq_flags_i32
-#undef dst_rect
-#undef src_rect
-#undef cur_frame
-#undef result
 
 /* 005e3550 auto */
 void __thiscall avi_player_call_end_callback(AviPlayerEndCbCallView *this)
@@ -3735,18 +3405,6 @@ void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *this)
 
 /* 005ec317 auto */
 #define wnd_active_child (*(WndOnMciDoneView * *)((u8 *)&g.d_00637ea4))
-#define generic_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
-#define frame_height (*(int *)(frame_ + FRAME_OFF(8)))
-#define minmax_info (*(uptr *)(frame_ + FRAME_OFF(12)))
-#define frame_width (*(int *)(frame_ + FRAME_OFF(16)))
-#define parent_window (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define min_height2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define min_width2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define scroll_pos2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define wnd2 (*(WndOnMciDoneView * *)(frame_ + FRAME_OFF(36)))
-#define mci_device2 (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define max_height2 (*(int *)(frame_ + FRAME_OFF(44)))
-#define max_width2 (*(int *)(frame_ + FRAME_OFF(48)))
 i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
 
 {
@@ -3756,7 +3414,18 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
   WndBase *pCVar4;
   BOOL BVar5;
   int value;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 generic_parms[4];
+  int frame_height;
+  uptr minmax_info;
+  int frame_width;
+  iptr parent_window;
+  int min_height2;
+  int min_width2;
+  int scroll_pos2;
+  WndOnMciDoneView *wnd2;
+  iptr mci_device2;
+  int max_height2;
+  int max_width2;
   
   wnd2 = (WndOnMciDoneView *)GetWindowLongA(hwnd,4);
   if (wnd2 == (WndOnMciDoneView *)0x0) {
@@ -4083,18 +3752,6 @@ switchD_005ecda6_caseD_6:
   return 0;
 }
 #undef wnd_active_child
-#undef generic_parms
-#undef frame_height
-#undef minmax_info
-#undef frame_width
-#undef parent_window
-#undef min_height2
-#undef min_width2
-#undef scroll_pos2
-#undef wnd2
-#undef mci_device2
-#undef max_height2
-#undef max_width2
 
 /* 005eeca0 auto */
 AviAudio * __thiscall avi_audio_ctor(AviAudio *this)

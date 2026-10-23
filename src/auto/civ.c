@@ -34,13 +34,12 @@ i32 __cdecl civ_get_adjective(iptr civ)
 }
 
 /* 004151e0 auto */
-#define advance (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl tech_editor_load_items(void)
 
 {
   char *_Source;
   size_t _Count;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance;
   
   for (advance = 0; advance < 100; advance++) {
     _Count = 0x28;
@@ -56,17 +55,15 @@ void __cdecl tech_editor_load_items(void)
   }
   return;
 }
-#undef advance
 
 /* 00415307 auto */
-#define advance (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl tech_editor_save_items(void)
 
 {
   char *_Dest;
   char *_Source;
   size_t _Count;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance;
   
   for (advance = 0; advance < 100; advance++) {
     _Count = 0x14;
@@ -82,17 +79,15 @@ void __cdecl tech_editor_save_items(void)
   }
   return;
 }
-#undef advance
 
 /* 0041541a auto */
-#define row (*(int *)(frame_ + FRAME_OFF(4)))
-#define num_text (*(char (*)[8])(frame_ + FRAME_OFF(8)))
-#define sel (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl tech_editor_update_controls(void)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int row;
+  char num_text[8];
+  iptr sel;
   
   for (row = 1; row < 7; row++) {
     if (*(int *)(&tech_editor_ctrl_kinds + row * 8) == 9) {
@@ -121,21 +116,17 @@ void __cdecl tech_editor_update_controls(void)
   }
   return;
 }
-#undef row
-#undef num_text
-#undef sel
 
 /* 0041557b auto */
-#define row (*(int *)(frame_ + FRAME_OFF(0)))
-#define changed_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define num_text (*(char (*)[8])(frame_ + FRAME_OFF(8)))
-#define value (*(int *)(frame_ + FRAME_OFF(16)))
 int __cdecl tech_editor_store_controls(void)
 
 {
   int ctrl_id;
   i32 clamped;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int row;
+  int changed_count;
+  char num_text[8];
+  int value;
   
   changed_count = 0;
   for (row = 1; row < 7; row++) {
@@ -174,10 +165,6 @@ int __cdecl tech_editor_store_controls(void)
   }
   return changed_count;
 }
-#undef row
-#undef changed_count
-#undef num_text
-#undef value
 
 /* 00415765 auto */
 void __cdecl tech_editor_redraw(void)
@@ -189,14 +176,13 @@ void __cdecl tech_editor_redraw(void)
 
 /* 00415780 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define name_len (*(size_t *)(frame_ + FRAME_OFF(4)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl tech_editor_write_civilize(FILE *file)
 
 {
   char *name2;
   size_t len;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  size_t name_len;
+  iptr advance;
   
   for (advance = 0; advance < 100; advance++) {
     text_clear();
@@ -231,18 +217,15 @@ i32 __cdecl tech_editor_write_civilize(FILE *file)
   return 1;
 }
 #undef text_buffer
-#undef name_len
-#undef advance
 
 /* 00415952 auto */
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define preq_idx (*(iptr *)(frame_ + FRAME_OFF(12)))
 void __cdecl tech_editor_relink_prereqs(void)
 
 {
   bool found;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance2;
+  iptr advance;
+  iptr preq_idx;
   
   game.num_advances = 0;
   for (advance = 0; advance < 100; advance++) {
@@ -265,14 +248,9 @@ void __cdecl tech_editor_relink_prereqs(void)
   }
   return;
 }
-#undef advance2
-#undef advance
-#undef preq_idx
 
 /* 00415a40 auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define msg (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl tech_editor_on_ok(void)
 
 {
@@ -283,7 +261,8 @@ void __cdecl tech_editor_on_ok(void)
   char *lpText;
   char *lpCaption;
   UINT uType;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  char msg[32];
   
   errors = tech_editor_store_controls();
   if (errors == 0) {
@@ -321,13 +300,8 @@ void __cdecl tech_editor_on_ok(void)
   return;
 }
 #undef editor_running
-#undef parent_wnd2
-#undef msg
 
 /* 00415b52 auto */
-#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define line (*(char (*)[80])(frame_ + FRAME_OFF(20)))
 void __cdecl tech_editor_fill_usage_list(void)
 
 {
@@ -337,7 +311,9 @@ void __cdecl tech_editor_fill_usage_list(void)
   i32 name2;
   i32 conj;
   i32 adv_name;
-  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance;
+  iptr unit_type;
+  char line[80];
   
   advances_header = false;
   units_header = false;
@@ -393,31 +369,26 @@ void __cdecl tech_editor_fill_usage_list(void)
   }
   return;
 }
-#undef advance
-#undef unit_type
-#undef line
 
 /* 00415e53 auto */
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
-#define old_name (*(char (*)[19])(frame_ + FRAME_OFF(12)))
-#define name_term (*(i8 *)(frame_ + FRAME_OFF(31)))
-#define new_name (*(char (*)[260])(frame_ + FRAME_OFF(32)))
-#define sel3 (*(iptr *)(frame_ + FRAME_OFF(292)))
-#define sel2 (*(iptr *)(frame_ + FRAME_OFF(296)))
-#define sel1 (*(iptr *)(frame_ + FRAME_OFF(300)))
-#define result (*(int *)(frame_ + FRAME_OFF(304)))
 void __cdecl tech_editor_on_rename(void)
 
 {
   int item;
   size_t len;
   iptr label;
-  i8 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  int i;
+  char old_name[20];
+  char new_name[260];
+  iptr sel3;
+  iptr sel2;
+  iptr sel1;
+  int result;
   
   item = *(int *)(active_editor_wnd + 0x2ec);
   _strncpy(old_name,&editor_item_names + item * 0x28,0x14);
-  name_term = 0;
+  old_name[19] = 0;
   do {
     if (active_editor_wnd == 0) {
       parent_wnd2 = 0;
@@ -463,22 +434,12 @@ void __cdecl tech_editor_on_rename(void)
   }
   return;
 }
-#undef parent_wnd2
-#undef i
-#undef old_name
-#undef name_term
-#undef new_name
-#undef sel3
-#undef sel2
-#undef sel1
-#undef result
 
 /* 0041612e auto */
-#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl tech_editor_on_help(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 parent_wnd2;
   
   if (active_editor_wnd == 0) {
     parent_wnd2 = 0;
@@ -491,7 +452,6 @@ void __cdecl tech_editor_on_help(void)
   dlg_set_parent_window(0);
   return;
 }
-#undef parent_wnd2
 
 /* 0041618d auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
@@ -524,14 +484,13 @@ void __cdecl tech_editor_on_edit_icon(void)
 }
 
 /* 0041623d auto */
-#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl tech_editor_on_combo(int ctrl_id)
 
 {
   int errors;
   HWND hWnd;
   i32 sel;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 parent_wnd2;
   
   if (ctrl_id == 0xc9) {
     errors = tech_editor_store_controls();
@@ -567,19 +526,17 @@ void __cdecl tech_editor_on_combo(int ctrl_id)
   }
   return;
 }
-#undef parent_wnd2
 
 /* 00416354 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
-#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall tech_editor_create_combo(ViewWindow *this,int slot)
 
 {
   int ctrl_id;
   iptr label;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent_wnd2;
+  iptr advance;
+  i8 rect[16];
   
   rect_set_xywh((iptr)rect,*(int *)(&tech_editor_combo_x_table + slot * 8) + this->client_x - 0x1e,
                      *(int *)(&tech_editor_combo_y_table + slot * 8) + this->client_y,0xa0,
@@ -640,21 +597,17 @@ void __thiscall tech_editor_create_combo(ViewWindow *this,int slot)
   return;
 }
 #undef editor_next_ctrl_id
-#undef parent_wnd2
-#undef advance
-#undef rect
 
 /* 00416734 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define tech_editor_edit_x_table (*(i32 *)((u8 *)&g.d_00625150))
 #define tech_editor_edit_y_table (*(i32 *)((u8 *)&g.d_00625154))
-#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall tech_editor_create_edit(ViewWindow *this,int slot)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent_wnd2;
+  i8 rect[16];
   
   rect_set_xywh((iptr)rect,(&tech_editor_edit_x_table)[slot * 2] + this->client_x,
                      (&tech_editor_edit_y_table)[slot * 2] + this->client_y,0x30,this->sci_rate_sel + 6);
@@ -676,8 +629,6 @@ void __thiscall tech_editor_create_edit(ViewWindow *this,int slot)
 #undef editor_next_ctrl_id
 #undef tech_editor_edit_x_table
 #undef tech_editor_edit_y_table
-#undef parent_wnd2
-#undef rect
 
 /* 00416828 auto */
 #define editor_bg_surface (*(int *)((u8 *)&g.d_0062e018))
@@ -686,19 +637,18 @@ void __thiscall tech_editor_create_edit(ViewWindow *this,int slot)
 #define tech_editor_edit_y_table (*(int *)((u8 *)&g.d_00625154))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define tech_editor_category_ctrl_y_i32 (*(i32 *)((u8 *)&g.d_0062514c))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define icon (*(Sprite * *)(frame_ + FRAME_OFF(16)))
-#define label_y (*(int *)(frame_ + FRAME_OFF(20)))
-#define label_x (*(int *)(frame_ + FRAME_OFF(24)))
-#define icon_y (*(int *)(frame_ + FRAME_OFF(28)))
-#define icon_x (*(int *)(frame_ + FRAME_OFF(32)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall tech_editor_paint(ViewWindow *this)
 
 {
   byte key_color;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 sprite_rect[16];
+  Sprite *icon;
+  int label_y;
+  int label_x;
+  int icon_y;
+  int icon_x;
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((editor_bg_surface == 0) || (editor_running == 0)) {
@@ -769,30 +719,11 @@ void __thiscall tech_editor_paint(ViewWindow *this)
 #undef tech_editor_edit_y_table
 #undef text_buffer
 #undef tech_editor_category_ctrl_y_i32
-#undef sprite_rect
-#undef icon
-#undef label_y
-#undef label_x
-#undef icon_y
-#undef icon_x
 
 /* 00416c9e auto */
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
-#define icon_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define cancel_parent (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define help_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define rename_parent (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define ok_parent (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define list_parent (*(u8 * *)(frame_ + FRAME_OFF(24)))
-#define surface (*(DibSurface * *)(frame_ + FRAME_OFF(40)))
-#define row (*(int *)(frame_ + FRAME_OFF(48)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(60)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(76)))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(1152)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(1156)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(1160)))
 void __thiscall tech_editor_dialog_run(ViewWindow *this)
 
 {
@@ -810,7 +741,19 @@ void __thiscall tech_editor_dialog_run(ViewWindow *this)
   i32 extra_arg1;
   i32 extra_arg2;
   i32 extra_arg3;
-  i8 frame_[FRAME_OFF(1168)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *icon_parent;
+  u8 *cancel_parent;
+  u8 *help_parent;
+  u8 *rename_parent;
+  u8 *ok_parent;
+  u8 *list_parent;
+  DibSurface *surface;
+  int row;
+  i8 rect[16];
+  GamePalette palette;
+  i32 eh_next;
+  i8 *eh_handler;
+  int eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -825,7 +768,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *this)
   else {
     surface = (DibSurface *)surface_ctor(this_00);
   }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   editor_bg_surface = surface;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font((iptr)((u8 *)&g.d_006a4f90));
@@ -966,29 +909,15 @@ void __thiscall tech_editor_dialog_run(ViewWindow *this)
 #undef editor_bg_surface
 #undef editor_next_ctrl_id
 #undef editor_running
-#undef icon_parent
-#undef cancel_parent
-#undef help_parent
-#undef rename_parent
-#undef ok_parent
-#undef list_parent
-#undef surface
-#undef row
-#undef rect
-#undef palette
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 00417566 auto */
-#define editor_wnd (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(2888)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(2892)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl tech_editor_run(void)
 
 {
-  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  EditorWindow editor_wnd;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   editor_wnd_ctor(&editor_wnd);
@@ -999,10 +928,6 @@ void __cdecl tech_editor_run(void)
   /* inlined unwind funclet 004175bf */ { editor_wnd_dtor((EditorWindow *)((iptr)&editor_wnd)); }
   return;
 }
-#undef editor_wnd
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00419cbb auto */
 i8 __cdecl rules_next_line_byte_clamped(i32 min_value,i32 max_value)
@@ -1065,9 +990,6 @@ void __cdecl rules_load_cosmic(void)
 /* 0041a046 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define text_token_buf (*(i8 *)((u8 *)&g.d_00673e10))
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define preq_index (*(iptr *)(frame_ + FRAME_OFF(12)))
 void __cdecl rules_load_advances(int keep_names)
 
 {
@@ -1076,7 +998,9 @@ void __cdecl rules_load_advances(int keep_names)
   size_t line_len;
   i32 value;
   i32 name_id;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance2;
+  iptr advance;
+  iptr preq_index;
   
   text_open_section((iptr)((u8 *)&g.d_006559e8),(iptr)((u8 *)&g.d_006252d4));
   game.num_advances = 0;
@@ -1166,19 +1090,15 @@ void __cdecl rules_load_advances(int keep_names)
 }
 #undef text_buffer
 #undef text_token_buf
-#undef advance2
-#undef advance
-#undef preq_index
 
 /* 0041a422 auto */
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl rules_load_improvements(int keep_names)
 
 {
   i8 preq_advance;
   i32 name_id;
   i32 value;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr improvement;
   
   text_open_section((iptr)((u8 *)&g.d_006559e8),(iptr)((u8 *)&g.d_006252ec));
   for (improvement = 0; improvement < 0x43; improvement++) {
@@ -1217,14 +1137,12 @@ void __cdecl rules_load_improvements(int keep_names)
   }
   return;
 }
-#undef improvement
 
 /* 0041a5c4 auto */
 #define double_moves_applied (*(i32 *)((u8 *)&g.d_00628068))
 #define strpool_last_string (*(i32 *)((u8 *)&g.d_0063e4b8))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define text_token_buf (*(i8 *)((u8 *)&g.d_00673e10))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl rules_load_units(int keep_names)
 
 {
@@ -1234,7 +1152,7 @@ void __cdecl rules_load_units(int keep_names)
   size_t line_len;
   i32 value;
   i32 name_id;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit_type;
   
   double_moves_applied = 0;
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
@@ -1314,11 +1232,8 @@ void __cdecl rules_load_units(int keep_names)
 #undef strpool_last_string
 #undef text_buffer
 #undef text_token_buf
-#undef unit_type
 
 /* 0041a95f auto */
-#define terrain2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define slot (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl rules_load_terrain(void)
 
 {
@@ -1326,7 +1241,8 @@ void __cdecl rules_load_terrain(void)
   i8 transform_terrain;
   i32 name_id;
   i32 value;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr terrain2;
+  iptr slot;
   
   text_open_section(0,(iptr)((u8 *)&g.d_00625310));
   for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
@@ -1366,13 +1282,8 @@ void __cdecl rules_load_terrain(void)
   }
   return;
 }
-#undef terrain2
-#undef slot
 
 /* 0041ab18 auto */
-#define gender (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define govt (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define leader (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl rules_load_govts_leaders(int load_civ_data)
 
 {
@@ -1387,7 +1298,9 @@ void __cdecl rules_load_govts_leaders(int load_civ_data)
   iptr raw_value;
   int title_govt;
   i32 max_value;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr gender;
+  iptr govt;
+  iptr leader;
   
   text_open_section(0,(iptr)((u8 *)&g.d_00625318));
   for (leader = 0; leader < 7; leader++) {
@@ -1499,18 +1412,14 @@ void __cdecl rules_load_govts_leaders(int load_civ_data)
   }
   return;
 }
-#undef gender
-#undef govt
-#undef leader
 
 /* 0041b00e auto */
 #define text_token_buf (*(char *)((u8 *)&g.d_00673e10))
-#define i (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl rules_parse_sections(i32 load_civ_data)
 
 {
   i32 string_id;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
   
   rules_load_cosmic();
   rules_load_advances(0);
@@ -1546,24 +1455,25 @@ void __cdecl rules_parse_sections(i32 load_civ_data)
   return;
 }
 #undef text_token_buf
-#undef i
 
 /* 0041b8ff auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define known_count (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define known_advances (*(iptr (*)[12])(frame_ + FRAME_OFF(12)))
 void __cdecl civ_intro_popup(iptr civ)
 
 {
   int has_advance;
   iptr name_text;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance;
+  iptr known_count;
+  iptr known_advances[12];
   
   advance = 100;
   known_count = 0;
   while ((0 < advance && (known_count < 0xc))) {
-    if (((advances[advance].preq[0] != -2) || (advances[advance].preq[1] != -2)) &&
+    /* advances[100] is one past the table: the original read the terrain
+       table that follows it there (irrigate_to, mine_to of the first terrain) */
+    if (((advance == 100) ? ((terrain_types[0].irrigate_to != -2) || (terrain_types[0].mine_to != -2))
+                          : ((advances[advance].preq[0] != -2) || (advances[advance].preq[1] != -2))) &&
        (has_advance = civ_has_advance(civ,advance), has_advance != 0)) {
       known_advances[known_count] = advance;
       known_count++;
@@ -1591,19 +1501,15 @@ void __cdecl civ_intro_popup(iptr civ)
   return;
 }
 #undef dlg_pending_idle_callback
-#undef advance
-#undef known_count
-#undef known_advances
 
 /* 0041ba52: written by hand in src/game/bigframes.c */
 
 /* 0041e864 auto */
-#define rules_path (*(i8 (*)[260])(frame_ + FRAME_OFF(0)))
 void __cdecl rules_load(i32 load_civ_data)
 
 {
   int exists;
-  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rules_path[260];
   
   labels_reload();
   gfx_load_game_sprites();
@@ -1619,7 +1525,6 @@ void __cdecl rules_load(i32 load_civ_data)
   input_flush_events();
   return;
 }
-#undef rules_path
 
 /* 0042a542 auto */
 void __cdecl civ_rating_title_font_global_init(void)
@@ -1663,31 +1568,6 @@ void __cdecl civ_rating_title_font_static_dtor(void)
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
 #define advisor_list_left_i32 (*(i32 *)((u8 *)&g.d_0063ef90))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define draw_y (*(int *)(frame_ + FRAME_OFF(20)))
-#define total_science2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define list_bottom (*(int *)(frame_ + FRAME_OFF(28)))
-#define govt_index (*(int *)(frame_ + FRAME_OFF(32)))
-#define first_item (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define item_x (*(int *)(frame_ + FRAME_OFF(40)))
-#define box_bottom (*(int *)(frame_ + FRAME_OFF(44)))
-#define cur_y (*(int *)(frame_ + FRAME_OFF(48)))
-#define item_index (*(int *)(frame_ + FRAME_OFF(52)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(56)))
-#define box_top (*(int *)(frame_ + FRAME_OFF(60)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(64)))
-#define scrollbar_height (*(int *)(frame_ + FRAME_OFF(68)))
-#define list_right (*(int *)(frame_ + FRAME_OFF(72)))
-#define research_cost (*(int *)(frame_ + FRAME_OFF(76)))
-#define list_left (*(int *)(frame_ + FRAME_OFF(80)))
-#define known_count (*(int *)(frame_ + FRAME_OFF(84)))
-#define text_x2 (*(int *)(frame_ + FRAME_OFF(88)))
-#define column (*(int *)(frame_ + FRAME_OFF(92)))
-#define row (*(int *)(frame_ + FRAME_OFF(96)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(100)))
-#define frame_rect2 (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
-#define rows_per_page (*(int *)(frame_ + FRAME_OFF(120)))
 /* WARNING: Removing unreachable block (ram,0x0042b48e) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -1700,7 +1580,31 @@ void __cdecl science_advisor_draw(void)
   int has_advance;
   i32 bar_height;
   i32 bar_flag;
-  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 sprite_rect[16];
+  iptr civ;
+  int draw_y;
+  int total_science2;
+  int list_bottom;
+  int govt_index;
+  iptr first_item;
+  int item_x;
+  int box_bottom;
+  int cur_y;
+  int item_index;
+  iptr city;
+  int box_top;
+  iptr advance;
+  int scrollbar_height;
+  int list_right;
+  int research_cost;
+  int list_left;
+  int known_count;
+  int text_x2;
+  int column;
+  int row;
+  int line_height;
+  i8 frame_rect2[16];
+  int rows_per_page;
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -1859,31 +1763,6 @@ void __cdecl science_advisor_draw(void)
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
 #undef advisor_list_left_i32
-#undef sprite_rect
-#undef civ
-#undef draw_y
-#undef total_science2
-#undef list_bottom
-#undef govt_index
-#undef first_item
-#undef item_x
-#undef box_bottom
-#undef cur_y
-#undef item_index
-#undef city
-#undef box_top
-#undef advance
-#undef scrollbar_height
-#undef list_right
-#undef research_cost
-#undef list_left
-#undef known_count
-#undef text_x2
-#undef column
-#undef row
-#undef line_height
-#undef frame_rect2
-#undef rows_per_page
 
 /* 0042b540 auto */
 #define advisor_first_row (*(int *)((u8 *)&g.d_0063ef70))
@@ -1900,8 +1779,6 @@ void __cdecl science_advisor_on_scroll(int scroll_pos)
 #define advisor_first_row (*(int *)((u8 *)&g.d_0063ef70))
 #define advisor_row_height (*(int *)((u8 *)&g.d_0063ef80))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
-#define advance (*(int *)(frame_ + FRAME_OFF(4)))
-#define known_index (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl science_advisor_on_click(int click_x,int click_y)
@@ -1911,7 +1788,8 @@ void __cdecl science_advisor_on_click(int click_x,int click_y)
   int column;
   int has_advance;
   bool is_match;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int advance;
+  int known_index;
   
   if ((((-1 < click_y - advisor_list_top_i32) &&
        (row = (click_y - advisor_list_top_i32) / advisor_row_height, row < advisor_rows_per_page)) &&
@@ -1931,8 +1809,6 @@ void __cdecl science_advisor_on_click(int click_x,int click_y)
 #undef advisor_first_row
 #undef advisor_row_height
 #undef advisor_list_top_i32
-#undef advance
-#undef known_index
 
 /* 0042b65b auto */
 void __cdecl science_advisor_on_goal_clicked(void)
@@ -1944,7 +1820,6 @@ void __cdecl science_advisor_on_goal_clicked(void)
 
 /* 0042b67d auto */
 #define advisor_client_x (*(i32 *)((u8 *)&g.d_0063ec34))
-#define button_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 /* WARNING: Removing unreachable block (ram,0x0042b72b) */
 /* WARNING: Removing unreachable block (ram,0x0042b7b6) */
 
@@ -1954,7 +1829,7 @@ void __cdecl science_advisor_show(iptr civ)
   int client_y;
   int rect_h;
   iptr label;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 button_rect[16];
   
   picwnd_open((PictureWindow *)&advisor_window,6,6,0,600,400,0,0);
   advisor_report_civ = civ;
@@ -1980,7 +1855,6 @@ void __cdecl science_advisor_show(iptr civ)
   return;
 }
 #undef advisor_client_x
-#undef button_rect
 
 /* 00434e39 auto */
 #define advisor_client_width (*(int *)((u8 *)&g.d_0063ec3c))
@@ -2000,35 +1874,6 @@ void __cdecl science_advisor_show(iptr civ)
 #define score_wonders (*(iptr *)((u8 *)&g.d_00673f5c))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
-#define wonder_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define citizen_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define text_y3 (*(int *)(frame_ + FRAME_OFF(36)))
-#define content_count (*(int *)(frame_ + FRAME_OFF(40)))
-#define list_bottom (*(int *)(frame_ + FRAME_OFF(44)))
-#define left_x (*(int *)(frame_ + FRAME_OFF(48)))
-#define header_y (*(int *)(frame_ + FRAME_OFF(52)))
-#define sprite_index (*(uint *)(frame_ + FRAME_OFF(56)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(60)))
-#define column (*(int *)(frame_ + FRAME_OFF(64)))
-#define happy_count (*(int *)(frame_ + FRAME_OFF(68)))
-#define total_width (*(int *)(frame_ + FRAME_OFF(72)))
-#define citizen_count (*(uint *)(frame_ + FRAME_OFF(76)))
-#define text_x2 (*(int *)(frame_ + FRAME_OFF(80)))
-#define threshold (*(iptr *)(frame_ + FRAME_OFF(84)))
-#define draw_y (*(int *)(frame_ + FRAME_OFF(88)))
-#define draw_x (*(int *)(frame_ + FRAME_OFF(92)))
-#define citizen (*(int *)(frame_ + FRAME_OFF(96)))
-#define unhappy_count (*(int *)(frame_ + FRAME_OFF(100)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(104)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(108)))
-#define row (*(uint *)(frame_ + FRAME_OFF(112)))
-#define measure_pass (*(int *)(frame_ + FRAME_OFF(116)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(120)))
-#define row_wrapped (*(int *)(frame_ + FRAME_OFF(124)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(128)))
-#define era (*(int *)(frame_ + FRAME_OFF(132)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(136)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl civ_score_window_draw(void)
@@ -2037,7 +1882,35 @@ void __cdecl civ_score_window_draw(void)
   iptr text;
   int text_y2;
   int value;
-  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 wonder_rect[16];
+  i8 citizen_rect[16];
+  iptr civ;
+  int text_y3;
+  int content_count;
+  int list_bottom;
+  int left_x;
+  int header_y;
+  uint sprite_index;
+  iptr city;
+  int column;
+  int happy_count;
+  int total_width;
+  uint citizen_count;
+  int text_x2;
+  iptr threshold;
+  int draw_y;
+  int draw_x;
+  int citizen;
+  int unhappy_count;
+  iptr wonder;
+  iptr civ2;
+  uint row;
+  int measure_pass;
+  int row_height;
+  int row_wrapped;
+  int line_height;
+  int era;
+  int icon_width;
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -2415,35 +2288,6 @@ LAB_004355c2:
 #undef score_wonders
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
-#undef wonder_rect
-#undef citizen_rect
-#undef civ
-#undef text_y3
-#undef content_count
-#undef list_bottom
-#undef left_x
-#undef header_y
-#undef sprite_index
-#undef city
-#undef column
-#undef happy_count
-#undef total_width
-#undef citizen_count
-#undef text_x2
-#undef threshold
-#undef draw_y
-#undef draw_x
-#undef citizen
-#undef unhappy_count
-#undef wonder
-#undef civ2
-#undef row
-#undef measure_pass
-#undef row_height
-#undef row_wrapped
-#undef line_height
-#undef era
-#undef icon_width
 
 /* 00435d15 auto */
 #define advisor_modal_start_ticks_i32 (*(i32 *)((u8 *)&g.d_00625ec0))
@@ -2478,14 +2322,6 @@ void __cdecl civ_score_window_show(iptr civ)
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
-#define bottom_y (*(int *)(frame_ + FRAME_OFF(0)))
-#define title_index (*(int *)(frame_ + FRAME_OFF(12)))
-#define difficulty_factor (*(int *)(frame_ + FRAME_OFF(24)))
-#define i (*(int *)(frame_ + FRAME_OFF(28)))
-#define line_buf (*(i8 (*)[80])(frame_ + FRAME_OFF(32)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(112)))
-#define open_failed (*(int *)(frame_ + FRAME_OFF(116)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(120)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl civ_rating_window_draw(void)
@@ -2495,7 +2331,14 @@ void __cdecl civ_rating_window_draw(void)
   int rating_percent;
   iptr text;
   iptr civ;
-  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  int bottom_y;
+  int title_index;
+  int difficulty_factor;
+  int i;
+  i8 line_buf[80];
+  int line_height;
+  int open_failed;
+  int best_score;
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -2599,14 +2442,6 @@ void __cdecl civ_rating_window_draw(void)
 #undef text_buffer
 #undef advisor_list_top_i32
 #undef advisor_list_height_i32
-#undef bottom_y
-#undef title_index
-#undef difficulty_factor
-#undef i
-#undef line_buf
-#undef line_height
-#undef open_failed
-#undef best_score
 
 /* 004361cc auto */
 #define advisor_modal_start_ticks_i32 (*(i32 *)((u8 *)&g.d_00625ec0))
@@ -2634,11 +2469,10 @@ void __cdecl civ_rating_window_show(iptr civ)
 #undef advisor_modal_start_ticks_i32
 
 /* 0043cab0 auto */
-#define color_index (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl civ_color_primary(iptr civ)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int color_index;
   
   if (civ == 0) {
     color_index = 0;
@@ -2648,14 +2482,12 @@ i32 __cdecl civ_color_primary(iptr civ)
   }
   return *(i32 *)(&civ_primary_colors + color_index * 0x10);
 }
-#undef color_index
 
 /* 0043cb30 auto */
-#define color_index (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl civ_color_secondary(iptr civ)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int color_index;
   
   if (civ == 0) {
     color_index = 0;
@@ -2665,16 +2497,14 @@ i32 __cdecl civ_color_secondary(iptr civ)
   }
   return *(i32 *)(&civ_secondary_colors + color_index * 0x10);
 }
-#undef color_index
 
 /* 0043cce5 auto */
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define total (*(int *)(frame_ + FRAME_OFF(8)))
 int __cdecl civ_total_population(iptr civ)
 
 {
   int city_pop;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
+  int total;
   
   total = 0;
   for (city = 0; city < game.num_cities; city++) {
@@ -2691,17 +2521,14 @@ int __cdecl civ_total_population(iptr civ)
   }
   return total;
 }
-#undef city
-#undef total
 
 /* 00442541 auto */
 #define hotseat_human_players (*(byte *)((u8 *)&g.d_006c31a9))
-#define city (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_reset_city_production(uptr civ,iptr landmass)
 
 {
   int city_landmass;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
   
   if ((game.multiplayer != 1) || ((1 << ((byte)civ & 0x1f) & (uint)hotseat_human_players) == 0)) {
     for (city = 0; city < game.num_cities; city++) {
@@ -2716,7 +2543,6 @@ void __cdecl civ_reset_city_production(uptr civ,iptr landmass)
   return;
 }
 #undef hotseat_human_players
-#undef city
 
 /* 004481f0 auto */
 void __cdecl civ_flag_sprites_global_init(void)
@@ -3016,18 +2842,6 @@ void __cdecl civ_set_attitude(iptr civ,iptr other_civ,iptr attitude)
 
 /* 004853e7 auto */
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define civ (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define unit_strength (*(int *)(frame_ + FRAME_OFF(4)))
-#define power (*(int (*)[8])(frame_ + FRAME_OFF(8)))
-#define rank (*(int *)(frame_ + FRAME_OFF(40)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(44)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(48)))
-#define alert_ai (*(int *)(frame_ + FRAME_OFF(52)))
-#define hp_factor (*(int *)(frame_ + FRAME_OFF(56)))
-#define ally_count (*(int *)(frame_ + FRAME_OFF(60)))
-#define civ2 (*(uptr *)(frame_ + FRAME_OFF(64)))
-#define military_power (*(int *)(frame_ + FRAME_OFF(68)))
-#define best_power (*(int *)(frame_ + FRAME_OFF(72)))
 void __cdecl civ_update_power_ranks(void)
 
 {
@@ -3037,7 +2851,18 @@ void __cdecl civ_update_power_ranks(void)
   uint rand_value;
   uint sign;
   uptr leader_civ;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr civ;
+  int unit_strength;
+  int power[8];
+  int rank;
+  iptr city;
+  iptr unit_type;
+  int alert_ai;
+  int hp_factor;
+  int ally_count;
+  uptr civ2;
+  int military_power;
+  int best_power;
   
   for (civ = 1; (int)civ < 8; civ++) {
     if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0) {
@@ -3194,26 +3019,13 @@ LAB_00485891:
   } while( true );
 }
 #undef scenario_flags
-#undef civ
-#undef unit_strength
-#undef power
-#undef rank
-#undef city
-#undef unit_type
-#undef alert_ai
-#undef hp_factor
-#undef ally_count
-#undef civ2
-#undef military_power
-#undef best_power
 
 /* 00486e15 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define sum (*(int *)(frame_ + FRAME_OFF(8)))
 int __cdecl civ_throne_upgrade_threshold(int level)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  int sum;
   
   sum = 0;
   for (i = 0; i <= level; i++) {
@@ -3221,13 +3033,10 @@ int __cdecl civ_throne_upgrade_threshold(int level)
   }
   return sum / 2 + 1;
 }
-#undef i
-#undef sum
 
 /* 00486e6f auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define prefs_accelerated_start (*(short *)((u8 *)&g.d_0064bc56))
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl civ_check_throne_room_upgrade(void)
 
 {
@@ -3235,7 +3044,7 @@ void __cdecl civ_check_throne_room_upgrade(void)
   int score;
   int threshold;
   iptr civ;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
   
   civ = human_civ;
   if (((game.game_flags & 0x80) == 0) && (game.multiplayer != 1)) {
@@ -3261,19 +3070,9 @@ void __cdecl civ_check_throne_room_upgrade(void)
 }
 #undef human_civ
 #undef prefs_accelerated_start
-#undef city
 
 /* 00487a41 auto */
 #define city_zoom_requested (*(int *)((u8 *)&g.d_006a65a0))
-#define govt (*(int *)(frame_ + FRAME_OFF(0)))
-#define other_civ (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define continent (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define city_status (*(uint *)(frame_ + FRAME_OFF(28)))
-#define lux_slack (*(int *)(frame_ + FRAME_OFF(32)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define max_rate (*(int *)(frame_ + FRAME_OFF(40)))
-#define tech_bonus (*(int *)(frame_ + FRAME_OFF(44)))
 void __cdecl civ_process_cities_turn(uptr civ)
 
 {
@@ -3282,7 +3081,15 @@ void __cdecl civ_process_cities_turn(uptr civ)
   int value;
   i32 clamped;
   int result;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  int govt;
+  iptr other_civ;
+  iptr city;
+  iptr continent;
+  uint city_status;
+  int lux_slack;
+  iptr wonder;
+  int max_rate;
+  int tech_bonus;
   
   city_status = 0;
   civs[civ].best_shield_surplus = 0;
@@ -3456,21 +3263,9 @@ void __cdecl civ_process_cities_turn(uptr civ)
   return;
 }
 #undef city_zoom_requested
-#undef govt
-#undef other_civ
-#undef city
-#undef continent
-#undef city_status
-#undef lux_slack
-#undef wonder
-#undef max_rate
-#undef tech_bonus
 
 /* 00488cef auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define heal_amount (*(uint *)(frame_ + FRAME_OFF(24)))
 void __cdecl civ_heal_units(iptr civ)
 
 {
@@ -3484,7 +3279,9 @@ void __cdecl civ_heal_units(iptr civ)
   int city;
   int has_barracks;
   iptr civ2;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr improvement;
+  uint heal_amount;
   
   for (unit = 0; unit < game.num_units; unit++) {
     if (2 < game.multiplayer) {
@@ -3581,21 +3378,17 @@ void __cdecl civ_heal_units(iptr civ)
   return;
 }
 #undef human_civ
-#undef unit
-#undef improvement
-#undef heal_amount
 
 /* 00489292 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define game_loop_active (*(char *)((u8 *)&g.d_00628044))
-#define milestone_pop (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_check_pop_and_funds(iptr civ,int prev_gold)
 
 {
   short old_milestone;
   int total_pop;
   iptr adjective;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int milestone_pop;
   
   milestone_pop = -1;
   total_pop = civ_total_population(civ);
@@ -3629,18 +3422,16 @@ void __cdecl civ_check_pop_and_funds(iptr civ,int prev_gold)
 }
 #undef autoplay_active
 #undef game_loop_active
-#undef milestone_pop
 
 /* 00489553 auto */
 #define civ_turn_in_progress (*(i32 *)((u8 *)&g.d_0062c5b8))
-#define part (*(int *)(frame_ + FRAME_OFF(0)))
-#define parts_delta (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl civ_process_turn(uptr civ)
 
 {
   i32 start_gold;
   int result;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int part;
+  int parts_delta;
   
   parts_delta = 0;
   civ_turn_in_progress = 1;
@@ -3692,8 +3483,6 @@ void __cdecl civ_process_turn(uptr civ)
   return;
 }
 #undef civ_turn_in_progress
-#undef part
-#undef parts_delta
 
 /* 00492b60 auto */
 void __cdecl civ_ai_goal_negate_priority(int civ,int goal)
@@ -3712,13 +3501,12 @@ void __cdecl civ_ai_goal_negate_priority(int civ,int goal)
 }
 
 /* 00492c15 auto */
-#define goal (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl
 civ_clear_standing_goals_near(iptr civ,i32 role,i32 x,i32 y,int max_dist)
 
 {
   int dist;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int goal;
   
   for (goal = 0; goal < 0x10; goal++) {
     if (civs[civ].ai_standing_goals[goal].role == (char)role) {
@@ -3733,7 +3521,6 @@ civ_clear_standing_goals_near(iptr civ,i32 role,i32 x,i32 y,int max_dist)
   }
   return;
 }
-#undef goal
 
 /* 00492d18 auto */
 void __cdecl civ_ai_goal_insert_gap(iptr civ,iptr goal)
@@ -3755,13 +3542,12 @@ void __cdecl civ_ai_goal_insert_gap(iptr civ,iptr goal)
 }
 
 /* 00492dd0 auto */
-#define goal (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_standing_goal_insert_gap(iptr civ,int start)
 
 {
   i16 goal_y;
   i8 priority;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr goal;
   
   for (goal = 0xe; start <= goal; goal--) {
     goal_y = civs[civ].ai_standing_goals[goal].y;
@@ -3774,16 +3560,14 @@ void __cdecl civ_standing_goal_insert_gap(iptr civ,int start)
   }
   return;
 }
-#undef goal
 
 /* 00492e60 auto */
-#define abs_priority (*(int *)(frame_ + FRAME_OFF(0)))
-#define best_priority (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define goal (*(int *)(frame_ + FRAME_OFF(8)))
 int __cdecl civ_ai_goal_get_priority(iptr civ,int x,int y,i32 role)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int abs_priority;
+  i32 best_priority;
+  int goal;
   
   best_priority = 0;
   for (goal = 0; goal < 0x30; goal++) {
@@ -3808,19 +3592,15 @@ int __cdecl civ_ai_goal_get_priority(iptr civ,int x,int y,i32 role)
   }
   return best_priority;
 }
-#undef abs_priority
-#undef best_priority
-#undef goal
 
 /* 0049301b auto */
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define goal (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl civ_add_ai_goal(iptr civ,int x,int y,int role,int priority)
 
 {
   int value;
   int value2;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int goal;
   
   goal = 0;
   while( true ) {
@@ -3871,15 +3651,12 @@ void __cdecl civ_add_ai_goal(iptr civ,int x,int y,int role,int priority)
   }
   return;
 }
-#undef unit
-#undef goal
 
 /* 004933f2 auto */
-#define goal (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_add_standing_goal(iptr civ,int x,int y,i32 role,int priority)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int goal;
   
   goal = 0;
   while( true ) {
@@ -3908,14 +3685,12 @@ void __cdecl civ_add_standing_goal(iptr civ,int x,int y,i32 role,int priority)
   }
   return;
 }
-#undef goal
 
 /* 00493602 auto */
-#define goal (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_refresh_ai_goals(iptr civ)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int goal;
   
   for (goal = 0; goal < 0x30; goal++) {
     if (civs[civ].ai_goals[goal].priority < '\0') {
@@ -3933,14 +3708,12 @@ void __cdecl civ_refresh_ai_goals(iptr civ)
   }
   return;
 }
-#undef goal
 
 /* 0049376f auto */
-#define goal (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_reset_standing_goals(iptr civ)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int goal;
   
   for (goal = 0; goal < 0x10; goal++) {
     civs[civ].ai_standing_goals[goal].role = 0xff;
@@ -3948,7 +3721,6 @@ void __cdecl civ_reset_standing_goals(iptr civ)
   }
   return;
 }
-#undef goal
 
 /* 00493b10 auto */
 int __cdecl civ_leader_name(iptr civ)
@@ -4026,11 +3798,10 @@ int __cdecl civ_adjective(iptr civ)
 }
 
 /* 00494dae auto */
-#define preq_index (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl advance_count_prereq_depth(iptr advance)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr preq_index;
   
   if (tech_prereq_walk_count < 0x65) {
     for (preq_index = 0; preq_index < 2; preq_index++) {
@@ -4042,14 +3813,12 @@ void __cdecl advance_count_prereq_depth(iptr advance)
   }
   return;
 }
-#undef preq_index
 
 /* 00498310 auto */
-#define password (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl civ_password_ensure_set(int civ)
 
 {
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  char password[32];
   
   mp_turn_timer_stop(1);
   passwords_unscramble();
@@ -4060,20 +3829,18 @@ void __cdecl civ_password_ensure_set(int civ)
   }
   return;
 }
-#undef password
 
 /* 0049836a auto */
-#define entered (*(char (*)[32])(frame_ + FRAME_OFF(0)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(32)))
-#define current_password (*(char (*)[32])(frame_ + FRAME_OFF(788)))
-#define result (*(int *)(frame_ + FRAME_OFF(820)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(824)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(828)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(832)))
 void __cdecl civ_change_password_dialog(iptr civ)
 
 {
-  i8 frame_[FRAME_OFF(840)] __attribute__((aligned(8)));  /* original stack frame */
+  char entered[32];
+  Dialog dialog2;
+  char current_password[32];
+  int result;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -4118,27 +3885,19 @@ LAB_004985a2:
   /* inlined unwind funclet 004985d0 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return;
 }
-#undef entered
-#undef dialog2
-#undef current_password
-#undef result
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 004985f4 auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
-#define entered (*(char (*)[32])(frame_ + FRAME_OFF(0)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(32)))
-#define result (*(int *)(frame_ + FRAME_OFF(788)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(792)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(796)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(800)))
 i32 __cdecl civ_password_prompt(int civ)
 
 {
   i32 status;
-  i8 frame_[FRAME_OFF(808)] __attribute__((aligned(8)));  /* original stack frame */
+  char entered[32];
+  Dialog dialog2;
+  int result;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -4173,12 +3932,6 @@ i32 __cdecl civ_password_prompt(int civ)
   return status;
 }
 #undef dlg_pending_idle_callback
-#undef entered
-#undef dialog2
-#undef result
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00498a5c auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -4223,15 +3976,14 @@ i32 __cdecl civ_check_password(iptr civ)
 #define score_total_objective_value (*(int *)((u8 *)&g.d_00673f70))
 #define score_wonders (*(int *)((u8 *)&g.d_00673f5c))
 #define spaceship_success_pct (*(int *)((u8 *)&g.d_006ad0ec))
-#define end_turn (*(int *)(frame_ + FRAME_OFF(0)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define outcome (*(int *)(frame_ + FRAME_OFF(16)))
 int __cdecl civ_calc_score(iptr civ)
 
 {
   int value;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int end_turn;
+  iptr city;
+  iptr wonder;
+  int outcome;
   
   score_citizens = 0;
   for (city = 0; city < game.num_cities; city++) {
@@ -4366,17 +4118,12 @@ int __cdecl civ_calc_score(iptr civ)
 #undef score_total_objective_value
 #undef score_wonders
 #undef spaceship_success_pct
-#undef end_turn
-#undef city
-#undef wonder
-#undef outcome
 
 /* 004a74bc auto */
-#define part (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_reset_spaceship(iptr civ)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int part;
   
   civs[civ].spaceship_flags = '\0';
   civs[civ].spaceship_population = 0;
@@ -4387,7 +4134,6 @@ void __cdecl civ_reset_spaceship(iptr civ)
   }
   return;
 }
-#undef part
 
 /* 004a7577 auto */
 uint __cdecl civ_spaceship_launched(iptr civ)
@@ -4458,34 +4204,6 @@ void __cdecl civ_spaceship_lost_notify(iptr civ)
 #define mapview_center_y (*(i16 *)((u8 *)&g.d_0066ca8a))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define nm_new_civ_ack_result (*(int *)((u8 *)&g.d_006c9164))
-#define rand_y (*(int *)(frame_ + FRAME_OFF(0)))
-#define rand_x (*(int *)(frame_ + FRAME_OFF(4)))
-#define pick (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define grant_roll (*(int *)(frame_ + FRAME_OFF(12)))
-#define candidates (*(iptr (*)[21])(frame_ + FRAME_OFF(16)))
-#define x3 (*(iptr *)(frame_ + FRAME_OFF(100)))
-#define no_start_units (*(int *)(frame_ + FRAME_OFF(104)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(108)))
-#define landmass_fertility (*(int *)(frame_ + FRAME_OFF(112)))
-#define attempts (*(int *)(frame_ + FRAME_OFF(116)))
-#define clear_mask (*(uint *)(frame_ + FRAME_OFF(120)))
-#define landmass2 (*(iptr *)(frame_ + FRAME_OFF(124)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(128)))
-#define continent_city_counts (*(int (*)[64])(frame_ + FRAME_OFF(132)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(388)))
-#define unit_dist (*(int *)(frame_ + FRAME_OFF(392)))
-#define pass (*(int *)(frame_ + FRAME_OFF(396)))
-#define old_tribe (*(int *)(frame_ + FRAME_OFF(400)))
-#define leader_color (*(int *)(frame_ + FRAME_OFF(404)))
-#define was_alive (*(uint *)(frame_ + FRAME_OFF(408)))
-#define leader (*(iptr *)(frame_ + FRAME_OFF(412)))
-#define y3 (*(iptr *)(frame_ + FRAME_OFF(416)))
-#define leader2 (*(iptr *)(frame_ + FRAME_OFF(420)))
-#define fertility (*(int *)(frame_ + FRAME_OFF(424)))
-#define nearest_city (*(int *)(frame_ + FRAME_OFF(428)))
-#define alive_count (*(int *)(frame_ + FRAME_OFF(432)))
-#define candidate_count (*(iptr *)(frame_ + FRAME_OFF(436)))
-#define start_ticks (*(int *)(frame_ + FRAME_OFF(440)))
 int __cdecl civ_create(iptr civ)
 
 {
@@ -4497,7 +4215,34 @@ int __cdecl civ_create(iptr civ)
   int result;
   i32 attitude;
   i32 max_attitude;
-  i8 frame_[FRAME_OFF(448)] __attribute__((aligned(8)));  /* original stack frame */
+  int rand_y;
+  int rand_x;
+  iptr pick;
+  int grant_roll;
+  iptr candidates[21];
+  iptr x3;
+  int no_start_units;
+  iptr unit;
+  int landmass_fertility;
+  int attempts;
+  uint clear_mask;
+  iptr landmass2;
+  uint y2;
+  int continent_city_counts[64];
+  uint x2;
+  int unit_dist;
+  int pass;
+  int old_tribe;
+  int leader_color;
+  uint was_alive;
+  iptr leader;
+  iptr y3;
+  iptr leader2;
+  int fertility;
+  int nearest_city;
+  int alive_count;
+  iptr candidate_count;
+  int start_ticks;
   
   if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) || (game.turn == 0)) {
     civ_create_busy = 1;
@@ -4882,34 +4627,6 @@ int __cdecl civ_create(iptr civ)
 #undef mapview_center_y
 #undef net_host_flag
 #undef nm_new_civ_ack_result
-#undef rand_y
-#undef rand_x
-#undef pick
-#undef grant_roll
-#undef candidates
-#undef x3
-#undef no_start_units
-#undef unit
-#undef landmass_fertility
-#undef attempts
-#undef clear_mask
-#undef landmass2
-#undef y2
-#undef continent_city_counts
-#undef x2
-#undef unit_dist
-#undef pass
-#undef old_tribe
-#undef leader_color
-#undef was_alive
-#undef leader
-#undef y3
-#undef leader2
-#undef fertility
-#undef nearest_city
-#undef alive_count
-#undef candidate_count
-#undef start_ticks
 
 /* 004aa378 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
@@ -4920,10 +4637,6 @@ int __cdecl civ_create(iptr civ)
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define nm_kill_civ_ack_result (*(int *)((u8 *)&g.d_006c9168))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(20)))
 int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
 
 {
@@ -4933,7 +4646,10 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
   iptr name_text;
   int result;
   i32 plural_name;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr city;
+  int y2;
+  int x2;
   
   if (civ == 0) {
     result = 0;
@@ -5064,20 +4780,15 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
 #undef human_civ
 #undef net_host_flag
 #undef nm_kill_civ_ack_result
-#undef unit
-#undef city
-#undef y2
-#undef x2
 
 /* 004b0720 auto */
-#define found (*(int *)(frame_ + FRAME_OFF(4)))
-#define advance (*(int *)(frame_ + FRAME_OFF(8)))
 i8 __cdecl rules_parse_advance_abbrev(char *abbrev)
 
 {
   i8 result;
   int cmp;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int found;
+  int advance;
   
   cmp = _strcmp(abbrev,&rules_advance_no_str);
   if (cmp == 0) {
@@ -5101,18 +4812,15 @@ i8 __cdecl rules_parse_advance_abbrev(char *abbrev)
   }
   return result;
 }
-#undef found
-#undef advance
 
 /* 004b07d1 auto */
-#define found (*(int *)(frame_ + FRAME_OFF(4)))
-#define terrain2 (*(int *)(frame_ + FRAME_OFF(8)))
 i8 __cdecl rules_parse_terrain_abbrev(char *abbrev)
 
 {
   i8 result;
   int cmp;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int found;
+  int terrain2;
   
   cmp = __strcmpi(abbrev,&rules_terrain_no_str);
   if (cmp == 0) {
@@ -5136,17 +4844,14 @@ i8 __cdecl rules_parse_terrain_abbrev(char *abbrev)
   }
   return result;
 }
-#undef found
-#undef terrain2
 
 /* 004bd9f0 auto */
-#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define bit_mask (*(byte (*)[4])(frame_ + FRAME_OFF(8)))
 i32 __cdecl civ_has_advance(iptr civ,iptr advance_id)
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance;
+  byte bit_mask[4];
   
   if (advance_id == -2) {
     result = 0;
@@ -5176,8 +4881,6 @@ i32 __cdecl civ_has_advance(iptr civ,iptr advance_id)
   }
   return result;
 }
-#undef advance
-#undef bit_mask
 
 /* 004bdaa5 auto */
 i32 __cdecl advance_has_prereq(iptr advance,iptr prereq)
@@ -5208,17 +4911,16 @@ i32 __cdecl advance_has_prereq(iptr advance,iptr prereq)
 /* 004be6ba auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define upgrade_advance (*(int *)(frame_ + FRAME_OFF(8)))
-#define unit_type3 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define unit_type2 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define notified (*(char (*)[64])(frame_ + FRAME_OFF(20)))
 void __cdecl civ_leonardo_upgrade(iptr civ)
 
 {
   byte unit_type;
   int result;
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int upgrade_advance;
+  iptr unit_type3;
+  iptr unit_type2;
+  char notified[64];
   
   result = civ_has_wonder(civ,0xe);
   if (result != 0) {
@@ -5277,20 +4979,14 @@ void __cdecl civ_leonardo_upgrade(iptr civ)
 }
 #undef human_civ
 #undef ui_large_screen
-#undef unit
-#undef upgrade_advance
-#undef unit_type3
-#undef unit_type2
-#undef notified
 
 /* 004bea84 auto */
-#define gov_sprite_index (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_advance_gov_prompts(iptr civ,iptr advance)
 
 {
   int choice;
   iptr civ_plural;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int gov_sprite_index;
   
   if (advance == 0x36) {
     if ((civs[civ].government == 1) &&
@@ -5359,20 +5055,18 @@ void __cdecl civ_advance_gov_prompts(iptr civ,iptr advance)
   }
   return;
 }
-#undef gov_sprite_index
 
 /* 004bee56 auto */
-#define roll (*(int *)(frame_ + FRAME_OFF(4)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define best_roll (*(int *)(frame_ + FRAME_OFF(20)))
-#define weight (*(int *)(frame_ + FRAME_OFF(24)))
 void __cdecl civ_golden_age_popup(iptr civ)
 
 {
   iptr adjective;
   int has_temple;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int roll;
+  iptr city2;
+  iptr city;
+  int best_roll;
+  int weight;
   
   adjective = civ_get_adjective(civ);
   text_set_string_arg(0,adjective);
@@ -5407,32 +5101,11 @@ void __cdecl civ_golden_age_popup(iptr civ)
   }
   return;
 }
-#undef roll
-#undef city2
-#undef city
-#undef best_roll
-#undef weight
 
 /* 004bf05b auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define diplo_session_active (*(int *)((u8 *)&g.d_00626a24))
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define advance3 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define list_count (*(int *)(frame_ + FRAME_OFF(16)))
-#define bit_mask (*(byte (*)[4])(frame_ + FRAME_OFF(20)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(28)))
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(784)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(788)))
-#define civ4 (*(int *)(frame_ + FRAME_OFF(792)))
-#define first_discovery (*(int *)(frame_ + FRAME_OFF(796)))
-#define count (*(int *)(frame_ + FRAME_OFF(800)))
-#define line_width (*(i32 *)(frame_ + FRAME_OFF(804)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(808)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(812)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(816)))
 void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,int from_network)
 
 {
@@ -5441,7 +5114,22 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
   iptr civ_plural;
   int improvement2;
   uptr civ3;
-  i8 frame_[FRAME_OFF(824)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr improvement;
+  iptr advance3;
+  iptr city;
+  int list_count;
+  byte bit_mask[4];
+  iptr unit_type;
+  Dialog dialog2;
+  iptr advance2;
+  iptr wonder;
+  int civ4;
+  int first_discovery;
+  int count;
+  i32 line_width;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   first_discovery = 0;
@@ -5684,22 +5372,6 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
 #undef autoplay_active
 #undef diplo_session_active
 #undef human_civ
-#undef improvement
-#undef advance3
-#undef city
-#undef list_count
-#undef bit_mask
-#undef unit_type
-#undef dialog2
-#undef advance2
-#undef wonder
-#undef civ4
-#undef first_discovery
-#undef count
-#undef line_width
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 004bfdbe auto */
 i32 __cdecl civ_can_research_advance(iptr civ,iptr advance)
@@ -5717,14 +5389,13 @@ i32 __cdecl civ_can_research_advance(iptr civ,iptr advance)
 }
 
 /* 004bfe5a auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define unit_type2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl civ_can_build_unit(iptr civ,iptr city,iptr unit_type)
 
 {
   char prereq;
   int known;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
+  iptr unit_type2;
   
   result = 0;
   prereq = unit_types[unit_type].prerequisite;
@@ -5771,17 +5442,14 @@ i32 __cdecl civ_can_build_unit(iptr civ,iptr city,iptr unit_type)
   }
   return result;
 }
-#undef result
-#undef unit_type2
 
 /* 004c02d8 auto */
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define result (*(i32 *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl civ_can_build_wonder(iptr civ,iptr wonder)
 
 {
   int known;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
   
   result = 0;
   if ((((((game.game_flags & 0x80) == 0) || ((scenario_flags & 4) == 0)) || (game.reveal_map != '\0'))
@@ -5793,20 +5461,18 @@ i32 __cdecl civ_can_build_wonder(iptr civ,iptr wonder)
   return result;
 }
 #undef scenario_flags
-#undef result
 
 /* 004c09b0 auto */
-#define best_advance (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define candidates (*(int *)(frame_ + FRAME_OFF(4)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(12)))
-#define score (*(int *)(frame_ + FRAME_OFF(16)))
 iptr __cdecl civ_pick_research_advance(iptr civ)
 
 {
   int value;
   int ai_value;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr best_advance;
+  int candidates;
+  iptr advance;
+  int best_score;
+  int score;
   
   best_score = -1;
   best_advance = -1;
@@ -5842,23 +5508,17 @@ iptr __cdecl civ_pick_research_advance(iptr civ)
   }
   return best_advance;
 }
-#undef best_advance
-#undef candidates
-#undef advance
-#undef best_score
-#undef score
 
 /* 004c0b51 auto */
-#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define draw_y (*(int *)(frame_ + FRAME_OFF(16)))
-#define draw_x (*(int *)(frame_ + FRAME_OFF(20)))
-#define y_offset (*(int *)(frame_ + FRAME_OFF(24)))
 i32 __cdecl
 research_option_draw_advance(i32 dialog,iptr surface,iptr advance,byte flags,int x,int y,
             int height)
 
 {
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_ctx[16];
+  int draw_y;
+  int draw_x;
+  int y_offset;
   
   draw_x = x;
   if ((flags & 1) != 0) {
@@ -5873,24 +5533,19 @@ research_option_draw_advance(i32 dialog,iptr surface,iptr advance,byte flags,int
              (iptr)draw_ctx,surface,draw_x,draw_y);
   return 0;
 }
-#undef draw_ctx
-#undef draw_y
-#undef draw_x
-#undef y_offset
 
 /* 004c0be8 auto */
-#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define zoom2 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define draw_y (*(int *)(frame_ + FRAME_OFF(20)))
-#define draw_x (*(int *)(frame_ + FRAME_OFF(24)))
-#define y_offset (*(int *)(frame_ + FRAME_OFF(28)))
-#define sprite_height2 (*(int *)(frame_ + FRAME_OFF(32)))
 i32 __cdecl
 research_option_draw_unit(i32 dialog,iptr surface,int unit_type,byte flags,int x,int y,
             int height)
 
 {
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_ctx[16];
+  i32 zoom2;
+  int draw_y;
+  int draw_x;
+  int y_offset;
+  int sprite_height2;
   
   zoom2 = 0xfffffffe;
   draw_x = x;
@@ -5908,24 +5563,17 @@ research_option_draw_unit(i32 dialog,iptr surface,int unit_type,byte flags,int x
   gfx_reset_zoom_scale();
   return 0;
 }
-#undef draw_ctx
-#undef zoom2
-#undef draw_y
-#undef draw_x
-#undef y_offset
-#undef sprite_height2
 
 /* 004c0c83 auto */
-#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define draw_y (*(int *)(frame_ + FRAME_OFF(16)))
-#define draw_x (*(int *)(frame_ + FRAME_OFF(20)))
-#define y_offset (*(int *)(frame_ + FRAME_OFF(24)))
 i32 __cdecl
 research_option_draw_improvement(i32 dialog,iptr surface,int improvement,byte flags,int x,int y,
             int height)
 
 {
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_ctx[16];
+  int draw_y;
+  int draw_x;
+  int y_offset;
   
   draw_x = x;
   if ((flags & 1) != 0) {
@@ -5938,27 +5586,9 @@ research_option_draw_improvement(i32 dialog,iptr surface,int improvement,byte fl
              draw_y);
   return 0;
 }
-#undef draw_ctx
-#undef draw_y
-#undef draw_x
-#undef y_offset
 
 /* 004c0cf7 auto */
 #define diplo_session_active (*(int *)((u8 *)&g.d_00626a24))
-#define path_advances (*(iptr (*)[99])(frame_ + FRAME_OFF(0)))
-#define mode_state (*(int (*)[4])(frame_ + FRAME_OFF(396)))
-#define choice (*(iptr *)(frame_ + FRAME_OFF(412)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(416)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(420)))
-#define option_count2 (*(int *)(frame_ + FRAME_OFF(424)))
-#define path_count (*(iptr *)(frame_ + FRAME_OFF(428)))
-#define button_count (*(iptr *)(frame_ + FRAME_OFF(432)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(436)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(440)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(1196)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1200)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1204)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(1208)))
 void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
 
 {
@@ -5966,7 +5596,20 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
   int known;
   iptr option_id;
   i32 option_flags;
-  i8 frame_[FRAME_OFF(1216)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr path_advances[99];
+  int mode_state[4];
+  iptr choice;
+  iptr improvement;
+  iptr advance;
+  int option_count2;
+  iptr path_count;
+  iptr button_count;
+  iptr unit_type;
+  Dialog dialog2;
+  iptr i;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x2000);
@@ -6210,38 +5853,10 @@ LAB_004c1734:
   } while( true );
 }
 #undef diplo_session_active
-#undef path_advances
-#undef mode_state
-#undef choice
-#undef improvement
-#undef advance
-#undef option_count2
-#undef path_count
-#undef button_count
-#undef unit_type
-#undef dialog2
-#undef i
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 004c195e auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define hint_kind (*(int *)(frame_ + FRAME_OFF(0)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define count (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define hint_items (*(iptr (*)[5])(frame_ + FRAME_OFF(20)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define chosen (*(iptr *)(frame_ + FRAME_OFF(44)))
-#define choice_dialog (*(Dialog *)(frame_ + FRAME_OFF(48)))
-#define advance3 (*(iptr *)(frame_ + FRAME_OFF(804)))
-#define info_dialog (*(Dialog *)(frame_ + FRAME_OFF(808)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(1564)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1568)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1572)))
-#define seh_state (*(uint *)(frame_ + FRAME_OFF(1576)))
 iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
 
 {
@@ -6249,13 +5864,26 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
   iptr ticks;
   int known;
   iptr selected;
-  i8 frame_[FRAME_OFF(1584)] __attribute__((aligned(8)));  /* original stack frame */
+  int hint_kind;
+  iptr improvement;
+  iptr advance;
+  iptr count;
+  iptr hint_items[5];
+  iptr unit_type;
+  iptr chosen;
+  Dialog choice_dialog;
+  iptr advance3;
+  Dialog info_dialog;
+  iptr i;
+  i32 seh_prev;
+  i8 *seh_handler;
+  uint seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&choice_dialog,0x4000);
   seh_state = 0;
   dialog_ctor(&info_dialog,0x4000);
-  seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),1);
+  seh_state = (seh_state & 0xffffff00 | (byte)(1));
   chosen = civ_pick_research_advance(civ);
   if ((forced != 0) ||
      (((advance2 = chosen, game.turn != 0 &&
@@ -6402,20 +6030,6 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
 }
 #undef autoplay_active
 #undef ui_large_screen
-#undef hint_kind
-#undef improvement
-#undef advance
-#undef count
-#undef hint_items
-#undef unit_type
-#undef chosen
-#undef choice_dialog
-#undef advance3
-#undef info_dialog
-#undef i
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 004c21ad auto */
 void __cdecl civ_choose_research(iptr civ)
@@ -6428,11 +6042,6 @@ void __cdecl civ_choose_research(iptr civ)
 /* 004c21d5 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(12)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(768)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(776)))
 iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
 
 {
@@ -6440,7 +6049,11 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
   iptr city;
   iptr adjective;
   int has_philosophy;
-  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance;
+  Dialog dialog2;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -6537,24 +6150,18 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
 }
 #undef autoplay_active
 #undef human_civ
-#undef advance
-#undef dialog2
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 004c2788 auto */
 #define scenario_tech_paradigm (*(short *)((u8 *)&g.d_0064bcb2))
 #define scenario_year_increment (*(short *)((u8 *)&g.d_0064bcb4))
-#define extra (*(int *)(frame_ + FRAME_OFF(4)))
-#define cost2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define multiplier (*(int *)(frame_ + FRAME_OFF(12)))
-#define turn_penalty (*(int *)(frame_ + FRAME_OFF(16)))
 int __cdecl civ_research_cost(iptr civ)
 
 {
   uint tech_count;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int extra;
+  int cost2;
+  int multiplier;
+  int turn_penalty;
   
   tech_count = (uint)civs[civ].num_advances + (uint)civs[civ].research_cost_advances;
   if (tech_count < 2) {
@@ -6625,10 +6232,6 @@ int __cdecl civ_research_cost(iptr civ)
 }
 #undef scenario_tech_paradigm
 #undef scenario_year_increment
-#undef extra
-#undef cost2
-#undef multiplier
-#undef turn_penalty
 
 /* 004c2b73 auto */
 void __cdecl civ_add_research_points(uptr civ,int points)
@@ -6663,13 +6266,12 @@ void __cdecl civ_add_research_points(uptr civ,int points)
 }
 
 /* 004c65d2 auto */
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define min_dist (*(int *)(frame_ + FRAME_OFF(8)))
 int __cdecl civ_distance_to_capital(iptr civ,i32 target_x,i32 target_y)
 
 {
   int dist;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
+  int min_dist;
   
   min_dist = 0x10;
   for (city = 0; city < game.num_cities; city++) {
@@ -6682,8 +6284,6 @@ int __cdecl civ_distance_to_capital(iptr civ,i32 target_x,i32 target_y)
   }
   return min_dist;
 }
-#undef city
-#undef min_dist
 
 /* 004ccab9 auto */
 #define rules_edit_section_names_i32 (*(i32 *)((u8 *)&g.d_006a1880))
@@ -6707,11 +6307,10 @@ void __cdecl rules_edit_set_section(iptr names,iptr writers)
 #undef rules_edit_next_writer_i32
 
 /* 004ccaed auto */
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl rules_edit_add_section(iptr name2,iptr writer)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
   
   for (slot = 0; (*(int *)(&rules_edit_section_names + slot * 8) != 0 && (slot < 7));
       slot = slot + 1) {
@@ -6724,17 +6323,8 @@ void __cdecl rules_edit_add_section(iptr name2,iptr writer)
   }
   return;
 }
-#undef slot
 
 /* 004ccf2d auto */
-#define success (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define header (*(char (*)[80])(frame_ + FRAME_OFF(4)))
-#define out_file (*(FILE * *)(frame_ + FRAME_OFF(84)))
-#define in_file (*(FILE * *)(frame_ + FRAME_OFF(88)))
-#define saved_cwd (*(char (*)[260])(frame_ + FRAME_OFF(92)))
-#define rules_name (*(i8 (*)[16])(frame_ + FRAME_OFF(352)))
-#define section (*(int *)(frame_ + FRAME_OFF(368)))
-#define s (*(char (*)[256])(frame_ + FRAME_OFF(372)))
 i32 __cdecl rules_write_sections(void)
 
 {
@@ -6745,7 +6335,14 @@ i32 __cdecl rules_write_sections(void)
   size_t line_len;
   char *lpCaption;
   UINT uType;
-  i8 frame_[FRAME_OFF(632)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 success;
+  char header[80];
+  FILE *out_file;
+  FILE *in_file;
+  char saved_cwd[260];
+  i8 rules_name[16];
+  int section;
+  char s[256];
   
   section = 0;
   success = 0;
@@ -6827,23 +6424,14 @@ LAB_004cd353:
   __chdir(saved_cwd);
   return success;
 }
-#undef success
-#undef header
-#undef out_file
-#undef in_file
-#undef saved_cwd
-#undef rules_name
-#undef section
-#undef s
 
 /* 004e1314 auto */
 #define double_moves_applied (*(int *)((u8 *)&g.d_00628068))
 #define mp_double_moves (*(short *)((u8 *)&g.d_00654fae))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl rules_apply_double_moves(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit_type;
   
   if (((game.multiplayer == '\0') || (mp_double_moves == 0)) || (double_moves_applied != 0)) {
     if (((game.multiplayer != '\0') && (mp_double_moves == 0)) && (double_moves_applied == 1)) {
@@ -6869,7 +6457,6 @@ void __cdecl rules_apply_double_moves(void)
 }
 #undef double_moves_applied
 #undef mp_double_moves
-#undef unit_type
 
 /* 004e1763 auto */
 #define civ_eliminate_busy (*(i32 *)((u8 *)&g.d_006ad8ec))
@@ -6878,14 +6465,6 @@ void __cdecl rules_apply_double_moves(void)
 #define mp_kill_civ_on_retire (*(short *)((u8 *)&g.d_00654c76))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_kill_or_quit_ack (*(int *)((u8 *)&g.d_006c90b4))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define seen_mask (*(uint *)(frame_ + FRAME_OFF(16)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(24)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define owner_bit (*(byte *)(frame_ + FRAME_OFF(36)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(44)))
 void __cdecl civ_eliminate(iptr civ,i32 kill_units,i32 recreate)
 
 {
@@ -6901,7 +6480,14 @@ void __cdecl civ_eliminate(iptr civ,i32 kill_units,i32 recreate)
   int status;
   uint fertility;
   iptr net_flag;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr city;
+  uint seen_mask;
+  int y3;
+  int x2;
+  iptr unit2;
+  byte owner_bit;
+  iptr city2;
   
   relinked = false;
   civ_eliminate_busy = 1;
@@ -7100,22 +6686,13 @@ void __cdecl civ_eliminate(iptr civ,i32 kill_units,i32 recreate)
 #undef mp_kill_civ_on_retire
 #undef net_host_flag
 #undef net_kill_or_quit_ack
-#undef unit
-#undef city
-#undef seen_mask
-#undef y3
-#undef x2
-#undef unit2
-#undef owner_bit
-#undef city2
 
 /* 004ec312 auto */
-#define civ2 (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl civ_apply_eiffel_tower(iptr civ)
 
 {
   uint *treaty_ptr;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ2;
   
   if ((civs[civ].flags & 0x10) == 0) {
     civs[civ].reputation = civs[civ].reputation >> 1;
@@ -7130,16 +6707,14 @@ void __cdecl civ_apply_eiffel_tower(iptr civ)
   }
   return;
 }
-#undef civ2
 
 /* 004f00f0 auto */
-#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define cost2 (*(uint *)(frame_ + FRAME_OFF(8)))
 uint __cdecl civ_improvement_upkeep(iptr civ,iptr improvement)
 
 {
   int has;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr advance;
+  uint cost2;
   
   cost2 = (uint)improvements[improvement].upkeep;
   if (improvement == 2) {
@@ -7170,19 +6745,16 @@ uint __cdecl civ_improvement_upkeep(iptr civ,iptr improvement)
   }
   return cost2;
 }
-#undef advance
-#undef cost2
 
 /* 0055c066 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define civ2 (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl civ_set_government(iptr civ,iptr new_gov)
 
 {
   uint *treaty_ptr;
   u8 old_government;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
+  int civ2;
   
   old_government = civs[civ].government;
   civs[civ].government = (u8)new_gov;
@@ -7212,11 +6784,8 @@ void __cdecl civ_set_government(iptr civ,iptr new_gov)
   return;
 }
 #undef autoplay_active
-#undef city
-#undef civ2
 
 /* 0055c277 auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl
 civ_can_choose_government(iptr civ,iptr government,i32 unused_3,i32 unused_4,i32 unused_5,
             iptr unused_6,iptr unused_7,i32 unused_8,iptr unused_9,iptr unused_10,iptr unused_11,
@@ -7227,7 +6796,7 @@ civ_can_choose_government(iptr civ,iptr government,i32 unused_3,i32 unused_4,i32
 {
   int has_statue;
   int known;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
   
   result = 1;
   has_statue = civ_has_wonder(civ,0x13);
@@ -7267,7 +6836,6 @@ civ_can_choose_government(iptr civ,iptr government,i32 unused_3,i32 unused_4,i32
   }
   return result;
 }
-#undef result
 
 /* 0055c3d3: written by hand in src/game/unwind.c */
 
@@ -7275,16 +6843,15 @@ civ_can_choose_government(iptr civ,iptr government,i32 unused_3,i32 unused_4,i32
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define notified (*(int *)(frame_ + FRAME_OFF(0)))
-#define civ2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define gov_rank (*(uptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl civ_change_government(iptr civ,uptr new_gov)
 
 {
   iptr text;
   int has_wonder;
   uint old_government;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int notified;
+  int civ2;
+  uptr gov_rank;
   
   old_government = (uint)civs[civ].government;
   if (new_gov != 0) {
@@ -7370,17 +6937,10 @@ void __cdecl civ_change_government(iptr civ,uptr new_gov)
 #undef autoplay_active
 #undef human_civ
 #undef ui_large_screen
-#undef notified
-#undef civ2
-#undef gov_rank
 
 /* 00560084 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define roll (*(int *)(frame_ + FRAME_OFF(0)))
-#define civ4 (*(uptr *)(frame_ + FRAME_OFF(12)))
-#define civ2 (*(uptr *)(frame_ + FRAME_OFF(16)))
-#define civ3 (*(int *)(frame_ + FRAME_OFF(20)))
 void __cdecl civ_turn_update_diplomacy(uptr civ)
 
 {
@@ -7388,7 +6948,10 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
   u8 cur_gov;
   int value;
   iptr civ_plural;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int roll;
+  uptr civ4;
+  uptr civ2;
+  int civ3;
   
   cur_gov = civs[civ].government;
   civs[civ].flags = civs[civ].flags & 0xffb7;
@@ -7587,10 +7150,6 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
 }
 #undef autoplay_active
 #undef human_civ
-#undef roll
-#undef civ4
-#undef civ2
-#undef civ3
 
 /* 00568861 auto */
 i32 __cdecl civ_city_art_era(iptr civ)
@@ -7610,11 +7169,10 @@ i32 __cdecl civ_city_art_era(iptr civ)
 }
 
 /* 0056e1f0 auto */
-#define color_index (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl civ_color_mid(iptr civ)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int color_index;
   
   if (civ == 0) {
     color_index = 0;
@@ -7624,20 +7182,11 @@ i32 __cdecl civ_color_mid(iptr civ)
   }
   return *(i32 *)(&civ_mid_colors + color_index * 0x10);
 }
-#undef color_index
 
 /* 0057a27a auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define best_advance (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(12)))
-#define best_value (*(int *)(frame_ + FRAME_OFF(768)))
-#define value (*(int *)(frame_ + FRAME_OFF(772)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(776)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(780)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(784)))
 void __cdecl civ_steal_advance(iptr civ,iptr civ2)
 
 {
@@ -7646,7 +7195,14 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
   bool interactive;
   i32 option_flags;
   iptr option_id;
-  i8 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr best_advance;
+  iptr advance;
+  Dialog dialog2;
+  int best_value;
+  int value;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   best_advance = -1;
@@ -7725,26 +7281,17 @@ LAB_0057a677:
 #undef autoplay_active
 #undef human_civ
 #undef scenario_flags
-#undef best_advance
-#undef advance
-#undef dialog2
-#undef best_value
-#undef value
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0057a685 auto */
-#define best_city (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define best_total (*(int *)(frame_ + FRAME_OFF(8)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define total_dist (*(int *)(frame_ + FRAME_OFF(16)))
 iptr __cdecl civ_find_central_city(iptr civ)
 
 {
   int dist;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr best_city;
+  iptr city;
+  int best_total;
+  iptr city2;
+  int total_dist;
   
   best_total = 0x7fff;
   best_city = -1;
@@ -7766,37 +7313,9 @@ iptr __cdecl civ_find_central_city(iptr civ)
   }
   return best_city;
 }
-#undef best_city
-#undef city
-#undef best_total
-#undef city2
-#undef total_dist
 
 /* 0057a904 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define x3 (*(int *)(frame_ + FRAME_OFF(4)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define capital_landmass (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define city4 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define civ3 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define city3 (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define city (*(uptr *)(frame_ + FRAME_OFF(32)))
-#define landmass_sizes (*(int (*)[64])(frame_ + FRAME_OFF(36)))
-#define landmass2 (*(iptr *)(frame_ + FRAME_OFF(292)))
-#define rebel_bit (*(byte *)(frame_ + FRAME_OFF(296)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(300)))
-#define civ_bit (*(byte *)(frame_ + FRAME_OFF(304)))
-#define saved_unit (*(iptr *)(frame_ + FRAME_OFF(308)))
-#define tiles (*(Tile * *)(frame_ + FRAME_OFF(312)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(316)))
-#define rebel_size (*(int *)(frame_ + FRAME_OFF(320)))
-#define dist (*(int *)(frame_ + FRAME_OFF(324)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(328)))
-#define loyal_size (*(int *)(frame_ + FRAME_OFF(332)))
-#define total_size (*(int *)(frame_ + FRAME_OFF(336)))
-#define max_dist (*(int *)(frame_ + FRAME_OFF(340)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(344)))
 i32 __cdecl civ_civil_war(iptr civ)
 
 {
@@ -7806,7 +7325,29 @@ i32 __cdecl civ_civil_war(iptr civ)
   iptr has_palace;
   int city2;
   iptr adjective;
-  i8 frame_[FRAME_OFF(352)] __attribute__((aligned(8)));  /* original stack frame */
+  int x3;
+  uint y2;
+  iptr capital_landmass;
+  iptr unit;
+  iptr city4;
+  iptr civ3;
+  iptr city3;
+  uptr city;
+  int landmass_sizes[64];
+  iptr landmass2;
+  byte rebel_bit;
+  uint x2;
+  byte civ_bit;
+  iptr saved_unit;
+  Tile *tiles;
+  iptr civ2;
+  int rebel_size;
+  int dist;
+  iptr advance;
+  int loyal_size;
+  int total_size;
+  int max_dist;
+  int y3;
   
   allowed = events_check_no_schism((ScenarioEvents *)&scenario_events,civ);
   if (allowed == 0) {
@@ -7997,29 +7538,6 @@ i32 __cdecl civ_civil_war(iptr civ)
   return result;
 }
 #undef human_civ
-#undef x3
-#undef y2
-#undef capital_landmass
-#undef unit
-#undef city4
-#undef civ3
-#undef city3
-#undef city
-#undef landmass_sizes
-#undef landmass2
-#undef rebel_bit
-#undef x2
-#undef civ_bit
-#undef saved_unit
-#undef tiles
-#undef civ2
-#undef rebel_size
-#undef dist
-#undef advance
-#undef loyal_size
-#undef total_size
-#undef max_dist
-#undef y3
 
 /* 005866a0 auto */
 void __cdecl cosmic_editor_focus_redraw(void)
@@ -8202,15 +7720,14 @@ void __cdecl cosmic_editor_capture_defaults(void)
 /* 005869d4 auto */
 #define cosmic_edit_values (*(i8 *)((u8 *)&g.d_006a2d80))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define index (*(int *)(frame_ + FRAME_OFF(0)))
-#define line (*(char (*)[128])(frame_ + FRAME_OFF(4)))
-#define suffix (*(char (*)[32])(frame_ + FRAME_OFF(132)))
 void __cdecl cosmic_editor_fill_list(void)
 
 {
   char *_Str;
   size_t len;
-  i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  char line[128];
+  char suffix[32];
   
   index = 0;
   listbox_clear((ListBoxClearView *)(active_editor_wnd + 0xa94));
@@ -8247,14 +7764,8 @@ void __cdecl cosmic_editor_fill_list(void)
 }
 #undef cosmic_edit_values
 #undef text_buffer
-#undef index
-#undef line
-#undef suffix
 
 /* 00586bb6 auto */
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define input (*(char (*)[260])(frame_ + FRAME_OFF(8)))
-#define num_buf (*(char (*)[16])(frame_ + FRAME_OFF(268)))
 void __cdecl cosmic_editor_edit_value(void)
 
 {
@@ -8264,7 +7775,9 @@ void __cdecl cosmic_editor_edit_value(void)
   i32 max_value;
   i32 min_value;
   char *out_buf;
-  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  char input[260];
+  char num_buf[16];
   
   sel = listbox_get_cur_sel((ListBoxGetSelView *)(active_editor_wnd + 0xa94));
   if (active_editor_wnd == 0) {
@@ -8293,19 +7806,15 @@ void __cdecl cosmic_editor_edit_value(void)
   cosmic_editor_focus_redraw();
   return;
 }
-#undef parent_wnd2
-#undef input
-#undef num_buf
 
 /* 00586d0a auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define line (*(char (*)[128])(frame_ + FRAME_OFF(4)))
 i32 __cdecl cosmic_editor_write_section(FILE *out_file,FILE *in_file)
 
 {
   char *comment;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  char line[128];
   
   for (i = 0; i < 0x16; i++) {
     _fgets(line,0x80,in_file);
@@ -8316,12 +7825,9 @@ i32 __cdecl cosmic_editor_write_section(FILE *out_file,FILE *in_file)
   return 1;
 }
 #undef text_buffer
-#undef i
-#undef line
 
 /* 00586da1 auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
-#define message (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl cosmic_editor_ok_clicked(void)
 
 {
@@ -8330,7 +7836,7 @@ void __cdecl cosmic_editor_ok_clicked(void)
   char *lpText;
   char *lpCaption;
   UINT uType;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  char message[32];
   
   rules_edit_set_section((iptr)((u8 *)&g.d_00634698),(iptr)cosmic_editor_write_section);
   ok = rules_write_sections();
@@ -8347,14 +7853,12 @@ void __cdecl cosmic_editor_ok_clicked(void)
   return;
 }
 #undef editor_running
-#undef message
 
 /* 00586e24 auto */
-#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl cosmic_editor_help_clicked(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 parent_wnd2;
   
   if (active_editor_wnd == 0) {
     parent_wnd2 = 0;
@@ -8368,7 +7872,6 @@ void __cdecl cosmic_editor_help_clicked(void)
   cosmic_editor_focus_redraw();
   return;
 }
-#undef parent_wnd2
 
 /* 00586e88 auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
@@ -8398,17 +7901,6 @@ void __thiscall cosmic_editor_draw_bg(FrameWindow *this)
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
-#define cancel_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define help_parent (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define edit_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define ok_parent (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define list_parent (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define surface (*(DibSurface * *)(frame_ + FRAME_OFF(36)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(68)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1144)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1148)))
-#define seh_state (*(int *)(frame_ + FRAME_OFF(1152)))
 void __thiscall cosmic_editor_dialog(ViewWindow *this)
 
 {
@@ -8426,7 +7918,17 @@ void __thiscall cosmic_editor_dialog(ViewWindow *this)
   i32 reserved_1;
   i32 reserved_2;
   i32 reserved_3;
-  i8 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *cancel_parent;
+  u8 *help_parent;
+  u8 *edit_parent;
+  u8 *ok_parent;
+  u8 *list_parent;
+  DibSurface *surface;
+  i8 rect[16];
+  GamePalette palette;
+  i32 seh_prev;
+  i8 *seh_handler;
+  int seh_state;
   
   seh_state = 0xffffffff;
   palette_init(&palette);
@@ -8441,7 +7943,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *this)
   else {
     surface = (DibSurface *)surface_ctor(this_00);
   }
-  seh_state = (uint)(*(i32 *)((char *)&seh_state + 1)) << 8;
+  seh_state = seh_state & 0xffffff00;
   editor_bg_surface = surface;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font((iptr)((u8 *)&g.d_006a4f90));
@@ -8557,27 +8059,15 @@ void __thiscall cosmic_editor_dialog(ViewWindow *this)
 #undef editor_bg_surface
 #undef editor_next_ctrl_id
 #undef editor_running
-#undef cancel_parent
-#undef help_parent
-#undef edit_parent
-#undef ok_parent
-#undef list_parent
-#undef surface
-#undef rect
-#undef palette
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0058760d auto */
-#define editor_wnd (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(2888)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(2892)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl cosmic_editor_run(void)
 
 {
-  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  EditorWindow editor_wnd;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   editor_wnd_ctor(&editor_wnd);
@@ -8588,10 +8078,6 @@ void __cdecl cosmic_editor_run(void)
   /* inlined unwind funclet 00587666 */ { editor_wnd_dtor((EditorWindow *)((iptr)&editor_wnd)); }
   return;
 }
-#undef editor_wnd
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00598a05 auto */
 i32 __cdecl civ_spaceship_part_maxed(iptr civ,iptr improvement)

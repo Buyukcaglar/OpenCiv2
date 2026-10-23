@@ -360,15 +360,6 @@ typedef struct {
     int32_t *view;              /* where to report the area drawn: x, y, width, height */
 } Codec;
 
-typedef struct {
-    DWORD dwFlags;
-    BITMAPINFOHEADER *lpbiSrc;
-    void *lpSrc;
-    BITMAPINFOHEADER *lpbiDst;
-    void *lpDst;
-    int xDst, yDst, dxDst, dyDst, xSrc, ySrc, dxSrc, dySrc;
-} DecompressEx;
-
 /* The palette offered: the one Intel's decompressor (ir41_32.dll, from the
  * Indeo installer on the game's disc) gives an 8-bit decompression --
  * Windows' 20 static colours around 234 of its own (tools/probe/ivpalprobe.c
@@ -443,7 +434,7 @@ static int clamp8(int v) { return v < 0 ? 0 : v > 255 ? 255 : v; }
 
 /* Draw the decoded frame into the destination DIB (8, 16, 24 or 32 bits;
  * bottom-up unless the height is negative), scaling the source rectangle. */
-static void draw_frame(Codec *c, const Iv41Frame *fr, const DecompressEx *d)
+static void draw_frame(Codec *c, const Iv41Frame *fr, const ICDECOMPRESSEX *d)
 {
     static const int bayer[4][4] = {{-24, 8, -16, 16}, {20, -8, 28, 0}, {-12, 20, -20, 12}, {24, 0, 16, -4}};
     BITMAPINFOHEADER *bi = d->lpbiDst;
@@ -558,7 +549,7 @@ LRESULT WINAPI ICSendMessage(HIC h, UINT msg, DWORD_PTR a, DWORD_PTR b)
     }
     case ICM_DECOMPRESSEX_QUERY:
     case ICM_DECOMPRESS_QUERY: {
-        const DecompressEx *d = (const DecompressEx *)a;
+        const ICDECOMPRESSEX *d = (const ICDECOMPRESSEX *)a;
         if (msg == ICM_DECOMPRESSEX_QUERY && d && d->lpbiDst) {
             int bpp = d->lpbiDst->biBitCount;
             if (d->lpbiDst->biCompression != BI_RGB || (bpp != 8 && bpp != 16 && bpp != 24 && bpp != 32))
@@ -567,7 +558,7 @@ LRESULT WINAPI ICSendMessage(HIC h, UINT msg, DWORD_PTR a, DWORD_PTR b)
         return ICERR_OK;
     }
     case ICM_DECOMPRESSEX_BEGIN: {
-        const DecompressEx *d = (const DecompressEx *)a;
+        const ICDECOMPRESSEX *d = (const ICDECOMPRESSEX *)a;
         int w = d && d->lpbiSrc ? d->lpbiSrc->biWidth : c->width;
         int hh = d && d->lpbiSrc ? (d->lpbiSrc->biHeight < 0 ? -d->lpbiSrc->biHeight : d->lpbiSrc->biHeight) : c->height;
         if (!c->dec || w != c->width || hh != c->height) {
@@ -581,7 +572,7 @@ LRESULT WINAPI ICSendMessage(HIC h, UINT msg, DWORD_PTR a, DWORD_PTR b)
         return c->dec ? ICERR_OK : ICERR_ERROR;
     }
     case ICM_DECOMPRESSEX: {
-        const DecompressEx *d = (const DecompressEx *)a;
+        const ICDECOMPRESSEX *d = (const ICDECOMPRESSEX *)a;
         Iv41Frame fr;
         if (!c->dec || !d || !d->lpbiSrc || !d->lpSrc)
             return ICERR_ERROR;

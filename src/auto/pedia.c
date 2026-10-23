@@ -4,8 +4,6 @@
 
 /* 00451af0 auto */
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define body_rect (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define body_height (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
 pedia_draw_category_body(DocumentWindow *this,i32 category,i32 flags)
 
@@ -15,7 +13,8 @@ pedia_draw_category_body(DocumentWindow *this,i32 category,i32 flags)
   int col_width;
   int line_height;
   int title_height;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT body_rect;
+  int body_height;
   
   gfx_set_text_color_index(10);
   xLeft = this->content_left + panel_margin_x;
@@ -32,28 +31,22 @@ pedia_draw_category_body(DocumentWindow *this,i32 category,i32 flags)
   return;
 }
 #undef panel_margin_x
-#undef body_rect
-#undef body_height
 
 /* 00451bf0 auto */
-#define hotspot_parent2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define hotspot_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define hotspot2 (*(u32 *)(frame_ + FRAME_OFF(8)))
-#define hotspot (*(u32 *)(frame_ + FRAME_OFF(16)))
-#define rect_left2 (*(u32 *)(frame_ + FRAME_OFF(32)))
-#define rect_top2 (*(u32 *)(frame_ + FRAME_OFF(36)))
-#define rect_right2 (*(u32 *)(frame_ + FRAME_OFF(40)))
-#define rect_bottom2 (*(u32 *)(frame_ + FRAME_OFF(44)))
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(52)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(56)))
 void __thiscall pedia_update_controls(MediaWindow *this)
 
 {
   u32 view_mode;
   int scroll_height;
   Control *pCVar3;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *hotspot_parent2;
+  u8 *hotspot_parent;
+  u32 hotspot2;
+  u32 hotspot;
+  struct { u32 left; u32 top; u32 right; u32 bottom; } rect2;
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   control_hide((Control *)(((PictureWindow *)this)->list_describe_button));
@@ -98,12 +91,12 @@ void __thiscall pedia_update_controls(MediaWindow *this)
       ctrl_show_and_redraw((Control *)(((PictureWindow *)this)->advance_list_close_button));
       ctrl_show_and_redraw((Control *)&((PictureWindow *)this)->list_scrollbar);
       if (((PictureWindow *)this)->list_hotspot == 0) {
-        rect_left2 = this->content_left;
-        rect_top2 = this->content_top;
-        rect_right2 = this->content_right;
-        rect_bottom2 = this->content_bottom;
+        rect2.left = this->content_left;
+        rect2.top = this->content_top;
+        rect2.right = this->content_right;
+        rect2.bottom = this->content_bottom;
         scroll_height = GetSystemMetrics(3);
-        rect_bottom2 -= scroll_height;
+        rect2.bottom -= scroll_height;
         pCVar3 = operator_new(0x40);
         seh_state = 0;
         if (pCVar3 == (Control *)0x0) {
@@ -121,7 +114,7 @@ void __thiscall pedia_update_controls(MediaWindow *this)
           hotspot_parent = this->window_2;
         }
         hotspot_create
-                  ((ClickControl *)((PictureWindow *)this)->list_hotspot,(iptr)hotspot_parent,0xfa9,(iptr)&rect_left2);
+                  ((ClickControl *)((PictureWindow *)this)->list_hotspot,(iptr)hotspot_parent,0xfa9,(iptr)&rect2);
         hotspot_set_click_callback((HotspotClickSetView *)((PictureWindow *)this)->list_hotspot,(iptr)pedia_list_on_click);
         hotspot_set_dblclick_callback((HotspotDblClickSetView *)((PictureWindow *)this)->list_hotspot,(iptr)pedia_toggle_describe);
         ctrl_show_and_redraw((Control *)((PictureWindow *)this)->list_hotspot);
@@ -132,12 +125,12 @@ void __thiscall pedia_update_controls(MediaWindow *this)
       ctrl_show_and_redraw((Control *)&((PictureWindow *)this)->list_scrollbar);
       ctrl_show_and_redraw((Control *)((u8 *)&((PictureWindow *)this)->list_close_button));
       if (((PictureWindow *)this)->list_hotspot == 0) {
-        rect_left2 = this->content_left;
-        rect_top2 = this->content_top;
-        rect_right2 = this->content_right;
-        rect_bottom2 = this->content_bottom;
+        rect2.left = this->content_left;
+        rect2.top = this->content_top;
+        rect2.right = this->content_right;
+        rect2.bottom = this->content_bottom;
         scroll_height = GetSystemMetrics(3);
-        rect_bottom2 -= scroll_height;
+        rect2.bottom -= scroll_height;
         pCVar3 = operator_new(0x40);
         seh_state = 1;
         if (pCVar3 == (Control *)0x0) {
@@ -155,7 +148,7 @@ void __thiscall pedia_update_controls(MediaWindow *this)
           hotspot_parent2 = this->window_2;
         }
         hotspot_create
-                  ((ClickControl *)((PictureWindow *)this)->list_hotspot,(iptr)hotspot_parent2,0xfa9,(iptr)&rect_left2);
+                  ((ClickControl *)((PictureWindow *)this)->list_hotspot,(iptr)hotspot_parent2,0xfa9,(iptr)&rect2);
         hotspot_set_click_callback((HotspotClickSetView *)((PictureWindow *)this)->list_hotspot,(iptr)pedia_list_on_click);
         hotspot_set_dblclick_callback((HotspotDblClickSetView *)((PictureWindow *)this)->list_hotspot,(iptr)pedia_toggle_describe);
         ctrl_show_and_redraw((Control *)((PictureWindow *)this)->list_hotspot);
@@ -186,17 +179,6 @@ void __thiscall pedia_update_controls(MediaWindow *this)
   ui_pump_messages();
   return;
 }
-#undef hotspot_parent2
-#undef hotspot_parent
-#undef hotspot2
-#undef hotspot
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 00452188 auto */
 void __thiscall
@@ -205,18 +187,13 @@ pedia_dispatch_category_draw
           i32 bottom,i32 category)
 
 {
-  u32 pargs_[5] = {(u32)(uptr)left, (u32)(uptr)top, (u32)(uptr)right, (u32)(uptr)bottom, (u32)(uptr)category};  /* the arguments, contiguous as on the original stack */
-#define left (*(i32 *)&pargs_[0])
-#define top (*(i32 *)&pargs_[1])
-#define right (*(i32 *)&pargs_[2])
-#define bottom (*(i32 *)&pargs_[3])
-#define category (*(i32 *)&pargs_[4])
+  i32 rect[4] = {left, top, right, bottom};  /* the rectangle passed as four arguments */
   switch(category) {
   case 0:
     break;
   case 1:
     if (this->border_width == 0) {
-      pedia_init_advance_list((PediaAdvanceListView *)this,(iptr)&left);
+      pedia_init_advance_list((PediaAdvanceListView *)this,(iptr)rect);
     }
     else {
       pedia_draw_advance_page(this);
@@ -224,7 +201,7 @@ pedia_dispatch_category_draw
     break;
   case 2:
     if (this->border_width == 0) {
-      pedia_init_improvement_list(this,(iptr)&left);
+      pedia_init_improvement_list(this,(iptr)rect);
     }
     else {
       pedia_draw_improvement_page(this);
@@ -232,7 +209,7 @@ pedia_dispatch_category_draw
     break;
   case 3:
     if (this->border_width == 0) {
-      pedia_init_wonder_list((MediaWindow *)this,(iptr)&left);
+      pedia_init_wonder_list((MediaWindow *)this,(iptr)rect);
     }
     else {
       pedia_draw_improvement(this);
@@ -240,7 +217,7 @@ pedia_dispatch_category_draw
     break;
   case 4:
     if (this->border_width == 0) {
-      pedia_show_unit_list((MediaWindow *)this,(iptr)&left);
+      pedia_show_unit_list((MediaWindow *)this,(iptr)rect);
     }
     else {
       pedia_draw_unit_page(this);
@@ -248,17 +225,17 @@ pedia_dispatch_category_draw
     break;
   case 5:
     if (this->border_width == 0) {
-      pedia_init_terrain_list((MediaWindow *)this,(iptr)&left);
+      pedia_init_terrain_list((MediaWindow *)this,(iptr)rect);
     }
     break;
   case 6:
     if (this->border_width == 0) {
-      pedia_init_government_list((MediaWindow *)this,(iptr)&left);
+      pedia_init_government_list((MediaWindow *)this,(iptr)rect);
     }
     break;
   case 7:
     if (this->border_width == 0) {
-      pedia_init_concept_list((MediaWindow *)this,(iptr)&left);
+      pedia_init_concept_list((MediaWindow *)this,(iptr)rect);
     }
     break;
   case 8:
@@ -266,22 +243,16 @@ pedia_dispatch_category_draw
   }
   return;
 }
-#undef left
-#undef top
-#undef right
-#undef bottom
-#undef category
 
 /* 00452315: written by hand in src/game/retvals.c */
 
 /* 00452768 auto */
-#define topic_id (*(int *)(frame_ + FRAME_OFF(4)))
-#define path (*(i8 (*)[260])(frame_ + FRAME_OFF(8)))
 void __thiscall pedia_update_describe_button(ListPaneWindow *this,int list_index)
 
 {
   int result;
-  i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
+  int topic_id;
+  i8 path[260];
   
   if ((((game.game_flags & 0x80) != 0) && (this->caption_height != 7)) &&
      (result = _strcmp(&scenario_dir_path,&game_home_dir), result != 0)) {
@@ -334,16 +305,13 @@ void __thiscall pedia_update_describe_button(ListPaneWindow *this,int list_index
   }
   return;
 }
-#undef topic_id
-#undef path
 
 /* 004529df auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define wnd_class (*(WNDCLASSA *)(frame_ + FRAME_OFF(4)))
 void __cdecl hyperlink_register_class(void)
 
 {
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  WNDCLASSA wnd_class;
   
   if (hyperlink_class_registered == 0) {
     hyperlink_class_registered = 1;
@@ -362,16 +330,14 @@ void __cdecl hyperlink_register_class(void)
   return;
 }
 #undef app_hinstance
-#undef wnd_class
 
 /* 00452a67 auto */
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall hyperlink_dtor(HyperlinkDtorView *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (this->hwnd != 0) {
@@ -381,9 +347,6 @@ void __thiscall hyperlink_dtor(HyperlinkDtorView *this)
   /* inlined unwind funclet 00452ac1 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 00452ae2 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
@@ -441,31 +404,26 @@ hyperlink_create(ClickControl *this,iptr parent,i32 control_id,iptr rect)
 /* 00452c14 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define link (*(u32 * *)(frame_ + FRAME_OFF(12)))
-#define list_index (*(u32 *)(frame_ + FRAME_OFF(20)))
-#define link_index (*(int *)(frame_ + FRAME_OFF(28)))
-#define last_link (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(44)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(48)))
 void __thiscall
 pedia_add_link
           (DocumentWindow *this,iptr item_id,int x,int y,i32 link_kind,
           i32 rect_left,i32 rect_top,i32 rect_right,i32 rect_bottom)
 
 {
+  i32 rect[4] = {rect_left, rect_top, rect_right, rect_bottom};  /* the rectangle passed as four arguments */
   int text_width;
   int max_width;
   uptr len;
   PediaLinkCtorView *pCVar3;
   int underline_y;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  u32 pargs_[4] = {(u32)(uptr)rect_left, (u32)(uptr)rect_top, (u32)(uptr)rect_right, (u32)(uptr)rect_bottom};  /* the arguments, contiguous as on the original stack */
-#define rect_left (*(i32 *)&pargs_[0])
-#define rect_top (*(i32 *)&pargs_[1])
-#define rect_right (*(i32 *)&pargs_[2])
-#define rect_bottom (*(i32 *)&pargs_[3])
+  u8 *parent_wnd2;
+  u32 *link;
+  u32 list_index;
+  int link_index;
+  iptr last_link;
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   switch(link_kind) {
@@ -513,7 +471,7 @@ pedia_add_link
   }
   while( true ) {
     text_width = font_text_width((GameFont *)&font_size21,(iptr)((u8 *)&g.d_00679640));
-    max_width = rect_width((iptr)&rect_left);
+    max_width = rect_width((iptr)rect);
     if (text_width <= max_width) break;
     len = _strlen(&text_buffer);
     (&text_buffer_minus1)[len] = 0;
@@ -570,7 +528,7 @@ pedia_add_link
     parent_wnd2 = this->window_2;
   }
   hyperlink_create
-            ((ClickControl *)(link + 1),(iptr)parent_wnd2,link_index + 0xfb4,(iptr)&rect_left);
+            ((ClickControl *)(link + 1),(iptr)parent_wnd2,link_index + 0xfb4,(iptr)rect);
   switch(link_kind) {
   case 0:
     hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)(link + 1),(iptr)pedia_link_on_click_advance);
@@ -598,29 +556,16 @@ switchD_00452e28_default:
 }
 #undef human_civ
 #undef text_buffer
-#undef parent_wnd2
-#undef link
-#undef list_index
-#undef link_index
-#undef last_link
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
-#undef rect_left
-#undef rect_top
-#undef rect_right
-#undef rect_bottom
 
 /* 004531b8 auto */
 #define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
 #define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
-#define link (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define link_index (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_advance(int control_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *link;
+  int link_index;
   
   link_index = control_id - 0xfb4;
   for (link = pedia_link_list; (link_index != 0 && (link != (i32 *)0x0));
@@ -638,19 +583,16 @@ void __cdecl pedia_link_on_click_advance(int control_id)
 #undef pedia_category
 #undef pedia_page_mode
 #undef pedia_selected_item
-#undef link
-#undef link_index
 
 /* 0045323a auto */
 #define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
 #define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
-#define link (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define link_index (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_improvement(int control_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *link;
+  int link_index;
   
   link_index = control_id - 0xfb4;
   for (link = pedia_link_list; (link_index != 0 && (link != (i32 *)0x0));
@@ -668,19 +610,16 @@ void __cdecl pedia_link_on_click_improvement(int control_id)
 #undef pedia_category
 #undef pedia_page_mode
 #undef pedia_selected_item
-#undef link
-#undef link_index
 
 /* 004532bc auto */
 #define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
 #define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
-#define link (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define link_index (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_wonder(int control_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *link;
+  int link_index;
   
   link_index = control_id - 0xfb4;
   for (link = pedia_link_list; (link_index != 0 && (link != (i32 *)0x0));
@@ -698,19 +637,16 @@ void __cdecl pedia_link_on_click_wonder(int control_id)
 #undef pedia_category
 #undef pedia_page_mode
 #undef pedia_selected_item
-#undef link
-#undef link_index
 
 /* 0045333e auto */
 #define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
 #define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
-#define link (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define link_index (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_unit(int control_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *link;
+  int link_index;
   
   link_index = control_id - 0xfb4;
   for (link = pedia_link_list; (link_index != 0 && (link != (i32 *)0x0));
@@ -728,19 +664,16 @@ void __cdecl pedia_link_on_click_unit(int control_id)
 #undef pedia_category
 #undef pedia_page_mode
 #undef pedia_selected_item
-#undef link
-#undef link_index
 
 /* 004533c0 auto */
 #define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
 #define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
-#define link (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define link_index (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_terrain(int control_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *link;
+  int link_index;
   
   link_index = control_id - 0xfb4;
   for (link = pedia_link_list; (link_index != 0 && (link != (i32 *)0x0));
@@ -758,42 +691,32 @@ void __cdecl pedia_link_on_click_terrain(int control_id)
 #undef pedia_category
 #undef pedia_page_mode
 #undef pedia_selected_item
-#undef link
-#undef link_index
 
 /* 00453b10 auto */
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 PediaLinkCtorView * __thiscall pedia_link_ctor(PediaLinkCtorView *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   hyperlink_ctor((Control *)(this->link_control));
   return this;
 }
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 00453cc0 auto */
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall hyperlink_ctor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor(this);
   return this;
 }
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 00453d40 auto */
 void __thiscall hyperlink_set_click_callback(HyperlinkSetClickCallbackView *this,iptr callback)
@@ -817,11 +740,10 @@ void __thiscall hyperlink_set_dblclick_callback(HyperlinkSetDblclickCallbackView
 }
 
 /* 00490590 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_init_terrain_list(MediaWindow *this,iptr rect)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (((int)this->resize_border < 0) || (*(int *)((u8 *)&((PictureWindow *)this)->pedia_terrain_count_2) <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -852,60 +774,12 @@ void __thiscall pedia_init_terrain_list(MediaWindow *this,iptr rect)
   pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
-#undef i
 
 /* 004906fd auto */
 #define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
 #define pedia_terrain_names (*(i32 *)((u8 *)&g.d_006a7d58))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define trade_sprite_ctx2 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define shield_sprite_ctx2 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define food_sprite_ctx2 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define trade_sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
-#define shield_sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
-#define food_sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
-#define resource_sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(96)))
-#define hill_sprite_ctx2 (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
-#define forest_sprite_ctx2 (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
-#define grass_shield_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(144)))
-#define mountain_sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(160)))
-#define hill_sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(176)))
-#define forest_sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(192)))
-#define base_sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(208)))
-#define format_buf (*(char (*)[256])(frame_ + FRAME_OFF(224)))
-#define base_trade2 (*(int *)(frame_ + FRAME_OFF(480)))
-#define base_name (*(i8 (*)[40])(frame_ + FRAME_OFF(484)))
-#define base_shields (*(int *)(frame_ + FRAME_OFF(524)))
-#define special_trade (*(int *)(frame_ + FRAME_OFF(528)))
-#define base_food (*(int *)(frame_ + FRAME_OFF(532)))
-#define special_shields (*(int *)(frame_ + FRAME_OFF(536)))
-#define special_food (*(int *)(frame_ + FRAME_OFF(540)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(544)))
-#define terrain2 (*(iptr *)(frame_ + FRAME_OFF(548)))
-#define half_width (*(int *)(frame_ + FRAME_OFF(552)))
-#define link_height (*(int *)(frame_ + FRAME_OFF(556)))
-#define terrain3 (*(iptr *)(frame_ + FRAME_OFF(560)))
-#define sprite_area_width (*(int *)(frame_ + FRAME_OFF(564)))
-#define improve_kind (*(iptr *)(frame_ + FRAME_OFF(568)))
-#define sprite_height2 (*(int *)(frame_ + FRAME_OFF(572)))
-#define stats_top (*(int *)(frame_ + FRAME_OFF(576)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(580)))
-#define x2 (*(u32 *)(frame_ + FRAME_OFF(584)))
-#define page_width (*(int *)(frame_ + FRAME_OFF(588)))
-#define value_x (*(int *)(frame_ + FRAME_OFF(592)))
-#define resource_variant (*(uint *)(frame_ + FRAME_OFF(596)))
-#define sprite_width2 (*(int *)(frame_ + FRAME_OFF(600)))
-#define margin (*(int *)(frame_ + FRAME_OFF(604)))
-#define right_col_x (*(int *)(frame_ + FRAME_OFF(608)))
-#define text_color2 (*(i32 *)(frame_ + FRAME_OFF(612)))
-#define link_width (*(int *)(frame_ + FRAME_OFF(616)))
-#define link_rect (*(tagRECT *)(frame_ + FRAME_OFF(620)))
-#define scale_den2 (*(i32 *)(frame_ + FRAME_OFF(636)))
-#define scale_num2 (*(int *)(frame_ + FRAME_OFF(640)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(644)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(648)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(664)))
 void __thiscall pedia_draw_terrain_page(DocumentWindow *this)
 
 {
@@ -916,7 +790,53 @@ void __thiscall pedia_draw_terrain_page(DocumentWindow *this)
   char *_Format;
   int icon_center_y;
   i8 *name_arg;
-  i8 frame_[FRAME_OFF(672)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 trade_sprite_ctx2[16];
+  i8 shield_sprite_ctx2[16];
+  i8 food_sprite_ctx2[16];
+  i8 trade_sprite_ctx[16];
+  i8 shield_sprite_ctx[16];
+  i8 food_sprite_ctx[16];
+  i8 resource_sprite_ctx[16];
+  i8 hill_sprite_ctx2[16];
+  i8 forest_sprite_ctx2[16];
+  i8 grass_shield_ctx[16];
+  i8 mountain_sprite_ctx[16];
+  i8 hill_sprite_ctx[16];
+  i8 forest_sprite_ctx[16];
+  i8 base_sprite_ctx[16];
+  char format_buf[256];
+  int base_trade2;
+  i8 base_name[40];
+  int base_shields;
+  int special_trade;
+  int base_food;
+  int special_shields;
+  int special_food;
+  int line_height;
+  iptr terrain2;
+  int half_width;
+  int link_height;
+  iptr terrain3;
+  int sprite_area_width;
+  iptr improve_kind;
+  int sprite_height2;
+  int stats_top;
+  int y2;
+  u32 x2;
+  int page_width;
+  int value_x;
+  uint resource_variant;
+  int sprite_width2;
+  int margin;
+  int right_col_x;
+  i32 text_color2;
+  int link_width;
+  tagRECT link_rect;
+  i32 scale_den2;
+  int scale_num2;
+  int row_height;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   surface_get_clip((DibSurface *)this,(iptr)saved_clip);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
@@ -1344,63 +1264,15 @@ LAB_00490a7d:
 #undef panel_margin_x
 #undef pedia_terrain_names
 #undef text_buffer
-#undef trade_sprite_ctx2
-#undef shield_sprite_ctx2
-#undef food_sprite_ctx2
-#undef trade_sprite_ctx
-#undef shield_sprite_ctx
-#undef food_sprite_ctx
-#undef resource_sprite_ctx
-#undef hill_sprite_ctx2
-#undef forest_sprite_ctx2
-#undef grass_shield_ctx
-#undef mountain_sprite_ctx
-#undef hill_sprite_ctx
-#undef forest_sprite_ctx
-#undef base_sprite_ctx
-#undef format_buf
-#undef base_trade2
-#undef base_name
-#undef base_shields
-#undef special_trade
-#undef base_food
-#undef special_shields
-#undef special_food
-#undef line_height
-#undef terrain2
-#undef half_width
-#undef link_height
-#undef terrain3
-#undef sprite_area_width
-#undef improve_kind
-#undef sprite_height2
-#undef stats_top
-#undef y2
-#undef x2
-#undef page_width
-#undef value_x
-#undef resource_variant
-#undef sprite_width2
-#undef margin
-#undef right_col_x
-#undef text_color2
-#undef link_width
-#undef link_rect
-#undef scale_den2
-#undef scale_num2
-#undef row_height
-#undef saved_clip
-#undef font2
 
 /* 00491c20 auto */
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_terrain_names (*(i32 *)((u8 *)&g.d_006a7d58))
-#define terrain_idx (*(uptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_terrain_modal(DocumentWindow *this,int terrain_id)
 
 {
   i32 name_text;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr terrain_idx;
   
   if (pedia_closed != 0) {
     terrain_idx = 0;
@@ -1431,14 +1303,12 @@ void __thiscall pedia_show_terrain_modal(DocumentWindow *this,int terrain_id)
 }
 #undef pedia_closed
 #undef pedia_terrain_names
-#undef terrain_idx
 
 /* 00491d61 auto */
-#define index (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl pedia_find_terrain_index(iptr terrain_id)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
   
   index = 0;
   while( true ) {
@@ -1450,14 +1320,12 @@ i32 __cdecl pedia_find_terrain_index(iptr terrain_id)
   }
   return index;
 }
-#undef index
 
 /* 004a69b0 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_init_concept_list(MediaWindow *this,iptr unused_arg)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (((int)this->resize_border < 0) || ((int)(*(uptr *)&((PictureWindow *)this)->pedia_concept_count) <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -1488,7 +1356,6 @@ void __thiscall pedia_init_concept_list(MediaWindow *this,iptr unused_arg)
   pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
-#undef i
 
 /* 004f3f80 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -1532,15 +1399,14 @@ void __cdecl pedia_window_static_dtor(void)
 }
 
 /* 004f3feb auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define exc_link (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(12)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(16)))
 ScaledWindowView * __thiscall pedia_window_ctor(ScaledWindowView *this)
 
 {
   u8 *slot;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  i32 exc_link;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
@@ -1576,7 +1442,7 @@ ScaledWindowView * __thiscall pedia_window_ctor(ScaledWindowView *this)
   button_ctor((Control *)((u8 *)&((PictureWindow *)this)->advance_detail_close_button));
   (*(i8 *)((char *)&eh_state + 0)) = 0xf;
   edit_ctor((InputControl *)((u8 *)&((PictureWindow *)this)->description_edit));
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),0x10);
+  eh_state = (eh_state & 0xffffff00 | (byte)(0x10));
   scrollbar_ctor((Control *)&((PictureWindow *)this)->list_scrollbar);
   this->vtable = (u32)&PTR_FUN_0061d6d0;
   this->style_flags = 1;
@@ -1673,19 +1539,14 @@ ScaledWindowView * __thiscall pedia_window_ctor(ScaledWindowView *this)
   this->client_y = 0;
   return this;
 }
-#undef i
-#undef exc_link
-#undef seh_handler
-#undef eh_state
 
 /* 004f44a7 auto */
-#define exc_link (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall pedia_window_dtor(DibSurface *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 exc_link;
+  i8 *seh_handler;
+  int eh_state;
   
   this->vtable = (u32)&PTR_FUN_0061d6d0;
   eh_state = 0x11;
@@ -1736,15 +1597,12 @@ void __thiscall pedia_window_dtor(DibSurface *this)
   /* inlined unwind funclet 004f4745 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x178c)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 004f4754 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1750)); }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004f4763 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1714)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004f4772 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return;
 }
-#undef exc_link
-#undef seh_handler
-#undef eh_state
 
 /* 004f4793 auto */
 void __thiscall pedia_clear_links(WindowObjectView *this)
@@ -1830,30 +1688,6 @@ void __thiscall pedia_free_lists(WindowObjectView *this)
 
 /* 004f4b9f auto */
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define scroll_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define edit_parent (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define parent_16 (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define parent_15 (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define parent_14 (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define parent_13 (*(u8 * *)(frame_ + FRAME_OFF(24)))
-#define parent_12 (*(u8 * *)(frame_ + FRAME_OFF(28)))
-#define parent_11 (*(u8 * *)(frame_ + FRAME_OFF(32)))
-#define parent_10 (*(u8 * *)(frame_ + FRAME_OFF(36)))
-#define parent_9 (*(u8 * *)(frame_ + FRAME_OFF(40)))
-#define parent_8 (*(u8 * *)(frame_ + FRAME_OFF(44)))
-#define parent_7 (*(u8 * *)(frame_ + FRAME_OFF(48)))
-#define parent_6 (*(u8 * *)(frame_ + FRAME_OFF(52)))
-#define parent_5 (*(u8 * *)(frame_ + FRAME_OFF(56)))
-#define parent_4 (*(u8 * *)(frame_ + FRAME_OFF(60)))
-#define parent_3 (*(u8 * *)(frame_ + FRAME_OFF(64)))
-#define parent_2 (*(u8 * *)(frame_ + FRAME_OFF(68)))
-#define close_parent (*(u8 * *)(frame_ + FRAME_OFF(72)))
-#define close_hotspot (*(u32 *)(frame_ + FRAME_OFF(76)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(108)))
-#define btn_height (*(int *)(frame_ + FRAME_OFF(124)))
-#define exc_link (*(i32 *)(frame_ + FRAME_OFF(128)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(132)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(136)))
 void __thiscall pedia_window_create(DocumentWindow *this)
 
 {
@@ -1864,7 +1698,30 @@ void __thiscall pedia_window_create(DocumentWindow *this)
   int avail_width;
   iptr label;
   int yTop;
-  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *scroll_parent;
+  u8 *edit_parent;
+  u8 *parent_16;
+  u8 *parent_15;
+  u8 *parent_14;
+  u8 *parent_13;
+  u8 *parent_12;
+  u8 *parent_11;
+  u8 *parent_10;
+  u8 *parent_9;
+  u8 *parent_8;
+  u8 *parent_7;
+  u8 *parent_6;
+  u8 *parent_5;
+  u8 *parent_4;
+  u8 *parent_3;
+  u8 *parent_2;
+  u8 *close_parent;
+  u32 close_hotspot;
+  tagRECT rect;
+  int btn_height;
+  i32 exc_link;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   pedia_free_lists((WindowObjectView *)this);
@@ -2146,30 +2003,6 @@ void __thiscall pedia_window_create(DocumentWindow *this)
   return;
 }
 #undef panel_margin_x
-#undef scroll_parent
-#undef edit_parent
-#undef parent_16
-#undef parent_15
-#undef parent_14
-#undef parent_13
-#undef parent_12
-#undef parent_11
-#undef parent_10
-#undef parent_9
-#undef parent_8
-#undef parent_7
-#undef parent_6
-#undef parent_5
-#undef parent_4
-#undef parent_3
-#undef parent_2
-#undef close_parent
-#undef close_hotspot
-#undef rect
-#undef btn_height
-#undef exc_link
-#undef seh_handler
-#undef eh_state
 
 /* 004f5b24 auto */
 #define pedia_history_count (*(i32 *)((u8 *)&g.d_006a6790))
@@ -2432,18 +2265,17 @@ void __cdecl pedia_toggle_describe(i32 unused_arg)
 #define dlg_bevel_dark_color (*(byte *)((u8 *)&g.d_00635a0c))
 #define dlg_bevel_light_color (*(byte *)((u8 *)&g.d_00635a08))
 #define panel_margin_x (*(i32 *)((u8 *)&g.d_0062d858))
-#define sprite_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define font2 (*(i8 * *)(frame_ + FRAME_OFF(28)))
-#define i (*(int *)(frame_ + FRAME_OFF(32)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(36)))
 void __thiscall pedia_draw_frame(MediaWindow *this)
 
 {
   int tmp_a;
   int tmp_b;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 sprite_ctx[16];
+  int y2;
+  int x2;
+  i8 *font2;
+  int i;
+  tagRECT rect;
   
   surface_reset_clip((DibSurface *)this);
   crt_memcpy(&rect,this->pedia_frame_rect,0x10);
@@ -2496,12 +2328,6 @@ void __thiscall pedia_draw_frame(MediaWindow *this)
 #undef dlg_bevel_dark_color
 #undef dlg_bevel_light_color
 #undef panel_margin_x
-#undef sprite_ctx
-#undef y2
-#undef x2
-#undef font2
-#undef i
-#undef rect
 
 /* 004f6564 auto */
 #define dlg_bg_color (*(byte *)((u8 *)&g.d_00635a04))
@@ -2577,49 +2403,6 @@ void __thiscall pedia_redraw(PediaRedrawView *this)
 #define pedia_unit_names (*(i32 *)((u8 *)&g.d_006a7d50))
 #define pedia_wonder_names (*(i32 *)((u8 *)&g.d_006a7d4c))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define fill_color_e (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define fill_color_d (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define shield_x (*(int *)(frame_ + FRAME_OFF(12)))
-#define fill_color_c (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define icon_x2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define fill_color_b (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define fill_color_a (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define terrain_fill_color (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define shield_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
-#define icon_ctx2 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
-#define icon_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
-#define resource_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
-#define hill_ctx2 (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
-#define forest_ctx2 (*(i8 (*)[16])(frame_ + FRAME_OFF(116)))
-#define grass_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(132)))
-#define mountain_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(148)))
-#define hill_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(164)))
-#define forest_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
-#define base_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(196)))
-#define text_y_off (*(int *)(frame_ + FRAME_OFF(212)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(216)))
-#define col_width (*(int *)(frame_ + FRAME_OFF(220)))
-#define base_terrain (*(int *)(frame_ + FRAME_OFF(224)))
-#define icon_x (*(int *)(frame_ + FRAME_OFF(228)))
-#define scale_num2 (*(i32 *)(frame_ + FRAME_OFF(232)))
-#define col (*(int *)(frame_ + FRAME_OFF(236)))
-#define col_base (*(int *)(frame_ + FRAME_OFF(240)))
-#define row (*(int *)(frame_ + FRAME_OFF(244)))
-#define row_y (*(int *)(frame_ + FRAME_OFF(248)))
-#define scale_den2 (*(i32 *)(frame_ + FRAME_OFF(252)))
-#define col_x (*(int *)(frame_ + FRAME_OFF(256)))
-#define list_width2 (*(int *)(frame_ + FRAME_OFF(260)))
-#define shadow_color2 (*(int *)(frame_ + FRAME_OFF(264)))
-#define resource_variant (*(uint *)(frame_ + FRAME_OFF(268)))
-#define text_x_off (*(int *)(frame_ + FRAME_OFF(272)))
-#define icon_mode (*(int *)(frame_ + FRAME_OFF(276)))
-#define icon_sprite (*(Sprite * *)(frame_ + FRAME_OFF(280)))
-#define text_color2 (*(int *)(frame_ + FRAME_OFF(284)))
-#define is_selected (*(uint *)(frame_ + FRAME_OFF(288)))
-#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(292)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(308)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(312)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(328)))
 void __thiscall pedia_draw_item_list(ListPaneWindow *this)
 
 {
@@ -2627,7 +2410,49 @@ void __thiscall pedia_draw_item_list(ListPaneWindow *this)
   int dim_b;
   int dim_c;
   i32 name_text;
-  i8 frame_[FRAME_OFF(336)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 fill_color_e;
+  i32 fill_color_d;
+  int shield_x;
+  i32 fill_color_c;
+  int icon_x2;
+  i32 fill_color_b;
+  i32 fill_color_a;
+  i32 terrain_fill_color;
+  i8 shield_ctx[16];
+  i8 icon_ctx2[16];
+  i8 icon_ctx[16];
+  i8 resource_ctx[16];
+  i8 hill_ctx2[16];
+  i8 forest_ctx2[16];
+  i8 grass_ctx[16];
+  i8 mountain_ctx[16];
+  i8 hill_ctx[16];
+  i8 forest_ctx[16];
+  i8 base_ctx[16];
+  int text_y_off;
+  iptr advance;
+  int col_width;
+  int base_terrain;
+  int icon_x;
+  i32 scale_num2;
+  int col;
+  int col_base;
+  int row;
+  int row_y;
+  i32 scale_den2;
+  int col_x;
+  int list_width2;
+  int shadow_color2;
+  uint resource_variant;
+  int text_x_off;
+  int icon_mode;
+  Sprite *icon_sprite;
+  int text_color2;
+  uint is_selected;
+  tagRECT row_rect;
+  int row_height;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   icon_mode = 0;
   pedia_history_push((ScaledWindowView *)&pedia_window);
@@ -2932,49 +2757,6 @@ LAB_004f6d04:
 #undef pedia_unit_names
 #undef pedia_wonder_names
 #undef text_buffer
-#undef fill_color_e
-#undef fill_color_d
-#undef shield_x
-#undef fill_color_c
-#undef icon_x2
-#undef fill_color_b
-#undef fill_color_a
-#undef terrain_fill_color
-#undef shield_ctx
-#undef icon_ctx2
-#undef icon_ctx
-#undef resource_ctx
-#undef hill_ctx2
-#undef forest_ctx2
-#undef grass_ctx
-#undef mountain_ctx
-#undef hill_ctx
-#undef forest_ctx
-#undef base_ctx
-#undef text_y_off
-#undef advance
-#undef col_width
-#undef base_terrain
-#undef icon_x
-#undef scale_num2
-#undef col
-#undef col_base
-#undef row
-#undef row_y
-#undef scale_den2
-#undef col_x
-#undef list_width2
-#undef shadow_color2
-#undef resource_variant
-#undef text_x_off
-#undef icon_mode
-#undef icon_sprite
-#undef text_color2
-#undef is_selected
-#undef row_rect
-#undef row_height
-#undef saved_clip
-#undef font2
 
 /* 004f7313 auto */
 void __cdecl pedia_list_on_scroll(int scroll_pos)
@@ -2988,13 +2770,12 @@ void __cdecl pedia_list_on_scroll(int scroll_pos)
 }
 
 /* 004f734a auto */
-#define result (*(int *)(frame_ + FRAME_OFF(4)))
-#define column (*(uint *)(frame_ + FRAME_OFF(12)))
 int __cdecl pedia_list_hit_test(int x,int y)
 
 {
   int dim;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int result;
+  uint column;
   
   if (y < pedia_list_rect_top) {
     result = -1;
@@ -3021,8 +2802,6 @@ int __cdecl pedia_list_hit_test(int x,int y)
   }
   return result;
 }
-#undef result
-#undef column
 
 /* 004f7454 auto */
 void __thiscall pedia_scroll_to_item(WindowObjectView *this,int item)
@@ -3050,15 +2829,14 @@ void __thiscall pedia_scroll_to_item(WindowObjectView *this,int item)
 #define pedia_terrain_names (*(i32 * *)((u8 *)&g.d_006a7d58))
 #define pedia_unit_names (*(i32 * *)((u8 *)&g.d_006a7d50))
 #define pedia_wonder_names (*(i32 * *)((u8 *)&g.d_006a7d4c))
-#define remaining (*(int *)(frame_ + FRAME_OFF(4)))
-#define list_head (*(i32 * *)(frame_ + FRAME_OFF(8)))
-#define index (*(int *)(frame_ + FRAME_OFF(12)))
-#define node2 (*(i32 * *)(frame_ + FRAME_OFF(16)))
 int __cdecl pedia_find_item_by_key(int key)
 
 {
   int first_char;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int remaining;
+  i32 *list_head;
+  int index;
+  i32 *node2;
   
   switch(pedia_category) {
   case 1:
@@ -3134,10 +2912,6 @@ int __cdecl pedia_find_item_by_key(int key)
 #undef pedia_terrain_names
 #undef pedia_unit_names
 #undef pedia_wonder_names
-#undef remaining
-#undef list_head
-#undef index
-#undef node2
 
 /* 004f76ce auto */
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
@@ -3238,13 +3012,12 @@ void __cdecl pedia_list_on_key(i32 key)
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(int *)((u8 *)&g.d_006a85a0))
 #define pedia_topic (*(int *)((u8 *)&g.d_006a6788))
-#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_list_on_click(void)
 
 {
   int hit_item;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 cursor_y;
+  i32 cursor_x;
   
   if ((((pedia_page_mode == 0) &&
        (wnd_get_cursor_pos
@@ -3259,8 +3032,6 @@ void __cdecl pedia_list_on_click(void)
 #undef pedia_page_mode
 #undef pedia_selected_item
 #undef pedia_topic
-#undef cursor_y
-#undef cursor_x
 
 /* 004f7ac7 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
@@ -3330,13 +3101,6 @@ void __thiscall pedia_open_category(MediaWindow *this,u32 category,int show)
 /* 004f7c99 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define text_buffer_plus2 (*(i8 *)((u8 *)&g.d_00679642))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
-#define sort_key (*(int *)(frame_ + FRAME_OFF(12)))
-#define line_prefix (*(char (*)[2])(frame_ + FRAME_OFF(16)))
-#define prefix_nul (*(i8 *)(frame_ + FRAME_OFF(18)))
-#define node2 (*(i32 * *)(frame_ + FRAME_OFF(20)))
-#define prev_node2 (*(i32 * *)(frame_ + FRAME_OFF(24)))
 void __thiscall pedia_load_indexes(DocumentWindow *this)
 
 {
@@ -3348,7 +3112,12 @@ void __thiscall pedia_load_indexes(DocumentWindow *this)
   void *name_buf;
   i32 name_text;
   iptr terrain_label;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr improvement;
+  int i;
+  int sort_key;
+  char line_prefix[3];
+  i32 *node2;
+  i32 *prev_node2;
   
   for (i = 0; i < 100; i++) {
     slot = this->advance_sort_keys + i * 4;
@@ -3650,7 +3419,7 @@ void __thiscall pedia_load_indexes(DocumentWindow *this)
     ((PictureWindow *)this)->pedia_concept_count_byte1[0] = '\0';
     ((PictureWindow *)this)->pedia_concept_count_byte2[0] = '\0';
     ((PictureWindow *)this)->pedia_concept_count_byte3[0] = '\0';
-    prefix_nul = 0;
+    line_prefix[2] = 0;
     improvement = 0;
     while (reading) {
       text_read_line(1);
@@ -3690,25 +3459,17 @@ void __thiscall pedia_load_indexes(DocumentWindow *this)
 }
 #undef text_buffer
 #undef text_buffer_plus2
-#undef improvement
-#undef i
-#undef sort_key
-#undef line_prefix
-#undef prefix_nul
-#undef node2
-#undef prev_node2
 
 /* 004f896a auto */
-#define j (*(int *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define other_node (*(i32 * *)(frame_ + FRAME_OFF(12)))
-#define node2 (*(i32 * *)(frame_ + FRAME_OFF(16)))
 void __thiscall pedia_sort_list(void *this,iptr list_head,iptr keys,iptr ids,iptr count)
 
 {
   i32 swap_tmp;
   int cmp;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int j;
+  int i;
+  i32 *other_node;
+  i32 *node2;
   
   other_node = (i32 *)list_head;
   node2 = (i32 *)list_head;
@@ -3740,18 +3501,13 @@ void __thiscall pedia_sort_list(void *this,iptr list_head,iptr keys,iptr ids,ipt
   }
   return;
 }
-#undef j
-#undef i
-#undef other_node
-#undef node2
 
 /* 004f8a9b auto */
-#define node2 (*(i32 * *)(frame_ + FRAME_OFF(0)))
 i8 * __cdecl pedia_lookup_text(i32 *list_head,iptr item_id)
 
 {
   i8 *text;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *node2;
   
   for (node2 = list_head; (node2 != (i32 *)0x0 && (node2[1] != item_id));
       node2 = (i32 *)node2[2]) {
@@ -3762,7 +3518,6 @@ i8 * __cdecl pedia_lookup_text(i32 *list_head,iptr item_id)
   }
   return text;
 }
-#undef node2
 
 /* 004f8af9 auto */
 #define pedia_back_topic (*(int *)((u8 *)&g.d_0062f010))
@@ -3848,9 +3603,6 @@ void * __thiscall pedia_link_scalar_dtor(void *this,uint flags)
 }
 
 /* 004fa140 auto */
-#define exc_link (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: __thiscall CControlBarInfo::~CControlBarInfo(void)
    
@@ -3859,22 +3611,20 @@ void * __thiscall pedia_link_scalar_dtor(void *this,uint flags)
 void __thiscall pedia_link_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 exc_link;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004fa17e */ { hyperlink_dtor((HyperlinkDtorView *)(*(int *)((iptr)&this) + 4)); }
   return;
 }
-#undef exc_link
-#undef seh_handler
-#undef eh_state
 
 /* 00518f00 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_init_government_list(MediaWindow *this,iptr unused_arg)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (((int)this->resize_border < 0) || ((int)(*(u32 *)&((PictureWindow *)this)->pedia_government_count) <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -3905,7 +3655,6 @@ void __thiscall pedia_init_government_list(MediaWindow *this,iptr unused_arg)
   pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
-#undef i
 
 /* 005190d0 auto */
 void __cdecl notice_dlg_global_init(void)
@@ -3941,11 +3690,10 @@ void __cdecl notice_dlg_static_dtor(void)
 }
 
 /* 005261a0 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_init_wonder_list(MediaWindow *this,iptr unused_arg)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (((int)this->resize_border < 0) || ((int)(*(u32 *)&((PictureWindow *)this)->wonder_count) <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -3976,30 +3724,11 @@ void __thiscall pedia_init_wonder_list(MediaWindow *this,iptr unused_arg)
   pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
-#undef i
 
 /* 0052630d auto */
 #define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define shield_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define icon_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define text_rect (*(tagRECT *)(frame_ + FRAME_OFF(36)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(52)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(56)))
-#define scale_num2 (*(i32 *)(frame_ + FRAME_OFF(60)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(64)))
-#define scale_den2 (*(i32 *)(frame_ + FRAME_OFF(68)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(72)))
-#define content_width2 (*(int *)(frame_ + FRAME_OFF(76)))
-#define value_x (*(int *)(frame_ + FRAME_OFF(80)))
-#define unused_flag (*(i32 *)(frame_ + FRAME_OFF(84)))
-#define link_rect (*(tagRECT *)(frame_ + FRAME_OFF(88)))
-#define text_width (*(int *)(frame_ + FRAME_OFF(104)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(108)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(128)))
 /* WARNING: Removing unreachable block (ram,0x0052661a) */
 
 void __thiscall pedia_draw_improvement(DocumentWindow *this)
@@ -4010,7 +3739,24 @@ void __thiscall pedia_draw_improvement(DocumentWindow *this)
   size_t text_len;
   int center_y;
   u32 yBottom;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 shield_ctx[16];
+  i8 icon_ctx[16];
+  iptr improvement;
+  tagRECT text_rect;
+  int line_height;
+  int icon_width;
+  i32 scale_num2;
+  int y2;
+  i32 scale_den2;
+  int x2;
+  int content_width2;
+  int value_x;
+  i32 unused_flag;
+  tagRECT link_rect;
+  int text_width;
+  int row_height;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   unused_flag = 0;
   surface_get_clip((DibSurface *)this,(iptr)saved_clip);
@@ -4113,35 +3859,16 @@ void __thiscall pedia_draw_improvement(DocumentWindow *this)
 #undef list_text_color
 #undef panel_margin_x
 #undef text_buffer
-#undef shield_ctx
-#undef icon_ctx
-#undef improvement
-#undef text_rect
-#undef line_height
-#undef icon_width
-#undef scale_num2
-#undef y2
-#undef scale_den2
-#undef x2
-#undef content_width2
-#undef value_x
-#undef unused_flag
-#undef link_rect
-#undef text_width
-#undef row_height
-#undef saved_clip
-#undef font2
 
 /* 00526913 auto */
 #define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_wonder_names (*(i32 *)((u8 *)&g.d_006a7d4c))
-#define wonder_idx (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_wonder_modal(DocumentWindow *this,int wonder_id)
 
 {
   i32 name_text;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 wonder_idx;
   
   if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     for (wonder_idx = 0;
@@ -4172,14 +3899,12 @@ void __thiscall pedia_show_wonder_modal(DocumentWindow *this,int wonder_id)
 #undef map_redraw_busy
 #undef pedia_closed
 #undef pedia_wonder_names
-#undef wonder_idx
 
 /* 00564d00 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_init_advance_list(PediaAdvanceListView *this,iptr unused_arg)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (((int)this->resize_border < 0) || ((int)this->pedia_advance_count <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -4210,39 +3935,10 @@ void __thiscall pedia_init_advance_list(PediaAdvanceListView *this,iptr unused_a
   pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
-#undef i
 
 /* 00564e6d auto */
 #define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define unit_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define impr_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define icon_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define is_child (*(int *)(frame_ + FRAME_OFF(56)))
-#define advance3 (*(iptr *)(frame_ + FRAME_OFF(60)))
-#define prev_unit_height (*(int *)(frame_ + FRAME_OFF(64)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(68)))
-#define pedia_file (*(char * *)(frame_ + FRAME_OFF(72)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(76)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(80)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(84)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(88)))
-#define x2 (*(u32 *)(frame_ + FRAME_OFF(92)))
-#define line (*(char * *)(frame_ + FRAME_OFF(96)))
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(100)))
-#define unit_text_y (*(int *)(frame_ + FRAME_OFF(104)))
-#define has_pedia (*(int *)(frame_ + FRAME_OFF(108)))
-#define link_rect (*(tagRECT *)(frame_ + FRAME_OFF(112)))
-#define text_width (*(int *)(frame_ + FRAME_OFF(128)))
-#define related_count (*(int *)(frame_ + FRAME_OFF(132)))
-#define line_buf (*(char *)(frame_ + FRAME_OFF(136)))
-#define line_rest (*(char (*)[259])(frame_ + FRAME_OFF(137)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(396)))
-#define list_x2 (*(int *)(frame_ + FRAME_OFF(400)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(404)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(420)))
-#define in_right_col (*(uint *)(frame_ + FRAME_OFF(424)))
 void __thiscall pedia_draw_advance_page(DocumentWindow *this)
 
 {
@@ -4251,7 +3947,33 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *this)
   size_t rest_len;
   int center_y;
   bool was_right;
-  i8 frame_[FRAME_OFF(432)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 unit_ctx[16];
+  i8 impr_ctx[16];
+  i8 icon_ctx[16];
+  iptr wonder;
+  int is_child;
+  iptr advance3;
+  int prev_unit_height;
+  iptr advance;
+  char *pedia_file;
+  iptr improvement;
+  int line_height;
+  iptr unit_type;
+  int y2;
+  u32 x2;
+  char *line;
+  iptr advance2;
+  int unit_text_y;
+  int has_pedia;
+  tagRECT link_rect;
+  int text_width;
+  int related_count;
+  char line_buf[260];
+  int row_height;
+  int list_x2;
+  i8 saved_clip[16];
+  GameFont *font2;
+  uint in_right_col;
   
   surface_get_clip((DibSurface *)this,(iptr)saved_clip);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
@@ -4505,9 +4227,9 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *this)
   measure = _strcmp(&scenario_dir_path,&game_home_dir);
   if (measure != 0) {
     __chdir(&scenario_dir_path);
-    crt_strcpy(&line_buf,s_describe__00633d7c);
-    crt_strcat(&line_buf,&lang_file_ext);
-    measure = file_exists((iptr)&line_buf);
+    crt_strcpy(line_buf,s_describe__00633d7c);
+    crt_strcat(line_buf,&lang_file_ext);
+    measure = file_exists((iptr)line_buf);
     if (measure == 0) {
       ctrl_disable((Control *)(((PictureWindow *)this)->advance_detail_describe_button));
       __chdir(&game_home_dir);
@@ -4518,15 +4240,15 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *this)
   has_pedia = _strcmp(&scenario_dir_path,&game_home_dir);
   if (has_pedia != 0) {
     __chdir(&scenario_dir_path);
-    crt_strcpy(&line_buf,s_pedia__00633d88);
-    crt_strcat(&line_buf,&lang_file_ext);
-    measure = file_exists((iptr)&line_buf);
+    crt_strcpy(line_buf,s_pedia__00633d88);
+    crt_strcat(line_buf,&lang_file_ext);
+    measure = file_exists((iptr)line_buf);
     if (measure == 0) {
       has_pedia = 0;
     }
     __chdir(&game_home_dir);
   }
-  str_clear((iptr)&line_buf);
+  str_clear((iptr)line_buf);
   measure = text_open_section((iptr)pedia_file,(iptr)((u8 *)&g.d_00633d90));
   if (measure == 0) {
     line = (char *)text_read_line(1);
@@ -4617,16 +4339,16 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *this)
     }
     line = (char *)text_read_line(1);
     str_append_space((iptr)line);
-    crt_strcpy(&line_buf,line);
-    if (line_buf == '^') {
-      rest_len = _strlen(line_rest);
-      crt_memmove(&line_buf,line_rest,rest_len);
+    crt_strcpy(line_buf,line);
+    if (line_buf[0] == '^') {
+      rest_len = _strlen((line_buf + 1));
+      crt_memmove(line_buf,(line_buf + 1),rest_len);
     }
     for (wonder = 0; wonder < 0x1c; wonder++) {
       if (wonder_expires[wonder] == advance) {
         surface_draw_text
-                  ((DibSurface *)this,(iptr)font2,(iptr)&line_buf,x2,y2,5);
-        measure = font_text_width(font2,(iptr)&line_buf);
+                  ((DibSurface *)this,(iptr)font2,(iptr)line_buf,x2,y2,5);
+        measure = font_text_width(font2,(iptr)line_buf);
         x2 += measure;
         text_clear();
         text_append_string_id(improvements[wonder + 0x27].name);
@@ -4653,45 +4375,16 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *this)
 }
 #undef list_text_color
 #undef panel_margin_x
-#undef unit_ctx
-#undef impr_ctx
-#undef icon_ctx
-#undef wonder
-#undef is_child
-#undef advance3
-#undef prev_unit_height
-#undef advance
-#undef pedia_file
-#undef improvement
-#undef line_height
-#undef unit_type
-#undef y2
-#undef x2
-#undef line
-#undef advance2
-#undef unit_text_y
-#undef has_pedia
-#undef link_rect
-#undef text_width
-#undef related_count
-#undef line_buf
-#undef line_rest
-#undef row_height
-#undef list_x2
-#undef saved_clip
-#undef font2
-#undef in_right_col
 
 /* 00566584 auto */
 #define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
 #define pedia_advance_names (*(i32 *)((u8 *)&g.d_006a7d44))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
-#define advance_idx (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_topic_modal(DocumentWindow *this,iptr advance_id)
 
 {
   i32 name_text;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 advance_idx;
   
   if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     advance_idx = 0;
@@ -4724,41 +4417,8 @@ void __thiscall pedia_show_topic_modal(DocumentWindow *this,iptr advance_id)
 #undef map_redraw_busy
 #undef pedia_advance_names
 #undef pedia_closed
-#undef advance_idx
 
 /* 005666da auto */
-#define gp_line_y (*(int *)(frame_ + FRAME_OFF(4)))
-#define grand_line_y (*(int *)(frame_ + FRAME_OFF(8)))
-#define parent_line_y (*(int *)(frame_ + FRAME_OFF(12)))
-#define gp_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define grand_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define parent_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
-#define root_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(80)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(84)))
-#define tier2_anchor_y (*(int (*)[8])(frame_ + FRAME_OFF(88)))
-#define icon (*(Sprite * *)(frame_ + FRAME_OFF(120)))
-#define tier2_anchor_x (*(int (*)[8])(frame_ + FRAME_OFF(124)))
-#define tier3_step (*(int *)(frame_ + FRAME_OFF(156)))
-#define j (*(iptr *)(frame_ + FRAME_OFF(160)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(164)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(168)))
-#define tier3_ids (*(int (*)[8])(frame_ + FRAME_OFF(172)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(204)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(208)))
-#define tier1_anchors (*(int (*)[4])(frame_ + FRAME_OFF(212)))
-#define root_anchor_y (*(int *)(frame_ + FRAME_OFF(228)))
-#define root_anchor_y2 (*(int *)(frame_ + FRAME_OFF(232)))
-#define icon_left (*(int *)(frame_ + FRAME_OFF(252)))
-#define icon_top (*(int *)(frame_ + FRAME_OFF(256)))
-#define icon_right (*(int *)(frame_ + FRAME_OFF(260)))
-#define icon_bottom (*(int *)(frame_ + FRAME_OFF(264)))
-#define root_anchor_x (*(int (*)[3])(frame_ + FRAME_OFF(268)))
-#define link_rect (*(tagRECT *)(frame_ + FRAME_OFF(280)))
-#define tier2_ids (*(int (*)[4])(frame_ + FRAME_OFF(296)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(312)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(328)))
-#define parent_ids (*(int (*)[2])(frame_ + FRAME_OFF(332)))
 void __thiscall pedia_draw_advance_tree(DocumentWindow *this)
 
 {
@@ -4766,7 +4426,35 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *this)
   int *icon_rect;
   int measure2;
   int icon_w;
-  i8 frame_[FRAME_OFF(344)] __attribute__((aligned(8)));  /* original stack frame */
+  int gp_line_y;
+  int grand_line_y;
+  int parent_line_y;
+  i8 gp_ctx[16];
+  i8 grand_ctx[16];
+  i8 parent_ctx[16];
+  i8 root_ctx[16];
+  iptr advance;
+  int line_height;
+  int tier2_anchor_y[8];
+  Sprite *icon;
+  int tier2_anchor_x[8];
+  int tier3_step;
+  iptr j;
+  int y2;
+  iptr i;
+  int tier3_ids[8];
+  int x2;
+  int icon_width;
+  int tier1_anchors[4];  /* y of the two tier-1 boxes' anchors */
+  int root_anchor_y[2];
+  int tier1_anchor_x[4];
+  RECT icon_box;
+  int root_anchor_x[3];
+  tagRECT link_rect;
+  int tier2_ids[4];
+  i8 saved_clip[16];
+  GameFont *font2;
+  int parent_ids[2];
   
   surface_get_clip((DibSurface *)this,(iptr)saved_clip);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
@@ -4788,21 +4476,21 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *this)
   measure = rect_height((iptr)&this->content_left);
   y2 = (this->content_top + measure / 2) - line_height / 2;
   icon_rect = (int *)sprite_draw(icon,(iptr)root_ctx,(iptr)((u8 *)&g.d_006a6668),x2,y2);
-  icon_left = *icon_rect;
-  icon_top = icon_rect[1];
-  icon_right = icon_rect[2];
-  icon_bottom = icon_rect[3];
+  icon_box.left = *icon_rect;
+  icon_box.top = icon_rect[1];
+  icon_box.right = icon_rect[2];
+  icon_box.bottom = icon_rect[3];
   x2 += icon_width;
   SetRect(&link_rect,x2 - icon_width,y2,root_anchor_x[2] + x2 + 5,line_height + y2);
   pedia_add_link(this,advance,x2,y2,0,link_rect.left,link_rect.top,link_rect.right,
                      link_rect.bottom);
   parent_ids[0] = (int)advances[advance].preq[0];
   parent_ids[1] = (int)advances[advance].preq[1];
-  root_anchor_x[1] = icon_left;
-  root_anchor_x[0] = icon_left;
-  measure = rect_height((iptr)(tier1_anchors + 10));
-  root_anchor_y = icon_top + measure / 2;
-  root_anchor_y2 = root_anchor_y;
+  root_anchor_x[1] = icon_box.left;
+  root_anchor_x[0] = icon_box.left;
+  measure = rect_height((iptr)&icon_box);
+  root_anchor_y[0] = icon_box.top + measure / 2;
+  root_anchor_y[1] = root_anchor_y[0];
   line_height = font_line_spacing(font2);
   measure = rect_height((iptr)&this->content_left);
   y2 = (this->content_top + ((int)(measure + (measure >> 0x1f & 3U)) >> 2)) - line_height / 2;
@@ -4825,26 +4513,26 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *this)
                  ((int)(measure2 + (measure2 >> 0x1f & 7U)) >> 3) + this->content_left;
       icon_rect = (int *)sprite_draw
                                 (icon,(iptr)parent_ctx,(iptr)((u8 *)&g.d_006a6668),x2,y2);
-      icon_left = *icon_rect;
-      icon_top = icon_rect[1];
-      icon_right = icon_rect[2];
+      icon_box.left = *icon_rect;
+      icon_box.top = icon_rect[1];
+      icon_box.right = icon_rect[2];
       parent_line_y = icon_rect[3];
-      icon_bottom = parent_line_y;
+      icon_box.bottom = parent_line_y;
       if (i != 0) {
         parent_line_y = icon_rect[1] - 1;
       }
-      measure = tier1_anchors[i + 4];
+      measure = root_anchor_y[i];
       measure2 = root_anchor_x[i];
-      icon_w = rect_width((iptr)(tier1_anchors + 10));
+      icon_w = rect_width((iptr)&icon_box);
       pedia_draw_tree_connector
-                ((DibSurface *)this,icon_left + icon_w / 2,parent_line_y,measure2,measure);
+                ((DibSurface *)this,icon_box.left + icon_w / 2,parent_line_y,measure2,measure);
       x2 += icon_width;
       tier2_ids[i * 2] = (int)advances[parent_ids[i]].preq[0];
       tier2_ids[i * 2 + 1] = (int)advances[parent_ids[i]].preq[1];
-      tier1_anchors[i * 2 + 7] = icon_left;
-      tier1_anchors[i * 2 + 6] = tier1_anchors[i * 2 + 7];
-      measure = rect_height((iptr)(tier1_anchors + 10));
-      tier1_anchors[i * 2 + 1] = icon_top + measure / 2;
+      tier1_anchor_x[i * 2 + 1] = icon_box.left;
+      tier1_anchor_x[i * 2] = tier1_anchor_x[i * 2 + 1];
+      measure = rect_height((iptr)&icon_box);
+      tier1_anchors[i * 2 + 1] = icon_box.top + measure / 2;
       tier1_anchors[i * 2] = tier1_anchors[i * 2 + 1];
       SetRect(&link_rect,x2 - icon_width,y2,root_anchor_x[2] + x2 + 5,line_height + y2
              );
@@ -4877,28 +4565,28 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *this)
                    ((int)(measure2 + (measure2 >> 0x1f & 7U)) >> 3) + this->content_left;
         icon_rect = (int *)sprite_draw
                                   (icon,(iptr)grand_ctx,(iptr)((u8 *)&g.d_006a6668),x2,y2);
-        icon_left = *icon_rect;
-        icon_top = icon_rect[1];
-        icon_right = icon_rect[2];
+        icon_box.left = *icon_rect;
+        icon_box.top = icon_rect[1];
+        icon_box.right = icon_rect[2];
         grand_line_y = icon_rect[3];
-        icon_bottom = grand_line_y;
+        icon_box.bottom = grand_line_y;
         if (j != 0) {
           grand_line_y = icon_rect[1] - 1;
         }
         measure = tier1_anchors[i * 2 + j];
-        measure2 = tier1_anchors[i * 2 + j + 6];
-        icon_w = rect_width((iptr)(tier1_anchors + 10));
+        measure2 = tier1_anchor_x[i * 2 + j];
+        icon_w = rect_width((iptr)&icon_box);
         pedia_draw_tree_connector
-                  ((DibSurface *)this,icon_left + icon_w / 2,grand_line_y,measure2,measure);
+                  ((DibSurface *)this,icon_box.left + icon_w / 2,grand_line_y,measure2,measure);
         x2 += icon_width;
         tier3_ids[(i * 2 + j) * 2] =
              (int)advances[tier2_ids[i * 2 + j]].preq[0];
         tier3_ids[(i * 2 + j) * 2 + 1] =
              (int)advances[tier2_ids[i * 2 + j]].preq[1];
-        tier2_anchor_x[(i * 2 + j) * 2 + 1] = icon_left;
+        tier2_anchor_x[(i * 2 + j) * 2 + 1] = icon_box.left;
         tier2_anchor_x[(i * 2 + j) * 2] = tier2_anchor_x[(i * 2 + j) * 2 + 1];
-        measure = rect_height((iptr)(tier1_anchors + 10));
-        tier2_anchor_y[(i * 2 + j) * 2 + 1] = icon_top + measure / 2;
+        measure = rect_height((iptr)&icon_box);
+        tier2_anchor_y[(i * 2 + j) * 2 + 1] = icon_box.top + measure / 2;
         tier2_anchor_y[(i * 2 + j) * 2] = tier2_anchor_y[(i * 2 + j) * 2 + 1];
         SetRect(&link_rect,x2 - icon_width,y2,root_anchor_x[2] + x2 + 5,
                 line_height + y2);
@@ -4929,23 +4617,23 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *this)
         icon_width += 3;
         icon_rect = (int *)sprite_draw
                                   (icon,(iptr)gp_ctx,(iptr)((u8 *)&g.d_006a6668),x2,y2);
-        icon_left = *icon_rect;
-        icon_top = icon_rect[1];
-        icon_right = icon_rect[2];
+        icon_box.left = *icon_rect;
+        icon_box.top = icon_rect[1];
+        icon_box.right = icon_rect[2];
         gp_line_y = icon_rect[3];
-        icon_bottom = gp_line_y;
+        icon_box.bottom = gp_line_y;
         if (j != 0) {
           gp_line_y = icon_rect[1] - 1;
         }
         measure = tier2_anchor_y[i * 2 + j];
         measure2 = tier2_anchor_x[i * 2 + j];
-        icon_w = rect_width((iptr)(tier1_anchors + 10));
+        icon_w = rect_width((iptr)&icon_box);
         pedia_draw_tree_connector
-                  ((DibSurface *)this,icon_left + icon_w / 2,gp_line_y,measure2,measure);
+                  ((DibSurface *)this,icon_box.left + icon_w / 2,gp_line_y,measure2,measure);
         if ((-1 < advances[tier3_ids[i * 2 + j]].preq[0]) ||
            (-1 < advances[tier3_ids[i * 2 + j]].preq[1])) {
-          measure = rect_height((iptr)(tier1_anchors + 10));
-          pedia_draw_tree_stub((MediaWindow *)this,icon_left,icon_top + measure / 2);
+          measure = rect_height((iptr)&icon_box);
+          pedia_draw_tree_stub((MediaWindow *)this,icon_box.left,icon_box.top + measure / 2);
         }
         SetRect(&link_rect,x2,y2,icon_width + root_anchor_x[2] + x2 + 5,
                 line_height + y2);
@@ -4960,38 +4648,6 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *this)
   wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
   return;
 }
-#undef gp_line_y
-#undef grand_line_y
-#undef parent_line_y
-#undef gp_ctx
-#undef grand_ctx
-#undef parent_ctx
-#undef root_ctx
-#undef advance
-#undef line_height
-#undef tier2_anchor_y
-#undef icon
-#undef tier2_anchor_x
-#undef tier3_step
-#undef j
-#undef y2
-#undef i
-#undef tier3_ids
-#undef x2
-#undef icon_width
-#undef tier1_anchors
-#undef root_anchor_y
-#undef root_anchor_y2
-#undef icon_left
-#undef icon_top
-#undef icon_right
-#undef icon_bottom
-#undef root_anchor_x
-#undef link_rect
-#undef tier2_ids
-#undef saved_clip
-#undef font2
-#undef parent_ids
 
 /* 005674b9 auto */
 void __thiscall
@@ -5075,11 +4731,10 @@ void __cdecl shared_palette_static_dtor(void)
 }
 
 /* 00599a20 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_init_improvement_list(DocumentWindow *this,iptr unused_arg)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (((int)this->resize_border < 0) || ((int)this->pedia_improve_count <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -5110,31 +4765,11 @@ void __thiscall pedia_init_improvement_list(DocumentWindow *this,iptr unused_arg
   pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
-#undef i
 
 /* 00599b8d auto */
 #define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define coin_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define shield_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define icon_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(48)))
-#define text_rect (*(tagRECT *)(frame_ + FRAME_OFF(52)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(68)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(72)))
-#define scale_num2 (*(i32 *)(frame_ + FRAME_OFF(76)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(80)))
-#define scale_den2 (*(i32 *)(frame_ + FRAME_OFF(84)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(88)))
-#define content_width2 (*(int *)(frame_ + FRAME_OFF(92)))
-#define value_x (*(int *)(frame_ + FRAME_OFF(96)))
-#define unused_flag (*(i32 *)(frame_ + FRAME_OFF(100)))
-#define link_rect (*(tagRECT *)(frame_ + FRAME_OFF(104)))
-#define text_width (*(int *)(frame_ + FRAME_OFF(120)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(124)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(144)))
 /* WARNING: Removing unreachable block (ram,0x00599e9a) */
 /* WARNING: Removing unreachable block (ram,0x00599fc4) */
 
@@ -5145,7 +4780,25 @@ void __thiscall pedia_draw_improvement_page(DocumentWindow *this)
   size_t text_len;
   int center_y;
   u32 yBottom;
-  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 coin_ctx[16];
+  i8 shield_ctx[16];
+  i8 icon_ctx[16];
+  iptr improvement;
+  tagRECT text_rect;
+  int line_height;
+  int icon_width;
+  i32 scale_num2;
+  int y2;
+  i32 scale_den2;
+  int x2;
+  int content_width2;
+  int value_x;
+  i32 unused_flag;
+  tagRECT link_rect;
+  int text_width;
+  int row_height;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   unused_flag = 0;
   surface_get_clip((DibSurface *)this,(iptr)saved_clip);
@@ -5239,31 +4892,9 @@ void __thiscall pedia_draw_improvement_page(DocumentWindow *this)
 #undef list_text_color
 #undef panel_margin_x
 #undef text_buffer
-#undef coin_ctx
-#undef shield_ctx
-#undef icon_ctx
-#undef improvement
-#undef text_rect
-#undef line_height
-#undef icon_width
-#undef scale_num2
-#undef y2
-#undef scale_den2
-#undef x2
-#undef content_width2
-#undef value_x
-#undef unused_flag
-#undef link_rect
-#undef text_width
-#undef row_height
-#undef saved_clip
-#undef font2
 
 /* 0059a15d auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define desc_buf (*(char (*)[4096])(frame_ + FRAME_OFF(4)))
-#define line_buf (*(i8 (*)[256])(frame_ + FRAME_OFF(4100)))
-#define section_name (*(i8 (*)[8])(frame_ + FRAME_OFF(4356)))
 void __thiscall pedia_load_improvement_text(WindowObjectView *this,iptr improvement_id)
 
 {
@@ -5271,7 +4902,9 @@ void __thiscall pedia_load_improvement_text(WindowObjectView *this,iptr improvem
   char *_Str;
   size_t len;
   i32 ret_addr;
-  i8 frame_[FRAME_OFF(4392)] __attribute__((aligned(8)));  /* original stack frame */
+  char desc_buf[4096];
+  i8 line_buf[256];
+  i8 section_name[32];
   str_clear((iptr)desc_buf);
   ret_addr = 0x59a190;
   crt_strcpy(section_name,s_PEDIAIMPROVE_00635074);
@@ -5305,20 +4938,16 @@ void __thiscall pedia_load_improvement_text(WindowObjectView *this,iptr improvem
   return;
 }
 #undef text_buffer
-#undef desc_buf
-#undef line_buf
-#undef section_name
 
 /* 0059a2e6 auto */
 #define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_improvement_names (*(i32 *)((u8 *)&g.d_006a7d48))
-#define improve_idx (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_improvement_modal(DocumentWindow *this,iptr improvement_id)
 
 {
   i32 name_text;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 improve_idx;
   
   if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     if (improvement_id < 0x27) {
@@ -5356,14 +4985,12 @@ void __thiscall pedia_show_improvement_modal(DocumentWindow *this,iptr improveme
 #undef map_redraw_busy
 #undef pedia_closed
 #undef pedia_improvement_names
-#undef improve_idx
 
 /* 005ac840 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_unit_list(MediaWindow *this,iptr unused_arg)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (((int)this->resize_border < 0) || (*(int *)(((PictureWindow *)this)->pedia_unit_count) <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -5394,41 +5021,11 @@ void __thiscall pedia_show_unit_list(MediaWindow *this,iptr unused_arg)
   pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
-#undef i
 
 /* 005ac9ad auto */
 #define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define shield_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define unit_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define desc_rect (*(tagRECT *)(frame_ + FRAME_OFF(32)))
-#define has_text (*(int *)(frame_ + FRAME_OFF(48)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(52)))
-#define link_rect (*(tagRECT *)(frame_ + FRAME_OFF(56)))
-#define text_width (*(int *)(frame_ + FRAME_OFF(72)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(76)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(80)))
-#define pedia_file (*(char * *)(frame_ + FRAME_OFF(84)))
-#define half_width (*(int *)(frame_ + FRAME_OFF(88)))
-#define unused_a (*(i32 *)(frame_ + FRAME_OFF(92)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(96)))
-#define desc_buf (*(char (*)[1000])(frame_ + FRAME_OFF(100)))
-#define unused_d (*(i32 *)(frame_ + FRAME_OFF(1100)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(1104)))
-#define x2 (*(u32 *)(frame_ + FRAME_OFF(1108)))
-#define content_width2 (*(int *)(frame_ + FRAME_OFF(1112)))
-#define value_x (*(int *)(frame_ + FRAME_OFF(1116)))
-#define line (*(int *)(frame_ + FRAME_OFF(1120)))
-#define unused_b (*(i32 *)(frame_ + FRAME_OFF(1124)))
-#define margin (*(int *)(frame_ + FRAME_OFF(1128)))
-#define text_color2 (*(i32 *)(frame_ + FRAME_OFF(1132)))
-#define unused_c (*(i32 *)(frame_ + FRAME_OFF(1136)))
-#define scale_den2 (*(i32 *)(frame_ + FRAME_OFF(1140)))
-#define scale_num2 (*(i32 *)(frame_ + FRAME_OFF(1144)))
-#define slot_height (*(int *)(frame_ + FRAME_OFF(1148)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(1152)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(1168)))
 void __thiscall pedia_draw_unit_page(DocumentWindow *this)
 
 {
@@ -5436,7 +5033,35 @@ void __thiscall pedia_draw_unit_page(DocumentWindow *this)
   size_t text_len;
   int center_y;
   u32 yBottom;
-  i8 frame_[FRAME_OFF(1176)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 shield_ctx[16];
+  i8 unit_ctx[16];
+  tagRECT desc_rect;
+  int has_text;
+  int line_height;
+  tagRECT link_rect;
+  int text_width;
+  int row_height;
+  iptr unit_type;
+  char *pedia_file;
+  int half_width;
+  i32 unused_a;
+  int icon_width;
+  char desc_buf[1000];
+  i32 unused_d;
+  int y2;
+  u32 x2;
+  int content_width2;
+  int value_x;
+  int line;
+  i32 unused_b;
+  int margin;
+  i32 text_color2;
+  i32 unused_c;
+  i32 scale_den2;
+  i32 scale_num2;
+  int slot_height;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   surface_get_clip((DibSurface *)this,(iptr)saved_clip);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
@@ -5751,46 +5376,16 @@ void __thiscall pedia_draw_unit_page(DocumentWindow *this)
 #undef list_text_color
 #undef panel_margin_x
 #undef text_buffer
-#undef shield_ctx
-#undef unit_ctx
-#undef desc_rect
-#undef has_text
-#undef line_height
-#undef link_rect
-#undef text_width
-#undef row_height
-#undef unit_type
-#undef pedia_file
-#undef half_width
-#undef unused_a
-#undef icon_width
-#undef desc_buf
-#undef unused_d
-#undef y2
-#undef x2
-#undef content_width2
-#undef value_x
-#undef line
-#undef unused_b
-#undef margin
-#undef text_color2
-#undef unused_c
-#undef scale_den2
-#undef scale_num2
-#undef slot_height
-#undef saved_clip
-#undef font2
 
 /* 005ad998 auto */
 #define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_unit_names (*(i32 *)((u8 *)&g.d_006a7d50))
-#define unit_index (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_unit_modal(DocumentWindow *this,iptr unit_type)
 
 {
   i32 name_text;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 unit_index;
   
   if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     unit_index = 0;
@@ -5823,4 +5418,3 @@ void __thiscall pedia_show_unit_modal(DocumentWindow *this,iptr unit_type)
 #undef map_redraw_busy
 #undef pedia_closed
 #undef pedia_unit_names
-#undef unit_index

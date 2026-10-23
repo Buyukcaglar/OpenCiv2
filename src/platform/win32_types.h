@@ -240,6 +240,12 @@ typedef struct mmtime_tag {
     union { DWORD ms; DWORD sample; DWORD cb; DWORD ticks; struct { BYTE hour, min, sec, frame, fps, dummy, pad[2]; } smpte;
             struct { DWORD songptrpos; } midi; } u;
 } MMTIME, *LPMMTIME;
+typedef struct { DWORD_PTR dwCallback; MCIDEVICEID wDeviceID; LPCSTR lpstrDeviceType, lpstrElementName, lpstrAlias; }
+    MCI_OPEN_PARMSA;
+typedef struct { DWORD_PTR dwCallback; DWORD dwTimeFormat, dwAudio; } MCI_SET_PARMS;
+typedef struct { DWORD_PTR dwCallback; DWORD_PTR dwReturn; DWORD dwItem, dwTrack; } MCI_STATUS_PARMS;
+typedef struct { DWORD_PTR dwCallback; DWORD dwFrom, dwTo; } MCI_PLAY_PARMS;
+typedef struct { DWORD_PTR dwCallback; DWORD dwTo; } MCI_SEEK_PARMS;
 #pragma pack(push, 1)
 typedef struct tWAVEFORMATEX {
     WORD wFormatTag; WORD nChannels; DWORD nSamplesPerSec; DWORD nAvgBytesPerSec; WORD nBlockAlign;
@@ -267,6 +273,10 @@ typedef struct IDirectDrawPalette { void **lpVtbl; } IDirectDrawPalette, *LPDIRE
 typedef struct _DDCAPS { DWORD dwSize; BYTE rest[312]; } DDCAPS, *LPDDCAPS;
 typedef uint32_t PAVIFILE;
 typedef uint32_t PAVISTREAM;
+typedef struct {
+    DWORD dwFlags; BITMAPINFOHEADER *lpbiSrc; void *lpSrc; BITMAPINFOHEADER *lpbiDst; void *lpDst;
+    int xDst, yDst, dxDst, dyDst, xSrc, ySrc, dxSrc, dySrc;
+} ICDECOMPRESSEX;
 typedef struct _AVISTREAMINFOA {
     DWORD fccType, fccHandler, dwFlags, dwCaps; WORD wPriority, wLanguage; DWORD dwScale, dwRate, dwStart, dwLength;
     DWORD dwInitialFrames, dwSuggestedBufferSize, dwQuality, dwSampleSize; RECT rcFrame; DWORD dwEditCount;

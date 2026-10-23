@@ -195,12 +195,11 @@ void __thiscall wnd_blit_surface(DibSurface *this)
 }
 
 /* 00408490 auto */
-#define view (*(DibSurface * *)(frame_ + FRAME_OFF(4)))
-#define view2 (*(DibSurface * *)(frame_ + FRAME_OFF(8)))
 void __thiscall wnd_blit_surface_rect(DibSurface *this,iptr rect)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  DibSurface *view;
+  DibSurface *view2;
   
   if (rect == 0) {
     if (this == (DibSurface *)0x0) {
@@ -224,8 +223,6 @@ void __thiscall wnd_blit_surface_rect(DibSurface *this,iptr rect)
   }
   return;
 }
-#undef view
-#undef view2
 
 /* 00408580 auto */
 void __thiscall wnd_view_validate_rect(WndValidateRectView *this,iptr rect)
@@ -305,14 +302,6 @@ i32 __thiscall dlg_show_modal(Dialog *this,iptr parent)
 /* 0040e017 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define civ_byte (*(byte *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define count (*(int *)(frame_ + FRAME_OFF(16)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(24)))
-#define civ (*(int *)(frame_ + FRAME_OFF(780)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(784)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(788)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(792)))
 void __cdecl menu_find_city(void)
 
 {
@@ -321,7 +310,14 @@ void __cdecl menu_find_city(void)
   iptr objective;
   iptr city2;
   iptr civ2;
-  i8 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
+  byte civ_byte;
+  iptr city;
+  int count;
+  Dialog dialog2;
+  int civ;
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -396,14 +392,6 @@ void __cdecl menu_find_city(void)
 }
 #undef human_civ
 #undef scenario_flags
-#undef civ_byte
-#undef city
-#undef count
-#undef dialog2
-#undef civ
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 0040e3b1 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -797,10 +785,6 @@ void __thiscall picwnd_close(PictureWindowCore *this)
 /* 0042a7bc auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(4)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(1080)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(1084)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1088)))
 void __thiscall
 picwnd_open
           (PictureWindow *this,uint resource_id,u32 report,u32 style,u32 img_width,u32 img_height,
@@ -812,7 +796,10 @@ picwnd_open
   int scr_height;
   u32 wnd_w;
   int nonclient_height;
-  i8 frame_[FRAME_OFF(1096)] __attribute__((aligned(8)));  /* original stack frame */
+  GamePalette palette;
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -884,10 +871,6 @@ picwnd_open
 }
 #undef frame_border_width
 #undef screen_height
-#undef palette
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 0042abc1 auto */
 void __thiscall
@@ -909,9 +892,6 @@ void __thiscall picwnd_blit(PictureWindow *this)
 }
 
 /* 0043c110 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: __thiscall CDaoFieldInfo::~CDaoFieldInfo(void)
    
@@ -920,9 +900,11 @@ void __thiscall picwnd_blit(PictureWindow *this)
 void __thiscall picwnd_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_scope;
+  int eh_state;
   
-  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 5;
   /* inlined unwind funclet 0043c19c */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x410)); }
   (*(i8 *)((char *)&eh_state + 0)) = 4;
@@ -933,24 +915,20 @@ void __thiscall picwnd_dtor(void *this)
   /* inlined unwind funclet 0043c1c9 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x35c)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 0043c1d8 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 800)); }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 0043c1e7 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x2d8)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0043c1f6 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 0043c260 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 ViewWindow * __thiscall picwnd_ctor(ViewWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
@@ -964,14 +942,11 @@ ViewWindow * __thiscall picwnd_ctor(ViewWindow *this)
   button_ctor((Control *)(this->lux_rate_scrollbar));
   (*(i8 *)((char *)&eh_state + 0)) = 4;
   button_ctor((Control *)(this->picwnd_extra_button));
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),5);
+  eh_state = (eh_state & 0xffffff00 | (byte)(5));
   scrollbar_ctor((Control *)(this->picwnd_scrollbar));
   this->vtable = (u32)&PTR_FUN_0061c05c;
   return this;
 }
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 0043c5c0 auto */
 i32 __thiscall wnd_nonclient_height(WndBase *this)
@@ -1382,13 +1357,12 @@ void __cdecl panel_texture_surface_static_dtor(void)
 }
 
 /* 0044c5a0 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 SurfaceWindow * __thiscall surfwnd_ctor(SurfaceWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   surface_ctor((DibSurface *)this);
@@ -1399,18 +1373,14 @@ SurfaceWindow * __thiscall surfwnd_ctor(SurfaceWindow *this)
   this->on_paint = 0;
   return this;
 }
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 0044c670 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 Wnd * __thiscall surfwnd_wnd_ctor(Wnd *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   wnd_ctor((ModalMenuWindow *)this);
@@ -1420,18 +1390,14 @@ Wnd * __thiscall surfwnd_wnd_ctor(Wnd *this)
   *(i8 *)&this->keyboard_nav = 1;
   return this;
 }
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 0044c730 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 ModalMenuWindow * __thiscall wnd_ctor(ModalMenuWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   wnd_record_init((WndBase *)this);
@@ -1453,9 +1419,6 @@ ModalMenuWindow * __thiscall wnd_ctor(ModalMenuWindow *this)
   this->on_modal_idle = 0;
   return this;
 }
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 0044c8b0 auto */
 /* Library Function - Single Match
@@ -1513,21 +1476,17 @@ void __thiscall wnd_handlers_dtor(void *this)
 /* 0044ca60: written by hand in src/game/unwind.c */
 
 /* 0044cb20 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 i32 __thiscall surfwnd_wnd_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0044cb5e */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return seh_handler;
 }
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 0044cba0: written by hand in src/game/unwind.c */
 
@@ -1597,21 +1556,17 @@ void __thiscall wnd_focus_and_raise(WndBase *this)
 }
 
 /* 00451930 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall hotspot_ctor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   ctrl_base_ctor(this);
   return this;
 }
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 004519b0 auto */
 void __thiscall
@@ -1675,13 +1630,12 @@ void __cdecl ui_pump_messages(void)
 }
 
 /* 00453ba0 auto */
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall hotspot_dtor(Hotspot *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0;
   if (this->hwnd != 0) {
@@ -1691,9 +1645,6 @@ void __thiscall hotspot_dtor(Hotspot *this)
   /* inlined unwind funclet 00453bfa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 00456ee0 auto */
 /* Library Function - Single Match
@@ -1771,11 +1722,10 @@ void __cdecl ui_delay_ticks(int ticks)
 }
 
 /* 0046f18f auto */
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl ui_blit_all_windows(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   for (view = 0; view < 8; view++) {
     if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
@@ -1788,19 +1738,8 @@ void __cdecl ui_blit_all_windows(void)
   wnd_flush_paint();
   return;
 }
-#undef view
 
 /* 004731d2 auto */
-#define success (*(char *)(frame_ + FRAME_OFF(0)))
-#define ofn (*(DWORD *)(frame_ + FRAME_OFF(4)))
-#define owner_hwnd (*(HWND *)(frame_ + FRAME_OFF(8)))
-#define filter_str (*(LPCSTR *)(frame_ + FRAME_OFF(16)))
-#define filter_index (*(DWORD *)(frame_ + FRAME_OFF(28)))
-#define file_str (*(LPSTR *)(frame_ + FRAME_OFF(32)))
-#define max_file (*(DWORD *)(frame_ + FRAME_OFF(36)))
-#define title_str (*(LPCSTR *)(frame_ + FRAME_OFF(52)))
-#define ofn_flags (*(DWORD *)(frame_ + FRAME_OFF(56)))
-#define def_ext_str (*(LPCSTR *)(frame_ + FRAME_OFF(64)))
 uint __cdecl
 ui_file_name_dialog(iptr parent,iptr title,iptr file_buf,iptr filter,iptr default_ext,int must_exist,
             int is_save)
@@ -1808,33 +1747,34 @@ ui_file_name_dialog(iptr parent,iptr title,iptr file_buf,iptr filter,iptr defaul
 {
   iptr wnd;
   BOOL BVar1;
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  char success;
+  OPENFILENAMEA ofn;
   
   _memset(&ofn,0,0x4c);
-  ofn = 0x4c;
-  owner_hwnd = (HWND)0x0;
+  ofn.lStructSize = 0x4c;
+  ofn.hwndOwner = (HWND)0x0;
   if (parent != 0) {
     wnd = wnd_get_window((WndBase *)parent);
-    owner_hwnd = *(HWND *)(wnd + 4);
+    ofn.hwndOwner = *(HWND *)(wnd + 4);
   }
-  filter_str = (LPCSTR)filter;
-  filter_index = 1;
-  file_str = (LPSTR)file_buf;
-  max_file = 0x100;
-  title_str = (LPCSTR)title;
-  def_ext_str = (LPCSTR)default_ext;
+  ofn.lpstrFilter = (LPCSTR)filter;
+  ofn.nFilterIndex = 1;
+  ofn.lpstrFile = (LPSTR)file_buf;
+  ofn.nMaxFile = 0x100;
+  ofn.lpstrTitle = (LPCSTR)title;
+  ofn.lpstrDefExt = (LPCSTR)default_ext;
   if (must_exist == 0) {
-    ofn_flags = 0x80e;
+    ofn.Flags = 0x80e;
   }
   else {
-    ofn_flags = 0x180e;
+    ofn.Flags = 0x180e;
   }
   if (is_save == 0) {
-    BVar1 = GetOpenFileNameA((LPOPENFILENAMEA)&ofn);
+    BVar1 = GetOpenFileNameA(&ofn);
     success = (char)BVar1;
   }
   else {
-    BVar1 = GetSaveFileNameA((LPOPENFILENAMEA)&ofn);
+    BVar1 = GetSaveFileNameA(&ofn);
     success = (char)BVar1;
   }
   if (success != 1) {
@@ -1842,16 +1782,6 @@ ui_file_name_dialog(iptr parent,iptr title,iptr file_buf,iptr filter,iptr defaul
   }
   return (uint)(success == 1);
 }
-#undef success
-#undef ofn
-#undef owner_hwnd
-#undef filter_str
-#undef filter_index
-#undef file_str
-#undef max_file
-#undef title_str
-#undef ofn_flags
-#undef def_ext_str
 
 /* 00484d52 auto */
 #define mp_simultaneous_moves (*(char *)((u8 *)&g.d_006ad684))
@@ -2021,13 +1951,12 @@ popup_text_with_advance(iptr filename,iptr section,i32 dlg_flags,iptr advance,i3
 }
 
 /* 004a6bdc auto */
-#define sprite (*(i8 * *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl
 popup_text_with_improvement(iptr filename,iptr section,i32 dlg_flags,int improvement,i32 sprite_flags)
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *sprite;
   
   if (improvement < 0x27) {
     sprite = &improvement_icon_sprites + improvement * 0x3c;
@@ -2038,7 +1967,6 @@ popup_text_with_improvement(iptr filename,iptr section,i32 dlg_flags,int improve
   result = popup_text_with_sprite(filename,section,dlg_flags,(iptr)sprite,sprite_flags);
   return result;
 }
-#undef sprite
 
 /* 004a6c4b auto */
 i32 __cdecl
@@ -2067,16 +1995,15 @@ popup_city_sprite_draw_cb(i32 dlg,iptr sprite,iptr city,i32 left,int x,
 /* 004a6cc5 auto */
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(0)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(756)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(816)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(820)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(824)))
 i32 __cdecl popup_text_with_city(iptr filename,iptr section,i32 dlg_flags,iptr city)
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
+  Dialog dialog2;
+  Sprite sprite;
+  i32 seh_handler;
+  i8 *seh_scope;
+  int eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -2092,7 +2019,7 @@ i32 __cdecl popup_text_with_city(iptr filename,iptr section,i32 dlg_flags,iptr c
   dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&sprite,city,0);
   result = dlg_show_modal(&dialog2,0);
   dlg_help_pressed = dialog2.result_extra;
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004a6dc9 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004a6dd2 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
@@ -2100,11 +2027,6 @@ i32 __cdecl popup_text_with_city(iptr filename,iptr section,i32 dlg_flags,iptr c
 }
 #undef dlg_help_pressed
 #undef ui_large_screen
-#undef dialog2
-#undef sprite
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 004a6df7 auto */
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
@@ -2121,16 +2043,15 @@ popup_unit_sprite_draw_cb(i32 dlg,iptr sprite,iptr unit,i32 left,int x,
 /* 004a6e39 auto */
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(0)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(756)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(816)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(820)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(824)))
 i32 __cdecl popup_text_with_unit(iptr filename,iptr section,i32 dlg_flags,iptr unit)
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
+  Dialog dialog2;
+  Sprite sprite;
+  i32 seh_handler;
+  i8 *seh_scope;
+  int eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -2146,7 +2067,7 @@ i32 __cdecl popup_text_with_unit(iptr filename,iptr section,i32 dlg_flags,iptr u
   dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&sprite,unit,0);
   result = dlg_show_modal(&dialog2,0);
   dlg_help_pressed = dialog2.result_extra;
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004a6f3d */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004a6f46 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
@@ -2154,18 +2075,8 @@ i32 __cdecl popup_text_with_unit(iptr filename,iptr section,i32 dlg_flags,iptr u
 }
 #undef dlg_help_pressed
 #undef ui_large_screen
-#undef dialog2
-#undef sprite
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 004a93b3 auto */
-#define best_tile (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(24)))
-#define tile (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define best_score (*(uint *)(frame_ + FRAME_OFF(36)))
-#define score (*(uint *)(frame_ + FRAME_OFF(40)))
 void __cdecl accel_start_develop_city(iptr city,int num_tiles)
 
 {
@@ -2178,7 +2089,11 @@ void __cdecl accel_start_develop_city(iptr city,int num_tiles)
   int y;
   int result;
   int landmass;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr best_tile;
+  int i;
+  iptr tile;
+  uint best_score;
+  uint score;
   
   x2 = (int)cities[city].x;
   y2 = (int)cities[city].y;
@@ -2257,11 +2172,6 @@ void __cdecl accel_start_develop_city(iptr city,int num_tiles)
   net_batch_flush();
   return;
 }
-#undef best_tile
-#undef i
-#undef tile
-#undef best_score
-#undef score
 
 /* 004bb570 auto */
 void __thiscall wnd_move_to_rect(WndBase *this,iptr rect)
@@ -2308,19 +2218,18 @@ void __thiscall wnd_set_resize_border(WndBase *this,i32 width)
 }
 
 /* 004e01b0 auto */
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(4)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(760)))
-#define last_choice (*(iptr *)(frame_ + FRAME_OFF(764)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(768)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl menu_wonder_movies(void)
 
 {
   iptr wonder_name;
   i32 flags;
   iptr wonder_id;
-  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  Dialog dialog2;
+  iptr wonder;
+  iptr last_choice;
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -2346,28 +2255,21 @@ void __cdecl menu_wonder_movies(void)
   /* inlined unwind funclet 004e02cb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return;
 }
-#undef dialog2
-#undef wonder
-#undef last_choice
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 004e02ef auto */
 #define minimap_hidden (*(i8 *)((u8 *)&g.d_00624ee0))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
 #define status_wnd_hidden (*(i8 *)((u8 *)&g.d_00633e00))
-#define chat_font_height (*(int *)(frame_ + FRAME_OFF(0)))
-#define parley_font_height (*(int *)(frame_ + FRAME_OFF(4)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(12)))
-#define view (*(int *)(frame_ + FRAME_OFF(24)))
 void __cdecl ui_reset_window_layout(void)
 
 {
   int left;
   int client_height;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int chat_font_height;
+  int parley_font_height;
+  int height2;
+  int width2;
+  int view;
   
   wnd_maximize((WndBase *)&main_frame_wnd);
   city_window_init_size();
@@ -2440,11 +2342,6 @@ void __cdecl ui_reset_window_layout(void)
 #undef minimap_hidden
 #undef panel_margin_x
 #undef status_wnd_hidden
-#undef chat_font_height
-#undef parley_font_height
-#undef height2
-#undef width2
-#undef view
 
 /* 004e068d auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
@@ -2455,13 +2352,12 @@ void __cdecl ui_reset_window_layout(void)
 #define saved_turn_civ (*(byte *)((u8 *)&g.d_00654fa4))
 #define status_wnd_hidden (*(i8 *)((u8 *)&g.d_00633e00))
 #define turn_resume_civ (*(byte *)((u8 *)&g.d_00628048))
-#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl menu_load_game(void)
 
 {
   byte music_was_on;
   int result;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int view;
   
   mp_turn_timer_stop(1);
   city_window_close();
@@ -2564,7 +2460,6 @@ void __cdecl menu_load_game(void)
 #undef saved_turn_civ
 #undef status_wnd_hidden
 #undef turn_resume_civ
-#undef view
 
 /* 004e0a8c auto */
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
@@ -2732,14 +2627,13 @@ void __cdecl menu_graphic_options(void)
 #define prefs_mp_double_moves (*(ushort *)((u8 *)&g.d_00666600))
 #define prefs_mp_double_production (*(ushort *)((u8 *)&g.d_006665fe))
 #define dialog_timeout_start_i32 (*(i32 *)((u8 *)&g.d_006cec80))
-#define choice (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl menu_multiplayer_options(void)
 
 {
   int result;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int choice;
   
   dlg_checks_clear();
   dlg_check_set_bool(0,(int)(short)prefs_clear_chat_on_new_game);
@@ -2812,7 +2706,6 @@ void __cdecl menu_multiplayer_options(void)
 #undef prefs_mp_double_moves
 #undef prefs_mp_double_production
 #undef dialog_timeout_start_i32
-#undef choice
 
 /* 004e1452 auto */
 #define prefs_message_options (*(u16 *)((u8 *)&g.d_0064bc22))
@@ -2908,17 +2801,16 @@ void __cdecl menu_show_hidden_terrain(void)
 
 /* 004e25ef auto */
 #define cd_music_current_track (*(int *)((u8 *)&g.d_0062b428))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(4)))
-#define track_count (*(int *)(frame_ + FRAME_OFF(760)))
-#define tries (*(int *)(frame_ + FRAME_OFF(764)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(768)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl menu_select_music(void)
 
 {
   int choice;
-  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  Dialog dialog2;
+  int track_count;
+  int tries;
+  i32 seh_handler;
+  i8 *seh_scope;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -2976,12 +2868,6 @@ LAB_004e27f5:
   return;
 }
 #undef cd_music_current_track
-#undef dialog2
-#undef track_count
-#undef tries
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 004e2803 auto */
 #define blocked_input_kind (*(i32 *)((u8 *)&g.d_006c31ac))
@@ -3562,17 +3448,16 @@ void __cdecl menu_command(i32 menu,int cmd)
 #undef blocked_input_arg2_i32
 
 /* 004e3a86 auto */
-#define editor_disabled (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define editor_checked (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define cheat_checked (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define cheat_disabled (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __cdecl menu_build_main(void)
 
 {
   int status;
   i32 item_arg;
   iptr label;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 editor_disabled;
+  i32 editor_checked;
+  i32 cheat_checked;
+  i32 cheat_disabled;
   
   menu_reset((GameMenu *)&main_menu,0x1bbc);
   status = text_open_section((iptr)((u8 *)&g.d_0062ed34),(iptr)((u8 *)&g.d_0062ed2c));
@@ -3994,17 +3879,12 @@ void __cdecl menu_build_main(void)
   menu_set_command_handler((GameMenu *)&main_menu,(iptr)menu_command);
   return;
 }
-#undef editor_disabled
-#undef editor_checked
-#undef cheat_checked
-#undef cheat_disabled
 
 /* 004e4c92 auto */
-#define label_text (*(i8 (*)[80])(frame_ + FRAME_OFF(4)))
 void __cdecl menu_set_item_label(i32 item_id,i32 label_id,i32 enabled)
 
 {
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 label_text[80];
   
   text_clear();
   text_append_label(label_id);
@@ -4013,7 +3893,6 @@ void __cdecl menu_set_item_label(i32 item_id,i32 label_id,i32 enabled)
   menu_set_item_enabled((GameMenu *)&main_menu,item_id,enabled);
   return;
 }
-#undef label_text
 
 /* 004e4ceb auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -4023,21 +3902,6 @@ void __cdecl menu_set_item_label(i32 item_id,i32 label_id,i32 enabled)
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
-#define scenario_menu_disabled (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define scenario_checked (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define cheat_checked (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define cheat_menu_disabled (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define mine_disabled (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define irrigate_disabled (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define farmland_disabled (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define road_disabled (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define railroad_disabled (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define build_city_disabled (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define fortress_hidden (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define airbase_hidden (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define pillage_hidden (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define revolution_disabled (*(i32 *)(frame_ + FRAME_OFF(52)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(104)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl menu_update_states(void)
@@ -4065,7 +3929,21 @@ void __cdecl menu_update_states(void)
   iptr path_cmp2;
   uptr terrain;
   bool is_ocean;
-  i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 scenario_menu_disabled;
+  i32 scenario_checked;
+  i32 cheat_checked;
+  i32 cheat_menu_disabled;
+  i32 mine_disabled;
+  i32 irrigate_disabled;
+  i32 farmland_disabled;
+  i32 road_disabled;
+  i32 railroad_disabled;
+  i32 build_city_disabled;
+  i32 fortress_hidden;
+  i32 airbase_hidden;
+  i32 pillage_hidden;
+  i32 revolution_disabled;
+  iptr dir;
   
   menu_set_item_enabled((GameMenu *)&main_menu,0x606,game.rules & 0x80);
   if (game.multiplayer == '\0') {
@@ -4362,21 +4240,6 @@ void __cdecl menu_update_states(void)
 #undef net_host_flag
 #undef scenario_flags
 #undef mp_turn_civ_i32
-#undef scenario_menu_disabled
-#undef scenario_checked
-#undef cheat_checked
-#undef cheat_menu_disabled
-#undef mine_disabled
-#undef irrigate_disabled
-#undef farmland_disabled
-#undef road_disabled
-#undef railroad_disabled
-#undef build_city_disabled
-#undef fortress_hidden
-#undef airbase_hidden
-#undef pillage_hidden
-#undef revolution_disabled
-#undef dir
 
 /* 004e7240 auto */
 void __thiscall wnd_show_restored(WndBase *this)
@@ -4390,14 +4253,6 @@ void __thiscall wnd_show_restored(WndBase *this)
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define city_notify_enabled (*(int *)((u8 *)&g.d_006a65ac))
 #define city_zoom_requested (*(int *)((u8 *)&g.d_006a65a0))
-#define picture_id (*(uint *)(frame_ + FRAME_OFF(0)))
-#define popup_new (*(void * *)(frame_ + FRAME_OFF(16)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(36)))
-#define popup (*(void * *)(frame_ + FRAME_OFF(96)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(100)))
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(1176)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(1180)))
-#define eh_state (*(uint *)(frame_ + FRAME_OFF(1184)))
 int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int silent,iptr civ)
 
 {
@@ -4407,7 +4262,14 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
   i32 width;
   iptr option_text;
   iptr option_id;
-  i8 frame_[FRAME_OFF(1192)] __attribute__((aligned(8)));  /* original stack frame */
+  uint picture_id;
+  void *popup_new;
+  Sprite sprite;
+  void *popup;
+  GamePalette palette;
+  i32 eh_prev;
+  i8 *eh_handler;
+  uint eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -4417,7 +4279,7 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
   if (autoplay_active == 0) {
     if (silent == 0) {
       if (city_notify_enabled == 0) {
-        eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+        eh_state = eh_state & 0xffffff00;
         /* inlined unwind funclet 004ebbad */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
         eh_state = 0xffffffff;
         /* inlined unwind funclet 004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
@@ -4436,7 +4298,7 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
     else {
       popup_new = (void *)city_picture_popup_ctor(this);
     }
-    eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),1);
+    eh_state = (eh_state & 0xffffff00 | (byte)(1));
     popup = popup_new;
     result = civ_has_advance(civ,0x25);
     if (result != 0) {
@@ -4487,7 +4349,7 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
     /* inlined unwind funclet 004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   }
   else {
-    eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+    eh_state = eh_state & 0xffffff00;
     /* inlined unwind funclet 004ebbad */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
     eh_state = 0xffffffff;
     /* inlined unwind funclet 004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
@@ -4499,14 +4361,6 @@ LAB_004ebbcf:
 #undef autoplay_active
 #undef city_notify_enabled
 #undef city_zoom_requested
-#undef picture_id
-#undef popup_new
-#undef sprite
-#undef popup
-#undef palette
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 00511320 auto */
 u32 __thiscall wnd_get_palette(WndPaletteView *this)
@@ -4583,18 +4437,17 @@ i32 __cdecl dlg_input_number_game(iptr section,i32 initial,iptr out_value)
 /* 0051d3e0 auto */
 #define dlg_check_bits (*(uint *)((u8 *)&g.d_00631ed8))
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(756)))
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(760)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(764)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(768)))
 i32 __cdecl
 popup_text_run(iptr file,iptr section,i32 result,i32 arg4,i32 arg5,
             i32 arg6,i32 arg7)
 
 {
   int status;
-  i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+  Dialog dialog2;
+  int i;
+  i32 eh_prev;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -4627,24 +4480,18 @@ popup_text_run(iptr file,iptr section,i32 result,i32 arg4,i32 arg5,
 }
 #undef dlg_check_bits
 #undef dlg_help_pressed
-#undef dialog2
-#undef i
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 0051d564 auto */
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(4)))
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(760)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(764)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(768)))
 i32 __cdecl
 popup_text_with_sprite(iptr file,iptr section,i32 flags,iptr sprite,i32 zoom)
 
 {
   i32 result;
-  i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+  Dialog dialog2;
+  i32 eh_prev;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -4659,24 +4506,19 @@ popup_text_with_sprite(iptr file,iptr section,i32 flags,iptr sprite,i32 zoom)
   return result;
 }
 #undef dlg_help_pressed
-#undef dialog2
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 0051d63b auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(8)))
-#define p (*(char * *)(frame_ + FRAME_OFF(764)))
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(768)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(776)))
 i32 __cdecl
 dlg_text_input(iptr file,iptr section,i32 max_len,iptr initial_text,iptr out_text)
 
 {
   int status;
-  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
+  Dialog dialog2;
+  char *p;
+  i32 eh_prev;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   result = 0;
@@ -4696,22 +4538,15 @@ dlg_text_input(iptr file,iptr section,i32 max_len,iptr initial_text,iptr out_tex
   /* inlined unwind funclet 0051d738 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return result;
 }
-#undef result
-#undef dialog2
-#undef p
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 0051d75d auto */
-#define input_text (*(char (*)[260])(frame_ + FRAME_OFF(0)))
-#define initial_text (*(char (*)[20])(frame_ + FRAME_OFF(260)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(280)))
 i32 __cdecl dlg_input_number(iptr file,iptr section,int initial,iptr out_value)
 
 {
   long value;
-  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  char input_text[260];
+  char initial_text[20];
+  i32 result;
   
   __itoa(initial,initial_text,10);
   result = dlg_text_input(file,section,5,(iptr)initial_text,(iptr)input_text);
@@ -4719,9 +4554,6 @@ i32 __cdecl dlg_input_number(iptr file,iptr section,int initial,iptr out_value)
   *(long *)out_value = value;
   return result;
 }
-#undef input_text
-#undef initial_text
-#undef result
 
 /* 0051d7bc auto */
 #define dlg_check_bits (*(i32 *)((u8 *)&g.d_00631ed8))
@@ -4758,13 +4590,12 @@ uint __cdecl dlg_check_get(i32 index)
 #undef dlg_check_bits
 
 /* 0052182c auto */
-#define title (*(char (*)[128])(frame_ + FRAME_OFF(4)))
 void __cdecl dialog_prepend_title_label(iptr dialog,i32 label_id)
 
 {
   size_t len;
   i32 buffer;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  char title[128];
   
   title[0] = '\0';
   str_append_label((iptr)title,label_id);
@@ -4778,7 +4609,6 @@ void __cdecl dialog_prepend_title_label(iptr dialog,i32 label_id)
   crt_strcpy(*(i32 *)(dialog + 0x134),title);
   return;
 }
-#undef title
 
 /* 00548b70 auto */
 int __cdecl ui_calc_item_spacing(int count,int item_size,int total_size,iptr out_count,iptr out_remainder)
@@ -5025,29 +4855,6 @@ void __cdecl frame_set_border_tile(iptr tile)
 #define mp_turn_seconds_left (*(u32 *)((u8 *)&g.d_00633a78))
 #define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
-#define caption_h2 (*(u32 *)(frame_ + FRAME_OFF(0)))
-#define caption_h (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(8)))
-#define minutes (*(int *)(frame_ + FRAME_OFF(24)))
-#define seconds (*(int *)(frame_ + FRAME_OFF(28)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define bevel (*(int *)(frame_ + FRAME_OFF(36)))
-#define shadow_color2 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define text_width (*(int *)(frame_ + FRAME_OFF(44)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(48)))
-#define button_y2 (*(int *)(frame_ + FRAME_OFF(52)))
-#define button_x (*(int *)(frame_ + FRAME_OFF(56)))
-#define offset (*(int *)(frame_ + FRAME_OFF(60)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(64)))
-#define text_y2 (*(int *)(frame_ + FRAME_OFF(68)))
-#define highlight_color2 (*(i32 *)(frame_ + FRAME_OFF(72)))
-#define text_x2 (*(int *)(frame_ + FRAME_OFF(76)))
-#define i (*(int *)(frame_ + FRAME_OFF(80)))
-#define caption (*(char (*)[256])(frame_ + FRAME_OFF(84)))
-#define rect_left2 (*(u32 *)(frame_ + FRAME_OFF(340)))
-#define rect_top2 (*(u32 *)(frame_ + FRAME_OFF(344)))
-#define rect_right2 (*(u32 *)(frame_ + FRAME_OFF(348)))
-#define rect_bottom2 (*(u32 *)(frame_ + FRAME_OFF(352)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall frame_wnd_draw_caption(FrameWindow *this)
@@ -5058,7 +4865,26 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *this)
   int small_height;
   uptr len;
   uptr len2;
-  i8 frame_[FRAME_OFF(360)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 caption_h2;
+  u32 caption_h;
+  i8 sprite_rect[16];
+  int minutes;
+  int seconds;
+  int height2;
+  int bevel;
+  i32 shadow_color2;
+  int text_width;
+  int width2;
+  int button_y2;
+  int button_x;
+  int offset;
+  GameFont *font2;
+  int text_y2;
+  i32 highlight_color2;
+  int text_x2;
+  int i;
+  char caption[256];
+  struct { u32 left; u32 top; u32 right; u32 bottom; } rect2;
   
   surface_reset_clip((DibSurface *)this);
   highlight_color2 = frame_highlight_color;
@@ -5083,33 +4909,33 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *this)
   offset = rect_width((iptr)&this->frame_rect);
   offset -= (bevel + width2);
   gfx_tile_fill((iptr)this,frame_border_tile,offset,0,width2,height2,offset,0);
-  rect_left2 = this->frame_rect;
-  rect_top2 = this->frame_top;
-  rect_right2 = this->frame_right;
-  rect_bottom2 = this->frame_bottom;
+  rect2.left = this->frame_rect;
+  rect2.top = this->frame_top;
+  rect2.right = this->frame_right;
+  rect2.bottom = this->frame_bottom;
   for (i = 0; i < bevel; i++) {
-    gfx_draw_bevel_rect((iptr)this,(iptr)&rect_left2,highlight_color2,shadow_color2);
-    rect_deflate((iptr)&rect_left2,1,1);
+    gfx_draw_bevel_rect((iptr)this,(iptr)&rect2,highlight_color2,shadow_color2);
+    rect_deflate((iptr)&rect2,1,1);
   }
-  rect_deflate((iptr)&rect_left2,this->border_width + bevel * -2,0);
+  rect_deflate((iptr)&rect2,this->border_width + bevel * -2,0);
   if (this->caption_height == 0) {
     caption_h2 = this->border_width;
   }
   else {
     caption_h2 = this->caption_height;
   }
-  rect_top2 = rect_top2 + caption_h2 + bevel * -2;
-  rect_bottom2 -= (this->border_width + bevel * -2);
+  rect2.top = rect2.top + caption_h2 + bevel * -2;
+  rect2.bottom -= (this->border_width + bevel * -2);
   for (i = 0; i < bevel; i++) {
-    gfx_draw_bevel_rect((iptr)this,(iptr)&rect_left2,shadow_color2,highlight_color2);
-    rect_deflate((iptr)&rect_left2,1,1);
+    gfx_draw_bevel_rect((iptr)this,(iptr)&rect2,shadow_color2,highlight_color2);
+    rect_deflate((iptr)&rect2,1,1);
   }
   button_x = frame_border_width;
   for (i = 0; i < (int)this->caption_button_count; i++) {
     width2 = (int)(*(int *)(this->pane_selection_flags_area + i * 0x1c + 0xc) * this->caption_height) / 0x18;
     height2 = (int)(*(int *)(this->pane_selection_flags_area + i * 0x1c + 0x10) * this->caption_height) / 0x18;
     button_y2 = ((int)this->caption_height >> 1) - (height2 >> 1);
-    rect_set_xywh((iptr)&rect_left2,button_x,button_y2,width2,height2);
+    rect_set_xywh((iptr)&rect2,button_x,button_y2,width2,height2);
     gfx_set_scale_ratio(this->caption_height,0x18);
     sprite_draw
               (*(Sprite **)(this->pane_selection_flags_area + i * 0x1c + 0x14),(iptr)sprite_rect,
@@ -5267,37 +5093,13 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *this)
 #undef mp_turn_seconds_left
 #undef mp_turn_time_limit_ms
 #undef mp_turn_civ_i32
-#undef caption_h2
-#undef caption_h
-#undef sprite_rect
-#undef minutes
-#undef seconds
-#undef height2
-#undef bevel
-#undef shadow_color2
-#undef text_width
-#undef width2
-#undef button_y2
-#undef button_x
-#undef offset
-#undef font2
-#undef text_y2
-#undef highlight_color2
-#undef text_x2
-#undef i
-#undef caption
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
 
 /* 00552e5b auto */
-#define frame_wnd (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl frame_wnd_on_caption_button_click(int button_id)
 
 {
   iptr child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr frame_wnd;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -5311,18 +5113,9 @@ void __cdecl frame_wnd_on_caption_button_click(int button_id)
   }
   return;
 }
-#undef frame_wnd
 
 /* 00552ed2 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
-#define native_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define hotspot (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define button_x (*(int *)(frame_ + FRAME_OFF(24)))
-#define i (*(int *)(frame_ + FRAME_OFF(28)))
-#define button_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(52)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(56)))
 void __thiscall frame_wnd_layout(FrameWindow *this)
 
 {
@@ -5330,7 +5123,14 @@ void __thiscall frame_wnd_layout(FrameWindow *this)
   int height;
   u32 size;
   Control *this_00;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *native_wnd2;
+  i32 hotspot;
+  int button_x;
+  int i;
+  i8 button_rect[16];
+  i32 eh_prev;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   width = surface_get_width((DibSurface *)this);
@@ -5378,14 +5178,6 @@ void __thiscall frame_wnd_layout(FrameWindow *this)
   return;
 }
 #undef frame_border_width
-#undef native_wnd2
-#undef hotspot
-#undef button_x
-#undef i
-#undef button_rect
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 0055318c auto */
 void __thiscall frame_wnd_add_caption_button(PortraitDialog *this,iptr sprite,i32 callback)
@@ -5414,36 +5206,27 @@ void __thiscall frame_wnd_add_caption_button(PortraitDialog *this,iptr sprite,i3
 }
 
 /* 0055324c auto */
-#define rect_left2 (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define rect_top2 (*(u32 *)(frame_ + FRAME_OFF(8)))
-#define rect_right2 (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define rect_bottom2 (*(u32 *)(frame_ + FRAME_OFF(16)))
 void __thiscall frame_wnd_set_caption(FrameWindow *this,iptr title)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  struct { u32 left; u32 top; u32 right; u32 bottom; } rect2;
   
   _memset(this->frame_title,0,0x84);
   _strncpy((char *)this->frame_title,(char *)title,0x83);
   frame_wnd_draw_caption(this);
-  rect_left2 = this->frame_rect;
-  rect_top2 = this->frame_top;
-  rect_right2 = this->frame_right;
-  rect_bottom2 = this->client_top;
-  wnd_blit_surface_rect((DibSurface *)this,(iptr)&rect_left2);
+  rect2.left = this->frame_rect;
+  rect2.top = this->frame_top;
+  rect2.right = this->frame_right;
+  rect2.bottom = this->client_top;
+  wnd_blit_surface_rect((DibSurface *)this,(iptr)&rect2);
   return;
 }
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
 
 /* 005532d7 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall frame_wnd_destroy_caption_buttons(WindowObjectView *this)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; i < 6; i++) {
     if (((u32 *)&((PediaRedrawView *)this)->caption_button_slots)[i * 7] != 0) {
@@ -5455,7 +5238,6 @@ void __thiscall frame_wnd_destroy_caption_buttons(WindowObjectView *this)
   }
   return;
 }
-#undef i
 
 /* 00553379 auto */
 void __thiscall frame_wnd_close(DibSurface *this)
@@ -5467,15 +5249,14 @@ void __thiscall frame_wnd_close(DibSurface *this)
 }
 
 /* 0055339f auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(12)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(16)))
 SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *this)
 
 {
   u8 *slot;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  i32 eh_prev;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   surfwnd_ctor(this);
@@ -5489,15 +5270,8 @@ SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *this)
   }
   return this;
 }
-#undef i
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 00553444 auto */
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: virtual __thiscall COleCntrFrameWnd::~COleCntrFrameWnd(void)
    
@@ -5506,7 +5280,9 @@ SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *this)
 void __thiscall frame_wnd_dtor(DibSurface *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_prev;
+  i8 *eh_handler;
+  i32 eh_state;
   
   this->vtable = (u32)&PTR_FUN_0061d6dc;
   eh_state = 0;
@@ -5516,22 +5292,18 @@ void __thiscall frame_wnd_dtor(DibSurface *this)
   /* inlined unwind funclet 0055349b */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return;
 }
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 005534bc auto */
 #define frame_border_width (*(u32 *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(u32 *)((u8 *)&g.d_00633598))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define wnd_style (*(uint *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 frame_wnd_create
           (FrameWindow *this,int title,uint flags,int x,int y,int width,
           int height,u32 resize_width,u32 caption_h,u32 border_w)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uint wnd_style;
   
   if (title == 0) {
     crt_strcpy(this->frame_title,&frame_default_title_str);
@@ -5590,7 +5362,6 @@ frame_wnd_create
 #undef frame_border_width
 #undef frame_caption_height
 #undef screen_height
-#undef wnd_style
 
 /* 00553d30 auto */
 u32 __thiscall wnd_set_drag_begin_callback(WndDragBeginSetView *this,iptr callback)
@@ -5657,21 +5428,20 @@ void __cdecl frame_texture_surface_static_dtor(void)
 
 /* 005681c9 auto */
 #define frame_texture_loaded_i32 (*(i32 *)((u8 *)&g.d_00633dac))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define dll (*(DllHandle *)(frame_ + FRAME_OFF(16)))
-#define surface (*(DibSurface *)(frame_ + FRAME_OFF(20)))
-#define path (*(i8 (*)[128])(frame_ + FRAME_OFF(92)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(220)))
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(280)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(284)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(288)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl frame_texture_load(void)
 
 {
   int ok;
-  i8 frame_[FRAME_OFF(296)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 sprite_rect[16];
+  DllHandle dll;
+  DibSurface surface;
+  i8 path[128];
+  Sprite sprite;
+  i32 eh_prev;
+  i8 *eh_handler;
+  int eh_state;
   
   eh_state = 0xffffffff;
   gfx_build_grey_remap();
@@ -5689,7 +5459,7 @@ void __cdecl frame_texture_load(void)
   }
   else {
     resource_dll_load(&dll,(iptr)path);
-    eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),2);
+    eh_state = (eh_state & 0xffffff00 | (byte)(2));
     ok = surface_load_gif_resource(&surface,999,10,0xec,(iptr)((u8 *)&g.d_006ab6a8));
     if (ok == 0) {
       MessageBoxA((HWND)0x0,s_Failed_to_load_civ2art_gif_00633dcc,s_NOTICE_00633dc4,0x40);
@@ -5706,21 +5476,13 @@ void __cdecl frame_texture_load(void)
     /* inlined unwind funclet 00568348 */ { dll_free((DllHandle *)((iptr)&dll)); }
   }
   frame_texture_load_hook_nop();
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 00568354 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0056835d */ { surface_dtor((DibSurface *)((iptr)&surface)); }
   return;
 }
 #undef frame_texture_loaded_i32
-#undef sprite_rect
-#undef dll
-#undef surface
-#undef path
-#undef sprite
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 00568381 auto */
 void __cdecl frame_texture_free(void)
@@ -5812,13 +5574,12 @@ void __thiscall menu_reset(GameMenu *this,i32 size)
 }
 
 /* 005786f1 auto */
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 GameMenu * __thiscall menu_ctor(GameMenu *this,i32 size)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_prev;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   menu_handle_ctor(this);
@@ -5827,18 +5588,14 @@ GameMenu * __thiscall menu_ctor(GameMenu *this,i32 size)
   menu_reset(this,size);
   return this;
 }
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 00578770 auto */
-#define eh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall menu_dtor(GameMenu *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_prev;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0;
   memblock_free((iptr)this->item_storage);
@@ -5846,16 +5603,12 @@ void __thiscall menu_dtor(GameMenu *this)
   /* inlined unwind funclet 005787bd */ { menu_handle_dtor(*(GameMenu **)((iptr)&this)); }
   return;
 }
-#undef eh_prev
-#undef eh_handler
-#undef eh_state
 
 /* 005787de auto */
-#define menu2 (*(uptr *)(frame_ + FRAME_OFF(4)))
 i32 __thiscall menu_find_menu(GameMenu *this,int menu_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr menu2;
   
   menu2 = this->menus;
   while( true ) {
@@ -5867,15 +5620,13 @@ i32 __thiscall menu_find_menu(GameMenu *this,int menu_id)
   }
   return menu2;
 }
-#undef menu2
 
 /* 00578840 auto */
-#define index (*(int *)(frame_ + FRAME_OFF(4)))
-#define cur (*(uptr *)(frame_ + FRAME_OFF(8)))
 int __thiscall menu_visible_index(GameMenu *this,uptr menu)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  uptr cur;
   
   index = 1;
   for (cur = this->menus; (cur != 0 && (menu != cur));
@@ -5886,16 +5637,13 @@ int __thiscall menu_visible_index(GameMenu *this,uptr menu)
   }
   return index;
 }
-#undef index
-#undef cur
 
 /* 005788a9 auto */
-#define index (*(int *)(frame_ + FRAME_OFF(0)))
-#define menu2 (*(uptr *)(frame_ + FRAME_OFF(4)))
 i32 __thiscall menu_id_at_visible_index(GameMenu *this,int visible_index)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  uptr menu2;
   
   index = 1;
   menu2 = this->menus;
@@ -5912,17 +5660,14 @@ i32 __thiscall menu_id_at_visible_index(GameMenu *this,int visible_index)
     menu2 = *(uptr *)(menu2 + 0x10);
   } while( true );
 }
-#undef index
-#undef menu2
 
 /* 00578922 auto */
-#define menu2 (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define item (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define found (*(iptr *)(frame_ + FRAME_OFF(8)))
 iptr __thiscall menu_find_item(GameMenu *this,int item_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr menu2;
+  iptr item;
+  iptr found;
   
   found = 0;
   menu2 = this->menus;
@@ -5939,17 +5684,13 @@ iptr __thiscall menu_find_item(GameMenu *this,int item_id)
     menu2 = *(uptr *)(menu2 + 0x10);
   } while( true );
 }
-#undef menu2
-#undef item
-#undef found
 
 /* 005789aa auto */
-#define index (*(int *)(frame_ + FRAME_OFF(4)))
-#define cur (*(iptr *)(frame_ + FRAME_OFF(8)))
 int __thiscall menu_item_visible_index(GameMenu *this,iptr item)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  iptr cur;
   
   index = 1;
   for (cur = *(iptr *)(*(int *)(item + 0x18) + 0x18); (cur != 0 && (item != cur));
@@ -5960,17 +5701,14 @@ int __thiscall menu_item_visible_index(GameMenu *this,iptr item)
   }
   return index;
 }
-#undef index
-#undef cur
 
 /* 00578a1c auto */
-#define index (*(int *)(frame_ + FRAME_OFF(0)))
-#define item (*(iptr *)(frame_ + FRAME_OFF(4)))
 i32 __thiscall menu_item_id_at_visible_index(GameMenu *this,i32 menu_id,int visible_index)
 
 {
   iptr menu;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  iptr item;
   
   index = 1;
   menu = menu_find_menu(this,menu_id);
@@ -5986,18 +5724,15 @@ i32 __thiscall menu_item_id_at_visible_index(GameMenu *this,i32 menu_id,int visi
   }
   return 0xffffffff;
 }
-#undef index
-#undef item
 
 /* 00578b06 auto */
-#define last (*(uptr *)(frame_ + FRAME_OFF(4)))
 i32 * __thiscall menu_add_menu(GameMenu *this,i32 menu_id,char *title)
 
 {
   i32 *menu;
   size_t len;
   i32 text;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr last;
   
   menu = (i32 *)memblock_alloc((iptr)this->item_storage,0x1c);
   if (this->menus == 0) {
@@ -6024,12 +5759,8 @@ i32 * __thiscall menu_add_menu(GameMenu *this,i32 menu_id,char *title)
   this->menu_flags = this->menu_flags & 0xffff7fff;
   return menu;
 }
-#undef last
 
 /* 00578c12 auto */
-#define buf_len (*(size_t *)(frame_ + FRAME_OFF(0)))
-#define item (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define last (*(iptr *)(frame_ + FRAME_OFF(8)))
 i32 * __thiscall
 menu_add_item
           (GameMenu *this,i32 menu_id,i32 item_id,iptr text,size_t min_len)
@@ -6038,7 +5769,9 @@ menu_add_item
   iptr menu;
   size_t len;
   i32 buffer;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  size_t buf_len;
+  i32 *item;
+  iptr last;
   
   item = (i32 *)0x0;
   menu = menu_find_menu(this,menu_id);
@@ -6080,9 +5813,6 @@ menu_add_item
   }
   return item;
 }
-#undef buf_len
-#undef item
-#undef last
 
 /* 00578d8a auto */
 #define menu_command_callback (*(code * *)((u8 *)&g.d_0063430c))
@@ -6167,16 +5897,15 @@ void __thiscall menu_apply_item_checked(GameMenu *this,i32 item_id)
 }
 
 /* 00578f2c auto */
-#define menu2 (*(i32 * *)(frame_ + FRAME_OFF(0)))
-#define menu_index (*(int *)(frame_ + FRAME_OFF(4)))
-#define item_index (*(int *)(frame_ + FRAME_OFF(8)))
-#define item (*(i32 * *)(frame_ + FRAME_OFF(12)))
-#define i (*(int *)(frame_ + FRAME_OFF(16)))
-#define spec (*(i8 (*)[256])(frame_ + FRAME_OFF(20)))
 void __thiscall menu_rebuild(GameMenu *this,iptr window)
 
 {
-  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *menu2;
+  int menu_index;
+  int item_index;
+  i32 *item;
+  int i;
+  i8 spec[256];
   
   if ((this->menu_flags & 0x8000) == 0) {
     spec[0] = 0;
@@ -6231,12 +5960,6 @@ void __thiscall menu_rebuild(GameMenu *this,iptr window)
   }
   return;
 }
-#undef menu2
-#undef menu_index
-#undef item_index
-#undef item
-#undef i
-#undef spec
 
 /* 00579260 auto */
 void __thiscall menu_set_item_hidden(GameMenu *this,i32 item_id,int hidden)
@@ -6263,14 +5986,13 @@ void __thiscall menu_set_item_hidden(GameMenu *this,i32 item_id,int hidden)
 }
 
 /* 005792e1 auto */
-#define was_enabled (*(GameMenu * *)(frame_ + FRAME_OFF(4)))
 GameMenu * __thiscall
 menu_set_item_enabled(GameMenu *this,i32 item_id,GameMenu *enabled)
 
 {
   GameMenu *pCVar1;
   GameMenu *pCVar2;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  GameMenu *was_enabled;
   
   pCVar1 = (GameMenu *)menu_find_item(this,item_id);
   pCVar2 = pCVar1;
@@ -6291,7 +6013,6 @@ menu_set_item_enabled(GameMenu *this,i32 item_id,GameMenu *enabled)
   }
   return pCVar2;
 }
-#undef was_enabled
 
 /* 005793a3 auto */
 void __thiscall menu_remove_item(GameMenu *this,i32 item_id)
@@ -6336,12 +6057,11 @@ void __thiscall menu_set_item_checked(GameMenu *this,i32 item_id,int checked)
 }
 
 /* 005794cf auto */
-#define item (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall menu_set_menu_enabled(GameMenu *this,i32 menu_id,i32 enabled)
 
 {
   iptr menu;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr item;
   
   menu = menu_find_menu(this,menu_id);
   if (menu != 0) {
@@ -6351,7 +6071,6 @@ void __thiscall menu_set_menu_enabled(GameMenu *this,i32 menu_id,i32 enabled)
   }
   return;
 }
-#undef item
 
 /* 0057953e auto */
 void __thiscall menu_set_item_text(GameMenu *this,i32 item_id,iptr text)
@@ -6500,11 +6219,10 @@ void __cdecl cmd_unit_skip_turn(void)
 
 /* 0058bd84 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl cmd_end_player_turn(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
   
   for (unit = 0; unit < game.num_units; unit++) {
     if ((units[unit].id != 0) && (units[unit].owner == human_civ)) {
@@ -6514,7 +6232,6 @@ void __cdecl cmd_end_player_turn(void)
   return;
 }
 #undef human_civ
-#undef unit
 
 /* 0058d442 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -6522,14 +6239,13 @@ void __cdecl cmd_end_player_turn(void)
 #define map_cursor_y (*(short *)((u8 *)&g.d_0064b1b0))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl ui_pick_unit_from_stack(void)
 
 {
   int stack_count;
   iptr prompt;
   i32 dialog_flags;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
   
   unit_blink_active = 0;
   if (moving_units_mode == 1) {
@@ -6583,7 +6299,6 @@ LAB_0058d58e:
 #undef map_cursor_y
 #undef moving_units_mode
 #undef unit_blink_active
-#undef unit
 
 /* 0059d190 auto */
 void __cdecl dialog_text_font_global_init(void)
@@ -6820,14 +6535,13 @@ void __cdecl dialog_set_default_offset(i32 x,i32 y)
 #undef dlg_default_y
 
 /* 0059d401 auto */
-#define i (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl dialog_load_button_labels(void)
 
 {
   int status;
   i32 label_id;
   i8 *label;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
   
   status = text_open_section((iptr)((u8 *)&g.d_00635ac4),(iptr)((u8 *)&g.d_00635abc));
   if (status == 0) {
@@ -6840,7 +6554,6 @@ void __cdecl dialog_load_button_labels(void)
   }
   return;
 }
-#undef i
 
 /* 0059d487 auto */
 #define dlg_bevel_dark_color (*(i8 *)((u8 *)&g.d_00635a0c))
@@ -6949,12 +6662,11 @@ void __thiscall dialog_reset_string_pool(DialogCore *this,uint size)
 #define list_sel_bg_color (*(u32 *)((u8 *)&g.d_00635a24))
 #define list_shadow_color (*(u32 *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(u32 *)((u8 *)&g.d_00635a1c))
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall dialog_init_defaults(Dialog *this)
 
 {
   u8 *slot;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   this->surf_wnd = 0;
   this->bg_surface = 0;
@@ -7087,7 +6799,6 @@ void __thiscall dialog_init_defaults(Dialog *this)
 #undef list_sel_bg_color
 #undef list_shadow_color
 #undef list_text_color
-#undef i
 
 /* 0059db08 auto */
 Dialog * __thiscall dialog_ctor(Dialog *this,i32 size)
@@ -7262,12 +6973,11 @@ dialog_init
 }
 
 /* 0059e0eb auto */
-#define line (*(int * *)(frame_ + FRAME_OFF(0)))
 i32 __thiscall dialog_set_item_text(void *this,int line_id,iptr text)
 
 {
   size_t len;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int *line;
   
   for (line = *(int **)((int)this + 0x230); (*line != line_id && (line != (int *)0x0));
       line = (int *)line[7]) {
@@ -7279,11 +6989,8 @@ i32 __thiscall dialog_set_item_text(void *this,int line_id,iptr text)
   }
   return 0;
 }
-#undef line
 
 /* 0059e18b auto */
-#define last (*(int * *)(frame_ + FRAME_OFF(4)))
-#define cur (*(int * *)(frame_ + FRAME_OFF(8)))
 int * __thiscall
 dialog_add_line
           (DialogAddLineView *this,iptr text,int x,int y,int max_len,int color)
@@ -7292,7 +6999,8 @@ dialog_add_line
   int *line;
   size_t len;
   int buffer;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int *last;
+  int *cur;
   
   last = (int *)0x0;
   for (cur = (int *)this->line_list; cur != (int *)0x0; cur = (int *)cur[7]) {
@@ -7341,8 +7049,6 @@ LAB_0059e2e4:
   this->line_count++;
   return line;
 }
-#undef last
-#undef cur
 
 /* 0059e356 auto */
 i32 __thiscall dialog_option_icon_width(DialogCore *this)
@@ -7352,13 +7058,12 @@ i32 __thiscall dialog_option_icon_width(DialogCore *this)
 }
 
 /* 0059e376 auto */
-#define result (*(int *)(frame_ + FRAME_OFF(4)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(8)))
 int __thiscall dialog_option_row_height(DialogCore *this)
 
 {
   int spacing;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int result;
+  int icon_width;
   
   icon_width = dialog_option_icon_width(this);
   spacing = font_line_spacing((GameFont *)this->body_font);
@@ -7375,8 +7080,6 @@ int __thiscall dialog_option_row_height(DialogCore *this)
   }
   return result;
 }
-#undef result
-#undef icon_width
 
 /* 0059e3fa auto */
 u32 __thiscall dialog_list_row_height(DialogTextView *this)
@@ -7561,12 +7264,11 @@ void __thiscall dialog_set_position(DialogCore *this,u32 x,u32 y)
 }
 
 /* 0059e7ad auto */
-#define cur (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define found (*(uptr *)(frame_ + FRAME_OFF(8)))
 uptr __thiscall dialog_find_option(DialogOptionList *this,int option_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr cur;
+  uptr found;
   
   found = 0;
   cur = this->option_list;
@@ -7578,16 +7280,13 @@ uptr __thiscall dialog_find_option(DialogOptionList *this,int option_id)
   }
   return found;
 }
-#undef cur
-#undef found
 
 /* 0059e877 auto */
-#define cur (*(int * *)(frame_ + FRAME_OFF(4)))
-#define found (*(int * *)(frame_ + FRAME_OFF(8)))
 int * __thiscall dialog_find_sprite(DialogOptionList *this,int sprite_id)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int *cur;
+  int *found;
   
   found = (int *)0x0;
   cur = (int *)this->sprite_list;
@@ -7599,8 +7298,6 @@ int * __thiscall dialog_find_sprite(DialogOptionList *this,int sprite_id)
   }
   return found;
 }
-#undef cur
-#undef found
 
 /* 0059e8db auto */
 void __thiscall dialog_set_option_disabled(DialogOptionList *this,iptr option_id,int disabled)
@@ -7621,12 +7318,11 @@ void __thiscall dialog_set_option_disabled(DialogOptionList *this,iptr option_id
 }
 
 /* 0059e9f3 auto */
-#define checked (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __thiscall dialog_option_is_checked(DialogOptionList *this,i32 option_id)
 
 {
   byte *option;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 checked;
   
   checked = 0;
   option = (byte *)dialog_find_option(this,option_id);
@@ -7640,7 +7336,6 @@ i32 __thiscall dialog_option_is_checked(DialogOptionList *this,i32 option_id)
   }
   return checked;
 }
-#undef checked
 
 /* 0059ea4d auto */
 void __thiscall dialog_set_option_checked(DialogOptionList *this,i32 option_id,int checked)
@@ -7760,9 +7455,6 @@ void __thiscall dialog_set_image_zoom(DialogWindowView *this,u32 zoom)
 }
 
 /* 0059ec88 auto */
-#define last (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define cur (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define entry_width (*(u32 *)(frame_ + FRAME_OFF(8)))
 iptr * __thiscall
 dialog_add_sprite(DialogOptionList *this,iptr sprite,iptr sprite_id,iptr label)
 
@@ -7772,7 +7464,9 @@ dialog_add_sprite(DialogOptionList *this,iptr sprite,iptr sprite_id,iptr label)
   iptr label_buf;
   int label_width;
   u32 max_width;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr last;
+  uptr cur;
+  u32 entry_width;
   
   last = 0;
   for (cur = this->sprite_list; cur != 0; cur = *(uptr *)(cur + 0x10)) {
@@ -7812,13 +7506,8 @@ dialog_add_sprite(DialogOptionList *this,iptr sprite,iptr sprite_id,iptr label)
   this->sprite_count++;
   return entry;
 }
-#undef last
-#undef cur
-#undef entry_width
 
 /* 0059edf0 auto */
-#define prev (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define cur (*(uptr *)(frame_ + FRAME_OFF(4)))
 uint * __thiscall
 dialog_add_option(DialogOptionList *this,iptr text,iptr option_id,uint data)
 
@@ -7830,7 +7519,8 @@ dialog_add_option(DialogOptionList *this,iptr text,iptr option_id,uint data)
   uint text_buf;
   int icon_width;
   u32 max_width;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr prev;
+  uptr cur;
   
   prev = 0;
   cur = this->option_list;
@@ -7893,8 +7583,6 @@ dialog_add_option(DialogOptionList *this,iptr text,iptr option_id,uint data)
   this->option_count++;
   return option;
 }
-#undef prev
-#undef cur
 
 /* 0059f026 auto */
 uint * __thiscall
@@ -7912,9 +7600,6 @@ dialog_add_checkbox_option(DialogOptionList *this,iptr text,iptr option_id,int c
 }
 
 /* 0059f06d auto */
-#define last (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define cur (*(uptr *)(frame_ + FRAME_OFF(8)))
-#define field_width (*(u32 *)(frame_ + FRAME_OFF(16)))
 i32 * __thiscall
 dialog_add_edit_field(DialogOptionList *this,iptr label,iptr initial_text,size_t max_len)
 
@@ -7925,7 +7610,9 @@ dialog_add_edit_field(DialogOptionList *this,iptr label,iptr initial_text,size_t
   u32 label_width;
   int char_width;
   u32 max_width;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr last;
+  uptr cur;
+  u32 field_width;
   
   last = 0;
   for (cur = this->edit_field_list; cur != 0; cur = *(uptr *)(cur + 0x18)) {
@@ -7979,9 +7666,6 @@ dialog_add_edit_field(DialogOptionList *this,iptr label,iptr initial_text,size_t
   this->edit_count++;
   return field;
 }
-#undef last
-#undef cur
-#undef field_width
 
 /* 0059f2a3 auto */
 void __thiscall dialog_add_button(DialogButtonsView *this,iptr label)
@@ -8001,13 +7685,12 @@ void __thiscall dialog_add_button(DialogButtonsView *this,iptr label)
 }
 
 /* 0059f31a auto */
-#define normal_color (*(u32 *)(frame_ + FRAME_OFF(0)))
-#define alt_color (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define hilite_color (*(u32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall dialog_set_text_color(DialogTextView *this,int highlighted,int use_alt,int shadow)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 normal_color;
+  u32 alt_color;
+  u32 hilite_color;
   
   if (highlighted == 0) {
     if (use_alt == 0) {
@@ -8040,9 +7723,6 @@ void __thiscall dialog_set_text_color(DialogTextView *this,int highlighted,int u
   }
   return;
 }
-#undef normal_color
-#undef alt_color
-#undef hilite_color
 
 /* 0059f3d7 auto */
 int __thiscall
@@ -8085,11 +7765,10 @@ dialog_draw_text_line(DialogTextLineView *this,iptr text,int x_offset,i32 y)
 }
 
 /* 0059f5f7 auto */
-#define line (*(uptr *)(frame_ + FRAME_OFF(0)))
 i32 __thiscall dialog_has_text_lines(DialogOptionList *this)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr line;
   
   line = this->line_list;
   while( true ) {
@@ -8101,20 +7780,8 @@ i32 __thiscall dialog_has_text_lines(DialogOptionList *this)
   }
   return 1;
 }
-#undef line
 
 /* 0059f64a auto */
-#define line_y (*(u32 *)(frame_ + FRAME_OFF(0)))
-#define src (*(char * *)(frame_ + FRAME_OFF(8)))
-#define total_height (*(int *)(frame_ + FRAME_OFF(12)))
-#define y2 (*(u32 *)(frame_ + FRAME_OFF(20)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define line_buf (*(char (*)[256])(frame_ + FRAME_OFF(40)))
-#define word_buf (*(char *)(frame_ + FRAME_OFF(296)))
-#define word_rest (*(i8 (*)[79])(frame_ + FRAME_OFF(297)))
-#define line_width (*(int *)(frame_ + FRAME_OFF(376)))
-#define line (*(uptr *)(frame_ + FRAME_OFF(380)))
-#define line_height (*(int *)(frame_ + FRAME_OFF(384)))
 int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int draw)
 
 {
@@ -8126,7 +7793,16 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int draw)
   int buf_width;
   int center_x;
   bool has_shadow;
-  i8 frame_[FRAME_OFF(392)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 line_y;
+  char *src;
+  int total_height;
+  u32 y2;
+  int x2;
+  char line_buf[256];
+  char word_buf[80];
+  int line_width;
+  uptr line;
+  int line_height;
   
   has_shadow = this->shadow_color != this->text_color;
   line = this->line_list;
@@ -8186,12 +7862,12 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int draw)
           *space = '\0';
         }
         word_len = _strlen(src);
-        word_buf = '\0';
+        word_buf[0] = '\0';
         if (line_buf[0] != '\0') {
-          crt_strcat(&word_buf,&dialog_wrap_space_str);
+          crt_strcat(word_buf,&dialog_wrap_space_str);
         }
-        crt_strcat(&word_buf,src);
-        text_width = font_text_width((GameFont *)this->body_font,(iptr)&word_buf);
+        crt_strcat(word_buf,src);
+        text_width = font_text_width((GameFont *)this->body_font,(iptr)word_buf);
         if ((int)max_width < (int)((uint)has_shadow + text_width + line_width)) {
           if (draw != 0) {
             if ((this->style_flags & 0x200000) == 0) {
@@ -8207,13 +7883,13 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int draw)
           }
           total_height += line_height;
           y2 += line_height;
-          while (word_buf == ' ') {
-            crt_strcpy(&word_buf,word_rest);
+          while (word_buf[0] == ' ') {
+            crt_strcpy(word_buf,(word_buf + 1));
           }
           line_buf[0] = '\0';
           line_width = 0;
         }
-        crt_strcat(line_buf,&word_buf);
+        crt_strcat(line_buf,word_buf);
         line_width += text_width;
         if (space != (char *)0x0) {
           *space = ' ';
@@ -8243,25 +7919,13 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int draw)
   }
   return total_height;
 }
-#undef line_y
-#undef src
-#undef total_height
-#undef y2
-#undef x2
-#undef line_buf
-#undef word_buf
-#undef word_rest
-#undef line_width
-#undef line
-#undef line_height
 
 /* 0059fb78 auto */
-#define index (*(int *)(frame_ + FRAME_OFF(4)))
-#define cur (*(uptr *)(frame_ + FRAME_OFF(8)))
 i32 __thiscall dialog_option_group_index(DialogOptionList *this,uptr option)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  uptr cur;
   
   if (this->option_list != 0) {
     index = 0;
@@ -8276,16 +7940,13 @@ i32 __thiscall dialog_option_group_index(DialogOptionList *this,uptr option)
   }
   return 0;
 }
-#undef index
-#undef cur
 
 /* 0059fc19 auto */
-#define index (*(int *)(frame_ + FRAME_OFF(4)))
-#define cur (*(uptr *)(frame_ + FRAME_OFF(8)))
 i32 __thiscall dialog_option_at(DialogOptionList *this,int target_index)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
+  uptr cur;
   
   if (this->option_list != 0) {
     index = 0;
@@ -8300,8 +7961,6 @@ i32 __thiscall dialog_option_at(DialogOptionList *this,int target_index)
   }
   return 0;
 }
-#undef index
-#undef cur
 
 /* 0059fcba auto */
 int __thiscall dialog_column_of_option(DialogOptionList *this,uptr option)
@@ -8316,31 +7975,6 @@ int __thiscall dialog_column_of_option(DialogOptionList *this,uptr option)
 /* 0059fd2a auto */
 #define dialog_clamp_overflow (*(int *)((u8 *)&g.d_0062f004))
 #define main_frame_created (*(int *)((u8 *)&g.d_00634718))
-#define button_x (*(int *)(frame_ + FRAME_OFF(0)))
-#define text_height (*(int *)(frame_ + FRAME_OFF(8)))
-#define top_index (*(int *)(frame_ + FRAME_OFF(12)))
-#define frame_rect2 (*(i8 (*)[12])(frame_ + FRAME_OFF(16)))
-#define frame_bottom2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define text_width (*(u32 *)(frame_ + FRAME_OFF(32)))
-#define screen_rect2 (*(i8 (*)[8])(frame_ + FRAME_OFF(36)))
-#define screen_right (*(int *)(frame_ + FRAME_OFF(44)))
-#define screen_bottom (*(int *)(frame_ + FRAME_OFF(48)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(52)))
-#define remainder_acc (*(int *)(frame_ + FRAME_OFF(56)))
-#define rows (*(int *)(frame_ + FRAME_OFF(60)))
-#define left (*(u32 *)(frame_ + FRAME_OFF(64)))
-#define extra_space (*(int *)(frame_ + FRAME_OFF(68)))
-#define top (*(u32 *)(frame_ + FRAME_OFF(72)))
-#define avail_width (*(u32 *)(frame_ + FRAME_OFF(76)))
-#define sprites_height (*(int *)(frame_ + FRAME_OFF(80)))
-#define edit_height (*(int *)(frame_ + FRAME_OFF(84)))
-#define sprite (*(uptr *)(frame_ + FRAME_OFF(88)))
-#define i (*(uptr *)(frame_ + FRAME_OFF(92)))
-#define sprite_width2 (*(u32 *)(frame_ + FRAME_OFF(96)))
-#define line (*(uptr *)(frame_ + FRAME_OFF(100)))
-#define lists_height (*(u32 *)(frame_ + FRAME_OFF(104)))
-#define first_option (*(uptr *)(frame_ + FRAME_OFF(108)))
-#define content_height (*(int *)(frame_ + FRAME_OFF(112)))
 i32 __thiscall dialog_compute_layout(DialogOptionList *this)
 
 {
@@ -8350,7 +7984,28 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *this)
   i32 height;
   u32 tmp;
   uptr column_count;
-  i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
+  int button_x;
+  int text_height;
+  int top_index;
+  RECT frame_rect2;
+  u32 text_width;
+  RECT screen_rect2;
+  i32 result;
+  int remainder_acc;
+  int rows;
+  u32 left;
+  int extra_space;
+  u32 top;
+  u32 avail_width;
+  int sprites_height;
+  int edit_height;
+  uptr sprite;
+  uptr i;
+  u32 sprite_width2;
+  uptr line;
+  u32 lists_height;
+  uptr first_option;
+  int content_height;
   
   result = 1;
   text_height = 0;
@@ -8698,35 +8353,35 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *this)
     value = dialog_line_height((DialogTextView *)this);
     this->button_y = tmp - (this->bevel_width + value + this->pad_y);
     if ((this->style_flags & 0x100000) == 0) {
-      gfx_get_screen_rect((iptr)screen_rect2);
-      wnd_get_screen_rect((WndBase *)&main_frame_wnd,(iptr)frame_rect2);
+      gfx_get_screen_rect((iptr)((i8 *)&screen_rect2.left));
+      wnd_get_screen_rect((WndBase *)&main_frame_wnd,(iptr)((i8 *)&frame_rect2.left));
       if (this->window_x == 0xfffffc19) {
-        value = rect_width((iptr)screen_rect2);
+        value = rect_width((iptr)((i8 *)&screen_rect2.left));
         this->window_x = (value >> 1) - ((int)this->wnd_width >> 1);
       }
       else if ((((int)this->window_x < 0) &&
-               (this->window_x = this->window_x + ((screen_right - 1) - this->wnd_width),
+               (this->window_x = this->window_x + ((screen_rect2.right - 1) - this->wnd_width),
                main_frame_created != 0)) && ((this->style_flags & 0x10000) != 0)) {
         value = wnd_frame_width((WndBase *)&main_frame_wnd);
         this->window_x -= value;
       }
       if (this->window_y == 0xfffffc19) {
-        value = rect_height((iptr)screen_rect2);
+        value = rect_height((iptr)((i8 *)&screen_rect2.left));
         this->window_y = (value >> 1) - ((int)this->wnd_height >> 1);
       }
       else if ((int)this->window_y < 0) {
-        if (-(screen_bottom - frame_bottom2) < (int)this->window_y) {
-          this->window_y -= (screen_bottom - frame_bottom2);
+        if (-(screen_rect2.bottom - frame_rect2.bottom) < (int)this->window_y) {
+          this->window_y -= (screen_rect2.bottom - frame_rect2.bottom);
         }
-        this->window_y += ((screen_bottom - 1) - this->wnd_height);
+        this->window_y += ((screen_rect2.bottom - 1) - this->wnd_height);
         if ((main_frame_created != 0) && ((this->style_flags & 0x10000) != 0)) {
           value = wnd_nonclient_height((WndBase *)&main_frame_wnd);
           this->window_y -= value;
         }
       }
       if ((dialog_clamp_overflow == 0) &&
-         (value = rect_width((iptr)screen_rect2), (int)this->wnd_width <= value)) {
-        rect_height((iptr)screen_rect2);
+         (value = rect_width((iptr)((i8 *)&screen_rect2.left)), (int)this->wnd_width <= value)) {
+        rect_height((iptr)((i8 *)&screen_rect2.left));
       }
       this->list_x += this->origin_x;
       this->list_y += this->origin_y;
@@ -8746,35 +8401,8 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *this)
 }
 #undef dialog_clamp_overflow
 #undef main_frame_created
-#undef button_x
-#undef text_height
-#undef top_index
-#undef frame_rect2
-#undef frame_bottom2
-#undef text_width
-#undef screen_rect2
-#undef screen_right
-#undef screen_bottom
-#undef result
-#undef remainder_acc
-#undef rows
-#undef left
-#undef extra_space
-#undef top
-#undef avail_width
-#undef sprites_height
-#undef edit_height
-#undef sprite
-#undef i
-#undef sprite_width2
-#undef line
-#undef lists_height
-#undef first_option
-#undef content_height
 
 /* 005a0fea auto */
-#define shadow_color2 (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define fg_color (*(u32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall
 dialog_draw_option_cell
           (DialogOptionDrawView *this,iptr text,int x,int y,int selected,int disabled)
@@ -8783,7 +8411,8 @@ dialog_draw_option_cell
   int col_width;
   int text_width;
   uptr text_len;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 shadow_color2;
+  u32 fg_color;
   
   while (*(char *)text != '\0') {
     col_width = *(int *)(((DialogOptionDrawViewExt *)this)->pane_column_widths + this->cur_pane * 4 - 4);
@@ -8818,11 +8447,8 @@ dialog_draw_option_cell
             ((DibSurface *)this->surface_value,this->list_font,text,x,y,5);
   return;
 }
-#undef shadow_color2
-#undef fg_color
 
 /* 005a1148 auto */
-#define right_text (*(char * *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 dialog_draw_option_text
           (DialogOptionDrawView *this,char *text,int x,i32 y,i32 selected,
@@ -8832,7 +8458,7 @@ dialog_draw_option_text
   int col_width;
   char *separator;
   int right_width;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  char *right_text;
   
   right_text = (char *)0x0;
   separator = _strchr(text,0x7c);
@@ -8850,30 +8476,22 @@ dialog_draw_option_text
   }
   return;
 }
-#undef right_text
 
 /* 005a120b auto */
-#define inner_left (*(int *)(frame_ + FRAME_OFF(4)))
-#define inner_top (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define inner_right (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define inner_bottom (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define row (*(int *)(frame_ + FRAME_OFF(20)))
-#define cell_y (*(int *)(frame_ + FRAME_OFF(24)))
-#define col (*(int *)(frame_ + FRAME_OFF(28)))
-#define cell_x (*(int *)(frame_ + FRAME_OFF(32)))
-#define fill_color (*(u32 *)(frame_ + FRAME_OFF(36)))
-#define is_selected (*(uint *)(frame_ + FRAME_OFF(40)))
-#define cell_left (*(int *)(frame_ + FRAME_OFF(44)))
-#define cell_top (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define cell_right (*(i32 *)(frame_ + FRAME_OFF(52)))
-#define cell_bottom (*(i32 *)(frame_ + FRAME_OFF(56)))
 uint __thiscall dialog_draw_option(DialogOptionList *this,iptr option,int blit)
 
 {
   int rel_index;
   int group_index;
   int visible_count;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  RECT inner_rect;
+  int row;
+  int cell_y;
+  int col;
+  int cell_x;
+  u32 fill_color;
+  uint is_selected;
+  RECT cell_rect;
   
   if (option == 0) {
     is_selected = 0;
@@ -8897,7 +8515,7 @@ uint __thiscall dialog_draw_option(DialogOptionList *this,iptr option,int blit)
                  *(int *)(this->list_column_counts + *(int *)(option + 0xc) * 4 - 0x28);
       cell_y = *(int *)(this->list_column_counts + *(int *)(option + 0xc) * 4 - 8) * row +
                  *(int *)(this->list_column_counts + *(int *)(option + 0xc) * 4 - 0x20);
-      rect_set_xywh((iptr)&cell_left,cell_x,cell_y,
+      rect_set_xywh((iptr)&cell_rect,cell_x,cell_y,
                          *(iptr *)(this->list_column_counts + *(int *)(option + 0xc) * 4 - 0x10),
                          *(iptr *)(this->list_column_counts + *(int *)(option + 0xc) * 4 - 8));
       is_selected = (uint)(this->selected_option == option);
@@ -8907,12 +8525,12 @@ uint __thiscall dialog_draw_option(DialogOptionList *this,iptr option,int blit)
       else {
         fill_color = this->list_sel_fill_color;
       }
-      inner_left = cell_left;
-      inner_top = cell_top;
-      inner_right = cell_right;
-      inner_bottom = cell_bottom;
+      inner_rect.left = cell_rect.left;
+      inner_rect.top = cell_rect.top;
+      inner_rect.right = cell_rect.right;
+      inner_rect.bottom = cell_rect.bottom;
       if (this != (DialogOptionList *)0xfffffdf8) {
-        inner_left = cell_left + *(int *)(this->list_column_counts + *(int *)(option + 0xc) * 4 + 0x10);
+        inner_rect.left = cell_rect.left + *(int *)(this->list_column_counts + *(int *)(option + 0xc) * 4 + 0x10);
       }
       if ((this->on_draw_option == 0) ||
          (group_index = (*(code *)this->on_draw_option)
@@ -8920,45 +8538,23 @@ uint __thiscall dialog_draw_option(DialogOptionList *this,iptr option,int blit)
                              ,*(i32 *)(this->list_column_counts + *(int *)(option + 0xc) * 4 - 8)),
          group_index == 0)) {
         if (is_selected != 0) {
-          gfx_draw_bevel_rect(this->surf_wnd,(iptr)&inner_left,this->bevel_light_color,this->bevel_dark_color);
-          rect_deflate((iptr)&inner_left,1,1);
+          gfx_draw_bevel_rect(this->surf_wnd,(iptr)&inner_rect,this->bevel_light_color,this->bevel_dark_color);
+          rect_deflate((iptr)&inner_rect,1,1);
         }
-        gfx_fill_rect(this->surf_wnd,(iptr)&inner_left,fill_color);
+        gfx_fill_rect(this->surf_wnd,(iptr)&inner_rect,fill_color);
         dialog_draw_option_text
                   ((DialogOptionDrawView *)this,*(i32 *)(option + 8),cell_x + 2,cell_y,is_selected,
                    *(uint *)option & 1);
       }
       if (blit != 0) {
-        wnd_blit_surface_rect((DibSurface *)this->surf_wnd,(iptr)&cell_left);
+        wnd_blit_surface_rect((DibSurface *)this->surf_wnd,(iptr)&cell_rect);
       }
     }
   }
   return is_selected;
 }
-#undef inner_left
-#undef inner_top
-#undef inner_right
-#undef inner_bottom
-#undef row
-#undef cell_y
-#undef col
-#undef cell_x
-#undef fill_color
-#undef is_selected
-#undef cell_left
-#undef cell_top
-#undef cell_right
-#undef cell_bottom
 
 /* 005a14d2 auto */
-#define group_pos (*(int *)(frame_ + FRAME_OFF(4)))
-#define pane_idx (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define node2 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define i (*(int *)(frame_ + FRAME_OFF(24)))
-#define clip_left2 (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define clip_top2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define clip_right2 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define clip_bottom2 (*(i32 *)(frame_ + FRAME_OFF(40)))
 void __thiscall dialog_draw_option_list(DialogOptionList *this)
 
 {
@@ -8969,7 +8565,11 @@ void __thiscall dialog_draw_option_list(DialogOptionList *this)
   iptr option;
   uint drawn;
   i32 no_blit;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  int group_pos;
+  u32 pane_idx;
+  iptr node2;
+  int i;
+  RECT clip_rect2;
   
   saved_pane = this->cur_pane;
   for (pane_idx = 0; (int)pane_idx < 2; pane_idx++) {
@@ -8981,17 +8581,17 @@ void __thiscall dialog_draw_option_list(DialogOptionList *this)
       pane_drawn[2] = '\0';
       pane_drawn[3] = '\0';
       pane = this->cur_pane;
-      clip_left2 = *(i32 *)(this->list_vscroll_rect + pane * 0x10 - 0x20);
-      clip_top2 = *(int *)(this->list_vscroll_rect + pane * 0x10 - 0x1c);
-      clip_right2 = *(i32 *)(this->list_vscroll_rect + pane * 0x10 - 0x18);
-      clip_bottom2 = *(i32 *)(this->list_vscroll_rect + pane * 0x10 - 0x14);
+      clip_rect2.left = *(i32 *)(this->list_vscroll_rect + pane * 0x10 - 0x20);
+      clip_rect2.top = *(int *)(this->list_vscroll_rect + pane * 0x10 - 0x1c);
+      clip_rect2.right = *(i32 *)(this->list_vscroll_rect + pane * 0x10 - 0x18);
+      clip_rect2.bottom = *(i32 *)(this->list_vscroll_rect + pane * 0x10 - 0x14);
       if ((1 < (int)this->columns) || ((this->option_count == 0 || (this->on_draw_option != 0)))) {
         gfx_fill_rect(this->surf_wnd,(iptr)(this->list_vscroll_rect + this->cur_pane * 0x10 - 0x20),
                            this->list_fill_color);
       }
       gfx_draw_rect_frame(this->surf_wnd,(iptr)(this->list_vscroll_rect + this->cur_pane * 0x10 - 0x40),
                          this->bevel_dark_color);
-      surface_set_clip((DibSurface *)this->surf_wnd,(iptr)&clip_left2);
+      surface_set_clip((DibSurface *)this->surf_wnd,(iptr)&clip_rect2);
       if (this->option_count != 0) {
         node2 = *(iptr *)(active_dialog + 0x228);
         first_index = dialog_option_group_index(this,*(uptr *)(this->list_column_counts + this->cur_pane * 4 + 0x18));
@@ -9006,15 +8606,15 @@ void __thiscall dialog_draw_option_list(DialogOptionList *this)
               drawn = dialog_draw_option(this,option,no_blit);
               *(uint *)(this->list_vscroll_rect + this->cur_pane * 4 + 0x40) =
                    *(uint *)(this->list_vscroll_rect + this->cur_pane * 4 + 0x40) | drawn;
-              clip_top2 += *(int *)(this->list_column_counts + this->cur_pane * 4 - 8);
+              clip_rect2.top += *(int *)(this->list_column_counts + this->cur_pane * 4 - 8);
             }
             group_pos++;
           }
           node2 = *(iptr *)(node2 + 0x10);
         }
         if (((this->columns == 1) && (this->on_draw_option == 0)) &&
-           (first_index = rect_height((iptr)&clip_left2), 0 < first_index)) {
-          gfx_fill_rect(this->surf_wnd,(iptr)&clip_left2,this->list_fill_color);
+           (first_index = rect_height((iptr)&clip_rect2), 0 < first_index)) {
+          gfx_fill_rect(this->surf_wnd,(iptr)&clip_rect2,this->list_fill_color);
         }
       }
       surface_reset_clip((DibSurface *)this->surf_wnd);
@@ -9026,14 +8626,6 @@ void __thiscall dialog_draw_option_list(DialogOptionList *this)
   this->cur_pane = saved_pane;
   return;
 }
-#undef group_pos
-#undef pane_idx
-#undef node2
-#undef i
-#undef clip_left2
-#undef clip_top2
-#undef clip_right2
-#undef clip_bottom2
 
 /* 005a1766 auto */
 int __thiscall dialog_column_of_index(DialogTextView *this,int index)
@@ -9056,7 +8648,6 @@ int __thiscall dialog_column_start_index(DialogTextView *this,int index)
 }
 
 /* 005a17e9 auto */
-#define top_index (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall dialog_select_option(DialogOptionList *this,uptr option,int redraw)
 
 {
@@ -9065,7 +8656,7 @@ void __thiscall dialog_select_option(DialogOptionList *this,uptr option,int redr
   int option_index;
   i32 top_option;
   iptr scroll_pos;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int top_index;
   
   scrolled = false;
   if ((option != 0) && (this->selected_option != option)) {
@@ -9120,7 +8711,6 @@ void __thiscall dialog_select_option(DialogOptionList *this,uptr option,int redr
   }
   return;
 }
-#undef top_index
 
 /* 005a1a7d auto */
 i32 __thiscall dialog_option_at_point(DialogOptionList *this,int x,int y)
@@ -9165,12 +8755,11 @@ i32 __thiscall dialog_option_at_point(DialogOptionList *this,int x,int y)
 }
 
 /* 005a1c52 auto */
-#define node2 (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define count (*(int *)(frame_ + FRAME_OFF(8)))
 int __thiscall dialog_count_group_options(DialogOptionList *this,int group)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr node2;
+  int count;
   
   count = 0;
   for (node2 = this->option_list; node2 != 0; node2 = *(uptr *)(node2 + 0x10)) {
@@ -9180,8 +8769,6 @@ int __thiscall dialog_count_group_options(DialogOptionList *this,int group)
   }
   return count;
 }
-#undef node2
-#undef count
 
 /* 005a1caf auto */
 void __thiscall dialog_pick_pane_at(DialogWindowView *this,int x,int y)
@@ -9228,15 +8815,6 @@ void __cdecl dialog_list_on_vscroll(i32 scroll_pos)
 #define dlg_parent_window (*(i8 * *)((u8 *)&g.d_006359c4))
 #define dlg_pending_idle_callback (*(int *)((u8 *)&g.d_00635a3c))
 #define main_frame_created (*(int *)((u8 *)&g.d_00634718))
-#define surf_wnd2 (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define wnd_style (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define palette (*(i8 * *)(frame_ + FRAME_OFF(16)))
-#define parent2 (*(i8 * *)(frame_ + FRAME_OFF(20)))
-#define title (*(i8 * *)(frame_ + FRAME_OFF(24)))
-#define empty_title (*(i8 (*)[4])(frame_ + FRAME_OFF(28)))
-#define saved_seh (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(36)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(40)))
 i32 __thiscall dialog_create_window(DialogWindowView *this)
 
 {
@@ -9244,7 +8822,15 @@ i32 __thiscall dialog_create_window(DialogWindowView *this)
   SurfaceWindow *this_00;
   int surf_width;
   u32 new_size;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr surf_wnd2;
+  i32 wnd_style;
+  i8 *palette;
+  i8 *parent2;
+  i8 *title;
+  i8 empty_title[4];
+  i32 saved_seh;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   if (this->surf_wnd == 0) {
@@ -9335,15 +8921,6 @@ i32 __thiscall dialog_create_window(DialogWindowView *this)
 #undef dlg_parent_window
 #undef dlg_pending_idle_callback
 #undef main_frame_created
-#undef surf_wnd2
-#undef wnd_style
-#undef palette
-#undef parent2
-#undef title
-#undef empty_title
-#undef saved_seh
-#undef seh_handler
-#undef eh_state
 
 /* 005a20f4 auto */
 void __cdecl dialog_on_redraw(void)
@@ -9359,45 +8936,6 @@ void __cdecl dialog_on_redraw(void)
 #define dialog_clamp_overflow (*(int *)((u8 *)&g.d_0062f004))
 #define dialog_stack (*(i32 *)((u8 *)&g.d_00635a58))
 #define dialog_stack_top (*(Dialog * *)((u8 *)&g.d_006ad678))
-#define parent_198 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define parent_194 (*(int *)(frame_ + FRAME_OFF(4)))
-#define parent_190 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define parent_18c (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define parent_188 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define parent_184 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define parent_180 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define parent_17c (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define parent_178 (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define parent_174 (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define parent_170 (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define buttons (*(int * *)(frame_ + FRAME_OFF(44)))
-#define edits (*(u32 * *)(frame_ + FRAME_OFF(52)))
-#define hotspots (*(u32 * *)(frame_ + FRAME_OFF(60)))
-#define radio_group2 (*(uptr *)(frame_ + FRAME_OFF(68)))
-#define checkboxes2 (*(u32 * *)(frame_ + FRAME_OFF(76)))
-#define hscroll2 (*(i32 *)(frame_ + FRAME_OFF(84)))
-#define vscroll2 (*(i32 *)(frame_ + FRAME_OFF(92)))
-#define listbox22 (*(i32 *)(frame_ + FRAME_OFF(100)))
-#define hscroll (*(i32 *)(frame_ + FRAME_OFF(108)))
-#define vscroll (*(i32 *)(frame_ + FRAME_OFF(116)))
-#define listbox3 (*(i32 *)(frame_ + FRAME_OFF(124)))
-#define item_index (*(int *)(frame_ + FRAME_OFF(148)))
-#define edit_field (*(uptr *)(frame_ + FRAME_OFF(156)))
-#define y2 (*(u32 *)(frame_ + FRAME_OFF(160)))
-#define label (*(i8 * *)(frame_ + FRAME_OFF(176)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
-#define label_count2 (*(iptr *)(frame_ + FRAME_OFF(196)))
-#define button_id (*(iptr *)(frame_ + FRAME_OFF(200)))
-#define is_listbox (*(uint *)(frame_ + FRAME_OFF(204)))
-#define option (*(uint * *)(frame_ + FRAME_OFF(208)))
-#define sprite (*(uptr *)(frame_ + FRAME_OFF(212)))
-#define i (*(int *)(frame_ + FRAME_OFF(216)))
-#define unused_flag (*(i8 *)(frame_ + FRAME_OFF(220)))
-#define width2 (*(iptr *)(frame_ + FRAME_OFF(224)))
-#define labels (*(uint (*)[41])(frame_ + FRAME_OFF(228)))
-#define saved_seh (*(i32 *)(frame_ + FRAME_OFF(392)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(396)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(400)))
 void __thiscall dialog_create_controls(Dialog *this)
 
 {
@@ -9410,7 +8948,45 @@ void __thiscall dialog_create_controls(Dialog *this)
   u32 x;
   i32 text;
   u32 zoom;
-  i8 frame_[FRAME_OFF(408)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_198;
+  int parent_194;
+  iptr parent_190;
+  iptr parent_18c;
+  iptr parent_188;
+  iptr parent_184;
+  iptr parent_180;
+  iptr parent_17c;
+  iptr parent_178;
+  iptr parent_174;
+  iptr parent_170;
+  int *buttons;
+  u32 *edits;
+  u32 *hotspots;
+  uptr radio_group2;
+  u32 *checkboxes2;
+  i32 hscroll2;
+  i32 vscroll2;
+  i32 listbox22;
+  i32 hscroll;
+  i32 vscroll;
+  i32 listbox3;
+  int item_index;
+  uptr edit_field;
+  u32 y2;
+  i8 *label;
+  i8 rect[16];
+  iptr label_count2;
+  iptr button_id;
+  uint is_listbox;
+  uint *option;
+  uptr sprite;
+  int i;
+  i8 unused_flag;
+  iptr width2;
+  uint labels[41];
+  i32 saved_seh;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   label_count2 = 0;
@@ -9912,54 +9488,14 @@ void __thiscall dialog_create_controls(Dialog *this)
 #undef dialog_clamp_overflow
 #undef dialog_stack
 #undef dialog_stack_top
-#undef parent_198
-#undef parent_194
-#undef parent_190
-#undef parent_18c
-#undef parent_188
-#undef parent_184
-#undef parent_180
-#undef parent_17c
-#undef parent_178
-#undef parent_174
-#undef parent_170
-#undef buttons
-#undef edits
-#undef hotspots
-#undef radio_group2
-#undef checkboxes2
-#undef hscroll2
-#undef vscroll2
-#undef listbox22
-#undef hscroll
-#undef vscroll
-#undef listbox3
-#undef item_index
-#undef edit_field
-#undef y2
-#undef label
-#undef rect
-#undef label_count2
-#undef button_id
-#undef is_listbox
-#undef option
-#undef sprite
-#undef i
-#undef unused_flag
-#undef width2
-#undef labels
-#undef saved_seh
-#undef seh_handler
-#undef eh_state
 
 /* 005a3bae auto */
-#define found (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define index (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define node2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl dialog_radio_on_dblclick(i32 ctrl_id,int item)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr found;
+  i32 index;
+  iptr node2;
   
   found = 0;
   if (active_dialog != 0) {
@@ -9980,9 +9516,6 @@ void __cdecl dialog_radio_on_dblclick(i32 ctrl_id,int item)
   }
   return;
 }
-#undef found
-#undef index
-#undef node2
 
 /* 005a3c58 auto */
 void __cdecl dialog_end_current(void)
@@ -10005,14 +9538,13 @@ void __cdecl dialog_listbox_on_dblclick(void)
 }
 
 /* 005a3cca auto */
-#define sprite (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl dialog_on_sprite_click(int ctrl_id)
 
 {
   bool changed;
   int done;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *sprite;
+  int i;
   
   changed = false;
   sprite = *(i32 **)(active_dialog + 0x234);
@@ -10045,8 +9577,6 @@ void __cdecl dialog_on_sprite_click(int ctrl_id)
   }
   return;
 }
-#undef sprite
-#undef i
 
 /* 005a3df3 auto */
 void __cdecl dialog_sprite_on_dblclick(void)
@@ -10069,19 +9599,18 @@ void __cdecl dialog_sprite_on_dblclick(void)
 
 /* 005a3e56 auto */
 #define dialog_timeout_start_i32 (*(i32 *)((u8 *)&g.d_006cec80))
-#define sprite_index (*(int *)(frame_ + FRAME_OFF(0)))
-#define found (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define button_id (*(int *)(frame_ + FRAME_OFF(8)))
-#define index (*(int *)(frame_ + FRAME_OFF(12)))
-#define node2 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define sprite (*(iptr *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl dialog_on_button_click(int ctrl_id)
 
 {
   int button_index;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int sprite_index;
+  iptr found;
+  int button_id;
+  int index;
+  iptr node2;
+  iptr sprite;
   
   if (active_dialog != 0) {
     dialog_timeout_start_i32 = timer_ticks();
@@ -10137,17 +9666,9 @@ void __cdecl dialog_on_button_click(int ctrl_id)
   return;
 }
 #undef dialog_timeout_start_i32
-#undef sprite_index
-#undef found
-#undef button_id
-#undef index
-#undef node2
-#undef sprite
 
 /* 005a407f auto */
 #define dialog_timeout_start_i32 (*(i32 *)((u8 *)&g.d_006cec80))
-#define sprite (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define node2 (*(uptr *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl dialog_on_keydown(i32 key)
@@ -10158,7 +9679,8 @@ void __cdecl dialog_on_keydown(i32 key)
   int index;
   int pos;
   i32 redraw;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr sprite;
+  uptr node2;
   
   if (active_dialog == 0) {
     return;
@@ -10396,15 +9918,9 @@ LAB_005a43d9:
   return;
 }
 #undef dialog_timeout_start_i32
-#undef sprite
-#undef node2
 
 /* 005a49c1 auto */
 #define dialog_timeout_start_i32 (*(i32 *)((u8 *)&g.d_006cec80))
-#define match_index (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define match (*(uptr *)(frame_ + FRAME_OFF(8)))
-#define node2 (*(uptr *)(frame_ + FRAME_OFF(16)))
-#define counter2 (*(iptr *)(frame_ + FRAME_OFF(20)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl dialog_on_char(byte ch)
@@ -10416,7 +9932,10 @@ void __cdecl dialog_on_char(byte ch)
   int top_index;
   int bottom_index;
   i32 top_option;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr match_index;
+  uptr match;
+  uptr node2;
+  iptr counter2;
   
   if ((active_dialog != 0) && (target_index = _isalpha((uint)ch), target_index != 0)) {
     dialog_timeout_start_i32 = timer_ticks();
@@ -10528,10 +10047,6 @@ void __cdecl dialog_on_char(byte ch)
   return;
 }
 #undef dialog_timeout_start_i32
-#undef match_index
-#undef match
-#undef node2
-#undef counter2
 
 /* 005a4df3 auto */
 void __cdecl dialog_list_on_lbuttondown(i32 x,i32 y)
@@ -10559,7 +10074,6 @@ void __cdecl dialog_list_on_lbuttondown(i32 x,i32 y)
 }
 
 /* 005a4edf auto */
-#define sel_index (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl dialog_list_on_mousemove(i32 x,i32 y)
 
 {
@@ -10569,7 +10083,7 @@ void __cdecl dialog_list_on_mousemove(i32 x,i32 y)
   int top_index;
   int last_col;
   i32 value;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int sel_index;
   
   if (((active_dialog != 0) && ((*(uint *)(active_dialog + 0x3c) & 0x41000) == 0x1000)) &&
      (*(int *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) != 0)) {
@@ -10659,7 +10173,6 @@ void __cdecl dialog_list_on_mousemove(i32 x,i32 y)
   }
   return;
 }
-#undef sel_index
 
 /* 005a535e auto */
 void __cdecl dialog_list_on_lbuttonup(i32 x,i32 y)
@@ -10797,24 +10310,6 @@ void __thiscall dialog_fill_rect_bg(DialogTextView *this,iptr rect,int area)
 #undef dlg_frame_tile_surface
 
 /* 005a577e auto */
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define pane (*(u32 *)(frame_ + FRAME_OFF(20)))
-#define saved_pane (*(u32 *)(frame_ + FRAME_OFF(24)))
-#define label_x (*(int *)(frame_ + FRAME_OFF(28)))
-#define sprite_h (*(int *)(frame_ + FRAME_OFF(32)))
-#define edit_field (*(uptr *)(frame_ + FRAME_OFF(36)))
-#define sprite_y2 (*(u32 *)(frame_ + FRAME_OFF(40)))
-#define sprite_x2 (*(u32 *)(frame_ + FRAME_OFF(44)))
-#define created (*(int *)(frame_ + FRAME_OFF(48)))
-#define title_y (*(int *)(frame_ + FRAME_OFF(52)))
-#define label_y (*(int *)(frame_ + FRAME_OFF(56)))
-#define title_x (*(int *)(frame_ + FRAME_OFF(60)))
-#define sprite (*(i32 * *)(frame_ + FRAME_OFF(64)))
-#define i (*(int *)(frame_ + FRAME_OFF(68)))
-#define sprite_w (*(int *)(frame_ + FRAME_OFF(72)))
-#define rect (*(i8 (*)[4])(frame_ + FRAME_OFF(76)))
-#define rect_top2 (*(int *)(frame_ + FRAME_OFF(80)))
-#define rect_bottom2 (*(int *)(frame_ + FRAME_OFF(88)))
 void __thiscall dialog_render(Dialog *this)
 
 {
@@ -10823,7 +10318,22 @@ void __thiscall dialog_render(Dialog *this)
   int row_height;
   int line_spacing;
   u32 zoom;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 sprite_rect[16];
+  u32 pane;
+  u32 saved_pane;
+  int label_x;
+  int sprite_h;
+  uptr edit_field;
+  u32 sprite_y2;
+  u32 sprite_x2;
+  int created;
+  int title_y;
+  int label_y;
+  int title_x;
+  i32 *sprite;
+  int i;
+  int sprite_w;
+  RECT rect;
   
   created = 0;
   if ((this->style_flags & 0x20) == 0) {
@@ -10835,22 +10345,22 @@ void __thiscall dialog_render(Dialog *this)
     dialog_create_controls(this);
   }
   if ((this->style_flags & 0x4000) == 0) {
-    rect_set_xywh((iptr)rect,this->origin_x,this->origin_y,this->wnd_width,this->wnd_height);
+    rect_set_xywh((iptr)((i8 *)&rect.left),this->origin_x,this->origin_y,this->wnd_width,this->wnd_height);
     if (this->border_width != 0) {
       for (i = 0; i < (int)this->bevel_width; i++) {
-        gfx_draw_bevel_rect(this->surf_wnd,(iptr)rect,this->bevel_light_color,this->bevel_dark_color);
-        rect_deflate((iptr)rect,1,1);
+        gfx_draw_bevel_rect(this->surf_wnd,(iptr)((i8 *)&rect.left),this->bevel_light_color,this->bevel_dark_color);
+        rect_deflate((iptr)((i8 *)&rect.left),1,1);
       }
-      dialog_fill_rect_bg((DialogTextView *)this,(iptr)rect,1);
-      rect_deflate((iptr)rect,this->border_width + this->bevel_width * -2,0);
-      rect_top2 = rect_top2 + this->title_height + this->bevel_width * -2;
-      rect_bottom2 -= ((this->chrome_height - this->title_height) + this->bevel_width * -2);
+      dialog_fill_rect_bg((DialogTextView *)this,(iptr)((i8 *)&rect.left),1);
+      rect_deflate((iptr)((i8 *)&rect.left),this->border_width + this->bevel_width * -2,0);
+      rect.top = rect.top + this->title_height + this->bevel_width * -2;
+      rect.bottom -= ((this->chrome_height - this->title_height) + this->bevel_width * -2);
       for (i = 0; i < (int)this->bevel_width; i++) {
-        gfx_draw_bevel_rect(this->surf_wnd,(iptr)rect,this->bevel_dark_color,this->bevel_light_color);
-        rect_deflate((iptr)rect,1,1);
+        gfx_draw_bevel_rect(this->surf_wnd,(iptr)((i8 *)&rect.left),this->bevel_dark_color,this->bevel_light_color);
+        rect_deflate((iptr)((i8 *)&rect.left),1,1);
       }
     }
-    dialog_fill_rect_bg((DialogTextView *)this,(iptr)rect,2);
+    dialog_fill_rect_bg((DialogTextView *)this,(iptr)((i8 *)&rect.left),2);
   }
   if ((this->title_text != 0) && ((this->style_flags & 0x10000) == 0)) {
     zoom = this->wnd_width;
@@ -10890,9 +10400,9 @@ void __thiscall dialog_render(Dialog *this)
                   (sprite[3],this->surf_wnd,*sprite,sprite[1],sprite_x2,sprite_y2);
       }
       if (((this->style_flags & 0x20000) != 0) && ((i32 *)this->selected_sprite == sprite)) {
-        rect_set((iptr)rect,sprite_x2 - 1,sprite_y2 - 1,sprite_w + sprite_x2,
+        rect_set((iptr)((i8 *)&rect.left),sprite_x2 - 1,sprite_y2 - 1,sprite_w + sprite_x2,
                            sprite_h + sprite_y2);
-        gfx_draw_rect_frame(this->surf_wnd,(iptr)rect,this->frame_color);
+        gfx_draw_rect_frame(this->surf_wnd,(iptr)((i8 *)&rect.left),this->frame_color);
       }
       tmp = sprite_h;
       if (sprite[2] != 0) {
@@ -10979,32 +10489,10 @@ void __thiscall dialog_render(Dialog *this)
   this->style_flags = this->style_flags | 0x20;
   return;
 }
-#undef sprite_rect
-#undef pane
-#undef saved_pane
-#undef label_x
-#undef sprite_h
-#undef edit_field
-#undef sprite_y2
-#undef sprite_x2
-#undef created
-#undef title_y
-#undef label_y
-#undef title_x
-#undef sprite
-#undef i
-#undef sprite_w
-#undef rect
-#undef rect_top2
-#undef rect_bottom2
 
 /* 005a5f34 auto */
 #define game_session_active (*(int *)((u8 *)&g.d_006252c4))
 #define dialog_timeout_start_i32 (*(i32 *)((u8 *)&g.d_006cec80))
-#define item_text (*(char (*)[132])(frame_ + FRAME_OFF(4)))
-#define sel_text (*(char (*)[132])(frame_ + FRAME_OFF(136)))
-#define option (*(uint * *)(frame_ + FRAME_OFF(268)))
-#define i (*(int *)(frame_ + FRAME_OFF(272)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 u32 __thiscall dialog_run_modal(Dialog *this,iptr out_text,iptr timeout_secs)
@@ -11013,7 +10501,10 @@ u32 __thiscall dialog_run_modal(Dialog *this,iptr out_text,iptr timeout_secs)
   iptr main_hwnd;
   BOOL BVar1;
   int result;
-  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  char item_text[132];
+  char sel_text[132];
+  uint *option;
+  int i;
   
   if (dialog_stack_depth != 0x10) {
     if (timeout_secs == 0) {
@@ -11110,24 +10601,8 @@ u32 __thiscall dialog_run_modal(Dialog *this,iptr out_text,iptr timeout_secs)
 }
 #undef game_session_active
 #undef dialog_timeout_start_i32
-#undef item_text
-#undef sel_text
-#undef option
-#undef i
 
 /* 005a632a auto */
-#define expanded (*(i8 (*)[256])(frame_ + FRAME_OFF(4)))
-#define mode (*(int *)(frame_ + FRAME_OFF(260)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(264)))
-#define has_edit (*(uint *)(frame_ + FRAME_OFF(268)))
-#define line (*(char * *)(frame_ + FRAME_OFF(272)))
-#define edit_text (*(i8 (*)[80])(frame_ + FRAME_OFF(276)))
-#define list_rows2 (*(int *)(frame_ + FRAME_OFF(356)))
-#define key2 (*(char * *)(frame_ + FRAME_OFF(360)))
-#define option (*(uptr *)(frame_ + FRAME_OFF(364)))
-#define option_index (*(int *)(frame_ + FRAME_OFF(368)))
-#define number (*(int *)(frame_ + FRAME_OFF(372)))
-#define edit_buf (*(i8 * *)(frame_ + FRAME_OFF(376)))
 i32 __thiscall
 dialog_load_text_section
           (Dialog *this,iptr file_name,iptr section,int default_value,iptr edit_default,iptr init_arg1,
@@ -11137,7 +10612,18 @@ dialog_load_text_section
   int cmp;
   size_t len;
   u32 coord;
-  i8 frame_[FRAME_OFF(384)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 expanded[256];
+  int mode;
+  i32 result;
+  uint has_edit;
+  char *line;
+  i8 edit_text[80];
+  int list_rows2;
+  char *key2;
+  uptr option;
+  int option_index;
+  int number;
+  i8 *edit_buf;
   
   result = 1;
   mode = 1;
@@ -11377,18 +10863,6 @@ dialog_load_text_section
   }
   return result;
 }
-#undef expanded
-#undef mode
-#undef result
-#undef has_edit
-#undef line
-#undef edit_text
-#undef list_rows2
-#undef key2
-#undef option
-#undef option_index
-#undef number
-#undef edit_buf
 
 /* 005a6c23 auto */
 #define dlg_parent_window (*(iptr *)((u8 *)&g.d_006359c4))
@@ -11528,13 +11002,12 @@ bool __thiscall surfwnd_resize_dib(DibSurface *this,iptr rect)
 
 /* 005bb621 auto */
 #define wnd_active_child (*(u8 * *)((u8 *)&g.d_00637ea4))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall surfwnd_on_resize(SurfaceWindow *this,int width,int height)
 
 {
   int cur_size;
   i32 palette;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   cur_size = surface_get_width((DibSurface *)this);
   if ((cur_size == width) &&
@@ -11556,17 +11029,15 @@ void __thiscall surfwnd_on_resize(SurfaceWindow *this,int width,int height)
   return;
 }
 #undef wnd_active_child
-#undef rect
 
 /* 005bb6c7 auto */
-#define min_height2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define min_width2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define max_height2 (*(int *)(frame_ + FRAME_OFF(12)))
-#define max_width2 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall wnd_resize_clamped(WindowObjectView *this,int width,int height)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int min_height2;
+  int min_width2;
+  int max_height2;
+  int max_width2;
   
   wnd_get_min_size((WndMinSizeView *)(this + 0x12),(iptr)&min_width2,(iptr)&min_height2);
   wnd_get_max_size((WndMaxSizeView *)(this + 0x12),(iptr)&max_width2,(iptr)&max_height2);
@@ -11585,10 +11056,6 @@ void __thiscall wnd_resize_clamped(WindowObjectView *this,int width,int height)
   wnd_set_client_size((WndClientSizeView *)(this + 0x12),width,height);
   return;
 }
-#undef min_height2
-#undef min_width2
-#undef max_height2
-#undef max_width2
 
 /* 005bb8c0 auto */
 u32 __thiscall wnd_get_palette_obj(WndPaletteObjView *this)
@@ -11635,16 +11102,6 @@ void __thiscall wnd_call_paint_cb(SurfaceWindow *this)
 
 /* 005bbc10 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define pos_x2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define pos_y2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define outer_width (*(int *)(frame_ + FRAME_OFF(12)))
-#define outer_height (*(int *)(frame_ + FRAME_OFF(16)))
-#define parent_hwnd (*(HWND *)(frame_ + FRAME_OFF(20)))
-#define ex_style (*(DWORD *)(frame_ + FRAME_OFF(24)))
-#define style2 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define caption_height2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define frame_height (*(int *)(frame_ + FRAME_OFF(40)))
-#define frame_width (*(int *)(frame_ + FRAME_OFF(44)))
 i32 * __cdecl
 wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
             iptr parent)
@@ -11656,7 +11113,16 @@ wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
   HWND pHVar4;
   HDC pHVar5;
   HCURSOR pHVar6;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  int pos_x2;
+  int pos_y2;
+  int outer_width;
+  int outer_height;
+  HWND parent_hwnd;
+  DWORD ex_style;
+  uint style2;
+  int caption_height2;
+  int frame_height;
+  int frame_width;
   
   ex_style = 0;
   handle = mem_handle_alloc(0x4c);
@@ -11802,16 +11268,6 @@ wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
   return wnd;
 }
 #undef app_hinstance
-#undef pos_x2
-#undef pos_y2
-#undef outer_width
-#undef outer_height
-#undef parent_hwnd
-#undef ex_style
-#undef style2
-#undef caption_height2
-#undef frame_height
-#undef frame_width
 
 /* 005bbfee auto */
 void __cdecl wnd_obj_enable(iptr wnd,BOOL enable)
@@ -11851,11 +11307,10 @@ i32 __cdecl wnd_obj_destroy(i32 *wnd)
 }
 
 /* 005bc173 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl wnd_stack_check_leaks_nop(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (ms_window_stack_count != 0) {
     for (i = 0; i < ms_window_stack_count; i++) {
@@ -11863,7 +11318,6 @@ void __cdecl wnd_stack_check_leaks_nop(void)
   }
   return;
 }
-#undef i
 
 /* 005bc1b5 auto */
 void __cdecl wnd_list_add_hwnd(i32 hwnd)
@@ -11875,11 +11329,10 @@ void __cdecl wnd_list_add_hwnd(i32 hwnd)
 }
 
 /* 005bc1db auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl wnd_stack_remove(int hwnd)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; (i < ms_window_stack_count && (*(int *)(&ms_window_stack + i * 4) != hwnd));
       i = i + 1) {
@@ -11895,19 +11348,17 @@ void __cdecl wnd_stack_remove(int hwnd)
   }
   return;
 }
-#undef i
 
 /* 005bc280 auto */
-#define green (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
-#define wnd_view (*(WndPaletteView * *)(frame_ + FRAME_OFF(8)))
-#define red (*(i8 (*)[4])(frame_ + FRAME_OFF(12)))
-#define blue (*(i8 (*)[4])(frame_ + FRAME_OFF(16)))
 void __cdecl wnd_obj_set_bg_color(iptr wnd,uint color_index)
 
 {
   HBRUSH pHVar1;
   GamePalette *this;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 green[4];
+  WndPaletteView *wnd_view;
+  i8 red[4];
+  i8 blue[4];
   
   if (*(int *)(wnd + 0x14) != 0) {
     DeleteObject(*(HGDIOBJ *)(wnd + 0x14));
@@ -11930,10 +11381,6 @@ void __cdecl wnd_obj_set_bg_color(iptr wnd,uint color_index)
   InvalidateRect(*(HWND *)(wnd + 4),(RECT *)0x0,0);
   return;
 }
-#undef green
-#undef wnd_view
-#undef red
-#undef blue
 
 /* 005bc3bf auto */
 void __cdecl wnd_obj_set_bg_tile(iptr wnd,i32 tile)
@@ -11975,14 +11422,13 @@ void __cdecl wnd_obj_hide(iptr wnd)
 }
 
 /* 005bc4a1 auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __cdecl wnd_obj_move_xy(iptr wnd,int x,int y)
 
 {
   int nHeight;
   int nWidth;
   BOOL bRepaint;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   if (wnd != 0) {
     GetWindowRect(*(HWND *)(wnd + 4),&rect);
@@ -11993,18 +11439,16 @@ void __cdecl wnd_obj_move_xy(iptr wnd,int x,int y)
   }
   return;
 }
-#undef rect
 
 /* 005bc505 auto */
-#define origin (*(tagPOINT *)(frame_ + FRAME_OFF(0)))
-#define parent_hwnd (*(HWND *)(frame_ + FRAME_OFF(8)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __cdecl wnd_obj_set_client_size(iptr wnd,int width,int height)
 
 {
   int frame_w;
   int frame_h;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  tagPOINT origin;
+  HWND parent_hwnd;
+  tagRECT rect;
   
   if (wnd != 0) {
     GetWindowRect(*(HWND *)(wnd + 4),&rect);
@@ -12022,9 +11466,6 @@ void __cdecl wnd_obj_set_client_size(iptr wnd,int width,int height)
   }
   return;
 }
-#undef origin
-#undef parent_hwnd
-#undef rect
 
 /* 005bc5da auto */
 void __cdecl wnd_obj_maximize(iptr wnd)
@@ -12084,11 +11525,6 @@ void __cdecl wnd_obj_move_to_rect(iptr wnd,int *rect)
 }
 
 /* 005bc763 auto */
-#define wnd_rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define pos_y2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define pos_x2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define origin (*(tagPOINT *)(frame_ + FRAME_OFF(28)))
-#define parent_rect (*(tagRECT *)(frame_ + FRAME_OFF(36)))
 void __cdecl wnd_obj_center(iptr wnd,int offset_x,int offset_y)
 
 {
@@ -12097,7 +11533,11 @@ void __cdecl wnd_obj_center(iptr wnd,int offset_x,int offset_y)
   int outer_h;
   int wnd_w;
   BOOL bRepaint;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT wnd_rect;
+  int pos_y2;
+  int pos_x2;
+  tagPOINT origin;
+  tagRECT parent_rect;
   
   if (wnd != 0) {
     GetWindowRect(*(HWND *)(wnd + 4),&wnd_rect);
@@ -12143,18 +11583,12 @@ void __cdecl wnd_obj_center(iptr wnd,int offset_x,int offset_y)
   }
   return;
 }
-#undef wnd_rect
-#undef pos_y2
-#undef pos_x2
-#undef origin
-#undef parent_rect
 
 /* 005bc933 auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 LONG __cdecl wnd_obj_client_width(iptr wnd)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   if (wnd == 0) {
     rect.right = 0;
@@ -12164,14 +11598,12 @@ LONG __cdecl wnd_obj_client_width(iptr wnd)
   }
   return rect.right;
 }
-#undef rect
 
 /* 005bc96b auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 LONG __cdecl wnd_obj_client_height(iptr wnd)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   if (wnd == 0) {
     rect.bottom = 0;
@@ -12181,7 +11613,6 @@ LONG __cdecl wnd_obj_client_height(iptr wnd)
   }
   return rect.bottom;
 }
-#undef rect
 
 /* 005bc9a3 auto */
 void __cdecl wnd_obj_get_screen_rect(iptr wnd,LPRECT rect)
@@ -12194,13 +11625,12 @@ void __cdecl wnd_obj_get_screen_rect(iptr wnd,LPRECT rect)
 }
 
 /* 005bc9d3 auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 int __cdecl wnd_obj_frame_width(iptr wnd)
 
 {
   int result;
   int client_w;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   if (wnd == 0) {
     result = 0;
@@ -12214,16 +11644,14 @@ int __cdecl wnd_obj_frame_width(iptr wnd)
   }
   return result;
 }
-#undef rect
 
 /* 005bca3d auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 int __cdecl wnd_obj_frame_height(iptr wnd)
 
 {
   int result;
   int client_h;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   if (wnd == 0) {
     result = 0;
@@ -12237,37 +11665,30 @@ int __cdecl wnd_obj_frame_height(iptr wnd)
   }
   return result;
 }
-#undef rect
 
 /* 005bcb85 auto */
-#define top_left (*(tagPOINT *)(frame_ + FRAME_OFF(4)))
-#define right2 (*(LONG *)(frame_ + FRAME_OFF(12)))
-#define bottom2 (*(LONG *)(frame_ + FRAME_OFF(16)))
 void __cdecl wnd_obj_get_rect_in_parent(iptr wnd,LPRECT rect)
 
 {
   HWND hWndTo;
   tagPOINT *lpPoints;
   UINT cPoints;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagPOINT corners[2];  /* top left, bottom right */
   
   if (wnd != 0) {
     GetWindowRect(*(HWND *)(wnd + 4),rect);
-    top_left.x = rect->left;
-    top_left.y = rect->top;
-    right2 = rect->right;
-    bottom2 = rect->bottom;
+    corners[0].x = rect->left;
+    corners[0].y = rect->top;
+    corners[1].x = rect->right;
+    corners[1].y = rect->bottom;
     cPoints = 2;
-    lpPoints = &top_left;
+    lpPoints = corners;
     hWndTo = GetParent(*(HWND *)(wnd + 4));
     MapWindowPoints((HWND)0x0,hWndTo,lpPoints,cPoints);
-    SetRect(rect,top_left.x,top_left.y,right2,bottom2);
+    SetRect(rect,corners[0].x,corners[0].y,corners[1].x,corners[1].y);
   }
   return;
 }
-#undef top_left
-#undef right2
-#undef bottom2
 
 /* 005bcdc3 auto */
 void __cdecl wnd_obj_select_palette(iptr wnd,HPALETTE palette)
@@ -12445,11 +11866,10 @@ void __cdecl wnd_obj_set_resize_border(iptr wnd,i32 border)
 }
 
 /* 005bd48f auto */
-#define pt (*(tagPOINT *)(frame_ + FRAME_OFF(4)))
 void __cdecl wnd_obj_get_cursor_pos(iptr wnd,LONG *out_x,LONG *out_y)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  tagPOINT pt;
   
   GetCursorPos(&pt);
   ScreenToClient(*(HWND *)(wnd + 4),&pt);
@@ -12457,7 +11877,6 @@ void __cdecl wnd_obj_get_cursor_pos(iptr wnd,LONG *out_x,LONG *out_y)
   *out_y = pt.y;
   return;
 }
-#undef pt
 
 /* 005bd533 auto */
 void __cdecl wnd_obj_set_capture(iptr wnd)
@@ -12515,11 +11934,10 @@ wnd_create_framed_child
 }
 
 /* 005c59c4 auto */
-#define last (*(uptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall wnd_append_control(WndControlListView *this,iptr ctrl)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr last;
   
   last = this->first_control;
   if (last == 0) {
@@ -12532,10 +11950,8 @@ void __thiscall wnd_append_control(WndControlListView *this,iptr ctrl)
   }
   return;
 }
-#undef last
 
 /* 005c5a27 auto */
-#define ctrl (*(ControlNextView * *)(frame_ + FRAME_OFF(0)))
 void __thiscall wnd_remove_control(WndControlRemoveView *this,int ctrl_id)
 
 {
@@ -12543,7 +11959,7 @@ void __thiscall wnd_remove_control(WndControlRemoveView *this,int ctrl_id)
   ControlIdView *this_00;
   ControlNextView *this_01;
   u32 next_next;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ControlNextView *ctrl;
   
   if (this->first_control != 0) {
     ctrl = (ControlNextView *)this->first_control;
@@ -12572,15 +11988,13 @@ void __thiscall wnd_remove_control(WndControlRemoveView *this,int ctrl_id)
   }
   return;
 }
-#undef ctrl
 
 /* 005c5aeb auto */
-#define ctrl (*(ControlIdView * *)(frame_ + FRAME_OFF(0)))
 void __thiscall wnd_remove_all_controls(WndControlRemoveView *this)
 
 {
   i32 ctrl_id;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ControlIdView *ctrl;
   
   for (ctrl = (ControlIdView *)this->first_control; ctrl != (ControlIdView *)0x0;
       ctrl = *(ControlIdView **)((ControlIdViewExt *)ctrl)->next_control) {
@@ -12589,15 +12003,13 @@ void __thiscall wnd_remove_all_controls(WndControlRemoveView *this)
   }
   return;
 }
-#undef ctrl
 
 /* 005c5b7f auto */
-#define ctrl (*(ControlInitialFocusView * *)(frame_ + FRAME_OFF(0)))
 void __thiscall wnd_focus_first_control(Wnd *this)
 
 {
   char wants_focus;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ControlInitialFocusView *ctrl;
   
   ctrl = (ControlInitialFocusView *)this->control_list;
   while( true ) {
@@ -12617,14 +12029,8 @@ void __thiscall wnd_focus_first_control(Wnd *this)
   wnd_focus_control((iptr)this,(iptr)ctrl);
   return;
 }
-#undef ctrl
 
 /* 005c5c86 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define handled (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define ctrl (*(RadioGroupItemsView * *)(frame_ + FRAME_OFF(16)))
-#define key_str (*(u8 (*)[4])(frame_ + FRAME_OFF(20)))
-#define done (*(char *)(frame_ + FRAME_OFF(24)))
 i32 __thiscall wnd_dispatch_hotkey_char(void *this,i32 ch)
 
 {
@@ -12634,7 +12040,11 @@ i32 __thiscall wnd_dispatch_hotkey_char(void *this,i32 ch)
   i32 hwnd;
   int value;
   int item_count;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  i32 handled;
+  RadioGroupItemsView *ctrl;
+  u8 key_str[4];
+  char done;
   
   done = '\0';
   handled = 0;
@@ -12684,11 +12094,6 @@ i32 __thiscall wnd_dispatch_hotkey_char(void *this,i32 ch)
     ctrl = *(RadioGroupItemsView **)(ctrl->next_control);
   } while( true );
 }
-#undef i
-#undef handled
-#undef ctrl
-#undef key_str
-#undef done
 
 /* 005c5f20 auto */
 void __thiscall
@@ -12723,13 +12128,12 @@ wnd_create_with_handlers
 }
 
 /* 005c61b0 auto */
-#define owner_after (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define owner2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __thiscall wnd_run_modal_loop(ModalMenuWindow *this)
 
 {
   iptr wnd;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr owner_after;
+  iptr owner2;
   
   if (wnd_modal_depth != 0xf) {
     this->modal_running = 1;
@@ -12764,8 +12168,6 @@ void __thiscall wnd_run_modal_loop(ModalMenuWindow *this)
   }
   return;
 }
-#undef owner_after
-#undef owner2
 
 /* 005c62cb auto */
 /* Library Function - Single Match
@@ -12942,18 +12344,16 @@ LONG __cdecl wnd_from_hwnd(HWND hwnd)
 }
 
 /* 005c96cc auto */
-#define client_rect2 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __cdecl wnd_redraw_client(HWND hwnd)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT client_rect2;
   
   GetClientRect(hwnd,&client_rect2);
   InvalidateRect(hwnd,&client_rect2,1);
   UpdateWindow(hwnd);
   return;
 }
-#undef client_rect2
 
 /* 005cbdd0 auto */
 u8 __thiscall wnd_keyboard_nav_enabled(WndKeyNavView *this)
@@ -13253,10 +12653,6 @@ void __cdecl dlg_radio_choice_button_cb(int button_id)
 
 /* 005e0ce0 auto */
 #define menu_next_item_id (*(HMENU *)((u8 *)&g.d_00638d9c))
-#define item_count2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define item_id (*(HMENU *)(frame_ + FRAME_OFF(12)))
-#define flags2 (*(uint *)(frame_ + FRAME_OFF(16)))
-#define label_len (*(size_t *)(frame_ + FRAME_OFF(20)))
 iptr __cdecl menu_hmenu_parse_items(HMENU hmenu,iptr spec)
 
 {
@@ -13266,7 +12662,10 @@ iptr __cdecl menu_hmenu_parse_items(HMENU hmenu,iptr spec)
   HLOCAL hMem;
   char *_Dest;
   int cmp;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int item_count2;
+  HMENU item_id;
+  uint flags2;
+  size_t label_len;
   
   done = false;
   item_count2 = 0;
@@ -13335,15 +12734,9 @@ iptr __cdecl menu_hmenu_parse_items(HMENU hmenu,iptr spec)
   return spec;
 }
 #undef menu_next_item_id
-#undef item_count2
-#undef item_id
-#undef flags2
-#undef label_len
 
 /* 005e0f2a auto */
 #define menu_next_item_id (*(int *)((u8 *)&g.d_00638d9c))
-#define label_len (*(size_t *)(frame_ + FRAME_OFF(0)))
-#define cursor (*(char * *)(frame_ + FRAME_OFF(20)))
 HMENU __cdecl menu_hmenu_build_from_spec(char *spec)
 
 {
@@ -13355,7 +12748,8 @@ HMENU __cdecl menu_hmenu_build_from_spec(char *spec)
   HLOCAL hMem;
   char *_Dest;
   HMENU uIDNewItem;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  size_t label_len;
+  char *cursor;
   
   cursor = spec;
   hMenu = CreateMenu();
@@ -13396,8 +12790,6 @@ HMENU __cdecl menu_hmenu_build_from_spec(char *spec)
   return hMenu;
 }
 #undef menu_next_item_id
-#undef label_len
-#undef cursor
 
 /* 005e10c7 auto */
 void __cdecl menu_hmenu_destroy(HMENU hmenu)
@@ -13482,14 +12874,13 @@ void __cdecl menu_hmenu_delete_item(HMENU hmenu,int menu_pos,int item_pos)
 
 /* 005e128c auto */
 #define menu_next_item_id (*(UINT_PTR *)((u8 *)&g.d_00638d9c))
-#define item_count2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define flags2 (*(uint *)(frame_ + FRAME_OFF(8)))
 void __cdecl menu_hmenu_insert_item(HMENU hmenu,int menu_pos,int item_pos,LPCSTR text)
 
 {
   UINT_PTR uIDNewItem;
   HMENU pHVar1;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int item_count2;
+  uint flags2;
   
   if (hmenu != (HMENU)0x0) {
     pHVar1 = GetSubMenu(hmenu,menu_pos - 1);
@@ -13521,8 +12912,6 @@ void __cdecl menu_hmenu_insert_item(HMENU hmenu,int menu_pos,int item_pos,LPCSTR
   return;
 }
 #undef menu_next_item_id
-#undef item_count2
-#undef flags2
 
 /* 005e14c8 auto */
 void __cdecl menu_hmenu_set_item_text(HMENU hmenu,int menu_pos,int item_pos,LPCSTR text)
@@ -13555,14 +12944,6 @@ void __cdecl wnd_install_paint_proc(iptr surface,iptr wnd)
 
 /* 005e18ff auto */
 #define wnd_active_child (*(u8 * *)((u8 *)&g.d_00637ea4))
-#define owner_ptr (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define ps (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(16)))
-#define hdc (*(HDC *)(frame_ + FRAME_OFF(80)))
-#define dest_rect (*(tagRECT *)(frame_ + FRAME_OFF(84)))
-#define paint_left (*(LONG *)(frame_ + FRAME_OFF(100)))
-#define paint_top (*(LONG *)(frame_ + FRAME_OFF(104)))
-#define paint_right (*(LONG *)(frame_ + FRAME_OFF(108)))
-#define paint_bottom (*(LONG *)(frame_ + FRAME_OFF(112)))
 i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
 
 {
@@ -13582,7 +12963,11 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
   int xSrc;
   int ySrc;
   DWORD rop;
-  i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *owner_ptr;
+  tagPAINTSTRUCT ps;
+  HDC hdc;
+  tagRECT dest_rect;
+  RECT paint_rect;
   
   this = (SurfaceWindow *)GetWindowLongA(hwnd,0xc);
   if (this == (SurfaceWindow *)0x0) {
@@ -13612,10 +12997,10 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
       BVar2 = IsWindowVisible(hwnd);
       if (BVar2 != 0) {
         BeginPaint(hwnd,&ps);
-        paint_left = ps.rcPaint.left;
-        paint_top = ps.rcPaint.top;
-        paint_right = ps.rcPaint.right;
-        paint_bottom = ps.rcPaint.bottom;
+        paint_rect.left = ps.rcPaint.left;
+        paint_rect.top = ps.rcPaint.top;
+        paint_rect.right = ps.rcPaint.right;
+        paint_rect.bottom = ps.rcPaint.bottom;
         if (this == (SurfaceWindow *)0x0) {
           owner_ptr = (u8 *)0x0;
         }
@@ -13623,7 +13008,7 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
           owner_ptr = this->window_2;
         }
         surface_blit_to_wnd
-                  ((DibSurface *)this,(iptr)owner_ptr,(iptr)&paint_left,(iptr)&paint_left);
+                  ((DibSurface *)this,(iptr)owner_ptr,(iptr)&paint_rect,(iptr)&paint_rect);
         EndPaint(hwnd,&ps);
       }
     }
@@ -13634,24 +13019,24 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
         return result;
       }
       hdc = BeginPaint(hwnd,&ps);
-      paint_left = ps.rcPaint.left;
-      paint_top = ps.rcPaint.top;
-      paint_right = ps.rcPaint.right;
-      paint_bottom = ps.rcPaint.bottom;
+      paint_rect.left = ps.rcPaint.left;
+      paint_rect.top = ps.rcPaint.top;
+      paint_rect.right = ps.rcPaint.right;
+      paint_rect.bottom = ps.rcPaint.bottom;
       SetRect(&dest_rect,0,0,0,0);
       surf_width = surface_get_width((DibSurface *)this);
       src_dim = surface_get_height((DibSurface *)this);
       if (surf_width < src_dim) {
         src_dim = surface_get_width((DibSurface *)this);
-        dim_b = rect_width((iptr)&paint_left);
+        dim_b = rect_width((iptr)&paint_rect);
         dest_rect.right = surface_get_height((DibSurface *)this);
         dest_rect.right = (src_dim * dim_b) / dest_rect.right;
-        dest_rect.bottom = rect_height((iptr)&paint_left);
+        dest_rect.bottom = rect_height((iptr)&paint_rect);
       }
       else {
-        dest_rect.right = rect_width((iptr)&paint_left);
+        dest_rect.right = rect_width((iptr)&paint_rect);
         src_dim = surface_get_height((DibSurface *)this);
-        dim_b = rect_height((iptr)&paint_left);
+        dim_b = rect_height((iptr)&paint_rect);
         dest_rect.bottom = surface_get_width((DibSurface *)this);
         dest_rect.bottom = (src_dim * dim_b) / dest_rect.bottom;
       }
@@ -13664,10 +13049,10 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
       xSrc = 0;
       wDest = dest_rect.right;
       hDest = dest_rect.bottom;
-      paint_extent = rect_height((iptr)&paint_left);
+      paint_extent = rect_height((iptr)&paint_rect);
       dest_extent = rect_height((iptr)&dest_rect);
       yDest = paint_extent - dest_extent >> 1;
-      paint_extent = rect_width((iptr)&paint_left);
+      paint_extent = rect_width((iptr)&paint_rect);
       dest_extent = rect_width((iptr)&dest_rect);
       StretchBlt(hdc,paint_extent - dest_extent >> 1,yDest,wDest,hDest,hdcSrc,xSrc,ySrc,dim_b,src_dim,rop);
       EndPaint(hwnd,&ps);
@@ -13680,14 +13065,6 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
   return result;
 }
 #undef wnd_active_child
-#undef owner_ptr
-#undef ps
-#undef hdc
-#undef dest_rect
-#undef paint_left
-#undef paint_top
-#undef paint_right
-#undef paint_bottom
 
 /* 005ea7a0 auto */
 void __cdecl wnd_install_frame_proc(iptr owner,iptr wnd)
@@ -13739,7 +13116,6 @@ HWND __cdecl hwnd_prev_sibling_wrap(HWND hwnd)
 }
 
 /* 005ea8d3 auto */
-#define group_hwnd (*(HWND *)(frame_ + FRAME_OFF(0)))
 void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
 
 {
@@ -13751,7 +13127,7 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
   CheckboxEnabledView *this;
   UINT UVar4;
   UINT uCmd;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  HWND group_hwnd;
   
   if (hwnd == (HWND)0x0) {
     hwnd = GetFocus();
@@ -13854,7 +13230,6 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
     }
   } while( true );
 }
-#undef group_hwnd
 
 /* 005eabcc auto */
 void __cdecl wnd_focus_control(iptr wnd,iptr control)
@@ -13925,15 +13300,14 @@ void __cdecl wnd_on_menu_command(HWND hwnd,i32 cmd_id)
 
 /* 005ec23a auto */
 #define menu_search_pos (*(int *)((u8 *)&g.d_006e5368))
-#define result (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
 uint __cdecl menu_find_item_pos(HMENU hmenu,UINT item_id)
 
 {
   int item_count;
   UINT UVar2;
   HMENU pHVar3;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
+  int i;
   
   result = 0;
   menu_search_pos++;
@@ -13958,8 +13332,6 @@ uint __cdecl menu_find_item_pos(HMENU hmenu,UINT item_id)
   return result;
 }
 #undef menu_search_pos
-#undef result
-#undef i
 
 /* 005ecf50 auto */
 void __thiscall wnd_call_mousemove(WndOnMouseMoveView *this,i32 x,i32 y)
@@ -14526,11 +13898,10 @@ void __thiscall ddwin_call_activate_app(DDWindowActivateView *this,i32 active)
 /* 005efeb0: written by hand in src/game/unwind.c */
 
 /* 005f029e auto */
-#define ctrl (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall ddwin_remove_all_controls(void *this)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 ctrl;
   
   ctrl = ptrlist_first((PtrList *)((int)this + 0xc0));
   while (ctrl != 0) {
@@ -14539,14 +13910,12 @@ void __thiscall ddwin_remove_all_controls(void *this)
   }
   return;
 }
-#undef ctrl
 
 /* 005f0342 auto */
-#define ctrl (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall ddwin_deactivate_controls(void *this)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 ctrl;
   
   ctrl = ptrlist_first((PtrList *)((int)this + 0xc0));
   while (ctrl != 0) {
@@ -14555,16 +13924,14 @@ void __thiscall ddwin_deactivate_controls(void *this)
   }
   return;
 }
-#undef ctrl
 
 /* 005f0391 auto */
-#define ctrl (*(DDControl * *)(frame_ + FRAME_OFF(0)))
 i8 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *this,int msg,int x,int y)
 
 {
   int *rect;
   int handled;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  DDControl *ctrl;
   
   if ((this->hover_control != 0) && (msg == 0x200)) {
     rect = (int *)ddctrl_get_rect((void *)this->hover_control);
@@ -14588,4 +13955,3 @@ i8 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *this,int msg,int x,int y)
   }
   return 1;
 }
-#undef ctrl

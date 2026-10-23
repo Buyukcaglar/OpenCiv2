@@ -3,13 +3,12 @@
 #include "auto_common.h"
 
 /* 00417fa0 auto */
-#define eh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 DocumentWindow * __thiscall editor_wnd_ctor(DocumentWindow *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_frame;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
@@ -54,25 +53,21 @@ DocumentWindow * __thiscall editor_wnd_ctor(DocumentWindow *this)
   checkbox_ctor((Control *)((u8 *)&((PictureWindow *)this)->editor_list_box));
   (*(i8 *)((char *)&eh_state + 0)) = 0x13;
   checkbox_ctor((Control *)(((PictureWindow *)this)->trigger_listbox));
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),0x14);
+  eh_state = (eh_state & 0xffffff00 | (byte)(0x14));
   checkbox_ctor((Control *)(((PictureWindow *)this)->action_listbox));
   this->vtable = (u32)&PTR_FUN_0061c058;
   return this;
 }
-#undef eh_frame
-#undef eh_prev
-#undef eh_state
 
 /* 004183d0 auto */
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall editor_wnd_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 eh_handler;
+  i8 *eh_prev;
+  int eh_state;
   
-  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 0x14;
   /* inlined unwind funclet 0041851f */ { listbox_dtor((ListBoxControl *)(*(int *)((iptr)&this) + 0xb0c)); }
   (*(i8 *)((char *)&eh_state + 0)) = 0x13;
@@ -113,15 +108,12 @@ void __thiscall editor_wnd_dtor(void *this)
   /* inlined unwind funclet 0041862d */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x6d4)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 0041863c */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x44c,0x48,9,edit_dtor); }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 00418654 */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x2fc,0x38,6,((void *)(iptr)combo_dtor)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0041866c */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 00447fc2 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -206,16 +198,15 @@ void __cdecl editor_tile_backdrop_sprite_static_dtor(void)
 }
 
 /* 004a3060 auto */
-#define adjective_id (*(int *)(frame_ + FRAME_OFF(4)))
-#define plural_id (*(int *)(frame_ + FRAME_OFF(8)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define leader (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl tribe_editor_load_tables(void)
 
 {
   char *text;
   size_t max_len;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int adjective_id;
+  int plural_id;
+  iptr civ;
+  iptr leader;
   
   for (leader = 0; leader < 0x15; leader++) {
     civ = 1;
@@ -282,21 +273,16 @@ void __cdecl tribe_editor_load_tables(void)
   }
   return;
 }
-#undef adjective_id
-#undef plural_id
-#undef civ
-#undef leader
 
 /* 004a3426 auto */
-#define civ (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define leader (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl tribe_editor_apply_tables(void)
 
 {
   char *src;
   char *dest;
   size_t max_len;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
+  iptr leader;
   
   for (leader = 0; leader < 0x15; leader++) {
     civ = 1;
@@ -333,16 +319,13 @@ void __cdecl tribe_editor_apply_tables(void)
   }
   return;
 }
-#undef civ
-#undef leader
 
 /* 004a3640 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl tribe_editor_load_controls(void)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 1; i < 5; i++) {
     if (*(int *)(&tribe_editor_ctrl_kinds + i * 8) == 9) {
@@ -363,17 +346,15 @@ void __cdecl tribe_editor_load_controls(void)
   }
   return;
 }
-#undef i
 
 /* 004a3757 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define text (*(char (*)[24])(frame_ + FRAME_OFF(8)))
-#define selection (*(i32 *)(frame_ + FRAME_OFF(32)))
 void __cdecl tribe_editor_store_controls(void)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  char text[24];
+  i32 selection;
   
   for (i = 1; i < 5; i++) {
     if (*(int *)(&tribe_editor_ctrl_kinds + i * 8) == 9) {
@@ -395,9 +376,6 @@ void __cdecl tribe_editor_store_controls(void)
   }
   return;
 }
-#undef i
-#undef text
-#undef selection
 
 /* 004a3889 auto */
 void __cdecl tribe_editor_redraw(void)
@@ -409,15 +387,14 @@ void __cdecl tribe_editor_redraw(void)
 
 /* 004a38a4 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define title_len (*(size_t *)(frame_ + FRAME_OFF(0)))
-#define name_len (*(size_t *)(frame_ + FRAME_OFF(4)))
-#define gov (*(iptr *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl tribe_editor_write_governments(FILE *file)
 
 {
   char *text;
   size_t len;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  size_t title_len;
+  size_t name_len;
+  iptr gov;
   
   for (gov = 0; gov < 7; gov++) {
     text_clear();
@@ -452,32 +429,11 @@ i32 __cdecl tribe_editor_write_governments(FILE *file)
   return 1;
 }
 #undef text_buffer
-#undef title_len
-#undef name_len
-#undef gov
 
 /* 004a3a21 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define text_file_handle (*(i32 *)((u8 *)&g.d_0062cd20))
 #define text_line_cursor (*(i32 *)((u8 *)&g.d_00673f14))
-#define adjective_id3 (*(int *)(frame_ + FRAME_OFF(0)))
-#define adjective_id2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define adjective_len (*(size_t *)(frame_ + FRAME_OFF(8)))
-#define adjective_id (*(int *)(frame_ + FRAME_OFF(12)))
-#define plural_id3 (*(int *)(frame_ + FRAME_OFF(16)))
-#define plural_id2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define plural_len (*(size_t *)(frame_ + FRAME_OFF(24)))
-#define plural_id (*(int *)(frame_ + FRAME_OFF(28)))
-#define female_id3 (*(int *)(frame_ + FRAME_OFF(32)))
-#define female_id2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define female_len (*(size_t *)(frame_ + FRAME_OFF(40)))
-#define female_id (*(int *)(frame_ + FRAME_OFF(44)))
-#define male_id3 (*(int *)(frame_ + FRAME_OFF(48)))
-#define male_id2 (*(int *)(frame_ + FRAME_OFF(52)))
-#define male_len (*(size_t *)(frame_ + FRAME_OFF(56)))
-#define male_id (*(int *)(frame_ + FRAME_OFF(60)))
-#define leader (*(iptr *)(frame_ + FRAME_OFF(72)))
-#define line_tail (*(i8 (*)[128])(frame_ + FRAME_OFF(76)))
 i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
 
 {
@@ -487,7 +443,24 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
   size_t len;
   i32 min_val;
   i32 max_val;
-  i8 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
+  int adjective_id3;
+  int adjective_id2;
+  size_t adjective_len;
+  int adjective_id;
+  int plural_id3;
+  int plural_id2;
+  size_t plural_len;
+  int plural_id;
+  int female_id3;
+  int female_id2;
+  size_t female_len;
+  int female_id;
+  int male_id3;
+  int male_id2;
+  size_t male_len;
+  int male_id;
+  iptr leader;
+  i8 line_tail[128];
   
   saved_handle = text_file_handle;
   text_file_handle = src_handle;
@@ -650,32 +623,13 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
 #undef text_buffer
 #undef text_file_handle
 #undef text_line_cursor
-#undef adjective_id3
-#undef adjective_id2
-#undef adjective_len
-#undef adjective_id
-#undef plural_id3
-#undef plural_id2
-#undef plural_len
-#undef plural_id
-#undef female_id3
-#undef female_id2
-#undef female_len
-#undef female_id
-#undef male_id3
-#undef male_id2
-#undef male_len
-#undef male_id
-#undef leader
-#undef line_tail
 
 /* 004a41d8 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define commodity (*(iptr *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl tribe_editor_write_caravan(FILE *file)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr commodity;
   
   for (commodity = 0; commodity < 0x10; commodity++) {
     text_clear();
@@ -686,11 +640,9 @@ i32 __cdecl tribe_editor_write_caravan(FILE *file)
   return 1;
 }
 #undef text_buffer
-#undef commodity
 
 /* 004a4249 auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
-#define msg (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl tribe_editor_on_ok(void)
 
 {
@@ -699,7 +651,7 @@ void __cdecl tribe_editor_on_ok(void)
   char *lpText;
   char *lpCaption;
   UINT uType;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  char msg[32];
   
   tribe_editor_store_controls();
   tribe_editor_update_city_file();
@@ -722,22 +674,20 @@ void __cdecl tribe_editor_on_ok(void)
   return;
 }
 #undef editor_running
-#undef msg
 
 /* 004a4304 auto */
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define input_buf (*(char (*)[260])(frame_ + FRAME_OFF(8)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(268)))
-#define choice (*(int *)(frame_ + FRAME_OFF(1024)))
-#define input_result (*(int *)(frame_ + FRAME_OFF(1028)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1032)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1036)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1040)))
 void __cdecl tribe_editor_rename_commodity(void)
 
 {
   size_t len;
-  i8 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  char input_buf[260];
+  Dialog dialog2;
+  int choice;
+  int input_result;
+  i32 eh_handler;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -774,29 +724,20 @@ void __cdecl tribe_editor_rename_commodity(void)
   /* inlined unwind funclet 004a44a2 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return;
 }
-#undef parent_wnd2
-#undef input_buf
-#undef dialog2
-#undef choice
-#undef input_result
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 004a44c6 auto */
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define input_buf (*(char (*)[260])(frame_ + FRAME_OFF(8)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(268)))
-#define choice (*(int *)(frame_ + FRAME_OFF(1024)))
-#define input_result (*(int *)(frame_ + FRAME_OFF(1028)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1032)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1036)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1040)))
 void __cdecl tribe_editor_rename_govt(void)
 
 {
   size_t len;
-  i8 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  char input_buf[260];
+  Dialog dialog2;
+  int choice;
+  int input_result;
+  i32 eh_handler;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -833,35 +774,26 @@ void __cdecl tribe_editor_rename_govt(void)
   /* inlined unwind funclet 004a4667 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return;
 }
-#undef parent_wnd2
-#undef input_buf
-#undef dialog2
-#undef choice
-#undef input_result
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 004a468b auto */
-#define dest_title (*(char * *)(frame_ + FRAME_OFF(4)))
-#define current_title (*(i8 * *)(frame_ + FRAME_OFF(8)))
-#define gender_label (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define title_name (*(i8 * *)(frame_ + FRAME_OFF(16)))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define input_buf (*(char (*)[260])(frame_ + FRAME_OFF(24)))
-#define option_text (*(char (*)[64])(frame_ + FRAME_OFF(284)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(348)))
-#define choice (*(uint *)(frame_ + FRAME_OFF(1104)))
-#define input_result (*(int *)(frame_ + FRAME_OFF(1108)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1112)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1116)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1120)))
 void __cdecl tribe_editor_rename_title(void)
 
 {
   int title_slot;
   size_t len;
-  i8 frame_[FRAME_OFF(1128)] __attribute__((aligned(8)));  /* original stack frame */
+  char *dest_title;
+  i8 *current_title;
+  i32 gender_label;
+  i8 *title_name;
+  iptr parent_wnd2;
+  char input_buf[260];
+  char option_text[64];
+  Dialog dialog2;
+  uint choice;
+  int input_result;
+  i32 eh_handler;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -925,26 +857,12 @@ void __cdecl tribe_editor_rename_title(void)
   /* inlined unwind funclet 004a4948 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return;
 }
-#undef dest_title
-#undef current_title
-#undef gender_label
-#undef title_name
-#undef parent_wnd2
-#undef input_buf
-#undef option_text
-#undef dialog2
-#undef choice
-#undef input_result
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 004a496c auto */
-#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl tribe_editor_on_help(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 parent_wnd2;
   
   if (active_editor_wnd == 0) {
     parent_wnd2 = 0;
@@ -957,7 +875,6 @@ void __cdecl tribe_editor_on_help(void)
   dlg_set_parent_window(0);
   return;
 }
-#undef parent_wnd2
 
 /* 004a49cb auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
@@ -992,16 +909,15 @@ void __cdecl tribe_editor_on_combo(int ctrl_id)
 
 /* 004a4a58 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
-#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(16)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall tribe_editor_create_combo(ViewWindow *this,int slot)
 
 {
   int ctrl_x;
   int ctrl_y;
   iptr label;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent_wnd2;
+  int i;
+  i8 rect[16];
   
   ctrl_x = *(int *)(&tribe_editor_combo_x_table + slot * 8) + this->client_x;
   ctrl_y = *(int *)(&tribe_editor_combo_y_table + slot * 8) + this->client_y;
@@ -1072,21 +988,17 @@ void __thiscall tribe_editor_create_combo(ViewWindow *this,int slot)
   return;
 }
 #undef editor_next_ctrl_id
-#undef parent_wnd2
-#undef i
-#undef rect
 
 /* 004a4eb2 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define tribe_editor_edit_x_table (*(i32 *)((u8 *)&g.d_0062cd60))
 #define tribe_editor_edit_y_table (*(i32 *)((u8 *)&g.d_0062cd64))
-#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall tribe_editor_create_edit(ViewWindow *this,int slot)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent_wnd2;
+  i8 rect[16];
   
   rect_set_xywh((iptr)rect,(&tribe_editor_edit_x_table)[slot * 2] + this->client_x,
                      (&tribe_editor_edit_y_table)[slot * 2] + this->client_y,100,this->sci_rate_sel + 6);
@@ -1107,25 +1019,22 @@ void __thiscall tribe_editor_create_edit(ViewWindow *this,int slot)
 #undef editor_next_ctrl_id
 #undef tribe_editor_edit_x_table
 #undef tribe_editor_edit_y_table
-#undef parent_wnd2
-#undef rect
 
 /* 004a4f89 auto */
 #define editor_bg_surface (*(int *)((u8 *)&g.d_0062e018))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define tribe_editor_edit_x_table (*(int *)((u8 *)&g.d_0062cd60))
 #define tribe_editor_edit_y_table (*(int *)((u8 *)&g.d_0062cd64))
-#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define sprite (*(Sprite * *)(frame_ + FRAME_OFF(16)))
-#define label_y (*(int *)(frame_ + FRAME_OFF(20)))
-#define label_x (*(int *)(frame_ + FRAME_OFF(24)))
-#define box_y (*(int *)(frame_ + FRAME_OFF(28)))
-#define box_x (*(int *)(frame_ + FRAME_OFF(32)))
 void __thiscall tribe_editor_paint(ViewWindow *this)
 
 {
   byte key_color;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_ctx[16];
+  Sprite *sprite;
+  int label_y;
+  int label_x;
+  int box_y;
+  int box_x;
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((editor_bg_surface == 0) || (editor_running == 0)) {
@@ -1201,30 +1110,11 @@ void __thiscall tribe_editor_paint(ViewWindow *this)
 #undef editor_running
 #undef tribe_editor_edit_x_table
 #undef tribe_editor_edit_y_table
-#undef draw_ctx
-#undef sprite
-#undef label_y
-#undef label_x
-#undef box_y
-#undef box_x
 
 /* 004a54d9 auto */
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
 #define editor_next_ctrl_id (*(i32 *)((u8 *)&g.d_006a1d80))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
-#define parent_wnd6 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define parent_wnd5 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define parent_wnd4 (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define parent_wnd3 (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define parent_wnd1 (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define bg_surface2 (*(DibSurface * *)(frame_ + FRAME_OFF(32)))
-#define i (*(int *)(frame_ + FRAME_OFF(40)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(68)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1144)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1148)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(1152)))
 void __thiscall tribe_editor_main(ViewWindow *this)
 
 {
@@ -1242,7 +1132,19 @@ void __thiscall tribe_editor_main(ViewWindow *this)
   i32 arg7;
   i32 arg8;
   i32 arg9;
-  i8 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent_wnd6;
+  u8 *parent_wnd5;
+  u8 *parent_wnd4;
+  u8 *parent_wnd3;
+  u8 *parent_wnd2;
+  u8 *parent_wnd1;
+  DibSurface *bg_surface2;
+  int i;
+  i8 rect[16];
+  GamePalette palette;
+  i32 eh_handler;
+  i8 *eh_prev;
+  int eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -1257,7 +1159,7 @@ void __thiscall tribe_editor_main(ViewWindow *this)
   else {
     bg_surface2 = (DibSurface *)surface_ctor(this_00);
   }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   editor_bg_surface = bg_surface2;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font((iptr)((u8 *)&g.d_006a4f90));
@@ -1393,29 +1295,15 @@ void __thiscall tribe_editor_main(ViewWindow *this)
 #undef editor_bg_surface
 #undef editor_next_ctrl_id
 #undef editor_running
-#undef parent_wnd6
-#undef parent_wnd5
-#undef parent_wnd4
-#undef parent_wnd3
-#undef parent_wnd2
-#undef parent_wnd1
-#undef bg_surface2
-#undef i
-#undef rect
-#undef palette
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 004a5d92 auto */
-#define editor_wnd (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(2888)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(2892)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl tribe_editor_run(void)
 
 {
-  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  EditorWindow editor_wnd;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   editor_wnd_ctor(&editor_wnd);
@@ -1426,10 +1314,6 @@ void __cdecl tribe_editor_run(void)
   /* inlined unwind funclet 004a5deb */ { editor_wnd_dtor((EditorWindow *)((iptr)&editor_wnd)); }
   return;
 }
-#undef editor_wnd
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 004cc8f0 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -1556,24 +1440,22 @@ void __cdecl editor_font_static_dtor(void)
 }
 
 /* 004cd8a6 auto */
-#define string_id (*(int *)(frame_ + FRAME_OFF(4)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define out_file (*(FILE * *)(frame_ + FRAME_OFF(16)))
-#define in_file (*(FILE * *)(frame_ + FRAME_OFF(20)))
-#define saved_cwd (*(char (*)[260])(frame_ + FRAME_OFF(24)))
-#define leader (*(iptr *)(frame_ + FRAME_OFF(284)))
-#define line (*(char *)(frame_ + FRAME_OFF(288)))
-#define line_name (*(char (*)[255])(frame_ + FRAME_OFF(289)))
-#define city_file_name (*(i8 (*)[16])(frame_ + FRAME_OFF(544)))
-#define tribe_str (*(char * *)(frame_ + FRAME_OFF(560)))
 i32 __cdecl tribe_editor_update_city_file(void)
 
 {
   int rc;
   char *read_ptr;
   size_t _MaxCount;
-  i8 frame_[FRAME_OFF(568)] __attribute__((aligned(8)));  /* original stack frame */
+  int string_id;
+  i32 result;
+  iptr civ;
+  FILE *out_file;
+  FILE *in_file;
+  char saved_cwd[260];
+  iptr leader;
+  char line[256];
+  i8 city_file_name[16];
+  char *tribe_str;
   
   result = 0;
   out_file = (FILE *)0x0;
@@ -1598,9 +1480,9 @@ LAB_004cdc50:
         if ((in_file != (FILE *)0x0) && (out_file != (FILE *)0x0)) {
           do {
             while( true ) {
-              read_ptr = _fgets(&line,0x100,in_file);
+              read_ptr = _fgets(line,0x100,in_file);
               if (read_ptr == (char *)0x0) goto LAB_004cdc50;
-              if ((line != '@') || (rc = __strnicmp(line_name,&city_file_stop_str,4), rc == 0))
+              if ((line[0] != '@') || (rc = __strnicmp((line + 1),&city_file_stop_str,4), rc == 0))
               break;
               for (leader = 0; leader < 0x15; leader++) {
                 civ = 1;
@@ -1620,20 +1502,20 @@ LAB_004cdc50:
                   tribe_str = (char *)label_string(string_id);
                 }
                 _MaxCount = _strlen(tribe_str);
-                rc = __strnicmp(line_name,tribe_str,_MaxCount);
+                rc = __strnicmp((line + 1),tribe_str,_MaxCount);
                 if (rc == 0) {
-                  _sprintf(&line,s__c_s_0062e1b4,0x40,
+                  _sprintf(line,s__c_s_0062e1b4,0x40,
                            &editor_item_names + (leader * 5 + 0xd2) * 8);
-                  __strupr(&line);
-                  rc = _fputs(&line,out_file);
+                  __strupr(line);
+                  rc = _fputs(line,out_file);
                   if (rc == -1) goto LAB_004cdc5a;
                   break;
                 }
               }
-              if ((leader == 0x15) && (rc = _fputs(&line,out_file), rc == -1))
+              if ((leader == 0x15) && (rc = _fputs(line,out_file), rc == -1))
               goto LAB_004cdc5a;
             }
-            rc = _fputs(&line,out_file);
+            rc = _fputs(line,out_file);
           } while (rc != -1);
         }
       }
@@ -1653,17 +1535,6 @@ LAB_004cdc5a:
   __chdir(saved_cwd);
   return result;
 }
-#undef string_id
-#undef result
-#undef civ
-#undef out_file
-#undef in_file
-#undef saved_cwd
-#undef leader
-#undef line
-#undef line_name
-#undef city_file_name
-#undef tribe_str
 
 /* 004cdcf6 auto */
 i32 __cdecl editor_numeric_edit_filter(i32 ctrl,int key)
@@ -1683,18 +1554,17 @@ i32 __cdecl editor_numeric_edit_filter(i32 ctrl,int key)
 /* 004cdd3d auto */
 #define dlg_check_bits (*(uint *)((u8 *)&g.d_00631ed8))
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define choice (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(16)))
-#define i (*(int *)(frame_ + FRAME_OFF(772)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(776)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(780)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(784)))
 i32 __cdecl editor_options_dialog(iptr file_name,i32 section,uint disabled_mask,i32 flags)
 
 {
   int rc;
-  i8 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  i32 choice;
+  Dialog dlg;
+  int i;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -1739,13 +1609,6 @@ i32 __cdecl editor_options_dialog(iptr file_name,i32 section,uint disabled_mask,
 }
 #undef dlg_check_bits
 #undef dlg_help_pressed
-#undef parent_wnd2
-#undef choice
-#undef dlg
-#undef i
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 004cdf4b auto */
 #define editor_value_clamped (*(i32 *)((u8 *)&g.d_0062e014))
@@ -1776,8 +1639,6 @@ int __cdecl editor_clamp_value(int value,int min_value,int max_value)
 #define editor_text_dlg_title_font_i32 (*(i32 *)((u8 *)&g.d_006a1b8c))
 #define editor_text_dlg_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006a1b90))
 #define editor_text_dlg_text_font_i32 (*(i32 *)((u8 *)&g.d_006a1b94))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define wnd_style (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl
@@ -1785,7 +1646,8 @@ editor_text_dlg_create(int title,uint style,int x,int y,int width,int height,int
             int caption_height,int border_width)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  uint wnd_style;
   
   if (title == 0) {
     crt_strcpy(&editor_text_dlg_title,&editor_text_dlg_empty_title);
@@ -1853,20 +1715,17 @@ editor_text_dlg_create(int title,uint style,int x,int y,int width,int height,int
 #undef editor_text_dlg_title_font_i32
 #undef editor_text_dlg_title_small_font_i32
 #undef editor_text_dlg_text_font_i32
-#undef parent_wnd2
-#undef wnd_style
 
 /* 004ce196 auto */
 #define editor_text_active (*(i32 *)((u8 *)&g.d_006a4f9c))
-#define line_idx (*(int *)(frame_ + FRAME_OFF(0)))
-#define line_buf (*(char (*)[256])(frame_ + FRAME_OFF(4)))
 void __cdecl editor_text_dlg_on_ok(void)
 
 {
   int has_line;
   size_t len;
   i32 line_copy;
-  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  int line_idx;
+  char line_buf[256];
   
   for (line_idx = 0; line_idx < 0x14; line_idx++) {
     *(i32 *)(editor_text_lines_out + line_idx * 4) = 0;
@@ -1900,8 +1759,6 @@ LAB_004ce2ca:
   } while( true );
 }
 #undef editor_text_active
-#undef line_idx
-#undef line_buf
 
 /* 004ce2f3 auto */
 #define editor_text_active (*(i32 *)((u8 *)&g.d_006a4f9c))
@@ -1930,16 +1787,6 @@ void __cdecl editor_text_dlg_redraw(void)
 
 /* 004ce38a auto */
 #define editor_text_active (*(int *)((u8 *)&g.d_006a4f9c))
-#define line_idx (*(int *)(frame_ + FRAME_OFF(4)))
-#define cancel_btn (*(Control *)(frame_ + FRAME_OFF(12)))
-#define button_height (*(int *)(frame_ + FRAME_OFF(72)))
-#define button_x (*(int *)(frame_ + FRAME_OFF(76)))
-#define button_width2 (*(int *)(frame_ + FRAME_OFF(80)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
-#define ok_btn (*(Control *)(frame_ + FRAME_OFF(100)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(160)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(164)))
-#define eh_state (*(uint *)(frame_ + FRAME_OFF(168)))
 /* WARNING: Removing unreachable block (ram,0x004ce598) */
 /* WARNING: Removing unreachable block (ram,0x004ce49e) */
 /* WARNING: Removing unreachable block (ram,0x004ce621) */
@@ -1950,13 +1797,22 @@ i32 __cdecl editor_text_edit_dialog(iptr lines,i32 title)
   i32 result;
   int button_y;
   iptr label;
-  i8 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
+  int line_idx;
+  Control cancel_btn;
+  int button_height;
+  int button_x;
+  int button_width2;
+  i8 rect[16];
+  Control ok_btn;
+  i32 seh_prev;
+  i8 *seh_handler;
+  uint eh_state;
   
   eh_state = 0xffffffff;
   button_ctor(&ok_btn);
   eh_state = 0;
   button_ctor(&cancel_btn);
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),1);
+  eh_state = (eh_state & 0xffffff00 | (byte)(1));
   editor_text_active = 1;
   editor_text_lines_out = lines;
   button_height = font_line_spacing((GameFont *)dialog_font_ptr);
@@ -2006,21 +1862,9 @@ i32 __cdecl editor_text_edit_dialog(iptr lines,i32 title)
   return result;
 }
 #undef editor_text_active
-#undef line_idx
-#undef cancel_btn
-#undef button_height
-#undef button_x
-#undef button_width2
-#undef rect
-#undef ok_btn
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 004ce71b auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define cmp_len (*(size_t *)(frame_ + FRAME_OFF(4)))
 uint __cdecl editor_check_city_name(iptr name2)
 
 {
@@ -2028,7 +1872,8 @@ uint __cdecl editor_check_city_name(iptr name2)
   size_t name_len;
   size_t line_len;
   uint result;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  size_t cmp_len;
   
   rc = text_open_section((iptr)((u8 *)&g.d_0062e1dc),0);
   if (rc == 0) {
@@ -2065,11 +1910,8 @@ LAB_004ce7c5:
   return result;
 }
 #undef text_buffer
-#undef parent_wnd2
-#undef cmp_len
 
 /* 004ce83d auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl editor_wnd_on_move_close_dropdowns(void)
 
 {
@@ -2077,7 +1919,7 @@ void __cdecl editor_wnd_on_move_close_dropdowns(void)
   UINT Msg;
   WPARAM wParam;
   LPARAM lParam;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; i < *(int *)(active_editor_wnd + 0x2f8); i++) {
     lParam = 0;
@@ -2089,17 +1931,15 @@ void __cdecl editor_wnd_on_move_close_dropdowns(void)
   }
   return;
 }
-#undef i
 
 /* 004ce8a4 auto */
-#define input_buf (*(char (*)[260])(frame_ + FRAME_OFF(0)))
-#define default_buf (*(char (*)[20])(frame_ + FRAME_OFF(260)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(280)))
 i32 __cdecl editor_input_long(iptr file_name,iptr section,int default_value,iptr out_value)
 
 {
   long value;
-  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  char input_buf[260];
+  char default_buf[20];
+  i32 result;
   
   __itoa(default_value,default_buf,10);
   result = dlg_text_input(file_name,section,6,(iptr)default_buf,(iptr)input_buf);
@@ -2107,21 +1947,17 @@ i32 __cdecl editor_input_long(iptr file_name,iptr section,int default_value,iptr
   *(long *)out_value = value;
   return result;
 }
-#undef input_buf
-#undef default_buf
-#undef result
 
 /* 00553dfd auto */
-#define folder_name (*(char (*)[260])(frame_ + FRAME_OFF(0)))
-#define path (*(CHAR (*)[260])(frame_ + FRAME_OFF(260)))
-#define retry (*(int *)(frame_ + FRAME_OFF(520)))
 i32 __cdecl editor_create_scenario_folder(void)
 
 {
   int rc;
   size_t len;
   DWORD DVar3;
-  i8 frame_[FRAME_OFF(528)] __attribute__((aligned(8)));  /* original stack frame */
+  char folder_name[260];
+  CHAR path[260];
+  int retry;
   
   rc = _strcmp(&scenario_dir_path,&game_home_dir);
   if (rc == 0) {
@@ -2164,9 +2000,6 @@ i32 __cdecl editor_create_scenario_folder(void)
   }
   return 1;
 }
-#undef folder_name
-#undef path
-#undef retry
 
 /* 00553ff6 auto */
 void __cdecl editor_toggle_scenario_flag(void)

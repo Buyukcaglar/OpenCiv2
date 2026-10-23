@@ -454,10 +454,6 @@ MMRESULT WINAPI mmioAdvance(HMMIO h, LPMMIOINFO info, UINT flags)
  * there is no drive, as before.  Replays have no drive either (as the
  * reference environment).  Other MCI devices (avivideo) are not available. */
 
-typedef struct { DWORD_PTR dwCallback; MCIDEVICEID wDeviceID; LPCSTR lpstrDeviceType, lpstrElementName, lpstrAlias; } MciOpenParms;
-typedef struct { DWORD_PTR dwCallback; DWORD_PTR dwReturn; DWORD dwItem, dwTrack; } MciStatusParms;
-typedef struct { DWORD_PTR dwCallback; DWORD dwFrom, dwTo; } MciPlayParms;
-typedef struct { DWORD_PTR dwCallback; DWORD dwTo; } MciSeekParms;
 
 #define CD_ID 0x4344            /* the drive's device id */
 
@@ -593,7 +589,7 @@ static MCIERROR cd_command(UINT msg, DWORD_PTR flags, DWORD_PTR param)
     case MCI_SET:                       /* time format (tracks), door: nothing to do */
         return 0;
     case MCI_STATUS: {
-        MciStatusParms *p = (MciStatusParms *)param;
+        MCI_STATUS_PARMS *p = (MCI_STATUS_PARMS *)param;
         if (!(flags & MCI_STATUS_ITEM))
             return MCIERR_MISSING_PARAMETER;
         switch (p->dwItem) {
@@ -606,7 +602,7 @@ static MCIERROR cd_command(UINT msg, DWORD_PTR flags, DWORD_PTR param)
         return MCIERR_UNSUPPORTED_FUNCTION;
     }
     case MCI_SEEK: {
-        MciSeekParms *p = (MciSeekParms *)param;
+        MCI_SEEK_PARMS *p = (MCI_SEEK_PARMS *)param;
         cd_stop(MCI_NOTIFY_ABORTED);
         if (flags & MCI_TO)
             cd.current = (int)(p->dwTo & 0xff);
@@ -617,7 +613,7 @@ static MCIERROR cd_command(UINT msg, DWORD_PTR flags, DWORD_PTR param)
         cd_stop(MCI_NOTIFY_ABORTED);
         return 0;
     case MCI_PLAY: {
-        MciPlayParms *p = (MciPlayParms *)param;
+        MCI_PLAY_PARMS *p = (MCI_PLAY_PARMS *)param;
         int n = (flags & MCI_FROM) ? (int)(p->dwFrom & 0xff) : (cd.current ? cd.current : 2);
         cd_stop(MCI_NOTIFY_SUPERSEDED);
         if (n < 2 || n > cd.tracks || !cd_play(n))
@@ -635,7 +631,7 @@ static MCIERROR cd_command(UINT msg, DWORD_PTR flags, DWORD_PTR param)
 MCIERROR WINAPI mciSendCommandA(MCIDEVICEID id, UINT msg, DWORD_PTR flags, DWORD_PTR param)
 { API_TRACE();
     if (msg == MCI_OPEN) {
-        MciOpenParms *p = (MciOpenParms *)param;
+        MCI_OPEN_PARMSA *p = (MCI_OPEN_PARMSA *)param;
         if ((flags & MCI_OPEN_TYPE) && !(flags & MCI_OPEN_TYPE_ID) && p && p->lpstrDeviceType &&
             !strcasecmp(p->lpstrDeviceType, "cdaudio")) {
             if (!cd.tracks)

@@ -14,13 +14,12 @@ void __thiscall ctrl_show_and_redraw(Control *this)
 }
 
 /* 0040f3e0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall button_ctor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor(this);
@@ -28,9 +27,6 @@ Control * __thiscall button_ctor(Control *this)
   this->on_select = 0xffffffff;
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0040f480 auto */
 Control * __thiscall ctrl_base_ctor(Control *this)
@@ -62,13 +58,12 @@ i32 __thiscall ctrl_base_dtor(ControlBase *this)
 }
 
 /* 0040f570 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 i32 __thiscall ctrl_dtor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (this->hwnd != 0) {
@@ -78,9 +73,6 @@ i32 __thiscall ctrl_dtor(Control *this)
   /* inlined unwind funclet 0040f5c3 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return seh_prev;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0040f610 auto */
 void __thiscall ctrl_destroy(Control *this)
@@ -173,30 +165,25 @@ void __thiscall button_set_callback(Control *this,iptr callback)
 }
 
 /* 0040f8b0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall checkbox_elem_ctor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor(this);
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0040f930 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall checkbox_dtor(Checkbox *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (this->hwnd != 0) {
@@ -206,12 +193,8 @@ void __thiscall checkbox_dtor(Checkbox *this)
   /* inlined unwind funclet 0040f98a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0040f9d0 auto */
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __thiscall
 checkbox_create
           (Control *this,iptr parent,i32 ctrl_id,i32 x,i32 y
@@ -219,7 +202,7 @@ checkbox_create
 
 {
   u32 new_hwnd;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   this->font = (u32)checkbox_default_font;
   checkbox_calc_rect(label,x,y,(iptr)rect,this->font);
@@ -234,7 +217,6 @@ checkbox_create
   this->hwnd = new_hwnd;
   return;
 }
-#undef rect
 
 /* 0040faa0 auto */
 void __thiscall checkbox_set_callback(CheckboxCallbackSetView *this,iptr callback)
@@ -253,13 +235,12 @@ void __thiscall checkbox_set_checked(Control *this,u32 checked)
 }
 
 /* 0040fb00 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall scrollbar_ctor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor(this);
@@ -268,18 +249,14 @@ Control * __thiscall scrollbar_ctor(Control *this)
   this->on_click = 0;
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0040fbb0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall scrollbar_dtor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (this->hwnd != 0) {
@@ -289,9 +266,6 @@ void __thiscall scrollbar_dtor(Control *this)
   /* inlined unwind funclet 0040fc0a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 0040fc50 auto */
 void __thiscall
@@ -353,13 +327,12 @@ u32 __thiscall control_get_hwnd(ControlHwndView *this)
 }
 
 /* 004187a0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 InputControl * __thiscall edit_ctor(InputControl *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor((Control *)this);
@@ -371,18 +344,14 @@ InputControl * __thiscall edit_ctor(InputControl *this)
   *(i8 *)((int)&this->font + 1) = 0;
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00418870 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall edit_dtor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (this->hwnd != 0) {
@@ -392,9 +361,6 @@ void __thiscall edit_dtor(Control *this)
   /* inlined unwind funclet 004188ca */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00418910 auto */
 void __thiscall
@@ -448,13 +414,12 @@ void __thiscall ctrl_get_text(ControlTextView *this,iptr buffer)
 }
 
 /* 00418ab0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall combo_ctor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor(this);
@@ -462,18 +427,14 @@ Control * __thiscall combo_ctor(Control *this)
   this->on_select = 0;
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00418b50 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall combo_dtor(ComboDtorView *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (this->hwnd != 0) {
@@ -483,9 +444,6 @@ void __thiscall combo_dtor(ComboDtorView *this)
   /* inlined unwind funclet 00418baa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00418bf0 auto */
 void __thiscall
@@ -560,13 +518,12 @@ void __thiscall combo_set_callback(ComboBoxCallbackSetView *this,iptr callback)
 }
 
 /* 00418e00 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall checkbox_ctor(Control *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor(this);
@@ -574,18 +531,14 @@ Control * __thiscall checkbox_ctor(Control *this)
   this->on_select = 0;
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00418ea0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall listbox_dtor(ListBoxControl *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (this->hwnd != 0) {
@@ -595,9 +548,6 @@ void __thiscall listbox_dtor(ListBoxControl *this)
   /* inlined unwind funclet 00418efa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00418f40 auto */
 void __thiscall
@@ -968,13 +918,12 @@ i32 __thiscall edit_get_text_end(ControlTextView *this)
 }
 
 /* 004bb740 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall radiogrp_dtor(RadioGroupDtorView *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (this->items_handle != 0) {
@@ -985,9 +934,6 @@ void __thiscall radiogrp_dtor(RadioGroupDtorView *this)
   /* inlined unwind funclet 004bb7b0 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 004cffb0 auto */
 i32 __thiscall
@@ -1001,20 +947,6 @@ edit_get_line(EditLineView *this,i32 line,iptr buffer,i32 max_len)
 }
 
 /* 005011b4 auto */
-#define shadow_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define height2 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define rect_left2 (*(int *)(frame_ + FRAME_OFF(40)))
-#define rect_top2 (*(int *)(frame_ + FRAME_OFF(44)))
-#define rect_right2 (*(int *)(frame_ + FRAME_OFF(48)))
-#define rect_bottom2 (*(int *)(frame_ + FRAME_OFF(52)))
-#define inner_left (*(int *)(frame_ + FRAME_OFF(56)))
-#define inner_top (*(int *)(frame_ + FRAME_OFF(60)))
-#define inner_right (*(int *)(frame_ + FRAME_OFF(64)))
-#define inner_bottom (*(int *)(frame_ + FRAME_OFF(68)))
-#define width2 (*(i32 *)(frame_ + FRAME_OFF(72)))
-#define icon_y (*(int *)(frame_ + FRAME_OFF(76)))
-#define icon_x (*(int *)(frame_ + FRAME_OFF(80)))
 void __cdecl
 spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr sprite,iptr rect)
 
@@ -1024,7 +956,14 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   WndPaletteView *pCVar3;
   iptr palette;
   int center;
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 shadow_ctx[16];
+  i8 draw_ctx[16];
+  i32 height2;
+  RECT rect2;
+  RECT inner_rect;
+  i32 width2;
+  int icon_y;
+  int icon_x;
   
   width2 = rect_width(rect);
   height2 = rect_height(rect);
@@ -1032,16 +971,16 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
             (button,parent,ctrl_id,*(i32 *)rect,*(i32 *)(rect + 4),width2,
              height2,sprite,0x17);
   surf_rect = (int *)surface_get_rect((DibSurface *)&button->on_select);
-  rect_left2 = *surf_rect;
-  rect_top2 = surf_rect[1];
-  rect_right2 = surf_rect[2];
-  rect_bottom2 = surf_rect[3];
-  size = rect_width((iptr)&rect_left2);
-  center = rect_left2 + size / 2;
+  rect2.left = *surf_rect;
+  rect2.top = surf_rect[1];
+  rect2.right = surf_rect[2];
+  rect2.bottom = surf_rect[3];
+  size = rect_width((iptr)&rect2);
+  center = rect2.left + size / 2;
   size = sprite_width((Sprite *)sprite);
   icon_x = center - size / 2;
-  size = rect_height((iptr)&rect_left2);
-  center = rect_top2 + size / 2;
+  size = rect_height((iptr)&rect2);
+  center = rect2.top + size / 2;
   size = sprite_height((Sprite *)sprite);
   icon_y = center - size / 2;
   sprite_draw
@@ -1049,18 +988,18 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   sprite_draw
             ((Sprite *)sprite,(iptr)shadow_ctx,(iptr)(button->button_surface),icon_x + 2,
              icon_y + 2);
-  gfx_draw_rect_frame((iptr)&button->on_select,(iptr)&rect_left2,10);
-  gfx_draw_rect_frame((iptr)(button->button_surface),(iptr)&rect_left2,10);
-  inner_left = rect_left2;
-  inner_top = rect_top2;
-  inner_right = rect_right2;
-  inner_bottom = rect_bottom2;
-  rect_deflate((iptr)&inner_left,1,1);
-  gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_left,0x1f,0xf);
-  gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_left,0xf,10);
-  rect_deflate((iptr)&inner_left,1,1);
-  gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_left,0x1f,0xf);
-  gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_left,0xf,10);
+  gfx_draw_rect_frame((iptr)&button->on_select,(iptr)&rect2,10);
+  gfx_draw_rect_frame((iptr)(button->button_surface),(iptr)&rect2,10);
+  inner_rect.left = rect2.left;
+  inner_rect.top = rect2.top;
+  inner_rect.right = rect2.right;
+  inner_rect.bottom = rect2.bottom;
+  rect_deflate((iptr)&inner_rect,1,1);
+  gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_rect,0x1f,0xf);
+  gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_rect,0xf,10);
+  rect_deflate((iptr)&inner_rect,1,1);
+  gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_rect,0x1f,0xf);
+  gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_rect,0xf,10);
   pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)button);
   palette = wnd_get_palette(pCVar3);
   surface_set_palette((DibSurface *)(button->button_surface),palette);
@@ -1069,20 +1008,6 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   surface_set_palette((DibSurface *)&button->on_select,palette);
   return;
 }
-#undef shadow_ctx
-#undef draw_ctx
-#undef height2
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
-#undef inner_left
-#undef inner_top
-#undef inner_right
-#undef inner_bottom
-#undef width2
-#undef icon_y
-#undef icon_x
 
 /* 00511560 auto */
 SpriteButtonCore * __thiscall spritebtn_scalar_dtor(SpriteButtonCore *this,uint flags)
@@ -1096,52 +1021,44 @@ SpriteButtonCore * __thiscall spritebtn_scalar_dtor(SpriteButtonCore *this,uint 
 }
 
 /* 005115b0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall spritebtn_dtor(SpriteButtonCore *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  int seh_state;
   
-  (*(i32 *)((char *)&seh_state + 1)) = 0;
+  seh_state = seh_state & 0xff;
   (*(i8 *)((char *)&seh_state + 0)) = 2;
   if (this->hwnd != 0) {
     spritebtn_hwnd_cleanup_stub(this->hwnd);
   }
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   /* inlined unwind funclet 00511624 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x7c)); }
-  seh_state = (uint)(*(i32 *)((char *)&seh_state + 1)) << 8;
+  seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 00511630 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x34)); }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 0051163c */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 00511720 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 SpriteButton * __thiscall spritebtn_ctor(SpriteButton *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor((Control *)this);
   seh_state = 0;
   surface_ctor((DibSurface *)&this->on_select);
-  seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),1);
+  seh_state = (seh_state & 0xffffff00 | (byte)(1));
   surface_ctor((DibSurface *)(this->button_surface));
   this->pressed_state = '\0';
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 005117f0 auto */
 void __thiscall spritebtn_set_click_handler(SpritebtnSetClickHandlerView *this,iptr callback)
@@ -1172,7 +1089,6 @@ void __thiscall edit_set_change_callback(EditChangeSetView *this,iptr callback)
 }
 
 /* 00530ee0 auto */
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __thiscall
 checkbox_create_fixed
           (Control *this,iptr parent,i32 ctrl_id,i32 x,i32 y
@@ -1180,7 +1096,7 @@ checkbox_create_fixed
 
 {
   u32 hwnd;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 rect[16];
   
   this->font = (u32)checkbox_default_font;
   checkbox_calc_rect_fixed(x,y,width,(iptr)rect,this->font);
@@ -1195,7 +1111,6 @@ checkbox_create_fixed
   this->hwnd = hwnd;
   return;
 }
-#undef rect
 
 /* 00530fb0 auto */
 void __thiscall checkbox_enable(CheckboxEnableView *this)
@@ -1218,22 +1133,18 @@ u32 __thiscall checkbox_is_checked(Control *this)
 }
 
 /* 00531010 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 InputControl * __thiscall radiogrp_ctor(InputControl *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   ctrl_base_ctor((Control *)this);
   this->items_handle = 0;
   return this;
 }
-#undef seh_prev
-#undef seh_handler
-#undef seh_state
 
 /* 005310a0 auto */
 void __thiscall
@@ -1436,14 +1347,13 @@ void __thiscall listbox_get_sel_text(ListBoxSelTextView *this,iptr buffer)
 }
 
 /* 005bd39e auto */
-#define msg (*(tagMSG *)(frame_ + FRAME_OFF(4)))
-#define pressed (*(char *)(frame_ + FRAME_OFF(32)))
 int __cdecl input_poll_modifier(int modifier)
 
 {
   SHORT SVar1;
   BOOL BVar2;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  tagMSG msg;
+  char pressed;
   
   pressed = '\0';
   if (modifier == 0x200) {
@@ -1468,8 +1378,6 @@ int __cdecl input_poll_modifier(int modifier)
   }
   return (int)pressed;
 }
-#undef msg
-#undef pressed
 
 /* 005bd4cd auto */
 uint __cdecl input_lbutton_down(void)
@@ -1539,9 +1447,6 @@ void __cdecl ctrl_hwnd_set_focus(HWND hwnd)
 }
 
 /* 005c90ca auto */
-#define origin (*(tagPOINT *)(frame_ + FRAME_OFF(4)))
-#define dib2 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define parent_hwnd (*(HWND *)(frame_ + FRAME_OFF(16)))
 void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
 
 {
@@ -1554,7 +1459,9 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
   HDC hdcSrc;
   LONG y1;
   DWORD rop;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagPOINT origin;
+  iptr dib2;
+  HWND parent_hwnd;
   
   parent_hwnd = GetParent(hwnd);
   LVar1 = GetWindowLongA(parent_hwnd,0xc);
@@ -1588,19 +1495,15 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
   }
   return;
 }
-#undef origin
-#undef dib2
-#undef parent_hwnd
 
 /* 005c9222 auto */
-#define pos (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define cursor (*(char * *)(frame_ + FRAME_OFF(4)))
-#define hotkey (*(char (*)[4])(frame_ + FRAME_OFF(8)))
 void __cdecl ctrl_parse_hotkey(iptr ctrl,iptr text)
 
 {
   size_t len;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr pos;
+  char *cursor;
+  char hotkey[4];
   
   cursor = (char *)text;
   *(i32 *)(ctrl + 0x28) = 0;
@@ -1627,19 +1530,15 @@ LAB_005c92ae:
   }
   return;
 }
-#undef pos
-#undef cursor
-#undef hotkey
 
 /* 005c9307 auto */
-#define ps (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(4)))
 LRESULT __stdcall ctrl_default_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
 
 {
   HWND hWnd;
   iptr block;
   LRESULT LVar1;
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  tagPAINTSTRUCT ps;
   
   if (msg < 0x10) {
     if (msg == 0xf) {
@@ -1671,7 +1570,6 @@ LRESULT __stdcall ctrl_default_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM l
   LVar1 = DefWindowProcA(hwnd,msg,wparam,lparam);
   return LVar1;
 }
-#undef ps
 
 /* 005c944b auto */
 int __cdecl ctrl_destroy_hwnd(iptr ctrl)
@@ -1694,12 +1592,11 @@ int __cdecl ctrl_destroy_hwnd(iptr ctrl)
 }
 
 /* 005c9499 auto */
-#define block (*(i32 * *)(frame_ + FRAME_OFF(4)))
 i32 * __cdecl ctrl_init_block(HWND hwnd,iptr owner)
 
 {
   i32 handle;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *block;
   
   block = (i32 *)0x0;
   if (hwnd == (HWND)0x0) {
@@ -1722,7 +1619,6 @@ i32 * __cdecl ctrl_init_block(HWND hwnd,iptr owner)
   }
   return block;
 }
-#undef block
 
 /* 005c9595 auto */
 void __cdecl ctrl_hwnd_free_block(HWND hwnd)
@@ -1780,32 +1676,6 @@ void __thiscall control_set_hwnd(ControlHwndSetView *this,u32 hwnd)
 
 /* 005c9740 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define style2 (*(DWORD *)(frame_ + FRAME_OFF(0)))
-#define label_text (*(char (*)[256])(frame_ + FRAME_OFF(40)))
-#define line_y (*(int *)(frame_ + FRAME_OFF(296)))
-#define green (*(i8 (*)[4])(frame_ + FRAME_OFF(300)))
-#define button (*(Control * *)(frame_ + FRAME_OFF(304)))
-#define text_width (*(int *)(frame_ + FRAME_OFF(308)))
-#define bmp_disabled (*(HBITMAP *)(frame_ + FRAME_OFF(312)))
-#define mem_dc (*(HDC *)(frame_ + FRAME_OFF(316)))
-#define red (*(i8 (*)[4])(frame_ + FRAME_OFF(320)))
-#define blue (*(i8 (*)[4])(frame_ + FRAME_OFF(324)))
-#define underline_end (*(int *)(frame_ + FRAME_OFF(328)))
-#define hwnd2 (*(HWND *)(frame_ + FRAME_OFF(332)))
-#define bounds (*(tagRECT *)(frame_ + FRAME_OFF(336)))
-#define old_obj (*(HGDIOBJ *)(frame_ + FRAME_OFF(352)))
-#define prefix (*(char (*)[256])(frame_ + FRAME_OFF(356)))
-#define saved_left (*(int *)(frame_ + FRAME_OFF(612)))
-#define saved_top (*(int *)(frame_ + FRAME_OFF(616)))
-#define saved_right (*(int *)(frame_ + FRAME_OFF(620)))
-#define saved_bottom (*(int *)(frame_ + FRAME_OFF(624)))
-#define underline_start (*(int *)(frame_ + FRAME_OFF(628)))
-#define text_rect (*(tagRECT *)(frame_ + FRAME_OFF(632)))
-#define bg_pen (*(HPEN *)(frame_ + FRAME_OFF(648)))
-#define orig_left (*(int *)(frame_ + FRAME_OFF(652)))
-#define orig_top (*(int *)(frame_ + FRAME_OFF(656)))
-#define orig_right (*(int *)(frame_ + FRAME_OFF(660)))
-#define orig_bottom (*(int *)(frame_ + FRAME_OFF(664)))
 HWND __cdecl
 button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
 
@@ -1843,7 +1713,32 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   i8 *blue_out;
   UINT UVar16;
   LONG LVar17;
-  i8 frame_[FRAME_OFF(672)] __attribute__((aligned(8)));  /* original stack frame */
+  DWORD style2;
+  char label_text[256];
+  int line_y;
+  i8 green[4];
+  Control *button;
+  int text_width;
+  HBITMAP bmp_disabled;
+  HDC mem_dc;
+  i8 red[4];
+  i8 blue[4];
+  int underline_end;
+  HWND hwnd2;
+  tagRECT bounds;
+  HGDIOBJ old_obj;
+  char prefix[256];
+  int saved_left;
+  int saved_top;
+  int saved_right;
+  int saved_bottom;
+  int underline_start;
+  tagRECT text_rect;
+  HPEN bg_pen;
+  int orig_left;
+  int orig_top;
+  int orig_right;
+  int orig_bottom;
   
   crt_strcpy(label_text,label);
   button = (Control *)ctrl;
@@ -2225,32 +2120,6 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   return hwnd2;
 }
 #undef app_hinstance
-#undef style2
-#undef label_text
-#undef line_y
-#undef green
-#undef button
-#undef text_width
-#undef bmp_disabled
-#undef mem_dc
-#undef red
-#undef blue
-#undef underline_end
-#undef hwnd2
-#undef bounds
-#undef old_obj
-#undef prefix
-#undef saved_left
-#undef saved_top
-#undef saved_right
-#undef saved_bottom
-#undef underline_start
-#undef text_rect
-#undef bg_pen
-#undef orig_left
-#undef orig_top
-#undef orig_right
-#undef orig_bottom
 
 /* 005cac22 auto */
 #define wnd_active_child (*(i32 *)((u8 *)&g.d_00637ea4))
@@ -2287,10 +2156,6 @@ void __cdecl button_press_animated(HWND hwnd)
 
 /* 005cb601 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define style2 (*(DWORD *)(frame_ + FRAME_OFF(4)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(12)))
-#define owner2 (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define hwnd2 (*(HWND *)(frame_ + FRAME_OFF(32)))
 HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,int visible)
 
 {
@@ -2302,7 +2167,10 @@ HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,in
   HMENU hMenu;
   HINSTANCE hInstance;
   LPVOID lpParam;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  DWORD style2;
+  tagRECT rect;
+  iptr owner2;
+  HWND hwnd2;
   
   style2 = 0x40810000;
   if (visible != 0) {
@@ -2326,10 +2194,6 @@ HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,in
   return hwnd2;
 }
 #undef app_hinstance
-#undef style2
-#undef rect
-#undef owner2
-#undef hwnd2
 
 /* 005cb6db auto */
 void __cdecl spritebtn_hwnd_cleanup_stub(i32 hwnd)
@@ -2371,11 +2235,6 @@ void __thiscall spritebtn_fire_rclick(SpriteButtonRClickView *this,i32 ctrl_id)
 }
 
 /* 005cbf40 auto */
-#define height2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define text_size (*(tagSIZE *)(frame_ + FRAME_OFF(20)))
-#define metrics (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(28)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(84)))
-#define font_data (*(i32 * *)(frame_ + FRAME_OFF(88)))
 void __cdecl checkbox_calc_rect(char *label,int x,int y,iptr out_rect,GameFont *font)
 
 {
@@ -2385,7 +2244,11 @@ void __cdecl checkbox_calc_rect(char *label,int x,int y,iptr out_rect,GameFont *
   HGDIOBJ h;
   size_t c;
   tagSIZE *lpsz;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  int height2;
+  tagSIZE text_size;
+  tagTEXTMETRICA metrics;
+  int width2;
+  i32 *font_data;
   
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
@@ -2410,23 +2273,17 @@ void __cdecl checkbox_calc_rect(char *label,int x,int y,iptr out_rect,GameFont *
   SetRect((LPRECT)out_rect,x,y,width2 + x,height2 + y);
   return;
 }
-#undef height2
-#undef text_size
-#undef metrics
-#undef width2
-#undef font_data
 
 /* 005cc035 auto */
-#define height2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define metrics (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(16)))
-#define font_data (*(i32 * *)(frame_ + FRAME_OFF(72)))
 void __cdecl checkbox_calc_rect_fixed(int x,int y,int width,iptr out_rect,GameFont *font)
 
 {
   HDC hdc;
   HDC hdc_00;
   i32 font_handle;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  int height2;
+  tagTEXTMETRICA metrics;
+  i32 *font_data;
   
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
@@ -2445,13 +2302,9 @@ void __cdecl checkbox_calc_rect_fixed(int x,int y,int width,iptr out_rect,GameFo
   SetRect((LPRECT)out_rect,x,y,width + x,height2 + y);
   return;
 }
-#undef height2
-#undef metrics
-#undef font_data
 
 /* 005cc0f0 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define style2 (*(DWORD *)(frame_ + FRAME_OFF(4)))
 HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
 
 {
@@ -2468,7 +2321,7 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   HMENU hMenu;
   HINSTANCE hInstance;
   LPVOID lpParam;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  DWORD style2;
   
   len = _strlen(label);
   label_copy = operator_new(len + 1);
@@ -2501,7 +2354,6 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   return pHVar6;
 }
 #undef app_hinstance
-#undef style2
 
 /* 005cc248 auto */
 void __cdecl checkbox_destroy_hwnd(int hwnd)
@@ -2554,28 +2406,6 @@ void __cdecl checkbox_toggle_by_hotkey(HWND hwnd)
 #define ctrl_shadow_dy (*(byte *)((u8 *)&g.d_00637e9c))
 #define ctrl_text_color_index (*(byte *)((u8 *)&g.d_00637e90))
 #define ctrl_text_rgb_set (*(char *)((u8 *)&g.d_00637f03))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define bitmap (*(HBITMAP *)(frame_ + FRAME_OFF(16)))
-#define block (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define checkbox (*(Control * *)(frame_ + FRAME_OFF(24)))
-#define ps (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(28)))
-#define old_font (*(HGDIOBJ *)(frame_ + FRAME_OFF(92)))
-#define bmp_size (*(tagSIZE *)(frame_ + FRAME_OFF(96)))
-#define green (*(i8 (*)[4])(frame_ + FRAME_OFF(104)))
-#define hdc (*(HDC *)(frame_ + FRAME_OFF(108)))
-#define label (*(char * *)(frame_ + FRAME_OFF(112)))
-#define underline_end (*(int *)(frame_ + FRAME_OFF(116)))
-#define underline_start (*(int *)(frame_ + FRAME_OFF(120)))
-#define box_left (*(int *)(frame_ + FRAME_OFF(124)))
-#define box_top (*(int *)(frame_ + FRAME_OFF(128)))
-#define box_right (*(int *)(frame_ + FRAME_OFF(132)))
-#define box_bottom (*(int *)(frame_ + FRAME_OFF(136)))
-#define red (*(i8 (*)[4])(frame_ + FRAME_OFF(140)))
-#define blue (*(i8 (*)[4])(frame_ + FRAME_OFF(144)))
-#define brush (*(HBRUSH *)(frame_ + FRAME_OFF(148)))
-#define font_data (*(i32 * *)(frame_ + FRAME_OFF(152)))
-#define prefix (*(char (*)[256])(frame_ + FRAME_OFF(156)))
-#define text_rect (*(tagRECT *)(frame_ + FRAME_OFF(412)))
 i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
 
 {
@@ -2599,7 +2429,28 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
   tagRECT *draw_rect;
   i8 *blue_out;
   UINT UVar19;
-  i8 frame_[FRAME_OFF(432)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
+  HBITMAP bitmap;
+  iptr block;
+  Control *checkbox;
+  tagPAINTSTRUCT ps;
+  HGDIOBJ old_font;
+  tagSIZE bmp_size;
+  i8 green[4];
+  HDC hdc;
+  char *label;
+  int underline_end;
+  int underline_start;
+  int box_left;
+  int box_top;
+  int box_right;
+  int box_bottom;
+  i8 red[4];
+  i8 blue[4];
+  HBRUSH brush;
+  i32 *font_data;
+  char prefix[256];
+  tagRECT text_rect;
   
   block = wnd_from_hwnd(hwnd);
   checkbox = *(Control **)(block + 4);
@@ -2854,28 +2705,6 @@ LAB_005ccd4b:
 #undef ctrl_shadow_dy
 #undef ctrl_text_color_index
 #undef ctrl_text_rgb_set
-#undef rect
-#undef bitmap
-#undef block
-#undef checkbox
-#undef ps
-#undef old_font
-#undef bmp_size
-#undef green
-#undef hdc
-#undef label
-#undef underline_end
-#undef underline_start
-#undef box_left
-#undef box_top
-#undef box_right
-#undef box_bottom
-#undef red
-#undef blue
-#undef brush
-#undef font_data
-#undef prefix
-#undef text_rect
 
 /* 005cce40 auto */
 void __thiscall checkbox_fire_callback(CheckboxClickView *this,i32 ctrl_id,i32 checked)
@@ -2907,9 +2736,6 @@ void __stdcall control_subclass_wndproc(HWND hwnd,int msg,i32 wparam,i32 lparam)
 
 /* 005ccf17 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define style2 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define wc (*(WNDCLASSA *)(frame_ + FRAME_OFF(8)))
-#define hwnd2 (*(HWND *)(frame_ + FRAME_OFF(48)))
 HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visible)
 
 {
@@ -2922,7 +2748,9 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
   HMENU pHVar6;
   HINSTANCE pHVar7;
   LPVOID create_param;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  uint style2;
+  WNDCLASSA wc;
+  HWND hwnd2;
   
   style2 = 0x40000000;
   if (visible != 0) {
@@ -2980,9 +2808,6 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
   return hwnd2;
 }
 #undef app_hinstance
-#undef style2
-#undef wc
-#undef hwnd2
 
 /* 005cd139 auto */
 void __cdecl scrollbar_destroy_hwnd(i32 hwnd)
@@ -3147,14 +2972,13 @@ u32 __thiscall scrollbar_get_page_size(ScrollbarPageView *this)
 }
 
 /* 005d25c0 auto */
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 edit_create_at
           (EditControl *this,iptr parent,i32 ctrl_id,int x,int y,int width,
           iptr text)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
   
   this->edit_font = (u32)ctrl_default_font;
   this->is_enabled = 0;
@@ -3162,13 +2986,9 @@ edit_create_at
   edit_create(this,parent,ctrl_id,(iptr)&rect,text);
   return;
 }
-#undef rect
 
 /* 005d2740 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define wc (*(WNDCLASSA *)(frame_ + FRAME_OFF(4)))
-#define hwnd2 (*(HWND *)(frame_ + FRAME_OFF(44)))
-#define style2 (*(uint *)(frame_ + FRAME_OFF(48)))
 HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameFont *font)
 
 {
@@ -3183,7 +3003,9 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
   HMENU pHVar8;
   HINSTANCE pHVar9;
   LPVOID create_param;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  WNDCLASSA wc;
+  HWND hwnd2;
+  uint style2;
   
   style2 = 0x40800000;
   if (visible != 0) {
@@ -3269,12 +3091,8 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
   return hwnd2;
 }
 #undef app_hinstance
-#undef wc
-#undef hwnd2
-#undef style2
 
 /* 005d2a01 auto */
-#define pass_through (*(int *)(frame_ + FRAME_OFF(0)))
 LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
 
 {
@@ -3288,7 +3106,7 @@ LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM 
   int window;
   LRESULT LVar5;
   iptr long_index;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int pass_through;
   
   this = (Control *)GetWindowLongA(hwnd,10);
   DVar1 = GetClassLongA(hwnd,-0x12);
@@ -3365,7 +3183,6 @@ LAB_005d2c05:
   LVar5 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
   return LVar5;
 }
-#undef pass_through
 
 /* 005d2d3d auto */
 void __cdecl edit_hwnd_cleanup_stub(i32 hwnd)
@@ -3489,9 +3306,6 @@ i32 __thiscall edit_fire_key_callback(EditKeyView *this,iptr key)
 
 /* 005d3130 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define style2 (*(DWORD *)(frame_ + FRAME_OFF(4)))
-#define wc (*(WNDCLASSA *)(frame_ + FRAME_OFF(8)))
-#define hwnd2 (*(HWND *)(frame_ + FRAME_OFF(48)))
 HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
 
 {
@@ -3504,7 +3318,9 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
   HMENU pHVar6;
   HINSTANCE pHVar7;
   LPVOID create_param;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  DWORD style2;
+  WNDCLASSA wc;
+  HWND hwnd2;
   
   style2 = 0x40a10003;
   if (visible != 0) {
@@ -3557,9 +3373,6 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
   return hwnd2;
 }
 #undef app_hinstance
-#undef style2
-#undef wc
-#undef hwnd2
 
 /* 005d3310 auto */
 LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM lparam)
@@ -3713,9 +3526,6 @@ void __thiscall combo_fire_selchange(ComboBoxSelChangeView *this)
 
 /* 005d37a0 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define style2 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define wc (*(WNDCLASSA *)(frame_ + FRAME_OFF(8)))
-#define hwnd2 (*(HWND *)(frame_ + FRAME_OFF(48)))
 HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_column,GameFont *font)
 
 {
@@ -3731,7 +3541,9 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
   HMENU pHVar9;
   HINSTANCE pHVar10;
   LPVOID create_param;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  uint style2;
+  WNDCLASSA wc;
+  HWND hwnd2;
   
   style2 = 0;
   if (multi_column == 1) {
@@ -3797,9 +3609,6 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
   return hwnd2;
 }
 #undef app_hinstance
-#undef style2
-#undef wc
-#undef hwnd2
 
 /* 005d39e2 auto */
 LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM lparam)
@@ -3976,11 +3785,10 @@ void __thiscall listbox_fire_selchange(ListBoxSelChangeView *this)
 }
 
 /* 005d4014 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall radiogrp_show_all(RadioGroupShowView *this)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; i < (int)this->item_count; i++) {
     hwnd_show(*(i32 *)(this->items + i * 0xa4));
@@ -3988,7 +3796,6 @@ void __thiscall radiogrp_show_all(RadioGroupShowView *this)
   }
   return;
 }
-#undef i
 
 /* 005d4167 auto */
 void __cdecl ctrl_set_pending_font(iptr font)
@@ -4000,22 +3807,6 @@ void __cdecl ctrl_set_pending_font(iptr font)
 
 /* 005d7cb0 auto */
 #define gfx_black_color_index (*(byte *)((u8 *)&g.d_00638b40))
-#define draw_ctx_b (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define draw_ctx_a (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define origin_y2 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define origin_x2 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define scale_den2 (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define scale_num2 (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define center_y (*(int *)(frame_ + FRAME_OFF(52)))
-#define center_x (*(int *)(frame_ + FRAME_OFF(56)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(60)))
-#define half_h (*(int *)(frame_ + FRAME_OFF(76)))
-#define half_w (*(int *)(frame_ + FRAME_OFF(80)))
-#define dst_rect (*(tagRECT *)(frame_ + FRAME_OFF(84)))
-#define src_left (*(int *)(frame_ + FRAME_OFF(100)))
-#define src_top (*(int *)(frame_ + FRAME_OFF(104)))
-#define src_right (*(int *)(frame_ + FRAME_OFF(108)))
-#define src_bottom (*(int *)(frame_ + FRAME_OFF(112)))
 void __thiscall
 spritebtn_init_from_sprite
           (SpriteButton *this,WndPaletteView *parent,i32 ctrl_id,int x,int y,
@@ -4027,7 +3818,19 @@ spritebtn_init_from_sprite
   WndPaletteView *pCVar3;
   i32 palette;
   int yBottom;
-  i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 draw_ctx_b[16];
+  i8 draw_ctx_a[16];
+  i32 origin_y2;
+  i32 origin_x2;
+  i32 scale_den2;
+  i32 scale_num2;
+  int center_y;
+  int center_x;
+  tagRECT rect;
+  int half_h;
+  int half_w;
+  tagRECT dst_rect;
+  RECT src_rect;
   
   this->pressed_state = '\0';
   value = wnd_get_palette(parent);
@@ -4066,14 +3869,14 @@ spritebtn_init_from_sprite
   dst_rect.right = rect.right;
   dst_rect.bottom = rect.bottom;
   SetRect(&dst_rect,rect.left,rect.top,rect.right - 2,rect.bottom - 2);
-  src_left = dst_rect.left;
-  src_top = dst_rect.top;
-  src_right = dst_rect.right;
-  src_bottom = dst_rect.bottom;
+  src_rect.left = dst_rect.left;
+  src_rect.top = dst_rect.top;
+  src_rect.right = dst_rect.right;
+  src_rect.bottom = dst_rect.bottom;
   OffsetRect(&dst_rect,2,2);
   surface_fill((DibSurface *)(this->button_surface),(uint)gfx_black_color_index);
   surface_blit
-            ((DibSurface *)&this->on_select,(iptr)(this->button_surface),(iptr)&src_left,
+            ((DibSurface *)&this->on_select,(iptr)(this->button_surface),(iptr)&src_rect,
              (iptr)&dst_rect);
   pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)this);
   palette = wnd_get_palette(pCVar3);
@@ -4086,34 +3889,17 @@ spritebtn_init_from_sprite
   return;
 }
 #undef gfx_black_color_index
-#undef draw_ctx_b
-#undef draw_ctx_a
-#undef origin_y2
-#undef origin_x2
-#undef scale_den2
-#undef scale_num2
-#undef center_y
-#undef center_x
-#undef rect
-#undef half_h
-#undef half_w
-#undef dst_rect
-#undef src_left
-#undef src_top
-#undef src_right
-#undef src_bottom
 
 /* 005d8da1 auto */
-#define height2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define metrics (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(16)))
-#define font_data (*(i32 * *)(frame_ + FRAME_OFF(72)))
 int __cdecl radiogrp_item_height(GameFont *font)
 
 {
   HDC hdc;
   HDC hdc_00;
   i32 font_handle;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  int height2;
+  tagTEXTMETRICA metrics;
+  i32 *font_data;
   
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
@@ -4131,19 +3917,9 @@ int __cdecl radiogrp_item_height(GameFont *font)
   }
   return height2;
 }
-#undef height2
-#undef metrics
-#undef font_data
 
 /* 005d8e3f auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define item_x (*(int *)(frame_ + FRAME_OFF(4)))
-#define style2 (*(DWORD *)(frame_ + FRAME_OFF(8)))
-#define index (*(uint *)(frame_ + FRAME_OFF(32)))
-#define cursor (*(char * *)(frame_ + FRAME_OFF(48)))
-#define label (*(char * *)(frame_ + FRAME_OFF(56)))
-#define hotkey (*(char (*)[4])(frame_ + FRAME_OFF(60)))
-#define item_y (*(int *)(frame_ + FRAME_OFF(64)))
 i32 __cdecl
 radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_count,iptr labels,int visible
             ,i32 font)
@@ -4168,7 +3944,13 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
   HMENU hMenu;
   HINSTANCE hInstance;
   LPVOID lpParam;
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  int item_x;
+  DWORD style2;
+  uint index;
+  char *cursor;
+  char *label;
+  char hotkey[4];
+  int item_y;
   
   pHVar2 = LoadBitmapA(app_hinstance,(LPCSTR)0x12d);
   pHVar3 = LoadBitmapA(app_hinstance,(LPCSTR)0x12f);
@@ -4270,21 +4052,13 @@ LAB_005d9226:
   } while( true );
 }
 #undef app_hinstance
-#undef item_x
-#undef style2
-#undef index
-#undef cursor
-#undef label
-#undef hotkey
-#undef item_y
 
 /* 005d99f4 auto */
-#define i (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl radiogrp_destroy_items(int count,int handle)
 
 {
   iptr items;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 i;
   
   if (handle == 0) {
     dbg_log((iptr)((u8 *)&g.d_0063872c));
@@ -4301,7 +4075,6 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
   }
   return;
 }
-#undef i
 
 /* 005d9a9a auto */
 #define wnd_active_child (*(i32 *)((u8 *)&g.d_00637ea4))
@@ -4356,30 +4129,6 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
 #define radio_shadow_dy (*(byte *)((u8 *)&g.d_00637e88))
 #define radio_text_color_index (*(byte *)((u8 *)&g.d_00637e7c))
 #define radio_text_rgb_set (*(char *)((u8 *)&g.d_006386f7))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define bitmap (*(HBITMAP *)(frame_ + FRAME_OFF(16)))
-#define block (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define ps (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(24)))
-#define old_font (*(HGDIOBJ *)(frame_ + FRAME_OFF(88)))
-#define bmp_size (*(tagSIZE *)(frame_ + FRAME_OFF(92)))
-#define remaining (*(int *)(frame_ + FRAME_OFF(100)))
-#define hdc (*(HDC *)(frame_ + FRAME_OFF(104)))
-#define underline_end (*(int *)(frame_ + FRAME_OFF(108)))
-#define next_index (*(int *)(frame_ + FRAME_OFF(112)))
-#define green (*(i8 (*)[4])(frame_ + FRAME_OFF(116)))
-#define underline_start (*(int *)(frame_ + FRAME_OFF(120)))
-#define item (*(iptr *)(frame_ + FRAME_OFF(124)))
-#define box_left (*(int *)(frame_ + FRAME_OFF(128)))
-#define box_top (*(int *)(frame_ + FRAME_OFF(132)))
-#define box_right (*(int *)(frame_ + FRAME_OFF(136)))
-#define box_bottom (*(int *)(frame_ + FRAME_OFF(140)))
-#define brush (*(HBRUSH *)(frame_ + FRAME_OFF(144)))
-#define red (*(i8 (*)[4])(frame_ + FRAME_OFF(148)))
-#define blue (*(i8 (*)[4])(frame_ + FRAME_OFF(152)))
-#define group (*(RadioGroupItemsView * *)(frame_ + FRAME_OFF(156)))
-#define font_data (*(i32 * *)(frame_ + FRAME_OFF(160)))
-#define text_rect (*(tagRECT *)(frame_ + FRAME_OFF(164)))
-#define prefix (*(char (*)[128])(frame_ + FRAME_OFF(180)))
 i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
 
 {
@@ -4407,7 +4156,30 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
   i8 *blue_out;
   UINT UVar22;
   BOOL BVar23;
-  i8 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
+  tagRECT rect;
+  HBITMAP bitmap;
+  iptr block;
+  tagPAINTSTRUCT ps;
+  HGDIOBJ old_font;
+  tagSIZE bmp_size;
+  int remaining;
+  HDC hdc;
+  int underline_end;
+  int next_index;
+  i8 green[4];
+  int underline_start;
+  iptr item;
+  int box_left;
+  int box_top;
+  int box_right;
+  int box_bottom;
+  HBRUSH brush;
+  i8 red[4];
+  i8 blue[4];
+  RadioGroupItemsView *group;
+  i32 *font_data;
+  tagRECT text_rect;
+  char prefix[128];
   
   block = wnd_from_hwnd(hwnd);
   group = *(RadioGroupItemsView **)(block + 4);
@@ -4781,33 +4553,8 @@ switchD_005dab35_default:
 #undef radio_shadow_dy
 #undef radio_text_color_index
 #undef radio_text_rgb_set
-#undef rect
-#undef bitmap
-#undef block
-#undef ps
-#undef old_font
-#undef bmp_size
-#undef remaining
-#undef hdc
-#undef underline_end
-#undef next_index
-#undef green
-#undef underline_start
-#undef item
-#undef box_left
-#undef box_top
-#undef box_right
-#undef box_bottom
-#undef brush
-#undef red
-#undef blue
-#undef group
-#undef font_data
-#undef text_rect
-#undef prefix
 
 /* 005dab5a auto */
-#define class_name (*(CHAR (*)[52])(frame_ + FRAME_OFF(0)))
 i32 __cdecl ctrl_hwnd_is_radio(HWND hwnd)
 
 {
@@ -4815,7 +4562,7 @@ i32 __cdecl ctrl_hwnd_is_radio(HWND hwnd)
   iptr cmp;
   iptr block;
   char *_Str2;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  CHAR class_name[52];
   
   GetClassNameA(hwnd,class_name,0x32);
   _Str2 = s_MSCONTROLCLASS_00638768;
@@ -4826,7 +4573,6 @@ i32 __cdecl ctrl_hwnd_is_radio(HWND hwnd)
   }
   return 0;
 }
-#undef class_name
 
 /* 005dabc7 auto */
 void __cdecl radiogrp_hwnd_invalidate(HWND hwnd)
@@ -4905,12 +4651,11 @@ void __thiscall radiogrp_fire_rclick(RadioGroupRClickView *this,i32 ctrl_id,i32 
 }
 
 /* 005db0d0 auto */
-#define min_pos (*(int *)(frame_ + FRAME_OFF(4)))
-#define max_pos (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall scrollbar_set_page_size(Control *this,u32 page_size)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int min_pos;
+  int max_pos;
   
   scrollbar_get_ctl_range(this,(iptr)&min_pos,(iptr)&max_pos);
   if ((int)page_size <= max_pos - min_pos) {
@@ -4918,8 +4663,6 @@ void __thiscall scrollbar_set_page_size(Control *this,u32 page_size)
   }
   return;
 }
-#undef min_pos
-#undef max_pos
 
 /* 005db110 auto */
 void __thiscall scrollbar_get_ctl_range(Control *this,iptr min_out,iptr max_out)
@@ -4930,12 +4673,11 @@ void __thiscall scrollbar_get_ctl_range(Control *this,iptr min_out,iptr max_out)
 }
 
 /* 005ea7d7 auto */
-#define ctrl (*(ControlNextView * *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl ctrl_list_find_by_hwnd(int hwnd,ControlNextView *list)
 
 {
   int ctrl_hwnd;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ControlNextView *ctrl;
   
   ctrl = list;
   while( true ) {
@@ -4948,16 +4690,14 @@ i32 __cdecl ctrl_list_find_by_hwnd(int hwnd,ControlNextView *list)
   }
   return ctrl;
 }
-#undef ctrl
 
 /* 005eac6d auto */
-#define ctrl (*(ControlNextView * *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl ctrl_list_find_type11_hwnd(ControlNextView *list)
 
 {
   int ctrl_type;
   i32 hwnd;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ControlNextView *ctrl;
   
   ctrl = list;
   while( true ) {
@@ -4971,7 +4711,6 @@ i32 __cdecl ctrl_list_find_type11_hwnd(ControlNextView *list)
   hwnd = control_get_hwnd((ControlHwndView *)ctrl);
   return hwnd;
 }
-#undef ctrl
 
 /* 005eacc0: written by hand in src/game/retvals.c */
 
@@ -4996,12 +4735,11 @@ void __thiscall edit_fire_change_callback(EditChangeView *this)
 }
 
 /* 005eb3ed auto */
-#define key_code (*(uint *)(frame_ + FRAME_OFF(0)))
 uint __cdecl input_map_vkey(uint vkey)
 
 {
   int key_down;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uint key_code;
   
   key_code = *(uint *)(&input_vkey_map_table + (vkey & 0xff) * 4);
   if (key_code != 0) {
@@ -5016,7 +4754,6 @@ uint __cdecl input_map_vkey(uint vkey)
   }
   return key_code;
 }
-#undef key_code
 
 /* 005eb447: written by hand in src/game/fixups.c */
 
@@ -5266,11 +5003,10 @@ void __thiscall ddctrl_on_set_active_nop(void *this,i32 active)
 }
 
 /* 005f19a6 auto */
-#define child (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall ddctrl_deactivate_children(void *this)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 child;
   
   child = ptrlist_first((PtrList *)((int)this + 0x10));
   while (child != 0) {
@@ -5279,16 +5015,14 @@ void __thiscall ddctrl_deactivate_children(void *this)
   }
   return;
 }
-#undef child
 
 /* 005f1a40 auto */
-#define child (*(DDControl * *)(frame_ + FRAME_OFF(0)))
 i8 __thiscall ddctrl_dispatch_to_children(DDControl *this,int msg,int x,int y)
 
 {
   int *child_rect;
   int handled;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  DDControl *child;
   
   if ((this->hover_child != 0) && (msg == 0x200)) {
     child_rect = (int *)ddctrl_get_rect((void *)this->hover_child);
@@ -5312,7 +5046,6 @@ i8 __thiscall ddctrl_dispatch_to_children(DDControl *this,int msg,int x,int y)
   }
   return 1;
 }
-#undef child
 
 /* 00601300: written by hand in src/crt/locale.c */
 

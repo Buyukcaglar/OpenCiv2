@@ -60,11 +60,6 @@ void __cdecl unit_stack_wake_sentries(iptr unit)
 /* 004274a6 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define redraw_radius (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define player (*(uint *)(frame_ + FRAME_OFF(16)))
-#define redraw_flags (*(uint *)(frame_ + FRAME_OFF(48)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(80)))
-#define goal_priority (*(int *)(frame_ + FRAME_OFF(88)))
 void __cdecl unit_reveal_surroundings(iptr unit,int allow_contact)
 
 {
@@ -97,7 +92,11 @@ void __cdecl unit_reveal_surroundings(iptr unit,int allow_contact)
   int tmp;
   uint civ_bit;
   bool is_human;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr redraw_radius;
+  uint player;
+  uint redraw_flags;
+  iptr dir;
+  int goal_priority;
   
   redrawn = false;
   x2 = (int)units[unit].x;
@@ -388,27 +387,11 @@ void __cdecl unit_reveal_surroundings(iptr unit,int allow_contact)
 }
 #undef human_civ
 #undef scenario_flags
-#undef redraw_radius
-#undef player
-#undef redraw_flags
-#undef dir
-#undef goal_priority
 
 /* 00440750 auto */
 #define city_food_box_rows (*(int *)((u8 *)&g.d_006a6560))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define best_commodity (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define bonus_count (*(int *)(frame_ + FRAME_OFF(12)))
-#define demand_bonus (*(int *)(frame_ + FRAME_OFF(16)))
-#define supply (*(uptr *)(frame_ + FRAME_OFF(24)))
-#define j (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define base_revenue (*(int *)(frame_ + FRAME_OFF(36)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define city2 (*(uptr *)(frame_ + FRAME_OFF(44)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(48)))
-#define is_freight (*(uint *)(frame_ + FRAME_OFF(52)))
-#define score (*(int *)(frame_ + FRAME_OFF(56)))
 void __cdecl unit_caravan_establish_trade(iptr unit,uptr city)
 
 {
@@ -426,7 +409,17 @@ void __cdecl unit_caravan_establish_trade(iptr unit,uptr city)
   uint sign;
   bool unit_type;
   i32 max_revenue;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr best_commodity;
+  int bonus_count;
+  int demand_bonus;
+  uptr supply;
+  iptr j;
+  int base_revenue;
+  iptr i;
+  uptr city2;
+  int best_score;
+  uint is_freight;
+  int score;
   
   civ2 = units[unit].owner;
   civ = (iptr)(char)civ2;
@@ -678,17 +671,6 @@ void __cdecl unit_caravan_establish_trade(iptr unit,uptr city)
 #undef city_food_box_rows
 #undef human_civ
 #undef ui_large_screen
-#undef best_commodity
-#undef bonus_count
-#undef demand_bonus
-#undef supply
-#undef j
-#undef base_revenue
-#undef i
-#undef city2
-#undef best_score
-#undef is_freight
-#undef score
 
 /* 00447ebe auto */
 void __cdecl nuke_anim_sprites_global_init(void)
@@ -864,13 +846,12 @@ void __cdecl explosion_sprites_static_dtor(void)
 }
 
 /* 0044b239 auto */
-#define dy (*(int *)(frame_ + FRAME_OFF(4)))
-#define dx (*(int *)(frame_ + FRAME_OFF(12)))
 void __cdecl unit_sprite_scan_shield_offset(int unit_type,int x,int y)
 
 {
   int pixel;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int dy;
+  int dx;
   
   *(i32 *)(&unit_shield_x_offsets + unit_type * 4) = 0;
   *(i32 *)(&unit_shield_y_offsets + unit_type * 4) = 0;
@@ -890,8 +871,6 @@ void __cdecl unit_sprite_scan_shield_offset(int unit_type,int x,int y)
   }
   return;
 }
-#undef dy
-#undef dx
 
 /* 00472d20 auto */
 #define dummy_unit_owner (*(i8 *)((u8 *)&units[2048] + 7))
@@ -918,12 +897,11 @@ i32 __cdecl unit_make_dummy(iptr unit_type,iptr owner)
 #undef dummy_unit_owner
 
 /* 0048710a auto */
-#define unit (*(uptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl units_reset_for_turn(iptr civ)
 
 {
   uint *spy_flags;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr unit;
   
   map_rebuild_unit_flags();
   if (civ == -3) {
@@ -960,19 +938,17 @@ void __cdecl units_reset_for_turn(iptr civ)
   }
   return;
 }
-#undef unit
 
 /* 00489859 auto */
 #define active_unit_lost_in_combat (*(int *)((u8 *)&g.d_0062c5bc))
 #define map_cursor_x (*(i16 *)((u8 *)&g.d_0064b1b4))
 #define map_cursor_y (*(i16 *)((u8 *)&g.d_0064b1b0))
 #define mp_simultaneous_moves (*(char *)((u8 *)&g.d_006ad684))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl unit_activate_next(i32 search_mode)
 
 {
   iptr unit;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit2;
   
   if (active_unit_lost_in_combat == 0) {
     unit2 = (iptr)game.active_unit;
@@ -1009,7 +985,6 @@ void __cdecl unit_activate_next(i32 search_mode)
 #undef map_cursor_x
 #undef map_cursor_y
 #undef mp_simultaneous_moves
-#undef unit2
 
 /* 004ad01e auto */
 i32 __cdecl path_grid_get_cost(int x,int y)
@@ -1035,27 +1010,6 @@ void __cdecl path_grid_set_cost(int x,int y,i32 cost)
 #define path_debug_requested (*(int *)((u8 *)&g.d_0062d050))
 #define path_goal_x (*(int *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
-#define start_dirs (*(uint *)(frame_ + FRAME_OFF(0)))
-#define cur_dirs (*(uint *)(frame_ + FRAME_OFF(8)))
-#define waypoint_y (*(int *)(frame_ + FRAME_OFF(16)))
-#define waypoint_x (*(int *)(frame_ + FRAME_OFF(20)))
-#define step (*(uint *)(frame_ + FRAME_OFF(24)))
-#define raw_wp_x (*(int *)(frame_ + FRAME_OFF(28)))
-#define found (*(int *)(frame_ + FRAME_OFF(32)))
-#define cy (*(int *)(frame_ + FRAME_OFF(36)))
-#define has_waypoint (*(int *)(frame_ + FRAME_OFF(40)))
-#define cx (*(int *)(frame_ + FRAME_OFF(44)))
-#define best_dir (*(iptr *)(frame_ + FRAME_OFF(48)))
-#define dist (*(uint *)(frame_ + FRAME_OFF(52)))
-#define ny (*(int *)(frame_ + FRAME_OFF(56)))
-#define is_sea (*(uint *)(frame_ + FRAME_OFF(60)))
-#define cur_step (*(uint *)(frame_ + FRAME_OFF(64)))
-#define nx (*(int *)(frame_ + FRAME_OFF(68)))
-#define dir_mask (*(uint *)(frame_ + FRAME_OFF(72)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(76)))
-#define raw_wp_y (*(int *)(frame_ + FRAME_OFF(80)))
-#define best_step (*(uint *)(frame_ + FRAME_OFF(84)))
-#define debug_flag (*(int *)(frame_ + FRAME_OFF(88)))
 int __cdecl path_coarse_find_waypoint(i32 from_x,i32 from_y,int to_x,int to_y)
 
 {
@@ -1066,7 +1020,27 @@ int __cdecl path_coarse_find_waypoint(i32 from_x,i32 from_y,int to_x,int to_y)
   char *visited;
   byte *cell_ptr;
   int start_cx;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  uint start_dirs;
+  uint cur_dirs;
+  int waypoint_y;
+  int waypoint_x;
+  uint step;
+  int raw_wp_x;
+  int found;
+  int cy;
+  int has_waypoint;
+  int cx;
+  iptr best_dir;
+  uint dist;
+  int ny;
+  uint is_sea;
+  uint cur_step;
+  int nx;
+  uint dir_mask;
+  iptr dir;
+  int raw_wp_y;
+  uint best_step;
+  int debug_flag;
   
   found = 0;
   debug_flag = path_debug_requested;
@@ -1194,36 +1168,10 @@ LAB_004ad51c:
 #undef path_debug_requested
 #undef path_goal_x
 #undef path_goal_y
-#undef start_dirs
-#undef cur_dirs
-#undef waypoint_y
-#undef waypoint_x
-#undef step
-#undef raw_wp_x
-#undef found
-#undef cy
-#undef has_waypoint
-#undef cx
-#undef best_dir
-#undef dist
-#undef ny
-#undef is_sea
-#undef cur_step
-#undef nx
-#undef dir_mask
-#undef dir
-#undef raw_wp_y
-#undef best_step
-#undef debug_flag
 
 /* 004ad822 auto */
 #define path_goal_x (*(i32 *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
-#define best_dir (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define best_dist (*(int *)(frame_ + FRAME_OFF(32)))
 uint __cdecl path_coarse_snap_cell(int x,int y,int is_sea)
 
 {
@@ -1232,7 +1180,11 @@ uint __cdecl path_coarse_snap_cell(int x,int y,int is_sea)
   char *cell;
   int nx;
   int ny;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr best_dir;
+  int y2;
+  iptr dir;
+  int x2;
+  int best_dist;
   
   best_dir = -1;
   cx = x >> 2;
@@ -1295,29 +1247,12 @@ uint __cdecl path_coarse_snap_cell(int x,int y,int is_sea)
 }
 #undef path_goal_x
 #undef path_goal_y
-#undef best_dir
-#undef y2
-#undef dir
-#undef x2
-#undef best_dist
 
 /* 004adafc auto */
 #define path_debug_pending (*(i32 *)((u8 *)&g.d_0062d04c))
 #define path_debug_requested (*(i32 *)((u8 *)&g.d_0062d050))
 #define path_goal_x (*(int *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
-#define y2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define delta_x (*(uint *)(frame_ + FRAME_OFF(24)))
-#define cost2 (*(int *)(frame_ + FRAME_OFF(48)))
-#define result_dir (*(uptr *)(frame_ + FRAME_OFF(52)))
-#define new_dist (*(int *)(frame_ + FRAME_OFF(64)))
-#define cur_dist (*(int *)(frame_ + FRAME_OFF(80)))
-#define ady (*(uint *)(frame_ + FRAME_OFF(88)))
-#define abs_dy (*(uint *)(frame_ + FRAME_OFF(96)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(100)))
-#define adx (*(uint *)(frame_ + FRAME_OFF(104)))
-#define abs_dx (*(uint *)(frame_ + FRAME_OFF(108)))
-#define best_cost (*(int *)(frame_ + FRAME_OFF(112)))
 uptr __cdecl unit_goto_next_dir(iptr unit)
 
 {
@@ -1339,7 +1274,18 @@ uptr __cdecl unit_goto_next_dir(iptr unit)
   int tmp;
   int tmp2;
   uint improvements2;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  int y2;
+  uint delta_x;
+  int cost2;
+  uptr result_dir;
+  int new_dist;
+  int cur_dist;
+  uint ady;
+  uint abs_dy;
+  uptr dir;
+  uint adx;
+  uint abs_dx;
+  int best_cost;
   
   result_dir = 0xffffffff;
   goal_x = (int)units[unit].goto_x;
@@ -1551,24 +1497,10 @@ LAB_004ae320:
 #undef path_debug_requested
 #undef path_goal_x
 #undef path_goal_y
-#undef y2
-#undef delta_x
-#undef cost2
-#undef result_dir
-#undef new_dist
-#undef cur_dist
-#undef ady
-#undef abs_dy
-#undef dir
-#undef adx
-#undef abs_dx
-#undef best_cost
 
 /* 004c42a0 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define unit3 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define turns_needed (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl unit_do_terrain_work(iptr unit,iptr order)
 
 {
@@ -1585,7 +1517,8 @@ void __cdecl unit_do_terrain_work(iptr unit,iptr order)
   i32 imp_low;
   uptr imp_pollution;
   iptr unit2;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit3;
+  int turns_needed;
   
   unit2 = unit;
   turns_needed = 1;
@@ -1755,20 +1688,17 @@ LAB_004c44ea:
 }
 #undef human_civ
 #undef unit_blink_active
-#undef unit3
-#undef turns_needed
 
 /* 004c4ada auto */
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define home_byte (*(i8 *)(frame_ + FRAME_OFF(4)))
-#define old_home (*(uint *)(frame_ + FRAME_OFF(8)))
 void __cdecl unit_set_fortified(iptr unit)
 
 {
   iptr city;
   i32 improvements2;
   iptr city2;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 home_byte;
+  uint old_home;
   
   unit_blink_active = 0;
   units[unit].orders = 2;
@@ -1815,18 +1745,15 @@ void __cdecl unit_set_fortified(iptr unit)
   return;
 }
 #undef unit_blink_active
-#undef home_byte
-#undef old_home
 
 /* 004c4d1e auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define other_civ (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_found_city(iptr unit,iptr city,iptr city_name)
 
 {
   int x;
   int y;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int other_civ;
   
   x = (int)units[unit].x;
   y = (int)units[unit].y;
@@ -1848,7 +1775,6 @@ void __cdecl unit_found_city(iptr unit,iptr city,iptr city_name)
   return;
 }
 #undef human_civ
-#undef other_civ
 
 /* 004c4e6d auto */
 #define path_owner_civ (*(int *)((u8 *)&g.d_0062d044))
@@ -1972,11 +1898,10 @@ void __cdecl unit_pillage(iptr unit,int improvement)
 #undef human_civ
 
 /* 004c5408 auto */
-#define handled (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl unit_execute_orders(iptr unit)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 handled;
   
   handled = 1;
   switch(units[unit].orders) {
@@ -2001,18 +1926,8 @@ i32 __cdecl unit_execute_orders(iptr unit)
   }
   return handled;
 }
-#undef handled
 
 /* 004c54da auto */
-#define y3 (*(int *)(frame_ + FRAME_OFF(0)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define x3 (*(int *)(frame_ + FRAME_OFF(8)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(12)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define landmass2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(44)))
-#define best_dist (*(int *)(frame_ + FRAME_OFF(52)))
-#define carrier_dist (*(int *)(frame_ + FRAME_OFF(56)))
 void __cdecl unit_go_home(iptr unit)
 
 {
@@ -2027,7 +1942,15 @@ void __cdecl unit_go_home(iptr unit)
   int home_dist;
   uint road_mult;
   iptr unit2;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  int y3;
+  int y2;
+  int x3;
+  int x2;
+  iptr city;
+  int landmass2;
+  iptr city2;
+  int best_dist;
+  int carrier_dist;
   
   unit2 = unit;
   carrier_dist = 999;
@@ -2110,21 +2033,10 @@ void __cdecl unit_go_home(iptr unit)
   }
   return;
 }
-#undef y3
-#undef y2
-#undef x3
-#undef x2
-#undef city
-#undef landmass2
-#undef city2
-#undef best_dist
-#undef carrier_dist
 
 /* 004c5fae auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define escape_roll (*(int *)(frame_ + FRAME_OFF(4)))
-#define escape_odds (*(uint *)(frame_ + FRAME_OFF(24)))
 i32 __cdecl spy_try_escape(iptr unit,int mission_mode,iptr civ)
 
 {
@@ -2135,7 +2047,8 @@ i32 __cdecl spy_try_escape(iptr unit,int mission_mode,iptr civ)
   int y;
   iptr city;
   uint rnd_sign;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int escape_roll;
+  uint escape_odds;
   
   civ2 = units[unit].owner;
   civ3 = (int)(char)civ2;
@@ -2226,8 +2139,6 @@ i32 __cdecl spy_try_escape(iptr unit,int mission_mode,iptr civ)
 }
 #undef autoplay_active
 #undef human_civ
-#undef escape_roll
-#undef escape_odds
 
 /* 004c64aa auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
@@ -2279,37 +2190,6 @@ uint __cdecl spy_confirm_treaty_breach(iptr civ,iptr target_civ)
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define nuke_roll (*(int *)(frame_ + FRAME_OFF(0)))
-#define sabotage_roll (*(int *)(frame_ + FRAME_OFF(4)))
-#define modifier_table (*(int (*)[16])(frame_ + FRAME_OFF(8)))
-#define civ (*(uptr *)(frame_ + FRAME_OFF(72)))
-#define choice (*(int *)(frame_ + FRAME_OFF(76)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(80)))
-#define civ3 (*(uptr *)(frame_ + FRAME_OFF(84)))
-#define i (*(int *)(frame_ + FRAME_OFF(88)))
-#define detect_chance (*(int *)(frame_ + FRAME_OFF(92)))
-#define unit_type3 (*(uint *)(frame_ + FRAME_OFF(96)))
-#define double_cost (*(int *)(frame_ + FRAME_OFF(100)))
-#define unit_type (*(uptr *)(frame_ + FRAME_OFF(104)))
-#define is_spy (*(uint *)(frame_ + FRAME_OFF(108)))
-#define incite_cost (*(int *)(frame_ + FRAME_OFF(112)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(116)))
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(872)))
-#define rand_start (*(int *)(frame_ + FRAME_OFF(876)))
-#define escape_mode (*(int *)(frame_ + FRAME_OFF(880)))
-#define unit3 (*(iptr *)(frame_ + FRAME_OFF(884)))
-#define civ2 (*(uptr *)(frame_ + FRAME_OFF(888)))
-#define capital_dist (*(int *)(frame_ + FRAME_OFF(892)))
-#define candidate (*(int *)(frame_ + FRAME_OFF(896)))
-#define improvement2 (*(iptr *)(frame_ + FRAME_OFF(900)))
-#define build_name (*(i8 (*)[80])(frame_ + FRAME_OFF(904)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(984)))
-#define odds (*(int *)(frame_ + FRAME_OFF(988)))
-#define has_treaty (*(uint *)(frame_ + FRAME_OFF(992)))
-#define detected (*(int *)(frame_ + FRAME_OFF(996)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(1000)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(1004)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(1008)))
 void __cdecl spy_city_mission(iptr unit,iptr city)
 
 {
@@ -2324,7 +2204,37 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
   i32 option_flags;
   uptr civ4;
   iptr impr_option;
-  i8 frame_[FRAME_OFF(1016)] __attribute__((aligned(8)));  /* original stack frame */
+  int nuke_roll;
+  int sabotage_roll;
+  int modifier_table[16];
+  uptr civ;
+  int choice;
+  iptr improvement;
+  uptr civ3;
+  int i;
+  int detect_chance;
+  uint unit_type3;
+  int double_cost;
+  uptr unit_type;
+  uint is_spy;
+  int incite_cost;
+  Dialog dlg;
+  iptr advance2;
+  int rand_start;
+  int escape_mode;
+  iptr unit3;
+  uptr civ2;
+  int capital_dist;
+  int candidate;
+  iptr improvement2;
+  i8 build_name[80];
+  iptr advance;
+  int odds;
+  uint has_treaty;
+  int detected;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -3022,37 +2932,6 @@ LAB_004c7b9b:
 #undef autoplay_active
 #undef human_civ
 #undef unit_blink_active
-#undef nuke_roll
-#undef sabotage_roll
-#undef modifier_table
-#undef civ
-#undef choice
-#undef improvement
-#undef civ3
-#undef i
-#undef detect_chance
-#undef unit_type3
-#undef double_cost
-#undef unit_type
-#undef is_spy
-#undef incite_cost
-#undef dlg
-#undef advance2
-#undef rand_start
-#undef escape_mode
-#undef unit3
-#undef civ2
-#undef capital_dist
-#undef candidate
-#undef improvement2
-#undef build_name
-#undef advance
-#undef odds
-#undef has_treaty
-#undef detected
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 004c9528 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
@@ -3061,9 +2940,6 @@ LAB_004c7b9b:
 #define net_bribe_answer (*(int *)((u8 *)&g.d_006a1870))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_timeout_seconds (*(int *)((u8 *)&g.d_006ad8b8))
-#define bribe_cost (*(int *)(frame_ + FRAME_OFF(0)))
-#define new_home (*(i8 *)(frame_ + FRAME_OFF(8)))
-#define capital_dist (*(int *)(frame_ + FRAME_OFF(12)))
 void __cdecl unit_bribe(iptr unit,iptr civ)
 
 {
@@ -3076,7 +2952,9 @@ void __cdecl unit_bribe(iptr unit,iptr civ)
   int now;
   int city;
   int answer;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int bribe_cost;
+  i8 new_home;
+  int capital_dist;
   
   civ3 = units[unit].owner;
   civ2 = (iptr)(char)civ3;
@@ -3243,9 +3121,6 @@ LAB_004c99a0:
 #undef net_bribe_answer
 #undef net_host_flag
 #undef net_timeout_seconds
-#undef bribe_cost
-#undef new_home
-#undef capital_dist
 
 /* 004c9ebd auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -3321,13 +3196,12 @@ i32 __cdecl spy_unit_mission(iptr unit2,iptr unit,iptr civ)
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_airlift_perform(iptr unit,iptr city2,iptr city,int risk_rolls,iptr civ)
 
 {
   int roll;
   iptr civ_name;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   cities[city2].flags = cities[city2].flags | 0x10000;
   cities[city].flags = cities[city].flags | 0x10000;
@@ -3359,25 +3233,12 @@ void __cdecl unit_airlift_perform(iptr unit,iptr city2,iptr city,int risk_rolls,
 #undef autoplay_active
 #undef human_civ
 #undef ui_large_screen
-#undef i
 
 /* 004ca39e auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define map_cursor_x (*(i16 *)((u8 *)&g.d_0064b1b4))
 #define map_cursor_y (*(i16 *)((u8 *)&g.d_0064b1b0))
-#define from_y (*(int *)(frame_ + FRAME_OFF(4)))
-#define from_x (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define anim_dir (*(uint *)(frame_ + FRAME_OFF(12)))
-#define civ_sees (*(int (*)[8])(frame_ + FRAME_OFF(16)))
-#define civ_animates (*(int (*)[8])(frame_ + FRAME_OFF(48)))
-#define civ4 (*(uptr *)(frame_ + FRAME_OFF(80)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(84)))
-#define civ2 (*(uptr *)(frame_ + FRAME_OFF(88)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(92)))
-#define city (*(int *)(frame_ + FRAME_OFF(96)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(100)))
-#define score (*(int *)(frame_ + FRAME_OFF(104)))
 void __cdecl unit_paradrop(iptr unit,int x,int y)
 
 {
@@ -3389,7 +3250,18 @@ void __cdecl unit_paradrop(iptr unit,int x,int y)
   uptr city2;
   iptr x2;
   uptr tile_civ;
-  i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
+  int from_y;
+  iptr from_x;
+  uint anim_dir;
+  int civ_sees[8];
+  int civ_animates[8];
+  uptr civ4;
+  int y2;
+  uptr civ2;
+  uptr dir;
+  int city;
+  int best_score;
+  int score;
   
   civ3 = units[unit].owner;
   civ = (uptr)(char)civ3;
@@ -3574,21 +3446,8 @@ void __cdecl unit_paradrop(iptr unit,int x,int y)
 #undef human_civ
 #undef map_cursor_x
 #undef map_cursor_y
-#undef from_y
-#undef from_x
-#undef anim_dir
-#undef civ_sees
-#undef civ_animates
-#undef civ4
-#undef y2
-#undef civ2
-#undef dir
-#undef city
-#undef best_score
-#undef score
 
 /* 004ec1c6 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_pick_caravan_commodity(iptr city,iptr unit)
 
 {
@@ -3596,7 +3455,7 @@ void __cdecl unit_pick_caravan_commodity(iptr city,iptr unit)
   iptr rnd;
   iptr slot;
   int rand_slot;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   units[unit].counter = 0xff;
   rand_start = _rand();
@@ -3625,7 +3484,6 @@ LAB_004ec264:
     i++;
   } while( true );
 }
-#undef i
 
 /* 00531567 auto */
 void __cdecl unit_stack_wake_by_role(iptr unit,uint role_mask,int wake)
@@ -3675,16 +3533,15 @@ void __cdecl unit_continue_active_orders(void)
 
 /* 0056b96e auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
-#define best_priority (*(int *)(frame_ + FRAME_OFF(4)))
-#define priority2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define best_unit (*(iptr *)(frame_ + FRAME_OFF(20)))
 iptr __cdecl unit_stack_pick_display_unit(iptr unit)
 
 {
   int x;
   int y;
   int ret;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int best_priority;
+  int priority2;
+  iptr best_unit;
   
   best_unit = -1;
   best_priority = -1;
@@ -3718,16 +3575,12 @@ iptr __cdecl unit_stack_pick_display_unit(iptr unit)
   return best_unit;
 }
 #undef human_civ
-#undef best_priority
-#undef priority2
-#undef best_unit
 
 /* 0057e2c3 auto */
-#define strength (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl unit_attack_strength(iptr unit)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int strength;
   
   strength = (char)unit_types[units[unit].type].attack * 8;
   if ((units[unit].flags & 0x2000) != 0) {
@@ -3738,10 +3591,8 @@ int __cdecl unit_attack_strength(iptr unit)
   }
   return strength;
 }
-#undef strength
 
 /* 0057e33a auto */
-#define strength (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl unit_defense_strength(iptr unit,int recalc_tile,iptr unit2)
 
 {
@@ -3751,7 +3602,7 @@ int __cdecl unit_defense_strength(iptr unit,int recalc_tile,iptr unit2)
   int y;
   byte *tile;
   i32 tile_impr;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int strength;
   
   x = (int)units[unit].x;
   y = (int)units[unit].y;
@@ -3815,12 +3666,8 @@ LAB_0057e694:
   }
   return strength;
 }
-#undef strength
 
 /* 0057e6e2 auto */
-#define strength (*(int *)(frame_ + FRAME_OFF(0)))
-#define best_unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define best_strength (*(int *)(frame_ + FRAME_OFF(8)))
 iptr __cdecl unit_stack_best_defender(iptr unit,iptr unit2)
 
 {
@@ -3829,7 +3676,9 @@ iptr __cdecl unit_stack_best_defender(iptr unit,iptr unit2)
   byte terrain;
   int hp_left;
   int max_hp;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int strength;
+  iptr best_unit;
+  int best_strength;
   
   best_strength = 0;
   best_unit = unit;
@@ -3890,9 +3739,6 @@ iptr __cdecl unit_stack_best_defender(iptr unit,iptr unit2)
   }
   return best_unit;
 }
-#undef strength
-#undef best_unit
-#undef best_strength
 
 /* 0057e9f9 auto */
 #define combat_kill_count (*(int *)((u8 *)&g.d_006acb0c))
@@ -3977,9 +3823,6 @@ void __cdecl unit_promote_veteran(iptr unit)
 
 /* 0057f9e3 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define city (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define target_civ_byte (*(byte *)(frame_ + FRAME_OFF(12)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(16)))
 i32 __cdecl unit_nuclear_attack(iptr civ,int x,int y,int check_sdi)
 
 {
@@ -3989,7 +3832,9 @@ i32 __cdecl unit_nuclear_attack(iptr civ,int x,int y,int check_sdi)
   iptr x2;
   iptr has_sdi;
   int unit;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
+  byte target_civ_byte;
+  iptr dir;
   
   target_civ = tile_city_or_unit_owner(x,y);
   x2 = civ_name_plural(civ);
@@ -4067,9 +3912,6 @@ i32 __cdecl unit_nuclear_attack(iptr civ,int x,int y,int check_sdi)
   return 1;
 }
 #undef human_civ
-#undef city
-#undef target_civ_byte
-#undef dir
 
 /* 00580341 auto */
 #define active_unit_lost_in_combat (*(i32 *)((u8 *)&g.d_0062c5bc))
@@ -4081,40 +3923,6 @@ i32 __cdecl unit_nuclear_attack(iptr civ,int x,int y,int check_sdi)
 #define mp_double_moves (*(short *)((u8 *)&g.d_00654fae))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
 #define unit_move_flags (*(byte *)((u8 *)&g.d_006ad0cc))
-#define def_vet_roll (*(int *)(frame_ + FRAME_OFF(4)))
-#define att_vet_roll (*(int *)(frame_ + FRAME_OFF(8)))
-#define def_roll2 (*(int *)(frame_ + FRAME_OFF(12)))
-#define att_roll2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define def_roll (*(int *)(frame_ + FRAME_OFF(20)))
-#define att_roll (*(int *)(frame_ + FRAME_OFF(24)))
-#define small_hp (*(sbyte *)(frame_ + FRAME_OFF(28)))
-#define msg_civ (*(uptr *)(frame_ + FRAME_OFF(32)))
-#define max_moves (*(int *)(frame_ + FRAME_OFF(36)))
-#define attacker_won (*(uint *)(frame_ + FRAME_OFF(40)))
-#define view_civ2 (*(int *)(frame_ + FRAME_OFF(44)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(48)))
-#define ally_warning (*(int *)(frame_ + FRAME_OFF(56)))
-#define explosion_kind (*(int *)(frame_ + FRAME_OFF(60)))
-#define attack_power (*(int *)(frame_ + FRAME_OFF(72)))
-#define moves_avail (*(uint *)(frame_ + FRAME_OFF(80)))
-#define att_firepower (*(int *)(frame_ + FRAME_OFF(112)))
-#define senate_roll (*(int *)(frame_ + FRAME_OFF(124)))
-#define defense2 (*(int *)(frame_ + FRAME_OFF(132)))
-#define loser_civ (*(uptr *)(frame_ + FRAME_OFF(136)))
-#define civ_sees (*(int (*)[8])(frame_ + FRAME_OFF(144)))
-#define result (*(i32 *)(frame_ + FRAME_OFF(176)))
-#define def_firepower (*(int *)(frame_ + FRAME_OFF(180)))
-#define show_treaty_msg (*(int *)(frame_ + FRAME_OFF(184)))
-#define anim_step (*(int *)(frame_ + FRAME_OFF(188)))
-#define scramble_msg (*(int *)(frame_ + FRAME_OFF(192)))
-#define sdi_bonus (*(int *)(frame_ + FRAME_OFF(196)))
-#define winner_civ (*(uptr *)(frame_ + FRAME_OFF(200)))
-#define view (*(int *)(frame_ + FRAME_OFF(204)))
-#define civ3 (*(uptr *)(frame_ + FRAME_OFF(208)))
-#define target_y (*(int *)(frame_ + FRAME_OFF(212)))
-#define shore_bombard (*(int *)(frame_ + FRAME_OFF(216)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(220)))
-#define target_x (*(iptr *)(frame_ + FRAME_OFF(224)))
 i32 __cdecl unit_resolve_attack(iptr unit,iptr dir,int execute)
 
 {
@@ -4140,7 +3948,40 @@ i32 __cdecl unit_resolve_attack(iptr unit,iptr dir,int execute)
   uint ransom;
   bool defender_reroll;
   uptr city;
-  i8 frame_[FRAME_OFF(232)] __attribute__((aligned(8)));  /* original stack frame */
+  int def_vet_roll;
+  int att_vet_roll;
+  int def_roll2;
+  int att_roll2;
+  int def_roll;
+  int att_roll;
+  sbyte small_hp;
+  uptr msg_civ;
+  int max_moves;
+  uint attacker_won;
+  int view_civ2;
+  iptr improvement;
+  int ally_warning;
+  int explosion_kind;
+  int attack_power;
+  uint moves_avail;
+  int att_firepower;
+  int senate_roll;
+  int defense2;
+  uptr loser_civ;
+  int civ_sees[8];
+  i32 result;
+  int def_firepower;
+  int show_treaty_msg;
+  int anim_step;
+  int scramble_msg;
+  int sdi_bonus;
+  uptr winner_civ;
+  int view;
+  uptr civ3;
+  int target_y;
+  int shore_bombard;
+  iptr unit2;
+  iptr target_x;
   
   scramble_msg = 0;
   improvement = 0;
@@ -5272,40 +5113,6 @@ LAB_00583d2b:
 #undef mp_double_moves
 #undef scenario_flags
 #undef unit_move_flags
-#undef def_vet_roll
-#undef att_vet_roll
-#undef def_roll2
-#undef att_roll2
-#undef def_roll
-#undef att_roll
-#undef small_hp
-#undef msg_civ
-#undef max_moves
-#undef attacker_won
-#undef view_civ2
-#undef improvement
-#undef ally_warning
-#undef explosion_kind
-#undef attack_power
-#undef moves_avail
-#undef att_firepower
-#undef senate_roll
-#undef defense2
-#undef loser_civ
-#undef civ_sees
-#undef result
-#undef def_firepower
-#undef show_treaty_msg
-#undef anim_step
-#undef scramble_msg
-#undef sdi_bonus
-#undef winner_civ
-#undef view
-#undef civ3
-#undef target_y
-#undef shore_bombard
-#undef unit2
-#undef target_x
 
 /* 0058a5b0 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -5358,8 +5165,6 @@ void __cdecl unit_sound_editor_static_dtor(void)
 #define unit_sound_editor_title_font_i32 (*(i32 *)((u8 *)&g.d_006ad024))
 #define unit_sound_editor_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006ad028))
 #define unit_sound_editor_text_font_i32 (*(i32 *)((u8 *)&g.d_006ad02c))
-#define parent2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define wnd_style (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl
@@ -5367,7 +5172,8 @@ unit_sound_editor_create_wnd(int title,uint style,int x,int y,int width,int heig
             int caption_height,int border_width)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent2;
+  uint wnd_style;
   
   if (title == 0) {
     crt_strcpy(&unit_sound_editor_title,&unit_sound_editor_empty_title);
@@ -5435,17 +5241,8 @@ unit_sound_editor_create_wnd(int title,uint style,int x,int y,int width,int heig
 #undef unit_sound_editor_title_font_i32
 #undef unit_sound_editor_title_small_font_i32
 #undef unit_sound_editor_text_font_i32
-#undef parent2
-#undef wnd_style
 
 /* 0058a905 auto */
-#define wav_path (*(i8 (*)[256])(frame_ + FRAME_OFF(0)))
-#define dest_path (*(char (*)[256])(frame_ + FRAME_OFF(256)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(512)))
-#define choice (*(int *)(frame_ + FRAME_OFF(1268)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(1272)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(1276)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(1280)))
 /* WARNING: Removing unreachable block (ram,0x0058a97f) */
 /* WARNING: Removing unreachable block (ram,0x0058a9fb) */
 
@@ -5462,7 +5259,13 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
   i8 *default_ext;
   i32 fmt_arg2;
   i32 fmt_arg3;
-  i8 frame_[FRAME_OFF(1288)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 wav_path[256];
+  char dest_path[256];
+  Dialog dlg;
+  int choice;
+  i32 seh_handler;
+  i8 *seh_prev;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -5525,13 +5328,6 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
 LAB_0058abe0:
   return;
 }
-#undef wav_path
-#undef dest_path
-#undef dlg
-#undef choice
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 0058abee auto */
 #define unit_sound_editor_running (*(i32 *)((u8 *)&g.d_006acd50))
@@ -5556,8 +5352,6 @@ void __cdecl unit_sound_editor_cancel_clicked(void)
 #undef unit_sound_editor_running
 
 /* 0058ac38 auto */
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl unit_sound_editor_redraw(void)
 
 {
@@ -5566,7 +5360,8 @@ void __cdecl unit_sound_editor_redraw(void)
   int col_width;
   int top;
   int left;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
+  i8 rect[16];
   
   frame_wnd_draw_caption((FrameWindow *)&unit_sound_editor_window);
   gfx_fill_rect((iptr)((u8 *)&g.d_006acd58),(iptr)((u8 *)&g.d_006ad014),0x1d);
@@ -5597,16 +5392,8 @@ void __cdecl unit_sound_editor_redraw(void)
   wnd_blit_surface((DibSurface *)&unit_sound_editor_window);
   return;
 }
-#undef slot
-#undef rect
 
 /* 0058ae6c auto */
-#define slot (*(int *)(frame_ + FRAME_OFF(4)))
-#define rect_left2 (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define rect_top2 (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define rect_right2 (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define rect_bottom2 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define saved_options (*(u32 *)(frame_ + FRAME_OFF(40)))
 void __cdecl unit_sound_editor_on_dblclick(int x,int y)
 
 {
@@ -5614,7 +5401,9 @@ void __cdecl unit_sound_editor_on_dblclick(int x,int y)
   int width_adj;
   int col_width;
   int hit;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
+  RECT rect2;
+  u32 saved_options;
   
   y -= unit_sound_editor_client_y;
   x -= unit_sound_editor_client_x;
@@ -5628,12 +5417,12 @@ void __cdecl unit_sound_editor_on_dblclick(int x,int y)
       return;
     }
     hit = (slot % 3) * col_width * 5;
-    rect_set_xywh((iptr)&rect_left2,
+    rect_set_xywh((iptr)&rect2,
                        ((int)(hit + (hit >> 0x1f & 3U)) >> 2) +
                        ((int)(col_width + (width_adj >> 0x1f & 3U)) >> 2),
                        (row_height * 3) / 2 + (slot / 3) * row_height * 4,col_width,row_height);
     if ((-1 < *(int *)(&unit_sound_slot_effects + slot * 4)) &&
-       (hit = point_in_rect_ltrb(x,y,rect_left2,rect_top2,rect_right2,rect_bottom2), hit != 0))
+       (hit = point_in_rect_ltrb(x,y,rect2.left,rect2.top,rect2.right,rect2.bottom), hit != 0))
     break;
     slot++;
   }
@@ -5643,12 +5432,6 @@ void __cdecl unit_sound_editor_on_dblclick(int x,int y)
   game.game_options = saved_options;
   return;
 }
-#undef slot
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
-#undef saved_options
 
 /* 0058afb6 auto */
 #define unit_sound_slot_effects_i32 (*(i32 *)((u8 *)&g.d_006acd38))
@@ -5656,14 +5439,13 @@ void __cdecl unit_sound_editor_on_dblclick(int x,int y)
 #define unit_sound_bomb_effect_i32 (*(i32 *)((u8 *)&g.d_006acd44))
 #define unit_sound_crash_effect_i32 (*(i32 *)((u8 *)&g.d_006acd48))
 #define unit_sound_sputter_effect_i32 (*(i32 *)((u8 *)&g.d_006acd4c))
-#define orders_effect (*(int *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl unit_sound_editor_set_slots(int unit_type,iptr buttons)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int orders_effect;
+  int i;
   
   orders_effect = -1;
   for (i = 0; i < 6; i++) {
@@ -5794,24 +5576,10 @@ void __cdecl unit_sound_editor_set_slots(int unit_type,iptr buttons)
 #undef unit_sound_bomb_effect_i32
 #undef unit_sound_crash_effect_i32
 #undef unit_sound_sputter_effect_i32
-#undef orders_effect
-#undef i
 
 /* 0058b47e auto */
 #define unit_sound_editor_running (*(int *)((u8 *)&g.d_006acd50))
 #define unit_sound_editor_client_height_i32 (*(i32 *)((u8 *)&g.d_006ace88))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define cancel_btn (*(Control *)(frame_ + FRAME_OFF(8)))
-#define btn_y (*(int *)(frame_ + FRAME_OFF(68)))
-#define slot_btns (*(Control (*)[6])(frame_ + FRAME_OFF(72)))
-#define btn_height (*(int *)(frame_ + FRAME_OFF(432)))
-#define btn_x (*(int *)(frame_ + FRAME_OFF(436)))
-#define btn_width (*(int *)(frame_ + FRAME_OFF(440)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(444)))
-#define ok_btn (*(Control *)(frame_ + FRAME_OFF(460)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(520)))
-#define seh_prev (*(i8 * *)(frame_ + FRAME_OFF(524)))
-#define seh_state (*(int *)(frame_ + FRAME_OFF(528)))
 /* WARNING: Removing unreachable block (ram,0x0058b6f2) */
 /* WARNING: Removing unreachable block (ram,0x0058b77b) */
 /* WARNING: Removing unreachable block (ram,0x0058b5ea) */
@@ -5822,7 +5590,18 @@ void __cdecl unit_sound_editor_run(iptr title,i32 unit_type)
 {
   int col_offset;
   iptr label;
-  i8 frame_[FRAME_OFF(536)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  Control cancel_btn;
+  int btn_y;
+  Control slot_btns[6];
+  int btn_height;
+  int btn_x;
+  int btn_width;
+  i8 rect[16];
+  Control ok_btn;
+  i32 seh_handler;
+  i8 *seh_prev;
+  int seh_state;
   
   seh_state = 0xffffffff;
   button_ctor(&ok_btn);
@@ -5831,7 +5610,7 @@ void __cdecl unit_sound_editor_run(iptr title,i32 unit_type)
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   crt_vector_ctor_iterator(slot_btns,0x3c,6,button_ctor,ctrl_dtor)
   ;
-  seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),2);
+  seh_state = (seh_state & 0xffffff00 | (byte)(2));
   unit_sound_editor_running = 1;
   unit_sound_editor_create_wnd(title,0xd,0,0,0x21c,0x118,0,0,0);
   btn_height = font_line_spacing((GameFont *)dialog_font_ptr);
@@ -5875,7 +5654,7 @@ void __cdecl unit_sound_editor_run(iptr title,i32 unit_type)
   frame_wnd_close((DibSurface *)&unit_sound_editor_window);
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   /* inlined unwind funclet 0058b859 */ { crt_vector_dtor_iterator((iptr)&slot_btns,0x3c,6,ctrl_dtor); }
-  seh_state = (uint)(*(i32 *)((char *)&seh_state + 1)) << 8;
+  seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 0058b86f */ { ctrl_dtor((Control *)((iptr)&cancel_btn)); }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 0058b87b */ { ctrl_dtor((Control *)((iptr)&ok_btn)); }
@@ -5883,18 +5662,6 @@ void __cdecl unit_sound_editor_run(iptr title,i32 unit_type)
 }
 #undef unit_sound_editor_running
 #undef unit_sound_editor_client_height_i32
-#undef i
-#undef cancel_btn
-#undef btn_y
-#undef slot_btns
-#undef btn_height
-#undef btn_x
-#undef btn_width
-#undef rect
-#undef ok_btn
-#undef seh_handler
-#undef seh_prev
-#undef seh_state
 
 /* 0058bdfd auto */
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
@@ -5917,11 +5684,6 @@ void __cdecl unit_cmd_wait(void)
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define city_name (*(i8 (*)[260])(frame_ + FRAME_OFF(0)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(260)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(264)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(268)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(272)))
 void __cdecl unit_cmd_build_city(void)
 
 {
@@ -5932,7 +5694,11 @@ void __cdecl unit_cmd_build_city(void)
   iptr x;
   int ret;
   uptr city;
-  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 city_name[260];
+  int y2;
+  int x2;
+  int y3;
+  iptr dir;
   
   unit_blink_active = 0;
   unit = (iptr)game.active_unit;
@@ -6005,11 +5771,6 @@ void __cdecl unit_cmd_build_city(void)
 #undef human_civ
 #undef ui_large_screen
 #undef unit_blink_active
-#undef city_name
-#undef y2
-#undef x2
-#undef y3
-#undef dir
 
 /* 0058c295 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -6017,9 +5778,6 @@ void __cdecl unit_cmd_build_city(void)
 #define map_cursor_y (*(short *)((u8 *)&g.d_0064b1b0))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define y2 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl unit_cmd_disband(void)
 
 {
@@ -6031,7 +5789,9 @@ void __cdecl unit_cmd_disband(void)
   int wnd_city;
   uptr city2;
   iptr confirm;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr y2;
+  int x2;
   
   if (moving_units_mode == 1) {
     unit = (iptr)game.active_unit;
@@ -6088,9 +5848,6 @@ void __cdecl unit_cmd_disband(void)
 #undef map_cursor_y
 #undef moving_units_mode
 #undef unit_blink_active
-#undef unit
-#undef y2
-#undef x2
 
 /* 0058c65e auto */
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
@@ -6238,14 +5995,13 @@ void __cdecl unit_cmd_terraform(iptr order)
 
 /* 0058cbe1 auto */
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define new_home (*(i8 *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_cmd_home_city(void)
 
 {
   byte city;
   iptr unit;
   int new_city;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 new_home;
   
   unit_blink_active = 0;
   unit = (iptr)game.active_unit;
@@ -6266,7 +6022,6 @@ void __cdecl unit_cmd_home_city(void)
   return;
 }
 #undef unit_blink_active
-#undef new_home
 
 /* 0058cce6 auto */
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
@@ -6306,7 +6061,6 @@ LAB_0058cd8e:
 
 /* 0058cde5 auto */
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_cmd_sleep(void)
 
 {
@@ -6317,7 +6071,7 @@ void __cdecl unit_cmd_sleep(void)
   int y;
   int result;
   iptr x2;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr dir;
   
   unit_blink_active = 0;
   unit = (iptr)game.active_unit;
@@ -6356,17 +6110,9 @@ void __cdecl unit_cmd_sleep(void)
   return;
 }
 #undef unit_blink_active
-#undef dir
 
 /* 0058cfcd auto */
 #define unit_move_flags (*(i8 *)((u8 *)&g.d_006ad0cc))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(0)))
-#define civ2 (*(int *)(frame_ + FRAME_OFF(756)))
-#define choice (*(int *)(frame_ + FRAME_OFF(760)))
-#define improvements_mask (*(uint *)(frame_ + FRAME_OFF(764)))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(768)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl unit_cmd_pillage(void)
 
 {
@@ -6378,7 +6124,13 @@ void __cdecl unit_cmd_pillage(void)
   iptr tile;
   int city;
   byte option_count;
-  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  Dialog dialog2;
+  int civ2;
+  int choice;
+  uint improvements_mask;
+  i32 eh_next;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   choice = 0;
@@ -6483,13 +6235,6 @@ LAB_0058d434:
   return;
 }
 #undef unit_move_flags
-#undef dialog2
-#undef civ2
-#undef choice
-#undef improvements_mask
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 0058d60a auto */
 void __cdecl unit_cmd_paradrop(void)
@@ -6515,18 +6260,6 @@ void __cdecl unit_cmd_paradrop(void)
 }
 
 /* 0058d6af auto */
-#define city (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define option_count2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define improved_tiles (*(int *)(frame_ + FRAME_OFF(16)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(24)))
-#define on_ocean (*(int *)(frame_ + FRAME_OFF(780)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(784)))
-#define show_all (*(uint *)(frame_ + FRAME_OFF(788)))
-#define tile_index (*(iptr *)(frame_ + FRAME_OFF(792)))
-#define city3 (*(iptr *)(frame_ + FRAME_OFF(796)))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(800)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(804)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(808)))
 void __cdecl unit_cmd_goto_city(void)
 
 {
@@ -6545,7 +6278,18 @@ void __cdecl unit_cmd_goto_city(void)
   iptr x2;
   int city2;
   uint move_mult;
-  i8 frame_[FRAME_OFF(816)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
+  int option_count2;
+  int improved_tiles;
+  Dialog dialog2;
+  int on_ocean;
+  int y2;
+  uint show_all;
+  iptr tile_index;
+  iptr city3;
+  i32 eh_next;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x2000);
@@ -6658,29 +6402,16 @@ LAB_0058ddc0:
     show_all = 1;
   } while( true );
 }
-#undef city
-#undef option_count2
-#undef improved_tiles
-#undef dialog2
-#undef on_ocean
-#undef y2
-#undef show_all
-#undef tile_index
-#undef city3
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 0058ddce auto */
 #define moving_units_mode (*(i32 *)((u8 *)&g.d_006d1da8))
-#define new_active (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl unit_cmd_unload(void)
 
 {
   iptr unit2;
   int selectable;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr new_active;
+  iptr unit;
   
   new_active = -1;
   if (-1 < game.active_unit) {
@@ -6707,8 +6438,6 @@ void __cdecl unit_cmd_unload(void)
   return;
 }
 #undef moving_units_mode
-#undef new_active
-#undef unit
 
 /* 0058df14 auto */
 void __cdecl unit_cmd_automate(void)
@@ -6725,16 +6454,6 @@ void __cdecl unit_cmd_automate(void)
 
 /* 0058df7b auto */
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define threat_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define option_count2 (*(int *)(frame_ + FRAME_OFF(12)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(16)))
-#define active (*(iptr *)(frame_ + FRAME_OFF(772)))
-#define civ2 (*(int *)(frame_ + FRAME_OFF(776)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(780)))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(784)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(788)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(792)))
 void __cdecl unit_cmd_airlift(void)
 
 {
@@ -6746,7 +6465,16 @@ void __cdecl unit_cmd_airlift(void)
   int distance;
   uint move_mult;
   iptr unit3;
-  i8 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int threat_count;
+  int option_count2;
+  Dialog dialog2;
+  iptr active;
+  int civ2;
+  iptr city;
+  i32 eh_next;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x2000);
@@ -6866,31 +6594,12 @@ LAB_0058e34c:
   return;
 }
 #undef ui_large_screen
-#undef unit
-#undef threat_count
-#undef option_count2
-#undef dialog2
-#undef active
-#undef civ2
-#undef city
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 0058f040: written by hand in src/game/retvals.c */
 
 /* 0058fedb auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define choice (*(int *)(frame_ + FRAME_OFF(4)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define shields_left (*(int *)(frame_ + FRAME_OFF(16)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(20)))
-#define k (*(iptr *)(frame_ + FRAME_OFF(776)))
-#define in_demand (*(int *)(frame_ + FRAME_OFF(780)))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(784)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(788)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(792)))
 i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
 
 {
@@ -6900,7 +6609,15 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
   char city2;
   iptr option_id;
   i32 result;
-  i8 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
+  int choice;
+  iptr improvement;
+  int shields_left;
+  Dialog dialog2;
+  iptr k;
+  int in_demand;
+  i32 eh_next;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
@@ -7043,15 +6760,6 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
 }
 #undef autoplay_active
 #undef human_civ
-#undef choice
-#undef improvement
-#undef shields_left
-#undef dialog2
-#undef k
-#undef in_demand
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 0059062c auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
@@ -7068,46 +6776,6 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
 #define unit_move_anim_active (*(i32 *)((u8 *)&g.d_00636058))
 #define unit_move_flags (*(byte *)((u8 *)&g.d_006ad0cc))
 #define saved_human_players_i32 (*(i32 *)((u8 *)&g.d_00673b08))
-#define trireme_roll (*(int *)(frame_ + FRAME_OFF(0)))
-#define move_roll (*(int *)(frame_ + FRAME_OFF(8)))
-#define abs_dy (*(int *)(frame_ + FRAME_OFF(12)))
-#define unit7 (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define city4 (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define result (*(uint *)(frame_ + FRAME_OFF(48)))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define answer (*(int *)(frame_ + FRAME_OFF(60)))
-#define unit5 (*(iptr *)(frame_ + FRAME_OFF(72)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(80)))
-#define trireme_odds (*(uint *)(frame_ + FRAME_OFF(92)))
-#define x3 (*(int *)(frame_ + FRAME_OFF(100)))
-#define unit4 (*(iptr *)(frame_ + FRAME_OFF(108)))
-#define has_hut (*(int *)(frame_ + FRAME_OFF(124)))
-#define civ_sees (*(int (*)[8])(frame_ + FRAME_OFF(128)))
-#define civ_animates (*(int (*)[8])(frame_ + FRAME_OFF(160)))
-#define y5 (*(int *)(frame_ + FRAME_OFF(192)))
-#define dir2 (*(iptr *)(frame_ + FRAME_OFF(196)))
-#define terrain2 (*(uptr *)(frame_ + FRAME_OFF(200)))
-#define src_is_ocean (*(uint *)(frame_ + FRAME_OFF(204)))
-#define has_land_unit (*(int *)(frame_ + FRAME_OFF(208)))
-#define attack_done (*(int *)(frame_ + FRAME_OFF(212)))
-#define y4 (*(int *)(frame_ + FRAME_OFF(216)))
-#define civ2 (*(uptr *)(frame_ + FRAME_OFF(220)))
-#define dst_is_ocean (*(uint *)(frame_ + FRAME_OFF(224)))
-#define score (*(int *)(frame_ + FRAME_OFF(228)))
-#define adj_dir (*(iptr *)(frame_ + FRAME_OFF(232)))
-#define other_civ (*(uptr *)(frame_ + FRAME_OFF(236)))
-#define lock_id (*(int *)(frame_ + FRAME_OFF(240)))
-#define unit_count (*(int *)(frame_ + FRAME_OFF(244)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(248)))
-#define step_cost (*(uint *)(frame_ + FRAME_OFF(252)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(256)))
-#define prev_moves_used (*(uint *)(frame_ + FRAME_OFF(260)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(264)))
-#define heal (*(int *)(frame_ + FRAME_OFF(268)))
-#define x5 (*(iptr *)(frame_ + FRAME_OFF(272)))
-#define unused_c (*(i32 *)(frame_ + FRAME_OFF(276)))
-#define shift_down (*(uint *)(frame_ + FRAME_OFF(280)))
 /* WARNING: Removing unreachable block (ram,0x0059103e) */
 /* WARNING: Removing unreachable block (ram,0x0059104b) */
 /* WARNING: Removing unreachable block (ram,0x00590f5a) */
@@ -7149,7 +6817,46 @@ i32 __cdecl unit_move_dir(iptr unit,uptr dir,i32 move_flags)
   int value;
   uint sign;
   iptr orig_unit;
-  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  int trireme_roll;
+  int move_roll;
+  int abs_dy;
+  iptr unit7;
+  int y2;
+  iptr city4;
+  uint result;
+  iptr x2;
+  int answer;
+  iptr unit5;
+  int y3;
+  uint trireme_odds;
+  int x3;
+  iptr unit4;
+  int has_hut;
+  int civ_sees[8];
+  int civ_animates[8];
+  int y5;
+  iptr dir2;
+  uptr terrain2;
+  uint src_is_ocean;
+  int has_land_unit;
+  int attack_done;
+  int y4;
+  uptr civ2;
+  uint dst_is_ocean;
+  int score;
+  iptr adj_dir;
+  uptr other_civ;
+  int lock_id;
+  int unit_count;
+  iptr unit2;
+  uint step_cost;
+  iptr city2;
+  uint prev_moves_used;
+  int best_score;
+  int heal;
+  iptr x5;
+  i32 unused_c;
+  uint shift_down;
   civ_sees[1] = civ_sees[2] = civ_sees[3] = civ_sees[4] = civ_sees[5] = civ_sees[6] = civ_sees[7] = 1;  /* stale stack the original reads (FRAME_PRESETS) */
   
   attack_done = 0;
@@ -8306,55 +8013,14 @@ LAB_00594aaa:
 #undef unit_move_anim_active
 #undef unit_move_flags
 #undef saved_human_players_i32
-#undef trireme_roll
-#undef move_roll
-#undef abs_dy
-#undef unit7
-#undef y2
-#undef city4
-#undef result
-#undef x2
-#undef answer
-#undef unit5
-#undef y3
-#undef trireme_odds
-#undef x3
-#undef unit4
-#undef has_hut
-#undef civ_sees
-#undef civ_animates
-#undef y5
-#undef dir2
-#undef terrain2
-#undef src_is_ocean
-#undef has_land_unit
-#undef attack_done
-#undef y4
-#undef civ2
-#undef dst_is_ocean
-#undef score
-#undef adj_dir
-#undef other_civ
-#undef lock_id
-#undef unit_count
-#undef unit2
-#undef step_cost
-#undef city2
-#undef prev_moves_used
-#undef best_score
-#undef heal
-#undef x5
-#undef unused_c
-#undef shift_down
 
 /* 005aef20 auto */
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_editor_load_rules(void)
 
 {
   char *_Source;
   size_t _Count;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit_type;
   
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     _Count = 0x28;
@@ -8378,17 +8044,15 @@ void __cdecl unit_editor_load_rules(void)
   }
   return;
 }
-#undef unit_type
 
 /* 005af140 auto */
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_editor_store_rules(void)
 
 {
   char *_Dest;
   char *_Source;
   size_t _Count;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit_type;
   
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     _Count = 0xf;
@@ -8412,17 +8076,15 @@ void __cdecl unit_editor_store_rules(void)
   }
   return;
 }
-#undef unit_type
 
 /* 005af343 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define num_buf (*(char (*)[8])(frame_ + FRAME_OFF(8)))
-#define sel (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl unit_editor_load_controls(void)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  char num_buf[8];
+  iptr sel;
   
   for (i = 1; i < 0xd; i++) {
     if (*(int *)(&unit_editor_ctrl_kinds + i * 8) == 9) {
@@ -8451,21 +8113,17 @@ void __cdecl unit_editor_load_controls(void)
   }
   return;
 }
-#undef i
-#undef num_buf
-#undef sel
 
 /* 005af4ae auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define changed_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define num_buf (*(char (*)[8])(frame_ + FRAME_OFF(8)))
-#define value (*(int *)(frame_ + FRAME_OFF(16)))
 int __cdecl unit_editor_store_controls(void)
 
 {
   int field;
   i32 clamped;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  int changed_count;
+  char num_buf[8];
+  int value;
   
   changed_count = 0;
   for (i = 1; i < 0xd; i++) {
@@ -8501,10 +8159,6 @@ int __cdecl unit_editor_store_controls(void)
   }
   return changed_count;
 }
-#undef i
-#undef changed_count
-#undef num_buf
-#undef value
 
 /* 005af682 auto */
 void __cdecl unit_editor_redraw(void)
@@ -8516,15 +8170,14 @@ void __cdecl unit_editor_redraw(void)
 
 /* 005af69d auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define pad_len (*(size_t *)(frame_ + FRAME_OFF(0)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define bit (*(int *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl unit_editor_write_units(FILE *file)
 
 {
   char *type_name;
   size_t name_len;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  size_t pad_len;
+  iptr unit_type;
+  int bit;
   
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     text_clear();
@@ -8577,17 +8230,9 @@ i32 __cdecl unit_editor_write_units(FILE *file)
   return 1;
 }
 #undef text_buffer
-#undef pad_len
-#undef unit_type
-#undef bit
 
 /* 005af9e3 auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define rules_err_msg (*(char (*)[32])(frame_ + FRAME_OFF(4)))
-#define events_err_msg (*(char (*)[32])(frame_ + FRAME_OFF(36)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(68)))
-#define renamed_count (*(int *)(frame_ + FRAME_OFF(72)))
 void __cdecl unit_editor_on_ok(void)
 
 {
@@ -8600,7 +8245,11 @@ void __cdecl unit_editor_on_ok(void)
   char *new_name;
   i8 *edited_name;
   UINT UVar6;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  char rules_err_msg[32];
+  char events_err_msg[32];
+  iptr unit_type;
+  int renamed_count;
   
   invalid_count = unit_editor_store_controls();
   if (invalid_count == 0) {
@@ -8660,29 +8309,22 @@ void __cdecl unit_editor_on_ok(void)
   return;
 }
 #undef editor_running
-#undef parent_wnd2
-#undef rules_err_msg
-#undef events_err_msg
-#undef unit_type
-#undef renamed_count
 
 /* 005afbca auto */
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define old_name (*(char (*)[14])(frame_ + FRAME_OFF(8)))
-#define old_name_term (*(i8 *)(frame_ + FRAME_OFF(22)))
-#define new_name (*(char (*)[260])(frame_ + FRAME_OFF(28)))
-#define item (*(int *)(frame_ + FRAME_OFF(288)))
-#define sel (*(iptr *)(frame_ + FRAME_OFF(292)))
-#define result (*(int *)(frame_ + FRAME_OFF(296)))
 void __cdecl unit_editor_on_rename(void)
 
 {
   size_t input_len;
-  i8 frame_[FRAME_OFF(304)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  char old_name[15];
+  char new_name[260];
+  int item;
+  iptr sel;
+  int result;
   
   item = *(int *)(active_editor_wnd + 0x2ec);
   _strncpy(old_name,&editor_item_names + item * 0x28,0xf);
-  old_name_term = 0;
+  old_name[14] = 0;
   do {
     if (active_editor_wnd == 0) {
       parent_wnd2 = 0;
@@ -8709,20 +8351,12 @@ void __cdecl unit_editor_on_rename(void)
   }
   return;
 }
-#undef parent_wnd2
-#undef old_name
-#undef old_name_term
-#undef new_name
-#undef item
-#undef sel
-#undef result
 
 /* 005afd3b auto */
-#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_editor_on_help(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 parent_wnd2;
   
   if (active_editor_wnd == 0) {
     parent_wnd2 = 0;
@@ -8735,7 +8369,6 @@ void __cdecl unit_editor_on_help(void)
   dlg_set_parent_window(0);
   return;
 }
-#undef parent_wnd2
 
 /* 005afd9a auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
@@ -8766,13 +8399,12 @@ void __cdecl unit_editor_edit_sprite(void)
 }
 
 /* 005afe15 auto */
-#define title (*(char (*)[128])(frame_ + FRAME_OFF(4)))
 void __cdecl unit_editor_edit_sound(void)
 
 {
   i32 label;
   i8 *item_name;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  char title[128];
   
   unit_editor_store_controls();
   item_name = &editor_item_names + *(int *)(active_editor_wnd + 0x2ec) * 0x28;
@@ -8781,7 +8413,6 @@ void __cdecl unit_editor_edit_sound(void)
   unit_sound_editor_run((iptr)title,*(i32 *)(active_editor_wnd + 0x2ec));
   return;
 }
-#undef title
 
 /* 005afe84 auto */
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
@@ -8794,14 +8425,13 @@ void __cdecl unit_editor_set_flag_check(i32 index,int checked)
 }
 
 /* 005afea8 auto */
-#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define flags2 (*(uint *)(frame_ + FRAME_OFF(8)))
 void __cdecl unit_editor_edit_flags(void)
 
 {
   int item;
   int result;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parent_wnd2;
+  uint flags2;
   
   item = *(int *)(active_editor_wnd + 0x2ec);
   dlg_checks_clear();
@@ -8893,8 +8523,6 @@ void __cdecl unit_editor_edit_flags(void)
   dlg_set_parent_window(0);
   return;
 }
-#undef parent_wnd2
-#undef flags2
 
 /* 005b02a5 auto */
 void __cdecl unit_editor_update_domain_ctrls(void)
@@ -8919,14 +8547,13 @@ void __cdecl unit_editor_update_domain_ctrls(void)
 }
 
 /* 005b0373 auto */
-#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_editor_on_combo(int ctrl_id)
 
 {
   int invalid_count;
   HWND hWnd;
   i32 sel;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 parent_wnd2;
   
   if (ctrl_id == 0xc9) {
     invalid_count = unit_editor_store_controls();
@@ -8960,21 +8587,19 @@ void __cdecl unit_editor_on_combo(int ctrl_id)
   }
   return;
 }
-#undef parent_wnd2
 
 /* 005b0473 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
-#define parent2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(28)))
 void __thiscall unit_editor_create_combo(ViewWindow *this,int index)
 
 {
   int x;
   int y;
   iptr label;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent2;
+  iptr advance;
+  iptr unit_type;
+  i8 rect[16];
   
   x = *(int *)(&unit_editor_ctrl_positions + index * 8) + this->client_x;
   y = *(int *)(&unit_editor_ctrl_pos_ys + index * 8) + this->client_y;
@@ -9044,22 +8669,17 @@ void __thiscall unit_editor_create_combo(ViewWindow *this,int index)
   return;
 }
 #undef editor_next_ctrl_id
-#undef parent2
-#undef advance
-#undef unit_type
-#undef rect
 
 /* 005b08e8 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define unit_editor_edit_x_table (*(i32 *)((u8 *)&g.d_00635e20))
 #define unit_editor_edit_y_table (*(i32 *)((u8 *)&g.d_00635e24))
-#define parent2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall unit_editor_create_edit(ViewWindow *this,int index)
 
 {
   int ctrl_id;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent2;
+  i8 rect[16];
   
   rect_set_xywh((iptr)rect,(&unit_editor_edit_x_table)[index * 2] + this->client_x,
                      (&unit_editor_edit_y_table)[index * 2] + this->client_y,0x30,this->sci_rate_sel + 6);
@@ -9081,8 +8701,6 @@ void __thiscall unit_editor_create_edit(ViewWindow *this,int index)
 #undef editor_next_ctrl_id
 #undef unit_editor_edit_x_table
 #undef unit_editor_edit_y_table
-#undef parent2
-#undef rect
 
 /* 005b09dc auto */
 #define editor_bg_surface (*(int *)((u8 *)&g.d_0062e018))
@@ -9091,19 +8709,18 @@ void __thiscall unit_editor_create_edit(ViewWindow *this,int index)
 #define unit_editor_edit_y_table (*(int *)((u8 *)&g.d_00635e24))
 #define unit_editor_domain_y_i32 (*(i32 *)((u8 *)&g.d_00635e1c))
 #define unit_editor_edit2_y_i32 (*(i32 *)((u8 *)&g.d_00635e34))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define sprite (*(Sprite * *)(frame_ + FRAME_OFF(16)))
-#define text_y2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define text_x2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define pic_y (*(int *)(frame_ + FRAME_OFF(28)))
-#define pic_x (*(int *)(frame_ + FRAME_OFF(32)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall unit_editor_paint(ViewWindow *this)
 
 {
   byte key_color;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 sprite_rect[16];
+  Sprite *sprite;
+  int text_y2;
+  int text_x2;
+  int pic_y;
+  int pic_x;
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((editor_bg_surface == 0) || (editor_running == 0)) {
@@ -9198,12 +8815,6 @@ void __thiscall unit_editor_paint(ViewWindow *this)
 #undef unit_editor_edit_y_table
 #undef unit_editor_domain_y_i32
 #undef unit_editor_edit2_y_i32
-#undef sprite_rect
-#undef sprite
-#undef text_y2
-#undef text_x2
-#undef pic_y
-#undef pic_x
 
 /* 005b1037 auto */
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
@@ -9211,20 +8822,6 @@ void __thiscall unit_editor_paint(ViewWindow *this)
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define unit_editor_move_max_i32 (*(i32 *)((u8 *)&g.d_00635ef0))
 #define unit_editor_hp_max_i32 (*(i32 *)((u8 *)&g.d_00635f00))
-#define flags_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define sound_parent (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define sprite_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define cancel_parent (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define help_parent (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define rename_parent (*(u8 * *)(frame_ + FRAME_OFF(24)))
-#define ok_parent (*(u8 * *)(frame_ + FRAME_OFF(28)))
-#define bg_surface2 (*(DibSurface * *)(frame_ + FRAME_OFF(40)))
-#define i (*(int *)(frame_ + FRAME_OFF(48)))
-#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(60)))
-#define palette (*(GamePalette *)(frame_ + FRAME_OFF(76)))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(1152)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(1156)))
-#define eh_state (*(int *)(frame_ + FRAME_OFF(1160)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall unit_editor_window_run(ViewWindow *this)
@@ -9244,7 +8841,20 @@ void __thiscall unit_editor_window_run(ViewWindow *this)
   i32 wnd_arg7;
   i32 wnd_arg8;
   i32 wnd_arg9;
-  i8 frame_[FRAME_OFF(1168)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *flags_parent;
+  u8 *sound_parent;
+  u8 *sprite_parent;
+  u8 *cancel_parent;
+  u8 *help_parent;
+  u8 *rename_parent;
+  u8 *ok_parent;
+  DibSurface *bg_surface2;
+  int i;
+  i8 rect[16];
+  GamePalette palette;
+  i32 eh_next;
+  i8 *eh_handler;
+  int eh_state;
   
   eh_state = 0xffffffff;
   palette_init(&palette);
@@ -9259,7 +8869,7 @@ void __thiscall unit_editor_window_run(ViewWindow *this)
   else {
     bg_surface2 = (DibSurface *)surface_ctor(this_00);
   }
-  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  eh_state = eh_state & 0xffffff00;
   editor_bg_surface = bg_surface2;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font((iptr)((u8 *)&g.d_006a4f90));
@@ -9421,30 +9031,15 @@ void __thiscall unit_editor_window_run(ViewWindow *this)
 #undef editor_running
 #undef unit_editor_move_max_i32
 #undef unit_editor_hp_max_i32
-#undef flags_parent
-#undef sound_parent
-#undef sprite_parent
-#undef cancel_parent
-#undef help_parent
-#undef rename_parent
-#undef ok_parent
-#undef bg_surface2
-#undef i
-#undef rect
-#undef palette
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 005b1a29 auto */
-#define editor_wnd (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(2888)))
-#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(2892)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl unit_editor_run(void)
 
 {
-  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  EditorWindow editor_wnd;
+  i32 eh_next;
+  i8 *eh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   editor_wnd_ctor(&editor_wnd);
@@ -9455,15 +9050,8 @@ void __cdecl unit_editor_run(void)
   /* inlined unwind funclet 005b1a82 */ { editor_wnd_dtor((EditorWindow *)((iptr)&editor_wnd)); }
   return;
 }
-#undef editor_wnd
-#undef eh_next
-#undef eh_handler
-#undef eh_state
 
 /* 005b2590 auto */
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define unit4 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define valid (*(i32 *)(frame_ + FRAME_OFF(32)))
 i32 __cdecl unit_stack_validate(iptr unit)
 
 {
@@ -9472,7 +9060,9 @@ i32 __cdecl unit_stack_validate(iptr unit)
   iptr stack_count;
   iptr unit5;
   iptr unit3;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit2;
+  iptr unit4;
+  i32 valid;
   
   if ((unit < 0) || (0x801 < unit)) {
     err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0063607c),(iptr)((u8 *)&g.d_00636060),0x11);
@@ -9559,9 +9149,6 @@ i32 __cdecl unit_stack_validate(iptr unit)
   }
   return valid;
 }
-#undef unit2
-#undef unit4
-#undef valid
 
 /* 005b29aa auto */
 int __cdecl unit_max_hp(iptr unit)
@@ -9588,15 +9175,14 @@ int __cdecl unit_hp_remaining(iptr unit)
 }
 
 /* 005b2a39 auto */
-#define min_moves (*(uint *)(frame_ + FRAME_OFF(4)))
-#define moves (*(uint *)(frame_ + FRAME_OFF(8)))
 uint __cdecl unit_max_moves(iptr unit)
 
 {
   int civ;
   int has;
   uint result;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  uint min_moves;
+  uint moves;
   
   moves = (uint)(char)unit_types[units[unit].type].move;
   if (moves == 0) {
@@ -9645,8 +9231,6 @@ uint __cdecl unit_max_moves(iptr unit)
   }
   return result;
 }
-#undef min_moves
-#undef moves
 
 /* 005b2c3d auto */
 int __cdecl unit_moves_left(iptr unit)
@@ -9700,13 +9284,12 @@ iptr __cdecl unit_stack_first(iptr unit)
 }
 
 /* 005b2daf auto */
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl unit_stack_first_at(int civ,int x,int y)
 
 {
   i32 first;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr unit2;
   
   unit2 = -1;
   for (unit = 0; (unit2 < 0 && (unit < game.num_units)); unit++) {
@@ -9719,8 +9302,6 @@ i32 __cdecl unit_stack_first_at(int civ,int x,int y)
   first = unit_stack_first(unit2);
   return first;
 }
-#undef unit
-#undef unit2
 
 /* 005b2f50 auto */
 void __cdecl unit_set_sleep(iptr unit)
@@ -9734,12 +9315,11 @@ void __cdecl unit_set_sleep(iptr unit)
 }
 
 /* 005b2f92 auto */
-#define found (*(int *)(frame_ + FRAME_OFF(4)))
-#define pos (*(i32 *)(frame_ + FRAME_OFF(8)))
 int __cdecl unit_stack_nth(int unit,int n)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int found;
+  i32 pos;
   
   pos = -1;
   found = -1;
@@ -9752,8 +9332,6 @@ int __cdecl unit_stack_nth(int unit,int n)
   }
   return found;
 }
-#undef found
-#undef pos
 
 /* 005b319e auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -9821,7 +9399,6 @@ void __cdecl unit_stack_unlink(iptr unit,int sync)
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define nm_unit_put_down_count (*(int *)((u8 *)&g.d_006c90e8))
 #define unit_stack_link_busy (*(i32 *)((u8 *)&g.d_006ad8dc))
-#define civ (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl unit_stack_link(iptr unit,iptr x,iptr y,int sync)
 
 {
@@ -9829,7 +9406,7 @@ void __cdecl unit_stack_link(iptr unit,iptr x,iptr y,int sync)
   iptr start_ticks;
   iptr now_ticks;
   int unit2;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
   
   unit_stack_link_busy = 1;
   if ((game.multiplayer < 3) || (is_host = net_is_host(&net_session), is_host != '\0')) {
@@ -9883,7 +9460,6 @@ void __cdecl unit_stack_link(iptr unit,iptr x,iptr y,int sync)
 #undef game_loop_active
 #undef nm_unit_put_down_count
 #undef unit_stack_link_busy
-#undef civ
 
 /* 005b36df auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -9941,7 +9517,6 @@ void __cdecl unit_relocate_in_place(iptr unit,i32 sync)
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define nm_bottomed_count (*(int *)((u8 *)&g.d_006c90f0))
 #define unit_stack_bottom_busy (*(i32 *)((u8 *)&g.d_006ad8e0))
-#define unit3 (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl unit_move_to_stack_bottom(iptr unit,int sync)
 
 {
@@ -9951,7 +9526,7 @@ void __cdecl unit_move_to_stack_bottom(iptr unit,int sync)
   iptr start_ticks;
   iptr now_ticks;
   int unit2;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit3;
   
   if (-1 < units[unit].next_in_stack) {
     unit_stack_bottom_busy = 1;
@@ -10000,15 +9575,13 @@ void __cdecl unit_move_to_stack_bottom(iptr unit,int sync)
 #undef game_loop_active
 #undef nm_bottomed_count
 #undef unit_stack_bottom_busy
-#undef unit3
 
 /* 005b3ae0 auto */
-#define unit2 (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_stack_relocate_all(iptr unit,iptr x,iptr y,int sync)
 
 {
   int next;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int unit2;
   
   unit2 = unit_stack_first(unit);
   while (-1 < unit2) {
@@ -10022,10 +9595,8 @@ void __cdecl unit_stack_relocate_all(iptr unit,iptr x,iptr y,int sync)
   }
   return;
 }
-#undef unit2
 
 /* 005b3b78 auto */
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl unit_stack_ships_to_top(iptr unit,i32 sync)
 
 {
@@ -10034,7 +9605,7 @@ void __cdecl unit_stack_ships_to_top(iptr unit,i32 sync)
   iptr first;
   iptr next_unit;
   iptr cur;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit2;
   
   unit2 = -1;
   if (-1 < unit) {
@@ -10063,15 +9634,12 @@ void __cdecl unit_stack_ships_to_top(iptr unit,i32 sync)
   }
   return;
 }
-#undef unit2
 
 /* 005b3d06 auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define mp_simultaneous_moves (*(char *)((u8 *)&g.d_006ad684))
 #define nm_unit_created_result (*(int *)((u8 *)&g.d_006c90d8))
 #define unit_create_busy (*(i32 *)((u8 *)&g.d_006ad8bc))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define home (*(i8 *)(frame_ + FRAME_OFF(4)))
 iptr __cdecl unit_create(iptr unit_type,uptr civ,iptr x,iptr y)
 
 {
@@ -10081,7 +9649,8 @@ iptr __cdecl unit_create(iptr unit_type,uptr civ,iptr x,iptr y)
   iptr now_ticks;
   i32 max_moves;
   int city;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  i8 home;
   
   unit_create_busy = 1;
   if ((game.multiplayer < 3) || (is_host = net_is_host(&net_session), is_host != '\0')) {
@@ -10207,15 +9776,11 @@ iptr __cdecl unit_create(iptr unit_type,uptr civ,iptr x,iptr y)
 #undef mp_simultaneous_moves
 #undef nm_unit_created_result
 #undef unit_create_busy
-#undef unit
-#undef home
 
 /* 005b4391 auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define net_unit_deleted_ack (*(int *)((u8 *)&g.d_006c90c0))
 #define unit_delete_busy (*(i32 *)((u8 *)&g.d_006ad8c0))
-#define home (*(uint *)(frame_ + FRAME_OFF(0)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl unit_delete(iptr unit,int update_ui)
 
 {
@@ -10227,7 +9792,8 @@ void __cdecl unit_delete(iptr unit,int update_ui)
   iptr start_ticks;
   iptr now_ticks;
   int civ;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  uint home;
+  iptr unit2;
   
   if ((-1 < unit) && (units[unit].id != 0)) {
     unit_delete_busy = 1;
@@ -10308,8 +9874,6 @@ void __cdecl unit_delete(iptr unit,int update_ui)
 #undef game_loop_active
 #undef net_unit_deleted_ack
 #undef unit_delete_busy
-#undef home
-#undef unit2
 
 /* 005b47fa auto */
 void __cdecl unit_stack_delete_all(iptr unit,int sync)
@@ -10385,11 +9949,10 @@ void __cdecl unit_stack_add_visibility(iptr unit,i32 vis_mask)
 }
 
 /* 005b50ad auto */
-#define sum (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl unit_stack_sum(iptr unit,int mode)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int sum;
   
   sum = 0;
   if (mode != 0xb) {
@@ -10458,14 +10021,12 @@ int __cdecl unit_stack_sum(iptr unit,int mode)
   }
   return sum;
 }
-#undef sum
 
 /* 005b53b6 auto */
-#define count (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl unit_stack_count_role(iptr unit,int wanted_role)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int count;
   
   count = 0;
   for (unit = unit_stack_first(unit); -1 < unit; unit = unit_next_in_stack(unit)) {
@@ -10475,18 +10036,11 @@ int __cdecl unit_stack_count_role(iptr unit,int wanted_role)
   }
   return count;
 }
-#undef count
 
 /* 005b542e auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define nm_ship_stacked_result (*(int *)((u8 *)&g.d_006c9108))
 #define unit_gather_cargo_busy (*(i32 *)((u8 *)&g.d_006ad8f8))
-#define num_passes (*(int *)(frame_ + FRAME_OFF(4)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define first_unit (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define capacity2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define pass (*(int *)(frame_ + FRAME_OFF(40)))
-#define on_ocean (*(int *)(frame_ + FRAME_OFF(48)))
 int __cdecl unit_gather_cargo(iptr unit,iptr lift_off,int send_update)
 
 {
@@ -10501,7 +10055,12 @@ int __cdecl unit_gather_cargo(iptr unit,iptr lift_off,int send_update)
   iptr landmass;
   bool take_aboard;
   iptr cur_unit;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  int num_passes;
+  iptr unit2;
+  iptr first_unit;
+  int capacity2;
+  int pass;
+  int on_ocean;
   
   on_ocean = 0;
   if ((unit < -1) || (0x801 < unit)) {
@@ -10662,12 +10221,6 @@ LAB_005b5a3a:
 #undef game_loop_active
 #undef nm_ship_stacked_result
 #undef unit_gather_cargo_busy
-#undef num_passes
-#undef unit2
-#undef first_unit
-#undef capacity2
-#undef pass
-#undef on_ocean
 
 /* 005b5bab auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -10724,8 +10277,6 @@ void __cdecl unit_lift_off_map(iptr unit,int send_update)
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define nm_safely_deleted_count (*(int *)((u8 *)&g.d_006c9118))
 #define unit_delete_cargo_busy (*(i32 *)((u8 *)&g.d_006ad900))
-#define y2 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __cdecl unit_delete_with_cargo(iptr unit,int send_update)
 
 {
@@ -10733,7 +10284,8 @@ void __cdecl unit_delete_with_cargo(iptr unit,int send_update)
   int result;
   int now_ticks;
   bool at_sea;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr y2;
+  iptr x2;
   
   at_sea = false;
   unit_delete_cargo_busy = 1;
@@ -10792,8 +10344,6 @@ LAB_005b5fed:
 #undef game_loop_active
 #undef nm_safely_deleted_count
 #undef unit_delete_cargo_busy
-#undef y2
-#undef x2
 
 /* 005b6042 auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -10846,12 +10396,11 @@ void __cdecl unit_destroy_redraw(iptr unit,int send_update)
 #undef unit_destroy_redraw_busy
 
 /* 005b633f auto */
-#define selectable (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl unit_is_selectable(iptr unit)
 
 {
   int result;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 selectable;
   
   selectable = 0;
   if ((((-1 < unit) && (unit < game.num_units)) && (units[unit].id != 0)) &&
@@ -10869,15 +10418,13 @@ i32 __cdecl unit_is_selectable(iptr unit)
   }
   return selectable;
 }
-#undef selectable
 
 /* 005b6458 auto */
-#define awake (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl unit_is_awake_with_moves(iptr unit)
 
 {
   int moves_left;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 awake;
   
   awake = 0;
   if ((((-1 < unit) && (unit < game.num_units)) && (units[unit].id != 0)) &&
@@ -10891,24 +10438,22 @@ i32 __cdecl unit_is_awake_with_moves(iptr unit)
   }
   return awake;
 }
-#undef awake
 
 /* 005b6512 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define map_cursor_x (*(short *)((u8 *)&g.d_0064b1b4))
 #define map_cursor_y (*(short *)((u8 *)&g.d_0064b1b0))
-#define best_unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define pass (*(int *)(frame_ + FRAME_OFF(12)))
-#define dist (*(int *)(frame_ + FRAME_OFF(16)))
-#define prev_active (*(int *)(frame_ + FRAME_OFF(20)))
-#define best_dist (*(int *)(frame_ + FRAME_OFF(24)))
 iptr __cdecl unit_find_nearest_selectable(iptr unit,int human_only)
 
 {
   int result;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr best_unit;
+  int y2;
+  int x2;
+  int pass;
+  int dist;
+  int prev_active;
+  int best_dist;
   
   best_dist = 9999;
   best_unit = -1;
@@ -10957,13 +10502,6 @@ iptr __cdecl unit_find_nearest_selectable(iptr unit,int human_only)
 #undef human_civ
 #undef map_cursor_x
 #undef map_cursor_y
-#undef best_unit
-#undef y2
-#undef x2
-#undef pass
-#undef dist
-#undef prev_active
-#undef best_dist
 
 /* 005b6787 auto */
 void __cdecl unit_exhaust_moves(iptr unit)
@@ -10977,13 +10515,12 @@ void __cdecl unit_exhaust_moves(iptr unit)
 }
 
 /* 005b67af auto */
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define nearest (*(iptr *)(frame_ + FRAME_OFF(4)))
 iptr __cdecl unit_find_nearest(i32 target_x,i32 target_y,iptr owner_civ,iptr exclude_unit)
 
 {
   int dist;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr nearest;
   
   nearest = -1;
   unit_nearest_dist = 9999;
@@ -10999,8 +10536,6 @@ iptr __cdecl unit_find_nearest(i32 target_x,i32 target_y,iptr owner_civ,iptr exc
   }
   return nearest;
 }
-#undef unit
-#undef nearest
 
 /* 005b6898 auto */
 int __cdecl unit_home_city_name(iptr unit)
@@ -11046,25 +10581,24 @@ unit_dlg_draw_sprite_cb(i32 dlg,iptr sprite,iptr unit,i32 left,int x,
 }
 
 /* 005b6aea auto */
-#define city (*(uint *)(frame_ + FRAME_OFF(4)))
-#define count (*(int *)(frame_ + FRAME_OFF(12)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(16)))
-#define sprite (*(Sprite *)(frame_ + FRAME_OFF(772)))
-#define seh_handler (*(i32 *)(frame_ + FRAME_OFF(832)))
-#define seh_scope (*(i8 * *)(frame_ + FRAME_OFF(836)))
-#define eh_state (*(uint *)(frame_ + FRAME_OFF(840)))
 i32 __cdecl unit_stack_select_dialog(iptr unit,iptr title,int allow_cancel)
 
 {
   iptr adjective;
   i32 choice;
-  i8 frame_[FRAME_OFF(848)] __attribute__((aligned(8)));  /* original stack frame */
+  uint city;
+  int count;
+  Dialog dialog2;
+  Sprite sprite;
+  i32 seh_handler;
+  i8 *seh_scope;
+  uint eh_state;
   
   eh_state = 0xffffffff;
   sprite_init(&sprite);
   eh_state = 0;
   dialog_ctor(&dialog2,0x4000);
-  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),1);
+  eh_state = (eh_state & 0xffffff00 | (byte)(1));
   sprite_create_solid(&sprite,0x42,0x30,0);
   dlg_unit_sprite_zoom = 0xffffffff;
   dlg_reset(&dialog2,0x20001 - (uint)(allow_cancel == 0));
@@ -11117,18 +10651,9 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,iptr title,int allow_cancel)
   /* inlined unwind funclet 005b6dab */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   return choice;
 }
-#undef city
-#undef count
-#undef dialog2
-#undef sprite
-#undef seh_handler
-#undef seh_scope
-#undef eh_state
 
 /* 005b9179 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define civ (*(int *)(frame_ + FRAME_OFF(0)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl nuclear_blast(iptr center_x,int center_y)
 
 {
@@ -11140,7 +10665,8 @@ void __cdecl nuclear_blast(iptr center_x,int center_y)
   i32 improvements2;
   uint rnd;
   uint sign;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
+  iptr dir;
   
   y = map_in_bounds(center_x,center_y);
   if (y != 0) {
@@ -11204,16 +10730,13 @@ void __cdecl nuclear_blast(iptr center_x,int center_y)
   return;
 }
 #undef human_civ
-#undef civ
-#undef dir
 
 /* 005badf0 auto */
-#define end (*(char * *)(frame_ + FRAME_OFF(0)))
-#define buf (*(char (*)[80])(frame_ + FRAME_OFF(4)))
 char * __cdecl path_join_upper(char *dest,iptr dir,i32 filename)
 
 {
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  char *end;
+  char buf[80];
   
   crt_strcpy(buf,dir);
   for (end = buf; *end != '\0'; end++) {
@@ -11226,5 +10749,3 @@ char * __cdecl path_join_upper(char *dest,iptr dir,i32 filename)
   __strupr(dest);
   return dest;
 }
-#undef end
-#undef buf

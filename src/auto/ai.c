@@ -3,7 +3,6 @@
 #include "auto_common.h"
 
 /* 00442885 auto */
-#define dir (*(uptr *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl ai_city_touches_landmass(iptr city,int landmass)
 
 {
@@ -13,7 +12,7 @@ i32 __cdecl ai_city_touches_landmass(iptr city,int landmass)
   i32 result;
   iptr x;
   int check;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr dir;
   
   x2 = cities[city].x;
   y2 = cities[city].y;
@@ -39,21 +38,8 @@ i32 __cdecl ai_city_touches_landmass(iptr city,int landmass)
   }
   return result;
 }
-#undef dir
 
 /* 004bdb2c auto */
-#define size_needed (*(uint *)(frame_ + FRAME_OFF(4)))
-#define civilize_mod (*(int *)(frame_ + FRAME_OFF(8)))
-#define free_continent (*(int *)(frame_ + FRAME_OFF(12)))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define continent (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define max_size (*(int *)(frame_ + FRAME_OFF(28)))
-#define advance2 (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define wonder (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(44)))
-#define expand_bonus (*(uint *)(frame_ + FRAME_OFF(48)))
-#define value (*(int *)(frame_ + FRAME_OFF(56)))
 int __cdecl ai_advance_value(iptr civ,iptr advance)
 
 {
@@ -64,7 +50,18 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
   iptr has_prereq;
   int check;
   int city2;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  uint size_needed;
+  int civilize_mod;
+  int free_continent;
+  iptr improvement;
+  iptr city;
+  iptr continent;
+  int max_size;
+  iptr advance2;
+  iptr wonder;
+  iptr civ2;
+  uint expand_bonus;
+  int value;
   
   civilize_mod = (int)leaders[civs[civ].tribe].civilize;
   if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) && (-1 < civilize_mod)) {
@@ -427,18 +424,6 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
   }
   return value;
 }
-#undef size_needed
-#undef civilize_mod
-#undef free_continent
-#undef improvement
-#undef city
-#undef continent
-#undef max_size
-#undef advance2
-#undef wonder
-#undef civ2
-#undef expand_bonus
-#undef value
 
 /* 004f03b7 auto */
 #define city_tile_job_found (*(i32 *)((u8 *)&g.d_0062ee0c))
@@ -448,11 +433,6 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
 #define path_owner_civ (*(i32 *)((u8 *)&g.d_0062d044))
 #define path_road_planning (*(i32 *)((u8 *)&g.d_0062d040))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define steps (*(int *)(frame_ + FRAME_OFF(4)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(20)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define pass (*(int *)(frame_ + FRAME_OFF(36)))
 i32 __cdecl ai_find_road_link_tile(iptr city)
 
 {
@@ -466,7 +446,11 @@ i32 __cdecl ai_find_road_link_tile(iptr city)
   int dir;
   uint tile_imps;
   byte *tile;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city2;
+  int steps;
+  int y2;
+  int x2;
+  int pass;
   
   landmass = tile_land_landmass((int)cities[city].x,(int)cities[city].y);
   civ = (int)cities[city].owner;
@@ -540,18 +524,12 @@ i32 __cdecl ai_find_road_link_tile(iptr city)
 #undef path_goal_y
 #undef path_owner_civ
 #undef path_road_planning
-#undef city2
-#undef steps
-#undef y2
-#undef x2
-#undef pass
 
 /* 00531287 auto */
-#define ai_role (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl ai_unit_role(iptr unit)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int ai_role;
   
   ai_role = (int)(char)unit_types[units[unit].type].role;
   if ((ai_role == 5) && ((units[unit].flags & 0x200) != 0)) {
@@ -559,15 +537,8 @@ int __cdecl ai_unit_role(iptr unit)
   }
   return ai_role;
 }
-#undef ai_role
 
 /* 005312e4 auto */
-#define best_dir (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define dir2 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define owner_byte (*(byte *)(frame_ + FRAME_OFF(28)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(36)))
-#define score (*(int *)(frame_ + FRAME_OFF(40)))
 iptr __cdecl ai_ship_best_landing_dir(iptr unit)
 
 {
@@ -579,7 +550,12 @@ iptr __cdecl ai_ship_best_landing_dir(iptr unit)
   int y;
   iptr x;
   int owner_civ;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr best_dir;
+  iptr dir2;
+  byte owner_byte;
+  iptr dir;
+  int best_score;
+  int score;
   
   x3 = units[unit].x;
   y3 = units[unit].y;
@@ -619,18 +595,8 @@ iptr __cdecl ai_ship_best_landing_dir(iptr unit)
   }
   return best_dir;
 }
-#undef best_dir
-#undef dir2
-#undef owner_byte
-#undef dir
-#undef best_score
-#undef score
 
 /* 00531653 auto */
-#define dest_y (*(int *)(frame_ + FRAME_OFF(4)))
-#define dest_x (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define offset (*(iptr *)(frame_ + FRAME_OFF(32)))
 void __cdecl ai_ship_goto_near_shore(iptr unit,i32 goto_mode,iptr x,int y)
 
 {
@@ -642,7 +608,10 @@ void __cdecl ai_ship_goto_near_shore(iptr unit,i32 goto_mode,iptr x,int y)
   int y2;
   iptr x2;
   int check;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int dest_y;
+  iptr dest_x;
+  iptr dir;
+  iptr offset;
   
   dest_x = x;
   dest_y = y;
@@ -673,54 +642,12 @@ void __cdecl ai_ship_goto_near_shore(iptr unit,i32 goto_mode,iptr x,int y)
   unit_set_goto(unit,goto_mode,dest_x,dest_y);
   return;
 }
-#undef dest_y
-#undef dest_x
-#undef dir
-#undef offset
 
 /* 0053184d auto */
 #define city_calc_cached_id (*(i32 *)((u8 *)&g.d_0062ee08))
 #define city_shield_rows (*(int *)((u8 *)&g.d_006a657c))
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
-#define density (*(int *)(frame_ + FRAME_OFF(0)))
-#define unit (*(uptr *)(frame_ + FRAME_OFF(20)))
-#define settler_divisor (*(int *)(frame_ + FRAME_OFF(28)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define attack_count (*(int *)(frame_ + FRAME_OFF(40)))
-#define goal_weight (*(int (*)[48])(frame_ + FRAME_OFF(44)))
-#define is_human (*(uint *)(frame_ + FRAME_OFF(236)))
-#define continent (*(iptr *)(frame_ + FRAME_OFF(240)))
-#define unit_type (*(uptr *)(frame_ + FRAME_OFF(244)))
-#define old_policy (*(uint *)(frame_ + FRAME_OFF(248)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(252)))
-#define x3 (*(int *)(frame_ + FRAME_OFF(256)))
-#define base_density (*(int *)(frame_ + FRAME_OFF(260)))
-#define ai_role (*(int *)(frame_ + FRAME_OFF(264)))
-#define scenario_mode (*(int *)(frame_ + FRAME_OFF(268)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(272)))
-#define crowded (*(uint *)(frame_ + FRAME_OFF(276)))
-#define settler_count (*(int (*)[64])(frame_ + FRAME_OFF(280)))
-#define done (*(int *)(frame_ + FRAME_OFF(536)))
-#define rival_military (*(int *)(frame_ + FRAME_OFF(540)))
-#define threat_count (*(int *)(frame_ + FRAME_OFF(544)))
-#define settlers_total (*(int *)(frame_ + FRAME_OFF(548)))
-#define settle_goals (*(int (*)[64])(frame_ + FRAME_OFF(552)))
-#define wonder (*(int *)(frame_ + FRAME_OFF(808)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(812)))
-#define civ2 (*(uptr *)(frame_ + FRAME_OFF(816)))
-#define defend_count (*(int *)(frame_ + FRAME_OFF(820)))
-#define goal_dist (*(int *)(frame_ + FRAME_OFF(824)))
-#define goal_idx (*(iptr *)(frame_ + FRAME_OFF(828)))
-#define rival_cities (*(int *)(frame_ + FRAME_OFF(832)))
-#define goal (*(iptr *)(frame_ + FRAME_OFF(836)))
-#define city4 (*(iptr *)(frame_ + FRAME_OFF(840)))
-#define land_city_count (*(int *)(frame_ + FRAME_OFF(844)))
-#define best_dist (*(int *)(frame_ + FRAME_OFF(848)))
-#define city3 (*(iptr *)(frame_ + FRAME_OFF(852)))
-#define group (*(iptr *)(frame_ + FRAME_OFF(856)))
-#define best_goal (*(iptr *)(frame_ + FRAME_OFF(860)))
-#define settler_quota (*(int *)(frame_ + FRAME_OFF(864)))
 void __cdecl ai_civ_turn_assess(uptr civ)
 
 {
@@ -738,7 +665,44 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   uptr city5;
   uint tile_imps;
   i32 imps;
-  i8 frame_[FRAME_OFF(872)] __attribute__((aligned(8)));  /* original stack frame */
+  int density;
+  uptr unit;
+  int settler_divisor;
+  iptr city;
+  int attack_count;
+  int goal_weight[48];
+  uint is_human;
+  iptr continent;
+  uptr unit_type;
+  uint old_policy;
+  int y2;
+  int x3;
+  int base_density;
+  int ai_role;
+  int scenario_mode;
+  int x2;
+  uint crowded;
+  int settler_count[64];
+  int done;
+  int rival_military;
+  int threat_count;
+  int settlers_total;
+  int settle_goals[64];
+  int wonder;
+  int y3;
+  uptr civ2;
+  int defend_count;
+  int goal_dist;
+  iptr goal_idx;
+  int rival_cities;
+  iptr goal;
+  iptr city4;
+  int land_city_count;
+  int best_dist;
+  iptr city3;
+  iptr group;
+  iptr best_goal;
+  int settler_quota;
   
   settlers_total = 0;
   scenario_mode = 0;
@@ -1459,65 +1423,11 @@ LAB_00534c18:
 #undef city_shield_rows
 #undef human_civ
 #undef scenario_flags
-#undef density
-#undef unit
-#undef settler_divisor
-#undef city
-#undef attack_count
-#undef goal_weight
-#undef is_human
-#undef continent
-#undef unit_type
-#undef old_policy
-#undef y2
-#undef x3
-#undef base_density
-#undef ai_role
-#undef scenario_mode
-#undef x2
-#undef crowded
-#undef settler_count
-#undef done
-#undef rival_military
-#undef threat_count
-#undef settlers_total
-#undef settle_goals
-#undef wonder
-#undef y3
-#undef civ2
-#undef defend_count
-#undef goal_dist
-#undef goal_idx
-#undef rival_cities
-#undef goal
-#undef city4
-#undef land_city_count
-#undef best_dist
-#undef city3
-#undef group
-#undef best_goal
-#undef settler_quota
 
 /* 005351aa auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define step_dy (*(int *)(frame_ + FRAME_OFF(0)))
-#define step_dx (*(int *)(frame_ + FRAME_OFF(4)))
-#define abs_dx (*(uint *)(frame_ + FRAME_OFF(8)))
-#define dy_toward (*(int *)(frame_ + FRAME_OFF(20)))
-#define x3 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define ransom (*(int *)(frame_ + FRAME_OFF(52)))
-#define best_dir (*(iptr *)(frame_ + FRAME_OFF(72)))
-#define civ3 (*(int *)(frame_ + FRAME_OFF(84)))
-#define line (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define sea_body (*(int *)(frame_ + FRAME_OFF(108)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(112)))
-#define civ_byte (*(byte *)(frame_ + FRAME_OFF(116)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(120)))
-#define score (*(int *)(frame_ + FRAME_OFF(124)))
 i32 __cdecl ai_barbarian_unit_move(void)
 
 {
@@ -1545,7 +1455,22 @@ i32 __cdecl ai_barbarian_unit_move(void)
   i32 misc;
   uptr unit_type;
   bool at_city;
-  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  int step_dy;
+  int step_dx;
+  uint abs_dx;
+  int dy_toward;
+  uint x3;
+  iptr city2;
+  iptr city;
+  int ransom;
+  iptr best_dir;
+  int civ3;
+  iptr line;
+  int sea_body;
+  iptr dir;
+  byte civ_byte;
+  int best_score;
+  int score;
   
   best_dir = 8;
   unit = (iptr)game.active_unit;
@@ -2020,25 +1945,8 @@ LAB_0053692c:
 #undef autoplay_active
 #undef human_civ
 #undef text_buffer
-#undef step_dy
-#undef step_dx
-#undef abs_dx
-#undef dy_toward
-#undef x3
-#undef city2
-#undef city
-#undef ransom
-#undef best_dir
-#undef civ3
-#undef line
-#undef sea_body
-#undef dir
-#undef civ_byte
-#undef best_score
-#undef score
 
 /* 005369f3 auto */
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl ai_transports_raid_empty_city(iptr city)
 
 {
@@ -2047,7 +1955,7 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
   short y;
   int civ;
   int max_moves;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
   
   x = cities[city].x;
   y = cities[city].y;
@@ -2074,17 +1982,15 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
   }
   return;
 }
-#undef unit
 
 /* 00536bc9 auto */
-#define quota (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define remaining (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define weight (*(int *)(frame_ + FRAME_OFF(16)))
 int __cdecl ai_continent_defense_quota(iptr civ,iptr continent)
 
 {
   uint batch;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 quota;
+  i32 remaining;
+  int weight;
   
   quota = 0;
   remaining = (uint)civs[civ].continent_cities[continent];
@@ -2100,18 +2006,8 @@ int __cdecl ai_continent_defense_quota(iptr civ,iptr continent)
   } while ((remaining != 0) && (0 < weight));
   return quota;
 }
-#undef quota
-#undef remaining
-#undef weight
 
 /* 00536c4c auto */
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define unit2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(28)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(32)))
-#define city3 (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define score (*(int *)(frame_ + FRAME_OFF(40)))
 i32 __cdecl ai_nuke_pick_target(iptr unit)
 
 {
@@ -2123,7 +2019,13 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
   int y;
   iptr x;
   int owner_civ;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city2;
+  iptr city;
+  int unit2;
+  uptr dir;
+  int best_score;
+  iptr city3;
+  int score;
   
   civ = (iptr)units[unit].owner;
   best_score = -1;
@@ -2218,32 +2120,10 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
     city++;
   } while( true );
 }
-#undef city2
-#undef city
-#undef unit2
-#undef dir
-#undef best_score
-#undef city3
-#undef score
 
 /* 00537331 auto */
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
 #define scenario_objective_civ (*(short *)((u8 *)&g.d_0064bcba))
-#define x3 (*(int *)(frame_ + FRAME_OFF(4)))
-#define unit3 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define best_threat (*(int *)(frame_ + FRAME_OFF(24)))
-#define home_dist (*(int *)(frame_ + FRAME_OFF(28)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define threat_score (*(int *)(frame_ + FRAME_OFF(56)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(60)))
-#define city_dist (*(int *)(frame_ + FRAME_OFF(68)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(72)))
-#define defense_power (*(int *)(frame_ + FRAME_OFF(76)))
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(80)))
-#define range_left (*(int *)(frame_ + FRAME_OFF(84)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(88)))
-#define nearest_city (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define score (*(int *)(frame_ + FRAME_OFF(96)))
 i32 __cdecl
 ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int mode,iptr out_flag,
             int may_go_home,iptr landmass,int set_flag)
@@ -2268,7 +2148,21 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int mode,iptr out_flag
   iptr x2;
   uint move_mult;
   iptr unit2;
-  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  int x3;
+  iptr unit3;
+  int best_threat;
+  int home_dist;
+  iptr city;
+  int threat_score;
+  int y3;
+  int city_dist;
+  uptr dir;
+  int defense_power;
+  iptr city2;
+  int range_left;
+  int best_score;
+  iptr nearest_city;
+  int score;
   
   unit2 = unit;
   civ2 = units[unit].owner;
@@ -2644,102 +2538,10 @@ LAB_00538277:
 }
 #undef scenario_flags
 #undef scenario_objective_civ
-#undef x3
-#undef unit3
-#undef best_threat
-#undef home_dist
-#undef city
-#undef threat_score
-#undef y3
-#undef city_dist
-#undef dir
-#undef defense_power
-#undef city2
-#undef range_left
-#undef best_score
-#undef nearest_city
-#undef score
 
 /* 00538a29 auto */
 #define mp_double_production (*(short *)((u8 *)&g.d_00654fac))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define cargo_target (*(int *)(frame_ + FRAME_OFF(0)))
-#define x4 (*(uint *)(frame_ + FRAME_OFF(12)))
-#define work_flags (*(uint *)(frame_ + FRAME_OFF(24)))
-#define goal_match (*(int *)(frame_ + FRAME_OFF(28)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define city6 (*(uptr *)(frame_ + FRAME_OFF(40)))
-#define in_enemy_zoc (*(int *)(frame_ + FRAME_OFF(48)))
-#define civ4 (*(int *)(frame_ + FRAME_OFF(60)))
-#define unit_domain (*(int *)(frame_ + FRAME_OFF(68)))
-#define trade_target (*(int *)(frame_ + FRAME_OFF(72)))
-#define city (*(uptr *)(frame_ + FRAME_OFF(84)))
-#define needed_defenders (*(uptr *)(frame_ + FRAME_OFF(108)))
-#define is_attack (*(int *)(frame_ + FRAME_OFF(112)))
-#define sea_south (*(int *)(frame_ + FRAME_OFF(116)))
-#define ally_civ (*(uptr *)(frame_ + FRAME_OFF(120)))
-#define y4 (*(int *)(frame_ + FRAME_OFF(124)))
-#define near_landmass (*(int *)(frame_ + FRAME_OFF(132)))
-#define max_score (*(int *)(frame_ + FRAME_OFF(140)))
-#define fort_need (*(int *)(frame_ + FRAME_OFF(148)))
-#define ally_territory (*(int *)(frame_ + FRAME_OFF(152)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(160)))
-#define ai_role (*(uint *)(frame_ + FRAME_OFF(164)))
-#define tile_count (*(int *)(frame_ + FRAME_OFF(168)))
-#define needs_units (*(int *)(frame_ + FRAME_OFF(172)))
-#define damage_level (*(uint *)(frame_ + FRAME_OFF(176)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(180)))
-#define x3 (*(iptr *)(frame_ + FRAME_OFF(184)))
-#define unit4 (*(uptr *)(frame_ + FRAME_OFF(188)))
-#define best_dir (*(uptr *)(frame_ + FRAME_OFF(192)))
-#define flag (*(uint *)(frame_ + FRAME_OFF(196)))
-#define explore_flag (*(i32 *)(frame_ + FRAME_OFF(200)))
-#define on_fortress (*(uint *)(frame_ + FRAME_OFF(204)))
-#define sea_north (*(int *)(frame_ + FRAME_OFF(208)))
-#define goto_city (*(int *)(frame_ + FRAME_OFF(212)))
-#define role_count (*(int *)(frame_ + FRAME_OFF(216)))
-#define attack_bonus (*(int *)(frame_ + FRAME_OFF(220)))
-#define room_aboard (*(uint *)(frame_ + FRAME_OFF(224)))
-#define has_orders (*(int *)(frame_ + FRAME_OFF(228)))
-#define type_flags (*(u32 *)(frame_ + FRAME_OFF(232)))
-#define defender_count (*(int *)(frame_ + FRAME_OFF(236)))
-#define unit5 (*(iptr *)(frame_ + FRAME_OFF(240)))
-#define retried (*(int *)(frame_ + FRAME_OFF(244)))
-#define hold_pos (*(int *)(frame_ + FRAME_OFF(248)))
-#define x6 (*(int *)(frame_ + FRAME_OFF(252)))
-#define city4 (*(uptr *)(frame_ + FRAME_OFF(256)))
-#define home_dist (*(int *)(frame_ + FRAME_OFF(260)))
-#define terrain2 (*(uptr *)(frame_ + FRAME_OFF(264)))
-#define dir2 (*(uptr *)(frame_ + FRAME_OFF(268)))
-#define civ2 (*(uptr *)(frame_ + FRAME_OFF(272)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(276)))
-#define cand_score (*(int *)(frame_ + FRAME_OFF(280)))
-#define is_ocean (*(uint *)(frame_ + FRAME_OFF(284)))
-#define explore (*(int *)(frame_ + FRAME_OFF(288)))
-#define attack_cost (*(int *)(frame_ + FRAME_OFF(292)))
-#define dir (*(uptr *)(frame_ + FRAME_OFF(296)))
-#define civ3 (*(uptr *)(frame_ + FRAME_OFF(300)))
-#define own_landmass (*(int *)(frame_ + FRAME_OFF(304)))
-#define unit3 (*(iptr *)(frame_ + FRAME_OFF(308)))
-#define will_attack (*(int *)(frame_ + FRAME_OFF(312)))
-#define sea_east (*(int *)(frame_ + FRAME_OFF(316)))
-#define is_guard (*(int *)(frame_ + FRAME_OFF(320)))
-#define city5 (*(uptr *)(frame_ + FRAME_OFF(324)))
-#define city2 (*(uptr *)(frame_ + FRAME_OFF(328)))
-#define own_dist (*(int *)(frame_ + FRAME_OFF(332)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(336)))
-#define freed_count (*(int *)(frame_ + FRAME_OFF(340)))
-#define divisor (*(int *)(frame_ + FRAME_OFF(344)))
-#define target_policy (*(uint *)(frame_ + FRAME_OFF(348)))
-#define sea_west (*(int *)(frame_ + FRAME_OFF(352)))
-#define race_behind (*(int *)(frame_ + FRAME_OFF(356)))
-#define no_moves (*(int *)(frame_ + FRAME_OFF(360)))
-#define here_landmass (*(int *)(frame_ + FRAME_OFF(364)))
-#define score (*(int *)(frame_ + FRAME_OFF(368)))
-#define tile_flags (*(uint *)(frame_ + FRAME_OFF(372)))
-#define attack_value (*(int *)(frame_ + FRAME_OFF(376)))
-#define tasks_mask (*(uint *)(frame_ + FRAME_OFF(380)))
-#define ocean_count (*(int *)(frame_ + FRAME_OFF(384)))
 i32 __cdecl ai_unit_choose_orders(void)
 
 {
@@ -2778,7 +2580,83 @@ i32 __cdecl ai_unit_choose_orders(void)
   bool trade_drop;
   i32 arg_hi;
   iptr unit2;
-  i8 frame_[FRAME_OFF(392)] __attribute__((aligned(8)));  /* original stack frame */
+  int cargo_target;
+  uint x4;
+  uint work_flags;
+  int goal_match;
+  iptr unit;
+  uptr city6;
+  int in_enemy_zoc;
+  int civ4;
+  int unit_domain;
+  int trade_target;
+  uptr city;
+  uptr needed_defenders;
+  int is_attack;
+  int sea_south;
+  uptr ally_civ;
+  int y4;
+  int near_landmass;
+  int max_score;
+  int fort_need;
+  int ally_territory;
+  int y3;
+  uint ai_role;
+  int tile_count;
+  int needs_units;
+  uint damage_level;
+  int x2;
+  iptr x3;
+  uptr unit4;
+  uptr best_dir;
+  uint flag;
+  i32 explore_flag;
+  uint on_fortress;
+  int sea_north;
+  int goto_city;
+  int role_count;
+  int attack_bonus;
+  uint room_aboard;
+  int has_orders;
+  u32 type_flags;
+  int defender_count;
+  iptr unit5;
+  int retried;
+  int hold_pos;
+  int x6;
+  uptr city4;
+  int home_dist;
+  uptr terrain2;
+  uptr dir2;
+  uptr civ2;
+  uint y2;
+  int cand_score;
+  uint is_ocean;
+  int explore;
+  int attack_cost;
+  uptr dir;
+  uptr civ3;
+  int own_landmass;
+  iptr unit3;
+  int will_attack;
+  int sea_east;
+  int is_guard;
+  uptr city5;
+  uptr city2;
+  int own_dist;
+  int best_score;
+  int freed_count;
+  int divisor;
+  uint target_policy;
+  int sea_west;
+  int race_behind;
+  int no_moves;
+  int here_landmass;
+  int score;
+  uint tile_flags;
+  int attack_value;
+  uint tasks_mask;
+  int ocean_count;
   defender_count = 0x108; needed_defenders = 0x64a8c19c; cand_score = 0x3bd; best_score = 0; goal_match = 4;  /* stale stack the original reads (FRAME_PRESETS) */
   
   near_landmass = -1;
@@ -5531,92 +5409,12 @@ LAB_00541001:
 }
 #undef mp_double_production
 #undef scenario_flags
-#undef cargo_target
-#undef x4
-#undef work_flags
-#undef goal_match
-#undef unit
-#undef city6
-#undef in_enemy_zoc
-#undef civ4
-#undef unit_domain
-#undef trade_target
-#undef city
-#undef needed_defenders
-#undef is_attack
-#undef sea_south
-#undef ally_civ
-#undef y4
-#undef near_landmass
-#undef max_score
-#undef fort_need
-#undef ally_territory
-#undef y3
-#undef ai_role
-#undef tile_count
-#undef needs_units
-#undef damage_level
-#undef x2
-#undef x3
-#undef unit4
-#undef best_dir
-#undef flag
-#undef explore_flag
-#undef on_fortress
-#undef sea_north
-#undef goto_city
-#undef role_count
-#undef attack_bonus
-#undef room_aboard
-#undef has_orders
-#undef type_flags
-#undef defender_count
-#undef unit5
-#undef retried
-#undef hold_pos
-#undef x6
-#undef city4
-#undef home_dist
-#undef terrain2
-#undef dir2
-#undef civ2
-#undef y2
-#undef cand_score
-#undef is_ocean
-#undef explore
-#undef attack_cost
-#undef dir
-#undef civ3
-#undef own_landmass
-#undef unit3
-#undef will_attack
-#undef sea_east
-#undef is_guard
-#undef city5
-#undef city2
-#undef own_dist
-#undef best_score
-#undef freed_count
-#undef divisor
-#undef target_policy
-#undef sea_west
-#undef race_behind
-#undef no_moves
-#undef here_landmass
-#undef score
-#undef tile_flags
-#undef attack_value
-#undef tasks_mask
-#undef ocean_count
 
 /* 00543cd6 auto */
 #define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
 #define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
 #define scenario_objective_civ (*(short *)((u8 *)&g.d_0064bcba))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define order_steps (*(int *)(frame_ + FRAME_OFF(4)))
-#define pass (*(int *)(frame_ + FRAME_OFF(12)))
 void __cdecl ai_process_civ_units(void)
 
 {
@@ -5624,7 +5422,9 @@ void __cdecl ai_process_civ_units(void)
   i16 prev_num_units;
   int civ;
   int result;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int order_steps;
+  int pass;
   
   civ = (int)game.turn_civ;
   naval_first_turn = false;
@@ -5689,22 +5489,18 @@ void __cdecl ai_process_civ_units(void)
 #undef player_has_quit
 #undef scenario_flags
 #undef scenario_objective_civ
-#undef unit
-#undef order_steps
-#undef pass
 
 /* 0057febc auto */
 #define path_goal_x (*(iptr *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(iptr *)((u8 *)&g.d_00673fa4))
 #define path_owner_civ (*(int *)((u8 *)&g.d_0062d044))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
 
 {
   int civ2;
   int target_landmass;
   int result;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
   
   unit = 0;
   while( true ) {
@@ -5757,20 +5553,18 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
 #undef path_goal_x
 #undef path_goal_y
 #undef path_owner_civ
-#undef unit
 
 /* 00598d45 auto */
-#define own_progress (*(int *)(frame_ + FRAME_OFF(0)))
-#define part (*(int *)(frame_ + FRAME_OFF(8)))
-#define rival_progress (*(int *)(frame_ + FRAME_OFF(12)))
-#define civ2 (*(int *)(frame_ + FRAME_OFF(16)))
 i32 __cdecl ai_spaceship_race_behind(iptr civ)
 
 {
   iptr race_active;
   iptr launched;
   int result;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int own_progress;
+  int part;
+  int rival_progress;
+  int civ2;
   
   race_active = spaceship_race_active();
   if ((((race_active != 0) && (launched = civ_spaceship_launched(civ), launched == 0)) &&
@@ -5807,13 +5601,8 @@ i32 __cdecl ai_spaceship_race_behind(iptr civ)
   }
   return 0;
 }
-#undef own_progress
-#undef part
-#undef rival_progress
-#undef civ2
 
 /* 005b68f6 auto */
-#define level (*(iptr *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl ai_tile_improve_choice(iptr civ,iptr x,i32 y)
 
 {
@@ -5821,7 +5610,7 @@ i32 __cdecl ai_tile_improve_choice(iptr civ,iptr x,i32 y)
   int result;
   uint improvements_mask;
   uint terrain;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr level;
   
   result = tile_city_owner(x,y);
   if (((result < 0) && (improvements_mask = tile_improvements(x,y), (improvements_mask & 8) == 0)) &&
@@ -5848,4 +5637,3 @@ i32 __cdecl ai_tile_improve_choice(iptr civ,iptr x,i32 y)
   }
   return 0;
 }
-#undef level

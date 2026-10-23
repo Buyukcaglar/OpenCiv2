@@ -76,29 +76,28 @@ void __thiscall ddwin_dtor(void *this)
 /* 0x0055c3d3: "PICKGOVT" dialog - lets civ param_1 pick a government
    (param_2 != 0: all of them, including anarchy) and applies the choice. */
 #define DAT_006d1da0 (*(int *)((u8 *)&g.d_006d1da0))
-#define local_30c (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_308 (*(i8 (*)[756])(frame_ + FRAME_OFF(4)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(760)))
 void __cdecl civ_select_government_dialog(int param_1, int param_2)
 {
     i32 uVar2;
-    i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+    int local_30c;
+    Dialog local_308;
+    int local_14;
 
-    dialog_ctor(local_308, 0x4000);
+    dialog_ctor(&local_308, 0x4000);
     if ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) == 0) {
         /* nothing */
     }
     else if ((game.multiplayer < 3) || (DAT_006d1da0 == param_1)) {
-        dialog_load_game_text(local_308, s_PICKGOVT_00633acc);
+        dialog_load_game_text(&local_308, s_PICKGOVT_00633acc);
         for (local_14 = (param_2 != 0) ? 0 : 1; local_14 < 7; local_14 = local_14 + 1) {
             /* (civ_can_choose_government's last 19 parameters are a decompiler artifact) */
             if ((param_2 != 0) || (civ_can_choose_government(param_1, local_14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) != 0)) {
                 text_clear();
                 text_append_string_id(government_names[local_14]);
-                dialog_add_option(local_308, &text_buffer, local_14, 0);
+                dialog_add_option(&local_308, &text_buffer, local_14, 0);
             }
         }
-        local_30c = dlg_show_modal(local_308, 0);
+        local_30c = dlg_show_modal(&local_308, 0);
         if (-1 < local_30c) {
             civ_set_government(param_1, local_30c);
             snd_play_effect(0x14, 1, 0, 0);
@@ -124,52 +123,43 @@ void __cdecl civ_select_government_dialog(int param_1, int param_2)
                            param_2, 0, 0, 0, 0, 0, 0, 0);
     }
     /* funclet 0055c679 */
-    dialog_dtor(local_308);
+    dialog_dtor(&local_308);
 }
 #undef DAT_006d1da0
-#undef local_30c
-#undef local_308
-#undef local_14
 
 /* 0x00493e83: builds a temporary object, stores param_1 in it, runs it if
    its check succeeds, then destroys it. */
-#define local_1f8 (*(i8 (*)[476])(frame_ + FRAME_OFF(0)))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(476)))
 void __cdecl portrait_dlg_show(i32 param_1)
 {
     int iVar1;
-    i8 frame_[FRAME_OFF(504)] __attribute__((aligned(8)));  /* original stack frame */
+    PortraitDialog local_1f8;
 
-    portrait_dlg_ctor(local_1f8);
-    local_1c = param_1;
-    iVar1 = portrait_dlg_create(local_1f8);
+    portrait_dlg_ctor(&local_1f8);
+    local_1f8.portrait_civ = param_1;
+    iVar1 = portrait_dlg_create(&local_1f8);
     if (iVar1 != 0) {
-        portrait_dlg_run(local_1f8);
+        portrait_dlg_run(&local_1f8);
     }
     /* funclet 00493eeb: lea ecx,[ebp-0x1f4] */
-    portrait_dlg_dtor(local_1f8);
+    portrait_dlg_dtor(&local_1f8);
 }
-#undef local_1f8
-#undef local_1c
 
 /* 0x005e0863: builds a window with "OK"/"Cancel" buttons on the stack and
    tears it all down again; returns 0. */
-#define local_630 (*(i8 (*)[60])(frame_ + FRAME_OFF(0)))
-#define local_5f4 (*(i8 (*)[8])(frame_ + FRAME_OFF(60)))
-#define local_5ec (*(i8 (*)[1076])(frame_ + FRAME_OFF(68)))
-#define local_1b8 (*(i8 (*)[72])(frame_ + FRAME_OFF(1144)))
-#define local_170 (*(i8 (*)[204])(frame_ + FRAME_OFF(1216)))
-#define local_a4 (*(i8 (*)[60])(frame_ + FRAME_OFF(1420)))
-#define local_68 (*(i8 (*)[72])(frame_ + FRAME_OFF(1480)))
-#define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(1552)))
 i32 __cdecl FUN_005e0863(void)
 {
     int iVar1;
     int iVar2;
-    i8 frame_[FRAME_OFF(1584)] __attribute__((aligned(8)));  /* original stack frame */
+    i8 local_630[60];
+    i8 local_5f4[8];
+    i8 local_5ec[1076];
+    SurfaceWindow local_1b8;
+    i8 local_a4[60];
+    i8 local_68[72];
+    tagRECT local_20;
 
     palette_init(local_5ec);
-    surfwnd_ctor(local_1b8);
+    surfwnd_ctor(&local_1b8);
     font_init_empty(local_5f4);
     button_ctor(local_630);
     button_ctor(local_a4);
@@ -178,15 +168,15 @@ i32 __cdecl FUN_005e0863(void)
     ui_set_button_font(local_5f4);
     ui_set_default_font(local_5f4);
     SetRect(&local_20, 0, 0, 0x3c, 0x19);
-    iVar1 = surface_get_height(local_1b8);
+    iVar1 = surface_get_height(&local_1b8);
     iVar1 = iVar1 + -0x23;
-    iVar2 = surface_get_width(local_1b8);
+    iVar2 = surface_get_width(&local_1b8);
     OffsetRect(&local_20, iVar2 + -0x46, iVar1);
-    button_create(local_630, (i32)local_170, 0x65, (i32)&local_20,
+    button_create(local_630, (i32)local_1b8.window_2, 0x65, (i32)&local_20,
                        (i32)&DAT_00638d90);
     button_set_callback(local_630, (i32)dlg_radio_choice_button_cb);
     OffsetRect(&local_20, 0, -0x23);
-    button_create(local_a4, (i32)local_170, 0x66, (i32)&local_20,
+    button_create(local_a4, (i32)local_1b8.window_2, 0x66, (i32)&local_20,
                        (i32)s_Cancel_00638d94);
     button_set_callback(local_a4, (i32)dlg_radio_choice_button_cb);
     /* funclets 005e0a31..005e0a6a: destroy the locals in reverse order */
@@ -194,28 +184,19 @@ i32 __cdecl FUN_005e0863(void)
     ctrl_dtor(local_a4);
     ctrl_dtor(local_630);
     font_destroy(local_5f4);
-    surfwnd_dtor(local_1b8);
+    surfwnd_dtor(&local_1b8);
     palette_destroy(local_5ec);
     return 0;
 }
-#undef local_630
-#undef local_5f4
-#undef local_5ec
-#undef local_1b8
-#undef local_170
-#undef local_a4
-#undef local_68
-#undef local_20
 
 /* 0x004d53ab: loads picture 0x1f1 and cuts it into six button images
    (two rows of three; the second row's caption depends on the language). */
-#define local_68 (*(i8 (*)[72])(frame_ + FRAME_OFF(0)))
-#define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(72)))
 void __thiscall spaceship_wnd_make_button_sprites(void *this)
 {
     int iVar1;
     i32 uVar2;
-    i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+    i8 local_68[72];
+    tagRECT local_20;
 
     surface_ctor(local_68);
     gfx_set_text_color_index(0x8b);
@@ -260,5 +241,3 @@ void __thiscall spaceship_wnd_make_button_sprites(void *this)
     /* funclet 004d56ea: lea ecx,[ebp-0x64] */
     surface_dtor(local_68);
 }
-#undef local_68
-#undef local_20

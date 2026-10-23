@@ -19,13 +19,12 @@ void __cdecl win_pump_one_message(void)
 }
 
 /* 00414f02 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl int_pairs_bubble_sort(int count,iptr values,iptr keys)
 
 {
   i32 tmp;
   bool swapped;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   do {
     swapped = false;
@@ -43,7 +42,6 @@ void __cdecl int_pairs_bubble_sort(int count,iptr values,iptr keys)
   } while (swapped);
   return;
 }
-#undef i
 
 /* 00428cb0 auto */
 MemBlock * __thiscall memblock_ctor(MemBlock *this)
@@ -174,12 +172,11 @@ iptr __cdecl memblock_free(iptr block)
 }
 
 /* 00498159 auto */
-#define ptr (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl memblock_alloc(iptr block,uint size)
 
 {
   int lock_err;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 ptr;
   
   ptr = 0;
   if ((uint)*(ushort *)(block + 0x10) < (size & 0xffff)) {
@@ -194,21 +191,19 @@ int __cdecl memblock_alloc(iptr block,uint size)
   }
   return ptr;
 }
-#undef ptr
 
 /* 004b1396 auto */
-#define byte_ptr (*(byte * *)(frame_ + FRAME_OFF(0)))
-#define k (*(int *)(frame_ + FRAME_OFF(4)))
-#define word_ptr (*(ushort * *)(frame_ + FRAME_OFF(8)))
-#define j (*(int *)(frame_ + FRAME_OFF(12)))
-#define i (*(int *)(frame_ + FRAME_OFF(20)))
-#define dword_ptr (*(int * *)(frame_ + FRAME_OFF(28)))
-#define sum (*(int *)(frame_ + FRAME_OFF(32)))
 int __cdecl mem_checksum(iptr data,uint size)
 
 {
   uint sign;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  byte *byte_ptr;
+  int k;
+  ushort *word_ptr;
+  int j;
+  int i;
+  int *dword_ptr;
+  int sum;
   
   if (size == 0) {
     sum = 0;
@@ -240,13 +235,6 @@ int __cdecl mem_checksum(iptr data,uint size)
   }
   return sum;
 }
-#undef byte_ptr
-#undef k
-#undef word_ptr
-#undef j
-#undef i
-#undef dword_ptr
-#undef sum
 
 /* 004bb870 auto */
 #define error_last_alloc_failed (*(uint *)((u8 *)&g.d_00634814))
@@ -300,17 +288,16 @@ int __cdecl int_clamp_c(int value,int lo,int hi)
 
 /* 00554145 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define civ (*(uint *)(frame_ + FRAME_OFF(0)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(4)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(760)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(764)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(768)))
 i32 __cdecl dbg_pick_player(int include_barbarians)
 
 {
   iptr adjective;
   i32 choice;
-  i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+  uint civ;
+  Dialog dlg;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -331,11 +318,6 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
   return choice;
 }
 #undef human_civ
-#undef civ
-#undef dlg
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 0055add0 auto */
 i32 __stdcall win_main(i32 instance,i32 prev_instance,i32 cmd_line,i32 show_cmd)
@@ -371,12 +353,11 @@ i32 __cdecl mem_check_available(i32 size)
 }
 
 /* 00589d80 auto */
-#define index (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl err_register_cleanup_fn(iptr callback)
 
 {
   int slot;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int index;
   
   slot = fatal_cleanup_count;
   index = -1;
@@ -387,12 +368,8 @@ int __cdecl err_register_cleanup_fn(iptr callback)
   }
   return index;
 }
-#undef index
 
 /* 00589dc5 auto */
-#define i (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define line (*(char (*)[80])(frame_ + FRAME_OFF(8)))
-#define keep_going (*(int *)(frame_ + FRAME_OFF(88)))
 void __cdecl err_dump_text_file(iptr path)
 
 {
@@ -400,7 +377,9 @@ void __cdecl err_dump_text_file(iptr path)
   char *line_read;
   size_t len;
   int cmp;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
+  char line[80];
+  int keep_going;
   
   _File = (FILE *)file_open_path(path,(iptr)((u8 *)&g.d_0063481c));
   if (_File != (FILE *)0x0) {
@@ -428,19 +407,15 @@ void __cdecl err_dump_text_file(iptr path)
   }
   return;
 }
-#undef i
-#undef line
-#undef keep_going
 
 /* 00589ef8 auto */
-#define data2_text (*(char (*)[12])(frame_ + FRAME_OFF(4)))
-#define error_text (*(char (*)[80])(frame_ + FRAME_OFF(16)))
-#define module_text (*(char (*)[80])(frame_ + FRAME_OFF(96)))
-#define data1_text (*(char (*)[12])(frame_ + FRAME_OFF(176)))
 void __cdecl error_report(uint error_code,int module_id,iptr context,iptr data1,iptr data2)
 
 {
-  i8 frame_[FRAME_OFF(192)] __attribute__((aligned(8)));  /* original stack frame */
+  char data2_text[12];
+  char error_text[80];
+  char module_text[80];
+  char data1_text[12];
   
   if (context != 0) {
     crt_strcpy(&error_context_text,context);
@@ -454,22 +429,17 @@ void __cdecl error_report(uint error_code,int module_id,iptr context,iptr data1,
   err_fatal_exit((iptr)error_text,(iptr)module_text,(iptr)data1_text,(iptr)data2_text,error_code);
   return;
 }
-#undef data2_text
-#undef error_text
-#undef module_text
-#undef data1_text
 
 /* 0058a0ee auto */
 #define error_last_alloc_failed (*(int *)((u8 *)&g.d_00634814))
 #define error_last_open_failed (*(int *)((u8 *)&g.d_00634810))
 #define mem_last_alloc_size (*(long *)((u8 *)&g.d_00634818))
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define msg (*(i8 (*)[256])(frame_ + FRAME_OFF(4)))
 void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,iptr data2_text,i32 error_code)
 
 {
   size_t len;
-  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  i8 msg[256];
   
   crt_strcpy(msg,s_Error___00634844);
   crt_strcat(msg,error_text);
@@ -528,8 +498,6 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
 #undef error_last_alloc_failed
 #undef error_last_open_failed
 #undef mem_last_alloc_size
-#undef i
-#undef msg
 
 /* 0058ae20 auto */
 i32 __cdecl
@@ -624,12 +592,11 @@ int __cdecl coarse_wrap_x(int x)
 }
 
 /* 005ae296 auto */
-#define dist (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl dist_from_deltas(uint dx,uint dy)
 
 {
   int half_sum;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 dist;
   
   if ((int)dx < 1) {
     dx = ~dx + 1;
@@ -646,14 +613,12 @@ int __cdecl dist_from_deltas(uint dx,uint dy)
   }
   return dist;
 }
-#undef dist
 
 /* 005ae3ec auto */
-#define right_shift (*(i8 *)(frame_ + FRAME_OFF(0)))
 int __cdecl int_shift_signed(int value,int shift)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 right_shift;
   
   if (shift != 0) {
     if (shift < 1) {
@@ -669,15 +634,13 @@ int __cdecl int_shift_signed(int value,int shift)
   }
   return value;
 }
-#undef right_shift
 
 /* 005bb9c0 auto */
-#define msg (*(tagMSG *)(frame_ + FRAME_OFF(0)))
 void __cdecl win_drain_input_msgs(void)
 
 {
   BOOL BVar1;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  tagMSG msg;
   
   do {
     BVar1 = PeekMessageA(&msg,(HWND)0x0,0x200,0x209,1);
@@ -687,17 +650,15 @@ void __cdecl win_drain_input_msgs(void)
   } while (BVar1 != 0);
   return;
 }
-#undef msg
 
 /* 005bba4f auto */
 #define avi_idle_update_enabled (*(int *)((u8 *)&g.d_00637efc))
-#define msg (*(tagMSG *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl win_dispatch_one_message(void)
 
 {
   BOOL BVar1;
   i32 dispatched;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  tagMSG msg;
   
   BVar1 = PeekMessageA(&msg,(HWND)0x0,0,0,1);
   if (BVar1 == 0) {
@@ -715,15 +676,13 @@ i32 __cdecl win_dispatch_one_message(void)
   return dispatched;
 }
 #undef avi_idle_update_enabled
-#undef msg
 
 /* 005bbab8 auto */
-#define msg (*(tagMSG *)(frame_ + FRAME_OFF(0)))
 uint __cdecl win_dispatch_one_paint(void)
 
 {
   BOOL BVar1;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  tagMSG msg;
   
   BVar1 = PeekMessageA(&msg,(HWND)0x0,0xf,0xf,1);
   if (BVar1 != 0) {
@@ -732,7 +691,6 @@ uint __cdecl win_dispatch_one_paint(void)
   }
   return (uint)(BVar1 != 0);
 }
-#undef msg
 
 /* 005bbb0a auto */
 void __cdecl win_dispatch_all_messages(void)
@@ -761,12 +719,11 @@ void __cdecl win_dispatch_all_paints(void)
 }
 
 /* 005bbb76 auto */
-#define msg (*(tagMSG *)(frame_ + FRAME_OFF(0)))
 uint __cdecl win_dispatch_one_custom_msg(void)
 
 {
   BOOL BVar1;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  tagMSG msg;
   
   BVar1 = PeekMessageA(&msg,(HWND)0x0,0x3bd,0x3bd,1);
   if (BVar1 != 0) {
@@ -775,7 +732,6 @@ uint __cdecl win_dispatch_one_custom_msg(void)
   }
   return (uint)(BVar1 != 0);
 }
-#undef msg
 
 /* 005bbbce auto */
 #define avi_idle_update_enabled (*(int *)((u8 *)&g.d_00637efc))
@@ -853,85 +809,73 @@ i8 __cdecl dbg_log(iptr text)
 }
 
 /* 005d2279 auto */
-#define buf (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
 i8 __cdecl dbg_logf(iptr fmt,iptr arg)
 
 {
   i8 result;
-  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg);
   result = dbg_log_write(&dbg_log_file,(iptr)buf);
   return result;
 }
-#undef buf
 
 /* 005d22b7 auto */
-#define buf (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
 i8 __cdecl dbg_logf_int2(iptr fmt,i32 arg1,i32 arg2)
 
 {
   i8 result;
-  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg1,arg2);
   result = dbg_log_write(&dbg_log_file,(iptr)buf);
   return result;
 }
-#undef buf
 
 /* 005d22f9 auto */
-#define buf (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
 void __cdecl dbg_logf3(iptr fmt,iptr arg1,i32 arg2,i32 arg3)
 
 {
-  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg1,arg2,arg3);
   dbg_log_write(&dbg_log_file,(iptr)buf);
   return;
 }
-#undef buf
 
 /* 005d233f auto */
-#define buf (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
 void __cdecl dbg_logf_noret(iptr fmt,i32 arg)
 
 {
-  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg);
   dbg_log_write(&dbg_log_file,(iptr)buf);
   return;
 }
-#undef buf
 
 /* 005d237d auto */
-#define buf (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
 i8 __cdecl dbg_logf_str(iptr fmt,iptr str)
 
 {
   i8 result;
-  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  char buf[1024];
   
   _sprintf(buf,(char *)fmt,str);
   result = dbg_log_write(&dbg_log_file,(iptr)buf);
   return result;
 }
-#undef buf
 
 /* 005d23bb auto */
-#define buf (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
 void __cdecl dbg_logf_str_int(iptr fmt,iptr str,iptr value)
 
 {
-  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  char buf[1024];
   
   _sprintf(buf,(char *)fmt,str,value);
   dbg_log_write(&dbg_log_file,(iptr)buf);
   return;
 }
-#undef buf
 
 /* 005d246f auto */
 void * __thiscall dbg_log_file_ctor(void *this)
@@ -956,12 +900,11 @@ void __thiscall dbg_log_file_dtor(void *this)
 /* 005d24b3 auto */
 #define dbg_log_to_debugger (*(char *)((u8 *)&g.d_00638308))
 #define dbg_log_to_file (*(char *)((u8 *)&g.d_00638304))
-#define line (*(char (*)[1032])(frame_ + FRAME_OFF(4)))
 i8 __thiscall dbg_log_write(void *this,iptr text)
 
 {
   DWORD DVar1;
-  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  char line[1032];
   
   DVar1 = GetTickCount();
   _sprintf(line,s___5d__0063830c,(DVar1 - *(int *)this) / 1000);
@@ -976,7 +919,6 @@ i8 __thiscall dbg_log_write(void *this,iptr text)
 }
 #undef dbg_log_to_debugger
 #undef dbg_log_to_file
-#undef line
 
 /* 005dae00 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -1223,12 +1165,6 @@ SIZE_T __cdecl mem_handle_size(HGLOBAL handle)
 }
 
 /* 005dfb61 auto */
-#define out_end (*(byte * *)(frame_ + FRAME_OFF(0)))
-#define run_len (*(uint *)(frame_ + FRAME_OFF(4)))
-#define src (*(byte * *)(frame_ + FRAME_OFF(20)))
-#define out (*(byte * *)(frame_ + FRAME_OFF(24)))
-#define capacity2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define out_size (*(iptr *)(frame_ + FRAME_OFF(40)))
 iptr __cdecl mem_rle_decompress(iptr buf_ptr)
 
 {
@@ -1237,7 +1173,12 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
   byte *src_copy;
   iptr grown;
   int final_buf;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  byte *out_end;
+  uint run_len;
+  byte *src;
+  byte *out;
+  int capacity2;
+  iptr out_size;
   
   src_size = __msize(*(void **)buf_ptr);
   src_copy = operator_new(src_size);
@@ -1306,20 +1247,8 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
   }
   return out_size;
 }
-#undef out_end
-#undef run_len
-#undef src
-#undef out
-#undef capacity2
-#undef out_size
 
 /* 005dfd8f auto */
-#define scan (*(char * *)(frame_ + FRAME_OFF(4)))
-#define src (*(char * *)(frame_ + FRAME_OFF(12)))
-#define out (*(char * *)(frame_ + FRAME_OFF(20)))
-#define literal_len (*(int *)(frame_ + FRAME_OFF(24)))
-#define run_len (*(int *)(frame_ + FRAME_OFF(28)))
-#define written (*(int *)(frame_ + FRAME_OFF(32)))
 uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
 
 {
@@ -1328,7 +1257,12 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
   uint out_size;
   char *src_end;
   void *new_buf;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  char *scan;
+  char *src;
+  char *out;
+  int literal_len;
+  int run_len;
+  int written;
   
   out_buf = operator_new(size + ((int)(size + (size >> 0x1f & 0x7fU)) >> 7) + 5);
   if (out_buf == (char *)0x0) {
@@ -1411,25 +1345,18 @@ LAB_005e0071:
   }
   return out_size;
 }
-#undef scan
-#undef src
-#undef out
-#undef literal_len
-#undef run_len
-#undef written
 
 /* 005ed920 auto */
-#define version (*(char (*)[32])(frame_ + FRAME_OFF(4)))
-#define header (*(char (*)[1024])(frame_ + FRAME_OFF(36)))
-#define file (*(HANDLE *)(frame_ + FRAME_OFF(1060)))
-#define bytes_written (*(DWORD *)(frame_ + FRAME_OFF(1064)))
 i32 __cdecl dbg_log_open(void)
 
 {
   size_t nNumberOfBytesToWrite;
   DWORD *lpNumberOfBytesWritten;
   LPOVERLAPPED lpOverlapped;
-  i8 frame_[FRAME_OFF(1072)] __attribute__((aligned(8)));  /* original stack frame */
+  char version[32];
+  char header[1024];
+  HANDLE file;
+  DWORD bytes_written;
   
   file = (HANDLE)0x0;
   file = CreateFileA(s_smeds_log_00639bec,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,2,0x80,
@@ -1455,22 +1382,17 @@ i32 __cdecl dbg_log_open(void)
   OutputDebugStringA(header);
   return 1;
 }
-#undef version
-#undef header
-#undef file
-#undef bytes_written
 
 /* 005eda65 auto */
-#define footer (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
-#define file (*(HANDLE *)(frame_ + FRAME_OFF(1028)))
-#define bytes_written (*(DWORD *)(frame_ + FRAME_OFF(1032)))
 i32 __cdecl dbg_log_close(void)
 
 {
   size_t nNumberOfBytesToWrite;
   DWORD *lpNumberOfBytesWritten;
   LPOVERLAPPED lpOverlapped;
-  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  char footer[1024];
+  HANDLE file;
+  DWORD bytes_written;
   
   file = (HANDLE)0x0;
   if (smeds_log_enabled != '\0') {
@@ -1487,12 +1409,8 @@ i32 __cdecl dbg_log_close(void)
   }
   return 1;
 }
-#undef footer
-#undef file
-#undef bytes_written
 
 /* 005edb15 auto */
-#define bytes_written (*(DWORD *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl dbg_log_write_file(iptr text)
 
 {
@@ -1500,7 +1418,7 @@ i32 __cdecl dbg_log_write_file(iptr text)
   size_t nNumberOfBytesToWrite;
   DWORD *lpNumberOfBytesWritten;
   LPOVERLAPPED lpOverlapped;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  DWORD bytes_written;
   
   if (smeds_log_enabled != '\0') {
     hFile = CreateFileA(s_smeds_log_00639ccc,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,
@@ -1515,7 +1433,6 @@ i32 __cdecl dbg_log_write_file(iptr text)
   }
   return 1;
 }
-#undef bytes_written
 
 /* 005edbb2 auto */
 i32 __cdecl dbg_log_write_debugger(iptr text)
@@ -1548,13 +1465,12 @@ void __cdecl dbg_stack_trace_stub(iptr buf)
 }
 
 /* 005eeeb0 auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define style2 (*(uint *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl sys_msgbox_potentially_fatal(LPCSTR text,i32 severity,i32 buttons)
 
 {
   int choice;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
+  uint style2;
   
   style2 = 0;
   switch(severity) {
@@ -1613,17 +1529,14 @@ i32 __cdecl sys_msgbox_potentially_fatal(LPCSTR text,i32 severity,i32 buttons)
   }
   return result;
 }
-#undef result
-#undef style2
 
 /* 005ef0b9 auto */
-#define result (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define style2 (*(uint *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl sys_msgbox_mapped(LPCSTR caption,LPCSTR text,i32 severity,i32 buttons)
 
 {
   int choice;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 result;
+  uint style2;
   
   style2 = 0;
   switch(severity) {
@@ -1682,27 +1595,21 @@ i32 __cdecl sys_msgbox_mapped(LPCSTR caption,LPCSTR text,i32 severity,i32 button
   }
   return result;
 }
-#undef result
-#undef style2
 
 /* 005ef58e: written by hand in src/game/regargs.c */
 
 /* 005f04c0 auto */
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall ptrlist_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   /* inlined unwind funclet 005f04fe */ { ptrlist_clear(*(PtrList **)((iptr)&this)); }
   return;
 }
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 005f0590 auto */
 i32 __thiscall ptrlist_first(PtrList *this)

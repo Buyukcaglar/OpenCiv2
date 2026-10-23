@@ -230,13 +230,12 @@ void __thiscall net_gamelist_restore_selection(NetGameListRefreshView *this)
 }
 
 /* 00424688 auto */
-#define option (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define game2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 u32 __thiscall net_gamelist_find_option(NetGameListRefreshView *this,iptr game_name,iptr host_name)
 
 {
   int cmp;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr option;
+  iptr game2;
   
   option = this->first_option_value;
   game2 = net_found_games;
@@ -252,8 +251,6 @@ u32 __thiscall net_gamelist_find_option(NetGameListRefreshView *this,iptr game_n
   }
   return option;
 }
-#undef option
-#undef game2
 
 /* 0042472a auto */
 void __thiscall net_gamelist_update_details(NetGameList *this)
@@ -275,12 +272,11 @@ void __thiscall net_gamelist_update_details(NetGameList *this)
 }
 
 /* 004247b2 auto */
-#define remaining (*(int *)(frame_ + FRAME_OFF(4)))
-#define game2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 void __thiscall net_gamelist_get_entry_names(NetGameList *this,iptr option,iptr out_game_name,iptr out_host_name)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int remaining;
+  iptr game2;
   
   for (game2 = net_found_games;
       (game2 != 0 && (*(int *)(option + 4) != *(int *)(game2 + 0x2c)));
@@ -297,8 +293,6 @@ void __thiscall net_gamelist_get_entry_names(NetGameList *this,iptr option,iptr 
   crt_strcpy(out_host_name,game2 + 0x90);
   return;
 }
-#undef remaining
-#undef game2
 
 /* 0042486f auto */
 void __thiscall net_gamelist_add_info_lines(NetGamelistAddInfoLinesView *this)
@@ -359,12 +353,6 @@ void __thiscall net_gamelist_add_info_lines(NetGamelistAddInfoLinesView *this)
 /* 00424ae9 auto */
 #define scenario_start_year (*(i16 *)((u8 *)&g.d_0064bcb6))
 #define scenario_year_increment (*(i16 *)((u8 *)&g.d_0064bcb4))
-#define civ_bits (*(uint *)(frame_ + FRAME_OFF(0)))
-#define civ_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define bit (*(int *)(frame_ + FRAME_OFF(8)))
-#define text (*(char (*)[21])(frame_ + FRAME_OFF(16)))
-#define text_cutoff (*(i8 *)(frame_ + FRAME_OFF(37)))
-#define found_game (*(iptr *)(frame_ + FRAME_OFF(272)))
 i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
 
 {
@@ -373,7 +361,12 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
   int seconds;
   int minutes;
   iptr scroll_pos;
-  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  uint civ_bits;
+  int civ_count;
+  int bit;
+  char text[21];
+  i8 text_cutoff;
+  iptr found_game;
   
   found_game = net_found_games;
   if (net_found_games == 0) {
@@ -517,20 +510,13 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
 }
 #undef scenario_start_year
 #undef scenario_year_increment
-#undef civ_bits
-#undef civ_count
-#undef bit
-#undef text
-#undef text_cutoff
-#undef found_game
 
 /* 004253ef auto */
-#define option (*(void * *)(frame_ + FRAME_OFF(4)))
 void __thiscall net_gamelist_clear(NetGameList *this)
 
 {
   void *next;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  void *option;
   
   option = (void *)this->first_option_value;
   net_gamelist_update_details(this);
@@ -546,11 +532,8 @@ void __thiscall net_gamelist_clear(NetGameList *this)
   *(i32 *)(this->list_dialog + 0x220) = 0;
   return;
 }
-#undef option
 
 /* 004254a8 auto */
-#define last (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define option (*(uptr *)(frame_ + FRAME_OFF(4)))
 uint * __thiscall net_gamelist_add_entry(NetGameListAddView *this,iptr name2,uint id)
 
 {
@@ -560,7 +543,8 @@ uint * __thiscall net_gamelist_add_entry(NetGameListAddView *this,iptr name2,uin
   void *name_copy;
   int entry_width;
   int max_width;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr last;
+  uptr option;
   
   last = 0;
   for (option = this->first_option_value; option != 0; option = *(uptr *)(option + 0x10)) {
@@ -598,8 +582,6 @@ uint * __thiscall net_gamelist_add_entry(NetGameListAddView *this,iptr name2,uin
   *count_ptr = *count_ptr + 1;
   return entry;
 }
-#undef last
-#undef option
 
 /* 00425607 auto */
 void __thiscall net_gamelist_start_timer(NetGameListTimerView *this,iptr callback)
@@ -644,14 +626,13 @@ void __cdecl net_gamelist_poll_tick(void)
 
 /* 0042570c auto */
 #define net_timeout_seconds (*(int *)((u8 *)&g.d_006ad8b8))
-#define game2 (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl net_gamelist_expire_stale(void)
 
 {
   bool removed;
   int now;
   iptr next;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr game2;
   
   removed = false;
   game2 = net_found_games;
@@ -682,20 +663,18 @@ void __cdecl net_gamelist_expire_stale(void)
   return;
 }
 #undef net_timeout_seconds
-#undef game2
 
 /* 004257fe auto */
 #define net_max_players (*(int *)((u8 *)&g.d_006c3164))
-#define civ_bits (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define bit (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define total_civs (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define game2 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define human_count (*(i32 *)(frame_ + FRAME_OFF(24)))
 void __cdecl net_gamelist_refresh(void)
 
 {
   uint *entry;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 civ_bits;
+  i32 bit;
+  i32 total_civs;
+  iptr game2;
+  i32 human_count;
   
   if (net_session != 0) {
     net_gamelist_clear((NetGameList *)net_session);
@@ -744,11 +723,6 @@ void __cdecl net_gamelist_refresh(void)
   return;
 }
 #undef net_max_players
-#undef civ_bits
-#undef bit
-#undef total_civs
-#undef game2
-#undef human_count
 
 /* 00430822 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
@@ -785,19 +759,18 @@ void __cdecl mp_meeting_wait_idle(void)
 #define net_adapter_index (*(uint *)((u8 *)&g.d_006ad2fc))
 #define net_protocol (*(int *)((u8 *)&g.d_006ad2f8))
 #define prefs_net_ip_address (*(i8 *)((u8 *)&g.d_006665b0))
-#define input (*(char (*)[260])(frame_ + FRAME_OFF(4)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(264)))
-#define choice (*(int *)(frame_ + FRAME_OFF(1020)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1024)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1028)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1032)))
 i32 __cdecl net_prompt_ip_address(void)
 
 {
   char *proto_addr;
   size_t input_len;
   i32 result;
-  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  char input[260];
+  Dialog dlg;
+  int choice;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -835,27 +808,20 @@ LAB_0044541d:
 #undef net_adapter_index
 #undef net_protocol
 #undef prefs_net_ip_address
-#undef input
-#undef dlg
-#undef choice
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 0044542c auto */
 #define prefs_net_player_name (*(i8 *)((u8 *)&g.d_00666570))
-#define input (*(char (*)[260])(frame_ + FRAME_OFF(4)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(264)))
-#define choice (*(int *)(frame_ + FRAME_OFF(1020)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1024)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1028)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1032)))
 i32 __cdecl net_prompt_player_name(void)
 
 {
   size_t input_len;
   i32 result;
-  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  char input[260];
+  Dialog dlg;
+  int choice;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -886,27 +852,20 @@ LAB_00445583:
   return result;
 }
 #undef prefs_net_player_name
-#undef input
-#undef dlg
-#undef choice
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 00445592 auto */
 #define prefs_net_game_name (*(i8 *)((u8 *)&g.d_00666550))
-#define input (*(char (*)[260])(frame_ + FRAME_OFF(4)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(264)))
-#define choice (*(int *)(frame_ + FRAME_OFF(1020)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1024)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1028)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1032)))
 i32 __cdecl net_prompt_game_name(void)
 
 {
   size_t input_len;
   i32 result;
-  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  char input[260];
+  Dialog dlg;
+  int choice;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -938,12 +897,6 @@ LAB_00445703:
   return result;
 }
 #undef prefs_net_game_name
-#undef input
-#undef dlg
-#undef choice
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 00445e46 auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
@@ -957,20 +910,6 @@ LAB_00445703:
 #define net_player_info_has_names_i32 (*(i32 *)((u8 *)&g.d_006ad12c))
 #define net_player_info_has_titles_i32 (*(i32 *)((u8 *)&g.d_006ad178))
 #define net_wait_start_ticks_i32 (*(i32 *)((u8 *)&g.d_006ad674))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define is_female (*(u8 *)(frame_ + FRAME_OFF(4)))
-#define input (*(i8 (*)[260])(frame_ + FRAME_OFF(8)))
-#define index (*(int *)(frame_ + FRAME_OFF(268)))
-#define available_count (*(int *)(frame_ + FRAME_OFF(272)))
-#define option_count2 (*(int *)(frame_ + FRAME_OFF(276)))
-#define selected2 (*(iptr *)(frame_ + FRAME_OFF(280)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(284)))
-#define option (*(byte * *)(frame_ + FRAME_OFF(1040)))
-#define option_civs (*(iptr (*)[8])(frame_ + FRAME_OFF(1044)))
-#define wait_start (*(int *)(frame_ + FRAME_OFF(1076)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1080)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1084)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1088)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl net_choose_civ_dialog(int title_offset)
@@ -984,7 +923,20 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
   i32 arg6;
   i32 arg7;
   i32 arg8;
-  i8 frame_[FRAME_OFF(1096)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr civ;
+  u8 is_female;
+  i8 input[260];
+  int index;
+  int available_count;
+  int option_count2;
+  iptr selected2;
+  Dialog dlg;
+  byte *option;
+  iptr option_civs[8];
+  int wait_start;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
@@ -1197,20 +1149,6 @@ LAB_00446810:
 #undef net_player_info_has_names_i32
 #undef net_player_info_has_titles_i32
 #undef net_wait_start_ticks_i32
-#undef civ
-#undef is_female
-#undef input
-#undef index
-#undef available_count
-#undef option_count2
-#undef selected2
-#undef dlg
-#undef option
-#undef option_civs
-#undef wait_start
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 00447170 auto */
 void * __thiscall net_gamelist_view_scalar_dtor(void *this,uint flags)
@@ -1237,34 +1175,30 @@ LobbyList * __thiscall lobby_list_scalar_dtor(LobbyList *this,uint flags)
 /* 00450480 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
-#define parent22 (*(WindowObjectView * *)(frame_ + FRAME_OFF(4)))
-#define parent2 (*(WindowObjectView * *)(frame_ + FRAME_OFF(8)))
-#define hotspot (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define scrollbar (*(u32 *)(frame_ + FRAME_OFF(20)))
-#define advance (*(uptr *)(frame_ + FRAME_OFF(28)))
-#define sb_left (*(int *)(frame_ + FRAME_OFF(32)))
-#define sb_top (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define sb_right (*(int *)(frame_ + FRAME_OFF(40)))
-#define sb_bottom (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define can_see_other (*(int *)(frame_ + FRAME_OFF(48)))
-#define civ (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(56)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(60)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(64)))
 void __thiscall parley_create_advance_list_pane(WindowObjectView *this,iptr rect,iptr pane,int their_side)
 
 {
   int result;
   int scroll_width;
   Control *pCVar3;
-  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  WindowObjectView *parent22;
+  WindowObjectView *parent2;
+  u32 hotspot;
+  u32 scrollbar;
+  uptr advance;
+  RECT sb_rect;
+  int can_see_other;
+  iptr civ;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   can_see_other = 0;
-  sb_left = *(int *)rect;
-  sb_top = *(i32 *)(rect + 4);
-  sb_right = *(int *)(rect + 8);
-  sb_bottom = *(i32 *)(rect + 0xc);
+  sb_rect.left = *(int *)rect;
+  sb_rect.top = *(i32 *)(rect + 4);
+  sb_rect.right = *(int *)(rect + 8);
+  sb_rect.bottom = *(i32 *)(rect + 0xc);
   result = civ_has_wonder(human_civ,0x18);
   if ((((result == 0) && (result = civ_has_wonder(human_civ,9), result == 0)) &&
       ((*(byte *)&civs[human_civ].treaties[parley_other_civ] & 0x80) == 0)) &&
@@ -1320,10 +1254,10 @@ void __thiscall parley_create_advance_list_pane(WindowObjectView *this,iptr rect
   ((u32 *)&((ViewWindow *)this)->advance_pane_rect_bottom)[pane * 4] = *(u32 *)(rect + 0xc);
   if ((int)((u32 *)&((PictureWindow *)this)->parley_list_page_rows)[pane] < (int)((u32 *)&((ViewWindow *)this)->advance_pane_item_counts)[pane]) {
     scroll_width = GetSystemMetrics(2);
-    result = sb_right;
+    result = sb_rect.right;
     ((u32 *)&((ViewWindow *)this)->advance_pane_rect_right)[pane * 4] -= scroll_width;
-    sb_left = GetSystemMetrics(2);
-    sb_left = result - sb_left;
+    sb_rect.left = GetSystemMetrics(2);
+    sb_rect.left = result - sb_rect.left;
     pCVar3 = operator_new(0x40);
     eh_state = 0;
     if (pCVar3 == (Control *)0x0) {
@@ -1342,7 +1276,7 @@ void __thiscall parley_create_advance_list_pane(WindowObjectView *this,iptr rect
     }
     scrollbar_create
               ((Control *)((u32 *)&((ViewWindow *)this)->advance_list_scrollbars)[pane],(iptr)parent2,pane + 0x411,
-               (iptr)&sb_left,1);
+               (iptr)&sb_rect,1);
     scrollbar_set_range
               ((Control *)((u32 *)&((ViewWindow *)this)->advance_list_scrollbars)[pane],0,
                (((u32 *)&((ViewWindow *)this)->advance_pane_item_counts)[pane] - 1) - ((u32 *)&((PictureWindow *)this)->parley_list_page_rows)[pane]);
@@ -1382,20 +1316,6 @@ void __thiscall parley_create_advance_list_pane(WindowObjectView *this,iptr rect
 }
 #undef human_civ
 #undef parley_other_civ
-#undef parent22
-#undef parent2
-#undef hotspot
-#undef scrollbar
-#undef advance
-#undef sb_left
-#undef sb_top
-#undef sb_right
-#undef sb_bottom
-#undef can_see_other
-#undef civ
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 00450ae6 auto */
 void __cdecl parley_advance_list0_on_scroll(i32 pos)
@@ -1406,12 +1326,11 @@ void __cdecl parley_advance_list0_on_scroll(i32 pos)
 }
 
 /* 00450b22 auto */
-#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_advance_list_on_scroll(int pane,i32 pos)
 
 {
   int child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -1425,22 +1344,20 @@ void __cdecl parley_advance_list_on_scroll(int pane,i32 pos)
   parley_draw_advance_list(pane);
   return;
 }
-#undef window
 
 /* 00450b83 auto */
-#define range_end (*(int *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
-#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define pane (*(int *)(frame_ + FRAME_OFF(20)))
-#define window (*(iptr *)(frame_ + FRAME_OFF(24)))
 void __cdecl parley_advance_list_on_click(int control_id)
 
 {
   uint *sel_flag;
   int row;
   int key_down;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int range_end;
+  int i;
+  i32 cursor_y;
+  i32 cursor_x;
+  int pane;
+  iptr window;
   
   row = wnd_get_active_child();
   if (row == 0) {
@@ -1497,22 +1414,15 @@ void __cdecl parley_advance_list_on_click(int control_id)
   }
   return;
 }
-#undef range_end
-#undef i
-#undef cursor_y
-#undef cursor_x
-#undef pane
-#undef window
 
 /* 00450df6 auto */
-#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
 int __cdecl parley_advance_list_hit_test(int px,int py,int pane)
 
 {
   iptr child;
   int result;
   int list_height;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -1543,7 +1453,6 @@ int __cdecl parley_advance_list_hit_test(int px,int py,int pane)
   }
   return result;
 }
-#undef window
 
 /* 00450f0b auto */
 #define dlg_sel_text_color (*(int *)((u8 *)&g.d_00635a28))
@@ -1553,26 +1462,6 @@ int __cdecl parley_advance_list_hit_test(int px,int py,int pane)
 #define list_shadow_color (*(int *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(int *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define icon_x (*(int *)(frame_ + FRAME_OFF(4)))
-#define bg_color2 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define text_y_offset (*(int *)(frame_ + FRAME_OFF(32)))
-#define advance (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define icon_step (*(int *)(frame_ + FRAME_OFF(40)))
-#define row (*(int *)(frame_ + FRAME_OFF(44)))
-#define row_top (*(int *)(frame_ + FRAME_OFF(48)))
-#define list_left (*(int *)(frame_ + FRAME_OFF(52)))
-#define list_width2 (*(int *)(frame_ + FRAME_OFF(56)))
-#define shadow_color2 (*(int *)(frame_ + FRAME_OFF(60)))
-#define text_x_offset (*(int *)(frame_ + FRAME_OFF(64)))
-#define icon_sprite (*(Sprite * *)(frame_ + FRAME_OFF(68)))
-#define text_color2 (*(int *)(frame_ + FRAME_OFF(72)))
-#define window (*(ViewWindow * *)(frame_ + FRAME_OFF(76)))
-#define selected2 (*(int *)(frame_ + FRAME_OFF(80)))
-#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(84)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(100)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(120)))
 void __cdecl parley_draw_advance_list(iptr pane)
 
 {
@@ -1580,7 +1469,26 @@ void __cdecl parley_draw_advance_list(iptr pane)
   int tmp;
   int tmp2;
   iptr name_label;
-  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  int icon_x;
+  i32 bg_color2;
+  i8 sprite_rect[16];
+  int text_y_offset;
+  iptr advance;
+  int icon_step;
+  int row;
+  int row_top;
+  int list_left;
+  int list_width2;
+  int shadow_color2;
+  int text_x_offset;
+  Sprite *icon_sprite;
+  int text_color2;
+  ViewWindow *window;
+  int selected2;
+  tagRECT row_rect;
+  int row_height;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   tmp = wnd_get_active_child();
   if (tmp == 0) {
@@ -1723,41 +1631,9 @@ LAB_00451089:
 #undef list_shadow_color
 #undef list_text_color
 #undef panel_margin_x
-#undef icon_x
-#undef bg_color2
-#undef sprite_rect
-#undef text_y_offset
-#undef advance
-#undef icon_step
-#undef row
-#undef row_top
-#undef list_left
-#undef list_width2
-#undef shadow_color2
-#undef text_x_offset
-#undef icon_sprite
-#undef text_color2
-#undef window
-#undef selected2
-#undef row_rect
-#undef row_height
-#undef saved_clip
-#undef font2
 
 /* 004683f0 auto */
 #define parley_units_by_city (*(i32 *)((u8 *)&g.d_0066be78))
-#define parent22 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define parent2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define hotspot (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define scrollbar (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define sb_left (*(int *)(frame_ + FRAME_OFF(28)))
-#define sb_top (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define sb_right (*(int *)(frame_ + FRAME_OFF(36)))
-#define sb_bottom (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define window (*(int *)(frame_ + FRAME_OFF(44)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(52)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(56)))
 void __thiscall
 parley_create_unit_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_side)
 
@@ -1766,7 +1642,15 @@ parley_create_unit_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_sid
   int sb_right_orig;
   int scroll_width;
   Control *pCVar4;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *parent22;
+  u8 *parent2;
+  i32 hotspot;
+  i32 scrollbar;
+  RECT sb_rect;
+  int window;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   window = wnd_get_active_child();
@@ -1777,10 +1661,10 @@ parley_create_unit_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_sid
     window -= 0x48;
   }
   *(i32 *)(&parley_list_own_side + pane * 4) = own_side;
-  sb_left = *(int *)rect;
-  sb_top = *(i32 *)(rect + 4);
-  sb_right = *(int *)(rect + 8);
-  sb_bottom = *(i32 *)(rect + 0xc);
+  sb_rect.left = *(int *)rect;
+  sb_rect.top = *(i32 *)(rect + 4);
+  sb_rect.right = *(int *)(rect + 8);
+  sb_rect.bottom = *(i32 *)(rect + 0xc);
   parley_units_by_city = 0;
   parley_build_unit_list(this,pane,0);
   if (*(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 + 0x4c) < 1) {
@@ -1809,11 +1693,11 @@ parley_create_unit_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_sid
   if (*(int *)(((PictureWindow *)this)->parley_pane_arrays_base + pane * 4 + 0x40) <
       *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 + 0x4c)) {
     scroll_width = GetSystemMetrics(2);
-    sb_right_orig = sb_right;
+    sb_right_orig = sb_rect.right;
     *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 0x10 + 0x2c) =
          *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 0x10 + 0x2c) - scroll_width;
-    sb_left = GetSystemMetrics(2);
-    sb_left = sb_right_orig - sb_left;
+    sb_rect.left = GetSystemMetrics(2);
+    sb_rect.left = sb_right_orig - sb_rect.left;
     pCVar4 = operator_new(0x40);
     eh_state = 0;
     if (pCVar4 == (Control *)0x0) {
@@ -1832,7 +1716,7 @@ parley_create_unit_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_sid
     }
     scrollbar_create
               (*(Control **)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 - 0x20),(iptr)parent2,
-               pane + 0x3fa,(iptr)&sb_left,1);
+               pane + 0x3fa,(iptr)&sb_rect,1);
     scrollbar_set_range
               (*(Control **)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 - 0x20),0,
                *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 + 0x4c) -
@@ -1873,18 +1757,6 @@ parley_create_unit_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_sid
   return;
 }
 #undef parley_units_by_city
-#undef parent22
-#undef parent2
-#undef hotspot
-#undef scrollbar
-#undef sb_left
-#undef sb_top
-#undef sb_right
-#undef sb_bottom
-#undef window
-#undef seh_prev
-#undef seh_handler
-#undef eh_state
 
 /* 00468797 auto */
 void __cdecl parley_unit_list_scroll_left(i32 pos)
@@ -1895,12 +1767,11 @@ void __cdecl parley_unit_list_scroll_left(i32 pos)
 }
 
 /* 004687d3 auto */
-#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_unit_list_on_scroll(int pane,i32 pos)
 
 {
   int child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -1914,22 +1785,20 @@ void __cdecl parley_unit_list_on_scroll(int pane,i32 pos)
   parley_draw_unit_list(pane);
   return;
 }
-#undef window
 
 /* 00468834 auto */
-#define range_end (*(int *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
-#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define pane (*(int *)(frame_ + FRAME_OFF(20)))
-#define window (*(iptr *)(frame_ + FRAME_OFF(24)))
 void __cdecl parley_unit_list_on_click(int control_id)
 
 {
   uint *sel_flag;
   int row;
   int key_down;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int range_end;
+  int i;
+  i32 cursor_y;
+  i32 cursor_x;
+  int pane;
+  iptr window;
   
   row = wnd_get_active_child();
   if (row == 0) {
@@ -1986,22 +1855,15 @@ void __cdecl parley_unit_list_on_click(int control_id)
   }
   return;
 }
-#undef range_end
-#undef i
-#undef cursor_y
-#undef cursor_x
-#undef pane
-#undef window
 
 /* 00468aa7 auto */
-#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
 int __cdecl parley_unit_list_hit_test(int px,int py,int pane)
 
 {
   iptr child;
   int result;
   int list_height;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -2032,7 +1894,6 @@ int __cdecl parley_unit_list_hit_test(int px,int py,int pane)
   }
   return result;
 }
-#undef window
 
 /* 00468bb9 auto */
 #define dlg_sel_text_color (*(int *)((u8 *)&g.d_00635a28))
@@ -2042,27 +1903,6 @@ int __cdecl parley_unit_list_hit_test(int px,int py,int pane)
 #define list_shadow_color (*(int *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(int *)((u8 *)&g.d_00635a1c))
 #define parley_units_by_city (*(int *)((u8 *)&g.d_0066be78))
-#define icon_x (*(int *)(frame_ + FRAME_OFF(0)))
-#define bg_color2 (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(8)))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define text_y_offset (*(int *)(frame_ + FRAME_OFF(32)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define icon_step (*(int *)(frame_ + FRAME_OFF(40)))
-#define row (*(int *)(frame_ + FRAME_OFF(44)))
-#define row_top (*(int *)(frame_ + FRAME_OFF(48)))
-#define list_left (*(int *)(frame_ + FRAME_OFF(52)))
-#define list_width2 (*(int *)(frame_ + FRAME_OFF(56)))
-#define shadow_color2 (*(int *)(frame_ + FRAME_OFF(60)))
-#define text_x_offset (*(int *)(frame_ + FRAME_OFF(64)))
-#define unit_sprite (*(Sprite * *)(frame_ + FRAME_OFF(68)))
-#define text_color2 (*(int *)(frame_ + FRAME_OFF(72)))
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(76)))
-#define selected2 (*(int *)(frame_ + FRAME_OFF(80)))
-#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(84)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(100)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(120)))
 void __cdecl parley_draw_unit_list(iptr pane)
 
 {
@@ -2072,7 +1912,27 @@ void __cdecl parley_draw_unit_list(iptr pane)
   iptr str;
   int row_mid;
   i32 denom;
-  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  int icon_x;
+  i32 bg_color2;
+  int icon_width;
+  i8 sprite_rect[16];
+  int text_y_offset;
+  iptr unit;
+  int icon_step;
+  int row;
+  int row_top;
+  int list_left;
+  int list_width2;
+  int shadow_color2;
+  int text_x_offset;
+  Sprite *unit_sprite;
+  int text_color2;
+  ViewWindow *this2;
+  int selected2;
+  tagRECT row_rect;
+  int row_height;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   tmp = wnd_get_active_child();
   if (tmp == 0) {
@@ -2258,36 +2118,14 @@ LAB_004692ba:
 #undef list_shadow_color
 #undef list_text_color
 #undef parley_units_by_city
-#undef icon_x
-#undef bg_color2
-#undef icon_width
-#undef sprite_rect
-#undef text_y_offset
-#undef unit
-#undef icon_step
-#undef row
-#undef row_top
-#undef list_left
-#undef list_width2
-#undef shadow_color2
-#undef text_x_offset
-#undef unit_sprite
-#undef text_color2
-#undef this2
-#undef selected2
-#undef row_rect
-#undef row_height
-#undef saved_clip
-#undef font2
 
 /* 004692ea auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_reveal_city_origin_clicked(void)
 
 {
   iptr child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -2310,16 +2148,14 @@ void __cdecl parley_reveal_city_origin_clicked(void)
   return;
 }
 #undef human_civ
-#undef window
 
 /* 004693c5 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define window (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_hide_city_origin_clicked(void)
 
 {
   int child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  WindowObjectView *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -2343,7 +2179,6 @@ void __cdecl parley_hide_city_origin_clicked(void)
   return;
 }
 #undef human_civ
-#undef window
 
 /* 00469547 auto */
 void __cdecl parley_sort_by_city_left_clicked(void)
@@ -2354,12 +2189,11 @@ void __cdecl parley_sort_by_city_left_clicked(void)
 }
 
 /* 0046957b auto */
-#define window (*(void * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_sort_by_city_clicked(iptr pane)
 
 {
   int child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  void *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -2373,7 +2207,6 @@ void __cdecl parley_sort_by_city_clicked(iptr pane)
   parley_draw_unit_list(pane);
   return;
 }
-#undef window
 
 /* 004695e9 auto */
 void __cdecl parley_sort_by_unit_left_clicked(void)
@@ -2384,12 +2217,11 @@ void __cdecl parley_sort_by_unit_left_clicked(void)
 }
 
 /* 0046961d auto */
-#define window (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_sort_by_unit_clicked(iptr pane)
 
 {
   int child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  WindowObjectView *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -2403,20 +2235,18 @@ void __cdecl parley_sort_by_unit_clicked(iptr pane)
   parley_draw_unit_list(pane);
   return;
 }
-#undef window
 
 /* 0046968b auto */
 #define parley_units_by_city (*(i32 *)((u8 *)&g.d_0066be78))
-#define j (*(int *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
-#define window (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __thiscall parley_sort_unit_list(WindowObjectView *this,int first,int last,iptr pane)
 
 {
   i32 swap;
   iptr child;
   int cmp;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int j;
+  int i;
+  iptr window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -2455,15 +2285,9 @@ void __thiscall parley_sort_unit_list(WindowObjectView *this,int first,int last,
   return;
 }
 #undef parley_units_by_city
-#undef j
-#undef i
-#undef window
 
 /* 0046990a auto */
 #define parley_units_by_city (*(i32 *)((u8 *)&g.d_0066be78))
-#define j (*(int *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
-#define window (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __thiscall parley_sort_units_by_city(void *this,int first,int last,iptr pane)
 
 {
@@ -2472,7 +2296,9 @@ void __thiscall parley_sort_units_by_city(void *this,int first,int last,iptr pan
   char *_Str2;
   char *_Str1;
   int cmp;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int j;
+  int i;
+  iptr window;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -2522,19 +2348,10 @@ LAB_00469989:
   goto LAB_0046996e;
 }
 #undef parley_units_by_city
-#undef j
-#undef i
-#undef window
 
 /* 00469bdc auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define parley_units_by_city (*(int *)((u8 *)&g.d_0066be78))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define old_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define k (*(int *)(frame_ + FRAME_OFF(8)))
-#define selected_ids (*(void * *)(frame_ + FRAME_OFF(24)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define window (*(iptr *)(frame_ + FRAME_OFF(40)))
 void __thiscall parley_build_unit_list(ListPaneWindow *this,int pane,int keep_selection)
 
 {
@@ -2546,7 +2363,12 @@ void __thiscall parley_build_unit_list(ListPaneWindow *this,int pane,int keep_se
   iptr x;
   int y;
   int in_bounds;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  int old_count;
+  int k;
+  void *selected_ids;
+  iptr dir;
+  iptr window;
   
   selected_ids = (void *)0x0;
   child = wnd_get_active_child();
@@ -2634,12 +2456,6 @@ void __thiscall parley_build_unit_list(ListPaneWindow *this,int pane,int keep_se
 }
 #undef human_civ
 #undef parley_units_by_city
-#undef unit
-#undef old_count
-#undef k
-#undef selected_ids
-#undef dir
-#undef window
 
 /* 0046af70 auto */
 #define net_send_sequence (*(int *)((u8 *)&g.d_00628468))
@@ -2703,52 +2519,6 @@ bool __thiscall net_session_send_to_all(void *this,iptr msg)
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_session_phase (*(i32 *)((u8 *)&g.d_006ad640))
 #define main_view_timer_cache_i32 (*(i32 *)((u8 *)&g.d_0066c990))
-#define msg_5b (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(4)))
-#define msg_2b (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(20)))
-#define msg_9c (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(36)))
-#define msg_58 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(52)))
-#define msg_8d (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(68)))
-#define msg_8b (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(84)))
-#define msg_26 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(100)))
-#define msg_46 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(116)))
-#define msg_44 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(132)))
-#define msg_42 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(148)))
-#define msg_40 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(164)))
-#define msg_8a (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(180)))
-#define msg_83 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(196)))
-#define msg_35 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(216)))
-#define msg_79 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(232)))
-#define msg_78 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(248)))
-#define msg_74 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(264)))
-#define whose_turn_msg (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(280)))
-#define caption_left (*(i32 *)(frame_ + FRAME_OFF(300)))
-#define caption_top (*(i32 *)(frame_ + FRAME_OFF(304)))
-#define caption_right (*(i32 *)(frame_ + FRAME_OFF(308)))
-#define caption_bottom (*(i32 *)(frame_ + FRAME_OFF(312)))
-#define msg_16 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(316)))
-#define msg_5d (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(336)))
-#define msg_14 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(352)))
-#define answer_msg (*(NetMsgHeader (*)[38])(frame_ + FRAME_OFF(368)))
-#define msg_12 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(676)))
-#define msg_6f (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(692)))
-#define msg_6e (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(708)))
-#define msg_6d (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(724)))
-#define simple_msg (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(740)))
-#define image_result (*(uint *)(frame_ + FRAME_OFF(756)))
-#define image_buf (*(void * *)(frame_ + FRAME_OFF(760)))
-#define player_node_msg (*(NetMsgHeader (*)[12])(frame_ + FRAME_OFF(764)))
-#define player_list_msg (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(864)))
-#define player_list_data (*(i8 (*)[624])(frame_ + FRAME_OFF(880)))
-#define server_path_msg (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(1504)))
-#define path_kind (*(i16 *)(frame_ + FRAME_OFF(1520)))
-#define path_name (*(i8 (*)[260])(frame_ + FRAME_OFF(1522)))
-#define path_subdir (*(i8 (*)[262])(frame_ + FRAME_OFF(1782)))
-#define msg_05 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(2044)))
-#define server_info_msg (*(NetMsgHeader (*)[50])(frame_ + FRAME_OFF(2060)))
-#define server_phase (*(i16 *)(frame_ + FRAME_OFF(2464)))
-#define announce_msg (*(NetMsgHeader (*)[15])(frame_ + FRAME_OFF(2468)))
-#define packet (*(void * *)(frame_ + FRAME_OFF(2588)))
-#define result (*(int *)(frame_ + FRAME_OFF(2592)))
 /* WARNING: Removing unreachable block (ram,0x0046cdce) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -2759,7 +2529,49 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
 {
   char sent;
   size_t text_len;
-  i8 frame_[FRAME_OFF(2600)] __attribute__((aligned(8)));  /* original stack frame */
+  NetMsgHeader msg_5b[2];
+  NetMsgHeader msg_2b[2];
+  NetMsgHeader msg_9c[2];
+  NetMsgHeader msg_58[2];
+  NetMsgHeader msg_8d[2];
+  NetMsgHeader msg_8b[2];
+  NetMsgHeader msg_26[2];
+  NetMsgHeader msg_46[2];
+  NetMsgHeader msg_44[2];
+  NetMsgHeader msg_42[2];
+  NetMsgHeader msg_40[2];
+  NetMsgHeader msg_8a[2];
+  NetMsgHeader msg_83[2];
+  NetMsgHeader msg_35[2];
+  NetMsgHeader msg_79[2];
+  NetMsgHeader msg_78[2];
+  NetMsgHeader msg_74[2];
+  NetMsgHeader whose_turn_msg[2];
+  RECT caption_rect;
+  NetMsgHeader msg_16[2];
+  NetMsgHeader msg_5d[2];
+  NetMsgHeader msg_14[2];
+  NetMsgHeader answer_msg[38];
+  NetMsgHeader msg_12[2];
+  NetMsgHeader msg_6f[2];
+  NetMsgHeader msg_6e[2];
+  NetMsgHeader msg_6d[2];
+  NetMsgHeader simple_msg[2];
+  uint image_result;
+  void *image_buf;
+  NetMsgHeader player_node_msg[12];
+  NetMsgHeader player_list_msg[2];
+  i8 player_list_data[624];
+  NetMsgHeader server_path_msg[2];
+  i16 path_kind;
+  i8 path_name[260];
+  i8 path_subdir[262];
+  NetMsgHeader msg_05[2];
+  NetMsgHeader server_info_msg[50];
+  i16 server_phase;
+  NetMsgHeader announce_msg[15];
+  void *packet;
+  int result;
   
   packet = (void *)0x0;
   switch(msg_type) {
@@ -3110,11 +2922,11 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     net_msg_whose_turn_init(whose_turn_msg,arg1);
     main_view_timer_cache_i32 = 0xffffffff;
     frame_wnd_draw_caption((FrameWindow *)&map_views);
-    caption_left = main_view_frame_left;
-    caption_top = main_view_frame_top;
-    caption_right = main_view_frame_right;
-    caption_bottom = main_view_client_top;
-    wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_left);
+    caption_rect.left = main_view_frame_left;
+    caption_rect.top = main_view_frame_top;
+    caption_rect.right = main_view_frame_right;
+    caption_rect.bottom = main_view_client_top;
+    wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_rect);
     sent = net_session_send_to(&net_session,dest,(iptr)whose_turn_msg);
     return (int)sent;
   case 0x6a:
@@ -3321,52 +3133,6 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
 #undef net_host_flag
 #undef net_session_phase
 #undef main_view_timer_cache_i32
-#undef msg_5b
-#undef msg_2b
-#undef msg_9c
-#undef msg_58
-#undef msg_8d
-#undef msg_8b
-#undef msg_26
-#undef msg_46
-#undef msg_44
-#undef msg_42
-#undef msg_40
-#undef msg_8a
-#undef msg_83
-#undef msg_35
-#undef msg_79
-#undef msg_78
-#undef msg_74
-#undef whose_turn_msg
-#undef caption_left
-#undef caption_top
-#undef caption_right
-#undef caption_bottom
-#undef msg_16
-#undef msg_5d
-#undef msg_14
-#undef answer_msg
-#undef msg_12
-#undef msg_6f
-#undef msg_6e
-#undef msg_6d
-#undef simple_msg
-#undef image_result
-#undef image_buf
-#undef player_node_msg
-#undef player_list_msg
-#undef player_list_data
-#undef server_path_msg
-#undef path_kind
-#undef path_name
-#undef path_subdir
-#undef msg_05
-#undef server_info_msg
-#undef server_phase
-#undef announce_msg
-#undef packet
-#undef result
 
 /* 0046d5a0 auto */
 NetMsgHeader * __thiscall net_msg_header_init(NetMsgHeader *this,u32 type)
@@ -3479,13 +3245,12 @@ NetMsgHeader * __thiscall net_msg_whose_turn_init(NetMsgHeader *this,u32 turn_ci
 
 /* 0047e0e5 auto */
 #define net_stacked_draw_count (*(uint *)((u8 *)&g.d_006ad90c))
-#define dummy_args (*(i8 (*)[28])(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(32)))
 int __cdecl net_stacked_draw_push(int kind,iptr args,iptr unit_data)
 
 {
   int result;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 dummy_args[28];
+  int i;
   
   if ((net_stacked_draw_last == net_stacked_draw_first) && (net_stacked_draw_count != 0)) {
     dbg_log((iptr)((u8 *)&g.d_0062bcf0));
@@ -3525,8 +3290,6 @@ int __cdecl net_stacked_draw_push(int kind,iptr args,iptr unit_data)
   return result;
 }
 #undef net_stacked_draw_count
-#undef dummy_args
-#undef i
 
 /* 0047e2b3 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -3535,7 +3298,6 @@ int __cdecl net_stacked_draw_push(int kind,iptr args,iptr unit_data)
 #define net_move_anim_sound_arg (*(i32 *)((u8 *)&g.d_006ad6a8))
 #define net_stacked_draw_count (*(int *)((u8 *)&g.d_006ad90c))
 #define unit_move_anim_active (*(i32 *)((u8 *)&g.d_00636058))
-#define stack_count (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl net_stacked_draw_run_next(void)
 
 {
@@ -3547,7 +3309,7 @@ int __cdecl net_stacked_draw_run_next(void)
   int count;
   int x;
   i32 sum_mode;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int stack_count;
   
   switch(*(i32 *)(&net_stacked_draw_kinds + net_stacked_draw_first * 0x40)) {
   case 0x70:
@@ -3687,7 +3449,6 @@ LAB_0047e5c2:
 #undef net_move_anim_sound_arg
 #undef net_stacked_draw_count
 #undef unit_move_anim_active
-#undef stack_count
 
 /* 0047e94e auto */
 #define blocked_input_char (*(i8 *)((u8 *)&g.d_006c31c8))
@@ -3754,75 +3515,6 @@ LAB_0047e5c2:
 #define main_view_timer_cache_i32 (*(i32 *)((u8 *)&g.d_0066c990))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
 #define nm_lock_nation_count_i32 (*(i32 *)((u8 *)&g.d_006c90a0))
-#define popup_data (*(int * *)(frame_ + FRAME_OFF(0)))
-#define dequeue_wait (*(int *)(frame_ + FRAME_OFF(8)))
-#define dblclick_wnd (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define click_wnd (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define home_city_id (*(i8 *)(frame_ + FRAME_OFF(48)))
-#define new_owner (*(i8 *)(frame_ + FRAME_OFF(52)))
-#define draw_args (*(i8 (*)[28])(frame_ + FRAME_OFF(76)))
-#define caption_left (*(i32 *)(frame_ + FRAME_OFF(104)))
-#define caption_top (*(i32 *)(frame_ + FRAME_OFF(108)))
-#define caption_right (*(i32 *)(frame_ + FRAME_OFF(112)))
-#define caption_bottom (*(i32 *)(frame_ + FRAME_OFF(116)))
-#define section_id2 (*(uint *)(frame_ + FRAME_OFF(120)))
-#define saved_multiplayer (*(u8 *)(frame_ + FRAME_OFF(124)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(128)))
-#define rle_src (*(uint * *)(frame_ + FRAME_OFF(132)))
-#define rle_src_end (*(int *)(frame_ + FRAME_OFF(136)))
-#define rle_dst (*(int *)(frame_ + FRAME_OFF(140)))
-#define rle_dst_end (*(int *)(frame_ + FRAME_OFF(144)))
-#define saved_moving_unit (*(i16 *)(frame_ + FRAME_OFF(152)))
-#define saved_player_civ (*(i8 *)(frame_ + FRAME_OFF(156)))
-#define decoded_size (*(int *)(frame_ + FRAME_OFF(160)))
-#define section_idx (*(int *)(frame_ + FRAME_OFF(164)))
-#define units_saved (*(int *)(frame_ + FRAME_OFF(168)))
-#define turn_civ_changed (*(int *)(frame_ + FRAME_OFF(172)))
-#define section_offset (*(uint *)(frame_ + FRAME_OFF(176)))
-#define city_changed (*(int *)(frame_ + FRAME_OFF(180)))
-#define saved_msg_options (*(u16 *)(frame_ + FRAME_OFF(184)))
-#define saved_field_1c (*(i8 *)(frame_ + FRAME_OFF(188)))
-#define saved_turn_civ_val (*(i8 *)(frame_ + FRAME_OFF(192)))
-#define section_size (*(uptr *)(frame_ + FRAME_OFF(196)))
-#define saved_active_unit (*(i16 *)(frame_ + FRAME_OFF(200)))
-#define saved_game_options (*(u32 *)(frame_ + FRAME_OFF(204)))
-#define slot (*(int *)(frame_ + FRAME_OFF(208)))
-#define join_dialog (*(Dialog *)(frame_ + FRAME_OFF(212)))
-#define wait_start (*(int *)(frame_ + FRAME_OFF(968)))
-#define wait_dialog (*(Dialog *)(frame_ + FRAME_OFF(972)))
-#define saved_busy (*(u32 *)(frame_ + FRAME_OFF(1728)))
-#define hello_msg (*(int * *)(frame_ + FRAME_OFF(1732)))
-#define y4 (*(int *)(frame_ + FRAME_OFF(1736)))
-#define x3 (*(int *)(frame_ + FRAME_OFF(1740)))
-#define timer_left (*(i32 *)(frame_ + FRAME_OFF(1744)))
-#define timer_top (*(i32 *)(frame_ + FRAME_OFF(1748)))
-#define timer_right (*(i32 *)(frame_ + FRAME_OFF(1752)))
-#define timer_bottom (*(i32 *)(frame_ + FRAME_OFF(1756)))
-#define input_kind (*(int *)(frame_ + FRAME_OFF(1760)))
-#define deferred_input (*(u32 *)(frame_ + FRAME_OFF(1764)))
-#define input_char (*(uint *)(frame_ + FRAME_OFF(1768)))
-#define msg_size (*(uint *)(frame_ + FRAME_OFF(1772)))
-#define sender (*(int *)(frame_ + FRAME_OFF(1776)))
-#define unit4 (*(iptr *)(frame_ + FRAME_OFF(1780)))
-#define image_kind (*(int *)(frame_ + FRAME_OFF(1784)))
-#define header_size (*(i32 *)(frame_ + FRAME_OFF(1788)))
-#define payload (*(uint * *)(frame_ + FRAME_OFF(1792)))
-#define unused_flag (*(i8 *)(frame_ + FRAME_OFF(1796)))
-#define unit (*(uptr *)(frame_ + FRAME_OFF(1800)))
-#define civ3 (*(uptr *)(frame_ + FRAME_OFF(1804)))
-#define unit3 (*(uptr *)(frame_ + FRAME_OFF(1808)))
-#define y2 (*(iptr *)(frame_ + FRAME_OFF(1812)))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(1816)))
-#define y3 (*(int *)(frame_ + FRAME_OFF(1820)))
-#define extra_len (*(int *)(frame_ + FRAME_OFF(1824)))
-#define msg_hdr (*(int * *)(frame_ + FRAME_OFF(1828)))
-#define msg (*(int * *)(frame_ + FRAME_OFF(1832)))
-#define gamelist_dirty (*(char *)(frame_ + FRAME_OFF(1836)))
-#define image_size (*(int *)(frame_ + FRAME_OFF(1840)))
-#define result (*(iptr *)(frame_ + FRAME_OFF(1844)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1848)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1852)))
-#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(1856)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode)
@@ -3841,7 +3533,69 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
   bool had_pending;
   uptr civ2;
   uptr unit5;
-  i8 frame_[FRAME_OFF(1864)] __attribute__((aligned(8)));  /* original stack frame */
+  int *popup_data;
+  int dequeue_wait;
+  iptr dblclick_wnd;
+  iptr click_wnd;
+  i8 home_city_id;
+  i8 new_owner;
+  i8 draw_args[28];
+  RECT caption_rect;
+  uint section_id2;
+  u8 saved_multiplayer;
+  iptr unit2;
+  uint *rle_src;
+  int rle_src_end;
+  int rle_dst;
+  int rle_dst_end;
+  i16 saved_moving_unit;
+  i8 saved_player_civ;
+  int decoded_size;
+  int section_idx;
+  int units_saved;
+  int turn_civ_changed;
+  uint section_offset;
+  int city_changed;
+  u16 saved_msg_options;
+  i8 saved_field_1c;
+  i8 saved_turn_civ_val;
+  uptr section_size;
+  i16 saved_active_unit;
+  u32 saved_game_options;
+  int slot;
+  Dialog join_dialog;
+  int wait_start;
+  Dialog wait_dialog;
+  u32 saved_busy;
+  int *hello_msg;
+  int y4;
+  int x3;
+  RECT timer_rect;
+  int input_kind;
+  u32 deferred_input;
+  uint input_char;
+  uint msg_size;
+  int sender;
+  iptr unit4;
+  int image_kind;
+  i32 header_size;
+  uint *payload;
+  i8 unused_flag;
+  uptr unit;
+  uptr civ3;
+  uptr unit3;
+  iptr y2;
+  iptr x2;
+  int y3;
+  int extra_len;
+  int *msg_hdr;
+  int *msg;
+  char gamelist_dirty;
+  int image_size;
+  iptr result;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 unwind_state;
   
   unwind_state = 0xffffffff;
   gamelist_dirty = '\0';
@@ -3891,7 +3645,7 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
         break;
       case 4:
         input_kind = blocked_input_char_pending;
-        input_char = CONCAT31((*(i32 *)((char *)&input_char + 1)),blocked_input_char);
+        input_char = (input_char & 0xffffff00 | (byte)(blocked_input_char));
         map_window_key(*(i32 *)((NetSessionExt *)this)->deferred_input_arg1);
         if (input_kind == 3) {
           map_window_ascii(input_char);
@@ -4656,11 +4410,11 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
           menu_update_states();
           main_view_timer_cache_i32 = 0xffffffff;
           frame_wnd_draw_caption((FrameWindow *)&map_views);
-          caption_left = main_view_frame_left;
-          caption_top = main_view_frame_top;
-          caption_right = main_view_frame_right;
-          caption_bottom = main_view_client_top;
-          wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_left);
+          caption_rect.left = main_view_frame_left;
+          caption_rect.top = main_view_frame_top;
+          caption_rect.right = main_view_frame_right;
+          caption_rect.bottom = main_view_client_top;
+          wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_rect);
           break;
         case 0x6a:
           net_msg_get_args((iptr)msg,&unit);
@@ -4698,11 +4452,11 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
           if (unit == 0) {
             main_view_timer_shown = 0;
             frame_wnd_draw_caption((FrameWindow *)&map_views);
-            timer_left = main_view_frame_left;
-            timer_top = main_view_frame_top;
-            timer_right = main_view_frame_right;
-            timer_bottom = main_view_client_top;
-            wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&timer_left);
+            timer_rect.left = main_view_frame_left;
+            timer_rect.top = main_view_frame_top;
+            timer_rect.right = main_view_frame_right;
+            timer_rect.bottom = main_view_client_top;
+            wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&timer_rect);
           }
           else {
             main_view_timer_shown = 1;
@@ -5116,75 +4870,6 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
 #undef main_view_timer_cache_i32
 #undef mp_turn_civ_i32
 #undef nm_lock_nation_count_i32
-#undef popup_data
-#undef dequeue_wait
-#undef dblclick_wnd
-#undef click_wnd
-#undef home_city_id
-#undef new_owner
-#undef draw_args
-#undef caption_left
-#undef caption_top
-#undef caption_right
-#undef caption_bottom
-#undef section_id2
-#undef saved_multiplayer
-#undef unit2
-#undef rle_src
-#undef rle_src_end
-#undef rle_dst
-#undef rle_dst_end
-#undef saved_moving_unit
-#undef saved_player_civ
-#undef decoded_size
-#undef section_idx
-#undef units_saved
-#undef turn_civ_changed
-#undef section_offset
-#undef city_changed
-#undef saved_msg_options
-#undef saved_field_1c
-#undef saved_turn_civ_val
-#undef section_size
-#undef saved_active_unit
-#undef saved_game_options
-#undef slot
-#undef join_dialog
-#undef wait_start
-#undef wait_dialog
-#undef saved_busy
-#undef hello_msg
-#undef y4
-#undef x3
-#undef timer_left
-#undef timer_top
-#undef timer_right
-#undef timer_bottom
-#undef input_kind
-#undef deferred_input
-#undef input_char
-#undef msg_size
-#undef sender
-#undef unit4
-#undef image_kind
-#undef header_size
-#undef payload
-#undef unused_flag
-#undef unit
-#undef civ3
-#undef unit3
-#undef y2
-#undef x2
-#undef y3
-#undef extra_len
-#undef msg_hdr
-#undef msg
-#undef gamelist_dirty
-#undef image_size
-#undef result
-#undef seh_prev
-#undef seh_handler
-#undef unwind_state
 
 /* 00482337 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
@@ -5246,7 +4931,6 @@ void __cdecl net_server_quit_wait_idle(void)
 #define net_player_slots_i32 (*(i32 *)((u8 *)&g.d_006ad30c))
 #define net_civ_slots_i32 (*(i32 *)((u8 *)&g.d_006ad558))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl net_host_quit_handoff(void)
@@ -5254,7 +4938,7 @@ void __cdecl net_host_quit_handoff(void)
 {
   byte sign;
   int human_count;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
   
   net_host_handoff_stage = 1;
   net_drop_flagged_players();
@@ -5302,7 +4986,6 @@ void __cdecl net_host_quit_handoff(void)
 #undef net_player_slots_i32
 #undef net_civ_slots_i32
 #undef mp_turn_civ_i32
-#undef slot
 
 /* 00482724 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
@@ -5420,13 +5103,6 @@ void __cdecl net_quit_wait_players_idle(void)
 #define turn_resume_civ (*(i8 *)((u8 *)&g.d_00628048))
 #define net_handoff_wait_ticks_i32 (*(i32 *)((u8 *)&g.d_00670d98))
 #define nm_server_quit_count_i32 (*(i32 *)((u8 *)&g.d_006c901c))
-#define slot (*(int *)(frame_ + FRAME_OFF(4)))
-#define old_slot (*(int *)(frame_ + FRAME_OFF(8)))
-#define saved_slots (*(int (*)[2])(frame_ + FRAME_OFF(12)))
-#define saved_addresses (*(char (*)[76])(frame_ + FRAME_OFF(20)))
-#define saved_civs (*(int (*)[135])(frame_ + FRAME_OFF(96)))
-#define status (*(int *)(frame_ + FRAME_OFF(636)))
-#define slot_civ (*(int *)(frame_ + FRAME_OFF(640)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl net_client_transfer_server(void)
@@ -5435,7 +5111,11 @@ i32 __cdecl net_client_transfer_server(void)
   char transport_ok;
   i32 result;
   int cmp;
-  i8 frame_[FRAME_OFF(648)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
+  int old_slot;
+  struct { int slots[2]; char addresses[76]; int civ_ids[135]; } saved;  /* a copy of the player table */
+  int status;
+  int slot_civ;
   
   nm_server_quit_count_i32 = 0;
   nm_start_civ_count = 0;
@@ -5469,7 +5149,7 @@ i32 __cdecl net_client_transfer_server(void)
       result = 0;
     }
     else {
-      crt_memcpy(saved_slots,&net_player_count,0x270);
+      crt_memcpy(&saved,&net_player_count,0x270);
       cmp = _strcmp(&prefs_net_ip_address,&net_slot_addresses);
       if (cmp == 0) {
         dbg_log((iptr)((u8 *)&g.d_0062c000));
@@ -5489,12 +5169,12 @@ i32 __cdecl net_client_transfer_server(void)
         net_server_conn_id = 0;
         net_local_slot = 0;
         diffeng_mirror_end = diffeng_mirror_size + diffeng_mirror_buf;
-        net_players_awaited = saved_slots[0] - 1;
+        net_players_awaited = saved.slots[0] - 1;
         net_players_awaited_initial = net_players_awaited;
         if (net_players_awaited < 1) {
-          slot_civ = saved_civs[0];
-          *(i32 *)(&net_civ_slots + saved_civs[0] * 4) = 0;
-          net_slot_civs = saved_civs[0];
+          slot_civ = saved.civ_ids[0];
+          *(i32 *)(&net_civ_slots + saved.civ_ids[0] * 4) = 0;
+          net_slot_civs = saved.civ_ids[0];
         }
         else {
           dlg_pending_idle_callback = ((void *)(iptr)net_quit_wait_players_idle);
@@ -5515,14 +5195,14 @@ i32 __cdecl net_client_transfer_server(void)
             if ((&net_slot_active_flags)[slot * 0x54] != '\0') {
               old_slot = 0;
               while ((old_slot < 7 &&
-                     (cmp = _strcmp(saved_addresses + old_slot * 0x54,
+                     (cmp = _strcmp(saved.addresses + old_slot * 0x54,
                                       &net_slot_addresses + slot * 0x54), cmp != 0))) {
                 old_slot++;
               }
               if (6 < old_slot) {
                 err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0062c0ec),(iptr)((u8 *)&g.d_0062c0c8),0x8a7);
               }
-              slot_civ = saved_civs[old_slot * 0x15];
+              slot_civ = saved.civ_ids[old_slot * 0x15];
               *(int *)(&net_civ_slots + slot_civ * 4) = slot;
               (&net_slot_civs)[slot * 0x15] = slot_civ;
             }
@@ -5618,13 +5298,6 @@ i32 __cdecl net_client_transfer_server(void)
 #undef turn_resume_civ
 #undef net_handoff_wait_ticks_i32
 #undef nm_server_quit_count_i32
-#undef slot
-#undef old_slot
-#undef saved_slots
-#undef saved_addresses
-#undef saved_civs
-#undef status
-#undef slot_civ
 
 /* 0048bf51 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
@@ -5728,10 +5401,6 @@ void __cdecl net_heartbeat_check(iptr civ)
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
 #define net_slot_civs (*(i32 *)((u8 *)&g.d_006ad35c))
 #define nm_lock_nation_count_i32 (*(i32 *)((u8 *)&g.d_006c90a0))
-#define civ (*(int *)(frame_ + FRAME_OFF(0)))
-#define dropped_count (*(int *)(frame_ + FRAME_OFF(8)))
-#define lost_counts (*(int (*)[7])(frame_ + FRAME_OFF(12)))
-#define slot (*(iptr *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl net_check_lost_connections(void)
@@ -5739,7 +5408,10 @@ i32 __cdecl net_check_lost_connections(void)
 {
   int slot_civ;
   bool no_player;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
+  int dropped_count;
+  int lost_counts[7];
+  iptr slot;
   
   if (net_host_flag == '\0') {
     if (net_lost_conn_total != 0) {
@@ -5817,26 +5489,21 @@ i32 __cdecl net_check_lost_connections(void)
 #undef net_slot_active_flags
 #undef net_slot_civs
 #undef nm_lock_nation_count_i32
-#undef civ
-#undef dropped_count
-#undef lost_counts
-#undef slot
 
 /* 0048de75 auto */
 #define net_claimed_civs_mask (*(ushort *)((u8 *)&g.d_00654fb0))
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
 #define net_slot_civs (*(i32 *)((u8 *)&g.d_006ad35c))
 #define nm_lock_nation_count_i32 (*(i32 *)((u8 *)&g.d_006c90a0))
-#define civ_bit (*(byte *)(frame_ + FRAME_OFF(0)))
-#define dropped_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define slot (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 int __cdecl net_drop_flagged_players(void)
 
 {
   int slot_civ;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  byte civ_bit;
+  int dropped_count;
+  int slot;
   
   dropped_count = 0;
   for (slot = 1; slot < 7; slot++) {
@@ -5866,15 +5533,11 @@ int __cdecl net_drop_flagged_players(void)
 #undef net_slot_active_flags
 #undef net_slot_civs
 #undef nm_lock_nation_count_i32
-#undef civ_bit
-#undef dropped_count
-#undef slot
 
 /* 004923f0 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define mp_chat_from_start (*(short *)((u8 *)&g.d_00654c7a))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define tries (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl chat_insert_macro_text(Control *edit,i32 macro_id)
 
 {
@@ -5882,7 +5545,7 @@ void __cdecl chat_insert_macro_text(Control *edit,i32 macro_id)
   int civ;
   iptr name2;
   size_t text_len;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int tries;
   
   text_clear();
   tries = 0;
@@ -5971,21 +5634,18 @@ switchD_004926f8_default:
 #undef human_civ
 #undef mp_chat_from_start
 #undef text_buffer
-#undef tries
 
 /* 0049275a auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define file (*(i8 (*)[160])(frame_ + FRAME_OFF(0)))
-#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(160)))
 void __cdecl chat_read_macro_line(iptr path,iptr file_offset)
 
 {
   int ok;
   size_t line_len;
-  i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 file[160];
+  i32 unwind_state;
   
   unwind_state = 0xffffffff;
-  (*(i32 *)((char *)&file + 156)) = &LAB_00492874;
   file_obj_init((FileObject *)file);
   unwind_state = 0;
   ok = file_obj_open((FileObject *)file,path);
@@ -6018,24 +5678,9 @@ void __cdecl chat_read_macro_line(iptr path,iptr file_offset)
   return;
 }
 #undef text_buffer
-#undef file
-#undef unwind_state
 
 /* 004af3e0 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define hotspot_parent (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define scroll_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define hotspot (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define scrollbar (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define other_civ (*(u32 *)(frame_ + FRAME_OFF(24)))
-#define rect_left2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define rect_top2 (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define rect_right2 (*(int *)(frame_ + FRAME_OFF(36)))
-#define rect_bottom2 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define all_contact (*(int *)(frame_ + FRAME_OFF(44)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(52)))
-#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(56)))
 void __thiscall parley_build_civ_list(ListPaneWindow *this,iptr rect,int side)
 
 {
@@ -6043,13 +5688,22 @@ void __thiscall parley_build_civ_list(ListPaneWindow *this,iptr rect,int side)
   int has_wonder;
   int scroll_width;
   Control *pCVar4;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *hotspot_parent;
+  u8 *scroll_parent;
+  i32 hotspot;
+  i32 scrollbar;
+  u32 other_civ;
+  RECT rect2;
+  int all_contact;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 unwind_state;
   
   unwind_state = 0xffffffff;
-  rect_left2 = *(int *)rect;
-  rect_top2 = *(i32 *)(rect + 4);
-  rect_right2 = *(int *)(rect + 8);
-  rect_bottom2 = *(i32 *)(rect + 0xc);
+  rect2.left = *(int *)rect;
+  rect2.top = *(i32 *)(rect + 4);
+  rect2.right = *(int *)(rect + 8);
+  rect2.bottom = *(i32 *)(rect + 0xc);
   if (game.wonder_city[0x18] == -1) {
     has_wonder = civ_has_wonder(human_civ,9);
     if ((has_wonder == 0) && (game.reveal_map == '\0')) {
@@ -6103,11 +5757,11 @@ LAB_004af467:
   if (*(int *)(((PictureWindow *)this)->parley_pane_arrays_base + side * 4 + 0x40) <
       *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + side * 4 + 0x4c)) {
     scroll_width = GetSystemMetrics(2);
-    has_wonder = rect_right2;
+    has_wonder = rect2.right;
     *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + side * 0x10 + 0x2c) =
          *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + side * 0x10 + 0x2c) - scroll_width;
-    rect_left2 = GetSystemMetrics(2);
-    rect_left2 = has_wonder - rect_left2;
+    rect2.left = GetSystemMetrics(2);
+    rect2.left = has_wonder - rect2.left;
     pCVar4 = operator_new(0x40);
     unwind_state = 0;
     if (pCVar4 == (Control *)0x0) {
@@ -6126,7 +5780,7 @@ LAB_004af467:
     }
     scrollbar_create
               (*(Control **)(((PediaRedrawView *)this)->pedia_pane_layout + side * 4 - 0x20),(iptr)scroll_parent,
-               side + 0x40d,(iptr)&rect_left2,1);
+               side + 0x40d,(iptr)&rect2,1);
     scrollbar_set_range
               (*(Control **)(((PediaRedrawView *)this)->pedia_pane_layout + side * 4 - 0x20),0,
                *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + side * 4 + 0x4c) -
@@ -6167,19 +5821,6 @@ LAB_004af467:
   return;
 }
 #undef human_civ
-#undef hotspot_parent
-#undef scroll_parent
-#undef hotspot
-#undef scrollbar
-#undef other_civ
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
-#undef all_contact
-#undef seh_prev
-#undef seh_handler
-#undef unwind_state
 
 /* 004af867 auto */
 void __cdecl parley_civ_list_scroll_local(i32 pos)
@@ -6190,12 +5831,11 @@ void __cdecl parley_civ_list_scroll_local(i32 pos)
 }
 
 /* 004af8a3 auto */
-#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_civ_list_scroll(int side,i32 pos)
 
 {
   int active;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr wnd2;
   
   active = wnd_get_active_child();
   if (active == 0) {
@@ -6209,22 +5849,20 @@ void __cdecl parley_civ_list_scroll(int side,i32 pos)
   parley_draw_civ_list(side);
   return;
 }
-#undef wnd2
 
 /* 004af904 auto */
-#define range_end (*(int *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
-#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define side (*(int *)(frame_ + FRAME_OFF(20)))
-#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(24)))
 void __cdecl parley_civ_list_click(int ctrl_id)
 
 {
   uint *sel_flag;
   int row;
   int key_down;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int range_end;
+  int i;
+  i32 cursor_y;
+  i32 cursor_x;
+  int side;
+  iptr wnd2;
   
   row = wnd_get_active_child();
   if (row == 0) {
@@ -6281,22 +5919,15 @@ void __cdecl parley_civ_list_click(int ctrl_id)
   }
   return;
 }
-#undef range_end
-#undef i
-#undef cursor_y
-#undef cursor_x
-#undef side
-#undef wnd2
 
 /* 004afb77 auto */
-#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 int __cdecl parley_civ_list_hit_test(int x,int y,int side)
 
 {
   iptr active;
   int row;
   int list_height;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr wnd2;
   
   active = wnd_get_active_child();
   if (active == 0) {
@@ -6327,7 +5958,6 @@ int __cdecl parley_civ_list_hit_test(int x,int y,int side)
   }
   return row;
 }
-#undef wnd2
 
 /* 004afc89 auto */
 #define dlg_sel_text_color (*(int *)((u8 *)&g.d_00635a28))
@@ -6337,15 +5967,6 @@ int __cdecl parley_civ_list_hit_test(int x,int y,int side)
 #define list_shadow_color (*(int *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(int *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define bg_color2 (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define row (*(int *)(frame_ + FRAME_OFF(16)))
-#define shadow_color2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define text_color2 (*(int *)(frame_ + FRAME_OFF(40)))
-#define wnd2 (*(ViewWindow * *)(frame_ + FRAME_OFF(44)))
-#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(52)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(68)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(72)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(88)))
 void __cdecl parley_draw_civ_list(int side)
 
 {
@@ -6359,7 +5980,15 @@ void __cdecl parley_draw_civ_list(int side)
   int text_dx;
   i32 font_height;
   iptr text;
-  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 bg_color2;
+  int row;
+  int shadow_color2;
+  int text_color2;
+  ViewWindow *wnd2;
+  tagRECT row_rect;
+  int row_height;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   active = wnd_get_active_child();
   if (active == 0) {
@@ -6494,31 +6123,21 @@ LAB_004afe04:
 #undef list_shadow_color
 #undef list_text_color
 #undef panel_margin_x
-#undef bg_color2
-#undef row
-#undef shadow_color2
-#undef text_color2
-#undef wnd2
-#undef row_rect
-#undef row_height
-#undef saved_clip
-#undef font2
 
 /* 004b0157 auto */
-#define city2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define zoom2 (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define draw_x (*(int *)(frame_ + FRAME_OFF(16)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(24)))
-#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define best_score (*(int *)(frame_ + FRAME_OFF(36)))
-#define score (*(int *)(frame_ + FRAME_OFF(40)))
 void __cdecl parley_draw_civ_capital(int civ,uint row,int x,int y,int row_height)
 
 {
   iptr active;
   int has_palace;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city2;
+  i32 zoom2;
+  iptr city;
+  int draw_x;
+  int icon_width;
+  iptr wnd2;
+  int best_score;
+  int score;
   
   active = wnd_get_active_child();
   if (active == 0) {
@@ -6567,14 +6186,6 @@ void __cdecl parley_draw_civ_capital(int civ,uint row,int x,int y,int row_height
   }
   return;
 }
-#undef city2
-#undef zoom2
-#undef city
-#undef draw_x
-#undef icon_width
-#undef wnd2
-#undef best_score
-#undef score
 
 /* 004b0b53 auto */
 #define diffeng_mirror_end (*(int * *)((u8 *)&g.d_0067a408))
@@ -6587,23 +6198,6 @@ void __cdecl parley_draw_civ_capital(int civ,uint row,int x,int y,int row_height
 #define diffeng_packet_msg_type_i32 (*(i32 *)((u8 *)&g.d_00679ff4))
 #define diffeng_packet_size_i32 (*(i32 *)((u8 *)&g.d_00679ff8))
 #define diffeng_packet_record_count_i32 (*(i32 *)((u8 *)&g.d_0067a000))
-#define bytes_changed (*(int *)(frame_ + FRAME_OFF(4)))
-#define run_section (*(uint *)(frame_ + FRAME_OFF(8)))
-#define run_size (*(uint *)(frame_ + FRAME_OFF(12)))
-#define cur_ptr (*(int * *)(frame_ + FRAME_OFF(16)))
-#define rle_src (*(int * *)(frame_ + FRAME_OFF(24)))
-#define rle_src_end (*(int *)(frame_ + FRAME_OFF(28)))
-#define rle_dst (*(uint * *)(frame_ + FRAME_OFF(32)))
-#define rle_size_ptr (*(i32 * *)(frame_ + FRAME_OFF(36)))
-#define encoded_size (*(uint *)(frame_ + FRAME_OFF(40)))
-#define start_ptr (*(int * *)(frame_ + FRAME_OFF(44)))
-#define run_offset (*(uint *)(frame_ + FRAME_OFF(48)))
-#define game_mirror (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define out_ptr (*(uint * *)(frame_ + FRAME_OFF(56)))
-#define record_count (*(int *)(frame_ + FRAME_OFF(60)))
-#define runs_left (*(int *)(frame_ + FRAME_OFF(64)))
-#define deadline (*(int *)(frame_ + FRAME_OFF(68)))
-#define section_end (*(int * *)(frame_ + FRAME_OFF(72)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 int __cdecl
@@ -6613,7 +6207,23 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
   int *mirror_start;
   int *run_start;
   int encoded;
-  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  int bytes_changed;
+  uint run_section;
+  uint run_size;
+  int *cur_ptr;
+  int *rle_src;
+  int rle_src_end;
+  uint *rle_dst;
+  i32 *rle_size_ptr;
+  uint encoded_size;
+  int *start_ptr;
+  uint run_offset;
+  iptr game_mirror;
+  uint *out_ptr;
+  int record_count;
+  int runs_left;
+  int deadline;
+  int *section_end;
   
   if (game.multiplayer < 3) {
     bytes_changed = 0;
@@ -6806,23 +6416,6 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
 #undef diffeng_packet_msg_type_i32
 #undef diffeng_packet_size_i32
 #undef diffeng_packet_record_count_i32
-#undef bytes_changed
-#undef run_section
-#undef run_size
-#undef cur_ptr
-#undef rle_src
-#undef rle_src_end
-#undef rle_dst
-#undef rle_size_ptr
-#undef encoded_size
-#undef start_ptr
-#undef run_offset
-#undef game_mirror
-#undef out_ptr
-#undef record_count
-#undef runs_left
-#undef deadline
-#undef section_end
 
 /* 004b401c auto */
 void __cdecl parley_wnd_global_init(void)
@@ -6894,16 +6487,15 @@ void __cdecl chat_wnd_static_dtor(void)
 #define chat_input_buffer (*(i32 *)((u8 *)&g.d_0062d86c))
 #define chat_log_buffer (*(i32 *)((u8 *)&g.d_0062d870))
 #define chat_log_capacity (*(i32 *)((u8 *)&g.d_0069b03c))
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(12)))
-#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(16)))
 ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr rect)
 
 {
   u8 *field;
   int width;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 unwind_state;
   
   unwind_state = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
@@ -7047,31 +6639,26 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr rect)
 #undef chat_input_buffer
 #undef chat_log_buffer
 #undef chat_log_capacity
-#undef i
-#undef seh_prev
-#undef seh_handler
-#undef unwind_state
 
 /* 004b4593 auto */
 #define chat_input_buffer (*(void * *)((u8 *)&g.d_0062d86c))
 #define chat_log_buffer (*(char * *)((u8 *)&g.d_0062d870))
 #define prefs_clear_chat_on_boot (*(short *)((u8 *)&g.d_006665fc))
-#define log_file (*(FileObject *)(frame_ + FRAME_OFF(0)))
-#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(152)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(156)))
-#define unwind_state (*(uint *)(frame_ + FRAME_OFF(160)))
 void __thiscall parley_wnd_dtor(ViewWindow *this)
 
 {
   int created;
   size_t log_len;
-  i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  FileObject log_file;
+  i32 seh_prev;
+  i8 *seh_handler;
+  uint unwind_state;
   
   this->vtable = (u32)&PTR_FUN_0061d6c4;
   unwind_state = 0;
   if (this->session_mode == 4) {
     file_obj_init(&log_file);
-    unwind_state = CONCAT31((*(i32 *)((char *)&unwind_state + 1)),1);
+    unwind_state = (unwind_state & 0xffffff00 | (byte)(1));
     if ((prefs_clear_chat_on_boot != 0) && (chat_log_buffer != (char *)0x0)) {
       *chat_log_buffer = '\0';
       created = file_obj_create(&log_file,(iptr)((u8 *)&g.d_0062d874));
@@ -7101,19 +6688,12 @@ void __thiscall parley_wnd_dtor(ViewWindow *this)
 #undef chat_input_buffer
 #undef chat_log_buffer
 #undef prefs_clear_chat_on_boot
-#undef log_file
-#undef seh_prev
-#undef seh_handler
-#undef unwind_state
 
 /* 004b4735 auto */
 #define chat_input_buffer (*(void * *)((u8 *)&g.d_0062d86c))
 #define chat_log_buffer (*(i8 * *)((u8 *)&g.d_0062d870))
 #define chat_log_capacity (*(UINT *)((u8 *)&g.d_0069b03c))
 #define prefs_clear_chat_on_new_game (*(short *)((u8 *)&g.d_006665fa))
-#define wnd2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define log_file (*(i8 (*)[160])(frame_ + FRAME_OFF(8)))
-#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(168)))
 void __thiscall parley_wnd_create(ViewWindow *this,u32 mode)
 
 {
@@ -7122,10 +6702,11 @@ void __thiscall parley_wnd_create(ViewWindow *this,u32 mode)
   i32 width;
   i8 *palette;
   i8 *parent;
-  i8 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *wnd2;
+  i8 log_file[160];
+  i32 unwind_state;
   
   unwind_state = 0xffffffff;
-  (*(i32 *)((char *)&log_file + 156)) = &LAB_004b4bef;
   this->style_flags = 1;
   if (this == (ViewWindow *)0x0) {
     wnd2 = (u8 *)0x0;
@@ -7223,17 +6804,13 @@ LAB_004b4982:
 #undef chat_log_buffer
 #undef chat_log_capacity
 #undef prefs_clear_chat_on_new_game
-#undef wnd2
-#undef log_file
-#undef unwind_state
 
 /* 004b4c09 auto */
-#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_wnd_on_move(void)
 
 {
   iptr active;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr wnd2;
   
   active = wnd_get_active_child();
   if (active == 0) {
@@ -7247,15 +6824,13 @@ void __cdecl parley_wnd_on_move(void)
   *(i32 *)(wnd2 + 0x120) = *(i32 *)(*(int *)(wnd2 + 0x150) + 4);
   return;
 }
-#undef wnd2
 
 /* 004b4c81 auto */
-#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_wnd_pick_size_mode(ParleyWindowLayout *this)
 
 {
   iptr active;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr wnd2;
   
   active = wnd_get_active_child();
   if (active == 0) {
@@ -7271,20 +6846,18 @@ void __thiscall parley_wnd_pick_size_mode(ParleyWindowLayout *this)
   parley_wnd_calc_rect(this);
   return;
 }
-#undef wnd2
 
 /* 004b4cf0 auto */
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define font_height (*(int *)(frame_ + FRAME_OFF(0)))
-#define height2 (*(int *)(frame_ + FRAME_OFF(4)))
-#define width2 (*(int *)(frame_ + FRAME_OFF(8)))
-#define top (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define left (*(u32 *)(frame_ + FRAME_OFF(16)))
 void __thiscall parley_wnd_calc_rect(ParleyWindowLayout *this)
 
 {
   int size;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int font_height;
+  int height2;
+  int width2;
+  u32 top;
+  u32 left;
   
   if (this->large_layout == 0) {
     width2 = 0x208;
@@ -7325,20 +6898,14 @@ void __thiscall parley_wnd_calc_rect(ParleyWindowLayout *this)
   return;
 }
 #undef panel_margin_x
-#undef font_height
-#undef height2
-#undef width2
-#undef top
-#undef left
 
 /* 004b4e8a auto */
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define font_height (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_wnd_calc_layout(ParleyWindowLayout *this)
 
 {
   u32 dim;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int font_height;
   
   dim = surface_get_width((DibSurface *)this);
   this->client_x = dim;
@@ -7358,7 +6925,6 @@ void __thiscall parley_wnd_calc_layout(ParleyWindowLayout *this)
   return;
 }
 #undef panel_margin_x
-#undef font_height
 
 /* 004b4fb2 auto */
 void __thiscall parley_wnd_sync_sides(ViewWindow *this)
@@ -7387,12 +6953,11 @@ void __thiscall parley_wnd_sync_sides(ViewWindow *this)
 }
 
 /* 004b50cf auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_wnd_destroy_controls(ViewWindow *this)
 
 {
   u8 *slot;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if (this->item_buffer != 0) {
     operator_delete((void *)this->item_buffer);
@@ -7640,66 +7205,11 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *this)
   }
   return;
 }
-#undef i
 
 /* 004b5c93 auto */
 #define chat_input_buffer (*(iptr *)((u8 *)&g.d_0062d86c))
 #define chat_log_buffer (*(iptr *)((u8 *)&g.d_0062d870))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define counter_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define no_thanks_parent (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define accept_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define never_mind_parent (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define mode2_parent (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define mode_parent (*(u8 * *)(frame_ + FRAME_OFF(24)))
-#define intel_parent (*(u8 * *)(frame_ + FRAME_OFF(28)))
-#define reveal_parent (*(u8 * *)(frame_ + FRAME_OFF(32)))
-#define conceal_parent (*(u8 * *)(frame_ + FRAME_OFF(36)))
-#define footer_line_h (*(int *)(frame_ + FRAME_OFF(40)))
-#define clear_parent (*(u8 * *)(frame_ + FRAME_OFF(44)))
-#define send_parent (*(u8 * *)(frame_ + FRAME_OFF(48)))
-#define input_parent (*(u8 * *)(frame_ + FRAME_OFF(52)))
-#define input_font_h4 (*(int *)(frame_ + FRAME_OFF(60)))
-#define input_font_h3 (*(int *)(frame_ + FRAME_OFF(64)))
-#define input_font_h2 (*(int *)(frame_ + FRAME_OFF(68)))
-#define input_font_h1 (*(int *)(frame_ + FRAME_OFF(72)))
-#define history_parent (*(u8 * *)(frame_ + FRAME_OFF(76)))
-#define hist_font_h4 (*(int *)(frame_ + FRAME_OFF(84)))
-#define hist_font_h3 (*(int *)(frame_ + FRAME_OFF(88)))
-#define hist_font_h2 (*(int *)(frame_ + FRAME_OFF(92)))
-#define hist_font_h1 (*(int *)(frame_ + FRAME_OFF(96)))
-#define close_parent (*(u8 * *)(frame_ + FRAME_OFF(100)))
-#define close_label (*(iptr *)(frame_ + FRAME_OFF(104)))
-#define close_line_h2 (*(int *)(frame_ + FRAME_OFF(108)))
-#define close_line_h (*(int *)(frame_ + FRAME_OFF(112)))
-#define caption_parent (*(u8 * *)(frame_ + FRAME_OFF(120)))
-#define counter_button (*(uptr *)(frame_ + FRAME_OFF(124)))
-#define no_thanks_button (*(uptr *)(frame_ + FRAME_OFF(132)))
-#define accept_button (*(uptr *)(frame_ + FRAME_OFF(140)))
-#define never_mind_button (*(uptr *)(frame_ + FRAME_OFF(148)))
-#define mode2_button (*(uptr *)(frame_ + FRAME_OFF(156)))
-#define mode_button (*(uptr *)(frame_ + FRAME_OFF(164)))
-#define intel_button (*(uptr *)(frame_ + FRAME_OFF(172)))
-#define reveal_button (*(uptr *)(frame_ + FRAME_OFF(180)))
-#define conceal_button (*(uptr *)(frame_ + FRAME_OFF(188)))
-#define clear_button (*(uptr *)(frame_ + FRAME_OFF(196)))
-#define send_button (*(uptr *)(frame_ + FRAME_OFF(204)))
-#define input_font (*(i8 * *)(frame_ + FRAME_OFF(212)))
-#define input_edit (*(uptr *)(frame_ + FRAME_OFF(216)))
-#define history_font (*(i8 * *)(frame_ + FRAME_OFF(224)))
-#define history_edit (*(uptr *)(frame_ + FRAME_OFF(228)))
-#define close_btn (*(uptr *)(frame_ + FRAME_OFF(236)))
-#define button_font (*(i8 * *)(frame_ + FRAME_OFF(244)))
-#define hotspot (*(i32 *)(frame_ + FRAME_OFF(248)))
-#define ctrl_top (*(int *)(frame_ + FRAME_OFF(256)))
-#define caption_x (*(int *)(frame_ + FRAME_OFF(260)))
-#define i (*(int *)(frame_ + FRAME_OFF(268)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(272)))
-#define ctrl_height (*(int *)(frame_ + FRAME_OFF(288)))
-#define input_style (*(i32 *)(frame_ + FRAME_OFF(292)))
-#define unused_10 (*(i32 *)(frame_ + FRAME_OFF(296)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(300)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(304)))
 void __thiscall parley_wnd_create_controls(ViewWindow *this)
 
 {
@@ -7714,7 +7224,60 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
   int yTop;
   InputControl *pCVar8;
   iptr label;
-  i8 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *counter_parent;
+  u8 *no_thanks_parent;
+  u8 *accept_parent;
+  u8 *never_mind_parent;
+  u8 *mode2_parent;
+  u8 *mode_parent;
+  u8 *intel_parent;
+  u8 *reveal_parent;
+  u8 *conceal_parent;
+  int footer_line_h;
+  u8 *clear_parent;
+  u8 *send_parent;
+  u8 *input_parent;
+  int input_font_h4;
+  int input_font_h3;
+  int input_font_h2;
+  int input_font_h1;
+  u8 *history_parent;
+  int hist_font_h4;
+  int hist_font_h3;
+  int hist_font_h2;
+  int hist_font_h1;
+  u8 *close_parent;
+  iptr close_label;
+  int close_line_h2;
+  int close_line_h;
+  u8 *caption_parent;
+  uptr counter_button;
+  uptr no_thanks_button;
+  uptr accept_button;
+  uptr never_mind_button;
+  uptr mode2_button;
+  uptr mode_button;
+  uptr intel_button;
+  uptr reveal_button;
+  uptr conceal_button;
+  uptr clear_button;
+  uptr send_button;
+  i8 *input_font;
+  uptr input_edit;
+  i8 *history_font;
+  uptr history_edit;
+  uptr close_btn;
+  i8 *button_font;
+  i32 hotspot;
+  int ctrl_top;
+  int caption_x;
+  int i;
+  tagRECT rect;
+  int ctrl_height;
+  i32 input_style;
+  i32 unused_10;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   caption_x = panel_padding_x;
@@ -8225,68 +7788,13 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
 #undef chat_input_buffer
 #undef chat_log_buffer
 #undef panel_margin_x
-#undef counter_parent
-#undef no_thanks_parent
-#undef accept_parent
-#undef never_mind_parent
-#undef mode2_parent
-#undef mode_parent
-#undef intel_parent
-#undef reveal_parent
-#undef conceal_parent
-#undef footer_line_h
-#undef clear_parent
-#undef send_parent
-#undef input_parent
-#undef input_font_h4
-#undef input_font_h3
-#undef input_font_h2
-#undef input_font_h1
-#undef history_parent
-#undef hist_font_h4
-#undef hist_font_h3
-#undef hist_font_h2
-#undef hist_font_h1
-#undef close_parent
-#undef close_label
-#undef close_line_h2
-#undef close_line_h
-#undef caption_parent
-#undef counter_button
-#undef no_thanks_button
-#undef accept_button
-#undef never_mind_button
-#undef mode2_button
-#undef mode_button
-#undef intel_button
-#undef reveal_button
-#undef conceal_button
-#undef clear_button
-#undef send_button
-#undef input_font
-#undef input_edit
-#undef history_font
-#undef history_edit
-#undef close_btn
-#undef button_font
-#undef hotspot
-#undef ctrl_top
-#undef caption_x
-#undef i
-#undef rect
-#undef ctrl_height
-#undef input_style
-#undef unused_10
-#undef eh_prev
-#undef eh_state
 
 /* 004b74c4 auto */
-#define parley_wnd_ptr (*(ParleyWindowLayout * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_wnd_on_caption_click(int control_id)
 
 {
   iptr child_wnd;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ParleyWindowLayout *parley_wnd_ptr;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
@@ -8317,7 +7825,6 @@ void __cdecl parley_wnd_on_caption_click(int control_id)
   }
   return;
 }
-#undef parley_wnd_ptr
 
 /* 004b7645 auto */
 /* WARNING: Removing unreachable block (ram,0x004b766b) */
@@ -8342,13 +7849,12 @@ void __cdecl chat_wnd_close(void)
 }
 
 /* 004b7885 auto */
-#define wnd2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_wnd_redraw(void)
 
 {
   iptr child_wnd;
   i32 caret_pos;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ViewWindow *wnd2;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
@@ -8372,26 +7878,24 @@ void __cdecl parley_wnd_redraw(void)
   }
   return;
 }
-#undef wnd2
 
 /* 004b794a auto */
 #define dlg_bevel_dark_color (*(byte *)((u8 *)&g.d_00635a0c))
 #define dlg_bevel_light_color (*(byte *)((u8 *)&g.d_00635a08))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define icon_height (*(int *)(frame_ + FRAME_OFF(20)))
-#define icon_width (*(int *)(frame_ + FRAME_OFF(24)))
-#define y2 (*(int *)(frame_ + FRAME_OFF(28)))
-#define x2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define title_font2 (*(GameFont * *)(frame_ + FRAME_OFF(36)))
-#define i (*(int *)(frame_ + FRAME_OFF(40)))
-#define rect (*(tagRECT *)(frame_ + FRAME_OFF(44)))
 void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *this)
 
 {
   int free_width;
   int title_width;
-  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 sprite_rect[16];
+  int icon_height;
+  int icon_width;
+  int y2;
+  int x2;
+  GameFont *title_font2;
+  int i;
+  tagRECT rect;
   
   surface_reset_clip((DibSurface *)this);
   crt_memcpy(&rect,&this->client_height,0x10);
@@ -8447,14 +7951,6 @@ void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *this)
 #undef dlg_bevel_dark_color
 #undef dlg_bevel_light_color
 #undef panel_margin_x
-#undef sprite_rect
-#undef icon_height
-#undef icon_width
-#undef y2
-#undef x2
-#undef title_font2
-#undef i
-#undef rect
 
 /* 004b7c90 auto */
 #define dlg_bg_color (*(byte *)((u8 *)&g.d_00635a04))
@@ -8498,12 +7994,11 @@ void __thiscall parley_fill_background(WindowObjectView *this,iptr rect,int area
 /* 004b7d72 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define attitude_level (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_wnd_build_title(ParleyTitleView *this)
 
 {
   iptr text;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr attitude_level;
   
   text_clear();
   if (this->parley_kind == 4) {
@@ -8533,7 +8028,6 @@ void __thiscall parley_wnd_build_title(ParleyTitleView *this)
 }
 #undef human_civ
 #undef text_buffer
-#undef attitude_level
 
 /* 004b7eb6 auto */
 #define chat_unread_count (*(i32 *)((u8 *)&g.d_006ad6a0))
@@ -8541,8 +8035,6 @@ void __thiscall parley_wnd_build_title(ParleyTitleView *this)
 #define mp_chat_from_start (*(short *)((u8 *)&g.d_00654c7a))
 #define parley_selected_action (*(i32 *)((u8 *)&g.d_0067a9b0))
 #define chat_missed_message_count_i32 (*(i32 *)((u8 *)&g.d_006ad69c))
-#define civ (*(int *)(frame_ + FRAME_OFF(4)))
-#define wnd2 (*(ParleyTitleView * *)(frame_ + FRAME_OFF(16)))
 /* WARNING: Removing unreachable block (ram,0x004b8008) */
 /* WARNING: Removing unreachable block (ram,0x004b8051) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -8555,7 +8047,8 @@ void __thiscall parley_wnd_open(ViewWindow *this,iptr other_civ,u32 mode)
   iptr has_wonder;
   iptr child_wnd;
   i32 caret_pos;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
+  ParleyTitleView *wnd2;
   
   if (mode == 4) {
     has_contact = false;
@@ -8640,8 +8133,6 @@ void __thiscall parley_wnd_open(ViewWindow *this,iptr other_civ,u32 mode)
 #undef mp_chat_from_start
 #undef parley_selected_action
 #undef chat_missed_message_count_i32
-#undef civ
-#undef wnd2
 
 /* 004b81dd auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
@@ -8815,13 +8306,12 @@ void __thiscall parley_set_mode_sides(WindowObjectView *this,int refresh)
 #undef parley_selected_action
 
 /* 004b888e auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_clear_side_controls(ViewWindow *this,int side)
 
 {
   u8 *slot_ptr;
   int half_width;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   if ((side != 0) && (side != 1)) {
     err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0062d9c0),(iptr)((u8 *)&g.d_0062d9a0),0x4ea);
@@ -8980,16 +8470,9 @@ void __thiscall parley_clear_side_controls(ViewWindow *this,int side)
   parley_fill_background((WindowObjectView *)this,(iptr)&this->fill_rect_left,2);
   return;
 }
-#undef i
 
 /* 004b8e5c auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define i (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define gold_text (*(char (*)[32])(frame_ + FRAME_OFF(8)))
-#define edit_index (*(uint *)(frame_ + FRAME_OFF(40)))
-#define modified (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define text (*(char (*)[32])(frame_ + FRAME_OFF(48)))
-#define caret (*(uint *)(frame_ + FRAME_OFF(80)))
 void __cdecl parley_gold_edit_on_change(int control_id)
 
 {
@@ -8997,7 +8480,12 @@ void __cdecl parley_gold_edit_on_change(int control_id)
   size_t len;
   int amount;
   size_t text_len;
-  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr i;
+  char gold_text[32];
+  uint edit_index;
+  i32 modified;
+  char text[32];
+  uint caret;
   
   modified = 0;
   _memset(text,0,0x20);
@@ -9044,12 +8532,6 @@ void __cdecl parley_gold_edit_on_change(int control_id)
   return;
 }
 #undef human_civ
-#undef i
-#undef gold_text
-#undef edit_index
-#undef modified
-#undef text
-#undef caret
 
 /* 004b90ad auto */
 #define chat_log_buffer (*(char * *)((u8 *)&g.d_0062d870))
@@ -9059,7 +8541,6 @@ void __cdecl parley_gold_edit_on_change(int control_id)
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define chat_missed_message_count_i32 (*(i32 *)((u8 *)&g.d_006ad69c))
-#define listener (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall
@@ -9069,7 +8550,7 @@ chat_receive_message(WindowObjectView *this,iptr civ,iptr civ2,iptr is_private,i
   u32 muted;
   size_t log_len;
   i32 label;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int listener;
   
   ctrl_get_text(chat_log_edit,(iptr)chat_log_buffer);
   text_clear();
@@ -9142,12 +8623,10 @@ LAB_004b9295:
 #undef parley_other_civ
 #undef text_buffer
 #undef chat_missed_message_count_i32
-#undef listener
 
 /* 004b93a2 auto */
 #define chat_log_buffer (*(char * *)((u8 *)&g.d_0062d870))
 #define chat_log_capacity (*(int *)((u8 *)&g.d_0069b03c))
-#define trim_len (*(uptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl chat_log_append(iptr line)
 
 {
@@ -9155,7 +8634,7 @@ void __cdecl chat_log_append(iptr line)
   size_t log_len;
   size_t line_len;
   i32 caret_pos;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr trim_len;
   
   capacity = chat_log_capacity;
   trim_len = 0;
@@ -9185,7 +8664,6 @@ void __cdecl chat_log_append(iptr line)
 }
 #undef chat_log_buffer
 #undef chat_log_capacity
-#undef trim_len
 
 /* 004b9504 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
@@ -9264,18 +8742,17 @@ i32 __cdecl parley_edit_escape_filter(i32 control,int key)
 #define chat_remain_anonymous (*(int *)((u8 *)&g.d_0068aedc))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define relay_sender (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define sender (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define count (*(int *)(frame_ + FRAME_OFF(16)))
-#define civ (*(int *)(frame_ + FRAME_OFF(20)))
-#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(24)))
 i32 __cdecl chat_input_on_key(i32 control,int key)
 
 {
   iptr child_wnd;
   size_t len;
   i32 label;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr relay_sender;
+  iptr sender;
+  int count;
+  int civ;
+  iptr wnd2;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
@@ -9395,11 +8872,6 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
 #undef chat_remain_anonymous
 #undef human_civ
 #undef text_buffer
-#undef relay_sender
-#undef sender
-#undef count
-#undef civ
-#undef wnd2
 
 /* 004db690 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -9407,10 +8879,6 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
 #define parley_offer_left_count_i32 (*(i32 *)((u8 *)&g.d_0068abd0))
 #define parley_offer_right_count_i32 (*(i32 *)((u8 *)&g.d_0068abd4))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define total_size (*(uint *)(frame_ + FRAME_OFF(16)))
-#define right_size (*(int *)(frame_ + FRAME_OFF(20)))
-#define left_size (*(int *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 * __thiscall parley_send_offer(ParleyOfferBuffer *this,int mode)
@@ -9419,7 +8887,10 @@ i32 * __thiscall parley_send_offer(ParleyOfferBuffer *this,int mode)
   i32 offer_kind;
   i32 *msg;
   int left_items;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  uint total_size;
+  int right_size;
+  int left_size;
   
   offer_kind = *(i32 *)(&parley_offer_kinds + mode * 4);
   parley_offer_left_count_i32 = 0;
@@ -9509,25 +8980,20 @@ i32 * __thiscall parley_send_offer(ParleyOfferBuffer *this,int mode)
 #undef parley_other_civ
 #undef parley_offer_left_count_i32
 #undef parley_offer_right_count_i32
-#undef i
-#undef total_size
-#undef right_size
-#undef left_size
 
 /* 004dbab4 auto */
 #define parley_list_counts (*(i32 *)((u8 *)&g.d_0067ab90))
-#define item_ptr2 (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define packed_count (*(int *)(frame_ + FRAME_OFF(8)))
-#define i (*(int *)(frame_ + FRAME_OFF(12)))
-#define pair_ptr (*(i32 * *)(frame_ + FRAME_OFF(16)))
-#define gold_text (*(char (*)[32])(frame_ + FRAME_OFF(20)))
 void __thiscall
 parley_pack_offer_items
           (ParleyOfferBuffer *this,iptr dest,i32 item_type,i32 item_size,iptr side)
 
 {
   int gold;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *item_ptr2;
+  int packed_count;
+  int i;
+  i32 *pair_ptr;
+  char gold_text[32];
   
   switch(item_type) {
   case 5:
@@ -9620,11 +9086,6 @@ parley_pack_offer_items
   return;
 }
 #undef parley_list_counts
-#undef item_ptr2
-#undef packed_count
-#undef i
-#undef pair_ptr
-#undef gold_text
 
 /* 004dbee6 auto */
 void __thiscall parley_build_description(WindowObjectView *this,iptr offer,int received)
@@ -9876,14 +9337,13 @@ void __thiscall parley_build_description(WindowObjectView *this,iptr offer,int r
 }
 
 /* 004dcafa auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
-#define adv_ptr (*(int * *)(frame_ + FRAME_OFF(8)))
 void __cdecl parley_describe_advances(iptr items)
 
 {
   int count;
   iptr adv_name;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  int *adv_ptr;
   
   count = *(int *)(items + 8);
   adv_ptr = (int *)(items + 0xc);
@@ -9909,16 +9369,13 @@ void __cdecl parley_describe_advances(iptr items)
   crt_strcat(&parley_description,&parley_advances_crlf_str);
   return;
 }
-#undef i
-#undef adv_ptr
 
 /* 004dcc0c auto */
-#define gold_text (*(char (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl parley_describe_gold(int gold)
 
 {
   i32 label;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  char gold_text[16];
   
   __itoa(gold,gold_text,10);
   crt_strcat(&parley_description,gold_text);
@@ -9928,22 +9385,20 @@ void __cdecl parley_describe_gold(int gold)
   crt_strcat(&parley_description,&parley_gold_crlf_str);
   return;
 }
-#undef gold_text
 
 /* 004dcc83 auto */
-#define type_counts (*(int (*)[62])(frame_ + FRAME_OFF(0)))
-#define listed (*(int *)(frame_ + FRAME_OFF(248)))
-#define unit_ids (*(iptr *)(frame_ + FRAME_OFF(252)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(256)))
-#define distinct_types (*(int *)(frame_ + FRAME_OFF(260)))
-#define unit_count (*(int *)(frame_ + FRAME_OFF(264)))
-#define count_text (*(char (*)[16])(frame_ + FRAME_OFF(268)))
 void __cdecl parley_describe_units(iptr items)
 
 {
   iptr unit;
   iptr label;
-  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  int type_counts[62];
+  int listed;
+  iptr unit_ids;
+  iptr unit_type;
+  int distinct_types;
+  int unit_count;
+  char count_text[16];
   
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     type_counts[unit_type] = 0;
@@ -9989,24 +9444,16 @@ void __cdecl parley_describe_units(iptr items)
   crt_strcat(&parley_description,&parley_units_crlf_str);
   return;
 }
-#undef type_counts
-#undef listed
-#undef unit_ids
-#undef unit_type
-#undef distinct_types
-#undef unit_count
-#undef count_text
 
 /* 004dcea5 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
-#define size_text (*(char (*)[16])(frame_ + FRAME_OFF(12)))
 void __cdecl parley_describe_cities(iptr items)
 
 {
   int count;
   int city;
   iptr label;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
+  char size_text[16];
   
   count = *(int *)(items + 8);
   for (i = 0; i < count; i++) {
@@ -10035,8 +9482,6 @@ void __cdecl parley_describe_cities(iptr items)
   crt_strcat(&parley_description,&parley_cities_crlf_str);
   return;
 }
-#undef i
-#undef size_text
 
 /* 004dd016 auto */
 void __cdecl parley_describe_maps(int map_kind,int exchange)
@@ -10079,14 +9524,13 @@ void __cdecl parley_describe_maps(int map_kind,int exchange)
 }
 
 /* 004dd176 auto */
-#define civ_ptr (*(iptr * *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl parley_describe_war_targets(iptr items)
 
 {
   int count;
   iptr text;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr *civ_ptr;
+  int i;
   
   count = *(int *)(items + 8);
   civ_ptr = (iptr *)(items + 0xc);
@@ -10112,8 +9556,6 @@ void __cdecl parley_describe_war_targets(iptr items)
   crt_strcat(&parley_description,&parley_war_targets_crlf_str);
   return;
 }
-#undef civ_ptr
-#undef i
 
 /* 004dd285 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -10266,13 +9708,6 @@ void __cdecl parley_execute_transaction(iptr offer)
 
 /* 004dd8ad auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define known_bits (*(byte *)(frame_ + FRAME_OFF(12)))
-#define recv_bit (*(byte *)(frame_ + FRAME_OFF(20)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define y2 (*(uint *)(frame_ + FRAME_OFF(28)))
-#define x2 (*(uint *)(frame_ + FRAME_OFF(36)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(44)))
 void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
 
 {
@@ -10291,7 +9726,13 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
   i32 set_flag;
   i32 redraw_flag;
   iptr target_civ;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  byte known_bits;
+  byte recv_bit;
+  iptr city;
+  uint y2;
+  uint x2;
+  iptr i;
   
   recv_mask = 1 << ((byte)receiver & 0x1f);
   giver_mask = 1 << ((byte)civ & 0x1f);
@@ -10399,22 +9840,14 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
   return;
 }
 #undef human_civ
-#undef unit
-#undef known_bits
-#undef recv_bit
-#undef city
-#undef y2
-#undef x2
-#undef i
 
 /* 004dde9e auto */
-#define civ_ptr (*(iptr * *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl parley_apply_war_pact(iptr civ,iptr items)
 
 {
   int count;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr *civ_ptr;
+  int i;
   
   count = *(int *)(items + 8);
   civ_ptr = (iptr *)(items + 0xc);
@@ -10424,8 +9857,6 @@ void __cdecl parley_apply_war_pact(iptr civ,iptr items)
   }
   return;
 }
-#undef civ_ptr
-#undef i
 
 /* 004ddf04 auto */
 void __cdecl parley_transfer_gold(iptr civ2,iptr civ,i32 amount)
@@ -10444,14 +9875,13 @@ void __cdecl parley_transfer_gold(iptr civ2,iptr civ,i32 amount)
 }
 
 /* 004ddfb2 auto */
-#define adv_ptr (*(iptr * *)(frame_ + FRAME_OFF(0)))
-#define i (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl parley_transfer_advances(iptr civ,iptr civ2,iptr items)
 
 {
   int count;
   int has_adv;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr *adv_ptr;
+  int i;
   
   count = *(int *)(items + 8);
   adv_ptr = (iptr *)(items + 0xc);
@@ -10467,18 +9897,15 @@ void __cdecl parley_transfer_advances(iptr civ,iptr civ2,iptr items)
   }
   return;
 }
-#undef adv_ptr
-#undef i
 
 /* 004de049 auto */
-#define city_id_ptr (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(12)))
 void __cdecl parley_transfer_cities(iptr civ,iptr items)
 
 {
   int count;
   iptr city;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *city_id_ptr;
+  int i;
   
   count = *(int *)(items + 8);
   city_id_ptr = (i32 *)(items + 0xc);
@@ -10491,16 +9918,9 @@ void __cdecl parley_transfer_cities(iptr civ,iptr items)
   }
   return;
 }
-#undef city_id_ptr
-#undef i
 
 /* 004de0e2 auto */
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define unit_type (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define i (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define defense_ratio (*(int *)(frame_ + FRAME_OFF(48)))
 void __cdecl parley_cede_city(uptr city,iptr civ)
 
 {
@@ -10516,7 +9936,11 @@ void __cdecl parley_cede_city(uptr city,iptr civ)
   iptr in_bounds2;
   int tile;
   uptr leonardo_city;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr improvement;
+  iptr unit;
+  iptr unit_type;
+  iptr i;
+  int defense_ratio;
   
   civ3 = cities[city].owner;
   civ2 = (iptr)civ3;
@@ -10643,31 +10067,25 @@ LAB_004de76b:
   return;
 }
 #undef scenario_events_loaded
-#undef improvement
-#undef unit
-#undef unit_type
-#undef i
-#undef defense_ratio
 
 /* 004de990 auto */
-#define x3 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define unit2 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define i (*(int *)(frame_ + FRAME_OFF(16)))
-#define y2 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define x2 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define count (*(int *)(frame_ + FRAME_OFF(28)))
-#define civ2 (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define y3 (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define id_ptr (*(i32 * *)(frame_ + FRAME_OFF(40)))
 void __cdecl parley_transfer_units(iptr civ,iptr items)
 
 {
   char *count_ptr;
   i32 unit_id;
   int result;
-  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr x3;
+  iptr unit;
+  iptr city;
+  iptr unit2;
+  int i;
+  iptr y2;
+  iptr x2;
+  int count;
+  iptr civ2;
+  iptr y3;
+  i32 *id_ptr;
   
   count = *(int *)(items + 8);
   id_ptr = (i32 *)(items + 0xc);
@@ -10728,21 +10146,8 @@ void __cdecl parley_transfer_units(iptr civ,iptr items)
   XD_FlushSendBuffer(5000);
   return;
 }
-#undef x3
-#undef unit
-#undef city
-#undef unit2
-#undef i
-#undef y2
-#undef x2
-#undef count
-#undef civ2
-#undef y3
-#undef id_ptr
 
 /* 004ded07 auto */
-#define i (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define found (*(i32 *)(frame_ + FRAME_OFF(8)))
 i32 __cdecl parley_find_unit_drop_tile(iptr unit,iptr x,iptr y,iptr civ,int must_move)
 
 {
@@ -10750,7 +10155,8 @@ i32 __cdecl parley_find_unit_drop_tile(iptr unit,iptr x,iptr y,iptr civ,int must
   int y2;
   int result;
   i32 wrapped_x;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr i;
+  i32 found;
   
   *(int *)x = (int)units[unit].x;
   x2 = *(iptr *)x;
@@ -10782,8 +10188,6 @@ i32 __cdecl parley_find_unit_drop_tile(iptr unit,iptr x,iptr y,iptr civ,int must
   }
   return found;
 }
-#undef i
-#undef found
 
 /* 004def54 auto */
 void __thiscall parley_describe_treaty(WindowObjectView *this,int treaty_kind,int exchange)
@@ -10857,16 +10261,15 @@ void __cdecl parley_apply_treaty(i32 treaty_kind,iptr civ,iptr other_civ)
 }
 
 /* 00511880 auto */
-#define write_ptr (*(void * *)(frame_ + FRAME_OFF(4)))
-#define payload_size (*(uint *)(frame_ + FRAME_OFF(8)))
-#define i (*(int *)(frame_ + FRAME_OFF(12)))
-#define payload (*(void * *)(frame_ + FRAME_OFF(16)))
 void __cdecl
 net_send_text_args(iptr popup_kind,i32 player_id,int string_count,int number_count,iptr arg_a,iptr arg_b)
 
 {
   size_t len;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  void *write_ptr;
+  uint payload_size;
+  int i;
+  void *payload;
   
   payload = (void *)0x0;
   payload_size = 0;
@@ -10901,10 +10304,6 @@ net_send_text_args(iptr popup_kind,i32 player_id,int string_count,int number_cou
   }
   return;
 }
-#undef write_ptr
-#undef payload_size
-#undef i
-#undef payload
 
 /* 00511a0e auto */
 #define net_popup_queue_head (*(i32 * *)((u8 *)&g.d_00631130))
@@ -10997,14 +10396,6 @@ void __cdecl net_popup_idle_autoclose(void)
 #define parley_reveal_city_prompt_open (*(i32 *)((u8 *)&g.d_0063113c))
 #define parley_reveal_units_prompt_open (*(i32 *)((u8 *)&g.d_00631138))
 #define net_popup_in_progress_i32 (*(i32 *)((u8 *)&g.d_006ad67c))
-#define icon_sprite (*(i8 * *)(frame_ + FRAME_OFF(0)))
-#define attitude_level (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define i (*(int *)(frame_ + FRAME_OFF(40)))
-#define dlg (*(Dialog *)(frame_ + FRAME_OFF(48)))
-#define arg_ptr (*(int * *)(frame_ + FRAME_OFF(804)))
-#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(808)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(812)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(816)))
 /* WARNING: Removing unreachable block (ram,0x0051343e) */
 /* WARNING: Removing unreachable block (ram,0x0051347e) */
 /* WARNING: Removing unreachable block (ram,0x0051369c) */
@@ -11017,7 +10408,14 @@ void __cdecl net_popup_queue_show_next(void)
   size_t len;
   int choice;
   iptr text;
-  i8 frame_[FRAME_OFF(824)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *icon_sprite;
+  iptr attitude_level;
+  int i;
+  Dialog dlg;
+  int *arg_ptr;
+  i32 eh_handler;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   entry = net_popup_queue_head;
@@ -11642,14 +11040,6 @@ LAB_005139b3:
 #undef parley_reveal_city_prompt_open
 #undef parley_reveal_units_prompt_open
 #undef net_popup_in_progress_i32
-#undef icon_sprite
-#undef attitude_level
-#undef i
-#undef dlg
-#undef arg_ptr
-#undef eh_handler
-#undef eh_prev
-#undef eh_state
 
 /* 00514220 auto */
 NetMsgQueue * __thiscall net_msgq_ctor(NetMsgQueue *this)
@@ -11669,12 +11059,11 @@ void __thiscall net_msgq_clear(NetMsgQueue *this)
 }
 
 /* 00514272 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall net_msgq_reset(NetMsgQueue *this)
 
 {
   u8 *field_ptr;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; i < 2000; i++) {
     if (*(int *)(this->msg_slots + i * 0xc + 4) != 0) {
@@ -11704,7 +11093,6 @@ void __thiscall net_msgq_reset(NetMsgQueue *this)
   this->prio_count = 0;
   return;
 }
-#undef i
 
 /* 0051435f auto */
 i32 __cdecl net_msg_is_priority(int msg_type)
@@ -11725,9 +11113,6 @@ i32 __cdecl net_msg_is_priority(int msg_type)
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define nm_heartbeat_ack_count (*(int *)((u8 *)&g.d_006c9090))
 #define nm_heart_beat_count_i32 (*(i32 *)((u8 *)&g.d_006c908c))
-#define lost_msg_text (*(i8 (*)[256])(frame_ + FRAME_OFF(0)))
-#define msg_copy (*(iptr *)(frame_ + FRAME_OFF(256)))
-#define lost_prio_text (*(i8 (*)[256])(frame_ + FRAME_OFF(260)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __thiscall
@@ -11736,7 +11121,9 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *this,int sender,iptr msg,uint msg_size)
 {
   int is_priority;
   void *msg_buf;
-  i8 frame_[FRAME_OFF(520)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 lost_msg_text[256];
+  iptr msg_copy;
+  i8 lost_prio_text[256];
   
   if ((((game.multiplayer == 5) || (game.multiplayer == 6)) && (sender != 0)) &&
      (sender != 0xff)) {
@@ -11830,9 +11217,6 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *this,int sender,iptr msg,uint msg_size)
 #undef net_host_flag
 #undef nm_heartbeat_ack_count
 #undef nm_heart_beat_count_i32
-#undef lost_msg_text
-#undef msg_copy
-#undef lost_prio_text
 
 /* 005149d6 auto */
 i32 __thiscall
@@ -11960,12 +11344,6 @@ void __cdecl net_pump_idle_cb(void)
 #define net_slot_host_flags (*(i8 *)((u8 *)&g.d_006ad358))
 #define saved_resume_new_game (*(short *)((u8 *)&g.d_00654fa6))
 #define saved_turn_civ (*(char *)((u8 *)&g.d_00654fa4))
-#define title_label_id (*(int *)(frame_ + FRAME_OFF(0)))
-#define join_civ (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define slot (*(int *)(frame_ + FRAME_OFF(8)))
-#define female_byte (*(u8 *)(frame_ + FRAME_OFF(12)))
-#define title_idx (*(int *)(frame_ + FRAME_OFF(28)))
-#define portrait (*(u8 *)(frame_ + FRAME_OFF(32)))
 i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
 
 {
@@ -11974,7 +11352,12 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
   i8 saved_turn_civ_val;
   i32 result;
   iptr saved_human_civ;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int title_label_id;
+  iptr join_civ;
+  int slot;
+  u8 female_byte;
+  int title_idx;
+  u8 portrait;
   
   if (net_host_flag == '\0') {
     err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_00632320),(iptr)((u8 *)&g.d_006322f4),0x778);
@@ -12101,12 +11484,6 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
 #undef net_slot_host_flags
 #undef saved_resume_new_game
 #undef saved_turn_civ
-#undef title_label_id
-#undef join_civ
-#undef slot
-#undef female_byte
-#undef title_idx
-#undef portrait
 
 /* 00523d8a auto */
 void __cdecl net_send_rules_tables(i32 dest_player)
@@ -12136,235 +11513,6 @@ void __cdecl net_send_rules_tables(i32 dest_player)
 #define mp_chat_from_start (*(short *)((u8 *)&g.d_00654c7a))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
 #define parley_offer_acceptable_i32 (*(i32 *)((u8 *)&g.d_0067a9e0))
-#define city_hide_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define city_hide_label (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define city_reveal_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define city_reveal_label (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define city_btn_font_height (*(int *)(frame_ + FRAME_OFF(20)))
-#define city_header_height (*(int *)(frame_ + FRAME_OFF(24)))
-#define city_side_height (*(int *)(frame_ + FRAME_OFF(28)))
-#define city_side_title (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define offer_parent (*(u8 * *)(frame_ + FRAME_OFF(40)))
-#define offer_row_height (*(int *)(frame_ + FRAME_OFF(44)))
-#define offer_header_height (*(int *)(frame_ + FRAME_OFF(52)))
-#define offer_title_height (*(int *)(frame_ + FRAME_OFF(60)))
-#define offer_line_height (*(int *)(frame_ + FRAME_OFF(68)))
-#define civlist_item_height (*(int *)(frame_ + FRAME_OFF(72)))
-#define civlist_box_offset (*(int *)(frame_ + FRAME_OFF(76)))
-#define civlist_header_height (*(int *)(frame_ + FRAME_OFF(84)))
-#define civlist_title_height (*(int *)(frame_ + FRAME_OFF(88)))
-#define civlist_row_height (*(int *)(frame_ + FRAME_OFF(92)))
-#define civlist_side_height (*(int *)(frame_ + FRAME_OFF(96)))
-#define civlist_side_title (*(iptr *)(frame_ + FRAME_OFF(104)))
-#define map_parent (*(u8 * *)(frame_ + FRAME_OFF(108)))
-#define map_box_offset (*(int *)(frame_ + FRAME_OFF(116)))
-#define map_header_height (*(int *)(frame_ + FRAME_OFF(124)))
-#define map_title_height (*(int *)(frame_ + FRAME_OFF(128)))
-#define map_row_height (*(int *)(frame_ + FRAME_OFF(132)))
-#define map_side_height (*(int *)(frame_ + FRAME_OFF(136)))
-#define map_side_title (*(iptr *)(frame_ + FRAME_OFF(144)))
-#define proposal_parent (*(u8 * *)(frame_ + FRAME_OFF(148)))
-#define proposal_row_height (*(int *)(frame_ + FRAME_OFF(152)))
-#define proposal_title_height (*(int *)(frame_ + FRAME_OFF(156)))
-#define proposal_line_height (*(int *)(frame_ + FRAME_OFF(168)))
-#define sort_city_parent (*(u8 * *)(frame_ + FRAME_OFF(172)))
-#define sort_unit_parent (*(u8 * *)(frame_ + FRAME_OFF(176)))
-#define unit_line_spacing (*(int *)(frame_ + FRAME_OFF(180)))
-#define unit_btn_offset (*(int *)(frame_ + FRAME_OFF(184)))
-#define hide_parent (*(u8 * *)(frame_ + FRAME_OFF(188)))
-#define hide_label (*(iptr *)(frame_ + FRAME_OFF(192)))
-#define reveal_parent (*(u8 * *)(frame_ + FRAME_OFF(196)))
-#define reveal_label (*(iptr *)(frame_ + FRAME_OFF(200)))
-#define unit_line_spacing_alt (*(int *)(frame_ + FRAME_OFF(204)))
-#define unit_btn_offset_alt (*(int *)(frame_ + FRAME_OFF(208)))
-#define unit_header_height (*(int *)(frame_ + FRAME_OFF(216)))
-#define unit_side_height (*(int *)(frame_ + FRAME_OFF(220)))
-#define unit_side_title (*(iptr *)(frame_ + FRAME_OFF(228)))
-#define gold_edit_parent (*(u8 * *)(frame_ + FRAME_OFF(232)))
-#define gold_prompt_width (*(int *)(frame_ + FRAME_OFF(244)))
-#define gold_edit_text_width (*(int *)(frame_ + FRAME_OFF(248)))
-#define gold_box_offset (*(int *)(frame_ + FRAME_OFF(252)))
-#define gold_header_height (*(int *)(frame_ + FRAME_OFF(260)))
-#define gold_side_title (*(iptr *)(frame_ + FRAME_OFF(268)))
-#define gold_title_height (*(int *)(frame_ + FRAME_OFF(272)))
-#define gold_line_height (*(int *)(frame_ + FRAME_OFF(276)))
-#define tech_header_height (*(int *)(frame_ + FRAME_OFF(284)))
-#define tech_side_height (*(int *)(frame_ + FRAME_OFF(288)))
-#define tech_side_title (*(iptr *)(frame_ + FRAME_OFF(296)))
-#define gift_parent (*(u8 * *)(frame_ + FRAME_OFF(300)))
-#define gift_row_height (*(int *)(frame_ + FRAME_OFF(304)))
-#define gift_header_height (*(int *)(frame_ + FRAME_OFF(308)))
-#define gift_title_height (*(int *)(frame_ + FRAME_OFF(320)))
-#define gift_line_height (*(int *)(frame_ + FRAME_OFF(324)))
-#define status_box_offset (*(int *)(frame_ + FRAME_OFF(332)))
-#define status_header_height (*(int *)(frame_ + FRAME_OFF(340)))
-#define status_title_height (*(int *)(frame_ + FRAME_OFF(344)))
-#define status_line_height (*(int *)(frame_ + FRAME_OFF(348)))
-#define treaty_parent (*(u8 * *)(frame_ + FRAME_OFF(352)))
-#define treaty_row_height (*(int *)(frame_ + FRAME_OFF(356)))
-#define treaty_row_height_alt (*(int *)(frame_ + FRAME_OFF(360)))
-#define treaty_title_height (*(int *)(frame_ + FRAME_OFF(364)))
-#define treaty_title (*(iptr *)(frame_ + FRAME_OFF(376)))
-#define treaty_line_height (*(int *)(frame_ + FRAME_OFF(380)))
-#define treaty_line_height_alt (*(int *)(frame_ + FRAME_OFF(384)))
-#define treaty_side_height (*(int *)(frame_ + FRAME_OFF(388)))
-#define treaty_side_title (*(iptr *)(frame_ + FRAME_OFF(396)))
-#define exch_parent_r (*(u8 * *)(frame_ + FRAME_OFF(400)))
-#define exch_title_height_r (*(int *)(frame_ + FRAME_OFF(404)))
-#define exch_parent_l (*(u8 * *)(frame_ + FRAME_OFF(416)))
-#define exch_title_height_l (*(int *)(frame_ + FRAME_OFF(420)))
-#define send_parent (*(u8 * *)(frame_ + FRAME_OFF(432)))
-#define mute_parent (*(u8 * *)(frame_ + FRAME_OFF(436)))
-#define broadcast_parent (*(u8 * *)(frame_ + FRAME_OFF(448)))
-#define mute_anon_parent (*(u8 * *)(frame_ + FRAME_OFF(452)))
-#define anon_parent (*(u8 * *)(frame_ + FRAME_OFF(456)))
-#define chat_font_height (*(int *)(frame_ + FRAME_OFF(464)))
-#define selected_mode (*(u32 *)(frame_ + FRAME_OFF(468)))
-#define mode_radio_parent (*(u8 * *)(frame_ + FRAME_OFF(472)))
-#define mode_title_height (*(int *)(frame_ + FRAME_OFF(476)))
-#define waiting_font_height (*(int *)(frame_ + FRAME_OFF(492)))
-#define review_parent (*(u8 * *)(frame_ + FRAME_OFF(500)))
-#define desc_parent (*(u8 * *)(frame_ + FRAME_OFF(508)))
-#define city_header_font (*(i8 * *)(frame_ + FRAME_OFF(516)))
-#define city_hide_button (*(i32 *)(frame_ + FRAME_OFF(520)))
-#define city_reveal_button (*(i32 *)(frame_ + FRAME_OFF(528)))
-#define city_side_font (*(i8 * *)(frame_ + FRAME_OFF(536)))
-#define offer_radio (*(i32 *)(frame_ + FRAME_OFF(540)))
-#define offer_radio_font (*(i8 * *)(frame_ + FRAME_OFF(548)))
-#define offer_header_font (*(i8 * *)(frame_ + FRAME_OFF(552)))
-#define offer_title_font (*(i8 * *)(frame_ + FRAME_OFF(556)))
-#define civlist_header_font (*(i8 * *)(frame_ + FRAME_OFF(560)))
-#define civlist_side_font (*(i8 * *)(frame_ + FRAME_OFF(564)))
-#define map_radio (*(i32 *)(frame_ + FRAME_OFF(568)))
-#define map_radio_font (*(i8 * *)(frame_ + FRAME_OFF(576)))
-#define map_header_font (*(i8 * *)(frame_ + FRAME_OFF(580)))
-#define map_side_font (*(i8 * *)(frame_ + FRAME_OFF(584)))
-#define proposal_radio (*(i32 *)(frame_ + FRAME_OFF(588)))
-#define proposal_radio_font (*(i8 * *)(frame_ + FRAME_OFF(596)))
-#define proposal_title_font (*(i8 * *)(frame_ + FRAME_OFF(600)))
-#define sort_city_button (*(i32 *)(frame_ + FRAME_OFF(604)))
-#define sort_unit_button (*(i32 *)(frame_ + FRAME_OFF(612)))
-#define hide_button (*(i32 *)(frame_ + FRAME_OFF(620)))
-#define reveal_button (*(i32 *)(frame_ + FRAME_OFF(628)))
-#define unit_header_font (*(i8 * *)(frame_ + FRAME_OFF(636)))
-#define unit_side_font (*(i8 * *)(frame_ + FRAME_OFF(640)))
-#define gold_edit_font (*(i8 * *)(frame_ + FRAME_OFF(644)))
-#define gold_edit (*(i32 *)(frame_ + FRAME_OFF(648)))
-#define gold_prompt_font (*(i8 * *)(frame_ + FRAME_OFF(656)))
-#define gold_header_font (*(i8 * *)(frame_ + FRAME_OFF(660)))
-#define gold_side_font (*(i8 * *)(frame_ + FRAME_OFF(664)))
-#define tech_header_font (*(i8 * *)(frame_ + FRAME_OFF(668)))
-#define tech_side_font (*(i8 * *)(frame_ + FRAME_OFF(672)))
-#define gift_radio (*(i32 *)(frame_ + FRAME_OFF(676)))
-#define gift_radio_font (*(i8 * *)(frame_ + FRAME_OFF(684)))
-#define gift_title_font (*(i8 * *)(frame_ + FRAME_OFF(688)))
-#define status_text_font (*(i8 * *)(frame_ + FRAME_OFF(692)))
-#define status_header_font (*(i8 * *)(frame_ + FRAME_OFF(696)))
-#define treaty_radio (*(i32 *)(frame_ + FRAME_OFF(700)))
-#define treaty_radio_font (*(i8 * *)(frame_ + FRAME_OFF(708)))
-#define treaty_title_font (*(i8 * *)(frame_ + FRAME_OFF(712)))
-#define treaty_side_font (*(i8 * *)(frame_ + FRAME_OFF(716)))
-#define exch_radio_r (*(i32 *)(frame_ + FRAME_OFF(720)))
-#define exch_radio_font_r (*(i8 * *)(frame_ + FRAME_OFF(728)))
-#define exch_title_font_r (*(i8 * *)(frame_ + FRAME_OFF(732)))
-#define exch_radio_l (*(i32 *)(frame_ + FRAME_OFF(736)))
-#define exch_radio_font_l (*(i8 * *)(frame_ + FRAME_OFF(744)))
-#define exch_title_font_l (*(i8 * *)(frame_ + FRAME_OFF(748)))
-#define send_checkbox (*(i32 *)(frame_ + FRAME_OFF(752)))
-#define mute_checkbox (*(i32 *)(frame_ + FRAME_OFF(760)))
-#define right_header_font (*(i8 * *)(frame_ + FRAME_OFF(768)))
-#define left_header_font (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define broadcast_checkbox (*(uptr *)(frame_ + FRAME_OFF(776)))
-#define mute_anon_checkbox (*(uptr *)(frame_ + FRAME_OFF(784)))
-#define anon_checkbox (*(uptr *)(frame_ + FRAME_OFF(792)))
-#define chat_font (*(i8 * *)(frame_ + FRAME_OFF(800)))
-#define mode_radio (*(i32 *)(frame_ + FRAME_OFF(804)))
-#define mode_radio_font (*(i8 * *)(frame_ + FRAME_OFF(812)))
-#define mode_title_font (*(i8 * *)(frame_ + FRAME_OFF(816)))
-#define waiting_font (*(i8 * *)(frame_ + FRAME_OFF(820)))
-#define review_font (*(i8 * *)(frame_ + FRAME_OFF(824)))
-#define review_edit (*(uptr *)(frame_ + FRAME_OFF(828)))
-#define desc_font (*(i8 * *)(frame_ + FRAME_OFF(836)))
-#define desc_edit (*(uptr *)(frame_ + FRAME_OFF(840)))
-#define city_btn_rect (*(tagRECT *)(frame_ + FRAME_OFF(848)))
-#define city_btn_width (*(int *)(frame_ + FRAME_OFF(864)))
-#define city_btn_top (*(int *)(frame_ + FRAME_OFF(868)))
-#define city_header_label (*(iptr *)(frame_ + FRAME_OFF(872)))
-#define city_btn_height (*(int *)(frame_ + FRAME_OFF(876)))
-#define city_list_mode (*(i32 *)(frame_ + FRAME_OFF(880)))
-#define offer_labels (*(i32 *)(frame_ + FRAME_OFF(884)))
-#define offer_label1 (*(i32 *)(frame_ + FRAME_OFF(888)))
-#define offer_label2 (*(i32 *)(frame_ + FRAME_OFF(892)))
-#define offer_label3 (*(i32 *)(frame_ + FRAME_OFF(896)))
-#define offer_label4 (*(i32 *)(frame_ + FRAME_OFF(900)))
-#define offer_label5 (*(i32 *)(frame_ + FRAME_OFF(904)))
-#define offer_label6 (*(i32 *)(frame_ + FRAME_OFF(908)))
-#define civlist_title_idx (*(iptr *)(frame_ + FRAME_OFF(912)))
-#define civlist_titles (*(iptr (*)[4])(frame_ + FRAME_OFF(916)))
-#define map_title_idx (*(uptr *)(frame_ + FRAME_OFF(932)))
-#define map_labels (*(iptr (*)[4])(frame_ + FRAME_OFF(936)))
-#define map_label_last (*(i32 *)(frame_ + FRAME_OFF(952)))
-#define proposal_labels (*(i32 *)(frame_ + FRAME_OFF(956)))
-#define proposal_label2 (*(i32 *)(frame_ + FRAME_OFF(960)))
-#define btn_rect (*(tagRECT *)(frame_ + FRAME_OFF(964)))
-#define btn_area_bottom (*(int *)(frame_ + FRAME_OFF(980)))
-#define btn_width (*(int *)(frame_ + FRAME_OFF(984)))
-#define btn_top (*(int *)(frame_ + FRAME_OFF(988)))
-#define btn_height (*(int *)(frame_ + FRAME_OFF(992)))
-#define unit_list_mode (*(i32 *)(frame_ + FRAME_OFF(996)))
-#define gold_text (*(char (*)[32])(frame_ + FRAME_OFF(1000)))
-#define tech_list_pick_mode (*(i32 *)(frame_ + FRAME_OFF(1032)))
-#define gift_labels (*(i32 *)(frame_ + FRAME_OFF(1036)))
-#define gift_label1 (*(i32 *)(frame_ + FRAME_OFF(1040)))
-#define gift_label2 (*(i32 *)(frame_ + FRAME_OFF(1044)))
-#define gift_label3 (*(i32 *)(frame_ + FRAME_OFF(1048)))
-#define gift_label4 (*(i32 *)(frame_ + FRAME_OFF(1052)))
-#define treaty_labels (*(i32 *)(frame_ + FRAME_OFF(1056)))
-#define treaty_label1 (*(i32 *)(frame_ + FRAME_OFF(1060)))
-#define treaty_label2 (*(i32 *)(frame_ + FRAME_OFF(1064)))
-#define treaty_label3 (*(i32 *)(frame_ + FRAME_OFF(1068)))
-#define exch_labels_r (*(i32 *)(frame_ + FRAME_OFF(1072)))
-#define exch_label_r1 (*(i32 *)(frame_ + FRAME_OFF(1076)))
-#define exch_label_r2 (*(i32 *)(frame_ + FRAME_OFF(1080)))
-#define exch_label_r3 (*(i32 *)(frame_ + FRAME_OFF(1084)))
-#define exch_label_r4 (*(i32 *)(frame_ + FRAME_OFF(1088)))
-#define exch_label_r5 (*(i32 *)(frame_ + FRAME_OFF(1092)))
-#define exch_label_r6 (*(i32 *)(frame_ + FRAME_OFF(1096)))
-#define exch_labels_l (*(i32 *)(frame_ + FRAME_OFF(1100)))
-#define exch_label_l1 (*(i32 *)(frame_ + FRAME_OFF(1104)))
-#define exch_label_l2 (*(i32 *)(frame_ + FRAME_OFF(1108)))
-#define exch_label_l3 (*(i32 *)(frame_ + FRAME_OFF(1112)))
-#define exch_label_l4 (*(i32 *)(frame_ + FRAME_OFF(1116)))
-#define exch_label_l5 (*(i32 *)(frame_ + FRAME_OFF(1120)))
-#define exch_label_l6 (*(i32 *)(frame_ + FRAME_OFF(1124)))
-#define left_col_x (*(uptr *)(frame_ + FRAME_OFF(1128)))
-#define shown_civ_count (*(uint *)(frame_ + FRAME_OFF(1132)))
-#define civ (*(int *)(frame_ + FRAME_OFF(1136)))
-#define right_col_x (*(u32 *)(frame_ + FRAME_OFF(1140)))
-#define has_full_intel (*(int *)(frame_ + FRAME_OFF(1144)))
-#define checkbox_indent (*(int *)(frame_ + FRAME_OFF(1148)))
-#define max_label_width (*(int *)(frame_ + FRAME_OFF(1152)))
-#define label_width (*(int *)(frame_ + FRAME_OFF(1156)))
-#define label_idx (*(iptr *)(frame_ + FRAME_OFF(1160)))
-#define mode_labels (*(iptr (*)[4])(frame_ + FRAME_OFF(1164)))
-#define mode_label_last (*(i32 *)(frame_ + FRAME_OFF(1180)))
-#define waiting_text_width (*(int *)(frame_ + FRAME_OFF(1184)))
-#define waiting_text (*(i8 (*)[80])(frame_ + FRAME_OFF(1188)))
-#define item_kind_ptr (*(int * *)(frame_ + FRAME_OFF(1268)))
-#define tech_ptr (*(iptr * *)(frame_ + FRAME_OFF(1272)))
-#define tech_idx (*(int *)(frame_ + FRAME_OFF(1276)))
-#define tech_count (*(int *)(frame_ + FRAME_OFF(1280)))
-#define cur_y (*(int *)(frame_ + FRAME_OFF(1284)))
-#define cur_x (*(uptr *)(frame_ + FRAME_OFF(1288)))
-#define col_width (*(int *)(frame_ + FRAME_OFF(1292)))
-#define is_demand_side (*(char *)(frame_ + FRAME_OFF(1296)))
-#define side_x (*(u32 *)(frame_ + FRAME_OFF(1300)))
-#define is_exchange_side (*(char *)(frame_ + FRAME_OFF(1304)))
-#define ctrl_rect (*(tagRECT *)(frame_ + FRAME_OFF(1308)))
-#define block_height (*(int *)(frame_ + FRAME_OFF(1324)))
-#define eh_next (*(i32 *)(frame_ + FRAME_OFF(1328)))
-#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1332)))
-#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1336)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
@@ -12381,7 +11529,235 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
   uptr draw_x;
   i32 text_align;
   uptr item_buf;
-  i8 frame_[FRAME_OFF(1344)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *city_hide_parent;
+  iptr city_hide_label;
+  u8 *city_reveal_parent;
+  iptr city_reveal_label;
+  int city_btn_font_height;
+  int city_header_height;
+  int city_side_height;
+  iptr city_side_title;
+  u8 *offer_parent;
+  int offer_row_height;
+  int offer_header_height;
+  int offer_title_height;
+  int offer_line_height;
+  int civlist_item_height;
+  int civlist_box_offset;
+  int civlist_header_height;
+  int civlist_title_height;
+  int civlist_row_height;
+  int civlist_side_height;
+  iptr civlist_side_title;
+  u8 *map_parent;
+  int map_box_offset;
+  int map_header_height;
+  int map_title_height;
+  int map_row_height;
+  int map_side_height;
+  iptr map_side_title;
+  u8 *proposal_parent;
+  int proposal_row_height;
+  int proposal_title_height;
+  int proposal_line_height;
+  u8 *sort_city_parent;
+  u8 *sort_unit_parent;
+  int unit_line_spacing;
+  int unit_btn_offset;
+  u8 *hide_parent;
+  iptr hide_label;
+  u8 *reveal_parent;
+  iptr reveal_label;
+  int unit_line_spacing_alt;
+  int unit_btn_offset_alt;
+  int unit_header_height;
+  int unit_side_height;
+  iptr unit_side_title;
+  u8 *gold_edit_parent;
+  int gold_prompt_width;
+  int gold_edit_text_width;
+  int gold_box_offset;
+  int gold_header_height;
+  iptr gold_side_title;
+  int gold_title_height;
+  int gold_line_height;
+  int tech_header_height;
+  int tech_side_height;
+  iptr tech_side_title;
+  u8 *gift_parent;
+  int gift_row_height;
+  int gift_header_height;
+  int gift_title_height;
+  int gift_line_height;
+  int status_box_offset;
+  int status_header_height;
+  int status_title_height;
+  int status_line_height;
+  u8 *treaty_parent;
+  int treaty_row_height;
+  int treaty_row_height_alt;
+  int treaty_title_height;
+  iptr treaty_title;
+  int treaty_line_height;
+  int treaty_line_height_alt;
+  int treaty_side_height;
+  iptr treaty_side_title;
+  u8 *exch_parent_r;
+  int exch_title_height_r;
+  u8 *exch_parent_l;
+  int exch_title_height_l;
+  u8 *send_parent;
+  u8 *mute_parent;
+  u8 *broadcast_parent;
+  u8 *mute_anon_parent;
+  u8 *anon_parent;
+  int chat_font_height;
+  u32 selected_mode;
+  u8 *mode_radio_parent;
+  int mode_title_height;
+  int waiting_font_height;
+  u8 *review_parent;
+  u8 *desc_parent;
+  i8 *city_header_font;
+  i32 city_hide_button;
+  i32 city_reveal_button;
+  i8 *city_side_font;
+  i32 offer_radio;
+  i8 *offer_radio_font;
+  i8 *offer_header_font;
+  i8 *offer_title_font;
+  i8 *civlist_header_font;
+  i8 *civlist_side_font;
+  i32 map_radio;
+  i8 *map_radio_font;
+  i8 *map_header_font;
+  i8 *map_side_font;
+  i32 proposal_radio;
+  i8 *proposal_radio_font;
+  i8 *proposal_title_font;
+  i32 sort_city_button;
+  i32 sort_unit_button;
+  i32 hide_button;
+  i32 reveal_button;
+  i8 *unit_header_font;
+  i8 *unit_side_font;
+  i8 *gold_edit_font;
+  i32 gold_edit;
+  i8 *gold_prompt_font;
+  i8 *gold_header_font;
+  i8 *gold_side_font;
+  i8 *tech_header_font;
+  i8 *tech_side_font;
+  i32 gift_radio;
+  i8 *gift_radio_font;
+  i8 *gift_title_font;
+  i8 *status_text_font;
+  i8 *status_header_font;
+  i32 treaty_radio;
+  i8 *treaty_radio_font;
+  i8 *treaty_title_font;
+  i8 *treaty_side_font;
+  i32 exch_radio_r;
+  i8 *exch_radio_font_r;
+  i8 *exch_title_font_r;
+  i32 exch_radio_l;
+  i8 *exch_radio_font_l;
+  i8 *exch_title_font_l;
+  i32 send_checkbox;
+  i32 mute_checkbox;
+  i8 *right_header_font;
+  i8 *left_header_font;
+  uptr broadcast_checkbox;
+  uptr mute_anon_checkbox;
+  uptr anon_checkbox;
+  i8 *chat_font;
+  i32 mode_radio;
+  i8 *mode_radio_font;
+  i8 *mode_title_font;
+  i8 *waiting_font;
+  i8 *review_font;
+  uptr review_edit;
+  i8 *desc_font;
+  uptr desc_edit;
+  tagRECT city_btn_rect;
+  int city_btn_width;
+  int city_btn_top;
+  iptr city_header_label;
+  int city_btn_height;
+  i32 city_list_mode;
+  i32 offer_labels;
+  i32 offer_label1;
+  i32 offer_label2;
+  i32 offer_label3;
+  i32 offer_label4;
+  i32 offer_label5;
+  i32 offer_label6;
+  iptr civlist_title_idx;
+  iptr civlist_titles[4];
+  uptr map_title_idx;
+  iptr map_labels[4];
+  i32 map_label_last;
+  i32 proposal_labels;
+  i32 proposal_label2;
+  tagRECT btn_rect;
+  int btn_area_bottom;
+  int btn_width;
+  int btn_top;
+  int btn_height;
+  i32 unit_list_mode;
+  char gold_text[32];
+  i32 tech_list_pick_mode;
+  i32 gift_labels;
+  i32 gift_label1;
+  i32 gift_label2;
+  i32 gift_label3;
+  i32 gift_label4;
+  i32 treaty_labels;
+  i32 treaty_label1;
+  i32 treaty_label2;
+  i32 treaty_label3;
+  i32 exch_labels_r;
+  i32 exch_label_r1;
+  i32 exch_label_r2;
+  i32 exch_label_r3;
+  i32 exch_label_r4;
+  i32 exch_label_r5;
+  i32 exch_label_r6;
+  i32 exch_labels_l;
+  i32 exch_label_l1;
+  i32 exch_label_l2;
+  i32 exch_label_l3;
+  i32 exch_label_l4;
+  i32 exch_label_l5;
+  i32 exch_label_l6;
+  uptr left_col_x;
+  uint shown_civ_count;
+  int civ;
+  u32 right_col_x;
+  int has_full_intel;
+  int checkbox_indent;
+  int max_label_width;
+  int label_width;
+  iptr label_idx;
+  iptr mode_labels[4];
+  i32 mode_label_last;
+  int waiting_text_width;
+  i8 waiting_text[80];
+  int *item_kind_ptr;
+  iptr *tech_ptr;
+  int tech_idx;
+  int tech_count;
+  int cur_y;
+  uptr cur_x;
+  int col_width;
+  char is_demand_side;
+  u32 side_x;
+  char is_exchange_side;
+  tagRECT ctrl_rect;
+  int block_height;
+  i32 eh_next;
+  i8 *eh_prev;
+  i32 eh_state;
   
   eh_state = 0xffffffff;
   if ((side != 0) && (side != 1)) {
@@ -14584,243 +13960,13 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
 #undef mp_chat_from_start
 #undef panel_margin_x
 #undef parley_offer_acceptable_i32
-#undef city_hide_parent
-#undef city_hide_label
-#undef city_reveal_parent
-#undef city_reveal_label
-#undef city_btn_font_height
-#undef city_header_height
-#undef city_side_height
-#undef city_side_title
-#undef offer_parent
-#undef offer_row_height
-#undef offer_header_height
-#undef offer_title_height
-#undef offer_line_height
-#undef civlist_item_height
-#undef civlist_box_offset
-#undef civlist_header_height
-#undef civlist_title_height
-#undef civlist_row_height
-#undef civlist_side_height
-#undef civlist_side_title
-#undef map_parent
-#undef map_box_offset
-#undef map_header_height
-#undef map_title_height
-#undef map_row_height
-#undef map_side_height
-#undef map_side_title
-#undef proposal_parent
-#undef proposal_row_height
-#undef proposal_title_height
-#undef proposal_line_height
-#undef sort_city_parent
-#undef sort_unit_parent
-#undef unit_line_spacing
-#undef unit_btn_offset
-#undef hide_parent
-#undef hide_label
-#undef reveal_parent
-#undef reveal_label
-#undef unit_line_spacing_alt
-#undef unit_btn_offset_alt
-#undef unit_header_height
-#undef unit_side_height
-#undef unit_side_title
-#undef gold_edit_parent
-#undef gold_prompt_width
-#undef gold_edit_text_width
-#undef gold_box_offset
-#undef gold_header_height
-#undef gold_side_title
-#undef gold_title_height
-#undef gold_line_height
-#undef tech_header_height
-#undef tech_side_height
-#undef tech_side_title
-#undef gift_parent
-#undef gift_row_height
-#undef gift_header_height
-#undef gift_title_height
-#undef gift_line_height
-#undef status_box_offset
-#undef status_header_height
-#undef status_title_height
-#undef status_line_height
-#undef treaty_parent
-#undef treaty_row_height
-#undef treaty_row_height_alt
-#undef treaty_title_height
-#undef treaty_title
-#undef treaty_line_height
-#undef treaty_line_height_alt
-#undef treaty_side_height
-#undef treaty_side_title
-#undef exch_parent_r
-#undef exch_title_height_r
-#undef exch_parent_l
-#undef exch_title_height_l
-#undef send_parent
-#undef mute_parent
-#undef broadcast_parent
-#undef mute_anon_parent
-#undef anon_parent
-#undef chat_font_height
-#undef selected_mode
-#undef mode_radio_parent
-#undef mode_title_height
-#undef waiting_font_height
-#undef review_parent
-#undef desc_parent
-#undef city_header_font
-#undef city_hide_button
-#undef city_reveal_button
-#undef city_side_font
-#undef offer_radio
-#undef offer_radio_font
-#undef offer_header_font
-#undef offer_title_font
-#undef civlist_header_font
-#undef civlist_side_font
-#undef map_radio
-#undef map_radio_font
-#undef map_header_font
-#undef map_side_font
-#undef proposal_radio
-#undef proposal_radio_font
-#undef proposal_title_font
-#undef sort_city_button
-#undef sort_unit_button
-#undef hide_button
-#undef reveal_button
-#undef unit_header_font
-#undef unit_side_font
-#undef gold_edit_font
-#undef gold_edit
-#undef gold_prompt_font
-#undef gold_header_font
-#undef gold_side_font
-#undef tech_header_font
-#undef tech_side_font
-#undef gift_radio
-#undef gift_radio_font
-#undef gift_title_font
-#undef status_text_font
-#undef status_header_font
-#undef treaty_radio
-#undef treaty_radio_font
-#undef treaty_title_font
-#undef treaty_side_font
-#undef exch_radio_r
-#undef exch_radio_font_r
-#undef exch_title_font_r
-#undef exch_radio_l
-#undef exch_radio_font_l
-#undef exch_title_font_l
-#undef send_checkbox
-#undef mute_checkbox
-#undef right_header_font
-#undef left_header_font
-#undef broadcast_checkbox
-#undef mute_anon_checkbox
-#undef anon_checkbox
-#undef chat_font
-#undef mode_radio
-#undef mode_radio_font
-#undef mode_title_font
-#undef waiting_font
-#undef review_font
-#undef review_edit
-#undef desc_font
-#undef desc_edit
-#undef city_btn_rect
-#undef city_btn_width
-#undef city_btn_top
-#undef city_header_label
-#undef city_btn_height
-#undef city_list_mode
-#undef offer_labels
-#undef offer_label1
-#undef offer_label2
-#undef offer_label3
-#undef offer_label4
-#undef offer_label5
-#undef offer_label6
-#undef civlist_title_idx
-#undef civlist_titles
-#undef map_title_idx
-#undef map_labels
-#undef map_label_last
-#undef proposal_labels
-#undef proposal_label2
-#undef btn_rect
-#undef btn_area_bottom
-#undef btn_width
-#undef btn_top
-#undef btn_height
-#undef unit_list_mode
-#undef gold_text
-#undef tech_list_pick_mode
-#undef gift_labels
-#undef gift_label1
-#undef gift_label2
-#undef gift_label3
-#undef gift_label4
-#undef treaty_labels
-#undef treaty_label1
-#undef treaty_label2
-#undef treaty_label3
-#undef exch_labels_r
-#undef exch_label_r1
-#undef exch_label_r2
-#undef exch_label_r3
-#undef exch_label_r4
-#undef exch_label_r5
-#undef exch_label_r6
-#undef exch_labels_l
-#undef exch_label_l1
-#undef exch_label_l2
-#undef exch_label_l3
-#undef exch_label_l4
-#undef exch_label_l5
-#undef exch_label_l6
-#undef left_col_x
-#undef shown_civ_count
-#undef civ
-#undef right_col_x
-#undef has_full_intel
-#undef checkbox_indent
-#undef max_label_width
-#undef label_width
-#undef label_idx
-#undef mode_labels
-#undef mode_label_last
-#undef waiting_text_width
-#undef waiting_text
-#undef item_kind_ptr
-#undef tech_ptr
-#undef tech_idx
-#undef tech_count
-#undef cur_y
-#undef cur_x
-#undef col_width
-#undef is_demand_side
-#undef side_x
-#undef is_exchange_side
-#undef ctrl_rect
-#undef block_height
-#undef eh_next
-#undef eh_prev
-#undef eh_state
 
 /* 0052d4d2 auto */
-#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_treaty_type_select(i32 ctrl_id,i32 treaty_type)
 
 {
   iptr active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -14833,15 +13979,13 @@ void __cdecl parley_on_treaty_type_select(i32 ctrl_id,i32 treaty_type)
   *(i32 *)(parley + 0x218) = treaty_type;
   return;
 }
-#undef parley
 
 /* 0052d523 auto */
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_demand_kind_select(i32 ctrl_id,u32 demand_kind)
 
 {
   iptr active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ViewWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -14855,15 +13999,13 @@ void __cdecl parley_on_demand_kind_select(i32 ctrl_id,u32 demand_kind)
   parley_add_side_dialog(this2,this2->right_civ,1);
   return;
 }
-#undef this2
 
 /* 0052d588 auto */
-#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_map_choice_select(int side,i32 map_choice)
 
 {
   int active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -14876,15 +14018,13 @@ void __cdecl parley_on_map_choice_select(int side,i32 map_choice)
   *(i32 *)(parley - 0xe6c + side * 4) = map_choice;
   return;
 }
-#undef parley
 
 /* 0052d5dd auto */
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_gift_kind_select(i32 ctrl_id,u32 gift_kind)
 
 {
   iptr active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ViewWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -14916,15 +14056,13 @@ void __cdecl parley_on_gift_kind_select(i32 ctrl_id,u32 gift_kind)
   parley_add_side_dialog(this2,this2->right_civ,1);
   return;
 }
-#undef this2
 
 /* 0052d6ff auto */
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_proposal_kind_select(i32 ctrl_id,u32 proposal_kind)
 
 {
   iptr active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ViewWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -14946,17 +14084,15 @@ void __cdecl parley_on_proposal_kind_select(i32 ctrl_id,u32 proposal_kind)
   parley_add_side_dialog(this2,this2->right_civ,1);
   return;
 }
-#undef this2
 
 /* 0052d7dc auto */
-#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define is_right_side (*(uint *)(frame_ + FRAME_OFF(8)))
 void __cdecl parley_on_exchange_kind_select(int ctrl_id,i32 exchange_kind)
 
 {
   iptr active_child;
   int selected;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley;
+  uint is_right_side;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -14998,17 +14134,14 @@ void __cdecl parley_on_exchange_kind_select(int ctrl_id,i32 exchange_kind)
   }
   return;
 }
-#undef parley
-#undef is_right_side
 
 /* 0052d9a1 auto */
-#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_radio_dblclick(i32 ctrl_id)
 
 {
   iptr active_child;
   int enabled;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -15025,16 +14158,14 @@ void __cdecl parley_on_radio_dblclick(i32 ctrl_id)
   }
   return;
 }
-#undef parley
 
 /* 0052da23 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_conceal_info(void)
 
 {
   iptr active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -15060,16 +14191,14 @@ void __cdecl parley_on_conceal_info(void)
   return;
 }
 #undef human_civ
-#undef parley
 
 /* 0052db3d auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_reveal_info(void)
 
 {
   iptr active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley;
   
   wnd_get_active_child();
   active_child = wnd_get_active_child();
@@ -15096,18 +14225,16 @@ void __cdecl parley_on_reveal_info(void)
   return;
 }
 #undef human_civ
-#undef parley
 
 /* 0052dc7e auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_check_intel(void)
 
 {
   bool has_intel_wonder;
   iptr active_child;
   int has_wonder;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -15136,17 +14263,15 @@ LAB_0052dcf1:
   return;
 }
 #undef human_civ
-#undef parley
 
 /* 0052dd73 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define this2 (*(ParleyOfferBuffer * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_mode_chosen(i32 ctrl_id)
 
 {
   iptr active_child;
   i32 value;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ParleyOfferBuffer *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -15273,15 +14398,13 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
   return;
 }
 #undef human_civ
-#undef this2
 
 /* 0052e326 auto */
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_never_mind(void)
 
 {
   iptr active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ViewWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -15324,17 +14447,15 @@ void __cdecl parley_on_never_mind(void)
   }
   return;
 }
-#undef this2
 
 /* 0052e4c9 auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
-#define parley (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_accept_offer(void)
 
 {
   int active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  WindowObjectView *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -15355,16 +14476,14 @@ void __cdecl parley_on_accept_offer(void)
 }
 #undef dlg_pending_idle_callback
 #undef parley_other_civ
-#undef parley
 
 /* 0052e57c auto */
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_no_thanks(void)
 
 {
   iptr active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  ViewWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -15387,16 +14506,14 @@ void __cdecl parley_on_no_thanks(void)
   return;
 }
 #undef parley_other_civ
-#undef this2
 
 /* 0052e685 auto */
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
-#define parley (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_counter_offer(void)
 
 {
   int active_child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  WindowObjectView *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
@@ -15414,15 +14531,13 @@ void __cdecl parley_on_counter_offer(void)
   return;
 }
 #undef parley_other_civ
-#undef parley
 
 /* 0052e71a auto */
-#define chat_wnd2 (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl chat_on_mute_checkbox(int ctrl_id)
 
 {
   i32 checked;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int chat_wnd2;
   
   chat_wnd2 = wnd_get_active_child();
   if (chat_wnd2 == 0) {
@@ -15439,19 +14554,17 @@ void __cdecl chat_on_mute_checkbox(int ctrl_id)
   }
   return;
 }
-#undef chat_wnd2
 
 /* 0052e7b7 auto */
 #define chat_broadcast_all (*(int *)((u8 *)&g.d_0068aee4))
 #define chat_mute_anonymous (*(i32 *)((u8 *)&g.d_0068aee0))
 #define chat_remain_anonymous (*(i32 *)((u8 *)&g.d_0068aedc))
-#define slot (*(int *)(frame_ + FRAME_OFF(4)))
-#define chat_wnd2 (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl chat_on_send_checkbox(int ctrl_id)
 
 {
   i32 checked;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
+  int chat_wnd2;
   
   chat_wnd2 = wnd_get_active_child();
   if (chat_wnd2 == 0) {
@@ -15501,8 +14614,6 @@ void __cdecl chat_on_send_checkbox(int ctrl_id)
 #undef chat_broadcast_all
 #undef chat_mute_anonymous
 #undef chat_remain_anonymous
-#undef slot
-#undef chat_wnd2
 
 /* 0052e971 auto */
 void __thiscall parley_update_buttons(ViewWindow *this)
@@ -15579,8 +14690,6 @@ void __thiscall parley_update_buttons(ViewWindow *this)
 }
 
 /* 0052ec47 auto */
-#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define dir (*(iptr *)(frame_ + FRAME_OFF(24)))
 iptr __thiscall parley_find_unit_by_id(WindowObjectView *this,int unit_id)
 
 {
@@ -15590,7 +14699,8 @@ iptr __thiscall parley_find_unit_by_id(WindowObjectView *this,int unit_id)
   iptr x;
   int y;
   int in_bounds;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr unit;
+  iptr dir;
   
   unit = (iptr)game.num_units;
   do {
@@ -15621,15 +14731,12 @@ LAB_0052ed47:
     dir++;
   } while( true );
 }
-#undef unit
-#undef dir
 
 /* 0052ed95 auto */
-#define city (*(iptr *)(frame_ + FRAME_OFF(0)))
 iptr __thiscall parley_find_city_by_id(WindowObjectView *this,int city_id)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
   
   city = (iptr)game.num_cities;
   do {
@@ -15640,7 +14747,6 @@ iptr __thiscall parley_find_city_by_id(WindowObjectView *this,int city_id)
   } while ((cities[city].id == 0) || (cities[city].id != city_id));
   return city;
 }
-#undef city
 
 /* 0055ae80 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -15682,16 +14788,12 @@ void __cdecl mp_turn_timer_stop(int notify)
 #define mp_turn_timer_last_ticks_i32 (*(i32 *)((u8 *)&g.d_00633a7c))
 #define main_view_timer_cache_i32 (*(i32 *)((u8 *)&g.d_0066c990))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
-#define caption_left (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define caption_top (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define caption_right (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define caption_bottom (*(i32 *)(frame_ + FRAME_OFF(16)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl mp_turn_timer_start(int notify)
 
 {
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  RECT caption_rect;
   
   if (mp_turn_civ_i32 == human_civ) {
     city_window_close();
@@ -15703,11 +14805,11 @@ void __cdecl mp_turn_timer_start(int notify)
   mp_turn_timer_blink = 0;
   main_view_timer_cache_i32 = 0xffffffff;
   frame_wnd_draw_caption((FrameWindow *)&map_views);
-  caption_left = main_view_frame_left;
-  caption_top = main_view_frame_top;
-  caption_right = main_view_frame_right;
-  caption_bottom = main_view_client_top;
-  wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_left);
+  caption_rect.left = main_view_frame_left;
+  caption_rect.top = main_view_frame_top;
+  caption_rect.right = main_view_frame_right;
+  caption_rect.bottom = main_view_client_top;
+  wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_rect);
   if (mp_turn_timer_handle != 0) {
     game_timer_destroy(mp_turn_timer_handle);
   }
@@ -15726,10 +14828,6 @@ void __cdecl mp_turn_timer_start(int notify)
 #undef mp_turn_timer_last_ticks_i32
 #undef main_view_timer_cache_i32
 #undef mp_turn_civ_i32
-#undef caption_left
-#undef caption_top
-#undef caption_right
-#undef caption_bottom
 
 /* 0055b046 auto */
 #define main_view_timer_shown (*(int *)((u8 *)&g.d_0066c988))
@@ -15767,15 +14865,11 @@ void __cdecl mp_turn_timer_resume(int notify)
 #define main_view_timer_shown (*(i32 *)((u8 *)&g.d_0066c988))
 #define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
 #define player_turn_active (*(i8 *)((u8 *)&g.d_0064b9bc))
-#define caption_left (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define caption_top (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define caption_right (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define caption_bottom (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __cdecl mp_cmd_change_timer(void)
 
 {
   int cancelled;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  RECT caption_rect;
   
   mp_turn_timer_stop(1);
   GetAsyncKeyState(0x1b);
@@ -15784,11 +14878,11 @@ void __cdecl mp_cmd_change_timer(void)
     if (mp_turn_time_limit_ms == 0) {
       main_view_timer_shown = 0;
       frame_wnd_draw_caption((FrameWindow *)&map_views);
-      caption_left = main_view_frame_left;
-      caption_top = main_view_frame_top;
-      caption_right = main_view_frame_right;
-      caption_bottom = main_view_client_top;
-      wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_left);
+      caption_rect.left = main_view_frame_left;
+      caption_rect.top = main_view_frame_top;
+      caption_rect.right = main_view_frame_right;
+      caption_rect.bottom = main_view_client_top;
+      wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_rect);
     }
     else {
       main_view_timer_shown = 1;
@@ -15810,10 +14904,6 @@ void __cdecl mp_cmd_change_timer(void)
 #undef main_view_timer_shown
 #undef mp_turn_time_limit_ms
 #undef player_turn_active
-#undef caption_left
-#undef caption_top
-#undef caption_right
-#undef caption_bottom
 
 /* 0055b3c8 auto */
 void __cdecl mp_mouse_watchdog_stop(void)
@@ -15959,12 +15049,11 @@ void __cdecl mp_mouse_watchdog_tick(i32 timer_id,i32 timer_arg)
 #undef player_has_quit
 
 /* 0056e270 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *this)
 
 {
   u8 *slot_ptr;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   this->next_id = 1;
   this->entries = 0;
@@ -15977,7 +15066,6 @@ LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *this)
   }
   return this;
 }
-#undef i
 
 /* 0056e2c9 auto */
 void __thiscall lobby_list_dtor(void *this)
@@ -16007,10 +15095,6 @@ void __thiscall lobby_list_dtor(void *this)
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
 #define turn_resume_new_game (*(int *)((u8 *)&g.d_0062c488))
 #define net_wait_start_ticks_i32 (*(i32 *)((u8 *)&g.d_006ad674))
-#define new_dialog (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(28)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(32)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 map_arg,int launch_mode)
@@ -16022,7 +15106,10 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 map_arg,int launch_mo
   int entry;
   int waiting_entry;
   i32 ret;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr new_dialog;
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   if ((launch_mode == 2) || (launch_mode == 3)) {
@@ -16247,22 +15334,17 @@ LAB_0056ec81:
 #undef turn_resume_civ
 #undef turn_resume_new_game
 #undef net_wait_start_ticks_i32
-#undef new_dialog
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 0056ec92 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define net_session_phase (*(i32 *)((u8 *)&g.d_006ad640))
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
 #define net_slot_civs (*(i32 *)((u8 *)&g.d_006ad35c))
-#define slot (*(int *)(frame_ + FRAME_OFF(4)))
-#define pending_count (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl lobby_wait_civs_chosen_idle(void)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
+  int pending_count;
   
   net_process_messages((NetSession *)&net_session,1,0);
   pending_count = 0;
@@ -16283,8 +15365,6 @@ void __cdecl lobby_wait_civs_chosen_idle(void)
 #undef net_session_phase
 #undef net_slot_active_flags
 #undef net_slot_civs
-#undef slot
-#undef pending_count
 
 /* 0056ed62 auto */
 void __cdecl lobby_dialog_idle(void)
@@ -16295,11 +15375,10 @@ void __cdecl lobby_dialog_idle(void)
 }
 
 /* 0056edd3 auto */
-#define neighbor (*(iptr *)(frame_ + FRAME_OFF(0)))
 iptr __thiscall lobby_entry_neighbor(LobbyList *this,iptr entry)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr neighbor;
   
   neighbor = entry;
   if (*(int *)(entry + 0x10) != 0) {
@@ -16310,15 +15389,13 @@ iptr __thiscall lobby_entry_neighbor(LobbyList *this,iptr entry)
   }
   return neighbor;
 }
-#undef neighbor
 
 /* 0056ee2c auto */
-#define entry (*(void * *)(frame_ + FRAME_OFF(4)))
 void __thiscall lobby_clear_player_list(LobbyList *this)
 
 {
   void *next;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  void *entry;
   
   entry = (void *)this->entries;
   while (entry != (void *)0x0) {
@@ -16333,7 +15410,6 @@ void __thiscall lobby_clear_player_list(LobbyList *this)
   *(i32 *)(this->dialog + 0x220) = 0;
   return;
 }
-#undef entry
 
 /* 0056eed7 auto */
 void __thiscall lobby_remove_entry(LobbyList *this,void *entry)
@@ -16361,8 +15437,6 @@ void __thiscall lobby_remove_entry(LobbyList *this,void *entry)
 }
 
 /* 0056ef93 auto */
-#define tail2 (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define node2 (*(uptr *)(frame_ + FRAME_OFF(4)))
 uint * __thiscall lobby_add_player_entry(LobbyList *this,iptr name2,uint entry_id)
 
 {
@@ -16372,7 +15446,8 @@ uint * __thiscall lobby_add_player_entry(LobbyList *this,iptr name2,uint entry_i
   void *name_copy;
   int width;
   int max_width;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr tail2;
+  uptr node2;
   
   tail2 = 0;
   for (node2 = this->entries; node2 != 0; node2 = *(uptr *)(node2 + 0x10)) {
@@ -16412,19 +15487,16 @@ uint * __thiscall lobby_add_player_entry(LobbyList *this,iptr name2,uint entry_i
   *(i32 *)(this->dialog + 0x210) = *(i32 *)(this->dialog + 0x228);
   return entry;
 }
-#undef tail2
-#undef node2
 
 /* 0056f113 auto */
 #define net_lobby_list (*(LobbyList * *)((u8 *)&g.d_006ad10c))
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
-#define entry (*(uptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl lobby_refresh_player_list(void)
 
 {
   int selected_id;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
+  uptr entry;
   
   if (net_lobby_list != (LobbyList *)0x0) {
     selected_id = *(int *)(*(int *)(net_lobby_list->dialog + 0x220) + 4);
@@ -16468,8 +15540,6 @@ void __cdecl lobby_refresh_player_list(void)
 }
 #undef net_lobby_list
 #undef net_slot_active_flags
-#undef slot
-#undef entry
 
 /* 0056f301 auto */
 #define net_lobby_list (*(i32 * *)((u8 *)&g.d_006ad10c))
@@ -16511,45 +15581,30 @@ i32 __thiscall lobby_find_waiting_entry(LobbyList *this)
 #undef text_buffer
 
 /* 0056f3e0 auto */
-#define entry (*(uptr *)(frame_ + FRAME_OFF(0)))
 uptr __thiscall lobby_find_entry_by_id(LobbyList *this,int entry_id)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  uptr entry;
   
   for (entry = this->entries; (entry != 0 && (*(int *)(entry + 4) != entry_id));
       entry = *(uptr *)(entry + 0x10)) {
   }
   return entry;
 }
-#undef entry
 
 /* 0056f42b auto */
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
 int __thiscall lobby_slot_for_entry_id(LobbyList *this,int entry_id)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
   
   for (slot = 0; (slot < 7 && (*(int *)(&net_slot_lobby_ids + slot * 0x54) != entry_id));
       slot = slot + 1) {
   }
   return slot;
 }
-#undef slot
 
 /* 00587a90 auto */
-#define hotspot_parent (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define scroll_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define hotspot (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define scrollbar (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define rect_left2 (*(int *)(frame_ + FRAME_OFF(24)))
-#define rect_top2 (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define rect_right2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define rect_bottom2 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(44)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(48)))
 void __thiscall
 parley_create_city_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_cities)
 
@@ -16558,13 +15613,20 @@ parley_create_city_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_cit
   int right;
   int scroll_width;
   Control *pCVar4;
-  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  u8 *hotspot_parent;
+  u8 *scroll_parent;
+  i32 hotspot;
+  i32 scrollbar;
+  RECT rect2;
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
-  rect_left2 = *(int *)rect;
-  rect_top2 = *(i32 *)(rect + 4);
-  rect_right2 = *(int *)(rect + 8);
-  rect_bottom2 = *(i32 *)(rect + 0xc);
+  rect2.left = *(int *)rect;
+  rect2.top = *(i32 *)(rect + 4);
+  rect2.right = *(int *)(rect + 8);
+  rect2.bottom = *(i32 *)(rect + 0xc);
   *(i32 *)(&parley_pane_own_cities + pane * 4) = own_cities;
   parley_build_city_list(this,pane,0);
   if (*(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 + 0x4c) < 1) {
@@ -16593,11 +15655,11 @@ parley_create_city_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_cit
   if (*(int *)(((PictureWindow *)this)->parley_pane_arrays_base + pane * 4 + 0x40) <
       *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 + 0x4c)) {
     scroll_width = GetSystemMetrics(2);
-    right = rect_right2;
+    right = rect2.right;
     *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 0x10 + 0x2c) =
          *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 0x10 + 0x2c) - scroll_width;
-    rect_left2 = GetSystemMetrics(2);
-    rect_left2 = right - rect_left2;
+    rect2.left = GetSystemMetrics(2);
+    rect2.left = right - rect2.left;
     pCVar4 = operator_new(0x40);
     seh_state = 0;
     if (pCVar4 == (Control *)0x0) {
@@ -16616,7 +15678,7 @@ parley_create_city_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_cit
     }
     scrollbar_create
               (*(Control **)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 - 0x20),(iptr)scroll_parent,
-               pane + 0x420,(iptr)&rect_left2,1);
+               pane + 0x420,(iptr)&rect2,1);
     scrollbar_set_range
               (*(Control **)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 - 0x20),0,
                *(int *)(((PediaRedrawView *)this)->pedia_pane_layout + pane * 4 + 0x4c) -
@@ -16656,17 +15718,6 @@ parley_create_city_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_cit
   parley_draw_city_list(pane);
   return;
 }
-#undef hotspot_parent
-#undef scroll_parent
-#undef hotspot
-#undef scrollbar
-#undef rect_left2
-#undef rect_top2
-#undef rect_right2
-#undef rect_bottom2
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 00587e05 auto */
 void __cdecl parley_city_list_scroll_local(i32 pos)
@@ -16678,12 +15729,11 @@ void __cdecl parley_city_list_scroll_local(i32 pos)
 
 /* 00587e41 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_reveal_city_info(void)
 
 {
   iptr child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -16704,16 +15754,14 @@ void __cdecl parley_reveal_city_info(void)
   return;
 }
 #undef human_civ
-#undef parley_wnd2
 
 /* 00587f00 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_hide_city_info(void)
 
 {
   iptr child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -16734,15 +15782,13 @@ void __cdecl parley_hide_city_info(void)
   return;
 }
 #undef human_civ
-#undef parley_wnd2
 
 /* 0058804f auto */
-#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_city_list_scroll(int pane,i32 pos)
 
 {
   int child;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -16756,22 +15802,20 @@ void __cdecl parley_city_list_scroll(int pane,i32 pos)
   parley_draw_city_list(pane);
   return;
 }
-#undef parley_wnd2
 
 /* 005880b0 auto */
-#define sel_end (*(int *)(frame_ + FRAME_OFF(4)))
-#define row (*(int *)(frame_ + FRAME_OFF(8)))
-#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define pane (*(int *)(frame_ + FRAME_OFF(20)))
-#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(24)))
 void __cdecl parley_city_list_click(int control_id)
 
 {
   uint *sel_flag;
   int hit_row;
   int key_down;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  int sel_end;
+  int row;
+  i32 cursor_y;
+  i32 cursor_x;
+  int pane;
+  iptr parley_wnd2;
   
   hit_row = wnd_get_active_child();
   if (hit_row == 0) {
@@ -16830,22 +15874,15 @@ void __cdecl parley_city_list_click(int control_id)
   }
   return;
 }
-#undef sel_end
-#undef row
-#undef cursor_y
-#undef cursor_x
-#undef pane
-#undef parley_wnd2
 
 /* 0058832d auto */
-#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 int __cdecl parley_city_list_hit_test(int x,int y,int pane)
 
 {
   iptr child;
   int result;
   int height;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -16876,19 +15913,17 @@ int __cdecl parley_city_list_hit_test(int x,int y,int pane)
   }
   return result;
 }
-#undef parley_wnd2
 
 /* 0058843f auto */
-#define j (*(int *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
-#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __thiscall parley_sort_city_list(void *this,int first,int last,int pane)
 
 {
   i32 tmp;
   iptr child;
   int cmp;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int j;
+  int i;
+  iptr parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -16929,9 +15964,6 @@ void __thiscall parley_sort_city_list(void *this,int first,int last,int pane)
   }
   return;
 }
-#undef j
-#undef i
-#undef parley_wnd2
 
 /* 0058878e auto */
 #define dlg_highlight_text_color (*(byte *)((u8 *)&g.d_00635a00))
@@ -16942,17 +15974,6 @@ void __thiscall parley_sort_city_list(void *this,int first,int last,int pane)
 #define list_shadow_color (*(uint *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(uint *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define bg_color2 (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define city (*(int *)(frame_ + FRAME_OFF(16)))
-#define row (*(int *)(frame_ + FRAME_OFF(20)))
-#define shadow_color2 (*(uint *)(frame_ + FRAME_OFF(36)))
-#define text_color2 (*(uint *)(frame_ + FRAME_OFF(44)))
-#define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(48)))
-#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(56)))
-#define row_height (*(int *)(frame_ + FRAME_OFF(72)))
-#define sprite_style (*(int *)(frame_ + FRAME_OFF(76)))
-#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
-#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(96)))
 void __cdecl parley_draw_city_list(int pane)
 
 {
@@ -16966,7 +15987,17 @@ void __cdecl parley_draw_city_list(int pane)
   i32 font_height;
   int selected;
   iptr label;
-  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 bg_color2;
+  int city;
+  int row;
+  uint shadow_color2;
+  uint text_color2;
+  ViewWindow *this2;
+  tagRECT row_rect;
+  int row_height;
+  int sprite_style;
+  i8 saved_clip[16];
+  GameFont *font2;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -17159,30 +16190,18 @@ LAB_00588e17:
 #undef list_shadow_color
 #undef list_text_color
 #undef panel_margin_x
-#undef bg_color2
-#undef city
-#undef row
-#undef shadow_color2
-#undef text_color2
-#undef this2
-#undef row_rect
-#undef row_height
-#undef sprite_style
-#undef saved_clip
-#undef font2
 
 /* 00588e47 auto */
-#define zoom2 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define draw_x (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define sprite_width2 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(20)))
 void __cdecl
 parley_draw_city_sprite(iptr city,uint row_index,int x,int y,int row_height,i32 style)
 
 {
   iptr child;
   int sprite_height2;
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 zoom2;
+  i32 draw_x;
+  i32 sprite_width2;
+  iptr parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
@@ -17211,24 +16230,19 @@ parley_draw_city_sprite(iptr city,uint row_index,int x,int y,int row_height,i32 
   gfx_draw_city((iptr)((u8 *)&g.d_0067a7a8),city,style,draw_x,y - (sprite_height2 - row_height) / 2,zoom2);
   return;
 }
-#undef zoom2
-#undef draw_x
-#undef sprite_width2
-#undef parley_wnd2
 
 /* 00588f36 auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
-#define city (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define old_count (*(int *)(frame_ + FRAME_OFF(4)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define old_selection (*(void * *)(frame_ + FRAME_OFF(12)))
-#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __thiscall parley_build_city_list(ListPaneWindow *this,int pane,int keep_selection)
 
 {
   int *count_ptr;
   iptr child;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr city;
+  int old_count;
+  iptr unit;
+  void *old_selection;
+  iptr parley_wnd2;
   
   old_selection = (void *)0x0;
   child = wnd_get_active_child();
@@ -17308,11 +16322,6 @@ void __thiscall parley_build_city_list(ListPaneWindow *this,int pane,int keep_se
   } while( true );
 }
 #undef human_civ
-#undef city
-#undef old_count
-#undef unit
-#undef old_selection
-#undef parley_wnd2
 
 /* 00594d42 auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -17320,9 +16329,6 @@ void __thiscall parley_build_city_list(ListPaneWindow *this,int pane,int keep_se
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_lock_map_busy (*(i32 *)((u8 *)&g.d_006ad8cc))
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
-#define src_conflict (*(int *)(frame_ + FRAME_OFF(4)))
-#define dst_conflict (*(int *)(frame_ + FRAME_OFF(8)))
-#define slot (*(int *)(frame_ + FRAME_OFF(12)))
 i32 __cdecl
 net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
 
@@ -17330,7 +16336,9 @@ net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
   i32 result;
   int start_ticks;
   int now_ticks;
-  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  int src_conflict;
+  int dst_conflict;
+  int slot;
   
   net_lock_map_busy = 1;
   *(i32 *)(&net_map_lock_replies + civ * 0x18) = 0;
@@ -17418,9 +16426,6 @@ net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
 #undef net_host_flag
 #undef net_lock_map_busy
 #undef net_slot_active_flags
-#undef src_conflict
-#undef dst_conflict
-#undef slot
 
 /* 0059511c auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -17505,13 +16510,12 @@ void __cdecl net_session_static_dtor(void)
 }
 
 /* 0059a8bb auto */
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   net_msg_player_info_init((NetMsgHeader *)&this->player_info_msg);
@@ -17529,19 +16533,15 @@ NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *this)
   XD_SetOversizedMessageCB(50000,net_on_oversized_message);
   return this;
 }
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 0059a998 auto */
 #define mp_meeting_pending (*(i32 *)((u8 *)&g.d_00626a2c))
 #define net_active_protocol (*(i32 *)((u8 *)&g.d_006c9288))
 #define net_xd_adapter_index (*(i32 *)((u8 *)&g.d_006c8fbc))
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall net_session_clear(void *this)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   *(i8 *)((int)this + 0x1ec) = 0;
   *(i8 *)((int)this + 0x1ed) = 0;
@@ -17620,16 +16620,14 @@ void __thiscall net_session_clear(void *this)
 #undef mp_meeting_pending
 #undef net_active_protocol
 #undef net_xd_adapter_index
-#undef i
 
 /* 0059ad40 auto */
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall net_session_dtor(void *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0;
   if (*(int *)((int)this + 0x534) != 0) {
@@ -17642,16 +16640,12 @@ void __thiscall net_session_dtor(void *this)
   /* inlined unwind funclet 0059adc8 */ { net_msgq_clear((NetMsgQueue *)(*(int *)((iptr)&this) + 0x160d0)); }
   return;
 }
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 0059adef auto */
 #define net_active_protocol (*(i32 *)((u8 *)&g.d_006c9288))
 #define net_protocol (*(i32 *)((u8 *)&g.d_006ad2f8))
 #define prefs_net_ip_address (*(i8 *)((u8 *)&g.d_006665b0))
 #define prefs_net_player_name (*(i8 *)((u8 *)&g.d_00666570))
-#define init_error (*(int *)(frame_ + FRAME_OFF(4)))
 i8 __thiscall net_init_transport(void *this,i32 protocol,int is_server)
 
 {
@@ -17659,7 +16653,7 @@ i8 __thiscall net_init_transport(void *this,i32 protocol,int is_server)
   i8 result;
   UINT UVar3;
   int activate_error;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int init_error;
   
   if (*(char *)((int)this + 0x1ec) != '\0') {
     err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_006350bc),(iptr)((u8 *)&g.d_0063509c),0x92);
@@ -17789,7 +16783,6 @@ i8 __thiscall net_init_transport(void *this,i32 protocol,int is_server)
 #undef net_protocol
 #undef prefs_net_ip_address
 #undef prefs_net_player_name
-#undef init_error
 
 /* 0059b293 auto */
 /* WARNING: Removing unreachable block (ram,0x0059b3ca) */
@@ -17874,16 +16867,15 @@ void __thiscall net_session_close_hook_nop(void *this)
 }
 
 /* 0059b571 auto */
-#define prev (*(char * *)(frame_ + FRAME_OFF(0)))
-#define node2 (*(char * *)(frame_ + FRAME_OFF(4)))
-#define saved_value (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall net_game_list_add(NetSession *this,iptr msg)
 
 {
   int cmp;
   void *entry;
   i32 now_ticks;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  char *prev;
+  char *node2;
+  i32 saved_value;
   
   if (*(char *)((int)&((NetSessionExt *)this)->session_flags + 2) != '\0') {
     node2 = (char *)((NetSessionExt *)this)->game_list_head;
@@ -17945,16 +16937,12 @@ void __thiscall net_game_list_add(NetSession *this,iptr msg)
   }
   return;
 }
-#undef prev
-#undef node2
-#undef saved_value
 
 /* 0059b7fc auto */
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall net_add_player(NetSession *this,iptr player_info)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
   
   slot = 0;
   while( true ) {
@@ -17977,15 +16965,13 @@ void __thiscall net_add_player(NetSession *this,iptr player_info)
   ((NetSessionExt *)this)->open_slot_count--;
   return;
 }
-#undef slot
 
 /* 0059b96a auto */
-#define slot (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall net_remove_player(NetSession *this,int player_id)
 
 {
   u8 *civ_slot_ptr;
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int slot;
   
   slot = 0;
   while ((slot < 7 && (*(int *)((int)this + slot * 0x54 + 0x204) != player_id))) {
@@ -18012,7 +16998,6 @@ void __thiscall net_remove_player(NetSession *this,int player_id)
   }
   return;
 }
-#undef slot
 
 /* 0059baf0 auto */
 void __thiscall net_free_game_list(void *this)
@@ -18057,20 +17042,17 @@ void __cdecl net_on_broadcast_receive(int *msg,ushort size)
 /* 0059bc41 auto */
 #define mp_window_drag_active (*(char *)((u8 *)&g.d_00633a84))
 #define net_send_sequence (*(int *)((u8 *)&g.d_00628468))
-#define scan_ptr (*(int * *)(frame_ + FRAME_OFF(0)))
-#define byte_idx (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define offset (*(uptr *)(frame_ + FRAME_OFF(8)))
-#define num_buf (*(char *)(frame_ + FRAME_OFF(12)))
-#define num_buf_1 (*(char *)(frame_ + FRAME_OFF(13)))
-#define num_buf_2 (*(i8 *)(frame_ + FRAME_OFF(14)))
-#define hex_line (*(i8 (*)[64])(frame_ + FRAME_OFF(44)))
-#define byte_val (*(uint *)(frame_ + FRAME_OFF(108)))
-#define header (*(int * *)(frame_ + FRAME_OFF(112)))
 void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
 
 {
   size_t len;
-  i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
+  int *scan_ptr;
+  uptr byte_idx;
+  uptr offset;
+  char num_buf[32];
+  i8 hex_line[64];
+  uint byte_val;
+  int *header;
   
   if (3 < size) {
     if (*msg == 0x66606660) {
@@ -18085,32 +17067,32 @@ void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
     else {
       dbg_log((iptr)((u8 *)&g.d_00635608));
       if (-1 < net_last_recv_msg_type) {
-        __ultoa(net_last_recv_callback_size,&num_buf,10);
-        dbg_logf_str((iptr)((u8 *)&g.d_00635640),(iptr)&num_buf);
-        __itoa(net_last_queued_send_seq,&num_buf,10);
-        dbg_logf_str((iptr)((u8 *)&g.d_00635658),(iptr)&num_buf);
-        __itoa(net_last_recv_msg_type,&num_buf,10);
-        dbg_logf_str((iptr)((u8 *)&g.d_00635678),(iptr)&num_buf);
-        __ultoa(net_last_recv_msg_size,&num_buf,10);
-        dbg_logf_str((iptr)((u8 *)&g.d_0063568c),(iptr)&num_buf);
+        __ultoa(net_last_recv_callback_size,num_buf,10);
+        dbg_logf_str((iptr)((u8 *)&g.d_00635640),(iptr)num_buf);
+        __itoa(net_last_queued_send_seq,num_buf,10);
+        dbg_logf_str((iptr)((u8 *)&g.d_00635658),(iptr)num_buf);
+        __itoa(net_last_recv_msg_type,num_buf,10);
+        dbg_logf_str((iptr)((u8 *)&g.d_00635678),(iptr)num_buf);
+        __ultoa(net_last_recv_msg_size,num_buf,10);
+        dbg_logf_str((iptr)((u8 *)&g.d_0063568c),(iptr)num_buf);
       }
-      __itoa(net_send_sequence,&num_buf,10);
-      dbg_logf_str((iptr)((u8 *)&g.d_006356a8),(iptr)&num_buf);
-      __ultoa(size,&num_buf,10);
-      dbg_logf_str((iptr)((u8 *)&g.d_006356bc),(iptr)&num_buf);
+      __itoa(net_send_sequence,num_buf,10);
+      dbg_logf_str((iptr)((u8 *)&g.d_006356a8),(iptr)num_buf);
+      __ultoa(size,num_buf,10);
+      dbg_logf_str((iptr)((u8 *)&g.d_006356bc),(iptr)num_buf);
       for (offset = 0; (offset < 0x20 && (hex_line[0] = 0, offset <= size));
           offset = offset + 8) {
         for (byte_idx = offset; (byte_idx < offset + 8 && (byte_idx < size));
             byte_idx = byte_idx + 1) {
           byte_val = (uint)*(byte *)(byte_idx + (int)msg);
-          __itoa(byte_val,&num_buf,0x10);
-          len = _strlen(&num_buf);
+          __itoa(byte_val,num_buf,0x10);
+          len = _strlen(num_buf);
           if (len == 1) {
-            num_buf_1 = num_buf;
-            num_buf_2 = 0;
-            num_buf = '0';
+            num_buf[1] = num_buf[0];
+            num_buf[2] = 0;
+            num_buf[0] = '0';
           }
-          crt_strcat(hex_line,&num_buf);
+          crt_strcat(hex_line,num_buf);
           crt_strcat(hex_line,&net_hexdump_space_str);
         }
         dbg_logf_str((iptr)((u8 *)&g.d_006356d4),(iptr)hex_line);
@@ -18122,13 +17104,13 @@ void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
         if (*scan_ptr == 0x66606660) {
           header = scan_ptr;
           dbg_log((iptr)((u8 *)&g.d_006356dc));
-          __itoa(offset,&num_buf,10);
-          dbg_logf_str((iptr)((u8 *)&g.d_006356fc),(iptr)&num_buf);
+          __itoa(offset,num_buf,10);
+          dbg_logf_str((iptr)((u8 *)&g.d_006356fc),(iptr)num_buf);
           dbg_logf_str((iptr)((u8 *)&g.d_0063571c),(iptr)(s_NM_DATAGRAM_00628470 + header[1] * 0x20));
-          __ultoa(header[2],&num_buf,10);
-          dbg_logf_str((iptr)((u8 *)&g.d_00635738),(iptr)&num_buf);
-          __ultoa(header[3],&num_buf,10);
-          dbg_logf_str((iptr)((u8 *)&g.d_00635758),(iptr)&num_buf);
+          __ultoa(header[2],num_buf,10);
+          dbg_logf_str((iptr)((u8 *)&g.d_00635738),(iptr)num_buf);
+          __ultoa(header[3],num_buf,10);
+          dbg_logf_str((iptr)((u8 *)&g.d_00635758),(iptr)num_buf);
           break;
         }
         scan_ptr = (int *)((int)scan_ptr + 1);
@@ -18142,15 +17124,6 @@ void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
 }
 #undef mp_window_drag_active
 #undef net_send_sequence
-#undef scan_ptr
-#undef byte_idx
-#undef offset
-#undef num_buf
-#undef num_buf_1
-#undef num_buf_2
-#undef hex_line
-#undef byte_val
-#undef header
 
 /* 0059bfb5 auto */
 void __cdecl net_on_new_client(i32 client_info,uint conn_id)
@@ -18190,40 +17163,28 @@ void __cdecl net_on_connection_lost(ushort player_id)
 #undef net_lost_conn_total
 
 /* 0059c0a4 auto */
-#define msg_buf (*(char (*)[256])(frame_ + FRAME_OFF(4)))
 void __cdecl net_on_oversized_message(i32 size)
 
 {
-  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  char msg_buf[256];
   
   _sprintf(msg_buf,s_Oversized_XDaemon_message___ul_00635814,size);
   dbg_log((iptr)msg_buf);
   return;
 }
-#undef msg_buf
 
 /* 0059c0e1 auto */
-#define packet (*(void * *)(frame_ + FRAME_OFF(4)))
-#define header (*(NetMsgHeader *)(frame_ + FRAME_OFF(8)))
-#define packet_size (*(int *)(frame_ + FRAME_OFF(16)))
-#define payload_size (*(size_t *)(frame_ + FRAME_OFF(24)))
 void * __cdecl
 net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2,
             i32 arg3,i32 arg4,i32 arg5,i32 arg6,
             size_t payload_len)
 
 {
-  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
-  u32 pargs_[7] = {(u32)(uptr)arg1, (u32)(uptr)arg2, (u32)(uptr)arg3, (u32)(uptr)arg4, (u32)(uptr)arg5, (u32)(uptr)arg6, (u32)(uptr)payload_len};  /* the arguments, contiguous as on the original stack */
-#define arg1 (*(i32 *)&pargs_[0])
-#define arg2 (*(i32 *)&pargs_[1])
-#define arg3 (*(i32 *)&pargs_[2])
-#define arg4 (*(i32 *)&pargs_[3])
-#define arg5 (*(i32 *)&pargs_[4])
-#define arg6 (*(i32 *)&pargs_[5])
-#define payload_len (*(size_t *)&pargs_[6])
+  void *packet;
+  NetMsgHeaderExt header;  /* the 16-byte message header */
+  size_t payload_size;
   
-  net_msg_header_init(&header,msg_type);
+  net_msg_header_init(&header.base,msg_type);
   if (payload_len == 0) {
     if (payload == 0) {
       payload_size = 0;
@@ -18240,7 +17201,7 @@ net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2,
     packet = operator_new(payload_len + 0x2c);
     crt_memcpy((int)packet + 0x2c,payload,payload_size);
   }
-  packet_size = payload_size + 0x2c;
+  header.msg_size_2 = payload_size + 0x2c;
   crt_memcpy(packet,&header,0x10);
   crt_memcpy((int)packet + 0x10,&arg1,4);
   crt_memcpy((int)packet + 0x14,&arg2,4);
@@ -18251,39 +17212,25 @@ net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2,
   crt_memcpy((int)packet + 0x28,&payload_size,4);
   return packet;
 }
-#undef packet
-#undef header
-#undef packet_size
-#undef payload_size
-#undef arg1
-#undef arg2
-#undef arg3
-#undef arg4
-#undef arg5
-#undef arg6
-#undef payload_len
 
 /* 0059c276 auto */
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl net_reset_msg_counts(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   for (i = 0; i < 0xa9; i++) {
     *(i32 *)(&nm_recv_counts + i * 4) = 0;
   }
   return;
 }
-#undef i
 
 /* 0059c2b8 auto */
 #define net_lost_conn_total (*(i32 *)((u8 *)&g.d_006c8fb4))
-#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl net_reset_error_counts(void)
 
 {
-  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  int i;
   
   net_lost_conn_total = 0;
   for (i = 0; i < 7; i++) {
@@ -18292,7 +17239,6 @@ void __cdecl net_reset_error_counts(void)
   return;
 }
 #undef net_lost_conn_total
-#undef i
 
 /* 0059c301 auto */
 void __cdecl net_modal_idle_poll(void)
@@ -18313,13 +17259,12 @@ void __cdecl net_modal_idle_poll(void)
 #define scenario_name (*(i8 *)((u8 *)&g.d_0064bc62))
 #define scenario_start_year (*(i16 *)((u8 *)&g.d_0064bcb6))
 #define scenario_year_increment (*(i16 *)((u8 *)&g.d_0064bcb4))
-#define bit_masks (*(i32 (*)[9])(frame_ + FRAME_OFF(0)))
 /* WARNING: Type propagation algorithm not settling */
 
 void __cdecl net_fill_game_info(iptr info)
 
 {
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 bit_masks[9];
   
   bit_masks[0] = 0;
   bit_masks[1] = 1;
@@ -18375,15 +17320,13 @@ void __cdecl net_fill_game_info(iptr info)
 #undef scenario_name
 #undef scenario_start_year
 #undef scenario_year_increment
-#undef bit_masks
 
 /* 0059d080 auto */
-#define j (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define i (*(int *)(frame_ + FRAME_OFF(8)))
 NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *this)
 
 {
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  iptr j;
+  int i;
   
   net_msg_header_init(this,0x2e);
   ((NetMsgHeaderExt *)this)->player_id = 0;
@@ -18403,18 +17346,15 @@ NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *this)
   ((NetMsgHeaderExt *)this)->msg_size_2 = 0x118;
   return this;
 }
-#undef j
-#undef i
 
 /* 005a9f30 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define nm_production_complete_count (*(int *)((u8 *)&g.d_006c9210))
-#define civ (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl net_host_wait_production_idle(void)
 
 {
   bool all_done;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
   
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_production_complete_count != 0) || (net_player_count < 2)) {
@@ -18436,17 +17376,15 @@ void __cdecl net_host_wait_production_idle(void)
 }
 #undef dialog_stack_top
 #undef nm_production_complete_count
-#undef civ
 
 /* 005aa004 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define nm_human_move_complete_count (*(int *)((u8 *)&g.d_006c921c))
-#define civ (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl net_host_wait_human_moves_idle(void)
 
 {
   bool all_done;
-  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
   
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_human_move_complete_count != 0) || (net_player_count < 2)) {
@@ -18468,7 +17406,6 @@ void __cdecl net_host_wait_human_moves_idle(void)
 }
 #undef dialog_stack_top
 #undef nm_human_move_complete_count
-#undef civ
 
 /* 005aa0e5: written by hand in src/game/bigframes.c */
 
@@ -18592,16 +17529,6 @@ void __cdecl net_client_hotwait_idle(void)
 #define main_view_timer_cache_i32 (*(i32 *)((u8 *)&g.d_0066c990))
 #define saved_human_players_i32 (*(i32 *)((u8 *)&g.d_00673b08))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
-#define civ (*(int *)(frame_ + FRAME_OFF(4)))
-#define unit (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(12)))
-#define turn_ok (*(i8 *)(frame_ + FRAME_OFF(768)))
-#define centered (*(int *)(frame_ + FRAME_OFF(772)))
-#define new_casualties (*(int *)(frame_ + FRAME_OFF(776)))
-#define is_first_turn (*(int *)(frame_ + FRAME_OFF(780)))
-#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(784)))
-#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(788)))
-#define seh_state (*(i32 *)(frame_ + FRAME_OFF(792)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl net_client_turn_loop(void)
@@ -18613,7 +17540,16 @@ i32 __cdecl net_client_turn_loop(void)
   int status;
   i32 ret;
   iptr slot_civ;
-  i8 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
+  int civ;
+  iptr unit;
+  Dialog dialog2;
+  i8 turn_ok;
+  int centered;
+  int new_casualties;
+  int is_first_turn;
+  i32 seh_frame;
+  i8 *seh_handler;
+  i32 seh_state;
   
   seh_state = 0xffffffff;
   is_first_turn = 1;
@@ -18923,16 +17859,6 @@ LAB_005abff1:
 #undef main_view_timer_cache_i32
 #undef saved_human_players_i32
 #undef mp_turn_civ_i32
-#undef civ
-#undef unit
-#undef dialog2
-#undef turn_ok
-#undef centered
-#undef new_casualties
-#undef is_first_turn
-#undef seh_frame
-#undef seh_handler
-#undef seh_state
 
 /* 005b9ec6 auto */
 #define net_batch_used_dwords (*(i32 *)((u8 *)&g.d_006365f4))
@@ -19063,18 +17989,16 @@ net_batch_add(int record_type,i32 x,i32 y,i32 arg1,iptr arg2,
 /* 005ba206 auto */
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_tile_sync_enabled (*(i8 *)((u8 *)&g.d_006ad699))
-#define records_left (*(int *)(frame_ + FRAME_OFF(0)))
-#define arg_idx (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define args (*(iptr (*)[4])(frame_ + FRAME_OFF(8)))
-#define extra_arg (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define pos (*(int *)(frame_ + FRAME_OFF(32)))
 void __cdecl net_apply_tile_updates(iptr batch)
 
 {
   int record_type;
   i8 saved_sync;
   iptr count_offset;
-  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  int records_left;
+  iptr arg_idx;
+  iptr args[5];
+  int pos;
   
   pos = 0;
   if (2 < game.multiplayer) {
@@ -19114,7 +18038,7 @@ void __cdecl net_apply_tile_updates(iptr batch)
         tile_set_radius_civ(args[0],args[1],args[2],1);
         break;
       case 7:
-        known_set(args[0],args[1],args[2],args[3],extra_arg,1);
+        known_set(args[0],args[1],args[2],args[3],args[4],1);
       }
     }
     net_tile_sync_enabled = saved_sync;
@@ -19124,8 +18048,3 @@ void __cdecl net_apply_tile_updates(iptr batch)
 }
 #undef net_host_flag
 #undef net_tile_sync_enabled
-#undef records_left
-#undef arg_idx
-#undef args
-#undef extra_arg
-#undef pos
