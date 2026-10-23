@@ -112,3 +112,8 @@ message by message and clock event by clock event.
   WM_PAINT pending for the map view (window 19) when the large child window
   Arrange Windows showed and hid (window 23) is hidden again, and does not
   erase the map frame (window 18) when it is resized.  Not yet explained.
+* **Effects editor repaint order.**  When the effects editor's "New Value"
+  box closes (harness/scripts/editors.txt), our list is drawn over the top
+  8 pixels of the OK/Edit/Help/Cancel buttons; in the original the buttons
+  end up on top (the controls overlap without WS_CLIPSIBLINGS, so the order
+  in which they repaint decides).

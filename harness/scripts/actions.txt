@@ -1,0 +1,174 @@
+# Game actions called directly on the autosave (Romans civ 1, Sioux civ 7):
+# treaties, civilization events, city info, unit actions,
+# the destructive ones (incite a city, a nuclear attack, a civilization
+# eliminated), the spaceship last (its window stays open).
+# Each followed by a screenshot and Escapes.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call diplo_agree_ceasefire 45a7a8 1 7
+wait 3000
+shot 01-diplo_agree_ceasefire
+key Escape
+wait 1500
+key Escape
+wait 1500
+call diplo_sign_peace_treaty 45a6ab 1 7
+wait 3000
+shot 02-diplo_sign_peace_treaty
+key Escape
+wait 1500
+key Escape
+wait 1500
+call diplo_form_alliance 45a535 1 7
+wait 3000
+shot 03-diplo_form_alliance
+key Escape
+wait 1500
+key Escape
+wait 1500
+call diplo_cancel_alliance 467ef2 1 7
+wait 3000
+shot 04-diplo_cancel_alliance
+key Escape
+wait 1500
+key Escape
+wait 1500
+call diplo_espionage_incident 4c59f0 1 7
+wait 3000
+shot 05-diplo_espionage_incident
+key Escape
+wait 1500
+key Escape
+wait 1500
+call diplo_ally_join_war 55d685 1 7 2
+wait 3000
+shot 06-diplo_ally_join_war
+key Escape
+wait 1500
+key Escape
+wait 1500
+call diplo_expel_units 467baf 7 1
+wait 3000
+shot 07-diplo_expel_units
+key Escape
+wait 1500
+key Escape
+wait 1500
+call diplo_offer_sell_tech 4591cb 7 1 0
+wait 3000
+shot 08-diplo_offer_sell_tech
+key Escape
+wait 1500
+key Escape
+wait 1500
+call civ_golden_age_popup 4bee56 1
+wait 3000
+shot 09-civ_golden_age_popup
+key Escape
+wait 1500
+key Escape
+wait 1500
+call civ_rating_window_show 4361cc 1
+wait 3000
+shot 10-civ_rating_window_show
+key Escape
+wait 1500
+key Escape
+wait 1500
+call civ_apply_eiffel_tower 4ec312 1
+wait 3000
+shot 11-civ_apply_eiffel_tower
+key Escape
+wait 1500
+key Escape
+wait 1500
+call civ_select_government_dialog 55c3d3 1 0
+wait 3000
+shot 12-civ_select_government_dialog
+key Escape
+wait 1500
+key Escape
+wait 1500
+call city_info_popup 4100cf 6
+wait 3000
+shot 13-city_info_popup
+key Escape
+wait 1500
+key Escape
+wait 1500
+call unit_pillage 4c50d0 7 0
+wait 3000
+shot 14-unit_pillage
+key Escape
+wait 1500
+key Escape
+wait 1500
+call unit_bribe 4c9528 23 1
+wait 3000
+shot 15-unit_bribe
+key Escape
+wait 1500
+key Escape
+wait 1500
+call city_incite_transfer 4c66ba 8 1 0
+wait 3000
+shot 16-city_incite_transfer
+key Escape
+wait 1500
+key Escape
+wait 1500
+call unit_nuclear_attack 57f9e3 1 13 73 0
+wait 3000
+shot 17-unit_nuclear_attack
+key Escape
+wait 1500
+key Escape
+wait 1500
+call civ_eliminate 4e1763 6 1 0
+wait 3000
+shot 18-civ_eliminate
+key Escape
+wait 1500
+key Escape
+wait 1500
+call spaceship_add_part 598197 1 0
+wait 3000
+shot 19-spaceship_add_part
+key Escape
+wait 1500
+key Escape
+wait 1500
+call spaceship_add_part 598197 1 1
+wait 3000
+shot 20-spaceship_add_part
+key Escape
+wait 1500
+key Escape
+wait 1500
+call spaceship_add_part 598197 1 2
+wait 3000
+shot 21-spaceship_add_part
+key Escape
+wait 1500
+key Escape
+wait 1500
+call spaceship_status_dialog 59772c 1 0
+wait 3000
+shot 22-spaceship_status_dialog
+key Escape
+wait 1500
+key Escape
+wait 1500
+call spaceship_wnd_show_for_civ 4d0339 1
+wait 3000
+shot 23-spaceship_wnd_show_for_civ
+key Escape
+wait 1500
+key Escape
+wait 1500
