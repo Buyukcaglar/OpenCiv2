@@ -7022,8 +7022,7 @@ i32 __cdecl unit_move_dir(iptr unit,uptr dir,i32 move_flags)
           unit3 = civ_name_plural(civ2);
           text_set_string_arg(1,unit3);
           text_set_label_arg(2,unit_types[units[unit].type].name);
-          popup_game_with_sprite((iptr)((u8 *)&g.d_00634d3c),(iptr)(&diplo_popup_portrait_sprite +
-                                            ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80))
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00634d3c),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite)
                              ,0);
         }
         unit = orig_unit;

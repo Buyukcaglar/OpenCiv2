@@ -1143,8 +1143,7 @@ void __cdecl diplo_form_alliance(iptr civ2,iptr civ)
   adjective = civ_get_adjective(civ2);
   text_set_string_arg(2,adjective);
   diplo_leader_play_reaction(2);
-  popup_game_with_sprite((iptr)((u8 *)&g.d_00626b74),(iptr)(&diplo_popup_portrait_sprite +
-                                    ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
+  popup_game_with_sprite((iptr)((u8 *)&g.d_00626b74),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0);
   return;
 }
 #undef diplo_ai_declare_war
@@ -1420,8 +1419,7 @@ void __cdecl diplo_ally_demand_help(iptr civ,iptr civ2)
         diplo_declare_war(civ3,civ2,civ);
       }
       else {
-        popup_game_with_sprite((iptr)((u8 *)&g.d_00626bc8),(iptr)(&diplo_popup_portrait_sprite +
-                                          ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00626bc8),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0
                           );
         if (diplo_cur_attitude < 0x33) {
           civ_adjust_attitude(civ,civ3,100);
@@ -2130,8 +2128,7 @@ LAB_0045d5d2:
         text_set_number_arg(0,tribute);
         diplo_leader_play_reaction(2);
         if (proposal == 3) {
-          popup_game_with_sprite((iptr)((u8 *)&g.d_00626d94),(iptr)(&diplo_popup_portrait_sprite +
-                                            ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80))
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00626d94),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite)
                              ,0);
         }
         else {
@@ -2162,8 +2159,7 @@ LAB_0045d5d2:
     diplo_eval_ai_stance(civ2,civ);
     diplo_set_attitude_arg(civ2,civ);
     diplo_leader_play_reaction(4);
-    popup_game_with_sprite((iptr)((u8 *)&g.d_00626df0),(iptr)(&diplo_popup_portrait_sprite +
-                                      ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
+    popup_game_with_sprite((iptr)((u8 *)&g.d_00626df0),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0);
     civs[civ2].reputation++;
     diplo_cancel_alliance(civ2,civ);
   }
@@ -3030,8 +3026,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
       }
       else {
         diplo_leader_play_reaction(3);
-        popup_game_with_sprite((iptr)((u8 *)&g.d_00626fa0),(iptr)(&diplo_popup_portrait_sprite +
-                                          ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00626fa0),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0
                           );
       }
       ended = true;
@@ -3330,12 +3325,10 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     }
     diplo_leader_play_reaction(4);
     if (diplo_tribute_demand == 999) {
-      popup_game_with_sprite((iptr)((u8 *)&g.d_00626fe8),(iptr)(&diplo_popup_portrait_sprite +
-                                        ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00626fe8),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0);
     }
     else {
-      popup_game_with_sprite((iptr)((u8 *)&g.d_00626ff0),(iptr)(&diplo_popup_portrait_sprite +
-                                        ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00626ff0),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0);
     }
     diplo_cancel_alliance(civ,civ2);
     civs[civ2].last_treaty_turn[civ] = game.turn;
@@ -4297,8 +4290,7 @@ void __cdecl diplo_cancel_alliance(iptr civ,iptr civ2)
       text_set_string_arg(2,name2);
     }
     text_append((iptr)((u8 *)&g.d_0062832c));
-    popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)(&diplo_popup_portrait_sprite +
-                                      ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
+    popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0);
   }
   else {
     if ((((((*(byte *)&civs[human_civ].treaties[civ] & 0x80) == 0) &&
@@ -4315,8 +4307,7 @@ void __cdecl diplo_cancel_alliance(iptr civ,iptr civ2)
       name2 = civ_name_plural(civ2);
       text_set_string_arg(2,name2);
       text_append((iptr)((u8 *)&g.d_00628330));
-      popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)(&diplo_popup_portrait_sprite +
-                                        ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0);
     }
   }
   return;
@@ -6078,8 +6069,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           text_set_string_arg(0,civ_name);
           civ_name = civ_name_plural(civ2);
           text_set_string_arg(1,civ_name);
-          popup_game_with_sprite((iptr)((u8 *)&g.d_00633ba0),(iptr)(&diplo_popup_portrait_sprite +
-                                            ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80))
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633ba0),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite)
                              ,0);
         }
         else if ((autoplay_active == 0) &&
@@ -6088,8 +6078,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           text_set_string_arg(0,civ_name);
           civ_name = civ_name_plural(civ);
           text_set_string_arg(1,civ_name);
-          popup_game_with_sprite((iptr)((u8 *)&g.d_00633bb0),(iptr)(&diplo_popup_portrait_sprite +
-                                            ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80))
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633bb0),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite)
                              ,0);
         }
         else if ((autoplay_active == 0) &&
@@ -6243,8 +6232,7 @@ LAB_0055ecb6:
         text_set_string_arg(0,civ_name);
         civ_name = civ_name_plural(civ2);
         text_set_string_arg(1,civ_name);
-        popup_game_with_sprite((iptr)((u8 *)&g.d_00633bf4),(iptr)(&diplo_popup_portrait_sprite +
-                                          ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00633bf4),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0
                           );
       }
       else if ((autoplay_active == 0) &&
@@ -6257,8 +6245,7 @@ LAB_0055ecb6:
         text_set_string_arg(0,civ_name);
         civ_name = civ_name_plural(civ);
         text_set_string_arg(1,civ_name);
-        popup_game_with_sprite((iptr)((u8 *)&g.d_00633c04),(iptr)(&diplo_popup_portrait_sprite +
-                                          ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00633c04),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0
                           );
       }
       else if ((autoplay_active == 0) &&
@@ -7047,8 +7034,7 @@ i32 __cdecl diplo_confirm_attack(iptr civ,iptr civ2,uint treaty_mask)
         }
       }
       else {
-        popup_game_with_sprite((iptr)((u8 *)&g.d_00634318),(iptr)(&diplo_popup_portrait_sprite +
-                                          ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00634318),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0
                           );
         result = 1;
       }

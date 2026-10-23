@@ -10657,12 +10657,10 @@ void __cdecl net_popup_queue_show_next(void)
       dlg_game_txt_with_unit_flags((iptr)((u8 *)&g.d_006313d4),entry[4],0);
       break;
     case 0x38:
-      popup_game_with_sprite((iptr)((u8 *)&g.d_006313dc),(iptr)(&diplo_popup_portrait_sprite +
-                                        ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_006313dc),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0);
       break;
     case 0x39:
-      popup_game_with_sprite((iptr)((u8 *)&g.d_006313ec),(iptr)(&diplo_popup_portrait_sprite +
-                                        ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_006313ec),(iptr)((game.advance_known_by[0xf] != '\0') ? &diplo_popup_portrait_sprite : &signal_allied_icon_sprite),0);
       break;
     case 0x3a:
       popup_game((iptr)((u8 *)&g.d_006313f8));
