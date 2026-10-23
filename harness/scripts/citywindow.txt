@@ -1,0 +1,56 @@
+# The city window: Rome, found and clicked on the map, and its buttons
+# (their handlers called: the window is larger than the replay's screen).
+wait 8000
+key Down Down Down Down
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 528
+wait 3000
+key Return
+wait 4000
+shot c0
+click 205 245
+wait 4000
+shot c1
+call city_button_info 50b9a4 0
+wait 3000
+shot c2-info
+call city_button_map 50ba07 0
+wait 3000
+shot c3-map
+call city_button_happy 50ba6a 0
+wait 3000
+shot c4-happy
+call city_button_buy 509b48 0
+wait 3000
+shot c5-buy
+key Return
+wait 3000
+call city_button_change 50a473 0
+wait 3000
+shot c6-change
+key Escape
+wait 3000
+call city_button_rename 50b74e 0
+wait 3000
+shot c7-rename
+key Escape
+wait 3000
+call city_button_view 50bacd 0
+wait 3000
+shot c8-view
+key Escape
+wait 3000
+call city_button_next_city 50bd13 0
+wait 3000
+shot c9-next
+call city_button_prev_city 50bf72 0
+wait 3000
+shot c10-prev
+key Escape
+wait 3000
+shot c11-closed

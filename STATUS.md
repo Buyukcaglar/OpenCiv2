@@ -93,9 +93,15 @@ message by message and clock event by clock event.
   sections; converting them to C tables is mechanical but not done.
 * `tools/build_recon.py` still reads the original `civ2.exe` for import-slot
   addresses when linking (the same information is in `data/image/idata.bin`).
-* Coverage of the comparison: the scripts execute 2,032 of 4,088 game
-  functions (50%, 37% of lines; `tools/coverage_report.py` with the
-  linux32cov build, per function in re/coverage.tsv).  Never executed:
-  multiplayer (parley, net), sound and video, spaceship, events, much of
-  the Civilopedia.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
+* Coverage of the comparison: the scripts execute 2,200 of the 3,417
+  compiled game functions (64%, 48% of lines; `tools/coverage_report.py`
+  with the linux32cov build, per function in re/coverage.tsv).  Never
+  executed: multiplayer (parley, net), sound and video, spaceship, the
+  scenario editors, council, network game setup.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
   `make ref SCRIPT=...` and bisect differences with `make bisect`.
+* **Blinking unit under a modal dialog.**  When the spy mission dialog
+  opens over the map (harness/scripts/conquest.txt, Roman phalanx at
+  22,58 of Ca_Auto.SAV), our build has been seen to leave the active unit
+  with its top rows missing; the original showed it whole.  The blink is
+  timer-driven, so the script takes no screenshot there; not yet
+  explained.

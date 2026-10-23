@@ -142,6 +142,69 @@ static void edit_font_margins(Window *w)
     e->left_margin = e->right_margin = width / 2;
 }
 
+/* The lines of a multi-line edit, as Wine's EDIT_BuildLineDefs_ML: a hard
+ * break at "\r\n" and, unless it scrolls sideways, a soft break after the
+ * last space that fits the format rectangle (a word too long for a line is
+ * broken where it overflows).  starts/lens: the lines' characters, without
+ * the hard break; returns the number of lines (at least 1). */
+#define EDIT_MAX_LINES 1024
+static int edit_layout(Window *w, int *starts, int *lens)
+{
+    Edit *e = edit_of(w);
+    FontFace *f = font_face_of(e->font);
+    int bw = e->border ? GetSystemMetrics(SM_CXBORDER) + 1 : 0;
+    int width = (w->client.right - w->client.left) - 2 * bw - e->left_margin - e->right_margin -
+                ((w->exstyle & WS_EX_CLIENTEDGE) ? 2 : 0);
+    int wrap = (w->style & ES_MULTILINE) && !(w->style & (ES_AUTOHSCROLL | WS_HSCROLL)) && f;
+    int n = 0, i = 0;
+    for (;;) {
+        int end = i, next;
+        while (end < e->len && !(e->text[end] == '\r' && end + 1 < e->len && e->text[end + 1] == '\n'))
+            end++;
+        next = end < e->len ? end + 2 : -1;
+        if (!(w->style & ES_MULTILINE)) {
+            end = e->len;
+            next = -1;
+        }
+        while (wrap && text_width(f, e->text + i, end - i) > width) {
+            /* whole words with the spaces after them while they fit
+               (Wine's WB_RIGHT steps); none fits: as many characters as do */
+            int prev = i, next = i, j;
+            for (;;) {
+                j = next;
+                while (j < end && e->text[j] != ' ')
+                    j++;
+                while (j < end && e->text[j] == ' ')
+                    j++;
+                if (j == next || text_width(f, e->text + i, j - i) > width)
+                    break;
+                prev = next = j;
+            }
+            if (prev == i) {
+                int x = 0;
+                for (j = i; j < end && x + text_width(f, e->text + j, 1) <= width; j++)
+                    x += text_width(f, e->text + j, 1);
+                prev = j > i ? j : i + 1;
+            }
+            if (n < EDIT_MAX_LINES) {
+                starts[n] = i;
+                lens[n] = prev - i;
+                n++;
+            }
+            i = prev;
+        }
+        if (n < EDIT_MAX_LINES) {
+            starts[n] = i;
+            lens[n] = end - i;
+            n++;
+        }
+        if (next < 0)
+            break;
+        i = next;
+    }
+    return n;
+}
+
 static void edit_paint(Window *w, HDC hdc)
 {
     Edit *e = edit_of(w);
@@ -153,19 +216,72 @@ static void edit_paint(Window *w, HDC hdc)
         return;
     GetClientRect(w->hwnd, &r);
     SelectObject(hdc, e->font);
-    br = (HBRUSH)SendMessageA(w->parent && w->parent != desktop ? w->parent->hwnd : 0, WM_CTLCOLOREDIT,
-                              (WPARAM)hdc, (LPARAM)w->hwnd);
+    /* (Wine: a read-only or disabled edit asks for a static's colours) */
+    br = (HBRUSH)SendMessageA(w->parent && w->parent != desktop ? w->parent->hwnd : 0,
+                              (e->readonly || (w->style & ES_READONLY) || (w->style & WS_DISABLED)) ?
+                              WM_CTLCOLORSTATIC : WM_CTLCOLOREDIT, (WPARAM)hdc, (LPARAM)w->hwnd);
     if (!br)
         br = GetSysColorBrush(COLOR_WINDOW);
     FillRect(hdc, &r, br);
-    if (e->border)
-        FrameRect(hdc, &r, GetSysColorBrush(COLOR_WINDOWFRAME));
+    if (e->border) {
+        /* (Wine: next to a scroll bar the frame's edge falls outside) */
+        RECT fr = r;
+        if ((w->style & ES_MULTILINE) && (w->style & WS_VSCROLL))
+            fr.right++;
+        if ((w->style & ES_MULTILINE) && (w->style & WS_HSCROLL))
+            fr.bottom++;
+        FrameRect(hdc, &fr, GetSysColorBrush(COLOR_WINDOWFRAME));
+    }
     (void)margin;
     edit_origin(w, &x, &y);
     a = e->sel_start < e->sel_end ? e->sel_start : e->sel_end;
     b = e->sel_start < e->sel_end ? e->sel_end : e->sel_start;
     if (!e->focused && !(w->style & ES_NOHIDESEL))
         a = b = 0;
+    if (w->style & ES_MULTILINE) {
+        static int starts[EDIT_MAX_LINES], lens[EDIT_MAX_LINES];
+        DC *dc = dc_get(hdc);
+        int n = edit_layout(w, starts, lens), l;
+        if (w->style & WS_VSCROLL) {
+            /* EDIT_UpdateScrollInfo: all the lines, a page of what shows */
+            int vlc = text_height(f) ? (r.bottom - r.top) / text_height(f) : 1;
+            if (w->vscroll.min != 0 || w->vscroll.max != n - 1 || w->vscroll.page != vlc) {
+                w->vscroll.min = 0;
+                w->vscroll.max = n - 1;
+                w->vscroll.page = vlc;
+                wnd_nc_paint(w);
+            }
+        }
+        SetBkMode(hdc, TRANSPARENT);
+        for (l = 0; l < n; l++) {
+            int lx = x, ly = y + l * text_height(f), i = starts[l], end = starts[l] + lens[l];
+            if (ly >= r.bottom)
+                break;
+            while (i < end) {
+                int run = i, sel = i >= a && i < b, wdt;
+                while (run < end && (run >= a && run < b) == sel)
+                    run++;
+                wdt = text_width(f, e->text + i, run - i);
+                if (sel) {
+                    RECT hl;
+                    hl.left = lx; hl.right = lx + wdt; hl.top = ly; hl.bottom = ly + text_height(f);
+                    dc_fill_rect(dc, &hl, GetSysColor(COLOR_HIGHLIGHT));
+                    SetTextColor(hdc, GetSysColor(COLOR_HIGHLIGHTTEXT));
+                } else {
+                    SetTextColor(hdc, GetSysColor(COLOR_WINDOWTEXT));
+                }
+                text_draw(dc, lx, ly, e->text + i, run - i, &r);
+                lx += wdt;
+                i = run;
+            }
+            if (e->focused && e->sel_end >= starts[l] && e->sel_end <= end &&
+                (l == n - 1 || e->sel_end < starts[l + 1])) {
+                int cx = x + text_width(f, e->text + starts[l], e->sel_end - starts[l]);
+                PatBlt(hdc, cx, ly, 1, text_height(f), DSTINVERT);
+            }
+        }
+        return;
+    }
     {
         DC *dc = dc_get(hdc);
         int first = (w->style & ES_MULTILINE) ? 0 : e->first, i;
@@ -408,51 +524,32 @@ LRESULT ctl_edit_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
     case EM_SETREADONLY:
         e->readonly = (int)wp;
         return TRUE;
-    case EM_GETLINECOUNT: {
-        int i, n = 1;
-        for (i = 0; i < e->len; i++)
-            if (e->text[i] == '\n')
-                n++;
-        return n;
-    }
-    case EM_LINEINDEX: {
-        int line = (int)wp, i, n = 0;
-        if (line < 0) {
-            for (i = 0; i < e->sel_end; i++)
-                if (e->text[i] == '\n')
-                    n = i + 1;
+    case EM_GETLINECOUNT: case EM_LINEINDEX: case EM_LINELENGTH: case EM_LINEFROMCHAR: case EM_GETLINE: {
+        static int starts[EDIT_MAX_LINES], lens[EDIT_MAX_LINES];
+        int n = edit_layout(w, starts, lens), l, c;
+        switch (m) {
+        case EM_GETLINECOUNT:
             return n;
+        case EM_LINEFROMCHAR: case EM_LINEINDEX: case EM_LINELENGTH:
+            c = (int)wp < 0 ? e->sel_end : (int)wp;
+            if (m == EM_LINEINDEX) {
+                if ((int)wp >= 0)
+                    return (int)wp < n ? starts[wp] : -1;
+            } else if (c > e->len) {
+                return m == EM_LINELENGTH ? 0 : n - 1;
+            }
+            for (l = n - 1; l > 0 && starts[l] > c; l--)
+                ;
+            return m == EM_LINEFROMCHAR ? l : m == EM_LINEINDEX ? starts[l] : lens[l];
+        default: {                      /* EM_GETLINE */
+            int max = *(WORD *)lp, k;
+            if ((int)wp < 0 || (int)wp >= n)
+                return 0;
+            for (k = 0; k < lens[wp] && k < max; k++)
+                ((char *)lp)[k] = e->text[starts[wp] + k];
+            return k;
         }
-        for (i = 0; i < e->len && line; i++)
-            if (e->text[i] == '\n')
-                line--;
-        return line ? -1 : i;
-    }
-    case EM_LINELENGTH: {
-        int i = (int)wp, n = 0;
-        if (i < 0 || i > e->len)
-            return 0;
-        while (i > 0 && e->text[i - 1] != '\n')
-            i--;
-        while (i + n < e->len && e->text[i + n] != '\r' && e->text[i + n] != '\n')
-            n++;
-        return n;
-    }
-    case EM_LINEFROMCHAR: {
-        int i, n = 0, c = (int)wp < 0 ? e->sel_end : (int)wp;
-        for (i = 0; i < c && i < e->len; i++)
-            if (e->text[i] == '\n')
-                n++;
-        return n;
-    }
-    case EM_GETLINE: {
-        int line = (int)wp, i, n = 0, max = *(WORD *)lp;
-        for (i = 0; i < e->len && line; i++)
-            if (e->text[i] == '\n')
-                line--;
-        while (i < e->len && e->text[i] != '\r' && e->text[i] != '\n' && n < max)
-            ((char *)lp)[n++] = e->text[i++];
-        return n;
+        }
     }
     case EM_GETFIRSTVISIBLELINE:
         return (w->style & ES_MULTILINE) ? 0 : e->first;

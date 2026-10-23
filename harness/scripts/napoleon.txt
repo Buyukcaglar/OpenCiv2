@@ -1,0 +1,36 @@
+# The Napoleon scenario: its own rules, graphics and events (events.txt),
+# a few turns so turn-based events fire.
+wait 8000
+key Down Down Down      # Begin Scenario
+wait 500
+file SCENARIO\NAPOLEON\napoleon.SCN
+key Return
+wait 20000
+shot 00-start
+key Return
+wait 8000
+shot 01
+key Return
+wait 8000
+shot 02
+key Return
+wait 8000
+shot 03
+key Return
+wait 8000
+shot 04
+key ctrl+n
+wait 30000
+shot 05-turn
+key Return
+wait 8000
+shot 06
+key Return
+wait 8000
+shot 07
+key ctrl+n
+wait 30000
+shot 08-turn
+key Return
+wait 8000
+shot 09

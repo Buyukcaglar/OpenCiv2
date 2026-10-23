@@ -1,0 +1,61 @@
+# A diplomat's and a caravan's choices at a foreign city, a city captured
+# and a civil war: a Roman diplomat (unit 21, a free slot) and caravan
+# (55) made next to the Sioux city Wounded Knee (8) of the autosave, Rome taking the city,
+# then the Greeks (civ 6) split.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call unit_create 5b3d06 46 1 19 69
+wait 500
+call unit_create 5b3d06 48 1 19 69
+wait 500
+# No screenshot of the mission dialog: the active Roman unit next to it
+# blinks on a timer that the dialog stops in whatever phase it is in (and
+# our build has been seen to leave it half drawn there; see STATUS.md).
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Return
+wait 3000
+shot 02
+key Return
+wait 3000
+shot 03
+key Escape
+wait 2000
+call unit_caravan_enter_city 58fedb 55 8
+wait 4000
+shot 04-caravan
+key Return
+wait 3000
+shot 05
+key Return
+wait 3000
+shot 06
+key Escape
+wait 2000
+call city_capture_aftermath 57b5df 8 1 0
+wait 4000
+shot 07-capture
+key Return
+wait 3000
+shot 08
+key Return
+wait 3000
+shot 09
+key Return
+wait 3000
+shot 10
+call civ_civil_war 57a904 6
+wait 4000
+shot 11-civilwar
+key Return
+wait 3000
+shot 12
+key Return
+wait 3000
+shot 13

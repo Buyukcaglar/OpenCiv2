@@ -1,0 +1,97 @@
+# README screenshots: city views of the WWII scenario (and the leader screen).
+wait 8000
+key Down Down Down      # Begin Scenario
+wait 500
+file WWII.SCN
+key Return
+wait 20000
+key Return
+wait 8000
+key Return
+wait 8000
+key Return
+wait 8000
+key Return
+wait 8000
+key Return
+wait 8000
+call cityview_open 454260 0
+wait 3000
+shot cv00
+key Escape
+wait 2000
+call cityview_open 454260 1
+wait 3000
+shot cv01
+key Escape
+wait 2000
+call cityview_open 454260 2
+wait 3000
+shot cv02
+key Escape
+wait 2000
+call cityview_open 454260 3
+wait 3000
+shot cv03
+key Escape
+wait 2000
+call cityview_open 454260 4
+wait 3000
+shot cv04
+key Escape
+wait 2000
+call cityview_open 454260 5
+wait 3000
+shot cv05
+key Escape
+wait 2000
+call cityview_open 454260 6
+wait 3000
+shot cv06
+key Escape
+wait 2000
+call cityview_open 454260 7
+wait 3000
+shot cv07
+key Escape
+wait 2000
+call cityview_open 454260 8
+wait 3000
+shot cv08
+key Escape
+wait 2000
+call cityview_open 454260 9
+wait 3000
+shot cv09
+key Escape
+wait 2000
+call cityview_open 454260 10
+wait 3000
+shot cv10
+key Escape
+wait 2000
+call cityview_open 454260 11
+wait 3000
+shot cv11
+key Escape
+wait 2000
+call cityview_open 454260 12
+wait 3000
+shot cv12
+key Escape
+wait 2000
+call cityview_open 454260 13
+wait 3000
+shot cv13
+key Escape
+wait 2000
+call cityview_open 454260 14
+wait 3000
+shot cv14
+key Escape
+wait 2000
+call cityview_open 454260 15
+wait 3000
+shot cv15
+key Escape
+wait 2000

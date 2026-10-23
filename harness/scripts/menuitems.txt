@@ -1,0 +1,135 @@
+# Every menu item that opens a dialog or report, run through menu_command
+# (the menu itself cannot be driven under Wine), on the autosave.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 257     # 0x101
+wait 3000
+shot 01-101
+key Escape
+wait 2000
+call menu_command 4e2803 0 258     # 0x102
+wait 3000
+shot 02-102
+key Escape
+wait 2000
+call menu_command 4e2803 0 259     # 0x103
+wait 3000
+shot 03-103
+key Escape
+wait 2000
+call menu_command 4e2803 0 260     # 0x104
+wait 3000
+shot 04-104
+key Escape
+wait 2000
+call menu_command 4e2803 0 261     # 0x105
+wait 3000
+shot 05-105
+key Escape
+wait 2000
+call menu_command 4e2803 0 262     # 0x106
+wait 3000
+shot 06-106
+key Escape
+wait 2000
+call menu_command 4e2803 0 513     # 0x201
+wait 3000
+shot 07-201
+key Escape
+wait 2000
+call menu_command 4e2803 0 517     # 0x205
+wait 3000
+shot 08-205
+key Escape
+wait 2000
+call menu_command 4e2803 0 528     # 0x210
+wait 3000
+shot 09-210
+key Escape
+wait 2000
+call menu_command 4e2803 0 1281     # 0x501
+wait 3000
+shot 10-501
+key Escape
+wait 2000
+call menu_command 4e2803 0 1282     # 0x502
+wait 3000
+shot 11-502
+key Escape
+wait 2000
+call menu_command 4e2803 0 1283     # 0x503
+wait 3000
+shot 12-503
+key Escape
+wait 2000
+call menu_command 4e2803 0 1284     # 0x504
+wait 3000
+shot 13-504
+key Escape
+wait 2000
+call menu_command 4e2803 0 1285     # 0x505
+wait 3000
+shot 14-505
+key Escape
+wait 2000
+call menu_command 4e2803 0 1286     # 0x506
+wait 3000
+shot 15-506
+key Escape
+wait 2000
+call menu_command 4e2803 0 1287     # 0x507
+wait 3000
+shot 16-507
+key Escape
+wait 2000
+call menu_command 4e2803 0 1288     # 0x508
+wait 3000
+shot 17-508
+key Escape
+wait 2000
+call menu_command 4e2803 0 1537     # 0x601
+wait 3000
+shot 18-601
+key Escape
+wait 2000
+call menu_command 4e2803 0 1538     # 0x602
+wait 3000
+shot 19-602
+key Escape
+wait 2000
+call menu_command 4e2803 0 1539     # 0x603
+wait 3000
+shot 20-603
+key Escape
+wait 2000
+call menu_command 4e2803 0 1541     # 0x605
+wait 3000
+shot 21-605
+key Escape
+wait 2000
+call menu_command 4e2803 0 1542     # 0x606
+wait 3000
+shot 22-606
+key Escape
+wait 2000
+call menu_command 4e2803 0 2317     # 0x90d
+wait 3000
+shot 23-90d
+key Escape
+wait 2000
+call menu_command 4e2803 0 2544     # 0x9f0
+wait 3000
+shot 24-9f0
+key Escape
+wait 2000
+call menu_command 4e2803 0 544     # 0x220 revolution: last, it changes the government
+wait 3000
+shot 25-220
+key Escape
+wait 2000

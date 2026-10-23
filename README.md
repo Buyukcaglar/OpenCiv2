@@ -7,9 +7,11 @@ point `CIV2_GAME` at it.
 <p>
 <img src="docs/screenshots/menu.png" width="49%"> <img src="docs/screenshots/city.png" width="49%">
 <img src="docs/screenshots/europe-1940.png" width="49%"> <img src="docs/screenshots/top5.png" width="49%">
+<img src="docs/screenshots/diplomacy.png" width="49%"> <img src="docs/screenshots/city-view.png" width="49%">
 </p>
 
-*The native build: the main menu, a city, the World War II scenario and the Top Five Cities.*
+*The native build: the main menu, a city, the World War II scenario, the Top Five Cities, a foreign
+leader receiving an envoy (his video, from the CD) and London's city view with its wonders.*
 
 ## Files
 
@@ -17,6 +19,7 @@ point `CIV2_GAME` at it.
 |------|------|
 | `src/auto/` | the game, machine-translated to C (≈4000 functions, named by original address) |
 | `src/game/` | game functions reconstructed by hand |
+| `src/unused/` | translated functions nothing in the game refers to (kept, not compiled) |
 | `src/data/` | the game's static data as C (`gamedata.h`/`.c`) |
 | `src/include/` | types recovered from the binary (units, cities, civilizations, classes) |
 | `src/platform/` | the Windows API the game uses (windows, GDI, controls, files, sound …) implemented in portable C |

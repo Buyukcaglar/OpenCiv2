@@ -1,0 +1,96 @@
+# New game with the choices newgame.txt leaves alone: a customized world,
+# custom rules (game options), another tribe; then the first turn.
+wait 8000
+shot 00-menu
+key Down Down           # Customize World
+wait 500
+key Return
+wait 3000
+shot 01-worldsize
+key Down Down           # Large
+key Return
+wait 3000
+shot 02-custom
+key Down
+key Return
+wait 3000
+shot 03
+key Down
+key Return
+wait 3000
+shot 04
+key Down
+key Return
+wait 3000
+shot 05
+key Down
+key Return
+wait 3000
+shot 06
+key Down
+key Return
+wait 3000
+shot 07
+key Return
+wait 3000
+shot 08
+key Down
+key Return
+wait 3000
+shot 09
+key Down
+key Return
+wait 3000
+shot 10
+key Down
+key Return
+wait 3000
+shot 11
+key Down
+wait 500
+shot 12-features
+click 300 247           # Select Computer Opponents
+wait 500
+shot 13-features2
+key Return
+wait 3000
+shot 14-gender
+key Down                # Female
+key Return
+wait 3000
+shot 15-tribe
+key Down                # Babylonians
+key Return
+wait 3000
+shot 16-name
+key Return
+wait 3000
+shot 17-citystyle
+key Down                # Classical
+key Return
+wait 3000
+shot 18-opponent1
+key Down                # Babylonians are taken: the list skips them
+key Return
+wait 3000
+shot 19-opponent2
+key Down Down
+key Return
+wait 3000
+shot 20-opponent3
+key Return
+wait 3000
+shot 21-opponent4
+key Down
+key Return
+wait 3000
+shot 22-opponent5
+key Return
+wait 600000             # world generation (paced by idle message-loop iterations)
+shot 23-intro
+key Return
+wait 5000
+shot 24-tutorial
+key Return
+wait 5000
+shot 25-map

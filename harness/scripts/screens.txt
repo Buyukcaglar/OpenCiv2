@@ -1,0 +1,84 @@
+# Screens the other scripts do not reach, opened directly on the autosave
+# (menu_command runs a menu item): Civilopedia pages of each kind, the tech tree, intelligence report, power
+# graph, spaceship, research goal.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 2305     # Civilopedia: advances
+wait 3000
+shot 01-pedia-advances
+click 92 382                 # Info: the first entry's page
+wait 3000
+shot 02-pedia-advances-page
+key Escape
+wait 2000
+call menu_command 4e2803 0 2305
+wait 3000
+click 302 382                # Tree
+wait 3000
+shot 03-pedia-tree
+key Escape
+wait 2000
+call menu_command 4e2803 0 2307     # Civilopedia: improvements
+wait 3000
+shot 04-pedia-improvements
+click 144 382                 # Info: the first entry's page
+wait 3000
+shot 05-pedia-improvements-page
+key Escape
+wait 2000
+call menu_command 4e2803 0 2309     # Civilopedia: wonders
+wait 3000
+shot 06-pedia-wonders
+click 144 382                 # Info: the first entry's page
+wait 3000
+shot 07-pedia-wonders-page
+key Escape
+wait 2000
+call menu_command 4e2803 0 2311     # Civilopedia: units
+wait 3000
+shot 08-pedia-units
+click 144 382                 # Info: the first entry's page
+wait 3000
+shot 09-pedia-units-page
+key Escape
+wait 2000
+call menu_command 4e2803 0 2313     # Civilopedia: governments
+wait 3000
+shot 10-pedia-governments
+click 144 382                 # Info: the first entry's page
+wait 3000
+shot 11-pedia-governments-page
+key Escape
+wait 2000
+call menu_command 4e2803 0 2315     # Civilopedia: terrain
+wait 3000
+shot 12-pedia-terrain
+click 144 382                 # Info: the first entry's page
+wait 3000
+shot 13-pedia-terrain-page
+key Escape
+wait 2000
+call intel_report_show 43060b 2 0
+wait 3000
+shot 14-intel
+key Escape
+wait 2000
+call powergraph_show 431d22
+wait 3000
+shot 15-powergraph
+key Escape
+wait 2000
+call civ_research_goal_dialog 4c0cf7 1 0 0
+wait 3000
+shot 16-goal
+key Escape
+wait 2000
+call spaceship_wnd_run 4d0208 1     # last: it does not close on a key
+wait 3000
+shot 17-spaceship
