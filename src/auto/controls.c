@@ -953,7 +953,7 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
 {
   int *surf_rect;
   int size;
-  WndPaletteView *pCVar3;
+  WndPaletteView *parent_wnd;
   iptr palette;
   int center;
   i8 shadow_ctx[16];
@@ -1000,11 +1000,11 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   rect_deflate((iptr)&inner_rect,1,1);
   gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_rect,0x1f,0xf);
   gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_rect,0xf,10);
-  pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)button);
-  palette = wnd_get_palette(pCVar3);
+  parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)button);
+  palette = wnd_get_palette(parent_wnd);
   surface_set_palette((DibSurface *)(button->button_surface),palette);
-  pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)button);
-  palette = wnd_get_palette(pCVar3);
+  parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)button);
+  palette = wnd_get_palette(parent_wnd);
   surface_set_palette((DibSurface *)&button->on_select,palette);
   return;
 }
@@ -1350,22 +1350,22 @@ void __thiscall listbox_get_sel_text(ListBoxSelTextView *this,iptr buffer)
 int __cdecl input_poll_modifier(int modifier)
 
 {
-  SHORT SVar1;
-  BOOL BVar2;
+  SHORT key_state;
+  BOOL has_msg;
   tagMSG msg;
   char pressed;
   
   pressed = '\0';
   if (modifier == 0x200) {
-    SVar1 = GetKeyState(0x11);
-    pressed = ((int)SVar1 & 0x8000U) != 0;
+    key_state = GetKeyState(0x11);
+    pressed = ((int)key_state & 0x8000U) != 0;
   }
   else if (modifier == 0x100) {
-    SVar1 = GetKeyState(0x10);
-    pressed = ((int)SVar1 & 0x8000U) != 0;
+    key_state = GetKeyState(0x10);
+    pressed = ((int)key_state & 0x8000U) != 0;
   }
   else if (modifier == 0x400) {
-    while (BVar2 = PeekMessageA(&msg,(HWND)0x0,0,0,1), BVar2 != 0) {
+    while (has_msg = PeekMessageA(&msg,(HWND)0x0,0,0,1), has_msg != 0) {
       if (((msg.message == 0x106) || (msg.message == 0x104)) ||
          (msg.message == 0x105)) {
         pressed = 1;
@@ -1383,10 +1383,10 @@ int __cdecl input_poll_modifier(int modifier)
 uint __cdecl input_lbutton_down(void)
 
 {
-  SHORT SVar1;
+  SHORT key_state;
   
-  SVar1 = GetAsyncKeyState(1);
-  return (uint)((char)((ushort)SVar1 >> 8) != '\0');
+  key_state = GetAsyncKeyState(1);
+  return (uint)((char)((ushort)key_state >> 8) != '\0');
 }
 
 /* 005c5e60 auto */
@@ -1450,9 +1450,9 @@ void __cdecl ctrl_hwnd_set_focus(HWND hwnd)
 void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
 
 {
-  LONG LVar1;
+  LONG own_data;
   DibSurface *this;
-  WndBase *pCVar2;
+  WndBase *parent_wnd;
   iptr window;
   iptr height;
   int value;
@@ -1464,18 +1464,18 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
   HWND parent_hwnd;
   
   parent_hwnd = GetParent(hwnd);
-  LVar1 = GetWindowLongA(parent_hwnd,0xc);
-  if (LVar1 == 0) {
-    pCVar2 = (WndBase *)GetWindowLongA(parent_hwnd,0);
-    value = wnd_get_window(pCVar2);
+  own_data = GetWindowLongA(parent_hwnd,0xc);
+  if (own_data == 0) {
+    parent_wnd = (WndBase *)GetWindowLongA(parent_hwnd,0);
+    value = wnd_get_window(parent_wnd);
     if (*(int *)(value + 0x14) != 0) {
       FillRect(*(HDC *)paint,(RECT *)(paint + 8),*(HBRUSH *)(value + 0x14));
     }
   }
   else {
     this = (DibSurface *)GetWindowLongA(parent_hwnd,0xc);
-    pCVar2 = (WndBase *)GetWindowLongA(parent_hwnd,0);
-    window = wnd_get_window(pCVar2);
+    parent_wnd = (WndBase *)GetWindowLongA(parent_hwnd,0);
+    window = wnd_get_window(parent_wnd);
     dib2 = surface_get_dib(this);
     origin.x = *(int *)(paint + 8);
     origin.y = *(int *)(paint + 0xc);
@@ -1486,11 +1486,11 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
     }
     rop = 0xcc0020;
     hdcSrc = *(HDC *)(dib2 + 4);
-    LVar1 = origin.x;
+    own_data = origin.x;
     y1 = origin.y;
     height = rect_height(paint + 8);
     value = rect_width(paint + 8);
-    BitBlt(*(HDC *)paint,*(int *)(paint + 8),*(int *)(paint + 0xc),value,height,hdcSrc,LVar1,y1
+    BitBlt(*(HDC *)paint,*(int *)(paint + 8),*(int *)(paint + 0xc),value,height,hdcSrc,own_data,y1
            ,rop);
   }
   return;
@@ -1508,7 +1508,7 @@ void __cdecl ctrl_parse_hotkey(iptr ctrl,iptr text)
   cursor = (char *)text;
   *(i32 *)(ctrl + 0x28) = 0;
   while( true ) {
-    if (*cursor == '\0') goto LAB_005c92ae;
+    if (*cursor == '\0') goto store_hotkey;
     if (*cursor == '~') break;
     *(int *)(ctrl + 0x28) = *(int *)(ctrl + 0x28) + 1;
     cursor++;
@@ -1517,7 +1517,7 @@ void __cdecl ctrl_parse_hotkey(iptr ctrl,iptr text)
       pos = pos + 1) {
     *(i8 *)(pos + text) = *(i8 *)(pos + 1 + text);
   }
-LAB_005c92ae:
+store_hotkey:
   len = _strlen((char *)text);
   if (*(uint *)(ctrl + 0x28) < len) {
     hotkey[0] = *(char *)(*(int *)(ctrl + 0x28) + text);
@@ -1537,7 +1537,7 @@ LRESULT __stdcall ctrl_default_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM l
 {
   HWND hWnd;
   iptr block;
-  LRESULT LVar1;
+  LRESULT result;
   tagPAINTSTRUCT ps;
   
   if (msg < 0x10) {
@@ -1558,8 +1558,8 @@ LRESULT __stdcall ctrl_default_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM l
         }
         ctrl_hwnd_free_block(hwnd);
       }
-      LVar1 = DefWindowProcA(hwnd,2,wparam,lparam);
-      return LVar1;
+      result = DefWindowProcA(hwnd,2,wparam,lparam);
+      return result;
     }
   }
   else if ((0xff < msg) && (msg < 0x103)) {
@@ -1567,8 +1567,8 @@ LRESULT __stdcall ctrl_default_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM l
     SendMessageA(hWnd,msg,wparam,lparam);
     return 0;
   }
-  LVar1 = DefWindowProcA(hwnd,msg,wparam,lparam);
-  return LVar1;
+  result = DefWindowProcA(hwnd,msg,wparam,lparam);
+  return result;
 }
 
 /* 005c944b auto */
@@ -1687,7 +1687,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   int value2;
   HBITMAP h;
   HBITMAP h_00;
-  WndPaletteView *pCVar5;
+  WndPaletteView *parent_wnd;
   PaletteHandleView *this_00;
   HPALETTE hPal;
   GamePalette *this_01;
@@ -1703,15 +1703,15 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   u32 color_index;
   HMENU hMenu;
   i8 *red_out;
-  LONG LVar12;
+  LONG text_top;
   HINSTANCE hInstance;
   i8 *green_out;
   tagRECT *draw_rect;
   LPVOID lpParam;
   BOOL bForceBkgd;
   i8 *blue_out;
-  UINT UVar16;
-  LONG LVar17;
+  UINT draw_flags;
+  LONG text_bottom;
   DWORD style2;
   char label_text[256];
   int line_y;
@@ -1800,8 +1800,8 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         else {
           if (gfx_palettized_display == 1) {
             bForceBkgd = 0;
-            pCVar5 = (WndPaletteView *)ctrl_get_parent(button);
-            this_00 = (PaletteHandleView *)wnd_get_palette(pCVar5);
+            parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
+            this_00 = (PaletteHandleView *)wnd_get_palette(parent_wnd);
             hPal = (HPALETTE)palette_get_hpalette(this_00);
             SelectPalette(mem_dc,hPal,bForceBkgd);
             RealizePalette(mem_dc);
@@ -1810,8 +1810,8 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
           green_out = green;
           red_out = red;
           color_index = button->on_select;
-          pCVar5 = (WndPaletteView *)ctrl_get_parent(button);
-          this_01 = (GamePalette *)wnd_get_palette(pCVar5);
+          parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
+          this_01 = (GamePalette *)wnd_get_palette(parent_wnd);
           logpal = palette_get_logpalette(this_01);
           palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
           bg_pen = CreatePen(0,1,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])))
@@ -1859,21 +1859,21 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         text_rect.top = bounds.top;
         text_rect.right = bounds.right;
         text_rect.bottom = bounds.bottom;
-        UVar16 = 0x424;
+        draw_flags = 0x424;
         draw_rect = &text_rect;
         len = _strlen(label_text);
-        DrawTextA(mem_dc,label_text,len,draw_rect,UVar16);
+        DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
         text_width = rect_width((iptr)&text_rect);
-        LVar17 = bounds.bottom;
+        text_bottom = bounds.bottom;
         value = rect_width((iptr)&bounds);
         value2 = ((bounds.left + value / 2) - text_width / 2) + text_width;
-        LVar12 = bounds.top;
+        text_top = bounds.top;
         value = rect_width((iptr)&bounds);
-        SetRect(&text_rect,(bounds.left + value / 2) - text_width / 2,LVar12,value2,LVar17);
-        UVar16 = 0x24;
+        SetRect(&text_rect,(bounds.left + value / 2) - text_width / 2,text_top,value2,text_bottom);
+        draw_flags = 0x24;
         draw_rect = &text_rect;
         len = _strlen(label_text);
-        DrawTextA(mem_dc,label_text,len,draw_rect,UVar16);
+        DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
         saved_left = text_rect.left;
         saved_top = text_rect.top;
         saved_right = text_rect.right;
@@ -1890,10 +1890,10 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
             text_rect.top = saved_top;
             text_rect.right = saved_right;
             text_rect.bottom = saved_bottom;
-            UVar16 = 0x424;
+            draw_flags = 0x424;
             draw_rect = &text_rect;
             len = _strlen(prefix);
-            DrawTextA(mem_dc,prefix,len,draw_rect,UVar16);
+            DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
             underline_start = text_rect.right - 1;
           }
           crt_strcpy(prefix,label_text);
@@ -1902,10 +1902,10 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
           text_rect.top = saved_top;
           text_rect.right = saved_right;
           text_rect.bottom = saved_bottom;
-          UVar16 = 0x424;
+          draw_flags = 0x424;
           draw_rect = &text_rect;
           len = _strlen(prefix);
-          DrawTextA(mem_dc,prefix,len,draw_rect,UVar16);
+          DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
           text_width = (text_rect.right + 1) - underline_start;
           underline_start = underline_start + (text_width >> 1) - 5;
           underline_end = underline_start + 10;
@@ -1940,23 +1940,23 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         bounds.top += 2;
         text_rect.right = bounds.right;
         text_rect.bottom = bounds.bottom;
-        UVar16 = 0x424;
+        draw_flags = 0x424;
         draw_rect = &text_rect;
         text_rect.left = bounds.left;
         text_rect.top = bounds.top;
         len = _strlen(label_text);
-        DrawTextA(mem_dc,label_text,len,draw_rect,UVar16);
+        DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
         text_width = rect_width((iptr)&text_rect);
-        LVar17 = bounds.bottom;
+        text_bottom = bounds.bottom;
         value = rect_width((iptr)&bounds);
         value = (((value >> 1) + bounds.left) - (text_width >> 1)) + text_width;
-        LVar12 = bounds.top;
+        text_top = bounds.top;
         value2 = rect_width((iptr)&bounds);
-        SetRect(&text_rect,((value2 >> 1) + bounds.left) - (text_width >> 1),LVar12,value,LVar17);
-        UVar16 = 0x24;
+        SetRect(&text_rect,((value2 >> 1) + bounds.left) - (text_width >> 1),text_top,value,text_bottom);
+        draw_flags = 0x24;
         draw_rect = &text_rect;
         len = _strlen(label_text);
-        DrawTextA(mem_dc,label_text,len,draw_rect,UVar16);
+        DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
         saved_left = text_rect.left;
         saved_top = text_rect.top;
         saved_right = text_rect.right;
@@ -1973,10 +1973,10 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
             text_rect.top = saved_top;
             text_rect.right = saved_right;
             text_rect.bottom = saved_bottom;
-            UVar16 = 0x424;
+            draw_flags = 0x424;
             draw_rect = &text_rect;
             len = _strlen(prefix);
-            DrawTextA(mem_dc,prefix,len,draw_rect,UVar16);
+            DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
             underline_start = text_rect.right - 1;
           }
           crt_strcpy(prefix,label_text);
@@ -1985,10 +1985,10 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
           text_rect.top = saved_top;
           text_rect.right = saved_right;
           text_rect.bottom = saved_bottom;
-          UVar16 = 0x424;
+          draw_flags = 0x424;
           draw_rect = &text_rect;
           len = _strlen(prefix);
-          DrawTextA(mem_dc,prefix,len,draw_rect,UVar16);
+          DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
           text_width = (text_rect.right + 1) - underline_start;
           underline_start = underline_start + (text_width >> 1) - 5;
           underline_end = underline_start + 10;
@@ -2034,28 +2034,28 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         text_rect.top = bounds.top;
         text_rect.right = bounds.right;
         text_rect.bottom = bounds.bottom;
-        UVar16 = 0x424;
+        draw_flags = 0x424;
         draw_rect = &text_rect;
         len = _strlen(label_text);
-        DrawTextA(mem_dc,label_text,len,draw_rect,UVar16);
+        DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
         text_width = rect_width((iptr)&text_rect);
-        LVar17 = bounds.bottom;
+        text_bottom = bounds.bottom;
         value = rect_width((iptr)&bounds);
         value = (((value >> 1) + bounds.left) - (text_width >> 1)) + text_width;
-        LVar12 = bounds.top;
+        text_top = bounds.top;
         value2 = rect_width((iptr)&bounds);
-        SetRect(&text_rect,((value2 >> 1) + bounds.left) - (text_width >> 1),LVar12,value,LVar17);
+        SetRect(&text_rect,((value2 >> 1) + bounds.left) - (text_width >> 1),text_top,value,text_bottom);
         SetTextColor(mem_dc,0xffffff);
-        UVar16 = 0x24;
+        draw_flags = 0x24;
         draw_rect = &text_rect;
         len = _strlen(label_text);
-        DrawTextA(mem_dc,label_text,len,draw_rect,UVar16);
+        DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
         OffsetRect(&text_rect,-1,-1);
         SetTextColor(mem_dc,0x808080);
-        UVar16 = 0x24;
+        draw_flags = 0x24;
         draw_rect = &text_rect;
         len = _strlen(label_text);
-        DrawTextA(mem_dc,label_text,len,draw_rect,UVar16);
+        DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
         OffsetRect(&text_rect,1,1);
         saved_left = text_rect.left;
         saved_top = text_rect.top;
@@ -2073,10 +2073,10 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
             text_rect.top = saved_top;
             text_rect.right = saved_right;
             text_rect.bottom = saved_bottom;
-            UVar16 = 0x424;
+            draw_flags = 0x424;
             draw_rect = &text_rect;
             len = _strlen(prefix);
-            DrawTextA(mem_dc,prefix,len,draw_rect,UVar16);
+            DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
             underline_start = text_rect.right - 1;
           }
           crt_strcpy(prefix,label_text);
@@ -2085,10 +2085,10 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
           text_rect.top = saved_top;
           text_rect.right = saved_right;
           text_rect.bottom = saved_bottom;
-          UVar16 = 0x424;
+          draw_flags = 0x424;
           draw_rect = &text_rect;
           len = _strlen(prefix);
-          DrawTextA(mem_dc,prefix,len,draw_rect,UVar16);
+          DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
           text_width = (text_rect.right + 1) - underline_start;
           underline_start = underline_start + (text_width >> 1) - 5;
           underline_end = underline_start + 10;
@@ -2307,10 +2307,10 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   iptr window;
   iptr height;
   int value;
-  HWND pHVar6;
-  HBITMAP pHVar7;
-  HBITMAP pHVar8;
-  HBITMAP pHVar9;
+  HWND check_hwnd;
+  HBITMAP bmp_unchecked;
+  HBITMAP bmp_checked;
+  HBITMAP bmp_focus;
   HMENU hMenu;
   HINSTANCE hInstance;
   LPVOID lpParam;
@@ -2328,23 +2328,23 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   hInstance = err_report_ctx_block.app_hinstance;
   this = (WndBase *)ctrl_get_parent((Control *)ctrl);
   window = wnd_get_window(this);
-  pHVar6 = *(HWND *)(window + 4);
+  check_hwnd = *(HWND *)(window + 4);
   height = rect_height(rect);
   value = rect_width(rect);
-  pHVar6 = CreateWindowExA(4,str_mscontrolclass_4,((i8 *)&wnd_modal_stack_below_block.checkbox_wnd_title),style2,*(int *)rect,
-                           *(int *)(rect + 4),value,height,pHVar6,hMenu,hInstance,lpParam);
+  check_hwnd = CreateWindowExA(4,str_mscontrolclass_4,((i8 *)&wnd_modal_stack_below_block.checkbox_wnd_title),style2,*(int *)rect,
+                           *(int *)(rect + 4),value,height,check_hwnd,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey(ctrl,(iptr)label_copy);
-  pHVar7 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x132);
-  pHVar8 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x131);
-  pHVar9 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x130);
-  value = ctrl_init_block(pHVar6,ctrl);
-  *(HBITMAP *)(value + 0xc) = pHVar7;
-  *(HBITMAP *)(value + 0x10) = pHVar8;
-  *(HBITMAP *)(value + 0x14) = pHVar9;
+  bmp_unchecked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x132);
+  bmp_checked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x131);
+  bmp_focus = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x130);
+  value = ctrl_init_block(check_hwnd,ctrl);
+  *(HBITMAP *)(value + 0xc) = bmp_unchecked;
+  *(HBITMAP *)(value + 0x10) = bmp_checked;
+  *(HBITMAP *)(value + 0x14) = bmp_focus;
   *(i32 *)(value + 0x2c) = 2;
   *(void **)(value + 0x24) = label_copy;
-  SetWindowLongA(pHVar6,-4,(iptr)checkbox_wndproc);
-  return pHVar6;
+  SetWindowLongA(check_hwnd,-4,(iptr)checkbox_wndproc);
+  return check_hwnd;
 }
 
 /* 005cc248 auto */
@@ -2399,19 +2399,19 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
   int *ctrl_rect;
   int value;
   uint color_index;
-  WndPaletteView *pCVar7;
-  GamePalette *pCVar8;
+  WndPaletteView *parent_wnd;
+  GamePalette *game_palette2;
   size_t len;
-  WndBase *pCVar10;
+  WndBase *parent_base;
   iptr logpal;
-  HWND pHVar12;
-  WndKeyNavView *pCVar13;
+  HWND hwnd_tmp;
+  WndKeyNavView *nav_wnd;
   i32 result;
   i8 *red_out;
   i8 *green_out;
   tagRECT *draw_rect;
   i8 *blue_out;
-  UINT UVar19;
+  UINT draw_flags;
   tagRECT rect;
   HBITMAP bitmap;
   iptr block;
@@ -2441,8 +2441,8 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
     if (msg == 0xf) {
       enabled = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
       if (enabled == 0) {
-        pHVar12 = GetFocus();
-        if (pHVar12 == hwnd) {
+        hwnd_tmp = GetFocus();
+        if (hwnd_tmp == hwnd) {
           SetFocus((HWND)0x0);
         }
         bitmap = *(HBITMAP *)(block + 0xc);
@@ -2490,20 +2490,20 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
         green_out = green;
         red_out = red;
         color_index = (uint)ctrl_shadow_color_index;
-        pCVar7 = (WndPaletteView *)ctrl_get_parent(checkbox);
-        pCVar8 = (GamePalette *)wnd_get_palette(pCVar7);
-        palette_get_entry(pCVar8,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+        parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
+        game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
+        palette_get_entry(game_palette2,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
         SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-        UVar19 = 0x24;
+        draw_flags = 0x24;
         draw_rect = &rect;
         len = _strlen(label);
-        DrawTextA(hdc,label,len,draw_rect,UVar19);
+        DrawTextA(hdc,label,len,draw_rect,draw_flags);
         OffsetRect(&rect,-(uint)ctrl_shadow_dx,-(uint)ctrl_shadow_dy);
       }
       value = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
       if (value == 1) {
-        pCVar10 = (WndBase *)ctrl_get_parent(checkbox);
-        value = wnd_get_window(pCVar10);
+        parent_base = (WndBase *)ctrl_get_parent(checkbox);
+        value = wnd_get_window(parent_base);
         if (*(int *)(value + 0x40) == 8) {
           if (ctrl_text_color_index == 0) {
             SetTextColor(hdc,0);
@@ -2513,9 +2513,9 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
             green_out = green;
             red_out = red;
             color_index = (uint)ctrl_text_color_index;
-            pCVar7 = (WndPaletteView *)ctrl_get_parent(checkbox);
-            pCVar8 = (GamePalette *)wnd_get_palette(pCVar7);
-            logpal = palette_get_logpalette(pCVar8);
+            parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
+            game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
+            logpal = palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])))
             ;
@@ -2531,8 +2531,8 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
       else {
         value = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
         if (value == 0) {
-          pCVar10 = (WndBase *)ctrl_get_parent(checkbox);
-          value = wnd_get_window(pCVar10);
+          parent_base = (WndBase *)ctrl_get_parent(checkbox);
+          value = wnd_get_window(parent_base);
           if (*(int *)(value + 0x40) == 8) {
             if (ctrl_disabled_color_index == 0) {
               SetTextColor(hdc,0x404040);
@@ -2542,9 +2542,9 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
               green_out = green;
               red_out = red;
               color_index = (uint)ctrl_disabled_color_index;
-              pCVar7 = (WndPaletteView *)ctrl_get_parent(checkbox);
-              pCVar8 = (GamePalette *)wnd_get_palette(pCVar7);
-              logpal = palette_get_logpalette(pCVar8);
+              parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
+              game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
+              logpal = palette_get_logpalette(game_palette2);
               palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
               SetTextColor(hdc,
                            (uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
@@ -2559,10 +2559,10 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
           }
         }
       }
-      UVar19 = 0x24;
+      draw_flags = 0x24;
       draw_rect = &rect;
       len = _strlen(label);
-      DrawTextA(hdc,label,len,draw_rect,UVar19);
+      DrawTextA(hdc,label,len,draw_rect,draw_flags);
       if (checkbox->hotkey_pos != 0xffffffff) {
         crt_strcpy(prefix,label);
         prefix[checkbox->hotkey_pos] = '\0';
@@ -2575,10 +2575,10 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
           underline_start = text_rect.left;
         }
         else {
-          UVar19 = 0x424;
+          draw_flags = 0x424;
           draw_rect = &text_rect;
           len = _strlen(prefix);
-          DrawTextA(hdc,prefix,len,draw_rect,UVar19);
+          DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
           underline_start = text_rect.right - 1;
         }
         crt_strcpy(prefix,label);
@@ -2587,10 +2587,10 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
         text_rect.top = rect.top;
         text_rect.right = rect.right;
         text_rect.bottom = rect.bottom;
-        UVar19 = 0x424;
+        draw_flags = 0x424;
         draw_rect = &text_rect;
         len = _strlen(prefix);
-        DrawTextA(hdc,prefix,len,draw_rect,UVar19);
+        DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
         underline_start = underline_start + ((text_rect.right + 1) - underline_start >> 1) - 5;
         underline_end = underline_start + 10;
         brush = GetStockObject(3);
@@ -2602,8 +2602,8 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
       }
       SelectObject(hdc,old_font);
       EndPaint(hwnd,&ps);
-      pHVar12 = GetFocus();
-      if (pHVar12 != hwnd) {
+      hwnd_tmp = GetFocus();
+      if (hwnd_tmp != hwnd) {
         return 0;
       }
     }
@@ -2612,12 +2612,12 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
         wnd_redraw_client(hwnd);
         return 0;
       }
-LAB_005ccd4b:
+default_proc:
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
       return result;
     }
-    pCVar13 = (WndKeyNavView *)ctrl_get_parent(checkbox);
-    nav_enabled = wnd_keyboard_nav_enabled(pCVar13);
+    nav_wnd = (WndKeyNavView *)ctrl_get_parent(checkbox);
+    nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
     if (nav_enabled == '\0') {
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
       return result;
@@ -2633,21 +2633,21 @@ LAB_005ccd4b:
   }
   else if (msg == 0x100) {
     if (wparam == 9) {
-      pHVar12 = GetParent(hwnd);
-      SendMessageA(pHVar12,msg,wparam,lparam);
+      hwnd_tmp = GetParent(hwnd);
+      SendMessageA(hwnd_tmp,msg,wparam,lparam);
     }
     else {
       if (wparam == 0x20) {
-        pCVar13 = (WndKeyNavView *)ctrl_get_parent(checkbox);
-        nav_enabled = wnd_keyboard_nav_enabled(pCVar13);
+        nav_wnd = (WndKeyNavView *)ctrl_get_parent(checkbox);
+        nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
         if (nav_enabled != '\0') {
           SendMessageA(hwnd,0x201,0,0);
           SendMessageA(hwnd,0x202,0,0);
           return 0;
         }
       }
-      pHVar12 = GetParent(hwnd);
-      SendMessageA(pHVar12,msg,wparam,lparam);
+      hwnd_tmp = GetParent(hwnd);
+      SendMessageA(hwnd_tmp,msg,wparam,lparam);
     }
   }
   else if (msg == 0x201) {
@@ -2672,7 +2672,7 @@ LAB_005ccd4b:
     }
   }
   else {
-    if (msg != 0x202) goto LAB_005ccd4b;
+    if (msg != 0x202) goto default_proc;
     value = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
     if (value != 0) {
       ReleaseCapture();
@@ -2696,14 +2696,14 @@ void __thiscall checkbox_fire_callback(CheckboxClickView *this,i32 ctrl_id,i32 c
 void __stdcall control_subclass_wndproc(HWND hwnd,int msg,i32 wparam,i32 lparam)
 
 {
-  DWORD DVar1;
+  DWORD class_extra;
   code *base_proc;
   ControlHwndSetView *this;
   
-  DVar1 = GetClassLongA(hwnd,-0x12);
-  base_proc = (code *)GetWindowLongA(hwnd,DVar1 - 4);
+  class_extra = GetClassLongA(hwnd,-0x12);
+  base_proc = (code *)GetWindowLongA(hwnd,class_extra - 4);
   if ((msg == 2) &&
-     (this = (ControlHwndSetView *)GetWindowLongA(hwnd,DVar1 - 8), this != (ControlHwndSetView *)0x0)) {
+     (this = (ControlHwndSetView *)GetWindowLongA(hwnd,class_extra - 8), this != (ControlHwndSetView *)0x0)) {
     control_set_hwnd(this,0);
   }
   (*base_proc)(hwnd,msg,wparam,lparam);
@@ -2714,14 +2714,14 @@ void __stdcall control_subclass_wndproc(HWND hwnd,int msg,i32 wparam,i32 lparam)
 HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visible)
 
 {
-  WndBase *pCVar1;
+  WndBase *parent_wnd;
   iptr window;
   iptr height;
   int value;
   int nWidth;
-  HWND pHVar5;
-  HMENU pHVar6;
-  HINSTANCE pHVar7;
+  HWND parent_hwnd;
+  HMENU menu;
+  HINSTANCE hinst;
   LPVOID create_param;
   uint style2;
   WNDCLASSA wc;
@@ -2739,15 +2739,15 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
   }
   if (scrollbar_class_registered == 0) {
     create_param = (LPVOID)0x0;
-    pHVar6 = (HMENU)0x0;
-    pHVar7 = err_report_ctx_block.app_hinstance;
-    pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
-    window = wnd_get_window(pCVar1);
-    pHVar5 = *(HWND *)(window + 4);
+    menu = (HMENU)0x0;
+    hinst = err_report_ctx_block.app_hinstance;
+    parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
+    window = wnd_get_window(parent_wnd);
+    parent_hwnd = *(HWND *)(window + 4);
     height = rect_height((iptr)rect);
     value = rect_width((iptr)rect);
     hwnd2 = CreateWindowExA(4,str_scrollbar,((i8 *)&scrollbar_probe_wnd_title),style_flags | 0x40000000,*rect,
-                              rect[1],value,height,pHVar5,pHVar6,pHVar7,create_param);
+                              rect[1],value,height,parent_hwnd,menu,hinst,create_param);
     default_draw_font_obj_block.scrollbar_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
     style2 = GetWindowLongA(hwnd2,-0x10);
     wc.style = 0x8b;
@@ -2766,15 +2766,15 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
     DestroyWindow(hwnd2);
   }
   create_param = (LPVOID)0x0;
-  pHVar6 = (HMENU)0x0;
-  pHVar7 = err_report_ctx_block.app_hinstance;
-  pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  value = wnd_get_window(pCVar1);
-  pHVar5 = *(HWND *)(value + 4);
+  menu = (HMENU)0x0;
+  hinst = err_report_ctx_block.app_hinstance;
+  parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
+  value = wnd_get_window(parent_wnd);
+  parent_hwnd = *(HWND *)(value + 4);
   value = rect_height((iptr)rect);
   nWidth = rect_width((iptr)rect);
   hwnd2 = CreateWindowExA(4,str_msscrollbarclass_2,((i8 *)&scrollbar_wnd_title),style2,*rect,rect[1]
-                            ,nWidth,value,pHVar5,pHVar6,pHVar7,create_param);
+                            ,nWidth,value,parent_hwnd,menu,hinst,create_param);
   SetWindowLongA(hwnd2,-4,(iptr)control_subclass_wndproc);
   SetWindowLongA(hwnd2,default_draw_font_obj_block.scrollbar_base_wnd_extra,ctrl);
   SetWindowLongA(hwnd2,default_draw_font_obj_block.scrollbar_base_wnd_extra + 4,(LONG)default_draw_font_obj_block.scrollbar_base_wndproc);
@@ -2795,18 +2795,18 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
 
 {
   short thumb_pos;
-  DWORD DVar2;
+  DWORD class_extra;
   ScrollbarPosView *this;
   iptr cur_pos;
   iptr parent;
-  WPARAM *pWVar5;
+  WPARAM *rect_ptr;
   iptr page_size;
   int value;
   u32 new_pos;
-  LPARAM LVar8;
+  LPARAM pos_lparam;
   
-  DVar2 = GetClassLongA(hwnd,-0x12);
-  this = (ScrollbarPosView *)GetWindowLongA(hwnd,DVar2 - 8);
+  class_extra = GetClassLongA(hwnd,-0x12);
+  this = (ScrollbarPosView *)GetWindowLongA(hwnd,class_extra - 8);
   cur_pos = scrollbar_get_cur_pos(this);
   if (msg == 0x111) {
     if (wparam == 0x7f) {
@@ -2822,9 +2822,9 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
       value = input_lbutton_down();
       if (value == 0) {
         value = ctrl_get_rect(this);
-        LVar8 = *(LPARAM *)(value + 4);
-        pWVar5 = (WPARAM *)ctrl_get_rect(this);
-        PostMessageA(hwnd,0x202,*pWVar5,LVar8);
+        pos_lparam = *(LPARAM *)(value + 4);
+        rect_ptr = (WPARAM *)ctrl_get_rect(this);
+        PostMessageA(hwnd,0x202,*rect_ptr,pos_lparam);
       }
       else {
         SetScrollPos(hwnd,2,cur_pos - 1,1);
@@ -2839,9 +2839,9 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
       value = input_lbutton_down();
       if (value == 0) {
         value = ctrl_get_rect(this);
-        LVar8 = *(LPARAM *)(value + 4);
-        pWVar5 = (WPARAM *)ctrl_get_rect(this);
-        PostMessageA(hwnd,0x202,*pWVar5,LVar8);
+        pos_lparam = *(LPARAM *)(value + 4);
+        rect_ptr = (WPARAM *)ctrl_get_rect(this);
+        PostMessageA(hwnd,0x202,*rect_ptr,pos_lparam);
       }
       else {
         SetScrollPos(hwnd,2,cur_pos + 1,1);
@@ -2965,16 +2965,16 @@ edit_create_at
 HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameFont *font)
 
 {
-  WndBase *pCVar1;
+  WndBase *parent_wnd;
   iptr window;
   iptr height;
   int value;
   int nWidth;
   i32 font_handle;
-  WPARAM *pWVar6;
-  HWND pHVar7;
-  HMENU pHVar8;
-  HINSTANCE pHVar9;
+  WPARAM *font_ptr;
+  HWND parent_hwnd;
+  HMENU menu;
+  HINSTANCE hinst;
   LPVOID create_param;
   WNDCLASSA wc;
   HWND hwnd2;
@@ -3018,15 +3018,15 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
   *(uint *)(ctrl + 0x3c) = style2;
   if (editbox_class_registered == 0) {
     create_param = (LPVOID)0x0;
-    pHVar8 = (HMENU)0x0;
-    pHVar9 = err_report_ctx_block.app_hinstance;
-    pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
-    window = wnd_get_window(pCVar1);
-    pHVar7 = *(HWND *)(window + 4);
+    menu = (HMENU)0x0;
+    hinst = err_report_ctx_block.app_hinstance;
+    parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
+    window = wnd_get_window(parent_wnd);
+    parent_hwnd = *(HWND *)(window + 4);
     height = rect_height((iptr)rect);
     value = rect_width((iptr)rect);
     hwnd2 = CreateWindowExA(4,((i8 *)&editbox_native_class_name),((i8 *)&editbox_probe_wnd_title),style2,*rect,rect[1],value,height,
-                              pHVar7,pHVar8,pHVar9,create_param);
+                              parent_hwnd,menu,hinst,create_param);
     default_draw_font_obj_block.edit_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
     wc.style = 0x88;
     wc.cbClsExtra = 0;
@@ -3044,18 +3044,18 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
     DestroyWindow(hwnd2);
   }
   create_param = (LPVOID)0x0;
-  pHVar8 = (HMENU)0x0;
-  pHVar9 = err_report_ctx_block.app_hinstance;
-  pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  value = wnd_get_window(pCVar1);
-  pHVar7 = *(HWND *)(value + 4);
+  menu = (HMENU)0x0;
+  hinst = err_report_ctx_block.app_hinstance;
+  parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
+  value = wnd_get_window(parent_wnd);
+  parent_hwnd = *(HWND *)(value + 4);
   value = rect_height((iptr)rect);
   nWidth = rect_width((iptr)rect);
   hwnd2 = CreateWindowExA(4,str_mseditboxclass_2,((i8 *)&editbox_wnd_title),style2 | 0x40800000,*rect,
-                            rect[1],nWidth,value,pHVar7,pHVar8,pHVar9,create_param);
+                            rect[1],nWidth,value,parent_hwnd,menu,hinst,create_param);
   font_handle = font_get_handle(font);
-  pWVar6 = (WPARAM *)mem_handle_lock(font_handle);
-  SendMessageA(hwnd2,0x30,*pWVar6,0);
+  font_ptr = (WPARAM *)mem_handle_lock(font_handle);
+  SendMessageA(hwnd2,0x30,*font_ptr,0);
   font_handle = font_get_handle(font);
   mem_handle_unlock(font_handle);
   SetWindowLongA(hwnd2,-4,(iptr)edit_subclass_wndproc);
@@ -3069,20 +3069,20 @@ LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM 
 
 {
   Control *this;
-  DWORD DVar1;
+  DWORD class_extra;
   WNDPROC lpPrevWndFunc;
   iptr key;
-  HWND pHVar2;
+  HWND parent_hwnd;
   iptr parent;
   WndBase *this_00;
   int window;
-  LRESULT LVar5;
+  LRESULT result;
   iptr long_index;
   int pass_through;
   
   this = (Control *)GetWindowLongA(hwnd,10);
-  DVar1 = GetClassLongA(hwnd,-0x12);
-  lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,DVar1 - 8);
+  class_extra = GetClassLongA(hwnd,-0x12);
+  lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,class_extra - 8);
   if (msg < 8) {
     if (msg == 7) {
       parent = ctrl_get_parent(this);
@@ -3090,40 +3090,40 @@ LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM 
       if ((char)this->font == '\0') {
         edit_hwnd_set_sel(hwnd,0,0xffffffff);
       }
-      LVar5 = CallWindowProcA(lpPrevWndFunc,hwnd,7,wparam,lparam);
-      return LVar5;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,7,wparam,lparam);
+      return result;
     }
     if (msg == 2) {
       if (this != (Control *)0x0) {
         control_set_hwnd((ControlHwndSetView *)this,0);
       }
-      LVar5 = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
-      return LVar5;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
+      return result;
     }
   }
   else if (msg < 0x202) {
     if (msg == 0x201) {
-LAB_005d2c05:
+click_focus_parent:
       long_index = 0;
-      pHVar2 = GetParent(hwnd);
-      this_00 = (WndBase *)GetWindowLongA(pHVar2,long_index);
+      parent_hwnd = GetParent(hwnd);
+      this_00 = (WndBase *)GetWindowLongA(parent_hwnd,long_index);
       window = wnd_get_window(this_00);
       if ((*(byte *)(window + 0x49) & 2) != 0) {
-        pHVar2 = GetParent(hwnd);
-        SetFocus(pHVar2);
-        pHVar2 = GetParent(hwnd);
-        BringWindowToTop(pHVar2);
+        parent_hwnd = GetParent(hwnd);
+        SetFocus(parent_hwnd);
+        parent_hwnd = GetParent(hwnd);
+        BringWindowToTop(parent_hwnd);
       }
-      LVar5 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-      return LVar5;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+      return result;
     }
     if (msg == 0x100) {
       if (((wparam != 9) && (wparam != 0xd)) && (wparam != 0x1b)) {
-        LVar5 = CallWindowProcA(lpPrevWndFunc,hwnd,0x100,wparam,lparam);
-        return LVar5;
+        result = CallWindowProcA(lpPrevWndFunc,hwnd,0x100,wparam,lparam);
+        return result;
       }
-      pHVar2 = GetParent(hwnd);
-      SendMessageA(pHVar2,msg,wparam,lparam);
+      parent_hwnd = GetParent(hwnd);
+      SendMessageA(parent_hwnd,msg,wparam,lparam);
       return 1;
     }
     if (msg == 0x101) {
@@ -3133,8 +3133,8 @@ LAB_005d2c05:
       if ((0x2af < key) && (key < 0x2b5)) {
         edit_fire_key_callback((EditKeyView *)this,key);
       }
-      LVar5 = CallWindowProcA(lpPrevWndFunc,hwnd,0x101,wparam,lparam);
-      return LVar5;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,0x101,wparam,lparam);
+      return result;
     }
     if (msg == 0x102) {
       parent = ctrl_get_parent(this);
@@ -3147,13 +3147,13 @@ LAB_005d2c05:
       if (pass_through == 0) {
         return 1;
       }
-      LVar5 = CallWindowProcA(lpPrevWndFunc,hwnd,0x102,wparam,lparam);
-      return LVar5;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,0x102,wparam,lparam);
+      return result;
     }
   }
-  else if (msg == 0x204) goto LAB_005d2c05;
-  LVar5 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-  return LVar5;
+  else if (msg == 0x204) goto click_focus_parent;
+  result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+  return result;
 }
 
 /* 005d2d3d auto */
@@ -3183,42 +3183,42 @@ void __cdecl edit_hwnd_set_sel(HWND hwnd,WPARAM sel_start,LPARAM sel_end)
 iptr __cdecl edit_hwnd_get_line(HWND hwnd,WPARAM line,short *buffer,i32 buf_size)
 
 {
-  iptr LVar1;
+  iptr copied_len;
   
   *buffer = (short)buf_size - 1;
-  LVar1 = SendMessageA(hwnd,0xc4,line,(LPARAM)buffer);
-  *(i8 *)(LVar1 + (int)buffer) = 0;
-  return LVar1;
+  copied_len = SendMessageA(hwnd,0xc4,line,(LPARAM)buffer);
+  *(i8 *)(copied_len + (int)buffer) = 0;
+  return copied_len;
 }
 
 /* 005d2e31 auto */
 LRESULT __cdecl edit_hwnd_get_line_count(HWND hwnd)
 
 {
-  LRESULT LVar1;
+  LRESULT line_count;
   
-  LVar1 = SendMessageA(hwnd,0xba,0,0);
-  return LVar1;
+  line_count = SendMessageA(hwnd,0xba,0,0);
+  return line_count;
 }
 
 /* 005d2e9c auto */
 LRESULT __cdecl edit_line_index(HWND hwnd,WPARAM line)
 
 {
-  LRESULT LVar1;
+  LRESULT line_index;
   
-  LVar1 = SendMessageA(hwnd,0xbb,line,0);
-  return LVar1;
+  line_index = SendMessageA(hwnd,0xbb,line,0);
+  return line_index;
 }
 
 /* 005d2ec1 auto */
 LRESULT __cdecl edit_line_length(HWND hwnd,WPARAM char_index)
 
 {
-  LRESULT LVar1;
+  LRESULT line_start;
   
-  LVar1 = SendMessageA(hwnd,0xc1,char_index,0);
-  return LVar1;
+  line_start = SendMessageA(hwnd,0xc1,char_index,0);
+  return line_start;
 }
 
 /* 005d2f0d auto */
@@ -3280,14 +3280,14 @@ i32 __thiscall edit_fire_key_callback(EditKeyView *this,iptr key)
 HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
 
 {
-  WndBase *pCVar1;
+  WndBase *parent_wnd;
   iptr window;
   iptr height;
   int value;
   int nWidth;
-  HWND pHVar5;
-  HMENU pHVar6;
-  HINSTANCE pHVar7;
+  HWND parent_hwnd;
+  HMENU menu;
+  HINSTANCE hinst;
   LPVOID create_param;
   DWORD style2;
   WNDCLASSA wc;
@@ -3299,15 +3299,15 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
   }
   if (combo_class_registered == 0) {
     create_param = (LPVOID)0x0;
-    pHVar6 = (HMENU)0x0;
-    pHVar7 = err_report_ctx_block.app_hinstance;
-    pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
-    window = wnd_get_window(pCVar1);
-    pHVar5 = *(HWND *)(window + 4);
+    menu = (HMENU)0x0;
+    hinst = err_report_ctx_block.app_hinstance;
+    parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
+    window = wnd_get_window(parent_wnd);
+    parent_hwnd = *(HWND *)(window + 4);
     height = rect_height((iptr)rect);
     value = rect_width((iptr)rect);
     hwnd2 = CreateWindowExA(4,str_combobox,((i8 *)&combo_probe_wnd_title),style2,*rect,rect[1],value
-                              ,height,pHVar5,pHVar6,pHVar7,create_param);
+                              ,height,parent_hwnd,menu,hinst,create_param);
     default_draw_font_obj_block.combo_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
     wc.style = 0x88;
     wc.cbClsExtra = 0;
@@ -3329,15 +3329,15 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
     style2 = 0x50a10203;
   }
   create_param = (LPVOID)0x0;
-  pHVar6 = (HMENU)0x0;
-  pHVar7 = err_report_ctx_block.app_hinstance;
-  pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  value = wnd_get_window(pCVar1);
-  pHVar5 = *(HWND *)(value + 4);
+  menu = (HMENU)0x0;
+  hinst = err_report_ctx_block.app_hinstance;
+  parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
+  value = wnd_get_window(parent_wnd);
+  parent_hwnd = *(HWND *)(value + 4);
   value = rect_height((iptr)rect);
   nWidth = rect_width((iptr)rect);
   hwnd2 = CreateWindowExA(4,str_mscomboboxclass_2,((i8 *)&combo_wnd_title),style2,*rect,rect[1],
-                            nWidth,value,pHVar5,pHVar6,pHVar7,create_param);
+                            nWidth,value,parent_hwnd,menu,hinst,create_param);
   SetWindowLongA(hwnd2,-4,(iptr)combo_subclass_wndproc);
   SetWindowLongA(hwnd2,default_draw_font_obj_block.combo_base_wnd_extra,(LONG)default_draw_font_obj_block.combo_base_wndproc);
   SetWindowLongA(hwnd2,default_draw_font_obj_block.combo_base_wnd_extra + 4,ctrl);
@@ -3348,19 +3348,19 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
 LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM lparam)
 
 {
-  DWORD DVar1;
+  DWORD class_extra;
   WNDPROC lpPrevWndFunc;
   Control *this;
   iptr parent;
-  HWND pHVar3;
+  HWND parent_hwnd;
   WndBase *this_00;
   iptr window;
-  LRESULT LVar4;
+  LRESULT result;
   iptr long_index;
   
-  DVar1 = GetClassLongA(hwnd,-0x12);
-  lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,DVar1 - 8);
-  this = (Control *)GetWindowLongA(hwnd,DVar1 - 4);
+  class_extra = GetClassLongA(hwnd,-0x12);
+  lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,class_extra - 8);
+  this = (Control *)GetWindowLongA(hwnd,class_extra - 4);
   if (this == (Control *)0x0) {
     return 1;
   }
@@ -3369,35 +3369,35 @@ LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM l
   if (msg < 0x103) {
     if (0xff < msg) {
       if (((wparam != 9) && (wparam != 0xd)) && (wparam != 0x1b)) {
-        LVar4 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-        return LVar4;
+        result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+        return result;
       }
-      pHVar3 = GetParent(hwnd);
-      SendMessageA(pHVar3,msg,wparam,lparam);
+      parent_hwnd = GetParent(hwnd);
+      SendMessageA(parent_hwnd,msg,wparam,lparam);
       return 1;
     }
     if (msg == 2) {
       if (this != (Control *)0x0) {
         control_set_hwnd((ControlHwndSetView *)this,0);
       }
-      LVar4 = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
-      return LVar4;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
+      return result;
     }
   }
   else {
     if ((msg == 0x201) || (msg == 0x204)) {
       long_index = 0;
-      pHVar3 = GetParent(hwnd);
-      this_00 = (WndBase *)GetWindowLongA(pHVar3,long_index);
+      parent_hwnd = GetParent(hwnd);
+      this_00 = (WndBase *)GetWindowLongA(parent_hwnd,long_index);
       window = wnd_get_window(this_00);
       if ((*(byte *)(window + 0x49) & 2) != 0) {
-        pHVar3 = GetParent(hwnd);
-        SetFocus(pHVar3);
-        pHVar3 = GetParent(hwnd);
-        BringWindowToTop(pHVar3);
+        parent_hwnd = GetParent(hwnd);
+        SetFocus(parent_hwnd);
+        parent_hwnd = GetParent(hwnd);
+        BringWindowToTop(parent_hwnd);
       }
-      LVar4 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-      return LVar4;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+      return result;
     }
     if (msg == 0x4c8) {
       if (wparam >> 0x10 == 1) {
@@ -3414,8 +3414,8 @@ LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM l
       return 1;
     }
   }
-  LVar4 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-  return LVar4;
+  result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+  return result;
 }
 
 /* 005d356e auto */
@@ -3437,10 +3437,10 @@ void __cdecl combo_hwnd_add_string(HWND hwnd,LPARAM text)
 void __cdecl combo_hwnd_set_font(HWND hwnd,i32 font_handle)
 
 {
-  WPARAM *pWVar1;
+  WPARAM *font_ptr;
   
-  pWVar1 = (WPARAM *)mem_handle_lock(font_handle);
-  SendMessageA(hwnd,0x30,*pWVar1,0);
+  font_ptr = (WPARAM *)mem_handle_lock(font_handle);
+  SendMessageA(hwnd,0x30,*font_ptr,0);
   mem_handle_unlock(font_handle);
   return;
 }
@@ -3457,13 +3457,13 @@ void __cdecl combo_hwnd_clear(HWND hwnd)
 LRESULT __cdecl combo_hwnd_get_cur_sel(HWND hwnd)
 
 {
-  LRESULT LVar1;
+  LRESULT cur_sel;
   
-  LVar1 = SendMessageA(hwnd,0x147,0,0);
-  if (LVar1 == -1) {
-    LVar1 = -1;
+  cur_sel = SendMessageA(hwnd,0x147,0,0);
+  if (cur_sel == -1) {
+    cur_sel = -1;
   }
-  return LVar1;
+  return cur_sel;
 }
 
 /* 005d36f6 auto */
@@ -3499,16 +3499,16 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
 
 {
   uint style_bits;
-  WndBase *pCVar2;
+  WndBase *parent_wnd;
   iptr window;
   iptr height;
   int value;
   int nWidth;
   i32 font_handle;
-  WPARAM *pWVar7;
-  HWND pHVar8;
-  HMENU pHVar9;
-  HINSTANCE pHVar10;
+  WPARAM *font_ptr;
+  HWND parent_hwnd;
+  HMENU menu;
+  HINSTANCE hinst;
   LPVOID create_param;
   uint style2;
   WNDCLASSA wc;
@@ -3525,15 +3525,15 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
   style2 = style_bits;
   if (listbox_class_registered == 0) {
     create_param = (LPVOID)0x0;
-    pHVar9 = (HMENU)0x0;
-    pHVar10 = err_report_ctx_block.app_hinstance;
-    pCVar2 = (WndBase *)ctrl_get_parent((Control *)ctrl);
-    window = wnd_get_window(pCVar2);
-    pHVar8 = *(HWND *)(window + 4);
+    menu = (HMENU)0x0;
+    hinst = err_report_ctx_block.app_hinstance;
+    parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
+    window = wnd_get_window(parent_wnd);
+    parent_hwnd = *(HWND *)(window + 4);
     height = rect_height((iptr)rect);
     value = rect_width((iptr)rect);
     hwnd2 = CreateWindowExA(4,str_listbox_2,((i8 *)&listbox_probe_wnd_title),style2,*rect,rect[1],value,
-                              height,pHVar8,pHVar9,pHVar10,create_param);
+                              height,parent_hwnd,menu,hinst,create_param);
     default_draw_font_obj_block.listbox_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
     wc.style = 0x88;
     wc.cbClsExtra = 0;
@@ -3558,18 +3558,18 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
     style2 = style2 | 0x800;
   }
   create_param = (LPVOID)0x0;
-  pHVar9 = (HMENU)0x0;
-  pHVar10 = err_report_ctx_block.app_hinstance;
-  pCVar2 = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  value = wnd_get_window(pCVar2);
-  pHVar8 = *(HWND *)(value + 4);
+  menu = (HMENU)0x0;
+  hinst = err_report_ctx_block.app_hinstance;
+  parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
+  value = wnd_get_window(parent_wnd);
+  parent_hwnd = *(HWND *)(value + 4);
   value = rect_height((iptr)rect);
   nWidth = rect_width((iptr)rect);
   hwnd2 = CreateWindowExA(4,str_mslistboxclass_2,((i8 *)&listbox_wnd_title),style2,*rect,rect[1],
-                            nWidth,value,pHVar8,pHVar9,pHVar10,create_param);
+                            nWidth,value,parent_hwnd,menu,hinst,create_param);
   font_handle = font_get_handle(font);
-  pWVar7 = (WPARAM *)mem_handle_lock(font_handle);
-  SendMessageA(hwnd2,0x30,*pWVar7,0);
+  font_ptr = (WPARAM *)mem_handle_lock(font_handle);
+  SendMessageA(hwnd2,0x30,*font_ptr,0);
   font_handle = font_get_handle(font);
   mem_handle_unlock(font_handle);
   SetWindowLongA(hwnd2,-4,(iptr)listbox_subclass_wndproc);
@@ -3582,19 +3582,19 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
 LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM lparam)
 
 {
-  DWORD DVar1;
+  DWORD class_extra;
   WNDPROC lpPrevWndFunc;
   Control *this;
   iptr parent;
-  HWND pHVar3;
+  HWND parent_hwnd;
   WndBase *this_00;
   iptr window;
-  LRESULT LVar4;
+  LRESULT result;
   iptr long_index;
   
-  DVar1 = GetClassLongA(hwnd,-0x12);
-  lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,DVar1 - 8);
-  this = (Control *)GetWindowLongA(hwnd,DVar1 - 4);
+  class_extra = GetClassLongA(hwnd,-0x12);
+  lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,class_extra - 8);
+  this = (Control *)GetWindowLongA(hwnd,class_extra - 4);
   if (this == (Control *)0x0) {
     return 1;
   }
@@ -3603,35 +3603,35 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM
   if (msg < 0x103) {
     if (0xff < msg) {
       if (((wparam != 9) && (wparam != 0xd)) && (wparam != 0x1b)) {
-        LVar4 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-        return LVar4;
+        result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+        return result;
       }
-      pHVar3 = GetParent(hwnd);
-      SendMessageA(pHVar3,msg,wparam,lparam);
+      parent_hwnd = GetParent(hwnd);
+      SendMessageA(parent_hwnd,msg,wparam,lparam);
       return 1;
     }
     if (msg == 2) {
       if (this != (Control *)0x0) {
         control_set_hwnd((ControlHwndSetView *)this,0);
       }
-      LVar4 = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
-      return LVar4;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
+      return result;
     }
   }
   else {
     if ((msg == 0x201) || (msg == 0x204)) {
       long_index = 0;
-      pHVar3 = GetParent(hwnd);
-      this_00 = (WndBase *)GetWindowLongA(pHVar3,long_index);
+      parent_hwnd = GetParent(hwnd);
+      this_00 = (WndBase *)GetWindowLongA(parent_hwnd,long_index);
       window = wnd_get_window(this_00);
       if ((*(byte *)(window + 0x49) & 2) != 0) {
-        pHVar3 = GetParent(hwnd);
-        SetFocus(pHVar3);
-        pHVar3 = GetParent(hwnd);
-        BringWindowToTop(pHVar3);
+        parent_hwnd = GetParent(hwnd);
+        SetFocus(parent_hwnd);
+        parent_hwnd = GetParent(hwnd);
+        BringWindowToTop(parent_hwnd);
       }
-      LVar4 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-      return LVar4;
+      result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+      return result;
     }
     if (msg == 0x4c8) {
       if (wparam >> 0x10 == 1) {
@@ -3648,8 +3648,8 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM
       return 1;
     }
   }
-  LVar4 = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-  return LVar4;
+  result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+  return result;
 }
 
 /* 005d3c40 auto */
@@ -3671,10 +3671,10 @@ void __cdecl listbox_hwnd_add_string(HWND hwnd,LPARAM text)
 void __cdecl listbox_hwnd_set_font(HWND hwnd,i32 font_handle)
 
 {
-  WPARAM *pWVar1;
+  WPARAM *font_ptr;
   
-  pWVar1 = (WPARAM *)mem_handle_lock(font_handle);
-  SendMessageA(hwnd,0x30,*pWVar1,0);
+  font_ptr = (WPARAM *)mem_handle_lock(font_handle);
+  SendMessageA(hwnd,0x30,*font_ptr,0);
   mem_handle_unlock(font_handle);
   return;
 }
@@ -3699,14 +3699,14 @@ void __cdecl listbox_hwnd_get_text(HWND hwnd,WPARAM index,LPARAM buffer)
 void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,i32 buffer)
 
 {
-  LRESULT LVar1;
+  LRESULT cur_sel;
   
-  LVar1 = SendMessageA(hwnd,0x188,0,0);
-  if (LVar1 == -1) {
+  cur_sel = SendMessageA(hwnd,0x188,0,0);
+  if (cur_sel == -1) {
     crt_strcpy(buffer,((i8 *)&listbox_no_sel_text));
   }
   else {
-    listbox_hwnd_get_text(hwnd,LVar1,buffer);
+    listbox_hwnd_get_text(hwnd,cur_sel,buffer);
   }
   return;
 }
@@ -3715,13 +3715,13 @@ void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,i32 buffer)
 LRESULT __cdecl listbox_hwnd_get_cur_sel(HWND hwnd)
 
 {
-  LRESULT LVar1;
+  LRESULT cur_sel;
   
-  LVar1 = SendMessageA(hwnd,0x188,0,0);
-  if (LVar1 == -1) {
-    LVar1 = -1;
+  cur_sel = SendMessageA(hwnd,0x188,0,0);
+  if (cur_sel == -1) {
+    cur_sel = -1;
   }
-  return LVar1;
+  return cur_sel;
 }
 
 /* 005d3e92 auto */
@@ -3782,7 +3782,7 @@ spritebtn_init_from_sprite
 {
   u32 value;
   int size;
-  WndPaletteView *pCVar3;
+  WndPaletteView *parent_wnd;
   i32 palette;
   int yBottom;
   i8 draw_ctx_b[16];
@@ -3845,11 +3845,11 @@ spritebtn_init_from_sprite
   surface_blit
             ((DibSurface *)&this->on_select,(iptr)(this->button_surface),(iptr)&src_rect,
              (iptr)&dst_rect);
-  pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)this);
-  palette = wnd_get_palette(pCVar3);
+  parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)this);
+  palette = wnd_get_palette(parent_wnd);
   surface_apply_palette((DibSurface *)(this->button_surface),palette);
-  pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)this);
-  palette = wnd_get_palette(pCVar3);
+  parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)this);
+  palette = wnd_get_palette(parent_wnd);
   surface_apply_palette((DibSurface *)&this->on_select,palette);
   value = spritebtn_create_hwnd(x,y,width,height,(iptr)this,1);
   this->hwnd = value;
@@ -3891,9 +3891,9 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
 
 {
   int *hotkey_pos;
-  HBITMAP pHVar2;
-  HBITMAP pHVar3;
-  HBITMAP pHVar4;
+  HBITMAP bmp_unchecked;
+  HBITMAP bmp_checked;
+  HBITMAP bmp_focus;
   i32 handle;
   iptr items;
   int col_width;
@@ -3902,7 +3902,7 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
   WndBase *this;
   iptr window;
   int half_row;
-  HWND pHVar11;
+  HWND item_hwnd;
   iptr block;
   size_t len;
   int half_item;
@@ -3917,9 +3917,9 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
   char hotkey[4];
   int item_y;
   
-  pHVar2 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12d);
-  pHVar3 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12f);
-  pHVar4 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12e);
+  bmp_unchecked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12d);
+  bmp_checked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12f);
+  bmp_focus = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12e);
   handle = mem_handle_alloc(item_count * 0xa4);
   items = mem_handle_lock(handle);
   col_width = rect_width((iptr)rect);
@@ -3947,10 +3947,10 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     window = wnd_get_window(this);
     half_row = row_height >> 1;
     half_item = nHeight >> 1;
-    pHVar11 = CreateWindowExA(4,str_mscontrolclass_5,((i8 *)&radiogrp_item_wnd_title),style2,item_x,
+    item_hwnd = CreateWindowExA(4,str_mscontrolclass_5,((i8 *)&radiogrp_item_wnd_title),style2,item_x,
                               (half_row - half_item) + item_y,col_width,nHeight,*(HWND *)(window + 4),hMenu,
                               hInstance,lpParam);
-    *(HWND *)(items + index * 0xa4) = pHVar11;
+    *(HWND *)(items + index * 0xa4) = item_hwnd;
     block = ctrl_init_block(*(i32 *)(items + index * 0xa4),group);
     if (index == 0) {
       *(i32 *)(block + 8) = 0;
@@ -3958,9 +3958,9 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     else {
       *(i32 *)(block + 8) = 1;
     }
-    *(HBITMAP *)(block + 0xc) = pHVar2;
-    *(HBITMAP *)(block + 0x10) = pHVar3;
-    *(HBITMAP *)(block + 0x14) = pHVar4;
+    *(HBITMAP *)(block + 0xc) = bmp_unchecked;
+    *(HBITMAP *)(block + 0x10) = bmp_checked;
+    *(HBITMAP *)(block + 0x14) = bmp_focus;
     *(uint *)(block + 0x24) = index * 0xa4 + items;
     *(i32 *)(block + 0x2c) = 3;
     SetWindowLongA(*(HWND *)(items + index * 0xa4),-4,(iptr)radiogrp_item_wndproc);
@@ -3984,7 +3984,7 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     cursor = (char *)(index * 0xa4 + items + 0x1c);
     *(i32 *)(items + 0xa0 + index * 0xa4) = 0;
     while( true ) {
-      if (*cursor == '\0') goto LAB_005d9226;
+      if (*cursor == '\0') goto store_hotkey;
       if (*cursor == '~') break;
       hotkey_pos = (int *)(items + 0xa0 + index * 0xa4);
       *hotkey_pos = *hotkey_pos + 1;
@@ -3996,7 +3996,7 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
       *(i8 *)(index * 0xa5 + 0x1c + items) =
            *(i8 *)(index * 0xa5 + 0x1d + items);
     }
-LAB_005d9226:
+store_hotkey:
     len = _strlen((char *)(index * 0xa4 + items + 0x1c));
     if (*(uint *)(items + 0xa0 + index * 0xa4) < len) {
       hotkey[0] = *(char *)(*(int *)(items + 0xa0 + index * 0xa4) + index * 0xa4 + 0x1c +
@@ -4053,8 +4053,8 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
   int item;
   i32 sel_index;
   i32 ctrl_id;
-  RECT *pRVar9;
-  BOOL BVar10;
+  RECT *null_rect;
+  BOOL erase;
   
   block = wnd_from_hwnd(hwnd);
   if (block != 0) {
@@ -4063,17 +4063,17 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
     SetFocus(hwnd);
     selected = radiogrp_get_selected((RadioGroupGetSelView *)this);
     if ((selected != *(int *)(item + 0x14)) && (*(int *)(item + 0x18) == 1)) {
-      BVar10 = 0;
-      pRVar9 = (RECT *)0x0;
+      erase = 0;
+      null_rect = (RECT *)0x0;
       old_sel = radiogrp_get_selected((RadioGroupGetSelView *)this);
       items = radiogrp_get_items(this);
-      InvalidateRect(*(HWND *)(items + old_sel * 0xa4),pRVar9,BVar10);
+      InvalidateRect(*(HWND *)(items + old_sel * 0xa4),null_rect,erase);
       radiogrp_set_selected((RadioGroupSetSelView *)this,*(i32 *)(item + 0x14));
-      BVar10 = 0;
-      pRVar9 = (RECT *)0x0;
+      erase = 0;
+      null_rect = (RECT *)0x0;
       new_sel = radiogrp_get_selected((RadioGroupGetSelView *)this);
       item = radiogrp_get_items(this);
-      InvalidateRect(*(HWND *)(item + new_sel * 0xa4),pRVar9,BVar10);
+      InvalidateRect(*(HWND *)(item + new_sel * 0xa4),null_rect,erase);
     }
     wnd_active_child = ctrl_get_parent((Control *)this);
     sel_index = radiogrp_get_selected((RadioGroupGetSelView *)this);
@@ -4092,14 +4092,14 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
   iptr selected;
   iptr height;
   uint color_index;
-  WndPaletteView *pCVar6;
-  GamePalette *pCVar7;
+  WndPaletteView *parent_wnd;
+  GamePalette *game_palette2;
   size_t len;
-  WndBase *pCVar9;
+  WndBase *parent_base;
   int value;
   iptr parent;
-  HWND pHVar13;
-  WndKeyNavView *pCVar14;
+  HWND hwnd_tmp;
+  WndKeyNavView *nav_wnd;
   iptr items2;
   i32 ctrl_id;
   iptr items3;
@@ -4107,10 +4107,10 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
   i8 *red_out;
   i8 *green_out;
   tagRECT *draw_rect;
-  RECT *pRVar20;
+  RECT *null_rect;
   i8 *blue_out;
-  UINT UVar22;
-  BOOL BVar23;
+  UINT draw_flags;
+  BOOL erase;
   tagRECT rect;
   HBITMAP bitmap;
   iptr block;
@@ -4186,19 +4186,19 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         green_out = green;
         red_out = red;
         color_index = (uint)radio_shadow_color_index;
-        pCVar6 = (WndPaletteView *)ctrl_get_parent((Control *)group);
-        pCVar7 = (GamePalette *)wnd_get_palette(pCVar6);
-        palette_get_entry(pCVar7,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+        parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)group);
+        game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
+        palette_get_entry(game_palette2,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
         SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-        UVar22 = 0x24;
+        draw_flags = 0x24;
         draw_rect = &rect;
         len = _strlen((char *)(item + 0x1c));
-        DrawTextA(hdc,(LPCSTR)(item + 0x1c),len,draw_rect,UVar22);
+        DrawTextA(hdc,(LPCSTR)(item + 0x1c),len,draw_rect,draw_flags);
         OffsetRect(&rect,-(uint)radio_shadow_dx,-(uint)radio_shadow_dy);
       }
       if (*(int *)(item + 0x18) == 1) {
-        pCVar9 = (WndBase *)ctrl_get_parent((Control *)group);
-        value = wnd_get_window(pCVar9);
+        parent_base = (WndBase *)ctrl_get_parent((Control *)group);
+        value = wnd_get_window(parent_base);
         if (*(int *)(value + 0x40) == 8) {
           if (radio_text_color_index == 0) {
             SetTextColor(hdc,0);
@@ -4208,9 +4208,9 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             green_out = green;
             red_out = red;
             color_index = (uint)radio_text_color_index;
-            pCVar6 = (WndPaletteView *)ctrl_get_parent((Control *)group);
-            pCVar7 = (GamePalette *)wnd_get_palette(pCVar6);
-            parent = palette_get_logpalette(pCVar7);
+            parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)group);
+            game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
+            parent = palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
           }
@@ -4223,8 +4223,8 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         }
       }
       else if (*(int *)(item + 0x18) == 0) {
-        pCVar9 = (WndBase *)ctrl_get_parent((Control *)group);
-        value = wnd_get_window(pCVar9);
+        parent_base = (WndBase *)ctrl_get_parent((Control *)group);
+        value = wnd_get_window(parent_base);
         if (*(int *)(value + 0x40) == 8) {
           if (radio_disabled_color_index == 0) {
             SetTextColor(hdc,0x404040);
@@ -4234,9 +4234,9 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             green_out = green;
             red_out = red;
             color_index = (uint)radio_disabled_color_index;
-            pCVar6 = (WndPaletteView *)ctrl_get_parent((Control *)group);
-            pCVar7 = (GamePalette *)wnd_get_palette(pCVar6);
-            parent = palette_get_logpalette(pCVar7);
+            parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)group);
+            game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
+            parent = palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
           }
@@ -4248,10 +4248,10 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           SetTextColor(hdc,(uint)CONCAT12(radio_disabled_rgb_b,CONCAT11(radio_disabled_rgb_g,radio_disabled_rgb_r)));
         }
       }
-      UVar22 = 0x24;
+      draw_flags = 0x24;
       draw_rect = &rect;
       len = _strlen((char *)(item + 0x1c));
-      DrawTextA(hdc,(LPCSTR)(item + 0x1c),len,draw_rect,UVar22);
+      DrawTextA(hdc,(LPCSTR)(item + 0x1c),len,draw_rect,draw_flags);
       if (*(int *)(item + 0xa0) != -1) {
         crt_strcpy(prefix,item + 0x1c);
         prefix[*(int *)(item + 0xa0)] = '\0';
@@ -4264,10 +4264,10 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           underline_start = text_rect.left;
         }
         else {
-          UVar22 = 0x424;
+          draw_flags = 0x424;
           draw_rect = &text_rect;
           len = _strlen(prefix);
-          DrawTextA(hdc,prefix,len,draw_rect,UVar22);
+          DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
           underline_start = text_rect.right - 1;
         }
         crt_strcpy(prefix,item + 0x1c);
@@ -4276,10 +4276,10 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         text_rect.top = rect.top;
         text_rect.right = rect.right;
         text_rect.bottom = rect.bottom;
-        UVar22 = 0x424;
+        draw_flags = 0x424;
         draw_rect = &text_rect;
         len = _strlen(prefix);
-        DrawTextA(hdc,prefix,len,draw_rect,UVar22);
+        DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
         underline_start = underline_start + ((text_rect.right + 1) - underline_start >> 1) - 5;
         underline_end = underline_start + 10;
         brush = GetStockObject(3);
@@ -4291,8 +4291,8 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       }
       SelectObject(hdc,old_font);
       EndPaint(hwnd,&ps);
-      pHVar13 = GetFocus();
-      if (pHVar13 != hwnd) {
+      hwnd_tmp = GetFocus();
+      if (hwnd_tmp != hwnd) {
         return 0;
       }
     }
@@ -4301,10 +4301,10 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         wnd_redraw_client(hwnd);
         return 0;
       }
-      goto switchD_005dab35_default;
+      goto default_proc;
     }
-    pCVar14 = (WndKeyNavView *)ctrl_get_parent((Control *)group);
-    nav_enabled = wnd_keyboard_nav_enabled(pCVar14);
+    nav_wnd = (WndKeyNavView *)ctrl_get_parent((Control *)group);
+    nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
     if (nav_enabled == '\0') {
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
       return result;
@@ -4325,11 +4325,11 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         if ((value != *(int *)(item + 0x14)) && (*(int *)(item + 0x18) == 1)) {
           value = radiogrp_get_selected((RadioGroupGetSelView *)group);
           if (value != -1) {
-            BVar23 = 0;
-            pRVar20 = (RECT *)0x0;
+            erase = 0;
+            null_rect = (RECT *)0x0;
             value = radiogrp_get_selected((RadioGroupGetSelView *)group);
             items = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(items + value * 0xa4),pRVar20,BVar23);
+            InvalidateRect(*(HWND *)(items + value * 0xa4),null_rect,erase);
           }
           radiogrp_set_selected((RadioGroupSetSelView *)group,*(i32 *)(item + 0x14));
           SetFocus(hwnd);
@@ -4345,15 +4345,15 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       }
     }
     else {
-      if (msg != 0x100) goto switchD_005dab35_default;
+      if (msg != 0x100) goto default_proc;
       if (wparam == 9) {
-        pHVar13 = GetParent(hwnd);
-        SendMessageA(pHVar13,msg,wparam,lparam);
+        hwnd_tmp = GetParent(hwnd);
+        SendMessageA(hwnd_tmp,msg,wparam,lparam);
       }
       else {
         if (wparam == 0x20) {
-          pCVar14 = (WndKeyNavView *)ctrl_get_parent((Control *)group);
-          nav_enabled = wnd_keyboard_nav_enabled(pCVar14);
+          nav_wnd = (WndKeyNavView *)ctrl_get_parent((Control *)group);
+          nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
           if (nav_enabled != '\0') {
             SendMessageA(hwnd,0x201,0,0);
             SendMessageA(hwnd,0x202,0,0);
@@ -4361,8 +4361,8 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           }
         }
         if ((((wparam == 0x27) || (wparam == 0x28)) || (wparam == 0x66)) || (wparam == 0x62)) {
-          pCVar14 = (WndKeyNavView *)ctrl_get_parent((Control *)group);
-          nav_enabled = wnd_keyboard_nav_enabled(pCVar14);
+          nav_wnd = (WndKeyNavView *)ctrl_get_parent((Control *)group);
+          nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
           if (nav_enabled != '\0') {
             remaining = radiogrp_item_count((RadioGroupCountView *)group);
             next_index = *(int *)(item + 0x14) + 1;
@@ -4385,16 +4385,16 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             }
             value = radiogrp_get_items(group);
             SetFocus(*(HWND *)(value + next_index * 0xa4));
-            BVar23 = 0;
-            pRVar20 = (RECT *)0x0;
+            erase = 0;
+            null_rect = (RECT *)0x0;
             value = radiogrp_get_selected((RadioGroupGetSelView *)group);
             items2 = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(items2 + value * 0xa4),pRVar20,BVar23);
+            InvalidateRect(*(HWND *)(items2 + value * 0xa4),null_rect,erase);
             radiogrp_set_selected((RadioGroupSetSelView *)group,next_index);
-            BVar23 = 0;
-            pRVar20 = (RECT *)0x0;
+            erase = 0;
+            null_rect = (RECT *)0x0;
             value = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(value + next_index * 0xa4),pRVar20,BVar23);
+            InvalidateRect(*(HWND *)(value + next_index * 0xa4),null_rect,erase);
             parent = ctrl_get_parent((Control *)group);
             wnd_set_active_child(parent);
             result = radiogrp_get_selected((RadioGroupGetSelView *)group);
@@ -4404,8 +4404,8 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           }
         }
         if (((wparam == 0x26) || (wparam == 0x25)) || ((wparam == 0x68 || (wparam == 100)))) {
-          pCVar14 = (WndKeyNavView *)ctrl_get_parent((Control *)group);
-          nav_enabled = wnd_keyboard_nav_enabled(pCVar14);
+          nav_wnd = (WndKeyNavView *)ctrl_get_parent((Control *)group);
+          nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
           if (nav_enabled != '\0') {
             remaining = radiogrp_item_count((RadioGroupCountView *)group);
             next_index = *(int *)(item + 0x14) - 1;
@@ -4428,16 +4428,16 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             }
             value = radiogrp_get_items(group);
             SetFocus(*(HWND *)(value + next_index * 0xa4));
-            BVar23 = 0;
-            pRVar20 = (RECT *)0x0;
+            erase = 0;
+            null_rect = (RECT *)0x0;
             value = radiogrp_get_selected((RadioGroupGetSelView *)group);
             items3 = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(items3 + value * 0xa4),pRVar20,BVar23);
+            InvalidateRect(*(HWND *)(items3 + value * 0xa4),null_rect,erase);
             radiogrp_set_selected((RadioGroupSetSelView *)group,next_index);
-            BVar23 = 0;
-            pRVar20 = (RECT *)0x0;
+            erase = 0;
+            null_rect = (RECT *)0x0;
             value = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(value + next_index * 0xa4),pRVar20,BVar23);
+            InvalidateRect(*(HWND *)(value + next_index * 0xa4),null_rect,erase);
             parent = ctrl_get_parent((Control *)group);
             wnd_set_active_child(parent);
             result = radiogrp_get_selected((RadioGroupGetSelView *)group);
@@ -4446,8 +4446,8 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             return 0;
           }
         }
-        pHVar13 = GetParent(hwnd);
-        SendMessageA(pHVar13,msg,wparam,lparam);
+        hwnd_tmp = GetParent(hwnd);
+        SendMessageA(hwnd_tmp,msg,wparam,lparam);
       }
     }
   }
@@ -4465,11 +4465,11 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         if (value != *(int *)(item + 0x14)) {
           value = radiogrp_get_selected((RadioGroupGetSelView *)group);
           if (value != -1) {
-            BVar23 = 0;
-            pRVar20 = (RECT *)0x0;
+            erase = 0;
+            null_rect = (RECT *)0x0;
             value = radiogrp_get_selected((RadioGroupGetSelView *)group);
             items = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(items + value * 0xa4),pRVar20,BVar23);
+            InvalidateRect(*(HWND *)(items + value * 0xa4),null_rect,erase);
           }
           radiogrp_set_selected((RadioGroupSetSelView *)group,*(i32 *)(item + 0x14));
         }
@@ -4494,7 +4494,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       radio_rbutton_captured = 0;
       break;
     default:
-switchD_005dab35_default:
+default_proc:
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
       return result;
     }
@@ -4709,20 +4709,20 @@ uint __cdecl input_map_vkey(uint vkey)
 uint __cdecl input_shift_key_down(void)
 
 {
-  SHORT SVar1;
+  SHORT key_state;
   
-  SVar1 = GetKeyState(0x10);
-  return (uint)(((int)SVar1 & 0x8000U) != 0);
+  key_state = GetKeyState(0x10);
+  return (uint)(((int)key_state & 0x8000U) != 0);
 }
 
 /* 005ecf20 auto */
 uint __cdecl input_ctrl_key_down(void)
 
 {
-  SHORT SVar1;
+  SHORT key_state;
   
-  SVar1 = GetKeyState(0x11);
-  return (uint)(((int)SVar1 & 0x8000U) != 0);
+  key_state = GetKeyState(0x11);
+  return (uint)(((int)key_state & 0x8000U) != 0);
 }
 
 /* 005f0620 auto */

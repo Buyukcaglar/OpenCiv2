@@ -1432,7 +1432,7 @@ i32 __cdecl tribe_editor_update_city_file(void)
   if (rc != 0) {
     rc = file_exists((iptr)city_file_name);
     if (rc == 0) {
-LAB_004cdc50:
+success:
       result = 1;
     }
     else {
@@ -1445,7 +1445,7 @@ LAB_004cdc50:
           do {
             while( true ) {
               read_ptr = _fgets(line,0x100,in_file);
-              if (read_ptr == (char *)0x0) goto LAB_004cdc50;
+              if (read_ptr == (char *)0x0) goto success;
               if ((line[0] != '@') || (rc = __strnicmp((line + 1),((i8 *)&city_file_stop_str),4), rc == 0))
               break;
               for (leader = 0; leader < 0x15; leader++) {
@@ -1472,12 +1472,12 @@ LAB_004cdc50:
                            ((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (leader * 5 + 0xd2) * 8);
                   __strupr(line);
                   rc = _fputs(line,out_file);
-                  if (rc == -1) goto LAB_004cdc5a;
+                  if (rc == -1) goto cleanup;
                   break;
                 }
               }
               if ((leader == 0x15) && (rc = _fputs(line,out_file), rc == -1))
-              goto LAB_004cdc5a;
+              goto cleanup;
             }
             rc = _fputs(line,out_file);
           } while (rc != -1);
@@ -1485,7 +1485,7 @@ LAB_004cdc50:
       }
     }
   }
-LAB_004cdc5a:
+cleanup:
   if (in_file != (FILE *)0x0) {
     _fclose(in_file);
   }
@@ -1673,7 +1673,7 @@ void __cdecl editor_text_dlg_on_ok(void)
   line_idx = 0;
   do {
     if (0x13 < line_idx) {
-LAB_004ce2ca:
+finish_ok:
       editor_font_block.editor_text_result = 1;
       editor_font_block.editor_text_active = 0;
       wnd_end_modal_loop((ModalMenuWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner));
@@ -1690,7 +1690,7 @@ LAB_004ce2ca:
       *(i32 *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4) = line_copy;
       if (*(int *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4) == 0) {
         *(i32 *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4) = 0;
-        goto LAB_004ce2ca;
+        goto finish_ok;
       }
       crt_strcpy(*(i32 *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4),line_buf);
     }
@@ -1812,7 +1812,7 @@ uint __cdecl editor_check_city_name(iptr name2)
   if (rc == 0) {
     do {
       rc = text_read_line(1);
-      if (rc == 0) goto LAB_004ce7c5;
+      if (rc == 0) goto show_error_dialog;
       name_len = _strlen((char *)name2);
       line_len = _strlen(((i8 *)&map_views_block.text_buffer));
       if (line_len < name_len) {
@@ -1827,7 +1827,7 @@ uint __cdecl editor_check_city_name(iptr name2)
     result = 1;
   }
   else {
-LAB_004ce7c5:
+show_error_dialog:
     if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
       parent_wnd2 = 0;
     }
@@ -1886,7 +1886,7 @@ i32 __cdecl editor_create_scenario_folder(void)
 {
   int rc;
   size_t len;
-  DWORD DVar3;
+  DWORD attrs;
   char folder_name[260];
   CHAR path[260];
   int retry;
@@ -1907,8 +1907,8 @@ i32 __cdecl editor_create_scenario_folder(void)
         crt_strcpy(path,((i8 *)&civ_saved_cursor_x_block.game_home_dir));
         crt_strcat(path,str_scenario_4);
         crt_strcat(path,folder_name);
-        DVar3 = GetFileAttributesA(path);
-        if (DVar3 != 0xffffffff) {
+        attrs = GetFileAttributesA(path);
+        if (attrs != 0xffffffff) {
           text_set_string_arg(0,(iptr)path);
           popup_text((iptr)&str_debug_11,(iptr)&str_direxists);
           retry = 1;

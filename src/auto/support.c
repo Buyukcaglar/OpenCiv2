@@ -317,13 +317,13 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
 i32 __stdcall win_main(i32 instance,i32 prev_instance,i32 cmd_line,i32 show_cmd)
 
 {
-  DWORD DVar1;
+  DWORD last_error;
   int started;
   HWND hWnd;
   
   CreateMutexA((LPSECURITY_ATTRIBUTES)0x0,1,str_civilization_ii_once_only);
-  DVar1 = GetLastError();
-  if (DVar1 == 0xb7) {
+  last_error = GetLastError();
+  if (last_error == 0xb7) {
     hWnd = FindWindowA(str_mswindowclass,(LPCSTR)0x0);
     if (hWnd != (HWND)0x0) {
       BringWindowToTop(hWnd);
@@ -625,15 +625,15 @@ int __cdecl int_shift_signed(int value,int shift)
 void __cdecl win_drain_input_msgs(void)
 
 {
-  BOOL BVar1;
+  BOOL got_msg;
   tagMSG msg;
   
   do {
-    BVar1 = PeekMessageA(&msg,(HWND)0x0,0x200,0x209,1);
-  } while (BVar1 != 0);
+    got_msg = PeekMessageA(&msg,(HWND)0x0,0x200,0x209,1);
+  } while (got_msg != 0);
   do {
-    BVar1 = PeekMessageA(&msg,(HWND)0x0,0x100,0x108,1);
-  } while (BVar1 != 0);
+    got_msg = PeekMessageA(&msg,(HWND)0x0,0x100,0x108,1);
+  } while (got_msg != 0);
   return;
 }
 
@@ -641,12 +641,12 @@ void __cdecl win_drain_input_msgs(void)
 i32 __cdecl win_dispatch_one_message(void)
 
 {
-  BOOL BVar1;
+  BOOL got_msg;
   i32 dispatched;
   tagMSG msg;
   
-  BVar1 = PeekMessageA(&msg,(HWND)0x0,0,0,1);
-  if (BVar1 == 0) {
+  got_msg = PeekMessageA(&msg,(HWND)0x0,0,0,1);
+  if (got_msg == 0) {
     win_flush_pending_msgs();
     if (wnd_modal_stack_below_block.avi_idle_update_enabled != 0) {
       avi_update_current_frame();
@@ -665,15 +665,15 @@ i32 __cdecl win_dispatch_one_message(void)
 uint __cdecl win_dispatch_one_paint(void)
 
 {
-  BOOL BVar1;
+  BOOL got_msg;
   tagMSG msg;
   
-  BVar1 = PeekMessageA(&msg,(HWND)0x0,0xf,0xf,1);
-  if (BVar1 != 0) {
+  got_msg = PeekMessageA(&msg,(HWND)0x0,0xf,0xf,1);
+  if (got_msg != 0) {
     TranslateMessage(&msg);
     DispatchMessageA(&msg);
   }
-  return (uint)(BVar1 != 0);
+  return (uint)(got_msg != 0);
 }
 
 /* 005bbb0a auto */
@@ -706,15 +706,15 @@ void __cdecl win_dispatch_all_paints(void)
 uint __cdecl win_dispatch_one_custom_msg(void)
 
 {
-  BOOL BVar1;
+  BOOL got_msg;
   tagMSG msg;
   
-  BVar1 = PeekMessageA(&msg,(HWND)0x0,0x3bd,0x3bd,1);
-  if (BVar1 != 0) {
+  got_msg = PeekMessageA(&msg,(HWND)0x0,0x3bd,0x3bd,1);
+  if (got_msg != 0) {
     TranslateMessage(&msg);
     DispatchMessageA(&msg);
   }
-  return (uint)(BVar1 != 0);
+  return (uint)(got_msg != 0);
 }
 
 /* 005bbbce auto */
@@ -863,11 +863,11 @@ void __cdecl dbg_logf_str_int(iptr fmt,iptr str,iptr value)
 void * __thiscall dbg_log_file_ctor(void *this)
 
 {
-  DWORD DVar1;
+  DWORD tick_count;
   
   dbg_log_open();
-  DVar1 = GetTickCount();
-  *(DWORD *)this = DVar1;
+  tick_count = GetTickCount();
+  *(DWORD *)this = tick_count;
   return this;
 }
 
@@ -883,11 +883,11 @@ void __thiscall dbg_log_file_dtor(void *this)
 i8 __thiscall dbg_log_write(void *this,iptr text)
 
 {
-  DWORD DVar1;
+  DWORD tick_count;
   char line[1032];
   
-  DVar1 = GetTickCount();
-  _sprintf(line,str_5d,(DVar1 - *(int *)this) / 1000);
+  tick_count = GetTickCount();
+  _sprintf(line,str_5d,(tick_count - *(int *)this) / 1000);
   crt_strcat(line,text);
   if (dbg_log_to_debugger != '\0') {
     dbg_log_write_debugger((iptr)line);
@@ -1052,17 +1052,17 @@ void __cdecl mem_copy_src_dst(iptr src,iptr dst,i32 size)
 void __cdecl mem_handle_clone(iptr handle_ptr)
 
 {
-  SIZE_T SVar1;
+  SIZE_T mem_size;
   HGLOBAL hMem;
   LPVOID dst;
   LPVOID src;
   
-  SVar1 = GlobalSize(*(HGLOBAL *)handle_ptr);
-  hMem = (HGLOBAL)mem_handle_alloc(SVar1);
+  mem_size = GlobalSize(*(HGLOBAL *)handle_ptr);
+  hMem = (HGLOBAL)mem_handle_alloc(mem_size);
   if (hMem != (HGLOBAL)0x0) {
     dst = GlobalLock(hMem);
     src = GlobalLock(*(HGLOBAL *)handle_ptr);
-    crt_memmove(dst,src,SVar1);
+    crt_memmove(dst,src,mem_size);
     GlobalUnlock(hMem);
     GlobalUnlock(*(HGLOBAL *)handle_ptr);
     *(HGLOBAL *)handle_ptr = hMem;
@@ -1136,10 +1136,10 @@ void __cdecl mem_move_src_dst(iptr src,iptr dst,i32 size)
 SIZE_T __cdecl mem_handle_size(HGLOBAL handle)
 
 {
-  SIZE_T SVar1;
+  SIZE_T mem_size;
   
-  SVar1 = GlobalSize(handle);
-  return SVar1;
+  mem_size = GlobalSize(handle);
+  return mem_size;
 }
 
 /* 005dfb61 auto */
@@ -1261,19 +1261,19 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
         while (out_pos = out, run_len != 0) {
           if (run_len < 0x80) {
             *out = (char)run_len;
-            if (size <= written + 1) goto LAB_005e0071;
+            if (size <= written + 1) goto compress_fail;
             run_len = 0;
           }
           else {
             *out = 127;
-            if (size <= written + 1) goto LAB_005e0071;
+            if (size <= written + 1) goto compress_fail;
             run_len -= 0x7f;
           }
           out++;
           *out = *src;
           out = out_pos + 2;
           written += 2;
-          if (size <= written) goto LAB_005e0071;
+          if (size <= written) goto compress_fail;
         }
         src = scan;
       }
@@ -1285,7 +1285,7 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
           *out = (char)run_len - 0x80;
           out++;
           written++;
-          if (size <= written) goto LAB_005e0071;
+          if (size <= written) goto compress_fail;
           literal_len = run_len;
           run_len = 0;
         }
@@ -1293,7 +1293,7 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
           *out = -1;
           out++;
           written++;
-          if (size <= written) goto LAB_005e0071;
+          if (size <= written) goto compress_fail;
           run_len -= 0x7f;
           literal_len = 0x7f;
         }
@@ -1303,13 +1303,13 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
           out++;
           written++;
           literal_len--;
-          if (size <= written) goto LAB_005e0071;
+          if (size <= written) goto compress_fail;
         }
       }
     }
     out_size = (int)out - (int)out_buf;
     if (size < (int)out_size) {
-LAB_005e0071:
+compress_fail:
       operator_delete(out_buf);
       out_size = 0xffffffff;
     }

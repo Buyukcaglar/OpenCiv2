@@ -1617,7 +1617,7 @@ void __cdecl foreign_minister_show(iptr civ)
           popup_game((iptr)&str_noforeign);
           seh_state = 0xffffffff;
           /* inlined unwind funclet 0043154f */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
-          goto LAB_00431565;
+          goto done;
         }
         civ2 = dlg_show_modal(&dialog2,0);
         if (((*(i8 *)((char *)&dialog2.style_flags + 1)) & 0x20) != 0) {
@@ -1626,7 +1626,7 @@ void __cdecl foreign_minister_show(iptr civ)
         if (dialog2.result_extra == 0) {
           seh_state = 0xffffffff;
           /* inlined unwind funclet 0043154f */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
-          goto LAB_00431565;
+          goto done;
         }
         if (dialog2.result_extra != 1) break;
         if ((((*(byte *)&civs[civ].treaties[civ2] & 0x80) == 0) &&
@@ -1638,7 +1638,7 @@ void __cdecl foreign_minister_show(iptr civ)
         }
       }
       if (dialog2.result_extra == 2) break;
-      if (dialog2.result_extra != 3) goto LAB_0043153e;
+      if (dialog2.result_extra != 3) goto dialog_cleanup;
       text_clear();
       text = civ_leader_title(civ2);
       text_append(text);
@@ -1774,7 +1774,7 @@ void __cdecl foreign_minister_show(iptr civ)
     else {
       popup_game((iptr)&str_peacenobetray);
     }
-LAB_0043153e:
+dialog_cleanup:
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0043154f */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   }
@@ -1784,7 +1784,7 @@ LAB_0043153e:
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0043154f */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   }
-LAB_00431565:
+done:
   return;
 }
 
@@ -2241,7 +2241,7 @@ void __cdecl top_cities_draw(void)
       return;
     }
     if (cities[city].id != 0) break;
-LAB_00432c6b:
+next_city:
     city++;
   }
   score = ((int)cities[city].size + (int)(char)cities[city].happy) -
@@ -2252,9 +2252,9 @@ LAB_00432c6b:
     }
   }
   rank = 0;
-LAB_00432d26:
+rank_loop:
   if (rank < 5) {
-    if (score <= top_scores[rank]) goto LAB_00432d23;
+    if (score <= top_scores[rank]) goto next_rank;
     for (shift = 3; rank <= shift; shift--) {
       top_scores[shift + 1] = top_scores[shift];
       top_cities[shift + 1] = top_cities[shift];
@@ -2262,10 +2262,10 @@ LAB_00432d26:
     top_scores[rank] = score;
     top_cities[rank] = city;
   }
-  goto LAB_00432c6b;
-LAB_00432d23:
+  goto next_city;
+next_rank:
   rank++;
-  goto LAB_00432d26;
+  goto rank_loop;
 }
 
 /* 00433122 auto */
@@ -3177,7 +3177,7 @@ void __cdecl hall_of_fame_add_entry(iptr civ)
   do {
     insert_pos = 0;
     while( true ) {
-      if (5 < insert_pos) goto LAB_00437186;
+      if (5 < insert_pos) goto save_and_show;
       if (*(short *)(((i8 *)&advisor_window_block.hall_of_fame_entry_rating) + insert_pos * 0x48) < advisor_font_block.hof_new_rating) break;
       insert_pos++;
     }
@@ -3186,7 +3186,7 @@ void __cdecl hall_of_fame_add_entry(iptr civ)
     }
     crt_memcpy(((i8 *)&advisor_window_block.hall_of_fame_entries) + insert_pos * 0x48,((i8 *)&advisor_font_block.hall_of_fame_new_entry),0x48);
     new_rank = insert_pos;
-LAB_00437186:
+save_and_show:
     hall_of_fame_save();
     score = hall_of_fame_show(new_rank);
     if (score == 0) {
@@ -3284,18 +3284,18 @@ joined_r0x00437377:
     if (status != 0) {
       return 1;
     }
-    goto LAB_004373c4;
+    goto read_section_lines;
   default:
-    goto switchD_004373ad_default;
+    goto return_result;
   }
   if (status == 0) {
-LAB_004373c4:
+read_section_lines:
     while ((status = text_read_line(1), status != 0 && (map_views_block.text_buffer[0] != '@'))) {
       credits_add_line(((i8 *)&map_views_block.text_buffer));
     }
     result = 0;
   }
-switchD_004373ad_default:
+return_result:
   return result;
 }
 
@@ -3395,7 +3395,7 @@ void __cdecl credits_draw_scroll(int full_redraw)
         }
       }
       if (found_slot < 0) {
-        if (free_slot < 0) goto LAB_00437a02;
+        if (free_slot < 0) goto done;
         if (*line_text == '^') {
           line_text++;
           text_clear();
@@ -3485,7 +3485,7 @@ void __cdecl credits_draw_scroll(int full_redraw)
   else {
     wnd_end_modal_loop((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd));
   }
-LAB_00437a02:
+done:
   return;
 }
 
@@ -4176,7 +4176,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
         /* inlined unwind funclet 0044e762 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
         try_level = 0xffffffff;
         /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-        goto LAB_0044e781;
+        goto return_result;
       }
       sprite_grab_from_surface
                 (&sprite,(iptr)&surface,9,
@@ -4201,7 +4201,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
       result = fail1;
-      goto LAB_0044e781;
+      goto return_result;
     }
     sprite_grab_from_surface
               (&sprite,(iptr)&surface,9,throneroom_piece4_rect_x_block.throneroom_bonus_rect_x[0],throneroom_piece4_rect_x_block.throneroom_bonus_rect_y[0],throneroom_piece4_rect_x_block.throneroom_bonus_rect_w[0],throneroom_piece4_rect_x_block.throneroom_bonus_rect_h[0]);
@@ -4222,7 +4222,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
       result = fail2;
-      goto LAB_0044e781;
+      goto return_result;
     }
     sprite_grab_from_surface
               (&sprite,(iptr)&surface,9,
@@ -4249,7 +4249,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
           try_level = 0xffffffff;
           /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
           result = fail3;
-          goto LAB_0044e781;
+          goto return_result;
         }
         sprite_grab_from_surface
                   (&sprite,(iptr)&surface,9,(((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_x))[slot * 4],
@@ -4275,7 +4275,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
       result = fail4;
-      goto LAB_0044e781;
+      goto return_result;
     }
     sprite_grab_from_surface
               (&sprite,(iptr)&surface,9,*(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece4_rect_x) + level * 0x10),
@@ -4298,7 +4298,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
       result = fail5;
-      goto LAB_0044e781;
+      goto return_result;
     }
     sprite_grab_from_surface
               (&sprite,(iptr)&surface,9,throneroom_piece4_rect_x_block.throneroom_bonus3_rect_x,throneroom_piece4_rect_x_block.throneroom_bonus3_rect_y,throneroom_piece4_rect_x_block.throneroom_bonus3_rect_w,throneroom_piece4_rect_x_block.throneroom_bonus3_rect_h);
@@ -4319,7 +4319,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
         try_level = 0xffffffff;
         /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
         result = fail6;
-        goto LAB_0044e781;
+        goto return_result;
       }
       sprite_grab_from_surface
                 (&sprite,(iptr)&surface,9,
@@ -4347,7 +4347,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
           try_level = 0xffffffff;
           /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
           result = fail7;
-          goto LAB_0044e781;
+          goto return_result;
         }
         sprite_grab_from_surface
                   (&sprite,(iptr)&surface,9,(((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_x))[slot * 4],
@@ -4373,7 +4373,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
       try_level = 0xffffffff;
       /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
       result = fail8;
-      goto LAB_0044e781;
+      goto return_result;
     }
     sprite_grab_from_surface
               (&sprite,(iptr)&surface,9,*(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece7_rect_x) + level * 0x10),
@@ -4392,7 +4392,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
   try_level = 0xffffffff;
   /* inlined unwind funclet 0044e76b */ { surface_dtor((DibSurface *)((iptr)&surface)); }
   result = 1;
-LAB_0044e781:
+return_result:
   return result;
 }
 
@@ -4682,7 +4682,7 @@ i32 __thiscall throneroom_render_choices(ThroneRoomWindow *this)
             try_level = 0xffffffff;
             /* inlined unwind funclet 0044f4a4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
             result = fail1;
-            goto LAB_0044f4ba;
+            goto return_result;
           }
           sprite_grab_from_surface
                     (&sprite,(iptr)&surface,9,piece_rects[idx * 4],
@@ -4709,7 +4709,7 @@ i32 __thiscall throneroom_render_choices(ThroneRoomWindow *this)
             try_level = 0xffffffff;
             /* inlined unwind funclet 0044f4a4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
             result = fail2;
-            goto LAB_0044f4ba;
+            goto return_result;
           }
           sprite_grab_from_surface
                     (&sprite,(iptr)&surface,9,piece_rects[idx * 4 + 0x20],
@@ -4728,7 +4728,7 @@ i32 __thiscall throneroom_render_choices(ThroneRoomWindow *this)
     /* inlined unwind funclet 0044f4a4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
     result = 1;
   }
-LAB_0044f4ba:
+return_result:
   return result;
 }
 
@@ -4910,7 +4910,7 @@ void __thiscall defeat_movie_wnd_dtor(void *this)
 i32 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint civ)
 
 {
-  HFILE HVar1;
+  HFILE file_handle;
   i32 result;
   i32 width;
   CHAR dll_path[128];
@@ -4923,16 +4923,16 @@ i32 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint civ)
   str_clear((iptr)avi_path);
   str_append((iptr)avi_path,(iptr)&civ_saved_cursor_x_block.game_home_dir);
   str_append((iptr)avi_path,(iptr)&str_loser_avi);
-  HVar1 = OpenFile(avi_path,&of_struct,0x4000);
-  if (HVar1 == -1) {
+  file_handle = OpenFile(avi_path,&of_struct,0x4000);
+  if (file_handle == -1) {
     result = 0;
   }
   else {
     str_clear((iptr)dll_path);
     str_append((iptr)dll_path,(iptr)&civ_saved_cursor_x_block.game_home_dir);
     str_append((iptr)dll_path,(iptr)&str_civ2art_dll);
-    HVar1 = OpenFile(dll_path,&of_struct,0x4000);
-    if (HVar1 == -1) {
+    file_handle = OpenFile(dll_path,&of_struct,0x4000);
+    if (file_handle == -1) {
       result = 0;
     }
     else {
@@ -6263,7 +6263,7 @@ i32 __thiscall destroyed_civs_wnd_create(DestroyedCivsWindow *this,uint killer)
 void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
 
 {
-  DWORD DVar1;
+  DWORD start_tick;
   int status;
   char *line;
   i32 width;
@@ -6289,7 +6289,7 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
       destroyed_civs_draw_entry((WndBase *)this,entry);
       destroyed_civs_show_date = 1;
       destroyed_civs_draw_portrait((PictureFrameWindow *)this,entry);
-      DVar1 = timeGetTime();
+      start_tick = timeGetTime();
       snd_play_effect(((uint)(byte)(((i8 *)&destroyed_civ_count_block.destroyed_civ_portraits))[entry] + (uint)map.seed & 7) + 0x53,1,0,0)
       ;
       destroyed_civs_slide_up(this);
@@ -6300,7 +6300,7 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
         if (2 < game.multiplayer) {
           net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
         }
-      } while ((int)(now - DVar1) < 7000);
+      } while ((int)(now - start_tick) < 7000);
       destroyed_civs_draw_entry((WndBase *)this,entry);
       destroyed_civs_slide_down(this);
     }
@@ -6498,7 +6498,7 @@ void __thiscall destroyed_civs_slide_step(DestroyedCivsWindow *this,int delta)
 void __thiscall destroyed_civs_slide_down(DestroyedCivsWindow *this)
 
 {
-  DWORD DVar1;
+  DWORD tick;
   DWORD start_time;
   
   surface_blit
@@ -6506,16 +6506,16 @@ void __thiscall destroyed_civs_slide_down(DestroyedCivsWindow *this)
              (iptr)&this->panel_clip_rect,(iptr)&this->panel_clip_rect);
   snd_wave_stop_all();
   snd_play_effect(0x6f,1,0,0);
-  DVar1 = timeGetTime();
-  while (start_time = DVar1, (int)this->slide_y < 0x133) {
+  tick = timeGetTime();
+  while (start_time = tick, (int)this->slide_y < 0x133) {
     destroyed_civs_slide_step(this,0xf);
     do {
       win_flush_pending_msgs();
-      DVar1 = timeGetTime();
+      tick = timeGetTime();
       if (2 < game.multiplayer) {
         net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
       }
-    } while ((int)(DVar1 - start_time) < 0x16);
+    } while ((int)(tick - start_time) < 0x16);
   }
   return;
 }
@@ -6681,7 +6681,7 @@ i32 __thiscall council_wnd_init(ListPaneWindow *this,u32 civ,int cheat_mode)
     while( true ) {
       cancelled = popup_game((iptr)&str_councilcheat0);
       choice = dlg_help_pressed;
-      if ((cancelled != 0) || (dlg_help_pressed == 0)) goto LAB_00516b87;
+      if ((cancelled != 0) || (dlg_help_pressed == 0)) goto prompt_cheat_number;
       if (dlg_help_pressed == 6) break;
       valid = false;
       while (!valid) {
@@ -6696,7 +6696,7 @@ i32 __thiscall council_wnd_init(ListPaneWindow *this,u32 civ,int cheat_mode)
       }
     }
     ((PictureWindow *)this)->council_active_2 = 1;
-LAB_00516b87:
+prompt_cheat_number:
     valid = false;
     while ((!valid && (choice = dlg_input_number_game((iptr)&str_councilcheat2,0,(iptr)&number), choice == 0))) {
       if ((-1 < number) && (number < 3)) {
@@ -7043,17 +7043,17 @@ i32 __thiscall council_load_speech(WindowObjectView *this,uptr advisor)
     line_idx = 1;
     matched = true;
     skip_read = false;
-LAB_00517ae5:
-    if ((2 < line_idx) || (((u32 *)&((PictureWindow *)this)->speech_line_advisors)[line_idx] == 0xffffffff)) goto LAB_00517dae;
-    if ((!skip_read) && (status = text_read_line(1), status == 0)) goto LAB_00517db5;
+next_speech_line:
+    if ((2 < line_idx) || (((u32 *)&((PictureWindow *)this)->speech_line_advisors)[line_idx] == 0xffffffff)) goto speech_done;
+    if ((!skip_read) && (status = text_read_line(1), status == 0)) goto close_and_return;
     skip_read = false;
     token = (i8 *)text_next_token();
     switch(*token) {
     case 0x23:
       skip_read = matched;
-      goto LAB_00517ae5;
+      goto next_speech_line;
     case 0x3b:
-      goto LAB_00517ae5;
+      goto next_speech_line;
     case 0x41:
     case 0x61:
       advisor = 4;
@@ -7061,7 +7061,7 @@ LAB_00517ae5:
     case 0x45:
     case 0x65:
       ((u32 *)&((PictureWindow *)this)->speech_line_advisors)[line_idx] = 0xffffffff;
-      goto LAB_00517ae5;
+      goto next_speech_line;
     case 0x46:
     case 0x66:
       advisor = 3;
@@ -7072,7 +7072,7 @@ LAB_00517ae5:
       break;
     case 0x52:
     case 0x72:
-      goto switchD_00517c0c_caseD_52;
+      goto random_chance_line;
     case 0x53:
     case 0x73:
       advisor = 1;
@@ -7105,22 +7105,22 @@ LAB_00517ae5:
     else {
       matched = false;
     }
-    goto LAB_00517ae5;
+    goto next_speech_line;
   }
-LAB_00517db5:
+close_and_return:
   text_close_file();
   return result;
-LAB_00517dae:
+speech_done:
   result = 1;
-  goto LAB_00517db5;
-switchD_00517c0c_caseD_52:
+  goto close_and_return;
+random_chance_line:
   status = _atoi(token + 1);
   roll = rand_range(1,10);
   if (roll <= status) {
     matched = false;
   }
   skip_read = roll > status;
-  goto LAB_00517ae5;
+  goto next_speech_line;
 }
 
 /* 00517dd3 auto */
@@ -7220,7 +7220,7 @@ void __thiscall council_draw_advisor_frames(ListPaneWindow *this)
         /* inlined unwind funclet 005181ab */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
         try_level = 0xffffffff;
         /* inlined unwind funclet 005181b4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-        goto LAB_005181ca;
+        goto done;
       }
       status = text_read_line(1);
       if (status == 0) {
@@ -7228,7 +7228,7 @@ void __thiscall council_draw_advisor_frames(ListPaneWindow *this)
         /* inlined unwind funclet 005181ab */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
         try_level = 0xffffffff;
         /* inlined unwind funclet 005181b4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-        goto LAB_005181ca;
+        goto done;
       }
       frame_no = text_next_int();
       avi_player_show_frame(&this->style_flags,frame_no);
@@ -7247,7 +7247,7 @@ void __thiscall council_draw_advisor_frames(ListPaneWindow *this)
   /* inlined unwind funclet 005181ab */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   try_level = 0xffffffff;
   /* inlined unwind funclet 005181b4 */ { surface_dtor((DibSurface *)((iptr)&surface)); }
-LAB_005181ca:
+done:
   return;
 }
 

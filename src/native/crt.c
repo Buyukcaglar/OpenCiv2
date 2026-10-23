@@ -505,7 +505,7 @@ void FUN_0061a000(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7
 void FUN_0061a759(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int a16) { unsupported("ASMGRAF 0x0061a759"); }
 
 /* Network game connection set-up (XDaemon): no network play in this build. */
-i32 net_session_init(void *this, int param_1) { (void)this; (void)param_1; unsupported("network game (0x00421fcd)"); return 0; }
+i32 net_session_init(void *this, int conn_type) { (void)this; (void)conn_type; unsupported("network game (0x00421fcd)"); return 0; }
 
 #ifdef __wasm__
 /* The MSVC runtime's assertion failure (glibc happens to have one). */

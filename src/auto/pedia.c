@@ -36,7 +36,7 @@ void __thiscall pedia_update_controls(MediaWindow *this)
 {
   u32 view_mode;
   int scroll_height;
-  Control *pCVar3;
+  Control *new_ctrl;
   u8 *hotspot_parent2;
   u8 *hotspot_parent;
   u32 hotspot2;
@@ -95,13 +95,13 @@ void __thiscall pedia_update_controls(MediaWindow *this)
         rect2.bottom = this->content_bottom;
         scroll_height = GetSystemMetrics(3);
         rect2.bottom -= scroll_height;
-        pCVar3 = operator_new(0x40);
+        new_ctrl = operator_new(0x40);
         seh_state = 0;
-        if (pCVar3 == (Control *)0x0) {
+        if (new_ctrl == (Control *)0x0) {
           hotspot = 0;
         }
         else {
-          hotspot = hotspot_ctor(pCVar3);
+          hotspot = hotspot_ctor(new_ctrl);
         }
         seh_state = 0xffffffff;
         ((PictureWindow *)this)->list_hotspot = hotspot;
@@ -129,13 +129,13 @@ void __thiscall pedia_update_controls(MediaWindow *this)
         rect2.bottom = this->content_bottom;
         scroll_height = GetSystemMetrics(3);
         rect2.bottom -= scroll_height;
-        pCVar3 = operator_new(0x40);
+        new_ctrl = operator_new(0x40);
         seh_state = 1;
-        if (pCVar3 == (Control *)0x0) {
+        if (new_ctrl == (Control *)0x0) {
           hotspot2 = 0;
         }
         else {
-          hotspot2 = hotspot_ctor(pCVar3);
+          hotspot2 = hotspot_ctor(new_ctrl);
         }
         seh_state = 0xffffffff;
         ((PictureWindow *)this)->list_hotspot = hotspot2;
@@ -352,7 +352,7 @@ HWND __cdecl hyperlink_create_hwnd(int *rect,iptr control)
   iptr parent_wnd;
   iptr height;
   int width;
-  HWND pHVar4;
+  HWND link_hwnd;
   HMENU hMenu;
   HINSTANCE hInstance;
   LPVOID lpParam;
@@ -363,15 +363,15 @@ HWND __cdecl hyperlink_create_hwnd(int *rect,iptr control)
   hInstance = err_report_ctx_block.app_hinstance;
   this = (WndBase *)ctrl_get_parent((Control *)control);
   parent_wnd = wnd_get_window(this);
-  pHVar4 = *(HWND *)(parent_wnd + 4);
+  link_hwnd = *(HWND *)(parent_wnd + 4);
   height = rect_height((iptr)rect);
   width = rect_width((iptr)rect);
-  pHVar4 = CreateWindowExA(4,str_mshypertextclass_2,((i8 *)&hyperlink_window_title_str),0x50000000,*rect,
-                           rect[1],width,height,pHVar4,hMenu,hInstance,lpParam);
-  width = ctrl_init_block(pHVar4,control);
+  link_hwnd = CreateWindowExA(4,str_mshypertextclass_2,((i8 *)&hyperlink_window_title_str),0x50000000,*rect,
+                           rect[1],width,height,link_hwnd,hMenu,hInstance,lpParam);
+  width = ctrl_init_block(link_hwnd,control);
   *(i32 *)(width + 0x2c) = 1;
-  SetWindowLongA(pHVar4,-4,(iptr)hotspot_wndproc);
-  return pHVar4;
+  SetWindowLongA(link_hwnd,-4,(iptr)hotspot_wndproc);
+  return link_hwnd;
 }
 
 /* 00452b89 auto */
@@ -406,7 +406,7 @@ pedia_add_link
   int text_width;
   int max_width;
   uptr len;
-  PediaLinkCtorView *pCVar3;
+  PediaLinkCtorView *new_link;
   int underline_y;
   u8 *parent_wnd2;
   u32 *link;
@@ -425,7 +425,7 @@ pedia_add_link
            (*(int *)(this->advance_sort_keys + list_index * 4 + 400) != item_id))) {
       list_index++;
     }
-    if (this->pedia_advance_count == list_index) goto switchD_00452e28_default;
+    if (this->pedia_advance_count == list_index) goto done;
     break;
   case 1:
     list_index = 0;
@@ -433,14 +433,14 @@ pedia_add_link
            (*(int *)(this->improvement_sort_keys + list_index * 4 + 0x9c) != item_id))) {
       list_index++;
     }
-    if (this->pedia_improve_count == list_index) goto switchD_00452e28_default;
+    if (this->pedia_improve_count == list_index) goto done;
     break;
   case 2:
     for (list_index = 0;
         ((int)list_index < *(int *)(((PictureWindow *)this)->wonder_count) &&
         (*(int *)(((PictureWindow *)this)->pedia_improvement_ids + list_index * 4) != item_id)); list_index++) {
     }
-    if (*(u32 *)(((PictureWindow *)this)->wonder_count) == list_index) goto switchD_00452e28_default;
+    if (*(u32 *)(((PictureWindow *)this)->wonder_count) == list_index) goto done;
     break;
   case 3:
     list_index = 0;
@@ -448,7 +448,7 @@ pedia_add_link
            (*(int *)(((PictureWindow *)this)->unit_ids_tail + list_index * 4 - 4) != item_id))) {
       list_index++;
     }
-    if (*(u32 *)(((PictureWindow *)this)->pedia_unit_count) == list_index) goto switchD_00452e28_default;
+    if (*(u32 *)(((PictureWindow *)this)->pedia_unit_count) == list_index) goto done;
     break;
   case 4:
     list_index = 0;
@@ -456,10 +456,10 @@ pedia_add_link
            (*(int *)(((PictureWindow *)this)->terrain_key_slots + list_index * 4 + 0x6c) != item_id))) {
       list_index++;
     }
-    if (((PictureWindow *)this)->pedia_terrain_count_2 == list_index) goto switchD_00452e28_default;
+    if (((PictureWindow *)this)->pedia_terrain_count_2 == list_index) goto done;
     break;
   default:
-    goto switchD_00452e28_default;
+    goto done;
   }
   while( true ) {
     text_width = font_text_width((GameFont *)((i8 *)&font_size21),(iptr)&map_views_block.text_buffer);
@@ -490,13 +490,13 @@ pedia_add_link
   }
   surface_draw_text((DibSurface *)this,(iptr)&font_size21,(iptr)&map_views_block.text_buffer,x,y,5);
   gfx_set_text_color_index(10);
-  pCVar3 = operator_new(0x48);
+  new_link = operator_new(0x48);
   seh_state = 0;
-  if (pCVar3 == (PediaLinkCtorView *)0x0) {
+  if (new_link == (PediaLinkCtorView *)0x0) {
     link = (u32 *)0x0;
   }
   else {
-    link = (u32 *)pedia_link_ctor(pCVar3);
+    link = (u32 *)pedia_link_ctor(new_link);
   }
   seh_state = 0xffffffff;
   *link = list_index;
@@ -543,7 +543,7 @@ pedia_add_link
     hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)(link + 1),(iptr)pedia_link_on_click_terrain);
   }
   ctrl_show_and_redraw((Control *)(link + 1));
-switchD_00452e28_default:
+done:
   return;
 }
 
@@ -840,7 +840,7 @@ void __thiscall pedia_draw_terrain_page(DocumentWindow *this)
     case 0x18:
       sprite_draw
                 ((Sprite *)((i8 *)&grassland_shield_sprite),(iptr)grass_shield_ctx,(iptr)&pedia_window_block.pedia_window,x2,y2);
-      goto LAB_00490a7d;
+      goto restore_scale_draw_text;
     case 0xe:
     case 0x19:
       sprite_draw
@@ -864,7 +864,7 @@ void __thiscall pedia_draw_terrain_page(DocumentWindow *this)
               ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain3 * 0x78 + resource_variant * 0x3c),(iptr)resource_sprite_ctx,
                (iptr)&pedia_window_block.pedia_window,x2,y2);
   }
-LAB_00490a7d:
+restore_scale_draw_text:
   gfx_set_scale_ratio(scale_num2,scale_den2);
   text_color2 = list_text_color;
   gfx_set_text_color_index(list_text_color);
@@ -2425,7 +2425,7 @@ void __thiscall pedia_draw_item_list(ListPaneWindow *this)
               sprite_draw
                         ((Sprite *)((i8 *)&grassland_shield_sprite),(iptr)grass_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
                          row_y);
-              goto LAB_004f6d04;
+              goto draw_row_text;
             case 0xe:
             case 0x19:
               sprite_draw
@@ -2459,7 +2459,7 @@ void __thiscall pedia_draw_item_list(ListPaneWindow *this)
         default:
           text_append((iptr)&str_this_should_not_happen_2);
         }
-LAB_004f6d04:
+draw_row_text:
         if (icon_mode == 3) {
           dim_a = sprite_width(icon_sprite);
           text_x_off = (dim_a * 3) / 2 + panel_margin_x * 2;

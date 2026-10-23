@@ -315,7 +315,7 @@ uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle
 
 {
   bool use_fallback;
-  UINT UVar2;
+  UINT device_count;
   UINT chosen_device;
   UINT_PTR device;
   uint result;
@@ -328,8 +328,8 @@ uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle
       snd_wave_avg_bytes_per_sec = format[2];
       (*(i32 *)&snd_wave_block_align) = format[3];
     }
-    UVar2 = waveOutGetNumDevs();
-    for (device = 0; (int)device < (int)UVar2; device++) {
+    device_count = waveOutGetNumDevs();
+    for (device = 0; (int)device < (int)device_count; device++) {
       waveOutGetDevCapsA(device,(LPWAVEOUTCAPSA)&default_draw_font_obj_block.snd_wave_dev_caps,0x34);
       if ((default_draw_font_obj_block.snd_wave_dev_formats & 0x20) != 0) {
         use_fallback = false;
@@ -341,7 +341,7 @@ uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle
         use_fallback = true;
       }
     }
-    if ((use_fallback) || (device != UVar2)) {
+    if ((use_fallback) || (device != device_count)) {
       if (use_fallback) {
         snd_wave_format[0] = CONCAT22(1,(i16)snd_wave_format[0]);
         snd_wave_avg_bytes_per_sec = 0x5622;
@@ -374,13 +374,13 @@ uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle
 uint __cdecl snd_wave_close_device(HWAVEOUT wave_out)
 
 {
-  MMRESULT MVar1;
+  MMRESULT close_result;
   i32 result;
   
   result = 0;
   if (snd_wave_device_open != 0) {
-    MVar1 = waveOutClose(wave_out);
-    result = MVar1 & 0xffff;
+    close_result = waveOutClose(wave_out);
+    result = close_result & 0xffff;
   }
   snd_wave_device_open = 0;
   return result;
@@ -402,13 +402,13 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
 
 {
   i16 result;
-  MMRESULT MVar2;
-  DWORD DVar3;
+  MMRESULT mmio_result;
+  DWORD bytes_read;
   int n;
   _MMIOINFO *p_Var5;
   _MMCKINFO *p_Var6;
-  DWORD *pDVar7;
-  FOURCC *pFVar8;
+  DWORD *dst_flags;
+  FOURCC *dst_ckid;
   _MMCKINFO chunk;
   _MMIOINFO mmio_info;
   iptr node2;
@@ -427,19 +427,19 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
   }
   else {
     riff_chunk.fccType = 0x45564157;
-    MVar2 = mmioDescend(mmio,&riff_chunk,(MMCKINFO *)0x0,0x20);
-    if (MVar2 == 0) {
+    mmio_result = mmioDescend(mmio,&riff_chunk,(MMCKINFO *)0x0,0x20);
+    if (mmio_result == 0) {
       chunk.ckid = 0x20746d66;
-      MVar2 = mmioDescend(mmio,&chunk,&riff_chunk,0x10);
-      if (MVar2 == 0) {
+      mmio_result = mmioDescend(mmio,&chunk,&riff_chunk,0x10);
+      if (mmio_result == 0) {
         fmt_size = chunk.cksize;
-        DVar3 = mmioRead(mmio,(HPSTR)&wave_format,chunk.cksize);
-        if (DVar3 == fmt_size) {
+        bytes_read = mmioRead(mmio,(HPSTR)&wave_format,chunk.cksize);
+        if (bytes_read == fmt_size) {
           if ((wave_format.nSamplesPerSec == 0x5622) && (wave_format.wBitsPerSample == 8)) {
             mmioAscend(mmio,&chunk,0);
             chunk.ckid = 0x61746164;
-            MVar2 = mmioDescend(mmio,&chunk,&riff_chunk,0x10);
-            if (MVar2 == 0) {
+            mmio_result = mmioDescend(mmio,&chunk,&riff_chunk,0x10);
+            if (mmio_result == 0) {
               mmioGetInfo(mmio,&mmio_info,0);
               mmioAdvance(mmio,&mmio_info,0);
               mem_handle2 = GlobalAlloc(0x2002,0xbc);
@@ -459,16 +459,16 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
                   source[0x1b] = (FOURCC)mem_handle2;
                   *source = (FOURCC)mmio;
                   p_Var5 = &mmio_info;
-                  pDVar7 = source + 6;
+                  dst_flags = source + 6;
                   for (n = 0x12; n != 0; n--) {
-                    *pDVar7 = p_Var5->dwFlags;
+                    *dst_flags = p_Var5->dwFlags;
                     p_Var5 = (_MMIOINFO *)&p_Var5->fccIOProc;
-                    pDVar7++;
+                    dst_flags++;
                   }
                   p_Var6 = &chunk;
-                  pFVar8 = source;
-                  for (n = 5; pFVar8 = pFVar8 + 1, n != 0; n--) {
-                    *pFVar8 = p_Var6->ckid;
+                  dst_ckid = source;
+                  for (n = 5; dst_ckid = dst_ckid + 1, n != 0; n--) {
+                    *dst_ckid = p_Var6->ckid;
                     p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                   }
                   *(i16 *)((int)source + 0x8a) = (i16)flags;
@@ -525,13 +525,13 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
 
 {
   i16 result;
-  MMRESULT MVar2;
-  DWORD DVar3;
+  MMRESULT mmio_result;
+  DWORD bytes_read;
   int n;
   _MMIOINFO *p_Var5;
   _MMCKINFO *p_Var6;
-  DWORD *pDVar7;
-  FOURCC *pFVar8;
+  DWORD *dst_flags;
+  FOURCC *dst_ckid;
   _MMCKINFO chunk;
   _MMIOINFO mmio_info;
   iptr node2;
@@ -549,19 +549,19 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
   }
   else {
     riff_chunk.fccType = 0x45564157;
-    MVar2 = mmioDescend(file_mmio,&riff_chunk,(MMCKINFO *)0x0,0x20);
-    if (MVar2 == 0) {
+    mmio_result = mmioDescend(file_mmio,&riff_chunk,(MMCKINFO *)0x0,0x20);
+    if (mmio_result == 0) {
       chunk.ckid = 0x20746d66;
-      MVar2 = mmioDescend(file_mmio,&chunk,&riff_chunk,0x10);
-      if (MVar2 == 0) {
+      mmio_result = mmioDescend(file_mmio,&chunk,&riff_chunk,0x10);
+      if (mmio_result == 0) {
         fmt_size = chunk.cksize;
-        DVar3 = mmioRead(file_mmio,(HPSTR)&wave_format,chunk.cksize);
-        if (DVar3 == fmt_size) {
+        bytes_read = mmioRead(file_mmio,(HPSTR)&wave_format,chunk.cksize);
+        if (bytes_read == fmt_size) {
           if ((wave_format.nSamplesPerSec == 0x5622) && (wave_format.wBitsPerSample == 8)) {
             mmioAscend(file_mmio,&chunk,0);
             chunk.ckid = 0x61746164;
-            MVar2 = mmioDescend(file_mmio,&chunk,&riff_chunk,0x10);
-            if (MVar2 == 0) {
+            mmio_result = mmioDescend(file_mmio,&chunk,&riff_chunk,0x10);
+            if (mmio_result == 0) {
               _memset(&mmio_info,0,0x48);
               mmio_info.cchBuffer = snd_wave_total_buffer_bytes;
               mmio_info.fccIOProc = 0x204d454d;
@@ -593,16 +593,16 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
                     *source = (FOURCC)mem_mmio;
                     source[0x18] = (FOURCC)file_mmio;
                     p_Var5 = &mmio_info;
-                    pDVar7 = source + 6;
+                    dst_flags = source + 6;
                     for (n = 0x12; n != 0; n--) {
-                      *pDVar7 = p_Var5->dwFlags;
+                      *dst_flags = p_Var5->dwFlags;
                       p_Var5 = (_MMIOINFO *)&p_Var5->fccIOProc;
-                      pDVar7++;
+                      dst_flags++;
                     }
                     p_Var6 = &chunk;
-                    pFVar8 = source;
-                    for (n = 5; pFVar8 = pFVar8 + 1, n != 0; n--) {
-                      *pFVar8 = p_Var6->ckid;
+                    dst_ckid = source;
+                    for (n = 5; dst_ckid = dst_ckid + 1, n != 0; n--) {
+                      *dst_ckid = p_Var6->ckid;
                       p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                     }
                     source[0x1c] = source[0x1c] | 4;
@@ -658,7 +658,7 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
   i32 result;
   int n;
   _MMIOINFO *p_Var3;
-  DWORD *pDVar4;
+  DWORD *dst_flags;
   _MMIOINFO mmio_info;
   WAVEFORMATEX wave_format;
   i32 *source;
@@ -738,11 +738,11 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
             source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
             *source = mmio;
             p_Var3 = &mmio_info;
-            pDVar4 = source + 6;
+            dst_flags = source + 6;
             for (n = 0x12; n != 0; n--) {
-              *pDVar4 = p_Var3->dwFlags;
+              *dst_flags = p_Var3->dwFlags;
               p_Var3 = (_MMIOINFO *)&p_Var3->fccIOProc;
-              pDVar4++;
+              dst_flags++;
             }
             source[1] = stream_info.fccType;
             source[2] = total_bytes;
@@ -1325,7 +1325,7 @@ void __cdecl snd_wave_set_buffer_count(uint count)
 i32 __cdecl snd_wave_write_pending(iptr buffer)
 
 {
-  MMRESULT MVar1;
+  MMRESULT write_result;
   uint i;
   uint result;
   byte *sample;
@@ -1337,14 +1337,14 @@ i32 __cdecl snd_wave_write_pending(iptr buffer)
       *sample = *sample ^ 0x80;
       sample++;
     }
-    MVar1 = waveOutWrite((*(HWAVEOUT *)&snd_wave_out_handle),*(LPWAVEHDR *)buffer,0x20);
-    result = (result & 0xffff0000 | (ushort)((short)MVar1));
-    if ((short)MVar1 == 0) {
+    write_result = waveOutWrite((*(HWAVEOUT *)&snd_wave_out_handle),*(LPWAVEHDR *)buffer,0x20);
+    result = (result & 0xffff0000 | (ushort)((short)write_result));
+    if ((short)write_result == 0) {
       *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 0x20;
       *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffbf;
     }
     else {
-      if ((MVar1 & 0xffff) != 0x21) {
+      if ((write_result & 0xffff) != 0x21) {
         snd_waveout_error_box(result);
       }
       *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
@@ -1360,7 +1360,7 @@ i32 __cdecl snd_wave_write_pending(iptr buffer)
 void __cdecl snd_wave_stop_all(void)
 
 {
-  BOOL BVar1;
+  BOOL got_msg;
   tagMSG msg;
   iptr source;
   uint i;
@@ -1372,7 +1372,7 @@ void __cdecl snd_wave_stop_all(void)
   source = snd_wave_sources;
   if ((*(HWAVEOUT *)&snd_wave_out_handle) != (HWAVEOUT)0x0) {
     waveOutReset((*(HWAVEOUT *)&snd_wave_out_handle));
-    while (BVar1 = PeekMessageA(&msg,(*(HWND *)&snd_wave_notify_hwnd),0x3bd,0x3bd,1), BVar1 != 0) {
+    while (got_msg = PeekMessageA(&msg,(*(HWND *)&snd_wave_notify_hwnd),0x3bd,0x3bd,1), got_msg != 0) {
       snd_stop_drained_msg_count_i32++;
     }
     while (source != 0) {
@@ -1457,7 +1457,7 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
   i16 sound_id;
   i32 *hdr;
   int src;
-  MMRESULT MVar5;
+  MMRESULT write_result;
   iptr first_source;
   i32 *source;
   uint i;
@@ -1531,9 +1531,9 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
             *sample = *sample ^ 0x80;
             sample++;
           }
-          MVar5 = waveOutWrite(wave_out,(LPWAVEHDR)*buffer,0x20);
-          result = (result & 0xffff0000 | (ushort)((short)MVar5));
-          if ((short)MVar5 == 0) {
+          write_result = waveOutWrite(wave_out,(LPWAVEHDR)*buffer,0x20);
+          result = (result & 0xffff0000 | (ushort)((short)write_result));
+          if ((short)write_result == 0) {
             buffer[3] = buffer[3] & 0xffffffbf;
             buffer[3] = buffer[3] | 0x20;
             buffer[3] = buffer[3] & 0xfffffff7;
@@ -2167,7 +2167,7 @@ void __cdecl snd_system_init(void)
 LRESULT __stdcall snd_mci_notify_wndproc(HWND hwnd,UINT msg,WPARAM wparam,uint lparam)
 
 {
-  LRESULT LVar1;
+  LRESULT ret;
   
   if (msg == 0x3b9) {
     if (wparam == 1) {
@@ -2178,12 +2178,12 @@ LRESULT __stdcall snd_mci_notify_wndproc(HWND hwnd,UINT msg,WPARAM wparam,uint l
         snd_cd_fire_notify_callback();
       }
     }
-    LVar1 = 0;
+    ret = 0;
   }
   else {
-    LVar1 = DefWindowProcA(hwnd,msg,wparam,lparam);
+    ret = DefWindowProcA(hwnd,msg,wparam,lparam);
   }
-  return LVar1;
+  return ret;
 }
 
 /* 005dda11 auto */
@@ -2198,7 +2198,7 @@ void __cdecl snd_stop_sndplaysound(void)
 i32 __cdecl snd_cd_play_track(uint track)
 
 {
-  MCIERROR MVar1;
+  MCIERROR mci_result;
   i32 result;
   MCI_PLAY_PARMS play_parms;
   DWORD_PTR play_flags;
@@ -2218,8 +2218,8 @@ i32 __cdecl snd_cd_play_track(uint track)
   }
   seek_parms.dwCallback = 0;
   seek_parms.dwTo = track & 0xff;
-  MVar1 = mciSendCommandA(device_id,0x807,8,(DWORD_PTR)&seek_parms);
-  if (MVar1 == 0) {
+  mci_result = mciSendCommandA(device_id,0x807,8,(DWORD_PTR)&seek_parms);
+  if (mci_result == 0) {
     if ((track & 0xff) == (*(uint *)&snd_cd_track_count)) {
       play_flags = 5;
     }
@@ -2229,19 +2229,19 @@ i32 __cdecl snd_cd_play_track(uint track)
     play_parms.dwFrom = track & 0xff;
     play_parms.dwTo = (uint)(byte)((char)track + 1);
     play_parms.dwCallback = (*(i32 *)&err_report_ctx_block.snd_mci_notify_hwnd);
-    MVar1 = mciSendCommandA(device_id,0x806,play_flags,(DWORD_PTR)&play_parms);
-    if (MVar1 == 0) {
+    mci_result = mciSendCommandA(device_id,0x806,play_flags,(DWORD_PTR)&play_parms);
+    if (mci_result == 0) {
       result = 1;
     }
     else {
       snd_cd_close();
-      dbg_logf((iptr)&str_failed_to_play_requested_cd_track_2,MVar1);
+      dbg_logf((iptr)&str_failed_to_play_requested_cd_track_2,mci_result);
       result = 0;
     }
   }
   else {
     snd_cd_close();
-    dbg_logf((iptr)&str_failed_to_play_requested_cd_track,MVar1);
+    dbg_logf((iptr)&str_failed_to_play_requested_cd_track,mci_result);
     result = 0;
   }
   return result;
@@ -2262,19 +2262,19 @@ void __cdecl snd_midi_close(void)
 void __cdecl snd_cd_open(void)
 
 {
-  MCIERROR MVar1;
+  MCIERROR mci_result;
   MCI_OPEN_PARMSA open_parms;
   MCI_SET_PARMS set_parms;
   MCI_STATUS_PARMS status_parms;
   
   if (snd_cd_device_id == 0) {
     open_parms.lpstrDeviceType = str_cdaudio;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)&open_parms);
-    if (MVar1 == 0) {
+    mci_result = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)&open_parms);
+    if (mci_result == 0) {
       snd_cd_device_id = open_parms.wDeviceID;
       set_parms.dwTimeFormat = 10;
-      MVar1 = mciSendCommandA(open_parms.wDeviceID,0x80d,0x400,(DWORD_PTR)&set_parms);
-      if (MVar1 == 0) {
+      mci_result = mciSendCommandA(open_parms.wDeviceID,0x80d,0x400,(DWORD_PTR)&set_parms);
+      if (mci_result == 0) {
         status_parms.dwCallback = 0;
         status_parms.dwReturn = 0;
         status_parms.dwTrack = 0;
@@ -2285,11 +2285,11 @@ void __cdecl snd_cd_open(void)
       else {
         mciSendCommandA(snd_cd_device_id,0x804,0,0);
         snd_cd_device_id = 0;
-        dbg_logf((iptr)&str_cdaudio_could_not_set_time_format,MVar1);
+        dbg_logf((iptr)&str_cdaudio_could_not_set_time_format,mci_result);
       }
     }
     else {
-      dbg_logf((iptr)&str_failed_to_open_cdaudio_device,MVar1);
+      dbg_logf((iptr)&str_failed_to_open_cdaudio_device,mci_result);
     }
   }
   return;
@@ -2333,7 +2333,7 @@ void __cdecl snd_system_shutdown(void)
 i32 __cdecl snd_cd_get_track_count(void)
 
 {
-  MCIERROR MVar1;
+  MCIERROR mci_result;
   MCI_OPEN_PARMSA open_parms;
   MCIDEVICEID device_id;
   MCI_SET_PARMS set_parms;
@@ -2342,15 +2342,15 @@ i32 __cdecl snd_cd_get_track_count(void)
   
   if (snd_cd_device_id == 0) {
     open_parms.lpstrDeviceType = str_cdaudio_2;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)&open_parms);
-    if (MVar1 != 0) {
+    mci_result = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)&open_parms);
+    if (mci_result != 0) {
       return 0xffffffff;
     }
     device_id = open_parms.wDeviceID;
     snd_cd_device_id = open_parms.wDeviceID;
     set_parms.dwTimeFormat = 10;
-    MVar1 = mciSendCommandA(open_parms.wDeviceID,0x80d,0x400,(DWORD_PTR)&set_parms);
-    if (MVar1 != 0) {
+    mci_result = mciSendCommandA(open_parms.wDeviceID,0x80d,0x400,(DWORD_PTR)&set_parms);
+    if (mci_result != 0) {
       mciSendCommandA(device_id,0x804,0,0);
       snd_cd_device_id = 0;
       return 0xffffffff;
@@ -2360,8 +2360,8 @@ i32 __cdecl snd_cd_get_track_count(void)
     device_id = snd_cd_device_id;
   }
   status_parms.dwItem = 3;
-  MVar1 = mciSendCommandA(device_id,0x814,0x100,(DWORD_PTR)&status_parms);
-  if (MVar1 == 0) {
+  mci_result = mciSendCommandA(device_id,0x814,0x100,(DWORD_PTR)&status_parms);
+  if (mci_result == 0) {
     track_count = status_parms.dwReturn;
     snd_cd_track_count = track_count;
   }
@@ -3080,8 +3080,8 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
   short thumb_pos;
   i32 result;
   iptr window;
-  WndBase *pCVar4;
-  BOOL BVar5;
+  WndBase *wnd_obj;
+  BOOL is_iconic;
   int value;
   i8 generic_parms[4];
   int frame_height;
@@ -3111,19 +3111,19 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
       default:
-        goto switchD_005ecda6_caseD_4;
+        goto default_wndproc;
       case 5:
-switchD_005ecda6_caseD_5:
+handle_size:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        BVar5 = IsIconic(hwnd);
-        if (BVar5 == 0) {
+        is_iconic = IsIconic(hwnd);
+        if (is_iconic == 0) {
           wnd_on_size_nop(wnd2,lparam & 0xffff,lparam >> 0x10);
           wnd_call_size((WndOnSizeView *)(wnd2->handlers),wparam);
         }
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
       case 6:
-        goto switchD_005ecda6_caseD_6;
+        goto handle_mci;
       case 7:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_setfocus((WndOnSetFocusView *)(wnd2->handlers));
@@ -3158,7 +3158,7 @@ switchD_005ecda6_caseD_5:
         *(int *)(minmax_info + 0x1c) = frame_height + min_height2;
         return 0;
       }
-switchD_005ecda6_caseD_4:
+default_wndproc:
       result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
       return result;
     }
@@ -3186,7 +3186,7 @@ switchD_005ecda6_caseD_4:
         wnd_call_char((WndOnCharView *)(wnd2->handlers),wparam & 0xff);
         return 0;
       }
-      goto switchD_005ecda6_caseD_4;
+      goto default_wndproc;
     }
     if (msg < 0x201) {
       if (msg == 0x200) {
@@ -3316,7 +3316,7 @@ switchD_005ecda6_caseD_4:
           return 0;
         }
       }
-      goto switchD_005ecda6_caseD_4;
+      goto default_wndproc;
     }
     if (msg < 0x211) {
       if (msg == 0x210) {
@@ -3336,8 +3336,8 @@ switchD_005ecda6_caseD_4:
       }
       switch(msg) {
       case 0x201:
-        pCVar4 = (WndBase *)GetWindowLongA(hwnd,0);
-        parent_window = wnd_get_window(pCVar4);
+        wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
+        parent_window = wnd_get_window(wnd_obj);
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
           SetFocus(*(HWND *)(parent_window + 4));
@@ -3369,8 +3369,8 @@ switchD_005ecda6_caseD_4:
                   ((WndOnDblClickView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x204:
-        pCVar4 = (WndBase *)GetWindowLongA(hwnd,0);
-        parent_window = wnd_get_window(pCVar4);
+        wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
+        parent_window = wnd_get_window(wnd_obj);
         if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
           SetFocus(*(HWND *)(parent_window + 4));
           BringWindowToTop(hwnd);
@@ -3397,7 +3397,7 @@ switchD_005ecda6_caseD_4:
                   ((WndOnRButtonUpRawView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
-      goto switchD_005ecda6_caseD_4;
+      goto default_wndproc;
     }
     if ((msg != 0x30f) && (msg != 0x311)) {
       if (msg == 0x3b9) {
@@ -3405,11 +3405,11 @@ switchD_005ecda6_caseD_4:
           wnd_call_mci_done(wnd2);
           return 0;
         }
-        goto switchD_005ecda6_caseD_5;
+        goto handle_size;
       }
-      goto switchD_005ecda6_caseD_4;
+      goto default_wndproc;
     }
-switchD_005ecda6_caseD_6:
+handle_mci:
     mci_device2 = wnd_get_mci_device((WndMciDeviceView *)wnd2);
     if (mci_device2 == 0) {
       result = wnd_base_wndproc(hwnd,msg,wparam,lparam);

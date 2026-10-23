@@ -1720,7 +1720,7 @@ void __cdecl map_window_ascii(uint key)
       city_window_exit_clicked(0);
       break;
     default:
-      goto switchD_00412142_caseD_e;
+      goto default_key;
     case 0x41:
     case 0x43:
     case 0x61:
@@ -1753,7 +1753,7 @@ void __cdecl map_window_ascii(uint key)
     }
   }
   else {
-switchD_00412142_caseD_e:
+default_key:
     mapview_cancel_drag();
     result = ui_paradrop_cursor_active();
     if ((result == 0) || (mapviews_reset_cursor(), (char)key != 'p')) {
@@ -1851,7 +1851,7 @@ switchD_00412142_caseD_e:
 void __cdecl map_window_key(int cmd)
 
 {
-  SHORT SVar1;
+  SHORT shift_state;
   int result;
   uptr move_dir;
   
@@ -1984,7 +1984,7 @@ void __cdecl map_window_key(int cmd)
   else if (cmd < 0x355) {
     if (cmd == 0x354) {
       if ((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
-         (SVar1 = GetAsyncKeyState(0x10), (char)((ushort)SVar1 >> 8) == '\0')) {
+         (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) == '\0')) {
         council_show(human_civ[0],0);
       }
       else {
@@ -2084,11 +2084,11 @@ void __cdecl map_window_key(int cmd)
     }
   }
   if (((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0'))
-  goto switchD_00412ef0_default;
+  goto dispatch_move_dir;
   if (cmd < 0x332) {
     if (cmd == 0x331) {
       tech_editor_run();
-      goto switchD_00412ef0_default;
+      goto dispatch_move_dir;
     }
     switch(cmd) {
     case 0x1b0:
@@ -2114,7 +2114,7 @@ void __cdecl map_window_key(int cmd)
       break;
     case 0x1b7:
       cheat_terrain_saved_bits = 0xffffffff;
-      goto switchD_00412f3a_caseD_3b7;
+      goto cheat_terrain_change;
     case 0x1b8:
       cheat_change_money();
     }
@@ -2164,11 +2164,11 @@ void __cdecl map_window_key(int cmd)
       cheat_edit_technologies();
       break;
     case 0x3b7:
-switchD_00412f3a_caseD_3b7:
+cheat_terrain_change:
       cheat_change_terrain();
     }
   }
-switchD_00412ef0_default:
+dispatch_move_dir:
   switch(cmd) {
   case 0xa1:
   case 199:
@@ -3521,31 +3521,31 @@ i32 __cdecl map_road_connection(iptr civ,int x,int y,int x2,int y2)
       blocked = true;
       while( true ) {
         dir = map_path_next_dir(x3,y3,99);
-        if ((dir < 0) || (dir == 8)) goto LAB_00488ca7;
+        if ((dir < 0) || (dir == 8)) goto finish_road_check;
         x3 = map_wrap_x((char)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x3);
         y3 += (char)(((i8 *)&dir_dy_table_block.dir_dy_table))[dir];
         dir = map_in_bounds(x3,y3);
-        if (dir == 0) goto LAB_00488ca7;
+        if (dir == 0) goto finish_road_check;
         if ((x3 == x2) && (y3 == y2)) break;
         dir = tile_city_owner(x3,y3);
         if (civ == dir) {
           blocked = false;
-          goto LAB_00488ca7;
+          goto finish_road_check;
         }
         if ((((-1 < dir) && ((*(byte *)&civs[civ].treaties[dir] & 8) == 0)) ||
             ((dir = tile_city_or_unit_owner(x3,y3), 0 < dir &&
              ((civ != dir && ((*(byte *)&civs[civ].treaties[dir] & 8) == 0))))
             )) || (improvements2 = tile_improvements(x3,y3), (improvements2 & 0x10) == 0))
-        goto LAB_00488ca7;
+        goto finish_road_check;
         improvements2 = tile_improvements(x3,y3);
         if ((improvements2 & 0x20) == 0) {
           all_railroad = false;
         }
         steps++;
-        if (0x32 < steps) goto LAB_00488ca7;
+        if (0x32 < steps) goto finish_road_check;
       }
       blocked = false;
-LAB_00488ca7:
+finish_road_check:
       path_road_planning = 0;
       path_roads_only = 0;
       if (blocked) {
@@ -3761,7 +3761,7 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
               new_cost = cost;
               if (-1 < path_owner_civ) {
                 civ = tile_city_or_unit_owner(x2,y2);
-                if ((-1 < civ) && (path_owner_civ != civ)) goto LAB_004ac32b;
+                if ((-1 < civ) && (path_owner_civ != civ)) goto next_neighbor;
                 if ((path_owner_civ == civ) &&
                    ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 &&
                      (impr_bits = tile_improvements(x2,y2), ((byte)impr_bits & 0x43) == 1)) &&
@@ -3787,7 +3787,7 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
                   new_cost += 4;
                 }
                 else {
-                  if (path_roads_only != 0) goto LAB_004ac32b;
+                  if (path_roads_only != 0) goto next_neighbor;
                   if ((((cur_tile_flags & 0x80) != 0) &&
                       (tile = (byte *)tile_at(x2,y2), (*tile & 0x80) != 0)) &&
                      (check = map_dx_wrapped(y3,x2), check == 1)) {
@@ -3799,7 +3799,7 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
                     }
                     if (abs_dy == 1) {
                       new_cost += 4;
-                      goto LAB_004ac755;
+                      goto apply_road_bonus;
                     }
                   }
                   if (uses_terrain_cost) {
@@ -3815,7 +3815,7 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
               else {
                 new_cost += 4;
               }
-LAB_004ac755:
+apply_road_bonus:
               if (((unit_types[path_unit_type].flags & 0x20) != 0) &&
                  (tile = (byte *)tile_at(x2,y2), (*tile & 0x40) != 0)) {
                 new_cost += (uint)cosmic.road_move_mult * 4;
@@ -3829,17 +3829,17 @@ LAB_004ac755:
                 if (0x8ff < map_views_block.path_queue_tail) {
                   map_views_block.path_queue_tail = 0;
                 }
-                if (map_views_block.path_queue_head == map_views_block.path_queue_tail) goto LAB_004ac850;
+                if (map_views_block.path_queue_head == map_views_block.path_queue_tail) goto flood_done;
               }
             }
           }
-LAB_004ac32b: ;
+next_neighbor: ;
         }
       }
       map_views_block.path_result_cost = nb_x;
     } while ((map_views_block.path_queue_head != map_views_block.path_queue_tail) && (map_views_block.path_queue_head != 0));
   }
-LAB_004ac850:
+flood_done:
   best_dir = -1;
   if (map_views_block.path_result_cost < max_cost) {
     best_cost = 19999;
@@ -3908,7 +3908,7 @@ LAB_004ac850:
                   step_cost = 4;
                 }
                 else {
-                  if (path_roads_only != 0) goto LAB_004ac936;
+                  if (path_roads_only != 0) goto next_neighbor_back;
                   if ((((cur_tile_flags & 0x80) != 0) &&
                       (tile = (byte *)tile_at(x3,y3), (*tile & 0x80) != 0)) &&
                      (y2 = map_dx_wrapped(x,x3), y2 == 1)) {
@@ -3920,7 +3920,7 @@ LAB_004ac850:
                     }
                     if (abs_dy2 == 1) {
                       step_cost = 4;
-                      goto LAB_004acce1;
+                      goto apply_step_road_bonus;
                     }
                   }
                   if (uses_terrain_cost) {
@@ -3935,7 +3935,7 @@ LAB_004ac850:
               else {
                 step_cost = 4;
               }
-LAB_004acce1:
+apply_step_road_bonus:
               if (((unit_types[path_unit_type].flags & 0x20) != 0) &&
                  (tile = (byte *)tile_at(x3,y3), (*tile & 0x40) != 0)) {
                 step_cost += (uint)cosmic.road_move_mult * 4;
@@ -3972,7 +3972,7 @@ LAB_004acce1:
           }
         }
       }
-LAB_004ac936: ;
+next_neighbor_back: ;
     }
   }
   if (best_dir < 0) {
@@ -6146,7 +6146,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
         now = timeGetTime();
         if ((2 < game.multiplayer) &&
            (net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0), net_session_block.nm_abort_kaboom_count != 0))
-        goto LAB_0057f5f8;
+        goto explosion_cleanup;
       } while ((int)(now - last_time) < 0x40);
       last_time = now;
       for (view = 0; view < 8; view++) {
@@ -6159,7 +6159,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
       }
     }
     ui_delay_ticks(10);
-LAB_0057f5f8:
+explosion_cleanup:
     gfx_reset_zoom_scale();
     net_session_block.map_redraw_busy = 0;
     seh_state = 0xffffffff;
@@ -6803,17 +6803,17 @@ Tile * __cdecl tile_at(iptr x,iptr y)
 
 {
   int in_bounds;
-  Tile *pTVar2;
+  Tile *tile;
   
   in_bounds = map_in_bounds(x,y);
   if (in_bounds == 0) {
-    pTVar2 = &map_offmap_tile;
+    tile = &map_offmap_tile;
   }
   else {
-    pTVar2 = (Tile *)(&map_tiles->terrain +
+    tile = (Tile *)(&map_tiles->terrain +
                      ((int)map.width & 0xfffffffeU) * y * 3 + (x & 0xfffffffeU) * 3);
   }
-  return pTVar2;
+  return tile;
 }
 
 /* 005b898b auto */

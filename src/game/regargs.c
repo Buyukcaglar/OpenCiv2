@@ -1,16 +1,14 @@
 /*
- * Functions the generator flagged as taking a register argument (in_EAX,
- * in_AL, in_ECX).  For most of them the "argument" is only a decompiler
- * artifact:
+ * Functions whose decompiled form took a register argument.  It was only a
+ * decompiler artifact:
  *
- *   in_EAX  - the function returns a byte (or nothing) and the upper bits of
- *             EAX on some path are whatever the caller left there.  The
- *             naked stub hands the incoming EAX to the body so the returned
- *             EAX is bit-for-bit the original.
- *   in_AL   - an asm loop keeps the current audio sample in AL and may store
- *             it before loading the first one; the stub passes AL through.
- *   in_ECX  - the CRT strrchr (0x005f3c10) is typed __thiscall by Ghidra;
- *             it is really a plain __cdecl function and ECX is unused.
+ *   EAX  - the function returns a byte (or nothing) and the upper bits of
+ *          EAX on some path are whatever the caller left there; the callers
+ *          never look at them, so they are 0 here.
+ *   AL   - an asm loop keeps the current audio sample in AL and may store
+ *          it before loading the first one; it starts at 0 here.
+ *   ECX  - the CRT strrchr (0x005f3c10) is typed __thiscall by Ghidra;
+ *          it is really a plain __cdecl function and ECX is unused.
  */
 #include "game.h"
 
@@ -25,14 +23,13 @@ typedef int (__stdcall *com_fn2)(int *, int);
 /* ------------------------------------------------------------------------ */
 
 /* 0x0043d289: set (on != 0) or clear improvement bit `impr` (1..34) of a
- * city.  Really void; EAX ends up as city*11 or, if impr is out of range,
- * whatever the caller had in it. */
-int __cdecl regargs_0043d289(int eax_in, int city, int impr, int on)
+ * city.  Really void; EAX ends up as city*11 (0 if impr is out of range). */
+int __cdecl city_set_improvement(int city, int impr, int on)
 {
     int index, mask;
 
     if (impr <= 0 || impr >= 0x23)
-        return eax_in;
+        return 0;
     bit_index_split(impr, &index, &mask);
     if (on != 0)
         cities[city].improvements[index] |= (byte)mask;
@@ -41,71 +38,49 @@ int __cdecl regargs_0043d289(int eax_in, int city, int impr, int on)
     return city * 0xb;
 }
 
-int __cdecl city_set_improvement(int city, int impr, int on)
-{
-    /* Native builds: the register input only ever mattered as leftover state. */
-    return (int)regargs_0043d289(0, city, impr, on);
-}
-
 /* ------------------------------------------------------------------------ */
 
 /* 0x005ea578: surface->GetFlipStatus(DDGFS_CANFLIP) == DD_OK (result in AL). */
-uint __cdecl regargs_005ea578(uint eax_in, int *surface)
+uint __cdecl ddsurf_iface_can_flip(int *surface)
 {
     uint hr;
 
     if (surface == NULL)
-        return eax_in & 0xffffff00;
+        return 0;
     hr = COM_METHOD(surface, com_fn2, 0x48)(surface, 1);
     if (hr == 0)
         return 1;
     return hr & 0xffffff00;
 }
 
-uint __cdecl ddsurf_iface_can_flip(int *surface)
-{
-    /* Native builds: the register input only ever mattered as leftover state. */
-    return (uint)regargs_005ea578(0, surface);
-}
-
 /* 0x005ea677: IDirectDraw::GetVerticalBlankStatus; AL = in vertical blank
  * (0 on failure or without DirectDraw). */
-uint __cdecl regargs_005ea677(uint eax_in)
+uint __cdecl ddraw_get_vblank_status(void)
 {
+    int *ddraw = (int *)g_ddraw;
     uint hr;
     int in_vblank;
 
-    if ((*(int * *)&g_ddraw) == NULL)
-        return eax_in & 0xffffff00;
-    hr = COM_METHOD((*(int * *)&g_ddraw), com_fn2, 0x44)((*(int * *)&g_ddraw), (iptr)&in_vblank);
+    if (ddraw == NULL)
+        return 0;
+    hr = COM_METHOD(ddraw, com_fn2, 0x44)(ddraw, (iptr)&in_vblank);
     if (hr != 0)
         return hr & 0xffffff00;
     return (byte)in_vblank;
 }
 
-uint __cdecl ddraw_get_vblank_status(void)
-{
-    /* Native builds: the register input only ever mattered as leftover state. */
-    return (uint)regargs_005ea677(0);
-}
-
 /* 0x005ef58e: IDirectDraw::RestoreDisplayMode; AL = succeeded. */
-uint __cdecl regargs_005ef58e(uint eax_in)
+uint __cdecl ddraw_restore_display_mode(void)
 {
+    int *ddraw = (int *)g_ddraw;
     uint hr;
 
-    if ((*(int * *)&g_ddraw) == NULL)
-        return eax_in & 0xffffff00;
-    hr = COM_METHOD((*(int * *)&g_ddraw), com_fn1, 0x4c)((*(int * *)&g_ddraw));
+    if (ddraw == NULL)
+        return 0;
+    hr = COM_METHOD(ddraw, com_fn1, 0x4c)(ddraw);
     if (hr != 0)
         return hr & 0xffffff00;
     return 1;
-}
-
-uint __cdecl ddraw_restore_display_mode(void)
-{
-    /* Native builds: the register input only ever mattered as leftover state. */
-    return (uint)regargs_005ef58e(0);
 }
 
 /* ------------------------------------------------------------------------ */
@@ -114,17 +89,17 @@ uint __cdecl ddraw_restore_display_mode(void)
  * Sample-rate conversion of 8-bit unsigned audio into signed samples.  Each
  * of `count` steps (count 0 means 2^32) reads `src_step` source bytes and
  * emits `dst_step` output bytes, interleaved one read / one write at a time;
- * each output is the most recently read sample (initially AL).  Returns the
+ * each output is the most recently read sample (initially 0).  Returns the
  * number of source bytes consumed.
  */
 
 /* 0x005edc6c: store the samples. */
-int __cdecl regargs_005edc6c(uint al_in, byte *dst, byte *src, uint count,
-                             uint src_step, uint dst_step)
+short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count,
+                                i32 src_step, i32 dst_step)
 {
     uint n = (ushort)count;
     int nread = 0;
-    byte sample = (byte)al_in;
+    byte sample = 0;
     byte reads, writes;
 
     do {
@@ -144,23 +119,17 @@ int __cdecl regargs_005edc6c(uint al_in, byte *dst, byte *src, uint count,
             }
         }
     } while (--n != 0);
-    return nread;
-}
-
-short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count,
-                                                  i32 src_step, i32 dst_step)
-{
-    /* Native builds: the register input only ever mattered as leftover state. */
-    return (short)regargs_005edc6c(0, dst, src, count, src_step, dst_step);
+    return (short)nread;
 }
 
 /* 0x005edcac: mix the samples into dst with signed saturation. */
-int __cdecl regargs_005edcac(uint al_in, signed char *dst, byte *src, uint count,
-                             uint src_step, uint dst_step)
+short __cdecl snd_mix_8bit_resample(char *dst_chars, byte *src, uint count,
+                                    i32 src_step, i32 dst_step)
 {
+    signed char *dst = (signed char *)dst_chars;
     uint n = (ushort)count;
     int nread = 0;
-    signed char sample = (signed char)al_in;
+    signed char sample = 0;
     byte reads, writes;
     int sum;
 
@@ -186,14 +155,7 @@ int __cdecl regargs_005edcac(uint al_in, signed char *dst, byte *src, uint count
             }
         }
     } while (--n != 0);
-    return nread;
-}
-
-short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
-                                                  i32 src_step, i32 dst_step)
-{
-    /* Native builds: the register input only ever mattered as leftover state. */
-    return (short)regargs_005edcac(0, dst, src, count, src_step, dst_step);
+    return (short)nread;
 }
 
 /* ------------------------------------------------------------------------ */

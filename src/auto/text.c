@@ -117,14 +117,14 @@ iptr __cdecl file_build_open_path(iptr dest,i32 name2)
 FILE * __cdecl file_open_path(iptr name2,iptr mode)
 
 {
-  FILE *pFVar1;
+  FILE *file;
   char path[136];
   
   file_build_open_path((iptr)path,name2);
   crt_strcpy(((i8 *)&error_last_open_path),path);
-  pFVar1 = _fopen(path,(char *)mode);
-  (*(uint *)&error_last_open_failed) = (uint)(pFVar1 == (FILE *)0x0);
-  return pFVar1;
+  file = _fopen(path,(char *)mode);
+  (*(uint *)&error_last_open_failed) = (uint)(file == (FILE *)0x0);
+  return file;
 }
 
 /* 00415133 auto */
@@ -864,7 +864,7 @@ int __cdecl text_open_file_section(int filename,int section)
       section_offset = text_section_index_lookup((iptr)name2,(iptr)section_tag);
     }
     __chdir(saved_cwd);
-    if (text_file_handle == (FILE *)0x0) goto LAB_004a2348;
+    if (text_file_handle == (FILE *)0x0) goto close_if_failed;
   }
   if (section == 0) {
     result = 0;
@@ -876,7 +876,7 @@ int __cdecl text_open_file_section(int filename,int section)
     found = false;
     while (!found) {
       if ((CRT_FEOF(text_file_handle)) != 0) {
-        if (!allow_rewind) goto LAB_004a2348;
+        if (!allow_rewind) goto close_if_failed;
         allow_rewind = false;
         _rewind(text_file_handle);
       }
@@ -894,7 +894,7 @@ int __cdecl text_open_file_section(int filename,int section)
     (*(i8 * *)&map_views_block.text_line_cursor) = ((i8 *)&map_views_block.text_buffer) + len;
     result = 0;
   }
-LAB_004a2348:
+close_if_failed:
   if (result != 0) {
     text_close_file();
   }
@@ -1547,7 +1547,7 @@ i8 * __cdecl file_find_fallback_drive(iptr filename)
 
 {
   UINT uMode;
-  DWORD DVar1;
+  DWORD drive_mask;
   i8 *result;
   int drive;
   _OFSTRUCT of_struct;
@@ -1558,13 +1558,13 @@ i8 * __cdecl file_find_fallback_drive(iptr filename)
   HFILE hfile;
   
   uMode = SetErrorMode(1);
-  DVar1 = GetLogicalDrives();
+  drive_mask = GetLogicalDrives();
   GetLogicalDriveStringsA(0x100,drive_strings);
   drive_root = drive_strings;
   drive = 0;
   do {
     if (0x19 < drive) {
-LAB_005646e1:
+restore_error_mode:
       SetErrorMode(uMode);
       if (setup_picwnd_block.fallback_drive_root[0] == '\0') {
         result = (i8 *)0x0;
@@ -1575,7 +1575,7 @@ LAB_005646e1:
       return result;
     }
     drive_bit = 1 << ((byte)drive & 0x1f);
-    if ((DVar1 & drive_bit) != 0) {
+    if ((drive_mask & drive_bit) != 0) {
       drive_type = GetDriveTypeA(drive_root);
       if (drive_type == 3) {
         text_clear();
@@ -1586,7 +1586,7 @@ LAB_005646e1:
         setup_picwnd_block.fallback_drive_root[0] = *drive_root;
         setup_picwnd_block.fallback_drive_root_end = 0;
         str_append((iptr)&setup_picwnd_block.fallback_drive_root,(iptr)&str_empty_173);
-        goto LAB_005646e1;
+        goto restore_error_mode;
       }
       for (; *drive_root != '\0'; drive_root++) {
       }
@@ -1743,7 +1743,7 @@ i32 __cdecl file_read_nth_line(iptr dest,iptr filename,int line_num)
   if (_File != (FILE *)0x0) {
     for (i = 1; i <= line_num; i++) {
       if (((CRT_FEOF(_File)) != 0) ||
-         (line = _fgets(line_buf,0x4c,_File), line == (char *)0x0)) goto LAB_0058a0bc;
+         (line = _fgets(line_buf,0x4c,_File), line == (char *)0x0)) goto close_file;
     }
     for (i = 0; len = _strlen(line_buf), i < (int)len; i++) {
       if (line_buf[i] < ' ') {
@@ -1753,7 +1753,7 @@ i32 __cdecl file_read_nth_line(iptr dest,iptr filename,int line_num)
     crt_strcpy(dest,line_buf);
     result = 0;
   }
-LAB_0058a0bc:
+close_file:
   if (_File != (FILE *)0x0) {
     _fclose(_File);
   }
@@ -1972,7 +1972,7 @@ i32 __cdecl file_obj_open_path(char *filename,iptr file_obj)
 
 {
   char *sep;
-  HFILE HVar2;
+  HFILE file_handle;
   i32 result;
   char full_path[260];
   
@@ -1985,17 +1985,17 @@ i32 __cdecl file_obj_open_path(char *filename,iptr file_obj)
   else {
     crt_strcpy(full_path,filename);
   }
-  HVar2 = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),0x4000);
-  if (HVar2 == -1) {
+  file_handle = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),0x4000);
+  if (file_handle == -1) {
     result = 0;
   }
   else {
-    HVar2 = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),2);
-    *(HFILE *)(file_obj + 4) = HVar2;
+    file_handle = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),2);
+    *(HFILE *)(file_obj + 4) = file_handle;
     if (*(int *)(file_obj + 4) == -1) {
       *(i32 *)file_obj = 0;
-      HVar2 = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),0);
-      *(HFILE *)(file_obj + 4) = HVar2;
+      file_handle = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),0);
+      *(HFILE *)(file_obj + 4) = file_handle;
       *(i32 *)(file_obj + 0x94) = 0;
       *(i32 *)(file_obj + 0x90) = 0;
       if (*(int *)(file_obj + 4) == -1) {
@@ -2040,7 +2040,7 @@ i32 __cdecl file_obj_close_handle(iptr file_obj)
 
 {
   i32 result;
-  BOOL BVar2;
+  BOOL closed;
   
   if (*(int *)(file_obj + 4) == 0) {
     result = 0;
@@ -2049,8 +2049,8 @@ i32 __cdecl file_obj_close_handle(iptr file_obj)
     if ((*(int *)(file_obj + 0x94) != 0) || (*(int *)(file_obj + 0x90) != 0)) {
       file_obj_close_mapping(file_obj);
     }
-    BVar2 = CloseHandle(*(HANDLE *)(file_obj + 4));
-    if (BVar2 == 0) {
+    closed = CloseHandle(*(HANDLE *)(file_obj + 4));
+    if (closed == 0) {
       result = 0;
     }
     else {
@@ -2066,15 +2066,15 @@ i32 __cdecl file_obj_read_bytes(iptr file_obj,LPVOID buf,DWORD size)
 
 {
   i32 result;
-  BOOL BVar2;
+  BOOL read_ok;
   DWORD bytes_read;
   
   if (*(int *)(file_obj + 4) == 0) {
     result = 0;
   }
   else {
-    BVar2 = ReadFile(*(HANDLE *)(file_obj + 4),buf,size,&bytes_read,(LPOVERLAPPED)0x0);
-    if (BVar2 == 0) {
+    read_ok = ReadFile(*(HANDLE *)(file_obj + 4),buf,size,&bytes_read,(LPOVERLAPPED)0x0);
+    if (read_ok == 0) {
       result = 0;
     }
     else {
@@ -2089,14 +2089,14 @@ i32 __cdecl file_obj_seek_rel(iptr file_obj,LONG offset)
 
 {
   i32 result;
-  DWORD DVar2;
+  DWORD new_pos;
   
   if (*(int *)(file_obj + 4) == 0) {
     result = 0;
   }
   else {
-    DVar2 = SetFilePointer(*(HANDLE *)(file_obj + 4),offset,(PLONG)0x0,1);
-    if (DVar2 == 0xffffffff) {
+    new_pos = SetFilePointer(*(HANDLE *)(file_obj + 4),offset,(PLONG)0x0,1);
+    if (new_pos == 0xffffffff) {
       result = 0;
     }
     else {
@@ -2111,7 +2111,7 @@ i32 __cdecl file_obj_write_bytes(iptr file_obj,iptr buf,DWORD size)
 
 {
   i32 result;
-  BOOL BVar2;
+  BOOL write_ok;
   DWORD bytes_written;
   
   if (*(int *)(file_obj + 4) == 0) {
@@ -2122,8 +2122,8 @@ i32 __cdecl file_obj_write_bytes(iptr file_obj,iptr buf,DWORD size)
     result = 0;
   }
   else {
-    BVar2 = WriteFile(*(HANDLE *)(file_obj + 4),(LPCVOID)buf,size,&bytes_written,(LPOVERLAPPED)0x0);
-    if (BVar2 == 0) {
+    write_ok = WriteFile(*(HANDLE *)(file_obj + 4),(LPCVOID)buf,size,&bytes_written,(LPOVERLAPPED)0x0);
+    if (write_ok == 0) {
       result = 0;
     }
     else {
@@ -2181,19 +2181,19 @@ int __cdecl file_obj_read_line_impl(iptr file_obj,char *buf,int max_len)
 DWORD __cdecl file_obj_get_size_impl(iptr file_obj)
 
 {
-  DWORD DVar1;
+  DWORD file_size;
   
   if (*(int *)(file_obj + 4) == 0) {
-    DVar1 = 0;
+    file_size = 0;
   }
   else {
-    DVar1 = GetFileSize(*(HANDLE *)(file_obj + 4),(LPDWORD)0x0);
-    if (DVar1 == 0xffffffff) {
+    file_size = GetFileSize(*(HANDLE *)(file_obj + 4),(LPDWORD)0x0);
+    if (file_size == 0xffffffff) {
       dbg_log((iptr)&str_bad_file_handle_in_msfilesize);
-      DVar1 = 0;
+      file_size = 0;
     }
   }
-  return DVar1;
+  return file_size;
 }
 
 /* 005d8ab8 auto */
@@ -2215,22 +2215,22 @@ i32 __cdecl file_obj_close_mapping(iptr file_obj)
 HMODULE __cdecl res_dll_load_library(LPCSTR filename)
 
 {
-  HMODULE pHVar1;
+  HMODULE module;
   i8 msg[128];
   
-  pHVar1 = LoadLibraryExA(filename,(HANDLE)0x0,2);
-  if (pHVar1 == (HMODULE)0x0) {
+  module = LoadLibraryExA(filename,(HANDLE)0x0,2);
+  if (module == (HMODULE)0x0) {
     crt_strcpy(msg,str_error_resource_file);
     crt_strcat(msg,filename);
     crt_strcat(msg,str_not_found);
     dbg_log((iptr)msg);
-    pHVar1 = (HMODULE)0x0;
+    module = (HMODULE)0x0;
   }
   else {
-    *(HMODULE *)(((i8 *)&err_report_ctx_block.res_dll_modules) + (*(int *)&res_dll_module_count) * 4) = pHVar1;
+    *(HMODULE *)(((i8 *)&err_report_ctx_block.res_dll_modules) + (*(int *)&res_dll_module_count) * 4) = module;
     (*(int *)&res_dll_module_count)++;
   }
-  return pHVar1;
+  return module;
 }
 
 /* 005db1e0 auto */

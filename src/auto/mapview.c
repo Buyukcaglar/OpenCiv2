@@ -776,7 +776,7 @@ void __cdecl mapview_drag_hold_expired(void)
 void __cdecl mapview_on_lbuttondown(void)
 
 {
-  SHORT SVar1;
+  SHORT shift_state;
   iptr child_wnd;
   int paradrop;
   iptr view;
@@ -793,8 +793,8 @@ void __cdecl mapview_on_lbuttondown(void)
     mapview_cancel_drag();
     if ((moving_units_mode == 1) && (paradrop = ui_paradrop_cursor_active(), paradrop == 0)) {
       mapview_drag_view_index = *(int *)(view + 0x2d8);
-      SVar1 = GetAsyncKeyState(0x10);
-      if ((char)((ushort)SVar1 >> 8) == '\0') {
+      shift_state = GetAsyncKeyState(0x10);
+      if ((char)((ushort)shift_state >> 8) == '\0') {
         mapview_drag_hold_timer = game_timer_create((iptr)mapview_drag_hold_expired,400,1);
       }
       else {
@@ -1298,7 +1298,7 @@ clickmap_hit_test(ClickMapHitTestView *this,int x,int y,iptr out_id,iptr out_val
   i = 0;
   do {
     if ((int)this->region_count <= i) {
-LAB_0046ae34:
+report_hit:
       if (-1 < hit) {
         if (out_id != 0) {
           *(i32 *)out_id = *(i32 *)(this->hit_regions + hit * 0x18 + 0x14);
@@ -1314,7 +1314,7 @@ LAB_0046ae34:
         (*(int *)(this->hit_regions + i * 0x18 + 4) <= y)) &&
        (y < *(int *)(this->hit_regions + i * 0x18 + 0xc))) {
       hit = i;
-      goto LAB_0046ae34;
+      goto report_hit;
     }
     i++;
   } while( true );
@@ -1660,7 +1660,7 @@ mapview_draw_tile_terrain
     if (hidden != 0) {
       sprite_draw
                 ((Sprite *)((i8 *)&unexplored_tile_sprite),(iptr)hidden_rect,surface,screen_x,screen_y);
-      goto LAB_0047ba07;
+      goto reset_zoom_done;
     }
   }
   check = map_in_bounds(x,y);
@@ -1946,7 +1946,7 @@ mapview_draw_tile_terrain
       nbr_hidden = 0;
       if (city_tile_idx < 0) {
         check = map_in_bounds(x2,y2);
-        if (check != 0) goto LAB_0047b934;
+        if (check != 0) goto check_neighbor_visible;
       }
       else {
         if (city_tile_idx < 0x15) {
@@ -1976,7 +1976,7 @@ mapview_draw_tile_terrain
         else {
           nbr_hidden = 1;
         }
-LAB_0047b934:
+check_neighbor_visible:
         if (nbr_hidden == 0) {
           check = tile_visible_to(x2,y2,viewer_civ);
           if (check == 0) {
@@ -2008,7 +2008,7 @@ LAB_0047b934:
       }
     }
   }
-LAB_0047ba07:
+reset_zoom_done:
   gfx_reset_zoom_scale();
   return;
 }

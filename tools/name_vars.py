@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Name the parameters and locals the decompiler left numbered (param_N,
-iVarN / uVarN / ..., local_XX) from proposals: rows ADDR<TAB>OLD<TAB>NEW,
-one per variable, ADDR the function's address (its /* ADDR ... */ marker).
+iVarN / pCVarN / ..., local_XX) and goto labels (LAB_ADDR) from proposals: rows KEY<TAB>OLD<TAB>NEW,
+one per variable, KEY the function's address (its /* ADDR ... */ marker in
+src/auto) or, in src/game, the function's name.
 
     name_vars.py slices OUTDIR [--lines N]   the game's functions in slices of
                                              about N lines, for proposing names
@@ -24,29 +25,45 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import name_locals  # noqa: E402  (forbidden_names)
 
-VAR = re.compile(r'^(?:param_\d+|[a-z]{1,5}Var\d+|local_[0-9a-f]+|[a-z]Stack_[0-9a-f]+|[a-z]{1,4}Stack[XY]?_[0-9a-f]+)$')
+NUM = r'(?:param_\d+|(?:[a-z]{1,5}|[a-z]{0,5}[A-Z])Var\d+|local_[0-9a-f]+|[a-z]{1,4}Stack[XY]?_[0-9a-f]+|in_[A-Z]{2,3}|unaff_[A-Z]+)'
+VAR = re.compile(r'^(?:LAB_[0-9a-f]+|switchD_[0-9a-f]+\w*|caseD_\w+|param_\d+|(?:[a-z]{1,5}|[a-z]{0,5}[A-Z])Var\d+|in_[A-Z]{2,3}|unaff_[A-Z]+|local_[0-9a-f]+|[a-z]Stack_[0-9a-f]+|[a-z]{1,4}Stack[XY]?_[0-9a-f]+)$')
 NAME = re.compile(r'^[a-z_][a-z0-9_]*$')
 MARK = re.compile(r'(?m)^(?=/\* [0-9a-f]{8}[ :])')
 
 
+END = re.compile(r'(?m)(?<=^}\n)')
+DEF = re.compile(r'\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{')
+
+
 def game_files():
-    return sorted(f for f in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) if not f.endswith('msvcrt.c'))
+    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) + glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')))
 
 
 def regions(text):
-    return MARK.split(text)
+    """The file cut into one piece per function (the first piece is what
+    comes before the first function)."""
+    if MARK.search(text):
+        return MARK.split(text)
+    return [''] + [r for r in END.split(text) if r]
+
+
+def key(region):
+    if MARK.match(region):
+        return region[3:11]
+    for m in DEF.finditer(re.sub(r'(?ms)/\*(?:(?!\*/).)*\*/|//[^\n]*|^\s*#(?:[^\n]*\\\n)*[^\n]*', '', region)):
+        if m.group(1) not in ('if', 'while', 'for', 'switch', 'return', 'sizeof'):
+            return m.group(1)
+    return None
 
 
 def numbered(region):
-    return sorted(set(re.findall(r'\b(?:param_\d+|[a-z]{1,5}Var\d+|local_[0-9a-f]+|[a-z]{1,4}Stack[XY]?_[0-9a-f]+)\b',
-                                 region)))
+    return sorted(set(re.findall(r'\b%s\b' % NUM, region)))
 
 
 def count():
     c = collections.Counter()
     for f in game_files():
-        for v in re.findall(r'\b(param_\d+|[a-z]{1,5}Var\d+|local_[0-9a-f]+|[a-z]{1,4}Stack[XY]?_[0-9a-f]+)\b',
-                            open(f).read()):
+        for v in re.findall(r'\b%s\b' % NUM, open(f).read()):
             c['param' if v.startswith('param_') else 'local_' if v.startswith('local_') else 'stack'
               if 'Stack' in v else 'xVar'] += 1
     for k, v in sorted(c.items()):
@@ -77,7 +94,7 @@ def apply(paths):
     for p in paths:
         for line in open(p):
             f = line.rstrip('\n').split('\t')
-            if len(f) >= 3 and re.match(r'^[0-9a-f]{8}$', f[0]) and VAR.match(f[1]):
+            if len(f) >= 3 and re.match(r'^\w+$', f[0]) and VAR.match(f[1]):
                 props[f[0]][f[1]] = f[2].strip()
     words, fields = name_locals.forbidden_names()
     # a frame local is a macro: not the name of a member the function uses
@@ -93,7 +110,7 @@ def apply(paths):
         parts = regions(text)
         for i in range(1, len(parts)):
             r = parts[i]
-            ren = props.get(r[3:11])
+            ren = props.get(key(r))
             if not ren:
                 continue
             taken = set(re.findall(r'(?<![.>\w])[A-Za-z_]\w*\b', r))

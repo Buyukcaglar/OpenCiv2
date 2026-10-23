@@ -1366,7 +1366,7 @@ void __cdecl gfx_build_grey_remap(void)
   HPALETTE h;
   iptr full_rgb;
   iptr remap_table;
-  UINT UVar4;
+  UINT nearest_index;
   iptr offset;
   
   rgb_handle = mem_handle_alloc(0x2c4);
@@ -1421,16 +1421,16 @@ void __cdecl gfx_build_grey_remap(void)
             remap_table = mem_handle_lock(grey_palette_block.grey_remap_handle);
             palette_get_rgb((GamePalette *)((i8 *)&game_palette_block.game_palette),full_rgb,10,0xec);
             for (offset = 0; offset < 0x2c4; offset += 3) {
-              UVar4 = GetNearestPaletteIndex
+              nearest_index = GetNearestPaletteIndex
                                 (h,(uint)CONCAT12(*(i8 *)(offset + 2 + full_rgb),
                                                   CONCAT11(*(i8 *)(offset + 1 + full_rgb),
                                                            *(i8 *)(offset + full_rgb))));
-              *(char *)(remap_table + offset / 3) = (char)UVar4 + '\n';
+              *(char *)(remap_table + offset / 3) = (char)nearest_index + '\n';
               palette_set_entry
                         ((GamePalette *)((i8 *)&grey_palette_block.grey_palette),offset / 3 + 10,
-                         CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + rgb_data)),
-                         CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + 1 + rgb_data)),
-                         CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + 2 + rgb_data)));
+                         CONCAT31((int3)(nearest_index * 3 >> 8),*(i8 *)(nearest_index * 3 + rgb_data)),
+                         CONCAT31((int3)(nearest_index * 3 >> 8),*(i8 *)(nearest_index * 3 + 1 + rgb_data)),
+                         CONCAT31((int3)(nearest_index * 3 >> 8),*(i8 *)(nearest_index * 3 + 2 + rgb_data)));
             }
             DeleteObject(h);
             mem_handle_unlock(handle);
@@ -1651,7 +1651,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,iptr filename,int first_color,int 
           if (compression == 0) {
             do {
               row = height2 - 1;
-              if ((row < 0) || (ok == 0)) goto LAB_0046fbb4;
+              if ((row < 0) || (ok == 0)) goto close_file;
               dst = (char *)surface_pixel_ptr((DibSurface *)surface,0,row);
               for (col = 0; height2 = row, col < width2;
                   col = col + 1) {
@@ -1727,7 +1727,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,iptr filename,int first_color,int 
     else {
       error_msg = str_invalid_bitmap_file;
     }
-LAB_0046fbb4:
+close_file:
     _fclose(file);
     if (ok == 0) {
       MessageBoxA((HWND)0x0,error_msg,(LPCSTR)0x0,0);
@@ -1842,7 +1842,7 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,iptr filename,int first_color,int 
           row = height2;
           do {
             row--;
-            if ((row < 0) || (ok == 0)) goto LAB_0046ffb7;
+            if ((row < 0) || (ok == 0)) goto close_file;
             src = (byte *)surface_pixel_ptr((DibSurface *)surface,0,row);
             for (col = 0; col < width2; col++) {
               pixel = (uint)*src - first_color;
@@ -1859,7 +1859,7 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,iptr filename,int first_color,int 
         error_msg = str_error_writing_file_palette;
       }
     }
-LAB_0046ffb7:
+close_file:
     _fclose(file);
     if (ok == 0) {
       MessageBoxA((HWND)0x0,error_msg,(LPCSTR)0x0,0);
@@ -2979,7 +2979,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   gfx_set_zoom_scale(zoom);
   unit2 = unit;
   if (((draw_flags & 2) != 0) && (unit2 = unit_stack_pick_display_unit(unit), unit2 < 0))
-  goto LAB_0056c5e8;
+  goto reset_zoom_done;
   civ = (iptr)units[unit2].owner;
   unit_type = (uint)units[unit2].type;
   sprite_type = unit_type;
@@ -3091,7 +3091,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     order = 0xffffffff;
   }
   if ((int)order < 1) {
-LAB_0056c269:
+default_order_char:
     order_char = '-';
     if (((int)(short)units[unit2].flags & 0x8000U) != 0) {
       order_char = '*';
@@ -3101,7 +3101,7 @@ LAB_0056c269:
     order_char = order_names[order].key;
   }
   else {
-    if (order != 0xb) goto LAB_0056c269;
+    if (order != 0xb) goto default_order_char;
     if ((game.reveal_map == '\0') ||
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
       if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
@@ -3167,7 +3167,7 @@ LAB_0056c269:
     sprite_draw
               ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite),(iptr)clip_fortress,surface,px,py);
   }
-LAB_0056c5e8:
+reset_zoom_done:
   gfx_reset_zoom_scale();
   return;
 }
@@ -3785,10 +3785,10 @@ void __cdecl sprite_sheet_save_units(void)
   result = file_exists((iptr)&str_units_bmp_3);
   if (result != 0) {
     result = crt_remove(str_units_bmp_4);
-    if (result != 0) goto LAB_0056ff8c;
+    if (result != 0) goto cleanup;
   }
   gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_units_bmp_5,10,0xc0,(iptr)&palette);
-LAB_0056ff8c:
+cleanup:
   __chdir(saved_dir);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   eh_state = 0xffffffff;
@@ -3945,10 +3945,10 @@ void __cdecl sprite_sheet_save_cities(void)
   result = file_exists((iptr)&str_cities_bmp_3);
   if (result != 0) {
     result = crt_remove(str_cities_bmp_4);
-    if (result != 0) goto LAB_00570732;
+    if (result != 0) goto cleanup;
   }
   gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_cities_bmp_5,10,0xc0,(iptr)&palette);
-LAB_00570732:
+cleanup:
   __chdir(saved_dir);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   eh_state = 0xffffffff;
@@ -4125,10 +4125,10 @@ void __cdecl sprite_sheet_save_terrain1(void)
   result = file_exists((iptr)&str_terrain1_bmp_3);
   if (result != 0) {
     result = crt_remove(str_terrain1_bmp_4);
-    if (result != 0) goto LAB_00570f78;
+    if (result != 0) goto cleanup;
   }
   gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_terrain1_bmp_5,10,0xc0,(iptr)&palette);
-LAB_00570f78:
+cleanup:
   __chdir(saved_cwd);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
@@ -4300,10 +4300,10 @@ void __cdecl sprite_sheet_save_terrain2(void)
   result = file_exists((iptr)&str_terrain2_bmp_3);
   if (result != 0) {
     result = crt_remove(str_terrain2_bmp_4);
-    if (result != 0) goto LAB_005718c2;
+    if (result != 0) goto cleanup;
   }
   gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_terrain2_bmp_5,10,0xc0,(iptr)&palette);
-LAB_005718c2:
+cleanup:
   __chdir(saved_cwd);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
@@ -4374,10 +4374,10 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   result = file_exists((iptr)&str_icons_bmp_3);
   if (result != 0) {
     result = crt_remove(str_icons_bmp_4);
-    if (result != 0) goto LAB_00571b80;
+    if (result != 0) goto restore_cwd_and_cleanup;
   }
   gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_icons_bmp_5,10,0xc0,(iptr)&palette);
-LAB_00571b80:
+restore_cwd_and_cleanup:
   __chdir(saved_cwd);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
@@ -4491,10 +4491,10 @@ void __cdecl sprite_sheet_save_building_icons(void)
   result = file_exists((iptr)&str_icons_bmp_7);
   if (result != 0) {
     result = crt_remove(str_icons_bmp_8);
-    if (result != 0) goto LAB_0057203b;
+    if (result != 0) goto restore_cwd_and_cleanup;
   }
   gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_icons_bmp_9,10,0xc0,(iptr)&palette);
-LAB_0057203b:
+restore_cwd_and_cleanup:
   __chdir(saved_cwd);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
@@ -4907,7 +4907,7 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
 {
   iptr old_flag_y;
   iptr old_flag_x;
-  SHORT SVar3;
+  SHORT button_state;
   iptr window;
   i32 tool_index;
   int temp_x;
@@ -4940,14 +4940,14 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
       wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
     status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
-    SVar3 = GetKeyState(1);
-    if (((int)SVar3 & 0x8000U) != 0) {
+    button_state = GetKeyState(1);
+    if (((int)button_state & 0x8000U) != 0) {
       sprite_editor_prev_left_color = sprite_editor_left_color;
       old_color = sprite_editor_left_color;
       sprite_editor_left_color = 0;
     }
-    SVar3 = GetKeyState(2);
-    if (((int)SVar3 & 0x8000U) != 0) {
+    button_state = GetKeyState(2);
+    if (((int)button_state & 0x8000U) != 0) {
       sprite_editor_prev_right_color = sprite_editor_right_color;
       old_color = sprite_editor_right_color;
       sprite_editor_right_color = 0;
@@ -5057,17 +5057,17 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
       wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
     status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
-    SVar3 = GetKeyState(1);
+    button_state = GetKeyState(1);
     temp_x = sprite_editor_left_color;
-    if (((int)SVar3 & 0x8000U) != 0) {
+    if (((int)button_state & 0x8000U) != 0) {
       old_color = sprite_editor_left_color;
       sprite_editor_left_color = sprite_editor_prev_left_color;
       new_color = sprite_editor_prev_left_color;
       sprite_editor_prev_left_color = temp_x;
     }
-    SVar3 = GetKeyState(2);
+    button_state = GetKeyState(2);
     temp_x = sprite_editor_right_color;
-    if (((int)SVar3 & 0x8000U) != 0) {
+    if (((int)button_state & 0x8000U) != 0) {
       old_color = sprite_editor_right_color;
       sprite_editor_right_color = sprite_editor_prev_left_color;
       new_color = sprite_editor_prev_left_color;
@@ -5100,17 +5100,17 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
         wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
       }
       status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
-      SVar3 = GetKeyState(1);
+      button_state = GetKeyState(1);
       temp_x = sprite_editor_left_color;
-      if (((int)SVar3 & 0x8000U) != 0) {
+      if (((int)button_state & 0x8000U) != 0) {
         old_color = sprite_editor_left_color;
         sprite_editor_left_color = sprite_editor_prev_right_color;
         new_color = sprite_editor_prev_right_color;
         sprite_editor_prev_left_color = temp_x;
       }
-      SVar3 = GetKeyState(2);
+      button_state = GetKeyState(2);
       temp_x = sprite_editor_right_color;
-      if (((int)SVar3 & 0x8000U) != 0) {
+      if (((int)button_state & 0x8000U) != 0) {
         old_color = sprite_editor_right_color;
         sprite_editor_right_color = sprite_editor_prev_right_color;
         new_color = sprite_editor_prev_right_color;
@@ -5133,10 +5133,10 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
         new_color = surface_get_pixel
                              ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),x - 0x10 >> 2,
                               y - 0x10 >> 2);
-        SVar3 = GetKeyState(1);
-        if (((int)SVar3 & 0x8000U) == 0) {
-          SVar3 = GetKeyState(2);
-          if (((int)SVar3 & 0x8000U) != 0) {
+        button_state = GetKeyState(1);
+        if (((int)button_state & 0x8000U) == 0) {
+          button_state = GetKeyState(2);
+          if (((int)button_state & 0x8000U) != 0) {
             sprite_editor_prev_right_color = sprite_editor_right_color;
             old_color = sprite_editor_right_color;
             sprite_editor_right_color = new_color;
@@ -5168,10 +5168,10 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
         temp_y = (int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >> 2;
         status_window_block.sprite_editor_last_px = temp_x;
         status_window_block.sprite_editor_last_py = temp_y;
-        SVar3 = GetKeyState(1);
-        if (((int)SVar3 & 0x8000U) == 0) {
-          SVar3 = GetKeyState(2);
-          if (((int)SVar3 & 0x8000U) != 0) {
+        button_state = GetKeyState(1);
+        if (((int)button_state & 0x8000U) == 0) {
+          button_state = GetKeyState(2);
+          if (((int)button_state & 0x8000U) != 0) {
             status_window_block.sprite_editor_paint_color = sprite_editor_right_color;
           }
         }
@@ -5192,10 +5192,10 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
     }
   }
   else {
-    SVar3 = GetKeyState(1);
-    if (((int)SVar3 & 0x8000U) == 0) {
-      SVar3 = GetKeyState(2);
-      if (((int)SVar3 & 0x8000U) != 0) {
+    button_state = GetKeyState(1);
+    if (((int)button_state & 0x8000U) == 0) {
+      button_state = GetKeyState(2);
+      if (((int)button_state & 0x8000U) != 0) {
         sprite_editor_prev_right_color = sprite_editor_right_color;
         old_color = sprite_editor_right_color;
         sprite_editor_right_color = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
@@ -6171,10 +6171,10 @@ void __cdecl sprite_editor_import_sheet(void)
   i32 arg_a;
   char *arg_name;
   i32 arg_b;
-  LPCSTR pCVar9;
-  LPCSTR pCVar10;
+  LPCSTR caption_text;
+  LPCSTR title_text;
   i32 arg_c;
-  UINT UVar12;
+  UINT mb_flags;
   char prompt[132];
   int retry;
   char file_path[260];
@@ -6228,7 +6228,7 @@ void __cdecl sprite_editor_import_sheet(void)
     _sprintf(prompt,str_s_s_2,label,str);
     ok = ui_file_name_dialog((iptr)&status_window_block.sprite_editor_wnd,(iptr)prompt,(iptr)file_path,(iptr)filter,(iptr)&str_bmp_gif,1,0
                               );
-    if (ok == 0) goto LAB_00576783;
+    if (ok == 0) goto release_and_cleanup;
     __strupr(file_path);
     retry = 1;
     file_name = _strrchr(file_path,0x5c);
@@ -6243,7 +6243,7 @@ void __cdecl sprite_editor_import_sheet(void)
     if (cmp == 0) {
       if ((sprite_picker_sprite_block.sprite_sheet_mode == 7) || (sprite_picker_sprite_block.sprite_sheet_mode == 10)) {
         result = _isdigit((int)file_name[7]);
-        if ((result != 0) && ((file_name[7] & 1U) != 0)) goto LAB_00576631;
+        if ((result != 0) && ((file_name[7] & 1U) != 0)) goto check_file_extension;
         dlg_push_parent_window((iptr)&status_window_block.sprite_picker_wnd);
         popup_debug_text((iptr)&str_oddterrain);
         dlg_pop_parent_window();
@@ -6255,27 +6255,27 @@ void __cdecl sprite_editor_import_sheet(void)
         dlg_pop_parent_window();
       }
       else {
-LAB_00576631:
+check_file_extension:
         str = _strstr(file_path,((i8 *)&sprite_import_bmp_ext_str));
         if (str == (char *)0x0) {
           str = _strstr(file_path,((i8 *)&sprite_import_gif_ext_str));
           if (str == (char *)0x0) {
-            UVar12 = 0x10;
-            pCVar10 = (LPCSTR)0x0;
-            pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x968));
+            mb_flags = 0x10;
+            title_text = (LPCSTR)0x0;
+            caption_text = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x968));
             result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
-            MessageBoxA(*(HWND *)(result + 4),pCVar9,pCVar10,UVar12);
+            MessageBoxA(*(HWND *)(result + 4),caption_text,title_text,mb_flags);
           }
           else {
             result = surface_load_gif_file
                               ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)file_path,10,0xc0,
                                (iptr)&palette);
             if (result == 0) {
-              UVar12 = 0x10;
-              pCVar10 = (LPCSTR)0x0;
-              pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
+              mb_flags = 0x10;
+              title_text = (LPCSTR)0x0;
+              caption_text = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
               result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
-              MessageBoxA(*(HWND *)(result + 4),pCVar9,pCVar10,UVar12);
+              MessageBoxA(*(HWND *)(result + 4),caption_text,title_text,mb_flags);
             }
             else {
               retry = 0;
@@ -6285,11 +6285,11 @@ LAB_00576631:
         else {
           result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)file_path,10,0xc0,(iptr)&palette);
           if (result == 0) {
-            UVar12 = 0x10;
-            pCVar10 = (LPCSTR)0x0;
-            pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
+            mb_flags = 0x10;
+            title_text = (LPCSTR)0x0;
+            caption_text = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
             result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
-            MessageBoxA(*(HWND *)(result + 4),pCVar9,pCVar10,UVar12);
+            MessageBoxA(*(HWND *)(result + 4),caption_text,title_text,mb_flags);
           }
           else {
             retry = 0;
@@ -6301,16 +6301,16 @@ LAB_00576631:
       str = sheet_name;
       label = label_string(*(i32 *)(label_string_ids + 0x960));
       _sprintf(prompt,str_s_s_3,label,str);
-      UVar12 = 0x40;
-      pCVar9 = (LPCSTR)0x0;
+      mb_flags = 0x40;
+      caption_text = (LPCSTR)0x0;
       str = prompt;
       result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
-      MessageBoxA(*(HWND *)(result + 4),str,pCVar9,UVar12);
+      MessageBoxA(*(HWND *)(result + 4),str,caption_text,mb_flags);
     }
   } while (retry != 0);
   sprite_picker_show();
   sprite_editor_redraw();
-LAB_00576783:
+release_and_cleanup:
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 005767a7 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
@@ -7436,7 +7436,7 @@ surface_draw_text_in_rect(DibSurface *this,iptr font,iptr text,iptr rect,uint fl
 {
   i8 old_color;
   int shadow_offset;
-  BOOL BVar3;
+  BOOL offset_ok;
   i32 saved_color;
   tagRECT shadow_rect;
   
@@ -7448,8 +7448,8 @@ surface_draw_text_in_rect(DibSurface *this,iptr font,iptr text,iptr rect,uint fl
       shadow_rect.top = *(LONG *)(rect + 4);
       shadow_rect.right = *(LONG *)(rect + 8);
       shadow_rect.bottom = *(LONG *)(rect + 0xc);
-      BVar3 = OffsetRect(&shadow_rect,shadow_offset,shadow_offset);
-      old_color = gfx_set_text_color_index(CONCAT31((int3)((uint)BVar3 >> 8),gfx_black_color_index));
+      offset_ok = OffsetRect(&shadow_rect,shadow_offset,shadow_offset);
+      old_color = gfx_set_text_color_index(CONCAT31((int3)((uint)offset_ok >> 8),gfx_black_color_index));
       saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
       dib_draw_text_rect(this->dib,*(i32 *)font,text,(iptr)&shadow_rect,flags);
       gfx_set_text_color_index(saved_color);
@@ -8282,7 +8282,7 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
           value++;
         }
       }
-LAB_005cda01:
+use_cached_slot:
       default_draw_font_obj_block.gfx_scale_table = (int)((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + slot * 0x100c;
       return;
     }
@@ -8291,7 +8291,7 @@ LAB_005cda01:
       now = timer_ticks();
       *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
       slot = index;
-      goto LAB_005cda01;
+      goto use_cached_slot;
     }
     if (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) {
       oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
@@ -8344,7 +8344,7 @@ void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
       now = timer_ticks();
       *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
       x_slot = index;
-      goto LAB_005cdbab;
+      goto set_x_table;
     }
     if (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) {
       oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
@@ -8352,7 +8352,7 @@ void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
     }
   }
   gfx_scale_build_table(x_slot,gfx_scale_x_num,gfx_scale_x_den);
-LAB_005cdbab:
+set_x_table:
   default_draw_font_obj_block.gfx_scale_x_table = ((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + x_slot * 0x100c;
   oldest_tick = timer_ticks();
   y_slot = -1;
@@ -8361,7 +8361,7 @@ LAB_005cdbab:
     if (0xf < index) {
       gfx_scale_build_table(y_slot,gfx_scale_y_num,gfx_scale_y_den);
       index = y_slot;
-LAB_005cdcd6:
+set_y_table:
       default_draw_font_obj_block.gfx_scale_y_table = ((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 0x100c;
       return;
     }
@@ -8369,7 +8369,7 @@ LAB_005cdcd6:
        (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + index * 0x100c) == gfx_scale_y_den)) {
       now = timer_ticks();
       *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
-      goto LAB_005cdcd6;
+      goto set_y_table;
     }
     if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) && (x_slot != index)) {
       oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
@@ -8905,7 +8905,7 @@ sprite_blit_to_surface
   int scaled_trim_y;
   i32 clip_w;
   int scaled_h;
-  BOOL BVar7;
+  BOOL intersects;
   i32 surf_height;
   iptr dib;
   int top_down;
@@ -8948,8 +8948,8 @@ sprite_blit_to_surface
     tmp = gfx_scale_length(clip_w,tmp,clip_h);
     SetRect(&clip_rect,0,0,tmp,scaled_h);
     OffsetRect(&clip_rect,dst_x,dst_y);
-    BVar7 = IntersectRect(&clip_rect,&clip_rect,(RECT *)&surface->clip_left);
-    if (BVar7 != 0) {
+    intersects = IntersectRect(&clip_rect,&clip_rect,(RECT *)&surface->clip_left);
+    if (intersects != 0) {
       skip_x = 0;
       clip_w = rect_width((iptr)&clip_rect);
       if (dst_x < clip_rect.left) {
@@ -9002,7 +9002,7 @@ sprite_blit_silhouette_to_surface
   int scaled_trim_y;
   i32 clip_w;
   int scaled_h;
-  BOOL BVar7;
+  BOOL intersects;
   i32 surf_height;
   iptr dib;
   int top_down;
@@ -9045,8 +9045,8 @@ sprite_blit_silhouette_to_surface
     tmp = gfx_scale_length(clip_w,tmp,clip_h);
     SetRect(&clip_rect,0,0,tmp,scaled_h);
     OffsetRect(&clip_rect,dst_x,dst_y);
-    BVar7 = IntersectRect(&clip_rect,&clip_rect,(RECT *)&surface->clip_left);
-    if (BVar7 != 0) {
+    intersects = IntersectRect(&clip_rect,&clip_rect,(RECT *)&surface->clip_left);
+    if (intersects != 0) {
       skip_x = 0;
       clip_w = rect_width((iptr)&clip_rect);
       if (dst_x < clip_rect.left) {
@@ -9094,8 +9094,8 @@ sprite_merge_at
 
 {
   byte row_mask;
-  LONG LVar2;
-  LONG LVar3;
+  LONG width;
+  LONG height;
   int src_top;
   iptr src_w;
   int src_h;
@@ -9152,15 +9152,15 @@ sprite_merge_at
         value = merged;
       }
       SetRect(&rect,0,0,value,new_h);
-      LVar3 = rect.bottom;
-      LVar2 = rect.right;
+      height = rect.bottom;
+      width = rect.right;
       sprite_lock((Sprite *)src);
       sprite_lock(dst);
       src_cursor = *(int **)(src + 0x38);
       dst_cursor = (int *)dst->data_ptr;
-      new_handle = mem_handle_alloc(LVar2 * LVar3 + LVar3 * 8);
+      new_handle = mem_handle_alloc(width * height + height * 8);
       out = (int *)mem_handle_lock(new_handle);
-      for (row = 0; row < LVar3; row++) {
+      for (row = 0; row < height; row++) {
         row_mask = row < dst_h;
         if ((src_top <= row) && (row < src_h + src_top)) {
           row_mask = row_mask | 2;
@@ -9205,7 +9205,7 @@ sprite_merge_at
           }
           out[1] = merged - *out;
           out += 2;
-          cols_left = LVar2;
+          cols_left = width;
           col = 0;
           while (cols_left != 0) {
             written = 0;
@@ -10363,7 +10363,7 @@ gif_lzw_decode_stream(byte *src,i8 *dest,iptr prefix_tbl,int pitch,uint width,ui
   code_bits = init_bits;
   code_mask = init_mask;
   prev_code = clear_code;
-LAB_005e549a:
+decode_next_code:
   do {
     while( true ) {
       if (((short)pitch <= (short)row_pos) &&
@@ -10452,7 +10452,7 @@ LAB_005e549a:
         code_bits++;
         code_mask = code_mask * 2 + 2;
       }
-      goto LAB_005e549a;
+      goto decode_next_code;
     }
     dst += *(ushort *)(length_tbl + (uint)code);
     row_pos += *(ushort *)(length_tbl + (uint)code);

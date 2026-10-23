@@ -1687,17 +1687,17 @@ void __cdecl menu_handle_654fd4_atexit_dtor(void)
 void __cdecl ui_delay_ticks(int ticks)
 
 {
-  DWORD DVar1;
-  DWORD DVar2;
+  DWORD start_tick;
+  DWORD now_tick;
   
-  DVar1 = timeGetTime();
+  start_tick = timeGetTime();
   do {
     win_flush_pending_msgs();
-    DVar2 = timeGetTime();
+    now_tick = timeGetTime();
     if (2 < game.multiplayer) {
       net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
     }
-  } while ((int)(DVar2 - DVar1) < (ticks * 0x32) / 3);
+  } while ((int)(now_tick - start_tick) < (ticks * 0x32) / 3);
   return;
 }
 
@@ -1726,7 +1726,7 @@ ui_file_name_dialog(iptr parent,iptr title,iptr file_buf,iptr filter,iptr defaul
 
 {
   iptr wnd;
-  BOOL BVar1;
+  BOOL dlg_ok;
   char success;
   OPENFILENAMEA ofn;
   
@@ -1750,12 +1750,12 @@ ui_file_name_dialog(iptr parent,iptr title,iptr file_buf,iptr filter,iptr defaul
     ofn.Flags = 0x180e;
   }
   if (is_save == 0) {
-    BVar1 = GetOpenFileNameA(&ofn);
-    success = (char)BVar1;
+    dlg_ok = GetOpenFileNameA(&ofn);
+    success = (char)dlg_ok;
   }
   else {
-    BVar1 = GetSaveFileNameA(&ofn);
-    success = (char)BVar1;
+    dlg_ok = GetSaveFileNameA(&ofn);
+    success = (char)dlg_ok;
   }
   if (success != 1) {
     CommDlgExtendedError();
@@ -2725,7 +2725,7 @@ void __cdecl menu_select_music(void)
         popup_game((iptr)&str_nopickmusicnew_2);
         eh_state = 0xffffffff;
         /* inlined unwind funclet 004e27df */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
-        goto LAB_004e27f5;
+        goto done;
       }
       dlg_load_game_section(&dialog2,(iptr)&str_pickmusic,1);
     }
@@ -2743,7 +2743,7 @@ void __cdecl menu_select_music(void)
       /* inlined unwind funclet 004e27df */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
     }
   }
-LAB_004e27f5:
+done:
   return;
 }
 
@@ -2753,7 +2753,7 @@ LAB_004e27f5:
 void __cdecl menu_command(i32 menu,int cmd)
 
 {
-  SHORT SVar1;
+  SHORT shift_state;
   int result;
   
   result = XD_InFlushSendBuffer();
@@ -2990,8 +2990,8 @@ void __cdecl menu_command(i32 menu,int cmd)
         }
         else if (cmd < 0x602) {
           if (cmd == 0x601) {
-            SVar1 = GetAsyncKeyState(0x10);
-            if ((((char)((ushort)SVar1 >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+            shift_state = GetAsyncKeyState(0x10);
+            if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
                (game.multiplayer != '\0')) {
               wonders_report_show(human_civ[0]);
             }
@@ -3003,7 +3003,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             switch(cmd) {
             case 0x500:
               if ((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
-                 (SVar1 = GetAsyncKeyState(0x10), (char)((ushort)SVar1 >> 8) == '\0')) {
+                 (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) == '\0')) {
                 council_show(human_civ[0],0);
               }
               else {
@@ -3045,8 +3045,8 @@ void __cdecl menu_command(i32 menu,int cmd)
           else {
             switch(cmd) {
             case 0x602:
-              SVar1 = GetAsyncKeyState(0x10);
-              if ((((char)((ushort)SVar1 >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+              shift_state = GetAsyncKeyState(0x10);
+              if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
                  (game.multiplayer != '\0')) {
                 top_cities_show(human_civ[0]);
               }
@@ -3055,8 +3055,8 @@ void __cdecl menu_command(i32 menu,int cmd)
               }
               break;
             case 0x603:
-              SVar1 = GetAsyncKeyState(0x10);
-              if ((((char)((ushort)SVar1 >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+              shift_state = GetAsyncKeyState(0x10);
+              if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
                  (game.multiplayer != '\0')) {
                 civ_score_window_show(human_civ[0]);
                 if (game.reveal_map != '\0') {
@@ -3069,8 +3069,8 @@ void __cdecl menu_command(i32 menu,int cmd)
               }
               break;
             case 0x605:
-              SVar1 = GetAsyncKeyState(0x10);
-              if ((((char)((ushort)SVar1 >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+              shift_state = GetAsyncKeyState(0x10);
+              if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
                  (game.multiplayer != '\0')) {
                 demographics_show(human_civ[0]);
               }
@@ -3079,8 +3079,8 @@ void __cdecl menu_command(i32 menu,int cmd)
               }
               break;
             case 0x606:
-              SVar1 = GetAsyncKeyState(0x10);
-              if ((((char)((ushort)SVar1 >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+              shift_state = GetAsyncKeyState(0x10);
+              if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
                  (game.multiplayer != '\0')) {
                 spaceship_select_view_dialog(human_civ[0]);
               }
@@ -3233,7 +3233,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             break;
           case 0x90d:
             if ((cmd == 0x905) &&
-               (SVar1 = GetAsyncKeyState(0x10), (char)((ushort)SVar1 >> 8) != '\0')) {
+               (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) != '\0')) {
               menu_wonder_movies();
             }
             else {
@@ -4085,7 +4085,7 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
         eh_state = 0xffffffff;
         /* inlined unwind funclet 004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
         result = 0;
-        goto LAB_004ebbcf;
+        goto return_result;
       }
       civ = (iptr)cities[city].owner;
       mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,civ);
@@ -4156,7 +4156,7 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
     /* inlined unwind funclet 004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
     result = 0;
   }
-LAB_004ebbcf:
+return_result:
   return result;
 }
 
@@ -5734,28 +5734,28 @@ GameMenu * __thiscall
 menu_set_item_enabled(GameMenu *this,i32 item_id,GameMenu *enabled)
 
 {
-  GameMenu *pCVar1;
-  GameMenu *pCVar2;
+  GameMenu *item;
+  GameMenu *ret_val;
   GameMenu *was_enabled;
   
-  pCVar1 = (GameMenu *)menu_find_item(this,item_id);
-  pCVar2 = pCVar1;
-  if (pCVar1 != (GameMenu *)0x0) {
+  item = (GameMenu *)menu_find_item(this,item_id);
+  ret_val = item;
+  if (item != (GameMenu *)0x0) {
     enabled = (GameMenu *)(uint)(enabled != (GameMenu *)0x0);
-    was_enabled = (GameMenu *)(uint)((pCVar1->item_storage[4] & 1) != 0);
+    was_enabled = (GameMenu *)(uint)((item->item_storage[4] & 1) != 0);
     if (enabled == (GameMenu *)0x0) {
-      *(uint *)(pCVar1->item_flags) = *(uint *)(pCVar1->item_flags) & 0xfffffffe;
+      *(uint *)(item->item_flags) = *(uint *)(item->item_flags) & 0xfffffffe;
     }
     else {
-      *(uint *)(pCVar1->item_flags) = *(uint *)(pCVar1->item_flags) | 1;
+      *(uint *)(item->item_flags) = *(uint *)(item->item_flags) | 1;
     }
-    pCVar2 = this;
-    if ((((this->menu_flags & 0x8000) != 0) && (pCVar2 = pCVar1, (pCVar1->item_storage[4] & 2) == 0)) &&
-       (pCVar2 = enabled, was_enabled != enabled)) {
-      pCVar2 = (GameMenu *)menu_apply_item_enabled(this,item_id);
+    ret_val = this;
+    if ((((this->menu_flags & 0x8000) != 0) && (ret_val = item, (item->item_storage[4] & 2) == 0)) &&
+       (ret_val = enabled, was_enabled != enabled)) {
+      ret_val = (GameMenu *)menu_apply_item_enabled(this,item_id);
     }
   }
-  return pCVar2;
+  return ret_val;
 }
 
 /* 005793a3 auto */
@@ -6012,7 +6012,7 @@ void __cdecl ui_pick_unit_from_stack(void)
       return;
     }
     stack_count = unit_stack_sum(unit,2);
-    if (stack_count == 1) goto LAB_0058d58e;
+    if (stack_count == 1) goto activate_unit;
   }
   dialog_flags = 1;
   prompt = label_string(*(i32 *)(label_string_ids + 0xf8));
@@ -6020,7 +6020,7 @@ void __cdecl ui_pick_unit_from_stack(void)
   if (unit < 0) {
     return;
   }
-LAB_0058d58e:
+activate_unit:
   game.active_unit = (i16)unit;
   units[unit].orders = -1;
   units[unit].flags = units[unit].flags & 0x7fff;
@@ -6667,7 +6667,7 @@ dialog_add_line
       buffer = memblock_alloc((iptr)(this->line_storage),max_len + 1);
       line[2] = buffer;
       line[3] = max_len + 1;
-      goto LAB_0059e2e4;
+      goto copy_line_text;
     }
   }
   len = _strlen((char *)text);
@@ -6675,7 +6675,7 @@ dialog_add_line
   line[2] = buffer;
   len = _strlen((char *)text);
   line[3] = len + 1;
-LAB_0059e2e4:
+copy_line_text:
   crt_strcpy(line[2],text);
   line[4] = x;
   line[5] = y;
@@ -8557,7 +8557,7 @@ void __thiscall dialog_create_controls(Dialog *this)
 
 {
   uint is_checkbox;
-  Control *pCVar2;
+  Control *ctrl_mem;
   InputControl *this_00;
   i32 value;
   int count;
@@ -8727,13 +8727,13 @@ void __thiscall dialog_create_controls(Dialog *this)
           if (((int)((&this->list_rows)[this->cur_pane] * this->columns) < (int)this->option_count) ||
              ((this->style_flags & 0x1000000) != 0)) {
             if (this->columns == 1) {
-              pCVar2 = operator_new(0x40);
+              ctrl_mem = operator_new(0x40);
               eh_state = 1;
-              if (pCVar2 == (Control *)0x0) {
+              if (ctrl_mem == (Control *)0x0) {
                 vscroll = 0;
               }
               else {
-                vscroll = scrollbar_ctor(pCVar2);
+                vscroll = scrollbar_ctor(ctrl_mem);
               }
               eh_state = 0xffffffff;
               *(i32 *)((u8 *)&this->extra_button_labels + this->cur_pane * 4 - 0x10) = vscroll;
@@ -8764,13 +8764,13 @@ void __thiscall dialog_create_controls(Dialog *this)
                         (*(ScrollbarTrackSetView **)((u8 *)&this->extra_button_labels + this->cur_pane * 4 - 0x10),(iptr)dialog_list_on_vscroll);
             }
             else {
-              pCVar2 = operator_new(0x40);
+              ctrl_mem = operator_new(0x40);
               eh_state = 2;
-              if (pCVar2 == (Control *)0x0) {
+              if (ctrl_mem == (Control *)0x0) {
                 hscroll = 0;
               }
               else {
-                hscroll = scrollbar_ctor(pCVar2);
+                hscroll = scrollbar_ctor(ctrl_mem);
               }
               eh_state = 0xffffffff;
               *(i32 *)((u8 *)&this->extra_button_labels + this->cur_pane * 4 - 8) = hscroll;
@@ -8808,13 +8808,13 @@ void __thiscall dialog_create_controls(Dialog *this)
           wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),(iptr)dialog_list_on_dblclick);
         }
         else {
-          pCVar2 = operator_new(0x3c);
+          ctrl_mem = operator_new(0x3c);
           eh_state = 0;
-          if (pCVar2 == (Control *)0x0) {
+          if (ctrl_mem == (Control *)0x0) {
             listbox3 = 0;
           }
           else {
-            listbox3 = checkbox_ctor(pCVar2);
+            listbox3 = checkbox_ctor(ctrl_mem);
           }
           eh_state = 0xffffffff;
           *(i32 *)(this->control_ptr_slots + this->cur_pane * 4 + 0x14) = listbox3;
@@ -8851,13 +8851,13 @@ void __thiscall dialog_create_controls(Dialog *this)
             if (((int)((&this->list_rows)[this->cur_pane] * this->columns) < (int)this->option_count) ||
                ((this->style_flags & 0x1000000) != 0)) {
               if (this->columns == 1) {
-                pCVar2 = operator_new(0x40);
+                ctrl_mem = operator_new(0x40);
                 eh_state = 4;
-                if (pCVar2 == (Control *)0x0) {
+                if (ctrl_mem == (Control *)0x0) {
                   vscroll2 = 0;
                 }
                 else {
-                  vscroll2 = scrollbar_ctor(pCVar2);
+                  vscroll2 = scrollbar_ctor(ctrl_mem);
                 }
                 eh_state = 0xffffffff;
                 *(i32 *)((u8 *)&this->extra_button_labels + this->cur_pane * 4 - 0x10) = vscroll2;
@@ -8889,13 +8889,13 @@ void __thiscall dialog_create_controls(Dialog *this)
                           (*(ScrollbarTrackSetView **)((u8 *)&this->extra_button_labels + this->cur_pane * 4 - 0x10),(iptr)dialog_list2_on_vscroll);
               }
               else {
-                pCVar2 = operator_new(0x40);
+                ctrl_mem = operator_new(0x40);
                 eh_state = 5;
-                if (pCVar2 == (Control *)0x0) {
+                if (ctrl_mem == (Control *)0x0) {
                   hscroll2 = 0;
                 }
                 else {
-                  hscroll2 = scrollbar_ctor(pCVar2);
+                  hscroll2 = scrollbar_ctor(ctrl_mem);
                 }
                 eh_state = 0xffffffff;
                 *(i32 *)((u8 *)&this->extra_button_labels + this->cur_pane * 4 - 8) = hscroll2;
@@ -8929,13 +8929,13 @@ void __thiscall dialog_create_controls(Dialog *this)
             }
           }
           else {
-            pCVar2 = operator_new(0x3c);
+            ctrl_mem = operator_new(0x3c);
             eh_state = 3;
-            if (pCVar2 == (Control *)0x0) {
+            if (ctrl_mem == (Control *)0x0) {
               listbox22 = 0;
             }
             else {
-              listbox22 = checkbox_ctor(pCVar2);
+              listbox22 = checkbox_ctor(ctrl_mem);
             }
             eh_state = 0xffffffff;
             *(i32 *)(this->control_ptr_slots + this->cur_pane * 4 + 0x14) = listbox22;
@@ -9354,7 +9354,7 @@ void __cdecl dialog_on_keydown(i32 key)
     case 0xa2:
     case 0xc1:
       node2 = *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220);
-      goto LAB_005a43d9;
+      goto find_next_option;
     case 0xa3:
     case 0xc6:
       if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) < 2) {
@@ -9462,7 +9462,7 @@ void __cdecl dialog_on_keydown(i32 key)
     case 0xa8:
     case 0xc0:
       node2 = *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220);
-      goto LAB_005a4287;
+      goto find_prev_option;
     case 0xa9:
     case 0xc5:
       if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) < 2) {
@@ -9487,7 +9487,7 @@ void __cdecl dialog_on_keydown(i32 key)
   } while( true );
   while (node2 = *(uptr *)(node2 + 0x14),
         *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) != *(int *)(node2 + 0xc)) {
-LAB_005a4287:
+find_prev_option:
     if (*(int *)(node2 + 0x14) == 0) break;
   }
   if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x48) != *(int *)(node2 + 0xc)) {
@@ -9519,7 +9519,7 @@ LAB_005a4287:
   return;
   while (node2 = *(uptr *)(node2 + 0x10),
         *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) != *(int *)(node2 + 0xc)) {
-LAB_005a43d9:
+find_next_option:
     if (*(int *)(node2 + 0x10) == 0) break;
   }
   if ((*(int *)(dialog_title_font_obj_block.active_dialog + 0x48) == *(int *)(node2 + 0xc)) &&
@@ -10101,7 +10101,7 @@ u32 __thiscall dialog_run_modal(Dialog *this,iptr out_text,iptr timeout_secs)
 
 {
   iptr main_hwnd;
-  BOOL BVar1;
+  BOOL is_iconic;
   int result;
   char item_text[132];
   char sel_text[132];
@@ -10118,8 +10118,8 @@ u32 __thiscall dialog_run_modal(Dialog *this,iptr out_text,iptr timeout_secs)
     }
     if (game_session_active != 0) {
       main_hwnd = wnd_get_window((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-      BVar1 = IsIconic(*(HWND *)(main_hwnd + 4));
-      if (BVar1 != 0) {
+      is_iconic = IsIconic(*(HWND *)(main_hwnd + 4));
+      if (is_iconic != 0) {
         wnd_show_restored((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
       }
     }
@@ -10701,9 +10701,9 @@ wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
   i32 handle;
   i32 *wnd;
   int metric;
-  HWND pHVar4;
-  HDC pHVar5;
-  HCURSOR pHVar6;
+  HWND new_hwnd;
+  HDC hdc;
+  HCURSOR cursor;
   int pos_x2;
   int pos_y2;
   int outer_width;
@@ -10835,14 +10835,14 @@ wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
   else {
     pos_x2 = x;
   }
-  pHVar4 = CreateWindowExA(ex_style,str_mswindowclass_2,title,style2,pos_x2,pos_y2,
+  new_hwnd = CreateWindowExA(ex_style,str_mswindowclass_2,title,style2,pos_x2,pos_y2,
                            outer_width,outer_height,parent_hwnd,(HMENU)0x0,err_report_ctx_block.app_hinstance,(LPVOID)0x0);
-  wnd[1] = pHVar4;
+  wnd[1] = new_hwnd;
   wnd_list_add_hwnd(wnd[1]);
-  pHVar5 = GetDC((HWND)wnd[1]);
-  wnd[2] = pHVar5;
-  pHVar6 = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
-  wnd[7] = pHVar6;
+  hdc = GetDC((HWND)wnd[1]);
+  wnd[2] = hdc;
+  cursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
+  wnd[7] = cursor;
   wnd[6] = 0;
   wnd[8] = 0;
   wnd[0x11] = 0;
@@ -10943,7 +10943,7 @@ void __cdecl wnd_stack_remove(int hwnd)
 void __cdecl wnd_obj_set_bg_color(iptr wnd,uint color_index)
 
 {
-  HBRUSH pHVar1;
+  HBRUSH brush;
   GamePalette *this;
   i8 green[4];
   WndPaletteView *wnd_view;
@@ -10958,15 +10958,15 @@ void __cdecl wnd_obj_set_bg_color(iptr wnd,uint color_index)
     this = (GamePalette *)wnd_get_palette(wnd_view);
     palette_get_entry
               (this,color_index & 0xff,(iptr)red,(iptr)green,(iptr)blue);
-    pHVar1 = CreateSolidBrush((uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-    *(HBRUSH *)(wnd + 0x14) = pHVar1;
+    brush = CreateSolidBrush((uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+    *(HBRUSH *)(wnd + 0x14) = brush;
   }
   else {
     if (*(int *)(wnd + 0x18) != 0) {
       RealizePalette(*(HDC *)(wnd + 8));
     }
-    pHVar1 = CreateSolidBrush(color_index & 0xff | 0x1000000);
-    *(HBRUSH *)(wnd + 0x14) = pHVar1;
+    brush = CreateSolidBrush(color_index & 0xff | 0x1000000);
+    *(HBRUSH *)(wnd + 0x14) = brush;
   }
   InvalidateRect(*(HWND *)(wnd + 4),(RECT *)0x0,0);
   return;
@@ -11314,17 +11314,17 @@ void __cdecl wnd_obj_attach_menu(iptr wnd,HMENU menu)
 void __cdecl wnd_obj_set_icon(iptr wnd,uint icon_id)
 
 {
-  HICON pHVar1;
-  BOOL BVar2;
+  HICON icon;
+  BOOL is_window;
   
   if (wnd != 0) {
     if (*(int *)(wnd + 0x20) != 0) {
       DestroyIcon(*(HICON *)(wnd + 0x20));
     }
-    pHVar1 = LoadIconA(err_report_ctx_block.app_hinstance,(LPCSTR)(icon_id & 0xffff));
-    *(HICON *)(wnd + 0x20) = pHVar1;
-    BVar2 = IsWindow(*(HWND *)(wnd + 4));
-    if ((BVar2 != 0) && (BVar2 = IsIconic(*(HWND *)(wnd + 4)), BVar2 != 0)) {
+    icon = LoadIconA(err_report_ctx_block.app_hinstance,(LPCSTR)(icon_id & 0xffff));
+    *(HICON *)(wnd + 0x20) = icon;
+    is_window = IsWindow(*(HWND *)(wnd + 4));
+    if ((is_window != 0) && (is_window = IsIconic(*(HWND *)(wnd + 4)), is_window != 0)) {
       InvalidateRect(*(HWND *)(wnd + 4),(RECT *)0x0,0);
     }
   }
@@ -11345,22 +11345,22 @@ void __cdecl wnd_obj_set_cursor_now(iptr wnd,i32 cursor_id,int apply_now)
 void __cdecl wnd_obj_set_cursor(iptr wnd,uint cursor_id)
 
 {
-  HCURSOR pHVar1;
+  HCURSOR cursor;
   
   if (wnd != 0) {
     if ((int)cursor_id < 0) {
       if (cursor_id == 0xffffffff) {
-        pHVar1 = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
-        *(HCURSOR *)(wnd + 0x1c) = pHVar1;
+        cursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
+        *(HCURSOR *)(wnd + 0x1c) = cursor;
       }
       else if (cursor_id == 0xfffffffe) {
-        pHVar1 = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f02);
-        *(HCURSOR *)(wnd + 0x1c) = pHVar1;
+        cursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f02);
+        *(HCURSOR *)(wnd + 0x1c) = cursor;
       }
     }
     else {
-      pHVar1 = LoadCursorA(err_report_ctx_block.app_hinstance,(LPCSTR)(cursor_id & 0xffff));
-      *(HCURSOR *)(wnd + 0x1c) = pHVar1;
+      cursor = LoadCursorA(err_report_ctx_block.app_hinstance,(LPCSTR)(cursor_id & 0xffff));
+      *(HCURSOR *)(wnd + 0x1c) = cursor;
     }
   }
   return;
@@ -11391,16 +11391,16 @@ void __cdecl wnd_obj_set_focus(iptr wnd)
 void __cdecl wnd_obj_disable_owner(iptr wnd,iptr owner)
 
 {
-  HWND pHVar1;
-  BOOL BVar2;
+  HWND parent_hwnd;
+  BOOL is_window;
   
   if ((owner == 0) && (wnd != 0)) {
-    pHVar1 = GetParent(*(HWND *)(wnd + 4));
-    BVar2 = IsWindow(pHVar1);
-    if (BVar2 != 0) {
-      BVar2 = 0;
-      pHVar1 = GetParent(*(HWND *)(wnd + 4));
-      EnableWindow(pHVar1,BVar2);
+    parent_hwnd = GetParent(*(HWND *)(wnd + 4));
+    is_window = IsWindow(parent_hwnd);
+    if (is_window != 0) {
+      is_window = 0;
+      parent_hwnd = GetParent(*(HWND *)(wnd + 4));
+      EnableWindow(parent_hwnd,is_window);
     }
   }
   else if (owner != 0) {
@@ -11413,16 +11413,16 @@ void __cdecl wnd_obj_disable_owner(iptr wnd,iptr owner)
 void __cdecl wnd_obj_enable_owner(iptr wnd,iptr owner)
 
 {
-  HWND pHVar1;
-  BOOL BVar2;
+  HWND parent_hwnd;
+  BOOL is_window;
   
   if ((owner == 0) && (wnd != 0)) {
-    pHVar1 = GetParent(*(HWND *)(wnd + 4));
-    BVar2 = IsWindow(pHVar1);
-    if (BVar2 != 0) {
-      BVar2 = 1;
-      pHVar1 = GetParent(*(HWND *)(wnd + 4));
-      EnableWindow(pHVar1,BVar2);
+    parent_hwnd = GetParent(*(HWND *)(wnd + 4));
+    is_window = IsWindow(parent_hwnd);
+    if (is_window != 0) {
+      is_window = 1;
+      parent_hwnd = GetParent(*(HWND *)(wnd + 4));
+      EnableWindow(parent_hwnd,is_window);
     }
   }
   else if (owner != 0) {
@@ -11837,7 +11837,7 @@ HWND __cdecl hotspot_create_hwnd(int *rect,iptr ctrl)
   iptr parent_wnd;
   iptr height;
   int width;
-  HWND pHVar4;
+  HWND hotspot_hwnd;
   HMENU hMenu;
   HINSTANCE hInstance;
   LPVOID lpParam;
@@ -11847,15 +11847,15 @@ HWND __cdecl hotspot_create_hwnd(int *rect,iptr ctrl)
   hInstance = err_report_ctx_block.app_hinstance;
   this = (WndBase *)ctrl_get_parent((Control *)ctrl);
   parent_wnd = wnd_get_window(this);
-  pHVar4 = *(HWND *)(parent_wnd + 4);
+  hotspot_hwnd = *(HWND *)(parent_wnd + 4);
   height = rect_height((iptr)rect);
   width = rect_width((iptr)rect);
-  pHVar4 = CreateWindowExA(4,str_mscontrolclass,((i8 *)&hotspot_wnd_title),0x50000000,*rect,rect[1],
-                           width,height,pHVar4,hMenu,hInstance,lpParam);
-  width = ctrl_init_block(pHVar4,ctrl);
+  hotspot_hwnd = CreateWindowExA(4,str_mscontrolclass,((i8 *)&hotspot_wnd_title),0x50000000,*rect,rect[1],
+                           width,height,hotspot_hwnd,hMenu,hInstance,lpParam);
+  width = ctrl_init_block(hotspot_hwnd,ctrl);
   *(i32 *)(width + 0x2c) = 1;
-  SetWindowLongA(pHVar4,-4,(iptr)hotspot_wndproc);
-  return pHVar4;
+  SetWindowLongA(hotspot_hwnd,-4,(iptr)hotspot_wndproc);
+  return hotspot_hwnd;
 }
 
 /* 005c8f70 auto */
@@ -11912,15 +11912,15 @@ void __thiscall hotspot_fire_dblclick(HotspotDblClickView *this,i32 event_arg)
 LONG __cdecl wnd_from_hwnd(HWND hwnd)
 
 {
-  LONG LVar1;
+  LONG wnd_data;
   
   if (hwnd == (HWND)0x0) {
-    LVar1 = 0;
+    wnd_data = 0;
   }
   else {
-    LVar1 = GetWindowLongA(hwnd,0);
+    wnd_data = GetWindowLongA(hwnd,0);
   }
-  return LVar1;
+  return wnd_data;
 }
 
 /* 005c96cc auto */
@@ -12037,10 +12037,10 @@ void __cdecl ui_set_default_font(iptr font)
 void __cdecl hwnd_get_text(HWND hwnd,LPARAM buffer)
 
 {
-  LRESULT LVar1;
+  LRESULT text_len;
   
-  LVar1 = SendMessageA(hwnd,0xe,0,0);
-  SendMessageA(hwnd,0xd,LVar1 + 1,buffer);
+  text_len = SendMessageA(hwnd,0xe,0,0);
+  SendMessageA(hwnd,0xd,text_len + 1,buffer);
   return;
 }
 
@@ -12367,27 +12367,27 @@ void __cdecl menu_redraw_bar(iptr wnd)
 BOOL __cdecl menu_hmenu_enable_item(HMENU hmenu,int menu_pos,int item_pos,i32 enable)
 
 {
-  BOOL BVar1;
+  BOOL enable_ret;
   HMENU hMenu;
   
   if (item_pos == 0) {
     if ((char)enable == '\0') {
-      BVar1 = EnableMenuItem(hmenu,menu_pos - 1,0x403);
+      enable_ret = EnableMenuItem(hmenu,menu_pos - 1,0x403);
     }
     else {
-      BVar1 = EnableMenuItem(hmenu,menu_pos - 1,0x400);
+      enable_ret = EnableMenuItem(hmenu,menu_pos - 1,0x400);
     }
   }
   else {
     hMenu = GetSubMenu(hmenu,menu_pos - 1);
     if ((char)enable == '\0') {
-      BVar1 = EnableMenuItem(hMenu,item_pos - 1,0x403);
+      enable_ret = EnableMenuItem(hMenu,item_pos - 1,0x403);
     }
     else {
-      BVar1 = EnableMenuItem(hMenu,item_pos - 1,0x400);
+      enable_ret = EnableMenuItem(hMenu,item_pos - 1,0x400);
     }
   }
-  return BVar1;
+  return enable_ret;
 }
 
 /* 005e11be auto */
@@ -12431,15 +12431,15 @@ void __cdecl menu_hmenu_insert_item(HMENU hmenu,int menu_pos,int item_pos,LPCSTR
 
 {
   UINT_PTR uIDNewItem;
-  HMENU pHVar1;
+  HMENU submenu;
   int item_count2;
   uint flags2;
   
   if (hmenu != (HMENU)0x0) {
-    pHVar1 = GetSubMenu(hmenu,menu_pos - 1);
+    submenu = GetSubMenu(hmenu,menu_pos - 1);
     item_count2 = 0;
-    if (((pHVar1 != (HMENU)0x0) && (item_pos != -1)) && (menu_pos != -1)) {
-      item_count2 = GetMenuItemCount(pHVar1);
+    if (((submenu != (HMENU)0x0) && (item_pos != -1)) && (menu_pos != -1)) {
+      item_count2 = GetMenuItemCount(submenu);
     }
     uIDNewItem = (*(UINT_PTR *)&menu_next_item_id);
     if ((item_count2 % 0x16 == 0) && (item_count2 != 0)) {
@@ -12449,17 +12449,17 @@ void __cdecl menu_hmenu_insert_item(HMENU hmenu,int menu_pos,int item_pos,LPCSTR
       flags2 = 0x400;
     }
     if (item_pos == -1) {
-      pHVar1 = CreatePopupMenu();
+      submenu = CreatePopupMenu();
       if (menu_pos == -1) {
-        AppendMenuA(hmenu,flags2 | 0x10,(UINT_PTR)pHVar1,text);
+        AppendMenuA(hmenu,flags2 | 0x10,(UINT_PTR)submenu,text);
       }
       else {
-        InsertMenuA(hmenu,menu_pos - 1,flags2 | 0x10,(UINT_PTR)pHVar1,text);
+        InsertMenuA(hmenu,menu_pos - 1,flags2 | 0x10,(UINT_PTR)submenu,text);
       }
     }
     else {
       (*(UINT_PTR *)&menu_next_item_id)++;
-      InsertMenuA(pHVar1,item_pos - 1,flags2,uIDNewItem,text);
+      InsertMenuA(submenu,item_pos - 1,flags2,uIDNewItem,text);
     }
   }
   return;
@@ -12500,7 +12500,7 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
 {
   SurfaceWindow *this;
   i32 result;
-  BOOL BVar2;
+  BOOL is_iconic;
   iptr owner_wnd;
   iptr surf_width;
   int src_dim;
@@ -12536,17 +12536,17 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
     else {
       (*(u8 * *)&wnd_active_child) = this->window_2;
     }
-    BVar2 = IsIconic(hwnd);
-    if (BVar2 == 0) {
+    is_iconic = IsIconic(hwnd);
+    if (is_iconic == 0) {
       surfwnd_on_resize(this,lparam & 0xffff,lparam >> 0x10);
     }
     result = wnd_frame_wndproc(hwnd,5,wparam,lparam);
   }
   else if (msg == 0xf) {
-    BVar2 = IsIconic(hwnd);
-    if (BVar2 == 0) {
-      BVar2 = IsWindowVisible(hwnd);
-      if (BVar2 != 0) {
+    is_iconic = IsIconic(hwnd);
+    if (is_iconic == 0) {
+      is_iconic = IsWindowVisible(hwnd);
+      if (is_iconic != 0) {
         BeginPaint(hwnd,&ps);
         paint_rect.left = ps.rcPaint.left;
         paint_rect.top = ps.rcPaint.top;
@@ -12629,40 +12629,40 @@ void __cdecl wnd_install_frame_proc(iptr owner,iptr wnd)
 HWND __cdecl hwnd_next_sibling_wrap(HWND hwnd)
 
 {
-  BOOL BVar1;
-  HWND pHVar2;
+  BOOL is_window;
+  HWND sibling;
   
-  BVar1 = IsWindow(hwnd);
-  if (BVar1 == 0) {
-    pHVar2 = (HWND)0x0;
+  is_window = IsWindow(hwnd);
+  if (is_window == 0) {
+    sibling = (HWND)0x0;
   }
   else {
-    pHVar2 = GetWindow(hwnd,2);
-    if (pHVar2 == (HWND)0x0) {
-      pHVar2 = GetWindow(hwnd,0);
+    sibling = GetWindow(hwnd,2);
+    if (sibling == (HWND)0x0) {
+      sibling = GetWindow(hwnd,0);
     }
   }
-  return pHVar2;
+  return sibling;
 }
 
 /* 005ea87c auto */
 HWND __cdecl hwnd_prev_sibling_wrap(HWND hwnd)
 
 {
-  BOOL BVar1;
-  HWND pHVar2;
+  BOOL is_window;
+  HWND sibling;
   
-  BVar1 = IsWindow(hwnd);
-  if (BVar1 == 0) {
-    pHVar2 = (HWND)0x0;
+  is_window = IsWindow(hwnd);
+  if (is_window == 0) {
+    sibling = (HWND)0x0;
   }
   else {
-    pHVar2 = GetWindow(hwnd,3);
-    if (pHVar2 == (HWND)0x0) {
-      pHVar2 = GetWindow(hwnd,1);
+    sibling = GetWindow(hwnd,3);
+    if (sibling == (HWND)0x0) {
+      sibling = GetWindow(hwnd,1);
     }
   }
-  return pHVar2;
+  return sibling;
 }
 
 /* 005ea8d3 auto */
@@ -12670,21 +12670,21 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
 
 {
   iptr frame_win;
-  BOOL BVar1;
+  BOOL is_child;
   iptr frame_win2;
-  HWND pHVar2;
+  HWND start_hwnd;
   int result;
   CheckboxEnabledView *this;
-  UINT UVar4;
+  UINT first_cmd;
   UINT uCmd;
   HWND group_hwnd;
   
   if (hwnd == (HWND)0x0) {
     hwnd = GetFocus();
-    pHVar2 = hwnd;
+    start_hwnd = hwnd;
     frame_win = wnd_get_window((WndBase *)wnd);
-    BVar1 = IsChild(*(HWND *)(frame_win + 4),pHVar2);
-    if (BVar1 == 0) {
+    is_child = IsChild(*(HWND *)(frame_win + 4),start_hwnd);
+    if (is_child == 0) {
       hwnd = (HWND)0x0;
     }
   }
@@ -12693,35 +12693,35 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
       return;
     }
     if (direction == 2) {
-      UVar4 = 5;
+      first_cmd = 5;
       frame_win2 = wnd_get_window((WndBase *)wnd);
-      hwnd = GetWindow(*(HWND *)(frame_win2 + 4),UVar4);
-      pHVar2 = hwnd;
+      hwnd = GetWindow(*(HWND *)(frame_win2 + 4),first_cmd);
+      start_hwnd = hwnd;
     }
     else {
       uCmd = 1;
-      UVar4 = 5;
+      first_cmd = 5;
       result = wnd_get_window((WndBase *)wnd);
-      pHVar2 = GetWindow(*(HWND *)(result + 4),UVar4);
-      hwnd = GetWindow(pHVar2,uCmd);
-      pHVar2 = hwnd;
+      start_hwnd = GetWindow(*(HWND *)(result + 4),first_cmd);
+      hwnd = GetWindow(start_hwnd,uCmd);
+      start_hwnd = hwnd;
     }
   }
   else if (direction == 2) {
     hwnd = (HWND)hwnd_next_sibling_wrap(hwnd);
-    pHVar2 = hwnd;
+    start_hwnd = hwnd;
   }
   else {
     hwnd = (HWND)hwnd_prev_sibling_wrap(hwnd);
-    pHVar2 = hwnd;
+    start_hwnd = hwnd;
   }
   do {
-    BVar1 = IsWindow(hwnd);
-    if (BVar1 == 0) {
+    is_child = IsWindow(hwnd);
+    if (is_child == 0) {
       return;
     }
-    BVar1 = IsWindowVisible(hwnd);
-    if (BVar1 == 0) {
+    is_child = IsWindowVisible(hwnd);
+    if (is_child == 0) {
       if (direction == 2) {
         hwnd = (HWND)hwnd_next_sibling_wrap(hwnd);
       }
@@ -12734,8 +12734,8 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
       if (result != 0) {
         group_hwnd = hwnd;
         while( true ) {
-          BVar1 = IsWindow(hwnd);
-          if (BVar1 == 0) {
+          is_child = IsWindow(hwnd);
+          if (is_child == 0) {
             return;
           }
           result = radiogrp_hwnds_same_group(group_hwnd,hwnd);
@@ -12775,7 +12775,7 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
         hwnd = (HWND)hwnd_prev_sibling_wrap(hwnd);
       }
     }
-    if (hwnd == pHVar2) {
+    if (hwnd == start_hwnd) {
       return;
     }
   } while( true );
@@ -12830,16 +12830,16 @@ void __cdecl wnd_on_menu_command(HWND hwnd,i32 cmd_id)
 {
   char handled;
   WndOnCommandView *this;
-  HMENU pHVar2;
+  HMENU hmenu;
   uint pos;
   
   this = (WndOnCommandView *)GetWindowLongA(hwnd,4);
   handled = wnd_call_command(this,cmd_id);
   if (handled == '\0') {
     err_report_ctx_block.menu_search_pos = 0;
-    pHVar2 = GetMenu(hwnd);
-    if (pHVar2 != (HMENU)0x0) {
-      pos = menu_find_item_pos(pHVar2,cmd_id);
+    hmenu = GetMenu(hwnd);
+    if (hmenu != (HMENU)0x0) {
+      pos = menu_find_item_pos(hmenu,cmd_id);
       wnd_call_menu_pos_command((WndOnMenuPosCommandView *)this,pos & 0xffff,pos >> 0x10);
     }
   }
@@ -12851,8 +12851,8 @@ uint __cdecl menu_find_item_pos(HMENU hmenu,UINT item_id)
 
 {
   int item_count;
-  UINT UVar2;
-  HMENU pHVar3;
+  UINT sub_id;
+  HMENU submenu;
   i32 result;
   int i;
   
@@ -12860,17 +12860,17 @@ uint __cdecl menu_find_item_pos(HMENU hmenu,UINT item_id)
   err_report_ctx_block.menu_search_pos++;
   item_count = GetMenuItemCount(hmenu);
   for (i = 0; i < item_count; i++) {
-    UVar2 = GetMenuItemID(hmenu,i);
-    if (UVar2 == 0xffffffff) {
-      pHVar3 = GetSubMenu(hmenu,i);
-      result = menu_find_item_pos(pHVar3,item_id);
+    sub_id = GetMenuItemID(hmenu,i);
+    if (sub_id == 0xffffffff) {
+      submenu = GetSubMenu(hmenu,i);
+      result = menu_find_item_pos(submenu,item_id);
       if (result != 0) {
         i = item_count + 1;
       }
     }
     else {
-      UVar2 = GetMenuItemID(hmenu,i);
-      if (item_id == UVar2) {
+      sub_id = GetMenuItemID(hmenu,i);
+      if (item_id == sub_id) {
         result = (i + 1) * 0x10000 | err_report_ctx_block.menu_search_pos - 1U;
         i = item_count + 1;
       }
@@ -13274,36 +13274,36 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
 {
   char handled;
   DDWindow *this;
-  LRESULT LVar2;
+  LRESULT def_result;
   i32 key;
   int can_close;
-  uptr DVar5;
+  uptr wnd_obj;
   i32 zero_arg;
   
   this = (DDWindow *)GetClassLongA(hwnd,4);
   if (this == (DDWindow *)0x0) {
-    LVar2 = DefWindowProcA(hwnd,msg,wparam,lparam);
-    return LVar2;
+    def_result = DefWindowProcA(hwnd,msg,wparam,lparam);
+    return def_result;
   }
   if (msg < 0x11) {
     if (msg != 0x10) {
       if (msg == 2) {
-        DVar5 = GetClassLongA(hwnd,0);
-        *(i32 *)(DVar5 + 0x14) = 1;
-        LVar2 = DefWindowProcA(hwnd,2,wparam,lparam);
-        return LVar2;
+        wnd_obj = GetClassLongA(hwnd,0);
+        *(i32 *)(wnd_obj + 0x14) = 1;
+        def_result = DefWindowProcA(hwnd,2,wparam,lparam);
+        return def_result;
       }
-      goto switchD_005efc68_default;
+      goto default_proc;
     }
     can_close = wnd_call_close((WndOnCloseView *)(this->handlers));
     if (can_close != 0) {
-      LVar2 = DefWindowProcA(hwnd,0x10,wparam,lparam);
-      return LVar2;
+      def_result = DefWindowProcA(hwnd,0x10,wparam,lparam);
+      return def_result;
     }
   }
   else if (msg < 0x45) {
     if (msg != 0x44) {
-      if (msg != 0x1c) goto switchD_005efc68_default;
+      if (msg != 0x1c) goto default_proc;
       if (wparam != ddwin_last_activate_app) {
         ddwin_call_activate_app((DDWindowActivateView *)this,wparam);
         ddwin_last_activate_app = wparam;
@@ -13334,7 +13334,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
       wnd_call_keyup((WndOnKeyUpView *)(this->handlers),key);
     }
     else {
-      if (msg != 0x102) goto switchD_005efc68_default;
+      if (msg != 0x102) goto default_proc;
       handled = ddwin_dispatch_ctrl_msg(this,0x102,wparam & 0xff,0);
       if (handled == '\0') {
         wnd_call_char((WndOnCharView *)(this->handlers),wparam & 0xff);
@@ -13414,15 +13414,15 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
         }
         break;
       default:
-        goto switchD_005efc68_default;
+        goto default_proc;
       }
     }
   }
   else {
     if (msg != 0x4c8) {
-switchD_005efc68_default:
-      LVar2 = DefWindowProcA(hwnd,msg,wparam,lparam);
-      return LVar2;
+default_proc:
+      def_result = DefWindowProcA(hwnd,msg,wparam,lparam);
+      return def_result;
     }
     if (lparam == 0x20d) {
       wnd_call_msg4c8((WndCallMsg4c8View *)(this->handlers),0);

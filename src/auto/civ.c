@@ -1907,12 +1907,12 @@ void __cdecl civ_score_window_draw(void)
               row_wrapped = 1;
               draw_x = (icon_width / 2) * (row & 1) + left_x;
               draw_y += row_height;
-              if ((6 < (int)row) || (0xf0 < draw_y)) goto LAB_004355c2;
+              if ((6 < (int)row) || (0xf0 < draw_y)) goto draw_civ_row;
             }
           }
         }
       }
-LAB_004355c2:
+draw_civ_row:
       if (row_wrapped != 0) {
         draw_y -= row_height;
       }
@@ -2804,7 +2804,7 @@ void __cdecl civ_update_power_ranks(void)
   civ = 0;
   do {
     if (7 < (int)civ) {
-LAB_00485891:
+check_alert_ai:
       alert_ai = 0;
       civ = (uptr)game.civ_by_rank[7];
       if ((((((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) &&
@@ -2870,7 +2870,7 @@ LAB_00485891:
     }
     if (((uint)game.human_players & 1 << (game.civ_by_rank[civ] & 0x1f)) != 0) {
       game.worst_human_rank = (byte)civ;
-      goto LAB_00485891;
+      goto check_alert_ai;
     }
     civ++;
   } while( true );
@@ -3700,11 +3700,11 @@ void __cdecl civ_change_password_dialog(iptr civ)
     dialog_load_text_section(&dialog2,(iptr)&str_game_7,(iptr)&str_password1,0x1f,(iptr)&str_empty_110,0,0,0,1);
     password_dialog_set_title((iptr)&dialog2,civ,0x26d);
     result = dialog_run_modal(&dialog2,(iptr)entered,0);
-    if (result < 0) goto LAB_004985a2;
+    if (result < 0) goto cleanup;
     result = _strcmp(entered,current_password);
     if (result != 0) {
       popup_game((iptr)&str_password0);
-      goto LAB_004985a2;
+      goto cleanup;
     }
     dialog_load_text_section(&dialog2,(iptr)&str_game_7,(iptr)&str_password1_2,0x1f,(iptr)&str_empty_111,0,0,0,1);
     password_dialog_set_title((iptr)&dialog2,civ,0x26c);
@@ -3719,7 +3719,7 @@ void __cdecl civ_change_password_dialog(iptr civ)
       popup_game((iptr)&str_password4);
     }
   }
-LAB_004985a2:
+cleanup:
   passwords_refresh_flags();
   *(i32 *)(((i8 *)&map_views_block.civ_password_prompt_pending) + civ * 4) = 0;
   mp_turn_timer_resume(1);
@@ -5462,7 +5462,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       if (option_count2 == 0) {
         seh_state = 0xffffffff;
         /* inlined unwind funclet 004c193a */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
-        goto LAB_004c1950;
+        goto done;
       }
       button_count = 0;
       if (mode_state[1] != 0) {
@@ -5487,7 +5487,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       if (choice < 0) {
         seh_state = 0xffffffff;
         /* inlined unwind funclet 004c193a */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
-        goto LAB_004c1950;
+        goto done;
       }
       if (dialog2.result_extra != 1) break;
       if (diplo_session_active == 0) {
@@ -5591,7 +5591,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
         seh_state = 0xffffffff;
         /* inlined unwind funclet 004c193a */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
       }
-LAB_004c1950:
+done:
       return;
     }
     if ((advances[advance].enabled != '\0') &&
@@ -5605,14 +5605,14 @@ LAB_004c1950:
             known = (int)(advance - ((uint)civs[civ].num_advances + exclude_current)) % 3;
             goto joined_r0x004c1729;
           }
-          goto LAB_004c1734;
+          goto add_path_option;
         }
       }
       else {
         known = civ_has_advance(civ2,advance);
 joined_r0x004c1729:
         if (known != 0) {
-LAB_004c1734:
+add_path_option:
           if ((advances[advance].preq[0] != -2) || (advances[advance].preq[1] != -2)) {
             option_count2++;
             known = advance_has_prereq(choice,advance);
@@ -6114,7 +6114,7 @@ i32 __cdecl rules_write_sections(void)
     if (rc == 0) {
       rc = file_exists((iptr)&str_rules_bak_5);
       if ((rc != 0) && (rc = crt_remove(str_rules_bak_6), rc != 0))
-      goto LAB_004cd353;
+      goto cleanup;
       out_file = (FILE *)file_open_path((iptr)&str_rules_bak_7,(iptr)&str_wt_2);
       uType = 0x40;
       lpCaption = str_warning_2;
@@ -6130,7 +6130,7 @@ i32 __cdecl rules_write_sections(void)
   else {
     rc = file_exists((iptr)&str_rules_bak);
     if (((rc != 0) && (rc = crt_remove(str_rules_bak_2), rc != 0)) ||
-       (rc = crt_rename(rules_name,str_rules_bak_3), rc != 0)) goto LAB_004cd353;
+       (rc = crt_rename(rules_name,str_rules_bak_3), rc != 0)) goto cleanup;
     in_file = (FILE *)file_open_path((iptr)&str_rules_bak_4,(iptr)&str_rt_3);
     out_file = (FILE *)file_open_path((iptr)rules_name,(iptr)&str_wt);
   }
@@ -6143,7 +6143,7 @@ i32 __cdecl rules_write_sections(void)
       do {
         line_ptr = _fgets(s,0x100,in_file);
         if ((line_ptr == (char *)0x0) || (rc = _fputs(s,out_file), rc == -1))
-        goto LAB_004cd353;
+        goto cleanup;
         str_strip_newline((iptr)s);
         str_trim((iptr)s);
         rc = __strcmpi(s,header);
@@ -6153,11 +6153,11 @@ i32 __cdecl rules_write_sections(void)
       }
       do {
         line_ptr = _fgets(s,0x100,in_file);
-        if (line_ptr == (char *)0x0) goto LAB_004cd353;
+        if (line_ptr == (char *)0x0) goto cleanup;
         line_len = _strlen(s);
       } while (1 < line_len);
       rc = _fputs(s,out_file);
-      if (rc == -1) goto LAB_004cd353;
+      if (rc == -1) goto cleanup;
     }
     do {
       line_ptr = _fgets(s,0x100,in_file);
@@ -6168,7 +6168,7 @@ i32 __cdecl rules_write_sections(void)
       rc = _fputs(s,out_file);
     } while (rc != -1);
   }
-LAB_004cd353:
+cleanup:
   if (in_file != (FILE *)0x0) {
     _fclose(in_file);
   }
@@ -6968,7 +6968,7 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
       if (best_advance < 0) {
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0057a661 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
-        goto LAB_0057a677;
+        goto done;
       }
       advance = best_advance;
       if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) ||
@@ -6998,7 +6998,7 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0057a661 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   }
-LAB_0057a677:
+done:
   return;
 }
 

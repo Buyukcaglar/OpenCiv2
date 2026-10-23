@@ -923,7 +923,7 @@ void __thiscall spaceship_play_launch_video(WndBase *this)
       if (open_result == -0x7ffbfeac) {
         popup_game((iptr)&str_vfwnotregistered_6);
       }
-      goto LAB_004d5e33;
+      goto done;
     }
     wnd_hide(this + 0x10);
     wnd_flush_paint();
@@ -952,7 +952,7 @@ void __thiscall spaceship_play_launch_video(WndBase *this)
   }
   (*(u32 *)&((CityViewWindow *)this)->launch_video_player) = 0;
   snd_sync_music_option();
-LAB_004d5e33:
+done:
   return;
 }
 
@@ -1956,7 +1956,7 @@ iptr __cdecl spaceship_choose_part_group(iptr civ,iptr group)
     count = spaceship_group_count_clamped(civ,group);
     limit = spaceship_group_limit(civ,group);
     if ((count < limit) && (count = spaceship_group_can_build(civ,group), count != 0))
-    goto LAB_0059803b;
+    goto check_group_zero;
   }
   for (grp = 2; (int)(uint)(group == 0) <= grp; grp--) {
     count = spaceship_group_can_build(civ,grp);
@@ -1969,7 +1969,7 @@ iptr __cdecl spaceship_choose_part_group(iptr civ,iptr group)
       }
     }
   }
-LAB_0059803b:
+check_group_zero:
   if (group == 0) {
     for (civ2 = 1; civ2 < 8; civ2++) {
       if (((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
