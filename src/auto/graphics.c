@@ -2094,11 +2094,11 @@ PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *this)
   eh_state = 0;
   surface_ctor((DibSurface *)&this->style_flags);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
-  button_ctor((Control *)this->pad_15c);
+  button_ctor((Control *)this->parley_title);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  button_ctor((Control *)(this->pad_15c + 0x3c));
+  button_ctor((Control *)(this->accept_button_2));
   eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),3);
-  dll_handle_init((DllHandle *)(this->pad_1bc + 0x18));
+  dll_handle_init((DllHandle *)(this->portrait_dll));
   this->vtable = (u32)&PTR_FUN_0061d6c0;
   this->portrait_civ = 0;
   this->show_turn_timer = 0;
@@ -2122,7 +2122,7 @@ void __thiscall portrait_dlg_dtor(PortraitDlgDtorView *this)
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(i8 ***)this->pad_0 = &PTR_FUN_0061d6c0;
+  *(i8 ***)this->window_base = &PTR_FUN_0061d6c0;
   (*(i32 *)((char *)&eh_state + 1)) = 0;
   (*(i8 *)((char *)&eh_state + 0)) = 3;
   /* inlined unwind funclet 004963a5 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x1d4)); }
@@ -2150,12 +2150,12 @@ i32 __thiscall portrait_dlg_create(PortraitDialog *this)
             ((DibSurface *)this,ADDR(0x62cbc8, ((u8 *)&g.d_0062cbc8)),0xc00,0,0,frame_border_width * 8 + 0x276,
              frame_border_width * 4 + frame_caption_height + 0x16e,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
   portrait_dlg_create_buttons((WindowObjectView *)this);
-  wnd_set_caption_height((WndBase *)this->pad_48,frame_caption_height);
-  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x403ce7, portrait_dlg_on_click));
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->pad_48 + 0x10),ADDR(0x401f14, portrait_dlg_on_dblclick));
+  wnd_set_caption_height((WndBase *)this->window_2,frame_caption_height);
+  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x403ce7, portrait_dlg_on_click));
+  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x401f14, portrait_dlg_on_dblclick));
   portrait_dlg_paint(this);
   wnd_repaint((SurfaceWindow *)this);
-  wnd_center((WndCenterView *)this->pad_48);
+  wnd_center((WndCenterView *)this->window_2);
   return 1;
 }
 #undef frame_border_width
@@ -2206,18 +2206,18 @@ void __thiscall portrait_dlg_create_buttons(WindowObjectView *this)
 void __thiscall portrait_dlg_run(PortraitDialog *this)
 
 {
-  ctrl_show_and_redraw((Control *)this->pad_15c);
-  ctrl_show_and_redraw((Control *)(this->pad_15c + 0x3c));
+  ctrl_show_and_redraw((Control *)this->parley_title);
+  ctrl_show_and_redraw((Control *)(this->accept_button_2));
   window_show((WindowObjectView *)this);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)this->window_2,ADDR(0x403585, net_modal_idle_poll));
   }
-  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
-  wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,0);
-  wnd_hide((WndBase *)this->pad_48);
+  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
+  wnd_set_modal_idle_callback((ModalMenuWindow *)this->window_2,0);
+  wnd_hide((WndBase *)this->window_2);
   wnd_flush_paint();
-  control_hide((Control *)this->pad_15c);
-  control_hide((Control *)(this->pad_15c + 0x3c));
+  control_hide((Control *)this->parley_title);
+  control_hide((Control *)(this->accept_button_2));
   civs[this->portrait_civ].leader_portrait = (u8)this->show_turn_status;
   return;
 }
@@ -2246,13 +2246,13 @@ void __thiscall portrait_dlg_paint(PortraitDialog *this)
   i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   title = label_string(*(i32 *)(label_string_ids + 0x4a8));
-  dll_handle_load((DllHandle *)(this->pad_1bc + 0x18),ADDR(0x62cbd8, ((u8 *)&g.d_0062cbd8)));
+  dll_handle_load((DllHandle *)(this->portrait_dll),ADDR(0x62cbd8, ((u8 *)&g.d_0062cbd8)));
   loaded = surface_load_gif_resource
                     ((DibSurface *)&this->style_flags,
                      0xd3 - (uint)(leaders[civs[this->portrait_civ].tribe].female == '\0'),10,0xec,
                      ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
   if (loaded != 0) {
-    dll_handle_free((DllHandle *)(this->pad_1bc + 0x18));
+    dll_handle_free((DllHandle *)(this->portrait_dll));
     loaded = frame_caption_height + frame_bevel_width * -2;
     height = surface_get_width((DibSurface *)this);
     gfx_tile_fill((iptr)this,frame_border_tile,0,frame_bevel_width,height,loaded,0,frame_bevel_width);
@@ -6802,7 +6802,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
     scroll_parent = (u8 *)0x0;
   }
   else {
-    scroll_parent = this->pad_48;
+    scroll_parent = this->window_2;
   }
   scrollbar_create
             ((Control *)&this->dialog_w,(iptr)scroll_parent,0x65,(iptr)rect,0);
@@ -6819,7 +6819,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
     ok_parent = (u8 *)0x0;
   }
   else {
-    ok_parent = this->pad_48;
+    ok_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
@@ -6832,15 +6832,15 @@ void __thiscall sprite_picker_run(ViewWindow *this)
     import_parent = (u8 *)0x0;
   }
   else {
-    import_parent = this->pad_48;
+    import_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x954));
   button_create
-            ((Control *)(this->pad_364 + 0x10),(iptr)import_parent,0xc9,(iptr)rect,label);
-  button_set_callback((Control *)(this->pad_364 + 0x10),ADDR(0x4029a5, sprite_picker_import_all_clicked));
-  ctrl_set_default_button((Control *)(this->pad_364 + 0x10));
+            ((Control *)(this->import_all_button),(iptr)import_parent,0xc9,(iptr)rect,label);
+  button_set_callback((Control *)(this->import_all_button),ADDR(0x4029a5, sprite_picker_import_all_clicked));
+  ctrl_set_default_button((Control *)(this->import_all_button));
   if (sprite_sheet_mode == 5) {
-    ctrl_disable((Control *)(this->pad_364 + 0x10));
+    ctrl_disable((Control *)(this->import_all_button));
   }
   x2 = x2 + this->init_lux_rate + 2;
   rect_set_xywh((iptr)rect,x2,y2,this->init_lux_rate,this->init_sci_rate);
@@ -6848,7 +6848,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
     cancel_parent = (u8 *)0x0;
   }
   else {
-    cancel_parent = this->pad_48;
+    cancel_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
@@ -6858,7 +6858,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x403887, sprite_picker_redraw_cb));
   wnd_repaint((SurfaceWindow *)this);
   window_show((WindowObjectView *)this);
-  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
+  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
   while (sprite_picker_running != 0) {
     win_pump_one_message();
   }
@@ -7112,7 +7112,7 @@ ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *this)
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   button_ctor((Control *)&this->sci_label_y);
   (*(i8 *)((char *)&seh_state + 0)) = 2;
-  button_ctor((Control *)(this->pad_364 + 0x10));
+  button_ctor((Control *)(this->import_all_button));
   seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),3);
   button_ctor((Control *)&this->fill_rect_top);
   this->vtable = (u32)&PTR_FUN_0061d6fc;
@@ -8225,11 +8225,11 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 text,int x,int y,uin
       old_color = gfx_set_text_color_index(CONCAT31((int3)(font_height >> 0xb),gfx_black_color_index));
       saved_color = CONCAT31((*(i32 *)((char *)&saved_color + 1)),old_color);
       dib_draw_text_at(this->dib,*(i32 *)draw_current_font,text,shadow_offset + x,
-                   shadow_offset + y,(iptr)(this->pad_0 + 0x14),flags);
+                   shadow_offset + y,(iptr)(this->clip_rect_2),flags);
       gfx_set_text_color_index(saved_color);
     }
     dib_draw_text_at(this->dib,*(i32 *)draw_current_font,text,x,y,
-                 (iptr)(this->pad_0 + 0x14),flags);
+                 (iptr)(this->clip_rect_2),flags);
   }
   return;
 }
@@ -10093,8 +10093,8 @@ sprite_merge_at
               *(int *)(src + 0xc) + dy);
       dst->bounds_rect = *(u32 *)(src + 0x10);
       dst->bounds_top = *(u32 *)(src + 0x14);
-      *(i32 *)dst->pad_18 = *(i32 *)(src + 0x18);
-      *(i32 *)(dst->pad_18 + 4) = *(i32 *)(src + 0x1c);
+      *(i32 *)dst->bounds_right = *(i32 *)(src + 0x18);
+      *(i32 *)(dst->bounds_bottom) = *(i32 *)(src + 0x1c);
       OffsetRect((LPRECT)&dst->bounds_rect,dx,dy);
       dst->offset_x = *(int *)(src + 0x20) + dx;
       dst->full_height = *(int *)(src + 0x24) + dy;
@@ -10207,12 +10207,12 @@ sprite_merge_at
       OffsetRect(&rect,dst->bounds_rect,dst->bounds_top);
       dst->bounds_rect = rect.left;
       dst->bounds_top = rect.top;
-      *(LONG *)dst->pad_18 = rect.right;
-      *(LONG *)(dst->pad_18 + 4) = rect.bottom;
+      *(LONG *)dst->bounds_right = rect.right;
+      *(LONG *)(dst->bounds_bottom) = rect.bottom;
       dst->frame_rect = rect.left;
       dst->frame_top = rect.top;
-      *(LONG *)dst->pad_8 = rect.right;
-      *(LONG *)(dst->pad_8 + 4) = rect.bottom;
+      *(LONG *)dst->frame_right = rect.right;
+      *(LONG *)(dst->frame_bottom) = rect.bottom;
       if (dst->data_ptr != 0) {
         sprite_unlock(dst);
       }

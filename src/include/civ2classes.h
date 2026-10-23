@@ -21,7 +21,7 @@ typedef struct ModalMenuWindow {
     union { u32 field_4; u32 wnd_palette; };
     union { u32 field_8; u32 native_wnd; };
     union { u32 field_c; u32 wnd_record; };
-    u8 pad_10[104];
+    union { u8 pad_10[104]; struct { u8 wnd_handlers[104]; }; };
     union { u32 field_78; u32 menu; };
     union { u32 field_7c; u32 min_width; };
     union { u32 field_80; u32 min_height; };
@@ -65,7 +65,7 @@ typedef struct Wnd {
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
     union { u32 field_c4; u32 keyboard_nav; };
-    u8 pad_c8[4];
+    union { u8 pad_c8[4]; struct { u32 leader_surface_window; }; };
 } Wnd;
 
 /* 5 methods, size 0x6f0 */
@@ -94,30 +94,30 @@ typedef struct PictureFrameWindow {
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
     union { u32 field_c4; u32 keyboard_nav; };
-    u8 pad_c8[260];
+    union { u8 pad_c8[260]; struct { u8 gap_c8[56]; u8 frame_wnd_base[16]; u8 frame_handlers[188]; }; };
     union { u32 field_1cc; u32 ship_civ; };
     u8 pad_1d0[4];
     union { u32 field_1d4; u32 frame_left; };
     union { u32 field_1d8; u32 frame_top; };
     union { u32 field_1dc; u32 frame_right; };
     union { u32 field_1e0; u32 frame_bottom; };
-    u8 pad_1e4[784];
+    union { u8 pad_1e4[784]; struct { u8 gap_1e4[20]; u8 ship_palette[28]; u32 cityview_palette; u8 gap_218[724]; u32 media_wnd; u8 gap_4f0[4]; }; };
     union { u32 field_4f4; u32 throne_width; };
     union { u32 field_4f8; u32 throne_height; };
-    u8 pad_4fc[4];
+    union { u8 pad_4fc[4]; struct { u8 throne_dll[4]; }; };
     union { u32 field_500; u32 throne_civ; };
-    u8 pad_504[296];
+    union { u8 pad_504[296]; struct { u32 throne_surface_wnd; u8 gap_508[68]; u8 throne_wnd_base[16]; u8 throne_handlers[164]; u8 civs_art_surface[44]; }; };
     union { u32 field_62c; u32 anim_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 flight_timer; };
-    u8 pad_638[140];
+    union { u8 pad_638[140]; struct { u8 stats_text[16]; u32 improvement_art_surface; u8 gap_64c[12]; u32 leader_dll; u8 gap_65c[44]; u8 portrait_sprite[8]; u8 wonder_art_surface[52]; }; };
     union { u32 field_6c4; u32 killer_civ; };
     u8 pad_6c8[4];
     union { u32 field_6cc; u32 slide_rect; };
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
     union { u32 field_6d8; u32 resource_dll; };
-    u8 pad_6dc[16];
+    union { u8 pad_6dc[16]; struct { u32 slot_sprites; u8 gap_6e0[12]; }; };
     union { u32 field_6ec; u32 panel_clip_rect; };
 } PictureFrameWindow;
 
@@ -154,29 +154,29 @@ typedef struct DestroyedCivsWindow {
     union { u32 field_1d8; u32 frame_top; };
     union { u32 field_1dc; u32 frame_right; };
     union { u32 field_1e0; u32 frame_bottom; };
-    u8 pad_1e4[784];
+    union { u8 pad_1e4[784]; struct { u8 gap_1e4[776]; u8 media_wnd[8]; }; };
     union { u32 field_4f4; u32 throne_width; };
     union { u32 field_4f8; u32 throne_height; };
     u8 pad_4fc[4];
     union { u32 field_500; u32 throne_civ; };
-    u8 pad_504[296];
+    union { u8 pad_504[296]; struct { u8 gap_504[48]; u8 movie_wnd_base[16]; u8 destroyed_civs_handlers[188]; u8 civs_art_surface[44]; }; };
     union { u32 field_62c; u32 anim_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 flight_timer; };
-    u8 pad_638[140];
+    union { u8 pad_638[140]; struct { u8 gap_638[16]; u8 improvement_art_surface[4]; u8 panel_sprite[60]; u8 portrait_sprite[60]; }; };
     union { u32 field_6c4; u32 killer_civ; };
     u8 pad_6c8[4];
     union { u32 field_6cc; u32 slide_rect; };
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
     union { u32 field_6d8; u32 resource_dll; };
-    u8 pad_6dc[16];
+    union { u8 pad_6dc[16]; struct { u8 slot_sprites[16]; }; };
     union { u32 field_6ec; u32 panel_clip_rect; };
     u8 pad_6f0[4];
     union { u32 field_6f4; u32 panel_clip_right; };
     u8 pad_6f8[4];
     union { u32 field_6fc; u32 slide_y; };
-    u8 pad_700[16];
+    union { u8 pad_700[16]; struct { u8 caption_font_2[16]; }; };
 } DestroyedCivsWindow;
 
 /* 18 methods, size 0xfb8 */
@@ -205,23 +205,23 @@ typedef struct SpaceshipWindow {
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
     union { u32 field_c4; u32 keyboard_nav; };
-    u8 pad_c8[260];
+    union { u8 pad_c8[260]; struct { u8 gap_c8[56]; u8 frame_wnd_base[204]; }; };
     union { u32 field_1cc; u32 ship_civ; };
     u8 pad_1d0[4];
     union { u32 field_1d4; u32 frame_left; };
     union { u32 field_1d8; u32 frame_top; };
     union { u32 field_1dc; u32 frame_right; };
     union { u32 field_1e0; u32 frame_bottom; };
-    u8 pad_1e4[784];
+    union { u8 pad_1e4[784]; struct { u8 ship_panel_rect[16]; u8 ship_dll[4]; u8 ship_palette[756]; u8 media_wnd[8]; }; };
     union { u32 field_4f4; u32 throne_width; };
     union { u32 field_4f8; u32 throne_height; };
     u8 pad_4fc[4];
     union { u32 field_500; u32 throne_civ; };
-    u8 pad_504[296];
+    union { u8 pad_504[296]; struct { u8 gap_504[48]; u8 movie_wnd_base[248]; }; };
     union { u32 field_62c; u32 anim_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 flight_timer; };
-    u8 pad_638[140];
+    union { u8 pad_638[140]; struct { u8 stats_text[140]; }; };
     union { u32 field_6c4; u32 killer_civ; };
     u8 pad_6c8[4];
     union { u32 field_6cc; u32 slide_rect; };
@@ -234,18 +234,18 @@ typedef struct SpaceshipWindow {
     union { u32 field_6f4; u32 panel_clip_right; };
     u8 pad_6f8[4];
     union { u32 field_6fc; u32 slide_y; };
-    u8 pad_700[440];
+    union { u8 pad_700[440]; struct { u8 gap_700[312]; u8 success_text[128]; }; };
     union { u32 field_8b8; u32 type_x; };
     union { u32 field_8bc; u32 type_y; };
     union { u32 field_8c0; u32 type_index; };
-    u8 pad_8c4[40];
+    union { u8 pad_8c4[40]; struct { u8 large_font[8]; u8 medium_font[8]; u8 typing_font[8]; u8 status_line_rect[16]; }; };
     union { u32 field_8ec; u32 spaceship_state; };
     union { u32 field_8f0; u32 launched; };
-    u8 pad_8f4[492];
+    union { u8 pad_8f4[492]; struct { u8 ship_view_surface[72]; u8 ship_image_sprite[60]; u8 close_btn_disabled_sprite[60]; u8 close_btn_normal_sprite[60]; u8 close_btn_pressed_sprite[60]; u8 launch_btn_disabled_sprite[60]; u8 launch_btn_normal_sprite[60]; u8 launch_btn_pressed_sprite[60]; }; };
     union { u32 field_ae0; u32 launch_state; };
-    u8 pad_ae4[1076];
+    union { u8 pad_ae4[1076]; struct { u8 hotspot_map[1072]; u8 movie_dll[4]; }; };
     union { u32 field_f18; u32 advance_civ; };
-    u8 pad_f1c[156];
+    union { u8 pad_f1c[156]; struct { u8 movie_caption_font[8]; u8 movie_caption_text[148]; }; };
 } SpaceshipWindow;
 
 /* 2 methods, size 0x108c */
@@ -274,14 +274,14 @@ typedef struct DiploLeaderWindow {
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
     union { u32 field_c4; u32 keyboard_nav; };
-    u8 pad_c8[260];
+    union { u8 pad_c8[260]; struct { u8 leader_surface_window[260]; }; };
     union { u32 field_1cc; u32 ship_civ; };
     u8 pad_1d0[4];
     union { u32 field_1d4; u32 frame_left; };
     union { u32 field_1d8; u32 frame_top; };
     union { u32 field_1dc; u32 frame_right; };
     union { u32 field_1e0; u32 frame_bottom; };
-    u8 pad_1e4[784];
+    union { u8 pad_1e4[784]; struct { u8 gap_1e4[64]; u8 leader_palette[720]; }; };
     union { u32 field_4f4; u32 throne_width; };
     union { u32 field_4f8; u32 throne_height; };
     u8 pad_4fc[4];
@@ -290,7 +290,7 @@ typedef struct DiploLeaderWindow {
     union { u32 field_62c; u32 anim_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 flight_timer; };
-    u8 pad_638[140];
+    union { u8 pad_638[140]; struct { u8 gap_638[32]; u8 leader_dll[4]; u8 leader_video_wnd[104]; }; };
     union { u32 field_6c4; u32 killer_civ; };
     u8 pad_6c8[4];
     union { u32 field_6cc; u32 slide_rect; };
@@ -354,16 +354,16 @@ typedef struct ThroneRoomWindow {
     union { u32 field_1d8; u32 frame_top; };
     union { u32 field_1dc; u32 frame_right; };
     union { u32 field_1e0; u32 frame_bottom; };
-    u8 pad_1e4[784];
+    union { u8 pad_1e4[784]; struct { u8 gap_1e4[776]; u8 media_wnd[8]; }; };
     union { u32 field_4f4; u32 throne_width; };
     union { u32 field_4f8; u32 throne_height; };
-    u8 pad_4fc[4];
+    union { u8 pad_4fc[4]; struct { u8 throne_dll[4]; }; };
     union { u32 field_500; u32 throne_civ; };
-    u8 pad_504[296];
+    union { u8 pad_504[296]; struct { u8 throne_surface_wnd[72]; u8 throne_wnd_base[204]; u8 throne_backbuffer[20]; }; };
     union { u32 field_62c; u32 anim_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 flight_timer; };
-    u8 pad_638[140];
+    union { u8 pad_638[140]; struct { u8 gap_638[40]; u8 choice_clickmap[100]; }; };
     union { u32 field_6c4; u32 killer_civ; };
     u8 pad_6c8[4];
     union { u32 field_6cc; u32 slide_rect; };
@@ -391,17 +391,17 @@ typedef struct ThroneRoomWindow {
     union { u8 field_1084; u8 leader_tribe; };
     u8 pad_1085[3];
     union { u8 field_1088; u8 pending_flag_1088; };
-    u8 pad_1089[2203];
+    union { u8 pad_1089[2203]; struct { u8 gap_1089[667]; u8 movie_frame_surface[72]; u8 movie_caption_rect[372]; u8 slot_ptr_table_lead[12]; u32 slot_sprite_ptrs; u8 gap_14f0[236]; u8 small_building_sprites_a[240]; u8 small_building_sprites_b[240]; u8 large_building_sprites_a[240]; u8 large_building_sprites_b[120]; }; };
     union { u32 field_1924; u32 choosing_item; };
     union { u32 field_1928; u32 throne_complete; };
     union { u32 field_192c; u32 chosen_item; };
-    u8 pad_1930[180];
+    union { u8 pad_1930[180]; struct { u8 choice_dialog_2[108]; u32 icon_surface; u8 gap_19a0[68]; }; };
     union { u32 field_19e4; u32 terrain_kind; };
     union { u32 field_19e8; u32 slot_count; };
     union { u32 field_19ec; u32 wonder_slots_left; };
     union { u32 field_19f0; u32 improvement_slots_left; };
     union { u32 field_19f4; u32 houses_left; };
-    u8 pad_19f8[588];
+    union { u8 pad_19f8[588]; struct { u8 improvement_slot_tables[164]; u8 starfield_stars[208]; u8 wonder_slot_tables[184]; u32 click_prompt_rect; u8 gap_1c28[12]; u32 click_prompt_font; u8 gap_1c38[12]; }; };
 } ThroneRoomWindow;
 
 /* 13 methods, size 0x1cb4 */
@@ -430,14 +430,14 @@ typedef struct CityViewWindow {
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
     union { u32 field_c4; u32 keyboard_nav; };
-    u8 pad_c8[260];
+    union { u8 pad_c8[260]; struct { u8 gap_c8[56]; u8 frame_wnd_base[16]; u8 frame_handlers[188]; }; };
     union { u32 field_1cc; u32 ship_civ; };
     u8 pad_1d0[4];
     union { u32 field_1d4; u32 frame_left; };
     union { u32 field_1d8; u32 frame_top; };
     union { u32 field_1dc; u32 frame_right; };
     union { u32 field_1e0; u32 frame_bottom; };
-    u8 pad_1e4[784];
+    union { u8 pad_1e4[784]; struct { u8 gap_1e4[48]; u8 cityview_palette[736]; }; };
     union { u32 field_4f4; u32 throne_width; };
     union { u32 field_4f8; u32 throne_height; };
     u8 pad_4fc[4];
@@ -446,7 +446,7 @@ typedef struct CityViewWindow {
     union { u32 field_62c; u32 anim_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 flight_timer; };
-    u8 pad_638[140];
+    union { u8 pad_638[140]; struct { u8 gap_638[16]; u8 improvement_art_surface[72]; u8 wonder_art_surface[52]; }; };
     union { u32 field_6c4; u32 killer_civ; };
     u8 pad_6c8[4];
     union { u32 field_6cc; u32 slide_rect; };
@@ -474,7 +474,7 @@ typedef struct CityViewWindow {
     union { u8 field_1084; u8 leader_tribe; };
     u8 pad_1085[3];
     union { u8 field_1088; u8 pending_flag_1088; };
-    u8 pad_1089[2203];
+    union { u8 pad_1089[2203]; struct { u8 building_art_block[2203]; }; };
     union { u32 field_1924; u32 choosing_item; };
     union { u32 field_1928; u32 throne_complete; };
     union { u32 field_192c; u32 chosen_item; };
@@ -488,7 +488,24 @@ typedef struct CityViewWindow {
     union { u32 field_1c8c; u32 fixed_slot_used; };
     union { u32 field_1c90; u32 city_id; };
     union { u32 field_1c94; u32 art_era; };
-    u8 pad_1c98[28];
+    union { u8 pad_1c98[28]; struct { u8 title_rect[16]; u8 title_font[12]; }; };
+    u8 pad_1cb4[244];
+    u8 launch_video_player[1];
+    u8 launch_video_player_b1[1];
+    u8 launch_video_player_b2[1];
+    u8 launch_video_player_b3[1];
+    u8 close_btn_pressed[1];
+    u8 close_btn_pressed_b1[1];
+    u8 close_btn_pressed_b2[1];
+    u8 close_btn_pressed_b3[1];
+    u8 launch_btn_pressed[1];
+    u8 launch_btn_pressed_b1[1];
+    u8 launch_btn_pressed_b2[1];
+    u8 launch_btn_pressed_b3[1];
+    u8 typing_label_part[1];
+    u8 typing_label_part_b1[1];
+    u8 typing_label_part_b2[1];
+    u8 typing_label_part_b3[1];
 } CityViewWindow;
 
 /* 9 methods, size 0x9d0 */
@@ -556,7 +573,7 @@ typedef struct SurfaceWindow {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -582,7 +599,7 @@ typedef struct ListPaneWindow {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -617,6 +634,12 @@ typedef struct PediaRedrawView {
     union { u32 field_114; u32 style_flags; };
     union { u32 field_118; u32 caption_height; };
     union { u32 field_11c; u32 border_width; };
+    u8 pad_120[248];
+    u32 caption_button_slots[34];
+    u8 pedia_history_modes[128];
+    u32 civ_muted_flags[31];
+    u8 pedia_pane_layout[220];
+    u8 numeric_edit_controls_area[1];
 } PediaRedrawView;
 
 /* 16 methods, size 0x12c */
@@ -639,9 +662,9 @@ typedef struct ScaledWindowView {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
+    union { u8 pad_104[12]; struct { u8 pedia_history_base[12]; }; };
     union { uptr field_110; uptr on_paint; };
     union { u32 field_114; u32 style_flags; };
     union { u32 field_118; u32 caption_height; };
@@ -671,7 +694,7 @@ typedef struct ParleyWindowLayout {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -693,7 +716,7 @@ typedef struct ParleyWindowLayout {
     union { uptr field_150; uptr init_rect; };
     union { u32 field_154; u32 large_layout; };
     union { u32 field_158; u32 built_layout; };
-    u8 pad_15c[24];
+    union { u8 pad_15c[24]; struct { u32 parley_title; u8 gap_160[20]; }; };
 } ParleyWindowLayout;
 
 /* 5 methods, size 0x208 */
@@ -716,7 +739,7 @@ typedef struct PortraitDialog {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -738,12 +761,12 @@ typedef struct PortraitDialog {
     union { uptr field_150; uptr init_rect; };
     union { u32 field_154; u32 large_layout; };
     union { u32 field_158; u32 built_layout; };
-    u8 pad_15c[92];
+    union { u8 pad_15c[92]; struct { u8 parley_title[24]; u8 topic_history_area[36]; u8 accept_button_2[32]; }; };
     union { u8 field_1b8; u8 timer_text; };
     u8 pad_1b9[1];
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
-    u8 pad_1bc[32];
+    union { u8 pad_1bc[32]; struct { u8 timer_seconds_digits[24]; u8 portrait_dll[8]; }; };
     union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
@@ -753,7 +776,7 @@ typedef struct PortraitDialog {
     union { u32 field_1f4; u32 right_civ; };
     union { u32 field_1f8; u32 shown_left_civ; };
     union { u32 field_1fc; u32 caption_button_count; };
-    u8 pad_200[8];
+    union { u8 pad_200[8]; struct { u8 pane_selection_flags_area[8]; }; };
 } PortraitDialog;
 
 /* 35 methods, size 0x2e4 */
@@ -776,7 +799,7 @@ typedef struct FrameWindow {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -788,7 +811,7 @@ typedef struct FrameWindow {
     union { u32 field_128; u32 client_y; };
     union { u32 field_12c; u32 client_width; };
     union { u32 field_130; u32 client_height; };
-    u8 pad_134[4];
+    union { u8 pad_134[4]; struct { u8 frame_title[4]; }; };
     union { u32 field_138; u32 dlg_width; };
     u8 pad_13c[4];
     union { u32 field_140; u32 panel_rect; };
@@ -800,10 +823,10 @@ typedef struct FrameWindow {
     union { u32 field_158; u32 built_layout; };
     u8 pad_15c[92];
     union { u8 field_1b8; u8 timer_text; };
-    u8 pad_1b9[1];
+    union { u8 pad_1b9[1]; struct { u8 timer_minutes_text[1]; }; };
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
-    u8 pad_1bc[32];
+    union { u8 pad_1bc[32]; struct { u8 timer_seconds_digits[32]; }; };
     union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
@@ -813,7 +836,7 @@ typedef struct FrameWindow {
     union { u32 field_1f4; u32 right_civ; };
     union { u32 field_1f8; u32 shown_left_civ; };
     union { u32 field_1fc; u32 caption_button_count; };
-    u8 pad_200[8];
+    union { u8 pad_200[8]; struct { u8 pane_selection_flags_area[8]; }; };
     union { u32 field_208; u32 saved_mode_choice; };
     union { u32 field_20c; u32 left_exchange_kind; };
     union { u32 field_210; u32 right_exchange_kind; };
@@ -827,7 +850,7 @@ typedef struct FrameWindow {
     union { u32 field_230; u32 side1_amount_init; };
     union { uptr field_234; uptr item_buffer; };
     union { u32 field_238; u32 techs_all_known; };
-    u8 pad_23c[24];
+    union { u8 pad_23c[24]; struct { u8 gap_23c[20]; u8 close_caption_sprite_slot[4]; }; };
     union { u32 field_254; u32 text_offset_y; };
     u8 pad_258[24];
     union { u32 field_270; u32 list_font; };
@@ -849,7 +872,7 @@ typedef struct FrameWindow {
     u8 pad_2c4[8];
     union { uptr field_2cc; uptr title_font; };
     union { uptr field_2d0; uptr title_small_font; };
-    u8 pad_2d4[4];
+    union { u8 pad_2d4[4]; struct { u8 editor_combo_boxes[4]; }; };
     union { u32 field_2d8; u32 rates_civ; };
     union { u32 field_2dc; u32 max_rate_value; };
     union { u32 field_2e0; u32 tax_rate_sel; };
@@ -875,7 +898,7 @@ typedef struct ViewWindow {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -897,7 +920,7 @@ typedef struct ViewWindow {
     union { uptr field_150; uptr init_rect; };
     union { u32 field_154; u32 large_layout; };
     union { u32 field_158; u32 built_layout; };
-    u8 pad_15c[92];
+    union { u8 pad_15c[92]; struct { u8 parley_title[92]; }; };
     union { u8 field_1b8; u8 timer_text; };
     u8 pad_1b9[1];
     union { u8 field_1ba; u8 timer_colon; };
@@ -912,7 +935,7 @@ typedef struct ViewWindow {
     union { u32 field_1f4; u32 right_civ; };
     union { u32 field_1f8; u32 shown_left_civ; };
     union { u32 field_1fc; u32 caption_button_count; };
-    u8 pad_200[8];
+    union { u8 pad_200[8]; struct { u8 pane_selection_flags_area[8]; }; };
     union { u32 field_208; u32 saved_mode_choice; };
     union { u32 field_20c; u32 left_exchange_kind; };
     union { u32 field_210; u32 right_exchange_kind; };
@@ -926,9 +949,9 @@ typedef struct ViewWindow {
     union { u32 field_230; u32 side1_amount_init; };
     union { uptr field_234; uptr item_buffer; };
     union { u32 field_238; u32 techs_all_known; };
-    u8 pad_23c[24];
+    union { u8 pad_23c[24]; struct { u8 parley_caption_buttons[20]; u8 close_caption_sprite_slot[4]; }; };
     union { u32 field_254; u32 text_offset_y; };
-    u8 pad_258[24];
+    union { u8 pad_258[24]; struct { u8 caption_button_hotspots[20]; u8 zoom_out_caption_sprite_slot[4]; }; };
     union { u32 field_270; u32 list_font; };
     u8 pad_274[24];
     union { u32 field_28c; u32 reset_value_28c; };
@@ -945,10 +968,10 @@ typedef struct ViewWindow {
     union { u32 field_2b8; u32 frame_bottom; };
     union { u32 field_2bc; u32 client_rect; };
     union { u32 field_2c0; u32 client_top; };
-    u8 pad_2c4[8];
+    union { u8 pad_2c4[8]; struct { u8 parley_checkboxes[8]; }; };
     union { uptr field_2cc; uptr title_font; };
     union { uptr field_2d0; uptr title_small_font; };
-    u8 pad_2d4[4];
+    union { u8 pad_2d4[4]; struct { u8 editor_combo_boxes[4]; }; };
     union { u32 field_2d8; u32 rates_civ; };
     union { u32 field_2dc; u32 max_rate_value; };
     union { u32 field_2e0; u32 tax_rate_sel; };
@@ -984,7 +1007,7 @@ typedef struct ViewWindow {
     union { uptr field_358; uptr tax_scrollbar; };
     union { uptr field_35c; uptr no_thanks_button_value; };
     union { uptr field_360; uptr counter_button_value; };
-    u8 pad_364[56];
+    union { u8 pad_364[56]; struct { u8 rate_values[8]; u8 sci_rate_combo[8]; u8 import_all_button[8]; u32 advance_list_scrollbars[2]; u32 advance_list_hotspots[5]; u8 lux_rate_scrollbar[4]; }; };
     union { uptr field_39c; uptr left_accept_button; };
     union { uptr field_3a0; uptr right_accept_button; };
     union { uptr field_3a4; uptr left_agreed_button; };
@@ -997,7 +1020,7 @@ typedef struct ViewWindow {
     union { u8 field_3bd; u8 left_side_accepted; };
     union { u8 field_3be; u8 left_side_confirmed; };
     union { u8 field_3bf; u8 remote_side_agreed; };
-    u8 pad_3c0[112];
+    union { u8 pad_3c0[112]; struct { u32 advance_pane_rects[1]; u32 advance_pane_rect_top[1]; u32 advance_pane_rect_right[1]; u32 advance_pane_rect_bottom[2]; u8 picwnd_extra_button[4]; u8 sci_rate_scrollbar[8]; u32 advance_pane_columns[2]; u32 advance_pane_item_counts[2]; u32 advance_pane_items[8]; u8 picwnd_scrollbar[8]; u8 rate_lock_checkboxes[24]; }; };
 } ViewWindow;
 
 /* 1 methods, size 0x488 */
@@ -1020,7 +1043,7 @@ typedef struct PictureWindowCore {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -1312,7 +1335,291 @@ typedef struct PictureWindow {
     union { u32 field_498; u32 controls_created; };
     union { u32 field_49c; u32 report_param; };
     union { u32 field_4a0; u32 frame_style; };
-    u8 pad_4a4[32];
+    union { u8 pad_4a4[32]; struct { u8 popup_dialog[32]; }; };
+    u8 pad_4c4[1408];
+    u8 wonder_topic_view[20];
+    u32 delete_action_button;
+    u8 pad_a5c[20];
+    u8 wonder_sort_keys_view[36];
+    uptr editor_list_box;
+    u8 pad_a98[32];
+    u8 wonder_count[1];
+    u8 wonder_count_byte1[1];
+    u8 wonder_count_byte2[1];
+    u8 wonder_count_byte3[1];
+    u8 wonder_sort_keys[4];
+    u8 wonder_items_view[16];
+    u8 trigger_listbox[4];
+    u8 improvement_key_slots[56];
+    u8 action_listbox[32];
+    u8 pedia_improvement_ids[16];
+    u32 council_dialog;
+    u8 pad_b40[32];
+    u8 unit_topic_slots[36];
+    u8 unit_key_slots[12];
+    u8 unit_key_init_slots[12];
+    u8 pedia_unit_count[1];
+    u8 pedia_unit_count_byte1[1];
+    u8 pedia_unit_count_byte2[1];
+    u8 pedia_unit_count_byte3[1];
+    u8 pedia_unit_sort_keys[224];
+    u8 unit_id_slots[24];
+    u32 pedia_unit_ids;
+    u8 unit_ids_tail[100];
+    u8 wonder_index[4];
+    u8 border_tile_surface[40];
+    u8 pedia_key_init_slots[32];
+    u8 movie_palette[64];
+    u8 government_key_slots[4];
+    u8 pedia_government_count[1];
+    u8 pedia_government_count_byte1[1];
+    u8 pedia_government_count_byte2[1];
+    u8 pedia_government_count_byte3[1];
+    u8 pedia_government_sort_keys[4];
+    u8 government_topic_slots[24];
+    u8 pedia_government_ids[28];
+    uptr pedia_terrain_count_2;
+    uptr pedia_terrain_sort_keys;
+    u8 pad_dd4[20];
+    u8 terrain_key_slots[72];
+    u8 council_dll_handle[4];
+    u8 council_text_file[4];
+    u8 terrain_id_slots[20];
+    u8 council_speech_lines[8];
+    u8 pedia_terrain_ids_2[4];
+    u32 advisor_opinions[5];
+    u32 council_civ;
+    u32 council_active_2;
+    u32 advisor_codes;
+    u32 advisor_codes_part2;
+    u32 advisor_codes_part3;
+    u32 advisor_codes_part4;
+    u32 speech_line_advisors[3];
+    u32 speech_line_values[3];
+    u32 speech_line_params[6];
+    u8 advisor_code_slots[24];
+    u8 concept_key_slots[12];
+    u8 pedia_concept_count[1];
+    u8 pedia_concept_count_byte1[1];
+    u8 pedia_concept_count_byte2[1];
+    u8 pedia_concept_count_byte3[1];
+    u8 pedia_concept_sort_keys[424];
+    u8 pedia_entry_lists[292];
+    u8 speech_advisor_index[4];
+    u8 speech_line_y[1];
+    u8 speech_line_y_b1[1];
+    u8 speech_line_y_b2[1];
+    u8 speech_line_y_b3[1];
+    u32 speech_rect;
+    u8 speech_rect_top[4];
+    u8 speech_rect_right[4];
+    u8 speech_rect_bottom[4];
+    u32 advisor_button_1;
+    u8 pad_11c4[56];
+    u32 advisor_button_4;
+    u8 pad_1200[56];
+    uptr advisor_button_3;
+    u8 pad_123c[56];
+    u32 advisor_button_2;
+    u8 pad_1278[36];
+    u8 pedia_concept_list_base[20];
+    u32 advisor_button_0;
+    u8 pad_12b4[40];
+    u8 pedia_sorted_entries[16];
+    u32 council_close_button;
+    u8 pad_12f0[684];
+    u8 city_index[1];
+    u8 city_index_b1[1];
+    u8 city_index_b2[1];
+    u8 city_index_b3[1];
+    u8 redraw_suspended[1];
+    u8 redraw_suspended_b1[1];
+    u8 redraw_suspended_b2[1];
+    u8 redraw_suspended_b3[1];
+    u8 is_closed[1];
+    u8 is_closed_b1[1];
+    u8 is_closed_b2[1];
+    u8 is_closed_b3[1];
+    u8 redraw_deferred[1];
+    u8 redraw_deferred_b1[1];
+    u8 redraw_deferred_b2[1];
+    u8 redraw_deferred_b3[1];
+    u8 notice_mode[1];
+    u8 notice_mode_b1[1];
+    u8 notice_mode_b2[1];
+    u8 notice_mode_b3[1];
+    u8 info_panel_mode[1];
+    u8 info_panel_mode_b1[1];
+    u8 info_panel_mode_b2[1];
+    u8 info_panel_mode_b3[1];
+    u8 improvement_scroll_pos[1];
+    u8 improvement_scroll_pos_b1[1];
+    u8 improvement_scroll_pos_b2[1];
+    u8 improvement_scroll_pos_b3[1];
+    u8 panel_toggle_flag[1];
+    u8 panel_toggle_flag_b1[1];
+    u8 panel_toggle_flag_b2[1];
+    u8 panel_toggle_flag_b3[1];
+    u8 layout_width[4];
+    u8 resource_bar_height[4];
+    u8 margin_x_2[1];
+    u8 margin_x_b1[1];
+    u8 content_offset_x_byte2[1];
+    u8 content_offset_x_byte3[1];
+    u8 content_offset_y[1];
+    u8 content_offset_y_byte1[1];
+    u8 content_offset_y_byte2[1];
+    u8 content_offset_y_byte3[1];
+    u8 prev_content_offset_x[4];
+    u8 prev_content_offset_y[1];
+    u8 prev_content_offset_y_byte1[1];
+    u8 prev_content_offset_y_byte2[1];
+    u8 prev_content_offset_y_byte3[1];
+    u8 view_scale[1];
+    u8 view_scale_byte1[1];
+    u8 view_scale_byte2[1];
+    u8 view_scale_byte3[1];
+    u8 map_zoom_level[1];
+    u8 map_zoom_level_byte1[1];
+    u8 map_zoom_level_byte2[1];
+    u8 map_zoom_level_byte3[1];
+    u8 citizens_rect[4];
+    u8 citizens_rect_top[12];
+    u8 resource_map_rect[4];
+    u8 resource_map_rect_top[12];
+    u8 food_box_rect[4];
+    u8 food_box_rect_top[12];
+    u8 production_rect[4];
+    u8 production_rect_top[4];
+    u8 production_rect_right[4];
+    u32 production_rect_bottom;
+    u8 button_area_rect[16];
+    u32 supported_units_rect;
+    u32 supported_units_rect_top;
+    u8 pad_1634[8];
+    u32 improvements_rect;
+    u8 improvements_rect_top[12];
+    u32 info_panel_rect;
+    u32 info_panel_rect_top;
+    u8 pad_1654[8];
+    u32 resource_label_rect;
+    u8 pad_1660[8];
+    u32 resource_label_rect_bottom;
+    u32 improvement_list_rect;
+    uptr improvement_list_rect_top;
+    u32 improvement_list_rect_right;
+    u8 pad_1678[4];
+    uptr supported_units_label_rect;
+    u8 supported_units_label_rect_top[12];
+    u32 info_title_rect;
+    u32 info_title_rect_top;
+    u32 info_title_rect_right;
+    u8 pad_1698[4];
+    u8 improvements_scrollbar_rect[16];
+    u32 city_font;
+    u8 pad_16b0[4];
+    u32 buy_button;
+    u8 change_button[1];
+    u8 change_button_byte1[1];
+    u8 change_button_byte2[1];
+    u8 change_button_byte3[1];
+    u8 exit_button[1];
+    u8 exit_button_byte1[1];
+    u8 exit_button_byte2[1];
+    u8 exit_button_byte3[1];
+    u32 view_button;
+    u32 info_button;
+    u32 happy_button;
+    u32 map_button;
+    u32 rename_button;
+    u32 prev_city_button;
+    u32 next_city_button;
+    u8 improvements_scrollbar[1];
+    u8 improvements_scrollbar_byte1[1];
+    u8 improvements_scrollbar_byte2[1];
+    u8 improvements_scrollbar_byte3[1];
+    u8 pedia_list_head[1];
+    u8 pedia_list_head_byte1[1];
+    u8 text_list_1_byte2[1];
+    u8 text_list_1_byte3[1];
+    u8 text_list_2_head[1];
+    u8 text_list_2_byte1[1];
+    u8 text_list_2_byte2[1];
+    u8 text_list_2_byte3[1];
+    u8 text_list_3_head[1];
+    u8 text_list_3_byte1[1];
+    u8 text_list_3_byte2[1];
+    u8 text_list_3_byte3[1];
+    u8 text_list_4_head[1];
+    u8 text_list_4_byte1[1];
+    u8 text_list_4_byte2[1];
+    u8 text_list_4_byte3[1];
+    u8 text_list_5_head[1];
+    u8 text_list_5_byte1[1];
+    u8 text_list_5_byte2[1];
+    u8 text_list_5_byte3[1];
+    u8 text_list_6_head[1];
+    u8 text_list_6_byte1[1];
+    u8 text_list_6_byte2[1];
+    u8 text_list_6_byte3[1];
+    u32 has_close_box;
+    u8 pad_16fc[8];
+    u32 close_box_width;
+    u32 close_box_height;
+    u32 close_box_sprite;
+    u8 close_box_hotspot[1];
+    u8 close_box_hotspot_byte1[1];
+    u8 close_box_hotspot_byte2[1];
+    u8 close_box_hotspot_byte3[1];
+    u8 list_describe_button[60];
+    u32 list_close_button;
+    u8 pad_1754[56];
+    u32 detail_back_button;
+    u8 pad_1790[56];
+    u8 detail_describe_button[60];
+    u32 detail_close_button;
+    u8 pad_1808[56];
+    u8 text_back_button[60];
+    u32 text_close_button;
+    u8 pad_1880[56];
+    u32 concept_list_back_button;
+    u8 pad_18bc[56];
+    u8 advance_list_describe_button[60];
+    u8 advance_list_tech_tree_button[60];
+    u8 advance_list_close_button[60];
+    u32 advance_detail_back_button;
+    u8 pad_19ac[56];
+    u32 advance_detail_tech_tree_button;
+    u8 pad_19e8[56];
+    u8 advance_detail_describe_button[60];
+    u32 advance_detail_close_button;
+    u8 pad_1a60[56];
+    u32 description_edit;
+    u8 pad_1a9c[16];
+    u8 description_edit_body[52];
+    u32 list_scrollbar;
+    u8 pad_1ae4[4];
+    u8 list_scrollbar_body[56];
+    u32 list_hotspot;
+    u32 list_rect;
+    u32 list_rect_top;
+    u32 list_rect_right;
+    u32 list_rect_bottom;
+    u8 list_item_table[1028];
+    u8 list_selected_index[4];
+    u8 list_top_index[1];
+    u8 list_top_index_byte1[1];
+    u8 list_top_index_byte2[1];
+    u8 list_top_index_byte3[1];
+    u8 link_list_head[1];
+    u8 link_list_head_byte1[1];
+    u8 link_list_head_byte2[1];
+    u8 link_list_head_byte3_region[25789];
+    u32 advance_pane_item_flags[8184];
+    u8 parley_pane_arrays_base[8];
+    u8 parley_pane_rows_base[40];
+    u32 parley_list_top_index[4];
+    u32 parley_list_page_rows[1];
 } PictureWindow;
 
 /* 13 methods, size 0x61c */
@@ -1335,7 +1642,7 @@ typedef struct MediaWindow {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -1473,7 +1780,7 @@ typedef struct MediaWindow {
     union { u32 field_498; u32 controls_created; };
     union { u32 field_49c; u32 report_param; };
     union { u32 field_4a0; u32 frame_style; };
-    u8 pad_4a4[252];
+    union { u8 pad_4a4[252]; struct { u8 gap_4a4[40]; u8 rate_ok_button[212]; }; };
     union { u32 field_5a0; u32 double_size; };
     union { u32 field_5a4; u32 avi_option; };
     union { u32 field_5a8; u32 has_audio; };
@@ -1482,18 +1789,18 @@ typedef struct MediaWindow {
     union { uptr field_5b4; uptr target_surface; };
     union { u32 field_5b8; u32 pos_x; };
     union { u32 field_5bc; u32 pos_y; };
-    u8 pad_5c0[28];
+    union { u8 pad_5c0[28]; struct { u8 gap_5c0[20]; u8 advance_topic_view[8]; }; };
     union { u32 field_5dc; u32 panel_width; };
     union { u32 field_5e0; u32 panel_height; };
     union { u32 field_5e4; u32 header_height; };
-    u8 pad_5e8[8];
+    union { u8 pad_5e8[8]; struct { u8 pedia_frame_rect[8]; }; };
     union { u32 field_5f0; u32 frame_rect_right; };
     u8 pad_5f4[4];
     union { u32 field_5f8; u32 content_left; };
     union { u32 field_5fc; u32 content_top; };
     union { u32 field_600; u32 content_right; };
     union { u32 field_604; u32 content_bottom; };
-    u8 pad_608[20];
+    union { u8 pad_608[20]; struct { u8 gap_608[16]; u8 pedia_title_text_2[4]; }; };
 } MediaWindow;
 
 /* 1 methods, size 0x798 */
@@ -1674,9 +1981,9 @@ typedef struct PediaAdvanceListView {
     union { u32 field_5fc; u32 content_top; };
     union { u32 field_600; u32 content_right; };
     union { u32 field_604; u32 content_bottom; };
-    u8 pad_608[80];
+    union { u8 pad_608[80]; struct { u8 gap_608[28]; u8 pedia_list_init_area[52]; }; };
     union { u32 field_658; u32 pedia_advance_count; };
-    u8 pad_65c[316];
+    union { u8 pad_65c[316]; struct { u8 gap_65c[120]; uptr editor_ok_button; u8 gap_6d8[56]; u32 editor_help_button; u8 gap_714[56]; u32 editor_cancel_button; u8 gap_750[56]; uptr editor_rename_button; u8 gap_78c[12]; }; };
 } PediaAdvanceListView;
 
 /* 20 methods, size 0xa28 */
@@ -1699,7 +2006,7 @@ typedef struct DocumentWindow {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; u32 dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
+    union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
     union { u32 field_100; u32 handler_slot_100; };
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
@@ -1821,7 +2128,7 @@ typedef struct DocumentWindow {
     union { u8 field_3bd; u8 left_side_accepted; };
     union { u8 field_3be; u8 left_side_confirmed; };
     union { u8 field_3bf; u8 remote_side_agreed; };
-    u8 pad_3c0[144];
+    union { u8 pad_3c0[144]; struct { u8 gap_3c0[140]; u8 editor_edit_controls[4]; }; };
     union { u32 field_450; u32 report_id; };
     union { u32 field_454; u32 frame_state; };
     union { u32 field_458; u32 page_count; };
@@ -1837,7 +2144,7 @@ typedef struct DocumentWindow {
     union { u32 field_498; u32 controls_created; };
     union { u32 field_49c; u32 report_param; };
     union { u32 field_4a0; u32 frame_style; };
-    u8 pad_4a4[252];
+    union { u8 pad_4a4[252]; struct { u8 gap_4a4[180]; u8 movie_surface[72]; }; };
     union { u32 field_5a0; u32 double_size; };
     union { u32 field_5a4; u32 avi_option; };
     union { u32 field_5a8; u32 has_audio; };
@@ -1850,18 +2157,18 @@ typedef struct DocumentWindow {
     union { u32 field_5dc; u32 panel_width; };
     union { u32 field_5e0; u32 panel_height; };
     union { u32 field_5e4; u32 header_height; };
-    u8 pad_5e8[8];
+    union { u8 pad_5e8[8]; struct { u8 pedia_frame_rect[8]; }; };
     union { u32 field_5f0; u32 frame_rect_right; };
     u8 pad_5f4[4];
     union { u32 field_5f8; u32 content_left; };
     union { u32 field_5fc; u32 content_top; };
     union { u32 field_600; u32 content_right; };
     union { u32 field_604; u32 content_bottom; };
-    u8 pad_608[80];
+    union { u8 pad_608[80]; struct { u8 pedia_body_blit_rect[16]; u8 pedia_title_text_2[64]; }; };
     union { u32 field_658; u32 pedia_advance_count; };
-    u8 pad_65c[800];
+    union { u8 pad_65c[800]; struct { u8 advance_sort_keys[120]; u8 editor_ok_button[60]; u8 editor_help_button[60]; u8 editor_cancel_button[60]; u8 editor_rename_button[60]; u8 editor_icon_button[28]; u8 advance_items_view[12]; u8 advance_list_items[20]; u8 editor_misc_button[60]; u8 terrain_coast_button[60]; u32 terrain_misc_button; u8 gap_87c[56]; u8 unit_flags_button[60]; u8 unit_sound_button[56]; u8 improvement_topic_view[4]; u8 add_trigger_button[60]; u8 edit_trigger_button[20]; }; };
     union { u32 field_97c; u32 pedia_improve_count; };
-    u8 pad_980[144];
+    union { u8 pad_980[144]; struct { u8 improvement_sort_keys[36]; u32 delete_trigger_button; u8 improvement_list_init_area[56]; u8 add_action_button[48]; }; };
     union { u32 field_a10; u32 start_frame; };
     union { u32 field_a14; u32 end_frame; };
     union { u32 field_a18; u32 current_frame; };
@@ -2059,6 +2366,14 @@ typedef struct DialogTextLineView {
     union { u32 field_10c; u32 edit_y; };
     union { u32 field_110; u32 edit_label_width; };
     union { u32 field_114; u32 button_y; };
+    u8 pad_118[300];
+    u32 sprite_draw_callback;
+    u8 pad_248[12];
+    u32 string_pool;
+    u8 pad_258[44];
+    u32 list_vscroll_controls;
+    u8 pad_288[4];
+    u32 list_hscroll_controls;
 } DialogTextLineView;
 
 /* 5 methods, size 0x228 */
@@ -2172,7 +2487,7 @@ typedef struct DialogWindowView {
     union { u32 field_1ec; u32 list2_column_width; };
     union { u32 field_1f0; u32 list_row_height; };
     union { u32 field_1f4; u32 list2_row_height; };
-    u8 pad_1f8[24];
+    union { u8 pad_1f8[24]; struct { u8 gap_1f8[8]; u32 list_row_height_override; u8 gap_204[4]; uptr list_indents; u8 gap_20c[4]; }; };
     union { u32 field_210; u32 list_top_option; };
     union { u32 field_214; u32 list2_top_option; };
     union { u32 field_218; u32 list_left_col; };
@@ -2277,7 +2592,7 @@ typedef struct DialogOptionList {
     union { u32 field_16c; u32 list2_client_top; };
     union { u32 field_170; u32 list2_client_right; };
     union { u32 field_174; u32 list2_client_bottom; };
-    u8 pad_178[72];
+    union { u8 pad_178[72]; struct { u8 list_vscroll_rect[16]; u8 list2_vscroll_rect[16]; u8 list_hscroll_rect[16]; u8 list2_hscroll_rect[24]; }; };
     union { u32 field_1c0; u32 list_vscroll_width; };
     union { u32 field_1c4; u32 list2_vscroll_width; };
     union { u32 field_1c8; u32 list_hscroll_height; };
@@ -2292,7 +2607,7 @@ typedef struct DialogOptionList {
     union { u32 field_1ec; u32 list2_column_width; };
     union { u32 field_1f0; u32 list_row_height; };
     union { u32 field_1f4; u32 list2_row_height; };
-    u8 pad_1f8[24];
+    union { u8 pad_1f8[24]; struct { u8 list_column_counts[24]; }; };
     union { u32 field_210; u32 list_top_option; };
     union { u32 field_214; u32 list2_top_option; };
     union { u32 field_218; u32 list_left_col; };
@@ -2310,7 +2625,7 @@ typedef struct DialogOptionList {
     union { uptr field_248; uptr on_draw_option; };
     union { uptr field_24c; uptr on_select_change; };
     union { uptr field_250; uptr on_modal_poll; };
-    u8 pad_254[1];
+    union { u8 pad_254[1]; struct { u8 string_pool[1]; }; };
     union { u8 field_255; u8 pool_valid; };
     u8 pad_256[2];
     union { u32 field_258; u32 pool_handle; };
@@ -2416,7 +2731,7 @@ typedef struct Dialog {
     union { u32 field_16c; u32 list2_client_top; };
     union { u32 field_170; u32 list2_client_right; };
     union { u32 field_174; u32 list2_client_bottom; };
-    u8 pad_178[72];
+    union { u8 pad_178[72]; struct { u8 list_vscroll_rect[72]; }; };
     union { u32 field_1c0; u32 list_vscroll_width; };
     union { u32 field_1c4; u32 list2_vscroll_width; };
     union { u32 field_1c8; u32 list_hscroll_height; };
@@ -2431,7 +2746,7 @@ typedef struct Dialog {
     union { u32 field_1ec; u32 list2_column_width; };
     union { u32 field_1f0; u32 list_row_height; };
     union { u32 field_1f4; u32 list2_row_height; };
-    u8 pad_1f8[24];
+    union { u8 pad_1f8[24]; struct { u8 list_column_counts[24]; }; };
     union { u32 field_210; u32 list_top_option; };
     union { u32 field_214; u32 list2_top_option; };
     union { u32 field_218; u32 list_left_col; };
@@ -2449,14 +2764,14 @@ typedef struct Dialog {
     union { uptr field_248; uptr on_draw_option; };
     union { uptr field_24c; uptr on_select_change; };
     union { uptr field_250; uptr on_modal_poll; };
-    u8 pad_254[1];
+    union { u8 pad_254[1]; struct { u8 string_pool[1]; }; };
     union { u8 field_255; u8 pool_valid; };
     u8 pad_256[2];
     union { u32 field_258; u32 pool_handle; };
     union { u32 field_25c; u32 pool_ptr; };
     u8 pad_260[2];
     union { u16 field_262; u16 pool_size; };
-    u8 pad_264[4];
+    union { u8 pad_264[4]; struct { u8 control_ptr_slots[4]; }; };
     union { uptr field_268; uptr radio_group; };
     union { uptr field_26c; uptr checkboxes; };
     union { uptr field_270; uptr edit_controls; };
@@ -2468,7 +2783,8 @@ typedef struct Dialog {
     union { uptr field_288; uptr list2_vscroll; };
     union { uptr field_28c; uptr list_hscroll; };
     union { uptr field_290; uptr list2_hscroll; };
-    u8 pad_294[96];
+    union { u8 pad_294[96]; struct { uptr extra_button_labels; u8 gap_298[16]; u32 button_layout; u32 button_alignment; u32 button_x_coords; u8 gap_2b4[64]; }; };
+    u32 events_string_pool;
 } Dialog;
 
 /* 13 methods, size 0x310 */
@@ -2619,7 +2935,7 @@ typedef struct ScenarioEvents {
     union { uptr field_288; uptr list2_vscroll; };
     union { uptr field_28c; uptr list_hscroll; };
     union { uptr field_290; uptr list2_hscroll; };
-    u8 pad_294[97];
+    union { u8 pad_294[97]; struct { u8 gap_294[96]; u8 events_string_pool[1]; }; };
     union { u8 field_2f5; u8 events_pool_valid; };
     u8 pad_2f6[18];
     union { u32 field_308; u32 event_count; };
@@ -2777,7 +3093,7 @@ typedef struct SpriteButton {
     union { u32 field_44; u32 items_handle; };
     union { u32 field_48; u32 items_ptr; };
     union { u32 field_4c; u32 radio_font; };
-    u8 pad_50[116];
+    union { u8 pad_50[116]; struct { u8 gap_50[44]; u8 button_surface[72]; }; };
     union { u32 field_c4; u32 ctrl_palette; };
     union { u8 field_c8; u8 pressed_state; };
     u8 pad_c9[3];
@@ -2816,14 +3132,25 @@ typedef struct WndHandlersMouseSetView {
     union { u32 field_4; u32 on_lbutton_down; };
 } WndHandlersMouseSetView;
 
+/* WndHandlersMouseSetView where the code reaches past its end: the object is larger */
+typedef struct WndHandlersMouseSetViewExt {
+    WndHandlersMouseSetView base;
+    u32 on_lbutton_up_any;
+    u8 pad_c[4];
+    u32 on_rbutton_down;
+    u32 on_rbutton_up_any;
+    u8 pad_18[4];
+    u32 on_dblclick;
+} WndHandlersMouseSetViewExt;
+
 /* 61 methods, size 0x3c */
 typedef struct Sprite {
     union { u32 field_0; u32 frame_rect; };
     union { u32 field_4; u32 frame_top; };
-    u8 pad_8[8];
+    union { u8 pad_8[8]; struct { u8 frame_right[4]; u8 frame_bottom[4]; }; };
     union { u32 field_10; u32 bounds_rect; };
     union { u32 field_14; u32 bounds_top; };
-    u8 pad_18[8];
+    union { u8 pad_18[8]; struct { u8 bounds_right[4]; u8 bounds_bottom[4]; }; };
     union { u32 field_20; u32 offset_x; };
     union { u32 field_24; u32 full_height; };
     union { u32 field_28; u32 load_scale_num; };
@@ -2844,6 +3171,13 @@ typedef struct ControlIdView {
     u8 pad_0[4];
     union { u32 field_4; u32 ctrl_id; };
 } ControlIdView;
+
+/* ControlIdView where the code reaches past its end: the object is larger */
+typedef struct ControlIdViewExt {
+    ControlIdView base;
+    u8 pad_8[24];
+    u8 next_control[1];
+} ControlIdViewExt;
 
 /* 1 methods, size 0x20 */
 typedef struct ControlHwndView {
@@ -3066,6 +3400,13 @@ typedef struct LobbyList {
     union { uptr field_28; uptr entries; };
 } LobbyList;
 
+/* LobbyList where the code reaches past its end: the object is larger */
+typedef struct LobbyListExt {
+    LobbyList base;
+    u8 pad_2c[32];
+    u8 saved_button_labels[1];
+} LobbyListExt;
+
 /* 2 methods, size 0x4c */
 typedef struct RadioGroupDisableView {
     u8 pad_0[56];
@@ -3120,7 +3461,7 @@ typedef struct WndHandlers {
 
 /* 1 methods, size 0x1c44 */
 typedef struct ThroneRoomDtorView {
-    u8 pad_0[7236];
+    union { u8 pad_0[7236]; struct { u8 gap_0[1276]; u8 graphics_dll[5960]; }; };
 } ThroneRoomDtorView;
 
 /* 1 methods, size 0x10 */
@@ -3162,7 +3503,7 @@ typedef struct Hotspot {
 
 /* 1 methods, size 0x48 */
 typedef struct PediaLinkCtorView {
-    u8 pad_0[72];
+    union { u8 pad_0[72]; struct { u8 gap_0[4]; u8 link_control[68]; }; };
 } PediaLinkCtorView;
 
 /* 1 methods, size 0x38 */
@@ -3191,19 +3532,19 @@ typedef struct ClickMapClearView {
 
 /* 3 methods, size 0x12c4 */
 typedef struct ClickMapRemoveView {
-    u8 pad_0[4800];
+    union { u8 pad_0[4800]; struct { u8 hit_regions[4800]; }; };
     union { u32 field_12c0; u32 entry_count; };
 } ClickMapRemoveView;
 
 /* 3 methods, size 0x12c4 */
 typedef struct ClickMap {
-    u8 pad_0[4800];
+    union { u8 pad_0[4800]; struct { u8 hit_regions[4800]; }; };
     union { u32 field_12c0; u32 entry_count; };
 } ClickMap;
 
 /* 1 methods, size 0x12c4 */
 typedef struct ClickMapHitTestView {
-    u8 pad_0[4800];
+    union { u8 pad_0[4800]; struct { u8 hit_regions[4800]; }; };
     union { u32 field_12c0; u32 region_count; };
 } ClickMapHitTestView;
 
@@ -3213,10 +3554,45 @@ typedef struct NetMsgHeader {
     union { u32 field_4; u32 msg_type; };
 } NetMsgHeader;
 
+/* NetMsgHeader where the code reaches past its end: the object is larger */
+typedef struct NetMsgHeaderExt {
+    NetMsgHeader base;
+    u32 msg_size_2;
+    u8 pad_c[4];
+    u32 player_id;
+    u32 ip_address;
+    u32 info_word_18;
+    u32 info_word_1c;
+    u32 info_string_20;
+    u8 pad_24[16];
+    u32 player_name;
+    u32 info_string_38;
+    u8 pad_3c[20];
+    u32 info_string_50;
+    u32 node_status_54;
+    u32 node_status_58;
+    u32 node_flag_bytes;
+    u32 node_slot_index;
+    u8 pad_64[4];
+    u32 info_count_68;
+    u32 info_string_table[1];
+    u32 inner_msg_type;
+    u32 game_info;
+    u8 pad_78[156];
+    u32 info_trailer_flag;
+} NetMsgHeaderExt;
+
 /* 1 methods, size 0x48 */
 typedef struct AviPlayerEndCbSetView {
     u8 pad_0[72];
 } AviPlayerEndCbSetView;
+
+/* AviPlayerEndCbSetView where the code reaches past its end: the object is larger */
+typedef struct AviPlayerEndCbSetViewExt {
+    AviPlayerEndCbSetView base;
+    u8 pad_48[204];
+    u8 on_end_callback[1];
+} AviPlayerEndCbSetViewExt;
 
 /* 1 methods, size 0xa24 */
 typedef struct AviPlayerSetFrameCallbackView {
@@ -3244,11 +3620,75 @@ typedef struct MapViewHitView {
     union { u32 field_334; u32 scroll_px_y; };
 } MapViewHitView;
 
+/* MapViewHitView where the code reaches past its end: the object is larger */
+typedef struct MapViewHitViewExt {
+    MapViewHitView base;
+    u8 pad_338[40];
+    u8 view_surface[1];
+} MapViewHitViewExt;
+
 /* 4 methods, size 0x8 */
 typedef struct NetSession {
     u8 pad_0[4];
     union { u32 field_4; u32 player_stats; };
 } NetSession;
+
+/* NetSession where the code reaches past its end: the object is larger */
+typedef struct NetSessionExt {
+    NetSession base;
+    u8 pad_8[484];
+    u32 session_flags;
+    u8 pad_1f0[8];
+    u8 local_player_net_id[4];
+    u32 local_player_slot;
+    u8 player_slots[592];
+    u8 civ_slot_map[232];
+    u8 civ_flags[36];
+    u32 open_slot_count;
+    u8 pad_560[12];
+    u32 last_message_time;
+    u8 pad_570[4];
+    u32 popup_busy;
+    u8 pad_578[8];
+    u8 process_depth[4];
+    u32 max_process_depth;
+    u8 pad_588[8];
+    u8 ack_message_counts[548];
+    u32 pending_count_7b4;
+    u8 pending_count_7b8[4];
+    u32 pending_count_7bc;
+    u8 pending_count_7c0[4];
+    u32 pending_count_7c4;
+    u8 pending_count_7c8[8];
+    u8 pending_count_7d0[4];
+    u32 pending_count_7d4;
+    u8 pending_count_7d8[4];
+    u32 pending_count_7dc;
+    u8 pending_count_7e0[4];
+    u32 pending_count_7e4;
+    u8 pending_count_7e8[4];
+    u32 pending_count_7ec;
+    u8 gather_cargo_busy[4];
+    u32 lift_off_map_busy;
+    u8 delete_cargo_busy[4];
+    u32 destroy_redraw_busy;
+    u8 map_redraw_busy_2[4];
+    u32 stacked_draw_count;
+    u8 pad_808[8];
+    u8 stacked_draw_active[1];
+    u8 stacked_draw_active_b1[1];
+    u8 stacked_draw_active_b2[1];
+    u8 stacked_draw_active_b3[88209];
+    u32 deferred_input_kind;
+    u8 deferred_input_arg1[4];
+    u32 deferred_input_arg2;
+    u8 deferred_input_arg3[4];
+    u32 deferred_input_arg4;
+    u8 deferred_input_arg5[12];
+    u32 deferred_input_window;
+    u8 pad_160c8[4];
+    u32 game_list_head;
+} NetSessionExt;
 
 /* 1 methods, size 0xa0 */
 typedef struct FileSeekView {
@@ -3279,9 +3719,9 @@ typedef struct DiploLeaderView {
     u8 pad_c[180];
     union { u32 field_c0; u32 screen_width_value; };
     union { u32 field_c4; u32 screen_height_value; };
-    u8 pad_c8[276];
+    union { u8 pad_c8[276]; struct { u8 leader_surface[276]; }; };
     union { u32 field_1dc; u32 bg_tile_surface; };
-    u8 pad_1e0[3748];
+    union { u8 pad_1e0[3748]; struct { u8 gap_1e0[68]; u8 leader_palette[1076]; u8 leader_dll[4]; u8 video_player[72]; u8 video_window[2528]; }; };
     union { u8 field_1084; u8 leader_tribe; };
     union { u8 field_1085; u8 leader_civ; };
     union { u8 field_1086; u8 viewer_civ; };
@@ -3290,7 +3730,7 @@ typedef struct DiploLeaderView {
 
 /* 1 methods, size 0x1dc */
 typedef struct PortraitDlgDtorView {
-    u8 pad_0[476];
+    union { u8 pad_0[476]; struct { u8 window_base[476]; }; };
 } PortraitDlgDtorView;
 
 /* 1 methods, size 0x18 */
@@ -3305,11 +3745,28 @@ typedef struct DiffEngSection {
 
 /* 1 methods, size 0x1f0 */
 typedef struct ParleyTitleView {
-    u8 pad_0[280];
+    union { u8 pad_0[280]; struct { u8 window_base[276]; u8 wnd_closed[4]; }; };
     union { u32 field_118; u32 civ_id; };
-    u8 pad_11c[208];
+    union { u8 pad_11c[208]; struct { u8 gap_11c[64]; u8 title_text[144]; }; };
     union { u32 field_1ec; u32 parley_kind; };
 } ParleyTitleView;
+
+/* ParleyTitleView where the code reaches past its end: the object is larger */
+typedef struct ParleyTitleViewExt {
+    ParleyTitleView base;
+    u8 left_kind[4];
+    u8 right_kind[4];
+    u8 shown_left_kind[1];
+    u8 shown_left_kind_b1[1];
+    u8 shown_left_kind_b2[1];
+    u8 shown_left_kind_b3[1];
+    u8 shown_right_kind[1];
+    u8 shown_right_kind_b1[1];
+    u8 shown_right_kind_b2[1];
+    u8 shown_right_kind_b3[153];
+    u8 chat_input_edit[4];
+    u8 chat_log_edit_2[1];
+} ParleyTitleViewExt;
 
 /* 2 methods, size 0x610 */
 typedef struct RadioGroupDtorView {
@@ -3334,7 +3791,7 @@ typedef struct ControlFocusView {
 
 /* 1 methods, size 0x1188 */
 typedef struct WonderMovieWindow {
-    u8 pad_0[4488];
+    union { u8 pad_0[4488]; struct { u8 window_base[4488]; }; };
 } WonderMovieWindow;
 
 /* 1 methods, size 0x20 */
@@ -3345,7 +3802,7 @@ typedef struct EditLineView {
 
 /* 1 methods, size 0x2180 */
 typedef struct SpaceshipWindowDtorView {
-    u8 pad_0[1580];
+    union { u8 pad_0[1580]; struct { u8 gap_0[500]; u8 art_dll_2[1080]; }; };
     union { u32 field_62c; u32 type_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 starfield_timer; };
@@ -3354,21 +3811,21 @@ typedef struct SpaceshipWindowDtorView {
 
 /* 2 methods, size 0xa48 */
 typedef struct AviPlayer {
-    u8 pad_0[2632];
+    union { u8 pad_0[2632]; struct { u8 media_window_base[2632]; }; };
 } AviPlayer;
 
 /* 2 methods, size 0x10430 */
 typedef struct ParleyOfferBuffer {
-    u8 pad_0[280];
+    union { u8 pad_0[280]; struct { u8 gap_0[72]; u8 inner_wnd[208]; }; };
     union { u32 field_118; u32 civ_id; };
     u8 pad_11c[208];
     union { u32 field_1ec; u32 parley_kind; };
-    u8 pad_1f0[16];
+    union { u8 pad_1f0[16]; struct { u8 left_kind[4]; u8 right_kind[4]; u8 shown_left_kind[4]; u8 shown_right_kind[4]; }; };
     union { u32 field_200; u32 offer_type_left; };
     union { u32 field_204; u32 offer_type_right; };
-    u8 pad_208[16];
+    union { u8 pad_208[16]; struct { u8 selected_action[4]; u8 barter_give_kind[4]; u8 barter_want_kind[8]; }; };
     union { u32 field_218; u32 treaty_choice; };
-    u8 pad_21c[66060];
+    union { u8 pad_21c[66060]; struct { u8 proposal_kind[4]; u8 gift_kind[20]; u8 received_offer[284]; u8 never_mind_button_2[28]; u8 barter_give_radio_group[4]; u8 action_radio_group[65720]; }; };
     union { u32 field_10428; u32 selected_count_left; };
     union { u32 field_1042c; u32 selected_count_right; };
 } ParleyOfferBuffer;
@@ -3393,7 +3850,7 @@ typedef struct SpritebtnSetClickHandlerView {
 
 /* 3 methods, size 0x5dd8 */
 typedef struct NetMsgQueue {
-    u8 pad_0[24000];
+    union { u8 pad_0[24000]; struct { u8 msg_slots[24000]; }; };
     union { u32 field_5dc0; u32 low_read_index; };
     union { u32 field_5dc4; u32 main_tail; };
     union { u32 field_5dc8; u32 main_count; };
@@ -3404,7 +3861,7 @@ typedef struct NetMsgQueue {
 
 /* 1 methods, size 0x5dd8 */
 typedef struct NetMsgQueueEnqueueView {
-    u8 pad_0[24000];
+    union { u8 pad_0[24000]; struct { u8 msg_slots[24000]; }; };
     union { u32 field_5dc0; u32 normal_head; };
     union { u32 field_5dc4; u32 normal_tail; };
     union { u32 field_5dc8; u32 normal_count; };
@@ -3415,7 +3872,7 @@ typedef struct NetMsgQueueEnqueueView {
 
 /* 1 methods, size 0x5dd8 */
 typedef struct NetMessageQueue {
-    u8 pad_0[24000];
+    union { u8 pad_0[24000]; struct { u8 msg_slots[24000]; }; };
     union { u32 field_5dc0; u32 low_read_index; };
     u8 pad_5dc4[4];
     union { u32 field_5dc8; u32 low_count; };
@@ -3426,12 +3883,12 @@ typedef struct NetMessageQueue {
 
 /* 1 methods, size 0x710 */
 typedef struct DestroyedCivsWindowCore {
-    u8 pad_0[1808];
+    union { u8 pad_0[1808]; struct { u8 gap_0[1608]; u8 art_dll_2[200]; }; };
 } DestroyedCivsWindowCore;
 
 /* 1 methods, size 0x1330 */
 typedef struct CouncilWindow {
-    u8 pad_0[4912];
+    union { u8 pad_0[4912]; struct { u8 window_base[4912]; }; };
 } CouncilWindow;
 
 /* 1 methods, size 0xd4 */
@@ -3520,13 +3977,13 @@ typedef struct LobbyListCtorView {
     union { u32 field_4; u32 next_id; };
     u8 pad_8[32];
     union { u32 field_28; u32 entries; };
-    u8 pad_2c[68];
+    union { u8 pad_2c[68]; struct { u8 player_slots_area[68]; }; };
 } LobbyListCtorView;
 
 /* 33 methods, size 0x20 */
 typedef struct GameMenu {
     union { u32 field_0; u32 hmenu; };
-    u8 pad_4[20];
+    union { u8 pad_4[20]; struct { u8 item_storage[4]; u8 item_flags[16]; }; };
     union { u32 field_18; u32 menu_flags; };
     union { uptr field_1c; uptr menus; };
 } GameMenu;
@@ -3548,13 +4005,24 @@ typedef struct NetSessionCtorView {
     union { u8 field_8; u8 player_info_msg; };
 } NetSessionCtorView;
 
+/* NetSessionCtorView where the code reaches past its end: the object is larger */
+typedef struct NetSessionCtorViewExt {
+    NetSessionCtorView base;
+    u8 pad_9[1323];
+    u8 connection_title[1];
+    u8 connection_title_b1[1];
+    u8 connection_title_b2[1];
+    u8 connection_title_b3[88985];
+    u8 msg_queue[1];
+} NetSessionCtorViewExt;
+
 /* 1 methods, size 0x2f4 */
 typedef struct DialogAddLineView {
     u8 pad_0[32];
     union { u32 field_20; u32 line_count; };
     u8 pad_24[524];
     union { uptr field_230; uptr line_list; };
-    u8 pad_234[192];
+    union { u8 pad_234[192]; struct { u8 gap_234[32]; u8 line_storage[160]; }; };
 } DialogAddLineView;
 
 /* 1 methods, size 0x3d */
@@ -3628,6 +4096,14 @@ typedef struct DialogOptionDrawView {
     union { u32 field_a4; u32 sel_shadow_color; };
 } DialogOptionDrawView;
 
+/* DialogOptionDrawView where the code reaches past its end: the object is larger */
+typedef struct DialogOptionDrawViewExt {
+    DialogOptionDrawView base;
+    u8 pad_a8[324];
+    u8 pane_column_widths[32];
+    u8 pane_column_offsets[1];
+} DialogOptionDrawViewExt;
+
 /* 1 methods, size 0x38 */
 typedef struct CheckboxDisableView {
     u8 pad_0[52];
@@ -3679,7 +4155,7 @@ typedef struct WndStyleView {
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextCurFontView {
-    u8 pad_0[64];
+    union { u8 pad_0[64]; struct { u8 gap_0[20]; u8 clip_rect_2[44]; }; };
     union { u32 field_40; u32 dib; };
 } SurfaceTextCurFontView;
 
@@ -3821,9 +4297,15 @@ typedef struct CheckboxEnabledView {
 
 /* 1 methods, size 0x4c */
 typedef struct RadioGroupItemsView {
-    u8 pad_0[72];
+    union { u8 pad_0[72]; struct { u8 control_header[32]; u8 next_control[8]; u8 hotkey_index[32]; }; };
     union { u32 field_48; u32 items; };
 } RadioGroupItemsView;
+
+/* RadioGroupItemsView where the code reaches past its end: the object is larger */
+typedef struct RadioGroupItemsViewExt {
+    RadioGroupItemsView base;
+    u8 item_font[1];
+} RadioGroupItemsViewExt;
 
 /* 1 methods, size 0x3c */
 typedef struct RadioGroupCountView {
@@ -4082,10 +4564,17 @@ typedef struct TimerManager {
     union { u32 field_0; u32 timer_hwnd; };
 } TimerManager;
 
+/* TimerManager where the code reaches past its end: the object is larger */
+typedef struct TimerManagerExt {
+    TimerManager base;
+    u32 timer_callbacks[17];
+    u32 timer_repeat_counts[1];
+} TimerManagerExt;
+
 /* 1 methods, size 0x90 */
 typedef struct TimerManagerCtorView {
     union { u32 field_0; u32 timer_wnd; };
-    u8 pad_4[140];
+    union { u8 pad_4[140]; struct { u8 timer_slot_tables[140]; }; };
 } TimerManagerCtorView;
 
 /* 1 methods, size 0x38 */
@@ -4175,10 +4664,16 @@ typedef struct RadioGroupRClickView {
 
 /* 11 methods, size 0x708 */
 typedef struct ErrorContext {
-    u8 pad_0[1792];
+    union { u8 pad_0[1792]; struct { u8 error_message_text[1024]; u8 stack_trace_text[768]; }; };
     union { u32 field_700; u32 error_bits; };
     union { u32 field_704; u32 last_error_code; };
 } ErrorContext;
+
+/* ErrorContext where the code reaches past its end: the object is larger */
+typedef struct ErrorContextExt {
+    ErrorContext base;
+    u8 error_ctx_option[1];
+} ErrorContextExt;
 
 /* 1 methods, size 0x708 */
 typedef struct ErrCtxGetLastCodeView {
@@ -4220,6 +4715,16 @@ typedef struct AviPlayerOpenView {
 typedef struct AviPlayerPlayView {
     u8 pad_0[72];
 } AviPlayerPlayView;
+
+/* AviPlayerPlayView where the code reaches past its end: the object is larger */
+typedef struct AviPlayerPlayViewExt {
+    AviPlayerPlayView base;
+    u8 pad_48[2524];
+    u8 loop_flag[1];
+    u8 loop_flag_byte1[1];
+    u8 loop_flag_byte2[1];
+    u8 loop_flag_byte3[1];
+} AviPlayerPlayViewExt;
 
 /* 1 methods, size 0xa28 */
 typedef struct AviPlayerRangeView {
@@ -4614,7 +5119,7 @@ typedef struct WndMciDeviceView {
 /* 1 methods, size 0xc0 */
 typedef struct WndOnMciDoneView {
     u32 field_0;
-    u8 pad_4[184];
+    union { u8 pad_4[184]; struct { u8 wnd_header_area[12]; u8 handlers[152]; u8 lbutton_held[4]; u8 rbutton_held[4]; u8 hscroll_pos[4]; u8 vscroll_pos[8]; }; };
     union { uptr field_bc; uptr on_mci_done; };
 } WndOnMciDoneView;
 
@@ -4769,9 +5274,22 @@ typedef struct DdwinAttachBackBufferView {
 
 /* 1 methods, size 0xd0 */
 typedef struct DDWindow {
-    u8 pad_0[204];
+    union { u8 pad_0[204]; struct { u8 gap_0[68]; u8 handlers[124]; u8 child_controls[12]; }; };
     union { uptr field_cc; uptr hover_control; };
 } DDWindow;
+
+/* DDWindow where the code reaches past its end: the object is larger */
+typedef struct DDWindowExt {
+    DDWindow base;
+    u8 lbutton_held[1];
+    u8 lbutton_held_byte1[1];
+    u8 lbutton_held_byte2[1];
+    u8 lbutton_held_byte3[1];
+    u8 rbutton_held[1];
+    u8 rbutton_held_byte1[1];
+    u8 rbutton_held_byte2[1];
+    u8 rbutton_held_byte3[1];
+} DDWindowExt;
 
 /* 2 methods, size 0xc */
 typedef struct PtrListInitView {
@@ -4917,7 +5435,7 @@ typedef struct DDControlParentView {
 /* 2 methods, size 0x48 */
 typedef struct DDControl {
     union { u32 field_0; u32 vtable; };
-    u8 pad_4[24];
+    union { u8 pad_4[24]; struct { u8 gap_4[12]; u8 child_controls[12]; }; };
     union { uptr field_1c; uptr hover_child; };
     u8 pad_20[20];
     union { u8 field_34; u8 is_active; };

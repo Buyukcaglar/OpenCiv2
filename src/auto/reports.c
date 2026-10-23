@@ -319,7 +319,7 @@ void __cdecl advisor_on_close_clicked(void)
     picwnd_close(window);
   }
   else {
-    wnd_end_modal_loop((ModalMenuWindow *)window->pad_48);
+    wnd_end_modal_loop((ModalMenuWindow *)window->window_2);
   }
   return;
 }
@@ -344,7 +344,7 @@ void __thiscall advisor_add_close_button(ViewWindow *this)
     parent_wnd2 = (u8 *)0x0;
   }
   else {
-    parent_wnd2 = this->pad_48;
+    parent_wnd2 = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
@@ -4413,19 +4413,19 @@ ThroneRoomWindow * __thiscall throneroom_ctor(ThroneRoomWindow *this,iptr civ)
   try_level = 0;
   palette_init((GamePalette *)&this->control_list);
   (*(i8 *)((char *)&try_level + 0)) = 1;
-  dll_handle_init((DllHandle *)this->pad_4fc);
+  dll_handle_init((DllHandle *)this->throne_dll);
   (*(i8 *)((char *)&try_level + 0)) = 2;
-  surfwnd_ctor((SurfaceWindow *)this->pad_504);
+  surfwnd_ctor((SurfaceWindow *)this->throne_surface_wnd);
   (*(i8 *)((char *)&try_level + 0)) = 3;
-  surface_ctor((DibSurface *)(this->pad_504 + 0x114));
+  surface_ctor((DibSurface *)(this->throne_backbuffer));
   (*(i8 *)((char *)&try_level + 0)) = 4;
-  clickmap_ctor(this->pad_638 + 0x28);
+  clickmap_ctor(this->choice_clickmap);
   (*(i8 *)((char *)&try_level + 0)) = 5;
-  dialog_ctor((Dialog *)this->pad_1930,0x4000);
+  dialog_ctor((Dialog *)this->choice_dialog_2,0x4000);
   (*(i8 *)((char *)&try_level + 0)) = 6;
-  font_init_empty((GameFont *)(this->pad_19f8 + 0x23c));
+  font_init_empty((GameFont *)((u8 *)&this->click_prompt_font));
   try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),7);
-  gfx_get_screen_rect((iptr)(this->pad_1e4 + 0x308));
+  gfx_get_screen_rect((iptr)(this->media_wnd));
   this->throne_civ = civ;
   throneroom_wnd = (iptr)this;
   this->throne_complete = 1;
@@ -4434,8 +4434,8 @@ ThroneRoomWindow * __thiscall throneroom_ctor(ThroneRoomWindow *this,iptr civ)
       this->throne_complete = 0;
     }
   }
-  SetRect((LPRECT)(this->pad_19f8 + 0x22c),0,0x1c2,0x280,0x1e0);
-  font_set_styled((GameFont *)(this->pad_19f8 + 0x23c),0,0x12,3);
+  SetRect((LPRECT)((u8 *)&this->click_prompt_rect),0,0x1c2,0x280,0x1e0);
+  font_set_styled((GameFont *)((u8 *)&this->click_prompt_font),0,0x12,3);
   return this;
 }
 #undef i
@@ -4455,7 +4455,7 @@ void __thiscall throneroom_dtor(ThroneRoomDtorView *this)
   (*(i32 *)((char *)&try_level + 1)) = 0;
   (*(i8 *)((char *)&try_level + 0)) = 7;
   throneroom_wnd = 0;
-  dll_handle_free((DllHandle *)(this->pad_0 + 0x4fc));
+  dll_handle_free((DllHandle *)(this->graphics_dll));
   (*(i8 *)((char *)&try_level + 0)) = 6;
   /* inlined unwind funclet 0044d0d8 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x1c34)); }
   (*(i8 *)((char *)&try_level + 0)) = 5;
@@ -4490,17 +4490,17 @@ uint __thiscall throneroom_create_windows(PictureFrameWindow *this)
   str_append((iptr)path,ADDR(0x626814, ((u8 *)&g.d_00626814)));
   found = file_resolve_path((iptr)path);
   if (found != 0) {
-    dll_handle_load((DllHandle *)this->pad_4fc,(iptr)path);
+    dll_handle_load((DllHandle *)this->throne_dll,(iptr)path);
     wnd_create_with_handlers
               ((WndBase *)this,ADDR(0x62681c, ((u8 *)&g.d_0062681c)),0x800,0,0,this->throne_width,this->throne_height + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00))
                ,ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
     wnd_set_bg_color((WndBase *)this,0);
     wnd_create_with_surface
-              ((DibSurface *)this->pad_504,ADDR(0x626820, ((u8 *)&g.d_00626820)),0x800,0,0,0x280,0x1e0,(iptr)&this->control_list,
+              ((DibSurface *)(u8 *)&this->throne_surface_wnd,ADDR(0x626820, ((u8 *)&g.d_00626820)),0x800,0,0,0x280,0x1e0,(iptr)&this->control_list,
                (iptr)this);
-    wnd_center((WndCenterView *)(this->pad_504 + 0x48));
-    wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_504 + 0x58),ADDR(0x4034bd, throneroom_on_click));
-    wnd_set_keydown_handler((WndEventHandlers *)(this->pad_504 + 0x58),ADDR(0x401fe6, throneroom_on_key));
+    wnd_center((WndCenterView *)(this->throne_wnd_base));
+    wnd_set_lbuttonup_handler((WndEventHandlers *)(this->throne_handlers),ADDR(0x4034bd, throneroom_on_click));
+    wnd_set_keydown_handler((WndEventHandlers *)(this->throne_handlers),ADDR(0x401fe6, throneroom_on_key));
   }
   return (uint)(found != 0);
 }
@@ -4524,10 +4524,10 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
   try_level = 0xffffffff;
   result = throneroom_create_windows((PictureFrameWindow *)this);
   if ((result != 0) && (result = throneroom_render(this), result != 0)) {
-    surface_create((DibSurface *)(this->pad_504 + 0x114),0x280,0x1e0);
+    surface_create((DibSurface *)(this->throne_backbuffer),0x280,0x1e0);
     SetRect(&rect,0,0,0x280,0x1e0);
     surface_blit
-              ((DibSurface *)this->pad_504,(iptr)(this->pad_504 + 0x114),(iptr)&rect,
+              ((DibSurface *)this->throne_surface_wnd,(iptr)(this->throne_backbuffer),(iptr)&rect,
                (iptr)&rect);
     font_init(&font2,1,0x18);
     try_level = 0;
@@ -4541,11 +4541,11 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
       SetRect(&rect,100,0x78,0x21c,0x1c2);
       gfx_set_text_color_index(0);
       surface_draw_text_rect
-                ((DibSurface *)this->pad_504,(iptr)&font2,(iptr)text_buf,(iptr)&rect,0);
+                ((DibSurface *)this->throne_surface_wnd,(iptr)&font2,(iptr)text_buf,(iptr)&rect,0);
       OffsetRect(&rect,2,2);
       gfx_set_text_color_index(0xff);
       surface_draw_text_rect
-                ((DibSurface *)this->pad_504,(iptr)&font2,(iptr)text_buf,(iptr)&rect,0);
+                ((DibSurface *)this->throne_surface_wnd,(iptr)&font2,(iptr)text_buf,(iptr)&rect,0);
       text_close_file();
       SetRect(&rect,0,0,0x280,0x1e0);
     }
@@ -4554,16 +4554,16 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
     wnd_handle_show_raise((WndBase *)this);
     wnd_flush_paint();
     wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
-    window_show((WindowObjectView *)this->pad_504);
+    window_show((WindowObjectView *)this->throne_surface_wnd);
     wnd_flush_paint();
     input_flush_events();
-    wnd_set_capture((WndBase *)(this->pad_504 + 0x48));
+    wnd_set_capture((WndBase *)(this->throne_wnd_base));
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x48),ADDR(0x403585, net_modal_idle_poll));
+      wnd_set_modal_idle_callback((ModalMenuWindow *)(this->throne_wnd_base),ADDR(0x403585, net_modal_idle_poll));
     }
-    wnd_run_modal_loop((ModalMenuWindow *)(this->pad_504 + 0x48));
-    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x48),0);
-    wnd_release_capture((WndBase *)(this->pad_504 + 0x48));
+    wnd_run_modal_loop((ModalMenuWindow *)(this->throne_wnd_base));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->throne_wnd_base),0);
+    wnd_release_capture((WndBase *)(this->throne_wnd_base));
     result = throneroom_render_choices(this);
     if (result == 0) {
       try_level = 0xffffffff;
@@ -4580,12 +4580,12 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
         SetRect(&rect,100,0x78,0x21c,0x1c2);
         gfx_set_text_color_index(0);
         surface_draw_text_rect
-                  ((DibSurface *)this->pad_504,(iptr)&font2,(iptr)text_buf,(iptr)&rect,0
+                  ((DibSurface *)this->throne_surface_wnd,(iptr)&font2,(iptr)text_buf,(iptr)&rect,0
                   );
         OffsetRect(&rect,2,2);
         gfx_set_text_color_index(0xff);
         surface_draw_text_rect
-                  ((DibSurface *)this->pad_504,(iptr)&font2,(iptr)text_buf,(iptr)&rect,0
+                  ((DibSurface *)this->throne_surface_wnd,(iptr)&font2,(iptr)text_buf,(iptr)&rect,0
                   );
         text_close_file();
         SetRect(&rect,0,0,0x280,0x1e0);
@@ -4593,24 +4593,24 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
       throneroom_draw_click_prompt((WndBase *)this);
       this->choosing_item = 1;
       SetRect(&rect,0,0,0x280,0x1e0);
-      gfx_dissolve_blit((iptr)this->pad_504,(iptr)&rect,8,4);
-      wnd_blit_surface((DibSurface *)this->pad_504);
+      gfx_dissolve_blit((iptr)this->throne_surface_wnd,(iptr)&rect,8,4);
+      wnd_blit_surface((DibSurface *)this->throne_surface_wnd);
       input_flush_events();
-      wnd_set_capture((WndBase *)(this->pad_504 + 0x48));
+      wnd_set_capture((WndBase *)(this->throne_wnd_base));
       if (2 < game.multiplayer) {
-        wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x48),ADDR(0x403585, net_modal_idle_poll));
+        wnd_set_modal_idle_callback((ModalMenuWindow *)(this->throne_wnd_base),ADDR(0x403585, net_modal_idle_poll));
       }
-      wnd_run_modal_loop((ModalMenuWindow *)(this->pad_504 + 0x48));
-      wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x48),0);
-      wnd_release_capture((WndBase *)(this->pad_504 + 0x48));
+      wnd_run_modal_loop((ModalMenuWindow *)(this->throne_wnd_base));
+      wnd_set_modal_idle_callback((ModalMenuWindow *)(this->throne_wnd_base),0);
+      wnd_release_capture((WndBase *)(this->throne_wnd_base));
       snd_play_effect(0xd,1,0,0);
       SetRect(&rect,0,0,0x280,0x1e0);
       surface_blit
-                ((DibSurface *)(this->pad_504 + 0x114),(iptr)this->pad_504,(iptr)&rect,
+                ((DibSurface *)(this->throne_backbuffer),(iptr)this->throne_surface_wnd,(iptr)&rect,
                  (iptr)&rect);
       win_flush_pending_msgs();
-      gfx_dissolve_blit((iptr)this->pad_504,(iptr)&rect,8,3);
-      wnd_blit_surface((DibSurface *)this->pad_504);
+      gfx_dissolve_blit((iptr)this->throne_surface_wnd,(iptr)&rect,8,3);
+      wnd_blit_surface((DibSurface *)this->throne_surface_wnd);
       wnd_flush_paint();
       if (this->throne_complete == 0) {
         line = (char *)(this->chosen_item + ADDR(0x64ca93, ((u8 *)&civs + 1011)) + this->throne_civ * 0x594);
@@ -4624,18 +4624,18 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
       if (result != 0) {
         snd_play_effect(0xd,1,0,0);
         SetRect(&rect,0,0,0x280,0x1e0);
-        gfx_dissolve_blit((iptr)this->pad_504,(iptr)&rect,4,1);
+        gfx_dissolve_blit((iptr)this->throne_surface_wnd,(iptr)&rect,4,1);
         throneroom_draw_click_prompt((WndBase *)this);
-        wnd_blit_surface((DibSurface *)this->pad_504);
+        wnd_blit_surface((DibSurface *)this->throne_surface_wnd);
         this->choosing_item = 0;
-        wnd_set_capture((WndBase *)(this->pad_504 + 0x48));
+        wnd_set_capture((WndBase *)(this->throne_wnd_base));
         if (2 < game.multiplayer) {
-          wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x48),ADDR(0x403585, net_modal_idle_poll));
+          wnd_set_modal_idle_callback((ModalMenuWindow *)(this->throne_wnd_base),ADDR(0x403585, net_modal_idle_poll));
         }
-        wnd_run_modal_loop((ModalMenuWindow *)(this->pad_504 + 0x48));
-        wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x48),0);
-        wnd_release_capture((WndBase *)(this->pad_504 + 0x48));
-        wnd_hide((WndBase *)(this->pad_504 + 0x48));
+        wnd_run_modal_loop((ModalMenuWindow *)(this->throne_wnd_base));
+        wnd_set_modal_idle_callback((ModalMenuWindow *)(this->throne_wnd_base),0);
+        wnd_release_capture((WndBase *)(this->throne_wnd_base));
+        wnd_hide((WndBase *)(this->throne_wnd_base));
         wnd_flush_paint();
       }
       wnd_set_palette((WndBase *)this,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
@@ -4668,14 +4668,14 @@ void __thiscall throneroom_run_view(ThroneRoomWindow *this)
     wnd_handle_show_raise((WndBase *)this);
     wnd_flush_paint();
     wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
-    window_show((WindowObjectView *)this->pad_504);
+    window_show((WindowObjectView *)this->throne_surface_wnd);
     wnd_flush_paint();
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x48),ADDR(0x403585, net_modal_idle_poll));
+      wnd_set_modal_idle_callback((ModalMenuWindow *)(this->throne_wnd_base),ADDR(0x403585, net_modal_idle_poll));
     }
-    wnd_run_modal_loop((ModalMenuWindow *)(this->pad_504 + 0x48));
-    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x48),0);
-    wnd_hide((WndBase *)(this->pad_504 + 0x48));
+    wnd_run_modal_loop((ModalMenuWindow *)(this->throne_wnd_base));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->throne_wnd_base),0);
+    wnd_hide((WndBase *)(this->throne_wnd_base));
     wnd_flush_paint();
     wnd_set_palette((WndBase *)this,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
     wnd_hide((WndBase *)this);
@@ -4697,14 +4697,14 @@ void __thiscall throneroom_draw_click_prompt(WndBase *this)
   text_append(ADDR(0x626844, ((u8 *)&g.d_00626844)));
   gfx_set_text_color_index(0);
   surface_draw_text_in_rect
-            ((DibSurface *)&this[0x50].field_4,(iptr)&this[0x1c3].field_4,ADDR(0x679640, ((u8 *)&g.d_00679640)),
-             (iptr)&this[0x1c2].field_4,0);
-  OffsetRect((LPRECT)&this[0x1c2].field_4,-1,-1);
+            ((DibSurface *)&((PictureFrameWindow *)this)->throne_surface_wnd,(iptr)&((ThroneRoomWindow *)this)->click_prompt_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),
+             (iptr)&((ThroneRoomWindow *)this)->click_prompt_rect,0);
+  OffsetRect((LPRECT)&((ThroneRoomWindow *)this)->click_prompt_rect,-1,-1);
   gfx_set_text_color_index(0xff);
   surface_draw_text_in_rect
-            ((DibSurface *)&this[0x50].field_4,(iptr)&this[0x1c3].field_4,ADDR(0x679640, ((u8 *)&g.d_00679640)),
-             (iptr)&this[0x1c2].field_4,0);
-  OffsetRect((LPRECT)&this[0x1c2].field_4,1,1);
+            ((DibSurface *)&((PictureFrameWindow *)this)->throne_surface_wnd,(iptr)&((ThroneRoomWindow *)this)->click_prompt_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),
+             (iptr)&((ThroneRoomWindow *)this)->click_prompt_rect,0);
+  OffsetRect((LPRECT)&((ThroneRoomWindow *)this)->click_prompt_rect,1,1);
   return;
 }
 
@@ -4767,7 +4767,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                  *(i32 *)(&throneroom_piece_rect_h + level * 0x10 + slot * 0x40));
       sprite_replace_color(&sprite,7,9);
       sprite_draw
-                (&sprite,(iptr)draw_tmp1,(iptr)this->pad_504,
+                (&sprite,(iptr)draw_tmp1,(iptr)this->throne_surface_wnd,
                  *(int *)(&throneroom_piece_rect_x + level * 0x10 + slot * 0x40) - 1,
                  *(int *)(&throneroom_piece_rect_y + level * 0x10 + slot * 0x40) - 1);
     }
@@ -4788,7 +4788,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
               (&sprite,(iptr)&surface,9,throneroom_bonus_rect_x,throneroom_bonus_rect_y,throneroom_bonus_rect_w,throneroom_bonus_rect_h);
     sprite_replace_color(&sprite,7,9);
     sprite_draw
-              (&sprite,(iptr)draw_tmp2,(iptr)this->pad_504,throneroom_bonus_rect_x - 1,throneroom_bonus_rect_y - 1);
+              (&sprite,(iptr)draw_tmp2,(iptr)this->throne_surface_wnd,throneroom_bonus_rect_x - 1,throneroom_bonus_rect_y - 1);
   }
   win_flush_pending_msgs();
   if (civs[this->throne_civ].throne_room[3] != '\0') {
@@ -4813,7 +4813,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                *(i32 *)(&throneroom_piece_rect_h + level * 0x10 + slot * 0x40));
     sprite_replace_color(&sprite,7,9);
     sprite_draw
-              (&sprite,(iptr)draw_tmp3,(iptr)this->pad_504,
+              (&sprite,(iptr)draw_tmp3,(iptr)this->throne_surface_wnd,
                *(int *)(&throneroom_piece3_rect_x + level * 0x10) - 1,
                *(int *)(&throneroom_piece3_rect_y + level * 0x10) - 1);
   }
@@ -4838,7 +4838,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                    (&throneroom_bonus_rect_h)[slot * 4]);
         sprite_replace_color(&sprite,7,9);
         sprite_draw
-                  (&sprite,(iptr)draw_tmp4,(iptr)this->pad_504,(&throneroom_bonus_rect_x)[slot * 4] - 1,
+                  (&sprite,(iptr)draw_tmp4,(iptr)this->throne_surface_wnd,(&throneroom_bonus_rect_x)[slot * 4] - 1,
                    (&throneroom_bonus_rect_y)[slot * 4] - 1);
       }
     }
@@ -4865,7 +4865,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                *(i32 *)(&throneroom_piece4_rect_h + level * 0x10));
     sprite_replace_color(&sprite,7,9);
     sprite_draw
-              (&sprite,(iptr)draw_tmp5,(iptr)this->pad_504,
+              (&sprite,(iptr)draw_tmp5,(iptr)this->throne_surface_wnd,
                *(int *)(&throneroom_piece4_rect_x + level * 0x10) - 1,
                *(int *)(&throneroom_piece4_rect_y + level * 0x10) - 1);
   }
@@ -4885,7 +4885,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
               (&sprite,(iptr)&surface,9,throneroom_bonus3_rect_x,throneroom_bonus3_rect_y,throneroom_bonus3_rect_w,throneroom_bonus3_rect_h);
     sprite_replace_color(&sprite,7,9);
     sprite_draw
-              (&sprite,(iptr)draw_tmp6,(iptr)this->pad_504,throneroom_bonus3_rect_x - 1,throneroom_bonus3_rect_y - 1);
+              (&sprite,(iptr)draw_tmp6,(iptr)this->throne_surface_wnd,throneroom_bonus3_rect_x - 1,throneroom_bonus3_rect_y - 1);
   }
   win_flush_pending_msgs();
   for (slot = 5; slot < 7; slot++) {
@@ -4910,7 +4910,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                  *(i32 *)(&throneroom_piece_rect_h + level * 0x10 + slot * 0x40));
       sprite_replace_color(&sprite,7,9);
       sprite_draw
-                (&sprite,(iptr)draw_tmp7,(iptr)this->pad_504,
+                (&sprite,(iptr)draw_tmp7,(iptr)this->throne_surface_wnd,
                  *(int *)(&throneroom_piece_rect_x + level * 0x10 + slot * 0x40) - 1,
                  *(int *)(&throneroom_piece_rect_y + level * 0x10 + slot * 0x40) - 1);
     }
@@ -4936,7 +4936,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                    (&throneroom_bonus_rect_h)[slot * 4]);
         sprite_replace_color(&sprite,7,9);
         sprite_draw
-                  (&sprite,(iptr)draw_tmp8,(iptr)this->pad_504,(&throneroom_bonus_rect_x)[slot * 4] - 1,
+                  (&sprite,(iptr)draw_tmp8,(iptr)this->throne_surface_wnd,(&throneroom_bonus_rect_x)[slot * 4] - 1,
                    (&throneroom_bonus_rect_y)[slot * 4] - 1);
       }
     }
@@ -4963,7 +4963,7 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *this)
                *(i32 *)(&throneroom_piece7_rect_h + level * 0x10));
     sprite_replace_color(&sprite,7,9);
     sprite_draw
-              (&sprite,(iptr)draw_tmp9,(iptr)this->pad_504,
+              (&sprite,(iptr)draw_tmp9,(iptr)this->throne_surface_wnd,
                *(int *)(&throneroom_piece7_rect_x + level * 0x10) - 1,
                *(int *)(&throneroom_piece7_rect_y + level * 0x10) - 1);
   }
@@ -5259,15 +5259,15 @@ i32 __thiscall throneroom_render_choices(ThroneRoomWindow *this)
   region_cursors[0x1f] = 2;
   region_cursors[0x20] = 1;
   region_cursors[0x21] = 0;
-  clickmap_clear((ClickMapClearView *)(this->pad_638 + 0x28));
+  clickmap_clear((ClickMapClearView *)(this->choice_clickmap));
   for (idx = 0; idx < 0x22; idx++) {
     clickmap_add
-              ((ClickMap *)(this->pad_638 + 0x28),idx,region_cursors[idx],
+              ((ClickMap *)(this->choice_clickmap),idx,region_cursors[idx],
                region_rects[idx * 4],region_rects[idx * 4 + 1],region_rects[idx * 4 + 2],
                region_rects[idx * 4 + 3]);
   }
   loaded = surface_load_gif_resource
-                    ((DibSurface *)this->pad_504,100,10,0xec,(iptr)&this->control_list);
+                    ((DibSurface *)this->throne_surface_wnd,100,10,0xec,(iptr)&this->control_list);
   if (loaded == 0) {
     result = 0;
     try_level = try_level & 0xffffff00;
@@ -5297,7 +5297,7 @@ i32 __thiscall throneroom_render_choices(ThroneRoomWindow *this)
                      piece_rects[idx * 4 + 3]);
           sprite_replace_color(&sprite,7,9);
           sprite_draw
-                    (&sprite,(iptr)draw_tmp1,(iptr)this->pad_504,piece_rects[idx * 4] - 1,
+                    (&sprite,(iptr)draw_tmp1,(iptr)this->throne_surface_wnd,piece_rects[idx * 4] - 1,
                      piece_rects[idx * 4 + 1] - 1);
         }
       }
@@ -5324,7 +5324,7 @@ i32 __thiscall throneroom_render_choices(ThroneRoomWindow *this)
                      piece_rects[idx * 4 + 0x23]);
           sprite_replace_color(&sprite,7,9);
           sprite_draw
-                    (&sprite,(iptr)draw_tmp2,(iptr)this->pad_504,
+                    (&sprite,(iptr)draw_tmp2,(iptr)this->throne_surface_wnd,
                      piece_rects[idx * 4 + 0x20] - 1,piece_rects[idx * 4 + 0x21] - 1);
         }
       }
@@ -5505,13 +5505,13 @@ SpaceshipWindow * __thiscall defeat_movie_wnd_ctor(SpaceshipWindow *this)
   try_level = 0;
   palette_init((GamePalette *)&this->control_list);
   (*(i8 *)((char *)&try_level + 0)) = 1;
-  mmwnd_ctor((DocumentWindow *)(this->pad_1e4 + 0x308));
+  mmwnd_ctor((DocumentWindow *)(this->media_wnd));
   (*(i8 *)((char *)&try_level + 0)) = 2;
-  dll_handle_init((DllHandle *)(this->pad_ae4 + 0x430));
+  dll_handle_init((DllHandle *)(this->movie_dll));
   (*(i8 *)((char *)&try_level + 0)) = 3;
-  font_init_empty((GameFont *)this->pad_f1c);
+  font_init_empty((GameFont *)this->movie_caption_font);
   try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),4);
-  surface_ctor((DibSurface *)(this[1].pad_1e4 + 0x188));
+  surface_ctor((DibSurface *)(((ThroneRoomWindow *)this)->movie_frame_surface));
   this->advance_civ = 0;
   return this;
 }
@@ -5581,7 +5581,7 @@ i32 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint civ)
       result = 0;
     }
     else {
-      dll_handle_load((DllHandle *)(this->pad_ae4 + 0x430),(iptr)dll_path);
+      dll_handle_load((DllHandle *)(this->movie_dll),(iptr)dll_path);
       if ((int)civ < 1) {
         this->advance_civ = ~civ + 1;
       }
@@ -5593,22 +5593,22 @@ i32 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint civ)
                  (screen_bottom - screen_top) + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
       wnd_set_bg_color((WndBase *)this,0);
       surface_load_gif_resource
-                ((DibSurface *)(this->pad_1e4 + 0x308),4000,10,0xec,(iptr)&this->control_list);
-      avi_player_create((MediaWindow *)(this->pad_1e4 + 0x308),ADDR(0x62b828, ((u8 *)&g.d_0062b828)),0x800,0,0);
-      avi_player_set_double_size((MediaWindow *)(this->pad_1e4 + 0x308),1);
-      open_err = avi_player_open((AviPlayerOpenView *)(this->pad_1e4 + 0x308),(iptr)avi_path);
+                ((DibSurface *)(this->media_wnd),4000,10,0xec,(iptr)&this->control_list);
+      avi_player_create((MediaWindow *)(this->media_wnd),ADDR(0x62b828, ((u8 *)&g.d_0062b828)),0x800,0,0);
+      avi_player_set_double_size((MediaWindow *)(this->media_wnd),1);
+      open_err = avi_player_open((AviPlayerOpenView *)(this->media_wnd),(iptr)avi_path);
       if (open_err == 0) {
-        surface_fill((DibSurface *)(this->pad_1e4 + 0x308),0);
-        wnd_center((WndCenterView *)(this->pad_504 + 0x30));
-        avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e4 + 0x308),ADDR(0x402630, defeat_movie_on_video_end));
-        SetRect((LPRECT)(this[1].pad_1e4 + 0x1d0),0x28,100,600,0x1e0);
-        result = surface_get_height((DibSurface *)(this->pad_1e4 + 0x308));
-        width = surface_get_width((DibSurface *)(this->pad_1e4 + 0x308));
-        surface_create((DibSurface *)(this[1].pad_1e4 + 0x188),width,result);
+        surface_fill((DibSurface *)(this->media_wnd),0);
+        wnd_center((WndCenterView *)(this->movie_wnd_base));
+        avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->media_wnd),ADDR(0x402630, defeat_movie_on_video_end));
+        SetRect((LPRECT)(((ThroneRoomWindow *)this)->movie_caption_rect),0x28,100,600,0x1e0);
+        result = surface_get_height((DibSurface *)(this->media_wnd));
+        width = surface_get_width((DibSurface *)(this->media_wnd));
+        surface_create((DibSurface *)(((ThroneRoomWindow *)this)->movie_frame_surface),width,result);
         avi_player_draw_to
-                  ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x188),0,0);
-        font_set_styled((GameFont *)this->pad_f1c,0,0x12,2);
-        dll_handle_free((DllHandle *)(this->pad_ae4 + 0x430));
+                  ((DibSurface *)(this->media_wnd),(iptr)(((ThroneRoomWindow *)this)->movie_frame_surface),0,0);
+        font_set_styled((GameFont *)this->movie_caption_font,0,0x12,2);
+        dll_handle_free((DllHandle *)(this->movie_dll));
         result = 1;
       }
       else {
@@ -5646,9 +5646,9 @@ void __thiscall defeat_movie_wnd_play(SpaceshipWindow *this)
   wnd_handle_show_raise((WndBase *)this);
   wnd_flush_paint();
   wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
-  window_show((WindowObjectView *)(this->pad_1e4 + 0x308));
+  window_show((WindowObjectView *)(this->media_wnd));
   wnd_flush_paint();
-  wnd_set_capture((WndBase *)(this->pad_504 + 0x30));
+  wnd_set_capture((WndBase *)(this->movie_wnd_base));
   gfx_set_text_color_index(0xff);
   advance = 0;
   while ((advance < 100 && (status = civ_has_advance(this->advance_civ,advance), status == 0))) {
@@ -5660,44 +5660,44 @@ void __thiscall defeat_movie_wnd_play(SpaceshipWindow *this)
   str = civ_leader_name(this->advance_civ);
   text_set_string_arg(1,str);
   for (page = 0; page < 3; page++) {
-    str_clear((iptr)(this->pad_f1c + 8));
+    str_clear((iptr)(this->movie_caption_text));
     text_clear();
     text_append(ADDR(0x62b840, ((u8 *)&g.d_0062b840)));
     text_append_int(page);
     status = text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x679640, ((u8 *)&g.d_00679640)));
     if (status == 0) {
       while (line = (char *)text_read_line(1), *line != '@') {
-        str_append((iptr)(this->pad_f1c + 8),text_line_cursor);
-        str_append((iptr)(this->pad_f1c + 8),ADDR(0x62b850, ((u8 *)&g.d_0062b850)));
+        str_append((iptr)(this->movie_caption_text),text_line_cursor);
+        str_append((iptr)(this->movie_caption_text),ADDR(0x62b850, ((u8 *)&g.d_0062b850)));
       }
       text_clear();
-      text_expand_vars((iptr)(this->pad_f1c + 8),ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      text_expand_vars((iptr)(this->movie_caption_text),ADDR(0x679640, ((u8 *)&g.d_00679640)));
       surface_blit
-                ((DibSurface *)(this[1].pad_1e4 + 0x188),(iptr)(this->pad_1e4 + 0x308),
-                 (iptr)(this[1].pad_1e4 + 0x1d0),(iptr)(this[1].pad_1e4 + 0x1d0));
-      OffsetRect((LPRECT)(this[1].pad_1e4 + 0x1d0),1,1);
+                ((DibSurface *)(((ThroneRoomWindow *)this)->movie_frame_surface),(iptr)(this->media_wnd),
+                 (iptr)(((ThroneRoomWindow *)this)->movie_caption_rect),(iptr)(((ThroneRoomWindow *)this)->movie_caption_rect));
+      OffsetRect((LPRECT)(((ThroneRoomWindow *)this)->movie_caption_rect),1,1);
       gfx_set_text_color_index(0);
       surface_draw_text_rect
-                ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)this->pad_f1c,ADDR(0x679640, ((u8 *)&g.d_00679640)),
-                 (iptr)(this[1].pad_1e4 + 0x1d0),0);
-      OffsetRect((LPRECT)(this[1].pad_1e4 + 0x1d0),-1,-1);
+                ((DibSurface *)(this->media_wnd),(iptr)this->movie_caption_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),
+                 (iptr)(((ThroneRoomWindow *)this)->movie_caption_rect),0);
+      OffsetRect((LPRECT)(((ThroneRoomWindow *)this)->movie_caption_rect),-1,-1);
       gfx_set_text_color_index(0xff);
       surface_draw_text_rect
-                ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)this->pad_f1c,ADDR(0x679640, ((u8 *)&g.d_00679640)),
-                 (iptr)(this[1].pad_1e4 + 0x1d0),0);
-      gfx_dissolve_blit((iptr)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x1d0),4,5);
+                ((DibSurface *)(this->media_wnd),(iptr)this->movie_caption_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),
+                 (iptr)(((ThroneRoomWindow *)this)->movie_caption_rect),0);
+      gfx_dissolve_blit((iptr)(this->media_wnd),(iptr)(((ThroneRoomWindow *)this)->movie_caption_rect),4,5);
       text_close_file();
       ui_delay_ticks(0x168);
     }
   }
-  avi_player_play((AviPlayerPlayView *)(this->pad_1e4 + 0x308));
+  avi_player_play((AviPlayerPlayView *)(this->media_wnd));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x30),ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->movie_wnd_base),ADDR(0x403585, net_modal_idle_poll));
   }
-  wnd_run_modal_loop((ModalMenuWindow *)(this->pad_504 + 0x30));
-  wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x30),0);
-  wnd_release_capture((WndBase *)(this->pad_504 + 0x30));
-  wnd_hide((WndBase *)(this->pad_504 + 0x30));
+  wnd_run_modal_loop((ModalMenuWindow *)(this->movie_wnd_base));
+  wnd_set_modal_idle_callback((ModalMenuWindow *)(this->movie_wnd_base),0);
+  wnd_release_capture((WndBase *)(this->movie_wnd_base));
+  wnd_hide((WndBase *)(this->movie_wnd_base));
   wnd_flush_paint();
   wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
   wnd_hide((WndBase *)this);
@@ -5843,13 +5843,13 @@ SpaceshipWindow * __thiscall arrival_movie_wnd_ctor(SpaceshipWindow *this)
   try_level = 0;
   palette_init((GamePalette *)&this->control_list);
   (*(i8 *)((char *)&try_level + 0)) = 1;
-  mmwnd_ctor((DocumentWindow *)(this->pad_1e4 + 0x308));
+  mmwnd_ctor((DocumentWindow *)(this->media_wnd));
   (*(i8 *)((char *)&try_level + 0)) = 2;
-  dll_handle_init((DllHandle *)(this->pad_ae4 + 0x430));
+  dll_handle_init((DllHandle *)(this->movie_dll));
   (*(i8 *)((char *)&try_level + 0)) = 3;
-  font_init_empty((GameFont *)this->pad_f1c);
+  font_init_empty((GameFont *)this->movie_caption_font);
   try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),4);
-  surface_ctor((DibSurface *)(this[1].pad_1e4 + 0x188));
+  surface_ctor((DibSurface *)(((ThroneRoomWindow *)this)->movie_frame_surface));
   this->advance_civ = 0;
   return this;
 }
@@ -5923,29 +5923,29 @@ i32 __thiscall arrival_movie_wnd_create(SpaceshipWindow *this,iptr civ)
       result = 0;
     }
     else {
-      dll_handle_load((DllHandle *)(this->pad_ae4 + 0x430),(iptr)dll_path);
+      dll_handle_load((DllHandle *)(this->movie_dll),(iptr)dll_path);
       wnd_create_with_handlers
                 ((WndBase *)this,ADDR(0x62b8d0, ((u8 *)&g.d_0062b8d0)),0x800,screen_left,screen_top,screen_right - screen_left,
                  (screen_bottom - screen_top) + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
       wnd_set_bg_color((WndBase *)this,0);
       surface_load_gif_resource
-                ((DibSurface *)(this->pad_1e4 + 0x308),2000,10,0xec,(iptr)&this->control_list);
-      avi_player_create((MediaWindow *)(this->pad_1e4 + 0x308),ADDR(0x62b8d4, ((u8 *)&g.d_0062b8d4)),0x800,0,0);
-      avi_player_set_double_size((MediaWindow *)(this->pad_1e4 + 0x308),1);
-      open_err = avi_player_open((AviPlayerOpenView *)(this->pad_1e4 + 0x308),(iptr)avi_path);
+                ((DibSurface *)(this->media_wnd),2000,10,0xec,(iptr)&this->control_list);
+      avi_player_create((MediaWindow *)(this->media_wnd),ADDR(0x62b8d4, ((u8 *)&g.d_0062b8d4)),0x800,0,0);
+      avi_player_set_double_size((MediaWindow *)(this->media_wnd),1);
+      open_err = avi_player_open((AviPlayerOpenView *)(this->media_wnd),(iptr)avi_path);
       if (open_err == 0) {
-        surface_fill((DibSurface *)(this->pad_1e4 + 0x308),0);
-        wnd_center((WndCenterView *)(this->pad_504 + 0x30));
-        avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e4 + 0x308),ADDR(0x4031c0, arrival_movie_on_video_end));
-        avi_player_set_frame_callback((AviPlayerSetFrameCallbackView *)(this->pad_1e4 + 0x308),ADDR(0x401d43, arrival_movie_on_frame),0x2ab);
-        SetRect((LPRECT)(this[1].pad_1e4 + 0x1d0),2,100,0x27e,0x1e0);
-        result = surface_get_height((DibSurface *)(this->pad_1e4 + 0x308));
-        width = surface_get_width((DibSurface *)(this->pad_1e4 + 0x308));
-        surface_create((DibSurface *)(this[1].pad_1e4 + 0x188),width,result);
+        surface_fill((DibSurface *)(this->media_wnd),0);
+        wnd_center((WndCenterView *)(this->movie_wnd_base));
+        avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->media_wnd),ADDR(0x4031c0, arrival_movie_on_video_end));
+        avi_player_set_frame_callback((AviPlayerSetFrameCallbackView *)(this->media_wnd),ADDR(0x401d43, arrival_movie_on_frame),0x2ab);
+        SetRect((LPRECT)(((ThroneRoomWindow *)this)->movie_caption_rect),2,100,0x27e,0x1e0);
+        result = surface_get_height((DibSurface *)(this->media_wnd));
+        width = surface_get_width((DibSurface *)(this->media_wnd));
+        surface_create((DibSurface *)(((ThroneRoomWindow *)this)->movie_frame_surface),width,result);
         avi_player_draw_to
-                  ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x188),0,0);
-        font_set_styled((GameFont *)this->pad_f1c,0,0x12,3);
-        dll_handle_free((DllHandle *)(this->pad_ae4 + 0x430));
+                  ((DibSurface *)(this->media_wnd),(iptr)(((ThroneRoomWindow *)this)->movie_frame_surface),0,0);
+        font_set_styled((GameFont *)this->movie_caption_font,0,0x12,3);
+        dll_handle_free((DllHandle *)(this->movie_dll));
         result = 1;
       }
       else {
@@ -5980,11 +5980,11 @@ void __thiscall arrival_movie_wnd_play(SpaceshipWindow *this)
   wnd_handle_show_raise((WndBase *)this);
   wnd_flush_paint();
   wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
-  window_show((WindowObjectView *)(this->pad_1e4 + 0x308));
+  window_show((WindowObjectView *)(this->media_wnd));
   wnd_flush_paint();
-  wnd_set_capture((WndBase *)(this->pad_504 + 0x30));
+  wnd_set_capture((WndBase *)(this->movie_wnd_base));
   gfx_set_text_color_index(0xff);
-  str_clear((iptr)(this->pad_f1c + 8));
+  str_clear((iptr)(this->movie_caption_text));
   text_clear();
   text_append_year((int)civs[this->advance_civ].spaceship_launch_year);
   text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
@@ -6000,7 +6000,7 @@ void __thiscall arrival_movie_wnd_play(SpaceshipWindow *this)
   str = civ_leader_name(this->advance_civ);
   text_set_string_arg(4,str);
   for (page = 0; page < 3; page++) {
-    str_clear((iptr)(this->pad_f1c + 8));
+    str_clear((iptr)(this->movie_caption_text));
     text_clear();
     text_append(ADDR(0x62b8f4, ((u8 *)&g.d_0062b8f4)));
     text_append_int(page);
@@ -6009,37 +6009,37 @@ void __thiscall arrival_movie_wnd_play(SpaceshipWindow *this)
       while( true ) {
         line = (char *)text_read_line(1);
         if (*line == '@') break;
-        str_append((iptr)(this->pad_f1c + 8),text_line_cursor);
-        str_append((iptr)(this->pad_f1c + 8),ADDR(0x62b900, ((u8 *)&g.d_0062b900)));
+        str_append((iptr)(this->movie_caption_text),text_line_cursor);
+        str_append((iptr)(this->movie_caption_text),ADDR(0x62b900, ((u8 *)&g.d_0062b900)));
       }
       text_clear();
-      text_expand_vars((iptr)(this->pad_f1c + 8),ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      text_expand_vars((iptr)(this->movie_caption_text),ADDR(0x679640, ((u8 *)&g.d_00679640)));
       surface_blit
-                ((DibSurface *)(this[1].pad_1e4 + 0x188),(iptr)(this->pad_1e4 + 0x308),
-                 (iptr)(this[1].pad_1e4 + 0x1d0),(iptr)(this[1].pad_1e4 + 0x1d0));
-      OffsetRect((LPRECT)(this[1].pad_1e4 + 0x1d0),1,1);
+                ((DibSurface *)(((ThroneRoomWindow *)this)->movie_frame_surface),(iptr)(this->media_wnd),
+                 (iptr)(((ThroneRoomWindow *)this)->movie_caption_rect),(iptr)(((ThroneRoomWindow *)this)->movie_caption_rect));
+      OffsetRect((LPRECT)(((ThroneRoomWindow *)this)->movie_caption_rect),1,1);
       gfx_set_text_color_index(0);
       surface_draw_text_rect
-                ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)this->pad_f1c,ADDR(0x679640, ((u8 *)&g.d_00679640)),
-                 (iptr)(this[1].pad_1e4 + 0x1d0),0);
-      OffsetRect((LPRECT)(this[1].pad_1e4 + 0x1d0),-1,-1);
+                ((DibSurface *)(this->media_wnd),(iptr)this->movie_caption_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),
+                 (iptr)(((ThroneRoomWindow *)this)->movie_caption_rect),0);
+      OffsetRect((LPRECT)(((ThroneRoomWindow *)this)->movie_caption_rect),-1,-1);
       gfx_set_text_color_index(0xf1);
       surface_draw_text_rect
-                ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)this->pad_f1c,ADDR(0x679640, ((u8 *)&g.d_00679640)),
-                 (iptr)(this[1].pad_1e4 + 0x1d0),0);
-      gfx_dissolve_blit((iptr)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x1d0),4,5);
+                ((DibSurface *)(this->media_wnd),(iptr)this->movie_caption_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),
+                 (iptr)(((ThroneRoomWindow *)this)->movie_caption_rect),0);
+      gfx_dissolve_blit((iptr)(this->media_wnd),(iptr)(((ThroneRoomWindow *)this)->movie_caption_rect),4,5);
       text_close_file();
       ui_delay_ticks(0x168);
     }
   }
-  avi_player_play((AviPlayerPlayView *)(this->pad_1e4 + 0x308));
+  avi_player_play((AviPlayerPlayView *)(this->media_wnd));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x30),ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->movie_wnd_base),ADDR(0x403585, net_modal_idle_poll));
   }
-  wnd_run_modal_loop((ModalMenuWindow *)(this->pad_504 + 0x30));
-  wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x30),0);
-  wnd_release_capture((WndBase *)(this->pad_504 + 0x30));
-  wnd_hide((WndBase *)(this->pad_504 + 0x30));
+  wnd_run_modal_loop((ModalMenuWindow *)(this->movie_wnd_base));
+  wnd_set_modal_idle_callback((ModalMenuWindow *)(this->movie_wnd_base),0);
+  wnd_release_capture((WndBase *)(this->movie_wnd_base));
+  wnd_hide((WndBase *)(this->movie_wnd_base));
   wnd_flush_paint();
   wnd_hide((WndBase *)this);
   wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
@@ -6940,23 +6940,23 @@ DestroyedCivsWindow * __thiscall destroyed_civs_wnd_ctor(DestroyedCivsWindow *th
   try_level = 0;
   palette_init((GamePalette *)&this->control_list);
   (*(i8 *)((char *)&try_level + 0)) = 1;
-  surfwnd_ctor((SurfaceWindow *)(this->pad_1e4 + 0x308));
+  surfwnd_ctor((SurfaceWindow *)(this->media_wnd));
   (*(i8 *)((char *)&try_level + 0)) = 2;
-  surface_ctor((DibSurface *)(this->pad_504 + 0xfc));
+  surface_ctor((DibSurface *)(this->civs_art_surface));
   (*(i8 *)((char *)&try_level + 0)) = 3;
-  dll_handle_init((DllHandle *)(this->pad_638 + 0x10));
+  dll_handle_init((DllHandle *)(this->improvement_art_surface));
   (*(i8 *)((char *)&try_level + 0)) = 4;
-  sprite_init((Sprite *)(this->pad_638 + 0x14));
+  sprite_init((Sprite *)(this->panel_sprite));
   (*(i8 *)((char *)&try_level + 0)) = 5;
-  sprite_init((Sprite *)(this->pad_638 + 0x50));
+  sprite_init((Sprite *)(this->portrait_sprite));
   (*(i8 *)((char *)&try_level + 0)) = 6;
-  font_init_empty((GameFont *)this->pad_700);
+  font_init_empty((GameFont *)this->caption_font_2);
   try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),7);
   this->killer_civ = 0;
   victory_screen_wnd = this;
   this->slide_y = 0;
   SetRect((LPRECT)&this->panel_clip_rect,0xd0,0x39,0x1b1,0x14c);
-  font_set_styled((GameFont *)this->pad_700,0,0x18,1);
+  font_set_styled((GameFont *)this->caption_font_2,0,0x18,1);
   return this;
 }
 #undef victory_screen_wnd
@@ -6976,7 +6976,7 @@ void __thiscall destroyed_civs_wnd_dtor(DestroyedCivsWindowCore *this)
   
   (*(i32 *)((char *)&try_level + 1)) = 0;
   (*(i8 *)((char *)&try_level + 0)) = 7;
-  dll_handle_free((DllHandle *)(this->pad_0 + 0x648));
+  dll_handle_free((DllHandle *)(this->art_dll_2));
   victory_screen_wnd = 0;
   (*(i8 *)((char *)&try_level + 0)) = 6;
   /* inlined unwind funclet 0051516a */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x700)); }
@@ -7026,34 +7026,34 @@ i32 __thiscall destroyed_civs_wnd_create(DestroyedCivsWindow *this,uint killer)
     result = 0;
   }
   else {
-    dll_handle_load((DllHandle *)(this->pad_638 + 0x10),(iptr)dll_path);
+    dll_handle_load((DllHandle *)(this->improvement_art_surface),(iptr)dll_path);
     this->killer_civ = killer;
     wnd_create_with_handlers
               ((WndBase *)this,ADDR(0x631aac, ((u8 *)&g.d_00631aac)),0x800,screen_left,screen_top,screen_right - screen_left,
                (screen_bottom - screen_top) + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
     wnd_set_bg_color((WndBase *)this,0);
     wnd_create_with_surface
-              ((DibSurface *)(this->pad_1e4 + 0x308),ADDR(0x631ab0, ((u8 *)&g.d_00631ab0)),0x800,0,0,0x280,0x1e0,
+              ((DibSurface *)(this->media_wnd),ADDR(0x631ab0, ((u8 *)&g.d_00631ab0)),0x800,0,0,0x280,0x1e0,
                (iptr)&this->control_list,(iptr)this);
-    wnd_center((WndCenterView *)(this->pad_504 + 0x30));
+    wnd_center((WndCenterView *)(this->movie_wnd_base));
     surface_load_gif_resource
-              ((DibSurface *)(this->pad_504 + 0xfc),0x2711,10,0xec,(iptr)&this->control_list);
+              ((DibSurface *)(this->civs_art_surface),0x2711,10,0xec,(iptr)&this->control_list);
     sprite_grab_from_surface
-              ((Sprite *)(this->pad_638 + 0x14),(iptr)(this->pad_504 + 0xfc),8,0,0,0x129,0xad
+              ((Sprite *)(this->panel_sprite),(iptr)(this->civs_art_surface),8,0,0,0x129,0xad
               );
     surface_load_gif_resource
-              ((DibSurface *)(this->pad_504 + 0xfc),10000,10,0xec,(iptr)&this->control_list);
+              ((DibSurface *)(this->civs_art_surface),10000,10,0xec,(iptr)&this->control_list);
     SetRect(&rect,0,0,0x280,0x1e0);
     surface_blit
-              ((DibSurface *)(this->pad_504 + 0xfc),(iptr)(this->pad_1e4 + 0x308),(iptr)&rect
+              ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),(iptr)&rect
                ,(iptr)&rect);
-    SetRect((LPRECT)this->pad_6dc,0xc1,0x173,0x1c0,0x1cd);
-    result = surface_height((DibSurface *)(this->pad_504 + 0xfc));
-    width = surface_width((DibSurface *)(this->pad_504 + 0xfc));
+    SetRect((LPRECT)this->slot_sprites,0xc1,0x173,0x1c0,0x1cd);
+    result = surface_height((DibSurface *)(this->civs_art_surface));
+    width = surface_width((DibSurface *)(this->civs_art_surface));
     surface_create((DibSurface *)&destroyed_civs_text_bg,width,result);
     surface_blit
-              ((DibSurface *)(this->pad_504 + 0xfc),ADDR(0x6aad58, ((u8 *)&g.d_006aad58)),(iptr)this->pad_6dc,
-               (iptr)this->pad_6dc);
+              ((DibSurface *)(this->civs_art_surface),ADDR(0x6aad58, ((u8 *)&g.d_006aad58)),(iptr)this->slot_sprites,
+               (iptr)this->slot_sprites);
     for (entry = 0;
         (entry < 0xc && ((uint)(byte)(&destroyed_civ_killers)[entry] != (killer & 0xff)));
         entry = entry + 1) {
@@ -7101,9 +7101,9 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
   wnd_handle_show_raise((WndBase *)this);
   wnd_flush_paint();
   wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
-  window_show((WindowObjectView *)(this->pad_1e4 + 0x308));
+  window_show((WindowObjectView *)(this->media_wnd));
   wnd_flush_paint();
-  wnd_set_capture((WndBase *)(this->pad_504 + 0x30));
+  wnd_set_capture((WndBase *)(this->movie_wnd_base));
   for (entry = 0; entry < 0xc; entry++) {
     if ((&destroyed_civ_killers)[entry] == (char)this->killer_civ) {
       destroyed_civs_draw_entry((WndBase *)this,entry);
@@ -7126,12 +7126,12 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
     }
   }
   ui_delay_ticks(0x3c);
-  surface_fill((DibSurface *)(this->pad_1e4 + 0x308),0);
-  SetRect((LPRECT)this->pad_6dc,0,0,0x280,0x1e0);
-  gfx_dissolve_blit((iptr)(this->pad_1e4 + 0x308),(iptr)this->pad_6dc,4,4);
+  surface_fill((DibSurface *)(this->media_wnd),0);
+  SetRect((LPRECT)this->slot_sprites,0,0,0x280,0x1e0);
+  gfx_dissolve_blit((iptr)(this->media_wnd),(iptr)this->slot_sprites,4,4);
   surface_load_gif_resource
-            ((DibSurface *)(this->pad_1e4 + 0x308),0x2712,10,0xec,(iptr)&this->control_list);
-  text_set_font((iptr)this->pad_700);
+            ((DibSurface *)(this->media_wnd),0x2712,10,0xec,(iptr)&this->control_list);
+  text_set_font((iptr)this->caption_font_2);
   text_set_colors(0x7c,0x81,1,1);
   text_clear();
   str_clear((iptr)text_buf);
@@ -7141,26 +7141,26 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *this)
       str_append((iptr)text_buf,text_line_cursor);
       str_append((iptr)text_buf,ADDR(0x631abc, ((u8 *)&g.d_00631abc)));
     }
-    text_draw_centered((iptr)(this->pad_1e4 + 0x308),(iptr)text_buf,0,0x48,0x280);
+    text_draw_centered((iptr)(this->media_wnd),(iptr)text_buf,0,0x48,0x280);
   }
-  gfx_dissolve_blit((iptr)(this->pad_1e4 + 0x308),(iptr)this->pad_6dc,4,3);
+  gfx_dissolve_blit((iptr)(this->media_wnd),(iptr)this->slot_sprites,4,3);
   text_clear();
   text_append_label(0x1c8);
   font_set_styled(&font2,0,0x10,3);
   text_set_font((iptr)&font2);
   width = 0x280;
   status = font_line_spacing(&font2);
-  text_draw_centered((iptr)(this->pad_1e4 + 0x308),ADDR(0x679640, ((u8 *)&g.d_00679640)),0,0x1dc - status,width);
-  wnd_blit_surface_rect((DibSurface *)(this->pad_1e4 + 0x308),(iptr)this->pad_6dc);
-  wnd_set_keydown_handler((WndEventHandlers *)(this->pad_504 + 0x40),ADDR(0x401a1e, victory_screen_on_key));
-  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_504 + 0x40),ADDR(0x401334, victory_screen_on_click));
+  text_draw_centered((iptr)(this->media_wnd),ADDR(0x679640, ((u8 *)&g.d_00679640)),0,0x1dc - status,width);
+  wnd_blit_surface_rect((DibSurface *)(this->media_wnd),(iptr)this->slot_sprites);
+  wnd_set_keydown_handler((WndEventHandlers *)(this->destroyed_civs_handlers),ADDR(0x401a1e, victory_screen_on_key));
+  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->destroyed_civs_handlers),ADDR(0x401334, victory_screen_on_click));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x30),ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->movie_wnd_base),ADDR(0x403585, net_modal_idle_poll));
   }
-  wnd_run_modal_loop((ModalMenuWindow *)(this->pad_504 + 0x30));
-  wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_504 + 0x30),0);
-  wnd_release_capture((WndBase *)(this->pad_504 + 0x30));
-  wnd_hide((WndBase *)(this->pad_504 + 0x30));
+  wnd_run_modal_loop((ModalMenuWindow *)(this->movie_wnd_base));
+  wnd_set_modal_idle_callback((ModalMenuWindow *)(this->movie_wnd_base),0);
+  wnd_release_capture((WndBase *)(this->movie_wnd_base));
+  wnd_hide((WndBase *)(this->movie_wnd_base));
   wnd_flush_paint();
   wnd_set_palette((WndBase *)this,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
   wnd_hide((WndBase *)this);
@@ -7189,25 +7189,25 @@ void __thiscall destroyed_civs_draw_entry(WndBase *this,iptr entry)
   
   if (destroyed_civs_show_date == 0) {
     surface_blit
-              ((DibSurface *)&destroyed_civs_text_bg,(iptr)(this + 0x60),(iptr)&this[0x6d].field_c,
-               (iptr)&this[0x6d].field_c);
+              ((DibSurface *)&destroyed_civs_text_bg,(iptr)(this + 0x60),(iptr)&((PictureFrameWindow *)this)->slot_sprites,
+               (iptr)&((PictureFrameWindow *)this)->slot_sprites);
     text_clear();
     text_append((iptr)(&destroyed_civ_names + entry * 0x18));
     gfx_set_text_color_index(0x21);
-    OffsetRect((LPRECT)&this[0x6d].field_c,1,1);
+    OffsetRect((LPRECT)&((PictureFrameWindow *)this)->slot_sprites,1,1);
     surface_draw_text_rect
-              ((DibSurface *)(this + 0x60),(iptr)(this + 0x70),ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&this[0x6d].field_c
+              ((DibSurface *)(this + 0x60),(iptr)(this + 0x70),ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&((PictureFrameWindow *)this)->slot_sprites
                ,0);
     gfx_set_text_color_index(0x10);
-    OffsetRect((LPRECT)&this[0x6d].field_c,-1,-1);
+    OffsetRect((LPRECT)&((PictureFrameWindow *)this)->slot_sprites,-1,-1);
     surface_draw_text_rect
-              ((DibSurface *)(this + 0x60),(iptr)(this + 0x70),ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&this[0x6d].field_c
+              ((DibSurface *)(this + 0x60),(iptr)(this + 0x70),ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&((PictureFrameWindow *)this)->slot_sprites
                ,0);
   }
   else {
     surface_blit
-              ((DibSurface *)&destroyed_civs_text_bg,(iptr)(this + 0x60),(iptr)&this[0x6d].field_c,
-               (iptr)&this[0x6d].field_c);
+              ((DibSurface *)&destroyed_civs_text_bg,(iptr)(this + 0x60),(iptr)&((PictureFrameWindow *)this)->slot_sprites,
+               (iptr)&((PictureFrameWindow *)this)->slot_sprites);
     text_clear();
     text_append((iptr)(&destroyed_civ_names + entry * 0x18));
     text_append_colon();
@@ -7218,25 +7218,25 @@ void __thiscall destroyed_civs_draw_entry(WndBase *this,iptr entry)
     year = game_turn_to_year((int)*(short *)(&destroyed_civ_turns + entry * 2));
     text_append_year(year);
     gfx_set_text_color_index(0x21);
-    OffsetRect((LPRECT)&this[0x6d].field_c,1,1);
+    OffsetRect((LPRECT)&((PictureFrameWindow *)this)->slot_sprites,1,1);
     surface_draw_text_rect
-              ((DibSurface *)(this + 0x60),(iptr)(this + 0x70),ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&this[0x6d].field_c
+              ((DibSurface *)(this + 0x60),(iptr)(this + 0x70),ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&((PictureFrameWindow *)this)->slot_sprites
                ,0);
     gfx_set_text_color_index(0x10);
-    OffsetRect((LPRECT)&this[0x6d].field_c,-1,-1);
+    OffsetRect((LPRECT)&((PictureFrameWindow *)this)->slot_sprites,-1,-1);
     surface_draw_text_rect
-              ((DibSurface *)(this + 0x60),(iptr)(this + 0x70),ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&this[0x6d].field_c
+              ((DibSurface *)(this + 0x60),(iptr)(this + 0x70),ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&((PictureFrameWindow *)this)->slot_sprites
                ,0);
     surface_blit
-              ((DibSurface *)(this + 0x60),(iptr)&this[0x4e].field_c,(iptr)&this[0x6d].field_c,
-               (iptr)&this[0x6d].field_c);
+              ((DibSurface *)(this + 0x60),(iptr)&((PictureFrameWindow *)this)->media_wnd,(iptr)&((PictureFrameWindow *)this)->slot_sprites,
+               (iptr)&((PictureFrameWindow *)this)->slot_sprites);
     wnd_blit_surface_rect
-              ((DibSurface *)&this[0x4e].field_c,(iptr)&this[0x6d].field_c);
+              ((DibSurface *)&((PictureFrameWindow *)this)->media_wnd,(iptr)&((PictureFrameWindow *)this)->slot_sprites);
     destroyed_civs_show_date = 0;
   }
   surface_blit
-            ((DibSurface *)(this + 0x60),(iptr)&this[0x4e].field_c,(iptr)&this[0x6d].field_c,
-             (iptr)&this[0x6d].field_c);
+            ((DibSurface *)(this + 0x60),(iptr)&((PictureFrameWindow *)this)->media_wnd,(iptr)&((PictureFrameWindow *)this)->slot_sprites,
+             (iptr)&((PictureFrameWindow *)this)->slot_sprites);
   return;
 }
 #undef destroyed_civs_show_date
@@ -7260,7 +7260,7 @@ void __thiscall destroyed_civs_draw_portrait(PictureFrameWindow *this,iptr entry
   palette_init(&palette);
   (*(i8 *)((char *)&try_level + 0)) = 1;
   surface_blit
-            ((DibSurface *)(this->pad_504 + 0xfc),(iptr)(this->pad_1e4 + 0x308),
+            ((DibSurface *)(this->civs_art_surface),(iptr)((u8 *)&this->media_wnd),
              (iptr)&this->panel_clip_rect,(iptr)&this->panel_clip_rect);
   surface_load_gif_resource
             (&portrait_surface,(byte)(&destroyed_civ_portraits)[entry] + 0xdc,10,0xec,(iptr)&palette);
@@ -7268,9 +7268,9 @@ void __thiscall destroyed_civs_draw_portrait(PictureFrameWindow *this,iptr entry
   palette_set_rgb((GamePalette *)&this->control_list,0x2a,0x40,(iptr)rgb_buf);
   surface_set_palette(&portrait_surface,(iptr)&this->control_list);
   sprite_grab_from_surface
-            ((Sprite *)(this->pad_638 + 0x50),(iptr)&portrait_surface,9,1,1,0xe1,0x113);
+            ((Sprite *)(this->portrait_sprite),(iptr)&portrait_surface,9,1,1,0xe1,0x113);
   sprite_draw
-            ((Sprite *)(this->pad_638 + 0x50),(iptr)draw_tmp,(iptr)(this->pad_1e4 + 0x308),
+            ((Sprite *)(this->portrait_sprite),(iptr)draw_tmp,(iptr)((u8 *)&this->media_wnd),
              0xd0,0x39);
   SetRect((LPRECT)&this->panel_clip_rect,0xd0,0x39,0x1b1,0x14c);
   try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
@@ -7314,10 +7314,10 @@ void __thiscall destroyed_civs_slide_step(DestroyedCivsWindow *this,int delta)
     dirty_bottom += delta;
   }
   surface_blit
-            ((DibSurface *)(this->pad_504 + 0xfc),(iptr)(this->pad_1e4 + 0x308),(iptr)&dirty_left,
+            ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),(iptr)&dirty_left,
              (iptr)&dirty_left);
   sprite_draw
-            ((Sprite *)(this->pad_638 + 0x50),(iptr)draw_tmp1,(iptr)(this->pad_1e4 + 0x308),
+            ((Sprite *)(this->portrait_sprite),(iptr)draw_tmp1,(iptr)(this->media_wnd),
              0xd0,0x39);
   if (0 < delta) {
     gap_left = this->panel_clip_rect;
@@ -7325,17 +7325,17 @@ void __thiscall destroyed_civs_slide_step(DestroyedCivsWindow *this,int delta)
     gap_top = this->slide_y;
     gap_bottom = this->slide_y + delta;
     surface_blit
-              ((DibSurface *)(this->pad_504 + 0xfc),(iptr)(this->pad_1e4 + 0x308),(iptr)&gap_left
+              ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),(iptr)&gap_left
                ,(iptr)&gap_left);
   }
   sprite_draw
-            ((Sprite *)(this->pad_638 + 0x14),(iptr)draw_tmp2,(iptr)(this->pad_1e4 + 0x308),
+            ((Sprite *)(this->panel_sprite),(iptr)draw_tmp2,(iptr)(this->media_wnd),
              0xab,this->slide_y + delta);
   OffsetRect((LPRECT)&this->slide_rect,0,delta);
   if ((int)dirty_top < 1) {
     dirty_top = 0;
   }
-  wnd_blit_surface_rect((DibSurface *)(this->pad_1e4 + 0x308),(iptr)&dirty_left);
+  wnd_blit_surface_rect((DibSurface *)(this->media_wnd),(iptr)&dirty_left);
   this->slide_y += delta;
   return;
 }
@@ -7359,7 +7359,7 @@ void __thiscall destroyed_civs_slide_down(DestroyedCivsWindow *this)
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_blit
-            ((DibSurface *)(this->pad_504 + 0xfc),(iptr)(this->pad_1e4 + 0x308),
+            ((DibSurface *)(this->civs_art_surface),(iptr)(this->media_wnd),
              (iptr)&this->panel_clip_rect,(iptr)&this->panel_clip_rect);
   snd_wave_stop_all();
   snd_play_effect(0x6f,1,0,0);
@@ -7460,27 +7460,27 @@ ListPaneWindow * __thiscall council_wnd_ctor(ListPaneWindow *this)
   try_level = 0;
   mmwnd_ctor((DocumentWindow *)&this->style_flags);
   (*(i8 *)((char *)&try_level + 0)) = 1;
-  dialog_ctor((Dialog *)&this[10].field_24,0x4000);
+  dialog_ctor((Dialog *)&((PictureWindow *)this)->council_dialog,0x4000);
   (*(i8 *)((char *)&try_level + 0)) = 2;
-  dll_handle_init((DllHandle *)(this[0xc].pad_48 + 0x98));
+  dll_handle_init((DllHandle *)(((PictureWindow *)this)->council_dll_handle));
   (*(i8 *)((char *)&try_level + 0)) = 3;
   button_ctor((Control *)(this + 0x10));
   (*(i8 *)((char *)&try_level + 0)) = 4;
-  button_ctor((Control *)&this[0x10].field_3c);
+  button_ctor((Control *)&((PictureWindow *)this)->advisor_button_4);
   (*(i8 *)((char *)&try_level + 0)) = 5;
-  button_ctor((Control *)(this[0x10].pad_48 + 0x30));
+  button_ctor((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_3));
   (*(i8 *)((char *)&try_level + 0)) = 6;
-  button_ctor((Control *)(this[0x10].pad_48 + 0x6c));
+  button_ctor((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_2));
   (*(i8 *)((char *)&try_level + 0)) = 7;
-  button_ctor((Control *)(this[0x10].pad_48 + 0xa8));
+  button_ctor((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_0));
   try_level = CONCAT31((*(i32 *)((char *)&try_level + 1)),8);
-  button_ctor((Control *)&this[0x11].field_10);
+  button_ctor((Control *)&((PictureWindow *)this)->council_close_button);
   this->vtable = (u32)&PTR_FUN_0061d6d8;
-  this[0xf].pad_104[4] = 0xb0;
-  this[0xf].pad_104[5] = '\0';
-  this[0xf].pad_104[6] = '\0';
-  this[0xf].pad_104[7] = '\0';
-  this[0xd].field_4 = 0;
+  ((PictureWindow *)this)->speech_line_y[0] = 0xb0;
+  ((PictureWindow *)this)->speech_line_y_b1[0] = '\0';
+  ((PictureWindow *)this)->speech_line_y_b2[0] = '\0';
+  ((PictureWindow *)this)->speech_line_y_b3[0] = '\0';
+  ((PictureWindow *)this)->council_active_2 = 0;
   council_wnd = (iptr)this;
   return this;
 }
@@ -7497,7 +7497,7 @@ void __thiscall council_wnd_dtor(CouncilWindow *this)
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(i8 ***)this->pad_0 = &PTR_FUN_0061d6d8;
+  *(i8 ***)this->window_base = &PTR_FUN_0061d6d8;
   (*(i32 *)((char *)&try_level + 1)) = 0;
   council_wnd = 0;
   (*(i8 *)((char *)&try_level + 0)) = 8;
@@ -7543,20 +7543,20 @@ i32 __thiscall council_wnd_init(ListPaneWindow *this,u32 civ,int cheat_mode)
   int choice;
   i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
   
-  this[0xd].field_0 = civ;
-  result = civ_city_art_era(this[0xd].field_0);
-  *(i32 *)this[0xc].pad_104 = result;
+  ((PictureWindow *)this)->council_civ = civ;
+  result = civ_city_art_era(((PictureWindow *)this)->council_civ);
+  *(i32 *)((PictureWindow *)this)->pedia_terrain_ids_2 = result;
   wnd_create_with_surface
             ((DibSurface *)this,ADDR(0x631ad4, ((u8 *)&g.d_00631ad4)),0xc02,0,0,frame_border_width * 6 + 0x1c2,
              frame_caption_height * 2 + frame_bevel_width + 0xfc,ADDR(0x6ab6a8, ((u8 *)&g.d_006ab6a8)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
-  wnd_set_caption_height((WndBase *)this->pad_48,frame_caption_height);
+  wnd_set_caption_height((WndBase *)this->window_2,frame_caption_height);
   ui_set_button_font(ADDR(0x6cec90, ((u8 *)&g.d_006cec90)));
   council_create_buttons((DibSurface *)this);
   council_draw_background((DibSurface *)this);
   wnd_repaint((SurfaceWindow *)this);
   for (advisor = 0; advisor < 5; advisor++) {
-    result = council_advisor_opinion(this[0xd].field_0,advisor);
-    *(i32 *)(this[0xc].pad_104 + advisor * 4 + 4) = result;
+    result = council_advisor_opinion(((PictureWindow *)this)->council_civ,advisor);
+    *(i32 *)(((PictureWindow *)this)->pedia_terrain_ids_2 + advisor * 4 + 4) = result;
   }
   if (cheat_mode != 0) {
     while( true ) {
@@ -7571,67 +7571,67 @@ i32 __thiscall council_wnd_init(ListPaneWindow *this,u32 civ,int cheat_mode)
           return 0;
         }
         if (((0 < number) && (number < 8)) && ((choice != 5 || (number < 7)))) {
-          *(int *)(this[0xc].pad_104 + choice * 4) = number;
+          *(int *)(((PictureWindow *)this)->pedia_terrain_ids_2 + choice * 4) = number;
           valid = true;
         }
       }
     }
-    this[0xd].field_4 = 1;
+    ((PictureWindow *)this)->council_active_2 = 1;
 LAB_00516b87:
     valid = false;
     while ((!valid && (choice = dlg_input_number_game(ADDR(0x631af8, ((u8 *)&g.d_00631af8)),0,(iptr)&number), choice == 0))) {
       if ((-1 < number) && (number < 3)) {
-        *(int *)this[0xc].pad_104 = number;
+        *(int *)((PictureWindow *)this)->pedia_terrain_ids_2 = number;
         valid = true;
       }
     }
   }
-  if (civs[this[0xd].field_0].government == '\0') {
-    this[0xd].field_4 = 1;
+  if (civs[((PictureWindow *)this)->council_civ].government == '\0') {
+    ((PictureWindow *)this)->council_active_2 = 1;
   }
   else {
     for (advisor = 0; advisor < 5; advisor++) {
-      str_clear((iptr)(this[0xd].pad_48 + advisor * 3 - 0x40));
+      str_clear((iptr)(((PictureWindow *)this)->advisor_code_slots + advisor * 3 - 0x40));
     }
-    str_append((iptr)&this[0xd].field_8,ADDR(0x631b08, ((u8 *)&g.d_00631b08)));
-    str_append((iptr)((int)&this[0xd].field_8 + 3),ADDR(0x631b0c, ((u8 *)&g.d_00631b0c)));
-    str_append((iptr)((int)&this[0xd].field_c + 2),ADDR(0x631b10, ((u8 *)&g.d_00631b10)));
-    str_append((iptr)((int)&this[0xd].field_10 + 1),ADDR(0x631b14, ((u8 *)&g.d_00631b14)));
-    str_append((iptr)&this[0xd].field_14,ADDR(0x631b18, ((u8 *)&g.d_00631b18)));
+    str_append((iptr)&((PictureWindow *)this)->advisor_codes,ADDR(0x631b08, ((u8 *)&g.d_00631b08)));
+    str_append((iptr)((int)&((PictureWindow *)this)->advisor_codes + 3),ADDR(0x631b0c, ((u8 *)&g.d_00631b0c)));
+    str_append((iptr)((int)&((PictureWindow *)this)->advisor_codes_part2 + 2),ADDR(0x631b10, ((u8 *)&g.d_00631b10)));
+    str_append((iptr)((int)&((PictureWindow *)this)->advisor_codes_part3 + 1),ADDR(0x631b14, ((u8 *)&g.d_00631b14)));
+    str_append((iptr)&((PictureWindow *)this)->advisor_codes_part4,ADDR(0x631b18, ((u8 *)&g.d_00631b18)));
     for (advisor = 0; advisor < 5; advisor++) {
-      str_append_int((iptr)(this[0xd].pad_48 + advisor * 3 - 0x40),
-                         *(i32 *)(this[0xc].pad_104 + advisor * 4 + 4));
+      str_append_int((iptr)(((PictureWindow *)this)->advisor_code_slots + advisor * 3 - 0x40),
+                         *(i32 *)(((PictureWindow *)this)->pedia_terrain_ids_2 + advisor * 4 + 4));
     }
   }
-  if (this[0xd].field_4 != 0) {
+  if (((PictureWindow *)this)->council_active_2 != 0) {
     ctrl_disable((Control *)(this + 0x10));
-    ctrl_disable((Control *)&this[0x10].field_3c);
-    ctrl_disable((Control *)(this[0x10].pad_48 + 0x30));
-    ctrl_disable((Control *)(this[0x10].pad_48 + 0x6c));
-    ctrl_disable((Control *)(this[0x10].pad_48 + 0xa8));
+    ctrl_disable((Control *)&((PictureWindow *)this)->advisor_button_4);
+    ctrl_disable((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_3));
+    ctrl_disable((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_2));
+    ctrl_disable((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_0));
   }
-  str_clear((iptr)(this[0xc].pad_48 + 0x9c));
+  str_clear((iptr)(((PictureWindow *)this)->council_text_file));
   text_clear();
-  if (this[0xd].field_4 == 0) {
+  if (((PictureWindow *)this)->council_active_2 == 0) {
     text_append(ADDR(0x631b1c, ((u8 *)&g.d_00631b1c)));
   }
   else {
     text_append(ADDR(0x631b24, ((u8 *)&g.d_00631b24)));
   }
-  text_append_int(*(iptr *)this[0xc].pad_104);
-  str_append((iptr)(this[0xc].pad_48 + 0x9c),ADDR(0x679640, ((u8 *)&g.d_00679640)));
-  if ((this[0xd].field_4 == 0) &&
+  text_append_int(*(iptr *)((PictureWindow *)this)->pedia_terrain_ids_2);
+  str_append((iptr)(((PictureWindow *)this)->council_text_file),ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  if ((((PictureWindow *)this)->council_active_2 == 0) &&
      (choice = council_load_speech((WindowObjectView *)this,0), choice == 0)) {
     result = 0;
   }
   else {
     dialog_init
-              ((Dialog *)&this[10].field_24,(iptr)this,(iptr)this,
-               (iptr)(this[0xf].pad_104 + 8),0x84008);
+              ((Dialog *)&((PictureWindow *)this)->council_dialog,(iptr)this,(iptr)this,
+               (iptr)((u8 *)&((PictureWindow *)this)->speech_rect),0x84008);
     avi_player_create_child((MediaWindow *)&this->style_flags,ADDR(0x631b2c, ((u8 *)&g.d_00631b2c)),0x200,0,0,(iptr)this);
     str_clear((iptr)avi_path);
     str_append((iptr)avi_path,ADDR(0x631b30, ((u8 *)&g.d_00631b30)));
-    str_append((iptr)avi_path,(iptr)(this[0xc].pad_48 + 0x9c));
+    str_append((iptr)avi_path,(iptr)(((PictureWindow *)this)->council_text_file));
     str_append((iptr)avi_path,ADDR(0x631b3c, ((u8 *)&g.d_00631b3c)));
     choice = file_resolve_path((iptr)avi_path);
     if (choice == 0) {
@@ -7641,7 +7641,7 @@ LAB_00516b87:
       open_err = avi_player_open((AviPlayerOpenView *)&this->style_flags,(iptr)avi_path);
       if (open_err == 0) {
         avi_player_set_palette((DibSurface *)&this->style_flags,ADDR(0x6ab6a8, ((u8 *)&g.d_006ab6a8)));
-        wnd_set_palette((WndBase *)&this[1].field_40,ADDR(0x6ab6a8, ((u8 *)&g.d_006ab6a8)));
+        wnd_set_palette((WndBase *)&((ParleyWindowLayout *)this)->parley_title,ADDR(0x6ab6a8, ((u8 *)&g.d_006ab6a8)));
         avi_player_set_end_callback((AviPlayerEndCbSetView *)&this->style_flags,ADDR(0x40188e, council_on_video_end));
         council_draw_advisor_frames(this);
         result = 1;
@@ -7673,33 +7673,33 @@ void __thiscall council_wnd_run_modal(ListPaneWindow *this)
   dlg_set_palette(ADDR(0x6ab6a8, ((u8 *)&g.d_006ab6a8)));
   screen_fade_out();
   wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6ab6a8, ((u8 *)&g.d_006ab6a8)));
-  wnd_center((WndCenterView *)this->pad_48);
-  ctrl_show_and_redraw((Control *)&this[0x10].field_3c);
-  ctrl_show_and_redraw((Control *)(this[0x10].pad_48 + 0x30));
-  ctrl_show_and_redraw((Control *)(this[0x10].pad_48 + 0xa8));
-  ctrl_show_and_redraw((Control *)(this[0x10].pad_48 + 0x6c));
+  wnd_center((WndCenterView *)this->window_2);
+  ctrl_show_and_redraw((Control *)&((PictureWindow *)this)->advisor_button_4);
+  ctrl_show_and_redraw((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_3));
+  ctrl_show_and_redraw((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_0));
+  ctrl_show_and_redraw((Control *)((u8 *)&((PictureWindow *)this)->advisor_button_2));
   ctrl_show_and_redraw((Control *)(this + 0x10));
-  ctrl_show_and_redraw((Control *)&this[0x11].field_10);
-  dlg_show_modal((Dialog *)&this[10].field_24,0);
+  ctrl_show_and_redraw((Control *)&((PictureWindow *)this)->council_close_button);
+  dlg_show_modal((Dialog *)&((PictureWindow *)this)->council_dialog,0);
   window_show((WindowObjectView *)this);
   wnd_flush_paint();
-  if (this[0xd].field_4 != 0) {
+  if (((PictureWindow *)this)->council_active_2 != 0) {
     wnd_move_xy
-              ((WndMoveView *)&this[1].field_40,frame_border_width + 1,frame_caption_height + 1);
+              ((WndMoveView *)&((ParleyWindowLayout *)this)->parley_title,frame_border_width + 1,frame_caption_height + 1);
     window_show((WindowObjectView *)&this->style_flags);
     wnd_flush_paint();
     avi_player_play((AviPlayerPlayView *)&this->style_flags);
   }
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)this->window_2,ADDR(0x403585, net_modal_idle_poll));
   }
-  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
-  wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,0);
+  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
+  wnd_set_modal_idle_callback((ModalMenuWindow *)this->window_2,0);
   snd_wave_stop_all();
   council_draw_background((DibSurface *)this);
-  wnd_hide((WndBase *)this->pad_48);
+  wnd_hide((WndBase *)this->window_2);
   wnd_flush_paint();
-  dialog_close((Dialog *)&this[10].field_24);
+  dialog_close((Dialog *)&((PictureWindow *)this)->council_dialog);
   wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
   screen_fade_in();
   dlg_set_palette(ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
@@ -7763,14 +7763,14 @@ void __thiscall council_draw_background(DibSurface *this)
   offset = surface_get_width(this);
   offset = (offset - frame_border_width) + frame_bevel_width;
   inner_top = surface_get_height(this);
-  SetRect((LPRECT)&this[0x3e].field_40,frame_border_width - frame_bevel_width,inner_top - 0x82 + frame_bevel_width * -3
+  SetRect((LPRECT)&((PictureWindow *)this)->speech_rect,frame_border_width - frame_bevel_width,inner_top - 0x82 + frame_bevel_width * -3
           ,offset,extent);
   for (j = 0; j < frame_bevel_width; j++) {
-    gfx_draw_bevel_rect((iptr)this,(iptr)&this[0x3e].field_40,frame_shadow_color,frame_highlight_color);
-    InflateRect((LPRECT)&this[0x3e].field_40,-1,-1);
+    gfx_draw_bevel_rect((iptr)this,(iptr)&((PictureWindow *)this)->speech_rect,frame_shadow_color,frame_highlight_color);
+    InflateRect((LPRECT)&((PictureWindow *)this)->speech_rect,-1,-1);
   }
-  surface_fill_rect(this,(iptr)&this[0x3e].field_40,0x1d);
-  InflateRect((LPRECT)&this[0x3e].field_40,-2,-2);
+  surface_fill_rect(this,(iptr)&((PictureWindow *)this)->speech_rect,0x1d);
+  InflateRect((LPRECT)&((PictureWindow *)this)->speech_rect,-2,-2);
   lprcSrc = (RECT *)surface_get_rect(this);
   CopyRect(&rect,lprcSrc);
   for (j = 0; j < frame_bevel_width; j++) {
@@ -7782,11 +7782,11 @@ void __thiscall council_draw_background(DibSurface *this)
     str = label_string(*(i32 *)(label_string_ids + 0x4ac));
     text_append(str);
     text_append_space();
-    str = civ_get_adjective(this[0x33].field_14);
+    str = civ_get_adjective(((PictureWindow *)this)->council_civ);
     text_append(str);
   }
   else {
-    str = civ_get_adjective(this[0x33].field_14);
+    str = civ_get_adjective(((PictureWindow *)this)->council_civ);
     text_append(str);
     if (game_language == 2) {
       text_append(ADDR(0x631b58, ((u8 *)&g.d_00631b58)));
@@ -7842,8 +7842,8 @@ void __thiscall council_create_buttons(DibSurface *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x26c));
   button_create_with_callback
-            ((Control *)&this[0x42].field_20,(iptr)parent1,0,(iptr)&rect,0x21,label);
-  button_set_callback((Control *)&this[0x42].field_20,ADDR(0x401b22, council_on_advisor_button));
+            ((Control *)&((PictureWindow *)this)->advisor_button_0,(iptr)parent1,0,(iptr)&rect,0x21,label);
+  button_set_callback((Control *)&((PictureWindow *)this)->advisor_button_0,ADDR(0x401b22, council_on_advisor_button));
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (this == (DibSurface *)0x0) {
     parent2 = (DibSurface *)0x0;
@@ -7853,8 +7853,8 @@ void __thiscall council_create_buttons(DibSurface *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x16c));
   button_create_with_callback
-            ((Control *)&this[0x3f].field_8,(iptr)parent2,1,(iptr)&rect,0x21,label);
-  button_set_callback((Control *)&this[0x3f].field_8,ADDR(0x401b22, council_on_advisor_button));
+            ((Control *)&((PictureWindow *)this)->advisor_button_1,(iptr)parent2,1,(iptr)&rect,0x21,label);
+  button_set_callback((Control *)&((PictureWindow *)this)->advisor_button_1,ADDR(0x401b22, council_on_advisor_button));
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (this == (DibSurface *)0x0) {
     parent3 = (DibSurface *)0x0;
@@ -7864,8 +7864,8 @@ void __thiscall council_create_buttons(DibSurface *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x114));
   button_create_with_callback
-            ((Control *)&this[0x41].field_2c,(iptr)parent3,2,(iptr)&rect,0x21,label);
-  button_set_callback((Control *)&this[0x41].field_2c,ADDR(0x401b22, council_on_advisor_button));
+            ((Control *)&((PictureWindow *)this)->advisor_button_2,(iptr)parent3,2,(iptr)&rect,0x21,label);
+  button_set_callback((Control *)&((PictureWindow *)this)->advisor_button_2,ADDR(0x401b22, council_on_advisor_button));
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (this == (DibSurface *)0x0) {
     parent4 = (DibSurface *)0x0;
@@ -7875,8 +7875,8 @@ void __thiscall council_create_buttons(DibSurface *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x6e0));
   button_create_with_callback
-            ((Control *)&this[0x40].field_38,(iptr)parent4,3,(iptr)&rect,0x21,label);
-  button_set_callback((Control *)&this[0x40].field_38,ADDR(0x401b22, council_on_advisor_button));
+            ((Control *)&((PictureWindow *)this)->advisor_button_3,(iptr)parent4,3,(iptr)&rect,0x21,label);
+  button_set_callback((Control *)&((PictureWindow *)this)->advisor_button_3,ADDR(0x401b22, council_on_advisor_button));
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (this == (DibSurface *)0x0) {
     parent5 = (DibSurface *)0x0;
@@ -7886,8 +7886,8 @@ void __thiscall council_create_buttons(DibSurface *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x6e4));
   button_create_with_callback
-            ((Control *)&this[0x3f].field_44,(iptr)parent5,4,(iptr)&rect,0x21,label);
-  button_set_callback((Control *)&this[0x3f].field_44,ADDR(0x401b22, council_on_advisor_button));
+            ((Control *)&((PictureWindow *)this)->advisor_button_4,(iptr)parent5,4,(iptr)&rect,0x21,label);
+  button_set_callback((Control *)&((PictureWindow *)this)->advisor_button_4,ADDR(0x401b22, council_on_advisor_button));
   y = surface_get_height(this);
   y = (y - frame_bevel_width) - 1;
   right = surface_get_width(this);
@@ -7902,8 +7902,8 @@ void __thiscall council_create_buttons(DibSurface *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create_with_callback
-            ((Control *)&this[0x43].field_14,(iptr)parent6,0xca,(iptr)&rect,0x21,label);
-  button_set_callback((Control *)&this[0x43].field_14,ADDR(0x401b22, council_on_advisor_button));
+            ((Control *)&((PictureWindow *)this)->council_close_button,(iptr)parent6,0xca,(iptr)&rect,0x21,label);
+  button_set_callback((Control *)&((PictureWindow *)this)->council_close_button,ADDR(0x401b22, council_on_advisor_button));
   return;
 }
 #undef frame_border_width
@@ -7938,20 +7938,20 @@ i32 __thiscall council_load_speech(WindowObjectView *this,uptr advisor)
   if (4 < (int)advisor) {
     return 0;
   }
-  status = text_open_section((iptr)(this + 0x38d),(int)&this[0x39d].field_0 + advisor * 3);
+  status = text_open_section((iptr)(this + 0x38d),(int)&((PictureWindow *)this)->advisor_codes + advisor * 3);
   if (status != 0) {
     return 0;
   }
   status = text_read_line(1);
   if (status != 0) {
     for (i = 0; i < 5; i++) {
-      this[i + 0x3a1].field_0 = 0;
+      ((u32 *)&((PictureWindow *)this)->speech_line_advisors)[i] = 0;
     }
-    this[0x3a1].field_0 = advisor;
+    ((PictureWindow *)this)->speech_line_advisors[0] = advisor;
     value = text_next_int();
-    this[0x3a4].field_0 = value;
+    ((PictureWindow *)this)->speech_line_values[0] = value;
     value = text_next_int();
-    this[0x3a7].field_0 = value;
+    ((PictureWindow *)this)->speech_line_params[0] = value;
     str_clear((iptr)(this + 0x3aa));
     str_trim((iptr)text_line_cursor);
     str_append((iptr)(this + 0x3aa),(iptr)text_line_cursor);
@@ -7959,7 +7959,7 @@ i32 __thiscall council_load_speech(WindowObjectView *this,uptr advisor)
     matched = true;
     skip_read = false;
 LAB_00517ae5:
-    if ((2 < line_idx) || (this[line_idx + 0x3a1].field_0 == 0xffffffff)) goto LAB_00517dae;
+    if ((2 < line_idx) || (((u32 *)&((PictureWindow *)this)->speech_line_advisors)[line_idx] == 0xffffffff)) goto LAB_00517dae;
     if ((!skip_read) && (status = text_read_line(1), status == 0)) goto LAB_00517db5;
     skip_read = false;
     token = (i8 *)text_next_token();
@@ -7975,7 +7975,7 @@ LAB_00517ae5:
       break;
     case 0x45:
     case 0x65:
-      this[line_idx + 0x3a1].field_0 = 0xffffffff;
+      ((u32 *)&((PictureWindow *)this)->speech_line_advisors)[line_idx] = 0xffffffff;
       goto LAB_00517ae5;
     case 0x46:
     case 0x66:
@@ -7997,13 +7997,13 @@ LAB_00517ae5:
       advisor = 2;
     }
     if ((used_mask & 1 << ((byte)advisor & 0x1f)) == 0) {
-      if ((token[1] == '\0') || (value = _atoi(token + 1), value == this[advisor + 0x396].field_0)
+      if ((token[1] == '\0') || (value = _atoi(token + 1), value == ((u32 *)&((PictureWindow *)this)->advisor_opinions)[advisor])
          ) {
-        this[line_idx + 0x3a1].field_0 = advisor;
+        ((u32 *)&((PictureWindow *)this)->speech_line_advisors)[line_idx] = advisor;
         value = text_next_int();
-        this[line_idx + 0x3a4].field_0 = value;
+        ((u32 *)&((PictureWindow *)this)->speech_line_values)[line_idx] = value;
         value = text_next_int();
-        this[line_idx + 0x3a7].field_0 = value;
+        ((u32 *)&((PictureWindow *)this)->speech_line_params)[line_idx] = value;
         str_clear((int)this + line_idx * 0xff + 0xea8);
         str_trim((iptr)text_line_cursor);
         if (*text_line_cursor != '*') {
@@ -8058,17 +8058,17 @@ void __thiscall council_draw_speech(SurfaceWindow *this,int mode)
   try_level = 0xffffffff;
   font_init(&font2,0,0xe);
   try_level = 0;
-  if ((*(int *)(this[0x10].pad_48 + 0x20) < 0) || (2 < *(int *)(this[0x10].pad_48 + 0x20))) {
+  if ((*(int *)(((PictureWindow *)this)->speech_advisor_index) < 0) || (2 < *(int *)(((PictureWindow *)this)->speech_advisor_index))) {
     try_level = 0xffffffff;
     /* inlined unwind funclet 00517fe4 */ { font_destroy((GameFont *)((iptr)&font2)); }
   }
   else {
     if (mode != 1) {
-      surface_fill_rect((DibSurface *)this,(iptr)(this[0x10].pad_48 + 0x28),0x1d);
-      this[0x10].pad_48[0x24] = 2;
-      this[0x10].pad_48[0x25] = '\0';
-      this[0x10].pad_48[0x26] = '\0';
-      this[0x10].pad_48[0x27] = '\0';
+      surface_fill_rect((DibSurface *)this,(iptr)((u8 *)&((PictureWindow *)this)->speech_rect),0x1d);
+      ((PictureWindow *)this)->speech_line_y[0] = 2;
+      ((PictureWindow *)this)->speech_line_y_b1[0] = '\0';
+      ((PictureWindow *)this)->speech_line_y_b2[0] = '\0';
+      ((PictureWindow *)this)->speech_line_y_b3[0] = '\0';
     }
     if (mode == -1) {
       wnd_repaint(this);
@@ -8076,33 +8076,33 @@ void __thiscall council_draw_speech(SurfaceWindow *this,int mode)
       /* inlined unwind funclet 00517fe4 */ { font_destroy((GameFont *)((iptr)&font2)); }
     }
     else {
-      rect.bottom = *(LONG *)(this[0x10].pad_48 + 0x34);
-      rect.left = *(int *)(this[0x10].pad_48 + 0x28) + 2;
-      rect.right = *(int *)(this[0x10].pad_48 + 0x30) - 2;
-      rect.top = *(int *)(this[0x10].pad_48 + 0x2c) + *(int *)(this[0x10].pad_48 + 0x24);
-      dialog_set_font((DialogTextView *)(this[10].pad_48 + 0x2c),(iptr)&font2);
-      if (this[0xd].pad_48[*(int *)(this[0x10].pad_48 + 0x20) * 0xff + 0x5c] != '\0') {
+      rect.bottom = *(LONG *)(((PictureWindow *)this)->speech_rect_bottom);
+      rect.left = *(int *)((u8 *)&((PictureWindow *)this)->speech_rect) + 2;
+      rect.right = *(int *)(((PictureWindow *)this)->speech_rect_right) - 2;
+      rect.top = *(int *)(((PictureWindow *)this)->speech_rect_top) + *(int *)(((PictureWindow *)this)->speech_line_y);
+      dialog_set_font((DialogTextView *)((u8 *)&((PictureWindow *)this)->council_dialog),(iptr)&font2);
+      if (((PictureWindow *)this)->council_speech_lines[*(int *)(((PictureWindow *)this)->speech_advisor_index) * 0xff + 0x5c] != '\0') {
         OffsetRect(&rect,1,1);
         gfx_set_text_color_index(0x25);
         surface_draw_text_rect
                   ((DibSurface *)this,(iptr)&font2,
-                   (iptr)(this[0xd].pad_48 + *(int *)(this[0x10].pad_48 + 0x20) * 0xff + 0x5c),
+                   (iptr)(((PictureWindow *)this)->council_speech_lines + *(int *)(((PictureWindow *)this)->speech_advisor_index) * 0xff + 0x5c),
                    (iptr)&rect,1);
         OffsetRect(&rect,-1,-1);
         gfx_set_text_color_index(10);
         surface_draw_text_rect
                   ((DibSurface *)this,(iptr)&font2,
-                   (iptr)(this[0xd].pad_48 + *(int *)(this[0x10].pad_48 + 0x20) * 0xff + 0x5c),
+                   (iptr)(((PictureWindow *)this)->council_speech_lines + *(int *)(((PictureWindow *)this)->speech_advisor_index) * 0xff + 0x5c),
                    (iptr)&rect,1);
         spacing = font_line_spacing(&font2);
-        *(int *)(this[0x10].pad_48 + 0x24) = *(int *)(this[0x10].pad_48 + 0x24) + spacing;
+        *(int *)(((PictureWindow *)this)->speech_line_y) = *(int *)(((PictureWindow *)this)->speech_line_y) + spacing;
         spacing = font_text_width
                           (&font2,
-                           (iptr)(this[0xd].pad_48 +
-                                 *(int *)(this[0x10].pad_48 + 0x20) * 0xff + 0x5c));
+                           (iptr)(((PictureWindow *)this)->council_speech_lines +
+                                 *(int *)(((PictureWindow *)this)->speech_advisor_index) * 0xff + 0x5c));
         if (rect.right - rect.left < spacing) {
           spacing = font_line_spacing(&font2);
-          *(int *)(this[0x10].pad_48 + 0x24) = *(int *)(this[0x10].pad_48 + 0x24) + spacing;
+          *(int *)(((PictureWindow *)this)->speech_line_y) = *(int *)(((PictureWindow *)this)->speech_line_y) + spacing;
         }
       }
       wnd_repaint(this);
@@ -8140,10 +8140,10 @@ void __thiscall council_draw_advisor_frames(ListPaneWindow *this)
   try_level = 0;
   sprite_init(&sprite);
   (*(i8 *)((char *)&try_level + 0)) = 1;
-  if (this[0xd].field_4 == 0) {
+  if (((PictureWindow *)this)->council_active_2 == 0) {
     for (advisor = 0; advisor < 5; advisor++) {
-      status = text_open_section((iptr)(this[0xc].pad_48 + 0x9c),
-                                 (iptr)(this[0xd].pad_48 + advisor * 3 - 0x40));
+      status = text_open_section((iptr)(((PictureWindow *)this)->council_text_file),
+                                 (iptr)(((PictureWindow *)this)->advisor_code_slots + advisor * 3 - 0x40));
       if (status != 0) {
         try_level = (uint)(*(i32 *)((char *)&try_level + 1)) << 8;
         /* inlined unwind funclet 005181ab */ { sprite_destroy((Sprite *)((iptr)&sprite)); }

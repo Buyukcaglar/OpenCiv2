@@ -1046,7 +1046,7 @@ err_format_message
   crt_strcpy(this,&err_format_empty_str);
   _Format = s_Error___s_File___s_Line___d_00638790;
   len = _strlen((char *)this);
-  _sprintf((char *)(this->pad_0 + len),_Format,text,file,line);
+  _sprintf((char *)(this->error_message_text + len),_Format,text,file,line);
   trace = err_get_stack_trace(this);
   crt_strcat(this,trace);
   return this;
@@ -1056,8 +1056,8 @@ err_format_message
 u8 * __thiscall err_get_stack_trace(ErrorContext *this)
 
 {
-  dbg_stack_trace_stub((iptr)(this->pad_0 + 0x400));
-  return this->pad_0 + 0x400;
+  dbg_stack_trace_stub((iptr)(this->stack_trace_text));
+  return this->stack_trace_text;
 }
 
 /* 005daf92 auto */
@@ -1086,7 +1086,7 @@ void __thiscall err_set_code(ErrorContext *this,u32 code)
 void __thiscall err_ctx_set_field_708(ErrorContext *this,i32 value)
 
 {
-  *(i32 *)this[1].pad_0 = value;
+  *(i32 *)((ErrorContextExt *)this)->error_ctx_option = value;
   return;
 }
 

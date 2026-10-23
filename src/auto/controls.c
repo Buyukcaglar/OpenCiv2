@@ -1047,23 +1047,23 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   sprite_draw
             ((Sprite *)sprite,(iptr)draw_ctx,(iptr)&button->on_select,icon_x,icon_y);
   sprite_draw
-            ((Sprite *)sprite,(iptr)shadow_ctx,(iptr)(button->pad_50 + 0x2c),icon_x + 2,
+            ((Sprite *)sprite,(iptr)shadow_ctx,(iptr)(button->button_surface),icon_x + 2,
              icon_y + 2);
   gfx_draw_rect_frame((iptr)&button->on_select,(iptr)&rect_left2,10);
-  gfx_draw_rect_frame((iptr)(button->pad_50 + 0x2c),(iptr)&rect_left2,10);
+  gfx_draw_rect_frame((iptr)(button->button_surface),(iptr)&rect_left2,10);
   inner_left = rect_left2;
   inner_top = rect_top2;
   inner_right = rect_right2;
   inner_bottom = rect_bottom2;
   rect_deflate((iptr)&inner_left,1,1);
   gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_left,0x1f,0xf);
-  gfx_draw_bevel_rect((iptr)(button->pad_50 + 0x2c),(iptr)&inner_left,0xf,10);
+  gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_left,0xf,10);
   rect_deflate((iptr)&inner_left,1,1);
   gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_left,0x1f,0xf);
-  gfx_draw_bevel_rect((iptr)(button->pad_50 + 0x2c),(iptr)&inner_left,0xf,10);
+  gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_left,0xf,10);
   pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)button);
   palette = wnd_get_palette(pCVar3);
-  surface_set_palette((DibSurface *)(button->pad_50 + 0x2c),palette);
+  surface_set_palette((DibSurface *)(button->button_surface),palette);
   pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)button);
   palette = wnd_get_palette(pCVar3);
   surface_set_palette((DibSurface *)&button->on_select,palette);
@@ -1135,7 +1135,7 @@ SpriteButton * __thiscall spritebtn_ctor(SpriteButton *this)
   seh_state = 0;
   surface_ctor((DibSurface *)&this->on_select);
   seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),1);
-  surface_ctor((DibSurface *)(this->pad_50 + 0x2c));
+  surface_ctor((DibSurface *)(this->button_surface));
   this->pressed_state = '\0';
   return this;
 }
@@ -1344,8 +1344,8 @@ Checkbox * __thiscall checkbox_vector_dtor(Checkbox *this,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(this,0x3c,this[-1].field_1c,checkbox_dtor);
-    operator_delete(&this[-1].field_1c);
+    crt_vector_dtor_iterator(this,0x3c,VECTOR_COUNT(this),checkbox_dtor);
+    operator_delete(&VECTOR_COUNT(this));
   }
   return this;
 }
@@ -1369,8 +1369,8 @@ Control * __thiscall edit_vector_dtor(Control *this,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(this,0x48,this[-1].field_38,edit_dtor);
-    operator_delete(&this[-1].field_38);
+    crt_vector_dtor_iterator(this,0x48,VECTOR_COUNT(this),edit_dtor);
+    operator_delete(&VECTOR_COUNT(this));
   }
   return this;
 }
@@ -1394,8 +1394,8 @@ Control * __thiscall ctrl_vector_dtor(Control *this,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(this,0x3c,this[-1].field_38,ctrl_dtor);
-    operator_delete(&this[-1].field_38);
+    crt_vector_dtor_iterator(this,0x3c,VECTOR_COUNT(this),ctrl_dtor);
+    operator_delete(&VECTOR_COUNT(this));
   }
   return this;
 }
@@ -4038,9 +4038,9 @@ spritebtn_init_from_sprite
   this->on_click = 0;
   gfx_get_scale_ratio((iptr)&scale_num2,(iptr)&scale_den2);
   gfx_set_scale_ratio(1,1);
-  surface_create((DibSurface *)(this->pad_50 + 0x2c),width,height);
+  surface_create((DibSurface *)(this->button_surface),width,height);
   surface_create((DibSurface *)&this->on_select,width,height);
-  surface_fill((DibSurface *)(this->pad_50 + 0x2c),bg_color & 0xff);
+  surface_fill((DibSurface *)(this->button_surface),bg_color & 0xff);
   surface_fill((DibSurface *)&this->on_select,bg_color & 0xff);
   center_x = width >> 1;
   center_y = height >> 1;
@@ -4051,14 +4051,14 @@ spritebtn_init_from_sprite
   half_h = half_h >> 1;
   sprite_set_origin((SpriteOriginSetView *)sprite,-half_w,-half_h);
   sprite_draw
-            ((Sprite *)sprite,(iptr)draw_ctx_a,(iptr)(this->pad_50 + 0x2c),center_x,center_y);
+            ((Sprite *)sprite,(iptr)draw_ctx_a,(iptr)(this->button_surface),center_x,center_y);
   sprite_draw
             ((Sprite *)sprite,(iptr)draw_ctx_b,(iptr)&this->on_select,center_x,center_y);
   sprite_set_origin((SpriteOriginSetView *)sprite,origin_x2,origin_y2);
   gfx_set_scale_ratio(scale_num2,scale_den2);
-  size = surface_height((DibSurface *)(this->pad_50 + 0x2c));
+  size = surface_height((DibSurface *)(this->button_surface));
   yBottom = y + size - 1;
-  size = surface_width((DibSurface *)(this->pad_50 + 0x2c));
+  size = surface_width((DibSurface *)(this->button_surface));
   SetRect(&rect,x,y,x + size - 1,yBottom);
   OffsetRect(&rect,-rect.left,-rect.top);
   dst_rect.left = rect.left;
@@ -4071,13 +4071,13 @@ spritebtn_init_from_sprite
   src_right = dst_rect.right;
   src_bottom = dst_rect.bottom;
   OffsetRect(&dst_rect,2,2);
-  surface_fill((DibSurface *)(this->pad_50 + 0x2c),(uint)gfx_black_color_index);
+  surface_fill((DibSurface *)(this->button_surface),(uint)gfx_black_color_index);
   surface_blit
-            ((DibSurface *)&this->on_select,(iptr)(this->pad_50 + 0x2c),(iptr)&src_left,
+            ((DibSurface *)&this->on_select,(iptr)(this->button_surface),(iptr)&src_left,
              (iptr)&dst_rect);
   pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)this);
   palette = wnd_get_palette(pCVar3);
-  surface_apply_palette((DibSurface *)(this->pad_50 + 0x2c),palette);
+  surface_apply_palette((DibSurface *)(this->button_surface),palette);
   pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)this);
   palette = wnd_get_palette(pCVar3);
   surface_apply_palette((DibSurface *)&this->on_select,palette);
@@ -4445,10 +4445,10 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       OffsetRect(&rect,-rect.left,-rect.top);
       hdc = BeginPaint(hwnd,&ps);
       ctrl_paint_parent_bkgnd((iptr)&ps,hwnd);
-      result = font_get_handle(*(GameFont **)group[1].pad_0);
+      result = font_get_handle(*(GameFont **)((RadioGroupItemsViewExt *)group)->item_font);
       font_data = (i32 *)mem_handle_lock(result);
       old_font = SelectObject(hdc,(HGDIOBJ)*font_data);
-      result = font_get_handle(*(GameFont **)group[1].pad_0);
+      result = font_get_handle(*(GameFont **)((RadioGroupItemsViewExt *)group)->item_font);
       mem_handle_unlock(result);
       SetBkMode(hdc,1);
       gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
@@ -5298,14 +5298,14 @@ i8 __thiscall ddctrl_dispatch_to_children(DDControl *this,int msg,int x,int y)
       this->hover_child = 0;
     }
   }
-  child = (DDControl *)ptrlist_first((PtrList *)(this->pad_4 + 0xc));
+  child = (DDControl *)ptrlist_first((PtrList *)(this->child_controls));
   while( true ) {
     if (child == (DDControl *)0x0) {
       return 0;
     }
     handled = ddctrl_dispatch_msg(child,msg,x,y);
     if (handled != 0) break;
-    child = (DDControl *)ptrlist_next((PtrList *)(this->pad_4 + 0xc));
+    child = (DDControl *)ptrlist_next((PtrList *)(this->child_controls));
   }
   if (msg == 0x200) {
     this->hover_child = (uptr)child;

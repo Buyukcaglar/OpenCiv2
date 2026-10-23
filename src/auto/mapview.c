@@ -881,7 +881,7 @@ void __cdecl mapview_on_mousemove(int mouse_x,int mouse_y)
     }
     if (view->tax_scrollbar != cursor_id) {
       view->tax_scrollbar = cursor_id;
-      wnd_set_cursor_now((WndCursorView *)view->pad_48,cursor_id,1);
+      wnd_set_cursor_now((WndCursorView *)view->window_2,cursor_id,1);
     }
   }
   return;
@@ -1323,19 +1323,19 @@ void __thiscall mapview_create(ViewWindow *this)
   frame_wnd_create
             ((FrameWindow *)this,title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
   ;
-  wnd_set_min_size((ModalMenuWindow *)this->pad_48,0x100,0x80);
+  wnd_set_min_size((ModalMenuWindow *)this->window_2,0x100,0x80);
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402315, mapview_on_redraw));
-  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4030c6, mapview_on_lbuttonup));
-  wnd_set_rbuttonup_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4018d9, mapview_on_rbuttonup));
-  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->pad_48 + 0x10),ADDR(0x402d9c, mapview_on_lbuttondown));
-  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(this->pad_48 + 0x10),ADDR(0x401a7d, mapview_on_lbuttonup_any));
-  wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->pad_48 + 0x10),ADDR(0x4014e7, mapview_on_mousemove));
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->pad_48 + 0x10),ADDR(0x40146f, map_window_double_click));
-  wnd_set_char_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x401e56, map_window_ascii));
-  wnd_set_keydown_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x402cd4, map_window_key));
-  wnd_set_close_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x40235b, mapview_on_close));
-  wnd_set_size_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x403b43, mapview_on_size));
-  wnd_set_move_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x402653, mapview_on_move));
+  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x4030c6, mapview_on_lbuttonup));
+  wnd_set_rbuttonup_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x4018d9, mapview_on_rbuttonup));
+  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x402d9c, mapview_on_lbuttondown));
+  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x401a7d, mapview_on_lbuttonup_any));
+  wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x4014e7, mapview_on_mousemove));
+  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x40146f, map_window_double_click));
+  wnd_set_char_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x401e56, map_window_ascii));
+  wnd_set_keydown_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x402cd4, map_window_key));
+  wnd_set_close_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x40235b, mapview_on_close));
+  wnd_set_size_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x403b43, mapview_on_size));
+  wnd_set_move_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x402653, mapview_on_move));
   mapview_update_title((FrameWindow *)this);
   if (this->rates_civ != 0) {
     frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x645120, ((u8 *)&g.d_00645120)),1);
@@ -1470,8 +1470,8 @@ void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int index)
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (i = index; i < (int)(this->entry_count - 1); i++) {
-    src = this->pad_0 + i * 0x18 + 0x18;
-    dst = this->pad_0 + i * 0x18;
+    src = this->hit_regions + i * 0x18 + 0x18;
+    dst = this->hit_regions + i * 0x18;
     for (n = 6; n != 0; n--) {
       *(i32 *)dst = *(i32 *)src;
       src += 4;
@@ -1496,7 +1496,7 @@ void __thiscall clickmap_remove_by_id(ClickMapRemoveView *this,int id)
   while (idx = count - 1, -1 < (int)idx) {
     offset = count * 0x18;
     count = idx;
-    if (*(int *)(this->pad_0 + offset - 8) == id) {
+    if (*(int *)(this->hit_regions + offset - 8) == id) {
       clickmap_remove_at(this,idx);
     }
   }
@@ -1518,9 +1518,9 @@ clickmap_add
   if ((int)this->entry_count < 200) {
     index = this->entry_count;
     this->entry_count++;
-    rect_set_xywh((iptr)(this->pad_0 + index * 0x18),x,y,width,height);
-    *(iptr *)(this->pad_0 + index * 0x18 + 0x14) = id;
-    *(i32 *)(this->pad_0 + index * 0x18 + 0x10) = value;
+    rect_set_xywh((iptr)(this->hit_regions + index * 0x18),x,y,width,height);
+    *(iptr *)(this->hit_regions + index * 0x18 + 0x14) = id;
+    *(i32 *)(this->hit_regions + index * 0x18 + 0x10) = value;
   }
   return index;
 }
@@ -1542,18 +1542,18 @@ clickmap_hit_test(ClickMapHitTestView *this,int x,int y,iptr out_id,iptr out_val
 LAB_0046ae34:
       if (-1 < hit) {
         if (out_id != 0) {
-          *(i32 *)out_id = *(i32 *)(this->pad_0 + hit * 0x18 + 0x14);
+          *(i32 *)out_id = *(i32 *)(this->hit_regions + hit * 0x18 + 0x14);
         }
         if (out_value != 0) {
-          *(i32 *)out_value = *(i32 *)(this->pad_0 + hit * 0x18 + 0x10);
+          *(i32 *)out_value = *(i32 *)(this->hit_regions + hit * 0x18 + 0x10);
         }
       }
       return hit;
     }
-    if ((((*(int *)(this->pad_0 + i * 0x18) <= x) &&
-         (x < *(int *)(this->pad_0 + i * 0x18 + 8))) &&
-        (*(int *)(this->pad_0 + i * 0x18 + 4) <= y)) &&
-       (y < *(int *)(this->pad_0 + i * 0x18 + 0xc))) {
+    if ((((*(int *)(this->hit_regions + i * 0x18) <= x) &&
+         (x < *(int *)(this->hit_regions + i * 0x18 + 8))) &&
+        (*(int *)(this->hit_regions + i * 0x18 + 4) <= y)) &&
+       (y < *(int *)(this->hit_regions + i * 0x18 + 0xc))) {
       hit = i;
       goto LAB_0046ae34;
     }
@@ -1760,7 +1760,7 @@ mapview_screen_to_tile
     tile_x = ((int)px / (int)this->tile_width) * 2 + this->origin_tile_x + 1;
     tile_y = (short)((int)py / (int)this->tile_height) * 2 + (short)this->origin_tile_y + 1;
     pixel = surface_get_pixel
-                      ((DibSurface *)(this[1].pad_0 + 0x28),
+                      ((DibSurface *)(((MapViewHitViewExt *)this)->view_surface),
                        (int)(short)((int)px % (int)this->tile_width),
                        (int)(short)((int)py % (int)this->tile_height));
     quadrant = pixel - 10 >> 4;

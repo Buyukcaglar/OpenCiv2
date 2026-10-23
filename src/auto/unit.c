@@ -8990,56 +8990,56 @@ void __thiscall unit_editor_create_combo(ViewWindow *this,int index)
     parent2 = (u8 *)0x0;
   }
   else {
-    parent2 = this->pad_48;
+    parent2 = this->window_2;
   }
   combo_create
-            ((Control *)(this->pad_2d4 + index * 0x38 + 0x28),(iptr)parent2,x,
+            ((Control *)(this->editor_combo_boxes + index * 0x38 + 0x28),(iptr)parent2,x,
              (iptr)rect);
-  combo_set_font((ComboBoxFontView *)(this->pad_2d4 + index * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
-  combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + index * 0x38 + 0x28),ADDR(0x40326f, unit_editor_on_combo));
+  combo_set_font((ComboBoxFontView *)(this->editor_combo_boxes + index * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
+  combo_set_callback((ComboBoxCallbackSetView *)(this->editor_combo_boxes + index * 0x38 + 0x28),ADDR(0x40326f, unit_editor_on_combo));
   switch(index) {
   case 0:
     for (unit_type = 0; unit_type < 0x3e; unit_type++) {
       label = label_string(unit_types[unit_type].name);
-      combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+      combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     }
     break;
   case 1:
   case 2:
     label = label_string(*(i32 *)(label_string_ids + 0x7c0));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7c4));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     for (advance = 0; advance < 100; advance++) {
       label = label_string(advances[advance].name);
-      combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+      combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     }
     break;
   case 3:
     label = label_string(*(i32 *)(label_string_ids + 0x794));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x798));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7e0));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7e4));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7e8));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7ec));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7f0));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7f4));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     break;
   case 4:
     label = label_string(*(i32 *)(label_string_ids + 0x7f8));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7fc));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x800));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + index * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + index * 0x38 + 0x28),label);
   }
   return;
 }
@@ -9069,13 +9069,13 @@ void __thiscall unit_editor_create_edit(ViewWindow *this,int index)
     parent2 = (u8 *)0x0;
   }
   else {
-    parent2 = this->pad_48;
+    parent2 = this->window_2;
   }
   edit_create
-            ((EditControl *)(this[1].pad_48 + index * 0x48 - 0x2c),(iptr)parent2,ctrl_id,
+            ((EditControl *)(((PediaRedrawView *)this)->numeric_edit_controls_area + index * 0x48 - 0x2c),(iptr)parent2,ctrl_id,
              (iptr)rect,ADDR(0x635fe0, ((u8 *)&g.d_00635fe0)));
-  edit_set_max_len((EditMaxLenView *)(this[1].pad_48 + index * 0x48 - 0x2c),3);
-  edit_set_callback((EditCallbackSetView *)(this[1].pad_48 + index * 0x48 - 0x2c),ADDR(0x401019, editor_numeric_edit_filter));
+  edit_set_max_len((EditMaxLenView *)(((PediaRedrawView *)this)->numeric_edit_controls_area + index * 0x48 - 0x2c),3);
+  edit_set_callback((EditCallbackSetView *)(((PediaRedrawView *)this)->numeric_edit_controls_area + index * 0x48 - 0x2c),ADDR(0x401019, editor_numeric_edit_filter));
   return;
 }
 #undef editor_next_ctrl_id
@@ -9304,49 +9304,49 @@ void __thiscall unit_editor_window_run(ViewWindow *this)
     ok_parent = (u8 *)0x0;
   }
   else {
-    ok_parent = this->pad_48;
+    ok_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
-            ((Control *)&this[1].field_2a4,(iptr)ok_parent,0x65,(iptr)rect,label);
-  button_set_callback((Control *)&this[1].field_2a4,ADDR(0x401767, unit_editor_on_ok));
+            ((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,ADDR(0x401767, unit_editor_on_ok));
   btn_x = btn_x + this->tax_rate_sel + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     rename_parent = (u8 *)0x0;
   }
   else {
-    rename_parent = this->pad_48;
+    rename_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
-            ((Control *)&this[1].field_358,(iptr)rename_parent,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&this[1].field_358,ADDR(0x403210, unit_editor_on_rename));
+            ((Control *)&((PediaAdvanceListView *)this)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_rename_button,ADDR(0x403210, unit_editor_on_rename));
   btn_x = btn_x + this->tax_rate_sel + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     help_parent = (u8 *)0x0;
   }
   else {
-    help_parent = this->pad_48;
+    help_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
-            ((Control *)&this[1].field_2e0,(iptr)help_parent,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&this[1].field_2e0,ADDR(0x403788, unit_editor_on_help));
+            ((Control *)&((PediaAdvanceListView *)this)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_help_button,ADDR(0x403788, unit_editor_on_help));
   rect_set_xywh((iptr)rect,btn_x + this->tax_rate_sel + 2,btn_y,this->tax_rate_sel,
                      this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     cancel_parent = (u8 *)0x0;
   }
   else {
-    cancel_parent = this->pad_48;
+    cancel_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
-            ((Control *)&this[1].field_31c,(iptr)cancel_parent,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&this[1].field_31c,ADDR(0x403c88, unit_editor_on_cancel));
-  ctrl_set_cancel_button((Control *)&this[1].field_31c);
+            ((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,ADDR(0x403c88, unit_editor_on_cancel));
+  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button);
   btn_x = sprite_width
                     ((Sprite *)(&terrain_base_sprites + this->init_tax_rate * 0x3c));
   this->tax_rate_sel = btn_x + 0xd;
@@ -9361,37 +9361,37 @@ void __thiscall unit_editor_window_run(ViewWindow *this)
     sprite_parent = (u8 *)0x0;
   }
   else {
-    sprite_parent = this->pad_48;
+    sprite_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
-            ((Control *)(this[1].pad_364 + 0x30),(iptr)sprite_parent,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x402202, unit_editor_edit_sprite));
+            ((Control *)(((DocumentWindow *)this)->editor_icon_button),(iptr)sprite_parent,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(((DocumentWindow *)this)->editor_icon_button),ADDR(0x402202, unit_editor_edit_sprite));
   btn_x = btn_x + this->lux_rate_sel + 2;
   rect_set_xywh((iptr)rect,btn_y,btn_x,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     sound_parent = (u8 *)0x0;
   }
   else {
-    sound_parent = this->pad_48;
+    sound_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 2000));
   button_create
-            ((Control *)(this[2].pad_48 + 0x48),(iptr)sound_parent,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this[2].pad_48 + 0x48),ADDR(0x4029b4, unit_editor_edit_sound));
+            ((Control *)(((DocumentWindow *)this)->unit_sound_button),(iptr)sound_parent,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(((DocumentWindow *)this)->unit_sound_button),ADDR(0x4029b4, unit_editor_edit_sound));
   rect_set_xywh((iptr)rect,btn_y,btn_x + this->lux_rate_sel + 2,this->tax_rate_sel,
                      this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     flags_parent = (u8 *)0x0;
   }
   else {
-    flags_parent = this->pad_48;
+    flags_parent = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x7d4));
   button_create
-            ((Control *)(this[2].pad_48 + 0xc),(iptr)flags_parent,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this[2].pad_48 + 0xc),ADDR(0x403a85, unit_editor_edit_flags));
-  wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
+            ((Control *)(((DocumentWindow *)this)->unit_flags_button),(iptr)flags_parent,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(((DocumentWindow *)this)->unit_flags_button),ADDR(0x403a85, unit_editor_edit_flags));
+  wnd_set_keyboard_nav((Wnd *)this->window_2,0);
   unit_editor_move_max_i32 = (i32)(0x7f / (ulonglong)(longlong)(int)(uint)cosmic.road_move_mult);
   unit_editor_hp_max_i32 = 0xc;
   unit_editor_load_rules();
@@ -9399,11 +9399,11 @@ void __thiscall unit_editor_window_run(ViewWindow *this)
   unit_editor_load_controls();
   unit_editor_update_domain_ctrls();
   this->dialog_w = 5;
-  wnd_set_move_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
+  wnd_set_move_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x401e01, unit_editor_redraw));
   wnd_repaint((SurfaceWindow *)this);
   window_show((WindowObjectView *)this);
-  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
+  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
   while (editor_running != 0) {
     win_pump_one_message();
   }

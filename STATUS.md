@@ -87,10 +87,16 @@ message by message and clock event by clock event.
   Each rename was checked by building: the Windows build stayed byte for byte
   the same.  Evidence for names: re/function_names.tsv, re/global_names.tsv,
   re/type_names.tsv, re/field_names.tsv; names live in re/symbols.tsv and
-  those maps, tools/rename.py applies them.  Left for the layout work (step
-  5): accesses into objects whose layout is not recovered -- `this[N].field_0`
-  (an object read as an array of 4-byte cells, ~700) and the pad_ gaps of
-  partly known classes (`this->pad_48 + 0x10`, ~2,800).
+  those maps, tools/rename.py applies them.  Layouts: the accesses by
+  offset (`this->pad_48 + 0x10`, the object read as an array of cells
+  `this[0x567].field_0`, and past a class's declared end) became fields at
+  those offsets (tools/layout_fields.py: the pad_ gaps split, classes
+  extended, ClassExt structs where a class must keep its size; every field
+  checked with offsetof), named from their uses (re/layout_names.tsv).
+  None is left: no field_XX, pad_ or cell access in the game code; the gaps
+  no code touches stay pad_ in the headers.  The machine code is the same
+  but for register choice and addressing modes in six functions (an index
+  through a field now, `base + 4 + 4*i` for `base + 4*(i + 1)`).
 * **Data is binary.**  `data/image/*.bin` are the original initialized data
   sections; converting them to C tables is mechanical but not done.
 * `tools/build_recon.py` still reads the original `civ2.exe` for import-slot

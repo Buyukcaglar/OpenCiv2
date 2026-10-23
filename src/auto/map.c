@@ -5715,48 +5715,48 @@ void __thiscall terrain_editor_create_combo(ViewWindow *this,int combo_idx)
     parent2 = (u8 *)0x0;
   }
   else {
-    parent2 = this->pad_48;
+    parent2 = this->window_2;
   }
   combo_create
-            ((Control *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),(iptr)parent2,left,
+            ((Control *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),(iptr)parent2,left,
              (iptr)rect);
-  combo_set_font((ComboBoxFontView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
-  combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),ADDR(0x4011fe, terrain_editor_on_combo));
+  combo_set_font((ComboBoxFontView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
+  combo_set_callback((ComboBoxCallbackSetView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),ADDR(0x4011fe, terrain_editor_on_combo));
   switch(combo_idx) {
   case 0:
     for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
       if ((terrain2 != 0xd) && (terrain2 != 0x18)) {
         label = label_string(terrain_types[terrain2].name);
-        combo_add_string((ComboBoxAddView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),label);
+        combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
       }
     }
     break;
   case 1:
   case 3:
     label = label_string(*(i32 *)(label_string_ids + 0x7bc));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7c0));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
       label = label_string(terrain_types[terrain2].name);
-      combo_add_string((ComboBoxAddView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),label);
+      combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     }
     break;
   case 2:
   case 4:
     label = label_string(*(i32 *)(label_string_ids + 0x7c8));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     for (terrain2 = 1; terrain2 < 7; terrain2++) {
       label = label_string(government_names[terrain2]);
-      combo_add_string((ComboBoxAddView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),label);
+      combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     }
     break;
   case 5:
     label = label_string(*(i32 *)(label_string_ids + 0x7c0));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
       label = label_string(terrain_types[terrain2].name);
-      combo_add_string((ComboBoxAddView *)(this->pad_2d4 + combo_idx * 0x38 + 0x28),label);
+      combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     }
   }
   return;
@@ -5786,13 +5786,13 @@ void __thiscall terrain_editor_create_edit(ViewWindow *this,int field_idx)
     parent2 = (u8 *)0x0;
   }
   else {
-    parent2 = this->pad_48;
+    parent2 = this->window_2;
   }
   edit_create
-            ((EditControl *)(this[1].pad_48 + field_idx * 0x48 - 0x2c),(iptr)parent2,ctrl_id,
+            ((EditControl *)(((PediaRedrawView *)this)->numeric_edit_controls_area + field_idx * 0x48 - 0x2c),(iptr)parent2,ctrl_id,
              (iptr)rect,ADDR(0x631e38, ((u8 *)&g.d_00631e38)));
-  edit_set_max_len((EditMaxLenView *)(this[1].pad_48 + field_idx * 0x48 - 0x2c),3);
-  edit_set_callback((EditCallbackSetView *)(this[1].pad_48 + field_idx * 0x48 - 0x2c),ADDR(0x401019, editor_numeric_edit_filter));
+  edit_set_max_len((EditMaxLenView *)(((PediaRedrawView *)this)->numeric_edit_controls_area + field_idx * 0x48 - 0x2c),3);
+  edit_set_callback((EditCallbackSetView *)(((PediaRedrawView *)this)->numeric_edit_controls_area + field_idx * 0x48 - 0x2c),ADDR(0x401019, editor_numeric_edit_filter));
   return;
 }
 #undef editor_next_ctrl_id
@@ -6064,49 +6064,49 @@ void __thiscall terrain_editor_run(ViewWindow *this)
     ok_parent = (u8 *)0x0;
   }
   else {
-    ok_parent = this->pad_48;
+    ok_parent = this->window_2;
   }
   btn_label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
-            ((Control *)&this[1].field_2a4,(iptr)ok_parent,0x65,(iptr)btn_rect,btn_label);
-  button_set_callback((Control *)&this[1].field_2a4,ADDR(0x402711, terrain_editor_on_ok));
+            ((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)btn_rect,btn_label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,ADDR(0x402711, terrain_editor_on_ok));
   btn_x = btn_x + this->tax_rate_sel + 2;
   rect_set_xywh((iptr)btn_rect,btn_x,btn_y,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     rename_parent = (u8 *)0x0;
   }
   else {
-    rename_parent = this->pad_48;
+    rename_parent = this->window_2;
   }
   btn_label = label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
-            ((Control *)&this[1].field_358,(iptr)rename_parent,0x66,(iptr)btn_rect,btn_label);
-  button_set_callback((Control *)&this[1].field_358,ADDR(0x401a69, terrain_editor_on_rename));
+            ((Control *)&((PediaAdvanceListView *)this)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)btn_rect,btn_label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_rename_button,ADDR(0x401a69, terrain_editor_on_rename));
   btn_x = btn_x + this->tax_rate_sel + 2;
   rect_set_xywh((iptr)btn_rect,btn_x,btn_y,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     help_parent = (u8 *)0x0;
   }
   else {
-    help_parent = this->pad_48;
+    help_parent = this->window_2;
   }
   btn_label = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
-            ((Control *)&this[1].field_2e0,(iptr)help_parent,0x66,(iptr)btn_rect,btn_label);
-  button_set_callback((Control *)&this[1].field_2e0,ADDR(0x40243c, terrain_editor_on_help));
+            ((Control *)&((PediaAdvanceListView *)this)->editor_help_button,(iptr)help_parent,0x66,(iptr)btn_rect,btn_label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_help_button,ADDR(0x40243c, terrain_editor_on_help));
   rect_set_xywh((iptr)btn_rect,btn_x + this->tax_rate_sel + 2,btn_y,this->tax_rate_sel,
                      this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     cancel_parent = (u8 *)0x0;
   }
   else {
-    cancel_parent = this->pad_48;
+    cancel_parent = this->window_2;
   }
   btn_label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
-            ((Control *)&this[1].field_31c,(iptr)cancel_parent,0x66,(iptr)btn_rect,btn_label);
-  button_set_callback((Control *)&this[1].field_31c,ADDR(0x402347, terrain_editor_on_cancel));
-  ctrl_set_cancel_button((Control *)&this[1].field_31c);
+            ((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)btn_rect,btn_label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,ADDR(0x402347, terrain_editor_on_cancel));
+  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button);
   btn_x = sprite_width
                     ((Sprite *)(&terrain_base_sprites + this->init_tax_rate * 0x3c));
   this->tax_rate_sel = btn_x + 0xd;
@@ -6121,12 +6121,12 @@ void __thiscall terrain_editor_run(ViewWindow *this)
     icon_parent = (u8 *)0x0;
   }
   else {
-    icon_parent = this->pad_48;
+    icon_parent = this->window_2;
   }
   btn_label = label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
-            ((Control *)(this[1].pad_364 + 0x30),(iptr)icon_parent,0x65,(iptr)btn_rect,btn_label);
-  button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x40196a, terrain_editor_on_edit_icon));
+            ((Control *)(((DocumentWindow *)this)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)btn_rect,btn_label);
+  button_set_callback((Control *)(((DocumentWindow *)this)->editor_icon_button),ADDR(0x40196a, terrain_editor_on_edit_icon));
   btn_y = (this->client_width + this->client_x - 0x19) - this->tax_rate_sel;
   btn_x = this->client_y + 0x28;
   rect_set_xywh((iptr)btn_rect,btn_y,btn_x,this->tax_rate_sel,this->lux_rate_sel);
@@ -6134,47 +6134,47 @@ void __thiscall terrain_editor_run(ViewWindow *this)
     river_parent = (u8 *)0x0;
   }
   else {
-    river_parent = this->pad_48;
+    river_parent = this->window_2;
   }
   btn_label = label_string(*(i32 *)(label_string_ids + 0x8f4));
   button_create
-            ((Control *)(this[1].pad_3c0 + 0x10),(iptr)river_parent,0x65,(iptr)btn_rect,btn_label);
-  button_set_callback((Control *)(this[1].pad_3c0 + 0x10),ADDR(0x401cfd, terrain_editor_on_edit_river));
+            ((Control *)(((DocumentWindow *)this)->editor_misc_button),(iptr)river_parent,0x65,(iptr)btn_rect,btn_label);
+  button_set_callback((Control *)(((DocumentWindow *)this)->editor_misc_button),ADDR(0x401cfd, terrain_editor_on_edit_river));
   btn_x = btn_x + this->lux_rate_sel + 2;
   rect_set_xywh((iptr)btn_rect,btn_y,btn_x,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     coast_parent = (u8 *)0x0;
   }
   else {
-    coast_parent = this->pad_48;
+    coast_parent = this->window_2;
   }
   btn_label = label_string(*(i32 *)(label_string_ids + 0x8f8));
   button_create
-            ((Control *)(this[1].pad_3c0 + 0x4c),(iptr)coast_parent,0x65,(iptr)btn_rect,btn_label);
-  button_set_callback((Control *)(this[1].pad_3c0 + 0x4c),ADDR(0x403535, terrain_editor_on_edit_coast));
+            ((Control *)(((DocumentWindow *)this)->terrain_coast_button),(iptr)coast_parent,0x65,(iptr)btn_rect,btn_label);
+  button_set_callback((Control *)(((DocumentWindow *)this)->terrain_coast_button),ADDR(0x403535, terrain_editor_on_edit_coast));
   rect_set_xywh((iptr)btn_rect,btn_y,btn_x + this->lux_rate_sel + 2,this->tax_rate_sel,
                      this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     misc_parent = (u8 *)0x0;
   }
   else {
-    misc_parent = this->pad_48;
+    misc_parent = this->window_2;
   }
   btn_label = label_string(*(i32 *)(label_string_ids + 0x8f0));
   button_create
-            ((Control *)&this[2].field_18,(iptr)misc_parent,0x65,(iptr)btn_rect,btn_label);
-  button_set_callback((Control *)&this[2].field_18,ADDR(0x40344f, terrain_editor_on_edit_misc));
-  wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
+            ((Control *)&((DocumentWindow *)this)->terrain_misc_button,(iptr)misc_parent,0x65,(iptr)btn_rect,btn_label);
+  button_set_callback((Control *)&((DocumentWindow *)this)->terrain_misc_button,ADDR(0x40344f, terrain_editor_on_edit_misc));
+  wnd_set_keyboard_nav((Wnd *)this->window_2,0);
   terrain_editor_load_rules();
   combo_set_cur_sel((ComboBoxSetSelView *)&this->dialog_h,this->init_tax_rate);
   terrain_editor_load_controls();
   terrain_editor_update_visibility();
   this->dialog_w = 6;
-  wnd_set_move_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
+  wnd_set_move_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402c7a, terrain_editor_redraw));
   wnd_repaint((SurfaceWindow *)this);
   window_show((WindowObjectView *)this);
-  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
+  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
   while (editor_running != 0) {
     win_pump_one_message();
   }

@@ -16,46 +16,46 @@ DocumentWindow * __thiscall editor_wnd_ctor(DocumentWindow *this)
   eh_state = 0;
   crt_vector_ctor_iterator(&this->dialog_h,0x38,6,((void *)ADDR(0x0040388c, combo_ctor)),((void *)ADDR(0x00403553, combo_dtor)));
   (*(i8 *)((char *)&eh_state + 0)) = 1;
-  crt_vector_ctor_iterator(this->pad_3c0 + 0x8c,0x48,9,edit_ctor,
+  crt_vector_ctor_iterator(this->editor_edit_controls,0x48,9,edit_ctor,
                edit_dtor);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  button_ctor((Control *)(this->pad_65c + 0x78));
+  button_ctor((Control *)(this->editor_ok_button));
   (*(i8 *)((char *)&eh_state + 0)) = 3;
-  button_ctor((Control *)(this->pad_65c + 0xb4));
+  button_ctor((Control *)(this->editor_help_button));
   (*(i8 *)((char *)&eh_state + 0)) = 4;
-  button_ctor((Control *)(this->pad_65c + 0xf0));
+  button_ctor((Control *)(this->editor_cancel_button));
   (*(i8 *)((char *)&eh_state + 0)) = 5;
-  button_ctor((Control *)(this->pad_65c + 300));
+  button_ctor((Control *)(this->editor_rename_button));
   (*(i8 *)((char *)&eh_state + 0)) = 6;
-  button_ctor((Control *)(this->pad_65c + 0x168));
+  button_ctor((Control *)(this->editor_icon_button));
   (*(i8 *)((char *)&eh_state + 0)) = 7;
-  button_ctor((Control *)(this->pad_65c + 0x1a4));
+  button_ctor((Control *)(this->editor_misc_button));
   (*(i8 *)((char *)&eh_state + 0)) = 8;
-  button_ctor((Control *)(this->pad_65c + 0x1e0));
+  button_ctor((Control *)(this->terrain_coast_button));
   (*(i8 *)((char *)&eh_state + 0)) = 9;
-  button_ctor((Control *)(this->pad_65c + 0x21c));
+  button_ctor((Control *)((u8 *)&this->terrain_misc_button));
   (*(i8 *)((char *)&eh_state + 0)) = 10;
-  button_ctor((Control *)(this->pad_65c + 600));
+  button_ctor((Control *)(this->unit_flags_button));
   (*(i8 *)((char *)&eh_state + 0)) = 0xb;
-  button_ctor((Control *)(this->pad_65c + 0x294));
+  button_ctor((Control *)(this->unit_sound_button));
   (*(i8 *)((char *)&eh_state + 0)) = 0xc;
-  button_ctor((Control *)(this->pad_65c + 0x2d0));
+  button_ctor((Control *)(this->add_trigger_button));
   (*(i8 *)((char *)&eh_state + 0)) = 0xd;
-  button_ctor((Control *)(this->pad_65c + 0x30c));
+  button_ctor((Control *)(this->edit_trigger_button));
   (*(i8 *)((char *)&eh_state + 0)) = 0xe;
-  button_ctor((Control *)(this->pad_980 + 0x24));
+  button_ctor((Control *)((u8 *)&this->delete_trigger_button));
   (*(i8 *)((char *)&eh_state + 0)) = 0xf;
-  button_ctor((Control *)(this->pad_980 + 0x60));
+  button_ctor((Control *)(this->add_action_button));
   (*(i8 *)((char *)&eh_state + 0)) = 0x10;
   button_ctor((Control *)&this->edit_action_button);
   (*(i8 *)((char *)&eh_state + 0)) = 0x11;
-  button_ctor((Control *)&this[1].field_30);
+  button_ctor((Control *)&((PictureWindow *)this)->delete_action_button);
   (*(i8 *)((char *)&eh_state + 0)) = 0x12;
-  checkbox_ctor((Control *)(this[1].pad_48 + 0x24));
+  checkbox_ctor((Control *)((u8 *)&((PictureWindow *)this)->editor_list_box));
   (*(i8 *)((char *)&eh_state + 0)) = 0x13;
-  checkbox_ctor((Control *)(this[1].pad_48 + 0x60));
+  checkbox_ctor((Control *)(((PictureWindow *)this)->trigger_listbox));
   eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),0x14);
-  checkbox_ctor((Control *)(this[1].pad_48 + 0x9c));
+  checkbox_ctor((Control *)(((PictureWindow *)this)->action_listbox));
   this->vtable = (u32)&PTR_FUN_0061c058;
   return this;
 }
@@ -1020,54 +1020,54 @@ void __thiscall tribe_editor_create_combo(ViewWindow *this,int slot)
     parent_wnd2 = (u8 *)0x0;
   }
   else {
-    parent_wnd2 = this->pad_48;
+    parent_wnd2 = this->window_2;
   }
   combo_create
-            ((Control *)(this->pad_2d4 + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_x,
+            ((Control *)(this->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_x,
              (iptr)rect);
-  combo_set_font((ComboBoxFontView *)(this->pad_2d4 + slot * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
-  combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + slot * 0x38 + 0x28),ADDR(0x401424, tribe_editor_on_combo));
+  combo_set_font((ComboBoxFontView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
+  combo_set_callback((ComboBoxCallbackSetView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),ADDR(0x401424, tribe_editor_on_combo));
   switch(slot) {
   case 0:
     for (i = 0; i < 0x15; i++) {
       combo_add_string
-                ((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),
+                ((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),
                  (iptr)(&editor_item_names + (i * 5 + 0xd2) * 8));
     }
     break;
   case 1:
     label = label_string(*(i32 *)(label_string_ids + 0x834));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x838));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x83c));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x840));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     break;
   case 2:
     label = label_string(*(i32 *)(label_string_ids + 0x904));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x908));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x90c));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     break;
   case 3:
     label = label_string(*(i32 *)(label_string_ids + 0x910));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x914));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x918));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     break;
   case 4:
     label = label_string(*(i32 *)(label_string_ids + 0x91c));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x914));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x920));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
   }
   return;
 }
@@ -1096,12 +1096,12 @@ void __thiscall tribe_editor_create_edit(ViewWindow *this,int slot)
     parent_wnd2 = (u8 *)0x0;
   }
   else {
-    parent_wnd2 = this->pad_48;
+    parent_wnd2 = this->window_2;
   }
   edit_create
-            ((EditControl *)(this[1].pad_48 + slot * 0x48 - 0x2c),(iptr)parent_wnd2,ctrl_id,
+            ((EditControl *)(((PediaRedrawView *)this)->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)parent_wnd2,ctrl_id,
              (iptr)rect,ADDR(0x62ce74, ((u8 *)&g.d_0062ce74)));
-  edit_set_max_len((EditMaxLenView *)(this[1].pad_48 + slot * 0x48 - 0x2c),0x17);
+  edit_set_max_len((EditMaxLenView *)(((PediaRedrawView *)this)->numeric_edit_controls_area + slot * 0x48 - 0x2c),0x17);
   return;
 }
 #undef editor_next_ctrl_id
@@ -1300,34 +1300,34 @@ void __thiscall tribe_editor_main(ViewWindow *this)
     parent_wnd1 = (u8 *)0x0;
   }
   else {
-    parent_wnd1 = this->pad_48;
+    parent_wnd1 = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x940));
   button_create
-            ((Control *)(this[2].pad_48 + 0x84),(iptr)parent_wnd1,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this[2].pad_48 + 0x84),ADDR(0x402775, tribe_editor_rename_commodity));
+            ((Control *)(((DocumentWindow *)this)->add_trigger_button),(iptr)parent_wnd1,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(((DocumentWindow *)this)->add_trigger_button),ADDR(0x402775, tribe_editor_rename_commodity));
   rect_set_xywh((iptr)rect,height + 0xe1,pos,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     parent_wnd2 = (u8 *)0x0;
   }
   else {
-    parent_wnd2 = this->pad_48;
+    parent_wnd2 = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x944));
   button_create
-            ((Control *)(this[2].pad_104 + 4),(iptr)parent_wnd2,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this[2].pad_104 + 4),ADDR(0x401631, tribe_editor_rename_govt));
+            ((Control *)(((DocumentWindow *)this)->edit_trigger_button),(iptr)parent_wnd2,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(((DocumentWindow *)this)->edit_trigger_button),ADDR(0x401631, tribe_editor_rename_govt));
   rect_set_xywh((iptr)rect,height + 0x159,pos,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     parent_wnd3 = (u8 *)0x0;
   }
   else {
-    parent_wnd3 = this->pad_48;
+    parent_wnd3 = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x948));
   button_create
-            ((Control *)&this[2].field_144,(iptr)parent_wnd3,0x65,(iptr)rect,label);
-  button_set_callback((Control *)&this[2].field_144,ADDR(0x402bda, tribe_editor_rename_title));
+            ((Control *)&((DocumentWindow *)this)->delete_trigger_button,(iptr)parent_wnd3,0x65,(iptr)rect,label);
+  button_set_callback((Control *)&((DocumentWindow *)this)->delete_trigger_button,ADDR(0x402bda, tribe_editor_rename_title));
   pos = font_line_spacing((GameFont *)dialog_font_ptr);
   this->lux_rate_sel = pos + 8;
   this->tax_rate_sel = (int)(this->client_width - 8) / 3;
@@ -1338,46 +1338,46 @@ void __thiscall tribe_editor_main(ViewWindow *this)
     parent_wnd4 = (u8 *)0x0;
   }
   else {
-    parent_wnd4 = this->pad_48;
+    parent_wnd4 = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
-            ((Control *)&this[1].field_2a4,(iptr)parent_wnd4,0x65,(iptr)rect,label);
-  button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40275c, tribe_editor_on_ok));
+            ((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,(iptr)parent_wnd4,0x65,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,ADDR(0x40275c, tribe_editor_on_ok));
   pos = pos + this->tax_rate_sel + 2;
   rect_set_xywh((iptr)rect,pos,button_y,this->tax_rate_sel,this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     parent_wnd5 = (u8 *)0x0;
   }
   else {
-    parent_wnd5 = this->pad_48;
+    parent_wnd5 = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
-            ((Control *)&this[1].field_2e0,(iptr)parent_wnd5,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&this[1].field_2e0,ADDR(0x401bea, tribe_editor_on_help));
+            ((Control *)&((PediaAdvanceListView *)this)->editor_help_button,(iptr)parent_wnd5,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_help_button,ADDR(0x401bea, tribe_editor_on_help));
   rect_set_xywh((iptr)rect,pos + this->tax_rate_sel + 2,button_y,this->tax_rate_sel,
                      this->lux_rate_sel);
   if (this == (ViewWindow *)0x0) {
     parent_wnd6 = (u8 *)0x0;
   }
   else {
-    parent_wnd6 = this->pad_48;
+    parent_wnd6 = this->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
-            ((Control *)&this[1].field_31c,(iptr)parent_wnd6,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&this[1].field_31c,ADDR(0x40152d, tribe_editor_on_cancel));
-  ctrl_set_cancel_button((Control *)&this[1].field_31c);
-  wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
+            ((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,(iptr)parent_wnd6,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,ADDR(0x40152d, tribe_editor_on_cancel));
+  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button);
+  wnd_set_keyboard_nav((Wnd *)this->window_2,0);
   combo_set_cur_sel((ComboBoxSetSelView *)&this->dialog_h,this->init_tax_rate);
   tribe_editor_load_controls();
   this->dialog_w = 5;
-  wnd_set_move_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
+  wnd_set_move_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x403cf1, tribe_editor_redraw));
   wnd_repaint((SurfaceWindow *)this);
   window_show((WindowObjectView *)this);
-  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
+  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
   while (editor_running != 0) {
     win_pump_one_message();
   }

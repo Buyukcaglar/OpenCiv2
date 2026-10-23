@@ -32,6 +32,10 @@
 #include "civ2classes.h"
 #include "../data/gamedata.h"
 
+/* new T[n] (MSVC): the element count is kept in the 4 bytes before the
+ * array (vector deleting destructors read it back). */
+#define VECTOR_COUNT(array) (((u32 *)(array))[-1])
+
 /* Ghidra refers to Win32 structs by their tag names. */
 typedef struct tagRECT tagRECT;
 typedef struct tagPOINT tagPOINT;
