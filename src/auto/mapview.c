@@ -666,8 +666,8 @@ void __thiscall mapview_center_on(ViewWindow *this,iptr x,i32 y)
   i32 wrapped_x;
   
   wrapped_x = map_wrap_x(x);
-  *(short *)&this->field_2e0 = (short)wrapped_x;
-  *(i16 *)((int)&this->field_2e0 + 2) = (i16)y;
+  *(short *)&this->tax_rate_sel = (short)wrapped_x;
+  *(i16 *)((int)&this->tax_rate_sel + 2) = (i16)y;
   saved_blink = unit_blink_active;
   unit_blink_active = 0;
   mapview_redraw(this,human_civ,1);
@@ -692,15 +692,15 @@ int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   need_scroll = 0;
-  view_left = this->field_2e8;
-  view_top = this->field_2ec;
-  if ((((game.rules & 0x8000) == 0) && (x <= (int)(this->field_2f8 * 2))) &&
-     ((int)((int)map.width + this->field_2f8 * -2) <= (int)view_left)) {
+  view_left = this->sci_rate_sel;
+  view_top = this->init_tax_rate;
+  if ((((game.rules & 0x8000) == 0) && (x <= (int)(this->dialog_w * 2))) &&
+     ((int)((int)map.width + this->dialog_w * -2) <= (int)view_left)) {
     x += map.width;
   }
-  view_cols = this->field_300;
-  view_bottom = this->field_2f4;
-  if (this->field_330 == 0) {
+  view_cols = this->label_x_value;
+  view_bottom = this->init_sci_rate;
+  if (this->tax_label_y == 0) {
     if ((game.rules & 0x8000) != 0) {
       x = int_clamp(x,2,map.width - 3);
     }
@@ -708,7 +708,7 @@ int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
       need_scroll = 1;
     }
   }
-  if ((this->field_334 == 0) &&
+  if ((this->lux_label_y == 0) &&
      ((y = int_clamp(y,2,map.height - 3), y <= (int)(view_top + 1) ||
       ((int)(view_bottom - 1) <= y)))) {
     need_scroll = 1;
@@ -797,7 +797,7 @@ mapview_point_unit_dir
       dir = 8;
     }
     else if (((int)client_dx < (int)this->client_width) && ((int)client_dy < (int)this->client_height)) {
-      dir = surface_get_pixel((DibSurface *)&this->field_3a8,off_x,off_y);
+      dir = surface_get_pixel((DibSurface *)&this->right_agreed_button,off_x,off_y);
       dir = dir - 10 >> 4;
     }
     else {
@@ -838,7 +838,7 @@ void __cdecl mapview_on_mousemove(int mouse_x,int mouse_y)
   else {
     view = (ViewWindow *)(child_wnd - 0x48);
   }
-  if ((city_turn_processing == 0) && (view->field_358 != 0x1fe)) {
+  if ((city_turn_processing == 0) && (view->tax_scrollbar != 0x1fe)) {
     check = ui_paradrop_cursor_active();
     if (check == 0) {
       cursor_id = 0x201;
@@ -879,8 +879,8 @@ void __cdecl mapview_on_mousemove(int mouse_x,int mouse_y)
         }
       }
     }
-    if (view->field_358 != cursor_id) {
-      view->field_358 = cursor_id;
+    if (view->tax_scrollbar != cursor_id) {
+      view->tax_scrollbar = cursor_id;
       wnd_set_cursor_now((WndCursorView *)view->pad_48,cursor_id,1);
     }
   }
@@ -1179,12 +1179,12 @@ void __thiscall mapview_update_title(FrameWindow *this)
   iptr adjective;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  mode = (uint)((this->field_2dc & 0x10000) != 0);
-  if ((this->field_2dc & 0x20000) != 0) {
+  mode = (uint)((this->max_rate_value & 0x10000) != 0);
+  if ((this->max_rate_value & 0x20000) != 0) {
     mode += 2;
   }
   text_clear();
-  if (this->field_2d8 == 0) {
+  if (this->rates_civ == 0) {
     if (game_language != 1) {
       adjective = civ_get_adjective(human_civ);
       text_append_str(adjective);
@@ -1236,25 +1236,25 @@ void __cdecl mapview_on_caption_button(i32 button)
     }
     switch(button) {
     case 1:
-      *(i16 *)&this2->field_2dc = 0;
+      *(i16 *)&this2->max_rate_value = 0;
       wnd_destroy_with_surface((DibSurface *)this2);
       mapview_update_title((FrameWindow *)&map_views);
       wnd_repaint((SurfaceWindow *)&map_views);
       break;
     case 2:
-      if ((short)this2->field_2e4 < 8) {
-        *(short *)&this2->field_2e4 = (short)this2->field_2e4 + 1;
+      if ((short)this2->lux_rate_sel < 8) {
+        *(short *)&this2->lux_rate_sel = (short)this2->lux_rate_sel + 1;
         mapview_redraw(this2,human_civ,1);
       }
       break;
     case 3:
-      if (-7 < (short)this2->field_2e4) {
-        *(short *)&this2->field_2e4 = (short)this2->field_2e4 - 1;
+      if (-7 < (short)this2->lux_rate_sel) {
+        *(short *)&this2->lux_rate_sel = (short)this2->lux_rate_sel - 1;
         mapview_redraw(this2,human_civ,1);
       }
       break;
     case 4:
-      *(ushort *)((int)&this2->field_2dc + 2) = *(short *)((int)&this2->field_2dc + 2) + 1U & 3;
+      *(ushort *)((int)&this2->max_rate_value + 2) = *(short *)((int)&this2->max_rate_value + 2) + 1U & 3;
       mapview_update_title((FrameWindow *)this2);
       mapview_redraw(this2,human_civ,1);
     }
@@ -1282,39 +1282,39 @@ void __thiscall mapview_create(ViewWindow *this)
   i32 create_arg9;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  mapview_init_state(this,this->field_2d8);
+  mapview_init_state(this,this->rates_civ);
   if ((turn_resume_civ == '\0') || (saved_layout_valid == 0)) {
-    *(i16 *)&this->field_2e4 = 0;
+    *(i16 *)&this->lux_rate_sel = 0;
     if (999 < screen_width) {
-      *(i16 *)&this->field_2e4 = 2;
+      *(i16 *)&this->lux_rate_sel = 2;
     }
-    if (this->field_2d8 == 0) {
+    if (this->rates_civ == 0) {
       mapview_calc_rect();
     }
   }
-  if (this->field_2d8 == 0) {
-    *(i16 *)((int)&this->field_2dc + 2) = 3;
+  if (this->rates_civ == 0) {
+    *(i16 *)((int)&this->max_rate_value + 2) = 3;
   }
   else {
-    *(i16 *)((int)&this->field_2dc + 2) = 2;
+    *(i16 *)((int)&this->max_rate_value + 2) = 2;
   }
-  if ((this->field_2d8 == 0) || ((short)this->field_2dc != 0)) {
-    left = *(int *)(&map_view_saved_rects + this->field_2d8 * 0x10);
-    top = *(int *)(&map_view_saved_rect_tops + this->field_2d8 * 0x10);
-    width2 = rect_width((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10));
+  if ((this->rates_civ == 0) || ((short)this->max_rate_value != 0)) {
+    left = *(int *)(&map_view_saved_rects + this->rates_civ * 0x10);
+    top = *(int *)(&map_view_saved_rect_tops + this->rates_civ * 0x10);
+    width2 = rect_width((iptr)(&map_view_saved_rects + this->rates_civ * 0x10));
     width2 -= sys_dlgframe_w2;
-    height2 = rect_height((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10));
+    height2 = rect_height((iptr)(&map_view_saved_rects + this->rates_civ * 0x10));
     height2 -= sys_dlgframe_h2;
   }
   else {
-    left = this->field_2d8 * 0x28;
-    top = this->field_2d8 * 0x28;
+    left = this->rates_civ * 0x28;
+    top = this->rates_civ * 0x28;
     width2 = 500;
     height2 = 300;
-    rect_set_xywh((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10),left,top,
+    rect_set_xywh((iptr)(&map_view_saved_rects + this->rates_civ * 0x10),left,top,
                        sys_dlgframe_w2 + 500,sys_dlgframe_h2 + 300);
   }
-  *(i16 *)&this->field_2dc = 1;
+  *(i16 *)&this->max_rate_value = 1;
   create_arg9 = 0;
   create_arg8 = 0;
   create_arg7 = 6;
@@ -1337,12 +1337,12 @@ void __thiscall mapview_create(ViewWindow *this)
   wnd_set_size_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x403b43, mapview_on_size));
   wnd_set_move_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x402653, mapview_on_move));
   mapview_update_title((FrameWindow *)this);
-  if (this->field_2d8 != 0) {
+  if (this->rates_civ != 0) {
     frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x645120, ((u8 *)&g.d_00645120)),1);
   }
   frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x648820, ((u8 *)&g.d_00648820)),2);
   frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x647788, ((u8 *)&g.d_00647788)),3);
-  if (this->field_2d8 != 0) {
+  if (this->rates_civ != 0) {
     frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x647348, ((u8 *)&g.d_00647348)),4);
   }
   wnd_set_caption_button_handler((FrameWindow *)this,ADDR(0x403cd8, mapview_on_caption_button));
@@ -1350,7 +1350,7 @@ void __thiscall mapview_create(ViewWindow *this)
   if (game.multiplayer != 1) {
     window_show((WindowObjectView *)this);
   }
-  if (this->field_2d8 != 0) {
+  if (this->rates_civ != 0) {
     mapview_update_title((FrameWindow *)&map_views);
     wnd_repaint((SurfaceWindow *)&map_views);
   }
@@ -1611,26 +1611,26 @@ void __cdecl mapview_draw_tile_number(i32 x,i32 y,int number,i32 color)
 void __thiscall mapview_init_state(ViewWindow *this,u32 view_index)
 
 {
-  this->field_2d8 = view_index;
+  this->rates_civ = view_index;
   if (view_index == 0) {
-    *(i16 *)((int)&this->field_2dc + 2) = 1;
+    *(i16 *)((int)&this->max_rate_value + 2) = 1;
   }
   else {
-    *(i16 *)((int)&this->field_2dc + 2) = 0;
+    *(i16 *)((int)&this->max_rate_value + 2) = 0;
   }
-  this->field_358 = 0xffffffff;
+  this->tax_scrollbar = 0xffffffff;
   if (turn_resume_civ == '\0') {
-    *(i16 *)&this->field_2e4 = 0;
-    *(i16 *)&this->field_2e0 = map.width >> 1;
-    *(i16 *)((int)&this->field_2e0 + 2) = map.height >> 1;
-    if ((this->field_2e0 & 1) != 0) {
-      *(short *)&this->field_2e0 = (short)this->field_2e0 - 1;
+    *(i16 *)&this->lux_rate_sel = 0;
+    *(i16 *)&this->tax_rate_sel = map.width >> 1;
+    *(i16 *)((int)&this->tax_rate_sel + 2) = map.height >> 1;
+    if ((this->tax_rate_sel & 1) != 0) {
+      *(short *)&this->tax_rate_sel = (short)this->tax_rate_sel - 1;
     }
-    if ((this->field_2e0 & 0x10000) != 0) {
-      *(short *)&this->field_2e0 = (short)this->field_2e0 + 1;
+    if ((this->tax_rate_sel & 0x10000) != 0) {
+      *(short *)&this->tax_rate_sel = (short)this->tax_rate_sel + 1;
     }
   }
-  this->field_35c = 0xfffffc19;
+  this->no_thanks_button_value = 0xfffffc19;
   return;
 }
 #undef turn_resume_civ
@@ -1648,85 +1648,85 @@ void __thiscall mapview_update_layout(ViewWindow *this)
   uint clamped;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  this->field_328 = this->client_width;
-  this->field_32c = this->client_height;
+  this->button_area_height = this->client_width;
+  this->row_spacing_value = this->client_height;
   scaled = mapview_zoom_scale(this,0x40);
   this->total_tax = scaled;
   scaled = mapview_zoom_scale(this,0x20);
   this->total_science = scaled;
-  this->field_310 = (int)this->total_tax / 2;
-  this->field_314 = (int)this->total_science / 2;
-  this->field_318 = (int)(this->total_tax + ((int)this->total_tax >> 0x1f & 3U)) >> 2;
-  this->field_31c = (int)(this->total_science + ((int)this->total_science >> 0x1f & 3U)) >> 2;
-  this->field_320 = this->total_tax;
-  this->field_324 = this->total_science + this->field_314;
-  this->field_2f8 = (int)((this->field_328 - 1) + this->total_tax) / (int)this->total_tax;
-  this->field_2fc = (int)((this->field_32c - 1) + this->total_science) / (int)this->total_science;
-  this->field_300 = (int)(this->field_310 * 3 - 1 + this->field_328) / (int)this->total_tax;
-  this->field_304 = (int)(this->field_314 * 3 - 1 + this->field_32c) / (int)this->total_science;
-  this->field_330 = 0;
-  this->field_334 = 0;
-  if ((int)map.width / 2 < (int)this->field_2f8) {
-    this->field_2f8 = (int)map.width / 2;
-    this->field_330 = (int)(this->field_328 - this->total_tax * this->field_2f8) >> 1;
-    this->field_300 = this->field_2f8 + 1;
+  this->total_upkeep_value = (int)this->total_tax / 2;
+  this->margin_value = (int)this->total_science / 2;
+  this->bar_gap = (int)(this->total_tax + ((int)this->total_tax >> 0x1f & 3U)) >> 2;
+  this->bar_width_value = (int)(this->total_science + ((int)this->total_science >> 0x1f & 3U)) >> 2;
+  this->bar_height = this->total_tax;
+  this->button_row_width = this->total_science + this->margin_value;
+  this->dialog_w = (int)((this->button_area_height - 1) + this->total_tax) / (int)this->total_tax;
+  this->dialog_h = (int)((this->row_spacing_value - 1) + this->total_science) / (int)this->total_science;
+  this->label_x_value = (int)(this->total_upkeep_value * 3 - 1 + this->button_area_height) / (int)this->total_tax;
+  this->header_y_value = (int)(this->margin_value * 3 - 1 + this->row_spacing_value) / (int)this->total_science;
+  this->tax_label_y = 0;
+  this->lux_label_y = 0;
+  if ((int)map.width / 2 < (int)this->dialog_w) {
+    this->dialog_w = (int)map.width / 2;
+    this->tax_label_y = (int)(this->button_area_height - this->total_tax * this->dialog_w) >> 1;
+    this->label_x_value = this->dialog_w + 1;
   }
-  if ((int)map.height < (int)this->field_2fc) {
-    this->field_2fc = (int)map.height / 2;
-    this->field_334 = (int)(this->field_32c - this->total_science * this->field_2fc) >> 1;
-    this->field_304 = (int)map.height + 1;
+  if ((int)map.height < (int)this->dialog_h) {
+    this->dialog_h = (int)map.height / 2;
+    this->lux_label_y = (int)(this->row_spacing_value - this->total_science * this->dialog_h) >> 1;
+    this->header_y_value = (int)map.height + 1;
   }
-  wrapped_x = map_wrap_x((int)(short)this->field_2e0);
-  *(short *)&this->field_2e0 = (short)wrapped_x;
-  this->field_2ec = (int)*(short *)((int)&this->field_2e0 + 2) - this->field_2fc;
-  wrapped = map_wrap_x((int)(short)this->field_2e0 - this->field_2f8);
-  this->field_2e8 = wrapped;
-  if (((game.rules & 0x8000) != 0) && (map.width + 1 < (int)(this->field_2f8 * 2 + this->field_2e8))
+  wrapped_x = map_wrap_x((int)(short)this->tax_rate_sel);
+  *(short *)&this->tax_rate_sel = (short)wrapped_x;
+  this->init_tax_rate = (int)*(short *)((int)&this->tax_rate_sel + 2) - this->dialog_h;
+  wrapped = map_wrap_x((int)(short)this->tax_rate_sel - this->dialog_w);
+  this->sci_rate_sel = wrapped;
+  if (((game.rules & 0x8000) != 0) && (map.width + 1 < (int)(this->dialog_w * 2 + this->sci_rate_sel))
      ) {
-    this->field_2e8 = map.width + 1 + this->field_2f8 * -2;
+    this->sci_rate_sel = map.width + 1 + this->dialog_w * -2;
   }
-  if (map.height + 1 < (int)(this->field_2fc * 2 + this->field_2ec)) {
-    this->field_2ec = map.height + 1 + this->field_2fc * -2;
+  if (map.height + 1 < (int)(this->dialog_h * 2 + this->init_tax_rate)) {
+    this->init_tax_rate = map.height + 1 + this->dialog_h * -2;
   }
-  clamped = this->field_2e8;
+  clamped = this->sci_rate_sel;
   if (0x7fffffff < clamped) {
     clamped = 0xffffffff;
   }
-  this->field_2e8 = clamped;
-  clamped = this->field_2ec;
+  this->sci_rate_sel = clamped;
+  clamped = this->init_tax_rate;
   if (0x7fffffff < clamped) {
     clamped = 0xffffffff;
   }
-  this->field_2ec = clamped;
-  if ((this->field_2e8 & 1) != 0) {
-    this->field_2e8--;
+  this->init_tax_rate = clamped;
+  if ((this->sci_rate_sel & 1) != 0) {
+    this->sci_rate_sel--;
   }
-  if ((this->field_2ec & 1) != 0) {
-    this->field_2e8++;
+  if ((this->init_tax_rate & 1) != 0) {
+    this->sci_rate_sel++;
   }
-  wrapped = map_wrap_x(this->field_300 * 2 - 2 + this->field_2e8);
-  this->field_2f0 = wrapped;
-  this->field_2f4 = this->field_304 * 2 - 2 + this->field_2ec;
-  if ((int)(short)this->field_2e4 != this->field_35c) {
-    surface_create((DibSurface *)&this->field_360,this->total_tax,this->total_science);
-    surface_create((DibSurface *)&this->field_3a8,this->total_tax,this->total_science);
-    this->field_35c = (int)(short)this->field_2e4;
+  wrapped = map_wrap_x(this->label_x_value * 2 - 2 + this->sci_rate_sel);
+  this->init_lux_rate = wrapped;
+  this->init_sci_rate = this->header_y_value * 2 - 2 + this->init_tax_rate;
+  if ((int)(short)this->lux_rate_sel != this->no_thanks_button_value) {
+    surface_create((DibSurface *)&this->counter_button_value,this->total_tax,this->total_science);
+    surface_create((DibSurface *)&this->right_agreed_button,this->total_tax,this->total_science);
+    this->no_thanks_button_value = (int)(short)this->lux_rate_sel;
     mapview_apply_zoom(this);
     sprite_draw
-              ((Sprite *)&tile_pick_mask_sprite,(iptr)pick_mask_rect,(iptr)&this->field_360,0,0);
+              ((Sprite *)&tile_pick_mask_sprite,(iptr)pick_mask_rect,(iptr)&this->counter_button_value,0,0);
     sprite_draw
-              ((Sprite *)&tile_direction_mask_sprite,(iptr)dir_mask_rect,(iptr)&this->field_3a8,0,0);
+              ((Sprite *)&tile_direction_mask_sprite,(iptr)dir_mask_rect,(iptr)&this->right_agreed_button,0,0);
     gfx_reset_zoom_scale();
   }
   font_size = (int)(this->total_science * 3) / 5;
-  if (this->field_348 != font_size) {
-    font_set((GameFont *)&this->field_338,0,font_size);
-    this->field_348 = font_size;
+  if (this->rates_clamped != font_size) {
+    font_set((GameFont *)&this->sci_label_y,0,font_size);
+    this->rates_clamped = font_size;
   }
   font_size = (int)(this->total_science + ((int)this->total_science >> 0x1f & 3U)) >> 2;
-  if (this->field_34c != font_size) {
-    font_set((GameFont *)&this->field_340,1,font_size);
-    this->field_34c = font_size;
+  if (this->mode2_button_value != font_size) {
+    font_set((GameFont *)&this->conceal_button_value,1,font_size);
+    this->mode2_button_value = font_size;
   }
   return;
 }
@@ -1789,10 +1789,10 @@ mapview_tile_to_screen(ViewWindow *this,iptr out_x,iptr out_y,int x,int y)
   uptr top;
   int dx;
   
-  dx = map_wrap_x(x - this->field_2e8);
-  top = this->field_2ec;
-  *(u32 *)out_x = this->field_310 * (dx - 1) + this->field_330;
-  *(u32 *)out_y = this->field_314 * ((y - top) - 1) + this->field_334;
+  dx = map_wrap_x(x - this->sci_rate_sel);
+  top = this->init_tax_rate;
+  *(u32 *)out_x = this->total_upkeep_value * (dx - 1) + this->tax_label_y;
+  *(u32 *)out_y = this->margin_value * ((y - top) - 1) + this->lux_label_y;
   *(u32 *)out_x = *(int *)out_x + this->client_x;
   *(u32 *)out_y = *(int *)out_y + this->client_y;
   return;
@@ -1879,11 +1879,11 @@ mapview_draw_tile_terrain
   i32 color;
   i8 frame_[FRAME_OFF(592)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((short)this->field_2e4 == zoom) {
+  if ((short)this->lux_rate_sel == zoom) {
     tile_w = this->total_tax;
     tile_h = this->total_science;
-    half_w = this->field_310;
-    half_h = this->field_314;
+    half_w = this->total_upkeep_value;
+    half_h = this->margin_value;
   }
   else {
     tile_w = gfx_zoom_scale(0x40,zoom);
@@ -2369,8 +2369,8 @@ mapview_draw_tile_city
     }
     if (((visible2 != 0) || (game.reveal_map != '\0')) ||
        (((game.game_flags & 0x80) != 0 && ((scenario_flags & 8) != 0)))) {
-      gfx_draw_city((iptr)this,city,0,screen_x,screen_y - this->field_314,
-                         (int)(short)this->field_2e4);
+      gfx_draw_city((iptr)this,city,0,screen_x,screen_y - this->margin_value,
+                         (int)(short)this->lux_rate_sel);
     }
   }
   return;
@@ -2385,7 +2385,7 @@ mapview_draw_unit_stacked
           (ViewWindow *this,iptr unit,uint draw_flags,i32 screen_x,i32 screen_y)
 
 {
-  gfx_draw_unit((iptr)this,unit,draw_flags | 3,screen_x,screen_y,(int)(short)this->field_2e4,0);
+  gfx_draw_unit((iptr)this,unit,draw_flags | 3,screen_x,screen_y,(int)(short)this->lux_rate_sel,0);
   return;
 }
 
@@ -2399,7 +2399,7 @@ mapview_draw_unit_blinking
 
 {
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
-    gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->field_2e4,0);
+    gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->lux_rate_sel,0);
   }
   return;
 }
@@ -2421,8 +2421,8 @@ void __thiscall mapview_draw_unit_at(ViewWindow *this,iptr unit)
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
     mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,(int)units[unit].x,
                        (int)units[unit].y);
-    screen_y -= this->field_314;
-    gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->field_2e4,0);
+    screen_y -= this->margin_value;
+    gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->lux_rate_sel,0);
   }
   return;
 }
@@ -2453,7 +2453,7 @@ mapview_draw_stack_unit
       mapview_draw_unit_stacked(this,unit,4,screen_x,screen_y);
     }
     else {
-      gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->field_2e4,0);
+      gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->lux_rate_sel,0);
     }
   }
   else {
@@ -2480,7 +2480,7 @@ mapview_draw_tile_units
   int result;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  draw_y = screen_y - this->field_314;
+  draw_y = screen_y - this->margin_value;
   result = map_in_bounds(x,y);
   if (result != 0) {
     unit = tile_first_unit(x,y);
@@ -2563,7 +2563,7 @@ mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
   
   mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,x,y);
   mapview_draw_tile_terrain(this,(iptr)this,screen_x,screen_y,x,y,civ,
-                     (int)(short)this->field_2e4,-1);
+                     (int)(short)this->lux_rate_sel,-1);
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
     net_process_messages((NetSession *)&net_session,1,0);
@@ -2613,8 +2613,8 @@ mapview_tile_in_view(ViewWindow *this,i32 tile_x,i32 tile_y)
 {
   i32 in_view;
   
-  in_view = map_tile_in_box(tile_x,tile_y,this->field_2e8,this->field_2ec,
-                             this->field_2f8 + this->field_300,this->field_2fc + this->field_304 + 1
+  in_view = map_tile_in_box(tile_x,tile_y,this->sci_rate_sel,this->init_tax_rate,
+                             this->dialog_w + this->label_x_value,this->dialog_h + this->header_y_value + 1
                             );
   return in_view;
 }
@@ -2647,7 +2647,7 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
     if (-1 < radius) {
       radius += 3;
     }
-    text_set_font((iptr)&this->field_338);
+    text_set_font((iptr)&this->sci_label_y);
     for (city = 0; city < game.num_cities; city++) {
       if (cities[city].id != 0) {
         x2 = (int)cities[city].x;
@@ -2672,7 +2672,7 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
           }
           if (visible2 != 0) {
             mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,x2,y2);
-            label_x = this->field_310 + screen_x;
+            label_x = this->total_upkeep_value + screen_x;
             label_y = ((int)(this->total_science * 3) >> 2) + screen_y;
             text_set_colors(10,0xffffffff,0xffffffff,0xffffffff);
             text_width = mapview_zoom_scale(this,2);
@@ -2684,7 +2684,7 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
             }
             shadow_y = label_y + shadow_y;
             text_width = font_text_width
-                              ((GameFont *)&this->field_338,(iptr)&cities[city].name);
+                              ((GameFont *)&this->sci_label_y,(iptr)&cities[city].name);
             text_draw_shadowed((iptr)this,(iptr)&cities[city].name,label_x - (text_width >> 1),shadow_y);
             text_width = mapview_zoom_scale(this,2);
             if (text_width < 3) {
@@ -2699,7 +2699,7 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
             text_set_colors(shadow_color,text_color,shadow_offset,shadow_depth);
             text_width = label_y;
             name_width = font_text_width
-                              ((GameFont *)&this->field_338,(iptr)&cities[city].name);
+                              ((GameFont *)&this->sci_label_y,(iptr)&cities[city].name);
             text_draw_shadowed((iptr)this,(iptr)&cities[city].name,label_x - (name_width >> 1),text_width);
           }
         }
@@ -2733,10 +2733,10 @@ mapview_tile_radius_rect
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   mapview_tile_to_screen(this,(iptr)&left,(iptr)&top,tile_x,tile_y);
-  top -= (radius * 2 + 1) * this->field_314;
-  left += this->field_310 * radius * -2;
+  top -= (radius * 2 + 1) * this->margin_value;
+  left += this->total_upkeep_value * radius * -2;
   width2 = (radius * 2 + 1) * this->total_tax;
-  rect_set_xywh((iptr)rect,left,top,width2,(radius * 4 + 3) * this->field_314);
+  rect_set_xywh((iptr)rect,left,top,width2,(radius * 4 + 3) * this->margin_value);
   rect_intersect_into(out_rect,(iptr)rect,(iptr)&this->client_rect);
   return;
 }
@@ -2811,18 +2811,18 @@ void __thiscall mapview_draw_all_tiles(ViewWindow *this,i32 civ)
   i32 x;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((this->field_330 != 0) || (this->field_334 != 0)) {
+  if ((this->tax_label_y != 0) || (this->lux_label_y != 0)) {
     gfx_fill_surface((iptr)this,10);
   }
-  for (row = 0; (int)row < (int)(this->field_2fc + this->field_304 + 1);
+  for (row = 0; (int)row < (int)(this->dialog_h + this->header_y_value + 1);
       row = row + 1) {
-    origin_y = this->field_2ec;
-    origin_x = this->field_2e8;
+    origin_y = this->init_tax_rate;
+    origin_x = this->sci_rate_sel;
     if ((row & 1) == 0) {
-      row_width = this->field_300;
+      row_width = this->label_x_value;
     }
     else {
-      row_width = this->field_2f8;
+      row_width = this->dialog_w;
     }
     for (col = 0; col < row_width; col++) {
       x = map_wrap_x(col * 2 + origin_x + (row & 1));
@@ -2907,7 +2907,7 @@ mapview_redraw_area
     }
     mapview_draw_tile_radius(this,tile_x,tile_y,radius,civ);
     if ((((moving_units_mode == 0) && (unit_blink_phase != '\0')) && (unit_blink_active != '\0')) &&
-       ((this->field_2d8 == 0 &&
+       ((this->rates_civ == 0 &&
         (in_view = mapview_tile_in_view(this,(int)map_cursor_x,(int)map_cursor_y), in_view != 0)))) {
       mapview_tile_to_screen(this,(iptr)&cursor_x,(iptr)&cursor_y,(int)map_cursor_x,(int)map_cursor_y);
       mapview_apply_zoom(this);
@@ -2980,7 +2980,7 @@ void __thiscall mapview_redraw(ViewWindow *this,iptr viewer_civ,int do_blit)
     }
     mapview_draw_all_tiles(this,civ);
     if ((do_blit != 0) &&
-       (mapview_blit_with_net_pump((DibSurface *)this), this->field_2d8 == 0)) {
+       (mapview_blit_with_net_pump((DibSurface *)this), this->rates_civ == 0)) {
       minimap_redraw();
     }
     if ((map_click_in_progress == 0) && (mp_simultaneous_moves == '\0')) {
@@ -3008,13 +3008,13 @@ ViewWindow * __thiscall mapview_ctor(ViewWindow *this)
   eh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   eh_state = 0;
-  font_init_empty((GameFont *)&this->field_338);
+  font_init_empty((GameFont *)&this->sci_label_y);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
-  font_init_empty((GameFont *)&this->field_340);
+  font_init_empty((GameFont *)&this->conceal_button_value);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  surface_ctor((DibSurface *)&this->field_360);
+  surface_ctor((DibSurface *)&this->counter_button_value);
   eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),3);
-  surface_ctor((DibSurface *)&this->field_3a8);
+  surface_ctor((DibSurface *)&this->right_agreed_button);
   this->vtable = (u32)&PTR_FUN_0061d1e4;
   return this;
 }
@@ -3059,7 +3059,7 @@ i32 __thiscall mapview_zoom_scale(ViewWindow *this,i32 value)
 {
   i32 scaled;
   
-  scaled = gfx_zoom_scale(value,(int)(short)this->field_2e4);
+  scaled = gfx_zoom_scale(value,(int)(short)this->lux_rate_sel);
   return scaled;
 }
 
@@ -3067,7 +3067,7 @@ i32 __thiscall mapview_zoom_scale(ViewWindow *this,i32 value)
 void __thiscall mapview_apply_zoom(ViewWindow *this)
 
 {
-  gfx_set_zoom_scale((int)(short)this->field_2e4);
+  gfx_set_zoom_scale((int)(short)this->lux_rate_sel);
   return;
 }
 

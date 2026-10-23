@@ -96,6 +96,13 @@ def apply_code(text):
             fam = family_of(d.group(1))
             if fam:
                 types[d.group(2)] = fam
+        # parameters declared T *name in the definition's parameter list
+        sig = re.search(r'\(([^(){};]*)\)\s*\n\{', body)
+        if sig:
+            for d in re.finditer(r'(\w+) \*(\w+)\s*(?:,|$)', sig.group(1)):
+                fam = family_of(d.group(1))
+                if fam and d.group(2) not in types:
+                    types[d.group(2)] = fam
 
         def var(m):
             fam = types.get(m.group(1))

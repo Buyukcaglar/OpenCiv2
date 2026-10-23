@@ -41,9 +41,9 @@ typedef struct Unit {
     u8 visibility;      /* 0x09 bit per civilization that has seen it */
     u8 damage;          /* 0x0a hit points lost */
     u8 last_dir;        /* 0x0b direction of the last move */
-    u8 field_0c;
+    union { u8 field_0c; u8 ai_task; };
     u8 counter;         /* 0x0d work counter (terrain improvement) / cargo */
-    u8 field_0e;
+    union { u8 field_0e; u8 aux_timer; };
     i8 orders;          /* 0x0f -1 none, 1 fortifying, 2 fortified, 0x0b goto, ... */
     i8 home_city;       /* 0x10 -1 none */
     u8 pad_11;
@@ -401,20 +401,20 @@ typedef struct Civ {
     i16 last_city_turn;             /* 0x00e turn the last city was founded */
     u8 num_advances;                /* 0x010 advances known */
     u8 future_techs;                /* 0x011 future technologies discovered */
-    u8 field_12;                    /* 0x012 added to num_advances in the research cost; only ever zeroed */
+    union { u8 field_12; u8 research_cost_advances; };                    /* 0x012 added to num_advances in the research cost; only ever zeroed */
     u8 science_rate;                /* 0x013 in tenths; luxury = 10 - science - tax */
     u8 tax_rate;                    /* 0x014 in tenths */
     u8 government;                  /* 0x015 0 anarchy .. 6 democracy */
-    u8 field_16;                    /* 0x016 rand() % 100, re-rolled every turn (civ_turn_update_diplomacy); AI diplomacy threshold */
+    union { u8 field_16; u8 diplo_random; };                    /* 0x016 rand() % 100, re-rolled every turn (civ_turn_update_diplomacy); AI diplomacy threshold */
     u8 wonders_by_group[4];         /* 0x017 wonders owned, counted per group of 7 (wonder index / 7) */
     u8 pad_1b;                      /* 0x01b */
-    i16 field_1c;                   /* 0x01c +1 when a unit changes owner for gold (net handler net_process_messages); AI gold logic */
+    union { i16 field_1c; i16 subversion_count; };                   /* 0x01c +1 when a unit changes owner for gold (net handler net_process_messages); AI gold logic */
     u8 reputation;                  /* 0x01e 0 spotless .. 7; incremented when a treaty is broken */
-    i8 field_1f;                    /* 0x01f diplomacy counter: +1/+2 per request granted, AI refuses above 4 */
+    union { i8 field_1f; i8 diplo_request_count; };                    /* 0x01f diplomacy counter: +1/+2 per request granted, AI refuses above 4 */
     u32 treaties[8];                /* 0x020 relationship flags toward each civ (contact, peace, alliance, war, ...) */
     u8 attitude[8];                 /* 0x040 AI attitude toward each civ (0..100) */
-    i8 field_48[8];                 /* 0x048 per-civ incident counter (diplo_declare_war), signed */
-    u8 field_50[8];                 /* 0x050 per-civ counter updated by combat (unit_resolve_attack), reset at > 9 */
+    union { i8 field_48[8]; i8 reputation_credit[8]; };                 /* 0x048 per-civ incident counter (diplo_declare_war), signed */
+    union { u8 field_50[8]; u8 aggression_counter[8]; };                 /* 0x050 per-civ counter updated by combat (unit_resolve_attack), reset at > 9 */
     u8 advances[13];                /* 0x058 bit per advance (100 bits), see civ_has_advance */
     u8 pad_65;                      /* 0x065 */
     i16 num_military_units;         /* 0x066 units with role < 5 (census ai_civ_turn_assess) */
@@ -435,7 +435,7 @@ typedef struct Civ {
     u8 continent_trade_units[64];   /* 0x312 role-7 (trade) units per landmass */
     u8 continent_flags[64];         /* 0x352 AI: other civs present (1/2 cities, 4/8 units, 0x10 threat) */
     u8 continent_policy[64];        /* 0x392 AI posture per landmass (0..5) */
-    i16 field_3d2;                  /* 0x3d2 zeroed each turn (civ_process_cities_turn), compared in city_choose_production */
+    union { i16 field_3d2; i16 best_shield_surplus; };                  /* 0x3d2 zeroed each turn (civ_process_cities_turn), compared in city_choose_production */
     i16 government_score[7];        /* 0x3d4 AI preference for each government, accumulated over cities */
     i16 last_treaty_turn[8];        /* 0x3e2 turn of the last treaty event with each civ, -1 never */
     u8 leader_portrait;             /* 0x3f2 tribe index, +21 if the leader is female */
@@ -467,12 +467,12 @@ typedef struct GameState {
     u16 rules;                      /* 0x000 custom features: 0x10 set unless Simplified Combat, 0x80 Bloodlust,
                                        0x100 Don't Restart Eliminated, 0x8000 Flat World */
     u32 game_options;               /* 0x002 @GAMEOPTIONS / @GRAPHICOPTIONS bits (saved to CIV.INI as 0x64bc1e) */
-    u16 field_06;                   /* 0x006 transient flag bits (1, 2, 4) */
+    union { u16 field_06; u16 transient_flags; };                   /* 0x006 transient flag bits (1, 2, 4) */
     u16 game_flags;                 /* 0x008 0x01 AI ganging up, 0x04 large map, 0x08 small map, 0x40 saved as
                                        scenario, 0x80 scenario */
     u16 message_options;            /* 0x00a @MESSAGEOPTIONS, bit set = message off */
-    u16 field_0c;                   /* 0x00c one-shot event bits (each set once when its message is shown) */
-    u16 field_0e;                   /* 0x00e only ever zeroed */
+    union { u16 field_0c; u16 shown_event_flags; };                   /* 0x00c one-shot event bits (each set once when its message is shown) */
+    union { u16 field_0e; u16 unused_0e; };                   /* 0x00e only ever zeroed */
     i16 turn;                       /* 0x010 */
     i16 year;                       /* 0x012 negative = BC */
     i16 first_launch_turn;          /* 0x014 turn the first spaceship was launched, -1 none (years then +1/turn) */
@@ -480,7 +480,7 @@ typedef struct GameState {
     i16 moving_unit;                /* 0x018 unit being moved (kept across combat) */
     u8 multiplayer;                 /* 0x01a 0 single player, 1 hot seat, > 2 network */
     i8 player_civ;                  /* 0x01b the human player's civ */
-    i8 field_1c;                    /* 0x01c copy of the current player civ (0x6d1da0) at save; restored on load */
+    union { i8 field_1c; i8 saved_current_civ; };                    /* 0x01c copy of the current player civ (0x6d1da0) at save; restored on load */
     i8 turn_civ;                    /* 0x01d civ whose turn is being played */
     i8 view_civ;                    /* 0x01e cheat "view as" civ, -1 none */
     u8 reveal_map;                  /* 0x01f cheat: whole map visible */
@@ -492,19 +492,19 @@ typedef struct GameState {
     u8 num_enemies;                 /* 0x025 AI opponents (recomputed on load from civs_alive) */
     i8 warming_counter;             /* 0x026 global warming pressure 0..99, event above 16 */
     i8 global_warmings;             /* 0x027 global warming events so far */
-    i16 field_28;                   /* 0x028 polluted-tile count weighted 1/2 in the warming check; reset after it */
+    union { i16 field_28; i16 warming_pollution; };                   /* 0x028 polluted-tile count weighted 1/2 in the warming check; reset after it */
     i16 polluted_tiles;             /* 0x02a */
-    i16 field_2c;                   /* 0x02c +1 per turn after turn 200, reset in combat; AI chance factor */
+    union { i16 field_2c; i16 peace_turns; };                   /* 0x02c +1 per turn after turn 200, reset in combat; AI chance factor */
     i16 num_units;                  /* 0x02e unit slots in use */
     i16 num_cities;                 /* 0x030 city slots in use */
     i16 num_advances;               /* 0x032 advances defined in RULES.TXT */
-    i16 field_34;                   /* 0x034 only ever zeroed */
+    union { i16 field_34; i16 unused_34; };                   /* 0x034 only ever zeroed */
     u8 first_discoverer[100];       /* 0x036 per advance: civ that discovered it first (8 = several, scenarios) */
     u8 advance_known_by[100];       /* 0x09a per advance: bit per civ that knows it */
     i16 wonder_city[28];            /* 0x0fe city holding each wonder, -1 not built */
     i16 next_history_turn;          /* 0x136 turn of the next historians' report */
-    u8 field_138;                   /* 0x138 power rank of the best-ranked human civ (see header note) */
-    u8 field_139;                   /* 0x139 power rank of the worst-ranked human civ (see header note) */
+    union { u8 field_138; u8 best_human_rank; };                   /* 0x138 power rank of the best-ranked human civ (see header note) */
+    union { u8 field_139; u8 worst_human_rank; };                   /* 0x139 power rank of the worst-ranked human civ (see header note) */
     u8 power_rank[8];               /* 0x13a rank of each civ (7 = strongest) */
     u8 civ_by_rank[8];              /* 0x142 civ at each rank; [7] = strongest civ */
 } GameState;

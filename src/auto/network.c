@@ -73,7 +73,7 @@ void __cdecl net_join_wait_gamestate_idle(void)
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_join_gamestate_count == 0) && (nm_server_canceled_count == 0)) {
     if (2 < elapsed) {
-      text = *(char **)(*(int *)(dialog_stack_top->field_230 + 0x1c) + 8);
+      text = *(char **)(*(int *)(dialog_stack_top->line_list + 0x1c) + 8);
       text_len = _strlen(text);
       marker = _strchr(text,0x3e);
       if (text + (text_len - 1) == marker) {
@@ -100,8 +100,8 @@ void __cdecl net_join_wait_gamestate_idle(void)
     }
   }
   else {
-    dialog_stack_top->field_3c = dialog_stack_top->field_3c | 0x400;
-    wnd_end_modal_loop((ModalMenuWindow *)(dialog_stack_top->field_0 + 0x48));
+    dialog_stack_top->style_flags = dialog_stack_top->style_flags | 0x400;
+    wnd_end_modal_loop((ModalMenuWindow *)(dialog_stack_top->surf_wnd + 0x48));
   }
   return;
 }
@@ -190,42 +190,42 @@ void __thiscall net_gamelist_restore_selection(NetGameListRefreshView *this)
   int selected_index;
   iptr scroll_pos;
   
-  option_count = dialog_count_group_options((DialogOptionList *)this->field_0,0);
-  scrollbar_set_range(*(Control **)(this->field_0 + 0x284),0,option_count - 1);
-  option = net_gamelist_find_option(this,(iptr)&this->field_8,(iptr)&this->field_28);
-  *(i32 *)(this->field_0 + 0x220) = option;
+  option_count = dialog_count_group_options((DialogOptionList *)this->list_dialog,0);
+  scrollbar_set_range(*(Control **)(this->list_dialog + 0x284),0,option_count - 1);
+  option = net_gamelist_find_option(this,(iptr)&this->selected_game_name,(iptr)&this->selected_host_name);
+  *(i32 *)(this->list_dialog + 0x220) = option;
   if (option_count < 0xb) {
-    *(u32 *)(this->field_0 + 0x210) = this->field_14c;
+    *(u32 *)(this->list_dialog + 0x210) = this->first_option_value;
   }
   else {
-    option = net_gamelist_find_option(this,(iptr)&this->field_48,(iptr)&this->field_68);
-    *(i32 *)(this->field_0 + 0x210) = option;
+    option = net_gamelist_find_option(this,(iptr)&this->top_game_name,(iptr)&this->top_host_name);
+    *(i32 *)(this->list_dialog + 0x210) = option;
   }
-  if (*(int *)(this->field_0 + 0x1b8) != 0) {
+  if (*(int *)(this->list_dialog + 0x1b8) != 0) {
     top_index = dialog_option_group_index
-                      ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x210));
-    option_count = *(int *)(this->field_0 + 0x5c);
+                      ((DialogOptionList *)this->list_dialog,*(uptr *)(this->list_dialog + 0x210));
+    option_count = *(int *)(this->list_dialog + 0x5c);
     selected_index = dialog_option_group_index
-                      ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x220));
+                      ((DialogOptionList *)this->list_dialog,*(uptr *)(this->list_dialog + 0x220));
     if (option_count + top_index <= selected_index) {
       option_count = dialog_option_group_index
-                        ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x220));
+                        ((DialogOptionList *)this->list_dialog,*(uptr *)(this->list_dialog + 0x220));
       option = dialog_option_at
-                        ((DialogOptionList *)this->field_0,
-                         (option_count - *(int *)(this->field_0 + 0x5c)) + 1);
-      *(i32 *)(this->field_0 + 0x210) = option;
+                        ((DialogOptionList *)this->list_dialog,
+                         (option_count - *(int *)(this->list_dialog + 0x5c)) + 1);
+      *(i32 *)(this->list_dialog + 0x210) = option;
     }
     option_count = dialog_option_group_index
-                      ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x210));
+                      ((DialogOptionList *)this->list_dialog,*(uptr *)(this->list_dialog + 0x210));
     top_index = dialog_option_group_index
-                      ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x220));
+                      ((DialogOptionList *)this->list_dialog,*(uptr *)(this->list_dialog + 0x220));
     if (top_index < option_count) {
-      *(i32 *)(this->field_0 + 0x210) = *(i32 *)(this->field_0 + 0x220);
+      *(i32 *)(this->list_dialog + 0x210) = *(i32 *)(this->list_dialog + 0x220);
     }
   }
   scroll_pos = dialog_option_group_index
-                    ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x210));
-  scrollbar_set_pos(*(ClickControl **)(this->field_0 + 0x284),scroll_pos);
+                    ((DialogOptionList *)this->list_dialog,*(uptr *)(this->list_dialog + 0x210));
+  scrollbar_set_pos(*(ClickControl **)(this->list_dialog + 0x284),scroll_pos);
   return;
 }
 
@@ -238,11 +238,11 @@ u32 __thiscall net_gamelist_find_option(NetGameListRefreshView *this,iptr game_n
   int cmp;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  option = this->field_14c;
+  option = this->first_option_value;
   game2 = net_found_games;
   while( true ) {
     if (game2 == 0) {
-      return this->field_14c;
+      return this->first_option_value;
     }
     cmp = _strcmp((char *)(game2 + 0x70),(char *)game_name);
     if ((cmp == 0) && (cmp = _strcmp((char *)(game2 + 0x90),(char *)host_name), cmp == 0))
@@ -260,16 +260,16 @@ void __thiscall net_gamelist_update_details(NetGameList *this)
 
 {
   if (net_found_games == 0) {
-    this->field_8 = '\0';
-    this->field_28 = '\0';
-    this->field_48 = '\0';
-    this->field_68 = '\0';
+    this->selected_game_name = '\0';
+    this->selected_host_name = '\0';
+    this->top_game_name = '\0';
+    this->top_host_name = '\0';
   }
   else {
-    net_gamelist_get_entry_names(this,*(iptr *)(this->field_0 + 0x220),(iptr)&this->field_8,
-                       (iptr)&this->field_28);
-    net_gamelist_get_entry_names(this,*(iptr *)(this->field_0 + 0x210),(iptr)&this->field_48,
-                       (iptr)&this->field_68);
+    net_gamelist_get_entry_names(this,*(iptr *)(this->list_dialog + 0x220),(iptr)&this->selected_game_name,
+                       (iptr)&this->selected_host_name);
+    net_gamelist_get_entry_names(this,*(iptr *)(this->list_dialog + 0x210),(iptr)&this->top_game_name,
+                       (iptr)&this->top_host_name);
   }
   return;
 }
@@ -288,7 +288,7 @@ void __thiscall net_gamelist_get_entry_names(NetGameList *this,iptr option,iptr 
   }
   if (game2 == 0) {
     game2 = net_found_games;
-    for (remaining = dialog_option_group_index((DialogOptionList *)this->field_0,option);
+    for (remaining = dialog_option_group_index((DialogOptionList *)this->list_dialog,option);
         (*(int *)(game2 + 0x20) != 0 && (remaining != 0)); remaining--) {
       game2 = *(iptr *)(game2 + 0x20);
     }
@@ -532,7 +532,7 @@ void __thiscall net_gamelist_clear(NetGameList *this)
   void *next;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  option = (void *)this->field_14c;
+  option = (void *)this->first_option_value;
   net_gamelist_update_details(this);
   while (option != (void *)0x0) {
     next = *(void **)((int)option + 0x10);
@@ -540,10 +540,10 @@ void __thiscall net_gamelist_clear(NetGameList *this)
     operator_delete(option);
     option = next;
   }
-  this->field_14c = 0;
-  *(i32 *)(this->field_0 + 0x28) = 0;
-  *(i32 *)(this->field_0 + 0x228) = 0;
-  *(i32 *)(this->field_0 + 0x220) = 0;
+  this->first_option_value = 0;
+  *(i32 *)(this->list_dialog + 0x28) = 0;
+  *(i32 *)(this->list_dialog + 0x228) = 0;
+  *(i32 *)(this->list_dialog + 0x220) = 0;
   return;
 }
 #undef option
@@ -563,15 +563,15 @@ uint * __thiscall net_gamelist_add_entry(NetGameListAddView *this,iptr name2,uin
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   last = 0;
-  for (option = this->field_14c; option != 0; option = *(uptr *)(option + 0x10)) {
+  for (option = this->first_option_value; option != 0; option = *(uptr *)(option + 0x10)) {
     last = option;
   }
   entry = operator_new(0x18);
   entry[4] = 0;
   entry[5] = last;
   if (last == 0) {
-    this->field_14c = (u32)entry;
-    *(uint **)(this->field_0 + 0x228) = entry;
+    this->first_option_value = (u32)entry;
+    *(uint **)(this->list_dialog + 0x228) = entry;
   }
   else {
     *(uint **)(last + 0x10) = entry;
@@ -586,15 +586,15 @@ uint * __thiscall net_gamelist_add_entry(NetGameListAddView *this,iptr name2,uin
   }
   entry[1] = id;
   entry[3] = 0;
-  entry_width = font_text_width(*(GameFont **)(this->field_0 + 8),entry[2]);
-  max_width = dialog_option_icon_width((DialogCore *)this->field_0);
-  entry_width = entry_width + max_width + *(int *)(this->field_0 + 0xac) + 5;
-  max_width = *(int *)(this->field_0 + 0x118);
+  entry_width = font_text_width(*(GameFont **)(this->list_dialog + 8),entry[2]);
+  max_width = dialog_option_icon_width((DialogCore *)this->list_dialog);
+  entry_width = entry_width + max_width + *(int *)(this->list_dialog + 0xac) + 5;
+  max_width = *(int *)(this->list_dialog + 0x118);
   if (max_width <= entry_width) {
     max_width = entry_width;
   }
-  *(int *)(this->field_0 + 0x118) = max_width;
-  count_ptr = (int *)(this->field_0 + 0x28);
+  *(int *)(this->list_dialog + 0x118) = max_width;
+  count_ptr = (int *)(this->list_dialog + 0x28);
   *count_ptr = *count_ptr + 1;
   return entry;
 }
@@ -1037,17 +1037,17 @@ LAB_00446036:
             available_count++;
             dialog_set_option_disabled
                       ((DialogOptionList *)&dlg,*(iptr *)(option + 4),0);
-            if ((RadioGroupDisableView *)dlg.field_268 != (RadioGroupDisableView *)0x0) {
+            if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
               radiogrp_enable_item
-                        ((RadioGroupEnableView *)dlg.field_268,*(iptr *)(option + 4));
+                        ((RadioGroupEnableView *)dlg.radio_group,*(iptr *)(option + 4));
             }
           }
           else {
             dialog_set_option_disabled
                       ((DialogOptionList *)&dlg,*(iptr *)(option + 4),1);
-            if ((RadioGroupDisableView *)dlg.field_268 != (RadioGroupDisableView *)0x0) {
+            if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
               radiogrp_disable_item
-                        ((RadioGroupDisableView *)dlg.field_268,*(iptr *)(option + 4));
+                        ((RadioGroupDisableView *)dlg.radio_group,*(iptr *)(option + 4));
             }
           }
         }
@@ -1065,9 +1065,9 @@ LAB_00446036:
                                      ((DialogOptionList *)&dlg,selected2);
         if ((option != (byte *)0x0) && ((*option & 1) == 0)) {
           dialog_set_default_choice((DialogOptionList *)&dlg,*(iptr *)(option + 4));
-          if ((RadioGroupDisableView *)dlg.field_268 != (RadioGroupDisableView *)0x0) {
+          if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
             radiogrp_set_selected
-                      ((RadioGroupSetSelView *)dlg.field_268,*(i32 *)(option + 4));
+                      ((RadioGroupSetSelView *)dlg.radio_group,*(i32 *)(option + 4));
           }
           break;
         }
@@ -1078,12 +1078,12 @@ LAB_00446036:
       }
       net_reset_msg_counts();
       net_wait_start_ticks_i32 = timer_ticks();
-      dlg.field_3c = dlg.field_3c & 0xfffffbff;
-      dlg.field_d8 = 0;
-      dlg.field_dc = 0;
+      dlg.style_flags = dlg.style_flags & 0xfffffbff;
+      dlg.result_id = 0;
+      dlg.result_extra = 0;
       dlg_pending_idle_callback = ((void *)ADDR(0x0040126c, net_lock_wait_idle_cb));
       choice = dlg_show_modal(&dlg,0);
-      selected2 = radiogrp_get_selected((RadioGroupGetSelView *)dlg.field_268);
+      selected2 = radiogrp_get_selected((RadioGroupGetSelView *)dlg.radio_group);
       if (choice < 0) {
         eh_state = 0xffffffff;
         /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
@@ -1593,7 +1593,7 @@ void __cdecl parley_draw_advance_list(iptr pane)
   surface_set_clip((DibSurface *)window,(iptr)(window->pad_3c0 + pane * 0x10));
   surface_fill_rect
             ((DibSurface *)window,(iptr)(window->pad_3c0 + pane * 0x10),list_bg_color);
-  if (window->field_154 == 0) {
+  if (window->large_layout == 0) {
     font2 = (GameFont *)&font_size14;
   }
   else {
@@ -2086,7 +2086,7 @@ void __cdecl parley_draw_unit_list(iptr pane)
 LAB_00468c0c:
   surface_fill_rect
             ((DibSurface *)this2,(iptr)(this2->pad_3c0 + pane * 0x10),list_bg_color);
-  if (this2->field_154 == 0) {
+  if (this2->large_layout == 0) {
     font2 = (GameFont *)&font_size14;
   }
   else {
@@ -2151,14 +2151,14 @@ LAB_004692ba:
                                   (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row)
                                   * 4 + 0x43f8 + (int)this2)), unit < 0)) break;
       unit_sprite = (Sprite *)(&unit_sprites + (uint)units[unit].type * 0x3c);
-      if (this2->field_154 == 0) {
+      if (this2->large_layout == 0) {
         tmp = sprite_get_width(unit_sprite);
         icon_width = (tmp * 2) / 3;
       }
       else {
         icon_width = sprite_get_width(unit_sprite);
       }
-      text_x_offset = (-(uint)(this2->field_154 == 0) & 0xfffffffc) + 10 + icon_width * 2;
+      text_x_offset = (-(uint)(this2->large_layout == 0) & 0xfffffffc) + 10 + icon_width * 2;
       row_rect.left = row_rect.left + text_x_offset - 3;
       if (selected2 == 0) {
         bg_color2 = list_bg_color;
@@ -2201,9 +2201,9 @@ LAB_004692ba:
           text_clear();
           text_append_string_id(unit_types[units[unit].type].name);
           if (((parley_mode == 9) ||
-              (((parley_mode == 0xe && (pane == 0)) && (this2->field_3bd != '\0')))) ||
-             ((((parley_mode == 0xe && (pane == 1)) && (this2->field_3bc != '\0')) ||
-              ((parley_mode == 0xf && (this2->field_3bc != '\0')))))) {
+              (((parley_mode == 0xe && (pane == 0)) && (this2->left_side_accepted != '\0')))) ||
+             ((((parley_mode == 0xe && (pane == 1)) && (this2->right_side_accepted != '\0')) ||
+              ((parley_mode == 0xf && (this2->right_side_accepted != '\0')))))) {
             text_append_str(ADDR(0x62840c, ((u8 *)&g.d_0062840c)));
             str = unit_home_city_name(unit);
             text_append_str(str);
@@ -2329,16 +2329,16 @@ void __cdecl parley_hide_city_origin_clicked(void)
     window = (WindowObjectView *)(child - 0x48);
   }
   wnd_activate((Wnd *)(window + 0x12));
-  ctrl_show_and_redraw((Control *)window[0xe7].field_0);
-  control_hide((Control *)window[0xe9].field_0);
-  *(i8 *)((int)&window[0xef].field_0 + 1) = 0;
-  ctrl_disable((Control *)window[0xe3].field_0);
-  ctrl_disable((Control *)window[0xe5].field_0);
+  ctrl_show_and_redraw((Control *)window[0xe7].vtable);
+  control_hide((Control *)window[0xe9].vtable);
+  *(i8 *)((int)&window[0xef].vtable + 1) = 0;
+  ctrl_disable((Control *)window[0xe3].vtable);
+  ctrl_disable((Control *)window[0xe5].vtable);
   net_send_message(0xa8,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + window[0x46].field_0 * 4) * 0x54),human_civ
-                     ,(int)*(char *)((int)&window[0xef].field_0 + 1),0,0,0,0,0,0);
-  parley_sort_unit_list(window,0,window[0xfa].field_0 - 1,0);
+                           *(int *)(&net_civ_slots + window[0x46].vtable * 4) * 0x54),human_civ
+                     ,(int)*(char *)((int)&window[0xef].vtable + 1),0,0,0,0,0,0);
+  parley_sort_unit_list(window,0,window[0xfa].vtable - 1,0);
   parley_draw_unit_list(0);
   return;
 }
@@ -2399,7 +2399,7 @@ void __cdecl parley_sort_by_unit_clicked(iptr pane)
     window = (WindowObjectView *)(child - 0x48);
   }
   wnd_activate((Wnd *)(window + 0x12));
-  parley_sort_unit_list(window,0,window[pane + 0xfa].field_0 - 1,pane);
+  parley_sort_unit_list(window,0,window[pane + 0xfa].vtable - 1,pane);
   parley_draw_unit_list(pane);
   return;
 }
@@ -4088,7 +4088,7 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
                 saved_moving_unit = game.moving_unit;
                 saved_multiplayer = game.multiplayer;
                 saved_player_civ = game.player_civ;
-                saved_field_1c = game.field_1c;
+                saved_field_1c = game.saved_current_civ;
                 saved_turn_civ_val = game.turn_civ;
                 saved_game_options = game.game_options;
                 saved_msg_options = game.message_options;
@@ -4129,7 +4129,7 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
                 game.moving_unit = saved_moving_unit;
                 game.multiplayer = saved_multiplayer;
                 game.player_civ = saved_player_civ;
-                game.field_1c = saved_field_1c;
+                game.saved_current_civ = saved_field_1c;
                 game.turn_civ = saved_turn_civ_val;
                 game.game_options = saved_game_options;
                 game.message_options = saved_msg_options;
@@ -4343,8 +4343,8 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
         case 0x32:
           *(i32 *)(&net_lost_conn_by_player + sender * 4) = 0xffffffff;
           net_remove_player(this,sender);
-          if ((this->field_4 != 0) &&
-             (drop_counter = (int *)(this->field_4 + 0x54 + sender * 4), *drop_counter = *drop_counter + 1,
+          if ((this->player_stats != 0) &&
+             (drop_counter = (int *)(this->player_stats + 0x54 + sender * 4), *drop_counter = *drop_counter + 1,
              *net_lobby_list != 0)) {
             lobby_refresh_player_list();
           }
@@ -4594,7 +4594,7 @@ void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode
           *type_count = *type_count - 1;
           type_count = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ3 * 0x594);
           *type_count = *type_count + 1;
-          civs[civ3].field_1c++;
+          civs[civ3].subversion_count++;
           new_owner = (i8)civ3;
           units[unit].owner = new_owner;
           units[unit].home_city = -1;
@@ -6372,7 +6372,7 @@ void __cdecl parley_draw_civ_list(int side)
   surface_set_clip((DibSurface *)wnd2,(iptr)(wnd2->pad_3c0 + side * 0x10));
   surface_fill_rect
             ((DibSurface *)wnd2,(iptr)(wnd2->pad_3c0 + side * 0x10),list_bg_color);
-  if (wnd2->field_154 == 0) {
+  if (wnd2->large_layout == 0) {
     font2 = (GameFont *)&font_size14;
   }
   else {
@@ -6412,7 +6412,7 @@ LAB_004afe04:
             text_color2 = dlg_sel_text_color;
             shadow_color2 = dlg_sel_text_shadow_color;
           }
-          text_dx = (-(uint)(wnd2->field_154 == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
+          text_dx = (-(uint)(wnd2->large_layout == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
           row_rect.left = row_rect.left + text_dx - 3;
           if (selected == 0) {
             bg_color2 = list_bg_color;
@@ -6647,7 +6647,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
       *(i16 *)(game_mirror + 0x18) = game.moving_unit;
       *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
       *(i8 *)(game_mirror + 0x1b) = game.player_civ;
-      *(i8 *)(game_mirror + 0x1c) = game.field_1c;
+      *(i8 *)(game_mirror + 0x1c) = game.saved_current_civ;
       *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
       *(u32 *)(game_mirror + 2) = game.game_options;
       *(u16 *)(game_mirror + 10) = game.message_options;
@@ -6676,7 +6676,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
               *(i16 *)(game_mirror + 0x18) = game.moving_unit;
               *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
               *(i8 *)(game_mirror + 0x1b) = game.player_civ;
-              *(i8 *)(game_mirror + 0x1c) = game.field_1c;
+              *(i8 *)(game_mirror + 0x1c) = game.saved_current_civ;
               *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
               *(u32 *)(game_mirror + 2) = game.game_options;
               *(u16 *)(game_mirror + 10) = game.message_options;
@@ -6712,7 +6712,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
                 *(i16 *)(game_mirror + 0x18) = game.moving_unit;
                 *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
                 *(i8 *)(game_mirror + 0x1b) = game.player_civ;
-                *(i8 *)(game_mirror + 0x1c) = game.field_1c;
+                *(i8 *)(game_mirror + 0x1c) = game.saved_current_civ;
                 *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
                 *(u32 *)(game_mirror + 2) = game.game_options;
                 *(u16 *)(game_mirror + 10) = game.message_options;
@@ -6928,17 +6928,17 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr rect)
     }
   }
   this->close_button = 0;
-  this->field_2a0 = 0;
-  this->field_2a4 = 0;
-  this->field_340 = 0;
-  this->field_344 = 0;
-  this->field_348 = 0;
-  this->field_354 = 0;
-  this->field_34c = 0;
-  this->field_350 = 0;
-  this->field_358 = 0;
-  this->field_35c = 0;
-  this->field_360 = 0;
+  this->send_button_value = 0;
+  this->clear_button_value = 0;
+  this->conceal_button_value = 0;
+  this->reveal_button_value = 0;
+  this->rates_clamped = 0;
+  this->intel_button_value = 0;
+  this->mode2_button_value = 0;
+  this->never_mind_button_value = 0;
+  this->tax_scrollbar = 0;
+  this->no_thanks_button_value = 0;
+  this->counter_button_value = 0;
   for (i = 0; i < 8; i++) {
     field = this->pad_2c4 + i * 4 - 0x1c;
     field[0] = '\0';
@@ -6961,31 +6961,31 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr rect)
     field[2] = '\0';
     field[3] = '\0';
   }
-  this->field_2f4 = 0;
-  this->field_2f8 = 0;
-  this->field_2fc = 0;
-  this->field_2f0 = 0;
-  this->field_2e8 = 0;
-  this->field_2ec = 0;
+  this->init_sci_rate = 0;
+  this->dialog_w = 0;
+  this->dialog_h = 0;
+  this->init_lux_rate = 0;
+  this->sci_rate_sel = 0;
+  this->init_tax_rate = 0;
   this->side_text_edit = 0;
   this->caption_height = 0xffffffff;
   this->item_buffer = 0;
   this->left_exchange_kind = 0;
   this->right_exchange_kind = 1;
-  this->field_214 = 0;
-  this->field_208 = 0xffffffff;
-  this->field_220 = 0;
-  this->field_228 = 0;
-  this->field_224 = this->field_228;
-  this->field_230 = 0;
-  this->field_22c = this->field_230;
-  this->field_21c = 0;
+  this->demand_choice = 0;
+  this->saved_mode_choice = 0xffffffff;
+  this->exchange_choice = 0;
+  this->side0_amount_init = 0;
+  this->side0_amount = this->side0_amount_init;
+  this->side1_amount_init = 0;
+  this->side1_amount = this->side1_amount_init;
+  this->gift_choice = 0;
   this->treaty_type_choice = 0;
   this->timer_last_value = 0;
   this->show_turn_status = this->timer_last_value;
-  this->field_254 = 0;
-  this->field_270 = 0;
-  this->field_28c = 0;
+  this->text_offset_y = 0;
+  this->list_font = 0;
+  this->reset_value_28c = 0;
   this->chat_input_edit = 0;
   this->chat_history_edit = 0;
   chat_input_buffer = 0;
@@ -7038,9 +7038,9 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr rect)
     field[2] = '\0';
     field[3] = '\0';
   }
-  this->field_3bc = '\0';
-  this->field_3bd = '\0';
-  this->field_3be = '\0';
+  this->right_side_accepted = '\0';
+  this->left_side_accepted = '\0';
+  this->left_side_confirmed = '\0';
   this->remote_side_agreed = '\0';
   return this;
 }
@@ -7202,7 +7202,7 @@ LAB_004b4982:
   }
   parley_wnd_calc_rect((ParleyWindowLayout *)this);
   wnd_move_to_rect((WndBase *)this->pad_48,this->init_rect);
-  this->field_158 = 0xffffffff;
+  this->built_layout = 0xffffffff;
   this->left_civ = parley_mode3_left_kind;
   this->right_civ = parley_mode3_right_kind;
   this->shown_left_civ = 0x15;
@@ -7214,7 +7214,7 @@ LAB_004b4982:
   parley_wnd_calc_layout((ParleyWindowLayout *)this);
   parley_wnd_sync_sides(this);
   if (((this->session_mode == 3) || (this->session_mode == 2)) || (this->session_mode == 1)) {
-    ctrl_disable((Control *)this->field_350);
+    ctrl_disable((Control *)this->never_mind_button_value);
   }
   parley_update_buttons(this);
   return;
@@ -7364,7 +7364,7 @@ void __thiscall parley_wnd_calc_layout(ParleyWindowLayout *this)
 void __thiscall parley_wnd_sync_sides(ViewWindow *this)
 
 {
-  if (this->field_158 == this->large_layout) {
+  if (this->built_layout == this->large_layout) {
     if (this->shown_left_civ != this->left_civ) {
       parley_add_side_dialog(this,this->left_civ,0);
       this->shown_left_civ = this->left_civ;
@@ -7381,7 +7381,7 @@ void __thiscall parley_wnd_sync_sides(ViewWindow *this)
     parley_add_side_dialog(this,this->right_civ,1);
     this->shown_left_civ = this->left_civ;
     this->caption_button_count = this->right_civ;
-    this->field_158 = this->large_layout;
+    this->built_layout = this->large_layout;
   }
   return;
 }
@@ -7416,71 +7416,71 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *this)
     }
     this->close_button = 0;
   }
-  if (this->field_2a0 != 0) {
-    if ((Control *)this->field_2a0 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_2a0,1);
+  if (this->send_button_value != 0) {
+    if ((Control *)this->send_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->send_button_value,1);
     }
-    this->field_2a0 = 0;
+    this->send_button_value = 0;
   }
-  if (this->field_2a4 != 0) {
-    if ((Control *)this->field_2a4 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_2a4,1);
+  if (this->clear_button_value != 0) {
+    if ((Control *)this->clear_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->clear_button_value,1);
     }
-    this->field_2a4 = 0;
+    this->clear_button_value = 0;
   }
-  if (this->field_344 != 0) {
-    if ((Control *)this->field_344 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_344,1);
+  if (this->reveal_button_value != 0) {
+    if ((Control *)this->reveal_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->reveal_button_value,1);
     }
-    this->field_344 = 0;
+    this->reveal_button_value = 0;
   }
-  if (this->field_340 != 0) {
-    if ((Control *)this->field_340 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_340,1);
+  if (this->conceal_button_value != 0) {
+    if ((Control *)this->conceal_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->conceal_button_value,1);
     }
-    this->field_340 = 0;
+    this->conceal_button_value = 0;
   }
-  if (this->field_348 != 0) {
-    if ((Control *)this->field_348 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_348,1);
+  if (this->rates_clamped != 0) {
+    if ((Control *)this->rates_clamped != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->rates_clamped,1);
     }
-    this->field_348 = 0;
+    this->rates_clamped = 0;
   }
-  if (this->field_354 != 0) {
-    if ((Control *)this->field_354 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_354,1);
+  if (this->intel_button_value != 0) {
+    if ((Control *)this->intel_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->intel_button_value,1);
     }
-    this->field_354 = 0;
+    this->intel_button_value = 0;
   }
-  if (this->field_34c != 0) {
-    if ((Control *)this->field_34c != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_34c,1);
+  if (this->mode2_button_value != 0) {
+    if ((Control *)this->mode2_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->mode2_button_value,1);
     }
-    this->field_34c = 0;
+    this->mode2_button_value = 0;
   }
-  if (this->field_350 != 0) {
-    if ((Control *)this->field_350 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_350,1);
+  if (this->never_mind_button_value != 0) {
+    if ((Control *)this->never_mind_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->never_mind_button_value,1);
     }
-    this->field_350 = 0;
+    this->never_mind_button_value = 0;
   }
-  if (this->field_358 != 0) {
-    if ((Control *)this->field_358 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_358,1);
+  if (this->tax_scrollbar != 0) {
+    if ((Control *)this->tax_scrollbar != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->tax_scrollbar,1);
     }
-    this->field_358 = 0;
+    this->tax_scrollbar = 0;
   }
-  if (this->field_35c != 0) {
-    if ((Control *)this->field_35c != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_35c,1);
+  if (this->no_thanks_button_value != 0) {
+    if ((Control *)this->no_thanks_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->no_thanks_button_value,1);
     }
-    this->field_35c = 0;
+    this->no_thanks_button_value = 0;
   }
-  if (this->field_360 != 0) {
-    if ((Control *)this->field_360 != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)this->field_360,1);
+  if (this->counter_button_value != 0) {
+    if ((Control *)this->counter_button_value != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)this->counter_button_value,1);
     }
-    this->field_360 = 0;
+    this->counter_button_value = 0;
   }
   if (this->chat_history_edit != 0) {
     if ((Control *)this->chat_history_edit != (Control *)0x0) {
@@ -7494,17 +7494,17 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *this)
     }
     this->chat_input_edit = 0;
   }
-  if (this->field_2e8 != 0) {
-    if ((Checkbox *)this->field_2e8 != (Checkbox *)0x0) {
-      checkbox_scalar_dtor((Checkbox *)this->field_2e8,1);
+  if (this->sci_rate_sel != 0) {
+    if ((Checkbox *)this->sci_rate_sel != (Checkbox *)0x0) {
+      checkbox_scalar_dtor((Checkbox *)this->sci_rate_sel,1);
     }
-    this->field_2e8 = 0;
+    this->sci_rate_sel = 0;
   }
-  if (this->field_2ec != 0) {
-    if ((Checkbox *)this->field_2ec != (Checkbox *)0x0) {
-      checkbox_scalar_dtor((Checkbox *)this->field_2ec,1);
+  if (this->init_tax_rate != 0) {
+    if ((Checkbox *)this->init_tax_rate != (Checkbox *)0x0) {
+      checkbox_scalar_dtor((Checkbox *)this->init_tax_rate,1);
     }
-    this->field_2ec = 0;
+    this->init_tax_rate = 0;
   }
   if (this->side_text_edit != 0) {
     if ((Control *)this->side_text_edit != (Control *)0x0) {
@@ -7512,11 +7512,11 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *this)
     }
     this->side_text_edit = 0;
   }
-  if (this->field_2f0 != 0) {
-    if ((Checkbox *)this->field_2f0 != (Checkbox *)0x0) {
-      checkbox_scalar_dtor((Checkbox *)this->field_2f0,1);
+  if (this->init_lux_rate != 0) {
+    if ((Checkbox *)this->init_lux_rate != (Checkbox *)0x0) {
+      checkbox_scalar_dtor((Checkbox *)this->init_lux_rate,1);
     }
-    this->field_2f0 = 0;
+    this->init_lux_rate = 0;
   }
   for (i = 0; i < 8; i++) {
     if (*(int *)(this->pad_2c4 + i * 4 - 0x1c) != 0) {
@@ -7963,7 +7963,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
   }
   xLeft = rect.right;
   eh_state = 0xffffffff;
-  this->field_2a0 = send_button;
+  this->send_button_value = send_button;
   ctrl_width = ctrl_width / 9;
   ctrl_height = ctrl_height / 2;
   SetRect(&rect,rect.right,ctrl_top,ctrl_width + rect.right,ctrl_top + ctrl_height);
@@ -7975,8 +7975,8 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0xb34));
   button_create
-            ((Control *)this->field_2a0,(iptr)send_parent,0x3f0,(iptr)&rect,label);
-  button_set_callback((Control *)this->field_2a0,ADDR(0x40308a, chat_send_button_on_click));
+            ((Control *)this->send_button_value,(iptr)send_parent,0x3f0,(iptr)&rect,label);
+  button_set_callback((Control *)this->send_button_value,ADDR(0x40308a, chat_send_button_on_click));
   pCVar7 = operator_new(0x3c);
   eh_state = 5;
   if (pCVar7 == (Control *)0x0) {
@@ -7986,7 +7986,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     clear_button = button_ctor(pCVar7);
   }
   eh_state = 0xffffffff;
-  this->field_2a4 = clear_button;
+  this->clear_button_value = clear_button;
   ctrl_top += ctrl_height;
   SetRect(&rect,xLeft,ctrl_top,ctrl_width + xLeft,ctrl_top + ctrl_height);
   if (this == (ViewWindow *)0x0) {
@@ -7997,8 +7997,8 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0xb38));
   button_create
-            ((Control *)this->field_2a4,(iptr)clear_parent,0x41e,(iptr)&rect,label);
-  button_set_callback((Control *)this->field_2a4,ADDR(0x403639, chat_clear_button_on_click));
+            ((Control *)this->clear_button_value,(iptr)clear_parent,0x41e,(iptr)&rect,label);
+  button_set_callback((Control *)this->clear_button_value,ADDR(0x403639, chat_clear_button_on_click));
   ctrl_top -= ctrl_height;
   if (this->large_layout == 0) {
     footer_line_h = font_line_spacing((GameFont *)&font_size16);
@@ -8019,7 +8019,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       conceal_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_340 = conceal_button;
+    this->conceal_button_value = conceal_button;
     ctrl_width = this->panel_rect + panel_margin_x;
     ctrl_left = rect_width((iptr)&this->panel_rect);
     ctrl_left += panel_margin_x * -2;
@@ -8032,10 +8032,10 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xdb4));
     button_create
-              ((Control *)this->field_340,(iptr)conceal_parent,0x431,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_340,ADDR(0x40349a, parley_on_conceal_info));
-    control_hide((Control *)this->field_340);
-    ctrl_disable((Control *)this->field_340);
+              ((Control *)this->conceal_button_value,(iptr)conceal_parent,0x431,(iptr)&rect,label);
+    button_set_callback((Control *)this->conceal_button_value,ADDR(0x40349a, parley_on_conceal_info));
+    control_hide((Control *)this->conceal_button_value);
+    ctrl_disable((Control *)this->conceal_button_value);
     pCVar7 = operator_new(0x3c);
     eh_state = 7;
     if (pCVar7 == (Control *)0x0) {
@@ -8045,7 +8045,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       reveal_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_344 = reveal_button;
+    this->reveal_button_value = reveal_button;
     ctrl_width = this->panel_rect + panel_margin_x;
     SetRect(&rect,ctrl_width,ctrl_top - ctrl_height,ctrl_left + ctrl_width,ctrl_top);
     if (this == (ViewWindow *)0x0) {
@@ -8056,10 +8056,10 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xdb8));
     button_create
-              ((Control *)this->field_344,(iptr)reveal_parent,0x432,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_344,ADDR(0x4016b3, parley_on_reveal_info));
-    control_hide((Control *)this->field_344);
-    ctrl_disable((Control *)this->field_344);
+              ((Control *)this->reveal_button_value,(iptr)reveal_parent,0x432,(iptr)&rect,label);
+    button_set_callback((Control *)this->reveal_button_value,ADDR(0x4016b3, parley_on_reveal_info));
+    control_hide((Control *)this->reveal_button_value);
+    ctrl_disable((Control *)this->reveal_button_value);
     pCVar7 = operator_new(0x3c);
     eh_state = 8;
     if (pCVar7 == (Control *)0x0) {
@@ -8069,7 +8069,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       intel_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_354 = intel_button;
+    this->intel_button_value = intel_button;
     ctrl_width = this->panel_rect + panel_margin_x;
     ctrl_left = rect_width((iptr)&this->panel_rect);
     ctrl_left = (ctrl_left + panel_margin_x * -2) / 3;
@@ -8082,9 +8082,9 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0x1a0));
     button_create
-              ((Control *)this->field_354,(iptr)intel_parent,0x428,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_354,ADDR(0x40144c, parley_on_check_intel));
-    ctrl_enable((Control *)this->field_354);
+              ((Control *)this->intel_button_value,(iptr)intel_parent,0x428,(iptr)&rect,label);
+    button_set_callback((Control *)this->intel_button_value,ADDR(0x40144c, parley_on_check_intel));
+    ctrl_enable((Control *)this->intel_button_value);
     pCVar7 = operator_new(0x3c);
     eh_state = 9;
     if (pCVar7 == (Control *)0x0) {
@@ -8094,7 +8094,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       mode_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_348 = mode_button;
+    this->rates_clamped = mode_button;
     SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
       mode_parent = (u8 *)0x0;
@@ -8104,9 +8104,9 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xb3c));
     button_create
-              ((Control *)this->field_348,(iptr)mode_parent,0x3f1,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_348,ADDR(0x402a09, parley_on_mode_chosen));
-    ctrl_enable((Control *)this->field_348);
+              ((Control *)this->rates_clamped,(iptr)mode_parent,0x3f1,(iptr)&rect,label);
+    button_set_callback((Control *)this->rates_clamped,ADDR(0x402a09, parley_on_mode_chosen));
+    ctrl_enable((Control *)this->rates_clamped);
     pCVar7 = operator_new(0x3c);
     eh_state = 10;
     if (pCVar7 == (Control *)0x0) {
@@ -8116,7 +8116,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       mode2_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_34c = mode2_button;
+    this->mode2_button_value = mode2_button;
     if (this == (ViewWindow *)0x0) {
       mode2_parent = (u8 *)0x0;
     }
@@ -8125,10 +8125,10 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xd10));
     button_create
-              ((Control *)this->field_34c,(iptr)mode2_parent,0x427,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_34c,ADDR(0x402a09, parley_on_mode_chosen));
-    ctrl_disable((Control *)this->field_34c);
-    control_hide((Control *)this->field_34c);
+              ((Control *)this->mode2_button_value,(iptr)mode2_parent,0x427,(iptr)&rect,label);
+    button_set_callback((Control *)this->mode2_button_value,ADDR(0x402a09, parley_on_mode_chosen));
+    ctrl_disable((Control *)this->mode2_button_value);
+    control_hide((Control *)this->mode2_button_value);
     pCVar7 = operator_new(0x3c);
     eh_state = 0xb;
     if (pCVar7 == (Control *)0x0) {
@@ -8138,7 +8138,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       never_mind_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_350 = never_mind_button;
+    this->never_mind_button_value = never_mind_button;
     SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
       never_mind_parent = (u8 *)0x0;
@@ -8148,8 +8148,8 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xb40));
     button_create
-              ((Control *)this->field_350,(iptr)never_mind_parent,0x3f2,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_350,ADDR(0x40339b, parley_on_never_mind));
+              ((Control *)this->never_mind_button_value,(iptr)never_mind_parent,0x3f2,(iptr)&rect,label);
+    button_set_callback((Control *)this->never_mind_button_value,ADDR(0x40339b, parley_on_never_mind));
     pCVar7 = operator_new(0x3c);
     eh_state = 0xc;
     if (pCVar7 == (Control *)0x0) {
@@ -8159,7 +8159,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       accept_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_358 = accept_button;
+    this->tax_scrollbar = accept_button;
     ctrl_width = this->panel_rect + panel_margin_x;
     ctrl_left = rect_width((iptr)&this->panel_rect);
     ctrl_left = (ctrl_left + panel_margin_x * -2) / 3;
@@ -8172,9 +8172,9 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xb44));
     button_create
-              ((Control *)this->field_358,(iptr)accept_parent,0x3f2,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_358,ADDR(0x4030a8, parley_on_accept_offer));
-    control_hide((Control *)this->field_358);
+              ((Control *)this->tax_scrollbar,(iptr)accept_parent,0x3f2,(iptr)&rect,label);
+    button_set_callback((Control *)this->tax_scrollbar,ADDR(0x4030a8, parley_on_accept_offer));
+    control_hide((Control *)this->tax_scrollbar);
     pCVar7 = operator_new(0x3c);
     eh_state = 0xd;
     if (pCVar7 == (Control *)0x0) {
@@ -8184,7 +8184,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       no_thanks_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_35c = no_thanks_button;
+    this->no_thanks_button_value = no_thanks_button;
     SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
       no_thanks_parent = (u8 *)0x0;
@@ -8194,9 +8194,9 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xb48));
     button_create
-              ((Control *)this->field_35c,(iptr)no_thanks_parent,0x3f2,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_35c,ADDR(0x4019a1, parley_on_no_thanks));
-    control_hide((Control *)this->field_35c);
+              ((Control *)this->no_thanks_button_value,(iptr)no_thanks_parent,0x3f2,(iptr)&rect,label);
+    button_set_callback((Control *)this->no_thanks_button_value,ADDR(0x4019a1, parley_on_no_thanks));
+    control_hide((Control *)this->no_thanks_button_value);
     pCVar7 = operator_new(0x3c);
     eh_state = 0xe;
     if (pCVar7 == (Control *)0x0) {
@@ -8206,7 +8206,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
       counter_button = button_ctor(pCVar7);
     }
     eh_state = 0xffffffff;
-    this->field_360 = counter_button;
+    this->counter_button_value = counter_button;
     SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
       counter_parent = (u8 *)0x0;
@@ -8216,9 +8216,9 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xb4c));
     button_create
-              ((Control *)this->field_360,(iptr)counter_parent,0x3f2,(iptr)&rect,label);
-    button_set_callback((Control *)this->field_360,ADDR(0x40334b, parley_on_counter_offer));
-    control_hide((Control *)this->field_360);
+              ((Control *)this->counter_button_value,(iptr)counter_parent,0x3f2,(iptr)&rect,label);
+    button_set_callback((Control *)this->counter_button_value,ADDR(0x40334b, parley_on_counter_offer));
+    control_hide((Control *)this->counter_button_value);
   }
   return;
 }
@@ -8300,19 +8300,19 @@ void __cdecl parley_wnd_on_caption_click(int control_id)
     diplo_wnd_close_active();
   }
   else if (control_id == 0x3ea) {
-    if (0 < (int)parley_wnd_ptr->field_154) {
+    if (0 < (int)parley_wnd_ptr->large_layout) {
       wnd_hide((WndBase *)parley_wnd_ptr->pad_48);
-      parley_wnd_ptr->field_154--;
+      parley_wnd_ptr->large_layout--;
       parley_wnd_calc_rect(parley_wnd_ptr);
-      wnd_move_to_rect((WndBase *)parley_wnd_ptr->pad_48,parley_wnd_ptr->field_150);
+      wnd_move_to_rect((WndBase *)parley_wnd_ptr->pad_48,parley_wnd_ptr->init_rect);
       window_show((WindowObjectView *)parley_wnd_ptr);
     }
   }
-  else if (((control_id == 0x3eb) && ((int)parley_wnd_ptr->field_154 < 1)) && (999 < screen_width)) {
+  else if (((control_id == 0x3eb) && ((int)parley_wnd_ptr->large_layout < 1)) && (999 < screen_width)) {
     wnd_hide((WndBase *)parley_wnd_ptr->pad_48);
-    parley_wnd_ptr->field_154++;
+    parley_wnd_ptr->large_layout++;
     parley_wnd_calc_rect(parley_wnd_ptr);
-    wnd_move_to_rect((WndBase *)parley_wnd_ptr->pad_48,parley_wnd_ptr->field_150);
+    wnd_move_to_rect((WndBase *)parley_wnd_ptr->pad_48,parley_wnd_ptr->init_rect);
     window_show((WindowObjectView *)parley_wnd_ptr);
   }
   return;
@@ -8357,7 +8357,7 @@ void __cdecl parley_wnd_redraw(void)
   else {
     wnd2 = (ViewWindow *)(child_wnd - 0x48);
   }
-  if (wnd2->field_114 == 0) {
+  if (wnd2->style_flags == 0) {
     parley_wnd_calc_layout((ParleyWindowLayout *)wnd2);
     parley_wnd_build_title((ParleyTitleView *)wnd2);
     gfx_set_draw_target((iptr)wnd2);
@@ -8365,10 +8365,10 @@ void __cdecl parley_wnd_redraw(void)
     parley_wnd_sync_sides(wnd2);
     wnd_blit_surface((DibSurface *)wnd2);
     window_show((WindowObjectView *)wnd2);
-    caret_pos = edit_get_text_end((ControlTextView *)wnd2->field_29c);
-    edit_set_caret((ControlTextView *)wnd2->field_29c,caret_pos);
-    caret_pos = edit_get_sel_end((EditSelEndView *)wnd2->field_298);
-    edit_set_caret((ControlTextView *)wnd2->field_298,caret_pos);
+    caret_pos = edit_get_text_end((ControlTextView *)wnd2->chat_history_edit);
+    edit_set_caret((ControlTextView *)wnd2->chat_history_edit,caret_pos);
+    caret_pos = edit_get_sel_end((EditSelEndView *)wnd2->chat_input_edit);
+    edit_set_caret((ControlTextView *)wnd2->chat_input_edit,caret_pos);
   }
   return;
 }
@@ -8429,7 +8429,7 @@ void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *this)
     title_font2 = (GameFont *)&font_size30;
   }
   x2 -= panel_margin_x;
-  free_width = (this->field_138 - x2) - panel_padding_x;
+  free_width = (this->dlg_width - x2) - panel_padding_x;
   title_width = font_text_width(title_font2,(iptr)this->pad_15c);
   x2 += (free_width / 2 - (title_width >> 1));
   y2 = panel_bevel_width + panel_margin_y;
@@ -8587,9 +8587,9 @@ void __thiscall parley_wnd_open(ViewWindow *this,iptr other_civ,u32 mode)
   else {
     wnd_set_active_child(ADDR(0x67a7f0, ((u8 *)&g.d_0067a7f0)));
     parley_selected_action = 0xffffffff;
-    this->field_3bc = '\0';
-    this->field_3bd = '\0';
-    this->field_3be = '\0';
+    this->right_side_accepted = '\0';
+    this->left_side_accepted = '\0';
+    this->left_side_confirmed = '\0';
     this->remote_side_agreed = '\0';
     if (mode == 3) {
       parley_set_mode_sides((WindowObjectView *)&parley_wnd,0);
@@ -8610,9 +8610,9 @@ void __thiscall parley_wnd_open(ViewWindow *this,iptr other_civ,u32 mode)
     wnd2->pad_0[0x115] = '\0';
     wnd2->pad_0[0x116] = '\0';
     wnd2->pad_0[0x117] = '\0';
-    wnd2->field_118 = other_civ;
+    wnd2->civ_id = other_civ;
     if (mode != 3) {
-      wnd2->field_1ec = mode;
+      wnd2->parley_kind = mode;
       *(i32 *)wnd2[1].pad_0 = (&parley_mode_left_kinds)[mode * 2];
       *(i32 *)(wnd2[1].pad_0 + 4) = (&parley_mode_right_kinds)[mode * 2];
     }
@@ -8833,23 +8833,23 @@ void __thiscall parley_clear_side_controls(ViewWindow *this,int side)
       }
       this->side_text_edit = 0;
     }
-    if (this->field_2e8 != 0) {
-      if ((Checkbox *)this->field_2e8 != (Checkbox *)0x0) {
-        checkbox_scalar_dtor((Checkbox *)this->field_2e8,1);
+    if (this->sci_rate_sel != 0) {
+      if ((Checkbox *)this->sci_rate_sel != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)this->sci_rate_sel,1);
       }
-      this->field_2e8 = 0;
+      this->sci_rate_sel = 0;
     }
-    if (this->field_2ec != 0) {
-      if ((Checkbox *)this->field_2ec != (Checkbox *)0x0) {
-        checkbox_scalar_dtor((Checkbox *)this->field_2ec,1);
+    if (this->init_tax_rate != 0) {
+      if ((Checkbox *)this->init_tax_rate != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)this->init_tax_rate,1);
       }
-      this->field_2ec = 0;
+      this->init_tax_rate = 0;
     }
-    if (this->field_2f0 != 0) {
-      if ((Checkbox *)this->field_2f0 != (Checkbox *)0x0) {
-        checkbox_scalar_dtor((Checkbox *)this->field_2f0,1);
+    if (this->init_lux_rate != 0) {
+      if ((Checkbox *)this->init_lux_rate != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)this->init_lux_rate,1);
       }
-      this->field_2f0 = 0;
+      this->init_lux_rate = 0;
     }
     for (i = 0; i < 8; i++) {
       if (*(int *)(this->pad_2c4 + i * 4 - 0x1c) != 0) {
@@ -8964,20 +8964,20 @@ void __thiscall parley_clear_side_controls(ViewWindow *this,int side)
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  this->field_3ac = this->panel_rect;
-  this->field_3b0 = this->panel_top;
-  this->field_3b4 = this->panel_right;
-  this->field_3b8 = this->panel_bottom;
-  this->field_3b8 = this->show_turn_timer;
+  this->fill_rect_left = this->panel_rect;
+  this->fill_rect_top = this->panel_top;
+  this->fill_rect_right = this->panel_right;
+  this->fill_rect_bottom = this->panel_bottom;
+  this->fill_rect_bottom = this->show_turn_timer;
   if (side == 0) {
     half_width = rect_width((iptr)&this->panel_rect);
-    this->field_3b4 = half_width / 2;
+    this->fill_rect_right = half_width / 2;
   }
   else {
     half_width = rect_width((iptr)&this->panel_rect);
-    this->field_3ac = half_width / 2;
+    this->fill_rect_left = half_width / 2;
   }
-  parley_fill_background((WindowObjectView *)this,(iptr)&this->field_3ac,2);
+  parley_fill_background((WindowObjectView *)this,(iptr)&this->fill_rect_left,2);
   return;
 }
 #undef i
@@ -9534,7 +9534,7 @@ parley_pack_offer_items
   case 6:
     *(i32 *)dest = item_type;
     *(i32 *)(dest + 4) = item_size;
-    *(u32 *)(dest + 8) = this->field_218;
+    *(u32 *)(dest + 8) = this->treaty_choice;
     break;
   case 8:
     *(i32 *)dest = item_type;
@@ -11363,7 +11363,7 @@ void __cdecl net_popup_queue_show_next(void)
       text = label_string(*(i32 *)(label_string_ids + 0xd54));
       dialog_add_button((DialogButtonsView *)&dlg,text);
       dlg_show_modal(&dlg,0x28);
-      net_send_message(0x56,0,dlg.field_dc,0,0,0,0,0,0,0);
+      net_send_message(0x56,0,dlg.result_extra,0,0,0,0,0,0,0);
       break;
     case 0x41:
       popup_game_with_sprite(ADDR(0x63146c, ((u8 *)&g.d_0063146c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -11378,7 +11378,7 @@ void __cdecl net_popup_queue_show_next(void)
       text = label_string(*(i32 *)(label_string_ids + 0xd54));
       dialog_add_button((DialogButtonsView *)&dlg,text);
       dlg_show_modal(&dlg,0);
-      net_send_message(0x57,0,dlg.field_dc,0,0,0,0,0,0,0);
+      net_send_message(0x57,0,dlg.result_extra,0,0,0,0,0,0,0);
       break;
     case 0x44:
       popup_game_with_sprite(ADDR(0x63149c, ((u8 *)&g.d_0063149c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -11555,7 +11555,7 @@ void __cdecl net_popup_queue_show_next(void)
         text = label_string(*(i32 *)(label_string_ids + 0xdd8));
         dialog_add_button((DialogButtonsView *)&dlg,text);
         dlg_show_modal(&dlg,0x14);
-        if (dlg.field_dc == 1) {
+        if (dlg.result_extra == 1) {
           parley_local_units_revealed = 1;
           if (parley_mode == 2) {
             ctrl_show_and_redraw(parley_conceal_info_button);
@@ -11595,7 +11595,7 @@ void __cdecl net_popup_queue_show_next(void)
         text = label_string(*(i32 *)(label_string_ids + 0xdd8));
         dialog_add_button((DialogButtonsView *)&dlg,text);
         dlg_show_modal(&dlg,0x14);
-        if (dlg.field_dc == 1) {
+        if (dlg.result_extra == 1) {
           parley_local_cities_revealed = 1;
           if (parley_mode == 2) {
             ctrl_show_and_redraw(parley_conceal_info_button);
@@ -12431,7 +12431,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
   }
   else if (side_kind == 0x10) {
     is_demand_side = 1;
-    switch(this->field_214) {
+    switch(this->demand_choice) {
     case 0:
       side_kind = 9;
       break;
@@ -12458,26 +12458,26 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
   *(int *)(this->pad_200 + side * 4) = side_kind;
   if (((parley_wnd_closed == 0) && (side_kind != 1)) && (side_kind != 0)) {
     if (side_kind == 0x14) {
-      control_hide((Control *)this->field_348);
-      ctrl_disable((Control *)this->field_348);
-      control_hide((Control *)this->field_34c);
-      ctrl_disable((Control *)this->field_34c);
-      control_hide((Control *)this->field_350);
-      ctrl_show_and_redraw((Control *)this->field_358);
-      control_hide((Control *)this->field_354);
-      ctrl_show_and_redraw((Control *)this->field_35c);
-      ctrl_show_and_redraw((Control *)this->field_360);
+      control_hide((Control *)this->rates_clamped);
+      ctrl_disable((Control *)this->rates_clamped);
+      control_hide((Control *)this->mode2_button_value);
+      ctrl_disable((Control *)this->mode2_button_value);
+      control_hide((Control *)this->never_mind_button_value);
+      ctrl_show_and_redraw((Control *)this->tax_scrollbar);
+      control_hide((Control *)this->intel_button_value);
+      ctrl_show_and_redraw((Control *)this->no_thanks_button_value);
+      ctrl_show_and_redraw((Control *)this->counter_button_value);
     }
     else {
-      ctrl_show_and_redraw((Control *)this->field_348);
-      ctrl_enable((Control *)this->field_348);
-      control_hide((Control *)this->field_34c);
-      ctrl_disable((Control *)this->field_34c);
-      ctrl_show_and_redraw((Control *)this->field_350);
-      control_hide((Control *)this->field_358);
-      ctrl_show_and_redraw((Control *)this->field_354);
-      control_hide((Control *)this->field_35c);
-      control_hide((Control *)this->field_360);
+      ctrl_show_and_redraw((Control *)this->rates_clamped);
+      ctrl_enable((Control *)this->rates_clamped);
+      control_hide((Control *)this->mode2_button_value);
+      ctrl_disable((Control *)this->mode2_button_value);
+      ctrl_show_and_redraw((Control *)this->never_mind_button_value);
+      control_hide((Control *)this->tax_scrollbar);
+      ctrl_show_and_redraw((Control *)this->intel_button_value);
+      control_hide((Control *)this->no_thanks_button_value);
+      control_hide((Control *)this->counter_button_value);
     }
   }
   switch(side_kind) {
@@ -12520,7 +12520,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
       anon_checkbox = checkbox_elem_ctor(pCVar6);
     }
     eh_state = 0xffffffff;
-    this->field_2e8 = anon_checkbox;
+    this->sci_rate_sel = anon_checkbox;
     if (this == (ViewWindow *)0x0) {
       anon_parent = (u8 *)0x0;
     }
@@ -12529,11 +12529,11 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xba4));
     checkbox_create_fixed
-              ((Control *)this->field_2e8,(iptr)anon_parent,0x415,cur_x,cur_y,col_width,
+              ((Control *)this->sci_rate_sel,(iptr)anon_parent,0x415,cur_x,cur_y,col_width,
                label);
-    checkbox_set_checked((Control *)this->field_2e8,chat_remain_anonymous);
-    checkbox_enable((CheckboxEnableView *)this->field_2e8);
-    checkbox_set_callback((CheckboxCallbackSetView *)this->field_2e8,ADDR(0x403d28, chat_on_send_checkbox));
+    checkbox_set_checked((Control *)this->sci_rate_sel,chat_remain_anonymous);
+    checkbox_enable((CheckboxEnableView *)this->sci_rate_sel);
+    checkbox_set_callback((CheckboxCallbackSetView *)this->sci_rate_sel,ADDR(0x403d28, chat_on_send_checkbox));
     pCVar6 = operator_new(0x3c);
     eh_state = 4;
     if (pCVar6 == (Control *)0x0) {
@@ -12543,7 +12543,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
       mute_anon_checkbox = checkbox_elem_ctor(pCVar6);
     }
     eh_state = 0xffffffff;
-    this->field_2ec = mute_anon_checkbox;
+    this->init_tax_rate = mute_anon_checkbox;
     if (this == (ViewWindow *)0x0) {
       mute_anon_parent = (u8 *)0x0;
     }
@@ -12552,11 +12552,11 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xd84));
     checkbox_create_fixed
-              ((Control *)this->field_2ec,(iptr)mute_anon_parent,0x430,col_width + cur_x,cur_y,
+              ((Control *)this->init_tax_rate,(iptr)mute_anon_parent,0x430,col_width + cur_x,cur_y,
                col_width,label);
-    checkbox_set_checked((Control *)this->field_2ec,chat_mute_anonymous);
-    checkbox_enable((CheckboxEnableView *)this->field_2ec);
-    checkbox_set_callback((CheckboxCallbackSetView *)this->field_2ec,ADDR(0x403d28, chat_on_send_checkbox));
+    checkbox_set_checked((Control *)this->init_tax_rate,chat_mute_anonymous);
+    checkbox_enable((CheckboxEnableView *)this->init_tax_rate);
+    checkbox_set_callback((CheckboxCallbackSetView *)this->init_tax_rate,ADDR(0x403d28, chat_on_send_checkbox));
     pCVar6 = operator_new(0x3c);
     eh_state = 5;
     if (pCVar6 == (Control *)0x0) {
@@ -12566,7 +12566,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
       broadcast_checkbox = checkbox_elem_ctor(pCVar6);
     }
     eh_state = 0xffffffff;
-    this->field_2f0 = broadcast_checkbox;
+    this->init_lux_rate = broadcast_checkbox;
     if (this == (ViewWindow *)0x0) {
       broadcast_parent = (u8 *)0x0;
     }
@@ -12575,11 +12575,11 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
     }
     label = label_string(*(i32 *)(label_string_ids + 0xba8));
     checkbox_create_fixed
-              ((Control *)this->field_2f0,(iptr)broadcast_parent,0x416,col_width * 2 + cur_x,
+              ((Control *)this->init_lux_rate,(iptr)broadcast_parent,0x416,col_width * 2 + cur_x,
                cur_y,col_width,label);
-    checkbox_set_checked((Control *)this->field_2f0,chat_broadcast_all);
-    checkbox_enable((CheckboxEnableView *)this->field_2f0);
-    checkbox_set_callback((CheckboxCallbackSetView *)this->field_2f0,ADDR(0x403d28, chat_on_send_checkbox));
+    checkbox_set_checked((Control *)this->init_lux_rate,chat_broadcast_all);
+    checkbox_enable((CheckboxEnableView *)this->init_lux_rate);
+    checkbox_set_callback((CheckboxCallbackSetView *)this->init_lux_rate,ADDR(0x403d28, chat_on_send_checkbox));
     cur_y += block_height;
     gfx_set_text_color_index(10);
     if (this->large_layout == 0) {
@@ -12751,10 +12751,10 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
       }
     }
     side_x = (this->panel_rect + (int)(this->panel_right - this->panel_rect) / 2) - max_label_width / 2;
-    this->field_3ac = side_x;
+    this->fill_rect_left = side_x;
     if ((int)cur_x < (int)side_x) {
       side_x = cur_x;
-      this->field_3ac = cur_x;
+      this->fill_rect_left = cur_x;
     }
     if (this->large_layout == 0) {
       mode_radio_font = &font_size20;
@@ -12793,11 +12793,11 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
     radiogrp_create
               (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)mode_radio_parent,0x3f3,
                (iptr)&ctrl_rect,1,5,(iptr)mode_labels);
-    if (this->field_208 == 0xffffffff) {
+    if (this->saved_mode_choice == 0xffffffff) {
       selected_mode = 0;
     }
     else {
-      selected_mode = this->field_208;
+      selected_mode = this->saved_mode_choice;
     }
     radiogrp_set_selected(*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),selected_mode);
     radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
@@ -13300,7 +13300,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
               (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)gift_parent,0x3f7,
                (iptr)&ctrl_rect,1,5,(iptr)&gift_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->field_220);
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->exchange_choice);
     radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
     radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x4010ff, parley_on_gift_kind_select))
@@ -13730,22 +13730,22 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
       button_set_callback
                 (*(Control **)(this->pad_3c0 + side * 4 - 0x1c),
                  (iptr)(((void *)ADDR(0x004034d1, parley_hide_city_origin_clicked)) + ((side == 0) - 1 & 0xffffdf58)));
-      if ((side == 0) && (this->field_3bd != '\0')) {
-        control_hide((Control *)this->field_39c);
-        ctrl_show_and_redraw((Control *)this->field_3a4);
+      if ((side == 0) && (this->left_side_accepted != '\0')) {
+        control_hide((Control *)this->left_accept_button);
+        ctrl_show_and_redraw((Control *)this->left_agreed_button);
       }
       else if (side == 0) {
-        ctrl_show_and_redraw((Control *)this->field_39c);
-        control_hide((Control *)this->field_3a4);
+        ctrl_show_and_redraw((Control *)this->left_accept_button);
+        control_hide((Control *)this->left_agreed_button);
       }
-      if ((side == 1) && (this->field_3bc != '\0')) {
-        control_hide((Control *)this->field_3a0);
-        ctrl_show_and_redraw((Control *)this->field_3a8);
-        ctrl_disable((Control *)this->field_3a8);
+      if ((side == 1) && (this->right_side_accepted != '\0')) {
+        control_hide((Control *)this->right_accept_button);
+        ctrl_show_and_redraw((Control *)this->right_agreed_button);
+        ctrl_disable((Control *)this->right_agreed_button);
       }
       else if (side == 1) {
-        ctrl_show_and_redraw((Control *)this->field_3a0);
-        control_hide((Control *)this->field_3a8);
+        ctrl_show_and_redraw((Control *)this->right_accept_button);
+        control_hide((Control *)this->right_agreed_button);
       }
       btn_top += btn_height;
       btn_width = col_width / 2;
@@ -13776,8 +13776,8 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
               (*(Control **)(this->pad_364 + side * 4 + 0x28),
                (iptr)(((void *)ADDR(0x00401f55, parley_sort_by_unit_left_clicked)) + ((side == 0) - 1 & 0xfffff637)));
     if ((parley_mode != 9) &&
-       (((side == 0 && (this->field_3bd == '\0')) ||
-        ((side == 1 && (this->field_3bc == '\0')))))) {
+       (((side == 0 && (this->left_side_accepted == '\0')) ||
+        ((side == 1 && (this->right_side_accepted == '\0')))))) {
       ctrl_disable(*(Control **)(this->pad_364 + side * 4 + 0x28));
     }
     SetRect(&btn_rect,btn_rect.right,btn_top,btn_rect.right + btn_width + panel_margin_x * -3,
@@ -13806,8 +13806,8 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
               (*(Control **)(this->pad_364 + side * 4 + 0x30),
                (iptr)(((void *)ADDR(0x004033d7, parley_sort_by_city_left_clicked)) + ((side == 0) - 1 & 0xfffff5a1)));
     if ((parley_mode != 9) &&
-       (((side == 0 && (this->field_3bd == '\0')) ||
-        ((side == 1 && (this->field_3bc == '\0')))))) {
+       (((side == 0 && (this->left_side_accepted == '\0')) ||
+        ((side == 1 && (this->right_side_accepted == '\0')))))) {
       ctrl_disable(*(Control **)(this->pad_364 + side * 4 + 0x30));
     }
     ctrl_rect.top = btn_rect.bottom;
@@ -13892,7 +13892,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
               (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)proposal_parent,0x40c,
                (iptr)&ctrl_rect,1,2,(iptr)&proposal_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->field_21c);
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->gift_choice);
     radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
     radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401c99, parley_on_proposal_kind_select))
@@ -14236,7 +14236,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
               (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)offer_parent,0x41f,
                (iptr)&ctrl_rect,1,7,(iptr)&offer_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->field_214);
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->demand_choice);
     radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
     radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x403a30, parley_on_demand_kind_select))
@@ -14385,22 +14385,22 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
       button_set_callback
                 (*(Control **)(this->pad_3c0 + side * 4 - 0x1c),
                  (iptr)(((void *)ADDR(0x00401979, parley_hide_city_info)) + ((side == 0) - 1 & 0xfffffccc)));
-      if ((side == 0) && (this->field_3be != '\0')) {
-        control_hide((Control *)this->field_39c);
-        ctrl_show_and_redraw((Control *)this->field_3a4);
+      if ((side == 0) && (this->left_side_confirmed != '\0')) {
+        control_hide((Control *)this->left_accept_button);
+        ctrl_show_and_redraw((Control *)this->left_agreed_button);
       }
       else if (side == 0) {
-        ctrl_show_and_redraw((Control *)this->field_39c);
-        control_hide((Control *)this->field_3a4);
+        ctrl_show_and_redraw((Control *)this->left_accept_button);
+        control_hide((Control *)this->left_agreed_button);
       }
       if ((side == 1) && (this->remote_side_agreed != '\0')) {
-        control_hide((Control *)this->field_3a0);
-        ctrl_show_and_redraw((Control *)this->field_3a8);
-        ctrl_disable((Control *)this->field_3a8);
+        control_hide((Control *)this->right_accept_button);
+        ctrl_show_and_redraw((Control *)this->right_agreed_button);
+        ctrl_disable((Control *)this->right_agreed_button);
       }
       else if (side == 1) {
-        ctrl_show_and_redraw((Control *)this->field_3a0);
-        control_hide((Control *)this->field_3a8);
+        ctrl_show_and_redraw((Control *)this->right_accept_button);
+        control_hide((Control *)this->right_agreed_button);
       }
     }
     if (this->large_layout == 0) {
@@ -14453,22 +14453,22 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
     }
     surface_draw_text
               ((DibSurface *)this,(iptr)waiting_font,(iptr)waiting_text,cur_x,cur_y,5);
-    control_hide((Control *)this->field_34c);
-    ctrl_disable((Control *)this->field_34c);
-    ctrl_show_and_redraw((Control *)this->field_348);
-    ctrl_disable((Control *)this->field_348);
-    ctrl_disable((Control *)this->field_350);
-    if ((this->field_3bd == '\0') && (this->field_3be == '\0')) {
-      control_hide((Control *)this->field_340);
-      ctrl_disable((Control *)this->field_340);
-      ctrl_show_and_redraw((Control *)this->field_344);
-      ctrl_enable((Control *)this->field_344);
+    control_hide((Control *)this->mode2_button_value);
+    ctrl_disable((Control *)this->mode2_button_value);
+    ctrl_show_and_redraw((Control *)this->rates_clamped);
+    ctrl_disable((Control *)this->rates_clamped);
+    ctrl_disable((Control *)this->never_mind_button_value);
+    if ((this->left_side_accepted == '\0') && (this->left_side_confirmed == '\0')) {
+      control_hide((Control *)this->conceal_button_value);
+      ctrl_disable((Control *)this->conceal_button_value);
+      ctrl_show_and_redraw((Control *)this->reveal_button_value);
+      ctrl_enable((Control *)this->reveal_button_value);
     }
     else {
-      ctrl_show_and_redraw((Control *)this->field_340);
-      ctrl_enable((Control *)this->field_340);
-      control_hide((Control *)this->field_344);
-      ctrl_disable((Control *)this->field_344);
+      ctrl_show_and_redraw((Control *)this->conceal_button_value);
+      ctrl_enable((Control *)this->conceal_button_value);
+      control_hide((Control *)this->reveal_button_value);
+      ctrl_disable((Control *)this->reveal_button_value);
     }
     break;
   case 0x13:
@@ -14566,14 +14566,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
       }
     }
     if (this->techs_all_known == 0) {
-      ctrl_disable((Control *)this->field_358);
+      ctrl_disable((Control *)this->tax_scrollbar);
     }
     else {
-      ctrl_enable((Control *)this->field_358);
+      ctrl_enable((Control *)this->tax_scrollbar);
     }
   }
   parley_update_buttons(this);
-  wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->field_3ac);
+  wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->fill_rect_left);
   return;
 }
 #undef chat_broadcast_all
@@ -14851,8 +14851,8 @@ void __cdecl parley_on_demand_kind_select(i32 ctrl_id,u32 demand_kind)
     this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
-  this2->field_214 = demand_kind;
-  parley_add_side_dialog(this2,this2->field_1f4,1);
+  this2->demand_choice = demand_kind;
+  parley_add_side_dialog(this2,this2->right_civ,1);
   return;
 }
 #undef this2
@@ -14894,26 +14894,26 @@ void __cdecl parley_on_gift_kind_select(i32 ctrl_id,u32 gift_kind)
     this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
-  this2->field_220 = gift_kind;
+  this2->exchange_choice = gift_kind;
   switch(gift_kind) {
   case 0:
-    this2->field_1ec = 7;
+    this2->session_mode = 7;
     break;
   case 1:
-    this2->field_1ec = 8;
+    this2->session_mode = 8;
     break;
   case 2:
-    this2->field_1ec = 9;
+    this2->session_mode = 9;
     break;
   case 3:
-    this2->field_1ec = 10;
+    this2->session_mode = 10;
     break;
   case 4:
-    this2->field_1ec = 0xb;
+    this2->session_mode = 0xb;
   }
-  this2->field_1fc = (&parley_mode_right_kinds)[this2->field_1ec * 2];
-  this2->field_1f4 = this2->field_1fc;
-  parley_add_side_dialog(this2,this2->field_1f4,1);
+  this2->caption_button_count = (&parley_mode_right_kinds)[this2->session_mode * 2];
+  this2->right_civ = this2->caption_button_count;
+  parley_add_side_dialog(this2,this2->right_civ,1);
   return;
 }
 #undef this2
@@ -14934,16 +14934,16 @@ void __cdecl parley_on_proposal_kind_select(i32 ctrl_id,u32 proposal_kind)
     this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
-  this2->field_21c = proposal_kind;
+  this2->gift_choice = proposal_kind;
   if (proposal_kind == 0) {
-    this2->field_1ec = 0xc;
+    this2->session_mode = 0xc;
   }
   else if (proposal_kind == 1) {
-    this2->field_1ec = 0xd;
+    this2->session_mode = 0xd;
   }
-  this2->field_1fc = (&parley_mode_right_kinds)[this2->field_1ec * 2];
-  this2->field_1f4 = this2->field_1fc;
-  parley_add_side_dialog(this2,this2->field_1f4,1);
+  this2->caption_button_count = (&parley_mode_right_kinds)[this2->session_mode * 2];
+  this2->right_civ = this2->caption_button_count;
+  parley_add_side_dialog(this2,this2->right_civ,1);
   return;
 }
 #undef this2
@@ -15156,50 +15156,50 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
     this2 = (ParleyOfferBuffer *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)(this2->pad_0 + 0x48));
-  switch(this2->field_1ec) {
+  switch(this2->parley_kind) {
   case 3:
     value = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->pad_21c + 0x154));
     *(i32 *)this2->pad_208 = value;
     if (*(int *)this2->pad_208 == 0) {
-      this2->field_1ec = 6;
+      this2->parley_kind = 6;
       ctrl_enable(*(Control **)(this2->pad_21c + 0x134));
     }
     else if (*(int *)this2->pad_208 == 1) {
-      this2->field_1ec = 0xc;
+      this2->parley_kind = 0xc;
       if (*(int *)this2->pad_21c != 0) {
-        this2->field_1ec = 0xd;
+        this2->parley_kind = 0xd;
       }
       ctrl_enable(*(Control **)(this2->pad_21c + 0x134));
     }
     else if (*(int *)this2->pad_208 == 2) {
       if (*(int *)(this2->pad_21c + 4) == 0) {
-        this2->field_1ec = 7;
+        this2->parley_kind = 7;
       }
       else if (*(int *)(this2->pad_21c + 4) == 1) {
-        this2->field_1ec = 8;
+        this2->parley_kind = 8;
       }
       else if (*(int *)(this2->pad_21c + 4) == 2) {
-        this2->field_1ec = 9;
+        this2->parley_kind = 9;
       }
       else if (*(int *)(this2->pad_21c + 4) == 3) {
-        this2->field_1ec = 10;
+        this2->parley_kind = 10;
       }
       else {
-        this2->field_1ec = 0xb;
+        this2->parley_kind = 0xb;
       }
       ctrl_enable(*(Control **)(this2->pad_21c + 0x134));
     }
     else if (*(int *)this2->pad_208 == 3) {
-      this2->field_1ec = 5;
+      this2->parley_kind = 5;
       ctrl_enable(*(Control **)(this2->pad_21c + 0x134));
     }
     else if (*(int *)this2->pad_208 == 4) {
-      this2->field_1ec = 0xf;
+      this2->parley_kind = 0xf;
       ctrl_enable(*(Control **)(this2->pad_21c + 0x134));
     }
-    *(i32 *)(this2->pad_1f0 + 8) = (&parley_mode_left_kinds)[this2->field_1ec * 2];
+    *(i32 *)(this2->pad_1f0 + 8) = (&parley_mode_left_kinds)[this2->parley_kind * 2];
     *(i32 *)this2->pad_1f0 = *(i32 *)(this2->pad_1f0 + 8);
-    *(i32 *)(this2->pad_1f0 + 0xc) = (&parley_mode_right_kinds)[this2->field_1ec * 2];
+    *(i32 *)(this2->pad_1f0 + 0xc) = (&parley_mode_right_kinds)[this2->parley_kind * 2];
     *(i32 *)(this2->pad_1f0 + 4) = *(i32 *)(this2->pad_1f0 + 0xc);
     parley_add_side_dialog((ViewWindow *)this2,*(i32 *)this2->pad_1f0,0);
     parley_add_side_dialog
@@ -15210,10 +15210,10 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
     *(i32 *)(this2->pad_208 + 4) = value;
     value = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->pad_21c + 0x154));
     *(i32 *)(this2->pad_208 + 8) = value;
-    this2->field_1ec = 0xe;
-    *(i32 *)(this2->pad_1f0 + 8) = (&parley_mode_left_kinds)[this2->field_1ec * 2];
+    this2->parley_kind = 0xe;
+    *(i32 *)(this2->pad_1f0 + 8) = (&parley_mode_left_kinds)[this2->parley_kind * 2];
     *(i32 *)this2->pad_1f0 = *(i32 *)(this2->pad_1f0 + 8);
-    *(i32 *)(this2->pad_1f0 + 0xc) = (&parley_mode_right_kinds)[this2->field_1ec * 2];
+    *(i32 *)(this2->pad_1f0 + 0xc) = (&parley_mode_right_kinds)[this2->parley_kind * 2];
     *(i32 *)(this2->pad_1f0 + 4) = *(i32 *)(this2->pad_1f0 + 0xc);
     parley_add_side_dialog((ViewWindow *)this2,*(i32 *)this2->pad_1f0,0);
     parley_add_side_dialog
@@ -15236,21 +15236,21 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
       this2->pad_21c[0x1a] = '\0';
       this2->pad_21c[0x1b] = '\0';
     }
-    value = parley_send_offer(this2,this2->field_1ec);
+    value = parley_send_offer(this2,this2->parley_kind);
     *(i32 *)(this2->pad_21c + 0x18) = value;
-    if ((this2->field_1ec == 6) && (this2->field_218 == 3)) {
-      if ((*(byte *)&civs[human_civ].treaties[(this2->field_118)] & 8) == 0) {
-        if ((*(byte *)&civs[human_civ].treaties[(this2->field_118)] & 4) == 0) {
-          if ((*(byte *)&civs[human_civ].treaties[(this2->field_118)] & 2) != 0) {
-            diplo_clear_treaty_flags(human_civ,this2->field_118,2);
+    if ((this2->parley_kind == 6) && (this2->treaty_choice == 3)) {
+      if ((*(byte *)&civs[human_civ].treaties[(this2->civ_id)] & 8) == 0) {
+        if ((*(byte *)&civs[human_civ].treaties[(this2->civ_id)] & 4) == 0) {
+          if ((*(byte *)&civs[human_civ].treaties[(this2->civ_id)] & 2) != 0) {
+            diplo_clear_treaty_flags(human_civ,this2->civ_id,2);
           }
         }
         else {
-          diplo_clear_treaty_flags(human_civ,this2->field_118,4);
+          diplo_clear_treaty_flags(human_civ,this2->civ_id,4);
         }
       }
       else {
-        diplo_clear_treaty_flags(human_civ,this2->field_118,8);
+        diplo_clear_treaty_flags(human_civ,this2->civ_id,8);
       }
       parley_add_side_dialog
                 ((ViewWindow *)this2,*(i32 *)this2->pad_1f0,0);
@@ -15258,10 +15258,10 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
                 ((ViewWindow *)this2,*(i32 *)(this2->pad_1f0 + 4),1);
     }
     else if (*(int *)(this2->pad_21c + 0x18) != 0) {
-      this2->field_1ec = 1;
-      *(i32 *)(this2->pad_1f0 + 8) = (&parley_mode_left_kinds)[this2->field_1ec * 2];
+      this2->parley_kind = 1;
+      *(i32 *)(this2->pad_1f0 + 8) = (&parley_mode_left_kinds)[this2->parley_kind * 2];
       *(i32 *)this2->pad_1f0 = *(i32 *)(this2->pad_1f0 + 8);
-      *(i32 *)(this2->pad_1f0 + 0xc) = (&parley_mode_right_kinds)[this2->field_1ec * 2];
+      *(i32 *)(this2->pad_1f0 + 0xc) = (&parley_mode_right_kinds)[this2->parley_kind * 2];
       *(i32 *)(this2->pad_1f0 + 4) = *(i32 *)(this2->pad_1f0 + 0xc);
       parley_add_side_dialog
                 ((ViewWindow *)this2,*(i32 *)this2->pad_1f0,0);
@@ -15291,7 +15291,7 @@ void __cdecl parley_on_never_mind(void)
     this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
-  switch(this2->field_1ec) {
+  switch(this2->session_mode) {
   case 3:
     break;
   case 5:
@@ -15304,23 +15304,23 @@ void __cdecl parley_on_never_mind(void)
   case 0xc:
   case 0xd:
   case 0xf:
-    this2->field_1ec = 3;
-    ctrl_disable((Control *)this2->field_350);
-    this2->field_1f8 = parley_mode3_left_kind;
-    this2->field_1f0 = this2->field_1f8;
-    this2->field_1fc = parley_mode3_right_kind;
-    this2->field_1f4 = this2->field_1fc;
-    parley_add_side_dialog(this2,this2->field_1f0,0);
-    parley_add_side_dialog(this2,this2->field_1f4,1);
+    this2->session_mode = 3;
+    ctrl_disable((Control *)this2->never_mind_button_value);
+    this2->shown_left_civ = parley_mode3_left_kind;
+    this2->left_civ = this2->shown_left_civ;
+    this2->caption_button_count = parley_mode3_right_kind;
+    this2->right_civ = this2->caption_button_count;
+    parley_add_side_dialog(this2,this2->left_civ,0);
+    parley_add_side_dialog(this2,this2->right_civ,1);
     break;
   case 0xe:
-    this2->field_1ec = 5;
-    this2->field_1f8 = parley_mode5_left_kind;
-    this2->field_1f0 = this2->field_1f8;
-    this2->field_1fc = parley_mode5_right_kind;
-    this2->field_1f4 = this2->field_1fc;
-    parley_add_side_dialog(this2,this2->field_1f0,0);
-    parley_add_side_dialog(this2,this2->field_1f4,1);
+    this2->session_mode = 5;
+    this2->shown_left_civ = parley_mode5_left_kind;
+    this2->left_civ = this2->shown_left_civ;
+    this2->caption_button_count = parley_mode5_right_kind;
+    this2->right_civ = this2->caption_button_count;
+    parley_add_side_dialog(this2,this2->left_civ,0);
+    parley_add_side_dialog(this2,this2->right_civ,1);
   }
   return;
 }
@@ -15349,7 +15349,7 @@ void __cdecl parley_on_accept_offer(void)
                      ,0,0,0,0,0);
   dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
   popup_game_with_sprite(ADDR(0x6324f0, ((u8 *)&g.d_006324f0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-  parley[0x7b].field_0 = 3;
+  parley[0x7b].vtable = 3;
   parley_set_mode_sides(parley,1);
   return;
 }
@@ -15377,13 +15377,13 @@ void __cdecl parley_on_no_thanks(void)
   net_send_message(0x84,*(i32 *)
                            (&net_player_slots + *(int *)(&net_civ_slots + parley_other_civ * 4) * 0x54),0,0,0
                      ,0,0,0,0,0);
-  this2->field_1ec = 2;
-  this2->field_1f8 = (&parley_mode_left_kinds)[this2->field_1ec * 2];
-  this2->field_1f0 = this2->field_1f8;
-  this2->field_1fc = (&parley_mode_right_kinds)[this2->field_1ec * 2];
-  this2->field_1f4 = this2->field_1fc;
-  parley_add_side_dialog(this2,this2->field_1f0,0);
-  parley_add_side_dialog(this2,this2->field_1f4,1);
+  this2->session_mode = 2;
+  this2->shown_left_civ = (&parley_mode_left_kinds)[this2->session_mode * 2];
+  this2->left_civ = this2->shown_left_civ;
+  this2->caption_button_count = (&parley_mode_right_kinds)[this2->session_mode * 2];
+  this2->right_civ = this2->caption_button_count;
+  parley_add_side_dialog(this2,this2->left_civ,0);
+  parley_add_side_dialog(this2,this2->right_civ,1);
   return;
 }
 #undef parley_other_civ
@@ -15409,7 +15409,7 @@ void __cdecl parley_on_counter_offer(void)
   net_send_message(0x85,*(i32 *)
                            (&net_player_slots + *(int *)(&net_civ_slots + parley_other_civ * 4) * 0x54),0,0,0
                      ,0,0,0,0,0);
-  parley[0x7b].field_0 = 3;
+  parley[0x7b].vtable = 3;
   parley_set_mode_sides(parley,1);
   return;
 }
@@ -15508,41 +15508,41 @@ void __cdecl chat_on_send_checkbox(int ctrl_id)
 void __thiscall parley_update_buttons(ViewWindow *this)
 
 {
-  if ((this->field_348 != 0) && (this->field_34c != 0)) {
+  if ((this->rates_clamped != 0) && (this->mode2_button_value != 0)) {
     if (this->session_mode != 2) {
-      control_hide((Control *)this->field_340);
-      ctrl_disable((Control *)this->field_340);
-      control_hide((Control *)this->field_344);
-      ctrl_disable((Control *)this->field_344);
+      control_hide((Control *)this->conceal_button_value);
+      ctrl_disable((Control *)this->conceal_button_value);
+      control_hide((Control *)this->reveal_button_value);
+      ctrl_disable((Control *)this->reveal_button_value);
     }
     switch(this->session_mode) {
     case 1:
     case 2:
-      control_hide((Control *)this->field_34c);
-      ctrl_disable((Control *)this->field_34c);
-      ctrl_show_and_redraw((Control *)this->field_348);
-      ctrl_disable((Control *)this->field_348);
+      control_hide((Control *)this->mode2_button_value);
+      ctrl_disable((Control *)this->mode2_button_value);
+      ctrl_show_and_redraw((Control *)this->rates_clamped);
+      ctrl_disable((Control *)this->rates_clamped);
       if (this->session_mode == 2) {
-        if ((this->field_3bd == '\0') && (this->field_3be == '\0')) {
-          control_hide((Control *)this->field_340);
-          ctrl_disable((Control *)this->field_340);
-          ctrl_show_and_redraw((Control *)this->field_344);
-          ctrl_enable((Control *)this->field_344);
+        if ((this->left_side_accepted == '\0') && (this->left_side_confirmed == '\0')) {
+          control_hide((Control *)this->conceal_button_value);
+          ctrl_disable((Control *)this->conceal_button_value);
+          ctrl_show_and_redraw((Control *)this->reveal_button_value);
+          ctrl_enable((Control *)this->reveal_button_value);
         }
         else {
-          ctrl_show_and_redraw((Control *)this->field_340);
-          ctrl_enable((Control *)this->field_340);
-          control_hide((Control *)this->field_344);
-          ctrl_disable((Control *)this->field_344);
+          ctrl_show_and_redraw((Control *)this->conceal_button_value);
+          ctrl_enable((Control *)this->conceal_button_value);
+          control_hide((Control *)this->reveal_button_value);
+          ctrl_disable((Control *)this->reveal_button_value);
         }
       }
       break;
     case 3:
     case 5:
-      control_hide((Control *)this->field_34c);
-      ctrl_disable((Control *)this->field_34c);
-      ctrl_show_and_redraw((Control *)this->field_348);
-      ctrl_enable((Control *)this->field_348);
+      control_hide((Control *)this->mode2_button_value);
+      ctrl_disable((Control *)this->mode2_button_value);
+      ctrl_show_and_redraw((Control *)this->rates_clamped);
+      ctrl_enable((Control *)this->rates_clamped);
       break;
     case 6:
     case 7:
@@ -15553,25 +15553,25 @@ void __thiscall parley_update_buttons(ViewWindow *this)
     case 0xc:
     case 0xd:
     case 0xf:
-      ctrl_show_and_redraw((Control *)this->field_34c);
-      control_hide((Control *)this->field_348);
-      ctrl_disable((Control *)this->field_348);
+      ctrl_show_and_redraw((Control *)this->mode2_button_value);
+      control_hide((Control *)this->rates_clamped);
+      ctrl_disable((Control *)this->rates_clamped);
       if (this->timer_last_value == 0) {
-        ctrl_disable((Control *)this->field_34c);
+        ctrl_disable((Control *)this->mode2_button_value);
       }
       else {
-        ctrl_enable((Control *)this->field_34c);
+        ctrl_enable((Control *)this->mode2_button_value);
       }
       break;
     case 0xe:
-      ctrl_show_and_redraw((Control *)this->field_34c);
-      control_hide((Control *)this->field_348);
-      ctrl_disable((Control *)this->field_348);
+      ctrl_show_and_redraw((Control *)this->mode2_button_value);
+      control_hide((Control *)this->rates_clamped);
+      ctrl_disable((Control *)this->rates_clamped);
       if ((this->show_turn_status == 0) || (this->timer_last_value == 0)) {
-        ctrl_disable((Control *)this->field_34c);
+        ctrl_disable((Control *)this->mode2_button_value);
       }
       else {
-        ctrl_enable((Control *)this->field_34c);
+        ctrl_enable((Control *)this->mode2_button_value);
       }
     }
   }
@@ -16427,7 +16427,7 @@ void __cdecl lobby_refresh_player_list(void)
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (net_lobby_list != (LobbyList *)0x0) {
-    selected_id = *(int *)(*(int *)(net_lobby_list->field_0 + 0x220) + 4);
+    selected_id = *(int *)(*(int *)(net_lobby_list->dialog + 0x220) + 4);
     lobby_clear_player_list(net_lobby_list);
     if (net_player_count == 0) {
       lobby_add_waiting_entry(net_lobby_list);
@@ -16436,8 +16436,8 @@ void __cdecl lobby_refresh_player_list(void)
       for (slot = 1; slot < 7; slot++) {
         if ((&net_slot_active_flags)[slot * 0x54] != '\0') {
           if (*(int *)(&net_slot_lobby_ids + slot * 0x54) == 0) {
-            *(u32 *)(&net_slot_lobby_ids + slot * 0x54) = net_lobby_list->field_4;
-            net_lobby_list->field_4++;
+            *(u32 *)(&net_slot_lobby_ids + slot * 0x54) = net_lobby_list->next_id;
+            net_lobby_list->next_id++;
           }
           lobby_add_player_entry
                     (net_lobby_list,(iptr)(&net_slot_player_names + slot * 0x54),
@@ -16446,23 +16446,23 @@ void __cdecl lobby_refresh_player_list(void)
       }
       lobby_add_waiting_entry(net_lobby_list);
     }
-    for (entry = net_lobby_list->field_28; (entry != 0 && (*(int *)(entry + 4) != selected_id));
+    for (entry = net_lobby_list->entries; (entry != 0 && (*(int *)(entry + 4) != selected_id));
         entry = *(uptr *)(entry + 0x10)) {
     }
     if (entry == 0) {
-      for (entry = net_lobby_list->field_28;
+      for (entry = net_lobby_list->entries;
           (*(int *)(entry + 0x10) != 0 && (*(int *)(entry + 4) < selected_id));
           entry = *(uptr *)(entry + 0x10)) {
       }
       if (entry == 0) {
-        entry = net_lobby_list->field_28;
+        entry = net_lobby_list->entries;
       }
     }
-    *(uptr *)(net_lobby_list->field_0 + 0x228) = net_lobby_list->field_28;
-    *(i32 *)(net_lobby_list->field_0 + 0x210) = *(i32 *)(net_lobby_list->field_0 + 0x228);
+    *(uptr *)(net_lobby_list->dialog + 0x228) = net_lobby_list->entries;
+    *(i32 *)(net_lobby_list->dialog + 0x210) = *(i32 *)(net_lobby_list->dialog + 0x228);
     dialog_set_default_choice
-              ((DialogOptionList *)net_lobby_list->field_0,*(iptr *)(entry + 4));
-    dialog_render((Dialog *)net_lobby_list->field_0);
+              ((DialogOptionList *)net_lobby_list->dialog,*(iptr *)(entry + 4));
+    dialog_render((Dialog *)net_lobby_list->dialog);
   }
   return;
 }
@@ -16980,7 +16980,7 @@ void __cdecl parley_draw_city_list(int pane)
 LAB_005887e1:
   surface_fill_rect
             ((DibSurface *)this2,(iptr)(this2->pad_3c0 + pane * 0x10),list_bg_color);
-  if (this2->field_154 == 0) {
+  if (this2->large_layout == 0) {
     font2 = (GameFont *)&font_size14;
   }
   else {
@@ -17050,7 +17050,7 @@ LAB_00588e17:
                                  (pane * 0x2004 +
                                   (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row)
                                   * 4 + 0x43f8 + (int)this2)), city == -1)) break;
-      text_offset_x = (-(uint)(this2->field_154 == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
+      text_offset_x = (-(uint)(this2->large_layout == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
       row_rect.left = row_rect.left + text_offset_x - 3;
       if (selected == 0) {
         bg_color2 = list_bg_color;
@@ -17060,14 +17060,14 @@ LAB_00588e17:
       }
       surface_fill_rect((DibSurface *)this2,(iptr)&row_rect,bg_color2);
       if (pane == 0) {
-        if (this2->field_3be == '\0') {
+        if (this2->left_side_confirmed == '\0') {
           sprite_style = 3;
         }
         else {
           sprite_style = 0;
         }
       }
-      else if (this2->field_3bf == '\0') {
+      else if (this2->remote_side_agreed == '\0') {
         sprite_style = 3;
       }
       else {
@@ -17514,7 +17514,7 @@ NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *this)
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   seh_state = 0xffffffff;
-  net_msg_player_info_init((NetMsgHeader *)&this->field_8);
+  net_msg_player_info_init((NetMsgHeader *)&this->player_info_msg);
   net_msgq_ctor((NetMsgQueue *)(this[0x2733].pad_0 + 5));
   seh_state = 0;
   this[0x94].pad_0[0] = '\0';
@@ -18811,7 +18811,7 @@ LAB_005ab60f:
                 input_flush_events();
                 snd_play_effect(0x30,0,0,0);
                 dlg_show_modal(&dialog2,0);
-                if (dialog2.field_dc != 0) {
+                if (dialog2.result_extra != 0) {
                   casualty_timeline_show(human_civ);
                 }
               }

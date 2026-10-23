@@ -315,7 +315,7 @@ void __cdecl advisor_on_close_clicked(void)
   else {
     window = (PictureWindowCore *)(active_child - 0x48);
   }
-  if (window[1].field_18 == 0) {
+  if (window[1].clip_top == 0) {
     picwnd_close(window);
   }
   else {
@@ -348,10 +348,10 @@ void __thiscall advisor_add_close_button(ViewWindow *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
-            ((Control *)&this->field_320,(iptr)parent_wnd2,100,(iptr)button_rect,label);
-  button_set_callback((Control *)&this->field_320,ADDR(0x401235, advisor_on_close_clicked));
-  ctrl_set_default_button((Control *)&this->field_320);
-  ctrl_set_cancel_button((Control *)&this->field_320);
+            ((Control *)&this->bar_height,(iptr)parent_wnd2,100,(iptr)button_rect,label);
+  button_set_callback((Control *)&this->bar_height,ADDR(0x401235, advisor_on_close_clicked));
+  ctrl_set_default_button((Control *)&this->bar_height);
+  ctrl_set_cancel_button((Control *)&this->bar_height);
   return;
 }
 #undef parent_wnd2
@@ -482,8 +482,8 @@ void __cdecl attitude_advisor_draw(void)
   i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = advisor_report_civ;
-  recalc_flag = game.field_06 & 4;
-  game.field_06 = game.field_06 & 0xfffb;
+  recalc_flag = game.transient_flags & 4;
+  game.transient_flags = game.transient_flags & 0xfffb;
   frame_wnd_layout((FrameWindow *)&advisor_window);
   frame_wnd_draw_caption((FrameWindow *)&advisor_window);
   picwnd_blit((PictureWindow *)&advisor_window);
@@ -1814,15 +1814,15 @@ void __cdecl foreign_minister_show(iptr civ)
           goto LAB_00431565;
         }
         civ2 = dlg_show_modal(&dialog2,0);
-        if (((*(i8 *)((char *)&dialog2.field_3c + 1)) & 0x20) != 0) {
-          dialog2.field_dc = 2;
+        if (((*(i8 *)((char *)&dialog2.style_flags + 1)) & 0x20) != 0) {
+          dialog2.result_extra = 2;
         }
-        if (dialog2.field_dc == 0) {
+        if (dialog2.result_extra == 0) {
           seh_state = 0xffffffff;
           /* inlined unwind funclet 0043154f */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
           goto LAB_00431565;
         }
-        if (dialog2.field_dc != 1) break;
+        if (dialog2.result_extra != 1) break;
         if ((((*(byte *)&civs[civ].treaties[civ2] & 0x80) == 0) &&
             (has_embassy_wonder == 0)) && (game.reveal_map == '\0')) {
           popup_game_with_sprite(ADDR(0x625ff8, ((u8 *)&g.d_00625ff8)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -1831,8 +1831,8 @@ void __cdecl foreign_minister_show(iptr civ)
           intel_report_show(civ,civ2);
         }
       }
-      if (dialog2.field_dc == 2) break;
-      if (dialog2.field_dc != 3) goto LAB_0043153e;
+      if (dialog2.result_extra == 2) break;
+      if (dialog2.result_extra != 3) goto LAB_0043153e;
       text_clear();
       text = civ_leader_title(civ2);
       text_append(text);
@@ -2206,10 +2206,10 @@ void __cdecl powergraph_show(void)
   }
   window_show((WindowObjectView *)graph_wnd);
   dialog_init(&dialog2,(iptr)graph_wnd,0,0,0x114000);
-  dialog2.field_40 = (*(i32 *)((char *)&graph_wnd + 300));
-  dialog2.field_44 = (*(i32 *)((char *)&graph_wnd + 304));
-  dialog2.field_e8 = (*(i32 *)((char *)&graph_wnd + 292));
-  dialog2.field_ec = (*(i32 *)((char *)&graph_wnd + 296));
+  dialog2.wnd_width = (*(i32 *)((char *)&graph_wnd + 300));
+  dialog2.wnd_height = (*(i32 *)((char *)&graph_wnd + 304));
+  dialog2.origin_x = (*(i32 *)((char *)&graph_wnd + 292));
+  dialog2.origin_y = (*(i32 *)((char *)&graph_wnd + 296));
   dlg_show_modal(&dialog2,0);
   if (bg_surface2 != (DibSurface *)0x0) {
     surface_delete(bg_surface2,1);
@@ -6741,8 +6741,8 @@ i32 __cdecl council_attitude_advice(iptr civ,i32 era)
   i32 result;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  recalc_flag = game.field_06 & 4;
-  game.field_06 = game.field_06 & 0xfffb;
+  recalc_flag = game.transient_flags & 4;
+  game.transient_flags = game.transient_flags & 0xfffb;
   content_count = 0;
   disorder_count = 0;
   celebrate_count = 0;

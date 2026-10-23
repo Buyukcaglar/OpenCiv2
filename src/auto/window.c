@@ -384,7 +384,7 @@ void __cdecl menu_find_city(void)
     else {
       mapview_center_on
                 ((ViewWindow *)&map_views,(int)cities[city2].x,(int)cities[city2].y);
-      if ((dialog2.field_dc != 0) && ((cities[city2].owner == civ2 || (game.reveal_map != '\0')))
+      if ((dialog2.result_extra != 0) && ((cities[city2].owner == civ2 || (game.reveal_map != '\0')))
          ) {
         city_window_open((ScaledWindowView *)&city_window,city2);
       }
@@ -788,7 +788,7 @@ void __thiscall picwnd_close(PictureWindowCore *this)
   if (-1 < (int)this->report_id) {
     this->report_id = 0xffffffff;
     wnd_remove_all_controls((WndControlRemoveView *)this->pad_48);
-    surface_release((DibSurface *)&this->field_2d8);
+    surface_release((DibSurface *)&this->rates_civ);
     frame_wnd_close((DibSurface *)this);
   }
   return;
@@ -820,13 +820,13 @@ picwnd_open
   picwnd_close((PictureWindowCore *)&advisor_window);
   ui_set_button_font(ADDR(0x63eaa0, ((u8 *)&g.d_0063eaa0)));
   this->controls_created = 0;
-  this->field_454 = 0;
+  this->frame_state = 0;
   this->page_count = 1;
   this->first_row = 0;
   this->report_civ = 1;
   this->report_param = 0;
   this->report_id = report;
-  this->field_4a0 = style;
+  this->frame_style = style;
   wnd_w = GetSystemMetrics(2);
   this->vscroll_width = wnd_w;
   border = frame_border_width;
@@ -840,19 +840,19 @@ picwnd_open
   this->image_height = img_height;
   win_flush_pending_msgs();
   if (resource_id == 10000) {
-    surface_load_gif_file((DibSurface *)&this->field_2d8,ADDR(0x625ee0, ((u8 *)&g.d_00625ee0)),10,0xc0,(iptr)&palette)
+    surface_load_gif_file((DibSurface *)&this->rates_civ,ADDR(0x625ee0, ((u8 *)&g.d_00625ee0)),10,0xc0,(iptr)&palette)
     ;
   }
   else {
-    surface_load_gif_resource((DibSurface *)&this->field_2d8,resource_id,10,0xc0,(iptr)&palette);
+    surface_load_gif_resource((DibSurface *)&this->rates_civ,resource_id,10,0xc0,(iptr)&palette);
   }
   win_flush_pending_msgs();
   if ((int)img_width < 1) {
-    wnd_w = surface_width((DibSurface *)&this->field_2d8);
+    wnd_w = surface_width((DibSurface *)&this->rates_civ);
     this->image_width = wnd_w;
   }
   if ((int)img_height < 1) {
-    wnd_w = surface_height((DibSurface *)&this->field_2d8);
+    wnd_w = surface_height((DibSurface *)&this->rates_civ);
     this->image_height = wnd_w;
   }
   this->window_width = win_width;
@@ -874,7 +874,7 @@ picwnd_open
   wnd_h = this->window_height;
   nonclient_height = wnd_nonclient_height((WndBase *)&main_frame_wnd);
   frame_wnd_create
-            ((FrameWindow *)this,0,(this->field_4a0 == 0) - 1 & 8,
+            ((FrameWindow *)this,0,(this->frame_style == 0) - 1 & 8,
              (screen_width >> 1) - ((int)(wnd_w + border * 2) >> 1),
              (scr_height - nonclient_height >> 1) - ((int)(wnd_h + border * 2) >> 1),this->image_width,this->image_height,
              0,border,border);
@@ -895,7 +895,7 @@ picwnd_blit_at
           (FrameWindow *this,int x,int y,i32 width,i32 height)
 
 {
-  gfx_copy_rect_xywh((iptr)&this->field_2d8,(iptr)this,x,y,this->client_x + x,
+  gfx_copy_rect_xywh((iptr)&this->rates_civ,(iptr)this,x,y,this->client_x + x,
                      this->client_y + y,width,height);
   return;
 }
@@ -955,11 +955,11 @@ ViewWindow * __thiscall picwnd_ctor(ViewWindow *this)
   eh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   eh_state = 0;
-  surface_ctor((DibSurface *)&this->field_2d8);
+  surface_ctor((DibSurface *)&this->rates_civ);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
-  button_ctor((Control *)&this->field_320);
+  button_ctor((Control *)&this->bar_height);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  button_ctor((Control *)&this->field_35c);
+  button_ctor((Control *)&this->no_thanks_button_value);
   (*(i8 *)((char *)&eh_state + 0)) = 3;
   button_ctor((Control *)(this->pad_364 + 0x34));
   (*(i8 *)((char *)&eh_state + 0)) = 4;
@@ -1395,7 +1395,7 @@ SurfaceWindow * __thiscall surfwnd_ctor(SurfaceWindow *this)
   eh_state = 0;
   surfwnd_wnd_ctor((Wnd *)this->pad_48);
   this->vtable = (u32)&PTR_FUN_0061c060;
-  this->field_100 = 0;
+  this->handler_slot_100 = 0;
   this->on_paint = 0;
   return this;
 }
@@ -1415,8 +1415,8 @@ Wnd * __thiscall surfwnd_wnd_ctor(Wnd *this)
   eh_state = 0xffffffff;
   wnd_ctor((ModalMenuWindow *)this);
   this->control_list = 0;
-  this->field_bc = 0;
-  this->field_c0 = 0;
+  this->handler_slot_bc = 0;
+  this->handler_slot_c0 = 0;
   *(i8 *)&this->keyboard_nav = 1;
   return this;
 }
@@ -1444,8 +1444,8 @@ ModalMenuWindow * __thiscall wnd_ctor(ModalMenuWindow *this)
   this->min_height = 0;
   this->max_width = 0x4000;
   this->max_height = 0x4000;
-  this->field_a8 = 0;
-  this->field_ac = 0;
+  this->handler_slot_a8 = 0;
+  this->handler_slot_ac = 0;
   this->modal_running = 0;
   this->hscroll_step = 1;
   this->vscroll_step = 1;
@@ -1996,7 +1996,7 @@ void __thiscall wnd_set_focus(WndBase *this)
 void __thiscall wnd_set_bg_tile(DiploLeaderView *this,iptr tile)
 
 {
-  wnd_obj_set_bg_tile(this->field_8,tile);
+  wnd_obj_set_bg_tile(this->wnd_obj,tile);
   return;
 }
 
@@ -2091,7 +2091,7 @@ i32 __cdecl popup_text_with_city(iptr filename,iptr section,i32 dlg_flags,iptr c
   dialog_set_image_zoom((DialogWindowView *)&dialog2,0);
   dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&sprite,city,0);
   result = dlg_show_modal(&dialog2,0);
-  dlg_help_pressed = dialog2.field_dc;
+  dlg_help_pressed = dialog2.result_extra;
   eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
   /* inlined unwind funclet 004a6dc9 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   eh_state = 0xffffffff;
@@ -2145,7 +2145,7 @@ i32 __cdecl popup_text_with_unit(iptr filename,iptr section,i32 dlg_flags,iptr u
   dialog_set_image_zoom((DialogWindowView *)&dialog2,0);
   dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&sprite,unit,0);
   result = dlg_show_modal(&dialog2,0);
-  dlg_help_pressed = dialog2.field_dc;
+  dlg_help_pressed = dialog2.result_extra;
   eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
   /* inlined unwind funclet 004a6f3d */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
   eh_state = 0xffffffff;
@@ -4602,18 +4602,18 @@ popup_text_run(iptr file,iptr section,i32 result,i32 arg4,i32 arg5,
   status = dialog_load_text_section
                     (&dialog2,file,section,result,0,arg4,arg5,arg6,arg7);
   if (status == 0) {
-    if (((byte)dialog2.field_3c & 4) != 0) {
-      for (i = 0; i < (int)dialog2.field_28; i++) {
+    if (((byte)dialog2.style_flags & 4) != 0) {
+      for (i = 0; i < (int)dialog2.option_count; i++) {
         dialog_set_option_checked
                   ((DialogOptionList *)&dialog2,i,1 << ((byte)i & 0x1f) & dlg_check_bits
                   );
       }
     }
     result = dlg_show_modal(&dialog2,0);
-    dlg_help_pressed = dialog2.field_dc;
-    if (((byte)dialog2.field_3c & 4) != 0) {
+    dlg_help_pressed = dialog2.result_extra;
+    if (((byte)dialog2.style_flags & 4) != 0) {
       dlg_check_bits = 0;
-      for (i = 0; i < (int)dialog2.field_28; i++) {
+      for (i = 0; i < (int)dialog2.option_count; i++) {
         status = dialog_option_is_checked((DialogOptionList *)&dialog2,i);
         if (status != 0) {
           dlg_check_bits = dlg_check_bits | 1 << ((byte)i & 0x1f);
@@ -4653,7 +4653,7 @@ popup_text_with_sprite(iptr file,iptr section,i32 flags,iptr sprite,i32 zoom)
   dialog_add_sprite((DialogOptionList *)&dialog2,sprite,0,0);
   dialog_set_image_zoom((DialogWindowView *)&dialog2,zoom);
   result = dlg_show_modal(&dialog2,0);
-  dlg_help_pressed = dialog2.field_dc;
+  dlg_help_pressed = dialog2.result_extra;
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0051d616 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return result;
@@ -7002,7 +7002,7 @@ void __thiscall dialog_init_defaults(Dialog *this)
   this->list_sel_fill_color = list_sel_bg_color;
   this->sel_text_color = dlg_sel_text_color;
   this->sel_shadow_color = dlg_sel_text_shadow_color;
-  this->field_a8 = dialog_default_list_color;
+  this->list_default_color = dialog_default_list_color;
   for (i = 0; i < 2; i++) {
     slot = this->pad_1f8 + i * 4 + 8;
     slot[0] = '\0';
@@ -7022,8 +7022,8 @@ void __thiscall dialog_init_defaults(Dialog *this)
   }
   this->cur_pane = 0;
   this->edit_width = 0;
-  this->field_124 = this->edit_width;
-  this->max_sprite_width = this->field_124;
+  this->item_width_value = this->edit_width;
+  this->max_sprite_width = this->item_width_value;
   this->content_width = this->max_sprite_width;
   this->option_width = this->content_width;
   this->selected_option = 0;
@@ -7033,7 +7033,7 @@ void __thiscall dialog_init_defaults(Dialog *this)
   this->line_list = 0;
   this->sprite_list = 0;
   this->edit_field_list = 0;
-  this->field_b0 = 0;
+  this->option_spacing = 0;
   this->pad_y = 2;
   this->pad_x = 2;
   this->section_gap = 4;
@@ -7064,7 +7064,7 @@ void __thiscall dialog_init_defaults(Dialog *this)
   this->on_select_change = 0;
   this->on_modal_poll = 0;
   this->result_id = 0;
-  this->field_dc = 0;
+  this->result_extra = 0;
   return;
 }
 #undef dialog_default_list_color
@@ -7295,12 +7295,12 @@ dialog_add_line
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   last = (int *)0x0;
-  for (cur = (int *)this->field_230; cur != (int *)0x0; cur = (int *)cur[7]) {
+  for (cur = (int *)this->line_list; cur != (int *)0x0; cur = (int *)cur[7]) {
     last = cur;
   }
   line = (int *)memblock_alloc((iptr)(this->pad_234 + 0x20),0x20);
   if (last == (int *)0x0) {
-    this->field_230 = (uptr)line;
+    this->line_list = (uptr)line;
     *line = 1;
   }
   else {
@@ -7338,7 +7338,7 @@ LAB_0059e2e4:
   line[4] = x;
   line[5] = y;
   line[6] = color;
-  this->field_20++;
+  this->line_count++;
   return line;
 }
 #undef last
@@ -7508,7 +7508,7 @@ int __thiscall dialog_button_width_for(DialogButtonWidthForView *this,iptr text)
   u32 padding;
   int text_width;
   
-  padding = this->field_c4;
+  padding = this->button_padding;
   text_width = font_text_width((GameFont *)&dialog_plain_font_obj,text);
   return text_width + 4 + padding * 4;
 }
@@ -8786,36 +8786,36 @@ dialog_draw_option_cell
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   while (*(char *)text != '\0') {
-    col_width = *(int *)(this[2].pad_9c + this->field_48 * 4 - 4);
-    text_width = font_text_width((GameFont *)this->field_10,text);
+    col_width = *(int *)(this[2].pad_9c + this->cur_pane * 4 - 4);
+    text_width = font_text_width((GameFont *)this->list_font,text);
     if (text_width <= col_width - 6) break;
     text_len = _strlen((char *)text);
     *(i8 *)((text_len - 1) + text) = 0;
   }
   if (selected == 0) {
-    fg_color = this->field_94;
-    shadow_color2 = this->field_98;
+    fg_color = this->list_fg_color;
+    shadow_color2 = this->list_fg_shadow_color;
   }
   else {
-    fg_color = this->field_a0;
-    shadow_color2 = this->field_a4;
+    fg_color = this->sel_text_color;
+    shadow_color2 = this->sel_shadow_color;
   }
   if (shadow_color2 != fg_color) {
     gfx_set_text_color_index(shadow_color2);
     surface_draw_text
-              ((DibSurface *)this->field_0,this->field_10,text,x + 2,y + 1,5);
+              ((DibSurface *)this->surface_value,this->list_font,text,x + 2,y + 1,5);
     gfx_set_text_color_index(fg_color);
     surface_draw_text
-              ((DibSurface *)this->field_0,this->field_10,text,x + 1,y,5);
+              ((DibSurface *)this->surface_value,this->list_font,text,x + 1,y,5);
   }
   if (disabled == 0) {
     gfx_set_text_color_index(fg_color);
   }
   else {
-    gfx_set_text_color_index(this->field_6c);
+    gfx_set_text_color_index(this->highlight_color);
   }
   surface_draw_text
-            ((DibSurface *)this->field_0,this->field_10,text,x,y,5);
+            ((DibSurface *)this->surface_value,this->list_font,text,x,y,5);
   return;
 }
 #undef shadow_color2
@@ -8840,11 +8840,11 @@ dialog_draw_option_text
     right_text = separator + 1;
     *separator = '\0';
   }
-  dialog_draw_option_cell(this,(iptr)text,*(int *)(this[3].pad_14 + this->field_48 * 4 - 4) + x
+  dialog_draw_option_cell(this,(iptr)text,*(int *)(this[3].pad_14 + this->cur_pane * 4 - 4) + x
                      ,y,selected,disabled);
   if (right_text != (char *)0x0) {
-    col_width = *(int *)(this[2].pad_9c + this->field_48 * 4 - 4);
-    right_width = font_text_width((GameFont *)this->field_10,(iptr)right_text);
+    col_width = *(int *)(this[2].pad_9c + this->cur_pane * 4 - 4);
+    right_width = font_text_width((GameFont *)this->list_font,(iptr)right_text);
     dialog_draw_option_cell(this,(iptr)right_text,(col_width + x - 4) - right_width,y,selected,disabled);
     *separator = '|';
   }
@@ -12549,7 +12549,7 @@ void __thiscall wnd_remove_control(WndControlRemoveView *this,int ctrl_id)
     ctrl = (ControlNextView *)this->first_control;
     id = ctrl_get_id((ControlIdView *)ctrl);
     if (id == ctrl_id) {
-      this->first_control = ctrl->field_20;
+      this->first_control = ctrl->next_control;
     }
     else {
       while( true ) {
@@ -12567,7 +12567,7 @@ void __thiscall wnd_remove_control(WndControlRemoveView *this,int ctrl_id)
       }
       this_01 = (ControlNextView *)control_get_next(ctrl);
       next_next = control_get_next(this_01);
-      ctrl->field_20 = next_next;
+      ctrl->next_control = next_next;
     }
   }
   return;
@@ -13132,7 +13132,7 @@ WndBase * __thiscall wnd_record_init(WndBase *this)
 {
   this->native_wnd = 0;
   this->wnd_palette = 0;
-  this->field_c = 0;
+  this->wnd_record = 0;
   this->style = 0;
   return this;
 }

@@ -996,7 +996,7 @@ edit_get_line(EditLineView *this,i32 line,iptr buffer,i32 max_len)
 {
   i32 length;
   
-  length = edit_hwnd_get_line(this->field_1c,line,buffer,max_len);
+  length = edit_hwnd_get_line(this->hwnd,line,buffer,max_len);
   return length;
 }
 
@@ -1031,7 +1031,7 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   spritebtn_init_from_sprite
             (button,parent,ctrl_id,*(i32 *)rect,*(i32 *)(rect + 4),width2,
              height2,sprite,0x17);
-  surf_rect = (int *)surface_get_rect((DibSurface *)&button->field_34);
+  surf_rect = (int *)surface_get_rect((DibSurface *)&button->on_select);
   rect_left2 = *surf_rect;
   rect_top2 = surf_rect[1];
   rect_right2 = surf_rect[2];
@@ -1045,28 +1045,28 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   size = sprite_height((Sprite *)sprite);
   icon_y = center - size / 2;
   sprite_draw
-            ((Sprite *)sprite,(iptr)draw_ctx,(iptr)&button->field_34,icon_x,icon_y);
+            ((Sprite *)sprite,(iptr)draw_ctx,(iptr)&button->on_select,icon_x,icon_y);
   sprite_draw
             ((Sprite *)sprite,(iptr)shadow_ctx,(iptr)(button->pad_50 + 0x2c),icon_x + 2,
              icon_y + 2);
-  gfx_draw_rect_frame((iptr)&button->field_34,(iptr)&rect_left2,10);
+  gfx_draw_rect_frame((iptr)&button->on_select,(iptr)&rect_left2,10);
   gfx_draw_rect_frame((iptr)(button->pad_50 + 0x2c),(iptr)&rect_left2,10);
   inner_left = rect_left2;
   inner_top = rect_top2;
   inner_right = rect_right2;
   inner_bottom = rect_bottom2;
   rect_deflate((iptr)&inner_left,1,1);
-  gfx_draw_bevel_rect((iptr)&button->field_34,(iptr)&inner_left,0x1f,0xf);
+  gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_left,0x1f,0xf);
   gfx_draw_bevel_rect((iptr)(button->pad_50 + 0x2c),(iptr)&inner_left,0xf,10);
   rect_deflate((iptr)&inner_left,1,1);
-  gfx_draw_bevel_rect((iptr)&button->field_34,(iptr)&inner_left,0x1f,0xf);
+  gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_left,0x1f,0xf);
   gfx_draw_bevel_rect((iptr)(button->pad_50 + 0x2c),(iptr)&inner_left,0xf,10);
   pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)button);
   palette = wnd_get_palette(pCVar3);
   surface_set_palette((DibSurface *)(button->pad_50 + 0x2c),palette);
   pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)button);
   palette = wnd_get_palette(pCVar3);
-  surface_set_palette((DibSurface *)&button->field_34,palette);
+  surface_set_palette((DibSurface *)&button->on_select,palette);
   return;
 }
 #undef shadow_ctx
@@ -1136,7 +1136,7 @@ SpriteButton * __thiscall spritebtn_ctor(SpriteButton *this)
   surface_ctor((DibSurface *)&this->on_select);
   seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),1);
   surface_ctor((DibSurface *)(this->pad_50 + 0x2c));
-  this->field_c8 = '\0';
+  this->pressed_state = '\0';
   return this;
 }
 #undef seh_prev
@@ -1900,7 +1900,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         mem_dc = CreateCompatibleDC(hdc);
         ReleaseDC(hwnd2,hdc);
         SetBkMode(mem_dc,1);
-        if (button->field_34 == 0xffffffff) {
+        if (button->on_select == 0xffffffff) {
           bg_pen = GetStockObject(1);
         }
         else {
@@ -1915,7 +1915,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
           blue_out = blue;
           green_out = green;
           red_out = red;
-          color_index = button->field_34;
+          color_index = button->on_select;
           pCVar5 = (WndPaletteView *)ctrl_get_parent(button);
           this_01 = (GamePalette *)wnd_get_palette(pCVar5);
           logpal = palette_get_logpalette(this_01);
@@ -1935,7 +1935,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         orig_top = bounds.top;
         orig_right = bounds.right;
         orig_bottom = bounds.bottom;
-        if (button->field_34 == 0xffffffff) {
+        if (button->on_select == 0xffffffff) {
           FillRect(mem_dc,&bounds,(HBRUSH)bg_pen);
         }
         else {
@@ -1984,9 +1984,9 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         saved_top = text_rect.top;
         saved_right = text_rect.right;
         saved_bottom = text_rect.bottom;
-        if (-1 < (int)button->field_28) {
+        if (-1 < (int)button->hotkey_pos) {
           crt_strcpy(prefix,label_text);
-          prefix[button->field_28] = '\0';
+          prefix[button->hotkey_pos] = '\0';
           len = _strlen(prefix);
           if (len == 0) {
             underline_start = text_rect.left;
@@ -2003,7 +2003,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
             underline_start = text_rect.right - 1;
           }
           crt_strcpy(prefix,label_text);
-          prefix[button->field_28 + 1] = '\0';
+          prefix[button->hotkey_pos + 1] = '\0';
           text_rect.left = saved_left;
           text_rect.top = saved_top;
           text_rect.right = saved_right;
@@ -2023,7 +2023,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
           SelectObject(mem_dc,old_obj);
         }
         SelectObject(mem_dc,h_00);
-        if (button->field_34 == 0xffffffff) {
+        if (button->on_select == 0xffffffff) {
           FillRect(mem_dc,&bounds,(HBRUSH)bg_pen);
         }
         else {
@@ -2067,9 +2067,9 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         saved_top = text_rect.top;
         saved_right = text_rect.right;
         saved_bottom = text_rect.bottom;
-        if (-1 < (int)button->field_28) {
+        if (-1 < (int)button->hotkey_pos) {
           crt_strcpy(prefix,label_text);
-          prefix[button->field_28] = '\0';
+          prefix[button->hotkey_pos] = '\0';
           len = _strlen(prefix);
           if (len == 0) {
             underline_start = text_rect.left;
@@ -2086,7 +2086,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
             underline_start = text_rect.right - 1;
           }
           crt_strcpy(prefix,label_text);
-          prefix[button->field_28 + 1] = '\0';
+          prefix[button->hotkey_pos + 1] = '\0';
           text_rect.left = saved_left;
           text_rect.top = saved_top;
           text_rect.right = saved_right;
@@ -2110,7 +2110,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         bounds.top = orig_top;
         bounds.right = orig_right;
         bounds.bottom = orig_bottom;
-        if (button->field_34 == 0xffffffff) {
+        if (button->on_select == 0xffffffff) {
           FillRect(mem_dc,&bounds,(HBRUSH)bg_pen);
         }
         else {
@@ -2167,9 +2167,9 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         saved_top = text_rect.top;
         saved_right = text_rect.right;
         saved_bottom = text_rect.bottom;
-        if (-1 < (int)button->field_28) {
+        if (-1 < (int)button->hotkey_pos) {
           crt_strcpy(prefix,label_text);
-          prefix[button->field_28] = '\0';
+          prefix[button->hotkey_pos] = '\0';
           len = _strlen(prefix);
           if (len == 0) {
             underline_start = text_rect.left;
@@ -2186,7 +2186,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
             underline_start = text_rect.right - 1;
           }
           crt_strcpy(prefix,label_text);
-          prefix[button->field_28 + 1] = '\0';
+          prefix[button->hotkey_pos + 1] = '\0';
           text_rect.left = saved_left;
           text_rect.top = saved_top;
           text_rect.right = saved_right;
@@ -2208,7 +2208,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         SelectObject(mem_dc,h_04);
         SelectObject(mem_dc,h_03);
         DeleteObject(h_01);
-        if (button->field_34 != 0xffffffff) {
+        if (button->on_select != 0xffffffff) {
           DeleteObject(bg_pen);
         }
         DeleteObject(h_02);
@@ -2641,10 +2641,10 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
       OffsetRect(&rect,-rect.left,-rect.top);
       hdc = BeginPaint(hwnd,&ps);
       ctrl_paint_parent_bkgnd((iptr)&ps,hwnd);
-      result = font_get_handle((GameFont *)checkbox->field_38);
+      result = font_get_handle((GameFont *)checkbox->font);
       font_data = (i32 *)mem_handle_lock(result);
       old_font = SelectObject(hdc,(HGDIOBJ)*font_data);
-      result = font_get_handle((GameFont *)checkbox->field_38);
+      result = font_get_handle((GameFont *)checkbox->font);
       mem_handle_unlock(result);
       SetBkMode(hdc,1);
       gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
@@ -2729,9 +2729,9 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
       draw_rect = &rect;
       len = _strlen(label);
       DrawTextA(hdc,label,len,draw_rect,UVar19);
-      if (checkbox->field_28 != 0xffffffff) {
+      if (checkbox->hotkey_pos != 0xffffffff) {
         crt_strcpy(prefix,label);
-        prefix[checkbox->field_28] = '\0';
+        prefix[checkbox->hotkey_pos] = '\0';
         text_rect.left = rect.left;
         text_rect.top = rect.top;
         text_rect.right = rect.right;
@@ -2748,7 +2748,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
           underline_start = text_rect.right - 1;
         }
         crt_strcpy(prefix,label);
-        prefix[checkbox->field_28 + 1] = '\0';
+        prefix[checkbox->hotkey_pos + 1] = '\0';
         text_rect.left = rect.left;
         text_rect.top = rect.top;
         text_rect.right = rect.right;
@@ -4029,7 +4029,7 @@ spritebtn_init_from_sprite
   int yBottom;
   i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
   
-  this->field_c8 = '\0';
+  this->pressed_state = '\0';
   value = wnd_get_palette(parent);
   this->ctrl_palette = value;
   SetRect(&rect,x,y,width + x,y + height);

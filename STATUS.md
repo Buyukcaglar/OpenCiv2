@@ -77,19 +77,20 @@ message by message and clock event by clock event.
 
 ## Known limitations / next steps
 
-* **Names and types.**  About 4,050 of about 4,450 game functions, 2,260 of
-  about 2,480 globals, 268 of 355 classes and 870 class fields are named: 95% of
-  calls and over 99% of global references in the generated code read by name.
-  Each name has its evidence in re/function_names.tsv, re/global_names.tsv,
-  re/type_names.tsv and re/field_names.tsv; re/notes.md collects the
-  structures found.  Names live in re/symbols.tsv (functions: func,
-  globals: var) and the maps above; tools/rename.py applies them to the
-  sources (src/auto included).  Naming dossiers:
-  tools/name_batches.py, name_globals_batches.py, name_types_dossier.py,
-  name_fields_dossier.py; tools/apply_names.py takes proposals in.
-  Still to do: the rarely-called remainder (mostly small helpers), the
-  larger window subclasses whose fields overlap, and typing parameters
-  and locals (still int/undefined4 in many functions).
+* **Names and types.**  Everything the game code (src/auto, but for the
+  MSVC runtime) refers to has a name: every function, global and class
+  (no FUN_, DAT_ or C_ placeholders left), every parameter and local
+  (no param_N, iVarN or local_XX: about 14,000 named by tools/name_vars.py
+  from proposals per slice of functions), every class and struct field it
+  accesses by name (tools/field_uses.py dossiers, tools/apply_field_names.py),
+  and Ghidra's undefinedN types are explicit integers (i8, i16, i32, i64).
+  Each rename was checked by building: the Windows build stayed byte for byte
+  the same.  Evidence for names: re/function_names.tsv, re/global_names.tsv,
+  re/type_names.tsv, re/field_names.tsv; names live in re/symbols.tsv and
+  those maps, tools/rename.py applies them.  Left for the layout work (step
+  5): accesses into objects whose layout is not recovered -- `this[N].field_0`
+  (an object read as an array of 4-byte cells, ~700) and the pad_ gaps of
+  partly known classes (`this->pad_48 + 0x10`, ~2,800).
 * **Data is binary.**  `data/image/*.bin` are the original initialized data
   sections; converting them to C tables is mechanical but not done.
 * `tools/build_recon.py` still reads the original `civ2.exe` for import-slot

@@ -2361,15 +2361,15 @@ void __cdecl portrait_dlg_on_click(int x,int y)
   else {
     dlg = (DibSurface *)(tmp - 0x48);
   }
-  old_sel = dlg[6].field_30;
+  old_sel = dlg[6].bounds_bottom;
   tmp = surface_get_height(dlg);
   if (y <= tmp - 0x24 + frame_border_width * -2) {
     tmp = (y - frame_caption_height) / (frame_border_width + 0x6e);
-    dlg[6].field_30 =
+    dlg[6].bounds_bottom =
          ((x - (frame_border_width >> 1)) / (frame_border_width + 0x5a) - tmp) + tmp * 8;
-    new_x = (((int)dlg[6].field_30 % 7) * (frame_border_width + 0x5a) + frame_border_width) -
+    new_x = (((int)dlg[6].bounds_bottom % 7) * (frame_border_width + 0x5a) + frame_border_width) -
                frame_bevel_width;
-    new_y = (((int)dlg[6].field_30 / 7) * (frame_border_width + 0x6e) + frame_caption_height) -
+    new_y = (((int)dlg[6].bounds_bottom / 7) * (frame_border_width + 0x6e) + frame_caption_height) -
                frame_bevel_width;
     old_x = ((frame_border_width + 0x5a) * ((int)old_sel % 7) + frame_border_width) - frame_bevel_width;
     old_y = ((frame_border_width + 0x6e) * ((int)old_sel / 7) + frame_caption_height) - frame_bevel_width;
@@ -3337,7 +3337,7 @@ LAB_0056c269:
       }
     }
     else {
-      order_char = units[unit2].field_0c;
+      order_char = units[unit2].ai_task;
     }
   }
   if (order_char != '\0') {
@@ -6776,28 +6776,28 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   sprite_picker_dialog = this;
-  this->field_2d8 = 0xf0;
-  this->field_2dc = 0xf0;
+  this->rates_civ = 0xf0;
+  this->max_rate_value = 0xf0;
   border_width = 0;
   caption_height = 0;
   resize_border = 0;
-  win_height = this->field_2dc;
-  win_width = this->field_2d8;
+  win_height = this->max_rate_value;
+  win_width = this->rates_civ;
   win_y = 0;
   win_x = 0;
   style_flags = 0xd;
   title = label_string(*(i32 *)(label_string_ids + 0x950));
   sprite_picker_create_window(title,style_flags,win_x,win_y,win_width,win_height,resize_border,caption_height,border_width);
   metric = font_line_spacing((GameFont *)dialog_font_ptr);
-  this->field_2f4 = metric + 8;
-  this->field_2f0 = this->client_width - 4;
+  this->init_sci_rate = metric + 8;
+  this->init_lux_rate = this->client_width - 4;
   metric = GetSystemMetrics(3);
   scroll_height = metric + 2;
-  this->field_2e8 = this->client_width - 4;
-  y2 = ((this->client_y + this->client_height) - (this->field_2f4 + 2)) - (metric + 4);
+  this->sci_rate_sel = this->client_width - 4;
+  y2 = ((this->client_y + this->client_height) - (this->init_sci_rate + 2)) - (metric + 4);
   x2 = this->client_x + 2;
   sprite_sheet_cell_count = sprite_editor_cell_rect(0,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out);
-  rect_set_xywh((iptr)rect,x2,y2,this->field_2e8,scroll_height);
+  rect_set_xywh((iptr)rect,x2,y2,this->sci_rate_sel,scroll_height);
   if (this == (ViewWindow *)0x0) {
     scroll_parent = (u8 *)0x0;
   }
@@ -6805,16 +6805,16 @@ void __thiscall sprite_picker_run(ViewWindow *this)
     scroll_parent = this->pad_48;
   }
   scrollbar_create
-            ((Control *)&this->field_2f8,(iptr)scroll_parent,0x65,(iptr)rect,0);
-  scrollbar_set_range((Control *)&this->field_2f8,0,sprite_sheet_cell_count - 1);
-  scrollbar_set_pos((ClickControl *)&this->field_2f8,0);
-  scrollbar_set_callback((Control *)&this->field_2f8,ADDR(0x401550, sprite_picker_select_cell));
+            ((Control *)&this->dialog_w,(iptr)scroll_parent,0x65,(iptr)rect,0);
+  scrollbar_set_range((Control *)&this->dialog_w,0,sprite_sheet_cell_count - 1);
+  scrollbar_set_pos((ClickControl *)&this->dialog_w,0);
+  scrollbar_set_callback((Control *)&this->dialog_w,ADDR(0x401550, sprite_picker_select_cell));
   sprite_picker_select_cell(0);
-  ctrl_show_and_redraw((Control *)&this->field_2f8);
-  this->field_2f0 = (int)(this->client_width - 8) / 3;
-  y2 = (this->client_y + this->client_height) - (this->field_2f4 + 2);
+  ctrl_show_and_redraw((Control *)&this->dialog_w);
+  this->init_lux_rate = (int)(this->client_width - 8) / 3;
+  y2 = (this->client_y + this->client_height) - (this->init_sci_rate + 2);
   x2 = this->client_x + 2;
-  rect_set_xywh((iptr)rect,x2,y2,this->field_2f0,this->field_2f4);
+  rect_set_xywh((iptr)rect,x2,y2,this->init_lux_rate,this->init_sci_rate);
   if (this == (ViewWindow *)0x0) {
     ok_parent = (u8 *)0x0;
   }
@@ -6823,11 +6823,11 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
-            ((Control *)&this->field_338,(iptr)ok_parent,0xc9,(iptr)rect,label);
-  button_set_callback((Control *)&this->field_338,ADDR(0x4013c5, sprite_picker_ok_clicked));
-  ctrl_set_default_button((Control *)&this->field_338);
-  x2 = x2 + this->field_2f0 + 2;
-  rect_set_xywh((iptr)rect,x2,y2,this->field_2f0,this->field_2f4);
+            ((Control *)&this->sci_label_y,(iptr)ok_parent,0xc9,(iptr)rect,label);
+  button_set_callback((Control *)&this->sci_label_y,ADDR(0x4013c5, sprite_picker_ok_clicked));
+  ctrl_set_default_button((Control *)&this->sci_label_y);
+  x2 = x2 + this->init_lux_rate + 2;
+  rect_set_xywh((iptr)rect,x2,y2,this->init_lux_rate,this->init_sci_rate);
   if (this == (ViewWindow *)0x0) {
     import_parent = (u8 *)0x0;
   }
@@ -6842,8 +6842,8 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   if (sprite_sheet_mode == 5) {
     ctrl_disable((Control *)(this->pad_364 + 0x10));
   }
-  x2 = x2 + this->field_2f0 + 2;
-  rect_set_xywh((iptr)rect,x2,y2,this->field_2f0,this->field_2f4);
+  x2 = x2 + this->init_lux_rate + 2;
+  rect_set_xywh((iptr)rect,x2,y2,this->init_lux_rate,this->init_sci_rate);
   if (this == (ViewWindow *)0x0) {
     cancel_parent = (u8 *)0x0;
   }
@@ -6852,9 +6852,9 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
-            ((Control *)&this->field_3b0,(iptr)cancel_parent,0xca,(iptr)rect,label);
-  button_set_callback((Control *)&this->field_3b0,ADDR(0x402cde, sprite_picker_cancel_clicked));
-  ctrl_set_cancel_button((Control *)&this->field_3b0);
+            ((Control *)&this->fill_rect_top,(iptr)cancel_parent,0xca,(iptr)rect,label);
+  button_set_callback((Control *)&this->fill_rect_top,ADDR(0x402cde, sprite_picker_cancel_clicked));
+  ctrl_set_cancel_button((Control *)&this->fill_rect_top);
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x403887, sprite_picker_redraw_cb));
   wnd_repaint((SurfaceWindow *)this);
   window_show((WindowObjectView *)this);
@@ -7108,13 +7108,13 @@ ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *this)
   seh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   seh_state = 0;
-  scrollbar_ctor((Control *)&this->field_2f8);
+  scrollbar_ctor((Control *)&this->dialog_w);
   (*(i8 *)((char *)&seh_state + 0)) = 1;
-  button_ctor((Control *)&this->field_338);
+  button_ctor((Control *)&this->sci_label_y);
   (*(i8 *)((char *)&seh_state + 0)) = 2;
   button_ctor((Control *)(this->pad_364 + 0x10));
   seh_state = CONCAT31((*(i32 *)((char *)&seh_state + 1)),3);
-  button_ctor((Control *)&this->field_3b0);
+  button_ctor((Control *)&this->fill_rect_top);
   this->vtable = (u32)&PTR_FUN_0061d6fc;
   return this;
 }
@@ -9896,7 +9896,7 @@ sprite_blit_to_surface
     tmp = gfx_scale_length(clip_w,tmp,clip_h);
     SetRect(&clip_rect,0,0,tmp,scaled_h);
     OffsetRect(&clip_rect,dst_x,dst_y);
-    BVar7 = IntersectRect(&clip_rect,&clip_rect,(RECT *)&surface->field_14);
+    BVar7 = IntersectRect(&clip_rect,&clip_rect,(RECT *)&surface->clip_left);
     if (BVar7 != 0) {
       skip_x = 0;
       clip_w = rect_width((iptr)&clip_rect);
@@ -10005,7 +10005,7 @@ sprite_blit_silhouette_to_surface
     tmp = gfx_scale_length(clip_w,tmp,clip_h);
     SetRect(&clip_rect,0,0,tmp,scaled_h);
     OffsetRect(&clip_rect,dst_x,dst_y);
-    BVar7 = IntersectRect(&clip_rect,&clip_rect,(RECT *)&surface->field_14);
+    BVar7 = IntersectRect(&clip_rect,&clip_rect,(RECT *)&surface->clip_left);
     if (BVar7 != 0) {
       skip_x = 0;
       clip_w = rect_width((iptr)&clip_rect);
@@ -10088,31 +10088,31 @@ sprite_merge_at
   i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(int *)(src + 0x34) != 0) {
-    if (dst->field_34 == 0) {
+    if (dst->data_handle == 0) {
       SetRect((LPRECT)dst,*(int *)src,*(int *)(src + 4),*(int *)(src + 8) + dx,
               *(int *)(src + 0xc) + dy);
-      dst->field_10 = *(u32 *)(src + 0x10);
-      dst->field_14 = *(u32 *)(src + 0x14);
+      dst->bounds_rect = *(u32 *)(src + 0x10);
+      dst->bounds_top = *(u32 *)(src + 0x14);
       *(i32 *)dst->pad_18 = *(i32 *)(src + 0x18);
       *(i32 *)(dst->pad_18 + 4) = *(i32 *)(src + 0x1c);
-      OffsetRect((LPRECT)&dst->field_10,dx,dy);
-      dst->field_20 = *(int *)(src + 0x20) + dx;
-      dst->field_24 = *(int *)(src + 0x24) + dy;
-      dst->field_28 = *(u32 *)(src + 0x28);
-      dst->field_2c = *(u32 *)(src + 0x2c);
-      dst->field_30 = *(u8 *)(src + 0x30);
-      dst->field_34 = *(u32 *)(src + 0x34);
-      mem_handle_clone((iptr)&dst->field_34);
+      OffsetRect((LPRECT)&dst->bounds_rect,dx,dy);
+      dst->offset_x = *(int *)(src + 0x20) + dx;
+      dst->full_height = *(int *)(src + 0x24) + dy;
+      dst->load_scale_num = *(u32 *)(src + 0x28);
+      dst->load_scale_den = *(u32 *)(src + 0x2c);
+      dst->key_color = *(u8 *)(src + 0x30);
+      dst->data_handle = *(u32 *)(src + 0x34);
+      mem_handle_clone((iptr)&dst->data_handle);
       sprite_lock(dst);
     }
     else {
-      src_top = (*(int *)(src + 0x14) + dy) - dst->field_14;
+      src_top = (*(int *)(src + 0x14) + dy) - dst->bounds_top;
       src_w = rect_width(src + 0x10);
       value = *(int *)(src + 0x10);
       src_h = rect_height(src + 0x10);
-      merged = rect_width((iptr)&dst->field_10);
-      merged = dst->field_10 + merged;
-      dst_h = rect_height((iptr)&dst->field_10);
+      merged = rect_width((iptr)&dst->bounds_rect);
+      merged = dst->bounds_rect + merged;
+      dst_h = rect_height((iptr)&dst->bounds_rect);
       new_h = src_h + src_top;
       if (src_h + src_top <= dst_h) {
         new_h = dst_h;
@@ -10127,7 +10127,7 @@ sprite_merge_at
       sprite_lock((Sprite *)src);
       sprite_lock(dst);
       src_cursor = *(int **)(src + 0x38);
-      dst_cursor = (int *)dst->field_38;
+      dst_cursor = (int *)dst->data_ptr;
       new_handle = mem_handle_alloc(LVar2 * LVar3 + LVar3 * 8);
       out = (int *)mem_handle_lock(new_handle);
       for (row = 0; row < LVar3; row++) {
@@ -10187,7 +10187,7 @@ sprite_merge_at
             if ((src_start <= col) && (col < src_end)) {
               if ((uint)*(byte *)(src + 0x30) == (int)(char)*src_cursor) {
                 if (written == 0) {
-                  *(u8 *)out = dst->field_30;
+                  *(u8 *)out = dst->key_color;
                 }
               }
               else {
@@ -10204,24 +10204,24 @@ sprite_merge_at
           }
         }
       }
-      OffsetRect(&rect,dst->field_10,dst->field_14);
-      dst->field_10 = rect.left;
-      dst->field_14 = rect.top;
+      OffsetRect(&rect,dst->bounds_rect,dst->bounds_top);
+      dst->bounds_rect = rect.left;
+      dst->bounds_top = rect.top;
       *(LONG *)dst->pad_18 = rect.right;
       *(LONG *)(dst->pad_18 + 4) = rect.bottom;
-      dst->field_0 = rect.left;
-      dst->field_4 = rect.top;
+      dst->frame_rect = rect.left;
+      dst->frame_top = rect.top;
       *(LONG *)dst->pad_8 = rect.right;
       *(LONG *)(dst->pad_8 + 4) = rect.bottom;
-      if (dst->field_38 != 0) {
+      if (dst->data_ptr != 0) {
         sprite_unlock(dst);
       }
-      if (dst->field_34 != 0) {
-        freed = mem_handle_free(dst->field_34);
-        dst->field_34 = freed;
+      if (dst->data_handle != 0) {
+        freed = mem_handle_free(dst->data_handle);
+        dst->data_handle = freed;
       }
       mem_handle_unlock(new_handle);
-      dst->field_34 = new_handle;
+      dst->data_handle = new_handle;
       sprite_lock(dst);
     }
   }
@@ -10244,8 +10244,8 @@ void __thiscall sprite_clear_fields(Sprite *this)
   SetRect((LPRECT)&this->bounds_rect,0,0,0,0);
   this->offset_x = 0;
   this->full_height = 0;
-  this->field_28 = 1;
-  this->field_2c = 1;
+  this->load_scale_num = 1;
+  this->load_scale_den = 1;
   this->key_color = '\0';
   this->data_handle = 0;
   this->data_ptr = 0;

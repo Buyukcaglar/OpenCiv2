@@ -1072,8 +1072,8 @@ void __thiscall err_show_fatal_box(ErrorContext *this,i32 msg)
 void __thiscall err_set_code(ErrorContext *this,u32 code)
 
 {
-  this->field_704 = code;
-  this->field_700 = this->field_700 | 1 << ((byte)code & 0x1f);
+  this->last_error_code = code;
+  this->error_bits = this->error_bits | 1 << ((byte)code & 0x1f);
   return;
 }
 
@@ -1094,8 +1094,8 @@ void __thiscall err_ctx_set_field_708(ErrorContext *this,i32 value)
 void __thiscall err_ctx_clear_codes(ErrorContext *this)
 
 {
-  this->field_700 = 0;
-  this->field_704 = 0;
+  this->error_bits = 0;
+  this->last_error_code = 0;
   return;
 }
 

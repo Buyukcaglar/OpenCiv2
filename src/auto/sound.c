@@ -2219,7 +2219,7 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
   this->vtable = (u32)&PTR_FUN_0061d718;
   this->style_flags = 0;
   this->double_size = 0;
-  this->field_5a4 = 0;
+  this->avi_option = 0;
   this->target_surface = 0;
   this->has_audio = 1;
   this->audio_playing = 0;

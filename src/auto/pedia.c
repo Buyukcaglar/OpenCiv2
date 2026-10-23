@@ -1879,14 +1879,14 @@ void __thiscall pedia_window_create(DocumentWindow *this)
   this->panel_width = 0x280;
   this->panel_height = 400;
   left_x = font_cached_height((GameFont *)&font_size30);
-  this->field_5e4 = left_x + panel_bevel_width * 2 + panel_margin_y * 2;
+  this->header_height = left_x + panel_bevel_width * 2 + panel_margin_y * 2;
   SetRect((LPRECT)this->pad_5e8,0,0,this->panel_width,this->panel_height);
   panel_h = this->panel_height;
-  left_x = this->field_5e4 + panel_margin_y;
+  left_x = this->header_height + panel_margin_y;
   col_width = font_line_spacing((GameFont *)&font_size24);
   SetRect((LPRECT)&this->content_left,0,0,this->panel_width + (panel_padding_x + panel_margin_x) * -2,
           (panel_h - left_x) + ((panel_margin_y * -3 + panel_padding_y * -2) - col_width) + panel_bevel_width * -2);
-  OffsetRect((LPRECT)&this->content_left,panel_padding_x + panel_margin_x,this->field_5e4 + panel_margin_y);
+  OffsetRect((LPRECT)&this->content_left,panel_padding_x + panel_margin_x,this->header_height + panel_margin_y);
   left_x = wnd_client_width((WndBase *)&main_frame_wnd);
   col_width = wnd_client_height((WndBase *)&main_frame_wnd);
   crt_strcpy(this->pad_608 + 0x10,&pedia_window_empty_title_str);
@@ -1896,7 +1896,7 @@ void __thiscall pedia_window_create(DocumentWindow *this)
   ;
   wnd_set_close_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x401dcf, pedia_close));
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x40272a, pedia_redraw_page));
-  wnd_set_caption_height((WndBase *)this->pad_48,this->field_5e4);
+  wnd_set_caption_height((WndBase *)this->pad_48,this->header_height);
   wnd_set_keydown_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4026bc, pedia_list_on_key));
   wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
   left_x = panel_padding_x;
@@ -1906,9 +1906,9 @@ void __thiscall pedia_window_create(DocumentWindow *this)
   this[2].field_2b4 = panel_h;
   panel_h = sprite_height((Sprite *)this[2].field_2bc);
   this[2].field_2b8 = panel_h;
-  btn_height = (int)(this[2].field_2b8 * this->field_5e4) / 0x18;
-  col_width = ((int)this->field_5e4 >> 1) - (btn_height >> 1);
-  SetRect(&rect,left_x,col_width,(int)(this[2].field_2b4 * this->field_5e4) / 0x18 + left_x,
+  btn_height = (int)(this[2].field_2b8 * this->header_height) / 0x18;
+  col_width = ((int)this->header_height >> 1) - (btn_height >> 1);
+  SetRect(&rect,left_x,col_width,(int)(this[2].field_2b4 * this->header_height) / 0x18 + left_x,
           btn_height + col_width);
   this_00 = operator_new(0x40);
   eh_state = 0;
@@ -2453,7 +2453,7 @@ void __thiscall pedia_draw_frame(MediaWindow *this)
   }
   pedia_fill_background((WindowObjectView *)this,(iptr)&rect,1);
   rect_deflate((iptr)&rect,panel_padding_x + panel_bevel_width * -2,0);
-  rect.top = rect.top + this->field_5e4 + panel_bevel_width * -2;
+  rect.top = rect.top + this->header_height + panel_bevel_width * -2;
   tmp_a = rect_height((iptr)this->pad_5e8);
   tmp_b = font_line_spacing((GameFont *)&font_size24);
   rect.bottom = tmp_a + ((panel_margin_y * -3 + panel_padding_y * -2) - tmp_b);
@@ -2464,11 +2464,11 @@ void __thiscall pedia_draw_frame(MediaWindow *this)
   pedia_fill_background((WindowObjectView *)this,(iptr)&rect,2);
   tmp_a = panel_padding_x;
   x2 = panel_padding_x;
-  this->panel_width = (int)(*(int *)(this[3].pad_4a4 + 0xc) * this->field_5e4) / 0x18;
-  this->panel_height = (int)(*(int *)(this[3].pad_4a4 + 0x10) * this->field_5e4) / 0x18;
-  y2 = ((int)this->field_5e4 >> 1) - ((int)this->panel_height >> 1);
+  this->panel_width = (int)(*(int *)(this[3].pad_4a4 + 0xc) * this->header_height) / 0x18;
+  this->panel_height = (int)(*(int *)(this[3].pad_4a4 + 0x10) * this->header_height) / 0x18;
+  y2 = ((int)this->header_height >> 1) - ((int)this->panel_height >> 1);
   SetRect(&rect,tmp_a,y2,this->panel_width + tmp_a,this->panel_height + y2);
-  gfx_set_scale_ratio(this->field_5e4,0x18);
+  gfx_set_scale_ratio(this->header_height,0x18);
   sprite_draw
             (*(Sprite **)(this[3].pad_4a4 + 0x14),(iptr)sprite_ctx,(iptr)this,x2,y2
             );
