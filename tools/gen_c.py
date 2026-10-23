@@ -13,6 +13,11 @@ Functions whose output still contains decompiler artifacts that have no C
 meaning (register inputs, unrecovered stack) are emitted inside `#if 0`
 with status "manual" so they keep running as original code until a person
 reconstructs them.  Overrides in src/manual/ always win over the auto tier.
+
+Retired (2026-10): src/auto is now the source, edited directly; running
+this again would overwrite those edits.  It refuses unless
+CIV2_REGENERATE=1 is set (kept for reference and for comparing a fresh
+decompilation with the sources).
 """
 import collections
 import csv
@@ -1054,6 +1059,9 @@ def apply_direct_calls():
             open(path, 'w').write(n)
 
 
+if __name__ == '__main__' and not os.environ.get('CIV2_REGENERATE'):
+    sys.exit('tools/gen_c.py: src/auto is edited directly now and would be overwritten; '
+             'set CIV2_REGENERATE=1 to regenerate anyway (into a scratch checkout)')
 if __name__ == '__main__':
     main()
     apply_type_names()

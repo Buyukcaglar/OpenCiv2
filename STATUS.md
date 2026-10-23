@@ -4,7 +4,7 @@
 
 | status      | functions | meaning |
 |-------------|-----------|---------|
-| auto        | 4040 | game functions translated by `tools/gen_c.py` (src/auto/blk_*.c) |
+| auto        | 4040 | game functions, translated from Ghidra's output by `tools/gen_c.py`; since October 2026 the source, edited directly (src/auto/blk_*.c) |
 | game        |  114 | reconstructed by hand (src/game/*.c, src/crt/*.c) |
 | ehfunclet   |  462 | C++ unwind funclets; inlined into their callers, never called on their own |
 | crt         |  284 | statically linked MSVC 4.2 debug C runtime, translated (src/auto/crt_*.c) |
@@ -57,8 +57,9 @@ random-click scripts on both builds: identical (3 392 `rand()` calls).
 
 Reads of locals the 1997 code never initialises are the main source of
 differences between builds: valgrind finds them, `CIV2_STACKPROBE` reads
-what the original's stack holds there, and `tools/gen_c.py`
-(FRAME_PRESETS) starts the native frame with those values.  What made it so: matching Wine's exact message semantics
+what the original's stack holds there, and the function's frame starts
+with those values (they were applied by `tools/gen_c.py`'s FRAME_PRESETS;
+now edited in src/auto directly).  What made it so: matching Wine's exact message semantics
 (window positioning, painting and exposure, activation and focus, key
 state, posted messages before input) -- `harness/msgdiff.sh` and
 `harness/clockdiff.py` compare a native run with the Wine reference
@@ -83,7 +84,7 @@ message by message and clock event by clock event.
   re/type_names.tsv and re/field_names.tsv; re/notes.md collects the
   structures found.  Names live in re/symbols.tsv (functions: func,
   globals: var) and the maps above; tools/rename.py applies them to the
-  sources, tools/gen_c.py when regenerating.  Naming dossiers:
+  sources (src/auto included).  Naming dossiers:
   tools/name_batches.py, name_globals_batches.py, name_types_dossier.py,
   name_fields_dossier.py; tools/apply_names.py takes proposals in.
   Still to do: the rarely-called remainder (mostly small helpers), the
@@ -93,11 +94,11 @@ message by message and clock event by clock event.
   sections; converting them to C tables is mechanical but not done.
 * `tools/build_recon.py` still reads the original `civ2.exe` for import-slot
   addresses when linking (the same information is in `data/image/idata.bin`).
-* Coverage of the comparison: the scripts execute 2,200 of the 3,417
-  compiled game functions (64%, 48% of lines; `tools/coverage_report.py`
+* Coverage of the comparison: the scripts execute 2,295 of the 3,417
+  compiled game functions (67%, 51% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never
-  executed: multiplayer (parley, net), sound and video, spaceship, the
-  scenario editors, council, network game setup.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
+  executed: multiplayer (parley, net), sound and video, council, the
+  editors' rarely used dialogs, atexit destructors.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
   `make ref SCRIPT=...` and bisect differences with `make bisect`.
 * **Blinking unit under a modal dialog.**  When the spy mission dialog
   opens over the map (harness/scripts/conquest.txt, Roman phalanx at

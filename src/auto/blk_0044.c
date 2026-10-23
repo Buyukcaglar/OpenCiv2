@@ -5355,26 +5355,7 @@ void __thiscall wnd_handlers_dtor(void *this)
   return;
 }
 
-/* 0044ca60 game (src/game/unwind.c) */
-#if 0
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-undefined4 __thiscall wnd_dtor(WndBase *this)
-
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0;
-  FUN_0044caab();
-  local_8 = 0xffffffff;
-  FUN_0044cad3();
-  return uStack_10;
-}
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-#endif
+/* 0044ca60: written by hand in src/game/unwind.c */
 
 /* 0044cb20 auto */
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
@@ -5393,98 +5374,11 @@ undefined4 __thiscall surfwnd_wnd_dtor(void *this)
 #undef puStack_c
 #undef local_8
 
-/* 0044cba0 game (src/game/unwind.c) */
-#if 0
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall surfwnd_dtor(SurfaceWindow *this)
+/* 0044cba0: written by hand in src/game/unwind.c */
 
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  this->vtable = (u32)&PTR_FUN_0061c060;
-  this->on_paint = 0;
-  local_8 = 0;
-  FUN_0044cc01();
-  local_8 = 0xffffffff;
-  FUN_0044cc29();
-  return;
-}
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-#endif
+/* 0044cc80: written by hand in src/game/throneroom.c */
 
-/* 0044cc80 game (src/game/throneroom.c) */
-#if 0
-#define local_1c50 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define auStack_10 (*(u8 (*)[4])(frame_ + FRAME_OFF(7232)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(7236)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(7240)))
-void __cdecl throneroom_show_upgrade(iptr civ)
-
-{
-  bool bVar1;
-  u8 auStackY_24 [4];
-  undefined1 frame_[FRAME_OFF(7248)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  bVar1 = false;
-  auStackY_24[0] = 0xbe;
-  auStackY_24[1] = 0xcc;
-  auStackY_24[2] = 'D';
-  auStackY_24[3] = '\0';
-  throneroom_ctor((ThroneRoomWindow *)&stack0xffffe3b4,civ);
-  local_8 = 0;
-  for (local_1c50 = 0; local_1c50 < 7; local_1c50++) {
-    if (civs[civ].throne_room[local_1c50] < 4) {
-      bVar1 = true;
-    }
-  }
-  if ((~civs[civ].throne_room[8] & 0x7f) != 0) {
-    bVar1 = true;
-  }
-  if (bVar1) {
-    throneroom_run_upgrade((ThroneRoomWindow *)&stack0xffffe3b4);
-  }
-  local_8 = 0xffffffff;
-  FUN_0044cd77();
-  return;
-}
-#undef local_1c50
-#undef auStack_10
-#undef puStack_c
-#undef local_8
-#endif
-
-/* 0044cd9b game (src/game/throneroom.c) */
-#if 0
-#define auStack_10 (*(u8 (*)[4])(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __cdecl throneroom_show(iptr param_1)
-
-{
-  u8 auStackY_24 [4];
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  auStackY_24[0] = 0xcf;
-  auStackY_24[1] = 0xcd;
-  auStackY_24[2] = 'D';
-  auStackY_24[3] = '\0';
-  throneroom_ctor((ThroneRoomWindow *)&stack0xffffe3b4,param_1);
-  local_8 = 0;
-  throneroom_run_view((ThroneRoomWindow *)&stack0xffffe3b4);
-  local_8 = 0xffffffff;
-  FUN_0044cdf2();
-  return;
-}
-#undef auStack_10
-#undef puStack_c
-#undef local_8
-#endif
+/* 0044cd9b: written by hand in src/game/throneroom.c */
 
 /* 0044ce16 auto */
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))

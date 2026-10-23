@@ -2713,41 +2713,9 @@ int __cdecl rng_set_seed(int param_1)
 }
 #undef rng_state
 
-/* 0059a733 game (src/game/random.c) */
-#if 0
-#define rng_state (*(uint *)((u8 *)&g.d_00635094))
-float10 __cdecl rng_next_unit(void)
+/* 0059a733: written by hand in src/game/random.c */
 
-{
-  rng_state = rng_state * 0x19660d + 0x3c6ef35f;
-  return (float10)rng_state / (float10)0xffffffff;
-}
-#undef rng_state
-#endif
-
-/* 0059a791 game (src/game/random.c) */
-#if 0
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
-int __cdecl rand_range(int param_1,int param_2)
-
-{
-  int iVar1;
-  
-  if (param_2 == param_1) {
-    rng_next_unit();
-  }
-  else {
-    if (param_2 < param_1) {
-      param_1 = param_2;
-    }
-    rng_next_unit();
-    iVar1 = __ftol();
-    param_1 = iVar1 + param_1;
-  }
-  return param_1;
-}
-#endif
+/* 0059a791: written by hand in src/game/random.c */
 
 /* 0059a850 auto */
 /* Library Function - Multiple Matches With Different Base Names

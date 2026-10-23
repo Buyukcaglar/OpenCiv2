@@ -4459,33 +4459,7 @@ undefined4 __cdecl city_has_improvement(iptr city,iptr param_2)
 #undef local_c
 #undef local_8
 
-/* 0043d289 game (src/game/regargs.c) */
-#if 0
-#define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(byte (*)[4])(frame_ + FRAME_OFF(8)))
-int __cdecl city_set_improvement(iptr city,iptr param_2,int param_3)
-
-{
-  int in_EAX;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if ((0 < param_2) && (param_2 < 0x23)) {
-    bit_index_split(param_2,(iptr)&improvement,(iptr)local_8);
-    if (param_3 == 0) {
-      cities[city].improvements[improvement] =
-           cities[city].improvements[improvement] & ~local_8[0];
-    }
-    else {
-      cities[city].improvements[improvement] =
-           cities[city].improvements[improvement] | local_8[0];
-    }
-    in_EAX = city * 0xb;
-  }
-  return in_EAX;
-}
-#undef improvement
-#undef local_8
-#endif
+/* 0043d289: written by hand in src/game/regargs.c */
 
 /* 0043d400 auto */
 #define _DAT_0063f54c (*(undefined4 *)((u8 *)&g.d_0063f54c))

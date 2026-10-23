@@ -17,7 +17,7 @@ leader receiving an envoy (his video, from the CD) and London's city view with i
 
 | path | what |
 |------|------|
-| `src/auto/` | the game, machine-translated to C (≈4000 functions, named by original address) |
+| `src/auto/` | the game: machine-translated to C once (≈4000 functions, in files by original address), now edited directly |
 | `src/game/` | game functions reconstructed by hand |
 | `src/unused/` | translated functions nothing in the game refers to (kept, not compiled) |
 | `src/data/` | the game's static data as C (`gamedata.h`/`.c`) |
@@ -29,7 +29,7 @@ leader receiving an envoy (his video, from the CD) and London's city view with i
 | `data/native/` | fonts as the reference renders them (glyph data, generated with Wine) |
 | `data/image/` | the original executable's data sections (input of the Windows standalone build) |
 | `re/` | analysis results: function list, calling conventions, data layout, Ghidra's decompilation |
-| `tools/` | analysis, code generation and build scripts (`build_port.py`, `build_native.py`, `gen_c.py` …) |
+| `tools/` | build, naming and clean-up scripts (`build_port.py`, `build_native.py`, `rename.py` …); the retired Ghidra pipeline (`gen_c.py`) |
 | `harness/` | replay scripts and the comparison against the original (`run.py`, `compare.py`, `native_suite.sh`, `msgdiff.sh`, `clockdiff.py`) |
 | `hook/` | `XDaemon.dll` proxy that makes the original deterministic under Wine (seed, virtual clock, input replay) |
 | `docs/`, `STATUS.md` | notes on the reconstruction and its verification |
@@ -132,7 +132,6 @@ make suite           # record the original under Wine and compare the Windows re
 make native-suite    # compare a native build against those recordings (EXE=civ2-port, civ2-port.exe under wine)
 make build           # build/civ2_recon.exe: the reconstruction grafted onto civ2.exe
 make standalone      # build/civ2.exe from source and data/image only
-make analysis        # re-run the analysis: machine code -> Ghidra -> src/auto
 ```
 
 `harness/scripts/*.txt` are the scenarios (menu, new game, load game, turns,

@@ -3460,20 +3460,7 @@ void __cdecl status_timer_bg_surface_static_dtor(void)
   return;
 }
 
-/* 0056b810 game (src/game/regargs.c) */
-#if 0
-char * __cdecl str_strip_newline(iptr param_1)
-
-{
-  char *pcVar1;
-  
-  pcVar1 = _strrchr((char *)param_1,10);
-  if (pcVar1 != (char *)0x0) {
-    *pcVar1 = '\0';
-  }
-  return pcVar1;
-}
-#endif
+/* 0056b810: written by hand in src/game/regargs.c */
 
 /* 0056b8a0 auto */
 /* Library Function - Multiple Matches With Different Base Names

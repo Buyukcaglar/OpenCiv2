@@ -1,12 +1,14 @@
 # Civilization II reconstruction — common entry points.  Everything runs in
-# Docker (tools/dk); see README.md.
+# Docker (tools/dk); see README.md.  (src/auto is edited directly: the
+# Ghidra regeneration, tools/pipeline.sh and tools/autoconvert.sh, is
+# retired; tools/gen_c.py refuses without CIV2_REGENERATE=1.)
 
 DK      = tools/dk
 SEED   ?= 7
 SCRIPT ?= harness/scripts/newgame.txt
 NAME   := $(basename $(notdir $(SCRIPT)))
 
-.PHONY: images hook gen build wipe standalone suite abi analysis ref run compare bisect native port native-suite clean
+.PHONY: images hook build wipe standalone suite abi ref run compare bisect native port native-suite clean
 
 images:                       ## build the Docker images (wine/mingw/python/SDL2/wasi-sdk; Ghidra)
 	docker build -t civ2-dev-base tools/docker
@@ -25,9 +27,6 @@ native-suite:                 ## run every scenario on a native build (EXE=civ2-
 hook:                         ## proxy XDaemon.dll: seed control, rand trace, replay, crash log
 	$(DK) make -C hook
 
-gen:                          ## regenerate src/auto from the Ghidra export and build
-	$(DK) sh tools/autoconvert.sh
-
 build:                        ## compile src/ and graft it onto civ2.exe -> build/civ2_recon.exe
 	$(DK) python3 tools/build_recon.py
 
@@ -42,9 +41,6 @@ suite:                        ## run every scenario and compare against the orig
 
 abi:                          ## check every reconstructed function pops the same stack bytes
 	$(DK) python3 tools/check_abi.py
-
-analysis:                     ## full re-analysis: machine-code facts -> Ghidra -> export -> gen -> build
-	tools/pipeline.sh
 
 ref:                          ## record the original game on SCRIPT (deterministic replay)
 	$(DK) python3 harness/run.py --build orig --seed $(SEED) --script $(SCRIPT) --out run/ref-$(NAME)

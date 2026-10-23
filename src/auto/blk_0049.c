@@ -1254,35 +1254,7 @@ void __cdecl diplo_greeting_sound_done_cb(void)
 #undef diplo_leader_sound_ids
 #undef diplo_leader_wnd_open
 
-/* 00493e83 game (src/game/unwind.c) */
-#if 0
-#define local_1c (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define uStack_10 (*(u32 *)(frame_ + FRAME_OFF(16)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(u32 *)(frame_ + FRAME_OFF(24)))
-void __cdecl portrait_dlg_show(u32 param_1)
-
-{
-  int iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  portrait_dlg_ctor((C_004083b0_208 *)&stack0xfffffe08);
-  local_8 = 0;
-  local_1c = param_1;
-  iVar1 = portrait_dlg_create((C_004083b0_208 *)&stack0xfffffe08);
-  if (iVar1 != 0) {
-    portrait_dlg_run((C_004083b0_208 *)&stack0xfffffe08);
-  }
-  local_8 = 0xffffffff;
-  FUN_00493eeb();
-  return;
-}
-#undef local_1c
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-#endif
+/* 00493e83: written by hand in src/game/unwind.c */
 
 /* 00493f0f auto */
 #define diplo_greeting_sound_id (*(int *)((u8 *)&g.d_0062ca44))

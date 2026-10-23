@@ -5042,39 +5042,7 @@ void __cdecl wnd_obj_release_capture(undefined4 param_1)
   return;
 }
 
-/* 005bd566 game (src/game/retvals.c) */
-#if 0
-void __cdecl wnd_obj_set_topmost_child(iptr param_1,iptr param_2)
-
-{
-  ushort uVar1;
-  HWND pHVar2;
-  WndStyleView *this;
-  
-  if (param_1 != 0) {
-    if (param_2 == 0) {
-      *(undefined4 *)(param_1 + 0x10) = 0;
-    }
-    else {
-      pHVar2 = GetParent(*(HWND *)(param_2 + 4));
-      if (pHVar2 == *(HWND *)(param_1 + 4)) {
-        this = (WndStyleView *)GetWindowLongA(*(HWND *)(param_2 + 4),0);
-        uVar1 = wnd_get_style_flags(this);
-        if ((uVar1 & 0x200) == 0) {
-          dbg_log(ADDR(0x63672c, ((u8 *)&g.d_0063672c)));
-        }
-        else {
-          *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(param_2 + 4);
-        }
-      }
-      else {
-        dbg_log(ADDR(0x636704, ((u8 *)&g.d_00636704)));
-      }
-    }
-  }
-  return;
-}
-#endif
+/* 005bd566: written by hand in src/game/retvals.c */
 
 /* 005bd610 auto */
 undefined2 __thiscall wnd_get_style_flags(WndStyleView *this)

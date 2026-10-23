@@ -575,26 +575,7 @@ void * __thiscall city_picture_popup_scalar_dtor(void *this,uint param_1)
   return this;
 }
 
-/* 004f3e70 game (src/game/unwind.c) */
-#if 0
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall city_picture_popup_dtor(void *this)
-
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0;
-  FUN_004f3ebb();
-  local_8 = 0xffffffff;
-  FUN_004f3ee5();
-  return;
-}
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-#endif
+/* 004f3e70: written by hand in src/game/unwind.c */
 
 /* 004f3f30 auto */
 void __cdecl city_notify_dialog(iptr param_1,iptr city,iptr param_3)
