@@ -199,7 +199,11 @@ tools/run-civ2.sh
 
 #### Windows
 
-See [Building OpenCiv2.exe](#building-openciv2exe) above.
+**Download:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip),
+upstream's build of its latest commit. Unpack it into your Civilization II folder (the one with
+`civ2.exe`) and double-click `OpenCiv2.exe`.
+
+To build it yourself, see [Building OpenCiv2.exe](#building-openciv2exe) above.
 
 ### Tooling
 
