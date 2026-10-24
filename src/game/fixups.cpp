@@ -262,7 +262,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             key_state = GetAsyncKeyState(0x20);
             key_word = (int)key_state;
             ui_pump_messages();
-            while (*(i8 *)((char *)&key_word + 1) != '\0') {
+            while (*((char *)&key_word + 1) != '\0') {
                 key_state = GetAsyncKeyState(0x20);
                 key_word = (int)key_state;
             }
@@ -398,7 +398,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (gfx_palettized_display == 1) {
             parent = (void *)ctrl_get_parent((Control *)ctrl);
             parent = (void *)wnd_get_palette((WndPaletteView *)parent);
-            hPal = (HPALETTE)palette_get_hpalette((PaletteHandleView *)parent);
+            hPal = palette_get_hpalette((PaletteHandleView *)parent);
             SelectPalette(hdc, hPal, 0);
         }
         if (*(int *)(wnd_obj + 0x18) == 0) {
@@ -443,7 +443,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             wnd_redraw_client(hwnd);
             *(i32 *)(wnd_obj + 0x18) = 0;
             key_word = (int)GetAsyncKeyState(0x20);
-            while (*(i8 *)((char *)&key_word + 1) != '\0')
+            while (*((char *)&key_word + 1) != '\0')
                 key_word = (int)GetAsyncKeyState(0x20);
             wnd_redraw_client(hwnd);
             ctrl_arg = ctrl_get_parent((Control *)ctrl);
@@ -571,7 +571,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     int wnd_obj;
     int owner;
     void *view;
-    WPARAM wp = (WPARAM)wparam_hwnd;
+    WPARAM wp = wparam_hwnd;
     short x = (short)lparam;
     short y = (short)(lparam >> 0x10);
     int min_h;

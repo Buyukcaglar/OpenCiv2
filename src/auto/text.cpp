@@ -11,10 +11,10 @@ void __cdecl text_clear(void)
 }
 
 /* 0040bbe0 auto */
-void __cdecl text_append(iptr str)
+void __cdecl text_append(const char *str)
 
 {
-  crt_strcat(((i8 *)&map_views_block.text_buffer),(void *)str);
+  crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)((void *)str));
   return;
 }
 
@@ -38,7 +38,7 @@ void __cdecl text_append_space(void)
 void __cdecl text_append_colon(void)
 
 {
-  str_append_colon((iptr)&map_views_block.text_buffer);
+  str_append_colon((char *)&map_views_block.text_buffer);
   return;
 }
 
@@ -83,12 +83,12 @@ void __cdecl text_append_int(iptr value)
 }
 
 /* 0040ff60 auto */
-i32 __cdecl text_set_string_arg(iptr index,iptr str)
+i32 __cdecl text_set_string_arg(iptr index,const char *str)
 
 {
   i32 result;
   
-  result = (i32)crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + index * 0x104,(void *)str);
+  result = (i32)crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + index * 0x104,(const char *)((void *)str));
   return result;
 }
 
@@ -105,7 +105,7 @@ iptr __cdecl file_build_open_path(iptr dest,i32 name2)
 
 {
   if (file_path_mode == '\0') {
-    crt_strcpy((void *)dest,(void *)name2);
+    crt_strcpy((char *)((void *)dest),(const char *)((void *)name2));
   }
   else {
     path_join_upper((char *)dest,(iptr)&open_path_prefix,name2);
@@ -134,7 +134,7 @@ uint __cdecl file_exists(iptr name2)
   FILE *_File;
   i32 exists;
   
-  _File = (FILE *)file_open_path(name2,(iptr)&str_rb);
+  _File = file_open_path(name2,(iptr)&str_rb);
   if (_File != (FILE *)0x0) {
     _fclose(_File);
   }
@@ -221,7 +221,7 @@ i32 __cdecl text_set_string_arg_b(int index,iptr text)
 {
   i32 result;
   
-  result = (i32)crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + index * 0x104,(void *)text);
+  result = (i32)crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + index * 0x104,(const char *)((void *)text));
   return result;
 }
 
@@ -259,7 +259,7 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
       *percent_pos = '\0';
     }
     if (*(char *)src != '\0') {
-      crt_strcat((void *)dest,(void *)src);
+      crt_strcat((char *)((void *)dest),(const char *)((void *)src));
     }
     tag = percent_pos;
     if (percent_pos != (char *)0x0) {
@@ -267,7 +267,7 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
       arg_index = __strnicmp(tag,str_string,6);
       if (arg_index == 0) {
         arg_index = _atoi(percent_pos + 7);
-        crt_strcat((void *)dest,((i8 *)&minimap_window_block.text_string_args) + arg_index * 0x104);
+        crt_strcat((char *)((void *)dest),((i8 *)&minimap_window_block.text_string_args) + arg_index * 0x104);
         src = (iptr)(percent_pos + 8);
         if (9 < arg_index) {
           src = (iptr)(percent_pos + 9);
@@ -278,7 +278,7 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
         if (arg_index == 0) {
           arg_index = _atoi(percent_pos + 7);
           __ltoa(*(long *)(((i8 *)&minimap_window_block.text_number_args) + arg_index * 4),num_buf,10);
-          crt_strcat((void *)dest,(void *)num_buf);
+          crt_strcat((char *)((void *)dest),(const char *)((void *)num_buf));
           src = (iptr)(percent_pos + 8);
         }
         else {
@@ -288,15 +288,15 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
             __ltoa(*(long *)(((i8 *)&minimap_window_block.text_number_args) + arg_index * 4),num_buf,0x10);
             for (pad_i = 0; len = _strlen(num_buf), pad_i < 4 - len;
                 pad_i = pad_i + 1) {
-              crt_strcat((void *)dest,((i8 *)&text_var_hex_pad_str));
+              crt_strcat((char *)((void *)dest),((i8 *)&text_var_hex_pad_str));
             }
-            crt_strcat((void *)dest,(void *)num_buf);
+            crt_strcat((char *)((void *)dest),(const char *)((void *)num_buf));
             src = (iptr)(percent_pos + 5);
           }
           else {
             src = (iptr)tag;
             if (*tag == '%') {
-              crt_strcat((void *)dest,((i8 *)&text_var_percent_str));
+              crt_strcat((char *)((void *)dest),((i8 *)&text_var_percent_str));
               src = (iptr)(percent_pos + 2);
             }
           }
@@ -373,7 +373,7 @@ int __cdecl strpool_add(iptr text)
   else {
     len = _strlen((char *)text);
     minimap_window_block.strpool_last_string = memblock_alloc((iptr)&strpool_block_block.strpool_block,len + 1);
-    crt_strcpy((void *)minimap_window_block.strpool_last_string,(void *)text);
+    crt_strcpy((char *)((void *)minimap_window_block.strpool_last_string),(const char *)((void *)text));
     string_id = strpool_count;
     strpool_count++;
   }
@@ -446,10 +446,10 @@ void __cdecl text_append_period(void)
 }
 
 /* 0043c840 auto */
-void __cdecl str_append(iptr dest,iptr src)
+void __cdecl str_append(char *dest,const char *src)
 
 {
-  crt_strcat((void *)dest,(void *)src);
+  crt_strcat((char *)((void *)dest),(const char *)((void *)src));
   return;
 }
 
@@ -499,14 +499,14 @@ void __cdecl str_append_population(iptr dest,iptr civ,int population)
   }
   if (99 < pop) {
     str_append_int(dest,pop / 100);
-    crt_strcat((void *)dest,((i8 *)&pop_thousands_sep_str));
+    crt_strcat((char *)((void *)dest),((i8 *)&pop_thousands_sep_str));
     pop = pop % 100;
     if (pop < 10) {
-      crt_strcat((void *)dest,((i8 *)&pop_zero_pad_str));
+      crt_strcat((char *)((void *)dest),((i8 *)&pop_zero_pad_str));
     }
   }
   str_append_int(dest,pop);
-  crt_strcat((void *)dest,(void *)str_0_000);
+  crt_strcat((char *)((void *)dest),(const char *)((void *)str_0_000));
   return;
 }
 
@@ -519,14 +519,14 @@ void __cdecl str_append_city_population(iptr dest,iptr city)
   pop = city_population_units(city);
   if (99 < pop) {
     str_append_int(dest,pop / 100);
-    crt_strcat((void *)dest,((i8 *)&city_pop_thousands_sep_str));
+    crt_strcat((char *)((void *)dest),((i8 *)&city_pop_thousands_sep_str));
     pop = pop % 100;
     if (pop < 10) {
-      crt_strcat((void *)dest,((i8 *)&city_pop_zero_pad_str));
+      crt_strcat((char *)((void *)dest),((i8 *)&city_pop_zero_pad_str));
     }
   }
   str_append_int(dest,pop);
-  crt_strcat((void *)dest,(void *)str_0_000_2);
+  crt_strcat((char *)((void *)dest),(const char *)((void *)str_0_000_2));
   return;
 }
 
@@ -841,7 +841,7 @@ int __cdecl text_open_file_section(int filename,int section)
   if (section != 0) {
     section_tag[0] = '@';
     section_tag[1] = 0;
-    crt_strcat((void *)section_tag,(void *)section);
+    crt_strcat((char *)((void *)section_tag),(const char *)((void *)section));
     __strupr(section_tag);
   }
   if (filename == 0) {
@@ -849,17 +849,17 @@ int __cdecl text_open_file_section(int filename,int section)
   }
   else {
     text_close_file();
-    crt_strcpy((void *)name2,(void *)filename);
-    path_default_extension(name2,(char*)(&lang_file_ext));
+    crt_strcpy((char *)((void *)name2),(const char *)((void *)filename));
+    path_default_extension(name2,(char *)(&lang_file_ext));
     __getcwd(saved_cwd,0x104);
     __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-    text_file_handle = (FILE *)file_open_path((iptr)name2,(iptr)&str_rt);
+    text_file_handle = file_open_path((iptr)name2,(iptr)&str_rt);
     if ((text_file_handle != (FILE *)0x0) && (len = _strlen(name2), len != 0)) {
       section_offset = text_section_index_lookup((iptr)name2,(iptr)section_tag);
     }
     __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     if (((text_file_handle == (FILE *)0x0) &&
-        (text_file_handle = (FILE *)file_open_path((iptr)name2,(iptr)&str_rt_2),
+        (text_file_handle = file_open_path((iptr)name2,(iptr)&str_rt_2),
         text_file_handle != (FILE *)0x0)) && (len = _strlen(name2), len != 0)) {
       section_offset = text_section_index_lookup((iptr)name2,(iptr)section_tag);
     }
@@ -882,7 +882,7 @@ int __cdecl text_open_file_section(int filename,int section)
       }
       line = _fgets(((i8 *)&map_views_block.text_buffer),0xff,text_file_handle);
       if (line != (char *)0x0) {
-        str_strip_newline((char*)(&map_views_block.text_buffer));
+        str_strip_newline((char *)(&map_views_block.text_buffer));
         str_trim((iptr)&map_views_block.text_buffer);
         cmp = __strcmpi(((i8 *)&map_views_block.text_buffer),section_tag);
         if (cmp == 0) {
@@ -928,7 +928,7 @@ i8 * __cdecl text_read_line(int trim)
   result = (i8 *)0x0;
   if (((CRT_FEOF(text_file_handle)) == 0) &&
      (line = _fgets(((i8 *)&map_views_block.text_buffer),0xff,text_file_handle), line != (char *)0x0)) {
-    str_strip_newline((char*)(&map_views_block.text_buffer));
+    str_strip_newline((char *)(&map_views_block.text_buffer));
     if (trim == 1) {
       str_trim((iptr)&map_views_block.text_buffer);
     }
@@ -1056,7 +1056,7 @@ iptr __cdecl str_clear(iptr str)
 void __cdecl str_append_space(iptr dest)
 
 {
-  crt_strcat((void *)dest,((i8 *)&append_space_str));
+  crt_strcat((char *)((void *)dest),((i8 *)&append_space_str));
   return;
 }
 
@@ -1076,15 +1076,15 @@ void __cdecl str_append_spaces(iptr dest,int count)
 void __cdecl str_append_comma(iptr dest)
 
 {
-  crt_strcat((void *)dest,((i8 *)&append_comma_str));
+  crt_strcat((char *)((void *)dest),((i8 *)&append_comma_str));
   return;
 }
 
 /* 004aefb7 auto */
-void __cdecl str_append_colon(iptr dest)
+void __cdecl str_append_colon(char *dest)
 
 {
-  crt_strcat((void *)dest,((i8 *)&append_colon_str));
+  crt_strcat((char *)((void *)dest),((i8 *)&append_colon_str));
   return;
 }
 
@@ -1092,7 +1092,7 @@ void __cdecl str_append_colon(iptr dest)
 void __cdecl str_append_period(iptr dest)
 
 {
-  crt_strcat((void *)dest,((i8 *)&append_period_str));
+  crt_strcat((char *)((void *)dest),((i8 *)&append_period_str));
   return;
 }
 
@@ -1100,7 +1100,7 @@ void __cdecl str_append_period(iptr dest)
 void __cdecl str_append_percent(iptr dest)
 
 {
-  crt_strcat((void *)dest,((i8 *)&append_percent_str));
+  crt_strcat((char *)((void *)dest),((i8 *)&append_percent_str));
   return;
 }
 
@@ -1108,7 +1108,7 @@ void __cdecl str_append_percent(iptr dest)
 void __cdecl str_append_lparen(iptr dest)
 
 {
-  crt_strcat((void *)dest,((i8 *)&append_lparen_str));
+  crt_strcat((char *)((void *)dest),((i8 *)&append_lparen_str));
   return;
 }
 
@@ -1116,7 +1116,7 @@ void __cdecl str_append_lparen(iptr dest)
 void __cdecl str_append_rparen(iptr dest)
 
 {
-  crt_strcat((void *)dest,((i8 *)&append_rparen_str));
+  crt_strcat((char *)((void *)dest),((i8 *)&append_rparen_str));
   return;
 }
 
@@ -1124,7 +1124,7 @@ void __cdecl str_append_rparen(iptr dest)
 void __cdecl str_append_plus(iptr dest)
 
 {
-  crt_strcat((void *)dest,((i8 *)&append_plus_str));
+  crt_strcat((char *)((void *)dest),((i8 *)&append_plus_str));
   return;
 }
 
@@ -1135,7 +1135,7 @@ void __cdecl str_append_string_id(iptr dest,i32 string_id)
   i32 text;
   
   text = (iptr)label_string(string_id);
-  crt_strcat((void *)dest,(void *)text);
+  crt_strcat((char *)((void *)dest),(const char *)((void *)text));
   return;
 }
 
@@ -1151,7 +1151,7 @@ void __cdecl str_append_label(iptr dest,int label_id)
 void __cdecl str_concat(iptr dest,iptr src)
 
 {
-  crt_strcat((void *)dest,(void *)src);
+  crt_strcat((char *)((void *)dest),(const char *)((void *)src));
   return;
 }
 
@@ -1163,7 +1163,7 @@ i32 __cdecl str_append_int(iptr dest,int value)
   char num_buf[20];
   
   __itoa(value,num_buf,10);
-  result = (i32)crt_strcat((void *)dest,num_buf);
+  result = (i32)crt_strcat((char *)((void *)dest),num_buf);
   return result;
 }
 
@@ -1174,7 +1174,7 @@ void __cdecl str_append_long(iptr dest,long value)
   char num_buf[20];
   
   __ltoa(value,num_buf,10);
-  crt_strcat((void *)dest,(void *)num_buf);
+  crt_strcat((char *)((void *)dest),(const char *)((void *)num_buf));
   return;
 }
 
@@ -1204,9 +1204,9 @@ void __cdecl text_list_append_wrapped(iptr dialog,i32 string_id,iptr item_count,
     text_append_lparen();
   }
   else {
-    text_append((iptr)&str_empty_117);
+    text_append((const char *)&str_empty_117);
     if (*(int *)line_count < 4) {
-      text_append((iptr)&str_empty_118);
+      text_append((const char *)&str_empty_118);
     }
     else {
       *(i32 *)line_count = 0;
@@ -1254,7 +1254,7 @@ void __cdecl text_append_advance_abbrev(iptr advance,int with_comma)
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&advance_abbrev_nil_strs) + ((with_comma != 0) - 1 & 8));
   }
   else if (advance < 100) {
-    crt_strcat(((i8 *)&map_views_block.text_buffer),advances + advance);
+    crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)(advances + advance));
     if (with_comma != 0) {
       crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&advance_abbrev_comma_str));
     }
@@ -1304,7 +1304,7 @@ void __cdecl str_trim(iptr str)
       start = start + 1) {
   }
   crt_strcpy(buf,start);
-  crt_strcpy((void *)str,(void *)buf);
+  crt_strcpy((char *)((void *)str),(const char *)((void *)buf));
   return;
 }
 
@@ -1342,9 +1342,9 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
   text_section_index_count = 0;
   __getcwd(((i8 *)&text_section_index_path),0x104);
   crt_strcat(((i8 *)&text_section_index_path),((i8 *)&text_index_path_sep_str));
-  crt_strcat(((i8 *)&text_section_index_path),(void *)filename);
-  path_default_extension((char*)(&text_section_index_path),lang_file_ext);
-  _File = (FILE *)file_open_path((iptr)&text_section_index_path,(iptr)&str_rt_6);
+  crt_strcat(((i8 *)&text_section_index_path),(const char *)((void *)filename));
+  path_default_extension((char *)(&text_section_index_path),lang_file_ext);
+  _File = file_open_path((iptr)&text_section_index_path,(iptr)&str_rt_6);
   if (_File == (FILE *)0x0) {
     text_section_index_path[0] = 0;
   }
@@ -1361,7 +1361,7 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
         if ((int)(uint)text_section_index_pool_block.text_section_pool_free_bytes < (int)entry_size) break;
         entry = (long *)memblock_alloc((iptr)&text_section_index_pool_block.text_section_index_pool,entry_size);
         *entry = line_offset;
-        crt_strcpy(entry + 1,line_buf);
+        crt_strcpy((char *)(entry + 1),line_buf);
         text_section_index_count++;
       }
     }
@@ -1394,7 +1394,7 @@ i32 __cdecl text_section_index_lookup(iptr filename,iptr section)
   if (text_section_index_valid != 0) {
     __getcwd(full_path,0x104);
     crt_strcat(full_path,((i8 *)&text_lookup_path_sep_str));
-    crt_strcat((void *)full_path,(void *)filename);
+    crt_strcat((char *)((void *)full_path),(const char *)((void *)filename));
     cmp = __strcmpi(full_path,((i8 *)&text_section_index_path));
     if (cmp == 0) {
       entry = text_section_index_pool_block.text_section_index_base;
@@ -1426,20 +1426,20 @@ void __cdecl text_set_unit_info_args(iptr unit)
   
   text_clear();
   adjective = civ_get_adjective((int)units[unit].owner);
-  text_append(adjective);
+  text_append((const char *)adjective);
   if ((units[unit].flags & 0x2000) != 0) {
     text_append_space();
     text_append_label(0xd);
   }
   text_append_space();
   text_append_string_id(unit_types[units[unit].type].name);
-  text_set_string_arg(0,(iptr)&map_views_block.text_buffer);
+  text_set_string_arg(0,(const char *)&map_views_block.text_buffer);
   text_clear();
   x = (int)units[unit].x;
   y = (int)units[unit].y;
   city_here = city_at(x,y);
   if (-1 < city_here) {
-    text_append(city_here * 0x58 + (iptr)((u8 *)&cities + 32));
+    text_append((const char *)(city_here * 0x58 + (iptr)((u8 *)&cities + 32)));
     text_append_space();
   }
   text_append_lparen();
@@ -1454,11 +1454,11 @@ void __cdecl text_set_unit_info_args(iptr unit)
       text_append_lparen();
       text_append_label(0xb2);
       text_append_space();
-      text_append(x * 0x58 + (iptr)((u8 *)&cities + 32));
+      text_append((const char *)(x * 0x58 + (iptr)((u8 *)&cities + 32)));
       text_append_rparen();
     }
   }
-  text_set_string_arg(1,(iptr)&map_views_block.text_buffer);
+  text_set_string_arg(1,(const char *)&map_views_block.text_buffer);
   text_clear();
   if (units[unit].home_city == -1) {
     city = 0xffffffff;
@@ -1467,7 +1467,7 @@ void __cdecl text_set_unit_info_args(iptr unit)
     city = (uint)(byte)units[unit].home_city;
   }
   text_append_city_name(city);
-  text_set_string_arg(2,(iptr)&map_views_block.text_buffer);
+  text_set_string_arg(2,(const char *)&map_views_block.text_buffer);
   return;
 }
 
@@ -1507,7 +1507,7 @@ i32 __cdecl file_require_cdrom(iptr filename)
   int attempt;
   char *cursor;
   
-  GetModuleFileNameA((*(HMODULE *)&err_report_ctx_block.app_hinstance),((i8 *)&setup_picwnd_block.exe_dir_path),0x80);
+  GetModuleFileNameA((*&err_report_ctx_block.app_hinstance),((i8 *)&setup_picwnd_block.exe_dir_path),0x80);
   len = lstrlenA(((i8 *)&setup_picwnd_block.exe_dir_path));
   cursor = ((i8 *)&setup_picwnd_block.exe_dir_path) + len;
   do {
@@ -1579,13 +1579,13 @@ restore_error_mode:
       drive_type = GetDriveTypeA(drive_root);
       if (drive_type == 3) {
         text_clear();
-        text_append((iptr)drive_root);
-        text_append(filename);
+        text_append((const char *)drive_root);
+        text_append((const char *)filename);
         hfile = OpenFile(((i8 *)&map_views_block.text_buffer),&of_struct,0x4000);
         str_clear((iptr)&setup_picwnd_block.fallback_drive_root);
         setup_picwnd_block.fallback_drive_root[0] = *drive_root;
         setup_picwnd_block.fallback_drive_root_end = 0;
-        str_append((iptr)&setup_picwnd_block.fallback_drive_root,(iptr)&str_empty_173);
+        str_append((char *)&setup_picwnd_block.fallback_drive_root,(const char *)&str_empty_173);
         goto restore_error_mode;
       }
       for (; *drive_root != '\0'; drive_root++) {
@@ -1622,11 +1622,11 @@ i32 __cdecl file_resolve_path(iptr path)
   cursor++;
   str_clear((iptr)base_name);
   str_clear((iptr)base_name);
-  str_append((iptr)base_name,name_offset + path);
+  str_append((char *)base_name,(const char *)(name_offset + path));
   uMode = SetErrorMode(1);
   str_clear((iptr)try_path);
-  str_append((iptr)try_path,(iptr)&setup_picwnd_block.exe_dir_path);
-  str_append((iptr)try_path,(iptr)base_name);
+  str_append((char *)try_path,(const char *)&setup_picwnd_block.exe_dir_path);
+  str_append((char *)try_path,(const char *)base_name);
   result = OpenFile(try_path,&of_struct,0x4000);
   if ((result == 0) || (result == -1)) {
     cursor = (char *)path;
@@ -1637,12 +1637,12 @@ i32 __cdecl file_resolve_path(iptr path)
       cursor = next;
     } while (ch != '\\');
     str_clear((iptr)alt_path);
-    str_append((iptr)alt_path,(iptr)&setup_picwnd_block.exe_dir_path);
+    str_append((char *)alt_path,(const char *)&setup_picwnd_block.exe_dir_path);
     if (*cursor == '\0') {
-      str_append((iptr)alt_path,path);
+      str_append((char *)alt_path,(const char *)path);
     }
     else {
-      str_append((iptr)alt_path,(iptr)cursor);
+      str_append((char *)alt_path,(const char *)cursor);
     }
     result = OpenFile(alt_path,&of_struct,0x4000);
     if ((result == 0) || (result == -1)) {
@@ -1651,32 +1651,32 @@ i32 __cdecl file_resolve_path(iptr path)
       }
       else {
         str_clear((iptr)try_path);
-        str_append((iptr)try_path,(iptr)&setup_picwnd_block.fallback_drive_root);
-        str_append((iptr)try_path,path);
+        str_append((char *)try_path,(const char *)&setup_picwnd_block.fallback_drive_root);
+        str_append((char *)try_path,(const char *)path);
         result = OpenFile(try_path,&of_struct,0x4000);
         if ((result == 0) || (result == -1)) {
           result = 0;
         }
         else {
           str_clear((iptr)alt_path);
-          str_append((iptr)alt_path,(iptr)&setup_picwnd_block.fallback_drive_root);
-          str_append((iptr)alt_path,path);
+          str_append((char *)alt_path,(const char *)&setup_picwnd_block.fallback_drive_root);
+          str_append((char *)alt_path,(const char *)path);
           str_clear(path);
-          str_append(path,(iptr)alt_path);
+          str_append((char *)path,(const char *)alt_path);
           result = 1;
         }
       }
     }
     else {
       str_clear(path);
-      str_append(path,(iptr)alt_path);
+      str_append((char *)path,(const char *)alt_path);
       result = 1;
     }
   }
   else {
     str_clear(path);
-    str_append(path,(iptr)&setup_picwnd_block.exe_dir_path);
-    str_append(path,(iptr)base_name);
+    str_append((char *)path,(const char *)&setup_picwnd_block.exe_dir_path);
+    str_append((char *)path,(const char *)base_name);
     result = 1;
   }
   SetErrorMode(uMode);
@@ -1739,7 +1739,7 @@ i32 __cdecl file_read_nth_line(iptr dest,iptr filename,int line_num)
   char line_buf[80];
   
   result = 1;
-  _File = (FILE *)file_open_path(filename,(iptr)&str_rt_9);
+  _File = file_open_path(filename,(iptr)&str_rt_9);
   if (_File != (FILE *)0x0) {
     for (i = 1; i <= line_num; i++) {
       if (((CRT_FEOF(_File)) != 0) ||
@@ -1750,7 +1750,7 @@ i32 __cdecl file_read_nth_line(iptr dest,iptr filename,int line_num)
         line_buf[i] = '\0';
       }
     }
-    crt_strcpy((void *)dest,(void *)line_buf);
+    crt_strcpy((char *)((void *)dest),(const char *)((void *)line_buf));
     result = 0;
   }
 close_file:
@@ -2257,7 +2257,7 @@ HGLOBAL __cdecl res_load_impl(CHAR *res_type,LPCSTR res_name)
   type_buf[3] = res_type[3];
   type_buf[4] = 0;
   dll_index = 0xffffffff;
-  hrsrc = FindResourceA((*(HMODULE *)&err_report_ctx_block.app_hinstance),res_name,type_buf);
+  hrsrc = FindResourceA((*&err_report_ctx_block.app_hinstance),res_name,type_buf);
   if (hrsrc == (HRSRC)0x0) {
     dll_index = 0;
     while ((dll_index < res_dll_module_count &&
@@ -2271,7 +2271,7 @@ HGLOBAL __cdecl res_load_impl(CHAR *res_type,LPCSTR res_name)
   }
   else {
     if (dll_index == 0xffffffff) {
-      hmodule2 = (*(HMODULE *)&err_report_ctx_block.app_hinstance);
+      hmodule2 = (*&err_report_ctx_block.app_hinstance);
     }
     else {
       hmodule2 = *(HMODULE *)(((i8 *)&err_report_ctx_block.res_dll_modules) + dll_index * 4);

@@ -341,12 +341,12 @@ void __cdecl menu_find_city(void)
       }
       if (visible) {
         text_clear();
-        text_append(city * 0x58 + (iptr)((u8 *)&cities + 32));
+        text_append((const char *)(city * 0x58 + (iptr)((u8 *)&cities + 32)));
         if (civ != civ2) {
           text_append_space();
           text_append_lparen();
           adjective = civ_adjective(civ);
-          text_append(adjective);
+          text_append((const char *)adjective);
           text_append_rparen();
         }
         if ((((game.game_flags & 0x80) != 0) && ((prefs_game_rules_block.scenario_flags[0] & 2) != 0)) &&
@@ -355,7 +355,7 @@ void __cdecl menu_find_city(void)
           text_append_lparen();
           text_append_label(0x1b0);
           if (1 < objective) {
-            text_append((iptr)&str_x);
+            text_append((const char *)&str_x);
             text_append_int(objective);
           }
           text_append_rparen();
@@ -367,13 +367,13 @@ void __cdecl menu_find_city(void)
   }
   if (count == 0) {
     eh_state = 0xffffffff;
-    /* inlined unwind funclet 0040e38d */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+    /* inlined unwind funclet 0040e38d */ { dialog_dtor(&dialog2); }
   }
   else {
     city2 = dlg_show_modal(&dialog2,0);
     if (city2 < 0) {
       eh_state = 0xffffffff;
-      /* inlined unwind funclet 0040e38d */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+      /* inlined unwind funclet 0040e38d */ { dialog_dtor(&dialog2); }
     }
     else {
       mapview_center_on
@@ -383,7 +383,7 @@ void __cdecl menu_find_city(void)
         city_window_open((ScaledWindowView *)((i8 *)&city_window_block.city_window),city2);
       }
       eh_state = 0xffffffff;
-      /* inlined unwind funclet 0040e38d */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+      /* inlined unwind funclet 0040e38d */ { dialog_dtor(&dialog2); }
     }
   }
   return;
@@ -402,15 +402,15 @@ void __cdecl menu_revolution(void)
     if ((civs[human_civ[0]].flags & 8) == 0) {
       if (civs[human_civ[0]].government != '\0') {
         text = civ_get_adjective(human_civ[0]);
-        text_set_string_arg(0,text);
+        text_set_string_arg(0,(const char *)text);
         text_set_label_arg(1,government_names[civs[civ].government]);
         choice = popup_game_with_sprite((iptr)&str_revolution,(iptr)(((i8 *)&government_sprites_block.government_sprites) +
                                                   (uint)civs[civ].government * 0x3c),
                                    (ui_large_screen == 0) - 1 & 8);
         if (choice == 0) {
           snd_play_effect(0x3e,1,0,0);
-          text = civ_name_plural(civ);
-          text_set_string_arg(0,text);
+          text = (iptr)(civ_name_plural(civ));
+          text_set_string_arg(0,(const char *)text);
           popup_game_with_sprite((iptr)&str_startrev,(iptr)&popup_info_icon_sprite,0);
           civ_set_government(civ,0);
           menu_update_states();
@@ -848,7 +848,7 @@ picwnd_open
              (scr_height - nonclient_height >> 1) - ((int)(wnd_h + border * 2) >> 1),self->image_width,self->image_height,
              0,border,border);
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0042ab9b */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 0042ab9b */ { palette_destroy(&palette); }
   return;
 }
 
@@ -885,20 +885,20 @@ void __thiscall picwnd_dtor(void *self)
   int eh_state;
   
   eh_state = eh_state & 0xff;
-  (*(i8 *)((char *)&eh_state + 0)) = 5;
-  /* inlined unwind funclet 0043c19c */ { scrollbar_dtor((Control *)(*(int *)((iptr)&self) + 0x410)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 0043c1ab */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 0x3d4)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0043c1ba */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 0x398)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0043c1c9 */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 0x35c)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0043c1d8 */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 800)); }
+  (*((char *)&eh_state + 0)) = 5;
+  /* inlined unwind funclet 0043c19c */ { scrollbar_dtor((Control *)(*(int *)&self + 0x410)); }
+  (*((char *)&eh_state + 0)) = 4;
+  /* inlined unwind funclet 0043c1ab */ { ctrl_dtor((Control *)(*(int *)&self + 0x3d4)); }
+  (*((char *)&eh_state + 0)) = 3;
+  /* inlined unwind funclet 0043c1ba */ { ctrl_dtor((Control *)(*(int *)&self + 0x398)); }
+  (*((char *)&eh_state + 0)) = 2;
+  /* inlined unwind funclet 0043c1c9 */ { ctrl_dtor((Control *)(*(int *)&self + 0x35c)); }
+  (*((char *)&eh_state + 0)) = 1;
+  /* inlined unwind funclet 0043c1d8 */ { ctrl_dtor((Control *)(*(int *)&self + 800)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0043c1e7 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x2d8)); }
+  /* inlined unwind funclet 0043c1e7 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x2d8)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0043c1f6 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&self)); }
+  /* inlined unwind funclet 0043c1f6 */ { frame_wnd_dtor(*(DibSurface **)&self); }
   return;
 }
 
@@ -914,16 +914,16 @@ ViewWindow * __thiscall picwnd_ctor(ViewWindow *self)
   frame_wnd_ctor((SurfaceWindow *)self);
   eh_state = 0;
   surface_ctor((DibSurface *)&self->rates_civ);
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
+  (*((char *)&eh_state + 0)) = 1;
   button_ctor((Control *)&self->bar_height);
-  (*(i8 *)((char *)&eh_state + 0)) = 2;
+  (*((char *)&eh_state + 0)) = 2;
   button_ctor((Control *)&self->no_thanks_button_value);
-  (*(i8 *)((char *)&eh_state + 0)) = 3;
-  button_ctor((Control *)(self->lux_rate_scrollbar));
-  (*(i8 *)((char *)&eh_state + 0)) = 4;
-  button_ctor((Control *)(self->picwnd_extra_button));
+  (*((char *)&eh_state + 0)) = 3;
+  button_ctor((Control *)self->lux_rate_scrollbar);
+  (*((char *)&eh_state + 0)) = 4;
+  button_ctor((Control *)self->picwnd_extra_button);
   eh_state = (eh_state & 0xffffff00 | (byte)(5));
-  scrollbar_ctor((Control *)(self->picwnd_scrollbar));
+  scrollbar_ctor((Control *)self->picwnd_scrollbar);
   self->vtable = (u32)((pointer *)(ptr_fun_rest + 4));
   return self;
 }
@@ -1464,7 +1464,7 @@ i32 __thiscall surfwnd_wnd_dtor(void *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044cb5e */ { wnd_dtor(*(WndBase **)((iptr)&self)); }
+  /* inlined unwind funclet 0044cb5e */ { wnd_dtor(*(WndBase **)&self); }
   return seh_handler;
 }
 
@@ -1622,7 +1622,7 @@ void __thiscall hotspot_dtor(Hotspot *self)
     region_dispose(self->hwnd);
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 00453bfa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 00453bfa */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return;
 }
 
@@ -1953,7 +1953,7 @@ i32 __cdecl popup_text_with_city(iptr filename,iptr section,i32 dlg_flags,iptr c
   dialog_ctor(&dialog2,0x4000);
   eh_state = 0;
   sprite_init(&sprite);
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
+  (*((char *)&eh_state + 0)) = 1;
   sprite_create_solid
             (&sprite,(2 - (uint)(ui_large_screen == 0)) * 0x40,(2 - (uint)(ui_large_screen == 0)) * 0x30
              ,0);
@@ -1964,9 +1964,9 @@ i32 __cdecl popup_text_with_city(iptr filename,iptr section,i32 dlg_flags,iptr c
   result = dlg_show_modal(&dialog2,0);
   (*(u32 *)&dlg_help_pressed) = dialog2.result_extra;
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 004a6dc9 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
+  /* inlined unwind funclet 004a6dc9 */ { sprite_destroy(&sprite); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a6dd2 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+  /* inlined unwind funclet 004a6dd2 */ { dialog_dtor(&dialog2); }
   return result;
 }
 
@@ -1995,7 +1995,7 @@ i32 __cdecl popup_text_with_unit(iptr filename,iptr section,i32 dlg_flags,iptr u
   dialog_ctor(&dialog2,0x4000);
   eh_state = 0;
   sprite_init(&sprite);
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
+  (*((char *)&eh_state + 0)) = 1;
   sprite_create_solid
             (&sprite,(2 - (uint)(ui_large_screen == 0)) * 0x40,(2 - (uint)(ui_large_screen == 0)) * 0x30
              ,0);
@@ -2006,9 +2006,9 @@ i32 __cdecl popup_text_with_unit(iptr filename,iptr section,i32 dlg_flags,iptr u
   result = dlg_show_modal(&dialog2,0);
   (*(u32 *)&dlg_help_pressed) = dialog2.result_extra;
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 004a6f3d */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
+  /* inlined unwind funclet 004a6f3d */ { sprite_destroy(&sprite); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a6f46 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+  /* inlined unwind funclet 004a6f46 */ { dialog_dtor(&dialog2); }
   return result;
 }
 
@@ -2038,8 +2038,8 @@ void __cdecl accel_start_develop_city(iptr city,int num_tiles)
     best_score = 0;
     best_tile = -1;
     for (tile = 0; tile < 0x14; tile++) {
-      x = map_wrap_x((char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[tile] + x2);
-      y = (char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[tile] + y2;
+      x = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[tile] + x2);
+      y = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[tile] + y2;
       result = map_in_bounds(x,y);
       if ((result != 0) && (result = tile_improvements(x,y), result == 0)) {
         score = 0;
@@ -2079,8 +2079,8 @@ void __cdecl accel_start_develop_city(iptr city,int num_tiles)
       }
     }
     if (best_tile < 0) break;
-    x = map_wrap_x((char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[best_tile] + x2);
-    y = (char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[best_tile] + y2;
+    x = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[best_tile] + x2);
+    y = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[best_tile] + y2;
     best_terrain = tile_terrain(x,y);
     tile_at(x,y);
     tile_set_improvements(x,y,0x10,1,1);
@@ -2094,8 +2094,8 @@ void __cdecl accel_start_develop_city(iptr city,int num_tiles)
   }
   civ = cities[city].owner;
   for (tile = 0; tile < 0x2d; tile++) {
-    x = map_wrap_x((char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[tile] + x2);
-    y = (char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[tile] + y2;
+    x = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[tile] + x2);
+    y = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[tile] + y2;
     result = map_in_bounds(x,y);
     if ((result != 0) && (result = tile_is_ocean(x,y), result == 0)) {
       result = tile_landmass((int)cities[city].x,(int)cities[city].y);
@@ -2188,7 +2188,7 @@ void __cdecl menu_wonder_movies(void)
     wonder_show_movie(wonder);
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004e02cb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+  /* inlined unwind funclet 004e02cb */ { dialog_dtor(&dialog2); }
   return;
 }
 
@@ -2405,7 +2405,7 @@ void __cdecl menu_game_options(void)
   dlg_check_set_bool(8,game.game_options & 0x100);
   dlg_check_set_bool(9,game.game_options & 0x80);
   dlg_check_set_bool(10,game.game_options & 0x40);
-  text_set_string_arg(0,(iptr)str_ptr_5_4_0f_multiplayer_26_march_99);
+  text_set_string_arg(0,(const char *)str_ptr_5_4_0f_multiplayer_26_march_99);
   crt_strcat(((i8 *)&minimap_window_block.text_string_args),((i8 *)&game_options_version_sep_str));
   crt_strcat(((i8 *)&minimap_window_block.text_string_args),(*(i8 * *)str_ptr_5_4_0f_multiplayer_26_march_99_rest));
   result = popup_game_flags((iptr)&str_gameoptions,1);
@@ -2568,7 +2568,7 @@ void __cdecl menu_multiplayer_options(void)
           net_session_block.net_vote_replies_pending = net_session_block.net_player_count[0] - 1;
           net_session_block.net_vote_status = 0;
           net_send_text_args(0x43,0xff,2,0,0,0);
-          dlg_pending_idle_callback = ((i8*)(net_vote_wait_idle_cb));
+          dlg_pending_idle_callback = ((i8 *)net_vote_wait_idle_cb);
           dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
           result = popup_game_sprite_flags((iptr)&str_pmchangeserver,0x2000001,(iptr)&popup_info_icon_sprite,0);
           if (((result < 0) || (net_session_block.net_vote_status == -1)) || (net_session_block.net_vote_replies_pending != 0)) {
@@ -2708,7 +2708,7 @@ void __cdecl menu_select_music(void)
   if (track_count == -1) {
     popup_game((iptr)&str_nopickmusicnew);
     eh_state = 0xffffffff;
-    /* inlined unwind funclet 004e27df */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+    /* inlined unwind funclet 004e27df */ { dialog_dtor(&dialog2); }
   }
   else {
     if (track_count == 0x18) {
@@ -2724,7 +2724,7 @@ void __cdecl menu_select_music(void)
       if (track_count != 10) {
         popup_game((iptr)&str_nopickmusicnew_2);
         eh_state = 0xffffffff;
-        /* inlined unwind funclet 004e27df */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+        /* inlined unwind funclet 004e27df */ { dialog_dtor(&dialog2); }
         goto done;
       }
       dlg_load_game_section(&dialog2,(iptr)&str_pickmusic,1);
@@ -2735,12 +2735,12 @@ void __cdecl menu_select_music(void)
     choice = dlg_show_modal(&dialog2,0);
     if (choice < 0) {
       eh_state = 0xffffffff;
-      /* inlined unwind funclet 004e27df */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+      /* inlined unwind funclet 004e27df */ { dialog_dtor(&dialog2); }
     }
     else {
       music_play_track(choice + 2,1);
       eh_state = 0xffffffff;
-      /* inlined unwind funclet 004e27df */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+      /* inlined unwind funclet 004e27df */ { dialog_dtor(&dialog2); }
     }
   }
 done:
@@ -3870,7 +3870,7 @@ void __cdecl menu_update_states(void)
     if (unit_role == 5) {
       no_adjacent_city = true;
       for (dir = 0; dir < 8; dir++) {
-        x2 = map_wrap_x((char)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
+        x2 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
         dy = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir];
         city = map_in_bounds(x2,dy + y);
         if ((city != 0) && (city = tile_city_owner(x2,dy + y), -1 < city)) {
@@ -4001,14 +4001,14 @@ void __cdecl menu_update_states(void)
       menu_set_item_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),0x421,1);
     }
   }
-  if ((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
+  if ((((*((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
     cheat_menu_disabled = 1;
   }
   else {
     cheat_menu_disabled = 0;
   }
   menu_set_menu_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),7,cheat_menu_disabled);
-  if ((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
+  if ((((*((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
     cheat_checked = 0;
   }
   else {
@@ -4021,7 +4021,7 @@ void __cdecl menu_update_states(void)
   if ((2 < game.multiplayer) && (net_session_block.mp_turn_civ != human_civ[0])) {
     menu_set_menu_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),4,1);
   }
-  if ((((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) ||
+  if ((((((*((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) ||
       ((game.game_flags & 0x80) == 0)) ||
      (path_cmp = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), path_cmp == 0)) {
     scenario_checked = 0;
@@ -4030,7 +4030,7 @@ void __cdecl menu_update_states(void)
     scenario_checked = 1;
   }
   menu_set_item_checked((GameMenu *)((i8 *)&main_menu_block.main_menu),0x801,scenario_checked);
-  if (((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) ||
+  if (((((*((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) ||
      (((game.game_flags & 0x80) == 0 || (path_cmp2 = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), path_cmp2 == 0)
       ))) {
     scenario_menu_disabled = 1;
@@ -4076,14 +4076,14 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
   palette_init(&palette);
   eh_state = 0;
   sprite_init(&sprite);
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
+  (*((char *)&eh_state + 0)) = 1;
   if (civ_saved_cursor_x_block.autoplay_active == 0) {
     if (silent == 0) {
       if (main_menu_block.city_notify_enabled == 0) {
         eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 004ebbad */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
+        /* inlined unwind funclet 004ebbad */ { sprite_destroy(&sprite); }
         eh_state = 0xffffffff;
-        /* inlined unwind funclet 004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+        /* inlined unwind funclet 004ebbb9 */ { palette_destroy(&palette); }
         result = 0;
         goto return_result;
       }
@@ -4092,7 +4092,7 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
       text_set_string_arg_b(0,(iptr)&cities[city].name);
     }
     self = (ViewWindow *)operator_new(0x798);
-    (*(i8 *)((char *)&eh_state + 0)) = 2;
+    (*((char *)&eh_state + 0)) = 2;
     if (self == (ViewWindow *)0x0) {
       popup_new = (void *)0x0;
     }
@@ -4145,15 +4145,15 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
       city_picture_popup_scalar_dtor(popup,1);
     }
     eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 004ebbad */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
+    /* inlined unwind funclet 004ebbad */ { sprite_destroy(&sprite); }
     eh_state = 0xffffffff;
-    /* inlined unwind funclet 004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+    /* inlined unwind funclet 004ebbb9 */ { palette_destroy(&palette); }
   }
   else {
     eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 004ebbad */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
+    /* inlined unwind funclet 004ebbad */ { sprite_destroy(&sprite); }
     eh_state = 0xffffffff;
-    /* inlined unwind funclet 004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+    /* inlined unwind funclet 004ebbb9 */ { palette_destroy(&palette); }
     result = 0;
   }
 return_result:
@@ -4271,7 +4271,7 @@ popup_text_run(iptr file,iptr section,i32 result,i32 arg4,i32 arg5,
     }
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0051d53f */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+  /* inlined unwind funclet 0051d53f */ { dialog_dtor(&dialog2); }
   return result;
 }
 
@@ -4295,7 +4295,7 @@ popup_text_with_sprite(iptr file,iptr section,i32 flags,iptr sprite,i32 zoom)
   result = dlg_show_modal(&dialog2,0);
   (*(u32 *)&dlg_help_pressed) = dialog2.result_extra;
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0051d616 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+  /* inlined unwind funclet 0051d616 */ { dialog_dtor(&dialog2); }
   return result;
 }
 
@@ -4327,7 +4327,7 @@ dlg_text_input(iptr file,iptr section,i32 max_len,iptr initial_text,iptr out_tex
     }
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0051d738 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+  /* inlined unwind funclet 0051d738 */ { dialog_dtor(&dialog2); }
   return result;
 }
 
@@ -4387,12 +4387,12 @@ void __cdecl dialog_prepend_title_label(iptr dialog,i32 label_id)
   str_append_label((iptr)title,label_id);
   if (*(int *)(dialog + 0x134) != 0) {
     crt_strcat(title,((i8 *)&dialog_title_label_space_str));
-    crt_strcat((void *)title,(void *)(*(i32 *)(dialog + 0x134)));
+    crt_strcat((char *)((void *)title),(const char *)((void *)(*(i32 *)(dialog + 0x134))));
   }
   len = _strlen(title);
   buffer = memblock_alloc(dialog + 0x254,len + 1);
   *(i32 *)(dialog + 0x134) = buffer;
-  crt_strcpy((void *)(*(i32 *)(dialog + 0x134)),(void *)title);
+  crt_strcpy((char *)((void *)(*(i32 *)(dialog + 0x134))),(const char *)((void *)title));
   return;
 }
 
@@ -4752,7 +4752,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
     self->timer_last_value = (int)civ_saved_cursor_x_block.autoplay_turns_left;
     __itoa((int)civ_saved_cursor_x_block.autoplay_turns_left,(char *)&self->timer_text,10);
   }
-  crt_strcpy(caption,self->frame_title);
+  crt_strcpy(caption,(const char *)self->frame_title);
   if (((self->show_turn_status == 0) || (game.multiplayer == '\0')) || (net_session_block.mp_simultaneous_moves != '\0')) {
     if (((self->show_turn_status != 0) && (game.multiplayer != '\0')) && (net_session_block.mp_simultaneous_moves != '\0')) {
       if ((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) {
@@ -4767,13 +4767,13 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
         str_append_label((iptr)caption,0x369);
         if (self->timer_text != '\0') {
           crt_strcat(caption,((i8 *)&caption_simul_timer_sep_str));
-          crt_strcat(caption,&self->timer_text);
+          crt_strcat(caption,(const char *)(&self->timer_text));
         }
         crt_strcat(caption,((i8 *)&caption_simul_close_paren_str));
       }
       else if (self->timer_text != '\0') {
         crt_strcat(caption,((i8 *)&caption_timer_open_paren_str));
-        crt_strcat(caption,&self->timer_text);
+        crt_strcat(caption,(const char *)(&self->timer_text));
         crt_strcat(caption,((i8 *)&caption_timer_close_paren_str));
       }
     }
@@ -4800,7 +4800,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
     }
     else {
       adjective = civ_adjective(net_session_block.mp_turn_civ);
-      crt_strcat((void *)caption,(void *)adjective);
+      crt_strcat((char *)((void *)caption),(const char *)((void *)adjective));
       if (((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
         self->timer_text = '\0';
       }
@@ -4809,7 +4809,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
     str_append_label((iptr)caption,0x369);
     if (self->timer_text != '\0') {
       crt_strcat(caption,((i8 *)&caption_timer_sep_str));
-      crt_strcat(caption,&self->timer_text);
+      crt_strcat(caption,(const char *)(&self->timer_text));
     }
     crt_strcat(caption,((i8 *)&caption_close_paren_str));
   }
@@ -4867,7 +4867,7 @@ void __cdecl frame_wnd_on_caption_button_click(int button_id)
     frame_wnd = child - 0x48;
   }
   if (*(int *)(frame_wnd + 0x2a8) != 0) {
-    call_untyped(((code **)(frame_wnd))[170], *(i32 *)(frame_wnd + 0x200 + (button_id - 1000) * 0x1c));
+    call_untyped(((code **)frame_wnd)[170], *(i32 *)(frame_wnd + 0x200 + (button_id - 1000) * 0x1c));
   }
   return;
 }
@@ -5045,7 +5045,7 @@ void __thiscall frame_wnd_dtor(DibSurface *self)
   frame_wnd_destroy_caption_buttons((WindowObjectView *)self);
   wnd_destroy_with_surface(self);
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0055349b */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&self)); }
+  /* inlined unwind funclet 0055349b */ { surfwnd_dtor(*(SurfaceWindow **)&self); }
   return;
 }
 
@@ -5059,10 +5059,10 @@ frame_wnd_create
   uint wnd_style;
   
   if (title == 0) {
-    crt_strcpy(self->frame_title,((i8 *)&frame_default_title_str));
+    crt_strcpy((char *)self->frame_title,((i8 *)&frame_default_title_str));
   }
   else {
-    crt_strcpy((void *)self->frame_title,(void *)title);
+    crt_strcpy((char *)((void *)self->frame_title),(const char *)((void *)title));
   }
   *(i8 **)self->editor_combo_boxes = ((i8 *)&ui_text_font);
   self->title_font = (uptr)((i8 *)&caption_font_block.caption_font);
@@ -5108,8 +5108,8 @@ frame_wnd_create
     wnd_set_resize_border((WndBase *)self->window_2,self->resize_border);
   }
   frame_wnd_layout(self);
-  wnd_set_drag_begin_callback((WndDragBeginSetView *)(self->event_handlers),(iptr)mp_window_drag_begin);
-  wnd_set_drag_end_callback((WndDragEndSetView *)(self->event_handlers),(iptr)mp_window_drag_end);
+  wnd_set_drag_begin_callback((WndDragBeginSetView *)self->event_handlers,(iptr)mp_window_drag_begin);
+  wnd_set_drag_end_callback((WndDragEndSetView *)self->event_handlers,(iptr)mp_window_drag_end);
   return;
 }
 
@@ -5197,10 +5197,10 @@ void __cdecl frame_texture_load(void)
   surface_ctor(&surface);
   eh_state = 0;
   sprite_init(&sprite);
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
+  (*((char *)&eh_state + 0)) = 1;
   frame_texture_loaded_i32 = 1;
   str_clear((iptr)path);
-  str_append((iptr)path,(iptr)&str_civ2_civ2art_dll_4);
+  str_append((char *)path,(const char *)&str_civ2_civ2art_dll_4);
   ok = file_resolve_path((iptr)path);
   if (ok == 0) {
     surface_create((DibSurface *)((i8 *)&frame_texture_surface_block.frame_texture_surface),0x40,0x20);
@@ -5221,14 +5221,14 @@ void __cdecl frame_texture_load(void)
       surface_release(&surface);
     }
     dll_handle_free(&dll);
-    (*(i8 *)((char *)&eh_state + 0)) = 1;
-    /* inlined unwind funclet 00568348 */ { dll_free((DllHandle *)((iptr)&dll)); }
+    (*((char *)&eh_state + 0)) = 1;
+    /* inlined unwind funclet 00568348 */ { dll_free(&dll); }
   }
   frame_texture_load_hook_nop();
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 00568354 */ { sprite_destroy((Sprite *)((iptr)&sprite)); }
+  /* inlined unwind funclet 00568354 */ { sprite_destroy(&sprite); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0056835d */ { surface_dtor((DibSurface *)((iptr)&surface)); }
+  /* inlined unwind funclet 0056835d */ { surface_dtor(&surface); }
   return;
 }
 
@@ -5348,7 +5348,7 @@ void __thiscall menu_dtor(GameMenu *self)
   eh_state = 0;
   memblock_free((iptr)self->item_storage);
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 005787bd */ { menu_handle_dtor(*(GameMenu **)((iptr)&self)); }
+  /* inlined unwind funclet 005787bd */ { menu_handle_dtor(*&self); }
   return;
 }
 
@@ -5502,7 +5502,7 @@ i32 * __thiscall menu_add_menu(GameMenu *self,i32 menu_id,char *title)
   len = _strlen(title);
   text = memblock_alloc((iptr)self->item_storage,len + 1);
   *menu = text;
-  crt_strcpy((void *)*menu,(void *)title);
+  crt_strcpy((char *)((void *)*menu),(const char *)((void *)title));
   str_pipes_to_tabs((char *)*menu);
   self->menu_flags = self->menu_flags & 0xffff7fff;
   return menu;
@@ -5554,7 +5554,7 @@ menu_add_item
       }
       buffer = memblock_alloc((iptr)self->item_storage,buf_len + 1);
       *item = buffer;
-      crt_strcpy((void *)*item,(void *)text);
+      crt_strcpy((char *)((void *)*item),(const char *)((void *)text));
       str_pipes_to_tabs((char *)*item);
     }
     self->menu_flags = self->menu_flags & 0xffff7fff;
@@ -5657,7 +5657,7 @@ void __thiscall menu_rebuild(GameMenu *self,iptr window)
     menu_index = 1;
     for (; menu2 != (i32 *)0x0; menu2 = (i32 *)menu2[4]) {
       if ((*(byte *)(menu2 + 2) & 2) == 0) {
-        crt_strcat((void *)spec,(void *)*menu2);
+        crt_strcat((char *)((void *)spec),(const char *)((void *)*menu2));
         crt_strcat(spec,((i8 *)&menu_title_sep_str));
       }
       if (window == 0) {
@@ -5744,10 +5744,10 @@ menu_set_item_enabled(GameMenu *self,i32 item_id,int enabled)
     enabled = enabled != 0;
     was_enabled = (item->item_storage[4] & 1) != 0;
     if (enabled == 0) {
-      *(uint *)(item->item_flags) = *(uint *)(item->item_flags) & 0xfffffffe;
+      *(uint *)item->item_flags = *(uint *)(item->item_flags) & 0xfffffffe;
     }
     else {
-      *(uint *)(item->item_flags) = *(uint *)(item->item_flags) | 1;
+      *(uint *)item->item_flags = *(uint *)item->item_flags | 1;
     }
     ret_val = self;
     if ((((self->menu_flags & 0x8000) != 0) && (ret_val = item, (item->item_storage[4] & 2) == 0)) &&
@@ -5827,7 +5827,7 @@ void __thiscall menu_set_item_text(GameMenu *self,i32 item_id,iptr text)
   
   item = (i32 *)menu_find_item(self,item_id);
   if (item != (i32 *)0x0) {
-    crt_strcpy((void *)*item,(void *)text);
+    crt_strcpy((char *)((void *)*item),(const char *)((void *)text));
     str_pipes_to_tabs((char *)*item);
     if (((self->menu_flags & 0x8000) != 0) && ((*(byte *)(item + 2) & 2) == 0)) {
       item_text = *item;
@@ -6266,7 +6266,7 @@ void __cdecl dialog_load_button_labels(void)
     for (i = 0; i < 3; i++) {
       label_id = text_read_line_pooled();
       *(i32 *)(((i8 *)&dialog_plain_font_obj_block.dialog_button_label_ids) + i * 4) = label_id;
-      label = (i8 *)label_string(*(i32 *)(((i8 *)&dialog_plain_font_obj_block.dialog_button_label_ids) + i * 4));
+      label = label_string(*(i32 *)(((i8 *)&dialog_plain_font_obj_block.dialog_button_label_ids) + i * 4));
       (((i8 * *)&dialog_button_labels))[i] = label;
     }
   }
@@ -6618,7 +6618,7 @@ i32 __thiscall dialog_set_item_text(void *self,int line_id,iptr text)
   }
   if (((line != (int *)0x0) && (-1 < line[3])) &&
      (len = _strlen((char *)text), (int)(len + 1) <= line[3])) {
-    crt_strcpy((void *)line[2],(void *)text);
+    crt_strcpy((char *)((void *)line[2]),(const char *)((void *)text));
     return 1;
   }
   return 0;
@@ -6676,7 +6676,7 @@ dialog_add_line
   len = _strlen((char *)text);
   line[3] = len + 1;
 copy_line_text:
-  crt_strcpy((void *)line[2],(void *)text);
+  crt_strcpy((char *)((void *)line[2]),(const char *)((void *)text));
   line[4] = x;
   line[5] = y;
   line[6] = color;
@@ -6860,7 +6860,7 @@ void __thiscall dialog_set_title(DialogWindowView *self,iptr title)
   len = _strlen((char *)title);
   buffer = memblock_alloc((iptr)&((DialogTextLineView *)self)->string_pool,len + 1);
   self->title_text = buffer;
-  crt_strcpy((void *)self->title_text,(void *)title);
+  crt_strcpy((char *)((void *)self->title_text),(const char *)((void *)title));
   return;
 }
 
@@ -6996,7 +6996,7 @@ void __thiscall dialog_set_default_choice(DialogOptionList *self,iptr choice_id)
   uptr entry;
   
   if (self->option_count == 0) {
-    entry = (uptr)dialog_find_sprite((DialogOptionList *)self,choice_id);
+    entry = (uptr)dialog_find_sprite(self,choice_id);
     if (entry != 0) {
       self->selected_sprite = entry;
     }
@@ -7127,7 +7127,7 @@ dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,iptr label)
     len = _strlen((char *)label);
     label_buf = memblock_alloc((iptr)self->string_pool,len + 1);
     entry[2] = label_buf;
-    crt_strcpy((void *)entry[2],(void *)label);
+    crt_strcpy((char *)((void *)entry[2]),(const char *)((void *)label));
     label_width = font_text_width((GameFont *)self->body_font,entry[2]);
     entry_width = entry_width + self->sprite_gap + label_width;
   }
@@ -7200,7 +7200,7 @@ dialog_add_option(DialogOptionList *self,iptr text,iptr option_id,uint data)
   len = _strlen((char *)text);
   text_buf = memblock_alloc((iptr)self->string_pool,len + 1);
   option[2] = text_buf;
-  crt_strcpy((void *)option[2],(void *)text);
+  crt_strcpy((char *)((void *)option[2]),(const char *)((void *)text));
   if (*(char *)text == '\0') {
     *option = *option | 1;
   }
@@ -7226,7 +7226,7 @@ dialog_add_checkbox_option(DialogOptionList *self,iptr text,iptr option_id,int c
   uint *option;
   
   self->style_flags = self->style_flags | 5;
-  option = (uint *)dialog_add_option(self,text,option_id,0);
+  option = dialog_add_option(self,text,option_id,0);
   if (checked != 0) {
     *option = *option | 4;
   }
@@ -7264,7 +7264,7 @@ dialog_add_edit_field(DialogOptionList *self,iptr label,iptr initial_text,size_t
   len = _strlen((char *)label);
   buffer = memblock_alloc((iptr)self->string_pool,len + 2);
   field[4] = buffer;
-  crt_strcpy((void *)field[4],(void *)label);
+  crt_strcpy((char *)((void *)field[4]),(const char *)((void *)label));
   label_width = font_text_width((GameFont *)self->body_font,field[4]);
   max_width = self->edit_label_width;
   if ((int)self->edit_label_width <= (int)label_width) {
@@ -7302,7 +7302,7 @@ dialog_add_edit_field(DialogOptionList *self,iptr label,iptr initial_text,size_t
 }
 
 /* 0059f2a3 auto */
-void __thiscall dialog_add_button(DialogButtonsView *self,iptr label)
+void __thiscall dialog_add_button(DialogButtonsView *self,const char *label)
 
 {
   size_t len;
@@ -7312,7 +7312,7 @@ void __thiscall dialog_add_button(DialogButtonsView *self,iptr label)
     len = _strlen((char *)label);
     buffer = memblock_alloc((iptr)&((DialogTextLineView *)self)->string_pool,len + 1);
     (&((Dialog *)self)->extra_button_labels)[self->extra_button_count] = buffer;
-    crt_strcpy((void *)((&((Dialog *)self)->extra_button_labels)[self->extra_button_count]),(void *)label);
+    crt_strcpy((char *)((void *)((&((Dialog *)self)->extra_button_labels)[self->extra_button_count])),(const char *)((void *)label));
     self->extra_button_count++;
   }
   return;
@@ -7920,9 +7920,9 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
         }
       }
       for (i = 0; (int)i < (int)self->extra_button_count; i++) {
-        value = dialog_button_width_for((DialogButtonWidthForView *)self,(&(*(u32 *)&((Dialog *)self)->extra_button_labels))[i]);
+        value = dialog_button_width_for((DialogButtonWidthForView *)self,(&(*&((Dialog *)self)->extra_button_labels))[i]);
         if ((int)self->button_width <= value) {
-          tmp = dialog_button_width_for((DialogButtonWidthForView *)self,(&(*(u32 *)&((Dialog *)self)->extra_button_labels))[i]);
+          tmp = dialog_button_width_for((DialogButtonWidthForView *)self,(&(*&((Dialog *)self)->extra_button_labels))[i]);
           self->button_width = tmp;
         }
       }
@@ -9180,7 +9180,7 @@ void __cdecl dialog_on_sprite_click(int ctrl_id)
       }
     }
     else {
-      done = call_untyped(((code **)(dialog_title_font_obj_block.active_dialog))[143], *sprite);
+      done = call_untyped(((code **)dialog_title_font_obj_block.active_dialog)[143], *sprite);
       dialog_render((Dialog *)dialog_title_font_obj_block.active_dialog);
       if (done != 0) {
         *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) = *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) | 0x2000;
@@ -9198,7 +9198,7 @@ void __cdecl dialog_sprite_on_dblclick(void)
   int done;
   
   if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x240) != 0) {
-    done = call_untyped(((code **)(dialog_title_font_obj_block.active_dialog))[144], 0);
+    done = call_untyped(((code **)dialog_title_font_obj_block.active_dialog)[144], 0);
     if (done == 0) {
       dialog_render((Dialog *)dialog_title_font_obj_block.active_dialog);
     }
@@ -10226,7 +10226,7 @@ dialog_load_text_section
   result = 1;
   mode = 1;
   option_index = 0;
-  crt_strcpy((void *)(((i8 *)&dialog_text_font_obj_block.dialog_section_name)),(void *)section);
+  crt_strcpy((char *)((void *)(((i8 *)&dialog_text_font_obj_block.dialog_section_name))),(const char *)((void *)section));
   cmp = text_open_section(file_name,section);
   if (cmp == 0) {
     if ((flags & 0x8000) == 0) {
@@ -10237,10 +10237,10 @@ dialog_load_text_section
     }
     has_edit = (uint)(edit_default != 0);
     if (has_edit != 0) {
-      crt_strcpy((void *)edit_text,(void *)edit_default);
+      crt_strcpy((char *)((void *)edit_text),(const char *)((void *)edit_default));
     }
     do {
-      line = (char *)text_read_line(1);
+      line = text_read_line(1);
       if (line == (char *)0x0) {
         mode = 3;
       }
@@ -10286,7 +10286,7 @@ dialog_load_text_section
                     key2++;
                   }
                   text_expand_vars((iptr)key2,(iptr)expanded);
-                  dialog_add_button((DialogButtonsView *)self,(iptr)expanded);
+                  dialog_add_button((DialogButtonsView *)self,(const char *)expanded);
                 }
                 else {
                   cmp = __strnicmp(key2,str_columns,7);
@@ -10606,7 +10606,7 @@ void __thiscall surfwnd_on_resize(SurfaceWindow *self,int width,int height)
     return;
   }
   SetRect(&rect,0,0,width,height);
-  call_untyped(((code **)(self->vtable))[0], self,&rect);
+  call_untyped(((code **)self->vtable)[0], self,&rect);
   palette = wnd_get_palette_obj((WndPaletteObjView *)self->window_2);
   surface_apply_palette((DibSurface *)self,(PaletteVersionView *)palette);
   if (self == (SurfaceWindow *)0x0) {
@@ -10956,7 +10956,7 @@ void __cdecl wnd_obj_set_bg_color(iptr wnd,uint color_index)
     self = (GamePalette *)wnd_get_palette(wnd_view);
     palette_get_entry
               (self,color_index & 0xff,(iptr)red,(iptr)green,(iptr)blue);
-    brush = CreateSolidBrush((uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+    brush = CreateSolidBrush(CONCAT12(blue[0],CONCAT11(green[0],red[0])));
     *(HBRUSH *)(wnd + 0x14) = brush;
   }
   else {
@@ -11644,7 +11644,7 @@ i32 __thiscall wnd_dispatch_hotkey_char(void *self,i32 ch)
     if (done != '\0') {
       return handled;
     }
-    if (*(int *)(ctrl->hotkey_index) < 0) {
+    if (*(int *)ctrl->hotkey_index < 0) {
       value = control_get_type((ControlTypeView *)ctrl);
       if (value == 3) {
         value = radiogrp_get_items(ctrl);
@@ -11675,7 +11675,7 @@ i32 __thiscall wnd_dispatch_hotkey_char(void *self,i32 ch)
         return 1;
       }
     }
-    ctrl = *(RadioGroupItemsView **)(ctrl->next_control);
+    ctrl = *(RadioGroupItemsView **)ctrl->next_control;
   } while( true );
 }
 
@@ -12281,7 +12281,7 @@ iptr __cdecl menu_hmenu_parse_items(HMENU hmenu,iptr spec)
       *_Dest = '\0';
       item_id = (HMENU)0x0;
     }
-    AppendMenuA(hmenu,flags2,(UINT_PTR)item_id,_Dest);
+    AppendMenuA(hmenu,flags2,item_id,_Dest);
     *_Dest = '\0';
   }
   LocalUnlock(hMem);
@@ -12330,10 +12330,10 @@ HMENU __cdecl menu_hmenu_build_from_spec(char *spec)
     uIDNewItem = CreateMenu();
     cursor = (char *)menu_hmenu_parse_items(uIDNewItem,(iptr)cursor);
     if (prefix_char != '!') {
-      AppendMenuA(hMenu,0x10,(UINT_PTR)uIDNewItem,_Dest);
+      AppendMenuA(hMenu,0x10,uIDNewItem,_Dest);
     }
     else {
-      AppendMenuA(hMenu,0x13,(UINT_PTR)uIDNewItem,_Dest);
+      AppendMenuA(hMenu,0x13,uIDNewItem,_Dest);
     }
     *_Dest = '\0';
   }
@@ -12439,7 +12439,7 @@ void __cdecl menu_hmenu_insert_item(HMENU hmenu,int menu_pos,int item_pos,LPCSTR
     if (((submenu != (HMENU)0x0) && (item_pos != -1)) && (menu_pos != -1)) {
       item_count2 = GetMenuItemCount(submenu);
     }
-    uIDNewItem = (*(UINT_PTR *)&menu_next_item_id);
+    uIDNewItem = (*&menu_next_item_id);
     if ((item_count2 % 0x16 == 0) && (item_count2 != 0)) {
       flags2 = 0x440;
     }
@@ -12449,14 +12449,14 @@ void __cdecl menu_hmenu_insert_item(HMENU hmenu,int menu_pos,int item_pos,LPCSTR
     if (item_pos == -1) {
       submenu = CreatePopupMenu();
       if (menu_pos == -1) {
-        AppendMenuA(hmenu,flags2 | 0x10,(UINT_PTR)submenu,text);
+        AppendMenuA(hmenu,flags2 | 0x10,submenu,text);
       }
       else {
-        InsertMenuA(hmenu,menu_pos - 1,flags2 | 0x10,(UINT_PTR)submenu,text);
+        InsertMenuA(hmenu,menu_pos - 1,flags2 | 0x10,submenu,text);
       }
     }
     else {
-      (*(UINT_PTR *)&menu_next_item_id)++;
+      (*&menu_next_item_id)++;
       InsertMenuA(submenu,item_pos - 1,flags2,uIDNewItem,text);
     }
   }
@@ -12473,7 +12473,7 @@ void __cdecl menu_hmenu_set_item_text(HMENU hmenu,int menu_pos,int item_pos,LPCS
   if (hmenu != (HMENU)0x0) {
     hMenu = GetSubMenu(hmenu,menu_pos - 1);
     if (item_pos == -1) {
-      ModifyMenuA(hmenu,menu_pos - 1,0x410,(UINT_PTR)hMenu,text);
+      ModifyMenuA(hmenu,menu_pos - 1,0x410,hMenu,text);
     }
     else {
       uIDNewItem = GetMenuItemID(hMenu,item_pos - 1);
@@ -12706,11 +12706,11 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
     }
   }
   else if (direction == 2) {
-    hwnd = (HWND)hwnd_next_sibling_wrap(hwnd);
+    hwnd = hwnd_next_sibling_wrap(hwnd);
     start_hwnd = hwnd;
   }
   else {
-    hwnd = (HWND)hwnd_prev_sibling_wrap(hwnd);
+    hwnd = hwnd_prev_sibling_wrap(hwnd);
     start_hwnd = hwnd;
   }
   do {
@@ -12721,10 +12721,10 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
     is_child = IsWindowVisible(hwnd);
     if (is_child == 0) {
       if (direction == 2) {
-        hwnd = (HWND)hwnd_next_sibling_wrap(hwnd);
+        hwnd = hwnd_next_sibling_wrap(hwnd);
       }
       else {
-        hwnd = (HWND)hwnd_prev_sibling_wrap(hwnd);
+        hwnd = hwnd_prev_sibling_wrap(hwnd);
       }
     }
     else {
@@ -12745,10 +12745,10 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
           }
           group_hwnd = hwnd;
           if (direction == 2) {
-            hwnd = (HWND)hwnd_next_sibling_wrap(hwnd);
+            hwnd = hwnd_next_sibling_wrap(hwnd);
           }
           else {
-            hwnd = (HWND)hwnd_prev_sibling_wrap(hwnd);
+            hwnd = hwnd_prev_sibling_wrap(hwnd);
           }
         }
         wnd_cycle_control_focus(wnd,group_hwnd,direction);
@@ -12767,10 +12767,10 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
         return;
       }
       if (direction == 2) {
-        hwnd = (HWND)hwnd_next_sibling_wrap(hwnd);
+        hwnd = hwnd_next_sibling_wrap(hwnd);
       }
       else {
-        hwnd = (HWND)hwnd_prev_sibling_wrap(hwnd);
+        hwnd = hwnd_prev_sibling_wrap(hwnd);
       }
     }
     if (hwnd == start_hwnd) {
@@ -13293,7 +13293,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
       }
       goto default_proc;
     }
-    can_close = wnd_call_close((WndOnCloseView *)(self->handlers));
+    can_close = wnd_call_close((WndOnCloseView *)self->handlers);
     if (can_close != 0) {
       def_result = DefWindowProcA(hwnd,0x10,wparam,lparam);
       return def_result;
@@ -13313,7 +13313,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
       handled = ddwin_dispatch_ctrl_msg(self,0x200,lparam & 0xffff,lparam >> 0x10);
       if (handled == '\0') {
         wnd_call_mousemove
-                  ((WndOnMouseMoveView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnMouseMoveView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
       }
     }
     else if (msg == 0x100) {
@@ -13322,20 +13322,20 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
       handled = ddwin_dispatch_ctrl_msg(self,0x100,key,zero_arg);
       if (handled == '\0') {
         key = input_map_vkey(wparam);
-        wnd_call_keydown_pre((WndOnKeyDownPreView *)(self->handlers),key);
+        wnd_call_keydown_pre((WndOnKeyDownPreView *)self->handlers,key);
         key = input_map_vkey(wparam);
-        wnd_call_keydown((WndOnKeyDownView *)(self->handlers),key);
+        wnd_call_keydown((WndOnKeyDownView *)self->handlers,key);
       }
     }
     else if (msg == 0x101) {
       key = input_map_vkey(wparam);
-      wnd_call_keyup((WndOnKeyUpView *)(self->handlers),key);
+      wnd_call_keyup((WndOnKeyUpView *)self->handlers,key);
     }
     else {
       if (msg != 0x102) goto default_proc;
       handled = ddwin_dispatch_ctrl_msg(self,0x102,wparam & 0xff,0);
       if (handled == '\0') {
-        wnd_call_char((WndOnCharView *)(self->handlers),wparam & 0xff);
+        wnd_call_char((WndOnCharView *)self->handlers,wparam & 0xff);
       }
     }
   }
@@ -13343,11 +13343,11 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
     if (msg == 0x210) {
       if ((wparam & 0xffff) == 0x201) {
         wnd_call_lbuttondown
-                  ((WndOnLButtonDownView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnLButtonDownView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
       }
       else if ((wparam & 0xffff) == 0x204) {
         wnd_call_rbuttondown
-                  ((WndOnRButtonDownView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnRButtonDownView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
       }
     }
     else {
@@ -13360,7 +13360,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
           ((DDWindowExt *)self)->lbutton_held_byte2[0] = '\0';
           ((DDWindowExt *)self)->lbutton_held_byte3[0] = '\0';
           wnd_call_lbuttondown
-                    ((WndOnLButtonDownView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                    ((WndOnLButtonDownView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       case 0x202:
@@ -13372,17 +13372,17 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
             ((DDWindowExt *)self)->lbutton_held_byte2[0] = '\0';
             ((DDWindowExt *)self)->lbutton_held_byte3[0] = '\0';
             wnd_call_lbuttonup
-                      ((WndOnLButtonUpView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                      ((WndOnLButtonUpView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
           }
           wnd_call_lbuttonup_raw
-                    ((WndOnLButtonUpRawView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                    ((WndOnLButtonUpRawView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       case 0x203:
         handled = ddwin_dispatch_ctrl_msg(self,msg,lparam & 0xffff,lparam >> 0x10);
         if (handled == '\0') {
           wnd_call_dblclick
-                    ((WndOnDblClickView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                    ((WndOnDblClickView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       case 0x204:
@@ -13393,7 +13393,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
           ((DDWindowExt *)self)->rbutton_held_byte2[0] = '\0';
           ((DDWindowExt *)self)->rbutton_held_byte3[0] = '\0';
           wnd_call_rbuttondown
-                    ((WndOnRButtonDownView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                    ((WndOnRButtonDownView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       case 0x205:
@@ -13405,10 +13405,10 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
             ((DDWindowExt *)self)->rbutton_held_byte2[0] = '\0';
             ((DDWindowExt *)self)->rbutton_held_byte3[0] = '\0';
             wnd_call_rbuttonup
-                      ((WndOnRButtonUpView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                      ((WndOnRButtonUpView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
           }
           wnd_call_rbuttonup_raw
-                    ((WndOnRButtonUpRawView *)(self->handlers),lparam & 0xffff,lparam >> 0x10);
+                    ((WndOnRButtonUpRawView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       default:
@@ -13423,7 +13423,7 @@ default_proc:
       return def_result;
     }
     if (lparam == 0x20d) {
-      wnd_call_msg4c8((WndCallMsg4c8View *)(self->handlers),0);
+      wnd_call_msg4c8((WndCallMsg4c8View *)self->handlers,0);
     }
   }
   return 0;
@@ -13485,14 +13485,14 @@ i8 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *self,int msg,int x,int y)
       self->hover_control = 0;
     }
   }
-  ctrl = (DDControl *)ptrlist_first((PtrList *)(self->child_controls));
+  ctrl = (DDControl *)ptrlist_first((PtrList *)self->child_controls);
   while( true ) {
     if (ctrl == (DDControl *)0x0) {
       return 0;
     }
     handled = ddctrl_dispatch_msg(ctrl,msg,x,y);
     if (handled != 0) break;
-    ctrl = (DDControl *)ptrlist_next((PtrList *)(self->child_controls));
+    ctrl = (DDControl *)ptrlist_next((PtrList *)self->child_controls);
   }
   if (msg == 0x200) {
     self->hover_control = (uptr)ctrl;

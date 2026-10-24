@@ -302,14 +302,14 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
     if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
       text_clear();
       adjective = civ_get_adjective(civ);
-      text_append(adjective);
+      text_append((const char *)adjective);
       dialog_add_option((DialogOptionList *)&dlg,(iptr)&map_views_block.text_buffer,civ,0);
     }
   }
   dialog_set_default_choice((DialogOptionList *)&dlg,human_civ[0]);
   choice = dlg_show_modal(&dlg,0);
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 00554272 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  /* inlined unwind funclet 00554272 */ { dialog_dtor(&dlg); }
   return choice;
 }
 
@@ -375,7 +375,7 @@ void __cdecl err_dump_text_file(iptr path)
   char line[80];
   int keep_going;
   
-  _File = (FILE *)file_open_path(path,(iptr)&str_rt_8);
+  _File = file_open_path(path,(iptr)&str_rt_8);
   if (_File != (FILE *)0x0) {
     keep_going = 1;
     while (((keep_going != 0 && ((CRT_FEOF(_File)) == 0)) &&
@@ -412,7 +412,7 @@ void __cdecl error_report(uint error_code,int module_id,iptr context,iptr data1,
   char data1_text[12];
   
   if (context != 0) {
-    crt_strcpy(((i8 *)&error_context_text),(const void *)context);
+    crt_strcpy(((i8 *)&error_context_text),(const char *)((const void *)context));
   }
   __itoa(error_code,error_text,10);
   __itoa(module_id,module_text,10);
@@ -433,13 +433,13 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   i8 msg[256];
   
   crt_strcpy(msg,str_error_4);
-  crt_strcat(msg,(const void *)error_text);
+  crt_strcat(msg,(const char *)((const void *)error_text));
   crt_strcat(msg,str_in_module);
-  crt_strcat(msg,(const void *)module_text);
+  crt_strcat(msg,(const char *)((const void *)module_text));
   crt_strcat(msg,str_data);
-  crt_strcat(msg,(const void *)data1_text);
+  crt_strcat(msg,(const char *)((const void *)data1_text));
   crt_strcat(msg,((i8 *)&err_data_sep_str));
-  crt_strcat(msg,(const void *)data2_text);
+  crt_strcat(msg,(const char *)((const void *)data2_text));
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&err_fatal_msg_fmt),msg);
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
   dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
@@ -450,9 +450,9 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
     dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
   }
   if ((*(int *)&error_last_alloc_failed) != 0) {
-    __ltoa((*(long *)&mem_last_alloc_size),(char *)data1_text,10);
+    __ltoa((*&mem_last_alloc_size),(char *)data1_text,10);
     crt_strcpy(msg,str_tried_to_allocate);
-    crt_strcat(msg,(const void *)data1_text);
+    crt_strcat(msg,(const char *)((const void *)data1_text));
     crt_strcat(msg,str_bytes);
     _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_alloc_line_fmt),msg);
     OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
@@ -468,7 +468,7 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   }
   crt_strcpy(msg,str_most_recent_dos_error);
   __itoa(crt_errno,(char *)data1_text,10);
-  crt_strcat(msg,(const void *)data1_text);
+  crt_strcat(msg,(const char *)((const void *)data1_text));
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_dos_error_line_fmt),msg);
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
   dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
@@ -888,7 +888,7 @@ i8 __thiscall dbg_log_write(void *self,iptr text)
   
   tick_count = GetTickCount();
   _sprintf(line,str_5d,(tick_count - *(int *)self) / 1000);
-  crt_strcat(line,(const void *)text);
+  crt_strcat(line,(const char *)((const void *)text));
   if (dbg_log_to_debugger != '\0') {
     dbg_log_write_debugger((iptr)line);
   }
@@ -963,12 +963,12 @@ err_format_message
   i32 trace;
   char *_Format;
   
-  crt_strcpy(self,((i8 *)&err_format_empty_str));
+  crt_strcpy((char *)self,((i8 *)&err_format_empty_str));
   _Format = str_error_s_file_s_line_d;
   len = _strlen((char *)self);
   _sprintf((char *)(self->error_message_text + len),_Format,text,file,line);
   trace = (i32)err_get_stack_trace(self);
-  crt_strcat(self,(const void *)trace);
+  crt_strcat((char *)self,(const char *)((const void *)trace));
   return self;
 }
 
@@ -1058,7 +1058,7 @@ void __cdecl mem_handle_clone(iptr handle_ptr)
   LPVOID src;
   
   mem_size = GlobalSize(*(HGLOBAL *)handle_ptr);
-  hMem = (HGLOBAL)mem_handle_alloc(mem_size);
+  hMem = mem_handle_alloc(mem_size);
   if (hMem != (HGLOBAL)0x0) {
     dst = GlobalLock(hMem);
     src = GlobalLock(*(HGLOBAL *)handle_ptr);
@@ -1339,7 +1339,7 @@ i32 __cdecl dbg_log_open(void)
   file = (HANDLE)0x0;
   file = CreateFileA(str_smeds_log,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,2,0x80,
                         (HANDLE)0x0);
-  if (file != (HANDLE)0xffffffff) {
+  if (file != 0xffffffff) {
     smeds_log_enabled = 1;
   }
   crt_strcpy(header,str_smeds_log_2);
@@ -1585,7 +1585,7 @@ void __thiscall ptrlist_dtor(void *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 005f04fe */ { ptrlist_clear(*(PtrList **)((iptr)&self)); }
+  /* inlined unwind funclet 005f04fe */ { ptrlist_clear(*(PtrList **)&self); }
   return;
 }
 

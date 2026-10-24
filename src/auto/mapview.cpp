@@ -989,7 +989,7 @@ void __thiscall mapview_update_title(FrameWindow *self)
       adjective = civ_get_adjective(human_civ[0]);
       text_append_str(adjective);
       if (game_language == 2) {
-        text_append((iptr)&str_e);
+        text_append((const char *)&str_e);
       }
       text_append_space();
     }
@@ -1115,17 +1115,17 @@ void __thiscall mapview_create(ViewWindow *self)
   ;
   wnd_set_min_size((ModalMenuWindow *)self->window_2,0x100,0x80);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)mapview_on_redraw);
-  wnd_set_lbuttonup_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_lbuttonup);
-  wnd_set_rbuttonup_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_rbuttonup);
-  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)mapview_on_lbuttondown);
-  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)mapview_on_lbuttonup_any);
-  wnd_set_mousemove_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)mapview_on_mousemove);
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)map_window_double_click);
-  wnd_set_char_handler((WndEventHandlers *)(self->event_handlers),(iptr)map_window_ascii);
-  wnd_set_keydown_handler((WndEventHandlers *)(self->event_handlers),(iptr)map_window_key);
-  wnd_set_close_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_close);
-  wnd_set_size_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_size);
-  wnd_set_move_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_move);
+  wnd_set_lbuttonup_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_lbuttonup);
+  wnd_set_rbuttonup_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_rbuttonup);
+  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)mapview_on_lbuttondown);
+  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)mapview_on_lbuttonup_any);
+  wnd_set_mousemove_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)mapview_on_mousemove);
+  wnd_set_dblclick_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)map_window_double_click);
+  wnd_set_char_handler((WndEventHandlers *)self->event_handlers,(iptr)map_window_ascii);
+  wnd_set_keydown_handler((WndEventHandlers *)self->event_handlers,(iptr)map_window_key);
+  wnd_set_close_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_close);
+  wnd_set_size_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_size);
+  wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_move);
   mapview_update_title((FrameWindow *)self);
   if (self->rates_civ != 0) {
     frame_wnd_add_caption_button((PortraitDialog *)self,(iptr)&caption_close_button_sprite_block.caption_close_button_sprite,1);
@@ -1508,8 +1508,8 @@ mapview_screen_to_tile
                        (int)(short)((int)py % (int)self->tile_height));
     quadrant = pixel - 10 >> 4;
     if (quadrant != 0) {
-      tile_x += (char)(((i8 *)&diag_neighbor_bits_block.pick_quadrant_dx_table))[quadrant];
-      tile_y += (char)(((i8 *)&diag_neighbor_bits_block.pick_quadrant_dy_table))[quadrant];
+      tile_x += (((i8 *)&diag_neighbor_bits_block.pick_quadrant_dx_table))[quadrant];
+      tile_y += (((i8 *)&diag_neighbor_bits_block.pick_quadrant_dy_table))[quadrant];
     }
     result = map_wrap_x(tile_x);
     *(int *)out_x = (int)(short)result;
@@ -1682,7 +1682,7 @@ mapview_draw_tile_terrain
       improvements2 = (uint)tile[1];
     }
     else {
-      known = (byte *)known_at(x,y,viewer_civ);
+      known = known_at(x,y,viewer_civ);
       improvements2 = (uint)*known;
     }
   }
@@ -1705,8 +1705,8 @@ mapview_draw_tile_terrain
                    (iptr)coast_rect,surface,quarter_x,quarter_y);
       }
       for (dir = 0; dir < 4; dir++) {
-        x2 = map_wrap_x((char)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + x);
-        y2 = (char)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + y;
+        x2 = map_wrap_x((((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + x);
+        y2 = (((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + y;
         check = map_in_bounds(x2,y2);
         if ((check != 0) && (known = (byte *)tile_at(x2,y2), (*known & 0x80) != 0)) {
           sprite_draw
@@ -1724,8 +1724,8 @@ mapview_draw_tile_terrain
     }
     else {
       for (dir = 0; dir < 4; dir++) {
-        x2 = map_wrap_x((char)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + x);
-        y2 = (char)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + y;
+        x2 = map_wrap_x((((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + x);
+        y2 = (((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + y;
         check = map_in_bounds(x2,y2);
         if (check != 0) {
           nbr_tile = (byte *)tile_at(x2,y2);
@@ -1733,7 +1733,7 @@ mapview_draw_tile_terrain
           nbr_byte = (uint)nbr_raw;
           nbr_terrain = nbr_byte & 0xf;
           if (nbr_terrain == terrain2) {
-            variant += (char)(((i8 *)&diag_neighbor_bits_block.diag_neighbor_bits))[dir];
+            variant += (((i8 *)&diag_neighbor_bits_block.diag_neighbor_bits))[dir];
           }
           else if (nbr_terrain == 10) {
             dither_terrain[dir] = 0xc;
@@ -1742,7 +1742,7 @@ mapview_draw_tile_terrain
             dither_terrain[dir] = nbr_terrain;
           }
           if (((nbr_raw & 0x80) != 0) || (nbr_terrain == 10)) {
-            river_mask += (char)(((i8 *)&diag_neighbor_bits_block.diag_neighbor_bits))[dir];
+            river_mask += (((i8 *)&diag_neighbor_bits_block.diag_neighbor_bits))[dir];
           }
         }
       }
@@ -1802,8 +1802,8 @@ mapview_draw_tile_terrain
       irrig_flags = 0;
       if (((byte)improvements2 & 0x42) == 2) {
         for (dir = 2; dir < 5; dir += 2) {
-          x2 = map_wrap_x((char)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
-          y2 = (char)(((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y;
+          x2 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
+          y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y;
           check = map_in_bounds(x2,y2);
           new_flags = irrig_flags;
           if (((check != 0) &&
@@ -1848,15 +1848,15 @@ mapview_draw_tile_terrain
       has_rail = 1;
     }
     for (dir = 0; dir < 8; dir++) {
-      x2 = map_wrap_x((char)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
-      y2 = (char)(((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y;
+      x2 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
+      y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y;
       check = map_in_bounds(x2,y2);
       if (check != 0) {
         if (viewer_civ < 1) {
           nbr_improvements = tile_improvements(x2,y2);
         }
         else {
-          known = (byte *)known_at(x2,y2,viewer_civ);
+          known = known_at(x2,y2,viewer_civ);
           nbr_improvements = (uint)*known;
         }
         if (((nbr_improvements & 0x12) != 0) &&
@@ -1869,15 +1869,15 @@ mapview_draw_tile_terrain
     }
     if (has_rail != 0) {
       for (dir = 0; dir < 8; dir++) {
-        x2 = map_wrap_x((char)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
-        y2 = (char)(((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y;
+        x2 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
+        y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y;
         check = map_in_bounds(x2,y2);
         if (check != 0) {
           if (viewer_civ < 1) {
             nbr_improvements = tile_improvements(x2,y2);
           }
           else {
-            known = (byte *)known_at(x2,y2,viewer_civ);
+            known = known_at(x2,y2,viewer_civ);
             nbr_improvements = (uint)*known;
           }
           if ((nbr_improvements & 0x22) != 0) {
@@ -1941,8 +1941,8 @@ mapview_draw_tile_terrain
   }
   if ((-4 < zoom) && (-1 < viewer_civ)) {
     for (dir = 0; dir < 4; dir++) {
-      x2 = map_wrap_x((char)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + x);
-      y2 = (char)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + y;
+      x2 = map_wrap_x((((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + x);
+      y2 = (((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + y;
       nbr_hidden = 0;
       if (city_tile_idx < 0) {
         check = map_in_bounds(x2,y2);
@@ -1954,19 +1954,19 @@ mapview_draw_tile_terrain
           if (check == 0) {
             nbr_hidden = 1;
           }
-          if ((int)(char)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[city_tile_idx] < 1) {
-            abs_dx = ~((int)(char)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[city_tile_idx])
+          if ((int)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + (int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[city_tile_idx] < 1) {
+            abs_dx = ~((int)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + (int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[city_tile_idx])
                        + 1;
           }
           else {
-            abs_dx = (int)(char)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[city_tile_idx];
+            abs_dx = (int)(((i8 *)&diag_neighbor_bits_block.diag_dx_table))[dir] + (int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[city_tile_idx];
           }
-          if ((int)(char)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[city_tile_idx] < 1) {
-            abs_dy = ~((int)(char)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[city_tile_idx])
+          if ((int)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + (int)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[city_tile_idx] < 1) {
+            abs_dy = ~((int)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + (int)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[city_tile_idx])
                        + 1;
           }
           else {
-            abs_dy = (int)(char)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[city_tile_idx];
+            abs_dy = (int)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir] + (int)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[city_tile_idx];
           }
           check = dist_from_deltas(abs_dx,abs_dy);
           if (2 < check) {
@@ -2572,9 +2572,9 @@ ViewWindow * __thiscall mapview_ctor(ViewWindow *self)
   frame_wnd_ctor((SurfaceWindow *)self);
   eh_state = 0;
   font_init_empty((GameFont *)&self->sci_label_y);
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
+  (*((char *)&eh_state + 0)) = 1;
   font_init_empty((GameFont *)&self->conceal_button_value);
-  (*(i8 *)((char *)&eh_state + 0)) = 2;
+  (*((char *)&eh_state + 0)) = 2;
   surface_ctor((DibSurface *)&self->counter_button_value);
   eh_state = (eh_state & 0xffffff00 | (byte)(3));
   surface_ctor((DibSurface *)&self->right_agreed_button);
@@ -2596,16 +2596,16 @@ void __thiscall mapview_dtor(void *self)
   int eh_state;
   
   eh_state = eh_state & 0xff;
-  (*(i8 *)((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0047de82 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x3a8)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0047de91 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x360)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0047dea0 */ { font_destroy((GameFont *)(*(int *)((iptr)&self) + 0x340)); }
+  (*((char *)&eh_state + 0)) = 3;
+  /* inlined unwind funclet 0047de82 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x3a8)); }
+  (*((char *)&eh_state + 0)) = 2;
+  /* inlined unwind funclet 0047de91 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x360)); }
+  (*((char *)&eh_state + 0)) = 1;
+  /* inlined unwind funclet 0047dea0 */ { font_destroy((GameFont *)(*(int *)&self + 0x340)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0047deaf */ { font_destroy((GameFont *)(*(int *)((iptr)&self) + 0x338)); }
+  /* inlined unwind funclet 0047deaf */ { font_destroy((GameFont *)(*(int *)&self + 0x338)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0047debe */ { frame_wnd_dtor(*(DibSurface **)((iptr)&self)); }
+  /* inlined unwind funclet 0047debe */ { frame_wnd_dtor(*(DibSurface **)&self); }
   return;
 }
 

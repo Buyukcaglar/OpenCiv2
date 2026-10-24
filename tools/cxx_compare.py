@@ -59,12 +59,60 @@ def functions(obj):
             if text.startswith('R_386') or text.startswith('R_'):
                 text = re.sub(r'(R_\w+)\s+(.*)', lambda r: r.group(1) + ' ' + strip_params(r.group(2)), text)
             funcs[cur].append(normalize(re.sub(r'\s+', ' ', text)))
-    return {k: canon_stack(v) for k, v in funcs.items() if v is not None}
+    return {k: canon_stack(fold_push(v)) for k, v in funcs.items() if v is not None}
 
+
+def reads_reg(instr, reg):
+    """Whether instr reads reg (a mov/lea/movzx... into reg only writes it)."""
+    m = re.match(r'(mov\w*|lea) (.+),(%\w+)( @.*)?$', instr)
+    if m and m.group(3) == reg:
+        return reg in m.group(2)
+    return reg in instr
+
+
+def fold_push(lines):
+    """mov SRC,%reg ... push %reg -> ... push SRC when the instructions
+    between touch neither %reg nor SRC (no call or jump either) and nothing
+    reads %reg after the push: -O0 loads a value it converts (an integer cast
+    of a pointer) into a register first, and pushes one it does not straight
+    from memory.  Relocations are attached to their instruction first."""
+    merged = []
+    for line in lines:
+        if line.startswith('R_') and merged:
+            merged[-1] += ' @' + line
+        else:
+            merged.append(line)
+    out = []
+    skip = set()
+    for i, line in enumerate(merged):
+        if i in skip:
+            continue
+        m = re.match(r'mov (.+?),(%e[a-d]x)( @.*)?$', line)
+        if m:
+            src, reg = m.group(1), m.group(2)
+            j = i + 1
+            while j < len(merged) and j - i < 6:
+                t = merged[j]
+                if t == 'push ' + reg:
+                    break
+                if (reg in t or (not src.startswith('$') and src in t)
+                        or re.match(r'(call|j\w+|ret|push|pop) ', t + ' ')):
+                    j = len(merged)
+                    break
+                j += 1
+            if j < len(merged) and merged[j] == 'push ' + reg:
+                nxt = merged[j + 1] if j + 1 < len(merged) else ''
+                if not reads_reg(nxt, reg):
+                    out.extend(merged[i + 1:j])
+                    out.append('push ' + src + (m.group(3) or ''))
+                    skip.update(range(i + 1, j + 1))
+                    continue
+        out.append(line)
+    return out
 
 def canon_stack(lines):
-    """Stack slots renamed in order of first use, the frame size dropped: the
-    same code with its locals in other slots compares equal."""
+    """Stack slots renamed in order of first use, stack adjustments dropped:
+    the same code with its locals in other slots compares equal."""
     slots = {}
 
     def slot(m):
@@ -75,7 +123,8 @@ def canon_stack(lines):
     out = []
     for line in lines:
         line = re.sub(r'(?:(-?0x[0-9a-f]+))?\(%esp\)', slot, line)
-        line = re.sub(r'^(sub|add) \$0x[0-9a-f]+,%esp$', r'\1 $FRAME,%esp', line)
+        if re.match(r'^(sub|add) \$(0x[0-9a-f]+|FRAME),%esp$', line):
+            continue        # stack adjustments: where they fall is no difference
         out.append(line)
     return out
 

@@ -70,7 +70,7 @@ void __cdecl mapgen_islet_walk(int x,int y); /* 0040aaa4 */
 i32 __cdecl mapgen_try_place_lake(int x,int y); /* 0040ab41 */
 void __cdecl mapgen_place_rivers(void); /* 0040ac5a */
 void __cdecl text_clear(void); /* 0040bbb0 */
-void __cdecl text_append(iptr str); /* 0040bbe0 */
+void __cdecl text_append(const char *str); /* 0040bbe0 */
 void __cdecl text_append_label(i32 label_id); /* 0040bc10 */
 void __thiscall dlg_reset(Dialog *self,i32 flags); /* 0040bc40 */
 i32 __thiscall dlg_show_modal(Dialog *self,iptr parent); /* 0040bc80 */
@@ -130,7 +130,7 @@ void __cdecl text_append_lparen(void); /* 0040fea0 */
 void __cdecl text_append_rparen(void); /* 0040fed0 */
 void __cdecl text_append_string_id(i32 string_id); /* 0040ff00 */
 void __cdecl text_append_int(iptr value); /* 0040ff30 */
-i32 __cdecl text_set_string_arg(iptr index,iptr str); /* 0040ff60 */
+i32 __cdecl text_set_string_arg(iptr index,const char *str); /* 0040ff60 */
 i32 __thiscall dlg_load_game_section(Dialog *self,iptr section,i32 flags); /* 0040ffa0 */
 i32 __thiscall dialog_load_text_ex(Dialog *self,iptr filename,iptr section,i32 arg,i32 flags); /* 0040ffe0 */
 i32 __cdecl popup_game_with_sprite(iptr section,iptr sprite,i32 sprite_flags); /* 00410030 */
@@ -479,10 +479,10 @@ GamePalette * __thiscall palette_scalar_dtor(GamePalette *self,uint flags); /* 0
 void __cdecl rect_offset(iptr rect,int dx,int dy); /* 0043c790 */
 void __cdecl gfx_draw_rect_frame(iptr surface,iptr rect,i32 color); /* 0043c7c0 */
 void __cdecl text_append_period(void); /* 0043c810 */
-void __cdecl str_append(iptr dest,iptr src); /* 0043c840 */
+void __cdecl str_append(char *dest,const char *src); /* 0043c840 */
 void __cdecl text_append_long(i32 value); /* 0043c870 */
 void __cdecl text_append_gold(i32 gold); /* 0043c8a0 */
-i32 __cdecl gfx_draw_text(iptr text,i32 x,iptr y); /* 0043c8d0 */
+i32 __cdecl gfx_draw_text(const char *text,i32 x,iptr y); /* 0043c8d0 */
 void __cdecl gfx_draw_text_centered(iptr text,i32 x,iptr y,i32 width); /* 0043c910 */
 i32 __cdecl gfx_draw_text_right(iptr text,i32 right_x,i32 y,i32 flags); /* 0043c950 */
 void __thiscall dialog_set_list_indent(DialogCore *self,uptr indent,iptr index); /* 0043c990 */
@@ -1181,9 +1181,9 @@ void __cdecl civ_add_ai_goal(iptr civ,int x,int y,int role,int priority); /* 004
 void __cdecl civ_add_standing_goal(iptr civ,int x,int y,i32 role,int priority); /* 004933f2 */
 void __cdecl civ_refresh_ai_goals(iptr civ); /* 00493602 */
 void __cdecl civ_reset_standing_goals(iptr civ); /* 0049376f */
-int __cdecl civ_leader_name(iptr civ); /* 00493b10 */
+char * __cdecl civ_leader_name(iptr civ); /* 00493b10 */
 int __cdecl civ_leader_title(iptr civ); /* 00493ba6 */
-int __cdecl civ_name_plural(iptr civ); /* 00493c7d */
+char * __cdecl civ_name_plural(iptr civ); /* 00493c7d */
 int __cdecl civ_adjective(iptr civ); /* 00493d13 */
 void __cdecl diplo_greeting_sound_done_cb(void); /* 00493e50 */
 void __cdecl portrait_dlg_show(i32 civ); /* 00493e83, hand-written */
@@ -1311,7 +1311,7 @@ iptr __cdecl str_clear(iptr str); /* 004aef20 */
 void __cdecl str_append_space(iptr dest); /* 004aef36 */
 void __cdecl str_append_spaces(iptr dest,int count); /* 004aef57 */
 void __cdecl str_append_comma(iptr dest); /* 004aef96 */
-void __cdecl str_append_colon(iptr dest); /* 004aefb7 */
+void __cdecl str_append_colon(char *dest); /* 004aefb7 */
 void __cdecl str_append_period(iptr dest); /* 004aefd8 */
 void __cdecl str_append_percent(iptr dest); /* 004aeff9 */
 void __cdecl str_append_lparen(iptr dest); /* 004af01a */
@@ -2573,7 +2573,7 @@ iptr * __thiscall dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr spri
 uint * __thiscall dialog_add_option(DialogOptionList *self,iptr text,iptr option_id,uint data); /* 0059edf0 */
 uint * __thiscall dialog_add_checkbox_option(DialogOptionList *self,iptr text,iptr option_id,int checked); /* 0059f026 */
 i32 * __thiscall dialog_add_edit_field(DialogOptionList *self,iptr label,iptr initial_text,size_t max_len); /* 0059f06d */
-void __thiscall dialog_add_button(DialogButtonsView *self,iptr label); /* 0059f2a3 */
+void __thiscall dialog_add_button(DialogButtonsView *self,const char *label); /* 0059f2a3 */
 void __thiscall dialog_set_text_color(DialogTextView *self,int highlighted,int use_alt,int shadow); /* 0059f31a */
 int __thiscall dialog_draw_text_shadowed(DialogTextView *self,iptr font,char *text,int x,int y,uint flags); /* 0059f3d7 */
 void __thiscall dialog_draw_text_line(DialogTextLineView *self,iptr text,int x_offset,i32 y); /* 0059f5ba */
@@ -3418,8 +3418,8 @@ int _atexit(void (*fn)(void)); /* 005f1c40, C runtime: src/native/crt.cpp */
 void *crt_memcpy(void *dst, const void *src, uint n); /* 005f2110, C runtime: src/native/crt.cpp */
 void crt_srand(u32 seed); /* 005f2260, C runtime: src/native/crt.cpp */
 int _rand(void); /* 005f2280, C runtime: src/native/crt.cpp */
-void *crt_strcpy(void *dst, const void *src); /* 005f22d0, C runtime: src/native/crt.cpp */
-void *crt_strcat(void *dst, const void *src); /* 005f22e0, C runtime: src/native/crt.cpp */
+char *crt_strcpy(char *dst, const char *src); /* 005f22d0, C runtime: src/native/crt.cpp */
+char *crt_strcat(char *dst, const char *src); /* 005f22e0, C runtime: src/native/crt.cpp */
 void operator_delete(void *p); /* 005f23c0, C runtime: src/native/crt.cpp */
 void *operator_new(size_t n); /* 005f2470, C runtime: src/native/crt.cpp */
 void crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor); /* 005f2490, C runtime: src/native/crt.cpp */

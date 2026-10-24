@@ -272,12 +272,12 @@ void __cdecl gfx_draw_rect_frame(iptr surface,iptr rect,i32 color)
 }
 
 /* 0043c8d0 auto */
-i32 __cdecl gfx_draw_text(iptr text,i32 x,iptr y)
+i32 __cdecl gfx_draw_text(const char *text,i32 x,iptr y)
 
 {
   i32 end_x;
   
-  end_x = text_draw_shadowed(text_draw_surface,text,x,y);
+  end_x = text_draw_shadowed(text_draw_surface,(iptr)(text),x,y);
   return end_x;
 }
 
@@ -778,9 +778,9 @@ void __cdecl gfx_load_terrain_sprites(void)
   }
   surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0044996f */ { sprite_destroy((Sprite *)((iptr)&blank_sprite)); }
+  /* inlined unwind funclet 0044996f */ { sprite_destroy(&blank_sprite); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044997b */ { sprite_destroy((Sprite *)((iptr)&dither_mask)); }
+  /* inlined unwind funclet 0044997b */ { sprite_destroy(&dither_mask); }
   return;
 }
 
@@ -1118,7 +1118,7 @@ void __cdecl gfx_load_icon_sprites(void)
   }
   surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044ab4e */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 0044ab4e */ { palette_destroy(&palette); }
   return;
 }
 
@@ -1290,7 +1290,7 @@ void __cdecl gfx_load_game_sprites(void)
   gfx_load_terrain_sprites();
   gfx_load_unit_sprites();
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044b4f6 */ { surfwnd_dtor((SurfaceWindow *)((iptr)&surf_wnd2)); }
+  /* inlined unwind funclet 0044b4f6 */ { surfwnd_dtor(&surf_wnd2); }
   return;
 }
 
@@ -1422,7 +1422,7 @@ void __cdecl gfx_build_grey_remap(void)
             palette_get_rgb((GamePalette *)((i8 *)&game_palette_block.game_palette),full_rgb,10,0xec);
             for (offset = 0; offset < 0x2c4; offset += 3) {
               nearest_index = GetNearestPaletteIndex
-                                (h,(uint)CONCAT12(*(i8 *)(offset + 2 + full_rgb),
+                                (h,CONCAT12(*(i8 *)(offset + 2 + full_rgb),
                                                   CONCAT11(*(i8 *)(offset + 1 + full_rgb),
                                                            *(i8 *)(offset + full_rgb))));
               *(char *)(remap_table + offset / 3) = (char)nearest_index + '\n';
@@ -1966,12 +1966,12 @@ PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *self)
   surfwnd_ctor((SurfaceWindow *)self);
   eh_state = 0;
   surface_ctor((DibSurface *)&self->style_flags);
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
+  (*((char *)&eh_state + 0)) = 1;
   button_ctor((Control *)self->parley_title);
-  (*(i8 *)((char *)&eh_state + 0)) = 2;
-  button_ctor((Control *)(self->accept_button_2));
+  (*((char *)&eh_state + 0)) = 2;
+  button_ctor((Control *)self->accept_button_2);
   eh_state = (eh_state & 0xffffff00 | (byte)(3));
-  dll_handle_init((DllHandle *)(self->portrait_dll));
+  dll_handle_init((DllHandle *)self->portrait_dll);
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3);
   self->portrait_civ = 0;
   self->show_turn_timer = 0;
@@ -1993,16 +1993,16 @@ void __thiscall portrait_dlg_dtor(PortraitDlgDtorView *self)
   
   *(i8 ***)self->window_base = (i8 **)&leader_anim_frame_starts_block.ptr_fun_3;
   eh_state = eh_state & 0xff;
-  (*(i8 *)((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 004963a5 */ { dll_free((DllHandle *)(*(int *)((iptr)&self) + 0x1d4)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 004963b4 */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 0x198)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 004963c3 */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 0x15c)); }
+  (*((char *)&eh_state + 0)) = 3;
+  /* inlined unwind funclet 004963a5 */ { dll_free((DllHandle *)(*(int *)&self + 0x1d4)); }
+  (*((char *)&eh_state + 0)) = 2;
+  /* inlined unwind funclet 004963b4 */ { ctrl_dtor((Control *)(*(int *)&self + 0x198)); }
+  (*((char *)&eh_state + 0)) = 1;
+  /* inlined unwind funclet 004963c3 */ { ctrl_dtor((Control *)(*(int *)&self + 0x15c)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 004963d2 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x114)); }
+  /* inlined unwind funclet 004963d2 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x114)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004963e1 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&self)); }
+  /* inlined unwind funclet 004963e1 */ { surfwnd_dtor(*(SurfaceWindow **)&self); }
   return;
 }
 
@@ -2015,8 +2015,8 @@ i32 __thiscall portrait_dlg_create(PortraitDialog *self)
              frame_border_width * 4 + frame_caption_height + 0x16e,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
   portrait_dlg_create_buttons((WindowObjectView *)self);
   wnd_set_caption_height((WndBase *)self->window_2,frame_caption_height);
-  wnd_set_lbuttonup_handler((WndEventHandlers *)(self->event_handlers),(iptr)portrait_dlg_on_click);
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)portrait_dlg_on_dblclick);
+  wnd_set_lbuttonup_handler((WndEventHandlers *)self->event_handlers,(iptr)portrait_dlg_on_click);
+  wnd_set_dblclick_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)portrait_dlg_on_dblclick);
   portrait_dlg_paint(self);
   wnd_repaint((SurfaceWindow *)self);
   wnd_center((WndCenterView *)self->window_2);
@@ -2061,7 +2061,7 @@ void __thiscall portrait_dlg_run(PortraitDialog *self)
 
 {
   ctrl_show_and_redraw((Control *)self->parley_title);
-  ctrl_show_and_redraw((Control *)(self->accept_button_2));
+  ctrl_show_and_redraw((Control *)self->accept_button_2);
   window_show((WindowObjectView *)self);
   if (2 < game.multiplayer) {
     wnd_set_modal_idle_callback((ModalMenuWindow *)self->window_2,(iptr)net_modal_idle_poll);
@@ -2071,7 +2071,7 @@ void __thiscall portrait_dlg_run(PortraitDialog *self)
   wnd_hide((WndBase *)self->window_2);
   wnd_flush_paint();
   control_hide((Control *)self->parley_title);
-  control_hide((Control *)(self->accept_button_2));
+  control_hide((Control *)self->accept_button_2);
   civs[self->portrait_civ].leader_portrait = (u8)self->show_turn_status;
   return;
 }
@@ -2097,13 +2097,13 @@ void __thiscall portrait_dlg_paint(PortraitDialog *self)
   iptr title;
   
   title = (iptr)label_string(*(i32 *)(label_string_ids + 0x4a8));
-  dll_handle_load((DllHandle *)(self->portrait_dll),(iptr)&str_mk_dll);
+  dll_handle_load((DllHandle *)self->portrait_dll,(iptr)&str_mk_dll);
   loaded = surface_load_gif_resource
                     ((DibSurface *)&self->style_flags,
                      0xd3 - (uint)(leaders[civs[self->portrait_civ].tribe].female == '\0'),10,0xec,
                      (iptr)&game_palette_block.game_palette);
   if (loaded != 0) {
-    dll_handle_free((DllHandle *)(self->portrait_dll));
+    dll_handle_free((DllHandle *)self->portrait_dll);
     loaded = frame_caption_height + frame_bevel_width * -2;
     height = surface_get_width((DibSurface *)self);
     gfx_tile_fill((iptr)self,frame_border_tile,0,frame_bevel_width,height,loaded,0,frame_bevel_width);
@@ -3377,7 +3377,7 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
       rect_deflate((iptr)&label_rect.left,1,1);
       gfx_fill_rect(surface,(iptr)&label_rect.left,color_primary);
       text_set_colors(10,10,1,0);
-      gfx_draw_text((iptr)size_text,label_rect.left + (pad >> 1) + 1,label_rect.top);
+      gfx_draw_text((const char *)size_text,label_rect.left + (pad >> 1) + 1,label_rect.top);
     }
     else {
       sprite_draw
@@ -3792,7 +3792,7 @@ cleanup:
   __chdir(saved_dir);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0056ffb6 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 0056ffb6 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -3952,7 +3952,7 @@ cleanup:
   __chdir(saved_dir);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0057075c */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 0057075c */ { palette_destroy(&palette); }
   return;
 }
 
@@ -4132,7 +4132,7 @@ cleanup:
   __chdir(saved_cwd);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00570fa2 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 00570fa2 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -4307,7 +4307,7 @@ cleanup:
   __chdir(saved_cwd);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 005718ec */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 005718ec */ { palette_destroy(&palette); }
   return;
 }
 
@@ -4381,7 +4381,7 @@ restore_cwd_and_cleanup:
   __chdir(saved_cwd);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00571baa */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 00571baa */ { palette_destroy(&palette); }
   return;
 }
 
@@ -4498,7 +4498,7 @@ restore_cwd_and_cleanup:
   __chdir(saved_cwd);
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00572065 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 00572065 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -5219,7 +5219,7 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
     status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00573adc */ { sprite_destroy((Sprite *)((iptr)&temp_sprite)); }
+  /* inlined unwind funclet 00573adc */ { sprite_destroy(&temp_sprite); }
   return;
 }
 
@@ -5412,9 +5412,9 @@ void __cdecl sprite_editor_run(iptr sprite,i32 title,i32 sheet_mode,iptr ok_call
   dlg_set_parent_window(0);
   frame_wnd_close((DibSurface *)((i8 *)&status_window_block.sprite_editor_window));
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 0057420c */ { ctrl_dtor((Control *)((iptr)&cancel_button)); }
+  /* inlined unwind funclet 0057420c */ { ctrl_dtor(&cancel_button); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00574218 */ { ctrl_dtor((Control *)((iptr)&ok_button)); }
+  /* inlined unwind funclet 00574218 */ { ctrl_dtor(&ok_button); }
   return;
 }
 
@@ -6116,11 +6116,11 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   }
   label = (iptr)label_string(*(i32 *)(label_string_ids + 0x954));
   button_create
-            ((Control *)(self->import_all_button),(iptr)import_parent,0xc9,(iptr)rect,label);
-  button_set_callback((Control *)(self->import_all_button),(iptr)sprite_picker_import_all_clicked);
-  ctrl_set_default_button((Control *)(self->import_all_button));
+            ((Control *)self->import_all_button,(iptr)import_parent,0xc9,(iptr)rect,label);
+  button_set_callback((Control *)self->import_all_button,(iptr)sprite_picker_import_all_clicked);
+  ctrl_set_default_button((Control *)self->import_all_button);
   if (sprite_picker_sprite_block.sprite_sheet_mode == 5) {
-    ctrl_disable((Control *)(self->import_all_button));
+    ctrl_disable((Control *)self->import_all_button);
   }
   x2 = x2 + self->init_lux_rate + 2;
   rect_set_xywh((iptr)rect,x2,y2,self->init_lux_rate,self->init_sci_rate);
@@ -6313,9 +6313,9 @@ check_file_extension:
 release_and_cleanup:
   surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 005767a7 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+  /* inlined unwind funclet 005767a7 */ { dialog_dtor(&dialog2); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 005767b3 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
+  /* inlined unwind funclet 005767b3 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -6333,16 +6333,16 @@ void __thiscall sprite_picker_dtor(void *self)
   int seh_state;
   
   seh_state = seh_state & 0xff;
-  (*(i8 *)((char *)&seh_state + 0)) = 3;
-  /* inlined unwind funclet 00578402 */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 0x3b0)); }
-  (*(i8 *)((char *)&seh_state + 0)) = 2;
-  /* inlined unwind funclet 00578411 */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 0x374)); }
-  (*(i8 *)((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 00578420 */ { ctrl_dtor((Control *)(*(int *)((iptr)&self) + 0x338)); }
+  (*((char *)&seh_state + 0)) = 3;
+  /* inlined unwind funclet 00578402 */ { ctrl_dtor((Control *)(*(int *)&self + 0x3b0)); }
+  (*((char *)&seh_state + 0)) = 2;
+  /* inlined unwind funclet 00578411 */ { ctrl_dtor((Control *)(*(int *)&self + 0x374)); }
+  (*((char *)&seh_state + 0)) = 1;
+  /* inlined unwind funclet 00578420 */ { ctrl_dtor((Control *)(*(int *)&self + 0x338)); }
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 0057842f */ { scrollbar_dtor((Control *)(*(int *)((iptr)&self) + 0x2f8)); }
+  /* inlined unwind funclet 0057842f */ { scrollbar_dtor((Control *)(*(int *)&self + 0x2f8)); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0057843e */ { frame_wnd_dtor(*(DibSurface **)((iptr)&self)); }
+  /* inlined unwind funclet 0057843e */ { frame_wnd_dtor(*(DibSurface **)&self); }
   return;
 }
 
@@ -6358,10 +6358,10 @@ ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *self)
   frame_wnd_ctor((SurfaceWindow *)self);
   seh_state = 0;
   scrollbar_ctor((Control *)&self->dialog_w);
-  (*(i8 *)((char *)&seh_state + 0)) = 1;
+  (*((char *)&seh_state + 0)) = 1;
   button_ctor((Control *)&self->sci_label_y);
-  (*(i8 *)((char *)&seh_state + 0)) = 2;
-  button_ctor((Control *)(self->import_all_button));
+  (*((char *)&seh_state + 0)) = 2;
+  button_ctor((Control *)self->import_all_button);
   seh_state = (seh_state & 0xffffff00 | (byte)(3));
   button_ctor((Control *)&self->fill_rect_top);
   self->vtable = (u32)&leader_anim_frame_starts_block.ptr_fun_4;
@@ -6757,7 +6757,7 @@ surface_load_gif_file(DibSurface *self,iptr filename,uint first_color,uint color
   result = file_obj_open(&file,filename);
   if (result == 0) {
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
+    /* inlined unwind funclet 005bf5ba */ { file_obj_close(&file); }
     ret = 0;
   }
   else {
@@ -6766,7 +6766,7 @@ surface_load_gif_file(DibSurface *self,iptr filename,uint first_color,uint color
     win_flush_pending_msgs();
     if (mem == 0) {
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
+      /* inlined unwind funclet 005bf5ba */ { file_obj_close(&file); }
       ret = 0;
     }
     else {
@@ -6779,7 +6779,7 @@ surface_load_gif_file(DibSurface *self,iptr filename,uint first_color,uint color
         dbg_logf_str((iptr)&str_error_gif_resource_not_found,filename);
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),3,(iptr)&str_err_resourcenotfound,(iptr)&str_d_ss_smeds32_port_cpp_2,0x382);
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
+        /* inlined unwind funclet 005bf5ba */ { file_obj_close(&file); }
         ret = 0;
       }
       else {
@@ -6792,7 +6792,7 @@ surface_load_gif_file(DibSurface *self,iptr filename,uint first_color,uint color
             mem_handle_free(mem);
             err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat_2,(iptr)&str_d_ss_smeds32_port_cpp_4,0x396);
             seh_state = 0xffffffff;
-            /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
+            /* inlined unwind funclet 005bf5ba */ { file_obj_close(&file); }
             ret = 0;
           }
           else {
@@ -6827,7 +6827,7 @@ surface_load_gif_file(DibSurface *self,iptr filename,uint first_color,uint color
                 mem_handle_unlock(mem);
                 mem_handle_free(mem);
                 seh_state = 0xffffffff;
-                /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
+                /* inlined unwind funclet 005bf5ba */ { file_obj_close(&file); }
                 ret = 0;
               }
               else {
@@ -6847,7 +6847,7 @@ surface_load_gif_file(DibSurface *self,iptr filename,uint first_color,uint color
                 mem_handle_free(mem);
                 file_map_close(&file);
                 seh_state = 0xffffffff;
-                /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
+                /* inlined unwind funclet 005bf5ba */ { file_obj_close(&file); }
                 ret = 1;
               }
             }
@@ -6857,7 +6857,7 @@ surface_load_gif_file(DibSurface *self,iptr filename,uint first_color,uint color
               mem_handle_free(mem);
               err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat_3,(iptr)&str_d_ss_smeds32_port_cpp_5,0x3b3);
               seh_state = 0xffffffff;
-              /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
+              /* inlined unwind funclet 005bf5ba */ { file_obj_close(&file); }
               ret = 0;
             }
           }
@@ -6868,7 +6868,7 @@ surface_load_gif_file(DibSurface *self,iptr filename,uint first_color,uint color
           mem_handle_free(mem);
           err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat,(iptr)&str_d_ss_smeds32_port_cpp_3,0x38d);
           seh_state = 0xffffffff;
-          /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
+          /* inlined unwind funclet 005bf5ba */ { file_obj_close(&file); }
           ret = 0;
         }
       }
@@ -7389,7 +7389,7 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *self,i32 text,int x,int y,uin
       font_height = font_measure_height(*(i32 *)draw_current_font);
       font_height += (font_height >> 0x1f & 7U);
       shadow_offset = font_height >> 3;
-      old_color = gfx_set_text_color_index(CONCAT31((int3)(font_height >> 0xb),gfx_black_color_index));
+      old_color = gfx_set_text_color_index(CONCAT31((font_height >> 0xb),gfx_black_color_index));
       saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
       dib_draw_text_at(self->dib,*(i32 *)draw_current_font,(char *)text,shadow_offset + x,
                    shadow_offset + y,(iptr)(self->clip_rect_2),flags);
@@ -7417,7 +7417,7 @@ surface_draw_text
       font_height = font_measure_height(*(i32 *)font);
       font_height += (font_height >> 0x1f & 7U);
       shadow_offset = font_height >> 3;
-      old_color = gfx_set_text_color_index(CONCAT31((int3)(font_height >> 0xb),gfx_black_color_index));
+      old_color = gfx_set_text_color_index(CONCAT31((font_height >> 0xb),gfx_black_color_index));
       saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
       dib_draw_text_at(self->dib,*(i32 *)font,(char *)text,x + shadow_offset,y + shadow_offset,
                    (iptr)&self->clip_left,flags);
@@ -8467,7 +8467,7 @@ sprite_create_solid(Sprite *self,i32 width,i32 height,uint color)
   sprite_encode_rect(self,(iptr)&surface,0,0,width,height);
   SetRect((LPRECT)&self->bounds_rect,0,0,0,0);
   unwind_state = 0xffffffff;
-  /* inlined unwind funclet 005cdf2d */ { surface_dtor((DibSurface *)((iptr)&surface)); }
+  /* inlined unwind funclet 005cdf2d */ { surface_dtor(&surface); }
   return result;
 }
 
@@ -8922,11 +8922,11 @@ sprite_blit_to_surface
   int trim_x;
   
   if (key_arg == -1) {
-    (*(i8 *)((char *)&key_arg + 0)) = self->key_color;
+    (*((char *)&key_arg + 0)) = self->key_color;
   }
   else {
   }
-  key2 = (key2 & 0xffffff00 | (byte)((u8)key_arg));
+  key2 = (key2 & 0xffffff00 | ((u8)key_arg));
   trim_x = self->bounds_rect - self->frame_rect;
   trim_y = self->bounds_top - self->frame_top;
   tmp = sprite_width(self);
@@ -9019,11 +9019,11 @@ sprite_blit_silhouette_to_surface
   int trim_x;
   
   if (key_arg == -1) {
-    (*(i8 *)((char *)&key_arg + 0)) = self->key_color;
+    (*((char *)&key_arg + 0)) = self->key_color;
   }
   else {
   }
-  key2 = (key2 & 0xffffff00 | (byte)((u8)key_arg));
+  key2 = (key2 & 0xffffff00 | ((u8)key_arg));
   trim_x = self->bounds_rect - self->frame_rect;
   trim_y = self->bounds_top - self->frame_top;
   tmp = sprite_width(self);
@@ -9124,7 +9124,7 @@ sprite_merge_at
       dst->bounds_rect = *(u32 *)(src + 0x10);
       dst->bounds_top = *(u32 *)(src + 0x14);
       *(i32 *)dst->bounds_right = *(i32 *)(src + 0x18);
-      *(i32 *)(dst->bounds_bottom) = *(i32 *)(src + 0x1c);
+      *(i32 *)dst->bounds_bottom = *(i32 *)(src + 0x1c);
       OffsetRect((LPRECT)&dst->bounds_rect,dx,dy);
       dst->offset_x = *(int *)(src + 0x20) + dx;
       dst->full_height = *(int *)(src + 0x24) + dy;
@@ -9238,11 +9238,11 @@ sprite_merge_at
       dst->bounds_rect = rect.left;
       dst->bounds_top = rect.top;
       *(LONG *)dst->bounds_right = rect.right;
-      *(LONG *)(dst->bounds_bottom) = rect.bottom;
+      *(LONG *)dst->bounds_bottom = rect.bottom;
       dst->frame_rect = rect.left;
       dst->frame_top = rect.top;
       *(LONG *)dst->frame_right = rect.right;
-      *(LONG *)(dst->frame_bottom) = rect.bottom;
+      *(LONG *)dst->frame_bottom = rect.bottom;
       if (dst->data_ptr != 0) {
         sprite_unlock(dst);
       }
@@ -9544,7 +9544,7 @@ i32 * __cdecl dib_create(iptr rect)
         DeleteDC(hdc);
       }
       else {
-        hMem = (HGLOBAL)mem_handle_alloc(0x28);
+        hMem = mem_handle_alloc(0x28);
         dib2 = (i32 *)GlobalLock(hMem);
         *dib2 = hMem;
         dib2[1] = hdc;
@@ -9715,7 +9715,7 @@ dib_draw_text_at(iptr dib,int font,char *text,int x,int y,iptr clip_rect,
     old_font = SelectObject(*(HDC *)(dib + 4),(HGDIOBJ)*font_data);
     GetDIBColorTable(*(HDC *)(dib + 4),(uint)gfx_text_color_index,1,&color2);
     SetTextColor(*(HDC *)(dib + 4),
-                 (uint)CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
+                 CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
     half_h = rect_height((iptr)&text_rect);
     half_h = half_h / 2;
     half_w = rect_width((iptr)&text_rect);
@@ -9766,7 +9766,7 @@ void __cdecl dib_draw_text_rect(iptr dib,int font,char *text,iptr rect,uint alig
     old_font = SelectObject(*(HDC *)(dib + 4),(HGDIOBJ)*font_data);
     GetDIBColorTable(*(HDC *)(dib + 4),(uint)gfx_text_color_index,1,&color2);
     SetTextColor(*(HDC *)(dib + 4),
-                 (uint)CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
+                 CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
     format = 0;
     if (align == 0) {
       format = 0x25;
@@ -9805,7 +9805,7 @@ void __cdecl dib_draw_text_wrap(iptr dib,int font,char *text,LPRECT rect,uint al
     old_font = SelectObject(*(HDC *)(dib + 4),(HGDIOBJ)*font_data);
     GetDIBColorTable(*(HDC *)(dib + 4),(uint)gfx_text_color_index,1,&color2);
     SetTextColor(*(HDC *)(dib + 4),
-                 (uint)CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
+                 CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
     format = 0x10;
     if (align == 0) {
       format = 0x11;
@@ -9831,7 +9831,7 @@ void __cdecl dib_draw_line(iptr dib,int x1,int y1,int x2,int y2)
   
   if (dib != 0) {
     GetDIBColorTable(*(HDC *)(dib + 4),(uint)gfx_text_color_index,1,&color2);
-    pen = CreatePen(0,1,(uint)CONCAT12(color2.rgbBlue,
+    pen = CreatePen(0,1,CONCAT12(color2.rgbBlue,
                                            CONCAT11(color2.rgbGreen,color2.rgbRed)));
     old_pen = SelectObject(*(HDC *)(dib + 4),pen);
     MoveToEx(*(HDC *)(dib + 4),x1,y1,(LPPOINT)0x0);
@@ -9895,7 +9895,7 @@ i32 * __cdecl dib_create16(iptr rect)
         DeleteDC(hdc);
       }
       else {
-        hMem = (HGLOBAL)mem_handle_alloc(0x28);
+        hMem = mem_handle_alloc(0x28);
         dib2 = (i32 *)GlobalLock(hMem);
         *dib2 = hMem;
         dib2[1] = hdc;
@@ -9969,7 +9969,7 @@ i32 * __cdecl dib_create24(iptr rect)
         DeleteDC(hdc);
       }
       else {
-        hMem = (HGLOBAL)mem_handle_alloc(0x28);
+        hMem = mem_handle_alloc(0x28);
         dib2 = (i32 *)GlobalLock(hMem);
         *dib2 = hMem;
         dib2[1] = hdc;
@@ -10043,7 +10043,7 @@ i32 * __cdecl dib_create32(iptr rect)
         DeleteDC(hdc);
       }
       else {
-        hMem = (HGLOBAL)mem_handle_alloc(0x28);
+        hMem = mem_handle_alloc(0x28);
         dib2 = (i32 *)GlobalLock(hMem);
         *dib2 = hMem;
         dib2[1] = hdc;

@@ -49,15 +49,15 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
     }
     crt_strcat(wav_name,((i8 *)&snd_wav_ext_str));
     str_clear((iptr)wav_path);
-    str_append((iptr)wav_path,(iptr)&str_civ2_sound);
-    str_append((iptr)wav_path,(iptr)wav_name);
+    str_append((char *)wav_path,(const char *)&str_civ2_sound);
+    str_append((char *)wav_path,(const char *)wav_name);
     str_clear((iptr)local_path);
-    str_append((iptr)local_path,(iptr)&net_map_lock_slots_block.scenario_dir_path);
-    str_append((iptr)local_path,(iptr)&str_sound);
-    str_append((iptr)local_path,(iptr)wav_name);
+    str_append((char *)local_path,(const char *)&net_map_lock_slots_block.scenario_dir_path);
+    str_append((char *)local_path,(const char *)&str_sound);
+    str_append((char *)local_path,(const char *)wav_name);
     result = file_exists((iptr)local_path);
     if (result == 0) {
-      drive = (char *)file_get_fallback_drive();
+      drive = file_get_fallback_drive();
       result = file_resolve_path((iptr)wav_path);
       if (result == 0) {
         return;
@@ -456,8 +456,8 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
                 }
                 else {
                   _memset(source,0,0xbc);
-                  source[0x1b] = (FOURCC)mem_handle2;
-                  *source = (FOURCC)mmio;
+                  source[0x1b] = mem_handle2;
+                  *source = mmio;
                   p_Var5 = &mmio_info;
                   dst_flags = source + 6;
                   for (n = 0x12; n != 0; n--) {
@@ -584,14 +584,14 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
                   }
                   else {
                     _memset(source,0,0xbc);
-                    source[0x1b] = (FOURCC)mem_handle2;
+                    source[0x1b] = mem_handle2;
                     *(i16 *)(source + 0x22) = 1;
                     source[0x1d] = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
                     source[0x1e] = wave_format.nSamplesPerSec;
                     source[0x1f] = wave_format.nAvgBytesPerSec;
                     source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
-                    *source = (FOURCC)mem_mmio;
-                    source[0x18] = (FOURCC)file_mmio;
+                    *source = mem_mmio;
+                    source[0x18] = file_mmio;
                     p_Var5 = &mmio_info;
                     dst_flags = source + 6;
                     for (n = 0x12; n != 0; n--) {
@@ -682,10 +682,10 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
   else if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
     AVIStreamInfoA(avi_stream,&stream_info,0x8c);
     if (stream_info.fccType == 0x73647561) {
-      AVIStreamRead(avi_stream,0,1,0,0,(LONG*)(sample_buf),0);
+      AVIStreamRead(avi_stream,0,1,0,0,(LONG *)sample_buf,0);
       total_bytes = stream_info.dwSampleSize * stream_info.dwLength;
       AVIStreamReadFormat(avi_stream,0,&wave_format,&format_size);
-      if ((*(i16 *)((char *)((i8 *)&snd_wave_format) + 2)) == 1) {
+      if ((*(i16 *)((i8 *)&snd_wave_format + 2)) == 1) {
         if (wave_format.nChannels == 2) {
           rate_mode = (rate_mode & 0xffff0000 | (ushort)(1));
         }
@@ -1909,10 +1909,10 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *self)
   surfwnd_ctor((SurfaceWindow *)self);
   eh_state = 0;
   avi_audio_ctor((AviAudio *)&self->border_width);
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
+  (*((char *)&eh_state + 0)) = 1;
   palette_init((GamePalette *)&self->client_x);
   eh_state = (eh_state & 0xffffff00 | (byte)(2));
-  surface_ctor((DibSurface *)(self->movie_surface));
+  surface_ctor((DibSurface *)self->movie_surface);
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   self->style_flags = 0;
   self->double_size = 0;
@@ -1944,18 +1944,18 @@ i32 __thiscall avi_player_dtor(AviPlayer *self)
   
   *(i8 ***)self->media_window_base = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   eh_state = eh_state & 0xff;
-  (*(i8 *)((char *)&eh_state + 0)) = 3;
+  (*((char *)&eh_state + 0)) = 3;
   avi_play_pause((iptr)self);
   avi_close((iptr)self);
   avi_current_player_i32 = 0;
-  (*(i8 *)((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x558)); }
-  (*(i8 *)((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 005dd23f */ { palette_destroy((GamePalette *)(*(int *)((iptr)&self) + 0x124)); }
+  (*((char *)&eh_state + 0)) = 2;
+  /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x558)); }
+  (*((char *)&eh_state + 0)) = 1;
+  /* inlined unwind funclet 005dd23f */ { palette_destroy((GamePalette *)(*(int *)&self + 0x124)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 005dd24e */ { avi_audio_release((AviAudioReleaseView *)(*(int *)((iptr)&self) + 0x11c)); }
+  /* inlined unwind funclet 005dd24e */ { avi_audio_release((AviAudioReleaseView *)(*(int *)&self + 0x11c)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 005dd25d */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&self)); }
+  /* inlined unwind funclet 005dd25d */ { surfwnd_dtor(*(SurfaceWindow **)&self); }
   return eh_next;
 }
 
@@ -3107,7 +3107,7 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
       case 3:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_move
-                  ((WndOnMoveView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnMoveView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
       default:
@@ -3118,7 +3118,7 @@ handle_size:
         is_iconic = IsIconic(hwnd);
         if (is_iconic == 0) {
           wnd_on_size_nop(wnd2,lparam & 0xffff,lparam >> 0x10);
-          wnd_call_size((WndOnSizeView *)(wnd2->handlers),wparam);
+          wnd_call_size((WndOnSizeView *)wnd2->handlers,wparam);
         }
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
@@ -3126,12 +3126,12 @@ handle_size:
         goto handle_mci;
       case 7:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_setfocus((WndOnSetFocusView *)(wnd2->handlers));
+        wnd_call_setfocus((WndOnSetFocusView *)wnd2->handlers);
         return 0;
       }
     }
     (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-    value = wnd_call_close((WndOnCloseView *)(wnd2->handlers));
+    value = wnd_call_close((WndOnCloseView *)wnd2->handlers);
     if (value != 0) {
       result = wnd_base_wndproc(hwnd,0x10,wparam,lparam);
       return result;
@@ -3141,7 +3141,7 @@ handle_size:
     if (msg < 0x45) {
       if (msg == 0x44) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_msg44((WndOnMsg44View *)(wnd2->handlers),lparam & 0xffff);
+        wnd_call_msg44((WndOnMsg44View *)wnd2->handlers,lparam & 0xffff);
         return 1;
       }
       if (msg == 0x24) {
@@ -3170,20 +3170,20 @@ default_wndproc:
       if (msg == 0x100) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         result = input_map_vkey(wparam);
-        wnd_call_keydown_pre((WndOnKeyDownPreView *)(wnd2->handlers),result);
+        wnd_call_keydown_pre((WndOnKeyDownPreView *)wnd2->handlers,result);
         result = input_map_vkey(wparam);
-        wnd_call_keydown((WndOnKeyDownView *)(wnd2->handlers),result);
+        wnd_call_keydown((WndOnKeyDownView *)wnd2->handlers,result);
         return 0;
       }
       if (msg == 0x101) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         result = input_map_vkey(wparam);
-        wnd_call_keyup((WndOnKeyUpView *)(wnd2->handlers),result);
+        wnd_call_keyup((WndOnKeyUpView *)wnd2->handlers,result);
         return 0;
       }
       if (msg == 0x102) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_char((WndOnCharView *)(wnd2->handlers),wparam & 0xff);
+        wnd_call_char((WndOnCharView *)wnd2->handlers,wparam & 0xff);
         return 0;
       }
       goto default_wndproc;
@@ -3192,18 +3192,18 @@ default_wndproc:
       if (msg == 0x200) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_mousemove
-                  ((WndOnMouseMoveView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnMouseMoveView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       if (msg == 0x112) {
         if (wparam == 0xf020) {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_minimize((WndOnMinimizeView *)(wnd2->handlers));
+          wnd_call_minimize((WndOnMinimizeView *)wnd2->handlers);
         }
         else {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           if (wparam == 0xf120) {
-            wnd_call_restore((WndOnRestoreView *)(wnd2->handlers));
+            wnd_call_restore((WndOnRestoreView *)wnd2->handlers);
           }
         }
         result = wnd_base_wndproc(hwnd,0x112,wparam,lparam);
@@ -3218,16 +3218,16 @@ default_wndproc:
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->hscroll_pos) = scroll_pos2;
-          wnd_call_hscroll((WndOnHScrollView *)(wnd2->handlers),scroll_pos2);
+          *(int *)wnd2->hscroll_pos = scroll_pos2;
+          wnd_call_hscroll((WndOnHScrollView *)wnd2->handlers,scroll_pos2);
           return 0;
         case 1:
           scroll_pos2++;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->hscroll_pos) = scroll_pos2;
-          wnd_call_hscroll((WndOnHScrollView *)(wnd2->handlers),scroll_pos2);
+          *(int *)wnd2->hscroll_pos = scroll_pos2;
+          wnd_call_hscroll((WndOnHScrollView *)wnd2->handlers,scroll_pos2);
           return 0;
         case 2:
           value = wnd_get_hscroll_page((WndHScrollPageView *)wnd2);
@@ -3235,8 +3235,8 @@ default_wndproc:
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->hscroll_pos) = scroll_pos2;
-          wnd_call_hscroll((WndOnHScrollView *)(wnd2->handlers),scroll_pos2);
+          *(int *)wnd2->hscroll_pos = scroll_pos2;
+          wnd_call_hscroll((WndOnHScrollView *)wnd2->handlers,scroll_pos2);
           return 0;
         case 3:
           value = wnd_get_hscroll_page((WndHScrollPageView *)wnd2);
@@ -3244,20 +3244,20 @@ default_wndproc:
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->hscroll_pos) = scroll_pos2;
-          wnd_call_hscroll((WndOnHScrollView *)(wnd2->handlers),scroll_pos2);
+          *(int *)wnd2->hscroll_pos = scroll_pos2;
+          wnd_call_hscroll((WndOnHScrollView *)wnd2->handlers,scroll_pos2);
           return 0;
         case 4:
           scroll_pos2 = (int)thumb_pos;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->hscroll_pos) = scroll_pos2;
+          *(int *)wnd2->hscroll_pos = scroll_pos2;
           wnd_call_hscroll
-                    ((WndOnHScrollView *)(wnd2->handlers),*(i32 *)(wnd2->hscroll_pos));
+                    ((WndOnHScrollView *)wnd2->handlers,*(i32 *)wnd2->hscroll_pos);
           return 0;
         case 5:
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_hscroll_track((WndOnHScrollTrackView *)(wnd2->handlers),(int)thumb_pos);
+          wnd_call_hscroll_track((WndOnHScrollTrackView *)wnd2->handlers,(int)thumb_pos);
           return 0;
         default:
           return 0;
@@ -3271,16 +3271,16 @@ default_wndproc:
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->vscroll_pos) = scroll_pos2;
-          wnd_call_vscroll((WndOnVScrollView *)(wnd2->handlers),scroll_pos2);
+          *(int *)wnd2->vscroll_pos = scroll_pos2;
+          wnd_call_vscroll((WndOnVScrollView *)wnd2->handlers,scroll_pos2);
           return 0;
         case 1:
           scroll_pos2++;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->vscroll_pos) = scroll_pos2;
-          wnd_call_vscroll((WndOnVScrollView *)(wnd2->handlers),scroll_pos2);
+          *(int *)wnd2->vscroll_pos = scroll_pos2;
+          wnd_call_vscroll((WndOnVScrollView *)wnd2->handlers,scroll_pos2);
           return 0;
         case 2:
           value = wnd_get_vscroll_page((WndVScrollPageView *)wnd2);
@@ -3288,8 +3288,8 @@ default_wndproc:
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->vscroll_pos) = scroll_pos2;
-          wnd_call_vscroll((WndOnVScrollView *)(wnd2->handlers),scroll_pos2);
+          *(int *)wnd2->vscroll_pos = scroll_pos2;
+          wnd_call_vscroll((WndOnVScrollView *)wnd2->handlers,scroll_pos2);
           return 0;
         case 3:
           value = wnd_get_vscroll_page((WndVScrollPageView *)wnd2);
@@ -3297,20 +3297,20 @@ default_wndproc:
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->vscroll_pos) = scroll_pos2;
-          wnd_call_vscroll((WndOnVScrollView *)(wnd2->handlers),scroll_pos2);
+          *(int *)wnd2->vscroll_pos = scroll_pos2;
+          wnd_call_vscroll((WndOnVScrollView *)wnd2->handlers,scroll_pos2);
           return 0;
         case 4:
           scroll_pos2 = (int)thumb_pos;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)(wnd2->vscroll_pos) = scroll_pos2;
+          *(int *)wnd2->vscroll_pos = scroll_pos2;
           wnd_call_vscroll
-                    ((WndOnVScrollView *)(wnd2->handlers),*(i32 *)(wnd2->vscroll_pos));
+                    ((WndOnVScrollView *)wnd2->handlers,*(i32 *)wnd2->vscroll_pos);
           return 0;
         case 5:
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_vscroll_track((WndOnVScrollTrackView *)(wnd2->handlers),(int)thumb_pos);
+          wnd_call_vscroll_track((WndOnVScrollTrackView *)wnd2->handlers,(int)thumb_pos);
           return 0;
         default:
           return 0;
@@ -3323,7 +3323,7 @@ default_wndproc:
         if (wparam == 0x201) {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           wnd_call_lbuttondown
-                    ((WndOnLButtonDownView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                    ((WndOnLButtonDownView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
           return 0;
         }
         if (wparam != 0x204) {
@@ -3331,7 +3331,7 @@ default_wndproc:
         }
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_rbuttondown
-                  ((WndOnRButtonDownView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnRButtonDownView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       switch(msg) {
@@ -3348,25 +3348,25 @@ default_wndproc:
         wnd2->wnd_header_area[0xa6] = '\0';
         wnd2->wnd_header_area[0xa7] = '\0';
         wnd_call_lbuttondown
-                  ((WndOnLButtonDownView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnLButtonDownView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x202:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        if (*(int *)(wnd2->lbutton_held) == 1) {
+        if (*(int *)wnd2->lbutton_held == 1) {
           wnd2->wnd_header_area[0xa4] = '\0';
           wnd2->wnd_header_area[0xa5] = '\0';
           wnd2->wnd_header_area[0xa6] = '\0';
           wnd2->wnd_header_area[0xa7] = '\0';
           wnd_call_lbuttonup
-                    ((WndOnLButtonUpView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                    ((WndOnLButtonUpView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         wnd_call_lbuttonup_raw
-                  ((WndOnLButtonUpRawView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnLButtonUpRawView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x203:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_dblclick
-                  ((WndOnDblClickView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnDblClickView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x204:
         wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
@@ -3381,20 +3381,20 @@ default_wndproc:
         wnd2->wnd_header_area[0xaa] = '\0';
         wnd2->wnd_header_area[0xab] = '\0';
         wnd_call_rbuttondown
-                  ((WndOnRButtonDownView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnRButtonDownView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x205:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        if (*(int *)(wnd2->rbutton_held) == 1) {
+        if (*(int *)wnd2->rbutton_held == 1) {
           wnd2->wnd_header_area[0xa8] = '\0';
           wnd2->wnd_header_area[0xa9] = '\0';
           wnd2->wnd_header_area[0xaa] = '\0';
           wnd2->wnd_header_area[0xab] = '\0';
           wnd_call_rbuttonup
-                    ((WndOnRButtonUpView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                    ((WndOnRButtonUpView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         wnd_call_rbuttonup_raw
-                  ((WndOnRButtonUpRawView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
+                  ((WndOnRButtonUpRawView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       goto default_wndproc;

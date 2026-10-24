@@ -334,9 +334,9 @@ int __cdecl save_read_game(char *path)
   if ((count_read != 0) && (result = _strncmp(events_tag,((i8 *)&save_events_tag_check_str),4), result == 0)) {
     count_read = _fread(&event_count2,4,1,_File);
     if (count_read == 0) goto close_file;
-    events_reset(((ScenarioEvents*)((i8 *)&unit_types_block.scenario_events)),50000);
+    events_reset(((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events)),50000);
     for (event_idx = 0; event_idx < event_count2; event_idx = event_idx + 1) {
-      event = (void *)events_alloc(((ScenarioEvents*)((i8 *)&unit_types_block.scenario_events)));
+      event = events_alloc(((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events)));
       if (event == (void *)0x0) {
         error_report(0xfffffff7,3,0,0,0);
       }
@@ -434,21 +434,21 @@ int __cdecl save_read_game(char *path)
   saved_player_civ = game.player_civ;
   if ((is_scenario == 0) && ((game.game_flags & 0x80) == 0)) {
     if (game.multiplayer == 0) {
-      leaders[civs[(char)game.player_civ].tribe].leader_name =
-           -leaders[civs[(char)game.player_civ].tribe].leader_name;
+      leaders[civs[game.player_civ].tribe].leader_name =
+           -leaders[civs[game.player_civ].tribe].leader_name;
       if (((short *)(leader_buf + 12))[0] < 0) {
-        leaders[civs[(char)game.player_civ].tribe].plural =
-             -leaders[civs[(char)game.player_civ].tribe].plural;
+        leaders[civs[game.player_civ].tribe].plural =
+             -leaders[civs[game.player_civ].tribe].plural;
       }
       if (((short *)(leader_buf + 12))[1] < 0) {
-        leaders[civs[(char)game.player_civ].tribe].adjective =
-             -leaders[civs[(char)game.player_civ].tribe].adjective;
+        leaders[civs[game.player_civ].tribe].adjective =
+             -leaders[civs[game.player_civ].tribe].adjective;
       }
       for (idx = 0; idx < 7; idx = idx + 1) {
         for (gender = 0; gender < 2; gender = gender + 1) {
           if (((short *)(leader_buf + 12))[gender + idx * 2 + 4] < 0) {
-            leaders[civs[(char)game.player_civ].tribe].titles[idx][gender]
-                 = -leaders[civs[(char)game.player_civ].tribe].titles[idx][gender];
+            leaders[civs[game.player_civ].tribe].titles[idx][gender]
+                 = -leaders[civs[game.player_civ].tribe].titles[idx][gender];
           }
         }
       }
@@ -459,20 +459,20 @@ int __cdecl save_read_game(char *path)
           game.player_civ = (byte)civ;
           leaders[civs[(char)(byte)civ].tribe].leader_name =
                -leaders[civs[(char)(byte)civ].tribe].leader_name;
-          if (((short *)(leader_buf + 12))[civs[(char)game.player_civ].tribe * 0x18] < 0) {
-            leaders[civs[(char)game.player_civ].tribe].plural = -leaders[civs[(char)game.player_civ].tribe].plural;
+          if (((short *)(leader_buf + 12))[civs[game.player_civ].tribe * 0x18] < 0) {
+            leaders[civs[game.player_civ].tribe].plural = -leaders[civs[game.player_civ].tribe].plural;
           }
-          if (((short *)(leader_buf + 12))[civs[(char)game.player_civ].tribe * 0x18 + 1] < 0) {
-            leaders[civs[(char)game.player_civ].tribe].adjective = -leaders[civs[(char)game.player_civ].tribe].adjective;
+          if (((short *)(leader_buf + 12))[civs[game.player_civ].tribe * 0x18 + 1] < 0) {
+            leaders[civs[game.player_civ].tribe].adjective = -leaders[civs[game.player_civ].tribe].adjective;
           }
           for (idx = 0; idx < 7; idx = idx + 1) {
             for (gender = 0; gender < 2; gender = gender + 1) {
               if (((short *)(leader_buf + 12))[idx * 2 +
                             gender +
-                            civs[(char)game.player_civ].tribe * 0x18 + 4] < 0)
+                            civs[game.player_civ].tribe * 0x18 + 4] < 0)
               {
-                leaders[civs[(char)game.player_civ].tribe].titles[idx][gender] =
-                     -leaders[civs[(char)game.player_civ].tribe].titles[idx][gender];
+                leaders[civs[game.player_civ].tribe].titles[idx][gender] =
+                     -leaders[civs[game.player_civ].tribe].titles[idx][gender];
               }
             }
           }
@@ -498,7 +498,7 @@ int __cdecl save_read_game(char *path)
       else {
         title_label = (int)leaders[civs[civ].tribe].plural;
       }
-      dot_ptr = (char *)label_string(title_label);
+      dot_ptr = label_string(title_label);
       result = _strcmp(&civ_names[civ].tribe_name[0],dot_ptr);
       if (result == 0) {
         for (idx = 0; idx < 7; idx = idx + 1) {
@@ -524,18 +524,18 @@ int __cdecl save_read_game(char *path)
     }
     for (unit_idx = 0; unit_idx < game.num_units; unit_idx = unit_idx + 1) {
       if ((units[unit_idx].id != 0) &&
-         ((char)units[unit_idx].owner == civ)) {
-        civs[civ].units_active[(uint)(byte)units[unit_idx].type] =
-             civs[civ].units_active[(uint)(byte)units[unit_idx].type] +
+         (units[unit_idx].owner == civ)) {
+        civs[civ].units_active[(uint)units[unit_idx].type] =
+             civs[civ].units_active[(uint)units[unit_idx].type] +
              '\x01';
       }
     }
     for (city_idx = 0; city_idx < game.num_cities; city_idx = city_idx + 1) {
       if (((cities[city_idx].id != 0) &&
-          ((char)cities[city_idx].owner == civ)) &&
-         (-1 < (char)cities[city_idx].building)) {
-        civs[civ].units_in_production[(int)(char)cities[city_idx].building] =
-             civs[civ].units_in_production[(int)(char)cities[city_idx].building] +
+          (cities[city_idx].owner == civ)) &&
+         (-1 < cities[city_idx].building)) {
+        civs[civ].units_in_production[(int)cities[city_idx].building] =
+             civs[civ].units_in_production[(int)cities[city_idx].building] +
              '\x01';
       }
     }
@@ -594,7 +594,7 @@ close_file:
    style dword (*this); callers test bit 0x200 (SWS_ATTACHED) in AH.  Read
    here directly (a call through a cast to another return type traps in
    wasm). */
-#define WIN_STYLE(w) (*(uint *)(w))
+#define WIN_STYLE(w) (*(uint *)w)
 
 /* 0x005bd566 */
 void __cdecl wnd_obj_set_topmost_child(int parent_obj,int child_obj)
@@ -1056,27 +1056,27 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
     if (msg == 0x100) {
       shift_state = GetAsyncKeyState(0x10);
       tmp = (int)shift_state;
-      (*(i8 *)((char *)&shift_flags + 1)) = (char)((ushort)shift_state >> 8);
+      (*((char *)&shift_flags + 1)) = (char)((ushort)shift_state >> 8);
       shift_flags = tmp;
-      if ((wparam == 9) && ((*(i8 *)((char *)&shift_flags + 1)) == '\0')) {
+      if ((wparam == 9) && ((*((char *)&shift_flags + 1)) == '\0')) {
         nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)frame);
         if (nav_enabled != '\0') {
           wnd_cycle_control_focus((iptr)frame,0,2);
         }
       }
-      else if ((wparam == 9) && ((*(i8 *)((char *)&shift_flags + 1)) != '\0')) {
+      else if ((wparam == 9) && ((*((char *)&shift_flags + 1)) != '\0')) {
         nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)frame);
         if (nav_enabled != '\0') {
           wnd_cycle_control_focus((iptr)frame,0,3);
         }
       }
-      else if ((wparam == 0xd) && ((*(i8 *)((char *)&shift_flags + 1)) == '\0')) {
+      else if ((wparam == 0xd) && ((*((char *)&shift_flags + 1)) == '\0')) {
         if (*(int *)((int)frame + 0xbc) != 0) {
           ctrl_arg = control_get_hwnd((ControlHwndView *)*(void **)((int)frame + 0xbc));
           button_press_animated(ctrl_arg);
         }
       }
-      else if ((wparam == 0x1b) && ((*(i8 *)((char *)&shift_flags + 1)) == '\0')) {
+      else if ((wparam == 0x1b) && ((*((char *)&shift_flags + 1)) == '\0')) {
         if (*(int *)((int)frame + 0xc0) != 0) {
           ctrl_arg = control_get_hwnd((ControlHwndView *)*(void **)((int)frame + 0xc0));
           button_press_animated(ctrl_arg);
@@ -1105,7 +1105,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
           parent_frame = GetWindowLongA(*(HWND *)(parent_data + 4),8);
           if ((parent_frame != 0) &&
              (insert_after = ctrl_list_find_type11_hwnd((ControlNextView *)*(i32 *)(parent_frame + 0xb8)), insert_after != 0)) {
-            ((WINDOWPOS *)lparam)->hwndInsertAfter = (HWND)(iptr)insert_after;
+            ((WINDOWPOS *)lparam)->hwndInsertAfter = (HWND)insert_after;
             result = DefWindowProcA(hwnd,0x46,wparam,(LPARAM)lparam);
             return result;
           }
@@ -1207,15 +1207,15 @@ uint __cdecl game_turn_start_popups(void)
   int score;
   
   best_city = -1;
-  ret = (uint)(short)game.turn;
+  ret = (uint)game.turn;
   if (((1 < (int)ret) &&
-      (ret = ((short)game.turn + -1) / 0x32, ((short)game.turn + -1) % 0x32 == 0)) &&
-     (((*(i8 *)((char *)&game.game_options + 2)) & 0x10) != 0)) {
+      (ret = (game.turn + -1) / 0x32, (game.turn + -1) % 0x32 == 0)) &&
+     (((*((char *)&game.game_options + 2)) & 0x10) != 0)) {
     best_score = -1;
     for (city_idx = 0; city_idx < game.num_cities; city_idx = city_idx + 1) {
       if ((cities[city_idx].id != 0) &&
-         ((char)cities[city_idx].owner == human_civ[0])) {
-        score = (int)(char)cities[city_idx].size;
+         (cities[city_idx].owner == human_civ[0])) {
+        score = (int)cities[city_idx].size;
         has_improv = city_has_improvement(city_idx,1);
         if (has_improv != 0) {
           score = score << 1;
@@ -1233,27 +1233,27 @@ uint __cdecl game_turn_start_popups(void)
         }
       }
     }
-    civ_name = civ_name_plural(human_civ[0]);
-    text_set_string_arg(0,civ_name);
+    civ_name = (i32)(civ_name_plural(human_civ[0]));
+    text_set_string_arg(0,(const char *)civ_name);
     text_clear();
     text_append_year((int)game.year);
-    text_set_string_arg(2,(iptr)&map_views_block.text_buffer);
+    text_set_string_arg(2,(const char *)&map_views_block.text_buffer);
     text_clear();
     if (best_city < 0) {
       text_append_label(0xe);
     }
     else {
-      text_append((iptr)cities[best_city].name);
-      mapview_center_on(((ViewWindow*)((i8 *)&map_views_block.map_views)),(int)cities[best_city].x,
+      text_append((const char *)cities[best_city].name);
+      mapview_center_on(((ViewWindow *)((i8 *)&map_views_block.map_views)),(int)cities[best_city].x,
                          (int)cities[best_city].y);
     }
-    text_set_string_arg(1,(iptr)&map_views_block.text_buffer);
+    text_set_string_arg(1,(const char *)&map_views_block.text_buffer);
     ret = popup_game_with_sprite((iptr)str_counciltime,(iptr)&popup_info_icon_sprite,0);
     if (ret == 0) {
       council_show(human_civ[0],0);   /* void; result left in EAX is garbage */
     }
   }
-  if (((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0) {
+  if (((*((char *)&game.game_options + 1)) & 1) != 0) {
     if (game.turn == 1) {
       popup_file_with_sprite(((iptr)*(i8 * *)str_ptr_labels_rest),(iptr)str_firstmove,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
     }
@@ -1270,14 +1270,14 @@ uint __cdecl game_turn_start_popups(void)
       ret = city_find_nearest((int)map.width / 2,(int)map.height / 2,human_civ[0],0xffffffff
                                  ,0xffffffff);
       if (-1 < (int)ret) {
-        text_set_string_arg(0,(iptr)cities[ret].name);
+        text_set_string_arg(0,(const char *)cities[ret].name);
         popup_text_with_city_noflags(((iptr)*(i8 * *)str_ptr_labels_rest),(iptr)str_onecity,ret);
-        ret = (int)(short)game.turn - 0x19;
+        ret = (int)game.turn - 0x19;
         civs[human_civ[0]].last_city_turn = (short)ret;
       }
     }
     else {
-      ret = (int)(short)game.turn - (int)civs[human_civ[0]].last_city_turn;
+      ret = (int)game.turn - (int)civs[human_civ[0]].last_city_turn;
       if ((0x18 < (int)ret) &&
          ((ret = (uint)civs[human_civ[0]].num_cities, (int)ret < 6 &&
           (ret = human_civ[0] * 0x165, civs[human_civ[0]].units_active[0] == '\0')))) {
@@ -1334,7 +1334,7 @@ int __cdecl city_process_pollution(int city)
   int pollution_chance;
   
   owner = cities[city].owner;
-  pollution_chance = (int)((uint)(byte)civs[owner].num_advances * (uint)game.difficulty) >> 1;
+  pollution_chance = (int)((uint)civs[owner].num_advances * (uint)game.difficulty) >> 1;
   if (((game.game_flags & 0x80) != 0) && ((prefs_game_rules_block.scenario_flags[0] & 0x40) != 0)) {
     pollution_chance = 0;
     main_menu_block.city_pollution = 0;
@@ -1354,9 +1354,9 @@ int __cdecl city_process_pollution(int city)
   if (pollution_roll < main_menu_block.city_pollution * 2) {
     roll = _rand();
     tile_x = map_wrap_x((int)cities[city].x +
-                               (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[roll % 0x14]);
+                               (int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[roll % 0x14]);
     roll = (int)cities[city].y +
-            (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[roll % 0x14];
+            (int)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[roll % 0x14];
     check = map_in_bounds(tile_x,roll);
     if (check != 0) {
       improvements2 = tile_improvements(tile_x,roll);
@@ -1366,7 +1366,7 @@ int __cdecl city_process_pollution(int city)
           tile_add_pollution(tile_x,roll);
           check = tile_visible_to(tile_x,roll,human_civ[0]);
           if (check != 0) {
-            mapview_center_on(((ViewWindow*)((i8 *)&map_views_block.map_views)),tile_x,roll);
+            mapview_center_on(((ViewWindow *)((i8 *)&map_views_block.map_views)),tile_x,roll);
             if ((game.message_options & 0x100) == 0) {
               city_notify_dialog_ex((iptr)str_pollution,city,0,0);
             }
@@ -1397,7 +1397,7 @@ int __cdecl city_process_pollution(int city)
           if (roll != 0) {
             mapviews_ensure_visible((int)cities[city].x,
                                (int)cities[city].y,
-                               (int)(char)cities[city].owner);
+                               (int)cities[city].owner);
           }
           map_animate_nuke((int)cities[city].x,
                              (int)cities[city].y);
@@ -1453,8 +1453,8 @@ uint __cdecl unit_enter_hut(int unit_id)
   y = (uint)units[unit_id].y;
   outcome = y;
   if ((civ != 0) &&
-     (outcome = (int)(char)unit_types[(uint)(byte)units[unit_id].type].domain,
-     (int)(char)unit_types[(uint)(byte)units[unit_id].type].domain == 0)) {
+     (outcome = (int)(char)unit_types[(uint)units[unit_id].type].domain,
+     (int)(char)unit_types[(uint)units[unit_id].type].domain == 0)) {
     city_find_nearest(x,y,0xffffffff,0xffffffff,0xffffffff);
     tmp = _rand();
     outcome = tmp % 5;
@@ -1477,7 +1477,7 @@ hut_outcome_dispatch:
         settlers = 0;
         for (unit_id = 0; unit_id < game.num_units; unit_id = unit_id + 1) {
           if (((units[unit_id].id != 0) &&
-              (unit_types[(uint)(byte)units[unit_id].type].role == '\x05')) &&
+              (unit_types[(uint)units[unit_id].type].role == '\x05')) &&
              (units[unit_id].home_city == -1)) {
             settlers = settlers + 1;
           }
@@ -1522,7 +1522,7 @@ hut_outcome_dispatch:
         if (tmp < 0) {
           return civ;
         }
-        city_window_open(((ScaledWindowView*)((i8 *)&city_window_block.city_window)),tmp);   /* void: the caller ignores our result */
+        city_window_open(((ScaledWindowView *)((i8 *)&city_window_block.city_window)),tmp);   /* void: the caller ignores our result */
         return civ;
       }
       outcome = 5;
@@ -1580,7 +1580,7 @@ hut_outcome_dispatch:
         outcome = civ;
         if (-1 < tmp) {
           outcome = tmp * 0x20;
-          *((i8 *)&units[0].home_city + outcome) = -1;   /* outcome is a byte offset (unit index * 0x20) */
+          *(&units[0].home_city + outcome) = -1;   /* outcome is a byte offset (unit index * 0x20) */
         }
       }
       else {
@@ -1620,7 +1620,7 @@ hut_outcome_dispatch:
         goto hut_outcome_dispatch;
       }
       if (((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0) &&
-         ((byte)game.power_rank[civ] < (byte)game.power_rank[game.field_139])) {
+         (game.power_rank[civ] < game.power_rank[game.field_139])) {
         rnd = _rand();
         sign = (int)rnd >> 0x1f;
         if ((int)(((rnd ^ sign) - sign & 7 ^ sign) - sign) < (int)(uint)game.difficulty) {
@@ -1667,8 +1667,8 @@ barbarian_surprise:
         }
         rnd = game.turn + step >> 0x1f;
         tmp = ((game.turn + step ^ rnd) - rnd & 7 ^ rnd) - rnd;
-        tile_x = map_wrap_x((char)(((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x);
-        tmp = (int)(char)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp] + y;
+        tile_x = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x);
+        tmp = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp] + y;
         check = map_in_bounds(tile_x,tmp);
         if ((((check != 0) && (check = tile_unit_owner(tile_x,tmp), check < 0)) &&
             (check = tile_city_owner(tile_x,tmp), check < 0)) &&
@@ -1745,8 +1745,8 @@ barbarian_surprise:
         settler_count = 0;
         for (unit_id = 0; unit_id < game.num_units; unit_id = unit_id + 1) {
           if ((((units[unit_id].id != 0) &&
-               ((int)(char)units[unit_id].owner == civ)) &&
-              (unit_types[(uint)(byte)units[unit_id].type].role == '\x05')) &&
+               ((int)units[unit_id].owner == civ)) &&
+              (unit_types[(uint)units[unit_id].type].role == '\x05')) &&
              (units[unit_id].home_city == -1)) {
             settler_count = settler_count + 1;
           }
