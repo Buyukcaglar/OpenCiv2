@@ -78,6 +78,13 @@ int msg_pump_events(int wait)
                 exit(0);
             break;
         case HOST_EV_KEYDOWN:
+            /* Ctrl+Q (Game > Quit) with no game in progress: exits at once,
+               as the menu's Quit does, also while a video plays, when the
+               game reads no keys. */
+            if (e.vk == 'Q' && GetKeyState(VK_CONTROL) < 0 && GetKeyState(VK_MENU) >= 0 &&
+                GetKeyState(VK_SHIFT) >= 0 && !game_in_play())
+                exit(0);
+            /* fall through */
         case HOST_EV_KEYUP:
             input_key(e.vk, e.type == HOST_EV_KEYDOWN);
             break;
