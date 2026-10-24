@@ -4666,7 +4666,7 @@ void __cdecl terrain_editor_on_ok(void)
   iptr errors;
   HWND hWnd;
   iptr ok;
-  int wnd;
+  NativeWindow *wnd;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -4684,7 +4684,7 @@ void __cdecl terrain_editor_on_ok(void)
       lpCaption = str_file_i_o_error_4;
       lpText = msg;
       wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
+      MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
     wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -5286,7 +5286,7 @@ void __thiscall terrain_editor_draw(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,
@@ -5894,9 +5894,9 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
       cur_sy[view] = from_sy;
       rect_set((iptr)rect,rect_left2[view],rect_top2[view],
                          rect_right2[view] + 1,rect_bottom2[view] + 1);
-      dim = rect_width((iptr)rect);
+      dim = rect_width((RECT *)rect);
       save_w[view] = dim;
-      dim = rect_height((iptr)rect);
+      dim = rect_height((RECT *)rect);
       save_h[view] = dim;
       if (any_visible == 0) {
         any_visible = 1;
@@ -6238,8 +6238,8 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
     if (dirty_rect.top < 0) {
       dirty_rect.top = 0;
     }
-    ok = rect_width((iptr)&dirty_rect);
-    if ((0 < ok) && (ok = rect_height((iptr)&dirty_rect), 0 < ok)) {
+    ok = rect_width(&dirty_rect);
+    if ((0 < ok) && (ok = rect_height(&dirty_rect), 0 < ok)) {
       last_time = timeGetTime();
       mapview_apply_zoom((ViewWindow *)((i8 *)&map_views_block.map_views));
       for (frame2 = 0; frame2 < 0xb; frame2++) {

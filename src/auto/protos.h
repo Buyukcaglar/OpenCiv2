@@ -21,8 +21,8 @@ void __cdecl minimap_on_size(void); /* 0040795a */
 void __cdecl minimap_on_move(void); /* 00407980 */
 void __cdecl minimap_window_create(void); /* 004079a6 */
 void __cdecl minimap_window_destroy(void); /* 00407b31 */
-int __cdecl rect_width(iptr rect); /* 00407f90 */
-int __cdecl rect_height(iptr rect); /* 00407fc0 */
+int __cdecl rect_width(RECT *rect); /* 00407f90 */
+int __cdecl rect_height(RECT *rect); /* 00407fc0 */
 void __cdecl win_flush_pending_msgs(void); /* 00407ff0 */
 void __thiscall wnd_set_cursor(WndBase *self,i32 cursor); /* 00408010 */
 void __thiscall wnd_set_icon(WndBase *self,i32 icon); /* 00408050 */
@@ -51,7 +51,7 @@ void __thiscall window_show_focus_first(Wnd *self); /* 00408620 */
 void __thiscall wnd_handle_show_raise(WndBase *self); /* 00408650 */
 void __cdecl rect_set(iptr rect,int left,int top,int right,int bottom); /* 00408680 */
 void __cdecl rect_set_xywh(iptr rect,int x,int y,iptr width,iptr height); /* 004086c0 */
-void __cdecl gfx_target_frame_rect(iptr rect,i32 color); /* 00408700 */
+void __cdecl gfx_target_frame_rect(RECT *rect,i32 color); /* 00408700 */
 void __cdecl gfx_fill_draw_target(i32 color); /* 00408750 */
 void __cdecl gfx_target_fill_rect(i32 x,i32 y,i32 width,iptr height, i32 color); /* 00408780 */
 i32 __cdecl map_in_bounds(iptr x,iptr y); /* 004087c0 */
@@ -106,7 +106,7 @@ i32 __thiscall ctrl_base_dtor(ControlBase *self); /* 0040f510 */
 i32 __thiscall ctrl_dtor(Control *self); /* 0040f570 */
 void __thiscall ctrl_destroy(Control *self); /* 0040f610 */
 void __thiscall button_create(Control *self,iptr parent,i32 ctrl_id,iptr rect,const char *label); /* 0040f680 */
-void __thiscall ctrl_init(Control *self,iptr parent_wnd,u32 type_code,u32 id,iptr rect); /* 0040f730 */
+void __thiscall ctrl_init(Control *self,iptr parent_wnd,u32 type_code,u32 id,RECT *rect); /* 0040f730 */
 void __thiscall ctrl_set_default_button(Control *self); /* 0040f7d0 */
 uptr __thiscall ctrl_get_parent(Control *self); /* 0040f810 */
 void __thiscall ctrl_set_cancel_button(Control *self); /* 0040f840 */
@@ -122,7 +122,7 @@ void __thiscall scrollbar_create(Control *self,iptr parent,iptr ctrl_id,iptr rec
 void __thiscall scrollbar_set_pos(ClickControl *self,iptr pos); /* 0040fcf0 */
 void __thiscall scrollbar_set_range(Control *self,i32 min_value,i32 max_value); /* 0040fd40 */
 void __thiscall scrollbar_set_callback(Control *self,iptr callback); /* 0040fd80 */
-void __cdecl gfx_fill_rect(iptr surface,iptr rect,i32 color); /* 0040fdb0 */
+void __cdecl gfx_fill_rect(iptr surface,RECT *rect,i32 color); /* 0040fdb0 */
 void __cdecl text_append_space(void); /* 0040fe10 */
 void __cdecl text_append_colon(void); /* 0040fe40 */
 void __cdecl text_append_percent(void); /* 0040fe70 */
@@ -180,7 +180,7 @@ u32 __thiscall wnd_set_lbuttondown_handler(WndHandlersMouseSetView *self,iptr ha
 u32 __thiscall wnd_set_lbuttonup_any_handler(WndHandlersMouseSetView *self,iptr handler); /* 00414c60 */
 u32 __thiscall wnd_set_dblclick_handler(WndHandlersMouseSetView *self,iptr handler); /* 00414ca0 */
 void __thiscall wnd_set_capture(WndBase *self); /* 00414ce0 */
-u32 __thiscall wnd_get_window(WndBase *self); /* 00414d10 */
+NativeWindow * __thiscall wnd_get_window(WndBase *self); /* 00414d10 */
 void __thiscall wnd_release_capture(WndBase *self); /* 00414d40 */
 void __cdecl text_append_str(const char *str); /* 00414d70 */
 void __thiscall wnd_set_caption_button_handler(FrameWindow *self,iptr handler); /* 00414da0 */
@@ -245,7 +245,7 @@ i32 __cdecl popup_text_ex(const char *filename,const char *section,i32 dlg_flags
 i32 __cdecl setup_hotseat_game(void); /* 00419170 */
 void __cdecl wnd_flush_paint(void); /* 00419b80 */
 void __thiscall wnd_set_bg_color(WndBase *self,i32 color); /* 00419ba0 */
-void __thiscall wnd_set_bg_surface(WndBase *self,iptr surface); /* 00419be0 */
+void __thiscall wnd_set_bg_surface(WndBase *self,DibSurface *surface); /* 00419be0 */
 void __cdecl setup_backdrop_surface_global_init(void); /* 00419c20 */
 void __cdecl setup_backdrop_surface_static_init(void); /* 00419c3a */
 void __cdecl setup_backdrop_surface_reg_atexit(void); /* 00419c54 */
@@ -306,13 +306,13 @@ void __cdecl net_join_wait_start_civ_idle(void); /* 0042439c */
 void __cdecl net_join_wait_answer_idle(void); /* 004243ef */
 void __cdecl net_join_wait_idle_cb(void); /* 0042444f */
 void __thiscall net_gamelist_restore_selection(NetGamelistView *self); /* 004244e0 */
-u32 __thiscall net_gamelist_find_option(NetGamelistView *self,iptr game_name,iptr host_name); /* 00424688 */
+DialogOption * __thiscall net_gamelist_find_option(NetGamelistView *self,iptr game_name,iptr host_name); /* 00424688 */
 void __thiscall net_gamelist_update_details(NetGamelistView *self); /* 0042472a */
 void __thiscall net_gamelist_get_entry_names(NetGamelistView *self,iptr option,iptr out_game_name,iptr out_host_name); /* 004247b2 */
 void __thiscall net_gamelist_add_info_lines(NetGamelistView *self); /* 0042486f */
 i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused); /* 00424ae9 */
 void __thiscall net_gamelist_clear(NetGamelistView *self); /* 004253ef */
-uint * __thiscall net_gamelist_add_entry(NetGamelistView *self,const char *name2,uint id); /* 004254a8 */
+DialogOption * __thiscall net_gamelist_add_entry(NetGamelistView *self,const char *name2,uint id); /* 004254a8 */
 void __thiscall net_gamelist_start_timer(NetGamelistView *self,iptr callback); /* 00425607 */
 void __thiscall net_gamelist_kill_timer(NetGamelistView *self); /* 00425650 */
 void __cdecl net_gamelist_poll_tick(void); /* 00425695 */
@@ -477,7 +477,7 @@ GameFont * __thiscall font_init_empty(GameFont *self); /* 0043c690 */
 void __thiscall font_set_styled(GameFont *self,i32 face,i32 size,i32 style); /* 0043c6c0 */
 GamePalette * __thiscall palette_scalar_dtor(GamePalette *self,uint flags); /* 0043c740 */
 void __cdecl rect_offset(iptr rect,int dx,int dy); /* 0043c790 */
-void __cdecl gfx_draw_rect_frame(iptr surface,iptr rect,i32 color); /* 0043c7c0 */
+void __cdecl gfx_draw_rect_frame(iptr surface,RECT *rect,i32 color); /* 0043c7c0 */
 void __cdecl text_append_period(void); /* 0043c810 */
 void __cdecl str_append(char *dest,const char *src); /* 0043c840 */
 void __cdecl text_append_long(i32 value); /* 0043c870 */
@@ -1034,8 +1034,8 @@ void __cdecl scenario_title_surface_reg_atexit(void); /* 00472f44 */
 void __cdecl scenario_title_surface_atexit_dtor(void); /* 00472f61 */
 void __cdecl save_pack_layout_rects(void); /* 00472f7b */
 void __cdecl save_unpack_layout_rects(void); /* 00473064 */
-void __cdecl rect_pack_to_short(iptr rect,iptr short_rect); /* 0047314e */
-void __cdecl rect_unpack_from_short(iptr short_rect,iptr rect); /* 00473190 */
+void __cdecl rect_pack_to_short(RECT *rect,iptr short_rect); /* 0047314e */
+void __cdecl rect_unpack_from_short(iptr short_rect,RECT *rect); /* 00473190 */
 uint __cdecl ui_file_name_dialog(iptr parent,const char *title,iptr file_buf,iptr filter,iptr default_ext,int must_exist, int is_save); /* 004731d2 */
 i32 __cdecl save_read_units_cities(int version,iptr file); /* 004732a6 */
 i32 __cdecl save_load_gpk(int version,iptr file); /* 00473660 */
@@ -1216,7 +1216,7 @@ void __cdecl portrait_dlg_on_button(int button_id); /* 00496ecf */
 void * __thiscall diplo_leader_wnd_scalar_dtor(void *self,uint flags); /* 00497bf0 */
 void __thiscall palette_get_entry(GamePalette *self,iptr index,iptr red,iptr green,iptr blue); /* 00497c40 */
 u32 * __thiscall surface_get_rect(DibSurface *self); /* 00497c90 */
-void __thiscall wnd_set_bg_tile(DiploLeaderView *self,iptr tile); /* 00497cc0 */
+void __thiscall wnd_set_bg_tile(DiploLeaderView *self,DibSurface *tile); /* 00497cc0 */
 void __thiscall wnd_set_caption_height(WndBase *self,i32 height); /* 00497d00 */
 void __thiscall button_create_with_callback(Control *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,const char *label); /* 00497d40 */
 iptr __cdecl save_read_cstr(char *buf,iptr file); /* 00497da0 */
@@ -1786,7 +1786,7 @@ void __cdecl city_tile_pick_surface_static_init(void); /* 00500fce */
 void __cdecl city_tile_pick_surface_reg_atexit(void); /* 00500fe8 */
 void __cdecl city_tile_pick_surface_atexit_dtor(void); /* 00501005 */
 void __cdecl city_window_load_background(void); /* 0050101f */
-void __cdecl spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr sprite,iptr rect); /* 005011b4 */
+void __cdecl spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr sprite,RECT *rect); /* 005011b4 */
 void __cdecl city_window_modal_notice(void); /* 005013bc */
 void __thiscall city_window_reset_state(FrameWindow *self); /* 00501440 */
 void __thiscall city_window_remove_citizen_hotspots(FrameWindow *self); /* 005014bf */
@@ -1872,7 +1872,7 @@ int __cdecl int_clamp_c(int value,int lo,int hi); /* 00511350 */
 void __cdecl city_draw_hline(i32 x,i32 y,i32 length,i32 color); /* 005113b0 */
 void __cdecl city_draw_bevel_rect(iptr rect,i32 light_color,i32 dark_color); /* 005113f0 */
 void __cdecl text_append_plus(void); /* 00511430 */
-void __thiscall hotspot_add_rect(ClickMap *self,iptr id,i32 cursor,iptr rect); /* 00511460 */
+void __thiscall hotspot_add_rect(ClickMap *self,iptr id,i32 cursor,RECT *rect); /* 00511460 */
 void __cdecl city_window_draw_icon_row(iptr sprite,i32 count,i32 x,i32 y, i32 width,i32 spacing,i32 max_width,i32 flags); /* 005114d0 */
 i32 __cdecl popup_game_with_city_flags(const char *section,i32 city,i32 flags); /* 00511520 */
 SpriteButtonCore * __thiscall spritebtn_scalar_dtor(SpriteButtonCore *self,uint flags); /* 00511560 */
@@ -2330,15 +2330,15 @@ void __thiscall menu_clear_lists(GameMenu *self); /* 0057868c */
 void __thiscall menu_reset(GameMenu *self,i32 size); /* 005786b6 */
 GameMenu * __thiscall menu_ctor(GameMenu *self,i32 size); /* 005786f1 */
 void __thiscall menu_dtor(GameMenu *self); /* 00578770 */
-i32 __thiscall menu_find_menu(GameMenu *self,int menu_id); /* 005787de */
-int __thiscall menu_visible_index(GameMenu *self,uptr menu); /* 00578840 */
+MenuNode * __thiscall menu_find_menu(GameMenu *self,int menu_id); /* 005787de */
+int __thiscall menu_visible_index(GameMenu *self,MenuNode *menu); /* 00578840 */
 i32 __thiscall menu_id_at_visible_index(GameMenu *self,int visible_index); /* 005788a9 */
-iptr __thiscall menu_find_item(GameMenu *self,int item_id); /* 00578922 */
-int __thiscall menu_item_visible_index(GameMenu *self,iptr item); /* 005789aa */
+MenuNode * __thiscall menu_find_item(GameMenu *self,int item_id); /* 00578922 */
+int __thiscall menu_item_visible_index(GameMenu *self,MenuNode *item); /* 005789aa */
 i32 __thiscall menu_item_id_at_visible_index(GameMenu *self,i32 menu_id,int visible_index); /* 00578a1c */
 void __cdecl str_pipes_to_tabs(char *str); /* 00578abd */
-i32 * __thiscall menu_add_menu(GameMenu *self,i32 menu_id,char *title); /* 00578b06 */
-i32 * __thiscall menu_add_item(GameMenu *self,i32 menu_id,i32 item_id,const char *text,size_t min_len); /* 00578c12 */
+MenuNode * __thiscall menu_add_menu(GameMenu *self,i32 menu_id,char *title); /* 00578b06 */
+MenuNode * __thiscall menu_add_item(GameMenu *self,i32 menu_id,i32 item_id,const char *text,size_t min_len); /* 00578c12 */
 void __cdecl menu_dispatch_command(i32 menu_index,i32 item_index); /* 00578d8a */
 void __thiscall menu_attach_to_window(GameMenu *self,ModalMenuWindow *window); /* 00578de8 */
 void __thiscall menu_set_command_handler(GameMenu *self,iptr handler); /* 00578e38 */
@@ -2537,9 +2537,9 @@ void __thiscall dialog_init_defaults(Dialog *self); /* 0059d5f5 */
 Dialog * __thiscall dialog_ctor(Dialog *self,i32 size); /* 0059db08 */
 void __thiscall dialog_close(Dialog *self); /* 0059db65 */
 i32 __thiscall dialog_dtor(Dialog *self); /* 0059df8a */
-void __thiscall dialog_init(Dialog *self,iptr surface_wnd,iptr background,iptr rect,u32 flags); /* 0059dfb9 */
-i32 __thiscall dialog_set_item_text(void *self,int line_id,const char *text); /* 0059e0eb */
-int * __thiscall dialog_add_line(DialogAddLineView *self,const char *text,int x,int y,int max_len,int color); /* 0059e18b */
+void __thiscall dialog_init(Dialog *self,iptr surface_wnd,iptr background,RECT *rect,u32 flags); /* 0059dfb9 */
+i32 __thiscall dialog_set_item_text(Dialog *self,int line_id,const char *text); /* 0059e0eb */
+DialogLine * __thiscall dialog_add_line(DialogAddLineView *self,const char *text,int x,int y,int max_len,int color); /* 0059e18b */
 i32 __thiscall dialog_option_icon_width(DialogCore *self); /* 0059e356 */
 int __thiscall dialog_option_row_height(DialogCore *self); /* 0059e376 */
 u32 __thiscall dialog_list_row_height(DialogTextView *self); /* 0059e3fa */
@@ -2557,8 +2557,8 @@ void __thiscall dialog_set_title(DialogWindowView *self,const char *title); /* 0
 void __thiscall dialog_set_width(DialogWindowView *self,u32 width); /* 0059e6ff */
 void __thiscall dialog_set_height(DialogCore *self,u32 height); /* 0059e762 */
 void __thiscall dialog_set_position(DialogCore *self,u32 x,u32 y); /* 0059e783 */
-uptr __thiscall dialog_find_option(DialogOptionList *self,int option_id); /* 0059e7ad */
-int * __thiscall dialog_find_sprite(DialogOptionList *self,int sprite_id); /* 0059e877 */
+DialogOption * __thiscall dialog_find_option(DialogOptionList *self,int option_id); /* 0059e7ad */
+DialogSprite * __thiscall dialog_find_sprite(DialogOptionList *self,int sprite_id); /* 0059e877 */
 void __thiscall dialog_set_option_disabled(DialogOptionList *self,iptr option_id,int disabled); /* 0059e8db */
 i32 __thiscall dialog_option_is_checked(DialogOptionList *self,i32 option_id); /* 0059e9f3 */
 void __thiscall dialog_set_option_checked(DialogOptionList *self,i32 option_id,int checked); /* 0059ea4d */
@@ -2569,27 +2569,27 @@ void __thiscall dialog_set_sprite_draw_fn(DialogCore *self,iptr callback); /* 00
 void __thiscall dialog_set_option_draw_fn(DialogOptionList *self,iptr callback); /* 0059ebf8 */
 void __thiscall dialog_set_select_change_fn(DialogSelChangeSetView *self,iptr callback); /* 0059ec1c */
 void __thiscall dialog_set_image_zoom(DialogWindowView *self,u32 zoom); /* 0059ec64 */
-iptr * __thiscall dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,const char *label); /* 0059ec88 */
-uint * __thiscall dialog_add_option(DialogOptionList *self,const char *text,iptr option_id,uint data); /* 0059edf0 */
-uint * __thiscall dialog_add_checkbox_option(DialogOptionList *self,const char *text,iptr option_id,int checked); /* 0059f026 */
-i32 * __thiscall dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text,size_t max_len); /* 0059f06d */
+DialogSprite * __thiscall dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,const char *label); /* 0059ec88 */
+DialogOption * __thiscall dialog_add_option(DialogOptionList *self,const char *text,iptr option_id,uint data); /* 0059edf0 */
+DialogOption * __thiscall dialog_add_checkbox_option(DialogOptionList *self,const char *text,iptr option_id,int checked); /* 0059f026 */
+DialogEditField * __thiscall dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text,size_t max_len); /* 0059f06d */
 void __thiscall dialog_add_button(DialogButtonsView *self,const char *label); /* 0059f2a3 */
 void __thiscall dialog_set_text_color(DialogTextView *self,int highlighted,int use_alt,int shadow); /* 0059f31a */
 int __thiscall dialog_draw_text_shadowed(DialogTextView *self,iptr font,char *text,int x,int y,uint flags); /* 0059f3d7 */
 void __thiscall dialog_draw_text_line(DialogTextLineView *self,const char *text,int x_offset,i32 y); /* 0059f5ba */
 i32 __thiscall dialog_has_text_lines(DialogOptionList *self); /* 0059f5f7 */
 int __thiscall dialog_draw_wrapped_text(DialogOptionList *self,int draw); /* 0059f64a */
-i32 __thiscall dialog_option_group_index(DialogOptionList *self,uptr option); /* 0059fb78 */
-i32 __thiscall dialog_option_at(DialogOptionList *self,int target_index); /* 0059fc19 */
-int __thiscall dialog_column_of_option(DialogOptionList *self,uptr option); /* 0059fcba */
+i32 __thiscall dialog_option_group_index(DialogOptionList *self,DialogOption *option); /* 0059fb78 */
+DialogOption * __thiscall dialog_option_at(DialogOptionList *self,int target_index); /* 0059fc19 */
+int __thiscall dialog_column_of_option(DialogOptionList *self,DialogOption *option); /* 0059fcba */
 i32 __thiscall dialog_compute_layout(DialogOptionList *self); /* 0059fd2a */
 void __thiscall dialog_draw_option_cell(DialogOptionDrawView *self,const char *text,int x,int y,int selected,int disabled); /* 005a0fea */
 void __thiscall dialog_draw_option_text(DialogOptionDrawView *self,char *text,int x,i32 y,i32 selected, i32 disabled); /* 005a1148 */
-uint __thiscall dialog_draw_option(DialogOptionList *self,iptr option,int blit); /* 005a120b */
+uint __thiscall dialog_draw_option(DialogOptionList *self,DialogOption *option,int blit); /* 005a120b */
 void __thiscall dialog_draw_option_list(DialogOptionList *self); /* 005a14d2 */
 int __thiscall dialog_column_of_index(DialogTextView *self,int index); /* 005a1766 */
 int __thiscall dialog_column_start_index(DialogTextView *self,int index); /* 005a17a4 */
-void __thiscall dialog_select_option(DialogOptionList *self,uptr option,int redraw); /* 005a17e9 */
+void __thiscall dialog_select_option(DialogOptionList *self,DialogOption *option,int redraw); /* 005a17e9 */
 int __cdecl int_clamp_b(int value,int lo,int hi); /* 005a1a44 */
 i32 __thiscall dialog_option_at_point(DialogOptionList *self,int x,int y); /* 005a1a7d */
 int __thiscall dialog_count_group_options(DialogOptionList *self,int group); /* 005a1c52 */
@@ -2613,7 +2613,7 @@ void __cdecl dialog_list_on_dblclick(i32 x,i32 y); /* 005a53b8 */
 void __cdecl dialog_list_on_hscroll(int scroll_pos); /* 005a5494 */
 void __cdecl dialog_list2_on_vscroll(i32 scroll_pos); /* 005a552c */
 void __cdecl dialog_list2_on_hscroll(int scroll_pos); /* 005a55b1 */
-void __thiscall dialog_fill_rect_bg(DialogTextView *self,iptr rect,int area); /* 005a5649 */
+void __thiscall dialog_fill_rect_bg(DialogTextView *self,RECT *rect,int area); /* 005a5649 */
 void __thiscall dialog_render(Dialog *self); /* 005a577e */
 u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs); /* 005a5f34 */
 i32 __thiscall dialog_load_text_section(Dialog *self,const char *file_name,const char *section,int default_value,iptr edit_default,iptr init_arg1, iptr init_arg2,iptr init_arg3,uint flags); /* 005a632a */
@@ -2637,7 +2637,7 @@ void __cdecl gfx_draw_hline(iptr surface,i32 x1,int x2,int y,i32 color); /* 005a
 void __cdecl gfx_draw_vline(iptr surface,int x,i32 y1,int y2,i32 color); /* 005a9858 */
 void __cdecl gfx_draw_box_ltrb(iptr surface,i32 left,i32 top,i32 right, i32 bottom,i32 color); /* 005a98e4 */
 void __cdecl gfx_draw_frame_rect(iptr surface,int x,int y,int width,iptr height,i32 color); /* 005a9964 */
-void __cdecl gfx_draw_bevel_rect(iptr surface,iptr rect,i32 light_color,i32 dark_color); /* 005a99fc */
+void __cdecl gfx_draw_bevel_rect(iptr surface,RECT *rect,i32 light_color,i32 dark_color); /* 005a99fc */
 void __cdecl gfx_fill_surface(iptr surface,i32 color); /* 005a9aa3 */
 void __cdecl gfx_fill_rect_xywh(iptr surface,i32 x,i32 y,iptr width,iptr height, i32 color); /* 005a9abf */
 void __cdecl gfx_copy_rect_xywh(iptr src,iptr dest,i32 src_x,i32 src_y,i32 dest_x, i32 dest_y,iptr width,iptr height); /* 005a9afe */
@@ -2801,50 +2801,50 @@ void __cdecl win_dispatch_all_messages(void); /* 005bbb0a */
 void __cdecl win_dispatch_all_paints(void); /* 005bbb32 */
 uint __cdecl win_dispatch_one_custom_msg(void); /* 005bbb76 */
 void __cdecl win_dispatch_custom_msgs(void); /* 005bbbce */
-i32 * __cdecl wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height, iptr parent); /* 005bbc10 */
-void __cdecl wnd_obj_enable(iptr wnd,BOOL enable); /* 005bbfee */
-i32 __cdecl wnd_obj_destroy(i32 *wnd); /* 005bc0ab */
+NativeWindow * __cdecl wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height, NativeWindow *parent); /* 005bbc10 */
+void __cdecl wnd_obj_enable(NativeWindow *wnd,BOOL enable); /* 005bbfee */
+i32 __cdecl wnd_obj_destroy(NativeWindow *wnd); /* 005bc0ab */
 void __cdecl wnd_stack_check_leaks_nop(void); /* 005bc173 */
 void __cdecl wnd_list_add_hwnd(i32 hwnd); /* 005bc1b5 */
 void __cdecl wnd_stack_remove(int hwnd); /* 005bc1db */
-void __cdecl wnd_obj_set_bg_color(iptr wnd,uint color_index); /* 005bc280 */
-void __cdecl wnd_obj_set_bg_tile(iptr wnd,i32 tile); /* 005bc3bf */
-void __cdecl wnd_obj_set_bg_surface(iptr wnd,i32 surface); /* 005bc3f1 */
-void __cdecl wnd_obj_show_raise(iptr wnd); /* 005bc40a */
-void __cdecl wnd_obj_hide(iptr wnd); /* 005bc44d */
-void __cdecl wnd_obj_move_xy(iptr wnd,int x,int y); /* 005bc4a1 */
-void __cdecl wnd_obj_set_client_size(iptr wnd,int width,int height); /* 005bc505 */
-void __cdecl wnd_obj_maximize(iptr wnd); /* 005bc5da */
-void __cdecl wnd_obj_minimize(iptr wnd); /* 005bc636 */
-void __cdecl wnd_obj_show_restored(iptr wnd); /* 005bc692 */
-void __cdecl wnd_obj_validate_rect(iptr wnd,RECT *rect); /* 005bc6bb */
-void __cdecl wnd_obj_move_to_rect(iptr wnd,int *rect); /* 005bc713 */
-void __cdecl wnd_obj_center(iptr wnd,int offset_x,int offset_y); /* 005bc763 */
-LONG __cdecl wnd_obj_client_width(iptr wnd); /* 005bc933 */
-LONG __cdecl wnd_obj_client_height(iptr wnd); /* 005bc96b */
-void __cdecl wnd_obj_get_screen_rect(iptr wnd,LPRECT rect); /* 005bc9a3 */
-int __cdecl wnd_obj_frame_width(iptr wnd); /* 005bc9d3 */
-int __cdecl wnd_obj_frame_height(iptr wnd); /* 005bca3d */
+void __cdecl wnd_obj_set_bg_color(NativeWindow *wnd,uint color_index); /* 005bc280 */
+void __cdecl wnd_obj_set_bg_tile(NativeWindow *wnd,DibSurface *tile); /* 005bc3bf */
+void __cdecl wnd_obj_set_bg_surface(NativeWindow *wnd,DibSurface *surface); /* 005bc3f1 */
+void __cdecl wnd_obj_show_raise(NativeWindow *wnd); /* 005bc40a */
+void __cdecl wnd_obj_hide(NativeWindow *wnd); /* 005bc44d */
+void __cdecl wnd_obj_move_xy(NativeWindow *wnd,int x,int y); /* 005bc4a1 */
+void __cdecl wnd_obj_set_client_size(NativeWindow *wnd,int width,int height); /* 005bc505 */
+void __cdecl wnd_obj_maximize(NativeWindow *wnd); /* 005bc5da */
+void __cdecl wnd_obj_minimize(NativeWindow *wnd); /* 005bc636 */
+void __cdecl wnd_obj_show_restored(NativeWindow *wnd); /* 005bc692 */
+void __cdecl wnd_obj_validate_rect(NativeWindow *wnd,RECT *rect); /* 005bc6bb */
+void __cdecl wnd_obj_move_to_rect(NativeWindow *wnd,int *rect); /* 005bc713 */
+void __cdecl wnd_obj_center(NativeWindow *wnd,int offset_x,int offset_y); /* 005bc763 */
+LONG __cdecl wnd_obj_client_width(NativeWindow *wnd); /* 005bc933 */
+LONG __cdecl wnd_obj_client_height(NativeWindow *wnd); /* 005bc96b */
+void __cdecl wnd_obj_get_screen_rect(NativeWindow *wnd,LPRECT rect); /* 005bc9a3 */
+int __cdecl wnd_obj_frame_width(NativeWindow *wnd); /* 005bc9d3 */
+int __cdecl wnd_obj_frame_height(NativeWindow *wnd); /* 005bca3d */
 void __cdecl gfx_get_screen_rect(iptr rect); /* 005bcaa7 */
-void __cdecl wnd_obj_get_rect_in_parent(iptr wnd,LPRECT rect); /* 005bcb85 */
-void __cdecl dib_blit_to_wnd_obj(iptr src,int src_x,int src_y,int width,int height,iptr dest,int dest_x, int dest_y); /* 005bcc11 */
-void __cdecl wnd_obj_select_palette(iptr wnd,HPALETTE palette); /* 005bcdc3 */
-void __cdecl wnd_obj_attach_menu(iptr wnd,HMENU menu); /* 005bcdfc */
-void __cdecl wnd_obj_set_icon(iptr wnd,uint icon_id); /* 005bce5f */
-void __cdecl wnd_obj_set_cursor_now(iptr wnd,i32 cursor_id,int apply_now); /* 005bcfdd */
-void __cdecl wnd_obj_set_cursor(iptr wnd,uint cursor_id); /* 005bd05f */
-void __cdecl wnd_obj_focus_and_raise(iptr wnd); /* 005bd0e7 */
-void __cdecl wnd_obj_set_focus(iptr wnd); /* 005bd120 */
-void __cdecl wnd_obj_disable_owner(iptr wnd,iptr owner); /* 005bd14c */
-void __cdecl wnd_obj_enable_owner(iptr wnd,iptr owner); /* 005bd1c5 */
-void __cdecl wnd_obj_set_caption_height(iptr wnd,i32 height); /* 005bd248 */
-void __cdecl wnd_obj_set_resize_border(iptr wnd,i32 border); /* 005bd270 */
+void __cdecl wnd_obj_get_rect_in_parent(NativeWindow *wnd,LPRECT rect); /* 005bcb85 */
+void __cdecl dib_blit_to_wnd_obj(GdiDib *src,int src_x,int src_y,int width,int height,NativeWindow *dest,int dest_x, int dest_y); /* 005bcc11 */
+void __cdecl wnd_obj_select_palette(NativeWindow *wnd,HPALETTE palette); /* 005bcdc3 */
+void __cdecl wnd_obj_attach_menu(NativeWindow *wnd,HMENU menu); /* 005bcdfc */
+void __cdecl wnd_obj_set_icon(NativeWindow *wnd,uint icon_id); /* 005bce5f */
+void __cdecl wnd_obj_set_cursor_now(NativeWindow *wnd,i32 cursor_id,int apply_now); /* 005bcfdd */
+void __cdecl wnd_obj_set_cursor(NativeWindow *wnd,uint cursor_id); /* 005bd05f */
+void __cdecl wnd_obj_focus_and_raise(NativeWindow *wnd); /* 005bd0e7 */
+void __cdecl wnd_obj_set_focus(NativeWindow *wnd); /* 005bd120 */
+void __cdecl wnd_obj_disable_owner(NativeWindow *wnd,NativeWindow *owner); /* 005bd14c */
+void __cdecl wnd_obj_enable_owner(NativeWindow *wnd,NativeWindow *owner); /* 005bd1c5 */
+void __cdecl wnd_obj_set_caption_height(NativeWindow *wnd,i32 height); /* 005bd248 */
+void __cdecl wnd_obj_set_resize_border(NativeWindow *wnd,i32 border); /* 005bd270 */
 int __cdecl input_poll_modifier(int modifier); /* 005bd39e */
-void __cdecl wnd_obj_get_cursor_pos(iptr wnd,LONG *out_x,LONG *out_y); /* 005bd48f */
+void __cdecl wnd_obj_get_cursor_pos(NativeWindow *wnd,LONG *out_x,LONG *out_y); /* 005bd48f */
 uint __cdecl input_lbutton_down(void); /* 005bd4cd */
-void __cdecl wnd_obj_set_capture(iptr wnd); /* 005bd533 */
-void __cdecl wnd_obj_release_capture(i32 wnd); /* 005bd550 */
-void __cdecl wnd_obj_set_topmost_child(int parent_obj,int child_obj); /* 005bd566, hand-written */
+void __cdecl wnd_obj_set_capture(NativeWindow *wnd); /* 005bd533 */
+void __cdecl wnd_obj_release_capture(NativeWindow *wnd); /* 005bd550 */
+void __cdecl wnd_obj_set_topmost_child(NativeWindow *parent_obj,NativeWindow *child_obj); /* 005bd566, hand-written */
 i16 __thiscall wnd_get_style_flags(WndStyleView *self); /* 005bd610 */
 DibSurface * __thiscall surface_ctor(DibSurface *self); /* 005bd630 */
 void __thiscall surface_create(DibSurface *self,int width,int height); /* 005bd65c */
@@ -2854,8 +2854,8 @@ DibSurface * __thiscall surface_dtor(DibSurface *self); /* 005bd915 */
 i32 __thiscall surface_load_gif_file(DibSurface *self,const char *filename,uint first_color,uint color_count,iptr palette); /* 005bf071 */
 i32 __thiscall surface_load_gif_resource(DibSurface *self,iptr res_id,uint first_color,uint color_count,iptr palette); /* 005bf5e1 */
 void __thiscall surface_reset_clip(DibSurface *self); /* 005c0034 */
-void __thiscall surface_set_clip(DibSurface *self,iptr rect); /* 005c0073 */
-void __thiscall surface_get_clip(DibSurface *self,iptr out_rect); /* 005c00ce */
+void __thiscall surface_set_clip(DibSurface *self,RECT *rect); /* 005c0073 */
+void __thiscall surface_get_clip(DibSurface *self,RECT *out_rect); /* 005c00ce */
 i32 __thiscall surface_alloc_dib_by_bpp(DibSurface *self,iptr rect); /* 005c0105 */
 i32 __thiscall surface_resize(DibSurface *self,iptr rect); /* 005c019d */
 void __thiscall surface_lock(DibSurface *self); /* 005c01c1 */
@@ -2864,15 +2864,15 @@ void __thiscall surface_fill_rect(DibSurface *self,iptr rect,i32 color); /* 005c
 void __thiscall surface_fill(DibSurface *self,i32 color); /* 005c041f */
 void __thiscall surface_replace_color_clip(DibSurface *self,i32 from_color,i32 to_color); /* 005c044a */
 void __thiscall surface_replace_color(DibSurface *self,iptr rect,i32 from_color,i32 to_color); /* 005c0479 */
-void __thiscall surface_blit(DibSurface *self,iptr src,iptr dest_rect,iptr src_rect); /* 005c0593 */
-void __thiscall surface_blit_to_wnd(DibSurface *self,iptr wnd,iptr src_rect,iptr dest_pt); /* 005c0979 */
+void __thiscall surface_blit(DibSurface *self,DibSurface *src,RECT *dest_rect,RECT *src_rect); /* 005c0593 */
+void __thiscall surface_blit_to_wnd(DibSurface *self,iptr wnd,RECT *src_rect,iptr dest_pt); /* 005c0979 */
 uint __thiscall surface_get_pixel(DibSurface *self,i32 x,i32 y); /* 005c0bf2 */
 void __thiscall surface_set_pixel(DibSurface *self,i32 x,i32 y,i32 color); /* 005c0c5d */
 void __thiscall surface_set_palette(DibSurface *self,iptr palette); /* 005c0cc5 */
 void __thiscall surface_apply_palette(DibSurface *self,PaletteVersionView *palette); /* 005c0d12 */
 void __thiscall surface_draw_text_cur_font(SurfaceTextCurFontView *self,const char *text,int x,int y,uint flags); /* 005c0d69 */
 void __thiscall surface_draw_text(DibSurface *self,iptr font,const char *text,iptr x,int y,uint flags); /* 005c0f57 */
-void __thiscall surface_draw_text_in_rect(DibSurface *self,iptr font,const char *text,iptr rect,uint flags); /* 005c1020 */
+void __thiscall surface_draw_text_in_rect(DibSurface *self,iptr font,const char *text,RECT *rect,uint flags); /* 005c1020 */
 void __thiscall surface_draw_text_rect(DibSurface *self,iptr font,const char *text,iptr rect,i32 flags); /* 005c1167 */
 void __thiscall surface_draw_line(DibSurface *self,u32 x1,u32 y1,u32 x2,u32 y2); /* 005c11b2 */
 i8 __cdecl gfx_set_text_color_index(i32 color_index); /* 005c19ad */
@@ -2890,7 +2890,7 @@ i32 __cdecl res_lock(i32 handle); /* 005c5560 */
 void __cdecl res_unlock(i32 handle); /* 005c5580 */
 int __cdecl dib_row_align4(int width); /* 005c55a0 */
 u32 __thiscall surface_get_pitch(DibSurface *self); /* 005c55d0 */
-u32 __thiscall surface_get_dib(DibSurface *self); /* 005c55f0 */
+GdiDib * __thiscall surface_get_dib(DibSurface *self); /* 005c55f0 */
 int __thiscall surface_next_row(DibSurface *self,iptr row_ptr); /* 005c5610 */
 uptr __thiscall surface_get_bits(DibSurface *self); /* 005c5640 */
 u32 __thiscall palette_get_version(PaletteVersionView *self); /* 005c56f0 */
@@ -2939,7 +2939,7 @@ void __cdecl hwnd_hide(HWND hwnd); /* 005c8b58 */
 HWND __cdecl hotspot_create_hwnd(int *rect,iptr ctrl); /* 005c8be1 */
 void __cdecl region_dispose(int region); /* 005c8c83 */
 i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam); /* 005c8caf, hand-written */
-int __thiscall ctrl_get_rect(void *self); /* 005c8f50 */
+int __thiscall ctrl_get_rect(Control *self); /* 005c8f50 */
 void __thiscall hotspot_fire_enter(HotspotEnterView *self,i32 arg); /* 005c8f70 */
 void __thiscall hotspot_fire_leave(HotspotLeaveView *self,i32 event_arg); /* 005c8fb0 */
 void __thiscall hotspot_fire_click(HotspotClickView *self,i32 event_arg); /* 005c8ff0 */
@@ -2950,8 +2950,8 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd); /* 005c90ca */
 void __cdecl ctrl_parse_hotkey(iptr ctrl,const char *text); /* 005c9222 */
 LRESULT __stdcall ctrl_default_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam); /* 005c9307 */
 int __cdecl ctrl_destroy_hwnd(iptr ctrl); /* 005c944b */
-i32 * __cdecl ctrl_init_block(HWND hwnd,iptr owner); /* 005c9499 */
-LONG __cdecl wnd_from_hwnd(HWND hwnd); /* 005c9563 */
+ControlBlock * __cdecl ctrl_init_block(HWND hwnd,iptr owner); /* 005c9499 */
+ControlBlock * __cdecl wnd_from_hwnd(HWND hwnd); /* 005c9563 */
 void __cdecl ctrl_hwnd_free_block(HWND hwnd); /* 005c9595 */
 void __cdecl wnd_redraw_client(HWND hwnd); /* 005c96cc */
 void __thiscall control_set_hwnd(ControlHwndSetView *self,u32 hwnd); /* 005c9710 */
@@ -2973,7 +2973,7 @@ void __cdecl default_draw_font_reg_dtor(void); /* 005cbf04 */
 void __cdecl default_draw_font_static_dtor(void); /* 005cbf21 */
 void __cdecl checkbox_calc_rect(char *label,int x,int y,iptr out_rect,GameFont *font); /* 005cbf40 */
 void __cdecl checkbox_calc_rect_fixed(int x,int y,int width,iptr out_rect,GameFont *font); /* 005cc035 */
-HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible); /* 005cc0f0 */
+HWND __cdecl checkbox_create_hwnd(RECT *rect,iptr ctrl,char *label,int visible); /* 005cc0f0 */
 void __cdecl checkbox_destroy_hwnd(int hwnd); /* 005cc248 */
 void __cdecl checkbox_toggle_by_hotkey(HWND hwnd); /* 005cc274 */
 i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam); /* 005cc320 */
@@ -3012,10 +3012,10 @@ bool __thiscall sprite_has_data(Sprite *self); /* 005cf36f */
 void __thiscall sprite_set_origin(SpriteOriginSetView *self,u32 x,u32 y); /* 005cf39b */
 void __thiscall sprite_get_origin(SpriteOriginGetView *self,iptr out_x,iptr out_y); /* 005cf3c5 */
 void __thiscall sprite_replace_color(Sprite *self,i32 old_color,i32 new_color); /* 005cf467 */
-int __thiscall sprite_encode_from_surface(Sprite *self,iptr surface,int key_mode,iptr src_rect); /* 005cf64c */
+int __thiscall sprite_encode_from_surface(Sprite *self,iptr surface,int key_mode,RECT *src_rect); /* 005cf64c */
 int * __thiscall sprite_blit_to_surface(Sprite *self,int *out_rect,DibSurface *surface,int key_arg,int x, int y); /* 005d056c */
 int * __thiscall sprite_blit_silhouette_to_surface(Sprite *self,int *out_rect,DibSurface *surface,int key_arg,int x, int y,i32 color); /* 005d10cd */
-void __thiscall sprite_merge_at(Sprite *self,iptr src,Sprite *dst,i32 unused,int dx, int dy); /* 005d1612 */
+void __thiscall sprite_merge_at(Sprite *self,Sprite *src,Sprite *dst,i32 unused,int dx, int dy); /* 005d1612 */
 void __thiscall sprite_clear_fields(Sprite *self); /* 005d1b38 */
 int __cdecl gfx_scale_length(int length,int start,int round_up); /* 005d1d00 */
 i32 __cdecl game_timer_create(iptr callback,i32 interval_ms,i32 repeat_count); /* 005d1f50 */
@@ -3247,13 +3247,13 @@ i32 __cdecl FUN_005e0863(void); /* 005e0863, hand-written */
 iptr __cdecl menu_hmenu_parse_items(HMENU hmenu,iptr spec); /* 005e0ce0 */
 HMENU __cdecl menu_hmenu_build_from_spec(char *spec); /* 005e0f2a */
 void __cdecl menu_hmenu_destroy(HMENU hmenu); /* 005e10c7 */
-void __cdecl menu_redraw_bar(iptr wnd); /* 005e10fb */
+void __cdecl menu_redraw_bar(NativeWindow *wnd); /* 005e10fb */
 BOOL __cdecl menu_hmenu_enable_item(HMENU hmenu,int menu_pos,int item_pos,i32 enable); /* 005e1118 */
 void __cdecl menu_hmenu_check_item(HMENU hmenu,int menu_pos,int item_pos,i32 checked); /* 005e11be */
 void __cdecl menu_hmenu_delete_item(HMENU hmenu,int menu_pos,int item_pos); /* 005e1226 */
 void __cdecl menu_hmenu_insert_item(HMENU hmenu,int menu_pos,int item_pos,LPCSTR text); /* 005e128c */
 void __cdecl menu_hmenu_set_item_text(HMENU hmenu,int menu_pos,int item_pos,LPCSTR text); /* 005e14c8 */
-void __cdecl wnd_install_paint_proc(iptr surface,iptr wnd); /* 005e1880 */
+void __cdecl wnd_install_paint_proc(iptr surface,NativeWindow *wnd); /* 005e1880 */
 i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam); /* 005e18ff */
 void __cdecl avi_update_current_frame(void); /* 005e1c70 */
 int __cdecl avi_open_file(AviPlayer *player,const char *filename); /* 005e1c8e */
@@ -3270,22 +3270,22 @@ void __cdecl avi_apply_palette(AviPlayer *player,GamePalette *palette); /* 005e3
 void __cdecl avi_restart_decompress(AviPlayer *player,int transparent); /* 005e32b2 */
 void __thiscall avi_player_call_end_callback(AviPlayerEndCbCallView *self); /* 005e3550 */
 void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *self); /* 005e3580 */
-i32 * __cdecl dib_create(iptr rect); /* 005e35b0 */
-i32 __cdecl dib_destroy(iptr dib); /* 005e388f */
-i32 __cdecl dib_get_stride(iptr dib); /* 005e392a */
-uint __cdecl dib_is_top_down(iptr dib); /* 005e395a */
-void __cdecl dib_flip_vertical(iptr dib); /* 005e3988 */
-i32 __cdecl dib_get_bits(iptr dib); /* 005e3a81 */
-i32 __cdecl dib_unlock_bits(int dib); /* 005e3aa8 */
-void __cdecl dib_set_color_table_range(iptr dib,GamePalette *palette,UINT first,UINT count); /* 005e3b4c */
-void __cdecl dib_set_palette(iptr dib,iptr palette); /* 005e3bdc */
-void __cdecl dib_draw_text_at(iptr dib,int font,char *text,int x,int y,iptr clip_rect, uint align); /* 005e3cb4 */
-void __cdecl dib_draw_text_rect(iptr dib,int font,char *text,iptr rect,uint align); /* 005e3eca */
-void __cdecl dib_draw_text_wrap(iptr dib,int font,char *text,LPRECT rect,uint align); /* 005e3feb */
-void __cdecl dib_draw_line(iptr dib,int x1,int y1,int x2,int y2); /* 005e40fb */
-i32 * __cdecl dib_create16(iptr rect); /* 005e41ba */
-i32 * __cdecl dib_create24(iptr rect); /* 005e43c5 */
-i32 * __cdecl dib_create32(iptr rect); /* 005e45b5 */
+GdiDib * __cdecl dib_create(RECT *rect); /* 005e35b0 */
+i32 __cdecl dib_destroy(GdiDib *dib); /* 005e388f */
+i32 __cdecl dib_get_stride(GdiDib *dib); /* 005e392a */
+uint __cdecl dib_is_top_down(GdiDib *dib); /* 005e395a */
+void __cdecl dib_flip_vertical(GdiDib *dib); /* 005e3988 */
+i32 __cdecl dib_get_bits(GdiDib *dib); /* 005e3a81 */
+i32 __cdecl dib_unlock_bits(GdiDib *dib); /* 005e3aa8 */
+void __cdecl dib_set_color_table_range(GdiDib *dib,GamePalette *palette,UINT first,UINT count); /* 005e3b4c */
+void __cdecl dib_set_palette(GdiDib *dib,iptr palette); /* 005e3bdc */
+void __cdecl dib_draw_text_at(GdiDib *dib,int font,char *text,int x,int y,iptr clip_rect, uint align); /* 005e3cb4 */
+void __cdecl dib_draw_text_rect(GdiDib *dib,int font,char *text,iptr rect,uint align); /* 005e3eca */
+void __cdecl dib_draw_text_wrap(GdiDib *dib,int font,char *text,LPRECT rect,uint align); /* 005e3feb */
+void __cdecl dib_draw_line(GdiDib *dib,int x1,int y1,int x2,int y2); /* 005e40fb */
+GdiDib * __cdecl dib_create16(RECT *rect); /* 005e41ba */
+GdiDib * __cdecl dib_create24(RECT *rect); /* 005e43c5 */
+GdiDib * __cdecl dib_create32(RECT *rect); /* 005e45b5 */
 i32 __cdecl gif_lzw_decode(iptr src,uint code_base,i32 min_code_size,uint pitch,int width,uint height, iptr dest); /* 005e4d60 */
 void __cdecl dib_fill_rect8(iptr bits,uint color,int x,int y,uint width,int height,int pitch, int surf_height); /* 005e4e60 */
 void __cdecl gfx_copy_pixels(int src_bits,int dst_bits,int src_x,int src_y,int dst_x,int dst_y,uint width, int height,int src_height,int dst_height,int src_pitch,int dst_pitch); /* 005e4f9b */
@@ -3298,7 +3298,7 @@ void __thiscall ddsurf_dtor(void *self); /* 005e5ee0 */
 i32 __cdecl ddraw_init(void); /* 005e89d0, hand-written */
 uint __cdecl ddsurf_iface_can_flip(int *surface); /* 005ea578, hand-written */
 uint __cdecl ddraw_get_vblank_status(void); /* 005ea677, hand-written */
-void __cdecl wnd_install_frame_proc(iptr owner,iptr wnd); /* 005ea7a0 */
+void __cdecl wnd_install_frame_proc(iptr owner,NativeWindow *wnd); /* 005ea7a0 */
 i32 __cdecl ctrl_list_find_by_hwnd(int hwnd,ControlNextView *list); /* 005ea7d7 */
 HWND __cdecl hwnd_next_sibling_wrap(HWND hwnd); /* 005ea825 */
 HWND __cdecl hwnd_prev_sibling_wrap(HWND hwnd); /* 005ea87c */
@@ -3308,8 +3308,8 @@ i32 __cdecl ctrl_list_find_type11_hwnd(ControlNextView *list); /* 005eac6d */
 LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam); /* 005eacc0, hand-written */
 void __thiscall edit_fire_maxtext_callback(EditMaxTextView *self); /* 005eb2f0 */
 void __thiscall edit_fire_change_callback(EditChangeView *self); /* 005eb330 */
-void __cdecl wnd_set_owner_ptr(iptr owner,iptr wnd); /* 005eb370 */
-void __cdecl wnd_install_command_proc(iptr owner,iptr wnd); /* 005eb393 */
+void __cdecl wnd_set_owner_ptr(iptr owner,NativeWindow *wnd); /* 005eb370 */
+void __cdecl wnd_install_command_proc(iptr owner,NativeWindow *wnd); /* 005eb393 */
 uint __cdecl input_map_vkey(uint vkey); /* 005eb3ed */
 uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam); /* 005eb447, hand-written */
 void __cdecl wnd_on_menu_command(HWND hwnd,i32 cmd_id); /* 005ec1a1 */
@@ -3375,13 +3375,13 @@ i32 __cdecl ddwin_destroy_native(i32 *ddwin); /* 005ef5db */
 LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam); /* 005ef6cb */
 void __thiscall ddwin_call_activate_app(DDWindowActivateView *self,i32 active); /* 005efd70 */
 void __thiscall ddwin_dtor(void *self); /* 005efeb0, hand-written */
-void __thiscall ddwin_remove_all_controls(void *self); /* 005f029e */
-void __thiscall ddwin_deactivate_controls(void *self); /* 005f0342 */
+void __thiscall ddwin_remove_all_controls(DDWindow *self); /* 005f029e */
+void __thiscall ddwin_deactivate_controls(DDWindow *self); /* 005f0342 */
 i8 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *self,int msg,int x,int y); /* 005f0391 */
 void __thiscall ptrlist_dtor(void *self); /* 005f04c0 */
 i32 __thiscall ptrlist_first(PtrList *self); /* 005f0590 */
 i32 __thiscall ptrlist_next(PtrList *self); /* 005f05d0 */
-int __thiscall ddctrl_get_rect(void *self); /* 005f0620 */
+int __thiscall ddctrl_get_rect(DDControl *self); /* 005f0620 */
 void __thiscall ptrlist_node_dtor(void *self); /* 005f0676 */
 void __thiscall ptrlist_node_set_next(PtrListNodeNextSetView *self,iptr next); /* 005f068c */
 void __thiscall ptrlist_node_set_prev(PtrListNodePrevSetView *self,iptr prev); /* 005f06ad */
@@ -3400,7 +3400,7 @@ i32 __thiscall ddctrl_dispatch_msg(DDControl *self,int msg,int x,int y); /* 005f
 uptr __thiscall ddctrl_get_parent_window(DDControlParentView *self); /* 005f1514 */
 void __thiscall ddctrl_on_paint_default(DDControlParentView *self,i32 paint_arg); /* 005f15a9 */
 void __thiscall ddctrl_activate(DDControlActivateView *self); /* 005f1622 */
-void __thiscall ddctrl_deactivate(void *self); /* 005f1683 */
+void __thiscall ddctrl_deactivate(DDControl *self); /* 005f1683 */
 void __thiscall ddctrl_on_lbuttondown(DDControlActivateView *self,i32 x,i32 y); /* 005f179c */
 void __thiscall ddctrl_on_rbuttondown_nop(void *self,i32 x,i32 y); /* 005f17bc */
 void __thiscall ddctrl_on_lbuttonup(DdctrlOnLbuttonupView *self,i32 x,i32 y); /* 005f17d4 */
@@ -3411,7 +3411,7 @@ void __thiscall ddctrl_on_msg_fff0_nop(void *self,i32 x,i32 y); /* 005f18c8 */
 void __thiscall ddctrl_on_keydown_nop(void *self,i32 key); /* 005f18e0 */
 void __thiscall ddctrl_on_char_nop(void *self,i32 ch); /* 005f18f8 */
 void __thiscall ddctrl_on_set_active_nop(void *self,i32 active); /* 005f1910 */
-void __thiscall ddctrl_deactivate_children(void *self); /* 005f19a6 */
+void __thiscall ddctrl_deactivate_children(DDControl *self); /* 005f19a6 */
 i8 __thiscall ddctrl_dispatch_to_children(DDControl *self,int msg,int x,int y); /* 005f1a40 */
 int _atexit(void (*fn)(void)); /* 005f1c40, C runtime: src/native/crt.cpp */
 /* ___CxxLongjmpUnwind@4: not a C identifier */

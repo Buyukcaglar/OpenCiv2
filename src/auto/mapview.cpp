@@ -218,11 +218,11 @@ void __cdecl minimap_draw_view_rect(void)
     minimap_tile_to_screen(map_views_block.mapview_end_x,map_views_block.mapview_end_y,(iptr)&right,(iptr)&bottom);
     if (left < right) {
       rect_set((iptr)rect,left,top,right + 1,bottom + 1);
-      gfx_target_frame_rect((iptr)rect,0x29);
+      gfx_target_frame_rect((RECT *)rect,0x29);
     }
     else {
       rect_set((iptr)rect,right,top,left + 1,bottom + 1);
-      gfx_target_frame_rect((iptr)rect,0x29);
+      gfx_target_frame_rect((RECT *)rect,0x29);
     }
   }
   return;
@@ -455,9 +455,9 @@ void __cdecl minimap_window_create(void)
   create_arg9 = 0;
   create_arg8 = 0;
   create_arg7 = 6;
-  wnd_height = rect_height((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
+  wnd_height = rect_height((RECT *)&minimap_wnd_rect_block.minimap_wnd_rect);
   wnd_height -= sys_dlgframe_h2;
-  wnd_width = rect_width((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
+  wnd_width = rect_width((RECT *)&minimap_wnd_rect_block.minimap_wnd_rect);
   wnd_width -= sys_dlgframe_w2;
   wnd_style = 6;
   wnd_x = minimap_wnd_rect_block.minimap_wnd_rect;
@@ -893,7 +893,7 @@ void __cdecl mapview_calc_rect(void)
   int top;
   
   client_w = wnd_client_width((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-  minimap_w = rect_width((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
+  minimap_w = rect_width((RECT *)&minimap_wnd_rect_block.minimap_wnd_rect);
   height2 = wnd_client_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
   height2++;
   top = 0;
@@ -1091,9 +1091,9 @@ void __thiscall mapview_create(ViewWindow *self)
   if ((self->rates_civ == 0) || ((short)self->max_rate_value != 0)) {
     left = *(int *)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10);
     top = *(int *)(((i8 *)&map_view_saved_rects_block.map_view_saved_rect_tops) + self->rates_civ * 0x10);
-    width2 = rect_width((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10));
+    width2 = rect_width((RECT *)(iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10));
     width2 -= sys_dlgframe_w2;
-    height2 = rect_height((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10));
+    height2 = rect_height((RECT *)(iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10));
     height2 -= sys_dlgframe_h2;
   }
   else {
@@ -1343,14 +1343,14 @@ void __cdecl mapview_draw_tile_number(i32 x,i32 y,int number,i32 color)
     gfx_set_text_color_index(10);
     rect_offset((iptr)rect,0xffffffff,0xffffffff);
     surface_draw_text_in_rect
-              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(iptr)rect,0);
+              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(RECT *)rect,0);
     rect_offset((iptr)rect,3,3);
     surface_draw_text_in_rect
-              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(iptr)rect,0);
+              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(RECT *)rect,0);
     rect_offset((iptr)rect,0xfffffffe,0xfffffffe);
     gfx_set_text_color_index(color);
     surface_draw_text_in_rect
-              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(iptr)rect,0);
+              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(RECT *)rect,0);
     wnd_blit_surface_rect((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)rect);
   }
   return;
@@ -2371,7 +2371,7 @@ mapview_draw_tile_radius
   i8 clip_rect[16];
   
   mapview_tile_radius_rect(self,center_x,center_y,radius,(iptr)clip_rect);
-  surface_set_clip((DibSurface *)self,(iptr)clip_rect);
+  surface_set_clip((DibSurface *)self,(RECT *)clip_rect);
   extent = radius * 2 + 2;
   for (dy = -extent; (int)dy <= (int)extent; dy++) {
     if ((int)dy < 1) {
@@ -2398,7 +2398,7 @@ mapview_draw_tile_radius
     }
   }
   mapview_draw_city_names(self,center_x,center_y,radius);
-  surface_set_clip((DibSurface *)self,(iptr)&self->client_rect);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->client_rect);
   return;
 }
 

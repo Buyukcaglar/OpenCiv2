@@ -636,7 +636,7 @@ void __cdecl tribe_editor_on_ok(void)
 
 {
   iptr ok;
-  iptr wnd;
+  NativeWindow *wnd;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -655,7 +655,7 @@ void __cdecl tribe_editor_on_ok(void)
     lpCaption = str_file_i_o_error_2;
     lpText = msg;
     wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-    MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
+    MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
   }
   editor_text_dlg_wnd_block.editor_running = 0;
   wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -1012,7 +1012,7 @@ void __thiscall tribe_editor_paint(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,
@@ -1713,7 +1713,7 @@ void __cdecl editor_text_dlg_redraw(void)
 
 {
   frame_wnd_draw_caption((FrameWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd));
-  gfx_fill_rect((iptr)&editor_text_dlg_wnd_block.editor_text_dlg_wnd,(iptr)&editor_text_dlg_wnd_block.editor_text_fill_rect,0x1d);
+  gfx_fill_rect((iptr)&editor_text_dlg_wnd_block.editor_text_dlg_wnd,(RECT *)&editor_text_dlg_wnd_block.editor_text_fill_rect,0x1d);
   text_set_surface((iptr)&editor_text_dlg_wnd_block.editor_text_dlg_wnd);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);

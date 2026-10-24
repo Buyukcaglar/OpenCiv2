@@ -152,7 +152,7 @@ void __cdecl spaceship_wnd_draw_title(iptr civ)
   gfx_set_text_color_index(0xfa);
   SetRect(&rect,0,0,0x27f,0x28);
   surface_draw_text_in_rect
-            ((DibSurface *)(spaceship_launch_sprite_xs_block.spaceship_wnd + 0xb8),spaceship_launch_sprite_xs_block.spaceship_wnd + 0x8c4,(const char *)&map_views_block.text_buffer,(iptr)&rect,
+            ((DibSurface *)(spaceship_launch_sprite_xs_block.spaceship_wnd + 0xb8),spaceship_launch_sprite_xs_block.spaceship_wnd + 0x8c4,(const char *)&map_views_block.text_buffer,&rect,
              0);
   win_flush_pending_msgs();
   return;
@@ -766,7 +766,7 @@ uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *self,int allow_skip)
         gfx_set_text_color_index(10);
         surface_draw_text_in_rect
                   ((DibSurface *)&self->control_list,(iptr)(self->medium_font),
-                   (const char *)self->success_text,(iptr)(self->status_line_rect),0);
+                   (const char *)self->success_text,(RECT *)(iptr)(self->status_line_rect),0);
         rect_offset((iptr)(self->status_line_rect),0xffffffff,0xffffffff);
         if (unit_sound_editor_window_block.spaceship_success_pct < 0x28) {
           gfx_set_text_color_index(0xf9);
@@ -779,7 +779,7 @@ uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *self,int allow_skip)
         }
         surface_draw_text_in_rect
                   ((DibSurface *)&self->control_list,(iptr)(self->medium_font),
-                   (const char *)self->success_text,(iptr)(self->status_line_rect),0);
+                   (const char *)self->success_text,(RECT *)(iptr)(self->status_line_rect),0);
         wnd_blit_surface_rect
                   ((DibSurface *)&self->control_list,(iptr)(self->status_line_rect));
         wnd_flush_paint();
@@ -872,12 +872,12 @@ void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *self)
   gfx_set_text_color_index(10);
   surface_draw_text_in_rect
             ((DibSurface *)&self->control_list,(iptr)(self->medium_font),
-             (const char *)self->success_text,(iptr)(self->status_line_rect),0);
+             (const char *)self->success_text,(RECT *)(iptr)(self->status_line_rect),0);
   rect_offset((iptr)(self->status_line_rect),0xffffffff,0xffffffff);
   gfx_set_text_color_index(0xfa);
   surface_draw_text_in_rect
             ((DibSurface *)&self->control_list,(iptr)(self->medium_font),
-             (const char *)self->success_text,(iptr)(self->status_line_rect),0);
+             (const char *)self->success_text,(RECT *)(iptr)(self->status_line_rect),0);
   wnd_blit_surface_rect((DibSurface *)&self->control_list,(iptr)(self->status_line_rect));
   sprite_draw
             ((Sprite *)self->ship_image_sprite,(iptr)clip_rect,(iptr)&self->control_list,0xaf,99);

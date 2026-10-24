@@ -254,7 +254,7 @@ i32 __cdecl memblock_alloc_checked(iptr block,uint size)
 {
   LPCSTR lpCaption;
   LPCSTR lpText;
-  iptr wnd;
+  NativeWindow *wnd;
   i32 result;
   UINT uType;
   
@@ -263,7 +263,7 @@ i32 __cdecl memblock_alloc_checked(iptr block,uint size)
     lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
     lpText = (LPCSTR)label_string(label_string_ids[0x23a]);
     wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-    MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
+    MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     result = 0;
   }
   else {

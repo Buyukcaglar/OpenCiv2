@@ -698,6 +698,152 @@ static_assert(sizeof(CasualtyEntry) == 0x22, "");
 static_assert(sizeof(NetStackedDraw) == 0x40, "");
 #endif
 
+
+/* Windows (window.cpp). */
+/* The native window record (0x4c bytes, a locked mem_handle block) that
+ * wnd_obj_create makes for a window object: WndBase.native_wnd,
+ * wnd_get_window(). */
+typedef struct NativeWindow {
+    i32 mem_handle;                 /* 0x00 handle of this record */
+    HWND hwnd;                      /* 0x04 */
+    HDC hdc;                        /* 0x08 GetDC(hwnd), kept for the window's life */
+    HWND active_child;              /* 0x0c the attached child drawn active (WM_NCACTIVATE) */
+    HWND topmost_child;             /* 0x10 the attached child kept above its siblings */
+    HBRUSH bg_brush;                /* 0x14 background colour */
+    HPALETTE palette;               /* 0x18 selected into hdc */
+    HCURSOR cursor;                 /* 0x1c */
+    HICON icon;                     /* 0x20 drawn when minimized */
+    struct DibSurface *bg_tile;     /* 0x24 tiled background */
+    i32 field_28;                   /* 0x28 */
+    struct DibSurface *bg_surface;  /* 0x2c centred background */
+    i32 flag_400;                   /* 0x30 created with flags & 0x400 */
+    i32 flag_1000;                  /* 0x34 created with flags & 0x1000 */
+    i32 caption_height;             /* 0x38 */
+    i32 resize_border;              /* 0x3c */
+    i32 field_40;                   /* 0x40 set to 8 */
+    i32 destroyed;                  /* 0x44 WM_DESTROY seen: hwnd is gone */
+    union { u32 flags; u8 flags_bytes[4]; };  /* 0x48 wnd_obj_create flags
+                                       (0x200 attached child, 0x2000 sizing ...) */
+} NativeWindow;
+#ifdef __cplusplus
+static_assert(sizeof(NativeWindow) == 0x4c, "");
+#endif
+
+
+/* Dialogs (window.cpp): the lists a dialog builds, each node allocated from
+ * the dialog's string pool (memblock_alloc). */
+/* A choice of a dialog's option list (0x18 bytes; Dialog.option_list,
+ * dialog_add_option); a list sorted by text when style_flags & 0x800000. */
+typedef struct DialogOption {
+    union { u32 flags; u8 flags_byte; };  /* 0x00 1 disabled (also an empty text), 4 checked */
+    i32 id;                         /* 0x04 */
+    char *text;                     /* 0x08 */
+    i32 group;                      /* 0x0c list pane (dialog_add_option data); compared with cur_pane */
+    struct DialogOption *next;      /* 0x10 */
+    struct DialogOption *prev;      /* 0x14 */
+} DialogOption;
+/* A picture of a dialog's sprite list (0x14 bytes; Dialog.sprite_list,
+ * dialog_add_sprite). */
+typedef struct DialogSprite {
+    i32 id;                         /* 0x00 */
+    i32 field_04;                   /* 0x04 */
+    char *label;                    /* 0x08 0: none */
+    struct Sprite *sprite;          /* 0x0c */
+    struct DialogSprite *next;      /* 0x10 */
+} DialogSprite;
+/* A text field of a dialog (0x1c bytes; Dialog.edit_field_list,
+ * dialog_add_edit_field). */
+typedef struct DialogEditField {
+    i32 field_00;                   /* 0x00 */
+    i32 width;                      /* 0x04 pixels */
+    i32 max_len;                    /* 0x08 */
+    i32 index;                      /* 0x0c its edit control */
+    char *label;                    /* 0x10 */
+    char *buffer;                   /* 0x14 the text (0x100 bytes) */
+    struct DialogEditField *next;   /* 0x18 */
+} DialogEditField;
+/* A line of a dialog's text (0x20 bytes; Dialog.line_list, dialog_add_line). */
+typedef struct DialogLine {
+    i32 number;                     /* 0x00 1, 2, ... */
+    union { u32 flags; u8 flags_byte; };  /* 0x04 1 the text began with ^^, 2 with ^ (centred) */
+    char *text;                     /* 0x08 */
+    i32 capacity;                   /* 0x0c bytes of text */
+    i32 x;                          /* 0x10 */
+    i32 y;                          /* 0x14 */
+    i32 color;                      /* 0x18 */
+    struct DialogLine *next;        /* 0x1c */
+} DialogLine;
+/* A menu of a GameMenu, or an item of a menu (0x1c bytes; GameMenu.menus,
+ * menu_add_menu / menu_add_item). */
+typedef struct MenuNode {
+    char *text;                     /* 0x00 */
+    i32 id;                         /* 0x04 */
+    union { u32 flags; u8 flags_byte; };  /* 0x08 1 disabled, 2 hidden, 4 checked */
+    i32 field_0c;                   /* 0x0c */
+    struct MenuNode *next;          /* 0x10 */
+    struct MenuNode *prev;          /* 0x14 */
+    struct MenuNode *link;          /* 0x18 a menu: its first item; an item: its menu */
+} MenuNode;
+#ifdef __cplusplus
+static_assert(sizeof(DialogOption) == 0x18, "");
+static_assert(sizeof(DialogSprite) == 0x14, "");
+static_assert(sizeof(DialogEditField) == 0x1c, "");
+static_assert(sizeof(DialogLine) == 0x20, "");
+static_assert(sizeof(MenuNode) == 0x1c, "");
+#endif
+
+
+/* Graphics (graphics.cpp). */
+/* A GDI DIB section and its memory DC (0x28 bytes, a locked mem_handle block;
+ * dib_create*; DibSurface.dib). */
+typedef struct GdiDib {
+    i32 mem_handle;                 /* 0x00 handle of this record */
+    HDC hdc;                        /* 0x04 memory DC the bitmap is selected into */
+    HGDIOBJ palette;                /* 0x08 deleted with the DIB when set */
+    HBITMAP bitmap;                 /* 0x0c the DIB section */
+    HGDIOBJ old_bitmap;             /* 0x10 hdc's bitmap before */
+    i32 top_down;                   /* 0x14 1: row 0 at the top */
+    i32 width;                      /* 0x18 */
+    i32 height;                     /* 0x1c */
+    i32 stride;                     /* 0x20 bytes per row */
+    i32 bits;                       /* 0x24 the pixels */
+} GdiDib;
+#ifdef __cplusplus
+static_assert(sizeof(GdiDib) == 0x28, "");
+#endif
+
+
+/* Controls (controls.cpp). */
+/* The record a control's HWND keeps in its window long 0 (0x30 bytes, a locked
+ * mem_handle block; ctrl_init_block, wnd_from_hwnd). */
+typedef struct ControlBlock {
+    i32 mem_handle;                 /* 0x00 handle of this record */
+    iptr owner;                     /* 0x04 the Control */
+    i32 shared_bitmaps;             /* 0x08 nonzero: the bitmaps are not deleted with it */
+    HBITMAP bitmaps[3];             /* 0x0c a button's faces */
+    i32 pressed;                    /* 0x18 drawn pressed / checked */
+    i32 tracking;                   /* 0x1c the mouse is captured */
+    i32 field_20;                   /* 0x20 */
+    iptr data;                      /* 0x24 kind 2: an owned buffer, kind 3: an i32 * cleared on destroy */
+    i32 field_28;                   /* 0x28 */
+    i32 kind;                       /* 0x2c */
+} ControlBlock;
+/* An item of a radio group (0xa4 bytes; RadioGroup.items). */
+typedef struct RadioItem {
+    HWND hwnd;                      /* 0x00 */
+    RECT rect;                      /* 0x04 */
+    i32 index;                      /* 0x14 */
+    i32 enabled;                    /* 0x18 */
+    char label[128];                /* 0x1c */
+    char hotkey;                    /* 0x9c */
+    u8 pad_9d[3];
+    i32 hotkey_pos;                 /* 0xa0 index of the hotkey in label, -1: none */
+} RadioItem;
+#ifdef __cplusplus
+static_assert(sizeof(ControlBlock) == 0x30, "");
+static_assert(sizeof(RadioItem) == 0xa4, "");
+#endif
+
 #pragma pack(pop)
 
 #endif

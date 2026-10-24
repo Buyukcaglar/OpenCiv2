@@ -254,7 +254,7 @@ void __cdecl tech_editor_on_ok(void)
   iptr errors;
   HWND hWnd;
   iptr ok;
-  int window;
+  NativeWindow *window;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -273,7 +273,7 @@ void __cdecl tech_editor_on_ok(void)
       lpCaption = str_file_i_o_error;
       lpText = msg;
       window = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(window + 4),lpText,lpCaption,uType);
+      MessageBoxA(window->hwnd,lpText,lpCaption,uType);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
     wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -632,7 +632,7 @@ void __thiscall tech_editor_paint(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,
@@ -1600,7 +1600,7 @@ void __cdecl science_advisor_draw(void)
     cur_y += line_height;
     draw_y = cur_y + 9;
     bar_flag = 1;
-    value = rect_width((iptr)&advisor_window_block.advisor_client_rect);
+    value = rect_width((RECT *)&advisor_window_block.advisor_client_rect);
     value -= 10;
     bar_height = 0xe;
     max_value = civ_research_cost(civ);
@@ -1609,7 +1609,7 @@ void __cdecl science_advisor_draw(void)
     box_bottom = cur_y + 0x20;
     cur_y = box_bottom;
     rect_set((iptr)frame_rect2,advisor_window_block.advisor_client_rect + 2,box_top,advisor_window_block.advisor_client_right - 2,box_bottom);
-    gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(iptr)frame_rect2,0x29);
+    gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(RECT *)frame_rect2,0x29);
     cur_y += 6;
   }
   research_cost = civ_research_cost(civ);
@@ -1767,7 +1767,7 @@ void __cdecl science_advisor_show(iptr civ)
   advisor_window_block.advisor_report_civ = civ;
   rect_set_xywh((iptr)button_rect,2,0,0x129,0x18);
   client_y = advisor_window_block.advisor_client_y;
-  rect_h = rect_height((iptr)button_rect);
+  rect_h = rect_height((RECT *)button_rect);
   rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)button_rect,299,0);
   label = (iptr)label_string(label_string_ids[0x147]);
@@ -6121,8 +6121,8 @@ i32 __cdecl rules_write_sections(void)
       uType = 0x40;
       lpCaption = str_warning_2;
       line_ptr = str_saving_changes_in_file_rules_bak;
-      rc = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(rc + 4),line_ptr,lpCaption,uType);
+      rc = (int)wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+      MessageBoxA(((NativeWindow *)rc)->hwnd,line_ptr,lpCaption,uType);
     }
     else {
       __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
@@ -7447,7 +7447,7 @@ void __cdecl cosmic_editor_ok_clicked(void)
 
 {
   iptr ok;
-  iptr wnd;
+  NativeWindow *wnd;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -7461,7 +7461,7 @@ void __cdecl cosmic_editor_ok_clicked(void)
     lpCaption = str_file_i_o_error_6;
     lpText = message;
     wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-    MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
+    MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
   }
   editor_text_dlg_wnd_block.editor_running = 0;
   wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -7501,7 +7501,7 @@ void __thiscall cosmic_editor_draw_bg(FrameWindow *self)
 
 {
   frame_wnd_draw_caption(self);
-  gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1a);
+  gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1a);
   text_set_surface((iptr)self);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);

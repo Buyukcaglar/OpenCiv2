@@ -84,7 +84,7 @@ cleanup_return:
       snd_play_effect(0x6a,0,0,0);
       setup_picwnd_close(((ViewWindow *)((i8 *)&setup_picwnd_block.setup_picwnd)));
     } while (enemies_choice < 0);
-    if ((int)dlg.result_extra == 0) {
+    if (dlg.result_extra == 0) {
       prefs_game_rules_block.prefs_enemies_choice = (short)enemies_choice;
       game.num_enemies = 6 - (char)enemies_choice;
     }
@@ -103,7 +103,7 @@ cleanup_return:
     snd_play_effect(0x6a,0,0,0);
     setup_picwnd_close(((ViewWindow *)((i8 *)&setup_picwnd_block.setup_picwnd)));
   } while (choice < 0);
-  if ((int)dlg.result_extra == 0) {
+  if (dlg.result_extra == 0) {
     barb_level = (char)choice;
     game.barbarian_activity = barb_level;
     prefs_game_rules_block.prefs_barbarity = (short)choice;
@@ -318,7 +318,7 @@ leaders_setup:
       crt_strcpy(&civ_names[game.player_civ].leader_name[0],label_text);
       leaders[civs[game.player_civ].tribe].leader_name =
            -leaders[civs[game.player_civ].tribe].leader_name;
-      if ((int)dlg.result_extra == 0) {
+      if (dlg.result_extra == 0) {
         setup_picwnd_show(((ViewWindow *)((i8 *)&setup_picwnd_block.setup_picwnd)),2,6,7);
         dialog_load_text_section(&dlg,(const char *)&str_game_7,(const char *)&str_name,0x17,
                            (iptr)&civ_names[game.player_civ].leader_name[0],0,0,0,1);
@@ -2120,7 +2120,7 @@ production_complete:
         input_flush_events();
         snd_play_effect(0x30,0,0,0);
         dlg_show_modal(&dlg,0);
-        if ((int)dlg.result_extra != 0) {
+        if (dlg.result_extra != 0) {
           casualty_timeline_show(human_civ[0]);
         }
       }

@@ -5114,7 +5114,7 @@ void __cdecl unit_sound_editor_redraw(void)
   i8 rect[16];
   
   frame_wnd_draw_caption((FrameWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window));
-  gfx_fill_rect((iptr)&unit_sound_editor_window_block.unit_sound_editor_window,(iptr)&unit_sound_editor_window_block.unit_sound_editor_fill_rect,0x1d);
+  gfx_fill_rect((iptr)&unit_sound_editor_window_block.unit_sound_editor_window,(RECT *)&unit_sound_editor_window_block.unit_sound_editor_fill_rect,0x1d);
   text_set_surface((iptr)&unit_sound_editor_window_block.unit_sound_editor_window);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(10,10,0,0);
@@ -5128,7 +5128,7 @@ void __cdecl unit_sound_editor_redraw(void)
     left = ((int)(left + (left >> 0x1f & 3U)) >> 2) + ((int)(col_width + (width_adj >> 0x1f & 3U)) >> 2)
             + unit_sound_editor_window_block.unit_sound_editor_client_x;
     rect_set_xywh((iptr)rect,left,top,col_width,row_height);
-    gfx_draw_bevel_rect((iptr)&unit_sound_editor_window_block.unit_sound_editor_window,(iptr)rect,10,10);
+    gfx_draw_bevel_rect((iptr)&unit_sound_editor_window_block.unit_sound_editor_window,(RECT *)rect,10,10);
     if (-1 < *(int *)(((i8 *)&main_frame_bg_surface_block.unit_sound_slot_effects) + slot * 4)) {
       text_clear();
       text_append_str((const char *)(((char *)&str_aircombt) + *(int *)(((i8 *)&main_frame_bg_surface_block.unit_sound_slot_effects) + slot * 4) * 9));
@@ -7918,8 +7918,8 @@ void __cdecl unit_editor_on_ok(void)
         box_flags = 0x10;
         str = str_file_i_o_error_7;
         new_name = events_err_msg;
-        result = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-        MessageBoxA(*(HWND *)(result + 4),new_name,str,box_flags);
+        result = (int)wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+        MessageBoxA(((NativeWindow *)result)->hwnd,new_name,str,box_flags);
       }
     }
     unit_editor_store_rules();
@@ -7930,8 +7930,8 @@ void __cdecl unit_editor_on_ok(void)
       box_flags = 0x10;
       str = str_file_i_o_error_8;
       new_name = rules_err_msg;
-      result = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(result + 4),new_name,str,box_flags);
+      result = (int)wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+      MessageBoxA(((NativeWindow *)result)->hwnd,new_name,str,box_flags);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
     wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -8353,7 +8353,7 @@ void __thiscall unit_editor_paint(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,

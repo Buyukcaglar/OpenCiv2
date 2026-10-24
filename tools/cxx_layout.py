@@ -53,7 +53,7 @@ def structs():
 
 
 # Win32 structs the game reads through raw offsets (platform/win32_types.h).
-EXTRA = {'RECT': ['left', 'top', 'right', 'bottom']}
+EXTRA = {'RECT': ['left', 'top', 'right', 'bottom'], 'tagRECT': ['left', 'top', 'right', 'bottom']}
 
 
 def main():

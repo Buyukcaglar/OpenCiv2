@@ -48,7 +48,7 @@ i32 __cdecl setup_hotseat_game(void)
   game.multiplayer = 1;
 show_hotseat_menu:
   surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-  wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+  wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
   wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
   wnd_flush_paint();
   setup_dialog_pos_state = 3;
@@ -147,7 +147,7 @@ done:
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x1f2,(const char *)&map_views_block.text_buffer,0);
           prefs_save_civ2dat();
           surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-          wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+          wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
           wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
           wnd_flush_paint();
           eh_state = eh_state & 0xffffff00;
@@ -174,7 +174,7 @@ done:
       menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x1f2,(const char *)&map_views_block.text_buffer,0);
       prefs_save_civ2dat();
       surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
       wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
       wnd_flush_paint();
       eh_state = eh_state & 0xffffff00;
@@ -664,7 +664,7 @@ int __cdecl setup_start_scenario(void)
   GamePalette palette;
   int result;
   Dialog dlg;
-  uint *option;
+  DialogOption *option;
   iptr gov;
   i8 dst[256];
   int level;
@@ -685,7 +685,7 @@ scenario_menu_loop:
       snd_play_effect(0x6b,0,1,0);
     }
     surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
     wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
     result = game_load_dialog(1,0,1);
     if (result != 0) {
@@ -694,7 +694,7 @@ finish_load_choice:
         snd_play_effect(0x6a,0,0,0);
       }
       surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
       wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
       choice = result;
       eh_state = eh_state & 0xffffff00;
@@ -755,9 +755,9 @@ select_civs:
         name2 = civ_leader_name(civ);
         text_append(name2);
         text_append_rparen();
-        option = dialog_add_option
-                              ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,civ,0);
-        option_civs[option[1]] = civ;
+        option = (dialog_add_option
+                              ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,civ,0));
+        option_civs[(uint)option->id] = civ;
       }
     }
     choice = dlg_show_modal(&dlg,0);
@@ -842,7 +842,7 @@ i32 __cdecl load_game_pick_civ(int title_offset)
   int enabled_count;
   int option_count2;
   Dialog dlg;
-  uint *option;
+  DialogOption *option;
   iptr option_civs[8];
   i32 seh_prev;
   i8 *seh_handler;
@@ -880,18 +880,18 @@ i32 __cdecl load_game_pick_civ(int title_offset)
         option_idx++;
         option = dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,choice,0)
         ;
-        option_civs[option[1]] = civ;
+        option_civs[(uint)option->id] = civ;
       }
     }
     option_count2 = option_idx;
     enabled_count = 0;
     for (option_idx = 0; option_idx < option_count2; option_idx++) {
-      option = (uint *)dialog_find_option((DialogOptionList *)&dlg,option_idx);
+      option = dialog_find_option((DialogOptionList *)&dlg,option_idx);
       if (option != 0) {
         enabled_count++;
-        dialog_set_option_disabled((DialogOptionList *)&dlg,option[1],0);
+        dialog_set_option_disabled((DialogOptionList *)&dlg,(uint)option->id,0);
         if ((RadioGroupEnableView *)dlg.radio_group != (RadioGroupEnableView *)0x0) {
-          radiogrp_enable_item((RadioGroupEnableView *)dlg.radio_group,option[1]);
+          radiogrp_enable_item((RadioGroupEnableView *)dlg.radio_group,(uint)option->id);
         }
       }
     }
@@ -1226,7 +1226,7 @@ void __cdecl game_main(void)
 {
   char is_host;
   iptr rc;
-  iptr hwnd_info;
+  NativeWindow *hwnd_info;
   int result;
   size_t log_len;
   LobbyLaunchInfo *launch_info;
@@ -1256,7 +1256,7 @@ void __cdecl game_main(void)
     _memset(((i8 *)&net_session_block.net_lobby_launch_info),0,0xc4);
     launch_info = (LobbyLaunchInfo *)((i8 *)&net_session_block.net_lobby_launch_info);
     hwnd_info = wnd_get_window((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-    lobby_rc = XD_LaunchedByLobby(*(void **)(hwnd_info + 4),launch_info);
+    lobby_rc = XD_LaunchedByLobby((void *)hwnd_info->hwnd,launch_info);
     if ((lobby_rc == 2) || (lobby_rc == 1)) {
       net_session_block.net_lobby_launch_mode = lobby_rc;
       dbg_log((const char *)&str_lobbylaunchinfo_gnetmgr_igzinfo);
@@ -1342,7 +1342,7 @@ void __cdecl game_main(void)
       }
       pedia_window_create((DocumentWindow *)((i8 *)&pedia_window_block.pedia_window));
       surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
       wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
       if (game.multiplayer != '\0') {
         if ((game.multiplayer < 3) || (is_host = net_is_host(&net_session_block), is_host != '\0')) {
@@ -1702,7 +1702,7 @@ show_network_menu:
   if (turn_resume_new_game == 1) {
     snd_play_effect(0x6a,0,0,0);
     surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
     wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
     wnd_flush_paint();
   }
@@ -2021,13 +2021,13 @@ scenario_menu_loop:
       snd_play_effect(0x6b,0,1,0);
     }
     surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
     wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
     rc = game_load_dialog(1,3,1);
     if (rc != 0) {
       snd_play_effect(0x6a,0,0,0);
       surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
       wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
       wnd_flush_paint();
       eh_state = eh_state & 0xffffff00;
@@ -2577,14 +2577,14 @@ void __cdecl save_pack_layout_rects(void)
   int i;
   
   grey_palette_block.save_layout_record[0] = (i16)destroyed_civ_count_block.saved_layout_valid;
-  rect_pack_to_short((iptr)&saved_screen_rect_block.saved_screen_rect,(iptr)&grey_palette_block.str_empty_189);
-  rect_pack_to_short((iptr)&saved_screen_rect_block.layout_rect_main,(iptr)&grey_palette_block.saved_layout_rects);
+  rect_pack_to_short((RECT *)&saved_screen_rect_block.saved_screen_rect,(iptr)&grey_palette_block.str_empty_189);
+  rect_pack_to_short((RECT *)&saved_screen_rect_block.layout_rect_main,(iptr)&grey_palette_block.saved_layout_rects);
   for (i = 0; i < 8; i++) {
-    rect_pack_to_short((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + i * 0x10),i * 8 + (iptr)(((u8 *)&grey_palette_block.saved_layout_rects + 8)));
+    rect_pack_to_short((RECT *)(iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + i * 0x10),i * 8 + (iptr)(((u8 *)&grey_palette_block.saved_layout_rects + 8)));
   }
-  rect_pack_to_short((iptr)&minimap_wnd_rect_block.minimap_wnd_rect,(iptr)&grey_palette_block.str_empty_190);
-  rect_pack_to_short((iptr)&minimap_wnd_rect_block.status_wnd_rect,(iptr)&grey_palette_block.str_empty_191);
-  rect_pack_to_short((iptr)&minimap_wnd_rect_block.city_wnd_rect,(iptr)&grey_palette_block.saved_layout_rect2);
+  rect_pack_to_short((RECT *)&minimap_wnd_rect_block.minimap_wnd_rect,(iptr)&grey_palette_block.str_empty_190);
+  rect_pack_to_short((RECT *)&minimap_wnd_rect_block.status_wnd_rect,(iptr)&grey_palette_block.str_empty_191);
+  rect_pack_to_short((RECT *)&minimap_wnd_rect_block.city_wnd_rect,(iptr)&grey_palette_block.saved_layout_rect2);
   return;
 }
 
@@ -2595,14 +2595,14 @@ void __cdecl save_unpack_layout_rects(void)
   int i;
   
   destroyed_civ_count_block.saved_layout_valid = (int)grey_palette_block.save_layout_record[0];
-  rect_unpack_from_short((iptr)&grey_palette_block.str_empty_189,(iptr)&saved_screen_rect_block.saved_screen_rect);
-  rect_unpack_from_short((iptr)&grey_palette_block.saved_layout_rects,(iptr)&saved_screen_rect_block.layout_rect_main);
+  rect_unpack_from_short((iptr)&grey_palette_block.str_empty_189,(RECT *)&saved_screen_rect_block.saved_screen_rect);
+  rect_unpack_from_short((iptr)&grey_palette_block.saved_layout_rects,(RECT *)&saved_screen_rect_block.layout_rect_main);
   for (i = 0; i < 8; i++) {
-    rect_unpack_from_short(i * 8 + (iptr)(((u8 *)&grey_palette_block.saved_layout_rects + 8)),(iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + i * 0x10));
+    rect_unpack_from_short(i * 8 + (iptr)(((u8 *)&grey_palette_block.saved_layout_rects + 8)),(RECT *)(iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + i * 0x10));
   }
-  rect_unpack_from_short((iptr)&grey_palette_block.str_empty_190,(iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
-  rect_unpack_from_short((iptr)&grey_palette_block.str_empty_191,(iptr)&minimap_wnd_rect_block.status_wnd_rect);
-  rect_unpack_from_short((iptr)&grey_palette_block.saved_layout_rect2,(iptr)&minimap_wnd_rect_block.city_wnd_rect);
+  rect_unpack_from_short((iptr)&grey_palette_block.str_empty_190,(RECT *)&minimap_wnd_rect_block.minimap_wnd_rect);
+  rect_unpack_from_short((iptr)&grey_palette_block.str_empty_191,(RECT *)&minimap_wnd_rect_block.status_wnd_rect);
+  rect_unpack_from_short((iptr)&grey_palette_block.saved_layout_rect2,(RECT *)&minimap_wnd_rect_block.city_wnd_rect);
   return;
 }
 
@@ -3588,7 +3588,7 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
            (result = surface_load_gif_file
                               ((DibSurface *)((i8 *)&scenario_title_surface_block.scenario_title_surface),(const char *)&str_title_gif_2,10,0xc0,(iptr)&palette),
            result != 0)) {
-          wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&scenario_title_surface_block.scenario_title_surface);
+          wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&scenario_title_surface_block.scenario_title_surface);
           wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
           wnd_maximize((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
           wnd_flush_paint();
@@ -10812,7 +10812,7 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
   iptr sel_tribe;
   Dialog dlg;
   iptr retry_tribe;
-  byte *option;
+  DialogOption *option;
   iptr leader2;
   iptr title;
   int cancelled;
@@ -10992,12 +10992,12 @@ count_available_tribes:
       goto finish_choice;
     }
     for (tries = 0; tries < 0x15; tries++) {
-      option = (byte *)dialog_find_option((DialogOptionList *)&dlg,sel_tribe);
-      if ((option != (byte *)0x0) && ((*option & 1) == 0)) {
-        dialog_set_default_choice((DialogOptionList *)&dlg,*(iptr *)(option + 4));
+      option = dialog_find_option((DialogOptionList *)&dlg,sel_tribe);
+      if ((option != (DialogOption *)0x0) && ((option->flags_byte & 1) == 0)) {
+        dialog_set_default_choice((DialogOptionList *)&dlg,option->id);
         if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
           radiogrp_set_selected
-                    ((RadioGroupSetSelView *)dlg.radio_group,*(i32 *)(option + 4));
+                    ((RadioGroupSetSelView *)dlg.radio_group,option->id);
         }
         break;
       }
@@ -11519,14 +11519,14 @@ scenario_menu_loop:
       snd_play_effect(0x6b,0,1,0);
     }
     surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
     wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
     wnd_flush_paint();
     load_result = game_load_dialog(1,game_mode,1);
     if (load_result != 0) {
       snd_play_effect(0x6a,0,0,0);
       surface_load_gif_resource((DibSurface *)((i8 *)&minimap_window_block.setup_backdrop_surface),0x5a,10,0xc0,(iptr)&palette);
-      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&minimap_window_block.setup_backdrop_surface);
+      wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(DibSurface *)&minimap_window_block.setup_backdrop_surface);
       wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
       wnd_flush_paint();
       try_level = try_level & 0xffffff00;
@@ -11682,7 +11682,7 @@ i32 __cdecl scenario_pick_human_civs(int num_players)
   int has_default;
   int player_idx;
   Dialog dlg;
-  uint *option;
+  DialogOption *option;
   iptr govt;
   uptr option_civs[8];
   i32 seh_prev;
@@ -11734,19 +11734,19 @@ done:
               text_append_space();
               text_append_label(0xc4);
               text_append((const char *)&str_empty_164);
-              option = dialog_add_option
-                                   ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,civ,0);
-              option_civs[option[1]] = civ;
+              option = (dialog_add_option
+                                   ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,civ,0));
+              option_civs[(uint)option->id] = civ;
               if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
                 if (has_default == 0) {
                   has_default = 1;
                   dialog_set_default_choice
-                            ((DialogOptionList *)&dlg,option[1]);
+                            ((DialogOptionList *)&dlg,(uint)option->id);
                 }
               }
               else {
                 dialog_set_option_disabled
-                          ((DialogOptionList *)&dlg,option[1],1);
+                          ((DialogOptionList *)&dlg,(uint)option->id,1);
               }
             }
           }
@@ -12091,7 +12091,7 @@ void __cdecl setup_choose_opponents(int num_humans)
         text_set_number_arg(0,opponent_num);
         setup_show_side_picture(9,0);
         dlg_load_game_section(&dlg,(const char *)&str_opponent_2,1);
-        *(i32 *)(dlg.option_list + 4) = 0x15;
+        dlg.option_list->id = 0x15;
         for (leader = 0; leader < 0x15; leader++) {
           if (leaders[leader].color == civ) {
             text_clear();
@@ -12148,7 +12148,7 @@ i32 __cdecl setup_join_pick_civ(int player_idx)
   int opt_count;
   int sel_idx;
   Dialog dlg;
-  byte *option;
+  DialogOption *option;
   iptr govt;
   iptr option_civs[8];
   i32 seh_prev;
@@ -12185,44 +12185,44 @@ i32 __cdecl setup_join_pick_civ(int player_idx)
         text_append((const char *)&str_empty_166);
         civ = opt_idx;
         opt_idx++;
-        option = (byte *)dialog_add_option
-                                     ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,civ,0);
-        option_civs[*(int *)(option + 4)] = civ2;
+        option = (DialogOption *)((byte *)dialog_add_option
+                                     ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,civ,0));
+        option_civs[option->id] = civ2;
       }
     }
     opt_count = opt_idx;
     avail_count = 0;
     for (opt_idx = 0; opt_idx < opt_count; opt_idx++) {
-      option = (byte *)dialog_find_option((DialogOptionList *)&dlg,opt_idx);
-      if (option != (byte *)0x0) {
-        (*((char *)&civ2 + 0)) = (byte)option_civs[*(int *)(option + 4)];
+      option = dialog_find_option((DialogOptionList *)&dlg,opt_idx);
+      if (option != (DialogOption *)0x0) {
+        (*((char *)&civ2 + 0)) = (byte)option_civs[option->id];
         if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) {
           avail_count++;
-          dialog_set_option_disabled((DialogOptionList *)&dlg,*(iptr *)(option + 4),0)
+          dialog_set_option_disabled((DialogOptionList *)&dlg,option->id,0)
           ;
           if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
             radiogrp_enable_item
-                      ((RadioGroupEnableView *)dlg.radio_group,*(iptr *)(option + 4));
+                      ((RadioGroupEnableView *)dlg.radio_group,option->id);
           }
         }
         else {
-          dialog_set_option_disabled((DialogOptionList *)&dlg,*(iptr *)(option + 4),1)
+          dialog_set_option_disabled((DialogOptionList *)&dlg,option->id,1)
           ;
           if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
             radiogrp_disable_item
-                      ((RadioGroupDisableView *)dlg.radio_group,*(iptr *)(option + 4));
+                      ((RadioGroupDisableView *)dlg.radio_group,option->id);
           }
         }
       }
     }
     sel_idx = 0;
     for (opt_idx = 0; opt_idx < opt_count; opt_idx++) {
-      option = (byte *)dialog_find_option((DialogOptionList *)&dlg,sel_idx);
-      if ((option != (byte *)0x0) && ((*option & 1) == 0)) {
-        dialog_set_default_choice((DialogOptionList *)&dlg,*(iptr *)(option + 4));
+      option = dialog_find_option((DialogOptionList *)&dlg,sel_idx);
+      if ((option != (DialogOption *)0x0) && ((option->flags_byte & 1) == 0)) {
+        dialog_set_default_choice((DialogOptionList *)&dlg,option->id);
         if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
           radiogrp_set_selected
-                    ((RadioGroupSetSelView *)dlg.radio_group,*(i32 *)(option + 4));
+                    ((RadioGroupSetSelView *)dlg.radio_group,option->id);
         }
         break;
       }
@@ -13159,7 +13159,7 @@ i32 __cdecl events_editor_pick_item(int default_choice,const char *title,i32 kin
     }
     break;
   case 3:
-    dialog_add_option((DialogOptionList *)&dlg,(const char *)&str_anyunit_2,-2,0);
+    ((uint *)dialog_add_option((DialogOptionList *)&dlg,(const char *)&str_anyunit_2,-2,0));
     for (civ = 0; civ < 0x3e; civ++) {
       result = 0;
       item = civ;
@@ -13339,7 +13339,7 @@ void __cdecl events_editor_on_ok(void)
 
 {
   iptr ok;
-  iptr wnd;
+  NativeWindow *wnd;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -13355,7 +13355,7 @@ void __cdecl events_editor_on_ok(void)
       lpCaption = str_file_i_o_error_5;
       lpText = msg;
       wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
+      MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
     wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -14747,7 +14747,7 @@ void __cdecl events_editor_on_add_trigger(void)
   int *new_event;
   LPCSTR lpCaption;
   LPCSTR lpText;
-  iptr window;
+  NativeWindow *window;
   int result;
   UINT uType;
   iptr parent_wnd2;
@@ -14777,7 +14777,7 @@ void __cdecl events_editor_on_add_trigger(void)
       lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
       lpText = (LPCSTR)label_string(label_string_ids[0x23a]);
       window = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(window + 4),lpText,lpCaption,uType);
+      MessageBoxA(window->hwnd,lpText,lpCaption,uType);
     }
     else {
       *new_event = 1 << ((byte)trigger_type & 0x1f);
@@ -15472,7 +15472,7 @@ void __thiscall events_editor_draw(ViewWindow *self)
   int x;
   
   frame_wnd_draw_caption((FrameWindow *)self);
-  gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1a);
+  gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1a);
   text_set_surface((iptr)self);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);
@@ -17487,8 +17487,8 @@ void __thiscall setup_picwnd_blit_image_rect(ScaledWindowView *self,int *rect)
   i32 height;
   i32 width;
   
-  height = rect_height((iptr)rect);
-  width = rect_width((iptr)rect);
+  height = rect_height((RECT *)rect);
+  width = rect_width((RECT *)rect);
   gfx_copy_rect_xywh((iptr)&setup_picwnd_block.setup_picwnd_surface,(iptr)self,*rect - self->client_x,rect[1] - self->client_y,
                      *rect,rect[1],width,height);
   return;
@@ -17696,9 +17696,9 @@ setup_picwnd_show(ViewWindow *self,i32 x_pos,i32 y_pos,u32 image_id)
     style = 8;
     y = 8;
     x = 0;
-    height = rect_height((iptr)&rect.left);
+    height = rect_height((RECT *)&rect.left);
     height -= sys_dlgframe_h2;
-    width = rect_width((iptr)&rect.left);
+    width = rect_width((RECT *)&rect.left);
     frame_wnd_create
               ((FrameWindow *)self,0,2,rect.left,rect.top,width - sys_dlgframe_w2,height,x,y,
                style);
@@ -17962,13 +17962,13 @@ void __cdecl status_draw_civ_color(iptr civ)
   RECT rect;
   
   if ((status_wnd_hidden == '\0') && (status_font_block.status_lower_panel_height != 0)) {
-    surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(iptr)&status_window_block.status_lower_rect);
+    surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(RECT *)&status_window_block.status_lower_rect);
     rect.right = status_window_block.status_client_right;
     rect.bottom = status_window_block.status_client_bottom;
     rect.left = status_window_block.status_client_right - 8;
     rect.top = status_window_block.status_client_bottom - 6;
     color = civ_color_primary(civ);
-    gfx_fill_rect((iptr)&status_window_block.status_window,(iptr)&rect.left,color);
+    gfx_fill_rect((iptr)&status_window_block.status_window,(RECT *)&rect.left,color);
     win_flush_pending_msgs();
     wnd_blit_surface_rect((DibSurface *)((i8 *)&status_window_block.status_window),(iptr)&rect.left);
     surface_reset_clip((DibSurface *)((i8 *)&status_window_block.status_window));
@@ -17990,13 +17990,13 @@ void __cdecl status_draw_end_of_turn(int blit)
   i32 src_y;
   
   if ((((status_wnd_hidden == '\0') && (unit_blink_active != '\0')) && (status_end_turn_visible != '\0')) &&
-     (((game.transient_flags & 1) != 0 && (text_y = rect_height((iptr)&frame_texture_surface_block.status_end_turn_rect), 0 < text_y)))) {
+     (((game.transient_flags & 1) != 0 && (text_y = rect_height((RECT *)&frame_texture_surface_block.status_end_turn_rect), 0 < text_y)))) {
     text_set_surface((iptr)&status_window_block.status_window);
-    surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(iptr)&frame_texture_surface_block.status_end_turn_rect);
+    surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(RECT *)&frame_texture_surface_block.status_end_turn_rect);
     src_y = 0;
     src_x = 0;
-    height = rect_height((iptr)&frame_texture_surface_block.status_end_turn_rect);
-    width = rect_width((iptr)&frame_texture_surface_block.status_end_turn_rect);
+    height = rect_height((RECT *)&frame_texture_surface_block.status_end_turn_rect);
+    width = rect_width((RECT *)&frame_texture_surface_block.status_end_turn_rect);
     gfx_tile_fill((iptr)&status_window_block.status_window,(iptr)&panel_texture_surface,frame_texture_surface_block.status_end_turn_rect,frame_texture_surface_block.status_end_turn_rect_top,width,height,src_x,src_y);
     text_set_colors((-(uint)((moving_units_mode == 0) == (bool)status_end_turn_blink_phase) & 0xf) + 0x1a,10,1,0);
     text_set_font((iptr)&status_font_block.status_font);
@@ -18122,13 +18122,13 @@ void __cdecl status_draw_info(int full_redraw)
     gfx_set_draw_target((iptr)&status_window_block.status_window);
     src_y = 0;
     src_x = 0;
-    height = rect_height((iptr)&frame_texture_surface_block.status_upper_rect);
-    width = rect_width((iptr)&frame_texture_surface_block.status_upper_rect);
+    height = rect_height((RECT *)&frame_texture_surface_block.status_upper_rect);
+    width = rect_width((RECT *)&frame_texture_surface_block.status_upper_rect);
     gfx_tile_fill((iptr)&status_window_block.status_window,(iptr)&panel_texture_surface,frame_texture_surface_block.status_upper_rect,frame_texture_surface_block.status_upper_rect_top,width,height,src_x,src_y);
   }
   text_set_surface((iptr)&status_window_block.status_window);
   text_set_font((iptr)&status_window_block.status_info_font);
-  panel_width2 = rect_width((iptr)&frame_texture_surface_block.status_upper_rect);
+  panel_width2 = rect_width((RECT *)&frame_texture_surface_block.status_upper_rect);
   if (1 < game.peace_turns) {
     percent = int_clamp(game.peace_turns * 3,0,100);
     bar_width = (percent * panel_width2) / 100;
@@ -18144,7 +18144,7 @@ void __cdecl status_draw_info(int full_redraw)
   text_y2 = frame_texture_surface_block.status_upper_rect_top;
   text_x2 = line_x;
   zoom2 = (*(int *)&status_info_font_scale) * 4 - 8;
-  surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(iptr)&frame_texture_surface_block.status_upper_rect);
+  surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(RECT *)&frame_texture_surface_block.status_upper_rect);
   text_set_colors(0x10,0x21,1,1);
   text_clear();
   text_append_population(human_civ[0],0xffffffff);
@@ -18171,14 +18171,14 @@ void __cdecl status_draw_info(int full_redraw)
   text_x2 = gfx_draw_text((const char *)&map_views_block.text_buffer,text_x2,text_y2);
   icon_size = gfx_zoom_scale(0xe,zoom2);
   icon_width = icon_size;
-  percent = rect_height((iptr)&frame_texture_surface_block.status_upper_rect);
+  percent = rect_height((RECT *)&frame_texture_surface_block.status_upper_rect);
   icon_y = ((percent >> 1) + frame_texture_surface_block.status_upper_rect_top) - (icon_size >> 1);
-  rect_w = rect_width((iptr)&frame_texture_surface_block.status_upper_rect);
+  rect_w = rect_width((RECT *)&frame_texture_surface_block.status_upper_rect);
   if ((int)(rect_w & 0xfffffffe) < 200) {
     icon_offset = 100;
   }
   else {
-    icon_offset = rect_width((iptr)&frame_texture_surface_block.status_upper_rect);
+    icon_offset = rect_width((RECT *)&frame_texture_surface_block.status_upper_rect);
     icon_offset = icon_offset >> 1;
   }
   icon_x = frame_texture_surface_block.status_upper_rect + icon_offset;
@@ -18239,7 +18239,7 @@ void __cdecl status_draw_unit_panel(void)
   
   status_draw_info(0);
   if (status_font_block.status_lower_panel_height != 0) {
-    surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(iptr)&status_window_block.status_lower_rect);
+    surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(RECT *)&status_window_block.status_lower_rect);
     text_set_font((iptr)&status_font_block.status_font);
     text_x = font_text_width((GameFont *)((i8 *)&status_font_block.status_font),(const char *)&str_x_6);
     text_x = status_window_block.status_lower_rect + text_x;
@@ -18249,7 +18249,7 @@ void __cdecl status_draw_unit_panel(void)
     text_clear();
     text_append_label((moving_units_mode == 0) + 9);
     text_set_colors(0x29,10,1,0);
-    width = rect_width((iptr)&status_window_block.status_lower_rect);
+    width = rect_width((RECT *)&status_window_block.status_lower_rect);
     gfx_draw_text_centered((const char *)&map_views_block.text_buffer,status_window_block.status_lower_rect,zoom,width);
     text_set_colors(0x10,0x21,1,1);
     text_y2 = zoom + line_height + (line_height >> 1);
@@ -18548,7 +18548,7 @@ void __cdecl status_draw_unit_panel(void)
       frame_texture_surface_block.status_end_turn_rect_right = status_window_block.status_lower_rect_right;
       frame_texture_surface_block.status_end_turn_rect_bottom = status_window_block.status_lower_rect_bottom;
       frame_texture_surface_block.status_end_turn_rect_top = text_y2;
-      while (zoom = rect_height((iptr)&frame_texture_surface_block.status_end_turn_rect), line_height * 3 < zoom) {
+      while (zoom = rect_height((RECT *)&frame_texture_surface_block.status_end_turn_rect), line_height * 3 < zoom) {
         frame_texture_surface_block.status_end_turn_rect_top += line_height;
       }
       status_end_turn_visible = 1;
@@ -18576,14 +18576,14 @@ void __cdecl status_redraw(int blit)
     gfx_set_draw_target((iptr)&status_window_block.status_window);
     src_y = 0;
     src_x = 0;
-    height = rect_height((iptr)&frame_texture_surface_block.status_upper_rect);
-    width = rect_width((iptr)&frame_texture_surface_block.status_upper_rect);
+    height = rect_height((RECT *)&frame_texture_surface_block.status_upper_rect);
+    width = rect_width((RECT *)&frame_texture_surface_block.status_upper_rect);
     gfx_tile_fill((iptr)&status_window_block.status_window,(iptr)&panel_texture_surface,frame_texture_surface_block.status_upper_rect,frame_texture_surface_block.status_upper_rect_top,width,height,src_x,src_y);
     if (status_font_block.status_lower_panel_height != 0) {
       src_y = 0;
       src_x = 0;
-      height = rect_height((iptr)&status_window_block.status_lower_rect);
-      width = rect_width((iptr)&status_window_block.status_lower_rect);
+      height = rect_height((RECT *)&status_window_block.status_lower_rect);
+      width = rect_width((RECT *)&status_window_block.status_lower_rect);
       gfx_tile_fill((iptr)&status_window_block.status_window,(iptr)&panel_texture_surface,status_window_block.status_lower_rect,status_window_block.status_lower_rect_top,width,height,src_x,src_y);
     }
     status_calc_font_sizes();
@@ -18636,14 +18636,14 @@ void __cdecl status_wnd_repaint(void)
       rect_deflate((iptr)&inner_rect.left,0,frame_bevel_width);
       src_y = 0;
       src_x = 0;
-      height = rect_height((iptr)&inner_rect.left);
-      width = rect_width((iptr)&inner_rect.left);
+      height = rect_height((RECT *)&inner_rect.left);
+      width = rect_width((RECT *)&inner_rect.left);
       gfx_tile_fill((iptr)&status_window_block.status_window,(iptr)&window_border_tile_surface,inner_rect.left,inner_rect.top,width,height,src_x,src_y);
       bevel_rect.bottom = bevel_rect.top + frame_bevel_width;
-      gfx_fill_rect((iptr)&status_window_block.status_window,(iptr)&bevel_rect.left,frame_highlight_color);
-      inner_height = rect_height((iptr)&inner_rect.left);
+      gfx_fill_rect((iptr)&status_window_block.status_window,(RECT *)&bevel_rect.left,frame_highlight_color);
+      inner_height = rect_height((RECT *)&inner_rect.left);
       rect_offset((iptr)&bevel_rect.left,0,frame_bevel_width + inner_height);
-      gfx_fill_rect((iptr)&status_window_block.status_window,(iptr)&bevel_rect.left,frame_shadow_color);
+      gfx_fill_rect((iptr)&status_window_block.status_window,(RECT *)&bevel_rect.left,frame_shadow_color);
     }
     wnd_blit_surface((DibSurface *)((i8 *)&status_window_block.status_window));
   }
@@ -18683,9 +18683,9 @@ void __cdecl status_calc_wnd_rect(void)
   int client_height;
   
   left = minimap_wnd_rect_block.minimap_wnd_rect;
-  top = rect_height((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
+  top = rect_height((RECT *)&minimap_wnd_rect_block.minimap_wnd_rect);
   top = minimap_wnd_rect_block.minimap_wnd_rect_top + top;
-  width = rect_width((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
+  width = rect_width((RECT *)&minimap_wnd_rect_block.minimap_wnd_rect);
   client_height = wnd_client_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
   rect_set_xywh((iptr)&minimap_wnd_rect_block.status_wnd_rect,left,top,width,(client_height - top) - 1 + sys_dlgframe_h2);
   return;
@@ -18728,9 +18728,9 @@ void __cdecl status_wnd_open(void)
   arg_b = 0;
   arg_a = 0;
   flags = 6;
-  height = rect_height((iptr)&minimap_wnd_rect_block.status_wnd_rect);
+  height = rect_height((RECT *)&minimap_wnd_rect_block.status_wnd_rect);
   height -= sys_dlgframe_h2;
-  width = rect_width((iptr)&minimap_wnd_rect_block.status_wnd_rect);
+  width = rect_width((RECT *)&minimap_wnd_rect_block.status_wnd_rect);
   width -= sys_dlgframe_w2;
   style = 6;
   x = minimap_wnd_rect_block.status_wnd_rect;
@@ -18786,19 +18786,19 @@ void __cdecl status_draw_timer_bar(int percent,int color)
   bar_rect.bottom = 0;
   if (((status_wnd_hidden == '\0') && (status_font_block.status_lower_panel_height != 0)) &&
      ((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)game.human_players) != 0)) {
-    surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(iptr)&status_window_block.status_lower_rect);
+    surface_set_clip((DibSurface *)((i8 *)&status_window_block.status_window),(RECT *)&status_window_block.status_lower_rect);
     bar_rect.left = status_window_block.status_indicator_rect;
     bar_rect.bottom = status_window_block.status_client_bottom;
     bar_rect.right = status_window_block.status_client_right - 8;
     bar_rect.top = status_window_block.status_client_bottom - 6;
-    width = rect_width((iptr)&status_window_block.status_lower_rect);
+    width = rect_width((RECT *)&status_window_block.status_lower_rect);
     if (width != status_timer_last_width) {
-      status_timer_last_width = rect_width((iptr)&status_window_block.status_lower_rect);
+      status_timer_last_width = rect_width((RECT *)&status_window_block.status_lower_rect);
       status_timer_last_color = -1;
       status_timer_last_percent = -1;
       surface_alloc_dib8((DibSurface *)((i8 *)&status_window_block.status_timer_bg_surface),(iptr)&bar_rect);
-      height = rect_height((iptr)&bar_rect);
-      bar_width = rect_width((iptr)&bar_rect);
+      height = rect_height(&bar_rect);
+      bar_width = rect_width(&bar_rect);
       gfx_copy_rect_xywh((iptr)&status_window_block.status_window,(iptr)&status_window_block.status_timer_bg_surface,bar_rect.left,bar_rect.top,0,0,bar_width,height);
     }
     if (((status_timer_last_color != color) || (width = _memcmp(&bar_rect.left,((i32 *)&status_window_block.status_timer_last_rect),0x10), width != 0))
@@ -18809,14 +18809,14 @@ void __cdecl status_draw_timer_bar(int percent,int color)
       status_window_block.status_timer_last_rect_right = bar_rect.right;
       status_window_block.status_timer_last_rect_bottom = bar_rect.bottom;
       status_timer_last_percent = percent;
-      height = rect_height((iptr)&bar_rect);
-      bar_width = rect_width((iptr)&bar_rect);
+      height = rect_height(&bar_rect);
+      bar_width = rect_width(&bar_rect);
       gfx_copy_rect_xywh((iptr)&status_window_block.status_timer_bg_surface,(iptr)&status_window_block.status_window,0,0,bar_rect.left,bar_rect.top,bar_width,height);
       wnd_blit_surface_rect((DibSurface *)((i8 *)&status_window_block.status_window),(iptr)&bar_rect);
       if (-1 < color) {
-        width = rect_width((iptr)&bar_rect);
+        width = rect_width(&bar_rect);
         bar_rect.right = bar_rect.left + (percent * width) / 100;
-        gfx_fill_rect((iptr)&status_window_block.status_window,(iptr)&bar_rect,color);
+        gfx_fill_rect((iptr)&status_window_block.status_window,&bar_rect,color);
         win_flush_pending_msgs();
         wnd_blit_surface_rect((DibSurface *)((i8 *)&status_window_block.status_window),(iptr)&bar_rect);
       }
@@ -18885,7 +18885,7 @@ uint __cdecl main_frame_create(void)
 
 {
   int cd_ok;
-  iptr wnd_info;
+  NativeWindow *wnd_info;
   i32 wave_rate;
   i32 wave_bits;
   i8 saved_rgb2[708];
@@ -18907,10 +18907,10 @@ uint __cdecl main_frame_create(void)
     wave_bits = 8;
     wave_rate = 0x10000;
     wnd_info = wnd_get_window((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-    snd_wave_open(*(i32 *)(wnd_info + 4),wave_rate,wave_bits);
+    snd_wave_open((i32)wnd_info->hwnd,wave_rate,wave_bits);
     menu_build_main();
     surface_load_gif_resource((DibSurface *)((i8 *)&main_frame_bg_surface_block.main_frame_bg_surface),0x5a,10,0xc0,(iptr)&palette);
-    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&main_frame_bg_surface_block.main_frame_bg_surface);
+    wnd_set_bg_surface((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),&main_frame_bg_surface_block.main_frame_bg_surface);
     wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
     wnd_set_icon((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),1);
     main_frame_bg_surface_block.main_frame_nonclient_width = wnd_frame_width((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));

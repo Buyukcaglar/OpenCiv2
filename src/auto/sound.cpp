@@ -1945,8 +1945,8 @@ i32 __thiscall avi_player_dtor(AviPlayer *self)
   *(i8 ***)self->media_window_base = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 3;
-  avi_play_pause((AviPlayer *)(iptr)self);
-  avi_close((AviPlayer *)(iptr)self);
+  avi_play_pause(self);
+  avi_close(self);
   avi_current_player_i32 = 0;
   (*((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x558)); }
@@ -2005,8 +2005,8 @@ int __thiscall avi_player_open(AviPlayerOpenView *self,const char *filename)
 {
   int result;
   
-  avi_close((AviPlayer *)(iptr)self);
-  result = avi_open_file((AviPlayer *)(iptr)self,filename);
+  avi_close((AviPlayer *)self);
+  result = avi_open_file((AviPlayer *)self,filename);
   if (result == 0) {
     result = 0;
   }
@@ -2021,7 +2021,7 @@ void __thiscall avi_player_play(AviPlayerPlayView *self)
   ((AviPlayerPlayViewExt *)self)->loop_flag_byte1[0] = '\0';
   ((AviPlayerPlayViewExt *)self)->loop_flag_byte2[0] = '\0';
   ((AviPlayerPlayViewExt *)self)->loop_flag_byte3[0] = '\0';
-  avi_play_start((AviPlayer *)(iptr)self);
+  avi_play_start((AviPlayer *)self);
   return;
 }
 
@@ -2031,10 +2031,10 @@ void __thiscall avi_player_play_range(AviPlayerRangeView *self,u32 first_frame,u
 {
   if ((int)first_frame <= (int)last_frame) {
     self->loop = 0;
-    avi_seek_frame((AviPlayer *)(iptr)self,first_frame,0);
+    avi_seek_frame((AviPlayer *)self,first_frame,0);
     self->end_frame = last_frame;
     self->start_frame = first_frame;
-    avi_play_start((AviPlayer *)(iptr)self);
+    avi_play_start((AviPlayer *)self);
   }
   return;
 }
@@ -2043,7 +2043,7 @@ void __thiscall avi_player_play_range(AviPlayerRangeView *self,u32 first_frame,u
 void __thiscall avi_player_show_frame(void *self,i32 frame)
 
 {
-  avi_seek_frame((AviPlayer *)(iptr)self,frame,1);
+  avi_seek_frame((AviPlayer *)self,frame,1);
   return;
 }
 
@@ -2052,10 +2052,10 @@ void __thiscall avi_player_loop_range(AviPlayerLoopView *self,u32 first_frame,u3
 
 {
   self->start_frame = first_frame;
-  avi_seek_frame((AviPlayer *)(iptr)self,first_frame,0);
+  avi_seek_frame((AviPlayer *)self,first_frame,0);
   self->end_frame = last_frame;
   self->loop = 1;
-  avi_play_start((AviPlayer *)(iptr)self);
+  avi_play_start((AviPlayer *)self);
   return;
 }
 
@@ -2063,7 +2063,7 @@ void __thiscall avi_player_loop_range(AviPlayerLoopView *self,u32 first_frame,u3
 void __thiscall avi_player_pause(AviPlayerPauseView *self)
 
 {
-  avi_play_pause((AviPlayer *)(iptr)self);
+  avi_play_pause((AviPlayer *)self);
   return;
 }
 
@@ -2071,7 +2071,7 @@ void __thiscall avi_player_pause(AviPlayerPauseView *self)
 void __thiscall avi_player_set_palette(DibSurface *self,iptr palette)
 
 {
-  avi_apply_palette((AviPlayer *)(iptr)self,(GamePalette *)palette);
+  avi_apply_palette((AviPlayer *)self,(GamePalette *)palette);
   surface_set_palette(self,palette);
   wnd_set_palette((WndBase *)(self + 1),palette);
   return;
@@ -2094,13 +2094,13 @@ avi_player_draw_to(DibSurface *self,iptr dest,int x,int y)
       dest_size = surface_height((DibSurface *)dest);
       src_size = surface_get_height(self);
       if (src_size <= dest_size - y) {
-        avi_decode_frame((AviPlayer *)(iptr)self,0);
+        avi_decode_frame((AviPlayer *)self,0);
         dest_size = surface_get_height(self);
         src_size = surface_get_width(self);
         SetRect(&src_rect,0,0,src_size,dest_size);
         CopyRect(&dst_rect,&src_rect);
         OffsetRect(&dst_rect,x,y);
-        surface_blit(self,dest,(iptr)&src_rect,(iptr)&dst_rect);
+        surface_blit(self,(DibSurface *)dest,&src_rect,&dst_rect);
       }
     }
   }
@@ -2129,12 +2129,12 @@ void __thiscall avi_player_set_transparent(AviPlayerSetTransparentView *self,int
   if (enable == 0) {
     if (self->is_transparent != 0) {
       self->is_transparent = 0;
-      avi_restart_decompress((AviPlayer *)(iptr)self,0);
+      avi_restart_decompress((AviPlayer *)self,0);
     }
   }
   else if (self->is_transparent == 0) {
     self->is_transparent = 1;
-    avi_restart_decompress((AviPlayer *)(iptr)self,1);
+    avi_restart_decompress((AviPlayer *)self,1);
   }
   return;
 }
@@ -2417,7 +2417,7 @@ int __cdecl avi_open_file(AviPlayer *player,const char *filename)
   int attach_result;
   i32 start_frame;
   int value;
-  iptr dib;
+  GdiDib *dib;
   HGLOBAL mem_handle;
   i8 palette_rgb[708];
   AVISTREAMINFOA stream_info;
@@ -2745,7 +2745,7 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
   }
   else {
     if ((player->transparent != 0) && (decode_flags == 0)) {
-      surface_blit(&player->backdrop,(iptr)player,(iptr)&avi_blit_union_left_block.avi_blit_union_left,(iptr)&avi_blit_union_left_block.avi_blit_union_left);
+      surface_blit(&player->backdrop,(DibSurface *)player,(RECT *)&avi_blit_union_left_block.avi_blit_union_left,(RECT *)&avi_blit_union_left_block.avi_blit_union_left);
     }
     result = AVIStreamRead(avi_video_stream[0],player->cur_frame,1,avi_frame_buffer,
                             avi_frame_buffer_size,&bytes_read,0);
@@ -3038,12 +3038,12 @@ void __cdecl avi_restart_decompress(AviPlayer *player,int transparent)
       OffsetRect(&dst_rect,player->pos_x,player->pos_y);
       if (player->target_surface != 0) {
         surface_blit
-                  ((DibSurface *)player->target_surface,(iptr)&player->backdrop,(iptr)&dst_rect,
-                   (iptr)&src_rect);
+                  ((DibSurface *)player->target_surface,&player->backdrop,&dst_rect,
+                   &src_rect);
       }
       if (avi_file_loaded != 0) {
         surface_blit
-                  (&player->backdrop,(iptr)player,(iptr)&src_rect,(iptr)&src_rect);
+                  (&player->backdrop,(DibSurface *)player,&src_rect,&src_rect);
         cur_frame = player->cur_frame;
         avi_seek_frame(player,cur_frame,0);
         wnd_blit_surface((DibSurface *)player);
@@ -3079,7 +3079,7 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
 {
   short thumb_pos;
   i32 result;
-  iptr window;
+  NativeWindow *window;
   WndBase *wnd_obj;
   BOOL is_iconic;
   int value;
@@ -3087,7 +3087,7 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
   int frame_height;
   MINMAXINFO *minmax_info;
   int frame_width;
-  iptr parent_window;
+  NativeWindow *parent_window;
   int min_height2;
   int min_width2;
   int scroll_pos2;
@@ -3339,8 +3339,8 @@ default_wndproc:
         wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
         parent_window = wnd_get_window(wnd_obj);
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
-          SetFocus(*(HWND *)(parent_window + 4));
+        if ((parent_window->flags_bytes[1] & 2) != 0) {
+          SetFocus(parent_window->hwnd);
           BringWindowToTop(hwnd);
         }
         wnd2->wnd_header_area[0xa4] = 1;
@@ -3371,8 +3371,8 @@ default_wndproc:
       case 0x204:
         wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
         parent_window = wnd_get_window(wnd_obj);
-        if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
-          SetFocus(*(HWND *)(parent_window + 4));
+        if ((parent_window->flags_bytes[1] & 2) != 0) {
+          SetFocus(parent_window->hwnd);
           BringWindowToTop(hwnd);
         }
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;

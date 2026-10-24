@@ -252,7 +252,7 @@ void __thiscall taxrate_dialog_paint(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if ((taxrate_bg_surface == 0) || (minimap_window_block.taxrate_dialog_active == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh(taxrate_bg_surface,(iptr)self,0,0,self->client_x,self->client_y,self->dialog_w,
@@ -1005,7 +1005,7 @@ void __thiscall city_editor_draw(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,
@@ -1722,7 +1722,7 @@ void __cdecl trade_advisor_show(iptr civ)
   advisor_window_block.advisor_report_civ = civ;
   rect_set_xywh((iptr)rect,2,0,0x129,0x18);
   client_y = advisor_window_block.advisor_client_y;
-  rect_h = rect_height((iptr)rect);
+  rect_h = rect_height((RECT *)rect);
   rect_offset((iptr)rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)rect,299,0);
   label = (iptr)label_string(label_string_ids[0x147]);
@@ -2121,7 +2121,7 @@ void __cdecl wonders_report_draw(void)
         rect_set((iptr)rect,advisor_window_block.advisor_client_x + 2,box_top,
                            ((advisor_window_block.advisor_client_width + advisor_window_block.advisor_client_x) - advisor_window_block.advisor_vscroll_width) - 4,box_bottom);
         value = civ_color_primary(civ);
-        gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(iptr)rect,value);
+        gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(RECT *)rect,value);
       }
       row++;
     }
@@ -4910,7 +4910,7 @@ void __thiscall cityview_redraw_scrolled(CityViewWindow *self)
   SetRect(&dst_rect,0,0,tax_rate_icon_sprites_block.screen_rect_right,0x1e0);
   SetRect(&src_rect,cityview_scroll_x,0,tax_rate_icon_sprites_block.screen_rect_right + cityview_scroll_x,0x1e0);
   surface_blit
-            ((DibSurface *)&self->ship_civ,(iptr)&self->control_list,(iptr)&src_rect,(iptr)&dst_rect
+            ((DibSurface *)&self->ship_civ,(DibSurface *)&self->control_list,&src_rect,&dst_rect
             );
   cityview_draw_title(self);
   wnd_repaint((SurfaceWindow *)&self->control_list);
@@ -4931,12 +4931,12 @@ void __thiscall cityview_draw_title(CityViewWindow *self)
   OffsetRect((LPRECT)self->title_rect,1,1);
   surface_draw_text_in_rect
             ((DibSurface *)&self->control_list,(iptr)(self->title_font),(const char *)&map_views_block.text_buffer,
-             (iptr)self->title_rect,0);
+             (RECT *)self->title_rect,0);
   gfx_set_text_color_index(0x1a);
   OffsetRect((LPRECT)self->title_rect,-1,-1);
   surface_draw_text_in_rect
             ((DibSurface *)&self->control_list,(iptr)(self->title_font),(const char *)&map_views_block.text_buffer,
-             (iptr)self->title_rect,0);
+             (RECT *)self->title_rect,0);
   return;
 }
 
@@ -5023,8 +5023,8 @@ void __thiscall cityview_scroll_right(CityViewWindow *self)
         (key_state = GetAsyncKeyState(0x27), (char)((ushort)key_state >> 8) == '\0')) &&
        (cursor.x <= tax_rate_icon_sprites_block.screen_rect_right * 7 >> 3)) break;
     surface_blit
-              ((DibSurface *)&self->ship_civ,(iptr)&self->control_list,(iptr)&src_rect,
-               (iptr)&dst_rect);
+              ((DibSurface *)&self->ship_civ,(DibSurface *)&self->control_list,&src_rect,
+               &dst_rect);
     cityview_draw_title(self);
     wnd_blit_surface((DibSurface *)&self->control_list);
     cityview_scroll_x += step;
@@ -5057,8 +5057,8 @@ void __thiscall cityview_scroll_left(CityViewWindow *self)
         (key_state = GetAsyncKeyState(0x25), (char)((ushort)key_state >> 8) == '\0')) &&
        (tax_rate_icon_sprites_block.screen_rect_right >> 3 <= cursor.x)) break;
     surface_blit
-              ((DibSurface *)&self->ship_civ,(iptr)&self->control_list,(iptr)&src_rect,
-               (iptr)&dst_rect);
+              ((DibSurface *)&self->ship_civ,(DibSurface *)&self->control_list,&src_rect,
+               &dst_rect);
     cityview_draw_title(self);
     wnd_blit_surface((DibSurface *)&self->control_list);
     cityview_scroll_x -= step;
@@ -7769,7 +7769,7 @@ void __cdecl impr_editor_on_ok(void)
   iptr clamp_count;
   HWND hWnd;
   iptr write_ok;
-  int wnd;
+  NativeWindow *wnd;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -7788,7 +7788,7 @@ void __cdecl impr_editor_on_ok(void)
       lpCaption = str_file_i_o_error_3;
       lpText = msg_text;
       wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
+      MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
     wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -8077,7 +8077,7 @@ void __thiscall impr_editor_paint(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,
@@ -11960,8 +11960,8 @@ void __thiscall city_window_blit_bg_rect(ScaledWindowView *self,int *rect)
   i32 height;
   i32 width;
   
-  height = rect_height((iptr)rect);
-  width = rect_width((iptr)rect);
+  height = rect_height((RECT *)rect);
+  width = rect_width((RECT *)rect);
   gfx_copy_rect_xywh((iptr)&city_window_bg_surface,(iptr)self,
                      (*rect - *(int *)(((PictureWindow *)self)->margin_x_2)) - self->client_x,
                      (rect[1] - *(int *)(((PictureWindow *)self)->content_offset_y)) - self->client_y,*rect,
@@ -12306,7 +12306,7 @@ void __thiscall city_window_draw_citizens(FrameWindow *self,int blit,i32 flag)
         i = i + 1) {
       height = city_window_scale((WindowObjectView *)self,0x1e);
       rect_set_xywh((iptr)hotspot_rect,x2,top + offset,pos,height);
-      hotspot_add_rect((ClickMap *)&self->rates_civ,i,2,(iptr)hotspot_rect);
+      hotspot_add_rect((ClickMap *)&self->rates_civ,i,2,(RECT *)hotspot_rect);
       x2 += pos;
     }
     if (blit != 0) {
@@ -12524,7 +12524,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *self,int blit)
     map_top = panel_top2 + map_top;
     clickmap_remove_by_id((ClickMapRemoveView *)&self->rates_civ,1);
     rect_set_xywh((iptr)map_rect,map_left,half_tile_h + map_top,tile_w << 2,tile_h << 2);
-    hotspot_add_rect((ClickMap *)&self->rates_civ,0,1,(iptr)map_rect);
+    hotspot_add_rect((ClickMap *)&self->rates_civ,0,1,(RECT *)map_rect);
     origin_x2 = half_tile_w * 3 + map_left;
     origin_y2 = half_tile_h * 4 + map_top;
     for (i = 0; i < 0x15; i++) {
@@ -12663,7 +12663,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *self,int blit)
     text_clear();
     text_append_label(0x1c2);
     text_set_colors(0x7c,0x39,1,1);
-    bar_height = rect_width((iptr)&((PictureWindow *)self)->resource_label_rect);
+    bar_height = rect_width((RECT *)(iptr)&((PictureWindow *)self)->resource_label_rect);
     text_bottom = ((PictureWindow *)self)->resource_label_rect_bottom;
     scaled = city_window_scale((WindowObjectView *)self,0xe);
     gfx_draw_text_centered((const char *)&map_views_block.text_buffer,((PictureWindow *)self)->resource_label_rect,text_bottom - scaled,bar_height);
@@ -13350,7 +13350,7 @@ void __thiscall city_window_draw_food_box(ScaledWindowView *self,int blit)
       (*(int *)(((PictureWindow *)self)->redraw_deferred) == 0)) && (-1 < *(int *)(((PictureWindow *)self)->city_index))) {
     city_window_begin_draw(self,(iptr)(((PictureWindow *)self)->food_box_rect));
     text_set_colors(0x2c,10,1,1);
-    width = rect_width((iptr)(((PictureWindow *)self)->food_box_rect));
+    width = rect_width((RECT *)(iptr)(((PictureWindow *)self)->food_box_rect));
     arg_y = *(i32 *)(((PictureWindow *)self)->food_box_rect_top);
     arg_x = *(i32 *)(((PictureWindow *)self)->food_box_rect);
     box_w = (iptr)label_string(label_string_ids[0x2b]);
@@ -13367,26 +13367,26 @@ void __thiscall city_window_draw_food_box(ScaledWindowView *self,int blit)
     rect_deflate((iptr)&box_rect.left,arg_x,arg_y);
     box_h = 0;
     box_w = 0;
-    arg_y = rect_width((iptr)&box_rect.left);
+    arg_y = rect_width((RECT *)&box_rect.left);
     arg_x = city_window_scale((WindowObjectView *)self,0x11);
     icon_x = ui_calc_item_spacing(cities[*(int *)(((PictureWindow *)self)->city_index)].size + 1,arg_x,arg_y,box_w
                                ,box_h);
     box_h = 0;
     box_w = 0;
-    arg_y = rect_height((iptr)&box_rect.left);
+    arg_y = rect_height((RECT *)&box_rect.left);
     arg_x = city_window_scale((WindowObjectView *)self,0xe);
     row_spacing = ui_calc_item_spacing(main_menu_block.city_food_box_rows,arg_x,arg_y,box_w,box_h);
     icon_x = (cities[*(int *)(((PictureWindow *)self)->city_index)].size + 1) * icon_x;
-    extent = rect_width((iptr)&box_rect.left);
+    extent = rect_width((RECT *)&box_rect.left);
     if (icon_x < extent) {
       arg_y = 0;
-      extent = rect_width((iptr)&box_rect.left);
+      extent = rect_width((RECT *)&box_rect.left);
       rect_deflate((iptr)&box_rect.left,extent - icon_x >> 1,arg_y);
     }
     icon_x = row_spacing * main_menu_block.city_food_box_rows;
-    extent = rect_height((iptr)&box_rect.left);
+    extent = rect_height((RECT *)&box_rect.left);
     if (icon_x < extent) {
-      extent = rect_height((iptr)&box_rect.left);
+      extent = rect_height((RECT *)&box_rect.left);
       box_rect.bottom -= (extent - icon_x);
     }
     rect_inflate((iptr)&box_rect.left,3,3);
@@ -13404,7 +13404,7 @@ void __thiscall city_window_draw_food_box(ScaledWindowView *self,int blit)
         extent = food_left;
       }
       width = 1;
-      arg_y = rect_width((iptr)&box_rect.left);
+      arg_y = rect_width((RECT *)&box_rect.left);
       arg_x = city_window_scale((WindowObjectView *)self,0x11);
       city_window_draw_icon_row((iptr)&war_icon_sprite_block.resource_icon_sprites,icon_x,row_y,extent,
                          cities[*(int *)(((PictureWindow *)self)->city_index)].size + 1,arg_x,arg_y,width);
@@ -13479,7 +13479,7 @@ void __thiscall city_window_draw_production(FrameWindow *self,int blit)
     scaled = city_window_scale((WindowObjectView *)self,0x28);
     box_rect.bottom = box_rect.top + scaled;
     clickmap_remove_by_id((ClickMapRemoveView *)&self->rates_civ,5);
-    hotspot_add_rect((ClickMap *)&self->rates_civ,0,5,(iptr)&box_rect.left);
+    hotspot_add_rect((ClickMap *)&self->rates_civ,0,5,(RECT *)&box_rect.left);
     if (cities[*(int *)(((PictureWindow *)self)->city_index)].building < '\0') {
       if (cities[*(int *)(((PictureWindow *)self)->city_index)].building < 1) {
         improvement = ~(int)cities[*(int *)(((PictureWindow *)self)->city_index)].building + 1;
@@ -13489,7 +13489,7 @@ void __thiscall city_window_draw_production(FrameWindow *self,int blit)
       }
       build_cost = (uint)improvements[improvement].cost;
       text_set_colors(0x54,10,1,1);
-      width = rect_width((iptr)(((PictureWindow *)self)->production_rect));
+      width = rect_width((RECT *)(iptr)(((PictureWindow *)self)->production_rect));
       arg_y = *(i32 *)(((PictureWindow *)self)->production_rect_top);
       arg_x = *(i32 *)(((PictureWindow *)self)->production_rect);
       arg_w = (iptr)label_string(improvements[improvement].name);
@@ -13535,7 +13535,7 @@ void __thiscall city_window_draw_production(FrameWindow *self,int blit)
       rect_deflate((iptr)&box_rect.left,arg_x,arg_y);
       arg_h = 0;
       arg_w = 0;
-      arg_y = rect_height((iptr)&box_rect.left);
+      arg_y = rect_height((RECT *)&box_rect.left);
       arg_x = city_window_scale((WindowObjectView *)self,0xe);
       row_spacing = ui_calc_item_spacing(10,arg_x,arg_y,arg_w,arg_h);
       per_row = build_cost;
@@ -13545,14 +13545,14 @@ void __thiscall city_window_draw_production(FrameWindow *self,int blit)
       }
       arg_w = 0;
       fit_out = &fit_count;
-      arg_y = rect_width((iptr)&box_rect.left);
+      arg_y = rect_width((RECT *)&box_rect.left);
       arg_x = city_window_scale((WindowObjectView *)self,0x11);
       col_spacing = ui_calc_item_spacing((*(uint *)&main_menu_block.city_shield_rows),arg_x,arg_y,(iptr)fit_out,arg_w);
       row_width = col_spacing * (*(uint *)&main_menu_block.city_shield_rows) + fit_count;
       pad_x2 = 0;
-      scaled = rect_width((iptr)&box_rect.left);
+      scaled = rect_width((RECT *)&box_rect.left);
       if (row_width < scaled) {
-        scaled = rect_width((iptr)&box_rect.left);
+        scaled = rect_width((RECT *)&box_rect.left);
         pad_x2 = scaled - row_width >> 1;
       }
       rect_inflate((iptr)&box_rect.left,3,3);
@@ -13570,7 +13570,7 @@ void __thiscall city_window_draw_production(FrameWindow *self,int blit)
           row_icons = per_row;
         }
         width = 1;
-        arg_y = rect_width((iptr)&box_rect.left);
+        arg_y = rect_width((RECT *)&box_rect.left);
         arg_x = city_window_scale((WindowObjectView *)self,0x11);
         city_window_draw_icon_row((iptr)&war_icon_sprite_block.shield_icon_sprite,row_x,row_y,row_icons,per_row,arg_x,arg_y,width);
         shields_left -= row_icons;
@@ -13683,7 +13683,7 @@ void __thiscall city_window_draw_supported_units(FrameWindow *self,int blit)
       text_clear();
       text_append_label(0x1bf);
       text_set_colors(0x7c,0x12,1,1);
-      width = rect_width((iptr)((u8 *)&((PictureWindow *)self)->supported_units_label_rect));
+      width = rect_width((RECT *)(iptr)((u8 *)&((PictureWindow *)self)->supported_units_label_rect));
       scaled = city_window_scale((WindowObjectView *)self,1);
       gfx_draw_text_centered((const char *)&map_views_block.text_buffer,*(i32 *)((u8 *)&((PictureWindow *)self)->supported_units_label_rect),
                          *(int *)(((PictureWindow *)self)->supported_units_label_rect_top) + scaled,width);
@@ -13771,7 +13771,7 @@ void __thiscall city_window_draw_supported_units(FrameWindow *self,int blit)
         }
         gfx_reset_zoom_scale();
         rect_set_xywh((iptr)hotspot_rect,cell_x,cell_y,unit_size,unit_size);
-        hotspot_add_rect((ClickMap *)&self->rates_civ,unit,6,(iptr)hotspot_rect);
+        hotspot_add_rect((ClickMap *)&self->rates_civ,unit,6,(RECT *)hotspot_rect);
         col++;
         cell_x += cell_w;
         if (max_cols <= col) {
@@ -13902,7 +13902,7 @@ void __thiscall city_window_draw_improvements(FrameWindow *self,int blit)
     text_clear();
     text_append_label(0x1c0);
     text_set_colors(0x7c,0x12,1,1);
-    width = rect_width((iptr)(u8 *)&((PictureWindow *)self)->improvements_rect);
+    width = rect_width((RECT *)(iptr)(u8 *)&((PictureWindow *)self)->improvements_rect);
     scaled2 = *(int *)(((PictureWindow *)self)->improvements_rect_top);
     scaled = city_window_scale((WindowObjectView *)self,1);
     gfx_draw_text_centered((const char *)&map_views_block.text_buffer,*(i32 *)(u8 *)&((PictureWindow *)self)->improvements_rect,scaled2 - scaled,width);
@@ -13910,7 +13910,7 @@ void __thiscall city_window_draw_improvements(FrameWindow *self,int blit)
     row_x = list_left + row_x;
     row_y = city_window_scale((WindowObjectView *)self,1);
     row_y = list_top + row_y;
-    scaled2 = rect_height((iptr)&((PictureWindow *)self)->improvement_list_rect);
+    scaled2 = rect_height((RECT *)(iptr)&((PictureWindow *)self)->improvement_list_rect);
     scaled = city_window_scale((WindowObjectView *)self,1);
     visible_rows = city_window_scale((WindowObjectView *)self,0xc);
     visible_rows = (scaled2 - (scaled >> 1)) / visible_rows;
@@ -13920,7 +13920,7 @@ void __thiscall city_window_draw_improvements(FrameWindow *self,int blit)
       scaled2 = city_window_scale((WindowObjectView *)self,0xc0);
       scaled = city_window_scale((WindowObjectView *)self,4);
       rect_set_xywh((iptr)row_rect,row_x,row_y,scaled2 - scaled,row_h);
-      hotspot_add_rect((ClickMap *)&self->rates_civ,row,4,(iptr)row_rect);
+      hotspot_add_rect((ClickMap *)&self->rates_civ,row,4,(RECT *)row_rect);
       scaled2 = city_window_scale((WindowObjectView *)self,0xc);
       row_y += scaled2;
     }
@@ -14326,7 +14326,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *self)
     text_clear();
     text_append_label(0x1c3);
     text_set_colors(0x7c,0x12,1,1);
-    width = rect_width((iptr)((u8 *)&((PictureWindow *)self)->info_title_rect));
+    width = rect_width((RECT *)(iptr)((u8 *)&((PictureWindow *)self)->info_title_rect));
     scaled = city_window_scale((WindowObjectView *)self,1);
     gfx_draw_text_centered((const char *)&map_views_block.text_buffer,*(i32 *)((u8 *)&((PictureWindow *)self)->info_title_rect),((PictureWindow *)self)->info_title_rect_top + scaled,
                        width);
@@ -14382,7 +14382,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *self)
       cell_h = unit_h;
     }
     rect_set_xywh((iptr)hotspot_rect,cell_x,cell_y,cell_w,cell_h);
-    hotspot_add_rect((ClickMap *)&self->rates_civ,slot,3,(iptr)hotspot_rect);
+    hotspot_add_rect((ClickMap *)&self->rates_civ,slot,3,(RECT *)hotspot_rect);
     col++;
     cell_x += col_w;
     if (per_row <= col) {
@@ -14402,7 +14402,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *self)
   if (main_menu_block.city_pollution != 0) {
     gfx_set_zoom_scale(*(int *)(((PictureWindow *)self)->view_scale) * 4 - 8);
     flag = 0;
-    row_width = rect_width((iptr)&((PictureWindow *)self)->info_panel_rect);
+    row_width = rect_width((RECT *)(iptr)&((PictureWindow *)self)->info_panel_rect);
     scaled = city_window_scale((WindowObjectView *)self,0xe);
     row_width -= scaled;
     width = city_window_scale((WindowObjectView *)self,0x40);
@@ -14541,11 +14541,11 @@ void __thiscall city_window_draw_support_map(WindowObjectView *self)
   text_clear();
   text_append_label(0x1c4);
   text_set_colors(0x7c,0x12,1,1);
-  title_width = rect_width((iptr)(self + 0x5a3));
+  title_width = rect_width((RECT *)(iptr)(self + 0x5a3));
   origin_x = city_window_scale(self,1);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,((PictureWindow *)self)->info_title_rect,((PictureWindow *)self)->info_title_rect_top + origin_x,title_width);
-  origin_x = rect_width((iptr)(self + 0x593));
-  origin_y = rect_height((iptr)(self + 0x593));
+  origin_x = rect_width((RECT *)(iptr)(self + 0x593));
+  origin_y = rect_height((RECT *)(iptr)(self + 0x593));
   pixel_size = int_clamp((origin_x - 4) / (int)map.width,1,(origin_y - 4) / (int)map.height);
   origin_x = ((origin_x - 4) - map.width * pixel_size >> 1) + 2 + ((PictureWindow *)self)->info_panel_rect;
   origin_y = ((origin_y - 4) - map.height * pixel_size >> 1) + 2 + ((PictureWindow *)self)->info_panel_rect_top;
@@ -14792,15 +14792,15 @@ void __thiscall city_window_draw_happiness(WindowObjectView *self)
   text_clear();
   text_append_label(0x1c5);
   text_set_colors(0x7c,0x12,1,1);
-  width = rect_width((iptr)(self + 0x5a3));
+  width = rect_width((RECT *)(iptr)(self + 0x5a3));
   scaled = city_window_scale(self,1);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,((PictureWindow *)self)->info_title_rect,((PictureWindow *)self)->info_title_rect_top + scaled,width);
   area_left = ((PictureWindow *)self)->info_title_rect + 2;
   scaled = city_window_scale(self,0xe);
   area_y = ((PictureWindow *)self)->info_title_rect_top + scaled + 2;
-  area_w = rect_width((iptr)(self + 0x5a3));
+  area_w = rect_width((RECT *)(iptr)(self + 0x5a3));
   area_w -= 4;
-  area_h = rect_height((iptr)(self + 0x5a3));
+  area_h = rect_height((RECT *)(iptr)(self + 0x5a3));
   area_h -= 4;
   row_h = area_h / 5;
   area_x = area_left;
@@ -15174,11 +15174,11 @@ void __thiscall city_window_refresh(FrameWindow *self)
 void __thiscall city_window_bring_to_top(WindowObjectView *self)
 
 {
-  iptr window;
+  NativeWindow *window;
   
   if (((*(u32 *)&((PictureWindow *)self)->is_closed) == 0) && ((*(u32 *)&((PictureWindow *)self)->redraw_suspended) == 0)) {
     window = wnd_get_window((WndBase *)(self + 0x12));
-    BringWindowToTop(*(HWND *)(window + 4));
+    BringWindowToTop(window->hwnd);
   }
   return;
 }
@@ -16866,12 +16866,12 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   rect_set_xywh((iptr)rect,origin_x2 + left_offset,top,width,height);
   icon_char_end = 0;
   icon_char = 0x5e;
-  spritebtn_create_icon_button((iptr)&city_window_block.city_window_wnd,9,*(SpriteButton **)((u8 *)&((PictureWindow *)self)->prev_city_button),(iptr)&scroll_up_button_sprite,(iptr)rect);
+  spritebtn_create_icon_button((iptr)&city_window_block.city_window_wnd,9,*(SpriteButton **)((u8 *)&((PictureWindow *)self)->prev_city_button),(iptr)&scroll_up_button_sprite,(RECT *)rect);
   spritebtn_set_click_handler(*(SpritebtnSetClickHandlerView **)((u8 *)&((PictureWindow *)self)->prev_city_button),(iptr)city_button_prev_city);
   offset = city_window_scale((WindowObjectView *)self,0x19);
   rect_offset((iptr)rect,0,offset);
   icon_char = 0x76;
-  spritebtn_create_icon_button((iptr)&city_window_block.city_window_wnd,10,*(SpriteButton **)((u8 *)&((PictureWindow *)self)->next_city_button),(iptr)&city_down_arrow_sprite_block.city_down_arrow_sprite,(iptr)rect);
+  spritebtn_create_icon_button((iptr)&city_window_block.city_window_wnd,10,*(SpriteButton **)((u8 *)&((PictureWindow *)self)->next_city_button),(iptr)&city_down_arrow_sprite_block.city_down_arrow_sprite,(RECT *)rect);
   spritebtn_set_click_handler(*(SpritebtnSetClickHandlerView **)((u8 *)&((PictureWindow *)self)->next_city_button),(iptr)city_button_next_city);
   height = city_window_scale((WindowObjectView *)self,0x18);
   width = city_window_scale((WindowObjectView *)self,0x39);
@@ -16925,7 +16925,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   scrollbar_create
             (*(Control **)(((PictureWindow *)self)->improvements_scrollbar),(iptr)&city_window_block.city_window_wnd,99,
              (iptr)(((PictureWindow *)self)->improvements_scrollbar_rect),1);
-  top = rect_height((iptr)&((PictureWindow *)self)->improvement_list_rect);
+  top = rect_height((RECT *)(iptr)&((PictureWindow *)self)->improvement_list_rect);
   left_offset = city_window_scale((WindowObjectView *)self,1);
   scaled = city_window_scale((WindowObjectView *)self,0xc);
   scrollbar_set_page_size
@@ -17074,9 +17074,9 @@ void __thiscall city_window_create(FrameWindow *self)
   extra_arg3 = 8;
   extra_arg2 = 0x18;
   extra_arg1 = 0;
-  height = rect_height((iptr)&minimap_wnd_rect_block.city_wnd_rect);
+  height = rect_height((RECT *)&minimap_wnd_rect_block.city_wnd_rect);
   height -= sys_dlgframe_h2;
-  width = rect_width((iptr)&minimap_wnd_rect_block.city_wnd_rect);
+  width = rect_width((RECT *)&minimap_wnd_rect_block.city_wnd_rect);
   width -= sys_dlgframe_w2;
   style = 2;
   left = minimap_wnd_rect_block.city_wnd_rect;
@@ -17126,7 +17126,7 @@ city_draw_hline(i32 x,i32 y,i32 length,i32 color)
 void __cdecl city_draw_bevel_rect(iptr rect,i32 light_color,i32 dark_color)
 
 {
-  gfx_draw_bevel_rect(gfx_draw_target,rect,light_color,dark_color);
+  gfx_draw_bevel_rect(gfx_draw_target,(RECT *)rect,light_color,dark_color);
   return;
 }
 

@@ -12,6 +12,10 @@ ROWS: KIND<TAB>FUNCTION<TAB>NAME<TAB>TYPE, KIND one of
     global  NAME (FUNCTION -) in gamedata.h/.cpp and every function that does
             not declare its own NAME
     ret     FUNCTION's return value (NAME -)
+    field   every use of the struct member NAME (FUNCTION -), declarations
+            changed by hand (same size types only)
+    member  NAME, a member of the global block variable FUNCTION (gamedata.h;
+            same size types only: the layout is fixed)
 TYPE: `S *` (S a struct of run/layout.tsv, which tools/cxx_layout.py reads
 from the compiler) or `T *` for an array of integers T.
 
@@ -55,7 +59,10 @@ SIGNED = {'int': 4, 'i32': 4, 'iptr': 4, 'long': 4, 'LONG': 4, 'BOOL': 4, 'INT':
 UNSIGNED = {'unsigned int': 4, 'uint': 4, 'u32': 4, 'uptr': 4, 'DWORD': 4, 'UINT': 4, 'ulong': 4,
             'unsigned long': 4, 'undefined4': 4, 'ULONG': 4,
             'unsigned short': 2, 'short unsigned int': 2, 'ushort': 2, 'u16': 2, 'WORD': 2, 'word': 2, 'undefined2': 2,
-            'unsigned char': 1, 'uchar': 1, 'u8': 1, 'byte': 1, 'BYTE': 1, 'undefined': 1, 'undefined1': 1}
+            'unsigned char': 1, 'uchar': 1, 'u8': 1, 'byte': 1, 'BYTE': 1, 'undefined': 1, 'undefined1': 1,
+            # Win32 handles: uint32_t in src/platform/win32_types.h
+            **{h: 4 for h in ('HWND', 'HDC', 'HBRUSH', 'HPALETTE', 'HCURSOR', 'HICON', 'HMENU', 'HFONT',
+                              'HBITMAP', 'HGDIOBJ', 'HANDLE', 'HGLOBAL', 'HINSTANCE', 'HPEN', 'HRGN', 'HMMIO')}}
 INT_TYPES = r'(?:iptr|uptr|i32|u32|int|uint|long|ulong)'
 NUM = r'(?:0x[0-9a-fA-F]+|\d+)'
 TYPE = r'(?:const\s+)?[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*(?:\s*\*)*'
@@ -131,6 +138,12 @@ def find_field(s, n, t, depth=0):
                 continue
             if mc[0] in 'su' and want[0] in 'su' and mc[1] == want_size:
                 best.append(((m, mt, 'sign'), unnamed(m)))
+                continue
+            if mt.strip().endswith('*') and (want_size == 4 or want[0] == 't' and want[1].endswith('*')) \
+                    or mc[0] in 'su' and mc[1] == 4 and want[0] == 't' and want[1].endswith('*'):
+                # a pointer member read as a 4-byte integer or another pointer,
+                # a 4-byte integer member read as a pointer
+                best.append(((m, mt, 'ptr'), unnamed(m)))
                 continue
         st = re.sub(r'\s+', ' ', mt.strip())
         if st in LAYOUT and depth < 4:
@@ -220,7 +233,16 @@ def is_statement_start(m, i):
         # a label or case (not a ?: branch)
         line = m[m.rfind('\n', 0, j) + 1:j]
         return re.match(r'\s*(?:case\b.*|default|\w+)\s*$', line) is not None
-    return p in (';', '{', '}', ')', 'else', '')
+    if p == ')':
+        # if (...) X, while (...) X, for (...) X; not a cast (T *)X
+        d, k = 0, j
+        while k >= 0:
+            d += {')': 1, '(': -1}.get(m[k], 0)
+            if d == 0:
+                break
+            k -= 1
+        return k >= 0 and prev_tok(m, k)[0] in ('if', 'while', 'for', 'switch')
+    return p in (';', '{', '}', 'else', '')
 
 
 def statement_end(m, i):
@@ -266,6 +288,9 @@ def binary_and(m, j):
     return p == ']' or (bool(re.match(r'^\w+$', p)) and p not in KEYWORDS)
 
 
+PENDING = []      # insertions a pointer store asks for (field_access)
+
+
 def field_access(m, start, end, obj, s, n, t, checks):
     """Text for the raw access m[start:end] = *(t *)(obj + n), obj an S * (or None)."""
     f = find_field(s, n, t)
@@ -282,7 +307,25 @@ def field_access(m, start, end, obj, s, n, t, checks):
     if kind == 'exact':
         checks.append((s, path, n, t))
         return expr
-    store = nt in STORE_OK or nt in ('++', '--') or pt in ('++', '--')
+    if kind == 'ptr' and pt != '*' and (nt in STORE_OK or nt in ('++', '--') or pt in ('++', '--')):
+        # p->f = (MT)(E);  (the same 4 bytes are stored)
+        if nt != '=' or not is_statement_start(m, start):
+            return None
+        e = statement_end(m, nj + 1)
+        if e < 0:
+            return None
+        checks.append((s, path, n, mt))
+        rs = nj + 1
+        while m[rs] in ' \n\t':
+            rs += 1
+        if m[rs:e].strip() not in ('0', '0x0'):
+            PENDING.append((rs, rs, '(%s)(' % cast_type(mt)))
+            PENDING.append((e, e, ')'))
+        return expr
+    if kind == 'ptr':
+        checks.append((s, path, n, mt))
+        return '(%s)%s' % (cast_type(t), expr)
+    store = pt != '*' and (nt in STORE_OK or nt in ('++', '--') or pt in ('++', '--'))
     if store:
         if pt in ('++', '--'):
             if not is_statement_start(m, pj) or statement_end(m, end) < 0:
@@ -408,10 +451,81 @@ def rewrite_uses(text, m, spans, newtype, oldtype, checks, stats, assign=True, r
     s = struct_of(newtype)
     el = elem_of(newtype)
     old = 'uptr' if canon(oldtype)[0] == 'u' else 'iptr'
+    # an integer pointer T * (X + N is N elements, X[N], *X)
+    pel = elem_of(oldtype) or (oldtype.strip()[:-1].strip() if re.fullmatch(r'(?:char|byte|undefined\d?)\s*\*', oldtype.strip()) else None)
+    psize = canon(pel)[1] if pel else 1
+    if pel:
+        old = cast_type(oldtype)
+        if not s:
+            raise ValueError('%s -> %s: only to a struct pointer' % (oldtype, newtype))
+    null_old = r'\(\s*%s\s*\*\s*\)\s*(?:0x0|0)\b(?!x)' % re.escape(pel) if pel else None
     edits = []
     for a, b in spans:
         x = text[a:b]
         r = raw_around(m, a, b)
+        if r and pel:
+            ra, rb, t, e = r
+            new = None
+            if e is None:
+                new = field_access(m, ra, rb, x, s, 0, t, checks)
+            elif re.fullmatch(NUM, e) and int(e, 0) * psize < LAYOUT[s]['size']:
+                new = field_access(m, ra, rb, x, s, int(e, 0) * psize, t, checks)
+            if new is not None:
+                stats['named'] += 1
+                edits.append((ra, rb, new))
+                edits.extend(PENDING)
+                del PENDING[:]
+            else:
+                del PENDING[:]
+                stats['raw_left'] += 1
+                report['wrap'] = report.get('wrap', 0) + 1
+                edits.append((a, a, '(%s)' % old))
+            continue
+        if pel:
+            nt, nj = next_tok(m, b)
+            pt, pj = prev_tok(m, a)
+            new = None
+            if nt == '[':
+                ce = m.index(']', nj)
+                ie = m[nj + 1:ce].strip()
+                if re.fullmatch(NUM, ie) and '[' not in ie and int(ie, 0) * psize < LAYOUT[s]['size']:
+                    new = field_access(m, a, ce + 1, x, s, int(ie, 0) * psize, pel, checks)
+                    if new is not None:
+                        edits.append((a, ce + 1, new))
+                elif ie == '0':
+                    pass
+            elif pt == '*' and (prev_tok(m, pj)[0] not in (')', ']') and not re.match(r'\w', prev_tok(m, pj)[0] or '(')
+                                or prev_tok(m, pj)[0] in KEYWORDS
+                                or prev_tok(m, pj)[0] == ')' and ANY_CAST.search(m[:prev_tok(m, pj)[1] + 1])):
+                new = field_access(m, pj, b, x, s, 0, pel, checks)
+                if new is not None:
+                    edits.append((pj, b, new))
+            if new is not None:
+                stats['named'] += 1
+                edits.extend(PENDING)
+                del PENDING[:]
+                continue
+            del PENDING[:]
+            if nt in ('==', '!=') and re.match(r'\s*(?:==|!=)\s*' + null_old, m[b:]):
+                cm = re.compile(null_old).search(m, nj)
+                edits.append((cm.start(), cm.end(), '(%s)0x0' % cast_type(newtype)))
+                continue
+            if pt in ('==', '!='):
+                cm = re.search(null_old + r'\s*(?:==|!=)\s*$', m[:a])
+                if cm:
+                    edits.append((cm.start(), cm.start() + re.match(null_old, m[cm.start():]).end(), '(%s)0x0' % cast_type(newtype)))
+                    continue
+            if assign and nt == '=' and assign_end(m, a, nj) is not None:
+                e = assign_end(m, a, nj)
+                if e > 0:
+                    rs = nj + 1
+                    while m[rs] in ' \n':
+                        rs += 1
+                    rhs = m[rs:e].rstrip()
+                    cm = re.match(r'\(\s*%s\s*\*\s*\)' % re.escape(pel), rhs)
+                    if cm and unary_end(rhs, cm.end()) == len(rhs):
+                        edits.append((rs, rs + cm.end(), '(%s)' % cast_type(newtype)))
+                        continue
         if r:
             ra, rb, t, e = r
             new = None
@@ -428,7 +542,10 @@ def rewrite_uses(text, m, spans, newtype, oldtype, checks, stats, assign=True, r
             if new is not None:
                 stats['named'] += 1
                 edits.append((ra, rb, new))
+                edits.extend(PENDING)
+                del PENDING[:]
                 continue
+            del PENDING[:]
             stats['raw_left'] += 1
             report['wrap'] = report.get('wrap', 0) + 1
             edits.append((a, a, '(%s)' % old))
@@ -450,8 +567,8 @@ def rewrite_uses(text, m, spans, newtype, oldtype, checks, stats, assign=True, r
             if ANY_CAST.search(m[:a]):
                 continue
         nt, nj = next_tok(m, b)
-        if assign and nt == '=' and is_statement_start(m, a):
-            e = statement_end(m, nj + 1)
+        if assign and nt == '=' and assign_end(m, a, nj) is not None:
+            e = assign_end(m, a, nj)
             if e < 0:
                 edits.append((a, a, '(%s)' % old))       # does not compile: for hand
                 report['wrap'] = report.get('wrap', 0) + 1
@@ -471,20 +588,23 @@ def rewrite_uses(text, m, spans, newtype, oldtype, checks, stats, assign=True, r
             elif unary_end(rhs, 0) == len(rhs):
                 edits.append((rs, rs, '(%s)' % ct))
             else:
-                report['wrap'] = report.get('wrap', 0) + 1
+                # a call written over lines, maybe under a cast, is a value too
+                cm = re.match(r'(?:\(\s*%s\s*\*?\s*\)\s*)?\w+\s*\(' % TYPE, rhs)
+                if not (cm and match_paren(rhs, cm.end() - 1) == len(rhs)):
+                    report['wrap'] = report.get('wrap', 0) + 1
                 edits.append((rs, rs, '(%s)(' % ct))
                 edits.append((rs + len(rhs), rs + len(rhs), ')'))
             continue
         ga, gb = group_extent(m, a, b)
         pt, pj = prev_tok(m, ga)
         nt, nj = next_tok(m, gb)
-        wrap = False
+        wrap = cmp = False
         if nt in ARITH_NEXT or pt in ARITH_PREV or pt == '*':
             wrap = True
         elif pt == '&':
             p2, _ = prev_tok(m, pj)
             wrap = bool(re.match(r'\w|[)\]]', p2 or '(')) and p2 not in KEYWORDS
-        elif pt == ',' or nt == ',':
+        elif pt == ',' and nt not in ('==', '!=') or nt == ',' and pt not in ('==', '!='):
             # a comma expression (not a call's arguments)
             o = enclosing_open(m, ga)
             if o >= 0:
@@ -494,12 +614,30 @@ def rewrite_uses(text, m, spans, newtype, oldtype, checks, stats, assign=True, r
                 wrap = True
         elif nt in ('==', '!='):
             wrap = not re.match(r'\s*(?:==|!=)\s*(?:0x0|0|nullptr)\b(?!x)', m[gb:])
+            cmp = wrap
         elif pt in ('==', '!='):
             wrap = not re.search(r'\b(?:0x0|0|nullptr)\s*(?:==|!=)\s*$', m[:ga])
-        if wrap:
+            cmp = wrap
+        if wrap and cmp:
+            # a comparison keeps its meaning with the old type on one side
+            edits.append((a, a, '(%s)' % old))
+            stats['wrapped'] += 1
+            report['cmp'] = report.get('cmp', 0) + 1
+        elif wrap:
             edits.append((a, a, '(%s)' % old))
             stats['wrapped'] += 1
             report['wrap'] = report.get('wrap', 0) + 1
+    if pel:
+        # ((T *)X): a cast binds less tightly than X[i], X++
+        ends = dict(spans)
+        out = []
+        for ea, eb, er in edits:
+            if ea == eb and er == '(%s)' % old and ea in ends:
+                out.append((ea, ea, '((%s)' % old))
+                out.append((ends[ea], ends[ea], ')'))
+            else:
+                out.append((ea, eb, er))
+        edits = out
     return edits
 
 
@@ -563,6 +701,8 @@ def typed_pass(body, ds, checks, stats):
             stats['typed' if r else 'typed_left'] += 1
             if r:
                 edits.append((x.start(), x.end(), r))
+                edits.extend(PENDING)
+            del PENDING[:]
     return apply(body, edits)
 
 
@@ -624,26 +764,106 @@ def retype_local(body, v, t, newtype, ds_, de, checks, stats, strict=False):
 
 
 def assigned(m, v):
-    """The right-hand sides of the statements v = E;"""
+    """The right-hand sides of the statements v = E; (and of v = E in a for
+    header's last clause)"""
     out = []
     for a, b in var_spans(m, v):
         nt, nj = next_tok(m, b)
-        if nt == '=' and is_statement_start(m, a):
-            e = statement_end(m, nj + 1)
-            out.append(m[nj + 1:e].strip() if e > 0 else '?')
+        if nt == '=' and prev_tok(m, a)[0] != '*':
+            e = assign_end(m, a, nj)
+            out.append(m[nj + 1:e].strip() if e is not None and e > 0 else '?')
     return out
 
 
-def pointer_source(rhs, s, ds):
+def assign_end(m, a, nj):
+    """End of E in the assignment m[a:] = `X = E` (nj: the =) when it is a
+    statement, a for header's first or last clause; else None."""
+    if for_step(m, a):
+        e = expr_end(m, nj + 1)
+        return e if e > 0 and m[e] == ')' else -1
+    pt, pj = prev_tok(m, a)
+    if is_statement_start(m, a) or pt == '(' and prev_tok(m, pj)[0] == 'for':
+        return statement_end(m, nj + 1)
+    return None
+
+
+def for_step(m, a):
+    """Is m[a:] the start of the last clause of a for header (`; X = E)`)?"""
+    return prev_tok(m, a)[0] == ';' and _for_open(m, a)
+
+
+def _for_open(m, a):
+    depth = 0
+    j = a - 1
+    while j >= 0:
+        if m[j] == ')':
+            depth += 1
+        elif m[j] == '(':
+            if depth == 0:
+                return prev_tok(m, j)[0] == 'for'
+            depth -= 1
+        elif m[j] in '{}' and depth == 0:
+            return False
+        j -= 1
+    return False
+
+
+def expr_end(m, i):
+    """Index of the ; , or unbalanced ) ending the expression from i."""
+    depth = 0
+    k = i
+    while k < len(m):
+        if m[k] in '([':
+            depth += 1
+        elif m[k] in ')]':
+            if depth == 0:
+                return k
+            depth -= 1
+        elif m[k] in ';,' and depth == 0:
+            return k
+        k += 1
+    return -1
+
+
+# functions returning a new block as an integer: what they return is what the
+# caller casts it to
+ALLOCATORS = {'memblock_alloc', 'mem_handle_lock', 'operator_new', '_malloc', 'mem_alloc'}
+
+
+def member_types(name):
+    return {re.sub(r'\s+', '', mt) for st in LAYOUT.values() for mn, _, _, mt in st['members'] if mn == name}
+
+
+def pointer_source(rhs, s, ds, v=None):
     """Is rhs (maybe under an integer cast) 0, a (S *) cast, an S * variable,
-    or a call of a function that returns S * or void *?"""
+    a call of a function that returns S * or void *, a member X->m of type
+    S *, or (v being retyped) a raw read of v's S * member?"""
+    rhs = re.sub(r'(\w)\s+\(', r'\1(', re.sub(r'\s+', ' ', rhs.strip()))
     if rhs in ('0', '0x0', 'nullptr'):
         return True
-    im = re.match(r'\(\s*%s\s*\)\s*' % INT_TYPES, rhs)
+    im = re.match(r'\(\s*(?:%s|(?:%s)\s*\*)\s*\)\s*' % (INT_TYPES, '|'.join(map(re.escape, list(SIGNED) + list(UNSIGNED)))), rhs)
     if im and unary_end(rhs, im.end()) == len(rhs):
         rhs = rhs[im.end():]
+    if rhs in ('0', '0x0', 'nullptr'):
+        return True
+    if re.fullmatch(r'\(\s*(?:0x0|0)\s*\)|\(\s*\w+\s*\*\s*\)\s*(?:0x0|0)', rhs):
+        return True
     if unary_end(rhs, 0) != len(rhs):
         return False
+    mm = re.search(r'(?:->|\.)\s*(\w+)$', rhs)
+    if mm and re.fullmatch(r'[\w\s.>()\[\]*-]+', rhs) and member_types(mm.group(1)) == {s + '*'}:
+        return True
+    if v:
+        rm = re.fullmatch(r'\*\(\s*%s\s*\*\s*\)\s*\(\s*%s\s*\+\s*(%s)\s*\)' % (TYPE, re.escape(v), NUM), rhs)
+        el = elem_of(ds[v][0]) if v in ds else None
+        n = None
+        if rm and not el:
+            n = int(rm.group(1), 0)
+        im2 = re.fullmatch(r'%s\s*\[\s*(%s)\s*\]' % (re.escape(v), NUM), rhs)
+        if im2 and el:
+            n = int(im2.group(1), 0) * canon(el)[1]
+        if n is not None and any(mo == n and re.sub(r'\s+', '', mt) == s + '*' for _, mo, _, mt in LAYOUT[s]['members']):
+            return True
     cm = re.match(r'\(\s*(\w+)\s*\*\s*\)', rhs)
     if cm:
         return cm.group(1) == s
@@ -652,7 +872,7 @@ def pointer_source(rhs, s, ds):
     cm = re.match(r'(\w+)\s*\(', rhs)
     if cm and match_paren(rhs, cm.end() - 1) == len(rhs):
         r = RETURNS.get(cm.group(1), '')
-        return struct_of(r) == s or re.sub(r'\s', '', r) in ('void*', 'LPVOID')
+        return struct_of(r) == s or re.sub(r'\s', '', r) in ('void*', 'LPVOID') or cm.group(1) in ALLOCATORS
     return False
 
 
@@ -673,7 +893,7 @@ def auto_pass(header, body, checks, stats, log, where):
         if offs and fits * 2 < len(offs):
             log.append('%s: %s: %d of %d offsets fit no member of %s' % (where, v, len(offs) - fits, len(offs), s))
             continue
-        bad = [r for r in assigned(m, v) if not pointer_source(r, s, ds)]
+        bad = [r for r in assigned(m, v) if not pointer_source(r, s, ds, v)]
         if bad:
             log.append('%s: %s: also assigned %s (%s)' % (where, v, bad[0][:60], s))
             continue
@@ -740,6 +960,33 @@ def retype_rows(rows, checks, stats, log):
                     return apply(body, rewrite_uses(body, m, var_spans(m, name), newtype, GLOBAL_TYPES[name], checks, stats))
                 each_function(f, one)
             retype_global_decl(name, newtype, log)
+        elif kind == 'member':
+            # a member of a global block struct (gamedata.h): FUNCTION is the
+            # block variable, NAME the member
+            oldtype = retype_member_decl(func, name, newtype, log)
+            if oldtype is None:
+                continue
+            for f in files:
+                def one(header, body, func=func, name=name, newtype=newtype, oldtype=oldtype):
+                    m = masked(body)
+                    return apply(body, rewrite_uses(body, m, member_spans(m, func, name), newtype, oldtype, checks, stats))
+                each_function(f, one)
+        elif kind == 'field':
+            # every use X->NAME / X.NAME of a struct member NAME (FUNCTION -):
+            # the member's declarations are changed by hand
+            oldtypes = {mt for st in LAYOUT.values() for mn, _, _, mt in st['members'] if mn == name}
+            if not oldtypes or any(canon(o)[0] not in 'su' for o in oldtypes):
+                log.append('field %s: not an integer member (%s)' % (name, oldtypes))
+                continue
+            oldtype = sorted(oldtypes)[0]
+            for f in files:
+                def one(header, body, name=name, newtype=newtype, oldtype=oldtype, f=f):
+                    m = masked(body)
+                    spans, odd = member_use_spans(m, name)
+                    for o in odd:
+                        log.append('%s: %s: use of %s not rewritten: %s' % (os.path.relpath(f, ROOT), func_name(header), name, m[max(0, o - 40):o + 20].replace('\n', ' ')))
+                    return apply(body, rewrite_uses(body, m, spans, newtype, oldtype, checks, stats))
+                each_function(f, one)
         elif kind == 'ret':
             oldtype = RETURNS.get(func, 'iptr')
             for f in files:
@@ -774,6 +1021,94 @@ def retype_global_decl(name, newtype, log):
         if not n:
             log.append('%s: declaration of %s not found' % (p, name))
         open(path, 'w').write(new)
+
+
+def member_spans(m, block, member):
+    out = []
+    for x in re.finditer(r'(?<![\w$])%s\s*\.\s*%s\b' % (re.escape(block), re.escape(member)), m):
+        if prev_tok(m, x.start())[0] in ('.', '->'):
+            continue
+        out.append((x.start(), x.end()))
+    return out
+
+
+def member_use_spans(m, name):
+    """Spans of the expressions X->name / X.name, X a chain of identifiers,
+    ->, ., [..] and (..) groups; and the positions of the uses whose start is
+    unclear."""
+    out, odd = [], []
+    for x in re.finditer(r'(?:->|\.)\s*%s\b' % re.escape(name), m):
+        if next_tok(m, x.end())[0] in ('(',):
+            continue
+        a = x.start()
+        while True:
+            j = a
+            while j > 0 and m[j - 1] in ' \n\t':
+                j -= 1
+            if j > 0 and (m[j - 1] == ']' or m[j - 1] == ')'):
+                o = j - 1
+                d = 0
+                while o >= 0:
+                    d += {')': 1, ']': 1, '(': -1, '[': -1}.get(m[o], 0)
+                    if d == 0:
+                        break
+                    o -= 1
+                if o < 0:
+                    break
+                if m[j - 1] == ')':
+                    # a group ( ... ) is the start; a call f(...) is not handled
+                    k = o
+                    while k > 0 and m[k - 1] in ' \n\t':
+                        k -= 1
+                    if k > 0 and re.match(r'[\w\])]', m[k - 1]):
+                        a = -1
+                        break
+                    a = o
+                    break
+                a = o
+                continue
+            w = re.search(r'[A-Za-z_]\w*$', m[:j])
+            if not w:
+                a = -1
+                break
+            a = w.start()
+            k = a
+            while k > 0 and m[k - 1] in ' \n\t':
+                k -= 1
+            if k >= 2 and m[k - 2:k] == '->' or k >= 1 and m[k - 1] == '.' :
+                a = k - (2 if m[k - 2:k] == '->' else 1)
+                continue
+            break
+        if a < 0:
+            odd.append(x.start())
+            continue
+        out.append((a, x.end()))
+    return out, odd
+
+
+def retype_member_decl(block, member, newtype, log):
+    """Retype member of the global block variable (gamedata.h: `extern [struct]
+    S block;`, `S` declared there); returns the old type."""
+    path = os.path.join(ROOT, 'src', 'data', 'gamedata.h')
+    text = open(path).read()
+    em = re.search(r'(?m)^extern\s+(?:struct\s+)?(\w+)\s+%s\s*;' % re.escape(block), text)
+    if not em:
+        log.append('member: no block %s' % block)
+        return None
+    sm = re.search(r'(?m)^(?:typedef\s+)?struct\s+%s\s*\{' % re.escape(em.group(1)), text)
+    if not sm:
+        log.append('member: no struct %s' % em.group(1))
+        return None
+    end = text.index('\n}', sm.end())
+    dm = re.compile(r'(?m)^(\s*)(%s?)\s*\b(%s\s*;)' % (TYPE, re.escape(member))).search(text, sm.end(), end)
+    if not dm:
+        log.append('member: %s not in %s' % (member, em.group(1)))
+        return None
+    oldtype = dm.group(2).strip()
+    nt = cast_type(newtype)
+    text = text[:dm.start()] + dm.group(1) + nt + ('' if nt.endswith('*') else ' ') + dm.group(3) + text[dm.end():]
+    open(path, 'w').write(text)
+    return oldtype
 
 
 def retype_param_decl(func, name, newtype, log):

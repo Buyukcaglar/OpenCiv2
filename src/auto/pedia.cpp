@@ -18,7 +18,7 @@ pedia_draw_category_body(DocumentWindow *self,i32 category,i32 flags)
   gfx_set_text_color_index(10);
   xLeft = self->content_left + panel_margin_x;
   yTop = self->content_top + panel_margin_y;
-  col_width = rect_width((iptr)&self->content_left);
+  col_width = rect_width((RECT *)&self->content_left);
   col_width = (col_width + panel_margin_x * -2) / 2 - panel_margin_x;
   line_height = font_cached_height((GameFont *)((i8 *)&font_size21));
   title_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
@@ -349,14 +349,14 @@ HWND __cdecl hyperlink_create_hwnd(int *rect,iptr control)
 
 {
   WndBase *self;
-  iptr parent_wnd;
+  NativeWindow *parent_wnd;
   iptr height;
   int width;
   HWND link_hwnd;
   HMENU hMenu;
   HINSTANCE hInstance;
   LPVOID lpParam;
-  i32 *block;
+  ControlBlock *block;
   
   hyperlink_register_class();
   lpParam = (LPVOID)0x0;
@@ -364,13 +364,13 @@ HWND __cdecl hyperlink_create_hwnd(int *rect,iptr control)
   hInstance = err_report_ctx_block.app_hinstance;
   self = (WndBase *)ctrl_get_parent((Control *)control);
   parent_wnd = wnd_get_window(self);
-  link_hwnd = *(HWND *)(parent_wnd + 4);
-  height = rect_height((iptr)rect);
-  width = rect_width((iptr)rect);
+  link_hwnd = parent_wnd->hwnd;
+  height = rect_height((RECT *)rect);
+  width = rect_width((RECT *)rect);
   link_hwnd = CreateWindowExA(4,str_mshypertextclass_2,((i8 *)&hyperlink_window_title_str),0x50000000,*rect,
                            rect[1],width,height,link_hwnd,hMenu,hInstance,lpParam);
   block = ctrl_init_block(link_hwnd,control);
-  block[0xb] = 1;
+  block->kind = 1;
   SetWindowLongA(link_hwnd,-4,(iptr)hotspot_wndproc);
   return link_hwnd;
 }
@@ -385,7 +385,7 @@ hyperlink_create(ClickControl *self,iptr parent,i32 control_id,iptr rect)
   if (self->hwnd != 0) {
     ctrl_destroy((Control *)self);
   }
-  ctrl_init((Control *)self,parent,1,control_id,rect);
+  ctrl_init((Control *)self,parent,1,control_id,(RECT *)rect);
   self->is_enabled = 0;
   self->on_click = 0;
   self->on_select = 0;
@@ -464,7 +464,7 @@ pedia_add_link
   }
   while( true ) {
     text_width = font_text_width((GameFont *)((i8 *)&font_size21),(const char *)&map_views_block.text_buffer);
-    max_width = rect_width((iptr)rect);
+    max_width = rect_width((RECT *)rect);
     if (text_width <= max_width) break;
     len = _strlen(((i8 *)&map_views_block.text_buffer));
     (((i8 *)&map_views_block.text_buffer_minus1))[len] = 0;
@@ -795,16 +795,16 @@ void __thiscall pedia_draw_terrain_page(DocumentWindow *self)
   i8 saved_clip[16];
   GameFont *font2;
   
-  surface_get_clip((DibSurface *)self,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)self,(iptr)&self->content_left);
+  surface_get_clip((DibSurface *)self,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->content_left);
   pedia_update_controls((MediaWindow *)self);
   pedia_fill_background((WindowObjectView *)self,(iptr)&self->content_left,2);
   font2 = (GameFont *)((i8 *)&font_size21);
   x2 = self->content_left;
   margin = 10;
-  page_width = rect_width((iptr)&self->content_left);
+  page_width = rect_width((RECT *)&self->content_left);
   half_width = page_width / 2;
-  row_height = rect_height((iptr)&self->content_left);
+  row_height = rect_height((RECT *)&self->content_left);
   row_height = row_height / 0xc;
   line_height = font_cached_height(font2);
   y2 = self->content_top + 8;
@@ -870,7 +870,7 @@ restore_scale_draw_text:
   text_color2 = list_text_color;
   gfx_set_text_color_index(list_text_color);
   x2 = self->content_left + margin;
-  right_col_x = rect_width((iptr)&self->content_left);
+  right_col_x = rect_width((RECT *)&self->content_left);
   right_col_x = right_col_x / 2;
   value_x = right_col_x - 100;
   if ((terrain2 < 0) || (10 < terrain2)) {
@@ -1213,7 +1213,7 @@ restore_scale_draw_text:
     }
   }
   pedia_update_describe_button((ListPaneWindow *)self,self->resize_border);
-  surface_set_clip((DibSurface *)self,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)saved_clip);
   wnd_blit_surface_rect((DibSurface *)self,(iptr)&self->content_left);
   return;
 }
@@ -2168,17 +2168,17 @@ void __thiscall pedia_draw_frame(MediaWindow *self)
   surface_reset_clip((DibSurface *)self);
   crt_memcpy(&rect,self->pedia_frame_rect,0x10);
   for (i = 0; i < panel_bevel_width; i++) {
-    gfx_draw_bevel_rect((iptr)self,(iptr)&rect,(uint)dlg_bevel_light_color,(uint)dlg_bevel_dark_color);
+    gfx_draw_bevel_rect((iptr)self,&rect,(uint)dlg_bevel_light_color,(uint)dlg_bevel_dark_color);
     rect_deflate((iptr)&rect,1,1);
   }
   pedia_fill_background((WindowObjectView *)self,(iptr)&rect,1);
   rect_deflate((iptr)&rect,panel_padding_x + panel_bevel_width * -2,0);
   rect.top = rect.top + self->header_height + panel_bevel_width * -2;
-  tmp_a = rect_height((iptr)self->pedia_frame_rect);
+  tmp_a = rect_height((RECT *)self->pedia_frame_rect);
   tmp_b = font_line_spacing((GameFont *)((i8 *)&font_size24));
   rect.bottom = tmp_a + ((panel_margin_y * -3 + panel_padding_y * -2) - tmp_b);
   for (i = 0; i < panel_bevel_width; i++) {
-    gfx_draw_bevel_rect((iptr)self,(iptr)&rect,(uint)dlg_bevel_dark_color,(uint)dlg_bevel_light_color);
+    gfx_draw_bevel_rect((iptr)self,&rect,(uint)dlg_bevel_dark_color,(uint)dlg_bevel_light_color);
     rect_deflate((iptr)&rect,1,1);
   }
   pedia_fill_background((WindowObjectView *)self,(iptr)&rect,2);
@@ -2210,7 +2210,7 @@ void __thiscall pedia_draw_frame(MediaWindow *self)
              ,5);
   surface_draw_text
             ((DibSurface *)self,(iptr)font2,(const char *)self->pedia_title_text_2,x2,y2,5);
-  surface_set_clip((DibSurface *)self,(iptr)&self->content_left);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->content_left);
   return;
 }
 
@@ -2225,13 +2225,13 @@ void __thiscall pedia_fill_background(WindowObjectView *self,iptr rect,int style
   
   if ((dlg_frame_tile_surface == 0) || (style != 1)) {
     if ((dlg_client_tile_surface == 0) || (style != 2)) {
-      gfx_fill_rect((iptr)self,rect,(uint)dlg_bg_color);
+      gfx_fill_rect((iptr)self,(RECT *)rect,(uint)dlg_bg_color);
     }
     else {
       offset_y = 0;
       offset_x = 0;
-      height = rect_height(rect);
-      width = rect_width(rect);
+      height = rect_height((RECT *)rect);
+      width = rect_width((RECT *)rect);
       gfx_tile_fill((iptr)self,dlg_client_tile_surface,*(i32 *)rect,*(i32 *)(rect + 4)
                          ,width,height,offset_x,offset_y);
     }
@@ -2239,8 +2239,8 @@ void __thiscall pedia_fill_background(WindowObjectView *self,iptr rect,int style
   else {
     offset_y = 0;
     offset_x = 0;
-    height = rect_height(rect);
-    width = rect_width(rect);
+    height = rect_height((RECT *)rect);
+    width = rect_width((RECT *)rect);
     gfx_tile_fill((iptr)self,dlg_frame_tile_surface,*(i32 *)rect,*(i32 *)(rect + 4),
                        width,height,offset_x,offset_y);
   }
@@ -2319,14 +2319,14 @@ void __thiscall pedia_draw_item_list(ListPaneWindow *self)
   
   icon_mode = 0;
   pedia_history_push((ScaledWindowView *)((i8 *)&pedia_window_block.pedia_window));
-  surface_get_clip((DibSurface *)self,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)self,(iptr)((u8 *)&((PictureWindow *)self)->list_rect));
+  surface_get_clip((DibSurface *)self,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)(iptr)((u8 *)&((PictureWindow *)self)->list_rect));
   surface_fill_rect((DibSurface *)self,(iptr)((u8 *)&((PictureWindow *)self)->list_rect),list_bg_color);
   font2 = (GameFont *)((i8 *)&font_size21);
   col_x = *(int *)((u8 *)&((PictureWindow *)self)->list_rect);
-  list_width2 = rect_width((iptr)((u8 *)&((PictureWindow *)self)->list_rect));
+  list_width2 = rect_width((RECT *)(iptr)((u8 *)&((PictureWindow *)self)->list_rect));
   col_width = list_width2 / 2;
-  row_height = rect_height((iptr)((u8 *)&((PictureWindow *)self)->list_rect));
+  row_height = rect_height((RECT *)(iptr)((u8 *)&((PictureWindow *)self)->list_rect));
   row_height = row_height / 9;
   dim_a = row_height / 2;
   dim_b = font_cached_height(font2);
@@ -2334,7 +2334,7 @@ void __thiscall pedia_draw_item_list(ListPaneWindow *self)
   col = 0;
   do {
     if (1 < col) {
-      surface_set_clip((DibSurface *)self,(iptr)saved_clip);
+      surface_set_clip((DibSurface *)self,(RECT *)saved_clip);
       ctrl_show_and_redraw(*(Control **)((u8 *)&((PictureWindow *)self)->list_hotspot));
       return;
     }
@@ -2582,7 +2582,7 @@ draw_row_text:
         default:
           text_append((const char *)&str_this_should_never_be_seen);
         }
-        surface_set_clip((DibSurface *)self,(iptr)&row_rect);
+        surface_set_clip((DibSurface *)self,&row_rect);
         if (shadow_color2 != text_color2) {
           gfx_set_text_color_index(shadow_color2);
           surface_draw_text
@@ -2597,7 +2597,7 @@ draw_row_text:
         surface_draw_text
                   ((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,text_x_off + col_x,
                    text_y_off + row_y,5);
-        surface_set_clip((DibSurface *)self,(iptr)((u8 *)&((PictureWindow *)self)->list_rect));
+        surface_set_clip((DibSurface *)self,(RECT *)(iptr)((u8 *)&((PictureWindow *)self)->list_rect));
       }
     }
     col_x = *(int *)((u8 *)&((PictureWindow *)self)->list_rect) + (col + 1) * col_width;
@@ -2632,9 +2632,9 @@ int __cdecl pedia_list_hit_test(int x,int y)
       result = -3;
     }
     else if (x < pedia_window_block.pedia_list_rect_right) {
-      dim = rect_width((iptr)&pedia_window_block.pedia_list_rect);
+      dim = rect_width((RECT *)&pedia_window_block.pedia_list_rect);
       column = (uint)(pedia_window_block.pedia_list_rect + dim / 2 <= x);
-      dim = rect_height((iptr)&pedia_window_block.pedia_list_rect);
+      dim = rect_height((RECT *)&pedia_window_block.pedia_list_rect);
       result = (y - pedia_window_block.pedia_list_rect_top) / (dim / 9) + column * 9 + pedia_window_block.pedia_list_top;
       if (pedia_window_block.pedia_list_count <= result) {
         result = -5;
@@ -3555,13 +3555,13 @@ void __thiscall pedia_draw_improvement(DocumentWindow *self)
   GameFont *font2;
   
   unused_flag = 0;
-  surface_get_clip((DibSurface *)self,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)self,(iptr)&self->content_left);
+  surface_get_clip((DibSurface *)self,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->content_left);
   pedia_update_controls((MediaWindow *)self);
   pedia_fill_background((WindowObjectView *)self,(iptr)&self->content_left,2);
   font2 = (GameFont *)((i8 *)&font_size21);
   x2 = self->content_left + 10;
-  content_width2 = rect_width((iptr)&self->content_left);
+  content_width2 = rect_width((RECT *)&self->content_left);
   row_height = font_cached_height(font2);
   y2 = self->content_top + 8;
   value_x = content_width2 / 2 - 100;
@@ -3643,12 +3643,12 @@ void __thiscall pedia_draw_improvement(DocumentWindow *self)
   text_len = _strlen(((i8 *)&map_views_block.text_buffer));
   if (text_len != 0) {
     yBottom = self->content_bottom;
-    measure = rect_width((iptr)&self->content_left);
+    measure = rect_width((RECT *)&self->content_left);
     SetRect(&text_rect,x2,y2,measure - 10 + x2,yBottom);
     surface_draw_text_rect((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,(iptr)&text_rect,5);
   }
   pedia_update_describe_button((ListPaneWindow *)self,self->resize_border);
-  surface_set_clip((DibSurface *)self,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)saved_clip);
   wnd_blit_surface_rect((DibSurface *)self,(iptr)&self->content_left);
   return;
 }
@@ -3760,8 +3760,8 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *self)
   GameFont *font2;
   uint in_right_col;
   
-  surface_get_clip((DibSurface *)self,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)self,(iptr)&self->content_left);
+  surface_get_clip((DibSurface *)self,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->content_left);
   pedia_update_controls((MediaWindow *)self);
   pedia_fill_background((WindowObjectView *)self,(iptr)&self->content_left,2);
   font2 = (GameFont *)((i8 *)&font_size21);
@@ -3907,9 +3907,9 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *self)
       text_width = font_text_width(font2,(const char *)&map_views_block.text_buffer);
       line_height = font_line_spacing(font2);
       if ((in_right_col == 0) &&
-         (measure = rect_width((iptr)&self->content_left),
+         (measure = rect_width((RECT *)&self->content_left),
          measure / 2 <= (int)(text_width + x2 + 5))) {
-        measure = rect_width((iptr)&self->content_left);
+        measure = rect_width((RECT *)&self->content_left);
         text_width = (measure / 2 - 5) - x2;
       }
       SetRect(&link_rect,x2,y2,text_width + x2 + 5,line_height + y2);
@@ -3927,7 +3927,7 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *self)
         x2 = list_x2;
       }
       else {
-        measure = rect_width((iptr)&self->content_left);
+        measure = rect_width((RECT *)&self->content_left);
         x2 = measure / 2;
       }
       in_right_col = (uint)!was_right;
@@ -3969,7 +3969,7 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *self)
       pedia_add_link(self,unit_type,x2,unit_text_y,3,link_rect.left,link_rect.top,
                          link_rect.right,link_rect.bottom);
       if (in_right_col == 0) {
-        measure = rect_width((iptr)&self->content_left);
+        measure = rect_width((RECT *)&self->content_left);
         x2 = measure / 2;
         in_right_col = 1;
         prev_unit_height = sprite_get_height
@@ -4154,7 +4154,7 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *self)
     }
   }
   pedia_update_describe_button((ListPaneWindow *)self,self->resize_border);
-  surface_set_clip((DibSurface *)self,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)saved_clip);
   wnd_blit_surface_rect((DibSurface *)self,(iptr)&self->content_left);
   return;
 }
@@ -4233,8 +4233,8 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
   GameFont *font2;
   int parent_ids[2];
   
-  surface_get_clip((DibSurface *)self,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)self,(iptr)&self->content_left);
+  surface_get_clip((DibSurface *)self,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->content_left);
   pedia_clear_links((WindowObjectView *)self);
   pedia_update_controls((MediaWindow *)self);
   pedia_fill_background((WindowObjectView *)self,(iptr)&self->content_left,2);
@@ -4250,7 +4250,7 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
   icon_width = sprite_get_width(icon);
   icon_width += 3;
   x2 = (self->content_right - 3) - (icon_width + root_anchor_x[2]);
-  measure = rect_height((iptr)&self->content_left);
+  measure = rect_height((RECT *)&self->content_left);
   y2 = (self->content_top + measure / 2) - line_height / 2;
   icon_rect = (int *)sprite_draw(icon,(iptr)root_ctx,(iptr)&pedia_window_block.pedia_window,x2,y2);
   icon_box.left = *icon_rect;
@@ -4265,11 +4265,11 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
   parent_ids[1] = (int)advances[advance].preq[1];
   root_anchor_x[1] = icon_box.left;
   root_anchor_x[0] = icon_box.left;
-  measure = rect_height((iptr)&icon_box);
+  measure = rect_height(&icon_box);
   root_anchor_y[0] = icon_box.top + measure / 2;
   root_anchor_y[1] = root_anchor_y[0];
   line_height = font_line_spacing(font2);
-  measure = rect_height((iptr)&self->content_left);
+  measure = rect_height((RECT *)&self->content_left);
   y2 = (self->content_top + ((int)(measure + (measure >> 0x1f & 3U)) >> 2)) - line_height / 2;
   for (i = 0; i < 2; i++) {
     tier2_ids[i * 2] = -1;
@@ -4284,8 +4284,8 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
                  (char)advances[parent_ids[i]].epoch * 0x3c);
       icon_width = sprite_get_width(icon);
       icon_width += 3;
-      measure = rect_width((iptr)&self->content_left);
-      measure2 = rect_width((iptr)&self->content_left);
+      measure = rect_width((RECT *)&self->content_left);
+      measure2 = rect_width((RECT *)&self->content_left);
       x2 = ((int)(measure * 2 + (measure * 2 >> 0x1f & 3U)) >> 2) +
                  ((int)(measure2 + (measure2 >> 0x1f & 7U)) >> 3) + self->content_left;
       icon_rect = (int *)sprite_draw
@@ -4300,7 +4300,7 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
       }
       measure = root_anchor_y[i];
       measure2 = root_anchor_x[i];
-      icon_w = rect_width((iptr)&icon_box);
+      icon_w = rect_width(&icon_box);
       pedia_draw_tree_connector
                 ((DibSurface *)self,icon_box.left + icon_w / 2,parent_line_y,measure2,measure);
       x2 += icon_width;
@@ -4308,7 +4308,7 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
       tier2_ids[i * 2 + 1] = (int)advances[parent_ids[i]].preq[1];
       tier1_anchor_x[i * 2 + 1] = icon_box.left;
       tier1_anchor_x[i * 2] = tier1_anchor_x[i * 2 + 1];
-      measure = rect_height((iptr)&icon_box);
+      measure = rect_height(&icon_box);
       tier1_anchors[i * 2 + 1] = icon_box.top + measure / 2;
       tier1_anchors[i * 2] = tier1_anchors[i * 2 + 1];
       SetRect(&link_rect,x2 - icon_width,y2,root_anchor_x[2] + x2 + 5,line_height + y2
@@ -4316,11 +4316,11 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
       pedia_add_link(self,parent_ids[i],x2,y2,0,link_rect.left,link_rect.top,
                          link_rect.right,link_rect.bottom);
     }
-    measure = rect_height((iptr)&self->content_left);
+    measure = rect_height((RECT *)&self->content_left);
     y2 += measure / 2;
   }
   line_height = font_line_spacing(font2);
-  measure = rect_height((iptr)&self->content_left);
+  measure = rect_height((RECT *)&self->content_left);
   y2 = (self->content_top + ((int)(measure + (measure >> 0x1f & 7U)) >> 3)) - line_height / 2;
   for (i = 0; i < 2; i++) {
     for (j = 0; j < 2; j++) {
@@ -4336,8 +4336,8 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
                    (char)advances[tier2_ids[i * 2 + j]].category * 0xf0);
         icon_width = sprite_get_width(icon);
         icon_width += 3;
-        measure = rect_width((iptr)&self->content_left);
-        measure2 = rect_width((iptr)&self->content_left);
+        measure = rect_width((RECT *)&self->content_left);
+        measure2 = rect_width((RECT *)&self->content_left);
         x2 = ((int)(measure + (measure >> 0x1f & 3U)) >> 2) +
                    ((int)(measure2 + (measure2 >> 0x1f & 7U)) >> 3) + self->content_left;
         icon_rect = (int *)sprite_draw
@@ -4352,7 +4352,7 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
         }
         measure = tier1_anchors[i * 2 + j];
         measure2 = tier1_anchor_x[i * 2 + j];
-        icon_w = rect_width((iptr)&icon_box);
+        icon_w = rect_width(&icon_box);
         pedia_draw_tree_connector
                   ((DibSurface *)self,icon_box.left + icon_w / 2,grand_line_y,measure2,measure);
         x2 += icon_width;
@@ -4362,7 +4362,7 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
              (int)advances[tier2_ids[i * 2 + j]].preq[1];
         tier2_anchor_x[(i * 2 + j) * 2 + 1] = icon_box.left;
         tier2_anchor_x[(i * 2 + j) * 2] = tier2_anchor_x[(i * 2 + j) * 2 + 1];
-        measure = rect_height((iptr)&icon_box);
+        measure = rect_height(&icon_box);
         tier2_anchor_y[(i * 2 + j) * 2 + 1] = icon_box.top + measure / 2;
         tier2_anchor_y[(i * 2 + j) * 2] = tier2_anchor_y[(i * 2 + j) * 2 + 1];
         SetRect(&link_rect,x2 - icon_width,y2,root_anchor_x[2] + x2 + 5,
@@ -4370,11 +4370,11 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
         pedia_add_link(self,tier2_ids[i * 2 + j],x2,y2,0,
                            link_rect.left,link_rect.top,link_rect.right,link_rect.bottom);
       }
-      measure = rect_height((iptr)&self->content_left);
+      measure = rect_height((RECT *)&self->content_left);
       y2 += ((int)(measure + (measure >> 0x1f & 3U)) >> 2);
     }
   }
-  measure = rect_height((iptr)&self->content_left);
+  measure = rect_height((RECT *)&self->content_left);
   tier3_step = (int)(measure + (measure >> 0x1f & 7U)) >> 3;
   line_height = font_line_spacing(font2);
   x2 = self->content_left + 2;
@@ -4404,12 +4404,12 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
         }
         measure = tier2_anchor_y[i * 2 + j];
         measure2 = tier2_anchor_x[i * 2 + j];
-        icon_w = rect_width((iptr)&icon_box);
+        icon_w = rect_width(&icon_box);
         pedia_draw_tree_connector
                   ((DibSurface *)self,icon_box.left + icon_w / 2,gp_line_y,measure2,measure);
         if ((-1 < advances[tier3_ids[i * 2 + j]].preq[0]) ||
            (-1 < advances[tier3_ids[i * 2 + j]].preq[1])) {
-          measure = rect_height((iptr)&icon_box);
+          measure = rect_height(&icon_box);
           pedia_draw_tree_stub((MediaWindow *)self,icon_box.left,icon_box.top + measure / 2);
         }
         SetRect(&link_rect,x2,y2,icon_width + root_anchor_x[2] + x2 + 5,
@@ -4417,11 +4417,11 @@ void __thiscall pedia_draw_advance_tree(DocumentWindow *self)
         pedia_add_link(self,tier3_ids[i * 2 + j],icon_width + x2,y2,0,
                            link_rect.left,link_rect.top,link_rect.right,link_rect.bottom);
       }
-      measure = rect_height((iptr)&self->content_left);
+      measure = rect_height((RECT *)&self->content_left);
       y2 += ((int)(measure + (measure >> 0x1f & 7U)) >> 3);
     }
   }
-  surface_set_clip((DibSurface *)self,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)saved_clip);
   wnd_blit_surface_rect((DibSurface *)self,(iptr)&self->content_left);
   return;
 }
@@ -4575,13 +4575,13 @@ void __thiscall pedia_draw_improvement_page(DocumentWindow *self)
   GameFont *font2;
   
   unused_flag = 0;
-  surface_get_clip((DibSurface *)self,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)self,(iptr)&self->content_left);
+  surface_get_clip((DibSurface *)self,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->content_left);
   pedia_update_controls((MediaWindow *)self);
   pedia_fill_background((WindowObjectView *)self,(iptr)&self->content_left,2);
   font2 = (GameFont *)((i8 *)&font_size21);
   x2 = self->content_left + 10;
-  content_width2 = rect_width((iptr)&self->content_left);
+  content_width2 = rect_width((RECT *)&self->content_left);
   row_height = font_cached_height(font2);
   y2 = self->content_top + 8;
   value_x = content_width2 / 2 - 100;
@@ -4654,12 +4654,12 @@ void __thiscall pedia_draw_improvement_page(DocumentWindow *self)
   text_len = _strlen(((i8 *)&map_views_block.text_buffer));
   if (text_len != 0) {
     yBottom = self->content_bottom;
-    measure = rect_width((iptr)&self->content_left);
+    measure = rect_width((RECT *)&self->content_left);
     SetRect(&text_rect,x2,y2,measure - 10 + x2,yBottom);
     surface_draw_text_rect((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,(iptr)&text_rect,5);
   }
   pedia_update_describe_button((ListPaneWindow *)self,self->resize_border);
-  surface_set_clip((DibSurface *)self,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)saved_clip);
   wnd_blit_surface_rect((DibSurface *)self,(iptr)&self->content_left);
   return;
 }
@@ -4823,16 +4823,16 @@ void __thiscall pedia_draw_unit_page(DocumentWindow *self)
   i8 saved_clip[16];
   GameFont *font2;
   
-  surface_get_clip((DibSurface *)self,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)self,(iptr)&self->content_left);
+  surface_get_clip((DibSurface *)self,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->content_left);
   pedia_update_controls((MediaWindow *)self);
   pedia_fill_background((WindowObjectView *)self,(iptr)&self->content_left,2);
   font2 = (GameFont *)((i8 *)&font_size21);
   x2 = self->content_left;
   margin = 10;
-  content_width2 = rect_width((iptr)&self->content_left);
+  content_width2 = rect_width((RECT *)&self->content_left);
   half_width = content_width2 / 2;
-  slot_height = rect_height((iptr)&self->content_left);
+  slot_height = rect_height((RECT *)&self->content_left);
   slot_height = slot_height / 0xc;
   row_height = font_cached_height(font2);
   y2 = self->content_top + 0xf;
@@ -5122,14 +5122,14 @@ void __thiscall pedia_draw_unit_page(DocumentWindow *self)
     text_len = _strlen(desc_buf);
     if (text_len != 0) {
       yBottom = self->content_bottom;
-      measure = rect_width((iptr)&self->content_left);
+      measure = rect_width((RECT *)&self->content_left);
       SetRect(&desc_rect,x2,y2,x2 + measure / 2,yBottom);
       surface_draw_text_rect
                 ((DibSurface *)self,(iptr)font2,(const char *)desc_buf,(iptr)&desc_rect,5);
     }
   }
   pedia_update_describe_button((ListPaneWindow *)self,self->resize_border);
-  surface_set_clip((DibSurface *)self,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)self,(RECT *)saved_clip);
   wnd_blit_surface_rect((DibSurface *)self,(iptr)&self->content_left);
   return;
 }

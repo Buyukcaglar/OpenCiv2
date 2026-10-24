@@ -5742,7 +5742,7 @@ extern NetSession net_session_block;
 struct dialog_title_font_obj_block {
     GameFont dialog_title_font_obj;  /* 006cec78 */
     i32 dialog_timeout_start_i32;  /* 006cec80 */
-    iptr active_dialog;  /* 006cec84 */
+    Dialog *active_dialog;  /* 006cec84 */
 };
 #pragma pack(pop)
 extern struct dialog_title_font_obj_block dialog_title_font_obj_block;

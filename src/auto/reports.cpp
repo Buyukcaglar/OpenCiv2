@@ -331,7 +331,7 @@ void __thiscall advisor_add_close_button(ViewWindow *self)
   
   rect_set_xywh((iptr)button_rect,2,0,0x254,0x18);
   top_y = self->client_y;
-  rect_h = rect_height((iptr)button_rect);
+  rect_h = rect_height((RECT *)button_rect);
   rect_offset((iptr)button_rect,self->client_x,(top_y - rect_h) + 0x18e);
   if (self == (ViewWindow *)0x0) {
     parent_wnd2 = (u8 *)0x0;
@@ -862,7 +862,7 @@ void __cdecl defense_minister_draw(void)
       if (advisor_window_block.advisor_report_param != 0) {
         rect_set((iptr)frame_rect2,lost_x - 8,list_top,lost_x + 0x10,bottom);
         value = civ_color_primary(civ);
-        gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(iptr)frame_rect2,value);
+        gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(RECT *)frame_rect2,value);
       }
       if (advisor_window_block.advisor_controls_created == 0) {
         rect_set((iptr)frame_rect2,(advisor_window_block.advisor_client_right - advisor_window_block.advisor_vscroll_width) - 2,list_top,advisor_window_block.advisor_client_right - 2
@@ -958,7 +958,7 @@ void __cdecl defense_minister_show(iptr report_civ)
   advisor_window_block.advisor_report_param = 0;
   rect_set_xywh((iptr)button_rect,2,0,0x129,0x18);
   client_y = advisor_window_block.advisor_client_y;
-  rect_h = rect_height((iptr)button_rect);
+  rect_h = rect_height((RECT *)button_rect);
   rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)button_rect,299,0);
   label = (iptr)label_string(label_string_ids[0x147]);
@@ -1453,7 +1453,7 @@ void __cdecl intel_report_show(iptr report_civ,iptr target_civ)
   advisor_window_block.advisor_report_param = target_civ;
   rect_set_xywh((iptr)button_rect,2,0,0x129,0x18);
   client_y = advisor_window_block.advisor_client_y;
-  rect_h = rect_height((iptr)button_rect);
+  rect_h = rect_height((RECT *)button_rect);
   rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)button_rect,299,0);
   label = (iptr)label_string(label_string_ids[0x147]);
@@ -1489,7 +1489,7 @@ void __cdecl intel_report_show(iptr report_civ,iptr target_civ)
 void __cdecl foreign_minister_show(iptr civ)
 
 {
-  iptr parley_hwnd_obj;
+  NativeWindow *parley_hwnd_obj;
   int value;
   iptr text;
   i32 option_flags;
@@ -1511,7 +1511,7 @@ void __cdecl foreign_minister_show(iptr civ)
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
   seh_state = 0;
-  if ((game.multiplayer < 3) || ((int)parley_wnd_block.closed != 0)) {
+  if ((game.multiplayer < 3) || (parley_wnd_block.closed != 0)) {
     while( true ) {
       while( true ) {
         value = int_clamp((uint)game.power_rank[civ],1,7);
@@ -1777,7 +1777,7 @@ dialog_cleanup:
   }
   else {
     parley_hwnd_obj = wnd_get_window((WndBase *)((i8 *)&parley_wnd_block.base.window_2));
-    BringWindowToTop(*(HWND *)(parley_hwnd_obj + 4));
+    BringWindowToTop(parley_hwnd_obj->hwnd);
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0043154f */ { dialog_dtor(&dialog2); }
   }
@@ -1893,9 +1893,9 @@ void __cdecl powergraph_show(void)
   ((u8 *)&rect2.bottom)[2] = graph_wnd[0x2ca];
   ((u8 *)&rect2.bottom)[3] = graph_wnd[0x2cb];
   rect2.top = (*(i32 *)((char *)&graph_wnd + 704)) + 400;
-  gfx_fill_rect((iptr)graph_wnd,(iptr)&rect2,0x14);
+  gfx_fill_rect((iptr)graph_wnd,(RECT *)&rect2,0x14);
   rect_set_xywh((iptr)&rect2,origin_x2 + 8,origin_y2 + 2,0x248,0x16e);
-  gfx_draw_rect_frame((iptr)graph_wnd,(iptr)&rect2,10);
+  gfx_draw_rect_frame((iptr)graph_wnd,(RECT *)&rect2,10);
   if (((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
     sample_count = (int)((int)game.turn + ((int)game.turn >> 0x1f & 3U)) >> 2;
   }
@@ -1935,7 +1935,7 @@ void __cdecl powergraph_show(void)
       gfx_draw_text((const char *)&map_views_block.text_buffer,grid_x + origin_x2,origin_y2 + 0x172);
     }
   }
-  surface_set_clip((DibSurface *)graph_wnd,(iptr)&rect2);
+  surface_set_clip((DibSurface *)graph_wnd,(RECT *)&rect2);
   for (civ = 1; civ < 8; civ++) {
     if (((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) ||
        ((1 << ((byte)civ & 0x1f) & (uint)game.civs_at_start) != 0)) {
@@ -1952,7 +1952,7 @@ void __cdecl powergraph_show(void)
       }
     }
   }
-  surface_set_clip((DibSurface *)graph_wnd,(iptr)(graph_wnd + 700));
+  surface_set_clip((DibSurface *)graph_wnd,(RECT *)(iptr)(graph_wnd + 700));
   text_set_font((iptr)&legend_font);
   legend_row = 0;
   for (civ = 1; civ < 8; civ++) {
@@ -2230,7 +2230,7 @@ void __cdecl top_cities_draw(void)
           rect_set((iptr)box_rect,advisor_window_block.advisor_client_x + 3,box_top,
                              advisor_window_block.advisor_client_width + advisor_window_block.advisor_client_x - 3,box_bottom);
           color = civ_color_primary((int)cities[city].owner);
-          gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(iptr)box_rect,color);
+          gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(RECT *)box_rect,color);
           y2 += 6;
         }
       }
@@ -3037,7 +3037,7 @@ iptr __cdecl hall_of_fame_show(int highlight)
   else {
     rect_set_xywh((iptr)button_rect,2,0,0x129,0x18);
     client_y = advisor_window_block.advisor_client_y;
-    rect_h = rect_height((iptr)button_rect);
+    rect_h = rect_height((RECT *)button_rect);
     rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
     rect_offset((iptr)button_rect,299,0);
     label = (iptr)label_string(label_string_ids[0x147]);
@@ -3341,8 +3341,8 @@ void __cdecl credits_draw_scroll(int full_redraw)
     full_redraw = 1;
   }
   if (full_redraw == 0) {
-    rect_h = rect_height((iptr)&advisor_button_font_block.credits_drawn_rect);
-    rect_w = rect_width((iptr)&advisor_button_font_block.credits_drawn_rect);
+    rect_h = rect_height((RECT *)&advisor_button_font_block.credits_drawn_rect);
+    rect_w = rect_width((RECT *)&advisor_button_font_block.credits_drawn_rect);
     picwnd_blit_at
               ((FrameWindow *)((i8 *)&advisor_window_block.advisor_window),advisor_button_font_block.credits_drawn_rect - advisor_window_block.advisor_client_x,
                advisor_button_font_block.credits_drawn_rect_top - advisor_window_block.advisor_client_y,rect_w,rect_h);
@@ -3792,7 +3792,7 @@ void __cdecl casualty_timeline_show(iptr civ)
     casualty_window_block.casualty_report_param_i32 = 0;
     rect_set_xywh((iptr)button_rect,2,0,0x254,0x18);
     client_y = casualty_window_block.casualty_client_y;
-    rect_h = rect_height((iptr)button_rect);
+    rect_h = rect_height((RECT *)button_rect);
     rect_offset((iptr)button_rect,casualty_window_block.casualty_client_x,(client_y - rect_h) + 0x18e);
     label = (iptr)label_string(label_string_ids[0x147]);
     button_create
@@ -3952,8 +3952,8 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *self)
     surface_create((DibSurface *)self->throne_backbuffer,0x280,0x1e0);
     SetRect(&rect,0,0,0x280,0x1e0);
     surface_blit
-              ((DibSurface *)self->throne_surface_wnd,(iptr)(self->throne_backbuffer),(iptr)&rect,
-               (iptr)&rect);
+              ((DibSurface *)self->throne_surface_wnd,(DibSurface *)(iptr)(self->throne_backbuffer),&rect,
+               &rect);
     font_init(&font2,1,0x18);
     try_level = 0;
     result = text_open_section((const char *)&main_frame_wnd_block.game_txt_path,(const char *)&str_throne);
@@ -4031,8 +4031,8 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *self)
       snd_play_effect(0xd,1,0,0);
       SetRect(&rect,0,0,0x280,0x1e0);
       surface_blit
-                ((DibSurface *)self->throne_backbuffer,(iptr)self->throne_surface_wnd,(iptr)&rect,
-                 (iptr)&rect);
+                ((DibSurface *)self->throne_backbuffer,(DibSurface *)self->throne_surface_wnd,&rect,
+                 &rect);
       win_flush_pending_msgs();
       gfx_dissolve_blit((iptr)self->throne_surface_wnd,(iptr)&rect,8,3);
       wnd_blit_surface((DibSurface *)self->throne_surface_wnd);
@@ -4116,12 +4116,12 @@ void __thiscall throneroom_draw_click_prompt(WndBase *self)
   gfx_set_text_color_index(0);
   surface_draw_text_in_rect
             ((DibSurface *)&((PictureFrameWindow *)self)->throne_surface_wnd,(iptr)&((ThroneRoomWindow *)self)->click_prompt_font,(const char *)&map_views_block.text_buffer,
-             (iptr)&((ThroneRoomWindow *)self)->click_prompt_rect,0);
+             (RECT *)(iptr)&((ThroneRoomWindow *)self)->click_prompt_rect,0);
   OffsetRect((LPRECT)&((ThroneRoomWindow *)self)->click_prompt_rect,-1,-1);
   gfx_set_text_color_index(0xff);
   surface_draw_text_in_rect
             ((DibSurface *)&((PictureFrameWindow *)self)->throne_surface_wnd,(iptr)&((ThroneRoomWindow *)self)->click_prompt_font,(const char *)&map_views_block.text_buffer,
-             (iptr)&((ThroneRoomWindow *)self)->click_prompt_rect,0);
+             (RECT *)(iptr)&((ThroneRoomWindow *)self)->click_prompt_rect,0);
   OffsetRect((LPRECT)&((ThroneRoomWindow *)self)->click_prompt_rect,1,1);
   return;
 }
@@ -5016,8 +5016,8 @@ void __thiscall defeat_movie_wnd_play(SpaceshipWindow *self)
       text_clear();
       text_expand_vars((iptr)(self->movie_caption_text),(iptr)&map_views_block.text_buffer);
       surface_blit
-                ((DibSurface *)(((ThroneRoomWindow *)self)->movie_frame_surface),(iptr)(self->media_wnd),
-                 (iptr)(((ThroneRoomWindow *)self)->movie_caption_rect),(iptr)(((ThroneRoomWindow *)self)->movie_caption_rect));
+                ((DibSurface *)(((ThroneRoomWindow *)self)->movie_frame_surface),(DibSurface *)(iptr)(self->media_wnd),
+                 (RECT *)(iptr)(((ThroneRoomWindow *)self)->movie_caption_rect),(RECT *)(iptr)(((ThroneRoomWindow *)self)->movie_caption_rect));
       OffsetRect((LPRECT)(((ThroneRoomWindow *)self)->movie_caption_rect),1,1);
       gfx_set_text_color_index(0);
       surface_draw_text_rect
@@ -5322,8 +5322,8 @@ void __thiscall arrival_movie_wnd_play(SpaceshipWindow *self)
       text_clear();
       text_expand_vars((iptr)(self->movie_caption_text),(iptr)&map_views_block.text_buffer);
       surface_blit
-                ((DibSurface *)(((ThroneRoomWindow *)self)->movie_frame_surface),(iptr)(self->media_wnd),
-                 (iptr)(((ThroneRoomWindow *)self)->movie_caption_rect),(iptr)(((ThroneRoomWindow *)self)->movie_caption_rect));
+                ((DibSurface *)(((ThroneRoomWindow *)self)->movie_frame_surface),(DibSurface *)(iptr)(self->media_wnd),
+                 (RECT *)(iptr)(((ThroneRoomWindow *)self)->movie_caption_rect),(RECT *)(iptr)(((ThroneRoomWindow *)self)->movie_caption_rect));
       OffsetRect((LPRECT)(((ThroneRoomWindow *)self)->movie_caption_rect),1,1);
       gfx_set_text_color_index(0);
       surface_draw_text_rect
@@ -5379,7 +5379,7 @@ void __cdecl arrival_movie_on_frame(void)
       str_clear((char *)(spaceship_arrival_window + 0xf24));
       str_append((char *)(spaceship_arrival_window + 0xf24),(const char *)map_views_block.text_line_cursor);
       text_expand_vars(spaceship_arrival_window + 0xf24,(iptr)&map_views_block.text_buffer);
-      width = rect_width(spaceship_arrival_window + 0x136c);
+      width = rect_width((RECT *)(spaceship_arrival_window + 0x136c));
       gfx_draw_text_centered((const char *)&map_views_block.text_buffer,*(i32 *)(spaceship_arrival_window + 0x136c),text_y2,width);
       status = font_line_spacing((GameFont *)(spaceship_arrival_window + 0xf1c));
       text_y2 += status;
@@ -5473,7 +5473,7 @@ void __cdecl endgame_show_centauri_beaten(uptr civ)
     wnd_center((WndCenterView *)(surface_wnd + 0x48));
     surface_create(&backup_surface,0x280,0xf0);
     surface_blit
-              ((DibSurface *)surface_wnd,(iptr)&backup_surface,(iptr)&text_rect,(iptr)&text_rect);
+              ((DibSurface *)surface_wnd,&backup_surface,&text_rect,&text_rect);
     surface_set_palette(&backup_surface,(iptr)&palette);
     wnd_handle_show_raise((WndBase *)&frame_wnd);
     wnd_flush_paint();
@@ -5511,7 +5511,7 @@ void __cdecl endgame_show_centauri_beaten(uptr civ)
         }
         text_clear();
         text_expand_vars((iptr)text_buf,(iptr)&map_views_block.text_buffer);
-        surface_blit(&backup_surface,(iptr)surface_wnd,(iptr)&text_rect,(iptr)&text_rect);
+        surface_blit(&backup_surface,(DibSurface *)surface_wnd,&text_rect,&text_rect);
         OffsetRect(&text_rect,1,1);
         gfx_set_text_color_index(0);
         surface_draw_text_rect
@@ -6234,15 +6234,15 @@ i32 __thiscall destroyed_civs_wnd_create(DestroyedCivsWindow *self,uint killer)
               ((DibSurface *)self->civs_art_surface,10000,10,0xec,(iptr)&self->control_list);
     SetRect(&rect,0,0,0x280,0x1e0);
     surface_blit
-              ((DibSurface *)self->civs_art_surface,(iptr)(self->media_wnd),(iptr)&rect
-               ,(iptr)&rect);
+              ((DibSurface *)self->civs_art_surface,(DibSurface *)(iptr)(self->media_wnd),&rect
+               ,&rect);
     SetRect((LPRECT)self->slot_sprites,0xc1,0x173,0x1c0,0x1cd);
     result = surface_height((DibSurface *)self->civs_art_surface);
     width = surface_width((DibSurface *)self->civs_art_surface);
     surface_create((DibSurface *)((i8 *)&destroyed_civs_text_bg),width,result);
     surface_blit
-              ((DibSurface *)self->civs_art_surface,(iptr)&destroyed_civs_text_bg,(iptr)self->slot_sprites,
-               (iptr)self->slot_sprites);
+              ((DibSurface *)self->civs_art_surface,(DibSurface *)&destroyed_civs_text_bg,(RECT *)self->slot_sprites,
+               (RECT *)self->slot_sprites);
     for (entry = 0;
         (entry < 0xc && ((uint)(byte)(((i8 *)&destroyed_civ_count_block.destroyed_civ_killers))[entry] != (killer & 0xff)));
         entry = entry + 1) {
@@ -6357,8 +6357,8 @@ void __thiscall destroyed_civs_draw_entry(WndBase *self,iptr entry)
   
   if (destroyed_civs_show_date == 0) {
     surface_blit
-              ((DibSurface *)((i8 *)&destroyed_civs_text_bg),(iptr)(self + 0x60),(iptr)&((PictureFrameWindow *)self)->slot_sprites,
-               (iptr)&((PictureFrameWindow *)self)->slot_sprites);
+              ((DibSurface *)((i8 *)&destroyed_civs_text_bg),(DibSurface *)(iptr)(self + 0x60),(RECT *)(iptr)&((PictureFrameWindow *)self)->slot_sprites,
+               (RECT *)(iptr)&((PictureFrameWindow *)self)->slot_sprites);
     text_clear();
     text_append((const char *)(((i8 *)&destroyed_civ_count_block.destroyed_civ_names) + entry * 0x18));
     gfx_set_text_color_index(0x21);
@@ -6374,8 +6374,8 @@ void __thiscall destroyed_civs_draw_entry(WndBase *self,iptr entry)
   }
   else {
     surface_blit
-              ((DibSurface *)((i8 *)&destroyed_civs_text_bg),(iptr)(self + 0x60),(iptr)&((PictureFrameWindow *)self)->slot_sprites,
-               (iptr)&((PictureFrameWindow *)self)->slot_sprites);
+              ((DibSurface *)((i8 *)&destroyed_civs_text_bg),(DibSurface *)(iptr)(self + 0x60),(RECT *)(iptr)&((PictureFrameWindow *)self)->slot_sprites,
+               (RECT *)(iptr)&((PictureFrameWindow *)self)->slot_sprites);
     text_clear();
     text_append((const char *)(((i8 *)&destroyed_civ_count_block.destroyed_civ_names) + entry * 0x18));
     text_append_colon();
@@ -6396,15 +6396,15 @@ void __thiscall destroyed_civs_draw_entry(WndBase *self,iptr entry)
               ((DibSurface *)(self + 0x60),(iptr)(self + 0x70),(const char *)&map_views_block.text_buffer,(iptr)&((PictureFrameWindow *)self)->slot_sprites
                ,0);
     surface_blit
-              ((DibSurface *)(self + 0x60),(iptr)&((PictureFrameWindow *)self)->media_wnd,(iptr)&((PictureFrameWindow *)self)->slot_sprites,
-               (iptr)&((PictureFrameWindow *)self)->slot_sprites);
+              ((DibSurface *)(self + 0x60),(DibSurface *)(iptr)&((PictureFrameWindow *)self)->media_wnd,(RECT *)(iptr)&((PictureFrameWindow *)self)->slot_sprites,
+               (RECT *)(iptr)&((PictureFrameWindow *)self)->slot_sprites);
     wnd_blit_surface_rect
               ((DibSurface *)&((PictureFrameWindow *)self)->media_wnd,(iptr)&((PictureFrameWindow *)self)->slot_sprites);
     destroyed_civs_show_date = 0;
   }
   surface_blit
-            ((DibSurface *)(self + 0x60),(iptr)&((PictureFrameWindow *)self)->media_wnd,(iptr)&((PictureFrameWindow *)self)->slot_sprites,
-             (iptr)&((PictureFrameWindow *)self)->slot_sprites);
+            ((DibSurface *)(self + 0x60),(DibSurface *)(iptr)&((PictureFrameWindow *)self)->media_wnd,(RECT *)(iptr)&((PictureFrameWindow *)self)->slot_sprites,
+             (RECT *)(iptr)&((PictureFrameWindow *)self)->slot_sprites);
   return;
 }
 
@@ -6426,8 +6426,8 @@ void __thiscall destroyed_civs_draw_portrait(PictureFrameWindow *self,iptr entry
   palette_init(&palette);
   (*((char *)&try_level + 0)) = 1;
   surface_blit
-            ((DibSurface *)self->civs_art_surface,(iptr)((u8 *)&self->media_wnd),
-             (iptr)&self->panel_clip_rect,(iptr)&self->panel_clip_rect);
+            ((DibSurface *)self->civs_art_surface,(DibSurface *)(iptr)((u8 *)&self->media_wnd),
+             (RECT *)&self->panel_clip_rect,(RECT *)&self->panel_clip_rect);
   surface_load_gif_resource
             (&portrait_surface,(byte)(((i8 *)&destroyed_civ_count_block.destroyed_civ_portraits))[entry] + 0xdc,10,0xec,(iptr)&palette);
   palette_get_rgb(&palette,(iptr)rgb_buf,0x2a,0x40);
@@ -6466,8 +6466,8 @@ void __thiscall destroyed_civs_slide_step(DestroyedCivsWindow *self,int delta)
     dirty_rect.bottom += delta;
   }
   surface_blit
-            ((DibSurface *)self->civs_art_surface,(iptr)(self->media_wnd),(iptr)&dirty_rect,
-             (iptr)&dirty_rect);
+            ((DibSurface *)self->civs_art_surface,(DibSurface *)(iptr)(self->media_wnd),(RECT *)&dirty_rect,
+             (RECT *)&dirty_rect);
   sprite_draw
             ((Sprite *)self->portrait_sprite,(iptr)draw_tmp1,(iptr)(self->media_wnd),
              0xd0,0x39);
@@ -6477,8 +6477,8 @@ void __thiscall destroyed_civs_slide_step(DestroyedCivsWindow *self,int delta)
     gap_rect.top = self->slide_y;
     gap_rect.bottom = self->slide_y + delta;
     surface_blit
-              ((DibSurface *)self->civs_art_surface,(iptr)(self->media_wnd),(iptr)&gap_rect
-               ,(iptr)&gap_rect);
+              ((DibSurface *)self->civs_art_surface,(DibSurface *)(iptr)(self->media_wnd),(RECT *)&gap_rect
+               ,(RECT *)&gap_rect);
   }
   sprite_draw
             ((Sprite *)self->panel_sprite,(iptr)draw_tmp2,(iptr)(self->media_wnd),
@@ -6500,8 +6500,8 @@ void __thiscall destroyed_civs_slide_down(DestroyedCivsWindow *self)
   DWORD start_time;
   
   surface_blit
-            ((DibSurface *)self->civs_art_surface,(iptr)(self->media_wnd),
-             (iptr)&self->panel_clip_rect,(iptr)&self->panel_clip_rect);
+            ((DibSurface *)self->civs_art_surface,(DibSurface *)(iptr)(self->media_wnd),
+             (RECT *)&self->panel_clip_rect,(RECT *)&self->panel_clip_rect);
   snd_wave_stop_all();
   snd_play_effect(0x6f,1,0,0);
   tick = timeGetTime();
@@ -6744,7 +6744,7 @@ prompt_cheat_number:
   else {
     dialog_init
               ((Dialog *)&((PictureWindow *)self)->council_dialog,(iptr)self,(iptr)self,
-               (iptr)((u8 *)&((PictureWindow *)self)->speech_rect),0x84008);
+               (RECT *)(iptr)((u8 *)&((PictureWindow *)self)->speech_rect),0x84008);
     avi_player_create_child((MediaWindow *)&self->style_flags,(iptr)&str_empty_160,0x200,0,0,(iptr)self);
     str_clear((char *)avi_path);
     str_append((char *)avi_path,(const char *)&str_civ2_video);
@@ -6854,7 +6854,7 @@ void __thiscall council_draw_background(DibSurface *self)
           frame_bevel_width * 2 + (frame_border_width - frame_bevel_width) + 0x5a,frame_bevel_width * 2 + inner_top + 0x7a);
   for (i = 0; i < 5; i++) {
     for (j = 0; j < frame_bevel_width; j++) {
-      gfx_draw_bevel_rect((iptr)self,(iptr)&rect,frame_shadow_color,frame_highlight_color);
+      gfx_draw_bevel_rect((iptr)self,&rect,frame_shadow_color,frame_highlight_color);
       InflateRect(&rect,-1,-1);
     }
     surface_fill_rect(self,(iptr)&rect,10);
@@ -6869,7 +6869,7 @@ void __thiscall council_draw_background(DibSurface *self)
   SetRect((LPRECT)&((PictureWindow *)self)->speech_rect,frame_border_width - frame_bevel_width,inner_top - 0x82 + frame_bevel_width * -3
           ,offset,extent);
   for (j = 0; j < frame_bevel_width; j++) {
-    gfx_draw_bevel_rect((iptr)self,(iptr)&((PictureWindow *)self)->speech_rect,frame_shadow_color,frame_highlight_color);
+    gfx_draw_bevel_rect((iptr)self,(RECT *)(iptr)&((PictureWindow *)self)->speech_rect,frame_shadow_color,frame_highlight_color);
     InflateRect((LPRECT)&((PictureWindow *)self)->speech_rect,-1,-1);
   }
   surface_fill_rect(self,(iptr)&((PictureWindow *)self)->speech_rect,0x1d);
@@ -6877,7 +6877,7 @@ void __thiscall council_draw_background(DibSurface *self)
   lprcSrc = (RECT *)surface_get_rect(self);
   CopyRect(&rect,lprcSrc);
   for (j = 0; j < frame_bevel_width; j++) {
-    gfx_draw_bevel_rect((iptr)self,(iptr)&rect,frame_highlight_color,frame_shadow_color);
+    gfx_draw_bevel_rect((iptr)self,&rect,frame_highlight_color,frame_shadow_color);
     InflateRect(&rect,-1,-1);
   }
   text_clear();

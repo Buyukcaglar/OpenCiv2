@@ -4483,7 +4483,7 @@ i32 __thiscall diplo_leader_init_background(DiploLeaderView *self)
   wnd_create_with_handlers
             ((WndBase *)self,(const char *)&str_empty_102,0x800,0,0,self->screen_width_value,self->screen_height_value + 5,(iptr)&game_palette_block.game_palette,
              (iptr)&main_frame_wnd_block.main_frame_wnd);
-  wnd_set_bg_tile(self,(iptr)&self->bg_tile_surface);
+  wnd_set_bg_tile(self,(DibSurface *)&self->bg_tile_surface);
   return 1;
 }
 
@@ -4822,12 +4822,12 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *self)
               gfx_set_text_color_index(10);
               surface_draw_text_in_rect
                         ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)(aCStack_641 + 1),
-                         (iptr)&draw_rect,0);
+                         &draw_rect,0);
               OffsetRect(&draw_rect,-1,-1);
               gfx_set_text_color_index(text_colors[self->style_era]);
               surface_draw_text_in_rect
                         ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)(aCStack_641 + 1),
-                         (iptr)&draw_rect,0);
+                         &draw_rect,0);
             }
           }
           else {
@@ -4863,12 +4863,12 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *self)
               gfx_set_text_color_index(10);
               surface_draw_text_in_rect
                         ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)(aCStack_641 + 1),
-                         (iptr)&draw_rect,1);
+                         &draw_rect,1);
               OffsetRect(&draw_rect,-1,-1);
               gfx_set_text_color_index(text_colors[self->style_era]);
               surface_draw_text_in_rect
                         ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)(aCStack_641 + 1),
-                         (iptr)&draw_rect,1);
+                         &draw_rect,1);
             }
             str_clear((char *)line2_buf);
             for (; word2 < 5; word2++) {
@@ -4894,12 +4894,12 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *self)
               gfx_set_text_color_index(10);
               surface_draw_text_in_rect
                         ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)line2_buf,
-                         (iptr)&draw_rect,1);
+                         &draw_rect,1);
               OffsetRect(&draw_rect,-1,-1);
               gfx_set_text_color_index(text_colors[self->style_era]);
               surface_draw_text_in_rect
                         ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)line2_buf,
-                         (iptr)&draw_rect,1);
+                         &draw_rect,1);
             }
           }
           OffsetRect(&text_rect,0,step_y);
@@ -5112,7 +5112,7 @@ i32 __cdecl diplo_wnd_close_active(void)
   else {
     wnd2 = (i8 *)(child - 0x48);
   }
-  if ((wnd2 == ((i8 *)&parley_wnd_block)) && ((int)parley_wnd_block.closed == 0)) {
+  if ((wnd2 == ((i8 *)&parley_wnd_block)) && (parley_wnd_block.closed == 0)) {
     if ((void *)parley_wnd_block.received_offer != (void *)0x0) {
       operator_delete((void *)parley_wnd_block.received_offer);
       parley_wnd_block.received_offer = 0;

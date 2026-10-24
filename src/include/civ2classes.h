@@ -11,7 +11,7 @@
 typedef struct WndBase {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
 } WndBase;
 
@@ -19,7 +19,7 @@ typedef struct WndBase {
 typedef struct ModalMenuWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
     union { u8 pad_10[104]; struct { u8 wnd_handlers[104]; }; };
     union { u32 field_78; u32 menu; };
@@ -43,7 +43,7 @@ typedef struct ModalMenuWindow {
 typedef struct Wnd {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
     u8 pad_10[104];
     union { u32 field_78; u32 menu; };
@@ -72,7 +72,7 @@ typedef struct Wnd {
 typedef struct PictureFrameWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
     u8 pad_10[104];
     union { u32 field_78; u32 menu; };
@@ -125,7 +125,7 @@ typedef struct PictureFrameWindow {
 typedef struct DestroyedCivsWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
     u8 pad_10[104];
     union { u32 field_78; u32 menu; };
@@ -183,7 +183,7 @@ typedef struct DestroyedCivsWindow {
 typedef struct SpaceshipWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
     u8 pad_10[104];
     union { u32 field_78; u32 menu; };
@@ -252,7 +252,7 @@ typedef struct SpaceshipWindow {
 typedef struct DiploLeaderWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
     u8 pad_10[104];
     union { u32 field_78; u32 menu; };
@@ -325,7 +325,7 @@ typedef struct DiploLeaderWindow {
 typedef struct ThroneRoomWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
     u8 pad_10[104];
     union { u32 field_78; u32 menu; };
@@ -408,7 +408,7 @@ typedef struct ThroneRoomWindow {
 typedef struct CityViewWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
     u8 pad_10[104];
     union { u32 field_78; u32 menu; };
@@ -549,7 +549,7 @@ typedef struct DibSurface {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
 } DibSurface;
 
@@ -571,7 +571,7 @@ typedef struct SurfaceWindow {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -597,7 +597,7 @@ typedef struct ListPaneWindow {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -625,7 +625,7 @@ typedef struct PediaRedrawView {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     u8 pad_48[184];
     union { u32 field_100; u32 handler_slot_100; };
@@ -660,7 +660,7 @@ typedef struct ScaledWindowView {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -692,7 +692,7 @@ typedef struct ParleyWindowLayout {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -737,7 +737,7 @@ typedef struct PortraitDialog {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -797,7 +797,7 @@ typedef struct FrameWindow {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -896,7 +896,7 @@ typedef struct ViewWindow {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -1041,7 +1041,7 @@ typedef struct PictureWindowCore {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -1195,7 +1195,7 @@ typedef struct PictureWindow {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     u8 pad_48[184];
     union { u32 field_100; u32 handler_slot_100; };
@@ -1640,7 +1640,7 @@ typedef struct MediaWindow {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -1821,7 +1821,7 @@ typedef struct PediaAdvanceListView {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     u8 pad_48[184];
     union { u32 field_100; u32 handler_slot_100; };
@@ -2004,7 +2004,7 @@ typedef struct DocumentWindow {
     union { uptr field_34; uptr bits; };
     union { uptr field_38; uptr row_offsets; };
     union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
     union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
     union { u32 field_100; u32 handler_slot_100; };
@@ -2180,7 +2180,7 @@ typedef struct DocumentWindow {
 /* 1 methods, size 0xc */
 typedef struct WndValidateRectView {
     u8 pad_0[8];
-    union { u32 field_8; u32 wnd_obj; };
+    union { u32 field_8; NativeWindow *wnd_obj; };
 } WndValidateRectView;
 
 /* 23 methods, size 0x28 */
@@ -2257,12 +2257,9 @@ typedef struct DialogTextView {
     union { u32 field_40; u32 wnd_width; };
     union { u32 field_44; u32 wnd_height; };
     union { u32 field_48; u32 cur_pane; };
-    union { u32 field_4c; u32 list_width; };
-    union { u32 field_50; u32 list_width_1; };
-    union { u32 field_54; u32 list_height; };
-    union { u32 field_58; u32 list_height_1; };
-    union { u32 field_5c; u32 list_rows; };
-    union { u32 field_60; u32 list_rows_1; };
+    union { struct { u32 field_4c; u32 field_50; }; u32 list_width[2]; };
+    union { struct { u32 field_54; u32 field_58; }; u32 list_height[2]; };
+    union { struct { u32 field_5c; u32 field_60; }; u32 list_rows[2]; };
     union { u32 field_64; u32 text_color; };
     union { u32 field_68; u32 shadow_color; };
     union { u32 field_6c; u32 highlight_color; };
@@ -2315,12 +2312,9 @@ typedef struct DialogTextLineView {
     union { u32 field_40; u32 wnd_width; };
     union { u32 field_44; u32 wnd_height; };
     union { u32 field_48; u32 cur_pane; };
-    union { u32 field_4c; u32 list_width; };
-    union { u32 field_50; u32 list_width_1; };
-    union { u32 field_54; u32 list_height; };
-    union { u32 field_58; u32 list_height_1; };
-    union { u32 field_5c; u32 list_rows; };
-    union { u32 field_60; u32 list_rows_1; };
+    union { struct { u32 field_4c; u32 field_50; }; u32 list_width[2]; };
+    union { struct { u32 field_54; u32 field_58; }; u32 list_height[2]; };
+    union { struct { u32 field_5c; u32 field_60; }; u32 list_rows[2]; };
     union { u32 field_64; u32 text_color; };
     union { u32 field_68; u32 shadow_color; };
     union { u32 field_6c; u32 highlight_color; };
@@ -2397,12 +2391,9 @@ typedef struct DialogWindowView {
     union { u32 field_40; u32 wnd_width; };
     union { u32 field_44; u32 wnd_height; };
     union { u32 field_48; u32 cur_pane; };
-    union { u32 field_4c; u32 list_width; };
-    union { u32 field_50; u32 list_width_1; };
-    union { u32 field_54; u32 list_height; };
-    union { u32 field_58; u32 list_height_1; };
-    union { u32 field_5c; u32 list_rows; };
-    union { u32 field_60; u32 list_rows_1; };
+    union { struct { u32 field_4c; u32 field_50; }; u32 list_width[2]; };
+    union { struct { u32 field_54; u32 field_58; }; u32 list_height[2]; };
+    union { struct { u32 field_5c; u32 field_60; }; u32 list_rows[2]; };
     union { u32 field_64; u32 text_color; };
     union { u32 field_68; u32 shadow_color; };
     union { u32 field_6c; u32 highlight_color; };
@@ -2456,44 +2447,25 @@ typedef struct DialogWindowView {
     union { u32 field_12c; u32 button_width; };
     union { u32 field_130; u32 sprite_zoom; };
     union { uptr field_134; uptr title_text; };
-    union { u32 field_138; u32 pane_left; };
-    union { u32 field_13c; u32 pane_top; };
-    union { u32 field_140; u32 pane_right; };
-    union { u32 field_144; u32 pane_bottom; };
-    union { u32 field_148; u32 pane1_left; };
-    union { u32 field_14c; u32 pane1_top; };
-    union { u32 field_150; u32 pane1_right; };
-    union { u32 field_154; u32 pane1_bottom; };
-    union { u32 field_158; u32 pane_inner_left; };
-    union { u32 field_15c; u32 list_client_top; };
-    union { u32 field_160; u32 list_client_right; };
-    union { u32 field_164; u32 list_client_bottom; };
-    union { u32 field_168; u32 list2_client_rect; };
-    union { u32 field_16c; u32 list2_client_top; };
-    union { u32 field_170; u32 list2_client_right; };
-    union { u32 field_174; u32 list2_client_bottom; };
-    u8 pad_178[72];
-    union { u32 field_1c0; u32 list_vscroll_width; };
-    union { u32 field_1c4; u32 list2_vscroll_width; };
-    union { u32 field_1c8; u32 list_hscroll_height; };
-    union { u32 field_1cc; u32 list2_hscroll_height; };
-    union { u32 field_1d0; u32 list_origin_x; };
-    union { u32 field_1d4; u32 list2_origin_x; };
-    union { u32 field_1d8; u32 list_origin_y; };
-    union { u32 field_1dc; u32 list2_origin_y; };
-    union { u32 field_1e0; u32 list_x_offset; };
-    union { u32 field_1e4; u32 list2_x_offset; };
-    union { u32 field_1e8; u32 list_column_width; };
-    union { u32 field_1ec; u32 list2_column_width; };
-    union { u32 field_1f0; u32 list_row_height; };
-    union { u32 field_1f4; u32 list2_row_height; };
-    union { u8 pad_1f8[24]; struct { u8 gap_1f8[8]; u32 list_row_height_override; u8 gap_204[4]; uptr list_indents; u8 gap_20c[4]; }; };
-    union { u32 field_210; u32 list_top_option; };
-    union { u32 field_214; u32 list2_top_option; };
-    union { u32 field_218; u32 list_left_col; };
-    union { u32 field_21c; u32 list2_left_col; };
-    union { uptr field_220; uptr selected_option; };
-    union { uptr field_224; uptr selected_sprite; };
+    RECT pane_rect[2];
+    RECT list_client_rect[2];
+    RECT list_vscroll_rect[2];
+    RECT list_hscroll_rect[2];
+    u32 pane_drawn[2];
+    union { struct { u32 field_1c0; u32 field_1c4; }; u32 list_vscroll_width[2]; };
+    union { struct { u32 field_1c8; u32 field_1cc; }; u32 list_hscroll_height[2]; };
+    union { struct { u32 field_1d0; u32 field_1d4; }; u32 list_origin_x[2]; };
+    union { struct { u32 field_1d8; u32 field_1dc; }; u32 list_origin_y[2]; };
+    union { struct { u32 field_1e0; u32 field_1e4; }; u32 list_x_offset[2]; };
+    union { struct { u32 field_1e8; u32 field_1ec; }; u32 list_column_width[2]; };
+    union { struct { u32 field_1f0; u32 field_1f4; }; u32 list_row_height[2]; };
+    u32 field_1f8[2];
+    u32 list_row_height_override[2];
+    uptr list_indents[2];
+    union { struct { u32 field_210; u32 field_214; }; DialogOption *list_top_option[2]; };
+    union { struct { u32 field_218; u32 field_21c; }; u32 list_left_col[2]; };
+    union { uptr field_220; DialogOption *selected_option; };
+    union { uptr field_224; DialogSprite *selected_sprite; };
 } DialogWindowView;
 
 /* 26 methods, size 0x268 */
@@ -2517,12 +2489,9 @@ typedef struct DialogOptionList {
     union { u32 field_40; u32 wnd_width; };
     union { u32 field_44; u32 wnd_height; };
     union { u32 field_48; u32 cur_pane; };
-    union { u32 field_4c; u32 list_width; };
-    union { u32 field_50; u32 list_width_1; };
-    union { u32 field_54; u32 list_height; };
-    union { u32 field_58; u32 list_height_1; };
-    union { u32 field_5c; u32 list_rows; };
-    union { u32 field_60; u32 list_rows_1; };
+    union { struct { u32 field_4c; u32 field_50; }; u32 list_width[2]; };
+    union { struct { u32 field_54; u32 field_58; }; u32 list_height[2]; };
+    union { struct { u32 field_5c; u32 field_60; }; u32 list_rows[2]; };
     union { u32 field_64; u32 text_color; };
     union { u32 field_68; u32 shadow_color; };
     union { u32 field_6c; u32 highlight_color; };
@@ -2576,49 +2545,30 @@ typedef struct DialogOptionList {
     union { u32 field_12c; u32 button_width; };
     union { u32 field_130; u32 sprite_zoom; };
     union { uptr field_134; uptr title_text; };
-    union { u32 field_138; u32 pane_left; };
-    union { u32 field_13c; u32 pane_top; };
-    union { u32 field_140; u32 pane_right; };
-    union { u32 field_144; u32 pane_bottom; };
-    union { u32 field_148; u32 pane1_left; };
-    union { u32 field_14c; u32 pane1_top; };
-    union { u32 field_150; u32 pane1_right; };
-    union { u32 field_154; u32 pane1_bottom; };
-    union { u32 field_158; u32 pane_inner_left; };
-    union { u32 field_15c; u32 list_client_top; };
-    union { u32 field_160; u32 list_client_right; };
-    union { u32 field_164; u32 list_client_bottom; };
-    union { u32 field_168; u32 list2_client_rect; };
-    union { u32 field_16c; u32 list2_client_top; };
-    union { u32 field_170; u32 list2_client_right; };
-    union { u32 field_174; u32 list2_client_bottom; };
-    union { u8 pad_178[72]; struct { u8 list_vscroll_rect[16]; u8 list2_vscroll_rect[16]; u8 list_hscroll_rect[16]; u8 list2_hscroll_rect[24]; }; };
-    union { u32 field_1c0; u32 list_vscroll_width; };
-    union { u32 field_1c4; u32 list2_vscroll_width; };
-    union { u32 field_1c8; u32 list_hscroll_height; };
-    union { u32 field_1cc; u32 list2_hscroll_height; };
-    union { u32 field_1d0; u32 list_origin_x; };
-    union { u32 field_1d4; u32 list2_origin_x; };
-    union { u32 field_1d8; u32 list_origin_y; };
-    union { u32 field_1dc; u32 list2_origin_y; };
-    union { u32 field_1e0; u32 list_x_offset; };
-    union { u32 field_1e4; u32 list2_x_offset; };
-    union { u32 field_1e8; u32 list_column_width; };
-    union { u32 field_1ec; u32 list2_column_width; };
-    union { u32 field_1f0; u32 list_row_height; };
-    union { u32 field_1f4; u32 list2_row_height; };
-    union { u8 pad_1f8[24]; struct { u8 list_column_counts[24]; }; };
-    union { u32 field_210; u32 list_top_option; };
-    union { u32 field_214; u32 list2_top_option; };
-    union { u32 field_218; u32 list_left_col; };
-    union { u32 field_21c; u32 list2_left_col; };
-    union { uptr field_220; uptr selected_option; };
-    union { uptr field_224; uptr selected_sprite; };
-    union { uptr field_228; uptr option_list; };
-    union { u32 field_22c; u32 option_tail; };
-    union { u32 field_230; u32 line_list; };
-    union { uptr field_234; uptr sprite_list; };
-    union { u32 field_238; u32 edit_field_list; };
+    RECT pane_rect[2];
+    RECT list_client_rect[2];
+    RECT list_vscroll_rect[2];
+    RECT list_hscroll_rect[2];
+    u32 pane_drawn[2];
+    union { struct { u32 field_1c0; u32 field_1c4; }; u32 list_vscroll_width[2]; };
+    union { struct { u32 field_1c8; u32 field_1cc; }; u32 list_hscroll_height[2]; };
+    union { struct { u32 field_1d0; u32 field_1d4; }; u32 list_origin_x[2]; };
+    union { struct { u32 field_1d8; u32 field_1dc; }; u32 list_origin_y[2]; };
+    union { struct { u32 field_1e0; u32 field_1e4; }; u32 list_x_offset[2]; };
+    union { struct { u32 field_1e8; u32 field_1ec; }; u32 list_column_width[2]; };
+    union { struct { u32 field_1f0; u32 field_1f4; }; u32 list_row_height[2]; };
+    u32 field_1f8[2];
+    u32 list_row_height_override[2];
+    uptr list_indents[2];
+    union { struct { u32 field_210; u32 field_214; }; DialogOption *list_top_option[2]; };
+    union { struct { u32 field_218; u32 field_21c; }; u32 list_left_col[2]; };
+    union { uptr field_220; DialogOption *selected_option; };
+    union { uptr field_224; DialogSprite *selected_sprite; };
+    union { uptr field_228; DialogOption *option_list; };
+    union { u32 field_22c; DialogOption *option_tail; };
+    union { u32 field_230; DialogLine *line_list; };
+    union { uptr field_234; DialogSprite *sprite_list; };
+    union { u32 field_238; DialogEditField *edit_field_list; };
     union { u32 field_23c; u32 on_sprite_click; };
     union { u32 field_240; u32 on_sprite_dblclick; };
     union { uptr field_244; uptr on_draw_sprite; };
@@ -2656,12 +2606,9 @@ typedef struct Dialog {
     union { u32 field_40; u32 wnd_width; };
     union { u32 field_44; u32 wnd_height; };
     union { u32 field_48; u32 cur_pane; };
-    union { u32 field_4c; u32 list_width; };
-    union { u32 field_50; u32 list_width_1; };
-    union { u32 field_54; u32 list_height; };
-    union { u32 field_58; u32 list_height_1; };
-    union { u32 field_5c; u32 list_rows; };
-    union { u32 field_60; u32 list_rows_1; };
+    union { struct { u32 field_4c; u32 field_50; }; u32 list_width[2]; };
+    union { struct { u32 field_54; u32 field_58; }; u32 list_height[2]; };
+    union { struct { u32 field_5c; u32 field_60; }; u32 list_rows[2]; };
     union { u32 field_64; u32 text_color; };
     union { u32 field_68; u32 shadow_color; };
     union { u32 field_6c; u32 highlight_color; };
@@ -2715,49 +2662,30 @@ typedef struct Dialog {
     union { u32 field_12c; u32 button_width; };
     union { u32 field_130; u32 sprite_zoom; };
     union { uptr field_134; uptr title_text; };
-    union { u32 field_138; u32 pane_left; };
-    union { u32 field_13c; u32 pane_top; };
-    union { u32 field_140; u32 pane_right; };
-    union { u32 field_144; u32 pane_bottom; };
-    union { u32 field_148; u32 pane1_left; };
-    union { u32 field_14c; u32 pane1_top; };
-    union { u32 field_150; u32 pane1_right; };
-    union { u32 field_154; u32 pane1_bottom; };
-    union { u32 field_158; u32 pane_inner_left; };
-    union { u32 field_15c; u32 list_client_top; };
-    union { u32 field_160; u32 list_client_right; };
-    union { u32 field_164; u32 list_client_bottom; };
-    union { u32 field_168; u32 list2_client_rect; };
-    union { u32 field_16c; u32 list2_client_top; };
-    union { u32 field_170; u32 list2_client_right; };
-    union { u32 field_174; u32 list2_client_bottom; };
-    union { u8 pad_178[72]; struct { u8 list_vscroll_rect[72]; }; };
-    union { u32 field_1c0; u32 list_vscroll_width; };
-    union { u32 field_1c4; u32 list2_vscroll_width; };
-    union { u32 field_1c8; u32 list_hscroll_height; };
-    union { u32 field_1cc; u32 list2_hscroll_height; };
-    union { u32 field_1d0; u32 list_origin_x; };
-    union { u32 field_1d4; u32 list2_origin_x; };
-    union { u32 field_1d8; u32 list_origin_y; };
-    union { u32 field_1dc; u32 list2_origin_y; };
-    union { u32 field_1e0; u32 list_x_offset; };
-    union { u32 field_1e4; u32 list2_x_offset; };
-    union { u32 field_1e8; u32 list_column_width; };
-    union { u32 field_1ec; u32 list2_column_width; };
-    union { u32 field_1f0; u32 list_row_height; };
-    union { u32 field_1f4; u32 list2_row_height; };
-    union { u8 pad_1f8[24]; struct { u8 list_column_counts[24]; }; };
-    union { u32 field_210; u32 list_top_option; };
-    union { u32 field_214; u32 list2_top_option; };
-    union { u32 field_218; u32 list_left_col; };
-    union { u32 field_21c; u32 list2_left_col; };
-    union { uptr field_220; uptr selected_option; };
-    union { uptr field_224; uptr selected_sprite; };
-    union { uptr field_228; uptr option_list; };
-    union { u32 field_22c; u32 option_tail; };
-    union { u32 field_230; u32 line_list; };
-    union { uptr field_234; uptr sprite_list; };
-    union { u32 field_238; u32 edit_field_list; };
+    RECT pane_rect[2];
+    RECT list_client_rect[2];
+    RECT list_vscroll_rect[2];
+    RECT list_hscroll_rect[2];
+    u32 pane_drawn[2];
+    union { struct { u32 field_1c0; u32 field_1c4; }; u32 list_vscroll_width[2]; };
+    union { struct { u32 field_1c8; u32 field_1cc; }; u32 list_hscroll_height[2]; };
+    union { struct { u32 field_1d0; u32 field_1d4; }; u32 list_origin_x[2]; };
+    union { struct { u32 field_1d8; u32 field_1dc; }; u32 list_origin_y[2]; };
+    union { struct { u32 field_1e0; u32 field_1e4; }; u32 list_x_offset[2]; };
+    union { struct { u32 field_1e8; u32 field_1ec; }; u32 list_column_width[2]; };
+    union { struct { u32 field_1f0; u32 field_1f4; }; u32 list_row_height[2]; };
+    u32 field_1f8[2];
+    u32 list_row_height_override[2];
+    uptr list_indents[2];
+    union { struct { u32 field_210; u32 field_214; }; DialogOption *list_top_option[2]; };
+    union { struct { u32 field_218; u32 field_21c; }; u32 list_left_col[2]; };
+    union { uptr field_220; DialogOption *selected_option; };
+    union { uptr field_224; DialogSprite *selected_sprite; };
+    union { uptr field_228; DialogOption *option_list; };
+    union { u32 field_22c; DialogOption *option_tail; };
+    union { u32 field_230; DialogLine *line_list; };
+    union { uptr field_234; DialogSprite *sprite_list; };
+    union { u32 field_238; DialogEditField *edit_field_list; };
     union { u32 field_23c; u32 on_sprite_click; };
     union { u32 field_240; u32 on_sprite_dblclick; };
     union { uptr field_244; uptr on_draw_sprite; };
@@ -2776,13 +2704,10 @@ typedef struct Dialog {
     union { uptr field_26c; uptr checkboxes; };
     union { uptr field_270; uptr edit_controls; };
     union { uptr field_274; uptr button_controls; };
-    union { uptr field_278; uptr listbox; };
-    union { uptr field_27c; uptr listbox2; };
+    union { struct { uptr field_278; uptr field_27c; }; uptr listbox[2]; };
     union { uptr field_280; uptr sprite_hotspots; };
-    union { uptr field_284; uptr list_vscroll; };
-    union { uptr field_288; uptr list2_vscroll; };
-    union { uptr field_28c; uptr list_hscroll; };
-    union { uptr field_290; uptr list2_hscroll; };
+    union { struct { uptr field_284; uptr field_288; }; uptr list_vscroll[2]; };
+    union { struct { uptr field_28c; uptr field_290; }; uptr list_hscroll[2]; };
     union { u8 pad_294[96]; struct { uptr extra_button_labels; u8 gap_298[16]; u32 button_layout; u32 button_alignment; u32 button_x_coords; u8 gap_2b4[64]; }; };
     u32 events_string_pool;
 } Dialog;
@@ -2808,12 +2733,9 @@ typedef struct ScenarioEvents {
     union { u32 field_40; u32 wnd_width; };
     union { u32 field_44; u32 wnd_height; };
     union { u32 field_48; u32 cur_pane; };
-    union { u32 field_4c; u32 list_width; };
-    union { u32 field_50; u32 list_width_1; };
-    union { u32 field_54; u32 list_height; };
-    union { u32 field_58; u32 list_height_1; };
-    union { u32 field_5c; u32 list_rows; };
-    union { u32 field_60; u32 list_rows_1; };
+    union { struct { u32 field_4c; u32 field_50; }; u32 list_width[2]; };
+    union { struct { u32 field_54; u32 field_58; }; u32 list_height[2]; };
+    union { struct { u32 field_5c; u32 field_60; }; u32 list_rows[2]; };
     union { u32 field_64; u32 text_color; };
     union { u32 field_68; u32 shadow_color; };
     union { u32 field_6c; u32 highlight_color; };
@@ -2867,49 +2789,30 @@ typedef struct ScenarioEvents {
     union { u32 field_12c; u32 button_width; };
     union { u32 field_130; u32 sprite_zoom; };
     union { uptr field_134; uptr title_text; };
-    union { u32 field_138; u32 pane_left; };
-    union { u32 field_13c; u32 pane_top; };
-    union { u32 field_140; u32 pane_right; };
-    union { u32 field_144; u32 pane_bottom; };
-    union { u32 field_148; u32 pane1_left; };
-    union { u32 field_14c; u32 pane1_top; };
-    union { u32 field_150; u32 pane1_right; };
-    union { u32 field_154; u32 pane1_bottom; };
-    union { u32 field_158; u32 pane_inner_left; };
-    union { u32 field_15c; u32 list_client_top; };
-    union { u32 field_160; u32 list_client_right; };
-    union { u32 field_164; u32 list_client_bottom; };
-    union { u32 field_168; u32 list2_client_rect; };
-    union { u32 field_16c; u32 list2_client_top; };
-    union { u32 field_170; u32 list2_client_right; };
-    union { u32 field_174; u32 list2_client_bottom; };
-    u8 pad_178[72];
-    union { u32 field_1c0; u32 list_vscroll_width; };
-    union { u32 field_1c4; u32 list2_vscroll_width; };
-    union { u32 field_1c8; u32 list_hscroll_height; };
-    union { u32 field_1cc; u32 list2_hscroll_height; };
-    union { u32 field_1d0; u32 list_origin_x; };
-    union { u32 field_1d4; u32 list2_origin_x; };
-    union { u32 field_1d8; u32 list_origin_y; };
-    union { u32 field_1dc; u32 list2_origin_y; };
-    union { u32 field_1e0; u32 list_x_offset; };
-    union { u32 field_1e4; u32 list2_x_offset; };
-    union { u32 field_1e8; u32 list_column_width; };
-    union { u32 field_1ec; u32 list2_column_width; };
-    union { u32 field_1f0; u32 list_row_height; };
-    union { u32 field_1f4; u32 list2_row_height; };
-    u8 pad_1f8[24];
-    union { u32 field_210; u32 list_top_option; };
-    union { u32 field_214; u32 list2_top_option; };
-    union { u32 field_218; u32 list_left_col; };
-    union { u32 field_21c; u32 list2_left_col; };
-    union { uptr field_220; uptr selected_option; };
-    union { uptr field_224; uptr selected_sprite; };
-    union { uptr field_228; uptr option_list; };
-    union { u32 field_22c; u32 option_tail; };
-    union { u32 field_230; u32 line_list; };
-    union { uptr field_234; uptr sprite_list; };
-    union { u32 field_238; u32 edit_field_list; };
+    RECT pane_rect[2];
+    RECT list_client_rect[2];
+    RECT list_vscroll_rect[2];
+    RECT list_hscroll_rect[2];
+    u32 pane_drawn[2];
+    union { struct { u32 field_1c0; u32 field_1c4; }; u32 list_vscroll_width[2]; };
+    union { struct { u32 field_1c8; u32 field_1cc; }; u32 list_hscroll_height[2]; };
+    union { struct { u32 field_1d0; u32 field_1d4; }; u32 list_origin_x[2]; };
+    union { struct { u32 field_1d8; u32 field_1dc; }; u32 list_origin_y[2]; };
+    union { struct { u32 field_1e0; u32 field_1e4; }; u32 list_x_offset[2]; };
+    union { struct { u32 field_1e8; u32 field_1ec; }; u32 list_column_width[2]; };
+    union { struct { u32 field_1f0; u32 field_1f4; }; u32 list_row_height[2]; };
+    u32 field_1f8[2];
+    u32 list_row_height_override[2];
+    uptr list_indents[2];
+    union { struct { u32 field_210; u32 field_214; }; DialogOption *list_top_option[2]; };
+    union { struct { u32 field_218; u32 field_21c; }; u32 list_left_col[2]; };
+    union { uptr field_220; DialogOption *selected_option; };
+    union { uptr field_224; DialogSprite *selected_sprite; };
+    union { uptr field_228; DialogOption *option_list; };
+    union { u32 field_22c; DialogOption *option_tail; };
+    union { u32 field_230; DialogLine *line_list; };
+    union { uptr field_234; DialogSprite *sprite_list; };
+    union { u32 field_238; DialogEditField *edit_field_list; };
     union { u32 field_23c; u32 on_sprite_click; };
     union { u32 field_240; u32 on_sprite_dblclick; };
     union { uptr field_244; uptr on_draw_sprite; };
@@ -2928,13 +2831,10 @@ typedef struct ScenarioEvents {
     union { uptr field_26c; uptr checkboxes; };
     union { uptr field_270; uptr edit_controls; };
     union { uptr field_274; uptr button_controls; };
-    union { uptr field_278; uptr listbox; };
-    union { uptr field_27c; uptr listbox2; };
+    union { struct { uptr field_278; uptr field_27c; }; uptr listbox[2]; };
     union { uptr field_280; uptr sprite_hotspots; };
-    union { uptr field_284; uptr list_vscroll; };
-    union { uptr field_288; uptr list2_vscroll; };
-    union { uptr field_28c; uptr list_hscroll; };
-    union { uptr field_290; uptr list2_hscroll; };
+    union { struct { uptr field_284; uptr field_288; }; uptr list_vscroll[2]; };
+    union { struct { uptr field_28c; uptr field_290; }; uptr list_hscroll[2]; };
     union { u8 pad_294[97]; struct { u8 gap_294[96]; u8 events_string_pool[1]; }; };
     union { u8 field_2f5; u8 events_pool_valid; };
     u8 pad_2f6[18];
@@ -3123,7 +3023,7 @@ typedef struct CheckboxCallbackSetView {
 /* 1 methods, size 0xc */
 typedef struct WndCursorView {
     u8 pad_0[8];
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
 } WndCursorView;
 
 /* 6 methods, size 0x8 */
@@ -3306,7 +3206,7 @@ typedef struct NetGamelistView {
     char server_version[32];
     u8 pad_108[32];
     i32 info_lines[9];
-    uptr first_option_value;
+    DialogOption *first_option_value;
     u8 pad_150[36];
     u32 refresh_timer;
 } NetGamelistView;
@@ -3420,7 +3320,7 @@ typedef struct ThroneRoomDtorView {
 /* 1 methods, size 0x10 */
 typedef struct WndCenterView {
     u8 pad_0[8];
-    union { u32 field_8; u32 wnd_obj; };
+    union { u32 field_8; NativeWindow *wnd_obj; };
     u8 pad_c[4];
 } WndCenterView;
 
@@ -3680,7 +3580,7 @@ typedef struct EditSelView {
 /* 9 methods, size 0x1088 */
 typedef struct DiploLeaderView {
     u8 pad_0[8];
-    union { u32 field_8; u32 wnd_obj; };
+    union { u32 field_8; NativeWindow *wnd_obj; };
     u8 pad_c[180];
     union { u32 field_c0; u32 screen_width_value; };
     union { u32 field_c4; u32 screen_height_value; };
@@ -3913,7 +3813,7 @@ typedef struct CouncilWindow {
 /* 1 methods, size 0xd4 */
 typedef struct WndMoveView {
     u8 pad_0[8];
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
     u8 pad_c[200];
 } WndMoveView;
 
@@ -3995,7 +3895,7 @@ typedef struct GameMenu {
     union { u32 field_0; u32 hmenu; };
     union { u8 pad_4[20]; struct { u8 item_storage[4]; u8 item_flags[16]; }; };
     union { u32 field_18; u32 menu_flags; };
-    union { uptr field_1c; uptr menus; };
+    union { uptr field_1c; MenuNode *menus; };
 } GameMenu;
 
 /* 1 methods, size 0x4 */
@@ -4015,7 +3915,7 @@ typedef struct DialogAddLineView {
     u8 pad_0[32];
     union { u32 field_20; u32 line_count; };
     u8 pad_24[524];
-    union { uptr field_230; uptr line_list; };
+    union { uptr field_230; DialogLine *line_list; };
     union { u8 pad_234[192]; struct { u8 gap_234[32]; u8 line_storage[160]; }; };
 } DialogAddLineView;
 
@@ -4125,7 +4025,7 @@ typedef struct WndPaletteObjView {
 /* 1 methods, size 0xc */
 typedef struct WndClientSizeView {
     u8 pad_0[8];
-    union { u32 field_8; u32 native_wnd; };
+    union { u32 field_8; NativeWindow *native_wnd; };
 } WndClientSizeView;
 
 /* 1 methods, size 0x84 */
@@ -4150,67 +4050,67 @@ typedef struct WndStyleView {
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextCurFontView {
     union { u8 pad_0[64]; struct { u8 gap_0[20]; u8 clip_rect_2[44]; }; };
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextCurFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextRectCurFontView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextRectCurFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextWrapCurFontView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextWrapCurFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceBlitRectView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceBlitRectView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceBlitDDSurfView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceBlitDDSurfView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextRgbCurFontView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextRgbCurFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextRectRgbCurFontView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextRectRgbCurFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextRgbFontView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextRgbFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextRectFontView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextRectFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextWrapRgbCurFontView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextWrapRgbCurFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextWrapRgbFontView {
     u8 pad_0[64];
-    union { u32 field_40; u32 dib; };
+    union { u32 field_40; GdiDib *dib; };
 } SurfaceTextWrapRgbFontView;
 
 /* 48 methods, size 0x44 */
@@ -4678,7 +4578,7 @@ typedef struct ErrCtxGetLastCodeView {
 /* 1 methods, size 0xc */
 typedef struct WndDestroyView {
     u8 pad_0[8];
-    union { u32 field_8; u32 wnd_obj; };
+    union { u32 field_8; NativeWindow *wnd_obj; };
 } WndDestroyView;
 
 /* 1 methods, size 0xc */

@@ -259,6 +259,16 @@ def simplify(paths):
                     break
             else:
                 break
+        # (T *)(I)X -> (T *)X, I a 32-bit integer, X a variable/member chain:
+        # the integer conversion of a pointer or an integer keeps its value
+        chain = r'[A-Za-z_]\w*(?:(?:->|\.)[A-Za-z_]\w*|\[[^\[\]()]*\])*'
+        s, n = re.subn(r'(\((?:%s)\))\s*\(\s*(?:iptr|uptr|int|uint|i32|u32)\s*\)\s*(&?%s)(?!\s*(?:[\w(\[.]|->))' % (PTR_TYPE, chain),
+                       r'\1\2', s)
+        done += n
+        # (I)X == 0 -> X == 0 (X a variable/member chain, I a 32-bit integer)
+        # (an operand of ( , ! && ||: not of a higher precedence operator)
+        s, n = re.subn(r'((?:[(,!]|&&|\|\|)\s*)\(\s*(?:iptr|uptr|int|uint|i32|u32)\s*\)\s*(%s)(\s*(?:==|!=)\s*(?:0x0|0)\b(?!x))' % chain, r'\1\2\3', s)
+        done += n
         # (T*)(simple) -> (T *)simple
         def tidy(m):
             t = re.sub(r'\s*(\*+)$', lambda x: ' ' + x.group(1), m.group(1).strip())

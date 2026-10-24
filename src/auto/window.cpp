@@ -179,9 +179,9 @@ void __thiscall wnd_destroy_with_surface(DibSurface *self)
 void __thiscall wnd_destroy_native(WndBase *self)
 
 {
-  u32 native;
+  NativeWindow *native;
   
-  native = (u32)wnd_obj_destroy((i32 *)self->native_wnd);
+  native = (NativeWindow *)wnd_obj_destroy(self->native_wnd);
   self->native_wnd = native;
   return;
 }
@@ -208,7 +208,7 @@ void __thiscall wnd_blit_surface_rect(DibSurface *self,iptr rect)
     else {
       view = self + 1;
     }
-    surface_blit_to_wnd(self,(iptr)view,(iptr)&self->bounds_rect,(iptr)&self->bounds_rect);
+    surface_blit_to_wnd(self,(iptr)view,(RECT *)&self->bounds_rect,(iptr)&self->bounds_rect);
     wnd_view_validate_rect((WndValidateRectView *)(self + 1),(iptr)&self->bounds_rect);
   }
   else {
@@ -218,7 +218,7 @@ void __thiscall wnd_blit_surface_rect(DibSurface *self,iptr rect)
     else {
       view2 = self + 1;
     }
-    surface_blit_to_wnd(self,(iptr)view2,rect,rect);
+    surface_blit_to_wnd(self,(iptr)view2,(RECT *)rect,rect);
     wnd_view_validate_rect((WndValidateRectView *)(self + 1),rect);
   }
   return;
@@ -559,7 +559,7 @@ u32 __thiscall wnd_set_dblclick_handler(WndHandlersMouseSetView *self,iptr handl
 void __thiscall wnd_set_capture(WndBase *self)
 
 {
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   hwnd = wnd_get_window(self);
   wnd_obj_set_capture(hwnd);
@@ -567,7 +567,7 @@ void __thiscall wnd_set_capture(WndBase *self)
 }
 
 /* 00414d10 auto */
-u32 __thiscall wnd_get_window(WndBase *self)
+NativeWindow * __thiscall wnd_get_window(WndBase *self)
 
 {
   return self->native_wnd;
@@ -577,7 +577,7 @@ u32 __thiscall wnd_get_window(WndBase *self)
 void __thiscall wnd_release_capture(WndBase *self)
 
 {
-  i32 hwnd;
+  NativeWindow *hwnd;
   
   hwnd = wnd_get_window(self);
   wnd_obj_release_capture(hwnd);
@@ -654,7 +654,7 @@ void __thiscall wnd_set_bg_color(WndBase *self,i32 color)
 }
 
 /* 00419be0 auto */
-void __thiscall wnd_set_bg_surface(WndBase *self,iptr surface)
+void __thiscall wnd_set_bg_surface(WndBase *self,DibSurface *surface)
 
 {
   wnd_obj_set_bg_surface(self->native_wnd,surface);
@@ -958,7 +958,7 @@ void __thiscall wnd_enable(WndBase *self)
 void __thiscall dialog_set_list_indent(DialogCore *self,uptr indent,iptr index)
 
 {
-  (&((DialogWindowView *)self)->list_indents)[index] = indent;
+  ((DialogWindowView *)self)->list_indents[index] = indent;
   return;
 }
 
@@ -1511,7 +1511,7 @@ void __thiscall wnd_apply_palette_handle(WndBase *self,iptr palette)
 void __thiscall wnd_get_cursor_pos(WndBase *self,iptr out_x,iptr out_y)
 
 {
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   hwnd = wnd_get_window(self);
   wnd_obj_get_cursor_pos(hwnd,(LONG *)out_x,(LONG *)out_y);
@@ -1558,7 +1558,7 @@ hotspot_create(ClickControl *self,iptr parent,iptr id,iptr rect)
   if (self->hwnd != 0) {
     ctrl_destroy((Control *)self);
   }
-  ctrl_init((Control *)self,parent,1,id,rect);
+  ctrl_init((Control *)self,parent,1,id,(RECT *)rect);
   self->is_enabled = 0;
   self->on_click = 0;
   self->on_select = 0;
@@ -1725,7 +1725,7 @@ ui_file_name_dialog(iptr parent,const char *title,iptr file_buf,iptr filter,iptr
             int is_save)
 
 {
-  iptr wnd;
+  NativeWindow *wnd;
   BOOL dlg_ok;
   char success;
   OPENFILENAMEA ofn;
@@ -1735,7 +1735,7 @@ ui_file_name_dialog(iptr parent,const char *title,iptr file_buf,iptr filter,iptr
   ofn.hwndOwner = (HWND)0x0;
   if (parent != 0) {
     wnd = wnd_get_window((WndBase *)parent);
-    ofn.hwndOwner = *(HWND *)(wnd + 4);
+    ofn.hwndOwner = wnd->hwnd;
   }
   ofn.lpstrFilter = (LPCSTR)filter;
   ofn.nFilterIndex = 1;
@@ -1871,7 +1871,7 @@ void __thiscall wnd_set_focus(WndBase *self)
 }
 
 /* 00497cc0 auto */
-void __thiscall wnd_set_bg_tile(DiploLeaderView *self,iptr tile)
+void __thiscall wnd_set_bg_tile(DiploLeaderView *self,DibSurface *tile)
 
 {
   wnd_obj_set_bg_tile(self->wnd_obj,tile);
@@ -2219,7 +2219,7 @@ void __cdecl ui_reset_window_layout(void)
   status_wnd_hidden = 0;
   wnd_move_to_rect((WndBase *)((i8 *)&status_window_block.status_window_wnd),(iptr)&minimap_wnd_rect_block.status_wnd_rect);
   wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.status_window));
-  if ((int)parley_wnd_block.large_layout == 0) {
+  if (parley_wnd_block.large_layout == 0) {
     width2 = 0x208;
     height2 = 0x14f;
     parley_font_height = font_cached_height((GameFont *)((i8 *)&font_size20));
@@ -2239,7 +2239,7 @@ void __cdecl ui_reset_window_layout(void)
   parley_wnd_block.wnd_y = (client_height >> 1) - (height2 >> 1);
   SetRect((LPRECT)parley_wnd_block.init_rect,left,(int)parley_wnd_block.wnd_y,left + width2,(int)parley_wnd_block.wnd_y + height2);
   wnd_move_to_rect((WndBase *)((i8 *)&parley_wnd_block.base.window_2),(iptr)(LPRECT)parley_wnd_block.init_rect);
-  if ((int)chat_wnd_block.large_layout == 0) {
+  if (chat_wnd_block.large_layout == 0) {
     width2 = 0x208;
     height2 = 0x14f;
     chat_font_height = font_cached_height((GameFont *)((i8 *)&font_size20));
@@ -4169,12 +4169,12 @@ u32 __thiscall wnd_get_palette(WndPaletteView *self)
 
 /* 00511460 auto */
 void __thiscall
-hotspot_add_rect(ClickMap *self,iptr id,i32 cursor,iptr rect)
+hotspot_add_rect(ClickMap *self,iptr id,i32 cursor,RECT *rect)
 
 {
-  clickmap_add(self,id,cursor,*(i32 *)rect,*(i32 *)(rect + 4),
-                     *(int *)(rect + 8) - *(int *)rect,
-                     *(int *)(rect + 0xc) - *(int *)(rect + 4));
+  clickmap_add(self,id,cursor,rect->left,rect->top,
+                     rect->right - rect->left,
+                     rect->bottom - rect->top);
   return;
 }
 
@@ -4594,8 +4594,8 @@ void __cdecl ui_init_screen_metrics(void)
   int metric;
   
   gfx_get_screen_rect((iptr)&caption_small_font_block.screen_rect);
-  caption_font_block.screen_width = rect_width((iptr)&caption_small_font_block.screen_rect);
-  caption_font_block.screen_height = rect_height((iptr)&caption_small_font_block.screen_rect);
+  caption_font_block.screen_width = rect_width((RECT *)&caption_small_font_block.screen_rect);
+  caption_font_block.screen_height = rect_height((RECT *)&caption_small_font_block.screen_rect);
   ui_font_height = 0x10;
   if (999 < caption_font_block.screen_width) {
     ui_font_height = 0x18;
@@ -4665,16 +4665,16 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
     caption_h = self->caption_height;
   }
   height2 = caption_h + frame_bevel_width * -2;
-  width2 = rect_width((iptr)&self->frame_rect);
+  width2 = rect_width((RECT *)&self->frame_rect);
   gfx_tile_fill((iptr)self,frame_border_tile,0,bevel,width2,height2,0,bevel);
   height2 = self->border_width + bevel * -2;
-  offset = rect_height((iptr)&self->frame_rect);
+  offset = rect_height((RECT *)&self->frame_rect);
   offset -= (bevel + height2);
   gfx_tile_fill((iptr)self,frame_border_tile,0,offset,width2,height2,0,offset);
   width2 = self->border_width + bevel * -2;
-  height2 = rect_height((iptr)&self->frame_rect);
+  height2 = rect_height((RECT *)&self->frame_rect);
   gfx_tile_fill((iptr)self,frame_border_tile,bevel,0,width2,height2,bevel,0);
-  offset = rect_width((iptr)&self->frame_rect);
+  offset = rect_width((RECT *)&self->frame_rect);
   offset -= (bevel + width2);
   gfx_tile_fill((iptr)self,frame_border_tile,offset,0,width2,height2,offset,0);
   rect2.left = self->frame_rect;
@@ -4682,7 +4682,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
   rect2.right = self->frame_right;
   rect2.bottom = self->frame_bottom;
   for (i = 0; i < bevel; i++) {
-    gfx_draw_bevel_rect((iptr)self,(iptr)&rect2,highlight_color2,shadow_color2);
+    gfx_draw_bevel_rect((iptr)self,(RECT *)&rect2,highlight_color2,shadow_color2);
     rect_deflate((iptr)&rect2,1,1);
   }
   rect_deflate((iptr)&rect2,self->border_width + bevel * -2,0);
@@ -4695,7 +4695,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
   rect2.top = rect2.top + caption_h2 + bevel * -2;
   rect2.bottom -= (self->border_width + bevel * -2);
   for (i = 0; i < bevel; i++) {
-    gfx_draw_bevel_rect((iptr)self,(iptr)&rect2,shadow_color2,highlight_color2);
+    gfx_draw_bevel_rect((iptr)self,(RECT *)&rect2,shadow_color2,highlight_color2);
     rect_deflate((iptr)&rect2,1,1);
   }
   button_x = frame_border_width;
@@ -4813,7 +4813,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
     }
     crt_strcat(caption,((i8 *)&caption_close_paren_str));
   }
-  width2 = rect_width((iptr)&self->frame_rect);
+  width2 = rect_width((RECT *)&self->frame_rect);
   text_width = font_text_width((GameFont *)self->title_font,(const char *)caption);
   text_width += 4;
   text_x2 = (width2 >> 1) - (text_width >> 1);
@@ -4848,7 +4848,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
             ((DibSurface *)self,(iptr)font2,(const char *)caption,text_x2 + 1,text_y2,5);
   surface_draw_text
             ((DibSurface *)self,(iptr)font2,(const char *)caption,text_x2,text_y2,5);
-  surface_set_clip((DibSurface *)self,(iptr)&self->client_rect);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->client_rect);
   return;
 }
 
@@ -4898,9 +4898,9 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
   rect_offset((iptr)&self->client_rect,self->border_width,self->caption_height);
   self->client_x = self->client_rect;
   self->client_y = self->client_top;
-  size = rect_width((iptr)&self->client_rect);
+  size = rect_width((RECT *)&self->client_rect);
   self->client_width = size;
-  size = rect_height((iptr)&self->client_rect);
+  size = rect_height((RECT *)&self->client_rect);
   self->client_height = size;
   frame_wnd_destroy_caption_buttons((WindowObjectView *)self);
   button_x = frame_border_width;
@@ -5353,33 +5353,33 @@ void __thiscall menu_dtor(GameMenu *self)
 }
 
 /* 005787de auto */
-i32 __thiscall menu_find_menu(GameMenu *self,int menu_id)
+MenuNode * __thiscall menu_find_menu(GameMenu *self,int menu_id)
 
 {
-  uptr menu2;
+  MenuNode *menu2;
   
   menu2 = self->menus;
   while( true ) {
     if (menu2 == 0) {
       return 0;
     }
-    if (*(int *)(menu2 + 4) == menu_id) break;
-    menu2 = *(uptr *)(menu2 + 0x10);
+    if (menu2->id == menu_id) break;
+    menu2 = menu2->next;
   }
   return menu2;
 }
 
 /* 00578840 auto */
-int __thiscall menu_visible_index(GameMenu *self,uptr menu)
+int __thiscall menu_visible_index(GameMenu *self,MenuNode *menu)
 
 {
   int index;
-  uptr cur;
+  MenuNode *cur;
   
   index = 1;
-  for (cur = self->menus; (cur != 0 && (menu != cur));
-      cur = *(uptr *)(cur + 0x10)) {
-    if ((*(byte *)(cur + 8) & 2) == 0) {
+  for (cur = self->menus; (cur != 0 && ((uptr)menu != (uptr)cur));
+      cur = cur->next) {
+    if ((cur->flags_byte & 2) == 0) {
       index++;
     }
   }
@@ -5391,7 +5391,7 @@ i32 __thiscall menu_id_at_visible_index(GameMenu *self,int visible_index)
 
 {
   int index;
-  uptr menu2;
+  MenuNode *menu2;
   
   index = 1;
   menu2 = self->menus;
@@ -5399,23 +5399,23 @@ i32 __thiscall menu_id_at_visible_index(GameMenu *self,int visible_index)
     if (menu2 == 0) {
       return 0xffffffff;
     }
-    if ((*(byte *)(menu2 + 8) & 2) == 0) {
+    if ((menu2->flags_byte & 2) == 0) {
       if (index == visible_index) {
-        return *(i32 *)(menu2 + 4);
+        return menu2->id;
       }
       index++;
     }
-    menu2 = *(uptr *)(menu2 + 0x10);
+    menu2 = menu2->next;
   } while( true );
 }
 
 /* 00578922 auto */
-iptr __thiscall menu_find_item(GameMenu *self,int item_id)
+MenuNode * __thiscall menu_find_item(GameMenu *self,int item_id)
 
 {
-  uptr menu2;
-  iptr item;
-  iptr found;
+  MenuNode *menu2;
+  MenuNode *item;
+  MenuNode *found;
   
   found = 0;
   menu2 = self->menus;
@@ -5423,25 +5423,25 @@ iptr __thiscall menu_find_item(GameMenu *self,int item_id)
     if (menu2 == 0) {
       return found;
     }
-    for (item = *(iptr *)(menu2 + 0x18); item != 0; item = *(iptr *)(item + 0x10)) {
-      if (*(int *)(item + 4) == item_id) {
+    for (item = menu2->link; item != 0; item = item->next) {
+      if (item->id == item_id) {
         found = item;
         break;
       }
     }
-    menu2 = *(uptr *)(menu2 + 0x10);
+    menu2 = menu2->next;
   } while( true );
 }
 
 /* 005789aa auto */
-int __thiscall menu_item_visible_index(GameMenu *self,iptr item)
+int __thiscall menu_item_visible_index(GameMenu *self,MenuNode *item)
 
 {
   int index;
   iptr cur;
   
   index = 1;
-  for (cur = *(iptr *)(*(int *)(item + 0x18) + 0x18); (cur != 0 && (item != cur));
+  for (cur = *(iptr *)((int)item->link + 0x18); (cur != 0 && ((iptr)item != cur));
       cur = *(iptr *)(cur + 0x10)) {
     if ((*(byte *)(cur + 8) & 2) == 0) {
       index++;
@@ -5454,17 +5454,17 @@ int __thiscall menu_item_visible_index(GameMenu *self,iptr item)
 i32 __thiscall menu_item_id_at_visible_index(GameMenu *self,i32 menu_id,int visible_index)
 
 {
-  iptr menu;
+  MenuNode *menu;
   int index;
-  iptr item;
+  MenuNode *item;
   
   index = 1;
   menu = menu_find_menu(self,menu_id);
   if (menu != 0) {
-    for (item = *(iptr *)(menu + 0x18); item != 0; item = *(iptr *)(item + 0x10)) {
-      if ((*(byte *)(item + 8) & 2) == 0) {
+    for (item = menu->link; item != 0; item = item->next) {
+      if ((item->flags_byte & 2) == 0) {
         if (index == visible_index) {
-          return *(i32 *)(item + 4);
+          return item->id;
         }
         index++;
       }
@@ -5474,75 +5474,75 @@ i32 __thiscall menu_item_id_at_visible_index(GameMenu *self,i32 menu_id,int visi
 }
 
 /* 00578b06 auto */
-i32 * __thiscall menu_add_menu(GameMenu *self,i32 menu_id,char *title)
+MenuNode * __thiscall menu_add_menu(GameMenu *self,i32 menu_id,char *title)
 
 {
-  i32 *menu;
+  MenuNode *menu;
   size_t len;
   i32 text;
-  uptr last;
+  MenuNode *last;
   
-  menu = (i32 *)memblock_alloc((iptr)self->item_storage,0x1c);
+  menu = (MenuNode *)memblock_alloc((iptr)self->item_storage,0x1c);
   if (self->menus == 0) {
-    self->menus = (uptr)menu;
-    menu[5] = 0;
+    self->menus = menu;
+    menu->prev = 0;
   }
   else {
-    for (last = self->menus; *(int *)(last + 0x10) != 0;
-        last = *(uptr *)(last + 0x10)) {
+    for (last = self->menus; (int)last->next != 0;
+        last = last->next) {
     }
-    *(i32 **)(last + 0x10) = menu;
-    menu[5] = last;
+    last->next = menu;
+    menu->prev = last;
   }
-  menu[4] = 0;
-  menu[6] = 0;
-  menu[2] = 0;
-  menu[1] = menu_id;
-  menu[3] = 0;
+  menu->next = 0;
+  menu->link = 0;
+  menu->flags = 0;
+  menu->id = menu_id;
+  menu->field_0c = 0;
   len = _strlen(title);
   text = memblock_alloc((iptr)self->item_storage,len + 1);
-  *menu = text;
-  crt_strcpy((char *)((void *)*menu),(const char *)((void *)title));
-  str_pipes_to_tabs((char *)*menu);
+  menu->text = (char *)text;
+  crt_strcpy((char *)((void *)menu->text),(const char *)((void *)title));
+  str_pipes_to_tabs(menu->text);
   self->menu_flags = self->menu_flags & 0xffff7fff;
   return menu;
 }
 
 /* 00578c12 auto */
-i32 * __thiscall
+MenuNode * __thiscall
 menu_add_item
           (GameMenu *self,i32 menu_id,i32 item_id,const char *text,size_t min_len)
 
 {
-  iptr menu;
+  MenuNode *menu;
   size_t len;
   i32 buffer;
   size_t buf_len;
-  i32 *item;
-  iptr last;
+  MenuNode *item;
+  MenuNode *last;
   
-  item = (i32 *)0x0;
+  item = (MenuNode *)0x0;
   menu = menu_find_menu(self,menu_id);
   if (menu != 0) {
-    item = (i32 *)memblock_alloc((iptr)self->item_storage,0x1c);
-    if (*(int *)(menu + 0x18) == 0) {
-      *(i32 **)(menu + 0x18) = item;
-      item[5] = 0;
+    item = (MenuNode *)memblock_alloc((iptr)self->item_storage,0x1c);
+    if (menu->link == 0) {
+      menu->link = item;
+      item->prev = 0;
     }
     else {
-      for (last = *(iptr *)(menu + 0x18); *(int *)(last + 0x10) != 0;
-          last = *(iptr *)(last + 0x10)) {
+      for (last = menu->link; (int)last->next != 0;
+          last = last->next) {
       }
-      *(i32 **)(last + 0x10) = item;
-      item[5] = last;
+      last->next = item;
+      item->prev = last;
     }
-    item[6] = menu;
-    item[4] = 0;
-    item[2] = 0;
-    item[1] = item_id;
-    item[3] = 0;
+    item->link = menu;
+    item->next = 0;
+    item->flags = 0;
+    item->id = item_id;
+    item->field_0c = 0;
     if (text == 0) {
-      *item = 0;
+      item->text = 0;
     }
     else {
       len = _strlen((char *)text);
@@ -5553,9 +5553,9 @@ menu_add_item
         buf_len = _strlen((char *)text);
       }
       buffer = memblock_alloc((iptr)self->item_storage,buf_len + 1);
-      *item = buffer;
-      crt_strcpy((char *)((void *)*item),(const char *)((void *)text));
-      str_pipes_to_tabs((char *)*item);
+      item->text = (char *)buffer;
+      crt_strcpy((char *)((void *)item->text),(const char *)((void *)text));
+      str_pipes_to_tabs(item->text);
     }
     self->menu_flags = self->menu_flags & 0xffff7fff;
   }
@@ -5603,7 +5603,7 @@ void __thiscall menu_set_command_handler(GameMenu *self,iptr handler)
 i32 __thiscall menu_apply_item_enabled(GameMenu *self,i32 item_id)
 
 {
-  iptr item;
+  MenuNode *item;
   uint enabled;
   i32 result;
   i32 menu_index;
@@ -5613,9 +5613,9 @@ i32 __thiscall menu_apply_item_enabled(GameMenu *self,i32 item_id)
     result = 0;
   }
   else {
-    enabled = ~*(uint *)(item + 8) & 1;
+    enabled = ~item->flags & 1;
     result = menu_item_visible_index(self,item);
-    menu_index = menu_visible_index(self,*(i32 *)(item + 0x18));
+    menu_index = menu_visible_index(self,item->link);
     result = menu_native_enable(self,menu_index,result,enabled);
   }
   return result;
@@ -5625,16 +5625,16 @@ i32 __thiscall menu_apply_item_enabled(GameMenu *self,i32 item_id)
 void __thiscall menu_apply_item_checked(GameMenu *self,i32 item_id)
 
 {
-  iptr item;
+  MenuNode *item;
   uint checked;
   i32 item_index;
   i32 menu_index;
   
   item = menu_find_item(self,item_id);
   if (item != 0) {
-    checked = *(uint *)(item + 8) & 4;
+    checked = item->flags & 4;
     item_index = menu_item_visible_index(self,item);
-    menu_index = menu_visible_index(self,*(i32 *)(item + 0x18));
+    menu_index = menu_visible_index(self,item->link);
     menu_native_check(self,menu_index,item_index,checked);
   }
   return;
@@ -5709,21 +5709,21 @@ void __thiscall menu_rebuild(GameMenu *self,iptr window)
 void __thiscall menu_set_item_hidden(GameMenu *self,i32 item_id,int hidden)
 
 {
-  iptr item;
+  MenuNode *item;
   
   item = menu_find_item(self,item_id);
   if (item != 0) {
     if (hidden == 0) {
-      if ((*(byte *)(item + 8) & 2) != 0) {
+      if ((item->flags_byte & 2) != 0) {
         self->menu_flags = self->menu_flags & 0xffff7fff;
       }
-      *(uint *)(item + 8) = *(uint *)(item + 8) & 0xfffffffd;
+      item->flags = item->flags & 0xfffffffd;
     }
     else {
-      if ((*(byte *)(item + 8) & 2) == 0) {
+      if ((item->flags_byte & 2) == 0) {
         self->menu_flags = self->menu_flags & 0xffff7fff;
       }
-      *(uint *)(item + 8) = *(uint *)(item + 8) | 2;
+      item->flags = item->flags | 2;
     }
   }
   return;
@@ -5751,7 +5751,7 @@ menu_set_item_enabled(GameMenu *self,i32 item_id,int enabled)
     }
     ret_val = self;
     if ((((self->menu_flags & 0x8000) != 0) && (ret_val = item, (item->item_storage[4] & 2) == 0)) &&
-       (ret_val = (GameMenu *)(uptr)enabled, was_enabled != enabled)) {
+       (ret_val = (GameMenu *)enabled, was_enabled != enabled)) {
       ret_val = (GameMenu *)menu_apply_item_enabled(self,item_id);
     }
   }
@@ -5762,16 +5762,16 @@ menu_set_item_enabled(GameMenu *self,i32 item_id,int enabled)
 void __thiscall menu_remove_item(GameMenu *self,i32 item_id)
 
 {
-  iptr item;
+  MenuNode *item;
   i32 item_index;
   i32 menu_index;
   
   item = menu_find_item(self,item_id);
   if (item != 0) {
     item_index = menu_item_visible_index(self,item);
-    menu_index = menu_visible_index(self,*(i32 *)(item + 0x18));
+    menu_index = menu_visible_index(self,item->link);
     menu_native_delete(self,menu_index,item_index);
-    *(i32 *)(*(int *)(item + 0x14) + 0x10) = *(i32 *)(item + 0x10);
+    *(i32 *)((int)item->prev + 0x10) = (i32)item->next;
   }
   return;
 }
@@ -5781,18 +5781,18 @@ void __thiscall menu_set_item_checked(GameMenu *self,i32 item_id,int checked)
 
 {
   byte old_flags;
-  iptr item;
+  MenuNode *item;
   
   item = menu_find_item(self,item_id);
   if (item != 0) {
-    old_flags = *(byte *)(item + 8);
+    old_flags = item->flags_byte;
     if (checked != 0) {
-      *(uint *)(item + 8) = *(uint *)(item + 8) | 4;
+      item->flags = item->flags | 4;
     }
     else {
-      *(uint *)(item + 8) = *(uint *)(item + 8) & 0xfffffffb;
+      item->flags = item->flags & 0xfffffffb;
     }
-    if ((((self->menu_flags & 0x8000) != 0) && ((*(byte *)(item + 8) & 2) == 0)) &&
+    if ((((self->menu_flags & 0x8000) != 0) && ((item->flags_byte & 2) == 0)) &&
        (((old_flags & 4) != 0) != (checked != 0))) {
       menu_apply_item_checked(self,item_id);
     }
@@ -5804,13 +5804,13 @@ void __thiscall menu_set_item_checked(GameMenu *self,i32 item_id,int checked)
 void __thiscall menu_set_menu_enabled(GameMenu *self,i32 menu_id,i32 enabled)
 
 {
-  iptr menu;
-  iptr item;
+  MenuNode *menu;
+  MenuNode *item;
   
   menu = menu_find_menu(self,menu_id);
   if (menu != 0) {
-    for (item = *(iptr *)(menu + 0x18); item != 0; item = *(iptr *)(item + 0x10)) {
-      menu_set_item_enabled(self,*(i32 *)(item + 4),enabled);
+    for (item = menu->link; item != 0; item = item->next) {
+      menu_set_item_enabled(self,item->id,enabled);
     }
   }
   return;
@@ -5820,19 +5820,19 @@ void __thiscall menu_set_menu_enabled(GameMenu *self,i32 menu_id,i32 enabled)
 void __thiscall menu_set_item_text(GameMenu *self,i32 item_id,const char *text)
 
 {
-  i32 *item;
+  MenuNode *item;
   i32 item_index;
   i32 menu_index;
   i32 item_text;
   
-  item = (i32 *)menu_find_item(self,item_id);
-  if (item != (i32 *)0x0) {
-    crt_strcpy((char *)((void *)*item),(const char *)((void *)text));
-    str_pipes_to_tabs((char *)*item);
-    if (((self->menu_flags & 0x8000) != 0) && ((*(byte *)(item + 2) & 2) == 0)) {
-      item_text = *item;
-      item_index = menu_item_visible_index(self,(iptr)item);
-      menu_index = menu_visible_index(self,item[6]);
+  item = menu_find_item(self,item_id);
+  if (item != (MenuNode *)0x0) {
+    crt_strcpy((char *)((void *)item->text),(const char *)((void *)text));
+    str_pipes_to_tabs(item->text);
+    if (((self->menu_flags & 0x8000) != 0) && ((item->flags_byte & 2) == 0)) {
+      item_text = (i32)item->text;
+      item_index = menu_item_visible_index(self,item);
+      menu_index = menu_visible_index(self,item->link);
       menu_native_set_text(self,menu_index,item_index,(const char *)item_text);
     }
   }
@@ -5901,7 +5901,7 @@ void __thiscall wnd_attach_menu(ModalMenuWindow *self,iptr menu_obj)
 
 {
   i32 hmenu;
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   hmenu = menu_get_hmenu((MenuHandleView *)menu_obj);
   hwnd = wnd_get_window((WndBase *)self);
@@ -5934,7 +5934,7 @@ void __thiscall wnd_set_menu_callback(WndMenuCbSetView *self,iptr callback)
 void __thiscall wnd_redraw_menu_bar(ModalMenuWindow *self)
 
 {
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   if (self->menu != 0) {
     hwnd = wnd_get_window((WndBase *)self);
@@ -6203,7 +6203,7 @@ void __cdecl active_dialog_global_init(void)
 void __cdecl active_dialog_static_init(void)
 
 {
-  dialog_title_font_obj_block.active_dialog = dialog_stack[0];
+  dialog_title_font_obj_block.active_dialog = (Dialog *)dialog_stack[0];
   return;
 }
 
@@ -6380,17 +6380,17 @@ void __thiscall dialog_init_defaults(Dialog *self)
   self->sel_shadow_color = (*(u32 *)&dlg_sel_text_shadow_color);
   self->list_default_color = (*(u32 *)&dialog_default_list_color);
   for (i = 0; i < 2; i++) {
-    slot = self->list_column_counts + i * 4 + 8;
+    slot = (u8 *)&self->list_row_height_override[i];
     slot[0] = '\0';
     slot[1] = '\0';
     slot[2] = '\0';
     slot[3] = '\0';
-    slot = self->list_column_counts + i * 4 + 0x10;
+    slot = (u8 *)&self->list_indents[i];
     slot[0] = '\0';
     slot[1] = '\0';
     slot[2] = '\0';
     slot[3] = '\0';
-    slot = self->list_vscroll_rect + i * 4 + 0x40;
+    slot = (u8 *)&self->pane_drawn[i];
     slot[0] = '\0';
     slot[1] = '\0';
     slot[2] = '\0';
@@ -6418,21 +6418,21 @@ void __thiscall dialog_init_defaults(Dialog *self)
   self->bevel_width = 2;
   self->option_extra_width = 0;
   self->columns = 1;
-  self->list2_left_col = 0;
-  self->list_left_col = self->list2_left_col;
+  self->list_left_col[1] = 0;
+  self->list_left_col[0] = self->list_left_col[1];
   self->sprite_zoom = 0;
   self->title_text = 0;
   self->radio_group = 0;
   self->checkboxes = 0;
   self->edit_controls = 0;
   self->button_controls = 0;
-  self->listbox2 = 0;
-  self->listbox = self->listbox2;
+  self->listbox[1] = 0;
+  self->listbox[0] = self->listbox[1];
   self->sprite_hotspots = 0;
-  self->list2_vscroll = 0;
-  self->list_vscroll = self->list2_vscroll;
-  self->list2_hscroll = 0;
-  self->list_hscroll = self->list2_hscroll;
+  self->list_vscroll[1] = 0;
+  self->list_vscroll[0] = self->list_vscroll[1];
+  self->list_hscroll[1] = 0;
+  self->list_hscroll[0] = self->list_hscroll[1];
   self->on_draw_sprite = 0;
   self->on_sprite_click = 0;
   self->on_sprite_dblclick = 0;
@@ -6494,17 +6494,17 @@ void __thiscall dialog_close(Dialog *self)
     }
     self->button_controls = 0;
   }
-  if (self->listbox != 0) {
-    if ((ListBoxControl *)self->listbox != (ListBoxControl *)0x0) {
-      listbox_scalar_dtor((ListBoxControl *)self->listbox,1);
+  if (self->listbox[0] != 0) {
+    if ((ListBoxControl *)self->listbox[0] != (ListBoxControl *)0x0) {
+      listbox_scalar_dtor((ListBoxControl *)self->listbox[0],1);
     }
-    self->listbox = 0;
+    self->listbox[0] = 0;
   }
-  if (self->listbox2 != 0) {
-    if ((ListBoxControl *)self->listbox2 != (ListBoxControl *)0x0) {
-      listbox_scalar_dtor((ListBoxControl *)self->listbox2,1);
+  if (self->listbox[1] != 0) {
+    if ((ListBoxControl *)self->listbox[1] != (ListBoxControl *)0x0) {
+      listbox_scalar_dtor((ListBoxControl *)self->listbox[1],1);
     }
-    self->listbox2 = 0;
+    self->listbox[1] = 0;
   }
   if (self->sprite_hotspots != 0) {
     if ((Hotspot *)self->sprite_hotspots != (Hotspot *)0x0) {
@@ -6512,29 +6512,29 @@ void __thiscall dialog_close(Dialog *self)
     }
     self->sprite_hotspots = 0;
   }
-  if (self->list_vscroll != 0) {
-    if ((Control *)self->list_vscroll != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)self->list_vscroll,1);
+  if (self->list_vscroll[0] != 0) {
+    if ((Control *)self->list_vscroll[0] != (Control *)0x0) {
+      scrollbar_scalar_dtor((Control *)self->list_vscroll[0],1);
     }
-    self->list_vscroll = 0;
+    self->list_vscroll[0] = 0;
   }
-  if (self->list2_vscroll != 0) {
-    if ((Control *)self->list2_vscroll != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)self->list2_vscroll,1);
+  if (self->list_vscroll[1] != 0) {
+    if ((Control *)self->list_vscroll[1] != (Control *)0x0) {
+      scrollbar_scalar_dtor((Control *)self->list_vscroll[1],1);
     }
-    self->list2_vscroll = 0;
+    self->list_vscroll[1] = 0;
   }
-  if (self->list_hscroll != 0) {
-    if ((Control *)self->list_hscroll != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)self->list_hscroll,1);
+  if (self->list_hscroll[0] != 0) {
+    if ((Control *)self->list_hscroll[0] != (Control *)0x0) {
+      scrollbar_scalar_dtor((Control *)self->list_hscroll[0],1);
     }
-    self->list_hscroll = 0;
+    self->list_hscroll[0] = 0;
   }
-  if (self->list2_hscroll != 0) {
-    if ((Control *)self->list2_hscroll != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)self->list2_hscroll,1);
+  if (self->list_hscroll[1] != 0) {
+    if ((Control *)self->list_hscroll[1] != (Control *)0x0) {
+      scrollbar_scalar_dtor((Control *)self->list_hscroll[1],1);
     }
-    self->list2_hscroll = 0;
+    self->list_hscroll[1] = 0;
   }
   if (((self->style_flags & 0x10) == 0) && (self->surf_wnd != 0)) {
     if ((SurfaceWindow *)self->surf_wnd != (SurfaceWindow *)0x0) {
@@ -6543,13 +6543,13 @@ void __thiscall dialog_close(Dialog *self)
     self->surf_wnd = 0;
     self->style_flags = self->style_flags | 0x10;
   }
-  if (self == (Dialog *)dialog_title_font_obj_block.active_dialog) {
+  if (self == dialog_title_font_obj_block.active_dialog) {
     if ((dialog_stack_depth < 1) || (0x10 < dialog_stack_depth)) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_popupstackindex_0_popupstackindex_17,(iptr)&str_d_ss_franklinton_popup_1_cpp,0x19c);
     }
     dialog_stack_depth--;
     (*(iptr *)&net_session_block.dialog_stack_top) = (((i32 *)&dialog_stack))[dialog_stack_depth];
-    dialog_title_font_obj_block.active_dialog = (*(iptr *)&net_session_block.dialog_stack_top);
+    dialog_title_font_obj_block.active_dialog = (Dialog *)(*(iptr *)&net_session_block.dialog_stack_top);
     dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
   }
   return;
@@ -6569,7 +6569,7 @@ i32 __thiscall dialog_dtor(Dialog *self)
 /* 0059dfb9 auto */
 void __thiscall
 dialog_init
-          (Dialog *self,iptr surface_wnd,iptr background,iptr rect,u32 flags)
+          (Dialog *self,iptr surface_wnd,iptr background,RECT *rect,u32 flags)
 
 {
   i32 size;
@@ -6593,8 +6593,8 @@ dialog_init
     dialog_set_width((DialogWindowView *)self,0x1b8);
   }
   else {
-    self->origin_x = *(u32 *)rect;
-    self->origin_y = *(u32 *)(rect + 4);
+    self->origin_x = (u32)rect->left;
+    self->origin_y = (u32)rect->top;
     size = rect_width(rect);
     dialog_set_width((DialogWindowView *)self,size);
     size = rect_height(rect);
@@ -6607,57 +6607,57 @@ dialog_init
 }
 
 /* 0059e0eb auto */
-i32 __thiscall dialog_set_item_text(void *self,int line_id,const char *text)
+i32 __thiscall dialog_set_item_text(Dialog *self,int line_id,const char *text)
 
 {
   size_t len;
-  int *line;
+  DialogLine *line;
   
-  for (line = *(int **)((int)self + 0x230); (*line != line_id && (line != (int *)0x0));
-      line = (int *)line[7]) {
+  for (line = self->line_list; (line->number != line_id && (line != (DialogLine *)0x0));
+      line = line->next) {
   }
-  if (((line != (int *)0x0) && (-1 < line[3])) &&
-     (len = _strlen((char *)text), (int)(len + 1) <= line[3])) {
-    crt_strcpy((char *)((void *)line[2]),(const char *)((void *)text));
+  if (((line != (DialogLine *)0x0) && (-1 < line->capacity)) &&
+     (len = _strlen((char *)text), (int)(len + 1) <= line->capacity)) {
+    crt_strcpy((char *)((void *)line->text),(const char *)((void *)text));
     return 1;
   }
   return 0;
 }
 
 /* 0059e18b auto */
-int * __thiscall
+DialogLine * __thiscall
 dialog_add_line
           (DialogAddLineView *self,const char *text,int x,int y,int max_len,int color)
 
 {
-  int *line;
+  DialogLine *line;
   size_t len;
   int buffer;
-  int *last;
-  int *cur;
+  DialogLine *last;
+  DialogLine *cur;
   
-  last = (int *)0x0;
-  for (cur = (int *)self->line_list; cur != (int *)0x0; cur = (int *)cur[7]) {
+  last = (DialogLine *)0x0;
+  for (cur = self->line_list; cur != (DialogLine *)0x0; cur = cur->next) {
     last = cur;
   }
-  line = (int *)memblock_alloc((iptr)(self->line_storage),0x20);
-  if (last == (int *)0x0) {
-    self->line_list = (uptr)line;
-    *line = 1;
+  line = (DialogLine *)memblock_alloc((iptr)(self->line_storage),0x20);
+  if (last == (DialogLine *)0x0) {
+    self->line_list = line;
+    line->number = 1;
   }
   else {
-    last[7] = (int)line;
-    *line = *last + 1;
+    last->next = line;
+    line->number = last->number + 1;
   }
-  line[7] = 0;
-  line[1] = 0;
+  line->next = 0;
+  line->flags = 0;
   if (*(char *)text == '^') {
     if (*(char *)(text + 1) == '^') {
-      line[1] = line[1] | 1;
+      line->flags = (int)line->flags | 1;
       text += 2;
     }
     else {
-      line[1] = line[1] | 2;
+      line->flags = (int)line->flags | 2;
       text++;
     }
   }
@@ -6665,21 +6665,21 @@ dialog_add_line
     len = _strlen((char *)text);
     if ((int)(len + 1) < max_len) {
       buffer = memblock_alloc((iptr)(self->line_storage),max_len + 1);
-      line[2] = buffer;
-      line[3] = max_len + 1;
+      line->text = (char *)buffer;
+      line->capacity = max_len + 1;
       goto copy_line_text;
     }
   }
   len = _strlen((char *)text);
   buffer = memblock_alloc((iptr)(self->line_storage),len + 1);
-  line[2] = buffer;
+  line->text = (char *)buffer;
   len = _strlen((char *)text);
-  line[3] = len + 1;
+  line->capacity = len + 1;
 copy_line_text:
-  crt_strcpy((char *)((void *)line[2]),(const char *)((void *)text));
-  line[4] = x;
-  line[5] = y;
-  line[6] = color;
+  crt_strcpy((char *)((void *)line->text),(const char *)((void *)text));
+  line->x = x;
+  line->y = y;
+  line->color = color;
   self->line_count++;
   return line;
 }
@@ -6722,12 +6722,12 @@ u32 __thiscall dialog_list_row_height(DialogTextView *self)
   int font_height;
   u32 result;
   
-  if ((&((DialogWindowView *)self)->list_row_height_override)[self->cur_pane] == 0) {
+  if (((DialogWindowView *)self)->list_row_height_override[self->cur_pane] == 0) {
     font_height = font_cached_height((GameFont *)self->list_font);
     result = font_height + 1;
   }
   else {
-    result = (&((DialogWindowView *)self)->list_row_height_override)[self->cur_pane];
+    result = ((DialogWindowView *)self)->list_row_height_override[self->cur_pane];
   }
   return result;
 }
@@ -6790,14 +6790,14 @@ void __thiscall dialog_set_list_rows(DialogTextView *self,u32 rows)
   int row_height;
   
   self->style_flags = self->style_flags | 0x1000;
-  (&self->list_rows)[self->cur_pane] = rows;
+  self->list_rows[self->cur_pane] = rows;
   if ((self->style_flags & 0x40000) == 0) {
     row_height = dialog_list_row_height(self);
-    (&self->list_height)[self->cur_pane] = row_height * rows + 2;
+    self->list_height[self->cur_pane] = row_height * rows + 2;
   }
   else {
     row_height = font_cached_height((GameFont *)((i32 *)&default_draw_font_obj_block.default_draw_font_obj));
-    (&self->list_height)[self->cur_pane] = row_height * rows + 2;
+    self->list_height[self->cur_pane] = row_height * rows + 2;
   }
   return;
 }
@@ -6820,8 +6820,8 @@ void __thiscall dialog_set_listbox(DialogTextView *self,int rows,u32 width,u32 l
 
 {
   self->style_flags = self->style_flags | 0x1000;
-  (&self->list_width)[self->cur_pane] = width;
-  (&((DialogWindowView *)self)->list_x_offset)[self->cur_pane] = list_flags;
+  self->list_width[self->cur_pane] = width;
+  ((DialogWindowView *)self)->list_x_offset[self->cur_pane] = list_flags;
   if (rows != 0) {
     dialog_set_list_rows(self,rows);
   }
@@ -6898,37 +6898,37 @@ void __thiscall dialog_set_position(DialogCore *self,u32 x,u32 y)
 }
 
 /* 0059e7ad auto */
-uptr __thiscall dialog_find_option(DialogOptionList *self,int option_id)
+DialogOption * __thiscall dialog_find_option(DialogOptionList *self,int option_id)
 
 {
-  uptr cur;
-  uptr found;
+  DialogOption *cur;
+  DialogOption *found;
   
   found = 0;
   cur = self->option_list;
   while ((cur != 0 && (found == 0))) {
-    if (*(int *)(cur + 4) == option_id) {
+    if (cur->id == option_id) {
       found = cur;
     }
-    cur = *(uptr *)(cur + 0x10);
+    cur = cur->next;
   }
   return found;
 }
 
 /* 0059e877 auto */
-int * __thiscall dialog_find_sprite(DialogOptionList *self,int sprite_id)
+DialogSprite * __thiscall dialog_find_sprite(DialogOptionList *self,int sprite_id)
 
 {
-  int *cur;
-  int *found;
+  DialogSprite *cur;
+  DialogSprite *found;
   
-  found = (int *)0x0;
-  cur = (int *)self->sprite_list;
-  while ((cur != (int *)0x0 && (found == (int *)0x0))) {
-    if (*cur == sprite_id) {
+  found = (DialogSprite *)0x0;
+  cur = self->sprite_list;
+  while ((cur != (DialogSprite *)0x0 && (found == (DialogSprite *)0x0))) {
+    if (cur->id == sprite_id) {
       found = cur;
     }
-    cur = (int *)cur[4];
+    cur = cur->next;
   }
   return found;
 }
@@ -6937,15 +6937,15 @@ int * __thiscall dialog_find_sprite(DialogOptionList *self,int sprite_id)
 void __thiscall dialog_set_option_disabled(DialogOptionList *self,iptr option_id,int disabled)
 
 {
-  uint *option;
+  DialogOption *option;
   
-  option = (uint *)dialog_find_option(self,option_id);
-  if (option != (uint *)0x0) {
+  option = dialog_find_option(self,option_id);
+  if (option != (DialogOption *)0x0) {
     if (disabled == 0) {
-      *option = *option & 0xfffffffe;
+      option->flags = option->flags & 0xfffffffe;
     }
     else {
-      *option = *option | 1;
+      option->flags = option->flags | 1;
     }
   }
   return;
@@ -6955,13 +6955,13 @@ void __thiscall dialog_set_option_disabled(DialogOptionList *self,iptr option_id
 i32 __thiscall dialog_option_is_checked(DialogOptionList *self,i32 option_id)
 
 {
-  byte *option;
+  DialogOption *option;
   i32 checked;
   
   checked = 0;
-  option = (byte *)dialog_find_option(self,option_id);
-  if (option != (byte *)0x0) {
-    if ((*option & 4) == 0) {
+  option = dialog_find_option(self,option_id);
+  if (option != (DialogOption *)0x0) {
+    if ((option->flags_byte & 4) == 0) {
       checked = 0;
     }
     else {
@@ -6975,15 +6975,15 @@ i32 __thiscall dialog_option_is_checked(DialogOptionList *self,i32 option_id)
 void __thiscall dialog_set_option_checked(DialogOptionList *self,i32 option_id,int checked)
 
 {
-  uint *option;
+  DialogOption *option;
   
-  option = (uint *)dialog_find_option(self,option_id);
-  if (option != (uint *)0x0) {
+  option = dialog_find_option(self,option_id);
+  if (option != (DialogOption *)0x0) {
     if (checked == 0) {
-      *option = *option & 0xfffffffb;
+      option->flags = option->flags & 0xfffffffb;
     }
     else {
-      *option = *option | 4;
+      option->flags = option->flags | 4;
     }
   }
   return;
@@ -6998,13 +6998,13 @@ void __thiscall dialog_set_default_choice(DialogOptionList *self,iptr choice_id)
   if (self->option_count == 0) {
     entry = (uptr)dialog_find_sprite(self,choice_id);
     if (entry != 0) {
-      self->selected_sprite = entry;
+      self->selected_sprite = (DialogSprite *)entry;
     }
   }
   else {
-    entry = dialog_find_option(self,choice_id);
+    entry = (uptr)dialog_find_option(self,choice_id);
     if (entry != 0) {
-      self->selected_option = entry;
+      self->selected_option = (DialogOption *)entry;
     }
   }
   return;
@@ -7089,49 +7089,49 @@ void __thiscall dialog_set_image_zoom(DialogWindowView *self,u32 zoom)
 }
 
 /* 0059ec88 auto */
-iptr * __thiscall
+DialogSprite * __thiscall
 dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,const char *label)
 
 {
-  iptr *entry;
+  DialogSprite *entry;
   size_t len;
   iptr label_buf;
   int label_width;
   u32 max_width;
-  uptr last;
-  uptr cur;
+  DialogSprite *last;
+  DialogSprite *cur;
   u32 entry_width;
   
   last = 0;
-  for (cur = self->sprite_list; cur != 0; cur = *(uptr *)(cur + 0x10)) {
+  for (cur = self->sprite_list; cur != 0; cur = cur->next) {
     last = cur;
   }
-  entry = (iptr *)memblock_alloc((iptr)self->string_pool,0x14);
+  entry = (DialogSprite *)memblock_alloc((iptr)self->string_pool,0x14);
   if (last == 0) {
-    self->sprite_list = (uptr)entry;
+    self->sprite_list = entry;
     if (self->selected_sprite == 0) {
-      self->selected_sprite = (uptr)entry;
+      self->selected_sprite = entry;
     }
   }
   else {
-    *(iptr **)(last + 0x10) = entry;
+    last->next = (DialogSprite *)((iptr *)entry);
   }
-  entry[4] = 0;
-  entry[1] = 0;
-  entry[3] = sprite;
+  entry->next = 0;
+  entry->field_04 = 0;
+  entry->sprite = (Sprite *)sprite;
   entry_width = sprite_width((Sprite *)sprite);
   if (label == 0) {
-    entry[2] = 0;
+    entry->label = 0;
   }
   else {
     len = _strlen((char *)label);
     label_buf = memblock_alloc((iptr)self->string_pool,len + 1);
-    entry[2] = label_buf;
-    crt_strcpy((char *)((void *)entry[2]),(const char *)((void *)label));
-    label_width = font_text_width((GameFont *)self->body_font,(const char *)entry[2]);
+    entry->label = (char *)label_buf;
+    crt_strcpy((char *)((void *)entry->label),(const char *)((void *)label));
+    label_width = font_text_width((GameFont *)self->body_font,(const char *)entry->label);
     entry_width = entry_width + self->sprite_gap + label_width;
   }
-  *entry = sprite_id;
+  entry->id = sprite_id;
   max_width = self->max_sprite_width;
   if ((int)self->max_sprite_width <= (int)entry_width) {
     max_width = entry_width;
@@ -7142,71 +7142,71 @@ dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,const char *
 }
 
 /* 0059edf0 auto */
-uint * __thiscall
+DialogOption * __thiscall
 dialog_add_option(DialogOptionList *self,const char *text,iptr option_id,uint data)
 
 {
   u32 width;
   int cmp;
-  uint *option;
+  DialogOption *option;
   size_t len;
   uint text_buf;
   int icon_width;
   u32 max_width;
-  uptr prev;
-  uptr cur;
+  DialogOption *prev;
+  DialogOption *cur;
   
   prev = 0;
   cur = self->option_list;
   if (((self->style_flags & 0x800000) == 0) || (cur == 0)) {
     if (cur != 0) {
-      for (; cur != 0; cur = *(uptr *)(cur + 0x10)) {
+      for (; cur != 0; cur = cur->next) {
         prev = cur;
       }
     }
   }
   else {
-    while ((cur != 0 && (cmp = __strcmpi((char *)text,*(char **)(cur + 8)), 0 < cmp))
+    while ((cur != 0 && (cmp = __strcmpi((char *)text,cur->text), 0 < cmp))
           ) {
       prev = cur;
-      cur = *(uptr *)(cur + 0x10);
+      cur = cur->next;
     }
   }
-  option = (uint *)memblock_alloc((iptr)self->string_pool,0x18);
+  option = (DialogOption *)memblock_alloc((iptr)self->string_pool,0x18);
   if (prev == 0) {
-    option[4] = self->option_list;
-    option[5] = 0;
+    option->next = self->option_list;
+    option->prev = 0;
     if (self->option_list == 0) {
-      self->option_tail = (u32)option;
+      self->option_tail = option;
     }
     else {
-      *(uint **)(self->option_list + 0x14) = option;
+      self->option_list->prev = option;
     }
-    self->option_list = (uptr)option;
-    self->selected_option = (uptr)option;
+    self->option_list = option;
+    self->selected_option = option;
   }
   else {
-    option[4] = *(uint *)(prev + 0x10);
-    option[5] = prev;
-    if (option[4] == 0) {
-      self->option_tail = (u32)option;
+    option->next = prev->next;
+    option->prev = prev;
+    if (option->next == 0) {
+      self->option_tail = option;
     }
     else {
-      *(uint **)(option[4] + 0x14) = option;
+      *(uint **)((uint)option->next + 0x14) = (uint *)option;
     }
-    *(uint **)(prev + 0x10) = option;
+    prev->next = (DialogOption *)((uint *)option);
   }
-  *option = 0;
+  option->flags = 0;
   len = _strlen((char *)text);
   text_buf = memblock_alloc((iptr)self->string_pool,len + 1);
-  option[2] = text_buf;
-  crt_strcpy((char *)((void *)option[2]),(const char *)((void *)text));
+  option->text = (char *)text_buf;
+  crt_strcpy((char *)((void *)option->text),(const char *)((void *)text));
   if (*(char *)text == '\0') {
-    *option = *option | 1;
+    option->flags = option->flags | 1;
   }
-  option[1] = option_id;
-  option[3] = data;
-  cmp = font_text_width((GameFont *)self->body_font,(const char *)option[2]);
+  option->id = option_id;
+  option->group = data;
+  cmp = font_text_width((GameFont *)self->body_font,(const char *)option->text);
   icon_width = dialog_option_icon_width((DialogCore *)self);
   width = cmp + icon_width + self->option_extra_width + 5;
   max_width = self->option_width;
@@ -7219,53 +7219,53 @@ dialog_add_option(DialogOptionList *self,const char *text,iptr option_id,uint da
 }
 
 /* 0059f026 auto */
-uint * __thiscall
+DialogOption * __thiscall
 dialog_add_checkbox_option(DialogOptionList *self,const char *text,iptr option_id,int checked)
 
 {
-  uint *option;
+  DialogOption *option;
   
   self->style_flags = self->style_flags | 5;
   option = dialog_add_option(self,text,option_id,0);
   if (checked != 0) {
-    *option = *option | 4;
+    option->flags = option->flags | 4;
   }
   return option;
 }
 
 /* 0059f06d auto */
-i32 * __thiscall
+DialogEditField * __thiscall
 dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text,size_t max_len)
 
 {
-  i32 *field;
+  DialogEditField *field;
   size_t len;
   i32 buffer;
   u32 label_width;
   int char_width;
   u32 max_width;
-  uptr last;
-  uptr cur;
+  DialogEditField *last;
+  DialogEditField *cur;
   u32 field_width;
   
   last = 0;
-  for (cur = self->edit_field_list; cur != 0; cur = *(uptr *)(cur + 0x18)) {
+  for (cur = self->edit_field_list; cur != 0; cur = cur->next) {
     last = cur;
   }
-  field = (i32 *)memblock_alloc((iptr)self->string_pool,0x1c);
+  field = (DialogEditField *)memblock_alloc((iptr)self->string_pool,0x1c);
   if (last == 0) {
-    self->edit_field_list = (u32)field;
+    self->edit_field_list = field;
   }
   else {
-    *(i32 **)(last + 0x18) = field;
+    last->next = (DialogEditField *)((i32 *)field);
   }
-  field[6] = 0;
-  *field = 0;
+  field->next = 0;
+  field->field_00 = 0;
   len = _strlen((char *)label);
   buffer = memblock_alloc((iptr)self->string_pool,len + 2);
-  field[4] = buffer;
-  crt_strcpy((char *)((void *)field[4]),(const char *)((void *)label));
-  label_width = font_text_width((GameFont *)self->body_font,(const char *)field[4]);
+  field->label = (char *)buffer;
+  crt_strcpy((char *)((void *)field->label),(const char *)((void *)label));
+  label_width = font_text_width((GameFont *)self->body_font,(const char *)field->label);
   max_width = self->edit_label_width;
   if ((int)self->edit_label_width <= (int)label_width) {
     max_width = label_width;
@@ -7274,15 +7274,15 @@ dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text
   if (0xfe < (int)max_len) {
     max_len = 0xff;
   }
-  field[2] = max_len;
+  field->max_len = max_len;
   buffer = memblock_alloc((iptr)self->string_pool,0x100);
-  field[5] = buffer;
+  field->buffer = (char *)buffer;
   char_width = font_text_width((GameFont *)(*(i8 * *)(draw_current_font_rest + 12)),(const char *)&str_w);
-  field[1] = char_width * max_len;
-  field_width = field[1] + self->edit_label_width;
+  field->width = char_width * max_len;
+  field_width = field->width + self->edit_label_width;
   if ((self->content_width != 0) && ((int)self->content_width < (int)field_width)) {
-    field[1] -= ((field_width - self->content_width) - 3);
-    field_width = field[1] + self->edit_label_width + 3;
+    field->width -= ((field_width - self->content_width) - 3);
+    field_width = field->width + self->edit_label_width + 3;
   }
   max_width = self->edit_width;
   if ((int)self->edit_width <= (int)field_width) {
@@ -7290,13 +7290,13 @@ dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text
   }
   self->edit_width = max_width;
   if (initial_text == 0) {
-    *(i8 *)field[5] = 0;
+    *field->buffer = 0;
   }
   else {
-    _memset((void *)field[5],0,0x100);
-    _strncpy((char *)field[5],(char *)initial_text,max_len);
+    _memset((void *)field->buffer,0,0x100);
+    _strncpy(field->buffer,(char *)initial_text,max_len);
   }
-  field[3] = self->edit_count;
+  field->index = self->edit_count;
   self->edit_count++;
   return field;
 }
@@ -7402,15 +7402,15 @@ dialog_draw_text_line(DialogTextLineView *self,const char *text,int x_offset,i32
 i32 __thiscall dialog_has_text_lines(DialogOptionList *self)
 
 {
-  uptr line;
+  DialogLine *line;
   
   line = self->line_list;
   while( true ) {
     if (line == 0) {
       return 0;
     }
-    if (*(int *)(line + 0x10) < 0) break;
-    line = *(uptr *)(line + 0x1c);
+    if (line->x < 0) break;
+    line = line->next;
   }
   return 1;
 }
@@ -7435,7 +7435,7 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *self,int draw)
   char line_buf[256];
   char word_buf[80];
   int line_width;
-  uptr line;
+  DialogLine *line;
   int line_height;
   
   has_shadow = self->shadow_color != self->text_color;
@@ -7446,10 +7446,10 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *self,int draw)
   line_height = font_line_spacing((GameFont *)self->body_font);
   line_buf[0] = '\0';
   line_width = 0;
-  for (; center_x = (int)max_width >> 1, line != 0; line = *(uptr *)(line + 0x1c)) {
-    if (*(int *)(line + 0x10) < 1) {
-      src = *(char **)(line + 8);
-      if ((*(byte *)(line + 4) & 3) != 0) {
+  for (; center_x = (int)max_width >> 1, line != 0; line = line->next) {
+    if (line->x < 1) {
+      src = line->text;
+      if ((line->flags_byte & 3) != 0) {
         if (line_buf[0] != '\0') {
           if (draw != 0) {
             dialog_draw_text_line((DialogTextLineView *)self,(const char *)line_buf,0,y2);
@@ -7460,30 +7460,30 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *self,int draw)
           line_width = 0;
         }
         if (draw != 0) {
-          if ((*(byte *)(line + 4) & 1) == 0) {
+          if ((line->flags_byte & 1) == 0) {
             x2 = 0;
           }
-          else if (*(int *)(line + 0x18) == 0) {
+          else if (line->color == 0) {
             text_width = font_text_width((GameFont *)self->body_font,(const char *)src);
             x2 = center_x - ((int)((uint)has_shadow + text_width) >> 1);
           }
           else {
-            x2 = *(int *)(line + 0x18);
+            x2 = line->color;
             text_width = font_text_width((GameFont *)self->body_font,(const char *)src);
             x2 -= ((int)((uint)has_shadow + text_width) >> 1);
           }
-          if (*(int *)(line + 0x14) == -1) {
+          if (line->y == -1) {
             line_y = y2;
           }
           else {
-            line_y = *(u32 *)(line + 0x14);
+            line_y = (u32)line->y;
           }
           dialog_draw_text_line
                     ((DialogTextLineView *)self,(const char *)src,x2,line_y);
         }
         for (; *src != '\0'; src++) {
         }
-        if (*(int *)(line + 0x14) < 0) {
+        if (line->y < 0) {
           total_height += line_height;
           y2 += line_height;
         }
@@ -7533,8 +7533,8 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *self,int draw)
     }
     else if (draw != 0) {
       dialog_draw_text_default_font
-                ((DialogTextView *)self,(const char *)(*(i32 *)(line + 8)),*(i32 *)(line + 0x10),
-                 *(i32 *)(line + 0x14),*(i32 *)(line + 4));
+                ((DialogTextView *)self,(const char *)line->text,line->x,
+                 line->y,(i32)line->flags);
     }
   }
   if (line_buf[0] != '\0') {
@@ -7555,19 +7555,19 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *self,int draw)
 }
 
 /* 0059fb78 auto */
-i32 __thiscall dialog_option_group_index(DialogOptionList *self,uptr option)
+i32 __thiscall dialog_option_group_index(DialogOptionList *self,DialogOption *option)
 
 {
   int index;
-  uptr cur;
+  DialogOption *cur;
   
   if (self->option_list != 0) {
     index = 0;
-    for (cur = self->option_list; cur != 0; cur = *(uptr *)(cur + 0x10)) {
-      if ((*(int *)(option + 0xc) == *(int *)(cur + 0xc)) && (option == cur)) {
+    for (cur = self->option_list; cur != 0; cur = cur->next) {
+      if ((option->group == cur->group) && ((uptr)option == (uptr)cur)) {
         return index;
       }
-      if (*(int *)(option + 0xc) == *(int *)(cur + 0xc)) {
+      if (option->group == cur->group) {
         index++;
       }
     }
@@ -7576,19 +7576,19 @@ i32 __thiscall dialog_option_group_index(DialogOptionList *self,uptr option)
 }
 
 /* 0059fc19 auto */
-i32 __thiscall dialog_option_at(DialogOptionList *self,int target_index)
+DialogOption * __thiscall dialog_option_at(DialogOptionList *self,int target_index)
 
 {
   int index;
-  uptr cur;
+  DialogOption *cur;
   
   if (self->option_list != 0) {
     index = 0;
-    for (cur = self->option_list; cur != 0; cur = *(uptr *)(cur + 0x10)) {
-      if ((self->cur_pane == *(u32 *)(cur + 0xc)) && (index == target_index)) {
+    for (cur = self->option_list; cur != 0; cur = cur->next) {
+      if ((self->cur_pane == (u32)cur->group) && (index == target_index)) {
         return cur;
       }
-      if (self->cur_pane == *(u32 *)(cur + 0xc)) {
+      if (self->cur_pane == (u32)cur->group) {
         index++;
       }
     }
@@ -7597,13 +7597,13 @@ i32 __thiscall dialog_option_at(DialogOptionList *self,int target_index)
 }
 
 /* 0059fcba auto */
-int __thiscall dialog_column_of_option(DialogOptionList *self,uptr option)
+int __thiscall dialog_column_of_option(DialogOptionList *self,DialogOption *option)
 
 {
   int group_index;
   
   group_index = dialog_option_group_index(self,option);
-  return group_index / (int)(&self->list_rows)[self->cur_pane];
+  return group_index / (int)self->list_rows[self->cur_pane];
 }
 
 /* 0059fd2a auto */
@@ -7631,12 +7631,12 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
   u32 avail_width;
   int sprites_height;
   int edit_height;
-  uptr sprite;
+  DialogSprite *sprite;
   uptr i;
   u32 sprite_width2;
-  uptr line;
+  DialogLine *line;
   u32 lists_height;
-  uptr first_option;
+  DialogOption *first_option;
   int content_height;
   
   result = 1;
@@ -7644,12 +7644,12 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
   lists_height = 0;
   edit_height = 0;
   if ((self->style_flags & 0x100000) == 0) {
-    for (line = self->line_list; line != 0; line = *(uptr *)(line + 0x1c)) {
-      if ((*(byte *)(line + 4) & 3) != 0) {
+    for (line = self->line_list; line != 0; line = line->next) {
+      if ((line->flags_byte & 3) != 0) {
         tmp = self->shadow_color;
         pos = self->text_color;
         value = font_text_width
-                          ((GameFont *)self->body_font,(const char *)(*(iptr *)(line + 8)));
+                          ((GameFont *)self->body_font,(const char *)line->text);
         text_width = (uint)(tmp != pos) + value;
         tmp = self->content_width;
         if ((int)self->content_width <= (int)text_width) {
@@ -7669,7 +7669,7 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
     }
     self->content_width = tmp;
   }
-  for (sprite = self->sprite_list; sprite != 0; sprite = *(uptr *)(sprite + 0x10)) {
+  for (sprite = self->sprite_list; sprite != 0; sprite = sprite->next) {
   }
   if ((self->edit_count != 0) && (self->option_count != 0)) {
     self->edit_count = 0;
@@ -7734,7 +7734,7 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
     sprites_height = 0;
     if (self->sprite_list != 0) {
       sprite_width2 = gfx_zoom_scale(self->max_sprite_width,self->sprite_zoom);
-      if (*(int *)(self->sprite_list + 8) == 0) {
+      if (self->sprite_list->label == 0) {
         self->text_x += sprite_width2;
         self->list_x += sprite_width2;
         self->edit_x += sprite_width2;
@@ -7747,12 +7747,12 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
         }
         self->content_width = tmp;
       }
-      for (sprite = self->sprite_list; sprite != 0; sprite = *(uptr *)(sprite + 0x10)) {
+      for (sprite = self->sprite_list; sprite != 0; sprite = sprite->next) {
         tmp = self->sprite_zoom;
-        height = sprite_height(*(Sprite **)(sprite + 0xc));
+        height = sprite_height(sprite->sprite);
         value = gfx_zoom_scale(height,tmp);
         sprites_height += value;
-        if (*(int *)(sprite + 0x10) != 0) {
+        if (sprite->next != 0) {
           sprites_height += self->section_gap;
         }
       }
@@ -7771,112 +7771,112 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
       lists_height = self->option_row_height * rows;
       if ((self->style_flags & 0x1000) != 0) {
         self->cur_pane = 0;
-        lists_height = self->list_height;
+        lists_height = self->list_height[0];
         if ((self->style_flags & 0x40000) == 0) {
           tmp = GetSystemMetrics(2);
-          self->list_vscroll_width = tmp;
+          self->list_vscroll_width[0] = tmp;
           tmp = GetSystemMetrics(3);
-          self->list_hscroll_height = tmp;
-          rect_set_xywh((iptr)&self->pane_left,self->list_x_offset + self->list_x,self->list_y,
-                             self->list_width,self->list_height);
-          self->pane_inner_left = self->pane_left;
-          self->list_client_top = self->pane_top;
-          self->list_client_right = self->pane_right;
-          self->list_client_bottom = self->pane_bottom;
-          if (((int)(self->list_rows * self->columns) < (int)self->option_count) ||
+          self->list_hscroll_height[0] = tmp;
+          rect_set_xywh((iptr)&self->pane_rect[0].left,self->list_x_offset[0] + self->list_x,self->list_y,
+                             self->list_width[0],self->list_height[0]);
+          self->list_client_rect[0].left = self->pane_rect[0].left;
+          self->list_client_rect[0].top = self->pane_rect[0].top;
+          self->list_client_rect[0].right = self->pane_rect[0].right;
+          self->list_client_rect[0].bottom = self->pane_rect[0].bottom;
+          if (((int)(self->list_rows[0] * self->columns) < (int)self->option_count) ||
              ((self->style_flags & 0x1000000) != 0)) {
             if (self->columns == 1) {
-              rect_set_xywh((iptr)self->list_vscroll_rect,self->pane_right - self->list_vscroll_width,
-                                 self->list_y,self->list_vscroll_width,self->list_height);
-              self->list_client_right -= self->list_vscroll_width;
+              rect_set_xywh((iptr)&self->list_vscroll_rect[0],self->pane_rect[0].right - self->list_vscroll_width[0],
+                                 self->list_y,self->list_vscroll_width[0],self->list_height[0]);
+              self->list_client_rect[0].right -= self->list_vscroll_width[0];
             }
             else {
-              self->list_height += self->list_hscroll_height;
-              self->pane_bottom += self->list_hscroll_height;
-              self->list_client_bottom += self->list_hscroll_height;
-              lists_height = self->list_height;
-              rect_set_xywh((iptr)(self->list_hscroll_rect),self->list_x_offset + self->list_x,
-                                 self->pane_bottom - self->list_hscroll_height,self->list_width,self->list_hscroll_height);
-              self->list_client_bottom -= self->list_hscroll_height;
+              self->list_height[0] += self->list_hscroll_height[0];
+              self->pane_rect[0].bottom += self->list_hscroll_height[0];
+              self->list_client_rect[0].bottom += self->list_hscroll_height[0];
+              lists_height = self->list_height[0];
+              rect_set_xywh((iptr)&self->list_hscroll_rect[0],self->list_x_offset[0] + self->list_x,
+                                 self->pane_rect[0].bottom - self->list_hscroll_height[0],self->list_width[0],self->list_hscroll_height[0]);
+              self->list_client_rect[0].bottom -= self->list_hscroll_height[0];
             }
           }
-          rect_deflate((iptr)&self->pane_inner_left,1,1);
-          self->list_origin_x = self->pane_inner_left;
-          self->list_origin_y = self->list_client_top;
-          value = rect_width((iptr)&self->pane_inner_left);
-          self->list_column_width = value / (int)self->columns;
+          rect_deflate((iptr)&self->list_client_rect[0].left,1,1);
+          self->list_origin_x[0] = self->list_client_rect[0].left;
+          self->list_origin_y[0] = self->list_client_rect[0].top;
+          value = rect_width((RECT *)&self->list_client_rect[0].left);
+          self->list_column_width[0] = value / (int)self->columns;
           tmp = dialog_list_row_height((DialogTextView *)self);
-          self->list_row_height = tmp;
+          self->list_row_height[0] = tmp;
           first_option = dialog_option_at(self,0);
           top_index = dialog_option_group_index(self,first_option);
           value = dialog_option_group_index(self,self->selected_option);
-          while ((int)(self->list_rows * self->columns + top_index) <= value) {
+          while ((int)(self->list_rows[0] * self->columns + top_index) <= value) {
             if (self->columns == 1) {
               top_index++;
             }
             else {
-              top_index += self->list_rows;
+              top_index += self->list_rows[0];
             }
           }
-          tmp = dialog_option_at(self,top_index);
-          self->list_top_option = tmp;
+          tmp = (u32)dialog_option_at(self,top_index);
+          self->list_top_option[0] = (DialogOption *)tmp;
         }
         if ((self->style_flags & 0x400000) != 0) {
           self->cur_pane = 1;
-          if ((int)lists_height < (int)self->list_height_1) {
-            lists_height = self->list_height_1;
+          if ((int)lists_height < (int)self->list_height[1]) {
+            lists_height = self->list_height[1];
           }
           if ((self->style_flags & 0x40000) == 0) {
             tmp = GetSystemMetrics(2);
-            self->list2_vscroll_width = tmp;
+            self->list_vscroll_width[1] = tmp;
             tmp = GetSystemMetrics(3);
-            self->list2_hscroll_height = tmp;
-            rect_set_xywh((iptr)&self->pane1_left,self->list2_x_offset + self->list_x,
-                               self->list_y,self->list_width_1,self->list_height_1);
-            self->list2_client_rect = self->pane1_left;
-            self->list2_client_top = self->pane1_top;
-            self->list2_client_right = self->pane1_right;
-            self->list2_client_bottom = self->pane1_bottom;
-            if (((int)(self->list_rows_1 * self->columns) < (int)self->option_count) ||
+            self->list_hscroll_height[1] = tmp;
+            rect_set_xywh((iptr)&self->pane_rect[1].left,self->list_x_offset[1] + self->list_x,
+                               self->list_y,self->list_width[1],self->list_height[1]);
+            self->list_client_rect[1].left = self->pane_rect[1].left;
+            self->list_client_rect[1].top = self->pane_rect[1].top;
+            self->list_client_rect[1].right = self->pane_rect[1].right;
+            self->list_client_rect[1].bottom = self->pane_rect[1].bottom;
+            if (((int)(self->list_rows[1] * self->columns) < (int)self->option_count) ||
                ((self->style_flags & 0x1000000) != 0)) {
               if (self->columns == 1) {
-                rect_set_xywh((iptr)(self->list2_vscroll_rect),self->pane1_right - self->list2_vscroll_width,
-                                   self->list_y,self->list2_vscroll_width,self->list_height_1);
-                self->list2_client_right -= self->list2_vscroll_width;
+                rect_set_xywh((iptr)&self->list_vscroll_rect[1],self->pane_rect[1].right - self->list_vscroll_width[1],
+                                   self->list_y,self->list_vscroll_width[1],self->list_height[1]);
+                self->list_client_rect[1].right -= self->list_vscroll_width[1];
               }
               else {
-                self->list_height_1 += self->list2_hscroll_height;
-                self->pane1_bottom += self->list2_hscroll_height;
-                self->list2_client_bottom += self->list2_hscroll_height;
-                if ((int)lists_height < (int)self->list_height_1) {
-                  lists_height = self->list_height_1;
+                self->list_height[1] += self->list_hscroll_height[1];
+                self->pane_rect[1].bottom += self->list_hscroll_height[1];
+                self->list_client_rect[1].bottom += self->list_hscroll_height[1];
+                if ((int)lists_height < (int)self->list_height[1]) {
+                  lists_height = self->list_height[1];
                 }
-                rect_set_xywh((iptr)(self->list2_hscroll_rect),self->list2_x_offset + self->list_x,
-                                   self->pane1_bottom - self->list2_hscroll_height,self->list_width_1,self->list2_hscroll_height)
+                rect_set_xywh((iptr)&self->list_hscroll_rect[1],self->list_x_offset[1] + self->list_x,
+                                   self->pane_rect[1].bottom - self->list_hscroll_height[1],self->list_width[1],self->list_hscroll_height[1])
                 ;
-                self->list2_client_bottom -= self->list2_hscroll_height;
+                self->list_client_rect[1].bottom -= self->list_hscroll_height[1];
               }
             }
-            rect_deflate((iptr)&self->list2_client_rect,1,1);
-            self->list2_origin_x = self->list2_client_rect;
-            self->list2_origin_y = self->list2_client_top;
-            value = rect_width((iptr)&self->list2_client_rect);
-            self->list2_column_width = value / (int)self->columns;
+            rect_deflate((iptr)&self->list_client_rect[1].left,1,1);
+            self->list_origin_x[1] = self->list_client_rect[1].left;
+            self->list_origin_y[1] = self->list_client_rect[1].top;
+            value = rect_width((RECT *)&self->list_client_rect[1].left);
+            self->list_column_width[1] = value / (int)self->columns;
             tmp = dialog_list_row_height((DialogTextView *)self);
-            self->list2_row_height = tmp;
+            self->list_row_height[1] = tmp;
             first_option = dialog_option_at(self,0);
             top_index = dialog_option_group_index(self,first_option);
             value = dialog_option_group_index(self,self->selected_option);
-            while ((int)(self->list_rows_1 * self->columns + top_index) <= value) {
+            while ((int)(self->list_rows[1] * self->columns + top_index) <= value) {
               if (self->columns == 1) {
                 top_index++;
               }
               else {
-                top_index += self->list_rows_1;
+                top_index += self->list_rows[1];
               }
             }
-            tmp = dialog_option_at(self,top_index);
-            self->list2_top_option = tmp;
+            tmp = (u32)dialog_option_at(self,top_index);
+            self->list_top_option[1] = (DialogOption *)tmp;
           }
           self->cur_pane = 0;
         }
@@ -7988,7 +7988,7 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
       gfx_get_screen_rect((iptr)((i8 *)&screen_rect2.left));
       wnd_get_screen_rect((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)((i8 *)&frame_rect2.left));
       if (self->window_x == 0xfffffc19) {
-        value = rect_width((iptr)((i8 *)&screen_rect2.left));
+        value = rect_width((RECT *)(iptr)((i8 *)&screen_rect2.left));
         self->window_x = (value >> 1) - ((int)self->wnd_width >> 1);
       }
       else if ((((int)self->window_x < 0) &&
@@ -7998,7 +7998,7 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
         self->window_x -= value;
       }
       if (self->window_y == 0xfffffc19) {
-        value = rect_height((iptr)((i8 *)&screen_rect2.left));
+        value = rect_height((RECT *)(iptr)((i8 *)&screen_rect2.left));
         self->window_y = (value >> 1) - ((int)self->wnd_height >> 1);
       }
       else if ((int)self->window_y < 0) {
@@ -8012,8 +8012,8 @@ i32 __thiscall dialog_compute_layout(DialogOptionList *self)
         }
       }
       if ((dialog_clamp_overflow == 0) &&
-         (value = rect_width((iptr)((i8 *)&screen_rect2.left)), (int)self->wnd_width <= value)) {
-        rect_height((iptr)((i8 *)&screen_rect2.left));
+         (value = rect_width((RECT *)(iptr)((i8 *)&screen_rect2.left)), (int)self->wnd_width <= value)) {
+        rect_height((RECT *)(iptr)((i8 *)&screen_rect2.left));
       }
       self->list_x += self->origin_x;
       self->list_y += self->origin_y;
@@ -8108,7 +8108,7 @@ dialog_draw_option_text
 }
 
 /* 005a120b auto */
-uint __thiscall dialog_draw_option(DialogOptionList *self,iptr option,int blit)
+uint __thiscall dialog_draw_option(DialogOptionList *self,DialogOption *option,int blit)
 
 {
   int rel_index;
@@ -8130,25 +8130,25 @@ uint __thiscall dialog_draw_option(DialogOptionList *self,iptr option,int blit)
     is_selected = 0;
   }
   else {
-    rel_index = dialog_option_group_index(self,*(uptr *)(self->list_column_counts + *(int *)(option + 0xc) * 4 + 0x18));
+    rel_index = dialog_option_group_index(self,self->list_top_option[option->group]);
     group_index = dialog_option_group_index(self,option);
     rel_index = group_index - rel_index;
     if ((rel_index < 0) ||
-       (visible_count = (&self->list_rows)[*(int *)(option + 0xc)] * self->columns,
+       (visible_count = self->list_rows[option->group] * self->columns,
        visible_count - rel_index == 0 || visible_count < rel_index)) {
       is_selected = 0;
     }
     else {
-      col = rel_index / (int)(&self->list_rows)[*(int *)(option + 0xc)];
-      row = rel_index % (int)(&self->list_rows)[*(int *)(option + 0xc)];
-      cell_x = *(int *)(self->list_column_counts + *(int *)(option + 0xc) * 4 - 0x10) * col +
-                 *(int *)(self->list_column_counts + *(int *)(option + 0xc) * 4 - 0x28);
-      cell_y = *(int *)(self->list_column_counts + *(int *)(option + 0xc) * 4 - 8) * row +
-                 *(int *)(self->list_column_counts + *(int *)(option + 0xc) * 4 - 0x20);
+      col = rel_index / (int)self->list_rows[option->group];
+      row = rel_index % (int)self->list_rows[option->group];
+      cell_x = (int)self->list_column_width[option->group] * col +
+                 (int)self->list_origin_x[option->group];
+      cell_y = (int)self->list_row_height[option->group] * row +
+                 (int)self->list_origin_y[option->group];
       rect_set_xywh((iptr)&cell_rect,cell_x,cell_y,
-                         *(iptr *)(self->list_column_counts + *(int *)(option + 0xc) * 4 - 0x10),
-                         *(iptr *)(self->list_column_counts + *(int *)(option + 0xc) * 4 - 8));
-      is_selected = (uint)(self->selected_option == option);
+                         (iptr)self->list_column_width[option->group],
+                         (iptr)self->list_row_height[option->group]);
+      is_selected = (uint)((uptr)self->selected_option == (iptr)option);
       if (is_selected == 0) {
         fill_color = self->list_fill_color;
       }
@@ -8160,20 +8160,20 @@ uint __thiscall dialog_draw_option(DialogOptionList *self,iptr option,int blit)
       inner_rect.right = cell_rect.right;
       inner_rect.bottom = cell_rect.bottom;
       if (self != (DialogOptionList *)0xfffffdf8) {
-        inner_rect.left = cell_rect.left + *(int *)(self->list_column_counts + *(int *)(option + 0xc) * 4 + 0x10);
+        inner_rect.left = cell_rect.left + (int)self->list_indents[option->group];
       }
       if ((self->on_draw_option == 0) ||
-         (group_index = call_untyped((code *)self->on_draw_option, self,self->surf_wnd,*(i32 *)(option + 4),group_index,cell_x,cell_y
-                             ,*(i32 *)(self->list_column_counts + *(int *)(option + 0xc) * 4 - 8)),
+         (group_index = call_untyped((code *)self->on_draw_option, self,self->surf_wnd,option->id,group_index,cell_x,cell_y
+                             ,(i32)self->list_row_height[option->group]),
          group_index == 0)) {
         if (is_selected != 0) {
-          gfx_draw_bevel_rect(self->surf_wnd,(iptr)&inner_rect,self->bevel_light_color,self->bevel_dark_color);
+          gfx_draw_bevel_rect(self->surf_wnd,&inner_rect,self->bevel_light_color,self->bevel_dark_color);
           rect_deflate((iptr)&inner_rect,1,1);
         }
-        gfx_fill_rect(self->surf_wnd,(iptr)&inner_rect,fill_color);
+        gfx_fill_rect(self->surf_wnd,&inner_rect,fill_color);
         dialog_draw_option_text
-                  ((DialogOptionDrawView *)self,(char *)*(i32 *)(option + 8),cell_x + 2,cell_y,is_selected,
-                   *(uint *)option & 1);
+                  ((DialogOptionDrawView *)self,option->text,cell_x + 2,cell_y,is_selected,
+                   option->flags & 1);
       }
       if (blit != 0) {
         wnd_blit_surface_rect((DibSurface *)self->surf_wnd,(iptr)&cell_rect);
@@ -8191,12 +8191,12 @@ void __thiscall dialog_draw_option_list(DialogOptionList *self)
   u32 saved_pane;
   u32 pane;
   int first_index;
-  iptr option;
+  DialogOption *option;
   uint drawn;
   i32 no_blit;
   int group_pos;
   u32 pane_idx;
-  iptr node2;
+  DialogOption *node2;
   int i;
   RECT clip_rect2;
   
@@ -8204,52 +8204,52 @@ void __thiscall dialog_draw_option_list(DialogOptionList *self)
   for (pane_idx = 0; (int)pane_idx < 2; pane_idx++) {
     if ((pane_idx != 1) || ((self->style_flags & 0x400000) != 0)) {
       self->cur_pane = pane_idx;
-      pane_drawn = self->list_vscroll_rect + self->cur_pane * 4 + 0x40;
+      pane_drawn = (u8 *)&self->pane_drawn[self->cur_pane];
       pane_drawn[0] = '\0';
       pane_drawn[1] = '\0';
       pane_drawn[2] = '\0';
       pane_drawn[3] = '\0';
       pane = self->cur_pane;
-      clip_rect2.left = *(i32 *)(self->list_vscroll_rect + pane * 0x10 - 0x20);
-      clip_rect2.top = *(int *)(self->list_vscroll_rect + pane * 0x10 - 0x1c);
-      clip_rect2.right = *(i32 *)(self->list_vscroll_rect + pane * 0x10 - 0x18);
-      clip_rect2.bottom = *(i32 *)(self->list_vscroll_rect + pane * 0x10 - 0x14);
+      clip_rect2.left = self->list_client_rect[pane].left;
+      clip_rect2.top = self->list_client_rect[pane].top;
+      clip_rect2.right = self->list_client_rect[pane].right;
+      clip_rect2.bottom = self->list_client_rect[pane].bottom;
       if ((1 < (int)self->columns) || ((self->option_count == 0 || (self->on_draw_option != 0)))) {
-        gfx_fill_rect(self->surf_wnd,(iptr)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x20),
+        gfx_fill_rect(self->surf_wnd,&self->list_client_rect[self->cur_pane],
                            self->list_fill_color);
       }
-      gfx_draw_rect_frame(self->surf_wnd,(iptr)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x40),
+      gfx_draw_rect_frame(self->surf_wnd,&self->pane_rect[self->cur_pane],
                          self->bevel_dark_color);
-      surface_set_clip((DibSurface *)self->surf_wnd,(iptr)&clip_rect2);
+      surface_set_clip((DibSurface *)self->surf_wnd,&clip_rect2);
       if (self->option_count != 0) {
-        node2 = *(iptr *)(dialog_title_font_obj_block.active_dialog + 0x228);
-        first_index = dialog_option_group_index(self,*(uptr *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
+        node2 = dialog_title_font_obj_block.active_dialog->option_list;
+        first_index = dialog_option_group_index(self,self->list_top_option[self->cur_pane]);
         group_pos = 0;
         for (i = 0; (node2 != 0 && (i < (int)self->option_count));
             i = i + 1) {
-          if (self->cur_pane == *(u32 *)(node2 + 0xc)) {
+          if (self->cur_pane == (u32)node2->group) {
             if ((first_index <= group_pos) &&
-               (group_pos < (int)((&self->list_rows)[self->cur_pane] * self->columns + first_index))) {
+               (group_pos < (int)(self->list_rows[self->cur_pane] * self->columns + first_index))) {
               no_blit = 0;
               option = dialog_option_at(self,group_pos);
               drawn = dialog_draw_option(self,option,no_blit);
-              *(uint *)(self->list_vscroll_rect + self->cur_pane * 4 + 0x40) =
-                   *(uint *)(self->list_vscroll_rect + self->cur_pane * 4 + 0x40) | drawn;
-              clip_rect2.top += *(int *)(self->list_column_counts + self->cur_pane * 4 - 8);
+              self->pane_drawn[self->cur_pane] =
+                   self->pane_drawn[self->cur_pane] | drawn;
+              clip_rect2.top += (int)self->list_row_height[self->cur_pane];
             }
             group_pos++;
           }
-          node2 = *(iptr *)(node2 + 0x10);
+          node2 = node2->next;
         }
         if (((self->columns == 1) && (self->on_draw_option == 0)) &&
-           (first_index = rect_height((iptr)&clip_rect2), 0 < first_index)) {
-          gfx_fill_rect(self->surf_wnd,(iptr)&clip_rect2,self->list_fill_color);
+           (first_index = rect_height(&clip_rect2), 0 < first_index)) {
+          gfx_fill_rect(self->surf_wnd,&clip_rect2,self->list_fill_color);
         }
       }
       surface_reset_clip((DibSurface *)self->surf_wnd);
       wnd_blit_surface_rect
                 ((DibSurface *)self->surf_wnd,
-                 (iptr)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x40));
+                 (iptr)&self->pane_rect[self->cur_pane]);
     }
   }
   self->cur_pane = saved_pane;
@@ -8261,7 +8261,7 @@ int __thiscall dialog_column_of_index(DialogTextView *self,int index)
 
 {
   if (self->columns != 1) {
-    index = index / (int)(&self->list_rows)[self->cur_pane];
+    index = index / (int)self->list_rows[self->cur_pane];
   }
   return index;
 }
@@ -8271,16 +8271,16 @@ int __thiscall dialog_column_start_index(DialogTextView *self,int index)
 
 {
   if (self->columns != 1) {
-    index -= index % (int)(&self->list_rows)[self->cur_pane];
+    index -= index % (int)self->list_rows[self->cur_pane];
   }
   return index;
 }
 
 /* 005a17e9 auto */
-void __thiscall dialog_select_option(DialogOptionList *self,uptr option,int redraw)
+void __thiscall dialog_select_option(DialogOptionList *self,DialogOption *option,int redraw)
 
 {
-  uptr prev_option;
+  DialogOption *prev_option;
   bool scrolled;
   int option_index;
   i32 top_option;
@@ -8288,36 +8288,36 @@ void __thiscall dialog_select_option(DialogOptionList *self,uptr option,int redr
   int top_index;
   
   scrolled = false;
-  if ((option != 0) && (self->selected_option != option)) {
-    top_index = dialog_option_group_index(self,*(uptr *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
+  if ((option != 0) && ((uptr)self->selected_option != (uptr)option)) {
+    top_index = dialog_option_group_index(self,self->list_top_option[self->cur_pane]);
     option_index = dialog_option_group_index(self,option);
     if (option_index < top_index) {
       scrolled = true;
       top_index = option_index;
     }
-    while ((int)((&self->list_rows)[self->cur_pane] * self->columns + top_index) <= option_index) {
+    while ((int)(self->list_rows[self->cur_pane] * self->columns + top_index) <= option_index) {
       if (self->columns == 1) {
         top_index++;
       }
       else {
-        top_index += (&self->list_rows)[self->cur_pane];
+        top_index += self->list_rows[self->cur_pane];
       }
       scrolled = true;
     }
     top_option = dialog_column_start_index((DialogTextView *)self,self->option_count - 1);
     top_option = int_clamp_b(top_index,0,top_option);
-    top_option = dialog_option_at(self,top_option);
-    *(i32 *)(self->list_column_counts + self->cur_pane * 4 + 0x18) = top_option;
+    top_option = (i32)dialog_option_at(self,top_option);
+    self->list_top_option[self->cur_pane] = (DialogOption *)top_option;
     prev_option = self->selected_option;
     self->selected_option = option;
     if ((scrolled) || (redraw == 0)) {
       if ((&((DialogTextLineView *)self)->list_vscroll_controls)[self->cur_pane] != 0) {
-        scroll_pos = dialog_option_group_index(self,*(uptr *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
+        scroll_pos = dialog_option_group_index(self,self->list_top_option[self->cur_pane]);
         scrollbar_set_pos
                   ((ClickControl *)(&((DialogTextLineView *)self)->list_vscroll_controls)[self->cur_pane],scroll_pos);
       }
       if ((&((DialogTextLineView *)self)->list_hscroll_controls)[self->cur_pane] != 0) {
-        scroll_pos = dialog_column_of_option(self,*(i32 *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
+        scroll_pos = dialog_column_of_option(self,self->list_top_option[self->cur_pane]);
         scrollbar_set_pos
                   ((ClickControl *)(&((DialogTextLineView *)self)->list_hscroll_controls)[self->cur_pane],scroll_pos);
       }
@@ -8326,14 +8326,14 @@ void __thiscall dialog_select_option(DialogOptionList *self,uptr option,int redr
       if (scrolled) {
         dialog_draw_option_list(self);
         if (self->on_select_change != 0) {
-          call_untyped((code *)self->on_select_change, self,*(i32 *)(option + 4));
+          call_untyped((code *)self->on_select_change, self,option->id);
         }
       }
       else {
         dialog_draw_option(self,prev_option,1);
         dialog_draw_option(self,option,1);
         if (self->on_select_change != 0) {
-          call_untyped((code *)self->on_select_change, self,*(i32 *)(option + 4));
+          call_untyped((code *)self->on_select_change, self,option->id);
         }
       }
     }
@@ -8350,27 +8350,27 @@ i32 __thiscall dialog_option_at_point(DialogOptionList *self,int x,int y)
   
   dialog_pick_pane_at((DialogWindowView *)self,x,y);
   if ((&((DialogTextLineView *)self)->list_hscroll_controls)[self->cur_pane] != 0) {
-    if (x < *(int *)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x20)) {
+    if (x < self->list_client_rect[self->cur_pane].left) {
       return 0xfffffffd;
     }
-    if (*(int *)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x18) <= x) {
+    if (self->list_client_rect[self->cur_pane].right <= x) {
       return 0xfffffffc;
     }
   }
-  if (y < *(int *)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x1c)) {
+  if (y < self->list_client_rect[self->cur_pane].top) {
     result = 0xffffffff;
   }
-  else if (y < *(int *)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x14)) {
-    if (x < *(int *)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x20)) {
+  else if (y < self->list_client_rect[self->cur_pane].bottom) {
+    if (x < self->list_client_rect[self->cur_pane].left) {
       result = 0xfffffffd;
     }
-    else if (x < *(int *)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x18)) {
-      top_index = dialog_option_group_index(self,*(uptr *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
-      result = int_clamp_b((&self->list_rows)[self->cur_pane] *
-                           ((x - *(int *)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x20)) /
-                           *(int *)(self->list_column_counts + self->cur_pane * 4 - 0x10)) +
-                           (y - *(int *)(self->list_vscroll_rect + self->cur_pane * 0x10 - 0x1c)) /
-                           *(int *)(self->list_column_counts + self->cur_pane * 4 - 8) + top_index,0,
+    else if (x < self->list_client_rect[self->cur_pane].right) {
+      top_index = dialog_option_group_index(self,self->list_top_option[self->cur_pane]);
+      result = int_clamp_b(self->list_rows[self->cur_pane] *
+                           ((x - self->list_client_rect[self->cur_pane].left) /
+                           (int)self->list_column_width[self->cur_pane]) +
+                           (y - self->list_client_rect[self->cur_pane].top) /
+                           (int)self->list_row_height[self->cur_pane] + top_index,0,
                            self->option_count - 1);
     }
     else {
@@ -8387,12 +8387,12 @@ i32 __thiscall dialog_option_at_point(DialogOptionList *self,int x,int y)
 int __thiscall dialog_count_group_options(DialogOptionList *self,int group)
 
 {
-  uptr node2;
+  DialogOption *node2;
   int count;
   
   count = 0;
-  for (node2 = self->option_list; node2 != 0; node2 = *(uptr *)(node2 + 0x10)) {
-    if (*(int *)(node2 + 0xc) == group) {
+  for (node2 = self->option_list; node2 != 0; node2 = node2->next) {
+    if (node2->group == group) {
       count++;
     }
   }
@@ -8411,10 +8411,10 @@ void __thiscall dialog_pick_pane_at(DialogWindowView *self,int x,int y)
   }
   else {
     self->cur_pane = 0;
-    if (((((y < (int)self->pane_top) || ((int)self->pane_bottom < y)) ||
-         (x < (int)self->pane_left)) || ((int)self->pane_right < x)) &&
-       (((self->cur_pane = 1, y < (int)self->pane1_top || ((int)self->pane1_bottom < y)) ||
-        ((x < (int)self->pane1_left || ((int)self->pane1_right < x)))))) {
+    if (((((y < self->pane_rect[0].top) || (self->pane_rect[0].bottom < y)) ||
+         (x < self->pane_rect[0].left)) || (self->pane_rect[0].right < x)) &&
+       (((self->cur_pane = 1, y < self->pane_rect[1].top || (self->pane_rect[1].bottom < y)) ||
+        ((x < self->pane_rect[1].left || (self->pane_rect[1].right < x)))))) {
       self->cur_pane = prev_pane;
     }
   }
@@ -8425,13 +8425,13 @@ void __thiscall dialog_pick_pane_at(DialogWindowView *self,int x,int y)
 void __cdecl dialog_list_on_vscroll(i32 scroll_pos)
 
 {
-  int top_option;
+  DialogOption *top_option;
   
   if (dialog_title_font_obj_block.active_dialog != 0) {
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48) = 0;
+    dialog_title_font_obj_block.active_dialog->cur_pane = 0;
     top_option = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,scroll_pos);
-    if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) != top_option) {
-      *(int *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = top_option;
+    if ((int)dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] != (iptr)top_option) {
+      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
       dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
     }
   }
@@ -8546,7 +8546,7 @@ void __cdecl dialog_on_redraw(void)
 
 {
   if (dialog_title_font_obj_block.active_dialog != 0) {
-    dialog_render((Dialog *)dialog_title_font_obj_block.active_dialog);
+    dialog_render(dialog_title_font_obj_block.active_dialog);
   }
   return;
 }
@@ -8587,15 +8587,15 @@ void __thiscall dialog_create_controls(Dialog *self)
   Control *vscroll;
   Control *listbox3;
   int item_index;
-  uptr edit_field;
+  DialogEditField *edit_field;
   u32 y2;
   i8 *label;
   i8 rect[16];
   iptr label_count2;
   iptr button_id;
   uint is_listbox;
-  uint *option;
-  uptr sprite;
+  DialogOption *option;
+  DialogSprite *sprite;
   int i;
   i8 unused_flag;
   iptr width2;
@@ -8606,20 +8606,20 @@ void __thiscall dialog_create_controls(Dialog *self)
   
   eh_state = 0xffffffff;
   label_count2 = 0;
-  if (self != (Dialog *)dialog_title_font_obj_block.active_dialog) {
+  if (self != dialog_title_font_obj_block.active_dialog) {
     if ((dialog_stack_depth < 0) || (0xf < dialog_stack_depth)) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_popupstackindex_0_popupstackindex_16,(iptr)&str_d_ss_franklinton_popup_1_cpp_2,0xc75);
     }
     dialog_stack_depth++;
     (*(Dialog * *)&net_session_block.dialog_stack_top) = self;
-    dialog_title_font_obj_block.active_dialog = (iptr)self;
+    dialog_title_font_obj_block.active_dialog = self;
     (((i32 *)&dialog_stack))[dialog_stack_depth] = (i32)self;
   }
   if ((self->style_flags & 0x200) == 0) {
     unused_flag = 0;
-    ctrl_set_pending_font(*(iptr *)(dialog_title_font_obj_block.active_dialog + 8));
+    ctrl_set_pending_font((iptr)dialog_title_font_obj_block.active_dialog->body_font);
     ui_set_button_font((iptr)&dialog_plain_font_obj_block.dialog_plain_font_obj);
-    ui_set_ctrl_font(*(iptr *)(dialog_title_font_obj_block.active_dialog + 8));
+    ui_set_ctrl_font((iptr)dialog_title_font_obj_block.active_dialog->body_font);
     ui_set_default_font((iptr)&dialog_plain_font_obj_block.dialog_plain_font_obj);
     is_checkbox = self->style_flags & 4;
     is_listbox = self->style_flags & 0x1000;
@@ -8632,9 +8632,9 @@ void __thiscall dialog_create_controls(Dialog *self)
           self->option_count = 0x28;
         }
       }
-      for (option = (uint *)self->option_list; option != (uint *)0x0;
-          option = (uint *)option[4]) {
-        labels[label_count2] = option[2];
+      for (option = self->option_list; option != (DialogOption *)0x0;
+          option = option->next) {
+        labels[label_count2] = (uint)option->text;
         label_count2++;
       }
     }
@@ -8667,13 +8667,13 @@ void __thiscall dialog_create_controls(Dialog *self)
           radiogrp_create
                     ((RadioGroup *)self->radio_group,parent_18c,200,(iptr)rect,self->columns,
                      self->option_count,(iptr)labels);
-          option = (uint *)self->option_list;
+          option = self->option_list;
           item_index = 0;
-          for (; option != (uint *)0x0; option = (uint *)option[4]) {
-            if ((uint *)self->selected_option == option) {
+          for (; option != (DialogOption *)0x0; option = option->next) {
+            if ((uint *)self->selected_option == ((uint *)option)) {
               radiogrp_set_selected((RadioGroupSetSelView *)self->radio_group,item_index);
             }
-            if ((*option & 1) != 0) {
+            if ((option->flags & 1) != 0) {
               radiogrp_disable_item((RadioGroupDisableView *)self->radio_group,item_index);
             }
             item_index++;
@@ -8699,8 +8699,8 @@ void __thiscall dialog_create_controls(Dialog *self)
           x = self->list_x;
           y2 = self->list_y;
           i = 0;
-          for (option = (uint *)self->option_list; option != (uint *)0x0;
-              option = (uint *)option[4]) {
+          for (option = self->option_list; option != (DialogOption *)0x0;
+              option = option->next) {
             if (self->surf_wnd == 0) {
               parent_188 = 0;
             }
@@ -8709,10 +8709,10 @@ void __thiscall dialog_create_controls(Dialog *self)
             }
             checkbox_create
                       ((Control *)(self->checkboxes + i * 0x3c),parent_188,i + 200
-                       ,x,y2,(const char *)option[2]);
+                       ,x,y2,(const char *)option->text);
             checkbox_set_checked
-                      ((Control *)(self->checkboxes + i * 0x3c),*option & 4);
-            if ((*option & 1) != 0) {
+                      ((Control *)(self->checkboxes + i * 0x3c),option->flags & 4);
+            if ((option->flags & 1) != 0) {
               checkbox_disable((CheckboxDisableView *)(self->checkboxes + i * 0x3c));
             }
             y2 += self->option_row_height;
@@ -8723,7 +8723,7 @@ void __thiscall dialog_create_controls(Dialog *self)
       else {
         self->cur_pane = 0;
         if ((self->style_flags & 0x40000) == 0) {
-          if (((int)((&self->list_rows)[self->cur_pane] * self->columns) < (int)self->option_count) ||
+          if (((int)(self->list_rows[self->cur_pane] * self->columns) < (int)self->option_count) ||
              ((self->style_flags & 0x1000000) != 0)) {
             if (self->columns == 1) {
               ctrl_mem = (Control *)operator_new(0x40);
@@ -8735,7 +8735,7 @@ void __thiscall dialog_create_controls(Dialog *self)
                 vscroll = scrollbar_ctor(ctrl_mem);
               }
               eh_state = 0xffffffff;
-              *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) = (i32)vscroll;
+              self->list_vscroll[self->cur_pane] = (i32)vscroll;
               if (self->surf_wnd == 0) {
                 parent_174 = 0;
               }
@@ -8743,24 +8743,24 @@ void __thiscall dialog_create_controls(Dialog *self)
                 parent_174 = self->surf_wnd + 0x48;
               }
               scrollbar_create
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),parent_174,
-                         0xb,(iptr)(self->list_vscroll_rect + self->cur_pane * 0x10),1);
+                        ((Control *)self->list_vscroll[self->cur_pane],parent_174,
+                         0xb,(iptr)&self->list_vscroll_rect[self->cur_pane],1);
               count = dialog_count_group_options((DialogOptionList *)self,self->cur_pane);
               scrollbar_set_range
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),0,
+                        ((Control *)self->list_vscroll[self->cur_pane],0,
                          count - 1);
               pos = dialog_option_group_index
                                 ((DialogOptionList *)self,
-                                 *(uptr *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
+                                 self->list_top_option[self->cur_pane]);
               scrollbar_set_pos
-                        (*(ClickControl **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),pos);
+                        ((ClickControl *)self->list_vscroll[self->cur_pane],pos);
               scrollbar_set_page_size
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),
-                         (&self->list_rows)[self->cur_pane] - 1);
+                        ((Control *)self->list_vscroll[self->cur_pane],
+                         self->list_rows[self->cur_pane] - 1);
               scrollbar_set_callback
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),(iptr)dialog_list_on_vscroll);
+                        ((Control *)self->list_vscroll[self->cur_pane],(iptr)dialog_list_on_vscroll);
               scrollbar_set_track_callback
-                        (*(ScrollbarTrackSetView **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),(iptr)dialog_list_on_vscroll);
+                        ((ScrollbarTrackSetView *)self->list_vscroll[self->cur_pane],(iptr)dialog_list_on_vscroll);
             }
             else {
               ctrl_mem = (Control *)operator_new(0x40);
@@ -8772,7 +8772,7 @@ void __thiscall dialog_create_controls(Dialog *self)
                 hscroll = scrollbar_ctor(ctrl_mem);
               }
               eh_state = 0xffffffff;
-              *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) = (i32)hscroll;
+              self->list_hscroll[self->cur_pane] = (i32)hscroll;
               if (self->surf_wnd == 0) {
                 parent_178 = 0;
               }
@@ -8780,25 +8780,25 @@ void __thiscall dialog_create_controls(Dialog *self)
                 parent_178 = self->surf_wnd + 0x48;
               }
               scrollbar_create
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),parent_178,0xc,
-                         (iptr)(self->list_vscroll_rect + self->cur_pane * 0x10 + 0x20),0);
+                        ((Control *)self->list_hscroll[self->cur_pane],parent_178,0xc,
+                         (iptr)&self->list_hscroll_rect[self->cur_pane],0);
               count = dialog_count_group_options((DialogOptionList *)self,self->cur_pane);
               value = dialog_column_of_index((DialogTextView *)self,count - 1);
               scrollbar_set_range
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),0,value);
+                        ((Control *)self->list_hscroll[self->cur_pane],0,value);
               value = dialog_option_group_index
                                 ((DialogOptionList *)self,
-                                 *(uptr *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
+                                 self->list_top_option[self->cur_pane]);
               pos = dialog_column_of_index((DialogTextView *)self,value);
               scrollbar_set_pos
-                        (*(ClickControl **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),pos);
+                        ((ClickControl *)self->list_hscroll[self->cur_pane],pos);
               scrollbar_set_page_size
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),self->columns
+                        ((Control *)self->list_hscroll[self->cur_pane],self->columns
                         );
               scrollbar_set_callback
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),(iptr)dialog_list_on_hscroll);
+                        ((Control *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
               scrollbar_set_track_callback
-                        (*(ScrollbarTrackSetView **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),(iptr)dialog_list_on_hscroll);
+                        ((ScrollbarTrackSetView *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
             }
           }
           wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_lbuttondown);
@@ -8816,9 +8816,9 @@ void __thiscall dialog_create_controls(Dialog *self)
             listbox3 = checkbox_ctor(ctrl_mem);
           }
           eh_state = 0xffffffff;
-          *(i32 *)(self->control_ptr_slots + self->cur_pane * 4 + 0x14) = (i32)listbox3;
+          self->listbox[self->cur_pane] = (i32)listbox3;
           rect_set_xywh((iptr)rect,self->list_x,self->list_y,
-                             (&self->list_width)[self->cur_pane],(&self->list_height)[self->cur_pane]);
+                             self->list_width[self->cur_pane],self->list_height[self->cur_pane]);
           if (self->surf_wnd == 0) {
             parent_170 = 0;
           }
@@ -8826,28 +8826,28 @@ void __thiscall dialog_create_controls(Dialog *self)
             parent_170 = self->surf_wnd + 0x48;
           }
           listbox_create
-                    (*(Control **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),parent_170,10,
+                    ((Control *)self->listbox[self->cur_pane],parent_170,10,
                      (iptr)rect);
-          option = (uint *)self->option_list;
+          option = self->option_list;
           item_index = 0;
-          for (; option != (uint *)0x0; option = (uint *)option[4]) {
-            if (self->cur_pane == option[3]) {
+          for (; option != (DialogOption *)0x0; option = option->next) {
+            if (self->cur_pane == (uint)option->group) {
               listbox_add_string
-                        (*(ListBoxAddView **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),(const char *)option[2]);
-              if ((uint *)self->selected_option == option) {
+                        ((ListBoxAddView *)self->listbox[self->cur_pane],(const char *)option->text);
+              if ((uint *)self->selected_option == ((uint *)option)) {
                 listbox_set_cur_sel
-                          (*(ListBoxSetSelView **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),item_index);
+                          ((ListBoxSetSelView *)self->listbox[self->cur_pane],item_index);
               }
               item_index++;
             }
           }
           listbox_set_dblclick_callback
-                    (*(ListBoxDblClickSetView **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),(iptr)dialog_listbox_on_dblclick);
+                    ((ListBoxDblClickSetView *)self->listbox[self->cur_pane],(iptr)dialog_listbox_on_dblclick);
         }
         if ((self->style_flags & 0x400000) != 0) {
           self->cur_pane = 1;
           if ((self->style_flags & 0x40000) == 0) {
-            if (((int)((&self->list_rows)[self->cur_pane] * self->columns) < (int)self->option_count) ||
+            if (((int)(self->list_rows[self->cur_pane] * self->columns) < (int)self->option_count) ||
                ((self->style_flags & 0x1000000) != 0)) {
               if (self->columns == 1) {
                 ctrl_mem = (Control *)operator_new(0x40);
@@ -8859,7 +8859,7 @@ void __thiscall dialog_create_controls(Dialog *self)
                   vscroll2 = scrollbar_ctor(ctrl_mem);
                 }
                 eh_state = 0xffffffff;
-                *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) = (i32)vscroll2;
+                self->list_vscroll[self->cur_pane] = (i32)vscroll2;
                 if (self->surf_wnd == 0) {
                   parent_180 = 0;
                 }
@@ -8867,25 +8867,25 @@ void __thiscall dialog_create_controls(Dialog *self)
                   parent_180 = self->surf_wnd + 0x48;
                 }
                 scrollbar_create
-                          (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),parent_180
-                           ,0xb,(iptr)(self->list_vscroll_rect + self->cur_pane * 0x10),1);
+                          ((Control *)self->list_vscroll[self->cur_pane],parent_180
+                           ,0xb,(iptr)&self->list_vscroll_rect[self->cur_pane],1);
                 count = dialog_count_group_options((DialogOptionList *)self,self->cur_pane);
                 scrollbar_set_range
-                          (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),0,
+                          ((Control *)self->list_vscroll[self->cur_pane],0,
                            count - 1);
                 pos = dialog_option_group_index
                                   ((DialogOptionList *)self,
-                                   *(uptr *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
+                                   self->list_top_option[self->cur_pane]);
                 scrollbar_set_pos
-                          (*(ClickControl **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),pos);
+                          ((ClickControl *)self->list_vscroll[self->cur_pane],pos);
                 scrollbar_set_page_size
-                          (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),
-                           (&self->list_rows)[self->cur_pane] - 1);
+                          ((Control *)self->list_vscroll[self->cur_pane],
+                           self->list_rows[self->cur_pane] - 1);
                 scrollbar_set_callback
-                          (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),(iptr)dialog_list2_on_vscroll)
+                          ((Control *)self->list_vscroll[self->cur_pane],(iptr)dialog_list2_on_vscroll)
                 ;
                 scrollbar_set_track_callback
-                          (*(ScrollbarTrackSetView **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),(iptr)dialog_list2_on_vscroll);
+                          ((ScrollbarTrackSetView *)self->list_vscroll[self->cur_pane],(iptr)dialog_list2_on_vscroll);
               }
               else {
                 ctrl_mem = (Control *)operator_new(0x40);
@@ -8897,7 +8897,7 @@ void __thiscall dialog_create_controls(Dialog *self)
                   hscroll2 = scrollbar_ctor(ctrl_mem);
                 }
                 eh_state = 0xffffffff;
-                *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) = (i32)hscroll2;
+                self->list_hscroll[self->cur_pane] = (i32)hscroll2;
                 if (self->surf_wnd == 0) {
                   parent_184 = 0;
                 }
@@ -8905,25 +8905,25 @@ void __thiscall dialog_create_controls(Dialog *self)
                   parent_184 = self->surf_wnd + 0x48;
                 }
                 scrollbar_create
-                          (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),parent_184,
-                           0xc,(iptr)(self->list_vscroll_rect + self->cur_pane * 0x10 + 0x20),0);
+                          ((Control *)self->list_hscroll[self->cur_pane],parent_184,
+                           0xc,(iptr)&self->list_hscroll_rect[self->cur_pane],0);
                 count = dialog_count_group_options((DialogOptionList *)self,self->cur_pane);
                 value = dialog_column_of_index((DialogTextView *)self,count - 1);
                 scrollbar_set_range
-                          (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),0,value);
+                          ((Control *)self->list_hscroll[self->cur_pane],0,value);
                 value = dialog_option_group_index
                                   ((DialogOptionList *)self,
-                                   *(uptr *)(self->list_column_counts + self->cur_pane * 4 + 0x18));
+                                   self->list_top_option[self->cur_pane]);
                 pos = dialog_column_of_index((DialogTextView *)self,value);
                 scrollbar_set_pos
-                          (*(ClickControl **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),pos);
+                          ((ClickControl *)self->list_hscroll[self->cur_pane],pos);
                 scrollbar_set_page_size
-                          (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),
+                          ((Control *)self->list_hscroll[self->cur_pane],
                            self->columns);
                 scrollbar_set_callback
-                          (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),(iptr)dialog_list2_on_hscroll);
+                          ((Control *)self->list_hscroll[self->cur_pane],(iptr)dialog_list2_on_hscroll);
                 scrollbar_set_track_callback
-                          (*(ScrollbarTrackSetView **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8),(iptr)dialog_list2_on_hscroll);
+                          ((ScrollbarTrackSetView *)self->list_hscroll[self->cur_pane],(iptr)dialog_list2_on_hscroll);
               }
             }
           }
@@ -8937,9 +8937,9 @@ void __thiscall dialog_create_controls(Dialog *self)
               listbox22 = checkbox_ctor(ctrl_mem);
             }
             eh_state = 0xffffffff;
-            *(i32 *)(self->control_ptr_slots + self->cur_pane * 4 + 0x14) = (i32)listbox22;
+            self->listbox[self->cur_pane] = (i32)listbox22;
             rect_set_xywh((iptr)rect,self->list_x,self->list_y,
-                               (&self->list_width)[self->cur_pane],(&self->list_height)[self->cur_pane]);
+                               self->list_width[self->cur_pane],self->list_height[self->cur_pane]);
             if (self->surf_wnd == 0) {
               parent_17c = 0;
             }
@@ -8947,23 +8947,23 @@ void __thiscall dialog_create_controls(Dialog *self)
               parent_17c = self->surf_wnd + 0x48;
             }
             listbox_create
-                      (*(Control **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),parent_17c,10,
+                      ((Control *)self->listbox[self->cur_pane],parent_17c,10,
                        (iptr)rect);
-            option = (uint *)self->option_list;
+            option = self->option_list;
             item_index = 0;
-            for (; option != (uint *)0x0; option = (uint *)option[4]) {
-              if (self->cur_pane == option[3]) {
+            for (; option != (DialogOption *)0x0; option = option->next) {
+              if (self->cur_pane == (uint)option->group) {
                 listbox_add_string
-                          (*(ListBoxAddView **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),(const char *)option[2]);
-                if ((uint *)self->selected_option == option) {
+                          ((ListBoxAddView *)self->listbox[self->cur_pane],(const char *)option->text);
+                if ((uint *)self->selected_option == ((uint *)option)) {
                   listbox_set_cur_sel
-                            (*(ListBoxSetSelView **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),item_index);
+                            ((ListBoxSetSelView *)self->listbox[self->cur_pane],item_index);
                 }
                 item_index++;
               }
             }
             listbox_set_dblclick_callback
-                      (*(ListBoxDblClickSetView **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),(iptr)dialog_listbox_on_dblclick);
+                      ((ListBoxDblClickSetView *)self->listbox[self->cur_pane],(iptr)dialog_listbox_on_dblclick);
           }
           self->cur_pane = 0;
         }
@@ -8988,10 +8988,10 @@ void __thiscall dialog_create_controls(Dialog *self)
       y2 = self->sprite_y;
       sprite = self->sprite_list;
       i = 0;
-      for (; sprite != 0; sprite = *(uptr *)(sprite + 0x10)) {
+      for (; sprite != 0; sprite = sprite->next) {
         width2 = gfx_zoom_scale(self->max_sprite_width,self->sprite_zoom);
         zoom = self->sprite_zoom;
-        value = sprite_height(*(Sprite **)(sprite + 0xc));
+        value = sprite_height(sprite->sprite);
         count = gfx_zoom_scale(value,zoom);
         rect_set_xywh((iptr)rect,x,y2,width2,count);
         if (self->surf_wnd == 0) {
@@ -9026,15 +9026,15 @@ void __thiscall dialog_create_controls(Dialog *self)
       eh_state = 0xffffffff;
       self->edit_controls = (uptr)edits;
       i = 0;
-      for (; edit_field != 0; edit_field = *(uptr *)(edit_field + 0x18)) {
+      for (; edit_field != 0; edit_field = edit_field->next) {
         if (self->surf_wnd == 0) {
           parent_194 = 0;
         }
         else {
           parent_194 = self->surf_wnd + 0x48;
         }
-        value = *(i32 *)(edit_field + 0x14);
-        text = *(i32 *)(edit_field + 4);
+        value = (i32)edit_field->buffer;
+        text = edit_field->width;
         count = dialog_edit_row_height((DialogCore *)self);
         edit_create_at
                   ((EditControl *)(self->edit_controls + i * 0x48),parent_194,0x14,
@@ -9045,7 +9045,7 @@ void __thiscall dialog_create_controls(Dialog *self)
           ;
         }
         edit_set_max_len
-                  ((EditMaxLenView *)(self->edit_controls + i * 0x48),*(i32 *)(edit_field + 8));
+                  ((EditMaxLenView *)(self->edit_controls + i * 0x48),edit_field->max_len);
         i++;
       }
     }
@@ -9106,25 +9106,25 @@ void __thiscall dialog_create_controls(Dialog *self)
 void __cdecl dialog_radio_on_dblclick(i32 ctrl_id,int item)
 
 {
-  iptr found;
+  DialogOption *found;
   i32 index;
-  iptr node2;
+  DialogOption *node2;
   
   found = 0;
   if (dialog_title_font_obj_block.active_dialog != 0) {
     index = 0;
-    for (node2 = *(iptr *)(dialog_title_font_obj_block.active_dialog + 0x228); node2 != 0;
-        node2 = *(iptr *)(node2 + 0x10)) {
+    for (node2 = dialog_title_font_obj_block.active_dialog->option_list; node2 != 0;
+        node2 = node2->next) {
       if (item == index) {
         found = node2;
       }
       index++;
     }
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0xd8) = 0xffffffff;
+    dialog_title_font_obj_block.active_dialog->result_id = 0xffffffff;
     if (found != 0) {
-      *(i32 *)(dialog_title_font_obj_block.active_dialog + 0xd8) = *(i32 *)(found + 4);
+      dialog_title_font_obj_block.active_dialog->result_id = found->id;
     }
-    *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) = *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) | 0x2000;
+    dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
     dialog_end_current();
   }
   return;
@@ -9134,8 +9134,8 @@ void __cdecl dialog_radio_on_dblclick(i32 ctrl_id,int item)
 void __cdecl dialog_end_current(void)
 
 {
-  *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) = *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) | 0x400;
-  wnd_end_modal_loop((ModalMenuWindow *)(*(int *)dialog_title_font_obj_block.active_dialog + 0x48));
+  dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x400;
+  wnd_end_modal_loop((ModalMenuWindow *)((int)dialog_title_font_obj_block.active_dialog->surf_wnd + 0x48));
   return;
 }
 
@@ -9143,8 +9143,8 @@ void __cdecl dialog_end_current(void)
 void __cdecl dialog_listbox_on_dblclick(void)
 
 {
-  if ((dialog_title_font_obj_block.active_dialog != 0) && ((*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3d) & 4) == 0)) {
-    *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) = *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) | 0x2000;
+  if ((dialog_title_font_obj_block.active_dialog != 0) && ((*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3d) & 4) == 0)) {
+    dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
     dialog_end_current();
   }
   return;
@@ -9160,7 +9160,7 @@ void __cdecl dialog_on_sprite_click(int ctrl_id)
   int i;
   
   changed = false;
-  sprite = *(i32 **)(dialog_title_font_obj_block.active_dialog + 0x234);
+  sprite = *(i32 **)((iptr)dialog_title_font_obj_block.active_dialog + 0x234);
   if (sprite != (i32 *)0x0) {
     for (i = 0; i < ctrl_id - 300; i++) {
       sprite = (i32 *)sprite[4];
@@ -9168,22 +9168,22 @@ void __cdecl dialog_on_sprite_click(int ctrl_id)
         return;
       }
     }
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0xd8) = *sprite;
-    if ((*(i32 **)(dialog_title_font_obj_block.active_dialog + 0x224) != sprite) &&
-       (*(i32 **)(dialog_title_font_obj_block.active_dialog + 0x224) = sprite,
-       (*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3e) & 2) != 0)) {
+    dialog_title_font_obj_block.active_dialog->result_id = *sprite;
+    if ((*(i32 **)((iptr)dialog_title_font_obj_block.active_dialog + 0x224) != sprite) &&
+       (*(i32 **)((iptr)dialog_title_font_obj_block.active_dialog + 0x224) = sprite,
+       (*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3e) & 2) != 0)) {
       changed = true;
     }
-    if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x23c) == 0) {
+    if (dialog_title_font_obj_block.active_dialog->on_sprite_click == 0) {
       if (changed) {
-        dialog_render((Dialog *)dialog_title_font_obj_block.active_dialog);
+        dialog_render(dialog_title_font_obj_block.active_dialog);
       }
     }
     else {
       done = call_untyped(((code **)dialog_title_font_obj_block.active_dialog)[143], *sprite);
-      dialog_render((Dialog *)dialog_title_font_obj_block.active_dialog);
+      dialog_render(dialog_title_font_obj_block.active_dialog);
       if (done != 0) {
-        *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) = *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) | 0x2000;
+        dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
         dialog_end_current();
       }
     }
@@ -9197,13 +9197,13 @@ void __cdecl dialog_sprite_on_dblclick(void)
 {
   int done;
   
-  if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x240) != 0) {
+  if (dialog_title_font_obj_block.active_dialog->on_sprite_dblclick != 0) {
     done = call_untyped(((code **)dialog_title_font_obj_block.active_dialog)[144], 0);
     if (done == 0) {
-      dialog_render((Dialog *)dialog_title_font_obj_block.active_dialog);
+      dialog_render(dialog_title_font_obj_block.active_dialog);
     }
     else {
-      *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) = *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) | 0x2000;
+      dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
       dialog_end_current();
     }
   }
@@ -9218,31 +9218,31 @@ void __cdecl dialog_on_button_click(int ctrl_id)
 {
   int button_index;
   int sprite_index;
-  iptr found;
+  DialogOption *found;
   int button_id;
   int index;
-  iptr node2;
-  iptr sprite;
+  DialogOption *node2;
+  DialogSprite *sprite;
   
   if (dialog_title_font_obj_block.active_dialog != 0) {
     dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
     button_index = ctrl_id - 100;
-    if (button_index < *(int *)(dialog_title_font_obj_block.active_dialog + 0x30)) {
-      button_id = *(int *)(dialog_title_font_obj_block.active_dialog + 0x2ac + button_index * 8);
+    if (button_index < (int)dialog_title_font_obj_block.active_dialog->std_button_count) {
+      button_id = *(int *)((iptr)dialog_title_font_obj_block.active_dialog + 0x2ac + button_index * 8);
     }
     else {
-      *(int *)(dialog_title_font_obj_block.active_dialog + 0xdc) = (button_index - *(int *)(dialog_title_font_obj_block.active_dialog + 0x30)) + 1;
+      dialog_title_font_obj_block.active_dialog->result_extra = (button_index - (int)dialog_title_font_obj_block.active_dialog->std_button_count) + 1;
       button_id = 0;
     }
     if (button_id == 1) {
-      *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) = *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) | 0x80;
+      dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x80;
     }
-    if (((button_id == 0) && ((*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3e) & 2) != 0)) &&
-       (*(int *)(dialog_title_font_obj_block.active_dialog + 0x224) != 0)) {
-      sprite = *(iptr *)(dialog_title_font_obj_block.active_dialog + 0x234);
+    if (((button_id == 0) && ((*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3e) & 2) != 0)) &&
+       (dialog_title_font_obj_block.active_dialog->selected_sprite != 0)) {
+      sprite = dialog_title_font_obj_block.active_dialog->sprite_list;
       sprite_index = 0;
-      for (; (sprite != 0 && (*(int *)(dialog_title_font_obj_block.active_dialog + 0x224) != sprite));
-          sprite = *(iptr *)(sprite + 0x10)) {
+      for (; (sprite != 0 && ((int)dialog_title_font_obj_block.active_dialog->selected_sprite != (iptr)sprite));
+          sprite = sprite->next) {
         sprite_index++;
       }
       if (sprite != 0) {
@@ -9250,26 +9250,26 @@ void __cdecl dialog_on_button_click(int ctrl_id)
       }
     }
     if (button_id == 2) {
-      *(i32 *)(dialog_title_font_obj_block.active_dialog + 0xd8) = 0xffffffff;
+      dialog_title_font_obj_block.active_dialog->result_id = 0xffffffff;
     }
     else {
-      if ((*(int *)(dialog_title_font_obj_block.active_dialog + 0x2c) < 2) || (*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) != 0)) {
-        *(i32 *)(dialog_title_font_obj_block.active_dialog + 0xd8) = 0;
+      if (((int)dialog_title_font_obj_block.active_dialog->sprite_count < 2) || (dialog_title_font_obj_block.active_dialog->option_count != 0)) {
+        dialog_title_font_obj_block.active_dialog->result_id = 0;
       }
-      if ((*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) != 0) && ((*(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) & 0x1004) == 0)
+      if ((dialog_title_font_obj_block.active_dialog->option_count != 0) && ((dialog_title_font_obj_block.active_dialog->style_flags & 0x1004) == 0)
          ) {
         index = 0;
         found = 0;
-        node2 = *(iptr *)(dialog_title_font_obj_block.active_dialog + 0x228);
-        button_index = radiogrp_get_selected(*(RadioGroupGetSelView **)(dialog_title_font_obj_block.active_dialog + 0x268));
-        for (; node2 != 0; node2 = *(iptr *)(node2 + 0x10)) {
+        node2 = dialog_title_font_obj_block.active_dialog->option_list;
+        button_index = radiogrp_get_selected(*(RadioGroupGetSelView **)((iptr)dialog_title_font_obj_block.active_dialog + 0x268));
+        for (; node2 != 0; node2 = node2->next) {
           if (button_index == index) {
             found = node2;
           }
           index++;
         }
         if (found != 0) {
-          *(i32 *)(dialog_title_font_obj_block.active_dialog + 0xd8) = *(i32 *)(found + 4);
+          dialog_title_font_obj_block.active_dialog->result_id = found->id;
         }
       }
     }
@@ -9285,49 +9285,49 @@ void __cdecl dialog_on_keydown(i32 key)
 
 {
   int count;
-  uptr option;
+  DialogOption *option;
   int index;
   int pos;
   i32 redraw;
-  uptr sprite;
-  uptr node2;
+  DialogSprite *sprite;
+  DialogOption *node2;
   
   if (dialog_title_font_obj_block.active_dialog == 0) {
     return;
   }
-  if (((*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3d) & 0x10) == 0) || (*(int *)(dialog_title_font_obj_block.active_dialog + 0x24) != 0)) {
+  if (((*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3d) & 0x10) == 0) || (dialog_title_font_obj_block.active_dialog->edit_count != 0)) {
     dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
   }
-  if ((*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3e) & 2) != 0) {
+  if ((*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3e) & 2) != 0) {
     switch(key) {
     case 0xa2:
     case 0xc1:
-      *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x224) =
-           *(i32 *)(*(int *)(dialog_title_font_obj_block.active_dialog + 0x224) + 0x10);
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x224) == 0) {
-        *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x224) = *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x234);
+      dialog_title_font_obj_block.active_dialog->selected_sprite =
+           (DialogSprite *)*(i32 *)((int)dialog_title_font_obj_block.active_dialog->selected_sprite + 0x10);
+      if (dialog_title_font_obj_block.active_dialog->selected_sprite == 0) {
+        dialog_title_font_obj_block.active_dialog->selected_sprite = dialog_title_font_obj_block.active_dialog->sprite_list;
       }
-      dialog_render((Dialog *)dialog_title_font_obj_block.active_dialog);
+      dialog_render(dialog_title_font_obj_block.active_dialog);
       break;
     case 0xa8:
     case 0xc0:
-      for (sprite = *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x234);
-          ((sprite != 0 && (*(int *)(sprite + 0x10) != *(int *)(dialog_title_font_obj_block.active_dialog + 0x224))) &&
-          (*(int *)(sprite + 0x10) != 0)); sprite = *(uptr *)(sprite + 0x10)) {
+      for (sprite = dialog_title_font_obj_block.active_dialog->sprite_list;
+          ((sprite != 0 && ((int)sprite->next != (int)dialog_title_font_obj_block.active_dialog->selected_sprite)) &&
+          (sprite->next != 0)); sprite = sprite->next) {
       }
-      *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x224) = sprite;
-      dialog_render((Dialog *)dialog_title_font_obj_block.active_dialog);
+      dialog_title_font_obj_block.active_dialog->selected_sprite = sprite;
+      dialog_render(dialog_title_font_obj_block.active_dialog);
       break;
     case 0xd1:
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x224) != 0) {
-        dialog_on_sprite_click(**(i32 **)(dialog_title_font_obj_block.active_dialog + 0x224));
+      if (dialog_title_font_obj_block.active_dialog->selected_sprite != 0) {
+        dialog_on_sprite_click(**(i32 **)((iptr)dialog_title_font_obj_block.active_dialog + 0x224));
       }
     }
   }
-  if ((*(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) & 0x41000) != 0x1000) {
+  if ((dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) != 0x1000) {
     return;
   }
-  if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) == 0) {
+  if (dialog_title_font_obj_block.active_dialog->option_count == 0) {
     key = 0;
   }
   do {
@@ -9335,44 +9335,43 @@ void __cdecl dialog_on_keydown(i32 key)
     case 0xa1:
     case 199:
       index = dialog_option_group_index
-                        ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
+                        ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
       pos = dialog_count_group_options
-                        ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48));
+                        ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,(i32)dialog_title_font_obj_block.active_dialog->cur_pane);
       if (pos - 1 <= index) {
         return;
       }
       index = dialog_count_group_options
-                        ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48));
-      redraw = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,index - 1);
-      *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = redraw;
+                        ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,(i32)dialog_title_font_obj_block.active_dialog->cur_pane);
+      redraw = (i32)dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,index - 1);
+      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)redraw;
       dialog_select_option
                 ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                 *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4),0);
+                 dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane],0);
       dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
       return;
     case 0xa2:
     case 0xc1:
-      node2 = *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220);
+      node2 = dialog_title_font_obj_block.active_dialog->selected_option;
       goto find_next_option;
     case 0xa3:
     case 0xc6:
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) < 2) {
+      if ((int)dialog_title_font_obj_block.active_dialog->columns < 2) {
         pos = dialog_option_group_index
-                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
-        index = *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4);
+                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
+        index = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
         count = dialog_count_group_options
-                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48));
+                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,(i32)dialog_title_font_obj_block.active_dialog->cur_pane);
         if (index + pos < count) {
           redraw = 1;
-          option = dialog_option_at
+          option = (dialog_option_at
                             ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                             pos + *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                             *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
+                             pos + (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
           dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,option,redraw);
           return;
         }
         index = dialog_count_group_options
-                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48));
+                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,(i32)dialog_title_font_obj_block.active_dialog->cur_pane);
         redraw = 1;
         option = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,index - 1);
         dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,option,redraw);
@@ -9382,39 +9381,36 @@ void __cdecl dialog_on_keydown(i32 key)
       break;
     case 0xa4:
     case 0xc2:
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) != 1) {
+      if ((int)dialog_title_font_obj_block.active_dialog->columns != 1) {
         index = dialog_option_group_index
-                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
+                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
         pos = dialog_option_group_index
                           ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                           *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
-        if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) + pos <= index) {
+                           dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
+        if ((int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] + pos <= index) {
           redraw = 1;
-          option = dialog_option_at
+          option = (dialog_option_at
                             ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                             index - *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                             *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
+                             index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
           dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,option,redraw);
           return;
         }
-        if (index < *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4)) {
+        if (index < (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]) {
           return;
         }
         index = dialog_option_group_index
                           ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                           *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
-        redraw = dialog_option_at
+                           dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
+        redraw = (i32)dialog_option_at
                           ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                           index - *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                           *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
-        *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = redraw;
+                           index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]);
+        dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)redraw;
         index = dialog_option_group_index
-                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
+                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
         redraw = 0;
-        option = dialog_option_at
+        option = (dialog_option_at
                           ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                           index - *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                           *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
+                           index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
         dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,option,redraw);
         dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
         return;
@@ -9425,20 +9421,19 @@ void __cdecl dialog_on_keydown(i32 key)
       return;
     case 0xa6:
     case 0xc3:
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) != 1) {
+      if ((int)dialog_title_font_obj_block.active_dialog->columns != 1) {
         pos = dialog_option_group_index
-                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
-        index = *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4);
+                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
+        index = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
         count = dialog_count_group_options
-                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48));
+                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,(i32)dialog_title_font_obj_block.active_dialog->cur_pane);
         if (count <= index + pos) {
           return;
         }
         redraw = 1;
-        option = dialog_option_at
+        option = (dialog_option_at
                           ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                           pos + *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                           *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
+                           pos + (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
         dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,option,redraw);
         return;
       }
@@ -9447,32 +9442,31 @@ void __cdecl dialog_on_keydown(i32 key)
     case 0xa7:
     case 0xc4:
       index = dialog_option_group_index
-                        ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
+                        ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
       if (index < 1) {
         return;
       }
-      redraw = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,0);
-      *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = redraw;
+      redraw = (i32)dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,0);
+      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)redraw;
       dialog_select_option
                 ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                 *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4),0);
+                 dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane],0);
       dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
       return;
     case 0xa8:
     case 0xc0:
-      node2 = *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220);
+      node2 = dialog_title_font_obj_block.active_dialog->selected_option;
       goto find_prev_option;
     case 0xa9:
     case 0xc5:
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) < 2) {
+      if ((int)dialog_title_font_obj_block.active_dialog->columns < 2) {
         index = dialog_option_group_index
-                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
-        if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) <= index) {
+                          ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
+        if ((int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] <= index) {
           redraw = 1;
-          option = dialog_option_at
+          option = (dialog_option_at
                             ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                             index - *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                             *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
+                             index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
           dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,option,redraw);
           return;
         }
@@ -9484,31 +9478,31 @@ void __cdecl dialog_on_keydown(i32 key)
       key = 0xc2;
     }
   } while( true );
-  while (node2 = *(uptr *)(node2 + 0x14),
-        *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) != *(int *)(node2 + 0xc)) {
+  while (node2 = node2->prev,
+        (int)dialog_title_font_obj_block.active_dialog->cur_pane != node2->group) {
 find_prev_option:
-    if (*(int *)(node2 + 0x14) == 0) break;
+    if (node2->prev == 0) break;
   }
-  if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x48) != *(int *)(node2 + 0xc)) {
+  if ((int)dialog_title_font_obj_block.active_dialog->cur_pane != node2->group) {
     return;
   }
-  if (*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220) == node2) {
+  if (dialog_title_font_obj_block.active_dialog->selected_option == node2) {
     return;
   }
-  if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) != 1) {
+  if ((int)dialog_title_font_obj_block.active_dialog->columns != 1) {
     index = dialog_option_group_index
                       ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                       *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
+                       dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
     pos = dialog_option_group_index((DialogOptionList *)dialog_title_font_obj_block.active_dialog,node2);
     if (pos < index) {
       index = dialog_option_group_index
                         ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                         *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
-      redraw = dialog_option_at
+                         dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
+      redraw = (i32)dialog_option_at
                         ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                         index - *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4)
+                         index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]
                         );
-      *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = redraw;
+      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)redraw;
       dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,node2,0);
       dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
       return;
@@ -9516,13 +9510,13 @@ find_prev_option:
   }
   dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,node2,1);
   return;
-  while (node2 = *(uptr *)(node2 + 0x10),
-        *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) != *(int *)(node2 + 0xc)) {
+  while (node2 = node2->next,
+        (int)dialog_title_font_obj_block.active_dialog->cur_pane != node2->group) {
 find_next_option:
-    if (*(int *)(node2 + 0x10) == 0) break;
+    if (node2->next == 0) break;
   }
-  if ((*(int *)(dialog_title_font_obj_block.active_dialog + 0x48) == *(int *)(node2 + 0xc)) &&
-     (*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220) != node2)) {
+  if (((int)dialog_title_font_obj_block.active_dialog->cur_pane == node2->group) &&
+     (dialog_title_font_obj_block.active_dialog->selected_option != node2)) {
     dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,node2,1);
   }
   return;
@@ -9539,27 +9533,27 @@ void __cdecl dialog_on_char(byte ch)
   uint first_ch;
   int top_index;
   int bottom_index;
-  i32 top_option;
+  DialogOption *top_option;
   iptr match_index;
-  uptr match;
-  uptr node2;
+  DialogOption *match;
+  DialogOption *node2;
   iptr counter2;
   
   if ((dialog_title_font_obj_block.active_dialog != 0) && (target_index = _isalpha((uint)ch), target_index != 0)) {
     dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
     upper_ch = crt_toupper((uint)ch);
-    if ((*(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) & 0x41000) == 0x1000) {
-      node2 = *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220);
+    if ((dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) == 0x1000) {
+      node2 = dialog_title_font_obj_block.active_dialog->selected_option;
       match = 0;
       counter2 = 0;
       do {
         do {
-          node2 = *(uptr *)(node2 + 0x10);
+          node2 = node2->next;
           if (node2 == 0) {
-            node2 = *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x228);
+            node2 = dialog_title_font_obj_block.active_dialog->option_list;
           }
-        } while (*(int *)(dialog_title_font_obj_block.active_dialog + 0x48) != *(int *)(node2 + 0xc));
-        first_ch = crt_toupper((int)**(char **)(node2 + 8));
+        } while ((int)dialog_title_font_obj_block.active_dialog->cur_pane != node2->group);
+        first_ch = crt_toupper((int)*node2->text);
         if (first_ch == (upper_ch & 0xff)) {
           match = node2;
         }
@@ -9570,27 +9564,25 @@ void __cdecl dialog_on_char(byte ch)
         while( true ) {
           top_index = dialog_option_group_index
                             ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                             *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
-          bottom_index = *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) *
-                  *(int *)(dialog_title_font_obj_block.active_dialog + 0x38) + top_index;
-          if ((*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) == 1) || ((top_index <= target_index && (target_index < bottom_index)))) break;
+                             dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
+          bottom_index = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] *
+                  (int)dialog_title_font_obj_block.active_dialog->columns + top_index;
+          if (((int)dialog_title_font_obj_block.active_dialog->columns == 1) || ((top_index <= target_index && (target_index < bottom_index)))) break;
           if (target_index < top_index) {
-            top_option = dialog_option_at
+            top_option = (dialog_option_at
                               ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                               top_index - *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                               *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = top_option;
+                               top_index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
+            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
             counter2++;
           }
           else {
             if (target_index < bottom_index) {
               return;
             }
-            top_option = dialog_option_at
+            top_option = (dialog_option_at
                               ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                               top_index + *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                               *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = top_option;
+                               top_index + (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
+            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
             counter2++;
           }
         }
@@ -9603,11 +9595,11 @@ void __cdecl dialog_on_char(byte ch)
         }
       }
     }
-    else if ((*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3e) & 2) == 0) {
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x34) != 0) {
+    else if ((*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3e) & 2) == 0) {
+      if (dialog_title_font_obj_block.active_dialog->extra_button_count != 0) {
         match_index = -1;
-        for (counter2 = 0; counter2 < *(int *)(dialog_title_font_obj_block.active_dialog + 0x34); counter2++) {
-          first_ch = crt_toupper((int)**(char **)(dialog_title_font_obj_block.active_dialog + 0x294 + counter2 * 4));
+        for (counter2 = 0; counter2 < (int)dialog_title_font_obj_block.active_dialog->extra_button_count; counter2++) {
+          first_ch = crt_toupper((int)**(char **)((iptr)dialog_title_font_obj_block.active_dialog + 0x294 + counter2 * 4));
           if (first_ch == (upper_ch & 0xff)) {
             match_index = counter2;
             break;
@@ -9616,18 +9608,18 @@ void __cdecl dialog_on_char(byte ch)
         if (-1 < match_index) {
           ctrl_set_focus
                     ((ControlFocusView *)
-                     ((*(int *)(dialog_title_font_obj_block.active_dialog + 0x30) + counter2) * 0x3c +
-                     *(int *)(dialog_title_font_obj_block.active_dialog + 0x274)));
-          dialog_on_button_click(*(int *)(dialog_title_font_obj_block.active_dialog + 0x30) + counter2 + 100);
+                     (((int)dialog_title_font_obj_block.active_dialog->std_button_count + counter2) * 0x3c +
+                     (int)dialog_title_font_obj_block.active_dialog->button_controls));
+          dialog_on_button_click((int)dialog_title_font_obj_block.active_dialog->std_button_count + counter2 + 100);
           return;
         }
       }
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) != 0) {
+      if (dialog_title_font_obj_block.active_dialog->option_count != 0) {
         match = 0;
         match_index = 0;
-        for (node2 = *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x228); node2 != 0;
-            node2 = *(uptr *)(node2 + 0x10)) {
-          first_ch = crt_toupper((int)**(char **)(node2 + 8));
+        for (node2 = dialog_title_font_obj_block.active_dialog->option_list; node2 != 0;
+            node2 = node2->next) {
+          first_ch = crt_toupper((int)*node2->text);
           if (first_ch == (upper_ch & 0xff)) {
             match = node2;
             break;
@@ -9635,14 +9627,14 @@ void __cdecl dialog_on_char(byte ch)
           match_index++;
         }
         if (match != 0) {
-          if ((*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3d) & 0x10) == 0) {
-            if ((*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3c) & 4) == 0) {
-              radiogrp_set_selected(*(RadioGroupSetSelView **)(dialog_title_font_obj_block.active_dialog + 0x268),match_index);
+          if ((*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3d) & 0x10) == 0) {
+            if ((*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3c) & 4) == 0) {
+              radiogrp_set_selected(*(RadioGroupSetSelView **)((iptr)dialog_title_font_obj_block.active_dialog + 0x268),match_index);
             }
           }
           else {
             listbox_set_cur_sel
-                      (*(ListBoxSetSelView **)(dialog_title_font_obj_block.active_dialog + 0x278 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4),
+                      ((ListBoxSetSelView *)dialog_title_font_obj_block.active_dialog->listbox[dialog_title_font_obj_block.active_dialog->cur_pane],
                        match_index);
           }
         }
@@ -9660,18 +9652,18 @@ void __cdecl dialog_list_on_lbuttondown(i32 x,i32 y)
 
 {
   int hit_index;
-  uptr option;
+  DialogOption *option;
   i32 redraw;
   
   if (dialog_title_font_obj_block.active_dialog != 0) {
     dialog_pick_pane_at((DialogWindowView *)dialog_title_font_obj_block.active_dialog,x,y);
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x218 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = 0;
-    if ((((*(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) & 0x41000) == 0x1000) &&
-        (*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) != 0)) &&
+    dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] = 0;
+    if ((((dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) == 0x1000) &&
+        (dialog_title_font_obj_block.active_dialog->option_count != 0)) &&
        (hit_index = dialog_option_at_point((DialogOptionList *)dialog_title_font_obj_block.active_dialog,x,y),
        -1 < hit_index)) {
-      *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x218 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = 1;
-      wnd_set_capture((WndBase *)(*(int *)dialog_title_font_obj_block.active_dialog + 0x48));
+      dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] = 1;
+      wnd_set_capture((WndBase *)((int)dialog_title_font_obj_block.active_dialog->surf_wnd + 0x48));
       redraw = 1;
       option = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,hit_index);
       dialog_select_option((DialogOptionList *)dialog_title_font_obj_block.active_dialog,option,redraw);
@@ -9686,87 +9678,83 @@ void __cdecl dialog_list_on_mousemove(i32 x,i32 y)
 {
   int rows;
   int hit;
-  uptr option;
+  DialogOption *option;
   int top_index;
   int last_col;
   i32 value;
   int sel_index;
   
-  if (((dialog_title_font_obj_block.active_dialog != 0) && ((*(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) & 0x41000) == 0x1000)) &&
-     (*(int *)(dialog_title_font_obj_block.active_dialog + 0x218 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) != 0)) {
+  if (((dialog_title_font_obj_block.active_dialog != 0) && ((dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) == 0x1000)) &&
+     (dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] != 0)) {
     hit = dialog_option_at_point((DialogOptionList *)dialog_title_font_obj_block.active_dialog,x,y);
     if (hit < 0) {
-      if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) *
-          *(int *)(dialog_title_font_obj_block.active_dialog + 0x38) < *(int *)(dialog_title_font_obj_block.active_dialog + 0x28)) {
+      if ((int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] *
+          (int)dialog_title_font_obj_block.active_dialog->columns < (int)dialog_title_font_obj_block.active_dialog->option_count) {
         top_index = dialog_option_group_index
                           ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                           *(uptr *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
+                           dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
         switch(hit) {
         case -4:
-          if ((1 < *(int *)(dialog_title_font_obj_block.active_dialog + 0x38)) &&
+          if ((1 < (int)dialog_title_font_obj_block.active_dialog->columns) &&
              (hit = dialog_column_start_index
-                                ((DialogTextView *)dialog_title_font_obj_block.active_dialog,*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) - 1)
+                                ((DialogTextView *)dialog_title_font_obj_block.active_dialog,(int)dialog_title_font_obj_block.active_dialog->option_count - 1)
              , top_index < hit)) {
-            hit = *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4);
-            rows = *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4);
+            hit = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
+            rows = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
             last_col = dialog_column_of_index
-                              ((DialogTextView *)dialog_title_font_obj_block.active_dialog,*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) - 1);
+                              ((DialogTextView *)dialog_title_font_obj_block.active_dialog,(int)dialog_title_font_obj_block.active_dialog->option_count - 1);
             hit = int_clamp_b(top_index + hit,0,rows * last_col);
             top_index = dialog_option_group_index
-                              ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
-            for (sel_index = top_index % *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                           *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) + hit;
-                *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) + sel_index <
-                *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) *
-                *(int *)(dialog_title_font_obj_block.active_dialog + 0x38) + hit;
-                sel_index = sel_index + *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                            *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4)) {
+                              ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
+            for (sel_index = top_index % (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] + hit;
+                (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] + sel_index <
+                (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] *
+                (int)dialog_title_font_obj_block.active_dialog->columns + hit;
+                sel_index = sel_index + (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]) {
             }
-            value = int_clamp_b(sel_index,0,*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) - 1);
-            value = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,value);
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x220) = value;
-            value = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,hit);
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = value;
+            value = int_clamp_b(sel_index,0,(int)dialog_title_font_obj_block.active_dialog->option_count - 1);
+            value = (i32)dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,value);
+            dialog_title_font_obj_block.active_dialog->selected_option = (DialogOption *)value;
+            value = (i32)dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,hit);
+            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)value;
             dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
           }
           break;
         case -3:
-          if ((1 < *(int *)(dialog_title_font_obj_block.active_dialog + 0x38)) && (0 < top_index)) {
-            top_index -= *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4);
+          if ((1 < (int)dialog_title_font_obj_block.active_dialog->columns) && (0 < top_index)) {
+            top_index -= (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
             if (top_index < 1) {
               top_index = 0;
             }
-            value = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,top_index);
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = value;
+            value = (i32)dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,top_index);
+            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)value;
             hit = dialog_option_group_index
-                              ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,*(uptr *)(dialog_title_font_obj_block.active_dialog + 0x220));
-            value = dialog_option_at
+                              ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,dialog_title_font_obj_block.active_dialog->selected_option);
+            value = (i32)dialog_option_at
                               ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                               top_index + hit % *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c +
-                                                       *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4));
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x220) = value;
+                               top_index + hit % (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]);
+            dialog_title_font_obj_block.active_dialog->selected_option = (DialogOption *)value;
             dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
           }
           break;
         case -2:
-          if ((top_index < *(int *)(dialog_title_font_obj_block.active_dialog + 0x28) - 1) && (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) == 1)
+          if ((top_index < (int)dialog_title_font_obj_block.active_dialog->option_count - 1) && ((int)dialog_title_font_obj_block.active_dialog->columns == 1)
              ) {
-            value = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,top_index + 1);
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = value;
-            value = int_clamp_b(*(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4)
-                                 * *(int *)(dialog_title_font_obj_block.active_dialog + 0x38) + top_index + 1 - 1,0,
-                                 *(int *)(dialog_title_font_obj_block.active_dialog + 0x28) - 1);
-            value = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,value);
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x220) = value;
+            value = (i32)dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,top_index + 1);
+            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)value;
+            value = int_clamp_b((int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]
+                                 * (int)dialog_title_font_obj_block.active_dialog->columns + top_index + 1 - 1,0,
+                                 (int)dialog_title_font_obj_block.active_dialog->option_count - 1);
+            value = (i32)dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,value);
+            dialog_title_font_obj_block.active_dialog->selected_option = (DialogOption *)value;
             dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
           }
           break;
         case -1:
-          if ((0 < top_index) && (*(int *)(dialog_title_font_obj_block.active_dialog + 0x38) == 1)) {
-            value = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,top_index - 1);
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x220) = value;
-            *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) =
-                 *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x220);
+          if ((0 < top_index) && ((int)dialog_title_font_obj_block.active_dialog->columns == 1)) {
+            value = (i32)dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,top_index - 1);
+            dialog_title_font_obj_block.active_dialog->selected_option = (DialogOption *)value;
+            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = dialog_title_font_obj_block.active_dialog->selected_option;
             dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
           }
         }
@@ -9787,8 +9775,8 @@ void __cdecl dialog_list_on_lbuttonup(i32 x,i32 y)
 {
   if (dialog_title_font_obj_block.active_dialog != 0) {
     dialog_list_on_mousemove(x,y);
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x218 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = 0;
-    wnd_release_capture((WndBase *)(*(int *)dialog_title_font_obj_block.active_dialog + 0x48));
+    dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] = 0;
+    wnd_release_capture((WndBase *)((int)dialog_title_font_obj_block.active_dialog->surf_wnd + 0x48));
   }
   return;
 }
@@ -9801,14 +9789,14 @@ void __cdecl dialog_list_on_dblclick(i32 x,i32 y)
   
   if ((((dialog_title_font_obj_block.active_dialog != 0) &&
        (dialog_pick_pane_at((DialogWindowView *)dialog_title_font_obj_block.active_dialog,x,y),
-       (*(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) & 0x41000) == 0x1000)) &&
-      (*(int *)(dialog_title_font_obj_block.active_dialog + 0x28) != 0)) &&
-     (((*(byte *)(dialog_title_font_obj_block.active_dialog + 0x3d) & 4) == 0 &&
+       (dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) == 0x1000)) &&
+      (dialog_title_font_obj_block.active_dialog->option_count != 0)) &&
+     (((*(byte *)((iptr)dialog_title_font_obj_block.active_dialog + 0x3d) & 4) == 0 &&
       (hit_index = dialog_option_at_point((DialogOptionList *)dialog_title_font_obj_block.active_dialog,x,y),
       -1 < hit_index)))) {
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x218 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = 1;
+    dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] = 1;
     dialog_list_on_lbuttonup(x,y);
-    *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) = *(uint *)(dialog_title_font_obj_block.active_dialog + 0x3c) | 0x2000;
+    dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
     dialog_end_current();
   }
   return;
@@ -9818,16 +9806,16 @@ void __cdecl dialog_list_on_dblclick(i32 x,i32 y)
 void __cdecl dialog_list_on_hscroll(int scroll_pos)
 
 {
-  int top_option;
+  DialogOption *top_option;
   
   if (dialog_title_font_obj_block.active_dialog != 0) {
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48) = 0;
-    top_option = dialog_option_at
+    dialog_title_font_obj_block.active_dialog->cur_pane = 0;
+    top_option = (dialog_option_at
                       ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                       *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) * scroll_pos
-                      );
-    if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) != top_option) {
-      *(int *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = top_option;
+                       (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] * scroll_pos
+                      ));
+    if ((int)dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] != (iptr)top_option) {
+      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
       dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
     }
   }
@@ -9838,13 +9826,13 @@ void __cdecl dialog_list_on_hscroll(int scroll_pos)
 void __cdecl dialog_list2_on_vscroll(i32 scroll_pos)
 
 {
-  int top_option;
+  DialogOption *top_option;
   
   if (dialog_title_font_obj_block.active_dialog != 0) {
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48) = 1;
+    dialog_title_font_obj_block.active_dialog->cur_pane = 1;
     top_option = dialog_option_at((DialogOptionList *)dialog_title_font_obj_block.active_dialog,scroll_pos);
-    if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) != top_option) {
-      *(int *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = top_option;
+    if ((int)dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] != (iptr)top_option) {
+      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
       dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
     }
   }
@@ -9855,16 +9843,16 @@ void __cdecl dialog_list2_on_vscroll(i32 scroll_pos)
 void __cdecl dialog_list2_on_hscroll(int scroll_pos)
 
 {
-  int top_option;
+  DialogOption *top_option;
   
   if (dialog_title_font_obj_block.active_dialog != 0) {
-    *(i32 *)(dialog_title_font_obj_block.active_dialog + 0x48) = 1;
-    top_option = dialog_option_at
+    dialog_title_font_obj_block.active_dialog->cur_pane = 1;
+    top_option = (dialog_option_at
                       ((DialogOptionList *)dialog_title_font_obj_block.active_dialog,
-                       *(int *)(dialog_title_font_obj_block.active_dialog + 0x5c + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) * scroll_pos
-                      );
-    if (*(int *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) != top_option) {
-      *(int *)(dialog_title_font_obj_block.active_dialog + 0x210 + *(int *)(dialog_title_font_obj_block.active_dialog + 0x48) * 4) = top_option;
+                       (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] * scroll_pos
+                      ));
+    if ((int)dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] != (iptr)top_option) {
+      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
       dialog_draw_option_list((DialogOptionList *)dialog_title_font_obj_block.active_dialog);
     }
   }
@@ -9872,7 +9860,7 @@ void __cdecl dialog_list2_on_hscroll(int scroll_pos)
 }
 
 /* 005a5649 auto */
-void __thiscall dialog_fill_rect_bg(DialogTextView *self,iptr rect,int area)
+void __thiscall dialog_fill_rect_bg(DialogTextView *self,RECT *rect,int area)
 
 {
   i32 height;
@@ -9890,8 +9878,8 @@ void __thiscall dialog_fill_rect_bg(DialogTextView *self,iptr rect,int area)
         src_x = 0;
         height = rect_height(rect);
         width = rect_width(rect);
-        gfx_tile_fill(self->surf_wnd,dlg_client_tile_surface,*(i32 *)rect,
-                           *(i32 *)(rect + 4),width,height,src_x,src_y);
+        gfx_tile_fill(self->surf_wnd,dlg_client_tile_surface,rect->left,
+                           rect->top,width,height,src_x,src_y);
       }
     }
     else {
@@ -9899,15 +9887,15 @@ void __thiscall dialog_fill_rect_bg(DialogTextView *self,iptr rect,int area)
       src_x = 0;
       height = rect_height(rect);
       width = rect_width(rect);
-      gfx_tile_fill(self->surf_wnd,dlg_frame_tile_surface,*(i32 *)rect,
-                         *(i32 *)(rect + 4),width,height,src_x,src_y);
+      gfx_tile_fill(self->surf_wnd,dlg_frame_tile_surface,rect->left,
+                         rect->top,width,height,src_x,src_y);
     }
   }
   else {
     height = rect_height(rect);
     width = rect_width(rect);
-    gfx_copy_rect_same_pos(self->bg_surface,self->surf_wnd,*(i32 *)rect,
-                       *(i32 *)(rect + 4),width,height);
+    gfx_copy_rect_same_pos(self->bg_surface,self->surf_wnd,rect->left,
+                       rect->top,width,height);
   }
   return;
 }
@@ -9926,14 +9914,14 @@ void __thiscall dialog_render(Dialog *self)
   u32 saved_pane;
   int label_x;
   int sprite_h;
-  uptr edit_field;
+  DialogEditField *edit_field;
   u32 sprite_y2;
   u32 sprite_x2;
   int created;
   int title_y;
   int label_y;
   int title_x;
-  i32 *sprite;
+  DialogSprite *sprite;
   int i;
   int sprite_w;
   RECT rect;
@@ -9951,19 +9939,19 @@ void __thiscall dialog_render(Dialog *self)
     rect_set_xywh((iptr)((i8 *)&rect.left),self->origin_x,self->origin_y,self->wnd_width,self->wnd_height);
     if (self->border_width != 0) {
       for (i = 0; i < (int)self->bevel_width; i++) {
-        gfx_draw_bevel_rect(self->surf_wnd,(iptr)((i8 *)&rect.left),self->bevel_light_color,self->bevel_dark_color);
+        gfx_draw_bevel_rect(self->surf_wnd,(RECT *)(iptr)((i8 *)&rect.left),self->bevel_light_color,self->bevel_dark_color);
         rect_deflate((iptr)((i8 *)&rect.left),1,1);
       }
-      dialog_fill_rect_bg((DialogTextView *)self,(iptr)((i8 *)&rect.left),1);
+      dialog_fill_rect_bg((DialogTextView *)self,(RECT *)(iptr)((i8 *)&rect.left),1);
       rect_deflate((iptr)((i8 *)&rect.left),self->border_width + self->bevel_width * -2,0);
       rect.top = rect.top + self->title_height + self->bevel_width * -2;
       rect.bottom -= ((self->chrome_height - self->title_height) + self->bevel_width * -2);
       for (i = 0; i < (int)self->bevel_width; i++) {
-        gfx_draw_bevel_rect(self->surf_wnd,(iptr)((i8 *)&rect.left),self->bevel_dark_color,self->bevel_light_color);
+        gfx_draw_bevel_rect(self->surf_wnd,(RECT *)(iptr)((i8 *)&rect.left),self->bevel_dark_color,self->bevel_light_color);
         rect_deflate((iptr)((i8 *)&rect.left),1,1);
       }
     }
-    dialog_fill_rect_bg((DialogTextView *)self,(iptr)((i8 *)&rect.left),2);
+    dialog_fill_rect_bg((DialogTextView *)self,(RECT *)(iptr)((i8 *)&rect.left),2);
   }
   if ((self->title_text != 0) && ((self->style_flags & 0x10000) == 0)) {
     zoom = self->wnd_width;
@@ -9986,32 +9974,32 @@ void __thiscall dialog_render(Dialog *self)
     gfx_set_zoom_scale(self->sprite_zoom);
     sprite_x2 = self->sprite_x;
     sprite_y2 = self->sprite_y;
-    for (sprite = (i32 *)self->sprite_list; sprite != (i32 *)0x0;
-        sprite = (i32 *)sprite[4]) {
+    for (sprite = self->sprite_list; sprite != (DialogSprite *)0x0;
+        sprite = sprite->next) {
       zoom = self->sprite_zoom;
-      size = sprite_width((Sprite *)sprite[3]);
+      size = sprite_width(sprite->sprite);
       sprite_w = gfx_zoom_scale(size,zoom);
       zoom = self->sprite_zoom;
-      size = sprite_height((Sprite *)sprite[3]);
+      size = sprite_height(sprite->sprite);
       sprite_h = gfx_zoom_scale(size,zoom);
       if (self->on_draw_sprite == 0) {
         sprite_draw
-                  ((Sprite *)sprite[3],(iptr)sprite_rect,self->surf_wnd,sprite_x2,sprite_y2);
+                  (sprite->sprite,(iptr)sprite_rect,self->surf_wnd,sprite_x2,sprite_y2);
       }
       else {
-        call_untyped((code *)self->on_draw_sprite, sprite[3],self->surf_wnd,*sprite,sprite[1],sprite_x2,sprite_y2);
+        call_untyped((code *)self->on_draw_sprite, (i32)sprite->sprite,self->surf_wnd,sprite->id,sprite->field_04,sprite_x2,sprite_y2);
       }
-      if (((self->style_flags & 0x20000) != 0) && ((i32 *)self->selected_sprite == sprite)) {
+      if (((self->style_flags & 0x20000) != 0) && ((i32 *)self->selected_sprite == ((i32 *)sprite))) {
         rect_set((iptr)((i8 *)&rect.left),sprite_x2 - 1,sprite_y2 - 1,sprite_w + sprite_x2,
                            sprite_h + sprite_y2);
-        gfx_draw_rect_frame(self->surf_wnd,(iptr)((i8 *)&rect.left),self->frame_color);
+        gfx_draw_rect_frame(self->surf_wnd,(RECT *)(iptr)((i8 *)&rect.left),self->frame_color);
       }
       tmp = sprite_h;
-      if (sprite[2] != 0) {
+      if (sprite->label != 0) {
         label_x = self->sprite_gap + sprite_w + sprite_x2;
         row_height = font_line_spacing((GameFont *)self->body_font);
         label_y = (tmp - row_height >> 1) + sprite_y2;
-        dialog_draw_text_default_font((DialogTextView *)self,(const char *)sprite[2],label_x,label_y,0);
+        dialog_draw_text_default_font((DialogTextView *)self,(const char *)sprite->label,label_x,label_y,0);
       }
       sprite_y2 = sprite_y2 + sprite_h + self->section_gap;
     }
@@ -10020,7 +10008,7 @@ void __thiscall dialog_render(Dialog *self)
   if (self->edit_count != 0) {
     edit_field = self->edit_field_list;
     i = 0;
-    for (; edit_field != 0; edit_field = *(uptr *)(edit_field + 0x18)) {
+    for (; edit_field != 0; edit_field = edit_field->next) {
       gfx_set_text_color_index(self->text_color);
       size = 5;
       tmp = dialog_edit_row_height((DialogCore *)self);
@@ -10029,7 +10017,7 @@ void __thiscall dialog_render(Dialog *self)
       zoom = self->edit_y;
       line_spacing = font_line_spacing((GameFont *)self->body_font);
       surface_draw_text_cur_font
-                ((SurfaceTextCurFontView *)self->surf_wnd,(const char *)(*(i32 *)(edit_field + 0x10)),self->edit_x,
+                ((SurfaceTextCurFontView *)self->surf_wnd,(const char *)edit_field->label,self->edit_x,
                  (tmp + (row_height >> 1) + zoom) - (line_spacing >> 1),size);
       i++;
     }
@@ -10055,13 +10043,13 @@ void __thiscall dialog_render(Dialog *self)
         for (pane = 0; (int)pane < 2; pane++) {
           if ((pane != 1) || ((self->style_flags & 0x400000) != 0)) {
             self->cur_pane = pane;
-            if (*(int *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) != 0) {
+            if (self->list_vscroll[self->cur_pane] != 0) {
               ctrl_show_and_redraw
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10));
+                        ((Control *)self->list_vscroll[self->cur_pane]);
             }
-            if (*(int *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) != 0) {
+            if (self->list_hscroll[self->cur_pane] != 0) {
               ctrl_show_and_redraw
-                        (*(Control **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8));
+                        ((Control *)self->list_hscroll[self->cur_pane]);
             }
           }
         }
@@ -10098,12 +10086,12 @@ void __thiscall dialog_render(Dialog *self)
 u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
 
 {
-  iptr main_hwnd;
+  NativeWindow *main_hwnd;
   BOOL is_iconic;
   int result;
   char item_text[132];
   char sel_text[132];
-  uint *option;
+  DialogOption *option;
   int i;
   
   if (dialog_stack_depth != 0x10) {
@@ -10116,7 +10104,7 @@ u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
     }
     if (game_session_active != 0) {
       main_hwnd = wnd_get_window((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-      is_iconic = IsIconic(*(HWND *)(main_hwnd + 4));
+      is_iconic = IsIconic(main_hwnd->hwnd);
       if (is_iconic != 0) {
         wnd_show_restored((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
       }
@@ -10153,14 +10141,14 @@ u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
       }
       if ((self->style_flags & 0x1000) == 0) {
         if ((self->style_flags & 4) != 0) {
-          option = (uint *)self->option_list;
+          option = self->option_list;
           i = 0;
-          for (; option != (uint *)0x0; option = (uint *)option[4]) {
-            *option = *option & 0xfffffffb;
+          for (; option != (DialogOption *)0x0; option = option->next) {
+            option->flags = option->flags & 0xfffffffb;
             result = checkbox_is_checked
                               ((Control *)(self->checkboxes + i * 0x3c));
             if (result != 0) {
-              *option = *option | 4;
+              option->flags = option->flags | 4;
             }
             i++;
           }
@@ -10168,21 +10156,21 @@ u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
       }
       else if (self->result_id == 0) {
         if ((self->style_flags & 0x40000) == 0) {
-          self->result_id = *(u32 *)(self->selected_option + 4);
+          self->result_id = (u32)self->selected_option->id;
         }
         else {
           listbox_get_sel_text
-                    (*(ListBoxSelTextView **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),(char *)sel_text);
-          self->result_id = *(u32 *)(self->option_list + 4);
-          option = (uint *)self->option_list;
+                    ((ListBoxSelTextView *)self->listbox[self->cur_pane],(char *)sel_text);
+          self->result_id = (u32)self->option_list->id;
+          option = self->option_list;
           i = 0;
-          for (; option != (uint *)0x0; option = (uint *)option[4]) {
+          for (; option != (DialogOption *)0x0; option = option->next) {
             listbox_get_text
-                      (*(ListBoxTextView **)(self->control_ptr_slots + self->cur_pane * 4 + 0x14),i,
+                      ((ListBoxTextView *)self->listbox[self->cur_pane],i,
                        (char *)item_text);
             result = _strcmp(sel_text,item_text);
             if (result == 0) {
-              self->result_id = option[1];
+              self->result_id = (uint)option->id;
             }
             i++;
           }
@@ -10218,7 +10206,7 @@ dialog_load_text_section
   i8 edit_text[80];
   int list_rows2;
   char *key2;
-  uptr option;
+  DialogOption *option;
   int option_index;
   int number;
   i8 *edit_buf;
@@ -10230,7 +10218,7 @@ dialog_load_text_section
   cmp = text_open_section(file_name,section);
   if (cmp == 0) {
     if ((flags & 0x8000) == 0) {
-      dialog_init(self,init_arg1,init_arg2,init_arg3,flags);
+      dialog_init(self,init_arg1,init_arg2,(RECT *)init_arg3,flags);
     }
     else {
       self->style_flags = self->style_flags | flags;
@@ -10428,12 +10416,12 @@ dialog_load_text_section
           text_expand_vars((iptr)line,(iptr)expanded);
           if (has_edit == 0) {
             if ((self->style_flags & 4) == 0) {
-              option = (uptr)dialog_add_option
-                                   ((DialogOptionList *)self,(const char *)expanded,option_index,0);
+              option = (DialogOption *)((uptr)dialog_add_option
+                                   ((DialogOptionList *)self,(const char *)expanded,option_index,0));
             }
             else {
-              option = (uptr)dialog_add_checkbox_option
-                                   ((DialogOptionList *)self,(const char *)expanded,option_index,0);
+              option = (DialogOption *)((uptr)dialog_add_checkbox_option
+                                   ((DialogOptionList *)self,(const char *)expanded,option_index,0));
             }
             if (default_value == option_index) {
               self->selected_option = option;
@@ -10457,7 +10445,7 @@ dialog_load_text_section
     result = 0;
   }
   else if ((flags & 0x8000) == 0) {
-    dialog_init(self,init_arg1,init_arg2,init_arg3,flags);
+    dialog_init(self,init_arg1,init_arg2,(RECT *)init_arg3,flags);
   }
   return result;
 }
@@ -10548,7 +10536,7 @@ wnd_create_with_surface
           ,i32 width,i32 height,iptr palette,iptr parent)
 
 {
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   wnd_create_framed_child
             ((WndBase *)(self + 1),title,style,x,y,width,height,palette,
@@ -10585,8 +10573,8 @@ bool __thiscall surfwnd_resize_dib(DibSurface *self,iptr rect)
   
   result = surface_alloc_dib_by_bpp(self,rect);
   if (result == 1) {
-    height = rect_height(rect);
-    width = rect_width(rect);
+    height = rect_height((RECT *)rect);
+    width = rect_width((RECT *)rect);
     wnd_set_client_size((WndClientSizeView *)(self + 1),width,height);
   }
   return result == 1;
@@ -10691,13 +10679,13 @@ void __thiscall wnd_call_paint_cb(SurfaceWindow *self)
 }
 
 /* 005bbc10 auto */
-i32 * __cdecl
+NativeWindow * __cdecl
 wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
-            iptr parent)
+            NativeWindow *parent)
 
 {
   i32 handle;
-  i32 *wnd;
+  NativeWindow *wnd;
   int metric;
   HWND new_hwnd;
   HDC hdc;
@@ -10715,8 +10703,8 @@ wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
   
   ex_style = 0;
   handle = mem_handle_alloc(0x4c);
-  wnd = (i32 *)mem_handle_lock(handle);
-  *wnd = handle;
+  wnd = (NativeWindow *)mem_handle_lock(handle);
+  wnd->mem_handle = handle;
   frame_width = 0;
   frame_height = 0;
   caption_height2 = GetSystemMetrics(4);
@@ -10792,22 +10780,22 @@ wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
     style2 = style2 & 0xbfffffff | 0x80000000;
   }
   if ((flags & 0x400) == 0) {
-    wnd[0xc] = 0;
+    wnd->flag_400 = 0;
   }
   else {
-    wnd[0xc] = 1;
+    wnd->flag_400 = 1;
   }
   if ((flags & 0x1000) == 0) {
-    wnd[0xd] = 0;
+    wnd->flag_1000 = 0;
   }
   else {
-    wnd[0xd] = 1;
+    wnd->flag_1000 = 1;
   }
   if (parent == 0) {
     parent_hwnd = (HWND)0x0;
   }
   else {
-    parent_hwnd = *(HWND *)(parent + 4);
+    parent_hwnd = parent->hwnd;
   }
   if (height == -1) {
     outer_height = -0x80000000;
@@ -10835,59 +10823,59 @@ wnd_obj_create(LPCSTR title,uint flags,int x,int y,int width,int height,
   }
   new_hwnd = CreateWindowExA(ex_style,str_mswindowclass_2,title,style2,pos_x2,pos_y2,
                            outer_width,outer_height,parent_hwnd,(HMENU)0x0,err_report_ctx_block.app_hinstance,(LPVOID)0x0);
-  wnd[1] = new_hwnd;
-  wnd_list_add_hwnd(wnd[1]);
-  hdc = GetDC((HWND)wnd[1]);
-  wnd[2] = hdc;
+  wnd->hwnd = new_hwnd;
+  wnd_list_add_hwnd(wnd->hwnd);
+  hdc = GetDC(wnd->hwnd);
+  wnd->hdc = hdc;
   cursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
-  wnd[7] = cursor;
-  wnd[6] = 0;
-  wnd[8] = 0;
-  wnd[0x11] = 0;
-  wnd[5] = 0;
-  wnd[3] = 0;
-  wnd[9] = 0;
-  wnd[10] = 0;
-  wnd[0xb] = 0;
-  wnd[0x12] = flags;
-  wnd[0xe] = 0;
-  wnd[0xf] = 0;
-  wnd[4] = 0;
-  wnd[0x10] = 8;
+  wnd->cursor = cursor;
+  wnd->palette = 0;
+  wnd->icon = 0;
+  wnd->destroyed = 0;
+  wnd->bg_brush = 0;
+  wnd->active_child = 0;
+  wnd->bg_tile = 0;
+  wnd->field_28 = 0;
+  wnd->bg_surface = 0;
+  wnd->flags = flags;
+  wnd->caption_height = 0;
+  wnd->resize_border = 0;
+  wnd->topmost_child = 0;
+  wnd->field_40 = 8;
   return wnd;
 }
 
 /* 005bbfee auto */
-void __cdecl wnd_obj_enable(iptr wnd,BOOL enable)
+void __cdecl wnd_obj_enable(NativeWindow *wnd,BOOL enable)
 
 {
   if (wnd != 0) {
-    EnableWindow(*(HWND *)(wnd + 4),enable);
+    EnableWindow(wnd->hwnd,enable);
   }
   return;
 }
 
 /* 005bc0ab auto */
-i32 __cdecl wnd_obj_destroy(i32 *wnd)
+i32 __cdecl wnd_obj_destroy(NativeWindow *wnd)
 
 {
   i32 handle;
   
-  if (wnd != (i32 *)0x0) {
-    wnd_stack_remove(wnd[1]);
-    if (wnd[0x11] == 0) {
-      if (wnd[1] != 0) {
-        SetWindowLongA((HWND)wnd[1],4,0);
-        ShowWindow((HWND)wnd[1],0);
-        SetMenu((HWND)wnd[1],(HMENU)0x0);
-        DestroyWindow((HWND)wnd[1]);
+  if (wnd != (NativeWindow *)0x0) {
+    wnd_stack_remove(wnd->hwnd);
+    if (wnd->destroyed == 0) {
+      if (wnd->hwnd != 0) {
+        SetWindowLongA(wnd->hwnd,4,0);
+        ShowWindow(wnd->hwnd,0);
+        SetMenu(wnd->hwnd,(HMENU)0x0);
+        DestroyWindow(wnd->hwnd);
       }
-      wnd[1] = 0;
+      wnd->hwnd = 0;
     }
-    if (wnd[5] != 0) {
-      DeleteObject((HGDIOBJ)wnd[5]);
+    if (wnd->bg_brush != 0) {
+      DeleteObject(wnd->bg_brush);
     }
-    handle = *wnd;
+    handle = wnd->mem_handle;
     mem_handle_unlock(handle);
     mem_handle_free(handle);
   }
@@ -10938,7 +10926,7 @@ void __cdecl wnd_stack_remove(int hwnd)
 }
 
 /* 005bc280 auto */
-void __cdecl wnd_obj_set_bg_color(iptr wnd,uint color_index)
+void __cdecl wnd_obj_set_bg_color(NativeWindow *wnd,uint color_index)
 
 {
   HBRUSH brush;
@@ -10948,69 +10936,69 @@ void __cdecl wnd_obj_set_bg_color(iptr wnd,uint color_index)
   i8 red[4];
   i8 blue[4];
   
-  if (*(int *)(wnd + 0x14) != 0) {
-    DeleteObject(*(HGDIOBJ *)(wnd + 0x14));
+  if (wnd->bg_brush != 0) {
+    DeleteObject(wnd->bg_brush);
   }
   if (gfx_palettized_display == 0) {
-    wnd_view = (WndPaletteView *)GetWindowLongA(*(HWND *)(wnd + 4),0);
+    wnd_view = (WndPaletteView *)GetWindowLongA(wnd->hwnd,0);
     self = (GamePalette *)wnd_get_palette(wnd_view);
     palette_get_entry
               (self,color_index & 0xff,(iptr)red,(iptr)green,(iptr)blue);
     brush = CreateSolidBrush(CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-    *(HBRUSH *)(wnd + 0x14) = brush;
+    wnd->bg_brush = brush;
   }
   else {
-    if (*(int *)(wnd + 0x18) != 0) {
-      RealizePalette(*(HDC *)(wnd + 8));
+    if (wnd->palette != 0) {
+      RealizePalette(wnd->hdc);
     }
     brush = CreateSolidBrush(color_index & 0xff | 0x1000000);
-    *(HBRUSH *)(wnd + 0x14) = brush;
+    wnd->bg_brush = brush;
   }
-  InvalidateRect(*(HWND *)(wnd + 4),(RECT *)0x0,0);
+  InvalidateRect(wnd->hwnd,(RECT *)0x0,0);
   return;
 }
 
 /* 005bc3bf auto */
-void __cdecl wnd_obj_set_bg_tile(iptr wnd,i32 tile)
+void __cdecl wnd_obj_set_bg_tile(NativeWindow *wnd,DibSurface *tile)
 
 {
-  *(i32 *)(wnd + 0x24) = tile;
+  wnd->bg_tile = tile;
   return;
 }
 
 /* 005bc3f1 auto */
-void __cdecl wnd_obj_set_bg_surface(iptr wnd,i32 surface)
+void __cdecl wnd_obj_set_bg_surface(NativeWindow *wnd,DibSurface *surface)
 
 {
-  *(i32 *)(wnd + 0x2c) = surface;
+  wnd->bg_surface = surface;
   return;
 }
 
 /* 005bc40a auto */
-void __cdecl wnd_obj_show_raise(iptr wnd)
+void __cdecl wnd_obj_show_raise(NativeWindow *wnd)
 
 {
   if (wnd != 0) {
-    ShowWindow(*(HWND *)(wnd + 4),5);
-    if ((*(byte *)(wnd + 0x49) & 2) != 0) {
-      BringWindowToTop(*(HWND *)(wnd + 4));
+    ShowWindow(wnd->hwnd,5);
+    if ((wnd->flags_bytes[1] & 2) != 0) {
+      BringWindowToTop(wnd->hwnd);
     }
   }
   return;
 }
 
 /* 005bc44d auto */
-void __cdecl wnd_obj_hide(iptr wnd)
+void __cdecl wnd_obj_hide(NativeWindow *wnd)
 
 {
   if (wnd != 0) {
-    ShowWindow(*(HWND *)(wnd + 4),0);
+    ShowWindow(wnd->hwnd,0);
   }
   return;
 }
 
 /* 005bc4a1 auto */
-void __cdecl wnd_obj_move_xy(iptr wnd,int x,int y)
+void __cdecl wnd_obj_move_xy(NativeWindow *wnd,int x,int y)
 
 {
   int nHeight;
@@ -11019,17 +11007,17 @@ void __cdecl wnd_obj_move_xy(iptr wnd,int x,int y)
   tagRECT rect;
   
   if (wnd != 0) {
-    GetWindowRect(*(HWND *)(wnd + 4),&rect);
+    GetWindowRect(wnd->hwnd,&rect);
     bRepaint = 1;
-    nHeight = rect_height((iptr)&rect);
-    nWidth = rect_width((iptr)&rect);
-    MoveWindow(*(HWND *)(wnd + 4),x,y,nWidth,nHeight,bRepaint);
+    nHeight = rect_height(&rect);
+    nWidth = rect_width(&rect);
+    MoveWindow(wnd->hwnd,x,y,nWidth,nHeight,bRepaint);
   }
   return;
 }
 
 /* 005bc505 auto */
-void __cdecl wnd_obj_set_client_size(iptr wnd,int width,int height)
+void __cdecl wnd_obj_set_client_size(NativeWindow *wnd,int width,int height)
 
 {
   int frame_w;
@@ -11039,64 +11027,64 @@ void __cdecl wnd_obj_set_client_size(iptr wnd,int width,int height)
   tagRECT rect;
   
   if (wnd != 0) {
-    GetWindowRect(*(HWND *)(wnd + 4),&rect);
+    GetWindowRect(wnd->hwnd,&rect);
     frame_w = wnd_obj_frame_width(wnd);
     frame_h = wnd_obj_frame_height(wnd);
-    parent_hwnd = GetParent(*(HWND *)(wnd + 4));
-    if ((parent_hwnd != (HWND)0x0) && ((*(byte *)(wnd + 0x49) & 2) != 0)) {
+    parent_hwnd = GetParent(wnd->hwnd);
+    if ((parent_hwnd != (HWND)0x0) && ((wnd->flags_bytes[1] & 2) != 0)) {
       origin.x = 0;
       origin.y = 0;
       MapWindowPoints(parent_hwnd,(HWND)0x0,&origin,1);
       rect.left -= origin.x;
       rect.top -= origin.y;
     }
-    MoveWindow(*(HWND *)(wnd + 4),rect.left,rect.top,width + frame_w,height + frame_h,1);
+    MoveWindow(wnd->hwnd,rect.left,rect.top,width + frame_w,height + frame_h,1);
   }
   return;
 }
 
 /* 005bc5da auto */
-void __cdecl wnd_obj_maximize(iptr wnd)
+void __cdecl wnd_obj_maximize(NativeWindow *wnd)
 
 {
   if (wnd != 0) {
-    ShowWindow(*(HWND *)(wnd + 4),3);
+    ShowWindow(wnd->hwnd,3);
   }
   return;
 }
 
 /* 005bc636 auto */
-void __cdecl wnd_obj_minimize(iptr wnd)
+void __cdecl wnd_obj_minimize(NativeWindow *wnd)
 
 {
   if (wnd != 0) {
-    ShowWindow(*(HWND *)(wnd + 4),6);
+    ShowWindow(wnd->hwnd,6);
   }
   return;
 }
 
 /* 005bc692 auto */
-void __cdecl wnd_obj_show_restored(iptr wnd)
+void __cdecl wnd_obj_show_restored(NativeWindow *wnd)
 
 {
   if (wnd != 0) {
-    ShowWindow(*(HWND *)(wnd + 4),9);
+    ShowWindow(wnd->hwnd,9);
   }
   return;
 }
 
 /* 005bc6bb auto */
-void __cdecl wnd_obj_validate_rect(iptr wnd,RECT *rect)
+void __cdecl wnd_obj_validate_rect(NativeWindow *wnd,RECT *rect)
 
 {
   if (wnd != 0) {
-    ValidateRect(*(HWND *)(wnd + 4),rect);
+    ValidateRect(wnd->hwnd,rect);
   }
   return;
 }
 
 /* 005bc713 auto */
-void __cdecl wnd_obj_move_to_rect(iptr wnd,int *rect)
+void __cdecl wnd_obj_move_to_rect(NativeWindow *wnd,int *rect)
 
 {
   int nHeight;
@@ -11105,15 +11093,15 @@ void __cdecl wnd_obj_move_to_rect(iptr wnd,int *rect)
   
   if (wnd != 0) {
     bRepaint = 1;
-    nHeight = rect_height((iptr)rect);
-    nWidth = rect_width((iptr)rect);
-    MoveWindow(*(HWND *)(wnd + 4),*rect,rect[1],nWidth,nHeight,bRepaint);
+    nHeight = rect_height((RECT *)rect);
+    nWidth = rect_width((RECT *)rect);
+    MoveWindow(wnd->hwnd,*rect,rect[1],nWidth,nHeight,bRepaint);
   }
   return;
 }
 
 /* 005bc763 auto */
-void __cdecl wnd_obj_center(iptr wnd,int offset_x,int offset_y)
+void __cdecl wnd_obj_center(NativeWindow *wnd,int offset_x,int offset_y)
 
 {
   HWND hWnd;
@@ -11128,23 +11116,23 @@ void __cdecl wnd_obj_center(iptr wnd,int offset_x,int offset_y)
   tagRECT parent_rect;
   
   if (wnd != 0) {
-    GetWindowRect(*(HWND *)(wnd + 4),&wnd_rect);
-    hWnd = GetParent(*(HWND *)(wnd + 4));
+    GetWindowRect(wnd->hwnd,&wnd_rect);
+    hWnd = GetParent(wnd->hwnd);
     if (hWnd == (HWND)0x0) {
       outer_w = GetSystemMetrics(0);
       outer_h = GetSystemMetrics(1);
-      wnd_w = rect_width((iptr)&wnd_rect);
+      wnd_w = rect_width(&wnd_rect);
       pos_x2 = outer_w - wnd_w >> 1;
-      outer_w = rect_height((iptr)&wnd_rect);
+      outer_w = rect_height(&wnd_rect);
       pos_y2 = outer_h - outer_w >> 1;
     }
-    else if ((*(byte *)(wnd + 0x49) & 2) == 0) {
+    else if ((wnd->flags_bytes[1] & 2) == 0) {
       GetWindowRect(hWnd,&parent_rect);
-      outer_w = rect_width((iptr)&parent_rect);
-      outer_h = rect_height((iptr)&parent_rect);
-      wnd_w = rect_width((iptr)&wnd_rect);
+      outer_w = rect_width(&parent_rect);
+      outer_h = rect_height(&parent_rect);
+      wnd_w = rect_width(&wnd_rect);
       pos_x2 = outer_w - wnd_w >> 1;
-      outer_w = rect_height((iptr)&wnd_rect);
+      outer_w = rect_height(&wnd_rect);
       pos_y2 = outer_h - outer_w >> 1;
       origin.x = 0;
       origin.y = 0;
@@ -11154,26 +11142,26 @@ void __cdecl wnd_obj_center(iptr wnd,int offset_x,int offset_y)
     }
     else {
       GetClientRect(hWnd,&parent_rect);
-      outer_w = rect_width((iptr)&parent_rect);
-      outer_h = rect_height((iptr)&parent_rect);
-      wnd_w = rect_width((iptr)&wnd_rect);
+      outer_w = rect_width(&parent_rect);
+      outer_h = rect_height(&parent_rect);
+      wnd_w = rect_width(&wnd_rect);
       pos_x2 = outer_w - wnd_w >> 1;
-      outer_w = rect_height((iptr)&wnd_rect);
+      outer_w = rect_height(&wnd_rect);
       pos_y2 = outer_h - outer_w >> 1;
       if (pos_y2 < 0) {
         pos_y2 = 0;
       }
     }
     bRepaint = 1;
-    outer_w = rect_height((iptr)&wnd_rect);
-    outer_h = rect_width((iptr)&wnd_rect);
-    MoveWindow(*(HWND *)(wnd + 4),pos_x2 + offset_x,pos_y2 + offset_y,outer_h,outer_w,bRepaint);
+    outer_w = rect_height(&wnd_rect);
+    outer_h = rect_width(&wnd_rect);
+    MoveWindow(wnd->hwnd,pos_x2 + offset_x,pos_y2 + offset_y,outer_h,outer_w,bRepaint);
   }
   return;
 }
 
 /* 005bc933 auto */
-LONG __cdecl wnd_obj_client_width(iptr wnd)
+LONG __cdecl wnd_obj_client_width(NativeWindow *wnd)
 
 {
   tagRECT rect;
@@ -11182,13 +11170,13 @@ LONG __cdecl wnd_obj_client_width(iptr wnd)
     rect.right = 0;
   }
   else {
-    GetClientRect(*(HWND *)(wnd + 4),&rect);
+    GetClientRect(wnd->hwnd,&rect);
   }
   return rect.right;
 }
 
 /* 005bc96b auto */
-LONG __cdecl wnd_obj_client_height(iptr wnd)
+LONG __cdecl wnd_obj_client_height(NativeWindow *wnd)
 
 {
   tagRECT rect;
@@ -11197,23 +11185,23 @@ LONG __cdecl wnd_obj_client_height(iptr wnd)
     rect.bottom = 0;
   }
   else {
-    GetClientRect(*(HWND *)(wnd + 4),&rect);
+    GetClientRect(wnd->hwnd,&rect);
   }
   return rect.bottom;
 }
 
 /* 005bc9a3 auto */
-void __cdecl wnd_obj_get_screen_rect(iptr wnd,LPRECT rect)
+void __cdecl wnd_obj_get_screen_rect(NativeWindow *wnd,LPRECT rect)
 
 {
   if (wnd != 0) {
-    GetWindowRect(*(HWND *)(wnd + 4),rect);
+    GetWindowRect(wnd->hwnd,rect);
   }
   return;
 }
 
 /* 005bc9d3 auto */
-int __cdecl wnd_obj_frame_width(iptr wnd)
+int __cdecl wnd_obj_frame_width(NativeWindow *wnd)
 
 {
   int result;
@@ -11224,17 +11212,17 @@ int __cdecl wnd_obj_frame_width(iptr wnd)
     result = 0;
   }
   else {
-    GetWindowRect(*(HWND *)(wnd + 4),&rect);
-    result = rect_width((iptr)&rect);
-    GetClientRect(*(HWND *)(wnd + 4),&rect);
-    client_w = rect_width((iptr)&rect);
+    GetWindowRect(wnd->hwnd,&rect);
+    result = rect_width(&rect);
+    GetClientRect(wnd->hwnd,&rect);
+    client_w = rect_width(&rect);
     result -= client_w;
   }
   return result;
 }
 
 /* 005bca3d auto */
-int __cdecl wnd_obj_frame_height(iptr wnd)
+int __cdecl wnd_obj_frame_height(NativeWindow *wnd)
 
 {
   int result;
@@ -11245,17 +11233,17 @@ int __cdecl wnd_obj_frame_height(iptr wnd)
     result = 0;
   }
   else {
-    GetWindowRect(*(HWND *)(wnd + 4),&rect);
-    result = rect_height((iptr)&rect);
-    GetClientRect(*(HWND *)(wnd + 4),&rect);
-    client_h = rect_height((iptr)&rect);
+    GetWindowRect(wnd->hwnd,&rect);
+    result = rect_height(&rect);
+    GetClientRect(wnd->hwnd,&rect);
+    client_h = rect_height(&rect);
     result -= client_h;
   }
   return result;
 }
 
 /* 005bcb85 auto */
-void __cdecl wnd_obj_get_rect_in_parent(iptr wnd,LPRECT rect)
+void __cdecl wnd_obj_get_rect_in_parent(NativeWindow *wnd,LPRECT rect)
 
 {
   HWND hWndTo;
@@ -11264,14 +11252,14 @@ void __cdecl wnd_obj_get_rect_in_parent(iptr wnd,LPRECT rect)
   tagPOINT corners[2];  /* top left, bottom right */
   
   if (wnd != 0) {
-    GetWindowRect(*(HWND *)(wnd + 4),rect);
+    GetWindowRect(wnd->hwnd,rect);
     corners[0].x = rect->left;
     corners[0].y = rect->top;
     corners[1].x = rect->right;
     corners[1].y = rect->bottom;
     cPoints = 2;
     lpPoints = corners;
-    hWndTo = GetParent(*(HWND *)(wnd + 4));
+    hWndTo = GetParent(wnd->hwnd);
     MapWindowPoints((HWND)0x0,hWndTo,lpPoints,cPoints);
     SetRect(rect,corners[0].x,corners[0].y,corners[1].x,corners[1].y);
   }
@@ -11279,18 +11267,18 @@ void __cdecl wnd_obj_get_rect_in_parent(iptr wnd,LPRECT rect)
 }
 
 /* 005bcdc3 auto */
-void __cdecl wnd_obj_select_palette(iptr wnd,HPALETTE palette)
+void __cdecl wnd_obj_select_palette(NativeWindow *wnd,HPALETTE palette)
 
 {
   if (gfx_palettized_display == 1) {
-    *(HPALETTE *)(wnd + 0x18) = palette;
-    SelectPalette(*(HDC *)(wnd + 8),palette,0);
+    wnd->palette = palette;
+    SelectPalette(wnd->hdc,palette,0);
   }
   return;
 }
 
 /* 005bcdfc auto */
-void __cdecl wnd_obj_attach_menu(iptr wnd,HMENU menu)
+void __cdecl wnd_obj_attach_menu(NativeWindow *wnd,HMENU menu)
 
 {
   int new_height;
@@ -11298,7 +11286,7 @@ void __cdecl wnd_obj_attach_menu(iptr wnd,HMENU menu)
   i32 width;
   
   if (wnd != 0) {
-    SetMenu(*(HWND *)(wnd + 4),menu);
+    SetMenu(wnd->hwnd,menu);
     new_height = wnd_obj_client_height(wnd);
     menu_height = GetSystemMetrics(0xf);
     new_height = new_height + menu_height + 1;
@@ -11309,38 +11297,38 @@ void __cdecl wnd_obj_attach_menu(iptr wnd,HMENU menu)
 }
 
 /* 005bce5f auto */
-void __cdecl wnd_obj_set_icon(iptr wnd,uint icon_id)
+void __cdecl wnd_obj_set_icon(NativeWindow *wnd,uint icon_id)
 
 {
   HICON icon;
   BOOL is_window;
   
   if (wnd != 0) {
-    if (*(int *)(wnd + 0x20) != 0) {
-      DestroyIcon(*(HICON *)(wnd + 0x20));
+    if (wnd->icon != 0) {
+      DestroyIcon(wnd->icon);
     }
     icon = LoadIconA(err_report_ctx_block.app_hinstance,(LPCSTR)(icon_id & 0xffff));
-    *(HICON *)(wnd + 0x20) = icon;
-    is_window = IsWindow(*(HWND *)(wnd + 4));
-    if ((is_window != 0) && (is_window = IsIconic(*(HWND *)(wnd + 4)), is_window != 0)) {
-      InvalidateRect(*(HWND *)(wnd + 4),(RECT *)0x0,0);
+    wnd->icon = icon;
+    is_window = IsWindow(wnd->hwnd);
+    if ((is_window != 0) && (is_window = IsIconic(wnd->hwnd), is_window != 0)) {
+      InvalidateRect(wnd->hwnd,(RECT *)0x0,0);
     }
   }
   return;
 }
 
 /* 005bcfdd auto */
-void __cdecl wnd_obj_set_cursor_now(iptr wnd,i32 cursor_id,int apply_now)
+void __cdecl wnd_obj_set_cursor_now(NativeWindow *wnd,i32 cursor_id,int apply_now)
 
 {
   if ((wnd != 0) && (wnd_obj_set_cursor(wnd,cursor_id), apply_now != 0)) {
-    SetCursor(*(HCURSOR *)(wnd + 0x1c));
+    SetCursor(wnd->cursor);
   }
   return;
 }
 
 /* 005bd05f auto */
-void __cdecl wnd_obj_set_cursor(iptr wnd,uint cursor_id)
+void __cdecl wnd_obj_set_cursor(NativeWindow *wnd,uint cursor_id)
 
 {
   HCURSOR cursor;
@@ -11349,129 +11337,129 @@ void __cdecl wnd_obj_set_cursor(iptr wnd,uint cursor_id)
     if ((int)cursor_id < 0) {
       if (cursor_id == 0xffffffff) {
         cursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
-        *(HCURSOR *)(wnd + 0x1c) = cursor;
+        wnd->cursor = cursor;
       }
       else if (cursor_id == 0xfffffffe) {
         cursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f02);
-        *(HCURSOR *)(wnd + 0x1c) = cursor;
+        wnd->cursor = cursor;
       }
     }
     else {
       cursor = LoadCursorA(err_report_ctx_block.app_hinstance,(LPCSTR)(cursor_id & 0xffff));
-      *(HCURSOR *)(wnd + 0x1c) = cursor;
+      wnd->cursor = cursor;
     }
   }
   return;
 }
 
 /* 005bd0e7 auto */
-void __cdecl wnd_obj_focus_and_raise(iptr wnd)
+void __cdecl wnd_obj_focus_and_raise(NativeWindow *wnd)
 
 {
   if (wnd != 0) {
-    SetFocus(*(HWND *)(wnd + 4));
-    BringWindowToTop(*(HWND *)(wnd + 4));
+    SetFocus(wnd->hwnd);
+    BringWindowToTop(wnd->hwnd);
   }
   return;
 }
 
 /* 005bd120 auto */
-void __cdecl wnd_obj_set_focus(iptr wnd)
+void __cdecl wnd_obj_set_focus(NativeWindow *wnd)
 
 {
   if (wnd != 0) {
-    SetFocus(*(HWND *)(wnd + 4));
+    SetFocus(wnd->hwnd);
   }
   return;
 }
 
 /* 005bd14c auto */
-void __cdecl wnd_obj_disable_owner(iptr wnd,iptr owner)
+void __cdecl wnd_obj_disable_owner(NativeWindow *wnd,NativeWindow *owner)
 
 {
   HWND parent_hwnd;
   BOOL is_window;
   
   if ((owner == 0) && (wnd != 0)) {
-    parent_hwnd = GetParent(*(HWND *)(wnd + 4));
+    parent_hwnd = GetParent(wnd->hwnd);
     is_window = IsWindow(parent_hwnd);
     if (is_window != 0) {
       is_window = 0;
-      parent_hwnd = GetParent(*(HWND *)(wnd + 4));
+      parent_hwnd = GetParent(wnd->hwnd);
       EnableWindow(parent_hwnd,is_window);
     }
   }
   else if (owner != 0) {
-    EnableWindow(*(HWND *)(owner + 4),0);
+    EnableWindow(owner->hwnd,0);
   }
   return;
 }
 
 /* 005bd1c5 auto */
-void __cdecl wnd_obj_enable_owner(iptr wnd,iptr owner)
+void __cdecl wnd_obj_enable_owner(NativeWindow *wnd,NativeWindow *owner)
 
 {
   HWND parent_hwnd;
   BOOL is_window;
   
   if ((owner == 0) && (wnd != 0)) {
-    parent_hwnd = GetParent(*(HWND *)(wnd + 4));
+    parent_hwnd = GetParent(wnd->hwnd);
     is_window = IsWindow(parent_hwnd);
     if (is_window != 0) {
       is_window = 1;
-      parent_hwnd = GetParent(*(HWND *)(wnd + 4));
+      parent_hwnd = GetParent(wnd->hwnd);
       EnableWindow(parent_hwnd,is_window);
     }
   }
   else if (owner != 0) {
-    EnableWindow(*(HWND *)(owner + 4),1);
+    EnableWindow(owner->hwnd,1);
   }
   return;
 }
 
 /* 005bd248 auto */
-void __cdecl wnd_obj_set_caption_height(iptr wnd,i32 height)
+void __cdecl wnd_obj_set_caption_height(NativeWindow *wnd,i32 height)
 
 {
   if (wnd != 0) {
-    *(i32 *)(wnd + 0x38) = height;
+    wnd->caption_height = height;
   }
   return;
 }
 
 /* 005bd270 auto */
-void __cdecl wnd_obj_set_resize_border(iptr wnd,i32 border)
+void __cdecl wnd_obj_set_resize_border(NativeWindow *wnd,i32 border)
 
 {
   if (wnd != 0) {
-    *(i32 *)(wnd + 0x3c) = border;
+    wnd->resize_border = border;
   }
   return;
 }
 
 /* 005bd48f auto */
-void __cdecl wnd_obj_get_cursor_pos(iptr wnd,LONG *out_x,LONG *out_y)
+void __cdecl wnd_obj_get_cursor_pos(NativeWindow *wnd,LONG *out_x,LONG *out_y)
 
 {
   tagPOINT pt;
   
   GetCursorPos(&pt);
-  ScreenToClient(*(HWND *)(wnd + 4),&pt);
+  ScreenToClient(wnd->hwnd,&pt);
   *out_x = pt.x;
   *out_y = pt.y;
   return;
 }
 
 /* 005bd533 auto */
-void __cdecl wnd_obj_set_capture(iptr wnd)
+void __cdecl wnd_obj_set_capture(NativeWindow *wnd)
 
 {
-  SetCapture(*(HWND *)(wnd + 4));
+  SetCapture(wnd->hwnd);
   return;
 }
 
 /* 005bd550 auto */
-void __cdecl wnd_obj_release_capture(i32 wnd)
+void __cdecl wnd_obj_release_capture(NativeWindow *wnd)
 
 {
   ReleaseCapture();
@@ -11494,7 +11482,7 @@ wnd_create_framed
           ,i32 width,i32 height,iptr palette)
 
 {
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   wnd_create_with_cmd_proc(self,title,style,x,y,width,height,palette);
   hwnd = wnd_get_window(self);
@@ -11509,7 +11497,7 @@ wnd_create_framed_child
           ,i32 width,i32 height,iptr palette,iptr parent)
 
 {
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   wnd_create_with_handlers(self,title,style,x,y,width,height,palette,parent);
   hwnd = wnd_get_window(self);
@@ -11686,7 +11674,7 @@ wnd_create_with_cmd_proc
           ,i32 width,i32 height,iptr palette)
 
 {
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   wnd_record_create(self,(i32)title,style,x,y,width,height,palette);
   hwnd = wnd_get_window(self);
@@ -11702,7 +11690,7 @@ wnd_create_with_handlers
           ,i32 width,i32 height,iptr palette,iptr parent)
 
 {
-  iptr hwnd;
+  NativeWindow *hwnd;
   
   wnd_record_create_child(self,(i32)title,style,x,y,width,height,palette,(WndBase *)parent);
   hwnd = wnd_get_window(self);
@@ -11715,9 +11703,9 @@ wnd_create_with_handlers
 void __thiscall wnd_run_modal_loop(ModalMenuWindow *self)
 
 {
-  iptr wnd;
-  iptr owner_after;
-  iptr owner2;
+  NativeWindow *wnd;
+  NativeWindow *owner_after;
+  NativeWindow *owner2;
   
   if (wnd_modal_depth != 0xf) {
     self->modal_running = 1;
@@ -11832,7 +11820,7 @@ HWND __cdecl hotspot_create_hwnd(int *rect,iptr ctrl)
 
 {
   WndBase *self;
-  iptr parent_wnd;
+  NativeWindow *parent_wnd;
   iptr height;
   int width;
   HWND hotspot_hwnd;
@@ -11845,9 +11833,9 @@ HWND __cdecl hotspot_create_hwnd(int *rect,iptr ctrl)
   hInstance = err_report_ctx_block.app_hinstance;
   self = (WndBase *)ctrl_get_parent((Control *)ctrl);
   parent_wnd = wnd_get_window(self);
-  hotspot_hwnd = *(HWND *)(parent_wnd + 4);
-  height = rect_height((iptr)rect);
-  width = rect_width((iptr)rect);
+  hotspot_hwnd = parent_wnd->hwnd;
+  height = rect_height((RECT *)rect);
+  width = rect_width((RECT *)rect);
   hotspot_hwnd = CreateWindowExA(4,str_mscontrolclass,((i8 *)&hotspot_wnd_title),0x50000000,*rect,rect[1],
                            width,height,hotspot_hwnd,hMenu,hInstance,lpParam);
   width = (int)ctrl_init_block(hotspot_hwnd,ctrl);
@@ -11907,16 +11895,16 @@ void __thiscall hotspot_fire_dblclick(HotspotDblClickView *self,i32 event_arg)
 }
 
 /* 005c9563 auto */
-LONG __cdecl wnd_from_hwnd(HWND hwnd)
+ControlBlock * __cdecl wnd_from_hwnd(HWND hwnd)
 
 {
-  LONG wnd_data;
+  ControlBlock *wnd_data;
   
   if (hwnd == (HWND)0x0) {
     wnd_data = 0;
   }
   else {
-    wnd_data = GetWindowLongA(hwnd,0);
+    wnd_data = (ControlBlock *)GetWindowLongA(hwnd,0);
   }
   return wnd_data;
 }
@@ -12099,9 +12087,9 @@ WndBase * __thiscall wnd_record_init(WndBase *self)
 void __thiscall wnd_record_destroy(WndDestroyView *self)
 
 {
-  u32 destroyed_obj;
+  NativeWindow *destroyed_obj;
   
-  destroyed_obj = (u32)wnd_obj_destroy((i32 *)self->wnd_obj);
+  destroyed_obj = (NativeWindow *)wnd_obj_destroy(self->wnd_obj);
   self->wnd_obj = destroyed_obj;
   return;
 }
@@ -12113,14 +12101,14 @@ wnd_record_create
           i32 width,i32 height,iptr palette)
 
 {
-  u32 native;
+  NativeWindow *native;
   
   self->style = style;
   if (self->native_wnd != 0) {
-    native = (u32)wnd_obj_destroy((i32 *)self->native_wnd);
+    native = (NativeWindow *)wnd_obj_destroy(self->native_wnd);
     self->native_wnd = native;
   }
-  native = (u32)wnd_obj_create((LPCSTR)wnd_kind,style,x,y,width,height,0);
+  native = wnd_obj_create((LPCSTR)wnd_kind,style,x,y,width,height,0);
   self->native_wnd = native;
   wnd_set_owner_ptr((iptr)self,self->native_wnd);
   wnd_set_palette(self,palette);
@@ -12134,16 +12122,16 @@ wnd_record_create_child
           i32 width,i32 height,iptr palette,WndBase *parent)
 
 {
-  u32 native;
-  iptr parent_wnd;
+  NativeWindow *native;
+  NativeWindow *parent_wnd;
   
   self->style = style;
   if (self->native_wnd != 0) {
-    native = (u32)wnd_obj_destroy((i32 *)self->native_wnd);
+    native = (NativeWindow *)wnd_obj_destroy(self->native_wnd);
     self->native_wnd = native;
   }
   parent_wnd = wnd_get_window(parent);
-  native = (u32)wnd_obj_create((LPCSTR)wnd_kind,style,x,y,width,height,parent_wnd);
+  native = wnd_obj_create((LPCSTR)wnd_kind,style,x,y,width,height,parent_wnd);
   self->native_wnd = native;
   wnd_set_owner_ptr((iptr)self,self->native_wnd);
   wnd_set_palette(self,palette);
@@ -12354,10 +12342,10 @@ void __cdecl menu_hmenu_destroy(HMENU hmenu)
 }
 
 /* 005e10fb auto */
-void __cdecl menu_redraw_bar(iptr wnd)
+void __cdecl menu_redraw_bar(NativeWindow *wnd)
 
 {
-  DrawMenuBar(*(HWND *)(wnd + 4));
+  DrawMenuBar(wnd->hwnd);
   return;
 }
 
@@ -12484,11 +12472,11 @@ void __cdecl menu_hmenu_set_item_text(HMENU hmenu,int menu_pos,int item_pos,LPCS
 }
 
 /* 005e1880 auto */
-void __cdecl wnd_install_paint_proc(iptr surface,iptr wnd)
+void __cdecl wnd_install_paint_proc(iptr surface,NativeWindow *wnd)
 
 {
-  SetWindowLongA(*(HWND *)(wnd + 4),0xc,surface);
-  SetWindowLongA(*(HWND *)(wnd + 4),-4,(iptr)surfwnd_subclass_wndproc);
+  SetWindowLongA(wnd->hwnd,0xc,surface);
+  SetWindowLongA(wnd->hwnd,-4,(iptr)surfwnd_subclass_wndproc);
   return;
 }
 
@@ -12499,7 +12487,7 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
   SurfaceWindow *self;
   i32 result;
   BOOL is_iconic;
-  iptr owner_wnd;
+  NativeWindow *owner_wnd;
   iptr surf_width;
   int src_dim;
   int dim_b;
@@ -12557,13 +12545,13 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
           owner_ptr = self->window_2;
         }
         surface_blit_to_wnd
-                  ((DibSurface *)self,(iptr)owner_ptr,(iptr)&paint_rect,(iptr)&paint_rect);
+                  ((DibSurface *)self,(iptr)owner_ptr,&paint_rect,(iptr)&paint_rect);
         EndPaint(hwnd,&ps);
       }
     }
     else {
       owner_wnd = wnd_get_window((WndBase *)self->window_2);
-      if (*(int *)(owner_wnd + 0x20) != 0) {
+      if (owner_wnd->icon != 0) {
         result = wnd_base_wndproc(hwnd,0xf,wparam,lparam);
         return result;
       }
@@ -12577,19 +12565,19 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
       src_dim = surface_get_height((DibSurface *)self);
       if (surf_width < src_dim) {
         src_dim = surface_get_width((DibSurface *)self);
-        dim_b = rect_width((iptr)&paint_rect);
+        dim_b = rect_width(&paint_rect);
         dest_rect.right = surface_get_height((DibSurface *)self);
         dest_rect.right = (src_dim * dim_b) / dest_rect.right;
-        dest_rect.bottom = rect_height((iptr)&paint_rect);
+        dest_rect.bottom = rect_height(&paint_rect);
       }
       else {
-        dest_rect.right = rect_width((iptr)&paint_rect);
+        dest_rect.right = rect_width(&paint_rect);
         src_dim = surface_get_height((DibSurface *)self);
-        dim_b = rect_height((iptr)&paint_rect);
+        dim_b = rect_height(&paint_rect);
         dest_rect.bottom = surface_get_width((DibSurface *)self);
         dest_rect.bottom = (src_dim * dim_b) / dest_rect.bottom;
       }
-      src_dim = surface_get_dib((DibSurface *)self);
+      src_dim = (int)surface_get_dib((DibSurface *)self);
       hdcSrc = *(HDC *)(src_dim + 4);
       rop = 0xcc0020;
       src_dim = surface_get_height((DibSurface *)self);
@@ -12598,11 +12586,11 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
       xSrc = 0;
       wDest = dest_rect.right;
       hDest = dest_rect.bottom;
-      paint_extent = rect_height((iptr)&paint_rect);
-      dest_extent = rect_height((iptr)&dest_rect);
+      paint_extent = rect_height(&paint_rect);
+      dest_extent = rect_height(&dest_rect);
       yDest = paint_extent - dest_extent >> 1;
-      paint_extent = rect_width((iptr)&paint_rect);
-      dest_extent = rect_width((iptr)&dest_rect);
+      paint_extent = rect_width(&paint_rect);
+      dest_extent = rect_width(&dest_rect);
       StretchBlt(hdc,paint_extent - dest_extent >> 1,yDest,wDest,hDest,hdcSrc,xSrc,ySrc,dim_b,src_dim,rop);
       EndPaint(hwnd,&ps);
     }
@@ -12615,11 +12603,11 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
 }
 
 /* 005ea7a0 auto */
-void __cdecl wnd_install_frame_proc(iptr owner,iptr wnd)
+void __cdecl wnd_install_frame_proc(iptr owner,NativeWindow *wnd)
 
 {
-  SetWindowLongA(*(HWND *)(wnd + 4),8,owner);
-  SetWindowLongA(*(HWND *)(wnd + 4),-4,(iptr)wnd_frame_wndproc);
+  SetWindowLongA(wnd->hwnd,8,owner);
+  SetWindowLongA(wnd->hwnd,-4,(iptr)wnd_frame_wndproc);
   return;
 }
 
@@ -12667,9 +12655,9 @@ HWND __cdecl hwnd_prev_sibling_wrap(HWND hwnd)
 void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
 
 {
-  iptr frame_win;
+  NativeWindow *frame_win;
   BOOL is_child;
-  iptr frame_win2;
+  NativeWindow *frame_win2;
   HWND start_hwnd;
   int result;
   CheckboxEnabledView *self;
@@ -12681,7 +12669,7 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
     hwnd = GetFocus();
     start_hwnd = hwnd;
     frame_win = wnd_get_window((WndBase *)wnd);
-    is_child = IsChild(*(HWND *)(frame_win + 4),start_hwnd);
+    is_child = IsChild(frame_win->hwnd,start_hwnd);
     if (is_child == 0) {
       hwnd = (HWND)0x0;
     }
@@ -12693,14 +12681,14 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
     if (direction == 2) {
       first_cmd = 5;
       frame_win2 = wnd_get_window((WndBase *)wnd);
-      hwnd = GetWindow(*(HWND *)(frame_win2 + 4),first_cmd);
+      hwnd = GetWindow(frame_win2->hwnd,first_cmd);
       start_hwnd = hwnd;
     }
     else {
       uCmd = 1;
       first_cmd = 5;
-      result = wnd_get_window((WndBase *)wnd);
-      start_hwnd = GetWindow(*(HWND *)(result + 4),first_cmd);
+      result = (int)wnd_get_window((WndBase *)wnd);
+      start_hwnd = GetWindow(((NativeWindow *)result)->hwnd,first_cmd);
       hwnd = GetWindow(start_hwnd,uCmd);
       start_hwnd = hwnd;
     }
@@ -12806,19 +12794,19 @@ void __cdecl wnd_focus_control(iptr wnd,iptr control)
 }
 
 /* 005eb370 auto */
-void __cdecl wnd_set_owner_ptr(iptr owner,iptr wnd)
+void __cdecl wnd_set_owner_ptr(iptr owner,NativeWindow *wnd)
 
 {
-  SetWindowLongA(*(HWND *)(wnd + 4),0,owner);
+  SetWindowLongA(wnd->hwnd,0,owner);
   return;
 }
 
 /* 005eb393 auto */
-void __cdecl wnd_install_command_proc(iptr owner,iptr wnd)
+void __cdecl wnd_install_command_proc(iptr owner,NativeWindow *wnd)
 
 {
-  SetWindowLongA(*(HWND *)(wnd + 4),4,owner);
-  SetWindowLongA(*(HWND *)(wnd + 4),-4,(iptr)wnd_child_wndproc);
+  SetWindowLongA(wnd->hwnd,4,owner);
+  SetWindowLongA(wnd->hwnd,-4,(iptr)wnd_child_wndproc);
   return;
 }
 
@@ -13442,29 +13430,29 @@ void __thiscall ddwin_call_activate_app(DDWindowActivateView *self,i32 active)
 /* 005efeb0: written by hand in src/game/unwind.cpp */
 
 /* 005f029e auto */
-void __thiscall ddwin_remove_all_controls(void *self)
+void __thiscall ddwin_remove_all_controls(DDWindow *self)
 
 {
   i32 ctrl;
   
-  ctrl = ptrlist_first((PtrList *)((int)self + 0xc0));
+  ctrl = ptrlist_first((PtrList *)self->child_controls);
   while (ctrl != 0) {
-    ptrlist_remove_current((PtrList *)((int)self + 0xc0));
-    ctrl = ptrlist_first((PtrList *)((int)self + 0xc0));
+    ptrlist_remove_current((PtrList *)self->child_controls);
+    ctrl = ptrlist_first((PtrList *)self->child_controls);
   }
   return;
 }
 
 /* 005f0342 auto */
-void __thiscall ddwin_deactivate_controls(void *self)
+void __thiscall ddwin_deactivate_controls(DDWindow *self)
 
 {
   i32 ctrl;
   
-  ctrl = ptrlist_first((PtrList *)((int)self + 0xc0));
+  ctrl = ptrlist_first((PtrList *)self->child_controls);
   while (ctrl != 0) {
-    ddctrl_deactivate((void *)ctrl);
-    ctrl = ptrlist_next((PtrList *)((int)self + 0xc0));
+    ddctrl_deactivate((DDControl *)ctrl);
+    ctrl = ptrlist_next((PtrList *)self->child_controls);
   }
   return;
 }
@@ -13478,7 +13466,7 @@ i8 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *self,int msg,int x,int y)
   DDControl *ctrl;
   
   if ((self->hover_control != 0) && (msg == 0x200)) {
-    rect = (int *)ddctrl_get_rect((void *)self->hover_control);
+    rect = (int *)ddctrl_get_rect((DDControl *)self->hover_control);
     if ((x < *rect) ||
        (((rect[2] < x || (y < rect[1])) || (rect[3] < y)))) {
       ddctrl_dispatch_msg((DDControl *)self->hover_control,0xfff0,x,y);
