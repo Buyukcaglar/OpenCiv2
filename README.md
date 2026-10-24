@@ -5,15 +5,6 @@ Goal: reconstruct the source of *Sid Meier's Civilization II: Multiplayer Gold E
 and prove it behaves exactly like the original binary: the same screens, pixel for pixel,
 and the same random numbers, call for call, on recorded games.
 
-<p>
-<img src="docs/screenshots/menu.png" width="49%"> <img src="docs/screenshots/city.png" width="49%">
-<img src="docs/screenshots/europe-1940.png" width="49%"> <img src="docs/screenshots/top5.png" width="49%">
-<img src="docs/screenshots/diplomacy.png" width="49%"> <img src="docs/screenshots/city-view.png" width="49%">
-</p>
-
-*The native build: the main menu, a city, the World War II scenario, the Top Five Cities, a foreign
-leader receiving an envoy (his video, from the CD) and London's city view with its wonders.*
-
 ## Layout
 
 | Path | What |
@@ -102,19 +93,6 @@ The Windows executable can also be cross-compiled on Linux: `tools/fetch-toolcha
 `build/civ2-port.exe`, `build/SDL2.dll`, `data/native`, `harness/CIV2.DAT` and
 `tools/run-civ2.bat` (keeping the directories) to the Windows machine.
 
-### Music and videos from the CD
-
-The game plays its music from the CD's audio tracks and its heralds and movies from the CD's
-video files. With a disc image (`.cue` and `.bin`, or a zip of them), copy them into the game
-directory once:
-
-```sh
-python3 tools/extract_disc.py DISC.zip ~/Civ2
-```
-
-This writes `KINGS/` (the diplomatic heralds), `Video/` (opening, wonders, High Council) and
-`Music/Track02.wav` … (the CD's audio tracks). Turn music on in Game → Game Options.
-
 ## Tooling
 
 Development runs in Docker on Linux; `tools/dk CMD` runs a command in the dev container with
@@ -137,10 +115,20 @@ make native-suite    # replay every scenario on a native build and compare (EXE=
 
 Playable. Every function of the game that can run has source; the only parts not reconstructed
 are the original's MSVC runtime (replaced by the platform's C library) and unreachable 16-bit
-leftovers. 25 of the 29 recorded scenarios match the original exactly; the other four differ in a
-few pixels of an editor dialog, a Civilopedia page and the power graph. The scenarios run about two thirds of the
-game's functions; multiplayer, the High Council and some editor dialogs are not covered yet.
+leftovers. 25 of the 29 recorded scenarios match the original exactly; the other four differ in
+a few pixels of an editor dialog, a Civilopedia page and the power graph. The scenarios run about
+two thirds of the game's functions; multiplayer, the High Council and some editor dialogs are not
+covered yet.
 
 The code is being modernized step by step, each step checked by the harness: it compiles as
 strict C++ and keeps the original's data layout; recovering the remaining types, classes,
 structured control flow and smaller functions is in progress. Details in `STATUS.md`.
+
+| | |
+| --- | --- |
+| ![Main menu](docs/screenshots/menu.png) | ![A city](docs/screenshots/city.png) |
+| ![The World War II scenario](docs/screenshots/europe-1940.png) | ![The Top Five Cities](docs/screenshots/top5.png) |
+| ![A foreign leader receiving an envoy](docs/screenshots/diplomacy.png) | ![London's city view](docs/screenshots/city-view.png) |
+
+*The native build: the main menu, a city, the World War II scenario, the Top Five Cities, a foreign
+leader receiving an envoy and London's city view with its wonders.*
