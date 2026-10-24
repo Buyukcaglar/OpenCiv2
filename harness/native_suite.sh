@@ -18,7 +18,10 @@ from PIL import Image
 for f in glob.glob('/work/run/native-$n/*.bmp'):
     Image.open(f).save(f[:-4] + '.png')
 "
-    if python3 harness/compare.py run/ref-$n run/native-$n --report run/report-native-$n > run/compare-native-$n.txt; then
+    if grep -q "not laid out as in the original" run/native-$n.log; then
+        echo "FAIL $n"; grep "not laid out" run/native-$n.log | sed 's/^/    /'
+        fail=1
+    elif python3 harness/compare.py run/ref-$n run/native-$n --report run/report-native-$n > run/compare-native-$n.txt; then
         echo "PASS $n ($(tail -1 run/compare-native-$n.txt))"
     else
         echo "FAIL $n"; grep -v ": identical" run/compare-native-$n.txt | sed 's/^/    /'

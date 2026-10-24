@@ -12,6 +12,7 @@
 #include <unistd.h>
 
 void gamedata_init(void);
+int gamedata_check_layout(void);
 extern void (*const civ2_c_inits[])(void);
 extern void (*const civ2_cpp_inits[])(void);
 int __stdcall win_main(int inst, int prev, int cmdline, int show);   /* WinMain */
@@ -164,6 +165,7 @@ int main(int argc, char **argv)
     /* The game's static data, then the C and C++ initializers the MSVC
      * runtime ran before WinMain. */
     gamedata_init();
+    gamedata_check_layout();
     for (i = 0; civ2_c_inits[i]; i++)
         civ2_c_inits[i]();
     for (i = 0; civ2_cpp_inits[i]; i++)

@@ -22,7 +22,11 @@ moved between the two freely.
 * **Globals** are ordinary variables (`src/data/gamedata.h`).  Data the code
   reaches as one piece -- an object and the fields the code also names as
   globals, a table split into columns -- is a packed struct
-  (`pedia_window_block.pedia_wonder_entry_count`).
+  (`pedia_window_block.pedia_wonder_entry_count`).  The data lies exactly
+  as in the original (each definition is `GAMEDATA(alignment)`, in address
+  order, with its original address in a comment); the game checks that at
+  startup.  A static initializer must not point to a variable defined
+  further on (clang would emit that one early): set it in gamedata_init().
 * **Locals** are ordinary locals.  Where the original relies on two of them
   being next to each other (a struct built field by field, a buffer written
   past its first element), declare them as one struct or array.  The
