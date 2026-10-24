@@ -229,7 +229,7 @@ i32 __cdecl text_set_string_arg_b(int index,const char *text)
 i32 __cdecl text_set_number_arg(int index,i32 value)
 
 {
-  *(i32 *)(((i8 *)&minimap_window_block.text_number_args) + index * 4) = value;
+  minimap_window_block.text_number_args[index] = value;
   return value;
 }
 
@@ -277,7 +277,7 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
         arg_index = _strncmp(tag,str_number,6);
         if (arg_index == 0) {
           arg_index = _atoi(percent_pos + 7);
-          __ltoa(*(long *)(((i8 *)&minimap_window_block.text_number_args) + arg_index * 4),num_buf,10);
+          __ltoa(minimap_window_block.text_number_args[arg_index],num_buf,10);
           crt_strcat((char *)((void *)dest),(const char *)((void *)num_buf));
           src = (iptr)(percent_pos + 8);
         }
@@ -285,7 +285,7 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
           arg_index = _strncmp(tag,((i8 *)&text_var_hex_tag_str),3);
           if (arg_index == 0) {
             arg_index = _atoi(percent_pos + 4);
-            __ltoa(*(long *)(((i8 *)&minimap_window_block.text_number_args) + arg_index * 4),num_buf,0x10);
+            __ltoa(minimap_window_block.text_number_args[arg_index],num_buf,0x10);
             for (pad_i = 0; len = _strlen(num_buf), pad_i < 4 - len;
                 pad_i = pad_i + 1) {
               crt_strcat((char *)((void *)dest),((i8 *)&text_var_hex_pad_str));
@@ -580,7 +580,7 @@ void __thiscall dll_handle_free(DllHandle *self)
 void __cdecl text_set_number_arg_v(int index,i32 value)
 
 {
-  *(i32 *)(((i8 *)&minimap_window_block.text_number_args) + index * 4) = value;
+  minimap_window_block.text_number_args[index] = value;
   return;
 }
 
@@ -1225,7 +1225,7 @@ void __cdecl text_list_append_wrapped(iptr dialog,i32 string_id,iptr item_count,
 void __cdecl text_set_number_arg_u8(int index,uint value)
 
 {
-  *(uint *)(((i8 *)&minimap_window_block.text_number_args) + index * 4) = value & 0xff;
+  minimap_window_block.text_number_args[index] = value & 0xff;
   return;
 }
 

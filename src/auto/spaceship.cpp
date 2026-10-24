@@ -25,7 +25,7 @@ void __cdecl spaceship_wnd_load_parts(iptr civ)
   int i;
   
   for (i = 0; i < 6; i++) {
-    *(int *)(((i8 *)&editor_text_edit_block.spaceship_wnd_part_counts) + i * 4) =
+    editor_text_edit_block.spaceship_wnd_part_count_list[i] =
          (int)civs[civ].spaceship_parts[i];
   }
   return;
@@ -613,7 +613,7 @@ void __thiscall spaceship_wnd_build_stats_text(PictureFrameWindow *self)
   }
   for (part_index = 0; part_index < 6; part_index++) {
     str_append_string_id((iptr)self->stats_text,
-                       label_string_ids[*(int *)(((i8 *)&spaceship_part_table_block.spaceship_part_table) + part_index * 0xc)])
+                       label_string_ids[spaceship_part_table_block.spaceship_parts[part_index].label_id])
     ;
     str_append_colon((char *)self->stats_text);
     str_append_int((iptr)self->stats_text,
@@ -1561,12 +1561,12 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
   for (part = 0; part < 6; part++) {
     unit_sound_editor_window_block.spaceship_mass = unit_sound_editor_window_block.spaceship_mass +
                    (int)civs[civ].spaceship_parts[part] *
-                   *(int *)(((i8 *)&spaceship_part_table_block.spaceship_part_masses) + part * 0xc);
+                   spaceship_part_table_block.spaceship_parts[part].mass;
   }
   full_mass = unit_sound_editor_window_block.spaceship_mass;
   for (part = 0; part < 6; part++) {
     if (civs[civ].spaceship_parts[part] == 0) {
-      full_mass += *(int *)(((i8 *)&spaceship_part_table_block.spaceship_part_masses) + part * 0xc);
+      full_mass += spaceship_part_table_block.spaceship_parts[part].mass;
     }
   }
   unit_sound_editor_window_block.spaceship_success_pct = 100;
@@ -1750,7 +1750,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   }
   for (part = 0; part < 6; part++) {
     text_clear();
-    text_append_string_id(label_string_ids[*(int *)(((i8 *)&spaceship_part_table_block.spaceship_part_table) + part * 0xc)]
+    text_append_string_id(label_string_ids[spaceship_part_table_block.spaceship_parts[part].label_id]
                       );
     text_append_colon();
     text_append_int((int)civs[civ].spaceship_parts[part]);
@@ -2018,7 +2018,7 @@ int __cdecl spaceship_add_part(iptr civ,iptr group)
       if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) ||
          ((int)civs[civ].spaceship_parts[part] < (((int *)&spaceship_part_table_block.spaceship_part_max_counts))[part * 3]
          )) break;
-      text_set_label_arg(0,label_string_ids[*(int *)(((i8 *)&spaceship_part_table_block.spaceship_part_table) + part * 0xc)]);
+      text_set_label_arg(0,label_string_ids[spaceship_part_table_block.spaceship_parts[part].label_id]);
       popup_game((const char *)&str_nofurther);
     }
     result = civ_spaceship_exists(civ);

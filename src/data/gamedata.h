@@ -43,6 +43,7 @@ struct throneroom_piece4_rect_x_block {
 };
 #pragma pack(pop)
 extern struct throneroom_piece4_rect_x_block throneroom_piece4_rect_x_block;
+extern ThroneRect (*const throneroom_piece_rects)[4];  /* = throneroom_piece_rect_x_block: [piece][level], pieces 0-7 then the bonus rects (8), across both blocks */
 #pragma pack(push, 1)
 struct cityview_improvement_art_x_block {
     i8 cityview_improvement_art_x[4];  /* 0061c360 */
@@ -164,7 +165,7 @@ extern int mapgen_age;
 extern char str_empty_6[4];
 extern char str_empty_7[4];
 extern char str_empty_8[12];
-extern i8 taxrate_lock_flags[12];
+extern i32 taxrate_lock_flags[3];
 extern int taxrate_bg_surface;
 extern u8 str_empty_9[4];
 extern char str_findcity[12];
@@ -190,16 +191,21 @@ extern u8 file_path_mode_rest[3];
 extern char str_rb[16];
 #pragma pack(push, 1)
 struct tech_editor_combo_x_table_block {
-    i8 tech_editor_combo_x_table[4];  /* 00625128 */
-    i8 tech_editor_combo_y_table[4];  /* 0062512c */
-    int tech_editor_prereq1_ctrl_x;  /* 00625130 */
-    int tech_editor_prereq1_ctrl_y;  /* 00625134 */
-    int tech_editor_prereq2_ctrl_x;  /* 00625138 */
-    int tech_editor_prereq2_ctrl_y;  /* 0062513c */
-    int tech_editor_epoch_ctrl_x;  /* 00625140 */
-    int tech_editor_epoch_ctrl_y;  /* 00625144 */
-    int tech_editor_category_ctrl_x;  /* 00625148 */
-    i32 tech_editor_category_ctrl_y_i32;  /* 0062514c */
+    union {
+        struct {
+            i8 tech_editor_combo_x_table[4];  /* 00625128 */
+            i8 tech_editor_combo_y_table[4];  /* 0062512c */
+            int tech_editor_prereq1_ctrl_x;  /* 00625130 */
+            int tech_editor_prereq1_ctrl_y;  /* 00625134 */
+            int tech_editor_prereq2_ctrl_x;  /* 00625138 */
+            int tech_editor_prereq2_ctrl_y;  /* 0062513c */
+            int tech_editor_epoch_ctrl_x;  /* 00625140 */
+            int tech_editor_epoch_ctrl_y;  /* 00625144 */
+            int tech_editor_category_ctrl_x;  /* 00625148 */
+            i32 tech_editor_category_ctrl_y_i32;  /* 0062514c */
+        };
+        EditorPos tech_editor_combo_pos[5];  /* 00625128 */
+    };
 };
 #pragma pack(pop)
 extern struct tech_editor_combo_x_table_block tech_editor_combo_x_table_block;
@@ -214,9 +220,14 @@ struct tech_editor_edit_x_table_block {
 extern struct tech_editor_edit_x_table_block tech_editor_edit_x_table_block;
 #pragma pack(push, 1)
 struct tech_editor_ctrl_kinds_block {
-    EditorCtrlRow tech_editor_ctrl_rows[5];  /* 00625160 */
-    i8 tech_editor_field_min_table[8];  /* 00625188 */
-    i8 tech_editor_field_max_table[24];  /* 00625190 */
+    union {
+        struct {
+            u8 tech_editor_ctrl_rows_0_4[40];  /* 00625160 */
+            i8 tech_editor_field_min_table[8];  /* 00625188 */
+            i8 tech_editor_field_max_table[24];  /* 00625190 */
+        };
+        EditorCtrlRow tech_editor_ctrl_rows[7];  /* 00625160 (rows 5-6 overlap the min/max tables) */
+    };
     i8 tech_editor_int_fmt[4];  /* 006251a8 */
     i8 civilize_rules_name_sep_str[4];  /* 006251ac */
     i8 civilize_rules_ai_sep_str[4];  /* 006251b0 */
@@ -1014,8 +1025,8 @@ extern char str_loadok[8];
 extern char str_stacked_unit_in_save_unit_d_type_d_whose[200];
 extern i32 map_click_in_progress;
 extern u8 map_click_in_progress_rest[4];
-extern i8 coast_quarter_dx_table[16];
-extern i8 coast_quarter_dy_table[16];
+extern i32 coast_quarter_dx_table[4];
+extern i32 coast_quarter_dy_table[4];
 extern int map_show_hidden_terrain;
 extern u8 map_show_hidden_terrain_rest[16];
 extern char net_deferred_input_busy;
@@ -1069,7 +1080,7 @@ extern char str_lanconnectfail_7[16];
 extern char str_hostchangeclient[20];
 extern char str_d_ss_franklinton_netmgr_poll_cpp_6[36];
 extern char str_pstrings_charptr_pevents_pstrings_scenar[420];
-extern i8 net_meet_pending_flags[32];
+extern i32 net_meet_pending_flags[8];
 extern int turn_resume_new_game;
 extern u8 turn_resume_new_game_rest[4];
 #pragma pack(push, 1)
@@ -1088,6 +1099,7 @@ struct year_table_start_years_block {
 };
 #pragma pack(pop)
 extern struct year_table_start_years_block year_table_start_years_block;
+extern YearPeriod *const year_period_table;  /* = year_table_start_years_block: [table * 6 + period], 4 tables of 6 periods (the year loop reads period 6) */
 extern char str_reallyquit_2[12];
 extern char str_barbarians[12];
 extern char str_globalwarming[16];
@@ -1224,16 +1236,21 @@ extern char str_rt[4];
 extern char str_rt_2[12];
 #pragma pack(push, 1)
 struct tribe_editor_combo_x_table_block {
-    i8 tribe_editor_combo_x_table[4];  /* 0062cd38 */
-    i8 tribe_editor_combo_y_table[4];  /* 0062cd3c */
-    int tribe_editor_city_style_x;  /* 0062cd40 */
-    int tribe_editor_city_style_y;  /* 0062cd44 */
-    int tribe_editor_attack_x;  /* 0062cd48 */
-    int tribe_editor_attack_y;  /* 0062cd4c */
-    int tribe_editor_expand_x;  /* 0062cd50 */
-    int tribe_editor_expand_y;  /* 0062cd54 */
-    int tribe_editor_civilize_x;  /* 0062cd58 */
-    int tribe_editor_civilize_y;  /* 0062cd5c */
+    union {
+        struct {
+            i8 tribe_editor_combo_x_table[4];  /* 0062cd38 */
+            i8 tribe_editor_combo_y_table[4];  /* 0062cd3c */
+            int tribe_editor_city_style_x;  /* 0062cd40 */
+            int tribe_editor_city_style_y;  /* 0062cd44 */
+            int tribe_editor_attack_x;  /* 0062cd48 */
+            int tribe_editor_attack_y;  /* 0062cd4c */
+            int tribe_editor_expand_x;  /* 0062cd50 */
+            int tribe_editor_expand_y;  /* 0062cd54 */
+            int tribe_editor_civilize_x;  /* 0062cd58 */
+            int tribe_editor_civilize_y;  /* 0062cd5c */
+        };
+        EditorPos tribe_editor_combo_pos[5];  /* 0062cd38 */
+    };
     i32 tribe_editor_edit_x_table[1];  /* 0062cd60 */
     i32 tribe_editor_edit_y_table[1];  /* 0062cd64 */
 };
@@ -1571,12 +1588,17 @@ extern u8 str_empty_136[4];
 extern char str_vfwnotregistered_6[72];
 #pragma pack(push, 1)
 struct impr_editor_combo_x_table_block {
-    i8 impr_editor_combo_x_table[4];  /* 0062e398 */
-    i8 impr_editor_combo_y_table[4];  /* 0062e39c */
-    int impr_editor_combo1_x;  /* 0062e3a0 */
-    int impr_editor_combo1_y;  /* 0062e3a4 */
-    int impr_editor_combo2_x;  /* 0062e3a8 */
-    int impr_editor_combo2_y;  /* 0062e3ac */
+    union {
+        struct {
+            i8 impr_editor_combo_x_table[4];  /* 0062e398 */
+            i8 impr_editor_combo_y_table[4];  /* 0062e39c */
+            int impr_editor_combo1_x;  /* 0062e3a0 */
+            int impr_editor_combo1_y;  /* 0062e3a4 */
+            int impr_editor_combo2_x;  /* 0062e3a8 */
+            int impr_editor_combo2_y;  /* 0062e3ac */
+        };
+        EditorPos impr_editor_combo_pos[3];  /* 0062e398 */
+    };
 };
 #pragma pack(pop)
 extern struct impr_editor_combo_x_table_block impr_editor_combo_x_table_block;
@@ -1591,8 +1613,13 @@ struct impr_editor_edit_x_table_block {
 extern struct impr_editor_edit_x_table_block impr_editor_edit_x_table_block;
 #pragma pack(push, 1)
 struct impr_editor_ctrl_kinds_block {
-    i8 impr_editor_ctrl_kinds[4];  /* 0062e3c0 */
-    i8 impr_editor_ctrl_slots[36];  /* 0062e3c4 */
+    union {
+        struct {
+            i8 impr_editor_ctrl_kinds[4];  /* 0062e3c0 */
+            i8 impr_editor_ctrl_slots[36];  /* 0062e3c4 */
+        };
+        EditorCtrlRow impr_editor_ctrl_rows[5];  /* 0062e3c0 */
+    };
     i8 impr_editor_field_min_table[8];  /* 0062e3e8 */
     i8 impr_editor_field_max_table[8];  /* 0062e3f0 */
     i8 impr_editor_value_fmt[4];  /* 0062e3f8 */
@@ -1627,8 +1654,8 @@ extern int text_section_index_count;
 extern i8 text_index_path_sep_str[4];
 extern char str_rt_6[4];
 extern i8 text_lookup_path_sep_str[60];
-extern i8 parley_offer_kinds[64];
-extern i8 parley_item_header_sizes[84];
+extern i32 parley_offer_kinds[16];
+extern i32 parley_item_header_sizes[21];
 extern char str_failed_to_allocate_buffer_for_parley_tra[76];
 extern char str_d_ss_franklinton_parleywin_transaction_c[44];
 extern char str_charptr_pchunk_sizechunk0_charptr_pmessa[60];
@@ -2244,17 +2271,22 @@ extern char str_vfwnotregistered_7[20];
 extern char str_er_2[40];
 #pragma pack(push, 1)
 struct terrain_editor_combo_pos_x_block {
-    i8 terrain_editor_combo_pos_x[4];  /* 00631b80 */
-    i8 terrain_editor_combo_pos_y[4];  /* 00631b84 */
-    int terrain_editor_irrig_combo_x;  /* 00631b88 */
-    int terrain_editor_irrig_combo_y;  /* 00631b8c */
-    int terrain_editor_irrig_ai_combo_x;  /* 00631b90 */
-    int terrain_editor_irrig_ai_combo_y;  /* 00631b94 */
-    int terrain_editor_mine_combo_x;  /* 00631b98 */
-    int terrain_editor_mine_combo_y;  /* 00631b9c */
-    u8 terrain_editor_mine_combo_y_rest[8];
-    int terrain_editor_transform_combo_x;  /* 00631ba8 */
-    int terrain_editor_transform_combo_y;  /* 00631bac */
+    union {
+        struct {
+            i8 terrain_editor_combo_pos_x[4];  /* 00631b80 */
+            i8 terrain_editor_combo_pos_y[4];  /* 00631b84 */
+            int terrain_editor_irrig_combo_x;  /* 00631b88 */
+            int terrain_editor_irrig_combo_y;  /* 00631b8c */
+            int terrain_editor_irrig_ai_combo_x;  /* 00631b90 */
+            int terrain_editor_irrig_ai_combo_y;  /* 00631b94 */
+            int terrain_editor_mine_combo_x;  /* 00631b98 */
+            int terrain_editor_mine_combo_y;  /* 00631b9c */
+            u8 terrain_editor_mine_combo_y_rest[8];
+            int terrain_editor_transform_combo_x;  /* 00631ba8 */
+            int terrain_editor_transform_combo_y;  /* 00631bac */
+        };
+        EditorPos terrain_editor_combo_pos[6];  /* 00631b80 */
+    };
 };
 #pragma pack(pop)
 extern struct terrain_editor_combo_pos_x_block terrain_editor_combo_pos_x_block;
@@ -2282,8 +2314,13 @@ struct terrain_editor_field_pos_x_block {
 extern struct terrain_editor_field_pos_x_block terrain_editor_field_pos_x_block;
 #pragma pack(push, 1)
 struct terrain_editor_ctrl_kinds_block {
-    i8 terrain_editor_ctrl_kinds[4];  /* 00631bf8 */
-    i8 terrain_editor_ctrl_slots[116];  /* 00631bfc */
+    union {
+        struct {
+            i8 terrain_editor_ctrl_kinds[4];  /* 00631bf8 */
+            i8 terrain_editor_ctrl_slots[116];  /* 00631bfc */
+        };
+        EditorCtrlRow terrain_editor_ctrl_rows[15];  /* 00631bf8 */
+    };
     i8 terrain_editor_field_min_table[48];  /* 00631c70 */
     i8 terrain_editor_field_max_table[48];  /* 00631ca0 */
     i8 terrain_editor_int_fmt[4];  /* 00631cd0 */
@@ -3035,7 +3072,7 @@ extern char str_most_recent_dos_error[28];
 extern i8 fatal_dos_error_line_fmt[4];
 extern i8 fatal_dos_error_newline_str[4];
 extern char str_warn0_dat[88];
-extern i8 unit_sound_button_label_ids[24];
+extern i32 unit_sound_button_label_ids[6];
 extern i8 unit_sound_editor_empty_title[4];
 extern i8 file_copy_read_mode[4];
 extern i8 file_copy_write_mode[4];
@@ -3143,19 +3180,24 @@ extern char str_unlockmap_connection_to_server_timed_out[44];
 extern char str_serverconnecttime_9[136];
 #pragma pack(push, 1)
 struct spaceship_part_table_block {
-    i8 spaceship_part_table[4];  /* 00634f60 */
-    int spaceship_part_max_counts[1];  /* 00634f64 */
-    i8 spaceship_part_masses[8];  /* 00634f68 */
-    int spaceship_propulsion_max;  /* 00634f70 */
-    u8 spaceship_propulsion_max_rest[8];
-    int spaceship_fuel_max;  /* 00634f7c */
-    u8 spaceship_fuel_max_rest[8];
-    int spaceship_habitation_max;  /* 00634f88 */
-    u8 spaceship_habitation_max_rest[8];
-    int spaceship_life_support_max;  /* 00634f94 */
-    u8 spaceship_life_support_max_rest[8];
-    int spaceship_solar_panel_max;  /* 00634fa0 */
-    u8 spaceship_solar_panel_max_rest[4];
+    union {
+        struct {
+            i8 spaceship_part_table[4];  /* 00634f60 */
+            int spaceship_part_max_counts[1];  /* 00634f64 */
+            i8 spaceship_part_masses[8];  /* 00634f68 */
+            int spaceship_propulsion_max;  /* 00634f70 */
+            u8 spaceship_propulsion_max_rest[8];
+            int spaceship_fuel_max;  /* 00634f7c */
+            u8 spaceship_fuel_max_rest[8];
+            int spaceship_habitation_max;  /* 00634f88 */
+            u8 spaceship_habitation_max_rest[8];
+            int spaceship_life_support_max;  /* 00634f94 */
+            u8 spaceship_life_support_max_rest[8];
+            int spaceship_solar_panel_max;  /* 00634fa0 */
+            u8 spaceship_solar_panel_max_rest[4];
+        };
+        SpaceshipPartKind spaceship_parts[6];  /* 00634f60 */
+    };
 };
 #pragma pack(pop)
 extern struct spaceship_part_table_block spaceship_part_table_block;
@@ -3363,16 +3405,21 @@ extern char str_pbem1[8];
 extern char str_emailnot[36];
 #pragma pack(push, 1)
 struct unit_editor_ctrl_positions_block {
-    i8 unit_editor_ctrl_positions[4];  /* 00635df8 */
-    i8 unit_editor_ctrl_pos_ys[4];  /* 00635dfc */
-    int unit_editor_prereq_x;  /* 00635e00 */
-    int unit_editor_prereq_y;  /* 00635e04 */
-    int unit_editor_obsolete_x;  /* 00635e08 */
-    int unit_editor_obsolete_y;  /* 00635e0c */
-    int unit_editor_role_x;  /* 00635e10 */
-    int unit_editor_role_y;  /* 00635e14 */
-    int unit_editor_domain_x;  /* 00635e18 */
-    i32 unit_editor_domain_y_i32;  /* 00635e1c */
+    union {
+        struct {
+            i8 unit_editor_ctrl_positions[4];  /* 00635df8 */
+            i8 unit_editor_ctrl_pos_ys[4];  /* 00635dfc */
+            int unit_editor_prereq_x;  /* 00635e00 */
+            int unit_editor_prereq_y;  /* 00635e04 */
+            int unit_editor_obsolete_x;  /* 00635e08 */
+            int unit_editor_obsolete_y;  /* 00635e0c */
+            int unit_editor_role_x;  /* 00635e10 */
+            int unit_editor_role_y;  /* 00635e14 */
+            int unit_editor_domain_x;  /* 00635e18 */
+            i32 unit_editor_domain_y_i32;  /* 00635e1c */
+        };
+        EditorPos unit_editor_combo_pos[5];  /* 00635df8 */
+    };
 };
 #pragma pack(pop)
 extern struct unit_editor_ctrl_positions_block unit_editor_ctrl_positions_block;
@@ -3399,9 +3446,14 @@ struct unit_editor_edit_x_table_block {
 extern struct unit_editor_edit_x_table_block unit_editor_edit_x_table_block;
 #pragma pack(push, 1)
 struct unit_editor_ctrl_kinds_block {
-    i8 unit_editor_ctrl_kinds[4];  /* 00635e60 */
-    i8 unit_editor_ctrl_slots[84];  /* 00635e64 */
-    i8 unit_editor_field_min_table[32];  /* 00635eb8 */
+    union {
+        struct {
+            i8 unit_editor_ctrl_kinds[4];  /* 00635e60 */
+            i8 unit_editor_ctrl_slots[84];  /* 00635e64 */
+            i8 unit_editor_field_min_table[32];  /* 00635eb8 */
+        };
+        EditorCtrlRow unit_editor_ctrl_rows[13];  /* 00635e60 (rows 11-12 overlap the min table) */
+    };
     i8 unit_editor_field_max_table[24];  /* 00635ed8 */
     i32 unit_editor_move_max_i32;  /* 00635ef0 */
     u8 unit_editor_move_max_i32_rest[12];
@@ -3483,7 +3535,7 @@ extern u8 *map_coarse[4];
 extern u8 map_allocated;
 extern u8 map_allocated_rest[3];
 extern int net_batch_used_dwords;
-extern i8 net_batch_record_sizes[32];
+extern i32 net_batch_record_sizes[8];
 extern char str_d_ss_franklinton_map_cpp[28];
 extern char str_gnetmgr_bserver_3[20];
 extern char str_d_ss_franklinton_map_cpp_2[28];
@@ -3822,7 +3874,7 @@ extern char str_direct_draw_doesn_t_supports_hardware_bl[44];
 extern char str_direct_draw_doesn_t_supports_colorkeys[40];
 extern char str_direct_draw_doesn_t_supports_color_fills[44];
 extern char str_direct_draw_device_is_bank_switched[624];
-extern i8 input_vkey_map_table[1024];
+extern i32 input_vkey_map_table[256];
 extern char smeds_log_enabled;
 extern u8 smeds_log_enabled_rest[3];
 extern char str_smeds_log[12];
@@ -3887,7 +3939,7 @@ struct minimap_window_block {
     i32 unit_blink_timer;  /* 0063cbc4 */
     u8 unit_blink_timer_rest[8];
     u8 setup_backdrop_surface[96];  /* 0063cbd0 */
-    i8 text_number_args[24];  /* 0063cc30 */
+    i32 text_number_args[6];  /* 0063cc30 */
     i8 text_string_args[1];  /* 0063cc48 */
     i8 text_string_args_plus1;  /* 0063cc49 */
     u8 text_string_args_plus1_rest[258];
@@ -4106,8 +4158,8 @@ extern DibSurface panel_texture_surface;
 #pragma pack(push, 1)
 struct peace_treaty_icon_sprite_block {
     u8 peace_treaty_icon_sprite[64];  /* 006409d8 */
-    i8 city_flag_x_offsets[192];  /* 00640a18 */
-    i8 city_flag_y_offsets[192];  /* 00640ad8 */
+    i32 city_flag_x_offsets[48];  /* 00640a18 */
+    i32 city_flag_y_offsets[48];  /* 00640ad8 */
 };
 #pragma pack(pop)
 extern struct peace_treaty_icon_sprite_block peace_treaty_icon_sprite_block;
@@ -4136,8 +4188,8 @@ struct road_sprites_block {
     i32 unit_shield_x_offsets[64];  /* 00642c48 */
     i8 citizen_sprites[2640];  /* 00642d48 */
     i8 civ_portrait_sprites[480];  /* 00643798 */
-    i8 city_size_box_x_offsets[192];  /* 00643978 */
-    i8 city_label_y_offsets[192];  /* 00643a38 */
+    i32 city_size_box_x_offsets[48];  /* 00643978 */
+    i32 city_label_y_offsets[48];  /* 00643a38 */
 };
 #pragma pack(pop)
 extern struct road_sprites_block road_sprites_block;
@@ -4360,8 +4412,13 @@ extern i32 attitude_names[9];
 extern u8 attitude_names_rest[4];
 #pragma pack(push, 1)
 struct civ_unit_counts_block {
-    i8 civ_unit_counts[25];  /* 0064b9e8 */
-    i8 wonder_expires_by_impr[15];  /* 0064ba01 */
+    union {
+        struct {
+            i8 civ_unit_counts[25];  /* 0064b9e8 */
+            i8 wonder_expires_by_impr[15];  /* 0064ba01 (wonder_expires - 0x27) */
+        };
+        i32 civ_unit_totals[8];  /* 0064b9e8 units per civ */
+    };
     i32 difficulty_names[6];  /* 0064ba10 */
     i8 wonder_expires[28];  /* 0064ba28 */
     u8 wonder_expires_rest[4];
@@ -4434,9 +4491,9 @@ extern Civ civs[8];
 extern City cities[256];
 #pragma pack(push, 1)
 struct civ_saved_cursor_x_block {
-    i8 civ_saved_cursor_x[16];  /* 00654b40 */
-    i8 civ_saved_cursor_y[16];  /* 00654b50 */
-    i8 civ_intro_shown[16];  /* 00654b60 */
+    i16 civ_saved_cursor_x[8];  /* 00654b40 */
+    i16 civ_saved_cursor_y[8];  /* 00654b50 */
+    i16 civ_intro_shown[8];  /* 00654b60 */
     int mp_turn_time_limit_ms;  /* 00654b70 */
     i8 civ_passwords[255];  /* 00654b74 */
     char civ_passwords_last_byte;  /* 00654c73 */
@@ -4512,10 +4569,15 @@ struct minimap_wnd_rect_block {
 extern struct minimap_wnd_rect_block minimap_wnd_rect_block;
 #pragma pack(push, 1)
 struct civ_primary_colors_block {
-    i8 civ_primary_colors[4];  /* 00655358 */
-    i8 civ_mid_colors[4];  /* 0065535c */
-    i8 civ_secondary_colors[4];  /* 00655360 */
-    i8 leader_flags_table[116];  /* 00655364 */
+    union {
+        struct {
+            i8 civ_primary_colors[4];  /* 00655358 */
+            i8 civ_mid_colors[4];  /* 0065535c */
+            i8 civ_secondary_colors[4];  /* 00655360 */
+            i8 leader_flags_table[116];  /* 00655364 */
+        };
+        CivColors civ_colors[8];  /* 00655358 */
+    };
 };
 #pragma pack(pop)
 extern struct civ_primary_colors_block civ_primary_colors_block;
@@ -4570,10 +4632,15 @@ extern struct power_graph_history_block power_graph_history_block;
 extern Unit *const units;  /* = power_graph_history_block.units */
 #pragma pack(push, 1)
 struct landmass_table_block {
-    i8 landmass_table[2];  /* 00666130 */
-    i8 landmass_fertile_tiles[2];  /* 00666132 */
-    i8 water_body_sizes[3];  /* 00666134 */
-    i8 landmass_border_bits[1025];  /* 00666137 */
+    union {
+        struct {
+            i8 landmass_table[2];  /* 00666130 */
+            i8 landmass_fertile_tiles[2];  /* 00666132 */
+            i8 water_body_sizes[3];  /* 00666134 */
+            i8 landmass_border_bits[1025];  /* 00666137 */
+        };
+        Landmass landmass_recs[64];  /* 00666130 */
+    };
 };
 #pragma pack(pop)
 extern struct landmass_table_block landmass_table_block;
@@ -4615,8 +4682,8 @@ struct prefs_main_menu_choice_block {
     u8 mp_prefs_setting_5_i16_rest[22404];
     i32 parley_units_by_city;  /* 0066be78 */
     u8 parley_units_by_city_rest[4];
-    i8 parley_list_own_side[16];  /* 0066be80 */
-    i8 unit_type_name_ptrs[304];  /* 0066be90 */
+    i32 parley_list_own_side[4];  /* 0066be80 */
+    i32 unit_type_name_ptrs[76];  /* 0066be90 */
     iptr snd_last_effect_arg;  /* 0066bfc0 */
     iptr snd_last_effect_id;  /* 0066bfc4 */
     u8 snd_last_effect_id_rest[8];
@@ -4651,52 +4718,57 @@ extern u8 static_scrollbar_1[64];
 extern u8 static_scrollbar_2[64];
 #pragma pack(push, 1)
 struct map_views_block {
-    DibSurface map_views;  /* 0066c7a8 */
-    u8 map_view_wnds[220];  /* 0066c7f0 */
-    i32 mapview_client_origin_x[1];  /* 0066c8cc */
-    i32 mapview_client_origin_y[46];  /* 0066c8d0 */
-    i32 main_view_timer_shown[1];  /* 0066c988 */
-    i32 main_view_status_shown_i32;  /* 0066c98c */
-    i32 main_view_timer_cache_i32;  /* 0066c990 */
-    u8 main_view_timer_cache_i32_rest[192];
-    i32 main_view_frame_left;  /* 0066ca54 */
-    i32 main_view_frame_top;  /* 0066ca58 */
-    i32 main_view_frame_right;  /* 0066ca5c */
-    u8 main_view_frame_right_rest[8];
-    i32 main_view_client_top;  /* 0066ca68 */
-    u8 main_view_client_top_rest[24];
-    u8 map_view_open_flags[2];  /* 0066ca84 */
-    i8 mapview_track_moves[2];  /* 0066ca86 */
-    i16 map_view_center_x[1];  /* 0066ca88 */
-    i16 mapview_center_y[1];  /* 0066ca8a */
-    short mapview_zoom[2];  /* 0066ca8c */
-    i32 mapview_origin_x[1];  /* 0066ca90 */
-    i32 mapview_origin_y[1];  /* 0066ca94 */
-    i32 mapview_end_x;  /* 0066ca98 */
-    i32 mapview_end_y;  /* 0066ca9c */
-    u8 mapview_end_y_rest[16];
-    i8 mapview_tile_width[4];  /* 0066cab0 */
-    i8 mapview_tile_height[4];  /* 0066cab4 */
-    int mapview_half_tile_width;  /* 0066cab8 */
-    i32 mapview_half_tile_height[1];  /* 0066cabc */
-    i8 mapview_quarter_tile_width[12];  /* 0066cac0 */
-    i8 mapview_unit_sprite_height[4];  /* 0066cacc */
-    int mapview_layout_width;  /* 0066cad0 */
-    int mapview_layout_height;  /* 0066cad4 */
-    int mapview_margin_x;  /* 0066cad8 */
-    int mapview_margin_y;  /* 0066cadc */
-    u8 tile_number_font[32];  /* 0066cae0 */
-    i32 mapview_cursor_id[2214];  /* 0066cb00 */
-    i8 net_saved_unit_next[4096];  /* 0066ed98 */
-    i8 net_saved_unit_x[4096];  /* 0066fd98 */
+    union {
+        struct {
+            DibSurface map_views;  /* 0066c7a8 */
+            u8 map_view_wnds[220];  /* 0066c7f0 */
+            i32 mapview_client_origin_x[1];  /* 0066c8cc */
+            i32 mapview_client_origin_y[46];  /* 0066c8d0 */
+            i32 main_view_timer_shown[1];  /* 0066c988 */
+            i32 main_view_status_shown_i32;  /* 0066c98c */
+            i32 main_view_timer_cache_i32;  /* 0066c990 */
+            u8 main_view_timer_cache_i32_rest[192];
+            i32 main_view_frame_left;  /* 0066ca54 */
+            i32 main_view_frame_top;  /* 0066ca58 */
+            i32 main_view_frame_right;  /* 0066ca5c */
+            u8 main_view_frame_right_rest[8];
+            i32 main_view_client_top;  /* 0066ca68 */
+            u8 main_view_client_top_rest[24];
+            u8 map_view_open_flags[2];  /* 0066ca84 */
+            i8 mapview_track_moves[2];  /* 0066ca86 */
+            i16 map_view_center_x[1];  /* 0066ca88 */
+            i16 mapview_center_y[1];  /* 0066ca8a */
+            short mapview_zoom[2];  /* 0066ca8c */
+            i32 mapview_origin_x[1];  /* 0066ca90 */
+            i32 mapview_origin_y[1];  /* 0066ca94 */
+            i32 mapview_end_x;  /* 0066ca98 */
+            i32 mapview_end_y;  /* 0066ca9c */
+            u8 mapview_end_y_rest[16];
+            i8 mapview_tile_width[4];  /* 0066cab0 */
+            i8 mapview_tile_height[4];  /* 0066cab4 */
+            int mapview_half_tile_width;  /* 0066cab8 */
+            i32 mapview_half_tile_height[1];  /* 0066cabc */
+            i8 mapview_quarter_tile_width[12];  /* 0066cac0 */
+            i8 mapview_unit_sprite_height[4];  /* 0066cacc */
+            int mapview_layout_width;  /* 0066cad0 */
+            int mapview_layout_height;  /* 0066cad4 */
+            int mapview_margin_x;  /* 0066cad8 */
+            int mapview_margin_y;  /* 0066cadc */
+            u8 tile_number_font[32];  /* 0066cae0 */
+            i32 mapview_cursor_id[2214];  /* 0066cb00 */
+        };
+        MapView map_view_recs[8];  /* 0066c7a8 */
+    };
+    i16 net_saved_unit_next[2048];  /* 0066ed98 */
+    i16 net_saved_unit_x[2048];  /* 0066fd98 */
     i32 net_handoff_wait_ticks_i32;  /* 00670d98 */
     u8 net_handoff_wait_ticks_i32_rest[4];
-    i8 net_saved_unit_y[4096];  /* 00670da0 */
-    i8 net_saved_unit_prev[7384];  /* 00671da0 */
-    i8 net_meet_pending_x[32];  /* 00673a78 */
-    i8 net_meet_pending_y[32];  /* 00673a98 */
-    i8 net_meet_pending_civ[32];  /* 00673ab8 */
-    i8 net_meet_pending_ai_civ[32];  /* 00673ad8 */
+    i16 net_saved_unit_y[2048];  /* 00670da0 */
+    i16 net_saved_unit_prev[3692];  /* 00671da0 */
+    i32 net_meet_pending_x[8];  /* 00673a78 */
+    i32 net_meet_pending_y[8];  /* 00673a98 */
+    i32 net_meet_pending_civ[8];  /* 00673ab8 */
+    i32 net_meet_pending_ai_civ[8];  /* 00673ad8 */
     i8 human_wonders_by_group_min[4];  /* 00673af8 */
     i8 human_wonders_by_group_max[4];  /* 00673afc */
     i32 net_heartbeat_last_tick_i32;  /* 00673b00 */
@@ -4705,8 +4777,8 @@ struct map_views_block {
     i32 saved_human_players;  /* 00673b08 */
     u8 saved_human_players_rest[36];
     i32 tech_prereq_depth_cache[122];  /* 00673b30 */
-    i8 civ_password_prompt_pending[32];  /* 00673d18 */
-    i8 civ_has_password[56];  /* 00673d38 */
+    i32 civ_password_prompt_pending[8];  /* 00673d18 */
+    i32 civ_has_password[14];  /* 00673d38 */
     i32 citypref_improvements[40];  /* 00673d70 */
     i8 text_token_buf[260];  /* 00673e10 */
     iptr text_line_cursor;  /* 00673f14 */
@@ -4773,6 +4845,7 @@ struct diffeng_sections_block {
 };
 #pragma pack(pop)
 extern struct diffeng_sections_block diffeng_sections_block;
+extern DiffEngSection *const diffeng_section_table;  /* = diffeng_sections_block: the 0x18 sections, one after the other (diffeng_section_init) */
 #pragma pack(push, 1)
 struct diffeng_game_section_block {
     int diffeng_game_section[3];  /* 0067a428 */
@@ -4919,77 +4992,85 @@ struct editor_text_dlg_wnd_block {
     i32 editor_running;  /* 006a1d7c */
     int editor_next_ctrl_id;  /* 006a1d80 */
     u8 editor_next_ctrl_id_rest[4];
-    i8 editor_item_names[23];  /* 006a1d88 */
-    i8 editor_item_name24_ends[16];  /* 006a1d9f */
-    i8 editor_item_name_ends[3153];  /* 006a1daf */
-    i8 editor_ctrl_values[808];  /* 006a2a00 */
-    i32 editor_items[1];  /* 006a2d28 */
-    i32 editor_item_field1[1];  /* 006a2d2c */
-    i32 editor_item_field2[1];  /* 006a2d30 */
-    i32 editor_item_field3[1];  /* 006a2d34 */
-    i32 editor_item_field4[1];  /* 006a2d38 */
-    i32 editor_item_field5[1];  /* 006a2d3c */
-    i32 editor_item_field6[1];  /* 006a2d40 */
-    i32 editor_item_field7[1];  /* 006a2d44 */
-    i32 editor_item_field8[1];  /* 006a2d48 */
-    i32 editor_item_field9[1];  /* 006a2d4c */
-    i32 editor_item_field10[1];  /* 006a2d50 */
-    i32 editor_item_field11[1];  /* 006a2d54 */
-    u8 editor_item_flags[1];  /* 006a2d58 */
-    i8 editor_item_flags_byte1[3];  /* 006a2d59 */
-    i32 editor_item_field13[1];  /* 006a2d5c */
-    i32 editor_item_field14_i32;  /* 006a2d60 */
-    i32 editor_item_field15_i32;  /* 006a2d64 */
-    i32 editor_item_field16_i32;  /* 006a2d68 */
-    i32 editor_item_field17_i32;  /* 006a2d6c */
-    i32 editor_item_field18_i32;  /* 006a2d70 */
-    i32 editor_item_field19_i32;  /* 006a2d74 */
-    i32 editor_item_field20_i32;  /* 006a2d78 */
-    i32 editor_item_field21_i32;  /* 006a2d7c */
-    u8 cosmic_edit_values[4];  /* 006a2d80 */
-    u8 cosmic_edit_trireme_loss;  /* 006a2d84 */
-    u8 cosmic_edit_trireme_loss_rest[3];
-    u8 cosmic_edit_food_per_citizen;  /* 006a2d88 */
-    u8 cosmic_edit_food_per_citizen_rest[3];
-    u8 cosmic_edit_food_box_rows;  /* 006a2d8c */
-    u8 cosmic_edit_food_box_rows_rest[3];
-    u8 cosmic_edit_shield_box_rows;  /* 006a2d90 */
-    u8 cosmic_edit_shield_box_rows_rest[3];
-    u8 cosmic_edit_settler_food_low;  /* 006a2d94 */
-    u8 cosmic_edit_settler_food_low_rest[3];
-    u8 cosmic_edit_settler_food_high;  /* 006a2d98 */
-    u8 cosmic_edit_settler_food_high_rest[3];
-    u8 cosmic_edit_unhappy_size;  /* 006a2d9c */
-    u8 cosmic_edit_unhappy_size_rest[3];
-    u8 cosmic_edit_riot_factor;  /* 006a2da0 */
-    u8 cosmic_edit_riot_factor_rest[3];
-    u8 cosmic_edit_aqueduct_size;  /* 006a2da4 */
-    u8 cosmic_edit_aqueduct_size_rest[3];
-    u8 cosmic_edit_sewer_size;  /* 006a2da8 */
-    u8 cosmic_edit_sewer_size_rest[3];
-    u8 cosmic_edit_tech_paradigm;  /* 006a2dac */
-    u8 cosmic_edit_tech_paradigm_rest[3];
-    u8 cosmic_edit_transform_time;  /* 006a2db0 */
-    u8 cosmic_edit_transform_time_rest[3];
-    u8 cosmic_edit_monarchy_support;  /* 006a2db4 */
-    u8 cosmic_edit_monarchy_support_rest[3];
-    u8 cosmic_edit_communism_support;  /* 006a2db8 */
-    u8 cosmic_edit_communism_support_rest[3];
-    u8 cosmic_edit_fundamentalism_support;  /* 006a2dbc */
-    u8 cosmic_edit_fundamentalism_support_rest[3];
-    u8 cosmic_edit_communism_palace_dist;  /* 006a2dc0 */
-    u8 cosmic_edit_communism_palace_dist_rest[3];
-    u8 cosmic_edit_fund_science_loss;  /* 006a2dc4 */
-    u8 cosmic_edit_fund_science_loss_rest[3];
-    u8 cosmic_edit_change_penalty;  /* 006a2dc8 */
-    u8 cosmic_edit_change_penalty_rest[3];
-    u8 cosmic_edit_paradrop_range;  /* 006a2dcc */
-    u8 cosmic_edit_paradrop_range_rest[3];
-    u8 cosmic_edit_mass_thrust_paradigm;  /* 006a2dd0 */
-    u8 cosmic_edit_mass_thrust_paradigm_rest[3];
-    u8 cosmic_edit_fund_max_science;  /* 006a2dd4 */
-    u8 cosmic_edit_fund_max_science_rest[8627];
-    iptr active_editor_wnd;  /* 006a4f88 */
+    union {
+        struct {
+            i8 editor_item_names[23];  /* 006a1d88 */
+            i8 editor_item_name24_ends[16];  /* 006a1d9f */
+            i8 editor_item_name_ends[3153];  /* 006a1daf */
+            i8 editor_ctrl_values[808];  /* 006a2a00 */
+            i32 editor_items[1];  /* 006a2d28 */
+            i32 editor_item_field1[1];  /* 006a2d2c */
+            i32 editor_item_field2[1];  /* 006a2d30 */
+            i32 editor_item_field3[1];  /* 006a2d34 */
+            i32 editor_item_field4[1];  /* 006a2d38 */
+            i32 editor_item_field5[1];  /* 006a2d3c */
+            i32 editor_item_field6[1];  /* 006a2d40 */
+            i32 editor_item_field7[1];  /* 006a2d44 */
+            i32 editor_item_field8[1];  /* 006a2d48 */
+            i32 editor_item_field9[1];  /* 006a2d4c */
+            i32 editor_item_field10[1];  /* 006a2d50 */
+            i32 editor_item_field11[1];  /* 006a2d54 */
+            u8 editor_item_flags[1];  /* 006a2d58 */
+            i8 editor_item_flags_byte1[3];  /* 006a2d59 */
+            i32 editor_item_field13[1];  /* 006a2d5c */
+            i32 editor_item_field14_i32;  /* 006a2d60 */
+            i32 editor_item_field15_i32;  /* 006a2d64 */
+            i32 editor_item_field16_i32;  /* 006a2d68 */
+            i32 editor_item_field17_i32;  /* 006a2d6c */
+            i32 editor_item_field18_i32;  /* 006a2d70 */
+            i32 editor_item_field19_i32;  /* 006a2d74 */
+            i32 editor_item_field20_i32;  /* 006a2d78 */
+            i32 editor_item_field21_i32;  /* 006a2d7c */
+            u8 cosmic_edit_values[4];  /* 006a2d80 */
+            u8 cosmic_edit_trireme_loss;  /* 006a2d84 */
+            u8 cosmic_edit_trireme_loss_rest[3];
+            u8 cosmic_edit_food_per_citizen;  /* 006a2d88 */
+            u8 cosmic_edit_food_per_citizen_rest[3];
+            u8 cosmic_edit_food_box_rows;  /* 006a2d8c */
+            u8 cosmic_edit_food_box_rows_rest[3];
+            u8 cosmic_edit_shield_box_rows;  /* 006a2d90 */
+            u8 cosmic_edit_shield_box_rows_rest[3];
+            u8 cosmic_edit_settler_food_low;  /* 006a2d94 */
+            u8 cosmic_edit_settler_food_low_rest[3];
+            u8 cosmic_edit_settler_food_high;  /* 006a2d98 */
+            u8 cosmic_edit_settler_food_high_rest[3];
+            u8 cosmic_edit_unhappy_size;  /* 006a2d9c */
+            u8 cosmic_edit_unhappy_size_rest[3];
+            u8 cosmic_edit_riot_factor;  /* 006a2da0 */
+            u8 cosmic_edit_riot_factor_rest[3];
+            u8 cosmic_edit_aqueduct_size;  /* 006a2da4 */
+            u8 cosmic_edit_aqueduct_size_rest[3];
+            u8 cosmic_edit_sewer_size;  /* 006a2da8 */
+            u8 cosmic_edit_sewer_size_rest[3];
+            u8 cosmic_edit_tech_paradigm;  /* 006a2dac */
+            u8 cosmic_edit_tech_paradigm_rest[3];
+            u8 cosmic_edit_transform_time;  /* 006a2db0 */
+            u8 cosmic_edit_transform_time_rest[3];
+            u8 cosmic_edit_monarchy_support;  /* 006a2db4 */
+            u8 cosmic_edit_monarchy_support_rest[3];
+            u8 cosmic_edit_communism_support;  /* 006a2db8 */
+            u8 cosmic_edit_communism_support_rest[3];
+            u8 cosmic_edit_fundamentalism_support;  /* 006a2dbc */
+            u8 cosmic_edit_fundamentalism_support_rest[3];
+            u8 cosmic_edit_communism_palace_dist;  /* 006a2dc0 */
+            u8 cosmic_edit_communism_palace_dist_rest[3];
+            u8 cosmic_edit_fund_science_loss;  /* 006a2dc4 */
+            u8 cosmic_edit_fund_science_loss_rest[3];
+            u8 cosmic_edit_change_penalty;  /* 006a2dc8 */
+            u8 cosmic_edit_change_penalty_rest[3];
+            u8 cosmic_edit_paradrop_range;  /* 006a2dcc */
+            u8 cosmic_edit_paradrop_range_rest[3];
+            u8 cosmic_edit_mass_thrust_paradigm;  /* 006a2dd0 */
+            u8 cosmic_edit_mass_thrust_paradigm_rest[3];
+            u8 cosmic_edit_fund_max_science;  /* 006a2dd4 */
+            u8 cosmic_edit_fund_max_science_rest[8627];
+        };
+        struct {
+            i8 editor_item_name_recs[100][40];  /* 006a1d88 an item's name */
+            EditorItem editor_item_recs[100];  /* 006a2d28 an item's values (cosmic editor: record 1) */
+        };
+    };
+    EditorWindow *active_editor_wnd;  /* 006a4f88 */
     u8 active_editor_wnd_rest[4];
 };
 #pragma pack(pop)
@@ -5007,9 +5088,14 @@ struct editor_text_edit_block {
     u8 editor_text_edit[2920];  /* 006a4fa0 */
     i32 spaceship_wnd_open_ticks_i32;  /* 006a5b08 */
     u8 spaceship_wnd_open_ticks_i32_rest[4];
-    i8 spaceship_wnd_part_counts[4];  /* 006a5b10 */
-    int spaceship_wnd_component_count;  /* 006a5b14 */
-    u8 spaceship_wnd_component_count_rest[32];
+    union {
+        struct {
+            i8 spaceship_wnd_part_counts[4];  /* 006a5b10 */
+            int spaceship_wnd_component_count;  /* 006a5b14 */
+            u8 spaceship_wnd_component_count_rest[32];
+        };
+        i32 spaceship_wnd_part_count_list[10];  /* 006a5b10 */
+    };
 };
 #pragma pack(pop)
 extern struct editor_text_edit_block editor_text_edit_block;
@@ -5047,7 +5133,7 @@ struct main_menu_block {
     int city_pollution;  /* 006a6584 */
     int city_capital_distance;  /* 006a6588 */
     u8 city_capital_distance_rest[4];
-    i8 city_route_trade_values[12];  /* 006a6590 */
+    i32 city_route_trade_values[3];  /* 006a6590 */
     int city_angry_count;  /* 006a659c */
     int city_zoom_requested;  /* 006a65a0 */
     i32 city_saved_build_category;  /* 006a65a4 */
@@ -5192,8 +5278,13 @@ extern u8 destroyed_civs_text_bg[96];
 #pragma pack(push, 1)
 struct game_section_dialog_block {
     u8 game_section_dialog[908];  /* 006aadb8 */
-    i8 setup_prev_player_tribe[4];  /* 006ab144 */
-    i8 setup_player_tribes[48];  /* 006ab148 */
+    union {
+        struct {
+            i8 setup_prev_player_tribe[4];  /* 006ab144 */
+            i8 setup_player_tribes[48];  /* 006ab148 */
+        };
+        i32 setup_slot_tribes[13];  /* 006ab144 */
+    };
 };
 #pragma pack(pop)
 extern struct game_section_dialog_block game_section_dialog_block;
@@ -5378,7 +5469,7 @@ struct sprite_picker_sprite_block {
     int combat_defense_bonus_halves;  /* 006acb34 */
     int net_can_escape_reply;  /* 006acb38 */
     u8 net_can_escape_reply_rest[28];
-    i8 parley_pane_own_cities[16];  /* 006acb58 */
+    i32 parley_pane_own_cities[4];  /* 006acb58 */
 };
 #pragma pack(pop)
 extern struct sprite_picker_sprite_block sprite_picker_sprite_block;
@@ -5390,12 +5481,17 @@ struct main_frame_bg_surface_block {
     u8 main_frame_nonclient_height_i32_rest[24];
     iptr crash_handler_callbacks[10];  /* 006acbd0 */
     i8 crash_debug_buffer[320];  /* 006acbf8 */
-    i32 unit_sound_slot_effects[1];  /* 006acd38 */
-    int unit_sound_orders_effect;  /* 006acd3c */
-    i32 unit_sound_explosion_effect_i32;  /* 006acd40 */
-    i32 unit_sound_bomb_effect_i32;  /* 006acd44 */
-    i32 unit_sound_crash_effect_i32;  /* 006acd48 */
-    i32 unit_sound_sputter_effect_i32;  /* 006acd4c */
+    union {
+        struct {
+            i32 unit_sound_slot_effects[1];  /* 006acd38 */
+            int unit_sound_orders_effect;  /* 006acd3c */
+            i32 unit_sound_explosion_effect_i32;  /* 006acd40 */
+            i32 unit_sound_bomb_effect_i32;  /* 006acd44 */
+            i32 unit_sound_crash_effect_i32;  /* 006acd48 */
+            i32 unit_sound_sputter_effect_i32;  /* 006acd4c */
+        };
+        i32 unit_sound_effects[6];  /* 006acd38 by sound slot */
+    };
     i32 unit_sound_editor_running;  /* 006acd50 */
     u8 unit_sound_editor_running_rest[4];
 };
@@ -5715,7 +5811,7 @@ extern GameFont dialog_list_font_obj;
 #pragma pack(push, 1)
 struct dialog_plain_font_obj_block {
     GameFont dialog_plain_font_obj;  /* 006cec90 */
-    i8 dialog_button_label_ids[16];  /* 006cec98 */
+    i32 dialog_button_label_ids[4];  /* 006cec98 */
 };
 #pragma pack(pop)
 extern struct dialog_plain_font_obj_block dialog_plain_font_obj_block;
@@ -5723,7 +5819,7 @@ extern struct dialog_plain_font_obj_block dialog_plain_font_obj_block;
 struct dialog_text_font_obj_block {
     GameFont dialog_text_font_obj;  /* 006ceca8 */
     i8 dialog_section_name[112];  /* 006cecb0 */
-    i8 net_civ_phase_done[44];  /* 006ced20 */
+    i32 net_civ_phase_done[11];  /* 006ced20 */
     iptr adjacent_foreign_civ;  /* 006ced4c */
     int unit_nearest_dist;  /* 006ced50 */
     u8 unit_nearest_dist_rest[12];
@@ -5745,8 +5841,13 @@ extern int moving_units_mode;
 extern u8 moving_units_mode_rest[12];
 #pragma pack(push, 1)
 struct ms_window_stack_block {
-    i8 ms_window_stack[4];  /* 006d1db8 */
-    i8 ms_window_stack_elem1[268];  /* 006d1dbc */
+    union {
+        struct {
+            i8 ms_window_stack[4];  /* 006d1db8 */
+            i8 ms_window_stack_elem1[268];  /* 006d1dbc */
+        };
+        i32 ms_window_stack_entries[68];  /* 006d1db8 */
+    };
 };
 #pragma pack(pop)
 extern struct ms_window_stack_block ms_window_stack_block;
@@ -5756,13 +5857,18 @@ struct default_draw_font_obj_block {
     DWORD scrollbar_base_wnd_extra;  /* 006d46f4 */
     WNDPROC scrollbar_base_wndproc;  /* 006d46f8 */
     u8 scrollbar_base_wndproc_rest[4];
-    i8 gfx_scale_cache_num[4];  /* 006d4700 */
-    i8 gfx_scale_cache_den[4];  /* 006d4704 */
-    i8 gfx_scale_cache_last_used[4];  /* 006d4708 */
-    i8 gfx_scale_cache_tables[65716];  /* 006d470c */
+    union {
+        struct {
+            i8 gfx_scale_cache_num[4];  /* 006d4700 */
+            i8 gfx_scale_cache_den[4];  /* 006d4704 */
+            i8 gfx_scale_cache_last_used[4];  /* 006d4708 */
+            i8 gfx_scale_cache_tables[65716];  /* 006d470c */
+        };
+        GfxScaleCache gfx_scale_caches[16];  /* 006d4700 */
+    };
     i8 *gfx_scale_x_table;  /* 006e47c0 */
     i8 *gfx_scale_y_table;  /* 006e47c4 */
-    iptr gfx_scale_table;  /* 006e47c8 */
+    i32 *gfx_scale_table;  /* 006e47c8 */
     u8 gfx_scale_table_rest[4];
     i8 dbg_log_file[8];  /* 006e47d0 */
     DWORD edit_base_wnd_extra;  /* 006e47d8 */

@@ -277,8 +277,8 @@ int __cdecl save_read_game(char *path)
   save_unpack_layout_rects();
   ui_flush_input();
   for (idx = 0; idx < 8; idx = idx + 1) {
-    count_read = _fread(((i8 *)&map_views_block.map_view_open_flags) + idx * 0x3f0,2,1,_File);
-    if ((((count_read == 0) || (count_read = _fread(((i8 *)&map_views_block.mapview_track_moves) + idx * 0x3f0,2,1,_File), count_read == 0))
+    count_read = _fread(&map_views_block.map_view_recs[idx].open,2,1,_File);
+    if ((((count_read == 0) || (count_read = _fread(&map_views_block.map_view_recs[idx].track_moves,2,1,_File), count_read == 0))
         || (count_read = _fread(((i16 *)&map_views_block.map_view_center_x) + idx * 0x1f8,2,1,_File), count_read == 0)) ||
        ((count_read = _fread(((i16 *)&map_views_block.mapview_center_y) + idx * 0x1f8,2,1,_File), count_read == 0 ||
         (count_read = _fread(((i16 *)&map_views_block.mapview_zoom) + idx * 0x1f8,2,1,_File), count_read == 0))))

@@ -1575,7 +1575,7 @@ parley_create_unit_list_pane(ParleyWindow *self,RECT *rect,int pane,i32 own_side
   else {
     window -= 0x48;
   }
-  *(i32 *)(((i8 *)&prefs_main_menu_choice_block.parley_list_own_side) + pane * 4) = own_side;
+  prefs_main_menu_choice_block.parley_list_own_side[pane] = own_side;
   sb_rect.left = rect->left;
   sb_rect.top = rect->top;
   sb_rect.right = rect->right;
@@ -2337,8 +2337,8 @@ void __thiscall parley_build_unit_list(ParleyWindow *self,int pane,int keep_sele
       return;
     }
     if ((units[unit].id != 0) &&
-       (((*(int *)(((i8 *)&prefs_main_menu_choice_block.parley_list_own_side) + pane * 4) != 0 && (units[unit].owner == (*(i8 *)&human_civ))) ||
-        (((*(int *)(((i8 *)&prefs_main_menu_choice_block.parley_list_own_side) + pane * 4) == 0 &&
+       (((prefs_main_menu_choice_block.parley_list_own_side[pane] != 0 && (units[unit].owner == (*(i8 *)&human_civ))) ||
+        (((prefs_main_menu_choice_block.parley_list_own_side[pane] == 0 &&
           ((int)units[unit].owner == self->other_civ)) &&
          (((1 << ((byte)(*(i8 *)&human_civ) & 0x1f) & (uint)units[unit].visibility) != 0 ||
           ((int)units[unit].owner == ((*(i8 *)&human_civ) & 0xffU))))))))) {
@@ -3670,15 +3670,15 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
               else {
                 units_saved = 1;
                 for (unit2 = 0; unit2 < game.num_units; unit2++) {
-                  *(i16 *)(((i8 *)&map_views_block.net_saved_unit_x) + unit2 * 2) = units[unit2].x;
-                  *(i16 *)(((i8 *)&map_views_block.net_saved_unit_y) + unit2 * 2) = units[unit2].y;
-                  *(i16 *)(((i8 *)&map_views_block.net_saved_unit_next) + unit2 * 2) = units[unit2].next_in_stack;
-                  *(i16 *)(((i8 *)&map_views_block.net_saved_unit_prev) + unit2 * 2) = units[unit2].prev_in_stack;
+                  map_views_block.net_saved_unit_x[unit2] = units[unit2].x;
+                  map_views_block.net_saved_unit_y[unit2] = units[unit2].y;
+                  map_views_block.net_saved_unit_next[unit2] = units[unit2].next_in_stack;
+                  map_views_block.net_saved_unit_prev[unit2] = units[unit2].prev_in_stack;
                 }
               }
               if ((section_id2 & 0x8000) == 0) {
-                crt_memcpy((void *)((((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section_id2 * 6] + section_offset),payload,section_size);
-                crt_memcpy((void *)(*(int *)(((i8 *)&diffeng_sections_block.diffeng_section_offsets) + section_id2 * 0x18) + section_offset + diffeng_mirror_buf),
+                crt_memcpy((void *)((iptr)diffeng_section_table[section_id2].data_ptr + section_offset),payload,section_size);
+                crt_memcpy((void *)((int)diffeng_section_table[section_id2].mirror_offset + section_offset + diffeng_mirror_buf),
                              payload,section_size);
               }
               else {
@@ -3686,11 +3686,11 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
                 rle_src_end = section_size + (int)payload;
                 rle_src = payload;
                 decoded_size = diffeng_rle_decoded_size((RleStream *)&rle_src);
-                rle_dst = (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section_id2 * 6] + section_offset;
+                rle_dst = (iptr)diffeng_section_table[section_id2].data_ptr + section_offset;
                 rle_dst_end = rle_dst + decoded_size;
                 diffeng_rle_decode((RleStream *)&rle_src);
-                crt_memcpy((void *)(*(int *)(((i8 *)&diffeng_sections_block.diffeng_section_offsets) + section_id2 * 0x18) + section_offset + diffeng_mirror_buf),
-                             (const void *)((((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section_id2 * 6] + section_offset),decoded_size);
+                crt_memcpy((void *)((int)diffeng_section_table[section_id2].mirror_offset + section_offset + diffeng_mirror_buf),
+                             (const void *)((iptr)diffeng_section_table[section_id2].data_ptr + section_offset),decoded_size);
               }
               if (section_id2 == 1) {
                 game.active_unit = saved_active_unit;
@@ -3712,10 +3712,10 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
             }
             if ((net_session_block.net_host_flag != '\0') && (units_saved != 0)) {
               for (unit2 = 0; unit2 < game.num_units; unit2++) {
-                units[unit2].x = *(i16 *)(((i8 *)&map_views_block.net_saved_unit_x) + unit2 * 2);
-                units[unit2].y = *(i16 *)(((i8 *)&map_views_block.net_saved_unit_y) + unit2 * 2);
-                units[unit2].next_in_stack = *(i16 *)(((i8 *)&map_views_block.net_saved_unit_next) + unit2 * 2);
-                units[unit2].prev_in_stack = *(i16 *)(((i8 *)&map_views_block.net_saved_unit_prev) + unit2 * 2);
+                units[unit2].x = map_views_block.net_saved_unit_x[unit2];
+                units[unit2].y = map_views_block.net_saved_unit_y[unit2];
+                units[unit2].next_in_stack = map_views_block.net_saved_unit_next[unit2];
+                units[unit2].prev_in_stack = map_views_block.net_saved_unit_prev[unit2];
               }
             }
             if (turn_civ_changed != 0) {
@@ -4432,7 +4432,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           break;
         case 0x8c:
           net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
-          *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + unit * 4) = *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + unit * 4) + 1;
+          dialog_text_font_obj_block.net_civ_phase_done[unit] = dialog_text_font_obj_block.net_civ_phase_done[unit] + 1;
           break;
         case 0x8d:
           break;
@@ -4440,7 +4440,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           break;
         case 0x8f:
           net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
-          *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + unit * 4) = *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + unit * 4) + 1;
+          dialog_text_font_obj_block.net_civ_phase_done[unit] = dialog_text_font_obj_block.net_civ_phase_done[unit] + 1;
           for (unit4 = 0; unit4 < game.num_units; unit4++) {
             if ((units[unit4].id != 0) && ((int)units[unit4].owner == unit)) {
               unit_exhaust_moves(unit4);
@@ -4485,11 +4485,11 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           break;
         case 0x99:
           net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
-          *(i32 *)(((i8 *)&net_meet_pending_flags) + civ3 * 4) = 1;
-          *(uptr *)(((i8 *)&map_views_block.net_meet_pending_ai_civ) + civ3 * 4) = unit;
-          *(uptr *)(((i8 *)&map_views_block.net_meet_pending_civ) + civ3 * 4) = civ3;
-          *(uptr *)(((i8 *)&map_views_block.net_meet_pending_x) + civ3 * 4) = unit3;
-          *(iptr *)(((i8 *)&map_views_block.net_meet_pending_y) + civ3 * 4) = y2;
+          net_meet_pending_flags[civ3] = 1;
+          map_views_block.net_meet_pending_ai_civ[civ3] = unit;
+          map_views_block.net_meet_pending_civ[civ3] = civ3;
+          map_views_block.net_meet_pending_x[civ3] = unit3;
+          map_views_block.net_meet_pending_y[civ3] = y2;
           break;
         case 0x9a:
           net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
@@ -5803,8 +5803,8 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
       deadline = timer_ticks();
       deadline = limit + deadline;
     }
-    cur_ptr = (int *)((((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6] + map_views_block.diffeng_scan_offset_i32);
-    section_end = (int *)((((i32 *)&diffeng_sections_block.diffeng_section_padded_sizes))[(*(uint *)&map_views_block.diffeng_scan_section) * 6] + (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6]);
+    cur_ptr = (int *)((iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr + map_views_block.diffeng_scan_offset_i32);
+    section_end = (int *)((i32)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].padded_size + (iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr);
     if ((*(uint *)&map_views_block.diffeng_scan_section) == 1) {
       game_mirror = (GameState *)(diffeng_game_section_block.diffeng_game_offset + diffeng_mirror_buf);
       game_mirror->active_unit = game.active_unit;
@@ -5846,8 +5846,8 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
               game_mirror->message_options = game.message_options;
             }
             map_views_block.diffeng_scan_offset_i32 = 0;
-            cur_ptr = (int *)(((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6];
-            section_end = (int *)((((i32 *)&diffeng_sections_block.diffeng_section_padded_sizes))[(*(uint *)&map_views_block.diffeng_scan_section) * 6] + (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6]
+            cur_ptr = (int *)(iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr;
+            section_end = (int *)((i32)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].padded_size + (iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr
                              );
           }
         }
@@ -5866,7 +5866,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
           if ((*(int * *)&map_views_block.diffeng_scan_ptr) < (*(int * *)&map_views_block.diffeng_mirror_end)) {
             cur_ptr++;
             if (section_end <= cur_ptr) {
-              run_offset = (int)run_start - (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6];
+              run_offset = (int)run_start - (iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr;
               run_size = (int)section_end - (int)run_start;
               run_section = (*(uint *)&map_views_block.diffeng_scan_section);
               (*(uint *)&map_views_block.diffeng_scan_section)++;
@@ -5882,13 +5882,13 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
                 game_mirror->message_options = game.message_options;
               }
               map_views_block.diffeng_scan_offset_i32 = 0;
-              cur_ptr = (int *)(((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6];
-              section_end = (int *)((((i32 *)&diffeng_sections_block.diffeng_section_padded_sizes))[(*(uint *)&map_views_block.diffeng_scan_section) * 6] +
-                               (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6]);
+              cur_ptr = (int *)(iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr;
+              section_end = (int *)((i32)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].padded_size +
+                               (iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr);
             }
           }
           else {
-            run_offset = (int)run_start - (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6];
+            run_offset = (int)run_start - (iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr;
             run_size = (int)(*(int * *)&map_views_block.diffeng_mirror_end) - (int)mirror_start;
             run_section = (*(uint *)&map_views_block.diffeng_scan_section);
             (*(int * *)&map_views_block.diffeng_scan_ptr) = (int *)diffeng_mirror_buf;
@@ -5904,7 +5904,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
           err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_difflength_diff_engine_message_length,(iptr)&str_d_ss_franklinton_difference_engine_cpp_2,0xee);
         }
         if (run_size == 0) {
-          run_offset = (int)run_start - (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6];
+          run_offset = (int)run_start - (iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr;
           run_section = (*(uint *)&map_views_block.diffeng_scan_section);
           run_size = (int)(*(int * *)&map_views_block.diffeng_scan_ptr) - (int)mirror_start;
         }
@@ -5956,7 +5956,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
         XD_FlushSendBuffer(5000);
       }
     }
-    map_views_block.diffeng_scan_offset_i32 = (int)cur_ptr - (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6];
+    map_views_block.diffeng_scan_offset_i32 = (int)cur_ptr - (iptr)diffeng_section_table[(*(uint *)&map_views_block.diffeng_scan_section)].data_ptr;
   }
   return bytes_changed;
 }
@@ -8320,10 +8320,10 @@ i32 * __thiscall parley_send_offer(ParleyWindow *self,int mode)
   int right_size;
   int left_size;
   
-  offer_kind = *(i32 *)(((i8 *)&parley_offer_kinds) + mode * 4);
+  offer_kind = parley_offer_kinds[mode];
   parley_wnd_block.offer_counts[0] = 0;
   parley_wnd_block.offer_counts[1] = 0;
-  right_size = *(int *)(((i8 *)&parley_item_header_sizes) + self->side_kind[1] * 4);
+  right_size = parley_item_header_sizes[self->side_kind[1]];
   switch(self->side_kind[1]) {
   case 8:
   case 0xc:
@@ -8348,7 +8348,7 @@ i32 * __thiscall parley_send_offer(ParleyWindow *self,int mode)
   }
   total_size = right_size + 0x20;
   if (mode == 0xe) {
-    left_size = *(int *)(((i8 *)&parley_item_header_sizes) + self->side_kind[0] * 4);
+    left_size = parley_item_header_sizes[self->side_kind[0]];
     switch(self->side_kind[0]) {
     case 8:
     case 0xc:
@@ -9109,10 +9109,10 @@ void __cdecl parley_execute_transaction(ParleyOfferMsg *offer)
       net_send_message(0x79,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,0,0,0,0,
                          0,0,0,0);
     }
-    if ((*(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ2 * 4) == 0) && (civs[civ2].num_cities == 0)) {
+    if ((civ_unit_counts_block.civ_unit_totals[civ2] == 0) && (civs[civ2].num_cities == 0)) {
       civ_check_destroyed(civ2,civ);
     }
-    if ((*(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) == 0) && (civs[civ].num_cities == 0)) {
+    if ((civ_unit_counts_block.civ_unit_totals[civ] == 0) && (civs[civ].num_cities == 0)) {
       civ_check_destroyed(civ,civ2);
     }
     dbg_logf((const char *)&str_end_executeparleytransaction_message_d,net_send_sequence);
@@ -9408,13 +9408,13 @@ void __cdecl parley_cede_city(uptr city,iptr civ)
         if ((char)unit_types[units[unit].type].role < 5) {
           civs[civ].num_military_units++;
         }
-        *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) = *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) + 1;
+        civ_unit_counts_block.civ_unit_totals[civ] = civ_unit_counts_block.civ_unit_totals[civ] + 1;
         if ((civs[civ2].num_military_units != 0) &&
            ((char)unit_types[units[unit].type].role < 5)) {
           civs[civ2].num_military_units--;
         }
-        if (*(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ2 * 4) != 0) {
-          *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ2 * 4) = *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ2 * 4) - 1;
+        if (civ_unit_counts_block.civ_unit_totals[civ2] != 0) {
+          civ_unit_counts_block.civ_unit_totals[civ2] = civ_unit_counts_block.civ_unit_totals[civ2] - 1;
         }
       }
     }
@@ -9539,13 +9539,13 @@ void __cdecl parley_transfer_units(iptr civ,ParleyOfferItem *items)
         if ((char)unit_types[units[unit].type].role < 5) {
           civs[civ].num_military_units++;
         }
-        *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) = *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) + 1;
+        civ_unit_counts_block.civ_unit_totals[civ] = civ_unit_counts_block.civ_unit_totals[civ] + 1;
         if ((civs[civ2].num_military_units != 0) &&
            ((char)unit_types[units[unit].type].role < 5)) {
           civs[civ2].num_military_units--;
         }
-        if (*(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ2 * 4) != 0) {
-          *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ2 * 4) = *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ2 * 4) - 1;
+        if (civ_unit_counts_block.civ_unit_totals[civ2] != 0) {
+          civ_unit_counts_block.civ_unit_totals[civ2] = civ_unit_counts_block.civ_unit_totals[civ2] - 1;
         }
         unit_relocate(unit,x2,y2,1);
         unit_reveal_surroundings(unit,0);
@@ -14778,7 +14778,7 @@ parley_create_city_list_pane(ParleyWindow *self,RECT *rect,int pane,i32 own_citi
   rect2.top = rect->top;
   rect2.right = rect->right;
   rect2.bottom = rect->bottom;
-  *(i32 *)(((i8 *)&sprite_picker_sprite_block.parley_pane_own_cities) + pane * 4) = own_cities;
+  sprite_picker_sprite_block.parley_pane_own_cities[pane] = own_cities;
   parley_build_city_list(self,pane,0);
   if (self->list_counts[pane] < 1) {
     field_ptr = (u8 *)&self->list_first_row[pane];
@@ -15431,8 +15431,8 @@ void __thiscall parley_build_city_list(ParleyWindow *self,int pane,int keep_sele
       return;
     }
     if ((cities[city].id != 0) &&
-       (((*(int *)(((i8 *)&sprite_picker_sprite_block.parley_pane_own_cities) + pane * 4) != 0 && (cities[city].owner == (*(i8 *)&human_civ)))
-        || (((*(int *)(((i8 *)&sprite_picker_sprite_block.parley_pane_own_cities) + pane * 4) == 0 &&
+       (((sprite_picker_sprite_block.parley_pane_own_cities[pane] != 0 && (cities[city].owner == (*(i8 *)&human_civ)))
+        || (((sprite_picker_sprite_block.parley_pane_own_cities[pane] == 0 &&
              ((int)cities[city].owner == self->other_civ)) &&
             (((1 << ((byte)(*(i8 *)&human_civ) & 0x1f) & (int)(char)cities[city].known_to) != 0 ||
              ((int)cities[city].owner == ((*(i8 *)&human_civ) & 0xffU))))))))) {
@@ -16441,7 +16441,7 @@ void __cdecl net_host_wait_production_idle(void)
     for (civ = 1; civ < 8; civ++) {
       if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
           ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
-         (*(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + civ * 4) == 0)) {
+         (dialog_text_font_obj_block.net_civ_phase_done[civ] == 0)) {
         all_done = false;
         break;
       }
@@ -16467,7 +16467,7 @@ void __cdecl net_host_wait_human_moves_idle(void)
     for (civ = 1; civ < 8; civ++) {
       if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
           ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
-         (*(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + civ * 4) == 0)) {
+         (dialog_text_font_obj_block.net_civ_phase_done[civ] == 0)) {
         all_done = false;
         break;
       }
@@ -16722,9 +16722,9 @@ turn_loop:
           }
           if ((net_session_block.nm_end_sequence_count == 0) && (game_loop_active != '\0')) {
             net_session_block.nm_human_movement_count = 0;
-            if ((*(short *)(((i8 *)&civ_saved_cursor_x_block.civ_intro_shown) + human_civ[0] * 2) == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+            if ((civ_saved_cursor_x_block.civ_intro_shown[human_civ[0]] == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
               civ_intro_popup(human_civ[0]);
-              *(i16 *)(((i8 *)&civ_saved_cursor_x_block.civ_intro_shown) + human_civ[0] * 2) = 1;
+              civ_saved_cursor_x_block.civ_intro_shown[human_civ[0]] = 1;
             }
             new_casualties = net_session_block.casualty_counts[human_civ[0]] -
                        net_session_block.casualty_reported_counts[human_civ[0]];
@@ -16900,7 +16900,7 @@ net_batch_add(int record_type,i32 x,i32 y,i32 arg1,iptr arg2,
   if (net_session_block.net_host_flag != '\0') {
     err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_gnetmgr_bserver_3,(iptr)&str_d_ss_franklinton_map_cpp,0x3de);
   }
-  if (0x100 - net_batch_used_dwords < *(int *)(((i8 *)&net_batch_record_sizes) + record_type * 4) + 1) {
+  if (0x100 - net_batch_used_dwords < net_batch_record_sizes[record_type] + 1) {
     net_send_message(0x59,0,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(5000);
     _memset(((i8 *)&net_batch_buffer),0,0x400);
@@ -16908,18 +16908,18 @@ net_batch_add(int record_type,i32 x,i32 y,i32 arg1,iptr arg2,
     net_batch_used_dwords = 1;
   }
   net_batch_buffer[0]++;
-  *(int *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = record_type;
+  net_batch_buffer[net_batch_used_dwords] = record_type;
   net_batch_used_dwords++;
   switch(record_type) {
   case 0:
   case 2:
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = x;
+    net_batch_buffer[net_batch_used_dwords] = x;
     net_batch_used_dwords++;
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = y;
+    net_batch_buffer[net_batch_used_dwords] = y;
     net_batch_used_dwords++;
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = arg1;
+    net_batch_buffer[net_batch_used_dwords] = arg1;
     net_batch_used_dwords++;
-    *(iptr *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = arg2;
+    net_batch_buffer[net_batch_used_dwords] = arg2;
     net_batch_used_dwords++;
     break;
   case 1:
@@ -16927,23 +16927,23 @@ net_batch_add(int record_type,i32 x,i32 y,i32 arg1,iptr arg2,
   case 4:
   case 5:
   case 6:
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = x;
+    net_batch_buffer[net_batch_used_dwords] = x;
     net_batch_used_dwords++;
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = y;
+    net_batch_buffer[net_batch_used_dwords] = y;
     net_batch_used_dwords++;
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = arg1;
+    net_batch_buffer[net_batch_used_dwords] = arg1;
     net_batch_used_dwords++;
     break;
   case 7:
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = x;
+    net_batch_buffer[net_batch_used_dwords] = x;
     net_batch_used_dwords++;
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = y;
+    net_batch_buffer[net_batch_used_dwords] = y;
     net_batch_used_dwords++;
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = arg1;
+    net_batch_buffer[net_batch_used_dwords] = arg1;
     net_batch_used_dwords++;
-    *(iptr *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = arg2;
+    net_batch_buffer[net_batch_used_dwords] = arg2;
     net_batch_used_dwords++;
-    *(i32 *)(((i8 *)&net_batch_buffer) + net_batch_used_dwords * 4) = arg3;
+    net_batch_buffer[net_batch_used_dwords] = arg3;
     net_batch_used_dwords++;
   }
   return;
@@ -16972,7 +16972,7 @@ void __cdecl net_apply_tile_updates(iptr batch)
     pos++;
     for (records_left = *(int *)(batch + count_offset); 0 < records_left; records_left--) {
       record_type = *(int *)(batch + pos * 4);
-      for (arg_idx = 0; pos = pos + 1, arg_idx < *(int *)(((i8 *)&net_batch_record_sizes) + record_type * 4) - 1;
+      for (arg_idx = 0; pos = pos + 1, arg_idx < net_batch_record_sizes[record_type] - 1;
           arg_idx = arg_idx + 1) {
         args[arg_idx] = *(iptr *)(batch + pos * 4);
       }

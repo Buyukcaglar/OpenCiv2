@@ -7,7 +7,8 @@ by construction:
 rewrites `*(T *)(B->m + E)`, `*(T *)((u8 *)&B->m + E)`, `*(T *)(B->m)`,
 `*(T *)B->m`, `*(T *)&B->m` (and B.m for a global block variable) where B is
 a variable declared `S *`, `((S *)v)` or a global block, m a member of S at
-offset O whose elements are bytes (or E is absent): the byte offset O + E
+offset O, an array whose elements are bytes (or E is absent; a scalar member
+only as &B->m, since B->m is its value): the byte offset O + E
 names a typed member f of S (an integer or pointer, or an array of them, of
 T's size; not a field_/pad_ member, not bytes unless T is a byte) as B->f or
 B->f[I] with I = (E + O - offsetof f) / sizeof T (cxx_array: every term of E
@@ -228,6 +229,9 @@ def rewrite(body, ds, into, checks, stats):
             if not mi:
                 continue
             _, off, size, mt, et, es, k = mi[0]
+            if k is None and not amp:
+                # a scalar member's value (an address it holds), not its address
+                continue
         if rest and not byte_cast:
             # pointer arithmetic on the member: bytes only
             if amp or k is None or es != 1:

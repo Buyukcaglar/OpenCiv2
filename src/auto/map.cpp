@@ -67,7 +67,7 @@ void __cdecl mapgen_calc_fertility(void)
   int tile_score;
   
   for (landmass2 = 0; landmass2 < 0x40; landmass2++) {
-    *(i16 *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + landmass2 * 0x10) = 0;
+    landmass_table_block.landmass_recs[landmass2].fertile_tiles = 0;
   }
   for (terrain2 = 0; (int)terrain2 < 0x16; terrain2++) {
     terrain = (int)terrain2 % 0xb;
@@ -135,8 +135,8 @@ void __cdecl mapgen_calc_fertility(void)
         tile_score = (tmp >> 1) + 8;
         landmass2 = tile_landmass(x3,y3);
         if (-1 < landmass2) {
-          *(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + landmass2 * 0x10) =
-               *(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + landmass2 * 0x10) + 1;
+          landmass_table_block.landmass_recs[landmass2].fertile_tiles =
+               landmass_table_block.landmass_recs[landmass2].fertile_tiles + 1;
         }
         map_tile = tile_at(x3,y3);
         map_tile->owner = (char)tile_score - 0x10;
@@ -269,7 +269,7 @@ void __cdecl map_generate(int keep_map)
     map_assign_landmass_ids();
     landmass_count = 0;
     for (i = 0; (int)i < 0x40; i++) {
-      if (*(short *)(((i8 *)&landmass_table_block.landmass_table) + i * 0x10) != 0) {
+      if (landmass_table_block.landmass_recs[i].tiles != 0) {
         landmass_count++;
       }
     }
@@ -3311,9 +3311,9 @@ map_redraw_area_all_views(i32 x,i32 y,i32 radius,iptr civ,
   int view_idx;
   
   for (view_idx = 0; view_idx < 8; view_idx++) {
-    if ((view_idx == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view_idx * 0x3f0) != 0)) {
+    if ((view_idx == 0) || (map_views_block.map_view_recs[view_idx].open != 0)) {
       mapview_redraw_area
-                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view_idx * 0x3f0),x,y,radius,civ
+                ((ViewWindow *)&map_views_block.map_view_recs[view_idx],x,y,radius,civ
                  ,full_redraw);
     }
   }
@@ -3327,9 +3327,9 @@ void __cdecl map_redraw_tile_all_views(i32 x,i32 y)
   int view_idx;
   
   for (view_idx = 0; view_idx < 8; view_idx++) {
-    if ((view_idx == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view_idx * 0x3f0) != 0)) {
+    if ((view_idx == 0) || (map_views_block.map_view_recs[view_idx].open != 0)) {
       mapview_redraw_tile
-                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view_idx * 0x3f0),x,y);
+                ((ViewWindow *)&map_views_block.map_view_recs[view_idx],x,y);
     }
   }
   return;
@@ -3342,9 +3342,9 @@ void __cdecl map_redraw_neighbors_all_views(i32 x,iptr y)
   int view_idx;
   
   for (view_idx = 0; view_idx < 8; view_idx++) {
-    if ((view_idx == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view_idx * 0x3f0) != 0)) {
+    if ((view_idx == 0) || (map_views_block.map_view_recs[view_idx].open != 0)) {
       mapview_redraw_tile_neighbors
-                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view_idx * 0x3f0),x,y);
+                ((ViewWindow *)&map_views_block.map_view_recs[view_idx],x,y);
     }
   }
   return;
@@ -3357,9 +3357,9 @@ void __cdecl map_redraw_all_views(iptr civ,i32 full_redraw)
   int view_idx;
   
   for (view_idx = 0; view_idx < 8; view_idx++) {
-    if ((view_idx == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view_idx * 0x3f0) != 0)) {
+    if ((view_idx == 0) || (map_views_block.map_view_recs[view_idx].open != 0)) {
       mapview_redraw
-                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view_idx * 0x3f0),civ,full_redraw);
+                ((ViewWindow *)&map_views_block.map_view_recs[view_idx],civ,full_redraw);
     }
   }
   return;
@@ -3759,7 +3759,7 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
                 ((map_views_block.path_flood_goal_x == x2 && (y2 == map_views_block.path_flood_goal_y)))) &&
                ((!start_on_land ||
                 ((check = tile_landmass(x2,y2), check != 0x3f &&
-                 (*(short *)(((i8 *)&landmass_table_block.water_body_sizes) + check * 0x10) != 1)))))) {
+                 (landmass_table_block.landmass_recs[check].water_body_size != 1)))))) {
               new_cost = cost;
               if (-1 < path_owner_civ) {
                 civ = tile_city_or_unit_owner(x2,y2);
@@ -4122,7 +4122,7 @@ void __cdecl landmass_set_border_bit(int landmass,iptr bit)
   byte bit_mask[4];
   
   bit_index_split(bit,(iptr)&byte_idx,(iptr)bit_mask);
-  (((i8 *)&landmass_table_block.landmass_border_bits))[landmass * 0x10 + byte_idx] = (((i8 *)&landmass_table_block.landmass_border_bits))[landmass * 0x10 + byte_idx] | bit_mask[0]
+  landmass_table_block.landmass_recs[landmass].border_bits[byte_idx] = landmass_table_block.landmass_recs[landmass].border_bits[byte_idx] | bit_mask[0]
   ;
   return;
 }
@@ -4143,7 +4143,7 @@ void __cdecl landmass_compute_borders(void)
   
   for (landmass_idx = 0; landmass_idx < 0x40; landmass_idx++) {
     for (dir = 0; (int)dir < 8; dir++) {
-      (((i8 *)&landmass_table_block.landmass_border_bits))[dir + landmass_idx * 0x10] = 0;
+      landmass_table_block.landmass_recs[landmass_idx].border_bits[dir] = 0;
     }
   }
   for (y2 = 0; (int)y2 < (int)map.height; y2++) {
@@ -4202,8 +4202,8 @@ uint __cdecl map_assign_landmass_ids(void)
   overflow_mask = 0;
   ids_handle = 0;
   for (i = 0; i < 0x40; i++) {
-    *(i16 *)(((i8 *)&landmass_table_block.landmass_table) + i * 0x10) = 0;
-    *(i16 *)(((i8 *)&landmass_table_block.water_body_sizes) + i * 0x10) = 0;
+    landmass_table_block.landmass_recs[i].tiles = 0;
+    landmass_table_block.landmass_recs[i].water_body_size = 0;
   }
   counts_handle = mem_handle_alloc_tracked(0x20000);
   _Dst = (i32 *)mem_lock_handle(counts_handle);
@@ -4356,11 +4356,11 @@ uint __cdecl map_assign_landmass_ids(void)
         }
         for (j = 0; j < 0x40; j++) {
           if (ocean_pass == 0) {
-            *(short *)(((i8 *)&landmass_table_block.landmass_table) + j * 0x10) =
+            landmass_table_block.landmass_recs[j].tiles =
                  (short)_Dst[j];
           }
           else {
-            *(short *)(((i8 *)&landmass_table_block.water_body_sizes) + j * 0x10) =
+            landmass_table_block.landmass_recs[j].water_body_size =
                  (short)_Dst[j];
           }
         }
@@ -4387,26 +4387,26 @@ void __cdecl terrain_editor_load_rules(void)
   for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
     _Count = 0x28;
     _Source = label_string(terrain_types[terrain2].name);
-    _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + terrain2 * 0x28,_Source,_Count);
-    (((i8 *)&editor_text_dlg_wnd_block.editor_item_name_ends))[terrain2 * 0x28] = 0;
-    *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + terrain2 * 0x58) = (int)(char)terrain_types[terrain2].move_cost;
-    *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field1) + terrain2 * 0x58) = (int)(char)terrain_types[terrain2].defense;
+    _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[terrain2],_Source,_Count);
+    editor_text_dlg_wnd_block.editor_item_name_recs[terrain2][0x27] = 0;
+    editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[0] = (int)(char)terrain_types[terrain2].move_cost;
+    editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[1] = (int)(char)terrain_types[terrain2].defense;
     for (i = 0; i < 3; i++) {
-      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + i * 4 + terrain2 * 0x58) =
+      editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[2 + i] =
            (int)(char)terrain_types[terrain2].yields[i];
     }
     if (terrain2 < 0xb) {
       for (i = 0; i < 2; i++) {
-        *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field5) + i * 0x10 + terrain2 * 0x58) =
+        editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[5 + i * 4] =
              (int)terrain_types[terrain2].improve_to[i];
-        *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field6) + i * 0x10 + terrain2 * 0x58) =
+        editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[6 + i * 4] =
              (int)(char)terrain_types[terrain2].improve_bonus[i];
-        *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field7) + i * 0x10 + terrain2 * 0x58) =
+        editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[7 + i * 4] =
              (int)(char)terrain_types[terrain2].improve_turns[i];
-        *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field8) + i * 0x10 + terrain2 * 0x58) =
+        editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[8 + i * 4] =
              (int)(char)terrain_types[terrain2].improve_ai_govt[i];
       }
-      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field13) + terrain2 * 0x58) = (int)terrain_types[terrain2].transform_to;
+      editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[13] = (int)terrain_types[terrain2].transform_to;
     }
   }
   return;
@@ -4424,27 +4424,27 @@ void __cdecl terrain_editor_store_rules(void)
   
   for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
     _Count = 0xf;
-    _Source = ((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + terrain2 * 0x28;
+    _Source = editor_text_dlg_wnd_block.editor_item_name_recs[terrain2];
     _Dest = label_string(terrain_types[terrain2].name);
     _strncpy(_Dest,_Source,_Count);
-    terrain_types[terrain2].move_cost = (((i8 *)&editor_text_dlg_wnd_block.editor_items))[terrain2 * 0x58];
-    terrain_types[terrain2].defense = (((i8 *)&editor_text_dlg_wnd_block.editor_item_field1))[terrain2 * 0x58];
+    terrain_types[terrain2].move_cost = (i8)editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[0];
+    terrain_types[terrain2].defense = (i8)editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[1];
     for (i = 0; i < 3; i++) {
       terrain_types[terrain2].yields[i] =
-           (((i8 *)&editor_text_dlg_wnd_block.editor_item_field2))[i * 4 + terrain2 * 0x58];
+           (i8)editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[2 + i];
     }
     if (terrain2 < 0xb) {
       for (i = 0; i < 2; i++) {
         terrain_types[terrain2].improve_to[i] =
-             (((i8 *)&editor_text_dlg_wnd_block.editor_item_field5))[i * 0x10 + terrain2 * 0x58];
+             (i8)editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[5 + i * 4];
         terrain_types[terrain2].improve_bonus[i] =
-             (((i8 *)&editor_text_dlg_wnd_block.editor_item_field6))[i * 0x10 + terrain2 * 0x58];
+             (i8)editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[6 + i * 4];
         terrain_types[terrain2].improve_turns[i] =
-             (((i8 *)&editor_text_dlg_wnd_block.editor_item_field7))[i * 0x10 + terrain2 * 0x58];
+             (i8)editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[7 + i * 4];
         terrain_types[terrain2].improve_ai_govt[i] =
-             (((i8 *)&editor_text_dlg_wnd_block.editor_item_field8))[i * 0x10 + terrain2 * 0x58];
+             (i8)editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[8 + i * 4];
       }
-      terrain_types[terrain2].transform_to = (((i8 *)&editor_text_dlg_wnd_block.editor_item_field13))[terrain2 * 0x58];
+      terrain_types[terrain2].transform_to = (i8)editor_text_dlg_wnd_block.editor_item_recs[terrain2].values[13];
     }
   }
   return;
@@ -4486,22 +4486,22 @@ void __cdecl terrain_editor_load_controls(void)
   int sel;
   
   for (field = 1; field < 0xf; field++) {
-    if (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_kinds) + field * 8) == 9) {
+    if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].kind == 9) {
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + field * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd));
+                         &editor_text_dlg_wnd_block.active_editor_wnd->edits[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
       _sprintf(text,((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_int_fmt),
-               *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58));
+               *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58));
       ctrl_set_text
                 ((ControlTextView *)
-                 (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + field * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
+                 &editor_text_dlg_wnd_block.active_editor_wnd->edits[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot],
                  (const char *)text);
     }
-    else if (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_kinds) + field * 8) == 0xc) {
+    else if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].kind == 0xc) {
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + field * 8) * 0x38));
-      sel = *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58);
+                         &editor_text_dlg_wnd_block.active_editor_wnd->combos[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
+      sel = *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58);
       if (field == 0) {
         sel = terrain_editor_terrain_to_sel(sel);
       }
@@ -4513,7 +4513,7 @@ void __cdecl terrain_editor_load_controls(void)
       }
       combo_set_cur_sel
                 ((ComboBoxSetSelView *)
-                 (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + field * 8) * 0x38),sel);
+                 &editor_text_dlg_wnd_block.active_editor_wnd->combos[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot],sel);
     }
   }
   return;
@@ -4532,27 +4532,27 @@ int __cdecl terrain_editor_store_controls(void)
   
   err_count = 0;
   for (field = 1; field < 0xf; field++) {
-    if (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_kinds) + field * 8) == 9) {
+    if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].kind == 9) {
       ctrl_get_text
                 ((ControlTextView *)
-                 (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + field * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
+                 &editor_text_dlg_wnd_block.active_editor_wnd->edits[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot],
                  (char *)text);
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + field * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd));
+                         &editor_text_dlg_wnd_block.active_editor_wnd->edits[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
       ctrl_id -= 0xca;
       value = _atoi(text);
       clamped = int_clamp(value,*(i32 *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_field_min_table) + ctrl_id * 4),
                                  *(i32 *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_field_max_table) + ctrl_id * 4));
-      *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58 + ctrl_id * 4) = clamped;
-      if (*(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58 + ctrl_id * 4) != value) {
+      editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[ctrl_id] = clamped;
+      if (editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[ctrl_id] != value) {
         err_count++;
       }
     }
-    else if (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_kinds) + field * 8) == 0xc) {
+    else if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].kind == 0xc) {
       value = combo_get_cur_sel
                           ((ComboBoxGetSelView *)
-                           (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + field * 8) * 0x38));
+                           &editor_text_dlg_wnd_block.active_editor_wnd->combos[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
       if (field == 0) {
         value = terrain_editor_sel_to_terrain(value);
       }
@@ -4564,8 +4564,8 @@ int __cdecl terrain_editor_store_controls(void)
       }
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + field * 8) * 0x38));
-      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58 + ctrl_id * 4) = value;
+                         &editor_text_dlg_wnd_block.active_editor_wnd->combos[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
+      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58 + ctrl_id * 4) = value;
     }
   }
   return err_count;
@@ -4683,11 +4683,11 @@ void __cdecl terrain_editor_on_ok(void)
       uType = 0x10;
       lpCaption = str_file_i_o_error_4;
       lpText = msg;
-      wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+      wnd = wnd_get_window((WndBase *)&editor_text_dlg_wnd_block.active_editor_wnd->window);
       MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
-    wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+    wnd_end_modal_loop(&editor_text_dlg_wnd_block.active_editor_wnd->window);
     menu_update_states();
   }
   else {
@@ -4697,12 +4697,12 @@ void __cdecl terrain_editor_on_ok(void)
       parent_wnd2 = 0;
     }
     else {
-      parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+      parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
     }
     dlg_set_parent_window(parent_wnd2);
     popup_text((const char *)&str_debug_11,(const char *)&str_notice_12);
     dlg_set_parent_window(0);
-    hWnd = control_get_hwnd((ControlHwndView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
+    hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
     SetFocus(hWnd);
   }
   return;
@@ -4724,15 +4724,15 @@ void __cdecl terrain_editor_on_rename(void)
   iptr sel1;
   int result;
   
-  terrain2 = *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec);
-  _strncpy(old_name,((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + terrain2 * 0x28,0xf);
+  terrain2 = editor_text_dlg_wnd_block.active_editor_wnd->item;
+  _strncpy(old_name,editor_text_dlg_wnd_block.editor_item_name_recs[terrain2],0xf);
   old_name[14] = 0;
   do {
     if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
       parent_wnd2 = 0;
     }
     else {
-      parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+      parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
     }
     dlg_set_parent_window(parent_wnd2);
     result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_terrname,0xe,(iptr)old_name,(iptr)new_name);
@@ -4741,43 +4741,43 @@ void __cdecl terrain_editor_on_rename(void)
     len = _strlen(new_name);
   } while (len == 0);
   if (-1 < result) {
-    crt_strcpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + terrain2 * 0x28,new_name);
-    sel1 = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
-    sel2 = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
-    sel3 = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4));
-    sel4 = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414));
-    combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
-    combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
-    combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4));
-    combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414));
+    crt_strcpy(editor_text_dlg_wnd_block.editor_item_name_recs[terrain2],new_name);
+    sel1 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    sel2 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+    sel3 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
+    sel4 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5]);
+    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
+    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5]);
     label = (iptr)label_string(label_string_ids[0x1ef]);
-    combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)label);
+    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1ef]);
-    combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4),(const char *)label);
+    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)label);
+    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4),(const char *)label);
+    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414),(const char *)label);
+    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],(const char *)label);
     for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
       if ((terrain2 != 0xd) && (terrain2 != 0x18)) {
         combo_add_string
-                  ((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc),(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + terrain2 * 0x28));
+                  ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
       }
     }
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
       combo_add_string
-                ((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + terrain2 * 0x28));
+                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
       combo_add_string
-                ((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4),(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + terrain2 * 0x28));
+                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
       combo_add_string
-                ((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414),(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + terrain2 * 0x28));
+                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
     }
-    combo_set_cur_sel((ComboBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc),sel1);
-    combo_set_cur_sel((ComboBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),sel2);
-    combo_set_cur_sel((ComboBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4),sel3);
-    combo_set_cur_sel((ComboBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414),sel4);
+    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],sel1);
+    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],sel2);
+    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],sel3);
+    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],sel4);
     terrain_editor_redraw();
   }
   return;
@@ -4793,7 +4793,7 @@ void __cdecl terrain_editor_on_help(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   popup_text((const char *)&str_help_5,(const char *)&str_terrain_3);
@@ -4806,7 +4806,7 @@ void __cdecl terrain_editor_on_cancel(void)
 
 {
   editor_text_dlg_wnd_block.editor_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+  wnd_end_modal_loop(&editor_text_dlg_wnd_block.active_editor_wnd->window);
   return;
 }
 
@@ -4826,12 +4826,12 @@ void __cdecl terrain_editor_on_edit_icon(void)
   sprites = (i8 *)0x0;
   save_fn = ((i8 *)sprite_sheet_save_terrain1);
   sheet_id = 7;
-  if (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) == 3) {
+  if (editor_text_dlg_wnd_block.active_editor_wnd->item == 3) {
     if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
       parent_wnd1 = 0;
     }
     else {
-      parent_wnd1 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+      parent_wnd1 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
     }
     dlg_set_parent_window(parent_wnd1);
     while( true ) {
@@ -4842,7 +4842,7 @@ void __cdecl terrain_editor_on_edit_icon(void)
     }
     if (choice != -1) {
       if (choice == 0) {
-        sprites = ((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x3c;
+        sprites = ((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x3c;
       }
       else {
         sprites = ((i8 *)&forest_sprites) + (choice * 4 - 4) * 0xf;
@@ -4854,12 +4854,12 @@ void __cdecl terrain_editor_on_edit_icon(void)
     }
     dlg_set_parent_window(0);
   }
-  else if (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) == 4) {
+  else if (editor_text_dlg_wnd_block.active_editor_wnd->item == 4) {
     if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
       parent_wnd2 = 0;
     }
     else {
-      parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+      parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
     }
     dlg_set_parent_window(parent_wnd2);
     while( true ) {
@@ -4870,7 +4870,7 @@ void __cdecl terrain_editor_on_edit_icon(void)
     }
     if (choice != -1) {
       if (choice == 0) {
-        sprites = ((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x3c;
+        sprites = ((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x3c;
       }
       else {
         sprites = ((i8 *)&hill_sprites_block.hill_sprites) + (choice * 4 - 4) * 0xf;
@@ -4882,12 +4882,12 @@ void __cdecl terrain_editor_on_edit_icon(void)
     }
     dlg_set_parent_window(0);
   }
-  else if (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) == 5) {
+  else if (editor_text_dlg_wnd_block.active_editor_wnd->item == 5) {
     if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
       parent_wnd3 = 0;
     }
     else {
-      parent_wnd3 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+      parent_wnd3 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
     }
     dlg_set_parent_window(parent_wnd3);
     while( true ) {
@@ -4898,7 +4898,7 @@ void __cdecl terrain_editor_on_edit_icon(void)
     }
     if (choice != -1) {
       if (choice == 0) {
-        sprites = ((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x3c;
+        sprites = ((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x3c;
       }
       else {
         sprites = ((i8 *)&mountain_sprites) + (choice * 4 - 4) * 0xf;
@@ -4910,14 +4910,14 @@ void __cdecl terrain_editor_on_edit_icon(void)
     }
     dlg_set_parent_window(0);
   }
-  else if (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) < 0xb) {
-    sprites = ((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x3c;
+  else if (editor_text_dlg_wnd_block.active_editor_wnd->item < 0xb) {
+    sprites = ((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x3c;
   }
-  else if (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) < 0x16) {
-    sprites = ((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) % 0xb) * 0x78;
+  else if (editor_text_dlg_wnd_block.active_editor_wnd->item < 0x16) {
+    sprites = ((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + (editor_text_dlg_wnd_block.active_editor_wnd->item % 0xb) * 0x78;
   }
   else {
-    sprites = ((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) % 0xb) * 0x78;
+    sprites = ((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + (editor_text_dlg_wnd_block.active_editor_wnd->item % 0xb) * 0x78;
   }
   if (sprites != (i8 *)0x0) {
     title = (iptr)label_string(label_string_ids[0x1f6]);
@@ -4943,7 +4943,7 @@ void __cdecl terrain_editor_on_edit_river(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   while( true ) {
@@ -4988,7 +4988,7 @@ void __cdecl terrain_editor_on_edit_coast(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   while( true ) {
@@ -5030,7 +5030,7 @@ void __cdecl terrain_editor_on_edit_misc(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   while( true ) {
@@ -5074,49 +5074,49 @@ void __cdecl terrain_editor_update_visibility(void)
   int sel;
   int i;
   
-  if (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) < 0xb) {
-    ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
-    sel = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
+  if (editor_text_dlg_wnd_block.active_editor_wnd->item < 0xb) {
+    ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+    sel = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
     if (sel == 0) {
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x5b4));
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x5fc));
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[5]);
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[6]);
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
     }
     else if (sel == 1) {
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x5b4));
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x5fc));
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[5]);
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[6]);
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
     }
     else {
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x5b4));
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x5fc));
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[5]);
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[6]);
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
     }
-    ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4));
-    sel = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4));
+    ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
+    sel = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
     if (sel == 0) {
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x644));
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x68c));
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3dc));
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[7]);
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[8]);
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[4]);
     }
     else if (sel == 1) {
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x644));
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x68c));
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3dc));
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[7]);
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[8]);
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[4]);
     }
     else {
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x644));
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x68c));
-      ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3dc));
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[7]);
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[8]);
+      ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[4]);
     }
-    ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414));
+    ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5]);
   }
   else {
     for (i = 5; i < 9; i++) {
-      control_hide((Control *)(i * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd));
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[i]);
     }
     for (i = 1; i < 6; i++) {
-      control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + i * 0x38));
+      control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[i]);
     }
   }
   return;
@@ -5134,28 +5134,28 @@ void __cdecl terrain_editor_on_combo(int ctrl_id)
   if (ctrl_id == 0xc9) {
     errors = terrain_editor_store_controls();
     if (errors == 0) {
-      terrain = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
+      terrain = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
       terrain = terrain_editor_sel_to_terrain(terrain);
-      *(i32 *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) = terrain;
+      editor_text_dlg_wnd_block.active_editor_wnd->item = terrain;
       terrain_editor_load_controls();
       terrain_editor_update_visibility();
       terrain_editor_redraw();
     }
     else {
       combo_set_cur_sel
-                ((ComboBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc),*(iptr *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec));
+                ((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],editor_text_dlg_wnd_block.active_editor_wnd->item);
       terrain_editor_load_controls();
       terrain_editor_redraw();
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
         parent_wnd2 = 0;
       }
       else {
-        parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+        parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
       }
       dlg_set_parent_window(parent_wnd2);
       popup_text((const char *)&str_debug_11,(const char *)&str_notice_13);
       dlg_set_parent_window(0);
-      hWnd = control_get_hwnd((ControlHwndView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
+      hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
       SetFocus(hWnd);
     }
   }
@@ -5177,8 +5177,8 @@ void __thiscall terrain_editor_create_combo(ViewWindow *self,int combo_idx)
   iptr terrain2;
   i8 rect[16];
   
-  left = *(int *)(((i8 *)&terrain_editor_combo_pos_x_block.terrain_editor_combo_pos_x) + combo_idx * 8) + self->client_x;
-  top = *(int *)(((i8 *)&terrain_editor_combo_pos_x_block.terrain_editor_combo_pos_y) + combo_idx * 8) + self->client_y;
+  left = terrain_editor_combo_pos_x_block.terrain_editor_combo_pos[combo_idx].x + self->client_x;
+  top = terrain_editor_combo_pos_x_block.terrain_editor_combo_pos[combo_idx].y + self->client_y;
   if (combo_idx == 0) {
     rect_set_xywh((iptr)rect,left - 0x1e,top,0xa0,self->sci_rate_sel << 3);
   }
@@ -5460,7 +5460,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   palette_init(&palette);
   seh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
-  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
+  editor_text_dlg_wnd_block.active_editor_wnd = (EditorWindow *)self;
   this_00 = (DibSurface *)operator_new(0x48);
   (*((char *)&seh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
@@ -5492,11 +5492,11 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   for (ctrl_idx = 0; ctrl_idx < 0xf; ctrl_idx++) {
-    if (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_kinds) + ctrl_idx * 8) == 9) {
-      terrain_editor_create_edit(self,*(i32 *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + ctrl_idx * 8));
+    if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[ctrl_idx].kind == 9) {
+      terrain_editor_create_edit(self,terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[ctrl_idx].slot);
     }
-    else if (*(int *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_kinds) + ctrl_idx * 8) == 0xc) {
-      terrain_editor_create_combo(self,*(i32 *)(((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_slots) + ctrl_idx * 8));
+    else if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[ctrl_idx].kind == 0xc) {
+      terrain_editor_create_combo(self,terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[ctrl_idx].slot);
     }
   }
   btn_x = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
@@ -5852,21 +5852,21 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
   anim_origin_stack_unit = -1;
   for (view = 0; view < 8; view++) {
     view_active[view] = '\0';
-    if (((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) &&
+    if (((view == 0) || (map_views_block.map_view_recs[view].open != 0)) &&
        ((tmp = mapview_tile_in_view
-                           ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),from_x,from_y),
+                           ((ViewWindow *)&map_views_block.map_view_recs[view],from_x,from_y),
         tmp != 0 ||
         (tmp = mapview_tile_in_view
-                           ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),to_x,to_y
+                           ((ViewWindow *)&map_views_block.map_view_recs[view],to_x,to_y
                            ), tmp != 0)))) {
       view_active[view] = 1;
       saved_origin_x[view] = (((i32 *)&map_views_block.mapview_origin_x))[view * 0xfc];
       saved_origin_y[view] = (((i32 *)&map_views_block.mapview_origin_y))[view * 0xfc];
       mapview_tile_to_screen
-                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),(iptr)&from_sx,
+                ((ViewWindow *)&map_views_block.map_view_recs[view],(iptr)&from_sx,
                  (iptr)&from_sy,from_x,from_y);
       mapview_tile_to_screen
-                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),(iptr)&to_sx,
+                ((ViewWindow *)&map_views_block.map_view_recs[view],(iptr)&to_sx,
                  (iptr)&to_sy,to_x,to_y);
       from_sy -= (((i32 *)&map_views_block.mapview_half_tile_height))[view * 0xfc];
       to_sy -= (((i32 *)&map_views_block.mapview_half_tile_height))[view * 0xfc];
@@ -5884,12 +5884,12 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
       if (to_sx <= from_sx) {
         tmp = from_sx;
       }
-      rect_right2[view] = *(int *)(((i8 *)&map_views_block.mapview_tile_width) + view * 0x3f0) + tmp - 1;
+      rect_right2[view] = map_views_block.map_view_recs[view].tile_width + tmp - 1;
       tmp = to_sy;
       if (to_sy <= from_sy) {
         tmp = from_sy;
       }
-      rect_bottom2[view] = *(int *)(((i8 *)&map_views_block.mapview_unit_sprite_height) + view * 0x3f0) + tmp - 1;
+      rect_bottom2[view] = map_views_block.map_view_recs[view].unit_sprite_height + tmp - 1;
       cur_sx[view] = from_sx;
       cur_sy[view] = from_sy;
       rect_set((iptr)rect,rect_left2[view],rect_top2[view],
@@ -5901,7 +5901,7 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
       if (any_visible == 0) {
         any_visible = 1;
         frame_delay = 0x10;
-        tmp = map_view_zoom_scale_round((MapViewZoomView *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),2);
+        tmp = map_view_zoom_scale_round((MapViewZoomView *)&map_views_block.map_view_recs[view],2);
         step[view] = tmp;
         tmp = step[view];
         if (tmp < 2) {
@@ -5911,19 +5911,19 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
         if (step[view] == 3) {
           step[view] = 4;
         }
-        num_frames = *(int *)(((i8 *)&map_views_block.mapview_tile_height) + view * 0x3f0) / step[view] + 1;
+        num_frames = map_views_block.map_view_recs[view].tile_height / step[view] + 1;
         frame_delay = (frame_delay << 4) / num_frames;
         if ((unit_types[units[unit].type].domain == 1) &&
            (((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) != 0)) {
           step[view] = step[view] << 1;
-          num_frames = *(int *)(((i8 *)&map_views_block.mapview_tile_height) + view * 0x3f0) / step[view] + 1;
+          num_frames = map_views_block.map_view_recs[view].tile_height / step[view] + 1;
         }
       }
       else {
-        step[view] = *(int *)(((i8 *)&map_views_block.mapview_tile_height) + view * 0x3f0) / num_frames;
+        step[view] = map_views_block.map_view_recs[view].tile_height / num_frames;
       }
       surface_create(saved_bg + view,save_w[view],save_h[view]);
-      gfx_copy_rect_clipped((iptr)(((i8 *)&map_views_block.map_views) + view * 0x3f0),(iptr)(saved_bg + view),
+      gfx_copy_rect_clipped((iptr)&map_views_block.map_view_recs[view],(iptr)(saved_bg + view),
                          rect_left2[view],rect_top2[view],
                          (((i32 *)&map_views_block.mapview_client_origin_x))[view * 0xfc],(((i32 *)&map_views_block.mapview_client_origin_y))[view * 0xfc],0,0,0,0,
                          save_w[view],save_h[view]);
@@ -5942,7 +5942,7 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
       for (view = 0; view < 8; view++) {
         if (view_active[view] != '\0') {
           tmp = mapview_tile_in_view
-                            ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),from_x,from_y);
+                            ((ViewWindow *)&map_views_block.map_view_recs[view],from_x,from_y);
           if (((tmp == 0) || ((((i32 *)&map_views_block.mapview_origin_x))[view * 0xfc] != saved_origin_x[view])) ||
              ((((i32 *)&map_views_block.mapview_origin_y))[view * 0xfc] != saved_origin_y[view])) {
             view_active[view] = '\0';
@@ -5952,14 +5952,14 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
               sound_played = 1;
               snd_play_effect(sound_id,sound_arg,0,0);
             }
-            gfx_draw_unit((iptr)(((i8 *)&map_views_block.map_views) + view * 0x3f0),unit,5,
+            gfx_draw_unit((iptr)&map_views_block.map_view_recs[view],unit,5,
                                cur_sx[view],cur_sy[view],
                                (int)(((i16 *)&map_views_block.mapview_zoom))[view * 0x1f8],1);
             rect_set_xywh((iptr)&dirty_rect,cur_sx[view] + step[view] * -2,
                                cur_sy[view] + step[view] * -2,
-                               step[view] * 4 + *(int *)(((i8 *)&map_views_block.mapview_tile_width) + view * 0x3f0)
+                               step[view] * 4 + map_views_block.map_view_recs[view].tile_width
                                ,step[view] * 4 +
-                                *(int *)(((i8 *)&map_views_block.mapview_unit_sprite_height) + view * 0x3f0));
+                                map_views_block.map_view_recs[view].unit_sprite_height);
             tmp = rect_left2[view];
             if (rect_left2[view] <= dirty_rect.left) {
               tmp = dirty_rect.left;
@@ -5981,14 +5981,14 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
             }
             dirty_rect.bottom = tmp;
             wnd_blit_surface_rect
-                      ((DibSurface *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),(iptr)&dirty_rect);
-            gfx_copy_rect_clipped((iptr)(saved_bg + view),(iptr)(((i8 *)&map_views_block.map_views) + view * 0x3f0)
+                      (&map_views_block.map_view_recs[view].surface,(iptr)&dirty_rect);
+            gfx_copy_rect_clipped((iptr)(saved_bg + view),(iptr)&map_views_block.map_view_recs[view]
                                ,cur_sx[view] - rect_left2[view],
                                cur_sy[view] - rect_top2[view],0,0,
                                cur_sx[view],cur_sy[view],
                                (((i32 *)&map_views_block.mapview_client_origin_x))[view * 0xfc],(((i32 *)&map_views_block.mapview_client_origin_y))[view * 0xfc],
-                               *(i32 *)(((i8 *)&map_views_block.mapview_tile_width) + view * 0x3f0),
-                               *(i32 *)(((i8 *)&map_views_block.mapview_unit_sprite_height) + view * 0x3f0));
+                               map_views_block.map_view_recs[view].tile_width,
+                               map_views_block.map_view_recs[view].unit_sprite_height);
             cur_sx[view] += step_x[view];
             cur_sy[view] += step_y[view];
           }
@@ -6056,30 +6056,30 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
   net_session_block.nm_abort_kaboom_count = 0;
   for (view = 0; view < 8; view++) {
     view_active[view] = 0;
-    if (((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) &&
+    if (((view == 0) || (map_views_block.map_view_recs[view].open != 0)) &&
        (in_view = mapview_tile_in_view
-                          ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),x,y),
+                          ((ViewWindow *)&map_views_block.map_view_recs[view],x,y),
        in_view != 0)) {
       view_active[view] = 1;
       any_visible = 1;
       saved_origin_x[view] = (((i32 *)&map_views_block.mapview_origin_x))[view * 0xfc];
       saved_origin_y[view] = (((i32 *)&map_views_block.mapview_origin_y))[view * 0xfc];
       scaled = mapview_zoom_scale
-                        ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),0x20);
+                        ((ViewWindow *)&map_views_block.map_view_recs[view],0x20);
       sprite_w[view] = scaled;
       scaled = mapview_zoom_scale
-                        ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),0x20);
+                        ((ViewWindow *)&map_views_block.map_view_recs[view],0x20);
       sprite_h[view] = scaled;
       mapview_tile_to_screen
-                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),(iptr)(screen_x + view)
+                ((ViewWindow *)&map_views_block.map_view_recs[view],(iptr)(screen_x + view)
                  ,(iptr)(screen_y + view),x,y);
-      screen_x[view] += *(int *)(((i8 *)&map_views_block.mapview_quarter_tile_width) + view * 0x3f0);
+      screen_x[view] += map_views_block.map_view_recs[view].quarter_tile_width;
       rect_set_xywh((iptr)(view_rects + view * 0x10),screen_x[view],
                          screen_y[view],sprite_w[view],sprite_h[view]);
       surface_create
-                (saved_bg + view,*(i32 *)(((i8 *)&map_views_block.mapview_tile_width) + view * 0x3f0),
-                 *(i32 *)(((i8 *)&map_views_block.mapview_tile_height) + view * 0x3f0));
-      gfx_copy_rect_clipped((iptr)(((i8 *)&map_views_block.map_views) + view * 0x3f0),(iptr)(saved_bg + view),
+                (saved_bg + view,map_views_block.map_view_recs[view].tile_width,
+                 map_views_block.map_view_recs[view].tile_height);
+      gfx_copy_rect_clipped((iptr)&map_views_block.map_view_recs[view],(iptr)(saved_bg + view),
                          screen_x[view],screen_y[view],
                          (((i32 *)&map_views_block.mapview_client_origin_x))[view * 0xfc],(((i32 *)&map_views_block.mapview_client_origin_y))[view * 0xfc],0,0,0,0,
                          sprite_w[view],sprite_h[view]);
@@ -6100,7 +6100,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
       for (view = 0; view < 8; view++) {
         if (view_active[view] != 0) {
           in_view = mapview_tile_in_view
-                            ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),x,y);
+                            ((ViewWindow *)&map_views_block.map_view_recs[view],x,y);
           if (in_view == 0) {
             view_active[view] = 0;
           }
@@ -6110,23 +6110,23 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
               saved_origin_x[view] = (((i32 *)&map_views_block.mapview_origin_x))[view * 0xfc];
               saved_origin_y[view] = (((i32 *)&map_views_block.mapview_origin_y))[view * 0xfc];
               scaled = mapview_zoom_scale
-                                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),0x20);
+                                ((ViewWindow *)&map_views_block.map_view_recs[view],0x20);
               sprite_w[view] = scaled;
               scaled = mapview_zoom_scale
-                                ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),0x20);
+                                ((ViewWindow *)&map_views_block.map_view_recs[view],0x20);
               sprite_h[view] = scaled;
               mapview_tile_to_screen
-                        ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),
+                        ((ViewWindow *)&map_views_block.map_view_recs[view],
                          (iptr)(screen_x + view),(iptr)(screen_y + view),x,
                          y);
               screen_x[view] =
-                   screen_x[view] + *(int *)(((i8 *)&map_views_block.mapview_quarter_tile_width) + view * 0x3f0);
+                   screen_x[view] + map_views_block.map_view_recs[view].quarter_tile_width;
               rect_set_xywh((iptr)(view_rects + view * 0x10),screen_x[view],
                                  screen_y[view],sprite_w[view],sprite_h[view]);
               surface_create
-                        (saved_bg + view,*(i32 *)(((i8 *)&map_views_block.mapview_tile_width) + view * 0x3f0),
-                         *(i32 *)(((i8 *)&map_views_block.mapview_tile_height) + view * 0x3f0));
-              gfx_copy_rect_clipped((iptr)(((i8 *)&map_views_block.map_views) + view * 0x3f0),
+                        (saved_bg + view,map_views_block.map_view_recs[view].tile_width,
+                         map_views_block.map_view_recs[view].tile_height);
+              gfx_copy_rect_clipped((iptr)&map_views_block.map_view_recs[view],
                                  (iptr)(saved_bg + view),screen_x[view],
                                  screen_y[view],(((i32 *)&map_views_block.mapview_client_origin_x))[view * 0xfc],
                                  (((i32 *)&map_views_block.mapview_client_origin_y))[view * 0xfc],0,0,0,0,sprite_w[view],
@@ -6135,10 +6135,10 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
             gfx_set_zoom_scale((int)(((i16 *)&map_views_block.mapview_zoom))[view * 0x1f8]);
             sprite_draw
                       ((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + frame2 * 0x3c),(iptr)clip_rect,
-                       (iptr)(((i8 *)&map_views_block.map_views) + view * 0x3f0),screen_x[view],
+                       (iptr)&map_views_block.map_view_recs[view],screen_x[view],
                        screen_y[view]);
             wnd_blit_surface_rect
-                      ((DibSurface *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),
+                      (&map_views_block.map_view_recs[view].surface,
                        (iptr)(view_rects + view * 0x10));
           }
         }
@@ -6153,7 +6153,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
       last_time = now;
       for (view = 0; view < 8; view++) {
         if (view_active[view] != 0) {
-          gfx_copy_rect_clipped((iptr)(saved_bg + view),(iptr)(((i8 *)&map_views_block.map_views) + view * 0x3f0),0
+          gfx_copy_rect_clipped((iptr)(saved_bg + view),(iptr)&map_views_block.map_view_recs[view],0
                              ,0,0,0,screen_x[view],screen_y[view],
                              (((i32 *)&map_views_block.mapview_client_origin_x))[view * 0xfc],(((i32 *)&map_views_block.mapview_client_origin_y))[view * 0xfc],
                              sprite_w[view],sprite_h[view]);
@@ -7158,7 +7158,7 @@ uint __cdecl landmass_borders_body(int landmass,iptr other_body)
   uint bit_mask;
   
   bit_index_split(other_body,(iptr)&byte_idx,(iptr)&bit_mask);
-  return (uint)((bit_mask & (byte)(((i8 *)&landmass_table_block.landmass_border_bits))[byte_idx + landmass * 0x10]) != 0);
+  return (uint)((bit_mask & (byte)landmass_table_block.landmass_recs[landmass].border_bits[byte_idx]) != 0);
 }
 
 /* 005b947f auto */

@@ -1114,7 +1114,7 @@ void __cdecl gfx_load_icon_sprites(void)
     sprite_grab_from_sheet((iptr)(((i8 *)&road_sprites_block.civ_portrait_sprites) + civ * 0x3c),2,0x18e,0x40,0x40);
     sprite_replace_color
               ((Sprite *)(((i8 *)&road_sprites_block.civ_portrait_sprites) + civ * 0x3c),8,
-               *(i32 *)(((i8 *)&civ_primary_colors_block.civ_primary_colors) + civ * 0x10));
+               civ_primary_colors_block.civ_colors[civ].primary);
   }
   surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   eh_state = 0xffffffff;
@@ -1208,11 +1208,11 @@ void __cdecl gfx_load_city_sprites(void)
     sprite_grab_from_sheet((iptr)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78),flag_x,0x1a9,0xe,0x16);
     sprite_grab_from_sheet((iptr)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78),flag_x,0x1c0,0xe,0x16);
     color = surface_get_pixel((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),flag_x + 3,0x1ad);
-    *(i32 *)(((i8 *)&civ_primary_colors_block.civ_primary_colors) + civ * 0x10) = color;
+    civ_primary_colors_block.civ_colors[civ].primary = color;
     color = surface_get_pixel((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),flag_x + 6,0x1ad);
-    *(i32 *)(((i8 *)&civ_primary_colors_block.civ_mid_colors) + civ * 0x10) = color;
+    civ_primary_colors_block.civ_colors[civ].mid = color;
     color = surface_get_pixel((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),flag_x,0x1a7);
-    *(i32 *)(((i8 *)&civ_primary_colors_block.civ_secondary_colors) + civ * 0x10) = color;
+    civ_primary_colors_block.civ_colors[civ].secondary = color;
     flag_x += 0xf;
   }
   sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites));
@@ -1466,9 +1466,9 @@ void __cdecl gfx_grey_out_windows(void)
   remap_table = (iptr)mem_handle_lock(grey_palette_block.grey_remap_handle);
   if (remap_table != 0) {
     for (view = 0; view < 8; view++) {
-      if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
+      if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
         surface_remap_colors
-                  ((DibSurface *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),remap_table,10,0xec);
+                  (&map_views_block.map_view_recs[view].surface,remap_table,10,0xec);
       }
     }
     surface_remap_colors((DibSurface *)((i8 *)&status_window_block.status_window),remap_table,10,0xec);
@@ -1487,8 +1487,8 @@ void __cdecl gfx_repaint_main_windows(void)
   int view;
   
   for (view = 0; view < 8; view++) {
-    if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
-      wnd_repaint((SurfaceWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0));
+    if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
+      wnd_repaint((SurfaceWindow *)&map_views_block.map_view_recs[view]);
     }
   }
   wnd_repaint((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window));
@@ -1549,15 +1549,15 @@ void __cdecl screen_fade_in(void)
 void __cdecl palette_set_nocollapse_all(void)
 
 {
-  iptr logpal;
+  GameLogPalette *logpal;
   int i;
   
-  logpal = (iptr)palette_get_logpalette((GamePalette *)((i8 *)&game_palette_block.game_palette));
+  logpal = (GameLogPalette *)palette_get_logpalette((GamePalette *)((i8 *)&game_palette_block.game_palette));
   if (logpal == 0) {
     err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_p,(iptr)&str_d_ss_franklinton_grey_cpp_6,0xbc);
   }
   for (i = 0; i < 0x100; i++) {
-    *(i8 *)(logpal + 7 + i * 4) = 4;
+    logpal->entries[i].flags = 4;
   }
   palette_commit_range((GamePalette *)((i8 *)&game_palette_block.game_palette),10,0xec);
   return;
@@ -1641,7 +1641,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
               blue = *(i32 *)(bmp_palette + src_index * 4 + 2);
               tmp = i;
               logpal = palette_get_logpalette((GamePalette *)palette);
-              palette_set_entry_rgb((iptr)logpal,tmp,blue,green,red);
+              palette_set_entry_rgb((GameLogPalette *)logpal,tmp,blue,green,red);
               src_index++;
             }
             palette_commit_range((GamePalette *)palette,first_color,num_colors);
@@ -1817,7 +1817,7 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,const char *filename,int first_col
       red_ptr = bmp_palette + dst_index * 4 + 2;
       tmp = i;
       logpal = palette_get_logpalette((GamePalette *)palette);
-      palette_get_entry_rgb((iptr)logpal,tmp,(iptr)red_ptr,(iptr)green_ptr,(iptr)blue_ptr);
+      palette_get_entry_rgb((GameLogPalette *)logpal,tmp,(iptr)red_ptr,(iptr)green_ptr,(iptr)blue_ptr);
       dst_index++;
     }
   }
@@ -1909,24 +1909,24 @@ int __cdecl gfx_zoom_scale(int value,int zoom)
 }
 
 /* 0047314e auto */
-void __cdecl rect_pack_to_short(RECT *rect,iptr short_rect)
+void __cdecl rect_pack_to_short(RECT *rect,ShortRect *short_rect)
 
 {
-  *(short *)short_rect = (short)rect->left;
-  *(short *)(short_rect + 4) = (short)rect->right;
-  *(short *)(short_rect + 2) = (short)rect->top;
-  *(short *)(short_rect + 6) = (short)rect->bottom;
+  short_rect->left = (short)rect->left;
+  short_rect->right = (short)rect->right;
+  short_rect->top = (short)rect->top;
+  short_rect->bottom = (short)rect->bottom;
   return;
 }
 
 /* 00473190 auto */
-void __cdecl rect_unpack_from_short(iptr short_rect,RECT *rect)
+void __cdecl rect_unpack_from_short(ShortRect *short_rect,RECT *rect)
 
 {
-  rect->left = (int)*(short *)short_rect;
-  rect->right = (int)*(short *)(short_rect + 4);
-  rect->top = (int)*(short *)(short_rect + 2);
-  rect->bottom = (int)*(short *)(short_rect + 6);
+  rect->left = (int)short_rect->left;
+  rect->right = (int)short_rect->right;
+  rect->top = (int)short_rect->top;
+  rect->bottom = (int)short_rect->bottom;
   return;
 }
 
@@ -2277,7 +2277,7 @@ palette_get_entry
           (GamePalette *self,iptr index,iptr red,iptr green,iptr blue)
 
 {
-  palette_get_entry_rgb((iptr)self,index,red,green,blue);
+  palette_get_entry_rgb((GameLogPalette *)self,index,red,green,blue);
   return;
 }
 
@@ -2793,7 +2793,7 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
   int remaining;
   tagRECT area2;
   tagRECT cell_rect;
-  LPVOID cells;
+  POINT *cells;
   
   if (rect == 0) {
     lo = surface_get_height((DibSurface *)surface);
@@ -2809,8 +2809,8 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
   rows = lo / (int)cell_size;
   remaining = rows * cols;
   mem = GlobalAlloc(0x40,remaining * 8);
-  cells = GlobalLock(mem);
-  if (cells == (LPVOID)0x0) {
+  cells = (POINT *)GlobalLock(mem);
+  if (cells == (POINT *)0x0) {
     result = 0;
   }
   else {
@@ -2819,9 +2819,9 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
       for (col = 0; col < cols; col++) {
         for (row = 0; row < rows; row++) {
           win_flush_pending_msgs();
-          *(uint *)((int)cells + (col * rows + row) * 8) =
+          cells[(col * rows + row)].x =
                ((cols - col) - 1) * cell_size;
-          *(uint *)((int)cells + (col * rows + row) * 8 + 4) = row * cell_size;
+          cells[(col * rows + row)].y = row * cell_size;
         }
       }
       break;
@@ -2830,8 +2830,8 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
       for (col = 0; col < cols; col++) {
         for (row = 0; row < rows; row++) {
           win_flush_pending_msgs();
-          *(uint *)((int)cells + (col * rows + row) * 8) = col * cell_size;
-          *(uint *)((int)cells + (col * rows + row) * 8 + 4) = row * cell_size;
+          cells[(col * rows + row)].x = col * cell_size;
+          cells[(col * rows + row)].y = row * cell_size;
         }
       }
       break;
@@ -2839,8 +2839,8 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
       for (row = 0; row < rows; row++) {
         for (col = 0; col < cols; col++) {
           win_flush_pending_msgs();
-          *(uint *)((int)cells + (row * cols + col) * 8) = col * cell_size;
-          *(uint *)((int)cells + (row * cols + col) * 8 + 4) = row * cell_size;
+          cells[(row * cols + col)].x = col * cell_size;
+          cells[(row * cols + col)].y = row * cell_size;
         }
       }
       break;
@@ -2848,8 +2848,8 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
       for (row = 0; row < rows; row++) {
         for (col = 0; col < cols; col++) {
           win_flush_pending_msgs();
-          *(uint *)((int)cells + (row * cols + col) * 8) = col * cell_size;
-          *(uint *)((int)cells + (row * cols + col) * 8 + 4) =
+          cells[(row * cols + col)].x = col * cell_size;
+          cells[(row * cols + col)].y =
                ((rows - row) - 1) * cell_size;
         }
       }
@@ -2858,8 +2858,8 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
       while (remaining != 0) {
         win_flush_pending_msgs();
         pick = rand_range(0,remaining - 1);
-        cell_x = *(int *)((int)cells + pick * 8) + area2.left;
-        cell_y = *(int *)((int)cells + pick * 8 + 4) + area2.top;
+        cell_x = cells[pick].x + area2.left;
+        cell_y = cells[pick].y + area2.top;
         lo = cell_size + cell_y;
         if (area2.bottom - 1 <= lo) {
           lo = area2.bottom - 1;
@@ -2872,9 +2872,9 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
         SetRect(&cell_rect,cell_x,cell_y,cell_right,lo);
         wnd_blit_surface_rect((DibSurface *)surface,(iptr)&cell_rect);
         remaining--;
-        *(i32 *)((int)cells + pick * 8) = *(i32 *)((int)cells + remaining * 8);
-        *(i32 *)((int)cells + pick * 8 + 4) =
-             *(i32 *)((int)cells + remaining * 8 + 4);
+        cells[pick].x = cells[remaining].x;
+        cells[pick].y =
+             cells[remaining].y;
       }
     }
     else {
@@ -2885,8 +2885,8 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
           lo = 0;
         }
         pick = rand_range(lo,remaining - 1);
-        cell_x = *(int *)((int)cells + pick * 8) + area2.left;
-        cell_y = *(int *)((int)cells + pick * 8 + 4) + area2.top;
+        cell_x = cells[pick].x + area2.left;
+        cell_y = cells[pick].y + area2.top;
         lo = cell_size + cell_y;
         if (area2.bottom - 1 <= lo) {
           lo = area2.bottom - 1;
@@ -2899,9 +2899,9 @@ i32 __cdecl gfx_dissolve_blit(iptr surface,iptr rect,uint cell_size,int mode)
         SetRect(&cell_rect,cell_x,cell_y,cell_right,lo);
         wnd_blit_surface_rect((DibSurface *)surface,(iptr)&cell_rect);
         remaining--;
-        *(i32 *)((int)cells + pick * 8) = *(i32 *)((int)cells + remaining * 8);
-        *(i32 *)((int)cells + pick * 8 + 4) =
-             *(i32 *)((int)cells + remaining * 8 + 4);
+        cells[pick].x = cells[remaining].x;
+        cells[pick].y =
+             cells[remaining].y;
       }
     }
     mem = GlobalHandle(cells);
@@ -2988,14 +2988,14 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   }
   color_primary = civ_color_primary(civ);
   color_mid = civ_color_mid(civ);
-  shield_x = gfx_zoom_scale(*(i32 *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + sprite_type * 4),zoom);
+  shield_x = gfx_zoom_scale(road_sprites_block.unit_shield_x_offsets[sprite_type],zoom);
   shield_x = px + shield_x;
-  shield_y = gfx_zoom_scale(*(i32 *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + sprite_type * 4),zoom);
+  shield_y = gfx_zoom_scale(road_sprites_block.unit_shield_y_offsets[sprite_type],zoom);
   shield_y = py + shield_y;
   shield_width = gfx_zoom_scale(0xc,zoom);
   shield_height = gfx_zoom_scale(0x14,zoom);
   side = 1;
-  if (*(int *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + sprite_type * 4) < 0x20) {
+  if (road_sprites_block.unit_shield_x_offsets[sprite_type] < 0x20) {
     side = -1;
   }
   if (((draw_flags & 1) != 0) &&
@@ -3332,12 +3332,10 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
              ,(iptr)clip_city,surface,px,py);
   tmp = tile_unit_owner((int)cities[city].x,(int)cities[city].y);
   if ((-1 < tmp) && ((draw_flags & 2) == 0)) {
-    flag_x = gfx_zoom_scale(*(i32 *)
-                                   (((i8 *)&peace_treaty_icon_sprite_block.city_flag_x_offsets) + style2 * 0x20 + walled * 4 + size_idx * 8),
+    flag_x = gfx_zoom_scale(peace_treaty_icon_sprite_block.city_flag_x_offsets[style2 * 8 + walled + size_idx * 2],
                                   zoom);
     flag_x = px + flag_x;
-    flag_y = gfx_zoom_scale(*(i32 *)
-                                   (((i8 *)&peace_treaty_icon_sprite_block.city_flag_y_offsets) + style2 * 0x20 + walled * 4 + size_idx * 8),
+    flag_y = gfx_zoom_scale(peace_treaty_icon_sprite_block.city_flag_y_offsets[style2 * 8 + walled + size_idx * 2],
                                   zoom);
     flag_y = py + flag_y;
     sprite_draw
@@ -3365,12 +3363,10 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
       width2 = width2 + pad + 5;
       height2 += 2;
       rect_set_xywh((iptr)&label_rect.left,0,0,width2,height2);
-      tmp = gfx_zoom_scale(*(i32 *)
-                                  (((i8 *)&road_sprites_block.city_label_y_offsets) + style2 * 0x20 + walled * 4 + size_idx * 8),
+      tmp = gfx_zoom_scale(road_sprites_block.city_label_y_offsets[style2 * 8 + walled + size_idx * 2],
                                  zoom);
       tmp = py + tmp;
-      box_dx = gfx_zoom_scale(*(i32 *)
-                                  (((i8 *)&road_sprites_block.city_size_box_x_offsets) + style2 * 0x20 + walled * 4 + size_idx * 8),
+      box_dx = gfx_zoom_scale(road_sprites_block.city_size_box_x_offsets[style2 * 8 + walled + size_idx * 2],
                                  zoom);
       rect_offset((iptr)&label_rect.left,px + box_dx,tmp);
       gfx_draw_rect_frame(surface,(RECT *)&label_rect.left,10);
@@ -3701,13 +3697,13 @@ void __cdecl sprite_sheet_draw_shield_marks(int unit_type,int x,int y)
     surface_set_pixel((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left + dx + 1,top,8);
   }
   surface_set_pixel
-            ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left + *(int *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + unit_type * 4) + 1,top,
+            ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left + road_sprites_block.unit_shield_x_offsets[unit_type] + 1,top,
              4);
   for (dy = 0; dy < 0x30; dy++) {
     surface_set_pixel((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left,dy + top + 1,8);
   }
   surface_set_pixel
-            ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left,*(int *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + unit_type * 4) + top + 1,
+            ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left,road_sprites_block.unit_shield_y_offsets[unit_type] + top + 1,
              4);
   return;
 }
@@ -4557,7 +4553,7 @@ sprite_editor_create_window(const char *title,uint style_flags,int x,int y,int w
     parent_hwnd = 0;
   }
   else {
-    parent_hwnd = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_hwnd = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   wnd_create_with_surface
             ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
@@ -4582,8 +4578,8 @@ void __cdecl sprite_editor_ok_clicked(void)
   rect_set_xywh((iptr)rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
   surface_replace_color_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),0x109,0x107);
   sprite_grab_surface_rect(status_window_block.sprite_editor_target_sprite,(iptr)&status_window_block.sprite_editor_surface,(iptr)rect);
-  *(i32 *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 4) = status_window_block.sprite_editor_flag_x;
-  *(i32 *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 4) = status_window_block.sprite_editor_flag_y;
+  road_sprites_block.unit_shield_x_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item] = status_window_block.sprite_editor_flag_x;
+  road_sprites_block.unit_shield_y_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item] = status_window_block.sprite_editor_flag_y;
   if (status_window_block.sprite_editor_ok_callback != (code *)0x0) {
     (*status_window_block.sprite_editor_ok_callback)();
   }
@@ -5369,8 +5365,8 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,iptr
   surface_create((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
   sprite_editor_draw_backdrop();
   sprite_draw((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite),(iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
-  status_window_block.sprite_editor_undo_flag_x = *(i32 *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 4);
-  status_window_block.sprite_editor_undo_flag_y = *(i32 *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 4);
+  status_window_block.sprite_editor_undo_flag_x = road_sprites_block.unit_shield_x_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item];
+  status_window_block.sprite_editor_undo_flag_y = road_sprites_block.unit_shield_y_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item];
   status_window_block.sprite_editor_flag_y = status_window_block.sprite_editor_undo_flag_y;
   status_window_block.sprite_editor_flag_x = status_window_block.sprite_editor_undo_flag_x;
   sprite_editor_rebuild_sprite();
@@ -7812,7 +7808,7 @@ void __thiscall palette_commit_range(GamePalette *self,int first,int count)
   if (0x100 < count + first) {
     count = 0x100 - first;
   }
-  logpal_apply_range((iptr)self,self->hpalette,first,count);
+  logpal_apply_range((GameLogPalette *)self,self->hpalette,first,count);
   palette_new_version(self);
   return;
 }
@@ -7823,8 +7819,8 @@ GamePalette * __thiscall palette_init(GamePalette *self)
 {
   u32 hpal;
   
-  logpal_init_from_system((iptr)self);
-  hpal = logpal_create_hpalette((iptr)self);
+  logpal_init_from_system((GameLogPalette *)self);
+  hpal = logpal_create_hpalette((GameLogPalette *)self);
   self->hpalette = hpal;
   palette_new_version(self);
   self->tint_red = '\0';
@@ -7901,7 +7897,7 @@ void __thiscall
 palette_reserve_range(GamePalette *self,i32 first,i32 count)
 
 {
-  logpal_reserve_range((iptr)self,first,count);
+  logpal_reserve_range((GameLogPalette *)self,first,count);
   palette_commit_range(self,first,count);
   return;
 }
@@ -7912,7 +7908,7 @@ palette_get_rgb
           (GamePalette *self,iptr dest,i32 first,i32 count)
 
 {
-  palette_copy_rgb_range((iptr)self,dest,first,count);
+  palette_copy_rgb_range((GameLogPalette *)self,dest,first,count);
   return;
 }
 
@@ -7923,7 +7919,7 @@ palette_set_entry
           i32 blue)
 
 {
-  palette_set_entry_rgb((iptr)self,index,red,green,blue);
+  palette_set_entry_rgb((GameLogPalette *)self,index,red,green,blue);
   palette_commit_range(self,index,1);
   return;
 }
@@ -7941,7 +7937,7 @@ palette_set_rgb(GamePalette *self,int first,int count,iptr rgb)
   }
   for (index = first; index < count + first; index++) {
     hi_bits = (i32)((uint)rgb >> 8);
-    palette_set_entry_rgb((iptr)self,index,CONCAT31(hi_bits,*(i8 *)rgb),
+    palette_set_entry_rgb((GameLogPalette *)self,index,CONCAT31(hi_bits,*(i8 *)rgb),
                  CONCAT31(hi_bits,*(i8 *)(rgb + 1)),
                  CONCAT31(hi_bits,*(i8 *)(rgb + 2)));
     rgb += 3;
@@ -7968,13 +7964,13 @@ palette_fade_begin(GamePalette *self,u32 first,u32 count,u32 steps,iptr target_p
   handle = mem_handle_alloc(count * 3);
   self->fade_dst_rgb = handle;
   dst_buf = (iptr)mem_handle_lock(self->fade_src_rgb);
-  palette_copy_rgb_range((iptr)self,dst_buf,first,count);
+  palette_copy_rgb_range((GameLogPalette *)self,dst_buf,first,count);
   mem_handle_unlock(self->fade_src_rgb);
   dst_buf = (iptr)mem_handle_lock(self->fade_dst_rgb);
   handle = first;
   count_arg = count;
   target_logpal = palette_get_logpalette((GamePalette *)target_pal);
-  palette_copy_rgb_range((iptr)target_logpal,dst_buf,handle,count_arg);
+  palette_copy_rgb_range((GameLogPalette *)target_logpal,dst_buf,handle,count_arg);
   mem_handle_unlock(self->fade_dst_rgb);
   palette_reserve_range(self,first,count);
   return;
@@ -8034,9 +8030,9 @@ void __thiscall palette_fade_step(GamePalette *self,int step)
                                (longlong)(int)self->fade_steps) * dst_weight +
                          (char)((longlong)(ulonglong)*(byte *)(offset + 2 + src_buf) /
                                (longlong)(int)self->fade_steps) * src_weight));
-      logpal_set_entry((iptr)self,self->fade_first + offset / 3,red,green,blue);
+      logpal_set_entry((GameLogPalette *)self,self->fade_first + offset / 3,red,green,blue);
     }
-    palette_animate((iptr)self,self->hpalette,self->fade_first,self->fade_count);
+    palette_animate((GameLogPalette *)self,self->hpalette,self->fade_first,self->fade_count);
     mem_handle_unlock(self->fade_src_rgb);
     mem_handle_unlock(self->fade_dst_rgb);
   }
@@ -8220,9 +8216,9 @@ void __cdecl gfx_scale_init(void)
   int i;
   
   for (i = 0; i < 0x10; i++) {
-    *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + i * 0x100c) = 0;
-    *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + i * 0x100c) = 0;
-    *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + i * 0x100c) = 0;
+    default_draw_font_obj_block.gfx_scale_caches[i].last_used = 0;
+    default_draw_font_obj_block.gfx_scale_caches[i].num = 0;
+    default_draw_font_obj_block.gfx_scale_caches[i].den = 0;
   }
   gfx_set_scale_ratio(1,1);
   gfx_set_scale_tables(1,1,1,1);
@@ -8253,17 +8249,17 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
   index = 0;
   do {
     if (0xf < index) {
-      *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + slot * 0x100c) = gfx_scale_num;
-      *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + slot * 0x100c) = gfx_scale_den;
+      default_draw_font_obj_block.gfx_scale_caches[slot].num = gfx_scale_num;
+      default_draw_font_obj_block.gfx_scale_caches[slot].den = gfx_scale_den;
       now = timer_ticks();
-      *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + slot * 0x100c) = now;
+      default_draw_font_obj_block.gfx_scale_caches[slot].last_used = now;
       value = 0;
       if (gfx_scale_num < gfx_scale_den) {
         accum = 0;
         index = 0;
         while (index < 0x400) {
           for (; (-1 < accum && (index < 0x400)); index++) {
-            *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 4 + slot * 0x100c) = value;
+            default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
             accum -= gfx_scale_den;
           }
           accum += gfx_scale_num;
@@ -8275,7 +8271,7 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
         index = 0;
         while (index < 0x400) {
           for (; (gfx_scale_den <= accum && (index < 0x400)); index++) {
-            *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 4 + slot * 0x100c) = value;
+            default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
             accum -= gfx_scale_den;
           }
           accum += gfx_scale_num;
@@ -8283,18 +8279,18 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
         }
       }
 use_cached_slot:
-      default_draw_font_obj_block.gfx_scale_table = (int)((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + slot * 0x100c;
+      default_draw_font_obj_block.gfx_scale_table = (i32 *)default_draw_font_obj_block.gfx_scale_caches[slot].table;
       return;
     }
-    if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + index * 0x100c) == gfx_scale_num) &&
-       (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + index * 0x100c) == gfx_scale_den)) {
+    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale_num) &&
+       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale_den)) {
       now = timer_ticks();
-      *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
+      default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
       slot = index;
       goto use_cached_slot;
     }
-    if (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) {
-      oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
+    if (default_draw_font_obj_block.gfx_scale_caches[index].last_used <= oldest_tick) {
+      oldest_tick = default_draw_font_obj_block.gfx_scale_caches[index].last_used;
       slot = index;
     }
     index++;
@@ -8339,21 +8335,21 @@ void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
   oldest_tick = timer_ticks();
   x_slot = -1;
   for (index = 0; index < 0x10; index++) {
-    if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + index * 0x100c) == gfx_scale_x_num) &&
-       (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + index * 0x100c) == gfx_scale_x_den)) {
+    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale_x_num) &&
+       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale_x_den)) {
       now = timer_ticks();
-      *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
+      default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
       x_slot = index;
       goto set_x_table;
     }
-    if (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) {
-      oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
+    if (default_draw_font_obj_block.gfx_scale_caches[index].last_used <= oldest_tick) {
+      oldest_tick = default_draw_font_obj_block.gfx_scale_caches[index].last_used;
       x_slot = index;
     }
   }
   gfx_scale_build_table(x_slot,gfx_scale_x_num,gfx_scale_x_den);
 set_x_table:
-  default_draw_font_obj_block.gfx_scale_x_table = ((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + x_slot * 0x100c;
+  default_draw_font_obj_block.gfx_scale_x_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[x_slot].table;
   oldest_tick = timer_ticks();
   y_slot = -1;
   index = 0;
@@ -8362,17 +8358,17 @@ set_x_table:
       gfx_scale_build_table(y_slot,gfx_scale_y_num,gfx_scale_y_den);
       index = y_slot;
 set_y_table:
-      default_draw_font_obj_block.gfx_scale_y_table = ((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 0x100c;
+      default_draw_font_obj_block.gfx_scale_y_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[index].table;
       return;
     }
-    if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + index * 0x100c) == gfx_scale_y_num) &&
-       (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + index * 0x100c) == gfx_scale_y_den)) {
+    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale_y_num) &&
+       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale_y_den)) {
       now = timer_ticks();
-      *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
+      default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
       goto set_y_table;
     }
-    if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) && (x_slot != index)) {
-      oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
+    if ((default_draw_font_obj_block.gfx_scale_caches[index].last_used <= oldest_tick) && (x_slot != index)) {
+      oldest_tick = default_draw_font_obj_block.gfx_scale_caches[index].last_used;
       y_slot = index;
     }
     index++;
@@ -8388,17 +8384,17 @@ void __cdecl gfx_scale_build_table(int slot,int num,int den)
   int accum;
   int value;
   
-  *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + slot * 0x100c) = num;
-  *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + slot * 0x100c) = den;
+  default_draw_font_obj_block.gfx_scale_caches[slot].num = num;
+  default_draw_font_obj_block.gfx_scale_caches[slot].den = den;
   now = timer_ticks();
-  *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + slot * 0x100c) = now;
+  default_draw_font_obj_block.gfx_scale_caches[slot].last_used = now;
   value = 0;
   if (num < den) {
     accum = 0;
     index = 0;
     while (index < 0x400) {
       for (; (-1 < accum && (index < 0x400)); index++) {
-        *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 4 + slot * 0x100c) = value;
+        default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
         accum -= den;
       }
       accum += num;
@@ -8410,7 +8406,7 @@ void __cdecl gfx_scale_build_table(int slot,int num,int den)
     index = 0;
     while (index < 0x400) {
       for (; (den <= accum && (index < 0x400)); index++) {
-        *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 4 + slot * 0x100c) = value;
+        default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
         accum -= den;
       }
       accum += num;
@@ -8693,19 +8689,19 @@ sprite_encode_from_surface(Sprite *self,iptr surface,int key_mode,RECT *src_rect
   int row;
   u8 key2;
   int col;
-  void *run_lens;
+  i32 *run_lens;
   int was_locked;
   int handle;
   u8 *top_row;
   u8 *bottom_row;
   iptr width2;
-  void *run_starts;
+  i32 *run_starts;
   int min_left;
   int first_row2;
   int max_right;
   int last_row;
   int total_size;
-  void *run_ptrs;
+  u8 **run_ptrs;
   
   was_locked = 1;
   all_empty = 1;
@@ -8774,10 +8770,10 @@ sprite_encode_from_surface(Sprite *self,iptr surface,int key_mode,RECT *src_rect
         row++;
         bottom_row = (u8 *)surface_prev_row((DibSurface *)surface,(iptr)bottom_row);
       }
-      run_ptrs = operator_new(0xa00);
-      run_starts = operator_new(0xa00);
-      run_lens = operator_new(0xa00);
-      if (((run_ptrs == (void *)0x0) || (run_starts == (void *)0x0)) || (run_lens == (void *)0x0)) {
+      run_ptrs = (u8 **)operator_new(0xa00);
+      run_starts = (i32 *)operator_new(0xa00);
+      run_lens = (i32 *)operator_new(0xa00);
+      if (((run_ptrs == (u8 **)0x0) || (run_starts == (i32 *)0x0)) || (run_lens == (i32 *)0x0)) {
         dbg_log((const char *)&str_error_unable_to_allocate_scan_line_table);
         handle = 0;
       }
@@ -8785,35 +8781,35 @@ sprite_encode_from_surface(Sprite *self,iptr surface,int key_mode,RECT *src_rect
         row = 0;
         while (row < last_row - first_row2) {
           total_size += 8;
-          *(i32 *)((int)run_starts + row * 4) = 0;
-          *(i32 *)((int)run_lens + row * 4) = 0;
+          run_starts[row] = 0;
+          run_lens[row] = 0;
           scan = top_row;
           for (col = 0; col < width2; col++) {
             if ((*scan != key2) || (key_mode == -2)) {
-              *(u8 **)((int)run_ptrs + row * 4) = scan;
-              *(int *)((int)run_starts + row * 4) = col;
+              run_ptrs[row] = scan;
+              run_starts[row] = col;
               break;
             }
             scan++;
           }
-          if ((width2 != col) && (*(int *)((int)run_starts + row * 4) < min_left)) {
-            min_left = *(int *)((int)run_starts + row * 4);
+          if ((width2 != col) && (run_starts[row] < min_left)) {
+            min_left = run_starts[row];
           }
           scan = top_row + width2;
           for (col = 0; scan = scan - 1, col < width2; col++)
           {
             if ((*scan != key2) || (key_mode == -2)) {
-              *(iptr *)((int)run_lens + row * 4) =
-                   (width2 - col) - *(int *)((int)run_starts + row * 4);
-              total_size += *(int *)((int)run_lens + row * 4);
+              run_lens[row] =
+                   (width2 - col) - run_starts[row];
+              total_size += run_lens[row];
               break;
             }
           }
           if ((width2 != col) &&
              (max_right <
-              *(int *)((int)run_lens + row * 4) + *(int *)((int)run_starts + row * 4))) {
-            max_right = *(int *)((int)run_lens + row * 4) +
-                       *(int *)((int)run_starts + row * 4);
+              run_lens[row] + run_starts[row])) {
+            max_right = run_lens[row] +
+                       run_starts[row];
           }
           row++;
           top_row = (u8 *)surface_next_row((DibSurface *)surface,(iptr)top_row);
@@ -8851,12 +8847,12 @@ sprite_encode_from_surface(Sprite *self,iptr surface,int key_mode,RECT *src_rect
           self->full_height = 0;
           out = (i32 *)mem_handle_lock(handle);
           for (row = 0; row < last_row - first_row2; row++) {
-            *out = *(i32 *)((int)run_starts + row * 4);
-            out[1] = *(i32 *)((int)run_lens + row * 4);
+            *out = run_starts[row];
+            out[1] = run_lens[row];
             out += 2;
-            mem_move_src_dst(*(iptr *)((int)run_ptrs + row * 4),(iptr)out,
-                         *(i32 *)((int)run_lens + row * 4));
-            out = (i32 *)((int)out + *(int *)((int)run_lens + row * 4));
+            mem_move_src_dst((iptr)run_ptrs[row],(iptr)out,
+                         run_lens[row]);
+            out = (i32 *)((int)out + run_lens[row]);
           }
           *out = 0;
           out = (i32 *)mem_handle_unlock(handle);
@@ -8969,7 +8965,7 @@ sprite_blit_to_surface
       top_down = dib_is_top_down(dib);
       pitch = surface_get_pitch(surface);
       pitch = ((-(uint)(top_down == 0) & 0xfffffffe) + 1) * pitch;
-      scale_tbl = default_draw_font_obj_block.gfx_scale_table;
+      scale_tbl = (iptr)default_draw_font_obj_block.gfx_scale_table;
       bits = surface_get_bits(surface);
       sprite_blit_rows_keyed(self->data_ptr,bits,scale_tbl,key2,dst_x,dst_y,pitch,surf_height,clip_w,clip_h
                    ,skip_x,tmp,scaled_h,trim_y,scaled_trim_x,scaled_trim_y);
@@ -9066,7 +9062,7 @@ sprite_blit_silhouette_to_surface
       top_down = dib_is_top_down(dib);
       pitch = surface_get_pitch(surface);
       pitch = ((-(uint)(top_down == 0) & 0xfffffffe) + 1) * pitch;
-      scale_tbl = default_draw_font_obj_block.gfx_scale_table;
+      scale_tbl = (iptr)default_draw_font_obj_block.gfx_scale_table;
       bits = surface_get_bits(surface);
       sprite_blit_rows_solid(self->data_ptr,bits,scale_tbl,key2,dst_x,dst_y,pitch,surf_height,clip_w,clip_h
                    ,skip_x,tmp,scaled_h,trim_y,scaled_trim_x,scaled_trim_y,color);
@@ -9292,17 +9288,17 @@ int __cdecl gfx_scale_length(int length,int start,int round_up)
     }
     if (gfx_scale_num < gfx_scale_den) {
       index = start;
-      result = *(int *)(default_draw_font_obj_block.gfx_scale_table + start * 4) + length;
-      for (; *(int *)(default_draw_font_obj_block.gfx_scale_table + index * 4) < result; index++) {
+      result = default_draw_font_obj_block.gfx_scale_table[start] + length;
+      for (; default_draw_font_obj_block.gfx_scale_table[index] < result; index++) {
       }
-      if ((round_up == 0) && (*(int *)(default_draw_font_obj_block.gfx_scale_table + index * 4) != result)) {
+      if ((round_up == 0) && (default_draw_font_obj_block.gfx_scale_table[index] != result)) {
         index--;
       }
     }
     else {
       index = start;
-      for (; *(int *)(default_draw_font_obj_block.gfx_scale_table + index * 4) <
-             *(int *)(default_draw_font_obj_block.gfx_scale_table + start * 4) + length; index++) {
+      for (; default_draw_font_obj_block.gfx_scale_table[index] <
+             default_draw_font_obj_block.gfx_scale_table[start] + length; index++) {
       }
     }
     result = ((-(uint)positive & 2) - 1) * (index - start);
@@ -9311,7 +9307,7 @@ int __cdecl gfx_scale_length(int length,int start,int round_up)
 }
 
 /* 005de780 auto */
-void __cdecl logpal_init_from_system(iptr logpal)
+void __cdecl logpal_init_from_system(GameLogPalette *logpal)
 
 {
   HDC hdc;
@@ -9320,8 +9316,8 @@ void __cdecl logpal_init_from_system(iptr logpal)
   i8 *sys_color;
   int i;
   
-  *(i16 *)logpal = 0x300;
-  *(i16 *)(logpal + 2) = 0x100;
+  logpal->version = 0x300;
+  logpal->count = 0x100;
   hdc = GetDC((HWND)0x0);
   raster_caps = GetDeviceCaps(hdc,0x26);
   if ((raster_caps & 0x100) == 0) {
@@ -9331,32 +9327,32 @@ void __cdecl logpal_init_from_system(iptr logpal)
   else {
     num_reserved = GetDeviceCaps(hdc,0x18);
     err_report_ctx_block.palette_static_half_count = num_reserved / 2;
-    GetSystemPaletteEntries(hdc,0,0x100,(LPPALETTEENTRY)(logpal + 4));
+    GetSystemPaletteEntries(hdc,0,0x100,(LPPALETTEENTRY)logpal->entries);
   }
   for (i = 0; i < err_report_ctx_block.palette_static_half_count; i++) {
-    *(i8 *)(logpal + 7 + i * 4) = 0;
+    logpal->entries[i].flags = 0;
   }
   for (; i < 0x100 - err_report_ctx_block.palette_static_half_count; i++) {
-    *(i8 *)(logpal + 4 + i * 4) = 0;
-    *(i8 *)(logpal + 5 + i * 4) = 0;
-    *(i8 *)(logpal + 6 + i * 4) = 0;
-    *(i8 *)(logpal + 7 + i * 4) = 4;
+    logpal->entries[i].red = 0;
+    logpal->entries[i].green = 0;
+    logpal->entries[i].blue = 0;
+    logpal->entries[i].flags = 4;
   }
   for (; i < 0x100; i++) {
-    *(i8 *)(logpal + 7 + i * 4) = 0;
+    logpal->entries[i].flags = 0;
   }
   if (gfx_palettized_display == 0) {
     sys_color = ((i8 *)&logpal_static_system_colors);
     for (i = 0; i < 10; i++) {
-      *(i8 *)(logpal + 4 + i * 4) = *sys_color;
-      *(i8 *)(logpal + 5 + i * 4) = sys_color[1];
-      *(i8 *)(logpal + 6 + i * 4) = sys_color[2];
+      logpal->entries[i].red = *sys_color;
+      logpal->entries[i].green = sys_color[1];
+      logpal->entries[i].blue = sys_color[2];
       sys_color += 3;
     }
     for (i = 0xf6; i < 0x100; i++) {
-      *(i8 *)(logpal + 4 + i * 4) = *sys_color;
-      *(i8 *)(logpal + 5 + i * 4) = sys_color[1];
-      *(i8 *)(logpal + 6 + i * 4) = sys_color[2];
+      logpal->entries[i].red = *sys_color;
+      logpal->entries[i].green = sys_color[1];
+      logpal->entries[i].blue = sys_color[2];
       sys_color += 3;
     }
   }
@@ -9365,7 +9361,7 @@ void __cdecl logpal_init_from_system(iptr logpal)
 }
 
 /* 005de984 auto */
-void __cdecl logpal_reserve_range(iptr logpal,int first,int count)
+void __cdecl logpal_reserve_range(GameLogPalette *logpal,int first,int count)
 
 {
   int i;
@@ -9374,72 +9370,72 @@ void __cdecl logpal_reserve_range(iptr logpal,int first,int count)
     count = 0x100 - first;
   }
   for (i = first; i < count + first; i++) {
-    *(i8 *)(logpal + 7 + i * 4) = 1;
+    logpal->entries[i].flags = 1;
   }
   return;
 }
 
 /* 005dea62 auto */
-void __cdecl palette_animate(iptr logpal,HPALETTE hpal,UINT first,UINT count)
+void __cdecl palette_animate(GameLogPalette *logpal,HPALETTE hpal,UINT first,UINT count)
 
 {
   if (gfx_palettized_display == 1) {
-    AnimatePalette(hpal,first,count,(PALETTEENTRY *)(first * 4 + logpal + 4));
+    AnimatePalette(hpal,first,count,(PALETTEENTRY *)&logpal->entries[first]);
   }
   return;
 }
 
 /* 005dea9e auto */
-void __cdecl palette_get_entry_rgb(iptr logpal,int index,iptr out_red,iptr out_green,iptr out_blue)
+void __cdecl palette_get_entry_rgb(GameLogPalette *logpal,int index,iptr out_red,iptr out_green,iptr out_blue)
 
 {
-  *(i8 *)out_red = *(i8 *)(logpal + 4 + index * 4);
-  *(i8 *)out_green = *(i8 *)(logpal + 5 + index * 4);
-  *(i8 *)out_blue = *(i8 *)(logpal + 6 + index * 4);
+  *(i8 *)out_red = logpal->entries[index].red;
+  *(i8 *)out_green = logpal->entries[index].green;
+  *(i8 *)out_blue = logpal->entries[index].blue;
   return;
 }
 
 /* 005deadb auto */
 void __cdecl
-logpal_set_entry(iptr logpal,int index,i32 red,i32 green,i32 blue)
+logpal_set_entry(GameLogPalette *logpal,int index,i32 red,i32 green,i32 blue)
 
 {
-  *(i8 *)(logpal + 4 + index * 4) = (i8)red;
-  *(i8 *)(logpal + 5 + index * 4) = (i8)green;
-  *(i8 *)(logpal + 6 + index * 4) = (i8)blue;
+  logpal->entries[index].red = (i8)red;
+  logpal->entries[index].green = (i8)green;
+  logpal->entries[index].blue = (i8)blue;
   return;
 }
 
 /* 005deb12 auto */
 void __cdecl
-palette_set_entry_rgb(iptr logpal,int index,i32 red,i32 green,i32 blue)
+palette_set_entry_rgb(GameLogPalette *logpal,int index,i32 red,i32 green,i32 blue)
 
 {
   int i;
   
-  *(char *)(logpal + 4 + index * 4) = (char)red;
-  *(char *)(logpal + 5 + index * 4) = (char)green;
-  *(char *)(logpal + 6 + index * 4) = (char)blue;
-  *(i8 *)(logpal + 7 + index * 4) = 4;
+  logpal->entries[index].red = (char)red;
+  logpal->entries[index].green = (char)green;
+  logpal->entries[index].blue = (char)blue;
+  logpal->entries[index].flags = 4;
   for (i = 0; i < err_report_ctx_block.palette_static_half_count; i++) {
-    if (((*(char *)(logpal + 4 + i * 4) == (char)red) &&
-        (*(char *)(logpal + 5 + i * 4) == (char)green)) &&
-       (*(char *)(logpal + 6 + i * 4) == (char)blue)) {
-      *(i8 *)(logpal + 7 + index * 4) = 1;
+    if (((logpal->entries[i].red == (char)red) &&
+        (logpal->entries[i].green == (char)green)) &&
+       (logpal->entries[i].blue == (char)blue)) {
+      logpal->entries[index].flags = 1;
     }
   }
   for (i = 0x100 - err_report_ctx_block.palette_static_half_count; i < 0x100; i++) {
-    if (((*(char *)(logpal + 4 + i * 4) == (char)red) &&
-        (*(char *)(logpal + 5 + i * 4) == (char)green)) &&
-       (*(char *)(logpal + 6 + i * 4) == (char)blue)) {
-      *(i8 *)(logpal + 7 + index * 4) = 1;
+    if (((logpal->entries[i].red == (char)red) &&
+        (logpal->entries[i].green == (char)green)) &&
+       (logpal->entries[i].blue == (char)blue)) {
+      logpal->entries[index].flags = 1;
     }
   }
   return;
 }
 
 /* 005dec4e auto */
-HPALETTE __cdecl logpal_create_hpalette(iptr logpal)
+HPALETTE __cdecl logpal_create_hpalette(GameLogPalette *logpal)
 
 {
   i32 hpal;
@@ -9464,17 +9460,17 @@ void __cdecl logpal_delete_hpalette(HGDIOBJ hpal)
 }
 
 /* 005decb1 auto */
-void __cdecl logpal_apply_range(iptr logpal,HPALETTE hpal,UINT first,UINT count)
+void __cdecl logpal_apply_range(GameLogPalette *logpal,HPALETTE hpal,UINT first,UINT count)
 
 {
   if (gfx_palettized_display == 1) {
-    SetPaletteEntries(hpal,first,count,(PALETTEENTRY *)(first * 4 + logpal + 4));
+    SetPaletteEntries(hpal,first,count,(PALETTEENTRY *)&logpal->entries[first]);
   }
   return;
 }
 
 /* 005ded12 auto */
-void __cdecl palette_copy_rgb_range(iptr logpal,iptr dest,int first,int count)
+void __cdecl palette_copy_rgb_range(GameLogPalette *logpal,iptr dest,int first,int count)
 
 {
   int index;
@@ -9482,9 +9478,9 @@ void __cdecl palette_copy_rgb_range(iptr logpal,iptr dest,int first,int count)
   
   offset = 0;
   for (index = first; index < count + first; index++) {
-    *(i8 *)(offset + dest) = *(i8 *)(logpal + 4 + index * 4);
-    *(i8 *)(offset + 1 + dest) = *(i8 *)(logpal + 5 + index * 4);
-    *(i8 *)(offset + 2 + dest) = *(i8 *)(logpal + 6 + index * 4);
+    *(i8 *)(offset + dest) = logpal->entries[index].red;
+    *(i8 *)(offset + 1 + dest) = logpal->entries[index].green;
+    *(i8 *)(offset + 2 + dest) = logpal->entries[index].blue;
     offset += 3;
   }
   return;

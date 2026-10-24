@@ -1599,7 +1599,7 @@ i32 __thiscall spaceship_wnd_render_ship(SpaceshipWindow *self)
                         for (row_i = 0; row_i < 7; row_i = row_i + 1) {
                           win_flush_pending_msgs();
                           if ((int)(uint)part_rows[row_i].count <=
-                              *(int *)(((i8 *)&editor_text_edit_block.spaceship_wnd_part_counts) + (uint)part_rows[row_i].kind * 4)) {
+                              editor_text_edit_block.spaceship_wnd_part_count_list[(uint)part_rows[row_i].kind]) {
                             if (part_rows[row_i].kind == 1) {
                               part_count = part_rows[row_i].count;
                               load_ok = spaceship_part_count((i32)self->ship_civ,1);
@@ -1694,7 +1694,7 @@ i32 __thiscall spaceship_wnd_render_ship(SpaceshipWindow *self)
                         struct_row = 0;
                         for (row_i = 7; row_i < 0x1f; row_i = row_i + 1) {
                           if ((int)(uint)part_rows[row_i].count <=
-                              *(int *)(((i8 *)&editor_text_edit_block.spaceship_wnd_part_counts) + (uint)part_rows[row_i].kind * 4)) {
+                              editor_text_edit_block.spaceship_wnd_part_count_list[(uint)part_rows[row_i].kind]) {
                             struct_row = row_i;
                           }
                         }
@@ -1741,7 +1741,7 @@ i32 __thiscall spaceship_wnd_render_ship(SpaceshipWindow *self)
                             win_flush_pending_msgs();
                             win_flush_pending_msgs();
                             if ((int)(uint)part_rows[row_i].count <=
-                                *(int *)(((i8 *)&editor_text_edit_block.spaceship_wnd_part_counts) + (uint)part_rows[row_i].kind * 4)) {
+                                editor_text_edit_block.spaceship_wnd_part_count_list[(uint)part_rows[row_i].kind]) {
                               if (part_rows[row_i].kind == 1) {
                                 part_count = part_rows[row_i].count;
                                 load_ok = spaceship_part_count((i32)self->ship_civ,1);
@@ -2004,7 +2004,7 @@ turn_start:
     XD_FlushSendBuffer(60000);
     net_reset_msg_counts();
     for (civ = 0; civ < 8; civ = civ + 1) {
-      *(i32 *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + civ * 4) = 0;
+      dialog_text_font_obj_block.net_civ_phase_done[civ] = 0;
     }
     net_send_message(0x8b,0xff,0,0,0,0,0,0,0,0);
     human_civ[0] = (((i32 *)&net_session_block.net_slot_civs))[net_session_block.net_local_slot * 0x15];
@@ -2015,7 +2015,7 @@ turn_start:
     }
     civ_process_turn(human_civ[0]);
     net_send_state_diff(0xff,2,0,0,0);
-    *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + human_civ[0] * 4) = *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + human_civ[0] * 4) + 1;
+    dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] = dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] + 1;
     dlg_pending_idle_callback = ((i8 *)net_host_wait_production_idle);
     popup_game_with_sprite((const char *)str_waitproduction,(iptr)&popup_info_icon_sprite,0);
     clients_done = 0;
@@ -2030,7 +2030,7 @@ wait_production_loop:
       for (civ = 1; civ < 8; civ = civ + 1) {
         if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
             ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
-           (*(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + civ * 4) == 0)) {
+           (dialog_text_font_obj_block.net_civ_phase_done[civ] == 0)) {
           clients_done = 0;
           break;
         }
@@ -2065,7 +2065,7 @@ production_complete:
       }
     }
     for (civ = 0; civ < 8; civ = civ + 1) {
-      *(i32 *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + civ * 4) = 0;
+      dialog_text_font_obj_block.net_civ_phase_done[civ] = 0;
       net_session_block.net_civ_new_player_flags[civ] = 0;
     }
     net_send_state_diff(0xff,2,0,0,0);
@@ -2077,9 +2077,9 @@ production_complete:
       net_send_message(0x31,0,0,human_civ[0],0,0,0,0,0,0);
       break;
     }
-    if ((*(short *)(((i8 *)&civ_saved_cursor_x_block.civ_intro_shown) + human_civ[0] * 2) == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+    if ((civ_saved_cursor_x_block.civ_intro_shown[human_civ[0]] == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
       civ_intro_popup(human_civ[0]);
-      *(i16 *)(((i8 *)&civ_saved_cursor_x_block.civ_intro_shown) + human_civ[0] * 2) = 1;
+      civ_saved_cursor_x_block.civ_intro_shown[human_civ[0]] = 1;
     }
     if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
       mp_turn_seconds_left = civ_saved_cursor_x_block.mp_turn_time_limit_ms / 1000;
@@ -2167,7 +2167,7 @@ production_complete:
     civ_saved_cursor_x_block.saved_resume_new_game = 0;
     turn_resume_new_game = 0;
     game.field_06 = game.field_06 & 0xfffe;
-    *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + human_civ[0] * 4) = *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + human_civ[0] * 4) + 1;
+    dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] = dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] + 1;
     XD_FlushSendBuffer(60000);
     dlg_pending_idle_callback = ((i8 *)net_host_wait_human_moves_idle);
     popup_game_with_sprite((const char *)str_waithumanmoves,(iptr)&popup_info_icon_sprite,0);
@@ -2183,7 +2183,7 @@ wait_human_moves_loop:
       for (civ = 1; civ < 8; civ = civ + 1) {
         if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
             ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
-           (*(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + civ * 4) == 0)) {
+           (dialog_text_font_obj_block.net_civ_phase_done[civ] == 0)) {
           humans_done = 0;
           break;
         }

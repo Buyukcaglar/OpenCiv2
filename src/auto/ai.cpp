@@ -767,7 +767,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
     settler_count[continent] = 0;
     settle_goals[continent] = 0;
   }
-  *(i32 *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) = 0;
+  civ_unit_counts_block.civ_unit_totals[civ] = 0;
   civs[civ].num_military_units = 0;
   civs[civ].num_cities = 0;
   civs[civ].num_ships = 0;
@@ -855,7 +855,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
               unit_set_sleep(unit);
             }
           }
-          *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) = *(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) + 1;
+          civ_unit_counts_block.civ_unit_totals[civ] = civ_unit_counts_block.civ_unit_totals[civ] + 1;
           if (((char)unit_types[unit_type].role < 5) &&
              (civs[civ].num_military_units = civs[civ].num_military_units + 1,
              -1 < continent)) {
@@ -1092,15 +1092,15 @@ continent_loop_done: ;
       base_density++;
     }
     city6 = ((uint)civs[civ].continent_military[continent] + rival_military) * 2;
-    crowded = (uint)(city6 - *(short *)(((i8 *)&landmass_table_block.landmass_table) + continent * 0x10) != 0 &&
-                      *(short *)(((i8 *)&landmass_table_block.landmass_table) + continent * 0x10) <= city6);
+    crowded = (uint)(city6 - landmass_table_block.landmass_recs[continent].tiles != 0 &&
+                      landmass_table_block.landmass_recs[continent].tiles <= city6);
     if (*(char *)&civs[civ].continent_flags[continent] == '\0') {
       density = leaders[civs[civ].tribe].expand + base_density + 1;
     }
     else {
       density = base_density;
     }
-    if ((int)*(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + continent * 0x10) <
+    if ((int)landmass_table_block.landmass_recs[continent].fertile_tiles <
         (int)(((uint)civs[civ].continent_cities[continent] + rival_cities) * density + 2))
     {
       crowded = 1;
@@ -3697,7 +3697,7 @@ after_transport_candidate: ;
                           if (((tasks_mask & 0x20) == 0) &&
                              (*(char *)&civs[civ].continent_flags[city7] == '\0')) {
                             if ((*(short *)&civs[civ].continent_military[city7] == 0) &&
-                               (0x31 < *(short *)(((i8 *)&landmass_table_block.landmass_table) + city7 * 0x10))) {
+                               (0x31 < landmass_table_block.landmass_recs[city7].tiles)) {
                               civs[civ].continent_flags[city7] =
                                    civs[civ].continent_flags[city7] | 0x80;
                               explore_flag = 1;
@@ -3732,7 +3732,7 @@ after_transport_candidate: ;
                               units[unit2].counter = (byte)game.turn & 7;
                             }
                           }
-                          if (((needs_units != 0) && (4 < *(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + city7 * 0x10)))
+                          if (((needs_units != 0) && (4 < landmass_table_block.landmass_recs[city7].fertile_tiles))
                              && ((1 < (int)y2 && ((int)y2 < map.height - 2)))) {
                             y = unit_moves_left(unit2);
                             if ((((int)(uint)cosmic.road_move_mult <= y) &&
@@ -4061,7 +4061,7 @@ after_stack_check: ;
                       city7 = tile_land_landmass(x4,y2);
                       here_landmass = tile_land_landmass(x2,y3);
                       if ((((0 < city7) && (city7 < 0x3f)) &&
-                          (0x10 < *(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + city7 * 0x10))) &&
+                          (0x10 < landmass_table_block.landmass_recs[city7].fertile_tiles)) &&
                          ((here_landmass != city7 &&
                           (*(char *)&civs[civ].continent_cities[city7] == '\0')))) {
                         flag = 1;
@@ -4428,7 +4428,7 @@ settler_goto_check:
                       if (((units[unit].orders == 11) &&
                           ((units[unit].flags & 0x200) == 0)) &&
                          (city7 = (leaders[civs[civ].tribe].expand + 1) *
-                                   (int)*(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + landmass * 0x10),
+                                   (int)landmass_table_block.landmass_recs[landmass].fertile_tiles,
                          terrain = (uint)civs[civ].continent_cities[landmass],
                          city7 + terrain * -0x10 != 0 && (int)(terrain * 0x10) <= city7))
                       goto finish_orders;
@@ -5355,7 +5355,7 @@ military_stack_check:
     }
   }
   if (((is_settler) &&
-      (*(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + landmass * 0x10) >> 3 <
+      (landmass_table_block.landmass_recs[landmass].fertile_tiles >> 3 <
        (short)(ushort)civs[civ].continent_cities[landmass])) &&
      (units[unit].home_city != -1)) {
     if ((own_dist == 0) && (cities[city2].size < '\n')) {

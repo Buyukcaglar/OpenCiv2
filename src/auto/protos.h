@@ -1034,8 +1034,8 @@ void __cdecl scenario_title_surface_reg_atexit(void); /* 00472f44 */
 void __cdecl scenario_title_surface_atexit_dtor(void); /* 00472f61 */
 void __cdecl save_pack_layout_rects(void); /* 00472f7b */
 void __cdecl save_unpack_layout_rects(void); /* 00473064 */
-void __cdecl rect_pack_to_short(RECT *rect,iptr short_rect); /* 0047314e */
-void __cdecl rect_unpack_from_short(iptr short_rect,RECT *rect); /* 00473190 */
+void __cdecl rect_pack_to_short(RECT *rect,ShortRect *short_rect); /* 0047314e */
+void __cdecl rect_unpack_from_short(ShortRect *short_rect,RECT *rect); /* 00473190 */
 uint __cdecl ui_file_name_dialog(iptr parent,const char *title,iptr file_buf,iptr filter,iptr default_ext,int must_exist, int is_save); /* 004731d2 */
 i32 __cdecl save_read_units_cities(int version,iptr file); /* 004732a6 */
 i32 __cdecl save_load_gpk(int version,iptr file); /* 00473660 */
@@ -3230,16 +3230,16 @@ i32 __cdecl snd_cd_get_track_count(void); /* 005ddeff */
 void __cdecl snd_midi_fire_notify_callback(void); /* 005de6bd */
 void __cdecl snd_cd_set_notify_callback(iptr callback); /* 005de6fc */
 void __cdecl snd_cd_fire_notify_callback(void); /* 005de714 */
-void __cdecl logpal_init_from_system(iptr logpal); /* 005de780 */
-void __cdecl logpal_reserve_range(iptr logpal,int first,int count); /* 005de984 */
-void __cdecl palette_animate(iptr logpal,HPALETTE hpal,UINT first,UINT count); /* 005dea62 */
-void __cdecl palette_get_entry_rgb(iptr logpal,int index,iptr out_red,iptr out_green,iptr out_blue); /* 005dea9e */
-void __cdecl logpal_set_entry(iptr logpal,int index,i32 red,i32 green,i32 blue); /* 005deadb */
-void __cdecl palette_set_entry_rgb(iptr logpal,int index,i32 red,i32 green,i32 blue); /* 005deb12 */
-HPALETTE __cdecl logpal_create_hpalette(iptr logpal); /* 005dec4e */
+void __cdecl logpal_init_from_system(GameLogPalette *logpal); /* 005de780 */
+void __cdecl logpal_reserve_range(GameLogPalette *logpal,int first,int count); /* 005de984 */
+void __cdecl palette_animate(GameLogPalette *logpal,HPALETTE hpal,UINT first,UINT count); /* 005dea62 */
+void __cdecl palette_get_entry_rgb(GameLogPalette *logpal,int index,iptr out_red,iptr out_green,iptr out_blue); /* 005dea9e */
+void __cdecl logpal_set_entry(GameLogPalette *logpal,int index,i32 red,i32 green,i32 blue); /* 005deadb */
+void __cdecl palette_set_entry_rgb(GameLogPalette *logpal,int index,i32 red,i32 green,i32 blue); /* 005deb12 */
+HPALETTE __cdecl logpal_create_hpalette(GameLogPalette *logpal); /* 005dec4e */
 void __cdecl logpal_delete_hpalette(HGDIOBJ hpal); /* 005dec8a */
-void __cdecl logpal_apply_range(iptr logpal,HPALETTE hpal,UINT first,UINT count); /* 005decb1 */
-void __cdecl palette_copy_rgb_range(iptr logpal,iptr dest,int first,int count); /* 005ded12 */
+void __cdecl logpal_apply_range(GameLogPalette *logpal,HPALETTE hpal,UINT first,UINT count); /* 005decb1 */
+void __cdecl palette_copy_rgb_range(GameLogPalette *logpal,iptr dest,int first,int count); /* 005ded12 */
 iptr __cdecl mem_rle_decompress(iptr buf_ptr); /* 005dfb61 */
 uint __cdecl mem_rle_compress(iptr buf_ptr,int size); /* 005dfd8f */
 void __cdecl dlg_radio_choice_button_cb(int button_id); /* 005e00bb */

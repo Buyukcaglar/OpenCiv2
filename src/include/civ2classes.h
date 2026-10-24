@@ -3103,10 +3103,115 @@ typedef struct Sprite {
     union { uptr field_38; uptr data_ptr; };
 } Sprite;
 
-/* 1 methods, size 0xb50 */
+/* A rules/scenario editor's window (editor_wnd_ctor, 0xb50 bytes; one class
+ * for all editors, each uses the controls it needs).  The editor that runs
+ * is editor_text_dlg_wnd_block.active_editor_wnd. */
+typedef struct EditorCombo {
+    u8 raw[0x38];                   /* a combo box control (combo_ctor) */
+} EditorCombo;
 typedef struct EditorWindow {
-    u8 pad_0[2896];
+    DibSurface surface;             /* 0x000 */
+    ModalMenuWindow window;         /* 0x048 */
+    u8 frame_rest[0x1d8];           /* 0x100 the rest of the frame window */
+    i32 wnd_width;                  /* 0x2d8 */
+    i32 wnd_height;                 /* 0x2dc */
+    i32 button_width;               /* 0x2e0 */
+    i32 button_height;              /* 0x2e4 */
+    i32 font_height;                /* 0x2e8 */
+    i32 item;                       /* 0x2ec the item edited (combo 0's selection) */
+    i32 item_2;                     /* 0x2f0 city editor: combo 1's selection */
+    i32 item_3;                     /* 0x2f4 city editor: combo 2's selection */
+    i32 combo_count;                /* 0x2f8 combo boxes created */
+    EditorCombo combos[6];          /* 0x2fc */
+    InputControl edits[9];          /* 0x44c */
+    Control ok_button;              /* 0x6d4 */
+    Control help_button;            /* 0x710 */
+    Control cancel_button;          /* 0x74c */
+    Control rename_button;          /* 0x788 */
+    Control icon_button;            /* 0x7c4 */
+    Control misc_button;            /* 0x800 */
+    Control coast_button;           /* 0x83c */
+    Control terrain_misc_button;    /* 0x878 */
+    Control unit_flags_button;      /* 0x8b4 */
+    Control unit_sound_button;      /* 0x8f0 */
+    Control add_trigger_button;     /* 0x92c */
+    Control edit_trigger_button;    /* 0x968 */
+    Control delete_trigger_button;  /* 0x9a4 */
+    Control add_action_button;      /* 0x9e0 */
+    Control edit_action_button;     /* 0xa1c */
+    Control delete_action_button;   /* 0xa58 */
+    Control list_box;               /* 0xa94 (checkbox_ctor) */
+    Control trigger_listbox;        /* 0xad0 */
+    Control action_listbox;         /* 0xb0c */
+    u8 pad_b48[8];
 } EditorWindow;
+#ifdef __cplusplus
+static_assert(sizeof(EditorWindow) == 0xb50, "");
+static_assert(__builtin_offsetof(EditorWindow, combos) == 0x2fc, "");
+static_assert(__builtin_offsetof(EditorWindow, edits) == 0x44c, "");
+static_assert(__builtin_offsetof(EditorWindow, ok_button) == 0x6d4, "");
+static_assert(__builtin_offsetof(EditorWindow, add_trigger_button) == 0x92c, "");
+static_assert(__builtin_offsetof(EditorWindow, list_box) == 0xa94, "");
+static_assert(__builtin_offsetof(EditorWindow, wnd_width) == 0x2d8 && __builtin_offsetof(EditorWindow, item) == 0x2ec && __builtin_offsetof(EditorWindow, combo_count) == 0x2f8, "");
+static_assert(__builtin_offsetof(EditorWindow, trigger_listbox) == 0xad0 && __builtin_offsetof(EditorWindow, action_listbox) == 0xb0c, "");
+#endif
+
+/* A map view window (0x3f0 bytes; map_views_block.map_view_recs[8], view 0
+ * is the main map). */
+typedef struct MapView {
+    DibSurface surface;             /* 0x000 */
+    ModalMenuWindow window;         /* 0x048 */
+    u8 pad_100[0x24];
+    i32 client_origin_x;            /* 0x124 */
+    i32 client_origin_y;            /* 0x128 */
+    u8 pad_12c[0xb4];
+    i32 timer_shown;                /* 0x1e0 */
+    i32 status_shown;               /* 0x1e4 */
+    i32 timer_cache;                /* 0x1e8 */
+    u8 pad_1ec[0xc0];
+    i32 frame_left;                 /* 0x2ac */
+    i32 frame_top;                  /* 0x2b0 */
+    i32 frame_right;                /* 0x2b4 */
+    u8 pad_2b8[8];
+    i32 client_top;                 /* 0x2c0 */
+    u8 pad_2c4[0x18];
+    i16 open;                       /* 0x2dc nonzero: the view is open */
+    u16 track_moves;                /* 0x2de */
+    i16 center_x;                   /* 0x2e0 */
+    i16 center_y;                   /* 0x2e2 */
+    i16 zoom;                       /* 0x2e4 */
+    i16 field_2e6;
+    i32 origin_x;                   /* 0x2e8 */
+    i32 origin_y;                   /* 0x2ec */
+    i32 end_x;                      /* 0x2f0 */
+    i32 end_y;                      /* 0x2f4 */
+    u8 pad_2f8[0x10];
+    i32 tile_width;                 /* 0x308 */
+    i32 tile_height;                /* 0x30c */
+    i32 half_tile_width;            /* 0x310 */
+    i32 half_tile_height;           /* 0x314 */
+    i32 quarter_tile_width;         /* 0x318 */
+    u8 pad_31c[8];
+    i32 unit_sprite_height;         /* 0x324 */
+    i32 layout_width;               /* 0x328 */
+    i32 layout_height;              /* 0x32c */
+    i32 margin_x;                   /* 0x330 */
+    i32 margin_y;                   /* 0x334 */
+    u8 tile_number_font[0x20];      /* 0x338 */
+    i32 cursor_id;                  /* 0x358 */
+    u8 pad_35c[0x94];
+} MapView;
+#ifdef __cplusplus
+static_assert(sizeof(MapView) == 0x3f0, "");
+static_assert(__builtin_offsetof(MapView, open) == 0x2dc, "");
+static_assert(__builtin_offsetof(MapView, tile_width) == 0x308, "");
+static_assert(__builtin_offsetof(MapView, cursor_id) == 0x358, "");
+static_assert(__builtin_offsetof(MapView, client_origin_x) == 0x124 && __builtin_offsetof(MapView, timer_shown) == 0x1e0, "");
+static_assert(__builtin_offsetof(MapView, frame_left) == 0x2ac && __builtin_offsetof(MapView, client_top) == 0x2c0, "");
+static_assert(__builtin_offsetof(MapView, center_x) == 0x2e0 && __builtin_offsetof(MapView, origin_x) == 0x2e8, "");
+static_assert(__builtin_offsetof(MapView, half_tile_width) == 0x310 && __builtin_offsetof(MapView, quarter_tile_width) == 0x318, "");
+static_assert(__builtin_offsetof(MapView, unit_sprite_height) == 0x324 && __builtin_offsetof(MapView, margin_y) == 0x334, "");
+#endif
 
 /* 1 methods, size 0x8 */
 typedef struct ControlIdView {
@@ -3674,7 +3779,7 @@ typedef struct DiffEngSection {
     union { u32 field_4; u32 padded_size; };
     union { u32 field_8; u32 section_id; };
     union { u32 field_c; u32 checksum; };
-    u8 pad_10[4];
+    union { u32 field_10; u32 mirror_offset; };  /* offset of its copy in the mirror buffer */
     union { u32 field_14; u32 data_ptr; };
 } DiffEngSection;
 

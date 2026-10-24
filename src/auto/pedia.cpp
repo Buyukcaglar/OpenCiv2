@@ -3568,17 +3568,17 @@ void __thiscall pedia_draw_improvement(DocumentWindow *self)
     text_append_label(0xe);
     surface_draw_text((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
   }
-  else if ((((i8 *)&civ_unit_counts_block.wonder_expires_by_impr))[improvement] < 1) {
+  else if (wonder_expires[improvement - 0x27] < 1) {
     text_append_label(0xe);
     surface_draw_text((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
   }
   else {
-    label = (iptr)label_string(advances[(((i8 *)&civ_unit_counts_block.wonder_expires_by_impr))[improvement]].name);
+    label = (iptr)label_string(advances[wonder_expires[improvement - 0x27]].name);
     text_append((const char *)label);
     text_width = font_text_width(font2,(const char *)&map_views_block.text_buffer);
     line_height = font_line_spacing(font2);
     SetRect(&link_rect,value_x,y2,value_x + text_width + 5,y2 + line_height);
-    pedia_add_link(self,(int)(((i8 *)&civ_unit_counts_block.wonder_expires_by_impr))[improvement],value_x,y2,0,link_rect.left,
+    pedia_add_link(self,(int)wonder_expires[improvement - 0x27],value_x,y2,0,link_rect.left,
                        link_rect.top,link_rect.right,link_rect.bottom);
   }
   x2 = self->content_left + 10;

@@ -1812,7 +1812,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
           parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
           this_01 = (GamePalette *)wnd_get_palette(parent_wnd);
           logpal = palette_get_logpalette(this_01);
-          palette_get_entry_rgb((iptr)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+          palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
           bg_pen = CreatePen(0,1,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
           ;
         }
@@ -2515,7 +2515,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
             parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             logpal = (iptr)palette_get_logpalette(game_palette2);
-            palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+            palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
             ;
           }
@@ -2544,7 +2544,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
               parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
               game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
               logpal = (iptr)palette_get_logpalette(game_palette2);
-              palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+              palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
               SetTextColor(hdc,
                            CONCAT12(blue[0],CONCAT11(green[0],red[0])));
             }
@@ -4209,7 +4209,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)group);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             parent = (iptr)palette_get_logpalette(game_palette2);
-            palette_get_entry_rgb(parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+            palette_get_entry_rgb((GameLogPalette *)parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
           }
         }
@@ -4235,7 +4235,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)group);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             parent = (iptr)palette_get_logpalette(game_palette2);
-            palette_get_entry_rgb(parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+            palette_get_entry_rgb((GameLogPalette *)parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
           }
         }
@@ -4687,7 +4687,7 @@ uint __cdecl input_map_vkey(uint vkey)
   int key_down;
   uint key_code;
   
-  key_code = *(uint *)(((i8 *)&input_vkey_map_table) + (vkey & 0xff) * 4);
+  key_code = (uint)input_vkey_map_table[vkey & 0xff];
   if (key_code != 0) {
     key_down = input_ctrl_key_down();
     if (key_down != 0) {

@@ -984,7 +984,104 @@ typedef struct EditorCtrlRow {
     i32 kind;                       /* 0x0 9 edit box, 0xc combo box */
     i32 slot;                       /* 0x4 index of the edit box / combo box */
 } EditorCtrlRow;
+/* A 256-colour LOGPALETTE (the start of a GamePalette; palette_get_logpalette),
+ * entries read as signed bytes. */
+typedef struct LogPalEntry {
+    i8 red;
+    i8 green;
+    i8 blue;
+    i8 flags;                       /* PC_ flags: 1 reserved, 4 nocollapse */
+} LogPalEntry;
+typedef struct GameLogPalette {
+    i16 version;                    /* 0x0 0x300 */
+    i16 count;                      /* 0x2 0x100 */
+    LogPalEntry entries[256];       /* 0x4 */
+} GameLogPalette;
 #ifdef __cplusplus
+static_assert(sizeof(GameLogPalette) == 0x404, "");
+#endif
+/* Where a throne room piece is drawn (throneroom_piece_rects[piece][level]). */
+typedef struct ThroneRect {
+    i32 x;
+    i32 y;
+    i32 w;
+    i32 h;
+} ThroneRect;
+#ifdef __cplusplus
+static_assert(sizeof(ThroneRect) == 0x10, "");
+#endif
+/* A cached scaling table (default_draw_font_obj_block.gfx_scale_caches[16]):
+ * table[i] = i * num / den, the least recently used is replaced. */
+typedef struct GfxScaleCache {
+    i32 num;                        /* 0x0 */
+    i32 den;                        /* 0x4 */
+    i32 last_used;                  /* 0x8 tick */
+    i32 table[0x400];               /* 0xc */
+} GfxScaleCache;
+#ifdef __cplusplus
+static_assert(sizeof(GfxScaleCache) == 0x100c, "");
+#endif
+/* A civ's colours (civ_primary_colors_block.civ_colors[8], by colour index). */
+typedef struct CivColors {
+    i32 primary;                    /* 0x0 */
+    i32 mid;                        /* 0x4 */
+    i32 secondary;                  /* 0x8 */
+    i32 flags;                      /* 0xc cleared for a new game */
+} CivColors;
+#ifdef __cplusplus
+static_assert(sizeof(CivColors) == 0x10, "");
+#endif
+/* A landmass or body of water (landmass_table_block.landmass_recs[64]). */
+typedef struct Landmass {
+    i16 tiles;                      /* 0x0 */
+    i16 fertile_tiles;              /* 0x2 */
+    i16 water_body_size;            /* 0x4 */
+    i8 field_6;
+    i8 border_bits[8];              /* 0x7 a bit per body it borders */
+    i8 field_f;
+} Landmass;
+#ifdef __cplusplus
+static_assert(sizeof(Landmass) == 0x10, "");
+static_assert(__builtin_offsetof(Landmass, border_bits) == 7, "");
+#endif
+/* A RECT stored as shorts (the saved window layout; rect_pack_to_short). */
+typedef struct ShortRect {
+    i16 left;
+    i16 top;
+    i16 right;
+    i16 bottom;
+} ShortRect;
+#ifdef __cplusplus
+static_assert(sizeof(ShortRect) == 8, "");
+#endif
+/* Where a rules editor puts a control (x, y in the client area). */
+typedef struct EditorPos {
+    i32 x;
+    i32 y;
+} EditorPos;
+/* A spaceship part kind (spaceship_part_table_block.spaceship_parts[6]). */
+typedef struct SpaceshipPartKind {
+    i32 label_id;                   /* 0x0 index in label_string_ids */
+    i32 max_count;                  /* 0x4 */
+    i32 mass;                       /* 0x8 */
+} SpaceshipPartKind;
+/* A period of the calendar (year_period_table, 4 x 6):
+ * turn_count turns of year_step years from start_year. */
+typedef struct YearPeriod {
+    i32 start_year;                 /* 0x0 */
+    i32 turn_count;                 /* 0x4 */
+    i32 year_step;                  /* 0x8 */
+} YearPeriod;
+#ifdef __cplusplus
+static_assert(sizeof(EditorPos) == 8 && sizeof(SpaceshipPartKind) == 0xc && sizeof(YearPeriod) == 0xc, "");
+#endif
+/* A rules editor's values for one item (unit type, improvement, advance...):
+ * value i is the control with id 0xca + i (editor_text_dlg_wnd_block). */
+typedef struct EditorItem {
+    i32 values[22];
+} EditorItem;
+#ifdef __cplusplus
+static_assert(sizeof(EditorItem) == 0x58, "");
 static_assert(sizeof(RulesEditSection) == 8, "");
 static_assert(sizeof(EditorCtrlRow) == 8, "");
 #endif

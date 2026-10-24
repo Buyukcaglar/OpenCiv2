@@ -196,7 +196,7 @@ i32 __cdecl minimap_tile_color(int x,int y)
         }
       }
       else {
-        color2 = *(i32 *)(((i8 *)&civ_primary_colors_block.civ_secondary_colors) + cities[city].owner * 0x10);
+        color2 = civ_primary_colors_block.civ_colors[cities[city].owner].secondary;
       }
     }
   }
@@ -371,15 +371,15 @@ void __cdecl minimap_on_rbuttonup(int mouse_x,int mouse_y)
       if (in_bounds != 0) {
         free_view = -1;
         for (view = 1; view < 8; view++) {
-          if (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) == 0) {
+          if (map_views_block.map_view_recs[view].open == 0) {
             free_view = view;
             break;
           }
         }
         if (0 < free_view) {
-          mapview_create((ViewWindow *)(((i8 *)&map_views_block.map_views) + free_view * 0x3f0));
+          mapview_create((ViewWindow *)&map_views_block.map_view_recs[free_view]);
           mapview_center_on
-                    ((ViewWindow *)(((i8 *)&map_views_block.map_views) + free_view * 0x3f0),tile_x,tile_y);
+                    ((ViewWindow *)&map_views_block.map_view_recs[free_view],tile_x,tile_y);
         }
       }
     }
@@ -509,8 +509,8 @@ void __cdecl mapviews_redraw_cursor(void)
   int view;
   
   for (view = 0; view < 8; view++) {
-    if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
-      mapview_redraw_cursor_tile((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0));
+    if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
+      mapview_redraw_cursor_tile((ViewWindow *)&map_views_block.map_view_recs[view]);
     }
   }
   return;
@@ -613,13 +613,13 @@ uint __cdecl mapviews_ensure_visible(i32 x,i32 y,iptr civ)
     track_mask = 2;
   }
   for (view = 0; view < 8; view++) {
-    if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
-      if ((track_mask & *(ushort *)(((i8 *)&map_views_block.mapview_track_moves) + view * 0x3f0)) == 0) {
+    if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
+      if ((track_mask & map_views_block.map_view_recs[view].track_moves) == 0) {
         result = 0;
       }
       else {
         scrolled = mapview_scroll_if_near_edge
-                          ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),x,y);
+                          ((ViewWindow *)&map_views_block.map_view_recs[view],x,y);
         result = result & scrolled;
       }
     }
@@ -749,8 +749,8 @@ void __cdecl mapview_cancel_drag(void)
   }
   if ((-1 < mapview_drag_view_index) && ((((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] == 0x1fe)) {
     (((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] = 0x201;
-    wnd_set_cursor_now((WndCursorView *)(((i8 *)&map_views_block.map_view_wnds) + mapview_drag_view_index * 0x3f0),0x201,1);
-    wnd_release_capture((WndBase *)(((i8 *)&map_views_block.map_view_wnds) + mapview_drag_view_index * 0x3f0));
+    wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x201,1);
+    wnd_release_capture((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window);
   }
   mapview_drag_view_index = 0xffffffff;
   return;
@@ -765,8 +765,8 @@ void __cdecl mapview_drag_hold_expired(void)
     mapview_drag_hold_timer = -1;
     if (-1 < mapview_drag_view_index) {
       (((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] = 0x1fe;
-      wnd_set_cursor_now((WndCursorView *)(((i8 *)&map_views_block.map_view_wnds) + mapview_drag_view_index * 0x3f0),0x1fe,1);
-      wnd_set_capture((WndBase *)(((i8 *)&map_views_block.map_view_wnds) + mapview_drag_view_index * 0x3f0));
+      wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x1fe,1);
+      wnd_set_capture((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window);
     }
   }
   return;
@@ -799,9 +799,9 @@ void __cdecl mapview_on_lbuttondown(void)
       }
       else {
         (((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] = 0x1fe;
-        wnd_set_cursor_now((WndCursorView *)(((i8 *)&map_views_block.map_view_wnds) + mapview_drag_view_index * 0x3f0),0x1fe,1)
+        wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x1fe,1)
         ;
-        wnd_set_capture((WndBase *)(((i8 *)&map_views_block.map_view_wnds) + mapview_drag_view_index * 0x3f0));
+        wnd_set_capture((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window);
       }
     }
     net_session_block.ui_input_busy = 0;
@@ -840,9 +840,9 @@ void __cdecl mapviews_set_paradrop_cursor(void)
   int view;
   
   for (view = 0; view < 8; view++) {
-    if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
+    if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
       (((i32 *)&map_views_block.mapview_cursor_id))[view * 0xfc] = 0x202;
-      wnd_set_cursor_now((WndCursorView *)(((i8 *)&map_views_block.map_view_wnds) + view * 0x3f0),0x202,1);
+      wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[view].window,0x202,1);
     }
   }
   return;
@@ -858,9 +858,9 @@ void __cdecl mapviews_reset_cursor(void)
   paradrop = ui_paradrop_cursor_active();
   if (paradrop != 0) {
     for (view = 0; view < 8; view++) {
-      if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
+      if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
         (((i32 *)&map_views_block.mapview_cursor_id))[view * 0xfc] = 0x201;
-        wnd_set_cursor_now((WndCursorView *)(((i8 *)&map_views_block.map_view_wnds) + view * 0x3f0),0x201,1);
+        wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[view].window,0x201,1);
       }
     }
   }
@@ -995,7 +995,7 @@ void __thiscall mapview_update_title(FrameWindow *self)
     }
     show_mode = false;
     for (view = 1; view < 8; view++) {
-      if (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0) {
+      if (map_views_block.map_view_recs[view].open != 0) {
         show_mode = true;
         break;
       }
@@ -1156,17 +1156,17 @@ void __cdecl mapviews_create_all(void)
   int view;
   
   for (view = 0; view < 8; view++) {
-    mapview_init_state((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),view);
+    mapview_init_state((ViewWindow *)&map_views_block.map_view_recs[view],view);
     if (turn_resume_civ == '\0') {
       if (view == 0) {
         (*(i32 *)&map_views_block.map_view_open_flags) = 1;
       }
       else {
-        *(i16 *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) = 0;
+        map_views_block.map_view_recs[view].open = 0;
       }
     }
-    if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
-      mapview_create((ViewWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0));
+    if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
+      mapview_create((ViewWindow *)&map_views_block.map_view_recs[view]);
     }
   }
   map_views_block.main_view_status_shown_i32 = 1;
@@ -1191,8 +1191,8 @@ void __cdecl mapviews_destroy_all(void)
   game_timer_destroy(minimap_window_block.eot_blink_timer);
   wnd_modal_stack_below_block.timer_alt_kind_request = 0;
   for (view = 0; view < 8; view++) {
-    if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
-      wnd_destroy_with_surface((DibSurface *)(((i8 *)&map_views_block.map_views) + view * 0x3f0));
+    if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
+      wnd_destroy_with_surface(&map_views_block.map_view_recs[view].surface);
     }
   }
   return;
@@ -1686,8 +1686,8 @@ mapview_draw_tile_terrain
     else {
       variant = tile_calc_coast_masks(x,y);
       for (quarter = 0; quarter < 4; quarter++) {
-        quarter_x = (*(int *)(((i8 *)&coast_quarter_dx_table) + quarter * 4) + 1) * ((int)half_w >> 1) + screen_x;
-        quarter_y = *(int *)(((i8 *)&coast_quarter_dy_table) + quarter * 4) * ((int)half_h >> 1) + screen_y;
+        quarter_x = (coast_quarter_dx_table[quarter] + 1) * ((int)half_w >> 1) + screen_x;
+        quarter_y = coast_quarter_dy_table[quarter] * ((int)half_h >> 1) + screen_y;
         sprite_draw
                   ((Sprite *)
                    (((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + quarter * 0x3c + (uint)(byte)(((i8 *)&scenario_title_surface_block.coast_quarter_land_masks))[quarter] * 0xf0),
@@ -2626,9 +2626,9 @@ i32 __cdecl mapviews_tile_visible(iptr x,iptr y)
   visible = tile_visible_to(x,y,human_civ[0]);
   if (visible != 0) {
     for (view_index = 0; view_index < 8; view_index++) {
-      if (((view_index == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view_index * 0x3f0) != 0)) &&
+      if (((view_index == 0) || (map_views_block.map_view_recs[view_index].open != 0)) &&
          (visible = mapview_tile_in_view
-                            ((ViewWindow *)(((i8 *)&map_views_block.map_views) + view_index * 0x3f0),x,y),
+                            ((ViewWindow *)&map_views_block.map_view_recs[view_index],x,y),
          visible != 0)) {
         return 1;
       }

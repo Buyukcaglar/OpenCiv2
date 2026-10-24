@@ -216,13 +216,13 @@ void __cdecl tribe_editor_load_tables(void)
     if (civ < 8) {
       max_len = 0x18;
       text = civ_name_plural(civ);
-      _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (leader * 5 + 0xd2) * 8,text,max_len);
-      (((i8 *)&editor_text_dlg_wnd_block.editor_item_name24_ends))[(leader * 5 + 0xd2) * 8] = 0;
+      _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x2a],text,max_len);
+      editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x2a][0x17] = 0;
       max_len = 0x18;
       text = (char *)civ_adjective(civ);
-      _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (leader * 5 + 0x13b) * 8,text,max_len);
-      (((i8 *)&editor_text_dlg_wnd_block.editor_item_name24_ends))[(leader * 5 + 0x13b) * 8] = 0;
-      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + leader * 0x58) = (int)civ_names[civ].city_style;
+      _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x3f],text,max_len);
+      editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x3f][0x17] = 0;
+      editor_text_dlg_wnd_block.editor_item_recs[leader].values[0] = (int)civ_names[civ].city_style;
     }
     else {
       if (leaders[leader].plural < 1) {
@@ -233,8 +233,8 @@ void __cdecl tribe_editor_load_tables(void)
       }
       max_len = 0x18;
       text = label_string(plural_id);
-      _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (leader * 5 + 0xd2) * 8,text,max_len);
-      (((i8 *)&editor_text_dlg_wnd_block.editor_item_name24_ends))[(leader * 5 + 0xd2) * 8] = 0;
+      _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x2a],text,max_len);
+      editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x2a][0x17] = 0;
       if (leaders[leader].adjective < 1) {
         adjective_id = ~(int)leaders[leader].adjective + 1;
       }
@@ -243,13 +243,13 @@ void __cdecl tribe_editor_load_tables(void)
       }
       max_len = 0x18;
       text = label_string(adjective_id);
-      _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (leader * 5 + 0x13b) * 8,text,max_len);
-      (((i8 *)&editor_text_dlg_wnd_block.editor_item_name24_ends))[(leader * 5 + 0x13b) * 8] = 0;
-      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + leader * 0x58) = (int)leaders[leader].city_style;
+      _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x3f],text,max_len);
+      editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x3f][0x17] = 0;
+      editor_text_dlg_wnd_block.editor_item_recs[leader].values[0] = (int)leaders[leader].city_style;
     }
-    *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field1) + leader * 0x58) = leaders[leader].attack + 1;
-    *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + leader * 0x58) = leaders[leader].expand + 1;
-    *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field3) + leader * 0x58) = leaders[leader].civilize + 1;
+    editor_text_dlg_wnd_block.editor_item_recs[leader].values[1] = leaders[leader].attack + 1;
+    editor_text_dlg_wnd_block.editor_item_recs[leader].values[2] = leaders[leader].expand + 1;
+    editor_text_dlg_wnd_block.editor_item_recs[leader].values[3] = leaders[leader].civilize + 1;
   }
   for (leader = 0; leader < 7; leader++) {
     max_len = 0xf;
@@ -290,12 +290,12 @@ void __cdecl tribe_editor_apply_tables(void)
       civ++;
     }
     if (civ < 8) {
-      civ_names[civ].city_style = (i16)*(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + leader * 0x58);
+      civ_names[civ].city_style = (i16)editor_text_dlg_wnd_block.editor_item_recs[leader].values[0];
     }
-    leaders[leader].city_style = (i16)*(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + leader * 0x58);
-    leaders[leader].attack = (char)*(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field1) + leader * 0x58) - 1;
-    leaders[leader].expand = (char)*(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + leader * 0x58) - 1;
-    leaders[leader].civilize = (char)*(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field3) + leader * 0x58) - 1;
+    leaders[leader].city_style = (i16)editor_text_dlg_wnd_block.editor_item_recs[leader].values[0];
+    leaders[leader].attack = (char)editor_text_dlg_wnd_block.editor_item_recs[leader].values[1] - 1;
+    leaders[leader].expand = (char)editor_text_dlg_wnd_block.editor_item_recs[leader].values[2] - 1;
+    leaders[leader].civilize = (char)editor_text_dlg_wnd_block.editor_item_recs[leader].values[3] - 1;
   }
   for (leader = 0; leader < 7; leader++) {
     max_len = 0xf;
@@ -331,17 +331,17 @@ void __cdecl tribe_editor_load_controls(void)
     if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 9) {
       ctrl_set_text
                 ((ControlTextView *)
-                 (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
-                 (const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8));
+                 &editor_text_dlg_wnd_block.active_editor_wnd->edits[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot],
+                 (const char *)editor_text_dlg_wnd_block.editor_item_name_recs[editor_text_dlg_wnd_block.active_editor_wnd->item + 0x3f]);
     }
     else if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 0xc) {
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x38));
+                         &editor_text_dlg_wnd_block.active_editor_wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot]);
       combo_set_cur_sel
                 ((ComboBoxSetSelView *)
-                 (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x38),
-                 *(iptr *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58));
+                 &editor_text_dlg_wnd_block.active_editor_wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot],
+                 *(iptr *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58));
     }
   }
   return;
@@ -360,18 +360,18 @@ void __cdecl tribe_editor_store_controls(void)
     if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 9) {
       ctrl_get_text
                 ((ControlTextView *)
-                 (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
+                 &editor_text_dlg_wnd_block.active_editor_wnd->edits[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot],
                  (char *)text);
-      _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8,text,0x18);
+      _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[editor_text_dlg_wnd_block.active_editor_wnd->item + 0x3f],text,0x18);
     }
     else if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 0xc) {
       selection = combo_get_cur_sel
                           ((ComboBoxGetSelView *)
-                           (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x38));
+                           &editor_text_dlg_wnd_block.active_editor_wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot]);
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x38));
-      *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58 + ctrl_id * 4) = selection;
+                         &editor_text_dlg_wnd_block.active_editor_wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot]);
+      *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58 + ctrl_id * 4) = selection;
     }
   }
   return;
@@ -654,11 +654,11 @@ void __cdecl tribe_editor_on_ok(void)
     uType = 0x10;
     lpCaption = str_file_i_o_error_2;
     lpText = msg;
-    wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+    wnd = wnd_get_window((WndBase *)&editor_text_dlg_wnd_block.active_editor_wnd->window);
     MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
   }
   editor_text_dlg_wnd_block.editor_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+  wnd_end_modal_loop(&editor_text_dlg_wnd_block.active_editor_wnd->window);
   menu_update_states();
   return;
 }
@@ -684,7 +684,7 @@ void __cdecl tribe_editor_rename_commodity(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   dialog_load_text(&dialog2,(const char *)&str_debug_11,(const char *)&str_renamecommo,1);
@@ -734,7 +734,7 @@ void __cdecl tribe_editor_rename_govt(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   dialog_load_text(&dialog2,(const char *)&str_debug_11,(const char *)&str_renamegovt,1);
@@ -790,7 +790,7 @@ void __cdecl tribe_editor_rename_title(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   dialog_load_text(&dialog2,(const char *)&str_debug_11,(const char *)&str_renametitle,1);
@@ -856,7 +856,7 @@ void __cdecl tribe_editor_on_help(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   popup_text((const char *)&str_help_3,(const char *)&str_tribes);
@@ -869,7 +869,7 @@ void __cdecl tribe_editor_on_cancel(void)
 
 {
   editor_text_dlg_wnd_block.editor_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+  wnd_end_modal_loop(&editor_text_dlg_wnd_block.active_editor_wnd->window);
   return;
 }
 
@@ -881,8 +881,8 @@ void __cdecl tribe_editor_on_combo(int ctrl_id)
   
   if (ctrl_id == 0xc9) {
     tribe_editor_store_controls();
-    selection = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
-    *(i32 *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) = selection;
+    selection = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    editor_text_dlg_wnd_block.active_editor_wnd->item = selection;
     tribe_editor_load_controls();
     tribe_editor_redraw();
   }
@@ -904,8 +904,8 @@ void __thiscall tribe_editor_create_combo(ViewWindow *self,int slot)
   int i;
   i8 rect[16];
   
-  ctrl_x = *(int *)(((i8 *)&tribe_editor_combo_x_table_block.tribe_editor_combo_x_table) + slot * 8) + self->client_x;
-  ctrl_y = *(int *)(((i8 *)&tribe_editor_combo_x_table_block.tribe_editor_combo_y_table) + slot * 8) + self->client_y;
+  ctrl_x = tribe_editor_combo_x_table_block.tribe_editor_combo_pos[slot].x + self->client_x;
+  ctrl_y = tribe_editor_combo_x_table_block.tribe_editor_combo_pos[slot].y + self->client_y;
   if (slot == 0) {
     rect_set_xywh((iptr)rect,ctrl_x - 0x32,ctrl_y,200,self->sci_rate_sel << 3);
   }
@@ -933,7 +933,7 @@ void __thiscall tribe_editor_create_combo(ViewWindow *self,int slot)
     for (i = 0; i < 0x15; i++) {
       combo_add_string
                 ((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),
-                 (const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (i * 5 + 0xd2) * 8));
+                 (const char *)editor_text_dlg_wnd_block.editor_item_name_recs[i + 0x2a]);
     }
     break;
   case 1:
@@ -1021,7 +1021,7 @@ void __thiscall tribe_editor_paint(ViewWindow *self)
   box_x = self->client_x + 0x20;
   box_y = self->client_y + 0x20;
   sprite = (Sprite *)
-             (*(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58) * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 300)));
+             (editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[0] * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 300)));
   key_color = sprite_get_key_color(sprite);
   gfx_fill_rect_xywh((iptr)self,box_x,box_y,0x40,0x40,(uint)key_color);
   sprite_draw_keyed(sprite,(iptr)draw_ctx,(iptr)self,0,box_x,box_y + 8);
@@ -1029,9 +1029,9 @@ void __thiscall tribe_editor_paint(ViewWindow *self)
   box_x = self->client_width + self->client_x - 0x60;
   box_y = self->client_y + 0x20;
   gfx_fill_rect_xywh((iptr)self,box_x,box_y,0x40,0x40,
-                     *(i32 *)(((i8 *)&civ_primary_colors_block.civ_mid_colors) + leaders[self->init_tax_rate].color * 0x10));
+                     civ_primary_colors_block.civ_colors[leaders[self->init_tax_rate].color].mid);
   gfx_fill_rect_xywh((iptr)self,box_x + 0x10,box_y + 0x10,0x20,0x20,
-                     *(i32 *)(((i8 *)&civ_primary_colors_block.civ_primary_colors) + leaders[self->init_tax_rate].color * 0x10));
+                     civ_primary_colors_block.civ_colors[leaders[self->init_tax_rate].color].primary);
   gfx_draw_tiled_frame((iptr)self,box_x,box_y,0x40,0x40,6);
   text_set_surface((iptr)self);
   text_set_font((iptr)&editor_font_block.editor_font);
@@ -1041,7 +1041,7 @@ void __thiscall tribe_editor_paint(ViewWindow *self)
   gfx_fill_rect_xywh((iptr)self,box_x,box_y,100,self->sci_rate_sel + 6,0x29);
   gfx_draw_frame_rect((iptr)self,box_x,box_y,100,self->sci_rate_sel + 6,10);
   text_clear();
-  text_append_str((const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8));
+  text_append_str((const char *)editor_text_dlg_wnd_block.editor_item_name_recs[editor_text_dlg_wnd_block.active_editor_wnd->item + 0x3f]);
   text_draw_shadowed((iptr)self,(const char *)&map_views_block.text_buffer,box_x + 3,box_y + 2);
   text_set_colors(0x29,0x12,1,1);
   box_x = self->client_x + 0x59;
@@ -1117,7 +1117,7 @@ void __thiscall tribe_editor_main(ViewWindow *self)
   palette_init(&palette);
   eh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
-  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
+  editor_text_dlg_wnd_block.active_editor_wnd = (EditorWindow *)self;
   this_00 = (DibSurface *)(operator_new(0x48));
   (*((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
@@ -1469,7 +1469,7 @@ success:
                 rc = __strnicmp((line + 1),tribe_str,_MaxCount);
                 if (rc == 0) {
                   _sprintf(line,str_c_s,0x40,
-                           ((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (leader * 5 + 0xd2) * 8);
+                           editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x2a]);
                   __strupr(line);
                   rc = _fputs(line,out_file);
                   if (rc == -1) goto cleanup;
@@ -1535,7 +1535,7 @@ i32 __cdecl editor_options_dialog(const char *file_name,const char *section,uint
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   rc = dialog_load_text_section(&dlg,(const char *)&str_game_7,file_name,(int)section,0,0,0,0,flags);
@@ -1641,7 +1641,7 @@ editor_text_dlg_create(const char *title,uint style,int x,int y,int width,int he
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   wnd_create_with_surface
             ((DibSurface *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd),0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
@@ -1832,7 +1832,7 @@ show_error_dialog:
       parent_wnd2 = 0;
     }
     else {
-      parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+      parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
     }
     dlg_set_parent_window(parent_wnd2);
     text_set_string_arg(0,name2);
@@ -1853,12 +1853,12 @@ void __cdecl editor_wnd_on_move_close_dropdowns(void)
   LPARAM lParam;
   int i;
   
-  for (i = 0; i < *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2f8); i++) {
+  for (i = 0; i < editor_text_dlg_wnd_block.active_editor_wnd->combo_count; i++) {
     lParam = 0;
     wParam = 0;
     Msg = 0x14f;
     hWnd = control_get_hwnd
-                           ((ControlHwndView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + i * 0x38));
+                           ((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[i]);
     SendMessageA(hWnd,Msg,wParam,lParam);
   }
   return;

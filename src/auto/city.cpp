@@ -552,7 +552,7 @@ void __thiscall taxrate_dialog_run(ViewWindow *self,uptr civ)
   }
   for (i = 0; i < 3; i++) {
     *(i32 *)(self->rate_values + i * 4 - 0x18) =
-         *(i32 *)(((i8 *)&taxrate_lock_flags) + i * 4);
+         taxrate_lock_flags[i];
     if (self == (ViewWindow *)0x0) {
       parent_wnd_lock = (u8 *)0x0;
     }
@@ -586,7 +586,7 @@ void __thiscall taxrate_dialog_run(ViewWindow *self,uptr civ)
   }
   (*(DibSurface * *)&taxrate_bg_surface) = (DibSurface *)0x0;
   for (i = 0; i < 3; i++) {
-    *(i32 *)(((i8 *)&taxrate_lock_flags) + i * 4) =
+    taxrate_lock_flags[i] =
          *(i32 *)(self->rate_values + i * 4 - 0x18);
   }
   if (((uint)civs[civ].tax_rate != self->tax_rate_sel) ||
@@ -797,7 +797,7 @@ void __cdecl city_info_popup(iptr city)
 u32 __thiscall city_window_is_closed(WindowObjectView *self)
 
 {
-  return (*(u32 *)&((PictureWindow *)self)->is_closed);
+  return ((u32)((PictureWindow *)self)->is_closed);
 }
 
 /* 00428d00 auto */
@@ -813,7 +813,7 @@ void __cdecl city_editor_on_ok(void)
 
 {
   editor_text_dlg_wnd_block.editor_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+  wnd_end_modal_loop(&editor_text_dlg_wnd_block.active_editor_wnd->window);
   menu_update_states();
   return;
 }
@@ -828,7 +828,7 @@ void __cdecl city_editor_on_help(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   popup_text((const char *)&str_help_2,(const char *)&str_cities);
@@ -841,7 +841,7 @@ void __cdecl city_editor_on_cancel(void)
 
 {
   editor_text_dlg_wnd_block.editor_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+  wnd_end_modal_loop(&editor_text_dlg_wnd_block.active_editor_wnd->window);
   return;
 }
 
@@ -857,9 +857,9 @@ void __cdecl city_editor_on_edit_icon(void)
   sprite_count = 1;
   title_text = (iptr)label_string(label_string_ids[0x1f6]);
   sprite_editor_run((iptr)(((i8 *)&gfx_sheet_surface_block.city_sprites) +
-                           *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2f4) * 0x3c +
-                           *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x1e0 +
-                           *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2f0) * 0x78),(const char *)title_text,sprite_count,(iptr)save_callback);
+                           editor_text_dlg_wnd_block.active_editor_wnd->item_3 * 0x3c +
+                           editor_text_dlg_wnd_block.active_editor_wnd->item * 0x1e0 +
+                           editor_text_dlg_wnd_block.active_editor_wnd->item_2 * 0x78),(const char *)title_text,sprite_count,(iptr)save_callback);
   city_editor_request_redraw();
   return;
 }
@@ -880,7 +880,7 @@ void __cdecl city_editor_on_edit_misc(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   choice = popup_text_flags((const char *)&str_debug_11,(const char *)&str_citymisc,1);
@@ -923,12 +923,12 @@ void __cdecl city_editor_on_combo_change(i32 unused)
 {
   i32 selection;
   
-  selection = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
-  *(i32 *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) = selection;
-  selection = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
-  *(i32 *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2f0) = selection;
-  selection = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
-  *(i32 *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2f4) = selection;
+  selection = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+  editor_text_dlg_wnd_block.active_editor_wnd->item = selection;
+  selection = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+  editor_text_dlg_wnd_block.active_editor_wnd->item_2 = selection;
+  selection = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
+  editor_text_dlg_wnd_block.active_editor_wnd->item_3 = selection;
   city_editor_request_redraw();
   return;
 }
@@ -1080,7 +1080,7 @@ void __thiscall city_editor_open_window(ViewWindow *self)
   palette_init(&palette);
   eh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
-  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
+  editor_text_dlg_wnd_block.active_editor_wnd = (EditorWindow *)self;
   this_00 = (DibSurface *)operator_new(0x48);
   (*((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
@@ -2542,10 +2542,10 @@ void __cdecl city_calc_commodity_demand(uptr city)
         advisor_window_block.supply_score_spice = advisor_window_block.supply_score_spice * 2;
       }
       advisor_window_block.supply_score_spice -= center_dy;
-      if (*(short *)(((i8 *)&landmass_table_block.landmass_table) + landmass2 * 0x10) < 0x1a) {
+      if (landmass_table_block.landmass_recs[landmass2].tiles < 0x1a) {
         advisor_window_block.supply_score_spice += (advisor_window_block.supply_score_spice >> 1);
       }
-      if (300 < *(short *)(((i8 *)&landmass_table_block.landmass_table) + landmass2 * 0x10)) {
+      if (300 < landmass_table_block.landmass_recs[landmass2].tiles) {
         advisor_window_block.supply_score_spice = advisor_window_block.supply_score_spice >> 1;
       }
       if (landmass2 == 1) {
@@ -2770,11 +2770,11 @@ void __cdecl city_calc_commodity_demand(uptr city)
     if (city2 < 1) {
       city2 = 0;
     }
-    advisor_window_block.demand_score_spice = (int)*(short *)(((i8 *)&landmass_table_block.landmass_table) + landmass2 * 0x10) / 10 - city2;
+    advisor_window_block.demand_score_spice = (int)landmass_table_block.landmass_recs[landmass2].tiles / 10 - city2;
     if (cities[city].size < 4) {
       advisor_window_block.demand_score_spice = advisor_window_block.demand_score_spice / 2;
     }
-    if (400 < *(short *)(((i8 *)&landmass_table_block.landmass_table) + landmass2 * 0x10)) {
+    if (400 < landmass_table_block.landmass_recs[landmass2].tiles) {
       if (7 < cities[city].size) {
         advisor_window_block.demand_score_spice = advisor_window_block.demand_score_spice << 1;
       }
@@ -3215,7 +3215,7 @@ uptr __cdecl city_create(iptr x,iptr y,iptr civ)
         result = tile_is_ocean(x2,y2);
         if (result != 0) {
           result = tile_landmass(x2,y2);
-          if ((1 < *(short *)(((i8 *)&landmass_table_block.water_body_sizes) + result * 0x10)) &&
+          if ((1 < landmass_table_block.landmass_recs[result].water_body_size) &&
              ((result < 0x3f || ((cities[city].flags & 0x80) != 0)))) {
             cities[city].flags = cities[city].flags | 0x200000;
           }
@@ -3748,7 +3748,7 @@ int __cdecl city_adjacent_sea_info(iptr city,int *out_max_size,uptr *out_dir)
     ok = map_in_bounds(x,y);
     if ((ok != 0) && (ok = tile_is_ocean(x,y), ok != 0)) {
       landmass2 = tile_landmass(x,y);
-      body_size = (int)*(short *)(((i8 *)&landmass_table_block.water_body_sizes) + landmass2 * 0x10);
+      body_size = (int)landmass_table_block.landmass_recs[landmass2].water_body_size;
       if (0x3e < landmass2) {
         body_size = 1;
       }
@@ -4049,20 +4049,20 @@ void __cdecl city_sprite_scan_flag_offset(int style,int row,int col,int sheet_x,
   int dy;
   int dx;
   
-  *(i32 *)(((i8 *)&peace_treaty_icon_sprite_block.city_flag_x_offsets) + col * 4 + style * 0x20 + row * 8) = 0;
-  *(i32 *)(((i8 *)&peace_treaty_icon_sprite_block.city_flag_y_offsets) + col * 4 + style * 0x20 + row * 8) = 0;
+  peace_treaty_icon_sprite_block.city_flag_x_offsets[col + style * 8 + row * 2] = 0;
+  peace_treaty_icon_sprite_block.city_flag_y_offsets[col + style * 8 + row * 2] = 0;
   for (dx = 0; dx < 0x40; dx++) {
     pixel = surface_get_pixel
                       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),dx + sheet_x - 1 + 1,sheet_y - 1);
     if (pixel == 4) {
-      *(int *)(((i8 *)&peace_treaty_icon_sprite_block.city_flag_x_offsets) + col * 4 + style * 0x20 + row * 8) = dx - 1;
+      peace_treaty_icon_sprite_block.city_flag_x_offsets[col + style * 8 + row * 2] = dx - 1;
     }
   }
   for (dy = 0; dy < 0x30; dy++) {
     pixel = surface_get_pixel
                       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),sheet_x - 1,dy + sheet_y - 1 + 1);
     if (pixel == 4) {
-      *(int *)(((i8 *)&peace_treaty_icon_sprite_block.city_flag_y_offsets) + col * 4 + style * 0x20 + row * 8) = dy - 0xf;
+      peace_treaty_icon_sprite_block.city_flag_y_offsets[col + style * 8 + row * 2] = dy - 0xf;
     }
   }
   return;
@@ -4076,20 +4076,20 @@ void __cdecl city_sprite_scan_size_box_offset(int style,int row,int col,int shee
   int dy;
   int dx;
   
-  *(i32 *)(((i8 *)&road_sprites_block.city_size_box_x_offsets) + row * 8 + style * 0x20 + col * 4) = 0;
-  *(i32 *)(((i8 *)&road_sprites_block.city_label_y_offsets) + row * 8 + style * 0x20 + col * 4) = 0;
+  road_sprites_block.city_size_box_x_offsets[row * 2 + style * 8 + col] = 0;
+  road_sprites_block.city_label_y_offsets[row * 2 + style * 8 + col] = 0;
   for (dx = 0; dx < 0x40; dx++) {
     pixel = surface_get_pixel
                       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),dx + sheet_x - 1 + 1,sheet_y - 1);
     if (pixel == 3) {
-      *(int *)(((i8 *)&road_sprites_block.city_size_box_x_offsets) + row * 8 + style * 0x20 + col * 4) = dx;
+      road_sprites_block.city_size_box_x_offsets[row * 2 + style * 8 + col] = dx;
     }
   }
   for (dy = 0; dy < 0x30; dy++) {
     pixel = surface_get_pixel
                       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),sheet_x - 1,dy + sheet_y - 1 + 1);
     if (pixel == 3) {
-      *(int *)(((i8 *)&road_sprites_block.city_label_y_offsets) + row * 8 + style * 0x20 + col * 4) = dy;
+      road_sprites_block.city_label_y_offsets[row * 2 + style * 8 + col] = dy;
     }
   }
   return;
@@ -5088,7 +5088,7 @@ void * __thiscall cityview_scalar_dtor(void *self,uint flags)
 u32 __thiscall citywnd_get_city(WindowObjectView *self)
 
 {
-  return (*(u32 *)&((PictureWindow *)self)->city_index);
+  return ((u32)((PictureWindow *)self)->city_index);
 }
 
 /* 00498d40 auto */
@@ -6824,7 +6824,7 @@ joined_r0x0049ef35:
                     explorer_cap = 1;
                   }
                   else {
-                    explorer_cap = (*(short *)(((i8 *)&landmass_table_block.landmass_table) + landmass2 * 0x10) + 199) / 200;
+                    explorer_cap = (landmass_table_block.landmass_recs[landmass2].tiles + 199) / 200;
                   }
                   if ((units_in_build[unit_type] * 2 + unit_counts[unit_type] <= explorer_cap) &&
                      (civs[civ].units_active[unit_type] < 2)) goto check_expand_policy;
@@ -6878,7 +6878,7 @@ apply_defense_need:
                     ((((ret = city_adjacent_sea_info(city,0,0), ret != 0x3f &&
                        ((cities[city].flags & 0x80) != 0)) && (ret != 0)) &&
                      ((count = landmass_count_bordering(ret), 1 < count ||
-                      (((role2 != 4 && (0x2f < *(short *)(((i8 *)&landmass_table_block.water_body_sizes) + ret * 0x10))) &&
+                      (((role2 != 4 && (0x2f < landmass_table_block.landmass_recs[ret].water_body_size)) &&
                        (ret < 0x3f)))))))))) {
                   if (role2 == 4) {
                     if (policy == 4) {
@@ -7588,13 +7588,13 @@ void __cdecl impr_editor_load_rules(void)
   for (improvement = 0; improvement < 0x43; improvement++) {
     _Count = 0x28;
     _Source = label_string(improvements[improvement].name);
-    _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + improvement * 0x28,_Source,_Count);
-    (((i8 *)&editor_text_dlg_wnd_block.editor_item_name_ends))[improvement * 0x28] = 0;
-    *(uint *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + improvement * 0x58) = (uint)improvements[improvement].cost;
-    *(uint *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field1) + improvement * 0x58) = (uint)improvements[improvement].upkeep;
-    *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + improvement * 0x58) = (int)improvements[improvement].preq;
+    _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[improvement],_Source,_Count);
+    editor_text_dlg_wnd_block.editor_item_name_recs[improvement][0x27] = 0;
+    editor_text_dlg_wnd_block.editor_item_recs[improvement].values[0] = (uint)improvements[improvement].cost;
+    editor_text_dlg_wnd_block.editor_item_recs[improvement].values[1] = (uint)improvements[improvement].upkeep;
+    editor_text_dlg_wnd_block.editor_item_recs[improvement].values[2] = (int)improvements[improvement].preq;
     if (0x27 < improvement) {
-      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field3) + improvement * 0x58) = (int)(((i8 *)&civ_unit_counts_block.wonder_expires_by_impr))[improvement];
+      editor_text_dlg_wnd_block.editor_item_recs[improvement].values[3] = (int)wonder_expires[improvement - 0x27];
     }
   }
   return;
@@ -7611,14 +7611,14 @@ void __cdecl impr_editor_store_rules(void)
   
   for (improvement = 0; improvement < 0x43; improvement++) {
     _Count = 0x19;
-    _Source = ((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + improvement * 0x28;
+    _Source = editor_text_dlg_wnd_block.editor_item_name_recs[improvement];
     _Dest = label_string(improvements[improvement].name);
     _strncpy(_Dest,_Source,_Count);
-    improvements[improvement].cost = (((i8 *)&editor_text_dlg_wnd_block.editor_items))[improvement * 0x58];
-    improvements[improvement].upkeep = (((i8 *)&editor_text_dlg_wnd_block.editor_item_field1))[improvement * 0x58];
-    improvements[improvement].preq = (((i8 *)&editor_text_dlg_wnd_block.editor_item_field2))[improvement * 0x58];
+    improvements[improvement].cost = (i8)editor_text_dlg_wnd_block.editor_item_recs[improvement].values[0];
+    improvements[improvement].upkeep = (i8)editor_text_dlg_wnd_block.editor_item_recs[improvement].values[1];
+    improvements[improvement].preq = (i8)editor_text_dlg_wnd_block.editor_item_recs[improvement].values[2];
     if (0x27 < improvement) {
-      (((i8 *)&civ_unit_counts_block.wonder_expires_by_impr))[improvement] = (((i8 *)&editor_text_dlg_wnd_block.editor_item_field3))[improvement * 0x58];
+      wonder_expires[improvement - 0x27] = (i8)editor_text_dlg_wnd_block.editor_item_recs[improvement].values[3];
     }
   }
   return;
@@ -7634,25 +7634,25 @@ void __cdecl impr_editor_load_controls(void)
   int sel_index;
   
   for (ctrl_index = 1; ctrl_index < 5; ctrl_index++) {
-    if (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_kinds) + ctrl_index * 8) == 9) {
+    if (impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].kind == 9) {
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd));
+                         &editor_text_dlg_wnd_block.active_editor_wnd->edits[impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot]);
       _sprintf(value_text,((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_value_fmt),
-               *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58));
+               *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58));
       ctrl_set_text
                 ((ControlTextView *)
-                 (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
+                 &editor_text_dlg_wnd_block.active_editor_wnd->edits[impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot],
                  (const char *)value_text);
     }
-    else if (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_kinds) + ctrl_index * 8) == 0xc) {
+    else if (impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].kind == 0xc) {
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8) * 0x38));
-      sel_index = *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58) + 2;
+                         &editor_text_dlg_wnd_block.active_editor_wnd->combos[impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot]);
+      sel_index = *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58) + 2;
       combo_set_cur_sel
                 ((ComboBoxSetSelView *)
-                 (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8) * 0x38),sel_index);
+                 &editor_text_dlg_wnd_block.active_editor_wnd->combos[impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot],sel_index);
     }
   }
   return;
@@ -7671,32 +7671,32 @@ int __cdecl impr_editor_save_controls(void)
   
   clamp_count = 0;
   for (ctrl_index = 1; ctrl_index < 5; ctrl_index++) {
-    if (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_kinds) + ctrl_index * 8) == 9) {
+    if (impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].kind == 9) {
       ctrl_get_text
                 ((ControlTextView *)
-                 (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
+                 &editor_text_dlg_wnd_block.active_editor_wnd->edits[impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot],
                  (char *)value_text);
       field = ctrl_get_id
                         ((ControlIdView *)
-                         (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd));
+                         &editor_text_dlg_wnd_block.active_editor_wnd->edits[impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot]);
       field -= 0xca;
       value = _atoi(value_text);
       clamped = int_clamp(value,*(i32 *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_field_min_table) + field * 4),
                                  *(i32 *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_field_max_table) + field * 4));
-      *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58 + field * 4) = clamped;
-      if (*(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_items) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58 + field * 4) != value) {
+      editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[field] = clamped;
+      if (editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[field] != value) {
         clamp_count++;
       }
     }
-    else if (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_kinds) + ctrl_index * 8) == 0xc) {
+    else if (impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].kind == 0xc) {
       value = combo_get_cur_sel
                           ((ComboBoxGetSelView *)
-                           (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8) * 0x38));
+                           &editor_text_dlg_wnd_block.active_editor_wnd->combos[impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot]);
       value -= 2;
       field = ctrl_get_id
                         ((ControlIdView *)
-                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8) * 0x38));
-      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58 + field * 4) = value;
+                         &editor_text_dlg_wnd_block.active_editor_wnd->combos[impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot]);
+      *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58 + field * 4) = value;
     }
   }
   return clamp_count;
@@ -7752,7 +7752,7 @@ i32 __cdecl impr_editor_write_endwonder(FILE *file)
   
   for (improvement = 0x27; improvement < 0x43; improvement++) {
     text_clear();
-    text_append_advance_abbrev((int)(((i8 *)&civ_unit_counts_block.wonder_expires_by_impr))[improvement],1);
+    text_append_advance_abbrev((int)wonder_expires[improvement - 0x27],1);
     text_append_spaces(8);
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&rules_endwonder_comment_sep_str));
     text_append_string_id(improvements[improvement].name);
@@ -7787,11 +7787,11 @@ void __cdecl impr_editor_on_ok(void)
       uType = 0x10;
       lpCaption = str_file_i_o_error_3;
       lpText = msg_text;
-      wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+      wnd = wnd_get_window((WndBase *)&editor_text_dlg_wnd_block.active_editor_wnd->window);
       MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
-    wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+    wnd_end_modal_loop(&editor_text_dlg_wnd_block.active_editor_wnd->window);
     menu_update_states();
   }
   else {
@@ -7801,12 +7801,12 @@ void __cdecl impr_editor_on_ok(void)
       parent_wnd2 = 0;
     }
     else {
-      parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+      parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
     }
     dlg_set_parent_window(parent_wnd2);
     popup_text((const char *)&str_debug_11,(const char *)&str_notice_10);
     dlg_set_parent_window(0);
-    hWnd = control_get_hwnd((ControlHwndView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
+    hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
     SetFocus(hWnd);
   }
   return;
@@ -7825,15 +7825,15 @@ void __cdecl impr_editor_on_rename(void)
   iptr cur_sel;
   int dlg_result;
   
-  item_index = *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec);
-  _strncpy(old_name,((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + item_index * 0x28,0x19);
+  item_index = editor_text_dlg_wnd_block.active_editor_wnd->item;
+  _strncpy(old_name,editor_text_dlg_wnd_block.editor_item_name_recs[item_index],0x19);
   old_name[24] = 0;
   do {
     if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
       parent_wnd2 = 0;
     }
     else {
-      parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+      parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
     }
     dlg_push_parent_window(parent_wnd2);
     dlg_result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_imprname,0x18,(iptr)old_name,(iptr)new_name);
@@ -7842,14 +7842,14 @@ void __cdecl impr_editor_on_rename(void)
     len = _strlen(new_name);
   } while (len == 0);
   if (-1 < dlg_result) {
-    crt_strcpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + item_index * 0x28,new_name);
-    cur_sel = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
-    combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
+    crt_strcpy(editor_text_dlg_wnd_block.editor_item_name_recs[item_index],new_name);
+    cur_sel = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
     for (item = 0; item < 0x43; item++) {
       combo_add_string
-                ((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc),(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + item * 0x28));
+                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[item]);
     }
-    combo_set_cur_sel((ComboBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc),cur_sel);
+    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],cur_sel);
     impr_editor_redraw();
   }
   return;
@@ -7865,7 +7865,7 @@ void __cdecl impr_editor_on_help(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   popup_text((const char *)&str_help_4,(const char *)&str_improvements);
@@ -7878,7 +7878,7 @@ void __cdecl impr_editor_on_cancel(void)
 
 {
   editor_text_dlg_wnd_block.editor_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+  wnd_end_modal_loop(&editor_text_dlg_wnd_block.active_editor_wnd->window);
   return;
 }
 
@@ -7893,7 +7893,7 @@ void __cdecl impr_editor_edit_icon(void)
   save_callback = ((i8 *)sprite_sheet_save_building_icons);
   sprite_count = 4;
   title = (iptr)label_string(label_string_ids[0x1f6]);
-  sprite_editor_run((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x3c),(const char *)title,sprite_count,
+  sprite_editor_run((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x3c),(const char *)title,sprite_count,
                      (iptr)save_callback);
   impr_editor_redraw();
   return;
@@ -7914,7 +7914,7 @@ void __cdecl impr_editor_edit_misc_icon(void)
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   choice = popup_text_flags((const char *)&str_debug_11,(const char *)&str_imprmisc,1);
@@ -7949,38 +7949,38 @@ void __cdecl impr_editor_on_select(int ctrl_id)
   if (ctrl_id == 0xc9) {
     clamp_count = impr_editor_save_controls();
     if (clamp_count == 0) {
-      cur_sel = combo_get_cur_sel((ComboBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
-      *(i32 *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) = cur_sel;
-      if (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) == 0) {
-        ctrl_disable((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x7c4));
+      cur_sel = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+      editor_text_dlg_wnd_block.active_editor_wnd->item = cur_sel;
+      if (editor_text_dlg_wnd_block.active_editor_wnd->item == 0) {
+        ctrl_disable(&editor_text_dlg_wnd_block.active_editor_wnd->icon_button);
       }
       else {
-        ctrl_enable((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x7c4));
+        ctrl_enable(&editor_text_dlg_wnd_block.active_editor_wnd->icon_button);
       }
-      if (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) < 0x27) {
-        control_hide((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
+      if (editor_text_dlg_wnd_block.active_editor_wnd->item < 0x27) {
+        control_hide((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
       }
       else {
-        ctrl_show_and_redraw((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
+        ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
       }
       impr_editor_load_controls();
       impr_editor_redraw();
     }
     else {
       combo_set_cur_sel
-                ((ComboBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc),*(iptr *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec));
+                ((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],editor_text_dlg_wnd_block.active_editor_wnd->item);
       impr_editor_load_controls();
       impr_editor_redraw();
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
         parent_wnd2 = 0;
       }
       else {
-        parent_wnd2 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
+        parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
       }
       dlg_set_parent_window(parent_wnd2);
       popup_text((const char *)&str_debug_11,(const char *)&str_notice_11);
       dlg_set_parent_window(0);
-      hWnd = control_get_hwnd((ControlHwndView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
+      hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
       SetFocus(hWnd);
     }
   }
@@ -7998,8 +7998,8 @@ void __thiscall impr_editor_create_combo(ViewWindow *self,int combo_index)
   iptr advance;
   i8 rect[16];
   
-  rect_set_xywh((iptr)rect,*(int *)(((i8 *)&impr_editor_combo_x_table_block.impr_editor_combo_x_table) + combo_index * 8) + self->client_x - 0x32,
-                     *(int *)(((i8 *)&impr_editor_combo_x_table_block.impr_editor_combo_y_table) + combo_index * 8) + self->client_y,200,
+  rect_set_xywh((iptr)rect,impr_editor_combo_x_table_block.impr_editor_combo_pos[combo_index].x + self->client_x - 0x32,
+                     impr_editor_combo_x_table_block.impr_editor_combo_pos[combo_index].y + self->client_y,200,
                      self->sci_rate_sel << 3);
   ctrl_id = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
@@ -8200,7 +8200,7 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   palette_init(&palette);
   try_level = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
-  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
+  editor_text_dlg_wnd_block.active_editor_wnd = (EditorWindow *)self;
   this_00 = (DibSurface *)operator_new(0x48);
   (*((char *)&try_level + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
@@ -8236,11 +8236,11 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title,style,wnd_x,wnd_y,wnd_width,wnd_height,arg7,arg8,arg9);
   for (ctrl_index = 0; ctrl_index < 5; ctrl_index++) {
-    if (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_kinds) + ctrl_index * 8) == 9) {
-      impr_editor_create_edit(self,*(i32 *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8));
+    if (impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].kind == 9) {
+      impr_editor_create_edit(self,impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot);
     }
-    else if (*(int *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_kinds) + ctrl_index * 8) == 0xc) {
-      impr_editor_create_combo(self,*(i32 *)(((i8 *)&impr_editor_ctrl_kinds_block.impr_editor_ctrl_slots) + ctrl_index * 8));
+    else if (impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].kind == 0xc) {
+      impr_editor_create_combo(self,impr_editor_ctrl_kinds_block.impr_editor_ctrl_rows[ctrl_index].slot);
     }
   }
   btn_x = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
@@ -9779,7 +9779,7 @@ int __cdecl city_calc_trade_happiness(uptr city)
     if (cities[city2].owner == civ) {
       route_trade = route_trade >> 1;
     }
-    *(int *)(((i8 *)&main_menu_block.city_route_trade_values) + route * 4) = route_trade;
+    main_menu_block.city_route_trade_values[route] = route_trade;
     main_menu_block.city_total_trade += route_trade;
   }
   main_menu_block.city_trade_corruption = city_calc_corruption(city,main_menu_block.city_total_trade,0,1);
@@ -11984,9 +11984,9 @@ void __thiscall city_window_begin_draw(ScaledWindowView *self,iptr rect)
 void __thiscall city_window_recalc_redraw(WindowObjectView *self,i32 flag)
 
 {
-  if (((((*(u32 *)&((PictureWindow *)self)->is_closed) == 0) && ((*(u32 *)&((PictureWindow *)self)->redraw_suspended) == 0)) && ((*(u32 *)&((PictureWindow *)self)->redraw_deferred) == 0)) &&
-     (-1 < (int)(*(u32 *)&((PictureWindow *)self)->city_index))) {
-    city_recalc((*(u32 *)&((PictureWindow *)self)->city_index),1);
+  if ((((((u32)((PictureWindow *)self)->is_closed) == 0) && (((u32)((PictureWindow *)self)->redraw_suspended) == 0)) && (((u32)((PictureWindow *)self)->redraw_deferred) == 0)) &&
+     (-1 < (int)((u32)((PictureWindow *)self)->city_index))) {
+    city_recalc(((u32)((PictureWindow *)self)->city_index),1);
     city_window_draw_citizens((FrameWindow *)((i8 *)&city_window_block.city_window),1,flag);
     city_window_draw_resource_map((FrameWindow *)((i8 *)&city_window_block.city_window),1);
     city_window_draw_info_panel((FrameWindow *)((i8 *)&city_window_block.city_window),1);
@@ -12075,11 +12075,11 @@ city_window_draw_citizen_row
   int i;
   uint citizen_num;
   
-  gfx_set_zoom_scale((*(u32 *)&((PictureWindow *)self)->view_scale) * 4 - 8);
+  gfx_set_zoom_scale(((u32)((PictureWindow *)self)->view_scale) * 4 - 8);
   zero_b = 0;
   zero_a = 0;
   arg_y = city_window_scale(self,0x1b);
-  spacing = ui_calc_item_spacing((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].size,arg_y + 1,width,zero_a,zero_b)
+  spacing = ui_calc_item_spacing((int)cities[((u32)((PictureWindow *)self)->city_index)].size,arg_y + 1,width,zero_a,zero_b)
   ;
   citizen_num = 0;
   for (i = 0; i < happy; i++) {
@@ -12088,7 +12088,7 @@ city_window_draw_citizen_row
     arg_x = x + 1;
     rect_arg = happy_shadow_rect;
     view = self;
-    style_era = civ_city_style_era((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner);
+    style_era = civ_city_style_era((int)cities[((u32)((PictureWindow *)self)->city_index)].owner);
     sprite_draw_silhouette
               ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + style_era * 0x294 + (citizen_num & 1) * 0x3c),(iptr)rect_arg,
                (iptr)view,arg_x,arg_y,shadow_color);
@@ -12096,7 +12096,7 @@ city_window_draw_citizen_row
     view = self;
     arg_y = x;
     arg_x = y;
-    style_era = civ_city_style_era((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner);
+    style_era = civ_city_style_era((int)cities[((u32)((PictureWindow *)self)->city_index)].owner);
     sprite_draw
               ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + style_era * 0x294 + (citizen_num & 1) * 0x3c),(iptr)rect_arg,
                (iptr)view,arg_y,arg_x);
@@ -12104,14 +12104,14 @@ city_window_draw_citizen_row
     citizen_num++;
   }
   for (i = 0;
-      i < (int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].size - (unhappy + happy + main_menu_block.city_specialist_count);
+      i < (int)cities[((u32)((PictureWindow *)self)->city_index)].size - (unhappy + happy + main_menu_block.city_specialist_count);
       i = i + 1) {
     shadow_color = 10;
     arg_y = y + 1;
     arg_x = x + 1;
     rect_arg = content_shadow_rect;
     view = self;
-    style_era = civ_city_style_era((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner);
+    style_era = civ_city_style_era((int)cities[((u32)((PictureWindow *)self)->city_index)].owner);
     sprite_draw_silhouette
               ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + style_era * 0x294 + ((citizen_num & 1) * 4 + 8) * 0xf),
                (iptr)rect_arg,(iptr)view,arg_x,arg_y,shadow_color);
@@ -12119,7 +12119,7 @@ city_window_draw_citizen_row
     view = self;
     arg_y = x;
     arg_x = y;
-    style_era = civ_city_style_era((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner);
+    style_era = civ_city_style_era((int)cities[((u32)((PictureWindow *)self)->city_index)].owner);
     sprite_draw
               ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + style_era * 0x294 + ((citizen_num & 1) * 4 + 8) * 0xf),
                (iptr)rect_arg,(iptr)view,arg_y,arg_x);
@@ -12138,7 +12138,7 @@ city_window_draw_citizen_row
     arg_x = x + 1;
     rect_arg = unhappy_shadow_rect;
     view = self;
-    style_era = civ_city_style_era((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner);
+    style_era = civ_city_style_era((int)cities[((u32)((PictureWindow *)self)->city_index)].owner);
     sprite_draw_silhouette
               ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + style_era * 0x294 + ((citizen_num & 1) + mood_idx) * 0x3c),
                (iptr)rect_arg,(iptr)view,arg_x,arg_y,shadow_color);
@@ -12146,7 +12146,7 @@ city_window_draw_citizen_row
     view = self;
     arg_y = x;
     arg_x = y;
-    style_era = civ_city_style_era((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner);
+    style_era = civ_city_style_era((int)cities[((u32)((PictureWindow *)self)->city_index)].owner);
     sprite_draw
               ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + style_era * 0x294 + ((citizen_num & 1) + mood_idx) * 0x3c),
                (iptr)rect_arg,(iptr)view,arg_y,arg_x);
@@ -12159,8 +12159,8 @@ city_window_draw_citizen_row
     arg_x = x + 1;
     rect_arg = spec_shadow_rect;
     view = self;
-    style_era = civ_city_style_era((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner);
-    spec_kind = city_specialist_type((*(u32 *)&((PictureWindow *)self)->city_index),i);
+    style_era = civ_city_style_era((int)cities[((u32)((PictureWindow *)self)->city_index)].owner);
+    spec_kind = city_specialist_type(((u32)((PictureWindow *)self)->city_index),i);
     sprite_draw_silhouette
               ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + style_era * 0x294 + (spec_kind * 4 + 0x1c) * 0xf),
                (iptr)rect_arg,(iptr)view,arg_x,arg_y,shadow_color);
@@ -12168,8 +12168,8 @@ city_window_draw_citizen_row
     view = self;
     arg_y = x;
     arg_x = y;
-    style_era = civ_city_style_era((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner);
-    spec_kind = city_specialist_type((*(u32 *)&((PictureWindow *)self)->city_index),i);
+    style_era = civ_city_style_era((int)cities[((u32)((PictureWindow *)self)->city_index)].owner);
+    spec_kind = city_specialist_type(((u32)((PictureWindow *)self)->city_index),i);
     sprite_draw
               ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + style_era * 0x294 + (spec_kind * 4 + 0x1c) * 0xf),
                (iptr)rect_arg,(iptr)view,arg_y,arg_x);
@@ -12202,11 +12202,11 @@ city_happy_draw_citizen_row
   int i;
   uint citizen_num;
   
-  gfx_set_zoom_scale((*(u32 *)&((PictureWindow *)self)->view_scale) * 4 - 8);
+  gfx_set_zoom_scale(((u32)((PictureWindow *)self)->view_scale) * 4 - 8);
   zero_b = 0;
   zero_a = 0;
   arg_x = city_window_scale(self,0xf);
-  spacing = ui_calc_item_spacing((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].size,arg_x + 1,width,zero_a,zero_b)
+  spacing = ui_calc_item_spacing((int)cities[((u32)((PictureWindow *)self)->city_index)].size,arg_x + 1,width,zero_a,zero_b)
   ;
   citizen_num = 0;
   for (i = 0; i < happy; i++) {
@@ -12217,7 +12217,7 @@ city_happy_draw_citizen_row
     citizen_num++;
   }
   for (i = 0;
-      i < (int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].size - (unhappy + happy + main_menu_block.city_specialist_count);
+      i < (int)cities[((u32)((PictureWindow *)self)->city_index)].size - (unhappy + happy + main_menu_block.city_specialist_count);
       i = i + 1) {
     sprite_draw
               ((Sprite *)(((i8 *)&government_sprites_block.small_citizen_sprites) + ((citizen_num & 1) * 4 + 8) * 0xf),(iptr)content_rect,
@@ -12243,7 +12243,7 @@ city_happy_draw_citizen_row
     view = self;
     arg_x = x;
     arg_y = y;
-    spec_kind = city_specialist_type((*(u32 *)&((PictureWindow *)self)->city_index),i);
+    spec_kind = city_specialist_type(((u32)((PictureWindow *)self)->city_index),i);
     sprite_draw
               ((Sprite *)(((i8 *)&government_sprites_block.small_citizen_sprites) + (spec_kind * 4 + 0x1c) * 0xf),(iptr)rect_arg,(iptr)view
                ,arg_x,arg_y);
@@ -13685,7 +13685,7 @@ void __thiscall city_window_draw_supported_units(FrameWindow *self,int blit)
       text_set_colors(0x7c,0x12,1,1);
       width = rect_width((RECT *)(iptr)((u8 *)&((PictureWindow *)self)->supported_units_label_rect));
       scaled = city_window_scale((WindowObjectView *)self,1);
-      gfx_draw_text_centered((const char *)&map_views_block.text_buffer,*(i32 *)((u8 *)&((PictureWindow *)self)->supported_units_label_rect),
+      gfx_draw_text_centered((const char *)&map_views_block.text_buffer,((PictureWindow *)self)->pedia_concept_ids[232],
                          ((PictureWindow *)self)->supported_units_label_rect_top + scaled,width);
     }
     unit_size = gfx_zoom_scale(0x40,zoom2);
@@ -14328,7 +14328,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *self)
     text_set_colors(0x7c,0x12,1,1);
     width = rect_width((RECT *)(iptr)((u8 *)&((PictureWindow *)self)->info_title_rect));
     scaled = city_window_scale((WindowObjectView *)self,1);
-    gfx_draw_text_centered((const char *)&map_views_block.text_buffer,*(i32 *)((u8 *)&((PictureWindow *)self)->info_title_rect),((PictureWindow *)self)->info_title_rect_top + scaled,
+    gfx_draw_text_centered((const char *)&map_views_block.text_buffer,((PictureWindow *)self)->pedia_concept_ids[236],((PictureWindow *)self)->info_title_rect_top + scaled,
                        width);
   }
   cell_x = row_start_x;
@@ -14505,7 +14505,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *self)
     }
     else {
       text_append_plus();
-      text_append_int(*(iptr *)(((i8 *)&main_menu_block.city_route_trade_values) + i * 4));
+      text_append_int(main_menu_block.city_route_trade_values[i]);
       scaled = gfx_draw_text((const char *)&map_views_block.text_buffer,cell_x,cell_y);
       icon_x = city_window_scale((WindowObjectView *)self,2);
       icon_x = scaled + icon_x;
@@ -14537,7 +14537,7 @@ void __thiscall city_window_draw_support_map(WindowObjectView *self)
   int map_x;
   int x_offset;
   
-  civ = cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner;
+  civ = cities[((u32)((PictureWindow *)self)->city_index)].owner;
   text_clear();
   text_append_label(0x1c4);
   text_set_colors(0x7c,0x12,1,1);
@@ -14567,14 +14567,14 @@ void __thiscall city_window_draw_support_map(WindowObjectView *self)
     }
   }
   for (unit = 0; unit < game.num_units; unit++) {
-    if ((units[unit].id != 0) && ((uint)(byte)units[unit].home_city == (*(u32 *)&((PictureWindow *)self)->city_index)))
+    if ((units[unit].id != 0) && ((uint)(byte)units[unit].home_city == ((u32)((PictureWindow *)self)->city_index)))
     {
       value = map_wrap_x(units[unit].x - x_offset);
       gfx_target_fill_rect(value * pixel_size + origin_x,units[unit].y * pixel_size + origin_y,pixel_size,pixel_size,0x1d);
     }
   }
-  value = map_wrap_x(cities[(*(u32 *)&((PictureWindow *)self)->city_index)].x - x_offset);
-  gfx_target_fill_rect(value * pixel_size + origin_x,cities[(*(u32 *)&((PictureWindow *)self)->city_index)].y * pixel_size + origin_y,pixel_size,pixel_size
+  value = map_wrap_x(cities[((u32)((PictureWindow *)self)->city_index)].x - x_offset);
+  gfx_target_fill_rect(value * pixel_size + origin_x,cities[((u32)((PictureWindow *)self)->city_index)].y * pixel_size + origin_y,pixel_size,pixel_size
                      ,0x29);
   return;
 }
@@ -14606,9 +14606,9 @@ void __thiscall city_happy_draw_building_icons(WindowObjectView *self,iptr x_ptr
       break;
     case 1:
       improvement_id = 0xb;
-      scaled = civ_has_advance((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner,0x37);
+      scaled = civ_has_advance((int)cities[((u32)((PictureWindow *)self)->city_index)].owner,0x37);
       if (scaled != 0) {
-        scaled = civ_has_wonder((int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner,10);
+        scaled = civ_has_wonder((int)cities[((u32)((PictureWindow *)self)->city_index)].owner,10);
         if (scaled != 0) {
           forced = 1;
           improvement_id = 0x31;
@@ -14620,16 +14620,16 @@ void __thiscall city_happy_draw_building_icons(WindowObjectView *self,iptr x_ptr
       improvement_id = 4;
       break;
     case 3:
-      scaled = city_has_improvement((*(u32 *)&((PictureWindow *)self)->city_index),1);
+      scaled = city_has_improvement(((u32)((PictureWindow *)self)->city_index),1);
       if (scaled == 0) {
         improvement_id = 7;
       }
       else {
         improvement_id = 1;
       }
-      if (civs[cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner].government != 6) goto next_slot;
+      if (civs[cities[((u32)((PictureWindow *)self)->city_index)].owner].government != 6) goto next_slot;
     }
-    scaled = city_has_improvement((*(u32 *)&((PictureWindow *)self)->city_index),improvement_id);
+    scaled = city_has_improvement(((u32)((PictureWindow *)self)->city_index),improvement_id);
     if ((scaled != 0) || (forced != 0)) {
       if (2 < drawn_count) {
         return;
@@ -14641,7 +14641,7 @@ void __thiscall city_happy_draw_building_icons(WindowObjectView *self,iptr x_ptr
       drawn_count++;
       scaled = city_window_scale(self,0x24);
       *(int *)x_ptr = *(int *)x_ptr - scaled;
-      gfx_set_zoom_scale((*(u32 *)&((PictureWindow *)self)->view_scale) * 4 - 8);
+      gfx_set_zoom_scale(((u32)((PictureWindow *)self)->view_scale) * 4 - 8);
       sprite_draw
                 ((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement_id * 0x3c),(iptr)icon_rect,(iptr)self,
                  *(i32 *)x_ptr,icon_y);
@@ -14678,9 +14678,9 @@ city_happy_draw_unit_effects(WindowObjectView *self,iptr x_ptr,int row_top,int r
   int unit_h;
   
   drew_any = false;
-  civ = (iptr)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner;
+  civ = (iptr)cities[((u32)((PictureWindow *)self)->city_index)].owner;
   gov_type = civs[civ].government;
-  zoom2 = (*(u32 *)&((PictureWindow *)self)->map_zoom_level);
+  zoom2 = ((u32)((PictureWindow *)self)->map_zoom_level);
   unit_w = gfx_zoom_scale(0x40,zoom2);
   unit_h = gfx_zoom_scale(0x30,zoom2);
   half_row_h = row_h >> 1;
@@ -14698,8 +14698,8 @@ city_happy_draw_unit_effects(WindowObjectView *self,iptr x_ptr,int row_top,int r
     unit_count = 0;
     for (unit = 0; unit < game.num_units; unit++) {
       if ((((units[unit].id != 0) &&
-           (half_h = unit_h >> 1, cities[(*(u32 *)&((PictureWindow *)self)->city_index)].x == units[unit].x)) &&
-          (cities[(*(u32 *)&((PictureWindow *)self)->city_index)].y == units[unit].y)) &&
+           (half_h = unit_h >> 1, cities[((u32)((PictureWindow *)self)->city_index)].x == units[unit].x)) &&
+          (cities[((u32)((PictureWindow *)self)->city_index)].y == units[unit].y)) &&
          (unit_types[units[unit].type].attack != '\0')) {
         unit_count++;
         if (3 < unit_count) {
@@ -14721,7 +14721,7 @@ city_happy_draw_unit_effects(WindowObjectView *self,iptr x_ptr,int row_top,int r
   else {
     unit_w = city_window_scale(self,10);
     half_h = civ_has_wonder(civ,0x15);
-    if ((half_h == 0) && (half_h = city_has_improvement((*(u32 *)&((PictureWindow *)self)->city_index),0x21), half_h == 0)) {
+    if ((half_h == 0) && (half_h = city_has_improvement(((u32)((PictureWindow *)self)->city_index),0x21), half_h == 0)) {
       unhappy_per_unit = 1;
     }
     else {
@@ -14747,7 +14747,7 @@ city_happy_draw_unit_effects(WindowObjectView *self,iptr x_ptr,int row_top,int r
         icons_width = city_window_scale(self,10);
         icons_width += (icon_count - 1) * half_h;
         *(int *)x_ptr = *(int *)x_ptr - icons_width;
-        gfx_set_zoom_scale((*(u32 *)&((PictureWindow *)self)->view_scale) * 4 - 8);
+        gfx_set_zoom_scale(((u32)((PictureWindow *)self)->view_scale) * 4 - 8);
         text_x = 0;
         half_h = icons_width;
         scaled = city_window_scale(self,10);
@@ -14788,7 +14788,7 @@ void __thiscall city_window_draw_happiness(WindowObjectView *self)
   int row_w;
   int icon_w;
   
-  civ = (iptr)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].owner;
+  civ = (iptr)cities[((u32)((PictureWindow *)self)->city_index)].owner;
   text_clear();
   text_append_label(0x1c5);
   text_set_colors(0x7c,0x12,1,1);
@@ -14831,7 +14831,7 @@ void __thiscall city_window_draw_happiness(WindowObjectView *self)
         mid_y = (row_h >> 1) + row_y;
         scaled = city_window_scale(self,0xe);
         icon_y = mid_y - (scaled >> 1);
-        gfx_set_zoom_scale((*(u32 *)&((PictureWindow *)self)->view_scale) * 4 - 8);
+        gfx_set_zoom_scale(((u32)((PictureWindow *)self)->view_scale) * 4 - 8);
         sprite_draw
                   ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.tax_rate_icon_sprites),(iptr)lux_rect,(iptr)self,right_x,icon_y);
         gfx_reset_zoom_scale();
@@ -14839,12 +14839,12 @@ void __thiscall city_window_draw_happiness(WindowObjectView *self)
       }
       goto next_stage;
     case 2:
-      scaled = city_has_improvement((*(u32 *)&((PictureWindow *)self)->city_index),4);
-      if (((((scaled == 0) && (scaled = city_has_improvement((*(u32 *)&((PictureWindow *)self)->city_index),0xe), scaled == 0)) &&
-           (scaled = city_has_improvement((*(u32 *)&((PictureWindow *)self)->city_index),0xb), scaled == 0)) &&
+      scaled = city_has_improvement(((u32)((PictureWindow *)self)->city_index),4);
+      if (((((scaled == 0) && (scaled = city_has_improvement(((u32)((PictureWindow *)self)->city_index),0xe), scaled == 0)) &&
+           (scaled = city_has_improvement(((u32)((PictureWindow *)self)->city_index),0xb), scaled == 0)) &&
           (scaled = civ_has_wonder(civ,10), scaled == 0)) &&
-         (((scaled = city_has_improvement((*(u32 *)&((PictureWindow *)self)->city_index),7), scaled == 0 &&
-           (scaled = city_has_improvement((*(u32 *)&((PictureWindow *)self)->city_index),1), scaled == 0)) ||
+         (((scaled = city_has_improvement(((u32)((PictureWindow *)self)->city_index),7), scaled == 0 &&
+           (scaled = city_has_improvement(((u32)((PictureWindow *)self)->city_index),1), scaled == 0)) ||
           (civs[civ].government != 6)))) goto next_stage;
       prev_stage = 2;
       city_happy_draw_building_icons(self,(iptr)&right_x,row_y,row_h);
@@ -15176,7 +15176,7 @@ void __thiscall city_window_bring_to_top(WindowObjectView *self)
 {
   NativeWindow *window;
   
-  if (((*(u32 *)&((PictureWindow *)self)->is_closed) == 0) && ((*(u32 *)&((PictureWindow *)self)->redraw_suspended) == 0)) {
+  if ((((u32)((PictureWindow *)self)->is_closed) == 0) && (((u32)((PictureWindow *)self)->redraw_suspended) == 0)) {
     window = wnd_get_window((WndBase *)(self + 0x12));
     BringWindowToTop(window->hwnd);
   }
@@ -16424,7 +16424,7 @@ void __cdecl city_window_on_rbuttonup(i32 x,i32 y)
 void __thiscall city_window_close_if_city(WindowObjectView *self,iptr city)
 
 {
-  if (((int)(*(u32 *)&((PictureWindow *)self)->city_index) <= city) && (city <= (int)(*(u32 *)&((PictureWindow *)self)->city_index))) {
+  if (((int)((u32)((PictureWindow *)self)->city_index) <= city) && (city <= (int)((u32)((PictureWindow *)self)->city_index))) {
     city_window_close();
   }
   return;
@@ -16480,10 +16480,10 @@ void __thiscall city_window_refresh_if_near(WindowObjectView *self,i32 x,i32 y)
 {
   int dist;
   
-  if (((((*(u32 *)&((PictureWindow *)self)->is_closed) == 0) && ((*(u32 *)&((PictureWindow *)self)->redraw_suspended) == 0)) && ((*(u32 *)&((PictureWindow *)self)->redraw_deferred) == 0)) &&
-     ((-1 < (int)(*(u32 *)&((PictureWindow *)self)->city_index) &&
-      (dist = map_distance_diag(x,y,(int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].x,
-                                  (int)cities[(*(u32 *)&((PictureWindow *)self)->city_index)].y), dist < 3)))) {
+  if ((((((u32)((PictureWindow *)self)->is_closed) == 0) && (((u32)((PictureWindow *)self)->redraw_suspended) == 0)) && (((u32)((PictureWindow *)self)->redraw_deferred) == 0)) &&
+     ((-1 < (int)((u32)((PictureWindow *)self)->city_index) &&
+      (dist = map_distance_diag(x,y,(int)cities[((u32)((PictureWindow *)self)->city_index)].x,
+                                  (int)cities[((u32)((PictureWindow *)self)->city_index)].y), dist < 3)))) {
     city_window_recalc_redraw(self,0);
   }
   return;
@@ -16494,9 +16494,9 @@ void __thiscall city_window_clear_controls(WindowObjectView *self)
 
 {
   ((PictureWindow *)self)->buy_button = 0;
-  (*(u32 *)&((PictureWindow *)self)->change_button) = 0;
-  (*(u32 *)&((PictureWindow *)self)->exit_button) = 0;
-  ((PictureWindow *)self)->view_button = (*(u32 *)&((PictureWindow *)self)->exit_button);
+  (((PictureWindow *)self)->pedia_concept_ids[247]) = 0;
+  (((PictureWindow *)self)->pedia_concept_ids[248]) = 0;
+  ((PictureWindow *)self)->view_button = ((u32)((PictureWindow *)self)->pedia_concept_ids[248]);
   ((PictureWindow *)self)->happy_button = ((PictureWindow *)self)->view_button;
   ((PictureWindow *)self)->rename_button = ((PictureWindow *)self)->happy_button;
   ((PictureWindow *)self)->map_button = ((PictureWindow *)self)->rename_button;
@@ -16515,8 +16515,8 @@ void __thiscall city_window_destroy_controls(WindowObjectView *self)
     if ((Control *)((PictureWindow *)self)->buy_button != (Control *)0x0) {
       ctrl_scalar_dtor((Control *)((PictureWindow *)self)->buy_button,1);
     }
-    if ((Control *)(*(u32 *)&((PictureWindow *)self)->change_button) != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)(*(u32 *)&((PictureWindow *)self)->change_button),1);
+    if ((Control *)((PictureWindow *)self)->pedia_concept_ids[247] != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)((PictureWindow *)self)->pedia_concept_ids[247],1);
     }
     if ((Control *)((PictureWindow *)self)->info_button != (Control *)0x0) {
       ctrl_scalar_dtor((Control *)((PictureWindow *)self)->info_button,1);
@@ -16533,11 +16533,11 @@ void __thiscall city_window_destroy_controls(WindowObjectView *self)
     if ((Control *)((PictureWindow *)self)->view_button != (Control *)0x0) {
       ctrl_scalar_dtor((Control *)((PictureWindow *)self)->view_button,1);
     }
-    if ((*(u32 *)&((PictureWindow *)self)->exit_button) != 0) {
-      if ((Control *)(*(u32 *)&((PictureWindow *)self)->exit_button) != (Control *)0x0) {
-        ctrl_scalar_dtor((Control *)(*(u32 *)&((PictureWindow *)self)->exit_button),1);
+    if (((u32)((PictureWindow *)self)->pedia_concept_ids[248]) != 0) {
+      if ((Control *)((PictureWindow *)self)->pedia_concept_ids[248] != (Control *)0x0) {
+        ctrl_scalar_dtor((Control *)((PictureWindow *)self)->pedia_concept_ids[248],1);
       }
-      (*(u32 *)&((PictureWindow *)self)->exit_button) = 0;
+      (((PictureWindow *)self)->pedia_concept_ids[248]) = 0;
     }
     if ((SpriteButtonCore *)((PictureWindow *)self)->prev_city_button != (SpriteButtonCore *)0x0) {
       spritebtn_scalar_dtor((SpriteButtonCore *)((PictureWindow *)self)->prev_city_button,1);
@@ -16751,7 +16751,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     buy_btn = button_ctor(buy_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->buy_button) = (i32)buy_btn;
+  ((PictureWindow *)self)->pedia_concept_ids[246] = (i32)buy_btn;
   change_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 1;
   if (change_btn_mem == (Control *)0x0) {
@@ -16771,7 +16771,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     info_btn = button_ctor(info_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->info_button) = (i32)info_btn;
+  ((PictureWindow *)self)->pedia_concept_ids[250] = (i32)info_btn;
   map_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 3;
   if (map_btn_mem == (Control *)0x0) {
@@ -16781,7 +16781,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     map_btn = button_ctor(map_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->map_button) = (i32)map_btn;
+  ((PictureWindow *)self)->pedia_concept_ids[252] = (i32)map_btn;
   rename_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 4;
   if (rename_btn_mem == (Control *)0x0) {
@@ -16791,7 +16791,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     rename_btn = button_ctor(rename_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->rename_button) = (i32)rename_btn;
+  ((PictureWindow *)self)->pedia_concept_ids[253] = (i32)rename_btn;
   happy_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 5;
   if (happy_btn_mem == (Control *)0x0) {
@@ -16801,7 +16801,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     happy_btn = button_ctor(happy_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->happy_button) = (i32)happy_btn;
+  ((PictureWindow *)self)->pedia_concept_ids[251] = (i32)happy_btn;
   view_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 6;
   if (view_btn_mem == (Control *)0x0) {
@@ -16811,7 +16811,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     view_btn = button_ctor(view_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->view_button) = (i32)view_btn;
+  ((PictureWindow *)self)->pedia_concept_ids[249] = (i32)view_btn;
   prev_btn_mem = (SpriteButton *)operator_new(0xcc);
   eh_state = 7;
   if (prev_btn_mem == (SpriteButton *)0x0) {
@@ -16821,7 +16821,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     prev_btn = spritebtn_ctor(prev_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->prev_city_button) = (i32)prev_btn;
+  ((PictureWindow *)self)->pedia_concept_ids[254] = (i32)prev_btn;
   next_btn_mem = (SpriteButton *)operator_new(0xcc);
   eh_state = 8;
   if (next_btn_mem == (SpriteButton *)0x0) {
@@ -16831,7 +16831,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     next_btn = spritebtn_ctor(next_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->next_city_button) = (i32)next_btn;
+  ((PictureWindow *)self)->pedia_concept_ids[255] = (i32)next_btn;
   scrollbar_mem = (Control *)operator_new(0x40);
   eh_state = 9;
   if (scrollbar_mem == (Control *)0x0) {
@@ -16854,8 +16854,8 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   rect_set_xywh((iptr)rect,origin_x2 + left_offset,top,width,height);
   height = (iptr)label_string(label_string_ids[0x23]);
   button_create
-            (*(Control **)((u8 *)&((PictureWindow *)self)->buy_button),(iptr)&city_window_block.city_window_wnd,1,(iptr)rect,(const char *)height);
-  button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->buy_button),(iptr)city_button_buy);
+            ((Control *)((PictureWindow *)self)->buy_button,(iptr)&city_window_block.city_window_wnd,1,(iptr)rect,(const char *)height);
+  button_set_callback((Control *)((PictureWindow *)self)->buy_button,(iptr)city_button_buy);
   city_change_button_variant = 0xff;
   city_window_create_change_button(self,0);
   height = city_window_scale((WindowObjectView *)self,0x18);
@@ -16866,13 +16866,13 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   rect_set_xywh((iptr)rect,origin_x2 + left_offset,top,width,height);
   icon_char_end = 0;
   icon_char = 0x5e;
-  spritebtn_create_icon_button((iptr)&city_window_block.city_window_wnd,9,*(SpriteButton **)((u8 *)&((PictureWindow *)self)->prev_city_button),(iptr)&scroll_up_button_sprite,(RECT *)rect);
-  spritebtn_set_click_handler(*(SpritebtnSetClickHandlerView **)((u8 *)&((PictureWindow *)self)->prev_city_button),(iptr)city_button_prev_city);
+  spritebtn_create_icon_button((iptr)&city_window_block.city_window_wnd,9,(SpriteButton *)((PictureWindow *)self)->prev_city_button,(iptr)&scroll_up_button_sprite,(RECT *)rect);
+  spritebtn_set_click_handler((SpritebtnSetClickHandlerView *)((PictureWindow *)self)->prev_city_button,(iptr)city_button_prev_city);
   offset = city_window_scale((WindowObjectView *)self,0x19);
   rect_offset((iptr)rect,0,offset);
   icon_char = 0x76;
-  spritebtn_create_icon_button((iptr)&city_window_block.city_window_wnd,10,*(SpriteButton **)((u8 *)&((PictureWindow *)self)->next_city_button),(iptr)&city_down_arrow_sprite_block.city_down_arrow_sprite,(RECT *)rect);
-  spritebtn_set_click_handler(*(SpritebtnSetClickHandlerView **)((u8 *)&((PictureWindow *)self)->next_city_button),(iptr)city_button_next_city);
+  spritebtn_create_icon_button((iptr)&city_window_block.city_window_wnd,10,(SpriteButton *)((PictureWindow *)self)->next_city_button,(iptr)&city_down_arrow_sprite_block.city_down_arrow_sprite,(RECT *)rect);
+  spritebtn_set_click_handler((SpritebtnSetClickHandlerView *)((PictureWindow *)self)->next_city_button,(iptr)city_button_next_city);
   height = city_window_scale((WindowObjectView *)self,0x18);
   width = city_window_scale((WindowObjectView *)self,0x39);
   top = city_window_scale((WindowObjectView *)self,0x16c);
@@ -16881,37 +16881,37 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   rect_set_xywh((iptr)rect,origin_x2 + left_offset,top,width,height);
   height = (iptr)label_string(label_string_ids[0x27]);
   button_create
-            (*(Control **)((u8 *)&((PictureWindow *)self)->info_button),(iptr)&city_window_block.city_window_wnd,3,(iptr)rect,(const char *)height);
-  button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->info_button),(iptr)city_button_info);
+            ((Control *)((PictureWindow *)self)->info_button,(iptr)&city_window_block.city_window_wnd,3,(iptr)rect,(const char *)height);
+  button_set_callback((Control *)((PictureWindow *)self)->info_button,(iptr)city_button_info);
   offset2 = 0;
   offset = city_window_scale((WindowObjectView *)self,0x3a);
   rect_offset((iptr)rect,offset,offset2);
   height = (iptr)label_string(label_string_ids[0x29]);
   button_create
-            (*(Control **)((u8 *)&((PictureWindow *)self)->map_button),(iptr)&city_window_block.city_window_wnd,4,(iptr)rect,(const char *)height);
-  button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->map_button),(iptr)city_button_map);
+            ((Control *)((PictureWindow *)self)->map_button,(iptr)&city_window_block.city_window_wnd,4,(iptr)rect,(const char *)height);
+  button_set_callback((Control *)((PictureWindow *)self)->map_button,(iptr)city_button_map);
   offset2 = 0;
   offset = city_window_scale((WindowObjectView *)self,0x3a);
   rect_offset((iptr)rect,offset,offset2);
   height = (iptr)label_string(label_string_ids[0x2a]);
   button_create
-            (*(Control **)((u8 *)&((PictureWindow *)self)->rename_button),(iptr)&city_window_block.city_window_wnd,5,(iptr)rect,(const char *)height);
-  button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->rename_button),(iptr)city_button_rename);
+            ((Control *)((PictureWindow *)self)->rename_button,(iptr)&city_window_block.city_window_wnd,5,(iptr)rect,(const char *)height);
+  button_set_callback((Control *)((PictureWindow *)self)->rename_button,(iptr)city_button_rename);
   offset = city_window_scale((WindowObjectView *)self,0x19);
   top = city_window_scale((WindowObjectView *)self,0xffffffc6);
   left_offset = city_window_scale((WindowObjectView *)self,0xffffffc6);
   rect_offset((iptr)rect,top + left_offset,offset);
   height = (iptr)label_string(label_string_ids[0x28]);
   button_create
-            (*(Control **)((u8 *)&((PictureWindow *)self)->happy_button),(iptr)&city_window_block.city_window_wnd,6,(iptr)rect,(const char *)height);
-  button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->happy_button),(iptr)city_button_happy);
+            ((Control *)((PictureWindow *)self)->happy_button,(iptr)&city_window_block.city_window_wnd,6,(iptr)rect,(const char *)height);
+  button_set_callback((Control *)((PictureWindow *)self)->happy_button,(iptr)city_button_happy);
   offset2 = 0;
   offset = city_window_scale((WindowObjectView *)self,0x3a);
   rect_offset((iptr)rect,offset,offset2);
   height = (iptr)label_string(label_string_ids[0x26]);
   button_create
-            (*(Control **)((u8 *)&((PictureWindow *)self)->view_button),(iptr)&city_window_block.city_window_wnd,7,(iptr)rect,(const char *)height);
-  button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->view_button),(iptr)city_button_view);
+            ((Control *)((PictureWindow *)self)->view_button,(iptr)&city_window_block.city_window_wnd,7,(iptr)rect,(const char *)height);
+  button_set_callback((Control *)((PictureWindow *)self)->view_button,(iptr)city_button_view);
   vscroll_w = GetSystemMetrics(2);
   left_offset = city_window_scale((WindowObjectView *)self,0x83);
   left_offset -= 2;
@@ -16967,13 +16967,13 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
 void __thiscall city_window_begin_notice(WindowObjectView *self)
 
 {
-  if ((*(u32 *)&((PictureWindow *)self)->is_closed) == 0) {
-    (*(u32 *)&((PictureWindow *)self)->notice_mode) = 2;
+  if (((u32)((PictureWindow *)self)->is_closed) == 0) {
+    (((PictureWindow *)self)->notice_mode) = 2;
   }
   else {
-    (*(u32 *)&((PictureWindow *)self)->notice_mode) = 1;
+    (((PictureWindow *)self)->notice_mode) = 1;
   }
-  if ((*(u32 *)&((PictureWindow *)self)->is_closed) == 0) {
+  if (((u32)((PictureWindow *)self)->is_closed) == 0) {
     city_window_exit_btn_pending = 1;
   }
   return;
@@ -17107,7 +17107,7 @@ void __thiscall city_window_create(FrameWindow *self)
 void __thiscall city_window_destroy(DibSurface *self)
 
 {
-  (*(u32 *)&((PictureWindow *)self)->redraw_suspended) = 1;
+  (((PictureWindow *)self)->redraw_suspended) = 1;
   city_window_destroy_controls((WindowObjectView *)self);
   wnd_destroy_with_surface(self);
   return;
@@ -17144,8 +17144,8 @@ city_window_draw_icon_row(iptr sprite,i32 count,i32 x,i32 y,
 int __thiscall city_window_scale(WindowObjectView *self,int value)
 
 {
-  if ((*(u32 *)&((PictureWindow *)self)->view_scale) != 2) {
-    value = (int)((*(u32 *)&((PictureWindow *)self)->view_scale) * value) / 2;
+  if (((u32)((PictureWindow *)self)->view_scale) != 2) {
+    value = (int)(((u32)((PictureWindow *)self)->view_scale) * value) / 2;
   }
   return value;
 }

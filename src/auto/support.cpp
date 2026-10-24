@@ -262,7 +262,7 @@ i32 __cdecl memblock_alloc_checked(MemBlock *block,uint size)
     uType = 0;
     lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
     lpText = (LPCSTR)label_string(label_string_ids[0x23a]);
-    wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+    wnd = wnd_get_window((WndBase *)&editor_text_dlg_wnd_block.active_editor_wnd->window);
     MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     result = 0;
   }

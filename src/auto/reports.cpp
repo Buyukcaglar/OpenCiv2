@@ -4178,15 +4178,15 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *self)
       }
       sprite_grab_from_surface
                 (&sprite,(iptr)&surface,9,
-                 *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_x) + level * 0x10 + slot * 0x40),
-                 *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_y) + level * 0x10 + slot * 0x40),
-                 *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_w) + level * 0x10 + slot * 0x40),
-                 *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_h) + level * 0x10 + slot * 0x40));
+                 throneroom_piece_rects[slot][level].x,
+                 throneroom_piece_rects[slot][level].y,
+                 throneroom_piece_rects[slot][level].w,
+                 throneroom_piece_rects[slot][level].h);
       sprite_replace_color(&sprite,7,9);
       sprite_draw
                 (&sprite,(iptr)draw_tmp1,(iptr)self->throne_surface_wnd,
-                 *(int *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_x) + level * 0x10 + slot * 0x40) - 1,
-                 *(int *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_y) + level * 0x10 + slot * 0x40) - 1);
+                 throneroom_piece_rects[slot][level].x - 1,
+                 throneroom_piece_rects[slot][level].y - 1);
     }
   }
   win_flush_pending_msgs();
@@ -4224,15 +4224,15 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *self)
     }
     sprite_grab_from_surface
               (&sprite,(iptr)&surface,9,
-               *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_x) + level * 0x10 + slot * 0x40),
-               *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_y) + level * 0x10 + slot * 0x40),
-               *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_w) + level * 0x10 + slot * 0x40),
-               *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_h) + level * 0x10 + slot * 0x40));
+               throneroom_piece_rects[slot][level].x,
+               throneroom_piece_rects[slot][level].y,
+               throneroom_piece_rects[slot][level].w,
+               throneroom_piece_rects[slot][level].h);
     sprite_replace_color(&sprite,7,9);
     sprite_draw
               (&sprite,(iptr)draw_tmp3,(iptr)self->throne_surface_wnd,
-               *(int *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece3_rect_x) + level * 0x10) - 1,
-               *(int *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece3_rect_y) + level * 0x10) - 1);
+               throneroom_piece_rects[3][level].x - 1,
+               throneroom_piece_rects[3][level].y - 1);
   }
   win_flush_pending_msgs();
   if (self->throne_complete != 0) {
@@ -4250,13 +4250,13 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *self)
           goto return_result;
         }
         sprite_grab_from_surface
-                  (&sprite,(iptr)&surface,9,(((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_x))[slot * 4],
-                   (((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_y))[slot * 4],(((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_w))[slot * 4],
-                   (((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_h))[slot * 4]);
+                  (&sprite,(iptr)&surface,9,throneroom_piece_rects[8][slot].x,
+                   throneroom_piece_rects[8][slot].y,throneroom_piece_rects[8][slot].w,
+                   throneroom_piece_rects[8][slot].h);
         sprite_replace_color(&sprite,7,9);
         sprite_draw
-                  (&sprite,(iptr)draw_tmp4,(iptr)self->throne_surface_wnd,(((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_x))[slot * 4] - 1,
-                   (((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_y))[slot * 4] - 1);
+                  (&sprite,(iptr)draw_tmp4,(iptr)self->throne_surface_wnd,throneroom_piece_rects[8][slot].x - 1,
+                   throneroom_piece_rects[8][slot].y - 1);
       }
     }
   }
@@ -4276,15 +4276,15 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *self)
       goto return_result;
     }
     sprite_grab_from_surface
-              (&sprite,(iptr)&surface,9,*(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece4_rect_x) + level * 0x10),
-               *(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece4_rect_y) + level * 0x10),
-               *(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece4_rect_w) + level * 0x10),
-               *(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece4_rect_h) + level * 0x10));
+              (&sprite,(iptr)&surface,9,throneroom_piece_rects[4][level].x,
+               throneroom_piece_rects[4][level].y,
+               throneroom_piece_rects[4][level].w,
+               throneroom_piece_rects[4][level].h);
     sprite_replace_color(&sprite,7,9);
     sprite_draw
               (&sprite,(iptr)draw_tmp5,(iptr)self->throne_surface_wnd,
-               *(int *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece4_rect_x) + level * 0x10) - 1,
-               *(int *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece4_rect_y) + level * 0x10) - 1);
+               throneroom_piece_rects[4][level].x - 1,
+               throneroom_piece_rects[4][level].y - 1);
   }
   win_flush_pending_msgs();
   if ((self->throne_complete != 0) && ((civs[self->throne_civ].throne_room[8] & 8) != 0)) {
@@ -4321,15 +4321,15 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *self)
       }
       sprite_grab_from_surface
                 (&sprite,(iptr)&surface,9,
-                 *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_x) + level * 0x10 + slot * 0x40),
-                 *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_y) + level * 0x10 + slot * 0x40),
-                 *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_w) + level * 0x10 + slot * 0x40),
-                 *(i32 *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_h) + level * 0x10 + slot * 0x40));
+                 throneroom_piece_rects[slot][level].x,
+                 throneroom_piece_rects[slot][level].y,
+                 throneroom_piece_rects[slot][level].w,
+                 throneroom_piece_rects[slot][level].h);
       sprite_replace_color(&sprite,7,9);
       sprite_draw
                 (&sprite,(iptr)draw_tmp7,(iptr)self->throne_surface_wnd,
-                 *(int *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_x) + level * 0x10 + slot * 0x40) - 1,
-                 *(int *)(((i8 *)&throneroom_piece_rect_x_block.throneroom_piece_rect_y) + level * 0x10 + slot * 0x40) - 1);
+                 throneroom_piece_rects[slot][level].x - 1,
+                 throneroom_piece_rects[slot][level].y - 1);
     }
   }
   win_flush_pending_msgs();
@@ -4348,13 +4348,13 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *self)
           goto return_result;
         }
         sprite_grab_from_surface
-                  (&sprite,(iptr)&surface,9,(((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_x))[slot * 4],
-                   (((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_y))[slot * 4],(((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_w))[slot * 4],
-                   (((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_h))[slot * 4]);
+                  (&sprite,(iptr)&surface,9,throneroom_piece_rects[8][slot].x,
+                   throneroom_piece_rects[8][slot].y,throneroom_piece_rects[8][slot].w,
+                   throneroom_piece_rects[8][slot].h);
         sprite_replace_color(&sprite,7,9);
         sprite_draw
-                  (&sprite,(iptr)draw_tmp8,(iptr)self->throne_surface_wnd,(((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_x))[slot * 4] - 1,
-                   (((i32 *)&throneroom_piece4_rect_x_block.throneroom_bonus_rect_y))[slot * 4] - 1);
+                  (&sprite,(iptr)draw_tmp8,(iptr)self->throne_surface_wnd,throneroom_piece_rects[8][slot].x - 1,
+                   throneroom_piece_rects[8][slot].y - 1);
       }
     }
   }
@@ -4374,15 +4374,15 @@ i32 __thiscall throneroom_render(ThroneRoomWindow *self)
       goto return_result;
     }
     sprite_grab_from_surface
-              (&sprite,(iptr)&surface,9,*(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece7_rect_x) + level * 0x10),
-               *(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece7_rect_y) + level * 0x10),
-               *(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece7_rect_w) + level * 0x10),
-               *(i32 *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece7_rect_h) + level * 0x10));
+              (&sprite,(iptr)&surface,9,throneroom_piece_rects[7][level].x,
+               throneroom_piece_rects[7][level].y,
+               throneroom_piece_rects[7][level].w,
+               throneroom_piece_rects[7][level].h);
     sprite_replace_color(&sprite,7,9);
     sprite_draw
               (&sprite,(iptr)draw_tmp9,(iptr)self->throne_surface_wnd,
-               *(int *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece7_rect_x) + level * 0x10) - 1,
-               *(int *)(((i8 *)&throneroom_piece4_rect_x_block.throneroom_piece7_rect_y) + level * 0x10) - 1);
+               throneroom_piece_rects[7][level].x - 1,
+               throneroom_piece_rects[7][level].y - 1);
   }
   win_flush_pending_msgs();
   try_level = try_level & 0xffffff00;
