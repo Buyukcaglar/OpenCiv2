@@ -428,7 +428,7 @@ void __cdecl powergraph_show(void); /* 00431d22 */
 void __cdecl historian_report_show(void); /* 00432611 */
 void __cdecl top_cities_draw(void); /* 00432c1c */
 void __cdecl top_cities_show(iptr report_civ); /* 00433122 */
-void __cdecl demographics_draw_rank(iptr values,iptr civ,uint y,iptr unit_suffix,int left_x,int right_x); /* 004331d1 */
+void __cdecl demographics_draw_rank(i32 *values,iptr civ,uint y,iptr unit_suffix,int left_x,int right_x); /* 004331d1 */
 void __cdecl demographics_draw(void); /* 00433434 */
 void __cdecl demographics_show(iptr report_civ); /* 00434d8a */
 void __cdecl civ_score_window_draw(void); /* 00434e39 */
@@ -1713,7 +1713,7 @@ void __cdecl pedia_redraw_page(void); /* 004f5e52 */
 void __cdecl pedia_show_tech_tree(void); /* 004f5ed2 */
 void __cdecl pedia_toggle_describe(i32 unused_arg); /* 004f5f23 */
 void __thiscall pedia_draw_frame(MediaWindow *self); /* 004f6244 */
-void __thiscall pedia_fill_background(WindowObjectView *self,iptr rect,int style); /* 004f6564 */
+void __thiscall pedia_fill_background(WindowObjectView *self,RECT *rect,int style); /* 004f6564 */
 void __thiscall pedia_redraw(PediaRedrawView *self); /* 004f6646 */
 void __thiscall pedia_draw_item_list(ListPaneWindow *self); /* 004f66c6 */
 void __cdecl pedia_list_on_scroll(int scroll_pos); /* 004f7313 */
@@ -1725,8 +1725,8 @@ void __cdecl pedia_list_on_click(void); /* 004f7a30 */
 void __thiscall pedia_set_category_title(WindowObjectView *self,i32 category); /* 004f7ac7 */
 void __thiscall pedia_open_category(MediaWindow *self,u32 category,int show); /* 004f7bd1 */
 void __thiscall pedia_load_indexes(DocumentWindow *self); /* 004f7c99 */
-void __thiscall pedia_sort_list(void *self,iptr list_head,iptr keys,iptr ids,iptr count); /* 004f896a */
-i8 * __cdecl pedia_lookup_text(i32 *list_head,iptr item_id); /* 004f8a9b */
+void __thiscall pedia_sort_list(void *self,PediaListNode *list_head,i32 *keys,i32 *ids,iptr count); /* 004f896a */
+i8 * __cdecl pedia_lookup_text(PediaListNode *list_head,iptr item_id); /* 004f8a9b */
 void __thiscall pedia_history_push(ScaledWindowView *self); /* 004f8af9 */
 void __cdecl pedia_modal_idle(void); /* 004f8d04 */
 void __cdecl pedia_end_modal(void); /* 004f8d51 */

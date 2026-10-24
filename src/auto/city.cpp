@@ -13977,10 +13977,10 @@ void __thiscall city_window_draw_improvements(FrameWindow *self,int blit)
       }
     }
     city_window_block.city_improvement_list_count_i32 = shown_count;
-    scrollbar_set_range((Control *)(*(uptr *)&((PictureWindow *)self)->improvements_scrollbar),0,shown_count - 1);
-    scrollbar_set_page_size((Control *)(*(uptr *)&((PictureWindow *)self)->improvements_scrollbar),visible_rows - 1);
+    scrollbar_set_range(((PictureWindow *)self)->improvements_scrollbar,0,shown_count - 1);
+    scrollbar_set_page_size(((PictureWindow *)self)->improvements_scrollbar,visible_rows - 1);
     scrollbar_set_pos
-              ((ClickControl *)(*(uptr *)&((PictureWindow *)self)->improvements_scrollbar),((PictureWindow *)self)->improvement_scroll_pos);
+              ((ClickControl *)((PictureWindow *)self)->improvements_scrollbar,((PictureWindow *)self)->improvement_scroll_pos);
     if (blit != 0) {
       wnd_blit_surface_rect((DibSurface *)self,(iptr)(u8 *)&((PictureWindow *)self)->improvements_rect);
     }
@@ -16545,8 +16545,8 @@ void __thiscall city_window_destroy_controls(WindowObjectView *self)
     if ((SpriteButtonCore *)((PictureWindow *)self)->next_city_button != (SpriteButtonCore *)0x0) {
       spritebtn_scalar_dtor((SpriteButtonCore *)((PictureWindow *)self)->next_city_button,1);
     }
-    if ((Control *)(*(u32 *)&((PictureWindow *)self)->improvements_scrollbar) != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)(*(u32 *)&((PictureWindow *)self)->improvements_scrollbar),1);
+    if (((PictureWindow *)self)->improvements_scrollbar != (Control *)0x0) {
+      scrollbar_scalar_dtor(((PictureWindow *)self)->improvements_scrollbar,1);
     }
     city_window_clear_controls(self);
   }
@@ -16841,7 +16841,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     scrollbar = scrollbar_ctor(scrollbar_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)(((PictureWindow *)self)->improvements_scrollbar) = (i32)scrollbar;
+  ((PictureWindow *)self)->improvements_scrollbar = scrollbar;
   origin_x2 = ((PictureWindow *)self)->margin_x_2 + self->client_x;
   origin_y2 = self->client_y + ((PictureWindow *)self)->content_offset_y;
   ui_set_button_font((iptr)((u8 *)&((PictureWindow *)self)->city_font));
@@ -16923,15 +16923,15 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   rect_set_xywh((iptr)(((PictureWindow *)self)->improvements_scrollbar_rect),(scaled + scaled2 + origin_x2) - (vscroll_w + 1),
                      scroll_top,top,left_offset);
   scrollbar_create
-            (*(Control **)(((PictureWindow *)self)->improvements_scrollbar),(iptr)&city_window_block.city_window_wnd,99,
+            (((PictureWindow *)self)->improvements_scrollbar,(iptr)&city_window_block.city_window_wnd,99,
              (iptr)(((PictureWindow *)self)->improvements_scrollbar_rect),1);
   top = rect_height((RECT *)(iptr)&((PictureWindow *)self)->improvement_list_rect);
   left_offset = city_window_scale((WindowObjectView *)self,1);
   scaled = city_window_scale((WindowObjectView *)self,0xc);
   scrollbar_set_page_size
-            (*(Control **)(((PictureWindow *)self)->improvements_scrollbar),(top - (left_offset >> 1)) / scaled);
-  scrollbar_set_callback(*(Control **)(((PictureWindow *)self)->improvements_scrollbar),(iptr)city_window_on_improvement_scroll);
-  scrollbar_set_track_callback(*(ScrollbarTrackSetView **)(((PictureWindow *)self)->improvements_scrollbar),(iptr)city_window_on_improvement_scroll);
+            (((PictureWindow *)self)->improvements_scrollbar,(top - (left_offset >> 1)) / scaled);
+  scrollbar_set_callback(((PictureWindow *)self)->improvements_scrollbar,(iptr)city_window_on_improvement_scroll);
+  scrollbar_set_track_callback((ScrollbarTrackSetView *)((PictureWindow *)self)->improvements_scrollbar,(iptr)city_window_on_improvement_scroll);
   top = ((PictureWindow *)self)->view_scale;
   if (top == 1) {
     ((PictureWindow *)self)->map_zoom_level_b0[0] = 0xfb;

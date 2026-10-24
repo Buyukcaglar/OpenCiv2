@@ -253,6 +253,26 @@ typedef struct Leader {
     i16 titles[7][2];       /* 0x14 per government: [0] male, [1] female title */
 } Leader;
 
+/* One line of the Hall of Fame (HALLFAME, 0x48 bytes): five places and the
+   game being retired. */
+typedef struct HallOfFameEntry {
+    i16 score;              /* 0x00 -1: an empty place */
+    u16 difficulty;         /* 0x02 | 0x80 */
+    i16 turn;               /* 0x04 */
+    i16 year;               /* 0x06 */
+    i16 population;         /* 0x08 */
+    i16 objective_score;    /* 0x0a -1: none */
+    i16 year_increment;     /* 0x0c scenario */
+    i16 start_year;         /* 0x0e scenario */
+    i16 is_scenario;        /* 0x10 */
+    i16 rating;             /* 0x12 civilization rating, % */
+    i16 leader_female;      /* 0x14 */
+    i16 title_index;        /* 0x16 */
+    char leader_name[24];   /* 0x18 */
+    char civ_name[24];      /* 0x30 */
+} HallOfFameEntry;
+static_assert(sizeof(HallOfFameEntry) == 0x48, "");
+
 #pragma pack(pop)
 
 /* @COSMIC (0x29 bytes; one block, synced over the network as a whole). */
@@ -312,20 +332,47 @@ typedef struct Terrain {
     i32 name;               /* 0x04 string id */
     u8 move_cost;           /* 0x08 */
     u8 defense;             /* 0x09 x50% */
-    u8 food;                /* 0x0a */
-    u8 shields;             /* 0x0b */
-    u8 trade;               /* 0x0c */
+    union {
+        struct {
+            u8 food;        /* 0x0a */
+            u8 shields;     /* 0x0b */
+            u8 trade;       /* 0x0c */
+        };
+        u8 yields[3];       /* food, shields, trade */
+    };
     i8 transform_to;        /* 0x0d terrain engineers transform to, -1 no */
-    i8 irrigate_to;         /* 0x0e -2 yes (bonus), -1 no, else terrain it becomes */
-    i8 mine_to;             /* 0x0f */
-    u8 irrigate_bonus;      /* 0x10 extra production from irrigating */
-    u8 mine_bonus;          /* 0x11 */
-    u8 irrigate_turns;      /* 0x12 settler turns */
-    u8 mine_turns;          /* 0x13 */
-    u8 irrigate_ai_govt;    /* 0x14 min govt for AI to irrigate (0 never .. 6 democracy) */
-    u8 mine_ai_govt;        /* 0x15 */
+    /* irrigation [0] and mine [1] (orders 6 and 7) */
+    union {
+        struct {
+            i8 irrigate_to; /* 0x0e -2 yes (bonus), -1 no, else terrain it becomes */
+            i8 mine_to;     /* 0x0f */
+        };
+        i8 improve_to[2];
+    };
+    union {
+        struct {
+            u8 irrigate_bonus;  /* 0x10 extra production from irrigating */
+            u8 mine_bonus;      /* 0x11 */
+        };
+        u8 improve_bonus[2];
+    };
+    union {
+        struct {
+            u8 irrigate_turns;  /* 0x12 settler turns */
+            u8 mine_turns;      /* 0x13 */
+        };
+        u8 improve_turns[2];
+    };
+    union {
+        struct {
+            u8 irrigate_ai_govt;    /* 0x14 min govt for AI to irrigate (0 never .. 6 democracy) */
+            u8 mine_ai_govt;        /* 0x15 */
+        };
+        u8 improve_ai_govt[2];
+    };
     u8 pad_16[2];
 } Terrain;
+static_assert(sizeof(Terrain) == 0x18, "");
 
 /* Male/female leader title for one government from @GOVERNMENTS (8 bytes). */
 typedef struct GovTitle {

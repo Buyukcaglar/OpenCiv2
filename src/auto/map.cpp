@@ -4177,7 +4177,7 @@ uint __cdecl map_assign_landmass_ids(void)
   char dy;
   bool run_active;
   iptr counts_handle;
-  void *_Dst;
+  i32 *_Dst;
   ushort *_Dst_00;
   int check;
   uptr dir;
@@ -4206,7 +4206,7 @@ uint __cdecl map_assign_landmass_ids(void)
     *(i16 *)(((i8 *)&landmass_table_block.water_body_sizes) + i * 0x10) = 0;
   }
   counts_handle = mem_handle_alloc_tracked(0x20000);
-  _Dst = mem_lock_handle(counts_handle);
+  _Dst = (i32 *)mem_lock_handle(counts_handle);
   if (_Dst == (void *)0x0) {
     error_report(0xfffffff7,8,0,1,0);
   }
@@ -4251,9 +4251,9 @@ uint __cdecl map_assign_landmass_ids(void)
                       if ((int)nb_id <= (int)cur_id) {
                         nb_id = cur_id;
                       }
-                      count_ptr = (int *)((int)_Dst + merged_id * 4);
-                      *count_ptr = *count_ptr + *(int *)((int)_Dst + nb_id * 4);
-                      *(i32 *)((int)_Dst + nb_id * 4) = 0;
+                      count_ptr = &_Dst[merged_id];
+                      *count_ptr = *count_ptr + _Dst[nb_id];
+                      _Dst[nb_id] = 0;
                       id_ptr = _Dst_00;
                       for (row_y = 0; (int)row_y <= (int)y2; row_y++) {
                         for (col_x = (uint)((row_y & 1) != 0); (int)col_x < (int)map.width;
@@ -4275,13 +4275,13 @@ uint __cdecl map_assign_landmass_ids(void)
                   do {
                     next_id2++;
                     if (0x7ffe < (int)next_id2) break;
-                  } while (*(int *)((int)_Dst + next_id2 * 4) != 0);
+                  } while (_Dst[next_id2] != 0);
                 }
                 cur_id = next_id2;
               }
               *(short *)(((int)map.width & 0xfffffffeU) * y2 + (x2 & 0xfffffffe) +
                         (int)_Dst_00) = (short)cur_id;
-              count_ptr = (int *)((int)_Dst + cur_id * 4);
+              count_ptr = &_Dst[cur_id];
               *count_ptr = *count_ptr + 1;
               run_active = true;
             }
@@ -4295,24 +4295,24 @@ uint __cdecl map_assign_landmass_ids(void)
         if (ocean_pass != 0) {
           merged_count = 0;
           for (i = 0; i < 0x3f; i++) {
-            if (*(int *)((int)_Dst + i * 4) < 9) {
-              *(int *)((int)_Dst + 0xfc) =
-                   *(int *)((int)_Dst + 0xfc) + *(int *)((int)_Dst + i * 4);
-              *(i32 *)((int)_Dst + i * 4) = 0xffffffff;
+            if (_Dst[i] < 9) {
+              _Dst[0x3f] =
+                   _Dst[0x3f] + _Dst[i];
+              _Dst[i] = 0xffffffff;
               merged_count++;
             }
           }
           if (merged_count != 0) {
             id_ptr = _Dst_00;
             for (idx = 0; idx < map.area; idx++) {
-              if (*(int *)((int)_Dst + (uint)*id_ptr * 4) < 0) {
+              if (_Dst[(uint)*id_ptr] < 0) {
                 *id_ptr = 0x3f;
               }
               id_ptr++;
             }
             for (i = 0; i < 0x3f; i++) {
-              if (*(int *)((int)_Dst + i * 4) < 0) {
-                *(i32 *)((int)_Dst + i * 4) = 0;
+              if (_Dst[i] < 0) {
+                _Dst[i] = 0;
               }
             }
           }
@@ -4322,24 +4322,24 @@ uint __cdecl map_assign_landmass_ids(void)
         for (idx = 0; idx < map.area; idx++) {
           if (*id_ptr != 0) {
             if (0x3f < *id_ptr) {
-              if (*(int *)((int)_Dst + (uint)*id_ptr * 4) < 1) {
-                if (*(int *)((int)_Dst + (uint)*id_ptr * 4) < 1) {
-                  *id_ptr = ~(ushort)*(i32 *)((int)_Dst + (uint)*id_ptr * 4) + 1;
+              if (_Dst[(uint)*id_ptr] < 1) {
+                if (_Dst[(uint)*id_ptr] < 1) {
+                  *id_ptr = ~(ushort)_Dst[(uint)*id_ptr] + 1;
                 }
                 else {
-                  *id_ptr = (ushort)*(i32 *)((int)_Dst + (uint)*id_ptr * 4);
+                  *id_ptr = (ushort)_Dst[(uint)*id_ptr];
                 }
               }
               else {
                 next_id2 = 0;
                 do {
                   next_id2++;
-                } while (*(int *)((int)_Dst + next_id2 * 4) != 0);
+                } while (_Dst[next_id2] != 0);
                 if (((int)next_id2 < 0x40) &&
-                   ((ocean_pass == 0 || (0x10 < *(int *)((int)_Dst + (uint)*id_ptr * 4))))) {
-                  *(i32 *)((int)_Dst + next_id2 * 4) =
-                       *(i32 *)((int)_Dst + (uint)*id_ptr * 4);
-                  *(uint *)((int)_Dst + (uint)*id_ptr * 4) = -next_id2;
+                   ((ocean_pass == 0 || (0x10 < _Dst[(uint)*id_ptr])))) {
+                  _Dst[next_id2] =
+                       _Dst[(uint)*id_ptr];
+                  _Dst[(uint)*id_ptr] = -next_id2;
                   *id_ptr = (ushort)next_id2;
                 }
                 else {
@@ -4357,11 +4357,11 @@ uint __cdecl map_assign_landmass_ids(void)
         for (j = 0; j < 0x40; j++) {
           if (ocean_pass == 0) {
             *(short *)(((i8 *)&landmass_table_block.landmass_table) + j * 0x10) =
-                 (short)*(i32 *)((int)_Dst + j * 4);
+                 (short)_Dst[j];
           }
           else {
             *(short *)(((i8 *)&landmass_table_block.water_body_sizes) + j * 0x10) =
-                 (short)*(i32 *)((int)_Dst + j * 4);
+                 (short)_Dst[j];
           }
         }
       }
@@ -4393,18 +4393,18 @@ void __cdecl terrain_editor_load_rules(void)
     *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field1) + terrain2 * 0x58) = (int)(char)terrain_types[terrain2].defense;
     for (i = 0; i < 3; i++) {
       *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + i * 4 + terrain2 * 0x58) =
-           (int)*(char *)(i + (iptr)((u8 *)&terrain_types + 10) + terrain2 * 0x18);
+           (int)(char)terrain_types[terrain2].yields[i];
     }
     if (terrain2 < 0xb) {
       for (i = 0; i < 2; i++) {
         *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field5) + i * 0x10 + terrain2 * 0x58) =
-             (int)*(char *)(i + (iptr)((u8 *)&terrain_types + 14) + terrain2 * 0x18);
+             (int)terrain_types[terrain2].improve_to[i];
         *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field6) + i * 0x10 + terrain2 * 0x58) =
-             (int)*(char *)(i + (iptr)((u8 *)&terrain_types + 16) + terrain2 * 0x18);
+             (int)(char)terrain_types[terrain2].improve_bonus[i];
         *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field7) + i * 0x10 + terrain2 * 0x58) =
-             (int)*(char *)(i + (iptr)((u8 *)&terrain_types + 18) + terrain2 * 0x18);
+             (int)(char)terrain_types[terrain2].improve_turns[i];
         *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field8) + i * 0x10 + terrain2 * 0x58) =
-             (int)*(char *)(i + (iptr)((u8 *)&terrain_types + 20) + terrain2 * 0x18);
+             (int)(char)terrain_types[terrain2].improve_ai_govt[i];
       }
       *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field13) + terrain2 * 0x58) = (int)terrain_types[terrain2].transform_to;
     }
@@ -4430,18 +4430,18 @@ void __cdecl terrain_editor_store_rules(void)
     terrain_types[terrain2].move_cost = (((i8 *)&editor_text_dlg_wnd_block.editor_items))[terrain2 * 0x58];
     terrain_types[terrain2].defense = (((i8 *)&editor_text_dlg_wnd_block.editor_item_field1))[terrain2 * 0x58];
     for (i = 0; i < 3; i++) {
-      *(i8 *)(i + (iptr)((u8 *)&terrain_types + 10) + terrain2 * 0x18) =
+      terrain_types[terrain2].yields[i] =
            (((i8 *)&editor_text_dlg_wnd_block.editor_item_field2))[i * 4 + terrain2 * 0x58];
     }
     if (terrain2 < 0xb) {
       for (i = 0; i < 2; i++) {
-        *(i8 *)(i + (iptr)((u8 *)&terrain_types + 14) + terrain2 * 0x18) =
+        terrain_types[terrain2].improve_to[i] =
              (((i8 *)&editor_text_dlg_wnd_block.editor_item_field5))[i * 0x10 + terrain2 * 0x58];
-        *(i8 *)(i + (iptr)((u8 *)&terrain_types + 16) + terrain2 * 0x18) =
+        terrain_types[terrain2].improve_bonus[i] =
              (((i8 *)&editor_text_dlg_wnd_block.editor_item_field6))[i * 0x10 + terrain2 * 0x58];
-        *(i8 *)(i + (iptr)((u8 *)&terrain_types + 18) + terrain2 * 0x18) =
+        terrain_types[terrain2].improve_turns[i] =
              (((i8 *)&editor_text_dlg_wnd_block.editor_item_field7))[i * 0x10 + terrain2 * 0x58];
-        *(i8 *)(i + (iptr)((u8 *)&terrain_types + 20) + terrain2 * 0x18) =
+        terrain_types[terrain2].improve_ai_govt[i] =
              (((i8 *)&editor_text_dlg_wnd_block.editor_item_field8))[i * 0x10 + terrain2 * 0x58];
       }
       terrain_types[terrain2].transform_to = (((i8 *)&editor_text_dlg_wnd_block.editor_item_field13))[terrain2 * 0x58];
@@ -4631,21 +4631,21 @@ i32 __cdecl terrain_editor_write_section(FILE *file)
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&terrain_editor_ctrl_kinds_block.terrain_txt_defense_sep));
     text_append_spaces(2);
     for (i = 0; i < 3; i++) {
-      text_append_int((int)*(char *)(i + (iptr)((u8 *)&terrain_types + 10) + terrain2 * 0x18));
+      text_append_int((int)(char)terrain_types[terrain2].yields[i]);
       crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&terrain_editor_ctrl_kinds_block.terrain_txt_yield_sep));
     }
     if (terrain2 < 0xb) {
       for (i = 0; i < 2; i++) {
         text_append_spaces(3);
-        terrain_editor_append_rule_ref((int)*(char *)(i + (iptr)((u8 *)&terrain_types + 14) + terrain2 * 0x18),1);
-        text_append_int_2d((int)*(char *)(i + (iptr)((u8 *)&terrain_types + 16) + terrain2 * 0x18));
+        terrain_editor_append_rule_ref((int)terrain_types[terrain2].improve_to[i],1);
+        text_append_int_2d((int)(char)terrain_types[terrain2].improve_bonus[i]);
         crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&terrain_editor_ctrl_kinds_block.terrain_txt_bonus_sep));
-        text_append_int_2d((int)*(char *)(i + (iptr)((u8 *)&terrain_types + 18) + terrain2 * 0x18));
+        text_append_int_2d((int)(char)terrain_types[terrain2].improve_turns[i]);
         crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&terrain_editor_ctrl_kinds_block.terrain_txt_turns_sep));
         if (i == 1) {
           text_append_space();
         }
-        text_append_int_2d((int)*(char *)(i + (iptr)((u8 *)&terrain_types + 20) + terrain2 * 0x18));
+        text_append_int_2d((int)(char)terrain_types[terrain2].improve_ai_govt[i]);
         crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&terrain_editor_ctrl_kinds_block.terrain_txt_ai_gov_sep));
       }
       text_append_spaces(2);

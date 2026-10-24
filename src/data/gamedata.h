@@ -574,7 +574,7 @@ extern char str_cities_gif_2[12];
 extern char str_units_bmp[12];
 extern char str_units_gif[12];
 extern char str_units_gif_2[60];
-extern iptr throneroom_wnd;
+extern ThroneRoomWindow *throneroom_wnd;
 extern char str_pv_dll[8];
 extern u8 str_empty_67[4];
 extern u8 str_empty_68[4];
@@ -2228,7 +2228,7 @@ extern u8 str_empty_157[4];
 extern char str_slam[8];
 extern char str_empty_158[12];
 extern i32 council_video_busy_i32;
-extern iptr council_wnd;
+extern PictureWindow *council_wnd;
 extern char council_active;
 extern u8 council_active_rest[3];
 extern u8 str_empty_159[4];
@@ -3962,7 +3962,7 @@ struct casualty_window_block {
     int casualty_controls_created;  /* 0063e990 */
     i32 casualty_report_param_i32;  /* 0063e994 */
     u8 casualty_report_param_i32_rest[8];
-    i8 credits_slot_widths[120];  /* 0063e9a0 */
+    i32 credits_slot_widths[30];  /* 0063e9a0 */
     int civ_rating_percent;  /* 0063ea18 */
     u8 civ_rating_percent_rest[4];
 };
@@ -3971,7 +3971,7 @@ extern struct casualty_window_block casualty_window_block;
 #pragma pack(push, 1)
 struct credits_font_block {
     GameFont credits_font;  /* 0063ea20 */
-    i8 credits_slot_lines[120];  /* 0063ea28 */
+    i32 credits_slot_lines[30];  /* 0063ea28 */
 };
 #pragma pack(pop)
 extern struct credits_font_block credits_font_block;
@@ -3989,20 +3989,7 @@ extern GameFont advisor_bold_font;
 #pragma pack(push, 1)
 struct advisor_font_block {
     GameFont advisor_font;  /* 0063eac0 */
-    i16 hall_of_fame_new_entry[1];  /* 0063eac8 */
-    ushort hof_new_difficulty;  /* 0063eaca */
-    i16 hof_new_turn_i16;  /* 0063eacc */
-    i16 hof_new_year_i16;  /* 0063eace */
-    i16 hof_new_population_i16;  /* 0063ead0 */
-    i16 hof_new_objective_score_i16;  /* 0063ead2 */
-    i16 hof_new_year_increment_i16;  /* 0063ead4 */
-    i16 hof_new_start_year_i16;  /* 0063ead6 */
-    i16 hof_new_is_scenario_i16;  /* 0063ead8 */
-    short hof_new_rating;  /* 0063eada */
-    i16 hof_new_leader_female_i16;  /* 0063eadc */
-    i16 hof_new_title_index_i16;  /* 0063eade */
-    i8 hof_new_leader_name[24];  /* 0063eae0 */
-    i8 hof_new_civ_name[24];  /* 0063eaf8 */
+    HallOfFameEntry hof_new_entry;  /* 0063eac8 */
 };
 #pragma pack(pop)
 extern struct advisor_font_block advisor_font_block;
@@ -4042,28 +4029,13 @@ struct advisor_window_block {
     int advisor_controls_created;  /* 0063efa8 */
     iptr advisor_report_param;  /* 0063efac */
     u8 advisor_report_param_rest[8];
-    i8 credits_slot_sprites[120];  /* 0063efb8 */
+    Sprite *credits_slot_sprites[30];  /* 0063efb8 */
     GameFont hall_of_fame_font;  /* 0063f030 */
     i8 credits_text_block[8];  /* 0063f038 */
     char *credits_text_data;  /* 0063f040 */
     u8 credits_text_data_rest[12];
-    i8 credits_slot_x[120];  /* 0063f050 */
-    i8 hall_of_fame_entries[2];  /* 0063f0c8 */
-    i8 hof_entry_difficulty[2];  /* 0063f0ca */
-    i8 hof_entry_turn[2];  /* 0063f0cc */
-    i8 hof_entry_year[2];  /* 0063f0ce */
-    i8 hof_entry_population[2];  /* 0063f0d0 */
-    i8 hof_entry_objective_score[2];  /* 0063f0d2 */
-    i8 hof_entry_year_increment[2];  /* 0063f0d4 */
-    i8 hof_entry_start_year[2];  /* 0063f0d6 */
-    i8 hof_entry_is_scenario[2];  /* 0063f0d8 */
-    i8 hall_of_fame_entry_rating[2];  /* 0063f0da */
-    i8 hof_entry_leader_female[2];  /* 0063f0dc */
-    i8 hof_entry_title_index[338];  /* 0063f0de */
-    i16 hof_last_entry_score_i16;  /* 0063f230 */
-    u8 hof_last_entry_score_i16_rest[16];
-    i16 hof_last_entry_rating_i16;  /* 0063f242 */
-    u8 hof_last_entry_rating_i16_rest[52];
+    i32 credits_slot_x[30];  /* 0063f050 */
+    HallOfFameEntry hall_of_fame[6];  /* 0063f0c8 */
     int mp_meeting_reply;  /* 0063f278 */
     u8 mp_meeting_reply_rest[708];
     int city_commodity_demand_scores[1];  /* 0063f540 */
@@ -4165,8 +4137,8 @@ extern struct pollution_sprite_block pollution_sprite_block;
 struct road_sprites_block {
     Sprite road_sprites[9];  /* 00642710 */
     Sprite railroad_sprites[9];  /* 0064292c */
-    i8 unit_shield_y_offsets[256];  /* 00642b48 */
-    i8 unit_shield_x_offsets[256];  /* 00642c48 */
+    i32 unit_shield_y_offsets[64];  /* 00642b48 */
+    i32 unit_shield_x_offsets[64];  /* 00642c48 */
     i8 citizen_sprites[2640];  /* 00642d48 */
     i8 civ_portrait_sprites[480];  /* 00643798 */
     i8 city_size_box_x_offsets[192];  /* 00643978 */
@@ -4504,7 +4476,7 @@ extern GovTitle *const government_titles;  /* = civ_saved_cursor_x_block.governm
 #pragma pack(push, 1)
 struct destroyed_civ_count_block {
     i16 destroyed_civ_count[1];  /* 00655128 */
-    i8 destroyed_civ_turns[24];  /* 0065512a */
+    i16 destroyed_civ_turns[12];  /* 0065512a */
     i8 destroyed_civ_killers[12];  /* 00655142 */
     i8 destroyed_civ_portraits[12];  /* 0065514e */
     i8 destroyed_civ_names[294];  /* 0065515a */
@@ -5141,9 +5113,10 @@ struct pedia_window_block {
     int pedia_topic;  /* 006a6788 */
     int pedia_modal_active;  /* 006a678c */
     i32 pedia_history_count;  /* 006a6790 */
-    i8 pedia_history_topics[400];  /* 006a6794 */
-    i8 pedia_history_page_modes[400];  /* 006a6924 */
-    i8 pedia_history_categories[428];  /* 006a6ab4 */
+    i32 pedia_history_topics[100];  /* 006a6794 */
+    i32 pedia_history_page_modes[100];  /* 006a6924 */
+    i32 pedia_history_categories[100];  /* 006a6ab4 */
+    u8 pedia_history_categories_rest[28];
     u8 pedia_describe_rect[32];  /* 006a6c60 */
     i8 pedia_title_text[64];  /* 006a6c80 */
     int pedia_advance_entry_count;  /* 006a6cc0 */
@@ -5158,16 +5131,16 @@ struct pedia_window_block {
     u8 pedia_government_entry_count_rest[56];
     int pedia_terrain_count;  /* 006a7434 */
     u8 pedia_terrain_count_rest[132];
-    i8 pedia_terrain_ids[132];  /* 006a74bc */
+    i32 pedia_terrain_ids[33];  /* 006a74bc */
     int pedia_concept_entry_count;  /* 006a7540 */
     u8 pedia_concept_entry_count_rest[2048];
-    i32 pedia_advance_names;  /* 006a7d44 */
-    i32 pedia_improvement_names;  /* 006a7d48 */
-    i32 pedia_wonder_names;  /* 006a7d4c */
-    i32 pedia_unit_names;  /* 006a7d50 */
-    i32 pedia_government_names;  /* 006a7d54 */
-    i32 pedia_terrain_names;  /* 006a7d58 */
-    i32 pedia_concept_names;  /* 006a7d5c */
+    PediaListNode *pedia_advance_names;  /* 006a7d44 */
+    PediaListNode *pedia_improvement_names;  /* 006a7d48 */
+    PediaListNode *pedia_wonder_names;  /* 006a7d4c */
+    PediaListNode *pedia_unit_names;  /* 006a7d50 */
+    PediaListNode *pedia_government_names;  /* 006a7d54 */
+    PediaListNode *pedia_terrain_names;  /* 006a7d58 */
+    PediaListNode *pedia_concept_names;  /* 006a7d5c */
     u8 pedia_concept_names_rest[1000];
     ClickControl pedia_list_scrollbar;  /* 006a8148 */
     Hotspot *pedia_close_hotspot;  /* 006a8188 */
@@ -5179,7 +5152,7 @@ struct pedia_window_block {
     u8 pedia_list_count_rest[1024];
     i32 pedia_selected_item;  /* 006a85a0 */
     int pedia_list_top;  /* 006a85a4 */
-    i32 *pedia_link_list;  /* 006a85a8 */
+    PediaLink *pedia_link_list;  /* 006a85a8 */
     i32 pedia_popped_category;  /* 006a85ac */
     i32 pedia_popped_page_mode;  /* 006a85b0 */
     u8 pedia_popped_page_mode_rest[1612];
@@ -5405,7 +5378,7 @@ struct sprite_picker_sprite_block {
     Sprite sprite_picker_sprite;  /* 006ac8e8 */
     int sprite_sheet_mode;  /* 006ac924 */
     u8 sprite_sheet_mode_rest[236];
-    i8 unit_sound_effects_by_ctrl[244];  /* 006aca14 */
+    i32 unit_sound_effects_by_ctrl[61];  /* 006aca14 */
     uptr combat_defender_city;  /* 006acb08 */
     int combat_kill_count;  /* 006acb0c */
     u8 combat_kill_count_rest[32];

@@ -825,20 +825,20 @@ void __cdecl unit_sprite_scan_shield_offset(int unit_type,int x,int y)
   int dy;
   int dx;
   
-  *(i32 *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + unit_type * 4) = 0;
-  *(i32 *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + unit_type * 4) = 0;
+  road_sprites_block.unit_shield_x_offsets[unit_type] = 0;
+  road_sprites_block.unit_shield_y_offsets[unit_type] = 0;
   for (dx = 0; dx < 0x40; dx++) {
     pixel = surface_get_pixel
                       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),x - 1 + dx + 1,y - 1);
     if (pixel == 4) {
-      *(int *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + unit_type * 4) = dx;
+      road_sprites_block.unit_shield_x_offsets[unit_type] = dx;
     }
   }
   for (dy = 0; dy < 0x30; dy++) {
     pixel = surface_get_pixel
                       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),x - 1,y - 1 + dy + 1);
     if (pixel == 4) {
-      *(int *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + unit_type * 4) = dy;
+      road_sprites_block.unit_shield_y_offsets[unit_type] = dy;
     }
   }
   return;
@@ -1549,7 +1549,7 @@ merge_counters:
           break;
         case 6:
         case 7:
-          if (*(char *)(order + (iptr)((u8 *)&terrain_types + 8) + terrain * 0x18) < '\0') {
+          if (terrain_types[terrain].improve_to[order - 6] < '\0') {
             if (order == 6) {
               terrain = tile_improvements(x,y);
               if ((terrain & 4) == 0) {
@@ -1569,8 +1569,8 @@ merge_counters:
             }
           }
           else {
-            tile_set_terrain(x,y,(int)*(char *)(order + (iptr)((u8 *)&terrain_types + 8) + terrain * 0x18),1);
-            terrain2 = *(char *)(order + (iptr)((u8 *)&terrain_types + 8) + terrain * 0x18);
+            tile_set_terrain(x,y,(int)terrain_types[terrain].improve_to[order - 6],1);
+            terrain2 = terrain_types[terrain].improve_to[order - 6];
             if ((terrain_types[terrain2].irrigate_to != -2) &&
                (terrain = tile_improvements(x,y), (terrain & 4) != 0)) {
               tile_set_improvements(x,y,0xc,0,1);
@@ -5024,7 +5024,7 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
   seh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
   seh_state = 0;
-  if (*(int *)(((i8 *)&sprite_picker_sprite_block.unit_sound_effects_by_ctrl) + slot * 4) < 0) {
+  if (sprite_picker_sprite_block.unit_sound_effects_by_ctrl[slot] < 0) {
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0058abca */ { dialog_dtor(&dlg); }
   }
@@ -5069,7 +5069,7 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
     }
     else {
       crt_strcat(dest_path,((i8 *)&unit_sound_path_sep_str));
-      crt_strcat(dest_path,((char *)&str_aircombt) + *(int *)(((i8 *)&sprite_picker_sprite_block.unit_sound_effects_by_ctrl) + slot * 4) * 9);
+      crt_strcat(dest_path,((char *)&str_aircombt) + sprite_picker_sprite_block.unit_sound_effects_by_ctrl[slot] * 9);
       crt_strcat(dest_path,((i8 *)&unit_sound_wav_suffix_str));
       ret = file_exists((const char *)dest_path);
       if ((ret == 0) || (ret = crt_remove(dest_path), ret == 0)) {
@@ -5646,7 +5646,7 @@ void __cdecl unit_cmd_terraform(iptr order)
     }
   }
   if (((order == 6) || (order == 7)) &&
-     (transform = *(char *)(order + (iptr)((u8 *)&terrain_types + 8) + (uint)terrain * 0x18), transform < '\0')) {
+     (transform = terrain_types[(uint)terrain].improve_to[order - 6], transform < '\0')) {
     if (transform == -1) {
       dlg_game_txt_with_unit((const char *)&str_cantimprove_4,unit);
       return;
