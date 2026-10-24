@@ -4961,7 +4961,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
               (game.reveal_map != '\0')))) &&
             ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0)))))))) {
         dialog_init_default(&dialog2);
-        dialog_set_width((DialogWindowView *)&dialog2,0x140);
+        dialog_set_width(&dialog2,0x140);
         text_clear();
         civ_plural = (iptr)(civ_name_plural(civ));
         text_append((const char *)civ_plural);
@@ -4993,14 +4993,14 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
         }
         text_append((const char *)&str_empty_119);
         dialog_add_line
-                  ((DialogAddLineView *)&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+                  (&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
         if (diplo_session_active == 0) {
           dialog_add_sprite
-                    ((DialogOptionList *)&dialog2,
+                    (&dialog2,
                      (iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                            (char)advances[advance].epoch * 0x3c +
                            (char)advances[advance].category * 0xf0),0,0);
-          dialog_set_image_zoom((DialogWindowView *)&dialog2,8);
+          dialog_set_image_zoom(&dialog2,8);
         }
         line_width = 0;
         list_count = 0;
@@ -5022,7 +5022,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
           if (list_count != 0) {
             text_append_rparen();
             dialog_add_line
-                      ((DialogAddLineView *)&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+                      (&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
           }
         }
         dlg_show_modal(&dialog2,0);
@@ -5074,12 +5074,12 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
             dialog_load_game_text(&dialog2,(const char *)&str_barracks);
             if (diplo_session_active == 0) {
               dialog_add_sprite
-                        ((DialogOptionList *)&dialog2,
+                        (&dialog2,
                          (iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                                (char)advances[advance].epoch * 0x3c +
                                (char)advances[advance].category * 0xf0),0,0);
-              dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&caption_close_button_sprite_block.notify_sprites,0,0);
-              dialog_set_image_zoom((DialogWindowView *)&dialog2,8);
+              dialog_add_sprite(&dialog2,(iptr)&caption_close_button_sprite_block.notify_sprites,0,0);
+              dialog_set_image_zoom(&dialog2,8);
             }
             dlg_show_modal(&dialog2,0);
           }
@@ -5107,13 +5107,13 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
               dialog_load_game_text(&dialog2,(const char *)&str_endwonder_2);
               if (diplo_session_active == 0) {
                 dialog_add_sprite
-                          ((DialogOptionList *)&dialog2,
+                          (&dialog2,
                            (iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                                  (char)advances[advance].epoch * 0x3c +
                                  (char)advances[advance].category * 0xf0),0,0);
                 dialog_add_sprite
-                          ((DialogOptionList *)&dialog2,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
-                dialog_set_image_zoom((DialogWindowView *)&dialog2,8);
+                          (&dialog2,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
+                dialog_set_image_zoom(&dialog2,8);
               }
               if (2 < game.multiplayer) {
                 net_send_text_args(0x4d,0xff,2,0,advance,improvement2);
@@ -5397,10 +5397,10 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       option_count2 = 0;
       dlg_load_game_section(&dialog2,(const char *)&str_researchgoal,1);
       if (mode_state[1] == 0) {
-        dialog_set_columns((DialogButtonsView *)&dialog2,2);
+        dialog_set_columns(&dialog2,2);
         if (diplo_session_active == 0) {
-          dialog_set_list_indent((DialogCore *)&dialog2,0x4b,0);
-          dialog_set_option_draw_fn((DialogOptionList *)&dialog2,(iptr)research_option_draw_advance);
+          dialog_set_list_indent(&dialog2,0x4b,0);
+          dialog_set_option_draw_fn(&dialog2,(iptr)research_option_draw_advance);
         }
         for (advance = 0; advance < 100; advance++) {
           if (((advances[advance].enabled != '\0') &&
@@ -5414,15 +5414,15 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
               text_append_space();
               text_append_int(civs[civ].future_techs + 1);
             }
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,advance,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,advance,0);
             option_count2++;
           }
         }
       }
       else if (mode_state[1] == 1) {
         if (diplo_session_active == 0) {
-          dialog_set_list_indent((DialogCore *)&dialog2,0x4b,0);
-          dialog_set_option_draw_fn((DialogOptionList *)&dialog2,(iptr)research_option_draw_unit);
+          dialog_set_list_indent(&dialog2,0x4b,0);
+          dialog_set_option_draw_fn(&dialog2,(iptr)research_option_draw_unit);
         }
         for (unit_type = 0; unit_type < 0x3e; unit_type++) {
           advance = (iptr)unit_types[unit_type].prerequisite;
@@ -5435,15 +5435,15 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
             text_append_lparen();
             text_append_string_id(advances[advance].name);
             text_append_rparen();
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,unit_type,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,unit_type,0);
             option_count2++;
           }
         }
       }
       else if (mode_state[1] == 2) {
         if (diplo_session_active == 0) {
-          dialog_set_list_indent((DialogCore *)&dialog2,0x4b,0);
-          dialog_set_option_draw_fn((DialogOptionList *)&dialog2,(iptr)research_option_draw_improvement);
+          dialog_set_list_indent(&dialog2,0x4b,0);
+          dialog_set_option_draw_fn(&dialog2,(iptr)research_option_draw_improvement);
         }
         for (improvement = 0; improvement < 0x43; improvement++) {
           advance = (iptr)improvements[improvement].preq;
@@ -5456,7 +5456,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
             text_append_lparen();
             text_append_string_id(advances[advance].name);
             text_append_rparen();
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,improvement,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,improvement,0);
             option_count2++;
           }
         }
@@ -5469,19 +5469,19 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       button_count = 0;
       if (mode_state[1] != 0) {
         label = (iptr)label_string(label_string_ids[0xc3]);
-        dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
+        dialog_add_button(&dialog2,(const char *)label);
         mode_state[button_count + 2] = 0;
         button_count++;
       }
       if (mode_state[1] != 1) {
         label = (iptr)label_string(label_string_ids[0xc4]);
-        dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
+        dialog_add_button(&dialog2,(const char *)label);
         mode_state[button_count + 2] = 1;
         button_count++;
       }
       if (mode_state[1] != 2) {
         label = (iptr)label_string(label_string_ids[0xc5]);
-        dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
+        dialog_add_button(&dialog2,(const char *)label);
         mode_state[button_count + 2] = 2;
         button_count++;
       }
@@ -5503,11 +5503,11 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
           option_flags = 0;
           option_id = 0;
           label = (iptr)label_string(unit_types[unit_type].name);
-          dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
+          dialog_add_option(&dialog2,(const char *)label,option_id,option_flags);
           option_flags = 0;
           option_id = 1;
           label = (iptr)label_string(advances[advance].name);
-          dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
+          dialog_add_option(&dialog2,(const char *)label,option_id,option_flags);
           choice = dlg_show_modal(&dialog2,0);
           if (choice == 0) {
             pedia_show_unit_modal((DocumentWindow *)((i8 *)&pedia_window_block.pedia_window),unit_type);
@@ -5523,11 +5523,11 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
           option_flags = 0;
           option_id = 0;
           label = (iptr)label_string(improvements[improvement].name);
-          dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
+          dialog_add_option(&dialog2,(const char *)label,option_id,option_flags);
           option_flags = 0;
           option_id = 1;
           label = (iptr)label_string(advances[advance].name);
-          dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
+          dialog_add_option(&dialog2,(const char *)label,option_id,option_flags);
           choice = dlg_show_modal(&dialog2,0);
           if (choice == 0) {
             pedia_show_improvement_modal((DocumentWindow *)((i8 *)&pedia_window_block.pedia_window),improvement);
@@ -5587,7 +5587,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
             text_append_period();
           }
           dialog_add_line
-                    ((DialogAddLineView *)&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+                    (&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
         }
         dlg_show_modal(&dialog2,0);
         seh_state = 0xffffffff;
@@ -5707,7 +5707,7 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
         text_append_int(hint_kind);
         dialog_load_text(&info_dialog,(const char *)&str_advice,(const char *)&map_views_block.text_buffer,8);
         dialog_add_sprite
-                  ((DialogOptionList *)&info_dialog,
+                  (&info_dialog,
                    (iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                          (char)advances[advance2].epoch * 0x3c + (char)advances[advance2].category * 0xf0)
                    ,(ui_large_screen == 0) - 1 & 8,0);
@@ -5743,7 +5743,7 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
             }
           }
           dialog_add_line
-                    ((DialogAddLineView *)&info_dialog,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+                    (&info_dialog,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
         }
         ticks = timer_ticks();
         dialog_run_modal(&info_dialog,0,ticks - 300);
@@ -5752,10 +5752,10 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
       text_set_label_arg(0,label_string_ids[0x31 - (uint)(known == 0)]);
       dialog_load_game_text(&choice_dialog,(const char *)&str_research);
       if (((*((char *)&game.game_options + 1)) & 2) != 0) {
-        dialog_set_position((DialogCore *)&choice_dialog,5,0xfffffc19);
+        dialog_set_position(&choice_dialog,5,0xfffffc19);
       }
-      dialog_set_option_draw_fn((DialogOptionList *)&choice_dialog,(iptr)research_option_draw_advance);
-      dialog_set_list_indent((DialogCore *)&choice_dialog,0x4b,0);
+      dialog_set_option_draw_fn(&choice_dialog,(iptr)research_option_draw_advance);
+      dialog_set_list_indent(&choice_dialog,0x4b,0);
       count = 0;
       for (advance = 0; advance < 100; advance++) {
         if (((((advances[advance].enabled != '\0') &&
@@ -5772,7 +5772,7 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
             text_append_space();
             text_append_int(civs[civ].future_techs + 1);
           }
-          dialog_add_option((DialogOptionList *)&choice_dialog,(const char *)&map_views_block.text_buffer,advance,0);
+          dialog_add_option(&choice_dialog,(const char *)&map_views_block.text_buffer,advance,0);
           count++;
         }
       }
@@ -5869,11 +5869,11 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
       text_set_string_arg_b(2,(const char *)&map_views_block.text_buffer);
       dialog_load_game_text(&dialog2,(const char *)&str_civadvance);
       dialog_add_sprite
-                ((DialogOptionList *)&dialog2,
+                (&dialog2,
                  (iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                        (char)advances[advance].category * 0xf0 +
                        (char)advances[advance].epoch * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dialog2,8);
+      dialog_set_image_zoom(&dialog2,8);
       dlg_show_modal(&dialog2,0);
       if (((*((char *)&game.game_options + 2)) & 8) != 0) {
         pedia_show_topic_modal((DocumentWindow *)((i8 *)&pedia_window_block.pedia_window),advance);
@@ -5896,8 +5896,8 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
       }
       if (improvements[0x18].preq == advance) {
         dialog_load_game_text(&dialog2,(const char *)&str_newfarmland);
-        dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&caption_close_button_sprite_block.research_dialog_sprite,0,0);
-        dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&land_improvement_sprites_block.farmland_sprite,0,0);
+        dialog_add_sprite(&dialog2,(iptr)&caption_close_button_sprite_block.research_dialog_sprite,0,0);
+        dialog_add_sprite(&dialog2,(iptr)&land_improvement_sprites_block.farmland_sprite,0,0);
         dlg_show_modal(&dialog2,0);
       }
       if (unit_types[0xd].prerequisite == advance) {
@@ -6950,7 +6950,7 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
             option_flags = 0;
             option_id = advance;
             text = (iptr)label_string(advances[advance].name);
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)text,option_id,option_flags);
+            dialog_add_option(&dialog2,(const char *)text,option_id,option_flags);
           }
           value = ai_advance_value(civ,advance);
           if (best_value <= value) {

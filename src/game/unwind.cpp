@@ -93,7 +93,7 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
             if ((all_govs != 0) || (civ_can_choose_government(civ2, gov, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) != 0)) {
                 text_clear();
                 text_append_string_id(government_names[gov]);
-                dialog_add_option((DialogOptionList *)(&dlg), (const char *)&map_views_block.text_buffer, gov, 0);
+                dialog_add_option(&dlg, (const char *)&map_views_block.text_buffer, gov, 0);
             }
         }
         choice2 = dlg_show_modal(&dlg, 0);

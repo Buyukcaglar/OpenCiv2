@@ -1422,7 +1422,7 @@ void __cdecl intel_report_on_cities_clicked(void)
         text_append_string_id(improvements[improvement].name);
         text_append_rparen();
       }
-      dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,city,0);
+      dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,city,0);
     }
   }
   wnd_disable((WndBase *)((i8 *)&advisor_window_block.advisor_wnd));
@@ -1524,8 +1524,8 @@ void __cdecl foreign_minister_show(iptr civ)
         else {
           dlg_load_game_section(&dialog2,(const char *)&str_reportforeignmulti,0x2000001);
         }
-        dialog_set_option_draw_fn((DialogOptionList *)&dialog2,(iptr)foreign_minister_draw_civ_city);
-        dialog_set_list_indent((DialogCore *)&dialog2,0x4b,0);
+        dialog_set_option_draw_fn(&dialog2,(iptr)foreign_minister_draw_civ_city);
+        dialog_set_list_indent(&dialog2,0x4b,0);
         contact_count = 0;
         value = civ_has_wonder(civ,0x18);
         if ((value == 0) && (value = civ_has_wonder(civ,9), value == 0)) {
@@ -1609,7 +1609,7 @@ void __cdecl foreign_minister_show(iptr civ)
                 }
               }
               text_append_rparen();
-              dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,civ2,0);
+              dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,civ2,0);
             }
           }
         }
@@ -1653,12 +1653,12 @@ void __cdecl foreign_minister_show(iptr civ)
       text_set_string_arg(0,(const char *)&map_views_block.text_buffer);
       choice = dialog_load_text(&dialog2,(const char *)&str_game_2,(const char *)&str_attitudemulti,1);
       if (choice == 0) {
-        dialog_set_columns((DialogButtonsView *)&dialog2,3);
+        dialog_set_columns(&dialog2,3);
         for (choice = 0; choice < 9; choice++) {
           option_flags = 0;
           option_id = choice;
           text = (iptr)label_string(attitude_names[choice]);
-          dialog_add_option((DialogOptionList *)&dialog2,(const char *)text,option_id,option_flags);
+          dialog_add_option(&dialog2,(const char *)text,option_id,option_flags);
         }
         if (*(char *)&civs[civ].attitude[civ2] == '\0') {
           cur_level = 0;
@@ -1666,7 +1666,7 @@ void __cdecl foreign_minister_show(iptr civ)
         else {
           cur_level = diplo_attitude_level((uint)civs[civ].attitude[civ2]);
         }
-        dialog_set_default_choice((DialogOptionList *)&dialog2,cur_level);
+        dialog_set_default_choice(&dialog2,cur_level);
         choice = dlg_show_modal(&dialog2,0);
         if (-1 < choice) {
           attitude_values[0] = 0;
@@ -2043,7 +2043,7 @@ void __cdecl historian_report_show(void)
       text_set_string_arg(2,(const char *)&map_views_block.text_buffer);
       dlg_load_game_section(&dialog2,(const char *)&str_history,0x40000);
       dialog_add_line
-                ((DialogAddLineView *)&dialog2,(const char *)&str_empty_40,0xffffffff,0xffffffff,0xffffffff,0);
+                (&dialog2,(const char *)&str_empty_40,0xffffffff,0xffffffff,0xffffffff,0);
       for (civ = 0; civ < 8; civ++) {
         scores[civ] = 0;
       }
@@ -2116,7 +2116,7 @@ void __cdecl historian_report_show(void)
               ((*(byte *)&civs[human_civ[0]].treaties[civ2] & 1) != 0)) ||
              (game.difficulty == '\0')) {
             dialog_add_line
-                      ((DialogAddLineView *)&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+                      (&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
           }
         }
         dlg_show_modal(&dialog2,0);
@@ -5140,7 +5140,7 @@ void __cdecl endgame_spaceship_arrival(iptr civ)
         dialog_ctor(&dialog2,0x4000);
         try_level = 1;
         dialog_load_game_text(&dialog2,(const char *)&str_centauri);
-        dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&popup_info_icon_sprite,0,0);
+        dialog_add_sprite(&dialog2,(iptr)&popup_info_icon_sprite,0,0);
         dlg_show_modal(&dialog2,0);
         try_level = 0xffffffff;
         /* inlined unwind funclet 0047132e */ { dialog_dtor(&dialog2); }
@@ -7152,7 +7152,7 @@ void __thiscall council_draw_speech(SurfaceWindow *self,int mode)
       rect.left = ((PictureWindow *)self)->speech_rect + 2;
       rect.right = ((PictureWindow *)self)->speech_rect_right - 2;
       rect.top = ((PictureWindow *)self)->speech_rect_top + ((PictureWindow *)self)->speech_line_y;
-      dialog_set_font((DialogTextView *)((u8 *)&((PictureWindow *)self)->council_dialog),(iptr)&font2);
+      dialog_set_font((Dialog *)((u8 *)&((PictureWindow *)self)->council_dialog),(iptr)&font2);
       if (((PictureWindow *)self)->council_speech_lines[((PictureWindow *)self)->speech_advisor_index * 0xff + 0x5c] != '\0') {
         OffsetRect(&rect,1,1);
         gfx_set_text_color_index(0x25);

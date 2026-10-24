@@ -303,10 +303,10 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
       text_clear();
       adjective = civ_get_adjective(civ);
       text_append((const char *)adjective);
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,civ,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,civ,0);
     }
   }
-  dialog_set_default_choice((DialogOptionList *)&dlg,human_civ[0]);
+  dialog_set_default_choice(&dlg,human_civ[0]);
   choice = dlg_show_modal(&dlg,0);
   eh_state = 0xffffffff;
   /* inlined unwind funclet 00554272 */ { dialog_dtor(&dlg); }

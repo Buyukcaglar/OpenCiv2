@@ -25,12 +25,14 @@ def strip_comments(t):
 
 
 def structs():
-    """{name: [member names]} for `typedef struct X { ... } X;` (members at any
-    depth of anonymous unions/structs: their names are the struct's)."""
-    out = {}
+    """{name: [member names]} for `typedef struct X { ... } X;` and
+    `typedef struct X : B { ... } X;` (members at any depth of anonymous
+    unions/structs: their names are the struct's; a derived struct lists its
+    bases' members first, offsetof(X, base_member) is X's offset)."""
+    out, bases = {}, {}
     for h in HEADERS:
         t = strip_comments(open(os.path.join(ROOT, h)).read())
-        for m in re.finditer(r'typedef\s+struct\s+(\w+)\s*\{', t):
+        for m in re.finditer(r'typedef\s+struct\s+(\w+)\s*(?::\s*(?:public\s+)?(\w+)\s*)?\{', t):
             i, depth = m.end(), 1
             while depth:
                 depth += {'{': 1, '}': -1}.get(t[i], 0)
@@ -49,7 +51,12 @@ def structs():
                 if dm and len(decl.split()) > 1 or (dm and '*' in decl):
                     names.append(dm.group(1))
             out[tail.group(1)] = names
-    return out
+            if m.group(2):
+                bases[tail.group(1)] = m.group(2)
+
+    def inherited(s):
+        return (inherited(bases[s]) if s in bases else []) + out[s]
+    return {s: inherited(s) for s in out}
 
 
 # Win32 structs the game reads through raw offsets (platform/win32_types.h).

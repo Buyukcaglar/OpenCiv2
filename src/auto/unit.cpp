@@ -2177,9 +2177,9 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
     text_set_string_arg(2,(const char *)&cities[city].name);
     dlg_load_game_section(&dlg,(const char *)&str_spymenu,1);
     dialog_add_sprite
-              ((DialogOptionList *)&dlg,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + (uint)units[unit].type * 0x3c)
+              (&dlg,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + (uint)units[unit].type * 0x3c)
                ,0,0);
-    dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+    dialog_set_image_zoom(&dlg,8);
     ret = text_open_section((const char *)&main_frame_wnd_block.game_txt_path,(const char *)&str_spyoptions);
     if (ret != 0) goto cleanup_return;
     text_read_line(1);
@@ -2191,7 +2191,7 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
         text_append_label(0xed);
         str_append_rparen((iptr)&map_views_block.text_buffer);
       }
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
     }
     text_read_line(1);
     if (is_spy != 0) {
@@ -2200,27 +2200,27 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
       text_append_label(0xed);
       str_append_rparen((iptr)&map_views_block.text_buffer);
     }
-    dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,1,0);
+    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,1,0);
     text_read_line(1);
     if (((cities[city].flags & 8) == 0) || (is_spy != 0)) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,2,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,2,0);
     }
     text_read_line(1);
-    dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,3,0);
+    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,3,0);
     text_read_line(1);
     if ((is_spy != 0) && (1 < cities[city].size)) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,4,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,4,0);
     }
     text_read_line(1);
     if ((((is_spy != 0) && (ret = civ_has_advance(civ,0x49), ret != 0)) &&
         (ret = civ_has_advance(civ,0x3a), ret != 0)) &&
        (ret = wonder_get_city(0x17), ret != -1)) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,5,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,5,0);
     }
     text_read_line(1);
     ret = city_has_improvement(city,1);
     if (ret == 0) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,6,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,6,0);
     }
     if (((2 < game.multiplayer) && ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0))
        && ((ret = city_has_improvement(city,1), ret != 0 &&
@@ -2228,7 +2228,7 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
       option_flags = 0;
       option_id = 7;
       unit2 = (iptr)label_string(label_string_ids[0x34a]);
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)unit2,option_id,option_flags);
+      dialog_add_option(&dlg,(const char *)unit2,option_id,option_flags);
     }
     text_close_file();
     choice = dlg_show_modal(&dlg,0);
@@ -2561,19 +2561,19 @@ incite_dialog:
             ret = text_open_section((const char *)&main_frame_wnd_block.game_txt_path,(const char *)&str_dissidentoptions);
             if (ret != 0) break;
             text_read_line(1);
-            dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+            dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
             text_read_line(1);
             if (has_treaty == 0) {
-              dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,1,0);
+              dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,1,0);
             }
             text_read_line(1);
             if (has_treaty != 0) {
-              dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,1,0);
+              dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,1,0);
             }
             text_read_line(1);
             if (((has_treaty != 0) && (incite_cost * 2 <= civs[civ].gold)) && (incite_cost < 0x3a99)
                ) {
-              dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,2,0);
+              dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,2,0);
             }
             text_close_file();
           }
@@ -2675,14 +2675,14 @@ sabotage_choice:
     if (choice == 1) {
       dlg_load_game_section(&dlg,(const char *)&str_sabotage,1);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type3 * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+                (&dlg,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type3 * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,8);
       for (improvement = 1; improvement < 0x27; improvement++) {
         if ((improvement != 1) && (ret = city_has_improvement(city,improvement), ret != 0)) {
           option_flags = 0;
           impr_option = improvement;
           unit2 = (iptr)label_string(improvements[improvement].name);
-          dialog_add_option((DialogOptionList *)&dlg,(const char *)unit2,impr_option,option_flags);
+          dialog_add_option(&dlg,(const char *)unit2,impr_option,option_flags);
         }
       }
       text_clear();
@@ -2691,7 +2691,7 @@ sabotage_choice:
       text_append_lparen();
       text_append_label(0x78);
       text_append_rparen();
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
       improvement2 = dlg_show_modal(&dlg,0);
       if (improvement2 < 0) goto cleanup_return;
       if (improvement2 == 0x11) {
@@ -5864,38 +5864,38 @@ void __cdecl unit_cmd_pillage(void)
           text_read_line(1);
           option_count = ((byte)improvements_mask & 0xc) == 0xc;
           if (option_count) {
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,0xc,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,0xc,0);
           }
           text_read_line(1);
           if (((byte)improvements_mask & 0xc) == 4) {
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,4,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,4,0);
             option_count++;
           }
           text_read_line(1);
           if (((byte)improvements_mask & 0xc) == 8) {
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,8,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,8,0);
             option_count++;
           }
           text_read_line(1);
           if (((byte)improvements_mask & 0x42) == 0x42) {
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,0x42,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,0x42,0);
             option_count++;
           }
           text_read_line(1);
           if (((byte)improvements_mask & 0x42) == 0x40) {
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,0x40,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,0x40,0);
             option_count++;
           }
           text_read_line(1);
           if ((improvements_mask & 0x20) == 0) {
             text_read_line(1);
             if ((improvements_mask & 0x10) != 0) {
-              dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,0x10,0);
+              dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,0x10,0);
               option_count++;
             }
           }
           else {
-            dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,0x20,0);
+            dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,0x20,0);
             option_count++;
           }
           if ((1 < option_count) &&
@@ -6071,7 +6071,7 @@ add_city_option:
             text_append_string_id(improvements[0x20].name);
             text_append_rparen();
           }
-          dialog_add_option((DialogOptionList *)&dialog2,(const char *)&map_views_block.text_buffer,city,0);
+          dialog_add_option(&dialog2,(const char *)&map_views_block.text_buffer,city,0);
           option_count2++;
         }
       }
@@ -6217,7 +6217,7 @@ void __cdecl unit_cmd_airlift(void)
                 (city != city2)) && (threat = city_has_improvement(city,0x20), threat != 0)) {
               option_count2++;
               dialog_add_option
-                        ((DialogOptionList *)&dialog2,(const char *)&cities[city].name,city,0);
+                        (&dialog2,(const char *)&cities[city].name,city,0);
             }
           }
           if (option_count2 == 0) {
@@ -6347,7 +6347,7 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
       }
       dialog_load_game_text(&dialog2,(const char *)&str_caravanmenu);
       dialog_add_sprite
-                ((DialogOptionList *)&dialog2,
+                (&dialog2,
                  (iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + (uint)units[unit].type * 0x3c),0,0);
       if (-1 < (char)units[unit].counter) {
         text_clear();
@@ -6369,24 +6369,24 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
         text_append_string_id(commodity_names[(char)units[unit].counter]);
         text_append_period();
         dialog_add_line
-                  ((DialogAddLineView *)&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+                  (&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
       }
       result = 0;
       option_id = 0;
       label = (iptr)label_string(label_string_ids[0xa1]);
-      dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,result);
+      dialog_add_option(&dialog2,(const char *)label,option_id,result);
       city2 = (int)units[unit].home_city != city;
       if ((bool)city2) {
         result = 0;
         option_id = 1;
         label = (iptr)label_string(label_string_ids[0xa2]);
-        dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,result);
+        dialog_add_option(&dialog2,(const char *)label,option_id,result);
       }
       if (cities[city].building < -0x26) {
         result = 0;
         option_id = 2;
         label = (iptr)label_string(label_string_ids[0xa3]);
-        dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,result);
+        dialog_add_option(&dialog2,(const char *)label,option_id,result);
         city2++;
       }
       choice = 0;
@@ -10149,12 +10149,12 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cance
   sprite_create_solid(&sprite,0x42,0x30,0);
   dlg_unit_sprite_zoom = 0xffffffff;
   dlg_reset(&dialog2,0x20001 - (uint)(allow_cancel == 0));
-  dialog_set_title((DialogWindowView *)&dialog2,title);
-  dialog_set_width((DialogWindowView *)&dialog2,0x154);
-  dialog_set_sprite_click_fn((DialogOptionList *)&dialog2,(iptr)unit_dlg_wake_unit_cb);
-  dialog_set_sprite_dblclick_fn((DialogOptionList *)&dialog2,(iptr)unit_dlg_dblclick_accept_cb);
-  dialog_set_sprite_draw_fn((DialogCore *)&dialog2,(iptr)unit_dlg_draw_sprite_cb);
-  dialog_set_image_zoom((DialogWindowView *)&dialog2,0xffffffff);
+  dialog_set_title(&dialog2,title);
+  dialog_set_width(&dialog2,0x154);
+  dialog_set_sprite_click_fn(&dialog2,(iptr)unit_dlg_wake_unit_cb);
+  dialog_set_sprite_dblclick_fn(&dialog2,(iptr)unit_dlg_dblclick_accept_cb);
+  dialog_set_sprite_draw_fn(&dialog2,(iptr)unit_dlg_draw_sprite_cb);
+  dialog_set_image_zoom(&dialog2,0xffffffff);
   count = 0;
   for (unit = unit_stack_first(unit); -1 < unit; unit = unit_next_in_stack(unit)) {
     count++;
@@ -10188,7 +10188,7 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cance
       }
       text_append_rparen();
       dialog_add_sprite
-                ((DialogOptionList *)&dialog2,(iptr)&sprite,unit,(const char *)&map_views_block.text_buffer);
+                (&dialog2,(iptr)&sprite,unit,(const char *)&map_views_block.text_buffer);
     }
   }
   choice = dlg_show_modal(&dialog2,0);

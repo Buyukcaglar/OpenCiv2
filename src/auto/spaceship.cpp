@@ -1757,28 +1757,28 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
     if ((over_limit != 0) && (part == 0)) {
       text_append((const char *)&str_empty_176);
     }
-    dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   }
   text_clear();
-  dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+  dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   text_clear();
   text_append_label(0x22);
   text_append_colon();
   text_append_int((int)civs[civ].spaceship_parts[3]);
   text_append((const char *)&str_0_000_7);
-  dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+  dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   text_clear();
   text_append_label(0x42);
   text_append_colon();
   text_append_int(unit_sound_editor_window_block.spaceship_support_pct);
   text_append_percent();
-  dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+  dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   text_clear();
   text_append_label(0xcd);
   text_append_colon();
   text_append_int(unit_sound_editor_window_block.spaceship_energy_pct);
   text_append_percent();
-  dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+  dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   text_clear();
   text_append_label(0xce);
   text_append_colon();
@@ -1787,7 +1787,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   text_append_int(unit_sound_editor_window_block.spaceship_mass % 10);
   text_append((const char *)&str_00_2);
   text_append_label(0xd1);
-  dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+  dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   text_clear();
   text_append_label(200);
   text_append_colon();
@@ -1799,7 +1799,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
     text_append_label(0xeb);
     text_append_rparen();
   }
-  dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+  dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   text_clear();
   text_append_label(0xcf);
   text_append_colon();
@@ -1808,7 +1808,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   text_append_int(unit_sound_editor_window_block.spaceship_flight_time % 10);
   text_append_space();
   text_append_label(0xd2);
-  dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+  dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   text_clear();
   text_append_label(0xd0);
   text_append_colon();
@@ -1816,13 +1816,13 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   text_append_int(unit_sound_editor_window_block.spaceship_success_pct);
   text_append_percent();
   text_append((const char *)&str_empty_180);
-  dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+  dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   result = civ_spaceship_launched(civ);
   if (result == 0) {
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) && (allow_launch != 0)) &&
        (unit_sound_editor_window_block.spaceship_success_pct != 0)) {
       str = (iptr)label_string(label_string_ids[0xd5]);
-      dialog_add_button((DialogButtonsView *)&dlg,(const char *)str);
+      dialog_add_button(&dlg,(const char *)str);
     }
   }
   else {
@@ -1839,7 +1839,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
       text_append_int((int)civs[civ].spaceship_arrival_year);
     }
     text_append((const char *)&str_empty_183);
-    dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
   }
   dlg_show_modal(&dlg,0);
   if (dlg.result_extra != 0) {
@@ -2130,7 +2130,7 @@ void __cdecl spaceship_select_view_dialog(iptr unused)
       flags = 0;
       civ = civ2;
       name2 = (iptr)(civ_name_plural(civ2));
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)name2,civ,flags);
+      dialog_add_option(&dlg,(const char *)name2,civ,flags);
       any_ship = true;
     }
   }

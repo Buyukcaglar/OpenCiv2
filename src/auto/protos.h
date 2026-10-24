@@ -485,7 +485,7 @@ void __cdecl text_append_gold(i32 gold); /* 0043c8a0 */
 i32 __cdecl gfx_draw_text(const char *text,i32 x,iptr y); /* 0043c8d0 */
 void __cdecl gfx_draw_text_centered(const char *text,i32 x,iptr y,i32 width); /* 0043c910 */
 i32 __cdecl gfx_draw_text_right(const char *text,i32 right_x,i32 y,i32 flags); /* 0043c950 */
-void __thiscall dialog_set_list_indent(DialogCore *self,uptr indent,iptr index); /* 0043c990 */
+void __thiscall dialog_set_list_indent(Dialog *self,uptr indent,iptr index); /* 0043c990 */
 void __thiscall dialog_load_game_text(Dialog *self,const char *section); /* 0043c9d0 */
 void __thiscall dialog_load_text_noflags(Dialog *self,const char *filename,const char *section); /* 0043ca10 */
 void __cdecl text_append_population(iptr civ,i32 population); /* 0043ca50 */
@@ -1738,22 +1738,22 @@ void __cdecl game_palette_reg_atexit(void); /* 004fa1f4 */
 void __cdecl game_palette_atexit_dtor(void); /* 004fa211 */
 i32 __cdecl events_parse_civ(const char *name2); /* 004fa250 */
 i32 __cdecl events_parse_unit_type(const char *name2); /* 004fa359 */
-void __thiscall events_init_string_pool(DialogCore *self,uint pool_size); /* 004fa47e */
+void __thiscall events_init_string_pool(ScenarioEvents *self,uint pool_size); /* 004fa47e */
 ScenarioEvents * __thiscall events_ctor(ScenarioEvents *self,i32 pool_size); /* 004fa4be */
-void __thiscall events_dtor(DialogCore *self); /* 004fa569 */
+void __thiscall events_dtor(ScenarioEvents *self); /* 004fa569 */
 void __thiscall events_reset(ScenarioEvents *self,i32 pool_size); /* 004fa5d9 */
 ScenarioEvent * __thiscall events_alloc(ScenarioEvents *self); /* 004fa617 */
-i32 __thiscall events_action_play_wave(DialogCore *self,ScenarioEvent *event); /* 004fa707 */
-i32 __thiscall events_action_dont_play_wonders(DialogCore *self,ScenarioEvent *event); /* 004fa82d */
-i32 __thiscall events_action_play_cd(DialogCore *self,ScenarioEvent *event); /* 004fa854 */
-i32 __thiscall events_action_change_money(DialogCore *self,ScenarioEvent *event); /* 004fa944 */
-i32 __thiscall events_action_text(Dialog *self,ScenarioEvent *event); /* 004faab0 */
-i32 __thiscall events_action_make_aggression(DialogCore *self,ScenarioEvent *event); /* 004faba6 */
-i32 __thiscall events_action_destroy_civ(DialogCore *self,ScenarioEvent *event); /* 004fad02 */
-i32 __thiscall events_action_give_tech(DialogCore *self,ScenarioEvent *event); /* 004fadfb */
-i32 __thiscall events_action_create_unit(DialogCore *self,ScenarioEvent *event); /* 004faed4 */
-int __thiscall events_action_move_unit(DialogCore *self,ScenarioEvent *event); /* 004fb29f */
-int __thiscall events_action_change_terrain(DialogCore *self,ScenarioEvent *event); /* 004fb5b2 */
+i32 __thiscall events_action_play_wave(ScenarioEvents *self,ScenarioEvent *event); /* 004fa707 */
+i32 __thiscall events_action_dont_play_wonders(ScenarioEvents *self,ScenarioEvent *event); /* 004fa82d */
+i32 __thiscall events_action_play_cd(ScenarioEvents *self,ScenarioEvent *event); /* 004fa854 */
+i32 __thiscall events_action_change_money(ScenarioEvents *self,ScenarioEvent *event); /* 004fa944 */
+i32 __thiscall events_action_text(ScenarioEvents *self,ScenarioEvent *event); /* 004faab0 */
+i32 __thiscall events_action_make_aggression(ScenarioEvents *self,ScenarioEvent *event); /* 004faba6 */
+i32 __thiscall events_action_destroy_civ(ScenarioEvents *self,ScenarioEvent *event); /* 004fad02 */
+i32 __thiscall events_action_give_tech(ScenarioEvents *self,ScenarioEvent *event); /* 004fadfb */
+i32 __thiscall events_action_create_unit(ScenarioEvents *self,ScenarioEvent *event); /* 004faed4 */
+int __thiscall events_action_move_unit(ScenarioEvents *self,ScenarioEvent *event); /* 004fb29f */
+int __thiscall events_action_change_terrain(ScenarioEvents *self,ScenarioEvent *event); /* 004fb5b2 */
 i32 __thiscall events_check_turn(ScenarioEvents *self,int turn); /* 004fba0c */
 i32 __thiscall events_check_turn_interval(ScenarioEvents *self,int turn); /* 004fba9c */
 i32 __thiscall events_check_random_turn(ScenarioEvents *self,i32 turn); /* 004fbb2f */
@@ -1763,7 +1763,7 @@ i32 __thiscall events_check_unit_killed(ScenarioEvents *self,int unit_type,int a
 i32 __thiscall events_check_negotiation(ScenarioEvents *self,iptr talker_civ,iptr listener_civ); /* 004fbe84 */
 i32 __thiscall events_check_no_schism(ScenarioEvents *self,iptr civ); /* 004fc20d */
 i32 __thiscall events_check_city_taken(ScenarioEvents *self,iptr city_name,iptr attacker_civ,iptr defender_civ); /* 004fc2bb */
-i32 __thiscall event_run_actions(Dialog *self,ScenarioEvent *event); /* 004fc3ae */
+i32 __thiscall event_run_actions(ScenarioEvents *self,ScenarioEvent *event); /* 004fc3ae */
 int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const char *section); /* 004fc516 */
 void __cdecl city_window_font_global_init(void); /* 00500e00 */
 void __cdecl city_window_font_static_init(void); /* 00500e1a */
@@ -2058,7 +2058,7 @@ void __cdecl events_editor_on_add_action(void); /* 0054eed0 */
 void __thiscall events_editor_draw(ViewWindow *self); /* 0054f16b */
 void __thiscall events_editor_run(DocumentWindow *self); /* 0054f3b9 */
 void __cdecl events_editor_open(void); /* 0054ffc8 */
-DialogCore * __thiscall events_delete(DialogCore *self,uint flags); /* 00551cd0 */
+ScenarioEvents * __thiscall events_delete(ScenarioEvents *self,uint flags); /* 00551cd0 */
 u32 __thiscall listbox_get_count(ListboxGetCountView *self); /* 00551d20 */
 i32 __thiscall listbox_get_cur_sel(ListBoxGetSelView *self); /* 00551d50 */
 void __thiscall listbox_set_cur_sel(ListBoxSetSelView *self,i32 index); /* 00551d80 */
@@ -2532,70 +2532,70 @@ void __cdecl dialog_load_button_labels(void); /* 0059d401 */
 void __cdecl dialog_set_colors(i32 text_color,i32 text_shadow,i32 frame_color,i32 highlight_color, i32 bg_color,i32 bevel_light,i32 bevel_dark,i32 title_color, i32 title_shadow); /* 0059d487 */
 void __cdecl dialog_set_list_colors(i32 bg_color,i32 text_color,i32 shadow_color,i32 sel_bg_color, i32 sel_text_color,i32 sel_shadow_color,i32 default_color); /* 0059d4df */
 void __cdecl dialog_set_frame_tile_surface(iptr surface); /* 0059d59d */
-void __thiscall dialog_reset_string_pool(DialogCore *self,uint size); /* 0059d5b5 */
+void __thiscall dialog_reset_string_pool(Dialog *self,uint size); /* 0059d5b5 */
 void __thiscall dialog_init_defaults(Dialog *self); /* 0059d5f5 */
 Dialog * __thiscall dialog_ctor(Dialog *self,i32 size); /* 0059db08 */
 void __thiscall dialog_close(Dialog *self); /* 0059db65 */
 i32 __thiscall dialog_dtor(Dialog *self); /* 0059df8a */
 void __thiscall dialog_init(Dialog *self,iptr surface_wnd,iptr background,RECT *rect,u32 flags); /* 0059dfb9 */
 i32 __thiscall dialog_set_item_text(Dialog *self,int line_id,const char *text); /* 0059e0eb */
-DialogLine * __thiscall dialog_add_line(DialogAddLineView *self,const char *text,int x,int y,int max_len,int color); /* 0059e18b */
-i32 __thiscall dialog_option_icon_width(DialogCore *self); /* 0059e356 */
-int __thiscall dialog_option_row_height(DialogCore *self); /* 0059e376 */
-u32 __thiscall dialog_list_row_height(DialogTextView *self); /* 0059e3fa */
-int __thiscall dialog_edit_row_height(DialogCore *self); /* 0059e448 */
-void __thiscall dialog_set_font(DialogTextView *self,iptr font); /* 0059e472 */
-void __thiscall dialog_set_title_font(DialogCore *self,iptr font); /* 0059e4a4 */
-void __thiscall dialog_set_list_font(DialogCore *self,iptr font); /* 0059e4c5 */
-void __thiscall dialog_set_columns(DialogButtonsView *self,u32 column_count); /* 0059e4e6 */
-void __thiscall dialog_set_list_rows(DialogTextView *self,u32 rows); /* 0059e507 */
-void __thiscall dialog_set_current_pane(DialogSetCurrentPaneView *self,u32 pane); /* 0059e585 */
-void __thiscall dialog_set_listbox(DialogTextView *self,int rows,u32 width,u32 list_flags); /* 0059e5c9 */
-int __thiscall dialog_line_height(DialogTextView *self); /* 0059e648 */
-int __thiscall dialog_button_width_for(DialogButtonWidthForView *self,const char *text); /* 0059e676 */
-void __thiscall dialog_set_title(DialogWindowView *self,const char *title); /* 0059e6a9 */
-void __thiscall dialog_set_width(DialogWindowView *self,u32 width); /* 0059e6ff */
-void __thiscall dialog_set_height(DialogCore *self,u32 height); /* 0059e762 */
-void __thiscall dialog_set_position(DialogCore *self,u32 x,u32 y); /* 0059e783 */
-DialogOption * __thiscall dialog_find_option(DialogOptionList *self,int option_id); /* 0059e7ad */
-DialogSprite * __thiscall dialog_find_sprite(DialogOptionList *self,int sprite_id); /* 0059e877 */
-void __thiscall dialog_set_option_disabled(DialogOptionList *self,iptr option_id,int disabled); /* 0059e8db */
-i32 __thiscall dialog_option_is_checked(DialogOptionList *self,i32 option_id); /* 0059e9f3 */
-void __thiscall dialog_set_option_checked(DialogOptionList *self,i32 option_id,int checked); /* 0059ea4d */
-void __thiscall dialog_set_default_choice(DialogOptionList *self,iptr choice_id); /* 0059ea99 */
-void __thiscall dialog_set_sprite_click_fn(DialogOptionList *self,iptr callback); /* 0059eb8c */
-void __thiscall dialog_set_sprite_dblclick_fn(DialogOptionList *self,iptr callback); /* 0059ebb0 */
-void __thiscall dialog_set_sprite_draw_fn(DialogCore *self,iptr callback); /* 0059ebd4 */
-void __thiscall dialog_set_option_draw_fn(DialogOptionList *self,iptr callback); /* 0059ebf8 */
-void __thiscall dialog_set_select_change_fn(DialogSelChangeSetView *self,iptr callback); /* 0059ec1c */
-void __thiscall dialog_set_image_zoom(DialogWindowView *self,u32 zoom); /* 0059ec64 */
-DialogSprite * __thiscall dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,const char *label); /* 0059ec88 */
-DialogOption * __thiscall dialog_add_option(DialogOptionList *self,const char *text,iptr option_id,uint data); /* 0059edf0 */
-DialogOption * __thiscall dialog_add_checkbox_option(DialogOptionList *self,const char *text,iptr option_id,int checked); /* 0059f026 */
-DialogEditField * __thiscall dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text,size_t max_len); /* 0059f06d */
-void __thiscall dialog_add_button(DialogButtonsView *self,const char *label); /* 0059f2a3 */
-void __thiscall dialog_set_text_color(DialogTextView *self,int highlighted,int use_alt,int shadow); /* 0059f31a */
-int __thiscall dialog_draw_text_shadowed(DialogTextView *self,iptr font,char *text,int x,int y,uint flags); /* 0059f3d7 */
-void __thiscall dialog_draw_text_line(DialogTextLineView *self,const char *text,int x_offset,i32 y); /* 0059f5ba */
-i32 __thiscall dialog_has_text_lines(DialogOptionList *self); /* 0059f5f7 */
-int __thiscall dialog_draw_wrapped_text(DialogOptionList *self,int draw); /* 0059f64a */
-i32 __thiscall dialog_option_group_index(DialogOptionList *self,DialogOption *option); /* 0059fb78 */
-DialogOption * __thiscall dialog_option_at(DialogOptionList *self,int target_index); /* 0059fc19 */
-int __thiscall dialog_column_of_option(DialogOptionList *self,DialogOption *option); /* 0059fcba */
-i32 __thiscall dialog_compute_layout(DialogOptionList *self); /* 0059fd2a */
-void __thiscall dialog_draw_option_cell(DialogOptionDrawView *self,const char *text,int x,int y,int selected,int disabled); /* 005a0fea */
-void __thiscall dialog_draw_option_text(DialogOptionDrawView *self,char *text,int x,i32 y,i32 selected, i32 disabled); /* 005a1148 */
-uint __thiscall dialog_draw_option(DialogOptionList *self,DialogOption *option,int blit); /* 005a120b */
-void __thiscall dialog_draw_option_list(DialogOptionList *self); /* 005a14d2 */
-int __thiscall dialog_column_of_index(DialogTextView *self,int index); /* 005a1766 */
-int __thiscall dialog_column_start_index(DialogTextView *self,int index); /* 005a17a4 */
-void __thiscall dialog_select_option(DialogOptionList *self,DialogOption *option,int redraw); /* 005a17e9 */
+DialogLine * __thiscall dialog_add_line(Dialog *self,const char *text,int x,int y,int max_len,int color); /* 0059e18b */
+i32 __thiscall dialog_option_icon_width(Dialog *self); /* 0059e356 */
+int __thiscall dialog_option_row_height(Dialog *self); /* 0059e376 */
+u32 __thiscall dialog_list_row_height(Dialog *self); /* 0059e3fa */
+int __thiscall dialog_edit_row_height(Dialog *self); /* 0059e448 */
+void __thiscall dialog_set_font(Dialog *self,iptr font); /* 0059e472 */
+void __thiscall dialog_set_title_font(Dialog *self,iptr font); /* 0059e4a4 */
+void __thiscall dialog_set_list_font(Dialog *self,iptr font); /* 0059e4c5 */
+void __thiscall dialog_set_columns(Dialog *self,u32 column_count); /* 0059e4e6 */
+void __thiscall dialog_set_list_rows(Dialog *self,u32 rows); /* 0059e507 */
+void __thiscall dialog_set_current_pane(Dialog *self,u32 pane); /* 0059e585 */
+void __thiscall dialog_set_listbox(Dialog *self,int rows,u32 width,u32 list_flags); /* 0059e5c9 */
+int __thiscall dialog_line_height(Dialog *self); /* 0059e648 */
+int __thiscall dialog_button_width_for(Dialog *self,const char *text); /* 0059e676 */
+void __thiscall dialog_set_title(Dialog *self,const char *title); /* 0059e6a9 */
+void __thiscall dialog_set_width(Dialog *self,u32 width); /* 0059e6ff */
+void __thiscall dialog_set_height(Dialog *self,u32 height); /* 0059e762 */
+void __thiscall dialog_set_position(Dialog *self,u32 x,u32 y); /* 0059e783 */
+DialogOption * __thiscall dialog_find_option(Dialog *self,int option_id); /* 0059e7ad */
+DialogSprite * __thiscall dialog_find_sprite(Dialog *self,int sprite_id); /* 0059e877 */
+void __thiscall dialog_set_option_disabled(Dialog *self,iptr option_id,int disabled); /* 0059e8db */
+i32 __thiscall dialog_option_is_checked(Dialog *self,i32 option_id); /* 0059e9f3 */
+void __thiscall dialog_set_option_checked(Dialog *self,i32 option_id,int checked); /* 0059ea4d */
+void __thiscall dialog_set_default_choice(Dialog *self,iptr choice_id); /* 0059ea99 */
+void __thiscall dialog_set_sprite_click_fn(Dialog *self,iptr callback); /* 0059eb8c */
+void __thiscall dialog_set_sprite_dblclick_fn(Dialog *self,iptr callback); /* 0059ebb0 */
+void __thiscall dialog_set_sprite_draw_fn(Dialog *self,iptr callback); /* 0059ebd4 */
+void __thiscall dialog_set_option_draw_fn(Dialog *self,iptr callback); /* 0059ebf8 */
+void __thiscall dialog_set_select_change_fn(Dialog *self,iptr callback); /* 0059ec1c */
+void __thiscall dialog_set_image_zoom(Dialog *self,u32 zoom); /* 0059ec64 */
+DialogSprite * __thiscall dialog_add_sprite(Dialog *self,iptr sprite,iptr sprite_id,const char *label); /* 0059ec88 */
+DialogOption * __thiscall dialog_add_option(Dialog *self,const char *text,iptr option_id,uint data); /* 0059edf0 */
+DialogOption * __thiscall dialog_add_checkbox_option(Dialog *self,const char *text,iptr option_id,int checked); /* 0059f026 */
+DialogEditField * __thiscall dialog_add_edit_field(Dialog *self,const char *label,iptr initial_text,size_t max_len); /* 0059f06d */
+void __thiscall dialog_add_button(Dialog *self,const char *label); /* 0059f2a3 */
+void __thiscall dialog_set_text_color(Dialog *self,int highlighted,int use_alt,int shadow); /* 0059f31a */
+int __thiscall dialog_draw_text_shadowed(Dialog *self,iptr font,char *text,int x,int y,uint flags); /* 0059f3d7 */
+void __thiscall dialog_draw_text_line(Dialog *self,const char *text,int x_offset,i32 y); /* 0059f5ba */
+i32 __thiscall dialog_has_text_lines(Dialog *self); /* 0059f5f7 */
+int __thiscall dialog_draw_wrapped_text(Dialog *self,int draw); /* 0059f64a */
+i32 __thiscall dialog_option_group_index(Dialog *self,DialogOption *option); /* 0059fb78 */
+DialogOption * __thiscall dialog_option_at(Dialog *self,int target_index); /* 0059fc19 */
+int __thiscall dialog_column_of_option(Dialog *self,DialogOption *option); /* 0059fcba */
+i32 __thiscall dialog_compute_layout(Dialog *self); /* 0059fd2a */
+void __thiscall dialog_draw_option_cell(Dialog *self,const char *text,int x,int y,int selected,int disabled); /* 005a0fea */
+void __thiscall dialog_draw_option_text(Dialog *self,char *text,int x,i32 y,i32 selected, i32 disabled); /* 005a1148 */
+uint __thiscall dialog_draw_option(Dialog *self,DialogOption *option,int blit); /* 005a120b */
+void __thiscall dialog_draw_option_list(Dialog *self); /* 005a14d2 */
+int __thiscall dialog_column_of_index(Dialog *self,int index); /* 005a1766 */
+int __thiscall dialog_column_start_index(Dialog *self,int index); /* 005a17a4 */
+void __thiscall dialog_select_option(Dialog *self,DialogOption *option,int redraw); /* 005a17e9 */
 int __cdecl int_clamp_b(int value,int lo,int hi); /* 005a1a44 */
-i32 __thiscall dialog_option_at_point(DialogOptionList *self,int x,int y); /* 005a1a7d */
-int __thiscall dialog_count_group_options(DialogOptionList *self,int group); /* 005a1c52 */
-void __thiscall dialog_pick_pane_at(DialogWindowView *self,int x,int y); /* 005a1caf */
+i32 __thiscall dialog_option_at_point(Dialog *self,int x,int y); /* 005a1a7d */
+int __thiscall dialog_count_group_options(Dialog *self,int group); /* 005a1c52 */
+void __thiscall dialog_pick_pane_at(Dialog *self,int x,int y); /* 005a1caf */
 void __cdecl dialog_list_on_vscroll(i32 scroll_pos); /* 005a1da3 */
-i32 __thiscall dialog_create_window(DialogWindowView *self); /* 005a1e28 */
+i32 __thiscall dialog_create_window(Dialog *self); /* 005a1e28 */
 void __cdecl dialog_on_redraw(void); /* 005a20f4 */
 void __thiscall dialog_create_controls(Dialog *self); /* 005a211c */
 void __cdecl dialog_radio_on_dblclick(i32 ctrl_id,int item); /* 005a3bae */
@@ -2613,7 +2613,7 @@ void __cdecl dialog_list_on_dblclick(i32 x,i32 y); /* 005a53b8 */
 void __cdecl dialog_list_on_hscroll(int scroll_pos); /* 005a5494 */
 void __cdecl dialog_list2_on_vscroll(i32 scroll_pos); /* 005a552c */
 void __cdecl dialog_list2_on_hscroll(int scroll_pos); /* 005a55b1 */
-void __thiscall dialog_fill_rect_bg(DialogTextView *self,RECT *rect,int area); /* 005a5649 */
+void __thiscall dialog_fill_rect_bg(Dialog *self,RECT *rect,int area); /* 005a5649 */
 void __thiscall dialog_render(Dialog *self); /* 005a577e */
 u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs); /* 005a5f34 */
 i32 __thiscall dialog_load_text_section(Dialog *self,const char *file_name,const char *section,int default_value,iptr edit_default,iptr init_arg1, iptr init_arg2,iptr init_arg3,uint flags); /* 005a632a */
@@ -2629,8 +2629,8 @@ void __thiscall wnd_get_screen_rect(WndBase *self,iptr rect); /* 005a9600 */
 void __thiscall checkbox_disable(CheckboxDisableView *self); /* 005a9640 */
 void __thiscall listbox_get_text(ListBoxTextView *self,i32 index,char *buffer); /* 005a9670 */
 void __thiscall listbox_get_sel_text(ListBoxSelTextView *self,char *buffer); /* 005a96b0 */
-uint __thiscall dialog_uses_alt_text_color(DialogAltColorView *self); /* 005a96f0 */
-void __thiscall dialog_draw_text_default_font(DialogTextView *self,const char *text,i32 x,i32 y, i32 flags); /* 005a9730 */
+uint __thiscall dialog_uses_alt_text_color(Dialog *self); /* 005a96f0 */
+void __thiscall dialog_draw_text_default_font(Dialog *self,const char *text,i32 x,i32 y, i32 flags); /* 005a9730 */
 void __cdecl gfx_set_draw_target(iptr surface); /* 005a9780 */
 void __cdecl gfx_draw_line_color(iptr surface,i32 x1,i32 y1,i32 x2, i32 y2,i32 color); /* 005a9798 */
 void __cdecl gfx_draw_hline(iptr surface,i32 x1,int x2,int y,i32 color); /* 005a97cc */

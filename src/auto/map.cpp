@@ -210,21 +210,21 @@ void __cdecl map_generate(int keep_map)
   unwind_state = 0;
   dlg_reset(&dialog2,8);
   dialog_set_position
-            ((DialogCore *)&dialog2,
+            (&dialog2,
              -(((int)(caption_font_block.screen_width - 0x280 + (caption_font_block.screen_width - 0x280 >> 0x1f & 7U)) >> 3) + 1),
              -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
   x = (iptr)label_string(label_string_ids[2]);
-  dialog_set_title((DialogWindowView *)&dialog2,(const char *)x);
-  dialog_set_width((DialogWindowView *)&dialog2,0x100);
+  dialog_set_title(&dialog2,(const char *)x);
+  dialog_set_width(&dialog2,0x100);
   dialog_add_line
-            ((DialogAddLineView *)&dialog2,(const char *)&str_empty_6,0xffffffff,0xffffffff,0xffffffff,0);
+            (&dialog2,(const char *)&str_empty_6,0xffffffff,0xffffffff,0xffffffff,0);
   text_clear();
   text_append((const char *)&str_empty_7);
   text_append_label(8);
   dialog_add_line
-            ((DialogAddLineView *)&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+            (&dialog2,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
   dialog_add_line
-            ((DialogAddLineView *)&dialog2,(const char *)&str_empty_8,0xffffffff,0xffffffff,0xffffffff,0);
+            (&dialog2,(const char *)&str_empty_8,0xffffffff,0xffffffff,0xffffffff,0);
   dlg_show_modal(&dialog2,0);
   wnd_set_cursor((WndBase *)(dialog2.surf_wnd + 0x48),0x200);
   wnd_set_cursor((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x200);

@@ -688,11 +688,11 @@ void __cdecl tribe_editor_rename_commodity(void)
   }
   dlg_set_parent_window(parent_wnd2);
   dialog_load_text(&dialog2,(const char *)&str_debug_11,(const char *)&str_renamecommo,1);
-  dialog_set_width((DialogWindowView *)&dialog2,0xdc);
-  dialog_set_listbox((DialogTextView *)&dialog2,0x10,0xdc,0);
+  dialog_set_width(&dialog2,0xdc);
+  dialog_set_listbox(&dialog2,0x10,0xdc,0);
   for (choice = 0; choice < 0x10; choice++) {
     dialog_add_option
-              ((DialogOptionList *)&dialog2,(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_commodity_names) + choice * 10),choice,0);
+              (&dialog2,(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_commodity_names) + choice * 10),choice,0);
   }
   dialog2.option_width = 0xdc;
   choice = dlg_show_modal(&dialog2,0);
@@ -738,11 +738,11 @@ void __cdecl tribe_editor_rename_govt(void)
   }
   dlg_set_parent_window(parent_wnd2);
   dialog_load_text(&dialog2,(const char *)&str_debug_11,(const char *)&str_renamegovt,1);
-  dialog_set_width((DialogWindowView *)&dialog2,0xdc);
-  dialog_set_listbox((DialogTextView *)&dialog2,7,0xdc,0);
+  dialog_set_width(&dialog2,0xdc);
+  dialog_set_listbox(&dialog2,7,0xdc,0);
   for (choice = 0; choice < 7; choice++) {
     dialog_add_option
-              ((DialogOptionList *)&dialog2,(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + choice * 0xf),choice,0);
+              (&dialog2,(const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + choice * 0xf),choice,0);
   }
   dialog2.option_width = 0xdc;
   choice = dlg_show_modal(&dialog2,0);
@@ -794,8 +794,8 @@ void __cdecl tribe_editor_rename_title(void)
   }
   dlg_set_parent_window(parent_wnd2);
   dialog_load_text(&dialog2,(const char *)&str_debug_11,(const char *)&str_renametitle,1);
-  dialog_set_width((DialogWindowView *)&dialog2,400);
-  dialog_set_listbox((DialogTextView *)&dialog2,0xe,400,0);
+  dialog_set_width(&dialog2,400);
+  dialog_set_listbox(&dialog2,0xe,400,0);
   for (choice = 0; (int)choice < 0xe; choice++) {
     if ((choice & 1) == 0) {
       title_slot = ((int)choice >> 1) * 3 + 0x15;
@@ -812,7 +812,7 @@ void __cdecl tribe_editor_rename_title(void)
     }
     _sprintf(option_text,str_s_s_s_3,((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + ((int)choice >> 1) * 0xf,gender_label,
              title_name);
-    dialog_add_option((DialogOptionList *)&dialog2,(const char *)option_text,choice,0);
+    dialog_add_option(&dialog2,(const char *)option_text,choice,0);
   }
   dialog2.option_width = 400;
   choice = dlg_show_modal(&dialog2,0);
@@ -1543,13 +1543,13 @@ i32 __cdecl editor_options_dialog(const char *file_name,const char *section,uint
     if (((byte)dlg.style_flags & 4) != 0) {
       for (i = 0; i < (int)dlg.option_count; i++) {
         dialog_set_option_checked
-                  ((DialogOptionList *)&dlg,i,1 << ((byte)i & 0x1f) & dlg_check_bits
+                  (&dlg,i,1 << ((byte)i & 0x1f) & dlg_check_bits
                   );
       }
     }
     for (i = 0; i < (int)dlg.option_count; i++) {
       dialog_set_option_disabled
-                ((DialogOptionList *)&dlg,i,
+                (&dlg,i,
                  (uint)((1 << ((byte)i & 0x1f) & disabled_mask) != 0));
     }
     choice = dlg_show_modal(&dlg,0);
@@ -1557,7 +1557,7 @@ i32 __cdecl editor_options_dialog(const char *file_name,const char *section,uint
     if (((byte)dlg.style_flags & 4) != 0) {
       dlg_check_bits = 0;
       for (i = 0; i < (int)dlg.option_count; i++) {
-        rc = dialog_option_is_checked((DialogOptionList *)&dlg,i);
+        rc = dialog_option_is_checked(&dlg,i);
         if (rc != 0) {
           dlg_check_bits = dlg_check_bits | 1 << ((byte)i & 0x1f);
         }

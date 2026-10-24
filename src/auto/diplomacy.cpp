@@ -504,7 +504,7 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
     offset_x = int_clamp((screen_rect2.right - 0x280) / 3,1,9999);
     offset_y = int_clamp((screen_rect2.bottom - 0x1e0) / 3,1,9999);
     dialog_set_default_offset(-offset_x,-offset_y);
-    dialog_set_position((DialogCore *)&dlg,-offset_x,-offset_y);
+    dialog_set_position(&dlg,-offset_x,-offset_y);
     diplo_leader_wnd_launch(civ2,civ);
   }
   diplo_set_attitude_arg(civ2,civ);
@@ -600,7 +600,7 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
           option_flags = 0;
           option_id = 2;
           str = (iptr)(label_string(label_string_ids[0x68]));
-          dialog_add_option((DialogOptionList *)&dlg,(const char *)str,option_id,option_flags);
+          dialog_add_option(&dlg,(const char *)str,option_id,option_flags);
         }
         ret = dlg_show_modal(&dlg,0);
         diplo_emissary_response = -ret;
@@ -1033,7 +1033,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
       str_clear((char *)label_buf);
       str_append_label((iptr)label_buf,0x6b);
       text_expand_vars((iptr)label_buf,(iptr)&map_views_block.text_buffer);
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,2,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,2,0);
     }
     ret = dlg_show_modal(&dlg,0);
     if (ret == 0) {
@@ -2169,7 +2169,7 @@ favor_menu_loop:
         arg_a = 0;
         civ3 = civ4;
         civ_name = (iptr)(civ_name_plural(civ4));
-        dialog_add_option((DialogOptionList *)&dlg,(const char *)civ_name,civ3,arg_a);
+        dialog_add_option(&dlg,(const char *)civ_name,civ3,arg_a);
       }
     }
     civ3 = dlg_show_modal(&dlg,0);
@@ -2563,7 +2563,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         text_append_label(0x72);
         text_append_space();
         text_append_gold(gold_amount);
-        dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,gold_amount,0);
+        dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,gold_amount,0);
       }
     }
     gold_amount = dlg_show_modal(&dlg,0);
@@ -2597,7 +2597,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       for (city2 = 0; city2 < game.num_cities; city2++) {
         if ((cities[city2].id != 0) && (cities[city2].owner == civ2)) {
           dialog_add_option
-                    ((DialogOptionList *)&dlg,(const char *)&cities[city2].name,city2,0);
+                    (&dlg,(const char *)&cities[city2].name,city2,0);
           city_count++;
         }
       }
@@ -2757,7 +2757,7 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
   err = text_open_section((const char *)&main_frame_wnd_block.game_txt_path,(const char *)&str_diplomacymenu);
   if (err == 0) {
     text_read_line(1);
-    dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,0,0);
+    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
     allied = false;
     at_peace = false;
     if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
@@ -2770,32 +2770,32 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
     }
     text_read_line(1);
     if (at_peace) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,1,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,1,0);
     }
     text_read_line(1);
     if ((!at_peace) && (!allied)) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,2,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,2,0);
     }
     text_read_line(1);
     if (allied) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,3,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,3,0);
     }
     text_read_line(1);
     if ((!allied) && (civs[civ2].government < 5)) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,4,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,4,0);
     }
     text_read_line(1);
     if ((at_peace) && (((byte)(civs[civ].treaties[civ2] >> 8) & 0x40) == 0)) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,5,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,5,0);
     }
     text_read_line(1);
     if (allied) {
-      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,6,0);
+      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,6,0);
     }
     text_read_line(1);
-    dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,7,0);
+    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,7,0);
     text_read_line(1);
-    dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,8,0);
+    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,8,0);
     choice = dlg_show_modal(&dlg,0);
   }
   text_close_file();

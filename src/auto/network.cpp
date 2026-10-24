@@ -170,7 +170,7 @@ void __thiscall net_gamelist_restore_selection(NetGamelistView *self)
   int selected_index;
   iptr scroll_pos;
   
-  option_count = dialog_count_group_options((DialogOptionList *)self->list_dialog,0);
+  option_count = dialog_count_group_options(self->list_dialog,0);
   scrollbar_set_range(*(Control **)((iptr)self->list_dialog + 0x284),0,option_count - 1);
   option = net_gamelist_find_option(self,(iptr)&self->selected_game_name,(iptr)&self->selected_host_name);
   self->list_dialog->selected_option = option;
@@ -183,28 +183,28 @@ void __thiscall net_gamelist_restore_selection(NetGamelistView *self)
   }
   if (*(int *)((iptr)self->list_dialog + 0x1b8) != 0) {
     top_index = dialog_option_group_index
-                      ((DialogOptionList *)self->list_dialog,self->list_dialog->list_top_option[0]);
+                      (self->list_dialog,self->list_dialog->list_top_option[0]);
     option_count = (int)self->list_dialog->list_rows[0];
     selected_index = dialog_option_group_index
-                      ((DialogOptionList *)self->list_dialog,self->list_dialog->selected_option);
+                      (self->list_dialog,self->list_dialog->selected_option);
     if (option_count + top_index <= selected_index) {
       option_count = dialog_option_group_index
-                        ((DialogOptionList *)self->list_dialog,self->list_dialog->selected_option);
+                        (self->list_dialog,self->list_dialog->selected_option);
       option = (dialog_option_at
-                        ((DialogOptionList *)self->list_dialog,
+                        (self->list_dialog,
                          (option_count - (int)self->list_dialog->list_rows[0]) + 1));
       self->list_dialog->list_top_option[0] = option;
     }
     option_count = dialog_option_group_index
-                      ((DialogOptionList *)self->list_dialog,self->list_dialog->list_top_option[0]);
+                      (self->list_dialog,self->list_dialog->list_top_option[0]);
     top_index = dialog_option_group_index
-                      ((DialogOptionList *)self->list_dialog,self->list_dialog->selected_option);
+                      (self->list_dialog,self->list_dialog->selected_option);
     if (top_index < option_count) {
       self->list_dialog->list_top_option[0] = self->list_dialog->selected_option;
     }
   }
   scroll_pos = dialog_option_group_index
-                    ((DialogOptionList *)self->list_dialog,self->list_dialog->list_top_option[0]);
+                    (self->list_dialog,self->list_dialog->list_top_option[0]);
   scrollbar_set_pos(*(ClickControl **)((iptr)self->list_dialog + 0x284),scroll_pos);
   return;
 }
@@ -264,7 +264,7 @@ void __thiscall net_gamelist_get_entry_names(NetGamelistView *self,iptr option,i
   }
   if (game2 == 0) {
     game2 = net_session_block.net_found_games;
-    for (remaining = dialog_option_group_index((DialogOptionList *)self->list_dialog,(DialogOption *)option);
+    for (remaining = dialog_option_group_index(self->list_dialog,(DialogOption *)option);
         (game2->next != 0 && (remaining != 0)); remaining--) {
       game2 = game2->next;
     }
@@ -282,49 +282,49 @@ void __thiscall net_gamelist_add_info_lines(NetGamelistView *self)
   DialogLine *line;
   int spacing;
   
-  dialog_compute_layout((DialogOptionList *)self->list_dialog);
+  dialog_compute_layout(self->list_dialog);
   line_y = (int)self->list_dialog->title_height + (int)self->list_dialog->field_b8 + 2;
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_14,0xe6,line_y,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_14,0xe6,line_y,0x80,0));
   self->info_lines[0] = (u32)line->number;
   spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_15,0xe6,line_y,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_15,0xe6,line_y,0x80,0));
   self->info_lines[1] = (u32)line->number;
   spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_16,0xe6,line_y,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_16,0xe6,line_y,0x80,0));
   self->info_lines[2] = (u32)line->number;
   spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_17,0xe6,line_y,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_17,0xe6,line_y,0x80,0));
   self->info_lines[3] = (u32)line->number;
   spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_18,0xe6,line_y,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_18,0xe6,line_y,0x80,0));
   self->info_lines[4] = (u32)line->number;
   spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_19,0xe6,line_y,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_19,0xe6,line_y,0x80,0));
   self->info_lines[5] = (u32)line->number;
   spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_20,0xe6,line_y,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_20,0xe6,line_y,0x80,0));
   self->info_lines[6] = (u32)line->number;
   spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_21,0xe6,line_y,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_21,0xe6,line_y,0x80,0));
   self->info_lines[7] = (u32)line->number;
   spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line = (DialogLine *)((u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_22,0xe6,line_y + spacing,0x80,0));
+                            (self->list_dialog,(const char *)&str_empty_22,0xe6,line_y + spacing,0x80,0));
   self->info_lines[8] = (u32)line->number;
   font_line_spacing((GameFont *)self->list_dialog->body_font);
   return;
@@ -481,7 +481,7 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
     }
   }
   scroll_pos = dialog_option_group_index
-                    ((DialogOptionList *)net_session_block.gamelist_view->list_dialog,net_session_block.gamelist_view->list_dialog->list_top_option[0]);
+                    (net_session_block.gamelist_view->list_dialog,net_session_block.gamelist_view->list_dialog->list_top_option[0]);
   scrollbar_set_pos(*(ClickControl **)((int)net_session_block.gamelist_view->list_dialog + 0x284),scroll_pos);
   dialog_render(net_session_block.gamelist_view->list_dialog);
   return 1;
@@ -547,7 +547,7 @@ DialogOption * __thiscall net_gamelist_add_entry(NetGamelistView *self,const cha
   entry->id = id;
   entry->group = 0;
   entry_width = font_text_width((GameFont *)self->list_dialog->body_font,(const char *)entry->text);
-  max_width = dialog_option_icon_width((DialogCore *)self->list_dialog);
+  max_width = dialog_option_icon_width(self->list_dialog);
   entry_width = entry_width + max_width + (int)self->list_dialog->option_extra_width + 5;
   max_width = (int)self->list_dialog->option_width;
   if (max_width <= entry_width) {
@@ -912,7 +912,7 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
         result = index;
         index++;
         option = (DialogOption *)((byte *)dialog_add_option
-                                     ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,result,0));
+                                     (&dlg,(const char *)&map_views_block.text_buffer,result,0));
         option_civs[option->id] = civ;
       }
     }
@@ -922,14 +922,14 @@ choose_loop:
       available_count = 0;
       for (index = 0; index < option_count2; index++) {
         option = (DialogOption *)((byte *)dialog_find_option
-                                     ((DialogOptionList *)&dlg,index));
+                                     (&dlg,index));
         if (option != (DialogOption *)0x0) {
           (*((char *)&civ + 0)) = (byte)option_civs[option->id];
           if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) &&
              ((1 << ((byte)civ & 0x1f) & (int)civ_saved_cursor_x_block.net_claimed_civs_mask) == 0)) {
             available_count++;
             dialog_set_option_disabled
-                      ((DialogOptionList *)&dlg,option->id,0);
+                      (&dlg,option->id,0);
             if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
               radiogrp_enable_item
                         ((RadioGroupEnableView *)dlg.radio_group,option->id);
@@ -937,7 +937,7 @@ choose_loop:
           }
           else {
             dialog_set_option_disabled
-                      ((DialogOptionList *)&dlg,option->id,1);
+                      (&dlg,option->id,1);
             if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
               radiogrp_disable_item
                         ((RadioGroupDisableView *)dlg.radio_group,option->id);
@@ -955,9 +955,9 @@ choose_loop:
       }
       for (index = 0; index < option_count2; index++) {
         option = (DialogOption *)((byte *)dialog_find_option
-                                     ((DialogOptionList *)&dlg,selected2));
+                                     (&dlg,selected2));
         if ((option != (DialogOption *)0x0) && ((option->flags_byte & 1) == 0)) {
-          dialog_set_default_choice((DialogOptionList *)&dlg,option->id);
+          dialog_set_default_choice(&dlg,option->id);
           if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
             radiogrp_set_selected
                       ((RadioGroupSetSelView *)dlg.radio_group,option->id);
@@ -1031,9 +1031,9 @@ choose_loop:
       dlg_load_game_section(&dlg,(const char *)&str_gender_4,1);
       dialog_prepend_title_label((iptr)&dlg,title_offset + 0x25e);
       dialog_set_default_choice
-                ((DialogOptionList *)&dlg,(uint)leaders[civs[game.player_civ].tribe].female);
+                (&dlg,(uint)leaders[civs[game.player_civ].tribe].female);
       dialog_set_position
-                ((DialogCore *)&dlg,0xfffffc19,
+                (&dlg,0xfffffc19,
                  -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
       dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
       result = dlg_show_modal(&dlg,0);
@@ -9894,22 +9894,22 @@ void __cdecl net_popup_queue_show_next(void)
     case 0x12:
       dialog_load_game_text(&dlg,(const char *)&str_startwonder_2);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,entry[5]);
       dlg_show_modal(&dlg,0);
       break;
     case 0x13:
       dialog_load_game_text(&dlg,(const char *)&str_switchwonder_2);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,entry[5]);
       dlg_show_modal(&dlg,0);
       break;
     case 0x14:
       dialog_load_game_text(&dlg,(const char *)&str_abandonwonder_2);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,entry[5]);
       dlg_show_modal(&dlg,0);
       break;
     case 0x15:
@@ -9929,15 +9929,15 @@ void __cdecl net_popup_queue_show_next(void)
     case 0x19:
       dialog_load_game_text(&dlg,(const char *)&str_capturewonder);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x1a:
       dialog_load_game_text(&dlg,(const char *)&str_lostwonder);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x1b:
@@ -10130,9 +10130,9 @@ void __cdecl net_popup_queue_show_next(void)
     case 0x40:
       dlg_load_game_section(&dlg,(const char *)&str_newturntimerclient,0x2000000);
       text = (iptr)(label_string(label_string_ids[0x354]));
-      dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
+      dialog_add_button(&dlg,(const char *)text);
       text = (iptr)(label_string(label_string_ids[0x355]));
-      dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
+      dialog_add_button(&dlg,(const char *)text);
       dlg_show_modal(&dlg,0x28);
       net_send_message(0x56,0,dlg.result_extra,0,0,0,0,0,0,0);
       break;
@@ -10145,9 +10145,9 @@ void __cdecl net_popup_queue_show_next(void)
     case 0x43:
       dlg_load_game_section(&dlg,(const char *)&str_pmchangeclient,0x2000000);
       text = (iptr)(label_string(label_string_ids[0x354]));
-      dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
+      dialog_add_button(&dlg,(const char *)text);
       text = (iptr)(label_string(label_string_ids[0x355]));
-      dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
+      dialog_add_button(&dlg,(const char *)text);
       dlg_show_modal(&dlg,0);
       net_send_message(0x57,0,dlg.result_extra,0,0,0,0,0,0,0);
       break;
@@ -10169,8 +10169,8 @@ void __cdecl net_popup_queue_show_next(void)
       else {
         icon_sprite = ((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + entry[4] * 0x3c;
       }
-      dialog_add_sprite((DialogOptionList *)&dlg,(iptr)icon_sprite,0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+      dialog_add_sprite(&dlg,(iptr)icon_sprite,0,0);
+      dialog_set_image_zoom(&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x48:
@@ -10182,34 +10182,34 @@ void __cdecl net_popup_queue_show_next(void)
     case 0x4a:
       dialog_load_game_text(&dlg,(const char *)&str_almostwonder_2);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x4b:
       dialog_load_game_text(&dlg,(const char *)&str_stillwonder1);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x4c:
       dialog_load_game_text(&dlg,(const char *)&str_stillwonder2);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x4d:
       dialog_load_game_text(&dlg,(const char *)&str_endwonder_4);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,
+                (&dlg,
                  (iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                        (char)advances[entry[4]].category * 0xf0 +
                        (char)advances[entry[4]].epoch * 0x3c),0,0);
       dialog_add_sprite
-                ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[5] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+                (&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[5] * 0x3c),0,0);
+      dialog_set_image_zoom(&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x4e:
@@ -10219,7 +10219,7 @@ void __cdecl net_popup_queue_show_next(void)
       dialog_init_default(&dlg);
       for (i = 0; i < entry[2]; i++) {
         dialog_add_line
-                  ((DialogAddLineView *)&dlg,(const char *)(((i8 *)&minimap_window_block.text_string_args) + i * 0x104),0xffffffff,
+                  (&dlg,(const char *)(((i8 *)&minimap_window_block.text_string_args) + i * 0x104),0xffffffff,
                    0xffffffff,0xffffffff,0);
       }
       dlg_show_modal(&dlg,0);
@@ -10322,9 +10322,9 @@ void __cdecl net_popup_queue_show_next(void)
         parley_reveal_units_prompt_open = 1;
         dlg_load_game_section(&dlg,(const char *)&str_revealunitorigins,0x2000000);
         text = (iptr)(label_string(label_string_ids[0x375]));
-        dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
+        dialog_add_button(&dlg,(const char *)text);
         text = (iptr)(label_string(label_string_ids[0x376]));
-        dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
+        dialog_add_button(&dlg,(const char *)text);
         dlg_show_modal(&dlg,0x14);
         if (dlg.result_extra == 1) {
           parley_wnd_block.local_units_revealed = 1;
@@ -10360,9 +10360,9 @@ void __cdecl net_popup_queue_show_next(void)
         parley_reveal_city_prompt_open = 1;
         dlg_load_game_section(&dlg,(const char *)&str_revealcityinfo,0x2000000);
         text = (iptr)(label_string(label_string_ids[0x377]));
-        dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
+        dialog_add_button(&dlg,(const char *)text);
         text = (iptr)(label_string(label_string_ids[0x376]));
-        dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
+        dialog_add_button(&dlg,(const char *)text);
         dlg_show_modal(&dlg,0x14);
         if (dlg.result_extra == 1) {
           parley_wnd_block.local_cities_revealed = 1;
@@ -14331,13 +14331,13 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
       crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&lobby_ip_sep_str));
       crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address));
     }
-    dialog_set_title((DialogWindowView *)self->dialog,(const char *)&map_views_block.text_buffer);
+    dialog_set_title(self->dialog,(const char *)&map_views_block.text_buffer);
     text_clear();
     text_append_label(0x120);
-    dialog_add_button((DialogButtonsView *)self->dialog,(const char *)&map_views_block.text_buffer);
+    dialog_add_button(self->dialog,(const char *)&map_views_block.text_buffer);
     lobby_add_waiting_entry(self);
-    dialog_set_listbox((DialogTextView *)self->dialog,7,0x1b7,0);
-    dialog_set_default_choice((DialogOptionList *)self->dialog,self->next_id - 1);
+    dialog_set_listbox(self->dialog,7,0x1b7,0);
+    dialog_set_default_choice(self->dialog,self->next_id - 1);
     dialog_render(self->dialog);
     wnd_set_modal_idle_callback((ModalMenuWindow *)((int)self->dialog->surf_wnd + 0x48),(iptr)lobby_dialog_idle);
     if (net_session_block.net_lobby_launch_mode == 2) {
@@ -14633,7 +14633,7 @@ uint * __thiscall lobby_add_player_entry(LobbyList *self,const char *name2,uint 
   entry[1] = entry_id;
   entry[3] = 0;
   width = font_text_width((GameFont *)self->dialog->body_font,(const char *)entry[2]);
-  max_width = dialog_option_icon_width((DialogCore *)self->dialog);
+  max_width = dialog_option_icon_width(self->dialog);
   width = width + max_width + (int)self->dialog->option_extra_width + 5;
   max_width = (int)self->dialog->option_width;
   if (max_width <= width) {
@@ -14690,7 +14690,7 @@ void __cdecl lobby_refresh_player_list(void)
     net_session_block.net_lobby_list->dialog->option_list = (DialogOption *)net_session_block.net_lobby_list->entries;
     net_session_block.net_lobby_list->dialog->list_top_option[0] = net_session_block.net_lobby_list->dialog->option_list;
     dialog_set_default_choice
-              ((DialogOptionList *)net_session_block.net_lobby_list->dialog,*(iptr *)(entry + 4));
+              (net_session_block.net_lobby_list->dialog,*(iptr *)(entry + 4));
     dialog_render(net_session_block.net_lobby_list->dialog);
   }
   return;
@@ -14709,7 +14709,7 @@ void __thiscall lobby_add_waiting_entry(LobbyList *self)
     (*(i32 * *)&net_session_block.net_lobby_list)[1]++;
     lobby_add_player_entry(self,(const char *)&map_views_block.text_buffer,entry_id);
     dialog_set_default_choice
-              ((DialogOptionList *)*(*(i32 * *)&net_session_block.net_lobby_list),*(iptr *)((*(i32 * *)&net_session_block.net_lobby_list)[10] + 4));
+              ((Dialog *)*(*(i32 * *)&net_session_block.net_lobby_list),*(iptr *)((*(i32 * *)&net_session_block.net_lobby_list)[10] + 4));
   }
   return;
 }
@@ -16736,8 +16736,8 @@ turn_loop:
               text_set_string_arg(1,(const char *)str);
               if (new_casualties < 1) {
                 dialog_load_text_noflags(&dialog2,(const char *)&str_game_7,(const char *)&str_ourturntomove_4);
-                dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&popup_info_icon_sprite,0,0);
-                dialog_set_image_zoom((DialogWindowView *)&dialog2,0);
+                dialog_add_sprite(&dialog2,(iptr)&popup_info_icon_sprite,0,0);
+                dialog_set_image_zoom(&dialog2,0);
                 input_flush_events();
                 snd_play_effect(0x30,0,0,0);
                 dlg_show_modal(&dialog2,0);
@@ -16752,8 +16752,8 @@ turn_loop:
                 else {
                   dialog_load_text_noflags(&dialog2,(const char *)&str_game_7,(const char *)&str_casualties_5);
                 }
-                dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&popup_info_icon_sprite,0,0);
-                dialog_set_image_zoom((DialogWindowView *)&dialog2,0);
+                dialog_add_sprite(&dialog2,(iptr)&popup_info_icon_sprite,0,0);
+                dialog_set_image_zoom(&dialog2,0);
                 input_flush_events();
                 snd_play_effect(0x30,0,0,0);
                 dlg_show_modal(&dialog2,0);

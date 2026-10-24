@@ -1211,7 +1211,7 @@ void __cdecl text_list_append_wrapped(iptr dialog,i32 string_id,iptr item_count,
     else {
       *(i32 *)line_count = 0;
       dialog_add_line
-                ((DialogAddLineView *)dialog,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+                ((Dialog *)dialog,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
       text_clear();
     }
   }
