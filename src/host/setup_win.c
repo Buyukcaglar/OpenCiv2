@@ -23,10 +23,12 @@
 #define CLASS_NAME L"Civ2PortSetup"
 #define TITLE L"Civilization II"
 
-enum { VIEW_CHOOSE, VIEW_WORK, VIEW_FAILED, VIEW_MESSAGE };
-enum { ID_ARCHIVE = 100, ID_FOLDER, ID_QUIT, ID_CANCEL, ID_COPY, ID_AGAIN, ID_REPORT, ID_MSG = 200 };
+enum { VIEW_CHOOSE, VIEW_WORK, VIEW_FAILED, VIEW_MESSAGE, VIEW_ABOUT };
+enum { ID_ARCHIVE = 100, ID_FOLDER, ID_QUIT, ID_CANCEL, ID_COPY, ID_AGAIN, ID_REPORT, ID_MSG = 200,
+       ID_LICENSE = 300, ID_ABOUT = 310 };
 #define TIMER_POLL 1
 #define MAX_BUTTONS 8
+#define MAX_ABOUT 16
 
 /* ---- text ---- */
 
@@ -135,6 +137,9 @@ typedef struct Win {
     int ids[MAX_BUTTONS];
     HWND buttons[MAX_BUTTONS];
     HWND bquit, barchive, bfolder, bcancel, bcopy, bagain;
+    /* VIEW_ABOUT: its lines (about_lines), the licence's field */
+    HWND about[MAX_ABOUT], license;
+    HFONT link;
     int result;                 /* the set-up: 1 the game is ready, 0 quit */
     int closed;
 } Win;
@@ -151,6 +156,8 @@ static void fonts(Win *w)
         DeleteObject(w->title);
     if (w->mono)
         DeleteObject(w->mono);
+    if (w->link)
+        DeleteObject(w->link);
     memset(&m, 0, sizeof m);
     m.cbSize = sizeof m;
     if (!(spi_for_dpi && spi_for_dpi(SPI_GETNONCLIENTMETRICS, sizeof m, &m, 0, (UINT)w->dpi))) {
@@ -167,6 +174,9 @@ static void fonts(Win *w)
     lstrcpyW(lf.lfFaceName, L"Consolas");
     lf.lfPitchAndFamily = FIXED_PITCH | FF_MODERN;
     w->mono = CreateFontIndirectW(&lf);
+    lf = m.lfMessageFont;
+    lf.lfUnderline = TRUE;
+    w->link = CreateFontIndirectW(&lf);
 }
 
 static void colors(Win *w)
@@ -224,6 +234,63 @@ static const wchar_t *const choose_text =
     L"The files the game needs are checked and copied into the GameData folder next to this program; "
     L"from then on it starts by itself, wherever the program and GameData are copied together.";
 
+/* The About box (as Civ1RE's): who made it, where it lives, its licence. */
+enum { A_TITLE, A_DIM, A_TEXT, A_LINK, A_GAP };
+static const struct {
+    int kind;
+    const wchar_t *text;
+} about_lines[] = {
+    {A_TITLE, L"" CIV2RE_NAME " v" CIV2RE_VERSION},
+    {A_DIM, L"Civilization II Multiplayer Gold Edition for 64-bit Windows"},
+    {A_GAP, NULL},
+    {A_TEXT, L"Windows port by Onur BUYUKCAGLAR"},
+    {A_TEXT, L"with Anthropic Claude AI assistance"},
+    {A_LINK, L"" CIV2RE_URL},
+    {A_GAP, NULL},
+    {A_TEXT, L"Based on Richard Penman's reconstruction of the game's source"},
+    {A_LINK, L"" CIV2RE_UPSTREAM_URL},
+    {A_GAP, NULL},
+    {A_TEXT, L"Icon: \"Icon Civilization II\" by alexielios"},
+    {A_LINK, L"" CIV2RE_ICON_URL},
+};
+#define N_ABOUT ((int)(sizeof about_lines / sizeof about_lines[0]))
+
+static const wchar_t about_license[] =
+    L"MIT License\r\n\r\n"
+    L"Copyright (c) 2026 Richard Penman\r\n"
+    L"Copyright (c) 2026 Onur BUYUKCAGLAR\r\n\r\n"
+    L"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and "
+    L"associated documentation files (the \"Software\"), to deal in the Software without restriction, including "
+    L"without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell "
+    L"copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the "
+    L"following conditions:\r\n\r\n"
+    L"The above copyright notice and this permission notice shall be included in all copies or substantial "
+    L"portions of the Software.\r\n\r\n"
+    L"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT "
+    L"LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO "
+    L"EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN "
+    L"AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE "
+    L"USE OR OTHER DEALINGS IN THE SOFTWARE.\r\n\r\n"
+    L"The licence covers this program's own code. Civilization II, its program and its data belong to their "
+    L"owners; they are not part of this software, which needs a copy of the original game to run.\r\n\r\n"
+    L"The program's icon, \"Icon Civilization II\" by alexielios (DeviantArt), is not covered by this licence.";
+
+static int text_width(Win *w, HFONT f, const wchar_t *s)
+{
+    HDC dc = GetDC(w->hwnd);
+    SIZE z = {0, 0};
+    HFONT old = SelectObject(dc, f);
+    GetTextExtentPoint32W(dc, s, lstrlenW(s), &z);
+    SelectObject(dc, old);
+    ReleaseDC(w->hwnd, dc);
+    return z.cx;
+}
+
+static HFONT about_font(Win *w, int i)
+{
+    return about_lines[i].kind == A_TITLE ? w->title : about_lines[i].kind == A_LINK ? w->link : w->font;
+}
+
 /* Where things go: the window's client size for its view, and the controls placed. */
 static void layout(Win *w, int place, int *cw, int *ch)
 {
@@ -231,7 +298,32 @@ static void layout(Win *w, int place, int *cw, int *ch)
     int y = m, bh = px(w, 32), gap = px(w, 8), inner = width - 2 * m, x, i;
     HWND row[MAX_BUTTONS];
     int nrow = 0;
-    if (w->view == VIEW_MESSAGE) {
+    if (w->view == VIEW_ABOUT) {
+        /* the icon at the left, the lines beside it; the licence below */
+        int col = m + px(w, 48) + px(w, 16), cw = width - m - col, lh = px(w, 140);
+        for (i = 0; i < N_ABOUT; i++) {
+            HFONT f = about_font(w, i);
+            int h, tw;
+            if (about_lines[i].kind == A_GAP) {
+                y += px(w, 10);
+                continue;
+            }
+            h = text_height(w, f, about_lines[i].text, cw);
+            tw = text_width(w, f, about_lines[i].text);
+            if (place)      /* (a link only as wide as its text: the click is on it) */
+                SetWindowPos(w->about[i], NULL, col, y, about_lines[i].kind == A_LINK && tw < cw ? tw : cw, h,
+                             SWP_NOZORDER);
+            y += h + (about_lines[i].kind == A_TITLE ? px(w, 2) : 0);
+        }
+        y += px(w, 16);
+        if (place)
+            SetWindowPos(w->about[N_ABOUT], NULL, m, y, inner, text_height(w, w->font, L"X", inner), SWP_NOZORDER);
+        y += text_height(w, w->font, L"X", inner) + px(w, 6);
+        if (place)
+            SetWindowPos(w->license, NULL, m, y, inner, lh, SWP_NOZORDER);
+        y += lh + px(w, 20);
+        row[nrow++] = w->buttons[0];
+    } else if (w->view == VIEW_MESSAGE) {
         int icon = w->icon >= 0 ? px(w, 32) + px(w, 16) : 0;
         int th = text_height(w, w->font, w->msg_text, inner - icon);
         if (th > px(w, 500)) {
@@ -362,6 +454,18 @@ static void fill_rect(HDC dc, int x, int y, int cx, int cy, COLORREF c)
     DeleteObject(b);
 }
 
+/* A text field's border (the report, the licence). */
+static void frame_field(Win *w, HDC dc, HWND field)
+{
+    RECT e;
+    HBRUSH b = CreateSolidBrush(w->c.border);
+    GetWindowRect(field, &e);
+    MapWindowPoints(NULL, w->hwnd, (POINT *)&e, 2);
+    InflateRect(&e, 1, 1);
+    FrameRect(dc, &e, b);
+    DeleteObject(b);
+}
+
 static void paint(Win *w)
 {
     PAINTSTRUCT ps;
@@ -375,7 +479,14 @@ static void paint(Win *w)
     r.right = client.right - m;
     r.top = m;
     r.bottom = client.bottom;
-    if (w->view == VIEW_MESSAGE) {
+    if (w->view == VIEW_ABOUT) {
+        HICON icon = LoadImageW(GetModuleHandleW(NULL), MAKEINTRESOURCEW(1), IMAGE_ICON, px(w, 48), px(w, 48), 0);
+        if (icon) {
+            DrawIconEx(dc, r.left, r.top, icon, px(w, 48), px(w, 48), 0, NULL, DI_NORMAL);
+            DestroyIcon(icon);
+        }
+        frame_field(w, dc, w->license);
+    } else if (w->view == VIEW_MESSAGE) {
         if (w->icon >= 0) {
             HICON icon = NULL;
             LPCWSTR id = (LPCWSTR)(w->icon == 2 ? IDI_ERROR : w->icon == 1 ? IDI_WARNING : IDI_INFORMATION);
@@ -431,16 +542,7 @@ static void paint(Win *w)
         free(detail);
     } else {
         paint_text(dc, w->title, w->c.text, L"The game's files could not be verified", &r, DT_SINGLELINE);
-        {
-            /* the report field's border */
-            RECT e;
-            HBRUSH b = CreateSolidBrush(w->c.border);
-            GetWindowRect(w->report, &e);
-            MapWindowPoints(NULL, w->hwnd, (POINT *)&e, 2);
-            InflateRect(&e, 1, 1);
-            FrameRect(dc, &e, b);
-            DeleteObject(b);
-        }
+        frame_field(w, dc, w->report);
     }
     EndPaint(w->hwnd, &ps);
 }
@@ -601,7 +703,7 @@ static void restyle(Win *w)
     int i;
     colors(w);
     dm_window(w->hwnd);
-    HWND all[] = {w->bquit, w->barchive, w->bfolder, w->bcancel, w->bcopy, w->bagain, w->report};
+    HWND all[] = {w->bquit, w->barchive, w->bfolder, w->bcancel, w->bcopy, w->bagain, w->report, w->license};
     for (i = 0; i < (int)(sizeof all / sizeof all[0]); i++)
         if (all[i])
             dm_control(all[i]);
@@ -622,6 +724,11 @@ static void refont(Win *w)
         SendMessageW(w->buttons[i], WM_SETFONT, (WPARAM)w->font, TRUE);
     if (w->report)
         SendMessageW(w->report, WM_SETFONT, (WPARAM)w->mono, TRUE);
+    if (w->license)
+        SendMessageW(w->license, WM_SETFONT, (WPARAM)w->font, TRUE);
+    for (i = 0; i <= N_ABOUT; i++)
+        if (w->about[i])
+            SendMessageW(w->about[i], WM_SETFONT, (WPARAM)(i < N_ABOUT ? about_font(w, i) : w->font), TRUE);
 }
 
 static void choose(Win *w, int folder)
@@ -654,11 +761,29 @@ static LRESULT CALLBACK proc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         return 0;
     case WM_ERASEBKGND:
         return 1;
+    case WM_CTLCOLORSTATIC: {
+        /* the About box's lines: on the window's background (links in the accent colour) */
+        int id = GetDlgCtrlID((HWND)lp) - ID_ABOUT;
+        if (id >= 0 && id <= N_ABOUT) {
+            int kind = id < N_ABOUT ? about_lines[id].kind : A_TEXT;
+            SetTextColor((HDC)wp, kind == A_LINK ? w->c.accent : kind == A_DIM ? w->c.dim : w->c.text);
+            SetBkColor((HDC)wp, w->c.bg);
+            return (LRESULT)w->bg_brush;
+        }
+    }
+        /* fall through: the read-only text fields */
     case WM_CTLCOLOREDIT:
-    case WM_CTLCOLORSTATIC:
         SetTextColor((HDC)wp, w->c.text);
         SetBkColor((HDC)wp, w->c.field);
         return (LRESULT)w->field_brush;
+    case WM_SETCURSOR: {
+        int id = GetDlgCtrlID((HWND)wp) - ID_ABOUT;
+        if (id >= 0 && id < N_ABOUT && about_lines[id].kind == A_LINK) {
+            SetCursor(LoadCursorW(NULL, (LPCWSTR)IDC_HAND));
+            return TRUE;
+        }
+        break;
+    }
     case WM_CTLCOLORBTN:
         return (LRESULT)w->bg_brush;
     case WM_DPICHANGED: {
@@ -695,6 +820,14 @@ static LRESULT CALLBACK proc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
         return 0;
     }
     case WM_COMMAND:
+        if (w->view == VIEW_ABOUT) {
+            int id = LOWORD(wp) - ID_ABOUT;
+            if (id >= 0 && id < N_ABOUT && about_lines[id].kind == A_LINK && HIWORD(wp) == STN_CLICKED)
+                ShellExecuteW(hwnd, L"open", about_lines[id].text, NULL, NULL, SW_SHOWNORMAL);
+            else if (LOWORD(wp) == ID_MSG || LOWORD(wp) == IDOK || LOWORD(wp) == IDCANCEL)
+                DestroyWindow(hwnd);
+            return 0;
+        }
         if (w->view == VIEW_MESSAGE && LOWORD(wp) >= ID_MSG && LOWORD(wp) < ID_MSG + w->nbuttons) {
             w->chosen = w->ids[LOWORD(wp) - ID_MSG];
             DestroyWindow(hwnd);
@@ -737,7 +870,15 @@ static LRESULT CALLBACK proc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
             if (w->view != VIEW_WORK)
                 DestroyWindow(hwnd);
             return 0;
-        case IDOK:                      /* (Enter, no button focused) */
+        case IDOK: {                    /* (Enter) */
+            /* a focused button is the one pressed, as in a dialog */
+            HWND f = GetFocus();
+            if (f && GetParent(f) == hwnd &&
+                (SendMessageW(f, WM_GETDLGCODE, 0, 0) & (DLGC_DEFPUSHBUTTON | DLGC_UNDEFPUSHBUTTON))) {
+                SendMessageW(hwnd, WM_COMMAND, MAKEWPARAM(GetDlgCtrlID(f), BN_CLICKED), (LPARAM)f);
+                return 0;
+            }
+        }
             if (w->view == VIEW_MESSAGE && w->enter >= 0 && w->enter < w->nbuttons) {
                 w->chosen = w->ids[w->enter];
                 DestroyWindow(hwnd);
@@ -830,6 +971,8 @@ static void destroy_resources(Win *w)
         DeleteObject(w->title);
     if (w->mono)
         DeleteObject(w->mono);
+    if (w->link)
+        DeleteObject(w->link);
     if (w->field_brush)
         DeleteObject(w->field_brush);
     if (w->bg_brush)
@@ -897,6 +1040,46 @@ int setup_message_box(void *owner_hwnd, int icon, const char *title, const char 
     free(t);
     free(w.msg_text);
     return w.chosen;
+}
+
+/* ---- the About box ---- */
+
+void setup_about(void *owner_hwnd)
+{
+    Win w;
+    DPI_AWARENESS_CONTEXT old;
+    HINSTANCE inst = GetModuleHandleW(NULL);
+    int i;
+    memset(&w, 0, sizeof w);
+    w.owner = owner_hwnd && IsWindow(owner_hwnd) ? owner_hwnd : NULL;
+    w.view = VIEW_ABOUT;
+    w.nbuttons = 1;
+    w.enter = w.escape = 0;
+    if (!create(&w, L"About " CIV2RE_NAME " v" CIV2RE_VERSION, WS_POPUP | WS_CAPTION | WS_SYSMENU, &old))
+        return;
+    for (i = 0; i <= N_ABOUT; i++) {
+        int link = i < N_ABOUT && about_lines[i].kind == A_LINK;
+        if (i < N_ABOUT && about_lines[i].kind == A_GAP)
+            continue;
+        w.about[i] = CreateWindowExW(0, WC_STATICW, i < N_ABOUT ? about_lines[i].text : L"License:",
+                                     WS_CHILD | WS_VISIBLE | SS_NOPREFIX | (link ? SS_NOTIFY : 0), 0, 0, 10, 10,
+                                     w.hwnd, (HMENU)(INT_PTR)(ID_ABOUT + i), inst, NULL);
+    }
+    w.license = CreateWindowExW(0, WC_EDITW, about_license,
+                                WS_CHILD | WS_VISIBLE | WS_TABSTOP | WS_VSCROLL | ES_MULTILINE | ES_READONLY |
+                                    ES_AUTOVSCROLL,
+                                0, 0, 10, 10, w.hwnd, (HMENU)(INT_PTR)ID_LICENSE, inst, NULL);
+    SendMessageW(w.license, EM_SETMARGINS, EC_LEFTMARGIN | EC_RIGHTMARGIN, MAKELPARAM(px(&w, 6), px(&w, 6)));
+    dm_control(w.license);
+    w.ids[0] = 1;
+    w.buttons[0] = button(&w, ID_MSG, L"OK", 1);
+    ShowWindow(w.buttons[0], SW_SHOW);
+    refont(&w);
+    dpi_end(old);
+    relayout(&w, 1);
+    SetFocus(w.buttons[0]);
+    run_modal(&w);
+    destroy_resources(&w);
 }
 
 /* ---- the set-up window ---- */

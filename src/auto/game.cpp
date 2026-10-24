@@ -7616,6 +7616,15 @@ void __cdecl main_menu_static_dtor(void)
   return;
 }
 
+/* (port) A game is being played: it has units or cities.  The intro, the
+   main menu and a new game's set-up have none (the main loop clears both
+   before its menu). */
+extern "C" int game_in_play(void)
+
+{
+  return (0 < game.num_units) || (0 < game.num_cities);
+}
+
 /* 004e22c9 auto */
 void __cdecl game_quit_or_retire(int retire)
 
@@ -7623,7 +7632,15 @@ void __cdecl game_quit_or_retire(int retire)
   int confirmed;
   iptr text;
   u8 saved_human_players2;
-  
+
+  /* (port) Without a game, Quit ends the program at once and Retire does
+     nothing: the original asked "really quit?" even over the intro. */
+  if (game_in_play() == 0) {
+    if (retire == 0) {
+      exit(0);
+    }
+    return;
+  }
   if ((game.multiplayer < 3) || (net_session_block.net_host_handoff_stage == '\0')) {
     if (retire == 0) {
       confirmed = popup_game_with_sprite((iptr)&str_reallyquit_3,(iptr)&popup_info_icon_sprite,0);

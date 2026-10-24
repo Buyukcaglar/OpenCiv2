@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- civ2-port.exe: themed common controls (v6, needed for the dark mode of
+<!-- Civ2RE.exe: themed common controls (v6, needed for the dark mode of
      the set-up and message windows) and UTF-8 as the process code page, so
      the C runtime's paths (the game's directory, wherever the program was
      copied) take any characters. -->

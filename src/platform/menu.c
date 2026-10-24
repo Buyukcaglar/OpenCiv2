@@ -678,6 +678,11 @@ void menu_native_sync(void)
 void menu_native_command(int id)
 {
     Window *w = wnd_get(native_owner);
+    /* (port) Game > Quit without a game ends the program at once: the game
+       takes no command during its intro (the video's modal loop) and asked
+       "really quit?" over its main menu */
+    if (!game_in_play() && id == menu_native_find("Quit"))
+        exit(0);
     if (w && w->menu && !(w->style & WS_DISABLED))
         PostMessageA(native_owner, WM_COMMAND, (WPARAM)id, 0);
 }

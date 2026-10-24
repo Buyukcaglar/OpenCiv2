@@ -37,6 +37,17 @@ void plat_present(void)
     host_present(screen->bits, screen->stride);
 }
 
+/* Closing the window during a game: asked first (Cancel the default:
+   Enter does not end a game by accident). */
+static int confirm_quit(void)
+{
+    static const char *const labels[2] = {"Quit", "Cancel"};
+    static const int ids[2] = {1, 0};
+    return host_message_box(1, "Civilization II",
+                            "Quit Civilization II?\n\nThe game in progress ends here; whatever was not saved is lost.",
+                            2, labels, ids, 1, 1) == 1;
+}
+
 /* Now, whatever the frame rate: before waiting for input (menus). */
 void plat_present_now(void)
 {
@@ -61,9 +72,9 @@ int msg_pump_events(int wait)
         n++;
         switch (e.type) {
         case HOST_EV_QUIT:
-            if (active_wnd)
-                PostMessageA(active_wnd, WM_SYSCOMMAND, SC_CLOSE, 0);
-            else
+            /* The window closed (its close button, Alt+F4, its menu's
+               Close): at once without a game, else once confirmed. */
+            if (!game_in_play() || confirm_quit())
                 exit(0);
             break;
         case HOST_EV_KEYDOWN:

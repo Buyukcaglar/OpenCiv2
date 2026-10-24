@@ -18,6 +18,9 @@ void host_menu_apply(SDL_Window *window, const HostMenuItem *items, int n);
 int host_menu_syswm_command(const void *msg);
 /* Windows: the window's title bar and menus in the system's light or dark mode. */
 void host_win_theme(SDL_Window *window);
+/* Windows: the window to full screen (its menu bar then at the top edge, on
+   demand) and back. */
+void host_win_full_screen(SDL_Window *window, int full);
 /* Windows: a message box in that mode, over window (may be NULL); as host_message_box. */
 int host_win_message_box(SDL_Window *window, int icon, const char *title, const char *text, int nbuttons,
                          const char *const *labels, const int *ids, int enter, int escape);

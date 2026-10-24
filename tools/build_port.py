@@ -9,8 +9,8 @@ Steps (each can run on its own):
   module   build/wasm/civ2.wasm            (needs wasi-sdk and the installed game)
   c        build/wasm/c/civ2_wasm*.c,.h    (needs wabt's wasm2c)
   exe      build/civ2-port                 (needs a C compiler and SDL2; on Windows
-                                           (MSYS2) civ2-port.exe and SDL2.dll)
-  exe-windows  build/civ2-port.exe         cross-compiled with MinGW-w64 (e.g. on
+                                           (MSYS2) Civ2RE.exe and SDL2.dll)
+  exe-windows  build/Civ2RE.exe            cross-compiled with MinGW-w64 (e.g. on
                                            Linux; tools/fetch-toolchain.sh windows)
   pack     dist/civ2-port-src.tar.gz       what the exe step needs on another
                                            machine, plus the data and run script
@@ -130,7 +130,7 @@ def windows_resources(cc, obj):
 
 def exe(cross_windows=False):
     """build/civ2-port: compile the generated C with the host runtime.
-    cross_windows: build/civ2-port.exe with MinGW-w64 and SDL2's MinGW
+    cross_windows: build/Civ2RE.exe with MinGW-w64 and SDL2's MinGW
     release (tools/fetch-toolchain.sh windows), e.g. on Linux."""
     windows = cross_windows or on_windows()
     if cross_windows:
@@ -188,7 +188,8 @@ def exe(cross_windows=False):
     # Few at a time: the generated files are large.
     with concurrent.futures.ThreadPoolExecutor(int(os.environ.get('JOBS', '2'))) as ex:
         objs = list(ex.map(compile_one, jobs))
-    out = os.path.join(ROOT, 'build', 'civ2-port' + ('.exe' if windows else ''))
+    # (Windows: the program as published, Civ2RE.exe)
+    out = os.path.join(ROOT, 'build', 'Civ2RE.exe' if windows else 'civ2-port')
     # (Windows: the C runtime's threads library linked in, so nothing else
     # is needed beside the program; the set-up's archive, CD and cabinet
     # readers; the icon, manifest and the program's own files as resources)

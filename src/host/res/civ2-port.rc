@@ -1,5 +1,5 @@
-/* civ2-port.exe's Windows resources: the icon (ICON-CREDITS.md), the
-   manifest and the version information.  Compiled by windres
+/* Civ2RE.exe's Windows resources: the icon (ICON-CREDITS.md), the
+   manifest and the version information (CIV2RE_VERSION, setup.h).  Compiled by windres
    (tools/build_port.py). */
 #include <windows.h>
 
@@ -22,11 +22,11 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "Civilization II (reconstructed)"
-            VALUE "ProductName", "Civilization II Multiplayer Gold Edition, reconstructed"
-            VALUE "InternalName", "civ2-port"
-            VALUE "OriginalFilename", "civ2-port.exe"
-            VALUE "LegalCopyright", "Reconstruction: MIT License. Civilization II and its game files are not included. Icon: alexielios (DeviantArt)."
+            VALUE "FileDescription", "Civ2RE - Civilization II for Windows"
+            VALUE "ProductName", "Civ2RE"
+            VALUE "InternalName", "Civ2RE"
+            VALUE "OriginalFilename", "Civ2RE.exe"
+            VALUE "LegalCopyright", "MIT License: (c) 2026 Richard Penman, (c) 2026 Onur BUYUKCAGLAR. Civilization II and its game files are not included. Icon: alexielios (DeviantArt)."
             VALUE "FileVersion", "1.0.0.0"
             VALUE "ProductVersion", "1.0.0.0"
         END

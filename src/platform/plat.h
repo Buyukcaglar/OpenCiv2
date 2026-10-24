@@ -264,6 +264,11 @@ void api_trace(const char *name, void *caller);
 #define API_TRACE() api_trace(__func__, __builtin_return_address(0))
 #endif
 void plat_fatal(const char *fmt, ...);
+/* A game is being played (src/auto/game.cpp): it has units or cities. */
+#ifdef __cplusplus
+extern "C"
+#endif
+int game_in_play(void);
 void plat_init(int argc, char **argv);
 char *plat_strdup(const char *s);
 void timers_fire(void);

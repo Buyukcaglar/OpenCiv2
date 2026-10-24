@@ -261,7 +261,7 @@ static char *temp_dir(Job *j, const char *kind)
         DWORD n = GetTempPathA(sizeof t, t);
         if (!n || n > MAX_PATH)
             snprintf(t, sizeof t, ".\\");
-        snprintf(name, sizeof name, "civ2-port-setup-%lu-%lu", (unsigned long)GetCurrentProcessId(),
+        snprintf(name, sizeof name, "Civ2RE-setup-%lu-%lu", (unsigned long)GetCurrentProcessId(),
                  (unsigned long)GetTickCount());
         j->tmp = join(t, "", name);
         if (!make_dirs(j->tmp)) {
@@ -1387,7 +1387,7 @@ int setup_import(const char *source, const char *game_dir, const SetupProgress *
 done:
     if (ok) {
         /* what was done, beside the game */
-        char *log = join(game_dir, "\\", "civ2-port-setup.txt");
+        char *log = join(game_dir, "\\", "Civ2RE-setup.txt");
         FILE *f = fopen(log, "w");
         if (f) {
             fputs(r.s, f);

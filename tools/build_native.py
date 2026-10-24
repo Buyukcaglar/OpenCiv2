@@ -240,6 +240,7 @@ def cxx_of(cc):
 
 def compile_one(job):
     cc, src, o, stale, tflags = job
+    path = src.replace(os.sep, '/')     # (the tests below, also on Windows)
     if stale:
         flags, extra = CFLAGS, []
         lang = []
@@ -248,18 +249,18 @@ def compile_one(job):
             flags = ['-std=gnu++17' if f == '-std=gnu89' else f for f in CFLAGS]
             lang = ['-x', 'c++']
             extra = ['-fno-exceptions', '-fno-rtti'] + (['-fpermissive'] if CXX_MODE == 'permissive' else [])
-        if '/src/platform/' in src:
+        if '/src/platform/' in path:
             flags = [f for f in CFLAGS if f != '-w']
             # The platform layer is ordinary portable C, with warnings.
             extra = ['-Wall', '-Wno-unused-function', '-std=gnu99', '-D_GNU_SOURCE']
-        elif src.endswith('/src/data/gamedata.cpp') and 'clang' not in cc:
+        elif path.endswith('/src/data/gamedata.cpp') and 'clang' not in cc:
             # the data in the original's order (it is defined in address order)
             extra = extra + ['-fno-toplevel-reorder']
-        elif '/src/third_party/' in src:
+        elif '/src/third_party/' in path:
             # Third-party C (src/third_party/*/), built as its authors' code.
             flags = [f for f in CFLAGS if not f.startswith('-std') and f not in ('-O1',)]
             extra = ['-std=gnu99', '-O2', '-I', os.path.dirname(src)]
-        elif '/src/host/' in src:
+        elif '/src/host/' in path:
             # The host interface over SDL2: plain C, none of the game's headers.
             flags = []
             extra = subprocess.run(['sdl2-config', '--cflags'], capture_output=True, text=True).stdout.split()
@@ -299,7 +300,7 @@ def main():
     jobs = []
     tflags = t.get('cflags', [])
     for src in sources:
-        o = os.path.join(objdir, os.path.relpath(src, ROOT).replace('/', '_') + '.o')
+        o = os.path.join(objdir, os.path.relpath(src, ROOT).replace(os.sep, '_').replace('/', '_') + '.o')
         stale = not os.path.exists(o) or os.path.getmtime(o) < max(os.path.getmtime(src), headers)
         jobs.append((t['cc'], src, o, stale, tflags))
     with concurrent.futures.ThreadPoolExecutor(os.cpu_count()) as ex:

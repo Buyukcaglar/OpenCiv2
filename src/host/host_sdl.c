@@ -23,6 +23,8 @@ int host_init(int headless)
     /* macOS: full screen in a Space of its own, the menu bar shown at the
        top edge (read when the video subsystem starts). */
     SDL_SetHint(SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES, "1");
+    /* Full screen stays when another window (a message box, the menu bar's) is active. */
+    SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         fprintf(stderr, "civ2: SDL: %s\n", SDL_GetError());
         return 0;
@@ -112,6 +114,10 @@ int host_open_native_window(int32_t *w, int32_t *h, int mode)
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);     /* WM_COMMAND from the menu bar */
 #endif
     host_menu_apply(window, NULL, 0);               /* the client area: what the menu bar leaves */
+#ifdef _WIN32
+    if (mode == 1)
+        host_win_full_screen(window, 1);            /* (its menu bar at the top edge) */
+#endif
     if (SDL_GetDisplayBounds(0, &full))
         full.w = full.h = 0;
     /* The size once the window manager is done (maximizing, the full
@@ -302,6 +308,14 @@ static int convert(const SDL_Event *s, HostEvent *e)
             if (s->type == SDL_KEYDOWN && !s->key.repeat && s->key.keysym.sym == SDLK_f &&
                 (s->key.keysym.mod & KMOD_CTRL) && window)
                 host_mac_full_screen(window);
+            return 0;
+        }
+#endif
+#ifdef _WIN32
+        /* Alt+Enter: full screen and back (the game does not see it) */
+        if (s->key.keysym.sym == SDLK_RETURN && (s->key.keysym.mod & KMOD_ALT)) {
+            if (s->type == SDL_KEYDOWN && !s->key.repeat && window)
+                host_win_full_screen(window, !(SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN));
             return 0;
         }
 #endif
