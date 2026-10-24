@@ -414,9 +414,9 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
   FOURCC *dst_ckid;
   _MMCKINFO chunk;
   _MMIOINFO mmio_info;
-  iptr node2;
+  WaveSource *node2;
   DWORD fmt_size;
-  FOURCC *source;
+  WaveSource *source;
   HGLOBAL mem_handle2;
   WAVEFORMATEX wave_format;
   _MMCKINFO riff_chunk;
@@ -451,44 +451,44 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
                 result = 2;
               }
               else {
-                source = (FOURCC *)GlobalLock(mem_handle2);
-                if (source == (FOURCC *)0x0) {
+                source = (WaveSource *)GlobalLock(mem_handle2);
+                if (source == (WaveSource *)0x0) {
                   mmioClose(mmio,0);
                   GlobalFree(mem_handle2);
                   result = 2;
                 }
                 else {
                   _memset(source,0,0xbc);
-                  source[0x1b] = mem_handle2;
-                  *source = mmio;
+                  source->mem_handle = mem_handle2;
+                  source->mmio = mmio;
                   p_Var5 = &mmio_info;
-                  dst_flags = source + 6;
+                  dst_flags = &source->io_flags;
                   for (n = 0x12; n != 0; n--) {
                     *dst_flags = p_Var5->dwFlags;
                     p_Var5 = (_MMIOINFO *)&p_Var5->fccIOProc;
                     dst_flags++;
                   }
                   p_Var6 = &chunk;
-                  dst_ckid = source;
+                  dst_ckid = (FOURCC *)source;
                   for (n = 5; dst_ckid = dst_ckid + 1, n != 0; n--) {
                     *dst_ckid = p_Var6->ckid;
                     p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                   }
-                  *(i16 *)((int)source + 0x8a) = (i16)flags;
-                  source[0x1d] = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
-                  source[0x1e] = wave_format.nSamplesPerSec;
-                  source[0x1f] = wave_format.nAvgBytesPerSec;
-                  source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
-                  *(i16 *)(source + 0x22) = 1;
-                  source[0x2d] = sound_id;
+                  source->sound_id = (i16)flags;
+                  source->format_tag_channels = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
+                  source->samples_per_sec = wave_format.nSamplesPerSec;
+                  source->avg_bytes_per_sec = wave_format.nAvgBytesPerSec;
+                  source->block_align_bits = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
+                  source->kind = 1;
+                  source->done_callback = sound_id;
                   if (snd_wave_sources == 0) {
-                    snd_wave_sources = (iptr)source;
+                    snd_wave_sources = source;
                   }
                   else {
-                    for (node2 = snd_wave_sources; *(int *)(node2 + 0xb8) != 0;
-                        node2 = *(iptr *)(node2 + 0xb8)) {
+                    for (node2 = snd_wave_sources; node2->next != 0;
+                        node2 = node2->next) {
                     }
-                    *(FOURCC **)(node2 + 0xb8) = source;
+                    node2->next = source;
                   }
                   result = 0;
                 }
@@ -537,9 +537,9 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
   FOURCC *dst_ckid;
   _MMCKINFO chunk;
   _MMIOINFO mmio_info;
-  iptr node2;
+  WaveSource *node2;
   DWORD fmt_size;
-  FOURCC *source;
+  WaveSource *source;
   HGLOBAL mem_handle2;
   WAVEFORMATEX wave_format;
   _MMCKINFO riff_chunk;
@@ -580,45 +580,45 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
                   result = 2;
                 }
                 else {
-                  source = (FOURCC *)GlobalLock(mem_handle2);
-                  if (source == (FOURCC *)0x0) {
+                  source = (WaveSource *)GlobalLock(mem_handle2);
+                  if (source == (WaveSource *)0x0) {
                     GlobalFree(mem_handle2);
                     result = 2;
                   }
                   else {
                     _memset(source,0,0xbc);
-                    source[0x1b] = mem_handle2;
-                    *(i16 *)(source + 0x22) = 1;
-                    source[0x1d] = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
-                    source[0x1e] = wave_format.nSamplesPerSec;
-                    source[0x1f] = wave_format.nAvgBytesPerSec;
-                    source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
-                    *source = mem_mmio;
-                    source[0x18] = file_mmio;
+                    source->mem_handle = mem_handle2;
+                    source->kind = 1;
+                    source->format_tag_channels = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
+                    source->samples_per_sec = wave_format.nSamplesPerSec;
+                    source->avg_bytes_per_sec = wave_format.nAvgBytesPerSec;
+                    source->block_align_bits = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
+                    source->mmio = mem_mmio;
+                    source->file_mmio = file_mmio;
                     p_Var5 = &mmio_info;
-                    dst_flags = source + 6;
+                    dst_flags = &source->io_flags;
                     for (n = 0x12; n != 0; n--) {
                       *dst_flags = p_Var5->dwFlags;
                       p_Var5 = (_MMIOINFO *)&p_Var5->fccIOProc;
                       dst_flags++;
                     }
                     p_Var6 = &chunk;
-                    dst_ckid = source;
+                    dst_ckid = (FOURCC *)source;
                     for (n = 5; dst_ckid = dst_ckid + 1, n != 0; n--) {
                       *dst_ckid = p_Var6->ckid;
                       p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                     }
-                    source[0x1c] = source[0x1c] | 4;
-                    *(i16 *)((int)source + 0x8a) = (i16)flags;
-                    snd_wave_stream_refill((iptr)source);
+                    source->flags = source->flags | 4;
+                    source->sound_id = (i16)flags;
+                    snd_wave_stream_refill(source);
                     if (snd_wave_sources == 0) {
-                      snd_wave_sources = (iptr)source;
+                      snd_wave_sources = source;
                     }
                     else {
-                      for (node2 = snd_wave_sources; *(int *)(node2 + 0xb8) != 0;
-                          node2 = *(iptr *)(node2 + 0xb8)) {
+                      for (node2 = snd_wave_sources; node2->next != 0;
+                          node2 = node2->next) {
                       }
-                      *(FOURCC **)(node2 + 0xb8) = source;
+                      node2->next = source;
                     }
                     result = 0;
                   }
@@ -664,7 +664,7 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
   DWORD *dst_flags;
   _MMIOINFO mmio_info;
   WAVEFORMATEX wave_format;
-  i32 *source;
+  WaveSource *source;
   HGLOBAL mem_handle2;
   i8 sample_buf[4];
   uint bytes_per_buffer;
@@ -682,7 +682,7 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
   else if (avi_stream == 0) {
     result = 0xc;
   }
-  else if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
+  else if ((snd_wave_sources == 0) || (snd_wave_sources->kind != 4)) {
     AVIStreamInfoA(avi_stream,&stream_info,0x8c);
     if (stream_info.fccType == 0x73647561) {
       AVIStreamRead(avi_stream,0,1,0,0,(LONG *)sample_buf,0);
@@ -726,38 +726,38 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
           result = 2;
         }
         else {
-          source = (i32 *)GlobalLock(mem_handle2);
-          if (source == (i32 *)0x0) {
+          source = (WaveSource *)GlobalLock(mem_handle2);
+          if (source == (WaveSource *)0x0) {
             GlobalFree(mem_handle2);
             result = 2;
           }
           else {
             _memset(source,0,0xbc);
-            source[0x1b] = mem_handle2;
-            *(i16 *)(source + 0x22) = 4;
-            source[0x1d] = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
-            source[0x1e] = wave_format.nSamplesPerSec;
-            source[0x1f] = wave_format.nAvgBytesPerSec;
-            source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
-            *source = mmio;
+            source->mem_handle = mem_handle2;
+            source->kind = 4;
+            source->format_tag_channels = wave_format.wFormatTag | (u32)wave_format.nChannels << 16;
+            source->samples_per_sec = wave_format.nSamplesPerSec;
+            source->avg_bytes_per_sec = wave_format.nAvgBytesPerSec;
+            source->block_align_bits = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
+            source->mmio = mmio;
             p_Var3 = &mmio_info;
-            dst_flags = (DWORD *)(source + 6);
+            dst_flags = &source->io_flags;
             for (n = 0x12; n != 0; n--) {
               *dst_flags = p_Var3->dwFlags;
               p_Var3 = (_MMIOINFO *)&p_Var3->fccIOProc;
               dst_flags++;
             }
-            source[1] = stream_info.fccType;
-            source[2] = total_bytes;
-            source[0x21] = avi_stream;
-            source[0x1c] = source[0x1c] | 2;
-            source[0x27] = bytes_per_buffer;
+            source->data_ckid = stream_info.fccType;
+            source->data_size = total_bytes;
+            source->avi_stream = avi_stream;
+            source->flags = source->flags | 2;
+            source->buffer_bytes = bytes_per_buffer;
             for (size_bits = mmio_info.cchBuffer; 1 < size_bits; size_bits = size_bits >> 1) {
-              source[0x2a] = source[0x2a] << 1;
-              source[0x2a]++;
+              source->size_mask = source->size_mask << 1;
+              source->size_mask++;
             }
-            source[0x2e] = snd_wave_sources;
-            snd_wave_sources = (iptr)source;
+            source->next = snd_wave_sources;
+            snd_wave_sources = source;
             snd_wave_source_count++;
             result = 0;
           }
@@ -786,10 +786,10 @@ i32 __cdecl snd_avi_stream_feed(uint sample_count)
 {
   i32 result;
   uint limit;
-  iptr source;
+  WaveSource *source;
   uint byte_count;
   uint i;
-  iptr buffer;
+  WaveBuffer *buffer;
   int bytes_read;
   
   source = snd_wave_sources;
@@ -799,67 +799,67 @@ i32 __cdecl snd_avi_stream_feed(uint sample_count)
   else if (snd_avi_stream_started == 0) {
     result = 0xe;
   }
-  else if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
+  else if ((snd_wave_sources == 0) || (snd_wave_sources->kind != 4)) {
     result = 5;
   }
-  else if ((*(byte *)(snd_wave_sources + 0x70) & 1) == 0) {
-    if ((*(uint *)(*(int *)(snd_wave_sources + 0x98) + 0xc) >> 3 & 1) == 0) {
-      if (((*(uint *)(*(int *)(snd_wave_sources + 0x98) + 0xc) >> 7) -
-           (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7) & 7) == 0) {
-        sample_count = (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68)) /
-                  (uint)*(ushort *)(snd_wave_sources + 0x80);
+  else if (((u8)snd_wave_sources->flags & 1) == 0) {
+    if ((snd_wave_sources->fill_buffer->flags >> 3 & 1) == 0) {
+      if (((snd_wave_sources->fill_buffer->flags >> 7) -
+           (snd_wave_cur_buffer->flags >> 7) & 7) == 0) {
+        sample_count = (uint)(snd_wave_sources->buffer_bytes - snd_wave_sources->buffer_fill) /
+                  (uint)snd_wave_sources->block_align;
         snd_avi_fill_count_i32++;
       }
-      buffer = *(int *)(snd_wave_sources + 0x98);
-      limit = (*(int *)(snd_wave_sources + 0x3c) - *(int *)(snd_wave_sources + 0x34)) /
-              (int)(uint)*(ushort *)(snd_wave_sources + 0x80);
+      buffer = snd_wave_sources->fill_buffer;
+      limit = (snd_wave_sources->buf_end - snd_wave_sources->buf_next) /
+              (int)(uint)snd_wave_sources->block_align;
       if (limit < sample_count) {
         sample_count = limit;
       }
-      byte_count = *(ushort *)(snd_wave_sources + 0x80) * sample_count;
-      limit = *(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68);
+      byte_count = snd_wave_sources->block_align * sample_count;
+      limit = snd_wave_sources->buffer_bytes - snd_wave_sources->buffer_fill;
       snd_avi_feed_samples_i32 = sample_count;
       if (limit < byte_count) {
         byte_count = limit;
       }
-      limit = *(int *)(snd_wave_sources + 8) -
-              (*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94));
+      limit = snd_wave_sources->data_size -
+              (snd_wave_sources->stream_pos - snd_wave_sources->stream_start);
       if (limit < byte_count) {
         byte_count = limit;
       }
       bytes_read = 0;
-      AVIStreamRead(*(i32 *)(snd_wave_sources + 0x84),
-                    *(uint *)(snd_wave_sources + 0x90) / (uint)*(ushort *)(snd_wave_sources + 0x80),
-                    byte_count / *(ushort *)(snd_wave_sources + 0x80),
-                    (LPVOID)*(i32 *)(snd_wave_sources + 0x34),byte_count,&bytes_read,0);
-      *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + bytes_read;
-      *(int *)(source + 0x34) = *(int *)(source + 0x34) + bytes_read;
-      if (*(int *)(source + 0x3c) == *(int *)(source + 0x34)) {
-        *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
+      AVIStreamRead(snd_wave_sources->avi_stream,
+                    (uint)snd_wave_sources->stream_pos / (uint)snd_wave_sources->block_align,
+                    byte_count / snd_wave_sources->block_align,
+                    (LPVOID)snd_wave_sources->buf_next,byte_count,&bytes_read,0);
+      snd_wave_sources->stream_pos = snd_wave_sources->stream_pos + bytes_read;
+      source->buf_next = source->buf_next + bytes_read;
+      if (source->buf_end == source->buf_next) {
+        source->buf_next = source->buf_start;
       }
-      *(int *)(snd_wave_sources + 0x68) = *(int *)(snd_wave_sources + 0x68) + bytes_read;
-      if (*(uint *)(snd_wave_sources + 0x9c) <= *(uint *)(snd_wave_sources + 0x68)) {
-        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 8;
-        *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(buffer + 0x1c);
-        buffer = *(iptr *)(snd_wave_sources + 0x98);
-        *(i32 *)(snd_wave_sources + 0x68) = 0;
+      snd_wave_sources->buffer_fill = snd_wave_sources->buffer_fill + bytes_read;
+      if ((uint)snd_wave_sources->buffer_bytes <= (uint)snd_wave_sources->buffer_fill) {
+        buffer->flags = buffer->flags | 8;
+        snd_wave_sources->fill_buffer = buffer->next;
+        buffer = snd_wave_sources->fill_buffer;
+        snd_wave_sources->buffer_fill = 0;
       }
-      if (*(uint *)(snd_wave_sources + 8) <=
-          (uint)(*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94))) {
+      if ((uint)snd_wave_sources->data_size <=
+          (uint)(snd_wave_sources->stream_pos - snd_wave_sources->stream_start)) {
         for (i = 0;
-            i < (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68));
+            i < (uint)(snd_wave_sources->buffer_bytes - snd_wave_sources->buffer_fill);
             i = i + 1) {
-          **(i8 **)(source + 0x34) = 0x80;
-          *(int *)(source + 0x34) = *(int *)(source + 0x34) + 1;
+          *(i8 *)source->buf_next = 0x80;
+          source->buf_next = source->buf_next + 1;
         }
-        if (*(int *)(source + 0x3c) == *(int *)(source + 0x34)) {
-          *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
+        if (source->buf_end == source->buf_next) {
+          source->buf_next = source->buf_start;
         }
-        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 8;
-        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 2;
-        *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(buffer + 0x1c);
-        *(i32 *)(snd_wave_sources + 0x68) = 0;
-        *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 1;
+        buffer->flags = buffer->flags | 8;
+        buffer->flags = buffer->flags | 2;
+        snd_wave_sources->fill_buffer = buffer->next;
+        snd_wave_sources->buffer_fill = 0;
+        snd_wave_sources->flags = snd_wave_sources->flags | 1;
       }
       snd_avi_feed_count_i32++;
       result = 0;
@@ -881,7 +881,7 @@ i32 __cdecl snd_avi_stream_stop(void)
   i32 result;
   
   snd_avi_stream_started = 0;
-  if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
+  if ((snd_wave_sources == 0) || (snd_wave_sources->kind != 4)) {
     result = 5;
   }
   else {
@@ -892,7 +892,7 @@ i32 __cdecl snd_avi_stream_stop(void)
 }
 
 /* 005d5bec auto */
-void __cdecl snd_avi_stream_refill(iptr source)
+void __cdecl snd_avi_stream_refill(WaveSource *source)
 
 {
   uint remaining;
@@ -901,23 +901,23 @@ void __cdecl snd_avi_stream_refill(iptr source)
   int bytes_read;
   
   bytes_read = 0;
-  if ((*(int *)(source + 0x3c) == *(int *)(source + 0x34)) ||
-     (*(int *)(source + 0x30) == *(int *)(source + 0x34))) {
-    remaining = *(int *)(snd_wave_sources + 8) -
-            (*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94));
-    byte_count = *(uint *)(source + 0x2c);
-    if (remaining < *(uint *)(source + 0x2c)) {
+  if ((source->buf_end == source->buf_next) ||
+     (source->buf_start == source->buf_next)) {
+    remaining = snd_wave_sources->data_size -
+            (snd_wave_sources->stream_pos - snd_wave_sources->stream_start);
+    byte_count = source->buf_size;
+    if (remaining < source->buf_size) {
       byte_count = remaining;
     }
-    *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
-    AVIStreamRead(*(i32 *)(source + 0x84),
-                  *(uint *)(source + 0x90) / (uint)*(ushort *)(source + 0x80),
-                  byte_count / *(ushort *)(source + 0x80),(LPVOID)*(i32 *)(source + 0x34),byte_count,
+    source->buf_next = source->buf_start;
+    AVIStreamRead(source->avi_stream,
+                  (uint)source->stream_pos / (uint)source->block_align,
+                  byte_count / source->block_align,(LPVOID)source->buf_next,byte_count,
                   &bytes_read,0);
-    *(int *)(source + 0x90) = *(int *)(source + 0x90) + bytes_read;
-    shortfall = *(int *)(source + 0x2c) - bytes_read;
+    source->stream_pos = source->stream_pos + bytes_read;
+    shortfall = (int)source->buf_size - bytes_read;
     if (shortfall != 0) {
-      snd_fill_silence_u8(*(int *)(source + 0x34) + bytes_read,shortfall);
+      snd_fill_silence_u8(source->buf_next + bytes_read,shortfall);
     }
   }
   return;
@@ -931,24 +931,24 @@ i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr)
   int start_byte;
   int byte_length;
   uint i;
-  i32 *buffer;
+  WaveBuffer *buffer;
   
   if (snd_wave_out_handle == 0) {
     result = 3;
   }
-  else if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
+  else if ((snd_wave_sources == 0) || (snd_wave_sources->kind != 4)) {
     result = 5;
   }
   else {
     if (snd_wave_buffer_count != snd_wave_max_buffers) {
       snd_wave_set_buffer_count(snd_wave_max_buffers);
     }
-    start_byte = AVIStreamTimeToSample(*(i32 *)(snd_wave_sources + 0x84),start_time);
-    byte_length = AVIStreamTimeToSample(*(i32 *)(snd_wave_sources + 0x84),end_time);
-    byte_length = (uint)*(ushort *)(snd_wave_sources + 0x80) * byte_length;
-    start_byte = (uint)*(ushort *)(snd_wave_sources + 0x80) * start_byte;
+    start_byte = AVIStreamTimeToSample(snd_wave_sources->avi_stream,start_time);
+    byte_length = AVIStreamTimeToSample(snd_wave_sources->avi_stream,end_time);
+    byte_length = (uint)snd_wave_sources->block_align * byte_length;
+    start_byte = (uint)snd_wave_sources->block_align * start_byte;
     if (byte_length == 0) {
-      byte_length = *(int *)(snd_wave_sources + 8) - start_byte;
+      byte_length = snd_wave_sources->data_size - start_byte;
     }
     else {
       byte_length -= start_byte;
@@ -958,35 +958,35 @@ i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr)
     }
     else {
       snd_wave_stop_all();
-      *(int *)(snd_wave_sources + 8) = byte_length;
-      *(int *)(snd_wave_sources + 0x90) = start_byte;
-      *(int *)(snd_wave_sources + 0x94) = start_byte;
-      *(i32 *)(snd_wave_sources + 100) = 0;
-      *(i32 *)(snd_wave_sources + 0x68) = 0;
-      *(i32 *)(snd_wave_sources + 0x34) = *(i32 *)(snd_wave_sources + 0x3c);
+      snd_wave_sources->data_size = byte_length;
+      snd_wave_sources->stream_pos = start_byte;
+      snd_wave_sources->stream_start = start_byte;
+      snd_wave_sources->play_pos = 0;
+      snd_wave_sources->buffer_fill = 0;
+      snd_wave_sources->buf_next = snd_wave_sources->buf_end;
       snd_avi_stream_refill(snd_wave_sources);
-      *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) & 0xfffffffd;
-      *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) & 0xfffffffe;
-      *(iptr *)(snd_wave_sources + 0x8c) = status_ptr;
+      snd_wave_sources->flags = snd_wave_sources->flags & 0xfffffffd;
+      snd_wave_sources->flags = snd_wave_sources->flags & 0xfffffffe;
+      snd_wave_sources->status_ptr = status_ptr;
       snd_avi_stream_started = 0;
-      buffer = (i32 *)snd_wave_buffer_ring;
+      buffer = snd_wave_buffer_ring;
       for (i = 0; i < snd_wave_max_buffers; i++) {
-        buffer[3] = buffer[3] & 0xffffffdf;
-        buffer[3] = buffer[3] & 0xfffffffe;
-        buffer[3] = buffer[3] & 0xfffffffd;
-        buffer[3] = buffer[3] & 0xffffffef;
-        buffer[3] = buffer[3] & 0xffffffdf;
-        buffer[3] = buffer[3] & 0xffffffbf;
-        buffer[4] = *(i32 *)*buffer;
-        start_byte = snd_wave_mix_buffer((i32 *)*buffer);
+        buffer->flags = buffer->flags & 0xffffffdf;
+        buffer->flags = buffer->flags & 0xfffffffe;
+        buffer->flags = buffer->flags & 0xfffffffd;
+        buffer->flags = buffer->flags & 0xffffffef;
+        buffer->flags = buffer->flags & 0xffffffdf;
+        buffer->flags = buffer->flags & 0xffffffbf;
+        buffer->data = buffer->hdr->data;
+        start_byte = snd_wave_mix_buffer(buffer->hdr);
         if (start_byte == 1) break;
-        buffer = (i32 *)buffer[7];
+        buffer = buffer->next;
       }
       snd_avi_stream_refill(snd_wave_sources);
-      buffer = (i32 *)snd_wave_buffer_ring;
+      buffer = snd_wave_buffer_ring;
       for (i = 0; i < snd_wave_max_buffers; i++) {
-        *(uint *)((int)buffer + 0xc) = *(uint *)((int)buffer + 0xc) | 8;
-        buffer = *(i32 **)((int)buffer + 0x1c);
+        buffer->flags = buffer->flags | 8;
+        buffer = buffer->next;
       }
       snd_wave_cur_buffer = snd_wave_buffer_ring;
       result = 0;
@@ -1001,16 +1001,16 @@ i16 __cdecl snd_avi_stream_start(void)
 {
   iptr ring;
   
-  if ((snd_wave_sources != 0) && (*(short *)(snd_wave_sources + 0x88) == 4)) {
-    snd_wave_write_pending((char *)snd_wave_buffer_ring);
-    *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 0x10;
-    if (*(int *)(snd_wave_sources + 0x8c) != 0) {
-      **(ushort **)(snd_wave_sources + 0x8c) = **(ushort **)(snd_wave_sources + 0x8c) | 4;
+  if ((snd_wave_sources != 0) && (snd_wave_sources->kind == 4)) {
+    snd_wave_write_pending(snd_wave_buffer_ring);
+    snd_wave_sources->flags = snd_wave_sources->flags | 0x10;
+    if (snd_wave_sources->status_ptr != 0) {
+      *(ushort *)snd_wave_sources->status_ptr = *(ushort *)snd_wave_sources->status_ptr | 4;
     }
   }
-  ring = snd_wave_buffer_ring;
+  ring = (iptr)snd_wave_buffer_ring;
   snd_avi_stream_started = 1;
-  *(iptr *)(snd_wave_sources + 0x98) = snd_wave_buffer_ring;
+  snd_wave_sources->fill_buffer = snd_wave_buffer_ring;
   return (short)ring;
 }
 
@@ -1021,7 +1021,7 @@ short __cdecl snd_wave_play(const char *filename,uint flags,i32 sound_id,i32 sou
   short result;
   int status;
   uint i;
-  i32 *buffer;
+  WaveBuffer *buffer;
   
   if (snd_wave_out_handle == 0) {
     result = 3;
@@ -1038,14 +1038,14 @@ short __cdecl snd_wave_play(const char *filename,uint flags,i32 sound_id,i32 sou
       result = snd_wave_open_stream((LPSTR)filename,flags,sound_id);
     }
     if ((result == 0) &&
-       ((*(ushort *)&snd_wave_source_count) = (*(ushort *)&snd_wave_source_count) + 1, (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0)) {
+       ((*(ushort *)&snd_wave_source_count) = (*(ushort *)&snd_wave_source_count) + 1, (snd_wave_cur_buffer->flags >> 5 & 1) == 0)) {
       i = 0;
-      buffer = (i32 *)snd_wave_cur_buffer;
-      while ((i < snd_wave_buffer_count && (status = snd_wave_mix_buffer((i32 *)*buffer), status != 1))) {
-        buffer = (i32 *)buffer[7];
+      buffer = snd_wave_cur_buffer;
+      while ((i < snd_wave_buffer_count && (status = snd_wave_mix_buffer(buffer->hdr), status != 1))) {
+        buffer = buffer->next;
         i++;
       }
-      snd_wave_write_pending((char *)snd_wave_cur_buffer);
+      snd_wave_write_pending(snd_wave_cur_buffer);
     }
   }
   else {
@@ -1058,25 +1058,25 @@ short __cdecl snd_wave_play(const char *filename,uint flags,i32 sound_id,i32 sou
 void __cdecl snd_wave_free_by_id(i32 sound_id)
 
 {
-  iptr source;
-  iptr prev;
+  WaveSource *source;
+  WaveSource *prev;
   
   prev = 0;
   source = snd_wave_sources;
   while (source != 0) {
-    if (*(short *)(source + 0x8a) == (short)sound_id) {
+    if (source->sound_id == (short)sound_id) {
       source = snd_wave_free(prev,source);
     }
     else {
       prev = source;
-      source = *(iptr *)(source + 0xb8);
+      source = source->next;
     }
   }
   return;
 }
 
 /* 005d6283 auto */
-void __cdecl snd_wave_stream_refill(iptr source)
+void __cdecl snd_wave_stream_refill(WaveSource *source)
 
 {
   int n;
@@ -1090,7 +1090,7 @@ void __cdecl snd_wave_stream_refill(iptr source)
   
   remaining = 0;
   done = 0;
-  src = (i32 *)(source + 0x18);
+  src = (i32 *)&source->io_flags;
   dst = (i32 *)&mmio_info;
   for (n = 0x12; n != 0; n--) {
     *dst = *src;
@@ -1113,19 +1113,19 @@ void __cdecl snd_wave_stream_refill(iptr source)
     mmio_info.pchNext = mmio_info.pchBuffer + leftover;
   }
   while (done == 0) {
-    remaining = *(int *)(source + 8) - *(int *)(source + 0x68);
+    remaining = source->data_size - source->buffer_fill;
     if (space < remaining) {
-      mmioRead(*(HMMIO *)(source + 0x60),mmio_info.pchNext,space);
-      *(int *)(source + 0x68) = *(int *)(source + 0x68) + space;
-      *(HPSTR *)(source + 0x34) = mmio_info.pchBuffer;
+      mmioRead(source->file_mmio,mmio_info.pchNext,space);
+      source->buffer_fill = source->buffer_fill + space;
+      source->buf_next = (i32)mmio_info.pchBuffer;
       done = 1;
     }
     else {
-      mmioRead(*(HMMIO *)(source + 0x60),mmio_info.pchNext,remaining);
-      *(i32 *)(source + 0x68) = 0;
+      mmioRead(source->file_mmio,mmio_info.pchNext,remaining);
+      source->buffer_fill = 0;
       mmio_info.pchNext += remaining;
       space = (int)mmio_info.pchEndWrite - (int)mmio_info.pchNext;
-      mmioSeek(*(HMMIO *)(source + 0x60),*(LONG *)(source + 0x10),0);
+      mmioSeek(source->file_mmio,source->data_offset,0);
     }
   }
   return;
@@ -1173,13 +1173,13 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint 
 {
   int data;
   int mem_handle2;
-  int *prev;
+  WaveBuffer *prev;
   uint i;
   MMRESULT result;
   uint bytes_per_buffer;
-  int *buffer;
+  WaveBuffer *buffer;
   
-  buffer = (int *)0x0;
+  buffer = (WaveBuffer *)0x0;
   bytes_per_buffer = total_bytes / buffer_count;
   if (snd_wave_device_open == 0) {
     result = 3;
@@ -1187,49 +1187,49 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint 
   else {
     for (i = 0; i < buffer_count; i++) {
       prev = buffer;
-      buffer = (int *)snd_global_alloc_lock(0x20,(iptr)&mem_handle2);
-      if (buffer == (int *)0x0) {
+      buffer = (WaveBuffer *)snd_global_alloc_lock(0x20,(iptr)&mem_handle2);
+      if (buffer == (WaveBuffer *)0x0) {
         if (i != 0) {
           snd_wave_reset_all(wave_out);
         }
         return 4;
       }
       if (i == 0) {
-        snd_wave_buffer_ring = (iptr)buffer;
-        snd_wave_cur_buffer = (iptr)buffer;
+        snd_wave_buffer_ring = buffer;
+        snd_wave_cur_buffer = buffer;
       }
       _memset(buffer,0,0x20);
-      buffer[2] = mem_handle2;
+      buffer->handle = mem_handle2;
       data = (int)snd_global_alloc_lock(bytes_per_buffer + 0x20,(iptr)&mem_handle2);
-      *buffer = data;
-      if (*buffer == 0) {
+      buffer->hdr = (WaveHeader *)data;
+      if (buffer->hdr == 0) {
         if (i != 0) {
           snd_wave_reset_all(wave_out);
         }
         return 4;
       }
-      _memset((void *)*buffer,0,0x20);
-      *(int *)*buffer = *buffer + 0x20;
-      buffer[4] = *(int *)*buffer;
-      *(uint *)(*buffer + 4) = bytes_per_buffer;
-      buffer[6] = *(int *)(*buffer + 4);
-      buffer[5] = *(int *)*buffer + buffer[6];
-      *(int **)(*buffer + 0xc) = buffer;
-      buffer[1] = mem_handle2;
-      buffer[3] = buffer[3] & 0xffff807fU | (i & 0xff) << 7;
-      result = waveOutPrepareHeader(wave_out,(LPWAVEHDR)*buffer,0x20);
+      _memset(buffer->hdr,0,0x20);
+      buffer->hdr->data = (iptr)buffer->hdr + 0x20;
+      buffer->data = buffer->hdr->data;
+      buffer->hdr->length = bytes_per_buffer;
+      buffer->length = buffer->hdr->length;
+      buffer->data_end = buffer->hdr->data + buffer->length;
+      buffer->hdr->owner = buffer;
+      buffer->data_handle = mem_handle2;
+      buffer->flags = buffer->flags & 0xffff807fU | (i & 0xff) << 7;
+      result = waveOutPrepareHeader(wave_out,(LPWAVEHDR)buffer->hdr,0x20);
       if (result != 0) {
         snd_waveout_error_box(result);
         snd_wave_reset_all(wave_out);
         return 5;
       }
-      *(uint *)(*buffer + 0x10) = *(uint *)(*buffer + 0x10) | 1;
-      if (prev != (int *)0x0) {
-        prev[7] = (int)buffer;
+      buffer->hdr->flags = buffer->hdr->flags | 1;
+      if (prev != (WaveBuffer *)0x0) {
+        prev->next = buffer;
       }
       result = 0;
     }
-    buffer[7] = snd_wave_buffer_ring;
+    buffer->next = snd_wave_buffer_ring;
     snd_wave_buffers_ready_i32 = 1;
     (*(uint *)&snd_wave_total_buffer_bytes) = total_bytes;
   }
@@ -1240,25 +1240,25 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint 
 void __cdecl snd_wave_add_buffers(int count)
 
 {
-  iptr next_spare;
+  WaveBuffer *next_spare;
   uint i;
-  iptr tail2;
-  iptr buffer;
+  WaveBuffer *tail2;
+  WaveBuffer *buffer;
   
   buffer = snd_wave_spare_buffers;
-  *(uint *)(snd_wave_spare_buffers + 0xc) = *(uint *)(snd_wave_spare_buffers + 0xc) & 0xfffffffe;
+  snd_wave_spare_buffers->flags = snd_wave_spare_buffers->flags & 0xfffffffe;
   for (i = 0; (int)i < count - 1; i++) {
-    buffer = *(int *)(buffer + 0x1c);
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffe;
+    buffer = buffer->next;
+    buffer->flags = buffer->flags & 0xfffffffe;
   }
   tail2 = snd_wave_buffer_ring;
   for (i = 0; i < (*(int *)&snd_wave_buffer_count) - 1U; i++) {
-    tail2 = *(iptr *)(tail2 + 0x1c);
+    tail2 = tail2->next;
   }
-  next_spare = *(iptr *)(buffer + 0x1c);
-  *(iptr *)(tail2 + 0x1c) = snd_wave_spare_buffers;
+  next_spare = buffer->next;
+  tail2->next = snd_wave_spare_buffers;
   snd_wave_spare_buffers = next_spare;
-  *(iptr *)(buffer + 0x1c) = snd_wave_buffer_ring;
+  buffer->next = snd_wave_buffer_ring;
   (*(int *)&snd_wave_buffer_count) += count;
   return;
 }
@@ -1267,35 +1267,35 @@ void __cdecl snd_wave_add_buffers(int count)
 void __cdecl snd_wave_remove_buffers(int count)
 
 {
-  iptr removed;
+  WaveBuffer *removed;
   int i;
-  iptr buffer;
+  WaveBuffer *buffer;
   
   buffer = snd_wave_buffer_ring;
-  if ((uint)((*(int *)&snd_wave_buffer_count) - count) <= (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7 & 0xff)) {
+  if ((uint)((*(int *)&snd_wave_buffer_count) - count) <= (snd_wave_cur_buffer->flags >> 7 & 0xff)) {
     snd_wave_cur_buffer = snd_wave_buffer_ring;
   }
   for (i = 0; i < (int)(((*(int *)&snd_wave_buffer_count) - count) - 1U); i++) {
-    buffer = *(iptr *)(buffer + 0x1c);
+    buffer = buffer->next;
   }
-  removed = *(iptr *)(buffer + 0x1c);
-  *(iptr *)(buffer + 0x1c) = snd_wave_buffer_ring;
+  removed = buffer->next;
+  buffer->next = snd_wave_buffer_ring;
   buffer = removed;
   for (i = 0; i < count; i++) {
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffd;
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffb;
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 1;
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffff7;
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffef;
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffbf;
-    buffer = *(iptr *)(buffer + 0x1c);
+    buffer->flags = buffer->flags & 0xfffffffd;
+    buffer->flags = buffer->flags & 0xfffffffb;
+    buffer->flags = buffer->flags | 1;
+    buffer->flags = buffer->flags & 0xfffffff7;
+    buffer->flags = buffer->flags & 0xffffffef;
+    buffer->flags = buffer->flags & 0xffffffdf;
+    buffer->flags = buffer->flags & 0xffffffbf;
+    buffer = buffer->next;
   }
   buffer = removed;
   for (i = 0; i < count - 1; i++) {
-    buffer = *(iptr *)(buffer + 0x1c);
+    buffer = buffer->next;
   }
-  *(iptr *)(buffer + 0x1c) = snd_wave_spare_buffers;
+  buffer->next = snd_wave_spare_buffers;
   snd_wave_spare_buffers = removed;
   (*(int *)&snd_wave_buffer_count) -= count;
   return;
@@ -1306,8 +1306,8 @@ void __cdecl snd_wave_set_buffer_count(uint count)
 
 {
   if ((snd_wave_out_handle != 0) &&
-     (((snd_wave_sources == 0 || (*(short *)(snd_wave_sources + 0x88) != 4)) ||
-      ((*(uint *)(snd_wave_sources + 0x70) >> 1 & 1) != 0)))) {
+     (((snd_wave_sources == 0 || (snd_wave_sources->kind != 4)) ||
+      ((snd_wave_sources->flags >> 1 & 1) != 0)))) {
     if (snd_wave_max_buffers < count) {
       count = snd_wave_max_buffers;
     }
@@ -1325,7 +1325,7 @@ void __cdecl snd_wave_set_buffer_count(uint count)
 }
 
 /* 005d6947 auto */
-i32 __cdecl snd_wave_write_pending(char *buffer)
+i32 __cdecl snd_wave_write_pending(WaveBuffer *buffer)
 
 {
   MMRESULT write_result;
@@ -1334,25 +1334,25 @@ i32 __cdecl snd_wave_write_pending(char *buffer)
   byte *sample;
   
   result = result & 0xffff0000;
-  while ((*(uint *)(buffer + 0xc) >> 6 & 1) != 0) {
-    sample = (byte *)**(i32 **)buffer;
-    for (i = 0; i < *(uint *)(*(int *)buffer + 4); i++) {
+  while ((buffer->flags >> 6 & 1) != 0) {
+    sample = (byte *)buffer->hdr->data;
+    for (i = 0; i < buffer->hdr->length; i++) {
       *sample = *sample ^ 0x80;
       sample++;
     }
-    write_result = waveOutWrite((*(HWAVEOUT *)&snd_wave_out_handle),*(LPWAVEHDR *)buffer,0x20);
+    write_result = waveOutWrite((*(HWAVEOUT *)&snd_wave_out_handle),(LPWAVEHDR)buffer->hdr,0x20);
     result = (result & 0xffff0000 | (ushort)((short)write_result));
     if ((short)write_result == 0) {
-      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 0x20;
-      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffbf;
+      buffer->flags = buffer->flags | 0x20;
+      buffer->flags = buffer->flags & 0xffffffbf;
     }
     else {
       if ((write_result & 0xffff) != 0x21) {
         snd_waveout_error_box(result);
       }
-      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
+      buffer->flags = buffer->flags & 0xffffffdf;
     }
-    buffer = (char *)(*(iptr *)(buffer + 0x1c));
+    buffer = buffer->next;
   }
   return 0;
 }
@@ -1365,10 +1365,10 @@ void __cdecl snd_wave_stop_all(void)
 {
   BOOL got_msg;
   tagMSG msg;
-  iptr source;
+  WaveSource *source;
   uint i;
-  iptr prev;
-  iptr buffer;
+  WaveSource *prev;
+  WaveBuffer *buffer;
   
   prev = 0;
   snd_wave_stop_pending_i16 = 0;
@@ -1379,9 +1379,9 @@ void __cdecl snd_wave_stop_all(void)
       snd_stop_drained_msg_count_i32++;
     }
     while (source != 0) {
-      if (*(short *)(source + 0x88) == 4) {
+      if (source->kind == 4) {
         prev = source;
-        source = *(iptr *)(source + 0xb8);
+        source = source->next;
       }
       else {
         source = snd_wave_free(prev,source);
@@ -1390,9 +1390,9 @@ void __cdecl snd_wave_stop_all(void)
     buffer = snd_wave_buffer_ring;
     if (snd_wave_buffer_ring != 0) {
       for (i = 0; i < snd_wave_buffer_count; i++) {
-        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
-        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffbf;
-        buffer = *(iptr *)(buffer + 0x1c);
+        buffer->flags = buffer->flags & 0xffffffdf;
+        buffer->flags = buffer->flags & 0xffffffbf;
+        buffer = buffer->next;
       }
     }
   }
@@ -1417,14 +1417,14 @@ void __cdecl snd_fill_silence_u8(iptr dest,uint length)
 i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
 
 {
-  int *next;
-  iptr ring;
+  WaveBuffer *next;
+  WaveBuffer *ring;
   uint i;
   i32 result;
-  int *buffer;
+  WaveBuffer *buffer;
   
   ring = snd_wave_buffer_ring;
-  buffer = (int *)snd_wave_buffer_ring;
+  buffer = snd_wave_buffer_ring;
   snd_wave_stop_pending_i16 = 0;
   if (snd_wave_device_open != 0) {
     waveOutReset(wave_out);
@@ -1434,12 +1434,12 @@ i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
   }
   if (ring != 0) {
     for (i = 0; i < snd_wave_max_buffers; i++) {
-      next = (int *)buffer[7];
-      if (*buffer != 0) {
-        waveOutUnprepareHeader(wave_out,(LPWAVEHDR)*buffer,0x20);
-        snd_global_free(buffer[1]);
+      next = buffer->next;
+      if (buffer->hdr != 0) {
+        waveOutUnprepareHeader(wave_out,(LPWAVEHDR)buffer->hdr,0x20);
+        snd_global_free(buffer->data_handle);
       }
-      snd_global_free(buffer[2]);
+      snd_global_free(buffer->handle);
       buffer = next;
     }
   }
@@ -1454,19 +1454,19 @@ i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
 /* 005d6c99 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
+i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,WaveHeader *wave_hdr)
 
 {
   i16 sound_id;
-  i32 *hdr;
+  WaveHeader *hdr;
   int src;
   MMRESULT write_result;
-  iptr first_source;
-  i32 *source;
+  WaveSource *first_source;
+  WaveSource *source;
   uint i;
   byte *sample;
-  int *buffer;
-  i32 *prev;
+  WaveBuffer *buffer;
+  WaveSource *prev;
   int active_count;
   uint result;
   code *done_callback;
@@ -1476,110 +1476,110 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
   done_callback = (code *)0x0;
   sound_id = 0;
   if (snd_wave_device_open != 0) {
-    buffer = *(int **)(wave_hdr + 0xc);
+    buffer = wave_hdr->owner;
     i = 0;
     while ((i < snd_wave_buffer_count &&
-           (snd_wave_cur_buffer = *(int *)(snd_wave_cur_buffer + 0x1c),
-           (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0))) {
+           (snd_wave_cur_buffer = snd_wave_cur_buffer->next,
+           (snd_wave_cur_buffer->flags >> 5 & 1) == 0))) {
       i++;
     }
-    if ((*(byte *)(buffer + 3) & 1) == 0) {
-      source = (i32 *)snd_wave_sources;
-      if ((((snd_wave_sources != 0) && (*(short *)(snd_wave_sources + 0x88) == 4)) &&
-          (((uint)buffer[3] >> 1 & 1) != 0)) && (((uint)buffer[3] >> 4 & 1) != 0)) {
-        **(ushort **)(snd_wave_sources + 0x8c) = **(ushort **)(snd_wave_sources + 0x8c) & 0xfffb;
-        *(uint *)(first_source + 0x70) = *(uint *)(first_source + 0x70) | 2;
+    if (((u8)buffer->flags & 1) == 0) {
+      source = snd_wave_sources;
+      if ((((snd_wave_sources != 0) && (snd_wave_sources->kind == 4)) &&
+          ((buffer->flags >> 1 & 1) != 0)) && ((buffer->flags >> 4 & 1) != 0)) {
+        *(ushort *)snd_wave_sources->status_ptr = *(ushort *)snd_wave_sources->status_ptr & 0xfffb;
+        first_source->flags = first_source->flags | 2;
       }
       do {
-        hdr = (i32 *)*buffer;
-        sample = *(byte **)*buffer;
-        while ((source != (i32 *)0x0 && ((*(uint *)((int)source + 0x70) >> 1 & 1) != 0)))
+        hdr = buffer->hdr;
+        sample = (byte *)buffer->hdr->data;
+        while ((source != (WaveSource *)0x0 && ((source->flags >> 1 & 1) != 0)))
         {
-          source = *(i32 **)((int)source + 0xb8);
+          source = source->next;
         }
-        if (source == (i32 *)0x0) {
-          snd_fill_silence_u8(*(iptr *)*buffer,*(i32 *)(*buffer + 4));
-          buffer[3] = buffer[3] & 0xffffffdf;
+        if (source == (WaveSource *)0x0) {
+          snd_fill_silence_u8(buffer->hdr->data,buffer->hdr->length);
+          buffer->flags = buffer->flags & 0xffffffdf;
         }
         else {
-          if (((uint)buffer[3] >> 6 & 1) == 0) {
-            if (*(short *)((int)source + 0x88) == 4) {
-              if (((uint)buffer[3] >> 3 & 1) == 0) {
-                snd_avi_fill_buffer((iptr)buffer,(iptr)source);
+          if ((buffer->flags >> 6 & 1) == 0) {
+            if (source->kind == 4) {
+              if ((buffer->flags >> 3 & 1) == 0) {
+                snd_avi_fill_buffer(buffer,source);
                 snd_avi_fill_count_i32++;
               }
-              src = ((uint)buffer[3] >> 7 & 0xff) * *(int *)((int)source + 0x9c) +
-                      *(int *)((int)source + 0x30);
-              snd_resample_8bit((byte *)buffer[4],(byte *)src,buffer[6] / (int)(uint)(ushort)snd_wave_block_align,
+              src = (buffer->flags >> 7 & 0xff) * source->buffer_bytes +
+                      source->buf_start;
+              snd_resample_8bit((byte *)buffer->data,(byte *)src,buffer->length / (int)(uint)(ushort)snd_wave_block_align,
                            CONCAT22((short)((uint)source >> 0x10),
-                                    *(i16 *)((int)source + 0x80)),
+                                    (i16)source->block_align),
                            CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
-              if (((uint)buffer[3] >> 1 & 1) != 0) {
-                buffer[3] = buffer[3] | 0x10;
+              if ((buffer->flags >> 1 & 1) != 0) {
+                buffer->flags = buffer->flags | 0x10;
               }
             }
             else {
-              snd_wave_copy_source((iptr)source,*hdr,hdr[1]);
+              snd_wave_copy_source(source,hdr->data,hdr->length);
             }
-            for (source = *(i32 **)((int)source + 0xb8); source != (i32 *)0x0;
-                source = *(i32 **)((int)source + 0xb8)) {
-              if ((*(uint *)((int)source + 0x70) >> 1 & 1) == 0) {
-                snd_wave_mix_source((uptr)source,*hdr,hdr[1]);
+            for (source = source->next; source != (WaveSource *)0x0;
+                source = source->next) {
+              if ((source->flags >> 1 & 1) == 0) {
+                snd_wave_mix_source(source,hdr->data,hdr->length);
               }
             }
-            buffer[3] = buffer[3] | 0x40;
-            *(uint *)(*buffer + 0x10) = *(uint *)(*buffer + 0x10) & 0xfffffffe;
+            buffer->flags = buffer->flags | 0x40;
+            buffer->hdr->flags = buffer->hdr->flags & 0xfffffffe;
           }
-          for (i = 0; i < (uint)hdr[1]; i++) {
+          for (i = 0; i < hdr->length; i++) {
             *sample = *sample ^ 0x80;
             sample++;
           }
-          write_result = waveOutWrite(wave_out,(LPWAVEHDR)*buffer,0x20);
+          write_result = waveOutWrite(wave_out,(LPWAVEHDR)buffer->hdr,0x20);
           result = (result & 0xffff0000 | (ushort)((short)write_result));
           if ((short)write_result == 0) {
-            buffer[3] = buffer[3] & 0xffffffbf;
-            buffer[3] = buffer[3] | 0x20;
-            buffer[3] = buffer[3] & 0xfffffff7;
+            buffer->flags = buffer->flags & 0xffffffbf;
+            buffer->flags = buffer->flags | 0x20;
+            buffer->flags = buffer->flags & 0xfffffff7;
           }
           else {
             snd_waveout_error_box(result);
-            buffer[3] = buffer[3] & 0xffffffdf;
+            buffer->flags = buffer->flags & 0xffffffdf;
           }
         }
-        source = (i32 *)snd_wave_sources;
-        prev = (i32 *)0x0;
+        source = snd_wave_sources;
+        prev = (WaveSource *)0x0;
         active_count = 0;
-        while (source != (i32 *)0x0) {
-          if ((*(byte *)(source + 0x1c) & 1) == 0) {
-            if (((((uint)source[0x1c] >> 1 & 1) == 0) &&
-                (active_count = active_count + 1, ((uint)source[0x1c] >> 3 & 1) != 0)) &&
-               (*(short *)(source + 0x22) != 4)) {
-              if (((uint)source[0x1c] >> 2 & 1) == 0) {
-                mmioAdvance((HMMIO)*source,(LPMMIOINFO)(source + 6),0);
+        while (source != (WaveSource *)0x0) {
+          if (((u8)source->flags & 1) == 0) {
+            if ((((source->flags >> 1 & 1) == 0) &&
+                (active_count = active_count + 1, (source->flags >> 3 & 1) != 0)) &&
+               (source->kind != 4)) {
+              if ((source->flags >> 2 & 1) == 0) {
+                mmioAdvance(source->mmio,(LPMMIOINFO)&source->io_flags,0);
               }
               else {
-                snd_wave_stream_refill((iptr)source);
+                snd_wave_stream_refill(source);
               }
             }
             prev = source;
-            source = (i32 *)source[0x2e];
+            source = source->next;
           }
-          else if (*(short *)(source + 0x22) == 4) {
+          else if (source->kind == 4) {
             prev = source;
-            source = (i32 *)source[0x2e];
+            source = source->next;
           }
           else {
-            if (source[0x2d] != 0) {
-              done_callback = (code *)source[0x2d];
-              source[0x2d] = 0;
-              sound_id = *(i16 *)((int)source + 0x8a);
+            if (source->done_callback != 0) {
+              done_callback = (code *)source->done_callback;
+              source->done_callback = 0;
+              sound_id = source->sound_id;
             }
-            source = (i32 *)snd_wave_free((iptr)prev,(iptr)source);
+            source = snd_wave_free(prev,source);
           }
         }
-        source = (i32 *)snd_wave_sources;
-        buffer = (int *)buffer[7];
-      } while ((active_count != 0) && (((uint)buffer[3] >> 5 & 1) == 0));
+        source = snd_wave_sources;
+        buffer = buffer->next;
+      } while ((active_count != 0) && ((buffer->flags >> 5 & 1) == 0));
       if (done_callback != (code *)0x0) {
         call_untyped(done_callback, sound_id);
       }
@@ -1589,86 +1589,86 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
 }
 
 /* 005d717f auto */
-i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
+i32 __cdecl snd_wave_mix_buffer(WaveHeader *hdr)
 
 {
   bool finished;
   i32 result;
   int src;
-  iptr buffer;
-  i32 *source;
-  i32 *prev;
+  WaveBuffer *buffer;
+  WaveSource *source;
+  WaveSource *prev;
   
   finished = false;
   if (snd_wave_device_open == 0) {
     result = 0;
   }
   else {
-    buffer = hdr[3];
-    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffd;
-    source = (i32 *)snd_wave_sources;
-    while ((source != (i32 *)0x0 && ((*(uint *)((int)source + 0x70) >> 1 & 1) != 0))) {
-      source = *(i32 **)((int)source + 0xb8);
+    buffer = hdr->owner;
+    buffer->flags = buffer->flags & 0xfffffffd;
+    source = snd_wave_sources;
+    while ((source != (WaveSource *)0x0 && ((source->flags >> 1 & 1) != 0))) {
+      source = source->next;
     }
-    if (source == (i32 *)0x0) {
-      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
+    if (source == (WaveSource *)0x0) {
+      buffer->flags = buffer->flags & 0xffffffdf;
     }
     else {
-      if ((*(uint *)(buffer + 0xc) >> 6 & 1) == 0) {
-        if (*(short *)((int)source + 0x88) == 4) {
-          src = (*(uint *)(buffer + 0xc) >> 7 & 0xff) * *(int *)((int)source + 0x9c) +
-                  *(int *)((int)source + 0x30);
-          snd_resample_8bit((byte *)*(i32 *)(buffer + 0x10),(byte *)src,
-                       *(int *)(buffer + 0x18) / (int)(uint)(ushort)snd_wave_block_align,
+      if ((buffer->flags >> 6 & 1) == 0) {
+        if (source->kind == 4) {
+          src = (buffer->flags >> 7 & 0xff) * source->buffer_bytes +
+                  source->buf_start;
+          snd_resample_8bit((byte *)buffer->data,(byte *)src,
+                       buffer->length / (int)(uint)(ushort)snd_wave_block_align,
                        CONCAT22((short)((uint)source >> 0x10),
-                                *(i16 *)((int)source + 0x80)),
+                                (i16)source->block_align),
                        CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
         }
         else {
-          src = snd_wave_copy_source((iptr)source,*hdr,hdr[1]);
+          src = snd_wave_copy_source(source,hdr->data,hdr->length);
           if (src == 1) {
             finished = true;
           }
         }
-        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 0x40;
-        source = *(i32 **)((int)source + 0xb8);
+        buffer->flags = buffer->flags | 0x40;
+        source = source->next;
       }
-      for (; source != (i32 *)0x0; source = *(i32 **)((int)source + 0xb8)) {
-        if (((*(uint *)((int)source + 0x70) >> 1 & 1) == 0) &&
-           (src = snd_wave_mix_source((uptr)source,*hdr,hdr[1]), src == 0)) {
+      for (; source != (WaveSource *)0x0; source = source->next) {
+        if (((source->flags >> 1 & 1) == 0) &&
+           (src = snd_wave_mix_source(source,hdr->data,hdr->length), src == 0)) {
           finished = false;
         }
       }
-      hdr[4] = hdr[4] & 0xfffffffe;
+      hdr->flags = hdr->flags & 0xfffffffe;
     }
-    source = (i32 *)snd_wave_sources;
-    prev = (i32 *)0x0;
-    while (source != (i32 *)0x0) {
-      if ((*(byte *)(source + 0x1c) & 1) == 0) {
-        if ((((uint)source[0x1c] >> 1 & 1) == 0) && (((uint)source[0x1c] >> 3 & 1) != 0)) {
-          if (*(short *)(source + 0x22) == 4) {
-            snd_avi_stream_refill((iptr)source);
+    source = snd_wave_sources;
+    prev = (WaveSource *)0x0;
+    while (source != (WaveSource *)0x0) {
+      if (((u8)source->flags & 1) == 0) {
+        if (((source->flags >> 1 & 1) == 0) && ((source->flags >> 3 & 1) != 0)) {
+          if (source->kind == 4) {
+            snd_avi_stream_refill(source);
           }
-          if (*(short *)(source + 0x22) != 4) {
-            if (((uint)source[0x1c] >> 2 & 1) == 0) {
-              mmioAdvance((HMMIO)*source,(LPMMIOINFO)(source + 6),0);
+          if (source->kind != 4) {
+            if ((source->flags >> 2 & 1) == 0) {
+              mmioAdvance(source->mmio,(LPMMIOINFO)&source->io_flags,0);
             }
             else {
-              snd_wave_stream_refill((iptr)source);
+              snd_wave_stream_refill(source);
             }
           }
         }
         prev = source;
-        source = (i32 *)source[0x2e];
+        source = source->next;
       }
-      else if (*(short *)(source + 0x22) == 4) {
-        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 2;
-        source[0x1c] = source[0x1c] | 2;
+      else if (source->kind == 4) {
+        buffer->flags = buffer->flags | 2;
+        source->flags = source->flags | 2;
         prev = source;
-        source = (i32 *)source[0x2e];
+        source = source->next;
       }
       else {
-        source = (i32 *)snd_wave_free((iptr)prev,(iptr)source);
+        source = snd_wave_free(prev,source);
       }
     }
     if ((snd_wave_sources == 0) || (finished)) {
@@ -1682,29 +1682,29 @@ i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
 }
 
 /* 005d7494 auto */
-iptr __cdecl snd_wave_free(iptr prev,iptr source)
+WaveSource * __cdecl snd_wave_free(WaveSource *prev,WaveSource *source)
 
 {
-  iptr next;
-  iptr new_head;
+  WaveSource *next;
+  WaveSource *new_head;
   
   if (source == 0) {
     next = 0;
   }
   else {
-    next = *(iptr *)(source + 0xb8);
+    next = source->next;
     new_head = next;
     if (prev != 0) {
-      *(iptr *)(prev + 0xb8) = next;
+      prev->next = next;
       new_head = snd_wave_sources;
     }
     snd_wave_sources = new_head;
-    mmioClose(*(HMMIO *)source,0);
-    if ((*(uint *)(source + 0x70) >> 2 & 1) != 0) {
-      mmioClose(*(HMMIO *)(source + 0x60),0);
+    mmioClose(source->mmio,0);
+    if ((source->flags >> 2 & 1) != 0) {
+      mmioClose(source->file_mmio,0);
     }
-    GlobalUnlock(*(HGLOBAL *)(source + 0x6c));
-    GlobalFree(*(HGLOBAL *)(source + 0x6c));
+    GlobalUnlock(source->mem_handle);
+    GlobalFree(source->mem_handle);
     snd_wave_source_count--;
   }
   return next;
@@ -1713,7 +1713,7 @@ iptr __cdecl snd_wave_free(iptr prev,iptr source)
 /* 005d753e auto */
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
-i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
+i32 __cdecl snd_wave_copy_source(WaveSource *source,int dst,uint length)
 
 {
   ushort consumed;
@@ -1724,55 +1724,55 @@ i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
   uint remaining;
   
   want = length / (ushort)snd_wave_block_align;
-  if ((source == 0) || ((*(byte *)(source + 0x70) & 1) != 0)) {
+  if ((source == 0) || (((u8)source->flags & 1) != 0)) {
     count = 0;
   }
   else {
-    if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
-      remaining = *(int *)(source + 8) - *(int *)(source + 100);
+    if ((source->flags >> 2 & 1) == 0) {
+      remaining = source->data_size - source->play_pos;
     }
     else {
-      remaining = *(int *)(source + 0x3c) - *(int *)(source + 0x34);
+      remaining = source->buf_end - source->buf_next;
     }
-    avail = remaining / *(ushort *)(source + 0x80);
+    avail = remaining / source->block_align;
     count = want;
     if (avail < want) {
-      *(uint *)(source + 0x70) = *(uint *)(source + 0x70) | 1;
+      source->flags = source->flags | 1;
       count = avail;
     }
-    if ((uint)(*(int *)(source + 0x3c) - *(int *)(source + 0x34)) /
-        (uint)*(ushort *)(source + 0x80) < want * 2) {
-      *(uint *)(source + 0x70) = *(uint *)(source + 0x70) | 8;
+    if ((uint)(source->buf_end - source->buf_next) /
+        (uint)source->block_align < want * 2) {
+      source->flags = source->flags | 8;
     }
     else {
-      *(uint *)(source + 0x70) = *(uint *)(source + 0x70) & 0xfffffff7;
+      source->flags = source->flags & 0xfffffff7;
     }
     want -= count;
   }
   if (count != 0) {
-    consumed = snd_resample_8bit((byte *)dst,(byte *)*(i32 *)(source + 0x34),count,
-                         CONCAT22((short)((uint)source >> 0x10),*(i16 *)(source + 0x80)),
+    consumed = snd_resample_8bit((byte *)dst,(byte *)source->buf_next,count,
+                         CONCAT22((short)((uint)source >> 0x10),(i16)source->block_align),
                          CONCAT22((short)(want >> 0x10),(ushort)snd_wave_block_align));
-    *(int *)(source + 0x34) = *(int *)(source + 0x34) + (uint)consumed;
-    if ((*(short *)(source + 0x88) == 4) && (*(int *)(source + 0x3c) == *(int *)(source + 0x34)))
+    source->buf_next = source->buf_next + (uint)consumed;
+    if ((source->kind == 4) && (source->buf_end == source->buf_next))
     {
-      *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
+      source->buf_next = source->buf_start;
     }
-    *(uint *)(source + 0x70) = *(uint *)(source + 0x70) & 0xffffffef;
+    source->flags = source->flags & 0xffffffef;
   }
   if (want == 0) {
-    if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
-      *(int *)(source + 100) = *(int *)(source + 100) + *(ushort *)(source + 0x80) * count;
+    if ((source->flags >> 2 & 1) == 0) {
+      source->play_pos = source->play_pos + source->block_align * count;
     }
     else {
-      *(i32 *)(source + 100) = 0;
+      source->play_pos = 0;
     }
     result = 0;
   }
   else {
     _memset((void *)(dst + (ushort)snd_wave_block_align * count),0,(ushort)snd_wave_block_align * want);
     if ((source != 0) && (remaining != 0)) {
-      *(int *)(source + 100) = *(int *)(source + 100) + *(ushort *)(source + 0x80) * count;
+      source->play_pos = source->play_pos + source->block_align * count;
     }
     result = 1;
   }
@@ -1780,7 +1780,7 @@ i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
 }
 
 /* 005d778c auto */
-i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
+i32 __cdecl snd_wave_mix_source(WaveSource *source,i32 dst,uint length)
 
 {
   ushort consumed;
@@ -1792,42 +1792,42 @@ i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
   i32 count;
   uint remaining;
   
-  if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
-    remaining = *(int *)(source + 8) - *(int *)(source + 100);
+  if ((source->flags >> 2 & 1) == 0) {
+    remaining = source->data_size - source->play_pos;
   }
   else {
-    remaining = *(int *)(source + 0x3c) - *(int *)(source + 0x34);
+    remaining = source->buf_end - source->buf_next;
   }
-  avail = remaining / *(ushort *)(source + 0x80);
+  avail = remaining / source->block_align;
   want = length / (ushort)snd_wave_block_align;
   count = want;
   if (avail < want) {
-    *(uint *)(source + 0x70) = *(uint *)(source + 0x70) | 1;
+    source->flags = source->flags | 1;
     count = avail;
   }
-  if ((uint)(*(int *)(source + 0x3c) - *(int *)(source + 0x34)) /
-      (uint)*(ushort *)(source + 0x80) < want * 2) {
-    flags = *(uint *)(source + 0x70) | 8;
-    *(uptr *)(source + 0x70) = flags;
+  if ((uint)(source->buf_end - source->buf_next) /
+      (uint)source->block_align < want * 2) {
+    flags = source->flags | 8;
+    source->flags = flags;
   }
   else {
-    *(uint *)(source + 0x70) = *(uint *)(source + 0x70) & 0xfffffff7;
-    flags = source;
+    source->flags = source->flags & 0xfffffff7;
+    flags = (uptr)source;
   }
   if (count != 0) {
-    consumed = snd_mix_8bit_resample((char *)dst,(byte *)*(i32 *)(source + 0x34),count,
-                         CONCAT22((short)(source >> 0x10),*(i16 *)(source + 0x80)),
+    consumed = snd_mix_8bit_resample((char *)dst,(byte *)source->buf_next,count,
+                         CONCAT22((short)((uptr)source >> 0x10),(i16)source->block_align),
                          CONCAT22((short)(flags >> 0x10),(ushort)snd_wave_block_align));
     advance = (uint)consumed;
-    *(int *)(source + 0x34) = *(int *)(source + 0x34) + advance;
+    source->buf_next = source->buf_next + advance;
   }
-  if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
-    *(int *)(source + 100) = *(int *)(source + 100) + *(ushort *)(source + 0x80) * count;
+  if ((source->flags >> 2 & 1) == 0) {
+    source->play_pos = source->play_pos + source->block_align * count;
   }
   else {
-    *(i32 *)(source + 100) = 0;
+    source->play_pos = 0;
   }
-  if (((*(byte *)(source + 0x70) & 1) == 0) || ((*(uint *)(source + 0x70) >> 2 & 1) != 0)) {
+  if ((((u8)source->flags & 1) == 0) || ((source->flags >> 2 & 1) != 0)) {
     result = 0;
   }
   else {
@@ -1837,58 +1837,58 @@ i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
 }
 
 /* 005d791b auto */
-i32 __cdecl snd_avi_fill_buffer(iptr buffer,iptr source)
+i32 __cdecl snd_avi_fill_buffer(WaveBuffer *buffer,WaveSource *source)
 
 {
   i32 result;
   uint limit;
-  iptr head;
+  WaveSource *head;
   uint byte_count;
   uint i;
   int bytes_read;
   
   head = snd_wave_sources;
-  if (*(int *)(source + 0x98) == buffer) {
-    byte_count = *(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68);
+  if (source->fill_buffer == buffer) {
+    byte_count = snd_wave_sources->buffer_bytes - snd_wave_sources->buffer_fill;
     bytes_read = 0;
-    limit = *(int *)(snd_wave_sources + 8) -
-            (*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94));
+    limit = snd_wave_sources->data_size -
+            (snd_wave_sources->stream_pos - snd_wave_sources->stream_start);
     if (limit < byte_count) {
       byte_count = limit;
     }
-    AVIStreamRead(*(i32 *)(snd_wave_sources + 0x84),
-                  *(uint *)(snd_wave_sources + 0x90) / (uint)*(ushort *)(snd_wave_sources + 0x80),
-                  byte_count / *(ushort *)(snd_wave_sources + 0x80),(LPVOID)*(i32 *)(snd_wave_sources + 0x34)
+    AVIStreamRead(snd_wave_sources->avi_stream,
+                  (uint)snd_wave_sources->stream_pos / (uint)snd_wave_sources->block_align,
+                  byte_count / snd_wave_sources->block_align,(LPVOID)snd_wave_sources->buf_next
                   ,byte_count,&bytes_read,0);
-    *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + bytes_read;
-    *(int *)(head + 0x34) = *(int *)(head + 0x34) + bytes_read;
-    *(int *)(snd_wave_sources + 0x68) = *(int *)(snd_wave_sources + 0x68) + bytes_read;
-    if (*(int *)(head + 0x3c) == *(int *)(head + 0x34)) {
-      *(i32 *)(head + 0x34) = *(i32 *)(head + 0x30);
+    snd_wave_sources->stream_pos = snd_wave_sources->stream_pos + bytes_read;
+    head->buf_next = head->buf_next + bytes_read;
+    snd_wave_sources->buffer_fill = snd_wave_sources->buffer_fill + bytes_read;
+    if (head->buf_end == head->buf_next) {
+      head->buf_next = head->buf_start;
     }
-    if (*(uint *)(snd_wave_sources + 0x9c) <= *(uint *)(snd_wave_sources + 0x68)) {
-      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 8;
-      *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(buffer + 0x1c);
-      buffer = *(iptr *)(snd_wave_sources + 0x98);
-      *(i32 *)(snd_wave_sources + 0x68) = 0;
+    if ((uint)snd_wave_sources->buffer_bytes <= (uint)snd_wave_sources->buffer_fill) {
+      buffer->flags = buffer->flags | 8;
+      snd_wave_sources->fill_buffer = buffer->next;
+      buffer = snd_wave_sources->fill_buffer;
+      snd_wave_sources->buffer_fill = 0;
     }
-    if (*(uint *)(snd_wave_sources + 8) <=
-        (uint)(*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94))) {
+    if ((uint)snd_wave_sources->data_size <=
+        (uint)(snd_wave_sources->stream_pos - snd_wave_sources->stream_start)) {
       i = 0;
-      while ((i < (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68)) &&
-             (*(uint *)(head + 0x34) < *(uint *)(head + 0x3c)))) {
-        **(i8 **)(head + 0x34) = 0x80;
-        *(int *)(head + 0x34) = *(int *)(head + 0x34) + 1;
+      while ((i < (uint)(snd_wave_sources->buffer_bytes - snd_wave_sources->buffer_fill) &&
+             ((uint)head->buf_next < (uint)head->buf_end))) {
+        *(i8 *)head->buf_next = 0x80;
+        head->buf_next = head->buf_next + 1;
         i++;
       }
-      if (*(int *)(head + 0x3c) == *(int *)(head + 0x34)) {
-        *(i32 *)(head + 0x34) = *(i32 *)(head + 0x30);
+      if (head->buf_end == head->buf_next) {
+        head->buf_next = head->buf_start;
       }
-      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffff7;
-      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 2;
-      *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 1;
-      *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(buffer + 0x1c);
-      *(i32 *)(snd_wave_sources + 0x68) = 0;
+      buffer->flags = buffer->flags & 0xfffffff7;
+      buffer->flags = buffer->flags | 2;
+      snd_wave_sources->flags = snd_wave_sources->flags | 1;
+      snd_wave_sources->fill_buffer = buffer->next;
+      snd_wave_sources->buffer_fill = 0;
     }
     result = 0;
   }
@@ -1948,8 +1948,8 @@ i32 __thiscall avi_player_dtor(AviPlayer *self)
   *(i8 ***)self->media_window_base = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 3;
-  avi_play_pause((iptr)self);
-  avi_close((iptr)self);
+  avi_play_pause(self);
+  avi_close(self);
   avi_current_player_i32 = 0;
   (*((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x558)); }
@@ -2008,8 +2008,8 @@ int __thiscall avi_player_open(AviPlayerOpenView *self,const char *filename)
 {
   int result;
   
-  avi_close((iptr)self);
-  result = avi_open_file((iptr)self,filename);
+  avi_close((AviPlayer *)self);
+  result = avi_open_file((AviPlayer *)self,filename);
   if (result == 0) {
     result = 0;
   }
@@ -2024,7 +2024,7 @@ void __thiscall avi_player_play(AviPlayerPlayView *self)
   ((AviPlayerPlayViewExt *)self)->loop_flag_byte1[0] = '\0';
   ((AviPlayerPlayViewExt *)self)->loop_flag_byte2[0] = '\0';
   ((AviPlayerPlayViewExt *)self)->loop_flag_byte3[0] = '\0';
-  avi_play_start((iptr)self);
+  avi_play_start((AviPlayer *)self);
   return;
 }
 
@@ -2034,10 +2034,10 @@ void __thiscall avi_player_play_range(AviPlayerRangeView *self,u32 first_frame,u
 {
   if ((int)first_frame <= (int)last_frame) {
     self->loop = 0;
-    avi_seek_frame((iptr)self,first_frame,0);
+    avi_seek_frame((AviPlayer *)self,first_frame,0);
     self->end_frame = last_frame;
     self->start_frame = first_frame;
-    avi_play_start((iptr)self);
+    avi_play_start((AviPlayer *)self);
   }
   return;
 }
@@ -2046,7 +2046,7 @@ void __thiscall avi_player_play_range(AviPlayerRangeView *self,u32 first_frame,u
 void __thiscall avi_player_show_frame(void *self,i32 frame)
 
 {
-  avi_seek_frame((iptr)self,frame,1);
+  avi_seek_frame((AviPlayer *)self,frame,1);
   return;
 }
 
@@ -2055,10 +2055,10 @@ void __thiscall avi_player_loop_range(AviPlayerLoopView *self,u32 first_frame,u3
 
 {
   self->start_frame = first_frame;
-  avi_seek_frame((iptr)self,first_frame,0);
+  avi_seek_frame((AviPlayer *)self,first_frame,0);
   self->end_frame = last_frame;
   self->loop = 1;
-  avi_play_start((iptr)self);
+  avi_play_start((AviPlayer *)self);
   return;
 }
 
@@ -2066,7 +2066,7 @@ void __thiscall avi_player_loop_range(AviPlayerLoopView *self,u32 first_frame,u3
 void __thiscall avi_player_pause(AviPlayerPauseView *self)
 
 {
-  avi_play_pause((iptr)self);
+  avi_play_pause((AviPlayer *)self);
   return;
 }
 
@@ -2074,7 +2074,7 @@ void __thiscall avi_player_pause(AviPlayerPauseView *self)
 void __thiscall avi_player_set_palette(DibSurface *self,iptr palette)
 
 {
-  avi_apply_palette((iptr)self,(GamePalette *)palette);
+  avi_apply_palette((AviPlayer *)self,(GamePalette *)palette);
   surface_set_palette(self,palette);
   wnd_set_palette((WndBase *)(self + 1),palette);
   return;
@@ -2097,13 +2097,13 @@ avi_player_draw_to(DibSurface *self,iptr dest,int x,int y)
       dest_size = surface_height((DibSurface *)dest);
       src_size = surface_get_height(self);
       if (src_size <= dest_size - y) {
-        avi_decode_frame((iptr)self,0);
+        avi_decode_frame((AviPlayer *)self,0);
         dest_size = surface_get_height(self);
         src_size = surface_get_width(self);
         SetRect(&src_rect,0,0,src_size,dest_size);
         CopyRect(&dst_rect,&src_rect);
         OffsetRect(&dst_rect,x,y);
-        surface_blit(self,dest,(iptr)&src_rect,(iptr)&dst_rect);
+        surface_blit(self,(DibSurface *)dest,&src_rect,&dst_rect);
       }
     }
   }
@@ -2132,12 +2132,12 @@ void __thiscall avi_player_set_transparent(AviPlayerSetTransparentView *self,int
   if (enable == 0) {
     if (self->is_transparent != 0) {
       self->is_transparent = 0;
-      avi_restart_decompress((iptr)self,0);
+      avi_restart_decompress((AviPlayer *)self,0);
     }
   }
   else if (self->is_transparent == 0) {
     self->is_transparent = 1;
-    avi_restart_decompress((iptr)self,1);
+    avi_restart_decompress((AviPlayer *)self,1);
   }
   return;
 }
@@ -2414,13 +2414,13 @@ void __cdecl avi_update_current_frame(void)
 /* 005e1c8e auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-int __cdecl avi_open_file(iptr player,const char *filename)
+int __cdecl avi_open_file(AviPlayer *player,const char *filename)
 
 {
   int attach_result;
   i32 start_frame;
   int value;
-  iptr dib;
+  GdiDib *dib;
   HGLOBAL mem_handle;
   i8 palette_rgb[708];
   AVISTREAMINFOA stream_info;
@@ -2456,62 +2456,62 @@ int __cdecl avi_open_file(iptr player,const char *filename)
     result = AVIFileGetStream(avi_file[0],((PAVISTREAM *)&avi_video_stream),0x73646976,0);
     if (result == 0) {
       value = 0;
-      if (*(int *)(player + 0x5a8) != 0) {
+      if (player->has_audio != 0) {
         result = AVIFileGetStream(avi_file[0],((PAVISTREAM *)&avi_audio_stream),0x73647561,0);
         if (result == 0) {
-          *(i32 *)(player + 0x5b0) = 0;
-          attach_result = avi_audio_attach_stream((AviAudioAttachView *)(player + 0x11c),avi_audio_stream[0]);
+          player->audio_playing = 0;
+          attach_result = avi_audio_attach_stream((AviAudioAttachView *)&player->audio,avi_audio_stream[0]);
           value = result;
           if (attach_result == 0) {
-            *(i32 *)(player + 0x5a8) = 1;
+            player->has_audio = 1;
           }
           else {
-            *(i32 *)(player + 0x5a8) = 0;
+            player->has_audio = 0;
           }
         }
         else {
-          *(i32 *)(player + 0x5a8) = 0;
+          player->has_audio = 0;
           value = result;
         }
       }
       result = value;
       format_size = 0x28;
-      AVIStreamReadFormat(avi_video_stream[0],1,(LPVOID)(player + 0x5c0),&format_size);
+      AVIStreamReadFormat(avi_video_stream[0],1,(LPVOID)&player->src_format,&format_size);
       AVIStreamInfoA(avi_video_stream[0],&stream_info,0x8c);
-      *(SIZE_T *)(player + 0x5d4) = stream_info.dwSuggestedBufferSize;
+      player->src_format.size_image = stream_info.dwSuggestedBufferSize;
       err_report_ctx_block.avi_frames_per_second_i32 = stream_info.dwRate / stream_info.dwScale;
-      avi_decompressor = ICLocate(0x63646976,stream_info.fccHandler,(LPBITMAPINFOHEADER)(player + 0x5c0),0,2);
+      avi_decompressor = ICLocate(0x63646976,stream_info.fccHandler,(LPBITMAPINFOHEADER)&player->src_format,0,2);
       if (avi_decompressor == 0) {
         avi_close(player);
         result = 0;
       }
       else {
         start_frame = AVIStreamStart(avi_video_stream[0]);
-        *(i32 *)(player + 0xa10) = start_frame;
+        player->start_frame = start_frame;
         value = AVIStreamLength(avi_video_stream[0]);
-        *(int *)(player + 0xa14) = *(int *)(player + 0xa10) + value - 1;
-        *(i32 *)(player + 0xa18) = *(i32 *)(player + 0xa10);
-        crt_memcpy((void *)(player + 0x5e8),(const void *)(player + 0x5c0),0x28);
-        *(i32 *)(player + 0x5f8) = 0;
-        *(i16 *)(player + 0x5f6) = 8;
-        *(i32 *)(player + 0x5fc) = 0;
-        *(i32 *)(player + 0x608) = 0x100;
-        avi_frame_width = *(int *)(player + 0x5c4);
-        avi_frame_height = *(int *)(player + 0x5c8);
+        player->end_frame = player->start_frame + value - 1;
+        player->cur_frame = player->start_frame;
+        crt_memcpy((void *)&player->dst_format,(const void *)&player->src_format,0x28);
+        player->dst_format.compression = 0;
+        player->dst_format.bit_count = 8;
+        player->dst_format.size_image = 0;
+        player->dst_format.clr_used = 0x100;
+        avi_frame_width = player->src_format.width;
+        avi_frame_height = player->src_format.height;
         dib = surface_get_dib((DibSurface *)player);
         value = dib_is_top_down(dib);
         if (value != 0) {
-          *(int *)(player + 0x5f0) = -*(int *)(player + 0x5f0);
+          player->dst_format.height = -player->dst_format.height;
         }
-        if (*(int *)(player + 0x5a0) == 0) {
+        if (player->double_size == 0) {
           wnd_resize_clamped((WindowObjectView *)player,avi_frame_width,avi_frame_height);
         }
         else {
           wnd_resize_clamped((WindowObjectView *)player,avi_frame_width * 2,avi_frame_height * 2);
         }
         if (stream_info.dwSuggestedBufferSize == 0) {
-          value = (uint)*(ushort *)(player + 0x5ce) * *(int *)(player + 0x5c4) *
-                  *(int *)(player + 0x5c8);
+          value = (uint)player->src_format.bit_count * player->src_format.width *
+                  player->src_format.height;
           mem_handle = GlobalAlloc(0x40,(int)(value + (value >> 0x1f & 7U)) >> 3);
           avi_frame_buffer = GlobalLock(mem_handle);
         }
@@ -2524,35 +2524,35 @@ int __cdecl avi_open_file(iptr player,const char *filename)
           result = 0;
         }
         else {
-          result = avi_ic_decompress_ex_query(avi_decompressor,0,player + 0x5c0,0,0,0,
-                                 *(i32 *)(player + 0x5c4),*(i32 *)(player + 0x5c8),
-                                 player + 0x5e8,0,0,0,*(i32 *)(player + 0x5c4),
-                                 *(i32 *)(player + 0x5c8));
+          result = avi_ic_decompress_ex_query(avi_decompressor,0,(iptr)&player->src_format,0,0,0,
+                                 player->src_format.width,player->src_format.height,
+                                 (iptr)&player->dst_format,0,0,0,player->src_format.width,
+                                 player->src_format.height);
           if (result == 0) {
-            ICSendMessage(avi_decompressor,0x401e,player + 0x5c0,player + 0x5e8);
+            ICSendMessage(avi_decompressor,0x401e,(iptr)&player->src_format,(iptr)&player->dst_format);
             for (i = 0; i < 0xec; i++) {
-              palette_rgb[i * 3] = *(i8 *)(player + 0x63a + i * 4);
-              palette_rgb[i * 3 + 1] = *(i8 *)(player + 0x639 + i * 4);
-              palette_rgb[i * 3 + 2] = *(i8 *)(player + 0x638 + i * 4);
+              palette_rgb[i * 3] = (i8)player->dst_colors[0x2a + i * 4];
+              palette_rgb[i * 3 + 1] = (i8)player->dst_colors[0x29 + i * 4];
+              palette_rgb[i * 3 + 2] = (i8)player->dst_colors[0x28 + i * 4];
             }
             palette_set_rgb
-                      ((GamePalette *)(player + 0x124),10,0xec,(iptr)palette_rgb);
-            ICSendMessage(avi_decompressor,0x401d,player + 0x5e8,0);
-            result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,
-                                   *(i32 *)(player + 0x5c4),*(i32 *)(player + 0x5c8)
-                                   ,player + 0x5e8,0,0,0,*(i32 *)(player + 0x5c4),
-                                   *(i32 *)(player + 0x5c8));
+                      (&player->palette,10,0xec,(iptr)palette_rgb);
+            ICSendMessage(avi_decompressor,0x401d,(iptr)&player->dst_format,0);
+            result = avi_ic_decompress_ex_begin(avi_decompressor,0,(iptr)&player->src_format,0,0,0,
+                                   player->src_format.width,player->src_format.height
+                                   ,(iptr)&player->dst_format,0,0,0,player->src_format.width,
+                                   player->src_format.height);
             if (result == 0) {
               avi_file_loaded = 1;
               avi_playing = 0;
-              if (*(int *)(player + 0x5a4) == 0) {
+              if (player->transparent == 0) {
                 avi_restart_decompress(player,0);
               }
               else {
                 avi_restart_decompress(player,1);
               }
-              value = (uint)*(ushort *)(player + 0x5ce) * *(int *)(player + 0x5c4) *
-                      *(int *)(player + 0x5c8);
+              value = (uint)player->src_format.bit_count * player->src_format.width *
+                      player->src_format.height;
               avi_frame_buffer_size = (int)(value + (value >> 0x1f & 7U)) >> 3;
               avi_blit_union_left_block.g_video_frame_count = 0;
               err_report_ctx_block.avi_indeo_frame_extra_i32 = 0;
@@ -2637,14 +2637,14 @@ __stdcall avi_ic_decompress_ex_query(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
 }
 
 /* 005e2675 auto */
-void __cdecl avi_play_pause(iptr player)
+void __cdecl avi_play_pause(AviPlayer *player)
 
 {
   if ((player != 0) && (avi_file_loaded != 0)) {
-    if (*(int *)(player + 0x5a8) != 0) {
-      *(i32 *)(player + 0x5b0) = 0;
+    if (player->has_audio != 0) {
+      player->audio_playing = 0;
     }
-    *(i32 *)(player + 0x5ac) = 1;
+    player->paused = 1;
     if (avi_playing != 0) {
       wnd_modal_stack_below_block.avi_idle_update_enabled = 0;
       avi_blit_union_left_block.avi_frame_needs_blit = 0;
@@ -2655,7 +2655,7 @@ void __cdecl avi_play_pause(iptr player)
 }
 
 /* 005e2799 auto */
-void __cdecl avi_close(iptr player)
+void __cdecl avi_close(AviPlayer *player)
 
 {
   HGLOBAL mem_handle;
@@ -2698,7 +2698,7 @@ void __cdecl avi_close(iptr player)
 }
 
 /* 005e28cd auto */
-void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
+void __cdecl avi_seek_frame(AviPlayer *player,uint frame_index,int redraw)
 
 {
   i32 key_frame;
@@ -2709,7 +2709,7 @@ void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
       avi_play_pause(player);
     }
     key_frame = AVIStreamFindSample(avi_video_stream[0],frame_index,0x14);
-    *(i32 *)(player + 0xa18) = key_frame;
+    player->cur_frame = key_frame;
     while( true ) {
       if ((int)frame_index < 0) {
         target_frame = 0;
@@ -2717,7 +2717,7 @@ void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
       else {
         target_frame = frame_index;
       }
-      if (target_frame <= *(uint *)(player + 0xa18)) break;
+      if (target_frame <= (uint)player->cur_frame) break;
       avi_decode_frame(player,0x80000000);
     }
     avi_decode_frame(player,0);
@@ -2729,7 +2729,7 @@ void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
 }
 
 /* 005e2997 auto */
-int __cdecl avi_decode_frame(iptr player,int decode_flags)
+int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
 
 {
   i32 dst_bits;
@@ -2747,58 +2747,58 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
     result = 1;
   }
   else {
-    if ((*(int *)(player + 0x5a4) != 0) && (decode_flags == 0)) {
-      surface_blit((DibSurface *)(player + 0x558),player,(iptr)&avi_blit_union_left_block.avi_blit_union_left,(iptr)&avi_blit_union_left_block.avi_blit_union_left);
+    if ((player->transparent != 0) && (decode_flags == 0)) {
+      surface_blit(&player->backdrop,(DibSurface *)player,(RECT *)&avi_blit_union_left_block.avi_blit_union_left,(RECT *)&avi_blit_union_left_block.avi_blit_union_left);
     }
-    result = AVIStreamRead(avi_video_stream[0],*(i32 *)(player + 0xa18),1,avi_frame_buffer,
+    result = AVIStreamRead(avi_video_stream[0],player->cur_frame,1,avi_frame_buffer,
                             avi_frame_buffer_size,&bytes_read,0);
     if (result == 0) {
-      *(i32 *)(player + 0x5d4) = bytes_read;
-      if (*(int *)(player + 0x5a0) == 0) {
+      player->src_format.size_image = bytes_read;
+      if (player->double_size == 0) {
         y_dst = 0;
         x_dst = 0;
         dst_dim_b = avi_frame_width;
         dst_dim_a = avi_frame_height;
         dst_bits = surface_get_bits((DibSurface *)player);
-        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,player + 0x5c0,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
-                               avi_frame_height,player + 0x5e8,dst_bits,x_dst,y_dst,dst_dim_b,dst_dim_a);
+        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,(iptr)&player->src_format,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
+                               avi_frame_height,(iptr)&player->dst_format,dst_bits,x_dst,y_dst,dst_dim_b,dst_dim_a);
       }
       else {
-        *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) << 1;
-        *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) << 1;
+        player->dst_format.height = player->dst_format.height << 1;
+        player->dst_format.width = player->dst_format.width << 1;
         dst_dim_b = avi_frame_height * 2;
         dst_dim_a = avi_frame_width * 2;
         y_dst = 0;
         x_dst = 0;
         dst_bits = surface_get_bits((DibSurface *)player);
-        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,player + 0x5c0,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
-                               avi_frame_height,player + 0x5e8,dst_bits,x_dst,y_dst,dst_dim_a,dst_dim_b);
-        *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) >> 1;
-        *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) >> 1;
+        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,(iptr)&player->src_format,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
+                               avi_frame_height,(iptr)&player->dst_format,dst_bits,x_dst,y_dst,dst_dim_a,dst_dim_b);
+        player->dst_format.height = player->dst_format.height >> 1;
+        player->dst_format.width = player->dst_format.width >> 1;
       }
       if ((result != 0) && (result != 1)) {
         wsprintfA(message,str_icdecompressex_returned_ld,result);
         MessageBoxA((HWND)0x0,message,str_get_frame,0);
       }
-      if ((*(int *)(player + 0xa20) != 0) &&
-         (*(int *)(player + 0xa20) == *(int *)(player + 0xa18))) {
-        *(i32 *)(player + 0xa20) = 0;
+      if ((player->cue_frame != 0) &&
+         (player->cue_frame == player->cur_frame)) {
+        player->cue_frame = 0;
         avi_player_call_cue_callback((AviPlayerCueCbCallView *)player);
       }
-      if ((*(uint *)(player + 0xa14) < *(uint *)(player + 0xa18)) && (avi_playing != 0)) {
-        if (*(int *)(player + 0xa24) == 0) {
+      if (((uint)player->end_frame < (uint)player->cur_frame) && (avi_playing != 0)) {
+        if (player->loop == 0) {
           avi_play_pause(player);
           avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
           result = 0;
         }
         else {
-          avi_seek_frame(player,*(i32 *)(player + 0xa10),0);
+          avi_seek_frame(player,player->start_frame,0);
           avi_play_start(player);
           result = 0;
         }
       }
       else {
-        *(int *)(player + 0xa18) = *(int *)(player + 0xa18) + 1;
+        player->cur_frame = player->cur_frame + 1;
         if (decode_flags != 0) {
           result = 1;
         }
@@ -2839,7 +2839,7 @@ __stdcall avi_ic_decompress_ex(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
 /* 005e2cd1 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl avi_update_frame(iptr player)
+void __cdecl avi_update_frame(AviPlayer *player)
 
 {
   int sample;
@@ -2856,47 +2856,47 @@ void __cdecl avi_update_frame(iptr player)
     return;
   }
   if (avi_playing != 0) {
-    if (*(int *)(player + 0x5a8) == 0) {
+    if (player->has_audio == 0) {
       now = timeGetTime();
       sample = AVIStreamTimeToSample(avi_video_stream[0],now - g_video_start_time);
-      target_frame = *(int *)(player + 0xa10) + sample;
-      if (target_frame < *(uint *)(player + 0xa18)) {
+      target_frame = player->start_frame + sample;
+      if (target_frame < (uint)player->cur_frame) {
         return;
       }
-      if (*(uint *)(player + 0xa14) < target_frame) {
-        if (*(int *)(player + 0xa24) == 0) {
+      if ((uint)player->end_frame < target_frame) {
+        if (player->loop == 0) {
           avi_play_pause(player);
           avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
           return;
         }
-        avi_seek_frame(player,*(i32 *)(player + 0xa10),0);
+        avi_seek_frame(player,player->start_frame,0);
         avi_play_start(player);
         return;
       }
     }
     else {
-      sample = avi_audio_is_playing((AviAudioPlayingView *)(player + 0x11c));
+      sample = avi_audio_is_playing((AviAudioPlayingView *)&player->audio);
       if (sample == 0) {
-        if (*(int *)(player + 0xa24) == 0) {
+        if (player->loop == 0) {
           avi_play_pause(player);
           avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
           return;
         }
-        avi_seek_frame(player,*(i32 *)(player + 0xa10),0);
+        avi_seek_frame(player,player->start_frame,0);
         avi_play_start(player);
         return;
       }
-      audio_pos_ms = avi_audio_get_position_ms((void *)(player + 0x11c));
+      audio_pos_ms = avi_audio_get_position_ms((void *)&player->audio);
       sample = AVIStreamTimeToSample(avi_video_stream[0],audio_pos_ms);
-      target_frame = *(int *)(player + 0xa10) + sample;
-      if ((*(int *)(player + 0x5ac) == 0) || (target_frame < *(uint *)(player + 0xa18))) {
+      target_frame = player->start_frame + sample;
+      if ((player->paused == 0) || (target_frame < (uint)player->cur_frame)) {
         snd_avi_stream_feed(0x40);
         avi_blit_union_left_block.g_video_frame_count++;
         return;
       }
     }
     if ((*(uint *)&avi_blit_union_left_block.avi_frame_needs_blit) != 0) {
-      if (*(int *)(player + 0x5a4) == 0) {
+      if (player->transparent == 0) {
         wnd_blit_surface((DibSurface *)player);
       }
       else {
@@ -2912,34 +2912,34 @@ void __cdecl avi_update_frame(iptr player)
         avi_blit_union_left_block.avi_blit_union_bottom = dirty_rect.bottom;
       }
     }
-    if (*(uint *)(player + 0xa18) < target_frame) {
-      key_frame = *(int *)(player + 0xa18);
+    if ((uint)player->cur_frame < target_frame) {
+      key_frame = player->cur_frame;
       do {
         sample = key_frame;
         key_frame++;
         key_frame = AVIStreamFindSample(avi_video_stream[0],key_frame,0x11);
         if ((int)target_frame <= key_frame) break;
       } while (key_frame != -1);
-      if (*(int *)(player + 0xa18) == sample) {
-        if ((key_frame != -1) && (key_frame - target_frame < target_frame - *(int *)(player + 0xa18))) {
-          *(int *)(player + 0xa18) = key_frame;
+      if (player->cur_frame == sample) {
+        if ((key_frame != -1) && (key_frame - target_frame < target_frame - player->cur_frame)) {
+          player->cur_frame = key_frame;
         }
       }
       else if ((key_frame == -1) || ((int)(target_frame - sample) <= (int)(key_frame - target_frame))) {
         if (sample != -1) {
-          *(int *)(player + 0xa18) = sample;
+          player->cur_frame = sample;
         }
       }
       else {
-        *(int *)(player + 0xa18) = key_frame;
+        player->cur_frame = key_frame;
       }
-      while ((*(uint *)(player + 0xa18) < target_frame &&
-             (*(uint *)(player + 0xa18) < *(int *)(player + 0xa14) - 1U))) {
+      while (((uint)player->cur_frame < target_frame &&
+             ((uint)player->cur_frame < player->end_frame - 1U))) {
         avi_decode_frame(player,0x80000000);
       }
     }
   }
-  if ((avi_playing != 0) && (*(int *)(player + 0x5a8) != 0)) {
+  if ((avi_playing != 0) && (player->has_audio != 0)) {
     snd_avi_stream_feed(0x40);
     avi_blit_union_left_block.g_video_frame_count++;
   }
@@ -2949,7 +2949,7 @@ void __cdecl avi_update_frame(iptr player)
 }
 
 /* 005e30a1 auto */
-void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
+void __cdecl avi_apply_palette(AviPlayer *player,GamePalette *palette)
 
 {
   i8 palette_rgb[708];
@@ -2960,25 +2960,25 @@ void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
     ICSendMessage(avi_decompressor,0x403f,0,0);
     palette_get_rgb(palette,(iptr)palette_rgb,0,0xec);
     for (i = 0; i < 0xec; i++) {
-      *(i8 *)(player + 0x610 + i * 4) = palette_rgb[i * 3 + 2];
-      *(i8 *)(player + 0x611 + i * 4) = palette_rgb[i * 3 + 1];
-      *(i8 *)(player + 0x612 + i * 4) = palette_rgb[i * 3];
-      *(i8 *)(player + 0x613 + i * 4) = 0;
+      player->dst_colors[i * 4] = palette_rgb[i * 3 + 2];
+      player->dst_colors[1 + i * 4] = palette_rgb[i * 3 + 1];
+      player->dst_colors[2 + i * 4] = palette_rgb[i * 3];
+      player->dst_colors[3 + i * 4] = 0;
     }
-    ICSendMessage(avi_decompressor,0x401d,player + 0x5e8,0);
-    if (*(int *)(player + 0x5a0) == 0) {
-      result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,*(i32 *)(player + 0x5c4),
-                             *(i32 *)(player + 0x5c8),player + 0x5e8,0,0,0,
-                             *(i32 *)(player + 0x5c4),*(i32 *)(player + 0x5c8));
+    ICSendMessage(avi_decompressor,0x401d,(iptr)&player->dst_format,0);
+    if (player->double_size == 0) {
+      result = avi_ic_decompress_ex_begin(avi_decompressor,0,(iptr)&player->src_format,0,0,0,player->src_format.width,
+                             player->src_format.height,(iptr)&player->dst_format,0,0,0,
+                             player->src_format.width,player->src_format.height);
     }
     else {
-      *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) << 1;
-      *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) << 1;
-      result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,*(i32 *)(player + 0x5c4),
-                             *(i32 *)(player + 0x5c8),player + 0x5e8,0,0,0,
-                             *(int *)(player + 0x5c4) * 2,*(int *)(player + 0x5c8) * 2);
-      *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) / 2;
-      *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) / 2;
+      player->dst_format.height = player->dst_format.height << 1;
+      player->dst_format.width = player->dst_format.width << 1;
+      result = avi_ic_decompress_ex_begin(avi_decompressor,0,(iptr)&player->src_format,0,0,0,player->src_format.width,
+                             player->src_format.height,(iptr)&player->dst_format,0,0,0,
+                             player->src_format.width * 2,player->src_format.height * 2);
+      player->dst_format.height = player->dst_format.height / 2;
+      player->dst_format.width = player->dst_format.width / 2;
     }
     if (result != 0) {
       avi_file_loaded = 0;
@@ -2990,7 +2990,7 @@ void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
 /* 005e32b2 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl avi_restart_decompress(iptr player,int transparent)
+void __cdecl avi_restart_decompress(AviPlayer *player,int transparent)
 
 {
   int yBottom;
@@ -3011,26 +3011,26 @@ void __cdecl avi_restart_decompress(iptr player,int transparent)
     err_report_ctx_block.g_video_flags_b = 0x80000008;
     ICSendMessage(avi_decompressor,0x5001,(DWORD_PTR)((i8 *)&err_report_ctx_block.avi_indeo_seq_opts),0x2c);
     ICSendMessage(avi_decompressor,0x5001,(DWORD_PTR)((i8 *)&err_report_ctx_block.avi_indeo_frame_opts),0x70);
-    if (*(int *)(player + 0x5a0) == 0) {
-      result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,avi_frame_width,avi_frame_height,
-                             player + 0x5e8,0,0,0,avi_frame_width,avi_frame_height);
+    if (player->double_size == 0) {
+      result = avi_ic_decompress_ex_begin(avi_decompressor,0,(iptr)&player->src_format,0,0,0,avi_frame_width,avi_frame_height,
+                             (iptr)&player->dst_format,0,0,0,avi_frame_width,avi_frame_height);
     }
     else {
-      *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) << 1;
-      *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) << 1;
-      result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,avi_frame_width,avi_frame_height,
-                             player + 0x5e8,0,0,0,avi_frame_width * 2,avi_frame_height * 2);
-      *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) >> 1;
-      *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) >> 1;
+      player->dst_format.height = player->dst_format.height << 1;
+      player->dst_format.width = player->dst_format.width << 1;
+      result = avi_ic_decompress_ex_begin(avi_decompressor,0,(iptr)&player->src_format,0,0,0,avi_frame_width,avi_frame_height,
+                             (iptr)&player->dst_format,0,0,0,avi_frame_width * 2,avi_frame_height * 2);
+      player->dst_format.height = player->dst_format.height >> 1;
+      player->dst_format.width = player->dst_format.width >> 1;
     }
     if (result != 0) {
       avi_file_loaded = 0;
     }
     if (transparent == 0) {
-      surface_create((DibSurface *)(player + 0x558),0,0);
+      surface_create(&player->backdrop,0,0);
     }
     else {
-      surface_create((DibSurface *)(player + 0x558),avi_frame_width,avi_frame_height);
+      surface_create(&player->backdrop,avi_frame_width,avi_frame_height);
       yBottom = surface_get_height((DibSurface *)player);
       xRight = surface_get_width((DibSurface *)player);
       SetRect(&src_rect,0,0,xRight,yBottom);
@@ -3038,16 +3038,16 @@ void __cdecl avi_restart_decompress(iptr player,int transparent)
       dst_rect.top = src_rect.top;
       dst_rect.right = src_rect.right;
       dst_rect.bottom = src_rect.bottom;
-      OffsetRect(&dst_rect,*(int *)(player + 0x5b8),*(int *)(player + 0x5bc));
-      if (*(int *)(player + 0x5b4) != 0) {
+      OffsetRect(&dst_rect,player->pos_x,player->pos_y);
+      if (player->target_surface != 0) {
         surface_blit
-                  (*(DibSurface **)(player + 0x5b4),player + 0x558,(iptr)&dst_rect,
-                   (iptr)&src_rect);
+                  ((DibSurface *)player->target_surface,&player->backdrop,&dst_rect,
+                   &src_rect);
       }
       if (avi_file_loaded != 0) {
         surface_blit
-                  ((DibSurface *)(player + 0x558),player,(iptr)&src_rect,(iptr)&src_rect);
-        cur_frame = *(i32 *)(player + 0xa18);
+                  (&player->backdrop,(DibSurface *)player,&src_rect,&src_rect);
+        cur_frame = player->cur_frame;
         avi_seek_frame(player,cur_frame,0);
         wnd_blit_surface((DibSurface *)player);
       }
@@ -3082,15 +3082,15 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
 {
   short thumb_pos;
   i32 result;
-  iptr window;
+  NativeWindow *window;
   WndBase *wnd_obj;
   BOOL is_iconic;
   int value;
   i8 generic_parms[4];
   int frame_height;
-  uptr minmax_info;
+  MINMAXINFO *minmax_info;
   int frame_width;
-  iptr parent_window;
+  NativeWindow *parent_window;
   int min_height2;
   int min_width2;
   int scroll_pos2;
@@ -3148,17 +3148,17 @@ handle_size:
         return 1;
       }
       if (msg == 0x24) {
-        minmax_info = lparam;
+        minmax_info = (MINMAXINFO *)lparam;
         window = wnd_get_window((WndBase *)wnd2);
         frame_height = wnd_obj_frame_height(window);
         window = wnd_get_window((WndBase *)wnd2);
         frame_width = wnd_obj_frame_width(window);
         wnd_get_min_size((WndMinSizeView *)wnd2,(iptr)&min_width2,(iptr)&min_height2);
         wnd_get_max_size((WndMaxSizeView *)wnd2,(iptr)&max_width2,(iptr)&max_height2);
-        *(int *)(minmax_info + 0x20) = frame_width + max_width2;
-        *(int *)(minmax_info + 0x24) = frame_height + max_height2;
-        *(int *)(minmax_info + 0x18) = frame_width + min_width2;
-        *(int *)(minmax_info + 0x1c) = frame_height + min_height2;
+        minmax_info->ptMaxTrackSize.x = frame_width + max_width2;
+        minmax_info->ptMaxTrackSize.y = frame_height + max_height2;
+        minmax_info->ptMinTrackSize.x = frame_width + min_width2;
+        minmax_info->ptMinTrackSize.y = frame_height + min_height2;
         return 0;
       }
 default_wndproc:
@@ -3342,8 +3342,8 @@ default_wndproc:
         wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
         parent_window = wnd_get_window(wnd_obj);
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
-          SetFocus(*(HWND *)(parent_window + 4));
+        if ((parent_window->flags_bytes[1] & 2) != 0) {
+          SetFocus(parent_window->hwnd);
           BringWindowToTop(hwnd);
         }
         wnd2->wnd_header_area[0xa4] = 1;
@@ -3374,8 +3374,8 @@ default_wndproc:
       case 0x204:
         wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
         parent_window = wnd_get_window(wnd_obj);
-        if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
-          SetFocus(*(HWND *)(parent_window + 4));
+        if ((parent_window->flags_bytes[1] & 2) != 0) {
+          SetFocus(parent_window->hwnd);
           BringWindowToTop(hwnd);
         }
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;

@@ -858,7 +858,7 @@ extern char str_empty_77[4];
 extern char str_empty_78[4];
 extern char str_empty_79[4];
 extern int label_ids_handle;
-extern iptr label_string_ids;
+extern i32 *label_string_ids;
 extern i32 label_count;
 extern char str_labels_2[8];
 extern char str_labels_3[8];
@@ -3710,11 +3710,11 @@ extern i32 snd_wave_buffers_ready_i32;
 extern i16 snd_wave_stop_pending_i16;
 extern u8 snd_wave_stop_pending_i16_rest[2];
 extern i32 snd_avi_stream_started;
-extern iptr snd_wave_buffer_ring;
-extern iptr snd_wave_spare_buffers;
-extern iptr snd_wave_cur_buffer;
+extern WaveBuffer *snd_wave_buffer_ring;
+extern WaveBuffer *snd_wave_spare_buffers;
+extern WaveBuffer *snd_wave_cur_buffer;
 extern LONG snd_wave_total_buffer_bytes;
-extern iptr snd_wave_sources;
+extern WaveSource *snd_wave_sources;
 extern i32 snd_stop_drained_msg_count_i32;
 extern char str_sound_error[12];
 extern char str_this_sound_format_is_not_supported[36];
@@ -3791,7 +3791,7 @@ extern i32 avi_video_stream[1];
 extern i32 avi_audio_stream[1];
 extern int avi_file_loaded;
 extern int avi_playing;
-extern iptr avi_active_window;
+extern AviPlayer *avi_active_window;
 #pragma pack(push, 1)
 struct avi_blit_union_left_block {
     i32 avi_blit_union_left[1];  /* 00638dd8 */
@@ -3886,7 +3886,7 @@ struct minimap_window_block {
     int mapgen_land_placed;  /* 0063cba4 */
     u8 mapgen_land_placed_rest[8];
     int taxrate_dialog_active;  /* 0063cbb0 */
-    iptr taxrate_dlg;  /* 0063cbb4 */
+    ViewWindow *taxrate_dlg;  /* 0063cbb4 */
     u8 taxrate_dlg_rest[8];
     i32 eot_blink_timer;  /* 0063cbc0 */
     i32 unit_blink_timer;  /* 0063cbc4 */
@@ -4381,7 +4381,7 @@ struct unit_types_block {
     ushort events_pool_bytes_free;  /* 0064b994 */
     u8 events_pool_bytes_free_rest[2];
     int scenario_event_count;  /* 0064b998 */
-    iptr events_list_head;  /* 0064b99c */
+    ScenarioEvent *events_list_head;  /* 0064b99c */
 };
 #pragma pack(pop)
 extern struct unit_types_block unit_types_block;
@@ -4404,15 +4404,20 @@ extern struct civ_unit_counts_block civ_unit_counts_block;
 extern i32 *const difficulty_names;  /* = civ_unit_counts_block.difficulty_names */
 extern i8 *const wonder_expires;  /* = civ_unit_counts_block.wonder_expires */
 #pragma pack(push, 1)
-struct net_map_lock_slots_block {
-    i8 net_map_lock_slots[4];  /* 0064ba48 */
-    i8 net_map_lock_replies[4];  /* 0064ba4c */
-    i8 net_map_lock_src_x[4];  /* 0064ba50 */
-    i8 net_map_lock_src_y[4];  /* 0064ba54 */
-    i8 net_map_lock_dst_x[4];  /* 0064ba58 */
-    i8 net_map_lock_dst_y[172];  /* 0064ba5c */
+typedef struct net_map_lock_slots_block {
+    union {
+        struct {
+            i8 net_map_lock_slots[4];  /* 0064ba48 */
+            i8 net_map_lock_replies[4];  /* 0064ba4c */
+            i8 net_map_lock_src_x[4];  /* 0064ba50 */
+            i8 net_map_lock_src_y[4];  /* 0064ba54 */
+            i8 net_map_lock_dst_x[4];  /* 0064ba58 */
+            i8 net_map_lock_dst_y[172];  /* 0064ba5c */
+        };
+        NetMapLock net_map_locks[8];  /* 0064ba48 per civ */
+    };
     i8 scenario_dir_path[264];  /* 0064bb08 */
-};
+} NetMapLockBlock;
 #pragma pack(pop)
 extern struct net_map_lock_slots_block net_map_lock_slots_block;
 #pragma pack(push, 1)
@@ -4898,102 +4903,10 @@ struct diffeng_events_section_block {
 extern struct diffeng_events_section_block diffeng_events_section_block;
 extern GameFont font_size21;
 extern GameFont font_size14;
-#pragma pack(push, 1)
-struct parley_wnd_block {
-    WindowObjectView parley_wnd[18];  /* 0067a7a8 */
-    u8 parley_wnd_frame[204];  /* 0067a7f0 */
-    int parley_wnd_closed;  /* 0067a8bc */
-    int parley_other_civ;  /* 0067a8c0 */
-    int parley_wnd_x;  /* 0067a8c4 */
-    int parley_wnd_y;  /* 0067a8c8 */
-    u8 parley_wnd_y_rest[8];
-    int parley_caption_height;  /* 0067a8d4 */
-    u8 parley_caption_height_rest[32];
-    LPRECT parley_wnd_rect_ptr;  /* 0067a8f8 */
-    int parley_large_layout;  /* 0067a8fc */
-    u8 parley_large_layout_rest[140];
-    i8 parley_gold_entered[8];  /* 0067a98c */
-    int parley_mode;  /* 0067a994 */
-    i32 parley_left_kind;  /* 0067a998 */
-    i32 parley_right_kind;  /* 0067a99c */
-    i32 parley_shown_left_kind;  /* 0067a9a0 */
-    i32 parley_shown_right_kind;  /* 0067a9a4 */
-    u8 parley_shown_right_kind_rest[8];
-    i32 parley_selected_action;  /* 0067a9b0 */
-    u8 parley_selected_action_rest[4];
-    int parley_barter_want_kind;  /* 0067a9b8 */
-    int parley_demand_kind;  /* 0067a9bc */
-    u8 parley_demand_kind_rest[4];
-    int parley_proposal_kind;  /* 0067a9c4 */
-    int parley_gift_kind;  /* 0067a9c8 */
-    u8 parley_gift_kind_rest[16];
-    void *parley_received_offer;  /* 0067a9dc */
-    i32 parley_offer_acceptable_i32;  /* 0067a9e0 */
-    u8 parley_offer_acceptable_i32_rest[92];
-    ControlFocusView *parley_chat_input_edit;  /* 0067aa40 */
-    ControlTextView *parley_chat_log_edit;  /* 0067aa44 */
-    u8 parley_chat_log_edit_rest[160];
-    Control *parley_conceal_info_button;  /* 0067aae8 */
-    Control *parley_reveal_info_button;  /* 0067aaec */
-    u8 parley_reveal_info_button_rest[8];
-    Control *parley_never_mind_button;  /* 0067aaf8 */
-    u8 parley_never_mind_button_rest[32];
-    i8 parley_gold_edits[24];  /* 0067ab1c */
-    Control *parley_sort_by_unit_buttons;  /* 0067ab34 */
-    Control *parley_sort_by_unit_right;  /* 0067ab38 */
-    Control *parley_sort_by_city_buttons;  /* 0067ab3c */
-    Control *parley_sort_by_city_right;  /* 0067ab40 */
-    Control *parley_reveal_origin_button;  /* 0067ab44 */
-    Control *parley_request_origin_button;  /* 0067ab48 */
-    Control *parley_hide_origin_button;  /* 0067ab4c */
-    Control *parley_request_done_button;  /* 0067ab50 */
-    u8 parley_request_done_button_rest[16];
-    i8 parley_remote_units_revealed;  /* 0067ab64 */
-    char parley_local_units_revealed;  /* 0067ab65 */
-    char parley_local_cities_revealed;  /* 0067ab66 */
-    i8 parley_remote_cities_revealed;  /* 0067ab67 */
-    u8 parley_remote_cities_revealed_rest[40];
-    int parley_list_counts[1];  /* 0067ab90 */
-    int parley_list_count_right;  /* 0067ab94 */
-    u8 parley_list_count_right_rest[32784];
-    i8 parley_list_selected[8196];  /* 00682ba8 */
-    i8 parley_list_selected_right[24612];  /* 00684bac */
-    i32 parley_offer_left_count_i32;  /* 0068abd0 */
-    i32 parley_offer_right_count_i32;  /* 0068abd4 */
-};
-#pragma pack(pop)
-extern struct parley_wnd_block parley_wnd_block;
+extern ParleyWindow parley_wnd_block;  /* the diplomacy / chat window object */
 extern GameFont font_size16;
 extern GameFont font_size24;
-#pragma pack(push, 1)
-struct chat_wnd_block {
-    WindowObjectView chat_wnd[18];  /* 0068abe8 */
-    u8 chat_wnd_frame[204];  /* 0068ac30 */
-    int chat_wnd_closed;  /* 0068acfc */
-    u8 chat_wnd_closed_rest[4];
-    int chat_wnd_x;  /* 0068ad04 */
-    int chat_wnd_y;  /* 0068ad08 */
-    u8 chat_wnd_y_rest[8];
-    int chat_wnd_row_height;  /* 0068ad14 */
-    u8 chat_wnd_row_height_rest[32];
-    LPRECT chat_wnd_init_rect;  /* 0068ad38 */
-    int chat_wnd_large_layout;  /* 0068ad3c */
-    u8 chat_wnd_large_layout_rest[324];
-    ControlTextView *chat_log_edit;  /* 0068ae84 */
-    u8 chat_log_edit_rest[8];
-    i8 chat_send_checkboxes[32];  /* 0068ae90 */
-    i8 chat_mute_checkboxes[32];  /* 0068aeb0 */
-    Control *chat_anonymous_checkbox;  /* 0068aed0 */
-    Control *chat_mute_anonymous_checkbox;  /* 0068aed4 */
-    Control *chat_broadcast_checkbox;  /* 0068aed8 */
-    i32 chat_remain_anonymous;  /* 0068aedc */
-    i32 chat_mute_anonymous;  /* 0068aee0 */
-    i32 chat_broadcast_all;  /* 0068aee4 */
-    i8 chat_send_to_civs[32];  /* 0068aee8 */
-    i8 chat_muted_civs[65808];  /* 0068af08 */
-};
-#pragma pack(pop)
-extern struct chat_wnd_block chat_wnd_block;
+extern ParleyWindow chat_wnd_block;  /* the diplomacy / chat window object */
 extern GameFont font_size30;
 extern GameFont font_size20;
 extern GameFont font_size24_bold;
@@ -5562,20 +5475,27 @@ struct unit_sound_editor_window_block {
 #pragma pack(pop)
 extern struct unit_sound_editor_window_block unit_sound_editor_window_block;
 #pragma pack(push, 1)
-struct net_session_block {
-    i32 net_session[1];  /* 006ad108 */
+/* The network session object (the original's global C++ object; its methods
+ * take it as `self`). */
+typedef struct NetSession {
+    NetGamelistView *gamelist_view;  /* 006ad108 */
     LobbyList *net_lobby_list;  /* 006ad10c */
-    u8 net_ping_message[16];  /* 006ad110 */
-    i32 net_player_info_civ_i32;  /* 006ad120 */
-    i32 net_player_info_leader_index_i32;  /* 006ad124 */
-    i32 net_player_info_gender_i32;  /* 006ad128 */
-    i32 net_player_info_has_names_i32;  /* 006ad12c */
-    i8 net_player_info_leader_name[24];  /* 006ad130 */
-    i8 net_player_info_tribe_name[24];  /* 006ad148 */
-    i8 net_player_info_adjective[24];  /* 006ad160 */
-    i32 net_player_info_has_titles_i32;  /* 006ad178 */
-    i8 net_player_info_govt_titles[168];  /* 006ad17c */
-    int net_player_info_city_style;  /* 006ad224 */
+    union {
+        struct {
+            u8 net_ping_message[16];  /* 006ad110 */
+            i32 net_player_info_civ_i32;  /* 006ad120 */
+            i32 net_player_info_leader_index_i32;  /* 006ad124 */
+            i32 net_player_info_gender_i32;  /* 006ad128 */
+            i32 net_player_info_has_names_i32;  /* 006ad12c */
+            i8 net_player_info_leader_name[24];  /* 006ad130 */
+            i8 net_player_info_tribe_name[24];  /* 006ad148 */
+            i8 net_player_info_adjective[24];  /* 006ad160 */
+            i32 net_player_info_has_titles_i32;  /* 006ad178 */
+            i8 net_player_info_govt_titles[168];  /* 006ad17c */
+            int net_player_info_city_style;  /* 006ad224 */
+        };
+        NetPlayerInfoMsg player_info_msg;  /* 006ad110 the local player's */
+    };
     int net_lobby_launch_mode;  /* 006ad228 */
     i8 net_lobby_launch_info[32];  /* 006ad22c */
     u8 startup_log_text[64];  /* 006ad24c */
@@ -5583,22 +5503,27 @@ struct net_session_block {
     i8 net_lobby_session_name[64];  /* 006ad2ac */
     iptr net_lobby_is_host;  /* 006ad2ec */
     int net_connection_type;  /* 006ad2f0 */
-    u8 net_connection_type_rest[1];
+    i8 net_connected;  /* 006ad2f4 */
     i8 net_connected_to_server;  /* 006ad2f5 */
-    u8 net_connected_to_server_rest[1];
+    i8 net_listing_games;  /* 006ad2f6: game announcements are collected (net_game_list_add) */
     char net_host_flag;  /* 006ad2f7 */
     i32 net_protocol;  /* 006ad2f8 */
     uint net_adapter_index;  /* 006ad2fc */
     int net_server_conn_id;  /* 006ad300 */
     int net_local_slot;  /* 006ad304 */
     iptr net_player_count[1];  /* 006ad308 */
-    i32 net_player_slots[1];  /* 006ad30c */
-    i8 net_slot_addresses[32];  /* 006ad310 */
-    i8 net_slot_player_names[36];  /* 006ad330 */
-    i8 net_slot_lobby_ids[4];  /* 006ad354 */
-    i8 net_slot_host_flags[1];  /* 006ad358 */
-    i8 net_slot_active_flags[3];  /* 006ad359 */
-    i32 net_slot_civs[127];  /* 006ad35c */
+    union {
+        struct {
+            i32 net_player_slots[1];  /* 006ad30c */
+            i8 net_slot_addresses[32];  /* 006ad310 */
+            i8 net_slot_player_names[36];  /* 006ad330 */
+            i8 net_slot_lobby_ids[4];  /* 006ad354 */
+            i8 net_slot_host_flags[1];  /* 006ad358 */
+            i8 net_slot_active_flags[3];  /* 006ad359 */
+            i32 net_slot_civs[127];  /* 006ad35c */
+        };
+        NetPlayerSlot net_slots[7];  /* 006ad30c */
+    };
     i32 net_civ_slots[8];  /* 006ad558 */
     i32 mp_turn_civ;  /* 006ad578 */
     i8 net_server_address[32];  /* 006ad57c */
@@ -5608,7 +5533,7 @@ struct net_session_block {
     i8 net_server_version[64];  /* 006ad5fc */
     i32 net_connection_title;  /* 006ad63c */
     i32 net_session_phase;  /* 006ad640 */
-    i8 net_civ_new_player_flags[32];  /* 006ad644 */
+    i32 net_civ_new_player_flags[8];  /* 006ad644 */
     int net_players_awaited;  /* 006ad664 */
     int net_players_awaited_initial;  /* 006ad668 */
     int net_vote_replies_pending;  /* 006ad66c */
@@ -5616,10 +5541,12 @@ struct net_session_block {
     i32 net_wait_start_ticks_i32;  /* 006ad674 */
     int *dialog_stack_top;  /* 006ad678 */
     i32 net_popup_in_progress_i32;  /* 006ad67c */
-    u8 net_popup_in_progress_i32_rest[4];
+    int net_last_send_result;  /* 006ad680 */
     char mp_simultaneous_moves;  /* 006ad684 */
     char player_has_quit;  /* 006ad685 */
-    u8 player_has_quit_rest[10];
+    u8 player_has_quit_rest[2];
+    int net_poll_depth;  /* 006ad688 */
+    int net_poll_depth_peak;  /* 006ad68c */
     u32 net_msgq_normal_peak;  /* 006ad690 */
     u32 net_msgq_priority_peak;  /* 006ad694 */
     char net_host_handoff_stage;  /* 006ad698 */
@@ -5659,26 +5586,36 @@ struct net_session_block {
     int net_stacked_draw_last;  /* 006ad914 */
     int unit_stack_check_enabled;  /* 006ad918 */
     uint net_stacked_draw_peak;  /* 006ad91c */
-    i8 net_stacked_draw_kinds[4];  /* 006ad920 */
-    i8 net_stacked_draw_args[4];  /* 006ad924 */
-    i8 net_stacked_draw_arg1[4];  /* 006ad928 */
-    i8 net_stacked_draw_arg2[4];  /* 006ad92c */
-    i8 net_stacked_draw_arg3[4];  /* 006ad930 */
-    i8 net_stacked_draw_arg4[6380];  /* 006ad934 */
-    i8 casualty_counts[32];  /* 006af220 */
-    i8 casualty_reported_counts[32];  /* 006af240 */
-    i8 casualty_log_first[32];  /* 006af260 */
-    i8 casualty_log_next[32];  /* 006af280 */
-    i8 casualty_log_unit_types[2];  /* 006af2a0 */
-    i8 casualty_log_x[2];  /* 006af2a2 */
-    i8 casualty_log_y[2];  /* 006af2a4 */
-    i8 casualty_log_years[2];  /* 006af2a6 */
-    i8 casualty_log_killer_colors[25];  /* 006af2a8 */
-    i8 casualty_log_killer_name_ends[81567];  /* 006af2c1 */
+    union {
+        struct {
+            i8 net_stacked_draw_kinds[4];  /* 006ad920 */
+            i8 net_stacked_draw_args[4];  /* 006ad924 */
+            i8 net_stacked_draw_arg1[4];  /* 006ad928 */
+            i8 net_stacked_draw_arg2[4];  /* 006ad92c */
+            i8 net_stacked_draw_arg3[4];  /* 006ad930 */
+            i8 net_stacked_draw_arg4[6380];  /* 006ad934 */
+        };
+        NetStackedDraw net_stacked_draw[100];  /* 006ad920 */
+    };
+    i32 casualty_counts[8];  /* 006af220 */
+    i32 casualty_reported_counts[8];  /* 006af240 */
+    i32 casualty_log_first[8];  /* 006af260 */
+    i32 casualty_log_next[8];  /* 006af280 */
+    union {
+        struct {
+            i8 casualty_log_unit_types[2];  /* 006af2a0 */
+            i8 casualty_log_x[2];  /* 006af2a2 */
+            i8 casualty_log_y[2];  /* 006af2a4 */
+            i8 casualty_log_years[2];  /* 006af2a6 */
+            i8 casualty_log_killer_colors[25];  /* 006af2a8 */
+            i8 casualty_log_killer_name_ends[81567];  /* 006af2c1 */
+        };
+        CasualtyEntry casualty_log[2400];  /* 006af2a0 [civ * 300 + i] */
+    };
     int ini_simultaneous_allowed;  /* 006c3160 */
     int net_max_players;  /* 006c3164 */
-    i8 net_civ_turn_ended[32];  /* 006c3168 */
-    i8 net_civ_drop_requested[32];  /* 006c3188 */
+    i32 net_civ_turn_ended[8];  /* 006c3168 */
+    i32 net_civ_drop_requested[8];  /* 006c3188 */
     byte pending_human_players;  /* 006c31a8 */
     u8 hotseat_human_players;  /* 006c31a9 */
     u8 hotseat_human_players_rest[2];
@@ -5694,108 +5631,118 @@ struct net_session_block {
     i32 blocked_input_window_i32;  /* 006c31cc */
     i8 net_drag_hold;  /* 006c31d0 */
     u8 net_drag_hold_rest[3];
-    iptr net_found_games;  /* 006c31d4 */
-    i8 net_msg_queue[24008];  /* 006c31d8 */
-    int net_msgq_normal_count;  /* 006c8fa0 */
-    u8 net_msgq_normal_count_rest[8];
-    int net_msgq_priority_count;  /* 006c8fac */
+    NetGameInfo *net_found_games;  /* 006c31d4 */
+    union {
+        struct {
+            i8 net_msg_queue[24008];  /* 006c31d8 */
+            int net_msgq_normal_count;  /* 006c8fa0 */
+            u8 net_msgq_normal_count_rest[8];
+            int net_msgq_priority_count;  /* 006c8fac */
+        };
+        NetMsgQueue msg_queue;  /* 006c31d8 */
+    };
     ulong net_last_recv_callback_size;  /* 006c8fb0 */
     int net_lost_conn_total;  /* 006c8fb4 */
     ulong net_last_recv_msg_size;  /* 006c8fb8 */
     uint net_xd_adapter_index;  /* 006c8fbc */
-    i8 net_lost_conn_by_player[32];  /* 006c8fc0 */
-    i8 nm_recv_counts[16];  /* 006c8fe0 */
-    int nm_player_list_count;  /* 006c8ff0 */
-    int nm_server_reject_count;  /* 006c8ff4 */
-    u8 nm_server_reject_count_rest[4];
-    int nm_full_gamestate_count;  /* 006c8ffc */
-    u8 nm_full_gamestate_count_rest[4];
-    int nm_join_gamestate_count;  /* 006c9004 */
-    u8 nm_join_gamestate_count_rest[4];
-    int nm_server_canceled_count;  /* 006c900c */
-    int nm_lost_server_on_join_count;  /* 006c9010 */
-    u8 nm_lost_server_on_join_count_rest[8];
-    i32 nm_server_quit_count_i32;  /* 006c901c */
-    u8 nm_server_quit_count_i32_rest[4];
-    int nm_server_full_count;  /* 006c9024 */
-    u8 nm_server_full_count_rest[4];
-    int nm_server_answer_count;  /* 006c902c */
-    u8 nm_server_answer_count_rest[8];
-    int nm_start_civ_count;  /* 006c9038 */
-    u8 nm_start_civ_count_rest[60];
-    int nm_nation_accept_count;  /* 006c9078 */
-    int nm_nation_reject_count;  /* 006c907c */
-    u8 nm_nation_reject_count_rest[8];
-    int nm_lock_data_count;  /* 006c9088 */
-    i32 nm_heart_beat_count_i32;  /* 006c908c */
-    int nm_heartbeat_ack_count;  /* 006c9090 */
-    u8 nm_heartbeat_ack_count_rest[12];
-    i32 nm_lock_nation_count_i32;  /* 006c90a0 */
-    u8 nm_lock_nation_count_i32_rest[16];
-    int net_kill_or_quit_ack;  /* 006c90b4 */
-    u8 net_kill_or_quit_ack_rest[8];
-    i32 net_unit_deleted_ack;  /* 006c90c0 */
-    u8 net_unit_deleted_ack_rest[4];
-    int net_city_deleted_ack;  /* 006c90c8 */
-    u8 net_city_deleted_ack_rest[4];
-    uptr nm_city_created_result;  /* 006c90d0 */
-    u8 nm_city_created_result_rest[4];
-    uptr nm_unit_created_result;  /* 006c90d8 */
-    u8 nm_unit_created_result_rest[4];
-    i32 nm_unit_picked_up_count;  /* 006c90e0 */
-    u8 nm_unit_picked_up_count_rest[4];
-    i32 nm_unit_put_down_count;  /* 006c90e8 */
-    u8 nm_unit_put_down_count_rest[4];
-    i32 nm_bottomed_count;  /* 006c90f0 */
-    u8 nm_bottomed_count_rest[4];
-    i32 nm_unit_relocated_count;  /* 006c90f8 */
-    u8 nm_unit_relocated_count_rest[4];
-    int nm_wonder_acquired_result;  /* 006c9100 */
-    u8 nm_wonder_acquired_result_rest[4];
-    uptr nm_ship_stacked_result;  /* 006c9108 */
-    u8 nm_ship_stacked_result_rest[4];
-    i32 nm_unit_stacked_count;  /* 006c9110 */
-    u8 nm_unit_stacked_count_rest[4];
-    i32 nm_safely_deleted_count;  /* 006c9118 */
-    u8 nm_safely_deleted_count_rest[4];
-    i32 nm_visibly_deleted_count;  /* 006c9120 */
-    u8 nm_visibly_deleted_count_rest[40];
-    i32 nm_stacker_ack_count;  /* 006c914c */
-    u8 nm_stacker_ack_count_rest[20];
-    int nm_new_civ_ack_result;  /* 006c9164 */
-    int nm_kill_civ_ack_result;  /* 006c9168 */
-    u8 nm_kill_civ_ack_result_rest[12];
-    i32 nm_continue_after_join_count;  /* 006c9178 */
-    u8 nm_continue_after_join_count_rest[16];
-    int nm_end_sequence_count;  /* 006c918c */
-    u8 nm_end_sequence_count_rest[84];
-    int nm_parley_cancel_count;  /* 006c91e4 */
-    int nm_parley_transaction_count;  /* 006c91e8 */
-    int nm_parley_accept_offer_count;  /* 006c91ec */
-    int nm_parley_no_thanks_count;  /* 006c91f0 */
-    int nm_parley_counter_offer_count;  /* 006c91f4 */
-    u8 nm_parley_counter_offer_count_rest[20];
-    int nm_production_begin_count;  /* 006c920c */
-    int nm_production_complete_count;  /* 006c9210 */
-    int nm_ai_movement_count;  /* 006c9214 */
-    int nm_human_movement_count;  /* 006c9218 */
-    int nm_human_move_complete_count;  /* 006c921c */
-    u8 nm_human_move_complete_count_rest[48];
-    int nm_ready_to_start_count;  /* 006c9250 */
-    u8 nm_ready_to_start_count_rest[24];
-    int nm_abort_kaboom_count;  /* 006c926c */
-    u8 nm_abort_kaboom_count_rest[20];
+    i32 net_lost_conn_by_player[8];  /* 006c8fc0 */
+    union {
+        struct {
+            i8 nm_recv_counts[16];  /* 006c8fe0 */
+            int nm_player_list_count;  /* 006c8ff0 */
+            int nm_server_reject_count;  /* 006c8ff4 */
+            u8 nm_server_reject_count_rest[4];
+            int nm_full_gamestate_count;  /* 006c8ffc */
+            u8 nm_full_gamestate_count_rest[4];
+            int nm_join_gamestate_count;  /* 006c9004 */
+            u8 nm_join_gamestate_count_rest[4];
+            int nm_server_canceled_count;  /* 006c900c */
+            int nm_lost_server_on_join_count;  /* 006c9010 */
+            u8 nm_lost_server_on_join_count_rest[8];
+            i32 nm_server_quit_count_i32;  /* 006c901c */
+            u8 nm_server_quit_count_i32_rest[4];
+            int nm_server_full_count;  /* 006c9024 */
+            u8 nm_server_full_count_rest[4];
+            int nm_server_answer_count;  /* 006c902c */
+            u8 nm_server_answer_count_rest[8];
+            int nm_start_civ_count;  /* 006c9038 */
+            u8 nm_start_civ_count_rest[60];
+            int nm_nation_accept_count;  /* 006c9078 */
+            int nm_nation_reject_count;  /* 006c907c */
+            u8 nm_nation_reject_count_rest[8];
+            int nm_lock_data_count;  /* 006c9088 */
+            i32 nm_heart_beat_count_i32;  /* 006c908c */
+            int nm_heartbeat_ack_count;  /* 006c9090 */
+            u8 nm_heartbeat_ack_count_rest[12];
+            i32 nm_lock_nation_count_i32;  /* 006c90a0 */
+            u8 nm_lock_nation_count_i32_rest[16];
+            int net_kill_or_quit_ack;  /* 006c90b4 */
+            u8 net_kill_or_quit_ack_rest[8];
+            i32 net_unit_deleted_ack;  /* 006c90c0 */
+            u8 net_unit_deleted_ack_rest[4];
+            int net_city_deleted_ack;  /* 006c90c8 */
+            u8 net_city_deleted_ack_rest[4];
+            uptr nm_city_created_result;  /* 006c90d0 */
+            u8 nm_city_created_result_rest[4];
+            uptr nm_unit_created_result;  /* 006c90d8 */
+            u8 nm_unit_created_result_rest[4];
+            i32 nm_unit_picked_up_count;  /* 006c90e0 */
+            u8 nm_unit_picked_up_count_rest[4];
+            i32 nm_unit_put_down_count;  /* 006c90e8 */
+            u8 nm_unit_put_down_count_rest[4];
+            i32 nm_bottomed_count;  /* 006c90f0 */
+            u8 nm_bottomed_count_rest[4];
+            i32 nm_unit_relocated_count;  /* 006c90f8 */
+            u8 nm_unit_relocated_count_rest[4];
+            int nm_wonder_acquired_result;  /* 006c9100 */
+            u8 nm_wonder_acquired_result_rest[4];
+            uptr nm_ship_stacked_result;  /* 006c9108 */
+            u8 nm_ship_stacked_result_rest[4];
+            i32 nm_unit_stacked_count;  /* 006c9110 */
+            u8 nm_unit_stacked_count_rest[4];
+            i32 nm_safely_deleted_count;  /* 006c9118 */
+            u8 nm_safely_deleted_count_rest[4];
+            i32 nm_visibly_deleted_count;  /* 006c9120 */
+            u8 nm_visibly_deleted_count_rest[40];
+            i32 nm_stacker_ack_count;  /* 006c914c */
+            u8 nm_stacker_ack_count_rest[20];
+            int nm_new_civ_ack_result;  /* 006c9164 */
+            int nm_kill_civ_ack_result;  /* 006c9168 */
+            u8 nm_kill_civ_ack_result_rest[12];
+            i32 nm_continue_after_join_count;  /* 006c9178 */
+            u8 nm_continue_after_join_count_rest[16];
+            int nm_end_sequence_count;  /* 006c918c */
+            u8 nm_end_sequence_count_rest[84];
+            int nm_parley_cancel_count;  /* 006c91e4 */
+            int nm_parley_transaction_count;  /* 006c91e8 */
+            int nm_parley_accept_offer_count;  /* 006c91ec */
+            int nm_parley_no_thanks_count;  /* 006c91f0 */
+            int nm_parley_counter_offer_count;  /* 006c91f4 */
+            u8 nm_parley_counter_offer_count_rest[20];
+            int nm_production_begin_count;  /* 006c920c */
+            int nm_production_complete_count;  /* 006c9210 */
+            int nm_ai_movement_count;  /* 006c9214 */
+            int nm_human_movement_count;  /* 006c9218 */
+            int nm_human_move_complete_count;  /* 006c921c */
+            u8 nm_human_move_complete_count_rest[48];
+            int nm_ready_to_start_count;  /* 006c9250 */
+            u8 nm_ready_to_start_count_rest[24];
+            int nm_abort_kaboom_count;  /* 006c926c */
+            u8 nm_abort_kaboom_count_rest[20];
+        };
+        i32 nm_recv_counts_by_type[169];  /* 006c8fe0 messages received, by type */
+    };
     int net_last_queued_send_seq;  /* 006c9284 */
     i32 net_active_protocol;  /* 006c9288 */
     u8 net_active_protocol_rest[23020];
-};
+} NetSession;
 #pragma pack(pop)
-extern struct net_session_block net_session_block;
+extern NetSession net_session_block;
 #pragma pack(push, 1)
 struct dialog_title_font_obj_block {
     GameFont dialog_title_font_obj;  /* 006cec78 */
     i32 dialog_timeout_start_i32;  /* 006cec80 */
-    iptr active_dialog;  /* 006cec84 */
+    Dialog *active_dialog;  /* 006cec84 */
 };
 #pragma pack(pop)
 extern struct dialog_title_font_obj_block dialog_title_font_obj_block;

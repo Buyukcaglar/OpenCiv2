@@ -213,7 +213,7 @@ void __cdecl map_generate(int keep_map)
             ((DialogCore *)&dialog2,
              -(((int)(caption_font_block.screen_width - 0x280 + (caption_font_block.screen_width - 0x280 >> 0x1f & 7U)) >> 3) + 1),
              -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-  x = (iptr)label_string(*(i32 *)(label_string_ids + 8));
+  x = (iptr)label_string(label_string_ids[2]);
   dialog_set_title((DialogWindowView *)&dialog2,(const char *)x);
   dialog_set_width((DialogWindowView *)&dialog2,0x100);
   dialog_add_line
@@ -1997,7 +1997,7 @@ void __cdecl map_window_key(int cmd)
       switch(cmd) {
       case 0x243:
         if (2 < game.multiplayer) {
-          parley_wnd_open((ViewWindow *)((i8 *)&chat_wnd_block.chat_wnd),0,4);
+          parley_wnd_open(&chat_wnd_block,0,4);
         }
         break;
       case 0x244:
@@ -2246,7 +2246,7 @@ i32 __cdecl map_load_dialog(void)
   default_ext = ((i8 *)&map_load_default_ext_str);
   path_buf = filename;
   filter = filter_str;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x40c));
+  title = (iptr)label_string(label_string_ids[0x103]);
   ok = ui_file_name_dialog((iptr)&main_frame_wnd_block.main_frame_wnd,(const char *)title,(iptr)path_buf,filter_str,(iptr)default_ext,dlg_flag,dlg_arg);
   if (ok != 0) {
     file = _fopen(filename,((i8 *)&map_load_open_mode_str));
@@ -4206,7 +4206,7 @@ uint __cdecl map_assign_landmass_ids(void)
     *(i16 *)(((i8 *)&landmass_table_block.water_body_sizes) + i * 0x10) = 0;
   }
   counts_handle = mem_handle_alloc_tracked(0x20000);
-  _Dst = (void *)mem_lock_handle(counts_handle);
+  _Dst = mem_lock_handle(counts_handle);
   if (_Dst == (void *)0x0) {
     error_report(0xfffffff7,8,0,1,0);
   }
@@ -4666,7 +4666,7 @@ void __cdecl terrain_editor_on_ok(void)
   iptr errors;
   HWND hWnd;
   iptr ok;
-  int wnd;
+  NativeWindow *wnd;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -4684,7 +4684,7 @@ void __cdecl terrain_editor_on_ok(void)
       lpCaption = str_file_i_o_error_4;
       lpText = msg;
       wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
+      MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
     wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -4750,15 +4750,15 @@ void __cdecl terrain_editor_on_rename(void)
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414));
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7bc));
+    label = (iptr)label_string(label_string_ids[0x1ef]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7bc));
+    label = (iptr)label_string(label_string_ids[0x1ef]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414),(const char *)label);
     for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
       if ((terrain2 != 0xd) && (terrain2 != 0x18)) {
@@ -4920,7 +4920,7 @@ void __cdecl terrain_editor_on_edit_icon(void)
     sprites = ((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) % 0xb) * 0x78;
   }
   if (sprites != (i8 *)0x0) {
-    title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+    title = (iptr)label_string(label_string_ids[0x1f6]);
     sprite_editor_run((iptr)sprites,(const char *)title,sheet_id,(iptr)save_fn);
   }
   terrain_editor_redraw();
@@ -4964,7 +4964,7 @@ void __cdecl terrain_editor_on_edit_river(void)
   if (sprites != (i8 *)0x0) {
     save_fn = ((i8 *)sprite_sheet_save_terrain2);
     sheet_id = 8;
-    title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+    title = (iptr)label_string(label_string_ids[0x1f6]);
     sprite_editor_run((iptr)sprites,(const char *)title,sheet_id,(iptr)save_fn);
   }
   terrain_editor_redraw();
@@ -5007,7 +5007,7 @@ void __cdecl terrain_editor_on_edit_coast(void)
   if (sprites != (i8 *)0x0) {
     save_fn = ((i8 *)sprite_sheet_save_terrain2);
     sheet_id = 9;
-    title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+    title = (iptr)label_string(label_string_ids[0x1f6]);
     sprite_editor_run((iptr)sprites,(const char *)title,sheet_id,(iptr)save_fn);
   }
   terrain_editor_redraw();
@@ -5060,7 +5060,7 @@ void __cdecl terrain_editor_on_edit_misc(void)
   if (sprites != (i8 *)0x0) {
     save_fn = ((i8 *)sprite_sheet_save_terrain1);
     sheet_id = 10;
-    title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+    title = (iptr)label_string(label_string_ids[0x1f6]);
     sprite_editor_run((iptr)sprites,(const char *)title,sheet_id,(iptr)save_fn);
   }
   terrain_editor_redraw();
@@ -5212,9 +5212,9 @@ void __thiscall terrain_editor_create_combo(ViewWindow *self,int combo_idx)
     break;
   case 1:
   case 3:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7bc));
+    label = (iptr)label_string(label_string_ids[0x1ef]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
       label = (iptr)label_string(terrain_types[terrain2].name);
@@ -5223,7 +5223,7 @@ void __thiscall terrain_editor_create_combo(ViewWindow *self,int combo_idx)
     break;
   case 2:
   case 4:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c8));
+    label = (iptr)label_string(label_string_ids[0x1f2]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     for (terrain2 = 1; terrain2 < 7; terrain2++) {
       label = (iptr)label_string(government_names[terrain2]);
@@ -5231,7 +5231,7 @@ void __thiscall terrain_editor_create_combo(ViewWindow *self,int combo_idx)
     }
     break;
   case 5:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
       label = (iptr)label_string(terrain_types[terrain2].name);
@@ -5286,7 +5286,7 @@ void __thiscall terrain_editor_draw(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,
@@ -5488,7 +5488,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   wnd_y = 0;
   wnd_x = 0;
   wnd_style = 0xd;
-  title_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x728));
+  title_text = (iptr)label_string(label_string_ids[0x1ca]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   for (ctrl_idx = 0; ctrl_idx < 0xf; ctrl_idx++) {
@@ -5512,7 +5512,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  btn_label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)terrain_editor_on_ok);
@@ -5524,7 +5524,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     rename_parent = self->window_2;
   }
-  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
+  btn_label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)terrain_editor_on_rename);
@@ -5536,7 +5536,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  btn_label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)terrain_editor_on_help);
@@ -5548,7 +5548,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  btn_label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)terrain_editor_on_cancel);
@@ -5569,7 +5569,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     icon_parent = self->window_2;
   }
-  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
+  btn_label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)terrain_editor_on_edit_icon);
@@ -5582,7 +5582,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     river_parent = self->window_2;
   }
-  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8f4));
+  btn_label = (iptr)label_string(label_string_ids[0x23d]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)river_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)terrain_editor_on_edit_river);
@@ -5594,7 +5594,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     coast_parent = self->window_2;
   }
-  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8f8));
+  btn_label = (iptr)label_string(label_string_ids[0x23e]);
   button_create
             ((Control *)(((DocumentWindow *)self)->terrain_coast_button),(iptr)coast_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
   button_set_callback((Control *)(((DocumentWindow *)self)->terrain_coast_button),(iptr)terrain_editor_on_edit_coast);
@@ -5606,7 +5606,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     misc_parent = self->window_2;
   }
-  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8f0));
+  btn_label = (iptr)label_string(label_string_ids[0x23c]);
   button_create
             ((Control *)&((DocumentWindow *)self)->terrain_misc_button,(iptr)misc_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
   button_set_callback((Control *)&((DocumentWindow *)self)->terrain_misc_button,(iptr)terrain_editor_on_edit_misc);
@@ -5894,9 +5894,9 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
       cur_sy[view] = from_sy;
       rect_set((iptr)rect,rect_left2[view],rect_top2[view],
                          rect_right2[view] + 1,rect_bottom2[view] + 1);
-      dim = rect_width((iptr)rect);
+      dim = rect_width((RECT *)rect);
       save_w[view] = dim;
-      dim = rect_height((iptr)rect);
+      dim = rect_height((RECT *)rect);
       save_h[view] = dim;
       if (any_visible == 0) {
         any_visible = 1;
@@ -5999,7 +5999,7 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
           win_flush_pending_msgs();
           now = timeGetTime();
           if (2 < game.multiplayer) {
-            net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+            net_process_messages(&net_session_block,1,0);
           }
         } while ((int)(now - last_time) < frame_delay);
         last_time = now;
@@ -6147,7 +6147,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
         win_flush_pending_msgs();
         now = timeGetTime();
         if ((2 < game.multiplayer) &&
-           (net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0), net_session_block.nm_abort_kaboom_count != 0))
+           (net_process_messages(&net_session_block,1,0), net_session_block.nm_abort_kaboom_count != 0))
         goto explosion_cleanup;
       } while ((int)(now - last_time) < 0x40);
       last_time = now;
@@ -6217,7 +6217,7 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
       do {
         win_flush_pending_msgs();
         if (2 < game.multiplayer) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
         }
         now = timeGetTime();
       } while ((int)(now - last_time) < 0x157c);
@@ -6238,8 +6238,8 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
     if (dirty_rect.top < 0) {
       dirty_rect.top = 0;
     }
-    ok = rect_width((iptr)&dirty_rect);
-    if ((0 < ok) && (ok = rect_height((iptr)&dirty_rect), 0 < ok)) {
+    ok = rect_width(&dirty_rect);
+    if ((0 < ok) && (ok = rect_height(&dirty_rect), 0 < ok)) {
       last_time = timeGetTime();
       mapview_apply_zoom((ViewWindow *)((i8 *)&map_views_block.map_views));
       for (frame2 = 0; frame2 < 0xb; frame2++) {
@@ -6250,7 +6250,7 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
         do {
           win_flush_pending_msgs();
           if (2 < game.multiplayer) {
-            net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+            net_process_messages(&net_session_block,1,0);
           }
           now = timeGetTime();
         } while ((int)(now - last_time) < 100);
@@ -6906,15 +6906,15 @@ int __cdecl tile_radius_civ(iptr x,iptr y)
 void __cdecl tile_update_known(iptr x,iptr y,iptr civ)
 
 {
-  iptr tile;
+  Tile *tile;
   i32 known_arg5;
   i32 known_arg6;
   
   if (civ != 0) {
     known_arg6 = 1;
     known_arg5 = 0;
-    tile = (iptr)tile_at(x,y);
-    known_set(x,y,CONCAT31((int3)((uint)tile >> 8),*(i8 *)(tile + 1)),civ,
+    tile = tile_at(x,y);
+    known_set(x,y,CONCAT31((int3)((uint)tile >> 8),(i8)tile->improvements),civ,
               known_arg5,known_arg6);
   }
   return;
@@ -6925,14 +6925,14 @@ uint __cdecl tile_visible_to(iptr x,iptr y,iptr civ)
 
 {
   uint result;
-  iptr tile;
+  Tile *tile;
   
   if (civ < 0) {
     result = 1;
   }
   else {
-    tile = (iptr)tile_at(x,y);
-    result = (uint)*(byte *)(tile + 4) & 1 << ((byte)civ & 0x1f);
+    tile = tile_at(x,y);
+    result = (uint)tile->visible & 1 << ((byte)civ & 0x1f);
   }
   return result;
 }
@@ -7194,17 +7194,17 @@ void __cdecl tile_set_improvements(iptr x,iptr y,iptr bits,iptr set,int sync)
 
 {
   char old_value;
-  iptr tile;
+  Tile *tile;
   
-  tile = (iptr)tile_at(x,y);
-  old_value = *(char *)(tile + 1);
+  tile = tile_at(x,y);
+  old_value = (char)tile->improvements;
   if (set == 0) {
-    *(byte *)(tile + 1) = *(byte *)(tile + 1) & ~(byte)bits;
+    tile->improvements = tile->improvements & ~(byte)bits;
   }
   else {
-    *(byte *)(tile + 1) = *(byte *)(tile + 1) | (byte)bits;
+    tile->improvements = tile->improvements | (byte)bits;
   }
-  if (((sync != 0) && (*(char *)(tile + 1) != old_value)) && (2 < game.multiplayer)) {
+  if (((sync != 0) && ((char)tile->improvements != old_value)) && (2 < game.multiplayer)) {
     if ((net_session_block.net_host_flag == '\0') && (net_session_block.net_tile_batch_active != '\0')) {
       net_batch_add(0,x,y,bits,set,0);
     }
@@ -7252,17 +7252,17 @@ void __cdecl tile_set_visible(iptr x,iptr y,iptr bits,iptr set,int sync)
 
 {
   char old_value;
-  iptr tile;
+  Tile *tile;
   
-  tile = (iptr)tile_at(x,y);
-  old_value = *(char *)(tile + 4);
+  tile = tile_at(x,y);
+  old_value = (char)tile->visible;
   if (set == 0) {
-    *(byte *)(tile + 4) = *(byte *)(tile + 4) & ~(byte)bits;
+    tile->visible = tile->visible & ~(byte)bits;
   }
   else {
-    *(byte *)(tile + 4) = *(byte *)(tile + 4) | (byte)bits;
+    tile->visible = tile->visible | (byte)bits;
   }
-  if (((sync != 0) && (*(char *)(tile + 4) != old_value)) && (2 < game.multiplayer)) {
+  if (((sync != 0) && ((char)tile->visible != old_value)) && (2 < game.multiplayer)) {
     if ((net_session_block.net_host_flag == '\0') && (net_session_block.net_tile_batch_active != '\0')) {
       net_batch_add(2,x,y,bits,set,0);
     }
@@ -7283,13 +7283,13 @@ void __cdecl tile_set_fertility(iptr x,iptr y,iptr fertility,iptr sync)
 
 {
   char old_value;
-  iptr tile;
+  Tile *tile;
   
-  tile = (iptr)tile_at(x,y);
-  old_value = *(char *)(tile + 5);
-  *(byte *)(tile + 5) = *(byte *)(tile + 5) & 0xf0;
-  *(byte *)(tile + 5) = *(byte *)(tile + 5) | (byte)fertility & 0xf;
-  if (((sync != 0) && (*(char *)(tile + 5) != old_value)) && (2 < game.multiplayer)) {
+  tile = tile_at(x,y);
+  old_value = (char)tile->owner;
+  tile->owner = tile->owner & 0xf0;
+  tile->owner = tile->owner | (byte)fertility & 0xf;
+  if (((sync != 0) && ((char)tile->owner != old_value)) && (2 < game.multiplayer)) {
     if ((net_session_block.net_host_flag == '\0') && (net_session_block.net_tile_batch_active != '\0')) {
       net_batch_add(3,x,y,fertility,0,0);
     }
@@ -7310,16 +7310,16 @@ void __cdecl tile_set_owner(iptr x,iptr y,iptr owner,iptr sync)
 
 {
   char old_value;
-  iptr tile;
+  Tile *tile;
   
   if ((owner < 0) || (8 < owner)) {
     owner = 0xf;
   }
-  tile = (iptr)tile_at(x,y);
-  old_value = *(char *)(tile + 5);
-  *(byte *)(tile + 5) = *(byte *)(tile + 5) & 0xf;
-  *(byte *)(tile + 5) = *(byte *)(tile + 5) | (byte)(owner << 4);
-  if (((sync != 0) && (*(char *)(tile + 5) != old_value)) && (2 < game.multiplayer)) {
+  tile = tile_at(x,y);
+  old_value = (char)tile->owner;
+  tile->owner = tile->owner & 0xf;
+  tile->owner = tile->owner | (byte)(owner << 4);
+  if (((sync != 0) && ((char)tile->owner != old_value)) && (2 < game.multiplayer)) {
     if ((net_session_block.net_host_flag == '\0') && (net_session_block.net_tile_batch_active != '\0')) {
       net_batch_add(4,x,y,owner,0,0);
     }
@@ -7366,13 +7366,13 @@ void __cdecl tile_set_radius_civ(iptr x,iptr y,iptr radius_civ,iptr sync)
 
 {
   char old_value;
-  iptr tile;
+  Tile *tile;
   
-  tile = (iptr)tile_at(x,y);
-  old_value = *(char *)(tile + 2);
-  *(byte *)(tile + 2) = *(byte *)(tile + 2) & 0x1f;
-  *(byte *)(tile + 2) = (byte)((radius_civ & 7U) << 5) | *(byte *)(tile + 2);
-  if (((sync != 0) && (*(char *)(tile + 2) != old_value)) && (2 < game.multiplayer)) {
+  tile = tile_at(x,y);
+  old_value = (char)tile->radius;
+  tile->radius = tile->radius & 0x1f;
+  tile->radius = (byte)((radius_civ & 7U) << 5) | tile->radius;
+  if (((sync != 0) && ((char)tile->radius != old_value)) && (2 < game.multiplayer)) {
     if ((net_session_block.net_host_flag == '\0') && (net_session_block.net_tile_batch_active != '\0')) {
       net_batch_add(6,x,y,radius_civ,0,0);
     }

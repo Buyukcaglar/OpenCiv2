@@ -38,7 +38,7 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
     POINT pt;
     tagRECT rect;
 
-    wnd_obj = wnd_from_hwnd(hwnd);
+    wnd_obj = (int)wnd_from_hwnd(hwnd);
     self = *(void **)(wnd_obj + 4);
     switch (msg) {
     case 0x200:     /* WM_MOUSEMOVE */
@@ -57,7 +57,7 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
             }
         }
         else {
-            rect_ptr = (int *)ctrl_get_rect(self);
+            rect_ptr = (int *)ctrl_get_rect((Control *)self);
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -151,7 +151,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     tagRECT focus_rect;
     i32 key_word;
 
-    wnd_obj2 = wnd_from_hwnd(hwnd);
+    wnd_obj2 = (int)wnd_from_hwnd(hwnd);
     if (wnd_obj2 == 0)
         return 0;
     ctrl = *(void **)(wnd_obj2 + 4);
@@ -168,7 +168,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (*(int *)(wnd_obj2 + 0x1c) != 0) {
             pt.x = lparam & 0xffff;
             pt.y = (lparam >> 0x10) & 0xffff;
-            rect_ptr = (int *)ctrl_get_rect(ctrl);
+            rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -189,7 +189,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         *(i32 *)(wnd_obj2 + 0x1c) = 0;
         pt.x = lparam & 0xffff;
         pt.y = (lparam >> 0x10) & 0xffff;
-        rect_ptr = (int *)ctrl_get_rect(ctrl);
+        rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
         rect.left = rect_ptr[0];
         rect.top = rect_ptr[1];
         rect.right = rect_ptr[2];
@@ -208,7 +208,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         break;
     case 0xf:       /* WM_PAINT */
         hdc = BeginPaint(hwnd, &ps);
-        rect_ptr = (int *)ctrl_get_rect(ctrl);
+        rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
         rect.left = rect_ptr[0];
         rect.top = rect_ptr[1];
         rect.right = rect_ptr[2];
@@ -222,8 +222,8 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
                 nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)parent);
                 if (nav_enabled == '\0') {
                     parent = (void *)ctrl_get_parent((Control *)ctrl);
-                    tmp = wnd_get_window((WndBase *)parent);
-                    SetFocus(*(HWND *)(tmp + 4));
+                    tmp = (int)wnd_get_window((WndBase *)parent);
+                    SetFocus(((NativeWindow *)tmp)->hwnd);
                 }
                 else {
                     SetFocus((HWND)0x0);
@@ -240,8 +240,8 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         mem_dc = CreateCompatibleDC(hdc);
         RealizePalette(mem_dc);
         h = SelectObject(mem_dc, bitmap2);
-        tmp = rect_height((iptr)&rect);      /* height */
-        cx = rect_width((iptr)&rect);         /* width */
+        tmp = rect_height(&rect);      /* height */
+        cx = rect_width(&rect);         /* width */
         BitBlt(hdc, 0, 0, cx, tmp, mem_dc, 0, 0, 0xcc0020);
         SelectObject(mem_dc, h);
         DeleteDC(mem_dc);
@@ -324,7 +324,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     uint inside_flag;
     i32 key_word;
 
-    wnd_obj = wnd_from_hwnd(hwnd);
+    wnd_obj = (int)wnd_from_hwnd(hwnd);
     if (wnd_obj == 0)
         return 1;
     ctrl = *(void **)(wnd_obj + 4);
@@ -338,7 +338,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (*(int *)(wnd_obj + 0x1c) != 0) {
             pt.x = lparam & 0xffff;
             pt.y = (lparam >> 0x10) & 0xffff;
-            rect_ptr = (int *)ctrl_get_rect(ctrl);
+            rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -359,7 +359,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             *(i32 *)(wnd_obj + 0x1c) = 0;
             pt.x = lparam & 0xffff;
             pt.y = (lparam >> 0x10) & 0xffff;
-            rect_ptr = (int *)ctrl_get_rect(ctrl);
+            rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -387,7 +387,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         break;
     case 0xf:       /* WM_PAINT */
         hdc = BeginPaint(hwnd, &ps);
-        rect_ptr = (int *)ctrl_get_rect(ctrl);
+        rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
         rect.left = rect_ptr[0];
         rect.top = rect_ptr[1];
         rect.right = rect_ptr[2];
@@ -408,7 +408,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             surface_apply_palette((DibSurface *)((int)ctrl + 0x34), (PaletteVersionView *)ctrl_arg);
             if (gfx_palettized_display == 1)
                 RealizePalette(hdc);
-            height = surface_get_dib((DibSurface *)((int)ctrl + 0x34));
+            height = (int)surface_get_dib((DibSurface *)((int)ctrl + 0x34));
             hdcSrc = *(HDC *)(height + 4);
             height = surface_height((DibSurface *)((int)ctrl + 0x34));
             width = surface_width((DibSurface *)((int)ctrl + 0x34));
@@ -421,7 +421,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             ctrl_arg = wnd_get_palette((WndPaletteView *)parent);
             surface_apply_palette((DibSurface *)((int)ctrl + 0x7c), (PaletteVersionView *)ctrl_arg);
             RealizePalette(hdc);
-            height = surface_get_dib((DibSurface *)((int)ctrl + 0x7c));
+            height = (int)surface_get_dib((DibSurface *)((int)ctrl + 0x7c));
             hdcSrc = *(HDC *)(height + 4);
             /* The original uses the same accessor for both dimensions here. */
             height = surface_width((DibSurface *)((int)ctrl + 0x7c));
@@ -473,7 +473,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
 /* ------------------------------------------------------------------------ */
 
 /* 0x005e22ed: start playing a video (decompressor setup, audio sync). */
-void __cdecl avi_play_start(int avi)
+void __cdecl avi_play_start(AviPlayer *avi)
 {
     LONG t_end, t_start;
 
@@ -481,40 +481,40 @@ void __cdecl avi_play_start(int avi)
         return;
     if (avi_playing != 0)
         avi_play_pause(avi);
-    if (*(int *)(avi + 0x5a0) != 0) {
+    if (avi->double_size != 0) {
         ICSendMessage((*(HIC *)&avi_decompressor), 0x403f, 0, 0);
         (*(uint *)&err_report_ctx_block.g_video_flags_a) = 8;
-        if (*(int *)(avi + 0x5a4) != 0)
+        if (avi->transparent != 0)
             (*(uint *)&err_report_ctx_block.g_video_flags_a) |= 0x80000004;
         (*(uint *)&err_report_ctx_block.g_video_flags_b) = 0x80000008;
         ICSendMessage((*(HIC *)&avi_decompressor), 0x5001, (DWORD_PTR)(iptr)&err_report_ctx_block.avi_indeo_seq_opts, 0x2c);
         ICSendMessage((*(HIC *)&avi_decompressor), 0x5001, (DWORD_PTR)(iptr)&err_report_ctx_block.avi_indeo_frame_opts, 0x70);
-        *(int *)(avi + 0x5f0) <<= 1;
-        *(int *)(avi + 0x5ec) <<= 1;
-        avi_ic_decompress_ex_begin((i32)(*(HIC *)&avi_decompressor), 0, avi + 0x5c0, 0, 0, 0,
-                     *(i32 *)(avi + 0x5c4), *(i32 *)(avi + 0x5c8),
-                     avi + 0x5e8, 0, 0, 0,
-                     *(int *)(avi + 0x5c4) * 2, *(int *)(avi + 0x5c8) * 2);
-        *(int *)(avi + 0x5f0) >>= 1;
-        *(int *)(avi + 0x5ec) >>= 1;
+        avi->dst_format.height <<= 1;
+        avi->dst_format.width <<= 1;
+        avi_ic_decompress_ex_begin((i32)(*(HIC *)&avi_decompressor), 0, (iptr)&avi->src_format, 0, 0, 0,
+                     avi->src_format.width, avi->src_format.height,
+                     (iptr)&avi->dst_format, 0, 0, 0,
+                     avi->src_format.width * 2, avi->src_format.height * 2);
+        avi->dst_format.height >>= 1;
+        avi->dst_format.width >>= 1;
     }
-    if (*(int *)(avi + 0x5a8) != 0) {
-        t_end = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), *(LONG *)(avi + 0xa14));
-        t_start = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), *(LONG *)(avi + 0xa18));
-        avi_audio_prepare_range((AviAudioPrepareView *)(avi + 0x11c), t_start, t_end);
+    if (avi->has_audio != 0) {
+        t_end = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), avi->end_frame);
+        t_start = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), avi->cur_frame);
+        avi_audio_prepare_range((AviAudioPrepareView *)&avi->audio, t_start, t_end);
     }
     if (avi_file_loaded != 0) {
-        if (*(int *)(avi + 0x5a4) == 0)
+        if (avi->transparent == 0)
             avi_update_frame(avi);
         wnd_modal_stack_below_block.avi_idle_update_enabled = 1;
         avi_playing = 1;
         avi_blit_union_left_block.g_video_frame_count = 0;
-        if (*(int *)(avi + 0x5a8) == 0) {
+        if (avi->has_audio == 0) {
             (*(DWORD *)&g_video_start_time) = timeGetTime();
         }
         else {
-            avi_audio_start((void *)(avi + 0x11c));
-            *(i32 *)(avi + 0x5b0) = 1;
+            avi_audio_start((void *)&avi->audio);
+            avi->audio_playing = 1;
         }
     }
 }
@@ -541,7 +541,7 @@ i32 __cdecl ddraw_init(void)
     wc.lpszMenuName = (LPCSTR)0x0;
     wc.lpszClassName = str_msdirectwindow;
     RegisterClassA(&wc);
-    hr = DirectDrawCreate((GUID *)0x0, (LPDIRECTDRAW *)(iptr)&g_ddraw, (IUnknown *)0x0);
+    hr = DirectDrawCreate((GUID *)0x0, (LPDIRECTDRAW *)&g_ddraw, (IUnknown *)0x0);
     if (hr != 0) {
         dbg_log((const char *)str_error_directdrawinitialize_failed);
         return 0;
@@ -549,7 +549,7 @@ i32 __cdecl ddraw_init(void)
     err_report_ctx_block.g_ddcaps_driver = 0x13c;
     err_report_ctx_block.g_ddcaps_hel = 0x13c;
     /* IDirectDraw::GetCaps (vtable slot 11) */
-    ((dd_getcaps_fn)(*(void ***)g_ddraw)[11])(g_ddraw, (void *)(iptr)&err_report_ctx_block.g_ddcaps_driver, (void *)(iptr)&err_report_ctx_block.g_ddcaps_hel);
+    ((dd_getcaps_fn)(*(void ***)g_ddraw)[11])(g_ddraw, (void *)&err_report_ctx_block.g_ddcaps_driver, (void *)&err_report_ctx_block.g_ddcaps_hel);
     if ((err_report_ctx_block.ddraw_hw_caps_byte0 & 0x40) == 0)
         dbg_log((const char *)str_direct_draw_doesn_t_supports_hardware_bl);
     if ((err_report_ctx_block.ddraw_hw_caps_byte2 & 0x40) == 0)
@@ -569,7 +569,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
 {
     int page;
     int wnd_obj;
-    int owner;
+    NativeWindow *owner;
     void *view;
     WPARAM wp = wparam_hwnd;
     short x = (short)lparam;
@@ -624,8 +624,8 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     case 0x201:     /* WM_LBUTTONDOWN */
         owner = wnd_get_window((WndBase *)GetWindowLongA(hwnd, 0));
         (*(void * *)&wnd_active_child) = child2;
-        if ((*(byte *)(owner + 0x49) & 2) != 0) {
-            SetFocus(*(HWND *)(owner + 4));
+        if ((owner->flags_bytes[1] & 2) != 0) {
+            SetFocus(owner->hwnd);
             BringWindowToTop(hwnd);
         }
         *(i32 *)((int)child2 + 0xa8) = 1;
@@ -641,8 +641,8 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         break;
     case 0x204:     /* WM_RBUTTONDOWN */
         owner = wnd_get_window((WndBase *)GetWindowLongA(hwnd, 0));
-        if ((*(byte *)(owner + 0x49) & 2) != 0) {
-            SetFocus(*(HWND *)(owner + 4));
+        if ((owner->flags_bytes[1] & 2) != 0) {
+            SetFocus(owner->hwnd);
             BringWindowToTop(hwnd);
         }
         (*(void * *)&wnd_active_child) = child2;
@@ -692,10 +692,10 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         /* fall through */
     case 0x30f:     /* WM_QUERYNEWPALETTE */
         hdc = GetDC(hwnd);
-        wnd_obj = wnd_get_window((WndBase *)child2);
-        if (*(int *)(wnd_obj + 0x18) != 0) {
-            wnd_obj = wnd_get_window((WndBase *)child2);
-            SelectPalette(hdc, *(HPALETTE *)(wnd_obj + 0x18), 0);
+        wnd_obj = (int)wnd_get_window((WndBase *)child2);
+        if ((int)((NativeWindow *)wnd_obj)->palette != 0) {
+            wnd_obj = (int)wnd_get_window((WndBase *)child2);
+            SelectPalette(hdc, ((NativeWindow *)wnd_obj)->palette, 0);
             realized = RealizePalette(hdc);
             InvalidateRect(hwnd, (RECT *)0x0, 1);
         }
@@ -721,7 +721,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
             wnd_on_menu_command(hwnd, wparam_hwnd);
         break;
     case 0x3bd:
-        snd_wave_on_buffer_done(wparam_hwnd, lparam);
+        snd_wave_on_buffer_done(wparam_hwnd, (WaveHeader *)lparam);
         return 0;
 
     case 0x11f:     /* WM_MENUSELECT */

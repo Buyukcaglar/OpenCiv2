@@ -254,7 +254,7 @@ void __cdecl tech_editor_on_ok(void)
   iptr errors;
   HWND hWnd;
   iptr ok;
-  int window;
+  NativeWindow *window;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -273,7 +273,7 @@ void __cdecl tech_editor_on_ok(void)
       lpCaption = str_file_i_o_error;
       lpText = msg;
       window = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(window + 4),lpText,lpCaption,uType);
+      MessageBoxA(window->hwnd,lpText,lpCaption,uType);
     }
     editor_text_dlg_wnd_block.editor_running = 0;
     wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -317,7 +317,7 @@ void __cdecl tech_editor_fill_usage_list(void)
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     if ((int)unit_types[unit_type].prerequisite == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!units_header) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x808));
+        label = (iptr)label_string(label_string_ids[0x202]);
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),(const char *)label);
         units_header = true;
       }
@@ -328,7 +328,7 @@ void __cdecl tech_editor_fill_usage_list(void)
   for (advance = 0; advance < 100; advance++) {
     if ((int)advances[advance].preq[0] == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!advances_header) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x80c));
+        label = (iptr)label_string(label_string_ids[0x203]);
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),(const char *)label);
         advances_header = true;
       }
@@ -338,7 +338,7 @@ void __cdecl tech_editor_fill_usage_list(void)
       }
       else {
         name2 = (iptr)label_string(advances[advances[advance].preq[1]].name);
-        conj = (iptr)label_string(*(i32 *)(label_string_ids + 0x1ec));
+        conj = (iptr)label_string(label_string_ids[0x7b]);
         adv_name = (iptr)label_string(advances[advance].name);
         _sprintf(line,str_s_s_s,adv_name,conj,name2);
       }
@@ -346,7 +346,7 @@ void __cdecl tech_editor_fill_usage_list(void)
     }
     else if ((int)advances[advance].preq[1] == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!advances_header) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x80c));
+        label = (iptr)label_string(label_string_ids[0x203]);
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),(const char *)label);
         advances_header = true;
       }
@@ -356,7 +356,7 @@ void __cdecl tech_editor_fill_usage_list(void)
       }
       else {
         name2 = (iptr)label_string(advances[advances[advance].preq[0]].name);
-        conj = (iptr)label_string(*(i32 *)(label_string_ids + 0x1ec));
+        conj = (iptr)label_string(label_string_ids[0x7b]);
         adv_name = (iptr)label_string(advances[advance].name);
         _sprintf(line,str_s_s_s_2,adv_name,conj,name2);
       }
@@ -406,13 +406,13 @@ void __cdecl tech_editor_on_rename(void)
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(label_string_ids[0x1f1]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(label_string_ids[0x1f1]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c),(const char *)label);
     for (i = 0; i < 100; i++) {
       combo_add_string
@@ -468,7 +468,7 @@ void __cdecl tech_editor_on_edit_icon(void)
   
   save_fn = ((i8 *)sprite_sheet_save_tech_icons);
   flags = 0;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+  title = (iptr)label_string(label_string_ids[0x1f6]);
   sprite_editor_run((iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                            *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field3) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58) * 0xf0 +
                            *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58) * 0x3c),
@@ -556,9 +556,9 @@ void __thiscall tech_editor_create_combo(ViewWindow *self,int slot)
     break;
   case 1:
   case 2:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(label_string_ids[0x1f1]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     for (advance = 0; advance < 100; advance++) {
       label = (iptr)label_string(advances[advance].name);
@@ -566,25 +566,25 @@ void __thiscall tech_editor_create_combo(ViewWindow *self,int slot)
     }
     break;
   case 3:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x810));
+    label = (iptr)label_string(label_string_ids[0x204]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x814));
+    label = (iptr)label_string(label_string_ids[0x205]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x818));
+    label = (iptr)label_string(label_string_ids[0x206]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x81c));
+    label = (iptr)label_string(label_string_ids[0x207]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     break;
   case 4:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x820));
+    label = (iptr)label_string(label_string_ids[0x208]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x824));
+    label = (iptr)label_string(label_string_ids[0x209]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x828));
+    label = (iptr)label_string(label_string_ids[0x20a]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x82c));
+    label = (iptr)label_string(label_string_ids[0x20b]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x830));
+    label = (iptr)label_string(label_string_ids[0x20c]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
   }
   return;
@@ -632,7 +632,7 @@ void __thiscall tech_editor_paint(ViewWindow *self)
   
   frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1d);
   }
   else {
     gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,
@@ -762,7 +762,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   top = 0;
   left = 0;
   style = 0xd;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x734));
+  title = (iptr)label_string(label_string_ids[0x1cd]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title,style,left,top,width,height,extra_arg1,extra_arg2,extra_arg3);
   for (row = 0; row < 7; row++) {
@@ -798,7 +798,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)tech_editor_on_ok);
@@ -810,7 +810,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     rename_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
+  label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)tech_editor_on_rename);
@@ -822,7 +822,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)tech_editor_on_help);
@@ -834,7 +834,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)tech_editor_on_cancel);
@@ -850,7 +850,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     icon_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
+  label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)tech_editor_on_edit_icon);
@@ -1566,7 +1566,7 @@ void __cdecl science_advisor_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x54c));
+  text = (iptr)label_string(label_string_ids[0x153]);
   text_append((const char *)text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,cur_y,advisor_window_block.advisor_client_width);
   cur_y += line_height;
@@ -1600,7 +1600,7 @@ void __cdecl science_advisor_draw(void)
     cur_y += line_height;
     draw_y = cur_y + 9;
     bar_flag = 1;
-    value = rect_width((iptr)&advisor_window_block.advisor_client_rect);
+    value = rect_width((RECT *)&advisor_window_block.advisor_client_rect);
     value -= 10;
     bar_height = 0xe;
     max_value = civ_research_cost(civ);
@@ -1609,7 +1609,7 @@ void __cdecl science_advisor_draw(void)
     box_bottom = cur_y + 0x20;
     cur_y = box_bottom;
     rect_set((iptr)frame_rect2,advisor_window_block.advisor_client_rect + 2,box_top,advisor_window_block.advisor_client_right - 2,box_bottom);
-    gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(iptr)frame_rect2,0x29);
+    gfx_draw_rect_frame((iptr)&advisor_window_block.advisor_window,(RECT *)frame_rect2,0x29);
     cur_y += 6;
   }
   research_cost = civ_research_cost(civ);
@@ -1767,17 +1767,17 @@ void __cdecl science_advisor_show(iptr civ)
   advisor_window_block.advisor_report_civ = civ;
   rect_set_xywh((iptr)button_rect,2,0,0x129,0x18);
   client_y = advisor_window_block.advisor_client_y;
-  rect_h = rect_height((iptr)button_rect);
+  rect_h = rect_height((RECT *)button_rect);
   rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)button_rect,299,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
   ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5cc));
+  label = (iptr)label_string(label_string_ids[0x173]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)science_advisor_on_goal_clicked);
@@ -1837,7 +1837,7 @@ void __cdecl civ_score_window_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x55c));
+  text = (iptr)label_string(label_string_ids[0x157]);
   text_append((const char *)text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,header_y,advisor_window_block.advisor_client_width);
   header_y += line_height;
@@ -2265,7 +2265,7 @@ void __cdecl civ_rating_window_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x670));
+  text = (iptr)label_string(label_string_ids[0x19c]);
   text_append((const char *)text);
   text_append_colon();
   text_append_int(rating_percent);
@@ -2962,7 +2962,7 @@ void __cdecl civ_process_cities_turn(uptr civ)
     city--;
     if (city < 0) break;
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     if ((cities[city].id != 0) && ((int)cities[city].owner == (civ & 0xff))) {
       cities[city].flags = cities[city].flags & 0xfffeffff;
@@ -3139,7 +3139,7 @@ void __cdecl civ_heal_units(iptr civ)
   
   for (unit = 0; unit < game.num_units; unit++) {
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     if ((units[unit].id != 0) && (units[unit].owner == civ)) {
       old_flags = units[unit].flags;
@@ -3576,7 +3576,7 @@ char * __cdecl civ_leader_name(iptr civ)
   int name2;
   
   if (civ < 1) {
-    name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x44));
+    name2 = (iptr)label_string(label_string_ids[0x11]);
   }
   else if (leaders[civs[civ].tribe].leader_name < 0) {
     name2 = civ * 0xf2 + (iptr)((u8 *)&civ_names + 2);
@@ -3615,7 +3615,7 @@ char * __cdecl civ_name_plural(iptr civ)
   int name2;
   
   if (civ < 1) {
-    name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x3c));
+    name2 = (iptr)label_string(label_string_ids[0xf]);
   }
   else if (leaders[civs[civ].tribe].plural < 0) {
     name2 = civ * 0xf2 + (iptr)((u8 *)&civ_names + 26);
@@ -3633,7 +3633,7 @@ int __cdecl civ_adjective(iptr civ)
   int adjective;
   
   if (civ < 1) {
-    adjective = (iptr)label_string(*(i32 *)(label_string_ids + 0x40));
+    adjective = (iptr)label_string(label_string_ids[0x10]);
   }
   else if (leaders[civs[civ].tribe].adjective < 0) {
     adjective = civ * 0xf2 + (iptr)((u8 *)&civ_names + 50);
@@ -3698,12 +3698,12 @@ void __cdecl civ_change_password_dialog(iptr civ)
   passwords_scramble();
   if (current_password[0] == '\0') {
     dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1_3,0x1f,(iptr)&str_empty_112,0,0,0,1);
-    password_dialog_set_title((iptr)&dialog2,civ,0x26c);
+    password_dialog_set_title(&dialog2,civ,0x26c);
     result = dialog_run_modal(&dialog2,(iptr)entered,0);
   }
   else {
     dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1,0x1f,(iptr)&str_empty_110,0,0,0,1);
-    password_dialog_set_title((iptr)&dialog2,civ,0x26d);
+    password_dialog_set_title(&dialog2,civ,0x26d);
     result = dialog_run_modal(&dialog2,(iptr)entered,0);
     if (result < 0) goto cleanup;
     result = _strcmp(entered,current_password);
@@ -3712,7 +3712,7 @@ void __cdecl civ_change_password_dialog(iptr civ)
       goto cleanup;
     }
     dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1_2,0x1f,(iptr)&str_empty_111,0,0,0,1);
-    password_dialog_set_title((iptr)&dialog2,civ,0x26c);
+    password_dialog_set_title(&dialog2,civ,0x26c);
     result = dialog_run_modal(&dialog2,(iptr)entered,0);
   }
   if (-1 < result) {
@@ -3749,7 +3749,7 @@ i32 __cdecl civ_password_prompt(int civ)
   dialog_ctor(&dialog2,0x4000);
   seh_state = 0;
   dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1_4,0x1f,(iptr)&str_empty_113,0,0,0,1);
-  password_dialog_set_title((iptr)&dialog2,civ,0x26b);
+  password_dialog_set_title(&dialog2,civ,0x26b);
   entered[0] = '\0';
   dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
   result = dialog_run_modal(&dialog2,(iptr)entered,0);
@@ -4417,7 +4417,7 @@ int __cdecl civ_create(iptr civ)
       net_send_message(0x5f,0,civ,0,0,0,0,0,0,0);
       start_ticks = timer_ticks();
       while ((net_session_block.nm_new_civ_ack_result == -0x1b && (now_ticks = timer_ticks(), now_ticks - start_ticks < 0xe10))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+        net_process_messages(&net_session_block,1,1);
       }
       if (net_session_block.nm_new_civ_ack_result == -0x1b) {
         dbg_log((const char *)&str_new_civ_connection_to_server_timed_out);
@@ -4428,7 +4428,7 @@ int __cdecl civ_create(iptr civ)
         dbg_log((const char *)&str_new_civ_received_nm_new_civ_ack_from_ser);
       }
       while ((net_session_block.net_msgq_priority_count != 0 || (result = net_session_block.nm_new_civ_ack_result, net_session_block.net_msgq_normal_count != 0))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
     }
   }
@@ -4513,8 +4513,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
           game_over_reason = 4;
         }
         else if ((2 < game.multiplayer) && ((*(i8 *)&human_civ) != civ)) {
-          net_send_message(0x6b,*(i32 *)
-                                   (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),
+          net_send_message(0x6b,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,
                              (uint)game.game_flags,4,0,0,0,0,0,0);
         }
         passwords_unscramble();
@@ -4557,7 +4556,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
       net_send_message(0x60,0,civ,civ2,0,0,0,0,0,0);
       start_ticks = timer_ticks();
       while ((net_session_block.nm_kill_civ_ack_result == -0x1b && (now_ticks = timer_ticks(), now_ticks - start_ticks < 0xe10))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+        net_process_messages(&net_session_block,1,1);
       }
       if (net_session_block.nm_kill_civ_ack_result == -0x1b) {
         dbg_log((const char *)&str_kill_civ_connection_to_server_timed_out);
@@ -4568,7 +4567,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
         dbg_log((const char *)&str_kill_civ_received_nm_new_civ_ack_from_se);
       }
       while ((net_session_block.net_msgq_priority_count != 0 || (result = net_session_block.nm_kill_civ_ack_result, net_session_block.net_msgq_normal_count != 0))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
     }
   }
@@ -4748,9 +4747,7 @@ void __cdecl civ_leonardo_upgrade(iptr civ)
                 dlg_game_txt_with_unit_flags((const char *)&str_upgrade,unit_type3,(ui_large_screen == 0) - 1 & 8);
               }
               else {
-                net_send_text_args(0x3e,*(i32 *)
-                                         (((i8 *)&net_session_block.net_player_slots) +
-                                         *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),3,0,unit_type3,
+                net_send_text_args(0x3e,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,3,0,unit_type3,
                                    ui_large_screen);
               }
             }
@@ -5148,8 +5145,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
     }
   }
   else {
-    net_send_message(0x9b,*(i32 *)
-                             (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),civ,
+    net_send_message(0x9b,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,civ,
                        advance,civ2,skip_pedia,0,0,0,0);
     seh_state = 0xffffffff;
     /* inlined unwind funclet 004bfd9a */ { dialog_dtor(&dialog2); }
@@ -5472,19 +5468,19 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       }
       button_count = 0;
       if (mode_state[1] != 0) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x30c));
+        label = (iptr)label_string(label_string_ids[0xc3]);
         dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
         mode_state[button_count + 2] = 0;
         button_count++;
       }
       if (mode_state[1] != 1) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x310));
+        label = (iptr)label_string(label_string_ids[0xc4]);
         dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
         mode_state[button_count + 2] = 1;
         button_count++;
       }
       if (mode_state[1] != 2) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x314));
+        label = (iptr)label_string(label_string_ids[0xc5]);
         dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
         mode_state[button_count + 2] = 2;
         button_count++;
@@ -5753,7 +5749,7 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
         dialog_run_modal(&info_dialog,0,ticks - 300);
       }
       known = civ_has_advance(civ,0x26);
-      text_set_label_arg(0,*(i32 *)(label_string_ids + 0xc4 + (uint)(known == 0) * -4));
+      text_set_label_arg(0,label_string_ids[0x31 - (uint)(known == 0)]);
       dialog_load_game_text(&choice_dialog,(const char *)&str_research);
       if (((*((char *)&game.game_options + 1)) & 2) != 0) {
         dialog_set_position((DialogCore *)&choice_dialog,5,0xfffffc19);
@@ -5863,7 +5859,7 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
       adjective = civ_adjective(civ);
       text_set_string_arg_b(0,(const char *)adjective);
       has_philosophy = civ_has_advance(civ,0x26);
-      text_set_label_arg(1,*(i32 *)(label_string_ids + 0xc4 + (uint)(has_philosophy == 0) * -4));
+      text_set_label_arg(1,label_string_ids[0x31 - (uint)(has_philosophy == 0)]);
       text_clear();
       text_append_string_id(advances[advance].name);
       if (advance == 0x59) {
@@ -6076,7 +6072,7 @@ void __cdecl rules_edit_add_section(const char *name2,iptr writer)
       slot = slot + 1) {
   }
   if (slot < 7) {
-    *(iptr *)(((i8 *)&font_size16_bold_block.rules_edit_section_names) + slot * 8) = (iptr)(name2);
+    *(iptr *)(((i8 *)&font_size16_bold_block.rules_edit_section_names) + slot * 8) = (iptr)name2;
     *(iptr *)(((i8 *)&font_size16_bold_block.rules_edit_section_writers) + slot * 8) = writer;
     *(i32 *)(((i8 *)&font_size16_bold_block.rules_edit_next_name) + slot * 8) = 0;
     *(i32 *)(((i8 *)&font_size16_bold_block.rules_edit_next_writer) + slot * 8) = 0;
@@ -6125,8 +6121,8 @@ i32 __cdecl rules_write_sections(void)
       uType = 0x40;
       lpCaption = str_warning_2;
       line_ptr = str_saving_changes_in_file_rules_bak;
-      rc = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-      MessageBoxA(*(HWND *)(rc + 4),line_ptr,lpCaption,uType);
+      rc = (int)wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
+      MessageBoxA(((NativeWindow *)rc)->hwnd,line_ptr,lpCaption,uType);
     }
     else {
       __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
@@ -6414,7 +6410,7 @@ void __cdecl civ_eliminate(iptr civ,i32 kill_units,i32 recreate)
     net_send_message(0x34,0,civ,0,0,0,0,0,0,0);
     x4 = timer_ticks();
     while ((net_session_block.net_kill_or_quit_ack == -2 && (y2 = timer_ticks(), y2 - x4 < 0xe10))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+      net_process_messages(&net_session_block,1,1);
     }
     if (net_session_block.net_kill_or_quit_ack == -2) {
       dbg_log((const char *)&str_killorretire_connection_to_server_timed);
@@ -6425,7 +6421,7 @@ void __cdecl civ_eliminate(iptr civ,i32 kill_units,i32 recreate)
       dbg_log((const char *)&str_killorretire_received_nm_kill_or_quit_ac);
     }
     while ((net_session_block.net_msgq_priority_count != 0 || (net_session_block.net_msgq_normal_count != 0))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
   }
   return;
@@ -6639,16 +6635,12 @@ void __cdecl civ_change_government(iptr civ,uptr new_gov)
                 (has_wonder = civ_has_wonder(civ2,0x18), has_wonder != 0)) ||
                (has_wonder = civ_has_wonder(civ2,9), has_wonder != 0)))))) {
             if (((civs[civ].flags & 1) == 0) || (civ_saved_cursor_x_block.autoplay_active != 0)) {
-              net_send_text_args(0x2c,*(i32 *)
-                                       (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54
-                                       ),1,0,old_government,(ui_large_screen == 0) - 1 & 8);
+              net_send_text_args(0x2c,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,1,0,old_government,(ui_large_screen == 0) - 1 & 8);
               civs[civ].flags = civs[civ].flags | 1;
               notified++;
             }
             else {
-              net_send_text_args(0x2b,*(i32 *)
-                                       (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54
-                                       ),4,0,new_gov,(ui_large_screen == 0) - 1 & 8);
+              net_send_text_args(0x2b,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,4,0,new_gov,(ui_large_screen == 0) - 1 & 8);
               civs[civ].flags = civs[civ].flags & 0xfffe;
               notified++;
             }
@@ -6721,7 +6713,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
     }
     for (civ2 = 1; (int)civ2 < 8; civ2++) {
       if (2 < game.multiplayer) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
       if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x40) == 0) {
         *(i32 *)(((i8 *)&setup_picwnd_block.diplo_recent_peace_table) + civ2 * 4) = 0;
@@ -6810,9 +6802,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
                           text_set_string_arg(0,(const char *)civ_plural);
                           civ_plural = (iptr)(civ_name_plural(civ2));
                           text_set_string_arg(1,(const char *)civ_plural);
-                          net_send_text_args(0x50,*(i32 *)
-                                                   (((i8 *)&net_session_block.net_player_slots) +
-                                                   *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ3 * 4) * 0x54),2,0
+                          net_send_text_args(0x50,net_session_block.net_slots[net_session_block.net_civ_slots[civ3]].id,2,0
                                              ,0,0);
                         }
                       }
@@ -6848,7 +6838,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
     if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
       for (civ2 = 1; (int)civ2 < 8; civ2++) {
         if (2 < game.multiplayer) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
         }
         if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) && (civ_saved_cursor_x_block.autoplay_active == 0)
             ) && ((*(byte *)&civs[civ].treaties[civ2] & 1) != 0)) {
@@ -6856,8 +6846,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
             diplo_ai_review_relations(civ,civ2);
           }
           else if (2 < game.multiplayer) {
-            net_send_message(0xa0,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54)
+            net_send_message(0xa0,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id
                                ,civ,civ2,0,0,0,0,0,0);
           }
         }
@@ -6865,15 +6854,14 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
       diplo_ai_military_aid(civ);
       for (civ4 = 1; (int)civ4 < 8; civ4++) {
         if (2 < game.multiplayer) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
         }
         if ((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) {
           if (human_civ[0] == civ4) {
             diplo_ai_seek_war_ally(civ,civ4);
           }
           else if (2 < game.multiplayer) {
-            net_send_message(0xa1,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ4 * 4) * 0x54)
+            net_send_message(0xa1,net_session_block.net_slots[net_session_block.net_civ_slots[civ4]].id
                                ,civ,civ4,0,0,0,0,0,0);
           }
         }
@@ -6991,8 +6979,7 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
           popup_game_with_advance((const char *)&str_tookciv_2,advance,0);
         }
         else if (2 < game.multiplayer) {
-          net_send_text_args(99,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),2,0,
+          net_send_text_args(99,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,2,0,
                              advance,0);
         }
       }
@@ -7460,7 +7447,7 @@ void __cdecl cosmic_editor_ok_clicked(void)
 
 {
   iptr ok;
-  iptr wnd;
+  NativeWindow *wnd;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -7474,7 +7461,7 @@ void __cdecl cosmic_editor_ok_clicked(void)
     lpCaption = str_file_i_o_error_6;
     lpText = message;
     wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
-    MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
+    MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
   }
   editor_text_dlg_wnd_block.editor_running = 0;
   wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
@@ -7514,7 +7501,7 @@ void __thiscall cosmic_editor_draw_bg(FrameWindow *self)
 
 {
   frame_wnd_draw_caption(self);
-  gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1a);
+  gfx_fill_rect((iptr)self,(RECT *)&self->client_rect,0x1a);
   text_set_surface((iptr)self);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);
@@ -7587,7 +7574,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   pos_y = 0;
   pos_x = 0;
   style = 0xd;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x94c));
+  title = (iptr)label_string(label_string_ids[0x253]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title,style,pos_x,pos_y,width,height,reserved_1,reserved_2,reserved_3);
   rect_set_xywh((iptr)rect,self->client_x + 2,self->client_y + 2,self->client_width - 5,
@@ -7620,7 +7607,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)cosmic_editor_ok_clicked);
@@ -7632,7 +7619,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     edit_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8e0));
+  label = (iptr)label_string(label_string_ids[0x238]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)edit_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)cosmic_editor_edit_value);
@@ -7645,7 +7632,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)cosmic_editor_help_clicked);
@@ -7657,7 +7644,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cosmic_editor_cancel_clicked);

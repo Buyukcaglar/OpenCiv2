@@ -3,27 +3,27 @@
 #include "auto_common.h"
 
 /* 00421f40 auto */
-i8 __thiscall net_is_host(void *self)
+i8 __thiscall net_is_host(NetSession *self)
 
 {
-  return *(i8 *)((int)self + 0x1ef);
+  return self->net_host_flag;
 }
 
 /* 00421f70 auto */
-NetGamelistViewCtorView * __thiscall net_gamelist_view_ctor(NetGamelistViewCtorView *self)
+NetGamelistView * __thiscall net_gamelist_view_ctor(NetGamelistView *self)
 
 {
   self->next_game_id = 1;
-  self->option_list = 0;
+  self->first_option_value = 0;
   self->refresh_timer = 0;
   return self;
 }
 
 /* 00421fad auto */
-void __thiscall net_gamelist_view_dtor(void *self)
+void __thiscall net_gamelist_view_dtor(NetGamelistView *self)
 
 {
-  net_free_game_list(((iptr *)&net_session_block.net_session));
+  net_free_game_list(&net_session_block);
   return;
 }
 
@@ -33,7 +33,7 @@ void __thiscall net_gamelist_view_dtor(void *self)
 void __cdecl net_gamelist_poll_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   return;
 }
 
@@ -44,7 +44,7 @@ void __cdecl net_join_wait_server_idle(void)
 
 {
   timer_ticks();
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((((net_session_block.nm_player_list_count != 0) || (net_session_block.nm_server_canceled_count != 0)) || (net_session_block.nm_server_reject_count != 0)) || (net_session_block.nm_server_full_count != 0))
   {
     net_session_block.dialog_stack_top[0xf] = net_session_block.dialog_stack_top[0xf] | 0x400;
@@ -66,10 +66,10 @@ void __cdecl net_join_wait_gamestate_idle(void)
   
   elapsed = timer_ticks();
   elapsed -= net_session_block.net_wait_start_ticks_i32;
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.nm_join_gamestate_count == 0) && (net_session_block.nm_server_canceled_count == 0)) {
     if (2 < elapsed) {
-      text = *(char **)(*(int *)((*(Dialog * *)&net_session_block.dialog_stack_top)->line_list + 0x1c) + 8);
+      text = *(char **)((int)(*(Dialog * *)&net_session_block.dialog_stack_top)->line_list->next + 8);
       text_len = _strlen(text);
       marker = _strchr(text,0x3e);
       if (text + (text_len - 1) == marker) {
@@ -106,7 +106,7 @@ void __cdecl net_join_wait_gamestate_idle(void)
 void __cdecl net_join_wait_player_list_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if (((net_session_block.nm_player_list_count != 0) || (net_session_block.nm_server_canceled_count != 0)) || (net_session_block.nm_lost_server_on_join_count != 0)) {
     net_session_block.dialog_stack_top[0xf] = net_session_block.dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*net_session_block.dialog_stack_top + 0x48));
@@ -118,7 +118,7 @@ void __cdecl net_join_wait_player_list_idle(void)
 void __cdecl net_join_wait_start_civ_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.nm_start_civ_count != 0) || (net_session_block.nm_server_canceled_count != 0)) {
     net_session_block.dialog_stack_top[0xf] = net_session_block.dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*net_session_block.dialog_stack_top + 0x48));
@@ -130,7 +130,7 @@ void __cdecl net_join_wait_start_civ_idle(void)
 void __cdecl net_join_wait_answer_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if (((net_session_block.nm_server_answer_count != 0) || (net_session_block.nm_server_canceled_count != 0)) || (net_session_block.nm_server_reject_count != 0)) {
     net_session_block.dialog_stack_top[0xf] = net_session_block.dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*net_session_block.dialog_stack_top + 0x48));
@@ -148,7 +148,7 @@ void __cdecl net_join_wait_idle_cb(void)
   
   elapsed = timer_ticks();
   elapsed -= net_session_block.net_wait_start_ticks_i32;
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.net_server_conn_id == -1) && (0x4d8 < elapsed)) {
     net_session_block.dialog_stack_top[0xf] = net_session_block.dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*net_session_block.dialog_stack_top + 0x48));
@@ -161,61 +161,61 @@ void __cdecl net_join_wait_idle_cb(void)
 }
 
 /* 004244e0 auto */
-void __thiscall net_gamelist_restore_selection(NetGameListRefreshView *self)
+void __thiscall net_gamelist_restore_selection(NetGamelistView *self)
 
 {
   int option_count;
-  i32 option;
+  DialogOption *option;
   int top_index;
   int selected_index;
   iptr scroll_pos;
   
   option_count = dialog_count_group_options((DialogOptionList *)self->list_dialog,0);
-  scrollbar_set_range(*(Control **)(self->list_dialog + 0x284),0,option_count - 1);
+  scrollbar_set_range(*(Control **)((iptr)self->list_dialog + 0x284),0,option_count - 1);
   option = net_gamelist_find_option(self,(iptr)&self->selected_game_name,(iptr)&self->selected_host_name);
-  *(i32 *)(self->list_dialog + 0x220) = option;
+  self->list_dialog->selected_option = option;
   if (option_count < 0xb) {
-    *(u32 *)(self->list_dialog + 0x210) = self->first_option_value;
+    self->list_dialog->list_top_option[0] = self->first_option_value;
   }
   else {
     option = net_gamelist_find_option(self,(iptr)&self->top_game_name,(iptr)&self->top_host_name);
-    *(i32 *)(self->list_dialog + 0x210) = option;
+    self->list_dialog->list_top_option[0] = option;
   }
-  if (*(int *)(self->list_dialog + 0x1b8) != 0) {
+  if (*(int *)((iptr)self->list_dialog + 0x1b8) != 0) {
     top_index = dialog_option_group_index
-                      ((DialogOptionList *)self->list_dialog,*(uptr *)(self->list_dialog + 0x210));
-    option_count = *(int *)(self->list_dialog + 0x5c);
+                      ((DialogOptionList *)self->list_dialog,self->list_dialog->list_top_option[0]);
+    option_count = (int)self->list_dialog->list_rows[0];
     selected_index = dialog_option_group_index
-                      ((DialogOptionList *)self->list_dialog,*(uptr *)(self->list_dialog + 0x220));
+                      ((DialogOptionList *)self->list_dialog,self->list_dialog->selected_option);
     if (option_count + top_index <= selected_index) {
       option_count = dialog_option_group_index
-                        ((DialogOptionList *)self->list_dialog,*(uptr *)(self->list_dialog + 0x220));
-      option = dialog_option_at
+                        ((DialogOptionList *)self->list_dialog,self->list_dialog->selected_option);
+      option = (dialog_option_at
                         ((DialogOptionList *)self->list_dialog,
-                         (option_count - *(int *)(self->list_dialog + 0x5c)) + 1);
-      *(i32 *)(self->list_dialog + 0x210) = option;
+                         (option_count - (int)self->list_dialog->list_rows[0]) + 1));
+      self->list_dialog->list_top_option[0] = option;
     }
     option_count = dialog_option_group_index
-                      ((DialogOptionList *)self->list_dialog,*(uptr *)(self->list_dialog + 0x210));
+                      ((DialogOptionList *)self->list_dialog,self->list_dialog->list_top_option[0]);
     top_index = dialog_option_group_index
-                      ((DialogOptionList *)self->list_dialog,*(uptr *)(self->list_dialog + 0x220));
+                      ((DialogOptionList *)self->list_dialog,self->list_dialog->selected_option);
     if (top_index < option_count) {
-      *(i32 *)(self->list_dialog + 0x210) = *(i32 *)(self->list_dialog + 0x220);
+      self->list_dialog->list_top_option[0] = self->list_dialog->selected_option;
     }
   }
   scroll_pos = dialog_option_group_index
-                    ((DialogOptionList *)self->list_dialog,*(uptr *)(self->list_dialog + 0x210));
-  scrollbar_set_pos(*(ClickControl **)(self->list_dialog + 0x284),scroll_pos);
+                    ((DialogOptionList *)self->list_dialog,self->list_dialog->list_top_option[0]);
+  scrollbar_set_pos(*(ClickControl **)((iptr)self->list_dialog + 0x284),scroll_pos);
   return;
 }
 
 /* 00424688 auto */
-u32 __thiscall net_gamelist_find_option(NetGameListRefreshView *self,iptr game_name,iptr host_name)
+DialogOption * __thiscall net_gamelist_find_option(NetGamelistView *self,iptr game_name,iptr host_name)
 
 {
   int cmp;
-  uptr option;
-  iptr game2;
+  DialogOption *option;
+  NetGameInfo *game2;
   
   option = self->first_option_value;
   game2 = net_session_block.net_found_games;
@@ -223,110 +223,110 @@ u32 __thiscall net_gamelist_find_option(NetGameListRefreshView *self,iptr game_n
     if (game2 == 0) {
       return self->first_option_value;
     }
-    cmp = _strcmp((char *)(game2 + 0x70),(char *)game_name);
-    if ((cmp == 0) && (cmp = _strcmp((char *)(game2 + 0x90),(char *)host_name), cmp == 0))
+    cmp = _strcmp(game2->game_name,(char *)game_name);
+    if ((cmp == 0) && (cmp = _strcmp(game2->host_name,(char *)host_name), cmp == 0))
     break;
-    option = *(uptr *)(option + 0x10);
-    game2 = *(iptr *)(game2 + 0x20);
+    option = option->next;
+    game2 = game2->next;
   }
   return option;
 }
 
 /* 0042472a auto */
-void __thiscall net_gamelist_update_details(NetGameList *self)
+void __thiscall net_gamelist_update_details(NetGamelistView *self)
 
 {
   if (net_session_block.net_found_games == 0) {
-    self->selected_game_name = '\0';
-    self->selected_host_name = '\0';
-    self->top_game_name = '\0';
-    self->top_host_name = '\0';
+    self->selected_game_name[0] = '\0';
+    self->selected_host_name[0] = '\0';
+    self->top_game_name[0] = '\0';
+    self->top_host_name[0] = '\0';
   }
   else {
-    net_gamelist_get_entry_names(self,*(iptr *)(self->list_dialog + 0x220),(iptr)&self->selected_game_name,
+    net_gamelist_get_entry_names(self,(iptr)self->list_dialog->selected_option,(iptr)&self->selected_game_name,
                        (iptr)&self->selected_host_name);
-    net_gamelist_get_entry_names(self,*(iptr *)(self->list_dialog + 0x210),(iptr)&self->top_game_name,
+    net_gamelist_get_entry_names(self,(iptr)self->list_dialog->list_top_option[0],(iptr)&self->top_game_name,
                        (iptr)&self->top_host_name);
   }
   return;
 }
 
 /* 004247b2 auto */
-void __thiscall net_gamelist_get_entry_names(NetGameList *self,iptr option,iptr out_game_name,iptr out_host_name)
+void __thiscall net_gamelist_get_entry_names(NetGamelistView *self,iptr option,iptr out_game_name,iptr out_host_name)
 
 {
   int remaining;
-  iptr game2;
+  NetGameInfo *game2;
   
   for (game2 = net_session_block.net_found_games;
-      (game2 != 0 && (*(int *)(option + 4) != *(int *)(game2 + 0x2c)));
-      game2 = *(iptr *)(game2 + 0x20)) {
+      (game2 != 0 && (*(int *)(option + 4) != game2->list_id));
+      game2 = game2->next) {
   }
   if (game2 == 0) {
     game2 = net_session_block.net_found_games;
-    for (remaining = dialog_option_group_index((DialogOptionList *)self->list_dialog,option);
-        (*(int *)(game2 + 0x20) != 0 && (remaining != 0)); remaining--) {
-      game2 = *(iptr *)(game2 + 0x20);
+    for (remaining = dialog_option_group_index((DialogOptionList *)self->list_dialog,(DialogOption *)option);
+        (game2->next != 0 && (remaining != 0)); remaining--) {
+      game2 = game2->next;
     }
   }
-  crt_strcpy((char *)((void *)out_game_name),(const char *)((const void *)(game2 + 0x70)));
-  crt_strcpy((char *)((void *)out_host_name),(const char *)((const void *)(game2 + 0x90)));
+  crt_strcpy((char *)((void *)out_game_name),game2->game_name);
+  crt_strcpy((char *)((void *)out_host_name),game2->host_name);
   return;
 }
 
 /* 0042486f auto */
-void __thiscall net_gamelist_add_info_lines(NetGamelistAddInfoLinesView *self)
+void __thiscall net_gamelist_add_info_lines(NetGamelistView *self)
 
 {
   int line_y;
-  u32 *line;
+  DialogLine *line;
   int spacing;
   
-  dialog_compute_layout((DialogOptionList *)self->dialog);
-  line_y = *(int *)(self->dialog + 0xd0) + *(int *)(self->dialog + 0xb8) + 2;
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_14,0xe6,line_y,0x80,0);
-  self->line_0 = *line;
-  spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
+  dialog_compute_layout((DialogOptionList *)self->list_dialog);
+  line_y = (int)self->list_dialog->title_height + (int)self->list_dialog->field_b8 + 2;
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_14,0xe6,line_y,0x80,0));
+  self->info_lines[0] = (u32)line->number;
+  spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_15,0xe6,line_y,0x80,0);
-  self->line_1 = *line;
-  spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_15,0xe6,line_y,0x80,0));
+  self->info_lines[1] = (u32)line->number;
+  spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_16,0xe6,line_y,0x80,0);
-  self->line_2 = *line;
-  spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_16,0xe6,line_y,0x80,0));
+  self->info_lines[2] = (u32)line->number;
+  spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_17,0xe6,line_y,0x80,0);
-  self->line_3 = *line;
-  spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_17,0xe6,line_y,0x80,0));
+  self->info_lines[3] = (u32)line->number;
+  spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_18,0xe6,line_y,0x80,0);
-  self->line_4 = *line;
-  spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_18,0xe6,line_y,0x80,0));
+  self->info_lines[4] = (u32)line->number;
+  spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_19,0xe6,line_y,0x80,0);
-  self->line_5 = *line;
-  spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_19,0xe6,line_y,0x80,0));
+  self->info_lines[5] = (u32)line->number;
+  spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_20,0xe6,line_y,0x80,0);
-  self->line_6 = *line;
-  spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_20,0xe6,line_y,0x80,0));
+  self->info_lines[6] = (u32)line->number;
+  spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
   line_y += spacing;
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_21,0xe6,line_y,0x80,0);
-  self->line_7 = *line;
-  spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
-  line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_22,0xe6,line_y + spacing,0x80,0);
-  self->line_8 = *line;
-  font_line_spacing(*(GameFont **)(self->dialog + 8));
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_21,0xe6,line_y,0x80,0));
+  self->info_lines[7] = (u32)line->number;
+  spacing = font_line_spacing((GameFont *)self->list_dialog->body_font);
+  line = (DialogLine *)((u32 *)dialog_add_line
+                            ((DialogAddLineView *)self->list_dialog,(const char *)&str_empty_22,0xe6,line_y + spacing,0x80,0));
+  self->info_lines[8] = (u32)line->number;
+  font_line_spacing((GameFont *)self->list_dialog->body_font);
   return;
 }
 
@@ -344,47 +344,47 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
   int bit;
   char text[21];
   i8 text_cutoff;
-  iptr found_game;
+  NetGameInfo *found_game;
   
   found_game = net_session_block.net_found_games;
   if (net_session_block.net_found_games == 0) {
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x128),(const char *)&str_empty_23);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 300),(const char *)&str_empty_24);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x130),(const char *)&str_empty_25);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x134),(const char *)&str_empty_26);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x138),(const char *)&str_empty_27);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x13c),(const char *)&str_empty_28);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x140),(const char *)&str_empty_29);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x144),(const char *)&str_empty_30);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x148),(const char *)&str_empty_31);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[0],(const char *)&str_empty_23);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[1],(const char *)&str_empty_24);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[2],(const char *)&str_empty_25);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[3],(const char *)&str_empty_26);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[4],(const char *)&str_empty_27);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[5],(const char *)&str_empty_28);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[6],(const char *)&str_empty_29);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[7],(const char *)&str_empty_30);
+    dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[8],(const char *)&str_empty_31);
   }
   else {
     for (; (found_game != 0 &&
-           (*(int *)(found_game + 0x2c) != *(int *)(*(int *)(*(int *)net_session_block.net_session[0] + 0x220) + 4)));
-        found_game = *(iptr *)(found_game + 0x20)) {
+           (found_game->list_id != *(int *)((int)net_session_block.gamelist_view->list_dialog->selected_option + 4)));
+        found_game = found_game->next) {
     }
     if (found_game != 0) {
       str_clear((char *)text);
       str_append_label((iptr)text,0x26f);
       str_append_space((iptr)text);
-      crt_strcat(text,(const char *)((const void *)(found_game + 0x70)));
+      crt_strcat(text,found_game->game_name);
       str_append_space((iptr)text);
       str_append_lparen((iptr)text);
-      str_append_label((iptr)text,(*(short *)(found_game + 0xb0) == 0) + 0x277);
+      str_append_label((iptr)text,(found_game->open_game == 0) + 0x277);
       str_append_rparen((iptr)text);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x128),(const char *)text);
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[0],(const char *)text);
       str_clear((char *)text);
       str_append_label((iptr)text,0x270);
       str_append_space((iptr)text);
-      crt_strcat(text,(const char *)((const void *)(found_game + 0x90)));
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 300),(const char *)text);
+      crt_strcat(text,found_game->host_name);
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[1],(const char *)text);
       str_clear((char *)text);
-      text_len = _strlen((char *)(found_game + 0xbc));
+      text_len = _strlen(found_game->scenario_name);
       if (text_len == 0) {
         str_append_label((iptr)text,0x34c);
       }
       else {
-        crt_strcpy(text,(const char *)((const void *)(found_game + 0xbc)));
+        crt_strcpy(text,found_game->scenario_name);
       }
       text_len = _strlen(text);
       if (0x19 < text_len) {
@@ -392,47 +392,47 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
       }
       str_append_space((iptr)text);
       str_append_lparen((iptr)text);
-      game.game_flags = *(u16 *)(found_game + 0x110);
-      game.first_launch_turn = *(i16 *)(found_game + 0x112);
-      prefs_game_rules_block.scenario_year_increment[0] = *(i16 *)(found_game + 0x114);
-      prefs_game_rules_block.scenario_start_year = *(i16 *)(found_game + 0x116);
-      game.difficulty = *(u8 *)(found_game + 0xb2);
-      year = game_turn_to_year((int)*(short *)(found_game + 0x118));
+      game.game_flags = found_game->game_flags;
+      game.first_launch_turn = found_game->first_launch_turn;
+      prefs_game_rules_block.scenario_year_increment[0] = found_game->year_increment;
+      prefs_game_rules_block.scenario_start_year = found_game->start_year;
+      game.difficulty = found_game->difficulty;
+      year = game_turn_to_year((int)found_game->turn);
       str_append_year((iptr)text,year);
       str_append_rparen((iptr)text);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x130),(const char *)text);
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[2],(const char *)text);
       str_clear((char *)text);
-      str_append_label((iptr)text,*(byte *)(found_game + 0xb2) + 0x279);
+      str_append_label((iptr)text,found_game->difficulty + 0x279);
       str_append_space((iptr)text);
       str_append_lparen((iptr)text);
-      str_append_label((iptr)text,0x34e - (uint)(*(short *)(found_game + 0x11e) == 0));
+      str_append_label((iptr)text,0x34e - (uint)(found_game->simultaneous == 0));
       str_append_rparen((iptr)text);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x134),(const char *)text);
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[3],(const char *)text);
       str_clear((char *)text);
       str_append_label((iptr)text,0x36c);
       str_append_space((iptr)text);
-      str_append_int((iptr)text,(int)*(short *)(found_game + 0x11a) / 2);
+      str_append_int((iptr)text,(int)found_game->map_width / 2);
       crt_strcat(text,((i8 *)&gamelist_map_size_sep_str));
-      str_append_int((iptr)text,(int)*(short *)(found_game + 0x11c));
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x138),(const char *)text);
+      str_append_int((iptr)text,(int)found_game->map_height);
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[4],(const char *)text);
       str_clear((char *)text);
-      str_append_label((iptr)text,0x350 - (uint)(*(short *)(found_game + 0x10e) == 0));
+      str_append_label((iptr)text,0x350 - (uint)(found_game->double_production == 0));
       crt_strcat(text,((i8 *)&gamelist_double_opts_sep_str));
-      str_append_label((iptr)text,0x352 - (uint)(*(short *)(found_game + 0x10c) == 0));
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x13c),(const char *)text);
+      str_append_label((iptr)text,0x352 - (uint)(found_game->double_moves == 0));
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[5],(const char *)text);
       str_clear((char *)text);
       str_append_label((iptr)text,0x273);
       str_append_space((iptr)text);
-      str_append_label((iptr)text,*(byte *)(found_game + 0xb3) + 0x27f);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x140),(const char *)text);
+      str_append_label((iptr)text,found_game->barbarian_activity + 0x27f);
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[6],(const char *)text);
       str_clear((char *)text);
       str_append_label((iptr)text,0x276);
       str_append_space((iptr)text);
-      if (*(int *)(found_game + 0xb8) == 0) {
+      if (found_game->turn_time_limit_ms == 0) {
         str_append_label((iptr)text,0x285);
       }
       else {
-        seconds = *(int *)(found_game + 0xb8) / 1000;
+        seconds = found_game->turn_time_limit_ms / 1000;
         minutes = seconds / 0x3c;
         seconds = seconds % 0x3c;
         if (minutes < 10) {
@@ -445,10 +445,10 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
         }
         str_append_int((iptr)text,seconds);
       }
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x144),(const char *)text);
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[7],(const char *)text);
       bit = 1;
       civ_count = 0;
-      civ_bits = (uint)*(byte *)(found_game + 0xb4);
+      civ_bits = (uint)found_game->civs_alive;
       for (; civ_bits = (int)civ_bits >> 1, bit < 8; bit++) {
         if ((civ_bits & 1) != 0) {
           civ_count++;
@@ -463,32 +463,32 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
       str_append_space((iptr)text);
       bit = 0;
       civ_count = 0;
-      civ_bits = (uint)*(byte *)(found_game + 0xb5);
+      civ_bits = (uint)found_game->player_mask;
       for (; bit < 8; bit++) {
         if ((civ_bits & 1) != 0) {
           civ_count++;
         }
         civ_bits = (int)civ_bits >> 1;
       }
-      if ((*(short *)(found_game + 0x120) < 3) || (civ_count == 0)) {
+      if ((found_game->field_120 < 3) || (civ_count == 0)) {
         str_append_label((iptr)text,0x353);
       }
       else {
         str_append_int((iptr)text,civ_count);
       }
       str_append_rparen((iptr)text);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x148),(const char *)text);
+      dialog_set_item_text((Dialog *)dialog,net_session_block.gamelist_view->info_lines[8],(const char *)text);
     }
   }
   scroll_pos = dialog_option_group_index
-                    (*(DialogOptionList **)net_session_block.net_session[0],*(uptr *)(*(int *)net_session_block.net_session[0] + 0x210));
-  scrollbar_set_pos(*(ClickControl **)(*(int *)net_session_block.net_session[0] + 0x284),scroll_pos);
-  dialog_render(*(Dialog **)net_session_block.net_session[0]);
+                    ((DialogOptionList *)net_session_block.gamelist_view->list_dialog,net_session_block.gamelist_view->list_dialog->list_top_option[0]);
+  scrollbar_set_pos(*(ClickControl **)((int)net_session_block.gamelist_view->list_dialog + 0x284),scroll_pos);
+  dialog_render(net_session_block.gamelist_view->list_dialog);
   return 1;
 }
 
 /* 004253ef auto */
-void __thiscall net_gamelist_clear(NetGameList *self)
+void __thiscall net_gamelist_clear(NetGamelistView *self)
 
 {
   void *next;
@@ -503,64 +503,64 @@ void __thiscall net_gamelist_clear(NetGameList *self)
     option = next;
   }
   self->first_option_value = 0;
-  *(i32 *)(self->list_dialog + 0x28) = 0;
-  *(i32 *)(self->list_dialog + 0x228) = 0;
-  *(i32 *)(self->list_dialog + 0x220) = 0;
+  self->list_dialog->option_count = 0;
+  self->list_dialog->option_list = 0;
+  self->list_dialog->selected_option = 0;
   return;
 }
 
 /* 004254a8 auto */
-uint * __thiscall net_gamelist_add_entry(NetGameListAddView *self,const char *name2,uint id)
+DialogOption * __thiscall net_gamelist_add_entry(NetGamelistView *self,const char *name2,uint id)
 
 {
   int *count_ptr;
-  uint *entry;
+  DialogOption *entry;
   size_t name_len;
   void *name_copy;
   int entry_width;
   int max_width;
-  uptr last;
-  uptr option;
+  DialogOption *last;
+  DialogOption *option;
   
   last = 0;
-  for (option = self->first_option_value; option != 0; option = *(uptr *)(option + 0x10)) {
+  for (option = self->first_option_value; option != 0; option = option->next) {
     last = option;
   }
-  entry = (uint *)(operator_new(0x18));
-  entry[4] = 0;
-  entry[5] = last;
+  entry = (DialogOption *)(operator_new(0x18));
+  entry->next = 0;
+  entry->prev = last;
   if (last == 0) {
-    self->first_option_value = (u32)entry;
-    *(uint **)(self->list_dialog + 0x228) = entry;
+    self->first_option_value = entry;
+    self->list_dialog->option_list = entry;
   }
   else {
-    *(uint **)(last + 0x10) = entry;
+    last->next = entry;
   }
-  *entry = 0;
+  entry->flags = 0;
   name_len = _strlen((char *)name2);
   name_copy = operator_new(name_len + 1);
-  entry[2] = (uint)name_copy;
-  crt_strcpy((char *)((void *)entry[2]),(const char *)((const void *)name2));
+  entry->text = (char *)name_copy;
+  crt_strcpy((char *)((void *)entry->text),(const char *)((const void *)name2));
   if (*(char *)name2 == '\0') {
-    *entry = *entry | 1;
+    entry->flags = entry->flags | 1;
   }
-  entry[1] = id;
-  entry[3] = 0;
-  entry_width = font_text_width(*(GameFont **)(self->list_dialog + 8),(const char *)entry[2]);
+  entry->id = id;
+  entry->group = 0;
+  entry_width = font_text_width((GameFont *)self->list_dialog->body_font,(const char *)entry->text);
   max_width = dialog_option_icon_width((DialogCore *)self->list_dialog);
-  entry_width = entry_width + max_width + *(int *)(self->list_dialog + 0xac) + 5;
-  max_width = *(int *)(self->list_dialog + 0x118);
+  entry_width = entry_width + max_width + (int)self->list_dialog->option_extra_width + 5;
+  max_width = (int)self->list_dialog->option_width;
   if (max_width <= entry_width) {
     max_width = entry_width;
   }
-  *(int *)(self->list_dialog + 0x118) = max_width;
-  count_ptr = (int *)(self->list_dialog + 0x28);
+  self->list_dialog->option_width = max_width;
+  count_ptr = (int *)((iptr)self->list_dialog + 0x28);
   *count_ptr = *count_ptr + 1;
   return entry;
 }
 
 /* 00425607 auto */
-void __thiscall net_gamelist_start_timer(NetGameListTimerView *self,iptr callback)
+void __thiscall net_gamelist_start_timer(NetGamelistView *self,iptr callback)
 
 {
   u32 timer;
@@ -574,7 +574,7 @@ void __thiscall net_gamelist_start_timer(NetGameListTimerView *self,iptr callbac
 }
 
 /* 00425650 auto */
-void __thiscall net_gamelist_kill_timer(NetGameListTimerView *self)
+void __thiscall net_gamelist_kill_timer(NetGamelistView *self)
 
 {
   if (self->refresh_timer != 0) {
@@ -592,11 +592,11 @@ void __cdecl net_gamelist_poll_tick(void)
   
   net_send_message(1,0,0,0,0,0,0,0,0,0);
   net_gamelist_expire_stale();
-  if (*(int *)(net_session_block.net_session[0] + 0x174) != 0) {
-    game_timer_destroy(*(i32 *)(net_session_block.net_session[0] + 0x174));
+  if (net_session_block.gamelist_view->refresh_timer != 0) {
+    game_timer_destroy((i32)net_session_block.gamelist_view->refresh_timer);
   }
   timer = game_timer_create((iptr)net_gamelist_poll_tick,0xfa,1);
-  *(i32 *)(net_session_block.net_session[0] + 0x174) = timer;
+  net_session_block.gamelist_view->refresh_timer = timer;
   return;
 }
 
@@ -606,30 +606,30 @@ void __cdecl net_gamelist_expire_stale(void)
 {
   bool removed;
   int now;
-  iptr next;
-  iptr game2;
+  NetGameInfo *next;
+  NetGameInfo *game2;
   
   removed = false;
   game2 = net_session_block.net_found_games;
   now = timer_ticks();
   while (game2 != 0) {
-    if (net_session_block.net_timeout_seconds * 0x3c < now - *(int *)(game2 + 0x28)) {
+    if (net_session_block.net_timeout_seconds * 0x3c < now - game2->last_seen) {
       if (net_session_block.net_found_games == game2) {
-        net_session_block.net_found_games = *(iptr *)(game2 + 0x20);
+        net_session_block.net_found_games = game2->next;
       }
-      if (*(int *)(game2 + 0x24) != 0) {
-        *(i32 *)(*(int *)(game2 + 0x24) + 0x20) = *(i32 *)(game2 + 0x20);
+      if (game2->prev != 0) {
+        game2->prev->next = game2->next;
       }
-      if (*(int *)(game2 + 0x20) != 0) {
-        *(i32 *)(*(int *)(game2 + 0x20) + 0x24) = *(i32 *)(game2 + 0x24);
+      if (game2->next != 0) {
+        game2->next->prev = game2->prev;
       }
-      next = *(iptr *)(game2 + 0x20);
-      operator_delete((void *)game2);
+      next = game2->next;
+      operator_delete(game2);
       removed = true;
       game2 = next;
     }
     else {
-      game2 = *(iptr *)(game2 + 0x20);
+      game2 = game2->next;
     }
   }
   if (removed) {
@@ -642,33 +642,33 @@ void __cdecl net_gamelist_expire_stale(void)
 void __cdecl net_gamelist_refresh(void)
 
 {
-  uint *entry;
+  DialogOption *entry;
   i32 civ_bits;
   i32 bit;
   i32 total_civs;
-  iptr game2;
+  NetGameInfo *game2;
   i32 human_count;
   
-  if (net_session_block.net_session[0] != 0) {
-    net_gamelist_clear((NetGameList *)net_session_block.net_session[0]);
+  if (net_session_block.gamelist_view != 0) {
+    net_gamelist_clear(net_session_block.gamelist_view);
     if (net_session_block.net_found_games == 0) {
       text_clear();
       text_append_label(0x286);
-      net_gamelist_add_entry((NetGameListAddView *)net_session_block.net_session[0],(const char *)&map_views_block.text_buffer,0);
-      net_gamelist_update_details((NetGameList *)net_session_block.net_session[0]);
+      net_gamelist_add_entry(net_session_block.gamelist_view,(const char *)&map_views_block.text_buffer,0);
+      net_gamelist_update_details(net_session_block.gamelist_view);
     }
     else {
-      for (game2 = net_session_block.net_found_games; game2 != 0; game2 = *(iptr *)(game2 + 0x20)) {
-        if (*(int *)(game2 + 0x2c) == 0) {
-          *(i32 *)(game2 + 0x2c) = *(i32 *)(net_session_block.net_session[0] + 4);
-          *(int *)(net_session_block.net_session[0] + 4) = *(int *)(net_session_block.net_session[0] + 4) + 1;
+      for (game2 = net_session_block.net_found_games; game2 != 0; game2 = game2->next) {
+        if (game2->list_id == 0) {
+          game2->list_id = net_session_block.gamelist_view->next_game_id;
+          net_session_block.gamelist_view->next_game_id = net_session_block.gamelist_view->next_game_id + 1;
         }
-        entry = net_gamelist_add_entry
-                                   ((NetGameListAddView *)net_session_block.net_session[0],(const char *)(game2 + 0x70),
-                                    *(i32 *)(game2 + 0x2c));
+        entry = (net_gamelist_add_entry
+                                   (net_session_block.gamelist_view,game2->game_name,
+                                    game2->list_id));
         bit = 0;
         total_civs = 0;
-        civ_bits = (uint)*(byte *)(game2 + 0xb4);
+        civ_bits = (uint)game2->civs_alive;
         for (; bit < 8; bit++) {
           if ((civ_bits & 1) != 0) {
             total_civs++;
@@ -677,7 +677,7 @@ void __cdecl net_gamelist_refresh(void)
         }
         bit = 0;
         human_count = 0;
-        civ_bits = (uint)*(byte *)(game2 + 0xb5);
+        civ_bits = (uint)game2->player_mask;
         for (; bit < 8; bit++) {
           if ((civ_bits & 1) != 0) {
             human_count++;
@@ -685,13 +685,13 @@ void __cdecl net_gamelist_refresh(void)
           civ_bits = civ_bits >> 1;
         }
         if (((net_session_block.net_max_players <= human_count) || (total_civs <= human_count)) ||
-           (*(short *)(game2 + 0xb0) == 0)) {
-          *entry = *entry | 1;
+           (game2->open_game == 0)) {
+          entry->flags = entry->flags | 1;
         }
       }
     }
-    net_gamelist_restore_selection((NetGameListRefreshView *)net_session_block.net_session[0]);
-    net_gamelist_show_game_info((void *)(*(i32 *)net_session_block.net_session[0]),0);
+    net_gamelist_restore_selection(net_session_block.gamelist_view);
+    net_gamelist_show_game_info((void *)net_session_block.gamelist_view->list_dialog,0);
   }
   return;
 }
@@ -704,7 +704,7 @@ void __cdecl mp_meeting_wait_idle(void)
 {
   int now;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   now = timer_ticks();
   if (((net_session_block.net_timeout_seconds * 0x3c <= now - civ_rating_title_font_block.mp_meeting_wait_start_i32) || (advisor_window_block.mp_meeting_reply != -1)) ||
      (net_session_block.nm_parley_cancel_count != 0)) {
@@ -872,7 +872,7 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
   int option_count2;
   iptr selected2;
   Dialog dlg;
-  byte *option;
+  DialogOption *option;
   iptr option_civs[8];
   int wait_start;
   i32 seh_prev;
@@ -911,9 +911,9 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
         text_append((const char *)&str_empty_66);
         result = index;
         index++;
-        option = (byte *)dialog_add_option
-                                     ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,result,0);
-        option_civs[*(int *)(option + 4)] = civ;
+        option = (DialogOption *)((byte *)dialog_add_option
+                                     ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,result,0));
+        option_civs[option->id] = civ;
       }
     }
     option_count2 = index;
@@ -921,26 +921,26 @@ choose_loop:
     do {
       available_count = 0;
       for (index = 0; index < option_count2; index++) {
-        option = (byte *)dialog_find_option
-                                     ((DialogOptionList *)&dlg,index);
-        if (option != (byte *)0x0) {
-          (*((char *)&civ + 0)) = (byte)option_civs[*(int *)(option + 4)];
+        option = (DialogOption *)((byte *)dialog_find_option
+                                     ((DialogOptionList *)&dlg,index));
+        if (option != (DialogOption *)0x0) {
+          (*((char *)&civ + 0)) = (byte)option_civs[option->id];
           if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) &&
              ((1 << ((byte)civ & 0x1f) & (int)civ_saved_cursor_x_block.net_claimed_civs_mask) == 0)) {
             available_count++;
             dialog_set_option_disabled
-                      ((DialogOptionList *)&dlg,*(iptr *)(option + 4),0);
+                      ((DialogOptionList *)&dlg,option->id,0);
             if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
               radiogrp_enable_item
-                        ((RadioGroupEnableView *)dlg.radio_group,*(iptr *)(option + 4));
+                        ((RadioGroupEnableView *)dlg.radio_group,option->id);
             }
           }
           else {
             dialog_set_option_disabled
-                      ((DialogOptionList *)&dlg,*(iptr *)(option + 4),1);
+                      ((DialogOptionList *)&dlg,option->id,1);
             if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
               radiogrp_disable_item
-                        ((RadioGroupDisableView *)dlg.radio_group,*(iptr *)(option + 4));
+                        ((RadioGroupDisableView *)dlg.radio_group,option->id);
             }
           }
         }
@@ -954,13 +954,13 @@ choose_loop:
         goto return_ret;
       }
       for (index = 0; index < option_count2; index++) {
-        option = (byte *)dialog_find_option
-                                     ((DialogOptionList *)&dlg,selected2);
-        if ((option != (byte *)0x0) && ((*option & 1) == 0)) {
-          dialog_set_default_choice((DialogOptionList *)&dlg,*(iptr *)(option + 4));
+        option = (DialogOption *)((byte *)dialog_find_option
+                                     ((DialogOptionList *)&dlg,selected2));
+        if ((option != (DialogOption *)0x0) && ((option->flags_byte & 1) == 0)) {
+          dialog_set_default_choice((DialogOptionList *)&dlg,option->id);
           if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
             radiogrp_set_selected
-                      ((RadioGroupSetSelView *)dlg.radio_group,*(i32 *)(option + 4));
+                      ((RadioGroupSetSelView *)dlg.radio_group,option->id);
           }
           break;
         }
@@ -1000,7 +1000,7 @@ choose_loop:
       wait_start = timer_ticks();
       while (((net_session_block.nm_nation_accept_count == 0 && (net_session_block.nm_nation_reject_count == 0)) &&
              (result = timer_ticks(), result - wait_start < net_session_block.net_timeout_seconds * 0x3c))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
     }
     if ((net_session_block.nm_nation_accept_count == 0) && (net_session_block.nm_nation_reject_count == 0)) {
@@ -1081,7 +1081,7 @@ return_ret:
 }
 
 /* 00447170 auto */
-void * __thiscall net_gamelist_view_scalar_dtor(void *self,uint flags)
+void * __thiscall net_gamelist_view_scalar_dtor(NetGamelistView *self,uint flags)
 
 {
   net_gamelist_view_dtor(self);
@@ -1103,7 +1103,7 @@ LobbyList * __thiscall lobby_list_scalar_dtor(LobbyList *self,uint flags)
 }
 
 /* 00450480 auto */
-void __thiscall parley_create_advance_list_pane(WindowObjectView *self,iptr rect,iptr pane,int their_side)
+void __thiscall parley_create_advance_list_pane(ParleyWindow *self,RECT *rect,iptr pane,int their_side)
 
 {
   int result;
@@ -1123,33 +1123,33 @@ void __thiscall parley_create_advance_list_pane(WindowObjectView *self,iptr rect
   
   eh_state = 0xffffffff;
   can_see_other = 0;
-  sb_rect.left = *(int *)rect;
-  sb_rect.top = *(i32 *)(rect + 4);
-  sb_rect.right = *(int *)(rect + 8);
-  sb_rect.bottom = *(i32 *)(rect + 0xc);
+  sb_rect.left = rect->left;
+  sb_rect.top = rect->top;
+  sb_rect.right = rect->right;
+  sb_rect.bottom = rect->bottom;
   result = civ_has_wonder(human_civ[0],0x18);
   if ((((result == 0) && (result = civ_has_wonder(human_civ[0],9), result == 0)) &&
-      ((*(byte *)&civs[human_civ[0]].treaties[parley_wnd_block.parley_other_civ] & 0x80) == 0)) &&
-     (((*(byte *)&civs[human_civ[0]].treaties[parley_wnd_block.parley_other_civ] & 8) == 0 &&
+      ((*(byte *)&civs[human_civ[0]].treaties[(int)parley_wnd_block.other_civ] & 0x80) == 0)) &&
+     (((*(byte *)&civs[human_civ[0]].treaties[(int)parley_wnd_block.other_civ] & 8) == 0 &&
       (game.reveal_map == '\0')))) {
     can_see_other = 0;
   }
   else {
     can_see_other = 1;
   }
-  ((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] = 0;
+  self->list_counts[pane] = 0;
   civ = human_civ[0];
   if ((their_side != 0) && (can_see_other != 0)) {
-    civ = parley_wnd_block.parley_other_civ;
+    civ = (int)parley_wnd_block.other_civ;
   }
   for (advance = 0; (int)advance < 100; advance++) {
     if (their_side == 0) {
       result = civ_has_advance(human_civ[0],advance);
       if ((result != 0) &&
-         ((can_see_other == 0 || (result = civ_has_advance(parley_wnd_block.parley_other_civ,advance), result == 0)))) {
-        ((u32 *)&((ViewWindow *)self)->advance_pane_items)[((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] + pane * 0x801] = advance;
-        ((u32 *)&((PictureWindow *)self)->advance_pane_item_flags)[((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] + pane * 0x801] = 0;
-        ((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane]++;
+         ((can_see_other == 0 || (result = civ_has_advance((int)parley_wnd_block.other_civ,advance), result == 0)))) {
+        self->list_items[(u32)self->list_counts[pane] + pane * 0x801] = advance;
+        self->list_selected[(u32)self->list_counts[pane] + pane * 0x801] = 0;
+        self->list_counts[pane]++;
       }
     }
     else if (((human_civ[0] == civ) ||
@@ -1158,32 +1158,32 @@ void __thiscall parley_create_advance_list_pane(WindowObjectView *self,iptr rect
       if (((human_civ[0] == civ) &&
           (result = civ_has_advance(human_civ[0],advance), result == 0)) &&
          (((int)advance < 0x59 && (advances[advance].enabled == 1)))) {
-        ((u32 *)&((ViewWindow *)self)->advance_pane_items)[((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] + pane * 0x801] = advance;
-        ((u32 *)&((PictureWindow *)self)->advance_pane_item_flags)[((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] + pane * 0x801] = 0;
-        ((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane]++;
+        self->list_items[(u32)self->list_counts[pane] + pane * 0x801] = advance;
+        self->list_selected[(u32)self->list_counts[pane] + pane * 0x801] = 0;
+        self->list_counts[pane]++;
       }
     }
     else {
-      ((u32 *)&((ViewWindow *)self)->advance_pane_items)[((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] + pane * 0x801] = advance;
-      ((u32 *)&((PictureWindow *)self)->advance_pane_item_flags)[((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] + pane * 0x801] = 0;
-      ((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane]++;
+      self->list_items[(u32)self->list_counts[pane] + pane * 0x801] = advance;
+      self->list_selected[(u32)self->list_counts[pane] + pane * 0x801] = 0;
+      self->list_counts[pane]++;
     }
   }
-  if ((int)((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] < 1) {
-    ((u32 *)&((PictureWindow *)self)->parley_list_top_index)[pane] = 0xffffffff;
+  if ((int)(u32)self->list_counts[pane] < 1) {
+    self->list_first_row[pane] = 0xffffffff;
   }
   else {
-    ((u32 *)&((PictureWindow *)self)->parley_list_top_index)[pane] = 0;
+    self->list_first_row[pane] = 0;
   }
-  ((u32 *)&((ViewWindow *)self)->advance_pane_columns)[pane] = 3;
-  ((u32 *)&((ViewWindow *)self)->advance_pane_rects)[pane * 4] = *(u32 *)rect;
-  ((u32 *)&((ViewWindow *)self)->advance_pane_rect_top)[pane * 4] = *(u32 *)(rect + 4);
-  ((u32 *)&((ViewWindow *)self)->advance_pane_rect_right)[pane * 4] = *(u32 *)(rect + 8);
-  ((u32 *)&((ViewWindow *)self)->advance_pane_rect_bottom)[pane * 4] = *(u32 *)(rect + 0xc);
-  if ((int)((u32 *)&((PictureWindow *)self)->parley_list_page_rows)[pane] < (int)((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane]) {
+  self->list_columns[pane] = 3;
+  self->list_rects[pane * 4] = (u32)rect->left;
+  self->list_rects[pane * 4 + 1] = (u32)rect->top;
+  self->list_rects[pane * 4 + 2] = (u32)rect->right;
+  self->list_rects[pane * 4 + 3] = (u32)rect->bottom;
+  if ((int)(u32)self->list_rows[pane] < (int)(u32)self->list_counts[pane]) {
     scroll_width = GetSystemMetrics(2);
     result = sb_rect.right;
-    ((u32 *)&((ViewWindow *)self)->advance_pane_rect_right)[pane * 4] -= scroll_width;
+    self->list_rects[pane * 4 + 2] -= scroll_width;
     sb_rect.left = GetSystemMetrics(2);
     sb_rect.left = result - sb_rect.left;
     new_ctrl = (Control *)(operator_new(0x40));
@@ -1195,27 +1195,27 @@ void __thiscall parley_create_advance_list_pane(WindowObjectView *self,iptr rect
       scrollbar = (u32)(scrollbar_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    ((u32 *)&((ViewWindow *)self)->advance_list_scrollbars)[pane] = scrollbar;
-    if (self == (WindowObjectView *)0x0) {
+    self->list_scrollbars[pane] = scrollbar;
+    if (self == (ParleyWindow *)0x0) {
       parent2 = (WindowObjectView *)0x0;
     }
     else {
-      parent2 = self + 0x12;
+      parent2 = (WindowObjectView *)((u8 *)self + 0x48);
     }
     scrollbar_create
-              ((Control *)((u32 *)&((ViewWindow *)self)->advance_list_scrollbars)[pane],(iptr)parent2,pane + 0x411,
+              ((Control *)self->list_scrollbars[pane],(iptr)parent2,pane + 0x411,
                (iptr)&sb_rect,1);
     scrollbar_set_range
-              ((Control *)((u32 *)&((ViewWindow *)self)->advance_list_scrollbars)[pane],0,
-               (((u32 *)&((ViewWindow *)self)->advance_pane_item_counts)[pane] - 1) - ((u32 *)&((PictureWindow *)self)->parley_list_page_rows)[pane]);
-    scrollbar_set_pos((ClickControl *)((u32 *)&((ViewWindow *)self)->advance_list_scrollbars)[pane],0);
+              ((Control *)self->list_scrollbars[pane],0,
+               ((u32)self->list_counts[pane] - 1) - (u32)self->list_rows[pane]);
+    scrollbar_set_pos((ClickControl *)self->list_scrollbars[pane],0);
     scrollbar_set_page_size
-              ((Control *)((u32 *)&((ViewWindow *)self)->advance_list_scrollbars)[pane],((u32 *)&((PictureWindow *)self)->parley_list_page_rows)[pane]);
+              ((Control *)self->list_scrollbars[pane],(u32)self->list_rows[pane]);
     scrollbar_set_callback
-              ((Control *)((u32 *)&((ViewWindow *)self)->advance_list_scrollbars)[pane],
+              ((Control *)self->list_scrollbars[pane],
                (pane == 0 ? (iptr)parley_advance_list0_on_scroll : (iptr)parley_advance_list1_on_scroll));
     scrollbar_set_track_callback
-              ((ScrollbarTrackSetView *)((u32 *)&((ViewWindow *)self)->advance_list_scrollbars)[pane],
+              ((ScrollbarTrackSetView *)self->list_scrollbars[pane],
                (pane == 0 ? (iptr)parley_advance_list0_on_scroll : (iptr)parley_advance_list1_on_scroll));
   }
   new_ctrl = (Control *)(operator_new(0x40));
@@ -1227,18 +1227,18 @@ void __thiscall parley_create_advance_list_pane(WindowObjectView *self,iptr rect
     hotspot = (u32)(hotspot_ctor(new_ctrl));
   }
   eh_state = 0xffffffff;
-  ((u32 *)&((ViewWindow *)self)->advance_list_hotspots)[pane] = hotspot;
-  if (self == (WindowObjectView *)0x0) {
+  self->list_hotspots[pane] = hotspot;
+  if (self == (ParleyWindow *)0x0) {
     parent22 = (WindowObjectView *)0x0;
   }
   else {
-    parent22 = self + 0x12;
+    parent22 = (WindowObjectView *)((u8 *)self + 0x48);
   }
   hotspot_create
-            ((ClickControl *)((u32 *)&((ViewWindow *)self)->advance_list_hotspots)[pane],(iptr)parent22,pane + 0x413,
-             (iptr)(self + pane * 4 + 0xf0));
-  hotspot_set_click_callback((HotspotClickSetView *)((u32 *)&((ViewWindow *)self)->advance_list_hotspots)[pane],(iptr)parley_advance_list_on_click);
-  hotspot_set_dblclick_callback((HotspotDblClickSetView *)((u32 *)&((ViewWindow *)self)->advance_list_hotspots)[pane],(iptr)parley_advance_list_on_click);
+            ((ClickControl *)self->list_hotspots[pane],(iptr)parent22,pane + 0x413,
+             (iptr)((u8 *)self + pane * 0x10 + 0x3c0));
+  hotspot_set_click_callback((HotspotClickSetView *)self->list_hotspots[pane],(iptr)parley_advance_list_on_click);
+  hotspot_set_dblclick_callback((HotspotDblClickSetView *)self->list_hotspots[pane],(iptr)parley_advance_list_on_click);
   parley_draw_advance_list(pane);
   return;
 }
@@ -1264,17 +1264,17 @@ void __cdecl parley_advance_list_on_scroll(int pane,i32 pos)
 
 {
   int child;
-  iptr window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
     window = 0;
   }
   else {
-    window = child - 0x48;
+    window = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x48));
-  *(i32 *)(window + 0x10410 + pane * 4) = pos;
+  wnd_activate((Wnd *)((iptr)window + 0x48));
+  window->list_first_row[pane] = pos;
   parley_draw_advance_list(pane);
   return;
 }
@@ -1291,57 +1291,57 @@ void __cdecl parley_advance_list_on_click(int control_id)
   i32 cursor_y;
   i32 cursor_x;
   int pane;
-  iptr window;
+  ParleyWindow *window;
   
   row = wnd_get_active_child();
   if (row == 0) {
     window = 0;
   }
   else {
-    window = row - 0x48;
+    window = (ParleyWindow *)(row - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x48));
+  wnd_activate((Wnd *)((iptr)window + 0x48));
   pane = control_id - 0x413;
   wnd_get_cursor_pos
-            ((WndBase *)(window + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
-  if (((*(int *)(window + 1000 + pane * 4) != 0) &&
+            ((WndBase *)((iptr)window + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
+  if (((window->list_counts[pane] != 0) &&
       (row = parley_advance_list_hit_test(cursor_x,cursor_y,pane), -1 < row)) &&
-     (row < *(int *)(window + 1000 + pane * 4))) {
-    key_down = wnd_is_shift_down((void *)(window + 0x48));
+     (row < window->list_counts[pane])) {
+    key_down = wnd_is_shift_down((void *)((iptr)window + 0x48));
     if (key_down == 0) {
-      key_down = wnd_is_ctrl_down((void *)(window + 0x48));
+      key_down = wnd_is_ctrl_down((void *)((iptr)window + 0x48));
       if (key_down == 0) {
-        for (i = 0; i < *(int *)(window + 1000 + pane * 4);
+        for (i = 0; i < window->list_counts[pane];
             i = i + 1) {
           if (i != row) {
-            *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) = 0;
+            window->list_selected[i + pane * 0x801] = 0;
           }
         }
-        *(int *)(window + 0x10418 + pane * 4) = row;
-        sel_flag = (uint *)(row * 4 + pane * 0x2004 + 0x8400 + window);
+        window->list_anchor_row[pane] = row;
+        sel_flag = (uint *)(row * 4 + pane * 0x2004 + 0x8400 + (iptr)window);
         *sel_flag = *sel_flag ^ 1;
       }
       else {
-        *(int *)(window + 0x10418 + pane * 4) = row;
-        sel_flag = (uint *)(row * 4 + pane * 0x2004 + 0x8400 + window);
+        window->list_anchor_row[pane] = row;
+        sel_flag = (uint *)(row * 4 + pane * 0x2004 + 0x8400 + (iptr)window);
         *sel_flag = *sel_flag ^ 1;
       }
     }
     else {
-      for (i = 0; i < *(int *)(window + 1000 + pane * 4); i++)
+      for (i = 0; i < window->list_counts[pane]; i++)
       {
-        *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) = 0;
+        window->list_selected[i + pane * 0x801] = 0;
       }
-      if (*(int *)(window + 0x10418 + pane * 4) < row) {
-        i = *(int *)(window + 0x10418 + pane * 4);
+      if (window->list_anchor_row[pane] < row) {
+        i = window->list_anchor_row[pane];
         range_end = row;
       }
       else {
-        range_end = *(int *)(window + 0x10418 + pane * 4);
+        range_end = window->list_anchor_row[pane];
         i = row;
       }
       for (; i <= range_end; i++) {
-        *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) = 1;
+        window->list_selected[i + pane * 0x801] = 1;
       }
     }
     parley_draw_advance_list(pane);
@@ -1356,27 +1356,27 @@ int __cdecl parley_advance_list_hit_test(int px,int py,int pane)
   iptr child;
   int result;
   int list_height;
-  iptr window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
     window = 0;
   }
   else {
-    window = child - 0x48;
+    window = (ParleyWindow *)(child - 0x48);
   }
-  if (py < *(int *)(pane * 0x10 + 0x3c4 + window)) {
+  if (py < (int)window->list_rects[pane * 4 + 1]) {
     result = -1;
   }
-  else if (py < *(int *)(pane * 0x10 + 0x3cc + window)) {
-    if (px < *(int *)(pane * 0x10 + 0x3c0 + window)) {
+  else if (py < (int)window->list_rects[pane * 4 + 3]) {
+    if (px < (int)window->list_rects[pane * 4]) {
       result = -3;
     }
-    else if (px < *(int *)(pane * 0x10 + 0x3c8 + window)) {
-      result = *(int *)(pane * 0x10 + 0x3c4 + window);
-      list_height = rect_height(pane * 0x10 + window + 0x3c0);
-      result = (py - result) / (list_height / (*(int *)(window + 0x10420 + pane * 4) + 1)) +
-              *(int *)(window + 0x10410 + pane * 4);
+    else if (px < (int)window->list_rects[pane * 4 + 2]) {
+      result = (int)window->list_rects[pane * 4 + 1];
+      list_height = rect_height((RECT *)(pane * 0x10 + (iptr)window + 0x3c0));
+      result = (py - result) / (list_height / (window->list_rows[pane] + 1)) +
+              window->list_first_row[pane];
     }
     else {
       result = -4;
@@ -1410,7 +1410,7 @@ void __cdecl parley_draw_advance_list(iptr pane)
   int text_x_offset;
   Sprite *icon_sprite;
   int text_color2;
-  ViewWindow *window;
+  ParleyWindow *window;
   int selected2;
   tagRECT row_rect;
   int row_height;
@@ -1419,48 +1419,46 @@ void __cdecl parley_draw_advance_list(iptr pane)
   
   tmp = wnd_get_active_child();
   if (tmp == 0) {
-    window = (ViewWindow *)0x0;
+    window = (ParleyWindow *)0x0;
   }
   else {
-    window = (ViewWindow *)(tmp - 0x48);
+    window = (ParleyWindow *)(tmp - 0x48);
   }
-  surface_get_clip((DibSurface *)window,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)window,(iptr)((u8 *)&window->advance_pane_rects + pane * 0x10));
+  surface_get_clip((DibSurface *)window,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)window,(RECT *)(iptr)(((u8 *)window + 0x3c0) + pane * 0x10));
   surface_fill_rect
-            ((DibSurface *)window,(iptr)((u8 *)&window->advance_pane_rects + pane * 0x10),list_bg_color);
+            ((DibSurface *)window,(iptr)(((u8 *)window + 0x3c0) + pane * 0x10),list_bg_color);
   if (window->large_layout == 0) {
     font2 = (GameFont *)((i8 *)&font_size14);
   }
   else {
     font2 = (GameFont *)((i8 *)&font_size21);
   }
-  list_left = *(int *)((u8 *)&window->advance_pane_rects + pane * 0x10);
-  list_width2 = rect_width((iptr)((u8 *)&window->advance_pane_rects + pane * 0x10));
-  row_height = rect_height((iptr)((u8 *)&window->advance_pane_rects + pane * 0x10));
-  row_height = row_height / (*(int *)(((PictureWindow *)window)->parley_pane_rows_base + pane * 4 + 0x38) + 1);
+  list_left = (int)window->list_rects[pane * 4];
+  list_width2 = rect_width((RECT *)(iptr)(((u8 *)window + 0x3c0) + pane * 0x10));
+  row_height = rect_height((RECT *)(iptr)(((u8 *)window + 0x3c0) + pane * 0x10));
+  row_height = row_height / (window->list_rows[pane] + 1);
   tmp = row_height / 2;
   tmp2 = font_cached_height(font2);
   text_y_offset = tmp - tmp2 / 2;
-  has_sel = window->pane_selection_flags_area + pane * 4 - 0x1c;
+  has_sel = (u8 *)&window->side_selected[pane];
   has_sel[0] = '\0';
   has_sel[1] = '\0';
   has_sel[2] = '\0';
   has_sel[3] = '\0';
   row = 0;
   do {
-    if (*(int *)((u8 *)&window->advance_pane_rects + pane * 4 + 0x28) <= row) {
+    if (window->list_counts[pane] <= row) {
 draw_rows:
-      for (row = 0; row < *(int *)(((PictureWindow *)window)->parley_pane_rows_base + pane * 4 + 0x38) + 1;
+      for (row = 0; row < window->list_rows[pane] + 1;
           row = row + 1) {
-        row_top = *(int *)((u8 *)&window->advance_pane_rects + pane * 0x10 + 4) + row * row_height +
+        row_top = (int)window->list_rects[pane * 4 + 1] + row * row_height +
                    panel_margin_y;
         SetRect(&row_rect,list_left,row_top,list_left + list_width2,row_top + row_height);
-        if (((row == 0) || (*(int *)(((PictureWindow *)window)->parley_pane_rows_base + pane * 4 + 0x28) != -1)) &&
-           (*(int *)(((PictureWindow *)window)->parley_pane_rows_base + pane * 4 + 0x28) + row <
-            *(int *)((u8 *)&window->advance_pane_rects + pane * 4 + 0x28))) {
-          selected2 = *(int *)(pane * 0x2004 +
-                              (*(int *)(((PictureWindow *)window)->parley_pane_rows_base + pane * 4 + 0x28) + row) * 4
-                              + 0x8400 + (int)window);
+        if (((row == 0) || (window->list_first_row[pane] != -1)) &&
+           (window->list_first_row[pane] + row <
+            window->list_counts[pane])) {
+          selected2 = (int)window->list_selected[pane * 0x801 + (window->list_first_row[pane] + row)];
           if (selected2 == 0) {
             text_color2 = list_text_color;
             shadow_color2 = list_shadow_color;
@@ -1469,9 +1467,7 @@ draw_rows:
             text_color2 = dlg_sel_text_color;
             shadow_color2 = dlg_sel_text_shadow_color;
           }
-          advance = *(int *)(pane * 0x2004 +
-                              (*(int *)(((PictureWindow *)window)->parley_pane_rows_base + pane * 4 + 0x28) + row) * 4
-                              + 0x3f0 + (int)window);
+          advance = (int)window->list_items[pane * 0x801 + (window->list_first_row[pane] + row)];
           icon_sprite = (Sprite *)
                      (((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                      (char)advances[advance].category * 0xf0 +
@@ -1486,20 +1482,20 @@ draw_rows:
             bg_color2 = list_sel_bg_color;
           }
           surface_fill_rect((DibSurface *)window,(iptr)&row_rect,bg_color2);
-          if (*(int *)(((PictureWindow *)window)->parley_pane_rows_base + pane * 4 + 0x28) == -1) {
+          if (window->list_first_row[pane] == -1) {
             text_clear();
-            if ((pane == 0) || (parley_wnd_block.parley_mode == 7)) {
+            if ((pane == 0) || ((int)parley_wnd_block.mode == 7)) {
               text_append_label(0x36b);
             }
             else {
               text_append_label(0x36a);
             }
-            has_sel = window->pane_selection_flags_area + pane * 4 - 0x1c;
+            has_sel = (u8 *)&window->side_selected[pane];
             has_sel[0] = '\0';
             has_sel[1] = '\0';
             has_sel[2] = '\0';
             has_sel[3] = '\0';
-            tmp = rect_width((iptr)((u8 *)&window->advance_pane_rects + pane * 0x10));
+            tmp = rect_width((RECT *)(iptr)(((u8 *)window + 0x3c0) + pane * 0x10));
             tmp2 = font_text_width(font2,(const char *)&map_views_block.text_buffer);
             text_x_offset = (tmp - tmp2) / 2;
           }
@@ -1507,13 +1503,13 @@ draw_rows:
             icon_step = sprite_get_width(icon_sprite);
             icon_step += panel_margin_x * 2;
             icon_x = icon_step;
-            if ((*(int *)(((PictureWindow *)window)->parley_pane_rows_base + pane * 4 + 0x28) + row & 1U) == 0) {
+            if ((window->list_first_row[pane] + row & 1U) == 0) {
               icon_x = panel_margin_x;
             }
             tmp2 = row_top + row_height / 2;
             tmp = sprite_get_height(icon_sprite);
             sprite_draw
-                      (icon_sprite,(iptr)sprite_rect,(iptr)&parley_wnd_block.parley_wnd,list_left + icon_x,tmp2 - tmp / 2);
+                      (icon_sprite,(iptr)sprite_rect,(iptr)&parley_wnd_block,list_left + icon_x,tmp2 - tmp / 2);
             text_clear();
             name_label = (label_string(advances[advance].name));
             text_append(name_label);
@@ -1534,14 +1530,14 @@ draw_rows:
                      row_top + text_y_offset,5);
         }
       }
-      surface_set_clip((DibSurface *)window,(iptr)saved_clip);
+      surface_set_clip((DibSurface *)window,(RECT *)saved_clip);
       parley_update_buttons(window);
-      ctrl_show_and_redraw(*(Control **)(window->rate_values + pane * 4 + 0x20))
+      ctrl_show_and_redraw((Control *)window->list_hotspots[pane])
       ;
       return;
     }
-    if (*(int *)(pane * 0x2004 + row * 4 + 0x8400 + (int)window) != 0) {
-      has_sel = window->pane_selection_flags_area + pane * 4 - 0x1c;
+    if (window->list_selected[pane * 0x801 + row] != 0) {
+      has_sel = (u8 *)&window->side_selected[pane];
       has_sel[0] = 1;
       has_sel[1] = '\0';
       has_sel[2] = '\0';
@@ -1554,7 +1550,7 @@ draw_rows:
 
 /* 004683f0 auto */
 void __thiscall
-parley_create_unit_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_side)
+parley_create_unit_list_pane(ParleyWindow *self,RECT *rect,int pane,i32 own_side)
 
 {
   u8 *field;
@@ -1580,41 +1576,41 @@ parley_create_unit_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_sid
     window -= 0x48;
   }
   *(i32 *)(((i8 *)&prefs_main_menu_choice_block.parley_list_own_side) + pane * 4) = own_side;
-  sb_rect.left = *(int *)rect;
-  sb_rect.top = *(i32 *)(rect + 4);
-  sb_rect.right = *(int *)(rect + 8);
-  sb_rect.bottom = *(i32 *)(rect + 0xc);
+  sb_rect.left = rect->left;
+  sb_rect.top = rect->top;
+  sb_rect.right = rect->right;
+  sb_rect.bottom = rect->bottom;
   prefs_main_menu_choice_block.parley_units_by_city = 0;
   parley_build_unit_list(self,pane,0);
-  if (*(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 + 0x4c) < 1) {
-    field = ((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x30;
+  if (self->list_counts[pane] < 1) {
+    field = (u8 *)&self->list_first_row[pane];
     field[0] = 0xff;
     field[1] = 0xff;
     field[2] = 0xff;
     field[3] = 0xff;
   }
   else {
-    field = ((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x30;
+    field = (u8 *)&self->list_first_row[pane];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
   }
-  field = ((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 + 0x44;
+  field = (u8 *)&self->list_columns[pane];
   field[0] = '\0';
   field[1] = '\0';
   field[2] = '\0';
   field[3] = '\0';
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x24) = *(i32 *)rect;
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x28) = *(i32 *)(rect + 4);
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x2c) = *(i32 *)(rect + 8);
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x30) = *(i32 *)(rect + 0xc);
-  if (*(int *)(((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x40) <
-      *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 + 0x4c)) {
+  self->list_rects[pane * 4] = rect->left;
+  self->list_rects[pane * 4 + 1] = rect->top;
+  self->list_rects[pane * 4 + 2] = rect->right;
+  self->list_rects[pane * 4 + 3] = rect->bottom;
+  if (self->list_rows[pane] <
+      self->list_counts[pane]) {
     scroll_width = GetSystemMetrics(2);
     sb_right_orig = sb_rect.right;
-    *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x2c) =
-         *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x2c) - scroll_width;
+    self->list_rects[pane * 4 + 2] =
+         (int)self->list_rects[pane * 4 + 2] - scroll_width;
     sb_rect.left = GetSystemMetrics(2);
     sb_rect.left = sb_right_orig - sb_rect.left;
     new_ctrl = (Control *)(operator_new(0x40));
@@ -1626,29 +1622,29 @@ parley_create_unit_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_sid
       scrollbar = (i32)(scrollbar_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20) = scrollbar;
-    if (self == (ListPaneWindow *)0x0) {
+    self->list_scrollbars[pane] = scrollbar;
+    if (self == (ParleyWindow *)0x0) {
       parent2 = (u8 *)0x0;
     }
     else {
-      parent2 = self->window_2;
+      parent2 = ((u8 *)self + 0x48);
     }
     scrollbar_create
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),(iptr)parent2,
+              ((Control *)self->list_scrollbars[pane],(iptr)parent2,
                pane + 0x3fa,(iptr)&sb_rect,1);
     scrollbar_set_range
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),0,
-               *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 + 0x4c) -
-               *(int *)(((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x40));
-    scrollbar_set_pos(*(ClickControl **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),0);
+              ((Control *)self->list_scrollbars[pane],0,
+               self->list_counts[pane] -
+               self->list_rows[pane]);
+    scrollbar_set_pos((ClickControl *)self->list_scrollbars[pane],0);
     scrollbar_set_page_size
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),
-               *(int *)(((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x40) - 1);
+              ((Control *)self->list_scrollbars[pane],
+               self->list_rows[pane] - 1);
     scrollbar_set_callback
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),
+              ((Control *)self->list_scrollbars[pane],
                (pane == 0 ? (iptr)parley_unit_list_scroll_left : (iptr)parley_unit_list_scroll_right));
     scrollbar_set_track_callback
-              (*(ScrollbarTrackSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),
+              ((ScrollbarTrackSetView *)self->list_scrollbars[pane],
                (pane == 0 ? (iptr)parley_unit_list_scroll_left : (iptr)parley_unit_list_scroll_right));
   }
   new_ctrl = (Control *)(operator_new(0x40));
@@ -1660,18 +1656,18 @@ parley_create_unit_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_sid
     hotspot = (i32)(hotspot_ctor(new_ctrl));
   }
   eh_state = 0xffffffff;
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x18) = hotspot;
-  if (self == (ListPaneWindow *)0x0) {
+  self->list_hotspots[pane] = hotspot;
+  if (self == (ParleyWindow *)0x0) {
     parent22 = (u8 *)0x0;
   }
   else {
-    parent22 = self->window_2;
+    parent22 = ((u8 *)self + 0x48);
   }
   hotspot_create
-            (*(ClickControl **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x18),(iptr)parent22,
-             pane + 0x3fc,(iptr)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x24));
-  hotspot_set_click_callback(*(HotspotClickSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x18),(iptr)parley_unit_list_on_click);
-  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x18),(iptr)parley_unit_list_on_click);
+            ((ClickControl *)self->list_hotspots[pane],(iptr)parent22,
+             pane + 0x3fc,(iptr)(((u8 *)self + 0x39c) + pane * 0x10 + 0x24));
+  hotspot_set_click_callback((HotspotClickSetView *)self->list_hotspots[pane],(iptr)parley_unit_list_on_click);
+  hotspot_set_dblclick_callback((HotspotDblClickSetView *)self->list_hotspots[pane],(iptr)parley_unit_list_on_click);
   parley_draw_unit_list(pane);
   return;
 }
@@ -1697,17 +1693,17 @@ void __cdecl parley_unit_list_on_scroll(int pane,i32 pos)
 
 {
   int child;
-  iptr window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
     window = 0;
   }
   else {
-    window = child - 0x48;
+    window = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x48));
-  *(i32 *)(window + 0x10410 + pane * 4) = pos;
+  wnd_activate((Wnd *)((iptr)window + 0x48));
+  window->list_first_row[pane] = pos;
   parley_draw_unit_list(pane);
   return;
 }
@@ -1724,57 +1720,57 @@ void __cdecl parley_unit_list_on_click(int control_id)
   i32 cursor_y;
   i32 cursor_x;
   int pane;
-  iptr window;
+  ParleyWindow *window;
   
   row = wnd_get_active_child();
   if (row == 0) {
     window = 0;
   }
   else {
-    window = row - 0x48;
+    window = (ParleyWindow *)(row - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x48));
+  wnd_activate((Wnd *)((iptr)window + 0x48));
   pane = control_id - 0x3fc;
   wnd_get_cursor_pos
-            ((WndBase *)(window + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
-  if (((*(int *)(window + 1000 + pane * 4) != 0) &&
+            ((WndBase *)((iptr)window + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
+  if (((window->list_counts[pane] != 0) &&
       (row = parley_unit_list_hit_test(cursor_x,cursor_y,pane), -1 < row)) &&
-     (row < *(int *)(window + 1000 + pane * 4))) {
-    key_down = wnd_is_shift_down((void *)(window + 0x48));
+     (row < window->list_counts[pane])) {
+    key_down = wnd_is_shift_down((void *)((iptr)window + 0x48));
     if (key_down == 0) {
-      key_down = wnd_is_ctrl_down((void *)(window + 0x48));
+      key_down = wnd_is_ctrl_down((void *)((iptr)window + 0x48));
       if (key_down == 0) {
-        for (i = 0; i < *(int *)(window + 1000 + pane * 4);
+        for (i = 0; i < window->list_counts[pane];
             i = i + 1) {
           if (i != row) {
-            *(i32 *)(pane * 0x2004 + i * 4 + 0x8400 + window) = 0;
+            window->list_selected[pane * 0x801 + i] = 0;
           }
         }
-        *(int *)(window + 0x10418 + pane * 4) = row;
-        sel_flag = (uint *)(pane * 0x2004 + row * 4 + 0x8400 + window);
+        window->list_anchor_row[pane] = row;
+        sel_flag = (uint *)(pane * 0x2004 + row * 4 + 0x8400 + (iptr)window);
         *sel_flag = *sel_flag ^ 1;
       }
       else {
-        *(int *)(window + 0x10418 + pane * 4) = row;
-        sel_flag = (uint *)(pane * 0x2004 + row * 4 + 0x8400 + window);
+        window->list_anchor_row[pane] = row;
+        sel_flag = (uint *)(pane * 0x2004 + row * 4 + 0x8400 + (iptr)window);
         *sel_flag = *sel_flag ^ 1;
       }
     }
     else {
-      for (i = 0; i < *(int *)(window + 1000 + pane * 4); i++)
+      for (i = 0; i < window->list_counts[pane]; i++)
       {
-        *(i32 *)(pane * 0x2004 + i * 4 + 0x8400 + window) = 0;
+        window->list_selected[pane * 0x801 + i] = 0;
       }
-      if (*(int *)(window + 0x10418 + pane * 4) < row) {
-        i = *(int *)(window + 0x10418 + pane * 4);
+      if (window->list_anchor_row[pane] < row) {
+        i = window->list_anchor_row[pane];
         range_end = row;
       }
       else {
-        range_end = *(int *)(window + 0x10418 + pane * 4);
+        range_end = window->list_anchor_row[pane];
         i = row;
       }
       for (; i <= range_end; i++) {
-        *(i32 *)(pane * 0x2004 + i * 4 + 0x8400 + window) = 1;
+        window->list_selected[pane * 0x801 + i] = 1;
       }
     }
     parley_draw_unit_list(pane);
@@ -1789,27 +1785,27 @@ int __cdecl parley_unit_list_hit_test(int px,int py,int pane)
   iptr child;
   int result;
   int list_height;
-  iptr window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
     window = 0;
   }
   else {
-    window = child - 0x48;
+    window = (ParleyWindow *)(child - 0x48);
   }
-  if (py < *(int *)(pane * 0x10 + 0x3c4 + window)) {
+  if (py < (int)window->list_rects[pane * 4 + 1]) {
     result = -1;
   }
-  else if (py < *(int *)(pane * 0x10 + 0x3cc + window)) {
-    if (px < *(int *)(pane * 0x10 + 0x3c0 + window)) {
+  else if (py < (int)window->list_rects[pane * 4 + 3]) {
+    if (px < (int)window->list_rects[pane * 4]) {
       result = -3;
     }
-    else if (px < *(int *)(pane * 0x10 + 0x3c8 + window)) {
-      result = *(int *)(pane * 0x10 + 0x3c4 + window);
-      list_height = rect_height(pane * 0x10 + window + 0x3c0);
-      result = (py - result) / (list_height / *(int *)(window + 0x10420 + pane * 4)) +
-              *(int *)(window + 0x10410 + pane * 4);
+    else if (px < (int)window->list_rects[pane * 4 + 2]) {
+      result = (int)window->list_rects[pane * 4 + 1];
+      list_height = rect_height((RECT *)(pane * 0x10 + (iptr)window + 0x3c0));
+      result = (py - result) / (list_height / window->list_rows[pane]) +
+              window->list_first_row[pane];
     }
     else {
       result = -4;
@@ -1846,7 +1842,7 @@ void __cdecl parley_draw_unit_list(iptr pane)
   int text_x_offset;
   Sprite *unit_sprite;
   int text_color2;
-  ViewWindow *this2;
+  ParleyWindow *this2;
   int selected2;
   tagRECT row_rect;
   int row_height;
@@ -1855,38 +1851,38 @@ void __cdecl parley_draw_unit_list(iptr pane)
   
   tmp = wnd_get_active_child();
   if (tmp == 0) {
-    this2 = (ViewWindow *)0x0;
+    this2 = (ParleyWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(tmp - 0x48);
+    this2 = (ParleyWindow *)(tmp - 0x48);
   }
-  surface_get_clip((DibSurface *)this2,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)this2,(iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10));
+  surface_get_clip((DibSurface *)this2,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)this2,(RECT *)(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10));
 fill_list_bg:
   surface_fill_rect
-            ((DibSurface *)this2,(iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10),list_bg_color);
+            ((DibSurface *)this2,(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10),list_bg_color);
   if (this2->large_layout == 0) {
     font2 = (GameFont *)((i8 *)&font_size14);
   }
   else {
     font2 = (GameFont *)((i8 *)&font_size21);
   }
-  list_left = *(int *)((u8 *)&this2->advance_pane_rects + pane * 0x10);
-  list_width2 = rect_width((iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10));
-  row_height = rect_height((iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10));
-  row_height = row_height / *(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x38);
+  list_left = (int)this2->list_rects[pane * 4];
+  list_width2 = rect_width((RECT *)(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10));
+  row_height = rect_height((RECT *)(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10));
+  row_height = row_height / this2->list_rows[pane];
   tmp = row_height / 2;
   tmp2 = font_cached_height(font2);
   text_y_offset = tmp - tmp2 / 2;
-  has_sel = this2->pane_selection_flags_area + pane * 4 - 0x1c;
+  has_sel = (u8 *)&this2->side_selected[pane];
   has_sel[0] = '\0';
   has_sel[1] = '\0';
   has_sel[2] = '\0';
   has_sel[3] = '\0';
-  for (row = 0; row < *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28);
+  for (row = 0; row < this2->list_counts[pane];
       row = row + 1) {
-    if (*(int *)(row * 4 + pane * 0x2004 + 0x8400 + (int)this2) != 0) {
-      has_sel = this2->pane_selection_flags_area + pane * 4 - 0x1c;
+    if (this2->list_selected[row + pane * 0x801] != 0) {
+      has_sel = (u8 *)&this2->side_selected[pane];
       has_sel[0] = 1;
       has_sel[1] = '\0';
       has_sel[2] = '\0';
@@ -1896,23 +1892,21 @@ fill_list_bg:
   }
   row = 0;
   do {
-    if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x38) <= row) {
+    if (this2->list_rows[pane] <= row) {
 restore_clip_and_finish:
-      surface_set_clip((DibSurface *)this2,(iptr)saved_clip);
+      surface_set_clip((DibSurface *)this2,(RECT *)saved_clip);
       parley_update_buttons(this2);
-      ctrl_show_and_redraw(*(Control **)(this2->rate_values + pane * 4 + 0x20))
+      ctrl_show_and_redraw((Control *)this2->list_hotspots[pane])
       ;
       return;
     }
-    row_top = *(int *)((u8 *)&this2->advance_pane_rects + pane * 0x10 + 4) + row_height * row;
+    row_top = (int)this2->list_rects[pane * 4 + 1] + row_height * row;
     SetRect(&row_rect,list_left,row_top,list_width2 + list_left,row_height + row_top);
-    if ((row != 0) && (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) == -1))
+    if ((row != 0) && (this2->list_first_row[pane] == -1))
     goto restore_clip_and_finish;
-    if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row <
-        *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28)) {
-      selected2 = *(int *)(pane * 0x2004 +
-                          (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row) * 4 +
-                          0x8400 + (int)this2);
+    if (this2->list_first_row[pane] + row <
+        this2->list_counts[pane]) {
+      selected2 = (int)this2->list_selected[pane * 0x801 + (this2->list_first_row[pane] + row)];
       if (selected2 == 0) {
         text_color2 = list_text_color;
         shadow_color2 = list_shadow_color;
@@ -1922,13 +1916,10 @@ restore_clip_and_finish:
         shadow_color2 = dlg_sel_text_shadow_color;
       }
       unit = 0;
-      if ((0 < *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28)) &&
+      if ((0 < this2->list_counts[pane]) &&
          (unit = parley_find_unit_by_id
-                               ((WindowObjectView *)this2,
-                                *(i32 *)
-                                 (pane * 0x2004 +
-                                  (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row)
-                                  * 4 + 0x43f8 + (int)this2)), unit < 0)) break;
+                               (this2,
+                                (i32)this2->list_items_b[pane * 0x801 + (this2->list_first_row[pane] + row)]), unit < 0)) break;
       unit_sprite = (Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + (uint)units[unit].type * 0x3c);
       if (this2->large_layout == 0) {
         tmp = sprite_get_width(unit_sprite);
@@ -1946,16 +1937,16 @@ restore_clip_and_finish:
         bg_color2 = list_sel_bg_color;
       }
       surface_fill_rect((DibSurface *)this2,(iptr)&row_rect,bg_color2);
-      if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) == -1) {
+      if (this2->list_first_row[pane] == -1) {
         text_clear();
-        str = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb7c)));
+        str = (iptr)(label_string(label_string_ids[0x2df]));
         text_append((const char *)str);
-        has_sel = this2->pane_selection_flags_area + pane * 4 - 0x1c;
+        has_sel = (u8 *)&this2->side_selected[pane];
         has_sel[0] = '\0';
         has_sel[1] = '\0';
         has_sel[2] = '\0';
         has_sel[3] = '\0';
-        tmp = rect_width((iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10));
+        tmp = rect_width((RECT *)(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10));
         tmp2 = font_text_width(font2,(const char *)&map_views_block.text_buffer);
         text_x_offset = (tmp - tmp2) / 2;
       }
@@ -1966,23 +1957,23 @@ restore_clip_and_finish:
         tmp = font_cached_height(font2);
         icon_step = (tmp << 7) / 0x30;
         icon_x = icon_step;
-        if ((*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row & 1U) == 0) {
+        if ((this2->list_first_row[pane] + row & 1U) == 0) {
           icon_x = 0;
         }
         row_mid = row_top + row_height / 2;
         tmp = sprite_get_height(unit_sprite);
         tmp2 = font_cached_height(font2);
         sprite_draw
-                  (unit_sprite,(iptr)sprite_rect,(iptr)&parley_wnd_block.parley_wnd,list_left + icon_x,
+                  (unit_sprite,(iptr)sprite_rect,(iptr)&parley_wnd_block,list_left + icon_x,
                    row_mid - (tmp * tmp2) / 0x30);
         gfx_set_scale_ratio(1,1);
         if (prefs_main_menu_choice_block.parley_units_by_city == 0) {
           text_clear();
           text_append_string_id(unit_types[units[unit].type].name);
-          if (((parley_wnd_block.parley_mode == 9) ||
-              (((parley_wnd_block.parley_mode == 0xe && (pane == 0)) && (this2->left_side_accepted != '\0')))) ||
-             ((((parley_wnd_block.parley_mode == 0xe && (pane == 1)) && (this2->right_side_accepted != '\0')) ||
-              ((parley_wnd_block.parley_mode == 0xf && (this2->right_side_accepted != '\0')))))) {
+          if ((((int)parley_wnd_block.mode == 9) ||
+              ((((int)parley_wnd_block.mode == 0xe && (pane == 0)) && (this2->local_units_revealed != '\0')))) ||
+             (((((int)parley_wnd_block.mode == 0xe && (pane == 1)) && (this2->remote_units_revealed != '\0')) ||
+              (((int)parley_wnd_block.mode == 0xf && (this2->remote_units_revealed != '\0')))))) {
             text_append_str((const char *)&str_empty_76);
             str = unit_home_city_name(unit);
             text_append_str((const char *)str);
@@ -2015,18 +2006,18 @@ restore_clip_and_finish:
     }
     row++;
   } while( true );
-  parley_build_unit_list((ListPaneWindow *)this2,pane,1);
-  if (*(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28) == 0) {
-    has_sel = ((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28;
+  parley_build_unit_list(this2,pane,1);
+  if (this2->list_counts[pane] == 0) {
+    has_sel = (u8 *)&this2->list_first_row[pane];
     has_sel[0] = 0xff;
     has_sel[1] = 0xff;
     has_sel[2] = 0xff;
     has_sel[3] = 0xff;
   }
-  else if (*(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28) <
-           *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28)) {
-    *(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) =
-         *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28) - 1;
+  else if (this2->list_counts[pane] <
+           this2->list_counts[pane]) {
+    this2->list_first_row[pane] =
+         this2->list_counts[pane] - 1;
   }
   goto fill_list_bg;
 }
@@ -2036,25 +2027,23 @@ void __cdecl parley_reveal_city_origin_clicked(void)
 
 {
   iptr child;
-  iptr window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
     window = 0;
   }
   else {
-    window = child - 0x48;
+    window = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x48));
-  ctrl_show_and_redraw(*(Control **)(window + 0x3a4));
-  control_hide(*(Control **)(window + 0x39c));
-  *(i8 *)(window + 0x3bd) = 1;
-  ctrl_enable(*(Control **)(window + 0x38c));
-  ctrl_enable(*(Control **)(window + 0x394));
-  net_send_message(0xa7,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) +
-                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(window + 0x118) * 4) * 0x54),
-                     human_civ[0],(int)*(char *)(window + 0x3bd),0,0,0,0,0,0);
+  wnd_activate((Wnd *)((iptr)window + 0x48));
+  ctrl_show_and_redraw((Control *)window->info_hide_buttons[0]);
+  control_hide((Control *)window->info_show_buttons[0]);
+  window->local_units_revealed = 1;
+  ctrl_enable((Control *)window->sort_by_unit_buttons[0]);
+  ctrl_enable((Control *)window->sort_by_city_buttons[0]);
+  net_send_message(0xa7,net_session_block.net_slots[net_session_block.net_civ_slots[(int)window->other_civ]].id,
+                     human_civ[0],(int)(char)window->local_units_revealed,0,0,0,0,0,0);
   parley_draw_unit_list(0);
   return;
 }
@@ -2064,26 +2053,24 @@ void __cdecl parley_hide_city_origin_clicked(void)
 
 {
   int child;
-  WindowObjectView *window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
-    window = (WindowObjectView *)0x0;
+    window = (ParleyWindow *)0x0;
   }
   else {
-    window = (WindowObjectView *)(child - 0x48);
+    window = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x12));
-  ctrl_show_and_redraw((Control *)window[0xe7].vtable);
-  control_hide((Control *)window[0xe9].vtable);
-  *(i8 *)((int)&window[0xef].vtable + 1) = 0;
-  ctrl_disable((Control *)window[0xe3].vtable);
-  ctrl_disable((Control *)window[0xe5].vtable);
-  net_send_message(0xa8,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) +
-                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + window[0x46].vtable * 4) * 0x54),human_civ[0]
-                     ,(int)*(char *)((int)&window[0xef].vtable + 1),0,0,0,0,0,0);
-  parley_sort_unit_list(window,0,window[0xfa].vtable - 1,0);
+  wnd_activate((Wnd *)((u8 *)window + 0x48));
+  ctrl_show_and_redraw((Control *)window->info_show_buttons[0]);
+  control_hide((Control *)window->info_hide_buttons[0]);
+  window->local_units_revealed = 0;
+  ctrl_disable((Control *)window->sort_by_unit_buttons[0]);
+  ctrl_disable((Control *)window->sort_by_city_buttons[0]);
+  net_send_message(0xa8,net_session_block.net_slots[net_session_block.net_civ_slots[window->other_civ]].id,human_civ[0]
+                     ,(int)(char)window->local_units_revealed,0,0,0,0,0,0);
+  parley_sort_unit_list(window,0,(u32)window->list_counts[0] - 1,0);
   parley_draw_unit_list(0);
   return;
 }
@@ -2093,22 +2080,20 @@ void __cdecl parley_request_city_origin_clicked(void)
 
 {
   iptr child;
-  ViewWindow *window;
+  ParleyWindow *window;
   const char *civ_plural;
   
   child = wnd_get_active_child();
   if (child == 0) {
-    window = (ViewWindow *)0x0;
+    window = (ParleyWindow *)0x0;
   }
   else {
-    window = (ViewWindow *)(child - 0x48);
+    window = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)window->window_2);
+  wnd_activate((Wnd *)((u8 *)window + 0x48));
   civ_plural = (civ_name_plural(human_civ[0]));
   text_set_string_arg(0,civ_plural);
-  net_send_text_args(100,*(i32 *)
-                          (((i8 *)&net_session_block.net_player_slots) +
-                          *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),1,0,
+  net_send_text_args(100,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd_block.other_civ]].id,1,0,
                     human_civ[0],0);
   return;
 }
@@ -2134,17 +2119,17 @@ void __cdecl parley_sort_by_city_clicked(iptr pane)
 
 {
   int child;
-  void *window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
-    window = (void *)0x0;
+    window = (ParleyWindow *)0x0;
   }
   else {
-    window = (void *)(child - 0x48);
+    window = (ParleyWindow *)(child - 0x48);
   }
   wnd_activate((Wnd *)((int)window + 0x48));
-  parley_sort_units_by_city(window,0,*(int *)((int)window + pane * 4 + 1000) - 1,pane);
+  parley_sort_units_by_city(window,0,window->list_counts[pane] - 1,pane);
   parley_draw_unit_list(pane);
   return;
 }
@@ -2170,23 +2155,23 @@ void __cdecl parley_sort_by_unit_clicked(iptr pane)
 
 {
   int child;
-  WindowObjectView *window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
-    window = (WindowObjectView *)0x0;
+    window = (ParleyWindow *)0x0;
   }
   else {
-    window = (WindowObjectView *)(child - 0x48);
+    window = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x12));
-  parley_sort_unit_list(window,0,window[pane + 0xfa].vtable - 1,pane);
+  wnd_activate((Wnd *)((u8 *)window + 0x48));
+  parley_sort_unit_list(window,0,(u32)window->list_counts[pane] - 1,pane);
   parley_draw_unit_list(pane);
   return;
 }
 
 /* 0046968b auto */
-void __thiscall parley_sort_unit_list(WindowObjectView *self,int first,int last,iptr pane)
+void __thiscall parley_sort_unit_list(ParleyWindow *self,int first,int last,iptr pane)
 
 {
   i32 swap;
@@ -2194,38 +2179,36 @@ void __thiscall parley_sort_unit_list(WindowObjectView *self,int first,int last,
   int cmp;
   int j;
   int i;
-  iptr window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
     window = 0;
   }
   else {
-    window = child - 0x48;
+    window = (ParleyWindow *)(child - 0x48);
   }
-  if (1 < *(int *)(window + 1000 + pane * 4)) {
+  if (1 < window->list_counts[pane]) {
     prefs_main_menu_choice_block.parley_units_by_city = 0;
     for (i = first; j = i, i < last; i++) {
       while (j = j + 1, j <= last) {
         cmp = _strcmp(*(char **)(((i8 *)&prefs_main_menu_choice_block.unit_type_name_ptrs) +
-                                  (uint)units[*(int *)(i * 4 + pane * 0x2004 + 0x3f0 +
-                                                      window)].type * 4),
+                                  (uint)units[(int)window->list_items[i + pane * 0x801]].type * 4),
                         *(char **)(((i8 *)&prefs_main_menu_choice_block.unit_type_name_ptrs) +
-                                  (uint)units[*(int *)(j * 4 + pane * 0x2004 + 0x3f0 +
-                                                      window)].type * 4));
+                                  (uint)units[(int)window->list_items[j + pane * 0x801]].type * 4));
         if (0 < cmp) {
-          swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + window);
-          *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + window) =
-               *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + window);
-          *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + window) = swap;
-          swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + window);
-          *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + window) =
-               *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + window);
-          *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + window) = swap;
-          swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window);
-          *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) =
-               *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + window);
-          *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + window) = swap;
+          swap = (i32)window->list_items[i + pane * 0x801];
+          window->list_items[i + pane * 0x801] =
+               (i32)window->list_items[j + pane * 0x801];
+          window->list_items[j + pane * 0x801] = swap;
+          swap = (i32)window->list_items_b[i + pane * 0x801];
+          window->list_items_b[i + pane * 0x801] =
+               (i32)window->list_items_b[j + pane * 0x801];
+          window->list_items_b[j + pane * 0x801] = swap;
+          swap = (i32)window->list_selected[i + pane * 0x801];
+          window->list_selected[i + pane * 0x801] =
+               (i32)window->list_selected[j + pane * 0x801];
+          window->list_selected[j + pane * 0x801] = swap;
         }
       }
     }
@@ -2234,7 +2217,7 @@ void __thiscall parley_sort_unit_list(WindowObjectView *self,int first,int last,
 }
 
 /* 0046990a auto */
-void __thiscall parley_sort_units_by_city(void *self,int first,int last,iptr pane)
+void __thiscall parley_sort_units_by_city(ParleyWindow *self,int first,int last,iptr pane)
 
 {
   i32 swap;
@@ -2244,16 +2227,16 @@ void __thiscall parley_sort_units_by_city(void *self,int first,int last,iptr pan
   int cmp;
   int j;
   int i;
-  iptr window;
+  ParleyWindow *window;
   
   child = wnd_get_active_child();
   if (child == 0) {
     window = 0;
   }
   else {
-    window = child - 0x48;
+    window = (ParleyWindow *)(child - 0x48);
   }
-  if (*(int *)(window + 1000 + pane * 4) < 2) {
+  if (window->list_counts[pane] < 2) {
     return;
   }
   prefs_main_menu_choice_block.parley_units_by_city = 1;
@@ -2267,27 +2250,25 @@ inner_loop:
   do {
     j++;
     if (last < j) break;
-    if (units[*(int *)(i * 4 + pane * 0x2004 + 0x3f0 + window)].home_city != -1) {
-      if (units[*(int *)(j * 4 + pane * 0x2004 + 0x3f0 + window)].home_city != -1) {
-        _Str2 = (char *)unit_home_city_name(*(iptr *)(j * 4 + pane * 0x2004 + 0x3f0 +
-                                                    window));
-        _Str1 = (char *)unit_home_city_name(*(iptr *)(i * 4 + pane * 0x2004 + 0x3f0 +
-                                                    window));
+    if (units[(int)window->list_items[i + pane * 0x801]].home_city != -1) {
+      if (units[(int)window->list_items[j + pane * 0x801]].home_city != -1) {
+        _Str2 = (char *)unit_home_city_name((iptr)window->list_items[j + pane * 0x801]);
+        _Str1 = (char *)unit_home_city_name((iptr)window->list_items[i + pane * 0x801]);
         cmp = _strcmp(_Str1,_Str2);
         if (cmp < 1) goto inner_loop;
       }
-      swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + window);
-      *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + window) =
-           *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + window);
-      *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + window) = swap;
-      swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + window);
-      *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + window) =
-           *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + window);
-      *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + window) = swap;
-      swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window);
-      *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) =
-           *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + window);
-      *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + window) = swap;
+      swap = (i32)window->list_items[i + pane * 0x801];
+      window->list_items[i + pane * 0x801] =
+           (i32)window->list_items[j + pane * 0x801];
+      window->list_items[j + pane * 0x801] = swap;
+      swap = (i32)window->list_items_b[i + pane * 0x801];
+      window->list_items_b[i + pane * 0x801] =
+           (i32)window->list_items_b[j + pane * 0x801];
+      window->list_items_b[j + pane * 0x801] = swap;
+      swap = (i32)window->list_selected[i + pane * 0x801];
+      window->list_selected[i + pane * 0x801] =
+           (i32)window->list_selected[j + pane * 0x801];
+      window->list_selected[j + pane * 0x801] = swap;
     }
   } while( true );
   i++;
@@ -2295,7 +2276,7 @@ inner_loop:
 }
 
 /* 00469bdc auto */
-void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_selection)
+void __thiscall parley_build_unit_list(ParleyWindow *self,int pane,int keep_selection)
 
 {
   int *count_ptr;
@@ -2311,7 +2292,7 @@ void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_se
   int k;
   void *selected_ids;
   iptr dir;
-  iptr window;
+  ParleyWindow *window;
   
   selected_ids = (void *)0x0;
   child = wnd_get_active_child();
@@ -2319,27 +2300,27 @@ void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_se
     window = 0;
   }
   else {
-    window = child - 0x48;
+    window = (ParleyWindow *)(child - 0x48);
   }
   if (keep_selection != 0) {
-    selected_ids = operator_new(*(int *)(window + 1000 + pane * 4) << 2);
+    selected_ids = operator_new(window->list_counts[pane] << 2);
     if (selected_ids == (void *)0x0) {
       keep_selection = 0;
     }
     else {
-      old_count = *(int *)(window + 1000 + pane * 4);
+      old_count = window->list_counts[pane];
       for (unit = 0; unit < old_count; unit++) {
-        if (*(int *)(pane * 0x2004 + unit * 4 + 0x8400 + window) == 0) {
+        if (window->list_selected[pane * 0x801 + unit] == 0) {
           *(i32 *)((int)selected_ids + unit * 4) = 0xffffffff;
         }
         else {
           *(i32 *)((int)selected_ids + unit * 4) =
-               *(i32 *)(pane * 0x2004 + unit * 4 + 0x43f8 + window);
+               (i32)window->list_items_b[pane * 0x801 + unit];
         }
       }
     }
   }
-  *(i32 *)(window + 1000 + pane * 4) = 0;
+  window->list_counts[pane] = 0;
   unit = 0;
   do {
     if (game.num_units <= unit) {
@@ -2348,17 +2329,17 @@ void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_se
       }
       if (prefs_main_menu_choice_block.parley_units_by_city == 0) {
         parley_sort_unit_list
-                  ((WindowObjectView *)self,0,*(int *)(window + 1000 + pane * 4) - 1,pane);
+                  (self,0,window->list_counts[pane] - 1,pane);
       }
       else {
-        parley_sort_units_by_city(self,0,*(int *)(window + 1000 + pane * 4) - 1,pane);
+        parley_sort_units_by_city(self,0,window->list_counts[pane] - 1,pane);
       }
       return;
     }
     if ((units[unit].id != 0) &&
        (((*(int *)(((i8 *)&prefs_main_menu_choice_block.parley_list_own_side) + pane * 4) != 0 && (units[unit].owner == (*(i8 *)&human_civ))) ||
         (((*(int *)(((i8 *)&prefs_main_menu_choice_block.parley_list_own_side) + pane * 4) == 0 &&
-          ((int)units[unit].owner == self->caption_height)) &&
+          ((int)units[unit].owner == self->other_civ)) &&
          (((1 << ((byte)(*(i8 *)&human_civ) & 0x1f) & (uint)units[unit].visibility) != 0 ||
           ((int)units[unit].owner == ((*(i8 *)&human_civ) & 0xffU))))))))) {
       x2 = units[unit].x;
@@ -2374,23 +2355,21 @@ void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_se
         }
       }
       if ((near_land) || (y = unit_stack_sum(unit,2), y == 1)) {
-        *(iptr *)(pane * 0x2004 + *(int *)(window + 1000 + pane * 4) * 4 + 0x3f0 + window) =
+        window->list_items[pane * 0x801 + window->list_counts[pane]] =
              unit;
-        *(i32 *)(pane * 0x2004 + *(int *)(window + 1000 + pane * 4) * 4 + 0x43f8 + window) =
+        window->list_items_b[pane * 0x801 + window->list_counts[pane]] =
              units[unit].id;
-        *(i32 *)
-         (pane * 0x2004 + *(int *)(window + 1000 + pane * 4) * 4 + 0x8400 + window) = 0;
+        window->list_selected[pane * 0x801 + window->list_counts[pane]] = 0;
         if ((keep_selection == 1) && (selected_ids != (void *)0x0)) {
           for (k = 0; k < old_count; k++) {
             if (units[unit].id == *(int *)((int)selected_ids + k * 4)) {
-              *(i32 *)
-               (pane * 0x2004 + *(int *)(window + 1000 + pane * 4) * 4 + 0x8400 + window) =
+              window->list_selected[pane * 0x801 + window->list_counts[pane]] =
                    1;
               break;
             }
           }
         }
-        count_ptr = (int *)(window + 1000 + pane * 4);
+        count_ptr = (int *)((iptr)window + 1000 + pane * 4);
         *count_ptr = *count_ptr + 1;
       }
     }
@@ -2399,7 +2378,7 @@ void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_se
 }
 
 /* 0046af70 auto */
-i8 __thiscall net_session_send_to(void *self,int player,iptr msg)
+i8 __thiscall net_session_send_to(NetSession *self,int player,NetMsg *msg)
 
 {
   i8 ok;
@@ -2408,17 +2387,17 @@ i8 __thiscall net_session_send_to(void *self,int player,iptr msg)
   if ((((player < 0) || (7 < player)) && (player != 0xff)) && (player != 0)) {
     err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_sock_0_sock_max_net_players_sock_broadca,(iptr)&str_d_ss_franklinton_netmgr_send_cpp,0x139);
   }
-  if (*(int *)(msg + 8) == 0) {
+  if (msg->size == 0) {
     err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_pmsg_size_0,(iptr)&str_d_ss_franklinton_netmgr_send_cpp_2,0x13a);
   }
-  *(int *)(msg + 0xc) = net_send_sequence;
+  msg->seq = net_send_sequence;
   net_send_sequence++;
-  sent = XD_SendSecureData((ushort)player,(void *)msg,*(ulong *)(msg + 8),0);
-  *(int *)((int)self + 0x578) = sent;
-  if (*(int *)((int)self + 0x578) < 0) {
-    dbg_logf3((const char *)&str_sendtoconnections_failed_on_send_to_conn,player,*(i32 *)((int)self + 0x578),*(i32 *)(msg + 4));
-    if (*(int *)(msg + 4) == 0x6a) {
-      dbg_logf_str((const char *)&str_popup_type_s,(const char *)(((char *)&str_nm_pop_retiredie) + *(int *)(msg + 0x10) * 0x20))
+  sent = XD_SendSecureData((ushort)player,(void *)msg,(ulong)msg->size,0);
+  self->net_last_send_result = sent;
+  if (self->net_last_send_result < 0) {
+    dbg_logf3((const char *)&str_sendtoconnections_failed_on_send_to_conn,player,self->net_last_send_result,(i32)msg->hdr.msg_type);
+    if ((int)msg->hdr.msg_type == 0x6a) {
+      dbg_logf_str((const char *)&str_popup_type_s,(const char *)(((char *)&str_nm_pop_retiredie) + msg->args[0] * 0x20))
       ;
     }
     ok = 0;
@@ -2430,19 +2409,19 @@ i8 __thiscall net_session_send_to(void *self,int player,iptr msg)
 }
 
 /* 0046b0a1 auto */
-bool __thiscall net_session_send_to_all(void *self,iptr msg)
+bool __thiscall net_session_send_to_all(NetSession *self,NetMsg *msg)
 
 {
   bool failed;
   int sent;
   
-  *(int *)(msg + 0xc) = net_send_sequence;
+  msg->seq = net_send_sequence;
   net_send_sequence++;
-  sent = XD_SendBroadcastData((void *)msg,*(ulong *)(msg + 8),0);
-  *(int *)((int)self + 0x578) = sent;
-  failed = *(int *)((int)self + 0x578) < *(int *)(msg + 8);
+  sent = XD_SendBroadcastData((void *)msg,(ulong)msg->size,0);
+  self->net_last_send_result = sent;
+  failed = self->net_last_send_result < msg->size;
   if (failed) {
-    dbg_logf((const char *)&str_sendtoeveryone_failed_return_val_d,*(iptr *)((int)self + 0x578));
+    dbg_logf((const char *)&str_sendtoeveryone_failed_return_val_d,self->net_last_send_result);
   }
   return !failed;
 }
@@ -2505,31 +2484,31 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   packet = (void *)0x0;
   switch(msg_type) {
   case 1:
-    net_msg_init_header(announce_msg,msg_type,(const char *)&str_empty_80);
-    sent = net_session_send_to_all(((iptr *)&net_session_block.net_session),(iptr)announce_msg);
+    net_msg_init_header((NetNamedMsg *)announce_msg,msg_type,(const char *)&str_empty_80);
+    sent = net_session_send_to_all(&net_session_block,(NetMsg *)announce_msg);
     return (int)sent;
   case 2:
-    net_msg_server_info_init(server_info_msg);
+    net_msg_server_info_init((NetServerInfoMsg *)server_info_msg);
     server_phase = (i16)net_session_block.net_session_phase;
-    sent = net_session_send_to_all(((iptr *)&net_session_block.net_session),(iptr)server_info_msg);
+    sent = net_session_send_to_all(&net_session_block,(NetMsg *)server_info_msg);
     return (int)sent;
   default:
     return 0;
   case 4:
-    net_msg_player_list_init(player_list_msg);
+    net_msg_player_list_init((NetPlayerListMsg *)player_list_msg);
     crt_memcpy(player_list_data,((iptr *)&net_session_block.net_player_count),0x270);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)player_list_msg);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)player_list_msg);
     return (int)sent;
   case 5:
     net_msg_header_init(msg_05,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_05);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_05);
     return (int)sent;
   case 6:
     net_msg_server_path_init(server_path_msg);
     path_kind = net_session_block.loaded_file_kind;
     crt_strcpy(path_name,((i8 *)&net_session_block.loaded_file_name));
     crt_strcpy(path_subdir,((i8 *)&net_session_block.loaded_file_subdir));
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)server_path_msg);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)server_path_msg);
     return (int)sent;
   case 7:
   case 8:
@@ -2553,7 +2532,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_address_null,(iptr)&str_d_ss_franklinton_netmgr_send_cpp_3,0x22c);
     }
     image_buf = net_msg_build_packet(msg_type,(iptr)image_buf,image_result,0,0,0,0,0,0);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)image_buf);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)image_buf);
     image_result = (uint)sent;
     operator_delete(image_buf);
     return image_result;
@@ -2566,30 +2545,30 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x11:
   case 0x32:
     net_msg_header_init(simple_msg,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)simple_msg);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)simple_msg);
     return (int)sent;
   case 0x12:
     net_msg_header_init(msg_12,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_12);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_12);
     return (int)sent;
   case 0x13:
-    net_msg_server_answer_init(answer_msg);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)answer_msg);
+    net_msg_server_answer_init((NetServerAnswerMsg *)answer_msg);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)answer_msg);
     return (int)sent;
   case 0x14:
     net_msg_header_init(msg_14,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_14);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_14);
     return (int)sent;
   case 0x15:
   case 0x5c:
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,raw_msg);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)raw_msg);
     if (sent == '\0') {
       return 0;
     }
     return *(i32 *)(raw_msg + 8);
   case 0x16:
     net_msg_header_init(msg_16,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_16);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_16);
     return (int)sent;
   case 0x17:
     packet = net_msg_build_packet(msg_type,(iptr)&cosmic,0,0,0,0,0,0,0x29);
@@ -2639,7 +2618,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x26:
   case 0x27:
     net_msg_header_init(msg_26,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_26);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_26);
     return (int)sent;
   case 0x28:
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
@@ -2651,17 +2630,17 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x2b:
   case 0x2c:
     net_msg_header_init(msg_2b,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_2b);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_2b);
     return (int)sent;
   case 0x2d:
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x2e:
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)&net_session_block.net_ping_message);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)&net_session_block.net_ping_message);
     return (int)sent;
   case 0x2f:
-    net_msg_player_list_node_init(player_node_msg,arg1);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)player_node_msg);
+    net_msg_player_list_node_init((NetPlayerNodeMsg *)player_node_msg,arg1);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)player_node_msg);
     return (int)sent;
   case 0x30:
     if (net_session_block.net_host_flag == '\0') {
@@ -2697,7 +2676,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x35:
   case 0x81:
     net_msg_header_init(msg_35,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_35);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_35);
     return (int)sent;
   case 0x37:
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
@@ -2750,28 +2729,28 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x4e:
   case 0x50:
     net_msg_header_init(msg_40,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_40);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_40);
     return (int)sent;
   case 0x41:
     packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x42:
     net_msg_header_init(msg_42,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_42);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_42);
     return (int)sent;
   case 0x43:
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x44:
     net_msg_header_init(msg_44,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_44);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_44);
     return (int)sent;
   case 0x45:
     packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x46:
     net_msg_header_init(msg_46,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_46);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_46);
     return (int)sent;
   case 0x47:
     packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
@@ -2806,7 +2785,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     break;
   case 0x58:
     net_msg_header_init(msg_58,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_58);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_58);
     return (int)sent;
   case 0x59:
     packet = net_msg_build_packet(msg_type,(iptr)&net_batch_buffer,0,0,0,0,0,0,net_batch_used_dwords << 2);
@@ -2820,12 +2799,12 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x66:
   case 0xa3:
     net_msg_header_init(msg_5b,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_5b);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_5b);
     return (int)sent;
   case 0x5d:
   case 0x5e:
     net_msg_header_init(msg_5d,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_5d);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_5d);
     return (int)sent;
   case 0x5f:
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
@@ -2845,10 +2824,10 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     break;
   case 0x68:
     text_len = _strlen((char *)text);
-    packet = net_msg_build_packet(msg_type,(iptr)(text),arg1,arg2,arg3,0,0,0,text_len + 1);
+    packet = net_msg_build_packet(msg_type,(iptr)text,arg1,arg2,arg3,0,0,0,text_len + 1);
     break;
   case 0x69:
-    net_msg_whose_turn_init(whose_turn_msg,arg1);
+    net_msg_whose_turn_init((NetWhoseTurnMsg *)whose_turn_msg,arg1);
     map_views_block.main_view_timer_cache_i32 = 0xffffffff;
     frame_wnd_draw_caption((FrameWindow *)((i8 *)&map_views_block.map_views));
     caption_rect.left = map_views_block.main_view_frame_left;
@@ -2856,7 +2835,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     caption_rect.right = map_views_block.main_view_frame_right;
     caption_rect.bottom = map_views_block.main_view_client_top;
     wnd_blit_surface_rect((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&caption_rect);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)whose_turn_msg);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)whose_turn_msg);
     return (int)sent;
   case 0x6a:
     packet = net_msg_build_packet(msg_type,raw_msg,arg1,arg2,arg3,arg4,arg5,0,
@@ -2870,15 +2849,15 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     break;
   case 0x6d:
     net_msg_header_init(msg_6d,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_6d);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_6d);
     return (int)sent;
   case 0x6e:
     net_msg_header_init(msg_6e,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_6e);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_6e);
     return (int)sent;
   case 0x6f:
     net_msg_header_init(msg_6f,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_6f);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_6f);
     return (int)sent;
   case 0x70:
     packet = net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,arg2,arg3,
@@ -2895,7 +2874,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     break;
   case 0x74:
     net_msg_header_init(msg_74,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_74);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_74);
     return (int)sent;
   case 0x75:
     packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
@@ -2908,11 +2887,11 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     break;
   case 0x78:
     net_msg_header_init(msg_78,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_78);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_78);
     return (int)sent;
   case 0x79:
     net_msg_header_init(msg_79,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_79);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_79);
     return (int)sent;
   case 0x7a:
     packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
@@ -2936,7 +2915,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x82:
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,raw_msg);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)raw_msg);
     if (sent == '\0') {
       return 0;
     }
@@ -2945,10 +2924,10 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x84:
   case 0x85:
     net_msg_header_init(msg_83,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_83);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_83);
     return (int)sent;
   case 0x86:
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,raw_msg);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)raw_msg);
     if (sent == '\0') {
       return 0;
     }
@@ -2964,11 +2943,11 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     break;
   case 0x8a:
     net_msg_header_init(msg_8a,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_8a);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_8a);
     return (int)sent;
   case 0x8b:
     net_msg_header_init(msg_8b,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_8b);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_8b);
     return (int)sent;
   case 0x8c:
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
@@ -2976,7 +2955,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x8d:
   case 0x8e:
     net_msg_header_init(msg_8d,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_8d);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_8d);
     return (int)sent;
   case 0x8f:
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
@@ -3024,7 +3003,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x9d:
   case 0x9e:
     net_msg_header_init(msg_9c,msg_type);
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_9c);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)msg_9c);
     return (int)sent;
   case 0x9f:
     packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
@@ -3048,7 +3027,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     result = 0;
   }
   else {
-    sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)packet);
+    sent = net_session_send_to(&net_session_block,dest,(NetMsg *)packet);
     result = (int)sent;
     operator_delete(packet);
   }
@@ -3059,72 +3038,72 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
 NetMsgHeader * __thiscall net_msg_header_init(NetMsgHeader *self,u32 type)
 
 {
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x10;
+  ((NetMsg *)self)->size = 0x10;
   self->msg_magic = 0x66606660;
   self->msg_type = type;
   return self;
 }
 
 /* 0046d5f0 auto */
-NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *self,u32 msg_type,const char *name2)
+NetMsgHeader * __thiscall net_msg_init_header(NetNamedMsg *self,u32 msg_type,const char *name2)
 
 {
-  net_msg_addr_header_init(self,0);
-  ((NetMsgHeaderExt *)self)->inner_msg_type = msg_type;
-  _memset(self + 6,0,0x20);
-  _strncpy((char *)(self + 6),(char *)name2,0x20);
-  _memset(self + 10,0,0x20);
-  _strncpy((char *)(self + 10),((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x74;
-  return self;
+  net_msg_addr_header_init((NetAddrMsg *)self,0);
+  self->inner_type = msg_type;
+  _memset(self->name,0,0x20);
+  _strncpy(self->name,(char *)name2,0x20);
+  _memset(self->address2,0,0x20);
+  _strncpy(self->address2,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
+  self->size = 0x74;
+  return &self->hdr;
 }
 
 /* 0046d6a0 auto */
-NetMsgHeader * __thiscall net_msg_addr_header_init(NetMsgHeader *self,i32 msg_type)
+NetMsgHeader * __thiscall net_msg_addr_header_init(NetAddrMsg *self,i32 msg_type)
 
 {
-  net_msg_header_init(self,msg_type);
-  _memset(self + 2,0,0x20);
-  _strncpy((char *)(self + 2),((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x30;
-  return self;
+  net_msg_header_init(&self->hdr,msg_type);
+  _memset(self->address,0,0x20);
+  _strncpy(self->address,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
+  self->size = 0x30;
+  return &self->hdr;
 }
 
 /* 0046d720 auto */
-NetMsgHeader * __thiscall net_msg_server_info_init(NetMsgHeader *self)
+NetMsgHeader * __thiscall net_msg_server_info_init(NetServerInfoMsg *self)
 
 {
-  net_msg_init_header(self,2,(const char *)&str_empty_81);
-  net_fill_game_info((iptr)&((NetMsgHeaderExt *)self)->game_info);
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x198;
-  return self;
+  net_msg_init_header(&self->named,2,(const char *)&str_empty_81);
+  net_fill_game_info(&self->game);
+  self->named.size = 0x198;
+  return &self->named.hdr;
 }
 
 /* 0046d780 auto */
-NetMsgHeader * __thiscall net_msg_player_list_node_init(NetMsgHeader *self,u32 player_id)
+NetMsgHeader * __thiscall net_msg_player_list_node_init(NetPlayerNodeMsg *self,u32 player_id)
 
 {
-  net_msg_header_init(self,0x2f);
-  ((NetMsgHeaderExt *)self)->player_id = player_id;
-  _memset(&((NetMsgHeaderExt *)self)->ip_address,0,0x20);
-  _strncpy((char *)&((NetMsgHeaderExt *)self)->ip_address,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
-  crt_strcpy((char *)(&((NetMsgHeaderExt *)self)->player_name),((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name));
-  ((NetMsgHeaderExt *)self)->node_status_54 = 0;
-  ((NetMsgHeaderExt *)self)->node_status_58 = 0;
-  *(i8 *)&((NetMsgHeaderExt *)self)->node_flag_bytes = 0;
-  *(i8 *)((int)&((NetMsgHeaderExt *)self)->node_flag_bytes + 1) = 0;
-  ((NetMsgHeaderExt *)self)->node_slot_index = 0xffffffff;
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 100;
-  return self;
+  net_msg_header_init(&self->hdr,0x2f);
+  self->slot.id = player_id;
+  _memset(self->slot.address,0,0x20);
+  _strncpy(self->slot.address,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
+  crt_strcpy(self->slot.name,((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name));
+  self->slot.field_44 = 0;
+  self->slot.lobby_id = 0;
+  self->slot.is_host = 0;
+  self->slot.active = 0;
+  self->slot.civ = 0xffffffff;
+  self->size = 100;
+  return &self->hdr;
 }
 
 /* 0046d860 auto */
-NetMsgHeader * __thiscall net_msg_player_list_init(NetMsgHeader *self)
+NetMsgHeader * __thiscall net_msg_player_list_init(NetPlayerListMsg *self)
 
 {
-  net_msg_header_init(self,4);
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x280;
-  return self;
+  net_msg_header_init(&self->hdr,4);
+  self->size = 0x280;
+  return &self->hdr;
 }
 
 /* 0046d8a0 auto */
@@ -3132,28 +3111,28 @@ NetMsgHeader * __thiscall net_msg_server_path_init(NetMsgHeader *self)
 
 {
   net_msg_header_init(self,6);
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x21c;
+  ((NetMsg *)self)->size = 0x21c;
   return self;
 }
 
 /* 0046d8e0 auto */
-NetMsgHeader * __thiscall net_msg_server_answer_init(NetMsgHeader *self)
+NetMsgHeader * __thiscall net_msg_server_answer_init(NetServerAnswerMsg *self)
 
 {
-  net_msg_header_init(self,0x13);
-  net_fill_game_info((iptr)(self + 2));
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x134;
-  return self;
+  net_msg_header_init(&self->hdr,0x13);
+  net_fill_game_info(&self->game);
+  self->size = 0x134;
+  return &self->hdr;
 }
 
 /* 0046d930 auto */
-NetMsgHeader * __thiscall net_msg_whose_turn_init(NetMsgHeader *self,u32 turn_civ)
+NetMsgHeader * __thiscall net_msg_whose_turn_init(NetWhoseTurnMsg *self,u32 turn_civ)
 
 {
-  net_msg_header_init(self,0x69);
-  ((NetMsgHeaderExt *)self)->player_id = turn_civ;
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x14;
-  return self;
+  net_msg_header_init(&self->hdr,0x69);
+  self->civ = turn_civ;
+  self->size = 0x14;
+  return &self->hdr;
 }
 
 /* 0047e0e5 auto */
@@ -3184,7 +3163,7 @@ int __cdecl net_stacked_draw_push(int kind,iptr args,iptr unit_data)
     if ((net_session_block.net_stacked_draw_last < 0) || (99 < net_session_block.net_stacked_draw_last)) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_gnetmgr_laststackeddraw_0_gnetmgr_lastst,(iptr)&str_d_ss_franklinton_netmgr_poll_cpp_2,0x5b);
     }
-    *(int *)(((i8 *)&net_session_block.net_stacked_draw_kinds) + net_session_block.net_stacked_draw_last * 0x40) = kind;
+    net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_last].kind = kind;
     for (i = 0; i < 7; i++) {
       *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + i * 4 + net_session_block.net_stacked_draw_last * 0x40) =
            *(i32 *)(args + i * 4);
@@ -3208,7 +3187,7 @@ int __cdecl net_stacked_draw_run_next(void)
 {
   int y;
   iptr visible;
-  iptr tile;
+  Tile *tile;
   iptr unit;
   iptr unit2;
   int count;
@@ -3216,22 +3195,22 @@ int __cdecl net_stacked_draw_run_next(void)
   i32 sum_mode;
   int stack_count;
   
-  switch(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_kinds) + net_session_block.net_stacked_draw_first * 0x40)) {
+  switch(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].kind) {
   case 0x70:
-    x = *(int *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40);
-    y = *(int *)(((i8 *)&net_session_block.net_stacked_draw_arg2) + net_session_block.net_stacked_draw_first * 0x40);
-    unit2 = *(iptr *)(((i8 *)&net_session_block.net_stacked_draw_arg3) + net_session_block.net_stacked_draw_first * 0x40);
-    unit_stack_validate(*(iptr *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40));
+    x = net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1];
+    y = net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[2];
+    unit2 = net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[3];
+    unit_stack_validate(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0]);
     visible = mapviews_tile_visible(x,y);
     if (visible != 0) {
       crt_memcpy(((short *)&power_graph_history_block.stacked_draw_unit_copy),(const void *)(net_session_block.net_stacked_draw_first * 0x40 + (iptr)(((u8 *)&net_session_block.net_stacked_draw_arg4 + 12))),0x20);
       power_graph_history_block.stacked_draw_unit_prev = -1;
       power_graph_history_block.stacked_draw_unit_next = -1;
       mapviews_ensure_visible(x,y,(int)power_graph_history_block.stacked_draw_unit_owner);
-      if (*(int *)(((i8 *)&net_session_block.net_stacked_draw_arg4) + net_session_block.net_stacked_draw_first * 0x40) == -1) {
+      if (net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[4] == -1) {
         snd_play_effect(99,1,0,0);
       }
-      tile = (iptr)(tile_at(x,y));
+      tile = tile_at(x,y);
       sum_mode = 2;
       unit = tile_first_unit(x,y);
       stack_count = unit_stack_sum(unit,sum_mode);
@@ -3239,7 +3218,7 @@ int __cdecl net_stacked_draw_run_next(void)
         stack_count++;
       }
       if (stack_count == 1) {
-        *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
+        tile->improvements = tile->improvements & 0xfe;
       }
       else if (1 < stack_count) {
         anim_origin_x = (int)power_graph_history_block.stacked_draw_unit_copy[0];
@@ -3248,7 +3227,7 @@ int __cdecl net_stacked_draw_run_next(void)
         if (count == 0) {
           if (power_graph_history_block.stacked_draw_unit_next < 0) {
             if (power_graph_history_block.stacked_draw_unit_prev < 0) {
-              *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
+              tile->improvements = tile->improvements & 0xfe;
             }
             else {
               anim_origin_stack_unit = (iptr)power_graph_history_block.stacked_draw_unit_prev;
@@ -3261,7 +3240,7 @@ int __cdecl net_stacked_draw_run_next(void)
         else {
           count = unit_stack_sum(0x801,5);
           if (count < 2) {
-            *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
+            tile->improvements = tile->improvements & 0xfe;
           }
           else {
             anim_origin_stack_unit = unit_stack_first(0x801);
@@ -3270,7 +3249,7 @@ int __cdecl net_stacked_draw_run_next(void)
                  (unit_types[units[anim_origin_stack_unit].type].domain == 2)) goto animate_move;
               anim_origin_stack_unit = (iptr)units[anim_origin_stack_unit].next_in_stack;
             } while (-1 < anim_origin_stack_unit);
-            *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
+            tile->improvements = tile->improvements & 0xfe;
           }
         }
       }
@@ -3283,7 +3262,7 @@ animate_move:
       count = unit_stack_sum(unit2,sum_mode);
       if (count != 0) {
         if (net_session_block.net_host_flag == '\0') {
-          *(byte *)(tile + 1) = *(byte *)(tile + 1) | 1;
+          tile->improvements = tile->improvements | 1;
         }
         else {
           tile_set_improvements(x,y,1,1,1);
@@ -3292,52 +3271,52 @@ animate_move:
     }
     break;
   case 0x71:
-    x = tile_visible_to(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                            *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40),human_civ[0]);
+    x = tile_visible_to(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                            net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1],human_civ[0]);
     if (x != 0) {
-      mapviews_ensure_visible(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                         *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40),
-                         *(iptr *)(((i8 *)&net_session_block.net_stacked_draw_arg2) + net_session_block.net_stacked_draw_first * 0x40));
+      mapviews_ensure_visible(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                         net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1],
+                         net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[2]);
     }
     break;
   case 0x72:
-    map_redraw_tile_all_views(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                       *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40));
+    map_redraw_tile_all_views(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                       net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1]);
     break;
   case 0x73:
-    map_redraw_combat_tiles(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                       *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40),
-                       *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg2) + net_session_block.net_stacked_draw_first * 0x40),
-                       *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg3) + net_session_block.net_stacked_draw_first * 0x40));
+    map_redraw_combat_tiles(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                       net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1],
+                       net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[2],
+                       net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[3]);
     break;
   case 0x74:
     map_redraw_all_views(human_civ[0],1);
     break;
   case 0x75:
-    map_redraw_neighbors_all_views(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                       *(iptr *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40));
+    map_redraw_neighbors_all_views(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                       net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1]);
     break;
   case 0x76:
-    map_redraw_area_all_views(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                       *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40),
-                       *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg2) + net_session_block.net_stacked_draw_first * 0x40),
-                       *(iptr *)(((i8 *)&net_session_block.net_stacked_draw_arg3) + net_session_block.net_stacked_draw_first * 0x40),1);
+    map_redraw_area_all_views(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                       net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1],
+                       net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[2],
+                       net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[3],1);
     break;
   case 0x7c:
-    x = mapviews_tile_visible(*(iptr *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                               *(iptr *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40));
+    x = mapviews_tile_visible(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                               net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1]);
     if (x != 0) {
-      map_animate_explosion(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                         *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40),
-                         *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg2) + net_session_block.net_stacked_draw_first * 0x40));
+      map_animate_explosion(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                         net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1],
+                         net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[2]);
     }
     break;
   case 0x7d:
-    x = mapviews_tile_visible(*(iptr *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                               *(iptr *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40));
+    x = mapviews_tile_visible(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                               net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1]);
     if (x != 0) {
-      map_animate_nuke(*(i32 *)(((i8 *)&net_session_block.net_stacked_draw_args) + net_session_block.net_stacked_draw_first * 0x40),
-                         *(i32 *)(((i8 *)&net_session_block.net_stacked_draw_arg1) + net_session_block.net_stacked_draw_first * 0x40));
+      map_animate_nuke(net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[0],
+                         net_session_block.net_stacked_draw[net_session_block.net_stacked_draw_first].args[1]);
     }
     break;
   case 0xa3:
@@ -3435,105 +3414,105 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
   unwind_state = 0xffffffff;
   gamelist_dirty = '\0';
   unused_flag = 0;
-  if ((((((((((NetSessionExt *)self)->pending_count_7b4 == 0) && (*(int *)((NetSessionExt *)self)->pending_count_7b8 == 0)) &&
-          (((NetSessionExt *)self)->pending_count_7bc == 0)) &&
-         ((*(int *)((NetSessionExt *)self)->pending_count_7c0 == 0 && (((NetSessionExt *)self)->pending_count_7c4 == 0)))) &&
-        (*(int *)((NetSessionExt *)self)->pending_count_7c8 == 0)) &&
-       (((*(int *)((NetSessionExt *)self)->pending_count_7d0 == 0 && (((NetSessionExt *)self)->pending_count_7d4 == 0)) &&
-        ((*(int *)((NetSessionExt *)self)->pending_count_7d8 == 0 &&
-         (((((NetSessionExt *)self)->pending_count_7dc == 0 && (*(int *)((NetSessionExt *)self)->pending_count_7e0 == 0)) && (((NetSessionExt *)self)->pending_count_7e4 == 0)
-          ))))))) && ((*(int *)((NetSessionExt *)self)->pending_count_7e8 == 0 && (((NetSessionExt *)self)->pending_count_7ec == 0)))) &&
-     ((*(int *)((NetSessionExt *)self)->gather_cargo_busy == 0 &&
-      (((((NetSessionExt *)self)->lift_off_map_busy == 0 && (*(int *)((NetSessionExt *)self)->delete_cargo_busy == 0)) &&
-       ((((NetSessionExt *)self)->destroy_redraw_busy == 0 && (flush_pending = XD_InFlushSendBuffer(), flush_pending == 0)))))))) {
-    if (((((NetSessionExt *)self)->deferred_input_kind != 0) && (net_deferred_input_busy == '\0')) &&
+  if ((((((((self->unit_create_busy == 0) && (self->unit_delete_busy == 0)) &&
+          (self->city_create_busy == 0)) &&
+         ((self->city_delete_busy == 0 && (self->net_lock_map_busy == 0)))) &&
+        (self->net_unlock_map_busy == 0)) &&
+       (((self->unit_stack_unlink_busy == 0 && (self->unit_stack_link_busy == 0)) &&
+        ((self->unit_stack_bottom_busy == 0 &&
+         (((self->unit_relocate_busy == 0 && (self->city_acquire_wonder_busy == 0)) && (self->civ_eliminate_busy == 0)
+          ))))))) && ((self->civ_create_busy == 0 && (self->civ_check_destroyed_busy == 0)))) &&
+     ((self->unit_gather_cargo_busy == 0 &&
+      (((self->unit_lift_off_map_busy == 0 && (self->unit_delete_cargo_busy == 0)) &&
+       ((self->unit_destroy_redraw_busy == 0 && (flush_pending = XD_InFlushSendBuffer(), flush_pending == 0)))))))) {
+    if (((self->blocked_input_kind != 0) && (net_deferred_input_busy == '\0')) &&
        (flush_pending2 = XD_InFlushSendBuffer(), flush_pending2 == 0)) {
-      deferred_input = ((NetSessionExt *)self)->deferred_input_kind;
+      deferred_input = (u32)self->blocked_input_kind;
       net_deferred_input_busy = 1;
       dbg_log((const char *)&str_poll_unstacking_xd_flushsendbuffer_block);
-      ((NetSessionExt *)self)->deferred_input_kind = 0;
+      self->blocked_input_kind = 0;
       switch(deferred_input) {
       case 1:
-        if (*(short *)(((NetSessionExt *)self)->deferred_input_window + 0x2dc) != 0) {
-          if (((NetSessionExt *)self)->deferred_input_window == 0) {
+        if (*(short *)((u32)self->blocked_input_window_i32 + 0x2dc) != 0) {
+          if (self->blocked_input_window_i32 == 0) {
             click_wnd = 0;
           }
           else {
-            click_wnd = ((NetSessionExt *)self)->deferred_input_window + 0x48;
+            click_wnd = (u32)self->blocked_input_window_i32 + 0x48;
           }
           wnd_set_active_child(click_wnd);
-          map_window_click(*(i32 *)((NetSessionExt *)self)->deferred_input_arg1,((NetSessionExt *)self)->deferred_input_arg2,
-                             *(i32 *)((NetSessionExt *)self)->deferred_input_arg3);
+          map_window_click(self->blocked_input_arg1_i32,(u32)self->blocked_input_arg2_i32,
+                             self->blocked_input_arg3_i32);
         }
         break;
       case 2:
-        if (*(short *)(((NetSessionExt *)self)->deferred_input_window + 0x2dc) != 0) {
-          if (((NetSessionExt *)self)->deferred_input_window == 0) {
+        if (*(short *)((u32)self->blocked_input_window_i32 + 0x2dc) != 0) {
+          if (self->blocked_input_window_i32 == 0) {
             dblclick_wnd = 0;
           }
           else {
-            dblclick_wnd = ((NetSessionExt *)self)->deferred_input_window + 0x48;
+            dblclick_wnd = (u32)self->blocked_input_window_i32 + 0x48;
           }
           wnd_set_active_child(dblclick_wnd);
-          map_window_double_click(*(i32 *)((NetSessionExt *)self)->deferred_input_arg1,((NetSessionExt *)self)->deferred_input_arg2);
+          map_window_double_click(self->blocked_input_arg1_i32,(u32)self->blocked_input_arg2_i32);
         }
         break;
       case 4:
         input_kind = net_session_block.blocked_input_char_pending;
         input_char = (input_char & 0xffffff00 | (byte)(net_session_block.blocked_input_char));
-        map_window_key(*(i32 *)((NetSessionExt *)self)->deferred_input_arg1);
+        map_window_key(self->blocked_input_arg1_i32);
         if (input_kind == 3) {
           map_window_ascii(input_char);
         }
         break;
       case 5:
-        menu_command(*(i32 *)((NetSessionExt *)self)->deferred_input_arg1,((NetSessionExt *)self)->deferred_input_arg2);
+        menu_command(self->blocked_input_arg1_i32,(u32)self->blocked_input_arg2_i32);
         break;
       case 6:
-        if (((city_window_block.city_window_closed == 0) && (cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].id != 0)) &&
-           ((int)cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].owner == ((NetSessionExt *)self)->deferred_input_arg2)) {
-          city_window_on_mouse(*(i32 *)((NetSessionExt *)self)->deferred_input_arg3,((NetSessionExt *)self)->deferred_input_arg4,
-                             *(i32 *)((NetSessionExt *)self)->deferred_input_arg5);
+        if (((city_window_block.city_window_closed == 0) && (cities[self->blocked_input_arg1_i32].id != 0)) &&
+           ((int)cities[self->blocked_input_arg1_i32].owner == (u32)self->blocked_input_arg2_i32)) {
+          city_window_on_mouse(self->blocked_input_arg3_i32,(u32)self->blocked_input_arg4_i32,
+                             self->blocked_input_arg5_i32);
         }
         break;
       case 7:
-        if (((city_window_block.city_window_closed == 0) && (cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].id != 0)) &&
-           ((int)cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].owner == ((NetSessionExt *)self)->deferred_input_arg2)) {
-          city_button_buy(*(i32 *)((NetSessionExt *)self)->deferred_input_arg3);
+        if (((city_window_block.city_window_closed == 0) && (cities[self->blocked_input_arg1_i32].id != 0)) &&
+           ((int)cities[self->blocked_input_arg1_i32].owner == (u32)self->blocked_input_arg2_i32)) {
+          city_button_buy(self->blocked_input_arg3_i32);
         }
         break;
       case 8:
-        if (((city_window_block.city_window_closed == 0) && (cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].id != 0)) &&
-           ((int)cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].owner == ((NetSessionExt *)self)->deferred_input_arg2)) {
-          city_button_change(*(i32 *)((NetSessionExt *)self)->deferred_input_arg3);
+        if (((city_window_block.city_window_closed == 0) && (cities[self->blocked_input_arg1_i32].id != 0)) &&
+           ((int)cities[self->blocked_input_arg1_i32].owner == (u32)self->blocked_input_arg2_i32)) {
+          city_button_change(self->blocked_input_arg3_i32);
         }
         break;
       case 9:
-        if (((city_window_block.city_window_closed == 0) && (cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].id != 0)) &&
-           ((int)cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].owner == ((NetSessionExt *)self)->deferred_input_arg2)) {
-          city_button_view(*(i32 *)((NetSessionExt *)self)->deferred_input_arg3);
+        if (((city_window_block.city_window_closed == 0) && (cities[self->blocked_input_arg1_i32].id != 0)) &&
+           ((int)cities[self->blocked_input_arg1_i32].owner == (u32)self->blocked_input_arg2_i32)) {
+          city_button_view(self->blocked_input_arg3_i32);
         }
         break;
       case 10:
-        if (((city_window_block.city_window_closed == 0) && (cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].id != 0)) &&
-           ((int)cities[*(int *)((NetSessionExt *)self)->deferred_input_arg1].owner == ((NetSessionExt *)self)->deferred_input_arg2)) {
-          city_button_rename(*(i32 *)((NetSessionExt *)self)->deferred_input_arg3);
+        if (((city_window_block.city_window_closed == 0) && (cities[self->blocked_input_arg1_i32].id != 0)) &&
+           ((int)cities[self->blocked_input_arg1_i32].owner == (u32)self->blocked_input_arg2_i32)) {
+          city_button_rename(self->blocked_input_arg3_i32);
         }
       }
       net_deferred_input_busy = '\0';
     }
-    *(int *)((NetSessionExt *)self)->process_depth = *(int *)((NetSessionExt *)self)->process_depth + 1;
-    if ((int)((NetSessionExt *)self)->max_process_depth < *(int *)((NetSessionExt *)self)->process_depth) {
-      ((NetSessionExt *)self)->max_process_depth = *(u32 *)((NetSessionExt *)self)->process_depth;
+    self->net_poll_depth = self->net_poll_depth + 1;
+    if (self->net_poll_depth_peak < self->net_poll_depth) {
+      self->net_poll_depth_peak = self->net_poll_depth;
     }
     while (max_msgs != 0) {
-      if (((*(int *)((NetSessionExt *)self)->stacked_draw_active == 0) && (*(int *)((NetSessionExt *)self)->map_redraw_busy_2 == 0)) &&
-         (0 < (int)((NetSessionExt *)self)->stacked_draw_count)) {
-        ((NetSessionExt *)self)->stacked_draw_active[0] = 1;
-        ((NetSessionExt *)self)->stacked_draw_active_b1[0] = '\0';
-        ((NetSessionExt *)self)->stacked_draw_active_b2[0] = '\0';
-        ((NetSessionExt *)self)->stacked_draw_active_b3[0] = '\0';
-        if ((int)((NetSessionExt *)self)->stacked_draw_count < 0x22) {
+      if (((self->unit_stack_check_enabled == 0) && (self->map_redraw_busy == 0)) &&
+         (0 < (int)self->net_stacked_draw_count)) {
+        ((u8 *)&self->unit_stack_check_enabled)[0] = 1;
+        ((u8 *)&self->unit_stack_check_enabled)[1] = '\0';
+        ((u8 *)&self->unit_stack_check_enabled)[2] = '\0';
+        ((u8 *)&self->unit_stack_check_enabled)[3] = '\0';
+        if ((int)self->net_stacked_draw_count < 0x22) {
           unit4 = 1;
         }
         else {
@@ -3542,10 +3521,10 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         for (; 0 < unit4; unit4--) {
           net_stacked_draw_run_next();
         }
-        ((NetSessionExt *)self)->stacked_draw_active[0] = '\0';
-        ((NetSessionExt *)self)->stacked_draw_active_b1[0] = '\0';
-        ((NetSessionExt *)self)->stacked_draw_active_b2[0] = '\0';
-        ((NetSessionExt *)self)->stacked_draw_active_b3[0] = '\0';
+        ((u8 *)&self->unit_stack_check_enabled)[0] = '\0';
+        ((u8 *)&self->unit_stack_check_enabled)[1] = '\0';
+        ((u8 *)&self->unit_stack_check_enabled)[2] = '\0';
+        ((u8 *)&self->unit_stack_check_enabled)[3] = '\0';
       }
       if ((net_session_block.net_msgq_normal_count < 0x12d) && (net_session_block.net_msgq_priority_count < 0x22)) {
         ui_pump_messages();
@@ -3558,7 +3537,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         dequeue_wait = 1;
       }
       civ = net_msgq_dequeue
-                        ((NetMessageQueue *)(self + 0x2c1a),(iptr)&sender,(iptr)&msg,
+                        (&self->msg_queue,(iptr)&sender,(iptr)&msg,
                          (iptr)&msg_size,dequeue_wait);
       if (civ == '\0') break;
       if (msg == (int *)0x0) {
@@ -3566,7 +3545,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
       }
       msg_hdr = msg;
       if (*msg == 0x66606660) {
-        *(int *)(((i8 *)&net_session_block.nm_recv_counts) + msg[1] * 4) = *(int *)(((i8 *)&net_session_block.nm_recv_counts) + msg[1] * 4) + 1;
+        net_session_block.nm_recv_counts_by_type[msg[1]] = net_session_block.nm_recv_counts_by_type[msg[1]] + 1;
         if ((0x35 < msg[1]) && (civ_saved_cursor_x_block.game_setup_complete == 0)) {
           operator_delete(msg);
           break;
@@ -3575,16 +3554,16 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         switch(msg[1]) {
         case 0:
           hello_msg = msg;
-          *(int *)(((i8 *)&net_session_block.nm_recv_counts) + msg[0x1c] * 4) =
-               *(int *)(((i8 *)&net_session_block.nm_recv_counts) + msg[0x1c] * 4) + 1;
+          net_session_block.nm_recv_counts_by_type[msg[0x1c]] =
+               net_session_block.nm_recv_counts_by_type[msg[0x1c]] + 1;
           if (msg[0x1c] == 1) {
-            if (((*(char *)((int)&((NetSessionExt *)self)->session_flags + 3) != '\0') && (net_session_block.net_host_handoff_stage == '\0')) &&
+            if (((self->net_host_flag != '\0') && (net_session_block.net_host_handoff_stage == '\0')) &&
                (net_session_block.net_connection_type != 0)) {
               net_send_message(2,0,0,0,0,0,0,0,0,0);
             }
           }
           else if (msg[0x1c] == 2) {
-            net_game_list_add(self,(iptr)msg);
+            net_game_list_add(self,(NetServerInfoMsg *)msg);
             gamelist_dirty = 1;
           }
           break;
@@ -3592,18 +3571,18 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           dbg_log((const char *)&str_received_unknown_message_type);
           break;
         case 4:
-          crt_memcpy(self + 0x40,msg + 4,0x270);
+          crt_memcpy((void *)self->net_player_count,msg + 4,0x270);
           for (unit4 = 0; unit4 < 7; unit4++) {
-            if ((*(char *)((int)self + unit4 * 0x54 + 0x251) != '\0') &&
-               (*(int *)((int)self + unit4 * 0x54 + 0x204) == *(int *)((NetSessionExt *)self)->local_player_net_id)) {
-              ((NetSessionExt *)self)->local_player_slot = unit4;
+            if ((self->net_slots[unit4].active != '\0') &&
+               (self->net_slots[unit4].id == self->net_server_conn_id)) {
+              self->net_local_slot = unit4;
               break;
             }
           }
           break;
         case 5:
           now = timer_ticks();
-          ((NetSessionExt *)self)->last_message_time = now;
+          self->net_wait_start_ticks_i32 = now;
           break;
         case 6:
           net_session_block.loaded_file_kind = (i16)msg[4];
@@ -3635,10 +3614,10 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         case 0xd:
           break;
         case 0xe:
-          ((NetSessionExt *)self)->ack_message_counts[0]++;
+          self->net_host_handoff_stage++;
           break;
         case 0xf:
-          ((NetSessionExt *)self)->ack_message_counts[0]++;
+          self->net_host_handoff_stage++;
           break;
         case 0x10:
           net_session_block.net_players_awaited--;
@@ -3647,11 +3626,11 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_send_message(0x13,sender,0,0,0,0,0,0,0,0);
           break;
         case 0x13:
-          if (net_session_block.net_session[0] != 0) {
-            crt_strcpy((char *)((void *)(net_session_block.net_session[0] + 0x88)),(const char *)(msg + 4));
-            crt_strcpy((char *)((void *)(net_session_block.net_session[0] + 0xa8)),(const char *)(msg_hdr + 0x20));
-            crt_strcpy((char *)((void *)(net_session_block.net_session[0] + 200)),(const char *)(msg_hdr + 0x28));
-            crt_strcpy((char *)((void *)(net_session_block.net_session[0] + 0xe8)),(const char *)(msg_hdr + 0x10));
+          if (net_session_block.gamelist_view != 0) {
+            crt_strcpy(net_session_block.gamelist_view->server_address,(const char *)(msg + 4));
+            crt_strcpy(net_session_block.gamelist_view->server_game_name,(const char *)(msg_hdr + 0x20));
+            crt_strcpy(net_session_block.gamelist_view->server_info_c8,(const char *)(msg_hdr + 0x28));
+            crt_strcpy(net_session_block.gamelist_view->server_version,(const char *)(msg_hdr + 0x10));
           }
           crt_strcpy(((i8 *)&net_session_block.net_server_address),(const char *)(msg_hdr + 4));
           crt_strcpy(((i8 *)&net_session_block.net_game_name),(const char *)(msg_hdr + 0x20));
@@ -3665,7 +3644,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           city_changed = 0;
           units_saved = 0;
           turn_civ_changed = 0;
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           if (diffeng_mirror_buf != 0) {
             for (section_idx = 0; section_idx < (int)unit; section_idx++) {
               section_id2 = *payload;
@@ -3706,10 +3685,10 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
                 section_id2 = section_id2 & 0x7fff;
                 rle_src_end = section_size + (int)payload;
                 rle_src = payload;
-                decoded_size = diffeng_rle_decoded_size((iptr)&rle_src);
+                decoded_size = diffeng_rle_decoded_size((RleStream *)&rle_src);
                 rle_dst = (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section_id2 * 6] + section_offset;
                 rle_dst_end = rle_dst + decoded_size;
-                diffeng_rle_decode((iptr)&rle_src);
+                diffeng_rle_decode((RleStream *)&rle_src);
                 crt_memcpy((void *)(*(int *)(((i8 *)&diffeng_sections_block.diffeng_section_offsets) + section_id2 * 0x18) + section_offset + diffeng_mirror_buf),
                              (const void *)((((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section_id2 * 6] + section_offset),decoded_size);
               }
@@ -3789,7 +3768,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           crt_memcpy(attitude_names,payload,0x24);
           break;
         case 0x25:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&scenario_events_loaded) = unit;
           (*(uptr *)&unit_types_block.scenario_event_count) = civ3;
           if (unit != 0) {
@@ -3801,11 +3780,11 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         case 0x27:
           break;
         case 0x28:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&net_session_block.net_session_phase) = unit;
           break;
         case 0x2a:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) = (ushort)unit;
           game.human_players = game.human_players & (byte)unit;
           net_session_block.nm_lock_nation_count_i32++;
@@ -3816,8 +3795,8 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         case 0x2c:
           break;
         case 0x2d:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          *(i32 *)(((i8 *)&net_session_block.net_civ_drop_requested) + unit * 4) = 1;
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          net_session_block.net_civ_drop_requested[unit] = 1;
           net_drop_flagged_players();
           break;
         case 0x2e:
@@ -3825,7 +3804,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
             err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_gnetmgr_bserver,(iptr)&str_d_ss_franklinton_netmgr_poll_cpp_4,0x22a);
           }
           if (net_session_block.net_host_handoff_stage == '\0') {
-            city = net_host_register_player_civ((iptr)msg_hdr,sender);
+            city = net_host_register_player_civ((NetPlayerInfoMsg *)msg_hdr,sender);
             if (city == 0) {
               net_send_message(0xc,sender,0,0,0,0,0,0,0,0);
             }
@@ -3857,18 +3836,18 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
                 do {
                   city = XD_FlushSendBuffer(5000);
                   if (city == 0) break;
-                  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),100,0);
+                  net_process_messages(&net_session_block,100,0);
                   city = timer_ticks();
                 } while (17999 < city - wait_start);
                 net_send_message(0x66,0xff,0,0,0,0,0,0,0,0);
                 dialog_close(&join_dialog);
                 mp_turn_timer_resume(0);
                 for (slot = 0;
-                    (slot < 7 && (*(int *)(((i8 *)&net_session_block.net_player_slots) + slot * 0x54) != sender));
+                    (slot < 7 && (net_session_block.net_slots[slot].id != sender));
                     slot = slot + 1) {
                 }
                 if (slot < 7) {
-                  civ_flag = ((NetSessionExt *)self)->civ_flags + (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15] * 4 + 4;
+                  civ_flag = (u8 *)self->net_civ_new_player_flags + (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15] * 4;
                   civ_flag[0] = 1;
                   civ_flag[1] = '\0';
                   civ_flag[2] = '\0';
@@ -3886,7 +3865,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         case 0x2f:
           if (net_session_block.net_host_handoff_stage == '\0') {
             if (net_session_block.net_player_count[0] < net_session_block.net_max_players) {
-              net_add_player(self,(iptr)msg);
+              net_add_player(self,(NetPlayerNodeMsg *)msg);
               if (((*(int * *)&net_session_block.net_lobby_list) == (int *)0x0) || (*(*(int * *)&net_session_block.net_lobby_list) == 0)) {
                 if (0 < (int)(*(uptr *)&net_session_block.net_session_phase)) {
                   net_send_message(0x28,sender,(*(uptr *)&net_session_block.net_session_phase),0,0,0,0,0,0,0);
@@ -3908,7 +3887,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           }
           break;
         case 0x30:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           if (((int)(short)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) & 1 << ((byte)civ3 & 0x1f)) == 0) {
             (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) = (ushort)(1 << ((byte)civ3 & 0x1f)) | (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask);
             net_send_message(0x26,sender,(int)(short)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask),0,0,0,0,0,0,0);
@@ -3920,7 +3899,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           }
           break;
         case 0x31:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           game.human_players = game.human_players & (byte)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask);
           if (((int)(short)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) & 1 << ((byte)civ3 & 0x1f)) != 0) {
             (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) = ~(ushort)(1 << ((byte)civ3 & 0x1f)) & (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask);
@@ -3930,23 +3909,23 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           }
           break;
         case 0x32:
-          *(i32 *)(((i8 *)&net_session_block.net_lost_conn_by_player) + sender * 4) = 0xffffffff;
+          net_session_block.net_lost_conn_by_player[sender] = 0xffffffff;
           net_remove_player(self,sender);
-          if ((self->player_stats != 0) &&
-             (drop_counter = (int *)(self->player_stats + 0x54 + sender * 4), *drop_counter = *drop_counter + 1,
+          if ((self->net_lobby_list != 0) &&
+             (drop_counter = (int *)&self->net_lobby_list->drop_counts[sender], *drop_counter = *drop_counter + 1,
              *(*(int * *)&net_session_block.net_lobby_list) != 0)) {
             lobby_refresh_player_list();
           }
           break;
         case 0x33:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           civ_saved_cursor_x_block.mp_double_production = (short)unit;
           civ_saved_cursor_x_block.mp_double_moves = (short)civ3;
           net_session_block.mp_simultaneous_moves = (char)unit3;
           civ_saved_cursor_x_block.mp_simultaneous_setting = (short)(char)unit3;
           break;
         case 0x34:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           civ_eliminate(unit,0,0);
           net_send_message(0x35,sender,0,0,0,0,0,0,0,0);
           break;
@@ -3954,7 +3933,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_session_block.net_kill_or_quit_ack = 1;
           break;
         case 0x37:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           if ((-1 < (int)unit) && (units[unit].id != 0)) {
             x3 = (int)units[unit].x;
             y4 = (int)units[unit].y;
@@ -3964,28 +3943,28 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           XD_FlushSendBuffer(5000);
           break;
         case 0x38:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_session_block.net_unit_deleted_ack = 1;
           break;
         case 0x39:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           city_delete(unit,0);
           net_send_message(0x3a,sender,unit,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3a:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_session_block.net_city_deleted_ack = 1;
           crt_memcpy(cities + unit,payload,0x58);
           break;
         case 0x3b:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           result = city_create(unit,civ3,unit3);
           net_send_message(0x3c,sender,result,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3c:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_session_block.nm_city_created_result = unit;
           if (unit != 0xffffffff) {
             crt_memcpy(cities + unit,payload,0x58);
@@ -3993,20 +3972,20 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           }
           break;
         case 0x3d:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           result = unit_create(unit,civ3,unit3,y2);
           net_send_message(0x3e,sender,result,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3e:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_session_block.nm_unit_created_result = unit;
           if (unit != 0xffffffff) {
             game.num_units = (i16)civ3;
           }
           break;
         case 0x3f:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           unit_stack_unlink(unit,1);
           net_send_message(0x40,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
@@ -4015,7 +3994,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_session_block.nm_unit_picked_up_count = 1;
           break;
         case 0x41:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           unit_stack_link(unit,civ3,unit3,1);
           net_send_message(0x42,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
@@ -4024,7 +4003,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_session_block.nm_unit_put_down_count = 1;
           break;
         case 0x43:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           unit_move_to_stack_bottom(unit,1);
           net_send_message(0x44,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
@@ -4033,7 +4012,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_session_block.nm_bottomed_count = 1;
           break;
         case 0x45:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           unit_relocate(unit,civ3,unit3,1);
           net_send_message(0x46,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
@@ -4042,26 +4021,26 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_session_block.nm_unit_relocated_count = 1;
           break;
         case 0x47:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           result = city_acquire_wonder(unit,civ3,unit3,y2,x2);
           net_send_message(0x48,sender,result,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x48:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&net_session_block.nm_wonder_acquired_result) = unit;
           break;
         case 0x49:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           ret_val = unit_gather_cargo(unit,civ3,1);
           net_send_message(0x4a,sender,ret_val,0,0,0,0,0,0,0);
           break;
         case 0x4a:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_session_block.nm_ship_stacked_result = unit;
           break;
         case 0x4b:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           unit_lift_off_map(unit,1);
           net_send_message(0x4c,sender,0,0,0,0,0,0,0,0);
           break;
@@ -4069,7 +4048,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_session_block.nm_unit_stacked_count = 1;
           break;
         case 0x4d:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           unit_delete_with_cargo(unit,1);
           net_send_message(0x4e,sender,0,0,0,0,0,0,0,0);
           break;
@@ -4077,7 +4056,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_session_block.nm_safely_deleted_count = 1;
           break;
         case 0x4f:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           unit_destroy_redraw(unit,1);
           net_send_message(0x50,sender,0,0,0,0,0,0,0,0);
           break;
@@ -4085,35 +4064,35 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_session_block.nm_visibly_deleted_count = 1;
           break;
         case 0x51:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_lock_map(unit,civ3,unit3,y2,x2,0);
           break;
         case 0x52:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_unlock_map(unit,0);
           net_send_message(0x54,sender,unit,0,0,0,0,0,0,0);
           break;
         case 0x53:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          *(uptr *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + unit * 0x18) = civ3;
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          net_map_lock_slots_block.net_map_locks[unit].replies = civ3;
           break;
         case 0x54:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          *(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_slots) + unit * 0x18) = *(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_slots) + unit * 0x18) + 1;
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          net_map_lock_slots_block.net_map_locks[unit].state = net_map_lock_slots_block.net_map_locks[unit].state + 1;
           break;
         case 0x55:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          *(uptr *)(((i8 *)&net_map_lock_slots_block.net_map_lock_src_x) + unit * 0x18) = civ3;
-          *(uptr *)(((i8 *)&net_map_lock_slots_block.net_map_lock_src_y) + unit * 0x18) = unit3;
-          *(iptr *)(((i8 *)&net_map_lock_slots_block.net_map_lock_dst_x) + unit * 0x18) = y2;
-          *(iptr *)(((i8 *)&net_map_lock_slots_block.net_map_lock_dst_y) + unit * 0x18) = x2;
-          *(i32 *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + unit * 0x18) = 0;
-          *(i32 *)(((i8 *)&net_map_lock_slots_block.net_map_lock_slots) + unit * 0x18) =
-               *(i32 *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + unit * 0x18);
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          net_map_lock_slots_block.net_map_locks[unit].src_x = civ3;
+          net_map_lock_slots_block.net_map_locks[unit].src_y = unit3;
+          net_map_lock_slots_block.net_map_locks[unit].dst_x = y2;
+          net_map_lock_slots_block.net_map_locks[unit].dst_y = x2;
+          net_map_lock_slots_block.net_map_locks[unit].replies = 0;
+          net_map_lock_slots_block.net_map_locks[unit].state =
+               net_map_lock_slots_block.net_map_locks[unit].replies;
           break;
         case 0x56:
         case 0x57:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_session_block.net_vote_replies_pending--;
           if (unit == 2) {
             net_session_block.net_vote_status = 0xffffffff;
@@ -4126,7 +4105,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_apply_tile_updates((iptr)payload);
           break;
         case 0x5a:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           unit_lift_off_map(unit3,0);
           unit_stack_clear_visibility(unit3);
           if (y2 == 0) {
@@ -4156,25 +4135,25 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           dbg_log((const char *)&str_hold_off);
           break;
         case 0x5f:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           result = civ_create(unit);
           net_send_message(0x61,sender,result,0,0,0,0,0,0,0);
           break;
         case 0x60:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           result = civ_check_destroyed(unit,civ3);
           net_send_message(0x62,sender,result,0,0,0,0,0,0,0);
           break;
         case 0x61:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&net_session_block.nm_new_civ_ack_result) = unit;
           break;
         case 0x62:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&net_session_block.nm_kill_civ_ack_result) = unit;
           break;
         case 99:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           civ2 = civ3;
           unit5 = unit;
           civ = units[unit].owner;
@@ -4200,20 +4179,20 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_send_state_diff(0xff,2,0,0,1);
           break;
         case 100:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           casualty_log_add(unit,civ3,unit3,y2,x2);
           break;
         case 0x65:
           dialog_ctor(&wait_dialog,0x4000);
           unwind_state = 0;
-          saved_busy = ((NetSessionExt *)self)->popup_busy;
-          ((NetSessionExt *)self)->popup_busy = 1;
+          saved_busy = (u32)self->net_popup_in_progress_i32;
+          self->net_popup_in_progress_i32 = 1;
           mp_turn_timer_stop(0);
           net_session_block.nm_continue_after_join_count = 0;
           dlg_pending_idle_callback = ((i8 *)net_game_xmit_wait_idle);
           popup_game_sprite_flags((const char *)&str_waitongamexmit,0x2000000,(iptr)&popup_info_icon_sprite,0);
           dialog_close(&wait_dialog);
-          ((NetSessionExt *)self)->popup_busy = saved_busy;
+          self->net_popup_in_progress_i32 = saved_busy;
           mp_turn_timer_resume(0);
           unwind_state = 0xffffffff;
           /* inlined unwind funclet 00482311 */ { dialog_dtor(&wait_dialog); }
@@ -4221,14 +4200,14 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         case 0x66:
           break;
         case 0x68:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           header_size = 0x2c;
           chat_receive_message
-                    ((WindowObjectView *)((i8 *)&chat_wnd_block.chat_wnd),unit,civ3,unit3,(iptr)(msg + 0xb)
+                    (&chat_wnd_block,unit,civ3,unit3,(iptr)(msg + 0xb)
                     );
           break;
         case 0x69:
-          had_pending = *(int *)((NetSessionExt *)self)->stacked_draw_active != 0;
+          had_pending = self->unit_stack_check_enabled != 0;
           if (had_pending) {
             net_session_block.net_stacked_draw_last = (net_session_block.net_stacked_draw_first + 1) % 100;
           }
@@ -4252,7 +4231,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           wnd_blit_surface_rect((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&caption_rect);
           break;
         case 0x6a:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           header_size = 0x2c;
           if ((unit == 0x3d) &&
              (((1 << ((byte)(*(i8 *)&human_civ) & 0x1f) & (uint)game.human_players) == 0 ||
@@ -4271,18 +4250,18 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
               else {
                 popup_data = msg + 0xb;
               }
-              net_popup_queue_push(unit,civ3,unit3,y2,x2,(i32)(popup_data),extra_len);
+              net_popup_queue_push(unit,civ3,unit3,y2,x2,(i32)popup_data,extra_len);
             }
           }
           break;
         case 0x6b:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           game.game_flags = (u16)unit;
           (*(uptr *)&game_over_reason) = civ3;
           (*(uptr *)&year_table_start_years_block.spaceship_winner_civ) = unit3;
           break;
         case 0x6c:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&civ_saved_cursor_x_block.mp_turn_time_limit_ms) = unit;
           if (unit == 0) {
             map_views_block.main_view_timer_shown[0] = 0;
@@ -4311,7 +4290,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           mp_turn_timer_resume(0);
           break;
         case 0x70:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           if (y3 != 0) {
             x = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[y2] + civ3);
             city = city_at(x,(int)(((i8 *)&dir_dy_table_block.dir_dy_table))[y2] + unit3);
@@ -4324,18 +4303,18 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_stacked_draw_push(msg_hdr[1],(iptr)&unit,(iptr)payload);
           break;
         case 0x71:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           break;
         case 0x72:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           city = mapviews_tile_visible(unit,civ3);
           if (city != 0) {
             net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           }
           break;
         case 0x73:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           city = mapviews_tile_visible(unit,civ3);
           if ((city != 0) || (city = mapviews_tile_visible(unit3,y2), city != 0)) {
             net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
@@ -4345,21 +4324,21 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           net_stacked_draw_push(msg[1],(iptr)&unit,0);
           break;
         case 0x75:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           city = mapviews_tile_visible(unit,civ3);
           if (city != 0) {
             net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           }
           break;
         case 0x76:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           city = mapviews_tile_visible(unit,civ3);
           if (city != 0) {
             net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           }
           break;
         case 0x77:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&sprite_picker_sprite_block.net_can_escape_reply) = unit;
           break;
         case 0x78:
@@ -4369,53 +4348,53 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           status_redraw(1);
           break;
         case 0x7a:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           snd_play_effect(unit,civ3,0,0);
           break;
         case 0x7b:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           font_size16_bold_block.net_bribe_answer = unit;
           break;
         case 0x7c:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           break;
         case 0x7d:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           break;
         case 0x7e:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           diplo_ally_demand_help(unit,civ3);
           break;
         case 0x7f:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           advisor_refresh_if_open(unit);
           break;
         case 0x80:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&advisor_window_block.mp_meeting_reply) = unit;
           break;
         case 0x81:
-          if ((((((i32 *)&net_session_block.net_slot_civs))[sender * 0x15] == (*(uptr *)&parley_wnd_block.parley_other_civ)) || ((*(uptr *)&parley_wnd_block.parley_other_civ) == 0xfffffffe))
-             || (parley_wnd_block.parley_wnd_closed == 0)) {
-            if (parley_wnd_block.parley_wnd_closed == 0) {
+          if ((((((i32 *)&net_session_block.net_slot_civs))[sender * 0x15] == parley_wnd_block.other_civ) || (parley_wnd_block.other_civ == 0xfffffffe))
+             || (parley_wnd_block.closed == 0)) {
+            if (parley_wnd_block.closed == 0) {
               parley_wnd_close();
             }
-            else if ((*(uptr *)&parley_wnd_block.parley_other_civ) == 0xfffffffe) {
-              (*(uptr *)&parley_wnd_block.parley_other_civ) = 0xffffffff;
+            else if (parley_wnd_block.other_civ == 0xfffffffe) {
+              parley_wnd_block.other_civ = 0xffffffff;
             }
             mp_meeting_pending = 0;
           }
           break;
         case 0x82:
-          if (parley_wnd_block.parley_received_offer != (void *)0x0) {
-            operator_delete(parley_wnd_block.parley_received_offer);
-            parley_wnd_block.parley_received_offer = (void *)0x0;
+          if ((void *)parley_wnd_block.received_offer != (void *)0x0) {
+            operator_delete((void *)parley_wnd_block.received_offer);
+            parley_wnd_block.received_offer = 0;
           }
-          parley_wnd_block.parley_received_offer = operator_new(msg_size);
-          if (parley_wnd_block.parley_received_offer != (void *)0x0) {
-            crt_memcpy(parley_wnd_block.parley_received_offer,msg,msg_size);
+          parley_wnd_block.received_offer = (ParleyOfferMsg *)operator_new(msg_size);
+          if ((void *)parley_wnd_block.received_offer != (void *)0x0) {
+            crt_memcpy((void *)parley_wnd_block.received_offer,msg,msg_size);
           }
           parley_poll_net_replies();
           break;
@@ -4429,19 +4408,19 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           parley_poll_net_replies();
           break;
         case 0x86:
-          parley_execute_transaction((iptr)msg);
+          parley_execute_transaction((ParleyOfferMsg *)msg);
           break;
         case 0x87:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           city_window_on_unit_change
                     ((FrameWindow *)((i8 *)&city_window_block.city_window),unit,civ3,unit3);
           break;
         case 0x88:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           city_window_refresh_if_city((FrameWindow *)((i8 *)&city_window_block.city_window),unit);
           break;
         case 0x89:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           city_window_close_if_city((WindowObjectView *)((i8 *)&city_window_block.city_window),unit);
           break;
         case 0x8a:
@@ -4452,7 +4431,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         case 0x8b:
           break;
         case 0x8c:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + unit * 4) = *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + unit * 4) + 1;
           break;
         case 0x8d:
@@ -4460,7 +4439,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         case 0x8e:
           break;
         case 0x8f:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + unit * 4) = *(int *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + unit * 4) + 1;
           for (unit4 = 0; unit4 < game.num_units; unit4++) {
             if ((units[unit4].id != 0) && ((int)units[unit4].owner == unit)) {
@@ -4469,43 +4448,43 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           }
           break;
         case 0x90:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           tile_set_improvements(unit,civ3,unit3,y2,x2);
           break;
         case 0x91:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           tile_set_terrain(unit,civ3,unit3,y2);
           break;
         case 0x92:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           tile_set_visible(unit,civ3,unit3,y2,x2);
           break;
         case 0x93:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           tile_set_fertility(unit,civ3,unit3,y2);
           break;
         case 0x94:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           tile_set_owner(unit,civ3,unit3,y2);
           break;
         case 0x95:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           tile_set_landmass(unit,civ3,unit3,y2);
           break;
         case 0x96:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           tile_set_radius_civ(unit,civ3,unit3,y2);
           break;
         case 0x97:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           known_set(unit,civ3,unit3,y2,x2,y3);
           break;
         case 0x98:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           *(char *)&civs[unit].attitude[civ3] = (char)unit3;
           break;
         case 0x99:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           *(i32 *)(((i8 *)&net_meet_pending_flags) + civ3 * 4) = 1;
           *(uptr *)(((i8 *)&map_views_block.net_meet_pending_ai_civ) + civ3 * 4) = unit;
           *(uptr *)(((i8 *)&map_views_block.net_meet_pending_civ) + civ3 * 4) = civ3;
@@ -4513,12 +4492,12 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           *(iptr *)(((i8 *)&map_views_block.net_meet_pending_y) + civ3 * 4) = y2;
           break;
         case 0x9a:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           (*(uptr *)&net_session_block.net_move_anim_sound) = unit;
           (*(uptr *)&net_session_block.net_move_anim_sound_arg) = civ3;
           break;
         case 0x9b:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           civ_give_advance(unit,civ3,unit3,y2,0);
           break;
         case 0x9c:
@@ -4530,26 +4509,26 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           taxrate_enforce_max_rate((*(i8 *)&human_civ));
           break;
         case 0x9f:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           civ_select_government_dialog((*(i8 *)&human_civ),unit);
           break;
         case 0xa0:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           diplo_ai_review_relations(unit,civ3);
           break;
         case 0xa1:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           diplo_ai_seek_war_ally(unit,civ3);
           break;
         case 0xa2:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          *(int *)(((i8 *)&net_session_block.net_civ_turn_ended) + unit * 4) = *(int *)(((i8 *)&net_session_block.net_civ_turn_ended) + unit * 4) + 1;
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          net_session_block.net_civ_turn_ended[unit] = net_session_block.net_civ_turn_ended[unit] + 1;
           break;
         case 0xa3:
           net_stacked_draw_push(msg[1],(iptr)&unit,0);
           break;
         case 0xa4:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
           ret_val = (iptr)(civ_name_plural(unit));
           text_set_string_arg(0,(const char *)ret_val);
           ret_val = (iptr)(civ_name_plural(civ3));
@@ -4572,54 +4551,54 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           }
           break;
         case 0xa5:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          if ((parley_wnd_block.parley_wnd_closed == 0) && ((*(uptr *)&parley_wnd_block.parley_other_civ) == unit)) {
-            parley_wnd_block.parley_remote_cities_revealed = (byte)civ3;
-            if (((parley_wnd_block.parley_mode == 0xe) && (parley_wnd_block.parley_barter_want_kind == 3)) ||
-               ((parley_wnd_block.parley_mode == 0xf && (parley_wnd_block.parley_demand_kind == 3)))) {
-              ctrl_disable(parley_wnd_block.parley_request_done_button);
-              ctrl_disable(parley_wnd_block.parley_request_origin_button);
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          if ((parley_wnd_block.closed == 0) && (parley_wnd_block.other_civ == unit)) {
+            parley_wnd_block.remote_cities_revealed = (byte)civ3;
+            if ((((int)parley_wnd_block.mode == 0xe) && ((int)parley_wnd_block.exchange_kind[1] == 3)) ||
+               (((int)parley_wnd_block.mode == 0xf && ((int)parley_wnd_block.demand_kind == 3)))) {
+              ctrl_disable((Control *)parley_wnd_block.info_hide_buttons[1]);
+              ctrl_disable((Control *)parley_wnd_block.info_show_buttons[1]);
               parley_draw_city_list(1);
             }
           }
           break;
         case 0xa6:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          if ((parley_wnd_block.parley_wnd_closed == 0) && ((*(uptr *)&parley_wnd_block.parley_other_civ) == unit)) {
-            parley_wnd_block.parley_remote_cities_revealed = (byte)civ3;
-            if (((parley_wnd_block.parley_mode == 0xe) && (parley_wnd_block.parley_barter_want_kind == 3)) ||
-               ((parley_wnd_block.parley_mode == 0xf && (parley_wnd_block.parley_demand_kind == 3)))) {
-              ctrl_enable(parley_wnd_block.parley_request_done_button);
-              ctrl_enable(parley_wnd_block.parley_request_origin_button);
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          if ((parley_wnd_block.closed == 0) && (parley_wnd_block.other_civ == unit)) {
+            parley_wnd_block.remote_cities_revealed = (byte)civ3;
+            if ((((int)parley_wnd_block.mode == 0xe) && ((int)parley_wnd_block.exchange_kind[1] == 3)) ||
+               (((int)parley_wnd_block.mode == 0xf && ((int)parley_wnd_block.demand_kind == 3)))) {
+              ctrl_enable((Control *)parley_wnd_block.info_hide_buttons[1]);
+              ctrl_enable((Control *)parley_wnd_block.info_show_buttons[1]);
               parley_draw_city_list(1);
             }
           }
           break;
         case 0xa7:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          if ((parley_wnd_block.parley_wnd_closed == 0) && ((*(uptr *)&parley_wnd_block.parley_other_civ) == unit)) {
-            parley_wnd_block.parley_remote_units_revealed = (byte)civ3;
-            if (((parley_wnd_block.parley_mode == 0xe) && (parley_wnd_block.parley_barter_want_kind == 2)) ||
-               ((parley_wnd_block.parley_mode == 0xf && (parley_wnd_block.parley_demand_kind == 2)))) {
-              ctrl_disable(parley_wnd_block.parley_request_done_button);
-              ctrl_disable(parley_wnd_block.parley_request_origin_button);
-              ctrl_enable(parley_wnd_block.parley_sort_by_city_right);
-              ctrl_enable(parley_wnd_block.parley_sort_by_unit_right);
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          if ((parley_wnd_block.closed == 0) && (parley_wnd_block.other_civ == unit)) {
+            parley_wnd_block.remote_units_revealed = (byte)civ3;
+            if ((((int)parley_wnd_block.mode == 0xe) && ((int)parley_wnd_block.exchange_kind[1] == 2)) ||
+               (((int)parley_wnd_block.mode == 0xf && ((int)parley_wnd_block.demand_kind == 2)))) {
+              ctrl_disable((Control *)parley_wnd_block.info_hide_buttons[1]);
+              ctrl_disable((Control *)parley_wnd_block.info_show_buttons[1]);
+              ctrl_enable((Control *)parley_wnd_block.sort_by_city_buttons[1]);
+              ctrl_enable((Control *)parley_wnd_block.sort_by_unit_buttons[1]);
               parley_draw_unit_list(1);
             }
           }
           break;
         case 0xa8:
-          net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          if ((parley_wnd_block.parley_wnd_closed == 0) && ((*(uptr *)&parley_wnd_block.parley_other_civ) == unit)) {
-            parley_wnd_block.parley_remote_units_revealed = (byte)civ3;
-            if (((parley_wnd_block.parley_mode == 0xe) && (parley_wnd_block.parley_barter_want_kind == 2)) ||
-               ((parley_wnd_block.parley_mode == 0xf && (parley_wnd_block.parley_demand_kind == 2)))) {
-              ctrl_enable(parley_wnd_block.parley_request_done_button);
-              ctrl_enable(parley_wnd_block.parley_request_origin_button);
-              ctrl_disable(parley_wnd_block.parley_sort_by_city_right);
-              ctrl_disable(parley_wnd_block.parley_sort_by_unit_right);
-              parley_sort_unit_list((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),0,parley_wnd_block.parley_list_count_right - 1,1);
+          net_msg_get_args((NetMsg *)msg,(i32 *)(&unit));
+          if ((parley_wnd_block.closed == 0) && (parley_wnd_block.other_civ == unit)) {
+            parley_wnd_block.remote_units_revealed = (byte)civ3;
+            if ((((int)parley_wnd_block.mode == 0xe) && ((int)parley_wnd_block.exchange_kind[1] == 2)) ||
+               (((int)parley_wnd_block.mode == 0xf && ((int)parley_wnd_block.demand_kind == 2)))) {
+              ctrl_enable((Control *)parley_wnd_block.info_hide_buttons[1]);
+              ctrl_enable((Control *)parley_wnd_block.info_show_buttons[1]);
+              ctrl_disable((Control *)parley_wnd_block.sort_by_city_buttons[1]);
+              ctrl_disable((Control *)parley_wnd_block.sort_by_unit_buttons[1]);
+              parley_sort_unit_list(&parley_wnd_block,0,parley_wnd_block.list_counts[1] - 1,1);
               parley_draw_unit_list(1);
             }
           }
@@ -4630,14 +4609,14 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         dbg_logf_int2((const char *)&str_poll_retrieved_non_civ_message_message_d,msg[1],msg[2]);
       }
     }
-    if (((wait_mode == 0) && (*(char *)((int)&((NetSessionExt *)self)->session_flags + 2) != '\0')) && (gamelist_dirty != '\0'))
+    if (((wait_mode == 0) && (self->net_listing_games != '\0')) && (gamelist_dirty != '\0'))
     {
       net_gamelist_refresh();
     }
-    if (((wait_mode == 0) && (((NetSessionExt *)self)->popup_busy == 0)) && (net_popup_queue_head != 0)) {
+    if (((wait_mode == 0) && (self->net_popup_in_progress_i32 == 0)) && (net_popup_queue_head != 0)) {
       net_popup_queue_show_next();
     }
-    *(int *)((NetSessionExt *)self)->process_depth = *(int *)((NetSessionExt *)self)->process_depth - 1;
+    self->net_poll_depth = self->net_poll_depth - 1;
   }
   return;
 }
@@ -4646,7 +4625,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
 void __cdecl net_game_xmit_wait_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if (net_session_block.nm_continue_after_join_count != 0) {
     net_session_block.dialog_stack_top[0xf] = net_session_block.dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*net_session_block.dialog_stack_top + 0x48));
@@ -4655,16 +4634,16 @@ void __cdecl net_game_xmit_wait_idle(void)
 }
 
 /* 004823d6 auto */
-void __cdecl net_msg_get_args(iptr msg,i32 *args)
+void __cdecl net_msg_get_args(NetMsg *msg,i32 *args)
 
 {
-  *args = *(i32 *)(msg + 0x10);
-  args[1] = *(i32 *)(msg + 0x14);
-  args[2] = *(i32 *)(msg + 0x18);
-  args[3] = *(i32 *)(msg + 0x1c);
-  args[4] = *(i32 *)(msg + 0x20);
-  args[5] = *(i32 *)(msg + 0x24);
-  args[6] = *(i32 *)(msg + 0x28);
+  *args = msg->args[0];
+  args[1] = msg->args[1];
+  args[2] = msg->args[2];
+  args[3] = msg->args[3];
+  args[4] = msg->args[4];
+  args[5] = msg->args[5];
+  args[6] = msg->args[6];
   return;
 }
 
@@ -4674,7 +4653,7 @@ void __cdecl net_server_quit_wait_idle(void)
 {
   int human_count;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if (((net_session_block.net_players_awaited != 0) &&
       (human_count = bits_count8((uint)(game.human_players == '\0')), human_count == 0)) &&
      (1 < net_session_block.net_player_count[0])) {
@@ -4718,9 +4697,9 @@ void __cdecl net_host_quit_handoff(void)
         crt_memcpy(((i8 *)&net_session_block.net_player_slots),((i8 *)&net_session_block.net_player_slots) + slot * 0x54,0x54);
         net_session_block.net_slot_host_flags[0] = 1;
         net_session_block.net_player_slots[0] = 0;
-        net_session_block.net_civ_slots[0] = *(i32 *)(((i8 *)&net_session_block.net_civ_slots) + slot * 4);
+        net_session_block.net_civ_slots[0] = net_session_block.net_civ_slots[slot];
         net_session_block.net_player_count[0]--;
-        *(i32 *)(((i8 *)&net_session_block.net_civ_slots) + slot * 4) = 0xffffffff;
+        net_session_block.net_civ_slots[slot] = 0xffffffff;
         _memset(((i8 *)&net_session_block.net_player_slots) + slot * 0x54,0,0x54);
         net_send_state_diff(0xff,2,0,1,0);
         net_send_message(0x16,0xff,0,0,0,0,0,0,0,0);
@@ -4736,7 +4715,7 @@ void __cdecl net_host_quit_handoff(void)
 void __cdecl net_client_quit_wait_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if (net_session_block.net_host_handoff_stage == 2) {
     net_session_block.dialog_stack_top[0xf] = net_session_block.dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*net_session_block.dialog_stack_top + 0x48));
@@ -4752,7 +4731,7 @@ void __cdecl net_quit_wait_start_civ_idle(void)
 {
   int now;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.nm_start_civ_count == 0) &&
      (now = timer_ticks(), now - map_views_block.net_handoff_wait_ticks_i32 <= net_session_block.net_timeout_seconds * 0x3c)) {
     return;
@@ -4770,7 +4749,7 @@ void __cdecl net_quit_wait_player_list_idle(void)
 {
   int now;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.nm_player_list_count == 0) &&
      (now = timer_ticks(), now - map_views_block.net_handoff_wait_ticks_i32 <= net_session_block.net_timeout_seconds * 0x3c)) {
     return;
@@ -4788,7 +4767,7 @@ void __cdecl net_quit_wait_players_idle(void)
 {
   int now;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.net_players_awaited != 0) &&
      (now = timer_ticks(), now - map_views_block.net_handoff_wait_ticks_i32 <= net_session_block.net_timeout_seconds * 0x3c)) {
     return;
@@ -4849,8 +4828,8 @@ i32 __cdecl net_client_transfer_server(void)
       cmp = _strcmp(((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),((i8 *)&net_session_block.net_slot_addresses));
       if (cmp == 0) {
         dbg_log((const char *)&str_clienttransferserver_disconnecting_from);
-        net_session_shutdown(((iptr *)&net_session_block.net_session),0);
-        transport_ok = net_init_transport(((iptr *)&net_session_block.net_session),net_session_block.net_protocol,1);
+        net_session_shutdown(&net_session_block,0);
+        transport_ok = net_init_transport(&net_session_block,net_session_block.net_protocol,1);
         status = (int)transport_ok;
         if (status == 0) {
           dbg_log((const char *)&str_clienttransferserver_could_not_reconnect);
@@ -4869,7 +4848,7 @@ i32 __cdecl net_client_transfer_server(void)
         net_session_block.net_players_awaited_initial = net_session_block.net_players_awaited;
         if (net_session_block.net_players_awaited < 1) {
           slot_civ = saved.civ_ids[0];
-          *(i32 *)(((i8 *)&net_session_block.net_civ_slots) + saved.civ_ids[0] * 4) = 0;
+          net_session_block.net_civ_slots[saved.civ_ids[0]] = 0;
           net_session_block.net_slot_civs[0] = saved.civ_ids[0];
         }
         else {
@@ -4899,7 +4878,7 @@ i32 __cdecl net_client_transfer_server(void)
                 err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_oldindex_max_net_players,(iptr)&str_d_ss_franklinton_netmgr_poll_cpp_5,0x8a7);
               }
               slot_civ = saved.civ_ids[old_slot * 0x15];
-              *(int *)(((i8 *)&net_session_block.net_civ_slots) + slot_civ * 4) = slot;
+              net_session_block.net_civ_slots[slot_civ] = slot;
               (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15] = slot_civ;
             }
           }
@@ -4974,7 +4953,7 @@ i32 __cdecl net_client_transfer_server(void)
 void __cdecl net_client_hot_wait_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   net_heartbeat_check(net_session_block.net_slot_civs[0]);
   if ((((net_session_block.nm_start_civ_count != 0) || (net_session_block.net_host_handoff_stage != '\0')) || (net_session_block.nm_end_sequence_count != 0)) ||
      (((net_session_block.player_has_quit != '\0' || (game_loop_active == '\0')) || (net_session_block.net_lost_conn_total != 0)))) {
@@ -4992,14 +4971,13 @@ void __cdecl net_heartbeat_send(iptr civ)
 {
   if (net_session_block.net_drag_hold == '\0') {
     net_session_block.nm_heartbeat_ack_count = 0;
-    net_send_message(0x2b,*(i32 *)
-                             (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),0,0,0,0,
+    net_send_message(0x2b,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,0,0,0,0,
                        0,0,0,0);
   }
   else {
     net_session_block.nm_heartbeat_ack_count = 1;
   }
-  if ((parley_wnd_block.parley_wnd_closed == 1) && (net_popup_queue_head == 0)) {
+  if (((int)parley_wnd_block.closed == 1) && (net_popup_queue_head == 0)) {
     mp_meeting_pending = 0;
     net_session_block.nm_parley_cancel_count = 0;
   }
@@ -5018,7 +4996,7 @@ void __cdecl net_heartbeat_check(iptr civ)
   now = timer_ticks();
   if (0xe0f < now - map_views_block.net_heartbeat_last_tick_i32) {
     if (net_session_block.nm_heartbeat_ack_count == 0) {
-      *(int *)(((i8 *)&net_session_block.net_civ_turn_ended) + civ * 4) = *(int *)(((i8 *)&net_session_block.net_civ_turn_ended) + civ * 4) + 1;
+      net_session_block.net_civ_turn_ended[civ] = net_session_block.net_civ_turn_ended[civ] + 1;
       if (net_session_block.net_host_flag == '\0') {
         net_session_block.net_lost_conn_total++;
       }
@@ -5047,7 +5025,7 @@ i32 __cdecl net_check_lost_connections(void)
     if (net_session_block.net_lost_conn_total != 0) {
       game_loop_active = 0;
       dbg_log((const char *)&str_we_lost_connection_to_the_server_heartbe);
-      net_session_shutdown(((iptr *)&net_session_block.net_session),1);
+      net_session_shutdown(&net_session_block,1);
       popup_game_with_sprite((const char *)&str_lostserver,(iptr)&popup_info_icon_sprite,0);
       return 1;
     }
@@ -5085,11 +5063,11 @@ i32 __cdecl net_check_lost_connections(void)
           slot_civ = (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15];
           text_set_string_arg(0,(const char *)(((i8 *)&net_session_block.net_slot_player_names) + slot * 0x54));
           net_send_text_args(0x53,0xff,1,0,0,0);
-          *(i32 *)(((i8 *)&net_session_block.net_civ_drop_requested) + slot_civ * 4) = 0;
+          net_session_block.net_civ_drop_requested[slot_civ] = 0;
           (*((char *)&civ + 0)) = (byte)slot_civ;
           game.human_players = game.human_players & ~(byte)(1 << ((byte)civ & 0x1f));
           net_remove_player
-                    ((NetSession *)((iptr *)&net_session_block.net_session),*(i32 *)(((i8 *)&net_session_block.net_player_slots) + slot * 0x54));
+                    (&net_session_block,net_session_block.net_slots[slot].id);
           if ((1 << ((byte)civ & 0x1f) & (int)(short)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask)) != 0) {
             (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) = (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) & ~(ushort)(1 << ((byte)civ & 0x1f));
             net_send_message(0x2a,0xff,(int)(short)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask),0,0,0,0,0,0,0);
@@ -5127,15 +5105,15 @@ int __cdecl net_drop_flagged_players(void)
   dropped_count = 0;
   for (slot = 1; slot < 7; slot++) {
     if (((((i8 *)&net_session_block.net_slot_active_flags))[slot * 0x54] != '\0') &&
-       (*(int *)(((i8 *)&net_session_block.net_civ_drop_requested) + (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15] * 4) != 0)) {
+       (net_session_block.net_civ_drop_requested[(((i32 *)&net_session_block.net_slot_civs))[slot * 0x15]] != 0)) {
       dropped_count++;
       slot_civ = (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15];
-      *(i32 *)(((i8 *)&net_session_block.net_civ_drop_requested) + slot_civ * 4) = 0;
-      *(i32 *)(((i8 *)&net_session_block.net_lost_conn_by_player) + *(int *)(((i8 *)&net_session_block.net_player_slots) + slot * 0x54) * 4) = 0;
+      net_session_block.net_civ_drop_requested[slot_civ] = 0;
+      net_session_block.net_lost_conn_by_player[net_session_block.net_slots[slot].id] = 0;
       civ_bit = (byte)slot_civ;
       game.human_players = game.human_players & ~(byte)(1 << (civ_bit & 0x1f));
       net_remove_player
-                ((NetSession *)((iptr *)&net_session_block.net_session),*(i32 *)(((i8 *)&net_session_block.net_player_slots) + slot * 0x54));
+                (&net_session_block,net_session_block.net_slots[slot].id);
       if ((1 << (civ_bit & 0x1f) & (int)(short)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask)) != 0) {
         (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) = (*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask) & ~(ushort)(1 << (civ_bit & 0x1f));
         net_session_block.nm_lock_nation_count_i32++;
@@ -5287,7 +5265,7 @@ void __cdecl chat_read_macro_line(const char *path,iptr file_offset)
 }
 
 /* 004af3e0 auto */
-void __thiscall parley_build_civ_list(ListPaneWindow *self,iptr rect,int side)
+void __thiscall parley_build_civ_list(ParleyWindow *self,RECT *rect,int side)
 
 {
   u8 *field;
@@ -5306,10 +5284,10 @@ void __thiscall parley_build_civ_list(ListPaneWindow *self,iptr rect,int side)
   i32 unwind_state;
   
   unwind_state = 0xffffffff;
-  rect2.left = *(int *)rect;
-  rect2.top = *(i32 *)(rect + 4);
-  rect2.right = *(int *)(rect + 8);
-  rect2.bottom = *(i32 *)(rect + 0xc);
+  rect2.left = rect->left;
+  rect2.top = rect->top;
+  rect2.right = rect->right;
+  rect2.bottom = rect->bottom;
   if (game.wonder_city[0x18] == -1) {
     has_wonder = civ_has_wonder(human_civ[0],9);
     if ((has_wonder == 0) && (game.reveal_map == '\0')) {
@@ -5319,53 +5297,51 @@ void __thiscall parley_build_civ_list(ListPaneWindow *self,iptr rect,int side)
   }
   all_contact = 1;
 reset_contact_field:
-  field = ((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x4c;
+  field = (u8 *)&self->list_counts[side];
   field[0] = '\0';
   field[1] = '\0';
   field[2] = '\0';
   field[3] = '\0';
   for (other_civ = 1; (int)other_civ < 8; other_civ++) {
-    if (((human_civ[0] != other_civ) && (self->caption_height != other_civ)) &&
+    if (((human_civ[0] != other_civ) && (self->other_civ != other_civ)) &&
        ((all_contact != 0 || ((*(byte *)&civs[human_civ[0]].treaties[other_civ] & 1) != 0))))
     {
-      *(u32 *)(side * 0x2004 + *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x4c) * 4 + 0x3f0 +
-              (int)self) = other_civ;
-      *(i32 *)
-       (side * 0x2004 + *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x4c) * 4 + 0x8400 + (int)self) =
+      self->list_items[side * 0x801 + self->list_counts[side]] = other_civ;
+      self->list_selected[side * 0x801 + self->list_counts[side]] =
            0;
-      *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x4c) =
-           *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x4c) + 1;
+      self->list_counts[side] =
+           self->list_counts[side] + 1;
     }
   }
-  if (*(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x4c) < 1) {
-    field = ((PictureWindow *)self)->parley_pane_arrays_base + side * 4 + 0x30;
+  if (self->list_counts[side] < 1) {
+    field = (u8 *)&self->list_first_row[side];
     field[0] = 0xff;
     field[1] = 0xff;
     field[2] = 0xff;
     field[3] = 0xff;
   }
   else {
-    field = ((PictureWindow *)self)->parley_pane_arrays_base + side * 4 + 0x30;
+    field = (u8 *)&self->list_first_row[side];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
   }
-  field = ((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x44;
+  field = (u8 *)&self->list_columns[side];
   field[0] = 2;
   field[1] = '\0';
   field[2] = '\0';
   field[3] = '\0';
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 0x10 + 0x24) = *(i32 *)rect;
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 0x10 + 0x28) = *(i32 *)(rect + 4);
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 0x10 + 0x2c) = *(i32 *)(rect + 8);
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 0x10 + 0x30) = *(i32 *)(rect + 0xc);
-  if (*(int *)(((PictureWindow *)self)->parley_pane_arrays_base + side * 4 + 0x40) <
-      *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x4c)) {
+  self->list_rects[side * 4] = rect->left;
+  self->list_rects[side * 4 + 1] = rect->top;
+  self->list_rects[side * 4 + 2] = rect->right;
+  self->list_rects[side * 4 + 3] = rect->bottom;
+  if (self->list_rows[side] <
+      self->list_counts[side]) {
     scroll_width = GetSystemMetrics(2);
     has_wonder = rect2.right;
-    *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 0x10 + 0x2c) =
-         *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 0x10 + 0x2c) - scroll_width;
+    self->list_rects[side * 4 + 2] =
+         (int)self->list_rects[side * 4 + 2] - scroll_width;
     rect2.left = GetSystemMetrics(2);
     rect2.left = has_wonder - rect2.left;
     new_ctrl = (Control *)(operator_new(0x40));
@@ -5377,29 +5353,29 @@ reset_contact_field:
       scrollbar = (i32)(scrollbar_ctor(new_ctrl));
     }
     unwind_state = 0xffffffff;
-    *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x20) = scrollbar;
-    if (self == (ListPaneWindow *)0x0) {
+    self->list_scrollbars[side] = scrollbar;
+    if (self == (ParleyWindow *)0x0) {
       scroll_parent = (u8 *)0x0;
     }
     else {
-      scroll_parent = self->window_2;
+      scroll_parent = ((u8 *)self + 0x48);
     }
     scrollbar_create
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x20),(iptr)scroll_parent,
+              ((Control *)self->list_scrollbars[side],(iptr)scroll_parent,
                side + 0x40d,(iptr)&rect2,1);
     scrollbar_set_range
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x20),0,
-               *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 + 0x4c) -
-               *(int *)(((PictureWindow *)self)->parley_pane_arrays_base + side * 4 + 0x40));
-    scrollbar_set_pos(*(ClickControl **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x20),0);
+              ((Control *)self->list_scrollbars[side],0,
+               self->list_counts[side] -
+               self->list_rows[side]);
+    scrollbar_set_pos((ClickControl *)self->list_scrollbars[side],0);
     scrollbar_set_page_size
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x20),
-               *(i32 *)(((PictureWindow *)self)->parley_pane_arrays_base + side * 4 + 0x40));
+              ((Control *)self->list_scrollbars[side],
+               self->list_rows[side]);
     scrollbar_set_callback
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x20),
+              ((Control *)self->list_scrollbars[side],
                (side == 0 ? (iptr)parley_civ_list_scroll_local : (iptr)parley_civ_list_scroll_remote));
     scrollbar_set_track_callback
-              (*(ScrollbarTrackSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x20),
+              ((ScrollbarTrackSetView *)self->list_scrollbars[side],
                (side == 0 ? (iptr)parley_civ_list_scroll_local : (iptr)parley_civ_list_scroll_remote));
   }
   new_ctrl = (Control *)(operator_new(0x40));
@@ -5411,18 +5387,18 @@ reset_contact_field:
     hotspot = (i32)(hotspot_ctor(new_ctrl));
   }
   unwind_state = 0xffffffff;
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x18) = hotspot;
-  if (self == (ListPaneWindow *)0x0) {
+  self->list_hotspots[side] = hotspot;
+  if (self == (ParleyWindow *)0x0) {
     hotspot_parent = (u8 *)0x0;
   }
   else {
-    hotspot_parent = self->window_2;
+    hotspot_parent = ((u8 *)self + 0x48);
   }
   hotspot_create
-            (*(ClickControl **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x18),(iptr)hotspot_parent,
-             side + 0x40f,(iptr)(((PediaRedrawView *)self)->pedia_pane_layout + side * 0x10 + 0x24));
-  hotspot_set_click_callback(*(HotspotClickSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x18),(iptr)parley_civ_list_click);
-  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + side * 4 - 0x18),(iptr)parley_civ_list_click);
+            ((ClickControl *)self->list_hotspots[side],(iptr)hotspot_parent,
+             side + 0x40f,(iptr)(((u8 *)self + 0x39c) + side * 0x10 + 0x24));
+  hotspot_set_click_callback((HotspotClickSetView *)self->list_hotspots[side],(iptr)parley_civ_list_click);
+  hotspot_set_dblclick_callback((HotspotDblClickSetView *)self->list_hotspots[side],(iptr)parley_civ_list_click);
   parley_draw_civ_list(side);
   return;
 }
@@ -5448,17 +5424,17 @@ void __cdecl parley_civ_list_scroll(int side,i32 pos)
 
 {
   int active;
-  iptr wnd2;
+  ParleyWindow *wnd2;
   
   active = wnd_get_active_child();
   if (active == 0) {
     wnd2 = 0;
   }
   else {
-    wnd2 = active - 0x48;
+    wnd2 = (ParleyWindow *)(active - 0x48);
   }
-  wnd_activate((Wnd *)(wnd2 + 0x48));
-  *(i32 *)(wnd2 + 0x10410 + side * 4) = pos;
+  wnd_activate((Wnd *)((iptr)wnd2 + 0x48));
+  wnd2->list_first_row[side] = pos;
   parley_draw_civ_list(side);
   return;
 }
@@ -5475,57 +5451,57 @@ void __cdecl parley_civ_list_click(int ctrl_id)
   i32 cursor_y;
   i32 cursor_x;
   int side;
-  iptr wnd2;
+  ParleyWindow *wnd2;
   
   row = wnd_get_active_child();
   if (row == 0) {
     wnd2 = 0;
   }
   else {
-    wnd2 = row - 0x48;
+    wnd2 = (ParleyWindow *)(row - 0x48);
   }
-  wnd_activate((Wnd *)(wnd2 + 0x48));
+  wnd_activate((Wnd *)((iptr)wnd2 + 0x48));
   side = ctrl_id - 0x40f;
   wnd_get_cursor_pos
-            ((WndBase *)(wnd2 + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
-  if (((*(int *)(wnd2 + 1000 + side * 4) != 0) &&
+            ((WndBase *)((iptr)wnd2 + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
+  if (((wnd2->list_counts[side] != 0) &&
       (row = parley_civ_list_hit_test(cursor_x,cursor_y,side), -1 < row)) &&
-     (row < *(int *)(wnd2 + 1000 + side * 4))) {
-    key_down = wnd_is_shift_down((void *)(wnd2 + 0x48));
+     (row < wnd2->list_counts[side])) {
+    key_down = wnd_is_shift_down((void *)((iptr)wnd2 + 0x48));
     if (key_down == 0) {
-      key_down = wnd_is_ctrl_down((void *)(wnd2 + 0x48));
+      key_down = wnd_is_ctrl_down((void *)((iptr)wnd2 + 0x48));
       if (key_down == 0) {
-        for (i = 0; i < *(int *)(wnd2 + 1000 + side * 4);
+        for (i = 0; i < wnd2->list_counts[side];
             i = i + 1) {
           if (i != row) {
-            *(i32 *)(i * 4 + side * 0x2004 + 0x8400 + wnd2) = 0;
+            wnd2->list_selected[i + side * 0x801] = 0;
           }
         }
-        *(int *)(wnd2 + 0x10418 + side * 4) = row;
-        sel_flag = (uint *)(row * 4 + side * 0x2004 + 0x8400 + wnd2);
+        wnd2->list_anchor_row[side] = row;
+        sel_flag = (uint *)(row * 4 + side * 0x2004 + 0x8400 + (iptr)wnd2);
         *sel_flag = *sel_flag ^ 1;
       }
       else {
-        *(int *)(wnd2 + 0x10418 + side * 4) = row;
-        sel_flag = (uint *)(row * 4 + side * 0x2004 + 0x8400 + wnd2);
+        wnd2->list_anchor_row[side] = row;
+        sel_flag = (uint *)(row * 4 + side * 0x2004 + 0x8400 + (iptr)wnd2);
         *sel_flag = *sel_flag ^ 1;
       }
     }
     else {
-      for (i = 0; i < *(int *)(wnd2 + 1000 + side * 4); i++)
+      for (i = 0; i < wnd2->list_counts[side]; i++)
       {
-        *(i32 *)(i * 4 + side * 0x2004 + 0x8400 + wnd2) = 0;
+        wnd2->list_selected[i + side * 0x801] = 0;
       }
-      if (*(int *)(wnd2 + 0x10418 + side * 4) < row) {
-        i = *(int *)(wnd2 + 0x10418 + side * 4);
+      if (wnd2->list_anchor_row[side] < row) {
+        i = wnd2->list_anchor_row[side];
         range_end = row;
       }
       else {
-        range_end = *(int *)(wnd2 + 0x10418 + side * 4);
+        range_end = wnd2->list_anchor_row[side];
         i = row;
       }
       for (; i <= range_end; i++) {
-        *(i32 *)(i * 4 + side * 0x2004 + 0x8400 + wnd2) = 1;
+        wnd2->list_selected[i + side * 0x801] = 1;
       }
     }
     parley_draw_civ_list(side);
@@ -5540,27 +5516,27 @@ int __cdecl parley_civ_list_hit_test(int x,int y,int side)
   iptr active;
   int row;
   int list_height;
-  iptr wnd2;
+  ParleyWindow *wnd2;
   
   active = wnd_get_active_child();
   if (active == 0) {
     wnd2 = 0;
   }
   else {
-    wnd2 = active - 0x48;
+    wnd2 = (ParleyWindow *)(active - 0x48);
   }
-  if (y < *(int *)(side * 0x10 + 0x3c4 + wnd2)) {
+  if (y < (int)wnd2->list_rects[side * 4 + 1]) {
     row = -1;
   }
-  else if (y < *(int *)(side * 0x10 + 0x3cc + wnd2)) {
-    if (x < *(int *)(side * 0x10 + 0x3c0 + wnd2)) {
+  else if (y < (int)wnd2->list_rects[side * 4 + 3]) {
+    if (x < (int)wnd2->list_rects[side * 4]) {
       row = -3;
     }
-    else if (x < *(int *)(side * 0x10 + 0x3c8 + wnd2)) {
-      row = *(int *)(side * 0x10 + 0x3c4 + wnd2);
-      list_height = rect_height(side * 0x10 + wnd2 + 0x3c0);
-      row = (y - row) / (list_height / *(int *)(wnd2 + 0x10420 + side * 4)) +
-              *(int *)(wnd2 + 0x10410 + side * 4);
+    else if (x < (int)wnd2->list_rects[side * 4 + 2]) {
+      row = (int)wnd2->list_rects[side * 4 + 1];
+      list_height = rect_height((RECT *)(side * 0x10 + (iptr)wnd2 + 0x3c0));
+      row = (y - row) / (list_height / wnd2->list_rows[side]) +
+              wnd2->list_first_row[side];
     }
     else {
       row = -4;
@@ -5590,7 +5566,7 @@ void __cdecl parley_draw_civ_list(int side)
   int row;
   int shadow_color2;
   int text_color2;
-  ViewWindow *wnd2;
+  ParleyWindow *wnd2;
   tagRECT row_rect;
   int row_height;
   i8 saved_clip[16];
@@ -5598,47 +5574,45 @@ void __cdecl parley_draw_civ_list(int side)
   
   active = wnd_get_active_child();
   if (active == 0) {
-    wnd2 = (ViewWindow *)0x0;
+    wnd2 = (ParleyWindow *)0x0;
   }
   else {
-    wnd2 = (ViewWindow *)(active - 0x48);
+    wnd2 = (ParleyWindow *)(active - 0x48);
   }
-  surface_get_clip((DibSurface *)wnd2,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)wnd2,(iptr)((u8 *)&wnd2->advance_pane_rects + side * 0x10));
+  surface_get_clip((DibSurface *)wnd2,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)wnd2,(RECT *)(iptr)(((u8 *)wnd2 + 0x3c0) + side * 0x10));
   surface_fill_rect
-            ((DibSurface *)wnd2,(iptr)((u8 *)&wnd2->advance_pane_rects + side * 0x10),list_bg_color);
+            ((DibSurface *)wnd2,(iptr)(((u8 *)wnd2 + 0x3c0) + side * 0x10),list_bg_color);
   if (wnd2->large_layout == 0) {
     font2 = (GameFont *)((i8 *)&font_size14);
   }
   else {
     font2 = (GameFont *)((i8 *)&font_size21);
   }
-  xLeft = *(int *)((u8 *)&wnd2->advance_pane_rects + side * 0x10);
-  list_width = rect_width((iptr)((u8 *)&wnd2->advance_pane_rects + side * 0x10));
-  row_height = rect_height((iptr)((u8 *)&wnd2->advance_pane_rects + side * 0x10));
-  row_height = row_height / *(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x38);
+  xLeft = (int)wnd2->list_rects[side * 4];
+  list_width = rect_width((RECT *)(iptr)(((u8 *)wnd2 + 0x3c0) + side * 0x10));
+  row_height = rect_height((RECT *)(iptr)(((u8 *)wnd2 + 0x3c0) + side * 0x10));
+  row_height = row_height / wnd2->list_rows[side];
   text_dy = row_height / 2;
   row_top = font_cached_height(font2);
   text_dy -= row_top / 2;
-  field = wnd2->pane_selection_flags_area + side * 4 - 0x1c;
+  field = (u8 *)&wnd2->side_selected[side];
   field[0] = '\0';
   field[1] = '\0';
   field[2] = '\0';
   field[3] = '\0';
   row = 0;
   do {
-    if (*(int *)((u8 *)&wnd2->advance_pane_rects + side * 4 + 0x28) <= row) {
+    if (wnd2->list_counts[side] <= row) {
 draw_rows:
-      for (row = 0; row < *(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x38);
+      for (row = 0; row < wnd2->list_rows[side];
           row = row + 1) {
-        row_top = *(int *)((u8 *)&wnd2->advance_pane_rects + side * 0x10 + 4) + row_height * row;
+        row_top = (int)wnd2->list_rects[side * 4 + 1] + row_height * row;
         SetRect(&row_rect,xLeft,row_top,list_width + xLeft,row_height + row_top);
-        if (((row == 0) || (*(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x28) != -1)) &&
-           (*(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x28) + row <
-            *(int *)((u8 *)&wnd2->advance_pane_rects + side * 4 + 0x28))) {
-          selected = *(int *)(side * 0x2004 +
-                           (*(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x28) + row) * 4 +
-                           0x8400 + (int)wnd2);
+        if (((row == 0) || (wnd2->list_first_row[side] != -1)) &&
+           (wnd2->list_first_row[side] + row <
+            wnd2->list_counts[side])) {
+          selected = (int)wnd2->list_selected[side * 0x801 + (wnd2->list_first_row[side] + row)];
           if (selected == 0) {
             text_color2 = list_text_color;
             shadow_color2 = list_shadow_color;
@@ -5656,11 +5630,11 @@ draw_rows:
             bg_color2 = list_sel_bg_color;
           }
           surface_fill_rect((DibSurface *)wnd2,(iptr)&row_rect,bg_color2);
-          if (*(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x28) == -1) {
+          if (wnd2->list_first_row[side] == -1) {
             text_clear();
-            text = (label_string(*(i32 *)(label_string_ids + 0xb84)));
+            text = (label_string(label_string_ids[0x2e1]));
             text_append(text);
-            field = wnd2->pane_selection_flags_area + side * 4 - 0x1c;
+            field = (u8 *)&wnd2->side_selected[side];
             field[0] = '\0';
             field[1] = '\0';
             field[2] = '\0';
@@ -5668,24 +5642,15 @@ draw_rows:
           }
           else {
             font_height = font_cached_height(font2);
-            parley_draw_civ_capital(*(i32 *)
-                                (side * 0x2004 +
-                                 (*(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x28) + row) *
-                                 4 + 0x3f0 + (int)wnd2),
-                               *(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x28) + row,
+            parley_draw_civ_capital((i32)wnd2->list_items[side * 0x801 + (wnd2->list_first_row[side] + row)],
+                               wnd2->list_first_row[side] + row,
                                xLeft + 2,row_top,font_height);
             text_clear();
-            text = civ_name_plural(*(iptr *)(side * 0x2004 +
-                                                 (*(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base +
-                                                          side * 4 + 0x28) + row) * 4 +
-                                                 0x3f0 + (int)wnd2));
+            text = civ_name_plural((iptr)wnd2->list_items[side * 0x801 + (wnd2->list_first_row[side] + row)]);
             text_append(text);
             text_append_space();
             text_append_lparen();
-            text = civ_leader_name(*(iptr *)(side * 0x2004 +
-                                                 (*(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base +
-                                                          side * 4 + 0x28) + row) * 4 +
-                                                 0x3f0 + (int)wnd2));
+            text = civ_leader_name((iptr)wnd2->list_items[side * 0x801 + (wnd2->list_first_row[side] + row)]);
             text_append(text);
             text_append_rparen();
           }
@@ -5705,14 +5670,14 @@ draw_rows:
           ;
         }
       }
-      surface_set_clip((DibSurface *)wnd2,(iptr)saved_clip);
+      surface_set_clip((DibSurface *)wnd2,(RECT *)saved_clip);
       parley_update_buttons(wnd2);
-      ctrl_show_and_redraw(*(Control **)(wnd2->rate_values + side * 4 + 0x20))
+      ctrl_show_and_redraw((Control *)wnd2->list_hotspots[side])
       ;
       return;
     }
-    if (*(int *)(side * 0x2004 + row * 4 + 0x8400 + (int)wnd2) != 0) {
-      field = wnd2->pane_selection_flags_area + side * 4 - 0x1c;
+    if (wnd2->list_selected[side * 0x801 + row] != 0) {
+      field = (u8 *)&wnd2->side_selected[side];
       field[0] = 1;
       field[1] = '\0';
       field[2] = '\0';
@@ -5734,7 +5699,7 @@ void __cdecl parley_draw_civ_capital(int civ,uint row,int x,int y,int row_height
   iptr city;
   int draw_x;
   int icon_width;
-  iptr wnd2;
+  ParleyWindow *wnd2;
   int best_score;
   int score;
   
@@ -5743,9 +5708,9 @@ void __cdecl parley_draw_civ_capital(int civ,uint row,int x,int y,int row_height
     wnd2 = 0;
   }
   else {
-    wnd2 = active - 0x48;
+    wnd2 = (ParleyWindow *)(active - 0x48);
   }
-  if (*(int *)(wnd2 + 0x154) == 0) {
+  if (wnd2->large_layout == 0) {
     zoom2 = 0xfffffffc;
   }
   else {
@@ -5771,7 +5736,7 @@ void __cdecl parley_draw_civ_capital(int civ,uint row,int x,int y,int row_height
   }
   if (-1 < city2) {
     draw_x = x;
-    if (*(int *)(wnd2 + 0x154) == 0) {
+    if (wnd2->large_layout == 0) {
       icon_width = 0x18;
     }
     else {
@@ -5781,7 +5746,7 @@ void __cdecl parley_draw_civ_capital(int civ,uint row,int x,int y,int row_height
       draw_x = x + icon_width + 2;
     }
     has_palace = gfx_zoom_scale(0x30,zoom2);
-    gfx_draw_city((iptr)&parley_wnd_block.parley_wnd,city2,0,draw_x,y - (has_palace - row_height) / 2,zoom2);
+    gfx_draw_city((iptr)&parley_wnd_block,city2,0,draw_x,y - (has_palace - row_height) / 2,zoom2);
   }
   return;
 }
@@ -5807,7 +5772,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
   uint encoded_size;
   int *start_ptr;
   uint run_offset;
-  iptr game_mirror;
+  GameState *game_mirror;
   uint *out_ptr;
   int record_count;
   int runs_left;
@@ -5841,15 +5806,15 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
     cur_ptr = (int *)((((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6] + map_views_block.diffeng_scan_offset_i32);
     section_end = (int *)((((i32 *)&diffeng_sections_block.diffeng_section_padded_sizes))[(*(uint *)&map_views_block.diffeng_scan_section) * 6] + (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6]);
     if ((*(uint *)&map_views_block.diffeng_scan_section) == 1) {
-      game_mirror = diffeng_game_section_block.diffeng_game_offset + diffeng_mirror_buf;
-      *(i16 *)(game_mirror + 0x16) = game.active_unit;
-      *(i16 *)(game_mirror + 0x18) = game.moving_unit;
-      *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
-      *(i8 *)(game_mirror + 0x1b) = game.player_civ;
-      *(i8 *)(game_mirror + 0x1c) = game.saved_current_civ;
-      *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
-      *(u32 *)(game_mirror + 2) = game.game_options;
-      *(u16 *)(game_mirror + 10) = game.message_options;
+      game_mirror = (GameState *)(diffeng_game_section_block.diffeng_game_offset + diffeng_mirror_buf);
+      game_mirror->active_unit = game.active_unit;
+      game_mirror->moving_unit = game.moving_unit;
+      game_mirror->multiplayer = game.multiplayer;
+      game_mirror->player_civ = game.player_civ;
+      game_mirror->saved_current_civ = game.saved_current_civ;
+      game_mirror->turn_civ = game.turn_civ;
+      game_mirror->game_options = game.game_options;
+      game_mirror->message_options = game.message_options;
     }
     map_views_block.diffeng_packet_i32 = 0x66606660;
     if ((char)alt_msg == '\0') {
@@ -5870,15 +5835,15 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
           if (section_end <= cur_ptr) {
             (*(uint *)&map_views_block.diffeng_scan_section)++;
             if ((*(uint *)&map_views_block.diffeng_scan_section) == 1) {
-              game_mirror = diffeng_game_section_block.diffeng_game_offset + diffeng_mirror_buf;
-              *(i16 *)(game_mirror + 0x16) = game.active_unit;
-              *(i16 *)(game_mirror + 0x18) = game.moving_unit;
-              *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
-              *(i8 *)(game_mirror + 0x1b) = game.player_civ;
-              *(i8 *)(game_mirror + 0x1c) = game.saved_current_civ;
-              *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
-              *(u32 *)(game_mirror + 2) = game.game_options;
-              *(u16 *)(game_mirror + 10) = game.message_options;
+              game_mirror = (GameState *)(diffeng_game_section_block.diffeng_game_offset + diffeng_mirror_buf);
+              game_mirror->active_unit = game.active_unit;
+              game_mirror->moving_unit = game.moving_unit;
+              game_mirror->multiplayer = game.multiplayer;
+              game_mirror->player_civ = game.player_civ;
+              game_mirror->saved_current_civ = game.saved_current_civ;
+              game_mirror->turn_civ = game.turn_civ;
+              game_mirror->game_options = game.game_options;
+              game_mirror->message_options = game.message_options;
             }
             map_views_block.diffeng_scan_offset_i32 = 0;
             cur_ptr = (int *)(((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6];
@@ -5906,15 +5871,15 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
               run_section = (*(uint *)&map_views_block.diffeng_scan_section);
               (*(uint *)&map_views_block.diffeng_scan_section)++;
               if ((*(uint *)&map_views_block.diffeng_scan_section) == 1) {
-                game_mirror = diffeng_game_section_block.diffeng_game_offset + diffeng_mirror_buf;
-                *(i16 *)(game_mirror + 0x16) = game.active_unit;
-                *(i16 *)(game_mirror + 0x18) = game.moving_unit;
-                *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
-                *(i8 *)(game_mirror + 0x1b) = game.player_civ;
-                *(i8 *)(game_mirror + 0x1c) = game.saved_current_civ;
-                *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
-                *(u32 *)(game_mirror + 2) = game.game_options;
-                *(u16 *)(game_mirror + 10) = game.message_options;
+                game_mirror = (GameState *)(diffeng_game_section_block.diffeng_game_offset + diffeng_mirror_buf);
+                game_mirror->active_unit = game.active_unit;
+                game_mirror->moving_unit = game.moving_unit;
+                game_mirror->multiplayer = game.multiplayer;
+                game_mirror->player_civ = game.player_civ;
+                game_mirror->saved_current_civ = game.saved_current_civ;
+                game_mirror->turn_civ = game.turn_civ;
+                game_mirror->game_options = game.game_options;
+                game_mirror->message_options = game.message_options;
               }
               map_views_block.diffeng_scan_offset_i32 = 0;
               cur_ptr = (int *)(((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[(*(uint *)&map_views_block.diffeng_scan_section) * 6];
@@ -5953,7 +5918,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
         rle_src_end = (int)run_start + run_size;
         rle_dst = out_ptr + 3;
         rle_size_ptr = ((i32 *)&map_views_block.diffeng_mirror_size);
-        encoded = diffeng_rle_encode((iptr)&rle_src);
+        encoded = diffeng_rle_encode((RleStream *)&rle_src);
         if (encoded == 0) {
           crt_memcpy(out_ptr + 3,run_start,run_size);
           *out_ptr = run_section;
@@ -6009,7 +5974,7 @@ void __cdecl parley_wnd_global_init(void)
 void __cdecl parley_wnd_static_init(void)
 
 {
-  parley_wnd_ctor((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),(iptr)&prefs_main_menu_choice_block.prefs_parley_wnd_rect);
+  parley_wnd_ctor(&parley_wnd_block,(RECT *)&prefs_main_menu_choice_block.prefs_parley_wnd_rect);
   return;
 }
 
@@ -6025,7 +5990,7 @@ void __cdecl parley_wnd_reg_atexit(void)
 void __cdecl parley_wnd_static_dtor(void)
 
 {
-  parley_wnd_dtor((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd));
+  parley_wnd_dtor(&parley_wnd_block);
   return;
 }
 
@@ -6042,7 +6007,7 @@ void __cdecl chat_wnd_global_init(void)
 void __cdecl chat_wnd_static_init(void)
 
 {
-  parley_wnd_ctor((ViewWindow *)((i8 *)&chat_wnd_block.chat_wnd),(iptr)&prefs_main_menu_choice_block.prefs_chat_wnd_rect);
+  parley_wnd_ctor(&chat_wnd_block,(RECT *)&prefs_main_menu_choice_block.prefs_chat_wnd_rect);
   return;
 }
 
@@ -6058,12 +6023,12 @@ void __cdecl chat_wnd_reg_atexit(void)
 void __cdecl chat_wnd_static_dtor(void)
 
 {
-  parley_wnd_dtor((ViewWindow *)((i8 *)&chat_wnd_block.chat_wnd));
+  parley_wnd_dtor(&chat_wnd_block);
   return;
 }
 
 /* 004b4108 auto */
-ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *self,iptr rect)
+ParleyWindow * __thiscall parley_wnd_ctor(ParleyWindow *self,RECT *rect)
 
 {
   u8 *field;
@@ -6076,18 +6041,18 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *self,iptr rect)
   unwind_state = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)self);
   unwind_state = 0;
-  self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 1);
-  self->init_rect = rect;
-  self->style_flags = 1;
+  self->base.vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 1);
+  self->init_rect = (u32)rect;
+  self->closed = 1;
   prefs_load_civ2dat();
-  width = rect_width(self->init_rect);
+  width = rect_width((RECT *)self->init_rect);
   if (width < 1) {
-    self->border_width = 0;
-    self->resize_border = 0;
+    self->wnd_x = 0;
+    self->wnd_y = 0;
   }
   else {
-    self->border_width = *(u32 *)self->init_rect;
-    self->resize_border = *(u32 *)(self->init_rect + 4);
+    self->wnd_x = *(u32 *)self->init_rect;
+    self->wnd_y = *(u32 *)(self->init_rect + 4);
     if (width < 0x321) {
       self->large_layout = 0;
     }
@@ -6096,125 +6061,125 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *self,iptr rect)
     }
   }
   self->close_button = 0;
-  self->send_button_value = 0;
-  self->clear_button_value = 0;
-  self->conceal_button_value = 0;
-  self->reveal_button_value = 0;
-  self->rates_clamped = 0;
-  self->intel_button_value = 0;
-  self->mode2_button_value = 0;
-  self->never_mind_button_value = 0;
-  self->tax_scrollbar = 0;
-  self->no_thanks_button_value = 0;
-  self->counter_button_value = 0;
+  self->send_button = 0;
+  self->clear_button = 0;
+  self->conceal_button = 0;
+  self->reveal_button = 0;
+  self->mode_button = 0;
+  self->intel_button = 0;
+  self->mode2_button = 0;
+  self->never_mind_button = 0;
+  self->accept_button = 0;
+  self->no_thanks_button = 0;
+  self->counter_button = 0;
   for (i = 0; i < 8; i++) {
-    field = self->parley_checkboxes + i * 4 - 0x1c;
+    field = (u8 *)&self->send_checkboxes[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->parley_checkboxes + i * 4 + 4;
+    field = (u8 *)&self->mute_checkboxes[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->editor_combo_boxes + i * 4 + 0x2c;
+    field = (u8 *)&self->send_to_civs[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->rate_values + i * 4 - 0x44;
+    field = (u8 *)&self->muted_civs[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
   }
-  self->init_sci_rate = 0;
-  self->dialog_w = 0;
-  self->dialog_h = 0;
-  self->init_lux_rate = 0;
-  self->sci_rate_sel = 0;
-  self->init_tax_rate = 0;
-  self->side_text_edit = 0;
-  self->caption_height = 0xffffffff;
-  self->item_buffer = 0;
-  self->left_exchange_kind = 0;
-  self->right_exchange_kind = 1;
-  self->demand_choice = 0;
-  self->saved_mode_choice = 0xffffffff;
-  self->exchange_choice = 0;
-  self->side0_amount_init = 0;
-  self->side0_amount = self->side0_amount_init;
-  self->side1_amount_init = 0;
-  self->side1_amount = self->side1_amount_init;
-  self->gift_choice = 0;
-  self->treaty_type_choice = 0;
-  self->timer_last_value = 0;
-  self->show_turn_status = self->timer_last_value;
-  self->text_offset_y = 0;
-  self->list_font = 0;
-  self->reset_value_28c = 0;
+  self->remain_anonymous = 0;
+  self->mute_anonymous = 0;
+  self->broadcast_all = 0;
+  self->broadcast_checkbox = 0;
+  self->anonymous_checkbox = 0;
+  self->mute_anonymous_checkbox = 0;
+  self->desc_edit = 0;
+  self->other_civ = 0xffffffff;
+  self->received_offer = 0;
+  self->exchange_kind[0] = 0;
+  self->exchange_kind[1] = 1;
+  self->demand_kind = 0;
+  self->selected_action = 0xffffffff;
+  self->gift_kind = 0;
+  self->map_choice[1] = 0;
+  self->map_choice[0] = self->map_choice[1];
+  self->gold_amount[1] = 0;
+  self->gold_amount[0] = self->gold_amount[1];
+  self->proposal_kind = 0;
+  self->treaty_kind = 0;
+  self->side_selected[1] = 0;
+  self->side_selected[0] = self->side_selected[1];
+  self->caption_buttons[0].hotspot = 0;
+  self->caption_buttons[1].hotspot = 0;
+  self->caption_buttons[2].hotspot = 0;
   self->chat_input_edit = 0;
-  self->chat_history_edit = 0;
+  self->chat_log_edit = 0;
   (*(i32 *)&chat_input_buffer) = 0;
   (*(i32 *)&chat_log_buffer) = 0;
   font_size16_bold_block.chat_log_capacity = 0;
   for (i = 0; i < 2; i++) {
-    field = self->rate_values + i * 4;
+    field = (u8 *)&self->side_checkboxes[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->rate_values + i * 4 + 8;
+    field = (u8 *)&self->side_radios[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->rate_values + i * 4 + 0x10;
+    field = (u8 *)&self->gold_edits[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->rate_values + i * 4 + 0x18;
+    field = (u8 *)&self->list_scrollbars[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->rate_values + i * 4 + 0x20;
+    field = (u8 *)&self->list_hotspots[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->rate_values + i * 4 + 0x28;
+    field = (u8 *)&self->sort_by_unit_buttons[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = self->rate_values + i * 4 + 0x30;
+    field = (u8 *)&self->sort_by_city_buttons[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = (u8 *)&self->advance_pane_rects + i * 4 - 0x24;
+    field = (u8 *)&self->info_show_buttons[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
-    field = (u8 *)&self->advance_pane_rects + i * 4 - 0x1c;
+    field = (u8 *)&self->info_hide_buttons[i];
     field[0] = '\0';
     field[1] = '\0';
     field[2] = '\0';
     field[3] = '\0';
   }
-  self->right_side_accepted = '\0';
-  self->left_side_accepted = '\0';
-  self->left_side_confirmed = '\0';
-  self->remote_side_agreed = '\0';
+  self->remote_units_revealed = '\0';
+  self->local_units_revealed = '\0';
+  self->local_cities_revealed = '\0';
+  self->remote_cities_revealed = '\0';
   return self;
 }
 
 /* 004b4593 auto */
-void __thiscall parley_wnd_dtor(ViewWindow *self)
+void __thiscall parley_wnd_dtor(ParleyWindow *self)
 
 {
   int created;
@@ -6224,9 +6189,9 @@ void __thiscall parley_wnd_dtor(ViewWindow *self)
   i8 *seh_handler;
   uint unwind_state;
   
-  self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 1);
+  self->base.vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 1);
   unwind_state = 0;
-  if (self->session_mode == 4) {
+  if (self->mode == 4) {
     file_obj_init(&log_file);
     unwind_state = (unwind_state & 0xffffff00 | (byte)(1));
     if ((prefs_main_menu_choice_block.prefs_clear_chat_on_boot != 0) && (chat_log_buffer != (char *)0x0)) {
@@ -6257,7 +6222,7 @@ void __thiscall parley_wnd_dtor(ViewWindow *self)
 }
 
 /* 004b4735 auto */
-void __thiscall parley_wnd_create(ViewWindow *self,u32 mode)
+void __thiscall parley_wnd_create(ParleyWindow *self,u32 mode)
 
 {
   int file_size;
@@ -6270,16 +6235,16 @@ void __thiscall parley_wnd_create(ViewWindow *self,u32 mode)
   i32 unwind_state;
   
   unwind_state = 0xffffffff;
-  self->style_flags = 1;
-  if (self == (ViewWindow *)0x0) {
+  self->closed = 1;
+  if (self == (ParleyWindow *)0x0) {
     wnd2 = (u8 *)0x0;
   }
   else {
-    wnd2 = self->window_2;
+    wnd2 = ((u8 *)self + 0x48);
   }
   wnd_set_active_child((iptr)wnd2);
-  self->session_mode = mode;
-  if (self->session_mode != 4) goto pick_size_mode;
+  self->mode = mode;
+  if (self->mode != 4) goto pick_size_mode;
   (*(UINT *)&font_size16_bold_block.chat_log_capacity) = GetPrivateProfileIntA
                            (str_civilization_gold_7,str_chatshowsize,-1,
                             str_civ_ini_7);
@@ -6322,15 +6287,15 @@ clear_chat_buffer:
   unwind_state = 0xffffffff;
   /* inlined unwind funclet 004b4be3 */ { file_obj_close((FileObject *)&log_file); }
 pick_size_mode:
-  if ((self->border_width == 0) && (self->resize_border == 0)) {
-    parley_wnd_pick_size_mode((ParleyWindowLayout *)self);
+  if ((self->wnd_x == 0) && (self->wnd_y == 0)) {
+    parley_wnd_pick_size_mode(self);
   }
-  crt_strcpy((char *)self->parley_title,((i8 *)&parley_wnd_empty_title_str));
-  if (self->session_mode == 4) {
+  crt_strcpy((char *)((u8 *)self + 0x15c),((i8 *)&parley_wnd_empty_title_str));
+  if (self->mode == 4) {
     parent = ((i8 *)&main_frame_wnd_block.main_frame_wnd);
     palette = ((i8 *)&game_palette_block.game_palette);
-    height = rect_height(self->init_rect);
-    width = rect_width(self->init_rect);
+    height = rect_height((RECT *)self->init_rect);
+    width = rect_width((RECT *)self->init_rect);
     wnd_create_with_surface
               ((DibSurface *)self,0,0x602,*(i32 *)self->init_rect,
                *(i32 *)(self->init_rect + 4),width,height,(iptr)palette,(iptr)parent);
@@ -6338,27 +6303,27 @@ pick_size_mode:
   else {
     parent = ((i8 *)&main_frame_wnd_block.main_frame_wnd);
     palette = ((i8 *)&game_palette_block.game_palette);
-    height = rect_height(self->init_rect);
-    width = rect_width(self->init_rect);
+    height = rect_height((RECT *)self->init_rect);
+    width = rect_width((RECT *)self->init_rect);
     wnd_create_with_surface
               ((DibSurface *)self,0,0x602,*(i32 *)self->init_rect,
                *(i32 *)(self->init_rect + 4),width,height,(iptr)palette,(iptr)parent);
   }
-  parley_wnd_calc_rect((ParleyWindowLayout *)self);
-  wnd_move_to_rect((WndBase *)self->window_2,self->init_rect);
+  parley_wnd_calc_rect(self);
+  wnd_move_to_rect((WndBase *)((u8 *)self + 0x48),self->init_rect);
   self->built_layout = 0xffffffff;
-  self->left_civ = parley_mode3_left_kind;
-  self->right_civ = parley_mode3_right_kind;
-  self->shown_left_civ = 0x15;
-  self->caption_button_count = 0x15;
-  wnd_set_close_handler((WndEventHandlers *)self->event_handlers,(iptr)diplo_wnd_close_active);
+  self->left_kind = parley_mode3_left_kind;
+  self->right_kind = parley_mode3_right_kind;
+  self->shown_left_kind = 0x15;
+  self->shown_right_kind = 0x15;
+  wnd_set_close_handler((WndEventHandlers *)((u8 *)self + 0x58),(iptr)diplo_wnd_close_active);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)parley_wnd_redraw);
-  wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)parley_wnd_on_move);
-  wnd_set_keydown_handler((WndEventHandlers *)self->event_handlers,(iptr)parley_wnd_on_key);
-  parley_wnd_calc_layout((ParleyWindowLayout *)self);
+  wnd_set_move_handler((WndEventHandlers *)((u8 *)self + 0x58),(iptr)parley_wnd_on_move);
+  wnd_set_keydown_handler((WndEventHandlers *)((u8 *)self + 0x58),(iptr)parley_wnd_on_key);
+  parley_wnd_calc_layout(self);
   parley_wnd_sync_sides(self);
-  if (((self->session_mode == 3) || (self->session_mode == 2)) || (self->session_mode == 1)) {
-    ctrl_disable((Control *)self->never_mind_button_value);
+  if (((self->mode == 3) || (self->mode == 2)) || (self->mode == 1)) {
+    ctrl_disable((Control *)self->never_mind_button);
   }
   parley_update_buttons(self);
   return;
@@ -6369,45 +6334,45 @@ void __cdecl parley_wnd_on_move(void)
 
 {
   iptr active;
-  iptr wnd2;
+  ParleyWindow *wnd2;
   
   active = wnd_get_active_child();
   if (active == 0) {
     wnd2 = 0;
   }
   else {
-    wnd2 = active - 0x48;
+    wnd2 = (ParleyWindow *)(active - 0x48);
   }
-  wnd_get_rect_in_parent((WndBase *)(wnd2 + 0x48),*(iptr *)(wnd2 + 0x150));
-  *(i32 *)(wnd2 + 0x11c) = **(i32 **)(wnd2 + 0x150);
-  *(i32 *)(wnd2 + 0x120) = *(i32 *)(*(int *)(wnd2 + 0x150) + 4);
+  wnd_get_rect_in_parent((WndBase *)((iptr)wnd2 + 0x48),(iptr)wnd2->init_rect);
+  wnd2->wnd_x = *(i32 *)wnd2->init_rect;
+  wnd2->wnd_y = *(i32 *)((int)wnd2->init_rect + 4);
   return;
 }
 
 /* 004b4c81 auto */
-void __thiscall parley_wnd_pick_size_mode(ParleyWindowLayout *self)
+void __thiscall parley_wnd_pick_size_mode(ParleyWindow *self)
 
 {
   iptr active;
-  iptr wnd2;
+  ParleyWindow *wnd2;
   
   active = wnd_get_active_child();
   if (active == 0) {
     wnd2 = 0;
   }
   else {
-    wnd2 = active - 0x48;
+    wnd2 = (ParleyWindow *)(active - 0x48);
   }
-  *(i32 *)(wnd2 + 0x154) = 0;
+  wnd2->large_layout = 0;
   if (999 < caption_font_block.screen_width) {
-    *(i32 *)(wnd2 + 0x154) = 1;
+    wnd2->large_layout = 1;
   }
   parley_wnd_calc_rect(self);
   return;
 }
 
 /* 004b4cf0 auto */
-void __thiscall parley_wnd_calc_rect(ParleyWindowLayout *self)
+void __thiscall parley_wnd_calc_rect(ParleyWindow *self)
 
 {
   int size;
@@ -6435,95 +6400,95 @@ void __thiscall parley_wnd_calc_rect(ParleyWindowLayout *self)
   else {
     font_height = font_cached_height((GameFont *)((i8 *)&font_size30));
   }
-  self->client_width = panel_margin_y * 2 + panel_bevel_width * 2 + font_height;
+  self->caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + font_height;
   width2 = width2 + (panel_padding_x + panel_margin_x) * 2 + 6;
-  height2 = height2 + panel_margin_y * 2 + self->client_width * 2 + 0xe;
-  size = rect_width(self->init_rect);
+  height2 = height2 + panel_margin_y * 2 + self->caption_height * 2 + 0xe;
+  size = rect_width((RECT *)self->init_rect);
   if (size == 0) {
     size = wnd_client_width((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-    self->border_width = (size >> 1) - (width2 >> 1);
-    left = self->border_width;
+    self->wnd_x = (size >> 1) - (width2 >> 1);
+    left = self->wnd_x;
     size = wnd_client_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-    self->resize_border = (size >> 1) - (height2 >> 1);
-    top = self->resize_border;
+    self->wnd_y = (size >> 1) - (height2 >> 1);
+    top = self->wnd_y;
   }
   else {
-    left = self->border_width;
-    top = self->resize_border;
+    left = self->wnd_x;
+    top = self->wnd_y;
   }
   SetRect((LPRECT)self->init_rect,left,top,width2 + left,height2 + top);
-  wnd_set_caption_height((WndBase *)self->window_2,self->client_width);
+  wnd_set_caption_height((WndBase *)((u8 *)self + 0x48),self->caption_height);
   return;
 }
 
 /* 004b4e8a auto */
-void __thiscall parley_wnd_calc_layout(ParleyWindowLayout *self)
+void __thiscall parley_wnd_calc_layout(ParleyWindow *self)
 
 {
   u32 dim;
   int font_height;
   
   dim = surface_get_width((DibSurface *)self);
-  self->client_x = dim;
+  self->width = dim;
   dim = surface_get_height((DibSurface *)self);
-  self->client_y = dim;
+  self->height = dim;
   if (self->large_layout == 0) {
     font_height = font_cached_height((GameFont *)((i8 *)&font_size20));
   }
   else {
     font_height = font_cached_height((GameFont *)((i8 *)&font_size30));
   }
-  self->client_width = panel_margin_y * 2 + panel_bevel_width * 2 + font_height;
-  SetRect((LPRECT)&self->client_height,0,0,self->client_x,self->client_y);
-  SetRect((LPRECT)&self->panel_rect,0,0,self->client_x + (panel_padding_x + panel_margin_x) * -2,
-          self->client_y - (panel_margin_y * 2 + self->client_width * 2 + panel_padding_x));
-  OffsetRect((LPRECT)&self->panel_rect,panel_padding_x + panel_margin_x,self->client_width + panel_margin_y);
+  self->caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + font_height;
+  SetRect((LPRECT)&self->client_left,0,0,self->width,self->height);
+  SetRect((LPRECT)&self->panel_left,0,0,self->width + (panel_padding_x + panel_margin_x) * -2,
+          self->height - (panel_margin_y * 2 + self->caption_height * 2 + panel_padding_x));
+  OffsetRect((LPRECT)&self->panel_left,panel_padding_x + panel_margin_x,self->caption_height + panel_margin_y);
   return;
 }
 
 /* 004b4fb2 auto */
-void __thiscall parley_wnd_sync_sides(ViewWindow *self)
+void __thiscall parley_wnd_sync_sides(ParleyWindow *self)
 
 {
   if (self->built_layout == self->large_layout) {
-    if (self->shown_left_civ != self->left_civ) {
-      parley_add_side_dialog(self,self->left_civ,0);
-      self->shown_left_civ = self->left_civ;
+    if (self->shown_left_kind != self->left_kind) {
+      parley_add_side_dialog(self,self->left_kind,0);
+      self->shown_left_kind = self->left_kind;
     }
-    if (self->caption_button_count != self->right_civ) {
-      parley_add_side_dialog(self,self->right_civ,1);
-      self->caption_button_count = self->right_civ;
+    if (self->shown_right_kind != self->right_kind) {
+      parley_add_side_dialog(self,self->right_kind,1);
+      self->shown_right_kind = self->right_kind;
     }
   }
   else {
     parley_wnd_destroy_controls(self);
     parley_wnd_create_controls(self);
-    parley_add_side_dialog(self,self->left_civ,0);
-    parley_add_side_dialog(self,self->right_civ,1);
-    self->shown_left_civ = self->left_civ;
-    self->caption_button_count = self->right_civ;
+    parley_add_side_dialog(self,self->left_kind,0);
+    parley_add_side_dialog(self,self->right_kind,1);
+    self->shown_left_kind = self->left_kind;
+    self->shown_right_kind = self->right_kind;
     self->built_layout = self->large_layout;
   }
   return;
 }
 
 /* 004b50cf auto */
-void __thiscall parley_wnd_destroy_controls(ViewWindow *self)
+void __thiscall parley_wnd_destroy_controls(ParleyWindow *self)
 
 {
   u8 *slot;
   int i;
   
-  if (self->item_buffer != 0) {
-    operator_delete((void *)self->item_buffer);
-    self->item_buffer = 0;
+  if (self->received_offer != 0) {
+    operator_delete((void *)self->received_offer);
+    self->received_offer = 0;
   }
   for (i = 0; i < 3; i++) {
-    if (*(int *)(self->caption_button_hotspots + i * 0x1c - 4) != 0) {
-      if (*(Hotspot **)(self->caption_button_hotspots + i * 0x1c - 4) != (Hotspot *)0x0) {
-        hotspot_scalar_dtor(*(Hotspot **)(self->caption_button_hotspots + i * 0x1c - 4),1);
+    if (self->caption_buttons[i].hotspot != 0) {
+      if ((Hotspot *)self->caption_buttons[i].hotspot != (Hotspot *)0x0) {
+        hotspot_scalar_dtor((Hotspot *)self->caption_buttons[i].hotspot,1);
       }
-      slot = self->caption_button_hotspots + i * 0x1c - 4;
+      slot = (u8 *)&self->caption_buttons[i].hotspot;
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
@@ -6536,77 +6501,77 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *self)
     }
     self->close_button = 0;
   }
-  if (self->send_button_value != 0) {
-    if ((Control *)self->send_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->send_button_value,1);
+  if (self->send_button != 0) {
+    if ((Control *)self->send_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->send_button,1);
     }
-    self->send_button_value = 0;
+    self->send_button = 0;
   }
-  if (self->clear_button_value != 0) {
-    if ((Control *)self->clear_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->clear_button_value,1);
+  if (self->clear_button != 0) {
+    if ((Control *)self->clear_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->clear_button,1);
     }
-    self->clear_button_value = 0;
+    self->clear_button = 0;
   }
-  if (self->reveal_button_value != 0) {
-    if ((Control *)self->reveal_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->reveal_button_value,1);
+  if (self->reveal_button != 0) {
+    if ((Control *)self->reveal_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->reveal_button,1);
     }
-    self->reveal_button_value = 0;
+    self->reveal_button = 0;
   }
-  if (self->conceal_button_value != 0) {
-    if ((Control *)self->conceal_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->conceal_button_value,1);
+  if (self->conceal_button != 0) {
+    if ((Control *)self->conceal_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->conceal_button,1);
     }
-    self->conceal_button_value = 0;
+    self->conceal_button = 0;
   }
-  if (self->rates_clamped != 0) {
-    if ((Control *)self->rates_clamped != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->rates_clamped,1);
+  if (self->mode_button != 0) {
+    if ((Control *)self->mode_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->mode_button,1);
     }
-    self->rates_clamped = 0;
+    self->mode_button = 0;
   }
-  if (self->intel_button_value != 0) {
-    if ((Control *)self->intel_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->intel_button_value,1);
+  if (self->intel_button != 0) {
+    if ((Control *)self->intel_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->intel_button,1);
     }
-    self->intel_button_value = 0;
+    self->intel_button = 0;
   }
-  if (self->mode2_button_value != 0) {
-    if ((Control *)self->mode2_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->mode2_button_value,1);
+  if (self->mode2_button != 0) {
+    if ((Control *)self->mode2_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->mode2_button,1);
     }
-    self->mode2_button_value = 0;
+    self->mode2_button = 0;
   }
-  if (self->never_mind_button_value != 0) {
-    if ((Control *)self->never_mind_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->never_mind_button_value,1);
+  if (self->never_mind_button != 0) {
+    if ((Control *)self->never_mind_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->never_mind_button,1);
     }
-    self->never_mind_button_value = 0;
+    self->never_mind_button = 0;
   }
-  if (self->tax_scrollbar != 0) {
-    if ((Control *)self->tax_scrollbar != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->tax_scrollbar,1);
+  if (self->accept_button != 0) {
+    if ((Control *)self->accept_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->accept_button,1);
     }
-    self->tax_scrollbar = 0;
+    self->accept_button = 0;
   }
-  if (self->no_thanks_button_value != 0) {
-    if ((Control *)self->no_thanks_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->no_thanks_button_value,1);
+  if (self->no_thanks_button != 0) {
+    if ((Control *)self->no_thanks_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->no_thanks_button,1);
     }
-    self->no_thanks_button_value = 0;
+    self->no_thanks_button = 0;
   }
-  if (self->counter_button_value != 0) {
-    if ((Control *)self->counter_button_value != (Control *)0x0) {
-      ctrl_scalar_dtor((Control *)self->counter_button_value,1);
+  if (self->counter_button != 0) {
+    if ((Control *)self->counter_button != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->counter_button,1);
     }
-    self->counter_button_value = 0;
+    self->counter_button = 0;
   }
-  if (self->chat_history_edit != 0) {
-    if ((Control *)self->chat_history_edit != (Control *)0x0) {
-      edit_scalar_dtor((Control *)self->chat_history_edit,1);
+  if (self->chat_log_edit != 0) {
+    if ((Control *)self->chat_log_edit != (Control *)0x0) {
+      edit_scalar_dtor((Control *)self->chat_log_edit,1);
     }
-    self->chat_history_edit = 0;
+    self->chat_log_edit = 0;
   }
   if (self->chat_input_edit != 0) {
     if ((Control *)self->chat_input_edit != (Control *)0x0) {
@@ -6614,46 +6579,46 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *self)
     }
     self->chat_input_edit = 0;
   }
-  if (self->sci_rate_sel != 0) {
-    if ((Checkbox *)self->sci_rate_sel != (Checkbox *)0x0) {
-      checkbox_scalar_dtor((Checkbox *)self->sci_rate_sel,1);
+  if (self->anonymous_checkbox != 0) {
+    if ((Checkbox *)self->anonymous_checkbox != (Checkbox *)0x0) {
+      checkbox_scalar_dtor((Checkbox *)self->anonymous_checkbox,1);
     }
-    self->sci_rate_sel = 0;
+    self->anonymous_checkbox = 0;
   }
-  if (self->init_tax_rate != 0) {
-    if ((Checkbox *)self->init_tax_rate != (Checkbox *)0x0) {
-      checkbox_scalar_dtor((Checkbox *)self->init_tax_rate,1);
+  if (self->mute_anonymous_checkbox != 0) {
+    if ((Checkbox *)self->mute_anonymous_checkbox != (Checkbox *)0x0) {
+      checkbox_scalar_dtor((Checkbox *)self->mute_anonymous_checkbox,1);
     }
-    self->init_tax_rate = 0;
+    self->mute_anonymous_checkbox = 0;
   }
-  if (self->side_text_edit != 0) {
-    if ((Control *)self->side_text_edit != (Control *)0x0) {
-      edit_scalar_dtor((Control *)self->side_text_edit,1);
+  if (self->desc_edit != 0) {
+    if ((Control *)self->desc_edit != (Control *)0x0) {
+      edit_scalar_dtor((Control *)self->desc_edit,1);
     }
-    self->side_text_edit = 0;
+    self->desc_edit = 0;
   }
-  if (self->init_lux_rate != 0) {
-    if ((Checkbox *)self->init_lux_rate != (Checkbox *)0x0) {
-      checkbox_scalar_dtor((Checkbox *)self->init_lux_rate,1);
+  if (self->broadcast_checkbox != 0) {
+    if ((Checkbox *)self->broadcast_checkbox != (Checkbox *)0x0) {
+      checkbox_scalar_dtor((Checkbox *)self->broadcast_checkbox,1);
     }
-    self->init_lux_rate = 0;
+    self->broadcast_checkbox = 0;
   }
   for (i = 0; i < 8; i++) {
-    if (*(int *)(self->parley_checkboxes + i * 4 - 0x1c) != 0) {
-      if (*(Checkbox **)(self->parley_checkboxes + i * 4 - 0x1c) != (Checkbox *)0x0) {
-        checkbox_scalar_dtor(*(Checkbox **)(self->parley_checkboxes + i * 4 - 0x1c),1);
+    if (self->send_checkboxes[i] != 0) {
+      if ((Checkbox *)self->send_checkboxes[i] != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)self->send_checkboxes[i],1);
       }
-      slot = self->parley_checkboxes + i * 4 - 0x1c;
+      slot = (u8 *)&self->send_checkboxes[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)(self->parley_checkboxes + i * 4 + 4) != 0) {
-      if (*(Checkbox **)(self->parley_checkboxes + i * 4 + 4) != (Checkbox *)0x0) {
-        checkbox_scalar_dtor(*(Checkbox **)(self->parley_checkboxes + i * 4 + 4),1);
+    if (self->mute_checkboxes[i] != 0) {
+      if ((Checkbox *)self->mute_checkboxes[i] != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)self->mute_checkboxes[i],1);
       }
-      slot = self->parley_checkboxes + i * 4 + 4;
+      slot = (u8 *)&self->mute_checkboxes[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
@@ -6661,97 +6626,97 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *self)
     }
   }
   for (i = 0; i < 2; i++) {
-    if (*(int *)(self->rate_values + i * 4) != 0) {
-      if (*(Checkbox **)(self->rate_values + i * 4) != (Checkbox *)0x0) {
-        checkbox_scalar_dtor(*(Checkbox **)(self->rate_values + i * 4),1);
+    if (self->side_checkboxes[i] != 0) {
+      if ((Checkbox *)self->side_checkboxes[i] != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)self->side_checkboxes[i],1);
       }
-      slot = self->rate_values + i * 4;
+      slot = (u8 *)&self->side_checkboxes[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)(self->rate_values + i * 4 + 8) != 0) {
-      if (*(RadioGroupDtorView **)(self->rate_values + i * 4 + 8) != (RadioGroupDtorView *)0x0) {
-        radiogrp_scalar_dtor(*(RadioGroupDtorView **)(self->rate_values + i * 4 + 8),1);
+    if (self->side_radios[i] != 0) {
+      if ((RadioGroupDtorView *)self->side_radios[i] != (RadioGroupDtorView *)0x0) {
+        radiogrp_scalar_dtor((RadioGroupDtorView *)self->side_radios[i],1);
       }
-      slot = self->rate_values + i * 4 + 8;
+      slot = (u8 *)&self->side_radios[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)(self->rate_values + i * 4 + 0x10) != 0) {
-      if (*(Control **)(self->rate_values + i * 4 + 0x10) != (Control *)0x0) {
-        edit_scalar_dtor(*(Control **)(self->rate_values + i * 4 + 0x10),1)
+    if (self->gold_edits[i] != 0) {
+      if ((Control *)self->gold_edits[i] != (Control *)0x0) {
+        edit_scalar_dtor((Control *)self->gold_edits[i],1)
         ;
       }
-      slot = self->rate_values + i * 4 + 0x10;
+      slot = (u8 *)&self->gold_edits[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)(self->rate_values + i * 4 + 0x18) != 0) {
-      if (*(Control **)(self->rate_values + i * 4 + 0x18) != (Control *)0x0) {
-        scrollbar_scalar_dtor(*(Control **)(self->rate_values + i * 4 + 0x18),1)
+    if (self->list_scrollbars[i] != 0) {
+      if ((Control *)self->list_scrollbars[i] != (Control *)0x0) {
+        scrollbar_scalar_dtor((Control *)self->list_scrollbars[i],1)
         ;
       }
-      slot = self->rate_values + i * 4 + 0x18;
+      slot = (u8 *)&self->list_scrollbars[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)(self->rate_values + i * 4 + 0x20) != 0) {
-      if (*(Hotspot **)(self->rate_values + i * 4 + 0x20) != (Hotspot *)0x0) {
-        hotspot_scalar_dtor(*(Hotspot **)(self->rate_values + i * 4 + 0x20),1);
+    if (self->list_hotspots[i] != 0) {
+      if ((Hotspot *)self->list_hotspots[i] != (Hotspot *)0x0) {
+        hotspot_scalar_dtor((Hotspot *)self->list_hotspots[i],1);
       }
-      slot = self->rate_values + i * 4 + 0x20;
+      slot = (u8 *)&self->list_hotspots[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)(self->rate_values + i * 4 + 0x28) != 0) {
-      if (*(Control **)(self->rate_values + i * 4 + 0x28) != (Control *)0x0) {
-        ctrl_scalar_dtor(*(Control **)(self->rate_values + i * 4 + 0x28),1)
+    if (self->sort_by_unit_buttons[i] != 0) {
+      if ((Control *)self->sort_by_unit_buttons[i] != (Control *)0x0) {
+        ctrl_scalar_dtor((Control *)self->sort_by_unit_buttons[i],1)
         ;
       }
-      slot = self->rate_values + i * 4 + 0x28;
+      slot = (u8 *)&self->sort_by_unit_buttons[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)(self->rate_values + i * 4 + 0x30) != 0) {
-      if (*(Control **)(self->rate_values + i * 4 + 0x30) != (Control *)0x0) {
-        ctrl_scalar_dtor(*(Control **)(self->rate_values + i * 4 + 0x30),1)
+    if (self->sort_by_city_buttons[i] != 0) {
+      if ((Control *)self->sort_by_city_buttons[i] != (Control *)0x0) {
+        ctrl_scalar_dtor((Control *)self->sort_by_city_buttons[i],1)
         ;
       }
-      slot = self->rate_values + i * 4 + 0x30;
+      slot = (u8 *)&self->sort_by_city_buttons[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)((u8 *)&self->advance_pane_rects + i * 4 - 0x24) != 0) {
-      if (*(Control **)((u8 *)&self->advance_pane_rects + i * 4 - 0x24) != (Control *)0x0) {
+    if (self->info_show_buttons[i] != 0) {
+      if ((Control *)self->info_show_buttons[i] != (Control *)0x0) {
         ctrl_scalar_dtor
-                  (*(Control **)((u8 *)&self->advance_pane_rects + i * 4 - 0x24),1);
+                  ((Control *)self->info_show_buttons[i],1);
       }
-      slot = (u8 *)&self->advance_pane_rects + i * 4 - 0x24;
+      slot = (u8 *)&self->info_show_buttons[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
       slot[3] = '\0';
     }
-    if (*(int *)((u8 *)&self->advance_pane_rects + i * 4 - 0x1c) != 0) {
-      if (*(Control **)((u8 *)&self->advance_pane_rects + i * 4 - 0x1c) != (Control *)0x0) {
+    if (self->info_hide_buttons[i] != 0) {
+      if ((Control *)self->info_hide_buttons[i] != (Control *)0x0) {
         ctrl_scalar_dtor
-                  (*(Control **)((u8 *)&self->advance_pane_rects + i * 4 - 0x1c),1);
+                  ((Control *)self->info_hide_buttons[i],1);
       }
-      slot = (u8 *)&self->advance_pane_rects + i * 4 - 0x1c;
+      slot = (u8 *)&self->info_hide_buttons[i];
       slot[0] = '\0';
       slot[1] = '\0';
       slot[2] = '\0';
@@ -6762,7 +6727,7 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *self)
 }
 
 /* 004b5c93 auto */
-void __thiscall parley_wnd_create_controls(ViewWindow *self)
+void __thiscall parley_wnd_create_controls(ParleyWindow *self)
 
 {
   u8 *slot_ptr;
@@ -6835,29 +6800,29 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   caption_x = panel_padding_x;
   for (i = 0; i < 3; i++) {
     if (i == 0) {
-      *(i8 **)self->close_caption_sprite_slot = ((i8 *)&caption_close_button_sprite_block.caption_close_button_sprite);
+      self->caption_buttons[0].sprite = (Sprite *)((i8 *)&caption_close_button_sprite_block.caption_close_button_sprite);
     }
     else if (i == 1) {
-      *(i8 **)self->zoom_out_caption_sprite_slot = ((i8 *)&caption_zoom_out_sprite);
+      self->caption_buttons[1].sprite = (Sprite *)((i8 *)&caption_zoom_out_sprite);
     }
     else {
-      *(i8 **)(self->parley_caption_buttons + i * 0x1c + 0x14) = ((i8 *)&caption_zoom_out_button_sprite_block.caption_zoom_out_button_sprite);
+      self->caption_buttons[i].sprite = (Sprite *)((i8 *)&caption_zoom_out_button_sprite_block.caption_zoom_out_button_sprite);
     }
-    *(int *)(self->parley_caption_buttons + i * 0x1c) = i + 1;
+    self->caption_buttons[i].id = i + 1;
     sprite_dim = sprite_width
-                      (*(Sprite **)(self->parley_caption_buttons + i * 0x1c + 0x14));
-    *(i32 *)(self->parley_caption_buttons + i * 0x1c + 0xc) = sprite_dim;
+                      (self->caption_buttons[i].sprite);
+    self->caption_buttons[i].width = sprite_dim;
     sprite_dim = sprite_height
-                      (*(Sprite **)(self->parley_caption_buttons + i * 0x1c + 0x14));
-    *(i32 *)(self->parley_caption_buttons + i * 0x1c + 0x10) = sprite_dim;
-    slot_ptr = self->caption_button_hotspots + i * 0x1c - 4;
+                      (self->caption_buttons[i].sprite);
+    self->caption_buttons[i].height = sprite_dim;
+    slot_ptr = (u8 *)&self->caption_buttons[i].hotspot;
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
-    ctrl_width = (int)(*(int *)(self->parley_caption_buttons + i * 0x1c + 0xc) * self->client_width) / 0x18;
-    ctrl_height = (int)(*(int *)(self->parley_caption_buttons + i * 0x1c + 0x10) * self->client_width) / 0x18;
-    ctrl_left = ((int)self->client_width >> 1) - (ctrl_height >> 1);
+    ctrl_width = (int)(self->caption_buttons[i].width * self->caption_height) / 0x18;
+    ctrl_height = (int)(self->caption_buttons[i].height * self->caption_height) / 0x18;
+    ctrl_left = ((int)self->caption_height >> 1) - (ctrl_height >> 1);
     SetRect(&rect,caption_x,ctrl_left,ctrl_width + caption_x,ctrl_left + ctrl_height);
     new_ctrl = (Control *)(operator_new(0x40));
     eh_state = 0;
@@ -6868,17 +6833,17 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       hotspot = (i32)(hotspot_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->caption_button_hotspots + i * 0x1c - 4) = hotspot;
-    if (self == (ViewWindow *)0x0) {
+    self->caption_buttons[i].hotspot = hotspot;
+    if (self == (ParleyWindow *)0x0) {
       caption_parent = (u8 *)0x0;
     }
     else {
-      caption_parent = self->window_2;
+      caption_parent = ((u8 *)self + 0x48);
     }
     hotspot_create
-              (*(ClickControl **)(self->caption_button_hotspots + i * 0x1c - 4),(iptr)caption_parent,
-               *(int *)(self->parley_caption_buttons + i * 0x1c) + 1000,(iptr)&rect);
-    hotspot_set_click_callback(*(HotspotClickSetView **)(self->caption_button_hotspots + i * 0x1c - 4),(iptr)parley_wnd_on_caption_click);
+              ((ClickControl *)self->caption_buttons[i].hotspot,(iptr)caption_parent,
+               self->caption_buttons[i].id + 1000,(iptr)&rect);
+    hotspot_set_click_callback((HotspotClickSetView *)self->caption_buttons[i].hotspot,(iptr)parley_wnd_on_caption_click);
     caption_x = caption_x + ctrl_width + panel_margin_x;
   }
   if (self->large_layout == 0) {
@@ -6905,8 +6870,8 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   else {
     close_line_h = font_line_spacing((GameFont *)((i8 *)&font_size24));
   }
-  yTop = self->client_y - ((panel_margin_y + panel_padding_y) * 2 + close_line_h);
-  wnd_width = self->client_x;
+  yTop = self->height - ((panel_margin_y + panel_padding_y) * 2 + close_line_h);
+  wnd_width = self->width;
   y_delta = panel_margin_x * 2;
   ctrl_left = panel_bevel_width * 2;
   if (self->large_layout == 0) {
@@ -6917,17 +6882,17 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   }
   ctrl_height = panel_padding_y * 2 + close_line_h2;
   SetRect(&rect,ctrl_width,yTop,(wnd_width - (y_delta + ctrl_left + 5)) + ctrl_width,yTop + ctrl_height);
-  if (self->session_mode == 4) {
-    close_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb2c)));
+  if (self->mode == 4) {
+    close_label = (iptr)(label_string(label_string_ids[0x2cb]));
   }
   else {
-    close_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb30)));
+    close_label = (iptr)(label_string(label_string_ids[0x2cc]));
   }
-  if (self == (ViewWindow *)0x0) {
+  if (self == (ParleyWindow *)0x0) {
     close_parent = (u8 *)0x0;
   }
   else {
-    close_parent = self->window_2;
+    close_parent = ((u8 *)self + 0x48);
   }
   button_create
             ((Control *)self->close_button,(iptr)close_parent,0x3ed,(iptr)&rect,(const char *)close_label);
@@ -6941,11 +6906,11 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     history_edit = (uptr)(edit_ctor(new_edit));
   }
   eh_state = 0xffffffff;
-  self->chat_history_edit = history_edit;
-  ctrl_left = self->panel_rect + panel_margin_x;
-  ctrl_width = rect_width((iptr)&self->panel_rect);
+  self->chat_log_edit = history_edit;
+  ctrl_left = self->panel_left + panel_margin_x;
+  ctrl_width = rect_width((RECT *)&self->panel_left);
   ctrl_width += panel_margin_x * -2;
-  if (self->session_mode == 4) {
+  if (self->mode == 4) {
     if (self->large_layout == 0) {
       hist_font_h3 = font_cached_height((GameFont *)((i8 *)&font_size14));
     }
@@ -6985,18 +6950,18 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     history_font = ((i8 *)&font_size21);
   }
   ui_set_default_font((iptr)history_font);
-  if (self == (ViewWindow *)0x0) {
+  if (self == (ParleyWindow *)0x0) {
     history_parent = (u8 *)0x0;
   }
   else {
-    history_parent = self->window_2;
+    history_parent = ((u8 *)self + 0x48);
   }
   edit_create_styled
-            ((EditControl *)self->chat_history_edit,(iptr)history_parent,0x3ee,(iptr)&rect,((const char *)(*(iptr *)&chat_log_buffer)),
+            ((EditControl *)self->chat_log_edit,(iptr)history_parent,0x3ee,(iptr)&rect,((const char *)(*(iptr *)&chat_log_buffer)),
              0x122,0);
-  edit_set_max_len((EditMaxLenView *)self->chat_history_edit,0x2000);
-  edit_set_callback((EditCallbackSetView *)self->chat_history_edit,(iptr)parley_edit_escape_filter);
-  ctrl_show_and_redraw((Control *)self->chat_history_edit);
+  edit_set_max_len((EditMaxLenView *)self->chat_log_edit,0x2000);
+  edit_set_callback((EditCallbackSetView *)self->chat_log_edit,(iptr)parley_edit_escape_filter);
+  ctrl_show_and_redraw((Control *)self->chat_log_edit);
   new_edit = (InputControl *)(operator_new(0x48));
   eh_state = 3;
   if (new_edit == (InputControl *)0x0) {
@@ -7008,7 +6973,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   eh_state = 0xffffffff;
   self->chat_input_edit = input_edit;
   ctrl_width -= ctrl_width / 10;
-  if (self->session_mode == 4) {
+  if (self->mode == 4) {
     if (self->large_layout == 0) {
       input_font_h3 = font_cached_height((GameFont *)((i8 *)&font_size14));
     }
@@ -7049,17 +7014,17 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     input_font = ((i8 *)&font_size21);
   }
   ui_set_default_font((iptr)input_font);
-  if (self->session_mode == 4) {
+  if (self->mode == 4) {
     input_style = 0x200;
   }
   else {
     input_style = 0x220;
   }
-  if (self == (ViewWindow *)0x0) {
+  if (self == (ParleyWindow *)0x0) {
     input_parent = (u8 *)0x0;
   }
   else {
-    input_parent = self->window_2;
+    input_parent = ((u8 *)self + 0x48);
   }
   edit_create_styled
             ((EditControl *)self->chat_input_edit,(iptr)input_parent,0x3ef,(iptr)&rect,((const char *)(*(iptr *)&chat_input_buffer)),
@@ -7078,20 +7043,20 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   }
   xLeft = rect.right;
   eh_state = 0xffffffff;
-  self->send_button_value = send_button;
+  self->send_button = send_button;
   ctrl_width = ctrl_width / 9;
   ctrl_height = ctrl_height / 2;
   SetRect(&rect,rect.right,ctrl_top,ctrl_width + rect.right,ctrl_top + ctrl_height);
-  if (self == (ViewWindow *)0x0) {
+  if (self == (ParleyWindow *)0x0) {
     send_parent = (u8 *)0x0;
   }
   else {
-    send_parent = self->window_2;
+    send_parent = ((u8 *)self + 0x48);
   }
-  label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb34)));
+  label = (iptr)(label_string(label_string_ids[0x2cd]));
   button_create
-            ((Control *)self->send_button_value,(iptr)send_parent,0x3f0,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)self->send_button_value,(iptr)chat_send_button_on_click);
+            ((Control *)self->send_button,(iptr)send_parent,0x3f0,(iptr)&rect,(const char *)label);
+  button_set_callback((Control *)self->send_button,(iptr)chat_send_button_on_click);
   new_ctrl = (Control *)(operator_new(0x3c));
   eh_state = 5;
   if (new_ctrl == (Control *)0x0) {
@@ -7101,19 +7066,19 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     clear_button = (uptr)(button_ctor(new_ctrl));
   }
   eh_state = 0xffffffff;
-  self->clear_button_value = clear_button;
+  self->clear_button = clear_button;
   ctrl_top += ctrl_height;
   SetRect(&rect,xLeft,ctrl_top,ctrl_width + xLeft,ctrl_top + ctrl_height);
-  if (self == (ViewWindow *)0x0) {
+  if (self == (ParleyWindow *)0x0) {
     clear_parent = (u8 *)0x0;
   }
   else {
-    clear_parent = self->window_2;
+    clear_parent = ((u8 *)self + 0x48);
   }
-  label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb38)));
+  label = (iptr)(label_string(label_string_ids[0x2ce]));
   button_create
-            ((Control *)self->clear_button_value,(iptr)clear_parent,0x41e,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)self->clear_button_value,(iptr)chat_clear_button_on_click);
+            ((Control *)self->clear_button,(iptr)clear_parent,0x41e,(iptr)&rect,(const char *)label);
+  button_set_callback((Control *)self->clear_button,(iptr)chat_clear_button_on_click);
   ctrl_top -= ctrl_height;
   if (self->large_layout == 0) {
     footer_line_h = font_line_spacing((GameFont *)((i8 *)&font_size16));
@@ -7123,8 +7088,8 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   }
   ctrl_height = panel_padding_y * 2 + footer_line_h;
   ctrl_top -= (panel_margin_y + ctrl_height);
-  self->show_turn_timer = ctrl_top - panel_margin_y;
-  if (self->session_mode != 4) {
+  self->divider_y = ctrl_top - panel_margin_y;
+  if (self->mode != 4) {
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 6;
     if (new_ctrl == (Control *)0x0) {
@@ -7134,23 +7099,23 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       conceal_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->conceal_button_value = conceal_button;
-    ctrl_width = self->panel_rect + panel_margin_x;
-    ctrl_left = rect_width((iptr)&self->panel_rect);
+    self->conceal_button = conceal_button;
+    ctrl_width = self->panel_left + panel_margin_x;
+    ctrl_left = rect_width((RECT *)&self->panel_left);
     ctrl_left += panel_margin_x * -2;
     SetRect(&rect,ctrl_width,ctrl_top - ctrl_height,ctrl_left + ctrl_width,ctrl_top);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       conceal_parent = (u8 *)0x0;
     }
     else {
-      conceal_parent = self->window_2;
+      conceal_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdb4)));
+    label = (iptr)(label_string(label_string_ids[0x36d]));
     button_create
-              ((Control *)self->conceal_button_value,(iptr)conceal_parent,0x431,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->conceal_button_value,(iptr)parley_on_conceal_info);
-    control_hide((Control *)self->conceal_button_value);
-    ctrl_disable((Control *)self->conceal_button_value);
+              ((Control *)self->conceal_button,(iptr)conceal_parent,0x431,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->conceal_button,(iptr)parley_on_conceal_info);
+    control_hide((Control *)self->conceal_button);
+    ctrl_disable((Control *)self->conceal_button);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 7;
     if (new_ctrl == (Control *)0x0) {
@@ -7160,21 +7125,21 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       reveal_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->reveal_button_value = reveal_button;
-    ctrl_width = self->panel_rect + panel_margin_x;
+    self->reveal_button = reveal_button;
+    ctrl_width = self->panel_left + panel_margin_x;
     SetRect(&rect,ctrl_width,ctrl_top - ctrl_height,ctrl_left + ctrl_width,ctrl_top);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       reveal_parent = (u8 *)0x0;
     }
     else {
-      reveal_parent = self->window_2;
+      reveal_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdb8)));
+    label = (iptr)(label_string(label_string_ids[0x36e]));
     button_create
-              ((Control *)self->reveal_button_value,(iptr)reveal_parent,0x432,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->reveal_button_value,(iptr)parley_on_reveal_info);
-    control_hide((Control *)self->reveal_button_value);
-    ctrl_disable((Control *)self->reveal_button_value);
+              ((Control *)self->reveal_button,(iptr)reveal_parent,0x432,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->reveal_button,(iptr)parley_on_reveal_info);
+    control_hide((Control *)self->reveal_button);
+    ctrl_disable((Control *)self->reveal_button);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 8;
     if (new_ctrl == (Control *)0x0) {
@@ -7184,22 +7149,22 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       intel_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->intel_button_value = intel_button;
-    ctrl_width = self->panel_rect + panel_margin_x;
-    ctrl_left = rect_width((iptr)&self->panel_rect);
+    self->intel_button = intel_button;
+    ctrl_width = self->panel_left + panel_margin_x;
+    ctrl_left = rect_width((RECT *)&self->panel_left);
     ctrl_left = (ctrl_left + panel_margin_x * -2) / 3;
     SetRect(&rect,ctrl_width,ctrl_top,ctrl_left + ctrl_width,ctrl_top + ctrl_height);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       intel_parent = (u8 *)0x0;
     }
     else {
-      intel_parent = self->window_2;
+      intel_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0x1a0)));
+    label = (iptr)(label_string(label_string_ids[0x68]));
     button_create
-              ((Control *)self->intel_button_value,(iptr)intel_parent,0x428,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->intel_button_value,(iptr)parley_on_check_intel);
-    ctrl_enable((Control *)self->intel_button_value);
+              ((Control *)self->intel_button,(iptr)intel_parent,0x428,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->intel_button,(iptr)parley_on_check_intel);
+    ctrl_enable((Control *)self->intel_button);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 9;
     if (new_ctrl == (Control *)0x0) {
@@ -7209,19 +7174,19 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       mode_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->rates_clamped = mode_button;
+    self->mode_button = mode_button;
     SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       mode_parent = (u8 *)0x0;
     }
     else {
-      mode_parent = self->window_2;
+      mode_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb3c)));
+    label = (iptr)(label_string(label_string_ids[0x2cf]));
     button_create
-              ((Control *)self->rates_clamped,(iptr)mode_parent,0x3f1,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->rates_clamped,(iptr)parley_on_mode_chosen);
-    ctrl_enable((Control *)self->rates_clamped);
+              ((Control *)self->mode_button,(iptr)mode_parent,0x3f1,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->mode_button,(iptr)parley_on_mode_chosen);
+    ctrl_enable((Control *)self->mode_button);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 10;
     if (new_ctrl == (Control *)0x0) {
@@ -7231,19 +7196,19 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       mode2_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->mode2_button_value = mode2_button;
-    if (self == (ViewWindow *)0x0) {
+    self->mode2_button = mode2_button;
+    if (self == (ParleyWindow *)0x0) {
       mode2_parent = (u8 *)0x0;
     }
     else {
-      mode2_parent = self->window_2;
+      mode2_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd10)));
+    label = (iptr)(label_string(label_string_ids[0x344]));
     button_create
-              ((Control *)self->mode2_button_value,(iptr)mode2_parent,0x427,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->mode2_button_value,(iptr)parley_on_mode_chosen);
-    ctrl_disable((Control *)self->mode2_button_value);
-    control_hide((Control *)self->mode2_button_value);
+              ((Control *)self->mode2_button,(iptr)mode2_parent,0x427,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->mode2_button,(iptr)parley_on_mode_chosen);
+    ctrl_disable((Control *)self->mode2_button);
+    control_hide((Control *)self->mode2_button);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 0xb;
     if (new_ctrl == (Control *)0x0) {
@@ -7253,18 +7218,18 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       never_mind_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->never_mind_button_value = never_mind_button;
+    self->never_mind_button = never_mind_button;
     SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       never_mind_parent = (u8 *)0x0;
     }
     else {
-      never_mind_parent = self->window_2;
+      never_mind_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb40)));
+    label = (iptr)(label_string(label_string_ids[0x2d0]));
     button_create
-              ((Control *)self->never_mind_button_value,(iptr)never_mind_parent,0x3f2,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->never_mind_button_value,(iptr)parley_on_never_mind);
+              ((Control *)self->never_mind_button,(iptr)never_mind_parent,0x3f2,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->never_mind_button,(iptr)parley_on_never_mind);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 0xc;
     if (new_ctrl == (Control *)0x0) {
@@ -7274,22 +7239,22 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       accept_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->tax_scrollbar = accept_button;
-    ctrl_width = self->panel_rect + panel_margin_x;
-    ctrl_left = rect_width((iptr)&self->panel_rect);
+    self->accept_button = accept_button;
+    ctrl_width = self->panel_left + panel_margin_x;
+    ctrl_left = rect_width((RECT *)&self->panel_left);
     ctrl_left = (ctrl_left + panel_margin_x * -2) / 3;
     SetRect(&rect,ctrl_width,ctrl_top,ctrl_left + ctrl_width,ctrl_top + ctrl_height);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       accept_parent = (u8 *)0x0;
     }
     else {
-      accept_parent = self->window_2;
+      accept_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb44)));
+    label = (iptr)(label_string(label_string_ids[0x2d1]));
     button_create
-              ((Control *)self->tax_scrollbar,(iptr)accept_parent,0x3f2,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->tax_scrollbar,(iptr)parley_on_accept_offer);
-    control_hide((Control *)self->tax_scrollbar);
+              ((Control *)self->accept_button,(iptr)accept_parent,0x3f2,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->accept_button,(iptr)parley_on_accept_offer);
+    control_hide((Control *)self->accept_button);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 0xd;
     if (new_ctrl == (Control *)0x0) {
@@ -7299,19 +7264,19 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       no_thanks_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->no_thanks_button_value = no_thanks_button;
+    self->no_thanks_button = no_thanks_button;
     SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       no_thanks_parent = (u8 *)0x0;
     }
     else {
-      no_thanks_parent = self->window_2;
+      no_thanks_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb48)));
+    label = (iptr)(label_string(label_string_ids[0x2d2]));
     button_create
-              ((Control *)self->no_thanks_button_value,(iptr)no_thanks_parent,0x3f2,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->no_thanks_button_value,(iptr)parley_on_no_thanks);
-    control_hide((Control *)self->no_thanks_button_value);
+              ((Control *)self->no_thanks_button,(iptr)no_thanks_parent,0x3f2,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->no_thanks_button,(iptr)parley_on_no_thanks);
+    control_hide((Control *)self->no_thanks_button);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 0xe;
     if (new_ctrl == (Control *)0x0) {
@@ -7321,19 +7286,19 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
       counter_button = (uptr)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->counter_button_value = counter_button;
+    self->counter_button = counter_button;
     SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       counter_parent = (u8 *)0x0;
     }
     else {
-      counter_parent = self->window_2;
+      counter_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb4c)));
+    label = (iptr)(label_string(label_string_ids[0x2d3]));
     button_create
-              ((Control *)self->counter_button_value,(iptr)counter_parent,0x3f2,(iptr)&rect,(const char *)label);
-    button_set_callback((Control *)self->counter_button_value,(iptr)parley_on_counter_offer);
-    control_hide((Control *)self->counter_button_value);
+              ((Control *)self->counter_button,(iptr)counter_parent,0x3f2,(iptr)&rect,(const char *)label);
+    button_set_callback((Control *)self->counter_button,(iptr)parley_on_counter_offer);
+    control_hide((Control *)self->counter_button);
   }
   return;
 }
@@ -7343,33 +7308,33 @@ void __cdecl parley_wnd_on_caption_click(int control_id)
 
 {
   iptr child_wnd;
-  ParleyWindowLayout *parley_wnd_ptr;
+  ParleyWindow *parley_wnd_ptr;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
-    parley_wnd_ptr = (ParleyWindowLayout *)0x0;
+    parley_wnd_ptr = (ParleyWindow *)0x0;
   }
   else {
-    parley_wnd_ptr = (ParleyWindowLayout *)(child_wnd - 0x48);
+    parley_wnd_ptr = (ParleyWindow *)(child_wnd - 0x48);
   }
-  wnd_activate((Wnd *)parley_wnd_ptr->window_2);
+  wnd_activate((Wnd *)((u8 *)parley_wnd_ptr + 0x48));
   if (control_id == 0x3e9) {
     diplo_wnd_close_active();
   }
   else if (control_id == 0x3ea) {
     if (0 < (int)parley_wnd_ptr->large_layout) {
-      wnd_hide((WndBase *)parley_wnd_ptr->window_2);
+      wnd_hide((WndBase *)((u8 *)parley_wnd_ptr + 0x48));
       parley_wnd_ptr->large_layout--;
       parley_wnd_calc_rect(parley_wnd_ptr);
-      wnd_move_to_rect((WndBase *)parley_wnd_ptr->window_2,parley_wnd_ptr->init_rect);
+      wnd_move_to_rect((WndBase *)((u8 *)parley_wnd_ptr + 0x48),parley_wnd_ptr->init_rect);
       window_show((WindowObjectView *)parley_wnd_ptr);
     }
   }
   else if (((control_id == 0x3eb) && ((int)parley_wnd_ptr->large_layout < 1)) && (999 < caption_font_block.screen_width)) {
-    wnd_hide((WndBase *)parley_wnd_ptr->window_2);
+    wnd_hide((WndBase *)((u8 *)parley_wnd_ptr + 0x48));
     parley_wnd_ptr->large_layout++;
     parley_wnd_calc_rect(parley_wnd_ptr);
-    wnd_move_to_rect((WndBase *)parley_wnd_ptr->window_2,parley_wnd_ptr->init_rect);
+    wnd_move_to_rect((WndBase *)((u8 *)parley_wnd_ptr + 0x48),parley_wnd_ptr->init_rect);
     window_show((WindowObjectView *)parley_wnd_ptr);
   }
   return;
@@ -7381,7 +7346,7 @@ void __cdecl parley_wnd_on_caption_click(int control_id)
 void __cdecl parley_wnd_close(void)
 
 {
-  wnd_set_active_child((iptr)&parley_wnd_block.parley_wnd_frame);
+  wnd_set_active_child((iptr)&parley_wnd_block.base.window_2);
   diplo_wnd_close_active();
   return;
 }
@@ -7392,7 +7357,7 @@ void __cdecl parley_wnd_close(void)
 void __cdecl chat_wnd_close(void)
 
 {
-  wnd_set_active_child((iptr)&chat_wnd_block.chat_wnd_frame);
+  wnd_set_active_child((iptr)&chat_wnd_block.base.window_2);
   diplo_wnd_close_active();
   return;
 }
@@ -7403,25 +7368,25 @@ void __cdecl parley_wnd_redraw(void)
 {
   iptr child_wnd;
   i32 caret_pos;
-  ViewWindow *wnd2;
+  ParleyWindow *wnd2;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
-    wnd2 = (ViewWindow *)0x0;
+    wnd2 = (ParleyWindow *)0x0;
   }
   else {
-    wnd2 = (ViewWindow *)(child_wnd - 0x48);
+    wnd2 = (ParleyWindow *)(child_wnd - 0x48);
   }
-  if (wnd2->style_flags == 0) {
-    parley_wnd_calc_layout((ParleyWindowLayout *)wnd2);
-    parley_wnd_build_title((ParleyTitleView *)wnd2);
+  if (wnd2->closed == 0) {
+    parley_wnd_calc_layout(wnd2);
+    parley_wnd_build_title(wnd2);
     gfx_set_draw_target((iptr)wnd2);
-    parley_wnd_draw_frame((ParleyWindowLayout *)wnd2);
+    parley_wnd_draw_frame(wnd2);
     parley_wnd_sync_sides(wnd2);
     wnd_blit_surface((DibSurface *)wnd2);
     window_show((WindowObjectView *)wnd2);
-    caret_pos = edit_get_text_end((ControlTextView *)wnd2->chat_history_edit);
-    edit_set_caret((ControlTextView *)wnd2->chat_history_edit,caret_pos);
+    caret_pos = edit_get_text_end((ControlTextView *)wnd2->chat_log_edit);
+    edit_set_caret((ControlTextView *)wnd2->chat_log_edit,caret_pos);
     caret_pos = edit_get_sel_end((EditSelEndView *)wnd2->chat_input_edit);
     edit_set_caret((ControlTextView *)wnd2->chat_input_edit,caret_pos);
   }
@@ -7429,7 +7394,7 @@ void __cdecl parley_wnd_redraw(void)
 }
 
 /* 004b794a auto */
-void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *self)
+void __thiscall parley_wnd_draw_frame(ParleyWindow *self)
 
 {
   int free_width;
@@ -7444,30 +7409,30 @@ void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *self)
   tagRECT rect;
   
   surface_reset_clip((DibSurface *)self);
-  crt_memcpy(&rect,&self->client_height,0x10);
+  crt_memcpy(&rect,&self->client_left,0x10);
   for (i = 0; i < panel_bevel_width; i++) {
-    gfx_draw_bevel_rect((iptr)self,(iptr)&rect,(uint)dlg_bevel_light_color,(uint)dlg_bevel_dark_color);
+    gfx_draw_bevel_rect((iptr)self,&rect,(uint)dlg_bevel_light_color,(uint)dlg_bevel_dark_color);
     rect_deflate((iptr)&rect,1,1);
   }
-  parley_fill_background((WindowObjectView *)self,(iptr)&rect,1);
+  parley_fill_background(self,&rect,1);
   rect_deflate((iptr)&rect,panel_padding_x + panel_bevel_width * -2,0);
-  rect.top = rect.top + self->client_width + panel_bevel_width * -2;
-  free_width = rect_height((iptr)&self->client_height);
-  rect.bottom = (free_width - self->client_width) + panel_bevel_width * -2;
+  rect.top = rect.top + self->caption_height + panel_bevel_width * -2;
+  free_width = rect_height((RECT *)&self->client_left);
+  rect.bottom = (free_width - self->caption_height) + panel_bevel_width * -2;
   for (i = 0; i < panel_bevel_width; i++) {
-    gfx_draw_bevel_rect((iptr)self,(iptr)&rect,(uint)dlg_bevel_dark_color,(uint)dlg_bevel_light_color);
+    gfx_draw_bevel_rect((iptr)self,&rect,(uint)dlg_bevel_dark_color,(uint)dlg_bevel_light_color);
     rect_deflate((iptr)&rect,1,1);
   }
-  parley_fill_background((WindowObjectView *)self,(iptr)&rect,2);
+  parley_fill_background(self,&rect,2);
   x2 = panel_padding_x;
   for (i = 0; i < 3; i++) {
-    icon_width = (int)(*(int *)(((PortraitDialog *)self)->timer_seconds_digits + i * 0x1c + 0x8c) * self->client_width) / 0x18;
-    icon_height = (int)(*(int *)(((PortraitDialog *)self)->timer_seconds_digits + i * 0x1c + 0x90) * self->client_width) / 0x18;
-    y2 = ((int)self->client_width >> 1) - (icon_height >> 1);
+    icon_width = (int)(self->caption_buttons[i].width * self->caption_height) / 0x18;
+    icon_height = (int)(self->caption_buttons[i].height * self->caption_height) / 0x18;
+    y2 = ((int)self->caption_height >> 1) - (icon_height >> 1);
     SetRect(&rect,x2,y2,icon_width + x2,icon_height + y2);
-    gfx_set_scale_ratio(self->client_width,0x18);
+    gfx_set_scale_ratio(self->caption_height,0x18);
     sprite_draw
-              (*(Sprite **)(((PortraitDialog *)self)->timer_seconds_digits + i * 0x1c + 0x94),(iptr)sprite_rect,
+              (self->caption_buttons[i].sprite,(iptr)sprite_rect,
                (iptr)self,x2,y2);
     gfx_reset_zoom_scale();
     x2 = x2 + panel_margin_x + icon_width;
@@ -7479,24 +7444,24 @@ void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *self)
     title_font2 = (GameFont *)((i8 *)&font_size30);
   }
   x2 -= panel_margin_x;
-  free_width = (self->dlg_width - x2) - panel_padding_x;
-  title_width = font_text_width(title_font2,(const char *)(u8 *)&self->parley_title);
+  free_width = (self->client_right - x2) - panel_padding_x;
+  title_width = font_text_width(title_font2,self->title);
   x2 += (free_width / 2 - (title_width >> 1));
   y2 = panel_bevel_width + panel_margin_y;
   gfx_set_text_color_index(10);
   surface_draw_text
-            ((DibSurface *)self,(iptr)title_font2,(const char *)(u8 *)&self->parley_title,x2 + 2,y2 + 1,5);
+            ((DibSurface *)self,(iptr)title_font2,self->title,x2 + 2,y2 + 1,5);
   gfx_set_text_color_index(0x1a);
   surface_draw_text
-            ((DibSurface *)self,(iptr)title_font2,(const char *)(u8 *)&self->parley_title,x2 + 1,y2,5);
+            ((DibSurface *)self,(iptr)title_font2,self->title,x2 + 1,y2,5);
   surface_draw_text
-            ((DibSurface *)self,(iptr)title_font2,(const char *)(u8 *)&self->parley_title,x2,y2,5);
-  surface_set_clip((DibSurface *)self,(iptr)&self->panel_rect);
+            ((DibSurface *)self,(iptr)title_font2,self->title,x2,y2,5);
+  surface_set_clip((DibSurface *)self,(RECT *)&self->panel_left);
   return;
 }
 
 /* 004b7c90 auto */
-void __thiscall parley_fill_background(WindowObjectView *self,iptr rect,int area_kind)
+void __thiscall parley_fill_background(ParleyWindow *self,RECT *rect,int area_kind)
 
 {
   i32 height;
@@ -7513,7 +7478,7 @@ void __thiscall parley_fill_background(WindowObjectView *self,iptr rect,int area
       tile_x = 0;
       height = rect_height(rect);
       width = rect_width(rect);
-      gfx_tile_fill((iptr)self,dlg_client_tile_surface,*(i32 *)rect,*(i32 *)(rect + 4)
+      gfx_tile_fill((iptr)self,dlg_client_tile_surface,rect->left,rect->top
                          ,width,height,tile_x,tile_y);
     }
   }
@@ -7522,42 +7487,42 @@ void __thiscall parley_fill_background(WindowObjectView *self,iptr rect,int area
     tile_x = 0;
     height = rect_height(rect);
     width = rect_width(rect);
-    gfx_tile_fill((iptr)self,dlg_frame_tile_surface,*(i32 *)rect,*(i32 *)(rect + 4),
+    gfx_tile_fill((iptr)self,dlg_frame_tile_surface,rect->left,rect->top,
                        width,height,tile_x,tile_y);
   }
   return;
 }
 
 /* 004b7d72 auto */
-void __thiscall parley_wnd_build_title(ParleyTitleView *self)
+void __thiscall parley_wnd_build_title(ParleyWindow *self)
 
 {
   const char *text;
   iptr attitude_level;
   
   text_clear();
-  if (self->parley_kind == 4) {
-    text = (label_string(*(i32 *)(label_string_ids + 0xb54)));
+  if (self->mode == 4) {
+    text = (label_string(label_string_ids[0x2d5]));
     text_append(text);
-    crt_strcpy((char *)self->title_text,((i8 *)&map_views_block.text_buffer));
+    crt_strcpy((char *)((u8 *)self + 0x15c),((i8 *)&map_views_block.text_buffer));
   }
   else {
-    text = (label_string(*(i32 *)(label_string_ids + 0xb50)));
+    text = (label_string(label_string_ids[0x2d4]));
     text_append(text);
     text_append_space();
-    text = (civ_name_plural(self->civ_id));
+    text = (civ_name_plural(self->other_civ));
     text_append(text);
     text_append_space();
     text_append_lparen();
-    if (*(char *)&civs[(self->civ_id)].attitude[human_civ[0]] == '\0') {
+    if (*(char *)&civs[self->other_civ].attitude[human_civ[0]] == '\0') {
       attitude_level = 0;
     }
     else {
-      attitude_level = diplo_attitude_level((uint)civs[(self->civ_id)].attitude[human_civ[0]]);
+      attitude_level = diplo_attitude_level((uint)civs[self->other_civ].attitude[human_civ[0]]);
     }
     text_append_string_id(attitude_names[attitude_level]);
     text_append_rparen();
-    crt_strcpy((char *)self->title_text,((i8 *)&map_views_block.text_buffer));
+    crt_strcpy((char *)((u8 *)self + 0x15c),((i8 *)&map_views_block.text_buffer));
   }
   return;
 }
@@ -7567,7 +7532,7 @@ void __thiscall parley_wnd_build_title(ParleyTitleView *self)
 /* WARNING: Removing unreachable block (ram,0x004b8051) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall parley_wnd_open(ViewWindow *self,iptr other_civ,u32 mode)
+void __thiscall parley_wnd_open(ParleyWindow *self,iptr other_civ,u32 mode)
 
 {
   bool can_see_all;
@@ -7576,7 +7541,7 @@ void __thiscall parley_wnd_open(ViewWindow *self,iptr other_civ,u32 mode)
   iptr child_wnd;
   i32 caret_pos;
   int civ;
-  ParleyTitleView *wnd2;
+  ParleyWindow *wnd2;
   
   if (mode == 4) {
     has_contact = false;
@@ -7601,57 +7566,57 @@ void __thiscall parley_wnd_open(ViewWindow *self,iptr other_civ,u32 mode)
       popup_game((const char *)&str_noforeignhuman);
       return;
     }
-    wnd_set_active_child((iptr)&chat_wnd_block.chat_wnd_frame);
+    wnd_set_active_child((iptr)&chat_wnd_block.base.window_2);
     net_session_block.chat_unread_count = 0;
     net_session_block.chat_missed_message_count_i32 = 0;
   }
   else {
-    wnd_set_active_child((iptr)&parley_wnd_block.parley_wnd_frame);
-    parley_wnd_block.parley_selected_action = 0xffffffff;
-    self->right_side_accepted = '\0';
-    self->left_side_accepted = '\0';
-    self->left_side_confirmed = '\0';
-    self->remote_side_agreed = '\0';
+    wnd_set_active_child((iptr)&parley_wnd_block.base.window_2);
+    parley_wnd_block.selected_action = 0xffffffff;
+    self->remote_units_revealed = '\0';
+    self->local_units_revealed = '\0';
+    self->local_cities_revealed = '\0';
+    self->remote_cities_revealed = '\0';
     if (mode == 3) {
-      parley_set_mode_sides((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),0);
+      parley_set_mode_sides(&parley_wnd_block,0);
     }
   }
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
-    wnd2 = (ParleyTitleView *)0x0;
+    wnd2 = (ParleyWindow *)0x0;
   }
   else {
-    wnd2 = (ParleyTitleView *)(child_wnd - 0x48);
+    wnd2 = (ParleyWindow *)(child_wnd - 0x48);
   }
-  if (*(int *)wnd2->wnd_closed == 0) {
+  if (wnd2->closed == 0) {
     window_show((WindowObjectView *)wnd2);
   }
   else {
-    wnd2->window_base[0x114] = '\0';
-    wnd2->window_base[0x115] = '\0';
-    wnd2->window_base[0x116] = '\0';
-    wnd2->window_base[0x117] = '\0';
-    wnd2->civ_id = other_civ;
+    ((u8 *)wnd2 + 0x0)[0x114] = '\0';
+    ((u8 *)wnd2 + 0x0)[0x115] = '\0';
+    ((u8 *)wnd2 + 0x0)[0x116] = '\0';
+    ((u8 *)wnd2 + 0x0)[0x117] = '\0';
+    wnd2->other_civ = other_civ;
     if (mode != 3) {
-      wnd2->parley_kind = mode;
-      *(i32 *)((ParleyTitleViewExt *)wnd2)->left_kind = (((i32 *)&parley_mode_left_kinds))[mode * 2];
-      *(i32 *)(((ParleyTitleViewExt *)wnd2)->right_kind) = (((i32 *)&parley_mode_right_kinds))[mode * 2];
+      wnd2->mode = mode;
+      wnd2->left_kind = (((i32 *)&parley_mode_left_kinds))[mode * 2];
+      wnd2->right_kind = (((i32 *)&parley_mode_right_kinds))[mode * 2];
     }
     parley_wnd_build_title(wnd2);
-    ((ParleyTitleViewExt *)wnd2)->shown_left_kind[0] = 21;
-    ((ParleyTitleViewExt *)wnd2)->shown_left_kind_b1[0] = '\0';
-    ((ParleyTitleViewExt *)wnd2)->shown_left_kind_b2[0] = '\0';
-    ((ParleyTitleViewExt *)wnd2)->shown_left_kind_b3[0] = '\0';
-    ((ParleyTitleViewExt *)wnd2)->shown_right_kind[0] = 21;
-    ((ParleyTitleViewExt *)wnd2)->shown_right_kind_b1[0] = '\0';
-    ((ParleyTitleViewExt *)wnd2)->shown_right_kind_b2[0] = '\0';
-    ((ParleyTitleViewExt *)wnd2)->shown_right_kind_b3[0] = '\0';
+    ((u8 *)wnd2 + 0x1f8)[0] = 21;
+    ((u8 *)wnd2 + 0x1f9)[0] = '\0';
+    ((u8 *)wnd2 + 0x1fa)[0] = '\0';
+    ((u8 *)wnd2 + 0x1fb)[0] = '\0';
+    ((u8 *)wnd2 + 0x1fc)[0] = 21;
+    ((u8 *)wnd2 + 0x1fd)[0] = '\0';
+    ((u8 *)wnd2 + 0x1fe)[0] = '\0';
+    ((u8 *)wnd2 + 0x1ff)[0] = '\0';
     wnd_repaint((SurfaceWindow *)wnd2);
     window_show((WindowObjectView *)wnd2);
-    caret_pos = edit_get_text_end(*(ControlTextView **)(((ParleyTitleViewExt *)wnd2)->chat_log_edit_2));
-    edit_set_caret(*(ControlTextView **)(((ParleyTitleViewExt *)wnd2)->chat_log_edit_2),caret_pos);
-    caret_pos = edit_get_sel_end(*(EditSelEndView **)(((ParleyTitleViewExt *)wnd2)->chat_input_edit));
-    edit_set_caret(*(ControlTextView **)(((ParleyTitleViewExt *)wnd2)->chat_input_edit),caret_pos);
+    caret_pos = edit_get_text_end((ControlTextView *)wnd2->chat_log_edit);
+    edit_set_caret((ControlTextView *)wnd2->chat_log_edit,caret_pos);
+    caret_pos = edit_get_sel_end((EditSelEndView *)wnd2->chat_input_edit);
+    edit_set_caret((ControlTextView *)wnd2->chat_input_edit,caret_pos);
   }
   snd_play_effect(((uint)map.seed + other_civ & 7) + 0x53,1,0,0);
   return;
@@ -7665,21 +7630,21 @@ void __cdecl parley_poll_net_replies(void)
 {
   const char *civ_name;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
-  wnd_set_active_child((iptr)&parley_wnd_block.parley_wnd_frame);
-  if ((net_session_block.nm_parley_transaction_count == 0) || (parley_wnd_block.parley_mode != 2)) {
-    if ((net_session_block.nm_parley_accept_offer_count == 0) || (parley_wnd_block.parley_mode != 1)) {
-      if ((net_session_block.nm_parley_no_thanks_count == 0) || (parley_wnd_block.parley_mode != 1)) {
-        if ((net_session_block.nm_parley_counter_offer_count != 0) && (parley_wnd_block.parley_mode == 1)) {
+  net_process_messages(&net_session_block,1,0);
+  wnd_set_active_child((iptr)&parley_wnd_block.base.window_2);
+  if ((net_session_block.nm_parley_transaction_count == 0) || ((int)parley_wnd_block.mode != 2)) {
+    if ((net_session_block.nm_parley_accept_offer_count == 0) || ((int)parley_wnd_block.mode != 1)) {
+      if ((net_session_block.nm_parley_no_thanks_count == 0) || ((int)parley_wnd_block.mode != 1)) {
+        if ((net_session_block.nm_parley_counter_offer_count != 0) && ((int)parley_wnd_block.mode == 1)) {
           net_session_block.nm_parley_counter_offer_count = 0;
-          parley_wnd_block.parley_mode = 2;
-          parley_wnd_block.parley_left_kind = parley_mode2_left_kind;
-          parley_wnd_block.parley_right_kind = parley_mode2_right_kind;
-          parley_wnd_block.parley_shown_left_kind = parley_wnd_block.parley_left_kind;
-          parley_wnd_block.parley_shown_right_kind = parley_wnd_block.parley_right_kind;
-          parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_mode2_left_kind,0);
-          parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_wnd_block.parley_right_kind,1);
-          civ_name = (civ_name_plural(parley_wnd_block.parley_other_civ));
+          parley_wnd_block.mode = 2;
+          parley_wnd_block.left_kind = parley_mode2_left_kind;
+          parley_wnd_block.right_kind = parley_mode2_right_kind;
+          parley_wnd_block.shown_left_kind = (i32)parley_wnd_block.left_kind;
+          parley_wnd_block.shown_right_kind = (i32)parley_wnd_block.right_kind;
+          parley_add_side_dialog(&parley_wnd_block,parley_mode2_left_kind,0);
+          parley_add_side_dialog(&parley_wnd_block,(i32)parley_wnd_block.right_kind,1);
+          civ_name = (civ_name_plural((int)parley_wnd_block.other_civ));
           text_set_string_arg(0,civ_name);
           dlg_pending_idle_callback = (i8 *)parley_poll_net_replies;
           popup_game_with_sprite((const char *)&str_parleycounteroffer,(iptr)&popup_info_icon_sprite,0);
@@ -7687,10 +7652,10 @@ void __cdecl parley_poll_net_replies(void)
       }
       else {
         net_session_block.nm_parley_no_thanks_count = 0;
-        parley_wnd_block.parley_mode = 3;
-        parley_wnd_block.parley_selected_action = 0xffffffff;
-        parley_set_mode_sides((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),1);
-        civ_name = (civ_name_plural(parley_wnd_block.parley_other_civ));
+        parley_wnd_block.mode = 3;
+        parley_wnd_block.selected_action = 0xffffffff;
+        parley_set_mode_sides(&parley_wnd_block,1);
+        civ_name = (civ_name_plural((int)parley_wnd_block.other_civ));
         text_set_string_arg(0,civ_name);
         dlg_pending_idle_callback = (i8 *)parley_poll_net_replies;
         popup_game_with_sprite((const char *)&str_parleynothanks,(iptr)&popup_info_icon_sprite,0);
@@ -7698,60 +7663,60 @@ void __cdecl parley_poll_net_replies(void)
     }
     else {
       net_session_block.nm_parley_accept_offer_count = 0;
-      if (parley_wnd_block.parley_received_offer != (void *)0x0) {
-        *(i32 *)((int)parley_wnd_block.parley_received_offer + 4) = 0x86;
+      if ((void *)parley_wnd_block.received_offer != (void *)0x0) {
+        parley_wnd_block.received_offer->hdr.msg_type = 0x86;
         if (net_session_block.net_host_flag == '\0') {
-          net_send_message(0x86,0,0,0,0,0,0,0,0,(iptr)parley_wnd_block.parley_received_offer);
+          net_send_message(0x86,0,0,0,0,0,0,0,0,(iptr)(void *)parley_wnd_block.received_offer);
         }
         else {
-          parley_execute_transaction((iptr)parley_wnd_block.parley_received_offer);
+          parley_execute_transaction(parley_wnd_block.received_offer);
         }
-        operator_delete(parley_wnd_block.parley_received_offer);
-        parley_wnd_block.parley_received_offer = (void *)0x0;
+        operator_delete((void *)parley_wnd_block.received_offer);
+        parley_wnd_block.received_offer = 0;
       }
-      parley_wnd_block.parley_mode = 2;
-      parley_wnd_block.parley_left_kind = parley_mode2_left_kind;
-      parley_wnd_block.parley_right_kind = parley_mode2_right_kind;
-      parley_wnd_block.parley_shown_left_kind = parley_wnd_block.parley_left_kind;
-      parley_wnd_block.parley_shown_right_kind = parley_wnd_block.parley_right_kind;
-      parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_mode2_left_kind,0);
-      parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_wnd_block.parley_right_kind,1);
+      parley_wnd_block.mode = 2;
+      parley_wnd_block.left_kind = parley_mode2_left_kind;
+      parley_wnd_block.right_kind = parley_mode2_right_kind;
+      parley_wnd_block.shown_left_kind = (i32)parley_wnd_block.left_kind;
+      parley_wnd_block.shown_right_kind = (i32)parley_wnd_block.right_kind;
+      parley_add_side_dialog(&parley_wnd_block,parley_mode2_left_kind,0);
+      parley_add_side_dialog(&parley_wnd_block,(i32)parley_wnd_block.right_kind,1);
       dlg_pending_idle_callback = (i8 *)parley_poll_net_replies;
       popup_game_with_sprite((const char *)&str_parleyaccept,(iptr)&popup_info_icon_sprite,0);
     }
   }
   else {
     net_session_block.nm_parley_transaction_count = 0;
-    if ((*(int *)((int)parley_wnd_block.parley_received_offer + 0x10) == 6) && (*(int *)((int)parley_wnd_block.parley_received_offer + 0x28) == 3)) {
-      civ_name = (civ_name_plural(parley_wnd_block.parley_other_civ));
+    if ((parley_wnd_block.received_offer->mode == 6) && (parley_wnd_block.received_offer->item.value == 3)) {
+      civ_name = (civ_name_plural((int)parley_wnd_block.other_civ));
       text_set_string_arg(0,civ_name);
       civ_name = (civ_name_plural(human_civ[0]));
       text_set_string_arg(1,civ_name);
-      if ((*(byte *)&civs[human_civ[0]].treaties[parley_wnd_block.parley_other_civ] & 8) == 0) {
-        if ((*(byte *)&civs[human_civ[0]].treaties[parley_wnd_block.parley_other_civ] & 4) == 0) {
-          if ((*(byte *)&civs[human_civ[0]].treaties[parley_wnd_block.parley_other_civ] & 2) != 0) {
-            diplo_clear_treaty_flags(human_civ[0],parley_wnd_block.parley_other_civ,2);
+      if ((*(byte *)&civs[human_civ[0]].treaties[(int)parley_wnd_block.other_civ] & 8) == 0) {
+        if ((*(byte *)&civs[human_civ[0]].treaties[(int)parley_wnd_block.other_civ] & 4) == 0) {
+          if ((*(byte *)&civs[human_civ[0]].treaties[(int)parley_wnd_block.other_civ] & 2) != 0) {
+            diplo_clear_treaty_flags(human_civ[0],(int)parley_wnd_block.other_civ,2);
             popup_game((const char *)&str_breakcease);
           }
         }
         else {
-          diplo_clear_treaty_flags(human_civ[0],parley_wnd_block.parley_other_civ,4);
+          diplo_clear_treaty_flags(human_civ[0],(int)parley_wnd_block.other_civ,4);
           popup_game((const char *)&str_cancelpeace);
         }
       }
       else {
-        diplo_clear_treaty_flags(human_civ[0],parley_wnd_block.parley_other_civ,8);
+        diplo_clear_treaty_flags(human_civ[0],(int)parley_wnd_block.other_civ,8);
         popup_game((const char *)&str_cancelallied);
       }
     }
     else {
-      parley_wnd_block.parley_mode = 0;
-      parley_wnd_block.parley_left_kind = parley_mode_left_kinds[0];
-      parley_wnd_block.parley_right_kind = parley_mode_right_kinds[0];
-      parley_wnd_block.parley_shown_left_kind = parley_wnd_block.parley_left_kind;
-      parley_wnd_block.parley_shown_right_kind = parley_wnd_block.parley_right_kind;
-      parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_mode_left_kinds[0],0);
-      parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_wnd_block.parley_right_kind,1);
+      parley_wnd_block.mode = 0;
+      parley_wnd_block.left_kind = parley_mode_left_kinds[0];
+      parley_wnd_block.right_kind = parley_mode_right_kinds[0];
+      parley_wnd_block.shown_left_kind = (i32)parley_wnd_block.left_kind;
+      parley_wnd_block.shown_right_kind = (i32)parley_wnd_block.right_kind;
+      parley_add_side_dialog(&parley_wnd_block,parley_mode_left_kinds[0],0);
+      parley_add_side_dialog(&parley_wnd_block,(i32)parley_wnd_block.right_kind,1);
     }
   }
   return;
@@ -7760,64 +7725,64 @@ void __cdecl parley_poll_net_replies(void)
 /* 004b8676 auto */
 /* WARNING: Removing unreachable block (ram,0x004b869f) */
 
-void __thiscall parley_set_mode_sides(WindowObjectView *self,int refresh)
+void __thiscall parley_set_mode_sides(ParleyWindow *self,int refresh)
 
 {
-  wnd_set_active_child((iptr)&parley_wnd_block.parley_wnd_frame);
-  if (parley_wnd_block.parley_selected_action == -1) {
-    parley_wnd_block.parley_mode = 3;
-    ctrl_disable(parley_wnd_block.parley_never_mind_button);
+  wnd_set_active_child((iptr)&parley_wnd_block.base.window_2);
+  if ((i32)parley_wnd_block.selected_action == -1) {
+    parley_wnd_block.mode = 3;
+    ctrl_disable((Control *)parley_wnd_block.never_mind_button);
   }
-  else if (parley_wnd_block.parley_selected_action == 0) {
-    parley_wnd_block.parley_mode = 6;
-    ctrl_enable(parley_wnd_block.parley_never_mind_button);
+  else if (parley_wnd_block.selected_action == 0) {
+    parley_wnd_block.mode = 6;
+    ctrl_enable((Control *)parley_wnd_block.never_mind_button);
   }
-  else if (parley_wnd_block.parley_selected_action == 1) {
-    parley_wnd_block.parley_mode = 0xc;
-    if (parley_wnd_block.parley_proposal_kind != 0) {
-      parley_wnd_block.parley_mode = 0xd;
+  else if ((i32)parley_wnd_block.selected_action == 1) {
+    parley_wnd_block.mode = 0xc;
+    if (parley_wnd_block.proposal_kind != 0) {
+      parley_wnd_block.mode = 0xd;
     }
-    ctrl_enable(parley_wnd_block.parley_never_mind_button);
+    ctrl_enable((Control *)parley_wnd_block.never_mind_button);
   }
-  else if (parley_wnd_block.parley_selected_action == 2) {
-    if (parley_wnd_block.parley_gift_kind == 0) {
-      parley_wnd_block.parley_mode = 7;
+  else if ((i32)parley_wnd_block.selected_action == 2) {
+    if (parley_wnd_block.gift_kind == 0) {
+      parley_wnd_block.mode = 7;
     }
-    else if (parley_wnd_block.parley_gift_kind == 1) {
-      parley_wnd_block.parley_mode = 8;
+    else if ((int)parley_wnd_block.gift_kind == 1) {
+      parley_wnd_block.mode = 8;
     }
-    else if (parley_wnd_block.parley_gift_kind == 2) {
-      parley_wnd_block.parley_mode = 9;
+    else if ((int)parley_wnd_block.gift_kind == 2) {
+      parley_wnd_block.mode = 9;
     }
-    else if (parley_wnd_block.parley_gift_kind == 3) {
-      parley_wnd_block.parley_mode = 10;
+    else if ((int)parley_wnd_block.gift_kind == 3) {
+      parley_wnd_block.mode = 10;
     }
     else {
-      parley_wnd_block.parley_mode = 0xb;
+      parley_wnd_block.mode = 0xb;
     }
-    ctrl_enable(parley_wnd_block.parley_never_mind_button);
+    ctrl_enable((Control *)parley_wnd_block.never_mind_button);
   }
-  else if (parley_wnd_block.parley_selected_action == 3) {
-    parley_wnd_block.parley_mode = 5;
-    ctrl_enable(parley_wnd_block.parley_never_mind_button);
+  else if ((i32)parley_wnd_block.selected_action == 3) {
+    parley_wnd_block.mode = 5;
+    ctrl_enable((Control *)parley_wnd_block.never_mind_button);
   }
-  else if (parley_wnd_block.parley_selected_action == 4) {
-    parley_wnd_block.parley_mode = 0xf;
-    ctrl_enable(parley_wnd_block.parley_never_mind_button);
+  else if ((i32)parley_wnd_block.selected_action == 4) {
+    parley_wnd_block.mode = 0xf;
+    ctrl_enable((Control *)parley_wnd_block.never_mind_button);
   }
-  parley_wnd_block.parley_left_kind = (((i32 *)&parley_mode_left_kinds))[parley_wnd_block.parley_mode * 2];
-  parley_wnd_block.parley_right_kind = (((i32 *)&parley_mode_right_kinds))[parley_wnd_block.parley_mode * 2];
-  parley_wnd_block.parley_shown_left_kind = parley_wnd_block.parley_left_kind;
-  parley_wnd_block.parley_shown_right_kind = parley_wnd_block.parley_right_kind;
+  parley_wnd_block.left_kind = (((i32 *)&parley_mode_left_kinds))[(int)parley_wnd_block.mode * 2];
+  parley_wnd_block.right_kind = (((i32 *)&parley_mode_right_kinds))[(int)parley_wnd_block.mode * 2];
+  parley_wnd_block.shown_left_kind = (i32)parley_wnd_block.left_kind;
+  parley_wnd_block.shown_right_kind = (i32)parley_wnd_block.right_kind;
   if (refresh != 0) {
-    parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_wnd_block.parley_left_kind,0);
-    parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_wnd_block.parley_right_kind,1);
+    parley_add_side_dialog(&parley_wnd_block,(i32)parley_wnd_block.left_kind,0);
+    parley_add_side_dialog(&parley_wnd_block,(i32)parley_wnd_block.right_kind,1);
   }
   return;
 }
 
 /* 004b888e auto */
-void __thiscall parley_clear_side_controls(ViewWindow *self,int side)
+void __thiscall parley_clear_side_controls(ParleyWindow *self,int side)
 
 {
   u8 *slot_ptr;
@@ -7828,46 +7793,46 @@ void __thiscall parley_clear_side_controls(ViewWindow *self,int side)
     err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_leftright_left_leftright_right,(iptr)&str_d_ss_franklinton_parleywin_cpp,0x4ea);
   }
   if (side == 1) {
-    if (self->side_text_edit != 0) {
-      if ((Control *)self->side_text_edit != (Control *)0x0) {
-        edit_scalar_dtor((Control *)self->side_text_edit,1);
+    if (self->desc_edit != 0) {
+      if ((Control *)self->desc_edit != (Control *)0x0) {
+        edit_scalar_dtor((Control *)self->desc_edit,1);
       }
-      self->side_text_edit = 0;
+      self->desc_edit = 0;
     }
-    if (self->sci_rate_sel != 0) {
-      if ((Checkbox *)self->sci_rate_sel != (Checkbox *)0x0) {
-        checkbox_scalar_dtor((Checkbox *)self->sci_rate_sel,1);
+    if (self->anonymous_checkbox != 0) {
+      if ((Checkbox *)self->anonymous_checkbox != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)self->anonymous_checkbox,1);
       }
-      self->sci_rate_sel = 0;
+      self->anonymous_checkbox = 0;
     }
-    if (self->init_tax_rate != 0) {
-      if ((Checkbox *)self->init_tax_rate != (Checkbox *)0x0) {
-        checkbox_scalar_dtor((Checkbox *)self->init_tax_rate,1);
+    if (self->mute_anonymous_checkbox != 0) {
+      if ((Checkbox *)self->mute_anonymous_checkbox != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)self->mute_anonymous_checkbox,1);
       }
-      self->init_tax_rate = 0;
+      self->mute_anonymous_checkbox = 0;
     }
-    if (self->init_lux_rate != 0) {
-      if ((Checkbox *)self->init_lux_rate != (Checkbox *)0x0) {
-        checkbox_scalar_dtor((Checkbox *)self->init_lux_rate,1);
+    if (self->broadcast_checkbox != 0) {
+      if ((Checkbox *)self->broadcast_checkbox != (Checkbox *)0x0) {
+        checkbox_scalar_dtor((Checkbox *)self->broadcast_checkbox,1);
       }
-      self->init_lux_rate = 0;
+      self->broadcast_checkbox = 0;
     }
     for (i = 0; i < 8; i++) {
-      if (*(int *)(self->parley_checkboxes + i * 4 - 0x1c) != 0) {
-        if (*(Checkbox **)(self->parley_checkboxes + i * 4 - 0x1c) != (Checkbox *)0x0) {
-          checkbox_scalar_dtor(*(Checkbox **)(self->parley_checkboxes + i * 4 - 0x1c),1);
+      if (self->send_checkboxes[i] != 0) {
+        if ((Checkbox *)self->send_checkboxes[i] != (Checkbox *)0x0) {
+          checkbox_scalar_dtor((Checkbox *)self->send_checkboxes[i],1);
         }
-        slot_ptr = self->parley_checkboxes + i * 4 - 0x1c;
+        slot_ptr = (u8 *)&self->send_checkboxes[i];
         slot_ptr[0] = '\0';
         slot_ptr[1] = '\0';
         slot_ptr[2] = '\0';
         slot_ptr[3] = '\0';
       }
-      if (*(int *)(self->parley_checkboxes + i * 4 + 4) != 0) {
-        if (*(Checkbox **)(self->parley_checkboxes + i * 4 + 4) != (Checkbox *)0x0) {
-          checkbox_scalar_dtor(*(Checkbox **)(self->parley_checkboxes + i * 4 + 4),1);
+      if (self->mute_checkboxes[i] != 0) {
+        if ((Checkbox *)self->mute_checkboxes[i] != (Checkbox *)0x0) {
+          checkbox_scalar_dtor((Checkbox *)self->mute_checkboxes[i],1);
         }
-        slot_ptr = self->parley_checkboxes + i * 4 + 4;
+        slot_ptr = (u8 *)&self->mute_checkboxes[i];
         slot_ptr[0] = '\0';
         slot_ptr[1] = '\0';
         slot_ptr[2] = '\0';
@@ -7875,110 +7840,110 @@ void __thiscall parley_clear_side_controls(ViewWindow *self,int side)
       }
     }
   }
-  if (*(int *)(self->rate_values + side * 4) != 0) {
-    if (*(Checkbox **)(self->rate_values + side * 4) != (Checkbox *)0x0) {
-      checkbox_scalar_dtor(*(Checkbox **)(self->rate_values + side * 4),1);
+  if (self->side_checkboxes[side] != 0) {
+    if ((Checkbox *)self->side_checkboxes[side] != (Checkbox *)0x0) {
+      checkbox_scalar_dtor((Checkbox *)self->side_checkboxes[side],1);
     }
-    slot_ptr = self->rate_values + side * 4;
+    slot_ptr = (u8 *)&self->side_checkboxes[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  if (*(int *)(self->rate_values + side * 4 + 8) != 0) {
-    if (*(RadioGroupDtorView **)(self->rate_values + side * 4 + 8) != (RadioGroupDtorView *)0x0) {
-      radiogrp_scalar_dtor(*(RadioGroupDtorView **)(self->rate_values + side * 4 + 8),1);
+  if (self->side_radios[side] != 0) {
+    if ((RadioGroupDtorView *)self->side_radios[side] != (RadioGroupDtorView *)0x0) {
+      radiogrp_scalar_dtor((RadioGroupDtorView *)self->side_radios[side],1);
     }
-    slot_ptr = self->rate_values + side * 4 + 8;
+    slot_ptr = (u8 *)&self->side_radios[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  if (*(int *)(self->rate_values + side * 4 + 0x10) != 0) {
-    if (*(Control **)(self->rate_values + side * 4 + 0x10) != (Control *)0x0) {
-      edit_scalar_dtor(*(Control **)(self->rate_values + side * 4 + 0x10),1);
+  if (self->gold_edits[side] != 0) {
+    if ((Control *)self->gold_edits[side] != (Control *)0x0) {
+      edit_scalar_dtor((Control *)self->gold_edits[side],1);
     }
-    slot_ptr = self->rate_values + side * 4 + 0x10;
+    slot_ptr = (u8 *)&self->gold_edits[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  if (*(int *)(self->rate_values + side * 4 + 0x18) != 0) {
-    if (*(Control **)(self->rate_values + side * 4 + 0x18) != (Control *)0x0) {
-      scrollbar_scalar_dtor(*(Control **)(self->rate_values + side * 4 + 0x18),1);
+  if (self->list_scrollbars[side] != 0) {
+    if ((Control *)self->list_scrollbars[side] != (Control *)0x0) {
+      scrollbar_scalar_dtor((Control *)self->list_scrollbars[side],1);
     }
-    slot_ptr = self->rate_values + side * 4 + 0x18;
+    slot_ptr = (u8 *)&self->list_scrollbars[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  if (*(int *)(self->rate_values + side * 4 + 0x20) != 0) {
-    if (*(Hotspot **)(self->rate_values + side * 4 + 0x20) != (Hotspot *)0x0) {
-      hotspot_scalar_dtor(*(Hotspot **)(self->rate_values + side * 4 + 0x20),1);
+  if (self->list_hotspots[side] != 0) {
+    if ((Hotspot *)self->list_hotspots[side] != (Hotspot *)0x0) {
+      hotspot_scalar_dtor((Hotspot *)self->list_hotspots[side],1);
     }
-    slot_ptr = self->rate_values + side * 4 + 0x20;
+    slot_ptr = (u8 *)&self->list_hotspots[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  if (*(int *)(self->rate_values + side * 4 + 0x28) != 0) {
-    if (*(Control **)(self->rate_values + side * 4 + 0x28) != (Control *)0x0) {
-      ctrl_scalar_dtor(*(Control **)(self->rate_values + side * 4 + 0x28),1);
+  if (self->sort_by_unit_buttons[side] != 0) {
+    if ((Control *)self->sort_by_unit_buttons[side] != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->sort_by_unit_buttons[side],1);
     }
-    slot_ptr = self->rate_values + side * 4 + 0x28;
+    slot_ptr = (u8 *)&self->sort_by_unit_buttons[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  if (*(int *)(self->rate_values + side * 4 + 0x30) != 0) {
-    if (*(Control **)(self->rate_values + side * 4 + 0x30) != (Control *)0x0) {
-      ctrl_scalar_dtor(*(Control **)(self->rate_values + side * 4 + 0x30),1);
+  if (self->sort_by_city_buttons[side] != 0) {
+    if ((Control *)self->sort_by_city_buttons[side] != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->sort_by_city_buttons[side],1);
     }
-    slot_ptr = self->rate_values + side * 4 + 0x30;
+    slot_ptr = (u8 *)&self->sort_by_city_buttons[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  if (*(int *)((u8 *)&self->advance_pane_rects + side * 4 - 0x24) != 0) {
-    if (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24) != (Control *)0x0) {
-      ctrl_scalar_dtor(*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),1);
+  if (self->info_show_buttons[side] != 0) {
+    if ((Control *)self->info_show_buttons[side] != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->info_show_buttons[side],1);
     }
-    slot_ptr = (u8 *)&self->advance_pane_rects + side * 4 - 0x24;
+    slot_ptr = (u8 *)&self->info_show_buttons[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  if (*(int *)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c) != 0) {
-    if (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c) != (Control *)0x0) {
-      ctrl_scalar_dtor(*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),1);
+  if (self->info_hide_buttons[side] != 0) {
+    if ((Control *)self->info_hide_buttons[side] != (Control *)0x0) {
+      ctrl_scalar_dtor((Control *)self->info_hide_buttons[side],1);
     }
-    slot_ptr = (u8 *)&self->advance_pane_rects + side * 4 - 0x1c;
+    slot_ptr = (u8 *)&self->info_hide_buttons[side];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
     slot_ptr[3] = '\0';
   }
-  self->fill_rect_left = self->panel_rect;
-  self->fill_rect_top = self->panel_top;
-  self->fill_rect_right = self->panel_right;
-  self->fill_rect_bottom = self->panel_bottom;
-  self->fill_rect_bottom = self->show_turn_timer;
+  self->fill_left = self->panel_left;
+  self->fill_top = self->panel_top;
+  self->fill_right = self->panel_right;
+  self->fill_bottom = self->panel_bottom;
+  self->fill_bottom = self->divider_y;
   if (side == 0) {
-    half_width = rect_width((iptr)&self->panel_rect);
-    self->fill_rect_right = half_width / 2;
+    half_width = rect_width((RECT *)&self->panel_left);
+    self->fill_right = half_width / 2;
   }
   else {
-    half_width = rect_width((iptr)&self->panel_rect);
-    self->fill_rect_left = half_width / 2;
+    half_width = rect_width((RECT *)&self->panel_left);
+    self->fill_left = half_width / 2;
   }
-  parley_fill_background((WindowObjectView *)self,(iptr)&self->fill_rect_left,2);
+  parley_fill_background(self,(RECT *)&self->fill_left,2);
   return;
 }
 
@@ -8001,8 +7966,8 @@ void __cdecl parley_gold_edit_on_change(int control_id)
   _memset(text,0,0x20);
   _memset(gold_text,0,0x20);
   edit_index = (uint)(control_id != 0x3f8);
-  caret = edit_get_sel_end(*(EditSelEndView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4));
-  ctrl_get_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4),(char *)text);
+  caret = edit_get_sel_end((EditSelEndView *)parley_wnd_block.gold_edits[edit_index]);
+  ctrl_get_text((ControlTextView *)parley_wnd_block.gold_edits[edit_index],(char *)text);
   __itoa(civs[human_civ[0]].gold,gold_text,10);
   for (i = 0; len = _strlen(text), i < len; i++) {
     if ((text[i] < '0') || ('9' < text[i])) {
@@ -8011,7 +7976,7 @@ void __cdecl parley_gold_edit_on_change(int control_id)
     }
   }
   amount = _atoi(text);
-  if (((parley_wnd_block.parley_mode == 0xe) && (edit_index == 0)) || ((parley_wnd_block.parley_mode != 0xf && (parley_wnd_block.parley_mode != 0xe)))
+  if ((((int)parley_wnd_block.mode == 0xe) && (edit_index == 0)) || (((int)parley_wnd_block.mode != 0xf && ((int)parley_wnd_block.mode != 0xe)))
      ) {
     len = _strlen(gold_text);
     text_len = _strlen(text);
@@ -8025,19 +7990,19 @@ void __cdecl parley_gold_edit_on_change(int control_id)
   }
   amount = _atoi(text);
   if (amount < 1) {
-    *(i32 *)(((i8 *)&parley_wnd_block.parley_gold_entered) + edit_index * 4) = 0;
+    parley_wnd_block.side_selected[edit_index] = 0;
   }
   else {
-    *(i32 *)(((i8 *)&parley_wnd_block.parley_gold_entered) + edit_index * 4) = 1;
+    parley_wnd_block.side_selected[edit_index] = 1;
   }
-  parley_update_buttons((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd));
+  parley_update_buttons(&parley_wnd_block);
   if (modified != 0) {
     len = _strlen(text);
     if (len < caret) {
       caret = _strlen(text);
     }
-    ctrl_set_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4),(const char *)text);
-    edit_set_caret(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4),caret);
+    ctrl_set_text((ControlTextView *)parley_wnd_block.gold_edits[edit_index],(const char *)text);
+    edit_set_caret((ControlTextView *)parley_wnd_block.gold_edits[edit_index],caret);
   }
   return;
 }
@@ -8046,7 +8011,7 @@ void __cdecl parley_gold_edit_on_change(int control_id)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall
-chat_receive_message(WindowObjectView *self,iptr civ,iptr civ2,iptr is_private,iptr message)
+chat_receive_message(ParleyWindow *self,iptr civ,iptr civ2,iptr is_private,iptr message)
 
 {
   u32 muted;
@@ -8054,14 +8019,14 @@ chat_receive_message(WindowObjectView *self,iptr civ,iptr civ2,iptr is_private,i
   const void *label;
   int listener;
   
-  ctrl_get_text(chat_wnd_block.chat_log_edit,chat_log_buffer);
+  ctrl_get_text((ControlTextView *)chat_wnd_block.chat_log_edit,chat_log_buffer);
   text_clear();
   log_len = _strlen(chat_log_buffer);
   if (log_len != 0) {
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_recv_newline_str));
   }
   if ((char)is_private == '\0') {
-    label = (label_string(*(i32 *)(label_string_ids + 0xb60)));
+    label = (label_string(label_string_ids[0x2d8]));
     crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)label);
     text_append_space();
     chat_append_sender_name(civ);
@@ -8070,11 +8035,11 @@ chat_receive_message(WindowObjectView *self,iptr civ,iptr civ2,iptr is_private,i
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_recv_year_close_str));
   }
   else {
-    label = (label_string(*(i32 *)(label_string_ids + 0xb58)));
+    label = (label_string(label_string_ids[0x2d6]));
     crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)label);
     text_append_space();
     chat_append_sender_name(civ);
-    label = (label_string(*(i32 *)(label_string_ids + 0xb5c)));
+    label = (label_string(label_string_ids[0x2d7]));
     crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)label);
     text_append_space();
     chat_append_sender_name(civ2);
@@ -8083,16 +8048,16 @@ chat_receive_message(WindowObjectView *self,iptr civ,iptr civ2,iptr is_private,i
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_recv_private_year_close_str));
   }
   crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)((const void *)message));
-  if ((civ == 0) && (chat_wnd_block.chat_mute_anonymous != 0)) {
+  if ((civ == 0) && (chat_wnd_block.mute_anonymous != 0)) {
     return;
   }
   if ((char)is_private == '\0') {
-    if (parley_wnd_block.parley_wnd_closed == 0) {
-      if (parley_wnd_block.parley_other_civ == civ) goto relay_to_listeners;
-      muted = ((u32 *)&((PediaRedrawView *)self)->civ_muted_flags)[civ];
+    if (parley_wnd_block.closed == 0) {
+      if ((int)parley_wnd_block.other_civ == civ) goto relay_to_listeners;
+      muted = self->muted_civs[civ];
     }
     else {
-      muted = ((u32 *)&((PediaRedrawView *)self)->civ_muted_flags)[civ];
+      muted = self->muted_civs[civ];
     }
     if (muted != 0) {
       return;
@@ -8103,18 +8068,17 @@ relay_to_listeners:
     if ((((listener != civ) && (human_civ[0] != listener)) &&
         ((1 << ((byte)listener & 0x1f) & (uint)game.human_players) != 0)) &&
        ((*(byte *)(listener * 0x594 + (iptr)((u8 *)&civs + 35) + human_civ[0] * 4) & 1) != 0)) {
-      net_send_message(0x68,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + listener * 4) * 0x54),
+      net_send_message(0x68,net_session_block.net_slots[net_session_block.net_civ_slots[listener]].id,
                          civ,civ2,1,0,0,0,(const char *)message,0);
     }
   }
   chat_log_append((iptr)&map_views_block.text_buffer);
-  if (chat_wnd_block.chat_wnd_closed != 0) {
+  if (chat_wnd_block.closed != 0) {
     net_session_block.chat_unread_count++;
     net_session_block.chat_missed_message_count_i32++;
   }
-  if ((parley_wnd_block.parley_wnd_closed != 0) && (chat_wnd_block.chat_wnd_closed != 0)) {
-    parley_wnd_open((ViewWindow *)((i8 *)&chat_wnd_block.chat_wnd),0,4);
+  if ((parley_wnd_block.closed != 0) && (chat_wnd_block.closed != 0)) {
+    parley_wnd_open(&chat_wnd_block,0,4);
   }
   return;
 }
@@ -8147,12 +8111,12 @@ void __cdecl chat_log_append(iptr line)
   }
   crt_strcpy(chat_log_buffer,chat_log_buffer + trim_len);
   crt_strcat(chat_log_buffer,(const char *)((const void *)line));
-  ctrl_set_text(chat_wnd_block.chat_log_edit,(const char *)chat_log_buffer);
-  ctrl_set_text(parley_wnd_block.parley_chat_log_edit,(const char *)chat_log_buffer);
-  caret_pos = edit_get_text_end(chat_wnd_block.chat_log_edit);
-  edit_set_caret(chat_wnd_block.chat_log_edit,caret_pos);
-  caret_pos = edit_get_text_end(chat_wnd_block.chat_log_edit);
-  edit_set_caret(parley_wnd_block.parley_chat_log_edit,caret_pos);
+  ctrl_set_text((ControlTextView *)chat_wnd_block.chat_log_edit,(const char *)chat_log_buffer);
+  ctrl_set_text((ControlTextView *)parley_wnd_block.chat_log_edit,(const char *)chat_log_buffer);
+  caret_pos = edit_get_text_end((ControlTextView *)chat_wnd_block.chat_log_edit);
+  edit_set_caret((ControlTextView *)chat_wnd_block.chat_log_edit,caret_pos);
+  caret_pos = edit_get_text_end((ControlTextView *)chat_wnd_block.chat_log_edit);
+  edit_set_caret((ControlTextView *)parley_wnd_block.chat_log_edit,caret_pos);
   return;
 }
 
@@ -8163,7 +8127,7 @@ void __cdecl chat_append_sender_name(int civ)
   i32 name_text;
   
   if (civ == 0) {
-    name_text = (i32)(label_string(*(i32 *)(label_string_ids + 0xb64)));
+    name_text = (i32)(label_string(label_string_ids[0x2d9]));
     crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)((const void *)name_text));
   }
   else {
@@ -8199,9 +8163,9 @@ void __cdecl chat_clear_button_on_click(void)
 
 {
   _memset((*(void * *)&chat_log_buffer),0,font_size16_bold_block.chat_log_capacity + 1);
-  ctrl_set_text(chat_wnd_block.chat_log_edit,(const char *)(*(void * *)&chat_log_buffer));
-  ctrl_set_text(parley_wnd_block.parley_chat_log_edit,(const char *)(*(void * *)&chat_log_buffer));
-  ctrl_set_focus(parley_wnd_block.parley_chat_input_edit);
+  ctrl_set_text((ControlTextView *)chat_wnd_block.chat_log_edit,(const char *)(*(void * *)&chat_log_buffer));
+  ctrl_set_text((ControlTextView *)parley_wnd_block.chat_log_edit,(const char *)(*(void * *)&chat_log_buffer));
+  ctrl_set_focus((ControlFocusView *)parley_wnd_block.chat_input_edit);
   return;
 }
 
@@ -8232,39 +8196,39 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
   iptr sender;
   int count;
   int civ;
-  iptr wnd2;
+  ParleyWindow *wnd2;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
     wnd2 = 0;
   }
   else {
-    wnd2 = child_wnd - 0x48;
+    wnd2 = (ParleyWindow *)(child_wnd - 0x48);
   }
   if (key < 0x2b5) {
     if (0x2af < key) {
-      chat_insert_macro_text((Control *)(*(i32 *)(wnd2 + 0x298)),key);
+      chat_insert_macro_text((Control *)wnd2->chat_input_edit,key);
       return 0;
     }
     if (key == 0xd0) {
-      ctrl_get_text(*(ControlTextView **)(wnd2 + 0x298),(*(char * *)&chat_input_buffer));
+      ctrl_get_text((ControlTextView *)wnd2->chat_input_edit,(*(char * *)&chat_input_buffer));
       len = _strlen((*(char * *)&chat_input_buffer));
       if (len == 0) {
         return 0;
       }
-      ctrl_get_text(chat_wnd_block.chat_log_edit,chat_log_buffer);
+      ctrl_get_text((ControlTextView *)chat_wnd_block.chat_log_edit,chat_log_buffer);
       text_clear();
       len = _strlen(chat_log_buffer);
       if (len != 0) {
         crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_send_newline_str));
       }
-      label = (label_string(*(i32 *)(label_string_ids + 0xb68)));
+      label = (label_string(label_string_ids[0x2da]));
       crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)label);
       text_append_space();
-      if (*(int *)(wnd2 + 0x1ec) == 4) {
+      if ((int)wnd2->mode == 4) {
         count = 0;
         for (civ = 1; civ < 8; civ++) {
-          if (*(int *)(((i8 *)&chat_wnd_block.chat_send_to_civs) + civ * 4) != 0) {
+          if (chat_wnd_block.send_to_civs[civ] != 0) {
             if (count != 0) {
               crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_send_recipient_sep_str));
             }
@@ -8274,7 +8238,7 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
         }
       }
       else {
-        chat_append_sender_name(*(i32 *)(wnd2 + 0x118));
+        chat_append_sender_name((i32)wnd2->other_civ);
         count = 1;
       }
       if (count == 0) {
@@ -8285,33 +8249,30 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
       crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_send_year_close_str));
       crt_strcat(((i8 *)&map_views_block.text_buffer),(*(char * *)&chat_input_buffer));
       chat_log_append((iptr)&map_views_block.text_buffer);
-      if (*(int *)(wnd2 + 0x1ec) == 4) {
+      if ((int)wnd2->mode == 4) {
         for (civ = 1; civ < 8; civ++) {
           if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
-              (human_civ[0] != civ)) && (*(int *)(((i8 *)&chat_wnd_block.chat_send_to_civs) + civ * 4) != 0)) {
-            if (chat_wnd_block.chat_remain_anonymous == 0) {
+              (human_civ[0] != civ)) && (chat_wnd_block.send_to_civs[civ] != 0)) {
+            if (chat_wnd_block.remain_anonymous == 0) {
               sender = human_civ[0];
             }
             else {
               sender = 0;
             }
-            net_send_message(0x68,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),
+            net_send_message(0x68,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,
                                sender,civ,0,0,0,0,(const char *)(*(char * *)&chat_input_buffer),0);
             for (count = 1; count < 8; count++) {
               if ((((1 << ((byte)count & 0x1f) & (uint)game.human_players) != 0) &&
                   (human_civ[0] != count)) &&
                  ((count != civ &&
                   ((*(byte *)(count * 0x594 + (iptr)((u8 *)&civs + 35) + human_civ[0] * 4) & 1) != 0)))) {
-                if (chat_wnd_block.chat_remain_anonymous == 0) {
+                if (chat_wnd_block.remain_anonymous == 0) {
                   relay_sender = human_civ[0];
                 }
                 else {
                   relay_sender = 0;
                 }
-                net_send_message(0x68,*(i32 *)
-                                         (((i8 *)&net_session_block.net_player_slots) +
-                                         *(int *)(((i8 *)&net_session_block.net_civ_slots) + count * 4) * 0x54),relay_sender,
+                net_send_message(0x68,net_session_block.net_slots[net_session_block.net_civ_slots[count]].id,relay_sender,
                                    civ,1,0,0,0,(const char *)(*(char * *)&chat_input_buffer),0);
               }
             }
@@ -8319,25 +8280,22 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
         }
       }
       else {
-        net_send_message(0x68,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) +
-                                 *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(wnd2 + 0x118) * 4) * 0x54),
-                           human_civ[0],*(iptr *)(wnd2 + 0x118),0,0,0,0,(const char *)(*(char * *)&chat_input_buffer),0);
+        net_send_message(0x68,net_session_block.net_slots[net_session_block.net_civ_slots[(int)wnd2->other_civ]].id,
+                           human_civ[0],(iptr)wnd2->other_civ,0,0,0,0,(const char *)(*(char * *)&chat_input_buffer),0);
         for (count = 1; count < 8; count++) {
           if ((((1 << ((byte)count & 0x1f) & (uint)game.human_players) != 0) &&
               (human_civ[0] != count)) &&
-             ((*(int *)(wnd2 + 0x118) != count &&
+             (((int)wnd2->other_civ != count &&
               ((*(byte *)(count * 0x594 + (iptr)((u8 *)&civs + 35) + human_civ[0] * 4) & 1) != 0)))) {
-            net_send_message(0x68,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + count * 4) * 0x54)
-                               ,human_civ[0],*(iptr *)(wnd2 + 0x118),1,0,0,0,(const char *)(*(char * *)&chat_input_buffer),
+            net_send_message(0x68,net_session_block.net_slots[net_session_block.net_civ_slots[count]].id
+                               ,human_civ[0],(iptr)wnd2->other_civ,1,0,0,0,(const char *)(*(char * *)&chat_input_buffer),
                                0);
           }
         }
       }
       *(*(char * *)&chat_input_buffer) = '\0';
-      ctrl_set_text(*(ControlTextView **)(wnd2 + 0x298),(const char *)(*(char * *)&chat_input_buffer));
-      ctrl_set_focus(*(ControlFocusView **)(wnd2 + 0x298));
+      ctrl_set_text((ControlTextView *)wnd2->chat_input_edit,(const char *)(*(char * *)&chat_input_buffer));
+      ctrl_set_focus((ControlFocusView *)wnd2->chat_input_edit);
       return 0;
     }
     if (key == 0xd2) {
@@ -8351,7 +8309,7 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
 /* 004db690 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 * __thiscall parley_send_offer(ParleyOfferBuffer *self,int mode)
+i32 * __thiscall parley_send_offer(ParleyWindow *self,int mode)
 
 {
   i32 offer_kind;
@@ -8363,54 +8321,54 @@ i32 * __thiscall parley_send_offer(ParleyOfferBuffer *self,int mode)
   int left_size;
   
   offer_kind = *(i32 *)(((i8 *)&parley_offer_kinds) + mode * 4);
-  parley_wnd_block.parley_offer_left_count_i32 = 0;
-  parley_wnd_block.parley_offer_right_count_i32 = 0;
-  right_size = *(int *)(((i8 *)&parley_item_header_sizes) + self->offer_type_right * 4);
-  switch(self->offer_type_right) {
+  parley_wnd_block.offer_counts[0] = 0;
+  parley_wnd_block.offer_counts[1] = 0;
+  right_size = *(int *)(((i8 *)&parley_item_header_sizes) + self->side_kind[1] * 4);
+  switch(self->side_kind[1]) {
   case 8:
   case 0xc:
-    for (i = 0; i < parley_wnd_block.parley_list_count_right; i++) {
-      if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected_right) + i * 4) == 1) {
-        parley_wnd_block.parley_offer_right_count_i32++;
+    for (i = 0; i < parley_wnd_block.list_counts[1]; i++) {
+      if ((int)parley_wnd_block.list_selected[i + 2049] == 1) {
+        parley_wnd_block.offer_counts[1]++;
       }
     }
-    right_size = self->selected_count_right * 4 + right_size;
+    right_size = self->offer_counts[1] * 4 + right_size;
     break;
   case 10:
   case 0x11:
-    for (i = 0; i < parley_wnd_block.parley_list_count_right; i++) {
-      if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected_right) + i * 4) == 1) {
-        parley_wnd_block.parley_offer_right_count_i32++;
+    for (i = 0; i < parley_wnd_block.list_counts[1]; i++) {
+      if ((int)parley_wnd_block.list_selected[i + 2049] == 1) {
+        parley_wnd_block.offer_counts[1]++;
       }
     }
-    right_size = self->selected_count_right * 4 + right_size;
-    if (self->offer_type_right == 0x11) {
-      right_size = self->selected_count_right * 4 + right_size;
+    right_size = self->offer_counts[1] * 4 + right_size;
+    if (self->side_kind[1] == 0x11) {
+      right_size = self->offer_counts[1] * 4 + right_size;
     }
   }
   total_size = right_size + 0x20;
   if (mode == 0xe) {
-    left_size = *(int *)(((i8 *)&parley_item_header_sizes) + self->offer_type_left * 4);
-    switch(self->offer_type_left) {
+    left_size = *(int *)(((i8 *)&parley_item_header_sizes) + self->side_kind[0] * 4);
+    switch(self->side_kind[0]) {
     case 8:
     case 0xc:
-      for (i = 0; i < parley_wnd_block.parley_list_counts[0]; i++) {
-        if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4) == 1) {
-          parley_wnd_block.parley_offer_left_count_i32++;
+      for (i = 0; i < parley_wnd_block.list_counts[0]; i++) {
+        if ((int)parley_wnd_block.list_selected[i] == 1) {
+          parley_wnd_block.offer_counts[0]++;
         }
       }
-      left_size = self->selected_count_left * 4 + left_size;
+      left_size = self->offer_counts[0] * 4 + left_size;
       break;
     case 10:
     case 0x11:
-      for (i = 0; i < parley_wnd_block.parley_list_counts[0]; i++) {
-        if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4) == 1) {
-          parley_wnd_block.parley_offer_left_count_i32++;
+      for (i = 0; i < parley_wnd_block.list_counts[0]; i++) {
+        if ((int)parley_wnd_block.list_selected[i] == 1) {
+          parley_wnd_block.offer_counts[0]++;
         }
       }
-      left_size = self->selected_count_left * 4 + left_size;
-      if (self->offer_type_left == 0x11) {
-        left_size = self->selected_count_left * 4 + left_size;
+      left_size = self->offer_counts[0] * 4 + left_size;
+      if (self->side_kind[0] == 0x11) {
+        left_size = self->offer_counts[0] * 4 + left_size;
       }
     }
     total_size += left_size;
@@ -8424,23 +8382,22 @@ i32 * __thiscall parley_send_offer(ParleyOfferBuffer *self,int mode)
     *msg = 0x66606660;
     msg[1] = 0x82;
     msg[2] = total_size;
-    msg[4] = self->parley_kind;
+    msg[4] = self->mode;
     msg[5] = human_civ[0];
-    msg[6] = self->civ_id;
+    msg[6] = self->other_civ;
     msg[7] = offer_kind;
     if (total_size + (int)msg < (uint)(right_size + (int)(msg + 8))) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_charptr_pchunk_sizechunk0_charptr_pmessa,(iptr)&str_d_ss_franklinton_parleywin_transaction_c,0x9f);
     }
-    parley_pack_offer_items(self,(iptr)(msg + 8),self->offer_type_right,right_size,1);
+    parley_pack_offer_items(self,(ParleyOfferItem *)(iptr)(msg + 8),self->side_kind[1],right_size,1);
     if (mode == 0xe) {
       left_items = (int)msg + right_size + 0x20;
       if (left_size + left_items != total_size + (int)msg) {
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_charptr_pchunk_sizechunk1_charptr_pmessa,(iptr)&str_d_ss_franklinton_parleywin_transaction_c_2,0xa4);
       }
-      parley_pack_offer_items(self,left_items,self->offer_type_left,left_size,0);
+      parley_pack_offer_items(self,(ParleyOfferItem *)left_items,self->side_kind[0],left_size,0);
     }
-    net_send_message(0x82,*(i32 *)
-                             (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),0,0
+    net_send_message(0x82,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd_block.other_civ]].id,0,0
                        ,0,0,0,0,0,(iptr)msg);
   }
   return msg;
@@ -8449,7 +8406,7 @@ i32 * __thiscall parley_send_offer(ParleyOfferBuffer *self,int mode)
 /* 004dbab4 auto */
 void __thiscall
 parley_pack_offer_items
-          (ParleyOfferBuffer *self,iptr dest,i32 item_type,i32 item_size,iptr side)
+          (ParleyWindow *self,ParleyOfferItem *dest,i32 item_type,i32 item_size,iptr side)
 
 {
   int gold;
@@ -8462,86 +8419,86 @@ parley_pack_offer_items
   switch(item_type) {
   case 5:
   case 6:
-    *(i32 *)dest = item_type;
-    *(i32 *)(dest + 4) = item_size;
-    *(u32 *)(dest + 8) = self->treaty_choice;
+    dest->type = item_type;
+    dest->size = item_size;
+    dest->value = self->treaty_kind;
     break;
   case 8:
-    *(i32 *)dest = item_type;
-    *(i32 *)(dest + 4) = item_size;
-    *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 0x1020c);
-    item_ptr2 = (i32 *)(dest + 0xc);
+    dest->type = item_type;
+    dest->size = item_size;
+    dest->value = (i32)self->offer_counts[side];
+    item_ptr2 = (i32 *)((iptr)dest + 0xc);
     packed_count = 0;
-    for (i = 0; i < (((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
-      if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4 + side * 0x2004) == 1) {
-        *item_ptr2 = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0x1d4);
+    for (i = 0; i < parley_wnd_block.list_counts[side]; i++) {
+      if ((int)parley_wnd_block.list_selected[i + side * 0x801] == 1) {
+        *item_ptr2 = (i32)self->list_items[side * 0x801 + i];
         item_ptr2++;
         packed_count++;
-        if (*(int *)(self->proposal_kind + side * 4 + 0x1020c) == packed_count) {
+        if ((int)self->offer_counts[side] == packed_count) {
           return;
         }
       }
     }
     break;
   case 9:
-    *(i32 *)dest = item_type;
-    *(i32 *)(dest + 4) = item_size;
-    ctrl_get_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + side * 4),(char *)gold_text);
+    dest->type = item_type;
+    dest->size = item_size;
+    ctrl_get_text((ControlTextView *)parley_wnd_block.gold_edits[side],(char *)gold_text);
     gold = _atoi(gold_text);
-    *(int *)(dest + 8) = gold;
+    dest->value = gold;
     break;
   case 10:
-    *(i32 *)dest = item_type;
-    *(i32 *)(dest + 4) = item_size;
-    *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 0x1020c);
-    pair_ptr = (i32 *)(dest + 0xc);
+    dest->type = item_type;
+    dest->size = item_size;
+    dest->value = (i32)self->offer_counts[side];
+    pair_ptr = (i32 *)((iptr)dest + 0xc);
     packed_count = 0;
-    for (i = 0; i < (((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
-      if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4 + side * 0x2004) == 1) {
-        *pair_ptr = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0x41dc);
+    for (i = 0; i < parley_wnd_block.list_counts[side]; i++) {
+      if ((int)parley_wnd_block.list_selected[i + side * 0x801] == 1) {
+        *pair_ptr = (i32)self->list_items_b[side * 0x801 + i];
         pair_ptr++;
         packed_count++;
-        if (*(int *)(self->proposal_kind + side * 4 + 0x1020c) == packed_count) {
+        if ((int)self->offer_counts[side] == packed_count) {
           return;
         }
       }
     }
     break;
   case 0xc:
-    *(i32 *)dest = item_type;
-    *(i32 *)(dest + 4) = item_size;
-    *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 0x1020c);
-    item_ptr2 = (i32 *)(dest + 0xc);
+    dest->type = item_type;
+    dest->size = item_size;
+    dest->value = (i32)self->offer_counts[side];
+    item_ptr2 = (i32 *)((iptr)dest + 0xc);
     packed_count = 0;
-    for (i = 0; i < (((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
-      if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4 + side * 0x2004) == 1) {
-        *item_ptr2 = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0x1d4);
+    for (i = 0; i < parley_wnd_block.list_counts[side]; i++) {
+      if ((int)parley_wnd_block.list_selected[i + side * 0x801] == 1) {
+        *item_ptr2 = (i32)self->list_items[side * 0x801 + i];
         item_ptr2++;
         packed_count++;
-        if (*(int *)(self->proposal_kind + side * 4 + 0x1020c) == packed_count) {
+        if ((int)self->offer_counts[side] == packed_count) {
           return;
         }
       }
     }
     break;
   case 0xd:
-    *(i32 *)dest = item_type;
-    *(i32 *)(dest + 4) = item_size;
-    *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 8);
+    dest->type = item_type;
+    dest->size = item_size;
+    dest->value = (i32)self->map_choice[side];
     break;
   case 0x11:
-    *(i32 *)dest = item_type;
-    *(i32 *)(dest + 4) = item_size;
-    *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 0x1020c);
-    pair_ptr = (i32 *)(dest + 0xc);
+    dest->type = item_type;
+    dest->size = item_size;
+    dest->value = (i32)self->offer_counts[side];
+    pair_ptr = (i32 *)((iptr)dest + 0xc);
     packed_count = 0;
-    for (i = 0; i < (((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
-      if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4 + side * 0x2004) == 1) {
-        *pair_ptr = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0x41dc);
-        pair_ptr[1] = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0xc1ec);
+    for (i = 0; i < parley_wnd_block.list_counts[side]; i++) {
+      if ((int)parley_wnd_block.list_selected[i + side * 0x801] == 1) {
+        *pair_ptr = (i32)self->list_items_b[side * 0x801 + i];
+        pair_ptr[1] = (i32)self->list_selected_b[side * 0x801 + i];
         pair_ptr += 2;
         packed_count++;
-        if (*(int *)(self->proposal_kind + side * 4 + 0x1020c) == packed_count) {
+        if ((int)self->offer_counts[side] == packed_count) {
           return;
         }
       }
@@ -8551,27 +8508,27 @@ parley_pack_offer_items
 }
 
 /* 004dbee6 auto */
-void __thiscall parley_build_description(WindowObjectView *self,iptr offer,int received)
+void __thiscall parley_build_description(ParleyWindow *self,ParleyOfferMsg *offer,int received)
 
 {
   int maps_kind;
   int *first_items;
-  iptr second_offer;
+  ParleyOfferMsg *second_offer;
   i32 *second_items;
   size_t desc_len;
   iptr label;
   
   if (offer != 0) {
-    first_items = (int *)(offer + 0x20);
-    second_offer = *(int *)(offer + 0x24) + offer;
-    second_items = (i32 *)(second_offer + 0x20);
+    first_items = (int *)((iptr)offer + 0x20);
+    second_offer = (ParleyOfferMsg *)(offer->item.size + (iptr)offer);
+    second_items = (i32 *)((iptr)second_offer + 0x20);
     str_clear((char *)&text_section_index_pool_block.parley_description);
     desc_len = _strlen(((i8 *)&text_section_index_pool_block.parley_description));
     if (desc_len != 0) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_strlen_parleydescription_0,(iptr)&str_d_ss_franklinton_parleywin_transaction_c_3,0x120);
     }
     if (received == 0) {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc70)));
+      label = (iptr)(label_string(label_string_ids[0x31c]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_transmitted_crlf_str));
     }
@@ -8579,216 +8536,216 @@ void __thiscall parley_build_description(WindowObjectView *self,iptr offer,int r
     if (0x7ff < desc_len) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_strlen_parleydescription_2048,(iptr)&str_d_ss_franklinton_parleywin_transaction_c_4,0x126);
     }
-    switch(*(i32 *)(offer + 0x10)) {
+    switch(offer->mode) {
     case 6:
-      parley_describe_treaty(self,*(i32 *)(offer + 0x28),0);
+      parley_describe_treaty(self,offer->item.value,0);
       break;
     case 7:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc98)));
+      label = (iptr)(label_string(label_string_ids[0x326]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_adv_crlf_str));
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc9c)));
+      label = (iptr)(label_string(label_string_ids[0x327]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_adv_head_crlf_str));
-      parley_describe_advances((iptr)first_items);
+      parley_describe_advances((ParleyOfferItem *)first_items);
       break;
     case 8:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc98)));
+      label = (iptr)(label_string(label_string_ids[0x326]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_gold_crlf_str));
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xca4)));
+      label = (iptr)(label_string(label_string_ids[0x329]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_gold_head_crlf_str));
       str_concat((iptr)&text_section_index_pool_block.parley_description,(iptr)&str_empty_139);
-      parley_describe_gold(*(i32 *)(offer + 0x28));
+      parley_describe_gold(offer->item.value);
       break;
     case 9:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc98)));
+      label = (iptr)(label_string(label_string_ids[0x326]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_units_crlf_str));
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xca0)));
+      label = (iptr)(label_string(label_string_ids[0x328]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_units_head_crlf_str));
-      parley_describe_units((iptr)first_items);
+      parley_describe_units((ParleyOfferItem *)first_items);
       break;
     case 10:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc98)));
+      label = (iptr)(label_string(label_string_ids[0x326]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_cities_crlf_str));
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xca8)));
+      label = (iptr)(label_string(label_string_ids[0x32a]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_cities_head_crlf_str));
-      parley_describe_cities((iptr)first_items);
+      parley_describe_cities((ParleyOfferItem *)first_items);
       break;
     case 0xb:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc98)));
+      label = (iptr)(label_string(label_string_ids[0x326]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_gift_maps_crlf_str));
-      parley_describe_maps(*(i32 *)(offer + 0x28),0);
+      parley_describe_maps(offer->item.value,0);
       break;
     case 0xc:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc84)));
+      label = (iptr)(label_string(label_string_ids[0x321]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_war_offer_crlf_str));
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc94)));
+      label = (iptr)(label_string(label_string_ids[0x325]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_war_head_crlf_str));
-      parley_describe_war_targets((iptr)first_items);
+      parley_describe_war_targets((ParleyOfferItem *)first_items);
       break;
     case 0xd:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc84)));
+      label = (iptr)(label_string(label_string_ids[0x321]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_maps_offer_crlf_str));
-      maps_kind = *(int *)(offer + 0x28);
+      maps_kind = offer->item.value;
       if (maps_kind == 0) {
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc88)));
+        label = (iptr)(label_string(label_string_ids[0x322]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       }
       else if (maps_kind == 1) {
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc8c)));
+        label = (iptr)(label_string(label_string_ids[0x323]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       }
       else if (maps_kind == 2) {
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc90)));
+        label = (iptr)(label_string(label_string_ids[0x324]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       }
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_maps_kind_crlf_str));
       break;
     case 0xe:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcb4)));
+      label = (iptr)(label_string(label_string_ids[0x32d]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_barter_crlf_str));
       switch(*second_items) {
       case 5:
       case 6:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd1c)));
+        label = (iptr)(label_string(label_string_ids[0x347]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_give_treaty_crlf_str));
-        parley_describe_treaty(self,*(i32 *)(second_offer + 0x28),1);
+        parley_describe_treaty(self,second_offer->item.value,1);
         break;
       case 8:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcb8)));
+        label = (iptr)(label_string(label_string_ids[0x32e]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_give_adv_crlf_str));
-        parley_describe_advances((iptr)second_items);
+        parley_describe_advances((ParleyOfferItem *)second_items);
         break;
       case 9:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcbc)));
+        label = (iptr)(label_string(label_string_ids[0x32f]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_give_gold_crlf_str));
         str_concat((iptr)&text_section_index_pool_block.parley_description,(iptr)&str_empty_140);
-        parley_describe_gold(*(i32 *)(second_offer + 0x28));
+        parley_describe_gold(second_offer->item.value);
         break;
       case 10:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcc0)));
+        label = (iptr)(label_string(label_string_ids[0x330]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_give_units_crlf_str));
-        parley_describe_units((iptr)second_items);
+        parley_describe_units((ParleyOfferItem *)second_items);
         break;
       case 0xc:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xccc)));
+        label = (iptr)(label_string(label_string_ids[0x333]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_give_war_crlf_str));
-        parley_describe_war_targets((iptr)second_items);
+        parley_describe_war_targets((ParleyOfferItem *)second_items);
         break;
       case 0xd:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcc8)));
+        label = (iptr)(label_string(label_string_ids[0x332]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_give_maps_crlf_str));
-        parley_describe_maps(*(i32 *)(second_offer + 0x28),0);
+        parley_describe_maps(second_offer->item.value,0);
         break;
       case 0x11:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcc4)));
+        label = (iptr)(label_string(label_string_ids[0x331]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_give_cities_crlf_str));
-        parley_describe_cities((iptr)second_items);
+        parley_describe_cities((ParleyOfferItem *)second_items);
       }
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_barter_sep_crlf_str));
       switch(*first_items) {
       case 5:
       case 6:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd20)));
+        label = (iptr)(label_string(label_string_ids[0x348]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_exch_for_treaty_crlf_str));
-        parley_describe_treaty(self,*(i32 *)(offer + 0x28),1);
+        parley_describe_treaty(self,offer->item.value,1);
         break;
       case 8:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcd0)));
+        label = (iptr)(label_string(label_string_ids[0x334]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_want_adv_crlf_str));
-        parley_describe_advances((iptr)first_items);
+        parley_describe_advances((ParleyOfferItem *)first_items);
         break;
       case 9:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcd4)));
+        label = (iptr)(label_string(label_string_ids[0x335]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_want_gold_crlf_str));
         str_concat((iptr)&text_section_index_pool_block.parley_description,(iptr)&str_empty_141);
-        parley_describe_gold(*(i32 *)(offer + 0x28));
+        parley_describe_gold(offer->item.value);
         break;
       case 10:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcd8)));
+        label = (iptr)(label_string(label_string_ids[0x336]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_want_units_crlf_str));
-        parley_describe_units((iptr)first_items);
+        parley_describe_units((ParleyOfferItem *)first_items);
         break;
       case 0xc:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xce4)));
+        label = (iptr)(label_string(label_string_ids[0x339]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_exch_for_war_targets_crlf_str));
-        parley_describe_war_targets((iptr)first_items);
+        parley_describe_war_targets((ParleyOfferItem *)first_items);
         break;
       case 0xd:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xce0)));
+        label = (iptr)(label_string(label_string_ids[0x338]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_exch_for_maps_crlf_str));
-        parley_describe_maps(*(i32 *)(offer + 0x28),1);
+        parley_describe_maps(offer->item.value,1);
         break;
       case 0x11:
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcdc)));
+        label = (iptr)(label_string(label_string_ids[0x337]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_exch_for_cities_crlf_str));
-        parley_describe_cities((iptr)first_items);
+        parley_describe_cities((ParleyOfferItem *)first_items);
       }
       break;
     case 0xf:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcac)));
+      label = (iptr)(label_string(label_string_ids[0x32b]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       str_append_space((iptr)&text_section_index_pool_block.parley_description);
       if (*first_items == 0xc) {
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd18)));
+        label = (iptr)(label_string(label_string_ids[0x346]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       }
       else if ((*first_items == 5) || (*first_items == 6)) {
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd14)));
+        label = (iptr)(label_string(label_string_ids[0x345]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       }
       else {
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcb0)));
+        label = (iptr)(label_string(label_string_ids[0x32c]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       }
       crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_desc_threat_crlf_str));
       switch(*first_items) {
       case 5:
       case 6:
-        parley_describe_treaty(self,*(i32 *)(offer + 0x28),1);
+        parley_describe_treaty(self,offer->item.value,1);
         break;
       case 8:
-        parley_describe_advances((iptr)first_items);
+        parley_describe_advances((ParleyOfferItem *)first_items);
         break;
       case 9:
-        parley_describe_gold(*(i32 *)(offer + 0x28));
+        parley_describe_gold(offer->item.value);
         break;
       case 10:
-        parley_describe_units((iptr)first_items);
+        parley_describe_units((ParleyOfferItem *)first_items);
         break;
       case 0xc:
-        parley_describe_war_targets((iptr)first_items);
+        parley_describe_war_targets((ParleyOfferItem *)first_items);
         break;
       case 0xd:
-        parley_describe_maps(*(i32 *)(offer + 0x28),1);
+        parley_describe_maps(offer->item.value,1);
         break;
       case 0x11:
-        parley_describe_cities((iptr)first_items);
+        parley_describe_cities((ParleyOfferItem *)first_items);
       }
     }
     desc_len = _strlen(((i8 *)&text_section_index_pool_block.parley_description));
@@ -8800,7 +8757,7 @@ void __thiscall parley_build_description(WindowObjectView *self,iptr offer,int r
 }
 
 /* 004dcafa auto */
-void __cdecl parley_describe_advances(iptr items)
+void __cdecl parley_describe_advances(ParleyOfferItem *items)
 
 {
   int count;
@@ -8808,8 +8765,8 @@ void __cdecl parley_describe_advances(iptr items)
   int i;
   int *adv_ptr;
   
-  count = *(int *)(items + 8);
-  adv_ptr = (int *)(items + 0xc);
+  count = items->value;
+  adv_ptr = (int *)((iptr)items + 0xc);
   for (i = 0; i < count; i++) {
     adv_name = (iptr)(label_string(advances[*adv_ptr].name));
     str_concat((iptr)&text_section_index_pool_block.parley_description,adv_name);
@@ -8819,7 +8776,7 @@ void __cdecl parley_describe_advances(iptr items)
       }
       else if (count - 2 == i) {
         str_append_space((iptr)&text_section_index_pool_block.parley_description);
-        adv_name = (iptr)(label_string(*(i32 *)(label_string_ids + 0xce8)));
+        adv_name = (iptr)(label_string(label_string_ids[0x33a]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,adv_name);
         str_append_space((iptr)&text_section_index_pool_block.parley_description);
       }
@@ -8843,14 +8800,14 @@ void __cdecl parley_describe_gold(int gold)
   __itoa(gold,gold_text,10);
   crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),gold_text);
   str_append_space((iptr)&text_section_index_pool_block.parley_description);
-  label = (label_string(*(i32 *)(label_string_ids + 0xcec)));
+  label = (label_string(label_string_ids[0x33b]));
   crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),(const char *)label);
   crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_gold_crlf_str));
   return;
 }
 
 /* 004dcc83 auto */
-void __cdecl parley_describe_units(iptr items)
+void __cdecl parley_describe_units(ParleyOfferItem *items)
 
 {
   iptr unit;
@@ -8866,12 +8823,12 @@ void __cdecl parley_describe_units(iptr items)
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     type_counts[unit_type] = 0;
   }
-  unit_count = *(int *)(items + 8);
-  unit_ids = items + 0xc;
+  unit_count = items->value;
+  unit_ids = (iptr)items + 0xc;
   distinct_types = 0;
   for (unit_type = 0; unit_type < unit_count; unit_type++) {
     unit = parley_find_unit_by_id
-                      ((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),*(i32 *)(unit_ids + unit_type * 4));
+                      (&parley_wnd_block,*(i32 *)(unit_ids + unit_type * 4));
     if (-1 < unit) {
       if (type_counts[units[unit].type] == 0) {
         distinct_types++;
@@ -8893,7 +8850,7 @@ void __cdecl parley_describe_units(iptr items)
         }
         else if (distinct_types - 2 == listed) {
           str_append_space((iptr)&text_section_index_pool_block.parley_description);
-          label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xce8)));
+          label = (iptr)(label_string(label_string_ids[0x33a]));
           str_concat((iptr)&text_section_index_pool_block.parley_description,label);
           str_append_space((iptr)&text_section_index_pool_block.parley_description);
         }
@@ -8909,7 +8866,7 @@ void __cdecl parley_describe_units(iptr items)
 }
 
 /* 004dcea5 auto */
-void __cdecl parley_describe_cities(iptr items)
+void __cdecl parley_describe_cities(ParleyOfferItem *items)
 
 {
   int count;
@@ -8918,13 +8875,13 @@ void __cdecl parley_describe_cities(iptr items)
   int i;
   char size_text[16];
   
-  count = *(int *)(items + 8);
+  count = items->value;
   for (i = 0; i < count; i++) {
     city = parley_find_city_by_id
-                      ((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),*(i32 *)(items + 0xc + i * 8));
+                      (&parley_wnd_block,*(i32 *)((iptr)items + 0xc + i * 8));
     str_append((char *)&text_section_index_pool_block.parley_description,(const char *)&cities[city].name);
     crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_cities_open_paren_str));
-    __itoa(*(int *)(items + 0x10 + i * 8),size_text,10);
+    __itoa(*(int *)((iptr)items + 0x10 + i * 8),size_text,10);
     crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),size_text);
     crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_cities_close_paren_str));
     if (1 < count) {
@@ -8933,7 +8890,7 @@ void __cdecl parley_describe_cities(iptr items)
       }
       else if (count - 2 == i) {
         str_append_space((iptr)&text_section_index_pool_block.parley_description);
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xce8)));
+        label = (iptr)(label_string(label_string_ids[0x33a]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,label);
         str_append_space((iptr)&text_section_index_pool_block.parley_description);
       }
@@ -8954,31 +8911,31 @@ void __cdecl parley_describe_maps(int map_kind,int exchange)
   
   if (map_kind == 0) {
     if (exchange == 0) {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcf0)));
+      label = (iptr)(label_string(label_string_ids[0x33c]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
     else {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcf4)));
+      label = (iptr)(label_string(label_string_ids[0x33d]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
   }
   else if (map_kind == 1) {
     if (exchange == 0) {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcf8)));
+      label = (iptr)(label_string(label_string_ids[0x33e]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
     else {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xcfc)));
+      label = (iptr)(label_string(label_string_ids[0x33f]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
   }
   else if (map_kind == 2) {
     if (exchange == 0) {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd00)));
+      label = (iptr)(label_string(label_string_ids[0x340]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
     else {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd04)));
+      label = (iptr)(label_string(label_string_ids[0x341]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
   }
@@ -8987,7 +8944,7 @@ void __cdecl parley_describe_maps(int map_kind,int exchange)
 }
 
 /* 004dd176 auto */
-void __cdecl parley_describe_war_targets(iptr items)
+void __cdecl parley_describe_war_targets(ParleyOfferItem *items)
 
 {
   int count;
@@ -8995,8 +8952,8 @@ void __cdecl parley_describe_war_targets(iptr items)
   iptr *civ_ptr;
   int i;
   
-  count = *(int *)(items + 8);
-  civ_ptr = (iptr *)(items + 0xc);
+  count = items->value;
+  civ_ptr = (iptr *)((iptr)items + 0xc);
   for (i = 0; i < count; i++) {
     text = (iptr)(civ_name_plural(*civ_ptr));
     str_concat((iptr)&text_section_index_pool_block.parley_description,text);
@@ -9006,7 +8963,7 @@ void __cdecl parley_describe_war_targets(iptr items)
       }
       else if (count - 2 == i) {
         str_append_space((iptr)&text_section_index_pool_block.parley_description);
-        text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xce8)));
+        text = (iptr)(label_string(label_string_ids[0x33a]));
         str_concat((iptr)&text_section_index_pool_block.parley_description,text);
         str_append_space((iptr)&text_section_index_pool_block.parley_description);
       }
@@ -9021,120 +8978,120 @@ void __cdecl parley_describe_war_targets(iptr items)
 }
 
 /* 004dd285 auto */
-void __cdecl parley_execute_transaction(iptr offer)
+void __cdecl parley_execute_transaction(ParleyOfferMsg *offer)
 
 {
   i32 *first_items;
-  iptr second_offer;
+  ParleyOfferMsg *second_offer;
   i32 *second_items;
   iptr civ;
   iptr civ2;
   
   if (offer != 0) {
     dbg_logf((const char *)&str_start_executeparleytransaction_message_d,net_send_sequence);
-    civ = *(iptr *)(offer + 0x14);
-    civ2 = *(iptr *)(offer + 0x18);
-    first_items = (i32 *)(offer + 0x20);
-    second_offer = *(int *)(offer + 0x24) + offer;
-    second_items = (i32 *)(second_offer + 0x20);
-    switch(*(i32 *)(offer + 0x10)) {
+    civ = offer->civ;
+    civ2 = offer->other_civ;
+    first_items = (i32 *)((iptr)offer + 0x20);
+    second_offer = (ParleyOfferMsg *)(offer->item.size + (iptr)offer);
+    second_items = (i32 *)((iptr)second_offer + 0x20);
+    switch(offer->mode) {
     case 6:
-      parley_apply_treaty(*(i32 *)(offer + 0x28),civ,civ2);
+      parley_apply_treaty(offer->item.value,civ,civ2);
       break;
     case 7:
-      parley_transfer_advances(civ2,civ,(iptr)first_items);
+      parley_transfer_advances(civ2,civ,(ParleyOfferItem *)first_items);
       break;
     case 8:
-      parley_transfer_gold(civ2,civ,*(i32 *)(offer + 0x28));
+      parley_transfer_gold(civ2,civ,offer->item.value);
       break;
     case 9:
-      parley_transfer_units(civ2,(iptr)first_items);
+      parley_transfer_units(civ2,(ParleyOfferItem *)first_items);
       break;
     case 10:
-      parley_transfer_cities(civ2,(iptr)first_items);
+      parley_transfer_cities(civ2,(ParleyOfferItem *)first_items);
       break;
     case 0xb:
-      parley_give_maps(civ2,civ,*(i32 *)(offer + 0x28));
+      parley_give_maps(civ2,civ,offer->item.value);
       break;
     case 0xc:
-      parley_apply_war_pact(civ,(iptr)first_items);
-      parley_apply_war_pact(civ2,(iptr)first_items);
+      parley_apply_war_pact(civ,(ParleyOfferItem *)first_items);
+      parley_apply_war_pact(civ2,(ParleyOfferItem *)first_items);
       break;
     case 0xd:
-      parley_give_maps(civ,civ2,*(i32 *)(offer + 0x28));
-      parley_give_maps(civ2,civ,*(i32 *)(offer + 0x28));
+      parley_give_maps(civ,civ2,offer->item.value);
+      parley_give_maps(civ2,civ,offer->item.value);
       break;
     case 0xe:
       switch(*second_items) {
       case 5:
       case 6:
-        parley_apply_treaty(*(i32 *)(second_offer + 0x28),civ,civ2);
+        parley_apply_treaty(second_offer->item.value,civ,civ2);
         break;
       case 8:
-        parley_transfer_advances(civ2,civ,(iptr)second_items);
+        parley_transfer_advances(civ2,civ,(ParleyOfferItem *)second_items);
         break;
       case 9:
-        parley_transfer_gold(civ2,civ,*(i32 *)(second_offer + 0x28));
+        parley_transfer_gold(civ2,civ,second_offer->item.value);
         break;
       case 10:
-        parley_transfer_units(civ2,(iptr)second_items);
+        parley_transfer_units(civ2,(ParleyOfferItem *)second_items);
         break;
       case 0xc:
-        parley_apply_war_pact(civ,(iptr)second_items);
+        parley_apply_war_pact(civ,(ParleyOfferItem *)second_items);
         break;
       case 0xd:
-        parley_give_maps(civ2,civ,*(i32 *)(second_offer + 0x28));
+        parley_give_maps(civ2,civ,second_offer->item.value);
         break;
       case 0x11:
-        parley_transfer_cities(civ2,(iptr)second_items);
+        parley_transfer_cities(civ2,(ParleyOfferItem *)second_items);
       }
       switch(*first_items) {
       case 5:
       case 6:
-        parley_apply_treaty(*(i32 *)(offer + 0x28),civ,civ2);
+        parley_apply_treaty(offer->item.value,civ,civ2);
         break;
       case 8:
-        parley_transfer_advances(civ,civ2,(iptr)first_items);
+        parley_transfer_advances(civ,civ2,(ParleyOfferItem *)first_items);
         break;
       case 9:
-        parley_transfer_gold(civ,civ2,*(i32 *)(offer + 0x28));
+        parley_transfer_gold(civ,civ2,offer->item.value);
         break;
       case 10:
-        parley_transfer_units(civ,(iptr)first_items);
+        parley_transfer_units(civ,(ParleyOfferItem *)first_items);
         break;
       case 0xc:
-        parley_apply_war_pact(civ2,(iptr)first_items);
+        parley_apply_war_pact(civ2,(ParleyOfferItem *)first_items);
         break;
       case 0xd:
-        parley_give_maps(civ,civ2,*(i32 *)(offer + 0x28));
+        parley_give_maps(civ,civ2,offer->item.value);
         break;
       case 0x11:
-        parley_transfer_cities(civ,(iptr)first_items);
+        parley_transfer_cities(civ,(ParleyOfferItem *)first_items);
       }
       break;
     case 0xf:
       switch(*first_items) {
       case 5:
       case 6:
-        parley_apply_treaty(*(i32 *)(offer + 0x28),civ,civ2);
+        parley_apply_treaty(offer->item.value,civ,civ2);
         break;
       case 8:
-        parley_transfer_advances(civ,civ2,(iptr)first_items);
+        parley_transfer_advances(civ,civ2,(ParleyOfferItem *)first_items);
         break;
       case 9:
-        parley_transfer_gold(civ,civ2,*(i32 *)(offer + 0x28));
+        parley_transfer_gold(civ,civ2,offer->item.value);
         break;
       case 10:
-        parley_transfer_units(civ,(iptr)first_items);
+        parley_transfer_units(civ,(ParleyOfferItem *)first_items);
         break;
       case 0xc:
-        parley_apply_war_pact(civ2,(iptr)first_items);
+        parley_apply_war_pact(civ2,(ParleyOfferItem *)first_items);
         break;
       case 0xd:
-        parley_give_maps(civ,civ2,*(i32 *)(offer + 0x28));
+        parley_give_maps(civ,civ2,offer->item.value);
         break;
       case 0x11:
-        parley_transfer_cities(civ,(iptr)first_items);
+        parley_transfer_cities(civ,(ParleyOfferItem *)first_items);
       }
     }
     net_send_state_diff(0xff,2,0,0,0);
@@ -9142,16 +9099,14 @@ void __cdecl parley_execute_transaction(iptr offer)
       status_redraw(1);
     }
     else {
-      net_send_message(0x79,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),0,0,0,0,
+      net_send_message(0x79,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,0,0,0,0,
                          0,0,0,0);
     }
     if (human_civ[0] == civ) {
       status_redraw(1);
     }
     else {
-      net_send_message(0x79,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),0,0,0,0,
+      net_send_message(0x79,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,0,0,0,0,
                          0,0,0,0);
     }
     if ((*(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ2 * 4) == 0) && (civs[civ2].num_cities == 0)) {
@@ -9173,11 +9128,11 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
   byte giver_bits;
   uint recv_mask;
   uint giver_mask;
-  iptr tile;
+  Tile *tile;
   byte *recv_known;
   byte *giver_known;
-  iptr tile2;
-  iptr tile3;
+  Tile *tile2;
+  Tile *tile3;
   int y;
   iptr x;
   int in_bounds;
@@ -9198,11 +9153,11 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
   x2 = 0;
   net_batch_begin();
   for (i = 0; i < map.area; i++) {
-    tile = (iptr)(tile_at(x2,y2));
+    tile = tile_at(x2,y2);
     recv_known = known_at(x2,y2,receiver);
     giver_known = known_at(x2,y2,civ);
-    if ((giver_mask & *(byte *)(tile + 4)) != 0) {
-      if ((recv_mask & *(byte *)(tile + 4)) == 0) {
+    if ((giver_mask & tile->visible) != 0) {
+      if ((recv_mask & tile->visible) == 0) {
         known_set(x2,y2,0,receiver,0,1);
         tile_set_visible(x2,y2,recv_mask,1,1);
       }
@@ -9210,8 +9165,8 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
         if (((*recv_known & 0x80) == 0) || ((*giver_known & 0x80) == 0)) {
           giver_bits = *giver_known;
           recv_bits = *recv_known;
-          tile2 = (iptr)(tile_at(x2,y2));
-          known_bits = (giver_bits | recv_bits) & *(byte *)(tile2 + 1) & 0x80;
+          tile2 = tile_at(x2,y2);
+          known_bits = (giver_bits | recv_bits) & tile2->improvements & 0x80;
         }
         else {
           known_bits = 0x80;
@@ -9224,8 +9179,8 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
         redraw_flag = 1;
         set_flag = 1;
         x = receiver;
-        tile3 = (iptr)(tile_at(x2,y2));
-        giver_bits = *(byte *)(tile3 + 1);
+        tile3 = tile_at(x2,y2);
+        giver_bits = tile3->improvements;
         recv_known = known_at(x2,y2,civ);
         known_set(x2,y2,(uint)(giver_bits & *recv_known),x,set_flag,redraw_flag);
       }
@@ -9291,23 +9246,22 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
     map_redraw_all_views(human_civ[0],1);
   }
   else {
-    net_send_message(0x74,*(i32 *)
-                             (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + receiver * 4) * 0x54),0,0,0,0,
+    net_send_message(0x74,net_session_block.net_slots[net_session_block.net_civ_slots[receiver]].id,0,0,0,0,
                        0,0,0,0);
   }
   return;
 }
 
 /* 004dde9e auto */
-void __cdecl parley_apply_war_pact(iptr civ,iptr items)
+void __cdecl parley_apply_war_pact(iptr civ,ParleyOfferItem *items)
 
 {
   int count;
   iptr *civ_ptr;
   int i;
   
-  count = *(int *)(items + 8);
-  civ_ptr = (iptr *)(items + 0xc);
+  count = items->value;
+  civ_ptr = (iptr *)((iptr)items + 0xc);
   for (i = 0; i < count; i++) {
     diplo_set_treaty_flags(civ,*civ_ptr,0x2000);
     civ_ptr++;
@@ -9332,7 +9286,7 @@ void __cdecl parley_transfer_gold(iptr civ2,iptr civ,i32 amount)
 }
 
 /* 004ddfb2 auto */
-void __cdecl parley_transfer_advances(iptr civ,iptr civ2,iptr items)
+void __cdecl parley_transfer_advances(iptr civ,iptr civ2,ParleyOfferItem *items)
 
 {
   int count;
@@ -9340,8 +9294,8 @@ void __cdecl parley_transfer_advances(iptr civ,iptr civ2,iptr items)
   iptr *adv_ptr;
   int i;
   
-  count = *(int *)(items + 8);
-  adv_ptr = (iptr *)(items + 0xc);
+  count = items->value;
+  adv_ptr = (iptr *)((iptr)items + 0xc);
   for (i = 0; i < count; i++) {
     has_adv = civ_has_advance(civ2,*adv_ptr);
     if (has_adv != 0) {
@@ -9356,7 +9310,7 @@ void __cdecl parley_transfer_advances(iptr civ,iptr civ2,iptr items)
 }
 
 /* 004de049 auto */
-void __cdecl parley_transfer_cities(iptr civ,iptr items)
+void __cdecl parley_transfer_cities(iptr civ,ParleyOfferItem *items)
 
 {
   int count;
@@ -9364,10 +9318,10 @@ void __cdecl parley_transfer_cities(iptr civ,iptr items)
   i32 *city_id_ptr;
   int i;
   
-  count = *(int *)(items + 8);
-  city_id_ptr = (i32 *)(items + 0xc);
+  count = items->value;
+  city_id_ptr = (i32 *)((iptr)items + 0xc);
   for (i = 0; i < count; i++) {
-    city = parley_find_city_by_id((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),*city_id_ptr);
+    city = parley_find_city_by_id(&parley_wnd_block,*city_id_ptr);
     if ((-1 < city) && (cities[city].id != 0)) {
       parley_cede_city(city,civ);
     }
@@ -9390,7 +9344,7 @@ void __cdecl parley_cede_city(uptr city,iptr civ)
   iptr in_bounds;
   int y2;
   iptr in_bounds2;
-  int tile;
+  Tile *tile;
   uptr leonardo_city;
   iptr improvement;
   iptr unit;
@@ -9506,8 +9460,8 @@ redraw_and_notify:
     y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[i] + y;
     in_bounds2 = map_in_bounds(x2,y2);
     if ((in_bounds2 != 0) &&
-       (tile = (int)(tile_at(x2,y2)),
-       (1 << ((byte)civ & 0x1f) & (uint)*(byte *)(tile + 4)) == 0)) {
+       (tile = (Tile *)(int)(tile_at(x2,y2)),
+       (1 << ((byte)civ & 0x1f) & (uint)tile->visible) == 0)) {
       tile_set_visible(x2,y2,1 << ((byte)civ & 0x1f),1,1);
       map_redraw_tile_all_views(x2,y2);
     }
@@ -9524,7 +9478,7 @@ redraw_and_notify:
 }
 
 /* 004de990 auto */
-void __cdecl parley_transfer_units(iptr civ,iptr items)
+void __cdecl parley_transfer_units(iptr civ,ParleyOfferItem *items)
 
 {
   char *count_ptr;
@@ -9542,12 +9496,12 @@ void __cdecl parley_transfer_units(iptr civ,iptr items)
   iptr y3;
   i32 *id_ptr;
   
-  count = *(int *)(items + 8);
-  id_ptr = (i32 *)(items + 0xc);
+  count = items->value;
+  id_ptr = (i32 *)((iptr)items + 0xc);
   for (i = 0; i < count; i++) {
     unit_id = *id_ptr;
     id_ptr++;
-    unit = parley_find_unit_by_id((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),unit_id);
+    unit = parley_find_unit_by_id(&parley_wnd_block,unit_id);
     if ((-1 < unit) && (civ2 = (iptr)units[unit].owner, civ != civ2)) {
       if ((unit_types[units[unit].type].domain == 2) &&
          (result = unit_stack_sum(unit,2), 1 < result)) {
@@ -9645,7 +9599,7 @@ i32 __cdecl parley_find_unit_drop_tile(iptr unit,iptr x,iptr y,iptr civ,int must
 }
 
 /* 004def54 auto */
-void __thiscall parley_describe_treaty(WindowObjectView *self,int treaty_kind,int exchange)
+void __thiscall parley_describe_treaty(ParleyWindow *self,int treaty_kind,int exchange)
 
 {
   iptr label;
@@ -9653,33 +9607,33 @@ void __thiscall parley_describe_treaty(WindowObjectView *self,int treaty_kind,in
   if (exchange == 0) {
     switch(treaty_kind) {
     case 0:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc74)));
+      label = (iptr)(label_string(label_string_ids[0x31d]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       break;
     case 1:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc78)));
+      label = (iptr)(label_string(label_string_ids[0x31e]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       break;
     case 2:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc7c)));
+      label = (iptr)(label_string(label_string_ids[0x31f]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
       break;
     case 3:
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc80)));
+      label = (iptr)(label_string(label_string_ids[0x320]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
   }
   else if (exchange == 1) {
     if (treaty_kind == 0) {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbcc)));
+      label = (iptr)(label_string(label_string_ids[0x2f3]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
     else if (treaty_kind == 1) {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbd0)));
+      label = (iptr)(label_string(label_string_ids[0x2f4]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
     else if (treaty_kind == 2) {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbd4)));
+      label = (iptr)(label_string(label_string_ids[0x2f5]));
       str_concat((iptr)&text_section_index_pool_block.parley_description,label);
     }
   }
@@ -9782,7 +9736,7 @@ net_popup_queue_push(i32 popup_kind,i32 string_count,i32 number_count,i32 arg_a,
   }
   new_head = entry;
   if ((*(i32 * *)&net_popup_queue_head) != (i32 *)0x0) {
-    *(*(i32 * *)&net_popup_queue_tail) = (i32)(entry);
+    *(*(i32 * *)&net_popup_queue_tail) = (i32)entry;
     new_head = (*(i32 * *)&net_popup_queue_head);
   }
   (*(i32 * *)&net_popup_queue_head) = new_head;
@@ -9812,7 +9766,7 @@ void __cdecl net_popup_idle_autoclose(void)
 {
   int now;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if (((net_session_block.net_host_handoff_stage == '\0') && (net_session_block.nm_parley_cancel_count == 0)) &&
      (now = timer_ticks(), now - dialog_title_font_obj_block.dialog_timeout_start_i32 < 0x4b1)) {
     return;
@@ -9966,8 +9920,7 @@ void __cdecl net_popup_queue_show_next(void)
       break;
     case 0x17:
       text = popup_game_with_sprite((const char *)&str_canescape,(iptr)&popup_info_icon_sprite,0);
-      net_send_message(0x77,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54),
+      net_send_message(0x77,net_session_block.net_slots[net_session_block.net_civ_slots[entry[4]]].id,
                          text,0,0,0,0,0,0,0);
       break;
     case 0x18:
@@ -10017,14 +9970,12 @@ void __cdecl net_popup_queue_show_next(void)
       break;
     case 0x23:
       text = dlg_game_txt_with_unit((const char *)&str_desert_3,entry[5]);
-      net_send_message(0x7b,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54),
+      net_send_message(0x7b,net_session_block.net_slots[net_session_block.net_civ_slots[entry[4]]].id,
                          text,0,0,0,0,0,0,0);
       break;
     case 0x24:
       text = dlg_game_txt_with_unit((const char *)&str_desert2,entry[5]);
-      net_send_message(0x7b,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54),
+      net_send_message(0x7b,net_session_block.net_slots[net_session_block.net_civ_slots[entry[4]]].id,
                          text,0,0,0,0,0,0,0);
       break;
     case 0x25:
@@ -10102,8 +10053,8 @@ void __cdecl net_popup_queue_show_next(void)
     case 0x3d:
       civs[human_civ[0]].last_treaty_turn[entry[4]] = game.turn;
       civs[entry[4]].last_treaty_turn[human_civ[0]] = game.turn;
-      if (parley_wnd_block.parley_other_civ == -1) {
-        parley_wnd_block.parley_other_civ = -2;
+      if ((int)parley_wnd_block.other_civ == -1) {
+        parley_wnd_block.other_civ = -2;
         text_clear();
         text = civ_leader_title(entry[4]);
         text_append((const char *)text);
@@ -10132,16 +10083,14 @@ void __cdecl net_popup_queue_show_next(void)
         choice = popup_game_with_sprite((const char *)&str_parleyrequest,(iptr)&popup_info_icon_sprite,0);
         if (net_session_block.net_host_handoff_stage == '\0') {
           if (net_session_block.nm_parley_cancel_count == 0) {
-            net_send_message(0x80,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54
-                                     ),choice,0,0,0,0,0,0,0);
+            net_send_message(0x80,net_session_block.net_slots[net_session_block.net_civ_slots[entry[4]]].id,choice,0,0,0,0,0,0,0);
           }
           if (net_session_block.nm_parley_cancel_count == 0) {
             if (choice == 1) {
               text = entry[4];
               operator_delete(entry);
               net_session_block.net_popup_in_progress_i32 = 0;
-              parley_wnd_open((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),text,2);
+              parley_wnd_open(&parley_wnd_block,text,2);
               eh_state = 0xffffffff;
               /* inlined unwind funclet 0051399d */ { dialog_dtor(&dlg); }
               goto done;
@@ -10154,20 +10103,18 @@ void __cdecl net_popup_queue_show_next(void)
             dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
             popup_game_with_sprite((const char *)&str_parleycancel_4,(iptr)&popup_info_icon_sprite,0);
           }
-          parley_wnd_block.parley_other_civ = -1;
+          parley_wnd_block.other_civ = -1;
           mp_meeting_pending = 0;
         }
         else {
-          net_send_message(0x80,*(i32 *)
-                                   (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54),
+          net_send_message(0x80,net_session_block.net_slots[net_session_block.net_civ_slots[entry[4]]].id,
                              2,0,0,0,0,0,0,0);
-          parley_wnd_block.parley_other_civ = -1;
+          parley_wnd_block.other_civ = -1;
           mp_meeting_pending = 0;
         }
       }
       else {
-        net_send_message(0x80,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54),2,
+        net_send_message(0x80,net_session_block.net_slots[net_session_block.net_civ_slots[entry[4]]].id,2,
                            0,0,0,0,0,0,0);
       }
       break;
@@ -10175,16 +10122,16 @@ void __cdecl net_popup_queue_show_next(void)
       dlg_game_txt_with_unit_flags((const char *)&str_upgrade_2,entry[4],(entry[5] == 0) - 1 & 8);
       break;
     case 0x3f:
-      if (*(int *)(((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + human_civ[0] * 4) * 0x54) != entry[4])
+      if (net_session_block.net_slots[net_session_block.net_civ_slots[human_civ[0]]].id != entry[4])
       {
         popup_game_with_sprite((const char *)&str_newplayer_2,(iptr)&popup_info_icon_sprite,0);
       }
       break;
     case 0x40:
       dlg_load_game_section(&dlg,(const char *)&str_newturntimerclient,0x2000000);
-      text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd50)));
+      text = (iptr)(label_string(label_string_ids[0x354]));
       dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
-      text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd54)));
+      text = (iptr)(label_string(label_string_ids[0x355]));
       dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
       dlg_show_modal(&dlg,0x28);
       net_send_message(0x56,0,dlg.result_extra,0,0,0,0,0,0,0);
@@ -10197,9 +10144,9 @@ void __cdecl net_popup_queue_show_next(void)
       break;
     case 0x43:
       dlg_load_game_section(&dlg,(const char *)&str_pmchangeclient,0x2000000);
-      text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd50)));
+      text = (iptr)(label_string(label_string_ids[0x354]));
       dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
-      text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd54)));
+      text = (iptr)(label_string(label_string_ids[0x355]));
       dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
       dlg_show_modal(&dlg,0);
       net_send_message(0x57,0,dlg.result_extra,0,0,0,0,0,0,0);
@@ -10371,39 +10318,37 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game_with_advance((const char *)&str_tookciv,entry[4],0);
       break;
     case 100:
-      if ((parley_wnd_block.parley_wnd_closed == 0) && (entry[4] == parley_wnd_block.parley_other_civ)) {
+      if ((parley_wnd_block.closed == 0) && (entry[4] == (int)parley_wnd_block.other_civ)) {
         parley_reveal_units_prompt_open = 1;
         dlg_load_game_section(&dlg,(const char *)&str_revealunitorigins,0x2000000);
-        text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdd4)));
+        text = (iptr)(label_string(label_string_ids[0x375]));
         dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
-        text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdd8)));
+        text = (iptr)(label_string(label_string_ids[0x376]));
         dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
         dlg_show_modal(&dlg,0x14);
         if (dlg.result_extra == 1) {
-          parley_wnd_block.parley_local_units_revealed = 1;
-          if (parley_wnd_block.parley_mode == 2) {
-            ctrl_show_and_redraw(parley_wnd_block.parley_conceal_info_button);
-            ctrl_enable(parley_wnd_block.parley_conceal_info_button);
-            control_hide(parley_wnd_block.parley_reveal_info_button);
-            ctrl_disable(parley_wnd_block.parley_reveal_info_button);
+          parley_wnd_block.local_units_revealed = 1;
+          if ((int)parley_wnd_block.mode == 2) {
+            ctrl_show_and_redraw((Control *)parley_wnd_block.conceal_button);
+            ctrl_enable((Control *)parley_wnd_block.conceal_button);
+            control_hide((Control *)parley_wnd_block.reveal_button);
+            ctrl_disable((Control *)parley_wnd_block.reveal_button);
           }
           else {
-            control_hide(parley_wnd_block.parley_conceal_info_button);
-            ctrl_disable(parley_wnd_block.parley_conceal_info_button);
-            control_hide(parley_wnd_block.parley_reveal_info_button);
-            ctrl_disable(parley_wnd_block.parley_reveal_info_button);
+            control_hide((Control *)parley_wnd_block.conceal_button);
+            ctrl_disable((Control *)parley_wnd_block.conceal_button);
+            control_hide((Control *)parley_wnd_block.reveal_button);
+            ctrl_disable((Control *)parley_wnd_block.reveal_button);
           }
-          net_send_message(0xa7,*(i32 *)
-                                   (((i8 *)&net_session_block.net_player_slots) +
-                                   *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),human_civ[0],
-                             (int)parley_wnd_block.parley_local_units_revealed,0,0,0,0,0,0);
-          if (((parley_wnd_block.parley_mode == 0xe) && (parley_wnd_block.parley_barter_want_kind == 2)) ||
-             ((parley_wnd_block.parley_mode == 0xf && (parley_wnd_block.parley_demand_kind == 2)))) {
-            ctrl_show_and_redraw(parley_wnd_block.parley_hide_origin_button);
-            control_hide(parley_wnd_block.parley_reveal_origin_button);
-            parley_wnd_block.parley_local_units_revealed = 1;
-            ctrl_enable(parley_wnd_block.parley_sort_by_unit_buttons);
-            ctrl_enable(parley_wnd_block.parley_sort_by_city_buttons);
+          net_send_message(0xa7,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd_block.other_civ]].id,human_civ[0],
+                             (int)(char)parley_wnd_block.local_units_revealed,0,0,0,0,0,0);
+          if ((((int)parley_wnd_block.mode == 0xe) && ((int)parley_wnd_block.exchange_kind[1] == 2)) ||
+             (((int)parley_wnd_block.mode == 0xf && ((int)parley_wnd_block.demand_kind == 2)))) {
+            ctrl_show_and_redraw((Control *)parley_wnd_block.info_hide_buttons[0]);
+            control_hide((Control *)parley_wnd_block.info_show_buttons[0]);
+            parley_wnd_block.local_units_revealed = 1;
+            ctrl_enable((Control *)parley_wnd_block.sort_by_unit_buttons[0]);
+            ctrl_enable((Control *)parley_wnd_block.sort_by_city_buttons[0]);
             parley_draw_unit_list(0);
           }
         }
@@ -10411,36 +10356,34 @@ void __cdecl net_popup_queue_show_next(void)
       }
       break;
     case 0x65:
-      if ((parley_wnd_block.parley_wnd_closed == 0) && (entry[4] == parley_wnd_block.parley_other_civ)) {
+      if ((parley_wnd_block.closed == 0) && (entry[4] == (int)parley_wnd_block.other_civ)) {
         parley_reveal_city_prompt_open = 1;
         dlg_load_game_section(&dlg,(const char *)&str_revealcityinfo,0x2000000);
-        text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xddc)));
+        text = (iptr)(label_string(label_string_ids[0x377]));
         dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
-        text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdd8)));
+        text = (iptr)(label_string(label_string_ids[0x376]));
         dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
         dlg_show_modal(&dlg,0x14);
         if (dlg.result_extra == 1) {
-          parley_wnd_block.parley_local_cities_revealed = 1;
-          if (parley_wnd_block.parley_mode == 2) {
-            ctrl_show_and_redraw(parley_wnd_block.parley_conceal_info_button);
-            ctrl_enable(parley_wnd_block.parley_conceal_info_button);
-            control_hide(parley_wnd_block.parley_reveal_info_button);
-            ctrl_disable(parley_wnd_block.parley_reveal_info_button);
+          parley_wnd_block.local_cities_revealed = 1;
+          if ((int)parley_wnd_block.mode == 2) {
+            ctrl_show_and_redraw((Control *)parley_wnd_block.conceal_button);
+            ctrl_enable((Control *)parley_wnd_block.conceal_button);
+            control_hide((Control *)parley_wnd_block.reveal_button);
+            ctrl_disable((Control *)parley_wnd_block.reveal_button);
           }
           else {
-            control_hide(parley_wnd_block.parley_conceal_info_button);
-            ctrl_disable(parley_wnd_block.parley_conceal_info_button);
-            control_hide(parley_wnd_block.parley_reveal_info_button);
-            ctrl_disable(parley_wnd_block.parley_reveal_info_button);
+            control_hide((Control *)parley_wnd_block.conceal_button);
+            ctrl_disable((Control *)parley_wnd_block.conceal_button);
+            control_hide((Control *)parley_wnd_block.reveal_button);
+            ctrl_disable((Control *)parley_wnd_block.reveal_button);
           }
-          net_send_message(0xa5,*(i32 *)
-                                   (((i8 *)&net_session_block.net_player_slots) +
-                                   *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),human_civ[0],
-                             (int)parley_wnd_block.parley_local_cities_revealed,0,0,0,0,0,0);
-          if (((parley_wnd_block.parley_mode == 0xe) && (parley_wnd_block.parley_barter_want_kind == 3)) ||
-             ((parley_wnd_block.parley_mode == 0xf && (parley_wnd_block.parley_demand_kind == 3)))) {
-            ctrl_show_and_redraw(parley_wnd_block.parley_hide_origin_button);
-            control_hide(parley_wnd_block.parley_reveal_origin_button);
+          net_send_message(0xa5,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd_block.other_civ]].id,human_civ[0],
+                             (int)(char)parley_wnd_block.local_cities_revealed,0,0,0,0,0,0);
+          if ((((int)parley_wnd_block.mode == 0xe) && ((int)parley_wnd_block.exchange_kind[1] == 3)) ||
+             (((int)parley_wnd_block.mode == 0xf && ((int)parley_wnd_block.demand_kind == 3)))) {
+            ctrl_show_and_redraw((Control *)parley_wnd_block.info_hide_buttons[0]);
+            control_hide((Control *)parley_wnd_block.info_show_buttons[0]);
             parley_draw_city_list(0);
           }
         }
@@ -10481,26 +10424,26 @@ void __thiscall net_msgq_reset(NetMsgQueue *self)
   int i;
   
   for (i = 0; i < 2000; i++) {
-    if (*(int *)(self->msg_slots + i * 0xc + 4) != 0) {
-      operator_delete(*(void **)(self->msg_slots + i * 0xc + 4));
-      field_ptr = self->msg_slots + i * 0xc + 4;
+    if (self->slots[i].data != 0) {
+      operator_delete((void *)self->slots[i].data);
+      field_ptr = (u8 *)&self->slots[i].data;
       field_ptr[0] = '\0';
       field_ptr[1] = '\0';
       field_ptr[2] = '\0';
       field_ptr[3] = '\0';
     }
-    field_ptr = self->msg_slots + i * 0xc + 8;
+    field_ptr = (u8 *)&self->slots[i].size;
     field_ptr[0] = '\0';
     field_ptr[1] = '\0';
     field_ptr[2] = '\0';
     field_ptr[3] = '\0';
-    field_ptr = self->msg_slots + i * 0xc;
+    field_ptr = (u8 *)&self->slots[i].sender;
     field_ptr[0] = '\0';
     field_ptr[1] = '\0';
     field_ptr[2] = '\0';
     field_ptr[3] = '\0';
   }
-  self->low_read_index = 400;
+  self->main_head = 400;
   self->main_tail = 400;
   self->main_count = 0;
   self->prio_head = 0;
@@ -10528,7 +10471,7 @@ i32 __cdecl net_msg_is_priority(int msg_type)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __thiscall
-net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size)
+net_msgq_enqueue(NetMsgQueue *self,int sender,NetMsg *msg,uint msg_size)
 
 {
   int is_priority;
@@ -10546,54 +10489,54 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size)
       sender = 1;
     }
   }
-  if (*(int *)(msg + 4) == 0x2b) {
+  if ((int)msg->hdr.msg_type == 0x2b) {
     net_session_block.nm_heart_beat_count_i32++;
     net_send_message(0x2c,sender,0,0,0,0,0,0,0,0);
   }
-  else if (*(int *)(msg + 4) == 0x2c) {
+  else if ((int)msg->hdr.msg_type == 0x2c) {
     net_session_block.nm_heartbeat_ack_count++;
   }
   else {
-    is_priority = net_msg_is_priority(*(i32 *)(msg + 4));
+    is_priority = net_msg_is_priority((i32)msg->hdr.msg_type);
     if (is_priority == 0) {
-      if ((self->normal_head == self->normal_tail) && (self->normal_count != 0)) {
+      if ((self->main_head == self->main_tail) && (self->main_count != 0)) {
         crt_strcpy(lost_msg_text,str_message_lost_in_enqueuemessage);
-        crt_strcat(lost_msg_text,((char *)&str_nm_datagram) + *(int *)(msg + 4) * 0x20);
+        crt_strcat(lost_msg_text,((char *)&str_nm_datagram) + (int)msg->hdr.msg_type * 0x20);
         crt_strcat(lost_msg_text,str_from_d_size_d_2);
         dbg_logf_int2((const char *)lost_msg_text,sender,msg_size);
         return 0;
       }
-      if (((int)self->normal_head < 400) || (1999 < (int)self->normal_head)) {
+      if (((int)self->main_head < 400) || (1999 < (int)self->main_head)) {
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_head_400_head_max_msgs_in_queue,(iptr)&str_d_ss_franklinton_netmessagequeue_cpp_4,0x130);
       }
-      if (((int)self->normal_tail < 400) || (1999 < (int)self->normal_tail)) {
+      if (((int)self->main_tail < 400) || (1999 < (int)self->main_tail)) {
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_tail_400_tail_max_msgs_in_queue,(iptr)&str_d_ss_franklinton_netmessagequeue_cpp_5,0x131);
       }
       msg_buf = operator_new(msg_size);
-      *(void **)(self->msg_slots + self->normal_tail * 0xc + 4) = msg_buf;
-      if (*(int *)(self->msg_slots + self->normal_tail * 0xc + 4) == 0) {
-        dbg_logf_int2((const char *)&str_enqueuemessage_primary_failed_to_allocat,*(i32 *)(msg + 4),*(i32 *)(msg + 8));
+      self->slots[self->main_tail].data = (i32)msg_buf;
+      if (self->slots[self->main_tail].data == 0) {
+        dbg_logf_int2((const char *)&str_enqueuemessage_primary_failed_to_allocat,(i32)msg->hdr.msg_type,msg->size);
         return 0;
       }
-      if (*(int *)(self->msg_slots + self->normal_tail * 0xc + 4) == 0) {
+      if (self->slots[self->main_tail].data == 0) {
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_msgqueue_tail_pdata,(iptr)&str_d_ss_franklinton_netmessagequeue_cpp_6,0x136);
       }
-      crt_memcpy((void *)(*(i32 *)(self->msg_slots + self->normal_tail * 0xc + 4)),(const void *)msg,msg_size);
-      *(int *)(self->msg_slots + self->normal_tail * 0xc) = sender;
-      *(uint *)(self->msg_slots + self->normal_tail * 0xc + 8) = msg_size;
-      self->normal_tail = (int)(self->normal_tail + 1) % 2000;
-      if (self->normal_tail == 0) {
-        self->normal_tail = 400;
+      crt_memcpy((void *)self->slots[self->main_tail].data,(const void *)msg,msg_size);
+      self->slots[self->main_tail].sender = sender;
+      self->slots[self->main_tail].size = msg_size;
+      self->main_tail = (int)(self->main_tail + 1) % 2000;
+      if (self->main_tail == 0) {
+        self->main_tail = 400;
       }
-      self->normal_count++;
-      if ((int)net_session_block.net_msgq_normal_peak < (int)self->normal_count) {
-        net_session_block.net_msgq_normal_peak = self->normal_count;
+      self->main_count++;
+      if ((int)net_session_block.net_msgq_normal_peak < (int)self->main_count) {
+        net_session_block.net_msgq_normal_peak = self->main_count;
       }
     }
     else {
       if ((self->prio_head == self->prio_tail) && (self->prio_count != 0)) {
         crt_strcpy(lost_prio_text,str_message_lost_in_alpha_enqueuemessage);
-        crt_strcat(lost_prio_text,((char *)&str_nm_datagram) + *(int *)(msg + 4) * 0x20);
+        crt_strcat(lost_prio_text,((char *)&str_nm_datagram) + (int)msg->hdr.msg_type * 0x20);
         crt_strcat(lost_prio_text,str_from_d_size_d);
         dbg_logf_int2((const char *)lost_prio_text,sender,msg_size);
         return 0;
@@ -10605,18 +10548,18 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size)
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_alphatail_0_alphatail_400,(iptr)&str_d_ss_franklinton_netmessagequeue_cpp_2,0x10d);
       }
       msg_buf = operator_new(msg_size);
-      *(void **)(self->msg_slots + self->prio_tail * 0xc + 4) = msg_buf;
-      if (*(int *)(self->msg_slots + self->prio_tail * 0xc + 4) == 0) {
-        msg_copy = msg;
-        dbg_logf_int2((const char *)&str_enqueuemessage_alpha_failed_to_allocate,*(i32 *)(msg + 4),*(i32 *)(msg + 8));
+      self->slots[self->prio_tail].data = (i32)msg_buf;
+      if (self->slots[self->prio_tail].data == 0) {
+        msg_copy = (iptr)msg;
+        dbg_logf_int2((const char *)&str_enqueuemessage_alpha_failed_to_allocate,(i32)msg->hdr.msg_type,msg->size);
         return 0;
       }
-      if (*(int *)(self->msg_slots + self->prio_tail * 0xc + 4) == 0) {
+      if (self->slots[self->prio_tail].data == 0) {
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_msgqueue_alphatail_pdata,(iptr)&str_d_ss_franklinton_netmessagequeue_cpp_3,0x112);
       }
-      crt_memcpy((void *)(*(i32 *)(self->msg_slots + self->prio_tail * 0xc + 4)),(const void *)msg,msg_size);
-      *(int *)(self->msg_slots + self->prio_tail * 0xc) = sender;
-      *(uint *)(self->msg_slots + self->prio_tail * 0xc + 8) = msg_size;
+      crt_memcpy((void *)self->slots[self->prio_tail].data,(const void *)msg,msg_size);
+      self->slots[self->prio_tail].sender = sender;
+      self->slots[self->prio_tail].size = msg_size;
       self->prio_tail = (int)(self->prio_tail + 1) % 400;
       self->prio_count++;
       if ((int)net_session_block.net_msgq_priority_peak < (int)self->prio_count) {
@@ -10629,37 +10572,37 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size)
 
 /* 005149d6 auto */
 i32 __thiscall
-net_msgq_dequeue(NetMessageQueue *self,iptr out_sender,iptr out_msg,iptr out_size,int priority_only)
+net_msgq_dequeue(NetMsgQueue *self,iptr out_sender,iptr out_msg,iptr out_size,int priority_only)
 
 {
   u8 *slot_field;
   i32 result;
   
-  if (self->high_count == 0) {
-    if ((priority_only == 0) && (self->low_count != 0)) {
-      *(i32 *)out_sender = *(i32 *)(self->msg_slots + self->low_read_index * 0xc);
-      slot_field = self->msg_slots + self->low_read_index * 0xc;
+  if (self->prio_count == 0) {
+    if ((priority_only == 0) && (self->main_count != 0)) {
+      *(i32 *)out_sender = self->slots[self->main_head].sender;
+      slot_field = (u8 *)&self->slots[self->main_head].sender;
       slot_field[0] = '\0';
       slot_field[1] = '\0';
       slot_field[2] = '\0';
       slot_field[3] = '\0';
-      *(i32 *)out_msg = *(i32 *)(self->msg_slots + self->low_read_index * 0xc + 4);
-      slot_field = self->msg_slots + self->low_read_index * 0xc + 4;
+      *(i32 *)out_msg = self->slots[self->main_head].data;
+      slot_field = (u8 *)&self->slots[self->main_head].data;
       slot_field[0] = '\0';
       slot_field[1] = '\0';
       slot_field[2] = '\0';
       slot_field[3] = '\0';
-      *(i32 *)out_size = *(i32 *)(self->msg_slots + self->low_read_index * 0xc + 8);
-      slot_field = self->msg_slots + self->low_read_index * 0xc + 8;
+      *(i32 *)out_size = self->slots[self->main_head].size;
+      slot_field = (u8 *)&self->slots[self->main_head].size;
       slot_field[0] = '\0';
       slot_field[1] = '\0';
       slot_field[2] = '\0';
       slot_field[3] = '\0';
-      self->low_read_index = (int)(self->low_read_index + 1) % 2000;
-      if (self->low_read_index == 0) {
-        self->low_read_index = 400;
+      self->main_head = (int)(self->main_head + 1) % 2000;
+      if (self->main_head == 0) {
+        self->main_head = 400;
       }
-      self->low_count--;
+      self->main_count--;
       result = 1;
     }
     else {
@@ -10667,26 +10610,26 @@ net_msgq_dequeue(NetMessageQueue *self,iptr out_sender,iptr out_msg,iptr out_siz
     }
   }
   else {
-    *(i32 *)out_sender = *(i32 *)(self->msg_slots + self->high_read_index * 0xc);
-    slot_field = self->msg_slots + self->high_read_index * 0xc;
+    *(i32 *)out_sender = self->slots[self->prio_head].sender;
+    slot_field = (u8 *)&self->slots[self->prio_head].sender;
     slot_field[0] = '\0';
     slot_field[1] = '\0';
     slot_field[2] = '\0';
     slot_field[3] = '\0';
-    *(i32 *)out_msg = *(i32 *)(self->msg_slots + self->high_read_index * 0xc + 4);
-    slot_field = self->msg_slots + self->high_read_index * 0xc + 4;
+    *(i32 *)out_msg = self->slots[self->prio_head].data;
+    slot_field = (u8 *)&self->slots[self->prio_head].data;
     slot_field[0] = '\0';
     slot_field[1] = '\0';
     slot_field[2] = '\0';
     slot_field[3] = '\0';
-    *(i32 *)out_size = *(i32 *)(self->msg_slots + self->high_read_index * 0xc + 8);
-    slot_field = self->msg_slots + self->high_read_index * 0xc + 8;
+    *(i32 *)out_size = self->slots[self->prio_head].size;
+    slot_field = (u8 *)&self->slots[self->prio_head].size;
     slot_field[0] = '\0';
     slot_field[1] = '\0';
     slot_field[2] = '\0';
     slot_field[3] = '\0';
-    self->high_read_index = (int)(self->high_read_index + 1) % 400;
-    self->high_count--;
+    self->prio_head = (int)(self->prio_head + 1) % 400;
+    self->prio_count--;
     result = 1;
   }
   return result;
@@ -10700,7 +10643,7 @@ void __cdecl net_vote_wait_idle_cb(void)
 {
   int now_ticks;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((((net_session_block.net_host_handoff_stage == '\0') && (now_ticks = timer_ticks(), now_ticks - dialog_title_font_obj_block.dialog_timeout_start_i32 < 0x961)) &&
       (net_session_block.net_vote_replies_pending != 0)) && (net_session_block.net_vote_status != -1)) {
     return;
@@ -10718,7 +10661,7 @@ void __cdecl net_lock_wait_idle_cb(void)
 
 {
   timer_ticks();
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.nm_lock_data_count != 0) || (net_session_block.nm_server_canceled_count != 0)) {
     net_session_block.dialog_stack_top[0xf] = net_session_block.dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*net_session_block.dialog_stack_top + 0x48));
@@ -10730,12 +10673,12 @@ void __cdecl net_lock_wait_idle_cb(void)
 void __cdecl net_pump_idle_cb(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   return;
 }
 
 /* 005233fc auto */
-i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
+i32 __cdecl net_host_register_player_civ(NetPlayerInfoMsg *player_info,int player_id)
 
 {
   int is_female;
@@ -10757,9 +10700,9 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
   saved_turn_civ_val = game.turn_civ;
   saved_player_civ = game.player_civ;
   if (((civ_saved_cursor_x_block.saved_resume_new_game == 0) && (civ_saved_cursor_x_block.saved_turn_civ == '\0')) && (net_session_block.net_session_phase < 2)) {
-    is_female = *(int *)(player_info + 0x18);
-    result = *(i32 *)(player_info + 0x14);
-    join_civ = *(iptr *)(player_info + 0x10);
+    is_female = player_info->gender;
+    result = player_info->leader_index;
+    join_civ = player_info->civ;
     game.player_civ = (byte)join_civ;
     civs[(char)(byte)join_civ].tribe = (i16)result;
     portrait = (u8)result;
@@ -10784,8 +10727,8 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
       leaders[civs[game.player_civ].tribe].leader_name =
            -leaders[civs[game.player_civ].tribe].leader_name;
     }
-    crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),(const char *)((const void *)(player_info + 0x20)));
-    if (*(int *)(player_info + 0x1c) != 0) {
+    crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),(const char *)((const void *)((iptr)player_info + 0x20)));
+    if (player_info->has_names != 0) {
       leaders[civs[game.player_civ].tribe].plural = -leaders[civs[game.player_civ].tribe].plural;
       leaders[civs[game.player_civ].tribe].adjective =
            -leaders[civs[game.player_civ].tribe].adjective;
@@ -10802,19 +10745,19 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
         leaders[civs[game.player_civ].tribe].titles[title_idx][is_female] =
              -leaders[civs[game.player_civ].tribe].titles[title_idx][is_female];
       }
-      crt_strcpy((char *)(&civ_names[game.player_civ].tribe_name),(const char *)((const void *)(player_info + 0x38)));
-      crt_strcpy((char *)(&civ_names[game.player_civ].adjective),(const char *)((const void *)(player_info + 0x50)));
-      if (*(int *)(player_info + 0x68) != 0) {
+      crt_strcpy((char *)(&civ_names[game.player_civ].tribe_name),(const char *)((const void *)((iptr)player_info + 0x38)));
+      crt_strcpy((char *)(&civ_names[game.player_civ].adjective),(const char *)((const void *)((iptr)player_info + 0x50)));
+      if (player_info->has_titles != 0) {
         for (title_idx = 0; title_idx < 7; title_idx++) {
           crt_strcpy((char *)(&civ_names[game.player_civ].titles[title_idx]),
-                       (const char *)(title_idx * 0x18 + player_info + 0x6c));
+                       (const char *)(title_idx * 0x18 + (iptr)player_info + 0x6c));
         }
       }
     }
-    civ_names[game.player_civ].city_style = (i16)*(i32 *)(player_info + 0x114);
+    civ_names[game.player_civ].city_style = (i16)player_info->city_style;
   }
   else {
-    join_civ = *(iptr *)(player_info + 0x10);
+    join_civ = player_info->civ;
     if (net_session_block.net_session_phase < 3) {
       game.human_players = game.human_players | (byte)(1 << ((byte)join_civ & 0x1f));
     }
@@ -10824,12 +10767,12 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
     game.player_civ = (byte)join_civ;
     game.turn_civ = (byte)join_civ;
     human_civ[0] = join_civ;
-    crt_strcpy((char *)(&civ_names[((char)(byte)join_civ)].leader_name),(const char *)((const void *)(player_info + 0x20)));
+    crt_strcpy((char *)(&civ_names[((char)(byte)join_civ)].leader_name),(const char *)((const void *)((iptr)player_info + 0x20)));
     if (0 < leaders[civs[game.player_civ].tribe].leader_name) {
       leaders[civs[game.player_civ].tribe].leader_name =
            -leaders[civs[game.player_civ].tribe].leader_name;
     }
-    is_female = *(int *)(player_info + 0x18);
+    is_female = player_info->gender;
     civs[human_civ[0]].flags = civs[human_civ[0]].flags & 0xfdff;
     if (is_female != 0) {
       civs[human_civ[0]].flags = civs[human_civ[0]].flags | 0x200;
@@ -10837,11 +10780,11 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
     female_byte = (u8)is_female;
     leaders[civs[game.player_civ].tribe].female = female_byte;
   }
-  for (slot = 0; (slot < 7 && (*(int *)(((i8 *)&net_session_block.net_player_slots) + slot * 0x54) != player_id));
+  for (slot = 0; (slot < 7 && (net_session_block.net_slots[slot].id != player_id));
       slot = slot + 1) {
   }
   if (slot < 7) {
-    *(int *)(((i8 *)&net_session_block.net_civ_slots) + game.player_civ * 4) = slot;
+    net_session_block.net_civ_slots[game.player_civ] = slot;
     (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15] = (int)game.player_civ;
     (((i8 *)&net_session_block.net_slot_active_flags))[slot * 0x54] = 1;
     if (player_id == 0) {
@@ -10859,7 +10802,7 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
     else {
       net_session_block.pending_human_players = net_session_block.pending_human_players & ~(byte)(1 << ((byte)join_civ & 0x1f));
     }
-    net_send_message(0x31,0,*(iptr *)(player_info + 0x14),*(iptr *)(player_info + 0x10),0,0,0,0,0,0);
+    net_send_message(0x31,0,player_info->leader_index,player_info->civ,0,0,0,0,0,0);
     result = 0;
   }
   human_civ[0] = saved_human_civ;
@@ -10890,7 +10833,7 @@ void __cdecl net_send_rules_tables(i32 dest_player)
 /* 00526ca0 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
+void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side)
 
 {
   u8 *flag_ptr;
@@ -10903,7 +10846,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
   u32 text_x;
   uptr draw_x;
   i32 text_align;
-  uptr item_buf;
+  ParleyOfferMsg *item_buf;
   u8 *city_hide_parent;
   iptr city_hide_label;
   u8 *city_reveal_parent;
@@ -11143,21 +11086,21 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
   }
   is_exchange_side = '\0';
   is_demand_side = '\0';
-  flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+  flag_ptr = (u8 *)&self->side_selected[side];
   flag_ptr[0] = '\0';
   flag_ptr[1] = '\0';
   flag_ptr[2] = '\0';
   flag_ptr[3] = '\0';
   if (side == 0) {
-    side_x = self->panel_rect + panel_margin_x;
+    side_x = self->panel_left + panel_margin_x;
   }
   else if (side == 1) {
-    tmp = rect_width((iptr)&self->panel_rect);
-    side_x = self->panel_rect + tmp / 2 + panel_margin_x;
+    tmp = rect_width((RECT *)&self->panel_left);
+    side_x = self->panel_left + tmp / 2 + panel_margin_x;
   }
   if (side_kind == 0xe) {
     is_exchange_side = 1;
-    switch(*(i32 *)(self->pane_selection_flags_area + side * 4 + 0xc)) {
+    switch((i32)self->exchange_kind[side]) {
     case 0:
       side_kind = 9;
       break;
@@ -11182,7 +11125,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
   }
   else if (side_kind == 0x10) {
     is_demand_side = 1;
-    switch(self->demand_choice) {
+    switch(self->demand_kind) {
     case 0:
       side_kind = 9;
       break;
@@ -11206,29 +11149,29 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
   }
   parley_clear_side_controls(self,side);
-  *(int *)(self->pane_selection_flags_area + side * 4) = side_kind;
-  if (((parley_wnd_block.parley_wnd_closed == 0) && (side_kind != 1)) && (side_kind != 0)) {
+  self->side_kind[side] = side_kind;
+  if (((parley_wnd_block.closed == 0) && (side_kind != 1)) && (side_kind != 0)) {
     if (side_kind == 0x14) {
-      control_hide((Control *)self->rates_clamped);
-      ctrl_disable((Control *)self->rates_clamped);
-      control_hide((Control *)self->mode2_button_value);
-      ctrl_disable((Control *)self->mode2_button_value);
-      control_hide((Control *)self->never_mind_button_value);
-      ctrl_show_and_redraw((Control *)self->tax_scrollbar);
-      control_hide((Control *)self->intel_button_value);
-      ctrl_show_and_redraw((Control *)self->no_thanks_button_value);
-      ctrl_show_and_redraw((Control *)self->counter_button_value);
+      control_hide((Control *)self->mode_button);
+      ctrl_disable((Control *)self->mode_button);
+      control_hide((Control *)self->mode2_button);
+      ctrl_disable((Control *)self->mode2_button);
+      control_hide((Control *)self->never_mind_button);
+      ctrl_show_and_redraw((Control *)self->accept_button);
+      control_hide((Control *)self->intel_button);
+      ctrl_show_and_redraw((Control *)self->no_thanks_button);
+      ctrl_show_and_redraw((Control *)self->counter_button);
     }
     else {
-      ctrl_show_and_redraw((Control *)self->rates_clamped);
-      ctrl_enable((Control *)self->rates_clamped);
-      control_hide((Control *)self->mode2_button_value);
-      ctrl_disable((Control *)self->mode2_button_value);
-      ctrl_show_and_redraw((Control *)self->never_mind_button_value);
-      control_hide((Control *)self->tax_scrollbar);
-      ctrl_show_and_redraw((Control *)self->intel_button_value);
-      control_hide((Control *)self->no_thanks_button_value);
-      control_hide((Control *)self->counter_button_value);
+      ctrl_show_and_redraw((Control *)self->mode_button);
+      ctrl_enable((Control *)self->mode_button);
+      control_hide((Control *)self->mode2_button);
+      ctrl_disable((Control *)self->mode2_button);
+      ctrl_show_and_redraw((Control *)self->never_mind_button);
+      control_hide((Control *)self->accept_button);
+      ctrl_show_and_redraw((Control *)self->intel_button);
+      control_hide((Control *)self->no_thanks_button);
+      control_hide((Control *)self->counter_button);
     }
   }
   switch(side_kind) {
@@ -11243,10 +11186,10 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       has_full_intel = 1;
     }
     right_col_x = side_x;
-    left_col_x = self->panel_rect + panel_margin_x;
+    left_col_x = self->panel_left + panel_margin_x;
     cur_y = self->panel_top + panel_margin_y;
     cur_x = left_col_x;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 3;
     if (self->large_layout == 0) {
       chat_font_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -11271,20 +11214,20 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       anon_checkbox = (uptr)(checkbox_elem_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->sci_rate_sel = anon_checkbox;
-    if (self == (ViewWindow *)0x0) {
+    self->anonymous_checkbox = anon_checkbox;
+    if (self == (ParleyWindow *)0x0) {
       anon_parent = (u8 *)0x0;
     }
     else {
-      anon_parent = self->window_2;
+      anon_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xba4)));
+    label = (iptr)(label_string(label_string_ids[0x2e9]));
     checkbox_create_fixed
-              ((Control *)self->sci_rate_sel,(iptr)anon_parent,0x415,cur_x,cur_y,col_width,
+              ((Control *)self->anonymous_checkbox,(iptr)anon_parent,0x415,cur_x,cur_y,col_width,
                (const char *)label);
-    checkbox_set_checked((Control *)self->sci_rate_sel,chat_wnd_block.chat_remain_anonymous);
-    checkbox_enable((CheckboxEnableView *)self->sci_rate_sel);
-    checkbox_set_callback((CheckboxCallbackSetView *)self->sci_rate_sel,(iptr)chat_on_send_checkbox);
+    checkbox_set_checked((Control *)self->anonymous_checkbox,(i32)chat_wnd_block.remain_anonymous);
+    checkbox_enable((CheckboxEnableView *)self->anonymous_checkbox);
+    checkbox_set_callback((CheckboxCallbackSetView *)self->anonymous_checkbox,(iptr)chat_on_send_checkbox);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 4;
     if (new_ctrl == (Control *)0x0) {
@@ -11294,20 +11237,20 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       mute_anon_checkbox = (uptr)(checkbox_elem_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->init_tax_rate = mute_anon_checkbox;
-    if (self == (ViewWindow *)0x0) {
+    self->mute_anonymous_checkbox = mute_anon_checkbox;
+    if (self == (ParleyWindow *)0x0) {
       mute_anon_parent = (u8 *)0x0;
     }
     else {
-      mute_anon_parent = self->window_2;
+      mute_anon_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd84)));
+    label = (iptr)(label_string(label_string_ids[0x361]));
     checkbox_create_fixed
-              ((Control *)self->init_tax_rate,(iptr)mute_anon_parent,0x430,col_width + cur_x,cur_y,
+              ((Control *)self->mute_anonymous_checkbox,(iptr)mute_anon_parent,0x430,col_width + cur_x,cur_y,
                col_width,(const char *)label);
-    checkbox_set_checked((Control *)self->init_tax_rate,chat_wnd_block.chat_mute_anonymous);
-    checkbox_enable((CheckboxEnableView *)self->init_tax_rate);
-    checkbox_set_callback((CheckboxCallbackSetView *)self->init_tax_rate,(iptr)chat_on_send_checkbox);
+    checkbox_set_checked((Control *)self->mute_anonymous_checkbox,(i32)chat_wnd_block.mute_anonymous);
+    checkbox_enable((CheckboxEnableView *)self->mute_anonymous_checkbox);
+    checkbox_set_callback((CheckboxCallbackSetView *)self->mute_anonymous_checkbox,(iptr)chat_on_send_checkbox);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 5;
     if (new_ctrl == (Control *)0x0) {
@@ -11317,20 +11260,20 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       broadcast_checkbox = (uptr)(checkbox_elem_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    self->init_lux_rate = broadcast_checkbox;
-    if (self == (ViewWindow *)0x0) {
+    self->broadcast_checkbox = broadcast_checkbox;
+    if (self == (ParleyWindow *)0x0) {
       broadcast_parent = (u8 *)0x0;
     }
     else {
-      broadcast_parent = self->window_2;
+      broadcast_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xba8)));
+    label = (iptr)(label_string(label_string_ids[0x2ea]));
     checkbox_create_fixed
-              ((Control *)self->init_lux_rate,(iptr)broadcast_parent,0x416,col_width * 2 + cur_x,
+              ((Control *)self->broadcast_checkbox,(iptr)broadcast_parent,0x416,col_width * 2 + cur_x,
                cur_y,col_width,(const char *)label);
-    checkbox_set_checked((Control *)self->init_lux_rate,chat_wnd_block.chat_broadcast_all);
-    checkbox_enable((CheckboxEnableView *)self->init_lux_rate);
-    checkbox_set_callback((CheckboxCallbackSetView *)self->init_lux_rate,(iptr)chat_on_send_checkbox);
+    checkbox_set_checked((Control *)self->broadcast_checkbox,(i32)chat_wnd_block.broadcast_all);
+    checkbox_enable((CheckboxEnableView *)self->broadcast_checkbox);
+    checkbox_set_callback((CheckboxCallbackSetView *)self->broadcast_checkbox,(iptr)chat_on_send_checkbox);
     cur_y += block_height;
     gfx_set_text_color_index(10);
     if (self->large_layout == 0) {
@@ -11342,7 +11285,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     draw_x = left_col_x;
     tmp = cur_y;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd2c)));
+    label = (iptr)(label_string(label_string_ids[0x34b]));
     surface_draw_text((DibSurface *)self,(iptr)left_header_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       right_header_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -11353,7 +11296,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     header_x = right_col_x - ((self->large_layout == 0) - 1 & 0x17);
     tmp = cur_y;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd2c)));
+    label = (iptr)(label_string(label_string_ids[0x34b]));
     surface_draw_text((DibSurface *)self,(iptr)right_header_font,(const char *)label,header_x,tmp,text_align);
     cur_x = left_col_x;
     if (self->large_layout == 0) {
@@ -11363,7 +11306,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       checkbox_indent = 0x17;
     }
     cur_y += block_height;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2;
     shown_civ_count = 0;
     for (civ = 1; civ < 8; civ++) {
@@ -11372,8 +11315,8 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
          (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 ||
           (((has_full_intel == 0 && (civ_saved_cursor_x_block.mp_chat_from_start == 0)) &&
            ((*(byte *)&civs[civ].treaties[human_civ[0]] & 1) == 0)))))) {
-        *(i32 *)(((i8 *)&chat_wnd_block.chat_send_to_civs) + civ * 4) = 0;
-        *(i32 *)(((i8 *)&chat_wnd_block.chat_muted_civs) + civ * 4) = 0;
+        chat_wnd_block.send_to_civs[civ] = 0;
+        chat_wnd_block.muted_civs[civ] = 0;
       }
       else {
         new_ctrl = (Control *)(operator_new(0x3c));
@@ -11385,21 +11328,21 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
           mute_checkbox = (i32)(checkbox_elem_ctor(new_ctrl));
         }
         eh_state = 0xffffffff;
-        *(i32 *)(self->parley_checkboxes + civ * 4 + 4) = mute_checkbox;
-        if (self == (ViewWindow *)0x0) {
+        self->mute_checkboxes[civ] = mute_checkbox;
+        if (self == (ParleyWindow *)0x0) {
           mute_parent = (u8 *)0x0;
         }
         else {
-          mute_parent = self->window_2;
+          mute_parent = ((u8 *)self + 0x48);
         }
         checkbox_create_fixed
-                  (*(Control **)(self->parley_checkboxes + civ * 4 + 4),(iptr)mute_parent,
+                  ((Control *)self->mute_checkboxes[civ],(iptr)mute_parent,
                    civ + 0x428,cur_x + checkbox_indent,cur_y,0x23,(const char *)&str_empty_167);
         checkbox_set_checked
-                  (*(Control **)(self->parley_checkboxes + civ * 4 + 4),
-                   *(i32 *)(((i8 *)&chat_wnd_block.chat_muted_civs) + civ * 4));
-        checkbox_enable(*(CheckboxEnableView **)(self->parley_checkboxes + civ * 4 + 4));
-        checkbox_set_callback(*(CheckboxCallbackSetView **)(self->parley_checkboxes + civ * 4 + 4),(iptr)chat_on_mute_checkbox);
+                  ((Control *)self->mute_checkboxes[civ],
+                   (i32)chat_wnd_block.muted_civs[civ]);
+        checkbox_enable((CheckboxEnableView *)self->mute_checkboxes[civ]);
+        checkbox_set_callback((CheckboxCallbackSetView *)self->mute_checkboxes[civ],(iptr)chat_on_mute_checkbox);
         new_ctrl = (Control *)(operator_new(0x3c));
         eh_state = 7;
         if (new_ctrl == (Control *)0x0) {
@@ -11409,24 +11352,24 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
           send_checkbox = (i32)(checkbox_elem_ctor(new_ctrl));
         }
         eh_state = 0xffffffff;
-        *(i32 *)(self->parley_checkboxes + civ * 4 - 0x1c) = send_checkbox;
-        if (self == (ViewWindow *)0x0) {
+        self->send_checkboxes[civ] = send_checkbox;
+        if (self == (ParleyWindow *)0x0) {
           send_parent = (u8 *)0x0;
         }
         else {
-          send_parent = self->window_2;
+          send_parent = ((u8 *)self + 0x48);
         }
         label = civ_adjective(civ);
         checkbox_create_fixed
-                  (*(Control **)(self->parley_checkboxes + civ * 4 - 0x1c),(iptr)send_parent,
+                  ((Control *)self->send_checkboxes[civ],(iptr)send_parent,
                    civ + 0x416,cur_x + checkbox_indent + 0x23,cur_y,
                    (col_width - 0x23) - checkbox_indent,(const char *)label);
         checkbox_set_checked
-                  (*(Control **)(self->parley_checkboxes + civ * 4 - 0x1c),
-                   *(i32 *)(((i8 *)&chat_wnd_block.chat_send_to_civs) + civ * 4));
-        checkbox_enable(*(CheckboxEnableView **)(self->parley_checkboxes + civ * 4 - 0x1c));
+                  ((Control *)self->send_checkboxes[civ],
+                   (i32)chat_wnd_block.send_to_civs[civ]);
+        checkbox_enable((CheckboxEnableView *)self->send_checkboxes[civ]);
         checkbox_set_callback
-                  (*(CheckboxCallbackSetView **)(self->parley_checkboxes + civ * 4 - 0x1c),(iptr)chat_on_send_checkbox);
+                  ((CheckboxCallbackSetView *)self->send_checkboxes[civ],(iptr)chat_on_send_checkbox);
         shown_civ_count++;
         if ((shown_civ_count & 1) == 0) {
           cur_x = left_col_x;
@@ -11455,21 +11398,21 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     break;
   case 2:
-    mode_labels[0] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb90)));
-    mode_labels[1] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb94)));
-    mode_labels[2] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb98)));
-    mode_labels[3] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb9c)));
-    mode_label_last = (i32)(label_string(*(i32 *)(label_string_ids + 0xba0)));
+    mode_labels[0] = (iptr)(label_string(label_string_ids[0x2e4]));
+    mode_labels[1] = (iptr)(label_string(label_string_ids[0x2e5]));
+    mode_labels[2] = (iptr)(label_string(label_string_ids[0x2e6]));
+    mode_labels[3] = (iptr)(label_string(label_string_ids[0x2e7]));
+    mode_label_last = (i32)(label_string(label_string_ids[0x2e8]));
     gfx_set_text_color_index(10);
     if (self->large_layout == 0) {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb8c)));
+      label = (iptr)(label_string(label_string_ids[0x2e3]));
       max_label_width = font_text_width((GameFont *)((i8 *)&font_size20),(const char *)label);
     }
     else {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb8c)));
+      label = (iptr)(label_string(label_string_ids[0x2e3]));
       max_label_width = font_text_width((GameFont *)((i8 *)&font_size30),(const char *)label);
     }
-    title_x = (self->panel_rect + (int)(self->panel_right - self->panel_rect) / 2) - max_label_width / 2;
+    title_x = (self->panel_left + (int)(self->panel_right - self->panel_left) / 2) - max_label_width / 2;
     tmp = self->panel_top + panel_margin_y;
     if (self->large_layout == 0) {
       mode_title_font = ((i8 *)&font_size20);
@@ -11480,7 +11423,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     cur_y = tmp;
     cur_x = title_x;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb8c)));
+    label = (iptr)(label_string(label_string_ids[0x2e3]));
     surface_draw_text((DibSurface *)self,(iptr)mode_title_font,(const char *)label,title_x,tmp,text_align);
     if (self->large_layout == 0) {
       max_label_width = font_text_width((GameFont *)((i8 *)&font_size20),(const char *)mode_labels[0]);
@@ -11501,11 +11444,11 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         max_label_width = label_width;
       }
     }
-    side_x = (self->panel_rect + (int)(self->panel_right - self->panel_rect) / 2) - max_label_width / 2;
-    self->fill_rect_left = side_x;
+    side_x = (self->panel_left + (int)(self->panel_right - self->panel_left) / 2) - max_label_width / 2;
+    self->fill_left = side_x;
     if ((int)cur_x < (int)side_x) {
       side_x = cur_x;
-      self->fill_rect_left = cur_x;
+      self->fill_left = cur_x;
     }
     if (self->large_layout == 0) {
       mode_radio_font = ((i8 *)&font_size20);
@@ -11523,7 +11466,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       mode_radio = (i32)(radiogrp_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 8) = mode_radio;
+    self->side_radios[side] = mode_radio;
     cur_x = side_x;
     col_width = max_label_width + max_label_width / 2;
     if (self->large_layout == 0) {
@@ -11533,40 +11476,40 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       mode_title_height = font_cached_height((GameFont *)((i8 *)&font_size30));
     }
     cur_y = self->panel_top + panel_margin_y * 2 + mode_title_height;
-    block_height = self->show_turn_timer - cur_y;
+    block_height = self->divider_y - cur_y;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       mode_radio_parent = (u8 *)0x0;
     }
     else {
-      mode_radio_parent = self->window_2;
+      mode_radio_parent = ((u8 *)self + 0x48);
     }
     radiogrp_create
-              (*(RadioGroup **)(self->rate_values + side * 4 + 8),(iptr)mode_radio_parent,0x3f3,
+              ((RadioGroup *)self->side_radios[side],(iptr)mode_radio_parent,0x3f3,
                (iptr)&ctrl_rect,1,5,(iptr)mode_labels);
-    if (self->saved_mode_choice == 0xffffffff) {
+    if (self->selected_action == 0xffffffff) {
       selected_mode = 0;
     }
     else {
-      selected_mode = self->saved_mode_choice;
+      selected_mode = self->selected_action;
     }
-    radiogrp_set_selected(*(RadioGroupSetSelView **)(self->rate_values + side * 4 + 8),selected_mode);
-    radiogrp_set_dblclick_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_radio_dblclick)
+    radiogrp_set_selected((RadioGroupSetSelView *)self->side_radios[side],selected_mode);
+    radiogrp_set_dblclick_callback((Control *)self->side_radios[side],(iptr)parley_on_radio_dblclick)
     ;
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
     flag_ptr[3] = '\0';
     break;
   case 3:
-    exch_labels_l = (i32)(label_string(*(i32 *)(label_string_ids + 0xbac)));
-    exch_label_l1 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbb0)));
-    exch_label_l2 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbb4)));
-    exch_label_l3 = (i32)(label_string(*(i32 *)(label_string_ids + 3000)));
-    exch_label_l4 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbbc)));
-    exch_label_l5 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbc0)));
-    exch_label_l6 = (i32)(label_string(*(i32 *)(label_string_ids + 0xd08)));
+    exch_labels_l = (i32)(label_string(label_string_ids[0x2eb]));
+    exch_label_l1 = (i32)(label_string(label_string_ids[0x2ec]));
+    exch_label_l2 = (i32)(label_string(label_string_ids[0x2ed]));
+    exch_label_l3 = (i32)(label_string(label_string_ids[750]));
+    exch_label_l4 = (i32)(label_string(label_string_ids[0x2ef]));
+    exch_label_l5 = (i32)(label_string(label_string_ids[0x2f0]));
+    exch_label_l6 = (i32)(label_string(label_string_ids[0x342]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     tmp = self->panel_top + panel_margin_y;
@@ -11579,7 +11522,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     text_x = side_x;
     cur_y = tmp;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
+    label = (iptr)(label_string(label_string_ids[0x303]));
     surface_draw_text((DibSurface *)self,(iptr)exch_title_font_l,(const char *)label,text_x,tmp,text_align);
     if (self->large_layout == 0) {
       exch_radio_font_l = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -11597,9 +11540,9 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       exch_radio_l = (i32)(radiogrp_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 8) = exch_radio_l;
+    self->side_radios[side] = exch_radio_l;
     cur_x = side_x;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2;
     if (self->large_layout == 0) {
       exch_title_height_l = font_cached_height((GameFont *)((i8 *)&font_size16));
@@ -11608,42 +11551,42 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       exch_title_height_l = font_cached_height((GameFont *)((i8 *)&font_size24));
     }
     cur_y = self->panel_top + panel_margin_y + exch_title_height_l;
-    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->show_turn_timer);
-    if (self == (ViewWindow *)0x0) {
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->divider_y);
+    if (self == (ParleyWindow *)0x0) {
       exch_parent_l = (u8 *)0x0;
     }
     else {
-      exch_parent_l = self->window_2;
+      exch_parent_l = ((u8 *)self + 0x48);
     }
     radiogrp_create
-              (*(RadioGroup **)(self->rate_values + side * 4 + 8),(iptr)exch_parent_l,0x3f4,
+              ((RadioGroup *)self->side_radios[side],(iptr)exch_parent_l,0x3f4,
                (iptr)&ctrl_rect,1,7,(iptr)&exch_labels_l);
-    if (self->right_exchange_kind == 0) {
-      radiogrp_disable_item(*(RadioGroupDisableView **)(self->rate_values + side * 4 + 8),0);
+    if (self->exchange_kind[1] == 0) {
+      radiogrp_disable_item((RadioGroupDisableView *)self->side_radios[side],0);
     }
-    else if (self->right_exchange_kind == 6) {
-      radiogrp_disable_item(*(RadioGroupDisableView **)(self->rate_values + side * 4 + 8),6);
+    else if (self->exchange_kind[1] == 6) {
+      radiogrp_disable_item((RadioGroupDisableView *)self->side_radios[side],6);
     }
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(self->rate_values + side * 4 + 8),self->left_exchange_kind);
-    radiogrp_set_dblclick_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_radio_dblclick)
+              ((RadioGroupSetSelView *)self->side_radios[side],self->exchange_kind[0]);
+    radiogrp_set_dblclick_callback((Control *)self->side_radios[side],(iptr)parley_on_radio_dblclick)
     ;
-    radiogrp_set_select_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_exchange_kind_select)
+    radiogrp_set_select_callback((Control *)self->side_radios[side],(iptr)parley_on_exchange_kind_select)
     ;
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
     flag_ptr[3] = '\0';
     break;
   case 4:
-    exch_labels_r = (i32)(label_string(*(i32 *)(label_string_ids + 0xbac)));
-    exch_label_r1 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbb0)));
-    exch_label_r2 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbb4)));
-    exch_label_r3 = (i32)(label_string(*(i32 *)(label_string_ids + 3000)));
-    exch_label_r4 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbbc)));
-    exch_label_r5 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbc4)));
-    exch_label_r6 = (i32)(label_string(*(i32 *)(label_string_ids + 0xd08)));
+    exch_labels_r = (i32)(label_string(label_string_ids[0x2eb]));
+    exch_label_r1 = (i32)(label_string(label_string_ids[0x2ec]));
+    exch_label_r2 = (i32)(label_string(label_string_ids[0x2ed]));
+    exch_label_r3 = (i32)(label_string(label_string_ids[750]));
+    exch_label_r4 = (i32)(label_string(label_string_ids[0x2ef]));
+    exch_label_r5 = (i32)(label_string(label_string_ids[0x2f1]));
+    exch_label_r6 = (i32)(label_string(label_string_ids[0x342]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     tmp = self->panel_top + panel_margin_y;
@@ -11656,7 +11599,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     text_x = side_x;
     cur_y = tmp;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
+    label = (iptr)(label_string(label_string_ids[0x304]));
     surface_draw_text((DibSurface *)self,(iptr)exch_title_font_r,(const char *)label,text_x,tmp,text_align);
     if (self->large_layout == 0) {
       exch_radio_font_r = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -11674,8 +11617,8 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       exch_radio_r = (i32)(radiogrp_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 8) = exch_radio_r;
-    tmp = rect_width((iptr)&self->panel_rect);
+    self->side_radios[side] = exch_radio_r;
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2;
     cur_x = side_x;
     if (self->large_layout == 0) {
@@ -11685,51 +11628,51 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       exch_title_height_r = font_cached_height((GameFont *)((i8 *)&font_size24));
     }
     cur_y = self->panel_top + panel_margin_y + exch_title_height_r;
-    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->show_turn_timer);
-    if (self == (ViewWindow *)0x0) {
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->divider_y);
+    if (self == (ParleyWindow *)0x0) {
       exch_parent_r = (u8 *)0x0;
     }
     else {
-      exch_parent_r = self->window_2;
+      exch_parent_r = ((u8 *)self + 0x48);
     }
     radiogrp_create
-              (*(RadioGroup **)(self->rate_values + side * 4 + 8),(iptr)exch_parent_r,0x3f5,
+              ((RadioGroup *)self->side_radios[side],(iptr)exch_parent_r,0x3f5,
                (iptr)&ctrl_rect,1,7,(iptr)&exch_labels_r);
-    if (self->left_exchange_kind == 0) {
-      radiogrp_disable_item(*(RadioGroupDisableView **)(self->rate_values + side * 4 + 8),0);
+    if (self->exchange_kind[0] == 0) {
+      radiogrp_disable_item((RadioGroupDisableView *)self->side_radios[side],0);
     }
-    else if (self->left_exchange_kind == 6) {
-      radiogrp_disable_item(*(RadioGroupDisableView **)(self->rate_values + side * 4 + 8),6);
+    else if (self->exchange_kind[0] == 6) {
+      radiogrp_disable_item((RadioGroupDisableView *)self->side_radios[side],6);
     }
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(self->rate_values + side * 4 + 8),self->right_exchange_kind);
-    radiogrp_set_dblclick_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_radio_dblclick)
+              ((RadioGroupSetSelView *)self->side_radios[side],self->exchange_kind[1]);
+    radiogrp_set_dblclick_callback((Control *)self->side_radios[side],(iptr)parley_on_radio_dblclick)
     ;
-    radiogrp_set_select_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_exchange_kind_select)
+    radiogrp_set_select_callback((Control *)self->side_radios[side],(iptr)parley_on_exchange_kind_select)
     ;
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
     flag_ptr[3] = '\0';
     break;
   case 5:
-    treaty_labels = (i32)(label_string(*(i32 *)(label_string_ids + 0xbcc)));
-    treaty_label1 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbd0)));
-    treaty_label2 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbd4)));
-    treaty_label3 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbd8)));
+    treaty_labels = (i32)(label_string(label_string_ids[0x2f3]));
+    treaty_label1 = (i32)(label_string(label_string_ids[0x2f4]));
+    treaty_label2 = (i32)(label_string(label_string_ids[0x2f5]));
+    treaty_label3 = (i32)(label_string(label_string_ids[0x2f6]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     cur_y = self->panel_top + panel_margin_y;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if ((is_exchange_side != '\0') || (is_demand_side != '\0')) {
       str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
-        treaty_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
+        treaty_side_title = (iptr)(label_string(label_string_ids[0x303]));
       }
       else {
-        treaty_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
+        treaty_side_title = (iptr)(label_string(label_string_ids[0x304]));
       }
       text_append_str((const char *)treaty_side_title);
       if (self->large_layout == 0) {
@@ -11766,12 +11709,12 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       block_height = panel_margin_y * 3 + treaty_line_height_alt * 4;
     }
-    cur_y = self->panel_top + (int)((self->show_turn_timer - self->panel_top) - block_height) / 2;
+    cur_y = self->panel_top + (int)((self->divider_y - self->panel_top) - block_height) / 2;
     if (is_demand_side == '\0' && is_exchange_side == '\0') {
-      treaty_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb90)));
+      treaty_title = (iptr)(label_string(label_string_ids[0x2e4]));
     }
     else {
-      treaty_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd08)));
+      treaty_title = (iptr)(label_string(label_string_ids[0x342]));
     }
     if (self->large_layout == 0) {
       treaty_title_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -11797,7 +11740,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       treaty_radio = (i32)(radiogrp_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 8) = treaty_radio;
+    self->side_radios[side] = treaty_radio;
     cur_x = side_x;
     if (self->large_layout == 0) {
       treaty_title_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -11825,48 +11768,48 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       block_height = treaty_row_height_alt * 3 + panel_margin_y * 2;
     }
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       treaty_parent = (u8 *)0x0;
     }
     else {
-      treaty_parent = self->window_2;
+      treaty_parent = ((u8 *)self + 0x48);
     }
     radiogrp_create
-              (*(RadioGroup **)(self->rate_values + side * 4 + 8),(iptr)treaty_parent,0x3f6,
+              ((RadioGroup *)self->side_radios[side],(iptr)treaty_parent,0x3f6,
                (iptr)&ctrl_rect,1,(is_demand_side == '\0' && is_exchange_side == '\0') + 3,(iptr)&treaty_labels);
-    if (((*(byte *)&civs[human_civ[0]].treaties[(self->caption_height)] & 2) != 0) &&
-       (radiogrp_disable_item(*(RadioGroupDisableView **)(self->rate_values + side * 4 + 8),0),
-       self->treaty_type_choice == 0)) {
-      self->treaty_type_choice++;
+    if (((*(byte *)&civs[human_civ[0]].treaties[self->other_civ] & 2) != 0) &&
+       (radiogrp_disable_item((RadioGroupDisableView *)self->side_radios[side],0),
+       self->treaty_kind == 0)) {
+      self->treaty_kind++;
     }
-    if (((*(byte *)&civs[human_civ[0]].treaties[(self->caption_height)] & 4) != 0) &&
-       (radiogrp_disable_item(*(RadioGroupDisableView **)(self->rate_values + side * 4 + 8),1),
-       self->treaty_type_choice == 1)) {
-      self->treaty_type_choice++;
+    if (((*(byte *)&civs[human_civ[0]].treaties[self->other_civ] & 4) != 0) &&
+       (radiogrp_disable_item((RadioGroupDisableView *)self->side_radios[side],1),
+       self->treaty_kind == 1)) {
+      self->treaty_kind++;
     }
-    if (((*(byte *)&civs[human_civ[0]].treaties[(self->caption_height)] & 8) != 0) &&
-       (radiogrp_disable_item(*(RadioGroupDisableView **)(self->rate_values + side * 4 + 8),2),
-       self->treaty_type_choice == 2)) {
+    if (((*(byte *)&civs[human_civ[0]].treaties[self->other_civ] & 8) != 0) &&
+       (radiogrp_disable_item((RadioGroupDisableView *)self->side_radios[side],2),
+       self->treaty_kind == 2)) {
       if (is_demand_side == '\0' && is_exchange_side == '\0') {
-        self->treaty_type_choice = 3;
+        self->treaty_kind = 3;
       }
       else {
-        self->treaty_type_choice = 0;
+        self->treaty_kind = 0;
       }
     }
     if ((((is_exchange_side == '\0') && (is_demand_side == '\0')) &&
-        ((*(byte *)&civs[human_civ[0]].treaties[(self->caption_height)] & 0xe) == 0)) &&
-       (radiogrp_disable_item(*(RadioGroupDisableView **)(self->rate_values + side * 4 + 8),3),
-       self->treaty_type_choice == 3)) {
-      self->treaty_type_choice = 0;
+        ((*(byte *)&civs[human_civ[0]].treaties[self->other_civ] & 0xe) == 0)) &&
+       (radiogrp_disable_item((RadioGroupDisableView *)self->side_radios[side],3),
+       self->treaty_kind == 3)) {
+      self->treaty_kind = 0;
     }
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(self->rate_values + side * 4 + 8),self->treaty_type_choice);
-    radiogrp_set_dblclick_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_radio_dblclick)
+              ((RadioGroupSetSelView *)self->side_radios[side],self->treaty_kind);
+    radiogrp_set_dblclick_callback((Control *)self->side_radios[side],(iptr)parley_on_radio_dblclick)
     ;
-    radiogrp_set_select_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_treaty_type_select)
+    radiogrp_set_select_callback((Control *)self->side_radios[side],(iptr)parley_on_treaty_type_select)
     ;
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
@@ -11875,7 +11818,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
   case 6:
     gfx_set_text_color_index(10);
     cur_x = side_x;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2 - panel_margin_x;
     if (self->large_layout == 0) {
       status_line_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -11890,13 +11833,13 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       status_title_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     block_height = panel_margin_y * 2 + status_line_height * 4 + status_title_height;
-    cur_y = self->panel_top + (int)((self->show_turn_timer - self->panel_top) - block_height) / 2;
+    cur_y = self->panel_top + (int)((self->divider_y - self->panel_top) - block_height) / 2;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    gfx_set_draw_target((iptr)&parley_wnd_block.parley_wnd);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_set_draw_target((iptr)&parley_wnd_block);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
-    tmp = rect_width((iptr)&ctrl_rect);
+    gfx_target_frame_rect(&ctrl_rect,10);
+    tmp = rect_width(&ctrl_rect);
     cur_x = ctrl_rect.left + tmp / 2;
     if (self->large_layout == 0) {
       status_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -11914,7 +11857,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 0;
     draw_x = cur_x;
     cur_y = tmp;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbdc)));
+    label = (iptr)(label_string(label_string_ids[0x2f7]));
     surface_draw_text((DibSurface *)self,(iptr)status_header_font,(const char *)label,draw_x,tmp,text_align);
     ctrl_rect.bottom += panel_margin_y * -2;
     ctrl_rect.left += panel_margin_x * 2;
@@ -11926,38 +11869,38 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       status_box_offset = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     ctrl_rect.top = ctrl_rect.top + panel_margin_y + status_box_offset;
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
     surface_fill_rect((DibSurface *)self,(iptr)&ctrl_rect,list_bg_color);
-    tmp = rect_width((iptr)&ctrl_rect);
+    tmp = rect_width(&ctrl_rect);
     cur_x = ctrl_rect.left + tmp / 2;
-    tmp = rect_height((iptr)&ctrl_rect);
+    tmp = rect_height(&ctrl_rect);
     cur_y = ctrl_rect.top + tmp / 2;
     text_clear();
-    if ((*(byte *)&civs[human_civ[0]].treaties[(self->caption_height)] & 8) == 0) {
-      if ((*(byte *)&civs[human_civ[0]].treaties[(self->caption_height)] & 4) == 0) {
-        if ((*(byte *)&civs[human_civ[0]].treaties[(self->caption_height)] & 2) == 0) {
-          if ((*(byte *)(human_civ[0] * 0x594 + (iptr)((u8 *)&civs + 33) + self->caption_height * 4) & 0x20) == 0) {
-            label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbec)));
+    if ((*(byte *)&civs[human_civ[0]].treaties[self->other_civ] & 8) == 0) {
+      if ((*(byte *)&civs[human_civ[0]].treaties[self->other_civ] & 4) == 0) {
+        if ((*(byte *)&civs[human_civ[0]].treaties[self->other_civ] & 2) == 0) {
+          if ((*(byte *)(human_civ[0] * 0x594 + (iptr)((u8 *)&civs + 33) + self->other_civ * 4) & 0x20) == 0) {
+            label = (iptr)(label_string(label_string_ids[0x2fb]));
             text_append((const char *)label);
           }
           else {
-            label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbe8)));
+            label = (iptr)(label_string(label_string_ids[0x2fa]));
             text_append((const char *)label);
           }
         }
         else {
-          label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbcc)));
+          label = (iptr)(label_string(label_string_ids[0x2f3]));
           text_append((const char *)label);
         }
       }
       else {
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbe4)));
+        label = (iptr)(label_string(label_string_ids[0x2f9]));
         text_append((const char *)label);
       }
     }
     else {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbe0)));
+      label = (iptr)(label_string(label_string_ids[0x2f8]));
       text_append((const char *)label);
     }
     if (self->large_layout == 0) {
@@ -11967,18 +11910,18 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       status_text_font = ((i8 *)&font_size24_bold);
     }
     surface_draw_text((DibSurface *)self,(iptr)status_text_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,0);
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
     flag_ptr[3] = '\0';
     break;
   case 7:
-    gift_labels = (i32)(label_string(*(i32 *)(label_string_ids + 0xbf4)));
-    gift_label1 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbf8)));
-    gift_label2 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbfc)));
-    gift_label3 = (i32)(label_string(*(i32 *)(label_string_ids + 0xc00)));
-    gift_label4 = (i32)(label_string(*(i32 *)(label_string_ids + 0xc04)));
+    gift_labels = (i32)(label_string(label_string_ids[0x2fd]));
+    gift_label1 = (i32)(label_string(label_string_ids[0x2fe]));
+    gift_label2 = (i32)(label_string(label_string_ids[0x2ff]));
+    gift_label3 = (i32)(label_string(label_string_ids[0x300]));
+    gift_label4 = (i32)(label_string(label_string_ids[0x301]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     if (self->large_layout == 0) {
@@ -11994,7 +11937,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       gift_title_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     block_height = panel_margin_y * 5 + gift_line_height * 5 + gift_title_height;
-    tmp = self->panel_top + (int)((self->show_turn_timer - self->panel_top) - block_height) / 2;
+    tmp = self->panel_top + (int)((self->divider_y - self->panel_top) - block_height) / 2;
     if (self->large_layout == 0) {
       gift_title_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -12004,7 +11947,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     draw_x = cur_x;
     cur_y = tmp;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbf0)));
+    label = (iptr)(label_string(label_string_ids[0x2fc]));
     surface_draw_text((DibSurface *)self,(iptr)gift_title_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       gift_radio_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -12022,9 +11965,9 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       gift_radio = (i32)(radiogrp_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 8) = gift_radio;
+    self->side_radios[side] = gift_radio;
     cur_x = side_x;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2;
     if (self->large_layout == 0) {
       gift_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12041,22 +11984,22 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     block_height = gift_row_height * 5 + panel_margin_y * 4;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       gift_parent = (u8 *)0x0;
     }
     else {
-      gift_parent = self->window_2;
+      gift_parent = ((u8 *)self + 0x48);
     }
     radiogrp_create
-              (*(RadioGroup **)(self->rate_values + side * 4 + 8),(iptr)gift_parent,0x3f7,
+              ((RadioGroup *)self->side_radios[side],(iptr)gift_parent,0x3f7,
                (iptr)&ctrl_rect,1,5,(iptr)&gift_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(self->rate_values + side * 4 + 8),self->exchange_choice);
-    radiogrp_set_dblclick_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_radio_dblclick)
+              ((RadioGroupSetSelView *)self->side_radios[side],self->gift_kind);
+    radiogrp_set_dblclick_callback((Control *)self->side_radios[side],(iptr)parley_on_radio_dblclick)
     ;
-    radiogrp_set_select_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_gift_kind_select)
+    radiogrp_set_select_callback((Control *)self->side_radios[side],(iptr)parley_on_gift_kind_select)
     ;
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
@@ -12064,14 +12007,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     break;
   case 8:
     if (is_exchange_side == '\0') {
-      flag_ptr = ((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38;
+      flag_ptr = (u8 *)&self->list_rows[side];
       flag_ptr[0] = 7;
       flag_ptr[1] = '\0';
       flag_ptr[2] = '\0';
       flag_ptr[3] = '\0';
     }
     else {
-      flag_ptr = ((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38;
+      flag_ptr = (u8 *)&self->list_rows[side];
       flag_ptr[0] = 6;
       flag_ptr[1] = '\0';
       flag_ptr[2] = '\0';
@@ -12080,15 +12023,15 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     gfx_set_text_color_index(10);
     cur_x = side_x;
     cur_y = self->panel_top + panel_margin_y;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (is_exchange_side != '\0') {
       str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
-        tech_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
+        tech_side_title = (iptr)(label_string(label_string_ids[0x303]));
       }
       else {
-        tech_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
+        tech_side_title = (iptr)(label_string(label_string_ids[0x304]));
       }
       text_append_str((const char *)tech_side_title);
       if (self->large_layout == 0) {
@@ -12107,12 +12050,12 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       cur_y = cur_y + panel_margin_y + tech_side_height;
     }
-    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->show_turn_timer);
-    gfx_set_draw_target((iptr)&parley_wnd_block.parley_wnd);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->divider_y);
+    gfx_set_draw_target((iptr)&parley_wnd_block);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
-    tmp = rect_width((iptr)&ctrl_rect);
+    gfx_target_frame_rect(&ctrl_rect,10);
+    tmp = rect_width(&ctrl_rect);
     cur_x = ctrl_rect.left + tmp / 2;
     if (self->large_layout == 0) {
       tech_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12130,7 +12073,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 0;
     draw_x = cur_x;
     cur_y = tmp;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc08)));
+    label = (iptr)(label_string(label_string_ids[0x302]));
     surface_draw_text((DibSurface *)self,(iptr)tech_header_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       tmp = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12140,22 +12083,22 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       tmp = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
       ctrl_rect.top += tmp;
     }
-    ctrl_rect.bottom = self->show_turn_timer + panel_margin_y * -2;
+    ctrl_rect.bottom = self->divider_y + panel_margin_y * -2;
     ctrl_rect.left += panel_margin_x * 2;
     ctrl_rect.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
     surface_fill_rect((DibSurface *)self,(iptr)&ctrl_rect,list_bg_color);
     tech_list_pick_mode = 0;
     if ((is_demand_side != '\0') || ((is_exchange_side != '\0' && (side == 1)))) {
       tech_list_pick_mode = 1;
     }
-    parley_create_advance_list_pane((WindowObjectView *)self,(iptr)&ctrl_rect,side,tech_list_pick_mode);
+    parley_create_advance_list_pane(self,&ctrl_rect,side,tech_list_pick_mode);
     break;
   case 9:
     gfx_set_text_color_index(10);
     cur_x = side_x;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (self->large_layout == 0) {
       gold_line_height = font_cached_height((GameFont *)((i8 *)&font_size14));
@@ -12170,14 +12113,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       gold_title_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     block_height = panel_margin_y * 2 + gold_line_height * 4 + gold_title_height;
-    cur_y = self->panel_top + (int)((self->show_turn_timer - self->panel_top) - block_height) / 2;
+    cur_y = self->panel_top + (int)((self->divider_y - self->panel_top) - block_height) / 2;
     if (is_exchange_side != '\0') {
       str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
-        gold_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
+        gold_side_title = (iptr)(label_string(label_string_ids[0x303]));
       }
       else {
-        gold_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
+        gold_side_title = (iptr)(label_string(label_string_ids[0x304]));
       }
       text_append_str((const char *)gold_side_title);
       if (self->large_layout == 0) {
@@ -12191,11 +12134,11 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
                  self->panel_top + panel_margin_y,5);
     }
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    gfx_set_draw_target((iptr)&parley_wnd_block.parley_wnd);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_set_draw_target((iptr)&parley_wnd_block);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
-    tmp = rect_width((iptr)&ctrl_rect);
+    gfx_target_frame_rect(&ctrl_rect,10);
+    tmp = rect_width(&ctrl_rect);
     cur_x = ctrl_rect.left + tmp / 2;
     if (self->large_layout == 0) {
       gold_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12206,16 +12149,16 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     cur_y = cur_y + panel_margin_y + gold_header_height / 2;
     str_clear((char *)&map_views_block.text_buffer);
     if (is_demand_side == '\0') {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc18)));
+      label = (iptr)(label_string(label_string_ids[0x306]));
       text_append_str((const char *)label);
       text_append_space();
       text_append_int(civs[human_civ[0]].gold);
       text_append_space();
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc1c)));
+      label = (iptr)(label_string(label_string_ids[0x307]));
       text_append_str((const char *)label);
     }
     else {
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc14)));
+      label = (iptr)(label_string(label_string_ids[0x305]));
       text_append_str((const char *)label);
     }
     if (self->large_layout == 0) {
@@ -12235,7 +12178,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       gold_box_offset = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     ctrl_rect.top = ctrl_rect.top + panel_margin_y + gold_box_offset;
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
     surface_fill_rect((DibSurface *)self,(iptr)&ctrl_rect,list_bg_color);
     str_clear((char *)&map_views_block.text_buffer);
@@ -12248,7 +12191,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     col_width = (gold_edit_text_width * 3) / 2;
     str_clear((char *)&map_views_block.text_buffer);
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc20)));
+    label = (iptr)(label_string(label_string_ids[0x308]));
     text_append_str((const char *)label);
     text_append_space();
     if (self->large_layout == 0) {
@@ -12257,9 +12200,9 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     else {
       gold_prompt_width = font_text_width((GameFont *)((i8 *)&font_size24_bold),(const char *)&map_views_block.text_buffer);
     }
-    tmp = rect_width((iptr)&ctrl_rect);
+    tmp = rect_width(&ctrl_rect);
     cur_x = (ctrl_rect.left + tmp / 2) - (col_width + gold_prompt_width) / 2;
-    tmp = rect_height((iptr)&ctrl_rect);
+    tmp = rect_height(&ctrl_rect);
     cur_y = ctrl_rect.top + tmp / 2;
     if (self->large_layout == 0) {
       gold_prompt_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -12277,7 +12220,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       gold_edit = (i32)(edit_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 0x10) = gold_edit;
+    self->gold_edits[side] = gold_edit;
     if (self->large_layout == 0) {
       gold_edit_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -12301,30 +12244,30 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     cur_y -= block_height / 2;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    __itoa(*(int *)(self->parley_caption_buttons + side * 4 - 0x10),gold_text,10);
-    if (self == (ViewWindow *)0x0) {
+    __itoa((int)self->gold_amount[side],gold_text,10);
+    if (self == (ParleyWindow *)0x0) {
       gold_edit_parent = (u8 *)0x0;
     }
     else {
-      gold_edit_parent = self->window_2;
+      gold_edit_parent = ((u8 *)self + 0x48);
     }
     edit_create
-              (*(EditControl **)(self->rate_values + side * 4 + 0x10),(iptr)gold_edit_parent,
+              ((EditControl *)self->gold_edits[side],(iptr)gold_edit_parent,
                side + 0x3f8,(iptr)&ctrl_rect,(const char *)gold_text);
-    edit_set_max_len(*(EditMaxLenView **)(self->rate_values + side * 4 + 0x10),6);
-    edit_set_change_callback(*(EditChangeSetView **)(self->rate_values + side * 4 + 0x10),(iptr)parley_gold_edit_on_change);
-    ctrl_set_focus(*(ControlFocusView **)(self->rate_values + side * 4 + 0x10));
+    edit_set_max_len((EditMaxLenView *)self->gold_edits[side],6);
+    edit_set_change_callback((EditChangeSetView *)self->gold_edits[side],(iptr)parley_gold_edit_on_change);
+    ctrl_set_focus((ControlFocusView *)self->gold_edits[side]);
     break;
   case 10:
     if (is_exchange_side == '\0') {
-      flag_ptr = ((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38;
+      flag_ptr = (u8 *)&self->list_rows[side];
       flag_ptr[0] = 6;
       flag_ptr[1] = '\0';
       flag_ptr[2] = '\0';
       flag_ptr[3] = '\0';
     }
     else {
-      flag_ptr = ((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38;
+      flag_ptr = (u8 *)&self->list_rows[side];
       flag_ptr[0] = 5;
       flag_ptr[1] = '\0';
       flag_ptr[2] = '\0';
@@ -12333,15 +12276,15 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     gfx_set_text_color_index(10);
     cur_x = side_x;
     cur_y = self->panel_top + panel_margin_y;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (is_exchange_side != '\0') {
       str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
-        unit_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
+        unit_side_title = (iptr)(label_string(label_string_ids[0x303]));
       }
       else {
-        unit_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
+        unit_side_title = (iptr)(label_string(label_string_ids[0x304]));
       }
       text_append_str((const char *)unit_side_title);
       if (self->large_layout == 0) {
@@ -12360,12 +12303,12 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       cur_y = cur_y + panel_margin_y + unit_side_height;
     }
-    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->show_turn_timer);
-    gfx_set_draw_target((iptr)&parley_wnd_block.parley_wnd);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->divider_y);
+    gfx_set_draw_target((iptr)&parley_wnd_block);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
-    tmp = rect_width((iptr)&ctrl_rect);
+    gfx_target_frame_rect(&ctrl_rect,10);
+    tmp = rect_width(&ctrl_rect);
     cur_x = ctrl_rect.left + tmp / 2;
     if (self->large_layout == 0) {
       unit_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12384,7 +12327,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       text_align = 0;
       draw_x = cur_x;
-      label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc24)));
+      label = (iptr)(label_string(label_string_ids[0x309]));
       surface_draw_text((DibSurface *)self,(iptr)unit_header_font,(const char *)label,draw_x,tmp,text_align);
     }
     if ((is_exchange_side == '\0') && (is_demand_side == '\0')) {
@@ -12434,24 +12377,24 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         reveal_button = (i32)(button_ctor(new_ctrl));
       }
       eh_state = 0xffffffff;
-      *(i32 *)((u8 *)&self->advance_pane_rects + side * 4 - 0x24) = reveal_button;
+      self->info_show_buttons[side] = reveal_button;
       if (side == 0) {
-        reveal_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdbc)));
+        reveal_label = (iptr)(label_string(label_string_ids[0x36f]));
       }
       else {
-        reveal_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdc0)));
+        reveal_label = (iptr)(label_string(label_string_ids[0x370]));
       }
-      if (self == (ViewWindow *)0x0) {
+      if (self == (ParleyWindow *)0x0) {
         reveal_parent = (u8 *)0x0;
       }
       else {
-        reveal_parent = self->window_2;
+        reveal_parent = ((u8 *)self + 0x48);
       }
       button_create
-                (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),(iptr)reveal_parent,
+                ((Control *)self->info_show_buttons[side],(iptr)reveal_parent,
                  side + 0x404,(iptr)&btn_rect,(const char *)reveal_label);
       button_set_callback
-                (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),
+                ((Control *)self->info_show_buttons[side],
                  (side == 0 ? (iptr)parley_reveal_city_origin_clicked : (iptr)parley_request_city_origin_clicked));
       new_ctrl = (Control *)(operator_new(0x3c));
       eh_state = 0xe;
@@ -12462,41 +12405,41 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         hide_button = (i32)(button_ctor(new_ctrl));
       }
       eh_state = 0xffffffff;
-      *(i32 *)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c) = hide_button;
+      self->info_hide_buttons[side] = hide_button;
       if (side == 0) {
-        hide_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdc4)));
+        hide_label = (iptr)(label_string(label_string_ids[0x371]));
       }
       else {
-        hide_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdc0)));
+        hide_label = (iptr)(label_string(label_string_ids[0x370]));
       }
-      if (self == (ViewWindow *)0x0) {
+      if (self == (ParleyWindow *)0x0) {
         hide_parent = (u8 *)0x0;
       }
       else {
-        hide_parent = self->window_2;
+        hide_parent = ((u8 *)self + 0x48);
       }
       button_create
-                (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),(iptr)hide_parent,
+                ((Control *)self->info_hide_buttons[side],(iptr)hide_parent,
                  side + 0x406,(iptr)&btn_rect,(const char *)hide_label);
       button_set_callback
-                (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),
+                ((Control *)self->info_hide_buttons[side],
                  (side == 0 ? (iptr)parley_hide_city_origin_clicked : (iptr)parley_request_city_origin_clicked));
-      if ((side == 0) && (self->left_side_accepted != '\0')) {
-        control_hide((Control *)self->left_accept_button);
-        ctrl_show_and_redraw((Control *)self->left_agreed_button);
+      if ((side == 0) && (self->local_units_revealed != '\0')) {
+        control_hide((Control *)self->info_show_buttons[0]);
+        ctrl_show_and_redraw((Control *)self->info_hide_buttons[0]);
       }
       else if (side == 0) {
-        ctrl_show_and_redraw((Control *)self->left_accept_button);
-        control_hide((Control *)self->left_agreed_button);
+        ctrl_show_and_redraw((Control *)self->info_show_buttons[0]);
+        control_hide((Control *)self->info_hide_buttons[0]);
       }
-      if ((side == 1) && (self->right_side_accepted != '\0')) {
-        control_hide((Control *)self->right_accept_button);
-        ctrl_show_and_redraw((Control *)self->right_agreed_button);
-        ctrl_disable((Control *)self->right_agreed_button);
+      if ((side == 1) && (self->remote_units_revealed != '\0')) {
+        control_hide((Control *)self->info_show_buttons[1]);
+        ctrl_show_and_redraw((Control *)self->info_hide_buttons[1]);
+        ctrl_disable((Control *)self->info_hide_buttons[1]);
       }
       else if (side == 1) {
-        ctrl_show_and_redraw((Control *)self->right_accept_button);
-        control_hide((Control *)self->right_agreed_button);
+        ctrl_show_and_redraw((Control *)self->info_show_buttons[1]);
+        control_hide((Control *)self->info_hide_buttons[1]);
       }
       btn_top += btn_height;
       btn_width = col_width / 2;
@@ -12512,24 +12455,24 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       sort_unit_button = (i32)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 0x28) = sort_unit_button;
-    if (self == (ViewWindow *)0x0) {
+    self->sort_by_unit_buttons[side] = sort_unit_button;
+    if (self == (ParleyWindow *)0x0) {
       sort_unit_parent = (u8 *)0x0;
     }
     else {
-      sort_unit_parent = self->window_2;
+      sort_unit_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc28)));
+    label = (iptr)(label_string(label_string_ids[0x30a]));
     button_create
-              (*(Control **)(self->rate_values + side * 4 + 0x28),(iptr)sort_unit_parent,
+              ((Control *)self->sort_by_unit_buttons[side],(iptr)sort_unit_parent,
                side + 0x400,(iptr)&btn_rect,(const char *)label);
     button_set_callback
-              (*(Control **)(self->rate_values + side * 4 + 0x28),
+              ((Control *)self->sort_by_unit_buttons[side],
                (side == 0 ? (iptr)parley_sort_by_unit_left_clicked : (iptr)parley_sort_by_unit_right_clicked));
-    if ((parley_wnd_block.parley_mode != 9) &&
-       (((side == 0 && (self->left_side_accepted == '\0')) ||
-        ((side == 1 && (self->right_side_accepted == '\0')))))) {
-      ctrl_disable(*(Control **)(self->rate_values + side * 4 + 0x28));
+    if (((int)parley_wnd_block.mode != 9) &&
+       (((side == 0 && (self->local_units_revealed == '\0')) ||
+        ((side == 1 && (self->remote_units_revealed == '\0')))))) {
+      ctrl_disable((Control *)self->sort_by_unit_buttons[side]);
     }
     SetRect(&btn_rect,btn_rect.right,btn_top,btn_rect.right + btn_width + panel_margin_x * -3,
             btn_top + btn_height);
@@ -12542,37 +12485,37 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       sort_city_button = (i32)(button_ctor(new_ctrl));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 0x30) = sort_city_button;
-    if (self == (ViewWindow *)0x0) {
+    self->sort_by_city_buttons[side] = sort_city_button;
+    if (self == (ParleyWindow *)0x0) {
       sort_city_parent = (u8 *)0x0;
     }
     else {
-      sort_city_parent = self->window_2;
+      sort_city_parent = ((u8 *)self + 0x48);
     }
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc2c)));
+    label = (iptr)(label_string(label_string_ids[0x30b]));
     button_create
-              (*(Control **)(self->rate_values + side * 4 + 0x30),(iptr)sort_city_parent,
+              ((Control *)self->sort_by_city_buttons[side],(iptr)sort_city_parent,
                side + 0x402,(iptr)&btn_rect,(const char *)label);
     button_set_callback
-              (*(Control **)(self->rate_values + side * 4 + 0x30),
+              ((Control *)self->sort_by_city_buttons[side],
                (side == 0 ? (iptr)parley_sort_by_city_left_clicked : (iptr)parley_sort_by_city_right_clicked));
-    if ((parley_wnd_block.parley_mode != 9) &&
-       (((side == 0 && (self->left_side_accepted == '\0')) ||
-        ((side == 1 && (self->right_side_accepted == '\0')))))) {
-      ctrl_disable(*(Control **)(self->rate_values + side * 4 + 0x30));
+    if (((int)parley_wnd_block.mode != 9) &&
+       (((side == 0 && (self->local_units_revealed == '\0')) ||
+        ((side == 1 && (self->remote_units_revealed == '\0')))))) {
+      ctrl_disable((Control *)self->sort_by_city_buttons[side]);
     }
     ctrl_rect.top = btn_rect.bottom;
-    ctrl_rect.bottom = self->show_turn_timer + panel_margin_y * -2;
+    ctrl_rect.bottom = self->divider_y + panel_margin_y * -2;
     ctrl_rect.left += panel_margin_x * 2;
     ctrl_rect.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
     surface_fill_rect((DibSurface *)self,(iptr)&ctrl_rect,list_bg_color);
     unit_list_mode = 1;
     if ((is_demand_side != '\0') || ((is_exchange_side != '\0' && (side == 1)))) {
       unit_list_mode = 0;
     }
-    parley_create_unit_list_pane((ListPaneWindow *)self,(iptr)&ctrl_rect,side,unit_list_mode);
+    parley_create_unit_list_pane((ParleyWindow *)(ListPaneWindow *)self,&ctrl_rect,side,unit_list_mode);
     break;
   case 0xb:
     gfx_set_text_color_index(10);
@@ -12583,7 +12526,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       proposal_line_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     block_height = proposal_line_height * 3 + panel_margin_y * 2;
-    tmp = self->panel_top + (int)((self->show_turn_timer - self->panel_top) - block_height) / 2;
+    tmp = self->panel_top + (int)((self->divider_y - self->panel_top) - block_height) / 2;
     cur_x = side_x;
     if (self->large_layout == 0) {
       proposal_title_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -12594,10 +12537,10 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     text_x = side_x;
     cur_y = tmp;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc30)));
+    label = (iptr)(label_string(label_string_ids[0x30c]));
     surface_draw_text((DibSurface *)self,(iptr)proposal_title_font,(const char *)label,text_x,tmp,text_align);
-    proposal_labels = (i32)(label_string(*(i32 *)(label_string_ids + 0xc34)));
-    proposal_label2 = (i32)(label_string(*(i32 *)(label_string_ids + 0xc38)));
+    proposal_labels = (i32)(label_string(label_string_ids[0x30d]));
+    proposal_label2 = (i32)(label_string(label_string_ids[0x30e]));
     if (self->large_layout == 0) {
       proposal_radio_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -12614,9 +12557,9 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       proposal_radio = (i32)(radiogrp_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 8) = proposal_radio;
+    self->side_radios[side] = proposal_radio;
     cur_x = side_x;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2;
     if (self->large_layout == 0) {
       proposal_title_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12633,32 +12576,32 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     block_height = proposal_row_height * 2 + panel_margin_y;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       proposal_parent = (u8 *)0x0;
     }
     else {
-      proposal_parent = self->window_2;
+      proposal_parent = ((u8 *)self + 0x48);
     }
     radiogrp_create
-              (*(RadioGroup **)(self->rate_values + side * 4 + 8),(iptr)proposal_parent,0x40c,
+              ((RadioGroup *)self->side_radios[side],(iptr)proposal_parent,0x40c,
                (iptr)&ctrl_rect,1,2,(iptr)&proposal_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(self->rate_values + side * 4 + 8),self->gift_choice);
-    radiogrp_set_dblclick_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_radio_dblclick)
+              ((RadioGroupSetSelView *)self->side_radios[side],self->proposal_kind);
+    radiogrp_set_dblclick_callback((Control *)self->side_radios[side],(iptr)parley_on_radio_dblclick)
     ;
-    radiogrp_set_select_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_proposal_kind_select)
+    radiogrp_set_select_callback((Control *)self->side_radios[side],(iptr)parley_on_proposal_kind_select)
     ;
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
     flag_ptr[3] = '\0';
     break;
   case 0xc:
-    civlist_titles[0] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc50)));
-    civlist_titles[1] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc54)));
-    civlist_titles[2] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc58)));
-    civlist_titles[3] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd0c)));
+    civlist_titles[0] = (iptr)(label_string(label_string_ids[0x314]));
+    civlist_titles[1] = (iptr)(label_string(label_string_ids[0x315]));
+    civlist_titles[2] = (iptr)(label_string(label_string_ids[0x316]));
+    civlist_titles[3] = (iptr)(label_string(label_string_ids[0x343]));
     if (is_exchange_side == '\0') {
       if (is_demand_side == '\0') {
         civlist_title_idx = 0;
@@ -12673,7 +12616,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     else {
       civlist_title_idx = 2;
     }
-    flag_ptr = ((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38;
+    flag_ptr = (u8 *)&self->list_rows[side];
     flag_ptr[0] = 5;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
@@ -12684,10 +12627,10 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     if (is_exchange_side != '\0') {
       str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
-        civlist_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
+        civlist_side_title = (iptr)(label_string(label_string_ids[0x303]));
       }
       else {
-        civlist_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
+        civlist_side_title = (iptr)(label_string(label_string_ids[0x304]));
       }
       text_append_str((const char *)civlist_side_title);
       if (self->large_layout == 0) {
@@ -12706,7 +12649,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       cur_y = cur_y + panel_margin_y + civlist_side_height;
     }
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (self->large_layout == 0) {
       civlist_row_height = font_cached_height((GameFont *)((i8 *)&font_size14));
@@ -12720,16 +12663,16 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     else {
       civlist_title_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
-    block_height = *(int *)(((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38) * civlist_row_height +
-               *(int *)(((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38) * panel_margin_y + panel_margin_y * 4 +
+    block_height = self->list_rows[side] * civlist_row_height +
+               self->list_rows[side] * panel_margin_y + panel_margin_y * 4 +
                civlist_title_height;
-    cur_y += (int)((self->show_turn_timer - cur_y) - block_height) / 2;
+    cur_y += (int)((self->divider_y - cur_y) - block_height) / 2;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    gfx_set_draw_target((iptr)&parley_wnd_block.parley_wnd);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_set_draw_target((iptr)&parley_wnd_block);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
-    tmp = rect_width((iptr)&ctrl_rect);
+    gfx_target_frame_rect(&ctrl_rect,10);
+    tmp = rect_width(&ctrl_rect);
     cur_x = ctrl_rect.left + tmp / 2;
     if (self->large_layout == 0) {
       civlist_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12760,22 +12703,22 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       civlist_item_height = font_cached_height((GameFont *)((i8 *)&font_size21));
     }
     ctrl_rect.bottom =
-         *(int *)(((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38) * civlist_item_height +
-         *(int *)(((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38) * panel_margin_y + ctrl_rect.top + 2;
+         self->list_rows[side] * civlist_item_height +
+         self->list_rows[side] * panel_margin_y + ctrl_rect.top + 2;
     ctrl_rect.left += panel_margin_x * 2;
     ctrl_rect.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
     surface_fill_rect((DibSurface *)self,(iptr)&ctrl_rect,list_bg_color);
-    parley_build_civ_list((ListPaneWindow *)self,(iptr)&ctrl_rect,side);
+    parley_build_civ_list(self,&ctrl_rect,side);
     break;
   case 0xd:
-    map_labels[0] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc3c)));
-    map_labels[1] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc40)));
+    map_labels[0] = (iptr)(label_string(label_string_ids[0x30f]));
+    map_labels[1] = (iptr)(label_string(label_string_ids[0x310]));
     map_title_idx = 0;
-    map_labels[2] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc44)));
-    map_labels[3] = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc48)));
-    map_label_last = (i32)(label_string(*(i32 *)(label_string_ids + 0xc4c)));
+    map_labels[2] = (iptr)(label_string(label_string_ids[0x311]));
+    map_labels[3] = (iptr)(label_string(label_string_ids[0x312]));
+    map_label_last = (i32)(label_string(label_string_ids[0x313]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     cur_y = self->panel_top + panel_margin_y;
@@ -12783,10 +12726,10 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       map_title_idx = (uptr)(side != 0);
       str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
-        map_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
+        map_side_title = (iptr)(label_string(label_string_ids[0x303]));
       }
       else {
-        map_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
+        map_side_title = (iptr)(label_string(label_string_ids[0x304]));
       }
       text_append_str((const char *)map_side_title);
       if (self->large_layout == 0) {
@@ -12805,7 +12748,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       cur_y = cur_y + panel_margin_y + map_side_height;
     }
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (self->large_layout == 0) {
       map_row_height = font_cached_height((GameFont *)((i8 *)&font_size14));
@@ -12820,13 +12763,13 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       map_title_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     block_height = map_row_height * 3 + panel_margin_y * 9 + map_title_height;
-    cur_y += (int)((self->show_turn_timer - cur_y) - block_height) / 2;
+    cur_y += (int)((self->divider_y - cur_y) - block_height) / 2;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    gfx_set_draw_target((iptr)&parley_wnd_block.parley_wnd);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_set_draw_target((iptr)&parley_wnd_block);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
-    tmp = rect_width((iptr)&ctrl_rect);
+    gfx_target_frame_rect(&ctrl_rect,10);
+    tmp = rect_width(&ctrl_rect);
     cur_x = ctrl_rect.left + tmp / 2;
     if (self->large_layout == 0) {
       map_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12853,7 +12796,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     ctrl_rect.bottom += panel_margin_y * -2;
     ctrl_rect.left += panel_margin_x * 2;
     ctrl_rect.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
     surface_fill_rect((DibSurface *)self,(iptr)&ctrl_rect,list_bg_color);
     if (self->large_layout == 0) {
@@ -12872,37 +12815,37 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       map_radio = (i32)(radiogrp_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 8) = map_radio;
-    if (self == (ViewWindow *)0x0) {
+    self->side_radios[side] = map_radio;
+    if (self == (ParleyWindow *)0x0) {
       map_parent = (u8 *)0x0;
     }
     else {
-      map_parent = self->window_2;
+      map_parent = ((u8 *)self + 0x48);
     }
     radiogrp_create
-              (*(RadioGroup **)(self->rate_values + side * 4 + 8),(iptr)map_parent,side + 0x424,
+              ((RadioGroup *)self->side_radios[side],(iptr)map_parent,side + 0x424,
                (iptr)&ctrl_rect,1,3,(iptr)(map_labels + 2));
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(self->rate_values + side * 4 + 8),
-               *(i32 *)(self->parley_caption_buttons + side * 4 - 0x18));
-    radiogrp_set_dblclick_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_radio_dblclick)
+              ((RadioGroupSetSelView *)self->side_radios[side],
+               (i32)self->map_choice[side]);
+    radiogrp_set_dblclick_callback((Control *)self->side_radios[side],(iptr)parley_on_radio_dblclick)
     ;
-    radiogrp_set_select_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_map_choice_select)
+    radiogrp_set_select_callback((Control *)self->side_radios[side],(iptr)parley_on_map_choice_select)
     ;
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
     flag_ptr[3] = '\0';
     break;
   case 0xf:
-    offer_labels = (i32)(label_string(*(i32 *)(label_string_ids + 0xbac)));
-    offer_label1 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbb0)));
-    offer_label2 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbb4)));
-    offer_label3 = (i32)(label_string(*(i32 *)(label_string_ids + 3000)));
-    offer_label4 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbbc)));
-    offer_label5 = (i32)(label_string(*(i32 *)(label_string_ids + 0xbc4)));
-    offer_label6 = (i32)(label_string(*(i32 *)(label_string_ids + 0xd08)));
+    offer_labels = (i32)(label_string(label_string_ids[0x2eb]));
+    offer_label1 = (i32)(label_string(label_string_ids[0x2ec]));
+    offer_label2 = (i32)(label_string(label_string_ids[0x2ed]));
+    offer_label3 = (i32)(label_string(label_string_ids[750]));
+    offer_label4 = (i32)(label_string(label_string_ids[0x2ef]));
+    offer_label5 = (i32)(label_string(label_string_ids[0x2f1]));
+    offer_label6 = (i32)(label_string(label_string_ids[0x342]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     if (self->large_layout == 0) {
@@ -12912,7 +12855,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       offer_line_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     block_height = panel_margin_y * 7 + offer_line_height * 8;
-    tmp = self->panel_top + (int)((self->show_turn_timer - self->panel_top) - block_height) / 2;
+    tmp = self->panel_top + (int)((self->divider_y - self->panel_top) - block_height) / 2;
     if (self->large_layout == 0) {
       offer_title_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -12922,7 +12865,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     draw_x = cur_x;
     cur_y = tmp;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc5c)));
+    label = (iptr)(label_string(label_string_ids[0x317]));
     surface_draw_text((DibSurface *)self,(iptr)offer_title_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       offer_title_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12940,7 +12883,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_align = 5;
     draw_x = cur_x;
     cur_y = tmp;
-    label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc60)));
+    label = (iptr)(label_string(label_string_ids[0x318]));
     surface_draw_text((DibSurface *)self,(iptr)offer_header_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       offer_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12965,9 +12908,9 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       offer_radio = (i32)(radiogrp_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->rate_values + side * 4 + 8) = offer_radio;
+    self->side_radios[side] = offer_radio;
     cur_x = side_x;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2;
     if (self->large_layout == 0) {
       offer_row_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -12977,22 +12920,22 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     block_height = panel_margin_y * 5 + offer_row_height * 6;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       offer_parent = (u8 *)0x0;
     }
     else {
-      offer_parent = self->window_2;
+      offer_parent = ((u8 *)self + 0x48);
     }
     radiogrp_create
-              (*(RadioGroup **)(self->rate_values + side * 4 + 8),(iptr)offer_parent,0x41f,
+              ((RadioGroup *)self->side_radios[side],(iptr)offer_parent,0x41f,
                (iptr)&ctrl_rect,1,7,(iptr)&offer_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(self->rate_values + side * 4 + 8),self->demand_choice);
-    radiogrp_set_dblclick_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_radio_dblclick)
+              ((RadioGroupSetSelView *)self->side_radios[side],self->demand_kind);
+    radiogrp_set_dblclick_callback((Control *)self->side_radios[side],(iptr)parley_on_radio_dblclick)
     ;
-    radiogrp_set_select_callback(*(Control **)(self->rate_values + side * 4 + 8),(iptr)parley_on_demand_kind_select)
+    radiogrp_set_select_callback((Control *)self->side_radios[side],(iptr)parley_on_demand_kind_select)
     ;
-    flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
+    flag_ptr = (u8 *)&self->side_selected[side];
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
     flag_ptr[2] = '\0';
@@ -13000,14 +12943,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     break;
   case 0x11:
     if (is_exchange_side == '\0') {
-      flag_ptr = ((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38;
+      flag_ptr = (u8 *)&self->list_rows[side];
       flag_ptr[0] = 7;
       flag_ptr[1] = '\0';
       flag_ptr[2] = '\0';
       flag_ptr[3] = '\0';
     }
     else {
-      flag_ptr = ((PictureWindow *)self)->parley_pane_rows_base + side * 4 + 0x38;
+      flag_ptr = (u8 *)&self->list_rows[side];
       flag_ptr[0] = 6;
       flag_ptr[1] = '\0';
       flag_ptr[2] = '\0';
@@ -13016,15 +12959,15 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     gfx_set_text_color_index(10);
     cur_x = side_x;
     cur_y = self->panel_top + panel_margin_y;
-    tmp = rect_width((iptr)&self->panel_rect);
+    tmp = rect_width((RECT *)&self->panel_left);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (is_exchange_side != '\0') {
       str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
-        city_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
+        city_side_title = (iptr)(label_string(label_string_ids[0x303]));
       }
       else {
-        city_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
+        city_side_title = (iptr)(label_string(label_string_ids[0x304]));
       }
       text_append_str((const char *)city_side_title);
       if (self->large_layout == 0) {
@@ -13043,12 +12986,12 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       cur_y = cur_y + panel_margin_y + city_side_height;
     }
-    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->show_turn_timer);
-    gfx_set_draw_target((iptr)&parley_wnd_block.parley_wnd);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,self->divider_y);
+    gfx_set_draw_target((iptr)&parley_wnd_block);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
-    tmp = rect_width((iptr)&ctrl_rect);
+    gfx_target_frame_rect(&ctrl_rect,10);
+    tmp = rect_width(&ctrl_rect);
     cur_x = ctrl_rect.left + tmp / 2;
     if (self->large_layout == 0) {
       city_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
@@ -13058,7 +13001,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     cur_y += city_header_height / 2;
     if ((is_exchange_side == '\0') && (is_demand_side == '\0')) {
-      city_header_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc68)));
+      city_header_label = (iptr)(label_string(label_string_ids[0x31a]));
       if (self->large_layout == 0) {
         city_header_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
       }
@@ -13089,24 +13032,24 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         city_reveal_button = (i32)(button_ctor(new_ctrl));
       }
       eh_state = 0xffffffff;
-      *(i32 *)((u8 *)&self->advance_pane_rects + side * 4 - 0x24) = city_reveal_button;
+      self->info_show_buttons[side] = city_reveal_button;
       if (side == 0) {
-        city_reveal_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdc8)));
+        city_reveal_label = (iptr)(label_string(label_string_ids[0x372]));
       }
       else {
-        city_reveal_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdcc)));
+        city_reveal_label = (iptr)(label_string(label_string_ids[0x373]));
       }
-      if (self == (ViewWindow *)0x0) {
+      if (self == (ParleyWindow *)0x0) {
         city_reveal_parent = (u8 *)0x0;
       }
       else {
-        city_reveal_parent = self->window_2;
+        city_reveal_parent = ((u8 *)self + 0x48);
       }
       button_create
-                (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),(iptr)city_reveal_parent,
+                ((Control *)self->info_show_buttons[side],(iptr)city_reveal_parent,
                  side + 0x408,(iptr)&city_btn_rect,(const char *)city_reveal_label);
       button_set_callback
-                (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),
+                ((Control *)self->info_show_buttons[side],
                  (side == 0 ? (iptr)parley_reveal_city_info : (iptr)parley_request_city_info));
       new_ctrl = (Control *)(operator_new(0x3c));
       eh_state = 0x15;
@@ -13117,41 +13060,41 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         city_hide_button = (i32)(button_ctor(new_ctrl));
       }
       eh_state = 0xffffffff;
-      *(i32 *)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c) = city_hide_button;
+      self->info_hide_buttons[side] = city_hide_button;
       if (side == 0) {
-        city_hide_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdd0)));
+        city_hide_label = (iptr)(label_string(label_string_ids[0x374]));
       }
       else {
-        city_hide_label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdcc)));
+        city_hide_label = (iptr)(label_string(label_string_ids[0x373]));
       }
-      if (self == (ViewWindow *)0x0) {
+      if (self == (ParleyWindow *)0x0) {
         city_hide_parent = (u8 *)0x0;
       }
       else {
-        city_hide_parent = self->window_2;
+        city_hide_parent = ((u8 *)self + 0x48);
       }
       button_create
-                (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),(iptr)city_hide_parent,
+                ((Control *)self->info_hide_buttons[side],(iptr)city_hide_parent,
                  side + 0x40a,(iptr)&city_btn_rect,(const char *)city_hide_label);
       button_set_callback
-                (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),
+                ((Control *)self->info_hide_buttons[side],
                  (side == 0 ? (iptr)parley_hide_city_info : (iptr)parley_request_city_info));
-      if ((side == 0) && (self->left_side_confirmed != '\0')) {
-        control_hide((Control *)self->left_accept_button);
-        ctrl_show_and_redraw((Control *)self->left_agreed_button);
+      if ((side == 0) && (self->local_cities_revealed != '\0')) {
+        control_hide((Control *)self->info_show_buttons[0]);
+        ctrl_show_and_redraw((Control *)self->info_hide_buttons[0]);
       }
       else if (side == 0) {
-        ctrl_show_and_redraw((Control *)self->left_accept_button);
-        control_hide((Control *)self->left_agreed_button);
+        ctrl_show_and_redraw((Control *)self->info_show_buttons[0]);
+        control_hide((Control *)self->info_hide_buttons[0]);
       }
-      if ((side == 1) && (self->remote_side_agreed != '\0')) {
-        control_hide((Control *)self->right_accept_button);
-        ctrl_show_and_redraw((Control *)self->right_agreed_button);
-        ctrl_disable((Control *)self->right_agreed_button);
+      if ((side == 1) && (self->remote_cities_revealed != '\0')) {
+        control_hide((Control *)self->info_show_buttons[1]);
+        ctrl_show_and_redraw((Control *)self->info_hide_buttons[1]);
+        ctrl_disable((Control *)self->info_hide_buttons[1]);
       }
       else if (side == 1) {
-        ctrl_show_and_redraw((Control *)self->right_accept_button);
-        control_hide((Control *)self->right_agreed_button);
+        ctrl_show_and_redraw((Control *)self->info_show_buttons[1]);
+        control_hide((Control *)self->info_hide_buttons[1]);
       }
     }
     if (self->large_layout == 0) {
@@ -13162,20 +13105,20 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       tmp = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
       ctrl_rect.top += tmp;
     }
-    ctrl_rect.bottom = self->show_turn_timer + panel_margin_y * -2;
+    ctrl_rect.bottom = self->divider_y + panel_margin_y * -2;
     ctrl_rect.left += panel_margin_x * 2;
     ctrl_rect.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    gfx_target_frame_rect(&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
     surface_fill_rect((DibSurface *)self,(iptr)&ctrl_rect,list_bg_color);
     city_list_mode = 1;
     if ((is_demand_side != '\0') || ((is_exchange_side != '\0' && (side == 1)))) {
       city_list_mode = 0;
     }
-    parley_create_city_list_pane((ListPaneWindow *)self,(iptr)&ctrl_rect,side,city_list_mode);
+    parley_create_city_list_pane((ParleyWindow *)(ListPaneWindow *)self,&ctrl_rect,side,city_list_mode);
     break;
   case 0x12:
-    label = civ_get_adjective(self->caption_height);
+    label = civ_get_adjective(self->other_civ);
     text_set_string_arg_b(0,(const char *)label);
     text_clear();
     text_append_label(0x2e2);
@@ -13187,14 +13130,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     else {
       waiting_text_width = font_text_width((GameFont *)((i8 *)&font_size30),(const char *)waiting_text);
     }
-    cur_x = (self->panel_rect + (int)(self->panel_right - self->panel_rect) / 2) - waiting_text_width / 2;
+    cur_x = (self->panel_left + (int)(self->panel_right - self->panel_left) / 2) - waiting_text_width / 2;
     if (self->large_layout == 0) {
       waiting_font_height = font_cached_height((GameFont *)((i8 *)&font_size20));
     }
     else {
       waiting_font_height = font_cached_height((GameFont *)((i8 *)&font_size30));
     }
-    cur_y = (self->panel_top + (int)(self->show_turn_timer - self->panel_top) / 2 + panel_margin_y) -
+    cur_y = (self->panel_top + (int)(self->divider_y - self->panel_top) / 2 + panel_margin_y) -
                waiting_font_height / 2;
     if (self->large_layout == 0) {
       waiting_font = ((i8 *)&font_size20);
@@ -13204,26 +13147,26 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     surface_draw_text
               ((DibSurface *)self,(iptr)waiting_font,(const char *)waiting_text,cur_x,cur_y,5);
-    control_hide((Control *)self->mode2_button_value);
-    ctrl_disable((Control *)self->mode2_button_value);
-    ctrl_show_and_redraw((Control *)self->rates_clamped);
-    ctrl_disable((Control *)self->rates_clamped);
-    ctrl_disable((Control *)self->never_mind_button_value);
-    if ((self->left_side_accepted == '\0') && (self->left_side_confirmed == '\0')) {
-      control_hide((Control *)self->conceal_button_value);
-      ctrl_disable((Control *)self->conceal_button_value);
-      ctrl_show_and_redraw((Control *)self->reveal_button_value);
-      ctrl_enable((Control *)self->reveal_button_value);
+    control_hide((Control *)self->mode2_button);
+    ctrl_disable((Control *)self->mode2_button);
+    ctrl_show_and_redraw((Control *)self->mode_button);
+    ctrl_disable((Control *)self->mode_button);
+    ctrl_disable((Control *)self->never_mind_button);
+    if ((self->local_units_revealed == '\0') && (self->local_cities_revealed == '\0')) {
+      control_hide((Control *)self->conceal_button);
+      ctrl_disable((Control *)self->conceal_button);
+      ctrl_show_and_redraw((Control *)self->reveal_button);
+      ctrl_enable((Control *)self->reveal_button);
     }
     else {
-      ctrl_show_and_redraw((Control *)self->conceal_button_value);
-      ctrl_enable((Control *)self->conceal_button_value);
-      control_hide((Control *)self->reveal_button_value);
-      ctrl_disable((Control *)self->reveal_button_value);
+      ctrl_show_and_redraw((Control *)self->conceal_button);
+      ctrl_enable((Control *)self->conceal_button);
+      control_hide((Control *)self->reveal_button);
+      ctrl_disable((Control *)self->reveal_button);
     }
     break;
   case 0x13:
-    parley_build_description((WindowObjectView *)self,self->item_buffer,0);
+    parley_build_description(self,self->received_offer,0);
     new_input = (InputControl *)(operator_new(0x48));
     eh_state = 0;
     if (new_input == (InputControl *)0x0) {
@@ -13233,12 +13176,12 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       desc_edit = (uptr)(edit_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    self->side_text_edit = desc_edit;
-    cur_x = self->panel_rect + panel_margin_x;
-    col_width = rect_width((iptr)&self->panel_rect);
+    self->desc_edit = desc_edit;
+    cur_x = self->panel_left + panel_margin_x;
+    col_width = rect_width((RECT *)&self->panel_left);
     col_width += panel_margin_x * -2;
     cur_y = self->panel_top + panel_margin_y;
-    block_height = self->show_turn_timer - cur_y;
+    block_height = self->divider_y - cur_y;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (self->large_layout == 0) {
       desc_font = ((i8 *)&font_size14);
@@ -13247,22 +13190,22 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       desc_font = ((i8 *)&font_size21);
     }
     ui_set_default_font((iptr)desc_font);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       desc_parent = (u8 *)0x0;
     }
     else {
-      desc_parent = self->window_2;
+      desc_parent = ((u8 *)self + 0x48);
     }
     edit_create_styled
-              ((EditControl *)self->side_text_edit,(iptr)desc_parent,0x426,(iptr)&ctrl_rect,(const char *)&text_section_index_pool_block.parley_description,0x122
+              ((EditControl *)self->desc_edit,(iptr)desc_parent,0x426,(iptr)&ctrl_rect,(const char *)&text_section_index_pool_block.parley_description,0x122
                ,0);
-    edit_set_max_len((EditMaxLenView *)self->side_text_edit,0x2000);
-    edit_set_callback((EditCallbackSetView *)self->side_text_edit,(iptr)parley_edit_escape_filter);
-    ctrl_show_and_redraw((Control *)self->side_text_edit);
+    edit_set_max_len((EditMaxLenView *)self->desc_edit,0x2000);
+    edit_set_callback((EditCallbackSetView *)self->desc_edit,(iptr)parley_edit_escape_filter);
+    ctrl_show_and_redraw((Control *)self->desc_edit);
     break;
   case 0x14:
-    window_show((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd));
-    parley_build_description((WindowObjectView *)self,self->item_buffer,1);
+    window_show((WindowObjectView *)((i8 *)&parley_wnd_block));
+    parley_build_description(self,self->received_offer,1);
     new_input = (InputControl *)(operator_new(0x48));
     eh_state = 1;
     if (new_input == (InputControl *)0x0) {
@@ -13272,12 +13215,12 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       review_edit = (uptr)(edit_ctor(new_input));
     }
     eh_state = 0xffffffff;
-    self->side_text_edit = review_edit;
-    cur_x = self->panel_rect + panel_margin_x;
-    col_width = rect_width((iptr)&self->panel_rect);
+    self->desc_edit = review_edit;
+    cur_x = self->panel_left + panel_margin_x;
+    col_width = rect_width((RECT *)&self->panel_left);
     col_width += panel_margin_x * -2;
     cur_y = self->panel_top + panel_margin_y;
-    block_height = self->show_turn_timer - cur_y;
+    block_height = self->divider_y - cur_y;
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (self->large_layout == 0) {
       review_font = ((i8 *)&font_size14);
@@ -13286,45 +13229,45 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       review_font = ((i8 *)&font_size21);
     }
     ui_set_default_font((iptr)review_font);
-    if (self == (ViewWindow *)0x0) {
+    if (self == (ParleyWindow *)0x0) {
       review_parent = (u8 *)0x0;
     }
     else {
-      review_parent = self->window_2;
+      review_parent = ((u8 *)self + 0x48);
     }
     edit_create_styled
-              ((EditControl *)self->side_text_edit,(iptr)review_parent,0x426,(iptr)&ctrl_rect,(const char *)&text_section_index_pool_block.parley_description,0x122
+              ((EditControl *)self->desc_edit,(iptr)review_parent,0x426,(iptr)&ctrl_rect,(const char *)&text_section_index_pool_block.parley_description,0x122
                ,0);
-    edit_set_max_len((EditMaxLenView *)self->side_text_edit,0x2000);
-    edit_set_callback((EditCallbackSetView *)self->side_text_edit,(iptr)parley_edit_escape_filter);
-    ctrl_show_and_redraw((Control *)self->side_text_edit);
-    parley_wnd_block.parley_offer_acceptable_i32 = 1;
-    if (self->item_buffer != 0) {
-      item_buf = self->item_buffer;
-      item_kind_ptr = (int *)(item_buf + 0x20);
-      if (((*(int *)(self->item_buffer + 0x10) == 0xf) && (*item_kind_ptr == 8)) ||
-         ((*(int *)(self->item_buffer + 0x10) == 0xe && (*item_kind_ptr == 8)))) {
-        tech_count = *(int *)(item_buf + 0x28);
-        tech_ptr = (iptr *)(item_buf + 0x2c);
+    edit_set_max_len((EditMaxLenView *)self->desc_edit,0x2000);
+    edit_set_callback((EditCallbackSetView *)self->desc_edit,(iptr)parley_edit_escape_filter);
+    ctrl_show_and_redraw((Control *)self->desc_edit);
+    parley_wnd_block.offer_acceptable = 1;
+    if (self->received_offer != 0) {
+      item_buf = self->received_offer;
+      item_kind_ptr = (int *)((uptr)item_buf + 0x20);
+      if (((self->received_offer->mode == 0xf) && (*item_kind_ptr == 8)) ||
+         ((self->received_offer->mode == 0xe && (*item_kind_ptr == 8)))) {
+        tech_count = item_buf->item.value;
+        tech_ptr = (iptr *)((uptr)item_buf + 0x2c);
         for (tech_idx = 0; tech_idx < tech_count; tech_idx++) {
           label = *tech_ptr;
           tech_ptr++;
           tmp = civ_has_advance(human_civ[0],label);
           if (tmp == 0) {
-            self->techs_all_known = 0;
+            self->offer_acceptable = 0;
           }
         }
       }
     }
-    if (self->techs_all_known == 0) {
-      ctrl_disable((Control *)self->tax_scrollbar);
+    if (self->offer_acceptable == 0) {
+      ctrl_disable((Control *)self->accept_button);
     }
     else {
-      ctrl_enable((Control *)self->tax_scrollbar);
+      ctrl_enable((Control *)self->accept_button);
     }
   }
   parley_update_buttons(self);
-  wnd_blit_surface_rect((DibSurface *)self,(iptr)&self->fill_rect_left);
+  wnd_blit_surface_rect((DibSurface *)self,(iptr)&self->fill_left);
   return;
 }
 
@@ -13333,17 +13276,17 @@ void __cdecl parley_on_treaty_type_select(i32 ctrl_id,i32 treaty_type)
 
 {
   iptr active_child;
-  iptr parley;
+  ParleyWindow *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
     parley = 0;
   }
   else {
-    parley = active_child - 0x48;
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)(parley + 0x48));
-  *(i32 *)(parley + 0x218) = treaty_type;
+  wnd_activate((Wnd *)((iptr)parley + 0x48));
+  parley->treaty_kind = treaty_type;
   return;
 }
 
@@ -13352,18 +13295,18 @@ void __cdecl parley_on_demand_kind_select(i32 ctrl_id,u32 demand_kind)
 
 {
   iptr active_child;
-  ViewWindow *this2;
+  ParleyWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    this2 = (ViewWindow *)0x0;
+    this2 = (ParleyWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(active_child - 0x48);
+    this2 = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)this2->window_2);
-  this2->demand_choice = demand_kind;
-  parley_add_side_dialog(this2,this2->right_civ,1);
+  wnd_activate((Wnd *)((u8 *)this2 + 0x48));
+  this2->demand_kind = demand_kind;
+  parley_add_side_dialog(this2,this2->right_kind,1);
   return;
 }
 
@@ -13372,17 +13315,17 @@ void __cdecl parley_on_map_choice_select(int side,i32 map_choice)
 
 {
   int active_child;
-  iptr parley;
+  ParleyWindow *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
     parley = 0;
   }
   else {
-    parley = active_child - 0x48;
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)(parley + 0x48));
-  *(i32 *)(parley - 0xe6c + side * 4) = map_choice;
+  wnd_activate((Wnd *)((iptr)parley + 0x48));
+  *(i32 *)((iptr)parley - 0xe6c + side * 4) = map_choice;
   return;
 }
 
@@ -13391,36 +13334,36 @@ void __cdecl parley_on_gift_kind_select(i32 ctrl_id,u32 gift_kind)
 
 {
   iptr active_child;
-  ViewWindow *this2;
+  ParleyWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    this2 = (ViewWindow *)0x0;
+    this2 = (ParleyWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(active_child - 0x48);
+    this2 = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)this2->window_2);
-  this2->exchange_choice = gift_kind;
+  wnd_activate((Wnd *)((u8 *)this2 + 0x48));
+  this2->gift_kind = gift_kind;
   switch(gift_kind) {
   case 0:
-    this2->session_mode = 7;
+    this2->mode = 7;
     break;
   case 1:
-    this2->session_mode = 8;
+    this2->mode = 8;
     break;
   case 2:
-    this2->session_mode = 9;
+    this2->mode = 9;
     break;
   case 3:
-    this2->session_mode = 10;
+    this2->mode = 10;
     break;
   case 4:
-    this2->session_mode = 0xb;
+    this2->mode = 0xb;
   }
-  this2->caption_button_count = (((i32 *)&parley_mode_right_kinds))[this2->session_mode * 2];
-  this2->right_civ = this2->caption_button_count;
-  parley_add_side_dialog(this2,this2->right_civ,1);
+  this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->mode * 2];
+  this2->right_kind = this2->shown_right_kind;
+  parley_add_side_dialog(this2,this2->right_kind,1);
   return;
 }
 
@@ -13429,26 +13372,26 @@ void __cdecl parley_on_proposal_kind_select(i32 ctrl_id,u32 proposal_kind)
 
 {
   iptr active_child;
-  ViewWindow *this2;
+  ParleyWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    this2 = (ViewWindow *)0x0;
+    this2 = (ParleyWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(active_child - 0x48);
+    this2 = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)this2->window_2);
-  this2->gift_choice = proposal_kind;
+  wnd_activate((Wnd *)((u8 *)this2 + 0x48));
+  this2->proposal_kind = proposal_kind;
   if (proposal_kind == 0) {
-    this2->session_mode = 0xc;
+    this2->mode = 0xc;
   }
   else if (proposal_kind == 1) {
-    this2->session_mode = 0xd;
+    this2->mode = 0xd;
   }
-  this2->caption_button_count = (((i32 *)&parley_mode_right_kinds))[this2->session_mode * 2];
-  this2->right_civ = this2->caption_button_count;
-  parley_add_side_dialog(this2,this2->right_civ,1);
+  this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->mode * 2];
+  this2->right_kind = this2->shown_right_kind;
+  parley_add_side_dialog(this2,this2->right_kind,1);
   return;
 }
 
@@ -13458,7 +13401,7 @@ void __cdecl parley_on_exchange_kind_select(int ctrl_id,i32 exchange_kind)
 {
   iptr active_child;
   int selected;
-  iptr parley;
+  ParleyWindow *parley;
   uint is_right_side;
   
   active_child = wnd_get_active_child();
@@ -13466,18 +13409,18 @@ void __cdecl parley_on_exchange_kind_select(int ctrl_id,i32 exchange_kind)
     parley = 0;
   }
   else {
-    parley = active_child - 0x48;
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)(parley + 0x48));
+  wnd_activate((Wnd *)((iptr)parley + 0x48));
   is_right_side = (uint)(ctrl_id == 0x3f4);
   switch(exchange_kind) {
   case 0:
-    selected = radiogrp_get_selected(*(RadioGroupGetSelView **)(parley + 0x36c + is_right_side * 4));
-    radiogrp_disable_item(*(RadioGroupDisableView **)(parley + 0x36c + is_right_side * 4),0);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x370),6);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x36c),6);
+    selected = radiogrp_get_selected((RadioGroupGetSelView *)parley->side_radios[is_right_side]);
+    radiogrp_disable_item((RadioGroupDisableView *)parley->side_radios[is_right_side],0);
+    radiogrp_enable_item((RadioGroupEnableView *)parley->side_radios[1],6);
+    radiogrp_enable_item((RadioGroupEnableView *)parley->side_radios[0],6);
     if (selected == 0) {
-      radiogrp_set_selected(*(RadioGroupSetSelView **)(parley + 0x36c + is_right_side * 4),1);
+      radiogrp_set_selected((RadioGroupSetSelView *)parley->side_radios[is_right_side],1);
     }
     break;
   case 1:
@@ -13485,18 +13428,18 @@ void __cdecl parley_on_exchange_kind_select(int ctrl_id,i32 exchange_kind)
   case 3:
   case 4:
   case 5:
-    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x36c),0);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x370),0);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x370),6);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x36c),6);
+    radiogrp_enable_item((RadioGroupEnableView *)parley->side_radios[0],0);
+    radiogrp_enable_item((RadioGroupEnableView *)parley->side_radios[1],0);
+    radiogrp_enable_item((RadioGroupEnableView *)parley->side_radios[1],6);
+    radiogrp_enable_item((RadioGroupEnableView *)parley->side_radios[0],6);
     break;
   case 6:
-    selected = radiogrp_get_selected(*(RadioGroupGetSelView **)(parley + 0x36c + is_right_side * 4));
-    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x36c),0);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x370),0);
-    radiogrp_disable_item(*(RadioGroupDisableView **)(parley + 0x36c + is_right_side * 4),6);
+    selected = radiogrp_get_selected((RadioGroupGetSelView *)parley->side_radios[is_right_side]);
+    radiogrp_enable_item((RadioGroupEnableView *)parley->side_radios[0],0);
+    radiogrp_enable_item((RadioGroupEnableView *)parley->side_radios[1],0);
+    radiogrp_disable_item((RadioGroupDisableView *)parley->side_radios[is_right_side],6);
     if (selected == 6) {
-      radiogrp_set_selected(*(RadioGroupSetSelView **)(parley + 0x36c + is_right_side * 4),0);
+      radiogrp_set_selected((RadioGroupSetSelView *)parley->side_radios[is_right_side],0);
     }
   }
   return;
@@ -13508,19 +13451,19 @@ void __cdecl parley_on_radio_dblclick(i32 ctrl_id)
 {
   iptr active_child;
   int enabled;
-  ViewWindow *parley;
+  ParleyWindow *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    parley = (ViewWindow *)0x0;
+    parley = (ParleyWindow *)0x0;
   }
   else {
-    parley = (ViewWindow *)(active_child - 0x48);
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
-  enabled = ctrl_is_enabled(*(ControlEnabledView **)((u8 *)parley + 0x348));
+  enabled = ctrl_is_enabled((ControlEnabledView *)parley->mode_button);
   if ((enabled != 0) ||
-     (enabled = ctrl_is_enabled(*(ControlEnabledView **)((u8 *)parley + 0x34c)), enabled != 0)) {
-    wnd_activate((Wnd *)parley->window_2);
+     (enabled = ctrl_is_enabled((ControlEnabledView *)parley->mode2_button), enabled != 0)) {
+    wnd_activate((Wnd *)((u8 *)parley + 0x48));
     parley_on_mode_chosen(ctrl_id);
   }
   return;
@@ -13531,29 +13474,25 @@ void __cdecl parley_on_conceal_info(void)
 
 {
   iptr active_child;
-  iptr parley;
+  ParleyWindow *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
     parley = 0;
   }
   else {
-    parley = active_child - 0x48;
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
-  *(i8 *)(parley + 0x3bd) = 0;
-  *(i8 *)(parley + 0x3be) = 0;
-  net_send_message(0xa6,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) +
-                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(parley + 0x118) * 4) * 0x54),
-                     human_civ[0],(int)*(char *)(parley + 0x3be),0,0,0,0,0,0);
-  net_send_message(0xa8,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) +
-                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(parley + 0x118) * 4) * 0x54),
-                     human_civ[0],(int)*(char *)(parley + 0x3bd),0,0,0,0,0,0);
-  control_hide(*(Control **)(parley + 0x340));
-  ctrl_disable(*(Control **)(parley + 0x340));
-  ctrl_show_and_redraw(*(Control **)(parley + 0x344));
-  ctrl_enable(*(Control **)(parley + 0x344));
+  parley->local_units_revealed = 0;
+  parley->local_cities_revealed = 0;
+  net_send_message(0xa6,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley->other_civ]].id,
+                     human_civ[0],(int)(char)parley->local_cities_revealed,0,0,0,0,0,0);
+  net_send_message(0xa8,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley->other_civ]].id,
+                     human_civ[0],(int)(char)parley->local_units_revealed,0,0,0,0,0,0);
+  control_hide((Control *)parley->conceal_button);
+  ctrl_disable((Control *)parley->conceal_button);
+  ctrl_show_and_redraw((Control *)parley->reveal_button);
+  ctrl_enable((Control *)parley->reveal_button);
   return;
 }
 
@@ -13562,7 +13501,7 @@ void __cdecl parley_on_reveal_info(void)
 
 {
   iptr active_child;
-  iptr parley;
+  ParleyWindow *parley;
   
   wnd_get_active_child();
   active_child = wnd_get_active_child();
@@ -13570,22 +13509,18 @@ void __cdecl parley_on_reveal_info(void)
     parley = 0;
   }
   else {
-    parley = active_child - 0x48;
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
-  *(i8 *)(parley + 0x3bd) = 1;
-  *(i8 *)(parley + 0x3be) = 1;
-  net_send_message(0xa5,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) +
-                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(parley + 0x118) * 4) * 0x54),
-                     human_civ[0],(int)*(char *)(parley + 0x3be),0,0,0,0,0,0);
-  net_send_message(0xa7,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) +
-                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(parley + 0x118) * 4) * 0x54),
-                     human_civ[0],(int)*(char *)(parley + 0x3bd),0,0,0,0,0,0);
-  ctrl_show_and_redraw(*(Control **)(parley + 0x340));
-  ctrl_enable(*(Control **)(parley + 0x340));
-  control_hide(*(Control **)(parley + 0x344));
-  ctrl_disable(*(Control **)(parley + 0x344));
+  parley->local_units_revealed = 1;
+  parley->local_cities_revealed = 1;
+  net_send_message(0xa5,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley->other_civ]].id,
+                     human_civ[0],(int)(char)parley->local_cities_revealed,0,0,0,0,0,0);
+  net_send_message(0xa7,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley->other_civ]].id,
+                     human_civ[0],(int)(char)parley->local_units_revealed,0,0,0,0,0,0);
+  ctrl_show_and_redraw((Control *)parley->conceal_button);
+  ctrl_enable((Control *)parley->conceal_button);
+  control_hide((Control *)parley->reveal_button);
+  ctrl_disable((Control *)parley->reveal_button);
   return;
 }
 
@@ -13596,14 +13531,14 @@ void __cdecl parley_on_check_intel(void)
   bool has_intel_wonder;
   iptr active_child;
   int has_wonder;
-  iptr parley;
+  ParleyWindow *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
     parley = 0;
   }
   else {
-    parley = active_child - 0x48;
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
   has_wonder = civ_has_wonder(human_civ[0],0x18);
   if (has_wonder == 0) {
@@ -13615,9 +13550,9 @@ void __cdecl parley_on_check_intel(void)
   }
   has_intel_wonder = true;
 check_intel_access:
-  if ((((*(byte *)&civs[human_civ[0]].treaties[(*(int *)(parley + 0x118))] & 0x80) != 0)
+  if ((((*(byte *)&civs[human_civ[0]].treaties[(int)parley->other_civ] & 0x80) != 0)
       || (has_intel_wonder)) || (game.reveal_map != '\0')) {
-    intel_report_show(human_civ[0],*(iptr *)(parley + 0x118));
+    intel_report_show(human_civ[0],(iptr)parley->other_civ);
   }
   else {
     popup_game_with_sprite((const char *)&str_nointel_2,(iptr)&popup_info_icon_sprite,0);
@@ -13631,78 +13566,78 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
 {
   iptr active_child;
   i32 value;
-  ParleyOfferBuffer *this2;
+  ParleyWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    this2 = (ParleyOfferBuffer *)0x0;
+    this2 = (ParleyWindow *)0x0;
   }
   else {
-    this2 = (ParleyOfferBuffer *)(active_child - 0x48);
+    this2 = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)this2->inner_wnd);
-  switch(this2->parley_kind) {
+  wnd_activate((Wnd *)((u8 *)this2 + 0x48));
+  switch(this2->mode) {
   case 3:
-    value = radiogrp_get_selected(*(RadioGroupGetSelView **)this2->action_radio_group);
-    *(i32 *)this2->selected_action = value;
-    if (*(int *)this2->selected_action == 0) {
-      this2->parley_kind = 6;
-      ctrl_enable(*(Control **)this2->never_mind_button_2);
+    value = radiogrp_get_selected((RadioGroupGetSelView *)this2->side_radios[1]);
+    this2->selected_action = value;
+    if (this2->selected_action == 0) {
+      this2->mode = 6;
+      ctrl_enable((Control *)this2->never_mind_button);
     }
-    else if (*(int *)this2->selected_action == 1) {
-      this2->parley_kind = 0xc;
-      if (*(int *)this2->proposal_kind != 0) {
-        this2->parley_kind = 0xd;
+    else if ((int)this2->selected_action == 1) {
+      this2->mode = 0xc;
+      if (this2->proposal_kind != 0) {
+        this2->mode = 0xd;
       }
-      ctrl_enable(*(Control **)this2->never_mind_button_2);
+      ctrl_enable((Control *)this2->never_mind_button);
     }
-    else if (*(int *)this2->selected_action == 2) {
-      if (*(int *)this2->gift_kind == 0) {
-        this2->parley_kind = 7;
+    else if ((int)this2->selected_action == 2) {
+      if (this2->gift_kind == 0) {
+        this2->mode = 7;
       }
-      else if (*(int *)this2->gift_kind == 1) {
-        this2->parley_kind = 8;
+      else if ((int)this2->gift_kind == 1) {
+        this2->mode = 8;
       }
-      else if (*(int *)this2->gift_kind == 2) {
-        this2->parley_kind = 9;
+      else if ((int)this2->gift_kind == 2) {
+        this2->mode = 9;
       }
-      else if (*(int *)this2->gift_kind == 3) {
-        this2->parley_kind = 10;
+      else if ((int)this2->gift_kind == 3) {
+        this2->mode = 10;
       }
       else {
-        this2->parley_kind = 0xb;
+        this2->mode = 0xb;
       }
-      ctrl_enable(*(Control **)this2->never_mind_button_2);
+      ctrl_enable((Control *)this2->never_mind_button);
     }
-    else if (*(int *)this2->selected_action == 3) {
-      this2->parley_kind = 5;
-      ctrl_enable(*(Control **)this2->never_mind_button_2);
+    else if ((int)this2->selected_action == 3) {
+      this2->mode = 5;
+      ctrl_enable((Control *)this2->never_mind_button);
     }
-    else if (*(int *)this2->selected_action == 4) {
-      this2->parley_kind = 0xf;
-      ctrl_enable(*(Control **)this2->never_mind_button_2);
+    else if ((int)this2->selected_action == 4) {
+      this2->mode = 0xf;
+      ctrl_enable((Control *)this2->never_mind_button);
     }
-    *(i32 *)this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
-    *(i32 *)this2->left_kind = *(i32 *)this2->shown_left_kind;
-    *(i32 *)this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
-    *(i32 *)this2->right_kind = *(i32 *)this2->shown_right_kind;
-    parley_add_side_dialog((ViewWindow *)this2,*(i32 *)this2->left_kind,0);
+    this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->mode * 2];
+    this2->left_kind = (i32)this2->shown_left_kind;
+    this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->mode * 2];
+    this2->right_kind = (i32)this2->shown_right_kind;
+    parley_add_side_dialog(this2,(i32)this2->left_kind,0);
     parley_add_side_dialog
-              ((ViewWindow *)this2,*(i32 *)this2->right_kind,1);
+              (this2,(i32)this2->right_kind,1);
     break;
   case 5:
-    value = radiogrp_get_selected(*(RadioGroupGetSelView **)this2->barter_give_radio_group);
-    *(i32 *)this2->barter_give_kind = value;
-    value = radiogrp_get_selected(*(RadioGroupGetSelView **)this2->action_radio_group);
-    *(i32 *)this2->barter_want_kind = value;
-    this2->parley_kind = 0xe;
-    *(i32 *)this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
-    *(i32 *)this2->left_kind = *(i32 *)this2->shown_left_kind;
-    *(i32 *)this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
-    *(i32 *)this2->right_kind = *(i32 *)this2->shown_right_kind;
-    parley_add_side_dialog((ViewWindow *)this2,*(i32 *)this2->left_kind,0);
+    value = radiogrp_get_selected((RadioGroupGetSelView *)this2->side_radios[0]);
+    this2->exchange_kind[0] = value;
+    value = radiogrp_get_selected((RadioGroupGetSelView *)this2->side_radios[1]);
+    this2->exchange_kind[1] = value;
+    this2->mode = 0xe;
+    this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->mode * 2];
+    this2->left_kind = (i32)this2->shown_left_kind;
+    this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->mode * 2];
+    this2->right_kind = (i32)this2->shown_right_kind;
+    parley_add_side_dialog(this2,(i32)this2->left_kind,0);
     parley_add_side_dialog
-              ((ViewWindow *)this2,*(i32 *)this2->right_kind,1);
+              (this2,(i32)this2->right_kind,1);
     break;
   case 6:
   case 7:
@@ -13714,45 +13649,45 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
   case 0xd:
   case 0xe:
   case 0xf:
-    if (*(int *)this2->received_offer != 0) {
-      operator_delete(*(void **)this2->received_offer);
-      this2->proposal_kind[0x18] = '\0';
-      this2->proposal_kind[0x19] = '\0';
-      this2->proposal_kind[0x1a] = '\0';
-      this2->proposal_kind[0x1b] = '\0';
+    if (this2->received_offer != 0) {
+      operator_delete((void *)this2->received_offer);
+      ((u8 *)this2 + 0x21c)[0x18] = '\0';
+      ((u8 *)this2 + 0x21c)[0x19] = '\0';
+      ((u8 *)this2 + 0x21c)[0x1a] = '\0';
+      ((u8 *)this2 + 0x21c)[0x1b] = '\0';
     }
-    value = (i32)(parley_send_offer(this2,this2->parley_kind));
-    *(i32 *)this2->received_offer = value;
-    if ((this2->parley_kind == 6) && (this2->treaty_choice == 3)) {
-      if ((*(byte *)&civs[human_civ[0]].treaties[(this2->civ_id)] & 8) == 0) {
-        if ((*(byte *)&civs[human_civ[0]].treaties[(this2->civ_id)] & 4) == 0) {
-          if ((*(byte *)&civs[human_civ[0]].treaties[(this2->civ_id)] & 2) != 0) {
-            diplo_clear_treaty_flags(human_civ[0],this2->civ_id,2);
+    value = (i32)(parley_send_offer(this2,this2->mode));
+    this2->received_offer = (ParleyOfferMsg *)value;
+    if ((this2->mode == 6) && (this2->treaty_kind == 3)) {
+      if ((*(byte *)&civs[human_civ[0]].treaties[this2->other_civ] & 8) == 0) {
+        if ((*(byte *)&civs[human_civ[0]].treaties[this2->other_civ] & 4) == 0) {
+          if ((*(byte *)&civs[human_civ[0]].treaties[this2->other_civ] & 2) != 0) {
+            diplo_clear_treaty_flags(human_civ[0],this2->other_civ,2);
           }
         }
         else {
-          diplo_clear_treaty_flags(human_civ[0],this2->civ_id,4);
+          diplo_clear_treaty_flags(human_civ[0],this2->other_civ,4);
         }
       }
       else {
-        diplo_clear_treaty_flags(human_civ[0],this2->civ_id,8);
+        diplo_clear_treaty_flags(human_civ[0],this2->other_civ,8);
       }
       parley_add_side_dialog
-                ((ViewWindow *)this2,*(i32 *)this2->left_kind,0);
+                (this2,(i32)this2->left_kind,0);
       parley_add_side_dialog
-                ((ViewWindow *)this2,*(i32 *)this2->right_kind,1);
+                (this2,(i32)this2->right_kind,1);
     }
-    else if (*(int *)this2->received_offer != 0) {
-      this2->parley_kind = 1;
-      *(i32 *)this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
-      *(i32 *)this2->left_kind = *(i32 *)this2->shown_left_kind;
-      *(i32 *)this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
-      *(i32 *)this2->right_kind = *(i32 *)this2->shown_right_kind;
+    else if (this2->received_offer != 0) {
+      this2->mode = 1;
+      this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->mode * 2];
+      this2->left_kind = (i32)this2->shown_left_kind;
+      this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->mode * 2];
+      this2->right_kind = (i32)this2->shown_right_kind;
       parley_add_side_dialog
-                ((ViewWindow *)this2,*(i32 *)this2->left_kind,0);
+                (this2,(i32)this2->left_kind,0);
       parley_add_side_dialog
-                ((ViewWindow *)this2,*(i32 *)this2->right_kind,1);
-      ctrl_disable(*(Control **)this2->never_mind_button_2);
+                (this2,(i32)this2->right_kind,1);
+      ctrl_disable((Control *)this2->never_mind_button);
     }
   }
   return;
@@ -13763,17 +13698,17 @@ void __cdecl parley_on_never_mind(void)
 
 {
   iptr active_child;
-  ViewWindow *this2;
+  ParleyWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    this2 = (ViewWindow *)0x0;
+    this2 = (ParleyWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(active_child - 0x48);
+    this2 = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)this2->window_2);
-  switch(this2->session_mode) {
+  wnd_activate((Wnd *)((u8 *)this2 + 0x48));
+  switch(this2->mode) {
   case 3:
     break;
   case 5:
@@ -13786,23 +13721,23 @@ void __cdecl parley_on_never_mind(void)
   case 0xc:
   case 0xd:
   case 0xf:
-    this2->session_mode = 3;
-    ctrl_disable((Control *)this2->never_mind_button_value);
-    this2->shown_left_civ = parley_mode3_left_kind;
-    this2->left_civ = this2->shown_left_civ;
-    this2->caption_button_count = parley_mode3_right_kind;
-    this2->right_civ = this2->caption_button_count;
-    parley_add_side_dialog(this2,this2->left_civ,0);
-    parley_add_side_dialog(this2,this2->right_civ,1);
+    this2->mode = 3;
+    ctrl_disable((Control *)this2->never_mind_button);
+    this2->shown_left_kind = parley_mode3_left_kind;
+    this2->left_kind = this2->shown_left_kind;
+    this2->shown_right_kind = parley_mode3_right_kind;
+    this2->right_kind = this2->shown_right_kind;
+    parley_add_side_dialog(this2,this2->left_kind,0);
+    parley_add_side_dialog(this2,this2->right_kind,1);
     break;
   case 0xe:
-    this2->session_mode = 5;
-    this2->shown_left_civ = parley_mode5_left_kind;
-    this2->left_civ = this2->shown_left_civ;
-    this2->caption_button_count = parley_mode5_right_kind;
-    this2->right_civ = this2->caption_button_count;
-    parley_add_side_dialog(this2,this2->left_civ,0);
-    parley_add_side_dialog(this2,this2->right_civ,1);
+    this2->mode = 5;
+    this2->shown_left_kind = parley_mode5_left_kind;
+    this2->left_kind = this2->shown_left_kind;
+    this2->shown_right_kind = parley_mode5_right_kind;
+    this2->right_kind = this2->shown_right_kind;
+    parley_add_side_dialog(this2,this2->left_kind,0);
+    parley_add_side_dialog(this2,this2->right_kind,1);
   }
   return;
 }
@@ -13812,22 +13747,21 @@ void __cdecl parley_on_accept_offer(void)
 
 {
   int active_child;
-  WindowObjectView *parley;
+  ParleyWindow *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    parley = (WindowObjectView *)0x0;
+    parley = (ParleyWindow *)0x0;
   }
   else {
-    parley = (WindowObjectView *)(active_child - 0x48);
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)(parley + 0x12));
-  net_send_message(0x83,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),0,0,0
+  wnd_activate((Wnd *)((u8 *)parley + 0x48));
+  net_send_message(0x83,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd_block.other_civ]].id,0,0,0
                      ,0,0,0,0,0);
   dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
   popup_game_with_sprite((const char *)&str_parleyaccept2,(iptr)&popup_info_icon_sprite,0);
-  parley[0x7b].vtable = 3;
+  parley->mode = 3;
   parley_set_mode_sides(parley,1);
   return;
 }
@@ -13837,26 +13771,25 @@ void __cdecl parley_on_no_thanks(void)
 
 {
   iptr active_child;
-  ViewWindow *this2;
+  ParleyWindow *this2;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    this2 = (ViewWindow *)0x0;
+    this2 = (ParleyWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(active_child - 0x48);
+    this2 = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)this2->window_2);
-  net_send_message(0x84,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),0,0,0
+  wnd_activate((Wnd *)((u8 *)this2 + 0x48));
+  net_send_message(0x84,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd_block.other_civ]].id,0,0,0
                      ,0,0,0,0,0);
-  this2->session_mode = 2;
-  this2->shown_left_civ = (((i32 *)&parley_mode_left_kinds))[this2->session_mode * 2];
-  this2->left_civ = this2->shown_left_civ;
-  this2->caption_button_count = (((i32 *)&parley_mode_right_kinds))[this2->session_mode * 2];
-  this2->right_civ = this2->caption_button_count;
-  parley_add_side_dialog(this2,this2->left_civ,0);
-  parley_add_side_dialog(this2,this2->right_civ,1);
+  this2->mode = 2;
+  this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->mode * 2];
+  this2->left_kind = this2->shown_left_kind;
+  this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->mode * 2];
+  this2->right_kind = this2->shown_right_kind;
+  parley_add_side_dialog(this2,this2->left_kind,0);
+  parley_add_side_dialog(this2,this2->right_kind,1);
   return;
 }
 
@@ -13865,20 +13798,19 @@ void __cdecl parley_on_counter_offer(void)
 
 {
   int active_child;
-  WindowObjectView *parley;
+  ParleyWindow *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    parley = (WindowObjectView *)0x0;
+    parley = (ParleyWindow *)0x0;
   }
   else {
-    parley = (WindowObjectView *)(active_child - 0x48);
+    parley = (ParleyWindow *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)(parley + 0x12));
-  net_send_message(0x85,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),0,0,0
+  wnd_activate((Wnd *)((u8 *)parley + 0x48));
+  net_send_message(0x85,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd_block.other_civ]].id,0,0,0
                      ,0,0,0,0,0);
-  parley[0x7b].vtable = 3;
+  parley->mode = 3;
   parley_set_mode_sides(parley,1);
   return;
 }
@@ -13900,8 +13832,8 @@ void __cdecl chat_on_mute_checkbox(int ctrl_id)
   wnd_activate((Wnd *)(chat_wnd2 + 0x48));
   if ((0x428 < ctrl_id) && (ctrl_id < 0x430)) {
     checked = checkbox_is_checked
-                      (*(Control **)(((i8 *)&chat_wnd_block.chat_mute_checkboxes) + (ctrl_id - 0x428) * 4));
-    *(i32 *)(((i8 *)&chat_wnd_block.chat_muted_civs) + (ctrl_id - 0x428) * 4) = checked;
+                      ((Control *)chat_wnd_block.mute_checkboxes[(ctrl_id - 0x428)]);
+    chat_wnd_block.muted_civs[(ctrl_id - 0x428)] = checked;
   }
   return;
 }
@@ -13924,16 +13856,16 @@ void __cdecl chat_on_send_checkbox(int ctrl_id)
   wnd_activate((Wnd *)(chat_wnd2 + 0x48));
   switch(ctrl_id) {
   case 0x415:
-    chat_wnd_block.chat_remain_anonymous = checkbox_is_checked(chat_wnd_block.chat_anonymous_checkbox);
+    chat_wnd_block.remain_anonymous = checkbox_is_checked((Control *)chat_wnd_block.anonymous_checkbox);
     break;
   case 0x416:
-    chat_wnd_block.chat_broadcast_all = checkbox_is_checked(chat_wnd_block.chat_broadcast_checkbox);
-    if (chat_wnd_block.chat_broadcast_all != 0) {
+    chat_wnd_block.broadcast_all = checkbox_is_checked((Control *)chat_wnd_block.broadcast_checkbox);
+    if (chat_wnd_block.broadcast_all != 0) {
       for (slot = 1; slot < 8; slot++) {
-        if (*(int *)(((i8 *)&chat_wnd_block.chat_send_checkboxes) + slot * 4) != 0) {
-          checkbox_set_checked(*(Control **)(((i8 *)&chat_wnd_block.chat_send_checkboxes) + slot * 4),1);
-          ctrl_show_and_redraw(*(Control **)(((i8 *)&chat_wnd_block.chat_send_checkboxes) + slot * 4));
-          *(i32 *)(((i8 *)&chat_wnd_block.chat_send_to_civs) + slot * 4) = 1;
+        if (chat_wnd_block.send_checkboxes[slot] != 0) {
+          checkbox_set_checked((Control *)chat_wnd_block.send_checkboxes[slot],1);
+          ctrl_show_and_redraw((Control *)chat_wnd_block.send_checkboxes[slot]);
+          chat_wnd_block.send_to_civs[slot] = 1;
         }
       }
     }
@@ -13946,59 +13878,59 @@ void __cdecl chat_on_send_checkbox(int ctrl_id)
   case 0x41c:
   case 0x41d:
     ctrl_id -= 0x416;
-    checked = checkbox_is_checked(*(Control **)(((i8 *)&chat_wnd_block.chat_send_checkboxes) + ctrl_id * 4));
-    *(i32 *)(((i8 *)&chat_wnd_block.chat_send_to_civs) + ctrl_id * 4) = checked;
-    if ((*(int *)(((i8 *)&chat_wnd_block.chat_send_to_civs) + ctrl_id * 4) == 0) && (chat_wnd_block.chat_broadcast_all != 0)) {
-      checkbox_set_checked(chat_wnd_block.chat_broadcast_checkbox,0);
-      ctrl_show_and_redraw(chat_wnd_block.chat_broadcast_checkbox);
-      chat_wnd_block.chat_broadcast_all = 0;
+    checked = checkbox_is_checked((Control *)chat_wnd_block.send_checkboxes[ctrl_id]);
+    chat_wnd_block.send_to_civs[ctrl_id] = checked;
+    if ((chat_wnd_block.send_to_civs[ctrl_id] == 0) && (chat_wnd_block.broadcast_all != 0)) {
+      checkbox_set_checked((Control *)chat_wnd_block.broadcast_checkbox,0);
+      ctrl_show_and_redraw((Control *)chat_wnd_block.broadcast_checkbox);
+      chat_wnd_block.broadcast_all = 0;
     }
     break;
   case 0x430:
-    chat_wnd_block.chat_mute_anonymous = checkbox_is_checked(chat_wnd_block.chat_mute_anonymous_checkbox);
+    chat_wnd_block.mute_anonymous = checkbox_is_checked((Control *)chat_wnd_block.mute_anonymous_checkbox);
   }
   return;
 }
 
 /* 0052e971 auto */
-void __thiscall parley_update_buttons(ViewWindow *self)
+void __thiscall parley_update_buttons(ParleyWindow *self)
 
 {
-  if ((self->rates_clamped != 0) && (self->mode2_button_value != 0)) {
-    if (self->session_mode != 2) {
-      control_hide((Control *)self->conceal_button_value);
-      ctrl_disable((Control *)self->conceal_button_value);
-      control_hide((Control *)self->reveal_button_value);
-      ctrl_disable((Control *)self->reveal_button_value);
+  if ((self->mode_button != 0) && (self->mode2_button != 0)) {
+    if (self->mode != 2) {
+      control_hide((Control *)self->conceal_button);
+      ctrl_disable((Control *)self->conceal_button);
+      control_hide((Control *)self->reveal_button);
+      ctrl_disable((Control *)self->reveal_button);
     }
-    switch(self->session_mode) {
+    switch(self->mode) {
     case 1:
     case 2:
-      control_hide((Control *)self->mode2_button_value);
-      ctrl_disable((Control *)self->mode2_button_value);
-      ctrl_show_and_redraw((Control *)self->rates_clamped);
-      ctrl_disable((Control *)self->rates_clamped);
-      if (self->session_mode == 2) {
-        if ((self->left_side_accepted == '\0') && (self->left_side_confirmed == '\0')) {
-          control_hide((Control *)self->conceal_button_value);
-          ctrl_disable((Control *)self->conceal_button_value);
-          ctrl_show_and_redraw((Control *)self->reveal_button_value);
-          ctrl_enable((Control *)self->reveal_button_value);
+      control_hide((Control *)self->mode2_button);
+      ctrl_disable((Control *)self->mode2_button);
+      ctrl_show_and_redraw((Control *)self->mode_button);
+      ctrl_disable((Control *)self->mode_button);
+      if (self->mode == 2) {
+        if ((self->local_units_revealed == '\0') && (self->local_cities_revealed == '\0')) {
+          control_hide((Control *)self->conceal_button);
+          ctrl_disable((Control *)self->conceal_button);
+          ctrl_show_and_redraw((Control *)self->reveal_button);
+          ctrl_enable((Control *)self->reveal_button);
         }
         else {
-          ctrl_show_and_redraw((Control *)self->conceal_button_value);
-          ctrl_enable((Control *)self->conceal_button_value);
-          control_hide((Control *)self->reveal_button_value);
-          ctrl_disable((Control *)self->reveal_button_value);
+          ctrl_show_and_redraw((Control *)self->conceal_button);
+          ctrl_enable((Control *)self->conceal_button);
+          control_hide((Control *)self->reveal_button);
+          ctrl_disable((Control *)self->reveal_button);
         }
       }
       break;
     case 3:
     case 5:
-      control_hide((Control *)self->mode2_button_value);
-      ctrl_disable((Control *)self->mode2_button_value);
-      ctrl_show_and_redraw((Control *)self->rates_clamped);
-      ctrl_enable((Control *)self->rates_clamped);
+      control_hide((Control *)self->mode2_button);
+      ctrl_disable((Control *)self->mode2_button);
+      ctrl_show_and_redraw((Control *)self->mode_button);
+      ctrl_enable((Control *)self->mode_button);
       break;
     case 6:
     case 7:
@@ -14009,25 +13941,25 @@ void __thiscall parley_update_buttons(ViewWindow *self)
     case 0xc:
     case 0xd:
     case 0xf:
-      ctrl_show_and_redraw((Control *)self->mode2_button_value);
-      control_hide((Control *)self->rates_clamped);
-      ctrl_disable((Control *)self->rates_clamped);
-      if (self->timer_last_value == 0) {
-        ctrl_disable((Control *)self->mode2_button_value);
+      ctrl_show_and_redraw((Control *)self->mode2_button);
+      control_hide((Control *)self->mode_button);
+      ctrl_disable((Control *)self->mode_button);
+      if (self->side_selected[1] == 0) {
+        ctrl_disable((Control *)self->mode2_button);
       }
       else {
-        ctrl_enable((Control *)self->mode2_button_value);
+        ctrl_enable((Control *)self->mode2_button);
       }
       break;
     case 0xe:
-      ctrl_show_and_redraw((Control *)self->mode2_button_value);
-      control_hide((Control *)self->rates_clamped);
-      ctrl_disable((Control *)self->rates_clamped);
-      if ((self->show_turn_status == 0) || (self->timer_last_value == 0)) {
-        ctrl_disable((Control *)self->mode2_button_value);
+      ctrl_show_and_redraw((Control *)self->mode2_button);
+      control_hide((Control *)self->mode_button);
+      ctrl_disable((Control *)self->mode_button);
+      if ((self->side_selected[0] == 0) || (self->side_selected[1] == 0)) {
+        ctrl_disable((Control *)self->mode2_button);
       }
       else {
-        ctrl_enable((Control *)self->mode2_button_value);
+        ctrl_enable((Control *)self->mode2_button);
       }
     }
   }
@@ -14035,7 +13967,7 @@ void __thiscall parley_update_buttons(ViewWindow *self)
 }
 
 /* 0052ec47 auto */
-iptr __thiscall parley_find_unit_by_id(WindowObjectView *self,int unit_id)
+iptr __thiscall parley_find_unit_by_id(ParleyWindow *self,int unit_id)
 
 {
   short x2;
@@ -14078,7 +14010,7 @@ check_stack_result:
 }
 
 /* 0052ed95 auto */
-iptr __thiscall parley_find_city_by_id(WindowObjectView *self,int city_id)
+iptr __thiscall parley_find_city_by_id(ParleyWindow *self,int city_id)
 
 {
   iptr city;
@@ -14261,7 +14193,7 @@ void __cdecl mp_window_drag_begin(void)
     net_send_message(0x5d,0xff,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(5000);
   }
-  setup_picwnd_block.mp_window_drag_hook = SetWindowsHookExA(7,(HOOKPROC)((void *)(iptr)mp_window_drag_mouse_hook),err_report_ctx_block.app_hinstance,0);
+  setup_picwnd_block.mp_window_drag_hook = SetWindowsHookExA(7,(HOOKPROC)((void *)mp_window_drag_mouse_hook),err_report_ctx_block.app_hinstance,0);
   return;
 }
 
@@ -14288,7 +14220,7 @@ void __cdecl mp_window_drag_end(void)
 void __cdecl mp_release_mouse_capture(void)
 
 {
-  iptr wnd;
+  NativeWindow *wnd;
   UINT Msg;
   WPARAM wParam;
   LPARAM lParam;
@@ -14299,7 +14231,7 @@ void __cdecl mp_release_mouse_capture(void)
       wParam = 0;
       Msg = 0x202;
       wnd = wnd_get_window((*(WndBase * *)&mp_window_drag_wnd));
-      PostMessageA(*(HWND *)(wnd + 4),Msg,wParam,lParam);
+      PostMessageA(wnd->hwnd,Msg,wParam,lParam);
       wnd_release_capture((*(WndBase * *)&mp_window_drag_wnd));
     }
     mp_window_drag_active = '\0';
@@ -14322,7 +14254,7 @@ void __cdecl mp_mouse_watchdog_tick(i32 timer_id,i32 timer_arg)
 }
 
 /* 0056e270 auto */
-LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *self)
+LobbyList * __thiscall lobby_list_ctor(LobbyList *self)
 
 {
   u8 *slot_ptr;
@@ -14331,7 +14263,7 @@ LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *self)
   self->next_id = 1;
   self->entries = 0;
   for (i = 0; i < 7; i++) {
-    slot_ptr = self->player_slots_area + i * 4 + 0x28;
+    slot_ptr = (u8 *)&self->drop_counts[i];
     slot_ptr[0] = '\0';
     slot_ptr[1] = '\0';
     slot_ptr[2] = '\0';
@@ -14344,7 +14276,7 @@ LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *self)
 void __thiscall lobby_list_dtor(void *self)
 
 {
-  net_free_game_list(((iptr *)&net_session_block.net_session));
+  net_free_game_list(&net_session_block);
   return;
 }
 
@@ -14384,15 +14316,15 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
       new_dialog = (uptr)(dialog_ctor(this_00,0x4000));
     }
     seh_state = 0xffffffff;
-    self->dialog = new_dialog;
+    self->dialog = (Dialog *)new_dialog;
     if (self->dialog == 0) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_pplayerpopup_null,(iptr)&str_d_ss_franklinton_startup_playerbox_cpp,0x34);
     }
-    *(i8 **)(((LobbyListExt *)self)->saved_button_labels) = dialog_button_labels[0];
-    str_clear((char *)(self + 1));
-    str_append_label((iptr)(self + 1),0x28b);
-    dialog_button_labels[0] = (i8 *)(self + 1);
-    dlg_reset((Dialog *)self->dialog,0x81801);
+    self->saved_button_label = dialog_button_labels[0];
+    str_clear(self->title);
+    str_append_label((iptr)self->title,0x28b);
+    dialog_button_labels[0] = (i8 *)self->title;
+    dlg_reset(self->dialog,0x81801);
     text_clear();
     text_append_label(0x288);
     if (launch_mode == 0) {
@@ -14406,8 +14338,8 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
     lobby_add_waiting_entry(self);
     dialog_set_listbox((DialogTextView *)self->dialog,7,0x1b7,0);
     dialog_set_default_choice((DialogOptionList *)self->dialog,self->next_id - 1);
-    dialog_render((Dialog *)self->dialog);
-    wnd_set_modal_idle_callback((ModalMenuWindow *)(*(int *)self->dialog + 0x48),(iptr)lobby_dialog_idle);
+    dialog_render(self->dialog);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)((int)self->dialog->surf_wnd + 0x48),(iptr)lobby_dialog_idle);
     if (net_session_block.net_lobby_launch_mode == 2) {
       dbg_log((const char *)&str_igz_sending_dplsys_connectionsettingsrea);
       result = XD_LobbySendMessage(1);
@@ -14422,32 +14354,32 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
     }
     while( true ) {
       net_send_message(2,0,0,0,0,0,0,0,0,0);
-      flags_ptr = (uint *)(self->dialog + 0x3c);
+      flags_ptr = (uint *)((iptr)self->dialog + 0x3c);
       *flags_ptr = *flags_ptr & 0xfffffbff;
-      *(i32 *)(self->dialog + 0xd8) = 0;
-      *(i32 *)(self->dialog + 0xdc) = *(i32 *)(self->dialog + 0xd8);
-      result = dlg_show_modal((Dialog *)self->dialog,0);
-      if (*(int *)(self->dialog + 0xdc) != 1) break;
+      self->dialog->result_id = 0;
+      self->dialog->result_extra = (i32)self->dialog->result_id;
+      result = dlg_show_modal(self->dialog,0);
+      if ((int)self->dialog->result_extra != 1) break;
       entry = lobby_find_entry_by_id(self,result);
       result = lobby_slot_for_entry_id(self,result);
       if ((entry != 0) && (waiting_entry = lobby_find_waiting_entry(self), waiting_entry == 0)) {
-        net_send_message(5,*(i32 *)(((i8 *)&net_session_block.net_player_slots) + result * 0x54),0,0,0,0,0,0,0,0);
+        net_send_message(5,net_session_block.net_slots[result].id,0,0,0,0,0,0,0,0);
         XD_FlushSendBuffer(180000);
-        XD_ServerCloseConnection((ushort)*(i32 *)(((i8 *)&net_session_block.net_player_slots) + result * 0x54));
+        XD_ServerCloseConnection((ushort)net_session_block.net_slots[result].id);
         ret = lobby_entry_neighbor(self,entry);
-        *(i32 *)(self->dialog + 0x220) = ret;
+        self->dialog->selected_option = (DialogOption *)ret;
         lobby_remove_entry(self,(void *)entry);
         net_remove_player
-                  ((NetSession *)((iptr *)&net_session_block.net_session),*(i32 *)(((i8 *)&net_session_block.net_player_slots) + result * 0x54));
+                  (&net_session_block,net_session_block.net_slots[result].id);
         lobby_add_waiting_entry(self);
       }
     }
     if (result < 0) {
       net_send_message(0xb,0xff,0,0,0,0,0,0,0,0);
-      dialog_button_labels[0] = *(i8 **)(((LobbyListExt *)self)->saved_button_labels);
+      dialog_button_labels[0] = self->saved_button_label;
       lobby_clear_player_list(self);
-      if ((Dialog *)self->dialog != (Dialog *)0x0) {
-        dialog_scalar_dtor((Dialog *)self->dialog,1);
+      if (self->dialog != (Dialog *)0x0) {
+        dialog_scalar_dtor(self->dialog,1);
       }
       self->dialog = 0;
       XD_StopConnections();
@@ -14458,11 +14390,11 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
     crt_strcpy(((i8 *)&net_session_block.net_game_name),((i8 *)&prefs_main_menu_choice_block.prefs_net_game_name));
     crt_strcpy(((i8 *)&net_session_block.net_local_player_name),((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name));
     crt_strcpy(((i8 *)&net_session_block.net_host_player_name),((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name));
-    dialog_close((Dialog *)self->dialog);
-    dialog_button_labels[0] = *(i8 **)(((LobbyListExt *)self)->saved_button_labels);
+    dialog_close(self->dialog);
+    dialog_button_labels[0] = self->saved_button_label;
     lobby_clear_player_list(self);
-    if ((Dialog *)self->dialog != (Dialog *)0x0) {
-      dialog_scalar_dtor((Dialog *)self->dialog,1);
+    if (self->dialog != (Dialog *)0x0) {
+      dialog_scalar_dtor(self->dialog,1);
     }
     self->dialog = 0;
     wnd_flush_paint();
@@ -14509,7 +14441,7 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
         goto return_ret;
       }
     }
-    *(i32 *)(((i8 *)&net_session_block.net_civ_slots) + game.player_civ * 4) = 0;
+    net_session_block.net_civ_slots[game.player_civ] = 0;
     net_session_block.net_slot_civs[0] = (int)game.player_civ;
     net_session_block.net_slot_active_flags[0] = 1;
     net_session_block.net_slot_host_flags[0] = 1;
@@ -14577,7 +14509,7 @@ void __cdecl lobby_wait_civs_chosen_idle(void)
   int slot;
   int pending_count;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   pending_count = 0;
   for (slot = 1; slot < 7; slot++) {
     if (((((i8 *)&net_session_block.net_slot_active_flags))[slot * 0x54] == 1) && ((((i32 *)&net_session_block.net_slot_civs))[slot * 0x15] == -1)) {
@@ -14597,7 +14529,7 @@ void __cdecl lobby_wait_civs_chosen_idle(void)
 void __cdecl lobby_dialog_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   return;
 }
 
@@ -14632,9 +14564,9 @@ void __thiscall lobby_clear_player_list(LobbyList *self)
     entry = next;
   }
   self->entries = 0;
-  *(i32 *)(self->dialog + 0x28) = 0;
-  *(i32 *)(self->dialog + 0x228) = 0;
-  *(i32 *)(self->dialog + 0x220) = 0;
+  self->dialog->option_count = 0;
+  self->dialog->option_list = 0;
+  self->dialog->selected_option = 0;
   return;
 }
 
@@ -14646,8 +14578,8 @@ void __thiscall lobby_remove_entry(LobbyList *self,void *entry)
   
   if (entry != (void *)0x0) {
     if (*(int *)((int)entry + 0x14) == 0) {
-      *(i32 *)(self->dialog + 0x228) = *(i32 *)((int)entry + 0x10);
-      self->entries = *(uptr *)(self->dialog + 0x228);
+      self->dialog->option_list = (DialogOption *)*(i32 *)((int)entry + 0x10);
+      self->entries = (uptr)self->dialog->option_list;
     }
     else {
       *(i32 *)(*(int *)((int)entry + 0x14) + 0x10) = *(i32 *)((int)entry + 0x10);
@@ -14657,7 +14589,7 @@ void __thiscall lobby_remove_entry(LobbyList *self,void *entry)
     }
     operator_delete(*(void **)((int)entry + 8));
     operator_delete(entry);
-    count_ptr = (int *)(self->dialog + 0x28);
+    count_ptr = (int *)((iptr)self->dialog + 0x28);
     *count_ptr = *count_ptr - 1;
   }
   return;
@@ -14685,7 +14617,7 @@ uint * __thiscall lobby_add_player_entry(LobbyList *self,const char *name2,uint 
   entry[5] = tail2;
   if (tail2 == 0) {
     self->entries = (uptr)entry;
-    *(uint **)(self->dialog + 0x228) = entry;
+    *(uint **)((iptr)self->dialog + 0x228) = entry;
   }
   else {
     *(uint **)(tail2 + 0x10) = entry;
@@ -14700,18 +14632,18 @@ uint * __thiscall lobby_add_player_entry(LobbyList *self,const char *name2,uint 
   }
   entry[1] = entry_id;
   entry[3] = 0;
-  width = font_text_width(*(GameFont **)(self->dialog + 8),(const char *)entry[2]);
+  width = font_text_width((GameFont *)self->dialog->body_font,(const char *)entry[2]);
   max_width = dialog_option_icon_width((DialogCore *)self->dialog);
-  width = width + max_width + *(int *)(self->dialog + 0xac) + 5;
-  max_width = *(int *)(self->dialog + 0x118);
+  width = width + max_width + (int)self->dialog->option_extra_width + 5;
+  max_width = (int)self->dialog->option_width;
   if (max_width <= width) {
     max_width = width;
   }
-  *(int *)(self->dialog + 0x118) = max_width;
-  count_ptr = (int *)(self->dialog + 0x28);
+  self->dialog->option_width = max_width;
+  count_ptr = (int *)((iptr)self->dialog + 0x28);
   *count_ptr = *count_ptr + 1;
-  *(uptr *)(self->dialog + 0x228) = self->entries;
-  *(i32 *)(self->dialog + 0x210) = *(i32 *)(self->dialog + 0x228);
+  self->dialog->option_list = (DialogOption *)self->entries;
+  self->dialog->list_top_option[0] = self->dialog->option_list;
   return entry;
 }
 
@@ -14724,7 +14656,7 @@ void __cdecl lobby_refresh_player_list(void)
   uptr entry;
   
   if (net_session_block.net_lobby_list != (LobbyList *)0x0) {
-    selected_id = *(int *)(*(int *)(net_session_block.net_lobby_list->dialog + 0x220) + 4);
+    selected_id = *(int *)((int)net_session_block.net_lobby_list->dialog->selected_option + 4);
     lobby_clear_player_list(net_session_block.net_lobby_list);
     if (net_session_block.net_player_count[0] == 0) {
       lobby_add_waiting_entry(net_session_block.net_lobby_list);
@@ -14732,13 +14664,13 @@ void __cdecl lobby_refresh_player_list(void)
     else {
       for (slot = 1; slot < 7; slot++) {
         if ((((i8 *)&net_session_block.net_slot_active_flags))[slot * 0x54] != '\0') {
-          if (*(int *)(((i8 *)&net_session_block.net_slot_lobby_ids) + slot * 0x54) == 0) {
-            *(u32 *)(((i8 *)&net_session_block.net_slot_lobby_ids) + slot * 0x54) = net_session_block.net_lobby_list->next_id;
+          if (net_session_block.net_slots[slot].lobby_id == 0) {
+            net_session_block.net_slots[slot].lobby_id = net_session_block.net_lobby_list->next_id;
             net_session_block.net_lobby_list->next_id++;
           }
           lobby_add_player_entry
                     (net_session_block.net_lobby_list,(const char *)(((i8 *)&net_session_block.net_slot_player_names) + slot * 0x54),
-                     *(i32 *)(((i8 *)&net_session_block.net_slot_lobby_ids) + slot * 0x54));
+                     net_session_block.net_slots[slot].lobby_id);
         }
       }
       lobby_add_waiting_entry(net_session_block.net_lobby_list);
@@ -14755,11 +14687,11 @@ void __cdecl lobby_refresh_player_list(void)
         entry = net_session_block.net_lobby_list->entries;
       }
     }
-    *(uptr *)(net_session_block.net_lobby_list->dialog + 0x228) = net_session_block.net_lobby_list->entries;
-    *(i32 *)(net_session_block.net_lobby_list->dialog + 0x210) = *(i32 *)(net_session_block.net_lobby_list->dialog + 0x228);
+    net_session_block.net_lobby_list->dialog->option_list = (DialogOption *)net_session_block.net_lobby_list->entries;
+    net_session_block.net_lobby_list->dialog->list_top_option[0] = net_session_block.net_lobby_list->dialog->option_list;
     dialog_set_default_choice
               ((DialogOptionList *)net_session_block.net_lobby_list->dialog,*(iptr *)(entry + 4));
-    dialog_render((Dialog *)net_session_block.net_lobby_list->dialog);
+    dialog_render(net_session_block.net_lobby_list->dialog);
   }
   return;
 }
@@ -14817,7 +14749,7 @@ int __thiscall lobby_slot_for_entry_id(LobbyList *self,int entry_id)
 {
   int slot;
   
-  for (slot = 0; (slot < 7 && (*(int *)(((i8 *)&net_session_block.net_slot_lobby_ids) + slot * 0x54) != entry_id));
+  for (slot = 0; (slot < 7 && (net_session_block.net_slots[slot].lobby_id != entry_id));
       slot = slot + 1) {
   }
   return slot;
@@ -14825,7 +14757,7 @@ int __thiscall lobby_slot_for_entry_id(LobbyList *self,int entry_id)
 
 /* 00587a90 auto */
 void __thiscall
-parley_create_city_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_cities)
+parley_create_city_list_pane(ParleyWindow *self,RECT *rect,int pane,i32 own_cities)
 
 {
   u8 *field_ptr;
@@ -14842,41 +14774,41 @@ parley_create_city_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_cit
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  rect2.left = *(int *)rect;
-  rect2.top = *(i32 *)(rect + 4);
-  rect2.right = *(int *)(rect + 8);
-  rect2.bottom = *(i32 *)(rect + 0xc);
+  rect2.left = rect->left;
+  rect2.top = rect->top;
+  rect2.right = rect->right;
+  rect2.bottom = rect->bottom;
   *(i32 *)(((i8 *)&sprite_picker_sprite_block.parley_pane_own_cities) + pane * 4) = own_cities;
   parley_build_city_list(self,pane,0);
-  if (*(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 + 0x4c) < 1) {
-    field_ptr = ((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x30;
+  if (self->list_counts[pane] < 1) {
+    field_ptr = (u8 *)&self->list_first_row[pane];
     field_ptr[0] = 0xff;
     field_ptr[1] = 0xff;
     field_ptr[2] = 0xff;
     field_ptr[3] = 0xff;
   }
   else {
-    field_ptr = ((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x30;
+    field_ptr = (u8 *)&self->list_first_row[pane];
     field_ptr[0] = '\0';
     field_ptr[1] = '\0';
     field_ptr[2] = '\0';
     field_ptr[3] = '\0';
   }
-  field_ptr = ((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 + 0x44;
+  field_ptr = (u8 *)&self->list_columns[pane];
   field_ptr[0] = 4;
   field_ptr[1] = '\0';
   field_ptr[2] = '\0';
   field_ptr[3] = '\0';
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x24) = *(i32 *)rect;
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x28) = *(i32 *)(rect + 4);
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x2c) = *(i32 *)(rect + 8);
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x30) = *(i32 *)(rect + 0xc);
-  if (*(int *)(((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x40) <
-      *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 + 0x4c)) {
+  self->list_rects[pane * 4] = rect->left;
+  self->list_rects[pane * 4 + 1] = rect->top;
+  self->list_rects[pane * 4 + 2] = rect->right;
+  self->list_rects[pane * 4 + 3] = rect->bottom;
+  if (self->list_rows[pane] <
+      self->list_counts[pane]) {
     scroll_width = GetSystemMetrics(2);
     right = rect2.right;
-    *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x2c) =
-         *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x2c) - scroll_width;
+    self->list_rects[pane * 4 + 2] =
+         (int)self->list_rects[pane * 4 + 2] - scroll_width;
     rect2.left = GetSystemMetrics(2);
     rect2.left = right - rect2.left;
     new_ctrl = (Control *)(operator_new(0x40));
@@ -14888,29 +14820,29 @@ parley_create_city_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_cit
       scrollbar = (i32)(scrollbar_ctor(new_ctrl));
     }
     seh_state = 0xffffffff;
-    *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20) = scrollbar;
-    if (self == (ListPaneWindow *)0x0) {
+    self->list_scrollbars[pane] = scrollbar;
+    if (self == (ParleyWindow *)0x0) {
       scroll_parent = (u8 *)0x0;
     }
     else {
-      scroll_parent = self->window_2;
+      scroll_parent = ((u8 *)self + 0x48);
     }
     scrollbar_create
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),(iptr)scroll_parent,
+              ((Control *)self->list_scrollbars[pane],(iptr)scroll_parent,
                pane + 0x420,(iptr)&rect2,1);
     scrollbar_set_range
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),0,
-               *(int *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 + 0x4c) -
-               *(int *)(((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x40));
-    scrollbar_set_pos(*(ClickControl **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),0);
+              ((Control *)self->list_scrollbars[pane],0,
+               self->list_counts[pane] -
+               self->list_rows[pane]);
+    scrollbar_set_pos((ClickControl *)self->list_scrollbars[pane],0);
     scrollbar_set_page_size
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),
-               *(i32 *)(((PictureWindow *)self)->parley_pane_arrays_base + pane * 4 + 0x40));
+              ((Control *)self->list_scrollbars[pane],
+               self->list_rows[pane]);
     scrollbar_set_callback
-              (*(Control **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),
+              ((Control *)self->list_scrollbars[pane],
                (pane == 0 ? (iptr)parley_city_list_scroll_local : (iptr)parley_city_list_scroll_remote));
     scrollbar_set_track_callback
-              (*(ScrollbarTrackSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x20),
+              ((ScrollbarTrackSetView *)self->list_scrollbars[pane],
                (pane == 0 ? (iptr)parley_city_list_scroll_local : (iptr)parley_city_list_scroll_remote));
   }
   new_ctrl = (Control *)(operator_new(0x40));
@@ -14922,18 +14854,18 @@ parley_create_city_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_cit
     hotspot = (i32)(hotspot_ctor(new_ctrl));
   }
   seh_state = 0xffffffff;
-  *(i32 *)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x18) = hotspot;
-  if (self == (ListPaneWindow *)0x0) {
+  self->list_hotspots[pane] = hotspot;
+  if (self == (ParleyWindow *)0x0) {
     hotspot_parent = (u8 *)0x0;
   }
   else {
-    hotspot_parent = self->window_2;
+    hotspot_parent = ((u8 *)self + 0x48);
   }
   hotspot_create
-            (*(ClickControl **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x18),(iptr)hotspot_parent,
-             pane + 0x422,(iptr)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 0x10 + 0x24));
-  hotspot_set_click_callback(*(HotspotClickSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x18),(iptr)parley_city_list_click);
-  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(((PediaRedrawView *)self)->pedia_pane_layout + pane * 4 - 0x18),(iptr)parley_city_list_click);
+            ((ClickControl *)self->list_hotspots[pane],(iptr)hotspot_parent,
+             pane + 0x422,(iptr)(((u8 *)self + 0x39c) + pane * 0x10 + 0x24));
+  hotspot_set_click_callback((HotspotClickSetView *)self->list_hotspots[pane],(iptr)parley_city_list_click);
+  hotspot_set_dblclick_callback((HotspotDblClickSetView *)self->list_hotspots[pane],(iptr)parley_city_list_click);
   parley_draw_city_list(pane);
   return;
 }
@@ -14959,23 +14891,21 @@ void __cdecl parley_reveal_city_info(void)
 
 {
   iptr child;
-  iptr parley_wnd2;
+  ParleyWindow *parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
     parley_wnd2 = 0;
   }
   else {
-    parley_wnd2 = child - 0x48;
+    parley_wnd2 = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(parley_wnd2 + 0x48));
-  ctrl_show_and_redraw(*(Control **)(parley_wnd2 + 0x3a4));
-  control_hide(*(Control **)(parley_wnd2 + 0x39c));
-  *(i8 *)(parley_wnd2 + 0x3be) = 1;
-  net_send_message(0xa5,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) +
-                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(parley_wnd2 + 0x118) * 4) * 0x54),
-                     human_civ[0],(int)*(char *)(parley_wnd2 + 0x3be),0,0,0,0,0,0);
+  wnd_activate((Wnd *)((iptr)parley_wnd2 + 0x48));
+  ctrl_show_and_redraw((Control *)parley_wnd2->info_hide_buttons[0]);
+  control_hide((Control *)parley_wnd2->info_show_buttons[0]);
+  parley_wnd2->local_cities_revealed = 1;
+  net_send_message(0xa5,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd2->other_civ]].id,
+                     human_civ[0],(int)(char)parley_wnd2->local_cities_revealed,0,0,0,0,0,0);
   parley_draw_city_list(0);
   return;
 }
@@ -14985,23 +14915,21 @@ void __cdecl parley_hide_city_info(void)
 
 {
   iptr child;
-  iptr parley_wnd2;
+  ParleyWindow *parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
     parley_wnd2 = 0;
   }
   else {
-    parley_wnd2 = child - 0x48;
+    parley_wnd2 = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(parley_wnd2 + 0x48));
-  ctrl_show_and_redraw(*(Control **)(parley_wnd2 + 0x39c));
-  control_hide(*(Control **)(parley_wnd2 + 0x3a4));
-  *(i8 *)(parley_wnd2 + 0x3be) = 0;
-  net_send_message(0xa6,*(i32 *)
-                           (((i8 *)&net_session_block.net_player_slots) +
-                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(parley_wnd2 + 0x118) * 4) * 0x54),
-                     human_civ[0],(int)*(char *)(parley_wnd2 + 0x3be),0,0,0,0,0,0);
+  wnd_activate((Wnd *)((iptr)parley_wnd2 + 0x48));
+  ctrl_show_and_redraw((Control *)parley_wnd2->info_show_buttons[0]);
+  control_hide((Control *)parley_wnd2->info_hide_buttons[0]);
+  parley_wnd2->local_cities_revealed = 0;
+  net_send_message(0xa6,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd2->other_civ]].id,
+                     human_civ[0],(int)(char)parley_wnd2->local_cities_revealed,0,0,0,0,0,0);
   parley_draw_city_list(0);
   return;
 }
@@ -15011,22 +14939,20 @@ void __cdecl parley_request_city_info(void)
 
 {
   iptr child;
-  ViewWindow *window;
+  ParleyWindow *window;
   const char *civ_plural;
   
   child = wnd_get_active_child();
   if (child == 0) {
-    window = (ViewWindow *)0x0;
+    window = (ParleyWindow *)0x0;
   }
   else {
-    window = (ViewWindow *)(child - 0x48);
+    window = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)window->window_2);
+  wnd_activate((Wnd *)((u8 *)window + 0x48));
   civ_plural = (civ_name_plural(human_civ[0]));
   text_set_string_arg(0,civ_plural);
-  net_send_text_args(0x65,*(i32 *)
-                          (((i8 *)&net_session_block.net_player_slots) +
-                          *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),1,0,
+  net_send_text_args(0x65,net_session_block.net_slots[net_session_block.net_civ_slots[(int)parley_wnd_block.other_civ]].id,1,0,
                     human_civ[0],0);
   return;
 }
@@ -15036,17 +14962,17 @@ void __cdecl parley_city_list_scroll(int pane,i32 pos)
 
 {
   int child;
-  iptr parley_wnd2;
+  ParleyWindow *parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
     parley_wnd2 = 0;
   }
   else {
-    parley_wnd2 = child - 0x48;
+    parley_wnd2 = (ParleyWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(parley_wnd2 + 0x48));
-  *(i32 *)(parley_wnd2 + 0x10410 + pane * 4) = pos;
+  wnd_activate((Wnd *)((iptr)parley_wnd2 + 0x48));
+  parley_wnd2->list_first_row[pane] = pos;
   parley_draw_city_list(pane);
   return;
 }
@@ -15063,58 +14989,58 @@ void __cdecl parley_city_list_click(int control_id)
   i32 cursor_y;
   i32 cursor_x;
   int pane;
-  iptr parley_wnd2;
+  ParleyWindow *parley_wnd2;
   
   hit_row = wnd_get_active_child();
   if (hit_row == 0) {
     parley_wnd2 = 0;
   }
   else {
-    parley_wnd2 = hit_row - 0x48;
+    parley_wnd2 = (ParleyWindow *)(hit_row - 0x48);
   }
-  wnd_activate((Wnd *)(parley_wnd2 + 0x48));
+  wnd_activate((Wnd *)((iptr)parley_wnd2 + 0x48));
   pane = control_id - 0x422;
   wnd_get_cursor_pos
-            ((WndBase *)(parley_wnd2 + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
-  if (((*(int *)(parley_wnd2 + 1000 + pane * 4) != 0) &&
+            ((WndBase *)((iptr)parley_wnd2 + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
+  if (((parley_wnd2->list_counts[pane] != 0) &&
       (hit_row = parley_city_list_hit_test(cursor_x,cursor_y,pane), 0 < hit_row)) &&
-     (hit_row < *(int *)(parley_wnd2 + 1000 + pane * 4))) {
-    key_down = wnd_is_shift_down((void *)(parley_wnd2 + 0x48));
+     (hit_row < parley_wnd2->list_counts[pane])) {
+    key_down = wnd_is_shift_down((void *)((iptr)parley_wnd2 + 0x48));
     if (key_down == 0) {
-      key_down = wnd_is_ctrl_down((void *)(parley_wnd2 + 0x48));
+      key_down = wnd_is_ctrl_down((void *)((iptr)parley_wnd2 + 0x48));
       if (key_down == 0) {
-        for (row = 0; row < *(int *)(parley_wnd2 + 1000 + pane * 4);
+        for (row = 0; row < parley_wnd2->list_counts[pane];
             row = row + 1) {
           if (row != hit_row) {
-            *(i32 *)(pane * 0x2004 + row * 4 + 0x8400 + parley_wnd2) = 0;
+            parley_wnd2->list_selected[pane * 0x801 + row] = 0;
           }
         }
-        *(int *)(parley_wnd2 + 0x10418 + pane * 4) = hit_row;
-        sel_flag = (uint *)(pane * 0x2004 + hit_row * 4 + 0x8400 + parley_wnd2);
+        parley_wnd2->list_anchor_row[pane] = hit_row;
+        sel_flag = (uint *)(pane * 0x2004 + hit_row * 4 + 0x8400 + (iptr)parley_wnd2);
         *sel_flag = *sel_flag ^ 1;
       }
       else {
-        *(int *)(parley_wnd2 + 0x10418 + pane * 4) = hit_row;
-        sel_flag = (uint *)(pane * 0x2004 + hit_row * 4 + 0x8400 + parley_wnd2);
+        parley_wnd2->list_anchor_row[pane] = hit_row;
+        sel_flag = (uint *)(pane * 0x2004 + hit_row * 4 + 0x8400 + (iptr)parley_wnd2);
         *sel_flag = *sel_flag ^ 1;
       }
     }
     else {
-      for (row = 0; row < *(int *)(parley_wnd2 + 1000 + pane * 4); row++)
+      for (row = 0; row < parley_wnd2->list_counts[pane]; row++)
       {
-        *(i32 *)(pane * 0x2004 + row * 4 + 0x8400 + parley_wnd2) = 0;
+        parley_wnd2->list_selected[pane * 0x801 + row] = 0;
       }
-      if (*(int *)(parley_wnd2 + 0x10418 + pane * 4) < hit_row) {
-        row = *(int *)(parley_wnd2 + 0x10418 + pane * 4);
+      if (parley_wnd2->list_anchor_row[pane] < hit_row) {
+        row = parley_wnd2->list_anchor_row[pane];
         sel_end = hit_row;
       }
       else {
-        sel_end = *(int *)(parley_wnd2 + 0x10418 + pane * 4);
+        sel_end = parley_wnd2->list_anchor_row[pane];
         row = hit_row;
       }
       for (; row <= sel_end; row++) {
         if (0 < row) {
-          *(i32 *)(pane * 0x2004 + row * 4 + 0x8400 + parley_wnd2) = 1;
+          parley_wnd2->list_selected[pane * 0x801 + row] = 1;
         }
       }
     }
@@ -15130,27 +15056,27 @@ int __cdecl parley_city_list_hit_test(int x,int y,int pane)
   iptr child;
   int result;
   int height;
-  iptr parley_wnd2;
+  ParleyWindow *parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
     parley_wnd2 = 0;
   }
   else {
-    parley_wnd2 = child - 0x48;
+    parley_wnd2 = (ParleyWindow *)(child - 0x48);
   }
-  if (y < *(int *)(pane * 0x10 + 0x3c4 + parley_wnd2)) {
+  if (y < (int)parley_wnd2->list_rects[pane * 4 + 1]) {
     result = -1;
   }
-  else if (y < *(int *)(pane * 0x10 + 0x3cc + parley_wnd2)) {
-    if (x < *(int *)(pane * 0x10 + 0x3c0 + parley_wnd2)) {
+  else if (y < (int)parley_wnd2->list_rects[pane * 4 + 3]) {
+    if (x < (int)parley_wnd2->list_rects[pane * 4]) {
       result = -3;
     }
-    else if (x < *(int *)(pane * 0x10 + 0x3c8 + parley_wnd2)) {
-      result = *(int *)(pane * 0x10 + 0x3c4 + parley_wnd2);
-      height = rect_height(pane * 0x10 + parley_wnd2 + 0x3c0);
-      result = (y - result) / (height / *(int *)(parley_wnd2 + 0x10420 + pane * 4)) +
-              *(int *)(parley_wnd2 + 0x10410 + pane * 4);
+    else if (x < (int)parley_wnd2->list_rects[pane * 4 + 2]) {
+      result = (int)parley_wnd2->list_rects[pane * 4 + 1];
+      height = rect_height((RECT *)(pane * 0x10 + (iptr)parley_wnd2 + 0x3c0));
+      result = (y - result) / (height / parley_wnd2->list_rows[pane]) +
+              parley_wnd2->list_first_row[pane];
     }
     else {
       result = -4;
@@ -15163,7 +15089,7 @@ int __cdecl parley_city_list_hit_test(int x,int y,int pane)
 }
 
 /* 0058843f auto */
-void __thiscall parley_sort_city_list(void *self,int first,int last,int pane)
+void __thiscall parley_sort_city_list(ParleyWindow *self,int first,int last,int pane)
 
 {
   i32 tmp;
@@ -15171,41 +15097,41 @@ void __thiscall parley_sort_city_list(void *self,int first,int last,int pane)
   int cmp;
   int j;
   int i;
-  iptr parley_wnd2;
+  ParleyWindow *parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
     parley_wnd2 = 0;
   }
   else {
-    parley_wnd2 = child - 0x48;
+    parley_wnd2 = (ParleyWindow *)(child - 0x48);
   }
-  if (1 < *(int *)(parley_wnd2 + 1000 + pane * 4)) {
+  if (1 < parley_wnd2->list_counts[pane]) {
     for (i = first; j = i, i < last; i++) {
       while (j = j + 1, j <= last) {
-        cmp = city_has_improvement(*(iptr *)(j * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2),1);
+        cmp = city_has_improvement((iptr)parley_wnd2->list_items[j + pane * 0x801],1);
         if ((cmp != 0) ||
-           ((cmp = city_has_improvement(*(iptr *)(i * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2)
+           ((cmp = city_has_improvement((iptr)parley_wnd2->list_items[i + pane * 0x801]
                                         ,1), cmp == 0 &&
-            (cmp = _strcmp(cities[*(int *)(i * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2)].
-                             name,cities[*(int *)(j * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2)
+            (cmp = _strcmp(cities[(int)parley_wnd2->list_items[i + pane * 0x801]].
+                             name,cities[(int)parley_wnd2->list_items[j + pane * 0x801]
                                         ].name), 0 < cmp)))) {
-          tmp = *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2);
-          *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2) =
-               *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2);
-          *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2) = tmp;
-          tmp = *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + parley_wnd2);
-          *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + parley_wnd2) =
-               *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + parley_wnd2);
-          *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + parley_wnd2) = tmp;
-          tmp = *(i32 *)(i * 4 + pane * 0x2004 + 0xc408 + parley_wnd2);
-          *(i32 *)(i * 4 + pane * 0x2004 + 0xc408 + parley_wnd2) =
-               *(i32 *)(j * 4 + pane * 0x2004 + 0xc408 + parley_wnd2);
-          *(i32 *)(j * 4 + pane * 0x2004 + 0xc408 + parley_wnd2) = tmp;
-          tmp = *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + parley_wnd2);
-          *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + parley_wnd2) =
-               *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + parley_wnd2);
-          *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + parley_wnd2) = tmp;
+          tmp = (i32)parley_wnd2->list_items[i + pane * 0x801];
+          parley_wnd2->list_items[i + pane * 0x801] =
+               (i32)parley_wnd2->list_items[j + pane * 0x801];
+          parley_wnd2->list_items[j + pane * 0x801] = tmp;
+          tmp = (i32)parley_wnd2->list_selected[i + pane * 0x801];
+          parley_wnd2->list_selected[i + pane * 0x801] =
+               (i32)parley_wnd2->list_selected[j + pane * 0x801];
+          parley_wnd2->list_selected[j + pane * 0x801] = tmp;
+          tmp = (i32)parley_wnd2->list_selected_b[i + pane * 0x801];
+          parley_wnd2->list_selected_b[i + pane * 0x801] =
+               (i32)parley_wnd2->list_selected_b[j + pane * 0x801];
+          parley_wnd2->list_selected_b[j + pane * 0x801] = tmp;
+          tmp = (i32)parley_wnd2->list_items_b[i + pane * 0x801];
+          parley_wnd2->list_items_b[i + pane * 0x801] =
+               (i32)parley_wnd2->list_items_b[j + pane * 0x801];
+          parley_wnd2->list_items_b[j + pane * 0x801] = tmp;
         }
       }
     }
@@ -15232,7 +15158,7 @@ void __cdecl parley_draw_city_list(int pane)
   int row;
   uint shadow_color2;
   uint text_color2;
-  ViewWindow *this2;
+  ParleyWindow *this2;
   tagRECT row_rect;
   int row_height;
   int sprite_style;
@@ -15241,38 +15167,38 @@ void __cdecl parley_draw_city_list(int pane)
   
   child = wnd_get_active_child();
   if (child == 0) {
-    this2 = (ViewWindow *)0x0;
+    this2 = (ParleyWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(child - 0x48);
+    this2 = (ParleyWindow *)(child - 0x48);
   }
-  surface_get_clip((DibSurface *)this2,(iptr)saved_clip);
-  surface_set_clip((DibSurface *)this2,(iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10));
+  surface_get_clip((DibSurface *)this2,(RECT *)saved_clip);
+  surface_set_clip((DibSurface *)this2,(RECT *)(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10));
 fill_list_bg:
   surface_fill_rect
-            ((DibSurface *)this2,(iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10),list_bg_color);
+            ((DibSurface *)this2,(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10),list_bg_color);
   if (this2->large_layout == 0) {
     font2 = (GameFont *)((i8 *)&font_size14);
   }
   else {
     font2 = (GameFont *)((i8 *)&font_size21);
   }
-  xLeft = *(int *)((u8 *)&this2->advance_pane_rects + pane * 0x10);
-  width = rect_width((iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10));
-  row_height = rect_height((iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10));
-  row_height = row_height / *(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x38);
+  xLeft = (int)this2->list_rects[pane * 4];
+  width = rect_width((RECT *)(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10));
+  row_height = rect_height((RECT *)(iptr)(((u8 *)this2 + 0x3c0) + pane * 0x10));
+  row_height = row_height / this2->list_rows[pane];
   text_offset_y = row_height / 2;
   row_y = font_cached_height(font2);
   text_offset_y -= row_y / 2;
-  field_ptr = this2->pane_selection_flags_area + pane * 4 - 0x1c;
+  field_ptr = (u8 *)&this2->side_selected[pane];
   field_ptr[0] = '\0';
   field_ptr[1] = '\0';
   field_ptr[2] = '\0';
   field_ptr[3] = '\0';
-  for (row = 0; row < *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28);
+  for (row = 0; row < this2->list_counts[pane];
       row = row + 1) {
-    if (*(int *)(pane * 0x2004 + row * 4 + 0x8400 + (int)this2) != 0) {
-      field_ptr = this2->pane_selection_flags_area + pane * 4 - 0x1c;
+    if (this2->list_selected[pane * 0x801 + row] != 0) {
+      field_ptr = (u8 *)&this2->side_selected[pane];
       field_ptr[0] = 1;
       field_ptr[1] = '\0';
       field_ptr[2] = '\0';
@@ -15282,25 +15208,23 @@ fill_list_bg:
   }
   row = 0;
   do {
-    if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x38) <= row) {
+    if (this2->list_rows[pane] <= row) {
 restore_clip_and_finish:
-      surface_set_clip((DibSurface *)this2,(iptr)saved_clip);
+      surface_set_clip((DibSurface *)this2,(RECT *)saved_clip);
       parley_update_buttons(this2);
-      ctrl_show_and_redraw(*(Control **)(this2->rate_values + pane * 4 + 0x20))
+      ctrl_show_and_redraw((Control *)this2->list_hotspots[pane])
       ;
       return;
     }
-    row_y = *(int *)((u8 *)&this2->advance_pane_rects + pane * 0x10 + 4) + row * row_height;
+    row_y = (int)this2->list_rects[pane * 4 + 1] + row * row_height;
     SetRect(&row_rect,xLeft,row_y,width + xLeft,row_y + row_height);
-    if ((row != 0) && (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) == -1))
+    if ((row != 0) && (this2->list_first_row[pane] == -1))
     goto restore_clip_and_finish;
-    if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row <
-        *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28)) {
-      selected = *(int *)(pane * 0x2004 +
-                       (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row) * 4 +
-                       0x8400 + (int)this2);
+    if (this2->list_first_row[pane] + row <
+        this2->list_counts[pane]) {
+      selected = (int)this2->list_selected[pane * 0x801 + (this2->list_first_row[pane] + row)];
       if (selected == 0) {
-        if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row == 0) {
+        if (this2->list_first_row[pane] + row == 0) {
           text_color2 = (uint)dlg_highlight_text_color;
           shadow_color2 = (*(uint *)&dlg_sel_text_shadow_color);
         }
@@ -15314,13 +15238,10 @@ restore_clip_and_finish:
         shadow_color2 = (*(uint *)&dlg_sel_text_shadow_color);
       }
       city = 0;
-      if ((0 < *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28)) &&
+      if ((0 < this2->list_counts[pane]) &&
          (city = parley_find_city_by_id
-                               ((WindowObjectView *)this2,
-                                *(i32 *)
-                                 (pane * 0x2004 +
-                                  (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row)
-                                  * 4 + 0x43f8 + (int)this2)), city == -1)) break;
+                               (this2,
+                                (i32)this2->list_items_b[pane * 0x801 + (this2->list_first_row[pane] + row)]), city == -1)) break;
       text_offset_x = (-(uint)(this2->large_layout == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
       row_rect.left = row_rect.left + text_offset_x - 3;
       if (selected == 0) {
@@ -15331,27 +15252,27 @@ restore_clip_and_finish:
       }
       surface_fill_rect((DibSurface *)this2,(iptr)&row_rect,bg_color2);
       if (pane == 0) {
-        if (this2->left_side_confirmed == '\0') {
+        if (this2->local_cities_revealed == '\0') {
           sprite_style = 3;
         }
         else {
           sprite_style = 0;
         }
       }
-      else if (this2->remote_side_agreed == '\0') {
+      else if (this2->remote_cities_revealed == '\0') {
         sprite_style = 3;
       }
       else {
         sprite_style = 0;
       }
-      if (parley_wnd_block.parley_mode == 10) {
+      if ((int)parley_wnd_block.mode == 10) {
         sprite_style = 0;
       }
-      if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) == -1) {
+      if (this2->list_first_row[pane] == -1) {
         text_clear();
-        label = (label_string(*(i32 *)(label_string_ids + 0xb78)));
+        label = (label_string(label_string_ids[0x2de]));
         text_append(label);
-        field_ptr = this2->pane_selection_flags_area + pane * 4 - 0x1c;
+        field_ptr = (u8 *)&this2->side_selected[pane];
         field_ptr[0] = '\0';
         field_ptr[1] = '\0';
         field_ptr[2] = '\0';
@@ -15360,7 +15281,7 @@ restore_clip_and_finish:
       else {
         selected = sprite_style;
         font_height = font_cached_height(font2);
-        parley_draw_city_sprite(city,*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row,
+        parley_draw_city_sprite(city,this2->list_first_row[pane] + row,
                            xLeft + 2,row_y,font_height,selected);
         text_clear();
         text_append((const char *)(city * 0x58 + (iptr)((u8 *)&cities + 32)));
@@ -15369,24 +15290,22 @@ restore_clip_and_finish:
         if ((selected == 0) && (sprite_style == 0)) {
           text_append_lparen();
           text_append_int(*(iptr *)(pane * 0x2004 +
-                                       (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) +
+                                       (this2->list_first_row[pane] +
                                        row) * 4 + 0xc408 + (int)this2));
           text_append_space();
-          if (*(int *)(pane * 0x2004 +
-                       (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row) * 4 +
-                       0xc408 + (int)this2) < 2) {
-            label = (label_string(*(i32 *)(label_string_ids + 0xb70)));
+          if ((int)this2->list_selected_b[pane * 0x801 + (this2->list_first_row[pane] + row)] < 2) {
+            label = (label_string(label_string_ids[0x2dc]));
             text_append(label);
           }
           else {
-            label = (label_string(*(i32 *)(label_string_ids + 0xb6c)));
+            label = (label_string(label_string_ids[0x2db]));
             text_append(label);
           }
         }
         else {
           selected = city_has_improvement(city,1);
           if (selected != 0) {
-            label = (label_string(*(i32 *)(label_string_ids + 0xb74)));
+            label = (label_string(label_string_ids[0x2dd]));
             text_append(label);
           }
         }
@@ -15407,18 +15326,18 @@ restore_clip_and_finish:
     }
     row++;
   } while( true );
-  parley_build_city_list((ListPaneWindow *)this2,pane,1);
-  if (*(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28) == 0) {
-    field_ptr = ((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28;
+  parley_build_city_list(this2,pane,1);
+  if (this2->list_counts[pane] == 0) {
+    field_ptr = (u8 *)&this2->list_first_row[pane];
     field_ptr[0] = 0xff;
     field_ptr[1] = 0xff;
     field_ptr[2] = 0xff;
     field_ptr[3] = 0xff;
   }
-  else if (*(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28) <
-           *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28)) {
-    *(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) =
-         *(int *)((u8 *)&this2->advance_pane_rects + pane * 4 + 0x28) - 1;
+  else if (this2->list_counts[pane] <
+           this2->list_counts[pane]) {
+    this2->list_first_row[pane] =
+         this2->list_counts[pane] - 1;
   }
   goto fill_list_bg;
 }
@@ -15433,23 +15352,23 @@ parley_draw_city_sprite(iptr city,uint row_index,int x,int y,int row_height,i32 
   i32 zoom2;
   i32 draw_x;
   i32 sprite_width2;
-  iptr parley_wnd2;
+  ParleyWindow *parley_wnd2;
   
   child = wnd_get_active_child();
   if (child == 0) {
     parley_wnd2 = 0;
   }
   else {
-    parley_wnd2 = child - 0x48;
+    parley_wnd2 = (ParleyWindow *)(child - 0x48);
   }
-  if (*(int *)(parley_wnd2 + 0x154) == 0) {
+  if (parley_wnd2->large_layout == 0) {
     zoom2 = 0xfffffffc;
   }
   else {
     zoom2 = 0xfffffffe;
   }
   draw_x = x;
-  if (*(int *)(parley_wnd2 + 0x154) == 0) {
+  if (parley_wnd2->large_layout == 0) {
     sprite_width2 = 0x18;
   }
   else {
@@ -15459,12 +15378,12 @@ parley_draw_city_sprite(iptr city,uint row_index,int x,int y,int row_height,i32 
     draw_x = x + sprite_width2 + 2;
   }
   sprite_height2 = gfx_zoom_scale(0x30,zoom2);
-  gfx_draw_city((iptr)&parley_wnd_block.parley_wnd,city,style,draw_x,y - (sprite_height2 - row_height) / 2,zoom2);
+  gfx_draw_city((iptr)&parley_wnd_block,city,style,draw_x,y - (sprite_height2 - row_height) / 2,zoom2);
   return;
 }
 
 /* 00588f36 auto */
-void __thiscall parley_build_city_list(ListPaneWindow *self,int pane,int keep_selection)
+void __thiscall parley_build_city_list(ParleyWindow *self,int pane,int keep_selection)
 
 {
   int *count_ptr;
@@ -15473,7 +15392,7 @@ void __thiscall parley_build_city_list(ListPaneWindow *self,int pane,int keep_se
   int old_count;
   iptr unit;
   void *old_selection;
-  iptr parley_wnd2;
+  ParleyWindow *parley_wnd2;
   
   old_selection = (void *)0x0;
   child = wnd_get_active_child();
@@ -15481,72 +15400,68 @@ void __thiscall parley_build_city_list(ListPaneWindow *self,int pane,int keep_se
     parley_wnd2 = 0;
   }
   else {
-    parley_wnd2 = child - 0x48;
+    parley_wnd2 = (ParleyWindow *)(child - 0x48);
   }
   if (keep_selection != 0) {
-    old_selection = operator_new(*(int *)(parley_wnd2 + 1000 + pane * 4) << 2);
+    old_selection = operator_new(parley_wnd2->list_counts[pane] << 2);
     if (old_selection == (void *)0x0) {
       keep_selection = 0;
     }
     else {
-      old_count = *(int *)(parley_wnd2 + 1000 + pane * 4);
+      old_count = parley_wnd2->list_counts[pane];
       for (city = 0; city < old_count; city++) {
-        if (*(int *)(pane * 0x2004 + city * 4 + 0x8400 + parley_wnd2) == 0) {
+        if (parley_wnd2->list_selected[pane * 0x801 + city] == 0) {
           *(i32 *)((int)old_selection + city * 4) = 0xffffffff;
         }
         else {
           *(i32 *)((int)old_selection + city * 4) =
-               *(i32 *)(pane * 0x2004 + city * 4 + 0x43f8 + parley_wnd2);
+               (i32)parley_wnd2->list_items_b[pane * 0x801 + city];
         }
       }
     }
   }
-  *(i32 *)(parley_wnd2 + 1000 + pane * 4) = 0;
+  parley_wnd2->list_counts[pane] = 0;
   city = 0;
   do {
     if (game.num_cities <= city) {
       if (keep_selection != 0) {
         operator_delete(old_selection);
       }
-      parley_sort_city_list(self,0,*(int *)(parley_wnd2 + 1000 + pane * 4) - 1,pane);
+      parley_sort_city_list(self,0,parley_wnd2->list_counts[pane] - 1,pane);
       return;
     }
     if ((cities[city].id != 0) &&
        (((*(int *)(((i8 *)&sprite_picker_sprite_block.parley_pane_own_cities) + pane * 4) != 0 && (cities[city].owner == (*(i8 *)&human_civ)))
         || (((*(int *)(((i8 *)&sprite_picker_sprite_block.parley_pane_own_cities) + pane * 4) == 0 &&
-             ((int)cities[city].owner == self->caption_height)) &&
+             ((int)cities[city].owner == self->other_civ)) &&
             (((1 << ((byte)(*(i8 *)&human_civ) & 0x1f) & (int)(char)cities[city].known_to) != 0 ||
              ((int)cities[city].owner == ((*(i8 *)&human_civ) & 0xffU))))))))) {
-      *(iptr *)(pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x3f0 + parley_wnd2) =
+      parley_wnd2->list_items[pane * 0x801 + parley_wnd2->list_counts[pane]] =
            city;
-      *(i32 *)(pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x43f8 + parley_wnd2) =
+      parley_wnd2->list_items_b[pane * 0x801 + parley_wnd2->list_counts[pane]] =
            cities[city].id;
       if (keep_selection == 0) {
-        *(i32 *)
-         (pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x8400 + parley_wnd2) = 0;
+        parley_wnd2->list_selected[pane * 0x801 + parley_wnd2->list_counts[pane]] = 0;
       }
       else {
-        *(i32 *)
-         (pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x8400 + parley_wnd2) = 0;
+        parley_wnd2->list_selected[pane * 0x801 + parley_wnd2->list_counts[pane]] = 0;
         for (unit = 0; unit < old_count; unit++) {
           if (cities[city].id == *(int *)((int)old_selection + unit * 4)) {
-            *(i32 *)
-             (pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x8400 + parley_wnd2) = 1;
+            parley_wnd2->list_selected[pane * 0x801 + parley_wnd2->list_counts[pane]] = 1;
             break;
           }
         }
       }
-      *(i32 *)
-       (pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0xc408 + parley_wnd2) = 0;
+      parley_wnd2->list_selected_b[pane * 0x801 + parley_wnd2->list_counts[pane]] = 0;
       for (unit = 0; unit < game.num_units; unit++) {
         if (((units[unit].id != 0) && (cities[city].x == units[unit].x)) &&
            (cities[city].y == units[unit].y)) {
-          count_ptr = (int *)(pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0xc408 +
-                          parley_wnd2);
+          count_ptr = (int *)(pane * 0x2004 + parley_wnd2->list_counts[pane] * 4 + 0xc408 +
+                          (iptr)parley_wnd2);
           *count_ptr = *count_ptr + 1;
         }
       }
-      count_ptr = (int *)(parley_wnd2 + 1000 + pane * 4);
+      count_ptr = (int *)((iptr)parley_wnd2 + 1000 + pane * 4);
       *count_ptr = *count_ptr + 1;
     }
     city++;
@@ -15566,8 +15481,8 @@ net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
   int slot;
   
   net_session_block.net_lock_map_busy = 1;
-  *(i32 *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + civ * 0x18) = 0;
-  *(i32 *)(((i8 *)&net_map_lock_slots_block.net_map_lock_slots) + civ * 0x18) = *(i32 *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + civ * 0x18);
+  net_map_lock_slots_block.net_map_locks[civ].replies = 0;
+  net_map_lock_slots_block.net_map_locks[civ].state = net_map_lock_slots_block.net_map_locks[civ].replies;
   if (net_session_block.net_host_flag == '\0') {
     net_session_block.net_lock_map_busy = 0;
     net_send_message(0x51,0,civ,src_x,src_y,dst_x,dst_y,0,0,0);
@@ -15579,16 +15494,16 @@ net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
       start_ticks = timer_ticks();
       while( true ) {
         now_ticks = timer_ticks();
-        if ((0xe0f < now_ticks - start_ticks) || (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + civ * 0x18) != 0)) break;
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+        if ((0xe0f < now_ticks - start_ticks) || (net_map_lock_slots_block.net_map_locks[civ].replies != 0)) break;
+        net_process_messages(&net_session_block,1,1);
       }
-      if (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + civ * 0x18) == 0) {
+      if (net_map_lock_slots_block.net_map_locks[civ].replies == 0) {
         dbg_log((const char *)&str_lockmap_connection_to_server_timed_out);
         popup_game_with_sprite((const char *)&str_serverconnecttime_8,(iptr)&popup_info_icon_sprite,0);
         game_loop_active = 0;
         result = 0;
       }
-      else if (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + civ * 0x18) == 1) {
+      else if (net_map_lock_slots_block.net_map_locks[civ].replies == 1) {
         result = 1;
       }
       else {
@@ -15600,31 +15515,30 @@ net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
     dst_conflict = -1;
     src_conflict = -1;
     for (slot = 1; slot < 8; slot++) {
-      if (((*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_src_x) + slot * 0x18) == src_x) &&
-          (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_src_y) + slot * 0x18) == src_y)) ||
-         ((*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_dst_x) + slot * 0x18) == src_x &&
-          (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_dst_y) + slot * 0x18) == src_y)))) {
+      if (((net_map_lock_slots_block.net_map_locks[slot].src_x == src_x) &&
+          (net_map_lock_slots_block.net_map_locks[slot].src_y == src_y)) ||
+         ((net_map_lock_slots_block.net_map_locks[slot].dst_x == src_x &&
+          (net_map_lock_slots_block.net_map_locks[slot].dst_y == src_y)))) {
         src_conflict = 0;
         break;
       }
-      if (((*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_src_x) + slot * 0x18) == dst_x) &&
-          (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_src_y) + slot * 0x18) == dst_y)) ||
-         ((*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_dst_x) + slot * 0x18) == dst_x &&
-          (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_dst_y) + slot * 0x18) == dst_y)))) {
+      if (((net_map_lock_slots_block.net_map_locks[slot].src_x == dst_x) &&
+          (net_map_lock_slots_block.net_map_locks[slot].src_y == dst_y)) ||
+         ((net_map_lock_slots_block.net_map_locks[slot].dst_x == dst_x &&
+          (net_map_lock_slots_block.net_map_locks[slot].dst_y == dst_y)))) {
         dst_conflict = 0;
         break;
       }
     }
     if ((src_conflict == -1) && (dst_conflict == -1)) {
-      *(iptr *)(((i8 *)&net_map_lock_slots_block.net_map_lock_src_x) + civ * 0x18) = src_x;
-      *(iptr *)(((i8 *)&net_map_lock_slots_block.net_map_lock_src_y) + civ * 0x18) = src_y;
-      *(iptr *)(((i8 *)&net_map_lock_slots_block.net_map_lock_dst_x) + civ * 0x18) = dst_x;
-      *(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_dst_y) + civ * 0x18) = dst_y;
+      net_map_lock_slots_block.net_map_locks[civ].src_x = src_x;
+      net_map_lock_slots_block.net_map_locks[civ].src_y = src_y;
+      net_map_lock_slots_block.net_map_locks[civ].dst_x = dst_x;
+      net_map_lock_slots_block.net_map_locks[civ].dst_y = dst_y;
       if ((human_civ[0] != civ) &&
          (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0 &&
-          ((((i8 *)&net_session_block.net_slot_active_flags))[*(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54] != '\0')))) {
-        net_send_message(0x53,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),
+          ((((i8 *)&net_session_block.net_slot_active_flags))[net_session_block.net_civ_slots[civ] * 0x54] != '\0')))) {
+        net_send_message(0x53,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,
                            civ,1,0,0,0,0,0,0);
         XD_FlushSendBuffer(60000);
       }
@@ -15634,9 +15548,8 @@ net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
     else {
       if (((human_civ[0] != civ) &&
           ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
-         ((((i8 *)&net_session_block.net_slot_active_flags))[*(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54] != '\0')) {
-        net_send_message(0x53,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),
+         ((((i8 *)&net_session_block.net_slot_active_flags))[net_session_block.net_civ_slots[civ] * 0x54] != '\0')) {
+        net_send_message(0x53,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,
                            civ,-1,0,0,0,0,0,0);
         XD_FlushSendBuffer(60000);
       }
@@ -15657,16 +15570,16 @@ void __cdecl net_unlock_map(iptr civ,int wait_reply)
   net_session_block.net_unlock_map_busy = 1;
   if (net_session_block.net_host_flag == '\0') {
     net_session_block.net_unlock_map_busy = 0;
-    *(i32 *)(((i8 *)&net_map_lock_slots_block.net_map_lock_slots) + civ * 0x18) = 0;
+    net_map_lock_slots_block.net_map_locks[civ].state = 0;
     net_send_message(0x52,0,civ,0,0,0,0,0,0,0);
     if (wait_reply != 0) {
       start_ticks = timer_ticks();
       while( true ) {
         now_ticks = timer_ticks();
-        if ((0xe0f < now_ticks - start_ticks) || (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_slots) + civ * 0x18) != 0)) break;
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+        if ((0xe0f < now_ticks - start_ticks) || (net_map_lock_slots_block.net_map_locks[civ].state != 0)) break;
+        net_process_messages(&net_session_block,1,1);
       }
-      if (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_slots) + civ * 0x18) == 0) {
+      if (net_map_lock_slots_block.net_map_locks[civ].state == 0) {
         dbg_log((const char *)&str_unlockmap_connection_to_server_timed_out);
         popup_game_with_sprite((const char *)&str_serverconnecttime_9,(iptr)&popup_info_icon_sprite,0);
         game_loop_active = 0;
@@ -15703,7 +15616,7 @@ void __cdecl net_session_global_init(void)
 void __cdecl net_session_static_init(void)
 
 {
-  net_session_ctor((NetSessionCtorView *)((iptr *)&net_session_block.net_session));
+  net_session_ctor(&net_session_block);
   return;
 }
 
@@ -15719,12 +15632,12 @@ void __cdecl net_session_reg_atexit(void)
 void __cdecl net_session_static_dtor(void)
 
 {
-  net_session_dtor(((iptr *)&net_session_block.net_session));
+  net_session_dtor(&net_session_block);
   return;
 }
 
 /* 0059a8bb auto */
-NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *self)
+NetSession * __thiscall net_session_ctor(NetSession *self)
 
 {
   i32 seh_frame;
@@ -15732,13 +15645,13 @@ NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *self)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  net_msg_player_info_init((NetMsgHeader *)&self->player_info_msg);
-  net_msgq_ctor((NetMsgQueue *)(((NetSessionCtorViewExt *)self)->msg_queue));
+  net_msg_player_info_init(&self->player_info_msg);
+  net_msgq_ctor(&self->msg_queue);
   seh_state = 0;
-  ((NetSessionCtorViewExt *)self)->connection_title[0] = '\0';
-  ((NetSessionCtorViewExt *)self)->connection_title_b1[0] = '\0';
-  ((NetSessionCtorViewExt *)self)->connection_title_b2[0] = '\0';
-  ((NetSessionCtorViewExt *)self)->connection_title_b3[0] = '\0';
+  ((u8 *)&self->net_connection_title)[0] = '\0';
+  ((u8 *)&self->net_connection_title)[1] = '\0';
+  ((u8 *)&self->net_connection_title)[2] = '\0';
+  ((u8 *)&self->net_connection_title)[3] = '\0';
   XD_SetBroadcastReceive(net_on_broadcast_receive);
   XD_SetSecureReceive(net_on_secure_receive);
   XD_SetOnClientConnectionToServer(net_on_connected_to_server);
@@ -15749,88 +15662,88 @@ NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *self)
 }
 
 /* 0059a998 auto */
-void __thiscall net_session_clear(void *self)
+void __thiscall net_session_clear(NetSession *self)
 
 {
   int i;
   
-  *(i8 *)((int)self + 0x1ec) = 0;
-  *(i8 *)((int)self + 0x1ed) = 0;
-  *(i32 *)((int)self + 0x574) = 0;
-  *(i8 *)((int)self + 0x1ee) = 0;
-  *(i32 *)((int)self + 0x538) = 0;
-  *(i32 *)((int)self + 0x160cc) = 0;
-  *(i32 *)self = 0;
-  *(i32 *)((int)self + 4) = 0;
-  *(i32 *)((int)self + 0x570) = 0;
-  *(i32 *)((int)self + 0x1f8) = 0xffffffff;
+  self->net_connected = 0;
+  self->net_connected_to_server = 0;
+  self->net_popup_in_progress_i32 = 0;
+  self->net_listing_games = 0;
+  self->net_session_phase = 0;
+  self->net_found_games = 0;
+  self->gamelist_view = 0;
+  self->net_lobby_list = 0;
+  self->dialog_stack_top = 0;
+  self->net_server_conn_id = 0xffffffff;
   (*(i32 *)&net_session_block.net_xd_adapter_index) = 0;
-  *(i32 *)((int)self + 500) = 0;
+  self->net_adapter_index = 0;
   net_session_block.net_active_protocol = 0xffffffff;
-  *(i32 *)((int)self + 0x1f0) = 0xffffffff;
-  *(i32 *)((int)self + 0x470) = 0;
-  *(i8 *)((int)self + 0x57d) = 0;
-  *(i32 *)((int)self + 0x580) = 0;
-  *(i32 *)((int)self + 0x584) = 0;
-  *(i32 *)((int)self + 0x588) = 0;
-  *(i32 *)((int)self + 0x58c) = 0;
-  *(i8 *)((int)self + 0x590) = 0;
-  *(i8 *)((int)self + 0x57c) = 0;
-  *(i8 *)((int)self + 0x591) = 0;
-  *(i8 *)((int)self + 0x592) = 0;
-  *(i32 *)((int)self + 0x594) = 8;
-  *(i32 *)((int)self + 0x598) = 0;
-  *(i32 *)((int)self + 0x7b0) = 0x3c;
-  *(i32 *)((int)self + 0x59c) = 0xffffffff;
-  *(i32 *)((int)self + 0x5a0) = 0xffffffff;
-  *(i32 *)((int)self + 0x7b4) = 0;
-  *(i32 *)((int)self + 0x7b8) = 0;
-  *(i32 *)((int)self + 0x7bc) = 0;
-  *(i32 *)((int)self + 0x7c0) = 0;
-  *(i32 *)((int)self + 0x7c4) = 0;
-  *(i32 *)((int)self + 0x7c8) = 0;
-  *(i32 *)((int)self + 0x7cc) = 0;
-  *(i32 *)((int)self + 2000) = 0;
-  *(i32 *)((int)self + 0x7d4) = 0;
-  *(i32 *)((int)self + 0x7d8) = 0;
-  *(i32 *)((int)self + 0x7dc) = 0;
-  *(i32 *)((int)self + 0x7e0) = 0;
-  *(i32 *)((int)self + 0x7e4) = 0;
-  *(i32 *)((int)self + 0x7e8) = 0;
-  *(i32 *)((int)self + 0x7ec) = 0;
-  *(i32 *)((int)self + 0x800) = 0;
-  *(i32 *)((int)self + 0x804) = 0;
-  *(i32 *)((int)self + 0x808) = 0;
-  *(i32 *)((int)self + 0x80c) = 0;
-  *(i32 *)((int)self + 0x810) = 0;
-  *(i32 *)((int)self + 0x814) = 0;
+  self->net_protocol = 0xffffffff;
+  self->mp_turn_civ = 0;
+  self->player_has_quit = 0;
+  self->net_poll_depth = 0;
+  self->net_poll_depth_peak = 0;
+  self->net_msgq_normal_peak = 0;
+  self->net_msgq_priority_peak = 0;
+  self->net_host_handoff_stage = 0;
+  self->mp_simultaneous_moves = 0;
+  self->net_tile_sync_enabled = 0;
+  self->net_tile_batch_active = 0;
+  self->chat_missed_message_count_i32 = 8;
+  self->chat_unread_count = 0;
+  self->net_timeout_seconds = 0x3c;
+  self->net_move_anim_sound = 0xffffffff;
+  self->net_move_anim_sound_arg = 0xffffffff;
+  self->unit_create_busy = 0;
+  self->unit_delete_busy = 0;
+  self->city_create_busy = 0;
+  self->city_delete_busy = 0;
+  self->net_lock_map_busy = 0;
+  self->net_unlock_map_busy = 0;
+  self->ui_input_busy = 0;
+  self->unit_stack_unlink_busy = 0;
+  self->unit_stack_link_busy = 0;
+  self->unit_stack_bottom_busy = 0;
+  self->unit_relocate_busy = 0;
+  self->city_acquire_wonder_busy = 0;
+  self->civ_eliminate_busy = 0;
+  self->civ_create_busy = 0;
+  self->civ_check_destroyed_busy = 0;
+  self->map_redraw_busy = 0;
+  self->net_stacked_draw_count = 0;
+  self->net_stacked_draw_first = 0;
+  self->net_stacked_draw_last = 0;
+  self->unit_stack_check_enabled = 0;
+  self->net_stacked_draw_peak = 0;
   for (i = 0; i < 8; i++) {
-    *(i32 *)((int)self + i * 4 + 0x2118) = 0;
-    *(i32 *)((int)self + i * 4 + 0x2138) = 0;
-    *(i32 *)((int)self + i * 4 + 0x2158) = 0;
-    *(i32 *)((int)self + i * 4 + 0x2178) = 0;
+    self->casualty_counts[i] = 0;
+    self->casualty_reported_counts[i] = 0;
+    self->casualty_log_first[i] = 0;
+    self->casualty_log_next[i] = 0;
   }
-  *(i8 *)((int)self + 0x160a1) = 0;
-  *(i32 *)((int)self + 0x7f0) = 0;
-  *(i32 *)((int)self + 0x7f4) = 0;
-  *(i32 *)((int)self + 0x7f8) = 0;
-  *(i32 *)((int)self + 0x7fc) = 0;
+  self->hotseat_human_players = 0;
+  self->unit_gather_cargo_busy = 0;
+  self->unit_lift_off_map_busy = 0;
+  self->unit_delete_cargo_busy = 0;
+  self->unit_destroy_redraw_busy = 0;
   mp_meeting_pending = 0;
-  *(i8 *)((int)self + 0x160a0) = 0;
+  self->pending_human_players = 0;
   for (i = 0; i < 8; i++) {
-    *(i32 *)((int)self + i * 4 + 0x53c) = 0;
-    *(i32 *)((int)self + i * 4 + 0x16060) = 0;
-    *(i32 *)((int)self + i * 4 + 0x16080) = 0;
+    self->net_civ_new_player_flags[i] = 0;
+    self->net_civ_turn_ended[i] = 0;
+    self->net_civ_drop_requested[i] = 0;
   }
-  *(i32 *)((int)self + 0x160a4) = 0;
-  *(i8 *)((int)self + 0x160c8) = 0;
+  self->blocked_input_kind = 0;
+  self->net_drag_hold = 0;
   net_session_shutdown(self,1);
   net_reset_error_counts();
   return;
 }
 
 /* 0059ad40 auto */
-void __thiscall net_session_dtor(void *self)
+void __thiscall net_session_dtor(NetSession *self)
 
 {
   i32 seh_frame;
@@ -15838,19 +15751,19 @@ void __thiscall net_session_dtor(void *self)
   i32 seh_state;
   
   seh_state = 0;
-  if (*(int *)((int)self + 0x534) != 0) {
-    operator_delete(*(void **)((int)self + 0x534));
-    *(i32 *)((int)self + 0x534) = 0;
+  if (self->net_connection_title != 0) {
+    operator_delete((void *)self->net_connection_title);
+    self->net_connection_title = 0;
   }
   net_session_shutdown(self,1);
   net_reset_error_counts();
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0059adc8 */ { net_msgq_clear((NetMsgQueue *)(*(int *)&self + 0x160d0)); }
+  /* inlined unwind funclet 0059adc8 */ { net_msgq_clear(&self->msg_queue); }
   return;
 }
 
 /* 0059adef auto */
-i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
+i8 __thiscall net_init_transport(NetSession *self,i32 protocol,int is_server)
 
 {
   i32 saved_protocol;
@@ -15859,20 +15772,20 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
   int activate_error;
   int init_error;
   
-  if (*(char *)((int)self + 0x1ec) != '\0') {
+  if (self->net_connected != '\0') {
     err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_bconnectedtonet,(iptr)&str_d_ss_franklinton_netmgr_cpp,0x92);
   }
   saved_protocol = net_session_block.net_protocol;
-  net_msgq_reset((NetMsgQueue *)((int)self + 0x160d0));
+  net_msgq_reset(&self->msg_queue);
   net_session_clear(self);
-  _memset((void *)((int)self + 0x200),0,0x270);
+  _memset((void *)self->net_player_count,0,0x270);
   switch(protocol) {
   case 0:
     init_error = XD_InitializeSocketsTCP
                         (3,0x1381,0x1382,(int)(char)is_server,7,NULL
                         );
     game.multiplayer = 3;
-    if (*(int *)((int)self + 0x1e8) == 0) {
+    if (self->net_connection_type == 0) {
       timeout_secs = GetPrivateProfileIntA
                         (str_civilization_gold_17,str_internet_timeout,-1,
                          str_civ_ini_17);
@@ -15880,10 +15793,10 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
         WritePrivateProfileStringA
                   (str_civilization_gold_18,str_internet_timeout_2,((i8 *)&net_internet_timeout_default),
                    str_civ_ini_18);
-        *(i32 *)((int)self + 0x7b0) = 0x3c;
+        self->net_timeout_seconds = 0x3c;
       }
       else {
-        *(UINT *)((int)self + 0x7b0) = timeout_secs;
+        self->net_timeout_seconds = timeout_secs;
       }
     }
     else {
@@ -15894,10 +15807,10 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
         WritePrivateProfileStringA
                   (str_civilization_gold_20,str_tcpip_timeout_2,((i8 *)&net_tcpip_timeout_default),
                    str_civ_ini_20);
-        *(i32 *)((int)self + 0x7b0) = 0xf;
+        self->net_timeout_seconds = 0xf;
       }
       else {
-        *(UINT *)((int)self + 0x7b0) = timeout_secs;
+        self->net_timeout_seconds = timeout_secs;
       }
     }
     break;
@@ -15913,10 +15826,10 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
       WritePrivateProfileStringA
                 (str_civilization_gold_22,str_ipxspx_timeout_2,((i8 *)&net_ipxspx_timeout_default),
                  str_civ_ini_22);
-      *(i32 *)((int)self + 0x7b0) = 0xf;
+      self->net_timeout_seconds = 0xf;
     }
     else {
-      *(UINT *)((int)self + 0x7b0) = timeout_secs;
+      self->net_timeout_seconds = timeout_secs;
     }
     break;
   case 2:
@@ -15927,10 +15840,10 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
       WritePrivateProfileStringA
                 (str_civilization_gold_24,str_modem_timeout_2,((i8 *)&net_modem_timeout_default),
                  str_civ_ini_24);
-      *(i32 *)((int)self + 0x7b0) = 0x1e;
+      self->net_timeout_seconds = 0x1e;
     }
     else {
-      *(UINT *)((int)self + 0x7b0) = timeout_secs;
+      self->net_timeout_seconds = timeout_secs;
     }
     init_error = XD_InitializeModem((int)(char)is_server);
     break;
@@ -15943,10 +15856,10 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
       WritePrivateProfileStringA
                 (str_civilization_gold_26,str_direct_timeout_2,((i8 *)&net_direct_timeout_default),
                  str_civ_ini_26);
-      *(i32 *)((int)self + 0x7b0) = 0x1e;
+      self->net_timeout_seconds = 0x1e;
     }
     else {
-      *(UINT *)((int)self + 0x7b0) = timeout_secs;
+      self->net_timeout_seconds = timeout_secs;
     }
     init_error = XD_InitializeSerial((int)(char)is_server);
     break;
@@ -15955,19 +15868,19 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
   }
   if (init_error == 0) {
     if (((char)is_server == '\0') || (activate_error = XD_ActivateServer(), activate_error == 0)) {
-      *(char *)((int)self + 0x1ef) = (char)is_server;
-      *(i8 *)((int)self + 0x1ec) = 1;
+      self->net_host_flag = (char)is_server;
+      self->net_connected = 1;
       net_session_block.net_active_protocol = protocol;
-      *(i32 *)((int)self + 0x1f0) = protocol;
+      self->net_protocol = protocol;
       net_reset_error_counts();
       net_reset_msg_counts();
-      _memset((void *)((int)self + 0x208),0,0x20);
-      _strncpy((char *)((int)self + 0x208),((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
-      _memset((void *)((int)self + 0x228),0,0x20);
-      _strncpy((char *)((int)self + 0x228),((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name),0x20);
-      *(i32 *)((int)self + 0x200) = 1;
-      *(i8 *)((int)self + 0x251) = 1;
-      *(i8 *)((int)self + 0x250) = *(i8 *)((int)self + 0x1ef);
+      _memset((void *)self->net_slot_addresses,0,0x20);
+      _strncpy((char *)self->net_slot_addresses,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
+      _memset((void *)self->net_slot_player_names,0,0x20);
+      _strncpy((char *)self->net_slot_player_names,((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name),0x20);
+      self->net_player_count[0] = 1;
+      self->net_slot_active_flags[0] = 1;
+      self->net_slot_host_flags[0] = self->net_host_flag;
       result = 1;
     }
     else {
@@ -15987,31 +15900,31 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
 /* 0059b293 auto */
 /* WARNING: Removing unreachable block (ram,0x0059b3ca) */
 
-void __thiscall net_session_shutdown(void *self,int delay_after)
+void __thiscall net_session_shutdown(NetSession *self,int delay_after)
 
 {
   dbg_log((const char *)&str_disconnecting_from_network);
-  if (*(char *)((int)self + 0x1ef) != '\0') {
+  if (self->net_host_flag != '\0') {
     delay_after = 0;
   }
-  if (*(char *)((int)self + 0x1ec) == '\0') {
+  if (self->net_connected == '\0') {
     XD_ResetLibrary();
     dbg_log((const char *)&str_xd_resetlibrary_2);
   }
   else {
     net_free_game_list(self);
-    if (*(char *)((int)self + 0x1ed) != '\0') {
+    if (self->net_connected_to_server != '\0') {
       XD_FlushSendBuffer(60000);
       dbg_log((const char *)&str_send_buffer_has_flushed);
-      net_msgq_reset((NetMsgQueue *)((int)self + 0x160d0));
+      net_msgq_reset(&self->msg_queue);
       net_popup_queue_clear();
       XD_CloseConnection();
-      net_msgq_reset((NetMsgQueue *)((int)self + 0x160d0));
+      net_msgq_reset(&self->msg_queue);
       net_popup_queue_clear();
       dbg_log((const char *)&str_xd_closeconnection);
       net_session_close_hook_nop(self);
     }
-    switch(*(i32 *)((int)self + 0x1f0)) {
+    switch(self->net_protocol) {
     case 0:
       XD_ShutdownSockets();
       dbg_log((const char *)&str_xd_shutdownsockets);
@@ -16028,19 +15941,19 @@ void __thiscall net_session_shutdown(void *self,int delay_after)
       XD_ShutdownTEN();
       dbg_log((const char *)&str_xd_shutdownten);
     }
-    net_msgq_reset((NetMsgQueue *)((int)self + 0x160d0));
+    net_msgq_reset(&self->msg_queue);
     net_popup_queue_clear();
-    if (0 < *(int *)((int)self + 0x584)) {
-      dbg_logf((const char *)&str_maximum_gnetmgr_poll_call_depth_d,*(iptr *)((int)self + 0x584));
+    if (0 < self->net_poll_depth_peak) {
+      dbg_logf((const char *)&str_maximum_gnetmgr_poll_call_depth_d,self->net_poll_depth_peak);
     }
-    if (0 < *(int *)((int)self + 0x58c)) {
-      dbg_logf((const char *)&str_maximum_alpha_message_queue_load_d,*(iptr *)((int)self + 0x58c));
+    if (0 < (int)self->net_msgq_priority_peak) {
+      dbg_logf((const char *)&str_maximum_alpha_message_queue_load_d,(iptr)self->net_msgq_priority_peak);
     }
-    if (0 < *(int *)((int)self + 0x588)) {
-      dbg_logf((const char *)&str_maximum_message_queue_load_d,*(iptr *)((int)self + 0x588));
+    if (0 < (int)self->net_msgq_normal_peak) {
+      dbg_logf((const char *)&str_maximum_message_queue_load_d,(iptr)self->net_msgq_normal_peak);
     }
-    if (*(int *)((int)self + 0x814) != 0) {
-      dbg_logf((const char *)&str_maximum_draw_stack_load_d,*(iptr *)((int)self + 0x814));
+    if (self->net_stacked_draw_peak != 0) {
+      dbg_logf((const char *)&str_maximum_draw_stack_load_d,(iptr)self->net_stacked_draw_peak);
     }
     XD_ResetLibrary();
     dbg_log((const char *)&str_xd_resetlibrary);
@@ -16049,97 +15962,97 @@ void __thiscall net_session_shutdown(void *self,int delay_after)
       ui_delay_ticks(0x78);
     }
   }
-  *(i8 *)((int)self + 0x1ec) = 0;
-  *(i8 *)((int)self + 0x1ed) = 0;
-  *(i8 *)((int)self + 0x1ee) = 0;
-  *(i32 *)((int)self + 0x1f8) = 0xffffffff;
+  self->net_connected = 0;
+  self->net_connected_to_server = 0;
+  self->net_listing_games = 0;
+  self->net_server_conn_id = 0xffffffff;
   net_reset_error_counts();
-  net_msgq_reset((NetMsgQueue *)((int)self + 0x160d0));
+  net_msgq_reset(&self->msg_queue);
   net_popup_queue_clear();
   return;
 }
 
 /* 0059b55b auto */
-void __thiscall net_session_close_hook_nop(void *self)
+void __thiscall net_session_close_hook_nop(NetSession *self)
 
 {
   return;
 }
 
 /* 0059b571 auto */
-void __thiscall net_game_list_add(NetSession *self,iptr msg)
+void __thiscall net_game_list_add(NetSession *self,NetServerInfoMsg *msg)
 
 {
   int cmp;
-  void *entry;
+  NetGameInfo *entry;
   i32 now_ticks;
-  char *prev;
-  char *node2;
+  NetGameInfo *prev;
+  NetGameInfo *node2;
   i32 saved_value;
   
-  if (*(char *)((int)&((NetSessionExt *)self)->session_flags + 2) != '\0') {
-    node2 = (char *)((NetSessionExt *)self)->game_list_head;
+  if (self->net_listing_games != '\0') {
+    node2 = self->net_found_games;
     saved_value = 0;
-    for (; node2 != (char *)0x0; node2 = *(char **)(node2 + 0x20)) {
-      cmp = _strncmp(node2,(char *)(msg + 0x74),0x20);
+    for (; node2 != 0; node2 = node2->next) {
+      cmp = _strncmp(node2->host_address,msg->game.host_address,0x20);
       if (cmp == 0) {
-        if ((char *)((NetSessionExt *)self)->game_list_head == node2) {
-          ((NetSessionExt *)self)->game_list_head = *(u32 *)(node2 + 0x20);
+        if (self->net_found_games == node2) {
+          self->net_found_games = node2->next;
         }
-        if (*(int *)(node2 + 0x24) != 0) {
-          *(i32 *)(*(int *)(node2 + 0x24) + 0x20) = *(i32 *)(node2 + 0x20);
+        if (node2->prev != 0) {
+          node2->prev->next = node2->next;
         }
-        if (*(int *)(node2 + 0x20) != 0) {
-          *(i32 *)(*(int *)(node2 + 0x20) + 0x24) = *(i32 *)(node2 + 0x24);
+        if (node2->next != 0) {
+          node2->next->prev = node2->prev;
         }
-        saved_value = *(i32 *)(node2 + 0x2c);
+        saved_value = node2->list_id;
         operator_delete(node2);
         break;
       }
     }
-    node2 = (char *)((NetSessionExt *)self)->game_list_head;
-    prev = (char *)0x0;
-    while ((node2 != (char *)0x0 &&
-           (cmp = __strcmpi((char *)(msg + 0xe4),node2 + 0x70), 0 < cmp))) {
+    node2 = self->net_found_games;
+    prev = 0;
+    while ((node2 != 0 &&
+           (cmp = __strcmpi(msg->game.game_name,node2->game_name), 0 < cmp))) {
       prev = node2;
-      node2 = *(char **)(node2 + 0x20);
+      node2 = node2->next;
     }
-    while (((node2 != (char *)0x0 &&
-            (cmp = __strcmpi((char *)(msg + 0xe4),node2 + 0x70), cmp == 0)) &&
-           (cmp = __strcmpi((char *)(msg + 0x74),node2), 0 < cmp))) {
+    while (((node2 != 0 &&
+            (cmp = __strcmpi(msg->game.game_name,node2->game_name), cmp == 0)) &&
+           (cmp = __strcmpi(msg->game.host_address,node2->host_address), 0 < cmp))) {
       prev = node2;
-      node2 = *(char **)(node2 + 0x20);
+      node2 = node2->next;
     }
-    entry = operator_new(0x124);
-    if (entry == (void *)0x0) {
+    entry = (NetGameInfo *)operator_new(0x124);
+    if (entry == 0) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_pcur_null,(iptr)&str_d_ss_franklinton_netmgr_cpp_3,0x1cf);
     }
-    crt_memcpy(entry,(const void *)(msg + 0x74),0x124);
-    if (prev == (char *)0x0) {
-      *(u32 *)((int)entry + 0x20) = ((NetSessionExt *)self)->game_list_head;
-      *(i32 *)((int)entry + 0x24) = 0;
-      if (((NetSessionExt *)self)->game_list_head != 0) {
-        *(void **)(((NetSessionExt *)self)->game_list_head + 0x24) = entry;
+    crt_memcpy(entry,&msg->game,0x124);
+    if (prev == 0) {
+      entry->next = self->net_found_games;
+      entry->prev = 0;
+      if (self->net_found_games != 0) {
+        self->net_found_games->prev = entry;
       }
-      ((NetSessionExt *)self)->game_list_head = (u32)entry;
+      self->net_found_games = entry;
     }
     else {
-      *(i32 *)((int)entry + 0x20) = *(i32 *)(prev + 0x20);
-      *(char **)((int)entry + 0x24) = prev;
-      *(void **)(prev + 0x20) = entry;
-      if (*(int *)((int)entry + 0x20) != 0) {
-        *(void **)(*(int *)((int)entry + 0x20) + 0x24) = entry;
+      entry->next = prev->next;
+      entry->prev = prev;
+      prev->next = entry;
+      if (entry->next != 0) {
+        entry->next->prev = entry;
       }
     }
     now_ticks = timer_ticks();
-    *(i32 *)((int)entry + 0x28) = now_ticks;
-    *(i32 *)((int)entry + 0x2c) = saved_value;
+    entry->last_seen = now_ticks;
+    entry->list_id = saved_value;
   }
   return;
 }
 
 /* 0059b7fc auto */
-void __thiscall net_add_player(NetSession *self,iptr player_info)
+void __thiscall net_add_player(NetSession *self,NetPlayerNodeMsg *player_info)
 
 {
   int slot;
@@ -16149,20 +16062,20 @@ void __thiscall net_add_player(NetSession *self,iptr player_info)
     if (6 < slot) {
       return;
     }
-    if (*(char *)((int)self + slot * 0x54 + 0x251) == '\0') break;
+    if (self->net_slots[slot].active == '\0') break;
     slot++;
   }
-  *(i32 *)((int)self + slot * 0x54 + 0x204) = *(i32 *)(player_info + 0x10);
+  self->net_slots[slot].id = player_info->slot.id;
   _memset((void *)((int)self + slot * 0x54 + 0x208),0,0x20);
-  _strncpy((char *)((int)self + slot * 0x54 + 0x208),(char *)(player_info + 0x14),0x20);
-  *(i8 *)((int)self + slot * 0x54 + 0x250) = 0;
-  *(i8 *)((int)self + slot * 0x54 + 0x251) = 1;
-  *(i32 *)((int)self + slot * 0x54 + 0x254) = 0xffffffff;
-  crt_strcpy((char *)((void *)((int)self + slot * 0x54 + 0x228)),(const char *)((const void *)(player_info + 0x34)));
-  *(i32 *)((int)self + slot * 0x54 + 0x248) = 0;
-  *(i32 *)((int)self + slot * 0x54 + 0x24c) = 0;
-  *(int *)((NetSessionExt *)self)->player_slots = *(int *)((NetSessionExt *)self)->player_slots + 1;
-  ((NetSessionExt *)self)->open_slot_count--;
+  _strncpy((char *)((int)self + slot * 0x54 + 0x208),(char *)((iptr)player_info + 0x14),0x20);
+  self->net_slots[slot].is_host = 0;
+  self->net_slots[slot].active = 1;
+  self->net_slots[slot].civ = 0xffffffff;
+  crt_strcpy((char *)((void *)((int)self + slot * 0x54 + 0x228)),(const char *)((const void *)((iptr)player_info + 0x34)));
+  self->net_slots[slot].field_44 = 0;
+  self->net_slots[slot].lobby_id = 0;
+  self->net_player_count[0] = self->net_player_count[0] + 1;
+  self->net_players_awaited--;
   return;
 }
 
@@ -16174,41 +16087,41 @@ void __thiscall net_remove_player(NetSession *self,int player_id)
   int slot;
   
   slot = 0;
-  while ((slot < 7 && (*(int *)((int)self + slot * 0x54 + 0x204) != player_id))) {
+  while ((slot < 7 && (self->net_slots[slot].id != player_id))) {
     slot++;
   }
-  if ((slot < 7) && (*(char *)((int)self + slot * 0x54 + 0x251) != '\0')) {
-    if ((0 < *(int *)((int)self + slot * 0x54 + 0x254)) &&
-       (*(int *)((int)self + slot * 0x54 + 0x254) < 8)) {
+  if ((slot < 7) && (self->net_slots[slot].active != '\0')) {
+    if ((0 < self->net_slots[slot].civ) &&
+       (self->net_slots[slot].civ < 8)) {
       game.human_players =
            ~(byte)(1 << (*(byte *)((int)self + slot * 0x54 + 0x254) & 0x1f)) & game.human_players
       ;
     }
-    *(i32 *)((int)self + slot * 0x54 + 0x204) = 0;
-    *(i8 *)((int)self + slot * 0x54 + 0x208) = 0;
-    *(i8 *)((int)self + slot * 0x54 + 0x250) = 0;
-    *(i8 *)((int)self + slot * 0x54 + 0x251) = 0;
-    civ_slot_ptr = ((NetSessionExt *)self)->civ_slot_map + *(int *)((int)self + slot * 0x54 + 0x254) * 4;
+    self->net_slots[slot].id = 0;
+    self->net_slots[slot].address[0] = 0;
+    self->net_slots[slot].is_host = 0;
+    self->net_slots[slot].active = 0;
+    civ_slot_ptr = (u8 *)self->net_civ_slots + self->net_slots[slot].civ * 4;
     civ_slot_ptr[0] = 0xff;
     civ_slot_ptr[1] = 0xff;
     civ_slot_ptr[2] = 0xff;
     civ_slot_ptr[3] = 0xff;
-    *(i32 *)((int)self + slot * 0x54 + 0x254) = 0xffffffff;
-    *(int *)((NetSessionExt *)self)->player_slots = *(int *)((NetSessionExt *)self)->player_slots - 1;
+    self->net_slots[slot].civ = 0xffffffff;
+    self->net_player_count[0] = self->net_player_count[0] - 1;
   }
   return;
 }
 
 /* 0059baf0 auto */
-void __thiscall net_free_game_list(void *self)
+void __thiscall net_free_game_list(NetSession *self)
 
 {
-  i32 next;
+  NetGameInfo *next;
   
-  while (*(int *)((int)self + 0x160cc) != 0) {
-    next = *(i32 *)(*(int *)((int)self + 0x160cc) + 0x20);
-    operator_delete(*(void **)((int)self + 0x160cc));
-    *(i32 *)((int)self + 0x160cc) = next;
+  while (self->net_found_games != 0) {
+    next = self->net_found_games->next;
+    operator_delete(self->net_found_games);
+    self->net_found_games = next;
   }
   return;
 }
@@ -16228,7 +16141,7 @@ void __cdecl net_on_broadcast_receive(int *msg,ushort size)
          (cmp = _strcmp((char *)(msg + 0xc),((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address)), cmp == 0)) &&
         (((char)msg[0x14] == '\0' ||
          (cmp = _strcmp((char *)(msg + 0x14),((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address)), cmp != 0)))))) {
-      net_msgq_enqueue((NetMsgQueueEnqueueView *)((i8 *)&net_session_block.net_msg_queue),0,(iptr)msg,(uint)size);
+      net_msgq_enqueue(&net_session_block.msg_queue,0,(NetMsg *)msg,(uint)size);
     }
   }
   else {
@@ -16253,7 +16166,7 @@ void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
   if (3 < size) {
     if (*msg == 0x66606660) {
       net_msgq_enqueue
-                ((NetMsgQueueEnqueueView *)((i8 *)&net_session_block.net_msg_queue),conn_id & 0xffff,(iptr)msg,size);
+                (&net_session_block.msg_queue,conn_id & 0xffff,(NetMsg *)msg,size);
       net_session_block.net_last_recv_callback_size = size;
       net_session_block.net_last_queued_send_seq = net_send_sequence;
       header = msg;
@@ -16347,7 +16260,7 @@ void __cdecl net_on_connection_lost(ushort player_id)
   dbg_logf((const char *)&str_lostconnectionfunc_connection_to_d_has_s,(uint)player_id);
   net_session_block.net_lost_conn_total++;
   if (player_id < 7) {
-    *(int *)(((i8 *)&net_session_block.net_lost_conn_by_player) + (uint)player_id * 4) = *(int *)(((i8 *)&net_session_block.net_lost_conn_by_player) + (uint)player_id * 4) + 1;
+    net_session_block.net_lost_conn_by_player[(uint)player_id] = net_session_block.net_lost_conn_by_player[(uint)player_id] + 1;
   }
   return;
 }
@@ -16371,10 +16284,10 @@ net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2,
 
 {
   void *packet;
-  NetMsgHeaderExt header;  /* the 16-byte message header */
+  NetMsg header;  /* only the 16-byte header is used */
   size_t payload_size;
   
-  net_msg_header_init(&header.base,msg_type);
+  net_msg_header_init(&header.hdr,msg_type);
   if (payload_len == 0) {
     if (payload == 0) {
       payload_size = 0;
@@ -16391,7 +16304,7 @@ net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2,
     packet = operator_new(payload_len + 0x2c);
     crt_memcpy((void *)((int)packet + 0x2c),(const void *)payload,payload_size);
   }
-  header.msg_size_2 = payload_size + 0x2c;
+  header.size = payload_size + 0x2c;
   crt_memcpy(packet,&header,0x10);
   crt_memcpy((void *)((int)packet + 0x10),&arg1,4);
   crt_memcpy((void *)((int)packet + 0x14),&arg2,4);
@@ -16410,7 +16323,7 @@ void __cdecl net_reset_msg_counts(void)
   int i;
   
   for (i = 0; i < 0xa9; i++) {
-    *(i32 *)(((i8 *)&net_session_block.nm_recv_counts) + i * 4) = 0;
+    net_session_block.nm_recv_counts_by_type[i] = 0;
   }
   return;
 }
@@ -16423,7 +16336,7 @@ void __cdecl net_reset_error_counts(void)
   
   net_session_block.net_lost_conn_total = 0;
   for (i = 0; i < 7; i++) {
-    *(i32 *)(((i8 *)&net_session_block.net_lost_conn_by_player) + i * 4) = 0;
+    net_session_block.net_lost_conn_by_player[i] = 0;
   }
   return;
 }
@@ -16432,14 +16345,14 @@ void __cdecl net_reset_error_counts(void)
 void __cdecl net_modal_idle_poll(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   return;
 }
 
 /* 0059c31f auto */
 /* WARNING: Type propagation algorithm not settling */
 
-void __cdecl net_fill_game_info(iptr info)
+void __cdecl net_fill_game_info(NetGameInfo *info)
 
 {
   i32 bit_masks[9];
@@ -16453,66 +16366,66 @@ void __cdecl net_fill_game_info(iptr info)
   bit_masks[6] = 0x3f;
   bit_masks[7] = 0x7f;
   bit_masks[8] = 0xff;
-  crt_strcpy((char *)((void *)(info + 0x30)),str_ptr_5_4_0f_multiplayer_26_march_99);
-  _memset((void *)info,0,0x20);
-  _strncpy((char *)info,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
-  _memset((void *)(info + 0x70),0,0x20);
-  _strncpy((char *)(info + 0x70),((i8 *)&net_session_block.net_game_name),0x20);
-  _memset((void *)(info + 0x90),0,0x20);
-  _strncpy((char *)(info + 0x90),((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name),0x20);
-  *(i16 *)(info + 0xb0) = civ_saved_cursor_x_block.mp_open_game;
-  *(u8 *)(info + 0xb2) = game.difficulty;
-  *(u8 *)(info + 0xb3) = game.barbarian_activity;
+  crt_strcpy(info->version,str_ptr_5_4_0f_multiplayer_26_march_99);
+  _memset(info->host_address,0,0x20);
+  _strncpy(info->host_address,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
+  _memset(info->game_name,0,0x20);
+  _strncpy(info->game_name,((i8 *)&net_session_block.net_game_name),0x20);
+  _memset(info->host_name,0,0x20);
+  _strncpy(info->host_name,((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name),0x20);
+  info->open_game = civ_saved_cursor_x_block.mp_open_game;
+  info->difficulty = game.difficulty;
+  info->barbarian_activity = game.barbarian_activity;
   if (game.civs_alive == '\0') {
-    *(i8 *)(info + 0xb4) = *(i8 *)(bit_masks + (uint)game.num_enemies + 2);
+    info->civs_alive = *(i8 *)(bit_masks + (uint)game.num_enemies + 2);
   }
   else {
-    *(u8 *)(info + 0xb4) = game.civs_alive;
+    info->civs_alive = game.civs_alive;
   }
-  *(i8 *)(info + 0xb5) = *(i8 *)(bit_masks + net_session_block.net_player_count[0]);
-  *(i32 *)(info + 0xb8) = civ_saved_cursor_x_block.mp_turn_time_limit_ms;
-  crt_strcpy((char *)((void *)(info + 0xbc)),((i8 *)&prefs_game_rules_block.scenario_name));
-  *(i16 *)(info + 0x10c) = civ_saved_cursor_x_block.mp_double_moves;
-  *(i16 *)(info + 0x10e) = civ_saved_cursor_x_block.mp_double_production;
-  *(u16 *)(info + 0x110) = game.game_flags;
-  *(i16 *)(info + 0x112) = game.first_launch_turn;
-  *(i16 *)(info + 0x114) = prefs_game_rules_block.scenario_year_increment[0];
-  *(i16 *)(info + 0x116) = prefs_game_rules_block.scenario_start_year;
-  *(i16 *)(info + 0x118) = game.turn;
-  *(i16 *)(info + 0x11e) = civ_saved_cursor_x_block.mp_simultaneous_setting;
-  *(i32 *)(info + 0x24) = 0;
-  *(i32 *)(info + 0x20) = *(i32 *)(info + 0x24);
-  *(i32 *)(info + 0x2c) = 0;
-  *(i32 *)(info + 0x28) = *(i32 *)(info + 0x2c);
-  *(i16 *)(info + 0x11a) = map.width;
-  *(i16 *)(info + 0x11c) = map.height;
+  info->player_mask = *(i8 *)(bit_masks + net_session_block.net_player_count[0]);
+  info->turn_time_limit_ms = civ_saved_cursor_x_block.mp_turn_time_limit_ms;
+  crt_strcpy(info->scenario_name,((i8 *)&prefs_game_rules_block.scenario_name));
+  info->double_moves = civ_saved_cursor_x_block.mp_double_moves;
+  info->double_production = civ_saved_cursor_x_block.mp_double_production;
+  info->game_flags = game.game_flags;
+  info->first_launch_turn = game.first_launch_turn;
+  info->year_increment = prefs_game_rules_block.scenario_year_increment[0];
+  info->start_year = prefs_game_rules_block.scenario_start_year;
+  info->turn = game.turn;
+  info->simultaneous = civ_saved_cursor_x_block.mp_simultaneous_setting;
+  info->prev = 0;
+  info->next = info->prev;
+  info->list_id = 0;
+  info->last_seen = info->list_id;
+  info->map_width = map.width;
+  info->map_height = map.height;
   return;
 }
 
 /* 0059d080 auto */
-NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *self)
+NetMsgHeader * __thiscall net_msg_player_info_init(NetPlayerInfoMsg *self)
 
 {
   iptr j;
   int i;
   
-  net_msg_header_init(self,0x2e);
-  ((NetMsgHeaderExt *)self)->player_id = 0;
-  ((NetMsgHeaderExt *)self)->ip_address = 0;
-  ((NetMsgHeaderExt *)self)->info_word_18 = 0;
-  *(i8 *)&((NetMsgHeaderExt *)self)->info_string_20 = 0;
-  *(i8 *)&((NetMsgHeaderExt *)self)->info_string_38 = 0;
-  *(i8 *)&((NetMsgHeaderExt *)self)->info_string_50 = 0;
-  ((NetMsgHeaderExt *)self)->info_trailer_flag = 0;
+  net_msg_header_init(&self->hdr,0x2e);
+  self->civ = 0;
+  self->leader_index = 0;
+  self->gender = 0;
+  self->leader_name[0] = 0;
+  self->tribe_name[0] = 0;
+  self->adjective[0] = 0;
+  self->city_style = 0;
   for (i = 0; i < 7; i++) {
     for (j = 0; j < 0x18; j++) {
-      *(i8 *)((int)&((u32 *)&((NetMsgHeaderExt *)self)->info_string_table)[(i * 3) * 2] + j) = 0;
+      self->govt_titles[i][j] = 0;
     }
   }
-  ((NetMsgHeaderExt *)self)->info_word_1c = 0;
-  ((NetMsgHeaderExt *)self)->info_count_68 = 0;
-  ((NetMsgHeaderExt *)self)->msg_size_2 = 0x118;
-  return self;
+  self->has_names = 0;
+  self->has_titles = 0;
+  self->size = 0x118;
+  return &self->hdr;
 }
 
 /* 005a9f30 auto */
@@ -16522,7 +16435,7 @@ void __cdecl net_host_wait_production_idle(void)
   bool all_done;
   int civ;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.nm_production_complete_count != 0) || (net_session_block.net_player_count[0] < 2)) {
     all_done = true;
     for (civ = 1; civ < 8; civ++) {
@@ -16548,7 +16461,7 @@ void __cdecl net_host_wait_human_moves_idle(void)
   bool all_done;
   int civ;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.nm_human_move_complete_count != 0) || (net_session_block.net_player_count[0] < 2)) {
     all_done = true;
     for (civ = 1; civ < 8; civ++) {
@@ -16573,7 +16486,7 @@ void __cdecl net_host_wait_human_moves_idle(void)
 void __cdecl net_client_wait_production_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   net_heartbeat_check(net_session_block.net_slot_civs[0]);
   if ((((net_session_block.nm_ai_movement_count != 0) || (net_session_block.nm_end_sequence_count != 0)) || (game_loop_active == '\0')) ||
      (net_session_block.net_lost_conn_total != 0)) {
@@ -16587,7 +16500,7 @@ void __cdecl net_client_wait_production_idle(void)
 void __cdecl net_client_wait_ai_moves_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   net_heartbeat_check(net_session_block.net_slot_civs[0]);
   if ((((net_session_block.nm_human_movement_count != 0) || (net_session_block.nm_end_sequence_count != 0)) || (game_loop_active == '\0')) ||
      (net_session_block.net_lost_conn_total != 0)) {
@@ -16601,7 +16514,7 @@ void __cdecl net_client_wait_ai_moves_idle(void)
 void __cdecl net_client_wait_human_moves_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   net_heartbeat_check(net_session_block.net_slot_civs[0]);
   if ((((net_session_block.nm_production_begin_count != 0) || (net_session_block.net_host_handoff_stage == 1)) || (net_session_block.nm_end_sequence_count != 0)) ||
      (((net_session_block.player_has_quit == 1 || (game_loop_active == '\0')) || (net_session_block.net_lost_conn_total != 0)))) {
@@ -16615,7 +16528,7 @@ void __cdecl net_client_wait_human_moves_idle(void)
 void __cdecl net_client_hotwait_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   net_heartbeat_check(net_session_block.net_slot_civs[0]);
   if ((((net_session_block.nm_production_begin_count != 0) || (net_session_block.net_host_handoff_stage != '\0')) || (net_session_block.nm_end_sequence_count != 0)) ||
      (((net_session_block.player_has_quit != '\0' || (game_loop_active == '\0')) || (net_session_block.net_lost_conn_total != 0)))) {
@@ -16657,7 +16570,7 @@ i32 __cdecl net_client_turn_loop(void)
   str = (iptr)(civ_name_plural(net_session_block.net_slot_civs[0]));
   dbg_logf_str_int((const char *)&str_server_s_d_4,(const char *)str,slot_civ);
   for (civ = 1; civ < 8; civ++) {
-    if (((*(int *)(((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54) != 0) &&
+    if (((net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id != 0) &&
         ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0)) &&
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
       status = civ;
@@ -16720,7 +16633,7 @@ turn_loop:
     net_heartbeat_send(net_session_block.net_slot_civs[0]);
     while ((((net_session_block.nm_production_begin_count == 0 && (net_session_block.net_host_handoff_stage == '\0')) && (net_session_block.nm_end_sequence_count == 0)) &&
            ((net_session_block.player_has_quit == '\0' && (game_loop_active != '\0'))))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
       net_heartbeat_check(net_session_block.net_slot_civs[0]);
       status = net_check_lost_connections();
       if (status != 0) {
@@ -16759,7 +16672,7 @@ turn_loop:
         map_views_block.main_view_timer_cache_i32 = 0xffffffff;
       }
       while ((net_session_block.net_msgq_priority_count != 0 || (net_session_block.net_msgq_normal_count != 0))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
       net_session_block.mp_turn_civ = human_civ[0];
       mapview_update_title((FrameWindow *)((i8 *)&map_views_block.map_views));
@@ -16781,7 +16694,7 @@ turn_loop:
         dlg_pending_idle_callback = ((i8 *)net_client_wait_production_idle);
         popup_game_with_sprite((const char *)&str_waitproduction_3,(iptr)&popup_info_icon_sprite,0);
         while (((net_session_block.nm_ai_movement_count == 0 && (net_session_block.nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
           net_heartbeat_check(net_session_block.net_slot_civs[0]);
           status = net_check_lost_connections();
           if (status != 0) {
@@ -16797,7 +16710,7 @@ turn_loop:
           dlg_pending_idle_callback = ((i8 *)net_client_wait_ai_moves_idle);
           popup_game_with_sprite((const char *)&str_waitaimoves,(iptr)&popup_info_icon_sprite,0);
           while (((net_session_block.nm_human_movement_count == 0 && (net_session_block.nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
-            net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+            net_process_messages(&net_session_block,1,0);
             net_heartbeat_check(net_session_block.net_slot_civs[0]);
             status = net_check_lost_connections();
             if (status != 0) {
@@ -16813,8 +16726,8 @@ turn_loop:
               civ_intro_popup(human_civ[0]);
               *(i16 *)(((i8 *)&civ_saved_cursor_x_block.civ_intro_shown) + human_civ[0] * 2) = 1;
             }
-            new_casualties = *(int *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4) -
-                       *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4);
+            new_casualties = net_session_block.casualty_counts[human_civ[0]] -
+                       net_session_block.casualty_reported_counts[human_civ[0]];
             if (civ_saved_cursor_x_block.autoplay_active == 0) {
               dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
               str = civ_leader_title(human_civ[0]);
@@ -16830,8 +16743,8 @@ turn_loop:
                 dlg_show_modal(&dialog2,0);
               }
               else {
-                *(i32 *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4) =
-                     *(i32 *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4);
+                net_session_block.casualty_reported_counts[human_civ[0]] =
+                     net_session_block.casualty_counts[human_civ[0]];
                 text_set_number_arg(0,new_casualties);
                 if (new_casualties == 1) {
                   dialog_load_text_noflags(&dialog2,(const char *)&str_game_7,(const char *)&str_casualty_5);
@@ -16873,7 +16786,7 @@ turn_loop:
         dlg_pending_idle_callback = ((i8 *)net_client_wait_production_idle);
         popup_game_with_sprite((const char *)&str_waitproduction_2,(iptr)&popup_info_icon_sprite,0);
         while (((net_session_block.nm_ai_movement_count == 0 && (net_session_block.nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
           net_heartbeat_check(net_session_block.net_slot_civs[0]);
           status = net_check_lost_connections();
           if (status != 0) {
@@ -16921,7 +16834,7 @@ turn_loop:
     if (game_loop_active == '\0') {
       net_send_message(0x2d,0,human_civ[0],0,0,0,0,0,0,0);
       XD_FlushSendBuffer(60000);
-      net_session_shutdown(((iptr *)&net_session_block.net_session),1);
+      net_session_shutdown(&net_session_block,1);
       if (game_over_reason != 0) {
         game_handle_game_over();
       }

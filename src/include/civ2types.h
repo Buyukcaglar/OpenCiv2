@@ -511,6 +511,422 @@ typedef struct GameState {
     u8 civ_by_rank[8];              /* 0x142 civ at each rank; [7] = strongest civ */
 } GameState;
 
+/* Sound mixer (sound.cpp).  32-bit layout: the original keeps pointers and
+ * Win32 handles (HMMIO, HGLOBAL) in 4-byte slots. */
+/* A waveOut header (WAVEHDR, 0x20 bytes) at the start of a buffer's sample
+ * block; the samples follow it. */
+typedef struct WaveHeader {
+    i32 data;                       /* 0x00 lpData: the samples */
+    u32 length;                     /* 0x04 dwBufferLength */
+    u32 bytes_recorded;             /* 0x08 */
+    struct WaveBuffer *owner;       /* 0x0c dwUser: the buffer it belongs to */
+    u32 flags;                      /* 0x10 dwFlags (WHDR_DONE = 1) */
+    u32 loops;                      /* 0x14 */
+    i32 next;                       /* 0x18 lpNext */
+    i32 reserved;                   /* 0x1c */
+} WaveHeader;
+
+/* One output buffer (0x20 bytes, GlobalAlloc'd), a ring linked by next
+ * (snd_wave_buffer_ring; unused ones in snd_wave_spare_buffers). */
+typedef struct WaveBuffer {
+    WaveHeader *hdr;                /* 0x00 header + samples (bytes + 0x20) */
+    u32 data_handle;                /* 0x04 HGLOBAL of hdr */
+    u32 handle;                     /* 0x08 HGLOBAL of this buffer */
+    u32 flags;                      /* 0x0c 1 spare, 2 stream ended, 8 filled, 0x10 end played,
+                                       0x20 queued, 0x40 mixed; bits 7..14 index in the ring */
+    i32 data;                       /* 0x10 the samples (= hdr->data) */
+    i32 data_end;                   /* 0x14 */
+    i32 length;                     /* 0x18 bytes */
+    struct WaveBuffer *next;        /* 0x1c */
+} WaveBuffer;
+
+/* One playing sound (0xbc bytes, GlobalAlloc'd): a wave file read through
+ * mmio, a streamed wave file, or an AVI audio stream (kind 4); a list linked
+ * by next (snd_wave_sources). */
+typedef struct WaveSource {
+    u32 mmio;                       /* 0x00 HMMIO the samples are read from */
+    u32 data_ckid;                  /* 0x04 the 'data' chunk (MMCKINFO) */
+    i32 data_size;                  /* 0x08 bytes of samples */
+    u32 data_fcc_type;              /* 0x0c */
+    i32 data_offset;                /* 0x10 file offset of the samples */
+    u32 data_ck_flags;              /* 0x14 */
+    u32 io_flags;                   /* 0x18 MMIOINFO of mmio */
+    u32 io_fcc_proc;                /* 0x1c */
+    u32 io_proc;                    /* 0x20 */
+    u32 io_error;                   /* 0x24 */
+    u32 io_task;                    /* 0x28 */
+    u32 buf_size;                   /* 0x2c cchBuffer */
+    i32 buf_start;                  /* 0x30 pchBuffer */
+    i32 buf_next;                   /* 0x34 pchNext: next sample to play */
+    i32 buf_end_read;               /* 0x38 */
+    i32 buf_end;                    /* 0x3c pchEndWrite */
+    i32 io_buf_offset;              /* 0x40 */
+    i32 io_disk_offset;             /* 0x44 */
+    u32 io_info[3];                 /* 0x48 */
+    u32 io_reserved[2];             /* 0x54 */
+    i32 io_hmmio;                   /* 0x5c */
+    u32 file_mmio;                  /* 0x60 HMMIO of the file (streamed) */
+    i32 play_pos;                   /* 0x64 bytes played */
+    i32 buffer_fill;                /* 0x68 bytes in the buffer being filled / read */
+    u32 mem_handle;                 /* 0x6c HGLOBAL of this record */
+    u32 flags;                      /* 0x70 1 ended, 2 stopped, 4 streamed, 8 needs data,
+                                       0x10 started */
+    union { u32 format_tag_channels; struct {
+        u16 format_tag;             /* 0x74 WAVEFORMAT */
+        u16 channels;               /* 0x76 */
+    }; };
+    u32 samples_per_sec;            /* 0x78 */
+    u32 avg_bytes_per_sec;          /* 0x7c */
+    union { u32 block_align_bits; struct {
+        u16 block_align;            /* 0x80 bytes per sample */
+        u16 bits_per_sample;        /* 0x82 */
+    }; };
+    i32 avi_stream;                 /* 0x84 PAVISTREAM */
+    i16 kind;                       /* 0x88 1 wave, 4 AVI stream */
+    i16 sound_id;                   /* 0x8a */
+    iptr status_ptr;                /* 0x8c u16 * of the AVI player's status (4 = playing) */
+    i32 stream_pos;                 /* 0x90 AVI: next byte to read */
+    i32 stream_start;               /* 0x94 */
+    WaveBuffer *fill_buffer;        /* 0x98 AVI: the buffer being filled */
+    i32 buffer_bytes;               /* 0x9c AVI: bytes per buffer */
+    u8 pad_a0[8];
+    i32 size_mask;                  /* 0xa8 */
+    u8 pad_ac[8];
+    i32 done_callback;              /* 0xb4 called with sound_id when it ends */
+    struct WaveSource *next;        /* 0xb8 */
+} WaveSource;
+/* A BITMAPINFOHEADER (0x28 bytes): the AVI player's frame formats. */
+typedef struct BitmapInfoHeader {
+    u32 size;                       /* 0x00 */
+    i32 width;                      /* 0x04 */
+    i32 height;                     /* 0x08 negative: top-down */
+    u16 planes;                     /* 0x0c */
+    u16 bit_count;                  /* 0x0e */
+    u32 compression;                /* 0x10 */
+    i32 size_image;                 /* 0x14 */
+    i32 x_pels_per_meter;           /* 0x18 */
+    i32 y_pels_per_meter;           /* 0x1c */
+    u32 clr_used;                   /* 0x20 */
+    u32 clr_important;              /* 0x24 */
+} BitmapInfoHeader;
+#ifdef __cplusplus
+static_assert(sizeof(WaveHeader) == 0x20, "");
+static_assert(sizeof(WaveBuffer) == 0x20, "");
+static_assert(sizeof(WaveSource) == 0xbc, "");
+static_assert(sizeof(BitmapInfoHeader) == 0x28, "");
+#endif
+
+/* Network (network.cpp). */
+/* A game announced on the network (0x124 bytes): the payload of the server's
+ * info message (net_fill_game_info), copied into a node of the found games
+ * list (net_session_block.net_found_games, sorted by game name). */
+typedef struct NetGameInfo {
+    char host_address[32];          /* 0x00 the server's address: the list's key */
+    struct NetGameInfo *next;       /* 0x20 found games list */
+    struct NetGameInfo *prev;       /* 0x24 */
+    i32 last_seen;                  /* 0x28 timer_ticks() when last announced */
+    i32 list_id;                    /* 0x2c id in the game list window */
+    char version[64];               /* 0x30 */
+    char game_name[32];             /* 0x70 */
+    char host_name[32];             /* 0x90 the hosting player */
+    i16 open_game;                  /* 0xb0 */
+    u8 difficulty;                  /* 0xb2 */
+    u8 barbarian_activity;          /* 0xb3 */
+    u8 civs_alive;                  /* 0xb4 bit per civ */
+    u8 player_mask;                 /* 0xb5 bit per player */
+    u8 pad_b6[2];
+    i32 turn_time_limit_ms;         /* 0xb8 0: none */
+    char scenario_name[80];         /* 0xbc */
+    i16 double_moves;               /* 0x10c */
+    i16 double_production;          /* 0x10e */
+    u16 game_flags;                 /* 0x110 */
+    i16 first_launch_turn;          /* 0x112 */
+    i16 year_increment;             /* 0x114 */
+    i16 start_year;                 /* 0x116 */
+    i16 turn;                       /* 0x118 */
+    i16 map_width;                  /* 0x11a */
+    i16 map_height;                 /* 0x11c */
+    i16 simultaneous;               /* 0x11e */
+    i16 field_120;                  /* 0x120 below 3: the player count is not shown */
+    u8 pad_122[2];
+} NetGameInfo;
+#ifdef __cplusplus
+static_assert(sizeof(NetGameInfo) == 0x124, "");
+#endif
+/* A player of the network game (0x54 bytes; net_session_block.net_slots,
+ * slot 0 is the local player). */
+typedef struct NetPlayerSlot {
+    i32 id;                         /* 0x00 the player's connection id */
+    char address[32];               /* 0x04 */
+    char name[32];                  /* 0x24 */
+    i32 field_44;                   /* 0x44 */
+    i32 lobby_id;                   /* 0x48 entry in the lobby list */
+    i8 is_host;                     /* 0x4c */
+    i8 active;                      /* 0x4d */
+    u8 pad_4e[2];
+    i32 civ;                        /* 0x50 */
+} NetPlayerSlot;
+/* A queued draw request of the network stacked-draw queue (0x40 bytes). */
+typedef struct NetStackedDraw {
+    i32 kind;                       /* 0x00 */
+    i32 args[15];                   /* 0x04 */
+} NetStackedDraw;
+/* A unit lost, in a civ's casualty log (0x22 bytes;
+ * net_session_block.casualty_log, 300 per civ). */
+typedef struct CasualtyEntry {
+    i16 unit_type;                  /* 0x00 */
+    i16 x;                          /* 0x02 */
+    i16 y;                          /* 0x04 */
+    i16 year;                       /* 0x06 */
+    i16 killer_color;               /* 0x08 */
+    char killer_name[24];           /* 0x0a */
+} CasualtyEntry;
+/* A civ's lock on map tiles during a network move (0x18 bytes;
+ * net_map_lock_slots_block.net_map_locks). */
+typedef struct NetMapLock {
+    i32 state;                      /* 0x00 */
+    i32 replies;                    /* 0x04 */
+    i32 src_x;                      /* 0x08 */
+    i32 src_y;                      /* 0x0c */
+    i32 dst_x;                      /* 0x10 */
+    i32 dst_y;                      /* 0x14 */
+} NetMapLock;
+#ifdef __cplusplus
+static_assert(sizeof(NetPlayerSlot) == 0x54, "");
+static_assert(sizeof(NetMapLock) == 0x18, "");
+static_assert(sizeof(CasualtyEntry) == 0x22, "");
+static_assert(sizeof(NetStackedDraw) == 0x40, "");
+#endif
+
+
+/* Windows (window.cpp). */
+/* The native window record (0x4c bytes, a locked mem_handle block) that
+ * wnd_obj_create makes for a window object: WndBase.native_wnd,
+ * wnd_get_window(). */
+typedef struct NativeWindow {
+    i32 mem_handle;                 /* 0x00 handle of this record */
+    HWND hwnd;                      /* 0x04 */
+    HDC hdc;                        /* 0x08 GetDC(hwnd), kept for the window's life */
+    HWND active_child;              /* 0x0c the attached child drawn active (WM_NCACTIVATE) */
+    HWND topmost_child;             /* 0x10 the attached child kept above its siblings */
+    HBRUSH bg_brush;                /* 0x14 background colour */
+    HPALETTE palette;               /* 0x18 selected into hdc */
+    HCURSOR cursor;                 /* 0x1c */
+    HICON icon;                     /* 0x20 drawn when minimized */
+    struct DibSurface *bg_tile;     /* 0x24 tiled background */
+    i32 field_28;                   /* 0x28 */
+    struct DibSurface *bg_surface;  /* 0x2c centred background */
+    i32 flag_400;                   /* 0x30 created with flags & 0x400 */
+    i32 flag_1000;                  /* 0x34 created with flags & 0x1000 */
+    i32 caption_height;             /* 0x38 */
+    i32 resize_border;              /* 0x3c */
+    i32 field_40;                   /* 0x40 set to 8 */
+    i32 destroyed;                  /* 0x44 WM_DESTROY seen: hwnd is gone */
+    union { u32 flags; u8 flags_bytes[4]; };  /* 0x48 wnd_obj_create flags
+                                       (0x200 attached child, 0x2000 sizing ...) */
+} NativeWindow;
+#ifdef __cplusplus
+static_assert(sizeof(NativeWindow) == 0x4c, "");
+#endif
+
+
+/* Dialogs (window.cpp): the lists a dialog builds, each node allocated from
+ * the dialog's string pool (memblock_alloc). */
+/* A choice of a dialog's option list (0x18 bytes; Dialog.option_list,
+ * dialog_add_option); a list sorted by text when style_flags & 0x800000. */
+typedef struct DialogOption {
+    union { u32 flags; u8 flags_byte; };  /* 0x00 1 disabled (also an empty text), 4 checked */
+    i32 id;                         /* 0x04 */
+    char *text;                     /* 0x08 */
+    i32 group;                      /* 0x0c list pane (dialog_add_option data); compared with cur_pane */
+    struct DialogOption *next;      /* 0x10 */
+    struct DialogOption *prev;      /* 0x14 */
+} DialogOption;
+/* A picture of a dialog's sprite list (0x14 bytes; Dialog.sprite_list,
+ * dialog_add_sprite). */
+typedef struct DialogSprite {
+    i32 id;                         /* 0x00 */
+    i32 field_04;                   /* 0x04 */
+    char *label;                    /* 0x08 0: none */
+    struct Sprite *sprite;          /* 0x0c */
+    struct DialogSprite *next;      /* 0x10 */
+} DialogSprite;
+/* A text field of a dialog (0x1c bytes; Dialog.edit_field_list,
+ * dialog_add_edit_field). */
+typedef struct DialogEditField {
+    i32 field_00;                   /* 0x00 */
+    i32 width;                      /* 0x04 pixels */
+    i32 max_len;                    /* 0x08 */
+    i32 index;                      /* 0x0c its edit control */
+    char *label;                    /* 0x10 */
+    char *buffer;                   /* 0x14 the text (0x100 bytes) */
+    struct DialogEditField *next;   /* 0x18 */
+} DialogEditField;
+/* A line of a dialog's text (0x20 bytes; Dialog.line_list, dialog_add_line). */
+typedef struct DialogLine {
+    i32 number;                     /* 0x00 1, 2, ... */
+    union { u32 flags; u8 flags_byte; };  /* 0x04 1 the text began with ^^, 2 with ^ (centred) */
+    char *text;                     /* 0x08 */
+    i32 capacity;                   /* 0x0c bytes of text */
+    i32 x;                          /* 0x10 */
+    i32 y;                          /* 0x14 */
+    i32 color;                      /* 0x18 */
+    struct DialogLine *next;        /* 0x1c */
+} DialogLine;
+/* A menu of a GameMenu, or an item of a menu (0x1c bytes; GameMenu.menus,
+ * menu_add_menu / menu_add_item). */
+typedef struct MenuNode {
+    char *text;                     /* 0x00 */
+    i32 id;                         /* 0x04 */
+    union { u32 flags; u8 flags_byte; };  /* 0x08 1 disabled, 2 hidden, 4 checked */
+    i32 field_0c;                   /* 0x0c */
+    struct MenuNode *next;          /* 0x10 */
+    struct MenuNode *prev;          /* 0x14 */
+    struct MenuNode *link;          /* 0x18 a menu: its first item; an item: its menu */
+} MenuNode;
+#ifdef __cplusplus
+static_assert(sizeof(DialogOption) == 0x18, "");
+static_assert(sizeof(DialogSprite) == 0x14, "");
+static_assert(sizeof(DialogEditField) == 0x1c, "");
+static_assert(sizeof(DialogLine) == 0x20, "");
+static_assert(sizeof(MenuNode) == 0x1c, "");
+#endif
+
+
+/* The buffers of the diff engine's run-length coder (0x14 bytes;
+ * diffeng_rle_encode / diffeng_rle_decode, callers' consecutive locals). */
+typedef struct RleStream {
+    u8 *src;                        /* 0x00 input */
+    u8 *src_end;                    /* 0x04 */
+    u8 *dst;                        /* 0x08 output */
+    u8 *dst_end;                    /* 0x0c its capacity */
+    i32 out_len;                    /* 0x10 bytes written */
+} RleStream;
+#ifdef __cplusplus
+static_assert(sizeof(RleStream) == 0x14, "");
+#endif
+
+
+/* Scenario events (game.cpp). */
+/* One @IF/@THEN event of EVENTS.TXT (0x1c4 bytes; ScenarioEvents.event_list,
+ * events_alloc, events_parse_file).  The first 0x1bc bytes are saved with the
+ * game; the strings live in the events' string pool. */
+typedef struct ScenarioEvent {
+    union { i32 trigger; u8 trigger_bytes[4]; };  /* 0x000 1 UnitKilled, 2 CityTaken, 4 Turn, 8 TurnInterval,
+                                       0x10 Negotiation, 0x20 ScenarioLoaded, 0x40 RandomTurn,
+                                       0x80 NoSchism, 0x100 ReceivedTechnology */
+    union { u32 actions; u8 actions_bytes[4]; };  /* 0x004 1 Text, 2 MoveUnit, 4 CreateUnit,
+                                       8 ChangeMoney, 0x10 PlayWaveFile, 0x20 MakeAggression,
+                                       0x40 JustOnce, 0x80 PlayCDTrack, 0x100 DontPlayWonders,
+                                       0x200 ChangeTerrain, 0x400 DestroyACivilization,
+                                       0x800 GiveTechnology */
+    char *unit_name;                /* 0x008 UnitKilled unit */
+    i32 unit_type;                  /* 0x00c */
+    char *city_name;                /* 0x010 CityTaken city */
+    char *who_name;                 /* 0x014 attacker / Negotiation talker */
+    i32 who_civ;                    /* 0x018 */
+    i32 talker_type;                /* 0x01c 1 human, 2 computer, 4 either */
+    char *whom_name;                /* 0x020 defender / listener / NoSchism, ReceivedTechnology civ */
+    i32 whom_civ;                   /* 0x024 */
+    i32 listener_type;              /* 0x028 1 human, 2 computer, 4 either */
+    i32 turn;                       /* 0x02c Turn (-1 every turn) / TurnInterval interval */
+    i32 denominator;                /* 0x030 RandomTurn */
+    i32 technology;                 /* 0x034 ReceivedTechnology */
+    char *text[20];                 /* 0x038 Text lines */
+    char *move_owner_name;          /* 0x088 MoveUnit */
+    i32 move_owner_civ;             /* 0x08c */
+    char *move_unit_name;           /* 0x090 */
+    i32 move_unit_type;             /* 0x094 */
+    i32 move_count;                 /* 0x098 NumberToMove, -2 all */
+    i32 move_rect[8];               /* 0x09c MapRect: 4 x, y pairs */
+    i32 move_to_x;                  /* 0x0bc */
+    i32 move_to_y;                  /* 0x0c0 */
+    char *aggression_whom_name;     /* 0x0c4 MakeAggression */
+    i32 aggression_whom_civ;        /* 0x0c8 */
+    char *aggression_who_name;      /* 0x0cc */
+    i32 aggression_who_civ;         /* 0x0d0 */
+    char *create_owner_name;        /* 0x0d4 CreateUnit */
+    i32 create_owner_civ;           /* 0x0d8 */
+    char *create_unit_name;         /* 0x0dc */
+    i32 create_unit_type;           /* 0x0e0 */
+    i32 create_locations[20];       /* 0x0e4 10 x, y pairs */
+    i32 create_location_count;      /* 0x134 */
+    i32 create_veteran;             /* 0x138 */
+    char *create_homecity;          /* 0x13c */
+    char *field_140;                /* 0x140 a civ name (saved, copied) */
+    i32 field_144;                  /* 0x144 */
+    char *field_148;                /* 0x148 a unit type name (renamed with the type) */
+    u8 pad_14c[0x28];               /* 0x14c */
+    char *money_receiver_name;      /* 0x174 ChangeMoney */
+    i32 money_receiver_civ;         /* 0x178 */
+    i32 money_amount;               /* 0x17c */
+    i32 negotiation_flag;           /* 0x180 0x1000 for a Negotiation trigger */
+    char *wave_file;                /* 0x184 PlayWaveFile */
+    i32 cd_track;                   /* 0x188 PlayCDTrack */
+    i32 terrain_type;               /* 0x18c ChangeTerrain */
+    i32 terrain_rect[8];            /* 0x190 MapRect: 4 x, y pairs */
+    i32 destroy_civ;                /* 0x1b0 DestroyACivilization */
+    i32 give_tech;                  /* 0x1b4 GiveTechnology */
+    i32 give_tech_civ;              /* 0x1b8 */
+    struct ScenarioEvent *next;     /* 0x1bc */
+    struct ScenarioEvent *prev;     /* 0x1c0 */
+} ScenarioEvent;
+#ifdef __cplusplus
+static_assert(sizeof(ScenarioEvent) == 0x1c4, "");
+#endif
+
+
+/* Graphics (graphics.cpp). */
+/* A GDI DIB section and its memory DC (0x28 bytes, a locked mem_handle block;
+ * dib_create*; DibSurface.dib). */
+typedef struct GdiDib {
+    i32 mem_handle;                 /* 0x00 handle of this record */
+    HDC hdc;                        /* 0x04 memory DC the bitmap is selected into */
+    HGDIOBJ palette;                /* 0x08 deleted with the DIB when set */
+    HBITMAP bitmap;                 /* 0x0c the DIB section */
+    HGDIOBJ old_bitmap;             /* 0x10 hdc's bitmap before */
+    i32 top_down;                   /* 0x14 1: row 0 at the top */
+    i32 width;                      /* 0x18 */
+    i32 height;                     /* 0x1c */
+    i32 stride;                     /* 0x20 bytes per row */
+    i32 bits;                       /* 0x24 the pixels */
+} GdiDib;
+#ifdef __cplusplus
+static_assert(sizeof(GdiDib) == 0x28, "");
+#endif
+
+
+/* Controls (controls.cpp). */
+/* The record a control's HWND keeps in its window long 0 (0x30 bytes, a locked
+ * mem_handle block; ctrl_init_block, wnd_from_hwnd). */
+typedef struct ControlBlock {
+    i32 mem_handle;                 /* 0x00 handle of this record */
+    iptr owner;                     /* 0x04 the Control */
+    i32 shared_bitmaps;             /* 0x08 nonzero: the bitmaps are not deleted with it */
+    HBITMAP bitmaps[3];             /* 0x0c a button's faces */
+    i32 pressed;                    /* 0x18 drawn pressed / checked */
+    i32 tracking;                   /* 0x1c the mouse is captured */
+    i32 field_20;                   /* 0x20 */
+    iptr data;                      /* 0x24 kind 2: an owned buffer, kind 3: an i32 * cleared on destroy */
+    i32 field_28;                   /* 0x28 */
+    i32 kind;                       /* 0x2c */
+} ControlBlock;
+/* An item of a radio group (0xa4 bytes; RadioGroup.items). */
+typedef struct RadioItem {
+    HWND hwnd;                      /* 0x00 */
+    RECT rect;                      /* 0x04 */
+    i32 index;                      /* 0x14 */
+    i32 enabled;                    /* 0x18 */
+    char label[128];                /* 0x1c */
+    char hotkey;                    /* 0x9c */
+    u8 pad_9d[3];
+    i32 hotkey_pos;                 /* 0xa0 index of the hotkey in label, -1: none */
+} RadioItem;
+#ifdef __cplusplus
+static_assert(sizeof(ControlBlock) == 0x30, "");
+static_assert(sizeof(RadioItem) == 0xa4, "");
+#endif
+
 #pragma pack(pop)
 
 #endif

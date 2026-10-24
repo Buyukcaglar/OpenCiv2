@@ -100,7 +100,7 @@ button_create
     ctrl_destroy(self);
   }
   self->font = (u32)(*(i8 * *)draw_current_font_rest);
-  ctrl_init(self,parent,6,ctrl_id,rect);
+  ctrl_init(self,parent,6,ctrl_id,(RECT *)rect);
   self->on_click = 0;
   new_hwnd = button_create_hwnd((int *)rect,(iptr)self,label,1,(GameFont *)self->font);
   self->hwnd = new_hwnd;
@@ -110,16 +110,16 @@ button_create
 
 /* 0040f730 auto */
 void __thiscall
-ctrl_init(Control *self,iptr parent_wnd,u32 type_code,u32 id,iptr rect)
+ctrl_init(Control *self,iptr parent_wnd,u32 type_code,u32 id,RECT *rect)
 
 {
   self->parent = parent_wnd;
   self->ctrl_type = type_code;
   self->ctrl_id = id;
-  self->rect_left = *(u32 *)rect;
-  self->rect_top = *(u32 *)(rect + 4);
-  self->rect_right = *(u32 *)(rect + 8);
-  self->rect_bottom = *(u32 *)(rect + 0xc);
+  self->rect_left = (u32)rect->left;
+  self->rect_top = (u32)rect->top;
+  self->rect_right = (u32)rect->right;
+  self->rect_bottom = (u32)rect->bottom;
   self->next_ctrl = 0;
   self->hwnd = 0;
   self->wants_initial_focus = '\0';
@@ -209,11 +209,11 @@ checkbox_create
   if (self->hwnd != 0) {
     ctrl_destroy(self);
   }
-  ctrl_init(self,parent,2,ctrl_id,(iptr)rect);
+  ctrl_init(self,parent,2,ctrl_id,(RECT *)rect);
   self->is_enabled = 0;
   self->on_select = 1;
   self->on_click = 0;
-  new_hwnd = checkbox_create_hwnd((iptr)rect,(iptr)self,(char *)label,1);
+  new_hwnd = checkbox_create_hwnd((RECT *)rect,(iptr)self,(char *)label,1);
   self->hwnd = new_hwnd;
   return;
 }
@@ -278,7 +278,7 @@ scrollbar_create
   if (self->hwnd != 0) {
     ctrl_destroy(self);
   }
-  ctrl_init(self,parent,8,ctrl_id,rect);
+  ctrl_init(self,parent,8,ctrl_id,(RECT *)rect);
   new_hwnd = scrollbar_create_hwnd((int *)rect,(iptr)self,style,1);
   self->hwnd = new_hwnd;
   scrollbar_hwnd_set_range(self->hwnd,1,100);
@@ -374,7 +374,7 @@ edit_create
     ctrl_destroy((Control *)self);
   }
   self->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
-  ctrl_init((Control *)self,parent,4,ctrl_id,rect);
+  ctrl_init((Control *)self,parent,4,ctrl_id,(RECT *)rect);
   new_hwnd = edit_create_window((int *)rect,(iptr)self,1,1,(GameFont *)self->edit_font);
   self->hwnd = new_hwnd;
   hwnd_send_settext(self->hwnd,(LPARAM)(text));
@@ -455,7 +455,7 @@ combo_create(Control *self,iptr parent,i32 ctrl_id,iptr rect)
   if (self->hwnd != 0) {
     ctrl_destroy(self);
   }
-  ctrl_init(self,parent,10,ctrl_id,rect);
+  ctrl_init(self,parent,10,ctrl_id,(RECT *)rect);
   new_hwnd = combo_create_window((int *)rect,(iptr)self,1);
   self->hwnd = new_hwnd;
   self->is_enabled = 0;
@@ -560,7 +560,7 @@ listbox_create(Control *self,iptr parent,i32 ctrl_id,iptr rect)
     ctrl_destroy(self);
   }
   self->font = (u32)(*(i8 * *)(draw_current_font_rest + 16));
-  ctrl_init(self,parent,7,ctrl_id,rect);
+  ctrl_init(self,parent,7,ctrl_id,(RECT *)rect);
   new_hwnd = listbox_create_hwnd((int *)rect,(iptr)self,1,0,(GameFont *)self->font);
   self->hwnd = new_hwnd;
   self->is_enabled = 0;
@@ -609,8 +609,8 @@ void __thiscall radiogrp_enable_item(RadioGroupEnableView *self,iptr index)
 
 {
   if ((index < (int)self->item_count) && (-1 < index)) {
-    *(i32 *)(self->items + 0x18 + index * 0xa4) = 1;
-    radiogrp_hwnd_invalidate(*(i32 *)(self->items + index * 0xa4));
+    ((RadioItem *)self->items)[index].enabled = 1;
+    radiogrp_hwnd_invalidate((i32)((RadioItem *)self->items)[index].hwnd);
   }
   return;
 }
@@ -633,8 +633,8 @@ void __thiscall radiogrp_disable_item(RadioGroupDisableView *self,iptr index)
     if (self->selected_index == index) {
       self->selected_index = 0xffffffff;
     }
-    *(i32 *)(self->items + 0x18 + index * 0xa4) = 0;
-    radiogrp_hwnd_invalidate(*(i32 *)(self->items + index * 0xa4));
+    ((RadioItem *)self->items)[index].enabled = 0;
+    radiogrp_hwnd_invalidate((i32)((RadioItem *)self->items)[index].hwnd);
   }
   return;
 }
@@ -891,7 +891,7 @@ edit_create_styled
     ctrl_destroy((Control *)self);
   }
   self->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
-  ctrl_init((Control *)self,parent,4,ctrl_id,rect);
+  ctrl_init((Control *)self,parent,4,ctrl_id,(RECT *)rect);
   new_hwnd = edit_create_window((int *)rect,(iptr)self,multiline,style,(GameFont *)self->edit_font);
   self->hwnd = new_hwnd;
   hwnd_send_settext(self->hwnd,(LPARAM)(text));
@@ -947,7 +947,7 @@ edit_get_line(EditLineView *self,i32 line,char *buffer,i32 max_len)
 
 /* 005011b4 auto */
 void __cdecl
-spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr sprite,iptr rect)
+spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr sprite,RECT *rect)
 
 {
   int *surf_rect;
@@ -967,18 +967,18 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   width2 = rect_width(rect);
   height2 = rect_height(rect);
   spritebtn_init_from_sprite
-            (button,(WndPaletteView *)parent,ctrl_id,*(i32 *)rect,*(i32 *)(rect + 4),width2,
+            (button,(WndPaletteView *)parent,ctrl_id,rect->left,rect->top,width2,
              height2,sprite,0x17);
   surf_rect = (int *)surface_get_rect((DibSurface *)&button->on_select);
   rect2.left = *surf_rect;
   rect2.top = surf_rect[1];
   rect2.right = surf_rect[2];
   rect2.bottom = surf_rect[3];
-  size = rect_width((iptr)&rect2);
+  size = rect_width(&rect2);
   center = rect2.left + size / 2;
   size = sprite_width((Sprite *)sprite);
   icon_x = center - size / 2;
-  size = rect_height((iptr)&rect2);
+  size = rect_height(&rect2);
   center = rect2.top + size / 2;
   size = sprite_height((Sprite *)sprite);
   icon_y = center - size / 2;
@@ -987,18 +987,18 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   sprite_draw
             ((Sprite *)sprite,(iptr)shadow_ctx,(iptr)(button->button_surface),icon_x + 2,
              icon_y + 2);
-  gfx_draw_rect_frame((iptr)&button->on_select,(iptr)&rect2,10);
-  gfx_draw_rect_frame((iptr)(button->button_surface),(iptr)&rect2,10);
+  gfx_draw_rect_frame((iptr)&button->on_select,&rect2,10);
+  gfx_draw_rect_frame((iptr)(button->button_surface),&rect2,10);
   inner_rect.left = rect2.left;
   inner_rect.top = rect2.top;
   inner_rect.right = rect2.right;
   inner_rect.bottom = rect2.bottom;
   rect_deflate((iptr)&inner_rect,1,1);
-  gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_rect,0x1f,0xf);
-  gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_rect,0xf,10);
+  gfx_draw_bevel_rect((iptr)&button->on_select,&inner_rect,0x1f,0xf);
+  gfx_draw_bevel_rect((iptr)(button->button_surface),&inner_rect,0xf,10);
   rect_deflate((iptr)&inner_rect,1,1);
-  gfx_draw_bevel_rect((iptr)&button->on_select,(iptr)&inner_rect,0x1f,0xf);
-  gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_rect,0xf,10);
+  gfx_draw_bevel_rect((iptr)&button->on_select,&inner_rect,0x1f,0xf);
+  gfx_draw_bevel_rect((iptr)(button->button_surface),&inner_rect,0xf,10);
   parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)button);
   palette = wnd_get_palette(parent_wnd);
   surface_set_palette((DibSurface *)button->button_surface,palette);
@@ -1102,11 +1102,11 @@ checkbox_create_fixed
   if (self->hwnd != 0) {
     ctrl_destroy(self);
   }
-  ctrl_init(self,parent,2,ctrl_id,(iptr)rect);
+  ctrl_init(self,parent,2,ctrl_id,(RECT *)rect);
   self->is_enabled = 0;
   self->on_select = 1;
   self->on_click = 0;
-  hwnd = checkbox_create_hwnd((iptr)rect,(iptr)self,(char *)label,1);
+  hwnd = checkbox_create_hwnd((RECT *)rect,(iptr)self,(char *)label,1);
   self->hwnd = hwnd;
   return;
 }
@@ -1158,7 +1158,7 @@ radiogrp_create
     ctrl_destroy((Control *)self);
   }
   self->radio_font = (u32)(*(i8 * *)(draw_current_font_rest + 4));
-  ctrl_init((Control *)self,parent,3,ctrl_id,rect);
+  ctrl_init((Control *)self,parent,3,ctrl_id,(RECT *)rect);
   self->is_enabled = 0;
   self->on_click = 0;
   self->on_select = 0;
@@ -1431,10 +1431,10 @@ u32 __thiscall radiogrp_item_count(RadioGroupCountView *self)
 }
 
 /* 005c8f50 auto */
-int __thiscall ctrl_get_rect(void *self)
+int __thiscall ctrl_get_rect(Control *self)
 
 {
-  return (int)self + 0xc;
+  return (int)&self->rect_left;
 }
 
 /* 005c90b0 auto */
@@ -1452,23 +1452,23 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
   LONG own_data;
   DibSurface *self;
   WndBase *parent_wnd;
-  iptr window;
+  NativeWindow *window;
   iptr height;
   int value;
   HDC hdcSrc;
   LONG y1;
   DWORD rop;
   tagPOINT origin;
-  iptr dib2;
+  GdiDib *dib2;
   HWND parent_hwnd;
   
   parent_hwnd = GetParent(hwnd);
   own_data = GetWindowLongA(parent_hwnd,0xc);
   if (own_data == 0) {
     parent_wnd = (WndBase *)GetWindowLongA(parent_hwnd,0);
-    value = wnd_get_window(parent_wnd);
-    if (*(int *)(value + 0x14) != 0) {
-      FillRect(*(HDC *)paint,(RECT *)(paint + 8),*(HBRUSH *)(value + 0x14));
+    value = (int)wnd_get_window(parent_wnd);
+    if ((int)((NativeWindow *)value)->bg_brush != 0) {
+      FillRect(*(HDC *)paint,(RECT *)(paint + 8),((NativeWindow *)value)->bg_brush);
     }
   }
   else {
@@ -1478,17 +1478,17 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
     dib2 = surface_get_dib(self);
     origin.x = *(int *)(paint + 8);
     origin.y = *(int *)(paint + 0xc);
-    MapWindowPoints(hwnd,*(HWND *)(window + 4),&origin,1);
-    if ((*(int *)(window + 0x18) != 0) && (gfx_palettized_display == 1)) {
-      SelectPalette(*(HDC *)paint,*(HPALETTE *)(window + 0x18),0);
+    MapWindowPoints(hwnd,window->hwnd,&origin,1);
+    if ((window->palette != 0) && (gfx_palettized_display == 1)) {
+      SelectPalette(*(HDC *)paint,window->palette,0);
       RealizePalette(*(HDC *)paint);
     }
     rop = 0xcc0020;
-    hdcSrc = *(HDC *)(dib2 + 4);
+    hdcSrc = dib2->hdc;
     own_data = origin.x;
     y1 = origin.y;
-    height = rect_height(paint + 8);
-    value = rect_width(paint + 8);
+    height = rect_height((RECT *)(paint + 8));
+    value = rect_width((RECT *)(paint + 8));
     BitBlt(*(HDC *)paint,*(int *)(paint + 8),*(int *)(paint + 0xc),value,height,hdcSrc,own_data,y1
            ,rop);
   }
@@ -1535,7 +1535,7 @@ LRESULT __stdcall ctrl_default_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM l
 
 {
   HWND hWnd;
-  iptr block;
+  ControlBlock *block;
   LRESULT result;
   tagPAINTSTRUCT ps;
   
@@ -1549,11 +1549,11 @@ LRESULT __stdcall ctrl_default_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM l
     if (msg == 2) {
       block = wnd_from_hwnd(hwnd);
       if (block != 0) {
-        if (*(int *)(block + 0x2c) == 3) {
-          **(i32 **)(block + 0x24) = 0;
+        if (block->kind == 3) {
+          *(i32 *)block->data = 0;
         }
         else {
-          control_set_hwnd(*(ControlHwndSetView **)(block + 4),0);
+          control_set_hwnd((ControlHwndSetView *)block->owner,0);
         }
         ctrl_hwnd_free_block(hwnd);
       }
@@ -1591,29 +1591,29 @@ int __cdecl ctrl_destroy_hwnd(iptr ctrl)
 }
 
 /* 005c9499 auto */
-i32 * __cdecl ctrl_init_block(HWND hwnd,iptr owner)
+ControlBlock * __cdecl ctrl_init_block(HWND hwnd,iptr owner)
 
 {
   i32 handle;
-  i32 *block;
+  ControlBlock *block;
   
-  block = (i32 *)0x0;
+  block = (ControlBlock *)0x0;
   if (hwnd == (HWND)0x0) {
     dbg_log((const char *)&str_error_tried_to_initialize_null_control_i);
   }
   else {
     handle = mem_handle_alloc(0x30);
-    block = (i32 *)mem_handle_lock(handle);
-    block[2] = 0;
-    block[5] = 0;
-    block[4] = block[5];
-    block[3] = block[4];
-    *block = handle;
-    block[1] = owner;
-    block[6] = 0;
-    block[7] = 0;
-    block[8] = 0;
-    block[0xb] = 0;
+    block = (ControlBlock *)mem_handle_lock(handle);
+    block->shared_bitmaps = 0;
+    block->bitmaps[2] = 0;
+    block->bitmaps[1] = (i32)block->bitmaps[2];
+    block->bitmaps[0] = (i32)block->bitmaps[1];
+    block->mem_handle = handle;
+    block->owner = owner;
+    block->pressed = 0;
+    block->tracking = 0;
+    block->field_20 = 0;
+    block->kind = 0;
     SetWindowLongA(hwnd,0,(LONG)block);
   }
   return block;
@@ -1624,33 +1624,33 @@ void __cdecl ctrl_hwnd_free_block(HWND hwnd)
 
 {
   i32 handle;
-  i32 *block;
+  ControlBlock *block;
   
   if (hwnd == (HWND)0x0) {
     dbg_log((const char *)&str_error_tried_to_dispose_null_control_in_d);
   }
   else {
-    block = (i32 *)GetWindowLongA(hwnd,0);
-    if (block != (i32 *)0x0) {
-      if (block[2] == 0) {
-        if (block[3] != 0) {
-          DeleteObject((HGDIOBJ)block[3]);
-          block[3] = 0;
+    block = (ControlBlock *)GetWindowLongA(hwnd,0);
+    if (block != (ControlBlock *)0x0) {
+      if (block->shared_bitmaps == 0) {
+        if (block->bitmaps[0] != 0) {
+          DeleteObject((HGDIOBJ)(i32)block->bitmaps[0]);
+          block->bitmaps[0] = 0;
         }
-        if (block[4] != 0) {
-          DeleteObject((HGDIOBJ)block[4]);
-          block[4] = 0;
+        if (block->bitmaps[1] != 0) {
+          DeleteObject((HGDIOBJ)(i32)block->bitmaps[1]);
+          block->bitmaps[1] = 0;
         }
-        if (block[5] != 0) {
-          DeleteObject((HGDIOBJ)block[5]);
-          block[5] = 0;
+        if (block->bitmaps[2] != 0) {
+          DeleteObject((HGDIOBJ)(i32)block->bitmaps[2]);
+          block->bitmaps[2] = 0;
         }
       }
-      if (block[0xb] == 2) {
-        operator_delete((void *)block[9]);
-        block[9] = 0;
+      if (block->kind == 2) {
+        operator_delete((void *)block->data);
+        block->data = 0;
       }
-      handle = *block;
+      handle = block->mem_handle;
       mem_handle_unlock(handle);
       mem_handle_free(handle);
       SetWindowLongA(hwnd,-4,(iptr)ctrl_default_wndproc);
@@ -1679,7 +1679,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
 
 {
   WndBase *self;
-  iptr window;
+  NativeWindow *window;
   iptr height;
   int value;
   HDC hdc;
@@ -1690,7 +1690,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
   PaletteHandleView *this_00;
   HPALETTE hPal;
   GamePalette *this_01;
-  iptr logpal;
+  GamePalette *logpal;
   HPEN h_01;
   HPEN h_02;
   i32 font_handle;
@@ -1749,9 +1749,9 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
   hInstance = err_report_ctx_block.app_hinstance;
   self = (WndBase *)ctrl_get_parent((Control *)ctrl);
   window = wnd_get_window(self);
-  hWndParent = *(HWND *)(window + 4);
-  height = rect_height((iptr)rect);
-  value = rect_width((iptr)rect);
+  hWndParent = window->hwnd;
+  height = rect_height((RECT *)rect);
+  value = rect_width((RECT *)rect);
   hwnd2 = CreateWindowExA(4,str_mscontrolclass_2,((i8 *)&button_wnd_title),style2,*rect,
                               rect[1],value,height,hWndParent,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey((iptr)button,(const char *)label_text);
@@ -1763,8 +1763,8 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
   bounds.right -= 2;
   bounds.bottom -= 2;
   hdc = GetDC(hwnd2);
-  value = rect_height((iptr)&bounds);
-  value2 = rect_width((iptr)&bounds);
+  value = rect_height(&bounds);
+  value2 = rect_width(&bounds);
   h = CreateCompatibleBitmap(hdc,value2,value);
   if (h == (HBITMAP)0x0) {
     dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton);
@@ -1772,8 +1772,8 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
     hwnd2 = (HWND)0x0;
   }
   else {
-    value = rect_height((iptr)&bounds);
-    value2 = rect_width((iptr)&bounds);
+    value = rect_height(&bounds);
+    value2 = rect_width(&bounds);
     h_00 = CreateCompatibleBitmap(hdc,value2,value);
     if (h_00 == (HBITMAP)0x0) {
       dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton_2);
@@ -1781,8 +1781,8 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
       hwnd2 = (HWND)0x0;
     }
     else {
-      value = rect_height((iptr)&bounds);
-      value2 = rect_width((iptr)&bounds);
+      value = rect_height(&bounds);
+      value2 = rect_width(&bounds);
       bmp_disabled = CreateCompatibleBitmap(hdc,value2,value);
       if (bmp_disabled == (HBITMAP)0x0) {
         dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton_3);
@@ -1811,8 +1811,8 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
           color_index = button->on_select;
           parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
           this_01 = (GamePalette *)wnd_get_palette(parent_wnd);
-          logpal = (iptr)palette_get_logpalette(this_01);
-          palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+          logpal = palette_get_logpalette(this_01);
+          palette_get_entry_rgb((iptr)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
           bg_pen = CreatePen(0,1,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
           ;
         }
@@ -1862,12 +1862,12 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         draw_rect = &text_rect;
         len = _strlen(label_text);
         DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
-        text_width = rect_width((iptr)&text_rect);
+        text_width = rect_width(&text_rect);
         text_bottom = bounds.bottom;
-        value = rect_width((iptr)&bounds);
+        value = rect_width(&bounds);
         value2 = ((bounds.left + value / 2) - text_width / 2) + text_width;
         text_top = bounds.top;
-        value = rect_width((iptr)&bounds);
+        value = rect_width(&bounds);
         SetRect(&text_rect,(bounds.left + value / 2) - text_width / 2,text_top,value2,text_bottom);
         draw_flags = 0x24;
         draw_rect = &text_rect;
@@ -1945,12 +1945,12 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         text_rect.top = bounds.top;
         len = _strlen(label_text);
         DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
-        text_width = rect_width((iptr)&text_rect);
+        text_width = rect_width(&text_rect);
         text_bottom = bounds.bottom;
-        value = rect_width((iptr)&bounds);
+        value = rect_width(&bounds);
         value = (((value >> 1) + bounds.left) - (text_width >> 1)) + text_width;
         text_top = bounds.top;
-        value2 = rect_width((iptr)&bounds);
+        value2 = rect_width(&bounds);
         SetRect(&text_rect,((value2 >> 1) + bounds.left) - (text_width >> 1),text_top,value,text_bottom);
         draw_flags = 0x24;
         draw_rect = &text_rect;
@@ -2037,12 +2037,12 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         draw_rect = &text_rect;
         len = _strlen(label_text);
         DrawTextA(mem_dc,label_text,len,draw_rect,draw_flags);
-        text_width = rect_width((iptr)&text_rect);
+        text_width = rect_width(&text_rect);
         text_bottom = bounds.bottom;
-        value = rect_width((iptr)&bounds);
+        value = rect_width(&bounds);
         value = (((value >> 1) + bounds.left) - (text_width >> 1)) + text_width;
         text_top = bounds.top;
-        value2 = rect_width((iptr)&bounds);
+        value2 = rect_width(&bounds);
         SetRect(&text_rect,((value2 >> 1) + bounds.left) - (text_width >> 1),text_top,value,text_bottom);
         SetTextColor(mem_dc,0xffffff);
         draw_flags = 0x24;
@@ -2123,19 +2123,19 @@ void __cdecl button_press_animated(HWND hwnd)
 
 {
   Control *self;
-  iptr block;
+  ControlBlock *block;
   int enabled;
   i32 ctrl_id;
   
   block = wnd_from_hwnd(hwnd);
   if (block != 0) {
-    self = *(Control **)(block + 4);
+    self = (Control *)block->owner;
     enabled = ctrl_is_enabled((ControlEnabledView *)self);
     if (enabled != 0) {
       SetFocus(hwnd);
-      *(i32 *)(block + 0x18) = 1;
+      block->pressed = 1;
       wnd_redraw_client(hwnd);
-      *(i32 *)(block + 0x18) = 0;
+      block->pressed = 0;
       ui_pump_messages();
       ui_wait_ticks(8);
       wnd_redraw_client(hwnd);
@@ -2154,7 +2154,7 @@ HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,in
 
 {
   WndBase *self;
-  iptr window;
+  NativeWindow *window;
   iptr rect_h;
   int value;
   HWND hWndParent;
@@ -2177,9 +2177,9 @@ HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,in
   hInstance = err_report_ctx_block.app_hinstance;
   self = (WndBase *)ctrl_get_parent((Control *)ctrl);
   window = wnd_get_window(self);
-  hWndParent = *(HWND *)(window + 4);
-  rect_h = rect_height((iptr)&rect);
-  value = rect_width((iptr)&rect);
+  hWndParent = window->hwnd;
+  rect_h = rect_height(&rect);
+  value = rect_width(&rect);
   hwnd2 = CreateWindowExA(4,str_mscontrolclass_3,((i8 *)&spritebtn_wnd_title),style2,x,y,value
                             ,rect_h,hWndParent,hMenu,hInstance,lpParam);
   value = (iptr)ctrl_init_block(hwnd2,ctrl);
@@ -2297,13 +2297,13 @@ void __cdecl checkbox_calc_rect_fixed(int x,int y,int width,iptr out_rect,GameFo
 }
 
 /* 005cc0f0 auto */
-HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
+HWND __cdecl checkbox_create_hwnd(RECT *rect,iptr ctrl,char *label,int visible)
 
 {
   size_t len;
   void *label_copy;
   WndBase *self;
-  iptr window;
+  NativeWindow *window;
   iptr height;
   int value;
   HWND check_hwnd;
@@ -2327,11 +2327,11 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   hInstance = err_report_ctx_block.app_hinstance;
   self = (WndBase *)ctrl_get_parent((Control *)ctrl);
   window = wnd_get_window(self);
-  check_hwnd = *(HWND *)(window + 4);
+  check_hwnd = window->hwnd;
   height = rect_height(rect);
   value = rect_width(rect);
-  check_hwnd = CreateWindowExA(4,str_mscontrolclass_4,((i8 *)&wnd_modal_stack_below_block.checkbox_wnd_title),style2,*(int *)rect,
-                           *(int *)(rect + 4),value,height,check_hwnd,hMenu,hInstance,lpParam);
+  check_hwnd = CreateWindowExA(4,str_mscontrolclass_4,((i8 *)&wnd_modal_stack_below_block.checkbox_wnd_title),style2,rect->left,
+                           rect->top,value,height,check_hwnd,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey(ctrl,(const char *)label_copy);
   bmp_unchecked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x132);
   bmp_checked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x131);
@@ -2361,14 +2361,14 @@ void __cdecl checkbox_toggle_by_hotkey(HWND hwnd)
 
 {
   Control *self;
-  iptr block;
+  ControlBlock *block;
   int checked;
   i32 is_checked;
   i32 ctrl_id;
   
   block = wnd_from_hwnd(hwnd);
   if (block != 0) {
-    self = *(Control **)(block + 4);
+    self = (Control *)block->owner;
     SetFocus(hwnd);
     checked = checkbox_is_checked(self);
     if (checked == 0) {
@@ -2413,7 +2413,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
   UINT draw_flags;
   tagRECT rect;
   HBITMAP bitmap;
-  iptr block;
+  ControlBlock *block;
   Control *checkbox;
   tagPAINTSTRUCT ps;
   HGDIOBJ old_font;
@@ -2435,7 +2435,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
   tagRECT text_rect;
   
   block = wnd_from_hwnd(hwnd);
-  checkbox = *(Control **)(block + 4);
+  checkbox = (Control *)block->owner;
   if (msg < 0x10) {
     if (msg == 0xf) {
       enabled = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
@@ -2444,15 +2444,15 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
         if (hwnd_tmp == hwnd) {
           SetFocus((HWND)0x0);
         }
-        bitmap = *(HBITMAP *)(block + 0xc);
+        bitmap = block->bitmaps[0];
       }
       else {
         checked = checkbox_is_checked(checkbox);
         if (checked == 0) {
-          bitmap = *(HBITMAP *)(block + 0x10);
+          bitmap = block->bitmaps[1];
         }
         else {
-          bitmap = *(HBITMAP *)(block + 0x14);
+          bitmap = block->bitmaps[2];
         }
       }
       GetBitmapDimensionEx(bitmap,&bmp_size);
@@ -2467,7 +2467,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
       box_bottom = rect.bottom;
       if (wnd_modal_stack_below_block.checkbox_mouse_pressed != 0) {
         box_right = rect.left + 0x20;
-        value = rect_height((iptr)&rect);
+        value = rect_height(&rect);
         box_top = value - 0x14 + rect.top >> 1;
         box_bottom = rect.top + 0x14;
       }
@@ -2482,7 +2482,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
       SetBkMode(hdc,1);
       gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
       rect.left += 0x25;
-      label = *(char **)(block + 0x24);
+      label = (char *)block->data;
       if ((ctrl_shadow_dx != 0) || (ctrl_shadow_dy != 0)) {
         OffsetRect(&rect,(uint)ctrl_shadow_dx,(uint)ctrl_shadow_dy);
         blue_out = blue;
@@ -2502,8 +2502,8 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
       value = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
       if (value == 1) {
         parent_base = (WndBase *)ctrl_get_parent(checkbox);
-        value = wnd_get_window(parent_base);
-        if (*(int *)(value + 0x40) == 8) {
+        value = (int)wnd_get_window(parent_base);
+        if (((NativeWindow *)value)->field_40 == 8) {
           if (ctrl_text_color_index == 0) {
             SetTextColor(hdc,0);
           }
@@ -2531,8 +2531,8 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
         value = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
         if (value == 0) {
           parent_base = (WndBase *)ctrl_get_parent(checkbox);
-          value = wnd_get_window(parent_base);
-          if (*(int *)(value + 0x40) == 8) {
+          value = (int)wnd_get_window(parent_base);
+          if (((NativeWindow *)value)->field_40 == 8) {
             if (ctrl_disabled_color_index == 0) {
               SetTextColor(hdc,0x404040);
             }
@@ -2714,7 +2714,7 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
 
 {
   WndBase *parent_wnd;
-  iptr window;
+  NativeWindow *window;
   iptr height;
   int value;
   int nWidth;
@@ -2742,9 +2742,9 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
     hinst = err_report_ctx_block.app_hinstance;
     parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
     window = wnd_get_window(parent_wnd);
-    parent_hwnd = *(HWND *)(window + 4);
-    height = rect_height((iptr)rect);
-    value = rect_width((iptr)rect);
+    parent_hwnd = window->hwnd;
+    height = rect_height((RECT *)rect);
+    value = rect_width((RECT *)rect);
     hwnd2 = CreateWindowExA(4,str_scrollbar,((i8 *)&scrollbar_probe_wnd_title),style_flags | 0x40000000,*rect,
                               rect[1],value,height,parent_hwnd,menu,hinst,create_param);
     default_draw_font_obj_block.scrollbar_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
@@ -2768,10 +2768,10 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
   menu = (HMENU)0x0;
   hinst = err_report_ctx_block.app_hinstance;
   parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  value = wnd_get_window(parent_wnd);
-  parent_hwnd = *(HWND *)(value + 4);
-  value = rect_height((iptr)rect);
-  nWidth = rect_width((iptr)rect);
+  value = (int)wnd_get_window(parent_wnd);
+  parent_hwnd = ((NativeWindow *)value)->hwnd;
+  value = rect_height((RECT *)rect);
+  nWidth = rect_width((RECT *)rect);
   hwnd2 = CreateWindowExA(4,str_msscrollbarclass_2,((i8 *)&scrollbar_wnd_title),style2,*rect,rect[1]
                             ,nWidth,value,parent_hwnd,menu,hinst,create_param);
   SetWindowLongA(hwnd2,-4,(iptr)control_subclass_wndproc);
@@ -2820,9 +2820,9 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
     case 0:
       value = input_lbutton_down();
       if (value == 0) {
-        value = ctrl_get_rect(self);
+        value = ctrl_get_rect((Control *)self);
         pos_lparam = *(LPARAM *)(value + 4);
-        rect_ptr = (WPARAM *)ctrl_get_rect(self);
+        rect_ptr = (WPARAM *)ctrl_get_rect((Control *)self);
         PostMessageA(hwnd,0x202,*rect_ptr,pos_lparam);
       }
       else {
@@ -2837,9 +2837,9 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
     case 1:
       value = input_lbutton_down();
       if (value == 0) {
-        value = ctrl_get_rect(self);
+        value = ctrl_get_rect((Control *)self);
         pos_lparam = *(LPARAM *)(value + 4);
-        rect_ptr = (WPARAM *)ctrl_get_rect(self);
+        rect_ptr = (WPARAM *)ctrl_get_rect((Control *)self);
         PostMessageA(hwnd,0x202,*rect_ptr,pos_lparam);
       }
       else {
@@ -2965,7 +2965,7 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
 
 {
   WndBase *parent_wnd;
-  iptr window;
+  NativeWindow *window;
   iptr height;
   int value;
   int nWidth;
@@ -3021,9 +3021,9 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
     hinst = err_report_ctx_block.app_hinstance;
     parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
     window = wnd_get_window(parent_wnd);
-    parent_hwnd = *(HWND *)(window + 4);
-    height = rect_height((iptr)rect);
-    value = rect_width((iptr)rect);
+    parent_hwnd = window->hwnd;
+    height = rect_height((RECT *)rect);
+    value = rect_width((RECT *)rect);
     hwnd2 = CreateWindowExA(4,((i8 *)&editbox_native_class_name),((i8 *)&editbox_probe_wnd_title),style2,*rect,rect[1],value,height,
                               parent_hwnd,menu,hinst,create_param);
     default_draw_font_obj_block.edit_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
@@ -3046,10 +3046,10 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
   menu = (HMENU)0x0;
   hinst = err_report_ctx_block.app_hinstance;
   parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  value = wnd_get_window(parent_wnd);
-  parent_hwnd = *(HWND *)(value + 4);
-  value = rect_height((iptr)rect);
-  nWidth = rect_width((iptr)rect);
+  value = (int)wnd_get_window(parent_wnd);
+  parent_hwnd = ((NativeWindow *)value)->hwnd;
+  value = rect_height((RECT *)rect);
+  nWidth = rect_width((RECT *)rect);
   hwnd2 = CreateWindowExA(4,str_mseditboxclass_2,((i8 *)&editbox_wnd_title),style2 | 0x40800000,*rect,
                             rect[1],nWidth,value,parent_hwnd,menu,hinst,create_param);
   font_handle = font_get_handle(font);
@@ -3074,7 +3074,7 @@ LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM 
   HWND parent_hwnd;
   iptr parent;
   WndBase *this_00;
-  int window;
+  NativeWindow *window;
   LRESULT result;
   iptr long_index;
   int pass_through;
@@ -3107,7 +3107,7 @@ click_focus_parent:
       parent_hwnd = GetParent(hwnd);
       this_00 = (WndBase *)GetWindowLongA(parent_hwnd,long_index);
       window = wnd_get_window(this_00);
-      if ((*(byte *)(window + 0x49) & 2) != 0) {
+      if ((window->flags_bytes[1] & 2) != 0) {
         parent_hwnd = GetParent(hwnd);
         SetFocus(parent_hwnd);
         parent_hwnd = GetParent(hwnd);
@@ -3280,7 +3280,7 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
 
 {
   WndBase *parent_wnd;
-  iptr window;
+  NativeWindow *window;
   iptr height;
   int value;
   int nWidth;
@@ -3302,9 +3302,9 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
     hinst = err_report_ctx_block.app_hinstance;
     parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
     window = wnd_get_window(parent_wnd);
-    parent_hwnd = *(HWND *)(window + 4);
-    height = rect_height((iptr)rect);
-    value = rect_width((iptr)rect);
+    parent_hwnd = window->hwnd;
+    height = rect_height((RECT *)rect);
+    value = rect_width((RECT *)rect);
     hwnd2 = CreateWindowExA(4,str_combobox,((i8 *)&combo_probe_wnd_title),style2,*rect,rect[1],value
                               ,height,parent_hwnd,menu,hinst,create_param);
     default_draw_font_obj_block.combo_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
@@ -3331,10 +3331,10 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
   menu = (HMENU)0x0;
   hinst = err_report_ctx_block.app_hinstance;
   parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  value = wnd_get_window(parent_wnd);
-  parent_hwnd = *(HWND *)(value + 4);
-  value = rect_height((iptr)rect);
-  nWidth = rect_width((iptr)rect);
+  value = (int)wnd_get_window(parent_wnd);
+  parent_hwnd = ((NativeWindow *)value)->hwnd;
+  value = rect_height((RECT *)rect);
+  nWidth = rect_width((RECT *)rect);
   hwnd2 = CreateWindowExA(4,str_mscomboboxclass_2,((i8 *)&combo_wnd_title),style2,*rect,rect[1],
                             nWidth,value,parent_hwnd,menu,hinst,create_param);
   SetWindowLongA(hwnd2,-4,(iptr)combo_subclass_wndproc);
@@ -3353,7 +3353,7 @@ LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM l
   iptr parent;
   HWND parent_hwnd;
   WndBase *this_00;
-  iptr window;
+  NativeWindow *window;
   LRESULT result;
   iptr long_index;
   
@@ -3389,7 +3389,7 @@ LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM l
       parent_hwnd = GetParent(hwnd);
       this_00 = (WndBase *)GetWindowLongA(parent_hwnd,long_index);
       window = wnd_get_window(this_00);
-      if ((*(byte *)(window + 0x49) & 2) != 0) {
+      if ((window->flags_bytes[1] & 2) != 0) {
         parent_hwnd = GetParent(hwnd);
         SetFocus(parent_hwnd);
         parent_hwnd = GetParent(hwnd);
@@ -3499,7 +3499,7 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
 {
   uint style_bits;
   WndBase *parent_wnd;
-  iptr window;
+  NativeWindow *window;
   iptr height;
   int value;
   int nWidth;
@@ -3528,9 +3528,9 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
     hinst = err_report_ctx_block.app_hinstance;
     parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
     window = wnd_get_window(parent_wnd);
-    parent_hwnd = *(HWND *)(window + 4);
-    height = rect_height((iptr)rect);
-    value = rect_width((iptr)rect);
+    parent_hwnd = window->hwnd;
+    height = rect_height((RECT *)rect);
+    value = rect_width((RECT *)rect);
     hwnd2 = CreateWindowExA(4,str_listbox_2,((i8 *)&listbox_probe_wnd_title),style2,*rect,rect[1],value,
                               height,parent_hwnd,menu,hinst,create_param);
     default_draw_font_obj_block.listbox_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
@@ -3560,10 +3560,10 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
   menu = (HMENU)0x0;
   hinst = err_report_ctx_block.app_hinstance;
   parent_wnd = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  value = wnd_get_window(parent_wnd);
-  parent_hwnd = *(HWND *)(value + 4);
-  value = rect_height((iptr)rect);
-  nWidth = rect_width((iptr)rect);
+  value = (int)wnd_get_window(parent_wnd);
+  parent_hwnd = ((NativeWindow *)value)->hwnd;
+  value = rect_height((RECT *)rect);
+  nWidth = rect_width((RECT *)rect);
   hwnd2 = CreateWindowExA(4,str_mslistboxclass_2,((i8 *)&listbox_wnd_title),style2,*rect,rect[1],
                             nWidth,value,parent_hwnd,menu,hinst,create_param);
   font_handle = font_get_handle(font);
@@ -3587,7 +3587,7 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM
   iptr parent;
   HWND parent_hwnd;
   WndBase *this_00;
-  iptr window;
+  NativeWindow *window;
   LRESULT result;
   iptr long_index;
   
@@ -3623,7 +3623,7 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM
       parent_hwnd = GetParent(hwnd);
       this_00 = (WndBase *)GetWindowLongA(parent_hwnd,long_index);
       window = wnd_get_window(this_00);
-      if ((*(byte *)(window + 0x49) & 2) != 0) {
+      if ((window->flags_bytes[1] & 2) != 0) {
         parent_hwnd = GetParent(hwnd);
         SetFocus(parent_hwnd);
         parent_hwnd = GetParent(hwnd);
@@ -3758,8 +3758,8 @@ void __thiscall radiogrp_show_all(RadioGroupShowView *self)
   int i;
   
   for (i = 0; i < (int)self->item_count; i++) {
-    hwnd_show(*(i32 *)(self->items + i * 0xa4));
-    wnd_invalidate(*(i32 *)(self->items + i * 0xa4));
+    hwnd_show((i32)((RadioItem *)self->items)[i].hwnd);
+    wnd_invalidate((i32)((RadioItem *)self->items)[i].hwnd);
   }
   return;
 }
@@ -3802,7 +3802,7 @@ spritebtn_init_from_sprite
   value = wnd_get_palette(parent);
   self->ctrl_palette = value;
   SetRect(&rect,x,y,width + x,y + height);
-  ctrl_init((Control *)self,(iptr)parent,6,ctrl_id,(iptr)&rect);
+  ctrl_init((Control *)self,(iptr)parent,6,ctrl_id,&rect);
   self->is_enabled = 0;
   self->on_click = 0;
   gfx_get_scale_ratio((iptr)&scale_num2,(iptr)&scale_den2);
@@ -3842,8 +3842,8 @@ spritebtn_init_from_sprite
   OffsetRect(&dst_rect,2,2);
   surface_fill((DibSurface *)self->button_surface,(uint)(*(byte *)&gfx_black_color_index));
   surface_blit
-            ((DibSurface *)&self->on_select,(iptr)(self->button_surface),(iptr)&src_rect,
-             (iptr)&dst_rect);
+            ((DibSurface *)&self->on_select,(DibSurface *)(iptr)(self->button_surface),&src_rect,
+             &dst_rect);
   parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)self);
   palette = wnd_get_palette(parent_wnd);
   surface_apply_palette((DibSurface *)self->button_surface,(PaletteVersionView *)palette);
@@ -3899,10 +3899,10 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
   int row_height;
   int nHeight;
   WndBase *self;
-  iptr window;
+  NativeWindow *window;
   int half_row;
   HWND item_hwnd;
-  iptr block;
+  ControlBlock *block;
   size_t len;
   int half_item;
   HMENU hMenu;
@@ -3921,9 +3921,9 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
   bmp_focus = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12e);
   handle = mem_handle_alloc(item_count * 0xa4);
   items = (iptr)mem_handle_lock((HGLOBAL)handle);
-  col_width = rect_width((iptr)rect);
+  col_width = rect_width((RECT *)rect);
   col_width = col_width / columns;
-  row_height = rect_height((iptr)rect);
+  row_height = rect_height((RECT *)rect);
   row_height = (row_height * columns) / item_count;
   nHeight = radiogrp_item_height((GameFont *)font);
   item_x = *rect;
@@ -3947,65 +3947,64 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     half_row = row_height >> 1;
     half_item = nHeight >> 1;
     item_hwnd = CreateWindowExA(4,str_mscontrolclass_5,((i8 *)&radiogrp_item_wnd_title),style2,item_x,
-                              (half_row - half_item) + item_y,col_width,nHeight,*(HWND *)(window + 4),hMenu,
+                              (half_row - half_item) + item_y,col_width,nHeight,window->hwnd,hMenu,
                               hInstance,lpParam);
-    *(HWND *)(items + index * 0xa4) = item_hwnd;
-    block = (iptr)ctrl_init_block(*(i32 *)(items + index * 0xa4),group);
+    ((RadioItem *)items)[index].hwnd = item_hwnd;
+    block = ctrl_init_block((i32)((RadioItem *)items)[index].hwnd,group);
     if (index == 0) {
-      *(i32 *)(block + 8) = 0;
+      block->shared_bitmaps = 0;
     }
     else {
-      *(i32 *)(block + 8) = 1;
+      block->shared_bitmaps = 1;
     }
-    *(HBITMAP *)(block + 0xc) = bmp_unchecked;
-    *(HBITMAP *)(block + 0x10) = bmp_checked;
-    *(HBITMAP *)(block + 0x14) = bmp_focus;
-    *(uint *)(block + 0x24) = index * 0xa4 + items;
-    *(i32 *)(block + 0x2c) = 3;
-    SetWindowLongA(*(HWND *)(items + index * 0xa4),-4,(iptr)radiogrp_item_wndproc);
-    SetRect((LPRECT)(index * 0xa4 + items + 4),item_x,(half_row - half_item) + item_y,
+    block->bitmaps[0] = bmp_unchecked;
+    block->bitmaps[1] = bmp_checked;
+    block->bitmaps[2] = bmp_focus;
+    block->data = (iptr)&((RadioItem *)items)[index];
+    block->kind = 3;
+    SetWindowLongA(((RadioItem *)items)[index].hwnd,-4,(iptr)radiogrp_item_wndproc);
+    SetRect(&((RadioItem *)items)[index].rect,item_x,(half_row - half_item) + item_y,
             item_x + col_width,(half_row - half_item) + item_y + nHeight);
-    *(uint *)(items + 0x14 + index * 0xa4) = index;
+    ((RadioItem *)items)[index].index = index;
     label = *(char **)(labels + index * 4);
     if (*label == '!') {
-      *(i32 *)(items + 0x18 + index * 0xa4) = 0;
+      ((RadioItem *)items)[index].enabled = 0;
       label++;
     }
     else if (*label == '^') {
-      *(i32 *)(items + 0x18 + index * 0xa4) = 1;
+      ((RadioItem *)items)[index].enabled = 1;
       radiogrp_set_selected((RadioGroupSetSelView *)group,index);
       label++;
     }
     else {
-      *(i32 *)(items + 0x18 + index * 0xa4) = 1;
+      ((RadioItem *)items)[index].enabled = 1;
     }
-    crt_strcpy((char *)((void *)(index * 0xa4 + items + 0x1c)),(const char *)((void *)label));
-    cursor = (char *)(index * 0xa4 + items + 0x1c);
-    *(i32 *)(items + 0xa0 + index * 0xa4) = 0;
+    crt_strcpy(((RadioItem *)items)[index].label,(const char *)((void *)label));
+    cursor = ((RadioItem *)items)[index].label;
+    ((RadioItem *)items)[index].hotkey_pos = 0;
     while( true ) {
       if (*cursor == '\0') goto store_hotkey;
       if (*cursor == '~') break;
-      hotkey_pos = (int *)(items + 0xa0 + index * 0xa4);
+      hotkey_pos = &((RadioItem *)items)[index].hotkey_pos;
       *hotkey_pos = *hotkey_pos + 1;
       cursor++;
     }
-    for (index = *(uint *)(items + 0xa0 + index * 0xa4);
-        len = _strlen((char *)(index * 0xa4 + items + 0x1c)), index < len;
+    for (index = (uint)((RadioItem *)items)[index].hotkey_pos;
+        len = _strlen(((RadioItem *)items)[index].label), index < len;
         index = index + 1) {
       *(i8 *)(index * 0xa5 + 0x1c + items) =
            *(i8 *)(index * 0xa5 + 0x1d + items);
     }
 store_hotkey:
-    len = _strlen((char *)(index * 0xa4 + items + 0x1c));
-    if (*(uint *)(items + 0xa0 + index * 0xa4) < len) {
-      hotkey[0] = *(char *)(*(int *)(items + 0xa0 + index * 0xa4) + index * 0xa4 + 0x1c +
-                            items);
+    len = _strlen(((RadioItem *)items)[index].label);
+    if ((uint)((RadioItem *)items)[index].hotkey_pos < len) {
+      hotkey[0] = ((RadioItem *)items)[index].label[((RadioItem *)items)[index].hotkey_pos];
       hotkey[1] = 0;
       __strlwr(hotkey);
-      *(char *)(items + 0x9c + index * 0xa4) = hotkey[0];
+      ((RadioItem *)items)[index].hotkey = hotkey[0];
     }
     else {
-      *(i32 *)(items + 0xa0 + index * 0xa4) = 0xffffffff;
+      ((RadioItem *)items)[index].hotkey_pos = 0xffffffff;
     }
     item_y += row_height;
     if (rect[3] <= item_y) {
@@ -4029,8 +4028,8 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
   else {
     items = (iptr)mem_handle_lock((HGLOBAL)handle);
     for (i = 0; i < count; i++) {
-      if (*(int *)(items + i * 0xa4) != 0) {
-        DestroyWindow(*(HWND *)(items + i * 0xa4));
+      if ((int)((RadioItem *)items)[i].hwnd != 0) {
+        DestroyWindow(((RadioItem *)items)[i].hwnd);
       }
     }
     mem_handle_unlock(handle);
@@ -4044,12 +4043,12 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
 
 {
   RadioGroupItemsView *self;
-  iptr block;
+  ControlBlock *block;
   iptr selected;
   iptr old_sel;
   iptr items;
   iptr new_sel;
-  int item;
+  RadioItem *item;
   i32 sel_index;
   i32 ctrl_id;
   RECT *null_rect;
@@ -4057,22 +4056,22 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
   
   block = wnd_from_hwnd(hwnd);
   if (block != 0) {
-    self = *(RadioGroupItemsView **)(block + 4);
-    item = *(int *)(block + 0x24);
+    self = (RadioGroupItemsView *)block->owner;
+    item = (RadioItem *)block->data;
     SetFocus(hwnd);
     selected = radiogrp_get_selected((RadioGroupGetSelView *)self);
-    if ((selected != *(int *)(item + 0x14)) && (*(int *)(item + 0x18) == 1)) {
+    if ((selected != item->index) && (item->enabled == 1)) {
       erase = 0;
       null_rect = (RECT *)0x0;
       old_sel = radiogrp_get_selected((RadioGroupGetSelView *)self);
       items = radiogrp_get_items(self);
-      InvalidateRect(*(HWND *)(items + old_sel * 0xa4),null_rect,erase);
-      radiogrp_set_selected((RadioGroupSetSelView *)self,*(i32 *)(item + 0x14));
+      InvalidateRect(((RadioItem *)items)[old_sel].hwnd,null_rect,erase);
+      radiogrp_set_selected((RadioGroupSetSelView *)self,item->index);
       erase = 0;
       null_rect = (RECT *)0x0;
       new_sel = radiogrp_get_selected((RadioGroupGetSelView *)self);
-      item = radiogrp_get_items(self);
-      InvalidateRect(*(HWND *)(item + new_sel * 0xa4),null_rect,erase);
+      item = (RadioItem *)radiogrp_get_items(self);
+      InvalidateRect(item[new_sel].hwnd,null_rect,erase);
     }
     wnd_active_child = ctrl_get_parent((Control *)self);
     sel_index = radiogrp_get_selected((RadioGroupGetSelView *)self);
@@ -4112,7 +4111,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
   BOOL erase;
   tagRECT rect;
   HBITMAP bitmap;
-  iptr block;
+  ControlBlock *block;
   tagPAINTSTRUCT ps;
   HGDIOBJ old_font;
   tagSIZE bmp_size;
@@ -4122,7 +4121,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
   int next_index;
   i8 green[4];
   int underline_start;
-  iptr item;
+  RadioItem *item;
   int box_left;
   int box_top;
   int box_right;
@@ -4136,34 +4135,34 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
   char prefix[128];
   
   block = wnd_from_hwnd(hwnd);
-  group = *(RadioGroupItemsView **)(block + 4);
-  item = *(int *)(block + 0x24);
+  group = (RadioGroupItemsView *)block->owner;
+  item = (RadioItem *)block->data;
   if (msg < 0x10) {
     if (msg == 0xf) {
-      if (*(int *)(item + 0x18) == 1) {
+      if (item->enabled == 1) {
         selected = radiogrp_get_selected((RadioGroupGetSelView *)group);
-        if (selected == *(int *)(item + 0x14)) {
-          bitmap = *(HBITMAP *)(block + 0x14);
+        if (selected == item->index) {
+          bitmap = block->bitmaps[2];
         }
         else {
-          bitmap = *(HBITMAP *)(block + 0x10);
+          bitmap = block->bitmaps[1];
         }
       }
       else {
-        bitmap = *(HBITMAP *)(block + 0xc);
+        bitmap = block->bitmaps[0];
       }
       GetBitmapDimensionEx(bitmap,&bmp_size);
-      rect.left = *(int *)(item + 4);
-      rect.top = *(int *)(item + 8);
-      rect.right = *(int *)(item + 0xc);
-      rect.bottom = *(int *)(item + 0x10);
+      rect.left = item->rect.left;
+      rect.top = item->rect.top;
+      rect.right = item->rect.right;
+      rect.bottom = item->rect.bottom;
       box_left = rect.left;
       box_top = rect.top;
       box_right = rect.right;
       box_bottom = rect.bottom;
       if (radio_lbutton_captured != 0) {
         box_right = rect.left + 0x20;
-        height = rect_height((iptr)&rect);
+        height = rect_height(&rect);
         box_top = height - 0x14 + rect.top >> 1;
         box_bottom = rect.top + 0x14;
       }
@@ -4191,14 +4190,14 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
         draw_flags = 0x24;
         draw_rect = &rect;
-        len = _strlen((char *)(item + 0x1c));
-        DrawTextA(hdc,(LPCSTR)(item + 0x1c),len,draw_rect,draw_flags);
+        len = _strlen(item->label);
+        DrawTextA(hdc,item->label,len,draw_rect,draw_flags);
         OffsetRect(&rect,-(uint)radio_shadow_dx,-(uint)radio_shadow_dy);
       }
-      if (*(int *)(item + 0x18) == 1) {
+      if (item->enabled == 1) {
         parent_base = (WndBase *)ctrl_get_parent((Control *)group);
-        value = wnd_get_window(parent_base);
-        if (*(int *)(value + 0x40) == 8) {
+        value = (int)wnd_get_window(parent_base);
+        if (((NativeWindow *)value)->field_40 == 8) {
           if (radio_text_color_index == 0) {
             SetTextColor(hdc,0);
           }
@@ -4221,10 +4220,10 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           SetTextColor(hdc,CONCAT12(radio_text_rgb_b,CONCAT11(radio_text_rgb_g,radio_text_rgb_r)));
         }
       }
-      else if (*(int *)(item + 0x18) == 0) {
+      else if (item->enabled == 0) {
         parent_base = (WndBase *)ctrl_get_parent((Control *)group);
-        value = wnd_get_window(parent_base);
-        if (*(int *)(value + 0x40) == 8) {
+        value = (int)wnd_get_window(parent_base);
+        if (((NativeWindow *)value)->field_40 == 8) {
           if (radio_disabled_color_index == 0) {
             SetTextColor(hdc,0x404040);
           }
@@ -4249,11 +4248,11 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       }
       draw_flags = 0x24;
       draw_rect = &rect;
-      len = _strlen((char *)(item + 0x1c));
-      DrawTextA(hdc,(LPCSTR)(item + 0x1c),len,draw_rect,draw_flags);
-      if (*(int *)(item + 0xa0) != -1) {
-        crt_strcpy(prefix,(const char *)((void *)(item + 0x1c)));
-        prefix[*(int *)(item + 0xa0)] = '\0';
+      len = _strlen(item->label);
+      DrawTextA(hdc,item->label,len,draw_rect,draw_flags);
+      if (item->hotkey_pos != -1) {
+        crt_strcpy(prefix,item->label);
+        prefix[item->hotkey_pos] = '\0';
         text_rect.left = rect.left;
         text_rect.top = rect.top;
         text_rect.right = rect.right;
@@ -4269,8 +4268,8 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
           underline_start = text_rect.right - 1;
         }
-        crt_strcpy(prefix,(const char *)((void *)(item + 0x1c)));
-        prefix[*(int *)(item + 0xa0) + 1] = '\0';
+        crt_strcpy(prefix,item->label);
+        prefix[item->hotkey_pos + 1] = '\0';
         text_rect.left = rect.left;
         text_rect.top = rect.top;
         text_rect.right = rect.right;
@@ -4321,16 +4320,16 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
     if (msg == 0x201) {
       if (radio_lbutton_captured == 0) {
         value = radiogrp_get_selected((RadioGroupGetSelView *)group);
-        if ((value != *(int *)(item + 0x14)) && (*(int *)(item + 0x18) == 1)) {
+        if ((value != item->index) && (item->enabled == 1)) {
           value = radiogrp_get_selected((RadioGroupGetSelView *)group);
           if (value != -1) {
             erase = 0;
             null_rect = (RECT *)0x0;
             value = radiogrp_get_selected((RadioGroupGetSelView *)group);
             items = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(items + value * 0xa4),null_rect,erase);
+            InvalidateRect(((RadioItem *)items)[value].hwnd,null_rect,erase);
           }
-          radiogrp_set_selected((RadioGroupSetSelView *)group,*(i32 *)(item + 0x14));
+          radiogrp_set_selected((RadioGroupSetSelView *)group,item->index);
           SetFocus(hwnd);
           InvalidateRect(hwnd,(RECT *)0x0,0);
           parent = ctrl_get_parent((Control *)group);
@@ -4364,14 +4363,14 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
           if (nav_enabled != '\0') {
             remaining = radiogrp_item_count((RadioGroupCountView *)group);
-            next_index = *(int *)(item + 0x14) + 1;
+            next_index = item->index + 1;
             value = radiogrp_item_count((RadioGroupCountView *)group);
             if (value <= next_index) {
               next_index = 0;
             }
             while ((0 < remaining &&
                    (value = radiogrp_get_items(group),
-                   *(int *)(value + 0x18 + next_index * 0xa4) == 0))) {
+                   ((RadioItem *)value)[next_index].enabled == 0))) {
               remaining--;
               next_index++;
               value = radiogrp_item_count((RadioGroupCountView *)group);
@@ -4383,17 +4382,17 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
               return 0;
             }
             value = radiogrp_get_items(group);
-            SetFocus(*(HWND *)(value + next_index * 0xa4));
+            SetFocus(((RadioItem *)value)[next_index].hwnd);
             erase = 0;
             null_rect = (RECT *)0x0;
             value = radiogrp_get_selected((RadioGroupGetSelView *)group);
             items2 = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(items2 + value * 0xa4),null_rect,erase);
+            InvalidateRect(((RadioItem *)items2)[value].hwnd,null_rect,erase);
             radiogrp_set_selected((RadioGroupSetSelView *)group,next_index);
             erase = 0;
             null_rect = (RECT *)0x0;
             value = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(value + next_index * 0xa4),null_rect,erase);
+            InvalidateRect(((RadioItem *)value)[next_index].hwnd,null_rect,erase);
             parent = ctrl_get_parent((Control *)group);
             wnd_set_active_child(parent);
             result = radiogrp_get_selected((RadioGroupGetSelView *)group);
@@ -4407,14 +4406,14 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
           if (nav_enabled != '\0') {
             remaining = radiogrp_item_count((RadioGroupCountView *)group);
-            next_index = *(int *)(item + 0x14) - 1;
+            next_index = item->index - 1;
             if (next_index < 0) {
               next_index = radiogrp_item_count((RadioGroupCountView *)group);
               next_index--;
             }
             while ((0 < remaining &&
                    (value = radiogrp_get_items(group),
-                   *(int *)(value + 0x18 + next_index * 0xa4) == 0))) {
+                   ((RadioItem *)value)[next_index].enabled == 0))) {
               remaining--;
               next_index--;
               if (next_index < 0) {
@@ -4426,17 +4425,17 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
               return 0;
             }
             value = radiogrp_get_items(group);
-            SetFocus(*(HWND *)(value + next_index * 0xa4));
+            SetFocus(((RadioItem *)value)[next_index].hwnd);
             erase = 0;
             null_rect = (RECT *)0x0;
             value = radiogrp_get_selected((RadioGroupGetSelView *)group);
             items3 = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(items3 + value * 0xa4),null_rect,erase);
+            InvalidateRect(((RadioItem *)items3)[value].hwnd,null_rect,erase);
             radiogrp_set_selected((RadioGroupSetSelView *)group,next_index);
             erase = 0;
             null_rect = (RECT *)0x0;
             value = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(value + next_index * 0xa4),null_rect,erase);
+            InvalidateRect(((RadioItem *)value)[next_index].hwnd,null_rect,erase);
             parent = ctrl_get_parent((Control *)group);
             wnd_set_active_child(parent);
             result = radiogrp_get_selected((RadioGroupGetSelView *)group);
@@ -4457,22 +4456,22 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       radio_lbutton_captured = 0;
       break;
     case 0x203:
-      if (*(int *)(item + 0x18) == 1) {
+      if (item->enabled == 1) {
         parent = ctrl_get_parent((Control *)group);
         wnd_set_active_child(parent);
         value = radiogrp_get_selected((RadioGroupGetSelView *)group);
-        if (value != *(int *)(item + 0x14)) {
+        if (value != item->index) {
           value = radiogrp_get_selected((RadioGroupGetSelView *)group);
           if (value != -1) {
             erase = 0;
             null_rect = (RECT *)0x0;
             value = radiogrp_get_selected((RadioGroupGetSelView *)group);
             items = radiogrp_get_items(group);
-            InvalidateRect(*(HWND *)(items + value * 0xa4),null_rect,erase);
+            InvalidateRect(((RadioItem *)items)[value].hwnd,null_rect,erase);
           }
-          radiogrp_set_selected((RadioGroupSetSelView *)group,*(i32 *)(item + 0x14));
+          radiogrp_set_selected((RadioGroupSetSelView *)group,item->index);
         }
-        result = *(i32 *)(item + 0x14);
+        result = item->index;
         ctrl_id = ctrl_get_id((ControlIdView *)group);
         radiogrp_fire_dblclick((RadioGroupDblClickView *)group,ctrl_id,result);
       }
@@ -4483,7 +4482,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         SetCapture(hwnd);
         parent = ctrl_get_parent((Control *)group);
         wnd_set_active_child(parent);
-        result = *(i32 *)(item + 0x14);
+        result = item->index;
         ctrl_id = ctrl_get_id((ControlIdView *)group);
         radiogrp_fire_rclick((RadioGroupRClickView *)group,ctrl_id,result);
       }
@@ -4515,7 +4514,7 @@ i32 __cdecl ctrl_hwnd_is_radio(HWND hwnd)
   _Str2 = str_mscontrolclass_6;
   _Str1 = __strupr(class_name);
   cmp = _strcmp(_Str1,_Str2);
-  if ((cmp == 0) && (block = wnd_from_hwnd(hwnd), *(int *)(block + 0x2c) == 3)) {
+  if ((cmp == 0) && (block = (iptr)wnd_from_hwnd(hwnd), *(int *)(block + 0x2c) == 3)) {
     return 1;
   }
   return 0;
@@ -4533,14 +4532,14 @@ void __cdecl radiogrp_hwnd_invalidate(HWND hwnd)
 uint __cdecl radiogrp_hwnd_is_selected(i32 hwnd)
 
 {
-  iptr block;
+  ControlBlock *block;
   int selected;
-  iptr item;
+  RadioItem *item;
   
   block = wnd_from_hwnd(hwnd);
-  item = *(iptr *)(block + 0x24);
-  selected = radiogrp_get_selected(*(RadioGroupGetSelView **)(block + 4));
-  return (uint)(selected == *(int *)(item + 0x14));
+  item = (RadioItem *)block->data;
+  selected = radiogrp_get_selected((RadioGroupGetSelView *)block->owner);
+  return (uint)(selected == item->index);
 }
 
 /* 005dac39 auto */
@@ -4549,8 +4548,8 @@ i32 __cdecl radiogrp_hwnds_same_group(int hwnd_a,int hwnd_b)
 {
   iptr is_radio_a;
   iptr is_radio_b;
-  int block_a;
-  iptr block_b;
+  ControlBlock *block_a;
+  ControlBlock *block_b;
   
   is_radio_a = ctrl_hwnd_is_radio(hwnd_a);
   if ((is_radio_a == 0) || (is_radio_b = ctrl_hwnd_is_radio(hwnd_b), is_radio_b == 0)) {
@@ -4561,7 +4560,7 @@ i32 __cdecl radiogrp_hwnds_same_group(int hwnd_a,int hwnd_b)
   }
   block_a = wnd_from_hwnd(hwnd_a);
   block_b = wnd_from_hwnd(hwnd_b);
-  if (*(int *)(block_b + 4) == *(int *)(block_a + 4)) {
+  if (block_b->owner == block_a->owner) {
     return 1;
   }
   return 0;
@@ -4730,10 +4729,10 @@ uint __cdecl input_ctrl_key_down(void)
    
    Library: Visual Studio 1998 Debug */
 
-int __thiscall ddctrl_get_rect(void *self)
+int __thiscall ddctrl_get_rect(DDControl *self)
 
 {
-  return (int)self + 0x38;
+  return (int)&self->rect_left;
 }
 
 /* 005f0f05 auto */
@@ -4841,10 +4840,10 @@ void __thiscall ddctrl_activate(DDControlActivateView *self)
 {
   if (self->is_active == '\0') {
     if (self->parent_control == 0) {
-      ddwin_deactivate_controls((void *)self->owner_ddwin);
+      ddwin_deactivate_controls((DDWindow *)(void *)self->owner_ddwin);
     }
     else {
-      ddctrl_deactivate_children((void *)self->parent_control);
+      ddctrl_deactivate_children((DDControl *)(void *)self->parent_control);
     }
     self->is_active = 1;
     call_untyped(((code **)self->vtable)[8], 1);
@@ -4853,13 +4852,13 @@ void __thiscall ddctrl_activate(DDControlActivateView *self)
 }
 
 /* 005f1683 auto */
-void __thiscall ddctrl_deactivate(void *self)
+void __thiscall ddctrl_deactivate(DDControl *self)
 
 {
-  if (*(char *)((int)self + 0x34) != '\0') {
+  if ((char)self->is_active != '\0') {
     ddctrl_deactivate_children(self);
-    *(i8 *)((int)self + 0x34) = 0;
-    call_untyped(((code **)(*(int **)self))[8], self,0);
+    self->is_active = 0;
+    call_untyped(((code **)((int *)self->vtable))[8], self,0);
   }
   return;
 }
@@ -4948,15 +4947,15 @@ void __thiscall ddctrl_on_set_active_nop(void *self,i32 active)
 }
 
 /* 005f19a6 auto */
-void __thiscall ddctrl_deactivate_children(void *self)
+void __thiscall ddctrl_deactivate_children(DDControl *self)
 
 {
   i32 child;
   
-  child = ptrlist_first((PtrList *)((int)self + 0x10));
+  child = ptrlist_first((PtrList *)self->child_controls);
   while (child != 0) {
-    ddctrl_deactivate((void *)child);
-    child = ptrlist_next((PtrList *)((int)self + 0x10));
+    ddctrl_deactivate((DDControl *)child);
+    child = ptrlist_next((PtrList *)self->child_controls);
   }
   return;
 }
@@ -4970,7 +4969,7 @@ i8 __thiscall ddctrl_dispatch_to_children(DDControl *self,int msg,int x,int y)
   DDControl *child;
   
   if ((self->hover_child != 0) && (msg == 0x200)) {
-    child_rect = (int *)ddctrl_get_rect((void *)self->hover_child);
+    child_rect = (int *)ddctrl_get_rect((DDControl *)self->hover_child);
     if ((x < *child_rect) ||
        (((child_rect[2] < x || (y < child_rect[1])) || (child_rect[3] < y)))) {
       ddctrl_dispatch_msg((DDControl *)self->hover_child,0xfff0,x,y);
