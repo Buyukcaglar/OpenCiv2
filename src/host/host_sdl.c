@@ -149,7 +149,7 @@ static int menu_n;
 void host_menu_begin(void)
 {
     while (menu_n > 0)
-        free(menu_items[--menu_n].text);
+        SDL_free(menu_items[--menu_n].text);       /* SDL's heap: SDL2.dll may have another C runtime */
 }
 
 void host_menu_add(int level, int flags, int id, const char *text)

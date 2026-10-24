@@ -240,11 +240,19 @@ void text_metrics(FontFace *f, TEXTMETRICA *tm)
     tm->tmDigitizedAspectX = tm->tmDigitizedAspectY = 96;
 }
 
+/* (port) Text is measured as it is drawn (dadv): Wine measures a bold line
+   a few pixels narrower than it draws it, so the game's word wrapping ran
+   lines past their boxes (the heralds question).  CIV2_WINE_TEXT=1 keeps
+   Wine's measures, for comparing with the original's recordings
+   (tools/native-run.sh). */
 int text_width(FontFace *f, const char *s, int n)
 {
+    static int wine = -1;
     int i, w = 0;
+    if (wine < 0)
+        wine = getenv("CIV2_WINE_TEXT") != NULL;
     for (i = 0; i < n; i++)
-        w += f->g[(unsigned char)s[i]].adv;
+        w += wine ? f->g[(unsigned char)s[i]].adv : f->g[(unsigned char)s[i]].dadv;
     return w;
 }
 

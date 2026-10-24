@@ -31,8 +31,11 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
   int result;
   char *drive;
   char wav_name[16];
-  char wav_path[128];
-  i8 local_path[128];
+  /* (port) 128 in the original: a game folder path longer than about 110
+     characters overran them.  Room for scenario_dir_path (264), SOUND\ and
+     the name. */
+  char wav_path[0x140];
+  i8 local_path[0x140];
   uint snd_flags;
   
   prefs_main_menu_choice_block.snd_last_effect_id = effect;

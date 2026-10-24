@@ -97,10 +97,21 @@ void plat_host_path(const char *win, char *host, size_t n, int for_create)
     }
 }
 
+/* The game keeps its paths in 128-byte buffers (sounds, videos ...), enough
+   for C:\MPS\CIV2 but not for a game folder deep in the host's file system.
+   A long path inside the game folder is given as C:\..., which
+   plat_host_path takes back to the game folder; short ones stay Z:\... as
+   under Wine, as the recordings have them. */
+#define LONG_WIN_PATH 48
+
 static void win_path_of_host(const char *host, char *win, size_t n)
 {
-    size_t i;
-    snprintf(win, n, "Z:%s", host);
+    size_t i, g = strlen(plat_game_dir);
+    if (strlen(host) + 2 > LONG_WIN_PATH && g > 1 && strncasecmp(host, plat_game_dir, g) == 0 &&
+        (host[g] == 0 || host[g] == '/') && strncasecmp(host + g, "/windows", 8) != 0)
+        snprintf(win, n, "C:%s", host[g] ? host + g : "/");
+    else
+        snprintf(win, n, "Z:%s", host);
     for (i = 0; win[i]; i++)
         if (win[i] == '/')
             win[i] = '\\';

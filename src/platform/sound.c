@@ -37,6 +37,13 @@ typedef struct {
 
 static WaveOut *wave_get(HWAVEOUT h) { return obj_get(h, OBJ_WAVEOUT); }
 
+/* The open waveOut devices, in order of opening: what sound_poll looks at
+   (scanning all 8192 handle slots on every message check made busy loops
+   such as building the world some 40 times slower). */
+#define MAX_WAVE 64
+static HWAVEOUT wave_open[MAX_WAVE];
+static int nwave_open;
+
 UINT WINAPI waveOutGetNumDevs(void) { API_TRACE(); return audio_ok ? 1 : 0; }
 
 MMRESULT WINAPI waveOutGetDevCapsA(UINT_PTR id, LPWAVEOUTCAPSA caps, UINT n)
@@ -68,6 +75,8 @@ MMRESULT WINAPI waveOutOpen(LPHWAVEOUT out, UINT id, LPCWAVEFORMATEX f, DWORD_PT
         return WAVERR_BADFORMAT;
     if (flags & WAVE_FORMAT_QUERY)
         return MMSYSERR_NOERROR;
+    if (nwave_open >= MAX_WAVE)                 /* (one sound_poll would not see) */
+        return MMSYSERR_ALLOCATED;
     w = calloc(1, sizeof *w);
     w->dev = host_audio_open((int)f->nSamplesPerSec, f->nChannels, f->wBitsPerSample == 8 ? 8 : 16);
     if (!w->dev) {
@@ -79,6 +88,7 @@ MMRESULT WINAPI waveOutOpen(LPHWAVEOUT out, UINT id, LPCWAVEFORMATEX f, DWORD_PT
     w->inst = inst;
     w->flags = flags;
     *out = obj_new(OBJ_WAVEOUT, w);
+    wave_open[nwave_open++] = *out;
     if ((flags & CALLBACK_TYPEMASK) == CALLBACK_WINDOW)
         PostMessageA((HWND)cb, MM_WOM_OPEN, (WPARAM)*out, 0);
     return MMSYSERR_NOERROR;
@@ -105,12 +115,15 @@ static uint64_t played_bytes(WaveOut *w)
 /* Called from the message loop: finish buffers that have played. */
 void sound_poll(void)
 {
-    int i;
+    HWAVEOUT open[MAX_WAVE];
+    int i, n;
     if (!audio_ok)
         return;
     cd_poll();
-    for (i = 1; i < 8192; i++) {
-        HWAVEOUT h = ((Handle)OBJ_WAVEOUT << 16) | (Handle)i;
+    n = nwave_open;
+    memcpy(open, wave_open, sizeof open[0] * (size_t)n);       /* (a callback may close one) */
+    for (i = 0; i < n; i++) {
+        HWAVEOUT h = open[i];
         WaveOut *w = wave_get(h);
         if (!w)
             continue;
@@ -175,6 +188,7 @@ MMRESULT WINAPI waveOutReset(HWAVEOUT h)
 MMRESULT WINAPI waveOutClose(HWAVEOUT h)
 { API_TRACE();
     WaveOut *w = wave_get(h);
+    int i;
     if (!w)
         return MMSYSERR_INVALHANDLE;
     if (w->npending)
@@ -184,6 +198,11 @@ MMRESULT WINAPI waveOutClose(HWAVEOUT h)
         PostMessageA((HWND)w->cb, MM_WOM_CLOSE, (WPARAM)h, 0);
     free(w);
     obj_free(h);
+    for (i = 0; i < nwave_open; i++)
+        if (wave_open[i] == h) {
+            memmove(wave_open + i, wave_open + i + 1, sizeof wave_open[0] * (size_t)(--nwave_open - i));
+            break;
+        }
     return MMSYSERR_NOERROR;
 }
 
