@@ -8,7 +8,7 @@ the code reached it through macros (`#define name (*(T *)((u8 *)&g.d_X))`,
 src/auto/globals.h and one block per function) and gamedata.c filled it at
 startup from an image of the original bytes.  This writes instead:
 
-  * src/data/gamedata.c: one definition per variable, in original address
+  * src/data/gamedata.cpp: one definition per variable, in original address
     order, initialized in C (numbers, strings, arrays); the slots the
     original relocates (addresses of functions and data) are set by
     gamedata_init();
@@ -27,7 +27,7 @@ addresses are written as pointers ((T *)&name) where the code indexes from
 them: it may run past the declared end, which compilers otherwise assume it
 does not.
 
-Done once (src/data/gamedata.c is the source now); it ran inside the
+Done once (src/data/gamedata.cpp is the source now); it ran inside the
 civ2-dev container (pefile) on the tree before:
 
     unglobal.py plan      print what would be made
@@ -57,9 +57,9 @@ SIGNED = {'i8', 'char', 'CHAR', 'i16', 'short', 'i32', 'int', 'iptr', 'LONG', 'B
 
 
 def code_files():
-    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) +
-                  glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')) +
-                  [os.path.join(ROOT, 'src', 'native', 'crt.c')])
+    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp')) +
+                  glob.glob(os.path.join(ROOT, 'src', 'game', '*.cpp')) +
+                  [os.path.join(ROOT, 'src', 'native', 'crt.cpp')])
 
 
 # ---------------------------------------------------------------- the data
@@ -80,7 +80,7 @@ def load_items():
 
 
 def load_image():
-    src = open(os.path.join(ROOT, 'src', 'data', 'gamedata.c')).read()
+    src = open(os.path.join(ROOT, 'src', 'data', 'gamedata.cpp')).read()
     m = re.search(r'static const char image\[0x([0-9a-f]+) \+ 1\] =\n(.*?);\n', src, re.S)
     data = bytes(int(x, 16) for x in re.findall(r'\\x([0-9a-f]{2})', m.group(2)))
     return data + bytes(HI - LO - len(data))
@@ -101,7 +101,7 @@ def load_relocs(img):
     defined = set()
     for p in code_files():
         defined |= set(re.findall(r'(?m)^[A-Za-z][\w \*]*?\b(\w+)\s*\([^;{}]*\)\s*\n\{', open(p).read()))
-    for p in glob.glob(os.path.join(ROOT, 'src', 'platform', '*.c')) + glob.glob(os.path.join(ROOT, 'src', 'native', '*.c')):
+    for p in glob.glob(os.path.join(ROOT, 'src', 'platform', '*.c')) + glob.glob(os.path.join(ROOT, 'src', 'native', '*.cpp')):
         defined |= set(re.findall(r'(?m)^[A-Za-z][\w \*]*?\b(\w+)\s*\([^;{}]*\)\s*\n\{', open(p).read()))
     thunks = {}
     th = os.path.join(ROOT, 'build', 'native', 'gen', 'thunks.h')
@@ -1084,7 +1084,7 @@ def apply():
     c = ['/* The game\'s static data, initialized as the original\'s (see gamedata.h). */',
          '#include <string.h>', '#include "auto_common.h"', ''] + defs + [''] + em.init_blobs + \
         ['', 'void gamedata_init(void)', '{'] + em.fix + ['}', '']
-    open(os.path.join(ROOT, 'src', 'data', 'gamedata.c'), 'w').write('\n'.join(c))
+    open(os.path.join(ROOT, 'src', 'data', 'gamedata.cpp'), 'w').write('\n'.join(c))
     os.remove(os.path.join(ROOT, 'src', 'auto', 'globals.h'))
     ac = os.path.join(ROOT, 'src', 'include', 'auto_common.h')
     acs = open(ac).read()

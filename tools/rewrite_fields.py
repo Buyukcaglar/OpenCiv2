@@ -14,7 +14,7 @@ or call `FUN_005b8931`.  This rewrites, in place:
 and reports references into named globals it could not rewrite.  Repeats
 until nothing changes (rewrites can nest).
 
-Usage: rewrite_fields.py [FILES...]   (default: src/game/*.c src/crt/*.c)
+Usage: rewrite_fields.py [FILES...]   (default: src/game/*.cpp src/crt/*.c)
 """
 import glob
 import os
@@ -232,7 +232,7 @@ def main():
                 out.append(rep)
                 i = end
 
-    files = sys.argv[1:] or sorted(glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')) +
+    files = sys.argv[1:] or sorted(glob.glob(os.path.join(ROOT, 'src', 'game', '*.cpp')) +
                                    glob.glob(os.path.join(ROOT, 'src', 'crt', '*.c')))
     for fpath in files:
         text = orig = open(fpath).read()

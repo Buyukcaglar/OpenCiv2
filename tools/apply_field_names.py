@@ -95,7 +95,7 @@ def main():
         names[(fam, 'field_%02x' % off)] = n
     gtypes = field_uses.global_types()
     count = 0
-    for path in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')):
+    for path in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp')):
         text = open(path).read()
         parts = re.split(r'(?m)^(?=/\* [0-9a-f]{8}[ :])', text)
         for i in range(1, len(parts)):

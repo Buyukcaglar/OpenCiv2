@@ -20,7 +20,7 @@ OBJ = os.path.join(ROOT, 'build', 'native', 'linux32cov')
 def main():
     os.chdir(ROOT)
     rows = []
-    for src in sorted([f for f in glob.glob('src/auto/*.c') if not f.endswith('msvcrt.c')] + glob.glob('src/game/*.c')):
+    for src in sorted([f for f in glob.glob('src/auto/*.cpp') if not f.endswith('msvcrt.c')] + glob.glob('src/game/*.cpp')):
         obj = os.path.join(OBJ, src.replace('/', '_') + '.o')
         if not os.path.exists(obj[:-2] + '.gcda'):
             continue

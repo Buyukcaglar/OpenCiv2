@@ -165,7 +165,7 @@ def choose(ev, taken, forbidden):
 
 
 def files():
-    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) +
+    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp')) +
                   glob.glob(os.path.join(ROOT, 'src', 'unused', 'blk_*.c')))
 
 
@@ -175,7 +175,7 @@ def apply_all(paths=None):
     forbidden = forbidden_names()
     # parameter names known: seeds, hand-written definitions, named ones
     known = dict(SEEDS)
-    for p in glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')):
+    for p in glob.glob(os.path.join(ROOT, 'src', 'game', '*.cpp')):
         for m in re.finditer(r'^[A-Za-z_][\w \*]*\b(\w+)\(([^()]*)\)\s*\n\{', open(p, errors='replace').read(), re.M):
             names = [re.findall(r'\w+', a)[-1] if re.findall(r'\w+', a) else '' for a in m.group(2).split(',')]
             if names and not any(re.match(VAR, n) for n in names) and 'void' not in names:

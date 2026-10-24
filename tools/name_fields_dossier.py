@@ -31,7 +31,7 @@ def main():
     names = {r['entry']: r['name'] for r in csv.DictReader(open('re/functions.tsv'), delimiter='\t')}
     count = collections.Counter()
     samples = collections.defaultdict(list)
-    for f in glob.glob('src/auto/*.c') + glob.glob('src/game/*.c'):
+    for f in glob.glob('src/auto/*.cpp') + glob.glob('src/game/*.cpp'):
         text = open(f, errors='replace').read()
         for m in re.finditer(r'^/\* ([0-9a-f]{8}) [^\n]*\*/\n(.*?)(?=^/\* [0-9a-f]{8} |\Z)', text, re.M | re.S):
             fam = fam_of.get(m.group(1))

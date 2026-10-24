@@ -102,7 +102,7 @@ button_create
   self->font = (u32)(*(i8 * *)draw_current_font_rest);
   ctrl_init(self,parent,6,ctrl_id,rect);
   self->on_click = 0;
-  new_hwnd = button_create_hwnd(rect,(iptr)self,label,1,self->font);
+  new_hwnd = button_create_hwnd((int *)rect,(iptr)self,label,1,(GameFont *)self->font);
   self->hwnd = new_hwnd;
   self->is_enabled = 1;
   return;
@@ -205,7 +205,7 @@ checkbox_create
   i8 rect[16];
   
   self->font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
-  checkbox_calc_rect(label,x,y,(iptr)rect,self->font);
+  checkbox_calc_rect((char *)label,x,y,(iptr)rect,(GameFont *)self->font);
   if (self->hwnd != 0) {
     ctrl_destroy(self);
   }
@@ -213,7 +213,7 @@ checkbox_create
   self->is_enabled = 0;
   self->on_select = 1;
   self->on_click = 0;
-  new_hwnd = checkbox_create_hwnd((iptr)rect,(iptr)self,label,1);
+  new_hwnd = checkbox_create_hwnd((iptr)rect,(iptr)self,(char *)label,1);
   self->hwnd = new_hwnd;
   return;
 }
@@ -279,7 +279,7 @@ scrollbar_create
     ctrl_destroy(self);
   }
   ctrl_init(self,parent,8,ctrl_id,rect);
-  new_hwnd = scrollbar_create_hwnd(rect,(iptr)self,style,1);
+  new_hwnd = scrollbar_create_hwnd((int *)rect,(iptr)self,style,1);
   self->hwnd = new_hwnd;
   scrollbar_hwnd_set_range(self->hwnd,1,100);
   self->font = 1;
@@ -375,7 +375,7 @@ edit_create
   }
   self->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
   ctrl_init((Control *)self,parent,4,ctrl_id,rect);
-  new_hwnd = edit_create_window(rect,(iptr)self,1,1,self->edit_font);
+  new_hwnd = edit_create_window((int *)rect,(iptr)self,1,1,(GameFont *)self->edit_font);
   self->hwnd = new_hwnd;
   hwnd_send_settext(self->hwnd,text);
   return;
@@ -456,7 +456,7 @@ combo_create(Control *self,iptr parent,i32 ctrl_id,iptr rect)
     ctrl_destroy(self);
   }
   ctrl_init(self,parent,10,ctrl_id,rect);
-  new_hwnd = combo_create_window(rect,(iptr)self,1);
+  new_hwnd = combo_create_window((int *)rect,(iptr)self,1);
   self->hwnd = new_hwnd;
   self->is_enabled = 0;
   return;
@@ -561,7 +561,7 @@ listbox_create(Control *self,iptr parent,i32 ctrl_id,iptr rect)
   }
   self->font = (u32)(*(i8 * *)(draw_current_font_rest + 16));
   ctrl_init(self,parent,7,ctrl_id,rect);
-  new_hwnd = listbox_create_hwnd(rect,(iptr)self,1,0,self->font);
+  new_hwnd = listbox_create_hwnd((int *)rect,(iptr)self,1,0,(GameFont *)self->font);
   self->hwnd = new_hwnd;
   self->is_enabled = 0;
   return;
@@ -893,7 +893,7 @@ edit_create_styled
   }
   self->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
   ctrl_init((Control *)self,parent,4,ctrl_id,rect);
-  new_hwnd = edit_create_window(rect,(iptr)self,multiline,style,self->edit_font);
+  new_hwnd = edit_create_window((int *)rect,(iptr)self,multiline,style,(GameFont *)self->edit_font);
   self->hwnd = new_hwnd;
   hwnd_send_settext(self->hwnd,text);
   return;
@@ -942,7 +942,7 @@ edit_get_line(EditLineView *self,i32 line,iptr buffer,i32 max_len)
 {
   i32 length;
   
-  length = edit_hwnd_get_line(self->hwnd,line,buffer,max_len);
+  length = edit_hwnd_get_line(self->hwnd,line,(short *)buffer,max_len);
   return length;
 }
 
@@ -968,7 +968,7 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   width2 = rect_width(rect);
   height2 = rect_height(rect);
   spritebtn_init_from_sprite
-            (button,parent,ctrl_id,*(i32 *)rect,*(i32 *)(rect + 4),width2,
+            (button,(WndPaletteView *)parent,ctrl_id,*(i32 *)rect,*(i32 *)(rect + 4),width2,
              height2,sprite,0x17);
   surf_rect = (int *)surface_get_rect((DibSurface *)&button->on_select);
   rect2.left = *surf_rect;
@@ -1099,7 +1099,7 @@ checkbox_create_fixed
   i8 rect[16];
   
   self->font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
-  checkbox_calc_rect_fixed(x,y,width,(iptr)rect,self->font);
+  checkbox_calc_rect_fixed(x,y,width,(iptr)rect,(GameFont *)self->font);
   if (self->hwnd != 0) {
     ctrl_destroy(self);
   }
@@ -1107,7 +1107,7 @@ checkbox_create_fixed
   self->is_enabled = 0;
   self->on_select = 1;
   self->on_click = 0;
-  hwnd = checkbox_create_hwnd((iptr)rect,(iptr)self,label,1);
+  hwnd = checkbox_create_hwnd((iptr)rect,(iptr)self,(char *)label,1);
   self->hwnd = hwnd;
   return;
 }
@@ -1166,10 +1166,10 @@ radiogrp_create
   self->font = item_count;
   self->scroll_pos = columns;
   self->edit_font = 0;
-  handle = radiogrp_create_items((iptr)&self->font,rect,columns,(iptr)self,item_count,labels,1,
+  handle = radiogrp_create_items((iptr)&self->font,(int *)rect,columns,(iptr)self,item_count,labels,1,
                        self->radio_font);
   self->items_handle = handle;
-  handle = mem_handle_lock(self->items_handle);
+  handle = (u32)mem_handle_lock((HGLOBAL)self->items_handle);
   self->items_ptr = handle;
   return;
 }
@@ -1255,7 +1255,7 @@ Checkbox * __thiscall checkbox_vector_dtor(Checkbox *self,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),checkbox_dtor);
+    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),(code *)checkbox_dtor);
     operator_delete(&VECTOR_COUNT(self));
   }
   return self;
@@ -1280,7 +1280,7 @@ Control * __thiscall edit_vector_dtor(Control *self,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(self,0x48,VECTOR_COUNT(self),edit_dtor);
+    crt_vector_dtor_iterator(self,0x48,VECTOR_COUNT(self),(code *)edit_dtor);
     operator_delete(&VECTOR_COUNT(self));
   }
   return self;
@@ -1305,7 +1305,7 @@ Control * __thiscall ctrl_vector_dtor(Control *self,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),ctrl_dtor);
+    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),(code *)ctrl_dtor);
     operator_delete(&VECTOR_COUNT(self));
   }
   return self;
@@ -1739,7 +1739,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   int orig_right;
   int orig_bottom;
   
-  crt_strcpy(label_text,label);
+  crt_strcpy((void *)label_text,(void *)label);
   button = (Control *)ctrl;
   style2 = 0x40810000;
   if (visible != 0) {
@@ -1812,7 +1812,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
           color_index = button->on_select;
           parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
           this_01 = (GamePalette *)wnd_get_palette(parent_wnd);
-          logpal = palette_get_logpalette(this_01);
+          logpal = (iptr)palette_get_logpalette(this_01);
           palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
           bg_pen = CreatePen(0,1,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])))
           ;
@@ -2107,7 +2107,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         }
         DeleteObject(h_02);
         DeleteDC(mem_dc);
-        value = ctrl_init_block(hwnd2,ctrl);
+        value = (iptr)ctrl_init_block(hwnd2,ctrl);
         *(HBITMAP *)(value + 0xc) = h;
         *(HBITMAP *)(value + 0x10) = h_00;
         *(HBITMAP *)(value + 0x14) = bmp_disabled;
@@ -2148,7 +2148,7 @@ void __cdecl button_press_animated(HWND hwnd)
   return;
 }
 
-/* 005cacd4: written by hand in src/game/fixups.c */
+/* 005cacd4: written by hand in src/game/fixups.cpp */
 
 /* 005cb601 auto */
 HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,int visible)
@@ -2183,7 +2183,7 @@ HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,in
   value = rect_width((iptr)&rect);
   hwnd2 = CreateWindowExA(4,str_mscontrolclass_3,((i8 *)&spritebtn_wnd_title),style2,x,y,value
                             ,rect_h,hWndParent,hMenu,hInstance,lpParam);
-  value = ctrl_init_block(hwnd2,ctrl);
+  value = (iptr)ctrl_init_block(hwnd2,ctrl);
   *(i32 *)(value + 0x2c) = 5;
   SetWindowLongA(hwnd2,-4,(iptr)spritebtn_wndproc);
   return hwnd2;
@@ -2196,7 +2196,7 @@ void __cdecl spritebtn_hwnd_cleanup_stub(i32 hwnd)
   return;
 }
 
-/* 005cb6eb: written by hand in src/game/fixups.c */
+/* 005cb6eb: written by hand in src/game/fixups.cpp */
 
 /* 005cbdf0 auto */
 void __thiscall button_fire_callback(ButtonClickView *self,i32 ctrl_id)
@@ -2337,7 +2337,7 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   bmp_unchecked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x132);
   bmp_checked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x131);
   bmp_focus = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x130);
-  value = ctrl_init_block(check_hwnd,ctrl);
+  value = (iptr)ctrl_init_block(check_hwnd,ctrl);
   *(HBITMAP *)(value + 0xc) = bmp_unchecked;
   *(HBITMAP *)(value + 0x10) = bmp_checked;
   *(HBITMAP *)(value + 0x14) = bmp_focus;
@@ -2515,7 +2515,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
             color_index = (uint)ctrl_text_color_index;
             parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
-            logpal = palette_get_logpalette(game_palette2);
+            logpal = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])))
             ;
@@ -2544,7 +2544,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
               color_index = (uint)ctrl_disabled_color_index;
               parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
               game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
-              logpal = palette_get_logpalette(game_palette2);
+              logpal = (iptr)palette_get_logpalette(game_palette2);
               palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
               SetTextColor(hdc,
                            (uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
@@ -3703,7 +3703,7 @@ void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,i32 buffer)
   
   cur_sel = SendMessageA(hwnd,0x188,0,0);
   if (cur_sel == -1) {
-    crt_strcpy(buffer,((i8 *)&listbox_no_sel_text));
+    crt_strcpy((void *)buffer,((i8 *)&listbox_no_sel_text));
   }
   else {
     listbox_hwnd_get_text(hwnd,cur_sel,buffer);
@@ -3847,10 +3847,10 @@ spritebtn_init_from_sprite
              (iptr)&dst_rect);
   parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)self);
   palette = wnd_get_palette(parent_wnd);
-  surface_apply_palette((DibSurface *)(self->button_surface),palette);
+  surface_apply_palette((DibSurface *)(self->button_surface),(PaletteVersionView *)palette);
   parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)self);
   palette = wnd_get_palette(parent_wnd);
-  surface_apply_palette((DibSurface *)&self->on_select,palette);
+  surface_apply_palette((DibSurface *)&self->on_select,(PaletteVersionView *)palette);
   value = spritebtn_create_hwnd(x,y,width,height,(iptr)self,1);
   self->hwnd = value;
   return;
@@ -3921,12 +3921,12 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
   bmp_checked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12f);
   bmp_focus = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12e);
   handle = mem_handle_alloc(item_count * 0xa4);
-  items = mem_handle_lock(handle);
+  items = (iptr)mem_handle_lock((HGLOBAL)handle);
   col_width = rect_width((iptr)rect);
   col_width = col_width / columns;
   row_height = rect_height((iptr)rect);
   row_height = (row_height * columns) / item_count;
-  nHeight = radiogrp_item_height(font);
+  nHeight = radiogrp_item_height((GameFont *)font);
   item_x = *rect;
   item_y = rect[1];
   style2 = 0x40010000;
@@ -3951,7 +3951,7 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
                               (half_row - half_item) + item_y,col_width,nHeight,*(HWND *)(window + 4),hMenu,
                               hInstance,lpParam);
     *(HWND *)(items + index * 0xa4) = item_hwnd;
-    block = ctrl_init_block(*(i32 *)(items + index * 0xa4),group);
+    block = (iptr)ctrl_init_block(*(i32 *)(items + index * 0xa4),group);
     if (index == 0) {
       *(i32 *)(block + 8) = 0;
     }
@@ -3980,7 +3980,7 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     else {
       *(i32 *)(items + 0x18 + index * 0xa4) = 1;
     }
-    crt_strcpy(index * 0xa4 + items + 0x1c,label);
+    crt_strcpy((void *)(index * 0xa4 + items + 0x1c),(void *)label);
     cursor = (char *)(index * 0xa4 + items + 0x1c);
     *(i32 *)(items + 0xa0 + index * 0xa4) = 0;
     while( true ) {
@@ -4028,7 +4028,7 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
     dbg_log((iptr)&str_error_tried_to_dismantle_null_radioset_i);
   }
   else {
-    items = mem_handle_lock(handle);
+    items = (iptr)mem_handle_lock((HGLOBAL)handle);
     for (i = 0; i < count; i++) {
       if (*(int *)(items + i * 0xa4) != 0) {
         DestroyWindow(*(HWND *)(items + i * 0xa4));
@@ -4210,7 +4210,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             color_index = (uint)radio_text_color_index;
             parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)group);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
-            parent = palette_get_logpalette(game_palette2);
+            parent = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
           }
@@ -4236,7 +4236,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             color_index = (uint)radio_disabled_color_index;
             parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)group);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
-            parent = palette_get_logpalette(game_palette2);
+            parent = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
             SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
           }
@@ -4253,7 +4253,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       len = _strlen((char *)(item + 0x1c));
       DrawTextA(hdc,(LPCSTR)(item + 0x1c),len,draw_rect,draw_flags);
       if (*(int *)(item + 0xa0) != -1) {
-        crt_strcpy(prefix,item + 0x1c);
+        crt_strcpy(prefix,(void *)(item + 0x1c));
         prefix[*(int *)(item + 0xa0)] = '\0';
         text_rect.left = rect.left;
         text_rect.top = rect.top;
@@ -4270,7 +4270,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
           underline_start = text_rect.right - 1;
         }
-        crt_strcpy(prefix,item + 0x1c);
+        crt_strcpy(prefix,(void *)(item + 0x1c));
         prefix[*(int *)(item + 0xa0) + 1] = '\0';
         text_rect.left = rect.left;
         text_rect.top = rect.top;
@@ -4616,7 +4616,7 @@ void __thiscall scrollbar_set_page_size(Control *self,u32 page_size)
 void __thiscall scrollbar_get_ctl_range(Control *self,iptr min_out,iptr max_out)
 
 {
-  scrollbar_hwnd_get_range(self->hwnd,min_out,max_out);
+  scrollbar_hwnd_get_range(self->hwnd,(LPINT)min_out,(LPINT)max_out);
   return;
 }
 
@@ -4636,7 +4636,7 @@ i32 __cdecl ctrl_list_find_by_hwnd(int hwnd,ControlNextView *list)
     if (ctrl_hwnd == hwnd) break;
     ctrl = (ControlNextView *)control_get_next(ctrl);
   }
-  return ctrl;
+  return (i32)ctrl;
 }
 
 /* 005eac6d auto */
@@ -4660,7 +4660,7 @@ i32 __cdecl ctrl_list_find_type11_hwnd(ControlNextView *list)
   return hwnd;
 }
 
-/* 005eacc0: written by hand in src/game/retvals.c */
+/* 005eacc0: written by hand in src/game/retvals.cpp */
 
 /* 005eb2f0 auto */
 void __thiscall edit_fire_maxtext_callback(EditMaxTextView *self)
@@ -4703,7 +4703,7 @@ uint __cdecl input_map_vkey(uint vkey)
   return key_code;
 }
 
-/* 005eb447: written by hand in src/game/fixups.c */
+/* 005eb447: written by hand in src/game/fixups.cpp */
 
 /* 005ecef0 auto */
 uint __cdecl input_shift_key_down(void)
@@ -4842,10 +4842,10 @@ void __thiscall ddctrl_activate(DDControlActivateView *self)
 {
   if (self->is_active == '\0') {
     if (self->parent_control == 0) {
-      ddwin_deactivate_controls(self->owner_ddwin);
+      ddwin_deactivate_controls((void *)self->owner_ddwin);
     }
     else {
-      ddctrl_deactivate_children(self->parent_control);
+      ddctrl_deactivate_children((void *)self->parent_control);
     }
     self->is_active = 1;
     call_untyped(((code **)(self->vtable))[8], 1);
@@ -4956,7 +4956,7 @@ void __thiscall ddctrl_deactivate_children(void *self)
   
   child = ptrlist_first((PtrList *)((int)self + 0x10));
   while (child != 0) {
-    ddctrl_deactivate(child);
+    ddctrl_deactivate((void *)child);
     child = ptrlist_next((PtrList *)((int)self + 0x10));
   }
   return;

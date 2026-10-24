@@ -1406,6 +1406,7 @@ check_goal_orders:
 i32 __cdecl ai_barbarian_unit_move(void)
 
 {
+  Tile *map_tile;
   u8 move_pts;
   short y4;
   short y5;
@@ -1517,8 +1518,8 @@ i32 __cdecl ai_barbarian_unit_move(void)
                   }
                 }
               }
-              y3 = tile_at(x,y3);
-              units[unit].visibility = *(byte *)(y3 + 4) | units[unit].visibility;
+              map_tile = tile_at(x,y3);
+              units[unit].visibility = map_tile->visible | units[unit].visibility;
               units[unit].ai_task = 'U';
               unit_stack_wake_by_role(unit,0xffff,0);
               unit_exhaust_moves(unit);
@@ -1881,9 +1882,9 @@ after_neighbor_scan: ;
            (y3 = unit_moves_left(unit), y3 <= (int)(uint)cosmic.road_move_mult)) &&
           (-1 < city)) &&
          (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) != 0)) {
-        y3 = tile_at(x2,y);
-        if (((*(byte *)(y3 + 1) & 0x4c) != 0) ||
-           ((unit_type == 9 && ((*(byte *)(y3 + 1) & 0x10) != 0)))) {
+        map_tile = tile_at(x2,y);
+        if (((map_tile->improvements & 0x4c) != 0) ||
+           ((unit_type == 9 && ((map_tile->improvements & 0x10) != 0)))) {
           unit_pillage(unit,0);
           unit_exhaust_moves(unit);
           goto clear_goto_done;
@@ -2511,6 +2512,7 @@ next_city:
 i32 __cdecl ai_unit_choose_orders(void)
 
 {
+  Tile *map_tile;
   uint *treaty;
   u8 stat;
   ushort military;
@@ -4116,8 +4118,8 @@ after_stack_check: ;
                     (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + cities[city3].owner * 4) & 0x20) != 0
                      && (unit_types[units[unit].type].domain == '\0')))) &&
                    (unit_types[units[unit].type].attack != '\0')) {
-                  city7 = tile_at(x2,y3);
-                  tile_byte = *(byte *)(city7 + 1);
+                  map_tile = tile_at(x2,y3);
+                  tile_byte = map_tile->improvements;
                   tile_flags = (uint)tile_byte;
                   unit4 = 0;
                   if (((tile_byte & 0x4c) == 0) || (3 < near_dist)) {
@@ -4375,8 +4377,8 @@ settler_goto_check:
                             goto finish_orders;
                           }
                         }
-                        city7 = tile_at(x2,y3);
-                        tile_byte = *(byte *)(city7 + 1);
+                        map_tile = tile_at(x2,y3);
+                        tile_byte = map_tile->improvements;
                         tile_flags = (uint)tile_byte;
                         if (((tile_byte & 0x10) == 0) || ((tile_byte & 0x20) != 0)) {
                           if (((tile_byte & 0x10) == 0) &&
@@ -4508,8 +4510,8 @@ settler_goto_check:
                     goto finish_orders;
                   }
                   if (own_dist < 3) {
-                    city7 = tile_at(x2,y3);
-                    tile_byte = *(byte *)(city7 + 1);
+                    map_tile = tile_at(x2,y3);
+                    tile_byte = map_tile->improvements;
                     tile_flags = (uint)tile_byte;
                     if ((tile_byte & 0xe) == 0) {
                       if ((terrain_types[terrain2].mine_ai_govt != '\0') &&
@@ -4542,9 +4544,9 @@ settler_goto_check:
                       city7 = map_in_bounds(x,y2);
                       if (city7 != 0) {
                         tile_byte = tile_terrain(x,y2);
-                        city7 = tile_at(x,y2);
-                        tile_flags = (uint)*(byte *)(city7 + 1);
-                        if ((*(byte *)(city7 + 1) & 0xe) == 0) {
+                        map_tile = tile_at(x,y2);
+                        tile_flags = (uint)map_tile->improvements;
+                        if ((map_tile->improvements & 0xe) == 0) {
                           if ((terrain_types[tile_byte].mine_ai_govt != '\0') &&
                              ((char)terrain_types[tile_byte].mine_ai_govt <
                               (char)terrain_types[tile_byte].irrigate_ai_govt)) {

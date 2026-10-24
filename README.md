@@ -17,13 +17,13 @@ leader receiving an envoy (his video, from the CD) and London's city view with i
 
 | path | what |
 |------|------|
-| `src/auto/` | the game, machine-translated to C once and now edited directly, a file per subject: `city.c`, `unit.c`, `ai.c`, `civ.c`, `diplomacy.c`, `reports.c`, `map.c`, `mapview.c`, `game.c`, `editor.c`, `pedia.c`, `spaceship.c`, `network.c`, `sound.c`, `window.c`, `controls.c`, `graphics.c`, `text.c`, `support.c` |
+| `src/auto/` | the game, machine-translated to C once, now C++ edited directly, a file per subject: `city.cpp`, `unit.cpp`, `ai.cpp`, `civ.cpp`, `diplomacy.cpp`, `reports.cpp`, `map.cpp`, `mapview.cpp`, `game.cpp`, `editor.cpp`, `pedia.cpp`, `spaceship.cpp`, `network.cpp`, `sound.cpp`, `window.cpp`, `controls.cpp`, `graphics.cpp`, `text.cpp`, `support.cpp` |
 | `src/game/` | game functions reconstructed by hand |
-| `src/data/` | the game's static data as C (`gamedata.h`/`.c`) |
+| `src/data/` | the game's static data (`gamedata.h`/`.cpp`) |
 | `src/include/` | types recovered from the binary (units, cities, civilizations, classes) |
 | `src/platform/` | the Windows API the game uses (windows, GDI, controls, files, sound …) implemented in portable C |
 | `src/host/` | what the platform needs from the machine: window, input, audio over SDL2; the portable build's runtime |
-| `src/native/` | the C runtime pieces for native builds |
+| `src/native/` | the C runtime pieces for native builds (C++, as the game) |
 | `data/native/` | fonts as the reference renders them (glyph data, generated with Wine) |
 | `data/image/` | the original executable's data sections |
 | `re/` | analysis results: function list, calling conventions, data layout, Ghidra's decompilation |

@@ -245,9 +245,9 @@ void __thiscall avi_player_set_frame_callback(AviPlayerSetFrameCallbackView *sel
   return;
 }
 
-/* 00472950: written by hand in src/game/regargs.c */
+/* 00472950: written by hand in src/game/regargs.cpp */
 
-/* 004729ab: written by hand in src/game/regargs.c */
+/* 004729ab: written by hand in src/game/regargs.cpp */
 
 /* 004d8b20 auto */
 AviPlayer * __thiscall avi_player_scalar_dtor(AviPlayer *self,uint flags)
@@ -448,7 +448,7 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
                 result = 2;
               }
               else {
-                source = GlobalLock(mem_handle2);
+                source = (FOURCC *)GlobalLock(mem_handle2);
                 if (source == (FOURCC *)0x0) {
                   mmioClose(mmio,0);
                   GlobalFree(mem_handle2);
@@ -577,7 +577,7 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
                   result = 2;
                 }
                 else {
-                  source = GlobalLock(mem_handle2);
+                  source = (FOURCC *)GlobalLock(mem_handle2);
                   if (source == (FOURCC *)0x0) {
                     GlobalFree(mem_handle2);
                     result = 2;
@@ -723,7 +723,7 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
           result = 2;
         }
         else {
-          source = GlobalLock(mem_handle2);
+          source = (i32 *)GlobalLock(mem_handle2);
           if (source == (i32 *)0x0) {
             GlobalFree(mem_handle2);
             result = 2;
@@ -738,7 +738,7 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
             source[0x20] = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
             *source = mmio;
             p_Var3 = &mmio_info;
-            dst_flags = source + 6;
+            dst_flags = (DWORD *)(source + 6);
             for (n = 0x12; n != 0; n--) {
               *dst_flags = p_Var3->dwFlags;
               p_Var3 = (_MMIOINFO *)&p_Var3->fccIOProc;
@@ -771,9 +771,9 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
   return result;
 }
 
-/* 005d5643: written by hand in src/game/sound_position.c */
+/* 005d5643: written by hand in src/game/sound_position.cpp */
 
-/* 005d5706: written by hand in src/game/sound_position.c */
+/* 005d5706: written by hand in src/game/sound_position.cpp */
 
 /* 005d57b1 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -828,7 +828,7 @@ i32 __cdecl snd_avi_stream_feed(uint sample_count)
       AVIStreamRead(*(i32 *)(snd_wave_sources + 0x84),
                     *(uint *)(snd_wave_sources + 0x90) / (uint)*(ushort *)(snd_wave_sources + 0x80),
                     byte_count / *(ushort *)(snd_wave_sources + 0x80),
-                    *(i32 *)(snd_wave_sources + 0x34),byte_count,&bytes_read,0);
+                    (LPVOID)*(i32 *)(snd_wave_sources + 0x34),byte_count,&bytes_read,0);
       *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + bytes_read;
       *(int *)(source + 0x34) = *(int *)(source + 0x34) + bytes_read;
       if (*(int *)(source + 0x3c) == *(int *)(source + 0x34)) {
@@ -909,7 +909,7 @@ void __cdecl snd_avi_stream_refill(iptr source)
     *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
     AVIStreamRead(*(i32 *)(source + 0x84),
                   *(uint *)(source + 0x90) / (uint)*(ushort *)(source + 0x80),
-                  byte_count / *(ushort *)(source + 0x80),*(i32 *)(source + 0x34),byte_count,
+                  byte_count / *(ushort *)(source + 0x80),(LPVOID)*(i32 *)(source + 0x34),byte_count,
                   &bytes_read,0);
     *(int *)(source + 0x90) = *(int *)(source + 0x90) + bytes_read;
     shortfall = *(int *)(source + 0x2c) - bytes_read;
@@ -975,7 +975,7 @@ i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr)
         buffer[3] = buffer[3] & 0xffffffdf;
         buffer[3] = buffer[3] & 0xffffffbf;
         buffer[4] = *(i32 *)*buffer;
-        start_byte = snd_wave_mix_buffer(*buffer);
+        start_byte = snd_wave_mix_buffer((i32 *)*buffer);
         if (start_byte == 1) break;
         buffer = (i32 *)buffer[7];
       }
@@ -1029,16 +1029,16 @@ short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
   }
   else if ((*(ushort *)&snd_wave_source_count) < 5) {
     if ((flags & 8) == 0) {
-      result = snd_wave_load_file(filename,flags,sound_id,sound_tag);
+      result = snd_wave_load_file((LPSTR)filename,flags,sound_id,sound_tag);
     }
     else {
-      result = snd_wave_open_stream(filename,flags,sound_id);
+      result = snd_wave_open_stream((LPSTR)filename,flags,sound_id);
     }
     if ((result == 0) &&
        ((*(ushort *)&snd_wave_source_count) = (*(ushort *)&snd_wave_source_count) + 1, (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0)) {
       i = 0;
       buffer = (i32 *)snd_wave_cur_buffer;
-      while ((i < snd_wave_buffer_count && (status = snd_wave_mix_buffer(*buffer), status != 1))) {
+      while ((i < snd_wave_buffer_count && (status = snd_wave_mix_buffer((i32 *)*buffer), status != 1))) {
         buffer = (i32 *)buffer[7];
         i++;
       }
@@ -1197,7 +1197,7 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint 
       }
       _memset(buffer,0,0x20);
       buffer[2] = mem_handle2;
-      data = snd_global_alloc_lock(bytes_per_buffer + 0x20,(iptr)&mem_handle2);
+      data = (int)snd_global_alloc_lock(bytes_per_buffer + 0x20,(iptr)&mem_handle2);
       *buffer = data;
       if (*buffer == 0) {
         if (i != 0) {
@@ -1507,7 +1507,7 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
               }
               src = ((uint)buffer[3] >> 7 & 0xff) * *(int *)((int)source + 0x9c) +
                       *(int *)((int)source + 0x30);
-              snd_resample_8bit(buffer[4],src,buffer[6] / (int)(uint)(ushort)snd_wave_block_align,
+              snd_resample_8bit((byte *)buffer[4],(byte *)src,buffer[6] / (int)(uint)(ushort)snd_wave_block_align,
                            CONCAT22((short)((uint)source >> 0x10),
                                     *(i16 *)((int)source + 0x80)),
                            CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
@@ -1615,7 +1615,7 @@ i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
         if (*(short *)((int)source + 0x88) == 4) {
           src = (*(uint *)(buffer + 0xc) >> 7 & 0xff) * *(int *)((int)source + 0x9c) +
                   *(int *)((int)source + 0x30);
-          snd_resample_8bit(*(i32 *)(buffer + 0x10),src,
+          snd_resample_8bit((byte *)*(i32 *)(buffer + 0x10),(byte *)src,
                        *(int *)(buffer + 0x18) / (int)(uint)(ushort)snd_wave_block_align,
                        CONCAT22((short)((uint)source >> 0x10),
                                 *(i16 *)((int)source + 0x80)),
@@ -1747,7 +1747,7 @@ i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
     want -= count;
   }
   if (count != 0) {
-    consumed = snd_resample_8bit(dst,*(i32 *)(source + 0x34),count,
+    consumed = snd_resample_8bit((byte *)dst,(byte *)*(i32 *)(source + 0x34),count,
                          CONCAT22((short)((uint)source >> 0x10),*(i16 *)(source + 0x80)),
                          CONCAT22((short)(want >> 0x10),(ushort)snd_wave_block_align));
     *(int *)(source + 0x34) = *(int *)(source + 0x34) + (uint)consumed;
@@ -1812,7 +1812,7 @@ i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
     flags = source;
   }
   if (count != 0) {
-    consumed = snd_mix_8bit_resample(dst,*(i32 *)(source + 0x34),count,
+    consumed = snd_mix_8bit_resample((char *)dst,(byte *)*(i32 *)(source + 0x34),count,
                          CONCAT22((short)(source >> 0x10),*(i16 *)(source + 0x80)),
                          CONCAT22((short)(flags >> 0x10),(ushort)snd_wave_block_align));
     advance = (uint)consumed;
@@ -1855,7 +1855,7 @@ i32 __cdecl snd_avi_fill_buffer(iptr buffer,iptr source)
     }
     AVIStreamRead(*(i32 *)(snd_wave_sources + 0x84),
                   *(uint *)(snd_wave_sources + 0x90) / (uint)*(ushort *)(snd_wave_sources + 0x80),
-                  byte_count / *(ushort *)(snd_wave_sources + 0x80),*(i32 *)(snd_wave_sources + 0x34)
+                  byte_count / *(ushort *)(snd_wave_sources + 0x80),(LPVOID)*(i32 *)(snd_wave_sources + 0x34)
                   ,byte_count,&bytes_read,0);
     *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + bytes_read;
     *(int *)(head + 0x34) = *(int *)(head + 0x34) + bytes_read;
@@ -1928,7 +1928,7 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *self)
   self->cue_frame = 0;
   self->paused = 1;
   self->loop = 0;
-  avi_current_player_i32 = self;
+  avi_current_player_i32 = (i32)self;
   return self;
 }
 
@@ -1942,7 +1942,7 @@ i32 __thiscall avi_player_dtor(AviPlayer *self)
   i8 *eh_handler;
   int eh_state;
   
-  *(i8 ***)self->media_window_base = ((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
+  *(i8 ***)self->media_window_base = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 3;
   avi_play_pause((iptr)self);
@@ -2071,7 +2071,7 @@ void __thiscall avi_player_pause(AviPlayerPauseView *self)
 void __thiscall avi_player_set_palette(DibSurface *self,iptr palette)
 
 {
-  avi_apply_palette((iptr)self,palette);
+  avi_apply_palette((iptr)self,(GamePalette *)palette);
   surface_set_palette(self,palette);
   wnd_set_palette((WndBase *)(self + 1),palette);
   return;
@@ -2146,7 +2146,7 @@ void __cdecl snd_system_init(void)
   WNDCLASSA wnd_class;
   
   wnd_class.style = 0;
-  wnd_class.lpfnWndProc = snd_mci_notify_wndproc;
+  wnd_class.lpfnWndProc = (WNDPROC)snd_mci_notify_wndproc;
   wnd_class.cbClsExtra = 0;
   wnd_class.cbWndExtra = 0;
   wnd_class.hInstance = err_report_ctx_block.app_hinstance;
@@ -2442,19 +2442,19 @@ int __cdecl avi_open_file(iptr player,i32 filename)
   err_report_ctx_block.avi_indeo_frame_environment_i32 = 2;
   err_report_ctx_block.avi_indeo_frame_version_i32 = 0x10002;
   err_report_ctx_block.avi_indeo_frame_type_i32 = 2;
-  err_report_ctx_block.avi_indeo_view_rect_ptr_i32 = ((i32 *)&err_report_ctx_block.avi_view_rect_x);
+  err_report_ctx_block.avi_indeo_view_rect_ptr_i32 = (i32)((i32 *)&err_report_ctx_block.avi_view_rect_x);
   err_report_ctx_block.g_video_flags_b = 0x80000008;
   err_report_ctx_block.avi_view_rect_x[0] = 0;
   err_report_ctx_block.avi_view_rect_y = 0;
   err_report_ctx_block.avi_view_rect_width_i32 = 0;
   err_report_ctx_block.avi_view_rect_height_i32 = 0;
-  result = AVIFileOpenA(((i32 *)&avi_file),filename,0,0);
+  result = AVIFileOpenA(((PAVIFILE *)&avi_file),(LPCSTR)filename,0,0);
   if (result == 0) {
-    result = AVIFileGetStream(avi_file[0],((i32 *)&avi_video_stream),0x73646976,0);
+    result = AVIFileGetStream(avi_file[0],((PAVISTREAM *)&avi_video_stream),0x73646976,0);
     if (result == 0) {
       value = 0;
       if (*(int *)(player + 0x5a8) != 0) {
-        result = AVIFileGetStream(avi_file[0],((i32 *)&avi_audio_stream),0x73647561,0);
+        result = AVIFileGetStream(avi_file[0],((PAVISTREAM *)&avi_audio_stream),0x73647561,0);
         if (result == 0) {
           *(i32 *)(player + 0x5b0) = 0;
           attach_result = avi_audio_attach_stream((AviAudioAttachView *)(player + 0x11c),avi_audio_stream[0]);
@@ -2473,11 +2473,11 @@ int __cdecl avi_open_file(iptr player,i32 filename)
       }
       result = value;
       format_size = 0x28;
-      AVIStreamReadFormat(avi_video_stream[0],1,player + 0x5c0,&format_size);
+      AVIStreamReadFormat(avi_video_stream[0],1,(LPVOID)(player + 0x5c0),&format_size);
       AVIStreamInfoA(avi_video_stream[0],&stream_info,0x8c);
       *(SIZE_T *)(player + 0x5d4) = stream_info.dwSuggestedBufferSize;
       err_report_ctx_block.avi_frames_per_second_i32 = stream_info.dwRate / stream_info.dwScale;
-      avi_decompressor = ICLocate(0x63646976,stream_info.fccHandler,player + 0x5c0,0,2);
+      avi_decompressor = ICLocate(0x63646976,stream_info.fccHandler,(LPBITMAPINFOHEADER)(player + 0x5c0),0,2);
       if (avi_decompressor == 0) {
         avi_close(player);
         result = 0;
@@ -2488,7 +2488,7 @@ int __cdecl avi_open_file(iptr player,i32 filename)
         value = AVIStreamLength(avi_video_stream[0]);
         *(int *)(player + 0xa14) = *(int *)(player + 0xa10) + value - 1;
         *(i32 *)(player + 0xa18) = *(i32 *)(player + 0xa10);
-        crt_memcpy(player + 0x5e8,player + 0x5c0,0x28);
+        crt_memcpy((void *)(player + 0x5e8),(const void *)(player + 0x5c0),0x28);
         *(i32 *)(player + 0x5f8) = 0;
         *(i16 *)(player + 0x5f6) = 8;
         *(i32 *)(player + 0x5fc) = 0;
@@ -2575,7 +2575,7 @@ int __cdecl avi_open_file(iptr player,i32 filename)
   return result;
 }
 
-/* 005e22ed: written by hand in src/game/fixups.c */
+/* 005e22ed: written by hand in src/game/fixups.cpp */
 
 /* 005e250c auto */
 i32
@@ -2601,7 +2601,7 @@ __stdcall avi_ic_decompress_ex_begin(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
   ex.yDst = y_dst;
   ex.dxDst = width_dst;
   ex.dyDst = height_dst;
-  result = ICSendMessage(hic,0x403c,&ex,0x34);
+  result = ICSendMessage(hic,0x403c,(DWORD_PTR)&ex,0x34);
   return result;
 }
 
@@ -2629,7 +2629,7 @@ __stdcall avi_ic_decompress_ex_query(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
   ex.yDst = y_dst;
   ex.dxDst = width_dst;
   ex.dyDst = height_dst;
-  result = ICSendMessage(hic,0x403d,&ex,0x34);
+  result = ICSendMessage(hic,0x403d,(DWORD_PTR)&ex,0x34);
   return result;
 }
 
@@ -2747,7 +2747,7 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
     if ((*(int *)(player + 0x5a4) != 0) && (decode_flags == 0)) {
       surface_blit((DibSurface *)(player + 0x558),player,(iptr)&avi_blit_union_left_block.avi_blit_union_left,(iptr)&avi_blit_union_left_block.avi_blit_union_left);
     }
-    result = AVIStreamRead(avi_video_stream[0],*(i32 *)(player + 0xa18),1,(*(i32 *)&avi_frame_buffer),
+    result = AVIStreamRead(avi_video_stream[0],*(i32 *)(player + 0xa18),1,avi_frame_buffer,
                             avi_frame_buffer_size,&bytes_read,0);
     if (result == 0) {
       *(i32 *)(player + 0x5d4) = bytes_read;
@@ -2829,7 +2829,7 @@ __stdcall avi_ic_decompress_ex(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
   ex.yDst = y_dst;
   ex.dxDst = width_dst;
   ex.dyDst = height_dst;
-  result = ICSendMessage(hic,0x403e,&ex,0x34);
+  result = ICSendMessage(hic,0x403e,(DWORD_PTR)&ex,0x34);
   return result;
 }
 
@@ -3006,8 +3006,8 @@ void __cdecl avi_restart_decompress(iptr player,int transparent)
       err_report_ctx_block.g_video_flags_a = 0x80000004;
     }
     err_report_ctx_block.g_video_flags_b = 0x80000008;
-    ICSendMessage(avi_decompressor,0x5001,((i8 *)&err_report_ctx_block.avi_indeo_seq_opts),0x2c);
-    ICSendMessage(avi_decompressor,0x5001,((i8 *)&err_report_ctx_block.avi_indeo_frame_opts),0x70);
+    ICSendMessage(avi_decompressor,0x5001,(DWORD_PTR)((i8 *)&err_report_ctx_block.avi_indeo_seq_opts),0x2c);
+    ICSendMessage(avi_decompressor,0x5001,(DWORD_PTR)((i8 *)&err_report_ctx_block.avi_indeo_frame_opts),0x70);
     if (*(int *)(player + 0x5a0) == 0) {
       result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,avi_frame_width,avi_frame_height,
                              player + 0x5e8,0,0,0,avi_frame_width,avi_frame_height);

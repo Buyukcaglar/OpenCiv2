@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """How far the source is from compiling as a portable 64-bit program.
 
-Counts, over src/auto/*.c and src/game/*.c (game code; the C runtime is
+Counts, over src/auto/*.cpp and src/game/*.cpp (game code; the C runtime is
 replaced by the platform's own in the native port):
   addr_globals  references to globals by original address (DAT_xxx, s_xxx,
                 PTR_xxx, GLOBAL(...), absolute casts)
@@ -25,8 +25,8 @@ RAW_OFFSET = re.compile(r'\(\(int\)[A-Za-z_]\w*\s*\+\s*(0x[0-9a-f]+|\d+)\)|\(&_?
 
 
 def main():
-    files = sorted([f for f in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) if not f.endswith('msvcrt.c')] +
-                   glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')))
+    files = sorted([f for f in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp')) if not f.endswith('msvcrt.c')] +
+                   glob.glob(os.path.join(ROOT, 'src', 'game', '*.cpp')))
     per = collections.defaultdict(lambda: collections.Counter())
     absolute_macros = set()
     for hp in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.h')) + files:

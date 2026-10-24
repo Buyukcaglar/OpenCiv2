@@ -8,6 +8,8 @@
                                   unrelated pointer types: f(dlg) -> f((B *)(dlg))
                                   (errors of g++ -fpermissive: what it still
                                   rejects)
+    cxx_fix.py convcasts ERRORS.txt  the same for any conversion strict C++
+                                  rejects (int <-> pointer too)
     cxx_fix.py untyped FILES...   calls through Ghidra's `code` type
                                   (*(code *)p)(a, b) -> call_untyped(p, a, b)
 
@@ -164,20 +166,33 @@ def expr_end(s, i):
     return -1
 
 
-def ptr_casts(path):
+def ptr_casts(path, any_conversion=False):
     sites = collections.defaultdict(dict)
     for line in open(path):
-        m = re.match(r"(src/[^:]+):(\d+):(\d+): error: cannot convert '.*?'(?: \{aka [^}]*\})? to '(.*?)'", line)
-        if m and m.group(4).endswith('*'):
-            sites[m.group(1)][(int(m.group(2)), int(m.group(3)))] = m.group(4)
+        m = re.match(r"(src/[^:]+):(\d+):(\d+): error: (?:cannot convert|invalid conversion from) '.*?'(?: \{aka [^}]*\})? to '(.*?)'", line)
+        if not m:
+            continue
+        to = m.group(4)
+        if to == 'iptr (*)()':
+            to = 'code *'
+        if to.endswith('*') or (any_conversion and re.match(r'^[A-Za-z_]\w*$', to)):
+            sites[m.group(1)][(int(m.group(2)), int(m.group(3)))] = to
     done = skipped = 0
     for f, cols in sites.items():
         lines = open(f).read().split('\n')
         for (ln, col), to in sorted(cols.items(), key=lambda x: (x[0][0], -x[0][1])):
             s = lines[ln - 1]
             i = col - 1
+            # a call is reported at its ( : start from the function's name
+            m = re.search(r'[A-Za-z_]\w*\s*$', s[:i])
+            if i < len(s) and s[i] == '(' and m:
+                i = m.start()
             e = expr_end(s, i)
-            if e < 0 or not s[i:e].strip():
+            before = s[:i].rstrip()
+            # only a whole operand: after = ( or , and starting like one
+            # (g++ points at the operator of a binary expression)
+            if (e < 0 or not s[i:e].strip() or not before or before[-1] not in '=(,'
+                    or not re.match(r'[A-Za-z_(&*]', s[i])):
                 skipped += 1
                 continue
             lines[ln - 1] = s[:i] + '(%s)(%s)' % (to, s[i:e].rstrip()) + s[i + len(s[i:e].rstrip()):]
@@ -226,6 +241,8 @@ def main():
         drop_casts(sys.argv[2])
     elif len(sys.argv) == 3 and sys.argv[1] == 'ptrcasts':
         ptr_casts(sys.argv[2])
+    elif len(sys.argv) == 3 and sys.argv[1] == 'convcasts':
+        ptr_casts(sys.argv[2], any_conversion=True)
     elif len(sys.argv) >= 3 and sys.argv[1] == 'untyped':
         untyped(sys.argv[2:])
     else:

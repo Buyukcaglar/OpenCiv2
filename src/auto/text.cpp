@@ -14,7 +14,7 @@ void __cdecl text_clear(void)
 void __cdecl text_append(iptr str)
 
 {
-  crt_strcat(((i8 *)&map_views_block.text_buffer),str);
+  crt_strcat(((i8 *)&map_views_block.text_buffer),(void *)str);
   return;
 }
 
@@ -88,7 +88,7 @@ i32 __cdecl text_set_string_arg(iptr index,iptr str)
 {
   i32 result;
   
-  result = crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + index * 0x104,str);
+  result = (i32)crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + index * 0x104,(void *)str);
   return result;
 }
 
@@ -105,10 +105,10 @@ iptr __cdecl file_build_open_path(iptr dest,i32 name2)
 
 {
   if (file_path_mode == '\0') {
-    crt_strcpy(dest,name2);
+    crt_strcpy((void *)dest,(void *)name2);
   }
   else {
-    path_join_upper(dest,(iptr)&open_path_prefix,name2);
+    path_join_upper((char *)dest,(iptr)&open_path_prefix,name2);
   }
   return dest;
 }
@@ -185,7 +185,7 @@ i32 __thiscall file_obj_create(FileObject *self,iptr path)
 {
   i32 result;
   
-  result = file_obj_create_path(path,(iptr)self);
+  result = file_obj_create_path((LPCSTR)path,(iptr)self);
   return result;
 }
 
@@ -221,7 +221,7 @@ i32 __cdecl text_set_string_arg_b(int index,iptr text)
 {
   i32 result;
   
-  result = crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + index * 0x104,text);
+  result = (i32)crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + index * 0x104,(void *)text);
   return result;
 }
 
@@ -259,7 +259,7 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
       *percent_pos = '\0';
     }
     if (*(char *)src != '\0') {
-      crt_strcat(dest,src);
+      crt_strcat((void *)dest,(void *)src);
     }
     tag = percent_pos;
     if (percent_pos != (char *)0x0) {
@@ -267,7 +267,7 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
       arg_index = __strnicmp(tag,str_string,6);
       if (arg_index == 0) {
         arg_index = _atoi(percent_pos + 7);
-        crt_strcat(dest,((i8 *)&minimap_window_block.text_string_args) + arg_index * 0x104);
+        crt_strcat((void *)dest,((i8 *)&minimap_window_block.text_string_args) + arg_index * 0x104);
         src = (iptr)(percent_pos + 8);
         if (9 < arg_index) {
           src = (iptr)(percent_pos + 9);
@@ -278,7 +278,7 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
         if (arg_index == 0) {
           arg_index = _atoi(percent_pos + 7);
           __ltoa(*(long *)(((i8 *)&minimap_window_block.text_number_args) + arg_index * 4),num_buf,10);
-          crt_strcat(dest,num_buf);
+          crt_strcat((void *)dest,(void *)num_buf);
           src = (iptr)(percent_pos + 8);
         }
         else {
@@ -288,15 +288,15 @@ void __cdecl text_expand_vars(iptr src,iptr dest)
             __ltoa(*(long *)(((i8 *)&minimap_window_block.text_number_args) + arg_index * 4),num_buf,0x10);
             for (pad_i = 0; len = _strlen(num_buf), pad_i < 4 - len;
                 pad_i = pad_i + 1) {
-              crt_strcat(dest,((i8 *)&text_var_hex_pad_str));
+              crt_strcat((void *)dest,((i8 *)&text_var_hex_pad_str));
             }
-            crt_strcat(dest,num_buf);
+            crt_strcat((void *)dest,(void *)num_buf);
             src = (iptr)(percent_pos + 5);
           }
           else {
             src = (iptr)tag;
             if (*tag == '%') {
-              crt_strcat(dest,((i8 *)&text_var_percent_str));
+              crt_strcat((void *)dest,((i8 *)&text_var_percent_str));
               src = (iptr)(percent_pos + 2);
             }
           }
@@ -314,7 +314,7 @@ i32 __cdecl text_set_label_arg(i32 index,i32 label_id)
   iptr label_text;
   i32 result;
   
-  label_text = label_string(label_id);
+  label_text = (iptr)label_string(label_id);
   result = text_set_string_arg_b(index,label_text);
   return result;
 }
@@ -373,7 +373,7 @@ int __cdecl strpool_add(iptr text)
   else {
     len = _strlen((char *)text);
     minimap_window_block.strpool_last_string = memblock_alloc((iptr)&strpool_block_block.strpool_block,len + 1);
-    crt_strcpy(minimap_window_block.strpool_last_string,text);
+    crt_strcpy((void *)minimap_window_block.strpool_last_string,(void *)text);
     string_id = strpool_count;
     strpool_count++;
   }
@@ -449,7 +449,7 @@ void __cdecl text_append_period(void)
 void __cdecl str_append(iptr dest,iptr src)
 
 {
-  crt_strcat(dest,src);
+  crt_strcat((void *)dest,(void *)src);
   return;
 }
 
@@ -499,14 +499,14 @@ void __cdecl str_append_population(iptr dest,iptr civ,int population)
   }
   if (99 < pop) {
     str_append_int(dest,pop / 100);
-    crt_strcat(dest,((i8 *)&pop_thousands_sep_str));
+    crt_strcat((void *)dest,((i8 *)&pop_thousands_sep_str));
     pop = pop % 100;
     if (pop < 10) {
-      crt_strcat(dest,((i8 *)&pop_zero_pad_str));
+      crt_strcat((void *)dest,((i8 *)&pop_zero_pad_str));
     }
   }
   str_append_int(dest,pop);
-  crt_strcat(dest,str_0_000);
+  crt_strcat((void *)dest,(void *)str_0_000);
   return;
 }
 
@@ -519,14 +519,14 @@ void __cdecl str_append_city_population(iptr dest,iptr city)
   pop = city_population_units(city);
   if (99 < pop) {
     str_append_int(dest,pop / 100);
-    crt_strcat(dest,((i8 *)&city_pop_thousands_sep_str));
+    crt_strcat((void *)dest,((i8 *)&city_pop_thousands_sep_str));
     pop = pop % 100;
     if (pop < 10) {
-      crt_strcat(dest,((i8 *)&city_pop_zero_pad_str));
+      crt_strcat((void *)dest,((i8 *)&city_pop_zero_pad_str));
     }
   }
   str_append_int(dest,pop);
-  crt_strcat(dest,str_0_000_2);
+  crt_strcat((void *)dest,(void *)str_0_000_2);
   return;
 }
 
@@ -560,7 +560,7 @@ void __thiscall dll_handle_load(DllHandle *self,iptr path)
   if (self->hmodule != 0) {
     dll_unload(self->hmodule);
   }
-  module = res_dll_load_library(path);
+  module = res_dll_load_library((LPCSTR)path);
   self->hmodule = module;
   return;
 }
@@ -768,7 +768,7 @@ i32 __thiscall file_obj_open(FileObject *self,iptr path)
 {
   i32 result;
   
-  result = file_obj_open_path(path,(iptr)self);
+  result = file_obj_open_path((char *)path,(iptr)self);
   return result;
 }
 
@@ -793,7 +793,7 @@ i32 __thiscall file_obj_seek_cur(FileSeekView *self,i32 offset)
 void __thiscall file_obj_read_line(FileReadLineView *self,iptr buf,i32 max_len)
 
 {
-  file_obj_read_line_impl((iptr)self,buf,max_len);
+  file_obj_read_line_impl((iptr)self,(char *)buf,max_len);
   return;
 }
 
@@ -841,7 +841,7 @@ int __cdecl text_open_file_section(int filename,int section)
   if (section != 0) {
     section_tag[0] = '@';
     section_tag[1] = 0;
-    crt_strcat(section_tag,section);
+    crt_strcat((void *)section_tag,(void *)section);
     __strupr(section_tag);
   }
   if (filename == 0) {
@@ -849,7 +849,7 @@ int __cdecl text_open_file_section(int filename,int section)
   }
   else {
     text_close_file();
-    crt_strcpy(name2,filename);
+    crt_strcpy((void *)name2,(void *)filename);
     path_default_extension(name2,(char*)(&lang_file_ext));
     __getcwd(saved_cwd,0x104);
     __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
@@ -968,7 +968,7 @@ i32 __cdecl text_next_int(void)
   iptr token;
   i32 value;
   
-  token = text_next_token();
+  token = (iptr)text_next_token();
   value = str_parse_int_prefixed(token);
   return value;
 }
@@ -1056,7 +1056,7 @@ iptr __cdecl str_clear(iptr str)
 void __cdecl str_append_space(iptr dest)
 
 {
-  crt_strcat(dest,((i8 *)&append_space_str));
+  crt_strcat((void *)dest,((i8 *)&append_space_str));
   return;
 }
 
@@ -1076,7 +1076,7 @@ void __cdecl str_append_spaces(iptr dest,int count)
 void __cdecl str_append_comma(iptr dest)
 
 {
-  crt_strcat(dest,((i8 *)&append_comma_str));
+  crt_strcat((void *)dest,((i8 *)&append_comma_str));
   return;
 }
 
@@ -1084,7 +1084,7 @@ void __cdecl str_append_comma(iptr dest)
 void __cdecl str_append_colon(iptr dest)
 
 {
-  crt_strcat(dest,((i8 *)&append_colon_str));
+  crt_strcat((void *)dest,((i8 *)&append_colon_str));
   return;
 }
 
@@ -1092,7 +1092,7 @@ void __cdecl str_append_colon(iptr dest)
 void __cdecl str_append_period(iptr dest)
 
 {
-  crt_strcat(dest,((i8 *)&append_period_str));
+  crt_strcat((void *)dest,((i8 *)&append_period_str));
   return;
 }
 
@@ -1100,7 +1100,7 @@ void __cdecl str_append_period(iptr dest)
 void __cdecl str_append_percent(iptr dest)
 
 {
-  crt_strcat(dest,((i8 *)&append_percent_str));
+  crt_strcat((void *)dest,((i8 *)&append_percent_str));
   return;
 }
 
@@ -1108,7 +1108,7 @@ void __cdecl str_append_percent(iptr dest)
 void __cdecl str_append_lparen(iptr dest)
 
 {
-  crt_strcat(dest,((i8 *)&append_lparen_str));
+  crt_strcat((void *)dest,((i8 *)&append_lparen_str));
   return;
 }
 
@@ -1116,7 +1116,7 @@ void __cdecl str_append_lparen(iptr dest)
 void __cdecl str_append_rparen(iptr dest)
 
 {
-  crt_strcat(dest,((i8 *)&append_rparen_str));
+  crt_strcat((void *)dest,((i8 *)&append_rparen_str));
   return;
 }
 
@@ -1124,7 +1124,7 @@ void __cdecl str_append_rparen(iptr dest)
 void __cdecl str_append_plus(iptr dest)
 
 {
-  crt_strcat(dest,((i8 *)&append_plus_str));
+  crt_strcat((void *)dest,((i8 *)&append_plus_str));
   return;
 }
 
@@ -1134,8 +1134,8 @@ void __cdecl str_append_string_id(iptr dest,i32 string_id)
 {
   i32 text;
   
-  text = label_string(string_id);
-  crt_strcat(dest,text);
+  text = (iptr)label_string(string_id);
+  crt_strcat((void *)dest,(void *)text);
   return;
 }
 
@@ -1151,7 +1151,7 @@ void __cdecl str_append_label(iptr dest,int label_id)
 void __cdecl str_concat(iptr dest,iptr src)
 
 {
-  crt_strcat(dest,src);
+  crt_strcat((void *)dest,(void *)src);
   return;
 }
 
@@ -1163,7 +1163,7 @@ i32 __cdecl str_append_int(iptr dest,int value)
   char num_buf[20];
   
   __itoa(value,num_buf,10);
-  result = crt_strcat(dest,num_buf);
+  result = (i32)crt_strcat((void *)dest,num_buf);
   return result;
 }
 
@@ -1174,7 +1174,7 @@ void __cdecl str_append_long(iptr dest,long value)
   char num_buf[20];
   
   __ltoa(value,num_buf,10);
-  crt_strcat(dest,num_buf);
+  crt_strcat((void *)dest,(void *)num_buf);
   return;
 }
 
@@ -1192,7 +1192,7 @@ void __cdecl str_append_gold(iptr dest,i32 gold)
 void __thiscall file_obj_read(FileObject *self,iptr buf,i32 size)
 
 {
-  file_obj_read_bytes((iptr)self,buf,size);
+  file_obj_read_bytes((iptr)self,(LPVOID)buf,size);
   return;
 }
 
@@ -1283,7 +1283,7 @@ void __cdecl str_trim_trailing(iptr str)
   len = _strlen((char *)str);
   if (len != 0) {
     for (cursor = (char *)((len - 1) + str);
-        ((uint)str <= cursor &&
+        ((char *)str <= cursor &&
         (((*cursor == ' ' || (*cursor == '\t')) && (*cursor = '\0', cursor != (char *)str)))
         ); cursor--) {
     }
@@ -1304,7 +1304,7 @@ void __cdecl str_trim(iptr str)
       start = start + 1) {
   }
   crt_strcpy(buf,start);
-  crt_strcpy(str,buf);
+  crt_strcpy((void *)str,(void *)buf);
   return;
 }
 
@@ -1342,7 +1342,7 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
   text_section_index_count = 0;
   __getcwd(((i8 *)&text_section_index_path),0x104);
   crt_strcat(((i8 *)&text_section_index_path),((i8 *)&text_index_path_sep_str));
-  crt_strcat(((i8 *)&text_section_index_path),filename);
+  crt_strcat(((i8 *)&text_section_index_path),(void *)filename);
   path_default_extension((char*)(&text_section_index_path),lang_file_ext);
   _File = (FILE *)file_open_path((iptr)&text_section_index_path,(iptr)&str_rt_6);
   if (_File == (FILE *)0x0) {
@@ -1394,7 +1394,7 @@ i32 __cdecl text_section_index_lookup(iptr filename,iptr section)
   if (text_section_index_valid != 0) {
     __getcwd(full_path,0x104);
     crt_strcat(full_path,((i8 *)&text_lookup_path_sep_str));
-    crt_strcat(full_path,filename);
+    crt_strcat((void *)full_path,(void *)filename);
     cmp = __strcmpi(full_path,((i8 *)&text_section_index_path));
     if (cmp == 0) {
       entry = text_section_index_pool_block.text_section_index_base;
@@ -1517,7 +1517,7 @@ i32 __cdecl file_require_cdrom(iptr filename)
   cursor[1] = '\0';
   do {
     for (attempt = 0; attempt < 2; attempt++) {
-      found = file_find_fallback_drive(filename);
+      found = (iptr)file_find_fallback_drive(filename);
       if (found != 0) {
         return 1;
       }
@@ -1750,7 +1750,7 @@ i32 __cdecl file_read_nth_line(iptr dest,iptr filename,int line_num)
         line_buf[i] = '\0';
       }
     }
-    crt_strcpy(dest,line_buf);
+    crt_strcpy((void *)dest,(void *)line_buf);
     result = 0;
   }
 close_file:
@@ -1927,7 +1927,7 @@ i32 __cdecl res_load(iptr res_type,i32 res_name)
 {
   i32 handle;
   
-  handle = res_load_impl(res_type,res_name);
+  handle = (i32)res_load_impl((CHAR *)res_type,(LPCSTR)res_name);
   return handle;
 }
 
@@ -1937,7 +1937,7 @@ i32 __cdecl res_lock(i32 handle)
 {
   i32 data;
   
-  data = res_lock_impl(handle);
+  data = (i32)res_lock_impl((HGLOBAL)handle);
   return data;
 }
 

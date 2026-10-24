@@ -49,7 +49,7 @@ static void *heap_alloc(size_t n)
     HeapHeader *h;
     if (n > 64u << 20)
         plat_suspicious("malloc(%lu)", (unsigned long)n);
-    h = malloc(sizeof(HeapHeader) + n);
+    h = (HeapHeader *)malloc(sizeof(HeapHeader) + n);
     if (!h)
         return NULL;
     h->size = n;
@@ -114,8 +114,8 @@ static char *copy_forward(char *d, const char *s)
 }
 void *crt_memcpy(void *dst, const void *src, uint n) { return memmove(dst, src, n); }
 void *crt_memmove(void *dst, const void *src, uint n) { return memmove(dst, src, n); }
-void *crt_strcpy(void *dst, const void *src) { copy_forward(dst, src); return dst; }
-void *crt_strcat(void *dst, const void *src) { copy_forward((char *)dst + strlen(dst), src); return dst; }
+void *crt_strcpy(void *dst, const void *src) { copy_forward((char *)dst, (const char *)src); return dst; }
+void *crt_strcat(void *dst, const void *src) { copy_forward((char *)dst + strlen((char *)dst), (const char *)src); return dst; }
 int _memcmp(const void *a, const void *b, size_t n) { return memcmp(a, b, n); }
 void *_memset(void *p, int c, size_t n) { return memset(p, c, n); }
 size_t _strlen(const char *s) { return strlen(s); }
@@ -131,9 +131,9 @@ char *_strncpy(char *d, const char *s, size_t n)
     return d;
 }
 char *_strncat(char *d, const char *s, size_t n) { return strncat(d, s, n); }
-char *_strchr(const char *s, int c) { return strchr(s, c); }
-char *_strrchr(const char *s, int c) { return strrchr(s, c); }
-char *_strstr(const char *s, const char *sub) { return strstr(s, sub); }
+char *_strchr(const char *s, int c) { return (char *)strchr(s, c); }
+char *_strrchr(const char *s, int c) { return (char *)strrchr(s, c); }
+char *_strstr(const char *s, const char *sub) { return (char *)strstr(s, sub); }
 int crt_abs(int v) { return v < 0 ? -v : v; }
 
 /* MSVC's ctype functions take the C locale's view of chars 0..255. */
@@ -418,7 +418,7 @@ int __chdir(const char *path)
 char *__getcwd(char *buf, int n)
 {
     if (!buf)
-        buf = heap_alloc(n > 0 ? (size_t)n : 260);
+        buf = (char *)heap_alloc(n > 0 ? (size_t)n : 260);
     return plat_getcwd(buf, n) ? buf : NULL;
 }
 
@@ -470,7 +470,7 @@ EXTERN_C void crt_exit_process(int code)
 
 void crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, code *dtor)
 {
-    char *p = array;
+    char *p = (char *)array;
     int i;
     (void)dtor;
     for (i = 0; i < count; i++, p += size)

@@ -32,7 +32,7 @@ def main():
                                 input='#define WIN32_LEAN_AND_MEAN\n#define NOMINMAX\n' + sys_headers,
                                 capture_output=True, text=True, cwd=ROOT).stdout
     ids = set()
-    for f in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) + glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')):
+    for f in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp')) + glob.glob(os.path.join(ROOT, 'src', 'game', '*.cpp')):
         ids |= set(re.findall(r'\b[A-Za-z_]\w*\b', open(f).read()))
 
     # Function declarations in the preprocessed headers: one statement each.

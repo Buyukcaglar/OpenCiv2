@@ -99,7 +99,7 @@ void __cdecl unit_reveal_surroundings(iptr unit,int allow_contact)
   redraw_flags = 0;
   is_human = human_civ[0] == civ2;
   if (civ2 == 0) {
-    tile = tile_at(x2,y);
+    tile = (iptr)tile_at(x2,y);
     units[unit].visibility = *(byte *)(tile + 4) | units[unit].visibility;
   }
   reveal_all = game.reveal_map;
@@ -119,7 +119,7 @@ void __cdecl unit_reveal_surroundings(iptr unit,int allow_contact)
         ((sees_two != 0 &&
          ((unit_domain == 1 || (is_ocean = tile_is_ocean(x,y4), is_ocean == (unit_domain == 2))))
          ))))) {
-      tile2 = tile_at(x,y4);
+      tile2 = (iptr)tile_at(x,y4);
       if (civ2 != 0) {
         known = (char *)known_at(x,y4,civ2);
         if (((is_human) && (!map_revealed)) &&
@@ -665,7 +665,7 @@ void __cdecl nuke_anim_sprites_global_init(void)
 void __cdecl nuke_anim_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&hill_sprites_block.nuke_anim_sprites),0x3c,0xb,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&hill_sprites_block.nuke_anim_sprites),0x3c,0xb,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -681,7 +681,7 @@ void __cdecl nuke_anim_sprites_reg_atexit(void)
 void __cdecl nuke_anim_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&hill_sprites_block.nuke_anim_sprites),0x3c,0xb,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&hill_sprites_block.nuke_anim_sprites),0x3c,0xb,(code *)sprite_destroy);
   return;
 }
 
@@ -739,7 +739,7 @@ void __cdecl unit_sprites_global_init(void)
 void __cdecl unit_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&pollution_sprite_block.unit_sprites),0x3c,0x3f,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&pollution_sprite_block.unit_sprites),0x3c,0x3f,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -755,7 +755,7 @@ void __cdecl unit_sprites_reg_atexit(void)
 void __cdecl unit_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&pollution_sprite_block.unit_sprites),0x3c,0x3f,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&pollution_sprite_block.unit_sprites),0x3c,0x3f,(code *)sprite_destroy);
   return;
 }
 
@@ -772,7 +772,7 @@ void __cdecl fortify_overlay_sprites_global_init(void)
 void __cdecl fortify_overlay_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),0x3c,8,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),0x3c,8,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -788,7 +788,7 @@ void __cdecl fortify_overlay_sprites_reg_atexit(void)
 void __cdecl fortify_overlay_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),0x3c,8,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),0x3c,8,(code *)sprite_destroy);
   return;
 }
 
@@ -805,7 +805,7 @@ void __cdecl explosion_sprites_global_init(void)
 void __cdecl explosion_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.explosion_sprites),0x3c,8,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.explosion_sprites),0x3c,8,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -821,7 +821,7 @@ void __cdecl explosion_sprites_reg_atexit(void)
 void __cdecl explosion_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.explosion_sprites),0x3c,8,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.explosion_sprites),0x3c,8,(code *)sprite_destroy);
   return;
 }
 
@@ -1706,7 +1706,7 @@ void __cdecl unit_found_city(iptr unit,iptr city,iptr city_name)
   if ((-1 < city) ||
      (city = city_create(x,y,(int)units[unit].owner), -1 < city)) {
     if (city_name != 0) {
-      crt_strcpy(&cities[city].name,city_name);
+      crt_strcpy(&cities[city].name,(const char *)city_name);
     }
     unit_delete(unit,1);
     tile_set_improvements(x,y,0x7c,0,1);
@@ -1776,6 +1776,7 @@ void __cdecl unit_pillage(iptr unit,int improvement)
   iptr confirmed;
   int city;
   byte *tile_flags;
+  Tile *map_tile;
   
   x = (int)units[unit].x;
   y = (int)units[unit].y;
@@ -1784,8 +1785,8 @@ void __cdecl unit_pillage(iptr unit,int improvement)
   if ((((city2 < 0) || ((int)cities[city2].owner == (int)(char)civ)) ||
       ((1 << (civ & 0x1f) & (uint)game.human_players) == 0)) ||
      (confirmed = diplo_confirm_attack((int)(char)civ,(int)cities[city2].owner,0xe), confirmed == 0)) {
-    city = tile_at(x,y);
-    tile_flags = (byte *)(city + 1);
+    map_tile = tile_at(x,y);
+    tile_flags = &map_tile->improvements;
     if (improvement < 1) {
       if ((units[unit].type == '\t') && ((*tile_flags & 0x10) != 0)) {
         if ((*tile_flags & 0x20) == 0) {
@@ -2237,7 +2238,7 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
            ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 35) + civ2 * 4) & 1) == 0)))) {
       option_flags = 0;
       option_id = 7;
-      unit2 = label_string(*(i32 *)(label_string_ids + 0xd28));
+      unit2 = (iptr)label_string(*(i32 *)(label_string_ids + 0xd28));
       dialog_add_option((DialogOptionList *)&dlg,unit2,option_id,option_flags);
     }
     text_close_file();
@@ -2696,7 +2697,7 @@ sabotage_choice:
         if ((improvement != 1) && (ret = city_has_improvement(city,improvement), ret != 0)) {
           option_flags = 0;
           impr_option = improvement;
-          unit2 = label_string(improvements[improvement].name);
+          unit2 = (iptr)label_string(improvements[improvement].name);
           dialog_add_option((DialogOptionList *)&dlg,unit2,impr_option,option_flags);
         }
       }
@@ -5032,11 +5033,11 @@ unit_sound_editor_create_wnd(int title,uint style,int x,int y,int width,int heig
     crt_strcpy(((i8 *)&unit_sound_editor_window_block.unit_sound_editor_title),((i8 *)&unit_sound_editor_empty_title));
   }
   else {
-    crt_strcpy(((i8 *)&unit_sound_editor_window_block.unit_sound_editor_title),title);
+    crt_strcpy(((i8 *)&unit_sound_editor_window_block.unit_sound_editor_title),(const char *)title);
   }
-  unit_sound_editor_window_block.unit_sound_editor_text_font_i32 = ((i8 *)&ui_text_font);
-  unit_sound_editor_window_block.unit_sound_editor_title_font_i32 = ((i8 *)&caption_font_block.caption_font);
-  unit_sound_editor_window_block.unit_sound_editor_title_small_font_i32 = ((i8 *)&caption_small_font_block.caption_small_font);
+  unit_sound_editor_window_block.unit_sound_editor_text_font_i32 = (iptr)&ui_text_font;
+  unit_sound_editor_window_block.unit_sound_editor_title_font_i32 = (iptr)&caption_font_block.caption_font;
+  unit_sound_editor_window_block.unit_sound_editor_title_small_font_i32 = (iptr)&caption_small_font_block.caption_small_font;
   unit_sound_editor_window_block.unit_sound_editor_style_flags_i32 = style;
   unit_sound_editor_window_block.unit_sound_editor_caption_height = caption_height;
   unit_sound_editor_window_block.unit_sound_editor_border_width = border_width;
@@ -5124,7 +5125,7 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
       fmt_arg3 = 0;
       fmt_arg2 = 0;
       dlg_arg = 0;
-      filter_arg = label_string(*(i32 *)(label_string_ids + 0x888));
+      filter_arg = (iptr)label_string(*(i32 *)(label_string_ids + 0x888));
       _sprintf(dest_path,str_s_wav_c_wav_c_c,filter_arg,dlg_arg,fmt_arg2,fmt_arg3);
       crt_strcpy(wav_path,str_wav);
       dlg_arg = 0;
@@ -5132,7 +5133,7 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
       default_ext = ((i8 *)&unit_sound_wav_default_ext);
       filter = dest_path;
       file_buf = wav_path;
-      title = label_string(*(i32 *)(label_string_ids + 0x88c));
+      title = (iptr)label_string(*(i32 *)(label_string_ids + 0x88c));
       ret = ui_file_name_dialog((iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,title,(iptr)file_buf,(iptr)filter,(iptr)default_ext,filter_arg,dlg_arg);
       if (ret == 0) {
         seh_state = 0xffffffff;
@@ -5436,7 +5437,7 @@ void __cdecl unit_sound_editor_run(iptr title,i32 unit_type)
   seh_state = 0;
   button_ctor(&cancel_btn);
   (*(i8 *)((char *)&seh_state + 0)) = 1;
-  crt_vector_ctor_iterator(slot_btns,0x3c,6,button_ctor,ctrl_dtor)
+  crt_vector_ctor_iterator(slot_btns,0x3c,6,(code *)button_ctor,(code *)ctrl_dtor)
   ;
   seh_state = (seh_state & 0xffffff00 | (byte)(2));
   main_frame_bg_surface_block.unit_sound_editor_running = 1;
@@ -5450,7 +5451,7 @@ void __cdecl unit_sound_editor_run(iptr title,i32 unit_type)
     btn_x = ((int)(col_offset + (col_offset >> 0x1f & 3U)) >> 2) +
                ((int)(btn_width + (btn_width >> 0x1f & 3U)) >> 2) + unit_sound_editor_window_block.unit_sound_editor_client_x;
     rect_set_xywh((iptr)rect,btn_x,btn_y,btn_width,btn_height);
-    label = label_string(*(i32 *)
+    label = (iptr)label_string(*(i32 *)
                                 (label_string_ids + *(int *)(((i8 *)&unit_sound_button_label_ids) + i * 4) * 4));
     button_create
               (slot_btns + i,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,i + 0xc9,(iptr)rect,label);
@@ -5461,12 +5462,12 @@ void __cdecl unit_sound_editor_run(iptr title,i32 unit_type)
   btn_y = (unit_sound_editor_window_block.unit_sound_editor_client_y + unit_sound_editor_window_block.unit_sound_editor_client_height_i32) - (btn_height + 2);
   btn_x = unit_sound_editor_window_block.unit_sound_editor_client_x + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,btn_width,btn_height);
-  label = label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create(&ok_btn,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,0x65,(iptr)rect,label);
   button_set_callback(&ok_btn,(iptr)unit_sound_editor_ok_clicked);
   btn_x = btn_x + btn_width + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,btn_width,btn_height);
-  label = label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create(&cancel_btn,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,0x66,(iptr)rect,label);
   button_set_callback(&cancel_btn,(iptr)unit_sound_editor_cancel_clicked);
   ctrl_set_cancel_button(&cancel_btn);
@@ -5481,7 +5482,7 @@ void __cdecl unit_sound_editor_run(iptr title,i32 unit_type)
   dlg_set_parent_window(0);
   frame_wnd_close((DibSurface *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window));
   (*(i8 *)((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 0058b859 */ { crt_vector_dtor_iterator(&slot_btns,0x3c,6,ctrl_dtor); }
+  /* inlined unwind funclet 0058b859 */ { crt_vector_dtor_iterator(&slot_btns,0x3c,6,(code *)ctrl_dtor); }
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 0058b86f */ { ctrl_dtor((Control *)((iptr)&cancel_btn)); }
   seh_state = 0xffffffff;
@@ -5924,6 +5925,7 @@ void __cdecl unit_cmd_pillage(void)
   i32 eh_next;
   i8 *eh_handler;
   i32 eh_state;
+  Tile *map_tile;
   
   eh_state = 0xffffffff;
   choice = 0;
@@ -5940,9 +5942,9 @@ void __cdecl unit_cmd_pillage(void)
   else if (unit_types[units[unit].type].domain == '\0') {
     city_owner = tile_city_owner(x,y);
     if (city_owner < 0) {
-      tile = tile_at(x,y);
-      improvements_mask = (uint)*(byte *)(tile + 1);
-      if ((*(byte *)(tile + 1) & 0x5c) == 0) {
+      map_tile = tile_at(x,y);
+      improvements_mask = (uint)map_tile->improvements;
+      if ((map_tile->improvements & 0x5c) == 0) {
         popup_game((iptr)&str_cantdo_5);
         eh_state = 0xffffffff;
         /* inlined unwind funclet 0058d41e */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
@@ -6383,7 +6385,7 @@ check_threats:
   return;
 }
 
-/* 0058f040: written by hand in src/game/retvals.c */
+/* 0058f040: written by hand in src/game/retvals.cpp */
 
 /* 0058fedb auto */
 i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
@@ -6463,19 +6465,19 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
       }
       result = 0;
       option_id = 0;
-      label = label_string(*(i32 *)(label_string_ids + 0x284));
+      label = (iptr)label_string(*(i32 *)(label_string_ids + 0x284));
       dialog_add_option((DialogOptionList *)&dialog2,label,option_id,result);
       city2 = (int)units[unit].home_city != city;
       if ((bool)city2) {
         result = 0;
         option_id = 1;
-        label = label_string(*(i32 *)(label_string_ids + 0x288));
+        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x288));
         dialog_add_option((DialogOptionList *)&dialog2,label,option_id,result);
       }
       if (cities[city].building < -0x26) {
         result = 0;
         option_id = 2;
-        label = label_string(*(i32 *)(label_string_ids + 0x28c));
+        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x28c));
         dialog_add_option((DialogOptionList *)&dialog2,label,option_id,result);
         city2++;
       }
@@ -6667,7 +6669,7 @@ i32 __cdecl unit_move_dir(iptr unit,uptr dir,i32 move_flags)
     if (src_city < 0) {
       tile_set_owner(x3,y3,civ,1);
     }
-    unit_sound_editor_window_block.unit_move_by_local_human = civ_saved_cursor_x_block.autoplay_active == 0 &((i8 *)&human_civ) == civ;
+    unit_sound_editor_window_block.unit_move_by_local_human = civ_saved_cursor_x_block.autoplay_active == 0 && human_civ[0] == civ;
     in_bounds = map_in_bounds(x2,y2);
     if (in_bounds == 0) {
       if (((unit_sound_editor_window_block.unit_move_flags & 1) != 0) && (unit_sound_editor_window_block.unit_move_by_local_human != '\0')) {
@@ -7274,7 +7276,7 @@ unit_step_cost:
          ((int)units[unit].owner != ((*(i8 *)&human_civ) & 0xffU))) &&
         (city3 = city_find_nearest(x3,y3,-1,0xffffffff,-1), -1 < city3)))) &&
       (cities[city3].owner == (*(i8 *)&human_civ))))) {
-    city3 = tile_at(x3,y3);
+    city3 = (iptr)tile_at(x3,y3);
     units[unit].visibility = *(byte *)(city3 + 4) | units[unit].visibility;
   }
   if ((((-1 < (int)city) && (civ2 != civ)) &&
@@ -7405,7 +7407,7 @@ unit_step_cost:
     }
     else {
       snd_play_effect(99,1,0,0);
-      city3 = tile_at(x3,y3);
+      city3 = (iptr)tile_at(x3,y3);
       arg = 2;
       unit6 = tile_first_unit(x3,y3);
       value = unit_stack_sum(unit6,arg);
@@ -7509,7 +7511,7 @@ animate_move:
          ((int)units[unit].owner != (uint)civ3)) &&
         (city3 = city_find_nearest(x2,y2,-1,0xffffffff,-1), -1 < city3)) &&
        (cities[city3].owner == (*(i8 *)&human_civ))))))) {
-    city3 = tile_at(x2,y2);
+    city3 = (iptr)tile_at(x2,y2);
     unit_stack_add_visibility(unit,(uint)*(byte *)(city3 + 4));
   }
   if (((src_is_ocean != 0) && (-1 < (int)city)) &&
@@ -8012,8 +8014,8 @@ void __cdecl unit_editor_on_ok(void)
       cmp = _strcmp(str,new_name);
       if (cmp != 0) {
         edited_name = ((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + unit_type * 0x28;
-        old_name = label_string(unit_types[unit_type].name);
-        result = events_rename_unit_refs(old_name,(iptr)edited_name);
+        old_name = (iptr)label_string(unit_types[unit_type].name);
+        result = events_rename_unit_refs((char *)old_name,(iptr)edited_name);
         renamed_count += result;
       }
     }
@@ -8140,7 +8142,7 @@ void __cdecl unit_editor_edit_sprite(void)
   
   save_cb = ((i8*)(sprite_sheet_save_units));
   count = 0xb;
-  title = label_string(*(i32 *)(label_string_ids + 0x7d8));
+  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
   sprite_editor_run((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x3c),title,count,
                      (iptr)save_cb);
   unit_editor_redraw();
@@ -8157,7 +8159,7 @@ void __cdecl unit_editor_edit_sound(void)
   
   unit_editor_store_controls();
   item_name = ((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x28;
-  label = label_string(*(i32 *)(label_string_ids + 0x7dc));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7dc));
   _sprintf(title,str_s_s_4,label,item_name);
   unit_sound_editor_run((iptr)title,*(i32 *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec));
   return;
@@ -8373,45 +8375,45 @@ void __thiscall unit_editor_create_combo(ViewWindow *self,int index)
   switch(index) {
   case 0:
     for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-      label = label_string(unit_types[unit_type].name);
+      label = (iptr)label_string(unit_types[unit_type].name);
       combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
     }
     break;
   case 1:
   case 2:
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
     for (advance = 0; advance < 100; advance++) {
-      label = label_string(advances[advance].name);
+      label = (iptr)label_string(advances[advance].name);
       combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
     }
     break;
   case 3:
-    label = label_string(*(i32 *)(label_string_ids + 0x794));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x794));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x798));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x798));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7e0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7e0));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7e4));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7e4));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7e8));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7e8));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7ec));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7ec));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7f0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7f0));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7f4));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7f4));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
     break;
   case 4:
-    label = label_string(*(i32 *)(label_string_ids + 0x7f8));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7f8));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7fc));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7fc));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x800));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x800));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),label);
   }
   return;
@@ -8585,7 +8587,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   eh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
   editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
-  this_00 = operator_new(0x48);
+  this_00 = (DibSurface *)operator_new(0x48);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     bg_surface2 = (DibSurface *)0x0;
@@ -8616,7 +8618,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   wnd_y = 0;
   wnd_x = 0;
   wnd_style = 0xd;
-  title = label_string(*(i32 *)(label_string_ids + 0x72c));
+  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x72c));
   frame_wnd_create
             ((FrameWindow *)self,title,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,wnd_arg7,wnd_arg8,wnd_arg9);
   for (i = 0; i < 0xd; i++) {
@@ -8640,7 +8642,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)unit_editor_on_ok);
@@ -8652,7 +8654,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     rename_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0xa8));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)unit_editor_on_rename);
@@ -8664,7 +8666,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)unit_editor_on_help);
@@ -8676,7 +8678,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)unit_editor_on_cancel);
@@ -8697,7 +8699,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     sprite_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x7cc));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)sprite_parent,0x65,(iptr)rect,label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)unit_editor_edit_sprite);
@@ -8709,7 +8711,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     sound_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 2000));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 2000));
   button_create
             ((Control *)(((DocumentWindow *)self)->unit_sound_button),(iptr)sound_parent,0x65,(iptr)rect,label);
   button_set_callback((Control *)(((DocumentWindow *)self)->unit_sound_button),(iptr)unit_editor_edit_sound);
@@ -8721,7 +8723,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     flags_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x7d4));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d4));
   button_create
             ((Control *)(((DocumentWindow *)self)->unit_flags_button),(iptr)flags_parent,0x65,(iptr)rect,label);
   button_set_callback((Control *)(((DocumentWindow *)self)->unit_flags_button),(iptr)unit_editor_edit_flags);
@@ -9062,6 +9064,7 @@ void __cdecl unit_stack_unlink(iptr unit,int sync)
   int tile;
   bool has_prev;
   bool has_next;
+  Tile *map_tile;
   
   net_session_block.unit_stack_unlink_busy = 1;
   if ((game.multiplayer < 3) || (is_host = net_is_host(((iptr *)&net_session_block.net_session)), is_host != '\0')) {
@@ -9077,8 +9080,8 @@ void __cdecl unit_stack_unlink(iptr unit,int sync)
     units[unit].next_in_stack = -1;
     if ((!has_next && !has_prev) &&
        (tile = map_in_bounds((int)units[unit].x,(int)units[unit].y), tile != 0)) {
-      tile = tile_at((int)units[unit].x,(int)units[unit].y);
-      *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
+      map_tile = tile_at((int)units[unit].x,(int)units[unit].y);
+      map_tile->improvements = map_tile->improvements & 0xfe;
     }
     units[unit].x = (units[unit].owner * 4 + 4) * -0x19;
     units[unit].y = (units[unit].owner * 4 + 4) * -0x19;
@@ -9117,6 +9120,7 @@ void __cdecl unit_stack_link(iptr unit,iptr x,iptr y,int sync)
   iptr now_ticks;
   int unit2;
   int civ;
+  Tile *map_tile;
   
   net_session_block.unit_stack_link_busy = 1;
   if ((game.multiplayer < 3) || (is_host = net_is_host(((iptr *)&net_session_block.net_session)), is_host != '\0')) {
@@ -9128,15 +9132,15 @@ void __cdecl unit_stack_link(iptr unit,iptr x,iptr y,int sync)
     if (unit2 < 0) {
       unit2 = map_in_bounds(x,y);
       if (unit2 != 0) {
-        unit2 = tile_at(x,y);
-        *(byte *)(unit2 + 1) = *(byte *)(unit2 + 1) | 1;
+        map_tile = tile_at(x,y);
+        map_tile->improvements = map_tile->improvements | 1;
         civ = (int)units[unit].owner;
         if ((civ < 0) || (8 < civ)) {
           civ = 0xf;
         }
-        unit2 = tile_at(x,y);
-        *(byte *)(unit2 + 5) = *(byte *)(unit2 + 5) & 0xf;
-        *(byte *)(unit2 + 5) = *(byte *)(unit2 + 5) | (byte)(civ << 4);
+        map_tile = tile_at(x,y);
+        map_tile->owner = map_tile->owner & 0xf;
+        map_tile->owner = map_tile->owner | (byte)(civ << 4);
       }
     }
     else {
@@ -10195,7 +10199,7 @@ int __cdecl unit_home_city_name(iptr unit)
   int name2;
   
   if (units[unit].home_city == -1) {
-    name2 = label_string(*(i32 *)(label_string_ids + 0x38));
+    name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x38));
   }
   else {
     name2 = (uint)(byte)units[unit].home_city * 0x58 + (iptr)((u8 *)&cities + 32);
@@ -10317,6 +10321,7 @@ void __cdecl nuclear_blast(iptr center_x,int center_y)
   uint sign;
   int civ;
   iptr dir;
+  Tile *map_tile;
   
   y = map_in_bounds(center_x,center_y);
   if (y != 0) {
@@ -10330,7 +10335,7 @@ void __cdecl nuclear_blast(iptr center_x,int center_y)
         if (city < 0) {
           tile = tile_is_ocean(x,y);
           if (tile == 0) {
-            tile = tile_at(x,y);
+            map_tile = tile_at(x,y);
             improvements2 = tile_improvements(x,y);
             if (((byte)improvements2 & 0x42) == 0x40) {
               tile_set_improvements(x,y,0x40,0,1);
@@ -10340,7 +10345,7 @@ void __cdecl nuclear_blast(iptr center_x,int center_y)
             if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
               tile_set_improvements(x,y,0x20,0,1);
             }
-            if (((*(byte *)(tile + 1) & 8) == 0) || ((*(byte *)(tile + 1) & 4) == 0)) {
+            if (((map_tile->improvements & 8) == 0) || ((map_tile->improvements & 4) == 0)) {
               rnd = _rand();
               sign = (int)rnd >> 0x1f;
               if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
@@ -10387,14 +10392,14 @@ char * __cdecl path_join_upper(char *dest,iptr dir,i32 filename)
   char *end;
   char buf[80];
   
-  crt_strcpy(buf,dir);
+  crt_strcpy(buf,(const char *)dir);
   for (end = buf; *end != '\0'; end++) {
   }
   if (end[-1] != '\\') {
     crt_strcat(buf,((i8 *)&path_separator_str));
   }
   crt_strcpy(dest,buf);
-  crt_strcat(dest,filename);
+  crt_strcat(dest,(const char *)filename);
   __strupr(dest);
   return dest;
 }

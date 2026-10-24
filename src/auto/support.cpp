@@ -69,7 +69,7 @@ i32 __cdecl mem_lock_handle(iptr handle)
 {
   i32 ptr;
   
-  ptr = mem_handle_lock(handle);
+  ptr = (i32)mem_handle_lock(handle);
   return ptr;
 }
 
@@ -123,7 +123,7 @@ i32 __cdecl memblock_ensure_locked(iptr block)
   i32 ptr;
   
   if (*(int *)(block + 8) == 0) {
-    ptr = mem_handle_lock(*(i32 *)(block + 4));
+    ptr = (i32)mem_handle_lock(*(i32 *)(block + 4));
     *(i32 *)(block + 8) = ptr;
     if (*(int *)(block + 8) == 0) {
       error_report(0xfffffff6,(uint)*(byte *)block,0,0,0);
@@ -412,7 +412,7 @@ void __cdecl error_report(uint error_code,int module_id,iptr context,iptr data1,
   char data1_text[12];
   
   if (context != 0) {
-    crt_strcpy(((i8 *)&error_context_text),context);
+    crt_strcpy(((i8 *)&error_context_text),(const void *)context);
   }
   __itoa(error_code,error_text,10);
   __itoa(module_id,module_text,10);
@@ -433,13 +433,13 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   i8 msg[256];
   
   crt_strcpy(msg,str_error_4);
-  crt_strcat(msg,error_text);
+  crt_strcat(msg,(const void *)error_text);
   crt_strcat(msg,str_in_module);
-  crt_strcat(msg,module_text);
+  crt_strcat(msg,(const void *)module_text);
   crt_strcat(msg,str_data);
-  crt_strcat(msg,data1_text);
+  crt_strcat(msg,(const void *)data1_text);
   crt_strcat(msg,((i8 *)&err_data_sep_str));
-  crt_strcat(msg,data2_text);
+  crt_strcat(msg,(const void *)data2_text);
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&err_fatal_msg_fmt),msg);
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
   dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
@@ -452,7 +452,7 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   if ((*(int *)&error_last_alloc_failed) != 0) {
     __ltoa((*(long *)&mem_last_alloc_size),(char *)data1_text,10);
     crt_strcpy(msg,str_tried_to_allocate);
-    crt_strcat(msg,data1_text);
+    crt_strcat(msg,(const void *)data1_text);
     crt_strcat(msg,str_bytes);
     _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_alloc_line_fmt),msg);
     OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
@@ -468,7 +468,7 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   }
   crt_strcpy(msg,str_most_recent_dos_error);
   __itoa(crt_errno,(char *)data1_text,10);
-  crt_strcat(msg,data1_text);
+  crt_strcat(msg,(const void *)data1_text);
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_dos_error_line_fmt),msg);
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
   dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
@@ -520,9 +520,9 @@ int __cdecl rng_set_seed(int seed)
   return prev_state;
 }
 
-/* 0059a733: written by hand in src/game/random.c */
+/* 0059a733: written by hand in src/game/random.cpp */
 
-/* 0059a791: written by hand in src/game/random.c */
+/* 0059a791: written by hand in src/game/random.cpp */
 
 /* 005a1a44 auto */
 int __cdecl int_clamp_b(int value,int lo,int hi)
@@ -888,7 +888,7 @@ i8 __thiscall dbg_log_write(void *self,iptr text)
   
   tick_count = GetTickCount();
   _sprintf(line,str_5d,(tick_count - *(int *)self) / 1000);
-  crt_strcat(line,text);
+  crt_strcat(line,(const void *)text);
   if (dbg_log_to_debugger != '\0') {
     dbg_log_write_debugger((iptr)line);
   }
@@ -948,7 +948,7 @@ err_report
   i32 msg;
   
   err_set_code(self,code);
-  msg = err_format_message(self,(iptr)&str_fatal_error,file,line,extra);
+  msg = (i32)err_format_message(self,(iptr)&str_fatal_error,file,line,extra);
   err_show_fatal_box(self,msg);
   return;
 }
@@ -967,8 +967,8 @@ err_format_message
   _Format = str_error_s_file_s_line_d;
   len = _strlen((char *)self);
   _sprintf((char *)(self->error_message_text + len),_Format,text,file,line);
-  trace = err_get_stack_trace(self);
-  crt_strcat(self,trace);
+  trace = (i32)err_get_stack_trace(self);
+  crt_strcat(self,(const void *)trace);
   return self;
 }
 
@@ -984,7 +984,7 @@ u8 * __thiscall err_get_stack_trace(ErrorContext *self)
 void __thiscall err_show_fatal_box(ErrorContext *self,i32 msg)
 
 {
-  dbg_fatal_msgbox_break((iptr)&str_smeds_application_error,msg);
+  dbg_fatal_msgbox_break((iptr)&str_smeds_application_error,(LPCSTR)msg);
   return;
 }
 
@@ -1128,7 +1128,7 @@ HGLOBAL __cdecl mem_handle_free(HGLOBAL handle)
 void __cdecl mem_move_src_dst(iptr src,iptr dst,i32 size)
 
 {
-  crt_memmove(dst,src,size);
+  crt_memmove((void *)dst,(const void *)src,size);
   return;
 }
 
@@ -1159,7 +1159,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
   iptr out_size;
   
   src_size = __msize(*(void **)buf_ptr);
-  src_copy = operator_new(src_size);
+  src_copy = (byte *)operator_new(src_size);
   if (src_copy == (byte *)0x0) {
     dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi);
     out_size = 0;
@@ -1167,7 +1167,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
   else {
     mem_move_src_dst(*(iptr *)buf_ptr,(iptr)src_copy,src_size);
     capacity2 = src_size * 2;
-    out = (byte *)crt_realloc(*(i32 *)buf_ptr,capacity2);
+    out = (byte *)crt_realloc((void *)*(i32 *)buf_ptr,capacity2);
     if (out == (byte *)0x0) {
       dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_2);
       out_size = 0;
@@ -1181,7 +1181,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
         run_len = (uint)*src;
         if (out_end < out + (run_len & 0x7f) + 1) {
           capacity2 += 1000;
-          grown = crt_realloc(*(i32 *)buf_ptr,capacity2);
+          grown = (iptr)crt_realloc((void *)*(i32 *)buf_ptr,capacity2);
           if (grown == 0) {
             dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_3);
             return 0;
@@ -1212,7 +1212,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
           }
         }
       }
-      final_buf = crt_realloc(*(i32 *)buf_ptr,out_size);
+      final_buf = (int)crt_realloc((void *)*(i32 *)buf_ptr,out_size);
       if (final_buf == 0) {
         dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_4);
         out_size = 0;
@@ -1242,7 +1242,7 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
   int run_len;
   int written;
   
-  out_buf = operator_new(size + ((int)(size + (size >> 0x1f & 0x7fU)) >> 7) + 5);
+  out_buf = (char *)operator_new(size + ((int)(size + (size >> 0x1f & 0x7fU)) >> 7) + 5);
   if (out_buf == (char *)0x0) {
     dbg_log((iptr)&str_rllencode_could_not_allocate_compression);
     out_size = 0xffffffff;
@@ -1421,9 +1421,9 @@ i32 __cdecl dbg_log_write_debugger(iptr text)
   return 1;
 }
 
-/* 005edc6c: written by hand in src/game/regargs.c */
+/* 005edc6c: written by hand in src/game/regargs.cpp */
 
-/* 005edcac: written by hand in src/game/regargs.c */
+/* 005edcac: written by hand in src/game/regargs.cpp */
 
 /* 005edd00 auto */
 void __cdecl dbg_fatal_msgbox_break(iptr caption,LPCSTR text)
@@ -1574,7 +1574,7 @@ i32 __cdecl sys_msgbox_mapped(LPCSTR caption,LPCSTR text,i32 severity,i32 button
   return result;
 }
 
-/* 005ef58e: written by hand in src/game/regargs.c */
+/* 005ef58e: written by hand in src/game/regargs.cpp */
 
 /* 005f04c0 auto */
 void __thiscall ptrlist_dtor(void *self)

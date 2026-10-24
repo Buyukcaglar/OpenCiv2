@@ -37,7 +37,7 @@ void __cdecl mp_turn_timer_tick(void)
         rect.top = (*(int *)((u8 *)&map_views_block.main_view_frame_top));
         rect.right = (*(int *)((u8 *)&map_views_block.main_view_frame_right));
         rect.bottom = (*(int *)((u8 *)&map_views_block.main_view_client_top));
-        wnd_blit_surface_rect(((DibSurface*)((i8 *)&map_views_block.map_views)), &rect);
+        wnd_blit_surface_rect(((DibSurface*)((i8 *)&map_views_block.map_views)), (iptr)&rect);
     }
     percent = (mp_turn_seconds_left * 100000) / civ_saved_cursor_x_block.mp_turn_time_limit_ms;
     if (percent < 0x21)
@@ -51,5 +51,5 @@ void __cdecl mp_turn_timer_tick(void)
     status_draw_timer_bar(percent, color);
     if (mp_turn_timer_handle != 0)
         game_timer_destroy(mp_turn_timer_handle);
-    mp_turn_timer_handle = game_timer_create(((void *)(iptr)mp_turn_timer_tick), 500, 1);
+    mp_turn_timer_handle = game_timer_create(((iptr)mp_turn_timer_tick), 500, 1);
 }

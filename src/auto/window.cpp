@@ -40,7 +40,7 @@ i32 __thiscall wnd_client_width(WndBase *self)
 void __thiscall wnd_get_rect_in_parent(WndBase *self,iptr rect)
 
 {
-  wnd_obj_get_rect_in_parent(self->native_wnd,rect);
+  wnd_obj_get_rect_in_parent(self->native_wnd,(LPRECT)rect);
   return;
 }
 
@@ -181,7 +181,7 @@ void __thiscall wnd_destroy_native(WndBase *self)
 {
   u32 native;
   
-  native = wnd_obj_destroy(self->native_wnd);
+  native = (u32)wnd_obj_destroy((i32 *)self->native_wnd);
   self->native_wnd = native;
   return;
 }
@@ -228,7 +228,7 @@ void __thiscall wnd_blit_surface_rect(DibSurface *self,iptr rect)
 void __thiscall wnd_view_validate_rect(WndValidateRectView *self,iptr rect)
 
 {
-  wnd_obj_validate_rect(self->wnd_obj,rect);
+  wnd_obj_validate_rect(self->wnd_obj,(RECT *)rect);
   return;
 }
 
@@ -1453,7 +1453,7 @@ void __thiscall wnd_handlers_dtor(void *self)
   return;
 }
 
-/* 0044ca60: written by hand in src/game/unwind.c */
+/* 0044ca60: written by hand in src/game/unwind.cpp */
 
 /* 0044cb20 auto */
 i32 __thiscall surfwnd_wnd_dtor(void *self)
@@ -1468,11 +1468,11 @@ i32 __thiscall surfwnd_wnd_dtor(void *self)
   return seh_handler;
 }
 
-/* 0044cba0: written by hand in src/game/unwind.c */
+/* 0044cba0: written by hand in src/game/unwind.cpp */
 
-/* 0044cc80: written by hand in src/game/throneroom.c */
+/* 0044cc80: written by hand in src/game/throneroom.cpp */
 
-/* 0044cd9b: written by hand in src/game/throneroom.c */
+/* 0044cd9b: written by hand in src/game/throneroom.cpp */
 
 /* 00450390 auto */
 void __thiscall wnd_set_palette(WndBase *self,iptr palette)
@@ -1514,7 +1514,7 @@ void __thiscall wnd_get_cursor_pos(WndBase *self,iptr out_x,iptr out_y)
   iptr hwnd;
   
   hwnd = wnd_get_window(self);
-  wnd_obj_get_cursor_pos(hwnd,out_x,out_y);
+  wnd_obj_get_cursor_pos(hwnd,(LONG *)out_x,(LONG *)out_y);
   return;
 }
 
@@ -1564,7 +1564,7 @@ hotspot_create(ClickControl *self,iptr parent,iptr id,iptr rect)
   self->on_select = 0;
   self->font = 0;
   self->scroll_pos = 0;
-  new_hwnd = hotspot_create_hwnd(rect,(iptr)self);
+  new_hwnd = hotspot_create_hwnd((int *)rect,(iptr)self);
   self->hwnd = new_hwnd;
   return;
 }
@@ -2113,7 +2113,7 @@ void __cdecl accel_start_develop_city(iptr city,int num_tiles)
 void __thiscall wnd_move_to_rect(WndBase *self,iptr rect)
 
 {
-  wnd_obj_move_to_rect(self->native_wnd,rect);
+  wnd_obj_move_to_rect(self->native_wnd,(int *)rect);
   return;
 }
 
@@ -2178,7 +2178,7 @@ void __cdecl menu_wonder_movies(void)
     for (wonder = 0; wonder < 0x1c; wonder++) {
       flags = 0;
       wonder_id = wonder;
-      wonder_name = label_string(improvements[wonder + 0x27].name);
+      wonder_name = (iptr)label_string(improvements[wonder + 0x27].name);
       dialog_add_option((DialogOptionList *)&dialog2,wonder_name,wonder_id,flags);
     }
     dialog_set_default_choice((DialogOptionList *)&dialog2,last_choice);
@@ -3280,302 +3280,302 @@ void __cdecl menu_build_main(void)
   menu_reset((GameMenu *)((i8 *)&main_menu_block.main_menu),0x1bbc);
   status = text_open_section((iptr)&str_menu,(iptr)&str_game_5);
   if (status == 0) {
-    item_arg = text_read_line(1);
-    menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),1,item_arg);
+    item_arg = (i32)text_read_line(1);
+    menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),1,(char *)item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x101,label,item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x102,label,item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x103,label,item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x104,label,item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x105,label,item_arg);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x106,label,item_arg);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x110,label,item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x120,label,item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x130,label,item_arg);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x131,label,item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x132,label,item_arg);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x1f0,label,item_arg);
     item_arg = 0;
-    label = text_read_line(1);
+    label = (iptr)text_read_line(1);
     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x1f1,label,item_arg);
     status = text_open_section(0,(iptr)&str_kingdom);
     if (status == 0) {
-      item_arg = text_read_line(1);
-      menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),2,item_arg);
+      item_arg = (i32)text_read_line(1);
+      menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),2,(char *)item_arg);
       item_arg = 0;
-      label = text_read_line(1);
+      label = (iptr)text_read_line(1);
       menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0x201,label,item_arg);
       menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0,0,0);
       item_arg = 0;
-      label = text_read_line(1);
+      label = (iptr)text_read_line(1);
       menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0x205,label,item_arg);
       item_arg = 0;
-      label = text_read_line(1);
+      label = (iptr)text_read_line(1);
       menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0x210,label,item_arg);
       menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0,0,0);
       item_arg = 0;
-      label = text_read_line(1);
+      label = (iptr)text_read_line(1);
       menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0x220,label,item_arg);
       status = text_open_section(0,(iptr)&str_view);
       if (status == 0) {
-        item_arg = text_read_line(1);
-        menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),3,item_arg);
+        item_arg = (i32)text_read_line(1);
+        menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),3,(char *)item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x301,label,item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x302,label,item_arg);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0,0,0);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x310,label,item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x311,label,item_arg);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0,0,0);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,800,label,item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x321,label,item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x322,label,item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x324,label,item_arg);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0,0,0);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x327,label,item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x328,label,item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x330,label,item_arg);
         item_arg = 0;
-        label = text_read_line(1);
+        label = (iptr)text_read_line(1);
         menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x340,label,item_arg);
         menu_set_item_checked
                   ((GameMenu *)((i8 *)&main_menu_block.main_menu),0x327,(game.game_options & 0x20) >> 5);
         status = text_open_section(0,(iptr)&str_orders_2);
         if (status == 0) {
-          item_arg = text_read_line(1);
-          menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),4,item_arg);
+          item_arg = (i32)text_read_line(1);
+          menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),4,(char *)item_arg);
           item_arg = 0x3c;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x401,label,item_arg);
           item_arg = 0x3c;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x410,label,item_arg);
           item_arg = 0x3c;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x411,label,item_arg);
           item_arg = 0x3c;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x412,label,item_arg);
           item_arg = 0x3c;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x413,label,item_arg);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x417,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x418,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x41b,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x420,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x421,label,item_arg);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x430,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x440,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x441,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x442,label,item_arg);
           item_arg = 0x3c;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x445,label,item_arg);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x450,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x451,label,item_arg);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x460,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x468,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x470,label,item_arg);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x480,label,item_arg);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
           item_arg = 0;
-          label = text_read_line(1);
+          label = (iptr)text_read_line(1);
           menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x490,label,item_arg);
           status = text_open_section(0,(iptr)&str_advisors);
           if (status == 0) {
-            item_arg = text_read_line(1);
-            menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),5,item_arg);
+            item_arg = (i32)text_read_line(1);
+            menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),5,(char *)item_arg);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x507,label,item_arg);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x500,label,item_arg);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0,0,0);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x501,label,item_arg);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x502,label,item_arg);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x503,label,item_arg);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0,0,0);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x504,label,item_arg);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x505,label,item_arg);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x506,label,item_arg);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0,0,0);
             item_arg = 0;
-            label = text_read_line(1);
+            label = (iptr)text_read_line(1);
             menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x508,label,item_arg);
             status = text_open_section(0,(iptr)&str_world);
             if (status == 0) {
-              item_arg = text_read_line(1);
-              menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),6,item_arg);
+              item_arg = (i32)text_read_line(1);
+              menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),6,(char *)item_arg);
               item_arg = 0;
-              label = text_read_line(1);
+              label = (iptr)text_read_line(1);
               menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x601,label,item_arg);
               item_arg = 0;
-              label = text_read_line(1);
+              label = (iptr)text_read_line(1);
               menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x602,label,item_arg);
               item_arg = 0;
-              label = text_read_line(1);
+              label = (iptr)text_read_line(1);
               menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x603,label,item_arg);
               menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0,0,0);
               item_arg = 0;
-              label = text_read_line(1);
+              label = (iptr)text_read_line(1);
               menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x605,label,item_arg);
               item_arg = 0;
-              label = text_read_line(1);
+              label = (iptr)text_read_line(1);
               menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x606,label,item_arg);
               status = text_open_section(0,(iptr)&str_cheat);
               if (status == 0) {
-                item_arg = text_read_line(1);
-                menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),7,item_arg);
+                item_arg = (i32)text_read_line(1);
+                menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),7,(char *)item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x701,label,item_arg);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x711,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x712,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x713,label,item_arg);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x721,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x722,label,item_arg);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x731,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x732,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x740,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x748,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x750,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x752,label,item_arg);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x755,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x760,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x765,label,item_arg);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x768,label,item_arg);
                 item_arg = 0;
-                label = text_read_line(1);
+                label = (iptr)text_read_line(1);
                 menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x770,label,item_arg);
                 if (((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) {
                   cheat_disabled = 1;
@@ -3596,35 +3596,35 @@ void __cdecl menu_build_main(void)
                            (game.multiplayer != '\0' &((int *)&mp_cheat_menu_allowed) == 0));
                 status = text_open_section(0,(iptr)&str_editor);
                 if (status == 0) {
-                  item_arg = text_read_line(1);
-                  menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),8,item_arg);
+                  item_arg = (i32)text_read_line(1);
+                  menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),8,(char *)item_arg);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x801,label,item_arg);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0,0,0);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x802,label,item_arg);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x803,label,item_arg);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x804,label,item_arg);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x805,label,item_arg);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x806,label,item_arg);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x807,label,item_arg);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x808,label,item_arg);
                   item_arg = 0;
-                  label = text_read_line(1);
+                  label = (iptr)text_read_line(1);
                   menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x809,label,item_arg);
                   if (((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
                       ((game.game_flags & 0x80) == 0)) ||
@@ -3648,34 +3648,34 @@ void __cdecl menu_build_main(void)
                             ((GameMenu *)((i8 *)&main_menu_block.main_menu),0x801,(game.multiplayer != '\0'));
                   status = text_open_section(0,(iptr)&str_pedia_2);
                   if (status == 0) {
-                    item_arg = text_read_line(1);
-                    menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),9,item_arg);
+                    item_arg = (i32)text_read_line(1);
+                    menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),9,(char *)item_arg);
                     item_arg = 0;
-                    label = text_read_line(1);
+                    label = (iptr)text_read_line(1);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x901,label,item_arg);
                     item_arg = 0;
-                    label = text_read_line(1);
+                    label = (iptr)text_read_line(1);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x903,label,item_arg);
                     item_arg = 0;
-                    label = text_read_line(1);
+                    label = (iptr)text_read_line(1);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x905,label,item_arg);
                     item_arg = 0;
-                    label = text_read_line(1);
+                    label = (iptr)text_read_line(1);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x907,label,item_arg);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0,0,0);
                     item_arg = 0;
-                    label = text_read_line(1);
+                    label = (iptr)text_read_line(1);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x909,label,item_arg);
                     item_arg = 0;
-                    label = text_read_line(1);
+                    label = (iptr)text_read_line(1);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x90b,label,item_arg);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0,0,0);
                     item_arg = 0;
-                    label = text_read_line(1);
+                    label = (iptr)text_read_line(1);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x90d,label,item_arg);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0,0,0);
                     item_arg = 0;
-                    label = text_read_line(1);
+                    label = (iptr)text_read_line(1);
                     menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x9f0,label,item_arg);
                     menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x441,1);
                     menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x413,1);
@@ -4091,7 +4091,7 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
       mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,civ);
       text_set_string_arg_b(0,(iptr)&cities[city].name);
     }
-    self = operator_new(0x798);
+    self = (ViewWindow *)operator_new(0x798);
     (*(i8 *)((char *)&eh_state + 0)) = 2;
     if (self == (ViewWindow *)0x0) {
       popup_new = (void *)0x0;
@@ -4122,12 +4122,12 @@ int __cdecl popup_city_picture_zoom(iptr section,iptr city,uint picture,int sile
     if ((silent == 0) && (main_menu_block.city_zoom_requested == 0)) {
       height = 0;
       option_id = 1;
-      option_text = label_string(*(i32 *)(label_string_ids + 0x80));
+      option_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x80));
       dialog_add_option
                 ((DialogOptionList *)((int)popup + 0x4a4),option_text,option_id,height);
       height = 0;
       option_id = 0;
-      option_text = label_string(*(i32 *)(label_string_ids + 0x84));
+      option_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x84));
       dialog_add_option
                 ((DialogOptionList *)((int)popup + 0x4a4),option_text,option_id,height);
       if ((game.message_options & 0x400) == 0) {
@@ -4387,12 +4387,12 @@ void __cdecl dialog_prepend_title_label(iptr dialog,i32 label_id)
   str_append_label((iptr)title,label_id);
   if (*(int *)(dialog + 0x134) != 0) {
     crt_strcat(title,((i8 *)&dialog_title_label_space_str));
-    crt_strcat(title,*(i32 *)(dialog + 0x134));
+    crt_strcat((void *)title,(void *)(*(i32 *)(dialog + 0x134)));
   }
   len = _strlen(title);
   buffer = memblock_alloc(dialog + 0x254,len + 1);
   *(i32 *)(dialog + 0x134) = buffer;
-  crt_strcpy(*(i32 *)(dialog + 0x134),title);
+  crt_strcpy((void *)(*(i32 *)(dialog + 0x134)),(void *)title);
   return;
 }
 
@@ -4800,7 +4800,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
     }
     else {
       adjective = civ_adjective(net_session_block.mp_turn_civ);
-      crt_strcat(caption,adjective);
+      crt_strcat((void *)caption,(void *)adjective);
       if (((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
         self->timer_text = '\0';
       }
@@ -4909,13 +4909,13 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
     height = (int)(*(int *)(self->pane_selection_flags_area + i * 0x1c + 0x10) * self->caption_height) / 0x18;
     rect_set_xywh((iptr)button_rect,button_x,((int)self->caption_height >> 1) - (height >> 1),width,
                        height);
-    this_00 = operator_new(0x40);
+    this_00 = (Control *)operator_new(0x40);
     eh_state = 0;
     if (this_00 == (Control *)0x0) {
       hotspot = 0;
     }
     else {
-      hotspot = hotspot_ctor(this_00);
+      hotspot = (i32)hotspot_ctor(this_00);
     }
     eh_state = 0xffffffff;
     *(i32 *)(self->pane_selection_flags_area + i * 0x1c + 0x18) = hotspot;
@@ -5062,7 +5062,7 @@ frame_wnd_create
     crt_strcpy(self->frame_title,((i8 *)&frame_default_title_str));
   }
   else {
-    crt_strcpy(self->frame_title,title);
+    crt_strcpy((void *)self->frame_title,(void *)title);
   }
   *(i8 **)self->editor_combo_boxes = ((i8 *)&ui_text_font);
   self->title_font = (uptr)((i8 *)&caption_font_block.caption_font);
@@ -5502,8 +5502,8 @@ i32 * __thiscall menu_add_menu(GameMenu *self,i32 menu_id,char *title)
   len = _strlen(title);
   text = memblock_alloc((iptr)self->item_storage,len + 1);
   *menu = text;
-  crt_strcpy(*menu,title);
-  str_pipes_to_tabs(*menu);
+  crt_strcpy((void *)*menu,(void *)title);
+  str_pipes_to_tabs((char *)*menu);
   self->menu_flags = self->menu_flags & 0xffff7fff;
   return menu;
 }
@@ -5554,8 +5554,8 @@ menu_add_item
       }
       buffer = memblock_alloc((iptr)self->item_storage,buf_len + 1);
       *item = buffer;
-      crt_strcpy(*item,text);
-      str_pipes_to_tabs(*item);
+      crt_strcpy((void *)*item,(void *)text);
+      str_pipes_to_tabs((char *)*item);
     }
     self->menu_flags = self->menu_flags & 0xffff7fff;
   }
@@ -5657,7 +5657,7 @@ void __thiscall menu_rebuild(GameMenu *self,iptr window)
     menu_index = 1;
     for (; menu2 != (i32 *)0x0; menu2 = (i32 *)menu2[4]) {
       if ((*(byte *)(menu2 + 2) & 2) == 0) {
-        crt_strcat(spec,*menu2);
+        crt_strcat((void *)spec,(void *)*menu2);
         crt_strcat(spec,((i8 *)&menu_title_sep_str));
       }
       if (window == 0) {
@@ -5697,7 +5697,7 @@ void __thiscall menu_rebuild(GameMenu *self,iptr window)
       }
     }
     self->menu_flags = self->menu_flags | 0x8000;
-    menu_attach_to_window(self,window);
+    menu_attach_to_window(self,(ModalMenuWindow *)window);
   }
   if (menu_owner_window != (ModalMenuWindow *)0x0) {
     wnd_redraw_menu_bar(menu_owner_window);
@@ -5827,8 +5827,8 @@ void __thiscall menu_set_item_text(GameMenu *self,i32 item_id,iptr text)
   
   item = (i32 *)menu_find_item(self,item_id);
   if (item != (i32 *)0x0) {
-    crt_strcpy(*item,text);
-    str_pipes_to_tabs(*item);
+    crt_strcpy((void *)*item,(void *)text);
+    str_pipes_to_tabs((char *)*item);
     if (((self->menu_flags & 0x8000) != 0) && ((*(byte *)(item + 2) & 2) == 0)) {
       item_text = *item;
       item_index = menu_item_visible_index(self,(iptr)item);
@@ -5845,7 +5845,7 @@ void __thiscall menu_native_build(GameMenu *self,iptr spec)
 {
   u32 menu_handle;
   
-  menu_handle = menu_hmenu_build_from_spec(spec);
+  menu_handle = menu_hmenu_build_from_spec((char *)spec);
   self->hmenu = menu_handle;
   return;
 }
@@ -5855,7 +5855,7 @@ void __thiscall
 menu_native_insert(GameMenu *self,i32 menu_index,i32 item_index,i32 text)
 
 {
-  menu_hmenu_insert_item(self->hmenu,menu_index,item_index,text);
+  menu_hmenu_insert_item(self->hmenu,menu_index,item_index,(LPCSTR)text);
   return;
 }
 
@@ -5872,7 +5872,7 @@ void __thiscall
 menu_native_set_text(GameMenu *self,i32 menu_index,i32 item_index,i32 text)
 
 {
-  menu_hmenu_set_item_text(self->hmenu,menu_index,item_index,text);
+  menu_hmenu_set_item_text(self->hmenu,menu_index,item_index,(LPCSTR)text);
   return;
 }
 
@@ -6015,7 +6015,7 @@ void __cdecl ui_pick_unit_from_stack(void)
     if (stack_count == 1) goto activate_unit;
   }
   dialog_flags = 1;
-  prompt = label_string(*(i32 *)(label_string_ids + 0xf8));
+  prompt = (iptr)label_string(*(i32 *)(label_string_ids + 0xf8));
   unit = unit_stack_select_dialog(unit,prompt,dialog_flags);
   if (unit < 0) {
     return;
@@ -6618,7 +6618,7 @@ i32 __thiscall dialog_set_item_text(void *self,int line_id,iptr text)
   }
   if (((line != (int *)0x0) && (-1 < line[3])) &&
      (len = _strlen((char *)text), (int)(len + 1) <= line[3])) {
-    crt_strcpy(line[2],text);
+    crt_strcpy((void *)line[2],(void *)text);
     return 1;
   }
   return 0;
@@ -6676,7 +6676,7 @@ dialog_add_line
   len = _strlen((char *)text);
   line[3] = len + 1;
 copy_line_text:
-  crt_strcpy(line[2],text);
+  crt_strcpy((void *)line[2],(void *)text);
   line[4] = x;
   line[5] = y;
   line[6] = color;
@@ -6860,7 +6860,7 @@ void __thiscall dialog_set_title(DialogWindowView *self,iptr title)
   len = _strlen((char *)title);
   buffer = memblock_alloc((iptr)&((DialogTextLineView *)self)->string_pool,len + 1);
   self->title_text = buffer;
-  crt_strcpy(self->title_text,title);
+  crt_strcpy((void *)self->title_text,(void *)title);
   return;
 }
 
@@ -6996,7 +6996,7 @@ void __thiscall dialog_set_default_choice(DialogOptionList *self,iptr choice_id)
   uptr entry;
   
   if (self->option_count == 0) {
-    entry = dialog_find_sprite(self,choice_id);
+    entry = (uptr)dialog_find_sprite((DialogOptionList *)self,choice_id);
     if (entry != 0) {
       self->selected_sprite = entry;
     }
@@ -7127,7 +7127,7 @@ dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,iptr label)
     len = _strlen((char *)label);
     label_buf = memblock_alloc((iptr)self->string_pool,len + 1);
     entry[2] = label_buf;
-    crt_strcpy(entry[2],label);
+    crt_strcpy((void *)entry[2],(void *)label);
     label_width = font_text_width((GameFont *)self->body_font,entry[2]);
     entry_width = entry_width + self->sprite_gap + label_width;
   }
@@ -7200,7 +7200,7 @@ dialog_add_option(DialogOptionList *self,iptr text,iptr option_id,uint data)
   len = _strlen((char *)text);
   text_buf = memblock_alloc((iptr)self->string_pool,len + 1);
   option[2] = text_buf;
-  crt_strcpy(option[2],text);
+  crt_strcpy((void *)option[2],(void *)text);
   if (*(char *)text == '\0') {
     *option = *option | 1;
   }
@@ -7264,7 +7264,7 @@ dialog_add_edit_field(DialogOptionList *self,iptr label,iptr initial_text,size_t
   len = _strlen((char *)label);
   buffer = memblock_alloc((iptr)self->string_pool,len + 2);
   field[4] = buffer;
-  crt_strcpy(field[4],label);
+  crt_strcpy((void *)field[4],(void *)label);
   label_width = font_text_width((GameFont *)self->body_font,field[4]);
   max_width = self->edit_label_width;
   if ((int)self->edit_label_width <= (int)label_width) {
@@ -7312,7 +7312,7 @@ void __thiscall dialog_add_button(DialogButtonsView *self,iptr label)
     len = _strlen((char *)label);
     buffer = memblock_alloc((iptr)&((DialogTextLineView *)self)->string_pool,len + 1);
     (&((Dialog *)self)->extra_button_labels)[self->extra_button_count] = buffer;
-    crt_strcpy((&((Dialog *)self)->extra_button_labels)[self->extra_button_count],label);
+    crt_strcpy((void *)((&((Dialog *)self)->extra_button_labels)[self->extra_button_count]),(void *)label);
     self->extra_button_count++;
   }
   return;
@@ -8172,7 +8172,7 @@ uint __thiscall dialog_draw_option(DialogOptionList *self,iptr option,int blit)
         }
         gfx_fill_rect(self->surf_wnd,(iptr)&inner_rect,fill_color);
         dialog_draw_option_text
-                  ((DialogOptionDrawView *)self,*(i32 *)(option + 8),cell_x + 2,cell_y,is_selected,
+                  ((DialogOptionDrawView *)self,(char *)*(i32 *)(option + 8),cell_x + 2,cell_y,is_selected,
                    *(uint *)option & 1);
       }
       if (blit != 0) {
@@ -8458,13 +8458,13 @@ i32 __thiscall dialog_create_window(DialogWindowView *self)
   
   eh_state = 0xffffffff;
   if (self->surf_wnd == 0) {
-    this_00 = operator_new(0x114);
+    this_00 = (SurfaceWindow *)operator_new(0x114);
     eh_state = 0;
     if (this_00 == (SurfaceWindow *)0x0) {
       surf_wnd2 = 0;
     }
     else {
-      surf_wnd2 = surfwnd_ctor(this_00);
+      surf_wnd2 = (uptr)surfwnd_ctor(this_00);
     }
     eh_state = 0xffffffff;
     self->surf_wnd = surf_wnd2;
@@ -8613,7 +8613,7 @@ void __thiscall dialog_create_controls(Dialog *self)
     dialog_stack_depth++;
     (*(Dialog * *)&net_session_block.dialog_stack_top) = self;
     dialog_title_font_obj_block.active_dialog = (iptr)self;
-    (((i32 *)&dialog_stack))[dialog_stack_depth] = self;
+    (((i32 *)&dialog_stack))[dialog_stack_depth] = (i32)self;
   }
   if ((self->style_flags & 0x200) == 0) {
     unused_flag = 0;
@@ -8641,13 +8641,13 @@ void __thiscall dialog_create_controls(Dialog *self)
     if (self->option_count != 0) {
       if (is_listbox == 0) {
         if (is_checkbox == 0) {
-          this_00 = operator_new(0x50);
+          this_00 = (InputControl *)operator_new(0x50);
           eh_state = 7;
           if (this_00 == (InputControl *)0x0) {
             radio_group2 = 0;
           }
           else {
-            radio_group2 = radiogrp_ctor(this_00);
+            radio_group2 = (uptr)radiogrp_ctor(this_00);
           }
           eh_state = 0xffffffff;
           self->radio_group = radio_group2;
@@ -8683,15 +8683,15 @@ void __thiscall dialog_create_controls(Dialog *self)
         }
         else {
           x = self->option_count;
-          checkboxes2 = operator_new(x * 0x3c + 4);
+          checkboxes2 = (u32 *)operator_new(x * 0x3c + 4);
           eh_state = 6;
           if (checkboxes2 == (u32 *)0x0) {
             checkboxes2 = (u32 *)0x0;
           }
           else {
             *checkboxes2 = x;
-            crt_vector_ctor_iterator(checkboxes2 + 1,0x3c,*checkboxes2,checkbox_elem_ctor,
-                         checkbox_dtor);
+            crt_vector_ctor_iterator(checkboxes2 + 1,0x3c,*checkboxes2,(code *)checkbox_elem_ctor,
+                         (code *)checkbox_dtor);
             checkboxes2++;
           }
           eh_state = 0xffffffff;
@@ -8726,13 +8726,13 @@ void __thiscall dialog_create_controls(Dialog *self)
           if (((int)((&self->list_rows)[self->cur_pane] * self->columns) < (int)self->option_count) ||
              ((self->style_flags & 0x1000000) != 0)) {
             if (self->columns == 1) {
-              ctrl_mem = operator_new(0x40);
+              ctrl_mem = (Control *)operator_new(0x40);
               eh_state = 1;
               if (ctrl_mem == (Control *)0x0) {
                 vscroll = 0;
               }
               else {
-                vscroll = scrollbar_ctor(ctrl_mem);
+                vscroll = (i32)scrollbar_ctor(ctrl_mem);
               }
               eh_state = 0xffffffff;
               *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) = vscroll;
@@ -8763,13 +8763,13 @@ void __thiscall dialog_create_controls(Dialog *self)
                         (*(ScrollbarTrackSetView **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),(iptr)dialog_list_on_vscroll);
             }
             else {
-              ctrl_mem = operator_new(0x40);
+              ctrl_mem = (Control *)operator_new(0x40);
               eh_state = 2;
               if (ctrl_mem == (Control *)0x0) {
                 hscroll = 0;
               }
               else {
-                hscroll = scrollbar_ctor(ctrl_mem);
+                hscroll = (i32)scrollbar_ctor(ctrl_mem);
               }
               eh_state = 0xffffffff;
               *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) = hscroll;
@@ -8807,13 +8807,13 @@ void __thiscall dialog_create_controls(Dialog *self)
           wnd_set_dblclick_handler((WndHandlersMouseSetView *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_dblclick);
         }
         else {
-          ctrl_mem = operator_new(0x3c);
+          ctrl_mem = (Control *)operator_new(0x3c);
           eh_state = 0;
           if (ctrl_mem == (Control *)0x0) {
             listbox3 = 0;
           }
           else {
-            listbox3 = checkbox_ctor(ctrl_mem);
+            listbox3 = (i32)checkbox_ctor(ctrl_mem);
           }
           eh_state = 0xffffffff;
           *(i32 *)(self->control_ptr_slots + self->cur_pane * 4 + 0x14) = listbox3;
@@ -8850,13 +8850,13 @@ void __thiscall dialog_create_controls(Dialog *self)
             if (((int)((&self->list_rows)[self->cur_pane] * self->columns) < (int)self->option_count) ||
                ((self->style_flags & 0x1000000) != 0)) {
               if (self->columns == 1) {
-                ctrl_mem = operator_new(0x40);
+                ctrl_mem = (Control *)operator_new(0x40);
                 eh_state = 4;
                 if (ctrl_mem == (Control *)0x0) {
                   vscroll2 = 0;
                 }
                 else {
-                  vscroll2 = scrollbar_ctor(ctrl_mem);
+                  vscroll2 = (i32)scrollbar_ctor(ctrl_mem);
                 }
                 eh_state = 0xffffffff;
                 *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) = vscroll2;
@@ -8888,13 +8888,13 @@ void __thiscall dialog_create_controls(Dialog *self)
                           (*(ScrollbarTrackSetView **)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10),(iptr)dialog_list2_on_vscroll);
               }
               else {
-                ctrl_mem = operator_new(0x40);
+                ctrl_mem = (Control *)operator_new(0x40);
                 eh_state = 5;
                 if (ctrl_mem == (Control *)0x0) {
                   hscroll2 = 0;
                 }
                 else {
-                  hscroll2 = scrollbar_ctor(ctrl_mem);
+                  hscroll2 = (i32)scrollbar_ctor(ctrl_mem);
                 }
                 eh_state = 0xffffffff;
                 *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) = hscroll2;
@@ -8928,13 +8928,13 @@ void __thiscall dialog_create_controls(Dialog *self)
             }
           }
           else {
-            ctrl_mem = operator_new(0x3c);
+            ctrl_mem = (Control *)operator_new(0x3c);
             eh_state = 3;
             if (ctrl_mem == (Control *)0x0) {
               listbox22 = 0;
             }
             else {
-              listbox22 = checkbox_ctor(ctrl_mem);
+              listbox22 = (i32)checkbox_ctor(ctrl_mem);
             }
             eh_state = 0xffffffff;
             *(i32 *)(self->control_ptr_slots + self->cur_pane * 4 + 0x14) = listbox22;
@@ -8971,15 +8971,15 @@ void __thiscall dialog_create_controls(Dialog *self)
     }
     if ((1 < (int)self->sprite_count) && (self->option_count == 0)) {
       x = self->sprite_count;
-      hotspots = operator_new(x * 0x40 + 4);
+      hotspots = (u32 *)operator_new(x * 0x40 + 4);
       eh_state = 8;
       if (hotspots == (u32 *)0x0) {
         hotspots = (u32 *)0x0;
       }
       else {
         *hotspots = x;
-        crt_vector_ctor_iterator(hotspots + 1,0x40,*hotspots,hotspot_ctor,
-                     hotspot_dtor);
+        crt_vector_ctor_iterator(hotspots + 1,0x40,*hotspots,(code *)hotspot_ctor,
+                     (code *)hotspot_dtor);
         hotspots++;
       }
       eh_state = 0xffffffff;
@@ -9012,15 +9012,15 @@ void __thiscall dialog_create_controls(Dialog *self)
     if (self->edit_field_list != 0) {
       edit_field = self->edit_field_list;
       x = self->edit_count;
-      edits = operator_new(x * 0x48 + 4);
+      edits = (u32 *)operator_new(x * 0x48 + 4);
       eh_state = 9;
       if (edits == (u32 *)0x0) {
         edits = (u32 *)0x0;
       }
       else {
         *edits = x;
-        crt_vector_ctor_iterator(edits + 1,0x48,*edits,edit_ctor,
-                     edit_dtor);
+        crt_vector_ctor_iterator(edits + 1,0x48,*edits,(code *)edit_ctor,
+                     (code *)edit_dtor);
         edits++;
       }
       eh_state = 0xffffffff;
@@ -9051,15 +9051,15 @@ void __thiscall dialog_create_controls(Dialog *self)
     }
     if (self->std_button_count + self->extra_button_count != 0) {
       count = self->std_button_count + self->extra_button_count;
-      buttons = operator_new(count * 0x3c + 4);
+      buttons = (int *)operator_new(count * 0x3c + 4);
       eh_state = 10;
       if (buttons == (int *)0x0) {
         buttons = (int *)0x0;
       }
       else {
         *buttons = count;
-        crt_vector_ctor_iterator(buttons + 1,0x3c,*buttons,button_ctor,
-                     ctrl_dtor);
+        crt_vector_ctor_iterator(buttons + 1,0x3c,*buttons,(code *)button_ctor,
+                     (code *)ctrl_dtor);
         buttons++;
       }
       eh_state = 0xffffffff;
@@ -10226,7 +10226,7 @@ dialog_load_text_section
   result = 1;
   mode = 1;
   option_index = 0;
-  crt_strcpy(((i8 *)&dialog_text_font_obj_block.dialog_section_name),section);
+  crt_strcpy((void *)(((i8 *)&dialog_text_font_obj_block.dialog_section_name)),(void *)section);
   cmp = text_open_section(file_name,section);
   if (cmp == 0) {
     if ((flags & 0x8000) == 0) {
@@ -10237,7 +10237,7 @@ dialog_load_text_section
     }
     has_edit = (uint)(edit_default != 0);
     if (has_edit != 0) {
-      crt_strcpy(edit_text,edit_default);
+      crt_strcpy((void *)edit_text,(void *)edit_default);
     }
     do {
       line = (char *)text_read_line(1);
@@ -10428,11 +10428,11 @@ dialog_load_text_section
           text_expand_vars((iptr)line,(iptr)expanded);
           if (has_edit == 0) {
             if ((self->style_flags & 4) == 0) {
-              option = dialog_add_option
+              option = (uptr)dialog_add_option
                                    ((DialogOptionList *)self,(iptr)expanded,option_index,0);
             }
             else {
-              option = dialog_add_checkbox_option
+              option = (uptr)dialog_add_checkbox_option
                                    ((DialogOptionList *)self,(iptr)expanded,option_index,0);
             }
             if (default_value == option_index) {
@@ -10498,7 +10498,7 @@ Hotspot * __thiscall hotspot_vector_dtor(Hotspot *self,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(self,0x40,VECTOR_COUNT(self),hotspot_dtor);
+    crt_vector_dtor_iterator(self,0x40,VECTOR_COUNT(self),(code *)hotspot_dtor);
     operator_delete(&VECTOR_COUNT(self));
   }
   return self;
@@ -10519,7 +10519,7 @@ SurfaceWindow * __thiscall surfwnd_scalar_dtor(SurfaceWindow *self,uint flags)
 void __thiscall wnd_get_screen_rect(WndBase *self,iptr rect)
 
 {
-  wnd_obj_get_screen_rect(self->native_wnd,rect);
+  wnd_obj_get_screen_rect(self->native_wnd,(LPRECT)rect);
   return;
 }
 
@@ -10537,7 +10537,7 @@ dialog_draw_text_default_font
           i32 flags)
 
 {
-  dialog_draw_text_shadowed(self,self->body_font,text,x,y,flags);
+  dialog_draw_text_shadowed(self,self->body_font,(char *)text,x,y,flags);
   return;
 }
 
@@ -10608,7 +10608,7 @@ void __thiscall surfwnd_on_resize(SurfaceWindow *self,int width,int height)
   SetRect(&rect,0,0,width,height);
   call_untyped(((code **)(self->vtable))[0], self,&rect);
   palette = wnd_get_palette_obj((WndPaletteObjView *)self->window_2);
-  surface_apply_palette((DibSurface *)self,palette);
+  surface_apply_palette((DibSurface *)self,(PaletteVersionView *)palette);
   if (self == (SurfaceWindow *)0x0) {
     (*(u8 * *)&wnd_active_child) = (u8 *)0x0;
   }
@@ -11478,7 +11478,7 @@ void __cdecl wnd_obj_release_capture(i32 wnd)
   return;
 }
 
-/* 005bd566: written by hand in src/game/retvals.c */
+/* 005bd566: written by hand in src/game/retvals.cpp */
 
 /* 005bd610 auto */
 i16 __thiscall wnd_get_style_flags(WndStyleView *self)
@@ -11704,7 +11704,7 @@ wnd_create_with_handlers
 {
   iptr hwnd;
   
-  wnd_record_create_child(self,title,style,x,y,width,height,palette,parent);
+  wnd_record_create_child(self,title,style,x,y,width,height,palette,(WndBase *)parent);
   hwnd = wnd_get_window(self);
   wnd_install_command_proc((iptr)self,hwnd);
   wnd_clear_handlers((WndHandlers *)(self + 1));
@@ -11722,7 +11722,7 @@ void __thiscall wnd_run_modal_loop(ModalMenuWindow *self)
   if (wnd_modal_depth != 0xf) {
     self->modal_running = 1;
     wnd_modal_depth++;
-    (((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack))[wnd_modal_depth] = self;
+    (((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack))[wnd_modal_depth] = (i32)self;
     if (wnd_modal_depth == 0) {
       owner2 = 0;
     }
@@ -11850,7 +11850,7 @@ HWND __cdecl hotspot_create_hwnd(int *rect,iptr ctrl)
   width = rect_width((iptr)rect);
   hotspot_hwnd = CreateWindowExA(4,str_mscontrolclass,((i8 *)&hotspot_wnd_title),0x50000000,*rect,rect[1],
                            width,height,hotspot_hwnd,hMenu,hInstance,lpParam);
-  width = ctrl_init_block(hotspot_hwnd,ctrl);
+  width = (int)ctrl_init_block(hotspot_hwnd,ctrl);
   *(i32 *)(width + 0x2c) = 1;
   SetWindowLongA(hotspot_hwnd,-4,(iptr)hotspot_wndproc);
   return hotspot_hwnd;
@@ -12101,7 +12101,7 @@ void __thiscall wnd_record_destroy(WndDestroyView *self)
 {
   u32 destroyed_obj;
   
-  destroyed_obj = wnd_obj_destroy(self->wnd_obj);
+  destroyed_obj = (u32)wnd_obj_destroy((i32 *)self->wnd_obj);
   self->wnd_obj = destroyed_obj;
   return;
 }
@@ -12117,10 +12117,10 @@ wnd_record_create
   
   self->style = style;
   if (self->native_wnd != 0) {
-    native = wnd_obj_destroy(self->native_wnd);
+    native = (u32)wnd_obj_destroy((i32 *)self->native_wnd);
     self->native_wnd = native;
   }
-  native = wnd_obj_create(wnd_kind,style,x,y,width,height,0);
+  native = (u32)wnd_obj_create((LPCSTR)wnd_kind,style,x,y,width,height,0);
   self->native_wnd = native;
   wnd_set_owner_ptr((iptr)self,self->native_wnd);
   wnd_set_palette(self,palette);
@@ -12139,11 +12139,11 @@ wnd_record_create_child
   
   self->style = style;
   if (self->native_wnd != 0) {
-    native = wnd_obj_destroy(self->native_wnd);
+    native = (u32)wnd_obj_destroy((i32 *)self->native_wnd);
     self->native_wnd = native;
   }
   parent_wnd = wnd_get_window(parent);
-  native = wnd_obj_create(wnd_kind,style,x,y,width,height,parent_wnd);
+  native = (u32)wnd_obj_create((LPCSTR)wnd_kind,style,x,y,width,height,parent_wnd);
   self->native_wnd = native;
   wnd_set_owner_ptr((iptr)self,self->native_wnd);
   wnd_set_palette(self,palette);
@@ -12205,7 +12205,7 @@ void __cdecl dlg_radio_choice_button_cb(int button_id)
   return;
 }
 
-/* 005e0863: written by hand in src/game/unwind.c */
+/* 005e0863: written by hand in src/game/unwind.cpp */
 
 /* 005e0ce0 auto */
 iptr __cdecl menu_hmenu_parse_items(HMENU hmenu,iptr spec)
@@ -12226,7 +12226,7 @@ iptr __cdecl menu_hmenu_parse_items(HMENU hmenu,iptr spec)
   item_count2 = 0;
   uBytes = _strlen((char *)spec);
   hMem = LocalAlloc(2,uBytes);
-  _Dest = LocalLock(hMem);
+  _Dest = (char *)LocalLock(hMem);
   *_Dest = '\0';
   for (; *(char *)spec == ' '; spec++) {
   }
@@ -12309,7 +12309,7 @@ HMENU __cdecl menu_hmenu_build_from_spec(char *spec)
   base_item_id = (*(int *)&menu_next_item_id);
   uBytes = _strlen(spec);
   hMem = LocalAlloc(2,uBytes);
-  _Dest = LocalLock(hMem);
+  _Dest = (char *)LocalLock(hMem);
   *_Dest = '\0';
   while (*cursor != '\0') {
     for (; *cursor == ' '; cursor++) {
@@ -12754,7 +12754,7 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
         wnd_cycle_control_focus(wnd,group_hwnd,direction);
         return;
       }
-      self = (CheckboxEnabledView *)ctrl_list_find_by_hwnd(hwnd,*(i32 *)(wnd + 0xb8));
+      self = (CheckboxEnabledView *)ctrl_list_find_by_hwnd(hwnd,(ControlNextView *)*(i32 *)(wnd + 0xb8));
       if ((self != (CheckboxEnabledView *)0x0) &&
          ((((result = control_get_type((ControlTypeView *)self), result == 6 &&
             (result = ctrl_is_enabled((ControlEnabledView *)self), result != 0)) ||
@@ -13439,7 +13439,7 @@ void __thiscall ddwin_call_activate_app(DDWindowActivateView *self,i32 active)
   return;
 }
 
-/* 005efeb0: written by hand in src/game/unwind.c */
+/* 005efeb0: written by hand in src/game/unwind.cpp */
 
 /* 005f029e auto */
 void __thiscall ddwin_remove_all_controls(void *self)
@@ -13463,7 +13463,7 @@ void __thiscall ddwin_deactivate_controls(void *self)
   
   ctrl = ptrlist_first((PtrList *)((int)self + 0xc0));
   while (ctrl != 0) {
-    ddctrl_deactivate(ctrl);
+    ddctrl_deactivate((void *)ctrl);
     ctrl = ptrlist_next((PtrList *)((int)self + 0xc0));
   }
   return;

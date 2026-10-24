@@ -404,7 +404,7 @@ DECL_FULL = re.compile(r'^\s+(?P<type>[A-Za-z_][\w\s\*]*?)\s*(?P<name>\b[A-Za-z_
 
 # The C runtime functions the game calls, with their real types (the
 # decompiler's guesses do not distinguish pointers).  Native builds use
-# these, implemented over the platform's C library in src/native/crt.c;
+# these, implemented over the platform's C library in src/native/crt.cpp;
 # MSVC's `long` is 32-bit (i32).
 CRT_NATIVE_SIGS = {
     'operator_new': 'void *operator_new(size_t n)',
@@ -698,7 +698,7 @@ def main():
     shared_types = set(re.findall(r'\}\s*(\w+);', open(os.path.join(ROOT, 'src', 'include', 'civ2types.h')).read()))
     shared_types |= {'i8', 'u8', 'i16', 'u16', 'i32', 'u32', 'FILE', 'LPSTR', 'LPCSTR', 'WCHAR', 'LCID', 'HWND', 'HDC',
                      'MMTIME', 'code', 'float10', 'size_t', 'wchar_t'}
-    for path in sorted(glob.glob(os.path.join(ROOT, 'src', 'game', '**', '*.c'), recursive=True) +
+    for path in sorted(glob.glob(os.path.join(ROOT, 'src', 'game', '**', '*.cpp'), recursive=True) +
                        glob.glob(os.path.join(ROOT, 'src', 'crt', '*.c'))):
         for m in re.finditer(r'^([A-Za-z_][^;{}]*?\b([A-Za-z_]\w*)\s*\([^;{}()]*\))\s*\{', open(path).read(), re.M):
             overrides[m.group(2)] = os.path.relpath(path, ROOT)
@@ -832,7 +832,7 @@ def main():
                 continue
             cc = conv.get(a, {}).get('cc') if a in conv else None
             if f['name'] in CRT_NATIVE_SIGS:
-                h.write('#ifdef CIV2_NATIVE\n%s; /* %08x, C runtime: src/native/crt.c */\n#else\n' % (
+                h.write('#ifdef CIV2_NATIVE\n%s; /* %08x, C runtime: src/native/crt.cpp */\n#else\n' % (
                     CRT_NATIVE_SIGS[f['name']], a))
             if f['name'] in override_protos:
                 h.write('#undef %s\n%s; /* %08x, hand-written */\n' % (f['name'], override_protos[f['name']], a))
@@ -871,7 +871,7 @@ def main():
         wanted = set()
         # Globals named in re/symbols.tsv (kind var) that hand-written code uses.
         var_names = {r['name']: r['addr'] for r in load_tsv('symbols.tsv') if r['kind'] == 'var'}
-        for path in glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')) + glob.glob(os.path.join(ROOT, 'src', 'crt', '*.c')):
+        for path in glob.glob(os.path.join(ROOT, 'src', 'game', '*.cpp')) + glob.glob(os.path.join(ROOT, 'src', 'crt', '*.c')):
             src_text = open(path).read()
             wanted |= set(re.findall(r'\b(_?(?:DAT|PTR)_[0-9a-f]{8}|[su]_\w*?_[0-9a-f]{8})\b', src_text))
             wanted |= {n for n in re.findall(r'\b[a-z_][a-z0-9_]*\b', src_text) if n in var_names}

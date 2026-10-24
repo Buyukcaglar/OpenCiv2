@@ -1,6 +1,6 @@
 /*
  * Services of the platform layer used by the game's C runtime
- * (src/native/crt.c): Windows paths, the clock and diagnostics.
+ * (src/native/crt.cpp): Windows paths, the clock and diagnostics.
  *
  * Windows paths map to host paths the way Wine maps them: "Z:\a\b" is
  * "/a/b"; the game directory is the current directory; any other drive

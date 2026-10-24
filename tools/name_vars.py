@@ -36,7 +36,7 @@ DEF = re.compile(r'\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{')
 
 
 def game_files():
-    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) + glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')))
+    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp')) + glob.glob(os.path.join(ROOT, 'src', 'game', '*.cpp')))
 
 
 def regions(text):

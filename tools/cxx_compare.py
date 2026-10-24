@@ -91,8 +91,11 @@ def main():
     for cobj in sorted(glob.glob(os.path.join(cxx_dir, '*.o'))):
         if not re.match(r'(src_(auto|game|data|native)_|build_native_gen_)', os.path.basename(cobj)):
             continue
-        bobj = os.path.join(base_dir, os.path.basename(cobj))
-        if not os.path.exists(bobj):
+        # the same source as .c in an older build
+        bobj = next((b for b in (os.path.join(base_dir, os.path.basename(cobj)),
+                                  os.path.join(base_dir, os.path.basename(cobj).replace('.cpp.o', '.c.o')))
+                     if os.path.exists(b)), None)
+        if not bobj:
             continue
         base, cxx = functions(bobj), functions(cobj)
         for name in sorted(base):

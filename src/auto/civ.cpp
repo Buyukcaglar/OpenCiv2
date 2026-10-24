@@ -317,47 +317,47 @@ void __cdecl tech_editor_fill_usage_list(void)
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     if ((int)unit_types[unit_type].prerequisite == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!units_header) {
-        label = label_string(*(i32 *)(label_string_ids + 0x808));
+        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x808));
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),label);
         units_header = true;
       }
-      label = label_string(unit_types[unit_type].name);
+      label = (iptr)label_string(unit_types[unit_type].name);
       listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),label);
     }
   }
   for (advance = 0; advance < 100; advance++) {
     if ((int)advances[advance].preq[0] == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!advances_header) {
-        label = label_string(*(i32 *)(label_string_ids + 0x80c));
+        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x80c));
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),label);
         advances_header = true;
       }
       if (advances[advance].preq[1] < '\0') {
-        name2 = label_string(advances[advance].name);
+        name2 = (iptr)label_string(advances[advance].name);
         _sprintf(line,((i8 *)&tech_editor_usage_preq1_fmt),name2);
       }
       else {
-        name2 = label_string(advances[advances[advance].preq[1]].name);
-        conj = label_string(*(i32 *)(label_string_ids + 0x1ec));
-        adv_name = label_string(advances[advance].name);
+        name2 = (iptr)label_string(advances[advances[advance].preq[1]].name);
+        conj = (iptr)label_string(*(i32 *)(label_string_ids + 0x1ec));
+        adv_name = (iptr)label_string(advances[advance].name);
         _sprintf(line,str_s_s_s,adv_name,conj,name2);
       }
       listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),(iptr)line);
     }
     else if ((int)advances[advance].preq[1] == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!advances_header) {
-        label = label_string(*(i32 *)(label_string_ids + 0x80c));
+        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x80c));
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),label);
         advances_header = true;
       }
       if (advances[advance].preq[0] < '\0') {
-        name2 = label_string(advances[advance].name);
+        name2 = (iptr)label_string(advances[advance].name);
         _sprintf(line,((i8 *)&tech_editor_usage_preq2_fmt),name2);
       }
       else {
-        name2 = label_string(advances[advances[advance].preq[0]].name);
-        conj = label_string(*(i32 *)(label_string_ids + 0x1ec));
-        adv_name = label_string(advances[advance].name);
+        name2 = (iptr)label_string(advances[advances[advance].preq[0]].name);
+        conj = (iptr)label_string(*(i32 *)(label_string_ids + 0x1ec));
+        adv_name = (iptr)label_string(advances[advance].name);
         _sprintf(line,str_s_s_s_2,adv_name,conj,name2);
       }
       listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),(iptr)line);
@@ -406,13 +406,13 @@ void __cdecl tech_editor_on_rename(void)
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c),label);
     for (i = 0; i < 100; i++) {
       combo_add_string
@@ -468,7 +468,7 @@ void __cdecl tech_editor_on_edit_icon(void)
   
   save_fn = ((i8*)(sprite_sheet_save_tech_icons));
   flags = 0;
-  title = label_string(*(i32 *)(label_string_ids + 0x7d8));
+  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
   sprite_editor_run((iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                            *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field3) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58) * 0xf0 +
                            *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58) * 0x3c),
@@ -550,41 +550,41 @@ void __thiscall tech_editor_create_combo(ViewWindow *self,int slot)
   switch(slot) {
   case 0:
     for (advance = 0; advance < 100; advance++) {
-      label = label_string(advances[advance].name);
+      label = (iptr)label_string(advances[advance].name);
       combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     }
     break;
   case 1:
   case 2:
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     for (advance = 0; advance < 100; advance++) {
-      label = label_string(advances[advance].name);
+      label = (iptr)label_string(advances[advance].name);
       combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     }
     break;
   case 3:
-    label = label_string(*(i32 *)(label_string_ids + 0x810));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x810));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x814));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x814));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x818));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x818));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x81c));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x81c));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     break;
   case 4:
-    label = label_string(*(i32 *)(label_string_ids + 0x820));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x820));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x824));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x824));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x828));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x828));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x82c));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x82c));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x830));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x830));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
   }
   return;
@@ -731,7 +731,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   eh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
   editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
-  this_00 = operator_new(0x48);
+  this_00 = (DibSurface *)operator_new(0x48);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     surface = (DibSurface *)0x0;
@@ -762,7 +762,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   top = 0;
   left = 0;
   style = 0xd;
-  title = label_string(*(i32 *)(label_string_ids + 0x734));
+  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x734));
   frame_wnd_create
             ((FrameWindow *)self,title,style,left,top,width,height,extra_arg1,extra_arg2,extra_arg3);
   for (row = 0; row < 7; row++) {
@@ -798,7 +798,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)tech_editor_on_ok);
@@ -810,7 +810,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     rename_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0xa8));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x65,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)tech_editor_on_rename);
@@ -822,7 +822,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)tech_editor_on_help);
@@ -834,7 +834,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)tech_editor_on_cancel);
@@ -850,7 +850,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     icon_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x7cc));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)rect,label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)tech_editor_on_edit_icon);
@@ -963,6 +963,7 @@ void __cdecl rules_load_advances(int keep_names)
   i8 preq_advance;
   size_t line_len;
   i32 value;
+  char *token;
   i32 name_id;
   iptr advance2;
   iptr advance;
@@ -996,8 +997,8 @@ void __cdecl rules_load_advances(int keep_names)
     value = text_next_int();
     advances[advance].civilized_mod = (i8)value;
     for (preq_index = 0; preq_index < 2; preq_index++) {
-      value = text_next_token();
-      preq_advance = rules_parse_advance_abbrev(value);
+      token = text_next_token();
+      preq_advance = rules_parse_advance_abbrev(token);
       advances[advance].preq[preq_index] = preq_advance;
       if (advances[advance].preq[preq_index] == -3) {
         error_report(0xfffffffc,3,(iptr)&map_views_block.text_buffer,advance,preq_index);
@@ -1062,6 +1063,7 @@ void __cdecl rules_load_improvements(int keep_names)
   i8 preq_advance;
   i32 name_id;
   i32 value;
+  char *token;
   iptr improvement;
   
   text_open_section((iptr)&main_frame_wnd_block.rules_txt_path,(iptr)&str_improve);
@@ -1078,8 +1080,8 @@ void __cdecl rules_load_improvements(int keep_names)
     improvements[improvement].cost = (u8)value;
     value = text_next_int();
     improvements[improvement].upkeep = (u8)value;
-    value = text_next_token();
-    preq_advance = rules_parse_advance_abbrev(value);
+    token = text_next_token();
+    preq_advance = rules_parse_advance_abbrev(token);
     improvements[improvement].preq = preq_advance;
     if (improvements[improvement].preq == -3) {
       error_report(0xfffffffb,3,(iptr)&map_views_block.text_buffer,improvement,0);
@@ -1092,8 +1094,8 @@ void __cdecl rules_load_improvements(int keep_names)
   text_open_section(0,(iptr)&str_endwonder);
   for (improvement = 0; improvement < 0x1c; improvement++) {
     text_read_line(1);
-    value = text_next_token();
-    preq_advance = rules_parse_advance_abbrev(value);
+    token = text_next_token();
+    preq_advance = rules_parse_advance_abbrev(token);
     wonder_expires[improvement] = preq_advance;
     if (wonder_expires[improvement] == -3) {
       error_report(0xfffffffc,3,(iptr)&map_views_block.text_buffer,improvement,0);
@@ -1111,6 +1113,7 @@ void __cdecl rules_load_units(int keep_names)
   ushort flag_bits;
   size_t line_len;
   i32 value;
+  char *token;
   i32 name_id;
   iptr unit_type;
   
@@ -1131,8 +1134,8 @@ void __cdecl rules_load_units(int keep_names)
     else {
       text_next_token();
     }
-    value = text_next_token();
-    advance_id = rules_parse_advance_abbrev(value);
+    token = text_next_token();
+    advance_id = rules_parse_advance_abbrev(token);
     unit_types[unit_type].obsolete_by = advance_id;
     value = text_next_int();
     unit_types[unit_type].domain = (u8)value;
@@ -1154,8 +1157,8 @@ void __cdecl rules_load_units(int keep_names)
     unit_types[unit_type].hold = (u8)value;
     value = text_next_int();
     unit_types[unit_type].role = (u8)value;
-    value = text_next_token();
-    advance_id = rules_parse_advance_abbrev(value);
+    token = text_next_token();
+    advance_id = rules_parse_advance_abbrev(token);
     unit_types[unit_type].prerequisite = advance_id;
     flag_bits = text_next_binary();
     unit_types[unit_type].flags = (uint)flag_bits;
@@ -1197,6 +1200,7 @@ void __cdecl rules_load_terrain(void)
   i8 transform_terrain;
   i32 name_id;
   i32 value;
+  char *token;
   iptr terrain2;
   iptr slot;
   
@@ -1215,8 +1219,8 @@ void __cdecl rules_load_terrain(void)
     }
     if (terrain2 < 0xb) {
       for (slot = 0; slot < 2; slot++) {
-        value = text_next_token();
-        result_terrain = rules_parse_terrain_abbrev(value);
+        token = text_next_token();
+        result_terrain = rules_parse_terrain_abbrev(token);
         *(i8 *)(slot + (iptr)((u8 *)&terrain_types + 14) + terrain2 * 0x18) = result_terrain;
         value = text_next_int();
         *(char *)(slot + (iptr)((u8 *)&terrain_types + 16) + terrain2 * 0x18) = (char)value;
@@ -1228,8 +1232,8 @@ void __cdecl rules_load_terrain(void)
           error_report(0xfffffff9,3,(iptr)&map_views_block.text_buffer,terrain2,slot);
         }
       }
-      value = text_next_token();
-      transform_terrain = rules_parse_terrain_abbrev(value);
+      token = text_next_token();
+      transform_terrain = rules_parse_terrain_abbrev(token);
       terrain_types[terrain2].transform_to = transform_terrain;
       if (terrain_types[terrain2].transform_to == -3) {
         error_report(0xfffffff9,3,(iptr)&map_views_block.text_buffer,terrain2,99);
@@ -1251,6 +1255,7 @@ void __cdecl rules_load_govts_leaders(int load_civ_data)
   i16 old_female_title;
   i32 name_id;
   i32 value;
+  char *token;
   iptr raw_value;
   int title_govt;
   i32 max_value;
@@ -1454,7 +1459,7 @@ void __cdecl civ_intro_popup(iptr civ)
   return;
 }
 
-/* 0041ba52: written by hand in src/game/bigframes.c */
+/* 0041ba52: written by hand in src/game/bigframes.cpp */
 
 /* 0041e864 auto */
 void __cdecl rules_load(i32 load_civ_data)
@@ -1561,7 +1566,7 @@ void __cdecl science_advisor_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = label_string(*(i32 *)(label_string_ids + 0x54c));
+  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x54c));
   text_append(text);
   gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,cur_y,advisor_window_block.advisor_client_width);
   cur_y += line_height;
@@ -1672,7 +1677,7 @@ void __cdecl science_advisor_draw(void)
                          0x5e,0x12,1,1);
       has_advance = draw_y + 2;
       value = text_x2;
-      text = label_string(advances[advance].name);
+      text = (iptr)label_string(advances[advance].name);
       gfx_draw_text(text,value,has_advance);
       row++;
       value = item_index;
@@ -1765,14 +1770,14 @@ void __cdecl science_advisor_show(iptr civ)
   rect_h = rect_height((iptr)button_rect);
   rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)button_rect,299,0);
-  label = label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
   ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
-  label = label_string(*(i32 *)(label_string_ids + 0x5cc));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5cc));
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)science_advisor_on_goal_clicked);
@@ -1832,7 +1837,7 @@ void __cdecl civ_score_window_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = label_string(*(i32 *)(label_string_ids + 0x55c));
+  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x55c));
   text_append(text);
   gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,header_y,advisor_window_block.advisor_client_width);
   header_y += line_height;
@@ -1946,7 +1951,7 @@ draw_civ_row:
           text_set_colors(0x5e,0x12,0xffffffff,0xffffffff);
           text_y2 = draw_y + 3;
           value = text_x2;
-          text = label_string(improvements[wonder + 0x27].name);
+          text = (iptr)label_string(improvements[wonder + 0x27].name);
           gfx_draw_text(text,value,text_y2);
           row_wrapped = 0;
           column++;
@@ -2260,7 +2265,7 @@ void __cdecl civ_rating_window_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = label_string(*(i32 *)(label_string_ids + 0x670));
+  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x670));
   text_append(text);
   text_append_colon();
   text_append_int(rating_percent);
@@ -2427,7 +2432,7 @@ void __cdecl civ_flag_sprites_global_init(void)
 void __cdecl civ_flag_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites),0x3c,0x10,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites),0x3c,0x10,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2443,7 +2448,7 @@ void __cdecl civ_flag_sprites_reg_atexit(void)
 void __cdecl civ_flag_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites),0x3c,0x10,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites),0x3c,0x10,(code *)sprite_destroy);
   return;
 }
 
@@ -2460,7 +2465,7 @@ void __cdecl research_flask_sprites_global_init(void)
 void __cdecl research_flask_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites),0x3c,4,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites),0x3c,4,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2476,7 +2481,7 @@ void __cdecl research_flask_sprites_reg_atexit(void)
 void __cdecl research_flask_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites),0x3c,4,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites),0x3c,4,(code *)sprite_destroy);
   return;
 }
 
@@ -2493,7 +2498,7 @@ void __cdecl global_warming_sprites_global_init(void)
 void __cdecl global_warming_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites),0x3c,4,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites),0x3c,4,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2509,7 +2514,7 @@ void __cdecl global_warming_sprites_reg_atexit(void)
 void __cdecl global_warming_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites),0x3c,4,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites),0x3c,4,(code *)sprite_destroy);
   return;
 }
 
@@ -2526,7 +2531,7 @@ void __cdecl advance_cat_icon_sprites_global_init(void)
 void __cdecl advance_category_icon_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.advance_category_icon_sprites),0x3c,0x14,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.advance_category_icon_sprites),0x3c,0x14,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2542,7 +2547,7 @@ void __cdecl advance_category_icon_sprites_reg_atexit(void)
 void __cdecl advance_cat_icon_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.advance_category_icon_sprites),0x3c,0x14,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.advance_category_icon_sprites),0x3c,0x14,(code *)sprite_destroy);
   return;
 }
 
@@ -2559,7 +2564,7 @@ void __cdecl government_sprites_global_init(void)
 void __cdecl government_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.government_sprites),0x3c,7,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.government_sprites),0x3c,7,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2575,7 +2580,7 @@ void __cdecl government_sprites_reg_atexit(void)
 void __cdecl government_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.government_sprites),0x3c,7,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.government_sprites),0x3c,7,(code *)sprite_destroy);
   return;
 }
 
@@ -2592,7 +2597,7 @@ void __cdecl civ_portrait_sprites_global_init(void)
 void __cdecl civ_portrait_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&road_sprites_block.civ_portrait_sprites),0x3c,8,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&road_sprites_block.civ_portrait_sprites),0x3c,8,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2608,7 +2613,7 @@ void __cdecl civ_portrait_sprites_reg_atexit(void)
 void __cdecl civ_portrait_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&road_sprites_block.civ_portrait_sprites),0x3c,8,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&road_sprites_block.civ_portrait_sprites),0x3c,8,(code *)sprite_destroy);
   return;
 }
 
@@ -3571,13 +3576,13 @@ int __cdecl civ_leader_name(iptr civ)
   int name2;
   
   if (civ < 1) {
-    name2 = label_string(*(i32 *)(label_string_ids + 0x44));
+    name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x44));
   }
   else if (leaders[civs[civ].tribe].leader_name < 0) {
     name2 = civ * 0xf2 + (iptr)((u8 *)&civ_names + 2);
   }
   else {
-    name2 = label_string((int)leaders[civs[civ].tribe].leader_name);
+    name2 = (iptr)label_string((int)leaders[civs[civ].tribe].leader_name);
   }
   return name2;
 }
@@ -3589,7 +3594,7 @@ int __cdecl civ_leader_title(iptr civ)
   int title;
   
   if (civ < 1) {
-    title = label_string(government_titles[2].male);
+    title = (iptr)label_string(government_titles[2].male);
   }
   else {
     title = (int)leaders[civs[civ].tribe].titles[((uint)civs[civ].government)][((uint)leaders[civs[civ].tribe].female)];
@@ -3597,7 +3602,7 @@ int __cdecl civ_leader_title(iptr civ)
       title = civ * 0xf2 + (iptr)((u8 *)&civ_names + 74) + (uint)civs[civ].government * 0x18;
     }
     else {
-      title = label_string(title);
+      title = (iptr)label_string(title);
     }
   }
   return title;
@@ -3610,13 +3615,13 @@ int __cdecl civ_name_plural(iptr civ)
   int name2;
   
   if (civ < 1) {
-    name2 = label_string(*(i32 *)(label_string_ids + 0x3c));
+    name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x3c));
   }
   else if (leaders[civs[civ].tribe].plural < 0) {
     name2 = civ * 0xf2 + (iptr)((u8 *)&civ_names + 26);
   }
   else {
-    name2 = label_string((int)leaders[civs[civ].tribe].plural);
+    name2 = (iptr)label_string((int)leaders[civs[civ].tribe].plural);
   }
   return name2;
 }
@@ -3628,13 +3633,13 @@ int __cdecl civ_adjective(iptr civ)
   int adjective;
   
   if (civ < 1) {
-    adjective = label_string(*(i32 *)(label_string_ids + 0x40));
+    adjective = (iptr)label_string(*(i32 *)(label_string_ids + 0x40));
   }
   else if (leaders[civs[civ].tribe].adjective < 0) {
     adjective = civ * 0xf2 + (iptr)((u8 *)&civ_names + 50);
   }
   else {
-    adjective = label_string((int)leaders[civs[civ].tribe].adjective);
+    adjective = (iptr)label_string((int)leaders[civs[civ].tribe].adjective);
   }
   return adjective;
 }
@@ -4025,6 +4030,7 @@ int __cdecl civ_create(iptr civ)
   iptr now_ticks;
   iptr rand_value;
   int result;
+  Tile *map_tile;
   i32 attitude;
   i32 max_attitude;
   int rand_y;
@@ -4361,8 +4367,8 @@ int __cdecl civ_create(iptr civ)
             unit = unit_create(0,civ,x2,y2);
             civs[civ].capital_x = (i16)x2;
             if (((0x14 < game.turn) && (no_start_units == 0)) &&
-               ((result = tile_at(x2,y2),
-                (game.human_players & *(byte *)(result + 4)) == 0 &&
+               ((map_tile = tile_at(x2,y2),
+                (map_tile->visible & game.human_players) == 0 &&
                 ((unit_create(0,civ,x2,y2), 0x28 < game.turn &&
                  (result = civ_can_build_unit(civ,-1,3), result != 0)))))) {
               unit_create(3,civ,x2,y2);
@@ -4481,7 +4487,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
           (((i8 *)&destroyed_civ_count_block.destroyed_civ_killers))[result] = (i8)civ2;
           (((i8 *)&destroyed_civ_count_block.destroyed_civ_portraits))[result] = civs[civ].leader_portrait;
           plural_name = civ_name_plural(civ);
-          crt_strcpy(((i8 *)&destroyed_civ_count_block.destroyed_civ_names) + result * 0x18,plural_name);
+          crt_strcpy(((i8 *)&destroyed_civ_count_block.destroyed_civ_names) + result * 0x18,(const char *)plural_name);
         }
         civ_spaceship_lost_notify(civ);
       }
@@ -5466,19 +5472,19 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       }
       button_count = 0;
       if (mode_state[1] != 0) {
-        label = label_string(*(i32 *)(label_string_ids + 0x30c));
+        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x30c));
         dialog_add_button((DialogButtonsView *)&dialog2,label);
         mode_state[button_count + 2] = 0;
         button_count++;
       }
       if (mode_state[1] != 1) {
-        label = label_string(*(i32 *)(label_string_ids + 0x310));
+        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x310));
         dialog_add_button((DialogButtonsView *)&dialog2,label);
         mode_state[button_count + 2] = 1;
         button_count++;
       }
       if (mode_state[1] != 2) {
-        label = label_string(*(i32 *)(label_string_ids + 0x314));
+        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x314));
         dialog_add_button((DialogButtonsView *)&dialog2,label);
         mode_state[button_count + 2] = 2;
         button_count++;
@@ -5500,11 +5506,11 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
           dlg_load_game_section(&dialog2,(iptr)&str_helpon,1);
           option_flags = 0;
           option_id = 0;
-          label = label_string(unit_types[unit_type].name);
+          label = (iptr)label_string(unit_types[unit_type].name);
           dialog_add_option((DialogOptionList *)&dialog2,label,option_id,option_flags);
           option_flags = 0;
           option_id = 1;
-          label = label_string(advances[advance].name);
+          label = (iptr)label_string(advances[advance].name);
           dialog_add_option((DialogOptionList *)&dialog2,label,option_id,option_flags);
           choice = dlg_show_modal(&dialog2,0);
           if (choice == 0) {
@@ -5520,11 +5526,11 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
           dlg_load_game_section(&dialog2,(iptr)&str_helpon_2,1);
           option_flags = 0;
           option_id = 0;
-          label = label_string(improvements[improvement].name);
+          label = (iptr)label_string(improvements[improvement].name);
           dialog_add_option((DialogOptionList *)&dialog2,label,option_id,option_flags);
           option_flags = 0;
           option_id = 1;
-          label = label_string(advances[advance].name);
+          label = (iptr)label_string(advances[advance].name);
           dialog_add_option((DialogOptionList *)&dialog2,label,option_id,option_flags);
           choice = dlg_show_modal(&dialog2,0);
           if (choice == 0) {
@@ -6138,7 +6144,7 @@ i32 __cdecl rules_write_sections(void)
     for (; *(int *)(((i8 *)&font_size16_bold_block.rules_edit_section_names) + section * 8) != 0; section++) {
       header[0] = '@';
       header[1] = 0;
-      crt_strcat(header,*(i32 *)(((i8 *)&font_size16_bold_block.rules_edit_section_names) + section * 8));
+      crt_strcat(header,(char *)*(i32 *)(((i8 *)&font_size16_bold_block.rules_edit_section_names) + section * 8));
       __strupr(header);
       do {
         line_ptr = _fgets(s,0x100,in_file);
@@ -6573,7 +6579,7 @@ civ_can_choose_government(iptr civ,iptr government,i32 unused_3,i32 unused_4,i32
   return result;
 }
 
-/* 0055c3d3: written by hand in src/game/unwind.c */
+/* 0055c3d3: written by hand in src/game/unwind.cpp */
 
 /* 0055c69d auto */
 void __cdecl civ_change_government(iptr civ,uptr new_gov)
@@ -6955,7 +6961,7 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
           if (interactive) {
             option_flags = 0;
             option_id = advance;
-            text = label_string(advances[advance].name);
+            text = (iptr)label_string(advances[advance].name);
             dialog_add_option((DialogOptionList *)&dialog2,text,option_id,option_flags);
           }
           value = ai_advance_value(civ,advance);
@@ -7043,6 +7049,7 @@ i32 __cdecl civ_civil_war(iptr civ)
   i32 result;
   iptr has_palace;
   int city2;
+  Tile *map_tile;
   iptr adjective;
   int x3;
   uint y2;
@@ -7142,8 +7149,8 @@ i32 __cdecl civ_civil_war(iptr civ)
           x2 = 0;
           net_batch_begin();
           for (advance = 0; advance < map.area; advance++) {
-            city2 = tile_at(x2,y2);
-            if ((civ_bit & *(byte *)(city2 + 4)) != 0) {
+            map_tile = tile_at(x2,y2);
+            if ((civ_bit & map_tile->visible) != 0) {
               tile_set_visible(x2,y2,(uint)rebel_bit,1,1);
             }
             x2 += 2;
@@ -7550,7 +7557,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   seh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
   editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
-  this_00 = operator_new(0x48);
+  this_00 = (DibSurface *)operator_new(0x48);
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     surface = (DibSurface *)0x0;
@@ -7580,7 +7587,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   pos_y = 0;
   pos_x = 0;
   style = 0xd;
-  title = label_string(*(i32 *)(label_string_ids + 0x94c));
+  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x94c));
   frame_wnd_create
             ((FrameWindow *)self,title,style,pos_x,pos_y,width,height,reserved_1,reserved_2,reserved_3);
   rect_set_xywh((iptr)rect,self->client_x + 2,self->client_y + 2,self->client_width - 5,
@@ -7613,7 +7620,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)cosmic_editor_ok_clicked);
@@ -7625,7 +7632,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     edit_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x8e0));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8e0));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)edit_parent,0x66,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)cosmic_editor_edit_value);
@@ -7638,7 +7645,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)cosmic_editor_help_clicked);
@@ -7650,7 +7657,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cosmic_editor_cancel_clicked);

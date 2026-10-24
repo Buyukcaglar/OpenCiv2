@@ -3413,71 +3413,71 @@ void __thiscall ddctrl_on_char_nop(void *self,i32 ch); /* 005f18f8 */
 void __thiscall ddctrl_on_set_active_nop(void *self,i32 active); /* 005f1910 */
 void __thiscall ddctrl_deactivate_children(void *self); /* 005f19a6 */
 i8 __thiscall ddctrl_dispatch_to_children(DDControl *self,int msg,int x,int y); /* 005f1a40 */
-int _atexit(void (*fn)(void)); /* 005f1c40, C runtime: src/native/crt.c */
+int _atexit(void (*fn)(void)); /* 005f1c40, C runtime: src/native/crt.cpp */
 /* ___CxxLongjmpUnwind@4: not a C identifier */
-void *crt_memcpy(void *dst, const void *src, uint n); /* 005f2110, C runtime: src/native/crt.c */
-void crt_srand(u32 seed); /* 005f2260, C runtime: src/native/crt.c */
-int _rand(void); /* 005f2280, C runtime: src/native/crt.c */
-void *crt_strcpy(void *dst, const void *src); /* 005f22d0, C runtime: src/native/crt.c */
-void *crt_strcat(void *dst, const void *src); /* 005f22e0, C runtime: src/native/crt.c */
-void operator_delete(void *p); /* 005f23c0, C runtime: src/native/crt.c */
-void *operator_new(size_t n); /* 005f2470, C runtime: src/native/crt.c */
-void crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor); /* 005f2490, C runtime: src/native/crt.c */
-void crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, code *dtor); /* 005f2620, C runtime: src/native/crt.c */
-uint crt_toupper(uint c); /* 005f2700, C runtime: src/native/crt.c */
-int _isalpha(int c); /* 005f2840, C runtime: src/native/crt.c */
-int _isdigit(int c); /* 005f2930, C runtime: src/native/crt.c */
-FILE *__fsopen(const char *path, const char *mode, int share); /* 005f2d00, C runtime: src/native/crt.c */
-FILE *_fopen(const char *path, const char *mode); /* 005f2e10, C runtime: src/native/crt.c */
-int _fclose(FILE *f); /* 005f2e40, C runtime: src/native/crt.c */
-char *_strncpy(char *dst, const char *src, size_t n); /* 005f2f30, C runtime: src/native/crt.c */
-int _sprintf(char *buf, const char *fmt, ...); /* 005f3030, C runtime: src/native/crt.c */
-i32 _atol(const char *s); /* 005f3120, C runtime: src/native/crt.c */
-int _atoi(const char *s); /* 005f3240, C runtime: src/native/crt.c */
-int _fputs(const char *s, FILE *f); /* 005f33b0, C runtime: src/native/crt.c */
-size_t _strlen(const char *s); /* 005f3480, C runtime: src/native/crt.c */
-void *_memset(void *p, int c, size_t n); /* 005f3500, C runtime: src/native/crt.c */
-int _strcmp(const char *a, const char *b); /* 005f3560, C runtime: src/native/crt.c */
-char *_strchr(const char *s, int c); /* 005f3630, C runtime: src/native/crt.c */
-int _strncmp(const char *a, const char *b, size_t n); /* 005f36f0, C runtime: src/native/crt.c */
-size_t _fread(void *buf, size_t size, size_t n, FILE *f); /* 005f3730, C runtime: src/native/crt.c */
-size_t _fwrite(const void *buf, size_t size, size_t n, FILE *f); /* 005f3900, C runtime: src/native/crt.c */
-int __chdir(const char *path); /* 005f3b20, C runtime: src/native/crt.c */
-char *_strrchr(const char *s, int c); /* 005f3c10, C runtime: src/native/crt.c */
-char *_fgets(char *buf, int n, FILE *f); /* 005f3c40, C runtime: src/native/crt.c */
-int _fputc(int c, FILE *f); /* 005f3f50, C runtime: src/native/crt.c */
-int _fgetc(FILE *f); /* 005f4010, C runtime: src/native/crt.c */
-int __strnicmp(const char *a, const char *b, size_t n); /* 005f40b0, C runtime: src/native/crt.c */
+void *crt_memcpy(void *dst, const void *src, uint n); /* 005f2110, C runtime: src/native/crt.cpp */
+void crt_srand(u32 seed); /* 005f2260, C runtime: src/native/crt.cpp */
+int _rand(void); /* 005f2280, C runtime: src/native/crt.cpp */
+void *crt_strcpy(void *dst, const void *src); /* 005f22d0, C runtime: src/native/crt.cpp */
+void *crt_strcat(void *dst, const void *src); /* 005f22e0, C runtime: src/native/crt.cpp */
+void operator_delete(void *p); /* 005f23c0, C runtime: src/native/crt.cpp */
+void *operator_new(size_t n); /* 005f2470, C runtime: src/native/crt.cpp */
+void crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor); /* 005f2490, C runtime: src/native/crt.cpp */
+void crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, code *dtor); /* 005f2620, C runtime: src/native/crt.cpp */
+uint crt_toupper(uint c); /* 005f2700, C runtime: src/native/crt.cpp */
+int _isalpha(int c); /* 005f2840, C runtime: src/native/crt.cpp */
+int _isdigit(int c); /* 005f2930, C runtime: src/native/crt.cpp */
+FILE *__fsopen(const char *path, const char *mode, int share); /* 005f2d00, C runtime: src/native/crt.cpp */
+FILE *_fopen(const char *path, const char *mode); /* 005f2e10, C runtime: src/native/crt.cpp */
+int _fclose(FILE *f); /* 005f2e40, C runtime: src/native/crt.cpp */
+char *_strncpy(char *dst, const char *src, size_t n); /* 005f2f30, C runtime: src/native/crt.cpp */
+int _sprintf(char *buf, const char *fmt, ...); /* 005f3030, C runtime: src/native/crt.cpp */
+i32 _atol(const char *s); /* 005f3120, C runtime: src/native/crt.cpp */
+int _atoi(const char *s); /* 005f3240, C runtime: src/native/crt.cpp */
+int _fputs(const char *s, FILE *f); /* 005f33b0, C runtime: src/native/crt.cpp */
+size_t _strlen(const char *s); /* 005f3480, C runtime: src/native/crt.cpp */
+void *_memset(void *p, int c, size_t n); /* 005f3500, C runtime: src/native/crt.cpp */
+int _strcmp(const char *a, const char *b); /* 005f3560, C runtime: src/native/crt.cpp */
+char *_strchr(const char *s, int c); /* 005f3630, C runtime: src/native/crt.cpp */
+int _strncmp(const char *a, const char *b, size_t n); /* 005f36f0, C runtime: src/native/crt.cpp */
+size_t _fread(void *buf, size_t size, size_t n, FILE *f); /* 005f3730, C runtime: src/native/crt.cpp */
+size_t _fwrite(const void *buf, size_t size, size_t n, FILE *f); /* 005f3900, C runtime: src/native/crt.cpp */
+int __chdir(const char *path); /* 005f3b20, C runtime: src/native/crt.cpp */
+char *_strrchr(const char *s, int c); /* 005f3c10, C runtime: src/native/crt.cpp */
+char *_fgets(char *buf, int n, FILE *f); /* 005f3c40, C runtime: src/native/crt.cpp */
+int _fputc(int c, FILE *f); /* 005f3f50, C runtime: src/native/crt.cpp */
+int _fgetc(FILE *f); /* 005f4010, C runtime: src/native/crt.cpp */
+int __strnicmp(const char *a, const char *b, size_t n); /* 005f40b0, C runtime: src/native/crt.cpp */
 EXTERN_C void __cdecl _exit(int status); /* 005f41b0 */
-char *_strstr(const char *s, const char *sub); /* 005f4370, C runtime: src/native/crt.c */
-void *crt_realloc(void *p, size_t n); /* 005f4900, C runtime: src/native/crt.c */
-size_t __msize(void *p); /* 005f53c0, C runtime: src/native/crt.c */
-void *crt_memmove(void *dst, const void *src, uint n); /* 005f6500, C runtime: src/native/crt.c */
-int crt_rename(const char *from, const char *to); /* 005f6650, C runtime: src/native/crt.c */
-int crt_remove(const char *path); /* 005f66b0, C runtime: src/native/crt.c */
-void _rewind(FILE *f); /* 005f6730, C runtime: src/native/crt.c */
-int _fseek(FILE *f, i32 off, int whence); /* 005f67f0, C runtime: src/native/crt.c */
-i32 _ftell(FILE *f); /* 005f6920, C runtime: src/native/crt.c */
-int _printf(const char *fmt, ...); /* 005f6bd0, C runtime: src/native/crt.c */
-int _memcmp(const void *a, const void *b, size_t n); /* 005f6d50, C runtime: src/native/crt.c */
-int __strcmpi(const char *a, const char *b); /* 005f6e00, C runtime: src/native/crt.c */
+char *_strstr(const char *s, const char *sub); /* 005f4370, C runtime: src/native/crt.cpp */
+void *crt_realloc(void *p, size_t n); /* 005f4900, C runtime: src/native/crt.cpp */
+size_t __msize(void *p); /* 005f53c0, C runtime: src/native/crt.cpp */
+void *crt_memmove(void *dst, const void *src, uint n); /* 005f6500, C runtime: src/native/crt.cpp */
+int crt_rename(const char *from, const char *to); /* 005f6650, C runtime: src/native/crt.cpp */
+int crt_remove(const char *path); /* 005f66b0, C runtime: src/native/crt.cpp */
+void _rewind(FILE *f); /* 005f6730, C runtime: src/native/crt.cpp */
+int _fseek(FILE *f, i32 off, int whence); /* 005f67f0, C runtime: src/native/crt.cpp */
+i32 _ftell(FILE *f); /* 005f6920, C runtime: src/native/crt.cpp */
+int _printf(const char *fmt, ...); /* 005f6bd0, C runtime: src/native/crt.cpp */
+int _memcmp(const void *a, const void *b, size_t n); /* 005f6d50, C runtime: src/native/crt.cpp */
+int __strcmpi(const char *a, const char *b); /* 005f6e00, C runtime: src/native/crt.cpp */
 void __cdecl entry(void); /* 005f6e90, hand-written */
-int crt_abs(int v); /* 005f7120, C runtime: src/native/crt.c */
-char *__getcwd(char *buf, int n); /* 005f7140, C runtime: src/native/crt.c */
-i32 _time(i32 *t); /* 005f7320, C runtime: src/native/crt.c */
-char *_strncat(char *dst, const char *src, size_t n); /* 005f74b0, C runtime: src/native/crt.c */
+int crt_abs(int v); /* 005f7120, C runtime: src/native/crt.cpp */
+char *__getcwd(char *buf, int n); /* 005f7140, C runtime: src/native/crt.cpp */
+i32 _time(i32 *t); /* 005f7320, C runtime: src/native/crt.cpp */
+char *_strncat(char *dst, const char *src, size_t n); /* 005f74b0, C runtime: src/native/crt.cpp */
 EXTERN_C void __cdecl __assert(const char *expr, const char *file, int line); /* 005f75e0 */
 /* __CallSettingFrame@12: not a C identifier */
 void __cdecl unexpected(); /* 005f8920 */
-char *__itoa(int v, char *buf, int radix); /* 00600a10, C runtime: src/native/crt.c */
-char *__ltoa(i32 v, char *buf, int radix); /* 00600b30, C runtime: src/native/crt.c */
-char *__ultoa(u32 v, char *buf, int radix); /* 00600b90, C runtime: src/native/crt.c */
-int __CxxUnhandledExceptionFilter(EXCEPTION_POINTERS *p); /* 00600fa0, C runtime: src/native/crt.c */
-i32 __filelength(int fd); /* 006075e0, C runtime: src/native/crt.c */
-int FUN_006076a0(FILE *f); /* 006076a0, C runtime: src/native/crt.c */
-char *__strupr(char *s); /* 006076c0, C runtime: src/native/crt.c */
-char *__strlwr(char *s); /* 006077f0, C runtime: src/native/crt.c */
-int crt_mkdir(const char *path); /* 00607920, C runtime: src/native/crt.c */
+char *__itoa(int v, char *buf, int radix); /* 00600a10, C runtime: src/native/crt.cpp */
+char *__ltoa(i32 v, char *buf, int radix); /* 00600b30, C runtime: src/native/crt.cpp */
+char *__ultoa(u32 v, char *buf, int radix); /* 00600b90, C runtime: src/native/crt.cpp */
+int __CxxUnhandledExceptionFilter(EXCEPTION_POINTERS *p); /* 00600fa0, C runtime: src/native/crt.cpp */
+i32 __filelength(int fd); /* 006075e0, C runtime: src/native/crt.cpp */
+int FUN_006076a0(FILE *f); /* 006076a0, C runtime: src/native/crt.cpp */
+char *__strupr(char *s); /* 006076c0, C runtime: src/native/crt.cpp */
+char *__strlwr(char *s); /* 006077f0, C runtime: src/native/crt.cpp */
+int crt_mkdir(const char *path); /* 00607920, C runtime: src/native/crt.cpp */
 void __cdecl FUN_0061a000(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14); /* 0061a000 */
 void __cdecl FUN_0061a759(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int a16); /* 0061a759 */
 int __cdecl coarse_wrap_x(int x); /* 00403021 */
@@ -3520,5 +3520,13 @@ byte __cdecl tile_terrain(iptr x,iptr y); /* 00403648 */
 i32 __cdecl tile_unit_owner(i32 x,i32 y); /* 004031fc */
 void __cdecl tile_update_known(iptr x,iptr y,iptr civ); /* 00402928 */
 uint __cdecl tile_visible_to(iptr x,iptr y,iptr civ); /* 00403c24 */
+void __cdecl parley_advance_list1_on_scroll(i32 pos); /* 00450b04 */
+void __cdecl parley_unit_list_scroll_right(i32 pos); /* 004687b5 */
+void __cdecl parley_request_city_origin_clicked(void); /* 004694b7 */
+void __cdecl parley_sort_by_city_right_clicked(void); /* 00469561 */
+void __cdecl parley_sort_by_unit_right_clicked(void); /* 00469603 */
+void __cdecl parley_civ_list_scroll_remote(i32 pos); /* 004af885 */
+void __cdecl parley_city_list_scroll_remote(i32 pos); /* 00587e23 */
+void __cdecl parley_request_city_info(void); /* 00587fbf */
 
 #endif

@@ -50,7 +50,7 @@ MEMBER = re.compile(r'^(\s+)(?:union \{ (\w+) (\w+)((?:\[\w+\])?); \w+ (\w+)(?:\
 
 
 def game_files():
-    return sorted(f for f in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) if not f.endswith('msvcrt.c'))
+    return sorted(f for f in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp')) if not f.endswith('msvcrt.c'))
 
 
 def parse(text):

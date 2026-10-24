@@ -28,8 +28,8 @@ void __thiscall pedia_load_description(void *self, int topic2)
   char marker[3];
   i8 section_name[228];
   
-  str_clear(section_name);
-  pedia_clear_links((void *)obj_addr);
+  str_clear((iptr)section_name);
+  pedia_clear_links((WindowObjectView *)obj_addr);
   ui_pump_messages();
   switch(*(i32 *)(obj_addr + 0x118)) {
   case 1:
@@ -63,7 +63,7 @@ void __thiscall pedia_load_description(void *self, int topic2)
   default:
     crt_strcpy(section_name,str_unknown_topic_group);
   }
-  found = text_open_section(str_describe,section_name);
+  found = text_open_section((iptr)str_describe,(iptr)section_name);
   if (found == 0) {
     remaining = topic2 + 1;
     marker[2] = 0;
@@ -81,7 +81,7 @@ void __thiscall pedia_load_description(void *self, int topic2)
     section_missing = false;
 read_text_lines:
     if (section_missing) {
-      str_clear(desc_text);
+      str_clear((iptr)desc_text);
       do {
         do {
           if (!section_missing) {
@@ -112,8 +112,8 @@ read_text_lines:
       crt_strcpy(desc_text,((i8 *)&map_views_block.text_buffer));
     }
 set_control_text:
-    ctrl_set_text((void *)(obj_addr + 0x1a98),desc_text);
-    ctrl_show_and_redraw(obj_addr + 0x1a98);
+    ctrl_set_text((ControlTextView *)(obj_addr + 0x1a98),(iptr)desc_text);
+    ctrl_show_and_redraw((Control *)(obj_addr + 0x1a98));
   }
   return;
 }
@@ -163,7 +163,7 @@ int __cdecl save_read_game(char *path)
     crt_strcat(save_path,((i8 *)&grey_palette_block.save_file_path));
   }
   _File = _fopen(save_path,((i8 *)&save_read_mode));
-  if ((_File == (FILE *)0x0) || (result = save_read_cstr(header_str,_File), result == 0))
+  if ((_File == (FILE *)0x0) || (result = save_read_cstr((iptr)header_str,(iptr)_File), result == 0))
   goto close_file;
   result = _strcmp(str_ptr_civilize,header_str);
   if (result != 0) {
@@ -188,7 +188,7 @@ int __cdecl save_read_game(char *path)
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   crt_strcpy(game_txt_path2,str_game_3);
   crt_strcat(game_txt_path2,((i8 *)&lang_file_ext));
-  result = file_exists(game_txt_path2);
+  result = file_exists((iptr)game_txt_path2);
   if (result == 0) {
     crt_strcpy(((i8 *)&main_frame_wnd_block.game_txt_path),((i8 *)&game_txt_default_name_str));
   }
@@ -218,7 +218,7 @@ int __cdecl save_read_game(char *path)
   rules_load(1);
   status = 3;
   ui_flush_input();
-  result = save_load_gpk(version & 0xffff,_File);
+  result = save_load_gpk(version & 0xffff,(iptr)_File);
   if (result == 0) goto close_file;
   if (game.multiplayer != 0) {
     game.game_options = game.game_options & 0xffff7fff;
@@ -238,14 +238,14 @@ int __cdecl save_read_game(char *path)
     game.game_flags = game.game_flags & 0xffef;
   }
   game.game_flags = game.game_flags & 0xffbf;
-  result = map_read(_File,0);
+  result = map_read((iptr)_File,0);
   if (((result != 0) ||
       (count_read = _fread(map_coarse[0],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0)) ||
      (count_read = _fread(map_coarse[1],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0))
   goto close_file;
   ui_flush_input();
   count_read = _fread(((i8 *)&landmass_table_block.landmass_table),0x400,1,_File);
-  if ((count_read == 0) || (result = save_read_units_cities(version & 0xffff,_File), result == 0))
+  if ((count_read == 0) || (result = save_read_units_cities(version & 0xffff,(iptr)_File), result == 0))
   goto close_file;
   for (idx = 0; idx < 0x15; idx = idx + 1) {
     count_read = _fread(&leaders[idx].times_used,1,1,_File);
@@ -345,83 +345,83 @@ int __cdecl save_read_game(char *path)
     }
     for (event_node = unit_types_block.events_list_head; event_node != 0; event_node = *(int *)(event_node + 0x1bc)) {
       if (*(int *)(event_node + 8) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 8) = event_str;
         if (*(int *)(event_node + 8) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x10) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x10) = event_str;
         if (*(int *)(event_node + 0x10) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x14) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x14) = event_str;
         if (*(int *)(event_node + 0x14) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x20) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x20) = event_str;
         if (*(int *)(event_node + 0x20) == 0) goto close_file;
       }
       for (event_idx = 0; (event_idx < 0x14 && (*(int *)(event_node + 0x38 + event_idx * 4) != 0));
           event_idx = event_idx + 1) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x38 + event_idx * 4) = event_str;
         if (*(int *)(event_node + 0x38 + event_idx * 4) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x88) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x88) = event_str;
         if (*(int *)(event_node + 0x88) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x90) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x90) = event_str;
         if (*(int *)(event_node + 0x90) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0xc4) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0xc4) = event_str;
         if (*(int *)(event_node + 0xc4) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0xcc) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0xcc) = event_str;
         if (*(int *)(event_node + 0xcc) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0xd4) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0xd4) = event_str;
         if (*(int *)(event_node + 0xd4) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0xdc) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0xdc) = event_str;
         if (*(int *)(event_node + 0xdc) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x13c) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x13c) = event_str;
         if (*(int *)(event_node + 0x13c) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x140) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x140) = event_str;
         if (*(int *)(event_node + 0x140) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x148) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x148) = event_str;
         if (*(int *)(event_node + 0x148) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x174) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x174) = event_str;
         if (*(int *)(event_node + 0x174) == 0) goto close_file;
       }
       if (*(int *)(event_node + 0x184) != 0) {
-        event_str = save_read_event_str(_File);
+        event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 0x184) = event_str;
         if (*(int *)(event_node + 0x184) == 0) goto close_file;
       }
@@ -546,11 +546,11 @@ int __cdecl save_read_game(char *path)
   rules_load_units(1);
   text_close_file();
   destroyed_civ_count_block.saved_layout_valid = 1;
-  result = rect_width(((i32 *)&saved_screen_rect_block.saved_screen_rect));
-  screen_h = rect_width(((i32 *)&caption_small_font_block.screen_rect));
+  result = rect_width((iptr)&saved_screen_rect_block.saved_screen_rect);
+  screen_h = rect_width((iptr)&caption_small_font_block.screen_rect);
   if (result == screen_h) {
-    result = rect_height(((i32 *)&saved_screen_rect_block.saved_screen_rect));
-    screen_h = rect_height(((i32 *)&caption_small_font_block.screen_rect));
+    result = rect_height((iptr)&saved_screen_rect_block.saved_screen_rect);
+    screen_h = rect_height((iptr)&caption_small_font_block.screen_rect);
     if ((result != screen_h) || (is_scenario != 0)) goto invalid_layout;
   }
   else {
@@ -612,14 +612,14 @@ void __cdecl wnd_obj_set_topmost_child(int parent_obj,int child_obj)
       if (child_parent == *(HWND *)(parent_obj + 4)) {
         self = (void *)GetWindowLongA(*(HWND *)(child_obj + 4),0);
         if ((WIN_STYLE(self) & 0x200) == 0) {
-          dbg_log(str_window_not_sws_attached_in_mssettopmostc);
+          dbg_log((iptr)str_window_not_sws_attached_in_mssettopmostc);
         }
         else {
           *(i32 *)(parent_obj + 0x10) = *(i32 *)(child_obj + 4);
         }
       }
       else {
-        dbg_log(str_window_not_a_child_in_mssettopmostchild);
+        dbg_log((iptr)str_window_not_a_child_in_mssettopmostchild);
       }
     }
   }
@@ -663,35 +663,35 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
       iconic = IsIconic(hwnd);
       if (iconic != 0) {
         GetWindowRect(hwnd,&win_rect);
-        wnd_data = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
         if (*(int *)(wnd_data + 0x20) == 0) {
           hIcon = LoadIconA((HINSTANCE)0x0,(LPCSTR)0x7f00);
           DrawIcon(paint_dc,0,0,hIcon);
         }
         else {
-          wnd_data = wnd_get_window(wnd2);
+          wnd_data = wnd_get_window((WndBase *)wnd2);
           if ((*(int *)(wnd_data + 0x18) != 0) && (gfx_palettized_display == 1)) {
-            wnd_data = wnd_get_window(wnd2);
+            wnd_data = wnd_get_window((WndBase *)wnd2);
             RealizePalette(*(HDC *)(wnd_data + 8));
           }
-          wnd_data = wnd_get_window(wnd2);
+          wnd_data = wnd_get_window((WndBase *)wnd2);
           DrawIcon(paint_dc,0,0,*(HICON *)(wnd_data + 0x20));
         }
         return 0;
       }
-      wnd_data = wnd_get_window(wnd2);
+      wnd_data = wnd_get_window((WndBase *)wnd2);
       if (*(int *)(wnd_data + 0x24) == 0) {
-        wnd_data = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
         if (*(int *)(wnd_data + 0x14) != 0) {
-          wnd_data = wnd_get_window(wnd2);
+          wnd_data = wnd_get_window((WndBase *)wnd2);
           FillRect(paint_dc,&ps.rcPaint,*(HBRUSH *)(wnd_data + 0x14));
         }
       }
       else {
-        wnd_data = wnd_get_window(wnd2);
-        tile_w = surface_width(*(void **)(wnd_data + 0x24));
-        wnd_data = wnd_get_window(wnd2);
-        tile_h = surface_height(*(void **)(wnd_data + 0x24));
+        wnd_data = wnd_get_window((WndBase *)wnd2);
+        tile_w = surface_width((DibSurface *)*(void **)(wnd_data + 0x24));
+        wnd_data = wnd_get_window((WndBase *)wnd2);
+        tile_h = surface_height((DibSurface *)*(void **)(wnd_data + 0x24));
         if ((tile_w != 0) && (tile_h != 0)) {
           paint_rect.left = ps.rcPaint.left;
           paint_rect.top = ps.rcPaint.top;
@@ -707,26 +707,26 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
               dst_rect = &blit_rect;
               src_rect = &win_rect;
               tmp_wnd = wnd2;
-              wnd_data = wnd_get_window(wnd2);
-              surface_blit_to_wnd(*(void **)(wnd_data + 0x24),tmp_wnd,src_rect,dst_rect);
+              wnd_data = wnd_get_window((WndBase *)wnd2);
+              surface_blit_to_wnd((DibSurface *)*(void **)(wnd_data + 0x24),(iptr)tmp_wnd,(iptr)src_rect,(iptr)dst_rect);
             }
           }
         }
       }
-      wnd_data = wnd_get_window(wnd2);
+      wnd_data = wnd_get_window((WndBase *)wnd2);
       if (*(int *)(wnd_data + 0x2c) != 0) {
-        wnd_data = wnd_get_window(wnd2);
-        tile_w = surface_width(*(void **)(wnd_data + 0x2c));
-        wnd_data = wnd_get_window(wnd2);
-        tile_h = surface_height(*(void **)(wnd_data + 0x2c));
+        wnd_data = wnd_get_window((WndBase *)wnd2);
+        tile_w = surface_width((DibSurface *)*(void **)(wnd_data + 0x2c));
+        wnd_data = wnd_get_window((WndBase *)wnd2);
+        tile_h = surface_height((DibSurface *)*(void **)(wnd_data + 0x2c));
         paint_rect.left = ps.rcPaint.left;
         paint_rect.top = ps.rcPaint.top;
         paint_rect.right = ps.rcPaint.right;
         paint_rect.bottom = ps.rcPaint.bottom;
         SetRect(&win_rect,0,0,tile_w,tile_h);
-        wnd_data = wnd_client_height(wnd2);
+        wnd_data = wnd_client_height((WndBase *)wnd2);
         wnd_data = wnd_data - tile_h >> 1;
-        offset_x = wnd_client_width(wnd2);
+        offset_x = wnd_client_width((WndBase *)wnd2);
         OffsetRect(&win_rect,offset_x - tile_w >> 1,wnd_data);
         iconic = IntersectRect(&blit_rect,&win_rect,&paint_rect);
         if (iconic != 0) {
@@ -734,15 +734,15 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
           win_rect.top = blit_rect.top;
           win_rect.right = blit_rect.right;
           win_rect.bottom = blit_rect.bottom;
-          wnd_data = wnd_client_height(wnd2);
+          wnd_data = wnd_client_height((WndBase *)wnd2);
           wnd_data = -(wnd_data - tile_h >> 1);
-          offset_x = wnd_client_width(wnd2);
+          offset_x = wnd_client_width((WndBase *)wnd2);
           OffsetRect(&win_rect,-(offset_x - tile_w >> 1),wnd_data);
           dst_rect = &blit_rect;
           src_rect = &win_rect;
           tmp_wnd = wnd2;
-          wnd_data = wnd_get_window(wnd2);
-          surface_blit_to_wnd(*(void **)(wnd_data + 0x2c),tmp_wnd,src_rect,dst_rect);
+          wnd_data = wnd_get_window((WndBase *)wnd2);
+          surface_blit_to_wnd((DibSurface *)*(void **)(wnd_data + 0x2c),(iptr)tmp_wnd,(iptr)src_rect,(iptr)dst_rect);
         }
       }
       EndPaint(hwnd,&ps);
@@ -752,13 +752,13 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     case 2:
       SetMenu(hwnd,(HMENU)0x0);
       tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = wnd_get_window(tmp_wnd);
+      wnd_data = wnd_get_window((WndBase *)tmp_wnd);
       *(i32 *)(wnd_data + 0x44) = 1;
       if ((*(byte *)(wnd_data + 0x49) & 2) != 0) {
         wnd_data = 0;
         parent_hwnd = GetParent(hwnd);
         tmp_wnd = (void *)GetWindowLongA(parent_hwnd,wnd_data);
-        parent_data = wnd_get_window(tmp_wnd);
+        parent_data = wnd_get_window((WndBase *)tmp_wnd);
         if (*(HWND *)(parent_data + 0xc) == hwnd) {
           *(i32 *)(parent_data + 0xc) = 0;
         }
@@ -768,12 +768,12 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     case 3:
       wnd2 = (void *)GetWindowLongA(hwnd,0);
       if (wnd2 != (void *)0x0) {
-        wnd_data = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
         dc = *(HDC *)(wnd_data + 8);
-        wnd_data = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
         ReleaseDC(*(HWND *)(wnd_data + 4),dc);
-        wnd_data = wnd_get_window(wnd2);
-        offset_x = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
+        offset_x = wnd_get_window((WndBase *)wnd2);
         dc = GetDC(*(HWND *)(offset_x + 4));
         *(HDC *)(wnd_data + 8) = dc;
       }
@@ -781,30 +781,30 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     case 5:
       wnd2 = (void *)GetWindowLongA(hwnd,0);
       if ((wnd2 != (void *)0x0) &&
-         (wnd_data = wnd_get_window(wnd2), *(int *)(wnd_data + 0x2c) != 0)) {
+         (wnd_data = wnd_get_window((WndBase *)wnd2), *(int *)(wnd_data + 0x2c) != 0)) {
         InvalidateRect(hwnd,(RECT *)0x0,1);
       }
       if (wnd2 != (void *)0x0) {
-        wnd_data = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
         dc = *(HDC *)(wnd_data + 8);
-        wnd_data = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
         ReleaseDC(*(HWND *)(wnd_data + 4),dc);
-        wnd_data = wnd_get_window(wnd2);
-        offset_x = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
+        offset_x = wnd_get_window((WndBase *)wnd2);
         dc = GetDC(*(HWND *)(offset_x + 4));
         *(HDC *)(wnd_data + 8) = dc;
       }
       break;
     case 7:
       tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = wnd_get_window(tmp_wnd);
+      wnd_data = wnd_get_window((WndBase *)tmp_wnd);
       if (*(int *)(wnd_data + 0xc) != 0) {
         SendMessageA(*(HWND *)(wnd_data + 0xc),0x86,1,0);
       }
       break;
     case 8:
       tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = wnd_get_window(tmp_wnd);
+      wnd_data = wnd_get_window((WndBase *)tmp_wnd);
       if (*(int *)(wnd_data + 0xc) != 0) {
         SendMessageA(*(HWND *)(wnd_data + 0xc),0x86,0,0);
       }
@@ -814,12 +814,12 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     if (msg == 0x46) {
       if ((*(byte *)(lparam + 0x18) & 4) == 0) {
         wnd2 = (void *)GetWindowLongA(hwnd,0);
-        wnd_get_window(wnd2);
+        wnd_get_window((WndBase *)wnd2);
         if ((WIN_STYLE(wnd2) & 0x200) != 0) {
           wnd_data = 0;
           parent_hwnd = GetParent(hwnd);
           tmp_wnd = (void *)GetWindowLongA(parent_hwnd,wnd_data);
-          parent_data = wnd_get_window(tmp_wnd);
+          parent_data = wnd_get_window((WndBase *)tmp_wnd);
           if (((*(int *)(parent_data + 0x10) != 0) && (*(HWND *)(parent_data + 0x10) != hwnd)) &&
              (iconic = IsWindowVisible(*(HWND *)(parent_data + 0x10)), iconic != 0)) {
             *(i32 *)(lparam + 4) = *(i32 *)(parent_data + 0x10);
@@ -829,12 +829,12 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     }
     else if (msg == 0x22) {
       tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = wnd_get_window(tmp_wnd);
+      wnd_data = wnd_get_window((WndBase *)tmp_wnd);
       if ((*(byte *)(wnd_data + 0x49) & 2) != 0) {
         wnd_data = 0;
         parent_hwnd = GetParent(hwnd);
         tmp_wnd = (void *)GetWindowLongA(parent_hwnd,wnd_data);
-        parent_data = wnd_get_window(tmp_wnd);
+        parent_data = wnd_get_window((WndBase *)tmp_wnd);
         if (*(int *)(parent_data + 0xc) != 0) {
           SendMessageA(*(HWND *)(parent_data + 0xc),0x86,0,0);
         }
@@ -851,7 +851,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
       if (msg == 0x112) {
         if ((wparam == 0xf100) || (wparam == 0xf090)) {
           tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-          wnd_data = wnd_get_window(tmp_wnd);
+          wnd_data = wnd_get_window((WndBase *)tmp_wnd);
           if ((*(byte *)(wnd_data + 0x48) & 0x20) == 0) {
             return 0;
           }
@@ -861,7 +861,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
       if ((msg != 0x201) && (msg != 0x204)) goto default_wndproc;
     }
     tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-    wnd_data = wnd_get_window(tmp_wnd);
+    wnd_data = wnd_get_window((WndBase *)tmp_wnd);
     if ((*(byte *)(wnd_data + 0x49) & 2) != 0) {
       SetFocus(*(HWND *)(wnd_data + 4));
       BringWindowToTop(hwnd);
@@ -871,7 +871,7 @@ default_wndproc:
   hit = DefWindowProcA(hwnd,msg,wparam,lparam);
   if (msg == 0x84) {
     tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-    wnd_data = wnd_get_window(tmp_wnd);
+    wnd_data = wnd_get_window((WndBase *)tmp_wnd);
     if ((*(int *)(wnd_data + 0x34) != 0) && (hit == 1)) {
       GetWindowRect(hwnd,&win_rect);
       pos_x2 = (lparam & 0xffff) - win_rect.left;
@@ -889,7 +889,7 @@ default_wndproc:
         row = -1;
       }
       else {
-        offset_x = rect_height(&blit_rect);
+        offset_x = rect_height((iptr)&blit_rect);
         if (offset_x - tile_w < pos_y2) {
           row = 1;
         }
@@ -898,7 +898,7 @@ default_wndproc:
         col = -1;
       }
       else {
-        offset_x = rect_width(&blit_rect);
+        offset_x = rect_width((iptr)&blit_rect);
         if (offset_x - tile_w < pos_x2) {
           col = 1;
         }
@@ -908,7 +908,7 @@ default_wndproc:
           col = -1;
         }
         else {
-          offset_x = rect_width(&blit_rect);
+          offset_x = rect_width((iptr)&blit_rect);
           if (offset_x + tile_w * -4 < pos_x2) {
             col = 1;
           }
@@ -929,7 +929,7 @@ default_wndproc:
             row = -1;
           }
           else {
-            offset_x = rect_height(&blit_rect);
+            offset_x = rect_height((iptr)&blit_rect);
             if (offset_x + tile_w * -4 < pos_y2) {
               row = 1;
             }
@@ -949,7 +949,7 @@ default_wndproc:
             row = -1;
           }
           else {
-            offset_x = rect_height(&blit_rect);
+            offset_x = rect_height((iptr)&blit_rect);
             if (offset_x + tile_w * -4 < pos_y2) {
               row = 1;
             }
@@ -970,7 +970,7 @@ default_wndproc:
           col = -1;
         }
         else {
-          offset_x = rect_width(&blit_rect);
+          offset_x = rect_width((iptr)&blit_rect);
           if (offset_x + tile_w * -4 < pos_x2) {
             col = 1;
           }
@@ -1038,7 +1038,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
   }
   if (msg < 6) {
     if (msg == 5) {
-      type11_hwnd = (HWND)ctrl_list_find_type11_hwnd(*(i32 *)((int)frame + 0xb8));
+      type11_hwnd = (HWND)ctrl_list_find_type11_hwnd((ControlNextView *)*(i32 *)((int)frame + 0xb8));
       if (type11_hwnd != (HWND)0x0) {
         SendMessageA(type11_hwnd,5,wparam,(LPARAM)lparam);
       }
@@ -1059,26 +1059,26 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
       (*(i8 *)((char *)&shift_flags + 1)) = (char)((ushort)shift_state >> 8);
       shift_flags = tmp;
       if ((wparam == 9) && ((*(i8 *)((char *)&shift_flags + 1)) == '\0')) {
-        nav_enabled = wnd_keyboard_nav_enabled(frame);
+        nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)frame);
         if (nav_enabled != '\0') {
-          wnd_cycle_control_focus(frame,0,2);
+          wnd_cycle_control_focus((iptr)frame,0,2);
         }
       }
       else if ((wparam == 9) && ((*(i8 *)((char *)&shift_flags + 1)) != '\0')) {
-        nav_enabled = wnd_keyboard_nav_enabled(frame);
+        nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)frame);
         if (nav_enabled != '\0') {
-          wnd_cycle_control_focus(frame,0,3);
+          wnd_cycle_control_focus((iptr)frame,0,3);
         }
       }
       else if ((wparam == 0xd) && ((*(i8 *)((char *)&shift_flags + 1)) == '\0')) {
         if (*(int *)((int)frame + 0xbc) != 0) {
-          ctrl_arg = control_get_hwnd(*(void **)((int)frame + 0xbc));
+          ctrl_arg = control_get_hwnd((ControlHwndView *)*(void **)((int)frame + 0xbc));
           button_press_animated(ctrl_arg);
         }
       }
       else if ((wparam == 0x1b) && ((*(i8 *)((char *)&shift_flags + 1)) == '\0')) {
         if (*(int *)((int)frame + 0xc0) != 0) {
-          ctrl_arg = control_get_hwnd(*(void **)((int)frame + 0xc0));
+          ctrl_arg = control_get_hwnd((ControlHwndView *)*(void **)((int)frame + 0xc0));
           button_press_animated(ctrl_arg);
         }
       }
@@ -1096,15 +1096,15 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
     if (msg == 0x46) {
       if ((((WINDOWPOS *)lparam)->flags & 4) == 0) {   /* WM_WINDOWPOSCHANGING: SWP_NOZORDER */
         wnd2 = (void *)GetWindowLongA(hwnd,0);
-        wnd_data = wnd_get_window(wnd2);
+        wnd_data = wnd_get_window((WndBase *)wnd2);
         if ((WIN_STYLE(wnd2) & 0x200) != 0) {
           tmp = 0;
           parent_hwnd = GetParent(hwnd);
           parent_wnd = (void *)GetWindowLongA(parent_hwnd,tmp);
-          parent_data = wnd_get_window(parent_wnd);
+          parent_data = wnd_get_window((WndBase *)parent_wnd);
           parent_frame = GetWindowLongA(*(HWND *)(parent_data + 4),8);
           if ((parent_frame != 0) &&
-             (insert_after = ctrl_list_find_type11_hwnd(*(i32 *)(parent_frame + 0xb8)), insert_after != 0)) {
+             (insert_after = ctrl_list_find_type11_hwnd((ControlNextView *)*(i32 *)(parent_frame + 0xb8)), insert_after != 0)) {
             ((WINDOWPOS *)lparam)->hwndInsertAfter = (HWND)(iptr)insert_after;
             result = DefWindowProcA(hwnd,0x46,wparam,(LPARAM)lparam);
             return result;
@@ -1126,7 +1126,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
             class_bytes = GetClassLongA(lparam,-0x12);
             edit_offset = class_bytes - 4;
             edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
-            edit_fire_change_callback(edit_obj);
+            edit_fire_change_callback((EditChangeView *)edit_obj);
           }
           else if (notify_code == 1) {
             ctrl_hwnd = lparam;
@@ -1148,13 +1148,13 @@ forward_command:
           class_bytes = GetClassLongA(lparam,-0x12);
           edit_offset = class_bytes - 4;
           edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
-          edit_fire_maxtext_callback(edit_obj);
+          edit_fire_maxtext_callback((EditMaxTextView *)edit_obj);
         }
       }
       else {
-        tmp = wnd_get_window(frame);
+        tmp = wnd_get_window((WndBase *)frame);
         if (((*(byte *)(tmp + 0x48) & 0x80) != 0) ||
-           (tmp = wnd_get_window(frame), (*(byte *)(tmp + 0x49) & 1) != 0)) {
+           (tmp = wnd_get_window((WndBase *)frame), (*(byte *)(tmp + 0x49) & 1) != 0)) {
           result = wnd_child_wndproc(hwnd,msg,wparam,lparam);
           return result;
         }
@@ -1165,15 +1165,15 @@ forward_command:
     }
     if (msg == 0x216) {
       wnd2 = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = wnd_get_window(wnd2);
+      wnd_data = wnd_get_window((WndBase *)wnd2);
       if ((WIN_STYLE(wnd2) & 0x200) != 0) {
         tmp = 0;
         parent_hwnd = GetParent(hwnd);
         parent_wnd = (void *)GetWindowLongA(parent_hwnd,tmp);
-        parent_data = wnd_get_window(parent_wnd);
+        parent_data = wnd_get_window((WndBase *)parent_wnd);
         parent_frame = GetWindowLongA(*(HWND *)(parent_data + 4),8);
         if (((parent_frame != 0) &&
-            (visible_type11 = (HWND)ctrl_list_find_type11_hwnd(*(i32 *)(parent_frame + 0xb8)), visible_type11 != (HWND)0x0)
+            (visible_type11 = (HWND)ctrl_list_find_type11_hwnd((ControlNextView *)*(i32 *)(parent_frame + 0xb8)), visible_type11 != (HWND)0x0)
             ) && (valid = IsWindowVisible(visible_type11), valid != 0)) {
           tmp = GetSystemMetrics(4);
           GetWindowRect(visible_type11,&moving_rect);
@@ -1237,31 +1237,31 @@ uint __cdecl game_turn_start_popups(void)
     text_set_string_arg(0,civ_name);
     text_clear();
     text_append_year((int)game.year);
-    text_set_string_arg(2,((i8 *)&map_views_block.text_buffer));
+    text_set_string_arg(2,(iptr)&map_views_block.text_buffer);
     text_clear();
     if (best_city < 0) {
       text_append_label(0xe);
     }
     else {
-      text_append(cities[best_city].name);
+      text_append((iptr)cities[best_city].name);
       mapview_center_on(((ViewWindow*)((i8 *)&map_views_block.map_views)),(int)cities[best_city].x,
                          (int)cities[best_city].y);
     }
-    text_set_string_arg(1,((i8 *)&map_views_block.text_buffer));
-    ret = popup_game_with_sprite(str_counciltime,((i8 *)&popup_info_icon_sprite),0);
+    text_set_string_arg(1,(iptr)&map_views_block.text_buffer);
+    ret = popup_game_with_sprite((iptr)str_counciltime,(iptr)&popup_info_icon_sprite,0);
     if (ret == 0) {
       council_show(human_civ[0],0);   /* void; result left in EAX is garbage */
     }
   }
   if (((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0) {
     if (game.turn == 1) {
-      popup_file_with_sprite((*(i8 * *)str_ptr_labels_rest),str_firstmove,((i8 *)&tutorial_icon_sprite_block.tutorial_icon_sprite),0);
+      popup_file_with_sprite(((iptr)*(i8 * *)str_ptr_labels_rest),(iptr)str_firstmove,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
     }
     if ((game.turn == 0x14) || (game.turn == 0x3c)) {
-      popup_file_with_sprite((*(i8 * *)str_ptr_labels_rest),str_help1,((i8 *)&tutorial_icon_sprite_block.tutorial_icon_sprite),0);
+      popup_file_with_sprite(((iptr)*(i8 * *)str_ptr_labels_rest),(iptr)str_help1,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
     }
     if ((game.turn == 0x28) || (game.turn == 0x50)) {
-      popup_file_with_sprite((*(i8 * *)str_ptr_labels_rest),str_help2,((i8 *)&tutorial_icon_sprite_block.tutorial_icon_sprite),0);
+      popup_file_with_sprite(((iptr)*(i8 * *)str_ptr_labels_rest),(iptr)str_help2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
     }
     if ((((civs[human_civ[0]].num_cities == 1) &&
          (2 < civs[human_civ[0]].total_city_size)) && (game.turn == 0x23)) &&
@@ -1270,8 +1270,8 @@ uint __cdecl game_turn_start_popups(void)
       ret = city_find_nearest((int)map.width / 2,(int)map.height / 2,human_civ[0],0xffffffff
                                  ,0xffffffff);
       if (-1 < (int)ret) {
-        text_set_string_arg(0,cities[ret].name);
-        popup_text_with_city_noflags((*(i8 * *)str_ptr_labels_rest),str_onecity,ret);
+        text_set_string_arg(0,(iptr)cities[ret].name);
+        popup_text_with_city_noflags(((iptr)*(i8 * *)str_ptr_labels_rest),(iptr)str_onecity,ret);
         ret = (int)(short)game.turn - 0x19;
         civs[human_civ[0]].last_city_turn = (short)ret;
       }
@@ -1281,7 +1281,7 @@ uint __cdecl game_turn_start_popups(void)
       if ((0x18 < (int)ret) &&
          ((ret = (uint)civs[human_civ[0]].num_cities, (int)ret < 6 &&
           (ret = human_civ[0] * 0x165, civs[human_civ[0]].units_active[0] == '\0')))) {
-        popup_file_with_sprite((*(i8 * *)str_ptr_labels_rest),str_expand0,((i8 *)&tutorial_icon_sprite_block.tutorial_icon_sprite),0);
+        popup_file_with_sprite(((iptr)*(i8 * *)str_ptr_labels_rest),(iptr)str_expand0,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
         ret = (uint)game.turn;
         civs[human_civ[0]].last_city_turn = game.turn;
       }
@@ -1368,7 +1368,7 @@ int __cdecl city_process_pollution(int city)
           if (check != 0) {
             mapview_center_on(((ViewWindow*)((i8 *)&map_views_block.map_views)),tile_x,roll);
             if ((game.message_options & 0x100) == 0) {
-              city_notify_dialog_ex(str_pollution,city,0,0);
+              city_notify_dialog_ex((iptr)str_pollution,city,0,0);
             }
           }
         }
@@ -1408,7 +1408,7 @@ int __cdecl city_process_pollution(int city)
           if (roll == 0) {
             /* city_notify_dialog is declared void but returns city_notify_dialog_ex's int:
                it is city_notify_dialog_ex(a, b, 0, c) */
-            roll = city_notify_dialog_ex(str_chernobyl,city,0,((i32 *)&caption_close_button_sprite_block.city_notify_sprite));
+            roll = city_notify_dialog_ex((iptr)str_chernobyl,city,0,(iptr)&caption_close_button_sprite_block.city_notify_sprite);
           }
         }
       }
@@ -1422,6 +1422,7 @@ int __cdecl city_process_pollution(int city)
 uint __cdecl unit_enter_hut(int unit_id)
 
 {
+  Tile *tile;
   bool single_spawn;
   byte owner_byte;
   uint civ;
@@ -1489,7 +1490,7 @@ hut_outcome_dispatch:
       tmp = tile_owner_or_fertility(x,y);
       if (0xb < tmp) {
         if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-          popup_game_with_sprite(str_surprisetribe,((i8 *)&popup_info_icon_sprite),0);
+          popup_game_with_sprite((iptr)str_surprisetribe,(iptr)&popup_info_icon_sprite,0);
         }
         tmp = city_create(x,y,civ);
         if (999 < game.year) {
@@ -1528,7 +1529,7 @@ hut_outcome_dispatch:
       goto hut_outcome_dispatch;
     case 1:
       if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-        popup_game_with_sprite(str_surprisemercs,((i8 *)&popup_info_icon_sprite),0);
+        popup_game_with_sprite((iptr)str_surprisemercs,(iptr)&popup_info_icon_sprite,0);
       }
       merc_type_a = 0x13;
       if (game.advance_known_by[11] == '\0') {
@@ -1605,7 +1606,7 @@ hut_outcome_dispatch:
       civs[civ].gold = civs[civ].gold + gold2;
       text_set_number_arg(0,gold2);
       if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-        popup_game_with_sprite(str_surprisemetals,((i8 *)&popup_info_icon_sprite),0);
+        popup_game_with_sprite((iptr)str_surprisemetals,(iptr)&popup_info_icon_sprite,0);
       }
       if ((*(uint *)&human_civ) != civ) {
         return civ;
@@ -1637,7 +1638,7 @@ check_nearby_city:
             if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
               return 0;
             }
-            civ = popup_game_with_sprite(str_surprisenothing,((i8 *)&popup_info_icon_sprite),0);
+            civ = popup_game_with_sprite((iptr)str_surprisenothing,(iptr)&popup_info_icon_sprite,0);
             return civ;
           }
         }
@@ -1657,7 +1658,7 @@ check_nearby_city:
 barbarian_surprise:
       rnd = 0;
       if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-        rnd = popup_game_with_sprite(str_surprisebarb,((i8 *)&popup_info_icon_sprite),0);
+        rnd = popup_game_with_sprite((iptr)str_surprisebarb,(iptr)&popup_info_icon_sprite,0);
       }
       step = 0;
       do {
@@ -1695,8 +1696,8 @@ barbarian_surprise:
           }
           rnd = unit_create(chosen_type,0,tile_x,tmp);
           if (-1 < (int)rnd) {
-            check = tile_at(x,y);
-            units[rnd].visibility = *(byte *)(check + 4) | units[rnd].visibility;
+            tile = tile_at(x,y);
+            units[rnd].visibility = tile->visible | units[rnd].visibility;
             map_redraw_tile_all_views(tile_x,tmp);
             rnd = (uint)game.multiplayer;
             if (2 < game.multiplayer) {
@@ -1726,7 +1727,7 @@ barbarian_surprise:
           }
           else {
             if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-              popup_game_with_sprite(str_surprisescrolls,((i8 *)&popup_info_icon_sprite),0);
+              popup_game_with_sprite((iptr)str_surprisescrolls,(iptr)&popup_info_icon_sprite,0);
             }
             civ_give_advance(civ,tech_id,civ,0,0);   /* void */
             tech_id = -1;
@@ -1752,7 +1753,7 @@ barbarian_surprise:
         }
         if (settler_count <= (int)civs[civ].num_cities >> 3) {
           if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-            popup_game_with_sprite(str_surprisenomads,((i8 *)&popup_info_icon_sprite),0);
+            popup_game_with_sprite((iptr)str_surprisenomads,(iptr)&popup_info_icon_sprite,0);
           }
           tmp = unit_create(0,civ,x,y);
           if (-1 < tmp) {

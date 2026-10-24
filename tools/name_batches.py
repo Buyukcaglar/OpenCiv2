@@ -45,7 +45,7 @@ def main():
     ranked.reverse()
     pick = sorted(x for _, x in ranked[a.skip:a.skip + a.count])
     src = {}
-    for f in glob.glob('src/auto/*.c') + glob.glob('src/game/*.c'):
+    for f in glob.glob('src/auto/*.cpp') + glob.glob('src/game/*.cpp'):
         t = open(f).read()
         for m in re.finditer(r'^/\* ([0-9a-f]{8}) (?:auto|game)[^\n]*\*/\n(.*?)(?=^/\* [0-9a-f]{8} |\Z)', t, re.M | re.S):
             src[m.group(1)] = (f, m.group(2))

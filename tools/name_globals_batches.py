@@ -45,7 +45,7 @@ def main():
     lines = collections.defaultdict(list)
     want = set(pick)
     pat = re.compile(r'\b(%s)\b' % '|'.join(pick))
-    for f in sorted(glob.glob('src/auto/*.c') + glob.glob('src/game/*.c')):
+    for f in sorted(glob.glob('src/auto/*.cpp') + glob.glob('src/game/*.cpp')):
         for ln in open(f, errors='replace'):
             if ln.startswith('#'):
                 continue

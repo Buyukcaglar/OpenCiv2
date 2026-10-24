@@ -259,7 +259,7 @@ i32 __thiscall spaceship_wnd_dtor(SpaceshipWindowDtorView *self)
     self->blink_timer = 0;
   }
   (*(i8 *)((char *)&eh_state + 0)) = 0xe;
-  /* inlined unwind funclet 004d0a56 */ { clickmap_dtor(*(int *)((iptr)&self) + 0xae4); }
+  /* inlined unwind funclet 004d0a56 */ { clickmap_dtor((u8 *)self + 0xae4); }
   (*(i8 *)((char *)&eh_state + 0)) = 0xd;
   /* inlined unwind funclet 004d0a65 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&self) + 0xaa4)); }
   (*(i8 *)((char *)&eh_state + 0)) = 0xc;
@@ -615,7 +615,7 @@ void __thiscall spaceship_wnd_launch_sequence(SpaceshipWindow *self)
   return;
 }
 
-/* 004d17bf: written by hand in src/game/bigframes.c */
+/* 004d17bf: written by hand in src/game/bigframes.cpp */
 
 /* 004d4a7b auto */
 void __thiscall spaceship_wnd_build_stats_text(PictureFrameWindow *self)
@@ -799,7 +799,7 @@ uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *self,int allow_skip)
   return result;
 }
 
-/* 004d53ab: written by hand in src/game/unwind.c */
+/* 004d53ab: written by hand in src/game/unwind.cpp */
 
 /* 004d570b auto */
 void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *self)
@@ -861,7 +861,7 @@ void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *self)
     value = spaceship_wnd_type_char(self,0);
   } while (value != 0);
   str_clear((iptr)(self->success_text));
-  label = label_string(*(i32 *)(label_string_ids + 0x718));
+  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x718));
   str_append((iptr)(self->success_text),label);
   str_append_colon((iptr)(self->success_text));
   str_append_space((iptr)(self->success_text));
@@ -902,13 +902,13 @@ void __thiscall spaceship_play_launch_video(WndBase *self)
   
   eh_state = 0xffffffff;
   snd_cd_stop();
-  this_00 = operator_new(0xa28);
+  this_00 = (DocumentWindow *)operator_new(0xa28);
   eh_state = 0;
   if (this_00 == (DocumentWindow *)0x0) {
     player = 0;
   }
   else {
-    player = mmwnd_ctor(this_00);
+    player = (u32)mmwnd_ctor(this_00);
   }
   eh_state = 0xffffffff;
   (*(u32 *)&((CityViewWindow *)self)->launch_video_player) = player;
@@ -1871,7 +1871,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   if (result == 0) {
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) && (allow_launch != 0)) &&
        (unit_sound_editor_window_block.spaceship_success_pct != 0)) {
-      str = label_string(*(i32 *)(label_string_ids + 0x354));
+      str = (iptr)label_string(*(i32 *)(label_string_ids + 0x354));
       dialog_add_button((DialogButtonsView *)&dlg,str);
     }
   }

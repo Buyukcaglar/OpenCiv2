@@ -65,7 +65,7 @@ def collect():
     structs = struct_types()
     gtypes = global_types()
     uses = collections.defaultdict(list)       # (owner, offset) -> lines
-    for f in sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c'))):
+    for f in sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp'))):
         if f.endswith('msvcrt.c'):
             continue
         text = open(f).read()

@@ -4,13 +4,14 @@
 
 | status      | functions | meaning |
 |-------------|-----------|---------|
-| auto        | 4040 | game functions, translated from Ghidra's output by `tools/gen_c.py`; since October 2026 the source, edited directly, in files by subject (src/auto/city.c, unit.c, map.c ...) |
+| auto        | 4040 | game functions, translated from Ghidra's output by `tools/gen_c.py`; since October 2026 the source, edited directly, in files by subject (src/auto/city.cpp, unit.c, map.c ...) |
 | game        |  114 | reconstructed by hand (src/game/*.c) |
 | ehfunclet   |  462 | C++ unwind funclets; inlined into their callers, never called on their own |
-| crt         |  295 | statically linked MSVC 4.2 debug C runtime: the native builds use their own C library (src/native/crt.c for what differs) |
+| crt         |  295 | statically linked MSVC 4.2 debug C runtime: the native builds use their own C library (src/native/crt.cpp for what differs) |
 | asm         |    2 | `ASMGRAF` section: 16-bit leftovers from the Win16 version, unreachable |
 
-About 221,000 lines of C.  Every function that can execute has C source.
+About 221,000 lines of C++ (the game) and C (the platform layer).  Every
+function that can execute has source.
 
 ## Builds
 
@@ -94,7 +95,7 @@ message by message and clock event by clock event.
 * **No emulation of the original's memory layout** (step 5).  Locals are
   ordinary locals (tools/unframe.py), callbacks and data are referred to by
   name (no ADDR), and the static data is 4,989 ordinary variables with C
-  initializers in original address order (src/data/gamedata.c, made by
+  initializers in original address order (src/data/gamedata.cpp, made by
   tools/unglobal.py; strings named from their text).  Where the code relies
   on data lying together, it is one object: Win32 structs and arrays the
   decompiler split into locals, and 115 packed structs of globals
@@ -113,6 +114,22 @@ message by message and clock event by clock event.
   the address comments) and native_suite.sh fails a run where it differs.  A
   DIB's pixels get a few bytes of slack as on Windows (the GIF decoder
   writes one byte past the last row).
+* **C++** (step 6, in progress).  The game (src/auto, src/game, src/data,
+  src/native) compiles as strict C++: g++ for the linux32 builds, the wasm
+  toolchain's clang++ for the portable ones; the platform layer stays C
+  (extern "C" at the boundary).  The conversion was checked function by
+  function: the machine code of each one is identical to that of the same
+  source compiled with g++ -fpermissive (C's integer/pointer conversions;
+  CIV2_CXX=permissive, tools/cxx_compare.py), which passes the suite as the C
+  build did.  Many conversions are still explicit casts where headers give
+  the wrong type (`iptr` for pointers, `void *` for strings); the classes,
+  typed callbacks and the rest of the modernization come next.  Two bugs of
+  the C version surfaced and are fixed: the parley window chose its
+  right-hand pane's callbacks by adding the distance between two functions in
+  the original executable to a function's address (a garbage pointer in any
+  other build; the eight handlers it meant are restored), and unit moves
+  compared the address of human_civ, not its value, so
+  unit_move_by_local_human was never set.
 * Coverage of the comparison: the scripts execute 2,295 of the 3,417
   compiled game functions (67%, 51% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never

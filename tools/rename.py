@@ -33,7 +33,7 @@ def files():
                 'harness/scripts/*.txt', 'harness/diffscripts/*.txt'):     # call FUNCTION
         out += glob.glob(os.path.join(ROOT, pat))
     for d, _, fs in os.walk(os.path.join(ROOT, 'src')):
-        out += [os.path.join(d, f) for f in fs if f.endswith(('.c', '.h', '.inc'))]
+        out += [os.path.join(d, f) for f in fs if f.endswith(('.c', '.cpp', '.h', '.inc'))]
     return [f for f in out if not f.endswith(('rename.py', 'symbols.tsv', 'function_names.tsv', 'global_names.tsv'))]
 
 
@@ -190,7 +190,7 @@ def apply_types(dry_run):
     changed = 0
     for d, _, fs in os.walk(os.path.join(ROOT, 'src')):
         for f in fs:
-            if not f.endswith(('.c', '.h', '.inc')):
+            if not f.endswith(('.c', '.cpp', '.h', '.inc')):
                 continue
             p = os.path.join(d, f)
             t = open(p, errors='surrogateescape').read()

@@ -21,7 +21,7 @@ elif '-d' in sys.argv:
         print('%08x  %-8s %s' % (i.address, i.mnemonic, i.op_str))
 else:
     m = None
-    for f in sorted(glob.glob('src/auto/*.c')):
+    for f in sorted(glob.glob('src/auto/*.cpp')):
         m = re.search(r'^/\* %s[ :].*?(?=^/\* [0-9a-f]{8}[ :]|\Z)' % addr, open(f).read(), re.M | re.S)
         if m:
             break

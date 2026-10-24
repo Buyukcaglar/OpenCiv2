@@ -51,6 +51,7 @@ void __cdecl mapgen_calc_fertility(void)
   byte terrain_byte;
   iptr in_bounds;
   int tmp;
+  Tile *map_tile;
   byte *tile;
   iptr terrain;
   uptr nbr_terrain;
@@ -137,12 +138,12 @@ void __cdecl mapgen_calc_fertility(void)
           *(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + landmass2 * 0x10) =
                *(short *)(((i8 *)&landmass_table_block.landmass_fertile_tiles) + landmass2 * 0x10) + 1;
         }
-        tmp = tile_at(x3,y3);
-        *(char *)(tmp + 5) = (char)tile_score - 0x10;
+        map_tile = tile_at(x3,y3);
+        map_tile->owner = (char)tile_score - 0x10;
       }
       else {
-        tmp = tile_at(x3,y3);
-        *(i8 *)(tmp + 5) = 0xf0;
+        map_tile = tile_at(x3,y3);
+        map_tile->owner = 0xf0;
       }
     }
   }
@@ -212,7 +213,7 @@ void __cdecl map_generate(int keep_map)
             ((DialogCore *)&dialog2,
              -(((int)(caption_font_block.screen_width - 0x280 + (caption_font_block.screen_width - 0x280 >> 0x1f & 7U)) >> 3) + 1),
              -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-  x = label_string(*(i32 *)(label_string_ids + 8));
+  x = (iptr)label_string(*(i32 *)(label_string_ids + 8));
   dialog_set_title((DialogWindowView *)&dialog2,x);
   dialog_set_width((DialogWindowView *)&dialog2,0x100);
   dialog_add_line
@@ -281,29 +282,29 @@ void __cdecl map_generate(int keep_map)
     for (y2 = 1; (int)y2 < map.height - 2; y2++) {
       for (x2 = y2 & 1; (int)x2 < map.width - 2; x2 += 2) {
         new_terrain = 0;
-        tmp = tile_at(x2,y2);
-        if (*(char *)(tmp + 1) != '\0') {
+        tmp = (iptr)tile_at(x2,y2);
+        if (((Tile *)tmp)->improvements != '\0') {
           new_terrain = new_terrain | 1;
         }
-        tmp = tile_at(x2 + 1,y2 + 1);
-        if (*(char *)(tmp + 1) != '\0') {
+        tmp = (iptr)tile_at(x2 + 1,y2 + 1);
+        if (((Tile *)tmp)->improvements != '\0') {
           new_terrain = new_terrain | 2;
         }
-        tmp = tile_at(x2 + 1,y2 - 1);
-        if (*(char *)(tmp + 1) != '\0') {
+        tmp = (iptr)tile_at(x2 + 1,y2 - 1);
+        if (((Tile *)tmp)->improvements != '\0') {
           new_terrain = new_terrain | 4;
         }
-        tmp = tile_at(x2 + 2,y2);
-        if (*(char *)(tmp + 1) != '\0') {
+        tmp = (iptr)tile_at(x2 + 2,y2);
+        if (((Tile *)tmp)->improvements != '\0') {
           new_terrain = new_terrain | 8;
         }
         if ((new_terrain == 6) || (new_terrain == 9)) {
-          tmp = tile_at(x2 + 1,y2 + 1);
-          *(i8 *)(tmp + 1) = 1;
-          tmp = tile_at(x2 + 1,y2 - 1);
-          *(i8 *)(tmp + 1) = 1;
-          tmp = tile_at(x2 + 2,y2);
-          *(i8 *)(tmp + 1) = 1;
+          tmp = (iptr)tile_at(x2 + 1,y2 + 1);
+          ((Tile *)tmp)->improvements = 1;
+          tmp = (iptr)tile_at(x2 + 1,y2 - 1);
+          ((Tile *)tmp)->improvements = 1;
+          tmp = (iptr)tile_at(x2 + 2,y2);
+          ((Tile *)tmp)->improvements = 1;
           if (((int)x2 < 2) || ((int)y2 < 2)) {
             if ((int)y2 < 2) {
               if (1 < (int)x2) {
@@ -803,7 +804,7 @@ void __cdecl map_generate(int keep_map)
 void __cdecl mapgen_add_landmass(int islet)
 
 {
-  iptr tile;
+  Tile *tile;
   int rnd;
   int roll;
   int y2;
@@ -841,7 +842,7 @@ void __cdecl mapgen_add_landmass(int islet)
       if (roll != 0) break;
     }
     tile = tile_at(x2,y2);
-  } while (*(char *)(tile + 1) != '\0');
+  } while (tile->improvements != '\0');
   if (islet == 0) {
     if (mapgen_land_form < 1) {
       mapgen_land_walk(x2,y2);
@@ -880,7 +881,7 @@ void __cdecl mapgen_land_walk(int x,int y)
 {
   int dir_idx;
   uint rnd;
-  iptr tile;
+  Tile *tile;
   iptr in_bounds;
   uint sign;
   int steps;
@@ -889,7 +890,7 @@ void __cdecl mapgen_land_walk(int x,int y)
   sign = (int)rnd >> 0x1f;
   steps = ((rnd ^ sign) - sign & 0x3f ^ sign) - sign;
   tile = tile_at(x,y);
-  if (*(char *)(tile + 1) != '\0') {
+  if (tile->improvements != '\0') {
     steps = steps >> 1;
   }
   steps++;
@@ -946,13 +947,13 @@ void __cdecl mapgen_mark_tile(iptr raw_x,iptr y)
 {
   iptr x;
   iptr in_bounds;
-  iptr tile;
+  Tile *tile;
   
   x = map_wrap_x(raw_x);
   in_bounds = mapgen_in_bounds(x,y);
   if (in_bounds != 0) {
     tile = tile_at(x,y);
-    *(i8 *)(tile + 5) = 1;
+    tile->owner = 1;
   }
   return;
 }
@@ -962,7 +963,7 @@ void __cdecl mapgen_land_walk_wide(int x,int y)
 
 {
   int dir_idx;
-  iptr tile;
+  Tile *tile;
   iptr in_bounds;
   uint rnd;
   uint sign;
@@ -971,7 +972,7 @@ void __cdecl mapgen_land_walk_wide(int x,int y)
   steps = _rand();
   steps = steps % 0x30;
   tile = tile_at(x,y);
-  if (*(char *)(tile + 1) != '\0') {
+  if (tile->improvements != '\0') {
     steps = steps >> 1;
   }
   steps++;
@@ -1098,6 +1099,7 @@ void __cdecl mapgen_place_rivers(void)
   uint start_y2;
   iptr start_x2;
   int y;
+  Tile *map_tile;
   byte *tile;
   uint rnd;
   iptr x;
@@ -1206,8 +1208,8 @@ void __cdecl mapgen_place_rivers(void)
       y2 += (int)(char)(((i8 *)&diag_neighbor_bits_block.diag_dy_table))[dir];
       y = map_in_bounds(x2,y2);
       if (y != 0) {
-        y = tile_at(x2,y2);
-        terrain = *(byte *)(y + 5);
+        map_tile = tile_at(x2,y2);
+        terrain = map_tile->owner;
       }
     } while (((!reached_ocean) && (y = map_in_bounds(x2,y2), y != 0)) &&
             ((terrain & 0x80) == 0));
@@ -2238,13 +2240,13 @@ i32 __cdecl map_load_dialog(void)
   result = 1;
   file = (FILE *)0x0;
   crt_strcpy(filename,((i8 *)&map_load_wildcard_str));
-  filter_str = save_file_filter(0,0,1);
+  filter_str = (iptr)save_file_filter(0,0,1);
   dlg_arg = 0;
   dlg_flag = 1;
   default_ext = ((i8 *)&map_load_default_ext_str);
   path_buf = filename;
   filter = filter_str;
-  title = label_string(*(i32 *)(label_string_ids + 0x40c));
+  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x40c));
   ok = ui_file_name_dialog((iptr)&main_frame_wnd_block.main_frame_wnd,title,(iptr)path_buf,filter_str,(iptr)default_ext,dlg_flag,dlg_arg);
   if (ok != 0) {
     file = _fopen(filename,((i8 *)&map_load_open_mode_str));
@@ -2369,7 +2371,7 @@ DllHandle * __thiscall resource_dll_load(DllHandle *self,iptr dll_name)
 {
   u32 hmodule;
   
-  hmodule = res_dll_load_library(dll_name);
+  hmodule = res_dll_load_library((LPCSTR)dll_name);
   self->hmodule = hmodule;
   return self;
 }
@@ -2387,7 +2389,7 @@ void __cdecl terrain_base_sprites_global_init(void)
 void __cdecl terrain_base_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&terrain_base_sprites_block.terrain_base_sprites),0x3c,0xb,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&terrain_base_sprites_block.terrain_base_sprites),0x3c,0xb,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2403,7 +2405,7 @@ void __cdecl terrain_base_sprites_reg_atexit(void)
 void __cdecl terrain_base_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&terrain_base_sprites_block.terrain_base_sprites),0x3c,0xb,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&terrain_base_sprites_block.terrain_base_sprites),0x3c,0xb,(code *)sprite_destroy);
   return;
 }
 
@@ -2420,7 +2422,7 @@ void __cdecl terrain_dither_sprites_global_init(void)
 void __cdecl terrain_dither_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&map_cursor_sprite_block.terrain_dither_sprites),0x3c,0x34,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&map_cursor_sprite_block.terrain_dither_sprites),0x3c,0x34,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2436,7 +2438,7 @@ void __cdecl terrain_dither_sprites_reg_atexit(void)
 void __cdecl terrain_dither_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&map_cursor_sprite_block.terrain_dither_sprites),0x3c,0x34,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&map_cursor_sprite_block.terrain_dither_sprites),0x3c,0x34,(code *)sprite_destroy);
   return;
 }
 
@@ -2453,7 +2455,7 @@ void __cdecl river_sprites_global_init(void)
 void __cdecl river_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&icon_misc_sprites_block.river_sprites),0x3c,0x10,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&icon_misc_sprites_block.river_sprites),0x3c,0x10,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2469,7 +2471,7 @@ void __cdecl river_sprites_reg_atexit(void)
 void __cdecl river_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&icon_misc_sprites_block.river_sprites),0x3c,0x10,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&icon_misc_sprites_block.river_sprites),0x3c,0x10,(code *)sprite_destroy);
   return;
 }
 
@@ -2486,7 +2488,7 @@ void __cdecl forest_sprites_global_init(void)
 void __cdecl forest_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&forest_sprites),0x3c,0x10,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&forest_sprites),0x3c,0x10,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2502,7 +2504,7 @@ void __cdecl forest_sprites_reg_atexit(void)
 void __cdecl forest_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&forest_sprites),0x3c,0x10,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&forest_sprites),0x3c,0x10,(code *)sprite_destroy);
   return;
 }
 
@@ -2519,7 +2521,7 @@ void __cdecl mountain_sprites_global_init(void)
 void __cdecl mountain_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&mountain_sprites),0x3c,0x10,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&mountain_sprites),0x3c,0x10,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2535,7 +2537,7 @@ void __cdecl mountain_sprites_reg_atexit(void)
 void __cdecl mountain_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&mountain_sprites),0x3c,0x10,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&mountain_sprites),0x3c,0x10,(code *)sprite_destroy);
   return;
 }
 
@@ -2552,7 +2554,7 @@ void __cdecl hill_sprites_global_init(void)
 void __cdecl hill_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&hill_sprites_block.hill_sprites),0x3c,0x10,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&hill_sprites_block.hill_sprites),0x3c,0x10,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2568,7 +2570,7 @@ void __cdecl hill_sprites_reg_atexit(void)
 void __cdecl hill_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&hill_sprites_block.hill_sprites),0x3c,0x10,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&hill_sprites_block.hill_sprites),0x3c,0x10,(code *)sprite_destroy);
   return;
 }
 
@@ -2626,7 +2628,7 @@ void __cdecl unused_sprite_pair_global_init(void)
 void __cdecl unused_sprite_pair_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&war_icon_sprite_block.unused_sprite_pair),0x3c,2,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&war_icon_sprite_block.unused_sprite_pair),0x3c,2,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2642,7 +2644,7 @@ void __cdecl unused_sprite_pair_reg_atexit(void)
 void __cdecl unused_sprite_pair_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&war_icon_sprite_block.unused_sprite_pair),0x3c,2,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&war_icon_sprite_block.unused_sprite_pair),0x3c,2,(code *)sprite_destroy);
   return;
 }
 
@@ -2782,7 +2784,7 @@ void __cdecl coast_quarter_sprites_global_init(void)
 void __cdecl coast_quarter_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites),0x3c,0x20,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites),0x3c,0x20,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2798,7 +2800,7 @@ void __cdecl coast_quarter_sprites_reg_atexit(void)
 void __cdecl coast_quarter_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites),0x3c,0x20,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites),0x3c,0x20,(code *)sprite_destroy);
   return;
 }
 
@@ -2815,7 +2817,7 @@ void __cdecl river_mouth_sprites_global_init(void)
 void __cdecl river_mouth_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites),0x3c,4,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites),0x3c,4,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2831,7 +2833,7 @@ void __cdecl river_mouth_sprites_reg_atexit(void)
 void __cdecl river_mouth_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites),0x3c,4,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites),0x3c,4,(code *)sprite_destroy);
   return;
 }
 
@@ -2848,7 +2850,7 @@ void __cdecl road_sprites_global_init(void)
 void __cdecl road_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&road_sprites_block.road_sprites),0x3c,0x12,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&road_sprites_block.road_sprites),0x3c,0x12,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2864,7 +2866,7 @@ void __cdecl road_sprites_reg_atexit(void)
 void __cdecl road_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&road_sprites_block.road_sprites),0x3c,0x12,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&road_sprites_block.road_sprites),0x3c,0x12,(code *)sprite_destroy);
   return;
 }
 
@@ -2881,7 +2883,7 @@ void __cdecl land_improvement_sprites_global_init(void)
 void __cdecl land_improvement_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&land_improvement_sprites_block.land_improvement_sprites),0x3c,3,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&land_improvement_sprites_block.land_improvement_sprites),0x3c,3,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -2897,7 +2899,7 @@ void __cdecl land_improvement_sprites_reg_atexit(void)
 void __cdecl land_improvement_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&land_improvement_sprites_block.land_improvement_sprites),0x3c,3,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&land_improvement_sprites_block.land_improvement_sprites),0x3c,3,(code *)sprite_destroy);
   return;
 }
 
@@ -2996,7 +2998,7 @@ void __cdecl terrain_resource_sprites_global_init(void)
 void __cdecl terrain_resource_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites),0x3c,0x16,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites),0x3c,0x16,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -3012,7 +3014,7 @@ void __cdecl terrain_resource_sprites_reg_atexit(void)
 void __cdecl terrain_resource_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites),0x3c,0x16,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites),0x3c,0x16,(code *)sprite_destroy);
   return;
 }
 
@@ -3029,7 +3031,7 @@ void __cdecl airbase_sprites_global_init(void)
 void __cdecl airbase_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&airbase_sprites_block.airbase_sprites),0x3c,2,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&airbase_sprites_block.airbase_sprites),0x3c,2,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -3045,7 +3047,7 @@ void __cdecl airbase_sprites_reg_atexit(void)
 void __cdecl airbase_sprites_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&airbase_sprites_block.airbase_sprites),0x3c,2,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&airbase_sprites_block.airbase_sprites),0x3c,2,(code *)sprite_destroy);
   return;
 }
 
@@ -3103,7 +3105,7 @@ void __cdecl resource_shortage_icon_sprites_global_init(void)
 void __cdecl resource_shortage_icon_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&war_icon_sprite_block.resource_shortage_icon_sprites),0x3c,6,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&war_icon_sprite_block.resource_shortage_icon_sprites),0x3c,6,(code *)sprite_init,(code *)sprite_destroy);
   return;
 }
 
@@ -3119,7 +3121,7 @@ void __cdecl resource_shortage_icon_sprites_reg_atexit(void)
 void __cdecl resource_shortage_icon_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&war_icon_sprite_block.resource_shortage_icon_sprites),0x3c,6,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&war_icon_sprite_block.resource_shortage_icon_sprites),0x3c,6,(code *)sprite_destroy);
   return;
 }
 
@@ -3177,7 +3179,7 @@ void __cdecl map_views_global_init(void)
 void __cdecl map_views_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&map_views_block.map_views),0x3f0,8,(mapview_ctor),(mapview_dtor));
+  crt_vector_ctor_iterator(((i8 *)&map_views_block.map_views),0x3f0,8,(code *)mapview_ctor,(code *)mapview_dtor);
   return;
 }
 
@@ -3193,7 +3195,7 @@ void __cdecl map_views_reg_atexit(void)
 void __cdecl map_views_atexit_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&map_views_block.map_views),0x3f0,8,(mapview_dtor));
+  crt_vector_dtor_iterator(((i8 *)&map_views_block.map_views),0x3f0,8,(code *)mapview_dtor);
   return;
 }
 
@@ -4748,15 +4750,15 @@ void __cdecl terrain_editor_on_rename(void)
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414));
-    label = label_string(*(i32 *)(label_string_ids + 0x7bc));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7bc));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7bc));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7bc));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x3a4),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x414),label);
     for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
       if ((terrain2 != 0xd) && (terrain2 != 0x18)) {
@@ -4918,7 +4920,7 @@ void __cdecl terrain_editor_on_edit_icon(void)
     sprites = ((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) % 0xb) * 0x78;
   }
   if (sprites != (i8 *)0x0) {
-    title = label_string(*(i32 *)(label_string_ids + 0x7d8));
+    title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
     sprite_editor_run((iptr)sprites,title,sheet_id,(iptr)save_fn);
   }
   terrain_editor_redraw();
@@ -4962,7 +4964,7 @@ void __cdecl terrain_editor_on_edit_river(void)
   if (sprites != (i8 *)0x0) {
     save_fn = ((i8*)(sprite_sheet_save_terrain2));
     sheet_id = 8;
-    title = label_string(*(i32 *)(label_string_ids + 0x7d8));
+    title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
     sprite_editor_run((iptr)sprites,title,sheet_id,(iptr)save_fn);
   }
   terrain_editor_redraw();
@@ -5005,7 +5007,7 @@ void __cdecl terrain_editor_on_edit_coast(void)
   if (sprites != (i8 *)0x0) {
     save_fn = ((i8*)(sprite_sheet_save_terrain2));
     sheet_id = 9;
-    title = label_string(*(i32 *)(label_string_ids + 0x7d8));
+    title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
     sprite_editor_run((iptr)sprites,title,sheet_id,(iptr)save_fn);
   }
   terrain_editor_redraw();
@@ -5058,7 +5060,7 @@ void __cdecl terrain_editor_on_edit_misc(void)
   if (sprites != (i8 *)0x0) {
     save_fn = ((i8*)(sprite_sheet_save_terrain1));
     sheet_id = 10;
-    title = label_string(*(i32 *)(label_string_ids + 0x7d8));
+    title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
     sprite_editor_run((iptr)sprites,title,sheet_id,(iptr)save_fn);
   }
   terrain_editor_redraw();
@@ -5203,36 +5205,36 @@ void __thiscall terrain_editor_create_combo(ViewWindow *self,int combo_idx)
   case 0:
     for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
       if ((terrain2 != 0xd) && (terrain2 != 0x18)) {
-        label = label_string(terrain_types[terrain2].name);
+        label = (iptr)label_string(terrain_types[terrain2].name);
         combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
       }
     }
     break;
   case 1:
   case 3:
-    label = label_string(*(i32 *)(label_string_ids + 0x7bc));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7bc));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
-      label = label_string(terrain_types[terrain2].name);
+      label = (iptr)label_string(terrain_types[terrain2].name);
       combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     }
     break;
   case 2:
   case 4:
-    label = label_string(*(i32 *)(label_string_ids + 0x7c8));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c8));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     for (terrain2 = 1; terrain2 < 7; terrain2++) {
-      label = label_string(government_names[terrain2]);
+      label = (iptr)label_string(government_names[terrain2]);
       combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     }
     break;
   case 5:
-    label = label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
-      label = label_string(terrain_types[terrain2].name);
+      label = (iptr)label_string(terrain_types[terrain2].name);
       combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),label);
     }
   }
@@ -5459,7 +5461,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   seh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
   editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
-  this_00 = operator_new(0x48);
+  this_00 = (DibSurface *)operator_new(0x48);
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     new_surface = (DibSurface *)0x0;
@@ -5486,7 +5488,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   wnd_y = 0;
   wnd_x = 0;
   wnd_style = 0xd;
-  title_text = label_string(*(i32 *)(label_string_ids + 0x728));
+  title_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x728));
   frame_wnd_create
             ((FrameWindow *)self,title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   for (ctrl_idx = 0; ctrl_idx < 0xf; ctrl_idx++) {
@@ -5510,7 +5512,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  btn_label = label_string(*(i32 *)(label_string_ids + 0x3f8));
+  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)btn_rect,btn_label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)terrain_editor_on_ok);
@@ -5522,7 +5524,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     rename_parent = self->window_2;
   }
-  btn_label = label_string(*(i32 *)(label_string_ids + 0xa8));
+  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)btn_rect,btn_label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)terrain_editor_on_rename);
@@ -5534,7 +5536,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  btn_label = label_string(*(i32 *)(label_string_ids + 0x8ec));
+  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)btn_rect,btn_label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)terrain_editor_on_help);
@@ -5546,7 +5548,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  btn_label = label_string(*(i32 *)(label_string_ids + 0x3fc));
+  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)btn_rect,btn_label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)terrain_editor_on_cancel);
@@ -5567,7 +5569,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     icon_parent = self->window_2;
   }
-  btn_label = label_string(*(i32 *)(label_string_ids + 0x7cc));
+  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)btn_rect,btn_label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)terrain_editor_on_edit_icon);
@@ -5580,7 +5582,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     river_parent = self->window_2;
   }
-  btn_label = label_string(*(i32 *)(label_string_ids + 0x8f4));
+  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8f4));
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)river_parent,0x65,(iptr)btn_rect,btn_label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)terrain_editor_on_edit_river);
@@ -5592,7 +5594,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     coast_parent = self->window_2;
   }
-  btn_label = label_string(*(i32 *)(label_string_ids + 0x8f8));
+  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8f8));
   button_create
             ((Control *)(((DocumentWindow *)self)->terrain_coast_button),(iptr)coast_parent,0x65,(iptr)btn_rect,btn_label);
   button_set_callback((Control *)(((DocumentWindow *)self)->terrain_coast_button),(iptr)terrain_editor_on_edit_coast);
@@ -5604,7 +5606,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   else {
     misc_parent = self->window_2;
   }
-  btn_label = label_string(*(i32 *)(label_string_ids + 0x8f0));
+  btn_label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8f0));
   button_create
             ((Control *)&((DocumentWindow *)self)->terrain_misc_button,(iptr)misc_parent,0x65,(iptr)btn_rect,btn_label);
   button_set_callback((Control *)&((DocumentWindow *)self)->terrain_misc_button,(iptr)terrain_editor_on_edit_misc);
@@ -5835,7 +5837,7 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
   
   seh_state = 0xffffffff;
   any_visible = 0;
-  crt_vector_ctor_iterator(saved_bg,0x48,8,surface_ctor,surface_dtor);
+  crt_vector_ctor_iterator(saved_bg,0x48,8,(code *)surface_ctor,(code *)surface_dtor);
   seh_state = 0;
   sound_played = 0;
   net_session_block.map_redraw_busy = 1;
@@ -5932,7 +5934,7 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
   if (any_visible == 0) {
     net_session_block.map_redraw_busy = 0;
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 0056d25b */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor); }
+    /* inlined unwind funclet 0056d25b */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,(code *)surface_dtor); }
   }
   else {
     last_time = timeGetTime();
@@ -6005,7 +6007,7 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
     }
     net_session_block.map_redraw_busy = 0;
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 0056d25b */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor); }
+    /* inlined unwind funclet 0056d25b */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,(code *)surface_dtor); }
   }
   return;
 }
@@ -6047,7 +6049,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  crt_vector_ctor_iterator(saved_bg,0x48,8,surface_ctor,surface_dtor);
+  crt_vector_ctor_iterator(saved_bg,0x48,8,(code *)surface_ctor,(code *)surface_dtor);
   seh_state = 0;
   any_visible = 0;
   net_session_block.map_redraw_busy = 1;
@@ -6087,7 +6089,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
     net_session_block.map_redraw_busy = 0;
     result = 0;
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 0057f628 */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor); }
+    /* inlined unwind funclet 0057f628 */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,(code *)surface_dtor); }
   }
   else {
     if (sound_id != 0) {
@@ -6163,7 +6165,7 @@ explosion_cleanup:
     gfx_reset_zoom_scale();
     net_session_block.map_redraw_busy = 0;
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 0057f628 */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor); }
+    /* inlined unwind funclet 0057f628 */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,(code *)surface_dtor); }
     result = 1;
   }
   return result;
@@ -6196,7 +6198,7 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
   ok = map_in_bounds(x,y);
   if ((ok != 0) && (ok = tile_visible_to(x,y,human_civ[0]), ok != 0)) {
     net_session_block.map_redraw_busy = 1;
-    alloc = operator_new(0x48);
+    alloc = (DibSurface *)operator_new(0x48);
     seh_state = 0;
     if (alloc == (DibSurface *)0x0) {
       new_surface = (DibSurface *)0x0;
@@ -6848,7 +6850,7 @@ int __cdecl tile_owner(iptr x,iptr y)
 
 {
   iptr in_bounds;
-  iptr tile;
+  Tile *tile;
   i32 owner2;
   
   in_bounds = map_in_bounds(x,y);
@@ -6857,7 +6859,7 @@ int __cdecl tile_owner(iptr x,iptr y)
   }
   else {
     tile = tile_at(x,y);
-    owner2 = (int)(uint)*(byte *)(tile + 5) >> 4;
+    owner2 = (int)(uint)tile->owner >> 4;
     if (owner2 == 0xf) {
       owner2 = -1;
     }
@@ -6869,10 +6871,10 @@ int __cdecl tile_owner(iptr x,iptr y)
 uint __cdecl tile_landmass(iptr x,iptr y)
 
 {
-  iptr tile;
+  Tile *tile;
   
   tile = tile_at(x,y);
-  return (uint)*(byte *)(tile + 3);
+  return (uint)tile->landmass;
 }
 
 /* 005b8aa8 auto */
@@ -6894,10 +6896,10 @@ i32 __cdecl tile_land_landmass(iptr x,iptr y)
 int __cdecl tile_radius_civ(iptr x,iptr y)
 
 {
-  iptr tile;
+  Tile *tile;
   
   tile = tile_at(x,y);
-  return (int)(uint)*(byte *)(tile + 2) >> 5;
+  return (int)(uint)tile->radius >> 5;
 }
 
 /* 005b8b1a auto */
@@ -6911,7 +6913,7 @@ void __cdecl tile_update_known(iptr x,iptr y,iptr civ)
   if (civ != 0) {
     known_arg6 = 1;
     known_arg5 = 0;
-    tile = tile_at(x,y);
+    tile = (iptr)tile_at(x,y);
     known_set(x,y,CONCAT31((int3)((uint)tile >> 8),*(i8 *)(tile + 1)),civ,
               known_arg5,known_arg6);
   }
@@ -6929,7 +6931,7 @@ uint __cdecl tile_visible_to(iptr x,iptr y,iptr civ)
     result = 1;
   }
   else {
-    tile = tile_at(x,y);
+    tile = (iptr)tile_at(x,y);
     result = (uint)*(byte *)(tile + 4) & 1 << ((byte)civ & 0x1f);
   }
   return result;
@@ -6939,10 +6941,10 @@ uint __cdecl tile_visible_to(iptr x,iptr y,iptr civ)
 uint __cdecl tile_get_fertility(iptr x,iptr y)
 
 {
-  iptr tile;
+  Tile *tile;
   
   tile = tile_at(x,y);
-  return *(byte *)(tile + 5) & 0xf;
+  return tile->owner & 0xf;
 }
 
 /* 005b8c42 auto */
@@ -7181,10 +7183,10 @@ int __cdecl landmass_count_bordering(iptr body)
 uint __cdecl tile_improvements(iptr x,iptr y)
 
 {
-  iptr tile;
+  Tile *tile;
   
   tile = tile_at(x,y);
-  return (uint)*(byte *)(tile + 1);
+  return (uint)tile->improvements;
 }
 
 /* 005b94fc auto */
@@ -7194,7 +7196,7 @@ void __cdecl tile_set_improvements(iptr x,iptr y,iptr bits,iptr set,int sync)
   char old_value;
   iptr tile;
   
-  tile = tile_at(x,y);
+  tile = (iptr)tile_at(x,y);
   old_value = *(char *)(tile + 1);
   if (set == 0) {
     *(byte *)(tile + 1) = *(byte *)(tile + 1) & ~(byte)bits;
@@ -7252,7 +7254,7 @@ void __cdecl tile_set_visible(iptr x,iptr y,iptr bits,iptr set,int sync)
   char old_value;
   iptr tile;
   
-  tile = tile_at(x,y);
+  tile = (iptr)tile_at(x,y);
   old_value = *(char *)(tile + 4);
   if (set == 0) {
     *(byte *)(tile + 4) = *(byte *)(tile + 4) & ~(byte)bits;
@@ -7283,7 +7285,7 @@ void __cdecl tile_set_fertility(iptr x,iptr y,iptr fertility,iptr sync)
   char old_value;
   iptr tile;
   
-  tile = tile_at(x,y);
+  tile = (iptr)tile_at(x,y);
   old_value = *(char *)(tile + 5);
   *(byte *)(tile + 5) = *(byte *)(tile + 5) & 0xf0;
   *(byte *)(tile + 5) = *(byte *)(tile + 5) | (byte)fertility & 0xf;
@@ -7313,7 +7315,7 @@ void __cdecl tile_set_owner(iptr x,iptr y,iptr owner,iptr sync)
   if ((owner < 0) || (8 < owner)) {
     owner = 0xf;
   }
-  tile = tile_at(x,y);
+  tile = (iptr)tile_at(x,y);
   old_value = *(char *)(tile + 5);
   *(byte *)(tile + 5) = *(byte *)(tile + 5) & 0xf;
   *(byte *)(tile + 5) = *(byte *)(tile + 5) | (byte)(owner << 4);
@@ -7338,12 +7340,12 @@ void __cdecl tile_set_landmass(iptr x,iptr y,iptr landmass,iptr sync)
 
 {
   char old_value;
-  iptr tile;
+  Tile *tile;
   
   tile = tile_at(x,y);
-  old_value = *(char *)(tile + 3);
-  *(i8 *)(tile + 3) = (i8)landmass;
-  if (((sync != 0) && (*(char *)(tile + 3) != old_value)) && (2 < game.multiplayer)) {
+  old_value = (char)tile->landmass;
+  tile->landmass = (i8)landmass;
+  if (((sync != 0) && ((char)tile->landmass != old_value)) && (2 < game.multiplayer)) {
     if ((net_session_block.net_host_flag == '\0') && (net_session_block.net_tile_batch_active != '\0')) {
       net_batch_add(5,x,y,landmass,0,0);
     }
@@ -7366,7 +7368,7 @@ void __cdecl tile_set_radius_civ(iptr x,iptr y,iptr radius_civ,iptr sync)
   char old_value;
   iptr tile;
   
-  tile = tile_at(x,y);
+  tile = (iptr)tile_at(x,y);
   old_value = *(char *)(tile + 2);
   *(byte *)(tile + 2) = *(byte *)(tile + 2) & 0x1f;
   *(byte *)(tile + 2) = (byte)((radius_civ & 7U) << 5) | *(byte *)(tile + 2);

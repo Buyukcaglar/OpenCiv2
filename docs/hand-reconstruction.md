@@ -3,9 +3,11 @@
 Most of the game was machine-translated (`src/auto/`, generated once by
 `tools/gen_c.py` from Ghidra's output) and is now edited directly: the
 generator no longer runs.  Functions it could not translate were written by
-hand in `src/game/*.c`; `src/auto` keeps a one-line pointer where each was
-(`/* 005e22ed: written by hand in src/game/fixups.c */`).  A function can be
-moved between the two freely.
+hand in `src/game/*.cpp`; `src/auto` keeps a one-line pointer where each was
+(`/* 005e22ed: written by hand in src/game/fixups.cpp */`).  A function can be
+moved between the two freely.  The game is C++ (the platform layer it
+runs on, `src/platform`, is C); `tools/cxx_one.sh FILE` compiles one file and
+compares each function's machine code with a reference build.
 
 ## Rules
 
@@ -33,7 +35,7 @@ moved between the two freely.
   AddressSanitizer build finds such places:
   `tools/build_native.py --target linux32asan`, then run the replays with it.
 * **Register arguments** (`in_EAX`, `in_ECX`, `in_AL`) are usually leftover
-  register contents, not arguments: see src/game/regargs.c.
+  register contents, not arguments: see src/game/regargs.cpp.
 * **Unwind funclets / EBP-relative code** (`unaff_EBP`): MSVC emits small
   `call $L` blocks that run with the *caller's* EBP to destroy locals;
   translate them as plain destructor calls on the caller's locals.
