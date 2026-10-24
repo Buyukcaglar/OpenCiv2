@@ -100,6 +100,34 @@ def on_windows():
     return sys.platform == 'win32' or bool(os.environ.get('MSYSTEM'))
 
 
+def windows_resources(cc, obj):
+    """src/host/res/civ2-port.rc compiled: the icon, the manifest, and as
+    RCDATA the program's own files GameData gets (src/host/setup_files.c):
+    the fonts (data/native) and CIV2.DAT (harness), each 8 bytes of size
+    and the file xz-compressed."""
+    import lzma
+    res = os.path.join(obj, 'res')
+    os.makedirs(res, exist_ok=True)
+    for src in (os.path.join(ROOT, 'data', 'native', 'fonts.bin'), os.path.join(ROOT, 'data', 'native', 'fonts_aa.bin'),
+                os.path.join(ROOT, 'harness', 'CIV2.DAT')):
+        out = os.path.join(res, os.path.basename(src) + '.xzs')
+        if not os.path.exists(out) or os.path.getmtime(out) < os.path.getmtime(src):
+            print('compressing %s' % os.path.relpath(src, ROOT), flush=True)
+            data = open(src, 'rb').read()
+            open(out, 'wb').write(len(data).to_bytes(8, 'little') + lzma.compress(data, preset=9 | lzma.PRESET_EXTREME))
+    rc = os.path.join(ROOT, 'src', 'host', 'res', 'civ2-port.rc')
+    o = os.path.join(obj, 'civ2-port.res.o')
+    windres = os.environ.get('WINDRES')
+    if not windres:
+        base = os.path.basename(cc)
+        windres = (cc[:-len(base)] + base[:base.rindex('-gcc')] + '-windres') if '-gcc' in base else 'windres'
+    newer = max(os.path.getmtime(f) for f in glob.glob(os.path.join(ROOT, 'src', 'host', 'res', '*')) +
+                glob.glob(os.path.join(res, '*')))
+    if not os.path.exists(o) or os.path.getmtime(o) < newer:
+        run([windres, '-I', os.path.dirname(rc), '-I', res, '-O', 'coff', '-i', rc, '-o', o])
+    return o
+
+
 def exe(cross_windows=False):
     """build/civ2-port: compile the generated C with the host runtime.
     cross_windows: build/civ2-port.exe with MinGW-w64 and SDL2's MinGW
@@ -109,9 +137,12 @@ def exe(cross_windows=False):
         cc = os.environ.get('CC') or 'x86_64-w64-mingw32-gcc'
         sdl = os.path.join(paths.SDL2_MINGW, 'x86_64-w64-mingw32')
         sdl_cflags = ['-I' + os.path.join(sdl, 'include', 'SDL2'), '-Dmain=SDL_main']
-        # (-mwindows: a GUI program, no console window; as sdl2-config gives on MSYS2)
-        sdl_libs = ['-L' + os.path.join(sdl, 'lib'), '-lmingw32', '-mwindows', '-lSDL2main', '-lSDL2']
-        sdl_dll = os.path.join(sdl, 'bin', 'SDL2.dll')
+        # (-mwindows: a GUI program, no console window; as sdl2-config gives
+        # on MSYS2.)  SDL2 linked in: the program is one file, beside GameData.
+        sdl_libs = ['-L' + os.path.join(sdl, 'lib'), '-lmingw32', '-mwindows', '-lSDL2main',
+                    '-Wl,-Bstatic', '-lSDL2', '-Wl,-Bdynamic', '-lsetupapi', '-lwinmm', '-limm32', '-lversion',
+                    '-loleaut32', '-lcfgmgr32', '-lgdi32']
+        sdl_dll = None
         obj = OBJ + '-windows'
     else:
         cc = os.environ.get('CC') or default_cc()
@@ -131,17 +162,26 @@ def exe(cross_windows=False):
     rt = [os.path.join(CDIR, f) for f in ('wasm-rt-impl.c', 'wasm-rt-mem-impl.c', 'wasm-rt-exceptions-impl.c')]
     # (the native menu bar: Win32 on Windows, Cocoa on macOS)
     mac = sys.platform == 'darwin' and not cross_windows
+    # (Windows: the set-up of GameData from the user's copy of the game, the
+    # light and dark mode of the program's windows: src/host/setup.h)
     host = [os.path.join(ROOT, 'src', 'host', f) for f in
-            ('port_main.c', 'wasi.c', 'host_sdl.c') + (('host_menu_win.c',) if windows else ()) +
+            ('port_main.c', 'wasi.c', 'host_sdl.c') +
+            (('host_menu_win.c', 'darkmode_win.c', 'setup_win.c', 'setup_files.c', 'setup_manifest.c', 'sha256.c')
+             if windows else ()) +
             (('host_menu_mac.m',) if mac else ())]
+    deps = ['-I' + os.path.join(paths.DEPS_WINDOWS, 'include'), '-DLIBARCHIVE_STATIC'] if windows else []
+    if windows and not os.path.exists(os.path.join(paths.DEPS_WINDOWS, 'lib', 'libarchive.a')):
+        sys.exit('the set-up libraries are not built: run tools/build_deps.py (see README)')
     jobs = [(s, ['-O2', '-fno-strict-aliasing', '-w']) for s in gen + rt] + \
-           [(s, ['-O2', '-Wall', '-Werror=implicit-function-declaration'] + sdl_cflags +
+           [(s, ['-O2', '-Wall', '-Werror=implicit-function-declaration'] + sdl_cflags + deps +
              (['-fobjc-arc'] if s.endswith('.m') else [])) for s in host]
+    headers = max(os.path.getmtime(h) for h in glob.glob(os.path.join(ROOT, 'src', 'host', '*.h')))
 
     def compile_one(job):
         src, flags = job
         o = os.path.join(obj, os.path.basename(src) + '.o')
-        if not os.path.exists(o) or os.path.getmtime(o) < os.path.getmtime(src):
+        newer = max(os.path.getmtime(src), headers if src in host else 0)
+        if not os.path.exists(o) or os.path.getmtime(o) < newer:
             subprocess.run([cc, '-c', '-o', o, src, '-I', CDIR, '-I', os.path.join(ROOT, 'src', 'host')] + flags,
                            check=True)
         return o
@@ -149,8 +189,23 @@ def exe(cross_windows=False):
     with concurrent.futures.ThreadPoolExecutor(int(os.environ.get('JOBS', '2'))) as ex:
         objs = list(ex.map(compile_one, jobs))
     out = os.path.join(ROOT, 'build', 'civ2-port' + ('.exe' if windows else ''))
-    # (Windows: the C runtime's threads library linked in, so only SDL2.dll is needed beside the program)
+    # (Windows: the C runtime's threads library linked in, so nothing else
+    # is needed beside the program; the set-up's archive, CD and cabinet
+    # readers; the icon, manifest and the program's own files as resources)
     libs = ['-lm', '-static-libgcc', '-Wl,-Bstatic', '-lpthread', '-Wl,-Bdynamic'] if windows else ['-lm', '-lpthread']
+    if windows:
+        objs.append(windows_resources(cc, obj))
+        # MinGW-w64's gcc links a default-manifest.o into every program; the
+        # program has its own (src/host/res): an empty one found first
+        empty = os.path.join(obj, 'no-default-manifest')
+        os.makedirs(empty, exist_ok=True)
+        if not os.path.exists(os.path.join(empty, 'default-manifest.o')):
+            open(os.path.join(empty, 'empty.c'), 'w').write('/* (tools/build_port.py) */\n')
+            run([cc, '-c', '-o', os.path.join(empty, 'default-manifest.o'), os.path.join(empty, 'empty.c')])
+        objs.insert(0, '-B' + empty + os.sep)
+        libs = ['-L' + os.path.join(paths.DEPS_WINDOWS, 'lib'), '-Wl,-Bstatic', '-larchive', '-lunshield', '-llzma',
+                '-lbz2', '-lz', '-Wl,-Bdynamic', '-lcomctl32', '-ldwmapi', '-luxtheme', '-lole32', '-luuid',
+                '-lshell32', '-ladvapi32', '-luser32', '-lbcrypt'] + libs
     if mac:
         libs += ['-framework', 'Cocoa']
     run([cc, '-o', out] + objs + sdl_libs + libs)

@@ -16,6 +16,11 @@ typedef struct HostMenuItem {
 void host_menu_apply(SDL_Window *window, const HostMenuItem *items, int n);
 /* Windows: the item id of a WM_COMMAND from the menu bar (an SDL_SysWMmsg), else 0. */
 int host_menu_syswm_command(const void *msg);
+/* Windows: the window's title bar and menus in the system's light or dark mode. */
+void host_win_theme(SDL_Window *window);
+/* Windows: a message box in that mode, over window (may be NULL); as host_message_box. */
+int host_win_message_box(SDL_Window *window, int icon, const char *title, const char *text, int nbuttons,
+                         const char *const *labels, const int *ids, int enter, int escape);
 /* macOS: an item was chosen (host_sdl.c turns it into HOST_EV_COMMAND). */
 void host_menu_picked(int id);
 /* macOS: the program made the active one (its menu bar the one shown). */

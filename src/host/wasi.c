@@ -173,6 +173,25 @@ static void put_filestat(u32 buf, const struct stat *st)
     PUT64(buf + 56, (u64)st->st_ctime * 1000000000ull);
 }
 
+/* CIV2_TRACE_FILES=PATH: the files the game opens, one per line (with
+ * "-" before those it could not), e.g. to list what it needs of the
+ * installed game (tools/gen_manifest.py). */
+static void trace_open(const char *path, int ok)
+{
+    static FILE *log;
+    static int tried;
+    if (!tried) {
+        const char *t = getenv("CIV2_TRACE_FILES");
+        tried = 1;
+        if (t && *t)
+            log = fopen(t, "a");
+    }
+    if (log) {
+        fprintf(log, "%s%s\n", ok ? "" : "-", path);
+        fflush(log);
+    }
+}
+
 /* ---- arguments, environment, clocks, exit ---- */
 
 #define WASI(name) w2c_wasi__snapshot__preview1_##name
@@ -366,6 +385,7 @@ u32 WASI(path_open)(Wasi *w, u32 dirfd, u32 dirflags, u32 path, u32 len, u32 ofl
     if (oflags & 8) flags |= O_TRUNC;
     if (fdflags & 1) flags |= O_APPEND;
     h = open(p, flags | O_BINARY, 0666);
+    trace_open(p, h >= 0);
     free(p);
     if (h < 0)
         return werr(errno);

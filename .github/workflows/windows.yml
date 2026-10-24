@@ -1,5 +1,6 @@
 # Builds the Windows executable on every push to main and publishes it as the
-# "latest" release (a zip to unpack into the Civilization II folder).
+# "latest" release (a zip with the one executable, which sets the game up
+# from the user's copy).
 name: Windows build
 
 on:
@@ -23,8 +24,14 @@ jobs:
       - name: Toolchain (wasi-sdk, wabt, MinGW, SDL2 for MinGW)
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends gcc-mingw-w64-x86-64-posix
+          sudo apt-get install -y --no-install-recommends gcc-mingw-w64-x86-64-posix \
+            binutils-mingw-w64-x86-64 cmake ninja-build
           sh tools/fetch-toolchain.sh windows
+
+      - name: Set-up libraries (libarchive, libunshield ...)
+        env:
+          CC: x86_64-w64-mingw32-gcc-posix
+        run: python3 tools/build_deps.py
 
       - name: Build
         env:
@@ -33,10 +40,8 @@ jobs:
 
       - name: Package
         run: |
-          mkdir -p pkg/Civ2Reconstructed/data
+          mkdir -p pkg/Civ2Reconstructed
           cp build/civ2-port.exe pkg/Civ2Reconstructed/civ2-reconstructed.exe
-          cp build/SDL2.dll pkg/Civ2Reconstructed/
-          cp data/native/* pkg/Civ2Reconstructed/data/
           cp LICENSE pkg/Civ2Reconstructed/LICENSE.txt
           cat > pkg/Civ2Reconstructed/README.txt <<'TXT'
           Civilization II (Multiplayer Gold) - reconstructed
@@ -44,9 +49,18 @@ jobs:
 
           You need your own copy of Civilization II Multiplayer Gold Edition.
 
-          1. Copy everything in this folder into your Civilization II folder
-             (the folder that contains civ2.exe).
-          2. Double-click civ2-reconstructed.exe.
+          1. Put civ2-reconstructed.exe in any folder and double-click it.
+          2. Show it your copy of the game: a zip, 7z or rar of it, its CD
+             image (.cue/.bin or .iso), or a folder with the game (installed
+             or a copy of the CD).
+          3. It checks the game's files, copies the ones it needs into a
+             GameData folder beside it, and starts the game.  Afterwards it
+             starts the game directly; keep the program and GameData together.
+
+          Run "civ2-reconstructed.exe --setup" to choose another copy.
+
+          Icon: "Icon Civilization II" by alexielios,
+          https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212
 
           Build ${{ github.sha }}
           TXT
@@ -59,7 +73,7 @@ jobs:
         run: |
           git tag -f latest
           git push -f origin latest
-          notes="Windows build of ${GITHUB_SHA::7}: unpack into your Civilization II folder and run civ2-reconstructed.exe (see README.txt)."
+          notes="Windows build of ${GITHUB_SHA::7}: unpack anywhere, run civ2-reconstructed.exe and show it your copy of the game (see README.txt). Icon by alexielios: https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212"
           if gh release view latest >/dev/null 2>&1; then
             gh release edit latest --notes "$notes" --prerelease
           else

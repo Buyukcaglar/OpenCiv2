@@ -1,0 +1,38 @@
+/* civ2-port.exe's Windows resources: the icon (ICON-CREDITS.md), the
+   manifest and the version information.  Compiled by windres
+   (tools/build_port.py). */
+#include <windows.h>
+
+1 ICON "civ2-port.ico"
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "civ2-port.manifest"
+
+/* What GameData gets from the program itself (setup_files.c), made by
+   tools/build_port.py: the fonts (data/native) and CIV2.DAT (harness). */
+201 RCDATA "fonts.bin.xzs"
+202 RCDATA "fonts_aa.bin.xzs"
+203 RCDATA "CIV2.DAT.xzs"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION 1, 0, 0, 0
+PRODUCTVERSION 1, 0, 0, 0
+FILEOS VOS_NT_WINDOWS32
+FILETYPE VFT_APP
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "FileDescription", "Civilization II (reconstructed)"
+            VALUE "ProductName", "Civilization II Multiplayer Gold Edition, reconstructed"
+            VALUE "InternalName", "civ2-port"
+            VALUE "OriginalFilename", "civ2-port.exe"
+            VALUE "LegalCopyright", "Reconstruction: MIT License. Civilization II and its game files are not included. Icon: alexielios (DeviantArt)."
+            VALUE "FileVersion", "1.0.0.0"
+            VALUE "ProductVersion", "1.0.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

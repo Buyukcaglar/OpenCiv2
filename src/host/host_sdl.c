@@ -71,6 +71,9 @@ int host_open_window(int w, int h, int scale)
                                   w * (scale < 1 ? 1 : scale), h * (scale < 1 ? 1 : scale),
                                   SDL_WINDOW_RESIZABLE | (getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN") ?
                                                           SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+#ifdef _WIN32
+    host_win_theme(window);
+#endif
     return window && make_renderer(w, h);
 }
 
@@ -492,6 +495,10 @@ int host_message_box(int icon, const char *title, const char *text, int nbuttons
     SDL_MessageBoxButtonData buttons[8];
     SDL_MessageBoxData data;
     int i, hit = -1;
+#ifdef _WIN32
+    /* (SDL's has the light look only) */
+    return host_win_message_box(window, icon, title, text, nbuttons, labels, ids, enter, escape);
+#endif
     if (nbuttons > 8)
         nbuttons = 8;
     for (i = 0; i < nbuttons; i++) {

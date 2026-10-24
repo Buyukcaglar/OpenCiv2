@@ -32,3 +32,5 @@ WASI_SDK = _first_dir(os.environ.get('WASI_SDK'), os.path.join(ROOT, 'tools', 't
 WABT = _first_dir(os.environ.get('WABT'), os.path.join(ROOT, 'tools', 'toolchain', 'wabt'), '/opt/wabt')
 # SDL2's MinGW release, for cross-compiling the Windows executable.
 SDL2_MINGW = _first_dir(os.environ.get('SDL2_MINGW'), os.path.join(ROOT, 'tools', 'toolchain', 'SDL2-mingw'))
+# The Windows executable's static libraries for game set-up (tools/build_deps.py).
+DEPS_WINDOWS = os.environ.get('DEPS_WINDOWS') or os.path.join(ROOT, 'tools', 'toolchain', 'deps-windows')
