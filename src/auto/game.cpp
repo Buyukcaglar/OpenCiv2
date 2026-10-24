@@ -656,7 +656,7 @@ int __cdecl setup_start_scenario(void)
   iptr rc;
   iptr unit;
   int choice;
-  iptr name2;
+  char *name2;
   int civ;
   u8 is_female;
   iptr gender;
@@ -664,7 +664,7 @@ int __cdecl setup_start_scenario(void)
   GamePalette palette;
   int result;
   Dialog dlg;
-  iptr option;
+  uint *option;
   iptr gov;
   i8 dst[256];
   int level;
@@ -748,16 +748,16 @@ select_civs:
     for (civ = 1; civ < 8; civ++) {
       if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
         text_clear();
-        name2 = (iptr)(civ_name_plural(civ));
-        text_append((const char *)name2);
+        name2 = civ_name_plural(civ);
+        text_append(name2);
         text_append_space();
         text_append_lparen();
-        name2 = (iptr)(civ_leader_name(civ));
-        text_append((const char *)name2);
+        name2 = civ_leader_name(civ);
+        text_append(name2);
         text_append_rparen();
-        option = (iptr)dialog_add_option
+        option = dialog_add_option
                               ((DialogOptionList *)&dlg,(iptr)&map_views_block.text_buffer,civ,0);
-        option_civs[*(int *)(option + 4)] = civ;
+        option_civs[option[1]] = civ;
       }
     }
     choice = dlg_show_modal(&dlg,0);
@@ -828,7 +828,7 @@ select_civs:
 i32 __cdecl load_game_pick_civ(int title_offset)
 
 {
-  iptr name2;
+  char *name2;
   iptr sel;
   int choice;
   i32 arg4;
@@ -842,7 +842,7 @@ i32 __cdecl load_game_pick_civ(int title_offset)
   int enabled_count;
   int option_count2;
   Dialog dlg;
-  iptr option;
+  uint *option;
   iptr option_civs[8];
   i32 seh_prev;
   i8 *seh_handler;
@@ -859,12 +859,12 @@ i32 __cdecl load_game_pick_civ(int title_offset)
     for (civ = 1; civ < 8; civ++) {
       if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
         text_clear();
-        name2 = (iptr)(civ_name_plural(civ));
-        text_append((const char *)name2);
+        name2 = civ_name_plural(civ);
+        text_append(name2);
         text_append_space();
         text_append_lparen();
-        name2 = (iptr)(civ_leader_name(civ));
-        text_append((const char *)name2);
+        name2 = civ_leader_name(civ);
+        text_append(name2);
         text_append_rparen();
         text_append_space();
         text_append_lparen();
@@ -878,20 +878,20 @@ i32 __cdecl load_game_pick_civ(int title_offset)
         text_append((const char *)&str_empty_13);
         choice = option_idx;
         option_idx++;
-        option = (iptr)dialog_add_option((DialogOptionList *)&dlg,(iptr)&map_views_block.text_buffer,choice,0)
+        option = dialog_add_option((DialogOptionList *)&dlg,(iptr)&map_views_block.text_buffer,choice,0)
         ;
-        option_civs[*(int *)(option + 4)] = civ;
+        option_civs[option[1]] = civ;
       }
     }
     option_count2 = option_idx;
     enabled_count = 0;
     for (option_idx = 0; option_idx < option_count2; option_idx++) {
-      option = dialog_find_option((DialogOptionList *)&dlg,option_idx);
+      option = (uint *)dialog_find_option((DialogOptionList *)&dlg,option_idx);
       if (option != 0) {
         enabled_count++;
-        dialog_set_option_disabled((DialogOptionList *)&dlg,*(iptr *)(option + 4),0);
+        dialog_set_option_disabled((DialogOptionList *)&dlg,option[1],0);
         if ((RadioGroupEnableView *)dlg.radio_group != (RadioGroupEnableView *)0x0) {
-          radiogrp_enable_item((RadioGroupEnableView *)dlg.radio_group,*(iptr *)(option + 4));
+          radiogrp_enable_item((RadioGroupEnableView *)dlg.radio_group,option[1]);
         }
       }
     }
@@ -927,9 +927,9 @@ i32 __cdecl load_game_pick_civ(int title_offset)
         arg6 = 0;
         arg5 = 0;
         arg4 = 0;
-        name2 = (iptr)(civ_leader_name((int)game.player_civ));
+        name2 = civ_leader_name((int)game.player_civ);
         choice = dialog_load_text_section
-                          (&dlg,(iptr)&str_game_7,(iptr)&str_name_3,0x17,name2,arg4,arg5,arg6,arg7);
+                          (&dlg,(iptr)&str_game_7,(iptr)&str_name_3,0x17,(iptr)name2,arg4,arg5,arg6,arg7);
         if (choice == 0) {
           dialog_prepend_title_label((iptr)&dlg,title_offset + 0x25e);
           choice = dialog_run_modal(&dlg,(iptr)name_buf,0);
@@ -1161,7 +1161,7 @@ cleanup:
 void __cdecl game_session_begin(void)
 
 {
-  iptr tile;
+  Tile *tile;
   uint y2;
   uint x2;
   int i;
@@ -1173,8 +1173,8 @@ void __cdecl game_session_begin(void)
     x2 = 0;
     net_batch_begin();
     for (i = 0; i < map.area; i++) {
-      tile = (iptr)tile_at(x2,y2);
-      if ((game.human_players & *(byte *)(tile + 4)) != 0) {
+      tile = tile_at(x2,y2);
+      if ((game.human_players & tile->visible) != 0) {
         tile_set_visible(x2,y2,(uint)game.human_players,1,1);
       }
       x2 += 2;
@@ -2909,21 +2909,21 @@ i8 * __cdecl save_file_filter(int save_only,int is_scenario,int is_mp)
 
 {
   size_t len;
-  iptr cursor;
+  char *cursor;
   
   if (is_scenario == 0) {
     if (is_mp == 0) {
       _memset(((i8 *)&grey_palette_block.save_file_filter_buf),0,0x104);
-      cursor = (iptr)save_filter_add_entry((uint)game.multiplayer,(iptr)&grey_palette_block.save_file_filter_buf);
+      cursor = save_filter_add_entry((uint)game.multiplayer,(iptr)&grey_palette_block.save_file_filter_buf);
       if (save_only == 0) {
         if (game.multiplayer != '\0') {
-          cursor = (iptr)save_filter_add_entry(0,cursor);
+          cursor = save_filter_add_entry(0,(iptr)cursor);
         }
         if (game.multiplayer < 3) {
-          cursor = (iptr)save_filter_add_entry(3,cursor);
+          cursor = save_filter_add_entry(3,(iptr)cursor);
         }
         if (game.multiplayer != 1) {
-          save_filter_add_entry(1,cursor);
+          save_filter_add_entry(1,(iptr)cursor);
         }
       }
     }
@@ -3259,7 +3259,7 @@ void __cdecl game_save_dialog(int is_scenario)
   uptr pattern_len;
   i32 leader_name;
   size_t name_len;
-  iptr title;
+  char *title;
   int result;
   char *name_arg;
   i8 *filter_arg;
@@ -3383,10 +3383,10 @@ void __cdecl game_save_dialog(int is_scenario)
       ext_arg = ((i8 *)&grey_palette_block.save_file_ext_bare);
       filter_arg = ((i8 *)&grey_palette_block.save_file_filter_buf);
       name_arg = file_name_buf + 1;
-      title = (iptr)label_string(*(i32 *)
+      title = label_string(*(i32 *)
                                   (label_string_ids + 0x680 + (-(uint)(is_scenario == 0) & 0xffffff4f) * 4)
                                 );
-      result = ui_file_name_dialog((iptr)&main_frame_wnd_block.main_frame_wnd,title,(iptr)name_arg,(iptr)filter_arg,(iptr)ext_arg,leader_name,flag_arg);
+      result = ui_file_name_dialog((iptr)&main_frame_wnd_block.main_frame_wnd,(iptr)title,(iptr)name_arg,(iptr)filter_arg,(iptr)ext_arg,leader_name,flag_arg);
       if (result != 0) {
         __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
         result = save_write_game((iptr)(file_name_buf + 1),is_scenario);
@@ -3397,12 +3397,12 @@ void __cdecl game_save_dialog(int is_scenario)
               popup_game((iptr)&str_emailsaved);
             }
             else {
-              title = civ_leader_title(human_civ[0]);
-              text_set_string_arg(0,(const char *)title);
-              title = (iptr)(civ_leader_name(human_civ[0]));
-              text_set_string_arg(1,(const char *)title);
-              title = (iptr)(civ_name_plural(human_civ[0]));
-              text_set_string_arg(2,(const char *)title);
+              title = (char *)civ_leader_title(human_civ[0]);
+              text_set_string_arg(0,title);
+              title = civ_leader_name(human_civ[0]);
+              text_set_string_arg(1,title);
+              title = civ_name_plural(human_civ[0]);
+              text_set_string_arg(2,title);
               text_clear();
               text_append_year((int)game.year);
               text_set_string_arg(3,(const char *)&map_views_block.text_buffer);
@@ -3433,7 +3433,7 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
 
 {
   size_t str_len;
-  iptr str_arg;
+  char *str_arg;
   int result;
   char *ext_match;
   HANDLE find_handle;
@@ -3499,9 +3499,9 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
   ext_arg = ((i8 *)&grey_palette_block.save_file_ext_bare);
   filter_arg = ((i8 *)&grey_palette_block.save_file_filter_buf);
   name_arg = file_path;
-  str_arg = (iptr)label_string(*(i32 *)
+  str_arg = label_string(*(i32 *)
                               (label_string_ids + 0x684 + (-(uint)(is_scenario == 0) & 0xffffff4f) * 4));
-  result = ui_file_name_dialog((iptr)&main_frame_wnd_block.main_frame_wnd,str_arg,(iptr)name_arg,(iptr)filter_arg,(iptr)ext_arg,flag_arg,flag_arg2);
+  result = ui_file_name_dialog((iptr)&main_frame_wnd_block.main_frame_wnd,(iptr)str_arg,(iptr)name_arg,(iptr)filter_arg,(iptr)ext_arg,flag_arg,flag_arg2);
   if (result == 0) {
     __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
@@ -3599,12 +3599,12 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
       }
       __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
       failed = 0;
-      str_arg = civ_leader_title(human_civ[0]);
-      text_set_string_arg(0,(const char *)str_arg);
-      str_arg = (iptr)(civ_leader_name(human_civ[0]));
-      text_set_string_arg(1,(const char *)str_arg);
-      str_arg = (iptr)(civ_name_plural(human_civ[0]));
-      text_set_string_arg(2,(const char *)str_arg);
+      str_arg = (char *)civ_leader_title(human_civ[0]);
+      text_set_string_arg(0,str_arg);
+      str_arg = civ_leader_name(human_civ[0]);
+      text_set_string_arg(1,str_arg);
+      str_arg = civ_name_plural(human_civ[0]);
+      text_set_string_arg(2,str_arg);
       text_clear();
       text_append_year((int)game.year);
       text_set_string_arg(3,(const char *)&map_views_block.text_buffer);
@@ -3957,7 +3957,7 @@ i32 __cdecl main_frame_on_close(void)
 
 {
   int confirmed;
-  iptr name_str;
+  char *name_str;
   u8 saved_human_players2;
   
   if (((game.multiplayer < 3) || (net_session_block.net_host_handoff_stage == '\0')) &&
@@ -3978,14 +3978,14 @@ i32 __cdecl main_frame_on_close(void)
         }
         parley_wnd_close();
         chat_wnd_close();
-        name_str = civ_get_adjective((*(i8 *)&human_civ));
-        text_set_string_arg(0,(const char *)name_str);
-        name_str = civ_leader_title((*(i8 *)&human_civ));
-        text_set_string_arg(1,(const char *)name_str);
-        name_str = (iptr)(civ_leader_name((*(i8 *)&human_civ)));
-        text_set_string_arg(2,(const char *)name_str);
-        name_str = (iptr)(civ_name_plural((*(i8 *)&human_civ)));
-        text_set_string_arg(3,(const char *)name_str);
+        name_str = (char *)civ_get_adjective((*(i8 *)&human_civ));
+        text_set_string_arg(0,name_str);
+        name_str = (char *)civ_leader_title((*(i8 *)&human_civ));
+        text_set_string_arg(1,name_str);
+        name_str = (civ_leader_name((*(i8 *)&human_civ)));
+        text_set_string_arg(2,name_str);
+        name_str = (civ_name_plural((*(i8 *)&human_civ)));
+        text_set_string_arg(3,name_str);
         if (civ_saved_cursor_x_block.mp_kill_civ_on_retire == 0) {
           net_send_text_args(1,0xff,4,0,0,0);
         }
@@ -4092,7 +4092,7 @@ void __cdecl game_spawn_barbarians(void)
   int unit;
   int share;
   uint horde_size;
-  iptr label;
+  char *label;
   uint sign_mask;
   int bonus_roll;
   int surge_roll;
@@ -4308,28 +4308,28 @@ spawn_attempt_check:
           if (unit % 3 == 0) {
             int_swap((iptr)&main_type,(iptr)&alt_type);
           }
-          label = (iptr)label_string(*(i32 *)(label_string_ids + 0x188));
-          text_set_string_arg(0,(const char *)label);
+          label = label_string(*(i32 *)(label_string_ids + 0x188));
+          text_set_string_arg(0,label);
           if ((10 < (int)horde_size) && ((int)cities[city].size / 2 < (int)horde_size)) {
-            label = (iptr)label_string(*(i32 *)(label_string_ids + 0x18c));
-            text_set_string_arg(0,(const char *)label);
+            label = label_string(*(i32 *)(label_string_ids + 0x18c));
+            text_set_string_arg(0,label);
           }
           if (game.advance_known_by[0x23] != '\0') {
-            label = (iptr)label_string(*(i32 *)(label_string_ids + 400));
-            text_set_string_arg(0,(const char *)label);
+            label = label_string(*(i32 *)(label_string_ids + 400));
+            text_set_string_arg(0,label);
             if ((game.rules & 1) != 0) {
               main_type = 4;
               alt_type = 0x11;
             }
           }
           if (game.advance_known_by[0x25] != '\0') {
-            label = (iptr)label_string(*(i32 *)(label_string_ids + 0x194));
-            text_set_string_arg(0,(const char *)label);
+            label = label_string(*(i32 *)(label_string_ids + 0x194));
+            text_set_string_arg(0,label);
             main_type = 0x18;
             alt_type = 7;
             if (game.advance_known_by[unit_types[0x16].prerequisite] != '\0') {
-              label = (iptr)label_string(*(i32 *)(label_string_ids + 0x198));
-              text_set_string_arg(0,(const char *)label);
+              label = label_string(*(i32 *)(label_string_ids + 0x198));
+              text_set_string_arg(0,label);
               alt_type = 0xb;
               if (((game.rules & 1) != 0) && (main_type = 0x19, game.advance_known_by[0x22] != '\0'))
               {
@@ -4340,8 +4340,8 @@ spawn_attempt_check:
                 }
                 else {
                   alt_type = 8;
-                  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x19c));
-                  text_set_string_arg(0,(const char *)label);
+                  label = label_string(*(i32 *)(label_string_ids + 0x19c));
+                  text_set_string_arg(0,label);
                 }
               }
             }
@@ -4585,14 +4585,14 @@ void __cdecl game_advance_turn(iptr civ)
 void __cdecl game_autosave(iptr civ)
 
 {
-  iptr leader_name;
+  char *leader_name;
   i8 backup_path[80];
   
   if (human_civ[0] == civ) {
     save_set_file_ext(0);
     text_clear();
-    leader_name = (iptr)(civ_leader_name(civ));
-    text_append((const char *)leader_name);
+    leader_name = civ_leader_name(civ);
+    text_append(leader_name);
     map_views_block.text_buffer_plus2[0] = 0;
     str_trim((iptr)&map_views_block.text_buffer);
     text_append((const char *)&str_empty_99);
@@ -4960,15 +4960,15 @@ void __cdecl game_calc_human_wonder_range(void)
 i32 __cdecl game_check_retirement(void)
 
 {
-  iptr name_str;
+  char *name_str;
   i32 game_ended;
   
   game_ended = 0;
   if (((game.game_flags & 2) == 0) && (game_over_reason == 0)) {
-    name_str = civ_leader_title(human_civ[0]);
-    text_set_string_arg(0,(const char *)name_str);
-    name_str = (iptr)(civ_leader_name(human_civ[0]));
-    text_set_string_arg(1,(const char *)name_str);
+    name_str = (char *)civ_leader_title(human_civ[0]);
+    text_set_string_arg(0,name_str);
+    name_str = civ_leader_name(human_civ[0]);
+    text_set_string_arg(1,name_str);
     if (((game.game_flags & 0x80) == 0) || (prefs_game_rules_block.scenario_max_turns == 0)) {
       if (game.year == 2000) {
         if (2 < game.multiplayer) {
@@ -5072,7 +5072,7 @@ void __cdecl game_play_loop(void)
   bool pbem_saved;
   bool human_moved;
   int retired;
-  iptr name_str;
+  char *name_str;
   iptr prev_human_civ;
   iptr city;
   uptr civ;
@@ -5153,10 +5153,10 @@ void __cdecl game_play_loop(void)
             civ_check_password(civ);
           }
           if (game.multiplayer == 1) {
-            name_str = (iptr)(civ_leader_name(civ));
-            text_set_string_arg(0,(const char *)name_str);
-            name_str = (iptr)(civ_name_plural(civ));
-            text_set_string_arg(1,(const char *)name_str);
+            name_str = civ_leader_name(civ);
+            text_set_string_arg(0,name_str);
+            name_str = civ_name_plural(civ);
+            text_set_string_arg(1,name_str);
             popup_game_with_sprite((iptr)&str_hotseatturn,(iptr)&popup_info_icon_sprite,0);
             *(i16 *)(((i8 *)&civ_saved_cursor_x_block.civ_saved_cursor_x) + (*(i8 *)&human_civ) * 2) = map_cursor_x[0];
             *(i16 *)(((i8 *)&civ_saved_cursor_x_block.civ_saved_cursor_y) + (*(i8 *)&human_civ) * 2) = map_cursor_y[0];
@@ -5186,13 +5186,13 @@ void __cdecl game_play_loop(void)
             if (pbem_saved) {
               game_save_dialog(0);
               if ((((i8 *)&civ_saved_cursor_x_block.civ_email_addresses))[civ * 0x20] == '\0') {
-                name_str = (iptr)(civ_leader_name(civ));
-                text_set_string_arg(0,(const char *)name_str);
+                name_str = civ_leader_name(civ);
+                text_set_string_arg(0,name_str);
                 popup_game((iptr)&str_emaildone2);
               }
               else {
-                name_str = (iptr)(civ_leader_name(civ));
-                text_set_string_arg(0,(const char *)name_str);
+                name_str = civ_leader_name(civ);
+                text_set_string_arg(0,name_str);
                 text_set_string_arg(1,(const char *)(((i8 *)&civ_saved_cursor_x_block.civ_email_addresses) + civ * 0x20));
                 popup_game((iptr)&str_emaildone1);
               }
@@ -5240,10 +5240,10 @@ void __cdecl game_play_loop(void)
                      *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + (*(i8 *)&human_civ) * 4);
           if (civ_saved_cursor_x_block.autoplay_active == 0) {
             dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
-            name_str = civ_leader_title((*(i8 *)&human_civ));
-            text_set_string_arg(0,(const char *)name_str);
-            name_str = (iptr)(civ_leader_name((*(i8 *)&human_civ)));
-            text_set_string_arg(1,(const char *)name_str);
+            name_str = (char *)civ_leader_title((*(i8 *)&human_civ));
+            text_set_string_arg(0,name_str);
+            name_str = (civ_leader_name((*(i8 *)&human_civ)));
+            text_set_string_arg(1,name_str);
             if (0 < casualties) {
               *(i32 *)(((i8 *)&net_session_block.casualty_reported_counts) + (*(i8 *)&human_civ) * 4) =
                    *(i32 *)(((i8 *)&net_session_block.casualty_counts) + (*(i8 *)&human_civ) * 4);
@@ -5339,7 +5339,7 @@ i32 __cdecl game_mp_client_turn_loop(void)
 {
   byte resume_civ;
   SHORT key_state;
-  iptr name_str;
+  char *name_str;
   int result;
   i32 ret;
   iptr slot_civ;
@@ -5360,15 +5360,15 @@ i32 __cdecl game_mp_client_turn_loop(void)
   seh_state = 0;
   still_playing = 1;
   slot_civ = net_session_block.net_slot_civs[0];
-  name_str = (iptr)(civ_name_plural(net_session_block.net_slot_civs[0]));
-  dbg_logf_str_int((iptr)&str_server_s_d,name_str,slot_civ);
+  name_str = civ_name_plural(net_session_block.net_slot_civs[0]);
+  dbg_logf_str_int((iptr)&str_server_s_d,(iptr)name_str,slot_civ);
   for (civ = 1; civ < 8; civ++) {
     if (((*(int *)(((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54) != 0) &&
         ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0)) &&
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
       result = civ;
-      name_str = (iptr)(civ_name_plural(civ));
-      dbg_logf_str_int((iptr)&str_client_s_d,name_str,result);
+      name_str = civ_name_plural(civ);
+      dbg_logf_str_int((iptr)&str_client_s_d,(iptr)name_str,result);
     }
   }
   net_reset_error_counts();
@@ -5471,10 +5471,10 @@ turn_loop:
                  *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4);
       if (civ_saved_cursor_x_block.autoplay_active == 0) {
         dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
-        name_str = civ_leader_title(human_civ[0]);
-        text_set_string_arg(0,(const char *)name_str);
-        name_str = (iptr)(civ_leader_name(human_civ[0]));
-        text_set_string_arg(1,(const char *)name_str);
+        name_str = (char *)civ_leader_title(human_civ[0]);
+        text_set_string_arg(0,name_str);
+        name_str = civ_leader_name(human_civ[0]);
+        text_set_string_arg(1,name_str);
         if (casualties < 1) {
           dialog_load_text_noflags(&dialog2,(iptr)&str_game_7,(iptr)&str_ourturntomove);
           dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&popup_info_icon_sprite,0,0);
@@ -5580,7 +5580,7 @@ void __cdecl game_mp_host_turn_loop(i32 force_process)
 {
   byte start_civ;
   SHORT key_state;
-  iptr name_str;
+  char *name_str;
   int result;
   iptr host_civ;
   uptr log_civ;
@@ -5599,15 +5599,15 @@ void __cdecl game_mp_host_turn_loop(i32 force_process)
   dialog_ctor(&dialog2,0x4000);
   seh_state = 0;
   host_civ = human_civ[0];
-  name_str = (iptr)(civ_name_plural(human_civ[0]));
-  dbg_logf_str_int((iptr)&str_server_s_d_2,name_str,host_civ);
+  name_str = civ_name_plural(human_civ[0]);
+  dbg_logf_str_int((iptr)&str_server_s_d_2,(iptr)name_str,host_civ);
   for (civ = 1; (int)civ < 8; civ++) {
     if (((human_civ[0] != civ) &&
         ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0)) &&
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
       log_civ = civ;
-      name_str = (iptr)(civ_name_plural(civ));
-      dbg_logf_str_int((iptr)&str_client_s_d_2,name_str,log_civ);
+      name_str = civ_name_plural(civ);
+      dbg_logf_str_int((iptr)&str_client_s_d_2,(iptr)name_str,log_civ);
     }
   }
   net_reset_error_counts();
@@ -5729,10 +5729,10 @@ end_loop:
                      *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4);
           if (civ_saved_cursor_x_block.autoplay_active == 0) {
             dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
-            name_str = civ_leader_title(human_civ[0]);
-            text_set_string_arg(0,(const char *)name_str);
-            name_str = (iptr)(civ_leader_name(human_civ[0]));
-            text_set_string_arg(1,(const char *)name_str);
+            name_str = (char *)civ_leader_title(human_civ[0]);
+            text_set_string_arg(0,name_str);
+            name_str = civ_leader_name(human_civ[0]);
+            text_set_string_arg(1,name_str);
             if (*(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4) <
                 *(int *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4)) {
               *(i32 *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4) =
@@ -6738,11 +6738,11 @@ void __cdecl diffeng_copy_to_mirror(void)
 
 {
   int section;
-  iptr dst;
+  u8 *dst;
   
-  dst = diffeng_mirror_buf;
+  dst = (u8 *)diffeng_mirror_buf;
   for (section = 0; section < 0x17; section++) {
-    crt_memcpy((void *)dst,(const void *)(((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section * 6],
+    crt_memcpy(dst,(const void *)(((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section * 6],
                  *(i32 *)(((i8 *)&diffeng_sections_block.diffeng_sections) + section * 0x18));
     dst += (((i32 *)&diffeng_sections_block.diffeng_section_padded_sizes))[section * 6];
   }
@@ -7621,7 +7621,7 @@ void __cdecl game_quit_or_retire(int retire)
 
 {
   int confirmed;
-  iptr text;
+  char *text;
   u8 saved_human_players2;
   
   if ((game.multiplayer < 3) || (net_session_block.net_host_handoff_stage == '\0')) {
@@ -7659,14 +7659,14 @@ void __cdecl game_quit_or_retire(int retire)
         }
         parley_wnd_close();
         chat_wnd_close();
-        text = civ_get_adjective((*(i8 *)&human_civ));
-        text_set_string_arg(0,(const char *)text);
-        text = civ_leader_title((*(i8 *)&human_civ));
-        text_set_string_arg(1,(const char *)text);
-        text = (iptr)(civ_leader_name((*(i8 *)&human_civ)));
-        text_set_string_arg(2,(const char *)text);
-        text = (iptr)(civ_name_plural((*(i8 *)&human_civ)));
-        text_set_string_arg(3,(const char *)text);
+        text = (char *)civ_get_adjective((*(i8 *)&human_civ));
+        text_set_string_arg(0,text);
+        text = (char *)civ_leader_title((*(i8 *)&human_civ));
+        text_set_string_arg(1,text);
+        text = (civ_leader_name((*(i8 *)&human_civ)));
+        text_set_string_arg(2,text);
+        text = (civ_name_plural((*(i8 *)&human_civ)));
+        text_set_string_arg(3,text);
         if (civ_saved_cursor_x_block.mp_kill_civ_on_retire == 0) {
           net_send_text_args(1,0xff,4,0,0,0);
         }
@@ -8341,7 +8341,7 @@ int __thiscall events_action_change_terrain(DialogCore *self,iptr event)
   uptr city2;
   iptr in_bounds2;
   i8 *terrain;
-  int tile;
+  Tile *tile;
   int civ;
   iptr unit;
   iptr city;
@@ -8378,12 +8378,12 @@ int __thiscall events_action_change_terrain(DialogCore *self,iptr event)
       if (in_bounds2 != 0) {
         terrain = (i8 *)tile_at(x2,y2);
         *terrain = *(i8 *)(event + 0x18c);
-        tile = (int)tile_at(x2,y2);
-        *(i8 *)(tile + 1) = 0;
-        tile = (int)tile_at(x2,y2);
-        *(i8 *)(tile + 2) = 0;
-        tile = (int)tile_at(x2,y2);
-        *(i8 *)(tile + 3) = 0;
+        tile = tile_at(x2,y2);
+        tile->improvements = 0;
+        tile = tile_at(x2,y2);
+        tile->radius = 0;
+        tile = tile_at(x2,y2);
+        tile->landmass = 0;
         for (civ = 0; civ < 8; civ++) {
           tile_update_known(x2,y2,civ);
         }
@@ -8417,8 +8417,8 @@ int __thiscall events_action_change_terrain(DialogCore *self,iptr event)
       }
       for (x2 = 0; x2 < map.width; x2++) {
         for (y2 = 0; y2 < map.height; y2++) {
-          tile = (int)tile_at(x2,y2);
-          *(byte *)(tile + 4) = *(byte *)(tile + 4) & ~(byte)(1 << ((byte)civ & 0x1f));
+          tile = tile_at(x2,y2);
+          tile->visible = tile->visible & ~(byte)(1 << ((byte)civ & 0x1f));
         }
       }
       civ_create(civ);
@@ -10809,7 +10809,7 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
   int choice;
   iptr label;
   int now_ticks;
-  i32 str;
+  char *str;
   iptr tribe_arg;
   i8 *email_default;
   iptr leader;
@@ -10948,7 +10948,7 @@ tribe_menu_loop:
         str = 0;
         tribe_arg = leader;
         label = (iptr)label_string((int)leaders[leader].plural);
-        dialog_add_option((DialogOptionList *)&dlg,label,tribe_arg,str);
+        dialog_add_option((DialogOptionList *)&dlg,label,tribe_arg,(uint)str);
       }
       else {
         dialog_add_option
@@ -11117,8 +11117,8 @@ apply_tribe:
     leaders[civs[game.player_civ].tribe].female = is_female;
     leaders[civs[game.player_civ].tribe].leader_name =
          leaders[civs[game.player_civ].tribe].names[((uint)leaders[civs[game.player_civ].tribe].female)];
-    str = (i32)label_string((int)leaders[civs[game.player_civ].tribe].leader_name);
-    crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),(const char *)((const void *)str));
+    str = label_string((int)leaders[civs[game.player_civ].tribe].leader_name);
+    crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),str);
     leaders[civs[game.player_civ].tribe].leader_name =
          -leaders[civs[game.player_civ].tribe].leader_name;
     now_ticks = civ_check_password((*(i8 *)&human_civ));
@@ -11174,10 +11174,10 @@ apply_tribe:
       }
       else {
         if (((net_session_block.net_player_info_tribe_name[0] == '\0') || (net_session_block.net_player_info_adjective[0] == '\0')) || (game_mode == 1)) {
-          str = (i32)label_string((int)leaders[civs[game.player_civ].tribe].plural);
-          crt_strcpy((char *)(&civ_names[game.player_civ].tribe_name),(const char *)((const void *)str));
-          str = (i32)label_string((int)leaders[civs[game.player_civ].tribe].adjective);
-          crt_strcpy((char *)(&civ_names[game.player_civ].adjective),(const char *)((const void *)str));
+          str = label_string((int)leaders[civs[game.player_civ].tribe].plural);
+          crt_strcpy((char *)(&civ_names[game.player_civ].tribe_name),str);
+          str = label_string((int)leaders[civs[game.player_civ].tribe].adjective);
+          crt_strcpy((char *)(&civ_names[game.player_civ].adjective),str);
         }
         else {
           crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),((i8 *)&net_session_block.net_player_info_leader_name));
@@ -11188,8 +11188,8 @@ apply_tribe:
         leaders[civs[game.player_civ].tribe].adjective =
              -leaders[civs[game.player_civ].tribe].adjective;
         for (title = 0; title < 7; title++) {
-          str = (i32)label_string((int)leaders[civs[game.player_civ].tribe].titles[title][choice]);
-          crt_strcpy((char *)(&civ_names[game.player_civ].titles[title]),(const char *)((const void *)str));
+          str = label_string((int)leaders[civs[game.player_civ].tribe].titles[title][choice]);
+          crt_strcpy((char *)(&civ_names[game.player_civ].titles[title]),str);
           leaders[civs[game.player_civ].tribe].titles[title][choice] =
                -leaders[civs[game.player_civ].tribe].titles[title][choice]
           ;
@@ -11681,7 +11681,7 @@ choose_difficulty:
 i32 __cdecl scenario_pick_human_civs(int num_players)
 
 {
-  iptr str;
+  char *str;
   iptr choice;
   int result;
   i32 ret;
@@ -11692,7 +11692,7 @@ i32 __cdecl scenario_pick_human_civs(int num_players)
   int has_default;
   int player_idx;
   Dialog dlg;
-  iptr option;
+  uint *option;
   iptr govt;
   uptr option_civs[8];
   i32 seh_prev;
@@ -11727,12 +11727,12 @@ done:
           for (civ = 1; (int)civ < 8; civ++) {
             if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
               text_clear();
-              str = (iptr)(civ_name_plural(civ));
-              text_append((const char *)str);
+              str = civ_name_plural(civ);
+              text_append(str);
               text_append_space();
               text_append_lparen();
-              str = (iptr)(civ_leader_name(civ));
-              text_append((const char *)str);
+              str = civ_leader_name(civ);
+              text_append(str);
               text_append_rparen();
               text_append_space();
               text_append_lparen();
@@ -11744,19 +11744,19 @@ done:
               text_append_space();
               text_append_label(0xc4);
               text_append((const char *)&str_empty_164);
-              option = (iptr)dialog_add_option
+              option = dialog_add_option
                                    ((DialogOptionList *)&dlg,(iptr)&map_views_block.text_buffer,civ,0);
-              option_civs[*(int *)(option + 4)] = civ;
+              option_civs[option[1]] = civ;
               if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
                 if (has_default == 0) {
                   has_default = 1;
                   dialog_set_default_choice
-                            ((DialogOptionList *)&dlg,*(iptr *)(option + 4));
+                            ((DialogOptionList *)&dlg,option[1]);
                 }
               }
               else {
                 dialog_set_option_disabled
-                          ((DialogOptionList *)&dlg,*(iptr *)(option + 4),1);
+                          ((DialogOptionList *)&dlg,option[1],1);
               }
             }
           }
@@ -12140,7 +12140,7 @@ done:
 i32 __cdecl setup_join_pick_civ(int player_idx)
 
 {
-  iptr str;
+  char *str;
   iptr choice;
   int result;
   iptr pw_ok;
@@ -12176,12 +12176,12 @@ i32 __cdecl setup_join_pick_civ(int player_idx)
     for (civ2 = 1; civ2 < 8; civ2++) {
       if ((1 << ((byte)civ2 & 0x1f) & (uint)game.civs_alive) != 0) {
         text_clear();
-        str = (iptr)(civ_name_plural(civ2));
-        text_append((const char *)str);
+        str = civ_name_plural(civ2);
+        text_append(str);
         text_append_space();
         text_append_lparen();
-        str = (iptr)(civ_leader_name(civ2));
-        text_append((const char *)str);
+        str = civ_leader_name(civ2);
+        text_append(str);
         text_append_rparen();
         text_append_space();
         text_append_lparen();
@@ -12257,9 +12257,9 @@ done:
     arg_b = 0;
     ret = 0;
     human_civ[0] = civ;
-    str = (iptr)(civ_leader_name(civ));
+    str = civ_leader_name(civ);
     result = dialog_load_text_section
-                      (&dlg,(iptr)&str_game_7,(iptr)&str_name_7,0x17,str,ret,arg_b,arg_c,arg_d);
+                      (&dlg,(iptr)&str_game_7,(iptr)&str_name_7,0x17,(iptr)str,ret,arg_b,arg_c,arg_d);
     if (result == 0) {
       dialog_prepend_title_label((iptr)&dlg,player_idx + 0x25f);
       result = dialog_run_modal(&dlg,(iptr)name_text,0);
@@ -16822,7 +16822,7 @@ void __cdecl cheat_edit_king(void)
 {
   uint *treaty_ptr;
   iptr civ;
-  iptr name2;
+  char *name2;
   int choice;
   i32 value;
   iptr advance;
@@ -16848,16 +16848,16 @@ void __cdecl cheat_edit_king(void)
     while( true ) {
       text_set_number_arg(0,(civs[civ].flags & 0x200) >> 9);
       text_clear();
-      name2 = (iptr)(civ_leader_name(civ));
-      text_append((const char *)name2);
+      name2 = civ_leader_name(civ);
+      text_append(name2);
       text_set_string_arg(0,(const char *)&map_views_block.text_buffer);
       choice = popup_game((iptr)&str_editking);
       if (choice == 0) break;
       if (choice == 1) {
         civ2 = dbg_pick_player(0);
         if (-1 < civ2) {
-          name2 = (iptr)(civ_leader_name(civ2));
-          text_set_string_arg(1,(const char *)name2);
+          name2 = civ_leader_name(civ2);
+          text_set_string_arg(1,name2);
           dlg_checks_clear();
           dlg_check_set(0,civs[civ].treaties[civ2] & 1);
           dlg_check_set(1,(civs[civ].treaties[civ2] & 2) >> 1);
@@ -16914,8 +16914,8 @@ void __cdecl cheat_edit_king(void)
       else if (choice == 2) {
         civ2 = dbg_pick_player(0);
         if (-1 < civ2) {
-          name2 = (iptr)(civ_leader_name(civ2));
-          text_set_string_arg(1,(const char *)name2);
+          name2 = civ_leader_name(civ2);
+          text_set_string_arg(1,name2);
           text_set_number_arg(0,(int)game.turn);
           choice = dlg_input_number_game((iptr)&str_lastcontact,(int)civs[civ].last_treaty_turn[civ2],(iptr)number_input);
           if (choice == 0) {
@@ -16926,8 +16926,8 @@ void __cdecl cheat_edit_king(void)
       else if (choice == 3) {
         civ2 = dbg_pick_player(0);
         if (-1 < civ2) {
-          name2 = (iptr)(civ_leader_name(civ2));
-          text_set_string_arg(1,(const char *)name2);
+          name2 = civ_leader_name(civ2);
+          text_set_string_arg(1,name2);
           choice = dlg_input_number_game((iptr)&str_editattitude,(uint)civs[civ].attitude[civ2],
                                      (iptr)number_input);
           if (choice == 0) {
@@ -16968,8 +16968,8 @@ void __cdecl cheat_edit_king(void)
       }
       else if (choice == 10) {
         text_clear();
-        name2 = (iptr)(civ_name_plural(civ));
-        text_append((const char *)name2);
+        name2 = civ_name_plural(civ);
+        text_append(name2);
         text_set_string_arg(0,(const char *)&map_views_block.text_buffer);
         if (-1 < leaders[civs[civ].tribe].leader_name) {
           value = (i32)label_string((int)leaders[civs[civ].tribe].leader_name);
@@ -17177,7 +17177,7 @@ void __cdecl cheat_scenario_params(void)
 
 {
   i32 year;
-  iptr label;
+  char *label;
   iptr choice;
   iptr result;
   int value;
@@ -17185,7 +17185,7 @@ void __cdecl cheat_scenario_params(void)
   iptr player;
   iptr city;
   i8 name_buf[260];
-  iptr tile_ptr;
+  Tile *tile_ptr;
   int known_ptrs[8];
   Tile *tile;
   i8 number_input[4];
@@ -17202,12 +17202,12 @@ void __cdecl cheat_scenario_params(void)
     text_set_number_arg(3,(int)prefs_game_rules_block.scenario_max_turns);
     text_set_number_arg(4,(int)(short)prefs_game_rules_block.scenario_flags[0] & 1);
     if ((game.game_flags & 0x80) == 0) {
-      label = (iptr)label_string(*(i32 *)(label_string_ids + 0x68c));
-      text_set_string_arg(0,(const char *)label);
+      label = label_string(*(i32 *)(label_string_ids + 0x68c));
+      text_set_string_arg(0,label);
     }
     else {
-      label = (iptr)label_string(*(i32 *)(label_string_ids + 0x688));
-      text_set_string_arg(0,(const char *)label);
+      label = label_string(*(i32 *)(label_string_ids + 0x688));
+      text_set_string_arg(0,label);
     }
     text_set_string_arg(1,(const char *)&prefs_game_rules_block.scenario_name);
     choice = popup_game((iptr)&str_editscen);
@@ -17257,18 +17257,18 @@ void __cdecl cheat_scenario_params(void)
       map_redraw_all_views(human_civ[0],1);
     }
     else if (choice == 7) {
-      tile_ptr = (iptr)tile_at(0,0);
+      tile_ptr = tile_at(0,0);
       for (player = 1; player < 8; player++) {
         value = (int)known_at(0,0,player);
         known_ptrs[player] = value;
       }
       for (tile_index = 0; tile_index < map.area; tile_index++) {
-        *(i8 *)(tile_ptr + 4) = 0xff;
+        tile_ptr->visible = 0xff;
         for (player = 1; player < 8; player++) {
-          *(i8 *)known_ptrs[player] = *(i8 *)(tile_ptr + 1);
+          *(i8 *)known_ptrs[player] = tile_ptr->improvements;
           known_ptrs[player]++;
         }
-        tile_ptr += 6;
+        tile_ptr++;
       }
       for (city = 0; city < game.num_cities; city++) {
         if (cities[city].id != 0) {
@@ -17284,15 +17284,15 @@ void __cdecl cheat_scenario_params(void)
       map_redraw_all_views(human_civ[0],1);
     }
     else if (choice == 8) {
-      tile_ptr = (iptr)tile_at(0,0);
+      tile_ptr = tile_at(0,0);
       for (tile_index = 0; tile_index < map.area; tile_index++) {
-        *(i8 *)(tile_ptr + 4) = 0;
-        if (((*(byte *)(tile_ptr + 1) & 3) != 0) &&
-           (owner = (int)(uint)*(byte *)(tile_ptr + 5) >> 4, owner < 8)) {
+        tile_ptr->visible = 0;
+        if (((tile_ptr->improvements & 3) != 0) &&
+           (owner = (int)(uint)tile_ptr->owner >> 4, owner < 8)) {
           (*((char *)&player + 0)) = (sbyte)owner;
-          *(char *)(tile_ptr + 4) = (char)(1 << (sbyte)player);
+          tile_ptr->visible = (char)(1 << (sbyte)player);
         }
-        tile_ptr += 6;
+        tile_ptr++;
       }
       prefs_game_rules_block.scenario_flags[0] = prefs_game_rules_block.scenario_flags[0] & 0xfff7;
       map_redraw_all_views(human_civ[0],1);

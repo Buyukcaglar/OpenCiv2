@@ -1280,7 +1280,7 @@ i32 __cdecl trade_commodity_cities_dialog(iptr civ,iptr commodity)
         }
         if (matches) {
           text_clear();
-          text_append((const char *)(city * 0x58 + (iptr)((u8 *)&cities + 32)));
+          text_append(cities[city].name);
           text_append_lparen();
           if (cities[city].owner == civ) {
             text_append_int((int)cities[city].size);
@@ -1376,7 +1376,7 @@ done:
 void __cdecl trade_advisor_draw(void)
 
 {
-  iptr text;
+  char *text;
   int value;
   i32 max_row;
   i8 sprite_rect6[16];
@@ -1427,8 +1427,8 @@ void __cdecl trade_advisor_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x548));
-  text_append((const char *)text);
+  text = label_string(*(i32 *)(label_string_ids + 0x548));
+  text_append(text);
   gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
   top_y += line_height;
   text_clear();
@@ -1437,16 +1437,16 @@ void __cdecl trade_advisor_draw(void)
   text_append_space();
   text_append_label(0x8c);
   text_append_space();
-  text = (iptr)(civ_name_plural(civ));
-  text_append((const char *)text);
+  text = civ_name_plural(civ);
+  text_append(text);
   gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
   top_y += line_height;
   text_clear();
-  text = civ_leader_title(civ);
-  text_append((const char *)text);
+  text = (char *)civ_leader_title(civ);
+  text_append(text);
   text_append_space();
-  text = (iptr)(civ_leader_name(civ));
-  text_append((const char *)text);
+  text = civ_leader_name(civ);
+  text_append(text);
   text_append_colon();
   text_append_year((int)game.year);
   gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
@@ -1524,14 +1524,14 @@ void __cdecl trade_advisor_draw(void)
       if (row == 0) {
         text_y2 = row_y + 10;
         text_clear();
-        text = (iptr)label_string(*(i32 *)(label_string_ids + 0x5b0));
-        text_append((const char *)text);
+        text = label_string(*(i32 *)(label_string_ids + 0x5b0));
+        text_append(text);
         text_set_font((iptr)&advisor_font_block.advisor_font);
         text_set_colors(0x29,10,1,1);
         gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
         text_clear();
-        text = (iptr)label_string(*(i32 *)(label_string_ids + 0x5b4));
-        text_append((const char *)text);
+        text = label_string(*(i32 *)(label_string_ids + 0x5b4));
+        text_append(text);
         gfx_draw_text((const char *)&map_views_block.text_buffer,right_col_x,text_y2);
         row_y += line_height;
       }
@@ -1752,7 +1752,7 @@ void __cdecl city_status_draw(void)
 
 {
   uint next_row;
-  iptr text;
+  char *text;
   i32 max_row;
   i8 sprite_rect[16];
   iptr civ;
@@ -1786,8 +1786,8 @@ void __cdecl city_status_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x538));
-  text_append((const char *)text);
+  text = label_string(*(i32 *)(label_string_ids + 0x538));
+  text_append(text);
   gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
   top_y += line_height;
   text_clear();
@@ -1796,16 +1796,16 @@ void __cdecl city_status_draw(void)
   text_append_space();
   text_append_label(0x8c);
   text_append_space();
-  text = (iptr)(civ_name_plural(civ));
-  text_append((const char *)text);
+  text = civ_name_plural(civ);
+  text_append(text);
   gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
   top_y += line_height;
   text_clear();
-  text = civ_leader_title(civ);
-  text_append((const char *)text);
+  text = (char *)civ_leader_title(civ);
+  text_append(text);
   text_append_space();
-  text = (iptr)(civ_leader_name(civ));
-  text_append((const char *)text);
+  text = civ_leader_name(civ);
+  text_append(text);
   text_append_colon();
   text_append_year((int)game.year);
   gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
@@ -1967,7 +1967,7 @@ void __cdecl city_status_show(iptr civ)
 void __cdecl wonders_report_draw(void)
 
 {
-  iptr text;
+  char *text;
   i32 value;
   int result;
   i32 shadow_color;
@@ -2025,8 +2025,8 @@ void __cdecl wonders_report_draw(void)
   }
   if (total_rows == 0) {
     text_clear();
-    text = (iptr)label_string(*(i32 *)(label_string_ids + 0x550));
-    text_append((const char *)text);
+    text = label_string(*(i32 *)(label_string_ids + 0x550));
+    text_append(text);
     gfx_draw_text_centered((iptr)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
     top_y = top_y + line_height + 4;
     text_clear();
@@ -2094,11 +2094,11 @@ void __cdecl wonders_report_draw(void)
           text_append_label(label_id);
           text_append_space();
           city = (iptr)game.wonder_city[wonder];
-          text_append((const char *)(city * 0x58 + (iptr)((u8 *)&cities + 32)));
+          text_append(cities[city].name);
           text_append_space();
           text_append_lparen();
-          text = civ_get_adjective((int)cities[city].owner);
-          text_append((const char *)text);
+          text = (char *)civ_get_adjective((int)cities[city].owner);
+          text_append(text);
           text_append_rparen();
           civ = (int)cities[city].owner;
         }
@@ -3526,7 +3526,7 @@ void __cdecl city_set_production(iptr city,int production)
   byte civ2;
   int civ;
   i32 new_shields;
-  iptr civ_name;
+  char *civ_name;
   int bonus_mult;
   iptr improvement2;
   int old_count;
@@ -3598,8 +3598,8 @@ void __cdecl city_set_production(iptr city,int production)
       else {
         old_wonder = 0;
       }
-      civ_name = (iptr)(civ_name_plural(civ));
-      text_set_string_arg(1,(const char *)civ_name);
+      civ_name = civ_name_plural(civ);
+      text_set_string_arg(1,civ_name);
       if (new_count == 0) {
         if ((old_building < -0x26) && ((old_count == 0 || (game.wonder_city[old_wonder] != -1)))) {
           if (old_count != 0) {
@@ -3680,8 +3680,8 @@ void __cdecl city_set_production(iptr city,int production)
          ((((((i8 *)&advisor_window_block.wonder_notice_flags))[civ * 0x1c + wonder] & 2) == 0 &&
           ((((i8 *)&advisor_window_block.wonder_notice_flags))[civ * 0x1c + wonder] = (((i8 *)&advisor_window_block.wonder_notice_flags))[civ * 0x1c + wonder] | 2,
           civ_saved_cursor_x_block.autoplay_active == 0)))) {
-        civ_name = (iptr)(civ_name_plural(civ));
-        text_set_string_arg(1,(const char *)civ_name);
+        civ_name = civ_name_plural(civ);
+        text_set_string_arg(1,civ_name);
         text_set_label_arg(2,improvements[improvement].name);
         dialog_load_game_text(&dialog2,(iptr)&str_abandonwonder);
         dialog_add_sprite
@@ -4925,7 +4925,7 @@ void __thiscall cityview_draw_title(CityViewWindow *self)
 
 {
   text_clear();
-  text_append((const char *)(self->city_id * 0x58 + (iptr)((u8 *)&cities + 32)));
+  text_append(cities[self->city_id].name);
   text_append_colon();
   text_append_space();
   text_append_year((int)game.year);
@@ -5570,7 +5570,7 @@ next_settler_unit: ;
   enemy_offshore = 0;
   if (policy == 4) {
     for (civ2 = 1; (int)civ2 < 8; civ2++) {
-      if (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0) &&
+      if (((*((byte *)&civs[civ].treaties[civ2] + 1) & 0x20) != 0) &&
          (*(char *)&civs[civ2].continent_cities[landmass2] == '\0')) {
         enemy_offshore = 1;
       }
@@ -5976,7 +5976,7 @@ reset_scores:
                            (uint)civs[civ2].units_active[0x1c] +
                            (uint)civs[civ2].units_active[0x1d] +
                            (uint)civs[civ2].units_active[0x1f];
-                if (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0) &&
+                if (((*((byte *)&civs[civ].treaties[civ2] + 1) & 0x20) == 0) &&
                    ((*(byte *)&civs[civ2].treaties[civ] & 0x10) == 0)) {
                   tmp = tmp / 2;
                 }
@@ -6016,7 +6016,7 @@ reset_scores:
                              (uint)civs[civ2].units_active[0x28] * 2 +
                              (uint)civs[civ2].units_active[0x26] +
                              (uint)civs[civ2].units_active[0x27];
-                  if (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0) &&
+                  if (((*((byte *)&civs[civ].treaties[civ2] + 1) & 0x20) == 0) &&
                      ((*(byte *)&civs[civ2].treaties[civ] & 0x10) == 0)) {
                     tmp = tmp / 2;
                   }
@@ -10053,7 +10053,7 @@ int __cdecl city_notify_dialog_ex(iptr msg_key,iptr city,int force,iptr sprite)
 i32 __cdecl city_process_food(uptr city)
 
 {
-  int goods_ptr;
+  char *goods_ptr;
   byte civ2;
   iptr civ;
   iptr box_limit;
@@ -10113,9 +10113,9 @@ i32 __cdecl city_process_food(uptr city)
     else {
       route_count = (int)(char)cities[city].trade_routes;
       while (route = route_count - 1, -1 < route) {
-        goods_ptr = route_count + (iptr)((u8 *)&cities + 64);
+        goods_ptr = (char *)&cities[city].route_goods[route];
         route_count = route;
-        if ((*(char *)(goods_ptr + city * 0x58) < '\0') &&
+        if ((*goods_ptr < '\0') &&
            (cities[city].route_partner[route] == main_menu_block.city_food_route_partner)) {
           city_remove_trade_route(city,route);
           route_count = route;
