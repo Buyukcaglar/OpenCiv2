@@ -75,6 +75,11 @@ the CD's `Music` tracks) to have them. Turn music on in Game → Game Options.
   the profile item). Read in order, the patch's file put each label from Pick
   Music on next to the wrong command (Quit retired, Retire changed the timer).
 - Empty rows the original used as spacing in menus are proper separators.
+- The menus open on the title screen and the main menu too (the game's own
+  items grayed until a game starts; Quit and About work).
+- Text is measured as wide as it is drawn, so no dialog cuts its lines off.
+  (Upstream keeps Wine's slightly narrower measures, to match its recordings
+  of the original; `CIV2_WINE_TEXT=1` does that here.)
 - OpenCiv2 can live in any folder, however deep: the game keeps its file paths
   in 128-byte buffers, so its own folder is shown to it as `C:\`.
 - Building the world takes about a second (the reconstruction's sound layer

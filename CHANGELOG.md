@@ -30,6 +30,11 @@ parameters are char pointers"), where the program became OpenCiv2.
 - **Any folder**: a game folder deep in the file system is shown to the game
   as `C:\`, since the game keeps its paths in 128-byte buffers (sound effects
   overran them, the intro and other videos did not play).
+- **Menus on the title screen and main menu** open, with what is not
+  available yet grayed; Game > Quit and About work there.
+- **Text fits its boxes**: text is measured as wide as it is drawn (Wine's
+  measures, which the reconstruction keeps, are a few pixels narrower for
+  bold text), so dialogs such as the heralds question no longer cut lines off.
 - **About OpenCiv2** (Civilopedia menu and title bar menu): version, credits,
   links and license.
 - Light and dark mode (and high contrast) for the set-up window, message boxes,
