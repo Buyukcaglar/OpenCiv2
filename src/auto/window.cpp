@@ -1,6 +1,7 @@
 /* The game, windows, dialogs and menus: functions translated from the original
  * (tools/gen_c.py, now edited directly), in address order. */
 #include "auto_common.h"
+#include "lang.h"
 
 /* 00408010 auto */
 void __thiscall wnd_set_cursor(WndBase *self,i32 cursor)
@@ -3270,423 +3271,73 @@ void __cdecl menu_build_main(void)
 
 {
   int status;
-  i32 item_arg;
-  iptr label;
   i32 editor_disabled;
   i32 editor_checked;
   i32 cheat_checked;
   i32 cheat_disabled;
-  /* (port) the Game menu's commands in order, 0 a separator */
-  static const i32 game_menu_cmds[] = {0x101,0x102,0x103,0x104,0x105,0,0x106,0,0x110,0x120,0x130,0,
-                                       0x131,0x132,0,0x1f0,0x1f1};
-  char game_labels[13][0x100];
-  int game_label_count;
-  int has_profile;
-  i32 line_pos;
-  int i;
+  int row;
   
   menu_reset((GameMenu *)((i8 *)&main_menu_block.main_menu),0x1bbc);
-  status = text_open_section((const char *)&str_menu,(const char *)&str_game_5);
-  if (status == 0) {
-    item_arg = (i32)text_read_line(1);
-    menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),1,(char *)item_arg);
-    /* (port) The Game menu's labels, in order, are those of the 5.4.0f
-       patch's MENU.TXT (13, with Game Profile, 0x105); the CD's has 12,
-       without it, and read as 13 each label from Pick Music on went to the
-       item before its own (Quit retired, Retire changed the timer).  A
-       13th line that is not a label (blank, the next @section, a comment)
-       means the CD's: the profile item is left out and the line read
-       again by what follows. */
-    for (game_label_count = 0; game_label_count < 13; game_label_count++) {
-      if (game_label_count == 12) {
-        line_pos = _ftell(text_file_handle);
-      }
-      label = (iptr)text_read_line(1);
-      crt_strcpy(game_labels[game_label_count],label != 0 ? (char *)label : (char *)"");
+  /* (port) The menus' structure is menu_rows; their texts are looked up by
+     key (lang.h), not read from MENU.TXT line by line.  An item without a
+     text is left out (the CD's MENU.TXT has no Game Profile). */
+  lang_load_menus();
+  for (row = 0; row < menu_row_count; row++) {
+    if (menu_rows[row].cmd == MENU_TITLE) {
+      menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),menu_rows[row].menu,
+                    (char *)lang_text(menu_rows[row].key));
     }
-    has_profile = (game_labels[12][0] != '\0') && (game_labels[12][0] != '@') && (game_labels[12][0] != ';');
-    if ((has_profile == 0) && (label != 0)) {
-      _fseek(text_file_handle,line_pos,0);
+    else if (menu_rows[row].cmd == 0) {
+      menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),menu_rows[row].menu,0,0,0);
     }
-    game_label_count = 0;
-    for (i = 0; i < (int)(sizeof game_menu_cmds / sizeof game_menu_cmds[0]); i++) {
-      if (game_menu_cmds[i] == 0) {
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
-      }
-      else if ((game_menu_cmds[i] != 0x105) || (has_profile != 0)) {
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,game_menu_cmds[i],
-                      game_labels[game_label_count],0);
-        game_label_count++;
-      }
-    }
-    status = text_open_section(0,(const char *)&str_kingdom);
-    if (status == 0) {
-      item_arg = (i32)text_read_line(1);
-      menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),2,(char *)item_arg);
-      item_arg = 0;
-      label = (iptr)text_read_line(1);
-      menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0x201,(const char *)label,item_arg);
-      menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0,0,0);
-      item_arg = 0;
-      label = (iptr)text_read_line(1);
-      menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0x205,(const char *)label,item_arg);
-      item_arg = 0;
-      label = (iptr)text_read_line(1);
-      menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0x210,(const char *)label,item_arg);
-      menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0,0,0);
-      item_arg = 0;
-      label = (iptr)text_read_line(1);
-      menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),2,0x220,(const char *)label,item_arg);
-      status = text_open_section(0,(const char *)&str_view);
-      if (status == 0) {
-        item_arg = (i32)text_read_line(1);
-        menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),3,(char *)item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x301,(const char *)label,item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x302,(const char *)label,item_arg);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0,0,0);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x310,(const char *)label,item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x311,(const char *)label,item_arg);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0,0,0);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,800,(const char *)label,item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x321,(const char *)label,item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x322,(const char *)label,item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x324,(const char *)label,item_arg);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0,0,0);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x327,(const char *)label,item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x328,(const char *)label,item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x330,(const char *)label,item_arg);
-        item_arg = 0;
-        label = (iptr)text_read_line(1);
-        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),3,0x340,(const char *)label,item_arg);
-        menu_set_item_checked
-                  ((GameMenu *)((i8 *)&main_menu_block.main_menu),0x327,(game.game_options & 0x20) >> 5);
-        status = text_open_section(0,(const char *)&str_orders_2);
-        if (status == 0) {
-          item_arg = (i32)text_read_line(1);
-          menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),4,(char *)item_arg);
-          item_arg = 0x3c;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x401,(const char *)label,item_arg);
-          item_arg = 0x3c;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x410,(const char *)label,item_arg);
-          item_arg = 0x3c;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x411,(const char *)label,item_arg);
-          item_arg = 0x3c;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x412,(const char *)label,item_arg);
-          item_arg = 0x3c;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x413,(const char *)label,item_arg);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x417,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x418,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x41b,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x420,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x421,(const char *)label,item_arg);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x430,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x440,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x441,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x442,(const char *)label,item_arg);
-          item_arg = 0x3c;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x445,(const char *)label,item_arg);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x450,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x451,(const char *)label,item_arg);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x460,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x468,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x470,(const char *)label,item_arg);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x480,(const char *)label,item_arg);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0,0,0);
-          item_arg = 0;
-          label = (iptr)text_read_line(1);
-          menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),4,0x490,(const char *)label,item_arg);
-          status = text_open_section(0,(const char *)&str_advisors);
-          if (status == 0) {
-            item_arg = (i32)text_read_line(1);
-            menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),5,(char *)item_arg);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x507,(const char *)label,item_arg);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x500,(const char *)label,item_arg);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0,0,0);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x501,(const char *)label,item_arg);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x502,(const char *)label,item_arg);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x503,(const char *)label,item_arg);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0,0,0);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x504,(const char *)label,item_arg);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x505,(const char *)label,item_arg);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x506,(const char *)label,item_arg);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0,0,0);
-            item_arg = 0;
-            label = (iptr)text_read_line(1);
-            menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),5,0x508,(const char *)label,item_arg);
-            status = text_open_section(0,(const char *)&str_world);
-            if (status == 0) {
-              item_arg = (i32)text_read_line(1);
-              menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),6,(char *)item_arg);
-              item_arg = 0;
-              label = (iptr)text_read_line(1);
-              menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x601,(const char *)label,item_arg);
-              item_arg = 0;
-              label = (iptr)text_read_line(1);
-              menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x602,(const char *)label,item_arg);
-              item_arg = 0;
-              label = (iptr)text_read_line(1);
-              menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x603,(const char *)label,item_arg);
-              menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0,0,0);
-              item_arg = 0;
-              label = (iptr)text_read_line(1);
-              menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x605,(const char *)label,item_arg);
-              item_arg = 0;
-              label = (iptr)text_read_line(1);
-              menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),6,0x606,(const char *)label,item_arg);
-              status = text_open_section(0,(const char *)&str_cheat);
-              if (status == 0) {
-                item_arg = (i32)text_read_line(1);
-                menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),7,(char *)item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x701,(const char *)label,item_arg);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x711,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x712,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x713,(const char *)label,item_arg);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x721,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x722,(const char *)label,item_arg);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x731,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x732,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x740,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x748,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x750,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x752,(const char *)label,item_arg);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x755,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x760,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x765,(const char *)label,item_arg);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0,0,0);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x768,(const char *)label,item_arg);
-                item_arg = 0;
-                label = (iptr)text_read_line(1);
-                menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),7,0x770,(const char *)label,item_arg);
-                if (((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) {
-                  cheat_disabled = 1;
-                }
-                else {
-                  cheat_disabled = 0;
-                }
-                menu_set_menu_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),7,cheat_disabled);
-                if (((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) {
-                  cheat_checked = 0;
-                }
-                else {
-                  cheat_checked = 1;
-                }
-                menu_set_item_checked((GameMenu *)((i8 *)&main_menu_block.main_menu),0x701,cheat_checked);
-                menu_set_item_enabled
-                          ((GameMenu *)((i8 *)&main_menu_block.main_menu),0x701,
-                           (game.multiplayer != '\0' &((int *)&mp_cheat_menu_allowed) == 0));
-                status = text_open_section(0,(const char *)&str_editor);
-                if (status == 0) {
-                  item_arg = (i32)text_read_line(1);
-                  menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),8,(char *)item_arg);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x801,(const char *)label,item_arg);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0,0,0);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x802,(const char *)label,item_arg);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x803,(const char *)label,item_arg);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x804,(const char *)label,item_arg);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x805,(const char *)label,item_arg);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x806,(const char *)label,item_arg);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x807,(const char *)label,item_arg);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x808,(const char *)label,item_arg);
-                  item_arg = 0;
-                  label = (iptr)text_read_line(1);
-                  menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),8,0x809,(const char *)label,item_arg);
-                  if (((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
-                      ((game.game_flags & 0x80) == 0)) ||
-                     (status = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), status == 0)) {
-                    editor_checked = 0;
-                  }
-                  else {
-                    editor_checked = 1;
-                  }
-                  menu_set_item_checked((GameMenu *)((i8 *)&main_menu_block.main_menu),0x801,editor_checked);
-                  if ((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
-                     (((game.game_flags & 0x80) == 0 ||
-                      (status = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), status == 0)))) {
-                    editor_disabled = 1;
-                  }
-                  else {
-                    editor_disabled = 0;
-                  }
-                  menu_set_menu_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),8,editor_disabled);
-                  menu_set_item_enabled
-                            ((GameMenu *)((i8 *)&main_menu_block.main_menu),0x801,(game.multiplayer != '\0'));
-                  status = text_open_section(0,(const char *)&str_pedia_2);
-                  if (status == 0) {
-                    item_arg = (i32)text_read_line(1);
-                    menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),9,(char *)item_arg);
-                    item_arg = 0;
-                    label = (iptr)text_read_line(1);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x901,(const char *)label,item_arg);
-                    item_arg = 0;
-                    label = (iptr)text_read_line(1);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x903,(const char *)label,item_arg);
-                    item_arg = 0;
-                    label = (iptr)text_read_line(1);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x905,(const char *)label,item_arg);
-                    item_arg = 0;
-                    label = (iptr)text_read_line(1);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x907,(const char *)label,item_arg);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0,0,0);
-                    item_arg = 0;
-                    label = (iptr)text_read_line(1);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x909,(const char *)label,item_arg);
-                    item_arg = 0;
-                    label = (iptr)text_read_line(1);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x90b,(const char *)label,item_arg);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0,0,0);
-                    item_arg = 0;
-                    label = (iptr)text_read_line(1);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x90d,(const char *)label,item_arg);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0,0,0);
-                    item_arg = 0;
-                    label = (iptr)text_read_line(1);
-                    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),9,0x9f0,(const char *)label,item_arg);
-                    menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x441,1);
-                    menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x413,1);
-                    menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x442,1);
-                    menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x417,1);
-                    menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x418,1);
-                    menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x41b,1);
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+    else if (lang_has(menu_rows[row].key) != 0) {
+      menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),menu_rows[row].menu,menu_rows[row].cmd,
+                    lang_text(menu_rows[row].key),menu_rows[row].room);
     }
   }
-  text_close_file();
+  if (((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) {
+    cheat_disabled = 1;
+  }
+  else {
+    cheat_disabled = 0;
+  }
+  menu_set_menu_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),7,cheat_disabled);
+  if (((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) {
+    cheat_checked = 0;
+  }
+  else {
+    cheat_checked = 1;
+  }
+  menu_set_item_checked((GameMenu *)((i8 *)&main_menu_block.main_menu),0x701,cheat_checked);
+  menu_set_item_enabled
+            ((GameMenu *)((i8 *)&main_menu_block.main_menu),0x701,
+             (game.multiplayer != '\0' &((int *)&mp_cheat_menu_allowed) == 0));
+  if (((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
+      ((game.game_flags & 0x80) == 0)) ||
+     (status = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), status == 0)) {
+    editor_checked = 0;
+  }
+  else {
+    editor_checked = 1;
+  }
+  menu_set_item_checked((GameMenu *)((i8 *)&main_menu_block.main_menu),0x801,editor_checked);
+  if ((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
+     (((game.game_flags & 0x80) == 0 ||
+      (status = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), status == 0)))) {
+    editor_disabled = 1;
+  }
+  else {
+    editor_disabled = 0;
+  }
+  menu_set_menu_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),8,editor_disabled);
+  menu_set_item_enabled
+            ((GameMenu *)((i8 *)&main_menu_block.main_menu),0x801,(game.multiplayer != '\0'));
+  menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x441,1);
+  menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x413,1);
+  menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x442,1);
+  menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x417,1);
+  menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x418,1);
+  menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x41b,1);
   menu_rebuild((GameMenu *)((i8 *)&main_menu_block.main_menu),(iptr)&main_frame_wnd_block.main_frame_wnd);
   menu_set_command_handler((GameMenu *)((i8 *)&main_menu_block.main_menu),(iptr)menu_command);
   return;
