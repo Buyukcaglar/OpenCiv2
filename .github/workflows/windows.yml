@@ -1,18 +1,19 @@
-# Builds the Windows executable on every push to main and publishes it as the
-# "latest" release (a zip with the one executable, which sets the game up
-# from the user's copy).
+# Builds Civ2RE.exe on every push to main (kept as the run's artifact) and,
+# for a v* tag, publishes it as that release: Civ2RE-windows.zip with the one
+# executable, which sets the game up from the user's copy.
 name: Windows build
 
 on:
   push:
     branches: [main]
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: windows-build
+  group: windows-build-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -39,44 +40,23 @@ jobs:
         run: python3 tools/build_port.py module c exe-windows
 
       - name: Package
-        run: |
-          mkdir -p pkg/Civ2Reconstructed
-          cp build/civ2-port.exe pkg/Civ2Reconstructed/civ2-reconstructed.exe
-          cp LICENSE pkg/Civ2Reconstructed/LICENSE.txt
-          cat > pkg/Civ2Reconstructed/README.txt <<'TXT'
-          Civilization II (Multiplayer Gold) - reconstructed
-          https://github.com/${{ github.repository }}
+        run: python3 tools/release/package.py "${GITHUB_SHA::7}"
 
-          You need your own copy of Civilization II Multiplayer Gold Edition.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Civ2RE-windows
+          path: dist/Civ2RE-windows.zip
 
-          1. Put civ2-reconstructed.exe in any folder and double-click it.
-          2. Show it your copy of the game: a zip, 7z or rar of it, its CD
-             image (.cue/.bin or .iso), or a folder with the game (installed
-             or a copy of the CD).
-          3. It checks the game's files, copies the ones it needs into a
-             GameData folder beside it, and starts the game.  Afterwards it
-             starts the game directly; keep the program and GameData together.
-
-          Run "civ2-reconstructed.exe --setup" to choose another copy.
-
-          Icon: "Icon Civilization II" by alexielios,
-          https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212
-
-          Build ${{ github.sha }}
-          TXT
-          sed -i 's/^          //' pkg/Civ2Reconstructed/README.txt
-          (cd pkg && zip -qr ../civ2-reconstructed-windows.zip Civ2Reconstructed)
-
-      - name: Publish as the "latest" release
+      - name: Publish the release
+        if: startsWith(github.ref, 'refs/tags/v')
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          git tag -f latest
-          git push -f origin latest
-          notes="Windows build of ${GITHUB_SHA::7}: unpack anywhere, run civ2-reconstructed.exe and show it your copy of the game (see README.txt). Icon by alexielios: https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212"
-          if gh release view latest >/dev/null 2>&1; then
-            gh release edit latest --notes "$notes" --prerelease
+          tag="${GITHUB_REF_NAME}"
+          notes="Civ2RE ${tag}: unpack anywhere, run Civ2RE.exe and show it your copy of Civilization II Multiplayer Gold Edition (see README.txt). Built from ${GITHUB_SHA::7} on Richard Penman's reconstruction, https://github.com/richardpenman/civ2. Icon: \"Icon Civilization II\" by alexielios, https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212"
+          # a release published by hand for this tag is left as it is
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "release $tag exists; not replacing its files"
           else
-            gh release create latest --title "Latest Windows build" --notes "$notes" --prerelease
+            gh release create "$tag" dist/Civ2RE-windows.zip --title "Civ2RE ${tag}" --notes "$notes" --latest
           fi
-          gh release upload latest civ2-reconstructed-windows.zip --clobber
