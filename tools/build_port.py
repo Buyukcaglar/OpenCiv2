@@ -8,11 +8,11 @@ keeping the original's 32-bit data model.
 Steps (each can run on its own):
   module   build/wasm/civ2.wasm            (needs wasi-sdk and the installed game)
   c        build/wasm/c/civ2_wasm*.c,.h    (needs wabt's wasm2c)
-  exe      build/civ2-port                 (needs a C compiler and SDL2; on Windows
-                                           (MSYS2) Civ2RE.exe and SDL2.dll)
-  exe-windows  build/Civ2RE.exe            cross-compiled with MinGW-w64 (e.g. on
+  exe      build/OpenCiv2                 (needs a C compiler and SDL2; on Windows
+                                           (MSYS2) OpenCiv2.exe and SDL2.dll)
+  exe-windows  build/OpenCiv2.exe         cross-compiled with MinGW-w64 (e.g. on
                                            Linux; tools/fetch-toolchain.sh windows)
-  pack     dist/civ2-port-src.tar.gz       what the exe step needs on another
+  pack     dist/OpenCiv2-src.tar.gz       what the exe step needs on another
                                            machine, plus the data and run script
 
 The c step's output is plain C: copy build/wasm/c and src/host to another
@@ -129,8 +129,8 @@ def windows_resources(cc, obj):
 
 
 def exe(cross_windows=False):
-    """build/civ2-port: compile the generated C with the host runtime.
-    cross_windows: build/Civ2RE.exe with MinGW-w64 and SDL2's MinGW
+    """build/OpenCiv2: compile the generated C with the host runtime.
+    cross_windows: build/OpenCiv2.exe with MinGW-w64 and SDL2's MinGW
     release (tools/fetch-toolchain.sh windows), e.g. on Linux."""
     windows = cross_windows or on_windows()
     if cross_windows:
@@ -188,8 +188,7 @@ def exe(cross_windows=False):
     # Few at a time: the generated files are large.
     with concurrent.futures.ThreadPoolExecutor(int(os.environ.get('JOBS', '2'))) as ex:
         objs = list(ex.map(compile_one, jobs))
-    # (Windows: the program as published, Civ2RE.exe)
-    out = os.path.join(ROOT, 'build', 'Civ2RE.exe' if windows else 'civ2-port')
+    out = os.path.join(ROOT, 'build', 'OpenCiv2' + ('.exe' if windows else ''))
     # (Windows: the C runtime's threads library linked in, so nothing else
     # is needed beside the program; the set-up's archive, CD and cabinet
     # readers; the icon, manifest and the program's own files as resources)
@@ -217,12 +216,12 @@ def exe(cross_windows=False):
 
 def pack():
     import tarfile
-    out = os.path.join(ROOT, 'dist', 'civ2-port-src.tar.gz')
+    out = os.path.join(ROOT, 'dist', 'OpenCiv2-src.tar.gz')
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with tarfile.open(out, 'w:gz') as t:
         for rel in ('build/wasm/c', 'src/host', 'src/platform/win32_vk.h', 'tools/build_port.py',
                     'tools/paths.py', 'tools/run-civ2.sh', 'data/native', 'harness/CIV2.DAT', 'README.md'):
-            t.add(os.path.join(ROOT, rel), arcname=os.path.join('civ2-port', rel))
+            t.add(os.path.join(ROOT, rel), arcname=os.path.join('OpenCiv2', rel))
     print('wrote %s (%d MB)' % (os.path.relpath(out, ROOT), os.path.getsize(out) >> 20))
 
 

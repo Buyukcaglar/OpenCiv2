@@ -1,5 +1,5 @@
-# Builds Civ2RE.exe on every push to main (kept as the run's artifact) and,
-# for a v* tag, publishes it as that release: Civ2RE-windows.zip with the one
+# Builds OpenCiv2.exe on every push to main (kept as the run's artifact) and,
+# for a v* tag, publishes it as that release: OpenCiv2-windows.zip with the one
 # executable, which sets the game up from the user's copy.
 name: Windows build
 
@@ -44,8 +44,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Civ2RE-windows
-          path: dist/Civ2RE-windows.zip
+          name: OpenCiv2-windows
+          path: dist/OpenCiv2-windows.zip
 
       - name: Publish the release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -53,10 +53,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           tag="${GITHUB_REF_NAME}"
-          notes="Civ2RE ${tag}: unpack anywhere, run Civ2RE.exe and show it your copy of Civilization II Multiplayer Gold Edition (see README.txt). Built from ${GITHUB_SHA::7} on Richard Penman's reconstruction, https://github.com/richardpenman/civ2. Icon: \"Icon Civilization II\" by alexielios, https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212"
+          notes="OpenCiv2 ${tag}: unpack anywhere, run OpenCiv2.exe and show it your copy of Civilization II Multiplayer Gold Edition (see README.txt). Built from ${GITHUB_SHA::7} on Richard Penman's reconstruction, https://github.com/richardpenman/civ2. Icon: \"Icon Civilization II\" by alexielios, https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212"
           # a release published by hand for this tag is left as it is
           if gh release view "$tag" >/dev/null 2>&1; then
             echo "release $tag exists; not replacing its files"
           else
-            gh release create "$tag" dist/Civ2RE-windows.zip --title "Civ2RE ${tag}" --notes "$notes" --latest
+            gh release create "$tag" dist/OpenCiv2-windows.zip --title "OpenCiv2 ${tag}" --notes "$notes" --latest
           fi

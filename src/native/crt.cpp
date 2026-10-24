@@ -114,8 +114,8 @@ static char *copy_forward(char *d, const char *s)
 }
 void *crt_memcpy(void *dst, const void *src, uint n) { return memmove(dst, src, n); }
 void *crt_memmove(void *dst, const void *src, uint n) { return memmove(dst, src, n); }
-void *crt_strcpy(void *dst, const void *src) { copy_forward((char *)dst, (const char *)src); return dst; }
-void *crt_strcat(void *dst, const void *src) { copy_forward((char *)dst + strlen((char *)dst), (const char *)src); return dst; }
+char *crt_strcpy(char *dst, const char *src) { copy_forward(dst, src); return dst; }
+char *crt_strcat(char *dst, const char *src) { copy_forward(dst + strlen(dst), src); return dst; }
 int _memcmp(const void *a, const void *b, size_t n) { return memcmp(a, b, n); }
 void *_memset(void *p, int c, size_t n) { return memset(p, c, n); }
 size_t _strlen(const char *s) { return strlen(s); }
@@ -200,7 +200,7 @@ static char *crt_xtoa(u32 v, int neg, char *buf, int radix)
 
 char *__itoa(int v, char *buf, int radix)
 {
-    return radix == 10 && v < 0 ? crt_xtoa((u32)-(i32)v, 1, buf, radix) : crt_xtoa((u32)v, 0, buf, radix);
+    return radix == 10 && v < 0 ? crt_xtoa((u32)-v, 1, buf, radix) : crt_xtoa((u32)v, 0, buf, radix);
 }
 
 char *__ltoa(i32 v, char *buf, int radix) { return __itoa(v, buf, radix); }
@@ -479,7 +479,7 @@ void crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, cod
 
 void crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor)
 {
-    char *p = (char *)array + (size_t)size * count;
+    char *p = (char *)array + size * count;
     while (--count >= 0) {
         p -= size;
         ((void (*)(void *))dtor)(p);

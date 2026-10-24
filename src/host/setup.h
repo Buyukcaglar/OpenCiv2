@@ -1,5 +1,5 @@
 /*
- * Setting up the game on Windows: Civ2RE.exe and a GameData folder
+ * Setting up the game on Windows: OpenCiv2.exe and a GameData folder
  * beside it, made from the user's copy of Civilization II -- an installed
  * game's folder, the CD as an image (.cue/.bin, .iso) or an archive
  * (.zip, .7z, .rar) of either.  The game's files are found wherever they
@@ -67,11 +67,11 @@ int setup_message_box(void *owner_hwnd, int icon, const char *title, const char 
                       const char *const *labels, const int *ids, int enter, int escape);
 
 /* The program's name and version (also in res/civ2-port.rc), its home. */
-#define CIV2RE_NAME "Civ2RE"
-#define CIV2RE_VERSION "1.0"
-#define CIV2RE_URL "https://github.com/Buyukcaglar/Civ2RE"
-#define CIV2RE_UPSTREAM_URL "https://github.com/richardpenman/civ2"
-#define CIV2RE_ICON_URL "https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212"
+#define OPENCIV2_NAME "OpenCiv2"
+#define OPENCIV2_VERSION "1.0"
+#define OPENCIV2_URL "https://github.com/Buyukcaglar/OpenCiv2"
+#define OPENCIV2_UPSTREAM_URL "https://github.com/richardpenman/civ2"
+#define OPENCIV2_ICON_URL "https://www.deviantart.com/alexielios/art/Icon-Civilization-II-558913212"
 
 /* The About box, modal over owner_hwnd (may be NULL). */
 void setup_about(void *owner_hwnd);

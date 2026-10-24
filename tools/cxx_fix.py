@@ -10,6 +10,8 @@
                                   rejects)
     cxx_fix.py convcasts ERRORS.txt  the same for any conversion strict C++
                                   rejects (int <-> pointer too)
+    cxx_fix.py simplify FILES...  (T *)((iptr)x) -> (T *)x; (T*)(x) -> (T *)x
+    cxx_fix.py useless ERRORS.txt drop the casts g++ -Wuseless-cast reports
     cxx_fix.py untyped FILES...   calls through Ghidra's `code` type
                                   (*(code *)p)(a, b) -> call_untyped(p, a, b)
 
@@ -166,6 +168,32 @@ def expr_end(s, i):
     return -1
 
 
+def arg_start(s, i):
+    """Start of the argument (or right-hand side) that contains s[i]: just
+    after the ( , or = that opens it at its level (-1 if not on this line)."""
+    depth = 0
+    j = i if i < len(s) and s[i] in ')]' else i - 1
+    while j >= 0:
+        c = s[j]
+        if c in ')]':
+            depth += 1
+        elif c in '([':
+            if depth == 0:
+                break
+            depth -= 1
+        elif c == ',' and depth == 0:
+            break
+        elif c == '=' and depth == 0 and s[j - 1:j] not in ('=', '!', '<', '>') and s[j + 1:j + 2] != '=':
+            break
+        j -= 1
+    if j < 0:
+        return -1
+    j += 1
+    while j < len(s) and s[j] == ' ':
+        j += 1
+    return j
+
+
 def ptr_casts(path, any_conversion=False):
     sites = collections.defaultdict(dict)
     for line in open(path):
@@ -187,18 +215,98 @@ def ptr_casts(path, any_conversion=False):
             m = re.search(r'[A-Za-z_]\w*\s*$', s[:i])
             if i < len(s) and s[i] == '(' and m:
                 i = m.start()
+            # g++ points at the operator of a binary expression: start from
+            # the beginning of the argument (after the ( or , that opens it)
+            if not (s[:i].rstrip() and s[:i].rstrip()[-1] in '=(,') or not re.match(r'[A-Za-z_(&*]', s[i]):
+                k = arg_start(s, i)
+                if k >= 0:
+                    i = k
             e = expr_end(s, i)
             before = s[:i].rstrip()
-            # only a whole operand: after = ( or , and starting like one
-            # (g++ points at the operator of a binary expression)
+            if not before and ln > 1:
+                # the argument starts a continuation line: what ends the line before
+                before = lines[ln - 2].rstrip()
             if (e < 0 or not s[i:e].strip() or not before or before[-1] not in '=(,'
-                    or not re.match(r'[A-Za-z_(&*]', s[i])):
+                    or not re.match(r'[A-Za-z_(&*0-9]', s[i])):
                 skipped += 1
                 continue
             lines[ln - 1] = s[:i] + '(%s)(%s)' % (to, s[i:e].rstrip()) + s[i + len(s[i:e].rstrip()):]
             done += 1
         open(f, 'w').write('\n'.join(lines))
     print('%d casts added, %d sites left for hand' % (done, skipped))
+
+
+PTR_TYPE = r'(?:const\s+)?[A-Za-z_]\w*(?:\s*\*)+'
+
+
+def simplify(paths):
+    done = 0
+    for f in paths:
+        s = open(f).read()
+        o = s
+        # (T *)((iptr)X) -> (T *)X  and  (T *)((iptr)(X)) -> (T *)(X)
+        while True:
+            m = None
+            for m in re.finditer(r'\((%s)\s*\)\(\(\s*(?:iptr|uptr|int|uint|i32|u32)\s*\)' % PTR_TYPE, s):
+                inner_open = m.end() - len(re.search(r'\(\s*(?:iptr|uptr|int|uint|i32|u32)\s*\)$', m.group(0)).group(0)) - 1
+                close = match_paren(s, inner_open)
+                e = unary_end(s, m.end())
+                if close > 0 and e == close - 1:
+                    s = s[:m.start()] + '(%s)' % m.group(1) + s[m.end():e] + s[close:]
+                    done += 1
+                    break
+            else:
+                break
+        # (T*)(simple) -> (T *)simple
+        def tidy(m):
+            t = re.sub(r'\s*(\*+)$', lambda x: ' ' + x.group(1), m.group(1).strip())
+            return '(%s)%s' % (t, m.group(2))
+        # (not when a postfix operator follows: (T *)(f)(x) is not (T *)f(x))
+        s, n = re.subn(r'\((%s)\)\(([A-Za-z_]\w*(?:(?:->|\.)[A-Za-z_]\w*|\[[^\[\]()]*\])*)\)(?!\s*(?:[\w(\[.&]|->))' % PTR_TYPE, tidy, s)
+        done += n
+        if s != o:
+            open(f, 'w').write(s)
+    print('%d simplified' % done)
+
+
+def useless(path):
+    sites = collections.defaultdict(set)
+    for line in open(path):
+        m = re.match(r"(src/[^:]+):(\d+):(\d+): (?:warning|error): useless cast to type '(.*?)'", line)
+        if m:
+            sites[m.group(1)].add((int(m.group(2)), int(m.group(3))))
+    done = 0
+    for f, cols in sites.items():
+        lines = open(f).read().split('\n')
+        for ln, col in sorted(cols, key=lambda x: (x[0], -x[1])):
+            s = lines[ln - 1]
+            # the location is the cast's ( or its operand: find the cast at or before it
+            i = col - 1
+            k = s.rfind('(', 0, i + 1)
+            while k >= 0:
+                m = re.match(r'\(\s*(?:const\s+)?[A-Za-z_]\w*(?:\s*\*)*\s*\)\s*', s[k:])
+                if m and k + m.end() > i - 1:
+                    break
+                k = s.rfind('(', 0, k)
+            if k < 0 or not m:
+                continue
+            rest = s[k + m.end():]
+            # (T)(x) -> x when the parentheses only held the operand (and
+            # x has no prefix operator a following [ ( . -> would bind into)
+            if rest.startswith('('):
+                close = match_paren(s, k + m.end())
+                inner = s[k + m.end() + 1:close - 1]
+                # (the line may end there: the operator can be on the next one)
+                postfix = re.match(r'\s*(\[|\(|\.|->|$)', s[close:]) if close > 0 else None
+                if (close > 0 and unary_end(inner, 0) == len(inner)
+                        and not (postfix and re.match(r'[&*!~+-]|\(', inner))):
+                    lines[ln - 1] = s[:k] + inner + s[close:]
+                    done += 1
+                    continue
+            lines[ln - 1] = s[:k] + s[k + m.end():]
+            done += 1
+        open(f, 'w').write('\n'.join(lines))
+    print('%d useless casts dropped' % done)
 
 
 def untyped(paths):
@@ -243,6 +351,10 @@ def main():
         ptr_casts(sys.argv[2])
     elif len(sys.argv) == 3 and sys.argv[1] == 'convcasts':
         ptr_casts(sys.argv[2], any_conversion=True)
+    elif len(sys.argv) >= 3 and sys.argv[1] == 'simplify':
+        simplify(sys.argv[2:])
+    elif len(sys.argv) == 3 and sys.argv[1] == 'useless':
+        useless(sys.argv[2])
     elif len(sys.argv) >= 3 and sys.argv[1] == 'untyped':
         untyped(sys.argv[2:])
     else:

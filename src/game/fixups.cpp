@@ -262,7 +262,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             key_state = GetAsyncKeyState(0x20);
             key_word = (int)key_state;
             ui_pump_messages();
-            while (*(i8 *)((char *)&key_word + 1) != '\0') {
+            while (*((char *)&key_word + 1) != '\0') {
                 key_state = GetAsyncKeyState(0x20);
                 key_word = (int)key_state;
             }
@@ -398,7 +398,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (gfx_palettized_display == 1) {
             parent = (void *)ctrl_get_parent((Control *)ctrl);
             parent = (void *)wnd_get_palette((WndPaletteView *)parent);
-            hPal = (HPALETTE)palette_get_hpalette((PaletteHandleView *)parent);
+            hPal = palette_get_hpalette((PaletteHandleView *)parent);
             SelectPalette(hdc, hPal, 0);
         }
         if (*(int *)(wnd_obj + 0x18) == 0) {
@@ -443,7 +443,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             wnd_redraw_client(hwnd);
             *(i32 *)(wnd_obj + 0x18) = 0;
             key_word = (int)GetAsyncKeyState(0x20);
-            while (*(i8 *)((char *)&key_word + 1) != '\0')
+            while (*((char *)&key_word + 1) != '\0')
                 key_word = (int)GetAsyncKeyState(0x20);
             wnd_redraw_client(hwnd);
             ctrl_arg = ctrl_get_parent((Control *)ctrl);
@@ -543,7 +543,7 @@ i32 __cdecl ddraw_init(void)
     RegisterClassA(&wc);
     hr = DirectDrawCreate((GUID *)0x0, (LPDIRECTDRAW *)(iptr)&g_ddraw, (IUnknown *)0x0);
     if (hr != 0) {
-        dbg_log((iptr)str_error_directdrawinitialize_failed);
+        dbg_log((const char *)str_error_directdrawinitialize_failed);
         return 0;
     }
     err_report_ctx_block.g_ddcaps_driver = 0x13c;
@@ -551,13 +551,13 @@ i32 __cdecl ddraw_init(void)
     /* IDirectDraw::GetCaps (vtable slot 11) */
     ((dd_getcaps_fn)(*(void ***)g_ddraw)[11])(g_ddraw, (void *)(iptr)&err_report_ctx_block.g_ddcaps_driver, (void *)(iptr)&err_report_ctx_block.g_ddcaps_hel);
     if ((err_report_ctx_block.ddraw_hw_caps_byte0 & 0x40) == 0)
-        dbg_log((iptr)str_direct_draw_doesn_t_supports_hardware_bl);
+        dbg_log((const char *)str_direct_draw_doesn_t_supports_hardware_bl);
     if ((err_report_ctx_block.ddraw_hw_caps_byte2 & 0x40) == 0)
-        dbg_log((iptr)str_direct_draw_doesn_t_supports_colorkeys);
+        dbg_log((const char *)str_direct_draw_doesn_t_supports_colorkeys);
     if ((err_report_ctx_block.ddraw_hw_caps_byte3 & 4) == 0)
-        dbg_log((iptr)str_direct_draw_doesn_t_supports_color_fills);
+        dbg_log((const char *)str_direct_draw_doesn_t_supports_color_fills);
     if ((err_report_ctx_block.ddraw_hw_caps_byte3 & 8) != 0)
-        dbg_log((iptr)str_direct_draw_device_is_bank_switched);
+        dbg_log((const char *)str_direct_draw_device_is_bank_switched);
     return 1;
 }
 
@@ -571,7 +571,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     int wnd_obj;
     int owner;
     void *view;
-    WPARAM wp = (WPARAM)wparam_hwnd;
+    WPARAM wp = wparam_hwnd;
     short x = (short)lparam;
     short y = (short)(lparam >> 0x10);
     int min_h;

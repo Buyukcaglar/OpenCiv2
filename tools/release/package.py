@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""dist/Civ2RE-windows.zip, as published: Civ2RE/ with Civ2RE.exe (from
+"""dist/OpenCiv2-windows.zip, as published: OpenCiv2/ with OpenCiv2.exe (from
 build/), LICENSE.txt, CHANGELOG.txt and README.txt (this folder's, with the
 version from src/host/setup.h and the build named).
 
@@ -17,7 +17,7 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 
 def version():
     h = open(os.path.join(ROOT, 'src', 'host', 'setup.h'), encoding='utf-8').read()
-    return re.search(r'#define\s+CIV2RE_VERSION\s+"([^"]+)"', h).group(1)
+    return re.search(r'#define\s+OPENCIV2_VERSION\s+"([^"]+)"', h).group(1)
 
 
 def build_name():
@@ -37,19 +37,19 @@ def text(path):
 
 
 def main():
-    exe = os.path.join(ROOT, 'build', 'Civ2RE.exe')
+    exe = os.path.join(ROOT, 'build', 'OpenCiv2.exe')
     if not os.path.exists(exe):
-        sys.exit('no build/Civ2RE.exe: run tools/build_port.py module c exe-windows first')
+        sys.exit('no build/OpenCiv2.exe: run tools/build_port.py module c exe-windows first')
     readme = open(os.path.join(HERE, 'README.txt'), encoding='utf-8').read()
     readme = readme.replace('@VERSION@', version()).replace('@BUILD@', build_name())
 
     os.makedirs(os.path.join(ROOT, 'dist'), exist_ok=True)
-    out = os.path.join(ROOT, 'dist', 'Civ2RE-windows.zip')
+    out = os.path.join(ROOT, 'dist', 'OpenCiv2-windows.zip')
     with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
-        z.write(exe, 'Civ2RE/Civ2RE.exe')
-        z.writestr('Civ2RE/README.txt', readme.replace('\r\n', '\n').replace('\n', '\r\n').encode('utf-8'))
-        z.writestr('Civ2RE/LICENSE.txt', text(os.path.join(ROOT, 'LICENSE')))
-        z.writestr('Civ2RE/CHANGELOG.txt', text(os.path.join(ROOT, 'CHANGELOG.md')))
+        z.write(exe, 'OpenCiv2/OpenCiv2.exe')
+        z.writestr('OpenCiv2/README.txt', readme.replace('\r\n', '\n').replace('\n', '\r\n').encode('utf-8'))
+        z.writestr('OpenCiv2/LICENSE.txt', text(os.path.join(ROOT, 'LICENSE')))
+        z.writestr('OpenCiv2/CHANGELOG.txt', text(os.path.join(ROOT, 'CHANGELOG.md')))
     print(out)
 
 

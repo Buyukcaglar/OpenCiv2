@@ -2,7 +2,7 @@
 # Run the native build on a fresh copy of the game files (inside the
 # container).  Usage: sh tools/native-run.sh SCRIPT OUTDIR [gdb|valgrind]
 # (valgrind needs the civ2-dbg image: see tools/docker-dbg)
-# EXE=Civ2RE.exe: the Windows build, run with wine (paths as Z:\...).
+# EXE=OpenCiv2.exe: the Windows build, run with wine (paths as Z:\...).
 script=$1; out=$2
 rm -rf /tmp/g && cp -r "${CIV2_GAME:-/civ2}" /tmp/g && chmod -R u+w /tmp/g && cp /work/harness/CIV2.DAT /tmp/g/
 [ -f /work/harness/CIV.INI ] && cp /work/harness/CIV.INI /tmp/g/

@@ -1,15 +1,15 @@
 # Changelog
 
-Civ2RE's releases. The reconstruction itself changes upstream, in
-[richardpenman/civ2](https://github.com/richardpenman/civ2); each release
-names the upstream commit it is built on.
+Releases of OpenCiv2 for Windows, this fork. The reconstruction itself
+changes upstream, in [richardpenman/civ2](https://github.com/richardpenman/civ2);
+each release names the upstream commit it is built on.
 
 ## v1.0
 
-The first release, on upstream commit `2cbc514` ("The game is C++: strict,
-every function checked against the C conversions").
+The first release, on upstream commit `17b2353` ("Types: 194 string
+parameters are char pointers"), where the program became OpenCiv2.
 
-- **Civ2RE.exe**: one 64-bit Windows executable with SDL2, the fonts and
+- **OpenCiv2.exe**: one 64-bit Windows executable with SDL2, the fonts and
   `CIV2.DAT` built in; nothing to install.
 - **Set-up from your own copy**: a zip, 7z or rar archive, a `.cue`/`.bin` or
   `.iso` CD image, or a folder. Each of the game's files is checked against its
@@ -30,7 +30,7 @@ every function checked against the C conversions").
 - **Any folder**: a game folder deep in the file system is shown to the game
   as `C:\`, since the game keeps its paths in 128-byte buffers (sound effects
   overran them, the intro and other videos did not play).
-- **About Civ2RE** (Civilopedia menu and title bar menu): version, credits,
+- **About OpenCiv2** (Civilopedia menu and title bar menu): version, credits,
   links and license.
 - Light and dark mode (and high contrast) for the set-up window, message boxes,
   title bar and menus.

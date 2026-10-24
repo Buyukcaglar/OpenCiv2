@@ -1,5 +1,5 @@
-/* Civ2RE.exe's Windows resources: the icon (ICON-CREDITS.md), the
-   manifest and the version information (CIV2RE_VERSION, setup.h).  Compiled by windres
+/* OpenCiv2.exe's Windows resources: the icon (ICON-CREDITS.md), the
+   manifest and the version information (OPENCIV2_VERSION, setup.h).  Compiled by windres
    (tools/build_port.py). */
 #include <windows.h>
 
@@ -22,10 +22,10 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "Civ2RE - Civilization II for Windows"
-            VALUE "ProductName", "Civ2RE"
-            VALUE "InternalName", "Civ2RE"
-            VALUE "OriginalFilename", "Civ2RE.exe"
+            VALUE "FileDescription", "OpenCiv2 - Civilization II for Windows"
+            VALUE "ProductName", "OpenCiv2"
+            VALUE "InternalName", "OpenCiv2"
+            VALUE "OriginalFilename", "OpenCiv2.exe"
             VALUE "LegalCopyright", "MIT License: (c) 2026 Richard Penman, (c) 2026 Onur BUYUKCAGLAR. Civilization II and its game files are not included. Icon: alexielios (DeviantArt)."
             VALUE "FileVersion", "1.0.0.0"
             VALUE "ProductVersion", "1.0.0.0"

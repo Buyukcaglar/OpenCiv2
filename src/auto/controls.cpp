@@ -70,7 +70,7 @@ i32 __thiscall ctrl_dtor(Control *self)
     ctrl_destroy(self);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0040f5c3 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 0040f5c3 */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return seh_prev;
 }
 
@@ -91,7 +91,7 @@ void __thiscall ctrl_destroy(Control *self)
 /* 0040f680 auto */
 void __thiscall
 button_create
-          (Control *self,iptr parent,i32 ctrl_id,iptr rect,iptr label)
+          (Control *self,iptr parent,i32 ctrl_id,iptr rect,const char *label)
 
 {
   u32 new_hwnd;
@@ -190,7 +190,7 @@ void __thiscall checkbox_dtor(Checkbox *self)
     checkbox_destroy_hwnd(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0040f98a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 0040f98a */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return;
 }
 
@@ -198,7 +198,7 @@ void __thiscall checkbox_dtor(Checkbox *self)
 void __thiscall
 checkbox_create
           (Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y
-          ,iptr label)
+          ,const char *label)
 
 {
   u32 new_hwnd;
@@ -263,7 +263,7 @@ void __thiscall scrollbar_dtor(Control *self)
     scrollbar_destroy_hwnd(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0040fc0a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 0040fc0a */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return;
 }
 
@@ -358,14 +358,14 @@ void __thiscall edit_dtor(Control *self)
     edit_hwnd_cleanup_stub(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 004188ca */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 004188ca */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return;
 }
 
 /* 00418910 auto */
 void __thiscall
 edit_create
-          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,iptr text)
+          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,const char *text)
 
 {
   u32 new_hwnd;
@@ -377,7 +377,7 @@ edit_create
   ctrl_init((Control *)self,parent,4,ctrl_id,rect);
   new_hwnd = edit_create_window((int *)rect,(iptr)self,1,1,(GameFont *)self->edit_font);
   self->hwnd = new_hwnd;
-  hwnd_send_settext(self->hwnd,text);
+  hwnd_send_settext(self->hwnd,(LPARAM)(text));
   return;
 }
 
@@ -398,18 +398,18 @@ void __thiscall edit_set_callback(EditCallbackSetView *self,iptr callback)
 }
 
 /* 00418a30 auto */
-void __thiscall ctrl_set_text(ControlTextView *self,iptr text)
+void __thiscall ctrl_set_text(ControlTextView *self,const char *text)
 
 {
-  hwnd_send_settext(self->hwnd,text);
+  hwnd_send_settext(self->hwnd,(LPARAM)(text));
   return;
 }
 
 /* 00418a70 auto */
-void __thiscall ctrl_get_text(ControlTextView *self,iptr buffer)
+void __thiscall ctrl_get_text(ControlTextView *self,char *buffer)
 
 {
-  hwnd_get_text(self->hwnd,buffer);
+  hwnd_get_text(self->hwnd,(LPARAM)(buffer));
   return;
 }
 
@@ -441,7 +441,7 @@ void __thiscall combo_dtor(ComboDtorView *self)
     combo_hwnd_cleanup_stub(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00418baa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 00418baa */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return;
 }
 
@@ -474,10 +474,10 @@ void __thiscall combo_set_font(ComboBoxFontView *self,iptr font)
 }
 
 /* 00418ce0 auto */
-void __thiscall combo_add_string(ComboBoxAddView *self,iptr text)
+void __thiscall combo_add_string(ComboBoxAddView *self,const char *text)
 
 {
-  combo_hwnd_add_string(self->hwnd,text);
+  combo_hwnd_add_string(self->hwnd,(LPARAM)(text));
   self->item_count++;
   return;
 }
@@ -545,7 +545,7 @@ void __thiscall listbox_dtor(ListBoxControl *self)
     listbox_hwnd_cleanup_stub(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00418efa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 00418efa */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return;
 }
 
@@ -579,10 +579,10 @@ void __thiscall listbox_set_font(ListBoxFontView *self,iptr font)
 }
 
 /* 00419020 auto */
-void __thiscall listbox_add_string(ListBoxAddView *self,iptr text)
+void __thiscall listbox_add_string(ListBoxAddView *self,const char *text)
 
 {
-  listbox_hwnd_add_string(self->hwnd,text);
+  listbox_hwnd_add_string(self->hwnd,(LPARAM)(text));
   self->item_count++;
   return;
 }
@@ -778,10 +778,10 @@ i32 __thiscall edit_get_sel_end(EditSelEndView *self)
 }
 
 /* 00492ae0 auto */
-void __thiscall edit_replace_sel(Control *self,iptr text)
+void __thiscall edit_replace_sel(Control *self,const char *text)
 
 {
-  edit_hwnd_replace_sel(self->hwnd,text);
+  edit_hwnd_replace_sel(self->hwnd,(LPARAM)(text));
   return;
 }
 
@@ -796,8 +796,7 @@ void __thiscall edit_set_sel(EditSelView *self,i32 sel_start,i32 sel_end)
 /* 00497d40 auto */
 void __thiscall
 button_create_with_callback
-          (Control *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,iptr label
-          )
+          (Control *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,const char *label)
 
 {
   self->on_select = callback;
@@ -882,7 +881,7 @@ void __thiscall ctrl_set_focus(ControlFocusView *self)
 /* 004bb620 auto */
 void __thiscall
 edit_create_styled
-          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,iptr text,
+          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,const char *text,
           i32 multiline,i32 style)
 
 {
@@ -895,7 +894,7 @@ edit_create_styled
   ctrl_init((Control *)self,parent,4,ctrl_id,rect);
   new_hwnd = edit_create_window((int *)rect,(iptr)self,multiline,style,(GameFont *)self->edit_font);
   self->hwnd = new_hwnd;
-  hwnd_send_settext(self->hwnd,text);
+  hwnd_send_settext(self->hwnd,(LPARAM)(text));
   return;
 }
 
@@ -931,13 +930,13 @@ void __thiscall radiogrp_dtor(RadioGroupDtorView *self)
     radiogrp_destroy_items(self->item_count,self->items_handle);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 004bb7b0 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 004bb7b0 */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return;
 }
 
 /* 004cffb0 auto */
 i32 __thiscall
-edit_get_line(EditLineView *self,i32 line,iptr buffer,i32 max_len)
+edit_get_line(EditLineView *self,i32 line,char *buffer,i32 max_len)
 
 {
   i32 length;
@@ -1002,7 +1001,7 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   gfx_draw_bevel_rect((iptr)(button->button_surface),(iptr)&inner_rect,0xf,10);
   parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)button);
   palette = wnd_get_palette(parent_wnd);
-  surface_set_palette((DibSurface *)(button->button_surface),palette);
+  surface_set_palette((DibSurface *)button->button_surface,palette);
   parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)button);
   palette = wnd_get_palette(parent_wnd);
   surface_set_palette((DibSurface *)&button->on_select,palette);
@@ -1029,16 +1028,16 @@ void __thiscall spritebtn_dtor(SpriteButtonCore *self)
   int seh_state;
   
   seh_state = seh_state & 0xff;
-  (*(i8 *)((char *)&seh_state + 0)) = 2;
+  (*((char *)&seh_state + 0)) = 2;
   if (self->hwnd != 0) {
     spritebtn_hwnd_cleanup_stub(self->hwnd);
   }
-  (*(i8 *)((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 00511624 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x7c)); }
+  (*((char *)&seh_state + 0)) = 1;
+  /* inlined unwind funclet 00511624 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x7c)); }
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 00511630 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x34)); }
+  /* inlined unwind funclet 00511630 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x34)); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0051163c */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
+  /* inlined unwind funclet 0051163c */ { ctrl_base_dtor(*(ControlBase **)&self); }
   return;
 }
 
@@ -1055,7 +1054,7 @@ SpriteButton * __thiscall spritebtn_ctor(SpriteButton *self)
   seh_state = 0;
   surface_ctor((DibSurface *)&self->on_select);
   seh_state = (seh_state & 0xffffff00 | (byte)(1));
-  surface_ctor((DibSurface *)(self->button_surface));
+  surface_ctor((DibSurface *)self->button_surface);
   self->pressed_state = '\0';
   return self;
 }
@@ -1092,7 +1091,7 @@ void __thiscall edit_set_change_callback(EditChangeSetView *self,iptr callback)
 void __thiscall
 checkbox_create_fixed
           (Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y
-          ,i32 width,iptr label)
+          ,i32 width,const char *label)
 
 {
   u32 hwnd;
@@ -1169,7 +1168,7 @@ radiogrp_create
   handle = radiogrp_create_items((iptr)&self->font,(int *)rect,columns,(iptr)self,item_count,labels,1,
                        self->radio_font);
   self->items_handle = handle;
-  handle = (u32)mem_handle_lock((HGLOBAL)self->items_handle);
+  handle = (u32)mem_handle_lock(self->items_handle);
   self->items_ptr = handle;
   return;
 }
@@ -1331,15 +1330,15 @@ void __thiscall checkbox_disable(CheckboxDisableView *self)
 }
 
 /* 005a9670 auto */
-void __thiscall listbox_get_text(ListBoxTextView *self,i32 index,iptr buffer)
+void __thiscall listbox_get_text(ListBoxTextView *self,i32 index,char *buffer)
 
 {
-  listbox_hwnd_get_text(self->hwnd,index,buffer);
+  listbox_hwnd_get_text(self->hwnd,index,(LPARAM)(buffer));
   return;
 }
 
 /* 005a96b0 auto */
-void __thiscall listbox_get_sel_text(ListBoxSelTextView *self,iptr buffer)
+void __thiscall listbox_get_sel_text(ListBoxSelTextView *self,char *buffer)
 
 {
   listbox_hwnd_get_sel_text(self->hwnd,buffer);
@@ -1497,7 +1496,7 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
 }
 
 /* 005c9222 auto */
-void __cdecl ctrl_parse_hotkey(iptr ctrl,iptr text)
+void __cdecl ctrl_parse_hotkey(iptr ctrl,const char *text)
 
 {
   size_t len;
@@ -1584,7 +1583,7 @@ int __cdecl ctrl_destroy_hwnd(iptr ctrl)
     hwnd_val = control_get_hwnd((ControlHwndView *)ctrl);
     result = 0;
     if (hwnd_val != 0) {
-      hWnd = (HWND)control_get_hwnd((ControlHwndView *)ctrl);
+      hWnd = control_get_hwnd((ControlHwndView *)ctrl);
       result = DestroyWindow(hWnd);
     }
   }
@@ -1600,7 +1599,7 @@ i32 * __cdecl ctrl_init_block(HWND hwnd,iptr owner)
   
   block = (i32 *)0x0;
   if (hwnd == (HWND)0x0) {
-    dbg_log((iptr)&str_error_tried_to_initialize_null_control_i);
+    dbg_log((const char *)&str_error_tried_to_initialize_null_control_i);
   }
   else {
     handle = mem_handle_alloc(0x30);
@@ -1628,7 +1627,7 @@ void __cdecl ctrl_hwnd_free_block(HWND hwnd)
   i32 *block;
   
   if (hwnd == (HWND)0x0) {
-    dbg_log((iptr)&str_error_tried_to_dispose_null_control_in_d);
+    dbg_log((const char *)&str_error_tried_to_dispose_null_control_in_d);
   }
   else {
     block = (i32 *)GetWindowLongA(hwnd,0);
@@ -1676,7 +1675,7 @@ void __thiscall control_set_hwnd(ControlHwndSetView *self,u32 hwnd)
 
 /* 005c9740 auto */
 HWND __cdecl
-button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
+button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *font)
 
 {
   WndBase *self;
@@ -1739,7 +1738,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   int orig_right;
   int orig_bottom;
   
-  crt_strcpy((void *)label_text,(void *)label);
+  crt_strcpy((char *)((void *)label_text),(const char *)((void *)label));
   button = (Control *)ctrl;
   style2 = 0x40810000;
   if (visible != 0) {
@@ -1755,7 +1754,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   value = rect_width((iptr)rect);
   hwnd2 = CreateWindowExA(4,str_mscontrolclass_2,((i8 *)&button_wnd_title),style2,*rect,
                               rect[1],value,height,hWndParent,hMenu,hInstance,lpParam);
-  ctrl_parse_hotkey((iptr)button,(iptr)label_text);
+  ctrl_parse_hotkey((iptr)button,(const char *)label_text);
   bounds.left = *rect;
   bounds.top = rect[1];
   bounds.right = rect[2];
@@ -1768,7 +1767,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   value2 = rect_width((iptr)&bounds);
   h = CreateCompatibleBitmap(hdc,value2,value);
   if (h == (HBITMAP)0x0) {
-    dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton);
+    dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton);
     DestroyWindow(hwnd2);
     hwnd2 = (HWND)0x0;
   }
@@ -1777,7 +1776,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
     value2 = rect_width((iptr)&bounds);
     h_00 = CreateCompatibleBitmap(hdc,value2,value);
     if (h_00 == (HBITMAP)0x0) {
-      dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton_2);
+      dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton_2);
       DestroyWindow(hwnd2);
       hwnd2 = (HWND)0x0;
     }
@@ -1786,7 +1785,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
       value2 = rect_width((iptr)&bounds);
       bmp_disabled = CreateCompatibleBitmap(hdc,value2,value);
       if (bmp_disabled == (HBITMAP)0x0) {
-        dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton_3);
+        dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton_3);
         DestroyWindow(hwnd2);
         hwnd2 = (HWND)0x0;
       }
@@ -1802,7 +1801,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
             bForceBkgd = 0;
             parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
             this_00 = (PaletteHandleView *)wnd_get_palette(parent_wnd);
-            hPal = (HPALETTE)palette_get_hpalette(this_00);
+            hPal = palette_get_hpalette(this_00);
             SelectPalette(mem_dc,hPal,bForceBkgd);
             RealizePalette(mem_dc);
           }
@@ -1814,7 +1813,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
           this_01 = (GamePalette *)wnd_get_palette(parent_wnd);
           logpal = (iptr)palette_get_logpalette(this_01);
           palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-          bg_pen = CreatePen(0,1,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])))
+          bg_pen = CreatePen(0,1,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
           ;
         }
         h_01 = CreatePen(0,1,0xffffff);
@@ -1830,7 +1829,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         orig_right = bounds.right;
         orig_bottom = bounds.bottom;
         if (button->on_select == 0xffffffff) {
-          FillRect(mem_dc,&bounds,(HBRUSH)bg_pen);
+          FillRect(mem_dc,&bounds,bg_pen);
         }
         else {
           old_obj = SelectObject(mem_dc,bg_pen);
@@ -1918,7 +1917,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         }
         SelectObject(mem_dc,h_00);
         if (button->on_select == 0xffffffff) {
-          FillRect(mem_dc,&bounds,(HBRUSH)bg_pen);
+          FillRect(mem_dc,&bounds,bg_pen);
         }
         else {
           old_obj = SelectObject(mem_dc,bg_pen);
@@ -2005,7 +2004,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         bounds.right = orig_right;
         bounds.bottom = orig_bottom;
         if (button->on_select == 0xffffffff) {
-          FillRect(mem_dc,&bounds,(HBRUSH)bg_pen);
+          FillRect(mem_dc,&bounds,bg_pen);
         }
         else {
           old_obj = SelectObject(mem_dc,bg_pen);
@@ -2318,7 +2317,7 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   
   len = _strlen(label);
   label_copy = operator_new(len + 1);
-  crt_strcpy(label_copy,label);
+  crt_strcpy((char *)label_copy,label);
   style2 = 0x40010000;
   if (visible != 0) {
     style2 = 0x50010000;
@@ -2333,7 +2332,7 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   value = rect_width(rect);
   check_hwnd = CreateWindowExA(4,str_mscontrolclass_4,((i8 *)&wnd_modal_stack_below_block.checkbox_wnd_title),style2,*(int *)rect,
                            *(int *)(rect + 4),value,height,check_hwnd,hMenu,hInstance,lpParam);
-  ctrl_parse_hotkey(ctrl,(iptr)label_copy);
+  ctrl_parse_hotkey(ctrl,(const char *)label_copy);
   bmp_unchecked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x132);
   bmp_checked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x131);
   bmp_focus = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x130);
@@ -2352,7 +2351,7 @@ void __cdecl checkbox_destroy_hwnd(int hwnd)
 
 {
   if (hwnd == 0) {
-    dbg_log((iptr)&str_error_tried_to_dispose_null_checkbox_in);
+    dbg_log((const char *)&str_error_tried_to_dispose_null_checkbox_in);
   }
   return;
 }
@@ -2493,7 +2492,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
         parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
         game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
         palette_get_entry(game_palette2,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-        SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+        SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
         draw_flags = 0x24;
         draw_rect = &rect;
         len = _strlen(label);
@@ -2517,7 +2516,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             logpal = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-            SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])))
+            SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
             ;
           }
         }
@@ -2525,7 +2524,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
           SetTextColor(hdc,0);
         }
         else {
-          SetTextColor(hdc,(uint)CONCAT12(wnd_modal_stack_below_block.ctrl_text_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_text_rgb_g,wnd_modal_stack_below_block.ctrl_text_rgb_r)));
+          SetTextColor(hdc,CONCAT12(wnd_modal_stack_below_block.ctrl_text_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_text_rgb_g,wnd_modal_stack_below_block.ctrl_text_rgb_r)));
         }
       }
       else {
@@ -2547,14 +2546,14 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
               logpal = (iptr)palette_get_logpalette(game_palette2);
               palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
               SetTextColor(hdc,
-                           (uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+                           CONCAT12(blue[0],CONCAT11(green[0],red[0])));
             }
           }
           else if (wnd_modal_stack_below_block.ctrl_disabled_rgb_set == '\0') {
             SetTextColor(hdc,0x404040);
           }
           else {
-            SetTextColor(hdc,(uint)CONCAT12(wnd_modal_stack_below_block.ctrl_disabled_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_disabled_rgb_g,wnd_modal_stack_below_block.ctrl_disabled_rgb_r)))
+            SetTextColor(hdc,CONCAT12(wnd_modal_stack_below_block.ctrl_disabled_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_disabled_rgb_g,wnd_modal_stack_below_block.ctrl_disabled_rgb_r)))
             ;
           }
         }
@@ -2949,7 +2948,7 @@ u32 __thiscall scrollbar_get_page_size(ScrollbarPageView *self)
 void __thiscall
 edit_create_at
           (EditControl *self,iptr parent,i32 ctrl_id,int x,int y,int width,
-          iptr text)
+          const char *text)
 
 {
   tagRECT rect;
@@ -3696,17 +3695,17 @@ void __cdecl listbox_hwnd_get_text(HWND hwnd,WPARAM index,LPARAM buffer)
 }
 
 /* 005d3d62 auto */
-void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,i32 buffer)
+void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,char *buffer)
 
 {
   LRESULT cur_sel;
   
   cur_sel = SendMessageA(hwnd,0x188,0,0);
   if (cur_sel == -1) {
-    crt_strcpy((void *)buffer,((i8 *)&listbox_no_sel_text));
+    crt_strcpy((char *)((void *)buffer),((i8 *)&listbox_no_sel_text));
   }
   else {
-    listbox_hwnd_get_text(hwnd,cur_sel,buffer);
+    listbox_hwnd_get_text(hwnd,cur_sel,(LPARAM)(buffer));
   }
   return;
 }
@@ -3808,9 +3807,9 @@ spritebtn_init_from_sprite
   self->on_click = 0;
   gfx_get_scale_ratio((iptr)&scale_num2,(iptr)&scale_den2);
   gfx_set_scale_ratio(1,1);
-  surface_create((DibSurface *)(self->button_surface),width,height);
+  surface_create((DibSurface *)self->button_surface,width,height);
   surface_create((DibSurface *)&self->on_select,width,height);
-  surface_fill((DibSurface *)(self->button_surface),bg_color & 0xff);
+  surface_fill((DibSurface *)self->button_surface,bg_color & 0xff);
   surface_fill((DibSurface *)&self->on_select,bg_color & 0xff);
   center_x = width >> 1;
   center_y = height >> 1;
@@ -3826,9 +3825,9 @@ spritebtn_init_from_sprite
             ((Sprite *)sprite,(iptr)draw_ctx_b,(iptr)&self->on_select,center_x,center_y);
   sprite_set_origin((SpriteOriginSetView *)sprite,origin_x2,origin_y2);
   gfx_set_scale_ratio(scale_num2,scale_den2);
-  size = surface_height((DibSurface *)(self->button_surface));
+  size = surface_height((DibSurface *)self->button_surface);
   yBottom = y + size - 1;
-  size = surface_width((DibSurface *)(self->button_surface));
+  size = surface_width((DibSurface *)self->button_surface);
   SetRect(&rect,x,y,x + size - 1,yBottom);
   OffsetRect(&rect,-rect.left,-rect.top);
   dst_rect.left = rect.left;
@@ -3841,13 +3840,13 @@ spritebtn_init_from_sprite
   src_rect.right = dst_rect.right;
   src_rect.bottom = dst_rect.bottom;
   OffsetRect(&dst_rect,2,2);
-  surface_fill((DibSurface *)(self->button_surface),(uint)(*(byte *)&gfx_black_color_index));
+  surface_fill((DibSurface *)self->button_surface,(uint)(*(byte *)&gfx_black_color_index));
   surface_blit
             ((DibSurface *)&self->on_select,(iptr)(self->button_surface),(iptr)&src_rect,
              (iptr)&dst_rect);
   parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)self);
   palette = wnd_get_palette(parent_wnd);
-  surface_apply_palette((DibSurface *)(self->button_surface),(PaletteVersionView *)palette);
+  surface_apply_palette((DibSurface *)self->button_surface,(PaletteVersionView *)palette);
   parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)self);
   palette = wnd_get_palette(parent_wnd);
   surface_apply_palette((DibSurface *)&self->on_select,(PaletteVersionView *)palette);
@@ -3980,7 +3979,7 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     else {
       *(i32 *)(items + 0x18 + index * 0xa4) = 1;
     }
-    crt_strcpy((void *)(index * 0xa4 + items + 0x1c),(void *)label);
+    crt_strcpy((char *)((void *)(index * 0xa4 + items + 0x1c)),(const char *)((void *)label));
     cursor = (char *)(index * 0xa4 + items + 0x1c);
     *(i32 *)(items + 0xa0 + index * 0xa4) = 0;
     while( true ) {
@@ -4025,7 +4024,7 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
   i32 i;
   
   if (handle == 0) {
-    dbg_log((iptr)&str_error_tried_to_dismantle_null_radioset_i);
+    dbg_log((const char *)&str_error_tried_to_dismantle_null_radioset_i);
   }
   else {
     items = (iptr)mem_handle_lock((HGLOBAL)handle);
@@ -4189,7 +4188,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)group);
         game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
         palette_get_entry(game_palette2,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-        SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+        SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
         draw_flags = 0x24;
         draw_rect = &rect;
         len = _strlen((char *)(item + 0x1c));
@@ -4212,14 +4211,14 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             parent = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-            SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+            SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
           }
         }
         else if (radio_text_rgb_set == '\0') {
           SetTextColor(hdc,0);
         }
         else {
-          SetTextColor(hdc,(uint)CONCAT12(radio_text_rgb_b,CONCAT11(radio_text_rgb_g,radio_text_rgb_r)));
+          SetTextColor(hdc,CONCAT12(radio_text_rgb_b,CONCAT11(radio_text_rgb_g,radio_text_rgb_r)));
         }
       }
       else if (*(int *)(item + 0x18) == 0) {
@@ -4238,14 +4237,14 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             parent = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb(parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-            SetTextColor(hdc,(uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+            SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
           }
         }
         else if (radio_disabled_rgb_set == '\0') {
           SetTextColor(hdc,0x404040);
         }
         else {
-          SetTextColor(hdc,(uint)CONCAT12(radio_disabled_rgb_b,CONCAT11(radio_disabled_rgb_g,radio_disabled_rgb_r)));
+          SetTextColor(hdc,CONCAT12(radio_disabled_rgb_b,CONCAT11(radio_disabled_rgb_g,radio_disabled_rgb_r)));
         }
       }
       draw_flags = 0x24;
@@ -4253,7 +4252,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       len = _strlen((char *)(item + 0x1c));
       DrawTextA(hdc,(LPCSTR)(item + 0x1c),len,draw_rect,draw_flags);
       if (*(int *)(item + 0xa0) != -1) {
-        crt_strcpy(prefix,(void *)(item + 0x1c));
+        crt_strcpy(prefix,(const char *)((void *)(item + 0x1c)));
         prefix[*(int *)(item + 0xa0)] = '\0';
         text_rect.left = rect.left;
         text_rect.top = rect.top;
@@ -4270,7 +4269,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
           underline_start = text_rect.right - 1;
         }
-        crt_strcpy(prefix,(void *)(item + 0x1c));
+        crt_strcpy(prefix,(const char *)((void *)(item + 0x1c)));
         prefix[*(int *)(item + 0xa0) + 1] = '\0';
         text_rect.left = rect.left;
         text_rect.top = rect.top;
@@ -4756,15 +4755,15 @@ i32 __thiscall ddctrl_dispatch_msg(DDControl *self,int msg,int x,int y)
   if (handled == '\0') {
     ddctrl_set_msg_target((iptr)self);
     if ((msg == 0x100) && (self->is_active != '\0')) {
-      call_untyped(((code **)(self->vtable))[6], x);
+      call_untyped(((code **)self->vtable)[6], x);
       result = 1;
     }
     else if ((msg == 0x102) && (self->is_active != '\0')) {
-      call_untyped(((code **)(self->vtable))[7], x);
+      call_untyped(((code **)self->vtable)[7], x);
       result = 1;
     }
     else if (msg == 0xfff0) {
-      call_untyped(((code **)(self->vtable))[9], x,y);
+      call_untyped(((code **)self->vtable)[9], x,y);
       result = 1;
     }
     else if ((((x < (int)self->rect_left) || (y < (int)self->rect_top)) ||
@@ -4774,22 +4773,22 @@ i32 __thiscall ddctrl_dispatch_msg(DDControl *self,int msg,int x,int y)
     else {
       switch(msg) {
       case 0x200:
-        call_untyped(((code **)(self->vtable))[4], x,y);
+        call_untyped(((code **)self->vtable)[4], x,y);
         break;
       case 0x201:
-        call_untyped(((code **)(self->vtable))[0], self,x,y);
+        call_untyped(((code **)self->vtable)[0], self,x,y);
         break;
       case 0x202:
-        call_untyped(((code **)(self->vtable))[2], x,y);
+        call_untyped(((code **)self->vtable)[2], x,y);
         break;
       case 0x203:
-        call_untyped(((code **)(self->vtable))[5], x,y);
+        call_untyped(((code **)self->vtable)[5], x,y);
         break;
       case 0x204:
-        call_untyped(((code **)(self->vtable))[1], x,y);
+        call_untyped(((code **)self->vtable)[1], x,y);
         break;
       case 0x205:
-        call_untyped(((code **)(self->vtable))[3], x,y);
+        call_untyped(((code **)self->vtable)[3], x,y);
       }
       result = 1;
     }
@@ -4848,7 +4847,7 @@ void __thiscall ddctrl_activate(DDControlActivateView *self)
       ddctrl_deactivate_children((void *)self->parent_control);
     }
     self->is_active = 1;
-    call_untyped(((code **)(self->vtable))[8], 1);
+    call_untyped(((code **)self->vtable)[8], 1);
   }
   return;
 }
@@ -4978,14 +4977,14 @@ i8 __thiscall ddctrl_dispatch_to_children(DDControl *self,int msg,int x,int y)
       self->hover_child = 0;
     }
   }
-  child = (DDControl *)ptrlist_first((PtrList *)(self->child_controls));
+  child = (DDControl *)ptrlist_first((PtrList *)self->child_controls);
   while( true ) {
     if (child == (DDControl *)0x0) {
       return 0;
     }
     handled = ddctrl_dispatch_msg(child,msg,x,y);
     if (handled != 0) break;
-    child = (DDControl *)ptrlist_next((PtrList *)(self->child_controls));
+    child = (DDControl *)ptrlist_next((PtrList *)self->child_controls);
   }
   if (msg == 0x200) {
     self->hover_child = (uptr)child;

@@ -428,7 +428,7 @@ static void system_menu(HWND hwnd)
     HMENU m = GetSystemMenu(hwnd, FALSE);
     if (!m)
         return;
-    InsertMenuW(m, SC_CLOSE, MF_BYCOMMAND | MF_STRING, SC_HOST_ABOUT, L"&About " CIV2RE_NAME L"\x2026");
+    InsertMenuW(m, SC_CLOSE, MF_BYCOMMAND | MF_STRING, SC_HOST_ABOUT, L"&About " OPENCIV2_NAME L"\x2026");
     InsertMenuW(m, SC_CLOSE, MF_BYCOMMAND | MF_SEPARATOR, 0, NULL);
 }
 
@@ -512,7 +512,7 @@ void host_menu_apply(SDL_Window *window, const HostMenuItem *items, int n)
     }
     if (last) {
         AppendMenuW(last, MF_SEPARATOR, 0, NULL);
-        AppendMenuW(last, MF_STRING, ID_HOST_ABOUT, L"About " CIV2RE_NAME L"\x2026");
+        AppendMenuW(last, MF_STRING, ID_HOST_ABOUT, L"About " OPENCIV2_NAME L"\x2026");
     }
     for (i = 0; i < npopups; i++)
         finish_popup(popups[i]);

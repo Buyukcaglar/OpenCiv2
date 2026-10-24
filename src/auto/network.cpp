@@ -269,8 +269,8 @@ void __thiscall net_gamelist_get_entry_names(NetGameList *self,iptr option,iptr 
       game2 = *(iptr *)(game2 + 0x20);
     }
   }
-  crt_strcpy((void *)(out_game_name),(const void *)(game2 + 0x70));
-  crt_strcpy((void *)(out_host_name),(const void *)(game2 + 0x90));
+  crt_strcpy((char *)((void *)out_game_name),(const char *)((const void *)(game2 + 0x70)));
+  crt_strcpy((char *)((void *)out_host_name),(const char *)((const void *)(game2 + 0x90)));
   return;
 }
 
@@ -285,46 +285,46 @@ void __thiscall net_gamelist_add_info_lines(NetGamelistAddInfoLinesView *self)
   dialog_compute_layout((DialogOptionList *)self->dialog);
   line_y = *(int *)(self->dialog + 0xd0) + *(int *)(self->dialog + 0xb8) + 2;
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_14,0xe6,line_y,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_14,0xe6,line_y,0x80,0);
   self->line_0 = *line;
   spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
   line_y += spacing;
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_15,0xe6,line_y,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_15,0xe6,line_y,0x80,0);
   self->line_1 = *line;
   spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
   line_y += spacing;
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_16,0xe6,line_y,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_16,0xe6,line_y,0x80,0);
   self->line_2 = *line;
   spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
   line_y += spacing;
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_17,0xe6,line_y,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_17,0xe6,line_y,0x80,0);
   self->line_3 = *line;
   spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
   line_y += spacing;
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_18,0xe6,line_y,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_18,0xe6,line_y,0x80,0);
   self->line_4 = *line;
   spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
   line_y += spacing;
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_19,0xe6,line_y,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_19,0xe6,line_y,0x80,0);
   self->line_5 = *line;
   spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
   line_y += spacing;
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_20,0xe6,line_y,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_20,0xe6,line_y,0x80,0);
   self->line_6 = *line;
   spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
   line_y += spacing;
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_21,0xe6,line_y,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_21,0xe6,line_y,0x80,0);
   self->line_7 = *line;
   spacing = font_line_spacing(*(GameFont **)(self->dialog + 8));
   line = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)self->dialog,(iptr)&str_empty_22,0xe6,line_y + spacing,0x80,0);
+                            ((DialogAddLineView *)self->dialog,(const char *)&str_empty_22,0xe6,line_y + spacing,0x80,0);
   self->line_8 = *line;
   font_line_spacing(*(GameFont **)(self->dialog + 8));
   return;
@@ -348,15 +348,15 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
   
   found_game = net_session_block.net_found_games;
   if (net_session_block.net_found_games == 0) {
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x128),(iptr)&str_empty_23);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 300),(iptr)&str_empty_24);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x130),(iptr)&str_empty_25);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x134),(iptr)&str_empty_26);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x138),(iptr)&str_empty_27);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x13c),(iptr)&str_empty_28);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x140),(iptr)&str_empty_29);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x144),(iptr)&str_empty_30);
-    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x148),(iptr)&str_empty_31);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x128),(const char *)&str_empty_23);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 300),(const char *)&str_empty_24);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x130),(const char *)&str_empty_25);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x134),(const char *)&str_empty_26);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x138),(const char *)&str_empty_27);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x13c),(const char *)&str_empty_28);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x140),(const char *)&str_empty_29);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x144),(const char *)&str_empty_30);
+    dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x148),(const char *)&str_empty_31);
   }
   else {
     for (; (found_game != 0 &&
@@ -364,27 +364,27 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
         found_game = *(iptr *)(found_game + 0x20)) {
     }
     if (found_game != 0) {
-      str_clear((iptr)text);
+      str_clear((char *)text);
       str_append_label((iptr)text,0x26f);
       str_append_space((iptr)text);
-      crt_strcat(text,(const void *)(found_game + 0x70));
+      crt_strcat(text,(const char *)((const void *)(found_game + 0x70)));
       str_append_space((iptr)text);
       str_append_lparen((iptr)text);
       str_append_label((iptr)text,(*(short *)(found_game + 0xb0) == 0) + 0x277);
       str_append_rparen((iptr)text);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x128),(iptr)text);
-      str_clear((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x128),(const char *)text);
+      str_clear((char *)text);
       str_append_label((iptr)text,0x270);
       str_append_space((iptr)text);
-      crt_strcat(text,(const void *)(found_game + 0x90));
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 300),(iptr)text);
-      str_clear((iptr)text);
+      crt_strcat(text,(const char *)((const void *)(found_game + 0x90)));
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 300),(const char *)text);
+      str_clear((char *)text);
       text_len = _strlen((char *)(found_game + 0xbc));
       if (text_len == 0) {
         str_append_label((iptr)text,0x34c);
       }
       else {
-        crt_strcpy(text,(const void *)(found_game + 0xbc));
+        crt_strcpy(text,(const char *)((const void *)(found_game + 0xbc)));
       }
       text_len = _strlen(text);
       if (0x19 < text_len) {
@@ -400,32 +400,32 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
       year = game_turn_to_year((int)*(short *)(found_game + 0x118));
       str_append_year((iptr)text,year);
       str_append_rparen((iptr)text);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x130),(iptr)text);
-      str_clear((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x130),(const char *)text);
+      str_clear((char *)text);
       str_append_label((iptr)text,*(byte *)(found_game + 0xb2) + 0x279);
       str_append_space((iptr)text);
       str_append_lparen((iptr)text);
       str_append_label((iptr)text,0x34e - (uint)(*(short *)(found_game + 0x11e) == 0));
       str_append_rparen((iptr)text);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x134),(iptr)text);
-      str_clear((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x134),(const char *)text);
+      str_clear((char *)text);
       str_append_label((iptr)text,0x36c);
       str_append_space((iptr)text);
       str_append_int((iptr)text,(int)*(short *)(found_game + 0x11a) / 2);
       crt_strcat(text,((i8 *)&gamelist_map_size_sep_str));
       str_append_int((iptr)text,(int)*(short *)(found_game + 0x11c));
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x138),(iptr)text);
-      str_clear((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x138),(const char *)text);
+      str_clear((char *)text);
       str_append_label((iptr)text,0x350 - (uint)(*(short *)(found_game + 0x10e) == 0));
       crt_strcat(text,((i8 *)&gamelist_double_opts_sep_str));
       str_append_label((iptr)text,0x352 - (uint)(*(short *)(found_game + 0x10c) == 0));
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x13c),(iptr)text);
-      str_clear((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x13c),(const char *)text);
+      str_clear((char *)text);
       str_append_label((iptr)text,0x273);
       str_append_space((iptr)text);
       str_append_label((iptr)text,*(byte *)(found_game + 0xb3) + 0x27f);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x140),(iptr)text);
-      str_clear((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x140),(const char *)text);
+      str_clear((char *)text);
       str_append_label((iptr)text,0x276);
       str_append_space((iptr)text);
       if (*(int *)(found_game + 0xb8) == 0) {
@@ -445,7 +445,7 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
         }
         str_append_int((iptr)text,seconds);
       }
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x144),(iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x144),(const char *)text);
       bit = 1;
       civ_count = 0;
       civ_bits = (uint)*(byte *)(found_game + 0xb4);
@@ -454,7 +454,7 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
           civ_count++;
         }
       }
-      str_clear((iptr)text);
+      str_clear((char *)text);
       str_append_label((iptr)text,0x274);
       str_append_space((iptr)text);
       str_append_int((iptr)text,civ_count);
@@ -477,7 +477,7 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
         str_append_int((iptr)text,civ_count);
       }
       str_append_rparen((iptr)text);
-      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x148),(iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session_block.net_session[0] + 0x148),(const char *)text);
     }
   }
   scroll_pos = dialog_option_group_index
@@ -510,7 +510,7 @@ void __thiscall net_gamelist_clear(NetGameList *self)
 }
 
 /* 004254a8 auto */
-uint * __thiscall net_gamelist_add_entry(NetGameListAddView *self,iptr name2,uint id)
+uint * __thiscall net_gamelist_add_entry(NetGameListAddView *self,const char *name2,uint id)
 
 {
   int *count_ptr;
@@ -540,13 +540,13 @@ uint * __thiscall net_gamelist_add_entry(NetGameListAddView *self,iptr name2,uin
   name_len = _strlen((char *)name2);
   name_copy = operator_new(name_len + 1);
   entry[2] = (uint)name_copy;
-  crt_strcpy((void *)(entry[2]),(const void *)(name2));
+  crt_strcpy((char *)((void *)entry[2]),(const char *)((const void *)name2));
   if (*(char *)name2 == '\0') {
     *entry = *entry | 1;
   }
   entry[1] = id;
   entry[3] = 0;
-  entry_width = font_text_width(*(GameFont **)(self->list_dialog + 8),entry[2]);
+  entry_width = font_text_width(*(GameFont **)(self->list_dialog + 8),(const char *)entry[2]);
   max_width = dialog_option_icon_width((DialogCore *)self->list_dialog);
   entry_width = entry_width + max_width + *(int *)(self->list_dialog + 0xac) + 5;
   max_width = *(int *)(self->list_dialog + 0x118);
@@ -654,7 +654,7 @@ void __cdecl net_gamelist_refresh(void)
     if (net_session_block.net_found_games == 0) {
       text_clear();
       text_append_label(0x286);
-      net_gamelist_add_entry((NetGameListAddView *)net_session_block.net_session[0],(iptr)&map_views_block.text_buffer,0);
+      net_gamelist_add_entry((NetGameListAddView *)net_session_block.net_session[0],(const char *)&map_views_block.text_buffer,0);
       net_gamelist_update_details((NetGameList *)net_session_block.net_session[0]);
     }
     else {
@@ -663,8 +663,8 @@ void __cdecl net_gamelist_refresh(void)
           *(i32 *)(game2 + 0x2c) = *(i32 *)(net_session_block.net_session[0] + 4);
           *(int *)(net_session_block.net_session[0] + 4) = *(int *)(net_session_block.net_session[0] + 4) + 1;
         }
-        entry = (uint *)net_gamelist_add_entry
-                                   ((NetGameListAddView *)net_session_block.net_session[0],game2 + 0x70,
+        entry = net_gamelist_add_entry
+                                   ((NetGameListAddView *)net_session_block.net_session[0],(const char *)(game2 + 0x70),
                                     *(i32 *)(game2 + 0x2c));
         bit = 0;
         total_civs = 0;
@@ -673,7 +673,7 @@ void __cdecl net_gamelist_refresh(void)
           if ((civ_bits & 1) != 0) {
             total_civs++;
           }
-          civ_bits = (int)civ_bits >> 1;
+          civ_bits = civ_bits >> 1;
         }
         bit = 0;
         human_count = 0;
@@ -682,7 +682,7 @@ void __cdecl net_gamelist_refresh(void)
           if ((civ_bits & 1) != 0) {
             human_count++;
           }
-          civ_bits = (int)civ_bits >> 1;
+          civ_bits = civ_bits >> 1;
         }
         if (((net_session_block.net_max_players <= human_count) || (total_civs <= human_count)) ||
            (*(short *)(game2 + 0xb0) == 0)) {
@@ -738,11 +738,11 @@ i32 __cdecl net_prompt_ip_address(void)
     proto_addr = XD_GetCurrentProtoAddr(net_session_block.net_adapter_index,net_session_block.net_protocol);
     if (proto_addr == (char *)0x0) {
       do {
-        dialog_load_text_section(&dlg,(iptr)&str_game_7,(iptr)&str_ipaddress,0x1f,(iptr)&prefs_main_menu_choice_block.prefs_net_ip_address,0,0,0,1);
+        dialog_load_text_section(&dlg,(const char *)&str_game_7,(const char *)&str_ipaddress,0x1f,(iptr)&prefs_main_menu_choice_block.prefs_net_ip_address,0,0,0,1);
         choice = dialog_run_modal(&dlg,(iptr)input,0);
         if (choice == -1) {
           eh_state = 0xffffffff;
-          /* inlined unwind funclet 00445407 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+          /* inlined unwind funclet 00445407 */ { dialog_dtor(&dlg); }
           result = 0;
           goto return_result;
         }
@@ -759,7 +759,7 @@ i32 __cdecl net_prompt_ip_address(void)
     crt_strcpy(((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),((i8 *)&net_session_block.net_lobby_launch_info));
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 00445407 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  /* inlined unwind funclet 00445407 */ { dialog_dtor(&dlg); }
   result = 1;
 return_result:
   return result;
@@ -783,11 +783,11 @@ i32 __cdecl net_prompt_player_name(void)
   eh_state = 0;
   if (net_session_block.net_lobby_launch_mode == -1) {
     do {
-      dialog_load_text_section(&dlg,(iptr)&str_game_7,(iptr)&str_netname,0x1f,(iptr)&prefs_main_menu_choice_block.prefs_net_player_name,0,0,0,1);
+      dialog_load_text_section(&dlg,(const char *)&str_game_7,(const char *)&str_netname,0x1f,(iptr)&prefs_main_menu_choice_block.prefs_net_player_name,0,0,0,1);
       choice = dialog_run_modal(&dlg,(iptr)input,0);
       if (choice == -1) {
         eh_state = 0xffffffff;
-        /* inlined unwind funclet 0044556d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+        /* inlined unwind funclet 0044556d */ { dialog_dtor(&dlg); }
         result = 0;
         goto return_result;
       }
@@ -801,7 +801,7 @@ i32 __cdecl net_prompt_player_name(void)
     _strncpy(((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name),((i8 *)&net_session_block.net_lobby_short_name),0x1f);
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044556d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  /* inlined unwind funclet 0044556d */ { dialog_dtor(&dlg); }
   result = 1;
 return_result:
   return result;
@@ -825,11 +825,11 @@ i32 __cdecl net_prompt_game_name(void)
   eh_state = 0;
   if (net_session_block.net_lobby_launch_mode == -1) {
     do {
-      dialog_load_text_section(&dlg,(iptr)&str_game_7,(iptr)&str_gamename,0x1f,(iptr)&prefs_main_menu_choice_block.prefs_net_game_name,0,0,0,1);
+      dialog_load_text_section(&dlg,(const char *)&str_game_7,(const char *)&str_gamename,0x1f,(iptr)&prefs_main_menu_choice_block.prefs_net_game_name,0,0,0,1);
       choice = dialog_run_modal(&dlg,(iptr)input,0);
       if (choice == -1) {
         eh_state = 0xffffffff;
-        /* inlined unwind funclet 004456ed */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+        /* inlined unwind funclet 004456ed */ { dialog_dtor(&dlg); }
         result = 0;
         goto return_result;
       }
@@ -844,7 +844,7 @@ i32 __cdecl net_prompt_game_name(void)
     _strncpy(((i8 *)&prefs_main_menu_choice_block.prefs_net_game_name),((i8 *)&net_session_block.net_lobby_session_name),0x1f);
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004456ed */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  /* inlined unwind funclet 004456ed */ { dialog_dtor(&dlg); }
   result = 1;
 return_result:
   return result;
@@ -892,27 +892,27 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
     for (civ = 1; civ < 8; civ++) {
       if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
         text_clear();
-        civ2 = civ_name_plural(civ);
-        text_append(civ2);
+        civ2 = (iptr)(civ_name_plural(civ));
+        text_append((const char *)civ2);
         text_append_space();
         text_append_lparen();
-        civ2 = civ_leader_name(civ);
-        text_append(civ2);
+        civ2 = (iptr)(civ_leader_name(civ));
+        text_append((const char *)civ2);
         text_append_rparen();
         text_append_space();
         text_append_lparen();
         text_append_int((int)civs[civ].num_cities);
         text_append_space();
         text_append_label(0xc5);
-        text_append((iptr)&str_empty_65);
+        text_append((const char *)&str_empty_65);
         text_append_int((int)civs[civ].num_military_units);
         text_append_space();
         text_append_label(0xc4);
-        text_append((iptr)&str_empty_66);
+        text_append((const char *)&str_empty_66);
         result = index;
         index++;
         option = (byte *)dialog_add_option
-                                     ((DialogOptionList *)&dlg,(iptr)&map_views_block.text_buffer,result,0);
+                                     ((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,result,0);
         option_civs[*(int *)(option + 4)] = civ;
       }
     }
@@ -924,7 +924,7 @@ choose_loop:
         option = (byte *)dialog_find_option
                                      ((DialogOptionList *)&dlg,index);
         if (option != (byte *)0x0) {
-          (*(i8 *)((char *)&civ + 0)) = (byte)option_civs[*(int *)(option + 4)];
+          (*((char *)&civ + 0)) = (byte)option_civs[*(int *)(option + 4)];
           if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) &&
              ((1 << ((byte)civ & 0x1f) & (int)civ_saved_cursor_x_block.net_claimed_civs_mask) == 0)) {
             available_count++;
@@ -946,10 +946,10 @@ choose_loop:
         }
       }
       if (available_count == 0) {
-        popup_game((iptr)&str_joinedmax);
+        popup_game((const char *)&str_joinedmax);
         dialog_close(&dlg);
         eh_state = 0xffffffff;
-        /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+        /* inlined unwind funclet 004467fa */ { dialog_dtor(&dlg); }
         ret = 1;
         goto return_ret;
       }
@@ -974,20 +974,20 @@ choose_loop:
       dlg.style_flags = dlg.style_flags & 0xfffffbff;
       dlg.result_id = 0;
       dlg.result_extra = 0;
-      dlg_pending_idle_callback = ((i8*)(net_lock_wait_idle_cb));
+      dlg_pending_idle_callback = ((i8 *)net_lock_wait_idle_cb);
       choice = dlg_show_modal(&dlg,0);
       selected2 = radiogrp_get_selected((RadioGroupGetSelView *)dlg.radio_group);
       if (choice < 0) {
         eh_state = 0xffffffff;
-        /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+        /* inlined unwind funclet 004467fa */ { dialog_dtor(&dlg); }
         ret = 1;
         goto return_ret;
       }
     } while (net_session_block.nm_lock_data_count != 0);
     if (net_session_block.nm_server_canceled_count != 0) {
-      popup_game_with_sprite((iptr)&str_gamecanceled,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_gamecanceled,(iptr)&popup_info_icon_sprite,0);
       eh_state = 0xffffffff;
-      /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+      /* inlined unwind funclet 004467fa */ { dialog_dtor(&dlg); }
       ret = 1;
       goto return_ret;
     }
@@ -1005,18 +1005,18 @@ choose_loop:
     }
     if ((net_session_block.nm_nation_accept_count == 0) && (net_session_block.nm_nation_reject_count == 0)) {
       dialog_close(&dlg);
-      popup_game_with_sprite((iptr)&str_serverconnectfail,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_serverconnectfail,(iptr)&popup_info_icon_sprite,0);
       eh_state = 0xffffffff;
-      /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+      /* inlined unwind funclet 004467fa */ { dialog_dtor(&dlg); }
       ret = 1;
       goto return_ret;
     }
     if (net_session_block.nm_nation_reject_count != 0) {
-      popup_game_with_sprite((iptr)&str_alreadychosen,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_alreadychosen,(iptr)&popup_info_icon_sprite,0);
       goto choose_loop;
     }
     dialog_close(&dlg);
-    (*(i8 *)((char *)&civ + 0)) = (byte)civ2;
+    (*((char *)&civ + 0)) = (byte)civ2;
     game.human_players = game.human_players | (byte)(1 << ((byte)civ & 0x1f));
     game.player_civ = (byte)civ;
     game.turn_civ = (byte)civ;
@@ -1028,14 +1028,14 @@ choose_loop:
       net_send_message(0x31,0,0,civ2,0,0,0,0,0,0);
     }
     else {
-      dlg_load_game_section(&dlg,(iptr)&str_gender_4,1);
+      dlg_load_game_section(&dlg,(const char *)&str_gender_4,1);
       dialog_prepend_title_label((iptr)&dlg,title_offset + 0x25e);
       dialog_set_default_choice
                 ((DialogOptionList *)&dlg,(uint)leaders[civs[game.player_civ].tribe].female);
       dialog_set_position
                 ((DialogCore *)&dlg,0xfffffc19,
                  -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-      dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
+      dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
       result = dlg_show_modal(&dlg,0);
       net_session_block.net_player_info_gender_i32 = result;
       snd_play_effect(0x6a,0,0,0);
@@ -1054,20 +1054,20 @@ choose_loop:
         arg7 = 0;
         arg6 = 0;
         ret = 0;
-        leader_str = civ_leader_name((int)game.player_civ);
+        leader_str = (iptr)(civ_leader_name((int)game.player_civ));
         result = dialog_load_text_section
-                          (&dlg,(iptr)&str_game_7,(iptr)&str_name_4,0x17,leader_str,ret,arg6,arg7,arg8);
+                          (&dlg,(const char *)&str_game_7,(const char *)&str_name_4,0x17,leader_str,ret,arg6,arg7,arg8);
         if (result == 0) {
           dialog_prepend_title_label((iptr)&dlg,title_offset + 0x25e);
-          dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
+          dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
           result = dialog_run_modal(&dlg,(iptr)input,0);
           if (result == 0) {
-            crt_strcpy(&civ_names[game.player_civ].leader_name,input);
+            crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),input);
             crt_strcpy(((i8 *)&net_session_block.net_player_info_leader_name),input);
             net_session_block.net_player_info_tribe_name[0] = 0;
             net_session_block.net_player_info_adjective[0] = 0;
             eh_state = 0xffffffff;
-            /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+            /* inlined unwind funclet 004467fa */ { dialog_dtor(&dlg); }
             ret = 0;
 return_ret:
             return ret;
@@ -1395,7 +1395,7 @@ void __cdecl parley_draw_advance_list(iptr pane)
   u8 *has_sel;
   int tmp;
   int tmp2;
-  iptr name_label;
+  const char *name_label;
   int icon_x;
   i32 bg_color2;
   i8 sprite_rect[16];
@@ -1500,7 +1500,7 @@ draw_rows:
             has_sel[2] = '\0';
             has_sel[3] = '\0';
             tmp = rect_width((iptr)((u8 *)&window->advance_pane_rects + pane * 0x10));
-            tmp2 = font_text_width(font2,(iptr)&map_views_block.text_buffer);
+            tmp2 = font_text_width(font2,(const char *)&map_views_block.text_buffer);
             text_x_offset = (tmp - tmp2) / 2;
           }
           else {
@@ -1515,22 +1515,22 @@ draw_rows:
             sprite_draw
                       (icon_sprite,(iptr)sprite_rect,(iptr)&parley_wnd_block.parley_wnd,list_left + icon_x,tmp2 - tmp / 2);
             text_clear();
-            name_label = (iptr)(label_string(advances[advance].name));
+            name_label = (label_string(advances[advance].name));
             text_append(name_label);
           }
           if (shadow_color2 != text_color2) {
             gfx_set_text_color_index(shadow_color2);
             surface_draw_text
-                      ((DibSurface *)window,(iptr)font2,(iptr)&map_views_block.text_buffer,list_left + text_x_offset + 2,
+                      ((DibSurface *)window,(iptr)font2,(const char *)&map_views_block.text_buffer,list_left + text_x_offset + 2,
                        row_top + text_y_offset + 1,5);
             gfx_set_text_color_index(text_color2);
             surface_draw_text
-                      ((DibSurface *)window,(iptr)font2,(iptr)&map_views_block.text_buffer,list_left + text_x_offset + 1,
+                      ((DibSurface *)window,(iptr)font2,(const char *)&map_views_block.text_buffer,list_left + text_x_offset + 1,
                        row_top + text_y_offset,5);
           }
           gfx_set_text_color_index(text_color2);
           surface_draw_text
-                    ((DibSurface *)window,(iptr)font2,(iptr)&map_views_block.text_buffer,list_left + text_x_offset,
+                    ((DibSurface *)window,(iptr)font2,(const char *)&map_views_block.text_buffer,list_left + text_x_offset,
                      row_top + text_y_offset,5);
         }
       }
@@ -1949,14 +1949,14 @@ restore_clip_and_finish:
       if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) == -1) {
         text_clear();
         str = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb7c)));
-        text_append(str);
+        text_append((const char *)str);
         has_sel = this2->pane_selection_flags_area + pane * 4 - 0x1c;
         has_sel[0] = '\0';
         has_sel[1] = '\0';
         has_sel[2] = '\0';
         has_sel[3] = '\0';
         tmp = rect_width((iptr)((u8 *)&this2->advance_pane_rects + pane * 0x10));
-        tmp2 = font_text_width(font2,(iptr)&map_views_block.text_buffer);
+        tmp2 = font_text_width(font2,(const char *)&map_views_block.text_buffer);
         text_x_offset = (tmp - tmp2) / 2;
       }
       else {
@@ -1983,34 +1983,34 @@ restore_clip_and_finish:
               (((parley_wnd_block.parley_mode == 0xe && (pane == 0)) && (this2->left_side_accepted != '\0')))) ||
              ((((parley_wnd_block.parley_mode == 0xe && (pane == 1)) && (this2->right_side_accepted != '\0')) ||
               ((parley_wnd_block.parley_mode == 0xf && (this2->right_side_accepted != '\0')))))) {
-            text_append_str((iptr)&str_empty_76);
+            text_append_str((const char *)&str_empty_76);
             str = unit_home_city_name(unit);
-            text_append_str(str);
-            text_append_str((iptr)&str_empty_77);
+            text_append_str((const char *)str);
+            text_append_str((const char *)&str_empty_77);
           }
         }
         else {
           text_clear();
           str = unit_home_city_name(unit);
-          text_append_str(str);
-          text_append_str((iptr)&str_empty_78);
+          text_append_str((const char *)str);
+          text_append_str((const char *)&str_empty_78);
           text_append_string_id(unit_types[units[unit].type].name);
-          text_append_str((iptr)&str_empty_79);
+          text_append_str((const char *)&str_empty_79);
         }
       }
       if (shadow_color2 != text_color2) {
         gfx_set_text_color_index(shadow_color2);
         surface_draw_text
-                  ((DibSurface *)this2,(iptr)font2,(iptr)&map_views_block.text_buffer,text_x_offset + list_left + 2,
+                  ((DibSurface *)this2,(iptr)font2,(const char *)&map_views_block.text_buffer,text_x_offset + list_left + 2,
                    text_y_offset + row_top + 1,5);
         gfx_set_text_color_index(text_color2);
         surface_draw_text
-                  ((DibSurface *)this2,(iptr)font2,(iptr)&map_views_block.text_buffer,text_x_offset + list_left + 1,
+                  ((DibSurface *)this2,(iptr)font2,(const char *)&map_views_block.text_buffer,text_x_offset + list_left + 1,
                    text_y_offset + row_top,5);
       }
       gfx_set_text_color_index(text_color2);
       surface_draw_text
-                ((DibSurface *)this2,(iptr)font2,(iptr)&map_views_block.text_buffer,text_x_offset + list_left,
+                ((DibSurface *)this2,(iptr)font2,(const char *)&map_views_block.text_buffer,text_x_offset + list_left,
                  text_y_offset + row_top,5);
     }
     row++;
@@ -2093,18 +2093,18 @@ void __cdecl parley_request_city_origin_clicked(void)
 
 {
   iptr child;
-  iptr window;
-  int civ_plural;
+  ViewWindow *window;
+  const char *civ_plural;
   
   child = wnd_get_active_child();
   if (child == 0) {
-    window = 0;
+    window = (ViewWindow *)0x0;
   }
   else {
-    window = child - 0x48;
+    window = (ViewWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x48));
-  civ_plural = civ_name_plural(human_civ[0]);
+  wnd_activate((Wnd *)window->window_2);
+  civ_plural = (civ_name_plural(human_civ[0]));
   text_set_string_arg(0,civ_plural);
   net_send_text_args(100,*(i32 *)
                           (((i8 *)&net_session_block.net_player_slots) +
@@ -2365,8 +2365,8 @@ void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_se
       y2 = units[unit].y;
       near_land = false;
       for (dir = 0; dir < 8; dir++) {
-        x = map_wrap_x((int)(char)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + (int)x2);
-        y = (int)(char)(((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + (int)y2;
+        x = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + (int)x2);
+        y = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + (int)y2;
         in_bounds = map_in_bounds(x,y);
         if ((in_bounds != 0) && (y = tile_is_ocean(x,y), y == 0)) {
           near_land = true;
@@ -2416,9 +2416,9 @@ i8 __thiscall net_session_send_to(void *self,int player,iptr msg)
   sent = XD_SendSecureData((ushort)player,(void *)msg,*(ulong *)(msg + 8),0);
   *(int *)((int)self + 0x578) = sent;
   if (*(int *)((int)self + 0x578) < 0) {
-    dbg_logf3((iptr)&str_sendtoconnections_failed_on_send_to_conn,player,*(i32 *)((int)self + 0x578),*(i32 *)(msg + 4));
+    dbg_logf3((const char *)&str_sendtoconnections_failed_on_send_to_conn,player,*(i32 *)((int)self + 0x578),*(i32 *)(msg + 4));
     if (*(int *)(msg + 4) == 0x6a) {
-      dbg_logf_str((iptr)&str_popup_type_s,(iptr)(((char *)&str_nm_pop_retiredie) + *(int *)(msg + 0x10) * 0x20))
+      dbg_logf_str((const char *)&str_popup_type_s,(const char *)(((char *)&str_nm_pop_retiredie) + *(int *)(msg + 0x10) * 0x20))
       ;
     }
     ok = 0;
@@ -2442,7 +2442,7 @@ bool __thiscall net_session_send_to_all(void *self,iptr msg)
   *(int *)((int)self + 0x578) = sent;
   failed = *(int *)((int)self + 0x578) < *(int *)(msg + 8);
   if (failed) {
-    dbg_logf((iptr)&str_sendtoeveryone_failed_return_val_d,*(iptr *)((int)self + 0x578));
+    dbg_logf((const char *)&str_sendtoeveryone_failed_return_val_d,*(iptr *)((int)self + 0x578));
   }
   return !failed;
 }
@@ -2453,7 +2453,7 @@ bool __thiscall net_session_send_to_all(void *self,iptr msg)
 
 int __cdecl
 net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
-            iptr arg5,i32 arg6,iptr text,iptr raw_msg)
+            iptr arg5,i32 arg6,const char *text,iptr raw_msg)
 
 {
   char sent;
@@ -2505,7 +2505,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   packet = (void *)0x0;
   switch(msg_type) {
   case 1:
-    net_msg_init_header(announce_msg,msg_type,(iptr)&str_empty_80);
+    net_msg_init_header(announce_msg,msg_type,(const char *)&str_empty_80);
     sent = net_session_send_to_all(((iptr *)&net_session_block.net_session),(iptr)announce_msg);
     return (int)sent;
   case 2:
@@ -2552,7 +2552,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     if (image_buf == (void *)0x0) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_address_null,(iptr)&str_d_ss_franklinton_netmgr_send_cpp_3,0x22c);
     }
-    image_buf = (void *)net_msg_build_packet(msg_type,(iptr)image_buf,image_result,0,0,0,0,0,0);
+    image_buf = net_msg_build_packet(msg_type,(iptr)image_buf,image_result,0,0,0,0,0,0);
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)image_buf);
     image_result = (uint)sent;
     operator_delete(image_buf);
@@ -2592,49 +2592,49 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_16);
     return (int)sent;
   case 0x17:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&cosmic,0,0,0,0,0,0,0x29);
+    packet = net_msg_build_packet(msg_type,(iptr)&cosmic,0,0,0,0,0,0,0x29);
     break;
   case 0x18:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&advances,0,0,0,0,0,0,0x640);
+    packet = net_msg_build_packet(msg_type,(iptr)&advances,0,0,0,0,0,0,0x640);
     break;
   case 0x19:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&improvements,0,0,0,0,0,0,0x218);
+    packet = net_msg_build_packet(msg_type,(iptr)&improvements,0,0,0,0,0,0,0x218);
     break;
   case 0x1a:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)((u8 *)wonder_expires),0,0,0,0,0,0,0x1c);
+    packet = net_msg_build_packet(msg_type,(iptr)((u8 *)wonder_expires),0,0,0,0,0,0,0x1c);
     break;
   case 0x1b:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)((u8 *)unit_types),0,0,0,0,0,0,0x4d8);
+    packet = net_msg_build_packet(msg_type,(iptr)((u8 *)unit_types),0,0,0,0,0,0,0x4d8);
     break;
   case 0x1c:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&terrain_types,0,0,0,0,0,0,0x318);
+    packet = net_msg_build_packet(msg_type,(iptr)&terrain_types,0,0,0,0,0,0,0x318);
     break;
   case 0x1d:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&government_names,0,0,0,0,0,0,0x1c);
+    packet = net_msg_build_packet(msg_type,(iptr)&government_names,0,0,0,0,0,0,0x1c);
     break;
   case 0x1e:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)((u8 *)government_titles),0,0,0,0,0,0,0x38);
+    packet = net_msg_build_packet(msg_type,(iptr)((u8 *)government_titles),0,0,0,0,0,0,0x38);
     break;
   case 0x1f:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)((u8 *)leaders),0,0,0,0,0,0,0x3f0);
+    packet = net_msg_build_packet(msg_type,(iptr)((u8 *)leaders),0,0,0,0,0,0,0x3f0);
     break;
   case 0x20:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&civs,0,0,0,0,0,0,0x7524);
+    packet = net_msg_build_packet(msg_type,(iptr)&civs,0,0,0,0,0,0,0x7524);
     break;
   case 0x21:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&commodity_names,0,0,0,0,0,0,0x40);
+    packet = net_msg_build_packet(msg_type,(iptr)&commodity_names,0,0,0,0,0,0,0x40);
     break;
   case 0x22:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)((u8 *)order_names),0,0,0,0,0,0,0x68);
+    packet = net_msg_build_packet(msg_type,(iptr)((u8 *)order_names),0,0,0,0,0,0,0x68);
     break;
   case 0x23:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)((u8 *)difficulty_names),0,0,0,0,0,0,0x18);
+    packet = net_msg_build_packet(msg_type,(iptr)((u8 *)difficulty_names),0,0,0,0,0,0,0x18);
     break;
   case 0x24:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&attitude_names,0,0,0,0,0,0,0x24);
+    packet = net_msg_build_packet(msg_type,(iptr)&attitude_names,0,0,0,0,0,0,0x24);
     break;
   case 0x25:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x26:
   case 0x27:
@@ -2642,10 +2642,10 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_26);
     return (int)sent;
   case 0x28:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x2a:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     net_session_block.nm_lock_data_count++;
     break;
   case 0x2b:
@@ -2654,7 +2654,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_2b);
     return (int)sent;
   case 0x2d:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x2e:
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)&net_session_block.net_ping_message);
@@ -2665,7 +2665,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     return (int)sent;
   case 0x30:
     if (net_session_block.net_host_flag == '\0') {
-      packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+      packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
       break;
     }
     if ((1 << ((byte)arg2 & 0x1f) & (int)(short)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask)) == 0) {
@@ -2686,13 +2686,13 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
       }
       return 1;
     }
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x33:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x34:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x35:
   case 0x81:
@@ -2700,41 +2700,41 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_35);
     return (int)sent;
   case 0x37:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x38:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,(int)game.num_units
+    packet = net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,(int)game.num_units
                                          ,arg3,arg4,arg5,arg6,0x20);
     break;
   case 0x39:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x3a:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)(cities + arg1),arg1,
+    packet = net_msg_build_packet(msg_type,(iptr)(cities + arg1),arg1,
                                          (int)game.num_cities,arg3,arg4,arg5,arg6,0x58);
     break;
   case 0x3b:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x3c:
     if (arg1 == -1) {
-      packet = (void *)net_msg_build_packet(msg_type,0,0xffffffff,0,0,0,0,0,0);
+      packet = net_msg_build_packet(msg_type,0,0xffffffff,0,0,0,0,0,0);
     }
     else {
-      packet = (void *)net_msg_build_packet(msg_type,(iptr)(cities + arg1),arg1,
+      packet = net_msg_build_packet(msg_type,(iptr)(cities + arg1),arg1,
                                            (int)game.num_cities,arg3,arg4,arg5,arg6,0x58
                                           );
     }
     break;
   case 0x3d:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x3e:
     if (arg1 == -1) {
-      packet = (void *)net_msg_build_packet(msg_type,0,0xffffffff,0,0,0,0,0,0);
+      packet = net_msg_build_packet(msg_type,0,0xffffffff,0,0,0,0,0,0);
     }
     else {
-      packet = (void *)net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,
+      packet = net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,
                                            (int)game.num_units,arg3,arg4,arg5,arg6,0x20)
       ;
     }
@@ -2743,7 +2743,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
   case 0x4b:
   case 0x4d:
   case 0x4f:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x40:
   case 0x4c:
@@ -2753,66 +2753,66 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_40);
     return (int)sent;
   case 0x41:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x42:
     net_msg_header_init(msg_42,msg_type);
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_42);
     return (int)sent;
   case 0x43:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x44:
     net_msg_header_init(msg_44,msg_type);
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_44);
     return (int)sent;
   case 0x45:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x46:
     net_msg_header_init(msg_46,msg_type);
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_46);
     return (int)sent;
   case 0x47:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x48:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x49:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x4a:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x51:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x52:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x53:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x54:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x55:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x56:
   case 0x57:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x58:
     net_msg_header_init(msg_58,msg_type);
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_58);
     return (int)sent;
   case 0x59:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)&net_batch_buffer,0,0,0,0,0,0,net_batch_used_dwords << 2);
+    packet = net_msg_build_packet(msg_type,(iptr)&net_batch_buffer,0,0,0,0,0,0,net_batch_used_dwords << 2);
     break;
   case 0x5a:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,arg6,0
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,arg6,0
                                         );
     break;
   case 0x5b:
@@ -2828,24 +2828,24 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_5d);
     return (int)sent;
   case 0x5f:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x60:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x61:
   case 0x62:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 99:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 100:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x68:
     text_len = _strlen((char *)text);
-    packet = (void *)net_msg_build_packet(msg_type,text,arg1,arg2,arg3,0,0,0,text_len + 1);
+    packet = net_msg_build_packet(msg_type,(iptr)(text),arg1,arg2,arg3,0,0,0,text_len + 1);
     break;
   case 0x69:
     net_msg_whose_turn_init(whose_turn_msg,arg1);
@@ -2859,14 +2859,14 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)whose_turn_msg);
     return (int)sent;
   case 0x6a:
-    packet = (void *)net_msg_build_packet(msg_type,raw_msg,arg1,arg2,arg3,arg4,arg5,0,
+    packet = net_msg_build_packet(msg_type,raw_msg,arg1,arg2,arg3,arg4,arg5,0,
                                          0);
     break;
   case 0x6b:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x6c:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x6d:
     net_msg_header_init(msg_6d,msg_type);
@@ -2881,30 +2881,30 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_6f);
     return (int)sent;
   case 0x70:
-    packet = (void *)net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,arg2,arg3,
+    packet = net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,arg2,arg3,
                                          arg4,arg5,arg6,0x20);
     break;
   case 0x71:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x72:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x73:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x74:
     net_msg_header_init(msg_74,msg_type);
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_74);
     return (int)sent;
   case 0x75:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x76:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x77:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x78:
     net_msg_header_init(msg_78,msg_type);
@@ -2915,25 +2915,25 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_79);
     return (int)sent;
   case 0x7a:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x7b:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x7c:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x7d:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x7e:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x7f:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x80:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x82:
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,raw_msg);
@@ -2954,13 +2954,13 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     }
     return *(i32 *)(raw_msg + 8);
   case 0x87:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x88:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x89:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x8a:
     net_msg_header_init(msg_8a,msg_type);
@@ -2971,7 +2971,7 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_8b);
     return (int)sent;
   case 0x8c:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x8d:
   case 0x8e:
@@ -2979,46 +2979,46 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_8d);
     return (int)sent;
   case 0x8f:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x90:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x91:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x92:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x93:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x94:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x95:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x96:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x97:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,arg6,0
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,arg6,0
                                         );
     break;
   case 0x98:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x99:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x9a:
   case 0xa0:
   case 0xa1:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x9b:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x9c:
   case 0x9d:
@@ -3027,21 +3027,21 @@ net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
     sent = net_session_send_to(((iptr *)&net_session_block.net_session),dest,(iptr)msg_9c);
     return (int)sent;
   case 0x9f:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0xa2:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0xa4:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0xa5:
   case 0xa6:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0xa7:
   case 0xa8:
-    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
+    packet = net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
   }
   if (packet == (void *)0x0) {
     err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_address,(iptr)&str_d_ss_franklinton_netmgr_send_cpp_4,0x523);
@@ -3066,7 +3066,7 @@ NetMsgHeader * __thiscall net_msg_header_init(NetMsgHeader *self,u32 type)
 }
 
 /* 0046d5f0 auto */
-NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *self,u32 msg_type,iptr name2)
+NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *self,u32 msg_type,const char *name2)
 
 {
   net_msg_addr_header_init(self,0);
@@ -3094,7 +3094,7 @@ NetMsgHeader * __thiscall net_msg_addr_header_init(NetMsgHeader *self,i32 msg_ty
 NetMsgHeader * __thiscall net_msg_server_info_init(NetMsgHeader *self)
 
 {
-  net_msg_init_header(self,2,(iptr)&str_empty_81);
+  net_msg_init_header(self,2,(const char *)&str_empty_81);
   net_fill_game_info((iptr)&((NetMsgHeaderExt *)self)->game_info);
   ((NetMsgHeaderExt *)self)->msg_size_2 = 0x198;
   return self;
@@ -3108,7 +3108,7 @@ NetMsgHeader * __thiscall net_msg_player_list_node_init(NetMsgHeader *self,u32 p
   ((NetMsgHeaderExt *)self)->player_id = player_id;
   _memset(&((NetMsgHeaderExt *)self)->ip_address,0,0x20);
   _strncpy((char *)&((NetMsgHeaderExt *)self)->ip_address,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
-  crt_strcpy(&((NetMsgHeaderExt *)self)->player_name,((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name));
+  crt_strcpy((char *)(&((NetMsgHeaderExt *)self)->player_name),((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name));
   ((NetMsgHeaderExt *)self)->node_status_54 = 0;
   ((NetMsgHeaderExt *)self)->node_status_58 = 0;
   *(i8 *)&((NetMsgHeaderExt *)self)->node_flag_bytes = 0;
@@ -3165,7 +3165,7 @@ int __cdecl net_stacked_draw_push(int kind,iptr args,iptr unit_data)
   int i;
   
   if ((net_session_block.net_stacked_draw_last == net_session_block.net_stacked_draw_first) && (net_session_block.net_stacked_draw_count != 0)) {
-    dbg_log((iptr)&str_stacked_draw_stack_full_flushing);
+    dbg_log((const char *)&str_stacked_draw_stack_full_flushing);
     if (net_session_block.unit_stack_check_enabled != 0) {
       net_session_block.net_stacked_draw_last = (net_session_block.net_stacked_draw_first + 1) % 100;
     }
@@ -3190,7 +3190,7 @@ int __cdecl net_stacked_draw_push(int kind,iptr args,iptr unit_data)
            *(i32 *)(args + i * 4);
     }
     if (kind == 0x70) {
-      crt_memcpy((void *)(net_session_block.net_stacked_draw_last * 0x40 + (iptr)(((u8 *)&net_session_block.net_stacked_draw_arg4 + 12))),(const void *)(unit_data),0x20);
+      crt_memcpy((void *)(net_session_block.net_stacked_draw_last * 0x40 + (iptr)(((u8 *)&net_session_block.net_stacked_draw_arg4 + 12))),(const void *)unit_data,0x20);
     }
     net_session_block.net_stacked_draw_count++;
     if ((int)net_session_block.net_stacked_draw_peak < (int)net_session_block.net_stacked_draw_count) {
@@ -3450,7 +3450,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
        (flush_pending2 = XD_InFlushSendBuffer(), flush_pending2 == 0)) {
       deferred_input = ((NetSessionExt *)self)->deferred_input_kind;
       net_deferred_input_busy = 1;
-      dbg_log((iptr)&str_poll_unstacking_xd_flushsendbuffer_block);
+      dbg_log((const char *)&str_poll_unstacking_xd_flushsendbuffer_block);
       ((NetSessionExt *)self)->deferred_input_kind = 0;
       switch(deferred_input) {
       case 1:
@@ -3589,7 +3589,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           }
           break;
         default:
-          dbg_log((iptr)&str_received_unknown_message_type);
+          dbg_log((const char *)&str_received_unknown_message_type);
           break;
         case 4:
           crt_memcpy(self + 0x40,msg + 4,0x270);
@@ -3607,8 +3607,8 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           break;
         case 6:
           net_session_block.loaded_file_kind = (i16)msg[4];
-          crt_strcpy(((i8 *)&net_session_block.loaded_file_name),(const void *)((int)msg + 0x12));
-          crt_strcpy(((i8 *)&net_session_block.loaded_file_subdir),(const void *)((int)msg_hdr + 0x116));
+          crt_strcpy(((i8 *)&net_session_block.loaded_file_name),(const char *)((const void *)((int)msg + 0x12)));
+          crt_strcpy(((i8 *)&net_session_block.loaded_file_subdir),(const char *)((const void *)((int)msg_hdr + 0x116)));
           break;
         case 7:
         case 8:
@@ -3618,7 +3618,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           image_size = msg_size - 0x2c;
           crt_memmove(msg,msg + 0xb,image_size);
           msg = (int *)crt_realloc(msg,image_size);
-          diffeng_apply_image((int*)(&msg),image_kind);
+          diffeng_apply_image((int *)(&msg),image_kind);
           break;
         case 10:
           header_size = 0x2c;
@@ -3626,7 +3626,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           image_size = msg_size - 0x2c;
           crt_memmove(msg,msg + 0xb,image_size);
           msg = (int *)crt_realloc(msg,image_size);
-          diffeng_apply_map_header_image((int*)(&msg),image_kind);
+          diffeng_apply_map_header_image((int *)(&msg),image_kind);
           break;
         case 0xb:
         case 0xc:
@@ -3648,15 +3648,15 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           break;
         case 0x13:
           if (net_session_block.net_session[0] != 0) {
-            crt_strcpy((void *)(net_session_block.net_session[0] + 0x88),msg + 4);
-            crt_strcpy((void *)(net_session_block.net_session[0] + 0xa8),msg_hdr + 0x20);
-            crt_strcpy((void *)(net_session_block.net_session[0] + 200),msg_hdr + 0x28);
-            crt_strcpy((void *)(net_session_block.net_session[0] + 0xe8),msg_hdr + 0x10);
+            crt_strcpy((char *)((void *)(net_session_block.net_session[0] + 0x88)),(const char *)(msg + 4));
+            crt_strcpy((char *)((void *)(net_session_block.net_session[0] + 0xa8)),(const char *)(msg_hdr + 0x20));
+            crt_strcpy((char *)((void *)(net_session_block.net_session[0] + 200)),(const char *)(msg_hdr + 0x28));
+            crt_strcpy((char *)((void *)(net_session_block.net_session[0] + 0xe8)),(const char *)(msg_hdr + 0x10));
           }
-          crt_strcpy(((i8 *)&net_session_block.net_server_address),msg_hdr + 4);
-          crt_strcpy(((i8 *)&net_session_block.net_game_name),msg_hdr + 0x20);
+          crt_strcpy(((i8 *)&net_session_block.net_server_address),(const char *)(msg_hdr + 4));
+          crt_strcpy(((i8 *)&net_session_block.net_game_name),(const char *)(msg_hdr + 0x20));
           crt_strcpy(((i8 *)&net_session_block.net_local_player_name),((i8 *)&prefs_main_menu_choice_block.prefs_net_player_name));
-          crt_strcpy(((i8 *)&net_session_block.net_server_version),msg_hdr + 0x10);
+          crt_strcpy(((i8 *)&net_session_block.net_server_version),(const char *)(msg_hdr + 0x10));
           break;
         case 0x14:
           break;
@@ -3836,7 +3836,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
                 unwind_state = 1;
                 net_send_message(0x65,0xff,0,0,0,0,0,0,0,0);
                 mp_turn_timer_stop(0);
-                dlg_load_game_section(&join_dialog,(iptr)&str_waitongamexmit_2,0x2000000);
+                dlg_load_game_section(&join_dialog,(const char *)&str_waitongamexmit_2,0x2000000);
                 dlg_show_modal(&join_dialog,0);
                 net_send_message(0x33,sender,(int)civ_saved_cursor_x_block.mp_double_production,(int)civ_saved_cursor_x_block.mp_double_moves,
                                    (int)civ_saved_cursor_x_block.mp_simultaneous_setting,0,0,0,0,0);
@@ -3875,7 +3875,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
                   civ_flag[3] = '\0';
                 }
                 unwind_state = 0xffffffff;
-                /* inlined unwind funclet 00482305 */ { dialog_dtor((Dialog *)((iptr)&join_dialog)); }
+                /* inlined unwind funclet 00482305 */ { dialog_dtor(&join_dialog); }
               }
             }
           }
@@ -4149,11 +4149,11 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           break;
         case 0x5d:
           net_session_block.net_drag_hold = 1;
-          dbg_log((iptr)&str_hold_on);
+          dbg_log((const char *)&str_hold_on);
           break;
         case 0x5e:
           net_session_block.net_drag_hold = 0;
-          dbg_log((iptr)&str_hold_off);
+          dbg_log((const char *)&str_hold_off);
           break;
         case 0x5f:
           net_msg_get_args((iptr)msg,(i32 *)(&unit));
@@ -4210,13 +4210,13 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           ((NetSessionExt *)self)->popup_busy = 1;
           mp_turn_timer_stop(0);
           net_session_block.nm_continue_after_join_count = 0;
-          dlg_pending_idle_callback = ((i8*)(net_game_xmit_wait_idle));
-          popup_game_sprite_flags((iptr)&str_waitongamexmit,0x2000000,(iptr)&popup_info_icon_sprite,0);
+          dlg_pending_idle_callback = ((i8 *)net_game_xmit_wait_idle);
+          popup_game_sprite_flags((const char *)&str_waitongamexmit,0x2000000,(iptr)&popup_info_icon_sprite,0);
           dialog_close(&wait_dialog);
           ((NetSessionExt *)self)->popup_busy = saved_busy;
           mp_turn_timer_resume(0);
           unwind_state = 0xffffffff;
-          /* inlined unwind funclet 00482311 */ { dialog_dtor((Dialog *)((iptr)&wait_dialog)); }
+          /* inlined unwind funclet 00482311 */ { dialog_dtor(&wait_dialog); }
           break;
         case 0x66:
           break;
@@ -4313,8 +4313,8 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         case 0x70:
           net_msg_get_args((iptr)msg,(i32 *)(&unit));
           if (y3 != 0) {
-            x = map_wrap_x((int)(char)(((i8 *)&dir_dx_table_block.dir_dx_table))[y2] + civ3);
-            city = city_at(x,(int)(char)(((i8 *)&dir_dy_table_block.dir_dy_table))[y2] + unit3);
+            x = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[y2] + civ3);
+            city = city_at(x,(int)(((i8 *)&dir_dy_table_block.dir_dy_table))[y2] + unit3);
             if ((city < 0) && ((game.game_options & 0x1000) == 0)) {
               msg_hdr[1] = 0x72;
               unit = civ3;
@@ -4550,19 +4550,19 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
           break;
         case 0xa4:
           net_msg_get_args((iptr)msg,(i32 *)(&unit));
-          ret_val = civ_name_plural(unit);
-          text_set_string_arg(0,ret_val);
-          ret_val = civ_name_plural(civ3);
-          text_set_string_arg(1,ret_val);
+          ret_val = (iptr)(civ_name_plural(unit));
+          text_set_string_arg(0,(const char *)ret_val);
+          ret_val = (iptr)(civ_name_plural(civ3));
+          text_set_string_arg(1,(const char *)ret_val);
           if ((*(byte *)&civs[civ3].treaties[unit] & 8) == 0) {
-            city = popup_game_with_sprite((iptr)&str_pretext,(iptr)&war_icon_sprite_block.war_icon_sprite,0);
+            city = popup_game_with_sprite((const char *)&str_pretext,(iptr)&war_icon_sprite_block.war_icon_sprite,0);
             if (city == 1) {
               diplo_set_treaty_flags(unit,civ3,0x2000);
               civs[civ3].last_treaty_turn[unit] = game.turn;
             }
           }
           else {
-            city = popup_game_with_sprite((iptr)&str_pretextallied,(iptr)(((i8 *)&diplo_popup_portrait_sprite) +
+            city = popup_game_with_sprite((const char *)&str_pretextallied,(iptr)(((i8 *)&diplo_popup_portrait_sprite) +
                                                       ((game.advance_known_by[0xf] != '\0') - 1 &
                                                       0xffff7c80)),0);
             if (city == 1) {
@@ -4627,7 +4627,7 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
         operator_delete(msg);
       }
       else {
-        dbg_logf_int2((iptr)&str_poll_retrieved_non_civ_message_message_d,msg[1],msg[2]);
+        dbg_logf_int2((const char *)&str_poll_retrieved_non_civ_message_message_d,msg[1],msg[2]);
       }
     }
     if (((wait_mode == 0) && (*(char *)((int)&((NetSessionExt *)self)->session_flags + 2) != '\0')) && (gamelist_dirty != '\0'))
@@ -4704,8 +4704,8 @@ void __cdecl net_host_quit_handoff(void)
     net_session_block.net_players_awaited = net_session_block.net_player_count[0] - 1;
     net_send_message(0xe,0xff,0,0,0,0,0,0,0,0);
     net_drop_flagged_players();
-    dlg_pending_idle_callback = ((i8*)(net_server_quit_wait_idle));
-    popup_game_sprite_flags((iptr)&str_serverquitwait,0x2000000,(iptr)&popup_info_icon_sprite,0);
+    dlg_pending_idle_callback = ((i8 *)net_server_quit_wait_idle);
+    popup_game_sprite_flags((const char *)&str_serverquitwait,0x2000000,(iptr)&popup_info_icon_sprite,0);
     human_count = bits_count8((uint)(game.human_players == '\0'));
     if (human_count == 0) {
       net_send_message(0xf,0xff,0,0,0,0,0,0,0,0);
@@ -4817,29 +4817,29 @@ i32 __cdecl net_client_transfer_server(void)
   net_session_block.nm_start_civ_count = 0;
   net_session_block.nm_player_list_count = 0;
   net_send_message(0x10,0,0,0,0,0,0,0,0,0);
-  dlg_pending_idle_callback = ((i8*)(net_client_quit_wait_idle));
-  popup_game_sprite_flags((iptr)&str_clientquitwait,0x2000000,(iptr)&popup_info_icon_sprite,0);
+  dlg_pending_idle_callback = ((i8 *)net_client_quit_wait_idle);
+  popup_game_sprite_flags((const char *)&str_clientquitwait,0x2000000,(iptr)&popup_info_icon_sprite,0);
   net_session_block.net_host_handoff_stage = 0;
-  dlg_pending_idle_callback = ((i8*)(net_quit_wait_start_civ_idle));
+  dlg_pending_idle_callback = ((i8 *)net_quit_wait_start_civ_idle);
   map_views_block.net_handoff_wait_ticks_i32 = timer_ticks();
-  popup_game_sprite_flags((iptr)&str_clientquitwait_2,0x2000000,(iptr)&popup_info_icon_sprite,0);
+  popup_game_sprite_flags((const char *)&str_clientquitwait_2,0x2000000,(iptr)&popup_info_icon_sprite,0);
   if (net_session_block.nm_start_civ_count == 0) {
-    dbg_log((iptr)&str_clienttransferserver_waiting_for_nm_star);
-    crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const void *)(net_session_block.net_connection_title));
-    popup_game_with_sprite((iptr)&str_lanconnectfail_3,(iptr)&popup_info_icon_sprite,0);
+    dbg_log((const char *)&str_clienttransferserver_waiting_for_nm_star);
+    crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const char *)((const void *)net_session_block.net_connection_title));
+    popup_game_with_sprite((const char *)&str_lanconnectfail_3,(iptr)&popup_info_icon_sprite,0);
     player_turn_active = 0;
     game_loop_active = 0;
     result = 0;
   }
   else {
     turn_resume_civ = civ_saved_cursor_x_block.saved_turn_civ;
-    dlg_pending_idle_callback = ((i8*)(net_quit_wait_player_list_idle));
+    dlg_pending_idle_callback = ((i8 *)net_quit_wait_player_list_idle);
     map_views_block.net_handoff_wait_ticks_i32 = timer_ticks();
-    popup_game_sprite_flags((iptr)&str_clientquitwait_3,0x2000000,(iptr)&popup_info_icon_sprite,0);
+    popup_game_sprite_flags((const char *)&str_clientquitwait_3,0x2000000,(iptr)&popup_info_icon_sprite,0);
     if (net_session_block.nm_player_list_count == 0) {
-      dbg_log((iptr)&str_clienttransferserver_waiting_for_nm_play);
-      crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const void *)(net_session_block.net_connection_title));
-      popup_game_with_sprite((iptr)&str_lanconnectfail_4,(iptr)&popup_info_icon_sprite,0);
+      dbg_log((const char *)&str_clienttransferserver_waiting_for_nm_play);
+      crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const char *)((const void *)net_session_block.net_connection_title));
+      popup_game_with_sprite((const char *)&str_lanconnectfail_4,(iptr)&popup_info_icon_sprite,0);
       player_turn_active = 0;
       game_loop_active = 0;
       result = 0;
@@ -4848,19 +4848,19 @@ i32 __cdecl net_client_transfer_server(void)
       crt_memcpy(&saved,((iptr *)&net_session_block.net_player_count),0x270);
       cmp = _strcmp(((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),((i8 *)&net_session_block.net_slot_addresses));
       if (cmp == 0) {
-        dbg_log((iptr)&str_clienttransferserver_disconnecting_from);
+        dbg_log((const char *)&str_clienttransferserver_disconnecting_from);
         net_session_shutdown(((iptr *)&net_session_block.net_session),0);
         transport_ok = net_init_transport(((iptr *)&net_session_block.net_session),net_session_block.net_protocol,1);
         status = (int)transport_ok;
         if (status == 0) {
-          dbg_log((iptr)&str_clienttransferserver_could_not_reconnect);
-          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const void *)(net_session_block.net_connection_title));
-          popup_game_with_sprite((iptr)&str_lanconnectfail_5,(iptr)&popup_info_icon_sprite,0);
+          dbg_log((const char *)&str_clienttransferserver_could_not_reconnect);
+          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const char *)((const void *)net_session_block.net_connection_title));
+          popup_game_with_sprite((const char *)&str_lanconnectfail_5,(iptr)&popup_info_icon_sprite,0);
           game_loop_active = 0;
           player_turn_active = 0;
           return 0;
         }
-        dbg_log((iptr)&str_reconnected_to_network_as_server);
+        dbg_log((const char *)&str_reconnected_to_network_as_server);
         crt_strcpy(((i8 *)&net_session_block.net_server_address),((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address));
         net_session_block.net_server_conn_id = 0;
         net_session_block.net_local_slot = 0;
@@ -4873,19 +4873,19 @@ i32 __cdecl net_client_transfer_server(void)
           net_session_block.net_slot_civs[0] = saved.civ_ids[0];
         }
         else {
-          dlg_pending_idle_callback = ((i8*)(net_quit_wait_players_idle));
+          dlg_pending_idle_callback = ((i8 *)net_quit_wait_players_idle);
           map_views_block.net_handoff_wait_ticks_i32 = timer_ticks();
-          popup_game_sprite_flags((iptr)&str_clientquitwait_4,0x2000000,(iptr)&popup_info_icon_sprite,0);
+          popup_game_sprite_flags((const char *)&str_clientquitwait_4,0x2000000,(iptr)&popup_info_icon_sprite,0);
           cmp = timer_ticks();
           if ((net_session_block.net_timeout_seconds * 0x3c < cmp - map_views_block.net_handoff_wait_ticks_i32) && (net_session_block.net_players_awaited != 0)) {
-            crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const void *)(net_session_block.net_connection_title));
+            crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const char *)((const void *)net_session_block.net_connection_title));
             if (net_session_block.net_players_awaited == net_session_block.net_players_awaited_initial) {
-              popup_game_with_sprite((iptr)&str_nooneshowed,(iptr)&popup_info_icon_sprite,0);
+              popup_game_with_sprite((const char *)&str_nooneshowed,(iptr)&popup_info_icon_sprite,0);
               game_loop_active = 0;
               player_turn_active = 0;
               return 0;
             }
-            popup_game_with_sprite((iptr)&str_someshowed,(iptr)&popup_info_icon_sprite,0);
+            popup_game_with_sprite((const char *)&str_someshowed,(iptr)&popup_info_icon_sprite,0);
           }
           for (slot = 0; slot < 7; slot++) {
             if ((((i8 *)&net_session_block.net_slot_active_flags))[slot * 0x54] != '\0') {
@@ -4903,7 +4903,7 @@ i32 __cdecl net_client_transfer_server(void)
               (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15] = slot_civ;
             }
           }
-          net_session_block.mp_simultaneous_moves = (i8)(*(i8 *)&civ_saved_cursor_x_block.mp_simultaneous_setting);
+          net_session_block.mp_simultaneous_moves = *(i8 *)&civ_saved_cursor_x_block.mp_simultaneous_setting;
           net_send_message(0x33,0xff,(int)civ_saved_cursor_x_block.mp_double_production,(int)civ_saved_cursor_x_block.mp_double_moves,(int)(*(i8 *)&civ_saved_cursor_x_block.mp_simultaneous_setting),0,0,0,0
                              ,0);
           net_send_message(4,0xff,0,0,0,0,0,0,0,0);
@@ -4916,16 +4916,16 @@ i32 __cdecl net_client_transfer_server(void)
         net_session_block.nm_start_civ_count = 0;
         net_session_block.nm_player_list_count = 0;
         if (game_over_reason != 2) {
-          popup_game_with_sprite((iptr)&str_hostchangeserver,(iptr)&popup_info_icon_sprite,0);
+          popup_game_with_sprite((const char *)&str_hostchangeserver,(iptr)&popup_info_icon_sprite,0);
         }
       }
       else {
-        dbg_logf_str((iptr)&str_disconnecting_from_server_s,(iptr)&net_session_block.net_server_address);
+        dbg_logf_str((const char *)&str_disconnecting_from_server_s,(const char *)&net_session_block.net_server_address);
         status = XD_CloseConnection();
         if (status != 0) {
-          dbg_logf_str_int((iptr)&str_clienttransferserver_disconnection_from,(iptr)&net_session_block.net_server_address,status);
-          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const void *)(net_session_block.net_connection_title));
-          popup_game_with_sprite((iptr)&str_lanconnectfail_6,(iptr)&popup_info_icon_sprite,0);
+          dbg_logf_str_int((const char *)&str_clienttransferserver_disconnection_from,(const char *)&net_session_block.net_server_address,status);
+          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const char *)((const void *)net_session_block.net_connection_title));
+          popup_game_with_sprite((const char *)&str_lanconnectfail_6,(iptr)&popup_info_icon_sprite,0);
           game_loop_active = 0;
           player_turn_active = 0;
           return 0;
@@ -4935,26 +4935,26 @@ i32 __cdecl net_client_transfer_server(void)
         do {
           cmp = timer_ticks();
         } while (cmp - map_views_block.net_handoff_wait_ticks_i32 < 0x3c);
-        dbg_logf_str((iptr)&str_attempting_to_reconnect_to_new_server_s,(iptr)&net_session_block.net_server_address);
+        dbg_logf_str((const char *)&str_attempting_to_reconnect_to_new_server_s,(const char *)&net_session_block.net_server_address);
         status = XD_OpenConnection(((i8 *)&net_session_block.net_server_address),net_session_block.net_timeout_seconds * 1000);
         if (status < 0) {
-          dbg_logf((iptr)&str_connecttogame_open_connection_failed_err,status);
-          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const void *)(net_session_block.net_connection_title));
-          popup_game_with_sprite((iptr)&str_serverconnectfail_2,(iptr)&popup_info_icon_sprite,0);
+          dbg_logf((const char *)&str_connecttogame_open_connection_failed_err,status);
+          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const char *)((const void *)net_session_block.net_connection_title));
+          popup_game_with_sprite((const char *)&str_serverconnectfail_2,(iptr)&popup_info_icon_sprite,0);
           game_loop_active = 0;
           player_turn_active = 0;
           return 0;
         }
-        dbg_log((iptr)&str_connection_to_new_server_successful);
+        dbg_log((const char *)&str_connection_to_new_server_successful);
         net_session_block.nm_server_quit_count_i32 = 0;
         net_session_block.nm_start_civ_count = 0;
-        dlg_pending_idle_callback = ((i8*)(net_quit_wait_player_list_idle));
+        dlg_pending_idle_callback = ((i8 *)net_quit_wait_player_list_idle);
         map_views_block.net_handoff_wait_ticks_i32 = timer_ticks();
-        popup_game_sprite_flags((iptr)&str_clientquitwait_5,0x2000000,(iptr)&popup_info_icon_sprite,0);
+        popup_game_sprite_flags((const char *)&str_clientquitwait_5,0x2000000,(iptr)&popup_info_icon_sprite,0);
         if (net_session_block.nm_player_list_count == 0) {
-          dbg_log((iptr)&str_clienttransferserver_client_timed_out_wa);
-          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const void *)(net_session_block.net_connection_title));
-          popup_game_with_sprite((iptr)&str_lanconnectfail_7,(iptr)&popup_info_icon_sprite,0);
+          dbg_log((const char *)&str_clienttransferserver_client_timed_out_wa);
+          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const char *)((const void *)net_session_block.net_connection_title));
+          popup_game_with_sprite((const char *)&str_lanconnectfail_7,(iptr)&popup_info_icon_sprite,0);
           game_loop_active = 0;
           player_turn_active = 0;
           return 0;
@@ -4962,7 +4962,7 @@ i32 __cdecl net_client_transfer_server(void)
         crt_strcpy(((i8 *)&minimap_window_block.text_string_args),((i8 *)&net_session_block.net_slot_player_names));
         net_reset_error_counts();
         net_session_block.nm_player_list_count = 0;
-        popup_game_with_sprite((iptr)&str_hostchangeclient,(iptr)&popup_info_icon_sprite,0);
+        popup_game_with_sprite((const char *)&str_hostchangeclient,(iptr)&popup_info_icon_sprite,0);
       }
       result = 1;
     }
@@ -5046,9 +5046,9 @@ i32 __cdecl net_check_lost_connections(void)
   if (net_session_block.net_host_flag == '\0') {
     if (net_session_block.net_lost_conn_total != 0) {
       game_loop_active = 0;
-      dbg_log((iptr)&str_we_lost_connection_to_the_server_heartbe);
+      dbg_log((const char *)&str_we_lost_connection_to_the_server_heartbe);
       net_session_shutdown(((iptr *)&net_session_block.net_session),1);
-      popup_game_with_sprite((iptr)&str_lostserver,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_lostserver,(iptr)&popup_info_icon_sprite,0);
       return 1;
     }
   }
@@ -5083,10 +5083,10 @@ i32 __cdecl net_check_lost_connections(void)
         if ((0 < lost_counts[slot]) && ((((i8 *)&net_session_block.net_slot_active_flags))[slot * 0x54] != '\0')) {
           dropped_count++;
           slot_civ = (((i32 *)&net_session_block.net_slot_civs))[slot * 0x15];
-          text_set_string_arg(0,(iptr)(((i8 *)&net_session_block.net_slot_player_names) + slot * 0x54));
+          text_set_string_arg(0,(const char *)(((i8 *)&net_session_block.net_slot_player_names) + slot * 0x54));
           net_send_text_args(0x53,0xff,1,0,0,0);
           *(i32 *)(((i8 *)&net_session_block.net_civ_drop_requested) + slot_civ * 4) = 0;
-          (*(i8 *)((char *)&civ + 0)) = (byte)slot_civ;
+          (*((char *)&civ + 0)) = (byte)slot_civ;
           game.human_players = game.human_players & ~(byte)(1 << ((byte)civ & 0x1f));
           net_remove_player
                     ((NetSession *)((iptr *)&net_session_block.net_session),*(i32 *)(((i8 *)&net_session_block.net_player_slots) + slot * 0x54));
@@ -5095,7 +5095,7 @@ i32 __cdecl net_check_lost_connections(void)
             net_send_message(0x2a,0xff,(int)(short)(*(ushort *)&civ_saved_cursor_x_block.net_claimed_civs_mask),0,0,0,0,0,0,0);
             net_session_block.nm_lock_nation_count_i32++;
           }
-          popup_game_with_sprite((iptr)&str_lostclient,(iptr)&popup_info_icon_sprite,0);
+          popup_game_with_sprite((const char *)&str_lostclient,(iptr)&popup_info_icon_sprite,0);
         }
       }
     }
@@ -5185,7 +5185,7 @@ void __cdecl chat_insert_macro_text(Control *edit,i32 macro_id)
     }
     chat_macro_next_adj_civ++;
     name2 = civ_adjective(civ);
-    text_append(name2);
+    text_append((const char *)name2);
     text_append_space();
     if (chat_macro_next_adj_civ == 8) {
       chat_macro_next_adj_civ = 1;
@@ -5207,27 +5207,27 @@ void __cdecl chat_insert_macro_text(Control *edit,i32 macro_id)
       return;
     }
     name2 = civ_leader_title(chat_macro_next_leader_civ);
-    text_append(name2);
+    text_append((const char *)name2);
     text_append_space();
     civ = chat_macro_next_leader_civ;
     chat_macro_next_leader_civ++;
-    name2 = civ_leader_name(civ);
-    text_append(name2);
+    name2 = (iptr)(civ_leader_name(civ));
+    text_append((const char *)name2);
     text_append_space();
     if (chat_macro_next_leader_civ == 8) {
       chat_macro_next_leader_civ = 1;
     }
     goto replace_selection;
   case 0x2b2:
-    chat_read_macro_line((iptr)&str_chatmac1_txt,(iptr)&chat_macro1_file_offset);
+    chat_read_macro_line((const char *)&str_chatmac1_txt,(iptr)&chat_macro1_file_offset);
     civ = chat_macro1_file_offset;
     break;
   case 0x2b3:
-    chat_read_macro_line((iptr)&str_chatmac2_txt,(iptr)&chat_macro2_file_offset);
+    chat_read_macro_line((const char *)&str_chatmac2_txt,(iptr)&chat_macro2_file_offset);
     civ = chat_macro2_file_offset;
     break;
   case 0x2b4:
-    chat_read_macro_line((iptr)&str_chatmac3_txt,(iptr)&chat_macro3_file_offset);
+    chat_read_macro_line((const char *)&str_chatmac3_txt,(iptr)&chat_macro3_file_offset);
     civ = chat_macro3_file_offset;
     break;
   default:
@@ -5237,7 +5237,7 @@ void __cdecl chat_insert_macro_text(Control *edit,i32 macro_id)
     return;
   }
 replace_selection:
-  edit_replace_sel(edit,(iptr)&map_views_block.text_buffer);
+  edit_replace_sel(edit,(const char *)&map_views_block.text_buffer);
   civ = edit_get_sel_end((EditSelEndView *)edit);
   text_len = _strlen(((i8 *)&map_views_block.text_buffer));
   edit_set_sel((EditSelView *)edit,civ - text_len,civ);
@@ -5245,7 +5245,7 @@ replace_selection:
 }
 
 /* 0049275a auto */
-void __cdecl chat_read_macro_line(iptr path,iptr file_offset)
+void __cdecl chat_read_macro_line(const char *path,iptr file_offset)
 
 {
   int ok;
@@ -5260,7 +5260,7 @@ void __cdecl chat_read_macro_line(iptr path,iptr file_offset)
   if (ok == 0) {
     *(i32 *)file_offset = 0;
     unwind_state = 0xffffffff;
-    /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&file)); }
+    /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)&file); }
   }
   else {
     ok = file_obj_get_size((FileObject *)file);
@@ -5272,15 +5272,15 @@ void __cdecl chat_read_macro_line(iptr path,iptr file_offset)
       *(i32 *)file_offset = 0;
       file_map_close((FileObject *)file);
       unwind_state = 0xffffffff;
-      /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&file)); }
+      /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)&file); }
     }
     else {
-      file_obj_read_line((FileReadLineView *)file,(iptr)&map_views_block.text_buffer,0x100);
+      file_obj_read_line((FileReadLineView *)file,(char *)&map_views_block.text_buffer,0x100);
       file_map_close((FileObject *)file);
       line_len = _strlen(((i8 *)&map_views_block.text_buffer));
       *(size_t *)file_offset = *(int *)file_offset + line_len + 2;
       unwind_state = 0xffffffff;
-      /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&file)); }
+      /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)&file); }
     }
   }
   return;
@@ -5585,7 +5585,7 @@ void __cdecl parley_draw_civ_list(int side)
   int row_top;
   int text_dx;
   i32 font_height;
-  iptr text;
+  const char *text;
   i32 bg_color2;
   int row;
   int shadow_color2;
@@ -5658,7 +5658,7 @@ draw_rows:
           surface_fill_rect((DibSurface *)wnd2,(iptr)&row_rect,bg_color2);
           if (*(int *)(((PictureWindow *)wnd2)->parley_pane_rows_base + side * 4 + 0x28) == -1) {
             text_clear();
-            text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb84)));
+            text = (label_string(*(i32 *)(label_string_ids + 0xb84)));
             text_append(text);
             field = wnd2->pane_selection_flags_area + side * 4 - 0x1c;
             field[0] = '\0';
@@ -5692,16 +5692,16 @@ draw_rows:
           if (shadow_color2 != text_color2) {
             gfx_set_text_color_index(shadow_color2);
             surface_draw_text
-                      ((DibSurface *)wnd2,(iptr)font2,(iptr)&map_views_block.text_buffer,text_dx + xLeft + 2,
+                      ((DibSurface *)wnd2,(iptr)font2,(const char *)&map_views_block.text_buffer,text_dx + xLeft + 2,
                        text_dy + row_top + 1,5);
             gfx_set_text_color_index(text_color2);
             surface_draw_text
-                      ((DibSurface *)wnd2,(iptr)font2,(iptr)&map_views_block.text_buffer,text_dx + xLeft + 1,
+                      ((DibSurface *)wnd2,(iptr)font2,(const char *)&map_views_block.text_buffer,text_dx + xLeft + 1,
                        text_dy + row_top,5);
           }
           gfx_set_text_color_index(text_color2);
           surface_draw_text
-                    ((DibSurface *)wnd2,(iptr)font2,(iptr)&map_views_block.text_buffer,text_dx + xLeft,text_dy + row_top,5)
+                    ((DibSurface *)wnd2,(iptr)font2,(const char *)&map_views_block.text_buffer,text_dx + xLeft,text_dy + row_top,5)
           ;
         }
       }
@@ -6231,7 +6231,7 @@ void __thiscall parley_wnd_dtor(ViewWindow *self)
     unwind_state = (unwind_state & 0xffffff00 | (byte)(1));
     if ((prefs_main_menu_choice_block.prefs_clear_chat_on_boot != 0) && (chat_log_buffer != (char *)0x0)) {
       *chat_log_buffer = '\0';
-      created = file_obj_create(&log_file,(iptr)&str_chatlog_txt_2);
+      created = file_obj_create(&log_file,(const char *)&str_chatlog_txt_2);
       if (created != 0) {
         log_len = _strlen(chat_log_buffer);
         file_obj_write(&log_file,(iptr)chat_log_buffer,log_len);
@@ -6247,12 +6247,12 @@ void __thiscall parley_wnd_dtor(ViewWindow *self)
       chat_input_buffer = (void *)0x0;
     }
     unwind_state = unwind_state & 0xffffff00;
-    /* inlined unwind funclet 004b4705 */ { file_obj_close((FileObject *)((iptr)&log_file)); }
+    /* inlined unwind funclet 004b4705 */ { file_obj_close(&log_file); }
   }
   parley_wnd_destroy_controls(self);
   wnd_destroy_with_surface((DibSurface *)self);
   unwind_state = 0xffffffff;
-  /* inlined unwind funclet 004b4711 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&self)); }
+  /* inlined unwind funclet 004b4711 */ { surfwnd_dtor(*(SurfaceWindow **)&self); }
   return;
 }
 
@@ -6295,10 +6295,10 @@ void __thiscall parley_wnd_create(ViewWindow *self,u32 mode)
                str_civ_ini_9);
     (*(UINT *)&font_size16_bold_block.chat_log_capacity) = 0xe000;
   }
-  if ((*(i8 * *)&chat_log_buffer) == (i8 *)0x0) {
-    (*(i8 * *)&chat_log_buffer) = (i8 *)(operator_new((*(UINT *)&font_size16_bold_block.chat_log_capacity) + 1));
+  if ((*&chat_log_buffer) == (i8 *)0x0) {
+    (*&chat_log_buffer) = (i8 *)(operator_new((*(UINT *)&font_size16_bold_block.chat_log_capacity) + 1));
   }
-  _memset((*(i8 * *)&chat_log_buffer),0,(*(UINT *)&font_size16_bold_block.chat_log_capacity) + 1);
+  _memset((*&chat_log_buffer),0,(*(UINT *)&font_size16_bold_block.chat_log_capacity) + 1);
   if (chat_input_buffer == (void *)0x0) {
     chat_input_buffer = operator_new(0x101);
   }
@@ -6306,26 +6306,26 @@ void __thiscall parley_wnd_create(ViewWindow *self,u32 mode)
   file_obj_init((FileObject *)log_file);
   unwind_state = 0;
   if (prefs_main_menu_choice_block.prefs_clear_chat_on_new_game == 0) {
-    file_size = file_obj_open((FileObject *)log_file,(iptr)&str_chatlog_txt_3);
+    file_size = file_obj_open((FileObject *)log_file,(const char *)&str_chatlog_txt_3);
     if (file_size == 0) goto clear_chat_buffer;
     file_size = file_obj_get_size((FileObject *)log_file);
     if ((int)(*(UINT *)&font_size16_bold_block.chat_log_capacity) < file_size) {
       file_obj_seek_cur((FileSeekView *)log_file,file_size - (*(UINT *)&font_size16_bold_block.chat_log_capacity));
     }
-    file_obj_read((FileObject *)log_file,(iptr)(*(i8 * *)&chat_log_buffer),(*(UINT *)&font_size16_bold_block.chat_log_capacity));
+    file_obj_read((FileObject *)log_file,*&chat_log_buffer,(*(UINT *)&font_size16_bold_block.chat_log_capacity));
     file_map_close((FileObject *)log_file);
   }
   else {
 clear_chat_buffer:
-    *(*(i8 * *)&chat_log_buffer) = 0;
+    *(*&chat_log_buffer) = 0;
   }
   unwind_state = 0xffffffff;
-  /* inlined unwind funclet 004b4be3 */ { file_obj_close((FileObject *)((iptr)&log_file)); }
+  /* inlined unwind funclet 004b4be3 */ { file_obj_close((FileObject *)&log_file); }
 pick_size_mode:
   if ((self->border_width == 0) && (self->resize_border == 0)) {
     parley_wnd_pick_size_mode((ParleyWindowLayout *)self);
   }
-  crt_strcpy(self->parley_title,((i8 *)&parley_wnd_empty_title_str));
+  crt_strcpy((char *)self->parley_title,((i8 *)&parley_wnd_empty_title_str));
   if (self->session_mode == 4) {
     parent = ((i8 *)&main_frame_wnd_block.main_frame_wnd);
     palette = ((i8 *)&game_palette_block.game_palette);
@@ -6351,10 +6351,10 @@ pick_size_mode:
   self->right_civ = parley_mode3_right_kind;
   self->shown_left_civ = 0x15;
   self->caption_button_count = 0x15;
-  wnd_set_close_handler((WndEventHandlers *)(self->event_handlers),(iptr)diplo_wnd_close_active);
+  wnd_set_close_handler((WndEventHandlers *)self->event_handlers,(iptr)diplo_wnd_close_active);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)parley_wnd_redraw);
-  wnd_set_move_handler((WndEventHandlers *)(self->event_handlers),(iptr)parley_wnd_on_move);
-  wnd_set_keydown_handler((WndEventHandlers *)(self->event_handlers),(iptr)parley_wnd_on_key);
+  wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)parley_wnd_on_move);
+  wnd_set_keydown_handler((WndEventHandlers *)self->event_handlers,(iptr)parley_wnd_on_key);
   parley_wnd_calc_layout((ParleyWindowLayout *)self);
   parley_wnd_sync_sides(self);
   if (((self->session_mode == 3) || (self->session_mode == 2)) || (self->session_mode == 1)) {
@@ -6835,10 +6835,10 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   caption_x = panel_padding_x;
   for (i = 0; i < 3; i++) {
     if (i == 0) {
-      *(i8 **)(self->close_caption_sprite_slot) = ((i8 *)&caption_close_button_sprite_block.caption_close_button_sprite);
+      *(i8 **)self->close_caption_sprite_slot = ((i8 *)&caption_close_button_sprite_block.caption_close_button_sprite);
     }
     else if (i == 1) {
-      *(i8 **)(self->zoom_out_caption_sprite_slot) = ((i8 *)&caption_zoom_out_sprite);
+      *(i8 **)self->zoom_out_caption_sprite_slot = ((i8 *)&caption_zoom_out_sprite);
     }
     else {
       *(i8 **)(self->parley_caption_buttons + i * 0x1c + 0x14) = ((i8 *)&caption_zoom_out_button_sprite_block.caption_zoom_out_button_sprite);
@@ -6930,7 +6930,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     close_parent = self->window_2;
   }
   button_create
-            ((Control *)self->close_button,(iptr)close_parent,0x3ed,(iptr)&rect,close_label);
+            ((Control *)self->close_button,(iptr)close_parent,0x3ed,(iptr)&rect,(const char *)close_label);
   button_set_callback((Control *)self->close_button,(iptr)diplo_wnd_escape_close);
   new_edit = (InputControl *)(operator_new(0x48));
   eh_state = 2;
@@ -6992,7 +6992,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     history_parent = self->window_2;
   }
   edit_create_styled
-            ((EditControl *)self->chat_history_edit,(iptr)history_parent,0x3ee,(iptr)&rect,(*(iptr *)&chat_log_buffer),
+            ((EditControl *)self->chat_history_edit,(iptr)history_parent,0x3ee,(iptr)&rect,((const char *)(*(iptr *)&chat_log_buffer)),
              0x122,0);
   edit_set_max_len((EditMaxLenView *)self->chat_history_edit,0x2000);
   edit_set_callback((EditCallbackSetView *)self->chat_history_edit,(iptr)parley_edit_escape_filter);
@@ -7062,7 +7062,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     input_parent = self->window_2;
   }
   edit_create_styled
-            ((EditControl *)self->chat_input_edit,(iptr)input_parent,0x3ef,(iptr)&rect,(*(iptr *)&chat_input_buffer),
+            ((EditControl *)self->chat_input_edit,(iptr)input_parent,0x3ef,(iptr)&rect,((const char *)(*(iptr *)&chat_input_buffer)),
              input_style,0);
   edit_set_max_len((EditMaxLenView *)self->chat_input_edit,0x100);
   edit_set_callback((EditCallbackSetView *)self->chat_input_edit,(iptr)chat_input_on_key);
@@ -7090,7 +7090,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   }
   label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb34)));
   button_create
-            ((Control *)self->send_button_value,(iptr)send_parent,0x3f0,(iptr)&rect,label);
+            ((Control *)self->send_button_value,(iptr)send_parent,0x3f0,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)self->send_button_value,(iptr)chat_send_button_on_click);
   new_ctrl = (Control *)(operator_new(0x3c));
   eh_state = 5;
@@ -7112,7 +7112,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
   }
   label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb38)));
   button_create
-            ((Control *)self->clear_button_value,(iptr)clear_parent,0x41e,(iptr)&rect,label);
+            ((Control *)self->clear_button_value,(iptr)clear_parent,0x41e,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)self->clear_button_value,(iptr)chat_clear_button_on_click);
   ctrl_top -= ctrl_height;
   if (self->large_layout == 0) {
@@ -7147,7 +7147,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdb4)));
     button_create
-              ((Control *)self->conceal_button_value,(iptr)conceal_parent,0x431,(iptr)&rect,label);
+              ((Control *)self->conceal_button_value,(iptr)conceal_parent,0x431,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->conceal_button_value,(iptr)parley_on_conceal_info);
     control_hide((Control *)self->conceal_button_value);
     ctrl_disable((Control *)self->conceal_button_value);
@@ -7171,7 +7171,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdb8)));
     button_create
-              ((Control *)self->reveal_button_value,(iptr)reveal_parent,0x432,(iptr)&rect,label);
+              ((Control *)self->reveal_button_value,(iptr)reveal_parent,0x432,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->reveal_button_value,(iptr)parley_on_reveal_info);
     control_hide((Control *)self->reveal_button_value);
     ctrl_disable((Control *)self->reveal_button_value);
@@ -7197,7 +7197,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0x1a0)));
     button_create
-              ((Control *)self->intel_button_value,(iptr)intel_parent,0x428,(iptr)&rect,label);
+              ((Control *)self->intel_button_value,(iptr)intel_parent,0x428,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->intel_button_value,(iptr)parley_on_check_intel);
     ctrl_enable((Control *)self->intel_button_value);
     new_ctrl = (Control *)(operator_new(0x3c));
@@ -7219,7 +7219,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb3c)));
     button_create
-              ((Control *)self->rates_clamped,(iptr)mode_parent,0x3f1,(iptr)&rect,label);
+              ((Control *)self->rates_clamped,(iptr)mode_parent,0x3f1,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->rates_clamped,(iptr)parley_on_mode_chosen);
     ctrl_enable((Control *)self->rates_clamped);
     new_ctrl = (Control *)(operator_new(0x3c));
@@ -7240,7 +7240,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd10)));
     button_create
-              ((Control *)self->mode2_button_value,(iptr)mode2_parent,0x427,(iptr)&rect,label);
+              ((Control *)self->mode2_button_value,(iptr)mode2_parent,0x427,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->mode2_button_value,(iptr)parley_on_mode_chosen);
     ctrl_disable((Control *)self->mode2_button_value);
     control_hide((Control *)self->mode2_button_value);
@@ -7263,7 +7263,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb40)));
     button_create
-              ((Control *)self->never_mind_button_value,(iptr)never_mind_parent,0x3f2,(iptr)&rect,label);
+              ((Control *)self->never_mind_button_value,(iptr)never_mind_parent,0x3f2,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->never_mind_button_value,(iptr)parley_on_never_mind);
     new_ctrl = (Control *)(operator_new(0x3c));
     eh_state = 0xc;
@@ -7287,7 +7287,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb44)));
     button_create
-              ((Control *)self->tax_scrollbar,(iptr)accept_parent,0x3f2,(iptr)&rect,label);
+              ((Control *)self->tax_scrollbar,(iptr)accept_parent,0x3f2,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->tax_scrollbar,(iptr)parley_on_accept_offer);
     control_hide((Control *)self->tax_scrollbar);
     new_ctrl = (Control *)(operator_new(0x3c));
@@ -7309,7 +7309,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb48)));
     button_create
-              ((Control *)self->no_thanks_button_value,(iptr)no_thanks_parent,0x3f2,(iptr)&rect,label);
+              ((Control *)self->no_thanks_button_value,(iptr)no_thanks_parent,0x3f2,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->no_thanks_button_value,(iptr)parley_on_no_thanks);
     control_hide((Control *)self->no_thanks_button_value);
     new_ctrl = (Control *)(operator_new(0x3c));
@@ -7331,7 +7331,7 @@ void __thiscall parley_wnd_create_controls(ViewWindow *self)
     }
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb4c)));
     button_create
-              ((Control *)self->counter_button_value,(iptr)counter_parent,0x3f2,(iptr)&rect,label);
+              ((Control *)self->counter_button_value,(iptr)counter_parent,0x3f2,(iptr)&rect,(const char *)label);
     button_set_callback((Control *)self->counter_button_value,(iptr)parley_on_counter_offer);
     control_hide((Control *)self->counter_button_value);
   }
@@ -7480,17 +7480,17 @@ void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *self)
   }
   x2 -= panel_margin_x;
   free_width = (self->dlg_width - x2) - panel_padding_x;
-  title_width = font_text_width(title_font2,(iptr)(u8 *)&self->parley_title);
+  title_width = font_text_width(title_font2,(const char *)(u8 *)&self->parley_title);
   x2 += (free_width / 2 - (title_width >> 1));
   y2 = panel_bevel_width + panel_margin_y;
   gfx_set_text_color_index(10);
   surface_draw_text
-            ((DibSurface *)self,(iptr)title_font2,(iptr)(u8 *)&self->parley_title,x2 + 2,y2 + 1,5);
+            ((DibSurface *)self,(iptr)title_font2,(const char *)(u8 *)&self->parley_title,x2 + 2,y2 + 1,5);
   gfx_set_text_color_index(0x1a);
   surface_draw_text
-            ((DibSurface *)self,(iptr)title_font2,(iptr)(u8 *)&self->parley_title,x2 + 1,y2,5);
+            ((DibSurface *)self,(iptr)title_font2,(const char *)(u8 *)&self->parley_title,x2 + 1,y2,5);
   surface_draw_text
-            ((DibSurface *)self,(iptr)title_font2,(iptr)(u8 *)&self->parley_title,x2,y2,5);
+            ((DibSurface *)self,(iptr)title_font2,(const char *)(u8 *)&self->parley_title,x2,y2,5);
   surface_set_clip((DibSurface *)self,(iptr)&self->panel_rect);
   return;
 }
@@ -7532,20 +7532,20 @@ void __thiscall parley_fill_background(WindowObjectView *self,iptr rect,int area
 void __thiscall parley_wnd_build_title(ParleyTitleView *self)
 
 {
-  iptr text;
+  const char *text;
   iptr attitude_level;
   
   text_clear();
   if (self->parley_kind == 4) {
-    text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb54)));
+    text = (label_string(*(i32 *)(label_string_ids + 0xb54)));
     text_append(text);
-    crt_strcpy(self->title_text,((i8 *)&map_views_block.text_buffer));
+    crt_strcpy((char *)self->title_text,((i8 *)&map_views_block.text_buffer));
   }
   else {
-    text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb50)));
+    text = (label_string(*(i32 *)(label_string_ids + 0xb50)));
     text_append(text);
     text_append_space();
-    text = civ_name_plural(self->civ_id);
+    text = (civ_name_plural(self->civ_id));
     text_append(text);
     text_append_space();
     text_append_lparen();
@@ -7557,7 +7557,7 @@ void __thiscall parley_wnd_build_title(ParleyTitleView *self)
     }
     text_append_string_id(attitude_names[attitude_level]);
     text_append_rparen();
-    crt_strcpy(self->title_text,((i8 *)&map_views_block.text_buffer));
+    crt_strcpy((char *)self->title_text,((i8 *)&map_views_block.text_buffer));
   }
   return;
 }
@@ -7598,7 +7598,7 @@ void __thiscall parley_wnd_open(ViewWindow *self,iptr other_civ,u32 mode)
       }
     }
     if (!has_contact) {
-      popup_game((iptr)&str_noforeignhuman);
+      popup_game((const char *)&str_noforeignhuman);
       return;
     }
     wnd_set_active_child((iptr)&chat_wnd_block.chat_wnd_frame);
@@ -7623,7 +7623,7 @@ void __thiscall parley_wnd_open(ViewWindow *self,iptr other_civ,u32 mode)
   else {
     wnd2 = (ParleyTitleView *)(child_wnd - 0x48);
   }
-  if (*(int *)(wnd2->wnd_closed) == 0) {
+  if (*(int *)wnd2->wnd_closed == 0) {
     window_show((WindowObjectView *)wnd2);
   }
   else {
@@ -7663,7 +7663,7 @@ void __thiscall parley_wnd_open(ViewWindow *self,iptr other_civ,u32 mode)
 void __cdecl parley_poll_net_replies(void)
 
 {
-  iptr civ_name;
+  const char *civ_name;
   
   net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
   wnd_set_active_child((iptr)&parley_wnd_block.parley_wnd_frame);
@@ -7679,10 +7679,10 @@ void __cdecl parley_poll_net_replies(void)
           parley_wnd_block.parley_shown_right_kind = parley_wnd_block.parley_right_kind;
           parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_mode2_left_kind,0);
           parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_wnd_block.parley_right_kind,1);
-          civ_name = civ_name_plural(parley_wnd_block.parley_other_civ);
+          civ_name = (civ_name_plural(parley_wnd_block.parley_other_civ));
           text_set_string_arg(0,civ_name);
-          dlg_pending_idle_callback = (i8*)(parley_poll_net_replies);
-          popup_game_with_sprite((iptr)&str_parleycounteroffer,(iptr)&popup_info_icon_sprite,0);
+          dlg_pending_idle_callback = (i8 *)parley_poll_net_replies;
+          popup_game_with_sprite((const char *)&str_parleycounteroffer,(iptr)&popup_info_icon_sprite,0);
         }
       }
       else {
@@ -7690,10 +7690,10 @@ void __cdecl parley_poll_net_replies(void)
         parley_wnd_block.parley_mode = 3;
         parley_wnd_block.parley_selected_action = 0xffffffff;
         parley_set_mode_sides((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),1);
-        civ_name = civ_name_plural(parley_wnd_block.parley_other_civ);
+        civ_name = (civ_name_plural(parley_wnd_block.parley_other_civ));
         text_set_string_arg(0,civ_name);
-        dlg_pending_idle_callback = (i8*)(parley_poll_net_replies);
-        popup_game_with_sprite((iptr)&str_parleynothanks,(iptr)&popup_info_icon_sprite,0);
+        dlg_pending_idle_callback = (i8 *)parley_poll_net_replies;
+        popup_game_with_sprite((const char *)&str_parleynothanks,(iptr)&popup_info_icon_sprite,0);
       }
     }
     else {
@@ -7716,32 +7716,32 @@ void __cdecl parley_poll_net_replies(void)
       parley_wnd_block.parley_shown_right_kind = parley_wnd_block.parley_right_kind;
       parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_mode2_left_kind,0);
       parley_add_side_dialog((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),parley_wnd_block.parley_right_kind,1);
-      dlg_pending_idle_callback = (i8*)(parley_poll_net_replies);
-      popup_game_with_sprite((iptr)&str_parleyaccept,(iptr)&popup_info_icon_sprite,0);
+      dlg_pending_idle_callback = (i8 *)parley_poll_net_replies;
+      popup_game_with_sprite((const char *)&str_parleyaccept,(iptr)&popup_info_icon_sprite,0);
     }
   }
   else {
     net_session_block.nm_parley_transaction_count = 0;
     if ((*(int *)((int)parley_wnd_block.parley_received_offer + 0x10) == 6) && (*(int *)((int)parley_wnd_block.parley_received_offer + 0x28) == 3)) {
-      civ_name = civ_name_plural(parley_wnd_block.parley_other_civ);
+      civ_name = (civ_name_plural(parley_wnd_block.parley_other_civ));
       text_set_string_arg(0,civ_name);
-      civ_name = civ_name_plural(human_civ[0]);
+      civ_name = (civ_name_plural(human_civ[0]));
       text_set_string_arg(1,civ_name);
       if ((*(byte *)&civs[human_civ[0]].treaties[parley_wnd_block.parley_other_civ] & 8) == 0) {
         if ((*(byte *)&civs[human_civ[0]].treaties[parley_wnd_block.parley_other_civ] & 4) == 0) {
           if ((*(byte *)&civs[human_civ[0]].treaties[parley_wnd_block.parley_other_civ] & 2) != 0) {
             diplo_clear_treaty_flags(human_civ[0],parley_wnd_block.parley_other_civ,2);
-            popup_game((iptr)&str_breakcease);
+            popup_game((const char *)&str_breakcease);
           }
         }
         else {
           diplo_clear_treaty_flags(human_civ[0],parley_wnd_block.parley_other_civ,4);
-          popup_game((iptr)&str_cancelpeace);
+          popup_game((const char *)&str_cancelpeace);
         }
       }
       else {
         diplo_clear_treaty_flags(human_civ[0],parley_wnd_block.parley_other_civ,8);
-        popup_game((iptr)&str_cancelallied);
+        popup_game((const char *)&str_cancelallied);
       }
     }
     else {
@@ -8002,7 +8002,7 @@ void __cdecl parley_gold_edit_on_change(int control_id)
   _memset(gold_text,0,0x20);
   edit_index = (uint)(control_id != 0x3f8);
   caret = edit_get_sel_end(*(EditSelEndView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4));
-  ctrl_get_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4),(iptr)text);
+  ctrl_get_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4),(char *)text);
   __itoa(civs[human_civ[0]].gold,gold_text,10);
   for (i = 0; len = _strlen(text), i < len; i++) {
     if ((text[i] < '0') || ('9' < text[i])) {
@@ -8036,7 +8036,7 @@ void __cdecl parley_gold_edit_on_change(int control_id)
     if (len < caret) {
       caret = _strlen(text);
     }
-    ctrl_set_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4),(iptr)text);
+    ctrl_set_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4),(const char *)text);
     edit_set_caret(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + edit_index * 4),caret);
   }
   return;
@@ -8051,18 +8051,18 @@ chat_receive_message(WindowObjectView *self,iptr civ,iptr civ2,iptr is_private,i
 {
   u32 muted;
   size_t log_len;
-  i32 label;
+  const void *label;
   int listener;
   
-  ctrl_get_text(chat_wnd_block.chat_log_edit,(iptr)chat_log_buffer);
+  ctrl_get_text(chat_wnd_block.chat_log_edit,chat_log_buffer);
   text_clear();
   log_len = _strlen(chat_log_buffer);
   if (log_len != 0) {
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_recv_newline_str));
   }
   if ((char)is_private == '\0') {
-    label = (i32)(label_string(*(i32 *)(label_string_ids + 0xb60)));
-    crt_strcat(((i8 *)&map_views_block.text_buffer),(const void *)(label));
+    label = (label_string(*(i32 *)(label_string_ids + 0xb60)));
+    crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)label);
     text_append_space();
     chat_append_sender_name(civ);
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_recv_year_open_str));
@@ -8070,19 +8070,19 @@ chat_receive_message(WindowObjectView *self,iptr civ,iptr civ2,iptr is_private,i
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_recv_year_close_str));
   }
   else {
-    label = (i32)(label_string(*(i32 *)(label_string_ids + 0xb58)));
-    crt_strcat(((i8 *)&map_views_block.text_buffer),(const void *)(label));
+    label = (label_string(*(i32 *)(label_string_ids + 0xb58)));
+    crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)label);
     text_append_space();
     chat_append_sender_name(civ);
-    label = (i32)(label_string(*(i32 *)(label_string_ids + 0xb5c)));
-    crt_strcat(((i8 *)&map_views_block.text_buffer),(const void *)(label));
+    label = (label_string(*(i32 *)(label_string_ids + 0xb5c)));
+    crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)label);
     text_append_space();
     chat_append_sender_name(civ2);
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_recv_private_year_open_str));
     text_append_year((int)game.year);
     crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_recv_private_year_close_str));
   }
-  crt_strcat(((i8 *)&map_views_block.text_buffer),(const void *)(message));
+  crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)((const void *)message));
   if ((civ == 0) && (chat_wnd_block.chat_mute_anonymous != 0)) {
     return;
   }
@@ -8105,7 +8105,7 @@ relay_to_listeners:
        ((*(byte *)(listener * 0x594 + (iptr)((u8 *)&civs + 35) + human_civ[0] * 4) & 1) != 0)) {
       net_send_message(0x68,*(i32 *)
                                (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + listener * 4) * 0x54),
-                         civ,civ2,1,0,0,0,message,0);
+                         civ,civ2,1,0,0,0,(const char *)message,0);
     }
   }
   chat_log_append((iptr)&map_views_block.text_buffer);
@@ -8146,9 +8146,9 @@ void __cdecl chat_log_append(iptr line)
     }
   }
   crt_strcpy(chat_log_buffer,chat_log_buffer + trim_len);
-  crt_strcat(chat_log_buffer,(const void *)(line));
-  ctrl_set_text(chat_wnd_block.chat_log_edit,(iptr)chat_log_buffer);
-  ctrl_set_text(parley_wnd_block.parley_chat_log_edit,(iptr)chat_log_buffer);
+  crt_strcat(chat_log_buffer,(const char *)((const void *)line));
+  ctrl_set_text(chat_wnd_block.chat_log_edit,(const char *)chat_log_buffer);
+  ctrl_set_text(parley_wnd_block.parley_chat_log_edit,(const char *)chat_log_buffer);
   caret_pos = edit_get_text_end(chat_wnd_block.chat_log_edit);
   edit_set_caret(chat_wnd_block.chat_log_edit,caret_pos);
   caret_pos = edit_get_text_end(chat_wnd_block.chat_log_edit);
@@ -8164,14 +8164,14 @@ void __cdecl chat_append_sender_name(int civ)
   
   if (civ == 0) {
     name_text = (i32)(label_string(*(i32 *)(label_string_ids + 0xb64)));
-    crt_strcat(((i8 *)&map_views_block.text_buffer),(const void *)(name_text));
+    crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)((const void *)name_text));
   }
   else {
     name_text = civ_leader_title(civ);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),(const void *)(name_text));
+    crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)((const void *)name_text));
     text_append_space();
-    name_text = civ_leader_name(civ);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),(const void *)(name_text));
+    name_text = (i32)(civ_leader_name(civ));
+    crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)((const void *)name_text));
   }
   return;
 }
@@ -8199,8 +8199,8 @@ void __cdecl chat_clear_button_on_click(void)
 
 {
   _memset((*(void * *)&chat_log_buffer),0,font_size16_bold_block.chat_log_capacity + 1);
-  ctrl_set_text(chat_wnd_block.chat_log_edit,(iptr)(*(void * *)&chat_log_buffer));
-  ctrl_set_text(parley_wnd_block.parley_chat_log_edit,(iptr)(*(void * *)&chat_log_buffer));
+  ctrl_set_text(chat_wnd_block.chat_log_edit,(const char *)(*(void * *)&chat_log_buffer));
+  ctrl_set_text(parley_wnd_block.parley_chat_log_edit,(const char *)(*(void * *)&chat_log_buffer));
   ctrl_set_focus(parley_wnd_block.parley_chat_input_edit);
   return;
 }
@@ -8227,7 +8227,7 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
 {
   iptr child_wnd;
   size_t len;
-  i32 label;
+  const void *label;
   iptr relay_sender;
   iptr sender;
   int count;
@@ -8247,19 +8247,19 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
       return 0;
     }
     if (key == 0xd0) {
-      ctrl_get_text(*(ControlTextView **)(wnd2 + 0x298),(iptr)(*(char * *)&chat_input_buffer));
+      ctrl_get_text(*(ControlTextView **)(wnd2 + 0x298),(*(char * *)&chat_input_buffer));
       len = _strlen((*(char * *)&chat_input_buffer));
       if (len == 0) {
         return 0;
       }
-      ctrl_get_text(chat_wnd_block.chat_log_edit,(iptr)chat_log_buffer);
+      ctrl_get_text(chat_wnd_block.chat_log_edit,chat_log_buffer);
       text_clear();
       len = _strlen(chat_log_buffer);
       if (len != 0) {
         crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&chat_send_newline_str));
       }
-      label = (i32)(label_string(*(i32 *)(label_string_ids + 0xb68)));
-      crt_strcat(((i8 *)&map_views_block.text_buffer),(const void *)(label));
+      label = (label_string(*(i32 *)(label_string_ids + 0xb68)));
+      crt_strcat(((i8 *)&map_views_block.text_buffer),(const char *)label);
       text_append_space();
       if (*(int *)(wnd2 + 0x1ec) == 4) {
         count = 0;
@@ -8297,7 +8297,7 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
             }
             net_send_message(0x68,*(i32 *)
                                      (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),
-                               sender,civ,0,0,0,0,(iptr)(*(char * *)&chat_input_buffer),0);
+                               sender,civ,0,0,0,0,(const char *)(*(char * *)&chat_input_buffer),0);
             for (count = 1; count < 8; count++) {
               if ((((1 << ((byte)count & 0x1f) & (uint)game.human_players) != 0) &&
                   (human_civ[0] != count)) &&
@@ -8312,7 +8312,7 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
                 net_send_message(0x68,*(i32 *)
                                          (((i8 *)&net_session_block.net_player_slots) +
                                          *(int *)(((i8 *)&net_session_block.net_civ_slots) + count * 4) * 0x54),relay_sender,
-                                   civ,1,0,0,0,(iptr)(*(char * *)&chat_input_buffer),0);
+                                   civ,1,0,0,0,(const char *)(*(char * *)&chat_input_buffer),0);
               }
             }
           }
@@ -8322,7 +8322,7 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
         net_send_message(0x68,*(i32 *)
                                  (((i8 *)&net_session_block.net_player_slots) +
                                  *(int *)(((i8 *)&net_session_block.net_civ_slots) + *(int *)(wnd2 + 0x118) * 4) * 0x54),
-                           human_civ[0],*(iptr *)(wnd2 + 0x118),0,0,0,0,(iptr)(*(char * *)&chat_input_buffer),0);
+                           human_civ[0],*(iptr *)(wnd2 + 0x118),0,0,0,0,(const char *)(*(char * *)&chat_input_buffer),0);
         for (count = 1; count < 8; count++) {
           if ((((1 << ((byte)count & 0x1f) & (uint)game.human_players) != 0) &&
               (human_civ[0] != count)) &&
@@ -8330,13 +8330,13 @@ i32 __cdecl chat_input_on_key(i32 control,int key)
               ((*(byte *)(count * 0x594 + (iptr)((u8 *)&civs + 35) + human_civ[0] * 4) & 1) != 0)))) {
             net_send_message(0x68,*(i32 *)
                                      (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + count * 4) * 0x54)
-                               ,human_civ[0],*(iptr *)(wnd2 + 0x118),1,0,0,0,(iptr)(*(char * *)&chat_input_buffer),
+                               ,human_civ[0],*(iptr *)(wnd2 + 0x118),1,0,0,0,(const char *)(*(char * *)&chat_input_buffer),
                                0);
           }
         }
       }
       *(*(char * *)&chat_input_buffer) = '\0';
-      ctrl_set_text(*(ControlTextView **)(wnd2 + 0x298),(iptr)(*(char * *)&chat_input_buffer));
+      ctrl_set_text(*(ControlTextView **)(wnd2 + 0x298),(const char *)(*(char * *)&chat_input_buffer));
       ctrl_set_focus(*(ControlFocusView **)(wnd2 + 0x298));
       return 0;
     }
@@ -8417,7 +8417,7 @@ i32 * __thiscall parley_send_offer(ParleyOfferBuffer *self,int mode)
   }
   msg = (i32 *)(operator_new(total_size));
   if (msg == (i32 *)0x0) {
-    dbg_log((iptr)&str_failed_to_allocate_buffer_for_parley_tra);
+    dbg_log((const char *)&str_failed_to_allocate_buffer_for_parley_tra);
     msg = (i32 *)0x0;
   }
   else {
@@ -8472,7 +8472,7 @@ parley_pack_offer_items
     *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 0x1020c);
     item_ptr2 = (i32 *)(dest + 0xc);
     packed_count = 0;
-    for (i = 0; i < (int)(((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
+    for (i = 0; i < (((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
       if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4 + side * 0x2004) == 1) {
         *item_ptr2 = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0x1d4);
         item_ptr2++;
@@ -8486,7 +8486,7 @@ parley_pack_offer_items
   case 9:
     *(i32 *)dest = item_type;
     *(i32 *)(dest + 4) = item_size;
-    ctrl_get_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + side * 4),(iptr)gold_text);
+    ctrl_get_text(*(ControlTextView **)(((i8 *)&parley_wnd_block.parley_gold_edits) + side * 4),(char *)gold_text);
     gold = _atoi(gold_text);
     *(int *)(dest + 8) = gold;
     break;
@@ -8496,7 +8496,7 @@ parley_pack_offer_items
     *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 0x1020c);
     pair_ptr = (i32 *)(dest + 0xc);
     packed_count = 0;
-    for (i = 0; i < (int)(((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
+    for (i = 0; i < (((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
       if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4 + side * 0x2004) == 1) {
         *pair_ptr = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0x41dc);
         pair_ptr++;
@@ -8513,7 +8513,7 @@ parley_pack_offer_items
     *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 0x1020c);
     item_ptr2 = (i32 *)(dest + 0xc);
     packed_count = 0;
-    for (i = 0; i < (int)(((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
+    for (i = 0; i < (((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
       if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4 + side * 0x2004) == 1) {
         *item_ptr2 = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0x1d4);
         item_ptr2++;
@@ -8535,7 +8535,7 @@ parley_pack_offer_items
     *(i32 *)(dest + 8) = *(i32 *)(self->proposal_kind + side * 4 + 0x1020c);
     pair_ptr = (i32 *)(dest + 0xc);
     packed_count = 0;
-    for (i = 0; i < (int)(((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
+    for (i = 0; i < (((i32 *)&parley_wnd_block.parley_list_counts))[side]; i++) {
       if (*(int *)(((i8 *)&parley_wnd_block.parley_list_selected) + i * 4 + side * 0x2004) == 1) {
         *pair_ptr = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0x41dc);
         pair_ptr[1] = *(i32 *)(self->proposal_kind + side * 0x2004 + i * 4 + 0xc1ec);
@@ -8565,7 +8565,7 @@ void __thiscall parley_build_description(WindowObjectView *self,iptr offer,int r
     first_items = (int *)(offer + 0x20);
     second_offer = *(int *)(offer + 0x24) + offer;
     second_items = (i32 *)(second_offer + 0x20);
-    str_clear((iptr)&text_section_index_pool_block.parley_description);
+    str_clear((char *)&text_section_index_pool_block.parley_description);
     desc_len = _strlen(((i8 *)&text_section_index_pool_block.parley_description));
     if (desc_len != 0) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_strlen_parleydescription_0,(iptr)&str_d_ss_franklinton_parleywin_transaction_c_3,0x120);
@@ -8837,14 +8837,14 @@ void __cdecl parley_describe_advances(iptr items)
 void __cdecl parley_describe_gold(int gold)
 
 {
-  i32 label;
+  const void *label;
   char gold_text[16];
   
   __itoa(gold,gold_text,10);
   crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),gold_text);
   str_append_space((iptr)&text_section_index_pool_block.parley_description);
-  label = (i32)(label_string(*(i32 *)(label_string_ids + 0xcec)));
-  crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),(const void *)(label));
+  label = (label_string(*(i32 *)(label_string_ids + 0xcec)));
+  crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),(const char *)label);
   crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_gold_crlf_str));
   return;
 }
@@ -8922,7 +8922,7 @@ void __cdecl parley_describe_cities(iptr items)
   for (i = 0; i < count; i++) {
     city = parley_find_city_by_id
                       ((WindowObjectView *)((i8 *)&parley_wnd_block.parley_wnd),*(i32 *)(items + 0xc + i * 8));
-    str_append((iptr)&text_section_index_pool_block.parley_description,(iptr)&cities[city].name);
+    str_append((char *)&text_section_index_pool_block.parley_description,(const char *)&cities[city].name);
     crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),((i8 *)&parley_cities_open_paren_str));
     __itoa(*(int *)(items + 0x10 + i * 8),size_text,10);
     crt_strcat(((i8 *)&text_section_index_pool_block.parley_description),size_text);
@@ -8998,7 +8998,7 @@ void __cdecl parley_describe_war_targets(iptr items)
   count = *(int *)(items + 8);
   civ_ptr = (iptr *)(items + 0xc);
   for (i = 0; i < count; i++) {
-    text = civ_name_plural(*civ_ptr);
+    text = (iptr)(civ_name_plural(*civ_ptr));
     str_concat((iptr)&text_section_index_pool_block.parley_description,text);
     if (1 < count) {
       if (i < count - 2) {
@@ -9031,7 +9031,7 @@ void __cdecl parley_execute_transaction(iptr offer)
   iptr civ2;
   
   if (offer != 0) {
-    dbg_logf((iptr)&str_start_executeparleytransaction_message_d,net_send_sequence);
+    dbg_logf((const char *)&str_start_executeparleytransaction_message_d,net_send_sequence);
     civ = *(iptr *)(offer + 0x14);
     civ2 = *(iptr *)(offer + 0x18);
     first_items = (i32 *)(offer + 0x20);
@@ -9160,7 +9160,7 @@ void __cdecl parley_execute_transaction(iptr offer)
     if ((*(int *)(((i8 *)&civ_unit_counts_block.civ_unit_counts) + civ * 4) == 0) && (civs[civ].num_cities == 0)) {
       civ_check_destroyed(civ,civ2);
     }
-    dbg_logf((iptr)&str_end_executeparleytransaction_message_d,net_send_sequence);
+    dbg_logf((const char *)&str_end_executeparleytransaction_message_d,net_send_sequence);
   }
   return;
 }
@@ -9199,8 +9199,8 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
   net_batch_begin();
   for (i = 0; i < map.area; i++) {
     tile = (iptr)(tile_at(x2,y2));
-    recv_known = (byte *)known_at(x2,y2,receiver);
-    giver_known = (byte *)known_at(x2,y2,civ);
+    recv_known = known_at(x2,y2,receiver);
+    giver_known = known_at(x2,y2,civ);
     if ((giver_mask & *(byte *)(tile + 4)) != 0) {
       if ((recv_mask & *(byte *)(tile + 4)) == 0) {
         known_set(x2,y2,0,receiver,0,1);
@@ -9219,14 +9219,14 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
         redraw_flag = 1;
         set_flag = 0;
         target_civ = receiver;
-        recv_known = (byte *)known_at(x2,y2,receiver);
+        recv_known = known_at(x2,y2,receiver);
         known_set(x2,y2,*recv_known & 0xffffff7f | (uint)known_bits,target_civ,set_flag,redraw_flag);
         redraw_flag = 1;
         set_flag = 1;
         x = receiver;
         tile3 = (iptr)(tile_at(x2,y2));
         giver_bits = *(byte *)(tile3 + 1);
-        recv_known = (byte *)known_at(x2,y2,civ);
+        recv_known = known_at(x2,y2,civ);
         known_set(x2,y2,(uint)(giver_bits & *recv_known),x,set_flag,redraw_flag);
       }
     }
@@ -9245,8 +9245,8 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
         y = (int)(tile_at((int)units[unit].x,(int)units[unit].y));
         if (((recv_mask & *(byte *)(y + 4)) == 0) || ((giver_mask & *(byte *)(y + 4)) == 0)) {
           for (i = 0; i < 0x15; i++) {
-            x = map_wrap_x((int)(char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x2);
-            y = (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y2;
+            x = map_wrap_x((int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x2);
+            y = (int)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y2;
             in_bounds = map_in_bounds(x,y);
             if (in_bounds != 0) {
               tile_set_visible(x,y,recv_mask,1,1);
@@ -9273,8 +9273,8 @@ void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
         y = (int)(tile_at((int)cities[city].x,(int)cities[city].y));
         if (((recv_mask & *(byte *)(y + 4)) == 0) || ((giver_mask & *(byte *)(y + 4)) == 0)) {
           for (i = 0; i < 0x15; i++) {
-            x = map_wrap_x((int)(char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x2);
-            y = (int)(char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y2;
+            x = map_wrap_x((int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x2);
+            y = (int)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y2;
             in_bounds = map_in_bounds(x,y);
             if (in_bounds != 0) {
               tile_set_visible(x,y,recv_mask,1,1);
@@ -9413,8 +9413,8 @@ void __cdecl parley_cede_city(uptr city,iptr civ)
   }
   net_batch_begin();
   for (i = 0; i < 0x15; i++) {
-    x2 = map_wrap_x((char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x);
-    y3 = (char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y;
+    x2 = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x);
+    y3 = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y;
     in_bounds = map_in_bounds(x2,y3);
     if (in_bounds != 0) {
       tile_set_radius_civ(x2,y3,civ,1);
@@ -9502,8 +9502,8 @@ redraw_and_notify:
     map_redraw_tile_all_views(x,y);
   }
   for (i = 0; i < 8; i++) {
-    x2 = map_wrap_x((char)(((i8 *)&dir_dx_table_block.dir_dx_table))[i] + x);
-    y2 = (char)(((i8 *)&dir_dy_table_block.dir_dy_table))[i] + y;
+    x2 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[i] + x);
+    y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[i] + y;
     in_bounds2 = map_in_bounds(x2,y2);
     if ((in_bounds2 != 0) &&
        (tile = (int)(tile_at(x2,y2)),
@@ -9622,9 +9622,9 @@ i32 __cdecl parley_find_unit_drop_tile(iptr unit,iptr x,iptr y,iptr civ,int must
      (result = unit_stack_sum(unit,2), 1 < result)) {
     found = 0;
     for (i = 0; i < 0x2d; i++) {
-      wrapped_x = map_wrap_x((char)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x2);
+      wrapped_x = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x2);
       *(i32 *)x = wrapped_x;
-      *(int *)y = (char)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y2;
+      *(int *)y = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y2;
       if ((((((must_move == 0) || (*(int *)x != x2)) || (*(int *)y != y2)) &&
            (result = map_in_bounds(*(iptr *)x,*(iptr *)y), result != 0)) &&
           (((result = tile_city_owner(*(iptr *)x,*(i32 *)y), result == civ ||
@@ -9743,7 +9743,7 @@ net_send_text_args(iptr popup_kind,i32 player_id,int string_count,int number_cou
       write_ptr = payload;
       if (string_count != 0) {
         for (i = 0; i < string_count; i++) {
-          crt_strcpy(write_ptr,((i8 *)&minimap_window_block.text_string_args) + i * 0x104);
+          crt_strcpy((char *)write_ptr,((i8 *)&minimap_window_block.text_string_args) + i * 0x104);
           len = _strlen(((i8 *)&minimap_window_block.text_string_args) + i * 0x104);
           write_ptr = (void *)((int)write_ptr + len + 1);
         }
@@ -9778,7 +9778,7 @@ net_popup_queue_push(i32 popup_kind,i32 string_count,i32 number_count,i32 arg_a,
   entry[5] = arg_b;
   entry[6] = payload_size;
   if (payload_size != 0) {
-    crt_memcpy(entry + 7,(const void *)(payload),payload_size);
+    crt_memcpy(entry + 7,(const void *)payload,payload_size);
   }
   new_head = entry;
   if ((*(i32 * *)&net_popup_queue_head) != (i32 *)0x0) {
@@ -9860,7 +9860,7 @@ void __cdecl net_popup_queue_show_next(void)
     }
     if (entry[2] != 0) {
       for (i = 0; i < entry[2]; i++) {
-        crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + i * 0x104,arg_ptr);
+        crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + i * 0x104,(const char *)arg_ptr);
         len = _strlen(((i8 *)&minimap_window_block.text_string_args) + i * 0x104);
         arg_ptr = (int *)((int)arg_ptr + len + 1);
       }
@@ -9871,117 +9871,117 @@ void __cdecl net_popup_queue_show_next(void)
         arg_ptr++;
       }
     }
-    dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
+    dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
     switch(entry[1]) {
     case 0:
-      popup_game((iptr)&str_retiredie);
+      popup_game((const char *)&str_retiredie);
       break;
     case 1:
-      popup_game((iptr)&str_retireai);
+      popup_game((const char *)&str_retireai);
       break;
     case 2:
-      dlg_game_txt_with_unit((iptr)&str_barbarians_2,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_barbarians_2,entry[4]);
       break;
     case 3:
-      popup_game_with_sprite((iptr)&str_globalwarming_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_globalwarming_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 4:
-      popup_game_with_sprite((iptr)&str_fearwarming_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_fearwarming_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 5:
       historian_report_show();
       break;
     case 6:
-      popup_game_with_sprite((iptr)&str_eaglehaslanded_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_eaglehaslanded_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 7:
-      popup_game_with_sprite((iptr)&str_scenarioends_2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_scenarioends_2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
       break;
     case 8:
-      popup_game_with_sprite((iptr)&str_scenarioend_2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_scenarioend_2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
       break;
     case 9:
       text = civ_leader_title(human_civ[0]);
-      text_set_string_arg(0,text);
-      text = civ_leader_name(human_civ[0]);
-      text_set_string_arg(1,text);
-      popup_game_with_sprite((iptr)&str_planretire_2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
+      text_set_string_arg(0,(const char *)text);
+      text = (iptr)(civ_leader_name(human_civ[0]));
+      text_set_string_arg(1,(const char *)text);
+      popup_game_with_sprite((const char *)&str_planretire_2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
       break;
     case 10:
-      text = civ_leader_name(human_civ[0]);
-      text_set_string_arg(1,text);
-      popup_game_with_sprite((iptr)&str_doretire_2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
+      text = (iptr)(civ_leader_name(human_civ[0]));
+      text_set_string_arg(1,(const char *)text);
+      popup_game_with_sprite((const char *)&str_doretire_2,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
       break;
     case 0xb:
-      popup_game((iptr)&str_launched);
+      popup_game((const char *)&str_launched);
       spaceship_wnd_run(-entry[4]);
       break;
     case 0xc:
-      popup_game((iptr)&str_spacereturns_2);
+      popup_game((const char *)&str_spacereturns_2);
       break;
     case 0xd:
-      popup_game((iptr)&str_spacedestroyed_2);
+      popup_game((const char *)&str_spacedestroyed_2);
       break;
     case 0xe:
       music_play_track(2,1);
-      popup_game_with_sprite((iptr)&str_destroyed_2,(iptr)(((i8 *)&road_sprites_block.civ_portrait_sprites) + entry[4] * 0x3c),0);
+      popup_game_with_sprite((const char *)&str_destroyed_2,(iptr)(((i8 *)&road_sprites_block.civ_portrait_sprites) + entry[4] * 0x3c),0);
       break;
     case 0xf:
       snd_play_effect((-(uint)(entry[5] == 0) & 0x14) + 0x16,1,0,0);
-      dlg_game_txt_with_unit((iptr)&str_caravan_6,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_caravan_6,entry[4]);
       break;
     case 0x10:
       snd_play_effect((-(uint)(entry[5] == 0) & 0x14) + 0x16,1,0,0);
-      dlg_game_txt_with_unit((iptr)&str_foodcaravan_4,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_foodcaravan_4,entry[4]);
       break;
     case 0x11:
-      dlg_game_txt_with_unit_flags((iptr)&str_caravanother_3,entry[4],entry[5]);
+      dlg_game_txt_with_unit_flags((const char *)&str_caravanother_3,entry[4],entry[5]);
       break;
     case 0x12:
-      dialog_load_game_text(&dlg,(iptr)&str_startwonder_2);
+      dialog_load_game_text(&dlg,(const char *)&str_startwonder_2);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
       dlg_show_modal(&dlg,0);
       break;
     case 0x13:
-      dialog_load_game_text(&dlg,(iptr)&str_switchwonder_2);
+      dialog_load_game_text(&dlg,(const char *)&str_switchwonder_2);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
       dlg_show_modal(&dlg,0);
       break;
     case 0x14:
-      dialog_load_game_text(&dlg,(iptr)&str_abandonwonder_2);
+      dialog_load_game_text(&dlg,(const char *)&str_abandonwonder_2);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
       dlg_show_modal(&dlg,0);
       break;
     case 0x15:
-      dlg_game_txt_with_unit((iptr)&str_paradrop_2,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_paradrop_2,entry[4]);
       break;
     case 0x16:
-      popup_game((iptr)&str_schism_2);
+      popup_game((const char *)&str_schism_2);
       break;
     case 0x17:
-      text = popup_game_with_sprite((iptr)&str_canescape,(iptr)&popup_info_icon_sprite,0);
+      text = popup_game_with_sprite((const char *)&str_canescape,(iptr)&popup_info_icon_sprite,0);
       net_send_message(0x77,*(i32 *)
                                (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54),
                          text,0,0,0,0,0,0,0);
       break;
     case 0x18:
-      popup_game_with_city((iptr)&str_escape,entry[4]);
+      popup_game_with_city((const char *)&str_escape,entry[4]);
       break;
     case 0x19:
-      dialog_load_game_text(&dlg,(iptr)&str_capturewonder);
+      dialog_load_game_text(&dlg,(const char *)&str_capturewonder);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x1a:
-      dialog_load_game_text(&dlg,(iptr)&str_lostwonder);
+      dialog_load_game_text(&dlg,(const char *)&str_lostwonder);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&dlg,8);
@@ -9989,115 +9989,115 @@ void __cdecl net_popup_queue_show_next(void)
       break;
     case 0x1b:
       snd_play_effect(5,0,0,0);
-      popup_city_picture_zoom((iptr)&str_citycapture,entry[5],0x46,1,entry[4]);
+      popup_city_picture_zoom((const char *)&str_citycapture,entry[5],0x46,1,entry[4]);
       break;
     case 0x1c:
       snd_play_effect(5,0,0,0);
-      popup_city_picture_zoom((iptr)&str_citywinally,entry[5],0x46,1,entry[4]);
+      popup_city_picture_zoom((const char *)&str_citywinally,entry[5],0x46,1,entry[4]);
       break;
     case 0x1d:
       snd_play_effect(5,0,0,0);
-      popup_city_picture_zoom((iptr)&str_cityloseally,entry[5],0x46,1,entry[4]);
+      popup_city_picture_zoom((const char *)&str_cityloseally,entry[5],0x46,1,entry[4]);
       break;
     case 0x1e:
       snd_play_effect(5,0,0,0);
-      popup_city_picture_zoom((iptr)&str_citycapture2,entry[5],0x46,1,entry[4]);
+      popup_city_picture_zoom((const char *)&str_citycapture2,entry[5],0x46,1,entry[4]);
       break;
     case 0x1f:
-      dlg_game_txt_with_unit((iptr)&str_partisans,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_partisans,entry[4]);
       break;
     case 0x20:
-      dlg_game_txt_with_unit((iptr)&str_promoted,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_promoted,entry[4]);
       break;
     case 0x21:
-      popup_game_with_sprite((iptr)&str_incorruptible_2,(iptr)&government_sprites_block.government_sprite_democracy,0);
+      popup_game_with_sprite((const char *)&str_incorruptible_2,(iptr)&government_sprites_block.government_sprite_democracy,0);
       break;
     case 0x22:
-      dlg_game_txt_with_unit((iptr)&str_deserted_2,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_deserted_2,entry[4]);
       break;
     case 0x23:
-      text = dlg_game_txt_with_unit((iptr)&str_desert_3,entry[5]);
+      text = dlg_game_txt_with_unit((const char *)&str_desert_3,entry[5]);
       net_send_message(0x7b,*(i32 *)
                                (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54),
                          text,0,0,0,0,0,0,0);
       break;
     case 0x24:
-      text = dlg_game_txt_with_unit((iptr)&str_desert2,entry[5]);
+      text = dlg_game_txt_with_unit((const char *)&str_desert2,entry[5]);
       net_send_message(0x7b,*(i32 *)
                                (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + entry[4] * 4) * 0x54),
                          text,0,0,0,0,0,0,0);
       break;
     case 0x25:
-      dlg_game_txt_with_unit((iptr)&str_blewitup_2,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_blewitup_2,entry[4]);
       break;
     case 0x26:
-      popup_game_with_sprite((iptr)&str_bond007_2,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + entry[4] * 0x3c),entry[5]);
+      popup_game_with_sprite((const char *)&str_bond007_2,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + entry[4] * 0x3c),entry[5]);
       break;
     case 0x27:
-      popup_game_with_sprite((iptr)&str_bond_2,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + entry[4] * 0x3c),entry[5]);
+      popup_game_with_sprite((const char *)&str_bond_2,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + entry[4] * 0x3c),entry[5]);
       break;
     case 0x28:
-      popup_game_with_sprite((iptr)&str_bondglory_2,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + entry[4] * 0x3c),entry[5]);
+      popup_game_with_sprite((const char *)&str_bondglory_2,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + entry[4] * 0x3c),entry[5]);
       break;
     case 0x29:
-      popup_game_with_improvement((iptr)&str_useweapons,0x3e,8);
+      popup_game_with_improvement((const char *)&str_useweapons,0x3e,8);
       break;
     case 0x2a:
-      popup_game_with_improvement((iptr)&str_sdi,0x11,8);
+      popup_game_with_improvement((const char *)&str_sdi,0x11,8);
       break;
     case 0x2b:
-      popup_game_with_sprite((iptr)&str_changed,(iptr)(((i8 *)&government_sprites_block.government_sprites) + entry[4] * 0x3c),entry[5]);
+      popup_game_with_sprite((const char *)&str_changed,(iptr)(((i8 *)&government_sprites_block.government_sprites) + entry[4] * 0x3c),entry[5]);
       break;
     case 0x2c:
-      popup_game_with_sprite((iptr)&str_overthrown,(iptr)(((i8 *)&government_sprites_block.government_sprites) + entry[4] * 0x3c),entry[5]);
+      popup_game_with_sprite((const char *)&str_overthrown,(iptr)(((i8 *)&government_sprites_block.government_sprites) + entry[4] * 0x3c),entry[5]);
       break;
     case 0x2d:
-      dlg_game_txt_with_unit((iptr)&str_breakcease_2,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_breakcease_2,entry[4]);
       break;
     case 0x2e:
-      dlg_game_txt_with_unit((iptr)&str_sneak,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_sneak,entry[4]);
       break;
     case 0x2f:
-      dlg_game_txt_with_unit((iptr)&str_missileattack,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_missileattack,entry[4]);
       break;
     case 0x30:
-      dlg_game_txt_with_unit((iptr)&str_pearlharbor,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_pearlharbor,entry[4]);
       break;
     case 0x31:
-      popup_game_with_improvement((iptr)&str_battery2,entry[4],8);
+      popup_game_with_improvement((const char *)&str_battery2,entry[4],8);
       break;
     case 0x32:
-      popup_game_with_improvement((iptr)&str_battery,entry[4],8);
+      popup_game_with_improvement((const char *)&str_battery,entry[4],8);
       break;
     case 0x33:
-      dlg_game_txt_with_unit((iptr)&str_scramble,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_scramble,entry[4]);
       break;
     case 0x34:
-      dlg_game_txt_with_unit((iptr)&str_amphibmotize,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_amphibmotize,entry[4]);
       break;
     case 0x35:
-      popup_game((iptr)&str_multiplelose);
+      popup_game((const char *)&str_multiplelose);
       break;
     case 0x36:
-      popup_game((iptr)&str_multiplewin);
+      popup_game((const char *)&str_multiplewin);
       break;
     case 0x37:
-      dlg_game_txt_with_unit_flags((iptr)&str_ransom,entry[4],0);
+      dlg_game_txt_with_unit_flags((const char *)&str_ransom,entry[4],0);
       break;
     case 0x38:
-      popup_game_with_sprite((iptr)&str_activateally_2,(iptr)((game.advance_known_by[0xf] != '\0') ? ((i8 *)&diplo_popup_portrait_sprite) : ((i8 *)&signal_allied_icon_sprite)),0);
+      popup_game_with_sprite((const char *)&str_activateally_2,(iptr)((game.advance_known_by[0xf] != '\0') ? ((i8 *)&diplo_popup_portrait_sprite) : ((i8 *)&signal_allied_icon_sprite)),0);
       break;
     case 0x39:
-      popup_game_with_sprite((iptr)&str_allyhelps_2,(iptr)((game.advance_known_by[0xf] != '\0') ? ((i8 *)&diplo_popup_portrait_sprite) : ((i8 *)&signal_allied_icon_sprite)),0);
+      popup_game_with_sprite((const char *)&str_allyhelps_2,(iptr)((game.advance_known_by[0xf] != '\0') ? ((i8 *)&diplo_popup_portrait_sprite) : ((i8 *)&signal_allied_icon_sprite)),0);
       break;
     case 0x3a:
-      popup_game((iptr)&str_cancelpeace_2);
+      popup_game((const char *)&str_cancelpeace_2);
       break;
     case 0x3b:
-      popup_game((iptr)&str_allyunderattack);
+      popup_game((const char *)&str_allyunderattack);
       break;
     case 0x3c:
-      popup_game((iptr)&str_allyattacking);
+      popup_game((const char *)&str_allyattacking);
       break;
     case 0x3d:
       civs[human_civ[0]].last_treaty_turn[entry[4]] = game.turn;
@@ -10106,20 +10106,20 @@ void __cdecl net_popup_queue_show_next(void)
         parley_wnd_block.parley_other_civ = -2;
         text_clear();
         text = civ_leader_title(entry[4]);
-        text_append(text);
+        text_append((const char *)text);
         text_append_space();
-        text = civ_leader_name(entry[4]);
-        text_append(text);
+        text = (iptr)(civ_leader_name(entry[4]));
+        text_append((const char *)text);
         text_append_space();
         text_append_label(0x8c);
         text_append_space();
-        text = civ_name_plural(entry[4]);
-        text_append(text);
-        text_set_string_arg(0,(iptr)&map_views_block.text_buffer);
-        text = civ_leader_name(human_civ[0]);
-        text_set_string_arg(1,text);
-        text = civ_name_plural(human_civ[0]);
-        text_set_string_arg(2,text);
+        text = (iptr)(civ_name_plural(entry[4]));
+        text_append((const char *)text);
+        text_set_string_arg(0,(const char *)&map_views_block.text_buffer);
+        text = (iptr)(civ_leader_name(human_civ[0]));
+        text_set_string_arg(1,(const char *)text);
+        text = (iptr)(civ_name_plural(human_civ[0]));
+        text_set_string_arg(2,(const char *)text);
         if (*(char *)&civs[entry[4]].attitude[human_civ[0]] == '\0') {
           attitude_level = 0;
         }
@@ -10127,9 +10127,9 @@ void __cdecl net_popup_queue_show_next(void)
           attitude_level = diplo_attitude_level((uint)civs[entry[4]].attitude[human_civ[0]]);
         }
         text = (iptr)(label_string(attitude_names[attitude_level]));
-        text_set_string_arg(3,text);
-        dlg_pending_idle_callback = ((i8*)(net_popup_idle_autoclose));
-        choice = popup_game_with_sprite((iptr)&str_parleyrequest,(iptr)&popup_info_icon_sprite,0);
+        text_set_string_arg(3,(const char *)text);
+        dlg_pending_idle_callback = ((i8 *)net_popup_idle_autoclose);
+        choice = popup_game_with_sprite((const char *)&str_parleyrequest,(iptr)&popup_info_icon_sprite,0);
         if (net_session_block.net_host_handoff_stage == '\0') {
           if (net_session_block.nm_parley_cancel_count == 0) {
             net_send_message(0x80,*(i32 *)
@@ -10143,16 +10143,16 @@ void __cdecl net_popup_queue_show_next(void)
               net_session_block.net_popup_in_progress_i32 = 0;
               parley_wnd_open((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),text,2);
               eh_state = 0xffffffff;
-              /* inlined unwind funclet 0051399d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+              /* inlined unwind funclet 0051399d */ { dialog_dtor(&dlg); }
               goto done;
             }
           }
           else {
             net_session_block.nm_parley_cancel_count = 0;
-            text = civ_name_plural(entry[4]);
-            text_set_string_arg(0,text);
-            dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
-            popup_game_with_sprite((iptr)&str_parleycancel_4,(iptr)&popup_info_icon_sprite,0);
+            text = (iptr)(civ_name_plural(entry[4]));
+            text_set_string_arg(0,(const char *)text);
+            dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+            popup_game_with_sprite((const char *)&str_parleycancel_4,(iptr)&popup_info_icon_sprite,0);
           }
           parley_wnd_block.parley_other_civ = -1;
           mp_meeting_pending = 0;
@@ -10172,50 +10172,50 @@ void __cdecl net_popup_queue_show_next(void)
       }
       break;
     case 0x3e:
-      dlg_game_txt_with_unit_flags((iptr)&str_upgrade_2,entry[4],(entry[5] == 0) - 1 & 8);
+      dlg_game_txt_with_unit_flags((const char *)&str_upgrade_2,entry[4],(entry[5] == 0) - 1 & 8);
       break;
     case 0x3f:
       if (*(int *)(((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + human_civ[0] * 4) * 0x54) != entry[4])
       {
-        popup_game_with_sprite((iptr)&str_newplayer_2,(iptr)&popup_info_icon_sprite,0);
+        popup_game_with_sprite((const char *)&str_newplayer_2,(iptr)&popup_info_icon_sprite,0);
       }
       break;
     case 0x40:
-      dlg_load_game_section(&dlg,(iptr)&str_newturntimerclient,0x2000000);
+      dlg_load_game_section(&dlg,(const char *)&str_newturntimerclient,0x2000000);
       text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd50)));
-      dialog_add_button((DialogButtonsView *)&dlg,text);
+      dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
       text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd54)));
-      dialog_add_button((DialogButtonsView *)&dlg,text);
+      dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
       dlg_show_modal(&dlg,0x28);
       net_send_message(0x56,0,dlg.result_extra,0,0,0,0,0,0,0);
       break;
     case 0x41:
-      popup_game_with_sprite((iptr)&str_newturntimerno,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_newturntimerno,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x42:
-      popup_game_with_sprite((iptr)&str_newturntimeryes,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_newturntimeryes,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x43:
-      dlg_load_game_section(&dlg,(iptr)&str_pmchangeclient,0x2000000);
+      dlg_load_game_section(&dlg,(const char *)&str_pmchangeclient,0x2000000);
       text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd50)));
-      dialog_add_button((DialogButtonsView *)&dlg,text);
+      dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
       text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd54)));
-      dialog_add_button((DialogButtonsView *)&dlg,text);
+      dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
       dlg_show_modal(&dlg,0);
       net_send_message(0x57,0,dlg.result_extra,0,0,0,0,0,0,0);
       break;
     case 0x44:
-      popup_game_with_sprite((iptr)&str_pmchangeno_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_pmchangeno_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x45:
-      popup_game_with_sprite((iptr)&str_pmchangeyes_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_pmchangeyes_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x46:
       snd_play_effect(0x23,1,0,0);
       city_notify_dialog_ex((iptr)&str_manhattan_2,entry[4],1,(iptr)&caption_close_button_sprite_block.city_notify_sprite);
       break;
     case 0x47:
-      dialog_load_game_text(&dlg,(iptr)&str_built2_2);
+      dialog_load_game_text(&dlg,(const char *)&str_built2_2);
       if (entry[4] < 0) {
         icon_sprite = ((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[5] * 0x3c;
       }
@@ -10227,34 +10227,34 @@ void __cdecl net_popup_queue_show_next(void)
       dlg_show_modal(&dlg,0);
       break;
     case 0x48:
-      popup_game((iptr)&str_movecapital_2);
+      popup_game((const char *)&str_movecapital_2);
       break;
     case 0x49:
-      popup_game((iptr)&str_astronauts_2);
+      popup_game((const char *)&str_astronauts_2);
       break;
     case 0x4a:
-      dialog_load_game_text(&dlg,(iptr)&str_almostwonder_2);
+      dialog_load_game_text(&dlg,(const char *)&str_almostwonder_2);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x4b:
-      dialog_load_game_text(&dlg,(iptr)&str_stillwonder1);
+      dialog_load_game_text(&dlg,(const char *)&str_stillwonder1);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x4c:
-      dialog_load_game_text(&dlg,(iptr)&str_stillwonder2);
+      dialog_load_game_text(&dlg,(const char *)&str_stillwonder2);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&dlg,8);
       dlg_show_modal(&dlg,0);
       break;
     case 0x4d:
-      dialog_load_game_text(&dlg,(iptr)&str_endwonder_4);
+      dialog_load_game_text(&dlg,(const char *)&str_endwonder_4);
       dialog_add_sprite
                 ((DialogOptionList *)&dlg,
                  (iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
@@ -10266,39 +10266,39 @@ void __cdecl net_popup_queue_show_next(void)
       dlg_show_modal(&dlg,0);
       break;
     case 0x4e:
-      dlg_game_txt_with_unit((iptr)&str_barbariansland,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_barbariansland,entry[4]);
       break;
     case 0x4f:
       dialog_init_default(&dlg);
       for (i = 0; i < entry[2]; i++) {
         dialog_add_line
-                  ((DialogAddLineView *)&dlg,(iptr)(((i8 *)&minimap_window_block.text_string_args) + i * 0x104),0xffffffff,
+                  ((DialogAddLineView *)&dlg,(const char *)(((i8 *)&minimap_window_block.text_string_args) + i * 0x104),0xffffffff,
                    0xffffffff,0xffffffff,0);
       }
       dlg_show_modal(&dlg,0);
       break;
     case 0x50:
-      popup_game_with_sprite((iptr)&str_warends,(iptr)&ceasefire_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_warends,(iptr)&ceasefire_icon_sprite,0);
       break;
     case 0x51:
-      dlg_game_txt_with_unit((iptr)&str_militaryaid1,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_militaryaid1,entry[4]);
       break;
     case 0x52:
-      dlg_game_txt_with_unit((iptr)&str_militaryaid2,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_militaryaid2,entry[4]);
       break;
     case 0x53:
-      popup_game_with_sprite((iptr)&str_lostclient_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_lostclient_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x54:
-      popup_game_with_advance((iptr)&str_goldenage_2,0x3c,8);
+      popup_game_with_advance((const char *)&str_goldenage_2,0x3c,8);
       break;
     case 0x55:
       snd_play_effect(0x44,1,0,0);
-      popup_game_with_sprite((iptr)&str_enemyembassy_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_enemyembassy_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x56:
       snd_play_effect(0x44,1,0,0);
-      popup_game_with_sprite((iptr)&str_enemyinvestigate_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_enemyinvestigate_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x57:
       choice = civ_has_advance(entry[4],0x23);
@@ -10308,11 +10308,11 @@ void __cdecl net_popup_queue_show_next(void)
       else {
         snd_play_effect(0x27,1,0,0);
       }
-      popup_game_with_sprite((iptr)&str_steal_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_steal_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x58:
       snd_play_effect(0x44,1,0,0);
-      popup_game_with_sprite((iptr)&str_foiledagain,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_foiledagain,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x59:
       choice = civ_has_advance(entry[5],0x23);
@@ -10322,7 +10322,7 @@ void __cdecl net_popup_queue_show_next(void)
       else {
         snd_play_effect(0x27,1,0,0);
       }
-      popup_game_with_sprite((iptr)&str_sabotageone_2,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),8);
+      popup_game_with_sprite((const char *)&str_sabotageone_2,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + entry[4] * 0x3c),8);
       break;
     case 0x5a:
       choice = civ_has_advance(entry[4],0x23);
@@ -10332,52 +10332,52 @@ void __cdecl net_popup_queue_show_next(void)
       else {
         snd_play_effect(0x27,1,0,0);
       }
-      popup_game((iptr)&str_sabotagetwo_2);
+      popup_game((const char *)&str_sabotagetwo_2);
       break;
     case 0x5b:
       snd_play_effect(0x44,1,0,0);
-      popup_game_with_sprite((iptr)&str_watersupply_2,(iptr)&popup_info_icon_sprite,0);
+      popup_game_with_sprite((const char *)&str_watersupply_2,(iptr)&popup_info_icon_sprite,0);
       break;
     case 0x5c:
       text_clear();
-      text_append((iptr)&str_plantednuke_2);
-      popup_game_with_improvement((iptr)&map_views_block.text_buffer,0x3e,8);
+      text_append((const char *)&str_plantednuke_2);
+      popup_game_with_improvement((const char *)&map_views_block.text_buffer,0x3e,8);
       break;
     case 0x5d:
       text_clear();
-      text_append((iptr)&str_plantednuke2);
-      popup_game_with_improvement((iptr)&map_views_block.text_buffer,0x3e,8);
+      text_append((const char *)&str_plantednuke2);
+      popup_game_with_improvement((const char *)&map_views_block.text_buffer,0x3e,8);
       break;
     case 0x5e:
       snd_play_effect(0x44,1,0,0);
-      popup_game((iptr)&str_civilwar_2);
+      popup_game((const char *)&str_civilwar_2);
       break;
     case 0x5f:
       snd_play_effect(0x5d,0,0,0);
-      dlg_game_txt_with_unit((iptr)&str_upmine,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_upmine,entry[4]);
       break;
     case 0x60:
       snd_play_effect(0x5d,0,0,0);
-      dlg_game_txt_with_unit((iptr)&str_upyours,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_upyours,entry[4]);
       break;
     case 0x61:
       snd_play_effect(0x5d,0,0,0);
-      dlg_game_txt_with_unit((iptr)&str_upyourstoo,entry[4]);
+      dlg_game_txt_with_unit((const char *)&str_upyourstoo,entry[4]);
       break;
     case 0x62:
-      popup_game((iptr)&str_mercdeclare_2);
+      popup_game((const char *)&str_mercdeclare_2);
       break;
     case 99:
-      popup_game_with_advance((iptr)&str_tookciv,entry[4],0);
+      popup_game_with_advance((const char *)&str_tookciv,entry[4],0);
       break;
     case 100:
       if ((parley_wnd_block.parley_wnd_closed == 0) && (entry[4] == parley_wnd_block.parley_other_civ)) {
         parley_reveal_units_prompt_open = 1;
-        dlg_load_game_section(&dlg,(iptr)&str_revealunitorigins,0x2000000);
+        dlg_load_game_section(&dlg,(const char *)&str_revealunitorigins,0x2000000);
         text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdd4)));
-        dialog_add_button((DialogButtonsView *)&dlg,text);
+        dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
         text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdd8)));
-        dialog_add_button((DialogButtonsView *)&dlg,text);
+        dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
         dlg_show_modal(&dlg,0x14);
         if (dlg.result_extra == 1) {
           parley_wnd_block.parley_local_units_revealed = 1;
@@ -10413,11 +10413,11 @@ void __cdecl net_popup_queue_show_next(void)
     case 0x65:
       if ((parley_wnd_block.parley_wnd_closed == 0) && (entry[4] == parley_wnd_block.parley_other_civ)) {
         parley_reveal_city_prompt_open = 1;
-        dlg_load_game_section(&dlg,(iptr)&str_revealcityinfo,0x2000000);
+        dlg_load_game_section(&dlg,(const char *)&str_revealcityinfo,0x2000000);
         text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xddc)));
-        dialog_add_button((DialogButtonsView *)&dlg,text);
+        dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
         text = (iptr)(label_string(*(i32 *)(label_string_ids + 0xdd8)));
-        dialog_add_button((DialogButtonsView *)&dlg,text);
+        dialog_add_button((DialogButtonsView *)&dlg,(const char *)text);
         dlg_show_modal(&dlg,0x14);
         if (dlg.result_extra == 1) {
           parley_wnd_block.parley_local_cities_revealed = 1;
@@ -10451,7 +10451,7 @@ void __cdecl net_popup_queue_show_next(void)
     net_session_block.net_popup_in_progress_i32 = 0;
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0051399d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  /* inlined unwind funclet 0051399d */ { dialog_dtor(&dlg); }
 done:
   return;
 }
@@ -10560,7 +10560,7 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size)
         crt_strcpy(lost_msg_text,str_message_lost_in_enqueuemessage);
         crt_strcat(lost_msg_text,((char *)&str_nm_datagram) + *(int *)(msg + 4) * 0x20);
         crt_strcat(lost_msg_text,str_from_d_size_d_2);
-        dbg_logf_int2((iptr)lost_msg_text,sender,msg_size);
+        dbg_logf_int2((const char *)lost_msg_text,sender,msg_size);
         return 0;
       }
       if (((int)self->normal_head < 400) || (1999 < (int)self->normal_head)) {
@@ -10572,13 +10572,13 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size)
       msg_buf = operator_new(msg_size);
       *(void **)(self->msg_slots + self->normal_tail * 0xc + 4) = msg_buf;
       if (*(int *)(self->msg_slots + self->normal_tail * 0xc + 4) == 0) {
-        dbg_logf_int2((iptr)&str_enqueuemessage_primary_failed_to_allocat,*(i32 *)(msg + 4),*(i32 *)(msg + 8));
+        dbg_logf_int2((const char *)&str_enqueuemessage_primary_failed_to_allocat,*(i32 *)(msg + 4),*(i32 *)(msg + 8));
         return 0;
       }
       if (*(int *)(self->msg_slots + self->normal_tail * 0xc + 4) == 0) {
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_msgqueue_tail_pdata,(iptr)&str_d_ss_franklinton_netmessagequeue_cpp_6,0x136);
       }
-      crt_memcpy((void *)(*(i32 *)(self->msg_slots + self->normal_tail * 0xc + 4)),(const void *)(msg),msg_size);
+      crt_memcpy((void *)(*(i32 *)(self->msg_slots + self->normal_tail * 0xc + 4)),(const void *)msg,msg_size);
       *(int *)(self->msg_slots + self->normal_tail * 0xc) = sender;
       *(uint *)(self->msg_slots + self->normal_tail * 0xc + 8) = msg_size;
       self->normal_tail = (int)(self->normal_tail + 1) % 2000;
@@ -10595,7 +10595,7 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size)
         crt_strcpy(lost_prio_text,str_message_lost_in_alpha_enqueuemessage);
         crt_strcat(lost_prio_text,((char *)&str_nm_datagram) + *(int *)(msg + 4) * 0x20);
         crt_strcat(lost_prio_text,str_from_d_size_d);
-        dbg_logf_int2((iptr)lost_prio_text,sender,msg_size);
+        dbg_logf_int2((const char *)lost_prio_text,sender,msg_size);
         return 0;
       }
       if (((int)self->prio_head < 0) || (399 < (int)self->prio_head)) {
@@ -10608,13 +10608,13 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size)
       *(void **)(self->msg_slots + self->prio_tail * 0xc + 4) = msg_buf;
       if (*(int *)(self->msg_slots + self->prio_tail * 0xc + 4) == 0) {
         msg_copy = msg;
-        dbg_logf_int2((iptr)&str_enqueuemessage_alpha_failed_to_allocate,*(i32 *)(msg + 4),*(i32 *)(msg + 8));
+        dbg_logf_int2((const char *)&str_enqueuemessage_alpha_failed_to_allocate,*(i32 *)(msg + 4),*(i32 *)(msg + 8));
         return 0;
       }
       if (*(int *)(self->msg_slots + self->prio_tail * 0xc + 4) == 0) {
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_msgqueue_alphatail_pdata,(iptr)&str_d_ss_franklinton_netmessagequeue_cpp_3,0x112);
       }
-      crt_memcpy((void *)(*(i32 *)(self->msg_slots + self->prio_tail * 0xc + 4)),(const void *)(msg),msg_size);
+      crt_memcpy((void *)(*(i32 *)(self->msg_slots + self->prio_tail * 0xc + 4)),(const void *)msg,msg_size);
       *(int *)(self->msg_slots + self->prio_tail * 0xc) = sender;
       *(uint *)(self->msg_slots + self->prio_tail * 0xc + 8) = msg_size;
       self->prio_tail = (int)(self->prio_tail + 1) % 400;
@@ -10779,12 +10779,12 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
     leaders[civs[game.player_civ].tribe].leader_name =
          leaders[civs[game.player_civ].tribe].names[((uint)leaders[civs[game.player_civ].tribe].female)];
     result = (i32)(label_string((int)leaders[civs[game.player_civ].tribe].leader_name));
-    crt_strcpy(&civ_names[game.player_civ].leader_name,(const void *)(result));
+    crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),(const char *)((const void *)result));
     if (0 < leaders[civs[game.player_civ].tribe].leader_name) {
       leaders[civs[game.player_civ].tribe].leader_name =
            -leaders[civs[game.player_civ].tribe].leader_name;
     }
-    crt_strcpy(&civ_names[game.player_civ].leader_name,(const void *)(player_info + 0x20));
+    crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),(const char *)((const void *)(player_info + 0x20)));
     if (*(int *)(player_info + 0x1c) != 0) {
       leaders[civs[game.player_civ].tribe].plural = -leaders[civs[game.player_civ].tribe].plural;
       leaders[civs[game.player_civ].tribe].adjective =
@@ -10798,16 +10798,16 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
           title_label_id = (int)leaders[civs[game.player_civ].tribe].titles[title_idx][is_female];
         }
         result = (i32)(label_string(title_label_id));
-        crt_strcpy(&civ_names[game.player_civ].titles[title_idx],(const void *)(result));
+        crt_strcpy((char *)(&civ_names[game.player_civ].titles[title_idx]),(const char *)((const void *)result));
         leaders[civs[game.player_civ].tribe].titles[title_idx][is_female] =
              -leaders[civs[game.player_civ].tribe].titles[title_idx][is_female];
       }
-      crt_strcpy(&civ_names[game.player_civ].tribe_name,(const void *)(player_info + 0x38));
-      crt_strcpy(&civ_names[game.player_civ].adjective,(const void *)(player_info + 0x50));
+      crt_strcpy((char *)(&civ_names[game.player_civ].tribe_name),(const char *)((const void *)(player_info + 0x38)));
+      crt_strcpy((char *)(&civ_names[game.player_civ].adjective),(const char *)((const void *)(player_info + 0x50)));
       if (*(int *)(player_info + 0x68) != 0) {
         for (title_idx = 0; title_idx < 7; title_idx++) {
-          crt_strcpy(&civ_names[game.player_civ].titles[title_idx],
-                       (const void *)(title_idx * 0x18 + player_info + 0x6c));
+          crt_strcpy((char *)(&civ_names[game.player_civ].titles[title_idx]),
+                       (const char *)(title_idx * 0x18 + player_info + 0x6c));
         }
       }
     }
@@ -10824,7 +10824,7 @@ i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
     game.player_civ = (byte)join_civ;
     game.turn_civ = (byte)join_civ;
     human_civ[0] = join_civ;
-    crt_strcpy(&civ_names[((char)(byte)join_civ)].leader_name,(const void *)(player_info + 0x20));
+    crt_strcpy((char *)(&civ_names[((char)(byte)join_civ)].leader_name),(const char *)((const void *)(player_info + 0x20)));
     if (0 < leaders[civs[game.player_civ].tribe].leader_name) {
       leaders[civs[game.player_civ].tribe].leader_name =
            -leaders[civs[game.player_civ].tribe].leader_name;
@@ -11281,7 +11281,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xba4)));
     checkbox_create_fixed
               ((Control *)self->sci_rate_sel,(iptr)anon_parent,0x415,cur_x,cur_y,col_width,
-               label);
+               (const char *)label);
     checkbox_set_checked((Control *)self->sci_rate_sel,chat_wnd_block.chat_remain_anonymous);
     checkbox_enable((CheckboxEnableView *)self->sci_rate_sel);
     checkbox_set_callback((CheckboxCallbackSetView *)self->sci_rate_sel,(iptr)chat_on_send_checkbox);
@@ -11304,7 +11304,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd84)));
     checkbox_create_fixed
               ((Control *)self->init_tax_rate,(iptr)mute_anon_parent,0x430,col_width + cur_x,cur_y,
-               col_width,label);
+               col_width,(const char *)label);
     checkbox_set_checked((Control *)self->init_tax_rate,chat_wnd_block.chat_mute_anonymous);
     checkbox_enable((CheckboxEnableView *)self->init_tax_rate);
     checkbox_set_callback((CheckboxCallbackSetView *)self->init_tax_rate,(iptr)chat_on_send_checkbox);
@@ -11327,7 +11327,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xba8)));
     checkbox_create_fixed
               ((Control *)self->init_lux_rate,(iptr)broadcast_parent,0x416,col_width * 2 + cur_x,
-               cur_y,col_width,label);
+               cur_y,col_width,(const char *)label);
     checkbox_set_checked((Control *)self->init_lux_rate,chat_wnd_block.chat_broadcast_all);
     checkbox_enable((CheckboxEnableView *)self->init_lux_rate);
     checkbox_set_callback((CheckboxCallbackSetView *)self->init_lux_rate,(iptr)chat_on_send_checkbox);
@@ -11343,7 +11343,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     draw_x = left_col_x;
     tmp = cur_y;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd2c)));
-    surface_draw_text((DibSurface *)self,(iptr)left_header_font,label,draw_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)left_header_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       right_header_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -11354,7 +11354,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     header_x = right_col_x - ((self->large_layout == 0) - 1 & 0x17);
     tmp = cur_y;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xd2c)));
-    surface_draw_text((DibSurface *)self,(iptr)right_header_font,label,header_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)right_header_font,(const char *)label,header_x,tmp,text_align);
     cur_x = left_col_x;
     if (self->large_layout == 0) {
       checkbox_indent = 5;
@@ -11394,7 +11394,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         }
         checkbox_create_fixed
                   (*(Control **)(self->parley_checkboxes + civ * 4 + 4),(iptr)mute_parent,
-                   civ + 0x428,cur_x + checkbox_indent,cur_y,0x23,(iptr)&str_empty_167);
+                   civ + 0x428,cur_x + checkbox_indent,cur_y,0x23,(const char *)&str_empty_167);
         checkbox_set_checked
                   (*(Control **)(self->parley_checkboxes + civ * 4 + 4),
                    *(i32 *)(((i8 *)&chat_wnd_block.chat_muted_civs) + civ * 4));
@@ -11420,7 +11420,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         checkbox_create_fixed
                   (*(Control **)(self->parley_checkboxes + civ * 4 - 0x1c),(iptr)send_parent,
                    civ + 0x416,cur_x + checkbox_indent + 0x23,cur_y,
-                   (col_width - 0x23) - checkbox_indent,label);
+                   (col_width - 0x23) - checkbox_indent,(const char *)label);
         checkbox_set_checked
                   (*(Control **)(self->parley_checkboxes + civ * 4 - 0x1c),
                    *(i32 *)(((i8 *)&chat_wnd_block.chat_send_to_civs) + civ * 4));
@@ -11463,11 +11463,11 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     gfx_set_text_color_index(10);
     if (self->large_layout == 0) {
       label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb8c)));
-      max_label_width = font_text_width((GameFont *)((i8 *)&font_size20),label);
+      max_label_width = font_text_width((GameFont *)((i8 *)&font_size20),(const char *)label);
     }
     else {
       label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb8c)));
-      max_label_width = font_text_width((GameFont *)((i8 *)&font_size30),label);
+      max_label_width = font_text_width((GameFont *)((i8 *)&font_size30),(const char *)label);
     }
     title_x = (self->panel_rect + (int)(self->panel_right - self->panel_rect) / 2) - max_label_width / 2;
     tmp = self->panel_top + panel_margin_y;
@@ -11481,21 +11481,21 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     cur_y = tmp;
     cur_x = title_x;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb8c)));
-    surface_draw_text((DibSurface *)self,(iptr)mode_title_font,label,title_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)mode_title_font,(const char *)label,title_x,tmp,text_align);
     if (self->large_layout == 0) {
-      max_label_width = font_text_width((GameFont *)((i8 *)&font_size20),mode_labels[0]);
+      max_label_width = font_text_width((GameFont *)((i8 *)&font_size20),(const char *)mode_labels[0]);
     }
     else {
-      max_label_width = font_text_width((GameFont *)((i8 *)&font_size30),mode_labels[0]);
+      max_label_width = font_text_width((GameFont *)((i8 *)&font_size30),(const char *)mode_labels[0]);
     }
     for (label_idx = 1; label_idx < 5; label_idx++) {
       if (self->large_layout == 0) {
         label_width = font_text_width
-                             ((GameFont *)((i8 *)&font_size20),mode_labels[label_idx]);
+                             ((GameFont *)((i8 *)&font_size20),(const char *)mode_labels[label_idx]);
       }
       else {
         label_width = font_text_width
-                             ((GameFont *)((i8 *)&font_size30),mode_labels[label_idx]);
+                             ((GameFont *)((i8 *)&font_size30),(const char *)mode_labels[label_idx]);
       }
       if (max_label_width < label_width) {
         max_label_width = label_width;
@@ -11580,7 +11580,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_x = side_x;
     cur_y = tmp;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
-    surface_draw_text((DibSurface *)self,(iptr)exch_title_font_l,label,text_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)exch_title_font_l,(const char *)label,text_x,tmp,text_align);
     if (self->large_layout == 0) {
       exch_radio_font_l = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -11657,7 +11657,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_x = side_x;
     cur_y = tmp;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
-    surface_draw_text((DibSurface *)self,(iptr)exch_title_font_r,label,text_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)exch_title_font_r,(const char *)label,text_x,tmp,text_align);
     if (self->large_layout == 0) {
       exch_radio_font_r = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -11724,14 +11724,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     tmp = rect_width((iptr)&self->panel_rect);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if ((is_exchange_side != '\0') || (is_demand_side != '\0')) {
-      str_clear((iptr)&map_views_block.text_buffer);
+      str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
         treaty_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
       }
       else {
         treaty_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
       }
-      text_append_str(treaty_side_title);
+      text_append_str((const char *)treaty_side_title);
       if (self->large_layout == 0) {
         treaty_side_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
       }
@@ -11739,7 +11739,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         treaty_side_font = ((i8 *)&font_size24_bold);
       }
       surface_draw_text
-                ((DibSurface *)self,(iptr)treaty_side_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,5);
+                ((DibSurface *)self,(iptr)treaty_side_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,5);
       if (self->large_layout == 0) {
         treaty_side_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
       }
@@ -11779,7 +11779,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     else {
       treaty_title_font = ((i8 *)&font_size24_bold);
     }
-    surface_draw_text((DibSurface *)self,(iptr)treaty_title_font,treaty_title,cur_x,cur_y,5)
+    surface_draw_text((DibSurface *)self,(iptr)treaty_title_font,(const char *)treaty_title,cur_x,cur_y,5)
     ;
     if (self->large_layout == 0) {
       treaty_radio_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -11915,7 +11915,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     draw_x = cur_x;
     cur_y = tmp;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbdc)));
-    surface_draw_text((DibSurface *)self,(iptr)status_header_font,label,draw_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)status_header_font,(const char *)label,draw_x,tmp,text_align);
     ctrl_rect.bottom += panel_margin_y * -2;
     ctrl_rect.left += panel_margin_x * 2;
     ctrl_rect.right += panel_margin_x * -2;
@@ -11939,26 +11939,26 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         if ((*(byte *)&civs[human_civ[0]].treaties[(self->caption_height)] & 2) == 0) {
           if ((*(byte *)(human_civ[0] * 0x594 + (iptr)((u8 *)&civs + 33) + self->caption_height * 4) & 0x20) == 0) {
             label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbec)));
-            text_append(label);
+            text_append((const char *)label);
           }
           else {
             label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbe8)));
-            text_append(label);
+            text_append((const char *)label);
           }
         }
         else {
           label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbcc)));
-          text_append(label);
+          text_append((const char *)label);
         }
       }
       else {
         label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbe4)));
-        text_append(label);
+        text_append((const char *)label);
       }
     }
     else {
       label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbe0)));
-      text_append(label);
+      text_append((const char *)label);
     }
     if (self->large_layout == 0) {
       status_text_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -11966,7 +11966,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     else {
       status_text_font = ((i8 *)&font_size24_bold);
     }
-    surface_draw_text((DibSurface *)self,(iptr)status_text_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,0);
+    surface_draw_text((DibSurface *)self,(iptr)status_text_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,0);
     flag_ptr = self->pane_selection_flags_area + side * 4 - 0x1c;
     flag_ptr[0] = 1;
     flag_ptr[1] = '\0';
@@ -12005,7 +12005,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     draw_x = cur_x;
     cur_y = tmp;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xbf0)));
-    surface_draw_text((DibSurface *)self,(iptr)gift_title_font,label,draw_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)gift_title_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       gift_radio_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -12083,14 +12083,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     tmp = rect_width((iptr)&self->panel_rect);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (is_exchange_side != '\0') {
-      str_clear((iptr)&map_views_block.text_buffer);
+      str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
         tech_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
       }
       else {
         tech_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
       }
-      text_append_str(tech_side_title);
+      text_append_str((const char *)tech_side_title);
       if (self->large_layout == 0) {
         tech_side_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
       }
@@ -12098,7 +12098,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         tech_side_font = ((i8 *)&font_size24_bold);
       }
       surface_draw_text
-                ((DibSurface *)self,(iptr)tech_side_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,5);
+                ((DibSurface *)self,(iptr)tech_side_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,5);
       if (self->large_layout == 0) {
         tech_side_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
       }
@@ -12131,7 +12131,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     draw_x = cur_x;
     cur_y = tmp;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc08)));
-    surface_draw_text((DibSurface *)self,(iptr)tech_header_font,label,draw_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)tech_header_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       tmp = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
       ctrl_rect.top += tmp;
@@ -12172,14 +12172,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     block_height = panel_margin_y * 2 + gold_line_height * 4 + gold_title_height;
     cur_y = self->panel_top + (int)((self->show_turn_timer - self->panel_top) - block_height) / 2;
     if (is_exchange_side != '\0') {
-      str_clear((iptr)&map_views_block.text_buffer);
+      str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
         gold_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
       }
       else {
         gold_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
       }
-      text_append_str(gold_side_title);
+      text_append_str((const char *)gold_side_title);
       if (self->large_layout == 0) {
         gold_side_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
       }
@@ -12187,7 +12187,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         gold_side_font = ((i8 *)&font_size24_bold);
       }
       surface_draw_text
-                ((DibSurface *)self,(iptr)gold_side_font,(iptr)&map_views_block.text_buffer,cur_x,
+                ((DibSurface *)self,(iptr)gold_side_font,(const char *)&map_views_block.text_buffer,cur_x,
                  self->panel_top + panel_margin_y,5);
     }
     SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
@@ -12204,19 +12204,19 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       gold_header_height = font_cached_height((GameFont *)((i8 *)&font_size24_bold));
     }
     cur_y = cur_y + panel_margin_y + gold_header_height / 2;
-    str_clear((iptr)&map_views_block.text_buffer);
+    str_clear((char *)&map_views_block.text_buffer);
     if (is_demand_side == '\0') {
       label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc18)));
-      text_append_str(label);
+      text_append_str((const char *)label);
       text_append_space();
       text_append_int(civs[human_civ[0]].gold);
       text_append_space();
       label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc1c)));
-      text_append_str(label);
+      text_append_str((const char *)label);
     }
     else {
       label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc14)));
-      text_append_str(label);
+      text_append_str((const char *)label);
     }
     if (self->large_layout == 0) {
       gold_header_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -12224,7 +12224,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     else {
       gold_header_font = ((i8 *)&font_size24_bold);
     }
-    surface_draw_text((DibSurface *)self,(iptr)gold_header_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,0);
+    surface_draw_text((DibSurface *)self,(iptr)gold_header_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,0);
     ctrl_rect.bottom += panel_margin_y * -2;
     ctrl_rect.left += panel_margin_x * 2;
     ctrl_rect.right += panel_margin_x * -2;
@@ -12238,24 +12238,24 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     gfx_target_frame_rect((iptr)&ctrl_rect,10);
     rect_deflate((iptr)&ctrl_rect,1,1);
     surface_fill_rect((DibSurface *)self,(iptr)&ctrl_rect,list_bg_color);
-    str_clear((iptr)&map_views_block.text_buffer);
-    text_append_str((iptr)&str_000000);
+    str_clear((char *)&map_views_block.text_buffer);
+    text_append_str((const char *)&str_000000);
     if (self->large_layout == 0) {
-      gold_edit_text_width = font_text_width((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold),(iptr)&map_views_block.text_buffer);
+      gold_edit_text_width = font_text_width((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold),(const char *)&map_views_block.text_buffer);
     }
     else {
-      gold_edit_text_width = font_text_width((GameFont *)((i8 *)&font_size24_bold),(iptr)&map_views_block.text_buffer);
+      gold_edit_text_width = font_text_width((GameFont *)((i8 *)&font_size24_bold),(const char *)&map_views_block.text_buffer);
     }
     col_width = (gold_edit_text_width * 3) / 2;
-    str_clear((iptr)&map_views_block.text_buffer);
+    str_clear((char *)&map_views_block.text_buffer);
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc20)));
-    text_append_str(label);
+    text_append_str((const char *)label);
     text_append_space();
     if (self->large_layout == 0) {
-      gold_prompt_width = font_text_width((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold),(iptr)&map_views_block.text_buffer);
+      gold_prompt_width = font_text_width((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold),(const char *)&map_views_block.text_buffer);
     }
     else {
-      gold_prompt_width = font_text_width((GameFont *)((i8 *)&font_size24_bold),(iptr)&map_views_block.text_buffer);
+      gold_prompt_width = font_text_width((GameFont *)((i8 *)&font_size24_bold),(const char *)&map_views_block.text_buffer);
     }
     tmp = rect_width((iptr)&ctrl_rect);
     cur_x = (ctrl_rect.left + tmp / 2) - (col_width + gold_prompt_width) / 2;
@@ -12267,7 +12267,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     else {
       gold_prompt_font = ((i8 *)&font_size24_bold);
     }
-    surface_draw_text((DibSurface *)self,(iptr)gold_prompt_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,1);
+    surface_draw_text((DibSurface *)self,(iptr)gold_prompt_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,1);
     new_input = (InputControl *)(operator_new(0x48));
     eh_state = 0xc;
     if (new_input == (InputControl *)0x0) {
@@ -12286,11 +12286,11 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     ui_set_default_font((iptr)gold_edit_font);
     if (self->large_layout == 0) {
-      tmp = font_text_width((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold),(iptr)&map_views_block.text_buffer);
+      tmp = font_text_width((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold),(const char *)&map_views_block.text_buffer);
       cur_x += tmp;
     }
     else {
-      tmp = font_text_width((GameFont *)((i8 *)&font_size24_bold),(iptr)&map_views_block.text_buffer);
+      tmp = font_text_width((GameFont *)((i8 *)&font_size24_bold),(const char *)&map_views_block.text_buffer);
       cur_x += tmp;
     }
     if (self->large_layout == 0) {
@@ -12310,7 +12310,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     }
     edit_create
               (*(EditControl **)(self->rate_values + side * 4 + 0x10),(iptr)gold_edit_parent,
-               side + 0x3f8,(iptr)&ctrl_rect,(iptr)gold_text);
+               side + 0x3f8,(iptr)&ctrl_rect,(const char *)gold_text);
     edit_set_max_len(*(EditMaxLenView **)(self->rate_values + side * 4 + 0x10),6);
     edit_set_change_callback(*(EditChangeSetView **)(self->rate_values + side * 4 + 0x10),(iptr)parley_gold_edit_on_change);
     ctrl_set_focus(*(ControlFocusView **)(self->rate_values + side * 4 + 0x10));
@@ -12336,14 +12336,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     tmp = rect_width((iptr)&self->panel_rect);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (is_exchange_side != '\0') {
-      str_clear((iptr)&map_views_block.text_buffer);
+      str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
         unit_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
       }
       else {
         unit_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
       }
-      text_append_str(unit_side_title);
+      text_append_str((const char *)unit_side_title);
       if (self->large_layout == 0) {
         unit_side_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
       }
@@ -12351,7 +12351,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         unit_side_font = ((i8 *)&font_size24_bold);
       }
       surface_draw_text
-                ((DibSurface *)self,(iptr)unit_side_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,5);
+                ((DibSurface *)self,(iptr)unit_side_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,5);
       if (self->large_layout == 0) {
         unit_side_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
       }
@@ -12385,7 +12385,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       text_align = 0;
       draw_x = cur_x;
       label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc24)));
-      surface_draw_text((DibSurface *)self,(iptr)unit_header_font,label,draw_x,tmp,text_align);
+      surface_draw_text((DibSurface *)self,(iptr)unit_header_font,(const char *)label,draw_x,tmp,text_align);
     }
     if ((is_exchange_side == '\0') && (is_demand_side == '\0')) {
       if (self->large_layout == 0) {
@@ -12449,7 +12449,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       button_create
                 (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),(iptr)reveal_parent,
-                 side + 0x404,(iptr)&btn_rect,reveal_label);
+                 side + 0x404,(iptr)&btn_rect,(const char *)reveal_label);
       button_set_callback
                 (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),
                  (side == 0 ? (iptr)parley_reveal_city_origin_clicked : (iptr)parley_request_city_origin_clicked));
@@ -12477,7 +12477,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       button_create
                 (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),(iptr)hide_parent,
-                 side + 0x406,(iptr)&btn_rect,hide_label);
+                 side + 0x406,(iptr)&btn_rect,(const char *)hide_label);
       button_set_callback
                 (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),
                  (side == 0 ? (iptr)parley_hide_city_origin_clicked : (iptr)parley_request_city_origin_clicked));
@@ -12522,7 +12522,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc28)));
     button_create
               (*(Control **)(self->rate_values + side * 4 + 0x28),(iptr)sort_unit_parent,
-               side + 0x400,(iptr)&btn_rect,label);
+               side + 0x400,(iptr)&btn_rect,(const char *)label);
     button_set_callback
               (*(Control **)(self->rate_values + side * 4 + 0x28),
                (side == 0 ? (iptr)parley_sort_by_unit_left_clicked : (iptr)parley_sort_by_unit_right_clicked));
@@ -12552,7 +12552,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc2c)));
     button_create
               (*(Control **)(self->rate_values + side * 4 + 0x30),(iptr)sort_city_parent,
-               side + 0x402,(iptr)&btn_rect,label);
+               side + 0x402,(iptr)&btn_rect,(const char *)label);
     button_set_callback
               (*(Control **)(self->rate_values + side * 4 + 0x30),
                (side == 0 ? (iptr)parley_sort_by_city_left_clicked : (iptr)parley_sort_by_city_right_clicked));
@@ -12595,7 +12595,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     text_x = side_x;
     cur_y = tmp;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc30)));
-    surface_draw_text((DibSurface *)self,(iptr)proposal_title_font,label,text_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)proposal_title_font,(const char *)label,text_x,tmp,text_align);
     proposal_labels = (i32)(label_string(*(i32 *)(label_string_ids + 0xc34)));
     proposal_label2 = (i32)(label_string(*(i32 *)(label_string_ids + 0xc38)));
     if (self->large_layout == 0) {
@@ -12682,14 +12682,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     cur_x = side_x;
     cur_y = self->panel_top + panel_margin_y;
     if (is_exchange_side != '\0') {
-      str_clear((iptr)&map_views_block.text_buffer);
+      str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
         civlist_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
       }
       else {
         civlist_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
       }
-      text_append_str(civlist_side_title);
+      text_append_str((const char *)civlist_side_title);
       if (self->large_layout == 0) {
         civlist_side_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
       }
@@ -12697,7 +12697,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         civlist_side_font = ((i8 *)&font_size24_bold);
       }
       surface_draw_text
-                ((DibSurface *)self,(iptr)civlist_side_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,5);
+                ((DibSurface *)self,(iptr)civlist_side_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,5);
       if (self->large_layout == 0) {
         civlist_side_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
       }
@@ -12745,7 +12745,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       civlist_header_font = ((i8 *)&font_size24_bold);
     }
     surface_draw_text
-              ((DibSurface *)self,(iptr)civlist_header_font,civlist_titles[civlist_title_idx],cur_x,cur_y,0);
+              ((DibSurface *)self,(iptr)civlist_header_font,(const char *)civlist_titles[civlist_title_idx],cur_x,cur_y,0);
     if (self->large_layout == 0) {
       civlist_box_offset = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
     }
@@ -12781,14 +12781,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     cur_y = self->panel_top + panel_margin_y;
     if (is_exchange_side != '\0') {
       map_title_idx = (uptr)(side != 0);
-      str_clear((iptr)&map_views_block.text_buffer);
+      str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
         map_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
       }
       else {
         map_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
       }
-      text_append_str(map_side_title);
+      text_append_str((const char *)map_side_title);
       if (self->large_layout == 0) {
         map_side_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
       }
@@ -12796,7 +12796,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         map_side_font = ((i8 *)&font_size24_bold);
       }
       surface_draw_text
-                ((DibSurface *)self,(iptr)map_side_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,5);
+                ((DibSurface *)self,(iptr)map_side_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,5);
       if (self->large_layout == 0) {
         map_side_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
       }
@@ -12842,7 +12842,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       map_header_font = ((i8 *)&font_size24_bold);
     }
     surface_draw_text
-              ((DibSurface *)self,(iptr)map_header_font,map_labels[map_title_idx],cur_x,cur_y,0);
+              ((DibSurface *)self,(iptr)map_header_font,(const char *)map_labels[map_title_idx],cur_x,cur_y,0);
     if (self->large_layout == 0) {
       map_box_offset = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
     }
@@ -12923,7 +12923,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     draw_x = cur_x;
     cur_y = tmp;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc5c)));
-    surface_draw_text((DibSurface *)self,(iptr)offer_title_font,label,draw_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)offer_title_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       offer_title_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
     }
@@ -12941,7 +12941,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     draw_x = cur_x;
     cur_y = tmp;
     label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc60)));
-    surface_draw_text((DibSurface *)self,(iptr)offer_header_font,label,draw_x,tmp,text_align);
+    surface_draw_text((DibSurface *)self,(iptr)offer_header_font,(const char *)label,draw_x,tmp,text_align);
     if (self->large_layout == 0) {
       offer_header_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
     }
@@ -13019,14 +13019,14 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     tmp = rect_width((iptr)&self->panel_rect);
     col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (is_exchange_side != '\0') {
-      str_clear((iptr)&map_views_block.text_buffer);
+      str_clear((char *)&map_views_block.text_buffer);
       if (side == 0) {
         city_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc0c)));
       }
       else {
         city_side_title = (iptr)(label_string(*(i32 *)(label_string_ids + 0xc10)));
       }
-      text_append_str(city_side_title);
+      text_append_str((const char *)city_side_title);
       if (self->large_layout == 0) {
         city_side_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
       }
@@ -13034,7 +13034,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         city_side_font = ((i8 *)&font_size24_bold);
       }
       surface_draw_text
-                ((DibSurface *)self,(iptr)city_side_font,(iptr)&map_views_block.text_buffer,cur_x,cur_y,5);
+                ((DibSurface *)self,(iptr)city_side_font,(const char *)&map_views_block.text_buffer,cur_x,cur_y,5);
       if (self->large_layout == 0) {
         city_side_height = font_cached_height((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
       }
@@ -13066,7 +13066,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
         city_header_font = ((i8 *)&font_size24_bold);
       }
       surface_draw_text
-                ((DibSurface *)self,(iptr)city_header_font,city_header_label,cur_x,cur_y,0);
+                ((DibSurface *)self,(iptr)city_header_font,(const char *)city_header_label,cur_x,cur_y,0);
     }
     else {
       city_btn_top = panel_margin_y * 2 + ctrl_rect.top - 1;
@@ -13104,7 +13104,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       button_create
                 (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),(iptr)city_reveal_parent,
-                 side + 0x408,(iptr)&city_btn_rect,city_reveal_label);
+                 side + 0x408,(iptr)&city_btn_rect,(const char *)city_reveal_label);
       button_set_callback
                 (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x24),
                  (side == 0 ? (iptr)parley_reveal_city_info : (iptr)parley_request_city_info));
@@ -13132,7 +13132,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       }
       button_create
                 (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),(iptr)city_hide_parent,
-                 side + 0x40a,(iptr)&city_btn_rect,city_hide_label);
+                 side + 0x40a,(iptr)&city_btn_rect,(const char *)city_hide_label);
       button_set_callback
                 (*(Control **)((u8 *)&self->advance_pane_rects + side * 4 - 0x1c),
                  (side == 0 ? (iptr)parley_hide_city_info : (iptr)parley_request_city_info));
@@ -13176,16 +13176,16 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
     break;
   case 0x12:
     label = civ_get_adjective(self->caption_height);
-    text_set_string_arg_b(0,label);
+    text_set_string_arg_b(0,(const char *)label);
     text_clear();
     text_append_label(0x2e2);
     text_expand_vars((iptr)&map_views_block.text_buffer,(iptr)waiting_text);
     gfx_set_text_color_index(10);
     if (self->large_layout == 0) {
-      waiting_text_width = font_text_width((GameFont *)((i8 *)&font_size20),(iptr)waiting_text);
+      waiting_text_width = font_text_width((GameFont *)((i8 *)&font_size20),(const char *)waiting_text);
     }
     else {
-      waiting_text_width = font_text_width((GameFont *)((i8 *)&font_size30),(iptr)waiting_text);
+      waiting_text_width = font_text_width((GameFont *)((i8 *)&font_size30),(const char *)waiting_text);
     }
     cur_x = (self->panel_rect + (int)(self->panel_right - self->panel_rect) / 2) - waiting_text_width / 2;
     if (self->large_layout == 0) {
@@ -13203,7 +13203,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       waiting_font = ((i8 *)&font_size30);
     }
     surface_draw_text
-              ((DibSurface *)self,(iptr)waiting_font,(iptr)waiting_text,cur_x,cur_y,5);
+              ((DibSurface *)self,(iptr)waiting_font,(const char *)waiting_text,cur_x,cur_y,5);
     control_hide((Control *)self->mode2_button_value);
     ctrl_disable((Control *)self->mode2_button_value);
     ctrl_show_and_redraw((Control *)self->rates_clamped);
@@ -13254,7 +13254,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       desc_parent = self->window_2;
     }
     edit_create_styled
-              ((EditControl *)self->side_text_edit,(iptr)desc_parent,0x426,(iptr)&ctrl_rect,(iptr)&text_section_index_pool_block.parley_description,0x122
+              ((EditControl *)self->side_text_edit,(iptr)desc_parent,0x426,(iptr)&ctrl_rect,(const char *)&text_section_index_pool_block.parley_description,0x122
                ,0);
     edit_set_max_len((EditMaxLenView *)self->side_text_edit,0x2000);
     edit_set_callback((EditCallbackSetView *)self->side_text_edit,(iptr)parley_edit_escape_filter);
@@ -13293,7 +13293,7 @@ void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side)
       review_parent = self->window_2;
     }
     edit_create_styled
-              ((EditControl *)self->side_text_edit,(iptr)review_parent,0x426,(iptr)&ctrl_rect,(iptr)&text_section_index_pool_block.parley_description,0x122
+              ((EditControl *)self->side_text_edit,(iptr)review_parent,0x426,(iptr)&ctrl_rect,(const char *)&text_section_index_pool_block.parley_description,0x122
                ,0);
     edit_set_max_len((EditMaxLenView *)self->side_text_edit,0x2000);
     edit_set_callback((EditCallbackSetView *)self->side_text_edit,(iptr)parley_edit_escape_filter);
@@ -13508,19 +13508,19 @@ void __cdecl parley_on_radio_dblclick(i32 ctrl_id)
 {
   iptr active_child;
   int enabled;
-  iptr parley;
+  ViewWindow *parley;
   
   active_child = wnd_get_active_child();
   if (active_child == 0) {
-    parley = 0;
+    parley = (ViewWindow *)0x0;
   }
   else {
-    parley = active_child - 0x48;
+    parley = (ViewWindow *)(active_child - 0x48);
   }
-  enabled = ctrl_is_enabled(*(ControlEnabledView **)(parley + 0x348));
+  enabled = ctrl_is_enabled(*(ControlEnabledView **)((u8 *)parley + 0x348));
   if ((enabled != 0) ||
-     (enabled = ctrl_is_enabled(*(ControlEnabledView **)(parley + 0x34c)), enabled != 0)) {
-    wnd_activate((Wnd *)(parley + 0x48));
+     (enabled = ctrl_is_enabled(*(ControlEnabledView **)((u8 *)parley + 0x34c)), enabled != 0)) {
+    wnd_activate((Wnd *)parley->window_2);
     parley_on_mode_chosen(ctrl_id);
   }
   return;
@@ -13620,7 +13620,7 @@ check_intel_access:
     intel_report_show(human_civ[0],*(iptr *)(parley + 0x118));
   }
   else {
-    popup_game_with_sprite((iptr)&str_nointel_2,(iptr)&popup_info_icon_sprite,0);
+    popup_game_with_sprite((const char *)&str_nointel_2,(iptr)&popup_info_icon_sprite,0);
   }
   return;
 }
@@ -13640,69 +13640,69 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
   else {
     this2 = (ParleyOfferBuffer *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)(this2->inner_wnd));
+  wnd_activate((Wnd *)this2->inner_wnd);
   switch(this2->parley_kind) {
   case 3:
-    value = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->action_radio_group));
+    value = radiogrp_get_selected(*(RadioGroupGetSelView **)this2->action_radio_group);
     *(i32 *)this2->selected_action = value;
     if (*(int *)this2->selected_action == 0) {
       this2->parley_kind = 6;
-      ctrl_enable(*(Control **)(this2->never_mind_button_2));
+      ctrl_enable(*(Control **)this2->never_mind_button_2);
     }
     else if (*(int *)this2->selected_action == 1) {
       this2->parley_kind = 0xc;
       if (*(int *)this2->proposal_kind != 0) {
         this2->parley_kind = 0xd;
       }
-      ctrl_enable(*(Control **)(this2->never_mind_button_2));
+      ctrl_enable(*(Control **)this2->never_mind_button_2);
     }
     else if (*(int *)this2->selected_action == 2) {
-      if (*(int *)(this2->gift_kind) == 0) {
+      if (*(int *)this2->gift_kind == 0) {
         this2->parley_kind = 7;
       }
-      else if (*(int *)(this2->gift_kind) == 1) {
+      else if (*(int *)this2->gift_kind == 1) {
         this2->parley_kind = 8;
       }
-      else if (*(int *)(this2->gift_kind) == 2) {
+      else if (*(int *)this2->gift_kind == 2) {
         this2->parley_kind = 9;
       }
-      else if (*(int *)(this2->gift_kind) == 3) {
+      else if (*(int *)this2->gift_kind == 3) {
         this2->parley_kind = 10;
       }
       else {
         this2->parley_kind = 0xb;
       }
-      ctrl_enable(*(Control **)(this2->never_mind_button_2));
+      ctrl_enable(*(Control **)this2->never_mind_button_2);
     }
     else if (*(int *)this2->selected_action == 3) {
       this2->parley_kind = 5;
-      ctrl_enable(*(Control **)(this2->never_mind_button_2));
+      ctrl_enable(*(Control **)this2->never_mind_button_2);
     }
     else if (*(int *)this2->selected_action == 4) {
       this2->parley_kind = 0xf;
-      ctrl_enable(*(Control **)(this2->never_mind_button_2));
+      ctrl_enable(*(Control **)this2->never_mind_button_2);
     }
-    *(i32 *)(this2->shown_left_kind) = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
-    *(i32 *)this2->left_kind = *(i32 *)(this2->shown_left_kind);
-    *(i32 *)(this2->shown_right_kind) = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
-    *(i32 *)(this2->right_kind) = *(i32 *)(this2->shown_right_kind);
+    *(i32 *)this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
+    *(i32 *)this2->left_kind = *(i32 *)this2->shown_left_kind;
+    *(i32 *)this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
+    *(i32 *)this2->right_kind = *(i32 *)this2->shown_right_kind;
     parley_add_side_dialog((ViewWindow *)this2,*(i32 *)this2->left_kind,0);
     parley_add_side_dialog
-              ((ViewWindow *)this2,*(i32 *)(this2->right_kind),1);
+              ((ViewWindow *)this2,*(i32 *)this2->right_kind,1);
     break;
   case 5:
-    value = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->barter_give_radio_group));
-    *(i32 *)(this2->barter_give_kind) = value;
-    value = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->action_radio_group));
-    *(i32 *)(this2->barter_want_kind) = value;
+    value = radiogrp_get_selected(*(RadioGroupGetSelView **)this2->barter_give_radio_group);
+    *(i32 *)this2->barter_give_kind = value;
+    value = radiogrp_get_selected(*(RadioGroupGetSelView **)this2->action_radio_group);
+    *(i32 *)this2->barter_want_kind = value;
     this2->parley_kind = 0xe;
-    *(i32 *)(this2->shown_left_kind) = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
-    *(i32 *)this2->left_kind = *(i32 *)(this2->shown_left_kind);
-    *(i32 *)(this2->shown_right_kind) = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
-    *(i32 *)(this2->right_kind) = *(i32 *)(this2->shown_right_kind);
+    *(i32 *)this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
+    *(i32 *)this2->left_kind = *(i32 *)this2->shown_left_kind;
+    *(i32 *)this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
+    *(i32 *)this2->right_kind = *(i32 *)this2->shown_right_kind;
     parley_add_side_dialog((ViewWindow *)this2,*(i32 *)this2->left_kind,0);
     parley_add_side_dialog
-              ((ViewWindow *)this2,*(i32 *)(this2->right_kind),1);
+              ((ViewWindow *)this2,*(i32 *)this2->right_kind,1);
     break;
   case 6:
   case 7:
@@ -13714,15 +13714,15 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
   case 0xd:
   case 0xe:
   case 0xf:
-    if (*(int *)(this2->received_offer) != 0) {
-      operator_delete(*(void **)(this2->received_offer));
+    if (*(int *)this2->received_offer != 0) {
+      operator_delete(*(void **)this2->received_offer);
       this2->proposal_kind[0x18] = '\0';
       this2->proposal_kind[0x19] = '\0';
       this2->proposal_kind[0x1a] = '\0';
       this2->proposal_kind[0x1b] = '\0';
     }
     value = (i32)(parley_send_offer(this2,this2->parley_kind));
-    *(i32 *)(this2->received_offer) = value;
+    *(i32 *)this2->received_offer = value;
     if ((this2->parley_kind == 6) && (this2->treaty_choice == 3)) {
       if ((*(byte *)&civs[human_civ[0]].treaties[(this2->civ_id)] & 8) == 0) {
         if ((*(byte *)&civs[human_civ[0]].treaties[(this2->civ_id)] & 4) == 0) {
@@ -13740,19 +13740,19 @@ void __cdecl parley_on_mode_chosen(i32 ctrl_id)
       parley_add_side_dialog
                 ((ViewWindow *)this2,*(i32 *)this2->left_kind,0);
       parley_add_side_dialog
-                ((ViewWindow *)this2,*(i32 *)(this2->right_kind),1);
+                ((ViewWindow *)this2,*(i32 *)this2->right_kind,1);
     }
-    else if (*(int *)(this2->received_offer) != 0) {
+    else if (*(int *)this2->received_offer != 0) {
       this2->parley_kind = 1;
-      *(i32 *)(this2->shown_left_kind) = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
-      *(i32 *)this2->left_kind = *(i32 *)(this2->shown_left_kind);
-      *(i32 *)(this2->shown_right_kind) = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
-      *(i32 *)(this2->right_kind) = *(i32 *)(this2->shown_right_kind);
+      *(i32 *)this2->shown_left_kind = (((i32 *)&parley_mode_left_kinds))[this2->parley_kind * 2];
+      *(i32 *)this2->left_kind = *(i32 *)this2->shown_left_kind;
+      *(i32 *)this2->shown_right_kind = (((i32 *)&parley_mode_right_kinds))[this2->parley_kind * 2];
+      *(i32 *)this2->right_kind = *(i32 *)this2->shown_right_kind;
       parley_add_side_dialog
                 ((ViewWindow *)this2,*(i32 *)this2->left_kind,0);
       parley_add_side_dialog
-                ((ViewWindow *)this2,*(i32 *)(this2->right_kind),1);
-      ctrl_disable(*(Control **)(this2->never_mind_button_2));
+                ((ViewWindow *)this2,*(i32 *)this2->right_kind,1);
+      ctrl_disable(*(Control **)this2->never_mind_button_2);
     }
   }
   return;
@@ -13825,8 +13825,8 @@ void __cdecl parley_on_accept_offer(void)
   net_send_message(0x83,*(i32 *)
                            (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + parley_wnd_block.parley_other_civ * 4) * 0x54),0,0,0
                      ,0,0,0,0,0);
-  dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
-  popup_game_with_sprite((iptr)&str_parleyaccept2,(iptr)&popup_info_icon_sprite,0);
+  dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+  popup_game_with_sprite((const char *)&str_parleyaccept2,(iptr)&popup_info_icon_sprite,0);
   parley[0x7b].vtable = 3;
   parley_set_mode_sides(parley,1);
   return;
@@ -14066,8 +14066,8 @@ check_stack_result:
       }
       return unit;
     }
-    x = map_wrap_x((int)(char)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + (int)x2);
-    y = (int)(char)(((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + (int)y2;
+    x = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + (int)x2);
+    y = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + (int)y2;
     in_bounds = map_in_bounds(x,y);
     if ((in_bounds != 0) && (y = tile_is_ocean(x,y), y == 0)) {
       near_land = true;
@@ -14252,7 +14252,7 @@ i32 __cdecl mp_window_drag_mouse_hook(void)
 void __cdecl mp_window_drag_begin(void)
 
 {
-  dbg_log((iptr)&str_enter_window_drag);
+  dbg_log((const char *)&str_enter_window_drag);
   mp_window_drag_active = 1;
   mp_window_drag_start_ticks = timer_ticks();
   mp_window_drag_flag_i32 = 0;
@@ -14271,7 +14271,7 @@ void __cdecl mp_window_drag_begin(void)
 void __cdecl mp_window_drag_end(void)
 
 {
-  dbg_log((iptr)&str_exit_window_drag);
+  dbg_log((const char *)&str_exit_window_drag);
   mp_window_drag_active = 0;
   mp_window_drag_start_ticks = 0;
   mp_window_drag_flag_i32 = 0;
@@ -14389,7 +14389,7 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_pplayerpopup_null,(iptr)&str_d_ss_franklinton_startup_playerbox_cpp,0x34);
     }
     *(i8 **)(((LobbyListExt *)self)->saved_button_labels) = dialog_button_labels[0];
-    str_clear((iptr)(self + 1));
+    str_clear((char *)(self + 1));
     str_append_label((iptr)(self + 1),0x28b);
     dialog_button_labels[0] = (i8 *)(self + 1);
     dlg_reset((Dialog *)self->dialog,0x81801);
@@ -14399,25 +14399,25 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
       crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&lobby_ip_sep_str));
       crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address));
     }
-    dialog_set_title((DialogWindowView *)self->dialog,(iptr)&map_views_block.text_buffer);
+    dialog_set_title((DialogWindowView *)self->dialog,(const char *)&map_views_block.text_buffer);
     text_clear();
     text_append_label(0x120);
-    dialog_add_button((DialogButtonsView *)self->dialog,(iptr)&map_views_block.text_buffer);
+    dialog_add_button((DialogButtonsView *)self->dialog,(const char *)&map_views_block.text_buffer);
     lobby_add_waiting_entry(self);
     dialog_set_listbox((DialogTextView *)self->dialog,7,0x1b7,0);
     dialog_set_default_choice((DialogOptionList *)self->dialog,self->next_id - 1);
     dialog_render((Dialog *)self->dialog);
     wnd_set_modal_idle_callback((ModalMenuWindow *)(*(int *)self->dialog + 0x48),(iptr)lobby_dialog_idle);
     if (net_session_block.net_lobby_launch_mode == 2) {
-      dbg_log((iptr)&str_igz_sending_dplsys_connectionsettingsrea);
+      dbg_log((const char *)&str_igz_sending_dplsys_connectionsettingsrea);
       result = XD_LobbySendMessage(1);
       if (result != 0) {
-        dbg_logf((iptr)&str_igz_xd_lobbysendmessage_returned_error_d_2,result);
+        dbg_logf((const char *)&str_igz_xd_lobbysendmessage_returned_error_d_2,result);
       }
-      dbg_log((iptr)&str_igz_sending_dplsys_dplayconnectsucceeded);
+      dbg_log((const char *)&str_igz_sending_dplsys_dplayconnectsucceeded);
       result = XD_LobbySendMessage(3);
       if (result != 0) {
-        dbg_logf((iptr)&str_igz_xd_lobbysendmessage_returned_error_d_3,result);
+        dbg_logf((const char *)&str_igz_xd_lobbysendmessage_returned_error_d_3,result);
       }
     }
     while( true ) {
@@ -14436,7 +14436,7 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
         XD_ServerCloseConnection((ushort)*(i32 *)(((i8 *)&net_session_block.net_player_slots) + result * 0x54));
         ret = lobby_entry_neighbor(self,entry);
         *(i32 *)(self->dialog + 0x220) = ret;
-        lobby_remove_entry(self,(void *)(entry));
+        lobby_remove_entry(self,(void *)entry);
         net_remove_player
                   ((NetSession *)((iptr *)&net_session_block.net_session),*(i32 *)(((i8 *)&net_session_block.net_player_slots) + result * 0x54));
         lobby_add_waiting_entry(self);
@@ -14514,10 +14514,10 @@ i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mo
     net_session_block.net_slot_active_flags[0] = 1;
     net_session_block.net_slot_host_flags[0] = 1;
     if (1 < net_session_block.net_player_count[0]) {
-      crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const void *)(net_session_block.net_connection_title));
-      dlg_pending_idle_callback = ((i8*)(lobby_wait_civs_chosen_idle));
+      crt_strcpy(((i8 *)&minimap_window_block.text_string_args),(const char *)((const void *)net_session_block.net_connection_title));
+      dlg_pending_idle_callback = ((i8 *)lobby_wait_civs_chosen_idle);
       net_session_block.net_wait_start_ticks_i32 = timer_ticks();
-      result = popup_game_sprite_flags((iptr)&str_waitingonjoin,0x2000001,(iptr)&popup_info_icon_sprite,0);
+      result = popup_game_sprite_flags((const char *)&str_waitingonjoin,0x2000001,(iptr)&popup_info_icon_sprite,0);
       if (result == -1) {
         net_send_message(0xb,0xff,0,0,0,0,0,0,0,0);
         XD_StopConnections();
@@ -14664,7 +14664,7 @@ void __thiscall lobby_remove_entry(LobbyList *self,void *entry)
 }
 
 /* 0056ef93 auto */
-uint * __thiscall lobby_add_player_entry(LobbyList *self,iptr name2,uint entry_id)
+uint * __thiscall lobby_add_player_entry(LobbyList *self,const char *name2,uint entry_id)
 
 {
   int *count_ptr;
@@ -14694,13 +14694,13 @@ uint * __thiscall lobby_add_player_entry(LobbyList *self,iptr name2,uint entry_i
   name_len = _strlen((char *)name2);
   name_copy = operator_new(name_len + 1);
   entry[2] = (uint)name_copy;
-  crt_strcpy((void *)(entry[2]),(const void *)(name2));
+  crt_strcpy((char *)((void *)entry[2]),(const char *)((const void *)name2));
   if (*(char *)name2 == '\0') {
     *entry = *entry | 1;
   }
   entry[1] = entry_id;
   entry[3] = 0;
-  width = font_text_width(*(GameFont **)(self->dialog + 8),entry[2]);
+  width = font_text_width(*(GameFont **)(self->dialog + 8),(const char *)entry[2]);
   max_width = dialog_option_icon_width((DialogCore *)self->dialog);
   width = width + max_width + *(int *)(self->dialog + 0xac) + 5;
   max_width = *(int *)(self->dialog + 0x118);
@@ -14737,7 +14737,7 @@ void __cdecl lobby_refresh_player_list(void)
             net_session_block.net_lobby_list->next_id++;
           }
           lobby_add_player_entry
-                    (net_session_block.net_lobby_list,(iptr)(((i8 *)&net_session_block.net_slot_player_names) + slot * 0x54),
+                    (net_session_block.net_lobby_list,(const char *)(((i8 *)&net_session_block.net_slot_player_names) + slot * 0x54),
                      *(i32 *)(((i8 *)&net_session_block.net_slot_lobby_ids) + slot * 0x54));
         }
       }
@@ -14775,7 +14775,7 @@ void __thiscall lobby_add_waiting_entry(LobbyList *self)
     text_append_label(0x28c);
     entry_id = (*(i32 * *)&net_session_block.net_lobby_list)[1];
     (*(i32 * *)&net_session_block.net_lobby_list)[1]++;
-    lobby_add_player_entry(self,(iptr)&map_views_block.text_buffer,entry_id);
+    lobby_add_player_entry(self,(const char *)&map_views_block.text_buffer,entry_id);
     dialog_set_default_choice
               ((DialogOptionList *)*(*(i32 * *)&net_session_block.net_lobby_list),*(iptr *)((*(i32 * *)&net_session_block.net_lobby_list)[10] + 4));
   }
@@ -15011,18 +15011,18 @@ void __cdecl parley_request_city_info(void)
 
 {
   iptr child;
-  iptr window;
-  int civ_plural;
+  ViewWindow *window;
+  const char *civ_plural;
   
   child = wnd_get_active_child();
   if (child == 0) {
-    window = 0;
+    window = (ViewWindow *)0x0;
   }
   else {
-    window = child - 0x48;
+    window = (ViewWindow *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(window + 0x48));
-  civ_plural = civ_name_plural(human_civ[0]);
+  wnd_activate((Wnd *)window->window_2);
+  civ_plural = (civ_name_plural(human_civ[0]));
   text_set_string_arg(0,civ_plural);
   net_send_text_args(0x65,*(i32 *)
                           (((i8 *)&net_session_block.net_player_slots) +
@@ -15226,7 +15226,7 @@ void __cdecl parley_draw_city_list(int pane)
   int text_offset_x;
   i32 font_height;
   int selected;
-  iptr label;
+  const char *label;
   i32 bg_color2;
   int city;
   int row;
@@ -15349,7 +15349,7 @@ restore_clip_and_finish:
       }
       if (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) == -1) {
         text_clear();
-        label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb78)));
+        label = (label_string(*(i32 *)(label_string_ids + 0xb78)));
         text_append(label);
         field_ptr = this2->pane_selection_flags_area + pane * 4 - 0x1c;
         field_ptr[0] = '\0';
@@ -15363,7 +15363,7 @@ restore_clip_and_finish:
         parley_draw_city_sprite(city,*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row,
                            xLeft + 2,row_y,font_height,selected);
         text_clear();
-        text_append(city * 0x58 + (iptr)((u8 *)&cities + 32));
+        text_append((const char *)(city * 0x58 + (iptr)((u8 *)&cities + 32)));
         text_append_space();
         selected = city_has_improvement(city,1);
         if ((selected == 0) && (sprite_style == 0)) {
@@ -15375,18 +15375,18 @@ restore_clip_and_finish:
           if (*(int *)(pane * 0x2004 +
                        (*(int *)(((PictureWindow *)this2)->parley_pane_rows_base + pane * 4 + 0x28) + row) * 4 +
                        0xc408 + (int)this2) < 2) {
-            label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb70)));
+            label = (label_string(*(i32 *)(label_string_ids + 0xb70)));
             text_append(label);
           }
           else {
-            label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb6c)));
+            label = (label_string(*(i32 *)(label_string_ids + 0xb6c)));
             text_append(label);
           }
         }
         else {
           selected = city_has_improvement(city,1);
           if (selected != 0) {
-            label = (iptr)(label_string(*(i32 *)(label_string_ids + 0xb74)));
+            label = (label_string(*(i32 *)(label_string_ids + 0xb74)));
             text_append(label);
           }
         }
@@ -15394,16 +15394,16 @@ restore_clip_and_finish:
       if (shadow_color2 != text_color2) {
         gfx_set_text_color_index(shadow_color2);
         surface_draw_text
-                  ((DibSurface *)this2,(iptr)font2,(iptr)&map_views_block.text_buffer,xLeft + text_offset_x + 2,
+                  ((DibSurface *)this2,(iptr)font2,(const char *)&map_views_block.text_buffer,xLeft + text_offset_x + 2,
                    row_y + text_offset_y + 1,5);
         gfx_set_text_color_index(text_color2);
         surface_draw_text
-                  ((DibSurface *)this2,(iptr)font2,(iptr)&map_views_block.text_buffer,xLeft + text_offset_x + 1,row_y + text_offset_y,
+                  ((DibSurface *)this2,(iptr)font2,(const char *)&map_views_block.text_buffer,xLeft + text_offset_x + 1,row_y + text_offset_y,
                    5);
       }
       gfx_set_text_color_index(text_color2);
       surface_draw_text
-                ((DibSurface *)this2,(iptr)font2,(iptr)&map_views_block.text_buffer,xLeft + text_offset_x,row_y + text_offset_y,5);
+                ((DibSurface *)this2,(iptr)font2,(const char *)&map_views_block.text_buffer,xLeft + text_offset_x,row_y + text_offset_y,5);
     }
     row++;
   } while( true );
@@ -15583,8 +15583,8 @@ net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
         net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
       }
       if (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_replies) + civ * 0x18) == 0) {
-        dbg_log((iptr)&str_lockmap_connection_to_server_timed_out);
-        popup_game_with_sprite((iptr)&str_serverconnecttime_8,(iptr)&popup_info_icon_sprite,0);
+        dbg_log((const char *)&str_lockmap_connection_to_server_timed_out);
+        popup_game_with_sprite((const char *)&str_serverconnecttime_8,(iptr)&popup_info_icon_sprite,0);
         game_loop_active = 0;
         result = 0;
       }
@@ -15667,8 +15667,8 @@ void __cdecl net_unlock_map(iptr civ,int wait_reply)
         net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
       }
       if (*(int *)(((i8 *)&net_map_lock_slots_block.net_map_lock_slots) + civ * 0x18) == 0) {
-        dbg_log((iptr)&str_unlockmap_connection_to_server_timed_out);
-        popup_game_with_sprite((iptr)&str_serverconnecttime_9,(iptr)&popup_info_icon_sprite,0);
+        dbg_log((const char *)&str_unlockmap_connection_to_server_timed_out);
+        popup_game_with_sprite((const char *)&str_serverconnecttime_9,(iptr)&popup_info_icon_sprite,0);
         game_loop_active = 0;
       }
     }
@@ -15845,7 +15845,7 @@ void __thiscall net_session_dtor(void *self)
   net_session_shutdown(self,1);
   net_reset_error_counts();
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0059adc8 */ { net_msgq_clear((NetMsgQueue *)(*(int *)((iptr)&self) + 0x160d0)); }
+  /* inlined unwind funclet 0059adc8 */ { net_msgq_clear((NetMsgQueue *)(*(int *)&self + 0x160d0)); }
   return;
 }
 
@@ -15971,13 +15971,13 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
       result = 1;
     }
     else {
-      dbg_logf((iptr)&str_connecttonet_xd_activateserver_failed_re,activate_error);
+      dbg_logf((const char *)&str_connecttonet_xd_activateserver_failed_re,activate_error);
       result = 0;
       net_session_block.net_protocol = saved_protocol;
     }
   }
   else {
-    dbg_logf((iptr)&str_connecttonet_xd_initialize_failed_return,init_error);
+    dbg_logf((const char *)&str_connecttonet_xd_initialize_failed_return,init_error);
     result = 0;
     net_session_block.net_protocol = saved_protocol;
   }
@@ -15990,62 +15990,62 @@ i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server)
 void __thiscall net_session_shutdown(void *self,int delay_after)
 
 {
-  dbg_log((iptr)&str_disconnecting_from_network);
+  dbg_log((const char *)&str_disconnecting_from_network);
   if (*(char *)((int)self + 0x1ef) != '\0') {
     delay_after = 0;
   }
   if (*(char *)((int)self + 0x1ec) == '\0') {
     XD_ResetLibrary();
-    dbg_log((iptr)&str_xd_resetlibrary_2);
+    dbg_log((const char *)&str_xd_resetlibrary_2);
   }
   else {
     net_free_game_list(self);
     if (*(char *)((int)self + 0x1ed) != '\0') {
       XD_FlushSendBuffer(60000);
-      dbg_log((iptr)&str_send_buffer_has_flushed);
+      dbg_log((const char *)&str_send_buffer_has_flushed);
       net_msgq_reset((NetMsgQueue *)((int)self + 0x160d0));
       net_popup_queue_clear();
       XD_CloseConnection();
       net_msgq_reset((NetMsgQueue *)((int)self + 0x160d0));
       net_popup_queue_clear();
-      dbg_log((iptr)&str_xd_closeconnection);
+      dbg_log((const char *)&str_xd_closeconnection);
       net_session_close_hook_nop(self);
     }
     switch(*(i32 *)((int)self + 0x1f0)) {
     case 0:
       XD_ShutdownSockets();
-      dbg_log((iptr)&str_xd_shutdownsockets);
+      dbg_log((const char *)&str_xd_shutdownsockets);
       break;
     case 1:
       XD_ShutdownSockets();
-      dbg_log((iptr)&str_xd_shutdownsockets_2);
+      dbg_log((const char *)&str_xd_shutdownsockets_2);
       break;
     case 2:
       XD_ShutdownModem();
-      dbg_log((iptr)&str_xd_shutdownmodem);
+      dbg_log((const char *)&str_xd_shutdownmodem);
       break;
     case 3:
       XD_ShutdownTEN();
-      dbg_log((iptr)&str_xd_shutdownten);
+      dbg_log((const char *)&str_xd_shutdownten);
     }
     net_msgq_reset((NetMsgQueue *)((int)self + 0x160d0));
     net_popup_queue_clear();
     if (0 < *(int *)((int)self + 0x584)) {
-      dbg_logf((iptr)&str_maximum_gnetmgr_poll_call_depth_d,*(iptr *)((int)self + 0x584));
+      dbg_logf((const char *)&str_maximum_gnetmgr_poll_call_depth_d,*(iptr *)((int)self + 0x584));
     }
     if (0 < *(int *)((int)self + 0x58c)) {
-      dbg_logf((iptr)&str_maximum_alpha_message_queue_load_d,*(iptr *)((int)self + 0x58c));
+      dbg_logf((const char *)&str_maximum_alpha_message_queue_load_d,*(iptr *)((int)self + 0x58c));
     }
     if (0 < *(int *)((int)self + 0x588)) {
-      dbg_logf((iptr)&str_maximum_message_queue_load_d,*(iptr *)((int)self + 0x588));
+      dbg_logf((const char *)&str_maximum_message_queue_load_d,*(iptr *)((int)self + 0x588));
     }
     if (*(int *)((int)self + 0x814) != 0) {
-      dbg_logf((iptr)&str_maximum_draw_stack_load_d,*(iptr *)((int)self + 0x814));
+      dbg_logf((const char *)&str_maximum_draw_stack_load_d,*(iptr *)((int)self + 0x814));
     }
     XD_ResetLibrary();
-    dbg_log((iptr)&str_xd_resetlibrary);
+    dbg_log((const char *)&str_xd_resetlibrary);
     if (delay_after != 0) {
-      dbg_log((iptr)&str_disconnection_delay_2_seconds);
+      dbg_log((const char *)&str_disconnection_delay_2_seconds);
       ui_delay_ticks(0x78);
     }
   }
@@ -16158,7 +16158,7 @@ void __thiscall net_add_player(NetSession *self,iptr player_info)
   *(i8 *)((int)self + slot * 0x54 + 0x250) = 0;
   *(i8 *)((int)self + slot * 0x54 + 0x251) = 1;
   *(i32 *)((int)self + slot * 0x54 + 0x254) = 0xffffffff;
-  crt_strcpy((void *)((int)self + slot * 0x54 + 0x228),(const void *)(player_info + 0x34));
+  crt_strcpy((char *)((void *)((int)self + slot * 0x54 + 0x228)),(const char *)((const void *)(player_info + 0x34)));
   *(i32 *)((int)self + slot * 0x54 + 0x248) = 0;
   *(i32 *)((int)self + slot * 0x54 + 0x24c) = 0;
   *(int *)((NetSessionExt *)self)->player_slots = *(int *)((NetSessionExt *)self)->player_slots + 1;
@@ -16220,7 +16220,7 @@ void __cdecl net_on_broadcast_receive(int *msg,ushort size)
   int cmp;
   
   if (size < 0x10) {
-    dbg_log((iptr)&str_broadcastreceivefunc_killed_message_tiny);
+    dbg_log((const char *)&str_broadcastreceivefunc_killed_message_tiny);
   }
   else if (*msg == 0x66606660) {
     if ((msg[1] != 0) ||
@@ -16232,7 +16232,7 @@ void __cdecl net_on_broadcast_receive(int *msg,ushort size)
     }
   }
   else {
-    dbg_log((iptr)&str_broadcastreceivefunc_killed_message_not);
+    dbg_log((const char *)&str_broadcastreceivefunc_killed_message_not);
   }
   return;
 }
@@ -16261,21 +16261,21 @@ void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
       net_last_recv_msg_type = msg[1];
     }
     else {
-      dbg_log((iptr)&str_securereceivefunc_killed_message_not_civ);
+      dbg_log((const char *)&str_securereceivefunc_killed_message_not_civ);
       if (-1 < net_last_recv_msg_type) {
         __ultoa(net_session_block.net_last_recv_callback_size,num_buf,10);
-        dbg_logf_str((iptr)&str_last_callback_size_s,(iptr)num_buf);
+        dbg_logf_str((const char *)&str_last_callback_size_s,(const char *)num_buf);
         __itoa(net_session_block.net_last_queued_send_seq,num_buf,10);
-        dbg_logf_str((iptr)&str_last_legal_sequence_number_s,(iptr)num_buf);
+        dbg_logf_str((const char *)&str_last_legal_sequence_number_s,(const char *)num_buf);
         __itoa(net_last_recv_msg_type,num_buf,10);
-        dbg_logf_str((iptr)&str_last_legal_type_s,(iptr)num_buf);
+        dbg_logf_str((const char *)&str_last_legal_type_s,(const char *)num_buf);
         __ultoa(net_session_block.net_last_recv_msg_size,num_buf,10);
-        dbg_logf_str((iptr)&str_last_legal_netmsg_size_s,(iptr)num_buf);
+        dbg_logf_str((const char *)&str_last_legal_netmsg_size_s,(const char *)num_buf);
       }
       __itoa(net_send_sequence,num_buf,10);
-      dbg_logf_str((iptr)&str_sequence_number_s,(iptr)num_buf);
+      dbg_logf_str((const char *)&str_sequence_number_s,(const char *)num_buf);
       __ultoa(size,num_buf,10);
-      dbg_logf_str((iptr)&str_message_size_s,(iptr)num_buf);
+      dbg_logf_str((const char *)&str_message_size_s,(const char *)num_buf);
       for (offset = 0; (offset < 0x20 && (hex_line[0] = 0, offset <= size));
           offset = offset + 8) {
         for (byte_idx = offset; (byte_idx < offset + 8 && (byte_idx < size));
@@ -16291,22 +16291,22 @@ void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
           crt_strcat(hex_line,num_buf);
           crt_strcat(hex_line,((i8 *)&net_hexdump_space_str));
         }
-        dbg_logf_str((iptr)&str_s_3,(iptr)hex_line);
+        dbg_logf_str((const char *)&str_s_3,(const char *)hex_line);
       }
-      dbg_log((iptr)&str_empty_184);
+      dbg_log((const char *)&str_empty_184);
       net_last_recv_msg_type = -1;
       scan_ptr = msg;
       for (offset = 0; offset < 0x20; offset++) {
         if (*scan_ptr == 0x66606660) {
           header = scan_ptr;
-          dbg_log((iptr)&str_potential_offset_message_found);
+          dbg_log((const char *)&str_potential_offset_message_found);
           __itoa(offset,num_buf,10);
-          dbg_logf_str((iptr)&str_offset_s_bytes,(iptr)num_buf);
-          dbg_logf_str((iptr)&str_type_s,(iptr)(((char *)&str_nm_datagram) + header[1] * 0x20));
+          dbg_logf_str((const char *)&str_offset_s_bytes,(const char *)num_buf);
+          dbg_logf_str((const char *)&str_type_s,(const char *)(((char *)&str_nm_datagram) + header[1] * 0x20));
           __ultoa(header[2],num_buf,10);
-          dbg_logf_str((iptr)&str_size_s_bytes,(iptr)num_buf);
+          dbg_logf_str((const char *)&str_size_s_bytes,(const char *)num_buf);
           __ultoa(header[3],num_buf,10);
-          dbg_logf_str((iptr)&str_sequence_number_s_2,(iptr)num_buf);
+          dbg_logf_str((const char *)&str_sequence_number_s_2,(const char *)num_buf);
           break;
         }
         scan_ptr = (int *)((int)scan_ptr + 1);
@@ -16323,7 +16323,7 @@ void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
 void __cdecl net_on_new_client(i32 client_info,uint conn_id)
 
 {
-  dbg_logf((iptr)&str_newclientreceivefunc_new_client_connecti,conn_id & 0xffff);
+  dbg_logf((const char *)&str_newclientreceivefunc_new_client_connecti,conn_id & 0xffff);
   return;
 }
 
@@ -16331,7 +16331,7 @@ void __cdecl net_on_new_client(i32 client_info,uint conn_id)
 void __cdecl net_on_connected_to_server(short conn_id)
 
 {
-  dbg_logf((iptr)&str_connectedtoserverfunc_new_server_connect,(int)conn_id);
+  dbg_logf((const char *)&str_connectedtoserverfunc_new_server_connect,(int)conn_id);
   if ((-1 < conn_id) && (conn_id < 8)) {
     net_session_block.net_server_conn_id = (int)conn_id;
     net_session_block.net_connected_to_server = 1;
@@ -16344,7 +16344,7 @@ void __cdecl net_on_connected_to_server(short conn_id)
 void __cdecl net_on_connection_lost(ushort player_id)
 
 {
-  dbg_logf((iptr)&str_lostconnectionfunc_connection_to_d_has_s,(uint)player_id);
+  dbg_logf((const char *)&str_lostconnectionfunc_connection_to_d_has_s,(uint)player_id);
   net_session_block.net_lost_conn_total++;
   if (player_id < 7) {
     *(int *)(((i8 *)&net_session_block.net_lost_conn_by_player) + (uint)player_id * 4) = *(int *)(((i8 *)&net_session_block.net_lost_conn_by_player) + (uint)player_id * 4) + 1;
@@ -16359,7 +16359,7 @@ void __cdecl net_on_oversized_message(i32 size)
   char msg_buf[256];
   
   _sprintf(msg_buf,str_oversized_xdaemon_message_ul,size);
-  dbg_log((iptr)msg_buf);
+  dbg_log((const char *)msg_buf);
   return;
 }
 
@@ -16382,14 +16382,14 @@ net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2,
     }
     else {
       payload_size = __msize((void *)payload);
-      packet = (void *)crt_realloc((void *)(payload),payload_size + 0x2c);
+      packet = crt_realloc((void *)payload,payload_size + 0x2c);
       crt_memmove((void *)((int)packet + 0x2c),packet,payload_size);
     }
   }
   else {
     payload_size = payload_len;
     packet = operator_new(payload_len + 0x2c);
-    crt_memcpy((void *)((int)packet + 0x2c),(const void *)(payload),payload_size);
+    crt_memcpy((void *)((int)packet + 0x2c),(const void *)payload,payload_size);
   }
   header.msg_size_2 = payload_size + 0x2c;
   crt_memcpy(packet,&header,0x10);
@@ -16453,7 +16453,7 @@ void __cdecl net_fill_game_info(iptr info)
   bit_masks[6] = 0x3f;
   bit_masks[7] = 0x7f;
   bit_masks[8] = 0xff;
-  crt_strcpy((void *)(info + 0x30),str_ptr_5_4_0f_multiplayer_26_march_99);
+  crt_strcpy((char *)((void *)(info + 0x30)),str_ptr_5_4_0f_multiplayer_26_march_99);
   _memset((void *)info,0,0x20);
   _strncpy((char *)info,((i8 *)&prefs_main_menu_choice_block.prefs_net_ip_address),0x20);
   _memset((void *)(info + 0x70),0,0x20);
@@ -16471,7 +16471,7 @@ void __cdecl net_fill_game_info(iptr info)
   }
   *(i8 *)(info + 0xb5) = *(i8 *)(bit_masks + net_session_block.net_player_count[0]);
   *(i32 *)(info + 0xb8) = civ_saved_cursor_x_block.mp_turn_time_limit_ms;
-  crt_strcpy((void *)(info + 0xbc),((i8 *)&prefs_game_rules_block.scenario_name));
+  crt_strcpy((char *)((void *)(info + 0xbc)),((i8 *)&prefs_game_rules_block.scenario_name));
   *(i16 *)(info + 0x10c) = civ_saved_cursor_x_block.mp_double_moves;
   *(i16 *)(info + 0x10e) = civ_saved_cursor_x_block.mp_double_production;
   *(u16 *)(info + 0x110) = game.game_flags;
@@ -16654,15 +16654,15 @@ i32 __cdecl net_client_turn_loop(void)
   seh_state = 0;
   turn_ok = 1;
   slot_civ = net_session_block.net_slot_civs[0];
-  str = civ_name_plural(net_session_block.net_slot_civs[0]);
-  dbg_logf_str_int((iptr)&str_server_s_d_4,str,slot_civ);
+  str = (iptr)(civ_name_plural(net_session_block.net_slot_civs[0]));
+  dbg_logf_str_int((const char *)&str_server_s_d_4,(const char *)str,slot_civ);
   for (civ = 1; civ < 8; civ++) {
     if (((*(int *)(((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54) != 0) &&
         ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0)) &&
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
       status = civ;
-      str = civ_name_plural(civ);
-      dbg_logf_str_int((iptr)&str_client_s_d_4,str,status);
+      str = (iptr)(civ_name_plural(civ));
+      dbg_logf_str_int((const char *)&str_client_s_d_4,(const char *)str,status);
     }
   }
   net_reset_error_counts();
@@ -16700,8 +16700,8 @@ i32 __cdecl net_client_turn_loop(void)
   resume_civ = turn_resume_civ;
   if ((1 << ((byte)human_civ[0] & 0x1f) & (uint)game.human_players) == 0) {
     net_heartbeat_send(net_session_block.net_slot_civs[0]);
-    dlg_pending_idle_callback = ((i8*)(net_client_hotwait_idle));
-    popup_game_sprite_flags((iptr)&str_clienthotwait_2,0x2000000,(iptr)&popup_info_icon_sprite,0);
+    dlg_pending_idle_callback = ((i8 *)net_client_hotwait_idle);
+    popup_game_sprite_flags((const char *)&str_clienthotwait_2,0x2000000,(iptr)&popup_info_icon_sprite,0);
     resume_civ = turn_resume_civ;
   }
 turn_loop:
@@ -16714,8 +16714,8 @@ turn_loop:
     }
     if (is_first_turn == 0) {
       net_heartbeat_send(net_session_block.net_slot_civs[0]);
-      dlg_pending_idle_callback = ((i8*)(net_client_wait_human_moves_idle));
-      popup_game_with_sprite((iptr)&str_waithumanmoves_2,(iptr)&popup_info_icon_sprite,0);
+      dlg_pending_idle_callback = ((i8 *)net_client_wait_human_moves_idle);
+      popup_game_with_sprite((const char *)&str_waithumanmoves_2,(iptr)&popup_info_icon_sprite,0);
     }
     net_heartbeat_send(net_session_block.net_slot_civs[0]);
     while ((((net_session_block.nm_production_begin_count == 0 && (net_session_block.net_host_handoff_stage == '\0')) && (net_session_block.nm_end_sequence_count == 0)) &&
@@ -16725,7 +16725,7 @@ turn_loop:
       status = net_check_lost_connections();
       if (status != 0) {
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+        /* inlined unwind funclet 005abfdb */ { dialog_dtor(&dialog2); }
         ret = 0;
         goto return_ret;
       }
@@ -16734,13 +16734,13 @@ turn_loop:
       status = net_client_transfer_server();
       if (status == 0) {
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+        /* inlined unwind funclet 005abfdb */ { dialog_dtor(&dialog2); }
         ret = 0;
         goto return_ret;
       }
       if (net_session_block.net_host_flag != '\0') {
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+        /* inlined unwind funclet 005abfdb */ { dialog_dtor(&dialog2); }
         ret = 1;
         goto return_ret;
       }
@@ -16778,15 +16778,15 @@ turn_loop:
         game_turn_start_popups();
         net_send_message(0x8c,0,human_civ[0],0,0,0,0,0,0,0);
         net_heartbeat_send(net_session_block.net_slot_civs[0]);
-        dlg_pending_idle_callback = ((i8*)(net_client_wait_production_idle));
-        popup_game_with_sprite((iptr)&str_waitproduction_3,(iptr)&popup_info_icon_sprite,0);
+        dlg_pending_idle_callback = ((i8 *)net_client_wait_production_idle);
+        popup_game_with_sprite((const char *)&str_waitproduction_3,(iptr)&popup_info_icon_sprite,0);
         while (((net_session_block.nm_ai_movement_count == 0 && (net_session_block.nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
           net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
           net_heartbeat_check(net_session_block.net_slot_civs[0]);
           status = net_check_lost_connections();
           if (status != 0) {
             seh_state = 0xffffffff;
-            /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+            /* inlined unwind funclet 005abfdb */ { dialog_dtor(&dialog2); }
             ret = 0;
             goto return_ret;
           }
@@ -16794,15 +16794,15 @@ turn_loop:
         if ((net_session_block.nm_end_sequence_count == 0) && (game_loop_active != '\0')) {
           net_session_block.nm_ai_movement_count = 0;
           net_heartbeat_send(net_session_block.net_slot_civs[0]);
-          dlg_pending_idle_callback = ((i8*)(net_client_wait_ai_moves_idle));
-          popup_game_with_sprite((iptr)&str_waitaimoves,(iptr)&popup_info_icon_sprite,0);
+          dlg_pending_idle_callback = ((i8 *)net_client_wait_ai_moves_idle);
+          popup_game_with_sprite((const char *)&str_waitaimoves,(iptr)&popup_info_icon_sprite,0);
           while (((net_session_block.nm_human_movement_count == 0 && (net_session_block.nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
             net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
             net_heartbeat_check(net_session_block.net_slot_civs[0]);
             status = net_check_lost_connections();
             if (status != 0) {
               seh_state = 0xffffffff;
-              /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+              /* inlined unwind funclet 005abfdb */ { dialog_dtor(&dialog2); }
               ret = 0;
               goto return_ret;
             }
@@ -16816,13 +16816,13 @@ turn_loop:
             new_casualties = *(int *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4) -
                        *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4);
             if (civ_saved_cursor_x_block.autoplay_active == 0) {
-              dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
+              dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
               str = civ_leader_title(human_civ[0]);
-              text_set_string_arg(0,str);
-              str = civ_leader_name(human_civ[0]);
-              text_set_string_arg(1,str);
+              text_set_string_arg(0,(const char *)str);
+              str = (iptr)(civ_leader_name(human_civ[0]));
+              text_set_string_arg(1,(const char *)str);
               if (new_casualties < 1) {
-                dialog_load_text_noflags(&dialog2,(iptr)&str_game_7,(iptr)&str_ourturntomove_4);
+                dialog_load_text_noflags(&dialog2,(const char *)&str_game_7,(const char *)&str_ourturntomove_4);
                 dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&popup_info_icon_sprite,0,0);
                 dialog_set_image_zoom((DialogWindowView *)&dialog2,0);
                 input_flush_events();
@@ -16834,10 +16834,10 @@ turn_loop:
                      *(i32 *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4);
                 text_set_number_arg(0,new_casualties);
                 if (new_casualties == 1) {
-                  dialog_load_text_noflags(&dialog2,(iptr)&str_game_7,(iptr)&str_casualty_5);
+                  dialog_load_text_noflags(&dialog2,(const char *)&str_game_7,(const char *)&str_casualty_5);
                 }
                 else {
-                  dialog_load_text_noflags(&dialog2,(iptr)&str_game_7,(iptr)&str_casualties_5);
+                  dialog_load_text_noflags(&dialog2,(const char *)&str_game_7,(const char *)&str_casualties_5);
                 }
                 dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&popup_info_icon_sprite,0,0);
                 dialog_set_image_zoom((DialogWindowView *)&dialog2,0);
@@ -16870,15 +16870,15 @@ turn_loop:
         }
         net_send_message(0x8c,0,human_civ[0],0,0,0,0,0,0,0);
         net_heartbeat_send(net_session_block.net_slot_civs[0]);
-        dlg_pending_idle_callback = ((i8*)(net_client_wait_production_idle));
-        popup_game_with_sprite((iptr)&str_waitproduction_2,(iptr)&popup_info_icon_sprite,0);
+        dlg_pending_idle_callback = ((i8 *)net_client_wait_production_idle);
+        popup_game_with_sprite((const char *)&str_waitproduction_2,(iptr)&popup_info_icon_sprite,0);
         while (((net_session_block.nm_ai_movement_count == 0 && (net_session_block.nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
           net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
           net_heartbeat_check(net_session_block.net_slot_civs[0]);
           status = net_check_lost_connections();
           if (status != 0) {
             seh_state = 0xffffffff;
-            /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+            /* inlined unwind funclet 005abfdb */ { dialog_dtor(&dialog2); }
             ret = 0;
             goto return_ret;
           }
@@ -16926,7 +16926,7 @@ turn_loop:
         game_handle_game_over();
       }
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+      /* inlined unwind funclet 005abfdb */ { dialog_dtor(&dialog2); }
       ret = 0;
 return_ret:
       return ret;

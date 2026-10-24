@@ -240,18 +240,18 @@ static const struct {
     int kind;
     const wchar_t *text;
 } about_lines[] = {
-    {A_TITLE, L"" CIV2RE_NAME " v" CIV2RE_VERSION},
+    {A_TITLE, L"" OPENCIV2_NAME " v" OPENCIV2_VERSION},
     {A_DIM, L"Civilization II Multiplayer Gold Edition for 64-bit Windows"},
     {A_GAP, NULL},
     {A_TEXT, L"Windows port by Onur BUYUKCAGLAR"},
     {A_TEXT, L"with Anthropic Claude AI assistance"},
-    {A_LINK, L"" CIV2RE_URL},
+    {A_LINK, L"" OPENCIV2_URL},
     {A_GAP, NULL},
     {A_TEXT, L"Based on Richard Penman's reconstruction of the game's source"},
-    {A_LINK, L"" CIV2RE_UPSTREAM_URL},
+    {A_LINK, L"" OPENCIV2_UPSTREAM_URL},
     {A_GAP, NULL},
     {A_TEXT, L"Icon: \"Icon Civilization II\" by alexielios"},
-    {A_LINK, L"" CIV2RE_ICON_URL},
+    {A_LINK, L"" OPENCIV2_ICON_URL},
 };
 #define N_ABOUT ((int)(sizeof about_lines / sizeof about_lines[0]))
 
@@ -1055,7 +1055,7 @@ void setup_about(void *owner_hwnd)
     w.view = VIEW_ABOUT;
     w.nbuttons = 1;
     w.enter = w.escape = 0;
-    if (!create(&w, L"About " CIV2RE_NAME " v" CIV2RE_VERSION, WS_POPUP | WS_CAPTION | WS_SYSMENU, &old))
+    if (!create(&w, L"About " OPENCIV2_NAME " v" OPENCIV2_VERSION, WS_POPUP | WS_CAPTION | WS_SYSMENU, &old))
         return;
     for (i = 0; i <= N_ABOUT; i++) {
         int link = i < N_ABOUT && about_lines[i].kind == A_LINK;
