@@ -404,7 +404,7 @@ city_style_dialog:
       setup_picwnd_show(((ViewWindow *)((i8 *)&setup_picwnd_block.setup_picwnd)),1,6,8);
       dlg_load_game_section(&dlg,(const char *)str_customcity,0x20001);
       for (style_i = 0; style_i < 4; style_i = style_i + 1) {
-        label_text = label_string(*(i32 *)(label_string_ids + 0x3d8 + style_i * 4));
+        label_text = label_string(label_string_ids[0xf6 + style_i]);
         dialog_add_sprite((DialogOptionList *)(&dlg),style_i * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 360)),style_i,(const char *)label_text);
       }
       dialog_set_default_choice((DialogOptionList *)(&dlg),

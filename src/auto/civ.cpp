@@ -317,7 +317,7 @@ void __cdecl tech_editor_fill_usage_list(void)
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     if ((int)unit_types[unit_type].prerequisite == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!units_header) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x808));
+        label = (iptr)label_string(label_string_ids[0x202]);
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),(const char *)label);
         units_header = true;
       }
@@ -328,7 +328,7 @@ void __cdecl tech_editor_fill_usage_list(void)
   for (advance = 0; advance < 100; advance++) {
     if ((int)advances[advance].preq[0] == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!advances_header) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x80c));
+        label = (iptr)label_string(label_string_ids[0x203]);
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),(const char *)label);
         advances_header = true;
       }
@@ -338,7 +338,7 @@ void __cdecl tech_editor_fill_usage_list(void)
       }
       else {
         name2 = (iptr)label_string(advances[advances[advance].preq[1]].name);
-        conj = (iptr)label_string(*(i32 *)(label_string_ids + 0x1ec));
+        conj = (iptr)label_string(label_string_ids[0x7b]);
         adv_name = (iptr)label_string(advances[advance].name);
         _sprintf(line,str_s_s_s,adv_name,conj,name2);
       }
@@ -346,7 +346,7 @@ void __cdecl tech_editor_fill_usage_list(void)
     }
     else if ((int)advances[advance].preq[1] == *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec)) {
       if (!advances_header) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x80c));
+        label = (iptr)label_string(label_string_ids[0x203]);
         listbox_add_string((ListBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa94),(const char *)label);
         advances_header = true;
       }
@@ -356,7 +356,7 @@ void __cdecl tech_editor_fill_usage_list(void)
       }
       else {
         name2 = (iptr)label_string(advances[advances[advance].preq[0]].name);
-        conj = (iptr)label_string(*(i32 *)(label_string_ids + 0x1ec));
+        conj = (iptr)label_string(label_string_ids[0x7b]);
         adv_name = (iptr)label_string(advances[advance].name);
         _sprintf(line,str_s_s_s_2,adv_name,conj,name2);
       }
@@ -406,13 +406,13 @@ void __cdecl tech_editor_on_rename(void)
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334));
     combo_clear((ComboBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c));
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(label_string_ids[0x1f1]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x334),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(label_string_ids[0x1f1]);
     combo_add_string((ComboBoxAddView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x36c),(const char *)label);
     for (i = 0; i < 100; i++) {
       combo_add_string
@@ -468,7 +468,7 @@ void __cdecl tech_editor_on_edit_icon(void)
   
   save_fn = ((i8 *)sprite_sheet_save_tech_icons);
   flags = 0;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+  title = (iptr)label_string(label_string_ids[0x1f6]);
   sprite_editor_run((iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                            *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field3) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58) * 0xf0 +
                            *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58) * 0x3c),
@@ -556,9 +556,9 @@ void __thiscall tech_editor_create_combo(ViewWindow *self,int slot)
     break;
   case 1:
   case 2:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(label_string_ids[0x1f1]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     for (advance = 0; advance < 100; advance++) {
       label = (iptr)label_string(advances[advance].name);
@@ -566,25 +566,25 @@ void __thiscall tech_editor_create_combo(ViewWindow *self,int slot)
     }
     break;
   case 3:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x810));
+    label = (iptr)label_string(label_string_ids[0x204]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x814));
+    label = (iptr)label_string(label_string_ids[0x205]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x818));
+    label = (iptr)label_string(label_string_ids[0x206]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x81c));
+    label = (iptr)label_string(label_string_ids[0x207]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     break;
   case 4:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x820));
+    label = (iptr)label_string(label_string_ids[0x208]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x824));
+    label = (iptr)label_string(label_string_ids[0x209]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x828));
+    label = (iptr)label_string(label_string_ids[0x20a]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x82c));
+    label = (iptr)label_string(label_string_ids[0x20b]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x830));
+    label = (iptr)label_string(label_string_ids[0x20c]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
   }
   return;
@@ -762,7 +762,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   top = 0;
   left = 0;
   style = 0xd;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x734));
+  title = (iptr)label_string(label_string_ids[0x1cd]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title,style,left,top,width,height,extra_arg1,extra_arg2,extra_arg3);
   for (row = 0; row < 7; row++) {
@@ -798,7 +798,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)tech_editor_on_ok);
@@ -810,7 +810,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     rename_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
+  label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)tech_editor_on_rename);
@@ -822,7 +822,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)tech_editor_on_help);
@@ -834,7 +834,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)tech_editor_on_cancel);
@@ -850,7 +850,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   else {
     icon_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
+  label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)tech_editor_on_edit_icon);
@@ -1566,7 +1566,7 @@ void __cdecl science_advisor_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x54c));
+  text = (iptr)label_string(label_string_ids[0x153]);
   text_append((const char *)text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,cur_y,advisor_window_block.advisor_client_width);
   cur_y += line_height;
@@ -1770,14 +1770,14 @@ void __cdecl science_advisor_show(iptr civ)
   rect_h = rect_height((iptr)button_rect);
   rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)button_rect,299,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
   ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5cc));
+  label = (iptr)label_string(label_string_ids[0x173]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)science_advisor_on_goal_clicked);
@@ -1837,7 +1837,7 @@ void __cdecl civ_score_window_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x55c));
+  text = (iptr)label_string(label_string_ids[0x157]);
   text_append((const char *)text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,header_y,advisor_window_block.advisor_client_width);
   header_y += line_height;
@@ -2265,7 +2265,7 @@ void __cdecl civ_rating_window_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x670));
+  text = (iptr)label_string(label_string_ids[0x19c]);
   text_append((const char *)text);
   text_append_colon();
   text_append_int(rating_percent);
@@ -3576,7 +3576,7 @@ char * __cdecl civ_leader_name(iptr civ)
   int name2;
   
   if (civ < 1) {
-    name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x44));
+    name2 = (iptr)label_string(label_string_ids[0x11]);
   }
   else if (leaders[civs[civ].tribe].leader_name < 0) {
     name2 = civ * 0xf2 + (iptr)((u8 *)&civ_names + 2);
@@ -3615,7 +3615,7 @@ char * __cdecl civ_name_plural(iptr civ)
   int name2;
   
   if (civ < 1) {
-    name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x3c));
+    name2 = (iptr)label_string(label_string_ids[0xf]);
   }
   else if (leaders[civs[civ].tribe].plural < 0) {
     name2 = civ * 0xf2 + (iptr)((u8 *)&civ_names + 26);
@@ -3633,7 +3633,7 @@ int __cdecl civ_adjective(iptr civ)
   int adjective;
   
   if (civ < 1) {
-    adjective = (iptr)label_string(*(i32 *)(label_string_ids + 0x40));
+    adjective = (iptr)label_string(label_string_ids[0x10]);
   }
   else if (leaders[civs[civ].tribe].adjective < 0) {
     adjective = civ * 0xf2 + (iptr)((u8 *)&civ_names + 50);
@@ -5472,19 +5472,19 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       }
       button_count = 0;
       if (mode_state[1] != 0) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x30c));
+        label = (iptr)label_string(label_string_ids[0xc3]);
         dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
         mode_state[button_count + 2] = 0;
         button_count++;
       }
       if (mode_state[1] != 1) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x310));
+        label = (iptr)label_string(label_string_ids[0xc4]);
         dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
         mode_state[button_count + 2] = 1;
         button_count++;
       }
       if (mode_state[1] != 2) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x314));
+        label = (iptr)label_string(label_string_ids[0xc5]);
         dialog_add_button((DialogButtonsView *)&dialog2,(const char *)label);
         mode_state[button_count + 2] = 2;
         button_count++;
@@ -5753,7 +5753,7 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
         dialog_run_modal(&info_dialog,0,ticks - 300);
       }
       known = civ_has_advance(civ,0x26);
-      text_set_label_arg(0,*(i32 *)(label_string_ids + 0xc4 + (uint)(known == 0) * -4));
+      text_set_label_arg(0,label_string_ids[0x31 - (uint)(known == 0)]);
       dialog_load_game_text(&choice_dialog,(const char *)&str_research);
       if (((*((char *)&game.game_options + 1)) & 2) != 0) {
         dialog_set_position((DialogCore *)&choice_dialog,5,0xfffffc19);
@@ -5863,7 +5863,7 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
       adjective = civ_adjective(civ);
       text_set_string_arg_b(0,(const char *)adjective);
       has_philosophy = civ_has_advance(civ,0x26);
-      text_set_label_arg(1,*(i32 *)(label_string_ids + 0xc4 + (uint)(has_philosophy == 0) * -4));
+      text_set_label_arg(1,label_string_ids[0x31 - (uint)(has_philosophy == 0)]);
       text_clear();
       text_append_string_id(advances[advance].name);
       if (advance == 0x59) {
@@ -6076,7 +6076,7 @@ void __cdecl rules_edit_add_section(const char *name2,iptr writer)
       slot = slot + 1) {
   }
   if (slot < 7) {
-    *(iptr *)(((i8 *)&font_size16_bold_block.rules_edit_section_names) + slot * 8) = (iptr)(name2);
+    *(iptr *)(((i8 *)&font_size16_bold_block.rules_edit_section_names) + slot * 8) = (iptr)name2;
     *(iptr *)(((i8 *)&font_size16_bold_block.rules_edit_section_writers) + slot * 8) = writer;
     *(i32 *)(((i8 *)&font_size16_bold_block.rules_edit_next_name) + slot * 8) = 0;
     *(i32 *)(((i8 *)&font_size16_bold_block.rules_edit_next_writer) + slot * 8) = 0;
@@ -7587,7 +7587,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   pos_y = 0;
   pos_x = 0;
   style = 0xd;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x94c));
+  title = (iptr)label_string(label_string_ids[0x253]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title,style,pos_x,pos_y,width,height,reserved_1,reserved_2,reserved_3);
   rect_set_xywh((iptr)rect,self->client_x + 2,self->client_y + 2,self->client_width - 5,
@@ -7620,7 +7620,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)cosmic_editor_ok_clicked);
@@ -7632,7 +7632,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     edit_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8e0));
+  label = (iptr)label_string(label_string_ids[0x238]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)edit_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)cosmic_editor_edit_value);
@@ -7645,7 +7645,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)cosmic_editor_help_clicked);
@@ -7657,7 +7657,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cosmic_editor_cancel_clicked);

@@ -339,7 +339,7 @@ void __thiscall advisor_add_close_button(ViewWindow *self)
   else {
     parent_wnd2 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)&self->bar_height,(iptr)parent_wnd2,100,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)&self->bar_height,(iptr)advisor_on_close_clicked);
@@ -466,7 +466,7 @@ void __cdecl attitude_advisor_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x544));
+  text = (iptr)label_string(label_string_ids[0x151]);
   text_append((const char *)text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,y,advisor_window_block.advisor_client_width);
   y += line_height;
@@ -655,15 +655,15 @@ void __cdecl defense_minister_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  unit = (iptr)label_string(*(i32 *)(label_string_ids + 0x53c));
+  unit = (iptr)label_string(label_string_ids[0x14f]);
   text_append((const char *)unit);
   text_append_colon();
   if (advisor_window_block.advisor_report_param == 0) {
-    unit = (iptr)label_string(*(i32 *)(label_string_ids + 0x560));
+    unit = (iptr)label_string(label_string_ids[0x158]);
     text_append((const char *)unit);
   }
   else {
-    unit = (iptr)label_string(*(i32 *)(label_string_ids + 0x564));
+    unit = (iptr)label_string(label_string_ids[0x159]);
     text_append((const char *)unit);
   }
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,y,advisor_window_block.advisor_client_width);
@@ -961,18 +961,18 @@ void __cdecl defense_minister_show(iptr report_civ)
   rect_h = rect_height((iptr)button_rect);
   rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)button_rect,299,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
   ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x564));
+  label = (iptr)label_string(label_string_ids[0x159]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)defense_minister_on_toggle_view);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x560));
+  label = (iptr)label_string(label_string_ids[0x158]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x66,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(iptr)defense_minister_on_toggle_view);
@@ -1036,7 +1036,7 @@ void __cdecl intel_report_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x540));
+  text = (iptr)label_string(label_string_ids[0x150]);
   text_append((const char *)text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,y2,advisor_window_block.advisor_client_width);
   y2 += line_height;
@@ -1456,14 +1456,14 @@ void __cdecl intel_report_show(iptr report_civ,iptr target_civ)
   rect_h = rect_height((iptr)button_rect);
   rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)button_rect,299,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
   ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x314));
+  label = (iptr)label_string(label_string_ids[0xc5]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)intel_report_on_cities_clicked);
@@ -1515,9 +1515,9 @@ void __cdecl foreign_minister_show(iptr civ)
     while( true ) {
       while( true ) {
         value = int_clamp((uint)game.power_rank[civ],1,7);
-        text_set_label_arg(0,*(i32 *)(label_string_ids + 0x38c + value * 4));
+        text_set_label_arg(0,label_string_ids[0xe3 + value]);
         value = int_clamp((uint)civs[civ].reputation,0,7);
-        text_set_label_arg(1,*(i32 *)(label_string_ids + 0x370 + value * 4));
+        text_set_label_arg(1,label_string_ids[0xdc + value]);
         if (game.multiplayer == '\0') {
           dlg_load_game_section(&dialog2,(const char *)&str_reportforeign,0x2000001);
         }
@@ -1876,7 +1876,7 @@ void __cdecl powergraph_show(void)
   wnd_y = 0x14;
   wnd_x = 0;
   wnd_style = 0xd;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x358));
+  title = (iptr)label_string(label_string_ids[0xd6]);
   frame_wnd_create
             ((FrameWindow *)graph_wnd,(const char *)title,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,wnd_arg6,wnd_arg7,wnd_arg8);
   text_set_surface((iptr)graph_wnd);
@@ -2180,7 +2180,7 @@ void __cdecl top_cities_draw(void)
       text_set_font((iptr)&advisor_font_block.advisor_font);
       text_set_colors(0x25,0x12,2,1);
       text_clear();
-      text = (iptr)label_string(*(i32 *)(label_string_ids + 0x554));
+      text = (iptr)label_string(label_string_ids[0x155]);
       text_append((const char *)text);
       gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,y2,advisor_window_block.advisor_client_width);
       advisor_window_block.advisor_list_top_i32 = y2 + line_height;
@@ -2475,7 +2475,7 @@ void __cdecl demographics_draw(void)
     text_append((const char *)label);
     text_append_space();
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x558));
+  label = (iptr)label_string(label_string_ids[0x156]);
   text_append((const char *)label);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,y2,advisor_window_block.advisor_client_width);
   row_y = y2 + row_height + 10;
@@ -2494,7 +2494,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(0x25,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5d4));
+  label = (iptr)label_string(label_string_ids[0x175]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     value = population[civ2];
@@ -2515,7 +2515,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5d8));
+  label = (iptr)label_string(label_string_ids[0x176]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     value = civ_total_population(civ2);
@@ -2532,7 +2532,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5dc));
+  label = (iptr)label_string(label_string_ids[0x177]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] = income[civ2];
@@ -2552,7 +2552,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5e0));
+  label = (iptr)label_string(label_string_ids[0x178]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] = shields2[civ2];
@@ -2572,7 +2572,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5e4));
+  label = (iptr)label_string(label_string_ids[0x179]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] = land_area[civ2];
@@ -2590,7 +2590,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5e8));
+  label = (iptr)label_string(label_string_ids[0x17a]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] =
@@ -2626,7 +2626,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5ec));
+  label = (iptr)label_string(label_string_ids[0x17b]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] =
@@ -2653,7 +2653,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5f0));
+  label = (iptr)label_string(label_string_ids[0x17c]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] = pollution[civ2];
@@ -2676,7 +2676,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5f4));
+  label = (iptr)label_string(label_string_ids[0x17d]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     value = int_clamp(life_expect[civ2],0x14,99);
@@ -2697,7 +2697,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5f8));
+  label = (iptr)label_string(label_string_ids[0x17e]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] = (food_surplus[civ2] * 0x28) / population[civ2] + 0x14;
@@ -2718,7 +2718,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5fc));
+  label = (iptr)label_string(label_string_ids[0x17f]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] = (civs[civ2].num_military_units * 10) / population[civ2];
@@ -2736,7 +2736,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x600));
+  label = (iptr)label_string(label_string_ids[0x180]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     if (income[civ2] <
@@ -2762,7 +2762,7 @@ void __cdecl demographics_draw(void)
   text_set_colors(label_color,0x12,0xffffffff,0xffffffff);
   value = label_x;
   text_y = row_y;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x604));
+  label = (iptr)label_string(label_string_ids[0x181]);
   gfx_draw_text((const char *)label,value,text_y);
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] = (gnp[civ2] * 10) / population[civ2];
@@ -2851,7 +2851,7 @@ void __cdecl hall_of_fame_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = (iptr)label_string(*(i32 *)(label_string_ids + 0x6e8));
+  text = (iptr)label_string(label_string_ids[0x1ba]);
   text_append((const char *)text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,y,advisor_window_block.advisor_client_width);
   y += line_height;
@@ -3043,14 +3043,14 @@ iptr __cdecl hall_of_fame_show(int highlight)
     rect_h = rect_height((iptr)button_rect);
     rect_offset((iptr)button_rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
     rect_offset((iptr)button_rect,299,0);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+    label = (iptr)label_string(label_string_ids[0x147]);
     button_create
               ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
     button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
     ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
     ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
     rect_offset((iptr)button_rect,0xfffffed5,0);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x6f8));
+    label = (iptr)label_string(label_string_ids[0x1be]);
     button_create
               ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
     button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)hall_of_fame_on_clear_clicked);
@@ -3311,7 +3311,7 @@ void __cdecl credits_draw_scroll(int full_redraw)
   i8 clip_rect[16];
   DibSurface *dead_surface;
   DibSurface *dead_surface2;
-  i32 new_sprite;
+  Sprite *new_sprite;
   Sprite *sprite_mem;
   DibSurface *new_surface;
   DibSurface *surface_mem;
@@ -3431,10 +3431,10 @@ void __cdecl credits_draw_scroll(int full_redraw)
           new_sprite = 0;
         }
         else {
-          new_sprite = (i32)sprite_init(sprite_mem);
+          new_sprite = sprite_init(sprite_mem);
         }
         seh_state = 0xffffffff;
-        *(i32 *)(((i8 *)&advisor_window_block.credits_slot_sprites) + free_slot * 4) = new_sprite;
+        *(i32 *)(((i8 *)&advisor_window_block.credits_slot_sprites) + free_slot * 4) = (i32)new_sprite;
         if (text_width != 0) {
           sprite_grab_from_surface
                     (*(Sprite **)(((i8 *)&advisor_window_block.credits_slot_sprites) + free_slot * 4),(iptr)line_surface,0xfa,0,0,
@@ -3638,10 +3638,10 @@ void __cdecl casualty_timeline_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  unit = (iptr)label_string(*(i32 *)(label_string_ids + 0x53c));
+  unit = (iptr)label_string(label_string_ids[0x14f]);
   text_append((const char *)unit);
   text_append_colon();
-  unit = (iptr)label_string(*(i32 *)(label_string_ids + 0xda0));
+  unit = (iptr)label_string(label_string_ids[0x368]);
   text_append((const char *)unit);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,casualty_window_block.casualty_client_x,y,casualty_window_block.casualty_client_width);
   y += line_height;
@@ -3797,7 +3797,7 @@ void __cdecl casualty_timeline_show(iptr civ)
     client_y = casualty_window_block.casualty_client_y;
     rect_h = rect_height((iptr)button_rect);
     rect_offset((iptr)button_rect,casualty_window_block.casualty_client_x,(client_y - rect_h) + 0x18e);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+    label = (iptr)label_string(label_string_ids[0x147]);
     button_create
               ((Control *)((i8 *)&casualty_window_block.casualty_close_button),(iptr)&casualty_window_block.casualty_parent_wnd,100,(iptr)button_rect,(const char *)label);
     button_set_callback((Control *)((i8 *)&casualty_window_block.casualty_close_button),(iptr)advisor_on_close_clicked);
@@ -4113,7 +4113,7 @@ void __thiscall throneroom_draw_click_prompt(WndBase *self)
   
   text_clear();
   text_append((const char *)&str_empty_71);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x720));
+  label = (iptr)label_string(label_string_ids[0x1c8]);
   text_append((const char *)label);
   text_append((const char *)&str_empty_72);
   gfx_set_text_color_index(0);
@@ -6383,7 +6383,7 @@ void __thiscall destroyed_civs_draw_entry(WndBase *self,iptr entry)
     text_append((const char *)(((i8 *)&destroyed_civ_count_block.destroyed_civ_names) + entry * 0x18));
     text_append_colon();
     text_append_space();
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x71c));
+    label = (iptr)label_string(label_string_ids[0x1c7]);
     text_append((const char *)label);
     text_append_space();
     year = game_turn_to_year((int)*(short *)(((i8 *)&destroyed_civ_count_block.destroyed_civ_turns) + entry * 2));
@@ -6885,7 +6885,7 @@ void __thiscall council_draw_background(DibSurface *self)
   }
   text_clear();
   if (game_language == 1) {
-    str = (iptr)label_string(*(i32 *)(label_string_ids + 0x4ac));
+    str = (iptr)label_string(label_string_ids[0x12b]);
     text_append((const char *)str);
     text_append_space();
     str = civ_get_adjective(((PictureWindow *)self)->council_civ);
@@ -6898,7 +6898,7 @@ void __thiscall council_draw_background(DibSurface *self)
       text_append((const char *)&str_er_2);
     }
     text_append_space();
-    str = (iptr)label_string(*(i32 *)(label_string_ids + 0x4ac));
+    str = (iptr)label_string(label_string_ids[0x12b]);
     text_append((const char *)str);
   }
   offset = surface_get_width(self);
@@ -6937,7 +6937,7 @@ void __thiscall council_create_buttons(DibSurface *self)
   else {
     parent1 = self + 1;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x26c));
+  label = (iptr)label_string(label_string_ids[0x9b]);
   button_create_with_callback
             ((Control *)&((PictureWindow *)self)->advisor_button_0,(iptr)parent1,0,(iptr)&rect,0x21,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_0,(iptr)council_on_advisor_button);
@@ -6948,7 +6948,7 @@ void __thiscall council_create_buttons(DibSurface *self)
   else {
     parent2 = self + 1;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x16c));
+  label = (iptr)label_string(label_string_ids[0x5b]);
   button_create_with_callback
             ((Control *)&((PictureWindow *)self)->advisor_button_1,(iptr)parent2,1,(iptr)&rect,0x21,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_1,(iptr)council_on_advisor_button);
@@ -6959,7 +6959,7 @@ void __thiscall council_create_buttons(DibSurface *self)
   else {
     parent3 = self + 1;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x114));
+  label = (iptr)label_string(label_string_ids[0x45]);
   button_create_with_callback
             ((Control *)&((PictureWindow *)self)->advisor_button_2,(iptr)parent3,2,(iptr)&rect,0x21,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_2,(iptr)council_on_advisor_button);
@@ -6970,7 +6970,7 @@ void __thiscall council_create_buttons(DibSurface *self)
   else {
     parent4 = self + 1;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x6e0));
+  label = (iptr)label_string(label_string_ids[0x1b8]);
   button_create_with_callback
             ((Control *)&((PictureWindow *)self)->advisor_button_3,(iptr)parent4,3,(iptr)&rect,0x21,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_3,(iptr)council_on_advisor_button);
@@ -6981,7 +6981,7 @@ void __thiscall council_create_buttons(DibSurface *self)
   else {
     parent5 = self + 1;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x6e4));
+  label = (iptr)label_string(label_string_ids[0x1b9]);
   button_create_with_callback
             ((Control *)&((PictureWindow *)self)->advisor_button_4,(iptr)parent5,4,(iptr)&rect,0x21,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_4,(iptr)council_on_advisor_button);
@@ -6997,7 +6997,7 @@ void __thiscall council_create_buttons(DibSurface *self)
   else {
     parent6 = self + 1;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create_with_callback
             ((Control *)&((PictureWindow *)self)->council_close_button,(iptr)parent6,0xca,(iptr)&rect,0x21,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->council_close_button,(iptr)council_on_advisor_button);

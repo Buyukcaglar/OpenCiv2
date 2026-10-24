@@ -230,7 +230,9 @@ def ptr_casts(path, any_conversion=False):
                     or not re.match(r'[A-Za-z_(&*0-9]', s[i])):
                 skipped += 1
                 continue
-            lines[ln - 1] = s[:i] + '(%s)(%s)' % (to, s[i:e].rstrip()) + s[i + len(s[i:e].rstrip()):]
+            arg = s[i:e].rstrip()
+            fmt = '(%s)%s' if unary_end(arg, 0) == len(arg) else '(%s)(%s)'
+            lines[ln - 1] = s[:i] + fmt % (to, arg) + s[i + len(arg):]
             done += 1
         open(f, 'w').write('\n'.join(lines))
     print('%d casts added, %d sites left for hand' % (done, skipped))

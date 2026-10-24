@@ -64,12 +64,12 @@ i32 __cdecl mem_free_handle(iptr handle)
 }
 
 /* 0046aad0 auto */
-i32 __cdecl mem_lock_handle(iptr handle)
+void * __cdecl mem_lock_handle(iptr handle)
 
 {
-  i32 ptr;
+  void *ptr;
   
-  ptr = (i32)mem_handle_lock(handle);
+  ptr = mem_handle_lock(handle);
   return ptr;
 }
 
@@ -260,8 +260,8 @@ i32 __cdecl memblock_alloc_checked(iptr block,uint size)
   
   if ((uint)*(ushort *)(block + 0x10) < (size & 0xffff)) {
     uType = 0;
-    lpCaption = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8d0));
-    lpText = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8e8));
+    lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
+    lpText = (LPCSTR)label_string(label_string_ids[0x23a]);
     wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
     MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
     result = 0;
@@ -945,11 +945,11 @@ err_report
           (ErrorContext *self,i32 code,iptr file,iptr line,i32 extra)
 
 {
-  i32 msg;
+  ErrorContext *msg;
   
   err_set_code(self,code);
-  msg = (i32)err_format_message(self,(const char *)&str_fatal_error,(const char *)file,line,extra);
-  err_show_fatal_box(self,msg);
+  msg = err_format_message(self,(const char *)&str_fatal_error,(const char *)file,line,extra);
+  err_show_fatal_box(self,(i32)msg);
   return;
 }
 

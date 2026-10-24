@@ -201,7 +201,7 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
     loaded = surface_load_gif_resource((DibSurface *)surface, 0x1f1, 10, 0xec, (iptr)self + 0x1f8);
     if (loaded != 0) {
         text_clear();
-        label_text = (i32)label_string(*(i32 *)(label_string_ids + 0x3f8));
+        label_text = (i32)label_string(label_string_ids[0xfe]);
         text_append((const char *)label_text);
         SetRect(&rect, 0, 0, 0x34, 0x24);
         OffsetRect(&rect, 1, 1);
@@ -216,7 +216,7 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
         gfx_set_text_color_index(0xc6);
         text_clear();
         if (game_language == 0) {
-            label_text = (i32)label_string(*(i32 *)(label_string_ids + 0x354));
+            label_text = (i32)label_string(label_string_ids[0xd5]);
             text_append((const char *)label_text);
         }
         else if (game_language == 1) {

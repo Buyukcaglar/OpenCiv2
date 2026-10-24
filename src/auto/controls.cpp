@@ -1690,7 +1690,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
   PaletteHandleView *this_00;
   HPALETTE hPal;
   GamePalette *this_01;
-  iptr logpal;
+  GamePalette *logpal;
   HPEN h_01;
   HPEN h_02;
   i32 font_handle;
@@ -1811,8 +1811,8 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
           color_index = button->on_select;
           parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
           this_01 = (GamePalette *)wnd_get_palette(parent_wnd);
-          logpal = (iptr)palette_get_logpalette(this_01);
-          palette_get_entry_rgb(logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+          logpal = palette_get_logpalette(this_01);
+          palette_get_entry_rgb((iptr)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
           bg_pen = CreatePen(0,1,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
           ;
         }

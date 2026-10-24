@@ -2954,7 +2954,7 @@ char * __cdecl save_filter_add_entry(i32 kind,char *buf)
   
   switch(kind) {
   case 0:
-    str_append_label((iptr)(buf),0xee);
+    str_append_label((iptr)buf,0xee);
     crt_strcat((char *)((void *)buf),str_sav);
     len = _strlen(buf);
     next = (buf + len + 1);
@@ -2963,7 +2963,7 @@ char * __cdecl save_filter_add_entry(i32 kind,char *buf)
     next = next + len + 1;
     break;
   case 1:
-    str_append_label((iptr)(buf),0x357);
+    str_append_label((iptr)buf,0x357);
     crt_strcat((char *)((void *)buf),str_hot);
     len = _strlen(buf);
     next = (buf + len + 1);
@@ -2972,7 +2972,7 @@ char * __cdecl save_filter_add_entry(i32 kind,char *buf)
     next = next + len + 1;
     break;
   case 2:
-    str_append_label((iptr)(buf),0x35a);
+    str_append_label((iptr)buf,0x35a);
     crt_strcat((char *)((void *)buf),str_eml);
     len = _strlen(buf);
     next = (buf + len + 1);
@@ -2984,7 +2984,7 @@ char * __cdecl save_filter_add_entry(i32 kind,char *buf)
   case 4:
   case 5:
   case 6:
-    str_append_label((iptr)(buf),0x35d);
+    str_append_label((iptr)buf,0x35d);
     crt_strcat((char *)((void *)buf),str_net);
     len = _strlen(buf);
     next = (buf + len + 1);
@@ -3383,8 +3383,7 @@ void __cdecl game_save_dialog(int is_scenario)
       ext_arg = ((i8 *)&grey_palette_block.save_file_ext_bare);
       filter_arg = ((i8 *)&grey_palette_block.save_file_filter_buf);
       name_arg = file_name_buf + 1;
-      title = label_string(*(i32 *)
-                                  (label_string_ids + 0x680 + (-(uint)(is_scenario == 0) & 0xffffff4f) * 4)
+      title = label_string(label_string_ids[0x1a0 + (-(uint)(is_scenario == 0) & 0xffffff4f)]
                                 );
       result = ui_file_name_dialog((iptr)&main_frame_wnd_block.main_frame_wnd,(const char *)title,(iptr)name_arg,(iptr)filter_arg,(iptr)ext_arg,leader_name,flag_arg);
       if (result != 0) {
@@ -3499,8 +3498,7 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
   ext_arg = ((i8 *)&grey_palette_block.save_file_ext_bare);
   filter_arg = ((i8 *)&grey_palette_block.save_file_filter_buf);
   name_arg = file_path;
-  str_arg = label_string(*(i32 *)
-                              (label_string_ids + 0x684 + (-(uint)(is_scenario == 0) & 0xffffff4f) * 4));
+  str_arg = label_string(label_string_ids[0x1a1 + (-(uint)(is_scenario == 0) & 0xffffff4f)]);
   result = ui_file_name_dialog((iptr)&main_frame_wnd_block.main_frame_wnd,(const char *)str_arg,(iptr)name_arg,(iptr)filter_arg,(iptr)ext_arg,flag_arg,flag_arg2);
   if (result == 0) {
     __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
@@ -4308,14 +4306,14 @@ spawn_attempt_check:
           if (unit % 3 == 0) {
             int_swap((iptr)&main_type,(iptr)&alt_type);
           }
-          label = label_string(*(i32 *)(label_string_ids + 0x188));
+          label = label_string(label_string_ids[0x62]);
           text_set_string_arg(0,label);
           if ((10 < (int)horde_size) && ((int)cities[city].size / 2 < (int)horde_size)) {
-            label = label_string(*(i32 *)(label_string_ids + 0x18c));
+            label = label_string(label_string_ids[0x63]);
             text_set_string_arg(0,label);
           }
           if (game.advance_known_by[0x23] != '\0') {
-            label = label_string(*(i32 *)(label_string_ids + 400));
+            label = label_string(label_string_ids[100]);
             text_set_string_arg(0,label);
             if ((game.rules & 1) != 0) {
               main_type = 4;
@@ -4323,12 +4321,12 @@ spawn_attempt_check:
             }
           }
           if (game.advance_known_by[0x25] != '\0') {
-            label = label_string(*(i32 *)(label_string_ids + 0x194));
+            label = label_string(label_string_ids[0x65]);
             text_set_string_arg(0,label);
             main_type = 0x18;
             alt_type = 7;
             if (game.advance_known_by[unit_types[0x16].prerequisite] != '\0') {
-              label = label_string(*(i32 *)(label_string_ids + 0x198));
+              label = label_string(label_string_ids[0x66]);
               text_set_string_arg(0,label);
               alt_type = 0xb;
               if (((game.rules & 1) != 0) && (main_type = 0x19, game.advance_known_by[0x22] != '\0'))
@@ -4340,7 +4338,7 @@ spawn_attempt_check:
                 }
                 else {
                   alt_type = 8;
-                  label = label_string(*(i32 *)(label_string_ids + 0x19c));
+                  label = label_string(label_string_ids[0x67]);
                   text_set_string_arg(0,label);
                 }
               }
@@ -11326,7 +11324,7 @@ apply_tribe:
       dlg_load_game_section(&dlg,(const char *)&str_customcity_2,0x20001);
       dialog_prepend_title_label((iptr)&dlg,player_slot + 0x25e);
       for (style2 = 0; style2 < 4; style2++) {
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3d8 + style2 * 4));
+        label = (iptr)label_string(label_string_ids[0xf6 + style2]);
         dialog_add_sprite
                   ((DialogOptionList *)&dlg,style2 * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 360)),style2,(const char *)label);
       }
@@ -14183,7 +14181,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
     }
     else if (value == 1) {
       kind = 1;
-      title = (i32)label_string(*(i32 *)(label_string_ids + 0x890));
+      title = (i32)label_string(label_string_ids[0x224]);
       choice = events_editor_pick_item(event[3],(const char *)title,kind);
       if (choice != 0xffffffff) {
         if ((int)choice < 0) {
@@ -14200,7 +14198,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
         if (event[2] != 0) {
           crt_strcpy((char *)((void *)event[2]),name2);
           kind = 4;
-          title = (i32)label_string(*(i32 *)(label_string_ids + 0x894));
+          title = (i32)label_string(label_string_ids[0x225]);
           choice = events_editor_pick_item(event[6],(const char *)title,kind);
           if (choice != 0xffffffff) {
             if ((int)choice < 0) {
@@ -14217,7 +14215,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
             if (event[5] != 0) {
               crt_strcpy((char *)((void *)event[5]),name2);
               kind = 4;
-              title = (i32)label_string(*(i32 *)(label_string_ids + 0x898));
+              title = (i32)label_string(label_string_ids[0x226]);
               choice = events_editor_pick_item(event[9],(const char *)title,kind);
               if (choice != 0xffffffff) {
                 if ((int)choice < 0) {
@@ -14265,7 +14263,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
         if (event[4] != 0) {
           crt_strcpy((char *)((void *)event[4]),city_name);
           kind = 4;
-          title = (i32)label_string(*(i32 *)(label_string_ids + 0x894));
+          title = (i32)label_string(label_string_ids[0x225]);
           choice = events_editor_pick_item(event[6],(const char *)title,kind);
           if (choice != 0xffffffff) {
             if ((int)choice < 0) {
@@ -14282,7 +14280,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
             if (event[5] != 0) {
               crt_strcpy((char *)((void *)event[5]),name2);
               kind = 4;
-              title = (i32)label_string(*(i32 *)(label_string_ids + 0x898));
+              title = (i32)label_string(label_string_ids[0x226]);
               choice = events_editor_pick_item(event[9],(const char *)title,kind);
               if (choice != 0xffffffff) {
                 if ((int)choice < 0) {
@@ -14327,7 +14325,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
     switch(value) {
     case 0x10:
       kind = 4;
-      title = (i32)label_string(*(i32 *)(label_string_ids + 0x89c));
+      title = (i32)label_string(label_string_ids[0x227]);
       choice = events_editor_pick_item(event[6],(const char *)title,kind);
       if (choice != 0xffffffff) {
         if ((int)choice < 0) {
@@ -14372,7 +14370,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
               event[7] = 4;
             }
             kind = 4;
-            title = (i32)label_string(*(i32 *)(label_string_ids + 0x8a0));
+            title = (i32)label_string(label_string_ids[0x228]);
             choice = events_editor_pick_item(event[9],(const char *)title,kind);
             if (choice != 0xffffffff) {
               if ((int)choice < 0) {
@@ -14684,7 +14682,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
       break;
     case 0x80:
       kind = 4;
-      title = (i32)label_string(*(i32 *)(label_string_ids + 0x8a4));
+      title = (i32)label_string(label_string_ids[0x229]);
       choice = events_editor_pick_item(event[9],(const char *)title,kind);
       if (choice != 0xffffffff) {
         if ((int)choice < 0) {
@@ -14706,7 +14704,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
       break;
     case 0x100:
       kind = 4;
-      title = (i32)label_string(*(i32 *)(label_string_ids + 0x8a8));
+      title = (i32)label_string(label_string_ids[0x22a]);
       choice = events_editor_pick_item(event[9],(const char *)title,kind);
       if (choice != 0xffffffff) {
         if ((int)choice < 0) {
@@ -14723,7 +14721,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
         if (event[8] != 0) {
           crt_strcpy((char *)((void *)event[8]),name2);
           kind = 2;
-          title = (i32)label_string(*(i32 *)(label_string_ids + 0x8ac));
+          title = (i32)label_string(label_string_ids[0x22b]);
           choice = events_editor_pick_item(event[0xd],(const char *)title,kind);
           if (choice != 0xffffffff) {
             event[0xd] = choice;
@@ -14784,8 +14782,8 @@ void __cdecl events_editor_on_add_trigger(void)
        (new_event = (int *)events_alloc((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events)),
        new_event == (int *)0x0)) {
       uType = 0;
-      lpCaption = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8d0));
-      lpText = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8e8));
+      lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
+      lpText = (LPCSTR)label_string(label_string_ids[0x23a]);
       window = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
       MessageBoxA(*(HWND *)(window + 4),lpText,lpCaption,uType);
     }
@@ -14921,7 +14919,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
     if (action_bit == 8) {
       name_out = &name_str;
       value = *event;
-      arg2 = (i32)label_string(*(i32 *)(label_string_ids + 0x8a8));
+      arg2 = (i32)label_string(label_string_ids[0x22a]);
       result = events_editor_pick_action_civ(event[0x5e],(const char *)arg2,value,(iptr)name_out);
       if (result != -1) {
         event[0x5e] = result;
@@ -14948,13 +14946,13 @@ uint __cdecl events_editor_edit_action(i32 mode)
       }
     }
     else if (action_bit == 1) {
-      value = (i32)label_string(*(i32 *)(label_string_ids + 0x8b0));
+      value = (i32)label_string(label_string_ids[0x22c]);
       prev_count = editor_text_edit_dialog((iptr)(event + 0xe),(const char *)value);
       changed = (uint)(prev_count != 0);
     }
     else if (action_bit == 2) {
       arg2 = 3;
-      value = (i32)label_string(*(i32 *)(label_string_ids + 0x8b4));
+      value = (i32)label_string(label_string_ids[0x22d]);
       result = events_editor_pick_item(event[0x25],(const char *)value,arg2);
       if (result != -1) {
         if (result < 0) {
@@ -14972,7 +14970,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
           crt_strcpy((char *)((void *)event[0x24]),name_str);
           name_out = &name_str;
           value = *event;
-          arg2 = (i32)label_string(*(i32 *)(label_string_ids + 0x8b8));
+          arg2 = (i32)label_string(label_string_ids[0x22e]);
           result = events_editor_pick_action_civ(event[0x23],(const char *)arg2,value,(iptr)name_out);
           if (result != -1) {
             event[0x23] = result;
@@ -15084,7 +15082,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
     }
     else if (action_bit == 4) {
       arg2 = 1;
-      value = (i32)label_string(*(i32 *)(label_string_ids + 0x8bc));
+      value = (i32)label_string(label_string_ids[0x22f]);
       result = events_editor_pick_item(event[0x38],(const char *)value,arg2);
       if (result != -1) {
         event[0x38] = result;
@@ -15096,7 +15094,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
           crt_strcpy((char *)((void *)event[0x37]),name_str);
           name_out = &name_str;
           value = *event;
-          arg2 = (i32)label_string(*(i32 *)(label_string_ids + 0x8b8));
+          arg2 = (i32)label_string(label_string_ids[0x22e]);
           result = events_editor_pick_action_civ(event[0x36],(const char *)arg2,value,(iptr)name_out);
           if (result != -1) {
             event[0x36] = result;
@@ -15196,7 +15194,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
   else if (action_bit < 0x21) {
     if (action_bit == 0x20) {
       arg2 = 0;
-      value = (i32)label_string(*(i32 *)(label_string_ids + 0x8c0));
+      value = (i32)label_string(label_string_ids[0x230]);
       result = events_editor_pick_item(event[0x34],(const char *)value,arg2);
       if (result != -1) {
         event[0x34] = result;
@@ -15207,7 +15205,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
         if (event[0x33] != 0) {
           crt_strcpy((char *)((void *)event[0x33]),name_str);
           arg2 = 0;
-          value = (i32)label_string(*(i32 *)(label_string_ids + 0x8c4));
+          value = (i32)label_string(label_string_ids[0x231]);
           result = events_editor_pick_item(event[0x32],(const char *)value,arg2);
           if (result != -1) {
             event[0x32] = result;
@@ -15286,7 +15284,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
   else if (action_bit < 0x201) {
     if (action_bit == 0x200) {
       arg2 = 7;
-      value = (i32)label_string(*(i32 *)(label_string_ids + 0x970));
+      value = (i32)label_string(label_string_ids[0x25c]);
       result = events_editor_pick_item(event[99],(const char *)value,arg2);
       if (result == -1) {
         result = -1;
@@ -15339,7 +15337,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
   else if (action_bit == 0x400) {
     name_out = &name_str;
     value = *event;
-    arg2 = (i32)label_string(*(i32 *)(label_string_ids + 0x8c8));
+    arg2 = (i32)label_string(label_string_ids[0x232]);
     result = events_editor_pick_action_civ(event[0x6c],(const char *)arg2,value,(iptr)name_out);
     if (result != -1) {
       event[0x6c] = result;
@@ -15349,7 +15347,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
   else if (action_bit == 0x800) {
     name_out = &name_str;
     value = *event;
-    arg2 = (i32)label_string(*(i32 *)(label_string_ids + 0x8a8));
+    arg2 = (i32)label_string(label_string_ids[0x22a]);
     result = events_editor_pick_action_civ(event[0x6e],(const char *)arg2,value,(iptr)name_out);
     if (result == -1) {
       result = -1;
@@ -15357,7 +15355,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
     else {
       event[0x6e] = result;
       arg2 = 2;
-      value = (i32)label_string(*(i32 *)(label_string_ids + 0x8ac));
+      value = (i32)label_string(label_string_ids[0x22b]);
       result = events_editor_pick_item(event[0x6d],(const char *)value,arg2);
       if (result != -1) {
         event[0x6d] = result;
@@ -15462,8 +15460,8 @@ void __cdecl events_editor_on_add_action(void)
   }
   else {
     uType = 0;
-    lpCaption = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8d0));
-    lpText = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8cc));
+    lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
+    lpText = (LPCSTR)label_string(label_string_ids[0x233]);
     MessageBoxA((HWND)0x0,lpText,lpCaption,uType);
   }
   events_editor_focus_redraw();
@@ -15490,13 +15488,13 @@ void __thiscall events_editor_draw(ViewWindow *self)
   top = self->client_y;
   line_height = self->sci_rate_sel;
   text_clear();
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8d4));
+  label = (iptr)label_string(label_string_ids[0x235]);
   text_append_str((const char *)label);
   text_draw_centered((iptr)self,(const char *)&map_views_block.text_buffer,x,(top - line_height) + 0x19,0);
   top = self->client_y;
   line_height = self->sci_rate_sel;
   text_clear();
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8d8));
+  label = (iptr)label_string(label_string_ids[0x236]);
   text_append_str((const char *)label);
   text_draw_centered((iptr)self,(const char *)&map_views_block.text_buffer,x,(top - line_height) + 0xc3,0);
   top = self->client_x;
@@ -15587,7 +15585,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   arg_y = 0;
   arg_x = 0;
   style = 0xd;
-  title = (i32)label_string(*(i32 *)(label_string_ids + 0x73c));
+  title = (i32)label_string(label_string_ids[0x1cf]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title,style,arg_x,arg_y,width,height,arg_a,arg_b,arg_c);
   x = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
@@ -15602,7 +15600,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent2 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8dc));
+  label = (iptr)label_string(label_string_ids[0x237]);
   button_create
             ((Control *)self->add_trigger_button,(iptr)parent2,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)self->add_trigger_button,(iptr)events_editor_on_add_trigger);
@@ -15614,7 +15612,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent22 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8e0));
+  label = (iptr)label_string(label_string_ids[0x238]);
   button_create
             ((Control *)self->edit_trigger_button,(iptr)parent22,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)self->edit_trigger_button,(iptr)events_editor_on_edit_trigger);
@@ -15626,7 +15624,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent3 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8e4));
+  label = (iptr)label_string(label_string_ids[0x239]);
   button_create
             ((Control *)((u8 *)&self->delete_trigger_button),(iptr)parent3,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)((u8 *)&self->delete_trigger_button),(iptr)events_editor_on_delete_trigger);
@@ -15639,7 +15637,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent7 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8dc));
+  label = (iptr)label_string(label_string_ids[0x237]);
   button_create
             ((Control *)self->add_action_button,(iptr)parent7,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)self->add_action_button,(iptr)events_editor_on_add_action);
@@ -15651,7 +15649,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent8 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8e0));
+  label = (iptr)label_string(label_string_ids[0x238]);
   button_create
             ((Control *)&self->edit_action_button,(iptr)parent8,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&self->edit_action_button,(iptr)events_editor_on_edit_action);
@@ -15663,7 +15661,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent9 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8e4));
+  label = (iptr)label_string(label_string_ids[0x239]);
   button_create
             ((Control *)&((PictureWindow *)self)->delete_action_button,(iptr)parent9,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->delete_action_button,(iptr)events_editor_on_delete_action);
@@ -15709,7 +15707,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent4 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)self->editor_ok_button,(iptr)parent4,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)self->editor_ok_button,(iptr)events_editor_on_ok);
@@ -15721,7 +15719,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent5 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)self->editor_help_button,(iptr)parent5,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)self->editor_help_button,(iptr)events_editor_on_help);
@@ -15733,7 +15731,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   else {
     parent6 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)self->editor_cancel_button,(iptr)parent6,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)self->editor_cancel_button,(iptr)events_editor_on_cancel);
@@ -16315,11 +16313,11 @@ void __cdecl cheat_reveal_map(void)
   }
   option_flags = 0;
   option_id = 0x62;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x13c));
+  label = (iptr)label_string(label_string_ids[0x4f]);
   dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
   option_flags = 0;
   option_id = 99;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x138));
+  label = (iptr)label_string(label_string_ids[0x4e]);
   dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
   if ((game.reveal_map == '\0') && (game.view_civ < '\0')) {
     dialog_set_default_choice((DialogOptionList *)&dialog2,0x62);
@@ -16387,7 +16385,7 @@ void __cdecl cheat_set_human_player(void)
   }
   option_flags = 0;
   option_id = 99;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x140));
+  label = (iptr)label_string(label_string_ids[0x50]);
   dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
   choice = dlg_show_modal(&dialog2,0);
   if (choice < 0) {
@@ -16563,7 +16561,7 @@ void __cdecl cheat_edit_unit(void)
       choice = unit_stack_sum(unit,2);
       if (1 < choice) {
         arg = 1;
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0xf8));
+        label = (iptr)label_string(label_string_ids[0x3e]);
         unit = unit_stack_select_dialog(unit,(const char *)label,arg);
         if (unit < 0) {
           seh_state = 0xffffffff;
@@ -16673,7 +16671,7 @@ void __cdecl cheat_edit_unit(void)
           }
           arg = 0;
           option_id = 0x10;
-          label = (iptr)label_string(*(i32 *)(label_string_ids + 0x300));
+          label = (iptr)label_string(label_string_ids[0xc0]);
           dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,arg);
           if ((char)units[unit].counter < '\0') {
             dialog_set_default_choice((DialogOptionList *)&dialog2,0x10);
@@ -17108,7 +17106,7 @@ void __cdecl cheat_edit_victory(void)
       dlg_reset(&dialog2,1);
       option_flags = 0;
       option_id = 0;
-      name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x38));
+      name2 = (iptr)label_string(label_string_ids[0xe]);
       dialog_add_option((DialogOptionList *)&dialog2,(const char *)name2,option_id,option_flags);
       for (civ = 1; civ < 8; civ++) {
         option_flags = 0;
@@ -17202,11 +17200,11 @@ void __cdecl cheat_scenario_params(void)
     text_set_number_arg(3,(int)prefs_game_rules_block.scenario_max_turns);
     text_set_number_arg(4,(int)(short)prefs_game_rules_block.scenario_flags[0] & 1);
     if ((game.game_flags & 0x80) == 0) {
-      label = label_string(*(i32 *)(label_string_ids + 0x68c));
+      label = label_string(label_string_ids[0x1a3]);
       text_set_string_arg(0,label);
     }
     else {
-      label = label_string(*(i32 *)(label_string_ids + 0x688));
+      label = label_string(label_string_ids[0x1a2]);
       text_set_string_arg(0,label);
     }
     text_set_string_arg(1,(const char *)&prefs_game_rules_block.scenario_name);
@@ -18745,7 +18743,7 @@ void __cdecl status_wnd_open(void)
   style = 6;
   x = minimap_wnd_rect_block.status_wnd_rect;
   y = minimap_wnd_rect_block.status_wnd_rect_top;
-  title = (i32)label_string(*(i32 *)(label_string_ids + 0x14));
+  title = (i32)label_string(label_string_ids[0x5]);
   frame_wnd_create
             ((FrameWindow *)((i8 *)&status_window_block.status_window),(const char *)title,style,x,y,width,height,flags,arg_a,arg_b);
   wnd_set_min_size((ModalMenuWindow *)((i8 *)&status_window_block.status_window_wnd),0x28,0x4c);

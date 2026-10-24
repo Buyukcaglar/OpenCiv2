@@ -514,9 +514,7 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
   text_set_string_arg(2,(const char *)str);
   str = (iptr)(civ_name_plural(civ));
   text_set_string_arg(3,(const char *)str);
-  text_set_label_arg(5,*(i32 *)
-                        (label_string_ids + 0x1a8 +
-                        (uint)(leaders[civs[civ].tribe].female == '\0') * -4));
+  text_set_label_arg(5,label_string_ids[0x6a - (uint)(leaders[civs[civ].tribe].female == '\0')]);
   str = (iptr)(civ_name_plural(civ2));
   text_set_string_arg(6,(const char *)str);
   text_clear();
@@ -594,16 +592,14 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
         text_set_string_arg(2,(const char *)str);
         str = (iptr)(civ_name_plural(civ));
         text_set_string_arg(3,(const char *)str);
-        text_set_label_arg(4,*(i32 *)
-                              (label_string_ids + 0x1d8 +
-                              (uint)(leaders[civs[civ].tribe].female == '\0') * -4));
+        text_set_label_arg(4,label_string_ids[0x76 - (uint)(leaders[civs[civ].tribe].female == '\0')]);
         dialog_load_game_text(&dlg,(const char *)&str_emissary);
         if ((((*(byte *)&civs[human_civ[0]].treaties[civ] & 0x80) != 0) ||
             (ret = civ_has_wonder(human_civ[0],0x18), ret != 0)) ||
            (ret = civ_has_wonder(human_civ[0],9), ret != 0)) {
           option_flags = 0;
           option_id = 2;
-          str = (iptr)(label_string(*(i32 *)(label_string_ids + 0x1a0)));
+          str = (iptr)(label_string(label_string_ids[0x68]));
           dialog_add_option((DialogOptionList *)&dlg,(const char *)str,option_id,option_flags);
         }
         ret = dlg_show_modal(&dlg,0);
@@ -2996,7 +2992,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     if ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) {
       variant = 0x6e;
     }
-    text_set_label_arg(2,*(i32 *)(label_string_ids + variant * 4));
+    text_set_label_arg(2,label_string_ids[variant]);
     text_clear();
     text_append((const char *)&str_canceltreaty);
     text_append_int(stance_idx);
@@ -3106,9 +3102,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     text_set_string_arg(2,(const char *)str);
     str = civ_get_adjective(civ);
     text_set_string_arg(3,(const char *)str);
-    text_set_label_arg(4,*(i32 *)
-                          (label_string_ids + 0x1a8 +
-                          (uint)(leaders[civs[civ].tribe].female == '\0') * -4));
+    text_set_label_arg(4,label_string_ids[0x6a - (uint)(leaders[civs[civ].tribe].female == '\0')]);
     text_set_number_arg(0,tax_rate_icon_sprites_block.diplo_tribute_demand);
     text_clear();
     diplo_leader_play_reaction(4);
@@ -3165,9 +3159,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     text_set_string_arg(3,(const char *)str);
     str = civ_leader_title(civ);
     text_set_string_arg(2,(const char *)str);
-    text_set_label_arg(4,*(i32 *)
-                          (label_string_ids + 0x1a8 +
-                          (uint)(leaders[civs[civ].tribe].female == '\0') * -4));
+    text_set_label_arg(4,label_string_ids[0x6a - (uint)(leaders[civs[civ].tribe].female == '\0')]);
     text_clear();
     text_append((const char *)&str_takeciv);
     variant = rand_range(0,2);
@@ -3785,7 +3777,7 @@ senate_hawks_check:
               variant = 0x6f;
             }
           }
-          text_set_label_arg(1,*(i32 *)(label_string_ids + variant * 4));
+          text_set_label_arg(1,label_string_ids[variant]);
           str = civ_get_adjective(civ2);
           text_set_string_arg(2,(const char *)str);
           str = civ_leader_title(civ2);
@@ -6695,10 +6687,7 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
             else {
               civ_name = (iptr)(civ_name_plural(civ3));
               text_set_string_arg(1,(const char *)civ_name);
-              text_set_label_arg(2,*(i32 *)
-                                    (label_string_ids +
-                                    (((civs[civ2].treaties[civ] & 8) == 0
-                                     ) + 0x73) * 4));
+              text_set_label_arg(2,label_string_ids[(((civs[civ2].treaties[civ] & 8) == 0 ) + 0x73)]);
               crt_strcpy(msg_key,str_crusade);
               if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
                 crt_strcpy(msg_key,str_jihad);

@@ -1,0 +1,818 @@
+#!/usr/bin/env python3
+"""Pointer types and struct field access in place of integers and raw
+offsets, correct by construction.
+
+    cxx_fields.py fields FILE...      (1) only
+    cxx_fields.py auto FILE...        (2) for the locals it can infer, then (1)
+    cxx_fields.py retype ROWS.tsv     (2) for the given variables, then (1)
+
+ROWS: KIND<TAB>FUNCTION<TAB>NAME<TAB>TYPE, KIND one of
+    local   FUNCTION's local NAME
+    param   FUNCTION's parameter NAME (prototype in protos.h and definition)
+    global  NAME (FUNCTION -) in gamedata.h/.cpp and every function that does
+            not declare its own NAME
+    ret     FUNCTION's return value (NAME -)
+TYPE: `S *` (S a struct of run/layout.tsv, which tools/cxx_layout.py reads
+from the compiler) or `T *` for an array of integers T.
+
+(1) `*(T *)((iptr)p + N)`, `*(T *)((u8 *)p + N)`, `*(T *)p` where p is
+    declared `S *`: p->f, when S has a member f at offset N whose type is T
+    (or an element p->a[i], or a member of a nested struct p->s.f).  An
+    integer member of T's size and the other signedness is read as (T)p->f,
+    and written as p->f only by = += -= *= &= |= ^= <<= ++ -- statements
+    whose value is unused (the same bits are stored).
+(2) An integer variable (or function result) X becomes `S *` / `T *`; each
+    use of X is rewritten so that it means what it meant:
+      *(T *)(X + N)            -> X->f as in (1), or *(T *)((I)X + N)
+      *(T *)(X + E)            -> X[E / sizeof T] for a `T *` (E a sum of
+                                  constants and multiples of sizeof T)
+      (S *)X                   -> X
+      X = E;                   -> X = (S *)E (an integer cast on E dropped)
+      X in arithmetic, a relational or bitwise operation, ++ --, a compound
+      assignment, a branch of ?:, a comma expression, or compared with
+      anything but 0          -> (I)X, I its old integer type
+    Everything else that the change affects does not compile any more (a
+    pointer and an integer do not convert implicitly): tools/cxx_fix.py
+    convcasts puts the old conversion there.
+Each rewrite of (1) is listed in run/fields_check.cpp as static_asserts on
+offsetof and the member's type and size; compile it to check them.
+Log: run/fields.log.
+"""
+import collections
+import glob
+import os
+import re
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, 'tools'))
+from cxx_fix import unary_end, match_paren  # noqa: E402
+from cxx_array import index as array_index  # noqa: E402
+import cxx_retype  # noqa: E402
+
+SIGNED = {'int': 4, 'i32': 4, 'iptr': 4, 'long': 4, 'LONG': 4, 'BOOL': 4, 'INT': 4,
+          'short': 2, 'i16': 2, 'SHORT': 2, 'char': 1, 'i8': 1, 'CHAR': 1, 'signed char': 1}
+UNSIGNED = {'unsigned int': 4, 'uint': 4, 'u32': 4, 'uptr': 4, 'DWORD': 4, 'UINT': 4, 'ulong': 4,
+            'unsigned long': 4, 'undefined4': 4, 'ULONG': 4,
+            'unsigned short': 2, 'ushort': 2, 'u16': 2, 'WORD': 2, 'word': 2, 'undefined2': 2,
+            'unsigned char': 1, 'uchar': 1, 'u8': 1, 'byte': 1, 'BYTE': 1, 'undefined': 1, 'undefined1': 1}
+INT_TYPES = r'(?:iptr|uptr|i32|u32|int|uint|long|ulong)'
+NUM = r'(?:0x[0-9a-fA-F]+|\d+)'
+TYPE = r'(?:const\s+)?[A-Za-z_]\w*(?:\s+[A-Za-z_]\w*)*(?:\s*\*)*'
+ANY_CAST = re.compile(r'\(\s*(?:(?:const\s+)?\w+(?:\s+\w+)*\s*\*+|%s)\s*\)\s*$'
+                      % '|'.join(map(re.escape, sorted(list(SIGNED) + list(UNSIGNED), key=len, reverse=True))))
+KEYWORDS = {'if', 'while', 'for', 'switch', 'return', 'sizeof', 'case', 'else', 'do'}
+
+LAYOUT = None
+
+
+def canon(t):
+    t = re.sub(r'\s+', ' ', t.strip())
+    t = re.sub(r'\s*\*', '*', t)
+    if t in SIGNED:
+        return ('s', SIGNED[t])
+    if t in UNSIGNED:
+        return ('u', UNSIGNED[t])
+    return ('t', t)
+
+
+def load_layout():
+    lay = {}
+    for line in open(os.path.join(ROOT, 'run', 'layout.tsv')):
+        s, m, off, size, t = line.rstrip('\n').split('\t')
+        if not m:
+            lay[s] = {'size': int(size), 'members': []}
+        else:
+            lay[s]['members'].append((m, int(off), int(size), t))
+    return lay
+
+
+def unnamed(m):
+    return re.match(r'(field|pad|unk|gap)_', m) is not None
+
+
+def find_field(s, n, t, depth=0):
+    """(path, member type, 'exact'|'sign') of S's member at offset n read as t."""
+    want = canon(t)
+    want_size = want[1] if want[0] in 'su' else None
+    best = []
+    for m, off, size, mt in LAYOUT[s]['members']:
+        if not off <= n < off + size:
+            continue
+        am = re.match(r'(.*?) ?\[(\d+)\]$', mt)
+        if am:
+            et, k = am.group(1), int(am.group(2))
+            es = size // k if k else 0
+            if not es or (n - off) % es:
+                continue
+            idx = (n - off) // es
+            ec = canon(et)
+            path = '%s[%d]' % (m, idx)
+            if ec == want:
+                best.append(((path, et, 'exact'), unnamed(m)))
+            elif ec[0] in 'su' and want[0] in 'su' and ec[1] == want_size:
+                best.append(((path, et, 'sign'), unnamed(m)))
+            elif re.sub(r'\s+', ' ', et.strip()) in LAYOUT and depth < 4:
+                r = find_field(re.sub(r'\s+', ' ', et.strip()), (n - off) % es, t, depth + 1)
+                if r:
+                    best.append((('%s.%s' % (path, r[0]), r[1], r[2]), unnamed(m)))
+            continue
+        if off == n:
+            mc = canon(mt)
+            if mc == want:
+                best.append(((m, mt, 'exact'), unnamed(m)))
+                continue
+            if mc[0] in 'su' and want[0] in 'su' and mc[1] == want_size:
+                best.append(((m, mt, 'sign'), unnamed(m)))
+                continue
+        st = re.sub(r'\s+', ' ', mt.strip())
+        if st in LAYOUT and depth < 4:
+            r = find_field(st, n - off, t, depth + 1)
+            if r:
+                best.append((('%s.%s' % (m, r[0]), r[1], r[2]), unnamed(m)))
+    if not best:
+        return None
+    best.sort(key=lambda b: (b[0][2] != 'exact', b[1], b[0][0].count('.')))
+    return best[0][0]
+
+
+def masked(body):
+    """The text with strings, character constants and comments blanked."""
+    out = list(body)
+    i = 0
+    while i < len(body):
+        c = body[i]
+        if body.startswith('/*', i):
+            e = body.find('*/', i + 2)
+            e = len(body) if e < 0 else e + 2
+            for k in range(i, e):
+                if out[k] != '\n':
+                    out[k] = ' '
+            i = e
+        elif body.startswith('//', i):
+            e = body.find('\n', i)
+            e = len(body) if e < 0 else e
+            for k in range(i, e):
+                out[k] = ' '
+            i = e
+        elif c in '"\'':
+            j = i + 1
+            while j < len(body) and body[j] != c:
+                j += 2 if body[j] == '\\' else 1
+            for k in range(i + 1, min(j, len(body))):
+                out[k] = ' '
+            i = j + 1
+        else:
+            i += 1
+    return ''.join(out)
+
+
+OPS = ('<<=', '>>=', '->', '++', '--', '<<', '>>', '<=', '>=', '==', '!=', '&&', '||',
+       '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=')
+
+
+def prev_tok(s, i):
+    j = i - 1
+    while j >= 0 and s[j] in ' \t\n':
+        j -= 1
+    if j < 0:
+        return '', j
+    for op in OPS:
+        if s[max(0, j - len(op) + 1):j + 1] == op:
+            return op, j - len(op) + 1
+    if s[j].isalnum() or s[j] == '_':
+        k = j
+        while k >= 0 and (s[k].isalnum() or s[k] == '_'):
+            k -= 1
+        return s[k + 1:j + 1], k + 1
+    return s[j], j
+
+
+def next_tok(s, i):
+    j = i
+    while j < len(s) and s[j] in ' \t\n':
+        j += 1
+    for op in OPS:
+        if s.startswith(op, j):
+            return op, j
+    if j < len(s) and (s[j].isalnum() or s[j] == '_'):
+        return re.match(r'\w+', s[j:]).group(0), j
+    return (s[j] if j < len(s) else ''), j
+
+
+STORE_OK = {'=', '+=', '-=', '*=', '&=', '|=', '^=', '<<='}
+ARITH_NEXT = {'+', '-', '*', '/', '%', '<', '>', '<=', '>=', '<<', '>>', '&', '|', '^', '++', '--',
+              '+=', '-=', '*=', '/=', '%=', '&=', '|=', '^=', '<<=', '>>=', '[', '?', ':'}
+ARITH_PREV = {'+', '-', '*', '/', '%', '<', '>', '<=', '>=', '<<', '>>', '|', '^', '++', '--', '~',
+              '?', ':'}
+
+
+def is_statement_start(m, i):
+    p, j = prev_tok(m, i)
+    if p == ':':
+        # a label or case (not a ?: branch)
+        line = m[m.rfind('\n', 0, j) + 1:j]
+        return re.match(r'\s*(?:case\b.*|default|\w+)\s*$', line) is not None
+    return p in (';', '{', '}', ')', 'else', '')
+
+
+def statement_end(m, i):
+    """Index of the ; ending the expression statement from i (-1 if a , or
+    unbalanced ) comes first)."""
+    depth = 0
+    k = i
+    while k < len(m):
+        if m[k] in '([':
+            depth += 1
+        elif m[k] in ')]':
+            if depth == 0:
+                return -1
+            depth -= 1
+        elif m[k] == ';' and depth == 0:
+            return k
+        elif m[k] == ',' and depth == 0:
+            return -1
+        k += 1
+    return -1
+
+
+def cast_type(t):
+    return re.sub(r'\s*\*', ' *', re.sub(r'\s+', ' ', t.strip())).replace('* *', '**')
+
+
+def field_access(m, start, end, obj, s, n, t, checks):
+    """Text for the raw access m[start:end] = *(t *)(obj + n), obj an S * (or None)."""
+    f = find_field(s, n, t)
+    if not f:
+        return None
+    path, mt, kind = f
+    nt, nj = next_tok(m, end)
+    pt, pj = prev_tok(m, start)
+    if pt in ('&', 'sizeof'):
+        return None
+    expr = '%s->%s' % (obj, path)
+    if kind == 'exact':
+        checks.append((s, path, n, t))
+        return expr
+    store = nt in STORE_OK or nt in ('++', '--') or pt in ('++', '--')
+    if store:
+        if pt in ('++', '--'):
+            if not is_statement_start(m, pj) or statement_end(m, end) < 0:
+                return None
+        elif not is_statement_start(m, start) or statement_end(m, end) < 0:
+            return None
+        if nt in ('/=', '%=', '>>='):
+            return None
+        checks.append((s, path, n, t))
+        return expr
+    checks.append((s, path, n, t))
+    return '(%s)%s' % (cast_type(t), expr)
+
+
+def functions(text):
+    """(header start, body start, body end) of each function definition."""
+    for fm in re.finditer(r'^\{\n', text, re.M):
+        hs = text.rfind('\n\n', 0, fm.start())
+        hs = 0 if hs < 0 else hs + 2
+        be = re.compile(r'^\}', re.M).search(text, fm.end())
+        if be:
+            yield hs, fm.end(), be.start()
+
+
+def func_name(header):
+    m = re.search(r'(\w+)\s*\([^()]*(?:\([^()]*\)[^()]*)*\)\s*$', header.strip())
+    return m.group(1) if m else None
+
+
+def decls(header, body):
+    """{name: (type, kind, start, end)} of the parameters and top-level locals."""
+    out = {}
+    if header:
+        hm = header.find('(', header.find(func_name(header) or '(') if func_name(header) else 0)
+        params = header[hm + 1:header.rfind(')')]
+        for p in cxx_retype.split_params(params):
+            pm = re.match(r'\s*(%s?)\s*\b(\w+)\s*$' % TYPE, p)
+            if pm and pm.group(1).strip():
+                out[pm.group(2)] = (pm.group(1).strip(), 'param', None, None)
+    for dm in re.finditer(r'^  (%s?)\s*\b(\w+)(?:\s*\[[^\]]*\])?;\n' % TYPE, body, re.M):
+        if dm.group(1).strip() in ('return', 'goto', 'break', 'continue'):
+            continue
+        out.setdefault(dm.group(2), (dm.group(1).strip(), 'local', dm.start(), dm.end()))
+    return out
+
+
+def struct_of(t):
+    m = re.match(r'(?:const\s+)?(\w+)\s*\*$', t.strip())
+    if m and m.group(1) in LAYOUT:
+        return m.group(1)
+    return None
+
+
+def elem_of(t):
+    m = re.match(r'(\w+)\s*\*$', t.strip())
+    if m and canon(m.group(1))[0] in 'su':
+        return m.group(1)
+    return None
+
+
+def apply(text, edits):
+    edits = sorted(edits, key=lambda e: (e[0], e[1]))
+    for x, y in zip(edits, edits[1:]):
+        if y[0] < x[1]:
+            raise ValueError('overlapping edits %r %r' % (x, y))
+    for a, b, r in reversed(edits):
+        text = text[:a] + r + text[b:]
+    return text
+
+
+def group_extent(m, a, b):
+    """Grow [a, b) over grouping parentheses ( X ) around it."""
+    while True:
+        pt, pj = prev_tok(m, a)
+        nt, nj = next_tok(m, b)
+        if pt != '(' or nt != ')':
+            return a, b
+        p2, _ = prev_tok(m, pj)
+        if re.match(r'\w', p2 or '') and p2 not in KEYWORDS or p2 in (')', ']'):
+            return a, b             # a call's parentheses
+        if re.match(r'\w', p2 or '') and p2 in ('if', 'while', 'switch', 'for'):
+            return a, b
+        a, b = pj, nj + 1
+
+
+def raw_around(m, a, b):
+    """If m[a:b] is the base of a raw access *(T *)(X + E) or *(T *)X: (start,
+    end, T, E or None)."""
+    pt, pj = prev_tok(m, a)
+    if pt == '(':
+        cm = re.search(r'\*\s*\(\s*(%s)\s*\*\s*\)\s*\(\s*$' % TYPE, m[:a])
+        if not cm:
+            return None
+        o = pj
+        e = match_paren(m, o)
+        if e < 0:
+            return None
+        nt, nj = next_tok(m, b)
+        if nt != '+':
+            return None
+        expr = m[nj + 1:e - 1].strip()
+        if not expr:
+            return None
+        return cm.start(), e, cm.group(1), expr
+    if pt == ')':
+        cm = re.search(r'\*\s*\(\s*(%s)\s*\*\s*\)\s*$' % TYPE, m[:a])
+        if cm:
+            nt, _ = next_tok(m, b)
+            if nt in ('->', '.', '[', '('):
+                return None
+            return cm.start(), b, cm.group(1), None
+    return None
+
+
+def rewrite_uses(text, m, spans, newtype, oldtype, checks, stats, assign=True, report=None):
+    """Edits that keep the meaning of each use m[a:b] of an expression whose
+    type changes from the integer oldtype to newtype (report counts the uses
+    that stay integers: 'wrap')."""
+    report = {} if report is None else report
+    s = struct_of(newtype)
+    el = elem_of(newtype)
+    old = 'uptr' if canon(oldtype)[0] == 'u' else 'iptr'
+    edits = []
+    for a, b in spans:
+        x = text[a:b]
+        r = raw_around(m, a, b)
+        if r:
+            ra, rb, t, e = r
+            new = None
+            if s and e is None:
+                new = field_access(m, ra, rb, x, s, 0, t, checks)
+            elif s and re.fullmatch(NUM, e):
+                n = int(e, 0)
+                if n < LAYOUT[s]['size']:
+                    new = field_access(m, ra, rb, x, s, n, t, checks)
+            elif el and canon(t) == canon(el):
+                idx = '0' if e is None else array_index(text[text.index('+', b, rb) + 1:rb - 1].strip(), canon(el)[1])
+                if idx is not None and prev_tok(m, ra)[0] not in ('&', 'sizeof'):
+                    new = '%s[%s]' % (x, idx)
+            if new is not None:
+                stats['named'] += 1
+                edits.append((ra, rb, new))
+                continue
+            stats['raw_left'] += 1
+            report['wrap'] = report.get('wrap', 0) + 1
+            edits.append((a, a, '(%s)' % old))
+            continue
+        pt, pj = prev_tok(m, a)
+        if pt == ')':
+            cm = re.search(r'\(\s*(?:const\s+)?(\w+)\s*\*\s*\)\s*$', m[:a])
+            if cm and '%s *' % cm.group(1) == cast_type(newtype):
+                # ((S *)X) -> X
+                pa, pb = prev_tok(m, cm.start()), next_tok(m, b)
+                if pa[0] == '(' and pb[0] == ')' and not re.match(r'\w|[)\]]', prev_tok(m, pa[1])[0] or '(') \
+                        or pa[0] == '(' and pb[0] == ')' and prev_tok(m, pa[1])[0] in KEYWORDS - {'if', 'while', 'switch', 'for'}:
+                    edits.append((pa[1], cm.start(), ''))
+                    edits.append((cm.start(), a, ''))
+                    edits.append((pb[1], pb[1] + 1, ''))
+                else:
+                    edits.append((cm.start(), a, ''))
+                continue
+            if ANY_CAST.search(m[:a]):
+                continue
+        nt, nj = next_tok(m, b)
+        if assign and nt == '=' and is_statement_start(m, a):
+            e = statement_end(m, nj + 1)
+            if e < 0:
+                edits.append((a, a, '(%s)' % old))       # does not compile: for hand
+                report['wrap'] = report.get('wrap', 0) + 1
+                continue
+            rs = nj + 1
+            while m[rs] in ' \n':
+                rs += 1
+            rhs = m[rs:e].rstrip()
+            ct = cast_type(newtype)
+            im = re.match(r'\(\s*%s\s*\)\s*' % INT_TYPES, rhs)
+            if rhs in ('0', '0x0', 'nullptr'):
+                pass
+            elif re.match(r'\(\s*%s\s*\)' % re.escape(ct).replace(r'\ ', r'\s*'), rhs) and unary_end(rhs, 0) == len(rhs):
+                pass
+            elif im and unary_end(rhs, im.end()) == len(rhs):
+                edits.append((rs, rs + im.end(), '(%s)' % ct))
+            elif unary_end(rhs, 0) == len(rhs):
+                edits.append((rs, rs, '(%s)' % ct))
+            else:
+                report['wrap'] = report.get('wrap', 0) + 1
+                edits.append((rs, rs, '(%s)(' % ct))
+                edits.append((rs + len(rhs), rs + len(rhs), ')'))
+            continue
+        ga, gb = group_extent(m, a, b)
+        pt, pj = prev_tok(m, ga)
+        nt, nj = next_tok(m, gb)
+        wrap = False
+        if nt in ARITH_NEXT or pt in ARITH_PREV or pt == '*':
+            wrap = True
+        elif pt == '&':
+            p2, _ = prev_tok(m, pj)
+            wrap = bool(re.match(r'\w|[)\]]', p2 or '(')) and p2 not in KEYWORDS
+        elif pt == ',' or nt == ',':
+            # a comma expression (not a call's arguments)
+            o = enclosing_open(m, ga)
+            if o >= 0:
+                p2, _ = prev_tok(m, o)
+                wrap = not ((re.match(r'\w', p2 or '') and p2 not in KEYWORDS) or p2 in (')', ']', 'for'))
+            else:
+                wrap = True
+        elif nt in ('==', '!='):
+            wrap = not re.match(r'\s*(?:==|!=)\s*(?:0x0|0|nullptr)\b(?!x)', m[gb:])
+        elif pt in ('==', '!='):
+            wrap = not re.search(r'\b(?:0x0|0|nullptr)\s*(?:==|!=)\s*$', m[:ga])
+        if wrap:
+            edits.append((a, a, '(%s)' % old))
+            stats['wrapped'] += 1
+            report['wrap'] = report.get('wrap', 0) + 1
+    return edits
+
+
+def enclosing_open(m, i):
+    depth = 0
+    j = i - 1
+    while j >= 0:
+        if m[j] in ')]':
+            depth += 1
+        elif m[j] in '([':
+            if depth == 0:
+                return j if m[j] == '(' else -1
+            depth -= 1
+        elif m[j] in ';{}' and depth == 0:
+            return -1
+        j -= 1
+    return -1
+
+
+def var_spans(m, v, skip=None):
+    out = []
+    for x in re.finditer(r'(?<![\w$])%s\b' % re.escape(v), m):
+        if prev_tok(m, x.start())[0] in ('.', '->', 'goto') or x.start() == skip:
+            continue
+        if next_tok(m, x.end())[0] == ':' and is_statement_start(m, x.start()):
+            continue                # a label
+        out.append((x.start(), x.end()))
+    return out
+
+
+def call_spans(m, f):
+    out = []
+    for x in re.finditer(r'(?<![\w$])%s\s*\(' % re.escape(f), m):
+        if prev_tok(m, x.start())[0] in ('.', '->'):
+            continue
+        e = match_paren(m, x.end() - 1)
+        if e > 0:
+            out.append((x.start(), e))
+    return out
+
+
+def typed_pass(body, ds, checks, stats):
+    """(1): raw accesses through pointers already typed S *."""
+    m = masked(body)
+    edits = []
+    for v, (t, _, _, _) in ds.items():
+        s = struct_of(t)
+        if not s:
+            continue
+        pat = re.compile(r'\*\(\s*(%s)\s*\*\s*\)\s*(?:\(\s*\(\s*(?:%s|u8\s*\*|byte\s*\*|char\s*\*|i8\s*\*)\s*\)\s*%s\s*\+\s*(%s)\s*\)|%s\b)'
+                         % (TYPE, INT_TYPES, re.escape(v), NUM, re.escape(v)))
+        for x in pat.finditer(m):
+            if prev_tok(m, x.start())[0] in ('.', '->'):
+                continue
+            if not x.group(2) and next_tok(m, x.end())[0] in ('->', '.', '[', '('):
+                continue
+            n = int(x.group(2), 0) if x.group(2) else 0
+            if n >= LAYOUT[s]['size']:
+                continue
+            r = field_access(m, x.start(), x.end(), v, s, n, x.group(1), checks)
+            stats['typed' if r else 'typed_left'] += 1
+            if r:
+                edits.append((x.start(), x.end(), r))
+    return apply(body, edits)
+
+
+def infer(body, m, v, ds):
+    """The struct an integer local holds: the only struct its value is cast
+    to, or that the values assigned to it have."""
+    found = set()
+    for a, b in var_spans(m, v):
+        pt, _ = prev_tok(m, a)
+        if pt == ')':
+            cm = re.search(r'\(\s*(?:const\s+)?(\w+)\s*\*\s*\)\s*$', m[:a])
+            if cm and cm.group(1) in LAYOUT and next_tok(m, b)[0] not in ('+', '-'):
+                found.add(cm.group(1))
+        nt, nj = next_tok(m, b)
+        if nt == '=' and is_statement_start(m, a):
+            e = statement_end(m, nj + 1)
+            rhs = m[nj + 1:e].strip() if e > 0 else ''
+            rm = re.fullmatch(r'(?:\(\s*%s\s*\)\s*)?\(?\s*(\w+)\s*\)?' % INT_TYPES, rhs)
+            if rm and rm.group(1) in ds and struct_of(ds[rm.group(1)][0]):
+                found.add(struct_of(ds[rm.group(1)][0]))
+            rm = re.fullmatch(r'(?:\(\s*%s\s*\)\s*)?\(\s*(\w+)\s*\*\s*\).*' % INT_TYPES, rhs, re.S)
+            if rm and rm.group(1) in LAYOUT and unary_end(rhs, 0) == len(rhs):
+                found.add(rm.group(1))
+            cm = re.match(r'(?:\(\s*%s\s*\)\s*)?(\w+)\s*\(' % INT_TYPES, rhs)
+            if cm and cm.group(1) in RETURNS and unary_end(rhs, 0) == len(rhs):
+                st = struct_of(RETURNS[cm.group(1)])
+                if st:
+                    found.add(st)
+    return found.pop() if len(found) == 1 else None
+
+
+RETURNS = {}
+
+
+def load_returns():
+    for line in open(os.path.join(ROOT, 'src', 'auto', 'protos.h')):
+        m = re.match(r'(?:EXTERN_C\s+)?(%s?)\s*(?:__\w+\s+)?(\w+)\(' % TYPE, line)
+        if m:
+            RETURNS[m.group(2)] = m.group(1).strip()
+
+
+def raw_offsets(m, v):
+    return [int(x.group(1), 0) for x in
+            re.finditer(r'\*\(\s*%s\s*\*\s*\)\s*\(\s*%s\s*\+\s*(%s)\s*\)' % (TYPE, re.escape(v), NUM), m)]
+
+
+def retype_local(body, v, t, newtype, ds_, de, checks, stats, strict=False):
+    m = masked(body)
+    spans = var_spans(m, v, skip=m.index(v, ds_ + 2))
+    report = {}
+    local_checks, local_stats = [], collections.Counter()
+    edits = rewrite_uses(body, m, spans, newtype, t, local_checks, local_stats, report=report)
+    if strict and report.get('wrap'):
+        return None
+    checks.extend(local_checks)
+    stats.update(local_stats)
+    edits.append((ds_, de, '  %s%s;\n' % (cast_type(newtype) if newtype.endswith('*') else newtype + ' ', v)))
+    return apply(body, edits)
+
+
+def assigned(m, v):
+    """The right-hand sides of the statements v = E;"""
+    out = []
+    for a, b in var_spans(m, v):
+        nt, nj = next_tok(m, b)
+        if nt == '=' and is_statement_start(m, a):
+            e = statement_end(m, nj + 1)
+            out.append(m[nj + 1:e].strip() if e > 0 else '?')
+    return out
+
+
+def pointer_source(rhs, s, ds):
+    """Is rhs (maybe under an integer cast) 0, a (S *) cast, an S * variable,
+    or a call of a function that returns S * or void *?"""
+    if rhs in ('0', '0x0', 'nullptr'):
+        return True
+    im = re.match(r'\(\s*%s\s*\)\s*' % INT_TYPES, rhs)
+    if im and unary_end(rhs, im.end()) == len(rhs):
+        rhs = rhs[im.end():]
+    if unary_end(rhs, 0) != len(rhs):
+        return False
+    cm = re.match(r'\(\s*(\w+)\s*\*\s*\)', rhs)
+    if cm:
+        return cm.group(1) == s
+    if rhs in ds:
+        return struct_of(ds[rhs][0]) == s
+    cm = re.match(r'(\w+)\s*\(', rhs)
+    if cm and match_paren(rhs, cm.end() - 1) == len(rhs):
+        r = RETURNS.get(cm.group(1), '')
+        return struct_of(r) == s or re.sub(r'\s', '', r) in ('void*', 'LPVOID')
+    return False
+
+
+def auto_pass(header, body, checks, stats, log, where):
+    ds = decls(header, body)
+    for v, (t, kind, ds_, de) in list(ds.items()):
+        if kind != 'local' or not re.fullmatch(INT_TYPES, t):
+            continue
+        m = masked(body)
+        s = infer(body, m, v, ds)
+        if not s:
+            continue
+        offs = raw_offsets(m, v)
+        if any(o >= LAYOUT[s]['size'] for o in offs):
+            log.append('%s: %s: offsets beyond %s' % (where, v, s))
+            continue
+        fits = sum(1 for o in offs if any(mo == o for _, mo, _, _ in LAYOUT[s]['members']))
+        if offs and fits * 2 < len(offs):
+            log.append('%s: %s: %d of %d offsets fit no member of %s' % (where, v, len(offs) - fits, len(offs), s))
+            continue
+        bad = [r for r in assigned(m, v) if not pointer_source(r, s, ds)]
+        if bad:
+            log.append('%s: %s: also assigned %s (%s)' % (where, v, bad[0][:60], s))
+            continue
+        ds = decls(header, body)
+        new = retype_local(body, v, t, '%s *' % s, ds[v][2], ds[v][3], checks, stats, strict=True)
+        if new is None:
+            log.append('%s: %s: also holds numbers (%s)' % (where, v, s))
+            continue
+        body = new
+        stats['retyped'] += 1
+        log.append('%s: %s -> %s *' % (where, v, s))
+    return body
+
+
+def sources():
+    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.cpp')) + glob.glob(os.path.join(ROOT, 'src', 'game', '*.cpp')))
+
+
+def each_function(path, fn):
+    text = open(path).read()
+    out, pos = [], 0
+    for hs, bs, be in functions(text):
+        header = text[hs:bs - 2]
+        body = fn(header, text[bs:be])
+        out.append(text[pos:bs] + body)
+        pos = be
+    out.append(text[pos:])
+    new = ''.join(out)
+    if new != text:
+        open(path, 'w').write(new)
+
+
+def retype_rows(rows, checks, stats, log):
+    files = sources()
+    for kind, func, name, newtype in rows:
+        if kind in ('local', 'param'):
+            for f in files:
+                text = open(f).read()
+                if not re.search(r'(?m)^(?:\w.*\b)?%s\s*\(' % re.escape(func), text):
+                    continue
+
+                def one(header, body, kind=kind, func=func, name=name, newtype=newtype):
+                    if func_name(header) != func:
+                        return body
+                    ds = decls(header, body)
+                    if name not in ds or ds[name][1] != kind:
+                        log.append('%s: no %s %s' % (func, kind, name))
+                        return body
+                    t = ds[name][0]
+                    if kind == 'local':
+                        return retype_local(body, name, t, newtype, ds[name][2], ds[name][3], checks, stats)
+                    m = masked(body)
+                    return apply(body, rewrite_uses(body, m, var_spans(m, name), newtype, t, checks, stats))
+                each_function(f, one)
+            if kind == 'param':
+                retype_param_decl(func, name, newtype, log)
+        elif kind == 'global':
+            for f in files:
+                def one(header, body, name=name, newtype=newtype):
+                    ds = decls(header, body)
+                    if name in ds:
+                        return body
+                    m = masked(body)
+                    return apply(body, rewrite_uses(body, m, var_spans(m, name), newtype, GLOBAL_TYPES[name], checks, stats))
+                each_function(f, one)
+            retype_global_decl(name, newtype, log)
+        elif kind == 'ret':
+            oldtype = RETURNS.get(func, 'iptr')
+            for f in files:
+                def one(header, body, func=func, newtype=newtype, oldtype=oldtype):
+                    m = masked(body)
+                    return apply(body, rewrite_uses(body, m, call_spans(m, func), newtype, oldtype, checks, stats, assign=False))
+                each_function(f, one)
+            r = os.path.join(ROOT, 'run', 'fields_ret.tsv')
+            open(r, 'w').write('%s\tret\t%s\n' % (func, newtype))
+            sys.argv = ['', r]
+            cxx_retype.main()
+        stats[kind] += 1
+
+
+GLOBAL_TYPES = {}
+
+
+def load_globals():
+    for line in open(os.path.join(ROOT, 'src', 'data', 'gamedata.h')):
+        m = re.match(r'extern\s+(%s?)\s*\b(\w+)\s*;' % TYPE, line)
+        if m:
+            GLOBAL_TYPES[m.group(2)] = m.group(1).strip()
+
+
+def retype_global_decl(name, newtype, log):
+    nt = cast_type(newtype)
+    for p, pat in (('src/data/gamedata.h', r'(?m)^(extern\s+)(%s?)\s*\b(%s\s*;)'),
+                   ('src/data/gamedata.cpp', r'(?m)^((?:GAMEDATA\(\d+\)\s+)?)(%s?)\s*\b(%s\s*=)')):
+        path = os.path.join(ROOT, p)
+        text = open(path).read()
+        new, n = re.subn(pat % (TYPE, re.escape(name)), lambda x: x.group(1) + nt + ('' if nt.endswith('*') else ' ') + x.group(3), text, count=1)
+        if not n:
+            log.append('%s: declaration of %s not found' % (p, name))
+        open(path, 'w').write(new)
+
+
+def retype_param_decl(func, name, newtype, log):
+    protos = open(cxx_retype.PROTOS).read()
+    m = re.search(r'(?m)^.*?\b%s\(' % re.escape(func), protos)
+    if not m:
+        log.append('no prototype: %s' % func)
+        return
+    i = m.end() - 1
+    params = cxx_retype.split_params(protos[i + 1:match_paren(protos, i) - 1])
+    k = [j for j, p in enumerate(params) if re.search(r'\b%s\s*$' % re.escape(name), p)]
+    if not k:
+        log.append('%s: parameter %s not in prototype' % (func, name))
+        return
+    protos = cxx_retype.edit_signature(protos, m.end() - len(func) - 1, func, k[0] + 1, newtype)
+    open(cxx_retype.PROTOS, 'w').write(protos)
+    for f in sources():
+        text = open(f).read()
+        for d in re.finditer(r'(?m)^(?:\w[^\n;]*\b)?%s\s*\(' % re.escape(func), text):
+            o = text.index('(', d.start() + d.group(0).rfind(func))
+            e = match_paren(text, o)
+            if re.match(r'\s*\{', text[e:]):
+                open(f, 'w').write(cxx_retype.edit_signature(text, o - len(func), func, k[0] + 1, newtype))
+                return
+    log.append('no definition: %s' % func)
+
+
+def write_checks(checks):
+    p = os.path.join(ROOT, 'run', 'fields_check.cpp')
+    lines = ['#include <stddef.h>', '#include <type_traits>', '#include "auto_common.h"']
+    have = set(open(p).read().split('\n')[3:]) if os.path.exists(p) else set()
+    new = set()
+    for s, path, n, t in checks:
+        t = t.strip()
+        new.add('static_assert(offsetof(%s, %s) == %d, "");' % (s, path, n))
+        if canon(t)[0] == 't':
+            new.add('static_assert(std::is_same<decltype(((%s *)0)->%s), %s>::value, "");' % (s, path, cast_type(t)))
+        else:
+            new.add('static_assert(sizeof(((%s *)0)->%s) == sizeof(%s) && std::is_integral<decltype(((%s *)0)->%s)>::value, "");'
+                    % (s, path, t, s, path))
+    open(p, 'w').write('\n'.join(lines + sorted((have | new) - {''})) + '\n')
+
+
+def main():
+    global LAYOUT
+    if len(sys.argv) < 3 or sys.argv[1] not in ('fields', 'auto', 'retype'):
+        print(__doc__)
+        return 1
+    LAYOUT = load_layout()
+    load_returns()
+    load_globals()
+    checks, stats, log = [], collections.Counter(), []
+    mode, args = sys.argv[1], sys.argv[2:]
+    if mode == 'retype':
+        rows = [l.rstrip('\n').split('\t') for f in args for l in open(f) if l.strip() and not l.startswith('#')]
+        retype_rows(rows, checks, stats, log)
+        files = sources()
+    else:
+        files = args
+    for f in files:
+        def one(header, body, f=f):
+            if mode == 'auto':
+                body = auto_pass(header, body, checks, stats, log, '%s:%s' % (os.path.relpath(f, ROOT), func_name(header)))
+            return typed_pass(body, decls(header, body), checks, stats)
+        each_function(f, one)
+    write_checks(checks)
+    open(os.path.join(ROOT, 'run', 'fields.log'), 'w').write('\n'.join(log) + '\n')
+    print(dict(stats))
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -462,7 +462,7 @@ void __cdecl minimap_window_create(void)
   wnd_style = 6;
   wnd_x = minimap_wnd_rect_block.minimap_wnd_rect;
   wnd_y = minimap_wnd_rect_block.minimap_wnd_rect_top;
-  title_text = (i32)label_string(*(i32 *)(label_string_ids + 0x18));
+  title_text = (i32)label_string(label_string_ids[0x6]);
   frame_wnd_create
             ((FrameWindow *)((i8 *)&minimap_window_block.minimap_window),(const char *)title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   wnd_set_min_size((ModalMenuWindow *)((i8 *)&minimap_window_block.minimap_wnd),0x28,0x19);
@@ -1109,7 +1109,7 @@ void __thiscall mapview_create(ViewWindow *self)
   create_arg8 = 0;
   create_arg7 = 6;
   wnd_style = 6;
-  title_text = (i32)label_string(*(i32 *)(label_string_ids + 0x10));
+  title_text = (i32)label_string(label_string_ids[0x4]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
   ;

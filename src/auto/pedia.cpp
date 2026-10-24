@@ -39,8 +39,8 @@ void __thiscall pedia_update_controls(MediaWindow *self)
   Control *new_ctrl;
   u8 *hotspot_parent2;
   u8 *hotspot_parent;
-  u32 hotspot2;
-  u32 hotspot;
+  Control *hotspot2;
+  Control *hotspot;
   struct { u32 left; u32 top; u32 right; u32 bottom; } rect2;
   i32 seh_frame;
   i8 *seh_handler;
@@ -101,10 +101,10 @@ void __thiscall pedia_update_controls(MediaWindow *self)
           hotspot = 0;
         }
         else {
-          hotspot = (u32)hotspot_ctor(new_ctrl);
+          hotspot = hotspot_ctor(new_ctrl);
         }
         seh_state = 0xffffffff;
-        ((PictureWindow *)self)->list_hotspot = hotspot;
+        ((PictureWindow *)self)->list_hotspot = (u32)hotspot;
         if (self == (MediaWindow *)0x0) {
           hotspot_parent = (u8 *)0x0;
         }
@@ -135,10 +135,10 @@ void __thiscall pedia_update_controls(MediaWindow *self)
           hotspot2 = 0;
         }
         else {
-          hotspot2 = (u32)hotspot_ctor(new_ctrl);
+          hotspot2 = hotspot_ctor(new_ctrl);
         }
         seh_state = 0xffffffff;
-        ((PictureWindow *)self)->list_hotspot = hotspot2;
+        ((PictureWindow *)self)->list_hotspot = (u32)hotspot2;
         if (self == (MediaWindow *)0x0) {
           hotspot_parent2 = (u8 *)0x0;
         }
@@ -923,7 +923,7 @@ restore_scale_draw_text:
       crt_strcpy(((i8 *)&map_views_block.text_buffer),str_150);
     }
     else {
-      terrain_index = (iptr)label_string(*(i32 *)(label_string_ids + 0xb08));
+      terrain_index = (iptr)label_string(label_string_ids[0x2c2]);
       text_append((const char *)terrain_index);
     }
     surface_draw_text((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
@@ -1005,11 +1005,11 @@ restore_scale_draw_text:
       name_arg = base_name;
       measured = base_food;
       icon_center_y = special_food;
-      _Format = label_string(*(i32 *)(label_string_ids + 0xb10));
+      _Format = label_string(label_string_ids[0x2c4]);
       _sprintf(((i8 *)&map_views_block.text_buffer),_Format,name_arg,measured,icon_center_y);
     }
     else {
-      label = label_string(*(i32 *)(label_string_ids + 0xb14));
+      label = label_string(label_string_ids[0x2c5]);
       crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
     }
     surface_draw_text((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
@@ -1017,7 +1017,7 @@ restore_scale_draw_text:
     text_clear();
     str_clear((char *)format_buf);
     if (base_shields < special_shields) {
-      label = label_string(*(i32 *)(label_string_ids + 0xb18));
+      label = label_string(label_string_ids[0x2c6]);
       crt_strcpy(format_buf,label);
       _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_shields,special_shields);
       surface_draw_text((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
@@ -1025,29 +1025,29 @@ restore_scale_draw_text:
       text_clear();
       str_clear((char *)format_buf);
       if (base_trade2 < special_trade) {
-        label = label_string(*(i32 *)(label_string_ids + 0xb1c));
+        label = label_string(label_string_ids[0x2c7]);
         crt_strcat(format_buf,label);
         _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_trade2,special_trade);
       }
       else {
-        label = label_string(*(i32 *)(label_string_ids + 0xb20));
+        label = label_string(label_string_ids[0x2c8]);
         crt_strcat(((i8 *)&map_views_block.text_buffer),label);
       }
     }
     else {
-      label = label_string(*(i32 *)(label_string_ids + 0xb24));
+      label = label_string(label_string_ids[0x2c9]);
       crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
       surface_draw_text((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
       y2 += line_height;
       text_clear();
       str_clear((char *)format_buf);
       if (base_trade2 < special_trade) {
-        label = label_string(*(i32 *)(label_string_ids + 0xb1c));
+        label = label_string(label_string_ids[0x2c7]);
         crt_strcat(format_buf,label);
         _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_trade2,special_trade);
       }
       else {
-        label = label_string(*(i32 *)(label_string_ids + 0xb28));
+        label = label_string(label_string_ids[0x2ca]);
         crt_strcat(((i8 *)&map_views_block.text_buffer),label);
       }
     }
@@ -1162,7 +1162,7 @@ restore_scale_draw_text:
       text_append_label(0x293);
       text_append_colon();
       text_append_space();
-      terrain_index = (iptr)label_string(*(i32 *)(label_string_ids + 0xb0c));
+      terrain_index = (iptr)label_string(label_string_ids[0x2c3]);
       text_append((const char *)terrain_index);
       surface_draw_text((DibSurface *)self,(iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
       if (((terrain2 == 0) || (terrain2 == 2)) || (terrain2 == 1)) {
@@ -1664,7 +1664,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   u8 *parent_3;
   u8 *parent_2;
   u8 *close_parent;
-  u32 close_hotspot;
+  Control *close_hotspot;
   tagRECT rect;
   int btn_height;
   i32 exc_link;
@@ -1721,10 +1721,10 @@ void __thiscall pedia_window_create(DocumentWindow *self)
     close_hotspot = 0;
   }
   else {
-    close_hotspot = (u32)hotspot_ctor(this_00);
+    close_hotspot = hotspot_ctor(this_00);
   }
   eh_state = 0xffffffff;
-  (*(u32 *)&((PictureWindow *)self)->close_box_hotspot) = close_hotspot;
+  (*(u32 *)&((PictureWindow *)self)->close_box_hotspot) = (u32)close_hotspot;
   if (self == (DocumentWindow *)0x0) {
     close_parent = (u8 *)0x0;
   }
@@ -1749,7 +1749,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_2 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x9c));
+  label = (iptr)label_string(label_string_ids[0x27]);
   button_create
             ((Control *)((PictureWindow *)self)->list_describe_button,(iptr)parent_2,0xfa1,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)((PictureWindow *)self)->list_describe_button,(iptr)pedia_toggle_describe);
@@ -1760,7 +1760,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_3 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)&((PictureWindow *)self)->list_close_button,(iptr)parent_3,0xfa2,(iptr)&rect,(const char *)label);
   ctrl_set_default_button((Control *)&((PictureWindow *)self)->list_close_button);
@@ -1773,7 +1773,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_4 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xd58));
+  label = (iptr)label_string(label_string_ids[0x356]);
   button_create
             ((Control *)((u8 *)&((PictureWindow *)self)->concept_list_back_button),(iptr)parent_4,0xfb2,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->concept_list_back_button),(iptr)pedia_on_back);
@@ -1785,7 +1785,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_5 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x9c));
+  label = (iptr)label_string(label_string_ids[0x27]);
   button_create
             ((Control *)((PictureWindow *)self)->advance_list_describe_button,(iptr)parent_5,0xfab,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)((PictureWindow *)self)->advance_list_describe_button,(iptr)pedia_toggle_describe);
@@ -1796,7 +1796,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_6 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xd80));
+  label = (iptr)label_string(label_string_ids[0x360]);
   button_create
             ((Control *)(((PictureWindow *)self)->advance_list_tech_tree_button),(iptr)parent_6,0xfac,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)(((PictureWindow *)self)->advance_list_tech_tree_button),(iptr)pedia_show_tech_tree);
@@ -1807,7 +1807,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_7 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)(((PictureWindow *)self)->advance_list_close_button),(iptr)parent_7,0xfad,(iptr)&rect,(const char *)label);
   ctrl_set_default_button((Control *)(((PictureWindow *)self)->advance_list_close_button));
@@ -1821,7 +1821,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_8 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xd58));
+  label = (iptr)label_string(label_string_ids[0x356]);
   button_create
             ((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_back_button),(iptr)parent_8,0xfae,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_back_button),(iptr)pedia_on_back);
@@ -1832,7 +1832,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_9 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xd80));
+  label = (iptr)label_string(label_string_ids[0x360]);
   button_create
             ((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_tech_tree_button),(iptr)parent_9,0xfaf,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_tech_tree_button),(iptr)pedia_show_tech_tree);
@@ -1843,7 +1843,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_10 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xb04));
+  label = (iptr)label_string(label_string_ids[0x2c1]);
   button_create
             ((Control *)(((PictureWindow *)self)->advance_detail_describe_button),(iptr)parent_10,0xfb0,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)(((PictureWindow *)self)->advance_detail_describe_button),(iptr)pedia_toggle_describe);
@@ -1854,7 +1854,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_11 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button),(iptr)parent_11,0xfb1,(iptr)&rect,(const char *)label);
   ctrl_set_default_button((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button));
@@ -1868,7 +1868,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_12 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xd58));
+  label = (iptr)label_string(label_string_ids[0x356]);
   button_create
             ((Control *)&((PictureWindow *)self)->detail_back_button,(iptr)parent_12,0xfa3,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->detail_back_button,(iptr)pedia_on_back);
@@ -1879,7 +1879,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_13 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xb04));
+  label = (iptr)label_string(label_string_ids[0x2c1]);
   button_create
             ((Control *)(((PictureWindow *)self)->detail_describe_button),(iptr)parent_13,0xfa4,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)(((PictureWindow *)self)->detail_describe_button),(iptr)pedia_toggle_describe);
@@ -1890,7 +1890,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_14 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)&((PictureWindow *)self)->detail_close_button,(iptr)parent_14,0xfa5,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)&((PictureWindow *)self)->detail_close_button,(iptr)pedia_on_close);
@@ -1902,7 +1902,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_15 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xd58));
+  label = (iptr)label_string(label_string_ids[0x356]);
   button_create
             ((Control *)(((PictureWindow *)self)->text_back_button),(iptr)parent_15,0xfa6,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)(((PictureWindow *)self)->text_back_button),(iptr)pedia_on_back);
@@ -1913,7 +1913,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   else {
     parent_16 = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)((u8 *)&((PictureWindow *)self)->text_close_button),(iptr)parent_16,0xfa7,(iptr)&rect,(const char *)label);
   button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->text_close_button),(iptr)pedia_on_close);
@@ -3201,7 +3201,7 @@ void __thiscall pedia_load_indexes(DocumentWindow *self)
         if ((0xc < improvement) &&
            (status = _strcmp(terrain_types[improvement].abbrev,((i8 *)&pedia_grassland_shield_abbrev_str)), status == 0)) {
           text_append_space();
-          name_text = label_string(*(i32 *)(label_string_ids + 0xb00));
+          name_text = label_string(label_string_ids[0x2c0]);
           crt_strcat(((i8 *)&map_views_block.text_buffer),name_text);
         }
         name_len = _strlen(((i8 *)&map_views_block.text_buffer));

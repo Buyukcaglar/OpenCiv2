@@ -1576,7 +1576,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
 {
   char color_base;
   size_t nread;
-  iptr logpal;
+  GamePalette *logpal;
   int tmp;
   i32 blue;
   i32 green;
@@ -1640,8 +1640,8 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
               green = *(i32 *)(bmp_palette + src_index * 4 + 1);
               blue = *(i32 *)(bmp_palette + src_index * 4 + 2);
               tmp = i;
-              logpal = (iptr)palette_get_logpalette((GamePalette *)palette);
-              palette_set_entry_rgb(logpal,tmp,blue,green,red);
+              logpal = palette_get_logpalette((GamePalette *)palette);
+              palette_set_entry_rgb((iptr)logpal,tmp,blue,green,red);
               src_index++;
             }
             palette_commit_range((GamePalette *)palette,first_color,num_colors);
@@ -1740,7 +1740,7 @@ close_file:
 int __cdecl gfx_save_bmp_640x480(iptr surface,const char *filename,int first_color,int num_colors,iptr palette)
 
 {
-  iptr logpal;
+  GamePalette *logpal;
   size_t nwritten;
   int tmp;
   i8 *red_ptr;
@@ -1816,8 +1816,8 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,const char *filename,int first_col
       green_ptr = bmp_palette + dst_index * 4 + 1;
       red_ptr = bmp_palette + dst_index * 4 + 2;
       tmp = i;
-      logpal = (iptr)palette_get_logpalette((GamePalette *)palette);
-      palette_get_entry_rgb(logpal,tmp,(iptr)red_ptr,(iptr)green_ptr,(iptr)blue_ptr);
+      logpal = palette_get_logpalette((GamePalette *)palette);
+      palette_get_entry_rgb((iptr)logpal,tmp,(iptr)red_ptr,(iptr)green_ptr,(iptr)blue_ptr);
       dst_index++;
     }
   }
@@ -2096,7 +2096,7 @@ void __thiscall portrait_dlg_paint(PortraitDialog *self)
   tagRECT src_rect;
   iptr title;
   
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x4a8));
+  title = (iptr)label_string(label_string_ids[0x12a]);
   dll_handle_load((DllHandle *)self->portrait_dll,(const char *)&str_mk_dll);
   loaded = surface_load_gif_resource
                     ((DibSurface *)&self->style_flags,
@@ -5387,12 +5387,12 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,iptr
   button_y2 = (status_window_block.sprite_editor_origin_y + status_window_block.sprite_editor_client_height_i32) - (line_height + 10);
   button_x = status_window_block.sprite_editor_origin_x + 2;
   rect_set_xywh((iptr)button_rect,button_x,button_y2,button_width2,button_height);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create(&ok_button,(iptr)&status_window_block.sprite_editor_wnd,0x65,(iptr)button_rect,(const char *)label);
   button_set_callback(&ok_button,(iptr)sprite_editor_ok_clicked);
   button_x = button_x + button_width2 + 2;
   rect_set_xywh((iptr)button_rect,button_x,button_y2,button_width2,button_height);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create(&cancel_button,(iptr)&status_window_block.sprite_editor_wnd,0x66,(iptr)button_rect,(const char *)label);
   button_set_callback(&cancel_button,(iptr)sprite_editor_cancel_clicked);
   ctrl_set_cancel_button(&cancel_button);
@@ -6066,7 +6066,7 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   win_y = 0;
   win_x = 0;
   style_flags = 0xd;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x950));
+  title = (iptr)label_string(label_string_ids[0x254]);
   sprite_picker_create_window((const char *)title,style_flags,win_x,win_y,win_width,win_height,resize_border,caption_height,border_width);
   metric = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
   self->init_sci_rate = metric + 8;
@@ -6101,7 +6101,7 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&self->sci_label_y,(iptr)ok_parent,0xc9,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&self->sci_label_y,(iptr)sprite_picker_ok_clicked);
@@ -6114,7 +6114,7 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   else {
     import_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x954));
+  label = (iptr)label_string(label_string_ids[0x255]);
   button_create
             ((Control *)self->import_all_button,(iptr)import_parent,0xc9,(iptr)rect,(const char *)label);
   button_set_callback((Control *)self->import_all_button,(iptr)sprite_picker_import_all_clicked);
@@ -6130,7 +6130,7 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&self->fill_rect_top,(iptr)cancel_parent,0xca,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&self->fill_rect_top,(iptr)sprite_picker_cancel_clicked);
@@ -6219,12 +6219,12 @@ void __cdecl sprite_editor_import_sheet(void)
     arg_a = 0;
     str = sheet_name;
     arg_name = sheet_name;
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x958));
+    label = (iptr)label_string(label_string_ids[0x256]);
     _sprintf(filter,str_s_s_c_s_bmp_s_gif_c_c,sheet_name,label,arg_a,str,arg_name,
              arg_b,arg_c);
     _sprintf(file_path,str_s_bmp_s_gif,sheet_name,sheet_name);
     str = sheet_name;
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x95c));
+    label = (iptr)label_string(label_string_ids[0x257]);
     _sprintf(prompt,str_s_s_2,label,str);
     ok = ui_file_name_dialog((iptr)&status_window_block.sprite_editor_wnd,(const char *)prompt,(iptr)file_path,(iptr)filter,(iptr)&str_bmp_gif,1,0
                               );
@@ -6262,7 +6262,7 @@ check_file_extension:
           if (str == (char *)0x0) {
             mb_flags = 0x10;
             title_text = (LPCSTR)0x0;
-            caption_text = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x968));
+            caption_text = (LPCSTR)label_string(label_string_ids[0x25a]);
             result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
             MessageBoxA(*(HWND *)(result + 4),caption_text,title_text,mb_flags);
           }
@@ -6273,7 +6273,7 @@ check_file_extension:
             if (result == 0) {
               mb_flags = 0x10;
               title_text = (LPCSTR)0x0;
-              caption_text = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
+              caption_text = (LPCSTR)label_string(label_string_ids[0x259]);
               result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
               MessageBoxA(*(HWND *)(result + 4),caption_text,title_text,mb_flags);
             }
@@ -6287,7 +6287,7 @@ check_file_extension:
           if (result == 0) {
             mb_flags = 0x10;
             title_text = (LPCSTR)0x0;
-            caption_text = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
+            caption_text = (LPCSTR)label_string(label_string_ids[0x259]);
             result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
             MessageBoxA(*(HWND *)(result + 4),caption_text,title_text,mb_flags);
           }
@@ -6299,7 +6299,7 @@ check_file_extension:
     }
     else {
       str = sheet_name;
-      label = (iptr)label_string(*(i32 *)(label_string_ids + 0x960));
+      label = (iptr)label_string(label_string_ids[0x258]);
       _sprintf(prompt,str_s_s_3,label,str);
       mb_flags = 0x40;
       caption_text = (LPCSTR)0x0;
@@ -7957,7 +7957,7 @@ palette_fade_begin(GamePalette *self,u32 first,u32 count,u32 steps,iptr target_p
 {
   u32 handle;
   iptr dst_buf;
-  iptr target_logpal;
+  GamePalette *target_logpal;
   u32 count_arg;
   
   self->fade_steps = steps;
@@ -7973,8 +7973,8 @@ palette_fade_begin(GamePalette *self,u32 first,u32 count,u32 steps,iptr target_p
   dst_buf = (iptr)mem_handle_lock(self->fade_dst_rgb);
   handle = first;
   count_arg = count;
-  target_logpal = (iptr)palette_get_logpalette((GamePalette *)target_pal);
-  palette_copy_rgb_range(target_logpal,dst_buf,handle,count_arg);
+  target_logpal = palette_get_logpalette((GamePalette *)target_pal);
+  palette_copy_rgb_range((iptr)target_logpal,dst_buf,handle,count_arg);
   mem_handle_unlock(self->fade_dst_rgb);
   palette_reserve_range(self,first,count);
   return;

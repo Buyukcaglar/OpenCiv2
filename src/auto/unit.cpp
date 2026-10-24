@@ -65,7 +65,7 @@ void __cdecl unit_reveal_surroundings(iptr unit,int allow_contact)
   uint sees_two;
   uint is_stealth;
   int y3;
-  iptr tile;
+  Tile *tile;
   iptr x;
   iptr y4;
   iptr in_bounds;
@@ -99,8 +99,8 @@ void __cdecl unit_reveal_surroundings(iptr unit,int allow_contact)
   redraw_flags = 0;
   is_human = human_civ[0] == civ2;
   if (civ2 == 0) {
-    tile = (iptr)tile_at(x2,y);
-    units[unit].visibility = *(byte *)(tile + 4) | units[unit].visibility;
+    tile = tile_at(x2,y);
+    units[unit].visibility = tile->visible | units[unit].visibility;
   }
   reveal_all = game.reveal_map;
   if ((game.reveal_map == '\0') && (((game.game_flags & 0x80) == 0 || ((prefs_game_rules_block.scenario_flags[0] & 8) == 0)))) {
@@ -513,7 +513,7 @@ void __cdecl unit_caravan_establish_trade(iptr unit,uptr city)
   revenue = int_clamp(base_revenue,0,max_revenue);
   if ((1 << (civ2 & 0x1f) & (uint)game.human_players) != 0) {
     if ((int)commodity < 0) {
-      text_set_label_arg(0,*(i32 *)(label_string_ids + 0x100));
+      text_set_label_arg(0,label_string_ids[0x40]);
     }
     else {
       text_set_label_arg(0,commodity_names[commodity]);
@@ -2238,7 +2238,7 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
            ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 35) + civ2 * 4) & 1) == 0)))) {
       option_flags = 0;
       option_id = 7;
-      unit2 = (iptr)label_string(*(i32 *)(label_string_ids + 0xd28));
+      unit2 = (iptr)label_string(label_string_ids[0x34a]);
       dialog_add_option((DialogOptionList *)&dlg,(const char *)unit2,option_id,option_flags);
     }
     text_close_file();
@@ -5125,7 +5125,7 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
       fmt_arg3 = 0;
       fmt_arg2 = 0;
       dlg_arg = 0;
-      filter_arg = (iptr)label_string(*(i32 *)(label_string_ids + 0x888));
+      filter_arg = (iptr)label_string(label_string_ids[0x222]);
       _sprintf(dest_path,str_s_wav_c_wav_c_c,filter_arg,dlg_arg,fmt_arg2,fmt_arg3);
       crt_strcpy(wav_path,str_wav);
       dlg_arg = 0;
@@ -5133,7 +5133,7 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
       default_ext = ((i8 *)&unit_sound_wav_default_ext);
       filter = dest_path;
       file_buf = wav_path;
-      title = (iptr)label_string(*(i32 *)(label_string_ids + 0x88c));
+      title = (iptr)label_string(label_string_ids[0x223]);
       ret = ui_file_name_dialog((iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,(const char *)title,(iptr)file_buf,(iptr)filter,(iptr)default_ext,filter_arg,dlg_arg);
       if (ret == 0) {
         seh_state = 0xffffffff;
@@ -5451,8 +5451,7 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
     btn_x = ((int)(col_offset + (col_offset >> 0x1f & 3U)) >> 2) +
                ((int)(btn_width + (btn_width >> 0x1f & 3U)) >> 2) + unit_sound_editor_window_block.unit_sound_editor_client_x;
     rect_set_xywh((iptr)rect,btn_x,btn_y,btn_width,btn_height);
-    label = (iptr)label_string(*(i32 *)
-                                (label_string_ids + *(int *)(((i8 *)&unit_sound_button_label_ids) + i * 4) * 4));
+    label = (iptr)label_string(label_string_ids[*(int *)(((i8 *)&unit_sound_button_label_ids) + i * 4)]);
     button_create
               (slot_btns + i,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,i + 0xc9,(iptr)rect,(const char *)label);
     button_set_callback(slot_btns + i,(iptr)unit_sound_editor_pick_wav);
@@ -5462,12 +5461,12 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
   btn_y = (unit_sound_editor_window_block.unit_sound_editor_client_y + unit_sound_editor_window_block.unit_sound_editor_client_height_i32) - (btn_height + 2);
   btn_x = unit_sound_editor_window_block.unit_sound_editor_client_x + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,btn_width,btn_height);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create(&ok_btn,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,0x65,(iptr)rect,(const char *)label);
   button_set_callback(&ok_btn,(iptr)unit_sound_editor_ok_clicked);
   btn_x = btn_x + btn_width + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,btn_width,btn_height);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create(&cancel_btn,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,0x66,(iptr)rect,(const char *)label);
   button_set_callback(&cancel_btn,(iptr)unit_sound_editor_cancel_clicked);
   ctrl_set_cancel_button(&cancel_btn);
@@ -6432,7 +6431,7 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
     if (((((1 << (civ2 & 0x1f) & (uint)game.human_players) != 0) && (human_civ[0] == civ)) &&
         (cities[city].owner == civ)) && (choice != 0)) {
       if ((char)units[unit].counter < '\0') {
-        text_set_label_arg(0,*(i32 *)(label_string_ids + 0x100));
+        text_set_label_arg(0,label_string_ids[0x40]);
       }
       else {
         text_set_label_arg(0,commodity_names[(char)units[unit].counter]);
@@ -6465,19 +6464,19 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
       }
       result = 0;
       option_id = 0;
-      label = (iptr)label_string(*(i32 *)(label_string_ids + 0x284));
+      label = (iptr)label_string(label_string_ids[0xa1]);
       dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,result);
       city2 = (int)units[unit].home_city != city;
       if ((bool)city2) {
         result = 0;
         option_id = 1;
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x288));
+        label = (iptr)label_string(label_string_ids[0xa2]);
         dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,result);
       }
       if (cities[city].building < -0x26) {
         result = 0;
         option_id = 2;
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x28c));
+        label = (iptr)label_string(label_string_ids[0xa3]);
         dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,result);
         city2++;
       }
@@ -6875,7 +6874,7 @@ i32 __cdecl unit_move_dir(iptr unit,uptr dir,i32 move_flags)
           if ((civ_saved_cursor_x_block.autoplay_active == 0) && ((1 << (civ3 & 0x1f) & (uint)game.human_players) != 0)) {
             text_set_label_arg(1,unit_types[units[unit2].type].name);
             if (unit_types[units[unit2].type].role != 6) {
-              text_set_label_arg(1,*(i32 *)(label_string_ids + 0x234));
+              text_set_label_arg(1,label_string_ids[0x8d]);
             }
             popup_game_with_sprite((const char *)&str_noexpel,(iptr)&popup_info_icon_sprite,0);
           }
@@ -8142,7 +8141,7 @@ void __cdecl unit_editor_edit_sprite(void)
   
   save_cb = ((i8 *)sprite_sheet_save_units);
   count = 0xb;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+  title = (iptr)label_string(label_string_ids[0x1f6]);
   sprite_editor_run((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x3c),(const char *)title,count,
                      (iptr)save_cb);
   unit_editor_redraw();
@@ -8159,7 +8158,7 @@ void __cdecl unit_editor_edit_sound(void)
   
   unit_editor_store_controls();
   item_name = ((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x28;
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7dc));
+  label = (iptr)label_string(label_string_ids[0x1f7]);
   _sprintf(title,str_s_s_4,label,item_name);
   unit_sound_editor_run((const char *)title,*(i32 *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec));
   return;
@@ -8381,9 +8380,9 @@ void __thiscall unit_editor_create_combo(ViewWindow *self,int index)
     break;
   case 1:
   case 2:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(label_string_ids[0x1f1]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
     for (advance = 0; advance < 100; advance++) {
       label = (iptr)label_string(advances[advance].name);
@@ -8391,29 +8390,29 @@ void __thiscall unit_editor_create_combo(ViewWindow *self,int index)
     }
     break;
   case 3:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x794));
+    label = (iptr)label_string(label_string_ids[0x1e5]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x798));
+    label = (iptr)label_string(label_string_ids[0x1e6]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7e0));
+    label = (iptr)label_string(label_string_ids[0x1f8]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7e4));
+    label = (iptr)label_string(label_string_ids[0x1f9]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7e8));
+    label = (iptr)label_string(label_string_ids[0x1fa]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7ec));
+    label = (iptr)label_string(label_string_ids[0x1fb]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7f0));
+    label = (iptr)label_string(label_string_ids[0x1fc]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7f4));
+    label = (iptr)label_string(label_string_ids[0x1fd]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
     break;
   case 4:
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7f8));
+    label = (iptr)label_string(label_string_ids[0x1fe]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7fc));
+    label = (iptr)label_string(label_string_ids[0x1ff]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x800));
+    label = (iptr)label_string(label_string_ids[0x200]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + index * 0x38 + 0x28),(const char *)label);
   }
   return;
@@ -8618,7 +8617,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   wnd_y = 0;
   wnd_x = 0;
   wnd_style = 0xd;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x72c));
+  title = (iptr)label_string(label_string_ids[0x1cb]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,wnd_arg7,wnd_arg8,wnd_arg9);
   for (i = 0; i < 0xd; i++) {
@@ -8642,7 +8641,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)unit_editor_on_ok);
@@ -8654,7 +8653,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     rename_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
+  label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)unit_editor_on_rename);
@@ -8666,7 +8665,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)unit_editor_on_help);
@@ -8678,7 +8677,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)unit_editor_on_cancel);
@@ -8699,7 +8698,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     sprite_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
+  label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)sprite_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)unit_editor_edit_sprite);
@@ -8711,7 +8710,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     sound_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 2000));
+  label = (iptr)label_string(label_string_ids[500]);
   button_create
             ((Control *)(((DocumentWindow *)self)->unit_sound_button),(iptr)sound_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->unit_sound_button),(iptr)unit_editor_edit_sound);
@@ -8723,7 +8722,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   else {
     flags_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d4));
+  label = (iptr)label_string(label_string_ids[0x1f5]);
   button_create
             ((Control *)(((DocumentWindow *)self)->unit_flags_button),(iptr)flags_parent,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->unit_flags_button),(iptr)unit_editor_edit_flags);
@@ -10199,7 +10198,7 @@ int __cdecl unit_home_city_name(iptr unit)
   int name2;
   
   if (units[unit].home_city == -1) {
-    name2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x38));
+    name2 = (iptr)label_string(label_string_ids[0xe]);
   }
   else {
     name2 = (uint)(byte)units[unit].home_city * 0x58 + (iptr)((u8 *)&cities + 32);
@@ -10288,7 +10287,7 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cance
       if (unit_types[units[unit].type].role == 7) {
         text_append_comma();
         if ((char)units[unit].counter < '\0') {
-          text_append_string_id(*(i32 *)(label_string_ids + 0x300));
+          text_append_string_id(label_string_ids[0xc0]);
         }
         else {
           text_append_string_id(commodity_names[(char)units[unit].counter]);

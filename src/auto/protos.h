@@ -954,7 +954,7 @@ void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_se
 void __cdecl labels_free(void); /* 0046a740 */
 int __cdecl labels_load(void); /* 0046a78d */
 i32 __cdecl mem_free_handle(iptr handle); /* 0046aaa0 */
-i32 __cdecl mem_lock_handle(iptr handle); /* 0046aad0 */
+void * __cdecl mem_lock_handle(iptr handle); /* 0046aad0 */
 i32 __cdecl mem_unlock_handle(iptr handle); /* 0046ab00 */
 void * __thiscall clickmap_ctor(void *self); /* 0046ab30 */
 void __thiscall clickmap_dtor(void *self); /* 0046ab49 */

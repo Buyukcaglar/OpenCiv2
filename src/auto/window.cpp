@@ -633,7 +633,7 @@ i32 __cdecl popup_text_ex(const char *filename,const char *section,i32 dlg_flags
 {
   i32 result;
   
-  result = popup_text_run((iptr)(filename),section,dlg_flags,0,0,0,flags);
+  result = popup_text_run((iptr)filename,section,dlg_flags,0,0,0,flags);
   return result;
 }
 
@@ -720,7 +720,7 @@ i32 __cdecl dlg_game_text_input(const char *section,i32 max_len,char *buf,iptr d
 {
   i32 result;
   
-  result = dlg_text_input((iptr)&str_game_7,section,max_len,(iptr)(buf),default_text);
+  result = dlg_text_input((iptr)&str_game_7,section,max_len,(iptr)buf,default_text);
   return result;
 }
 
@@ -1842,7 +1842,7 @@ void __cdecl ui_focus_active_unit(int auto_next)
 void __cdecl popup_file_with_sprite(const char *filename,const char *section,iptr sprite,i32 sprite_flags)
 
 {
-  popup_text_with_sprite((iptr)(filename),section,0,sprite,sprite_flags);
+  popup_text_with_sprite((iptr)filename,section,0,sprite,sprite_flags);
   return;
 }
 
@@ -1891,7 +1891,7 @@ void __cdecl
 popup_text_with_advance(const char *filename,const char *section,i32 dlg_flags,iptr advance,i32 sprite_flags)
 
 {
-  popup_text_with_sprite((iptr)(filename),section,dlg_flags,
+  popup_text_with_sprite((iptr)filename,section,dlg_flags,
                      (iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                            (char)advances[advance].category * 0xf0 +
                            (char)advances[advance].epoch * 0x3c),sprite_flags);
@@ -1912,7 +1912,7 @@ popup_text_with_improvement(const char *filename,const char *section,i32 dlg_fla
   else {
     sprite = ((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + (improvement * 4 - 0x9c) * 0xf;
   }
-  result = popup_text_with_sprite((iptr)(filename),section,dlg_flags,(iptr)sprite,sprite_flags);
+  result = popup_text_with_sprite((iptr)filename,section,dlg_flags,(iptr)sprite,sprite_flags);
   return result;
 }
 
@@ -1923,7 +1923,7 @@ popup_text_with_unit_sprite(const char *filename,const char *section,i32 dlg_fla
 {
   i32 result;
   
-  result = popup_text_with_sprite((iptr)(filename),section,dlg_flags,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c),sprite_flags)
+  result = popup_text_with_sprite((iptr)filename,section,dlg_flags,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c),sprite_flags)
   ;
   return result;
 }
@@ -4122,12 +4122,12 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
     if ((silent == 0) && (main_menu_block.city_zoom_requested == 0)) {
       height = 0;
       option_id = 1;
-      option_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x80));
+      option_text = (iptr)label_string(label_string_ids[0x20]);
       dialog_add_option
                 ((DialogOptionList *)((int)popup + 0x4a4),(const char *)option_text,option_id,height);
       height = 0;
       option_id = 0;
-      option_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x84));
+      option_text = (iptr)label_string(label_string_ids[0x21]);
       dialog_add_option
                 ((DialogOptionList *)((int)popup + 0x4a4),(const char *)option_text,option_id,height);
       if ((game.message_options & 0x400) == 0) {
@@ -4881,7 +4881,7 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
   u32 size;
   Control *this_00;
   u8 *native_wnd2;
-  i32 hotspot;
+  Control *hotspot;
   int button_x;
   int i;
   i8 button_rect[16];
@@ -4915,10 +4915,10 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
       hotspot = 0;
     }
     else {
-      hotspot = (i32)hotspot_ctor(this_00);
+      hotspot = hotspot_ctor(this_00);
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->pane_selection_flags_area + i * 0x1c + 0x18) = hotspot;
+    *(i32 *)(self->pane_selection_flags_area + i * 0x1c + 0x18) = (i32)hotspot;
     if (self == (FrameWindow *)0x0) {
       native_wnd2 = (u8 *)0x0;
     }
@@ -6015,7 +6015,7 @@ void __cdecl ui_pick_unit_from_stack(void)
     if (stack_count == 1) goto activate_unit;
   }
   dialog_flags = 1;
-  prompt = (iptr)label_string(*(i32 *)(label_string_ids + 0xf8));
+  prompt = (iptr)label_string(label_string_ids[0x3e]);
   unit = unit_stack_select_dialog(unit,(const char *)prompt,dialog_flags);
   if (unit < 0) {
     return;
@@ -8446,7 +8446,7 @@ i32 __thiscall dialog_create_window(DialogWindowView *self)
   SurfaceWindow *this_00;
   int surf_width;
   u32 new_size;
-  uptr surf_wnd2;
+  SurfaceWindow *surf_wnd2;
   i32 wnd_style;
   i8 *palette;
   i8 *parent2;
@@ -8464,10 +8464,10 @@ i32 __thiscall dialog_create_window(DialogWindowView *self)
       surf_wnd2 = 0;
     }
     else {
-      surf_wnd2 = (uptr)surfwnd_ctor(this_00);
+      surf_wnd2 = surfwnd_ctor(this_00);
     }
     eh_state = 0xffffffff;
-    self->surf_wnd = surf_wnd2;
+    self->surf_wnd = (uptr)surf_wnd2;
     empty_title[0] = 0;
     title = (i8 *)self->title_text;
     if (title == (i8 *)0x0) {
@@ -8578,14 +8578,14 @@ void __thiscall dialog_create_controls(Dialog *self)
   int *buttons;
   u32 *edits;
   u32 *hotspots;
-  uptr radio_group2;
+  InputControl *radio_group2;
   u32 *checkboxes2;
-  i32 hscroll2;
-  i32 vscroll2;
-  i32 listbox22;
-  i32 hscroll;
-  i32 vscroll;
-  i32 listbox3;
+  Control *hscroll2;
+  Control *vscroll2;
+  Control *listbox22;
+  Control *hscroll;
+  Control *vscroll;
+  Control *listbox3;
   int item_index;
   uptr edit_field;
   u32 y2;
@@ -8647,10 +8647,10 @@ void __thiscall dialog_create_controls(Dialog *self)
             radio_group2 = 0;
           }
           else {
-            radio_group2 = (uptr)radiogrp_ctor(this_00);
+            radio_group2 = radiogrp_ctor(this_00);
           }
           eh_state = 0xffffffff;
-          self->radio_group = radio_group2;
+          self->radio_group = (uptr)radio_group2;
           x = self->columns;
           if ((int)x < 2) {
             x = 1;
@@ -8732,10 +8732,10 @@ void __thiscall dialog_create_controls(Dialog *self)
                 vscroll = 0;
               }
               else {
-                vscroll = (i32)scrollbar_ctor(ctrl_mem);
+                vscroll = scrollbar_ctor(ctrl_mem);
               }
               eh_state = 0xffffffff;
-              *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) = vscroll;
+              *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) = (i32)vscroll;
               if (self->surf_wnd == 0) {
                 parent_174 = 0;
               }
@@ -8769,10 +8769,10 @@ void __thiscall dialog_create_controls(Dialog *self)
                 hscroll = 0;
               }
               else {
-                hscroll = (i32)scrollbar_ctor(ctrl_mem);
+                hscroll = scrollbar_ctor(ctrl_mem);
               }
               eh_state = 0xffffffff;
-              *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) = hscroll;
+              *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) = (i32)hscroll;
               if (self->surf_wnd == 0) {
                 parent_178 = 0;
               }
@@ -8813,10 +8813,10 @@ void __thiscall dialog_create_controls(Dialog *self)
             listbox3 = 0;
           }
           else {
-            listbox3 = (i32)checkbox_ctor(ctrl_mem);
+            listbox3 = checkbox_ctor(ctrl_mem);
           }
           eh_state = 0xffffffff;
-          *(i32 *)(self->control_ptr_slots + self->cur_pane * 4 + 0x14) = listbox3;
+          *(i32 *)(self->control_ptr_slots + self->cur_pane * 4 + 0x14) = (i32)listbox3;
           rect_set_xywh((iptr)rect,self->list_x,self->list_y,
                              (&self->list_width)[self->cur_pane],(&self->list_height)[self->cur_pane]);
           if (self->surf_wnd == 0) {
@@ -8856,10 +8856,10 @@ void __thiscall dialog_create_controls(Dialog *self)
                   vscroll2 = 0;
                 }
                 else {
-                  vscroll2 = (i32)scrollbar_ctor(ctrl_mem);
+                  vscroll2 = scrollbar_ctor(ctrl_mem);
                 }
                 eh_state = 0xffffffff;
-                *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) = vscroll2;
+                *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 0x10) = (i32)vscroll2;
                 if (self->surf_wnd == 0) {
                   parent_180 = 0;
                 }
@@ -8894,10 +8894,10 @@ void __thiscall dialog_create_controls(Dialog *self)
                   hscroll2 = 0;
                 }
                 else {
-                  hscroll2 = (i32)scrollbar_ctor(ctrl_mem);
+                  hscroll2 = scrollbar_ctor(ctrl_mem);
                 }
                 eh_state = 0xffffffff;
-                *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) = hscroll2;
+                *(i32 *)((u8 *)&self->extra_button_labels + self->cur_pane * 4 - 8) = (i32)hscroll2;
                 if (self->surf_wnd == 0) {
                   parent_184 = 0;
                 }
@@ -8934,10 +8934,10 @@ void __thiscall dialog_create_controls(Dialog *self)
               listbox22 = 0;
             }
             else {
-              listbox22 = (i32)checkbox_ctor(ctrl_mem);
+              listbox22 = checkbox_ctor(ctrl_mem);
             }
             eh_state = 0xffffffff;
-            *(i32 *)(self->control_ptr_slots + self->cur_pane * 4 + 0x14) = listbox22;
+            *(i32 *)(self->control_ptr_slots + self->cur_pane * 4 + 0x14) = (i32)listbox22;
             rect_set_xywh((iptr)rect,self->list_x,self->list_y,
                                (&self->list_width)[self->cur_pane],(&self->list_height)[self->cur_pane]);
             if (self->surf_wnd == 0) {
@@ -11688,7 +11688,7 @@ wnd_create_with_cmd_proc
 {
   iptr hwnd;
   
-  wnd_record_create(self,(i32)(title),style,x,y,width,height,palette);
+  wnd_record_create(self,(i32)title,style,x,y,width,height,palette);
   hwnd = wnd_get_window(self);
   wnd_install_command_proc((iptr)self,hwnd);
   wnd_clear_handlers((WndHandlers *)(self + 1));
@@ -11704,7 +11704,7 @@ wnd_create_with_handlers
 {
   iptr hwnd;
   
-  wnd_record_create_child(self,(i32)(title),style,x,y,width,height,palette,(WndBase *)parent);
+  wnd_record_create_child(self,(i32)title,style,x,y,width,height,palette,(WndBase *)parent);
   hwnd = wnd_get_window(self);
   wnd_install_command_proc((iptr)self,hwnd);
   wnd_clear_handlers((WndHandlers *)(self + 1));

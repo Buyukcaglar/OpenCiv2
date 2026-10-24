@@ -455,7 +455,7 @@ void __thiscall taxrate_dialog_run(ViewWindow *self,uptr civ)
   surface_load_gif_resource((*(DibSurface * *)&taxrate_bg_surface),gif_resource_id,10,0xc0,(iptr)&palette);
   value = font_cached_height((GameFont *)((i8 *)&ui_text_font));
   self->row_spacing_value = value;
-  label_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x408));
+  label_text = (iptr)label_string(label_string_ids[0x102]);
   label_width = font_text_width((GameFont *)((i8 *)&ui_text_font),(const char *)label_text);
   self->bar_width_value = (self->dialog_w + self->margin_value * -2) - (self->margin_value + label_width);
   arg_9 = 0;
@@ -466,7 +466,7 @@ void __thiscall taxrate_dialog_run(ViewWindow *self,uptr civ)
   arg_y = 0;
   arg_x = 0;
   style = 0xd;
-  title_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x404));
+  title_text = (iptr)label_string(label_string_ids[0x101]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title_text,style,arg_x,arg_y,left_x,value,arg_7,arg_8,arg_9);
   label_x = self->bar_width_value + self->margin_value + self->margin_value + self->client_x;
@@ -541,7 +541,7 @@ void __thiscall taxrate_dialog_run(ViewWindow *self,uptr civ)
   else {
     parent_wnd_ok = self->window_2;
   }
-  label_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label_text = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)(((MediaWindow *)self)->rate_ok_button),(iptr)parent_wnd_ok,0xc9,(iptr)rect,(const char *)label_text);
   button_set_callback((Control *)(((MediaWindow *)self)->rate_ok_button),(iptr)taxrate_on_ok_clicked);
@@ -857,7 +857,7 @@ void __cdecl city_editor_on_edit_icon(void)
   
   save_callback = ((i8 *)sprite_sheet_save_cities);
   sprite_count = 1;
-  title_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+  title_text = (iptr)label_string(label_string_ids[0x1f6]);
   sprite_editor_run((iptr)(((i8 *)&gfx_sheet_surface_block.city_sprites) +
                            *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2f4) * 0x3c +
                            *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x1e0 +
@@ -911,7 +911,7 @@ void __cdecl city_editor_on_edit_misc(void)
     }
     if (sprites != (i8 *)0x0) {
       save_callback = ((i8 *)sprite_sheet_save_cities);
-      title_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+      title_text = (iptr)label_string(label_string_ids[0x1f6]);
       sprite_editor_run((iptr)sprites,(const char *)title_text,sprite_count2,(iptr)save_callback);
     }
   }
@@ -960,33 +960,33 @@ void __thiscall city_editor_create_combo(ViewWindow *self,int combo_index)
   combo_set_font((ComboBoxFontView *)(self->editor_combo_boxes + combo_index * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
   combo_set_callback((ComboBoxCallbackSetView *)(self->editor_combo_boxes + combo_index * 0x38 + 0x28),(iptr)city_editor_on_combo_change);
   if (combo_index == 0) {
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x834));
+    label = (iptr)label_string(label_string_ids[0x20d]);
     combo_add_string((ComboBoxAddView *)&self->dialog_h,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x838));
+    label = (iptr)label_string(label_string_ids[0x20e]);
     combo_add_string((ComboBoxAddView *)&self->dialog_h,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x83c));
+    label = (iptr)label_string(label_string_ids[0x20f]);
     combo_add_string((ComboBoxAddView *)&self->dialog_h,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x840));
+    label = (iptr)label_string(label_string_ids[0x210]);
     combo_add_string((ComboBoxAddView *)&self->dialog_h,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x844));
+    label = (iptr)label_string(label_string_ids[0x211]);
     combo_add_string((ComboBoxAddView *)&self->dialog_h,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x848));
+    label = (iptr)label_string(label_string_ids[0x212]);
     combo_add_string((ComboBoxAddView *)&self->dialog_h,(const char *)label);
   }
   else if (combo_index == 1) {
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x84c));
+    label = (iptr)label_string(label_string_ids[0x213]);
     combo_add_string((ComboBoxAddView *)&self->lux_label_y,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x850));
+    label = (iptr)label_string(label_string_ids[0x214]);
     combo_add_string((ComboBoxAddView *)&self->lux_label_y,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x854));
+    label = (iptr)label_string(label_string_ids[0x215]);
     combo_add_string((ComboBoxAddView *)&self->lux_label_y,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x858));
+    label = (iptr)label_string(label_string_ids[0x216]);
     combo_add_string((ComboBoxAddView *)&self->lux_label_y,(const char *)label);
   }
   else if (combo_index == 2) {
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x85c));
+    label = (iptr)label_string(label_string_ids[0x217]);
     combo_add_string((ComboBoxAddView *)self->sci_rate_combo,(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x860));
+    label = (iptr)label_string(label_string_ids[0x218]);
     combo_add_string((ComboBoxAddView *)self->sci_rate_combo,(const char *)label);
   }
   return;
@@ -1028,19 +1028,19 @@ void __thiscall city_editor_draw(ViewWindow *self)
   label_x = city_editor_combo_x_table_block.city_editor_combo_x_table[0] + self->client_x + 0x32;
   label_y = ((city_editor_combo_x_table_block.city_editor_combo_y_table[0] + self->client_y) - self->sci_rate_sel) - 2;
   text_clear();
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x864));
+  label = (iptr)label_string(label_string_ids[0x219]);
   text_append_str((const char *)label);
   text_draw_centered((iptr)self,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
   label_x = city_editor_combo_x_table_block.city_editor_combo2_x + self->client_x + 0x32;
   label_y = ((city_editor_combo_x_table_block.city_editor_combo2_y + self->client_y) - self->sci_rate_sel) - 2;
   text_clear();
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x868));
+  label = (iptr)label_string(label_string_ids[0x21a]);
   text_append_str((const char *)label);
   text_draw_centered((iptr)self,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
   label_x = city_editor_combo_x_table_block.city_editor_combo3_x + self->client_x + 0x32;
   label_y = ((city_editor_combo_x_table_block.city_editor_combo3_y + self->client_y) - self->sci_rate_sel) - 2;
   text_clear();
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x86c));
+  label = (iptr)label_string(label_string_ids[0x21b]);
   text_append_str((const char *)label);
   text_draw_centered((iptr)self,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
   wnd_blit_surface((DibSurface *)self);
@@ -1114,7 +1114,7 @@ void __thiscall city_editor_open_window(ViewWindow *self)
   arg_y = 0;
   arg_x = 0;
   style = 0xd;
-  title_text = (iptr)label_string(*(i32 *)(label_string_ids + 0x738));
+  title_text = (iptr)label_string(label_string_ids[0x1ce]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title_text,style,arg_x,arg_y,width,height,arg_7,arg_8,arg_9);
   for (i = 0; i < 3; i++) {
@@ -1132,7 +1132,7 @@ void __thiscall city_editor_open_window(ViewWindow *self)
   else {
     parent_wnd_ok = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)parent_wnd_ok,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)city_editor_on_ok);
@@ -1144,7 +1144,7 @@ void __thiscall city_editor_open_window(ViewWindow *self)
   else {
     parent_wnd_help = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)parent_wnd_help,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)city_editor_on_help);
@@ -1156,7 +1156,7 @@ void __thiscall city_editor_open_window(ViewWindow *self)
   else {
     parent_wnd_cancel = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)parent_wnd_cancel,0x66,(iptr)rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)city_editor_on_cancel);
@@ -1173,7 +1173,7 @@ void __thiscall city_editor_open_window(ViewWindow *self)
   else {
     parent_wnd_icon = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
+  label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)parent_wnd_icon,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)city_editor_on_edit_icon);
@@ -1185,7 +1185,7 @@ void __thiscall city_editor_open_window(ViewWindow *self)
   else {
     parent_wnd_misc = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8f0));
+  label = (iptr)label_string(label_string_ids[0x23c]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)parent_wnd_misc,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)city_editor_on_edit_misc);
@@ -1427,7 +1427,7 @@ void __cdecl trade_advisor_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = label_string(*(i32 *)(label_string_ids + 0x548));
+  text = label_string(label_string_ids[0x152]);
   text_append(text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
   top_y += line_height;
@@ -1524,13 +1524,13 @@ void __cdecl trade_advisor_draw(void)
       if (row == 0) {
         text_y2 = row_y + 10;
         text_clear();
-        text = label_string(*(i32 *)(label_string_ids + 0x5b0));
+        text = label_string(label_string_ids[0x16c]);
         text_append(text);
         text_set_font((iptr)&advisor_font_block.advisor_font);
         text_set_colors(0x29,10,1,1);
         gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
         text_clear();
-        text = label_string(*(i32 *)(label_string_ids + 0x5b4));
+        text = label_string(label_string_ids[0x16d]);
         text_append(text);
         gfx_draw_text((const char *)&map_views_block.text_buffer,right_col_x,text_y2);
         row_y += line_height;
@@ -1727,14 +1727,14 @@ void __cdecl trade_advisor_show(iptr civ)
   rect_h = rect_height((iptr)rect);
   rect_offset((iptr)rect,advisor_window_block.advisor_client_x,(client_y - rect_h) + 0x18e);
   rect_offset((iptr)rect,299,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x51c));
+  label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
   ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)rect,0xfffffed5,0);
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x5bc));
+  label = (iptr)label_string(label_string_ids[0x16f]);
   button_create
             ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)rect,(const char *)label);
   button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)trade_advisor_on_supply_clicked);
@@ -1786,7 +1786,7 @@ void __cdecl city_status_draw(void)
   text_set_font((iptr)&advisor_font_block.advisor_font);
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  text = label_string(*(i32 *)(label_string_ids + 0x538));
+  text = label_string(label_string_ids[0x14e]);
   text_append(text);
   gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
   top_y += line_height;
@@ -2025,7 +2025,7 @@ void __cdecl wonders_report_draw(void)
   }
   if (total_rows == 0) {
     text_clear();
-    text = label_string(*(i32 *)(label_string_ids + 0x550));
+    text = label_string(label_string_ids[0x154]);
     text_append(text);
     gfx_draw_text_centered((const char *)&map_views_block.text_buffer,advisor_window_block.advisor_client_x,top_y,advisor_window_block.advisor_client_width);
     top_y = top_y + line_height + 4;
@@ -7895,7 +7895,7 @@ void __cdecl impr_editor_edit_icon(void)
   
   save_callback = ((i8 *)sprite_sheet_save_building_icons);
   sprite_count = 4;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+  title = (iptr)label_string(label_string_ids[0x1f6]);
   sprite_editor_run((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x3c),(const char *)title,sprite_count,
                      (iptr)save_callback);
   impr_editor_redraw();
@@ -7932,7 +7932,7 @@ void __cdecl impr_editor_edit_misc_icon(void)
     }
     if (sprites != (i8 *)0x0) {
       save_callback = ((i8 *)sprite_sheet_save_building_icons);
-      title = (iptr)label_string(*(i32 *)(label_string_ids + 0x7d8));
+      title = (iptr)label_string(label_string_ids[0x1f6]);
       sprite_editor_run((iptr)sprites,(const char *)title,sprite_count2,(iptr)save_callback);
     }
   }
@@ -8024,9 +8024,9 @@ void __thiscall impr_editor_create_combo(ViewWindow *self,int combo_index)
     }
   }
   else if ((0 < combo_index) && (combo_index < 3)) {
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c0));
+    label = (iptr)label_string(label_string_ids[0x1f0]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_index * 0x38 + 0x28),(const char *)label);
-    label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7c4));
+    label = (iptr)label_string(label_string_ids[0x1f1]);
     combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_index * 0x38 + 0x28),(const char *)label);
     for (advance = 0; advance < 100; advance++) {
       label = (iptr)label_string(advances[advance].name);
@@ -8235,7 +8235,7 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   wnd_y = 0;
   wnd_x = 0;
   style = 0xd;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x730));
+  title = (iptr)label_string(label_string_ids[0x1cc]);
   frame_wnd_create
             ((FrameWindow *)self,(const char *)title,style,wnd_x,wnd_y,wnd_width,wnd_height,arg7,arg8,arg9);
   for (ctrl_index = 0; ctrl_index < 5; ctrl_index++) {
@@ -8259,7 +8259,7 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   else {
     ok_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)impr_editor_on_ok);
@@ -8271,7 +8271,7 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   else {
     rename_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
+  label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)impr_editor_on_rename);
@@ -8283,7 +8283,7 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   else {
     help_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)impr_editor_on_help);
@@ -8295,7 +8295,7 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   else {
     cancel_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)impr_editor_on_cancel);
@@ -8312,7 +8312,7 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   else {
     icon_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x7cc));
+  label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)impr_editor_edit_icon);
@@ -8324,7 +8324,7 @@ void __thiscall impr_editor_window_run(ViewWindow *self)
   else {
     misc_icon_parent = self->window_2;
   }
-  label = (iptr)label_string(*(i32 *)(label_string_ids + 0x8f0));
+  label = (iptr)label_string(label_string_ids[0x23c]);
   button_create
             ((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)misc_icon_parent,0x65,(iptr)button_rect,(const char *)label);
   button_set_callback((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)impr_editor_edit_misc_icon);
@@ -10016,11 +10016,11 @@ int __cdecl city_notify_dialog_ex(iptr msg_key,iptr city,int force,iptr sprite)
       if (main_menu_block.city_zoom_requested == 0) {
         option_flags = 0;
         option_id = 1;
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x80));
+        label = (iptr)label_string(label_string_ids[0x20]);
         dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
         option_flags = 0;
         option_id = 0;
-        label = (iptr)label_string(*(i32 *)(label_string_ids + 0x84));
+        label = (iptr)label_string(label_string_ids[0x21]);
         dialog_add_option((DialogOptionList *)&dialog2,(const char *)label,option_id,option_flags);
         if ((game.message_options & 0x400) == 0) {
           dialog_set_default_choice((DialogOptionList *)&dialog2,0);
@@ -10389,7 +10389,7 @@ complete_improvement:
               if (wonder == 0x15) {
                 city3 = 0xb9;
               }
-              text_set_label_arg(3,*(i32 *)(label_string_ids + city3 * 4));
+              text_set_label_arg(3,label_string_ids[city3]);
               if (announce != 0) {
                 if (wonder < 0) {
                   if ((improvement < 0x23) || (0x25 < improvement)) {
@@ -10638,7 +10638,7 @@ complete_improvement:
           y2 = (int)cities[city].y;
           text_set_string_arg(0,(const char *)&cities[city].name);
           text_set_label_arg(1,unit_types[unit_type].name);
-          text_set_label_arg(3,*(i32 *)(label_string_ids + 0x2ec));
+          text_set_label_arg(3,label_string_ids[0xbb]);
           city_delete(city,0);
           result = civ_check_destroyed(civ,0);
           if (((result == 0) &&
@@ -10755,7 +10755,7 @@ after_target_search: ;
               }
               value = 0;
               option_id = 3;
-              str = (iptr)label_string(*(i32 *)(label_string_ids + 0x300));
+              str = (iptr)label_string(label_string_ids[0xc0]);
               dialog_add_option((DialogOptionList *)&caravan_dialog,(const char *)str,option_id,value);
               choice = dlg_show_modal(&caravan_dialog,0);
               if (caravan_dialog.result_extra == 0) {
@@ -10764,7 +10764,7 @@ after_target_search: ;
                                        [*(char *)&cities[city].supplies[choice]]);
                 }
                 else {
-                  str = (iptr)label_string(*(i32 *)(label_string_ids + 0x300));
+                  str = (iptr)label_string(label_string_ids[0xc0]);
                   text_set_string_arg(0,(const char *)str);
                 }
                 result = popup_game((const char *)&str_caraconfirm);
@@ -10817,7 +10817,7 @@ after_target_search: ;
               if (unit_types[unit_type].role == 7) {
                 city3 = 0xbc;
               }
-              text_set_label_arg(3,*(i32 *)(label_string_ids + city3 * 4));
+              text_set_label_arg(3,label_string_ids[city3]);
               city_notify_dialog((iptr)&str_built_3,city,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c));
             }
           }
@@ -11491,7 +11491,7 @@ void __cdecl wonder_apollo_reveal_map(void)
         arg_zero = 0;
         known_civ = civ_idx;
         tile = tile_at(x2,y2);
-        known_set(x2,y2,CONCAT31((int3)((uint)(iptr)tile >> 8),*(i8 *)((iptr)tile + 1)),
+        known_set(x2,y2,CONCAT31((int3)((uint)(iptr)tile >> 8),(i8)tile->improvements),
                   known_civ,arg_zero,arg_one);
       }
       x2 += 2;
@@ -13358,7 +13358,7 @@ void __thiscall city_window_draw_food_box(ScaledWindowView *self,int blit)
     width = rect_width((iptr)(((PictureWindow *)self)->food_box_rect));
     arg_y = *(i32 *)(((PictureWindow *)self)->food_box_rect_top);
     arg_x = *(i32 *)(((PictureWindow *)self)->food_box_rect);
-    box_w = (iptr)label_string(*(i32 *)(label_string_ids + 0xac));
+    box_w = (iptr)label_string(label_string_ids[0x2b]);
     gfx_draw_text_centered((const char *)box_w,arg_x,arg_y,width);
     box_w = city_window_scale((WindowObjectView *)self,0xb7);
     box_h = city_window_scale((WindowObjectView *)self,0x93);
@@ -14031,7 +14031,7 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
       dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&sprite,unit,0);
       arg = 0;
       option_id = 4;
-      city2 = (iptr)label_string(*(i32 *)(label_string_ids + 0x4c8));
+      city2 = (iptr)label_string(label_string_ids[0x132]);
       dialog_add_option((DialogOptionList *)&dialog2,(const char *)city2,option_id,arg);
       choice = dlg_show_modal(&dialog2,0);
       if (0 < choice) {
@@ -14152,53 +14152,53 @@ void __cdecl city_window_present_unit_menu(int stack_idx)
   dialog_add_sprite((DialogOptionList *)&dialog2,(iptr)&sprite,unit,0);
   unit2 = 0;
   option_id = 0;
-  city = (iptr)label_string(*(i32 *)(label_string_ids + 0x144));
+  city = (iptr)label_string(label_string_ids[0x51]);
   dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
   if (units[unit].orders != -1) {
     unit2 = 0;
     option_id = 1;
-    city = (iptr)label_string(*(i32 *)(label_string_ids + 0x148));
+    city = (iptr)label_string(label_string_ids[0x52]);
     dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
     dialog_set_default_choice((DialogOptionList *)&dialog2,1);
   }
   if (units[unit].orders != 3) {
     unit2 = 0;
     option_id = 2;
-    city = (iptr)label_string(*(i32 *)(label_string_ids + 0x14c));
+    city = (iptr)label_string(label_string_ids[0x53]);
     dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
   }
   if ((units[unit].orders != 1) && (units[unit].orders != 2)) {
     unit2 = 0;
     option_id = 3;
-    city = (iptr)label_string(*(i32 *)(label_string_ids + 0x150));
+    city = (iptr)label_string(label_string_ids[0x54]);
     dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
   }
   city6 = citywnd_get_city((WindowObjectView *)((i8 *)&city_window_block.city_window));
   if (city6 != (byte)units[unit].home_city) {
     unit2 = 0;
     option_id = 5;
-    city = (iptr)label_string(*(i32 *)(label_string_ids + 0x2cc));
+    city = (iptr)label_string(label_string_ids[0xb3]);
     dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
     if (units[unit].home_city != -1) {
       unit2 = 0;
       option_id = 6;
-      city = (iptr)label_string(*(i32 *)(label_string_ids + 0x2f4));
+      city = (iptr)label_string(label_string_ids[0xbd]);
       dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
     }
   }
   unit2 = 0;
   option_id = 7;
-  city = (iptr)label_string(*(i32 *)(label_string_ids + 0x2d0));
+  city = (iptr)label_string(label_string_ids[0xb4]);
   dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
   if (((((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) != 0) &&
       (game.turn_civ != '\0')) && (city2 = unit_moves_left(unit), city2 != 0)) {
     unit2 = 0;
     option_id = 8;
-    city = (iptr)label_string(*(i32 *)(label_string_ids + 0x2f8));
+    city = (iptr)label_string(label_string_ids[0xbe]);
     dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
     unit2 = 0;
     option_id = 9;
-    city = (iptr)label_string(*(i32 *)(label_string_ids + 0x2fc));
+    city = (iptr)label_string(label_string_ids[0xbf]);
     dialog_add_option((DialogOptionList *)&dialog2,(const char *)city,option_id,unit2);
   }
   unit2 = dlg_show_modal(&dialog2,0);
@@ -14869,7 +14869,7 @@ void __thiscall city_window_draw_happiness(WindowObjectView *self)
       width = 0;
       scaled = right_x;
       mid_y = icon_y;
-      text = (iptr)label_string(*(i32 *)(label_string_ids + 0x160));
+      text = (iptr)label_string(label_string_ids[0x58]);
       right_x = gfx_draw_text_right((const char *)text,scaled,mid_y,width);
     }
     scaled = city_window_scale(self,2);
@@ -15812,7 +15812,7 @@ void __cdecl city_button_change(i32 control_id)
             }
           }
           if ((((*((char *)&game.game_options + 1)) & 0x80) != 0) && (game.multiplayer == '\0')) {
-            city3 = (iptr)label_string(*(i32 *)(label_string_ids + 0x130));
+            city3 = (iptr)label_string(label_string_ids[0x4c]);
             dialog_add_button((DialogButtonsView *)&change_dialog,(const char *)city3);
           }
           if (((*((char *)&game.game_options + 1)) & 2) != 0) {
@@ -16570,7 +16570,7 @@ void __thiscall city_window_create_exit_button(ScaledWindowView *self,int show)
   int scaled;
   i32 dy;
   int top;
-  i32 button;
+  Control *button;
   i8 rect[16];
   i32 eh_next;
   i8 *eh_handler;
@@ -16592,10 +16592,10 @@ void __thiscall city_window_create_exit_button(ScaledWindowView *self,int show)
     button = 0;
   }
   else {
-    button = (i32)button_ctor(this_00);
+    button = button_ctor(this_00);
   }
   eh_state = 0xffffffff;
-  *(i32 *)(((PictureWindow *)self)->exit_button) = button;
+  *(i32 *)(((PictureWindow *)self)->exit_button) = (i32)button;
   ui_set_button_font((iptr)((u8 *)&((PictureWindow *)self)->city_font));
   height = city_window_scale((WindowObjectView *)self,0x18);
   width = city_window_scale((WindowObjectView *)self,0x39);
@@ -16608,9 +16608,7 @@ void __thiscall city_window_create_exit_button(ScaledWindowView *self,int show)
   scaled = city_window_scale((WindowObjectView *)self,0x3a);
   top = city_window_scale((WindowObjectView *)self,0x3a);
   rect_offset((iptr)rect,scaled + top,dy);
-  height = (iptr)label_string(*(i32 *)
-                              (label_string_ids + 0x94 +
-                              (-(uint)(*(int *)(((PictureWindow *)self)->notice_mode) == 2) & 0xcc) * 4));
+  height = (iptr)label_string(label_string_ids[0x25 + (-(uint)(*(int *)(((PictureWindow *)self)->notice_mode) == 2) & 0xcc)]);
   button_create
             (*(Control **)(((PictureWindow *)self)->exit_button),(iptr)&city_window_block.city_window_wnd,8,(iptr)rect,(const char *)height);
   ctrl_set_cancel_button(*(Control **)(((PictureWindow *)self)->exit_button));
@@ -16637,7 +16635,7 @@ void __thiscall city_window_create_change_button(ScaledWindowView *self,int show
   int origin_y;
   i32 dx;
   i32 dy;
-  i32 button;
+  Control *button;
   i8 rect[16];
   char auto_mode;
   i32 eh_next;
@@ -16663,10 +16661,10 @@ void __thiscall city_window_create_change_button(ScaledWindowView *self,int show
       button = 0;
     }
     else {
-      button = (i32)button_ctor(this_00);
+      button = button_ctor(this_00);
     }
     eh_state = 0xffffffff;
-    *(i32 *)(((PictureWindow *)self)->change_button) = button;
+    *(i32 *)(((PictureWindow *)self)->change_button) = (i32)button;
     ui_set_button_font((iptr)((u8 *)&((PictureWindow *)self)->city_font));
     origin_x = *(int *)(((PictureWindow *)self)->margin_x_2);
     cx = self->client_x;
@@ -16681,9 +16679,7 @@ void __thiscall city_window_create_change_button(ScaledWindowView *self,int show
     dy = 0;
     dx = city_window_scale((WindowObjectView *)self,0x73);
     rect_offset((iptr)rect,dx,dy);
-    height = (iptr)label_string(*(i32 *)
-                                (label_string_ids + 0x510 +
-                                (-(uint)(auto_mode == '\0') & 0xfffffee0) * 4));
+    height = (iptr)label_string(label_string_ids[0x144 + (-(uint)(auto_mode == '\0') & 0xfffffee0)]);
     button_create
               (*(Control **)(((PictureWindow *)self)->change_button),(iptr)&city_window_block.city_window_wnd,2,(iptr)rect,(const char *)height);
     button_set_callback(*(Control **)(((PictureWindow *)self)->change_button),(iptr)city_button_change);
@@ -16718,25 +16714,25 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   int scroll_top;
   i32 offset2;
   i8 mask_rect[16];
-  i32 scrollbar;
+  Control *scrollbar;
   Control *scrollbar_mem;
-  i32 next_btn;
+  SpriteButton *next_btn;
   SpriteButton *next_btn_mem;
-  i32 prev_btn;
+  SpriteButton *prev_btn;
   SpriteButton *prev_btn_mem;
-  i32 view_btn;
+  Control *view_btn;
   Control *view_btn_mem;
-  i32 happy_btn;
+  Control *happy_btn;
   Control *happy_btn_mem;
-  i32 rename_btn;
+  Control *rename_btn;
   Control *rename_btn_mem;
-  i32 map_btn;
+  Control *map_btn;
   Control *map_btn_mem;
-  i32 info_btn;
+  Control *info_btn;
   Control *info_btn_mem;
-  i32 change_btn;
+  Control *change_btn;
   Control *change_btn_mem;
-  i32 buy_btn;
+  Control *buy_btn;
   Control *buy_btn_mem;
   int vscroll_w;
   int origin_y2;
@@ -16757,100 +16753,100 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
     buy_btn = 0;
   }
   else {
-    buy_btn = (i32)button_ctor(buy_btn_mem);
+    buy_btn = button_ctor(buy_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->buy_button) = buy_btn;
+  *(i32 *)((u8 *)&((PictureWindow *)self)->buy_button) = (i32)buy_btn;
   change_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 1;
   if (change_btn_mem == (Control *)0x0) {
     change_btn = 0;
   }
   else {
-    change_btn = (i32)button_ctor(change_btn_mem);
+    change_btn = button_ctor(change_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)(((PictureWindow *)self)->change_button) = change_btn;
+  *(i32 *)(((PictureWindow *)self)->change_button) = (i32)change_btn;
   info_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 2;
   if (info_btn_mem == (Control *)0x0) {
     info_btn = 0;
   }
   else {
-    info_btn = (i32)button_ctor(info_btn_mem);
+    info_btn = button_ctor(info_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->info_button) = info_btn;
+  *(i32 *)((u8 *)&((PictureWindow *)self)->info_button) = (i32)info_btn;
   map_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 3;
   if (map_btn_mem == (Control *)0x0) {
     map_btn = 0;
   }
   else {
-    map_btn = (i32)button_ctor(map_btn_mem);
+    map_btn = button_ctor(map_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->map_button) = map_btn;
+  *(i32 *)((u8 *)&((PictureWindow *)self)->map_button) = (i32)map_btn;
   rename_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 4;
   if (rename_btn_mem == (Control *)0x0) {
     rename_btn = 0;
   }
   else {
-    rename_btn = (i32)button_ctor(rename_btn_mem);
+    rename_btn = button_ctor(rename_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->rename_button) = rename_btn;
+  *(i32 *)((u8 *)&((PictureWindow *)self)->rename_button) = (i32)rename_btn;
   happy_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 5;
   if (happy_btn_mem == (Control *)0x0) {
     happy_btn = 0;
   }
   else {
-    happy_btn = (i32)button_ctor(happy_btn_mem);
+    happy_btn = button_ctor(happy_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->happy_button) = happy_btn;
+  *(i32 *)((u8 *)&((PictureWindow *)self)->happy_button) = (i32)happy_btn;
   view_btn_mem = (Control *)operator_new(0x3c);
   eh_state = 6;
   if (view_btn_mem == (Control *)0x0) {
     view_btn = 0;
   }
   else {
-    view_btn = (i32)button_ctor(view_btn_mem);
+    view_btn = button_ctor(view_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->view_button) = view_btn;
+  *(i32 *)((u8 *)&((PictureWindow *)self)->view_button) = (i32)view_btn;
   prev_btn_mem = (SpriteButton *)operator_new(0xcc);
   eh_state = 7;
   if (prev_btn_mem == (SpriteButton *)0x0) {
     prev_btn = 0;
   }
   else {
-    prev_btn = (i32)spritebtn_ctor(prev_btn_mem);
+    prev_btn = spritebtn_ctor(prev_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->prev_city_button) = prev_btn;
+  *(i32 *)((u8 *)&((PictureWindow *)self)->prev_city_button) = (i32)prev_btn;
   next_btn_mem = (SpriteButton *)operator_new(0xcc);
   eh_state = 8;
   if (next_btn_mem == (SpriteButton *)0x0) {
     next_btn = 0;
   }
   else {
-    next_btn = (i32)spritebtn_ctor(next_btn_mem);
+    next_btn = spritebtn_ctor(next_btn_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)((u8 *)&((PictureWindow *)self)->next_city_button) = next_btn;
+  *(i32 *)((u8 *)&((PictureWindow *)self)->next_city_button) = (i32)next_btn;
   scrollbar_mem = (Control *)operator_new(0x40);
   eh_state = 9;
   if (scrollbar_mem == (Control *)0x0) {
     scrollbar = 0;
   }
   else {
-    scrollbar = (i32)scrollbar_ctor(scrollbar_mem);
+    scrollbar = scrollbar_ctor(scrollbar_mem);
   }
   eh_state = 0xffffffff;
-  *(i32 *)(((PictureWindow *)self)->improvements_scrollbar) = scrollbar;
+  *(i32 *)(((PictureWindow *)self)->improvements_scrollbar) = (i32)scrollbar;
   origin_x2 = *(int *)(((PictureWindow *)self)->margin_x_2) + self->client_x;
   origin_y2 = self->client_y + *(int *)(((PictureWindow *)self)->content_offset_y);
   ui_set_button_font((iptr)((u8 *)&((PictureWindow *)self)->city_font));
@@ -16861,7 +16857,7 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   top = origin_y2 + top;
   left_offset = city_window_scale((WindowObjectView *)self,0x1ba);
   rect_set_xywh((iptr)rect,origin_x2 + left_offset,top,width,height);
-  height = (iptr)label_string(*(i32 *)(label_string_ids + 0x8c));
+  height = (iptr)label_string(label_string_ids[0x23]);
   button_create
             (*(Control **)((u8 *)&((PictureWindow *)self)->buy_button),(iptr)&city_window_block.city_window_wnd,1,(iptr)rect,(const char *)height);
   button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->buy_button),(iptr)city_button_buy);
@@ -16888,21 +16884,21 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   top = origin_y2 + top;
   left_offset = city_window_scale((WindowObjectView *)self,0x1cb);
   rect_set_xywh((iptr)rect,origin_x2 + left_offset,top,width,height);
-  height = (iptr)label_string(*(i32 *)(label_string_ids + 0x9c));
+  height = (iptr)label_string(label_string_ids[0x27]);
   button_create
             (*(Control **)((u8 *)&((PictureWindow *)self)->info_button),(iptr)&city_window_block.city_window_wnd,3,(iptr)rect,(const char *)height);
   button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->info_button),(iptr)city_button_info);
   offset2 = 0;
   offset = city_window_scale((WindowObjectView *)self,0x3a);
   rect_offset((iptr)rect,offset,offset2);
-  height = (iptr)label_string(*(i32 *)(label_string_ids + 0xa4));
+  height = (iptr)label_string(label_string_ids[0x29]);
   button_create
             (*(Control **)((u8 *)&((PictureWindow *)self)->map_button),(iptr)&city_window_block.city_window_wnd,4,(iptr)rect,(const char *)height);
   button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->map_button),(iptr)city_button_map);
   offset2 = 0;
   offset = city_window_scale((WindowObjectView *)self,0x3a);
   rect_offset((iptr)rect,offset,offset2);
-  height = (iptr)label_string(*(i32 *)(label_string_ids + 0xa8));
+  height = (iptr)label_string(label_string_ids[0x2a]);
   button_create
             (*(Control **)((u8 *)&((PictureWindow *)self)->rename_button),(iptr)&city_window_block.city_window_wnd,5,(iptr)rect,(const char *)height);
   button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->rename_button),(iptr)city_button_rename);
@@ -16910,14 +16906,14 @@ void __thiscall city_window_create_controls(ScaledWindowView *self)
   top = city_window_scale((WindowObjectView *)self,0xffffffc6);
   left_offset = city_window_scale((WindowObjectView *)self,0xffffffc6);
   rect_offset((iptr)rect,top + left_offset,offset);
-  height = (iptr)label_string(*(i32 *)(label_string_ids + 0xa0));
+  height = (iptr)label_string(label_string_ids[0x28]);
   button_create
             (*(Control **)((u8 *)&((PictureWindow *)self)->happy_button),(iptr)&city_window_block.city_window_wnd,6,(iptr)rect,(const char *)height);
   button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->happy_button),(iptr)city_button_happy);
   offset2 = 0;
   offset = city_window_scale((WindowObjectView *)self,0x3a);
   rect_offset((iptr)rect,offset,offset2);
-  height = (iptr)label_string(*(i32 *)(label_string_ids + 0x98));
+  height = (iptr)label_string(label_string_ids[0x26]);
   button_create
             (*(Control **)((u8 *)&((PictureWindow *)self)->view_button),(iptr)&city_window_block.city_window_wnd,7,(iptr)rect,(const char *)height);
   button_set_callback(*(Control **)((u8 *)&((PictureWindow *)self)->view_button),(iptr)city_button_view);
@@ -17090,7 +17086,7 @@ void __thiscall city_window_create(FrameWindow *self)
   style = 2;
   left = minimap_wnd_rect_block.city_wnd_rect;
   top = minimap_wnd_rect_block.city_wnd_rect_top;
-  title = (iptr)label_string(*(i32 *)(label_string_ids + 0x1c));
+  title = (iptr)label_string(label_string_ids[0x7]);
   frame_wnd_create(self,(const char *)title,style,left,top,width,height,extra_arg1,extra_arg2,extra_arg3);
   frame_wnd_set_title_font(self,(iptr)&city_window_font);
   frame_wnd_set_title_small_font(self,(iptr)&city_window_small_font);
@@ -17586,8 +17582,8 @@ shrink_city:
     snd_play_effect(5,0,0,0);
   }
   text_set_string_arg(0,(const char *)city_name);
-  text_set_label_arg(3,*(i32 *)(label_string_ids + 700 + (uint)(was_founder == 0) * -4));
-  text_set_label_arg(4,*(i32 *)(label_string_ids + 0x2c4 + (uint)(was_founder == 0) * -4));
+  text_set_label_arg(3,label_string_ids[175 - (uint)(was_founder == 0)]);
+  text_set_label_arg(4,label_string_ids[0xb1 - (uint)(was_founder == 0)]);
   tile_update_known(x2,y,civ);
   tile_update_known(x2,y,civ2);
   if (2 < game.multiplayer) {

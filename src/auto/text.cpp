@@ -96,7 +96,7 @@ i32 __cdecl text_set_string_arg(iptr index,const char *str)
 void __cdecl text_append_str(const char *str)
 
 {
-  str_concat((iptr)&map_views_block.text_buffer,(iptr)(str));
+  str_concat((iptr)&map_views_block.text_buffer,(iptr)str);
   return;
 }
 
@@ -617,14 +617,14 @@ int __cdecl labels_load(void)
       error_report(0xfffffff7,4,0,0x378,4);
     }
     else {
-      label_string_ids = mem_lock_handle(label_ids_handle);
+      label_string_ids = (i32 *)mem_lock_handle(label_ids_handle);
       if (label_string_ids == 0) {
         error_report(0xfffffff6,4,0,label_ids_handle,0x378);
       }
       else {
         for (i = 0; i < label_count; i++) {
           string_id = text_read_line_pooled();
-          *(i32 *)(label_string_ids + i * 4) = string_id;
+          label_string_ids[i] = string_id;
         }
         if (i < 0x378) {
           crt_strcpy(saved_dir,((i8 *)&net_map_lock_slots_block.scenario_dir_path));
@@ -638,14 +638,14 @@ int __cdecl labels_load(void)
             }
             for (; i < status; i++) {
               string_id = text_read_line_pooled();
-              *(i32 *)(label_string_ids + i * 4) = string_id;
+              label_string_ids[i] = string_id;
             }
           }
           crt_strcpy(((i8 *)&net_map_lock_slots_block.scenario_dir_path),saved_dir);
           if (i < 0x378) {
             string_id = strpool_add((const char *)&str_error_labels_txt);
             for (; i < 0x378; i++) {
-              *(i32 *)(label_string_ids + i * 4) = string_id;
+              label_string_ids[i] = string_id;
             }
           }
         }
@@ -1143,7 +1143,7 @@ void __cdecl str_append_string_id(iptr dest,i32 string_id)
 void __cdecl str_append_label(iptr dest,int label_id)
 
 {
-  str_append_string_id(dest,*(i32 *)(label_string_ids + label_id * 4));
+  str_append_string_id(dest,label_string_ids[label_id]);
   return;
 }
 

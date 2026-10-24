@@ -858,7 +858,7 @@ extern char str_empty_77[4];
 extern char str_empty_78[4];
 extern char str_empty_79[4];
 extern int label_ids_handle;
-extern iptr label_string_ids;
+extern i32 *label_string_ids;
 extern i32 label_count;
 extern char str_labels_2[8];
 extern char str_labels_3[8];
