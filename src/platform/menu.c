@@ -636,20 +636,27 @@ WINBOOL WINAPI TrackPopupMenu(HMENU h, UINT flags, int x, int y, int res, HWND o
 
 /* ---- the host's menu bar ---- */
 
+static int is_label(const MenuItem *it, const char *text);
+
+/* grayed: the main window is disabled (a modal dialog, the main menu).
+   (port) Its menus still open, their items grayed, so the bar does not
+   look dead; Quit stays available while no game is in progress, as
+   menu_native_command ends the program for it then. */
 static void native_add(HMENU h, int level, int grayed)
 {
     Menu *m = menu_get(h);
     int i;
     for (i = 0; m && i < m->n; i++) {
         const MenuItem *it = &m->items[i];
-        int f = (grayed || (it->flags & (MF_GRAYED | MF_DISABLED)) ? HOST_MENU_GRAYED : 0) |
+        int off = grayed && !(it->flags & MF_POPUP) && !(is_label(it, "Quit") && !game_in_play());
+        int f = (off || (it->flags & (MF_GRAYED | MF_DISABLED)) ? HOST_MENU_GRAYED : 0) |
                 (it->flags & MF_CHECKED ? HOST_MENU_CHECKED : 0);
         if (it->flags & MF_SEPARATOR) {
             host_menu_add(level, HOST_MENU_SEPARATOR, 0, "");
         } else if (it->flags & MF_POPUP) {
             host_menu_add(level, f | HOST_MENU_POPUP, 0, it->text ? it->text : "");
             if (level < 2)
-                native_add((HMENU)it->id, level + 1, 0);
+                native_add((HMENU)it->id, level + 1, grayed);
         } else {
             host_menu_add(level, f, (int)it->id, it->text ? it->text : "");
         }
@@ -687,8 +694,23 @@ void menu_native_command(int id)
         PostMessageA(native_owner, WM_COMMAND, (WPARAM)id, 0);
 }
 
-/* The id of the menu bar's item labelled text ("&" and the shortcut left
-   out), or 0: replay scripts choose items as the host's menu bar does. */
+/* Whether it is labelled text ("&" and the shortcut left out). */
+static int is_label(const MenuItem *it, const char *text)
+{
+    char s[128];
+    size_t k = 0;
+    const char *p;
+    if (!it->text)
+        return 0;
+    for (p = it->text; *p && *p != '\t' && k + 1 < sizeof s; p++)
+        if (*p != '&')
+            s[k++] = *p;
+    s[k] = 0;
+    return !strcmp(s, text);
+}
+
+/* The id of the menu bar's item labelled text, or 0: replay scripts choose
+   items as the host's menu bar does. */
 static int find_label(HMENU h, const char *text)
 {
     Menu *m = menu_get(h);
@@ -698,16 +720,8 @@ static int find_label(HMENU h, const char *text)
         if (it->flags & MF_POPUP) {
             if ((id = find_label((HMENU)it->id, text)) != 0)
                 return id;
-        } else if (it->text) {
-            char s[128];
-            size_t k = 0;
-            const char *p;
-            for (p = it->text; *p && *p != '\t' && k + 1 < sizeof s; p++)
-                if (*p != '&')
-                    s[k++] = *p;
-            s[k] = 0;
-            if (!strcmp(s, text))
-                return (int)it->id;
+        } else if (is_label(it, text)) {
+            return (int)it->id;
         }
     }
     return 0;
