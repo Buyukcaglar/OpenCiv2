@@ -58,9 +58,10 @@ typedef struct Wnd {
     union { u32 field_9c; u32 on_command; };
     union { u32 field_a0; u32 on_menu_select; };
     union { uptr field_a4; uptr on_modal_idle; };
-    union { u32 field_a8; u32 handler_slot_a8; };
-    union { u32 field_ac; u32 handler_slot_ac; };
-    u8 pad_b0[8];
+    union { u32 field_a8; u32 handler_slot_a8; u32 lbutton_down; };   /* 1 between WM_LBUTTONDOWN and UP */
+    union { u32 field_ac; u32 handler_slot_ac; u32 rbutton_down; };
+    i32 hscroll_pos;                /* 0xb0 last WM_HSCROLL position */
+    i32 vscroll_pos;                /* 0xb4 */
     union { uptr field_b8; uptr control_list; };
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
@@ -248,6 +249,29 @@ typedef struct SpaceshipWindow {
     union { u8 pad_f1c[156]; struct { u8 movie_caption_font[8]; u8 movie_caption_text[148]; }; };
 } SpaceshipWindow;
 
+/* A star of the launch starfield (perspective: screen = x / depth + centre). */
+typedef struct SpaceshipStar {
+    i32 x;                          /* 0x0 */
+    i32 y;                          /* 0x4 */
+    i32 depth;                      /* 0x8 1..100 */
+} SpaceshipStar;
+
+/* The spaceship window (spaceship_wnd_ctor) is larger than SpaceshipWindow:
+   0x2180 bytes (SpaceshipWindowDtorView); the launch state past 0xfb8. */
+typedef struct SpaceshipWindowExt {
+    SpaceshipWindow base;
+    u8 pad_fb8[3568];
+    u32 launch_video_player;        /* 0x1da8 video window playing the launch (+0x48 its modal window) */
+    i32 close_btn_pressed;          /* 0x1dac */
+    i32 launch_btn_pressed;         /* 0x1db0 */
+    i32 typing_label_part;          /* 0x1db4 */
+    SpaceshipStar stars[80];        /* 0x1db8 */
+    u8 pad_2178[8];
+} SpaceshipWindowExt;
+#ifdef __cplusplus
+static_assert(sizeof(SpaceshipWindowExt) == 0x2180, "");
+#endif
+
 /* 2 methods, size 0x108c */
 typedef struct DiploLeaderWindow {
     union { u32 field_0; u32 style; };
@@ -314,7 +338,9 @@ typedef struct DiploLeaderWindow {
     union { u32 field_ae0; u32 launch_state; };
     u8 pad_ae4[1076];
     union { u32 field_f18; u32 advance_civ; };
-    u8 pad_f1c[360];
+    u8 pad_f1c[344];
+    union { i32 field_1074; i32 video_cur_frame; };   /* 0x1074 the leader video player's (at 0x65c) current frame */
+    u8 pad_1078[12];
     union { u8 field_1084; u8 leader_tribe; };
     u8 pad_1085[3];
     union { u8 field_1088; u8 pending_flag_1088; };
@@ -972,7 +998,7 @@ typedef struct ViewWindow {
     union { uptr field_2cc; uptr title_font; };
     union { uptr field_2d0; uptr title_small_font; };
     union { u8 pad_2d4[4]; struct { u8 editor_combo_boxes[4]; }; };
-    union { u32 field_2d8; u32 rates_civ; };
+    union { u32 field_2d8; u32 rates_civ; u32 map_view_index; };   /* map views: index in map_views (0 main) */
     union { u32 field_2dc; u32 max_rate_value; };
     union { u32 field_2e0; u32 tax_rate_sel; };
     union { u32 field_2e4; u32 lux_rate_sel; };
@@ -1202,7 +1228,7 @@ typedef struct PictureWindow {
     u8 pad_104[12];
     union { uptr field_110; uptr on_paint; };
     union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
+    union { u32 field_118; u32 caption_height; u32 pedia_category; };   /* Civilopedia: topic category (1 advances .. 8) */
     union { u32 field_11c; u32 border_width; };
     union { u32 field_120; u32 resize_border; };
     union { u32 field_124; u32 client_x; };
@@ -3193,10 +3219,17 @@ typedef struct ListBoxClearView {
     union { u32 field_2c; u32 item_count; };
 } ListBoxClearView;
 
-/* 11 methods, size 0x98 */
+/* 11 methods, size 0x98 (file_obj_init clears 0x98 bytes) */
 typedef struct FileObject {
-    u8 pad_0[152];
+    u8 pad_0[4];
+    i32 handle;                     /* 0x04 Win32 file handle, 0 closed (-1 open failed) */
+    u8 open_info[136];              /* 0x08 OFSTRUCT filled by OpenFile */
+    i32 map_view;                   /* 0x90 MapViewOfFile address */
+    i32 map_handle;                 /* 0x94 file mapping handle */
 } FileObject;
+#ifdef __cplusplus
+static_assert(sizeof(FileObject) == 0x98, "");
+#endif
 
 /* 2 methods, size 0x4c */
 typedef struct RadioGroupEnableView {
@@ -3228,14 +3261,22 @@ typedef struct NetGamelistView {
 } NetGamelistView;
 static_assert(sizeof(NetGamelistView) == 0x178, "");
 
-/* 1 methods, size 0x10 */
+/* A bump allocator over one movable memory handle (memblock_*); the code
+   reaches 0x10, so 0x14 with the class's 4-byte alignment. */
 typedef struct MemBlock {
-    u8 pad_0[4];
+    u8 block_id;                    /* 0x0 reported in errors */
+    u8 owns_handle;                 /* 0x1 1 once memblock_init allocated the handle */
+    u8 pad_2[2];
     union { u32 field_4; u32 mem_handle; };
-    union { u32 field_8; u32 base_ptr; };
-    u8 pad_c[2];
+    union { u32 field_8; u32 base_ptr; };   /* locked address, 0 when unlocked */
+    u16 used;                       /* 0xc bytes handed out */
     union { u16 field_e; u16 capacity; };
+    u16 available;                  /* 0x10 bytes left */
+    u8 pad_12[2];
 } MemBlock;
+#ifdef __cplusplus
+static_assert(sizeof(MemBlock) == 0x14, "");
+#endif
 
 /* 5 methods, size 0x4 */
 typedef struct DllHandle {
@@ -3393,6 +3434,19 @@ typedef struct WndSetKeydownPreHandlerView {
     union { u32 field_20; u32 tied_stream; };
 } WndSetKeydownPreHandlerView;
 
+/* A hotspot of a ClickMap (clickmap_add). */
+typedef struct ClickRegion {
+    i32 left;                       /* 0x00 rect, right/bottom exclusive */
+    i32 top;                        /* 0x04 */
+    i32 right;                      /* 0x08 */
+    i32 bottom;                     /* 0x0c */
+    i32 value;                      /* 0x10 */
+    i32 id;                         /* 0x14 hotspot id */
+} ClickRegion;
+#ifdef __cplusplus
+static_assert(sizeof(ClickRegion) == 0x18, "");
+#endif
+
 /* 1 methods, size 0x12c4 */
 typedef struct ClickMapClearView {
     u8 pad_0[4800];
@@ -3401,19 +3455,19 @@ typedef struct ClickMapClearView {
 
 /* 3 methods, size 0x12c4 */
 typedef struct ClickMapRemoveView {
-    union { u8 pad_0[4800]; struct { u8 hit_regions[4800]; }; };
+    ClickRegion hit_regions[200];
     union { u32 field_12c0; u32 entry_count; };
 } ClickMapRemoveView;
 
 /* 3 methods, size 0x12c4 */
 typedef struct ClickMap {
-    union { u8 pad_0[4800]; struct { u8 hit_regions[4800]; }; };
+    ClickRegion hit_regions[200];
     union { u32 field_12c0; u32 entry_count; };
 } ClickMap;
 
 /* 1 methods, size 0x12c4 */
 typedef struct ClickMapHitTestView {
-    union { u8 pad_0[4800]; struct { u8 hit_regions[4800]; }; };
+    ClickRegion hit_regions[200];
     union { u32 field_12c0; u32 region_count; };
 } ClickMapHitTestView;
 

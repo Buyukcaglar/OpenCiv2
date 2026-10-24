@@ -186,7 +186,7 @@ void __cdecl text_append_str(const char *str); /* 00414d70 */
 void __thiscall wnd_set_caption_button_handler(FrameWindow *self,iptr handler); /* 00414da0 */
 i32 __cdecl popup_game_with_city(const char *section,iptr city); /* 00414dd0 */
 u32 __thiscall city_window_is_closed(WindowObjectView *self); /* 00414e00 */
-void __cdecl int_pairs_bubble_sort(int count,iptr values,iptr keys); /* 00414f02 */
+void __cdecl int_pairs_bubble_sort(int count,i32 *values,i32 *keys); /* 00414f02 */
 iptr __cdecl file_build_open_path(iptr dest,const char *name2); /* 00415040 */
 FILE * __cdecl file_open_path(const char *name2,iptr mode); /* 0041508c */
 uint __cdecl file_exists(const char *name2); /* 00415133 */
@@ -1221,12 +1221,12 @@ void __thiscall wnd_set_caption_height(WndBase *self,i32 height); /* 00497d00 */
 void __thiscall button_create_with_callback(Control *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,const char *label); /* 00497d40 */
 iptr __cdecl save_read_cstr(char *buf,iptr file); /* 00497da0 */
 void __cdecl save_write_cstr_eof(const char *str,iptr file); /* 00497e0f */
-bool __cdecl memblock_init(iptr block,i32 block_id,uint size); /* 00497ea0 */
-i32 __cdecl memblock_ensure_locked(iptr block); /* 00497ff3 */
-void __cdecl memblock_detach(iptr block); /* 0049805e */
-void __cdecl memblock_unlock(iptr block); /* 004980a9 */
-iptr __cdecl memblock_free(iptr block); /* 004980ec */
-int __cdecl memblock_alloc(iptr block,uint size); /* 00498159 */
+bool __cdecl memblock_init(MemBlock *block,i32 block_id,uint size); /* 00497ea0 */
+i32 __cdecl memblock_ensure_locked(MemBlock *block); /* 00497ff3 */
+void __cdecl memblock_detach(MemBlock *block); /* 0049805e */
+void __cdecl memblock_unlock(MemBlock *block); /* 004980a9 */
+iptr __cdecl memblock_free(MemBlock *block); /* 004980ec */
+int __cdecl memblock_alloc(MemBlock *block,uint size); /* 00498159 */
 void __cdecl civ_password_ensure_set(int civ); /* 00498310 */
 void __cdecl civ_change_password_dialog(iptr civ); /* 0049836a */
 i32 __cdecl civ_password_prompt(int civ); /* 004985f4 */
@@ -1518,7 +1518,7 @@ void __cdecl editor_font_global_init(void); /* 004cc9c6 */
 void __cdecl editor_font_static_init(void); /* 004cc9e0 */
 void __cdecl editor_font_reg_atexit(void); /* 004cc9fe */
 void __cdecl editor_font_static_dtor(void); /* 004cca1b */
-i32 __cdecl memblock_alloc_checked(iptr block,uint size); /* 004cca35 */
+i32 __cdecl memblock_alloc_checked(MemBlock *block,uint size); /* 004cca35 */
 void __cdecl rules_edit_set_section(iptr names,iptr writers); /* 004ccab9 */
 void __cdecl rules_edit_add_section(const char *name2,iptr writer); /* 004ccaed */
 void __cdecl gfx_draw_tiled_frame(iptr surface,int x,int y,int width,int height,int border); /* 004ccb6a */
@@ -1533,7 +1533,7 @@ void __cdecl editor_text_dlg_create(const char *title,uint style,int x,int y,int
 void __cdecl editor_text_dlg_on_ok(void); /* 004ce196 */
 void __cdecl editor_text_dlg_on_cancel(void); /* 004ce2f3 */
 void __cdecl editor_text_dlg_redraw(void); /* 004ce322 */
-i32 __cdecl editor_text_edit_dialog(iptr lines,const char *title); /* 004ce38a */
+i32 __cdecl editor_text_edit_dialog(i32 *lines,const char *title); /* 004ce38a */
 uint __cdecl editor_check_city_name(const char *name2); /* 004ce71b */
 void __cdecl editor_wnd_on_move_close_dropdowns(void); /* 004ce83d */
 i32 __cdecl editor_input_long(const char *file_name,const char *section,int default_value,iptr out_value); /* 004ce8a4 */
@@ -1557,7 +1557,7 @@ uint __thiscall spaceship_wnd_create(PictureFrameWindow *self); /* 004d0d64 */
 void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *self); /* 004d0ea6 */
 void __thiscall spaceship_wnd_present(SpaceshipWindow *self); /* 004d13b8 */
 void __thiscall spaceship_wnd_launch_sequence(SpaceshipWindow *self); /* 004d1725 */
-i32 __thiscall spaceship_wnd_render_ship(void *self); /* 004d17bf, hand-written */
+i32 __thiscall spaceship_wnd_render_ship(SpaceshipWindow *self); /* 004d17bf, hand-written */
 void __thiscall spaceship_wnd_build_stats_text(PictureFrameWindow *self); /* 004d4a7b */
 uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *self,int allow_skip); /* 004d4fd1 */
 void __thiscall spaceship_wnd_make_button_sprites(void *self); /* 004d53ab, hand-written */
@@ -3135,15 +3135,15 @@ FileObject * __thiscall file_obj_init(FileObject *self); /* 005d7c00 */
 i32 __thiscall file_obj_close(FileObject *self); /* 005d7c6e */
 void __thiscall spritebtn_init_from_sprite(SpriteButton *self,WndPaletteView *parent,i32 ctrl_id,int x,int y, int width,int height,iptr sprite,uint bg_color); /* 005d7cb0 */
 void __cdecl ui_set_button_font(iptr font); /* 005d8236 */
-i32 __cdecl file_obj_open_path(char *filename,iptr file_obj); /* 005d8270 */
-uint __cdecl file_obj_create_path(LPCSTR filename,iptr file_obj); /* 005d83d6 */
-i32 __cdecl file_obj_close_handle(iptr file_obj); /* 005d8476 */
-i32 __cdecl file_obj_read_bytes(iptr file_obj,LPVOID buf,DWORD size); /* 005d84f6 */
-i32 __cdecl file_obj_seek_rel(iptr file_obj,LONG offset); /* 005d8622 */
-i32 __cdecl file_obj_write_bytes(iptr file_obj,char *buf,DWORD size); /* 005d8721 */
-int __cdecl file_obj_read_line_impl(iptr file_obj,char *buf,int max_len); /* 005d881c */
-DWORD __cdecl file_obj_get_size_impl(iptr file_obj); /* 005d898e */
-i32 __cdecl file_obj_close_mapping(iptr file_obj); /* 005d8ab8 */
+i32 __cdecl file_obj_open_path(char *filename,FileObject *file_obj); /* 005d8270 */
+uint __cdecl file_obj_create_path(LPCSTR filename,FileObject *file_obj); /* 005d83d6 */
+i32 __cdecl file_obj_close_handle(FileObject *file_obj); /* 005d8476 */
+i32 __cdecl file_obj_read_bytes(FileObject *file_obj,LPVOID buf,DWORD size); /* 005d84f6 */
+i32 __cdecl file_obj_seek_rel(FileObject *file_obj,LONG offset); /* 005d8622 */
+i32 __cdecl file_obj_write_bytes(FileObject *file_obj,char *buf,DWORD size); /* 005d8721 */
+int __cdecl file_obj_read_line_impl(FileObject *file_obj,char *buf,int max_len); /* 005d881c */
+DWORD __cdecl file_obj_get_size_impl(FileObject *file_obj); /* 005d898e */
+i32 __cdecl file_obj_close_mapping(FileObject *file_obj); /* 005d8ab8 */
 int __cdecl radiogrp_item_height(GameFont *font); /* 005d8da1 */
 i32 __cdecl radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_count,iptr labels,int visible ,i32 font); /* 005d8e3f */
 void __cdecl radiogrp_destroy_items(int count,int handle); /* 005d99f4 */

@@ -16,7 +16,7 @@
  */
 void __thiscall pedia_load_description(void *self, int topic2)
 {
-  int obj_addr = (iptr)self;
+  PictureWindow *obj_addr = (PictureWindow *)self;
   bool section_missing;
   int found;
   char *line;
@@ -31,33 +31,33 @@ void __thiscall pedia_load_description(void *self, int topic2)
   str_clear((char *)section_name);
   pedia_clear_links((WindowObjectView *)obj_addr);
   ui_pump_messages();
-  switch(*(i32 *)(obj_addr + 0x118)) {
+  switch(obj_addr->pedia_category) {
   case 1:
-    topic2 = *(int *)(obj_addr + 0x65c + topic2 * 4);
+    topic2 = obj_addr->pedia_advance_keys[topic2];
     crt_strcpy(section_name,str_advance_index);
     break;
   case 2:
-    topic2 = *(int *)(obj_addr + 0x980 + topic2 * 4);
+    topic2 = obj_addr->pedia_improve_keys[topic2];
     crt_strcpy(section_name,str_improvement_index);
     break;
   case 3:
-    topic2 = *(int *)(obj_addr + 0xabc + topic2 * 4);
+    topic2 = obj_addr->pedia_wonder_keys[topic2];
     crt_strcpy(section_name,str_wonder_index);
     break;
   case 4:
-    topic2 = *(int *)(obj_addr + 0xba0 + topic2 * 4);
+    topic2 = obj_addr->pedia_unit_keys[topic2];
     crt_strcpy(section_name,str_unit_index);
     break;
   case 5:
-    topic2 = *(int *)(obj_addr + 0xdd0 + topic2 * 4);
+    topic2 = obj_addr->pedia_terrain_keys[topic2];
     crt_strcpy(section_name,str_terrain_index);
     break;
   case 6:
-    topic2 = *(int *)(obj_addr + 0xd94 + topic2 * 4);
+    topic2 = obj_addr->pedia_government_keys[topic2];
     crt_strcpy(section_name,str_government_index);
     break;
   case 7:
-    topic2 = *(int *)(obj_addr + 0xedc + topic2 * 4);
+    topic2 = obj_addr->pedia_concept_keys[topic2];
     crt_strcpy(section_name,str_concept_descriptions);
     break;
   default:
@@ -112,8 +112,8 @@ read_text_lines:
       crt_strcpy(desc_text,((i8 *)&map_views_block.text_buffer));
     }
 set_control_text:
-    ctrl_set_text((ControlTextView *)(obj_addr + 0x1a98),(const char *)desc_text);
-    ctrl_show_and_redraw((Control *)(obj_addr + 0x1a98));
+    ctrl_set_text((ControlTextView *)((iptr)obj_addr + 0x1a98),(const char *)desc_text);
+    ctrl_show_and_redraw((Control *)((iptr)obj_addr + 0x1a98));
   }
   return;
 }
@@ -136,7 +136,7 @@ int __cdecl save_read_game(char *path)
   int unit_idx;
   int city_idx;
   int gender;
-  int event_node;
+  ScenarioEvent *event_node;
   int type_idx;
   i8 leader_buf[0x3f0];  /* 21 tribes x 0x30 bytes read from the file */
   int status;
@@ -343,87 +343,87 @@ int __cdecl save_read_game(char *path)
       count_read = _fread(event,0x1bc,1,_File);
       if (count_read == 0) goto close_file;
     }
-    for (event_node = (int)unit_types_block.events_list_head; event_node != 0; event_node = *(int *)(event_node + 0x1bc)) {
-      if (*(int *)(event_node + 8) != 0) {
+    for (event_node = unit_types_block.events_list_head; event_node != (ScenarioEvent *)0x0; event_node = event_node->next) {
+      if (event_node->unit_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 8) = event_str;
-        if (*(int *)(event_node + 8) == 0) goto close_file;
+        event_node->unit_name = (char *)event_str;
+        if (event_node->unit_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x10) != 0) {
+      if (event_node->city_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x10) = event_str;
-        if (*(int *)(event_node + 0x10) == 0) goto close_file;
+        event_node->city_name = (char *)event_str;
+        if (event_node->city_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x14) != 0) {
+      if (event_node->who_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x14) = event_str;
-        if (*(int *)(event_node + 0x14) == 0) goto close_file;
+        event_node->who_name = (char *)event_str;
+        if (event_node->who_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x20) != 0) {
+      if (event_node->whom_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x20) = event_str;
-        if (*(int *)(event_node + 0x20) == 0) goto close_file;
+        event_node->whom_name = (char *)event_str;
+        if (event_node->whom_name == (char *)0x0) goto close_file;
       }
-      for (event_idx = 0; (event_idx < 0x14 && (*(int *)(event_node + 0x38 + event_idx * 4) != 0));
+      for (event_idx = 0; (event_idx < 0x14 && (event_node->text[event_idx] != (char *)0x0));
           event_idx = event_idx + 1) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x38 + event_idx * 4) = event_str;
-        if (*(int *)(event_node + 0x38 + event_idx * 4) == 0) goto close_file;
+        event_node->text[event_idx] = (char *)event_str;
+        if (event_node->text[event_idx] == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x88) != 0) {
+      if (event_node->move_owner_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x88) = event_str;
-        if (*(int *)(event_node + 0x88) == 0) goto close_file;
+        event_node->move_owner_name = (char *)event_str;
+        if (event_node->move_owner_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x90) != 0) {
+      if (event_node->move_unit_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x90) = event_str;
-        if (*(int *)(event_node + 0x90) == 0) goto close_file;
+        event_node->move_unit_name = (char *)event_str;
+        if (event_node->move_unit_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0xc4) != 0) {
+      if (event_node->aggression_whom_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0xc4) = event_str;
-        if (*(int *)(event_node + 0xc4) == 0) goto close_file;
+        event_node->aggression_whom_name = (char *)event_str;
+        if (event_node->aggression_whom_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0xcc) != 0) {
+      if (event_node->aggression_who_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0xcc) = event_str;
-        if (*(int *)(event_node + 0xcc) == 0) goto close_file;
+        event_node->aggression_who_name = (char *)event_str;
+        if (event_node->aggression_who_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0xd4) != 0) {
+      if (event_node->create_owner_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0xd4) = event_str;
-        if (*(int *)(event_node + 0xd4) == 0) goto close_file;
+        event_node->create_owner_name = (char *)event_str;
+        if (event_node->create_owner_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0xdc) != 0) {
+      if (event_node->create_unit_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0xdc) = event_str;
-        if (*(int *)(event_node + 0xdc) == 0) goto close_file;
+        event_node->create_unit_name = (char *)event_str;
+        if (event_node->create_unit_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x13c) != 0) {
+      if (event_node->create_homecity != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x13c) = event_str;
-        if (*(int *)(event_node + 0x13c) == 0) goto close_file;
+        event_node->create_homecity = (char *)event_str;
+        if (event_node->create_homecity == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x140) != 0) {
+      if (event_node->field_140 != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x140) = event_str;
-        if (*(int *)(event_node + 0x140) == 0) goto close_file;
+        event_node->field_140 = (char *)event_str;
+        if (event_node->field_140 == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x148) != 0) {
+      if (event_node->field_148 != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x148) = event_str;
-        if (*(int *)(event_node + 0x148) == 0) goto close_file;
+        event_node->field_148 = (char *)event_str;
+        if (event_node->field_148 == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x174) != 0) {
+      if (event_node->money_receiver_name != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x174) = event_str;
-        if (*(int *)(event_node + 0x174) == 0) goto close_file;
+        event_node->money_receiver_name = (char *)event_str;
+        if (event_node->money_receiver_name == (char *)0x0) goto close_file;
       }
-      if (*(int *)(event_node + 0x184) != 0) {
+      if (event_node->wave_file != (char *)0x0) {
         event_str = save_read_event_str((iptr)_File);
-        *(i32 *)(event_node + 0x184) = event_str;
-        if (*(int *)(event_node + 0x184) == 0) goto close_file;
+        event_node->wave_file = (char *)event_str;
+        if (event_node->wave_file == (char *)0x0) goto close_file;
       }
     }
     events_compact();
@@ -812,7 +812,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
   }
   else if (msg < 0x47) {
     if (msg == 0x46) {
-      if ((*(byte *)(lparam + 0x18) & 4) == 0) {
+      if (((byte)((WINDOWPOS *)lparam)->flags & 4) == 0) {
         wnd2 = (void *)GetWindowLongA(hwnd,0);
         wnd_get_window((WndBase *)wnd2);
         if ((WIN_STYLE(wnd2) & 0x200) != 0) {
@@ -822,7 +822,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
           parent_data = wnd_get_window((WndBase *)tmp_wnd);
           if (((parent_data->topmost_child != 0) && (parent_data->topmost_child != hwnd)) &&
              (iconic = IsWindowVisible(parent_data->topmost_child), iconic != 0)) {
-            *(i32 *)(lparam + 4) = (i32)parent_data->topmost_child;
+            ((WINDOWPOS *)lparam)->hwndInsertAfter = parent_data->topmost_child;
           }
         }
       }
@@ -1025,20 +1025,20 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
   void *wnd2;
   int edit_offset;
   LONG parent_frame;
-  void *frame;
+  Wnd *frame;
   LONG edit_obj;
   HWND notify_hwnd;
   HWND scroll_hwnd;
   NativeWindow *parent_data;
   
-  frame = (void *)GetWindowLongA(hwnd,8);
-  if (frame == (void *)0x0) {
+  frame = (Wnd *)GetWindowLongA(hwnd,8);
+  if (frame == (Wnd *)0x0) {
     result = wnd_child_wndproc(hwnd,msg,wparam,lparam);
     return result;
   }
   if (msg < 6) {
     if (msg == 5) {
-      type11_hwnd = (HWND)ctrl_list_find_type11_hwnd((ControlNextView *)*(i32 *)((int)frame + 0xb8));
+      type11_hwnd = (HWND)ctrl_list_find_type11_hwnd((ControlNextView *)frame->control_list);
       if (type11_hwnd != (HWND)0x0) {
         SendMessageA(type11_hwnd,5,wparam,(LPARAM)lparam);
       }
@@ -1046,7 +1046,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
       return result;
     }
     if (msg == 2) {
-      *(i32 *)((int)frame + 0xb8) = 0;
+      frame->control_list = 0;
       SetWindowLongA(hwnd,8,0);
       result = wnd_child_wndproc(hwnd,2,wparam,lparam);
       return result;
@@ -1071,14 +1071,14 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
         }
       }
       else if ((wparam == 0xd) && ((*((char *)&shift_flags + 1)) == '\0')) {
-        if (*(int *)((int)frame + 0xbc) != 0) {
-          ctrl_arg = control_get_hwnd((ControlHwndView *)*(void **)((int)frame + 0xbc));
+        if (frame->handler_slot_bc != 0) {
+          ctrl_arg = control_get_hwnd((ControlHwndView *)frame->handler_slot_bc);
           button_press_animated(ctrl_arg);
         }
       }
       else if ((wparam == 0x1b) && ((*((char *)&shift_flags + 1)) == '\0')) {
-        if (*(int *)((int)frame + 0xc0) != 0) {
-          ctrl_arg = control_get_hwnd((ControlHwndView *)*(void **)((int)frame + 0xc0));
+        if (frame->handler_slot_c0 != 0) {
+          ctrl_arg = control_get_hwnd((ControlHwndView *)frame->handler_slot_c0);
           button_press_animated(ctrl_arg);
         }
       }
@@ -1104,7 +1104,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
           parent_data = wnd_get_window((WndBase *)parent_wnd);
           parent_frame = GetWindowLongA(parent_data->hwnd,8);
           if ((parent_frame != 0) &&
-             (insert_after = ctrl_list_find_type11_hwnd((ControlNextView *)*(i32 *)(parent_frame + 0xb8)), insert_after != 0)) {
+             (insert_after = ctrl_list_find_type11_hwnd((ControlNextView *)((Wnd *)parent_frame)->control_list), insert_after != 0)) {
             ((WINDOWPOS *)lparam)->hwndInsertAfter = (HWND)insert_after;
             result = DefWindowProcA(hwnd,0x46,wparam,(LPARAM)lparam);
             return result;
@@ -1173,7 +1173,7 @@ forward_command:
         parent_data = wnd_get_window((WndBase *)parent_wnd);
         parent_frame = GetWindowLongA(parent_data->hwnd,8);
         if (((parent_frame != 0) &&
-            (visible_type11 = (HWND)ctrl_list_find_type11_hwnd((ControlNextView *)*(i32 *)(parent_frame + 0xb8)), visible_type11 != (HWND)0x0)
+            (visible_type11 = (HWND)ctrl_list_find_type11_hwnd((ControlNextView *)((Wnd *)parent_frame)->control_list), visible_type11 != (HWND)0x0)
             ) && (valid = IsWindowVisible(visible_type11), valid != 0)) {
           tmp = GetSystemMetrics(4);
           GetWindowRect(visible_type11,&moving_rect);

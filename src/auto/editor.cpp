@@ -328,19 +328,19 @@ void __cdecl tribe_editor_load_controls(void)
   int i;
   
   for (i = 1; i < 5; i++) {
-    if (*(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_kinds) + i * 8) == 9) {
+    if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 9) {
       ctrl_set_text
                 ((ControlTextView *)
-                 (*(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_slots) + i * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
+                 (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
                  (const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8));
     }
-    else if (*(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_kinds) + i * 8) == 0xc) {
+    else if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 0xc) {
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_slots) + i * 8) * 0x38));
+                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x38));
       combo_set_cur_sel
                 ((ComboBoxSetSelView *)
-                 (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_slots) + i * 8) * 0x38),
+                 (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x38),
                  *(iptr *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58));
     }
   }
@@ -357,20 +357,20 @@ void __cdecl tribe_editor_store_controls(void)
   i32 selection;
   
   for (i = 1; i < 5; i++) {
-    if (*(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_kinds) + i * 8) == 9) {
+    if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 9) {
       ctrl_get_text
                 ((ControlTextView *)
-                 (*(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_slots) + i * 8) * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
+                 (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x48 + 0x44c + editor_text_dlg_wnd_block.active_editor_wnd),
                  (char *)text);
       _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_item_names) + (*(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8,text,0x18);
     }
-    else if (*(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_kinds) + i * 8) == 0xc) {
+    else if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 0xc) {
       selection = combo_get_cur_sel
                           ((ComboBoxGetSelView *)
-                           (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_slots) + i * 8) * 0x38));
+                           (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x38));
       ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + *(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_slots) + i * 8) * 0x38));
+                         (editor_text_dlg_wnd_block.active_editor_wnd + 0x2fc + tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot * 0x38));
       *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 0x58 + ctrl_id * 4) = selection;
     }
   }
@@ -1150,11 +1150,11 @@ void __thiscall tribe_editor_main(ViewWindow *self)
             ((FrameWindow *)self,(const char *)title,style,pos_x,pos_y,width,height,arg7,arg8,arg9);
   tribe_editor_load_tables();
   for (i = 0; i < 5; i++) {
-    if (*(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_kinds) + i * 8) == 9) {
-      tribe_editor_create_edit(self,*(i32 *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_slots) + i * 8));
+    if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 9) {
+      tribe_editor_create_edit(self,tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot);
     }
-    else if (*(int *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_kinds) + i * 8) == 0xc) {
-      tribe_editor_create_combo(self,*(i32 *)(((i8 *)&tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_slots) + i * 8));
+    else if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 0xc) {
+      tribe_editor_create_combo(self,tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot);
     }
   }
   pos = sprite_width
@@ -1667,7 +1667,7 @@ void __cdecl editor_text_dlg_on_ok(void)
   char line_buf[256];
   
   for (line_idx = 0; line_idx < 0x14; line_idx++) {
-    *(i32 *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4) = 0;
+    editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
   }
   events_compact();
   line_idx = 0;
@@ -1682,17 +1682,17 @@ finish_ok:
     has_line = edit_get_line
                       ((EditLineView *)((i8 *)&editor_text_edit_block.editor_text_edit),line_idx,(char *)line_buf,0x100);
     if (has_line == 0) {
-      *(i32 *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4) = 0;
+      editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
     }
     else {
       len = _strlen(line_buf);
-      line_copy = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-      *(i32 *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4) = line_copy;
-      if (*(int *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4) == 0) {
-        *(i32 *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4) = 0;
+      line_copy = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
+      editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = line_copy;
+      if (editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] == 0) {
+        editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
         goto finish_ok;
       }
-      crt_strcpy((char *)((void *)(*(i32 *)(editor_text_dlg_wnd_block.editor_text_lines_out + line_idx * 4))),line_buf);
+      crt_strcpy((char *)((void *)editor_text_dlg_wnd_block.editor_text_lines_out[line_idx]),line_buf);
     }
     line_idx++;
   } while( true );
@@ -1726,7 +1726,7 @@ void __cdecl editor_text_dlg_redraw(void)
 /* WARNING: Removing unreachable block (ram,0x004ce49e) */
 /* WARNING: Removing unreachable block (ram,0x004ce621) */
 
-i32 __cdecl editor_text_edit_dialog(iptr lines,const char *title)
+i32 __cdecl editor_text_edit_dialog(i32 *lines,const char *title)
 
 {
   i32 result;
@@ -1761,13 +1761,13 @@ i32 __cdecl editor_text_edit_dialog(iptr lines,const char *title)
                      (editor_text_dlg_wnd_block.editor_text_dlg_client_height - button_height) - 9);
   edit_create_styled
             ((EditControl *)((i8 *)&editor_text_edit_block.editor_text_edit),(iptr)&editor_text_dlg_wnd_block.editor_text_dlg_inner,0xc9,(iptr)rect,0,2,1);
-  for (line_idx = 0; (line_idx < 0x14 && (*(int *)(lines + line_idx * 4) != 0));
+  for (line_idx = 0; (line_idx < 0x14 && (lines[line_idx] != 0));
       line_idx = line_idx + 1) {
     if (line_idx != 0) {
       edit_replace_sel((Control *)((i8 *)&editor_text_edit_block.editor_text_edit),(const char *)&str_empty_122);
     }
     edit_replace_sel
-              ((Control *)((i8 *)&editor_text_edit_block.editor_text_edit),(const char *)(*(iptr *)(lines + line_idx * 4)));
+              ((Control *)((i8 *)&editor_text_edit_block.editor_text_edit),(const char *)lines[line_idx]);
   }
   button_y = (editor_text_dlg_wnd_block.editor_text_dlg_client_y + editor_text_dlg_wnd_block.editor_text_dlg_client_height) - (button_height + 2);
   button_x = editor_text_dlg_wnd_block.editor_text_dlg_client_x + 2;

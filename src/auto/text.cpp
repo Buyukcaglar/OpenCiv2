@@ -185,7 +185,7 @@ i32 __thiscall file_obj_create(FileObject *self,const char *path)
 {
   i32 result;
   
-  result = file_obj_create_path(path,(iptr)self);
+  result = file_obj_create_path(path,self);
   return result;
 }
 
@@ -195,7 +195,7 @@ i32 __thiscall file_map_close(FileObject *self)
 {
   i32 result;
   
-  result = file_obj_close_handle((iptr)self);
+  result = file_obj_close_handle(self);
   return result;
 }
 
@@ -203,7 +203,7 @@ i32 __thiscall file_map_close(FileObject *self)
 void __thiscall file_obj_write(FileObject *self,iptr data,i32 size)
 
 {
-  file_obj_write_bytes((iptr)self,(char *)data,size);
+  file_obj_write_bytes(self,(char *)data,size);
   return;
 }
 
@@ -341,11 +341,11 @@ void __cdecl strpool_init(uint pool_size)
 {
   if (strpool_initialized == 0) {
     strpool_initialized = 1;
-    memblock_init((iptr)&strpool_block_block.strpool_block,2,pool_size);
+    memblock_init((MemBlock *)&strpool_block_block.strpool_block,2,pool_size);
   }
   else {
-    memblock_free((iptr)&strpool_block_block.strpool_block);
-    memblock_init((iptr)&strpool_block_block.strpool_block,2,pool_size);
+    memblock_free((MemBlock *)&strpool_block_block.strpool_block);
+    memblock_init((MemBlock *)&strpool_block_block.strpool_block,2,pool_size);
   }
   strpool_count = 0;
   return;
@@ -355,7 +355,7 @@ void __cdecl strpool_init(uint pool_size)
 void __cdecl strpool_free(void)
 
 {
-  memblock_free((iptr)&strpool_block_block.strpool_block);
+  memblock_free((MemBlock *)&strpool_block_block.strpool_block);
   return;
 }
 
@@ -372,7 +372,7 @@ int __cdecl strpool_add(const char *text)
   }
   else {
     len = _strlen((char *)text);
-    minimap_window_block.strpool_last_string = memblock_alloc((iptr)&strpool_block_block.strpool_block,len + 1);
+    minimap_window_block.strpool_last_string = memblock_alloc((MemBlock *)&strpool_block_block.strpool_block,len + 1);
     crt_strcpy((char *)((void *)minimap_window_block.strpool_last_string),(const char *)((void *)text));
     string_id = strpool_count;
     strpool_count++;
@@ -412,7 +412,7 @@ int __cdecl strpool_add_padded(const char *text,uint min_size)
   else {
     alloc_size = min_size;
   }
-  (*(char * *)&minimap_window_block.strpool_last_string) = (char *)memblock_alloc((iptr)&strpool_block_block.strpool_block,alloc_size);
+  (*(char * *)&minimap_window_block.strpool_last_string) = (char *)memblock_alloc((MemBlock *)&strpool_block_block.strpool_block,alloc_size);
   _memset((*(char * *)&minimap_window_block.strpool_last_string),0,alloc_size);
   _strncpy((*(char * *)&minimap_window_block.strpool_last_string),(char *)text,alloc_size);
   len = _strlen((char *)text);
@@ -768,7 +768,7 @@ i32 __thiscall file_obj_open(FileObject *self,const char *path)
 {
   i32 result;
   
-  result = file_obj_open_path((char *)path,(iptr)self);
+  result = file_obj_open_path((char *)path,self);
   return result;
 }
 
@@ -785,7 +785,7 @@ i32 __thiscall file_obj_seek_cur(FileSeekView *self,i32 offset)
 {
   i32 result;
   
-  result = file_obj_seek_rel((iptr)self,offset);
+  result = file_obj_seek_rel((FileObject *)self,offset);
   return result;
 }
 
@@ -793,7 +793,7 @@ i32 __thiscall file_obj_seek_cur(FileSeekView *self,i32 offset)
 void __thiscall file_obj_read_line(FileReadLineView *self,char *buf,i32 max_len)
 
 {
-  file_obj_read_line_impl((iptr)self,buf,max_len);
+  file_obj_read_line_impl((FileObject *)self,buf,max_len);
   return;
 }
 
@@ -803,7 +803,7 @@ i32 __thiscall file_obj_get_size(FileObject *self)
 {
   i32 size;
   
-  size = file_obj_get_size_impl((iptr)self);
+  size = file_obj_get_size_impl(self);
   return size;
 }
 
@@ -1192,7 +1192,7 @@ void __cdecl str_append_gold(iptr dest,i32 gold)
 void __thiscall file_obj_read(FileObject *self,char *buf,i32 size)
 
 {
-  file_obj_read_bytes((iptr)self,(LPVOID)buf,size);
+  file_obj_read_bytes(self,(LPVOID)buf,size);
   return;
 }
 
@@ -1336,8 +1336,8 @@ void __cdecl text_section_index_build(const char *filename,uint pool_size)
   char line_buf[256];
   uint entry_size;
   
-  memblock_free((iptr)&text_section_index_pool_block.text_section_index_pool);
-  memblock_init((iptr)&text_section_index_pool_block.text_section_index_pool,1,pool_size);
+  memblock_free((MemBlock *)&text_section_index_pool_block.text_section_index_pool);
+  memblock_init((MemBlock *)&text_section_index_pool_block.text_section_index_pool,1,pool_size);
   text_section_index_valid = 0;
   text_section_index_count = 0;
   __getcwd(((i8 *)&text_section_index_path),0x104);
@@ -1359,7 +1359,7 @@ void __cdecl text_section_index_build(const char *filename,uint pool_size)
         len = _strlen(line_buf);
         entry_size = len + 5;
         if ((int)(uint)text_section_index_pool_block.text_section_pool_free_bytes < (int)entry_size) break;
-        entry = (long *)memblock_alloc((iptr)&text_section_index_pool_block.text_section_index_pool,entry_size);
+        entry = (long *)memblock_alloc((MemBlock *)&text_section_index_pool_block.text_section_index_pool,entry_size);
         *entry = line_offset;
         crt_strcpy((char *)(entry + 1),line_buf);
         text_section_index_count++;
@@ -1377,7 +1377,7 @@ void __cdecl text_section_index_free(void)
 {
   text_section_index_valid = 0;
   text_section_index_count = 0;
-  memblock_free((iptr)&text_section_index_pool_block.text_section_index_pool);
+  memblock_free((MemBlock *)&text_section_index_pool_block.text_section_index_pool);
   return;
 }
 
@@ -1968,7 +1968,7 @@ i32 __thiscall file_obj_close(FileObject *self)
 }
 
 /* 005d8270 auto */
-i32 __cdecl file_obj_open_path(char *filename,iptr file_obj)
+i32 __cdecl file_obj_open_path(char *filename,FileObject *file_obj)
 
 {
   char *sep;
@@ -1985,21 +1985,21 @@ i32 __cdecl file_obj_open_path(char *filename,iptr file_obj)
   else {
     crt_strcpy(full_path,filename);
   }
-  file_handle = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),0x4000);
+  file_handle = OpenFile(full_path,(LPOFSTRUCT)file_obj->open_info,0x4000);
   if (file_handle == -1) {
     result = 0;
   }
   else {
-    file_handle = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),2);
-    *(HFILE *)(file_obj + 4) = file_handle;
-    if (*(int *)(file_obj + 4) == -1) {
+    file_handle = OpenFile(full_path,(LPOFSTRUCT)file_obj->open_info,2);
+    file_obj->handle = file_handle;
+    if (file_obj->handle == -1) {
       *(i32 *)file_obj = 0;
-      file_handle = OpenFile(full_path,(LPOFSTRUCT)(file_obj + 8),0);
-      *(HFILE *)(file_obj + 4) = file_handle;
-      *(i32 *)(file_obj + 0x94) = 0;
-      *(i32 *)(file_obj + 0x90) = 0;
-      if (*(int *)(file_obj + 4) == -1) {
-        *(i32 *)(file_obj + 4) = 0;
+      file_handle = OpenFile(full_path,(LPOFSTRUCT)file_obj->open_info,0);
+      file_obj->handle = file_handle;
+      file_obj->map_handle = 0;
+      file_obj->map_view = 0;
+      if (file_obj->handle == -1) {
+        file_obj->handle = 0;
         return 0;
       }
     }
@@ -2012,49 +2012,49 @@ i32 __cdecl file_obj_open_path(char *filename,iptr file_obj)
 }
 
 /* 005d83d6 auto */
-uint __cdecl file_obj_create_path(LPCSTR filename,iptr file_obj)
+uint __cdecl file_obj_create_path(LPCSTR filename,FileObject *file_obj)
 
 {
   HANDLE handle;
   bool ok;
   
   handle = CreateFileA(filename,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,2,0x80,(HANDLE)0x0);
-  *(HANDLE *)(file_obj + 4) = handle;
-  ok = *(int *)(file_obj + 4) != -1;
+  file_obj->handle = handle;
+  ok = file_obj->handle != -1;
   if (ok) {
     *(i32 *)file_obj = 1;
-    *(i32 *)(file_obj + 0x94) = 0;
-    *(i32 *)(file_obj + 0x90) = 0;
+    file_obj->map_handle = 0;
+    file_obj->map_view = 0;
   }
   else {
-    *(i32 *)(file_obj + 4) = 0;
+    file_obj->handle = 0;
     *(i32 *)file_obj = 0;
-    *(i32 *)(file_obj + 0x94) = 0;
-    *(i32 *)(file_obj + 0x90) = 0;
+    file_obj->map_handle = 0;
+    file_obj->map_view = 0;
   }
   return (uint)ok;
 }
 
 /* 005d8476 auto */
-i32 __cdecl file_obj_close_handle(iptr file_obj)
+i32 __cdecl file_obj_close_handle(FileObject *file_obj)
 
 {
   i32 result;
   BOOL closed;
   
-  if (*(int *)(file_obj + 4) == 0) {
+  if (file_obj->handle == 0) {
     result = 0;
   }
   else {
-    if ((*(int *)(file_obj + 0x94) != 0) || (*(int *)(file_obj + 0x90) != 0)) {
+    if ((file_obj->map_handle != 0) || (file_obj->map_view != 0)) {
       file_obj_close_mapping(file_obj);
     }
-    closed = CloseHandle(*(HANDLE *)(file_obj + 4));
+    closed = CloseHandle((HANDLE)file_obj->handle);
     if (closed == 0) {
       result = 0;
     }
     else {
-      *(i32 *)(file_obj + 4) = 0;
+      file_obj->handle = 0;
       result = 1;
     }
   }
@@ -2062,18 +2062,18 @@ i32 __cdecl file_obj_close_handle(iptr file_obj)
 }
 
 /* 005d84f6 auto */
-i32 __cdecl file_obj_read_bytes(iptr file_obj,LPVOID buf,DWORD size)
+i32 __cdecl file_obj_read_bytes(FileObject *file_obj,LPVOID buf,DWORD size)
 
 {
   i32 result;
   BOOL read_ok;
   DWORD bytes_read;
   
-  if (*(int *)(file_obj + 4) == 0) {
+  if (file_obj->handle == 0) {
     result = 0;
   }
   else {
-    read_ok = ReadFile(*(HANDLE *)(file_obj + 4),buf,size,&bytes_read,(LPOVERLAPPED)0x0);
+    read_ok = ReadFile((HANDLE)file_obj->handle,buf,size,&bytes_read,(LPOVERLAPPED)0x0);
     if (read_ok == 0) {
       result = 0;
     }
@@ -2085,17 +2085,17 @@ i32 __cdecl file_obj_read_bytes(iptr file_obj,LPVOID buf,DWORD size)
 }
 
 /* 005d8622 auto */
-i32 __cdecl file_obj_seek_rel(iptr file_obj,LONG offset)
+i32 __cdecl file_obj_seek_rel(FileObject *file_obj,LONG offset)
 
 {
   i32 result;
   DWORD new_pos;
   
-  if (*(int *)(file_obj + 4) == 0) {
+  if (file_obj->handle == 0) {
     result = 0;
   }
   else {
-    new_pos = SetFilePointer(*(HANDLE *)(file_obj + 4),offset,(PLONG)0x0,1);
+    new_pos = SetFilePointer((HANDLE)file_obj->handle,offset,(PLONG)0x0,1);
     if (new_pos == 0xffffffff) {
       result = 0;
     }
@@ -2107,14 +2107,14 @@ i32 __cdecl file_obj_seek_rel(iptr file_obj,LONG offset)
 }
 
 /* 005d8721 auto */
-i32 __cdecl file_obj_write_bytes(iptr file_obj,char *buf,DWORD size)
+i32 __cdecl file_obj_write_bytes(FileObject *file_obj,char *buf,DWORD size)
 
 {
   i32 result;
   BOOL write_ok;
   DWORD bytes_written;
   
-  if (*(int *)(file_obj + 4) == 0) {
+  if (file_obj->handle == 0) {
     result = 0;
   }
   else if (*(int *)file_obj == 0) {
@@ -2122,7 +2122,7 @@ i32 __cdecl file_obj_write_bytes(iptr file_obj,char *buf,DWORD size)
     result = 0;
   }
   else {
-    write_ok = WriteFile(*(HANDLE *)(file_obj + 4),(LPCVOID)buf,size,&bytes_written,(LPOVERLAPPED)0x0);
+    write_ok = WriteFile((HANDLE)file_obj->handle,(LPCVOID)buf,size,&bytes_written,(LPOVERLAPPED)0x0);
     if (write_ok == 0) {
       result = 0;
     }
@@ -2134,7 +2134,7 @@ i32 __cdecl file_obj_write_bytes(iptr file_obj,char *buf,DWORD size)
 }
 
 /* 005d881c auto */
-int __cdecl file_obj_read_line_impl(iptr file_obj,char *buf,int max_len)
+int __cdecl file_obj_read_line_impl(FileObject *file_obj,char *buf,int max_len)
 
 {
   int ok;
@@ -2146,11 +2146,11 @@ int __cdecl file_obj_read_line_impl(iptr file_obj,char *buf,int max_len)
   len = 0;
   dest = buf;
   *buf = '\0';
-  if (*(int *)(file_obj + 4) == 0) {
+  if (file_obj->handle == 0) {
     ok = 0;
   }
   else {
-    ok = ReadFile(*(HANDLE *)(file_obj + 4),ch,1,&bytes_read,(LPOVERLAPPED)0x0);
+    ok = ReadFile((HANDLE)file_obj->handle,ch,1,&bytes_read,(LPOVERLAPPED)0x0);
     if (bytes_read == 0) {
       ok = 0;
     }
@@ -2162,12 +2162,12 @@ int __cdecl file_obj_read_line_impl(iptr file_obj,char *buf,int max_len)
           dest++;
           len++;
         }
-        ok = ReadFile(*(HANDLE *)(file_obj + 4),ch,1,&bytes_read,(LPOVERLAPPED)0x0);
+        ok = ReadFile((HANDLE)file_obj->handle,ch,1,&bytes_read,(LPOVERLAPPED)0x0);
       }
       *dest = '\0';
       while (((ok != 0 && (bytes_read != 0)) && ((ch[0] == '\n' || (ch[0] == '\r')))))
       {
-        ok = ReadFile(*(HANDLE *)(file_obj + 4),ch,1,&bytes_read,(LPOVERLAPPED)0x0);
+        ok = ReadFile((HANDLE)file_obj->handle,ch,1,&bytes_read,(LPOVERLAPPED)0x0);
       }
       if (bytes_read != 0) {
         file_obj_seek_rel(file_obj,0xffffffff);
@@ -2178,16 +2178,16 @@ int __cdecl file_obj_read_line_impl(iptr file_obj,char *buf,int max_len)
 }
 
 /* 005d898e auto */
-DWORD __cdecl file_obj_get_size_impl(iptr file_obj)
+DWORD __cdecl file_obj_get_size_impl(FileObject *file_obj)
 
 {
   DWORD file_size;
   
-  if (*(int *)(file_obj + 4) == 0) {
+  if (file_obj->handle == 0) {
     file_size = 0;
   }
   else {
-    file_size = GetFileSize(*(HANDLE *)(file_obj + 4),(LPDWORD)0x0);
+    file_size = GetFileSize((HANDLE)file_obj->handle,(LPDWORD)0x0);
     if (file_size == 0xffffffff) {
       dbg_log((const char *)&str_bad_file_handle_in_msfilesize);
       file_size = 0;
@@ -2197,16 +2197,16 @@ DWORD __cdecl file_obj_get_size_impl(iptr file_obj)
 }
 
 /* 005d8ab8 auto */
-i32 __cdecl file_obj_close_mapping(iptr file_obj)
+i32 __cdecl file_obj_close_mapping(FileObject *file_obj)
 
 {
-  if ((*(int *)(file_obj + 0x94) != 0) && (*(int *)(file_obj + 0x90) != 0)) {
-    UnmapViewOfFile(*(LPCVOID *)(file_obj + 0x90));
-    *(i32 *)(file_obj + 0x90) = 0;
+  if ((file_obj->map_handle != 0) && (file_obj->map_view != 0)) {
+    UnmapViewOfFile((LPCVOID)file_obj->map_view);
+    file_obj->map_view = 0;
   }
-  if (*(int *)(file_obj + 0x94) != 0) {
-    CloseHandle(*(HANDLE *)(file_obj + 0x94));
-    *(i32 *)(file_obj + 0x94) = 0;
+  if (file_obj->map_handle != 0) {
+    CloseHandle((HANDLE)file_obj->map_handle);
+    file_obj->map_handle = 0;
   }
   return 0;
 }
@@ -2227,7 +2227,7 @@ HMODULE __cdecl res_dll_load_library(LPCSTR filename)
     module = (HMODULE)0x0;
   }
   else {
-    *(HMODULE *)(((i8 *)&err_report_ctx_block.res_dll_modules) + (*(int *)&res_dll_module_count) * 4) = module;
+    err_report_ctx_block.res_dll_modules[(*(int *)&res_dll_module_count)] = module;
     (*(int *)&res_dll_module_count)++;
   }
   return module;
@@ -2261,7 +2261,7 @@ HGLOBAL __cdecl res_load_impl(CHAR *res_type,LPCSTR res_name)
   if (hrsrc == (HRSRC)0x0) {
     dll_index = 0;
     while ((dll_index < res_dll_module_count &&
-           (hrsrc = FindResourceA(*(HMODULE *)(((i8 *)&err_report_ctx_block.res_dll_modules) + dll_index * 4),res_name,type_buf),
+           (hrsrc = FindResourceA(err_report_ctx_block.res_dll_modules[dll_index],res_name,type_buf),
            hrsrc == (HRSRC)0x0))) {
       dll_index++;
     }
@@ -2274,7 +2274,7 @@ HGLOBAL __cdecl res_load_impl(CHAR *res_type,LPCSTR res_name)
       hmodule2 = (*&err_report_ctx_block.app_hinstance);
     }
     else {
-      hmodule2 = *(HMODULE *)(((i8 *)&err_report_ctx_block.res_dll_modules) + dll_index * 4);
+      hmodule2 = err_report_ctx_block.res_dll_modules[dll_index];
     }
     handle = LoadResource(hmodule2,hrsrc);
   }
@@ -2305,12 +2305,12 @@ void __cdecl dll_unload(HMODULE hmodule)
   uint i;
   
   for (i = 0;
-      (*(HMODULE *)(((i8 *)&err_report_ctx_block.res_dll_modules) + i * 4) != hmodule && (i < res_dll_module_count));
+      (err_report_ctx_block.res_dll_modules[i] != hmodule && (i < res_dll_module_count));
       i = i + 1) {
   }
   if (i < res_dll_module_count) {
     for (; i < res_dll_module_count; i++) {
-      *(i32 *)(((i8 *)&err_report_ctx_block.res_dll_modules) + i * 4) = *(i32 *)(((i8 *)&err_report_ctx_block.res_dll_modules_elem1) + i * 4);
+      err_report_ctx_block.res_dll_modules[i] = err_report_ctx_block.res_dll_modules[i + 1];
     }
     res_dll_module_count--;
     FreeLibrary(hmodule);

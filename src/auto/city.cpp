@@ -2850,8 +2850,8 @@ void __cdecl city_calc_commodity_demand(uptr city)
         (((int *)&advisor_window_block.city_commodity_demand_scores))[i] = 0;
       }
     }
-    int_pairs_bubble_sort(0x10,(iptr)supply_order,(iptr)&advisor_window_block.city_commodity_supply_scores);
-    int_pairs_bubble_sort(0x10,(iptr)demand_order,(iptr)&advisor_window_block.city_commodity_demand_scores);
+    int_pairs_bubble_sort(0x10,(i32 *)supply_order,(i32 *)&advisor_window_block.city_commodity_supply_scores);
+    int_pairs_bubble_sort(0x10,(i32 *)demand_order,(i32 *)&advisor_window_block.city_commodity_demand_scores);
     slot = 0xf;
     for (i = 0; i < 3; i++) {
       do {

@@ -3213,7 +3213,7 @@ void __cdecl credits_text_static_init(void)
 void __cdecl credits_text_init(uint capacity)
 
 {
-  memblock_init((iptr)&advisor_window_block.credits_text_block,2,capacity);
+  memblock_init((MemBlock *)&advisor_window_block.credits_text_block,2,capacity);
   credits_line_count = 0;
   return;
 }
@@ -3222,7 +3222,7 @@ void __cdecl credits_text_init(uint capacity)
 void __cdecl credits_text_free(void)
 
 {
-  memblock_free((iptr)&advisor_window_block.credits_text_block);
+  memblock_free((MemBlock *)&advisor_window_block.credits_text_block);
   return;
 }
 
@@ -3235,7 +3235,7 @@ int __cdecl credits_add_line(char *line)
   char *dest;
   
   len = _strlen(line);
-  dest = (char *)memblock_alloc((iptr)&advisor_window_block.credits_text_block,len + 1);
+  dest = (char *)memblock_alloc((MemBlock *)&advisor_window_block.credits_text_block,len + 1);
   crt_strcpy(dest,line);
   line_index = credits_line_count;
   credits_line_count++;

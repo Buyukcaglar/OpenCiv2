@@ -19,7 +19,7 @@ void __cdecl win_pump_one_message(void)
 }
 
 /* 00414f02 auto */
-void __cdecl int_pairs_bubble_sort(int count,iptr values,iptr keys)
+void __cdecl int_pairs_bubble_sort(int count,i32 *values,i32 *keys)
 
 {
   i32 tmp;
@@ -29,13 +29,13 @@ void __cdecl int_pairs_bubble_sort(int count,iptr values,iptr keys)
   do {
     swapped = false;
     for (i = 0; (!swapped && (i < count - 1)); i++) {
-      if (*(int *)(keys + 4 + i * 4) < *(int *)(keys + i * 4)) {
-        tmp = *(i32 *)(keys + i * 4);
-        *(i32 *)(keys + i * 4) = *(i32 *)(keys + 4 + i * 4);
-        *(i32 *)(keys + 4 + i * 4) = tmp;
-        tmp = *(i32 *)(values + i * 4);
-        *(i32 *)(values + i * 4) = *(i32 *)(values + 4 + i * 4);
-        *(i32 *)(values + 4 + i * 4) = tmp;
+      if (keys[1 + i] < keys[i]) {
+        tmp = keys[i];
+        keys[i] = keys[1 + i];
+        keys[1 + i] = tmp;
+        tmp = values[i];
+        values[i] = values[1 + i];
+        values[1 + i] = tmp;
         swapped = true;
       }
     }
@@ -84,110 +84,110 @@ i32 __cdecl mem_unlock_handle(iptr handle)
 }
 
 /* 00497ea0 auto */
-bool __cdecl memblock_init(iptr block,i32 block_id,uint size)
+bool __cdecl memblock_init(MemBlock *block,i32 block_id,uint size)
 
 {
   i32 handle;
   bool ok;
   
-  if (*(int *)(block + 4) != 0) {
-    if (*(int *)(block + 8) != 0) {
-      mem_handle_unlock(*(i32 *)(block + 4));
-      *(i32 *)(block + 8) = 0;
+  if (block->mem_handle != 0) {
+    if (block->base_ptr != 0) {
+      mem_handle_unlock((i32)block->mem_handle);
+      block->base_ptr = 0;
     }
-    mem_handle_free(*(i32 *)(block + 4));
-    *(i32 *)(block + 4) = 0;
+    mem_handle_free((i32)block->mem_handle);
+    block->mem_handle = 0;
   }
-  *(i8 *)block = (i8)block_id;
+  block->block_id = (i8)block_id;
   handle = mem_handle_alloc(size & 0xffff);
-  *(i32 *)(block + 4) = handle;
-  ok = *(int *)(block + 4) != 0;
+  block->mem_handle = handle;
+  ok = (int)block->mem_handle != 0;
   if (ok) {
-    *(i8 *)(block + 1) = 1;
-    *(i16 *)(block + 0xc) = 0;
-    *(i16 *)(block + 0x10) = (i16)size;
-    *(i16 *)(block + 0xe) = (i16)size;
-    *(i32 *)(block + 8) = 0;
+    block->owns_handle = 1;
+    block->used = 0;
+    block->available = (i16)size;
+    block->capacity = (i16)size;
+    block->base_ptr = 0;
   }
   else {
-    *(i32 *)(block + 4) = 0;
+    block->mem_handle = 0;
     error_report(0xfffffffe,block_id,0,size & 0xffff,0);
   }
   return !ok;
 }
 
 /* 00497ff3 auto */
-i32 __cdecl memblock_ensure_locked(iptr block)
+i32 __cdecl memblock_ensure_locked(MemBlock *block)
 
 {
   i32 ptr;
   
-  if (*(int *)(block + 8) == 0) {
-    ptr = (i32)mem_handle_lock(*(i32 *)(block + 4));
-    *(i32 *)(block + 8) = ptr;
-    if (*(int *)(block + 8) == 0) {
-      error_report(0xfffffff6,(uint)*(byte *)block,0,0,0);
+  if (block->base_ptr == 0) {
+    ptr = (i32)mem_handle_lock((i32)block->mem_handle);
+    block->base_ptr = ptr;
+    if (block->base_ptr == 0) {
+      error_report(0xfffffff6,(uint)block->block_id,0,0,0);
     }
   }
   return 0;
 }
 
 /* 0049805e auto */
-void __cdecl memblock_detach(iptr block)
+void __cdecl memblock_detach(MemBlock *block)
 
 {
-  *(i32 *)(block + 8) = 0;
-  *(i32 *)(block + 4) = 0;
+  block->base_ptr = 0;
+  block->mem_handle = 0;
   return;
 }
 
 /* 004980a9 auto */
-void __cdecl memblock_unlock(iptr block)
+void __cdecl memblock_unlock(MemBlock *block)
 
 {
-  if (*(int *)(block + 8) != 0) {
-    if (*(int *)(block + 4) != 0) {
-      mem_handle_unlock(*(i32 *)(block + 4));
+  if (block->base_ptr != 0) {
+    if (block->mem_handle != 0) {
+      mem_handle_unlock((i32)block->mem_handle);
     }
-    *(i32 *)(block + 8) = 0;
+    block->base_ptr = 0;
   }
   return;
 }
 
 /* 004980ec auto */
-iptr __cdecl memblock_free(iptr block)
+iptr __cdecl memblock_free(MemBlock *block)
 
 {
-  if (*(char *)(block + 1) != '\0') {
+  if ((char)block->owns_handle != '\0') {
     memblock_unlock(block);
-    if (*(int *)(block + 4) != 0) {
-      mem_handle_free(*(i32 *)(block + 4));
-      *(i32 *)(block + 4) = 0;
+    if (block->mem_handle != 0) {
+      mem_handle_free((i32)block->mem_handle);
+      block->mem_handle = 0;
     }
   }
-  *(i16 *)(block + 0xc) = 0;
-  *(i16 *)(block + 0x10) = 0;
-  *(i16 *)(block + 0xe) = 0;
-  return block;
+  block->used = 0;
+  block->available = 0;
+  block->capacity = 0;
+  return (iptr)block;
 }
 
 /* 00498159 auto */
-int __cdecl memblock_alloc(iptr block,uint size)
+int __cdecl memblock_alloc(MemBlock *block,uint size)
 
 {
   int lock_err;
   i32 ptr;
   
   ptr = 0;
-  if ((uint)*(ushort *)(block + 0x10) < (size & 0xffff)) {
-    error_report(0xfffffffd,(uint)*(byte *)block,0,size & 0xffff,
-                       (uint)*(ushort *)(block + 0x10));
+  if ((uint)block->available < (size & 0xffff)) {
+    error_report(0xfffffffd,(uint)block->block_id,0,size & 0xffff,
+                       (uint)block->available);
   }
   lock_err = memblock_ensure_locked(block);
   if (lock_err == 0) {
-    ptr = (uint)*(ushort *)(block + 0xc) + *(int *)(block + 8);
-    *(short *)(block + 0xc) = *(short *)(block + 0xc) + (short)size;
-    *(short *)(block + 0x10) = *(short *)(block + 0x10) - (short)size;
+    ptr = (uint)block->used + (int)block->base_ptr;
+    block->used = (short)block->used + (short)size;
+    block->available = (short)block->available - (short)size;
   }
   return ptr;
 }
@@ -249,7 +249,7 @@ int __cdecl mem_handle_alloc_tracked(i32 size)
 }
 
 /* 004cca35 auto */
-i32 __cdecl memblock_alloc_checked(iptr block,uint size)
+i32 __cdecl memblock_alloc_checked(MemBlock *block,uint size)
 
 {
   LPCSTR lpCaption;
@@ -258,7 +258,7 @@ i32 __cdecl memblock_alloc_checked(iptr block,uint size)
   i32 result;
   UINT uType;
   
-  if ((uint)*(ushort *)(block + 0x10) < (size & 0xffff)) {
+  if ((uint)block->available < (size & 0xffff)) {
     uType = 0;
     lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
     lpText = (LPCSTR)label_string(label_string_ids[0x23a]);
@@ -358,7 +358,7 @@ int __cdecl err_register_cleanup_fn(iptr callback)
   if (fatal_cleanup_count < 10) {
     index = fatal_cleanup_count;
     fatal_cleanup_count++;
-    *(iptr *)(((i8 *)&main_frame_bg_surface_block.crash_handler_callbacks) + slot * 4) = callback;
+    main_frame_bg_surface_block.crash_handler_callbacks[slot] = callback;
   }
   return index;
 }
@@ -478,8 +478,8 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   err_dump_text_file((const char *)&str_warn0_dat);
   i = fatal_cleanup_count;
   while (i = i - 1, -1 < i) {
-    if (*(int *)(((i8 *)&main_frame_bg_surface_block.crash_handler_callbacks) + i * 4) != 0) {
-      call_untyped(*(code **)(((i8 *)&main_frame_bg_surface_block.crash_handler_callbacks) + i * 4));
+    if (main_frame_bg_surface_block.crash_handler_callbacks[i] != 0) {
+      call_untyped((code *)main_frame_bg_surface_block.crash_handler_callbacks[i]);
     }
   }
   DebugBreak();

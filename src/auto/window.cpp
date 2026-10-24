@@ -4390,7 +4390,7 @@ void __cdecl dialog_prepend_title_label(iptr dialog,i32 label_id)
     crt_strcat((char *)((void *)title),(const char *)((void *)(*(i32 *)(dialog + 0x134))));
   }
   len = _strlen(title);
-  buffer = memblock_alloc(dialog + 0x254,len + 1);
+  buffer = memblock_alloc((MemBlock *)(dialog + 0x254),len + 1);
   *(i32 *)(dialog + 0x134) = buffer;
   crt_strcpy((char *)((void *)(*(i32 *)(dialog + 0x134))),(const char *)((void *)title));
   return;
@@ -5292,8 +5292,8 @@ u32 __thiscall wnd_set_rbuttonup_any_handler(WndHandlersMouseSetView *self,iptr 
 void __thiscall menu_storage_reinit(GameMenu *self,uint size)
 
 {
-  memblock_free((iptr)self->item_storage);
-  memblock_init((iptr)self->item_storage,0xb,size);
+  memblock_free((MemBlock *)self->item_storage);
+  memblock_init((MemBlock *)self->item_storage,0xb,size);
   return;
 }
 
@@ -5315,7 +5315,7 @@ void __thiscall menu_clear_lists(GameMenu *self)
 void __thiscall menu_reset(GameMenu *self,i32 size)
 
 {
-  memblock_detach((iptr)self->item_storage);
+  memblock_detach((MemBlock *)self->item_storage);
   menu_clear_lists(self);
   menu_storage_reinit(self,size);
   return;
@@ -5346,7 +5346,7 @@ void __thiscall menu_dtor(GameMenu *self)
   i32 eh_state;
   
   eh_state = 0;
-  memblock_free((iptr)self->item_storage);
+  memblock_free((MemBlock *)self->item_storage);
   eh_state = 0xffffffff;
   /* inlined unwind funclet 005787bd */ { menu_handle_dtor(*&self); }
   return;
@@ -5482,7 +5482,7 @@ MenuNode * __thiscall menu_add_menu(GameMenu *self,i32 menu_id,char *title)
   i32 text;
   MenuNode *last;
   
-  menu = (MenuNode *)memblock_alloc((iptr)self->item_storage,0x1c);
+  menu = (MenuNode *)memblock_alloc((MemBlock *)self->item_storage,0x1c);
   if (self->menus == 0) {
     self->menus = menu;
     menu->prev = 0;
@@ -5500,7 +5500,7 @@ MenuNode * __thiscall menu_add_menu(GameMenu *self,i32 menu_id,char *title)
   menu->id = menu_id;
   menu->field_0c = 0;
   len = _strlen(title);
-  text = memblock_alloc((iptr)self->item_storage,len + 1);
+  text = memblock_alloc((MemBlock *)self->item_storage,len + 1);
   menu->text = (char *)text;
   crt_strcpy((char *)((void *)menu->text),(const char *)((void *)title));
   str_pipes_to_tabs(menu->text);
@@ -5524,7 +5524,7 @@ menu_add_item
   item = (MenuNode *)0x0;
   menu = menu_find_menu(self,menu_id);
   if (menu != 0) {
-    item = (MenuNode *)memblock_alloc((iptr)self->item_storage,0x1c);
+    item = (MenuNode *)memblock_alloc((MemBlock *)self->item_storage,0x1c);
     if (menu->link == 0) {
       menu->link = item;
       item->prev = 0;
@@ -5552,7 +5552,7 @@ menu_add_item
       else {
         buf_len = _strlen((char *)text);
       }
-      buffer = memblock_alloc((iptr)self->item_storage,buf_len + 1);
+      buffer = memblock_alloc((MemBlock *)self->item_storage,buf_len + 1);
       item->text = (char *)buffer;
       crt_strcpy((char *)((void *)item->text),(const char *)((void *)text));
       str_pipes_to_tabs(item->text);
@@ -6320,8 +6320,8 @@ void __cdecl dialog_set_frame_tile_surface(iptr surface)
 void __thiscall dialog_reset_string_pool(DialogCore *self,uint size)
 
 {
-  memblock_free((iptr)&((DialogTextLineView *)self)->string_pool);
-  memblock_init((iptr)&((DialogTextLineView *)self)->string_pool,9,size);
+  memblock_free((MemBlock *)&((DialogTextLineView *)self)->string_pool);
+  memblock_init((MemBlock *)&((DialogTextLineView *)self)->string_pool,9,size);
   return;
 }
 
@@ -6562,7 +6562,7 @@ i32 __thiscall dialog_dtor(Dialog *self)
   i32 result;
   
   dialog_close(self);
-  result = memblock_free((iptr)self->string_pool);
+  result = memblock_free((MemBlock *)self->string_pool);
   return result;
 }
 
@@ -6575,7 +6575,7 @@ dialog_init
   i32 size;
   
   if ((self->style_flags & 0x20) == 0) {
-    memblock_init((iptr)self->string_pool,9,CONCAT22((short)((uint)self >> 0x10),self->pool_size));
+    memblock_init((MemBlock *)self->string_pool,9,CONCAT22((short)((uint)self >> 0x10),self->pool_size));
   }
   else {
     dialog_close(self);
@@ -6640,7 +6640,7 @@ dialog_add_line
   for (cur = self->line_list; cur != (DialogLine *)0x0; cur = cur->next) {
     last = cur;
   }
-  line = (DialogLine *)memblock_alloc((iptr)(self->line_storage),0x20);
+  line = (DialogLine *)memblock_alloc((MemBlock *)self->line_storage,0x20);
   if (last == (DialogLine *)0x0) {
     self->line_list = line;
     line->number = 1;
@@ -6664,14 +6664,14 @@ dialog_add_line
   if (0 < max_len) {
     len = _strlen((char *)text);
     if ((int)(len + 1) < max_len) {
-      buffer = memblock_alloc((iptr)(self->line_storage),max_len + 1);
+      buffer = memblock_alloc((MemBlock *)self->line_storage,max_len + 1);
       line->text = (char *)buffer;
       line->capacity = max_len + 1;
       goto copy_line_text;
     }
   }
   len = _strlen((char *)text);
-  buffer = memblock_alloc((iptr)(self->line_storage),len + 1);
+  buffer = memblock_alloc((MemBlock *)self->line_storage,len + 1);
   line->text = (char *)buffer;
   len = _strlen((char *)text);
   line->capacity = len + 1;
@@ -6858,7 +6858,7 @@ void __thiscall dialog_set_title(DialogWindowView *self,const char *title)
   uptr buffer;
   
   len = _strlen((char *)title);
-  buffer = memblock_alloc((iptr)&((DialogTextLineView *)self)->string_pool,len + 1);
+  buffer = memblock_alloc((MemBlock *)&((DialogTextLineView *)self)->string_pool,len + 1);
   self->title_text = buffer;
   crt_strcpy((char *)((void *)self->title_text),(const char *)((void *)title));
   return;
@@ -7106,7 +7106,7 @@ dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,const char *
   for (cur = self->sprite_list; cur != 0; cur = cur->next) {
     last = cur;
   }
-  entry = (DialogSprite *)memblock_alloc((iptr)self->string_pool,0x14);
+  entry = (DialogSprite *)memblock_alloc((MemBlock *)self->string_pool,0x14);
   if (last == 0) {
     self->sprite_list = entry;
     if (self->selected_sprite == 0) {
@@ -7125,7 +7125,7 @@ dialog_add_sprite(DialogOptionList *self,iptr sprite,iptr sprite_id,const char *
   }
   else {
     len = _strlen((char *)label);
-    label_buf = memblock_alloc((iptr)self->string_pool,len + 1);
+    label_buf = memblock_alloc((MemBlock *)self->string_pool,len + 1);
     entry->label = (char *)label_buf;
     crt_strcpy((char *)((void *)entry->label),(const char *)((void *)label));
     label_width = font_text_width((GameFont *)self->body_font,(const char *)entry->label);
@@ -7172,7 +7172,7 @@ dialog_add_option(DialogOptionList *self,const char *text,iptr option_id,uint da
       cur = cur->next;
     }
   }
-  option = (DialogOption *)memblock_alloc((iptr)self->string_pool,0x18);
+  option = (DialogOption *)memblock_alloc((MemBlock *)self->string_pool,0x18);
   if (prev == 0) {
     option->next = self->option_list;
     option->prev = 0;
@@ -7198,7 +7198,7 @@ dialog_add_option(DialogOptionList *self,const char *text,iptr option_id,uint da
   }
   option->flags = 0;
   len = _strlen((char *)text);
-  text_buf = memblock_alloc((iptr)self->string_pool,len + 1);
+  text_buf = memblock_alloc((MemBlock *)self->string_pool,len + 1);
   option->text = (char *)text_buf;
   crt_strcpy((char *)((void *)option->text),(const char *)((void *)text));
   if (*(char *)text == '\0') {
@@ -7252,7 +7252,7 @@ dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text
   for (cur = self->edit_field_list; cur != 0; cur = cur->next) {
     last = cur;
   }
-  field = (DialogEditField *)memblock_alloc((iptr)self->string_pool,0x1c);
+  field = (DialogEditField *)memblock_alloc((MemBlock *)self->string_pool,0x1c);
   if (last == 0) {
     self->edit_field_list = field;
   }
@@ -7262,7 +7262,7 @@ dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text
   field->next = 0;
   field->field_00 = 0;
   len = _strlen((char *)label);
-  buffer = memblock_alloc((iptr)self->string_pool,len + 2);
+  buffer = memblock_alloc((MemBlock *)self->string_pool,len + 2);
   field->label = (char *)buffer;
   crt_strcpy((char *)((void *)field->label),(const char *)((void *)label));
   label_width = font_text_width((GameFont *)self->body_font,(const char *)field->label);
@@ -7275,7 +7275,7 @@ dialog_add_edit_field(DialogOptionList *self,const char *label,iptr initial_text
     max_len = 0xff;
   }
   field->max_len = max_len;
-  buffer = memblock_alloc((iptr)self->string_pool,0x100);
+  buffer = memblock_alloc((MemBlock *)self->string_pool,0x100);
   field->buffer = (char *)buffer;
   char_width = font_text_width((GameFont *)(*(i8 * *)(draw_current_font_rest + 12)),(const char *)&str_w);
   field->width = char_width * max_len;
@@ -7310,7 +7310,7 @@ void __thiscall dialog_add_button(DialogButtonsView *self,const char *label)
   
   if ((int)self->extra_button_count < 6) {
     len = _strlen((char *)label);
-    buffer = memblock_alloc((iptr)&((DialogTextLineView *)self)->string_pool,len + 1);
+    buffer = memblock_alloc((MemBlock *)&((DialogTextLineView *)self)->string_pool,len + 1);
     (&((Dialog *)self)->extra_button_labels)[self->extra_button_count] = buffer;
     crt_strcpy((char *)((void *)((&((Dialog *)self)->extra_button_labels)[self->extra_button_count])),(const char *)((void *)label));
     self->extra_button_count++;

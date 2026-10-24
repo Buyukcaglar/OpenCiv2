@@ -2868,7 +2868,7 @@ int __cdecl save_read_event_str(iptr file)
   } while (*cur != '\0');
   buf[len] = '\0';
   str_len = _strlen(buf);
-  result = memblock_alloc((iptr)&unit_types_block.str_empty_188,str_len + 1);
+  result = memblock_alloc((MemBlock *)&unit_types_block.str_empty_188,str_len + 1);
   if (result == 0) {
     error_report(0xfffffff7,3,0,0,0);
     result = 0;
@@ -6017,7 +6017,7 @@ void __cdecl password_dialog_set_title(Dialog *dialog,int civ,i32 label_id)
   crt_strcpy(title,(const char *)(&civ_names[civ].leader_name));
   str_append_label((iptr)title,label_id);
   title_len = _strlen(title);
-  title_mem = memblock_alloc((iptr)(dialog->string_pool),title_len + 1);
+  title_mem = memblock_alloc((MemBlock *)dialog->string_pool,title_len + 1);
   dialog->title_text = title_mem;
   crt_strcpy((char *)((void *)dialog->title_text),title);
   return;
@@ -7140,7 +7140,7 @@ void __cdecl diffeng_register_blocks(void)
   int offset;
   int section;
   
-  memblock_ensure_locked((iptr)&unit_types_block.str_empty_188);
+  memblock_ensure_locked((MemBlock *)&unit_types_block.str_empty_188);
   diffeng_section_init((DiffEngSection *)((i8 *)&diffeng_sections_block.diffeng_sections),(iptr)&str_empty_115,4,0);
   diffeng_section_init((DiffEngSection *)((i32 *)&diffeng_game_section_block.diffeng_game_section),(iptr)&game,0x14c,1);
   diffeng_section_init((DiffEngSection *)((i32 *)&diffeng_civ_names_section_block.diffeng_civ_names_section),(iptr)&civ_names,0x790,2);
@@ -7360,7 +7360,7 @@ int __cdecl events_alloc_string(char *text,iptr events,uint min_len)
   else {
     alloc_len = min_len;
   }
-  str = memblock_alloc(events + 0x2f4,alloc_len);
+  str = memblock_alloc((MemBlock *)(events + 0x2f4),alloc_len);
   if (str == 0) {
     error_report(0xfffffff7,3,0,0,0);
   }
@@ -7813,8 +7813,8 @@ i32 __cdecl events_parse_unit_type(const char *name2)
 void __thiscall events_init_string_pool(DialogCore *self,uint pool_size)
 
 {
-  memblock_free((iptr)&((Dialog *)self)->events_string_pool);
-  memblock_init((iptr)&((Dialog *)self)->events_string_pool,0xc,pool_size);
+  memblock_free((MemBlock *)&((Dialog *)self)->events_string_pool);
+  memblock_init((MemBlock *)&((Dialog *)self)->events_string_pool,0xc,pool_size);
   return;
 }
 
@@ -7846,7 +7846,7 @@ void __thiscall events_dtor(DialogCore *self)
   i32 eh_state;
   
   eh_state = 0;
-  memblock_free((iptr)&((Dialog *)self)->events_string_pool);
+  memblock_free((MemBlock *)&((Dialog *)self)->events_string_pool);
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004fa5b8 */ { dialog_dtor(*(Dialog **)&self); }
   return;
@@ -7874,7 +7874,7 @@ ScenarioEvent * __thiscall events_alloc(ScenarioEvents *self)
     for (; (int)last->next != 0; last = last->next) {
     }
   }
-  _Dst = (ScenarioEvent *)(void *)memblock_alloc((iptr)(self->events_string_pool),0x1c4);
+  _Dst = (ScenarioEvent *)(void *)memblock_alloc((MemBlock *)self->events_string_pool,0x1c4);
   if (_Dst == (void *)0x0) {
     _Dst = (ScenarioEvent *)(void *)0x0;
   }
@@ -8939,7 +8939,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               }
               else {
                 len = _strlen(arg);
-                str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                str_buf = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                 event->unit_name = (char *)str_buf;
                 if (event->unit_name == 0) goto finish;
                 crt_strcpy((char *)((void *)event->unit_name),arg);
@@ -8962,7 +8962,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                 }
                 else {
                   len = _strlen(arg);
-                  cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                  cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                   event->who_name = (char *)cmp;
                   if (event->who_name == 0) goto finish;
                   crt_strcpy((char *)((void *)event->who_name),arg);
@@ -8985,7 +8985,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   }
                   else {
                     len = _strlen(arg);
-                    cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                    cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                     event->whom_name = (char *)cmp;
                     if (event->whom_name == 0) goto finish;
                     crt_strcpy((char *)((void *)event->whom_name),arg);
@@ -9031,7 +9031,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               }
               else {
                 len = _strlen(arg);
-                cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                 event->who_name = (char *)cmp;
                 if (event->who_name == 0) goto finish;
                 crt_strcpy((char *)((void *)event->who_name),arg);
@@ -9086,7 +9086,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   }
                   else {
                     len = _strlen(arg);
-                    cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                    cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                     event->whom_name = (char *)cmp;
                     if (event->whom_name == 0) goto finish;
                     crt_strcpy((char *)((void *)event->whom_name),arg);
@@ -9166,7 +9166,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               }
               else {
                 len = _strlen(arg);
-                cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                 event->whom_name = (char *)cmp;
                 if (event->whom_name == 0) goto finish;
                 crt_strcpy((char *)((void *)event->whom_name),arg);
@@ -9211,7 +9211,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                 }
                 else {
                   len = _strlen(arg);
-                  cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                  cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                   event->whom_name = (char *)cmp;
                   if (event->whom_name == 0) goto finish;
                   crt_strcpy((char *)((void *)event->whom_name),arg);
@@ -9276,7 +9276,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   }
                   else {
                     len = _strlen(arg);
-                    cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                    cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                     event->who_name = (char *)cmp;
                     if (event->who_name == 0) goto finish;
                     crt_strcpy((char *)((void *)event->who_name),arg);
@@ -9300,7 +9300,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                     }
                     else {
                       len = _strlen(arg);
-                      cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                      cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                       event->whom_name = (char *)cmp;
                       if (event->whom_name == 0) goto finish;
                       crt_strcpy((char *)((void *)event->whom_name),arg);
@@ -9316,7 +9316,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                     if (cmp == 0) {
                       arg += 5;
                       len = _strlen(arg);
-                      cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                      cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                       event->city_name = (char *)cmp;
                       if (event->city_name == 0) goto finish;
                       crt_strcpy((char *)((void *)event->city_name),arg);
@@ -9485,7 +9485,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
           while (cmp = __strcmpi(line,str_endtext), cmp != 0) {
             if (i != 0x14) {
               len = _strlen(line);
-              cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+              cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
               event->text[i] = (char *)cmp;
               if (event->text[i] == 0) goto finish;
               crt_strcpy(event->text[i],line);
@@ -9613,7 +9613,7 @@ read_unit_fields:
                   }
                   else {
                     len = _strlen(arg);
-                    str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                    str_buf = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                     event->create_unit_name = (char *)str_buf;
                     if (event->create_unit_name == 0) goto finish;
                     crt_strcpy((char *)((void *)event->create_unit_name),arg);
@@ -9636,7 +9636,7 @@ read_unit_fields:
                     }
                     else {
                       len = _strlen(arg);
-                      cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                      cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                       event->create_owner_name = (char *)cmp;
                       if (event->create_owner_name == 0) goto finish;
                       crt_strcpy((char *)((void *)event->create_owner_name),arg);
@@ -9673,7 +9673,7 @@ read_unit_fields:
                       if (cmp == 0) {
                         arg += 9;
                         len = _strlen(arg);
-                        cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                        cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                         event->create_homecity = (char *)cmp;
                         if (event->create_homecity == 0) goto finish;
                         crt_strcpy((char *)((void *)event->create_homecity),arg);
@@ -9760,7 +9760,7 @@ read_unit_fields:
                     }
                     else {
                       len = _strlen(arg);
-                      cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                      cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                       event->money_receiver_name = (char *)cmp;
                       if (event->money_receiver_name == 0) goto finish;
                       crt_strcpy((char *)((void *)event->money_receiver_name),arg);
@@ -9834,7 +9834,7 @@ read_unit_fields:
                           }
                           else {
                             len = _strlen(arg);
-                            cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                            cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                             event->aggression_who_name = (char *)cmp;
                             if (event->aggression_who_name == 0) goto finish;
                             crt_strcpy((char *)((void *)event->aggression_who_name),arg);
@@ -9857,7 +9857,7 @@ read_unit_fields:
                             }
                             else {
                               len = _strlen(arg);
-                              cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                              cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                               event->aggression_whom_name = (char *)cmp;
                               if (event->aggression_whom_name == 0) goto finish;
                               crt_strcpy((char *)((void *)event->aggression_whom_name),arg);
@@ -10001,7 +10001,7 @@ read_unit_fields:
                                 }
                                 else {
                                   len = _strlen(arg);
-                                  str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1)
+                                  str_buf = memblock_alloc((MemBlock *)self->events_string_pool,len + 1)
                                   ;
                                   event->move_unit_name = (char *)str_buf;
                                   if (event->move_unit_name == 0) goto finish;
@@ -10026,7 +10026,7 @@ read_unit_fields:
                                   }
                                   else {
                                     len = _strlen(arg);
-                                    cmp = memblock_alloc((iptr)(self->events_string_pool),
+                                    cmp = memblock_alloc((MemBlock *)self->events_string_pool,
                                                                len + 1);
                                     event->move_owner_name = (char *)cmp;
                                     if (event->move_owner_name == 0) goto finish;
@@ -10162,7 +10162,7 @@ read_unit_fields:
                                   goto finish;
                                 }
                                 len = _strlen(arg);
-                                cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
+                                cmp = memblock_alloc((MemBlock *)self->events_string_pool,len + 1);
                                 event->wave_file = (char *)cmp;
                                 if (event->wave_file == 0) goto finish;
                                 crt_strcpy((char *)((void *)event->wave_file),arg);
@@ -14184,7 +14184,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
           name2 = label_string(unit_types[(uint)event->unit_type].name);
         }
         len = _strlen(name2);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->unit_name = (char *)value;
         if (event->unit_name != 0) {
           crt_strcpy((char *)((void *)event->unit_name),name2);
@@ -14201,7 +14201,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
               name2 = civ_name_plural((uint)event->who_civ);
             }
             len = _strlen(name2);
-            value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+            value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
             event->who_name = (char *)value;
             if (event->who_name != 0) {
               crt_strcpy((char *)((void *)event->who_name),name2);
@@ -14218,7 +14218,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
                   name2 = civ_name_plural((uint)event->whom_civ);
                 }
                 len = _strlen(name2);
-                value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+                value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
                 event->whom_name = (char *)value;
                 if (event->whom_name != 0) {
                   crt_strcpy((char *)((void *)event->whom_name),name2);
@@ -14249,7 +14249,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
                (check = editor_check_city_name((const char *)city_name), check == 0))));
       if ((-1 < (int)choice) && (len = _strlen(city_name), len != 0)) {
         len = _strlen(city_name);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->city_name = (char *)value;
         if (event->city_name != 0) {
           crt_strcpy((char *)((void *)event->city_name),city_name);
@@ -14266,7 +14266,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
               name2 = civ_name_plural((uint)event->who_civ);
             }
             len = _strlen(name2);
-            value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+            value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
             event->who_name = (char *)value;
             if (event->who_name != 0) {
               crt_strcpy((char *)((void *)event->who_name),name2);
@@ -14283,7 +14283,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
                   name2 = civ_name_plural((uint)event->whom_civ);
                 }
                 len = _strlen(name2);
-                value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+                value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
                 event->whom_name = (char *)value;
                 if (event->whom_name != 0) {
                   crt_strcpy((char *)((void *)event->whom_name),name2);
@@ -14328,7 +14328,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
           name2 = civ_name_plural((uint)event->who_civ);
         }
         len = _strlen(name2);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->who_name = (char *)value;
         if (event->who_name != 0) {
           crt_strcpy((char *)((void *)event->who_name),name2);
@@ -14373,7 +14373,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
                 name2 = civ_name_plural((uint)event->whom_civ);
               }
               len = _strlen(name2);
-              value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+              value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
               event->whom_name = (char *)value;
               if (event->whom_name != 0) {
                 crt_strcpy((char *)((void *)event->whom_name),name2);
@@ -14685,7 +14685,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
           name2 = civ_name_plural((uint)event->whom_civ);
         }
         len = _strlen(name2);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->whom_name = (char *)value;
         if (event->whom_name != 0) {
           crt_strcpy((char *)((void *)event->whom_name),name2);
@@ -14707,7 +14707,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
           name2 = civ_name_plural((uint)event->whom_civ);
         }
         len = _strlen(name2);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->whom_name = (char *)value;
         if (event->whom_name != 0) {
           crt_strcpy((char *)((void *)event->whom_name),name2);
@@ -14915,7 +14915,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
       if (result != -1) {
         event->money_receiver_civ = result;
         len = _strlen(name_str);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->money_receiver_name = (char *)value;
         if (event->money_receiver_name != 0) {
           crt_strcpy((char *)((void *)event->money_receiver_name),name_str);
@@ -14938,7 +14938,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
     }
     else if (action_bit == 1) {
       value = (i32)label_string(label_string_ids[0x22c]);
-      prev_count = editor_text_edit_dialog((iptr)(((i32 *)event) + 0xe),(const char *)value);
+      prev_count = editor_text_edit_dialog((((i32 *)event) + 0xe),(const char *)value);
       changed = (uint)(prev_count != 0);
     }
     else if (action_bit == 2) {
@@ -14955,7 +14955,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
           name_str = label_string(unit_types[event->move_unit_type].name);
         }
         len = _strlen(name_str);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->move_unit_name = (char *)value;
         if (event->move_unit_name != 0) {
           crt_strcpy((char *)((void *)event->move_unit_name),name_str);
@@ -14966,7 +14966,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
           if (result != -1) {
             event->move_owner_civ = result;
             len = _strlen(name_str);
-            value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+            value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
             event->move_owner_name = (char *)value;
             if (event->move_owner_name != 0) {
               crt_strcpy((char *)((void *)event->move_owner_name),name_str);
@@ -15079,7 +15079,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
         event->create_unit_type = result;
         name_str = label_string(unit_types[event->create_unit_type].name);
         len = _strlen(name_str);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->create_unit_name = (char *)value;
         if (event->create_unit_name != 0) {
           crt_strcpy((char *)((void *)event->create_unit_name),name_str);
@@ -15090,7 +15090,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
           if (result != -1) {
             event->create_owner_civ = result;
             len = _strlen(name_str);
-            value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+            value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
             event->create_owner_name = (char *)value;
             if (event->create_owner_name != 0) {
               crt_strcpy((char *)((void *)event->create_owner_name),name_str);
@@ -15124,7 +15124,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
                          (prev_count = editor_check_city_name((const char *)input_buf), prev_count == 0))));
                 if ((-1 < result) && (len = _strlen(input_buf), len != 0)) {
                   len = _strlen(input_buf);
-                  value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+                  value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
                   event->create_homecity = (char *)value;
                   if (event->create_homecity != 0) {
                     crt_strcpy((char *)((void *)event->create_homecity),input_buf);
@@ -15191,7 +15191,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
         event->aggression_who_civ = result;
         name_str = civ_name_plural(event->aggression_who_civ);
         len = _strlen(name_str);
-        value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+        value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
         event->aggression_who_name = (char *)value;
         if (event->aggression_who_name != 0) {
           crt_strcpy((char *)((void *)event->aggression_who_name),name_str);
@@ -15202,7 +15202,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
             event->aggression_whom_civ = result;
             name_str = civ_name_plural(event->aggression_whom_civ);
             len = _strlen(name_str);
-            value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+            value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
             event->aggression_whom_name = (char *)value;
             if (event->aggression_whom_name != 0) {
               crt_strcpy((char *)((void *)event->aggression_whom_name),name_str);
@@ -15238,7 +15238,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
           }
           __strupr(input_buf);
           len = _strlen(input_buf);
-          value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
+          value = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
           event->wave_file = (char *)value;
           if (event->wave_file == 0) goto refresh_editor;
           crt_strcpy((char *)((void *)event->wave_file),input_buf);

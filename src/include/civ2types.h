@@ -974,6 +974,21 @@ static_assert(sizeof(ControlBlock) == 0x30, "");
 static_assert(sizeof(RadioItem) == 0xa4, "");
 #endif
 
+/* A section of RULES.TXT the rules editors rewrite (rules_edit_add_section). */
+typedef struct RulesEditSection {
+    iptr name;                      /* 0x0 "@NAME" without the @, 0 ends the list */
+    iptr writer;                    /* 0x4 void (*)(FILE *out, FILE *in) */
+} RulesEditSection;
+/* A row of a rules editor's control table: what is on that row. */
+typedef struct EditorCtrlRow {
+    i32 kind;                       /* 0x0 9 edit box, 0xc combo box */
+    i32 slot;                       /* 0x4 index of the edit box / combo box */
+} EditorCtrlRow;
+#ifdef __cplusplus
+static_assert(sizeof(RulesEditSection) == 8, "");
+static_assert(sizeof(EditorCtrlRow) == 8, "");
+#endif
+
 #pragma pack(pop)
 
 #endif

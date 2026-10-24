@@ -69,17 +69,14 @@ extern pointer ptr_fun_2;
 extern i8 tribe_leader_sound_set[24];
 #pragma pack(push, 1)
 struct leader_video_x_table_block {
-    i8 leader_video_x_table[4];  /* 0061d200 */
-    i8 leader_video_y_table[164];  /* 0061d204 */
+    i32 leader_video_pos[21][2];  /* 0061d200 per tribe: x, y of the leader video */
 };
 #pragma pack(pop)
 extern struct leader_video_x_table_block leader_video_x_table_block;
 #pragma pack(push, 1)
 struct leader_anim_frame_starts_block {
-    i8 leader_anim_frame_starts[4];  /* 0061d2a8 */
-    i8 leader_anim_frame_ends[4];  /* 0061d2ac */
-    i8 leader_anim_idle_start[4];  /* 0061d2b0 */
-    i8 leader_anim_idle_end[1036];  /* 0061d2b4 */
+    i32 leader_anim_frames[26][5][2];  /* 0061d2a8 per tribe, per reaction (1 idle): first, last frame */
+    u8 leader_anim_frames_rest[8];
     pointer ptr_fun_3[15];  /* 0061d6c0 */
     pointer ptr_fun_4;  /* 0061d6fc */
     u8 ptr_fun_4_rest[12];
@@ -217,8 +214,7 @@ struct tech_editor_edit_x_table_block {
 extern struct tech_editor_edit_x_table_block tech_editor_edit_x_table_block;
 #pragma pack(push, 1)
 struct tech_editor_ctrl_kinds_block {
-    i8 tech_editor_ctrl_kinds[4];  /* 00625160 */
-    i8 tech_editor_ctrl_slots[36];  /* 00625164 */
+    EditorCtrlRow tech_editor_ctrl_rows[5];  /* 00625160 */
     i8 tech_editor_field_min_table[8];  /* 00625188 */
     i8 tech_editor_field_max_table[24];  /* 00625190 */
     i8 tech_editor_int_fmt[4];  /* 006251a8 */
@@ -1163,7 +1159,7 @@ extern char str_chatmac1_txt[16];
 extern char str_chatmac2_txt[16];
 extern char str_chatmac3_txt[28];
 extern i8 *leader_video_tribe_codes[21];
-extern iptr diplo_leader_window;
+extern DiploLeaderWindow *diplo_leader_window;
 extern char diplo_leader_wnd_open;
 extern u8 diplo_leader_wnd_open_rest[3];
 extern i8 diplo_leader_wnd_busy;
@@ -1172,7 +1168,7 @@ extern char diplo_leader_video_active;
 extern u8 diplo_leader_video_active_rest[3];
 extern int diplo_greeting_sound_id;
 extern int diplo_leader_sound_ids[2];
-extern i8 diplo_leader_reaction_sound_ids[12];
+extern int diplo_leader_reaction_sound_ids[3];
 extern int tech_prereq_walk_count;
 extern u8 tech_prereq_walk_count_rest[84];
 extern char str_civ2_mk_dll[12];
@@ -1245,8 +1241,7 @@ struct tribe_editor_combo_x_table_block {
 extern struct tribe_editor_combo_x_table_block tribe_editor_combo_x_table_block;
 #pragma pack(push, 1)
 struct tribe_editor_ctrl_kinds_block {
-    i8 tribe_editor_ctrl_kinds[4];  /* 0062cd68 */
-    i8 tribe_editor_ctrl_slots[36];  /* 0062cd6c */
+    EditorCtrlRow tribe_editor_ctrl_rows[5];  /* 0062cd68 */
     i8 rules_gov_name_sep_str[4];  /* 0062cd90 */
     i8 rules_gov_male_title_sep_str[4];  /* 0062cd94 */
     i8 rules_gov_line_end_str[4];  /* 0062cd98 */
@@ -1548,7 +1543,7 @@ struct spaceship_launch_sprite_xs_block {
     i8 spaceship_launch_sprite_ys[4];  /* 0062e254 */
     i8 spaceship_launch_sprite_widths[4];  /* 0062e258 */
     i8 spaceship_part_sprite_heights[116];  /* 0062e25c */
-    iptr spaceship_wnd;  /* 0062e2d0 */
+    SpaceshipWindowExt *spaceship_wnd;  /* 0062e2d0 */
 };
 #pragma pack(pop)
 extern struct spaceship_launch_sprite_xs_block spaceship_launch_sprite_xs_block;
@@ -4709,7 +4704,7 @@ struct map_views_block {
     u8 unit_focus_done_rest[3];
     i32 saved_human_players;  /* 00673b08 */
     u8 saved_human_players_rest[36];
-    i8 tech_prereq_depth_cache[488];  /* 00673b30 */
+    i32 tech_prereq_depth_cache[122];  /* 00673b30 */
     i8 civ_password_prompt_pending[32];  /* 00673d18 */
     i8 civ_has_password[56];  /* 00673d38 */
     i32 citypref_improvements[40];  /* 00673d70 */
@@ -4891,10 +4886,7 @@ struct font_size16_bold_block {
     u8 wonder_movie_wnd_rest[8];
     uptr net_bribe_answer;  /* 006a1870 */
     u8 net_bribe_answer_rest[12];
-    i32 rules_edit_section_names[1];  /* 006a1880 */
-    i32 rules_edit_section_writers[1];  /* 006a1884 */
-    i32 rules_edit_next_name[1];  /* 006a1888 */
-    i32 rules_edit_next_writer[13];  /* 006a188c */
+    RulesEditSection rules_edit_sections[8];  /* 006a1880 */
 };
 #pragma pack(pop)
 extern struct font_size16_bold_block font_size16_bold_block;
@@ -4923,7 +4915,7 @@ struct editor_text_dlg_wnd_block {
     i8 editor_govt_name_ends[306];  /* 006a1ba6 */
     i8 editor_commodity_names[9];  /* 006a1cd8 */
     i8 editor_commodity_name_ends[151];  /* 006a1ce1 */
-    iptr editor_text_lines_out;  /* 006a1d78 */
+    i32 *editor_text_lines_out;  /* 006a1d78 */
     i32 editor_running;  /* 006a1d7c */
     int editor_next_ctrl_id;  /* 006a1d80 */
     u8 editor_next_ctrl_id_rest[4];
@@ -5234,7 +5226,7 @@ struct setup_picwnd_block {
     i32 g_timer_blink[2];  /* 006ab5ac */
     HHOOK mp_window_drag_hook;  /* 006ab5b4 */
     u8 mp_window_drag_hook_rest[8];
-    i8 diplo_recent_peace_table[32];  /* 006ab5c0 */
+    i32 diplo_recent_peace_table[8];  /* 006ab5c0 */
     int diplo_border_intruder_units;  /* 006ab5e0 */
     iptr border_intruder_city;  /* 006ab5e4 */
     int diplo_border_intruder_count;  /* 006ab5e8 */
@@ -5396,7 +5388,7 @@ struct main_frame_bg_surface_block {
     int main_frame_nonclient_width;  /* 006acbb0 */
     i32 main_frame_nonclient_height_i32;  /* 006acbb4 */
     u8 main_frame_nonclient_height_i32_rest[24];
-    i8 crash_handler_callbacks[40];  /* 006acbd0 */
+    iptr crash_handler_callbacks[10];  /* 006acbd0 */
     i8 crash_debug_buffer[320];  /* 006acbf8 */
     i32 unit_sound_slot_effects[1];  /* 006acd38 */
     int unit_sound_orders_effect;  /* 006acd3c */
@@ -5799,8 +5791,7 @@ extern struct default_draw_font_obj_block default_draw_font_obj_block;
 #pragma pack(push, 1)
 struct err_report_ctx_block {
     u8 err_report_ctx[1808];  /* 006e4850 */
-    i8 res_dll_modules[4];  /* 006e4f60 */
-    i8 res_dll_modules_elem1[136];  /* 006e4f64 */
+    u32 res_dll_modules[35];  /* 006e4f60 HMODULE */
     i32 app_prev_instance;  /* 006e4fec */
     HINSTANCE app_hinstance;  /* 006e4ff0 */
     u8 app_hinstance_rest[4];

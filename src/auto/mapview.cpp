@@ -779,7 +779,7 @@ void __cdecl mapview_on_lbuttondown(void)
   SHORT shift_state;
   iptr child_wnd;
   int paradrop;
-  iptr view;
+  ViewWindow *view;
   
   if ((city_turn_processing == 0) && ((game.multiplayer == '\0' || (net_session_block.ui_input_busy == 0)))) {
     net_session_block.ui_input_busy = 1;
@@ -788,11 +788,11 @@ void __cdecl mapview_on_lbuttondown(void)
       view = 0;
     }
     else {
-      view = child_wnd - 0x48;
+      view = (ViewWindow *)(child_wnd - 0x48);
     }
     mapview_cancel_drag();
     if ((moving_units_mode == 1) && (paradrop = ui_paradrop_cursor_active(), paradrop == 0)) {
-      mapview_drag_view_index = *(int *)(view + 0x2d8);
+      mapview_drag_view_index = (int)view->map_view_index;
       shift_state = GetAsyncKeyState(0x10);
       if ((char)((ushort)shift_state >> 8) == '\0') {
         mapview_drag_hold_timer = game_timer_create((iptr)mapview_drag_hold_expired,400,1);
@@ -911,21 +911,21 @@ bool __cdecl mapview_on_close(void)
 {
   iptr child_wnd;
   bool is_main;
-  iptr view;
+  ViewWindow *view;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
     view = 0;
   }
   else {
-    view = child_wnd - 0x48;
+    view = (ViewWindow *)(child_wnd - 0x48);
   }
-  is_main = *(int *)(view + 0x2d8) == 0;
+  is_main = (int)view->map_view_index == 0;
   if (is_main) {
-    wnd_minimize((WndBase *)(view + 0x48));
+    wnd_minimize((WndBase *)((iptr)view + 0x48));
   }
   else {
-    *(i16 *)(view + 0x2dc) = 0;
+    *(i16 *)((iptr)view + 0x2dc) = 0;
   }
   return !is_main;
 }
@@ -935,18 +935,18 @@ void __cdecl mapview_on_size(void)
 
 {
   iptr child_wnd;
-  iptr view;
+  ViewWindow *view;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
     view = 0;
   }
   else {
-    view = child_wnd - 0x48;
+    view = (ViewWindow *)(child_wnd - 0x48);
   }
   wnd_get_rect_in_parent
-            ((WndBase *)(view + 0x48),
-             (iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + *(int *)(view + 0x2d8) * 0x10));
+            ((WndBase *)((iptr)view + 0x48),
+             (iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + (int)view->map_view_index * 0x10));
   return;
 }
 
@@ -955,18 +955,18 @@ void __cdecl mapview_on_move(void)
 
 {
   iptr child_wnd;
-  iptr view;
+  ViewWindow *view;
   
   child_wnd = wnd_get_active_child();
   if (child_wnd == 0) {
     view = 0;
   }
   else {
-    view = child_wnd - 0x48;
+    view = (ViewWindow *)(child_wnd - 0x48);
   }
   wnd_get_rect_in_parent
-            ((WndBase *)(view + 0x48),
-             (iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + *(int *)(view + 0x2d8) * 0x10));
+            ((WndBase *)((iptr)view + 0x48),
+             (iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + (int)view->map_view_index * 0x10));
   return;
 }
 
@@ -1229,19 +1229,10 @@ void __thiscall clickmap_clear(ClickMapClearView *self)
 void __thiscall clickmap_remove_at(ClickMapRemoveView *self,int index)
 
 {
-  int n;
-  u8 *src;
-  u8 *dst;
   int i;
   
   for (i = index; i < (int)(self->entry_count - 1); i++) {
-    src = self->hit_regions + i * 0x18 + 0x18;
-    dst = self->hit_regions + i * 0x18;
-    for (n = 6; n != 0; n--) {
-      *(i32 *)dst = *(i32 *)src;
-      src += 4;
-      dst += 4;
-    }
+    self->hit_regions[i] = self->hit_regions[i + 1];
   }
   self->entry_count--;
   return;
@@ -1252,14 +1243,12 @@ void __thiscall clickmap_remove_by_id(ClickMapRemoveView *self,int id)
 
 {
   u32 count;
-  iptr offset;
   u32 idx;
   
   count = self->entry_count;
   while (idx = count - 1, -1 < (int)idx) {
-    offset = count * 0x18;
     count = idx;
-    if (*(int *)(self->hit_regions + offset - 8) == id) {
+    if (self->hit_regions[idx].value == id) {
       clickmap_remove_at(self,idx);
     }
   }
@@ -1279,9 +1268,9 @@ clickmap_add
   if ((int)self->entry_count < 200) {
     index = self->entry_count;
     self->entry_count++;
-    rect_set_xywh((iptr)(self->hit_regions + index * 0x18),x,y,width,height);
-    *(iptr *)(self->hit_regions + index * 0x18 + 0x14) = id;
-    *(i32 *)(self->hit_regions + index * 0x18 + 0x10) = value;
+    rect_set_xywh((iptr)&self->hit_regions[index],x,y,width,height);
+    self->hit_regions[index].id = id;
+    self->hit_regions[index].value = value;
   }
   return index;
 }
@@ -1301,18 +1290,18 @@ clickmap_hit_test(ClickMapHitTestView *self,int x,int y,iptr out_id,iptr out_val
 report_hit:
       if (-1 < hit) {
         if (out_id != 0) {
-          *(i32 *)out_id = *(i32 *)(self->hit_regions + hit * 0x18 + 0x14);
+          *(i32 *)out_id = self->hit_regions[hit].id;
         }
         if (out_value != 0) {
-          *(i32 *)out_value = *(i32 *)(self->hit_regions + hit * 0x18 + 0x10);
+          *(i32 *)out_value = self->hit_regions[hit].value;
         }
       }
       return hit;
     }
-    if ((((*(int *)(self->hit_regions + i * 0x18) <= x) &&
-         (x < *(int *)(self->hit_regions + i * 0x18 + 8))) &&
-        (*(int *)(self->hit_regions + i * 0x18 + 4) <= y)) &&
-       (y < *(int *)(self->hit_regions + i * 0x18 + 0xc))) {
+    if ((((self->hit_regions[i].left <= x) &&
+         (x < self->hit_regions[i].right)) &&
+        (self->hit_regions[i].top <= y)) &&
+       (y < self->hit_regions[i].bottom)) {
       hit = i;
       goto report_hit;
     }

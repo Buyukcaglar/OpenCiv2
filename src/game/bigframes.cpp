@@ -443,7 +443,7 @@ city_style_dialog:
               text_set_number_arg(0,opp_number);
               setup_picwnd_show(((ViewWindow *)((i8 *)&setup_picwnd_block.setup_picwnd)),2,6,9);
               dlg_load_game_section(&dlg,(const char *)str_opponent,1);
-              *(i32 *)((int)dlg.option_list + 4) = 0x15;
+              dlg.option_list->id = 0x15;
               for (leader_pick = 0; leader_pick < 0x15; leader_pick = leader_pick + 1) {
                 if (leaders[leader_pick].color == leader_i) {
                   text_clear();
@@ -488,7 +488,7 @@ city_style_dialog:
 }
 
 /* 0x004d17bf: unwind funclet 0x004d4a11 destroys the control at EBP-0x12c (surf_1eb). */
-i32 __thiscall spaceship_wnd_render_ship(void *self)
+i32 __thiscall spaceship_wnd_render_ship(SpaceshipWindow *self)
 
 {
   byte part_count;
@@ -1602,7 +1602,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                               *(int *)(((i8 *)&editor_text_edit_block.spaceship_wnd_part_counts) + (uint)part_rows[row_i].kind * 4)) {
                             if (part_rows[row_i].kind == 1) {
                               part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),1);
+                              load_ok = spaceship_part_count((i32)self->ship_civ,1);
                               if (load_ok < (int)(uint)part_count) {
                                 sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1ba,9,
                                              part_rows[row_i].v[5],1,
@@ -1618,7 +1618,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                             }
                             else if (part_rows[row_i].kind == 4) {
                               part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),4);
+                              load_ok = spaceship_part_count((i32)self->ship_civ,4);
                               if (load_ok < (int)(uint)part_count) {
                                 sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1e1,9,
                                              part_rows[row_i].v[5],1,
@@ -1634,7 +1634,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                             }
                             else if (part_rows[row_i].kind == 2) {
                               part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),2);
+                              load_ok = spaceship_part_count((i32)self->ship_civ,2);
                               if (load_ok < (int)(uint)part_count) {
                                 sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1c8,9,
                                              part_rows[row_i].v[5],1,
@@ -1650,7 +1650,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                             }
                             else if (part_rows[row_i].kind == 5) {
                               part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),5);
+                              load_ok = spaceship_part_count((i32)self->ship_civ,5);
                               if (load_ok < (int)(uint)part_count) {
                                 sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1e9,9,
                                              part_rows[row_i].v[5],1,
@@ -1666,7 +1666,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                             }
                             else if (part_rows[row_i].kind == 3) {
                               part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),3);
+                              load_ok = spaceship_part_count((i32)self->ship_civ,3);
                               if (load_ok < (int)(uint)part_count) {
                                 sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1d7,9,
                                              part_rows[row_i].v[5],1,
@@ -1744,7 +1744,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                                 *(int *)(((i8 *)&editor_text_edit_block.spaceship_wnd_part_counts) + (uint)part_rows[row_i].kind * 4)) {
                               if (part_rows[row_i].kind == 1) {
                                 part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),1);
+                                load_ok = spaceship_part_count((i32)self->ship_civ,1);
                                 if (load_ok < (int)(uint)part_count) {
                                   sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1ba,9,
                                                part_rows[row_i].v[5],1,
@@ -1760,7 +1760,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                               }
                               else if (part_rows[row_i].kind == 4) {
                                 part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),4);
+                                load_ok = spaceship_part_count((i32)self->ship_civ,4);
                                 if (load_ok < (int)(uint)part_count) {
                                   sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1e1,9,
                                                part_rows[row_i].v[5],1,
@@ -1776,7 +1776,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                               }
                               else if (part_rows[row_i].kind == 2) {
                                 part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),2);
+                                load_ok = spaceship_part_count((i32)self->ship_civ,2);
                                 if (load_ok < (int)(uint)part_count) {
                                   sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1c8,9,
                                                part_rows[row_i].v[5],1,
@@ -1792,7 +1792,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                               }
                               else if (part_rows[row_i].kind == 5) {
                                 part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),5);
+                                load_ok = spaceship_part_count((i32)self->ship_civ,5);
                                 if (load_ok < (int)(uint)part_count) {
                                   sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1e9,9,
                                                part_rows[row_i].v[5],1,
@@ -1808,7 +1808,7 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                               }
                               else if (part_rows[row_i].kind == 3) {
                                 part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count(*(i32 *)((iptr)self + 0x1cc),3);
+                                load_ok = spaceship_part_count((i32)self->ship_civ,3);
                                 if (load_ok < (int)(uint)part_count) {
                                   sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)surf_1d7,9,
                                                part_rows[row_i].v[5],1,
@@ -1836,12 +1836,12 @@ i32 __thiscall spaceship_wnd_render_ship(void *self)
                           sprite_grab_from_surface((Sprite *)((iptr)self + 0x93c),(iptr)self + 0x8f4,9,0,0,0x1c9,
                                        0x130);
                           win_flush_pending_msgs();
-                          if (*(int *)((iptr)self + 0xae0) == 3) {
+                          if ((int)self->launch_state == 3) {
                             surface_fill((DibSurface *)((iptr)self + 0xb8),0);
                           }
                           sprite_draw((Sprite *)((iptr)self + 0x93c),(iptr)sprite_final,(iptr)self + 0xb8,0xaf,
                                        99);
-                          spaceship_wnd_draw_title(*(i32 *)((iptr)self + 0x1cc));
+                          spaceship_wnd_draw_title((i32)self->ship_civ);
                           (*((char *)&unwind_state + 0)) = 10;
                           /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
                           (*((char *)&unwind_state + 0)) = 9;
