@@ -172,7 +172,7 @@ def arg_start(s, i):
     """Start of the argument (or right-hand side) that contains s[i]: just
     after the ( , or = that opens it at its level (-1 if not on this line)."""
     depth = 0
-    j = i - 1
+    j = i if i < len(s) and s[i] in ')]' else i - 1
     while j >= 0:
         c = s[j]
         if c in ')]':
@@ -223,6 +223,9 @@ def ptr_casts(path, any_conversion=False):
                     i = k
             e = expr_end(s, i)
             before = s[:i].rstrip()
+            if not before and ln > 1:
+                # the argument starts a continuation line: what ends the line before
+                before = lines[ln - 2].rstrip()
             if (e < 0 or not s[i:e].strip() or not before or before[-1] not in '=(,'
                     or not re.match(r'[A-Za-z_(&*0-9]', s[i])):
                 skipped += 1

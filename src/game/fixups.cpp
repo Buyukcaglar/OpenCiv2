@@ -543,7 +543,7 @@ i32 __cdecl ddraw_init(void)
     RegisterClassA(&wc);
     hr = DirectDrawCreate((GUID *)0x0, (LPDIRECTDRAW *)(iptr)&g_ddraw, (IUnknown *)0x0);
     if (hr != 0) {
-        dbg_log((iptr)str_error_directdrawinitialize_failed);
+        dbg_log((const char *)str_error_directdrawinitialize_failed);
         return 0;
     }
     err_report_ctx_block.g_ddcaps_driver = 0x13c;
@@ -551,13 +551,13 @@ i32 __cdecl ddraw_init(void)
     /* IDirectDraw::GetCaps (vtable slot 11) */
     ((dd_getcaps_fn)(*(void ***)g_ddraw)[11])(g_ddraw, (void *)(iptr)&err_report_ctx_block.g_ddcaps_driver, (void *)(iptr)&err_report_ctx_block.g_ddcaps_hel);
     if ((err_report_ctx_block.ddraw_hw_caps_byte0 & 0x40) == 0)
-        dbg_log((iptr)str_direct_draw_doesn_t_supports_hardware_bl);
+        dbg_log((const char *)str_direct_draw_doesn_t_supports_hardware_bl);
     if ((err_report_ctx_block.ddraw_hw_caps_byte2 & 0x40) == 0)
-        dbg_log((iptr)str_direct_draw_doesn_t_supports_colorkeys);
+        dbg_log((const char *)str_direct_draw_doesn_t_supports_colorkeys);
     if ((err_report_ctx_block.ddraw_hw_caps_byte3 & 4) == 0)
-        dbg_log((iptr)str_direct_draw_doesn_t_supports_color_fills);
+        dbg_log((const char *)str_direct_draw_doesn_t_supports_color_fills);
     if ((err_report_ctx_block.ddraw_hw_caps_byte3 & 8) != 0)
-        dbg_log((iptr)str_direct_draw_device_is_bank_switched);
+        dbg_log((const char *)str_direct_draw_device_is_bank_switched);
     return 1;
 }
 

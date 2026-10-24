@@ -87,13 +87,13 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
         /* nothing */
     }
     else if ((game.multiplayer < 3) || (human_civ[0] == civ2)) {
-        dialog_load_game_text(&dlg, (iptr)str_pickgovt);
+        dialog_load_game_text(&dlg, (const char *)str_pickgovt);
         for (gov = (all_govs != 0) ? 0 : 1; gov < 7; gov = gov + 1) {
             /* (civ_can_choose_government's last 19 parameters are a decompiler artifact) */
             if ((all_govs != 0) || (civ_can_choose_government(civ2, gov, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) != 0)) {
                 text_clear();
                 text_append_string_id(government_names[gov]);
-                dialog_add_option((DialogOptionList *)(&dlg), (iptr)&map_views_block.text_buffer, gov, 0);
+                dialog_add_option((DialogOptionList *)(&dlg), (const char *)&map_views_block.text_buffer, gov, 0);
             }
         }
         choice2 = dlg_show_modal(&dlg, 0);
@@ -107,11 +107,11 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
             text_arg = civ_get_adjective(civ2);
             text_set_string_arg(2, (const char *)text_arg);
             text_set_label_arg(3, government_names[choice2]);
-            popup_game_with_sprite((iptr)str_newgovt, (iptr)(((i8 *)&government_sprites_block.government_sprites) + choice2 * 0x3c), 0);
+            popup_game_with_sprite((const char *)str_newgovt, (iptr)(((i8 *)&government_sprites_block.government_sprites) + choice2 * 0x3c), 0);
             if (((4 < choice2) && (((*((char *)&game.game_options + 1)) & 1) != 0)) &&
                 ((game.field_0c & 0x20) == 0)) {
                 text_set_label_arg(0, government_names[choice2]);
-                popup_file_with_sprite((iptr)(*(i8 * *)str_ptr_labels_rest), (iptr)str_democrats, (iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite, 0);
+                popup_file_with_sprite((const char *)(*(i8 * *)str_ptr_labels_rest), (const char *)str_democrats, (iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite, 0);
                 game.field_0c = game.field_0c | 0x20;
             }
         }
@@ -171,11 +171,11 @@ i32 __cdecl FUN_005e0863(void)
     btn_x = surface_get_width((DibSurface *)(&surf_wnd2));
     OffsetRect(&btn_rect, btn_x + -0x46, btn_y);
     button_create((Control *)ok_button, (i32)surf_wnd2.window_2, 0x65, (i32)&btn_rect,
-                       (i32)((i32 *)&str_ok_3));
+                       (const char *)((i32 *)&str_ok_3));
     button_set_callback((Control *)ok_button, (i32)dlg_radio_choice_button_cb);
     OffsetRect(&btn_rect, 0, -0x23);
     button_create((Control *)cancel_button, (i32)surf_wnd2.window_2, 0x66, (i32)&btn_rect,
-                       (i32)str_cancel_3);
+                       (const char *)str_cancel_3);
     button_set_callback((Control *)cancel_button, (i32)dlg_radio_choice_button_cb);
     /* funclets 005e0a31..005e0a6a: destroy the locals in reverse order */
     edit_dtor((Control *)edit);
@@ -205,13 +205,13 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
         text_append((const char *)label_text);
         SetRect(&rect, 0, 0, 0x34, 0x24);
         OffsetRect(&rect, 1, 1);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (i32)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
+        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
         sprite_grab_from_surface((Sprite *)((iptr)self + 0x978), (i32)surface, 9, 1, 1, 0x34, 0x24);
         OffsetRect(&rect, 0x35, 0);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (i32)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
+        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
         sprite_grab_from_surface((Sprite *)((iptr)self + 0x9f0), (i32)surface, 9, 0x36, 1, 0x34, 0x24);
         OffsetRect(&rect, 0x35, 0);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (i32)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
+        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
         sprite_grab_from_surface((Sprite *)((iptr)self + 0x9b4), (i32)surface, 9, 0x6b, 1, 0x34, 0x24);
         gfx_set_text_color_index(0xc6);
         text_clear();
@@ -227,13 +227,13 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
         }
         SetRect(&rect, 0, 0, 0x43, 0x24);
         OffsetRect(&rect, 1, 0x26);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (i32)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
+        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
         sprite_grab_from_surface((Sprite *)((iptr)self + 0xa2c), (i32)surface, 9, 1, 0x26, 0x43, 0x24);
         OffsetRect(&rect, 0x44, 0);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (i32)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
+        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
         sprite_grab_from_surface((Sprite *)((iptr)self + 0xaa4), (i32)surface, 9, 0x45, 0x26, 0x43, 0x24);
         OffsetRect(&rect, 0x44, 0);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (i32)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
+        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), (iptr)&rect, 0);
         sprite_grab_from_surface((Sprite *)((iptr)self + 0xa68), (i32)surface, 9, 0x89, 0x26, 0x43, 0x24);
     }
     /* funclet 004d56ea: lea ecx,[ebp-0x64] */

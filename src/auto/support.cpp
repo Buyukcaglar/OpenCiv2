@@ -297,13 +297,13 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
   eh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
   eh_state = 0;
-  dialog_load_text(&dlg,(iptr)&str_debug_2,(iptr)&str_pickplayer,1);
+  dialog_load_text(&dlg,(const char *)&str_debug_2,(const char *)&str_pickplayer,1);
   for (civ = (uint)(include_barbarians == 0); (int)civ < 8; civ++) {
     if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
       text_clear();
       adjective = civ_get_adjective(civ);
       text_append((const char *)adjective);
-      dialog_add_option((DialogOptionList *)&dlg,(iptr)&map_views_block.text_buffer,civ,0);
+      dialog_add_option((DialogOptionList *)&dlg,(const char *)&map_views_block.text_buffer,civ,0);
     }
   }
   dialog_set_default_choice((DialogOptionList *)&dlg,human_civ[0]);
@@ -364,7 +364,7 @@ int __cdecl err_register_cleanup_fn(iptr callback)
 }
 
 /* 00589dc5 auto */
-void __cdecl err_dump_text_file(iptr path)
+void __cdecl err_dump_text_file(const char *path)
 
 {
   FILE *_File;
@@ -418,8 +418,8 @@ void __cdecl error_report(uint error_code,int module_id,iptr context,iptr data1,
   __itoa(module_id,module_text,10);
   __ltoa(data1,data1_text,10);
   __ltoa(data2,data2_text,10);
-  file_read_nth_line((iptr)error_text,(iptr)&str_errors_db,~error_code + 1);
-  file_read_nth_line((iptr)module_text,(iptr)&str_modules_db,module_id);
+  file_read_nth_line((iptr)error_text,(const char *)&str_errors_db,~error_code + 1);
+  file_read_nth_line((iptr)module_text,(const char *)&str_modules_db,module_id);
   err_fatal_exit((iptr)error_text,(iptr)module_text,(iptr)data1_text,(iptr)data2_text,error_code);
   return;
 }
@@ -442,12 +442,12 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   crt_strcat(msg,(const char *)((const void *)data2_text));
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&err_fatal_msg_fmt),msg);
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
-  dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+  dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   len = _strlen(((i8 *)&error_context_text));
   if (len != 0) {
     _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),str_s_2,((i8 *)&error_context_text));
     OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
-    dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+    dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   }
   if ((*(int *)&error_last_alloc_failed) != 0) {
     __ltoa((*&mem_last_alloc_size),(char *)data1_text,10);
@@ -456,26 +456,26 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
     crt_strcat(msg,str_bytes);
     _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_alloc_line_fmt),msg);
     OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
-    dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+    dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   }
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_alloc_newline_str));
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
-  dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+  dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   if (error_last_open_failed != 0) {
     _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),str_file_open_failed_s,((i8 *)&error_last_open_path));
     OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
-    dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+    dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   }
   crt_strcpy(msg,str_most_recent_dos_error);
   __itoa(crt_errno,(char *)data1_text,10);
   crt_strcat(msg,(const char *)((const void *)data1_text));
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_dos_error_line_fmt),msg);
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
-  dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+  dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_dos_error_newline_str));
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
-  dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
-  err_dump_text_file((iptr)&str_warn0_dat);
+  dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
+  err_dump_text_file((const char *)&str_warn0_dat);
   i = fatal_cleanup_count;
   while (i = i - 1, -1 < i) {
     if (*(int *)(((i8 *)&main_frame_bg_surface_block.crash_handler_callbacks) + i * 4) != 0) {
@@ -781,7 +781,7 @@ void __cdecl dbg_log_file_atexit_dtor(void)
 }
 
 /* 005d225b auto */
-i8 __cdecl dbg_log(iptr text)
+i8 __cdecl dbg_log(const char *text)
 
 {
   i8 result;
@@ -791,71 +791,71 @@ i8 __cdecl dbg_log(iptr text)
 }
 
 /* 005d2279 auto */
-i8 __cdecl dbg_logf(iptr fmt,iptr arg)
+i8 __cdecl dbg_logf(const char *fmt,iptr arg)
 
 {
   i8 result;
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg);
-  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
+  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(const char *)buf);
   return result;
 }
 
 /* 005d22b7 auto */
-i8 __cdecl dbg_logf_int2(iptr fmt,i32 arg1,i32 arg2)
+i8 __cdecl dbg_logf_int2(const char *fmt,i32 arg1,i32 arg2)
 
 {
   i8 result;
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg1,arg2);
-  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
+  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(const char *)buf);
   return result;
 }
 
 /* 005d22f9 auto */
-void __cdecl dbg_logf3(iptr fmt,iptr arg1,i32 arg2,i32 arg3)
+void __cdecl dbg_logf3(const char *fmt,iptr arg1,i32 arg2,i32 arg3)
 
 {
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg1,arg2,arg3);
-  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
+  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(const char *)buf);
   return;
 }
 
 /* 005d233f auto */
-void __cdecl dbg_logf_noret(iptr fmt,i32 arg)
+void __cdecl dbg_logf_noret(const char *fmt,i32 arg)
 
 {
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg);
-  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
+  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(const char *)buf);
   return;
 }
 
 /* 005d237d auto */
-i8 __cdecl dbg_logf_str(iptr fmt,iptr str)
+i8 __cdecl dbg_logf_str(const char *fmt,const char *str)
 
 {
   i8 result;
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,str);
-  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
+  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(const char *)buf);
   return result;
 }
 
 /* 005d23bb auto */
-void __cdecl dbg_logf_str_int(iptr fmt,iptr str,iptr value)
+void __cdecl dbg_logf_str_int(const char *fmt,const char *str,iptr value)
 
 {
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,str,value);
-  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
+  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(const char *)buf);
   return;
 }
 
@@ -880,7 +880,7 @@ void __thiscall dbg_log_file_dtor(void *self)
 }
 
 /* 005d24b3 auto */
-i8 __thiscall dbg_log_write(void *self,iptr text)
+i8 __thiscall dbg_log_write(void *self,const char *text)
 
 {
   DWORD tick_count;
@@ -890,10 +890,10 @@ i8 __thiscall dbg_log_write(void *self,iptr text)
   _sprintf(line,str_5d,(tick_count - *(int *)self) / 1000);
   crt_strcat(line,(const char *)((const void *)text));
   if (dbg_log_to_debugger != '\0') {
-    dbg_log_write_debugger((iptr)line);
+    dbg_log_write_debugger((const char *)line);
   }
   if (dbg_log_to_file != '\0') {
-    dbg_log_write_file((iptr)line);
+    dbg_log_write_file((const char *)line);
   }
   return 1;
 }
@@ -948,7 +948,7 @@ err_report
   i32 msg;
   
   err_set_code(self,code);
-  msg = (i32)err_format_message(self,(iptr)&str_fatal_error,file,line,extra);
+  msg = (i32)err_format_message(self,(const char *)&str_fatal_error,(const char *)file,line,extra);
   err_show_fatal_box(self,msg);
   return;
 }
@@ -956,7 +956,7 @@ err_report
 /* 005daef7 auto */
 ErrorContext * __thiscall
 err_format_message
-          (ErrorContext *self,iptr fmt,i32 text,i32 file,i32 line)
+          (ErrorContext *self,const char *fmt,const char *text,i32 file,i32 line)
 
 {
   size_t len;
@@ -976,7 +976,7 @@ err_format_message
 u8 * __thiscall err_get_stack_trace(ErrorContext *self)
 
 {
-  dbg_stack_trace_stub((iptr)(self->stack_trace_text));
+  dbg_stack_trace_stub((char *)self->stack_trace_text);
   return self->stack_trace_text;
 }
 
@@ -984,7 +984,7 @@ u8 * __thiscall err_get_stack_trace(ErrorContext *self)
 void __thiscall err_show_fatal_box(ErrorContext *self,i32 msg)
 
 {
-  dbg_fatal_msgbox_break((iptr)&str_smeds_application_error,(LPCSTR)msg);
+  dbg_fatal_msgbox_break((const char *)&str_smeds_application_error,(LPCSTR)msg);
   return;
 }
 
@@ -1115,7 +1115,7 @@ HGLOBAL __cdecl mem_handle_free(HGLOBAL handle)
   HGLOBAL result;
   
   if (handle == (HGLOBAL)0x0) {
-    dbg_log((iptr)&str_error_tried_to_dispose_of_null_handle_in);
+    dbg_log((const char *)&str_error_tried_to_dispose_of_null_handle_in);
     result = (HGLOBAL)0x0;
   }
   else {
@@ -1161,7 +1161,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
   src_size = __msize(*(void **)buf_ptr);
   src_copy = (byte *)operator_new(src_size);
   if (src_copy == (byte *)0x0) {
-    dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi);
+    dbg_log((const char *)&str_rlldecode_could_not_allocate_decompressi);
     out_size = 0;
   }
   else {
@@ -1169,7 +1169,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
     capacity2 = src_size * 2;
     out = (byte *)crt_realloc((void *)*(i32 *)buf_ptr,capacity2);
     if (out == (byte *)0x0) {
-      dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_2);
+      dbg_log((const char *)&str_rlldecode_could_not_allocate_decompressi_2);
       out_size = 0;
     }
     else {
@@ -1183,7 +1183,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
           capacity2 += 1000;
           grown = (iptr)crt_realloc((void *)*(i32 *)buf_ptr,capacity2);
           if (grown == 0) {
-            dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_3);
+            dbg_log((const char *)&str_rlldecode_could_not_allocate_decompressi_3);
             return 0;
           }
           *(iptr *)buf_ptr = grown;
@@ -1214,7 +1214,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
       }
       final_buf = (int)crt_realloc((void *)*(i32 *)buf_ptr,out_size);
       if (final_buf == 0) {
-        dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_4);
+        dbg_log((const char *)&str_rlldecode_could_not_allocate_decompressi_4);
         out_size = 0;
       }
       else {
@@ -1244,7 +1244,7 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
   
   out_buf = (char *)operator_new(size + ((int)(size + (size >> 0x1f & 0x7fU)) >> 7) + 5);
   if (out_buf == (char *)0x0) {
-    dbg_log((iptr)&str_rllencode_could_not_allocate_compression);
+    dbg_log((const char *)&str_rllencode_could_not_allocate_compression);
     out_size = 0xffffffff;
   }
   else {
@@ -1389,7 +1389,7 @@ i32 __cdecl dbg_log_close(void)
 }
 
 /* 005edb15 auto */
-i32 __cdecl dbg_log_write_file(iptr text)
+i32 __cdecl dbg_log_write_file(const char *text)
 
 {
   HANDLE hFile;
@@ -1413,10 +1413,10 @@ i32 __cdecl dbg_log_write_file(iptr text)
 }
 
 /* 005edbb2 auto */
-i32 __cdecl dbg_log_write_debugger(iptr text)
+i32 __cdecl dbg_log_write_debugger(const char *text)
 
 {
-  OutputDebugStringA((LPCSTR)text);
+  OutputDebugStringA(text);
   OutputDebugStringA(((i8 *)&dbg_log_debugger_crlf));
   return 1;
 }
@@ -1426,19 +1426,19 @@ i32 __cdecl dbg_log_write_debugger(iptr text)
 /* 005edcac: written by hand in src/game/regargs.cpp */
 
 /* 005edd00 auto */
-void __cdecl dbg_fatal_msgbox_break(iptr caption,LPCSTR text)
+void __cdecl dbg_fatal_msgbox_break(const char *caption,LPCSTR text)
 
 {
-  MessageBoxA((HWND)0x0,text,(LPCSTR)caption,0x2030);
+  MessageBoxA((HWND)0x0,text,caption,0x2030);
   DebugBreak();
   return;
 }
 
 /* 005eddaa auto */
-void __cdecl dbg_stack_trace_stub(iptr buf)
+void __cdecl dbg_stack_trace_stub(char *buf)
 
 {
-  _sprintf((char *)buf,str_stack_trace_not_yet_available_in_win32);
+  _sprintf(buf,str_stack_trace_not_yet_available_in_win32);
   return;
 }
 

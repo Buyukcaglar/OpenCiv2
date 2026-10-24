@@ -91,7 +91,7 @@ void __thiscall ctrl_destroy(Control *self)
 /* 0040f680 auto */
 void __thiscall
 button_create
-          (Control *self,iptr parent,i32 ctrl_id,iptr rect,iptr label)
+          (Control *self,iptr parent,i32 ctrl_id,iptr rect,const char *label)
 
 {
   u32 new_hwnd;
@@ -198,7 +198,7 @@ void __thiscall checkbox_dtor(Checkbox *self)
 void __thiscall
 checkbox_create
           (Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y
-          ,iptr label)
+          ,const char *label)
 
 {
   u32 new_hwnd;
@@ -365,7 +365,7 @@ void __thiscall edit_dtor(Control *self)
 /* 00418910 auto */
 void __thiscall
 edit_create
-          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,iptr text)
+          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,const char *text)
 
 {
   u32 new_hwnd;
@@ -377,7 +377,7 @@ edit_create
   ctrl_init((Control *)self,parent,4,ctrl_id,rect);
   new_hwnd = edit_create_window((int *)rect,(iptr)self,1,1,(GameFont *)self->edit_font);
   self->hwnd = new_hwnd;
-  hwnd_send_settext(self->hwnd,text);
+  hwnd_send_settext(self->hwnd,(LPARAM)(text));
   return;
 }
 
@@ -398,18 +398,18 @@ void __thiscall edit_set_callback(EditCallbackSetView *self,iptr callback)
 }
 
 /* 00418a30 auto */
-void __thiscall ctrl_set_text(ControlTextView *self,iptr text)
+void __thiscall ctrl_set_text(ControlTextView *self,const char *text)
 
 {
-  hwnd_send_settext(self->hwnd,text);
+  hwnd_send_settext(self->hwnd,(LPARAM)(text));
   return;
 }
 
 /* 00418a70 auto */
-void __thiscall ctrl_get_text(ControlTextView *self,iptr buffer)
+void __thiscall ctrl_get_text(ControlTextView *self,char *buffer)
 
 {
-  hwnd_get_text(self->hwnd,buffer);
+  hwnd_get_text(self->hwnd,(LPARAM)(buffer));
   return;
 }
 
@@ -474,10 +474,10 @@ void __thiscall combo_set_font(ComboBoxFontView *self,iptr font)
 }
 
 /* 00418ce0 auto */
-void __thiscall combo_add_string(ComboBoxAddView *self,iptr text)
+void __thiscall combo_add_string(ComboBoxAddView *self,const char *text)
 
 {
-  combo_hwnd_add_string(self->hwnd,text);
+  combo_hwnd_add_string(self->hwnd,(LPARAM)(text));
   self->item_count++;
   return;
 }
@@ -579,10 +579,10 @@ void __thiscall listbox_set_font(ListBoxFontView *self,iptr font)
 }
 
 /* 00419020 auto */
-void __thiscall listbox_add_string(ListBoxAddView *self,iptr text)
+void __thiscall listbox_add_string(ListBoxAddView *self,const char *text)
 
 {
-  listbox_hwnd_add_string(self->hwnd,text);
+  listbox_hwnd_add_string(self->hwnd,(LPARAM)(text));
   self->item_count++;
   return;
 }
@@ -778,10 +778,10 @@ i32 __thiscall edit_get_sel_end(EditSelEndView *self)
 }
 
 /* 00492ae0 auto */
-void __thiscall edit_replace_sel(Control *self,iptr text)
+void __thiscall edit_replace_sel(Control *self,const char *text)
 
 {
-  edit_hwnd_replace_sel(self->hwnd,text);
+  edit_hwnd_replace_sel(self->hwnd,(LPARAM)(text));
   return;
 }
 
@@ -796,8 +796,7 @@ void __thiscall edit_set_sel(EditSelView *self,i32 sel_start,i32 sel_end)
 /* 00497d40 auto */
 void __thiscall
 button_create_with_callback
-          (Control *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,iptr label
-          )
+          (Control *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,const char *label)
 
 {
   self->on_select = callback;
@@ -882,7 +881,7 @@ void __thiscall ctrl_set_focus(ControlFocusView *self)
 /* 004bb620 auto */
 void __thiscall
 edit_create_styled
-          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,iptr text,
+          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,const char *text,
           i32 multiline,i32 style)
 
 {
@@ -895,7 +894,7 @@ edit_create_styled
   ctrl_init((Control *)self,parent,4,ctrl_id,rect);
   new_hwnd = edit_create_window((int *)rect,(iptr)self,multiline,style,(GameFont *)self->edit_font);
   self->hwnd = new_hwnd;
-  hwnd_send_settext(self->hwnd,text);
+  hwnd_send_settext(self->hwnd,(LPARAM)(text));
   return;
 }
 
@@ -937,7 +936,7 @@ void __thiscall radiogrp_dtor(RadioGroupDtorView *self)
 
 /* 004cffb0 auto */
 i32 __thiscall
-edit_get_line(EditLineView *self,i32 line,iptr buffer,i32 max_len)
+edit_get_line(EditLineView *self,i32 line,char *buffer,i32 max_len)
 
 {
   i32 length;
@@ -1092,7 +1091,7 @@ void __thiscall edit_set_change_callback(EditChangeSetView *self,iptr callback)
 void __thiscall
 checkbox_create_fixed
           (Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y
-          ,i32 width,iptr label)
+          ,i32 width,const char *label)
 
 {
   u32 hwnd;
@@ -1331,15 +1330,15 @@ void __thiscall checkbox_disable(CheckboxDisableView *self)
 }
 
 /* 005a9670 auto */
-void __thiscall listbox_get_text(ListBoxTextView *self,i32 index,iptr buffer)
+void __thiscall listbox_get_text(ListBoxTextView *self,i32 index,char *buffer)
 
 {
-  listbox_hwnd_get_text(self->hwnd,index,buffer);
+  listbox_hwnd_get_text(self->hwnd,index,(LPARAM)(buffer));
   return;
 }
 
 /* 005a96b0 auto */
-void __thiscall listbox_get_sel_text(ListBoxSelTextView *self,iptr buffer)
+void __thiscall listbox_get_sel_text(ListBoxSelTextView *self,char *buffer)
 
 {
   listbox_hwnd_get_sel_text(self->hwnd,buffer);
@@ -1497,7 +1496,7 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
 }
 
 /* 005c9222 auto */
-void __cdecl ctrl_parse_hotkey(iptr ctrl,iptr text)
+void __cdecl ctrl_parse_hotkey(iptr ctrl,const char *text)
 
 {
   size_t len;
@@ -1600,7 +1599,7 @@ i32 * __cdecl ctrl_init_block(HWND hwnd,iptr owner)
   
   block = (i32 *)0x0;
   if (hwnd == (HWND)0x0) {
-    dbg_log((iptr)&str_error_tried_to_initialize_null_control_i);
+    dbg_log((const char *)&str_error_tried_to_initialize_null_control_i);
   }
   else {
     handle = mem_handle_alloc(0x30);
@@ -1628,7 +1627,7 @@ void __cdecl ctrl_hwnd_free_block(HWND hwnd)
   i32 *block;
   
   if (hwnd == (HWND)0x0) {
-    dbg_log((iptr)&str_error_tried_to_dispose_null_control_in_d);
+    dbg_log((const char *)&str_error_tried_to_dispose_null_control_in_d);
   }
   else {
     block = (i32 *)GetWindowLongA(hwnd,0);
@@ -1676,7 +1675,7 @@ void __thiscall control_set_hwnd(ControlHwndSetView *self,u32 hwnd)
 
 /* 005c9740 auto */
 HWND __cdecl
-button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
+button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *font)
 
 {
   WndBase *self;
@@ -1755,7 +1754,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   value = rect_width((iptr)rect);
   hwnd2 = CreateWindowExA(4,str_mscontrolclass_2,((i8 *)&button_wnd_title),style2,*rect,
                               rect[1],value,height,hWndParent,hMenu,hInstance,lpParam);
-  ctrl_parse_hotkey((iptr)button,(iptr)label_text);
+  ctrl_parse_hotkey((iptr)button,(const char *)label_text);
   bounds.left = *rect;
   bounds.top = rect[1];
   bounds.right = rect[2];
@@ -1768,7 +1767,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   value2 = rect_width((iptr)&bounds);
   h = CreateCompatibleBitmap(hdc,value2,value);
   if (h == (HBITMAP)0x0) {
-    dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton);
+    dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton);
     DestroyWindow(hwnd2);
     hwnd2 = (HWND)0x0;
   }
@@ -1777,7 +1776,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
     value2 = rect_width((iptr)&bounds);
     h_00 = CreateCompatibleBitmap(hdc,value2,value);
     if (h_00 == (HBITMAP)0x0) {
-      dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton_2);
+      dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton_2);
       DestroyWindow(hwnd2);
       hwnd2 = (HWND)0x0;
     }
@@ -1786,7 +1785,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
       value2 = rect_width((iptr)&bounds);
       bmp_disabled = CreateCompatibleBitmap(hdc,value2,value);
       if (bmp_disabled == (HBITMAP)0x0) {
-        dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton_3);
+        dbg_log((const char *)&str_could_not_create_bitmap_in_msinitbutton_3);
         DestroyWindow(hwnd2);
         hwnd2 = (HWND)0x0;
       }
@@ -2333,7 +2332,7 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   value = rect_width(rect);
   check_hwnd = CreateWindowExA(4,str_mscontrolclass_4,((i8 *)&wnd_modal_stack_below_block.checkbox_wnd_title),style2,*(int *)rect,
                            *(int *)(rect + 4),value,height,check_hwnd,hMenu,hInstance,lpParam);
-  ctrl_parse_hotkey(ctrl,(iptr)label_copy);
+  ctrl_parse_hotkey(ctrl,(const char *)label_copy);
   bmp_unchecked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x132);
   bmp_checked = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x131);
   bmp_focus = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x130);
@@ -2352,7 +2351,7 @@ void __cdecl checkbox_destroy_hwnd(int hwnd)
 
 {
   if (hwnd == 0) {
-    dbg_log((iptr)&str_error_tried_to_dispose_null_checkbox_in);
+    dbg_log((const char *)&str_error_tried_to_dispose_null_checkbox_in);
   }
   return;
 }
@@ -2949,7 +2948,7 @@ u32 __thiscall scrollbar_get_page_size(ScrollbarPageView *self)
 void __thiscall
 edit_create_at
           (EditControl *self,iptr parent,i32 ctrl_id,int x,int y,int width,
-          iptr text)
+          const char *text)
 
 {
   tagRECT rect;
@@ -3696,7 +3695,7 @@ void __cdecl listbox_hwnd_get_text(HWND hwnd,WPARAM index,LPARAM buffer)
 }
 
 /* 005d3d62 auto */
-void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,i32 buffer)
+void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,char *buffer)
 
 {
   LRESULT cur_sel;
@@ -3706,7 +3705,7 @@ void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,i32 buffer)
     crt_strcpy((char *)((void *)buffer),((i8 *)&listbox_no_sel_text));
   }
   else {
-    listbox_hwnd_get_text(hwnd,cur_sel,buffer);
+    listbox_hwnd_get_text(hwnd,cur_sel,(LPARAM)(buffer));
   }
   return;
 }
@@ -4025,7 +4024,7 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
   i32 i;
   
   if (handle == 0) {
-    dbg_log((iptr)&str_error_tried_to_dismantle_null_radioset_i);
+    dbg_log((const char *)&str_error_tried_to_dismantle_null_radioset_i);
   }
   else {
     items = (iptr)mem_handle_lock((HGLOBAL)handle);

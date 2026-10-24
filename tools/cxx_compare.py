@@ -59,7 +59,37 @@ def functions(obj):
             if text.startswith('R_386') or text.startswith('R_'):
                 text = re.sub(r'(R_\w+)\s+(.*)', lambda r: r.group(1) + ' ' + strip_params(r.group(2)), text)
             funcs[cur].append(normalize(re.sub(r'\s+', ' ', text)))
-    return {k: canon_stack(fold_push(v)) for k, v in funcs.items() if v is not None}
+    return {k: canon_stack(temp_regs(fold_push(v))) for k, v in funcs.items() if v is not None}
+
+
+def temp_regs(lines):
+    """A register loaded, computed on and pushed within a few instructions,
+    and not read after the push, is a temporary: which one it is does not
+    matter, so it is renamed %tmp.  No jump or call may lie in between."""
+    out = list(lines)
+    for i, line in enumerate(out):
+        m = re.match(r'push (%e[a-d]x|%e[sd]i)$', line)
+        if not m:
+            continue
+        reg = m.group(1)
+        nxt = out[i + 1] if i + 1 < len(out) else ''
+        if reads_reg(nxt, reg):
+            continue
+        j = i - 1
+        while j >= 0 and i - j <= 5:
+            t = out[j]
+            if re.match(r'(call|j\w+|ret|leave)\b', t) or (re.match(r'(push|pop)\b', t) and reg in t):
+                j = -1
+                break
+            d = re.match(r'(mov\w*|lea) (.+),(%\w+)( @.*)?$', t)
+            if d and d.group(3) == reg and reg not in d.group(2):
+                break
+            j -= 1
+        if j < 0 or i - j > 5:
+            continue
+        for k in range(j, i + 1):
+            out[k] = out[k].replace(reg, '%tmp')
+    return out
 
 
 def reads_reg(instr, reg):

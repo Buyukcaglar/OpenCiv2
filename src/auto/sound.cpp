@@ -48,17 +48,17 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
       str_append_int((iptr)wav_name,result + 1);
     }
     crt_strcat(wav_name,((i8 *)&snd_wav_ext_str));
-    str_clear((iptr)wav_path);
+    str_clear((char *)wav_path);
     str_append((char *)wav_path,(const char *)&str_civ2_sound);
     str_append((char *)wav_path,(const char *)wav_name);
-    str_clear((iptr)local_path);
+    str_clear((char *)local_path);
     str_append((char *)local_path,(const char *)&net_map_lock_slots_block.scenario_dir_path);
     str_append((char *)local_path,(const char *)&str_sound);
     str_append((char *)local_path,(const char *)wav_name);
-    result = file_exists((iptr)local_path);
+    result = file_exists((const char *)local_path);
     if (result == 0) {
       drive = file_get_fallback_drive();
-      result = file_resolve_path((iptr)wav_path);
+      result = file_resolve_path((const char *)wav_path);
       if (result == 0) {
         return;
       }
@@ -80,7 +80,7 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
       sndPlaySoundA(wav_path,snd_flags);
     }
     else {
-      snd_wave_play((iptr)wav_path,(loop == 0) - 1 & 8,effect,user_data);
+      snd_wave_play((const char *)wav_path,(loop == 0) - 1 & 8,effect,user_data);
     }
     win_flush_pending_msgs();
   }
@@ -999,7 +999,7 @@ i16 __cdecl snd_avi_stream_start(void)
   iptr ring;
   
   if ((snd_wave_sources != 0) && (*(short *)(snd_wave_sources + 0x88) == 4)) {
-    snd_wave_write_pending(snd_wave_buffer_ring);
+    snd_wave_write_pending((char *)snd_wave_buffer_ring);
     *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 0x10;
     if (*(int *)(snd_wave_sources + 0x8c) != 0) {
       **(ushort **)(snd_wave_sources + 0x8c) = **(ushort **)(snd_wave_sources + 0x8c) | 4;
@@ -1012,7 +1012,7 @@ i16 __cdecl snd_avi_stream_start(void)
 }
 
 /* 005d6038 auto */
-short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
+short __cdecl snd_wave_play(const char *filename,uint flags,i32 sound_id,i32 sound_tag)
 
 {
   short result;
@@ -1042,7 +1042,7 @@ short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
         buffer = (i32 *)buffer[7];
         i++;
       }
-      snd_wave_write_pending(snd_wave_cur_buffer);
+      snd_wave_write_pending((char *)snd_wave_cur_buffer);
     }
   }
   else {
@@ -1322,7 +1322,7 @@ void __cdecl snd_wave_set_buffer_count(uint count)
 }
 
 /* 005d6947 auto */
-i32 __cdecl snd_wave_write_pending(iptr buffer)
+i32 __cdecl snd_wave_write_pending(char *buffer)
 
 {
   MMRESULT write_result;
@@ -1349,7 +1349,7 @@ i32 __cdecl snd_wave_write_pending(iptr buffer)
       }
       *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
     }
-    buffer = *(iptr *)(buffer + 0x1c);
+    buffer = (char *)(*(iptr *)(buffer + 0x1c));
   }
   return 0;
 }
@@ -1990,7 +1990,7 @@ avi_player_create_child
     target_dib = target + 0x48;
   }
   wnd_create_with_surface
-            ((DibSurface *)self,parent,style,x,y,0x140,0xf0,(iptr)&self->client_x
+            ((DibSurface *)self,(const char *)parent,style,x,y,0x140,0xf0,(iptr)&self->client_x
              ,target_dib);
   surface_fill((DibSurface *)self,0);
   self->target_surface = target;
@@ -2000,7 +2000,7 @@ avi_player_create_child
 }
 
 /* 005dd377 auto */
-int __thiscall avi_player_open(AviPlayerOpenView *self,iptr filename)
+int __thiscall avi_player_open(AviPlayerOpenView *self,const char *filename)
 
 {
   int result;
@@ -2235,13 +2235,13 @@ i32 __cdecl snd_cd_play_track(uint track)
     }
     else {
       snd_cd_close();
-      dbg_logf((iptr)&str_failed_to_play_requested_cd_track_2,mci_result);
+      dbg_logf((const char *)&str_failed_to_play_requested_cd_track_2,mci_result);
       result = 0;
     }
   }
   else {
     snd_cd_close();
-    dbg_logf((iptr)&str_failed_to_play_requested_cd_track,mci_result);
+    dbg_logf((const char *)&str_failed_to_play_requested_cd_track,mci_result);
     result = 0;
   }
   return result;
@@ -2285,11 +2285,11 @@ void __cdecl snd_cd_open(void)
       else {
         mciSendCommandA(snd_cd_device_id,0x804,0,0);
         snd_cd_device_id = 0;
-        dbg_logf((iptr)&str_cdaudio_could_not_set_time_format,mci_result);
+        dbg_logf((const char *)&str_cdaudio_could_not_set_time_format,mci_result);
       }
     }
     else {
-      dbg_logf((iptr)&str_failed_to_open_cdaudio_device,mci_result);
+      dbg_logf((const char *)&str_failed_to_open_cdaudio_device,mci_result);
     }
   }
   return;
@@ -2411,7 +2411,7 @@ void __cdecl avi_update_current_frame(void)
 /* 005e1c8e auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-int __cdecl avi_open_file(iptr player,i32 filename)
+int __cdecl avi_open_file(iptr player,const char *filename)
 
 {
   int attach_result;
@@ -2448,7 +2448,7 @@ int __cdecl avi_open_file(iptr player,i32 filename)
   err_report_ctx_block.avi_view_rect_y = 0;
   err_report_ctx_block.avi_view_rect_width_i32 = 0;
   err_report_ctx_block.avi_view_rect_height_i32 = 0;
-  result = AVIFileOpenA(((PAVIFILE *)&avi_file),(LPCSTR)filename,0,0);
+  result = AVIFileOpenA(((PAVIFILE *)&avi_file),filename,0,0);
   if (result == 0) {
     result = AVIFileGetStream(avi_file[0],((PAVISTREAM *)&avi_video_stream),0x73646976,0);
     if (result == 0) {

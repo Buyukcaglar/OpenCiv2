@@ -464,7 +464,7 @@ void __cdecl minimap_window_create(void)
   wnd_y = minimap_wnd_rect_block.minimap_wnd_rect_top;
   title_text = (i32)label_string(*(i32 *)(label_string_ids + 0x18));
   frame_wnd_create
-            ((FrameWindow *)((i8 *)&minimap_window_block.minimap_window),title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
+            ((FrameWindow *)((i8 *)&minimap_window_block.minimap_window),(const char *)title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   wnd_set_min_size((ModalMenuWindow *)((i8 *)&minimap_window_block.minimap_wnd),0x28,0x19);
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window),(iptr)minimap_redraw);
   wnd_set_lbuttonup_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_lbuttonup);
@@ -987,7 +987,7 @@ void __thiscall mapview_update_title(FrameWindow *self)
   if (self->rates_civ == 0) {
     if (game_language != 1) {
       adjective = civ_get_adjective(human_civ[0]);
-      text_append_str(adjective);
+      text_append_str((const char *)adjective);
       if (game_language == 2) {
         text_append((const char *)&str_e);
       }
@@ -1009,7 +1009,7 @@ void __thiscall mapview_update_title(FrameWindow *self)
     text_append_colon();
     text_append_label(mode + 300);
   }
-  frame_wnd_set_caption(self,(iptr)&map_views_block.text_buffer);
+  frame_wnd_set_caption(self,(const char *)&map_views_block.text_buffer);
   return;
 }
 
@@ -1111,7 +1111,7 @@ void __thiscall mapview_create(ViewWindow *self)
   wnd_style = 6;
   title_text = (i32)label_string(*(i32 *)(label_string_ids + 0x10));
   frame_wnd_create
-            ((FrameWindow *)self,title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
+            ((FrameWindow *)self,(const char *)title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
   ;
   wnd_set_min_size((ModalMenuWindow *)self->window_2,0x100,0x80);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)mapview_on_redraw);
@@ -1343,14 +1343,14 @@ void __cdecl mapview_draw_tile_number(i32 x,i32 y,int number,i32 color)
     gfx_set_text_color_index(10);
     rect_offset((iptr)rect,0xffffffff,0xffffffff);
     surface_draw_text_in_rect
-              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(iptr)num_text,(iptr)rect,0);
+              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(iptr)rect,0);
     rect_offset((iptr)rect,3,3);
     surface_draw_text_in_rect
-              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(iptr)num_text,(iptr)rect,0);
+              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(iptr)rect,0);
     rect_offset((iptr)rect,0xfffffffe,0xfffffffe);
     gfx_set_text_color_index(color);
     surface_draw_text_in_rect
-              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(iptr)num_text,(iptr)rect,0);
+              ((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)&map_views_block.tile_number_font,(const char *)num_text,(iptr)rect,0);
     wnd_blit_surface_rect((DibSurface *)((i8 *)&map_views_block.map_views),(iptr)rect);
   }
   return;
@@ -2309,8 +2309,8 @@ mapview_draw_city_names(ViewWindow *self,i32 center_x,i32 center_y,int radius)
             }
             shadow_y = label_y + shadow_y;
             text_width = font_text_width
-                              ((GameFont *)&self->sci_label_y,(iptr)&cities[city].name);
-            text_draw_shadowed((iptr)self,(iptr)&cities[city].name,label_x - (text_width >> 1),shadow_y);
+                              ((GameFont *)&self->sci_label_y,(const char *)&cities[city].name);
+            text_draw_shadowed((iptr)self,(const char *)&cities[city].name,label_x - (text_width >> 1),shadow_y);
             text_width = mapview_zoom_scale(self,2);
             if (text_width < 3) {
               shadow_offset = mapview_zoom_scale(self,2);
@@ -2324,8 +2324,8 @@ mapview_draw_city_names(ViewWindow *self,i32 center_x,i32 center_y,int radius)
             text_set_colors(shadow_color,text_color,shadow_offset,shadow_depth);
             text_width = label_y;
             name_width = font_text_width
-                              ((GameFont *)&self->sci_label_y,(iptr)&cities[city].name);
-            text_draw_shadowed((iptr)self,(iptr)&cities[city].name,label_x - (name_width >> 1),text_width);
+                              ((GameFont *)&self->sci_label_y,(const char *)&cities[city].name);
+            text_draw_shadowed((iptr)self,(const char *)&cities[city].name,label_x - (name_width >> 1),text_width);
           }
         }
       }

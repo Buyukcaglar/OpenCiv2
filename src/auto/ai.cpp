@@ -1508,7 +1508,7 @@ i32 __cdecl ai_barbarian_unit_move(void)
                       mapviews_ensure_visible(x,y3,civ2);
                       map_redraw_tile_all_views(x,y3);
                     }
-                    dlg_game_txt_with_unit((iptr)&str_barbariansland_2,unit);
+                    dlg_game_txt_with_unit((const char *)&str_barbariansland_2,unit);
                   }
                   else if (2 < game.multiplayer) {
                     net_send_text_args(0x4e,*(i32 *)
@@ -1799,10 +1799,10 @@ score_direction:
                     city = city_at(x,y2);
                     text_set_string_arg(1,(const char *)&cities[city].name);
                     __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-                    value = text_open_section((iptr)&str_city_6,(iptr)&str_barbarians_3);
+                    value = text_open_section((const char *)&str_city_6,(const char *)&str_barbarians_3);
                     if (value != 0) {
                       __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-                      value = text_open_section((iptr)&str_city_7,(iptr)&str_barbarians_4);
+                      value = text_open_section((const char *)&str_city_7,(const char *)&str_barbarians_4);
                       if (value != 0) goto clear_goto_done;
                     }
                     __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
@@ -1818,7 +1818,7 @@ score_direction:
                       text_set_string_arg(0,(const char *)&map_views_block.text_buffer);
                       mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,civ);
                       if ((civ_saved_cursor_x_block.autoplay_active == 0) &&
-                         (value = dlg_game_txt_with_unit((iptr)&str_ransomcity,unit), value != 0)) {
+                         (value = dlg_game_txt_with_unit((const char *)&str_ransomcity,unit), value != 0)) {
                         civs[civ].gold -= ransom;
                         status_draw_info(1);
                         for (line = 0; line < 0x14; line++) {
