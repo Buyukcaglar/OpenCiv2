@@ -10,7 +10,7 @@ void __cdecl spaceship_wnd_net_idle(void)
 {
   int now;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((net_session_block.net_host_handoff_stage == '\0') && (now = timer_ticks(), now - editor_text_edit_block.spaceship_wnd_open_ticks_i32 < 0x4b1)) {
     return;
   }

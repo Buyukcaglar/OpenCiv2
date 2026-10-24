@@ -103,11 +103,18 @@ def find_field(s, n, t, depth=0):
         if am:
             et, k = am.group(1), int(am.group(2))
             es = size // k if k else 0
-            if not es or (n - off) % es:
+            if not es:
                 continue
             idx = (n - off) // es
             ec = canon(et)
             path = '%s[%d]' % (m, idx)
+            if (n - off) % es:
+                st = re.sub(r'\s+', ' ', et.strip())
+                if st in LAYOUT and depth < 4:
+                    r = find_field(st, (n - off) % es, t, depth + 1)
+                    if r:
+                        best.append((('%s.%s' % (path, r[0]), r[1], r[2]), unnamed(m)))
+                continue
             if ec == want:
                 best.append(((path, et, 'exact'), unnamed(m)))
             elif ec[0] in 'su' and want[0] in 'su' and ec[1] == want_size:
@@ -240,6 +247,25 @@ def cast_type(t):
     return re.sub(r'\s*\*', ' *', re.sub(r'\s+', ' ', t.strip())).replace('* *', '**')
 
 
+def binary_and(m, j):
+    """The '&' at j is the binary operator: an operand ends before it."""
+    p, k = prev_tok(m, j)
+    if p == ')':
+        d, i = 0, k
+        while i >= 0:
+            d += {')': 1, '(': -1}.get(m[i], 0)
+            if d == 0:
+                break
+            i -= 1
+        q, _ = prev_tok(m, i)
+        if q in (')', ']') or (re.match(r'^\w+$', q) and q not in KEYWORDS):
+            return True
+        if ANY_CAST.search(m[i:k + 1]) or re.match(r'\(\s*(?:const\s+)?\w+(?:\s+\w+)*\s*\)$', m[i:k + 1]):
+            return False
+        return True
+    return p == ']' or (bool(re.match(r'^\w+$', p)) and p not in KEYWORDS)
+
+
 def field_access(m, start, end, obj, s, n, t, checks):
     """Text for the raw access m[start:end] = *(t *)(obj + n), obj an S * (or None)."""
     f = find_field(s, n, t)
@@ -248,6 +274,8 @@ def field_access(m, start, end, obj, s, n, t, checks):
     path, mt, kind = f
     nt, nj = next_tok(m, end)
     pt, pj = prev_tok(m, start)
+    if pt == '&' and binary_and(m, pj):
+        pt = '&&'
     if pt in ('&', 'sizeof'):
         return None
     expr = '%s->%s' % (obj, path)
@@ -784,7 +812,7 @@ def write_checks(checks):
         if canon(t)[0] == 't':
             new.add('static_assert(std::is_same<decltype(((%s *)0)->%s), %s>::value, "");' % (s, path, cast_type(t)))
         else:
-            new.add('static_assert(sizeof(((%s *)0)->%s) == sizeof(%s) && std::is_integral<decltype(((%s *)0)->%s)>::value, "");'
+            new.add('static_assert(sizeof(((%s *)0)->%s) == sizeof(%s) && std::is_integral<std::remove_reference<decltype(((%s *)0)->%s)>::type>::value, "");'
                     % (s, path, t, s, path))
     open(p, 'w').write('\n'.join(lines + sorted((have | new) - {''})) + '\n')
 

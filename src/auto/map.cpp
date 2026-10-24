@@ -1997,7 +1997,7 @@ void __cdecl map_window_key(int cmd)
       switch(cmd) {
       case 0x243:
         if (2 < game.multiplayer) {
-          parley_wnd_open((ViewWindow *)((i8 *)&chat_wnd_block.chat_wnd),0,4);
+          parley_wnd_open(&chat_wnd_block,0,4);
         }
         break;
       case 0x244:
@@ -5999,7 +5999,7 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
           win_flush_pending_msgs();
           now = timeGetTime();
           if (2 < game.multiplayer) {
-            net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+            net_process_messages(&net_session_block,1,0);
           }
         } while ((int)(now - last_time) < frame_delay);
         last_time = now;
@@ -6147,7 +6147,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
         win_flush_pending_msgs();
         now = timeGetTime();
         if ((2 < game.multiplayer) &&
-           (net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0), net_session_block.nm_abort_kaboom_count != 0))
+           (net_process_messages(&net_session_block,1,0), net_session_block.nm_abort_kaboom_count != 0))
         goto explosion_cleanup;
       } while ((int)(now - last_time) < 0x40);
       last_time = now;
@@ -6217,7 +6217,7 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
       do {
         win_flush_pending_msgs();
         if (2 < game.multiplayer) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
         }
         now = timeGetTime();
       } while ((int)(now - last_time) < 0x157c);
@@ -6250,7 +6250,7 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
         do {
           win_flush_pending_msgs();
           if (2 < game.multiplayer) {
-            net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+            net_process_messages(&net_session_block,1,0);
           }
           now = timeGetTime();
         } while ((int)(now - last_time) < 100);

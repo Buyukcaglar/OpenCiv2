@@ -1968,7 +1968,7 @@ turn_start:
     net_send_state_diff(0xff,2,0,0,0);
     XD_FlushSendBuffer(60000);
     while ((net_session_block.net_msgq_priority_count != 0 || (net_session_block.net_msgq_normal_count != 0))) {
-      net_process_messages(((NetSession *)((i32 *)&net_session_block.net_session)),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     game_calc_human_wonder_range();
     if ((*(byte *)&turn_resume_civ) == 0) {
@@ -2021,7 +2021,7 @@ turn_start:
     clients_done = 0;
 wait_production_loop:
     if (clients_done == 0) {
-      net_process_messages(((NetSession *)((i32 *)&net_session_block.net_session)),1,0);
+      net_process_messages(&net_session_block,1,0);
       if (net_session_block.net_player_count[0] < 2) {
         clients_done = 1;
         goto production_complete;
@@ -2066,7 +2066,7 @@ production_complete:
     }
     for (civ = 0; civ < 8; civ = civ + 1) {
       *(i32 *)(((i8 *)&dialog_text_font_obj_block.net_civ_phase_done) + civ * 4) = 0;
-      *(i32 *)(((i8 *)&net_session_block.net_civ_new_player_flags) + civ * 4) = 0;
+      net_session_block.net_civ_new_player_flags[civ] = 0;
     }
     net_send_state_diff(0xff,2,0,0,0);
     net_send_message(0x8e,0xff,0,0,0,0,0,0,0,0);
@@ -2097,17 +2097,17 @@ production_complete:
     mapview_update_title(((FrameWindow *)((i8 *)&map_views_block.map_views)));
     map_redraw_all_views(human_civ[0],1);
     status_draw_civ_color(human_civ[0]);
-    new_casualties = *(int *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4) -
-               *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4);
+    new_casualties = net_session_block.casualty_counts[human_civ[0]] -
+               net_session_block.casualty_reported_counts[human_civ[0]];
     if (civ_saved_cursor_x_block.autoplay_active == 0) {
       dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
       civ_name = civ_leader_title(human_civ[0]);
       text_set_string_arg(0,(const char *)civ_name);
       civ_name = (i32)(civ_leader_name(human_civ[0]));
       text_set_string_arg(1,(const char *)civ_name);
-      if (*(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4) < *(int *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4)) {
-        *(i32 *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4) =
-             *(i32 *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4);
+      if (net_session_block.casualty_reported_counts[human_civ[0]] < net_session_block.casualty_counts[human_civ[0]]) {
+        net_session_block.casualty_reported_counts[human_civ[0]] =
+             net_session_block.casualty_counts[human_civ[0]];
         text_set_number_arg(0,new_casualties);
         if (new_casualties == 1) {
           dialog_load_text_noflags(&dlg,(const char *)&str_game_7,(const char *)str_casualty_4);
@@ -2174,7 +2174,7 @@ production_complete:
     humans_done = 0;
 wait_human_moves_loop:
     if (humans_done == 0) {
-      net_process_messages(((NetSession *)((i32 *)&net_session_block.net_session)),1,0);
+      net_process_messages(&net_session_block,1,0);
       if (net_session_block.net_player_count[0] < 2) {
         humans_done = 1;
         goto human_moves_complete;

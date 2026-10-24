@@ -2962,7 +2962,7 @@ void __cdecl civ_process_cities_turn(uptr civ)
     city--;
     if (city < 0) break;
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     if ((cities[city].id != 0) && ((int)cities[city].owner == (civ & 0xff))) {
       cities[city].flags = cities[city].flags & 0xfffeffff;
@@ -3139,7 +3139,7 @@ void __cdecl civ_heal_units(iptr civ)
   
   for (unit = 0; unit < game.num_units; unit++) {
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     if ((units[unit].id != 0) && (units[unit].owner == civ)) {
       old_flags = units[unit].flags;
@@ -4417,7 +4417,7 @@ int __cdecl civ_create(iptr civ)
       net_send_message(0x5f,0,civ,0,0,0,0,0,0,0);
       start_ticks = timer_ticks();
       while ((net_session_block.nm_new_civ_ack_result == -0x1b && (now_ticks = timer_ticks(), now_ticks - start_ticks < 0xe10))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+        net_process_messages(&net_session_block,1,1);
       }
       if (net_session_block.nm_new_civ_ack_result == -0x1b) {
         dbg_log((const char *)&str_new_civ_connection_to_server_timed_out);
@@ -4428,7 +4428,7 @@ int __cdecl civ_create(iptr civ)
         dbg_log((const char *)&str_new_civ_received_nm_new_civ_ack_from_ser);
       }
       while ((net_session_block.net_msgq_priority_count != 0 || (result = net_session_block.nm_new_civ_ack_result, net_session_block.net_msgq_normal_count != 0))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
     }
   }
@@ -4513,8 +4513,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
           game_over_reason = 4;
         }
         else if ((2 < game.multiplayer) && ((*(i8 *)&human_civ) != civ)) {
-          net_send_message(0x6b,*(i32 *)
-                                   (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),
+          net_send_message(0x6b,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,
                              (uint)game.game_flags,4,0,0,0,0,0,0);
         }
         passwords_unscramble();
@@ -4557,7 +4556,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
       net_send_message(0x60,0,civ,civ2,0,0,0,0,0,0);
       start_ticks = timer_ticks();
       while ((net_session_block.nm_kill_civ_ack_result == -0x1b && (now_ticks = timer_ticks(), now_ticks - start_ticks < 0xe10))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+        net_process_messages(&net_session_block,1,1);
       }
       if (net_session_block.nm_kill_civ_ack_result == -0x1b) {
         dbg_log((const char *)&str_kill_civ_connection_to_server_timed_out);
@@ -4568,7 +4567,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
         dbg_log((const char *)&str_kill_civ_received_nm_new_civ_ack_from_se);
       }
       while ((net_session_block.net_msgq_priority_count != 0 || (result = net_session_block.nm_kill_civ_ack_result, net_session_block.net_msgq_normal_count != 0))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
     }
   }
@@ -4748,9 +4747,7 @@ void __cdecl civ_leonardo_upgrade(iptr civ)
                 dlg_game_txt_with_unit_flags((const char *)&str_upgrade,unit_type3,(ui_large_screen == 0) - 1 & 8);
               }
               else {
-                net_send_text_args(0x3e,*(i32 *)
-                                         (((i8 *)&net_session_block.net_player_slots) +
-                                         *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),3,0,unit_type3,
+                net_send_text_args(0x3e,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,3,0,unit_type3,
                                    ui_large_screen);
               }
             }
@@ -5148,8 +5145,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
     }
   }
   else {
-    net_send_message(0x9b,*(i32 *)
-                             (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),civ,
+    net_send_message(0x9b,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,civ,
                        advance,civ2,skip_pedia,0,0,0,0);
     seh_state = 0xffffffff;
     /* inlined unwind funclet 004bfd9a */ { dialog_dtor(&dialog2); }
@@ -6414,7 +6410,7 @@ void __cdecl civ_eliminate(iptr civ,i32 kill_units,i32 recreate)
     net_send_message(0x34,0,civ,0,0,0,0,0,0,0);
     x4 = timer_ticks();
     while ((net_session_block.net_kill_or_quit_ack == -2 && (y2 = timer_ticks(), y2 - x4 < 0xe10))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+      net_process_messages(&net_session_block,1,1);
     }
     if (net_session_block.net_kill_or_quit_ack == -2) {
       dbg_log((const char *)&str_killorretire_connection_to_server_timed);
@@ -6425,7 +6421,7 @@ void __cdecl civ_eliminate(iptr civ,i32 kill_units,i32 recreate)
       dbg_log((const char *)&str_killorretire_received_nm_kill_or_quit_ac);
     }
     while ((net_session_block.net_msgq_priority_count != 0 || (net_session_block.net_msgq_normal_count != 0))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
   }
   return;
@@ -6639,16 +6635,12 @@ void __cdecl civ_change_government(iptr civ,uptr new_gov)
                 (has_wonder = civ_has_wonder(civ2,0x18), has_wonder != 0)) ||
                (has_wonder = civ_has_wonder(civ2,9), has_wonder != 0)))))) {
             if (((civs[civ].flags & 1) == 0) || (civ_saved_cursor_x_block.autoplay_active != 0)) {
-              net_send_text_args(0x2c,*(i32 *)
-                                       (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54
-                                       ),1,0,old_government,(ui_large_screen == 0) - 1 & 8);
+              net_send_text_args(0x2c,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,1,0,old_government,(ui_large_screen == 0) - 1 & 8);
               civs[civ].flags = civs[civ].flags | 1;
               notified++;
             }
             else {
-              net_send_text_args(0x2b,*(i32 *)
-                                       (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54
-                                       ),4,0,new_gov,(ui_large_screen == 0) - 1 & 8);
+              net_send_text_args(0x2b,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,4,0,new_gov,(ui_large_screen == 0) - 1 & 8);
               civs[civ].flags = civs[civ].flags & 0xfffe;
               notified++;
             }
@@ -6721,7 +6713,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
     }
     for (civ2 = 1; (int)civ2 < 8; civ2++) {
       if (2 < game.multiplayer) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
       if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x40) == 0) {
         *(i32 *)(((i8 *)&setup_picwnd_block.diplo_recent_peace_table) + civ2 * 4) = 0;
@@ -6810,9 +6802,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
                           text_set_string_arg(0,(const char *)civ_plural);
                           civ_plural = (iptr)(civ_name_plural(civ2));
                           text_set_string_arg(1,(const char *)civ_plural);
-                          net_send_text_args(0x50,*(i32 *)
-                                                   (((i8 *)&net_session_block.net_player_slots) +
-                                                   *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ3 * 4) * 0x54),2,0
+                          net_send_text_args(0x50,net_session_block.net_slots[net_session_block.net_civ_slots[civ3]].id,2,0
                                              ,0,0);
                         }
                       }
@@ -6848,7 +6838,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
     if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
       for (civ2 = 1; (int)civ2 < 8; civ2++) {
         if (2 < game.multiplayer) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
         }
         if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) && (civ_saved_cursor_x_block.autoplay_active == 0)
             ) && ((*(byte *)&civs[civ].treaties[civ2] & 1) != 0)) {
@@ -6856,8 +6846,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
             diplo_ai_review_relations(civ,civ2);
           }
           else if (2 < game.multiplayer) {
-            net_send_message(0xa0,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54)
+            net_send_message(0xa0,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id
                                ,civ,civ2,0,0,0,0,0,0);
           }
         }
@@ -6865,15 +6854,14 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
       diplo_ai_military_aid(civ);
       for (civ4 = 1; (int)civ4 < 8; civ4++) {
         if (2 < game.multiplayer) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
         }
         if ((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) {
           if (human_civ[0] == civ4) {
             diplo_ai_seek_war_ally(civ,civ4);
           }
           else if (2 < game.multiplayer) {
-            net_send_message(0xa1,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ4 * 4) * 0x54)
+            net_send_message(0xa1,net_session_block.net_slots[net_session_block.net_civ_slots[civ4]].id
                                ,civ,civ4,0,0,0,0,0,0);
           }
         }
@@ -6991,8 +6979,7 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
           popup_game_with_advance((const char *)&str_tookciv_2,advance,0);
         }
         else if (2 < game.multiplayer) {
-          net_send_text_args(99,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),2,0,
+          net_send_text_args(99,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,2,0,
                              advance,0);
         }
       }

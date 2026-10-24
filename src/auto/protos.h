@@ -294,9 +294,9 @@ i32 __cdecl popup_game_flags(const char *section,i32 flags); /* 00421e70 */
 i32 __cdecl popup_game(const char *section); /* 00421ea0 */
 i32 __cdecl dlg_game_text_input(const char *section,i32 max_len,char *buf,iptr default_text); /* 00421ed0 */
 void __cdecl text_append_year(i32 year); /* 00421f10 */
-i8 __thiscall net_is_host(void *self); /* 00421f40 */
-NetGamelistViewCtorView * __thiscall net_gamelist_view_ctor(NetGamelistViewCtorView *self); /* 00421f70 */
-void __thiscall net_gamelist_view_dtor(void *self); /* 00421fad */
+i8 __thiscall net_is_host(NetSession *self); /* 00421f40 */
+NetGamelistView * __thiscall net_gamelist_view_ctor(NetGamelistView *self); /* 00421f70 */
+void __thiscall net_gamelist_view_dtor(NetGamelistView *self); /* 00421fad */
 i32 __thiscall net_session_init(void *self,int conn_type); /* 00421fcd */
 void __cdecl net_gamelist_poll_idle(void); /* 0042415c */
 void __cdecl net_join_wait_server_idle(void); /* 0042417a */
@@ -305,16 +305,16 @@ void __cdecl net_join_wait_player_list_idle(void); /* 0042433c */
 void __cdecl net_join_wait_start_civ_idle(void); /* 0042439c */
 void __cdecl net_join_wait_answer_idle(void); /* 004243ef */
 void __cdecl net_join_wait_idle_cb(void); /* 0042444f */
-void __thiscall net_gamelist_restore_selection(NetGameListRefreshView *self); /* 004244e0 */
-u32 __thiscall net_gamelist_find_option(NetGameListRefreshView *self,iptr game_name,iptr host_name); /* 00424688 */
-void __thiscall net_gamelist_update_details(NetGameList *self); /* 0042472a */
-void __thiscall net_gamelist_get_entry_names(NetGameList *self,iptr option,iptr out_game_name,iptr out_host_name); /* 004247b2 */
-void __thiscall net_gamelist_add_info_lines(NetGamelistAddInfoLinesView *self); /* 0042486f */
+void __thiscall net_gamelist_restore_selection(NetGamelistView *self); /* 004244e0 */
+u32 __thiscall net_gamelist_find_option(NetGamelistView *self,iptr game_name,iptr host_name); /* 00424688 */
+void __thiscall net_gamelist_update_details(NetGamelistView *self); /* 0042472a */
+void __thiscall net_gamelist_get_entry_names(NetGamelistView *self,iptr option,iptr out_game_name,iptr out_host_name); /* 004247b2 */
+void __thiscall net_gamelist_add_info_lines(NetGamelistView *self); /* 0042486f */
 i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused); /* 00424ae9 */
-void __thiscall net_gamelist_clear(NetGameList *self); /* 004253ef */
-uint * __thiscall net_gamelist_add_entry(NetGameListAddView *self,const char *name2,uint id); /* 004254a8 */
-void __thiscall net_gamelist_start_timer(NetGameListTimerView *self,iptr callback); /* 00425607 */
-void __thiscall net_gamelist_kill_timer(NetGameListTimerView *self); /* 00425650 */
+void __thiscall net_gamelist_clear(NetGamelistView *self); /* 004253ef */
+uint * __thiscall net_gamelist_add_entry(NetGamelistView *self,const char *name2,uint id); /* 004254a8 */
+void __thiscall net_gamelist_start_timer(NetGamelistView *self,iptr callback); /* 00425607 */
+void __thiscall net_gamelist_kill_timer(NetGamelistView *self); /* 00425650 */
 void __cdecl net_gamelist_poll_tick(void); /* 00425695 */
 void __cdecl net_gamelist_expire_stale(void); /* 0042570c */
 void __cdecl net_gamelist_refresh(void); /* 004257fe */
@@ -529,7 +529,7 @@ i32 __cdecl net_prompt_player_name(void); /* 0044542c */
 i32 __cdecl net_prompt_game_name(void); /* 00445592 */
 i32 __cdecl setup_mp_load_scenario(i32 mp_mode); /* 00445712 */
 i32 __cdecl net_choose_civ_dialog(int title_offset); /* 00445e46 */
-void * __thiscall net_gamelist_view_scalar_dtor(void *self,uint flags); /* 00447170 */
+void * __thiscall net_gamelist_view_scalar_dtor(NetGamelistView *self,uint flags); /* 00447170 */
 LobbyList * __thiscall lobby_list_scalar_dtor(LobbyList *self,uint flags); /* 004471c0 */
 void __thiscall radiogrp_disable_item(RadioGroupDisableView *self,iptr index); /* 00447210 */
 u32 __thiscall radiogrp_get_selected(RadioGroupGetSelView *self); /* 004472c0 */
@@ -818,7 +818,7 @@ void __thiscall wnd_set_palette(WndBase *self,iptr palette); /* 00450390 */
 void __thiscall wnd_hide(WndBase *self); /* 004503d0 */
 void __thiscall wnd_center(WndCenterView *self); /* 00450400 */
 void __thiscall wnd_apply_palette_handle(WndBase *self,iptr palette); /* 00450440 */
-void __thiscall parley_create_advance_list_pane(WindowObjectView *self,iptr rect,iptr pane,int their_side); /* 00450480 */
+void __thiscall parley_create_advance_list_pane(ParleyWindow *self,RECT *rect,iptr pane,int their_side); /* 00450480 */
 void __cdecl parley_advance_list0_on_scroll(i32 pos); /* 00450ae6 */
 void __cdecl parley_advance_list_on_scroll(int pane,i32 pos); /* 00450b22 */
 void __cdecl parley_advance_list_on_click(int control_id); /* 00450b83 */
@@ -936,7 +936,7 @@ i32 __cdecl diplo_attitude_level(int attitude); /* 004679ab */
 uint __cdecl diplo_is_hostile(iptr civ,iptr civ2); /* 00467af0 */
 void __cdecl diplo_expel_units(int civ2,int civ); /* 00467baf */
 void __cdecl diplo_cancel_alliance(iptr civ,iptr civ2); /* 00467ef2 */
-void __thiscall parley_create_unit_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_side); /* 004683f0 */
+void __thiscall parley_create_unit_list_pane(ParleyWindow *self,RECT *rect,int pane,i32 own_side); /* 004683f0 */
 void __cdecl parley_unit_list_scroll_left(i32 pos); /* 00468797 */
 void __cdecl parley_unit_list_on_scroll(int pane,i32 pos); /* 004687d3 */
 void __cdecl parley_unit_list_on_click(int control_id); /* 00468834 */
@@ -948,9 +948,9 @@ void __cdecl parley_sort_by_city_left_clicked(void); /* 00469547 */
 void __cdecl parley_sort_by_city_clicked(iptr pane); /* 0046957b */
 void __cdecl parley_sort_by_unit_left_clicked(void); /* 004695e9 */
 void __cdecl parley_sort_by_unit_clicked(iptr pane); /* 0046961d */
-void __thiscall parley_sort_unit_list(WindowObjectView *self,int first,int last,iptr pane); /* 0046968b */
-void __thiscall parley_sort_units_by_city(void *self,int first,int last,iptr pane); /* 0046990a */
-void __thiscall parley_build_unit_list(ListPaneWindow *self,int pane,int keep_selection); /* 00469bdc */
+void __thiscall parley_sort_unit_list(ParleyWindow *self,int first,int last,iptr pane); /* 0046968b */
+void __thiscall parley_sort_units_by_city(ParleyWindow *self,int first,int last,iptr pane); /* 0046990a */
+void __thiscall parley_build_unit_list(ParleyWindow *self,int pane,int keep_selection); /* 00469bdc */
 void __cdecl labels_free(void); /* 0046a740 */
 int __cdecl labels_load(void); /* 0046a78d */
 i32 __cdecl mem_free_handle(iptr handle); /* 0046aaa0 */
@@ -963,18 +963,18 @@ void __thiscall clickmap_remove_at(ClickMapRemoveView *self,int index); /* 0046a
 void __thiscall clickmap_remove_by_id(ClickMapRemoveView *self,int id); /* 0046ac89 */
 u32 __thiscall clickmap_add(ClickMap *self,iptr id,i32 value,i32 x,i32 y, iptr width,iptr height); /* 0046ace7 */
 int __thiscall clickmap_hit_test(ClickMapHitTestView *self,int x,int y,iptr out_id,iptr out_value); /* 0046ad85 */
-i8 __thiscall net_session_send_to(void *self,int player,iptr msg); /* 0046af70 */
-bool __thiscall net_session_send_to_all(void *self,iptr msg); /* 0046b0a1 */
+i8 __thiscall net_session_send_to(NetSession *self,int player,NetMsg *msg); /* 0046af70 */
+bool __thiscall net_session_send_to_all(NetSession *self,NetMsg *msg); /* 0046b0a1 */
 int __cdecl net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4, iptr arg5,i32 arg6,const char *text,iptr raw_msg); /* 0046b14d */
 NetMsgHeader * __thiscall net_msg_header_init(NetMsgHeader *self,u32 type); /* 0046d5a0 */
-NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *self,u32 msg_type,const char *name2); /* 0046d5f0 */
-NetMsgHeader * __thiscall net_msg_addr_header_init(NetMsgHeader *self,i32 msg_type); /* 0046d6a0 */
-NetMsgHeader * __thiscall net_msg_server_info_init(NetMsgHeader *self); /* 0046d720 */
-NetMsgHeader * __thiscall net_msg_player_list_node_init(NetMsgHeader *self,u32 player_id); /* 0046d780 */
-NetMsgHeader * __thiscall net_msg_player_list_init(NetMsgHeader *self); /* 0046d860 */
+NetMsgHeader * __thiscall net_msg_init_header(NetNamedMsg *self,u32 msg_type,const char *name2); /* 0046d5f0 */
+NetMsgHeader * __thiscall net_msg_addr_header_init(NetAddrMsg *self,i32 msg_type); /* 0046d6a0 */
+NetMsgHeader * __thiscall net_msg_server_info_init(NetServerInfoMsg *self); /* 0046d720 */
+NetMsgHeader * __thiscall net_msg_player_list_node_init(NetPlayerNodeMsg *self,u32 player_id); /* 0046d780 */
+NetMsgHeader * __thiscall net_msg_player_list_init(NetPlayerListMsg *self); /* 0046d860 */
 NetMsgHeader * __thiscall net_msg_server_path_init(NetMsgHeader *self); /* 0046d8a0 */
-NetMsgHeader * __thiscall net_msg_server_answer_init(NetMsgHeader *self); /* 0046d8e0 */
-NetMsgHeader * __thiscall net_msg_whose_turn_init(NetMsgHeader *self,u32 turn_civ); /* 0046d930 */
+NetMsgHeader * __thiscall net_msg_server_answer_init(NetServerAnswerMsg *self); /* 0046d8e0 */
+NetMsgHeader * __thiscall net_msg_whose_turn_init(NetWhoseTurnMsg *self,u32 turn_civ); /* 0046d930 */
 void __cdecl intro_play_opening_video(void); /* 0046da40 */
 void __cdecl intro_video_on_end(void); /* 0046dde0 */
 void __cdecl intro_video_on_keydown(int key); /* 0046de25 */
@@ -1104,7 +1104,7 @@ int __cdecl net_stacked_draw_run_next(void); /* 0047e2b3 */
 void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode); /* 0047e94e */
 void __cdecl net_game_xmit_wait_idle(void); /* 00482337 */
 void __cdecl turn_popup_timeout_idle(void); /* 0048237d */
-void __cdecl net_msg_get_args(iptr msg,i32 *args); /* 004823d6 */
+void __cdecl net_msg_get_args(NetMsg *msg,i32 *args); /* 004823d6 */
 void __cdecl net_server_quit_wait_idle(void); /* 00482470 */
 void __cdecl net_host_quit_handoff(void); /* 004824e3 */
 void __cdecl net_client_quit_wait_idle(void); /* 00482724 */
@@ -1323,7 +1323,7 @@ void __cdecl str_concat(iptr dest,iptr src); /* 004af174 */
 i32 __cdecl str_append_int(iptr dest,int value); /* 004af1d5 */
 void __cdecl str_append_long(iptr dest,long value); /* 004af284 */
 void __cdecl str_append_gold(iptr dest,i32 gold); /* 004af2b9 */
-void __thiscall parley_build_civ_list(ListPaneWindow *self,iptr rect,int side); /* 004af3e0 */
+void __thiscall parley_build_civ_list(ParleyWindow *self,RECT *rect,int side); /* 004af3e0 */
 void __cdecl parley_civ_list_scroll_local(i32 pos); /* 004af867 */
 void __cdecl parley_civ_list_scroll(int side,i32 pos); /* 004af8a3 */
 void __cdecl parley_civ_list_click(int ctrl_id); /* 004af904 */
@@ -1397,31 +1397,31 @@ void __cdecl chat_wnd_global_init(void); /* 004b4092 */
 void __cdecl chat_wnd_static_init(void); /* 004b40ac */
 void __cdecl chat_wnd_reg_atexit(void); /* 004b40d1 */
 void __cdecl chat_wnd_static_dtor(void); /* 004b40ee */
-ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *self,iptr rect); /* 004b4108 */
-void __thiscall parley_wnd_dtor(ViewWindow *self); /* 004b4593 */
-void __thiscall parley_wnd_create(ViewWindow *self,u32 mode); /* 004b4735 */
+ParleyWindow * __thiscall parley_wnd_ctor(ParleyWindow *self,RECT *rect); /* 004b4108 */
+void __thiscall parley_wnd_dtor(ParleyWindow *self); /* 004b4593 */
+void __thiscall parley_wnd_create(ParleyWindow *self,u32 mode); /* 004b4735 */
 void __cdecl parley_wnd_on_move(void); /* 004b4c09 */
-void __thiscall parley_wnd_pick_size_mode(ParleyWindowLayout *self); /* 004b4c81 */
-void __thiscall parley_wnd_calc_rect(ParleyWindowLayout *self); /* 004b4cf0 */
-void __thiscall parley_wnd_calc_layout(ParleyWindowLayout *self); /* 004b4e8a */
-void __thiscall parley_wnd_sync_sides(ViewWindow *self); /* 004b4fb2 */
-void __thiscall parley_wnd_destroy_controls(ViewWindow *self); /* 004b50cf */
-void __thiscall parley_wnd_create_controls(ViewWindow *self); /* 004b5c93 */
+void __thiscall parley_wnd_pick_size_mode(ParleyWindow *self); /* 004b4c81 */
+void __thiscall parley_wnd_calc_rect(ParleyWindow *self); /* 004b4cf0 */
+void __thiscall parley_wnd_calc_layout(ParleyWindow *self); /* 004b4e8a */
+void __thiscall parley_wnd_sync_sides(ParleyWindow *self); /* 004b4fb2 */
+void __thiscall parley_wnd_destroy_controls(ParleyWindow *self); /* 004b50cf */
+void __thiscall parley_wnd_create_controls(ParleyWindow *self); /* 004b5c93 */
 void __cdecl parley_wnd_on_caption_click(int control_id); /* 004b74c4 */
 void __cdecl diplo_wnd_escape_close(i32 unused); /* 004b75fb */
 void __cdecl parley_wnd_close(void); /* 004b7645 */
 void __cdecl chat_wnd_close(void); /* 004b768d */
 i32 __cdecl diplo_wnd_close_active(void); /* 004b76d5 */
 void __cdecl parley_wnd_redraw(void); /* 004b7885 */
-void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *self); /* 004b794a */
-void __thiscall parley_fill_background(WindowObjectView *self,iptr rect,int area_kind); /* 004b7c90 */
-void __thiscall parley_wnd_build_title(ParleyTitleView *self); /* 004b7d72 */
-void __thiscall parley_wnd_open(ViewWindow *self,iptr other_civ,u32 mode); /* 004b7eb6 */
+void __thiscall parley_wnd_draw_frame(ParleyWindow *self); /* 004b794a */
+void __thiscall parley_fill_background(ParleyWindow *self,RECT *rect,int area_kind); /* 004b7c90 */
+void __thiscall parley_wnd_build_title(ParleyWindow *self); /* 004b7d72 */
+void __thiscall parley_wnd_open(ParleyWindow *self,iptr other_civ,u32 mode); /* 004b7eb6 */
 void __cdecl parley_poll_net_replies(void); /* 004b81dd */
-void __thiscall parley_set_mode_sides(WindowObjectView *self,int refresh); /* 004b8676 */
-void __thiscall parley_clear_side_controls(ViewWindow *self,int side); /* 004b888e */
+void __thiscall parley_set_mode_sides(ParleyWindow *self,int refresh); /* 004b8676 */
+void __thiscall parley_clear_side_controls(ParleyWindow *self,int side); /* 004b888e */
 void __cdecl parley_gold_edit_on_change(int control_id); /* 004b8e5c */
-void __thiscall chat_receive_message(WindowObjectView *self,iptr civ,iptr civ2,iptr is_private,iptr message); /* 004b90ad */
+void __thiscall chat_receive_message(ParleyWindow *self,iptr civ,iptr civ2,iptr is_private,iptr message); /* 004b90ad */
 void __cdecl chat_log_append(iptr line); /* 004b93a2 */
 void __cdecl chat_append_sender_name(int civ); /* 004b9504 */
 void __cdecl parley_wnd_on_key(int key); /* 004b957e */
@@ -1603,25 +1603,25 @@ void __cdecl text_section_index_static_init(void); /* 004db225 */
 void __cdecl text_section_index_build(const char *filename,uint pool_size); /* 004db23f */
 void __cdecl text_section_index_free(void); /* 004db450 */
 i32 __cdecl text_section_index_lookup(const char *filename,const char *section); /* 004db481 */
-i32 * __thiscall parley_send_offer(ParleyOfferBuffer *self,int mode); /* 004db690 */
-void __thiscall parley_pack_offer_items(ParleyOfferBuffer *self,iptr dest,i32 item_type,i32 item_size,iptr side); /* 004dbab4 */
-void __thiscall parley_build_description(WindowObjectView *self,iptr offer,int received); /* 004dbee6 */
-void __cdecl parley_describe_advances(iptr items); /* 004dcafa */
+i32 * __thiscall parley_send_offer(ParleyWindow *self,int mode); /* 004db690 */
+void __thiscall parley_pack_offer_items(ParleyWindow *self,ParleyOfferItem *dest,i32 item_type,i32 item_size,iptr side); /* 004dbab4 */
+void __thiscall parley_build_description(ParleyWindow *self,ParleyOfferMsg *offer,int received); /* 004dbee6 */
+void __cdecl parley_describe_advances(ParleyOfferItem *items); /* 004dcafa */
 void __cdecl parley_describe_gold(int gold); /* 004dcc0c */
-void __cdecl parley_describe_units(iptr items); /* 004dcc83 */
-void __cdecl parley_describe_cities(iptr items); /* 004dcea5 */
+void __cdecl parley_describe_units(ParleyOfferItem *items); /* 004dcc83 */
+void __cdecl parley_describe_cities(ParleyOfferItem *items); /* 004dcea5 */
 void __cdecl parley_describe_maps(int map_kind,int exchange); /* 004dd016 */
-void __cdecl parley_describe_war_targets(iptr items); /* 004dd176 */
-void __cdecl parley_execute_transaction(iptr offer); /* 004dd285 */
+void __cdecl parley_describe_war_targets(ParleyOfferItem *items); /* 004dd176 */
+void __cdecl parley_execute_transaction(ParleyOfferMsg *offer); /* 004dd285 */
 void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind); /* 004dd8ad */
-void __cdecl parley_apply_war_pact(iptr civ,iptr items); /* 004dde9e */
+void __cdecl parley_apply_war_pact(iptr civ,ParleyOfferItem *items); /* 004dde9e */
 void __cdecl parley_transfer_gold(iptr civ2,iptr civ,i32 amount); /* 004ddf04 */
-void __cdecl parley_transfer_advances(iptr civ,iptr civ2,iptr items); /* 004ddfb2 */
-void __cdecl parley_transfer_cities(iptr civ,iptr items); /* 004de049 */
+void __cdecl parley_transfer_advances(iptr civ,iptr civ2,ParleyOfferItem *items); /* 004ddfb2 */
+void __cdecl parley_transfer_cities(iptr civ,ParleyOfferItem *items); /* 004de049 */
 void __cdecl parley_cede_city(uptr city,iptr civ); /* 004de0e2 */
-void __cdecl parley_transfer_units(iptr civ,iptr items); /* 004de990 */
+void __cdecl parley_transfer_units(iptr civ,ParleyOfferItem *items); /* 004de990 */
 i32 __cdecl parley_find_unit_drop_tile(iptr unit,iptr x,iptr y,iptr civ,int must_move); /* 004ded07 */
-void __thiscall parley_describe_treaty(WindowObjectView *self,int treaty_kind,int exchange); /* 004def54 */
+void __thiscall parley_describe_treaty(ParleyWindow *self,int treaty_kind,int exchange); /* 004def54 */
 void __cdecl parley_apply_treaty(i32 treaty_kind,iptr civ,iptr other_civ); /* 004df10f */
 void __cdecl main_menu_global_init(void); /* 004e0140 */
 void __cdecl main_menu_static_init(void); /* 004e015a */
@@ -1892,8 +1892,8 @@ NetMsgQueue * __thiscall net_msgq_ctor(NetMsgQueue *self); /* 00514220 */
 void __thiscall net_msgq_clear(NetMsgQueue *self); /* 00514254 */
 void __thiscall net_msgq_reset(NetMsgQueue *self); /* 00514272 */
 i32 __cdecl net_msg_is_priority(int msg_type); /* 0051435f */
-i32 __thiscall net_msgq_enqueue(NetMsgQueueEnqueueView *self,int sender,iptr msg,uint msg_size); /* 0051438f */
-i32 __thiscall net_msgq_dequeue(NetMessageQueue *self,iptr out_sender,iptr out_msg,iptr out_size,int priority_only); /* 005149d6 */
+i32 __thiscall net_msgq_enqueue(NetMsgQueue *self,int sender,NetMsg *msg,uint msg_size); /* 0051438f */
+i32 __thiscall net_msgq_dequeue(NetMsgQueue *self,iptr out_sender,iptr out_msg,iptr out_size,int priority_only); /* 005149d6 */
 void __cdecl destroyed_civs_text_bg_global_init(void); /* 00514e10 */
 void __cdecl destroyed_civs_text_bg_static_init(void); /* 00514e2a */
 void __cdecl destroyed_civs_text_bg_reg_atexit(void); /* 00514e44 */
@@ -1979,13 +1979,13 @@ int __cdecl setup_choose_hotseat_players(void); /* 005227e3 */
 void __cdecl game_join_dialog(void); /* 00522b2b */
 void __cdecl leaders_reset_custom_names(void); /* 00522dfa */
 void __cdecl setup_choose_opponents(int num_humans); /* 00522f8f */
-i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id); /* 005233fc */
+i32 __cdecl net_host_register_player_civ(NetPlayerInfoMsg *player_info,int player_id); /* 005233fc */
 void __cdecl net_send_rules_tables(i32 dest_player); /* 00523d8a */
 i32 __cdecl setup_join_pick_civ(int player_idx); /* 00523f02 */
 void __thiscall pedia_init_wonder_list(MediaWindow *self,iptr unused_arg); /* 005261a0 */
 void __thiscall pedia_draw_improvement(DocumentWindow *self); /* 0052630d */
 void __thiscall pedia_show_wonder_modal(DocumentWindow *self,int wonder_id); /* 00526913 */
-void __thiscall parley_add_side_dialog(ViewWindow *self,int side_kind,int side); /* 00526ca0 */
+void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side); /* 00526ca0 */
 void __cdecl parley_on_treaty_type_select(i32 ctrl_id,i32 treaty_type); /* 0052d4d2 */
 void __cdecl parley_on_demand_kind_select(i32 ctrl_id,u32 demand_kind); /* 0052d523 */
 void __cdecl parley_on_map_choice_select(int side,i32 map_choice); /* 0052d588 */
@@ -2003,9 +2003,9 @@ void __cdecl parley_on_no_thanks(void); /* 0052e57c */
 void __cdecl parley_on_counter_offer(void); /* 0052e685 */
 void __cdecl chat_on_mute_checkbox(int ctrl_id); /* 0052e71a */
 void __cdecl chat_on_send_checkbox(int ctrl_id); /* 0052e7b7 */
-void __thiscall parley_update_buttons(ViewWindow *self); /* 0052e971 */
-iptr __thiscall parley_find_unit_by_id(WindowObjectView *self,int unit_id); /* 0052ec47 */
-iptr __thiscall parley_find_city_by_id(WindowObjectView *self,int city_id); /* 0052ed95 */
+void __thiscall parley_update_buttons(ParleyWindow *self); /* 0052e971 */
+iptr __thiscall parley_find_unit_by_id(ParleyWindow *self,int unit_id); /* 0052ec47 */
+iptr __thiscall parley_find_city_by_id(ParleyWindow *self,int city_id); /* 0052ed95 */
 u32 __thiscall ctrl_is_enabled(ControlEnabledView *self); /* 00530e80 */
 void __thiscall edit_set_change_callback(EditChangeSetView *self,iptr callback); /* 00530eb0 */
 void __thiscall checkbox_create_fixed(Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y ,i32 width,const char *label); /* 00530ee0 */
@@ -2245,7 +2245,7 @@ void __cdecl gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,
 i32 __thiscall map_view_zoom_scale_round(MapViewZoomView *self,i32 value); /* 0056e180 */
 int __cdecl gfx_zoom_scale_round(int value,int zoom); /* 0056e1c0 */
 i32 __cdecl civ_color_mid(iptr civ); /* 0056e1f0 */
-LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *self); /* 0056e270 */
+LobbyList * __thiscall lobby_list_ctor(LobbyList *self); /* 0056e270 */
 void __thiscall lobby_list_dtor(void *self); /* 0056e2c9 */
 i32 __thiscall lobby_host_wait_players(LobbyList *self,i32 map_arg,int launch_mode); /* 0056e2e9 */
 void __cdecl lobby_wait_civs_chosen_idle(void); /* 0056ec92 */
@@ -2392,17 +2392,17 @@ void __cdecl cosmic_editor_cancel_clicked(void); /* 00586e88 */
 void __thiscall cosmic_editor_draw_bg(FrameWindow *self); /* 00586eb0 */
 void __thiscall cosmic_editor_dialog(ViewWindow *self); /* 00586f16 */
 void __cdecl cosmic_editor_run(void); /* 0058760d */
-void __thiscall parley_create_city_list_pane(ListPaneWindow *self,iptr rect,int pane,i32 own_cities); /* 00587a90 */
+void __thiscall parley_create_city_list_pane(ParleyWindow *self,RECT *rect,int pane,i32 own_cities); /* 00587a90 */
 void __cdecl parley_city_list_scroll_local(i32 pos); /* 00587e05 */
 void __cdecl parley_reveal_city_info(void); /* 00587e41 */
 void __cdecl parley_hide_city_info(void); /* 00587f00 */
 void __cdecl parley_city_list_scroll(int pane,i32 pos); /* 0058804f */
 void __cdecl parley_city_list_click(int control_id); /* 005880b0 */
 int __cdecl parley_city_list_hit_test(int x,int y,int pane); /* 0058832d */
-void __thiscall parley_sort_city_list(void *self,int first,int last,int pane); /* 0058843f */
+void __thiscall parley_sort_city_list(ParleyWindow *self,int first,int last,int pane); /* 0058843f */
 void __cdecl parley_draw_city_list(int pane); /* 0058878e */
 void __cdecl parley_draw_city_sprite(iptr city,uint row_index,int x,int y,int row_height,i32 style); /* 00588e47 */
-void __thiscall parley_build_city_list(ListPaneWindow *self,int pane,int keep_selection); /* 00588f36 */
+void __thiscall parley_build_city_list(ParleyWindow *self,int pane,int keep_selection); /* 00588f36 */
 void __cdecl main_frame_bg_surface_global_init(void); /* 005899f0 */
 void __cdecl main_frame_bg_surface_init(void); /* 00589a0a */
 void __cdecl main_frame_bg_surface_atexit(void); /* 00589a24 */
@@ -2482,16 +2482,16 @@ void __cdecl net_session_global_init(void); /* 0059a850 */
 void __cdecl net_session_static_init(void); /* 0059a86a */
 void __cdecl net_session_reg_atexit(void); /* 0059a884 */
 void __cdecl net_session_static_dtor(void); /* 0059a8a1 */
-NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *self); /* 0059a8bb */
-void __thiscall net_session_clear(void *self); /* 0059a998 */
-void __thiscall net_session_dtor(void *self); /* 0059ad40 */
-i8 __thiscall net_init_transport(void *self,i32 protocol,int is_server); /* 0059adef */
-void __thiscall net_session_shutdown(void *self,int delay_after); /* 0059b293 */
-void __thiscall net_session_close_hook_nop(void *self); /* 0059b55b */
-void __thiscall net_game_list_add(NetSession *self,iptr msg); /* 0059b571 */
-void __thiscall net_add_player(NetSession *self,iptr player_info); /* 0059b7fc */
+NetSession * __thiscall net_session_ctor(NetSession *self); /* 0059a8bb */
+void __thiscall net_session_clear(NetSession *self); /* 0059a998 */
+void __thiscall net_session_dtor(NetSession *self); /* 0059ad40 */
+i8 __thiscall net_init_transport(NetSession *self,i32 protocol,int is_server); /* 0059adef */
+void __thiscall net_session_shutdown(NetSession *self,int delay_after); /* 0059b293 */
+void __thiscall net_session_close_hook_nop(NetSession *self); /* 0059b55b */
+void __thiscall net_game_list_add(NetSession *self,NetServerInfoMsg *msg); /* 0059b571 */
+void __thiscall net_add_player(NetSession *self,NetPlayerNodeMsg *player_info); /* 0059b7fc */
 void __thiscall net_remove_player(NetSession *self,int player_id); /* 0059b96a */
-void __thiscall net_free_game_list(void *self); /* 0059baf0 */
+void __thiscall net_free_game_list(NetSession *self); /* 0059baf0 */
 void __cdecl net_on_broadcast_receive(int *msg,ushort size); /* 0059bb54 */
 void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size); /* 0059bc41 */
 void __cdecl net_on_new_client(i32 client_info,uint conn_id); /* 0059bfb5 */
@@ -2502,9 +2502,9 @@ void * __cdecl net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2,
 void __cdecl net_reset_msg_counts(void); /* 0059c276 */
 void __cdecl net_reset_error_counts(void); /* 0059c2b8 */
 void __cdecl net_modal_idle_poll(void); /* 0059c301 */
-void __cdecl net_fill_game_info(iptr info); /* 0059c31f */
+void __cdecl net_fill_game_info(NetGameInfo *info); /* 0059c31f */
 void __cdecl casualty_log_add(iptr unit,iptr unit2,iptr year,iptr x,i32 y); /* 0059c575 */
-NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *self); /* 0059d080 */
+NetMsgHeader * __thiscall net_msg_player_info_init(NetPlayerInfoMsg *self); /* 0059d080 */
 void __cdecl dialog_text_font_global_init(void); /* 0059d190 */
 void __cdecl dialog_text_font_static_init(void); /* 0059d1aa */
 void __cdecl dialog_text_font_reg_atexit(void); /* 0059d1ca */

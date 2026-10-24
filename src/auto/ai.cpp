@@ -715,7 +715,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
                 if (done != 0) break;
                 for (city4 = 0; city4 < game.num_cities; city4++) {
                   if (2 < game.multiplayer) {
-                    net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+                    net_process_messages(&net_session_block,1,0);
                   }
                   if ((cities[city4].id != 0) && ((int)cities[city4].owner == civ)) {
                     x3 = (int)cities[city4].x;
@@ -790,7 +790,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   }
   for (unit = 0; (int)unit < (int)game.num_units; unit++) {
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     if (((units[unit].id != 0) && ((int)units[unit].owner == civ)) &&
        (units[unit].flags = units[unit].flags & 0xfc7f,
@@ -816,7 +816,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   }
   for (unit = 0; (int)unit < (int)game.num_units; unit++) {
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     if (units[unit].id != 0) {
       if ((int)units[unit].owner == civ) {
@@ -948,7 +948,7 @@ continent_loop_done: ;
   land_city_count = 0;
   for (city = 0; city < game.num_cities; city++) {
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     if (cities[city].id != 0) {
       x2 = (int)cities[city].x;
@@ -1011,7 +1011,7 @@ continent_loop_done: ;
   }
   for (continent = 1; continent < 0x3f; continent++) {
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
     threat_count = 0;
     defend_count = 0;
@@ -1166,7 +1166,7 @@ next_unit:
     unit--;
     if (-1 < (int)unit) {
       if (2 < game.multiplayer) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
       if (((units[unit].id != 0) && ((int)units[unit].owner == civ)) &&
          ((is_human == 0 || (((int)(short)units[unit].flags & 0x8000U) != 0)))) {
@@ -1511,9 +1511,7 @@ i32 __cdecl ai_barbarian_unit_move(void)
                     dlg_game_txt_with_unit((const char *)&str_barbariansland_2,unit);
                   }
                   else if (2 < game.multiplayer) {
-                    net_send_text_args(0x4e,*(i32 *)
-                                             (((i8 *)&net_session_block.net_player_slots) +
-                                             *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ3 * 4) * 0x54),1,0,
+                    net_send_text_args(0x4e,net_session_block.net_slots[net_session_block.net_civ_slots[civ3]].id,1,0,
                                        unit,0);
                   }
                 }
@@ -5416,7 +5414,7 @@ void __cdecl ai_process_civ_units(void)
           if (2 < game.multiplayer) {
             net_send_state_diff(0xff,2,0,0,0);
             XD_FlushSendBuffer(5000);
-            net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+            net_process_messages(&net_session_block,1,0);
           }
           prev_num_units = game.num_units;
           game.active_unit = (i16)unit;

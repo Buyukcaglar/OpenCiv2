@@ -1511,7 +1511,7 @@ void __cdecl foreign_minister_show(iptr civ)
   seh_state = 0xffffffff;
   dialog_ctor(&dialog2,0x4000);
   seh_state = 0;
-  if ((game.multiplayer < 3) || (parley_wnd_block.parley_wnd_closed != 0)) {
+  if ((game.multiplayer < 3) || ((int)parley_wnd_block.closed != 0)) {
     while( true ) {
       while( true ) {
         value = int_clamp((uint)game.power_rank[civ],1,7);
@@ -1696,8 +1696,7 @@ void __cdecl foreign_minister_show(iptr civ)
           diplo_set_treaty_flags(civ,civ2,0x401);
           advisor_window_block.mp_meeting_reply = -1;
           mp_meeting_pending = 1;
-          net_send_text_args(0x3d,*(i32 *)
-                                   (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),0
+          net_send_text_args(0x3d,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,0
                              ,0,civ,0);
           text = (iptr)(civ_leader_name(civ2));
           text_set_string_arg(1,(const char *)text);
@@ -1708,11 +1707,9 @@ void __cdecl foreign_minister_show(iptr civ)
           popup_result = popup_game_sprite_flags((const char *)&str_parleywaiting,0x2000001,(iptr)&popup_info_icon_sprite,0);
           if (net_session_block.nm_parley_cancel_count == 0) {
             if (popup_result == -1) {
-              net_send_message(0x81,*(i32 *)
-                                       (((i8 *)&net_session_block.net_player_slots) +
-                                       *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),0,0,0,0,0,0,0,
+              net_send_message(0x81,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,0,0,0,0,0,0,0,
                                  0);
-              parley_wnd_block.parley_other_civ = -1;
+              parley_wnd_block.other_civ = -1;
               mp_meeting_pending = 0;
             }
             else if (advisor_window_block.mp_meeting_reply < 1) {
@@ -1722,7 +1719,7 @@ void __cdecl foreign_minister_show(iptr civ)
             }
             else if (advisor_window_block.mp_meeting_reply == 1) {
               advisor_window_block.mp_meeting_reply = -1;
-              parley_wnd_block.parley_other_civ = civ2;
+              parley_wnd_block.other_civ = civ2;
               dlg_pending_idle_callback = ((i8 *)mp_meeting_wait_idle);
               civ_rating_title_font_block.mp_meeting_wait_start_i32 = timer_ticks();
               text = (iptr)(civ_name_plural(civ));
@@ -1730,10 +1727,10 @@ void __cdecl foreign_minister_show(iptr civ)
               popup_game_with_sprite((const char *)&str_parleyok,(iptr)&popup_info_icon_sprite,0);
               if (net_session_block.net_host_handoff_stage == '\0') {
                 if (net_session_block.nm_parley_cancel_count == 0) {
-                  parley_wnd_open((ViewWindow *)((i8 *)&parley_wnd_block.parley_wnd),civ2,3);
+                  parley_wnd_open(&parley_wnd_block,civ2,3);
                 }
                 else {
-                  parley_wnd_block.parley_other_civ = -1;
+                  parley_wnd_block.other_civ = -1;
                   net_session_block.nm_parley_cancel_count = 0;
                   text = (iptr)(civ_name_plural(civ2));
                   text_set_string_arg(0,(const char *)text);
@@ -1743,7 +1740,7 @@ void __cdecl foreign_minister_show(iptr civ)
                 }
               }
               else {
-                parley_wnd_block.parley_other_civ = -1;
+                parley_wnd_block.other_civ = -1;
                 dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
                 popup_game_with_sprite((const char *)&str_parleybusy,(iptr)&popup_info_icon_sprite,0);
                 mp_meeting_pending = 0;
@@ -1761,7 +1758,7 @@ void __cdecl foreign_minister_show(iptr civ)
             text_set_string_arg(0,(const char *)text);
             dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
             popup_game_with_sprite((const char *)&str_parleycancel,(iptr)&popup_info_icon_sprite,0);
-            parley_wnd_block.parley_other_civ = -1;
+            parley_wnd_block.other_civ = -1;
             mp_meeting_pending = 0;
           }
         }
@@ -1779,7 +1776,7 @@ dialog_cleanup:
     /* inlined unwind funclet 0043154f */ { dialog_dtor(&dialog2); }
   }
   else {
-    parley_hwnd_obj = wnd_get_window((WndBase *)((i8 *)&parley_wnd_block.parley_wnd_frame));
+    parley_hwnd_obj = wnd_get_window((WndBase *)((i8 *)&parley_wnd_block.base.window_2));
     BringWindowToTop(*(HWND *)(parley_hwnd_obj + 4));
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0043154f */ { dialog_dtor(&dialog2); }
@@ -3582,7 +3579,7 @@ void __cdecl advisor_mp_idle(void)
 {
   int now_ticks;
   
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   now_ticks = timer_ticks();
   if (0x4b0 < now_ticks - advisor_modal_start_ticks_i32) {
     intel_report_end_modal();
@@ -3671,10 +3668,10 @@ void __cdecl casualty_timeline_draw(void)
   casualty_window_block.casualty_list_height_i32 = bottom - line_height;
   casualty_window_block.casualty_rows_per_page = int_clamp((bottom - line_height) / 0x18,1,99);
   entry_count2 = 0;
-  if (*(int *)(((i8 *)&net_session_block.casualty_log_first) + civ * 4) < *(int *)(((i8 *)&net_session_block.casualty_log_next) + civ * 4)) {
-    entry_count2 = *(int *)(((i8 *)&net_session_block.casualty_log_next) + civ * 4) - *(int *)(((i8 *)&net_session_block.casualty_log_first) + civ * 4);
+  if (net_session_block.casualty_log_first[civ] < net_session_block.casualty_log_next[civ]) {
+    entry_count2 = net_session_block.casualty_log_next[civ] - net_session_block.casualty_log_first[civ];
   }
-  else if (*(int *)(((i8 *)&net_session_block.casualty_log_first) + civ * 4) < *(int *)(((i8 *)&net_session_block.casualty_log_next) + civ * 4)) {
+  else if (net_session_block.casualty_log_first[civ] < net_session_block.casualty_log_next[civ]) {
     entry_count2 = 300;
   }
   rows_per_page = casualty_window_block.casualty_rows_per_page;
@@ -3683,17 +3680,17 @@ void __cdecl casualty_timeline_draw(void)
     max_row = int_clamp(entry_count2 - 1,0,999);
     y = int_clamp(casualty_window_block.casualty_scroll_pos,0,max_row);
     entry = 1;
-    log_index = (*(int *)(((i8 *)&net_session_block.casualty_log_next) + civ * 4) - 1) - y;
+    log_index = (net_session_block.casualty_log_next[civ] - 1) - y;
     casualty_window_block.casualty_scroll_pos = y;
     row_y = line_height;
     if (log_index < 0) {
       log_index += 300;
     }
-    while (((entry <= *(int *)(((i8 *)&net_session_block.casualty_counts) + civ * 4) && (entry - 1 < y + rows_per_page))
-           && ((*(int *)(((i8 *)&net_session_block.casualty_log_first) + civ * 4) != 0 ||
-               (log_index < *(int *)(((i8 *)&net_session_block.casualty_log_next) + civ * 4)))))) {
+    while (((entry <= net_session_block.casualty_counts[civ] && (entry - 1 < y + rows_per_page))
+           && ((net_session_block.casualty_log_first[civ] != 0 ||
+               (log_index < net_session_block.casualty_log_next[civ]))))) {
       row_x = (entry + 1U & 1) * 0x40 + casualty_window_block.casualty_client_x;
-      unit = unit_make_dummy((int)*(short *)(((i8 *)&net_session_block.casualty_log_unit_types) + civ * 0x27d8 + log_index * 0x22),
+      unit = unit_make_dummy((int)net_session_block.casualty_log[civ * 0x12c + log_index].unit_type,
                                  civ);
       gfx_draw_unit((iptr)&casualty_window_block.casualty_window,unit,0,row_x + 2,row_y,0,0);
       text_set_font((iptr)&advisor_bold_font);
@@ -3703,7 +3700,7 @@ void __cdecl casualty_timeline_draw(void)
       name_x = casualty_window_block.casualty_client_x + 0x8c;
       text_clear();
       unit = (iptr)label_string(unit_types
-                                 [*(short *)(((i8 *)&net_session_block.casualty_log_unit_types) + civ * 0x27d8 + log_index * 0x22)].name
+                                 [net_session_block.casualty_log[civ * 0x12c + log_index].unit_type].name
                                 );
       text_append((const char *)unit);
       while (text_width = font_text_width((GameFont *)((i8 *)&advisor_bold_font),(const char *)&map_views_block.text_buffer),
@@ -3713,7 +3710,7 @@ void __cdecl casualty_timeline_draw(void)
       }
       gfx_draw_text((const char *)&map_views_block.text_buffer,name_x,text_y);
       text_clear();
-      text_append_year((int)*(short *)(((i8 *)&net_session_block.casualty_log_years) + civ * 0x27d8 + log_index * 0x22));
+      text_append_year((int)net_session_block.casualty_log[civ * 0x12c + log_index].year);
       while (name_x = font_text_width((GameFont *)((i8 *)&advisor_bold_font),(const char *)&map_views_block.text_buffer),
             0x4c < name_x) {
         len2 = _strlen(((i8 *)&map_views_block.text_buffer));
@@ -3722,11 +3719,11 @@ void __cdecl casualty_timeline_draw(void)
       gfx_draw_text((const char *)&map_views_block.text_buffer,row_x + 0xec,text_y);
       text_set_colors(0x5e,10,0xffffffff,0xffffffff);
       text_clear();
-      text_append_int((int)*(short *)(((i8 *)&net_session_block.casualty_log_x) + civ * 0x27d8 + log_index * 0x22));
+      text_append_int((int)net_session_block.casualty_log[civ * 0x12c + log_index].x);
       text_append((const char *)&str_empty_62);
-      text_append_int((int)*(short *)(((i8 *)&net_session_block.casualty_log_y) + civ * 0x27d8 + log_index * 0x22));
-      name_x = city_find_nearest((int)*(short *)(((i8 *)&net_session_block.casualty_log_x) + civ * 0x27d8 + log_index * 0x22),
-                                 (int)*(short *)(((i8 *)&net_session_block.casualty_log_y) + civ * 0x27d8 + log_index * 0x22),
+      text_append_int((int)net_session_block.casualty_log[civ * 0x12c + log_index].y);
+      name_x = city_find_nearest((int)net_session_block.casualty_log[civ * 0x12c + log_index].x,
+                                 (int)net_session_block.casualty_log[civ * 0x12c + log_index].y,
                                  -1,0xffffffff,-1);
       if (-1 < name_x) {
         text_append((const char *)&str_empty_63);
@@ -3739,10 +3736,10 @@ void __cdecl casualty_timeline_draw(void)
         (((i8 *)&map_views_block.text_buffer_minus1))[len3] = 0;
       }
       gfx_draw_text((const char *)&map_views_block.text_buffer,row_x + 0x138,text_y);
-      text_set_colors((int)*(short *)(((i8 *)&net_session_block.casualty_log_killer_colors) + civ * 0x27d8 + log_index * 0x22),0x12,
+      text_set_colors((int)net_session_block.casualty_log[civ * 0x12c + log_index].killer_color,0x12,
                          0xffffffff,0xffffffff);
       text_clear();
-      text_append((const char *)(log_index * 0x22 + civ * 0x27d8 + (iptr)(((u8 *)&net_session_block.casualty_log_killer_colors + 2))));
+      text_append(net_session_block.casualty_log[civ * 0x12c + log_index].killer_name);
       while (text_width = casualty_window_block.casualty_client_right - casualty_window_block.casualty_vscroll_width_i32,
             name_x = font_text_width((GameFont *)((i8 *)&advisor_bold_font),(const char *)&map_views_block.text_buffer),
             (text_width - 2) - (row_x + 0x1e2) < name_x) {
@@ -3822,18 +3819,18 @@ void __cdecl casualty_timeline_on_dblclick(i32 click_x,int click_y)
   
   click_y -= (casualty_window_block.casualty_first_row_y - casualty_window_block.casualty_row_height / 2);
   if ((-1 < click_y) && (click_y = click_y / casualty_window_block.casualty_row_height, click_y < casualty_window_block.casualty_rows_per_page)) {
-    log_index = ((*(int *)(((i8 *)&net_session_block.casualty_log_next) + casualty_window_block.casualty_window_civ * 4) - 1) - casualty_window_block.casualty_scroll_pos) - click_y;
+    log_index = ((net_session_block.casualty_log_next[casualty_window_block.casualty_window_civ] - 1) - casualty_window_block.casualty_scroll_pos) - click_y;
     if (log_index < 0) {
       log_index += 300;
     }
-    if ((*(int *)(((i8 *)&net_session_block.casualty_log_next) + casualty_window_block.casualty_window_civ * 4) != log_index) &&
-       (((*(int *)(((i8 *)&net_session_block.casualty_log_first) + casualty_window_block.casualty_window_civ * 4) != 0 ||
-         (0x12a < *(int *)(((i8 *)&net_session_block.casualty_counts) + casualty_window_block.casualty_window_civ * 4))) ||
-        (log_index < *(int *)(((i8 *)&net_session_block.casualty_log_next) + casualty_window_block.casualty_window_civ * 4))))) {
+    if ((net_session_block.casualty_log_next[casualty_window_block.casualty_window_civ] != log_index) &&
+       (((net_session_block.casualty_log_first[casualty_window_block.casualty_window_civ] != 0 ||
+         (0x12a < net_session_block.casualty_counts[casualty_window_block.casualty_window_civ])) ||
+        (log_index < net_session_block.casualty_log_next[casualty_window_block.casualty_window_civ])))) {
       mapview_center_on
                 ((ViewWindow *)((i8 *)&map_views_block.map_views),
-                 (int)*(short *)(((i8 *)&net_session_block.casualty_log_x) + casualty_window_block.casualty_window_civ * 0x27d8 + log_index * 0x22),
-                 (int)*(short *)(((i8 *)&net_session_block.casualty_log_y) + casualty_window_block.casualty_window_civ * 0x27d8 + log_index * 0x22));
+                 (int)net_session_block.casualty_log[casualty_window_block.casualty_window_civ * 0x12c + log_index].x,
+                 (int)net_session_block.casualty_log[casualty_window_block.casualty_window_civ * 0x12c + log_index].y);
     }
   }
   return;
@@ -6299,7 +6296,7 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *self)
         win_flush_pending_msgs();
         now = timeGetTime();
         if (2 < game.multiplayer) {
-          net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+          net_process_messages(&net_session_block,1,0);
         }
       } while ((int)(now - start_tick) < 7000);
       destroyed_civs_draw_entry((WndBase *)self,entry);
@@ -6514,7 +6511,7 @@ void __thiscall destroyed_civs_slide_down(DestroyedCivsWindow *self)
       win_flush_pending_msgs();
       tick = timeGetTime();
       if (2 < game.multiplayer) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
     } while ((int)(tick - start_time) < 0x16);
   }
@@ -7445,46 +7442,34 @@ void __cdecl casualty_log_add(iptr unit,iptr unit2,iptr year,iptr x,i32 y)
   char *_Source;
   size_t _Count;
   
-  *(ushort *)
-   (((i8 *)&net_session_block.casualty_log_unit_types) +
-   units[unit].owner * 0x27d8 + *(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) * 0x22) =
+  net_session_block.casualty_log[units[unit].owner * 0x12c + net_session_block.casualty_log_next[units[unit].owner]].unit_type =
        (ushort)units[unit].type;
-  *(short *)(((i8 *)&net_session_block.casualty_log_x) +
-            units[unit].owner * 0x27d8 +
-            *(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) * 0x22) = (short)x;
-  *(i16 *)
-   (((i8 *)&net_session_block.casualty_log_y) +
-   units[unit].owner * 0x27d8 + *(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) * 0x22) =
+  net_session_block.casualty_log[units[unit].owner * 0x12c + net_session_block.casualty_log_next[units[unit].owner]].x = (short)x;
+  net_session_block.casualty_log[units[unit].owner * 0x12c + net_session_block.casualty_log_next[units[unit].owner]].y =
        (i16)y;
-  *(short *)(((i8 *)&net_session_block.casualty_log_years) +
-            units[unit].owner * 0x27d8 +
-            *(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) * 0x22) = (short)year;
+  net_session_block.casualty_log[units[unit].owner * 0x12c + net_session_block.casualty_log_next[units[unit].owner]].year = (short)year;
   color = civ_color_secondary((int)units[unit2].owner);
-  *(short *)(((i8 *)&net_session_block.casualty_log_killer_colors) +
-            units[unit].owner * 0x27d8 +
-            *(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) * 0x22) = (short)color;
+  net_session_block.casualty_log[units[unit].owner * 0x12c + net_session_block.casualty_log_next[units[unit].owner]].killer_color = (short)color;
   _Count = 0x18;
   _Source = civ_name_plural((int)units[unit2].owner);
-  _strncpy((char *)(*(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) * 0x22 +
-                    units[unit].owner * 0x27d8 + (iptr)(((u8 *)&net_session_block.casualty_log_killer_colors + 2))),_Source,_Count);
-  (((i8 *)&net_session_block.casualty_log_killer_name_ends))
-  [units[unit].owner * 0x27d8 + *(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) * 0x22] = 0;
-  *(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) =
-       *(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) + 1;
-  if (*(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) == 300) {
-    *(i32 *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) = 0;
+  _strncpy(net_session_block.casualty_log[units[unit].owner * 0x12c + net_session_block.casualty_log_next[units[unit].owner]].killer_name,_Source,_Count);
+  net_session_block.casualty_log[units[unit].owner * 0x12c + net_session_block.casualty_log_next[units[unit].owner]].killer_name[23] = 0;
+  net_session_block.casualty_log_next[units[unit].owner] =
+       net_session_block.casualty_log_next[units[unit].owner] + 1;
+  if (net_session_block.casualty_log_next[units[unit].owner] == 300) {
+    net_session_block.casualty_log_next[units[unit].owner] = 0;
   }
-  if (*(int *)(((i8 *)&net_session_block.casualty_log_next) + units[unit].owner * 4) ==
-      *(int *)(((i8 *)&net_session_block.casualty_log_first) + units[unit].owner * 4)) {
-    *(int *)(((i8 *)&net_session_block.casualty_log_first) + units[unit].owner * 4) =
-         *(int *)(((i8 *)&net_session_block.casualty_log_first) + units[unit].owner * 4) + 1;
-    if (*(int *)(((i8 *)&net_session_block.casualty_log_first) + units[unit].owner * 4) == 300) {
-      *(i32 *)(((i8 *)&net_session_block.casualty_log_first) + units[unit].owner * 4) = 0;
+  if (net_session_block.casualty_log_next[units[unit].owner] ==
+      net_session_block.casualty_log_first[units[unit].owner]) {
+    net_session_block.casualty_log_first[units[unit].owner] =
+         net_session_block.casualty_log_first[units[unit].owner] + 1;
+    if (net_session_block.casualty_log_first[units[unit].owner] == 300) {
+      net_session_block.casualty_log_first[units[unit].owner] = 0;
     }
   }
   else {
-    *(int *)(((i8 *)&net_session_block.casualty_counts) + units[unit].owner * 4) =
-         *(int *)(((i8 *)&net_session_block.casualty_counts) + units[unit].owner * 4) + 1;
+    net_session_block.casualty_counts[units[unit].owner] =
+         net_session_block.casualty_counts[units[unit].owner] + 1;
   }
   if (-1 < casualty_window_block.casualty_window_report_id) {
     wnd_repaint((SurfaceWindow *)((i8 *)&casualty_window_block.casualty_window));

@@ -3290,73 +3290,27 @@ typedef struct RadioGroupEnableView {
     union { u32 field_48; u32 items; };
 } RadioGroupEnableView;
 
-/* 1 methods, size 0x178 */
-typedef struct NetGamelistViewCtorView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 next_game_id; };
-    u8 pad_8[324];
-    union { u32 field_14c; u32 option_list; };
+/* The network game list window (0x178 bytes; net_session_block.gamelist_view
+ * holds it while the game list is shown): its dialog, the names that keep the
+ * selection across refreshes, the server's answer, the info line controls. */
+typedef struct NetGamelistView {
+    Dialog *list_dialog;
+    i32 next_game_id;
+    char selected_game_name[32];
+    char selected_host_name[32];
+    char top_game_name[32];
+    char top_host_name[32];
+    char server_address[32];
+    char server_game_name[32];
+    char server_info_c8[32];
+    char server_version[32];
+    u8 pad_108[32];
+    i32 info_lines[9];
+    uptr first_option_value;
     u8 pad_150[36];
-    union { u32 field_174; u32 refresh_timer; };
-} NetGamelistViewCtorView;
-
-/* 2 methods, size 0x150 */
-typedef struct NetGameListRefreshView {
-    union { uptr field_0; uptr list_dialog; };
-    u8 pad_4[4];
-    union { u8 field_8; u8 selected_game_name; };
-    u8 pad_9[31];
-    union { u8 field_28; u8 selected_host_name; };
-    u8 pad_29[31];
-    union { u8 field_48; u8 top_game_name; };
-    u8 pad_49[31];
-    union { u8 field_68; u8 top_host_name; };
-    u8 pad_69[227];
-    union { u32 field_14c; u32 first_option_value; };
-} NetGameListRefreshView;
-
-/* 3 methods, size 0x150 */
-typedef struct NetGameList {
-    union { uptr field_0; uptr list_dialog; };
-    u8 pad_4[4];
-    union { u8 field_8; u8 selected_game_name; };
-    u8 pad_9[31];
-    union { u8 field_28; u8 selected_host_name; };
-    u8 pad_29[31];
-    union { u8 field_48; u8 top_game_name; };
-    u8 pad_49[31];
-    union { u8 field_68; u8 top_host_name; };
-    u8 pad_69[227];
-    union { uptr field_14c; uptr first_option_value; };
-} NetGameList;
-
-/* 1 methods, size 0x14c */
-typedef struct NetGamelistAddInfoLinesView {
-    union { uptr field_0; uptr dialog; };
-    u8 pad_4[292];
-    union { u32 field_128; u32 line_0; };
-    union { u32 field_12c; u32 line_1; };
-    union { u32 field_130; u32 line_2; };
-    union { u32 field_134; u32 line_3; };
-    union { u32 field_138; u32 line_4; };
-    union { u32 field_13c; u32 line_5; };
-    union { u32 field_140; u32 line_6; };
-    union { u32 field_144; u32 line_7; };
-    union { u32 field_148; u32 line_8; };
-} NetGamelistAddInfoLinesView;
-
-/* 1 methods, size 0x150 */
-typedef struct NetGameListAddView {
-    union { uptr field_0; uptr list_dialog; };
-    u8 pad_4[328];
-    union { u32 field_14c; u32 first_option_value; };
-} NetGameListAddView;
-
-/* 2 methods, size 0x178 */
-typedef struct NetGameListTimerView {
-    u8 pad_0[372];
-    union { u32 field_174; u32 refresh_timer; };
-} NetGameListTimerView;
+    u32 refresh_timer;
+} NetGamelistView;
+static_assert(sizeof(NetGamelistView) == 0x178, "");
 
 /* 1 methods, size 0x10 */
 typedef struct MemBlock {
@@ -3392,20 +3346,19 @@ typedef struct GamePalette {
     union { u32 field_430; u32 tint_saved_rgb; };
 } GamePalette;
 
-/* 11 methods, size 0x2c */
+/* The lobby's list of players (0x70 bytes; net_session_block.net_lobby_list):
+ * a dialog listing the players who joined. */
 typedef struct LobbyList {
-    union { uptr field_0; uptr dialog; };
-    union { u32 field_4; u32 next_id; };
+    Dialog *dialog;                 /* 0x00 */
+    u32 next_id;                    /* 0x04 */
     u8 pad_8[32];
-    union { uptr field_28; uptr entries; };
+    uptr entries;                   /* 0x28 the dialog's option list */
+    char title[32];                 /* 0x2c */
+    i8 *saved_button_label;         /* 0x4c dialog_button_labels[0] while the dialog runs */
+    u8 pad_50[4];
+    u32 drop_counts[7];             /* 0x54 connections lost, per player */
 } LobbyList;
-
-/* LobbyList where the code reaches past its end: the object is larger */
-typedef struct LobbyListExt {
-    LobbyList base;
-    u8 pad_2c[32];
-    u8 saved_button_labels[1];
-} LobbyListExt;
+static_assert(sizeof(LobbyList) == 0x70, "");
 
 /* 2 methods, size 0x4c */
 typedef struct RadioGroupDisableView {
@@ -3554,33 +3507,107 @@ typedef struct NetMsgHeader {
     union { u32 field_4; u32 msg_type; };
 } NetMsgHeader;
 
-/* NetMsgHeader where the code reaches past its end: the object is larger */
-typedef struct NetMsgHeaderExt {
-    NetMsgHeader base;
-    u32 msg_size_2;
-    u8 pad_c[4];
-    u32 player_id;
-    u32 ip_address;
-    u32 info_word_18;
-    u32 info_word_1c;
-    u32 info_string_20;
-    u8 pad_24[16];
-    u32 player_name;
-    u32 info_string_38;
-    u8 pad_3c[20];
-    u32 info_string_50;
-    u32 node_status_54;
-    u32 node_status_58;
-    u32 node_flag_bytes;
-    u32 node_slot_index;
-    u8 pad_64[4];
-    u32 info_count_68;
-    u32 info_string_table[1];
-    u32 inner_msg_type;
-    u32 game_info;
-    u8 pad_78[156];
-    u32 info_trailer_flag;
-} NetMsgHeaderExt;
+/* Network messages: a NetMsgHeader (magic 0x66606660, type), the size in
+ * bytes (header included) and a sequence number (0x10 bytes), then the
+ * payload. */
+/* A message of net_send_message: seven arguments (0x2c bytes). */
+typedef struct NetMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    i32 args[7];                    /* 0x10 */
+} NetMsg;
+/* A message carrying the sender's address (0x30 bytes). */
+typedef struct NetAddrMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    char address[32];               /* 0x10 */
+} NetAddrMsg;
+/* A message with a name (0x74 bytes; net_msg_init_header). */
+typedef struct NetNamedMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    char address[32];               /* 0x10 */
+    char name[32];                  /* 0x30 */
+    char address2[32];              /* 0x50 */
+    i32 inner_type;                 /* 0x70 */
+} NetNamedMsg;
+/* The server's announcement (type 2, 0x198 bytes). */
+typedef struct NetServerInfoMsg {
+    NetNamedMsg named;              /* 0x00 */
+    NetGameInfo game;               /* 0x74 */
+} NetServerInfoMsg;
+/* The server's answer (type 0x13, 0x134 bytes). */
+typedef struct NetServerAnswerMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    NetGameInfo game;               /* 0x10 */
+} NetServerAnswerMsg;
+/* A player of the game (type 0x2f, 0x64 bytes). */
+typedef struct NetPlayerNodeMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    NetPlayerSlot slot;             /* 0x10 */
+} NetPlayerNodeMsg;
+/* The players of the game (type 4, 0x280 bytes): net_session_block's copy. */
+typedef struct NetPlayerListMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    i32 player_count;               /* 0x10 */
+    NetPlayerSlot slots[7];         /* 0x14 */
+    i32 civ_slots[8];               /* 0x260 */
+} NetPlayerListMsg;
+/* Whose turn it is (type 0x69, 0x14 bytes). */
+typedef struct NetWhoseTurnMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    i32 civ;                        /* 0x10 */
+} NetWhoseTurnMsg;
+/* A player's civilization (type 0x2e, 0x118 bytes). */
+typedef struct NetPlayerInfoMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    i32 civ;                        /* 0x10 */
+    i32 leader_index;               /* 0x14 */
+    i32 gender;                     /* 0x18 */
+    i32 has_names;                  /* 0x1c */
+    char leader_name[24];           /* 0x20 */
+    char tribe_name[24];            /* 0x38 */
+    char adjective[24];             /* 0x50 */
+    i32 has_titles;                 /* 0x68 */
+    char govt_titles[7][24];        /* 0x6c */
+    i32 city_style;                 /* 0x114 */
+} NetPlayerInfoMsg;
+/* An item of a parley offer: what one side gives (0xc bytes, then for
+ * advances, units and cities `value` ids). */
+typedef struct ParleyOfferItem {
+    i32 type;                       /* 0x0 */
+    i32 size;                       /* 0x4 bytes, the ids included */
+    i32 value;                      /* 0x8 a count, an amount or a choice */
+} ParleyOfferItem;
+/* A parley offer (type 0x82): the first item, then for an exchange the
+ * second item `item.size` bytes further (read as a ParleyOfferMsg there). */
+typedef struct ParleyOfferMsg {
+    NetMsgHeader hdr;               /* 0x00 */
+    i32 size;                       /* 0x08 */
+    i32 seq;                        /* 0x0c */
+    i32 mode;                       /* 0x10 the parley window's mode */
+    i32 civ;                        /* 0x14 the sender */
+    i32 other_civ;                  /* 0x18 */
+    i32 kind;                       /* 0x1c */
+    ParleyOfferItem item;           /* 0x20 */
+} ParleyOfferMsg;
+static_assert(sizeof(NetMsg) == 0x2c && sizeof(NetAddrMsg) == 0x30 && sizeof(NetNamedMsg) == 0x74, "");
+static_assert(sizeof(NetServerInfoMsg) == 0x198 && sizeof(NetServerAnswerMsg) == 0x134, "");
+static_assert(sizeof(NetPlayerNodeMsg) == 0x64 && sizeof(NetPlayerListMsg) == 0x280, "");
+static_assert(sizeof(NetWhoseTurnMsg) == 0x14 && sizeof(NetPlayerInfoMsg) == 0x118, "");
 
 /* 1 methods, size 0x48 */
 typedef struct AviPlayerEndCbSetView {
@@ -3627,68 +3654,6 @@ typedef struct MapViewHitViewExt {
     u8 view_surface[1];
 } MapViewHitViewExt;
 
-/* 4 methods, size 0x8 */
-typedef struct NetSession {
-    u8 pad_0[4];
-    union { u32 field_4; u32 player_stats; };
-} NetSession;
-
-/* NetSession where the code reaches past its end: the object is larger */
-typedef struct NetSessionExt {
-    NetSession base;
-    u8 pad_8[484];
-    u32 session_flags;
-    u8 pad_1f0[8];
-    u8 local_player_net_id[4];
-    u32 local_player_slot;
-    u8 player_slots[592];
-    u8 civ_slot_map[232];
-    u8 civ_flags[36];
-    u32 open_slot_count;
-    u8 pad_560[12];
-    u32 last_message_time;
-    u8 pad_570[4];
-    u32 popup_busy;
-    u8 pad_578[8];
-    u8 process_depth[4];
-    u32 max_process_depth;
-    u8 pad_588[8];
-    u8 ack_message_counts[548];
-    u32 pending_count_7b4;
-    u8 pending_count_7b8[4];
-    u32 pending_count_7bc;
-    u8 pending_count_7c0[4];
-    u32 pending_count_7c4;
-    u8 pending_count_7c8[8];
-    u8 pending_count_7d0[4];
-    u32 pending_count_7d4;
-    u8 pending_count_7d8[4];
-    u32 pending_count_7dc;
-    u8 pending_count_7e0[4];
-    u32 pending_count_7e4;
-    u8 pending_count_7e8[4];
-    u32 pending_count_7ec;
-    u8 gather_cargo_busy[4];
-    u32 lift_off_map_busy;
-    u8 delete_cargo_busy[4];
-    u32 destroy_redraw_busy;
-    u8 map_redraw_busy_2[4];
-    u32 stacked_draw_count;
-    u8 pad_808[8];
-    u8 stacked_draw_active[1];
-    u8 stacked_draw_active_b1[1];
-    u8 stacked_draw_active_b2[1];
-    u8 stacked_draw_active_b3[88209];
-    u32 deferred_input_kind;
-    u8 deferred_input_arg1[4];
-    u32 deferred_input_arg2;
-    u8 deferred_input_arg3[4];
-    u32 deferred_input_arg4;
-    u8 deferred_input_arg5[12];
-    u32 deferred_input_window;
-    u8 pad_160c8[4];
-    u32 game_list_head;
-} NetSessionExt;
 
 /* 1 methods, size 0xa0 */
 typedef struct FileSeekView {
@@ -3743,30 +3708,117 @@ typedef struct DiffEngSection {
     union { u32 field_14; u32 data_ptr; };
 } DiffEngSection;
 
-/* 1 methods, size 0x1f0 */
-typedef struct ParleyTitleView {
-    union { u8 pad_0[280]; struct { u8 window_base[276]; u8 wnd_closed[4]; }; };
-    union { u32 field_118; u32 civ_id; };
-    union { u8 pad_11c[208]; struct { u8 gap_11c[64]; u8 title_text[144]; }; };
-    union { u32 field_1ec; u32 parley_kind; };
-} ParleyTitleView;
+/* A caption button of the parley window (0x1c bytes). */
+typedef struct ParleyCaptionButton {
+    i32 id;                         /* 0x00 1 close, 2 zoom out */
+    u8 pad_4[8];
+    i32 width;                      /* 0x0c sprite size */
+    i32 height;                     /* 0x10 */
+    Sprite *sprite;                 /* 0x14 */
+    u32 hotspot;                    /* 0x18 Hotspot * */
+} ParleyCaptionButton;
+static_assert(sizeof(ParleyCaptionButton) == 0x1c, "");
 
-/* ParleyTitleView where the code reaches past its end: the object is larger */
-typedef struct ParleyTitleViewExt {
-    ParleyTitleView base;
-    u8 left_kind[4];
-    u8 right_kind[4];
-    u8 shown_left_kind[1];
-    u8 shown_left_kind_b1[1];
-    u8 shown_left_kind_b2[1];
-    u8 shown_left_kind_b3[1];
-    u8 shown_right_kind[1];
-    u8 shown_right_kind_b1[1];
-    u8 shown_right_kind_b2[1];
-    u8 shown_right_kind_b3[153];
-    u8 chat_input_edit[4];
-    u8 chat_log_edit_2[1];
-} ParleyTitleViewExt;
+/* The diplomacy (parley) and chat window (0x10430 bytes): two instances,
+ * parley_wnd_block and chat_wnd_block (mode 4).  Two sides: [0] left (the
+ * local civ), [1] right; each side shows a list pane (units, cities, advances
+ * or civs) or one of the offer controls.  Controls are kept as u32. */
+typedef struct ParleyWindow {
+    SurfaceWindow base;             /* 0x000 surface and its window (0x48) */
+    u32 closed;                     /* 0x114 */
+    u32 other_civ;                  /* 0x118 the civ on the right side */
+    u32 wnd_x;                      /* 0x11c */
+    u32 wnd_y;                      /* 0x120 */
+    u32 width;                      /* 0x124 */
+    u32 height;                     /* 0x128 */
+    u32 caption_height;             /* 0x12c */
+    u32 client_left;                /* 0x130 RECT */
+    u32 client_top;                 /* 0x134 */
+    u32 client_right;               /* 0x138 */
+    u32 client_bottom;              /* 0x13c */
+    u32 panel_left;                 /* 0x140 RECT inside the frame */
+    u32 panel_top;                  /* 0x144 */
+    u32 panel_right;                /* 0x148 */
+    u32 panel_bottom;               /* 0x14c */
+    u32 init_rect;                  /* 0x150 RECT * of the initial placement */
+    u32 large_layout;               /* 0x154 */
+    u32 built_layout;               /* 0x158 large_layout the controls were made for */
+    char title[96];                 /* 0x15c */
+    u8 pad_1bc[36];
+    u32 divider_y;                  /* 0x1e0 bottom of the side panes */
+    u32 side_selected[2];           /* 0x1e4 the side has something selected */
+    u32 mode;                       /* 0x1ec 4: chat */
+    u32 left_kind;                  /* 0x1f0 */
+    u32 right_kind;                 /* 0x1f4 */
+    u32 shown_left_kind;            /* 0x1f8 */
+    u32 shown_right_kind;           /* 0x1fc */
+    u32 side_kind[2];               /* 0x200 what each side shows */
+    u32 selected_action;            /* 0x208 */
+    u32 exchange_kind[2];           /* 0x20c */
+    u32 demand_kind;                /* 0x214 */
+    u32 treaty_kind;                /* 0x218 */
+    u32 proposal_kind;              /* 0x21c */
+    u32 gift_kind;                  /* 0x220 */
+    u32 map_choice[2];              /* 0x224 */
+    u32 gold_amount[2];             /* 0x22c */
+    ParleyOfferMsg *received_offer; /* 0x234 the offer received */
+    u32 offer_acceptable;           /* 0x238 */
+    ParleyCaptionButton caption_buttons[3];  /* 0x23c */
+    u32 close_button;               /* 0x290 */
+    u32 desc_edit;                  /* 0x294 the offer's description */
+    u32 chat_input_edit;            /* 0x298 */
+    u32 chat_log_edit;              /* 0x29c */
+    u32 send_button;                /* 0x2a0 */
+    u32 clear_button;               /* 0x2a4 */
+    u32 send_checkboxes[8];         /* 0x2a8 chat: per civ */
+    u32 mute_checkboxes[8];         /* 0x2c8 */
+    u32 anonymous_checkbox;         /* 0x2e8 */
+    u32 mute_anonymous_checkbox;    /* 0x2ec */
+    u32 broadcast_checkbox;         /* 0x2f0 */
+    u32 remain_anonymous;           /* 0x2f4 */
+    u32 mute_anonymous;             /* 0x2f8 */
+    u32 broadcast_all;              /* 0x2fc */
+    u32 send_to_civs[8];            /* 0x300 */
+    u32 muted_civs[8];              /* 0x320 */
+    u32 conceal_button;             /* 0x340 */
+    u32 reveal_button;              /* 0x344 */
+    u32 mode_button;                /* 0x348 */
+    u32 mode2_button;               /* 0x34c */
+    u32 never_mind_button;          /* 0x350 */
+    u32 intel_button;               /* 0x354 */
+    u32 accept_button;              /* 0x358 */
+    u32 no_thanks_button;           /* 0x35c */
+    u32 counter_button;             /* 0x360 */
+    u32 side_checkboxes[2];         /* 0x364 */
+    u32 side_radios[2];             /* 0x36c */
+    u32 gold_edits[2];              /* 0x374 */
+    u32 list_scrollbars[2];         /* 0x37c */
+    u32 list_hotspots[2];           /* 0x384 */
+    u32 sort_by_unit_buttons[2];    /* 0x38c */
+    u32 sort_by_city_buttons[2];    /* 0x394 */
+    u32 info_show_buttons[2];       /* 0x39c units/cities' origin: reveal (left), request (right) */
+    u32 info_hide_buttons[2];       /* 0x3a4 hide (left), request done (right) */
+    u32 fill_left;                  /* 0x3ac RECT of the background */
+    u32 fill_top;                   /* 0x3b0 */
+    u32 fill_right;                 /* 0x3b4 */
+    u32 fill_bottom;                /* 0x3b8 */
+    u8 remote_units_revealed;       /* 0x3bc */
+    u8 local_units_revealed;        /* 0x3bd */
+    u8 local_cities_revealed;       /* 0x3be */
+    u8 remote_cities_revealed;      /* 0x3bf */
+    u32 list_rects[8];              /* 0x3c0 RECT per pane */
+    u32 list_columns[2];            /* 0x3e0 */
+    i32 list_counts[2];             /* 0x3e8 items in each pane */
+    u32 list_items[0x1002];         /* 0x3f0 [pane * 0x801 + i] */
+    u32 list_items_b[0x1002];       /* 0x43f8 */
+    u32 list_selected[0x1002];      /* 0x8400 */
+    u32 list_selected_b[0x1002];    /* 0xc408 */
+    i32 list_first_row[2];          /* 0x10410 scroll position, -1 empty */
+    i32 list_anchor_row[2];         /* 0x10418 selection anchor */
+    i32 list_rows[2];               /* 0x10420 rows shown */
+    u32 offer_counts[2];            /* 0x10428 items offered by each side */
+} ParleyWindow;
+static_assert(sizeof(ParleyWindow) == 0x10430, "");
 
 /* 2 methods, size 0x610 */
 typedef struct RadioGroupDtorView {
@@ -3809,22 +3861,6 @@ typedef struct SpaceshipWindowDtorView {
     u8 pad_638[6984];
 } SpaceshipWindowDtorView;
 
-/* 2 methods, size 0x10430 */
-typedef struct ParleyOfferBuffer {
-    union { u8 pad_0[280]; struct { u8 gap_0[72]; u8 inner_wnd[208]; }; };
-    union { u32 field_118; u32 civ_id; };
-    u8 pad_11c[208];
-    union { u32 field_1ec; u32 parley_kind; };
-    union { u8 pad_1f0[16]; struct { u8 left_kind[4]; u8 right_kind[4]; u8 shown_left_kind[4]; u8 shown_right_kind[4]; }; };
-    union { u32 field_200; u32 offer_type_left; };
-    union { u32 field_204; u32 offer_type_right; };
-    union { u8 pad_208[16]; struct { u8 selected_action[4]; u8 barter_give_kind[4]; u8 barter_want_kind[8]; }; };
-    union { u32 field_218; u32 treaty_choice; };
-    union { u8 pad_21c[66060]; struct { u8 proposal_kind[4]; u8 gift_kind[20]; u8 received_offer[284]; u8 never_mind_button_2[28]; u8 barter_give_radio_group[4]; u8 action_radio_group[65720]; }; };
-    union { u32 field_10428; u32 selected_count_left; };
-    union { u32 field_1042c; u32 selected_count_right; };
-} ParleyOfferBuffer;
-
 /* 1 methods, size 0x8 */
 typedef struct WndPaletteView {
     u8 pad_0[4];
@@ -3843,38 +3879,26 @@ typedef struct SpritebtnSetClickHandlerView {
     union { u32 field_2c; u32 on_click; };
 } SpritebtnSetClickHandlerView;
 
-/* 3 methods, size 0x5dd8 */
+/* A received message waiting in the queue (0xc bytes). */
+typedef struct NetMsgSlot {
+    i32 sender;                     /* 0x0 */
+    i32 data;                       /* 0x4 the message (operator_new'd copy) */
+    i32 size;                       /* 0x8 */
+} NetMsgSlot;
+
+/* The queue of received messages (0x5dd8 bytes; net_session_block.msg_queue):
+ * slots 0..399 a ring for priority messages (types 0x2a..0x66), 400..1999 a
+ * ring for the others. */
 typedef struct NetMsgQueue {
-    union { u8 pad_0[24000]; struct { u8 msg_slots[24000]; }; };
-    union { u32 field_5dc0; u32 low_read_index; };
-    union { u32 field_5dc4; u32 main_tail; };
-    union { u32 field_5dc8; u32 main_count; };
-    union { u32 field_5dcc; u32 prio_head; };
-    union { u32 field_5dd0; u32 prio_tail; };
-    union { u32 field_5dd4; u32 prio_count; };
+    NetMsgSlot slots[2000];         /* 0x0000 */
+    u32 main_head;                  /* 0x5dc0 */
+    u32 main_tail;                  /* 0x5dc4 */
+    u32 main_count;                 /* 0x5dc8 */
+    u32 prio_head;                  /* 0x5dcc */
+    u32 prio_tail;                  /* 0x5dd0 */
+    u32 prio_count;                 /* 0x5dd4 */
 } NetMsgQueue;
-
-/* 1 methods, size 0x5dd8 */
-typedef struct NetMsgQueueEnqueueView {
-    union { u8 pad_0[24000]; struct { u8 msg_slots[24000]; }; };
-    union { u32 field_5dc0; u32 normal_head; };
-    union { u32 field_5dc4; u32 normal_tail; };
-    union { u32 field_5dc8; u32 normal_count; };
-    union { u32 field_5dcc; u32 prio_head; };
-    union { u32 field_5dd0; u32 prio_tail; };
-    union { u32 field_5dd4; u32 prio_count; };
-} NetMsgQueueEnqueueView;
-
-/* 1 methods, size 0x5dd8 */
-typedef struct NetMessageQueue {
-    union { u8 pad_0[24000]; struct { u8 msg_slots[24000]; }; };
-    union { u32 field_5dc0; u32 low_read_index; };
-    u8 pad_5dc4[4];
-    union { u32 field_5dc8; u32 low_count; };
-    union { u32 field_5dcc; u32 high_read_index; };
-    u8 pad_5dd0[4];
-    union { u32 field_5dd4; u32 high_count; };
-} NetMessageQueue;
+static_assert(sizeof(NetMsgQueue) == 0x5dd8, "");
 
 /* 1 methods, size 0x710 */
 typedef struct DestroyedCivsWindowCore {
@@ -3966,15 +3990,6 @@ typedef struct MapViewZoomView {
     union { u16 field_2e4; u16 zoom; };
 } MapViewZoomView;
 
-/* 1 methods, size 0x70 */
-typedef struct LobbyListCtorView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 next_id; };
-    u8 pad_8[32];
-    union { u32 field_28; u32 entries; };
-    union { u8 pad_2c[68]; struct { u8 player_slots_area[68]; }; };
-} LobbyListCtorView;
-
 /* 33 methods, size 0x20 */
 typedef struct GameMenu {
     union { u32 field_0; u32 hmenu; };
@@ -3994,22 +4009,6 @@ typedef struct WndMenuCbSetView {
     union { u32 field_98; u32 on_menu; };
 } WndMenuCbSetView;
 
-/* 1 methods, size 0x9 */
-typedef struct NetSessionCtorView {
-    u8 pad_0[8];
-    union { u8 field_8; u8 player_info_msg; };
-} NetSessionCtorView;
-
-/* NetSessionCtorView where the code reaches past its end: the object is larger */
-typedef struct NetSessionCtorViewExt {
-    NetSessionCtorView base;
-    u8 pad_9[1323];
-    u8 connection_title[1];
-    u8 connection_title_b1[1];
-    u8 connection_title_b2[1];
-    u8 connection_title_b3[88985];
-    u8 msg_queue[1];
-} NetSessionCtorViewExt;
 
 /* 1 methods, size 0x2f4 */
 typedef struct DialogAddLineView {

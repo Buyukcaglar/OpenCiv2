@@ -276,7 +276,7 @@ void __cdecl ui_pump_messages_net(void)
 {
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
-    net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+    net_process_messages(&net_session_block,1,0);
   }
   return;
 }
@@ -1695,7 +1695,7 @@ void __cdecl ui_delay_ticks(int ticks)
     win_flush_pending_msgs();
     now_tick = timeGetTime();
     if (2 < game.multiplayer) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
   } while ((int)(now_tick - start_tick) < (ticks * 0x32) / 3);
   return;
@@ -2219,7 +2219,7 @@ void __cdecl ui_reset_window_layout(void)
   status_wnd_hidden = 0;
   wnd_move_to_rect((WndBase *)((i8 *)&status_window_block.status_window_wnd),(iptr)&minimap_wnd_rect_block.status_wnd_rect);
   wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.status_window));
-  if (parley_wnd_block.parley_large_layout == 0) {
+  if ((int)parley_wnd_block.large_layout == 0) {
     width2 = 0x208;
     height2 = 0x14f;
     parley_font_height = font_cached_height((GameFont *)((i8 *)&font_size20));
@@ -2229,17 +2229,17 @@ void __cdecl ui_reset_window_layout(void)
     height2 = 0x1cc;
     parley_font_height = font_cached_height((GameFont *)((i8 *)&font_size30));
   }
-  parley_wnd_block.parley_caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + parley_font_height;
+  parley_wnd_block.caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + parley_font_height;
   width2 = width2 + (panel_padding_x + panel_margin_x) * 2 + 6;
-  height2 = height2 + panel_margin_y * 2 + parley_wnd_block.parley_caption_height * 2 + 0xe;
+  height2 = height2 + panel_margin_y * 2 + (int)parley_wnd_block.caption_height * 2 + 0xe;
   left = wnd_client_width((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
   left = (left >> 1) - (width2 >> 1);
-  parley_wnd_block.parley_wnd_x = left;
+  parley_wnd_block.wnd_x = left;
   client_height = wnd_client_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-  parley_wnd_block.parley_wnd_y = (client_height >> 1) - (height2 >> 1);
-  SetRect(parley_wnd_block.parley_wnd_rect_ptr,left,parley_wnd_block.parley_wnd_y,left + width2,parley_wnd_block.parley_wnd_y + height2);
-  wnd_move_to_rect((WndBase *)((i8 *)&parley_wnd_block.parley_wnd_frame),(iptr)parley_wnd_block.parley_wnd_rect_ptr);
-  if (chat_wnd_block.chat_wnd_large_layout == 0) {
+  parley_wnd_block.wnd_y = (client_height >> 1) - (height2 >> 1);
+  SetRect((LPRECT)parley_wnd_block.init_rect,left,(int)parley_wnd_block.wnd_y,left + width2,(int)parley_wnd_block.wnd_y + height2);
+  wnd_move_to_rect((WndBase *)((i8 *)&parley_wnd_block.base.window_2),(iptr)(LPRECT)parley_wnd_block.init_rect);
+  if ((int)chat_wnd_block.large_layout == 0) {
     width2 = 0x208;
     height2 = 0x14f;
     chat_font_height = font_cached_height((GameFont *)((i8 *)&font_size20));
@@ -2249,16 +2249,16 @@ void __cdecl ui_reset_window_layout(void)
     height2 = 0x1cc;
     chat_font_height = font_cached_height((GameFont *)((i8 *)&font_size30));
   }
-  chat_wnd_block.chat_wnd_row_height = panel_margin_y * 2 + panel_bevel_width * 2 + chat_font_height;
+  chat_wnd_block.caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + chat_font_height;
   width2 = width2 + (panel_padding_x + panel_margin_x) * 2 + 6;
-  height2 = height2 + panel_margin_y * 2 + chat_wnd_block.chat_wnd_row_height * 2 + 0xe;
+  height2 = height2 + panel_margin_y * 2 + (int)chat_wnd_block.caption_height * 2 + 0xe;
   left = wnd_client_width((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
   left = (left >> 1) - (width2 >> 1);
-  chat_wnd_block.chat_wnd_x = left;
+  chat_wnd_block.wnd_x = left;
   client_height = wnd_client_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
-  chat_wnd_block.chat_wnd_y = (client_height >> 1) - (height2 >> 1);
-  SetRect(chat_wnd_block.chat_wnd_init_rect,left,chat_wnd_block.chat_wnd_y,left + width2,chat_wnd_block.chat_wnd_y + height2);
-  wnd_move_to_rect((WndBase *)((i8 *)&chat_wnd_block.chat_wnd_frame),(iptr)chat_wnd_block.chat_wnd_init_rect);
+  chat_wnd_block.wnd_y = (client_height >> 1) - (height2 >> 1);
+  SetRect((LPRECT)chat_wnd_block.init_rect,left,(int)chat_wnd_block.wnd_y,left + width2,(int)chat_wnd_block.wnd_y + height2);
+  wnd_move_to_rect((WndBase *)((i8 *)&chat_wnd_block.base.window_2),(iptr)(LPRECT)chat_wnd_block.init_rect);
   for (view = 1; view < 8; view++) {
     if (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0) {
       *(i16 *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) = 0;
@@ -3029,7 +3029,7 @@ void __cdecl menu_command(i32 menu,int cmd)
               science_advisor_show(human_civ[0]);
               break;
             case 0x507:
-              parley_wnd_open((ViewWindow *)((i8 *)&chat_wnd_block.chat_wnd),0,4);
+              parley_wnd_open(&chat_wnd_block,0,4);
               break;
             case 0x508:
               casualty_timeline_show(human_civ[0]);
@@ -4795,7 +4795,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
         }
       }
       else {
-        crt_strcat(caption,((i8 *)&net_session_block.net_slot_player_names) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + net_session_block.mp_turn_civ * 4) * 0x54);
+        crt_strcat(caption,((i8 *)&net_session_block.net_slot_player_names) + net_session_block.net_civ_slots[net_session_block.mp_turn_civ] * 0x54);
       }
     }
     else {

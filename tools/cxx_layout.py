@@ -52,8 +52,13 @@ def structs():
     return out
 
 
+# Win32 structs the game reads through raw offsets (platform/win32_types.h).
+EXTRA = {'RECT': ['left', 'top', 'right', 'bottom']}
+
+
 def main():
     ss = structs()
+    ss.update(EXTRA)
     src = ['#include "auto_common.h"', '#include <stddef.h>',
            'template<class T> const char *tn() { return __PRETTY_FUNCTION__; }',
            '#define M(S, m) printf(#S "\\t" #m "\\t%u\\t%u\\t%s\\n", (unsigned)offsetof(S, m), '

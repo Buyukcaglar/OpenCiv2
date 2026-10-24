@@ -2201,7 +2201,7 @@ mapview_draw_tile(ViewWindow *self,iptr x,iptr y,int civ)
                      (int)(short)self->lux_rate_sel,-1);
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
-    net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+    net_process_messages(&net_session_block,1,0);
   }
   result = map_in_bounds(x,y);
   if (result != 0) {
@@ -2463,12 +2463,12 @@ void __thiscall mapview_blit_with_net_pump(DibSurface *self)
 {
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
-    net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+    net_process_messages(&net_session_block,1,0);
   }
   wnd_blit_surface(self);
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
-    net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+    net_process_messages(&net_session_block,1,0);
   }
   return;
 }

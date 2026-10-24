@@ -117,8 +117,7 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
         }
     }
     else {
-        net_send_message(0x9f, *(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),
+        net_send_message(0x9f, net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,
                            all_govs, 0, 0, 0, 0, 0, 0, 0);
     }
     /* funclet 0055c679 */

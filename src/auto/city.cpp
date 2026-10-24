@@ -640,8 +640,7 @@ void __cdecl taxrate_dialog_show(iptr civ)
       city_window_refresh((FrameWindow *)((i8 *)&city_window_block.city_window));
     }
     else {
-      net_send_message(0x9d,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),0,0,0,
+      net_send_message(0x9d,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,0,0,0,
                          0,0,0,0,0);
     }
     eh_state = 0xffffffff;
@@ -670,8 +669,7 @@ void __cdecl taxrate_enforce_max_rate(iptr civ)
       }
     }
     else {
-      net_send_message(0x9e,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),0,0,0,
+      net_send_message(0x9e,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,0,0,0,
                          0,0,0,0,0);
     }
   }
@@ -3105,7 +3103,7 @@ uptr __cdecl city_create(iptr x,iptr y,iptr civ)
   int score;
   
   net_session_block.city_create_busy = 1;
-  if ((game.multiplayer < 3) || (is_host = net_is_host(((iptr *)&net_session_block.net_session)), is_host != '\0')) {
+  if ((game.multiplayer < 3) || (is_host = net_is_host(&net_session_block), is_host != '\0')) {
     for (city = 0; ((int)city < (int)game.num_cities && (cities[city].id != 0));
         city = city + 1) {
     }
@@ -3250,7 +3248,7 @@ uptr __cdecl city_create(iptr x,iptr y,iptr civ)
     net_send_message(0x3b,0,x,y,civ,0,0,0,0,0);
     start_ticks = timer_ticks();
     while ((net_session_block.nm_city_created_result == 0xfffffffe && (now_ticks = timer_ticks(), now_ticks - start_ticks < 0xe10))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+      net_process_messages(&net_session_block,1,1);
     }
     if (net_session_block.nm_city_created_result == 0xfffffffe) {
       dbg_log((const char *)&str_create_city_connection_to_server_timed_o);
@@ -3258,7 +3256,7 @@ uptr __cdecl city_create(iptr x,iptr y,iptr civ)
       game_loop_active = 0;
     }
     while ((net_session_block.net_msgq_priority_count != 0 || (city = net_session_block.nm_city_created_result, net_session_block.net_msgq_normal_count != 0))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
   }
   return city;
@@ -3381,7 +3379,7 @@ void __cdecl city_delete(uptr city,i32 from_network)
   
   if ((-1 < (int)city) && (cities[city].id != 0)) {
     net_session_block.city_delete_busy = 1;
-    if ((game.multiplayer < 3) || (is_host = net_is_host(((iptr *)&net_session_block.net_session)), is_host != '\0')) {
+    if ((game.multiplayer < 3) || (is_host = net_is_host(&net_session_block), is_host != '\0')) {
       saved_refresh_lock = city_window_block.city_window_refresh_locked;
       city_window_block.city_window_refresh_locked = 1;
       x2 = (int)cities[city].x;
@@ -3486,7 +3484,7 @@ destroy_unit:
     net_send_message(0x39,0,city,0,0,0,0,0,0,0);
     saved_refresh_lock = timer_ticks();
     while ((net_session_block.net_city_deleted_ack == -2 && (x2 = timer_ticks(), x2 - saved_refresh_lock < 0xe10))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+      net_process_messages(&net_session_block,1,1);
     }
     if (net_session_block.net_city_deleted_ack == -2) {
       dbg_log((const char *)&str_delete_city_connection_to_server_timed_o);
@@ -3494,7 +3492,7 @@ destroy_unit:
       game_loop_active = 0;
     }
     while ((net_session_block.net_msgq_priority_count != 0 || (net_session_block.net_msgq_normal_count != 0))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+      net_process_messages(&net_session_block,1,0);
     }
   }
   return;
@@ -7546,8 +7544,7 @@ void __cdecl city_incite_transfer(iptr city,iptr civ,i32 reason)
       text_set_string_arg(2,(const char *)x);
       popup_game((const char *)&str_civilwar);
       if (((1 << (civ3 & 0x1f) & (uint)game.human_players) != 0) && (2 < game.multiplayer)) {
-        net_send_text_args(0x5e,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),3,0,0,
+        net_send_text_args(0x5e,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3,0,0,
                            0);
       }
     }
@@ -8382,7 +8379,7 @@ int __cdecl city_acquire_wonder(iptr civ,iptr city,iptr wonder,iptr cost,iptr im
   
   acquired = 0;
   net_session_block.city_acquire_wonder_busy = 1;
-  if ((game.multiplayer < 3) || (is_host = net_is_host(((iptr *)&net_session_block.net_session)), is_host != '\0')) {
+  if ((game.multiplayer < 3) || (is_host = net_is_host(&net_session_block), is_host != '\0')) {
     if (game.wonder_city[wonder] == -1) {
       acquired = 1;
       game.wonder_city[wonder] = (i16)city;
@@ -8404,7 +8401,7 @@ int __cdecl city_acquire_wonder(iptr civ,iptr city,iptr wonder,iptr cost,iptr im
     net_send_message(0x47,0,civ,city,wonder,cost,impr,0,0,0);
     start_time = timer_ticks();
     while ((net_session_block.nm_wonder_acquired_result == -2 && (now = timer_ticks(), now - start_time < 0xe10))) {
-      net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,1);
+      net_process_messages(&net_session_block,1,1);
     }
     if (net_session_block.nm_wonder_acquired_result == -2) {
       dbg_log((const char *)&str_acquire_wonder_connection_to_server_time);
@@ -8412,7 +8409,7 @@ int __cdecl city_acquire_wonder(iptr civ,iptr city,iptr wonder,iptr cost,iptr im
     }
     else {
       while ((net_session_block.net_msgq_priority_count != 0 || (acquired = net_session_block.nm_wonder_acquired_result, net_session_block.net_msgq_normal_count != 0))) {
-        net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+        net_process_messages(&net_session_block,1,0);
       }
     }
   }
@@ -10340,9 +10337,7 @@ complete_improvement:
                       city_notify_dialog((iptr)&str_manhattan,city,(iptr)&caption_close_button_sprite_block.city_notify_sprite);
                     }
                     else if (2 < game.multiplayer) {
-                      net_send_text_args(0x46,*(i32 *)
-                                               (((i8 *)&net_session_block.net_player_slots) +
-                                               *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),1,0,
+                      net_send_text_args(0x46,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,1,0,
                                          city,0);
                     }
                   }
@@ -16048,7 +16043,7 @@ void __cdecl city_change_idle_autoclose(void)
       }
     }
   }
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   return;
 }
 
@@ -17366,12 +17361,11 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int capture_mode)
         }
         else {
           sprite_picker_sprite_block.net_can_escape_reply = -1;
-          net_send_text_args(0x17,*(i32 *)
-                                   (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),3
+          net_send_text_args(0x17,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3
                              ,1,human_civ[0],0);
           improvement2 = timer_ticks();
           while ((value = timer_ticks(), value - improvement2 < 0xe10 && (sprite_picker_sprite_block.net_can_escape_reply == -1))) {
-            net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+            net_process_messages(&net_session_block,1,0);
           }
           if (sprite_picker_sprite_block.net_can_escape_reply == -1) {
             save_palace = 0;
@@ -17395,8 +17389,7 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int capture_mode)
         popup_game_with_city((const char *)&str_escape_2,city2);
       }
       else {
-        net_send_text_args(0x18,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),3,0
+        net_send_text_args(0x18,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3,0
                            ,city2,0);
       }
       if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) {
@@ -17471,8 +17464,7 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int capture_mode)
         text_set_string_arg(2,(const char *)&map_views_block.text_buffer);
         if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
             (2 < game.multiplayer)) && (human_civ[0] != civ2)) {
-          net_send_text_args(0x1a,*(i32 *)
-                                   (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),3
+          net_send_text_args(0x1a,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3
                              ,0,improvement2,0);
         }
         if ((human_civ[0] == civ) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
@@ -17601,9 +17593,7 @@ shrink_city:
             map_redraw_tile_all_views(x2,y);
           }
           else if (2 < game.multiplayer) {
-            net_send_message(0x72,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ3 * 4) * 0x54
-                                     ),x2,y,0,0,0,0,0,0);
+            net_send_message(0x72,net_session_block.net_slots[net_session_block.net_civ_slots[civ3]].id,x2,y,0,0,0,0,0,0);
           }
           if (((*(byte *)&civs[civ3].treaties[civ] & 8) == 0) &&
              (((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 34) + civ * 0x594) & 0x10) == 0 ||
@@ -17625,9 +17615,7 @@ shrink_city:
                   popup_city_picture_zoom((const char *)&str_citycapture2_2,city,0x46,1,civ);
                 }
                 else if (2 < game.multiplayer) {
-                  net_send_text_args(0x1e,*(i32 *)
-                                           (((i8 *)&net_session_block.net_player_slots) +
-                                           *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ3 * 4) * 0x54),4,1,
+                  net_send_text_args(0x1e,net_session_block.net_slots[net_session_block.net_civ_slots[civ3]].id,4,1,
                                      civ,city);
                 }
               }
@@ -17641,9 +17629,7 @@ shrink_city:
                 popup_city_picture_zoom((const char *)&str_cityloseally_2,city,0x46,1,civ);
               }
               else if (2 < game.multiplayer) {
-                net_send_text_args(0x1d,*(i32 *)
-                                         (((i8 *)&net_session_block.net_player_slots) +
-                                         *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ3 * 4) * 0x54),4,1,civ
+                net_send_text_args(0x1d,net_session_block.net_slots[net_session_block.net_civ_slots[civ3]].id,4,1,civ
                                    ,city);
               }
             }
@@ -17657,9 +17643,7 @@ shrink_city:
               popup_city_picture_zoom((const char *)&str_citywinally_2,city,0x46,1,civ);
             }
             else if (2 < game.multiplayer) {
-              net_send_text_args(0x1c,*(i32 *)
-                                       (((i8 *)&net_session_block.net_player_slots) +
-                                       *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ3 * 4) * 0x54),5,1,civ,
+              net_send_text_args(0x1c,net_session_block.net_slots[net_session_block.net_civ_slots[civ3]].id,5,1,civ,
                                  city);
             }
           }
@@ -17678,38 +17662,28 @@ shrink_city:
     }
     if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) && (2 < game.multiplayer))
        && (human_civ[0] != civ2)) {
-      net_send_message(0x89,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),
+      net_send_message(0x89,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,
                          city,0,0,0,0,0,0,0);
-      net_send_message(0x8a,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),0,0,0
+      net_send_message(0x8a,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,0,0,0
                          ,0,0,0,0,0);
-      net_send_message(0x71,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),x2
+      net_send_message(0x71,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,x2
                          ,y,civ,0,0,0,0,0);
-      net_send_message(0x72,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),x2
+      net_send_message(0x72,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,x2
                          ,y,0,0,0,0,0,0);
-      net_send_text_args(0x1b,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),4,1,
+      net_send_text_args(0x1b,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,4,1,
                          civ,city);
     }
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) && (2 < game.multiplayer))
        && (human_civ[0] != civ)) {
-      net_send_message(0x89,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),
+      net_send_message(0x89,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,
                          city,0,0,0,0,0,0,0);
-      net_send_message(0x8a,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),0,0,0
+      net_send_message(0x8a,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,0,0,0
                          ,0,0,0,0,0);
-      net_send_message(0x71,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),x2,
+      net_send_message(0x71,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,x2,
                          y,civ,0,0,0,0,0);
-      net_send_message(0x72,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),x2,
+      net_send_message(0x72,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,x2,
                          y,0,0,0,0,0,0);
-      net_send_text_args(0x1b,*(i32 *)
-                               (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ * 4) * 0x54),4,1,
+      net_send_text_args(0x1b,net_session_block.net_slots[net_session_block.net_civ_slots[civ]].id,4,1,
                          civ,city);
     }
   }
@@ -17906,8 +17880,7 @@ check_civ_destroyed:
           if (((2 < game.multiplayer) &&
               ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
              (human_civ[0] != civ2)) {
-            net_send_message(0x7a,*(i32 *)
-                                     (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54)
+            net_send_message(0x7a,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id
                                ,0x22,1,0,0,0,0,0,0);
           }
         }
@@ -17944,8 +17917,7 @@ check_civ_destroyed:
       }
       if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
           (2 < game.multiplayer)) && (human_civ[0] != civ2)) {
-        net_send_text_args(0x1f,*(i32 *)
-                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + civ2 * 4) * 0x54),2,0
+        net_send_text_args(0x1f,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,2,0
                            ,unit,0);
       }
     }

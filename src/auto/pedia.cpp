@@ -3365,7 +3365,7 @@ void __thiscall pedia_history_push(ScaledWindowView *self)
 void __cdecl pedia_modal_idle(void)
 
 {
-  net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
+  net_process_messages(&net_session_block,1,0);
   if ((pedia_window_block.pedia_modal_active == 0) || (pedia_window_block.pedia_closed == 1)) {
     wnd_end_modal_loop((ModalMenuWindow *)((i8 *)&pedia_window_block.pedia_window_wnd));
     pedia_window_block.pedia_modal_active = 0;

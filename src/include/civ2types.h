@@ -616,6 +616,88 @@ static_assert(sizeof(WaveSource) == 0xbc, "");
 static_assert(sizeof(BitmapInfoHeader) == 0x28, "");
 #endif
 
+/* Network (network.cpp). */
+/* A game announced on the network (0x124 bytes): the payload of the server's
+ * info message (net_fill_game_info), copied into a node of the found games
+ * list (net_session_block.net_found_games, sorted by game name). */
+typedef struct NetGameInfo {
+    char host_address[32];          /* 0x00 the server's address: the list's key */
+    struct NetGameInfo *next;       /* 0x20 found games list */
+    struct NetGameInfo *prev;       /* 0x24 */
+    i32 last_seen;                  /* 0x28 timer_ticks() when last announced */
+    i32 list_id;                    /* 0x2c id in the game list window */
+    char version[64];               /* 0x30 */
+    char game_name[32];             /* 0x70 */
+    char host_name[32];             /* 0x90 the hosting player */
+    i16 open_game;                  /* 0xb0 */
+    u8 difficulty;                  /* 0xb2 */
+    u8 barbarian_activity;          /* 0xb3 */
+    u8 civs_alive;                  /* 0xb4 bit per civ */
+    u8 player_mask;                 /* 0xb5 bit per player */
+    u8 pad_b6[2];
+    i32 turn_time_limit_ms;         /* 0xb8 0: none */
+    char scenario_name[80];         /* 0xbc */
+    i16 double_moves;               /* 0x10c */
+    i16 double_production;          /* 0x10e */
+    u16 game_flags;                 /* 0x110 */
+    i16 first_launch_turn;          /* 0x112 */
+    i16 year_increment;             /* 0x114 */
+    i16 start_year;                 /* 0x116 */
+    i16 turn;                       /* 0x118 */
+    i16 map_width;                  /* 0x11a */
+    i16 map_height;                 /* 0x11c */
+    i16 simultaneous;               /* 0x11e */
+    i16 field_120;                  /* 0x120 below 3: the player count is not shown */
+    u8 pad_122[2];
+} NetGameInfo;
+#ifdef __cplusplus
+static_assert(sizeof(NetGameInfo) == 0x124, "");
+#endif
+/* A player of the network game (0x54 bytes; net_session_block.net_slots,
+ * slot 0 is the local player). */
+typedef struct NetPlayerSlot {
+    i32 id;                         /* 0x00 the player's connection id */
+    char address[32];               /* 0x04 */
+    char name[32];                  /* 0x24 */
+    i32 field_44;                   /* 0x44 */
+    i32 lobby_id;                   /* 0x48 entry in the lobby list */
+    i8 is_host;                     /* 0x4c */
+    i8 active;                      /* 0x4d */
+    u8 pad_4e[2];
+    i32 civ;                        /* 0x50 */
+} NetPlayerSlot;
+/* A queued draw request of the network stacked-draw queue (0x40 bytes). */
+typedef struct NetStackedDraw {
+    i32 kind;                       /* 0x00 */
+    i32 args[15];                   /* 0x04 */
+} NetStackedDraw;
+/* A unit lost, in a civ's casualty log (0x22 bytes;
+ * net_session_block.casualty_log, 300 per civ). */
+typedef struct CasualtyEntry {
+    i16 unit_type;                  /* 0x00 */
+    i16 x;                          /* 0x02 */
+    i16 y;                          /* 0x04 */
+    i16 year;                       /* 0x06 */
+    i16 killer_color;               /* 0x08 */
+    char killer_name[24];           /* 0x0a */
+} CasualtyEntry;
+/* A civ's lock on map tiles during a network move (0x18 bytes;
+ * net_map_lock_slots_block.net_map_locks). */
+typedef struct NetMapLock {
+    i32 state;                      /* 0x00 */
+    i32 replies;                    /* 0x04 */
+    i32 src_x;                      /* 0x08 */
+    i32 src_y;                      /* 0x0c */
+    i32 dst_x;                      /* 0x10 */
+    i32 dst_y;                      /* 0x14 */
+} NetMapLock;
+#ifdef __cplusplus
+static_assert(sizeof(NetPlayerSlot) == 0x54, "");
+static_assert(sizeof(NetMapLock) == 0x18, "");
+static_assert(sizeof(CasualtyEntry) == 0x22, "");
+static_assert(sizeof(NetStackedDraw) == 0x40, "");
+#endif
+
 #pragma pack(pop)
 
 #endif
