@@ -37,6 +37,18 @@ void plat_present(void)
     host_present(screen->bits, screen->stride);
 }
 
+/* Closing the window during a game: asked first (Cancel the default:
+   Enter does not end a game by accident); 1 quit, 0 not, -1 no message
+   box on this host. */
+static int confirm_quit(void)
+{
+    static const char *const labels[2] = {"Quit", "Cancel"};
+    static const int ids[2] = {1, 0};
+    return host_message_box(1, "Civilization II",
+                            "Quit Civilization II?\n\nThe game in progress ends here; whatever was not saved is lost.",
+                            2, labels, ids, 1, 1);
+}
+
 /* Now, whatever the frame rate: before waiting for input (menus). */
 void plat_present_now(void)
 {
@@ -61,12 +73,29 @@ int msg_pump_events(int wait)
         n++;
         switch (e.type) {
         case HOST_EV_QUIT:
-            if (active_wnd)
-                PostMessageA(active_wnd, WM_SYSCOMMAND, SC_CLOSE, 0);
-            else
+            /* The window closed (its close button, Alt+F4, its menu's
+               Close): at once without a game, else once confirmed (or as
+               the game closes its window, without a message box). */
+            if (!game_in_play())
                 exit(0);
+            switch (confirm_quit()) {
+            case 1:
+                exit(0);
+            case -1:
+                if (active_wnd)
+                    PostMessageA(active_wnd, WM_SYSCOMMAND, SC_CLOSE, 0);
+                else
+                    exit(0);
+            }
             break;
         case HOST_EV_KEYDOWN:
+            /* Ctrl+Q (Game > Quit) with no game in progress: exits at once,
+               as the menu's Quit does, also while a video plays, when the
+               game reads no keys. */
+            if (e.vk == 'Q' && GetKeyState(VK_CONTROL) < 0 && GetKeyState(VK_MENU) >= 0 &&
+                GetKeyState(VK_SHIFT) >= 0 && !game_in_play())
+                exit(0);
+            /* fall through */
         case HOST_EV_KEYUP:
             input_key(e.vk, e.type == HOST_EV_KEYDOWN);
             break;

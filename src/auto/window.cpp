@@ -3276,55 +3276,49 @@ void __cdecl menu_build_main(void)
   i32 editor_checked;
   i32 cheat_checked;
   i32 cheat_disabled;
+  /* (port) the Game menu's commands in order, 0 a separator */
+  static const i32 game_menu_cmds[] = {0x101,0x102,0x103,0x104,0x105,0,0x106,0,0x110,0x120,0x130,0,
+                                       0x131,0x132,0,0x1f0,0x1f1};
+  char game_labels[13][0x100];
+  int game_label_count;
+  int has_profile;
+  i32 line_pos;
+  int i;
   
   menu_reset((GameMenu *)((i8 *)&main_menu_block.main_menu),0x1bbc);
   status = text_open_section((const char *)&str_menu,(const char *)&str_game_5);
   if (status == 0) {
     item_arg = (i32)text_read_line(1);
     menu_add_menu((GameMenu *)((i8 *)&main_menu_block.main_menu),1,(char *)item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x101,(const char *)label,item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x102,(const char *)label,item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x103,(const char *)label,item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x104,(const char *)label,item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x105,(const char *)label,item_arg);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x106,(const char *)label,item_arg);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x110,(const char *)label,item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x120,(const char *)label,item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x130,(const char *)label,item_arg);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x131,(const char *)label,item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x132,(const char *)label,item_arg);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x1f0,(const char *)label,item_arg);
-    item_arg = 0;
-    label = (iptr)text_read_line(1);
-    menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0x1f1,(const char *)label,item_arg);
+    /* (port) The Game menu's labels, in order, are those of the 5.4.0f
+       patch's MENU.TXT (13, with Game Profile, 0x105); the CD's has 12,
+       without it, and read as 13 each label from Pick Music on went to the
+       item before its own (Quit retired, Retire changed the timer).  A
+       13th line that is not a label (blank, the next @section, a comment)
+       means the CD's: the profile item is left out and the line read
+       again by what follows. */
+    for (game_label_count = 0; game_label_count < 13; game_label_count++) {
+      if (game_label_count == 12) {
+        line_pos = _ftell(text_file_handle);
+      }
+      label = (iptr)text_read_line(1);
+      crt_strcpy(game_labels[game_label_count],label != 0 ? (char *)label : (char *)"");
+    }
+    has_profile = (game_labels[12][0] != '\0') && (game_labels[12][0] != '@') && (game_labels[12][0] != ';');
+    if ((has_profile == 0) && (label != 0)) {
+      _fseek(text_file_handle,line_pos,0);
+    }
+    game_label_count = 0;
+    for (i = 0; i < (int)(sizeof game_menu_cmds / sizeof game_menu_cmds[0]); i++) {
+      if (game_menu_cmds[i] == 0) {
+        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,0,0,0);
+      }
+      else if ((game_menu_cmds[i] != 0x105) || (has_profile != 0)) {
+        menu_add_item((GameMenu *)((i8 *)&main_menu_block.main_menu),1,game_menu_cmds[i],
+                      game_labels[game_label_count],0);
+        game_label_count++;
+      }
+    }
     status = text_open_section(0,(const char *)&str_kingdom);
     if (status == 0) {
       item_arg = (i32)text_read_line(1);
