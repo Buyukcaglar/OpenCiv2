@@ -3710,11 +3710,11 @@ extern i32 snd_wave_buffers_ready_i32;
 extern i16 snd_wave_stop_pending_i16;
 extern u8 snd_wave_stop_pending_i16_rest[2];
 extern i32 snd_avi_stream_started;
-extern iptr snd_wave_buffer_ring;
-extern iptr snd_wave_spare_buffers;
-extern iptr snd_wave_cur_buffer;
+extern WaveBuffer *snd_wave_buffer_ring;
+extern WaveBuffer *snd_wave_spare_buffers;
+extern WaveBuffer *snd_wave_cur_buffer;
 extern LONG snd_wave_total_buffer_bytes;
-extern iptr snd_wave_sources;
+extern WaveSource *snd_wave_sources;
 extern i32 snd_stop_drained_msg_count_i32;
 extern char str_sound_error[12];
 extern char str_this_sound_format_is_not_supported[36];
@@ -3791,7 +3791,7 @@ extern i32 avi_video_stream[1];
 extern i32 avi_audio_stream[1];
 extern int avi_file_loaded;
 extern int avi_playing;
-extern iptr avi_active_window;
+extern AviPlayer *avi_active_window;
 #pragma pack(push, 1)
 struct avi_blit_union_left_block {
     i32 avi_blit_union_left[1];  /* 00638dd8 */

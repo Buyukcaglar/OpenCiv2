@@ -3109,28 +3109,28 @@ i32 __cdecl snd_wave_get_position_ms(void); /* 005d5643, hand-written */
 i32 __cdecl snd_wave_get_position_samples(void); /* 005d5706, hand-written */
 i32 __cdecl snd_avi_stream_feed(uint sample_count); /* 005d57b1 */
 i32 __cdecl snd_avi_stream_stop(void); /* 005d5b88 */
-void __cdecl snd_avi_stream_refill(iptr source); /* 005d5bec */
+void __cdecl snd_avi_stream_refill(WaveSource *source); /* 005d5bec */
 i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr); /* 005d5d11 */
 i16 __cdecl snd_avi_stream_start(void); /* 005d5f91 */
 short __cdecl snd_wave_play(const char *filename,uint flags,i32 sound_id,i32 sound_tag); /* 005d6038 */
 void __cdecl snd_wave_free_by_id(i32 sound_id); /* 005d61ab */
-void __cdecl snd_wave_stream_refill(iptr source); /* 005d6283 */
+void __cdecl snd_wave_stream_refill(WaveSource *source); /* 005d6283 */
 LPVOID __cdecl snd_global_alloc_lock(SIZE_T size,iptr handle_out); /* 005d63c5 */
 void __cdecl snd_global_free(HGLOBAL handle); /* 005d6430 */
 MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint buffer_count); /* 005d645e */
 void __cdecl snd_wave_add_buffers(int count); /* 005d6685 */
 void __cdecl snd_wave_remove_buffers(int count); /* 005d673a */
 void __cdecl snd_wave_set_buffer_count(uint count); /* 005d687b */
-i32 __cdecl snd_wave_write_pending(char *buffer); /* 005d6947 */
+i32 __cdecl snd_wave_write_pending(WaveBuffer *buffer); /* 005d6947 */
 void __cdecl snd_wave_stop_all(void); /* 005d6a2c */
 void __cdecl snd_fill_silence_u8(iptr dest,uint length); /* 005d6b4c */
 i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out); /* 005d6b89 */
-i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr); /* 005d6c99 */
-i32 __cdecl snd_wave_mix_buffer(i32 *hdr); /* 005d717f */
-iptr __cdecl snd_wave_free(iptr prev,iptr source); /* 005d7494 */
-i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length); /* 005d753e */
-i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length); /* 005d778c */
-i32 __cdecl snd_avi_fill_buffer(iptr buffer,iptr source); /* 005d791b */
+i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,WaveHeader *wave_hdr); /* 005d6c99 */
+i32 __cdecl snd_wave_mix_buffer(WaveHeader *hdr); /* 005d717f */
+WaveSource * __cdecl snd_wave_free(WaveSource *prev,WaveSource *source); /* 005d7494 */
+i32 __cdecl snd_wave_copy_source(WaveSource *source,int dst,uint length); /* 005d753e */
+i32 __cdecl snd_wave_mix_source(WaveSource *source,i32 dst,uint length); /* 005d778c */
+i32 __cdecl snd_avi_fill_buffer(WaveBuffer *buffer,WaveSource *source); /* 005d791b */
 FileObject * __thiscall file_obj_init(FileObject *self); /* 005d7c00 */
 i32 __thiscall file_obj_close(FileObject *self); /* 005d7c6e */
 void __thiscall spritebtn_init_from_sprite(SpriteButton *self,WndPaletteView *parent,i32 ctrl_id,int x,int y, int width,int height,iptr sprite,uint bg_color); /* 005d7cb0 */
@@ -3256,18 +3256,18 @@ void __cdecl menu_hmenu_set_item_text(HMENU hmenu,int menu_pos,int item_pos,LPCS
 void __cdecl wnd_install_paint_proc(iptr surface,iptr wnd); /* 005e1880 */
 i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam); /* 005e18ff */
 void __cdecl avi_update_current_frame(void); /* 005e1c70 */
-int __cdecl avi_open_file(iptr player,const char *filename); /* 005e1c8e */
-void __cdecl avi_play_start(int avi); /* 005e22ed, hand-written */
+int __cdecl avi_open_file(AviPlayer *player,const char *filename); /* 005e1c8e */
+void __cdecl avi_play_start(AviPlayer *avi); /* 005e22ed, hand-written */
 i32 __stdcall avi_ic_decompress_ex_begin(i32 hic,i32 flags,iptr bi_src,i32 src_bits, i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst ,i32 dst_bits,i32 x_dst,i32 y_dst,i32 width_dst, i32 height_dst); /* 005e250c */
 i32 __stdcall avi_ic_decompress_ex_query(i32 hic,i32 flags,iptr bi_src,i32 src_bits, i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst ,i32 dst_bits,i32 x_dst,i32 y_dst,i32 width_dst, i32 height_dst); /* 005e2583 */
-void __cdecl avi_play_pause(iptr player); /* 005e2675 */
-void __cdecl avi_close(iptr player); /* 005e2799 */
-void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw); /* 005e28cd */
-int __cdecl avi_decode_frame(iptr player,int decode_flags); /* 005e2997 */
+void __cdecl avi_play_pause(AviPlayer *player); /* 005e2675 */
+void __cdecl avi_close(AviPlayer *player); /* 005e2799 */
+void __cdecl avi_seek_frame(AviPlayer *player,uint frame_index,int redraw); /* 005e28cd */
+int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags); /* 005e2997 */
 i32 __stdcall avi_ic_decompress_ex(i32 hic,i32 flags,iptr bi_src,i32 src_bits, i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst ,i32 dst_bits,i32 x_dst,i32 y_dst,i32 width_dst, i32 height_dst); /* 005e2c5a */
-void __cdecl avi_update_frame(iptr player); /* 005e2cd1 */
-void __cdecl avi_apply_palette(iptr player,GamePalette *palette); /* 005e30a1 */
-void __cdecl avi_restart_decompress(iptr player,int transparent); /* 005e32b2 */
+void __cdecl avi_update_frame(AviPlayer *player); /* 005e2cd1 */
+void __cdecl avi_apply_palette(AviPlayer *player,GamePalette *palette); /* 005e30a1 */
+void __cdecl avi_restart_decompress(AviPlayer *player,int transparent); /* 005e32b2 */
 void __thiscall avi_player_call_end_callback(AviPlayerEndCbCallView *self); /* 005e3550 */
 void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *self); /* 005e3580 */
 i32 * __cdecl dib_create(iptr rect); /* 005e35b0 */

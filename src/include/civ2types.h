@@ -511,6 +511,111 @@ typedef struct GameState {
     u8 civ_by_rank[8];              /* 0x142 civ at each rank; [7] = strongest civ */
 } GameState;
 
+/* Sound mixer (sound.cpp).  32-bit layout: the original keeps pointers and
+ * Win32 handles (HMMIO, HGLOBAL) in 4-byte slots. */
+/* A waveOut header (WAVEHDR, 0x20 bytes) at the start of a buffer's sample
+ * block; the samples follow it. */
+typedef struct WaveHeader {
+    i32 data;                       /* 0x00 lpData: the samples */
+    u32 length;                     /* 0x04 dwBufferLength */
+    u32 bytes_recorded;             /* 0x08 */
+    struct WaveBuffer *owner;       /* 0x0c dwUser: the buffer it belongs to */
+    u32 flags;                      /* 0x10 dwFlags (WHDR_DONE = 1) */
+    u32 loops;                      /* 0x14 */
+    i32 next;                       /* 0x18 lpNext */
+    i32 reserved;                   /* 0x1c */
+} WaveHeader;
+
+/* One output buffer (0x20 bytes, GlobalAlloc'd), a ring linked by next
+ * (snd_wave_buffer_ring; unused ones in snd_wave_spare_buffers). */
+typedef struct WaveBuffer {
+    WaveHeader *hdr;                /* 0x00 header + samples (bytes + 0x20) */
+    u32 data_handle;                /* 0x04 HGLOBAL of hdr */
+    u32 handle;                     /* 0x08 HGLOBAL of this buffer */
+    u32 flags;                      /* 0x0c 1 spare, 2 stream ended, 8 filled, 0x10 end played,
+                                       0x20 queued, 0x40 mixed; bits 7..14 index in the ring */
+    i32 data;                       /* 0x10 the samples (= hdr->data) */
+    i32 data_end;                   /* 0x14 */
+    i32 length;                     /* 0x18 bytes */
+    struct WaveBuffer *next;        /* 0x1c */
+} WaveBuffer;
+
+/* One playing sound (0xbc bytes, GlobalAlloc'd): a wave file read through
+ * mmio, a streamed wave file, or an AVI audio stream (kind 4); a list linked
+ * by next (snd_wave_sources). */
+typedef struct WaveSource {
+    u32 mmio;                       /* 0x00 HMMIO the samples are read from */
+    u32 data_ckid;                  /* 0x04 the 'data' chunk (MMCKINFO) */
+    i32 data_size;                  /* 0x08 bytes of samples */
+    u32 data_fcc_type;              /* 0x0c */
+    i32 data_offset;                /* 0x10 file offset of the samples */
+    u32 data_ck_flags;              /* 0x14 */
+    u32 io_flags;                   /* 0x18 MMIOINFO of mmio */
+    u32 io_fcc_proc;                /* 0x1c */
+    u32 io_proc;                    /* 0x20 */
+    u32 io_error;                   /* 0x24 */
+    u32 io_task;                    /* 0x28 */
+    u32 buf_size;                   /* 0x2c cchBuffer */
+    i32 buf_start;                  /* 0x30 pchBuffer */
+    i32 buf_next;                   /* 0x34 pchNext: next sample to play */
+    i32 buf_end_read;               /* 0x38 */
+    i32 buf_end;                    /* 0x3c pchEndWrite */
+    i32 io_buf_offset;              /* 0x40 */
+    i32 io_disk_offset;             /* 0x44 */
+    u32 io_info[3];                 /* 0x48 */
+    u32 io_reserved[2];             /* 0x54 */
+    i32 io_hmmio;                   /* 0x5c */
+    u32 file_mmio;                  /* 0x60 HMMIO of the file (streamed) */
+    i32 play_pos;                   /* 0x64 bytes played */
+    i32 buffer_fill;                /* 0x68 bytes in the buffer being filled / read */
+    u32 mem_handle;                 /* 0x6c HGLOBAL of this record */
+    u32 flags;                      /* 0x70 1 ended, 2 stopped, 4 streamed, 8 needs data,
+                                       0x10 started */
+    union { u32 format_tag_channels; struct {
+        u16 format_tag;             /* 0x74 WAVEFORMAT */
+        u16 channels;               /* 0x76 */
+    }; };
+    u32 samples_per_sec;            /* 0x78 */
+    u32 avg_bytes_per_sec;          /* 0x7c */
+    union { u32 block_align_bits; struct {
+        u16 block_align;            /* 0x80 bytes per sample */
+        u16 bits_per_sample;        /* 0x82 */
+    }; };
+    i32 avi_stream;                 /* 0x84 PAVISTREAM */
+    i16 kind;                       /* 0x88 1 wave, 4 AVI stream */
+    i16 sound_id;                   /* 0x8a */
+    iptr status_ptr;                /* 0x8c u16 * of the AVI player's status (4 = playing) */
+    i32 stream_pos;                 /* 0x90 AVI: next byte to read */
+    i32 stream_start;               /* 0x94 */
+    WaveBuffer *fill_buffer;        /* 0x98 AVI: the buffer being filled */
+    i32 buffer_bytes;               /* 0x9c AVI: bytes per buffer */
+    u8 pad_a0[8];
+    i32 size_mask;                  /* 0xa8 */
+    u8 pad_ac[8];
+    i32 done_callback;              /* 0xb4 called with sound_id when it ends */
+    struct WaveSource *next;        /* 0xb8 */
+} WaveSource;
+/* A BITMAPINFOHEADER (0x28 bytes): the AVI player's frame formats. */
+typedef struct BitmapInfoHeader {
+    u32 size;                       /* 0x00 */
+    i32 width;                      /* 0x04 */
+    i32 height;                     /* 0x08 negative: top-down */
+    u16 planes;                     /* 0x0c */
+    u16 bit_count;                  /* 0x0e */
+    u32 compression;                /* 0x10 */
+    i32 size_image;                 /* 0x14 */
+    i32 x_pels_per_meter;           /* 0x18 */
+    i32 y_pels_per_meter;           /* 0x1c */
+    u32 clr_used;                   /* 0x20 */
+    u32 clr_important;              /* 0x24 */
+} BitmapInfoHeader;
+#ifdef __cplusplus
+static_assert(sizeof(WaveHeader) == 0x20, "");
+static_assert(sizeof(WaveBuffer) == 0x20, "");
+static_assert(sizeof(WaveSource) == 0xbc, "");
+static_assert(sizeof(BitmapInfoHeader) == 0x28, "");
+#endif
+
 #pragma pack(pop)
 
 #endif

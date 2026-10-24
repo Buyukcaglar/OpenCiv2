@@ -51,10 +51,10 @@ from cxx_array import index as array_index  # noqa: E402
 import cxx_retype  # noqa: E402
 
 SIGNED = {'int': 4, 'i32': 4, 'iptr': 4, 'long': 4, 'LONG': 4, 'BOOL': 4, 'INT': 4,
-          'short': 2, 'i16': 2, 'SHORT': 2, 'char': 1, 'i8': 1, 'CHAR': 1, 'signed char': 1}
+          'short': 2, 'short int': 2, 'i16': 2, 'SHORT': 2, 'char': 1, 'i8': 1, 'CHAR': 1, 'signed char': 1}
 UNSIGNED = {'unsigned int': 4, 'uint': 4, 'u32': 4, 'uptr': 4, 'DWORD': 4, 'UINT': 4, 'ulong': 4,
             'unsigned long': 4, 'undefined4': 4, 'ULONG': 4,
-            'unsigned short': 2, 'ushort': 2, 'u16': 2, 'WORD': 2, 'word': 2, 'undefined2': 2,
+            'unsigned short': 2, 'short unsigned int': 2, 'ushort': 2, 'u16': 2, 'WORD': 2, 'word': 2, 'undefined2': 2,
             'unsigned char': 1, 'uchar': 1, 'u8': 1, 'byte': 1, 'BYTE': 1, 'undefined': 1, 'undefined1': 1}
 INT_TYPES = r'(?:iptr|uptr|i32|u32|int|uint|long|ulong)'
 NUM = r'(?:0x[0-9a-fA-F]+|\d+)'
@@ -272,7 +272,10 @@ def field_access(m, start, end, obj, s, n, t, checks):
 def functions(text):
     """(header start, body start, body end) of each function definition."""
     for fm in re.finditer(r'^\{\n', text, re.M):
-        hs = text.rfind('\n\n', 0, fm.start())
+        e = fm.start()
+        while e > 0 and text[e - 1] == '\n':   # the blank line between header and body
+            e -= 1
+        hs = text.rfind('\n\n', 0, e)
         hs = 0 if hs < 0 else hs + 2
         be = re.compile(r'^\}', re.M).search(text, fm.end())
         if be:

@@ -473,7 +473,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
 /* ------------------------------------------------------------------------ */
 
 /* 0x005e22ed: start playing a video (decompressor setup, audio sync). */
-void __cdecl avi_play_start(int avi)
+void __cdecl avi_play_start(AviPlayer *avi)
 {
     LONG t_end, t_start;
 
@@ -481,40 +481,40 @@ void __cdecl avi_play_start(int avi)
         return;
     if (avi_playing != 0)
         avi_play_pause(avi);
-    if (*(int *)(avi + 0x5a0) != 0) {
+    if (avi->double_size != 0) {
         ICSendMessage((*(HIC *)&avi_decompressor), 0x403f, 0, 0);
         (*(uint *)&err_report_ctx_block.g_video_flags_a) = 8;
-        if (*(int *)(avi + 0x5a4) != 0)
+        if (avi->transparent != 0)
             (*(uint *)&err_report_ctx_block.g_video_flags_a) |= 0x80000004;
         (*(uint *)&err_report_ctx_block.g_video_flags_b) = 0x80000008;
         ICSendMessage((*(HIC *)&avi_decompressor), 0x5001, (DWORD_PTR)(iptr)&err_report_ctx_block.avi_indeo_seq_opts, 0x2c);
         ICSendMessage((*(HIC *)&avi_decompressor), 0x5001, (DWORD_PTR)(iptr)&err_report_ctx_block.avi_indeo_frame_opts, 0x70);
-        *(int *)(avi + 0x5f0) <<= 1;
-        *(int *)(avi + 0x5ec) <<= 1;
-        avi_ic_decompress_ex_begin((i32)(*(HIC *)&avi_decompressor), 0, avi + 0x5c0, 0, 0, 0,
-                     *(i32 *)(avi + 0x5c4), *(i32 *)(avi + 0x5c8),
-                     avi + 0x5e8, 0, 0, 0,
-                     *(int *)(avi + 0x5c4) * 2, *(int *)(avi + 0x5c8) * 2);
-        *(int *)(avi + 0x5f0) >>= 1;
-        *(int *)(avi + 0x5ec) >>= 1;
+        avi->dst_format.height <<= 1;
+        avi->dst_format.width <<= 1;
+        avi_ic_decompress_ex_begin((i32)(*(HIC *)&avi_decompressor), 0, (iptr)&avi->src_format, 0, 0, 0,
+                     avi->src_format.width, avi->src_format.height,
+                     (iptr)&avi->dst_format, 0, 0, 0,
+                     avi->src_format.width * 2, avi->src_format.height * 2);
+        avi->dst_format.height >>= 1;
+        avi->dst_format.width >>= 1;
     }
-    if (*(int *)(avi + 0x5a8) != 0) {
-        t_end = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), *(LONG *)(avi + 0xa14));
-        t_start = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), *(LONG *)(avi + 0xa18));
-        avi_audio_prepare_range((AviAudioPrepareView *)(avi + 0x11c), t_start, t_end);
+    if (avi->has_audio != 0) {
+        t_end = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), avi->end_frame);
+        t_start = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), avi->cur_frame);
+        avi_audio_prepare_range((AviAudioPrepareView *)&avi->audio, t_start, t_end);
     }
     if (avi_file_loaded != 0) {
-        if (*(int *)(avi + 0x5a4) == 0)
+        if (avi->transparent == 0)
             avi_update_frame(avi);
         wnd_modal_stack_below_block.avi_idle_update_enabled = 1;
         avi_playing = 1;
         avi_blit_union_left_block.g_video_frame_count = 0;
-        if (*(int *)(avi + 0x5a8) == 0) {
+        if (avi->has_audio == 0) {
             (*(DWORD *)&g_video_start_time) = timeGetTime();
         }
         else {
-            avi_audio_start((void *)(avi + 0x11c));
-            *(i32 *)(avi + 0x5b0) = 1;
+            avi_audio_start((void *)&avi->audio);
+            avi->audio_playing = 1;
         }
     }
 }
@@ -721,7 +721,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
             wnd_on_menu_command(hwnd, wparam_hwnd);
         break;
     case 0x3bd:
-        snd_wave_on_buffer_done(wparam_hwnd, lparam);
+        snd_wave_on_buffer_done(wparam_hwnd, (WaveHeader *)lparam);
         return 0;
 
     case 0x11f:     /* WM_MENUSELECT */

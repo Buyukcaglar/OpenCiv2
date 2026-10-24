@@ -3809,11 +3809,6 @@ typedef struct SpaceshipWindowDtorView {
     u8 pad_638[6984];
 } SpaceshipWindowDtorView;
 
-/* 2 methods, size 0xa48 */
-typedef struct AviPlayer {
-    union { u8 pad_0[2632]; struct { u8 media_window_base[2632]; }; };
-} AviPlayer;
-
 /* 2 methods, size 0x10430 */
 typedef struct ParleyOfferBuffer {
     union { u8 pad_0[280]; struct { u8 gap_0[72]; u8 inner_wnd[208]; }; };
@@ -5209,6 +5204,35 @@ typedef struct AviAudio {
     u8 pad_0[4];
     union { u32 field_4; u32 audio_stream; };
 } AviAudio;
+
+/* 2 methods, size 0xa48 */
+typedef struct AviPlayer {
+    union { u8 pad_0[284]; struct { u8 media_window_base[284]; }; };
+    AviAudio audio;                                     /* 0x11c */
+    GamePalette palette;                                /* 0x124 */
+    DibSurface backdrop;                                /* 0x558 transparent: what the frame is drawn over */
+    union { i32 field_5a0; i32 double_size; };
+    union { i32 field_5a4; i32 transparent; };
+    union { i32 field_5a8; i32 has_audio; };
+    union { i32 field_5ac; i32 paused; };
+    union { i32 field_5b0; i32 audio_playing; };
+    union { i32 field_5b4; i32 target_surface; };       /* DibSurface * */
+    union { i32 field_5b8; i32 pos_x; };
+    union { i32 field_5bc; i32 pos_y; };
+    BitmapInfoHeader src_format;                        /* 0x5c0 the stream's frames */
+    BitmapInfoHeader dst_format;                        /* 0x5e8 decompressed, followed by */
+    u8 dst_colors[1024];                                /* 0x610 its RGBQUAD palette */
+    union { i32 field_a10; i32 start_frame; };
+    union { i32 field_a14; i32 end_frame; };
+    union { i32 field_a18; i32 cur_frame; };
+    u8 pad_a1c[4];
+    union { i32 field_a20; i32 cue_frame; };
+    union { i32 field_a24; i32 loop; };
+    u8 pad_a28[32];
+} AviPlayer;
+#ifdef __cplusplus
+static_assert(sizeof(AviPlayer) == 0xa48, "");
+#endif
 
 /* 1 methods, size 0x8 */
 typedef struct AviAudioSetStreamView {
