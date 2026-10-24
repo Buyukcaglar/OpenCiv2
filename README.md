@@ -1,8 +1,9 @@
-# Civilization II (Multiplayer Gold Edition) — reconstructed source
+# Civilization II reconstruction
 
-The game itself is not included.  Install your copy of Civilization II in
-`~/Civ2` (the directory with `civ2.exe`, `Tiles.dll`, the `.TXT` files …), or
-point `CIV2_GAME` at it.
+Goal: reconstruct the source of *Sid Meier's Civilization II: Multiplayer Gold Edition*
+(1998) as portable C++ that builds and runs natively on Linux, macOS and Windows,
+and prove it behaves exactly like the original binary: the same screens, pixel for pixel,
+and the same random numbers, call for call, on recorded games.
 
 <p>
 <img src="docs/screenshots/menu.png" width="49%"> <img src="docs/screenshots/city.png" width="49%">
@@ -13,31 +14,51 @@ point `CIV2_GAME` at it.
 *The native build: the main menu, a city, the World War II scenario, the Top Five Cities, a foreign
 leader receiving an envoy (his video, from the CD) and London's city view with its wonders.*
 
-## Files
+## Layout
 
-| path | what |
-|------|------|
-| `src/auto/` | the game, machine-translated to C once, now C++ edited directly, a file per subject: `city.cpp`, `unit.cpp`, `ai.cpp`, `civ.cpp`, `diplomacy.cpp`, `reports.cpp`, `map.cpp`, `mapview.cpp`, `game.cpp`, `editor.cpp`, `pedia.cpp`, `spaceship.cpp`, `network.cpp`, `sound.cpp`, `window.cpp`, `controls.cpp`, `graphics.cpp`, `text.cpp`, `support.cpp` |
-| `src/game/` | game functions reconstructed by hand |
-| `src/data/` | the game's static data (`gamedata.h`/`.cpp`) |
-| `src/include/` | types recovered from the binary (units, cities, civilizations, classes) |
-| `src/platform/` | the Windows API the game uses (windows, GDI, controls, files, sound …) implemented in portable C |
-| `src/host/` | what the platform needs from the machine: window, input, audio over SDL2; the portable build's runtime |
-| `src/native/` | the C runtime pieces for native builds (C++, as the game) |
-| `data/native/` | fonts as the reference renders them (glyph data, generated with Wine) |
-| `data/image/` | the original executable's data sections |
-| `re/` | analysis results: function list, calling conventions, data layout, Ghidra's decompilation |
-| `tools/` | build, naming and clean-up scripts (`build_port.py`, `build_native.py`, `rename.py` …); the retired Ghidra pipeline (`gen_c.py`) |
-| `harness/` | replay scripts and the comparison against the original (`run.py`, `compare.py`, `native_suite.sh`, `msgdiff.sh`, `clockdiff.py`) |
-| `hook/` | `XDaemon.dll` proxy that makes the original deterministic under Wine (seed, virtual clock, input replay) |
-| `docs/`, `STATUS.md` | notes on the reconstruction and its verification |
+| Path | What |
+| --- | --- |
+| `src/auto/` | The game: decompiled once, now C++ edited directly, a file per subject (`city.cpp`, `unit.cpp`, `ai.cpp`, `diplomacy.cpp`, `map.cpp`, `window.cpp` …). |
+| `src/game/` | Functions the decompiler could not translate, reconstructed by hand. |
+| `src/data/` | The game's static data (`gamedata.h`/`.cpp`), laid out exactly as in the original. |
+| `src/include/` | Types recovered from the binary: units, cities, civilizations, map, the game's classes. |
+| `src/platform/` | The Windows API the game uses (windows, GDI, controls, files, sound, video) implemented in portable C. |
+| `src/host/` | What the platform layer needs from the machine: window, input and audio over SDL2; the portable build's runtime. |
+| `src/native/` | The C runtime pieces the native builds need. |
+| `data/` | Fonts as the original renders them, and the original executable's data sections. |
+| `re/` | Analysis results: function list, calling conventions, data layout, Ghidra's decompilation. |
+| `harness/` | The replay scripts and the comparison with the original (`run.py`, `compare.py`, `native_suite.sh`). |
+| `hook/` | An `XDaemon.dll` proxy that makes the original deterministic under Wine. |
+| `tools/` | Build, analysis and refactoring scripts. |
+| `docs/`, `STATUS.md` | Notes on the reconstruction and its verification. |
+
+## Approach
+
+1. **Inventory**: Ghidra decompiles all ~4,900 functions; names and types for every function,
+   global, class and field were recovered from their use.
+2. **Translation**: the decompiled code was turned into C that compiles natively, then edited
+   by hand: names, types, struct access, real locals, data as ordinary variables. It is now C++
+   (`docs/hand-reconstruction.md`).
+3. **Platform**: the game keeps calling the Windows API; `src/platform` implements the part it
+   uses on top of SDL2, so the same game code runs everywhere.
+4. **Determinism**: under Wine, the `hook/` proxy DLL pins the original's random seed, gives it a
+   virtual clock and replays recorded input. The native builds do the same, so a recorded
+   scenario plays identically in both.
+5. **Differential harness**: each scenario in `harness/scripts` (new game, turns, cities,
+   diplomacy, editors, 50 turns of play …) is recorded from the original once; the native builds
+   replay it and must produce the same screenshots and the same sequence of `rand()` calls.
+   Changes to the code are also checked function by function against the previous version's
+   machine code (`tools/cxx_compare.py`), which covers the code no scenario reaches.
 
 ## Build and run
+
+The game files are not included: install your copy of Civilization II in `~/Civ2` (the
+directory with `civ2.exe`, `Tiles.dll`, the `.TXT` files …), or point `CIV2_GAME` at it.
 
 ### macOS
 
 ```sh
-xcode-select --install          # C compiler
+xcode-select --install          # C/C++ compiler
 brew install sdl2
 pip3 install pefile
 
@@ -49,13 +70,20 @@ tools/run-civ2.sh               # plays the game in ~/Civ2
 
 ### Linux
 
-Same as macOS with `libsdl2-dev` and `python3-pefile` from the package manager.
+As on macOS, with `libsdl2-dev` and `python3-pefile` from the package manager:
+
+```sh
+git clone https://github.com/richardpenman/civ2 && cd civ2
+tools/fetch-toolchain.sh
+python3 tools/build_port.py     # -> build/civ2-port
+tools/run-civ2.sh
+```
 
 ### Windows
 
 **Download:** [civ2-reconstructed-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/civ2-reconstructed-windows.zip),
-built from the latest commit. Unpack it into your Civilization II folder (the
-one with `civ2.exe`) and double-click `civ2-reconstructed.exe`.
+built from the latest commit. Unpack it into your Civilization II folder (the one with
+`civ2.exe`) and double-click `civ2-reconstructed.exe`.
 
 To build it yourself, in an [MSYS2](https://www.msys2.org) **MINGW64** shell:
 
@@ -66,47 +94,53 @@ tools/fetch-toolchain.sh
 python3 tools/build_port.py     # -> build/civ2-port.exe and SDL2.dll
 ```
 
-Then play from a normal Command Prompt (or double-click):
-`tools\run-civ2.bat [GAMEDIR]` — the game in `%USERPROFILE%\Civ2` by default.
+Then play from a normal Command Prompt (or double-click) with `tools\run-civ2.bat [GAMEDIR]`;
+the game is looked for in `%USERPROFILE%\Civ2` by default.
 
-The Windows executable can also be cross-compiled on Linux:
-`tools/fetch-toolchain.sh windows` (adds SDL2's MinGW release), then
-`python3 tools/build_port.py module c exe-windows`; copy `build/civ2-port.exe`,
-`build/SDL2.dll`, `data/native`, `harness/CIV2.DAT` and `tools/run-civ2.bat`
-(keeping the directories) to the Windows machine.
+The Windows executable can also be cross-compiled on Linux: `tools/fetch-toolchain.sh windows`
+(adds SDL2's MinGW release), then `python3 tools/build_port.py module c exe-windows`; copy
+`build/civ2-port.exe`, `build/SDL2.dll`, `data/native`, `harness/CIV2.DAT` and
+`tools/run-civ2.bat` (keeping the directories) to the Windows machine.
 
 ### Music and videos from the CD
 
-The game plays its music from the CD's audio tracks and its heralds and movies
-from the CD's video files.  With a disc image (`.cue` and `.bin`, or a zip of
-them), copy them into the game directory once:
+The game plays its music from the CD's audio tracks and its heralds and movies from the CD's
+video files. With a disc image (`.cue` and `.bin`, or a zip of them), copy them into the game
+directory once:
 
 ```sh
 python3 tools/extract_disc.py DISC.zip ~/Civ2
 ```
 
-This writes `KINGS/` (the diplomatic heralds), `Video/` (opening, wonders, High
-Council) and `Music/Track02.wav` … (the CD's audio tracks, played by the
-reconstruction's CD drive).  Turn music on in Game → Game Options.
+This writes `KINGS/` (the diplomatic heralds), `Video/` (opening, wonders, High Council) and
+`Music/Track02.wav` … (the CD's audio tracks). Turn music on in Game → Game Options.
 
-## Development (Docker)
+## Tooling
 
-Everything else runs in Docker on Linux; `tools/dk CMD` runs a command in the
-dev container with the repository at `/work` and the game at `/civ2`.
+Development runs in Docker on Linux; `tools/dk CMD` runs a command in the dev container with
+the repository at `/work` and the game at `/civ2`.
+
+| Tool | Notes |
+| --- | --- |
+| Docker images (`make images`) | Wine (runs the original), MinGW, g++/gcc with 32-bit support, SDL2, Python; Ghidra for the analysis. |
+| wasi-sdk + wabt (`tools/fetch-toolchain.sh`) | The portable build: the game compiles to a wasm32 module (keeping the original's 32-bit data model), which wasm2c turns into C for any machine. |
+| `hook/` (`make hook`) | The proxy DLL that makes the original replayable. |
 
 ```sh
-make images          # Docker images: wine, mingw, SDL2, wasi-sdk; Ghidra
-make hook            # the replay/trace proxy DLL for the original
-make port            # build/civ2-port (portable build)
-make native          # build/civ2-linux32 (gcc -m32: same code, easier to debug)
-make native-suite    # compare a native build against those recordings (EXE=civ2-port, civ2-port.exe under wine)
+make native          # build/civ2-linux32: gcc -m32, the same code, easier to debug
+make port            # build/civ2-port: the portable build
+make ref SCRIPT=harness/scripts/turns.txt    # record the original on a scenario
+make native-suite    # replay every scenario on a native build and compare (EXE=civ2-port, civ2-port.exe under Wine)
 ```
 
-`harness/scripts/*.txt` are the scenarios (menu, new game, load game, turns,
-advisors, 50 turns of play).  `make ref SCRIPT=...` records the original on a
-script, `make native-suite` checks the native builds against the recordings.
+## Status
 
-## License
+Playable. Every function of the game that can run has source; the only parts not reconstructed
+are the original's MSVC runtime (replaced by the platform's C library) and unreachable 16-bit
+leftovers. 25 of the 29 recorded scenarios match the original exactly; the other four differ in a
+few pixels of an editor dialog, a Civilopedia page and the power graph. The scenarios run about two thirds of the
+game's functions; multiplayer, the High Council and some editor dialogs are not covered yet.
 
-MIT (see `LICENSE`). Civilization II itself and its game files are not part of
-this repository and are not covered by this license.
+The code is being modernized step by step, each step checked by the harness: it compiles as
+strict C++ and keeps the original's data layout; recovering the remaining types, classes,
+structured control flow and smaller functions is in progress. Details in `STATUS.md`.

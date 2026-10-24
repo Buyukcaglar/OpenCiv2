@@ -4,8 +4,8 @@
 
 | status      | functions | meaning |
 |-------------|-----------|---------|
-| auto        | 4040 | game functions, translated from Ghidra's output by `tools/gen_c.py`; since October 2026 the source, edited directly, in files by subject (src/auto/city.cpp, unit.c, map.c ...) |
-| game        |  114 | reconstructed by hand (src/game/*.c) |
+| auto        | 4040 | game functions, translated from Ghidra's output by `tools/gen_c.py`; since October 2026 the source, edited directly, in files by subject (src/auto/city.cpp, unit.cpp, map.cpp ...) |
+| game        |  114 | reconstructed by hand (src/game/*.cpp) |
 | ehfunclet   |  462 | C++ unwind funclets; inlined into their callers, never called on their own |
 | crt         |  295 | statically linked MSVC 4.2 debug C runtime: the native builds use their own C library (src/native/crt.cpp for what differs) |
 | asm         |    2 | `ASMGRAF` section: 16-bit leftovers from the Win16 version, unreachable |
