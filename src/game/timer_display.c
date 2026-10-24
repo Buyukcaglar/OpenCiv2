@@ -32,12 +32,12 @@ void __cdecl mp_turn_timer_tick(void)
             status_draw_timer_bar(100, 0xffffffff);
             return;
         }
-        frame_wnd_draw_caption(((i8 *)&map_views_block.map_views));
+        frame_wnd_draw_caption(((FrameWindow*)((i8 *)&map_views_block.map_views)));
         rect.left = (*(int *)((u8 *)&map_views_block.main_view_frame_left));
         rect.top = (*(int *)((u8 *)&map_views_block.main_view_frame_top));
         rect.right = (*(int *)((u8 *)&map_views_block.main_view_frame_right));
         rect.bottom = (*(int *)((u8 *)&map_views_block.main_view_client_top));
-        wnd_blit_surface_rect(((i8 *)&map_views_block.map_views), &rect);
+        wnd_blit_surface_rect(((DibSurface*)((i8 *)&map_views_block.map_views)), &rect);
     }
     percent = (mp_turn_seconds_left * 100000) / civ_saved_cursor_x_block.mp_turn_time_limit_ms;
     if (percent < 0x21)

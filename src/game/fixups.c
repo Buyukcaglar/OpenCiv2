@@ -30,7 +30,7 @@ void __cdecl font_file_unload(i32 font_handle)
 /* 0x005c8caf: hover-tracking button window procedure. */
 i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
 {
-    void *this;
+    void *self;
     int wnd_obj;
     int *rect_ptr;
     BOOL inside;
@@ -39,7 +39,7 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
     tagRECT rect;
 
     wnd_obj = wnd_from_hwnd(hwnd);
-    this = *(void **)(wnd_obj + 4);
+    self = *(void **)(wnd_obj + 4);
     switch (msg) {
     case 0x200:     /* WM_MOUSEMOVE */
         pt.x = lparam & 0xffff;
@@ -48,16 +48,16 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
             if (g_btn_pressed == 0) {
                 g_btn_hover = 1;
                 SetCapture(hwnd);
-                if (this != (void *)0x0) {
-                    ctrl_arg = ctrl_get_parent(this);
+                if (self != (void *)0x0) {
+                    ctrl_arg = ctrl_get_parent(self);
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id(this);
-                    hotspot_fire_enter(this, ctrl_arg);
+                    ctrl_arg = ctrl_get_id(self);
+                    hotspot_fire_enter(self, ctrl_arg);
                 }
             }
         }
         else {
-            rect_ptr = (int *)ctrl_get_rect(this);
+            rect_ptr = (int *)ctrl_get_rect(self);
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -68,11 +68,11 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
                 g_btn_hover = 0;
                 if (g_btn_pressed == 0) {
                     ReleaseCapture();
-                    if (this != (void *)0x0) {
-                        ctrl_arg = ctrl_get_parent(this);
+                    if (self != (void *)0x0) {
+                        ctrl_arg = ctrl_get_parent(self);
                         wnd_set_active_child(ctrl_arg);
-                        ctrl_arg = ctrl_get_id(this);
-                        hotspot_fire_leave(this, ctrl_arg);
+                        ctrl_arg = ctrl_get_id(self);
+                        hotspot_fire_leave(self, ctrl_arg);
                     }
                 }
             }
@@ -81,40 +81,40 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
     case 0x201:     /* WM_LBUTTONDOWN */
         if (g_btn_hover != 0) {
             g_btn_pressed = 1;
-            ctrl_arg = ctrl_get_parent(this);
+            ctrl_arg = ctrl_get_parent(self);
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id(this);
-            hotspot_fire_press(this, ctrl_arg);
+            ctrl_arg = ctrl_get_id(self);
+            hotspot_fire_press(self, ctrl_arg);
         }
         break;
     case 0x202:     /* WM_LBUTTONUP */
         if (g_btn_pressed != 0) {
             g_btn_pressed = 0;
             if (g_btn_hover != 0) {
-                if (this != (void *)0x0) {
-                    ctrl_arg = ctrl_get_parent(this);
+                if (self != (void *)0x0) {
+                    ctrl_arg = ctrl_get_parent(self);
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id(this);
-                    hotspot_fire_click(this, ctrl_arg);
+                    ctrl_arg = ctrl_get_id(self);
+                    hotspot_fire_click(self, ctrl_arg);
                 }
             }
             else {
                 ReleaseCapture();
-                if (this != (void *)0x0) {
-                    ctrl_arg = ctrl_get_parent(this);
+                if (self != (void *)0x0) {
+                    ctrl_arg = ctrl_get_parent(self);
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id(this);
-                    hotspot_fire_leave(this, ctrl_arg);
+                    ctrl_arg = ctrl_get_id(self);
+                    hotspot_fire_leave(self, ctrl_arg);
                 }
             }
         }
         break;
     case 0x203:     /* WM_LBUTTONDBLCLK */
         if (g_btn_hover != 0) {
-            ctrl_arg = ctrl_get_parent(this);
+            ctrl_arg = ctrl_get_parent(self);
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id(this);
-            hotspot_fire_dblclick(this, ctrl_arg);
+            ctrl_arg = ctrl_get_id(self);
+            hotspot_fire_dblclick(self, ctrl_arg);
         }
         break;
     default:

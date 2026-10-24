@@ -703,7 +703,7 @@ finish_load_choice:
       /* inlined unwind funclet 0041e7be */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
       return choice;
     }
-    path_set_extension((iptr)dst,(iptr)&map_views_block.text_buffer,(iptr)&lang_file_ext);
+    path_set_extension(dst,(char*)(&map_views_block.text_buffer),lang_file_ext);
     if (cd_music_available != 0) {
       snd_play_effect(0x6a,0,0,0);
     }
@@ -811,7 +811,7 @@ select_civs:
           choice = dlg_game_text_input((iptr)&str_name_2,0x17,(iptr)&civ_names[game.player_civ].leader_name,(iptr)name_buf
                                     );
           if (choice == 0) {
-            crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,name_buf);
+            crt_strcpy(&civ_names[game.player_civ].leader_name,name_buf);
             civ_saved_cursor_x_block.saved_resume_new_game = 1;
             turn_resume_new_game = 1;
             result = 0;
@@ -934,7 +934,7 @@ i32 __cdecl load_game_pick_civ(int title_offset)
           dialog_prepend_title_label((iptr)&dlg,title_offset + 0x25e);
           choice = dialog_run_modal(&dlg,(iptr)name_buf,0);
           if (choice == 0) {
-            crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,name_buf);
+            crt_strcpy(&civ_names[game.player_civ].leader_name,name_buf);
             eh_state = 0xffffffff;
             /* inlined unwind funclet 0041eec6 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
             arg4 = 0;
@@ -1356,7 +1356,7 @@ void __cdecl game_main(void)
       }
       if (2 < game.multiplayer) {
         menu_set_item_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),0x120,1);
-        dlg_default_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+        dlg_default_idle_callback = ((i8*)(turn_popup_timeout_idle));
         is_host = net_is_host(((iptr *)&net_session_block.net_session));
         if (is_host != '\0') {
           net_send_rules_tables(0xff);
@@ -1583,7 +1583,7 @@ i32 __cdecl game_profile_popup(int is_join)
     count--;
   }
   str_append_int((iptr)&minimap_window_block.profile_count_text2,count);
-  dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+  dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
   result = popup_text_with_sprite((iptr)&str_game_7,(iptr)&str_gameprofile,(uint)(is_join != 0),(iptr)&popup_info_icon_sprite,0);
   return result;
 }
@@ -1596,7 +1596,7 @@ i32 __cdecl setup_network_game(int conn_type)
   int choice;
   i32 result;
   int rc2;
-  NetGamelistViewCtorView *this;
+  NetGamelistViewCtorView *self;
   char *title_buf;
   size_t ip_len;
   LobbyListCtorView *this_00;
@@ -1958,13 +1958,13 @@ build_connection_title:
     net_session_shutdown(((iptr *)&net_session_block.net_session),1);
     goto show_network_menu;
   }
-  this = operator_new(0x178);
+  self = operator_new(0x178);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  if (this == (NetGamelistViewCtorView *)0x0) {
+  if (self == (NetGamelistViewCtorView *)0x0) {
     this2 = (void *)0x0;
   }
   else {
-    this2 = (void *)net_gamelist_view_ctor(this);
+    this2 = (void *)net_gamelist_view_ctor(self);
   }
   eh_state = (eh_state & 0xffffff00 | (byte)(1));
   net_session_block.net_session[0] = (iptr)this2;
@@ -2038,7 +2038,7 @@ scenario_menu_loop:
 done:
       return value;
     }
-    path_set_extension((iptr)dst,(iptr)&map_views_block.text_buffer,(iptr)&lang_file_ext);
+    path_set_extension(dst,(char*)(&map_views_block.text_buffer),lang_file_ext);
     if (cd_music_available != 0) {
       snd_play_effect(0x6a,0,0,0);
     }
@@ -3547,7 +3547,7 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
     snd_play_effect(-0x6b,0,0,0);
     snd_play_effect(-0x6c,0,0,0);
     snd_play_effect(0x6a,0,0,0);
-    load_error = save_read_game((iptr)file_path);
+    load_error = save_read_game(file_path);
     if (load_error == 0) {
       ui_flush_input();
       if ((scenario_events_loaded == 0) && ((game.game_flags & 0x80) != 0)) {
@@ -5239,7 +5239,7 @@ void __cdecl game_play_loop(void)
           casualties = *(int *)(((i8 *)&net_session_block.casualty_counts) + (*(i8 *)&human_civ) * 4) -
                      *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + (*(i8 *)&human_civ) * 4);
           if (civ_saved_cursor_x_block.autoplay_active == 0) {
-            dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+            dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
             name_str = civ_leader_title((*(i8 *)&human_civ));
             text_set_string_arg(0,name_str);
             name_str = civ_leader_name((*(i8 *)&human_civ));
@@ -5406,7 +5406,7 @@ i32 __cdecl game_mp_client_turn_loop(void)
   resume_civ = (*(byte *)&turn_resume_civ);
   if ((1 << ((byte)human_civ[0] & 0x1f) & (uint)game.human_players) == 0) {
     net_heartbeat_send(net_session_block.net_slot_civs[0]);
-    dlg_pending_idle_callback = ((void *)(iptr)net_client_hot_wait_idle);
+    dlg_pending_idle_callback = ((i8*)(net_client_hot_wait_idle));
     popup_game_sprite_flags((iptr)&str_clienthotwait,0x2000000,(iptr)&popup_info_icon_sprite,0);
     resume_civ = (*(byte *)&turn_resume_civ);
   }
@@ -5470,7 +5470,7 @@ turn_loop:
       casualties = *(int *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4) -
                  *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4);
       if (civ_saved_cursor_x_block.autoplay_active == 0) {
-        dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+        dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
         name_str = civ_leader_title(human_civ[0]);
         text_set_string_arg(0,name_str);
         name_str = civ_leader_name(human_civ[0]);
@@ -5728,7 +5728,7 @@ end_loop:
           casualties = *(int *)(((i8 *)&net_session_block.casualty_counts) + human_civ[0] * 4) -
                      *(int *)(((i8 *)&net_session_block.casualty_reported_counts) + human_civ[0] * 4);
           if (civ_saved_cursor_x_block.autoplay_active == 0) {
-            dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+            dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
             name_str = civ_leader_title(human_civ[0]);
             text_set_string_arg(0,name_str);
             name_str = civ_leader_name(human_civ[0]);
@@ -6025,7 +6025,7 @@ void __cdecl password_dialog_set_title(iptr dialog,int civ,i32 label_id)
   i32 title_mem;
   char title[128];
   
-  crt_strcpy(title,(iptr)&civ_names[civ].leader_name);
+  crt_strcpy(title,&civ_names[civ].leader_name);
   str_append_label((iptr)title,label_id);
   title_len = _strlen(title);
   title_mem = memblock_alloc(dialog + 0x254,title_len + 1);
@@ -7333,16 +7333,16 @@ i32 __cdecl diffeng_rle_encode(iptr stream)
 }
 
 /* 004b3080 auto */
-void __thiscall diffeng_section_init(DiffEngSection *this,iptr data_ptr,u32 data_size,u32 section_id)
+void __thiscall diffeng_section_init(DiffEngSection *self,iptr data_ptr,u32 data_size,u32 section_id)
 
 {
-  this->data_ptr = data_ptr;
-  this->data_size = data_size;
-  this->section_id = section_id;
-  this->checksum = 0;
-  this->padded_size = this->data_size;
-  if ((this->data_size & 3) != 0) {
-    this->padded_size = (4 - (this->data_size & 3)) + this->padded_size;
+  self->data_ptr = data_ptr;
+  self->data_size = data_size;
+  self->section_id = section_id;
+  self->checksum = 0;
+  self->padded_size = self->data_size;
+  if ((self->data_size & 3) != 0) {
+    self->padded_size = (4 - (self->data_size & 3)) + self->padded_size;
   }
   return;
 }
@@ -7821,16 +7821,16 @@ i32 __cdecl events_parse_unit_type(iptr name2)
 }
 
 /* 004fa47e auto */
-void __thiscall events_init_string_pool(DialogCore *this,uint pool_size)
+void __thiscall events_init_string_pool(DialogCore *self,uint pool_size)
 
 {
-  memblock_free((iptr)&((Dialog *)this)->events_string_pool);
-  memblock_init((iptr)&((Dialog *)this)->events_string_pool,0xc,pool_size);
+  memblock_free((iptr)&((Dialog *)self)->events_string_pool);
+  memblock_init((iptr)&((Dialog *)self)->events_string_pool,0xc,pool_size);
   return;
 }
 
 /* 004fa4be auto */
-ScenarioEvents * __thiscall events_ctor(ScenarioEvents *this,i32 pool_size)
+ScenarioEvents * __thiscall events_ctor(ScenarioEvents *self,i32 pool_size)
 
 {
   i32 eh_next;
@@ -7838,18 +7838,18 @@ ScenarioEvents * __thiscall events_ctor(ScenarioEvents *this,i32 pool_size)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  dialog_ctor((Dialog *)this,0x4000);
+  dialog_ctor((Dialog *)self,0x4000);
   eh_state = 0;
-  memblock_ctor((MemBlock *)(this->events_string_pool));
-  this->events_pool_valid = '\0';
-  this->event_list = 0;
-  this->event_count = 0;
-  events_reset(this,pool_size);
-  return this;
+  memblock_ctor((MemBlock *)(self->events_string_pool));
+  self->events_pool_valid = '\0';
+  self->event_list = 0;
+  self->event_count = 0;
+  events_reset(self,pool_size);
+  return self;
 }
 
 /* 004fa569 auto */
-void __thiscall events_dtor(DialogCore *this)
+void __thiscall events_dtor(DialogCore *self)
 
 {
   i32 eh_next;
@@ -7857,42 +7857,42 @@ void __thiscall events_dtor(DialogCore *this)
   i32 eh_state;
   
   eh_state = 0;
-  memblock_free((iptr)&((Dialog *)this)->events_string_pool);
+  memblock_free((iptr)&((Dialog *)self)->events_string_pool);
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004fa5b8 */ { dialog_dtor(*(Dialog **)((iptr)&this)); }
+  /* inlined unwind funclet 004fa5b8 */ { dialog_dtor(*(Dialog **)((iptr)&self)); }
   return;
 }
 
 /* 004fa5d9 auto */
-void __thiscall events_reset(ScenarioEvents *this,i32 pool_size)
+void __thiscall events_reset(ScenarioEvents *self,i32 pool_size)
 
 {
-  this->event_list = 0;
-  this->event_count = 0;
-  events_init_string_pool((DialogCore *)this,pool_size);
+  self->event_list = 0;
+  self->event_count = 0;
+  events_init_string_pool((DialogCore *)self,pool_size);
   return;
 }
 
 /* 004fa617 auto */
-void * __thiscall events_alloc(ScenarioEvents *this)
+void * __thiscall events_alloc(ScenarioEvents *self)
 
 {
   void *_Dst;
   uptr last;
   
-  last = this->event_list;
+  last = self->event_list;
   if (last != 0) {
     for (; *(int *)(last + 0x1bc) != 0; last = *(uptr *)(last + 0x1bc)) {
     }
   }
-  _Dst = (void *)memblock_alloc((iptr)(this->events_string_pool),0x1c4);
+  _Dst = (void *)memblock_alloc((iptr)(self->events_string_pool),0x1c4);
   if (_Dst == (void *)0x0) {
     _Dst = (void *)0x0;
   }
   else {
     _memset(_Dst,0,0x1c4);
     if (last == 0) {
-      this->event_list = (uptr)_Dst;
+      self->event_list = (uptr)_Dst;
       *(i32 *)((int)_Dst + 0x1bc) = 0;
       *(i32 *)((int)_Dst + 0x1c0) = 0;
     }
@@ -7901,13 +7901,13 @@ void * __thiscall events_alloc(ScenarioEvents *this)
       *(uptr *)((int)_Dst + 0x1c0) = last;
       *(i32 *)((int)_Dst + 0x1bc) = 0;
     }
-    this->event_count++;
+    self->event_count++;
   }
   return _Dst;
 }
 
 /* 004fa707 auto */
-i32 __thiscall events_action_play_wave(DialogCore *this,iptr event)
+i32 __thiscall events_action_play_wave(DialogCore *self,iptr event)
 
 {
   i32 result;
@@ -7942,7 +7942,7 @@ i32 __thiscall events_action_play_wave(DialogCore *this,iptr event)
 }
 
 /* 004fa82d auto */
-i32 __thiscall events_action_dont_play_wonders(DialogCore *this,iptr event)
+i32 __thiscall events_action_dont_play_wonders(DialogCore *self,iptr event)
 
 {
   game_palette_block.event_dont_play_wonders = 1;
@@ -7950,7 +7950,7 @@ i32 __thiscall events_action_dont_play_wonders(DialogCore *this,iptr event)
 }
 
 /* 004fa854 auto */
-i32 __thiscall events_action_play_cd(DialogCore *this,iptr event)
+i32 __thiscall events_action_play_cd(DialogCore *self,iptr event)
 
 {
   i32 result;
@@ -7980,7 +7980,7 @@ i32 __thiscall events_action_play_cd(DialogCore *this,iptr event)
 }
 
 /* 004fa944 auto */
-i32 __thiscall events_action_change_money(DialogCore *this,iptr event)
+i32 __thiscall events_action_change_money(DialogCore *self,iptr event)
 
 {
   i32 result;
@@ -8024,18 +8024,18 @@ i32 __thiscall events_action_change_money(DialogCore *this,iptr event)
 }
 
 /* 004faab0 auto */
-i32 __thiscall events_action_text(Dialog *this,iptr event)
+i32 __thiscall events_action_text(Dialog *self,iptr event)
 
 {
   int line;
   int arg_count;
   
   arg_count = 0;
-  dialog_init_default(this);
+  dialog_init_default(self);
   for (line = 0; line < 0x14; line++) {
     if (*(int *)(event + 0x38 + line * 4) != 0) {
       dialog_add_line
-                ((DialogAddLineView *)this,*(iptr *)(event + 0x38 + line * 4),0xffffffff,0xffffffff,
+                ((DialogAddLineView *)self,*(iptr *)(event + 0x38 + line * 4),0xffffffff,0xffffffff,
                  0xffffffff,0);
       if (2 < game.multiplayer) {
         crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + arg_count * 0x104,*(i32 *)(event + 0x38 + line * 4));
@@ -8047,13 +8047,13 @@ i32 __thiscall events_action_text(Dialog *this,iptr event)
     if (2 < game.multiplayer) {
       net_send_text_args(0x4f,0xff,arg_count,0,0,0);
     }
-    dlg_show_modal(this,0);
+    dlg_show_modal(self,0);
   }
   return 1;
 }
 
 /* 004faba6 auto */
-i32 __thiscall events_action_make_aggression(DialogCore *this,iptr event)
+i32 __thiscall events_action_make_aggression(DialogCore *self,iptr event)
 
 {
   i32 result;
@@ -8099,7 +8099,7 @@ i32 __thiscall events_action_make_aggression(DialogCore *this,iptr event)
 }
 
 /* 004fad02 auto */
-i32 __thiscall events_action_destroy_civ(DialogCore *this,iptr event)
+i32 __thiscall events_action_destroy_civ(DialogCore *self,iptr event)
 
 {
   i32 result;
@@ -8133,7 +8133,7 @@ i32 __thiscall events_action_destroy_civ(DialogCore *this,iptr event)
 }
 
 /* 004fadfb auto */
-i32 __thiscall events_action_give_tech(DialogCore *this,iptr event)
+i32 __thiscall events_action_give_tech(DialogCore *self,iptr event)
 
 {
   i32 result;
@@ -8163,7 +8163,7 @@ i32 __thiscall events_action_give_tech(DialogCore *this,iptr event)
 }
 
 /* 004faed4 auto */
-i32 __thiscall events_action_create_unit(DialogCore *this,iptr event)
+i32 __thiscall events_action_create_unit(DialogCore *self,iptr event)
 
 {
   iptr x;
@@ -8264,7 +8264,7 @@ joined_r0x004fb11d:
 }
 
 /* 004fb29f auto */
-int __thiscall events_action_move_unit(DialogCore *this,iptr event)
+int __thiscall events_action_move_unit(DialogCore *self,iptr event)
 
 {
   int x;
@@ -8333,7 +8333,7 @@ int __thiscall events_action_move_unit(DialogCore *this,iptr event)
 }
 
 /* 004fb5b2 auto */
-int __thiscall events_action_change_terrain(DialogCore *this,iptr event)
+int __thiscall events_action_change_terrain(DialogCore *self,iptr event)
 
 {
   bool has_city;
@@ -8429,14 +8429,14 @@ int __thiscall events_action_change_terrain(DialogCore *this,iptr event)
 }
 
 /* 004fba0c auto */
-i32 __thiscall events_check_turn(ScenarioEvents *this,int turn)
+i32 __thiscall events_check_turn(ScenarioEvents *self,int turn)
 
 {
   i32 triggered;
   int *event;
   
   triggered = 0;
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   if (event == (int *)0x0) {
     triggered = 0;
   }
@@ -8444,7 +8444,7 @@ i32 __thiscall events_check_turn(ScenarioEvents *this,int turn)
     do {
       if ((*event == 4) && ((event[0xb] == -1 || (event[0xb] == turn)))) {
         triggered = 1;
-        event_run_actions((Dialog *)this,(iptr)event);
+        event_run_actions((Dialog *)self,(iptr)event);
       }
       event = (int *)event[0x6f];
     } while (event != (int *)0x0);
@@ -8453,14 +8453,14 @@ i32 __thiscall events_check_turn(ScenarioEvents *this,int turn)
 }
 
 /* 004fba9c auto */
-i32 __thiscall events_check_turn_interval(ScenarioEvents *this,int turn)
+i32 __thiscall events_check_turn_interval(ScenarioEvents *self,int turn)
 
 {
   i32 triggered;
   int *event;
   
   triggered = 0;
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   if (event == (int *)0x0) {
     triggered = 0;
   }
@@ -8468,7 +8468,7 @@ i32 __thiscall events_check_turn_interval(ScenarioEvents *this,int turn)
     do {
       if ((*event == 8) && ((event[0xb] == 0 || (turn % event[0xb] == 0)))) {
         triggered = 1;
-        event_run_actions((Dialog *)this,(iptr)event);
+        event_run_actions((Dialog *)self,(iptr)event);
       }
       event = (int *)event[0x6f];
     } while (event != (int *)0x0);
@@ -8477,7 +8477,7 @@ i32 __thiscall events_check_turn_interval(ScenarioEvents *this,int turn)
 }
 
 /* 004fbb2f auto */
-i32 __thiscall events_check_random_turn(ScenarioEvents *this,i32 turn)
+i32 __thiscall events_check_random_turn(ScenarioEvents *self,i32 turn)
 
 {
   int rnd;
@@ -8486,7 +8486,7 @@ i32 __thiscall events_check_random_turn(ScenarioEvents *this,i32 turn)
   int *event;
   
   triggered = 0;
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   if (event == (int *)0x0) {
     triggered = 0;
   }
@@ -8502,7 +8502,7 @@ i32 __thiscall events_check_random_turn(ScenarioEvents *this,i32 turn)
         }
         if (event[0xc] == roll) {
           triggered = 1;
-          event_run_actions((Dialog *)this,(iptr)event);
+          event_run_actions((Dialog *)self,(iptr)event);
         }
       }
       event = (int *)event[0x6f];
@@ -8512,7 +8512,7 @@ i32 __thiscall events_check_random_turn(ScenarioEvents *this,i32 turn)
 }
 
 /* 004fbbdd auto */
-i32 __thiscall events_check_received_tech(ScenarioEvents *this)
+i32 __thiscall events_check_received_tech(ScenarioEvents *self)
 
 {
   int has_tech;
@@ -8521,7 +8521,7 @@ i32 __thiscall events_check_received_tech(ScenarioEvents *this)
   int *event;
   
   triggered = 0;
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   if (event == (int *)0x0) {
     triggered = 0;
   }
@@ -8534,7 +8534,7 @@ i32 __thiscall events_check_received_tech(ScenarioEvents *this)
                (has_tech = civ_has_advance(civ,event[0xd]), has_tech != 0)) {
               event[9] = civ;
               triggered = 1;
-              event_run_actions((Dialog *)this,(iptr)event);
+              event_run_actions((Dialog *)self,(iptr)event);
             }
           }
         }
@@ -8542,7 +8542,7 @@ i32 __thiscall events_check_received_tech(ScenarioEvents *this)
                  ((1 << (*(byte *)(event + 9) & 0x1f) & (uint)game.civs_alive) != 0)) &&
                 (has_tech = civ_has_advance(event[9],event[0xd]), has_tech != 0)) {
           triggered = 1;
-          event_run_actions((Dialog *)this,(iptr)event);
+          event_run_actions((Dialog *)self,(iptr)event);
         }
       }
       event = (int *)event[0x6f];
@@ -8552,14 +8552,14 @@ i32 __thiscall events_check_received_tech(ScenarioEvents *this)
 }
 
 /* 004fbd2b auto */
-i32 __thiscall events_check_scenario_loaded(ScenarioEvents *this)
+i32 __thiscall events_check_scenario_loaded(ScenarioEvents *self)
 
 {
   i32 triggered;
   int *event;
   
   triggered = 0;
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   if (event == (int *)0x0) {
     triggered = 0;
   }
@@ -8567,7 +8567,7 @@ i32 __thiscall events_check_scenario_loaded(ScenarioEvents *this)
     do {
       if (*event == 0x20) {
         triggered = 1;
-        event_run_actions((Dialog *)this,(iptr)event);
+        event_run_actions((Dialog *)self,(iptr)event);
       }
       event = (int *)event[0x6f];
     } while (event != (int *)0x0);
@@ -8577,14 +8577,14 @@ i32 __thiscall events_check_scenario_loaded(ScenarioEvents *this)
 
 /* 004fbd9d auto */
 i32 __thiscall
-events_check_unit_killed(ScenarioEvents *this,int unit_type,int attacker_civ,int defender_civ)
+events_check_unit_killed(ScenarioEvents *self,int unit_type,int attacker_civ,int defender_civ)
 
 {
   i32 triggered;
   int *event;
   
   triggered = 0;
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   if (event == (int *)0x0) {
     triggered = 0;
   }
@@ -8600,7 +8600,7 @@ events_check_unit_killed(ScenarioEvents *this,int unit_type,int attacker_civ,int
         if (event[9] == -2) {
           event[9] = defender_civ;
         }
-        event_run_actions((Dialog *)this,(iptr)event);
+        event_run_actions((Dialog *)self,(iptr)event);
       }
       event = (int *)event[0x6f];
     } while (event != (int *)0x0);
@@ -8609,14 +8609,14 @@ events_check_unit_killed(ScenarioEvents *this,int unit_type,int attacker_civ,int
 }
 
 /* 004fbe84 auto */
-i32 __thiscall events_check_negotiation(ScenarioEvents *this,iptr talker_civ,iptr listener_civ)
+i32 __thiscall events_check_negotiation(ScenarioEvents *self,iptr talker_civ,iptr listener_civ)
 
 {
   int *event;
   bool talker_match;
   bool listener_match;
   
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   do {
     if (event == (int *)0x0) {
       return 1;
@@ -8645,10 +8645,10 @@ i32 __thiscall events_check_negotiation(ScenarioEvents *this,iptr talker_civ,ipt
       if ((talker_match) && (listener_match)) {
 run_event:
         if (event[0x60] == 0x1000) {
-          event_run_actions((Dialog *)this,(iptr)event);
+          event_run_actions((Dialog *)self,(iptr)event);
           return 0;
         }
-        event_run_actions((Dialog *)this,(iptr)event);
+        event_run_actions((Dialog *)self,(iptr)event);
         return 1;
       }
       if ((2 < game.multiplayer) &&
@@ -8682,7 +8682,7 @@ run_event:
 }
 
 /* 004fc20d auto */
-i32 __thiscall events_check_no_schism(ScenarioEvents *this,iptr civ)
+i32 __thiscall events_check_no_schism(ScenarioEvents *self,iptr civ)
 
 {
   bool triggered;
@@ -8690,14 +8690,14 @@ i32 __thiscall events_check_no_schism(ScenarioEvents *this,iptr civ)
   int *event;
   
   triggered = false;
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   if (event == (int *)0x0) {
     result = 1;
   }
   else {
     do {
       if ((*event == 0x80) && ((event[9] == civ || (event[9] == -2)))) {
-        event_run_actions((Dialog *)this,(iptr)event);
+        event_run_actions((Dialog *)self,(iptr)event);
         triggered = true;
       }
       event = (int *)event[0x6f];
@@ -8714,7 +8714,7 @@ i32 __thiscall events_check_no_schism(ScenarioEvents *this,iptr civ)
 
 /* 004fc2bb auto */
 i32 __thiscall
-events_check_city_taken(ScenarioEvents *this,iptr city_name,iptr attacker_civ,iptr defender_civ)
+events_check_city_taken(ScenarioEvents *self,iptr city_name,iptr attacker_civ,iptr defender_civ)
 
 {
   int cmp;
@@ -8722,7 +8722,7 @@ events_check_city_taken(ScenarioEvents *this,iptr city_name,iptr attacker_civ,ip
   int *event;
   
   triggered = 0;
-  event = (int *)this->event_list;
+  event = (int *)self->event_list;
   if (event == (int *)0x0) {
     triggered = 0;
   }
@@ -8738,7 +8738,7 @@ events_check_city_taken(ScenarioEvents *this,iptr city_name,iptr attacker_civ,ip
           event[9] = defender_civ;
         }
         triggered = 1;
-        event_run_actions((Dialog *)this,(iptr)event);
+        event_run_actions((Dialog *)self,(iptr)event);
       }
       event = (int *)event[0x6f];
     } while (event != (int *)0x0);
@@ -8747,44 +8747,44 @@ events_check_city_taken(ScenarioEvents *this,iptr city_name,iptr attacker_civ,ip
 }
 
 /* 004fc3ae auto */
-i32 __thiscall event_run_actions(Dialog *this,iptr event)
+i32 __thiscall event_run_actions(Dialog *self,iptr event)
 
 {
   i32 result;
   
   if (((*(byte *)(event + 4) & 0x40) == 0) || ((*(byte *)(event + 5) & 0x20) == 0)) {
     if ((*(byte *)(event + 4) & 0x10) != 0) {
-      events_action_play_wave((DialogCore *)this,event);
+      events_action_play_wave((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 4) & 0x80) != 0) {
-      events_action_play_cd((DialogCore *)this,event);
+      events_action_play_cd((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 4) & 4) != 0) {
-      events_action_create_unit((DialogCore *)this,event);
+      events_action_create_unit((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 4) & 2) != 0) {
-      events_action_move_unit((DialogCore *)this,event);
+      events_action_move_unit((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 5) & 2) != 0) {
-      events_action_change_terrain((DialogCore *)this,event);
+      events_action_change_terrain((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 4) & 0x20) != 0) {
-      events_action_make_aggression((DialogCore *)this,event);
+      events_action_make_aggression((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 4) & 8) != 0) {
-      events_action_change_money((DialogCore *)this,event);
+      events_action_change_money((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 5) & 4) != 0) {
-      events_action_destroy_civ((DialogCore *)this,event);
+      events_action_destroy_civ((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 5) & 8) != 0) {
-      events_action_give_tech((DialogCore *)this,event);
+      events_action_give_tech((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 4) & 1) != 0) {
-      events_action_text(this,event);
+      events_action_text(self,event);
     }
     if ((*(byte *)(event + 5) & 1) != 0) {
-      events_action_dont_play_wonders((DialogCore *)this,event);
+      events_action_dont_play_wonders((DialogCore *)self,event);
     }
     if ((*(byte *)(event + 4) & 0x40) != 0) {
       *(uint *)(event + 4) = *(uint *)(event + 4) | 0x2000;
@@ -8798,7 +8798,7 @@ i32 __thiscall event_run_actions(Dialog *this,iptr event)
 }
 
 /* 004fc516 auto */
-int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section)
+int __thiscall events_parse_file(ScenarioEvents *self,iptr filename,iptr section)
 
 {
   int cmp;
@@ -8851,7 +8851,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
           if (events_parse_verbose != 0) {
             _printf(str_if_found_creating_new_event_structure);
           }
-          event = (int *)events_alloc(this);
+          event = (int *)events_alloc(self);
           if (event == (int *)0x0) {
             if (events_parse_verbose != 0) {
               _printf(str_failed_to_create_new_event_structure);
@@ -8950,7 +8950,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
               }
               else {
                 len = _strlen(arg);
-                str_buf = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                 event[2] = str_buf;
                 if (event[2] == 0) goto finish;
                 crt_strcpy(event[2],arg);
@@ -8973,7 +8973,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
                 }
                 else {
                   len = _strlen(arg);
-                  cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                  cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                   event[5] = cmp;
                   if (event[5] == 0) goto finish;
                   crt_strcpy(event[5],arg);
@@ -8996,7 +8996,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
                   }
                   else {
                     len = _strlen(arg);
-                    cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                    cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                     event[8] = cmp;
                     if (event[8] == 0) goto finish;
                     crt_strcpy(event[8],arg);
@@ -9042,7 +9042,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
               }
               else {
                 len = _strlen(arg);
-                cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                 event[5] = cmp;
                 if (event[5] == 0) goto finish;
                 crt_strcpy(event[5],arg);
@@ -9097,7 +9097,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
                   }
                   else {
                     len = _strlen(arg);
-                    cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                    cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                     event[8] = cmp;
                     if (event[8] == 0) goto finish;
                     crt_strcpy(event[8],arg);
@@ -9177,7 +9177,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
               }
               else {
                 len = _strlen(arg);
-                cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                 event[8] = cmp;
                 if (event[8] == 0) goto finish;
                 crt_strcpy(event[8],arg);
@@ -9222,7 +9222,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
                 }
                 else {
                   len = _strlen(arg);
-                  cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                  cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                   event[8] = cmp;
                   if (event[8] == 0) goto finish;
                   crt_strcpy(event[8],arg);
@@ -9287,7 +9287,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
                   }
                   else {
                     len = _strlen(arg);
-                    cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                    cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                     event[5] = cmp;
                     if (event[5] == 0) goto finish;
                     crt_strcpy(event[5],arg);
@@ -9311,7 +9311,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
                     }
                     else {
                       len = _strlen(arg);
-                      cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                      cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                       event[8] = cmp;
                       if (event[8] == 0) goto finish;
                       crt_strcpy(event[8],arg);
@@ -9327,7 +9327,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
                     if (cmp == 0) {
                       arg += 5;
                       len = _strlen(arg);
-                      cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                      cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                       event[4] = cmp;
                       if (event[4] == 0) goto finish;
                       crt_strcpy(event[4],arg);
@@ -9496,7 +9496,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr filename,iptr section
           while (cmp = __strcmpi(line,str_endtext), cmp != 0) {
             if (i != 0x14) {
               len = _strlen(line);
-              cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+              cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
               event[i + 0xe] = cmp;
               if (event[i + 0xe] == 0) goto finish;
               crt_strcpy(event[i + 0xe],line);
@@ -9624,7 +9624,7 @@ read_unit_fields:
                   }
                   else {
                     len = _strlen(arg);
-                    str_buf = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                    str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                     event[0x37] = str_buf;
                     if (event[0x37] == 0) goto finish;
                     crt_strcpy(event[0x37],arg);
@@ -9647,7 +9647,7 @@ read_unit_fields:
                     }
                     else {
                       len = _strlen(arg);
-                      cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                      cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                       event[0x35] = cmp;
                       if (event[0x35] == 0) goto finish;
                       crt_strcpy(event[0x35],arg);
@@ -9684,7 +9684,7 @@ read_unit_fields:
                       if (cmp == 0) {
                         arg += 9;
                         len = _strlen(arg);
-                        cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                        cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                         event[0x4f] = cmp;
                         if (event[0x4f] == 0) goto finish;
                         crt_strcpy(event[0x4f],arg);
@@ -9771,7 +9771,7 @@ read_unit_fields:
                     }
                     else {
                       len = _strlen(arg);
-                      cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                      cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                       event[0x5d] = cmp;
                       if (event[0x5d] == 0) goto finish;
                       crt_strcpy(event[0x5d],arg);
@@ -9845,7 +9845,7 @@ read_unit_fields:
                           }
                           else {
                             len = _strlen(arg);
-                            cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                            cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                             event[0x33] = cmp;
                             if (event[0x33] == 0) goto finish;
                             crt_strcpy(event[0x33],arg);
@@ -9868,7 +9868,7 @@ read_unit_fields:
                             }
                             else {
                               len = _strlen(arg);
-                              cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                              cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                               event[0x31] = cmp;
                               if (event[0x31] == 0) goto finish;
                               crt_strcpy(event[0x31],arg);
@@ -10012,7 +10012,7 @@ read_unit_fields:
                                 }
                                 else {
                                   len = _strlen(arg);
-                                  str_buf = memblock_alloc((iptr)(this->events_string_pool),len + 1)
+                                  str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1)
                                   ;
                                   event[0x24] = str_buf;
                                   if (event[0x24] == 0) goto finish;
@@ -10037,7 +10037,7 @@ read_unit_fields:
                                   }
                                   else {
                                     len = _strlen(arg);
-                                    cmp = memblock_alloc((iptr)(this->events_string_pool),
+                                    cmp = memblock_alloc((iptr)(self->events_string_pool),
                                                                len + 1);
                                     event[0x22] = cmp;
                                     if (event[0x22] == 0) goto finish;
@@ -10173,7 +10173,7 @@ read_unit_fields:
                                   goto finish;
                                 }
                                 len = _strlen(arg);
-                                cmp = memblock_alloc((iptr)(this->events_string_pool),len + 1);
+                                cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
                                 event[0x61] = cmp;
                                 if (event[0x61] == 0) goto finish;
                                 crt_strcpy(event[0x61],arg);
@@ -10738,7 +10738,7 @@ close_timer_dialog:
     net_session_block.net_vote_replies_pending = net_session_block.net_player_count[0] - 1;
     net_session_block.net_vote_status = 0;
     net_send_text_args(0x40,0xff,2,0,0,0);
-    dlg_pending_idle_callback = ((void *)(iptr)net_vote_wait_idle_cb);
+    dlg_pending_idle_callback = ((i8*)(net_vote_wait_idle_cb));
     dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
     minutes = popup_game_sprite_flags((iptr)&str_newturntimerserver,0x2000001,(iptr)&popup_info_icon_sprite,0);
     if (((minutes < 0) || (net_session_block.net_vote_status == -1)) || (net_session_block.net_vote_replies_pending != 0)) {
@@ -10873,7 +10873,7 @@ tribe_menu_loop:
                  -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
     }
     if (2 < game_mode) {
-      dlg_pending_idle_callback = ((void *)(iptr)net_pump_idle_cb);
+      dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
     }
     choice = dlg_show_modal(&dlg,0);
     snd_play_effect(0x6a,0,0,0);
@@ -11029,7 +11029,7 @@ count_available_tribes:
     dlg.result_id = 0;
     dlg.result_extra = 0;
     if (2 < game_mode) {
-      dlg_pending_idle_callback = ((void *)(iptr)net_lock_wait_idle_cb);
+      dlg_pending_idle_callback = ((i8*)(net_lock_wait_idle_cb));
     }
     leader2 = dlg_show_modal(&dlg,0);
     sel_tribe = radiogrp_get_selected((RadioGroupGetSelView *)dlg.radio_group);
@@ -11118,7 +11118,7 @@ apply_tribe:
     leaders[civs[game.player_civ].tribe].leader_name =
          leaders[civs[game.player_civ].tribe].names[((uint)leaders[civs[game.player_civ].tribe].female)];
     str = label_string((int)leaders[civs[game.player_civ].tribe].leader_name);
-    crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,str);
+    crt_strcpy(&civ_names[game.player_civ].leader_name,str);
     leaders[civs[game.player_civ].tribe].leader_name =
          -leaders[civs[game.player_civ].tribe].leader_name;
     now_ticks = civ_check_password((*(i8 *)&human_civ));
@@ -11140,7 +11140,7 @@ apply_tribe:
                         + 1));
           }
           if (2 < game_mode) {
-            dlg_pending_idle_callback = ((void *)(iptr)net_pump_idle_cb);
+            dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
           }
           cancelled = dialog_run_modal(&dlg,(iptr)input_text,0);
         } while (input_text[0] == '\0');
@@ -11167,7 +11167,7 @@ apply_tribe:
           }
           goto tribe_menu_loop;
         }
-        crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,input_text);
+        crt_strcpy(&civ_names[game.player_civ].leader_name,input_text);
         crt_strcpy(((i8 *)&net_session_block.net_player_info_leader_name),input_text);
         net_session_block.net_player_info_tribe_name[0] = '\0';
         net_session_block.net_player_info_adjective[0] = '\0';
@@ -11175,21 +11175,21 @@ apply_tribe:
       else {
         if (((net_session_block.net_player_info_tribe_name[0] == '\0') || (net_session_block.net_player_info_adjective[0] == '\0')) || (game_mode == 1)) {
           str = label_string((int)leaders[civs[game.player_civ].tribe].plural);
-          crt_strcpy((iptr)&civ_names[game.player_civ].tribe_name,str);
+          crt_strcpy(&civ_names[game.player_civ].tribe_name,str);
           str = label_string((int)leaders[civs[game.player_civ].tribe].adjective);
-          crt_strcpy((iptr)&civ_names[game.player_civ].adjective,str);
+          crt_strcpy(&civ_names[game.player_civ].adjective,str);
         }
         else {
-          crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,((i8 *)&net_session_block.net_player_info_leader_name));
-          crt_strcpy((iptr)&civ_names[game.player_civ].tribe_name,((i8 *)&net_session_block.net_player_info_tribe_name));
-          crt_strcpy((iptr)&civ_names[game.player_civ].adjective,((i8 *)&net_session_block.net_player_info_adjective));
+          crt_strcpy(&civ_names[game.player_civ].leader_name,((i8 *)&net_session_block.net_player_info_leader_name));
+          crt_strcpy(&civ_names[game.player_civ].tribe_name,((i8 *)&net_session_block.net_player_info_tribe_name));
+          crt_strcpy(&civ_names[game.player_civ].adjective,((i8 *)&net_session_block.net_player_info_adjective));
         }
         leaders[civs[game.player_civ].tribe].plural = -leaders[civs[game.player_civ].tribe].plural;
         leaders[civs[game.player_civ].tribe].adjective =
              -leaders[civs[game.player_civ].tribe].adjective;
         for (title = 0; title < 7; title++) {
           str = label_string((int)leaders[civs[game.player_civ].tribe].titles[title][choice]);
-          crt_strcpy((iptr)&civ_names[game.player_civ].titles[title],str);
+          crt_strcpy(&civ_names[game.player_civ].titles[title],str);
           leaders[civs[game.player_civ].tribe].titles[title][choice] =
                -leaders[civs[game.player_civ].tribe].titles[title][choice]
           ;
@@ -11221,7 +11221,7 @@ apply_tribe:
                         + 1));
           }
           if (2 < game_mode) {
-            dlg_pending_idle_callback = ((void *)(iptr)net_pump_idle_cb);
+            dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
           }
           choice = dlg_show_modal(&dlg,0);
           snd_play_effect(0x6a,0,0,0);
@@ -11247,9 +11247,9 @@ apply_tribe:
             }
             goto tribe_menu_loop;
           }
-          crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,((i8 *)&minimap_window_block.text_string_args));
-          crt_strcpy((iptr)&civ_names[game.player_civ].tribe_name,((i8 *)&minimap_window_block.text_string_arg1));
-          crt_strcpy((iptr)&civ_names[game.player_civ].adjective,((i8 *)&minimap_window_block.text_string_arg2));
+          crt_strcpy(&civ_names[game.player_civ].leader_name,((i8 *)&minimap_window_block.text_string_args));
+          crt_strcpy(&civ_names[game.player_civ].tribe_name,((i8 *)&minimap_window_block.text_string_arg1));
+          crt_strcpy(&civ_names[game.player_civ].adjective,((i8 *)&minimap_window_block.text_string_arg2));
           crt_strcpy(((i8 *)&net_session_block.net_player_info_leader_name),((i8 *)&minimap_window_block.text_string_args));
           crt_strcpy(((i8 *)&net_session_block.net_player_info_tribe_name),((i8 *)&minimap_window_block.text_string_arg1));
           crt_strcpy(((i8 *)&net_session_block.net_player_info_adjective),((i8 *)&minimap_window_block.text_string_arg2));
@@ -11291,12 +11291,12 @@ apply_tribe:
                         + 1));
           }
           if (2 < game_mode) {
-            dlg_pending_idle_callback = ((void *)(iptr)net_pump_idle_cb);
+            dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
           }
           choice = dlg_show_modal(&dlg,0);
           if (choice == 0) {
             for (title = 0; title < 7; title++) {
-              crt_strcpy((iptr)&civ_names[game.player_civ].titles[title],
+              crt_strcpy(&civ_names[game.player_civ].titles[title],
                            ((i8 *)&minimap_window_block.text_string_args) + title * 0x104);
               crt_strcpy(((i8 *)&net_session_block.net_player_info_govt_titles) + title * 0x18,((i8 *)&minimap_window_block.text_string_args) + title * 0x104);
             }
@@ -11340,7 +11340,7 @@ apply_tribe:
                      ));
       }
       if (2 < game_mode) {
-        dlg_pending_idle_callback = ((void *)(iptr)net_pump_idle_cb);
+        dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
       }
       choice = dlg_show_modal(&dlg,0);
       if ((net_session_block.nm_server_canceled_count != 0) || (net_session_block.nm_lost_server_on_join_count != 0)) {
@@ -11547,7 +11547,7 @@ scenario_menu_loop:
 done:
       return value;
     }
-    path_set_extension((iptr)dst,(iptr)&map_views_block.text_buffer,(iptr)&lang_file_ext);
+    path_set_extension(dst,(char*)(&map_views_block.text_buffer),lang_file_ext);
     if (cd_music_available != 0) {
       snd_play_effect(0x6a,0,0,0);
     }
@@ -11784,7 +11784,7 @@ done:
         if (result == 0) break;
         game.human_players = game.human_players & ~(byte)(1 << ((byte)civ & 0x1f));
       }
-      crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,name_text);
+      crt_strcpy(&civ_names[game.player_civ].leader_name,name_text);
       dlg_load_game_section(&dlg,(iptr)&str_gender_6,1);
       dialog_prepend_title_label((iptr)&dlg,player_idx + 0x25e);
       dialog_set_default_choice
@@ -12264,7 +12264,7 @@ done:
       dialog_prepend_title_label((iptr)&dlg,player_idx + 0x25f);
       result = dialog_run_modal(&dlg,(iptr)name_text,0);
       if (result == 0) {
-        crt_strcpy((iptr)&civ_names[civ].leader_name,name_text);
+        crt_strcpy(&civ_names[civ].leader_name,name_text);
         if (0 < leaders[civs[civ].tribe].leader_name) {
           leaders[civs[civ].tribe].leader_name = -leaders[civs[civ].tribe].leader_name;
         }
@@ -13075,7 +13075,7 @@ i32 __cdecl events_write_file(void)
           got = _fgets(s,0x100,src_fp);
           if ((got == (char *)0x0) || (rc = _fputs(s,dst_fp), rc == -1))
           goto cleanup;
-          str_strip_newline((iptr)s);
+          str_strip_newline(s);
           str_trim((iptr)s);
           rc = __strcmpi(s,str_beginevents_2);
         } while (rc != 0);
@@ -13092,7 +13092,7 @@ copy_ok:
         do {
           got = _fgets(s,0x100,src_fp);
           if (got == (char *)0x0) goto cleanup;
-          str_strip_newline((iptr)s);
+          str_strip_newline(s);
           str_trim((iptr)s);
           rc = __strcmpi(s,str_endevents_2);
         } while (rc != 0);
@@ -15471,7 +15471,7 @@ void __cdecl events_editor_on_add_action(void)
 }
 
 /* 0054f16b auto */
-void __thiscall events_editor_draw(ViewWindow *this)
+void __thiscall events_editor_draw(ViewWindow *self)
 
 {
   u32 top;
@@ -15481,41 +15481,41 @@ void __thiscall events_editor_draw(ViewWindow *this)
   uint bar_height;
   int x;
   
-  frame_wnd_draw_caption((FrameWindow *)this);
-  gfx_fill_rect((iptr)this,(iptr)&this->client_rect,0x1a);
-  text_set_surface((iptr)this);
+  frame_wnd_draw_caption((FrameWindow *)self);
+  gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1a);
+  text_set_surface((iptr)self);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);
-  x = this->client_x + (int)this->client_width / 2;
-  top = this->client_y;
-  line_height = this->sci_rate_sel;
+  x = self->client_x + (int)self->client_width / 2;
+  top = self->client_y;
+  line_height = self->sci_rate_sel;
   text_clear();
   label = label_string(*(i32 *)(label_string_ids + 0x8d4));
   text_append_str(label);
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,x,(top - line_height) + 0x19,0);
-  top = this->client_y;
-  line_height = this->sci_rate_sel;
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,x,(top - line_height) + 0x19,0);
+  top = self->client_y;
+  line_height = self->sci_rate_sel;
   text_clear();
   label = label_string(*(i32 *)(label_string_ids + 0x8d8));
   text_append_str(label);
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,x,(top - line_height) + 0xc3,0);
-  top = this->client_x;
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,x,(top - line_height) + 0xc3,0);
+  top = self->client_x;
   x = top + 0x211;
-  bar_y = this->client_y + 0x1a;
+  bar_y = self->client_y + 0x1a;
   text_clear();
   _sprintf(((i8 *)&map_views_block.text_buffer),((i8 *)&events_pool_free_fmt),(uint)unit_types_block.events_pool_bytes_free);
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,top + 0x216,(bar_y - this->sci_rate_sel) - 2,0);
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,top + 0x216,(bar_y - self->sci_rate_sel) - 2,0);
   bar_height = ((uint)unit_types_block.events_pool_bytes_free * 0x13b) / (uint)unit_types_block.events_pool_size;
-  gfx_fill_rect_xywh((iptr)this,x,bar_y,10,bar_height,0x2a);
-  gfx_fill_rect_xywh((iptr)this,x,bar_height + bar_y,10,0x13b - bar_height,0x6a);
-  gfx_draw_frame_rect((iptr)this,x,bar_y,10,0x13b,10);
-  gfx_draw_frame_rect((iptr)this,x,bar_y,10,bar_height,10);
-  wnd_blit_surface((DibSurface *)this);
+  gfx_fill_rect_xywh((iptr)self,x,bar_y,10,bar_height,0x2a);
+  gfx_fill_rect_xywh((iptr)self,x,bar_height + bar_y,10,0x13b - bar_height,0x6a);
+  gfx_draw_frame_rect((iptr)self,x,bar_y,10,0x13b,10);
+  gfx_draw_frame_rect((iptr)self,x,bar_y,10,bar_height,10);
+  wnd_blit_surface((DibSurface *)self);
   return;
 }
 
 /* 0054f3b9 auto */
-void __thiscall events_editor_run(DocumentWindow *this)
+void __thiscall events_editor_run(DocumentWindow *self)
 
 {
   ScenarioEvents *this_00;
@@ -15554,7 +15554,7 @@ void __thiscall events_editor_run(DocumentWindow *this)
   palette_init(&palette);
   seh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
-  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)this;
+  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
   this_00 = operator_new(0x310);
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   if (this_00 == (ScenarioEvents *)0x0) {
@@ -15573,177 +15573,177 @@ void __thiscall events_editor_run(DocumentWindow *this)
   ui_set_ctrl_text_color(0x29);
   ui_set_ctrl_text_shadow(0x12,1,1);
   ui_set_ctrl_disabled_color(0x25);
-  this->rates_civ = 0x230;
-  this->max_rate_value = 0x17c;
-  this->init_tax_rate = 0;
+  self->rates_civ = 0x230;
+  self->max_rate_value = 0x17c;
+  self->init_tax_rate = 0;
   editor_text_dlg_wnd_block.editor_next_ctrl_id = 0xc9;
   font_height = font_cached_height((GameFont *)((i8 *)&editor_font_block.editor_font));
-  this->sci_rate_sel = font_height;
+  self->sci_rate_sel = font_height;
   arg_c = 0;
   arg_b = 0;
   arg_a = 0;
-  height = this->max_rate_value;
-  width = this->rates_civ;
+  height = self->max_rate_value;
+  width = self->rates_civ;
   arg_y = 0;
   arg_x = 0;
   style = 0xd;
   title = label_string(*(i32 *)(label_string_ids + 0x73c));
   frame_wnd_create
-            ((FrameWindow *)this,title,style,arg_x,arg_y,width,height,arg_a,arg_b,arg_c);
+            ((FrameWindow *)self,title,style,arg_x,arg_y,width,height,arg_a,arg_b,arg_c);
   x = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
-  this->lux_rate_sel = x + 8;
-  this->tax_rate_sel = 0x97;
-  y = this->client_y + 0x90;
-  x = this->client_x + 0x32;
-  rect_set_xywh((iptr)rect,x,y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+  self->lux_rate_sel = x + 8;
+  self->tax_rate_sel = 0x97;
+  y = self->client_y + 0x90;
+  x = self->client_x + 0x32;
+  rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent2 = (u8 *)0x0;
   }
   else {
-    parent2 = this->window_2;
+    parent2 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8dc));
   button_create
-            ((Control *)(this->add_trigger_button),(iptr)parent2,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this->add_trigger_button),(iptr)events_editor_on_add_trigger);
-  x = x + this->tax_rate_sel + 3;
-  rect_set_xywh((iptr)rect,x,y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+            ((Control *)(self->add_trigger_button),(iptr)parent2,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(self->add_trigger_button),(iptr)events_editor_on_add_trigger);
+  x = x + self->tax_rate_sel + 3;
+  rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent22 = (u8 *)0x0;
   }
   else {
-    parent22 = this->window_2;
+    parent22 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8e0));
   button_create
-            ((Control *)(this->edit_trigger_button),(iptr)parent22,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this->edit_trigger_button),(iptr)events_editor_on_edit_trigger);
-  rect_set_xywh((iptr)rect,x + this->tax_rate_sel + 3,y,this->tax_rate_sel,
-                     this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+            ((Control *)(self->edit_trigger_button),(iptr)parent22,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(self->edit_trigger_button),(iptr)events_editor_on_edit_trigger);
+  rect_set_xywh((iptr)rect,x + self->tax_rate_sel + 3,y,self->tax_rate_sel,
+                     self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent3 = (u8 *)0x0;
   }
   else {
-    parent3 = this->window_2;
+    parent3 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8e4));
   button_create
-            ((Control *)((u8 *)&this->delete_trigger_button),(iptr)parent3,0x65,(iptr)rect,label);
-  button_set_callback((Control *)((u8 *)&this->delete_trigger_button),(iptr)events_editor_on_delete_trigger);
-  y = this->client_y + 0x13a;
-  x = this->client_x + 0x32;
-  rect_set_xywh((iptr)rect,x,y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+            ((Control *)((u8 *)&self->delete_trigger_button),(iptr)parent3,0x65,(iptr)rect,label);
+  button_set_callback((Control *)((u8 *)&self->delete_trigger_button),(iptr)events_editor_on_delete_trigger);
+  y = self->client_y + 0x13a;
+  x = self->client_x + 0x32;
+  rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent7 = (u8 *)0x0;
   }
   else {
-    parent7 = this->window_2;
+    parent7 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8dc));
   button_create
-            ((Control *)(this->add_action_button),(iptr)parent7,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this->add_action_button),(iptr)events_editor_on_add_action);
-  x = x + this->tax_rate_sel + 3;
-  rect_set_xywh((iptr)rect,x,y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+            ((Control *)(self->add_action_button),(iptr)parent7,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(self->add_action_button),(iptr)events_editor_on_add_action);
+  x = x + self->tax_rate_sel + 3;
+  rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent8 = (u8 *)0x0;
   }
   else {
-    parent8 = this->window_2;
+    parent8 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8e0));
   button_create
-            ((Control *)&this->edit_action_button,(iptr)parent8,0x65,(iptr)rect,label);
-  button_set_callback((Control *)&this->edit_action_button,(iptr)events_editor_on_edit_action);
-  rect_set_xywh((iptr)rect,x + this->tax_rate_sel + 3,y,this->tax_rate_sel,
-                     this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+            ((Control *)&self->edit_action_button,(iptr)parent8,0x65,(iptr)rect,label);
+  button_set_callback((Control *)&self->edit_action_button,(iptr)events_editor_on_edit_action);
+  rect_set_xywh((iptr)rect,x + self->tax_rate_sel + 3,y,self->tax_rate_sel,
+                     self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent9 = (u8 *)0x0;
   }
   else {
-    parent9 = this->window_2;
+    parent9 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8e4));
   button_create
-            ((Control *)&((PictureWindow *)this)->delete_action_button,(iptr)parent9,0x65,(iptr)rect,label);
-  button_set_callback((Control *)&((PictureWindow *)this)->delete_action_button,(iptr)events_editor_on_delete_action);
-  rect_set_xywh((iptr)rect,this->client_x + 0x32,this->client_y + 0x1b,0x1cb,0x6e);
+            ((Control *)&((PictureWindow *)self)->delete_action_button,(iptr)parent9,0x65,(iptr)rect,label);
+  button_set_callback((Control *)&((PictureWindow *)self)->delete_action_button,(iptr)events_editor_on_delete_action);
+  rect_set_xywh((iptr)rect,self->client_x + 0x32,self->client_y + 0x1b,0x1cb,0x6e);
   x = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
-  if (this == (DocumentWindow *)0x0) {
+  if (self == (DocumentWindow *)0x0) {
     list_parent = (u8 *)0x0;
   }
   else {
-    list_parent = this->window_2;
+    list_parent = self->window_2;
   }
   listbox_create
-            ((Control *)(((PictureWindow *)this)->trigger_listbox),(iptr)list_parent,x,(iptr)rect);
-  listbox_set_font((ListBoxFontView *)(((PictureWindow *)this)->trigger_listbox),(iptr)&editor_font_block.editor_font);
-  listbox_set_select_callback((ListBoxSelectSetView *)(((PictureWindow *)this)->trigger_listbox),(iptr)events_editor_fill_actions);
-  listbox_set_dblclick_callback((ListBoxDblClickSetView *)(((PictureWindow *)this)->trigger_listbox),(iptr)events_editor_on_edit_trigger);
+            ((Control *)(((PictureWindow *)self)->trigger_listbox),(iptr)list_parent,x,(iptr)rect);
+  listbox_set_font((ListBoxFontView *)(((PictureWindow *)self)->trigger_listbox),(iptr)&editor_font_block.editor_font);
+  listbox_set_select_callback((ListBoxSelectSetView *)(((PictureWindow *)self)->trigger_listbox),(iptr)events_editor_fill_actions);
+  listbox_set_dblclick_callback((ListBoxDblClickSetView *)(((PictureWindow *)self)->trigger_listbox),(iptr)events_editor_on_edit_trigger);
   events_editor_fill_triggers();
-  listbox_set_cur_sel((ListBoxSetSelView *)(((PictureWindow *)this)->trigger_listbox),0);
-  rect_set_xywh((iptr)rect,this->client_x + 0x32,this->client_y + 0xc5,0x1cb,0x6e);
+  listbox_set_cur_sel((ListBoxSetSelView *)(((PictureWindow *)self)->trigger_listbox),0);
+  rect_set_xywh((iptr)rect,self->client_x + 0x32,self->client_y + 0xc5,0x1cb,0x6e);
   x = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
-  if (this == (DocumentWindow *)0x0) {
+  if (self == (DocumentWindow *)0x0) {
     list_parent2 = (u8 *)0x0;
   }
   else {
-    list_parent2 = this->window_2;
+    list_parent2 = self->window_2;
   }
   listbox_create
-            ((Control *)(((PictureWindow *)this)->action_listbox),(iptr)list_parent2,x,(iptr)rect);
-  listbox_set_font((ListBoxFontView *)(((PictureWindow *)this)->action_listbox),(iptr)&editor_font_block.editor_font);
-  listbox_set_select_callback((ListBoxSelectSetView *)(((PictureWindow *)this)->action_listbox),(iptr)events_editor_update_buttons);
-  listbox_set_dblclick_callback((ListBoxDblClickSetView *)(((PictureWindow *)this)->action_listbox),(iptr)events_editor_on_edit_action);
+            ((Control *)(((PictureWindow *)self)->action_listbox),(iptr)list_parent2,x,(iptr)rect);
+  listbox_set_font((ListBoxFontView *)(((PictureWindow *)self)->action_listbox),(iptr)&editor_font_block.editor_font);
+  listbox_set_select_callback((ListBoxSelectSetView *)(((PictureWindow *)self)->action_listbox),(iptr)events_editor_update_buttons);
+  listbox_set_dblclick_callback((ListBoxDblClickSetView *)(((PictureWindow *)self)->action_listbox),(iptr)events_editor_on_edit_action);
   events_editor_fill_actions(0);
   events_editor_update_buttons(0);
-  this->tax_rate_sel = (int)(this->client_width - 8) / 3;
-  y = (this->client_y + this->client_height) - (this->lux_rate_sel + 2);
-  x = this->client_x + 2;
-  rect_set_xywh((iptr)rect,x,y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+  self->tax_rate_sel = (int)(self->client_width - 8) / 3;
+  y = (self->client_y + self->client_height) - (self->lux_rate_sel + 2);
+  x = self->client_x + 2;
+  rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent4 = (u8 *)0x0;
   }
   else {
-    parent4 = this->window_2;
+    parent4 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
-            ((Control *)(this->editor_ok_button),(iptr)parent4,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(this->editor_ok_button),(iptr)events_editor_on_ok);
-  x = x + this->tax_rate_sel + 2;
-  rect_set_xywh((iptr)rect,x,y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+            ((Control *)(self->editor_ok_button),(iptr)parent4,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(self->editor_ok_button),(iptr)events_editor_on_ok);
+  x = x + self->tax_rate_sel + 2;
+  rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent5 = (u8 *)0x0;
   }
   else {
-    parent5 = this->window_2;
+    parent5 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
-            ((Control *)(this->editor_help_button),(iptr)parent5,0x66,(iptr)rect,label);
-  button_set_callback((Control *)(this->editor_help_button),(iptr)events_editor_on_help);
-  rect_set_xywh((iptr)rect,x + this->tax_rate_sel + 2,y,this->tax_rate_sel,
-                     this->lux_rate_sel);
-  if (this == (DocumentWindow *)0x0) {
+            ((Control *)(self->editor_help_button),(iptr)parent5,0x66,(iptr)rect,label);
+  button_set_callback((Control *)(self->editor_help_button),(iptr)events_editor_on_help);
+  rect_set_xywh((iptr)rect,x + self->tax_rate_sel + 2,y,self->tax_rate_sel,
+                     self->lux_rate_sel);
+  if (self == (DocumentWindow *)0x0) {
     parent6 = (u8 *)0x0;
   }
   else {
-    parent6 = this->window_2;
+    parent6 = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
-            ((Control *)(this->editor_cancel_button),(iptr)parent6,0x66,(iptr)rect,label);
-  button_set_callback((Control *)(this->editor_cancel_button),(iptr)events_editor_on_cancel);
-  ctrl_set_cancel_button((Control *)(this->editor_cancel_button));
-  wnd_set_keyboard_nav((Wnd *)this->window_2,0);
+            ((Control *)(self->editor_cancel_button),(iptr)parent6,0x66,(iptr)rect,label);
+  button_set_callback((Control *)(self->editor_cancel_button),(iptr)events_editor_on_cancel);
+  ctrl_set_cancel_button((Control *)(self->editor_cancel_button));
+  wnd_set_keyboard_nav((Wnd *)self->window_2,0);
   editor_value_clamped = 0;
-  wnd_set_redraw_callback((SurfaceWindow *)this,(iptr)events_editor_focus_redraw);
-  wnd_repaint((SurfaceWindow *)this);
-  window_show((WindowObjectView *)this);
-  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
+  wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)events_editor_focus_redraw);
+  wnd_repaint((SurfaceWindow *)self);
+  window_show((WindowObjectView *)self);
+  wnd_run_modal_loop((ModalMenuWindow *)self->window_2);
   while (editor_text_dlg_wnd_block.editor_running != 0) {
     win_pump_one_message();
   }
@@ -15766,23 +15766,23 @@ void __cdecl events_editor_open(void)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  editor_wnd_ctor(&editor_wnd);
+  editor_wnd_ctor((DocumentWindow*)(&editor_wnd));
   seh_state = 0;
-  events_editor_run(&editor_wnd);
+  events_editor_run((DocumentWindow*)(&editor_wnd));
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00550017 */ { editor_wnd_dtor((EditorWindow *)((iptr)&editor_wnd)); }
   return;
 }
 
 /* 00551cd0 auto */
-DialogCore * __thiscall events_delete(DialogCore *this,uint flags)
+DialogCore * __thiscall events_delete(DialogCore *self,uint flags)
 
 {
-  events_dtor(this);
+  events_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 00554297 auto */
@@ -16973,17 +16973,17 @@ void __cdecl cheat_edit_king(void)
         text_set_string_arg(0,(iptr)&map_views_block.text_buffer);
         if (-1 < leaders[civs[civ].tribe].leader_name) {
           value = label_string((int)leaders[civs[civ].tribe].leader_name);
-          crt_strcpy((iptr)&civ_names[civ].leader_name,value);
+          crt_strcpy(&civ_names[civ].leader_name,value);
           leaders[civs[civ].tribe].leader_name = -leaders[civs[civ].tribe].leader_name;
         }
         if (-1 < leaders[civs[civ].tribe].plural) {
           value = label_string((int)leaders[civs[civ].tribe].plural);
-          crt_strcpy((iptr)&civ_names[civ].tribe_name,value);
+          crt_strcpy(&civ_names[civ].tribe_name,value);
           leaders[civs[civ].tribe].plural = -leaders[civs[civ].tribe].plural;
         }
         if (-1 < leaders[civs[civ].tribe].adjective) {
           value = label_string((int)leaders[civs[civ].tribe].adjective);
-          crt_strcpy((iptr)&civ_names[civ].adjective,value);
+          crt_strcpy(&civ_names[civ].adjective,value);
           leaders[civs[civ].tribe].adjective = -leaders[civs[civ].tribe].adjective;
         }
         for (gov = 0; gov < 7; gov++) {
@@ -16998,9 +16998,9 @@ void __cdecl cheat_edit_king(void)
                   (&dialog2,(iptr)&str_game_7,(iptr)&str_editkingname,0x17,(iptr)&civ_names[civ].leader_name,0,0,0,1);
         choice = dlg_show_modal(&dialog2,0);
         if (-1 < choice) {
-          crt_strcpy((iptr)&civ_names[civ].leader_name,((i8 *)&minimap_window_block.text_string_args));
-          crt_strcpy((iptr)&civ_names[civ].tribe_name,((i8 *)&minimap_window_block.text_string_arg1));
-          crt_strcpy((iptr)&civ_names[civ].adjective,((i8 *)&minimap_window_block.text_string_arg2));
+          crt_strcpy(&civ_names[civ].leader_name,((i8 *)&minimap_window_block.text_string_args));
+          crt_strcpy(&civ_names[civ].tribe_name,((i8 *)&minimap_window_block.text_string_arg1));
+          crt_strcpy(&civ_names[civ].adjective,((i8 *)&minimap_window_block.text_string_arg2));
         }
       }
       else if (choice == 0xb) {
@@ -17438,18 +17438,18 @@ void __cdecl setup_picwnd_load_image(i32 width,i32 height)
 }
 
 /* 00559ded auto */
-void __thiscall setup_picwnd_reset_fields(ViewWindow *this)
+void __thiscall setup_picwnd_reset_fields(ViewWindow *self)
 
 {
-  this->max_rate_value = 100;
-  this->rates_civ = this->max_rate_value;
-  this->tax_rate_sel = 1;
-  this->lux_rate_sel = 0;
+  self->max_rate_value = 100;
+  self->rates_civ = self->max_rate_value;
+  self->tax_rate_sel = 1;
+  self->lux_rate_sel = 0;
   return;
 }
 
 /* 00559e3c auto */
-ViewWindow * __thiscall setup_picwnd_ctor(ViewWindow *this)
+ViewWindow * __thiscall setup_picwnd_ctor(ViewWindow *self)
 
 {
   i32 seh_handler;
@@ -17457,13 +17457,13 @@ ViewWindow * __thiscall setup_picwnd_ctor(ViewWindow *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  frame_wnd_ctor((SurfaceWindow *)this);
+  frame_wnd_ctor((SurfaceWindow *)self);
   seh_state = 0;
-  dll_handle_init((DllHandle *)&this->dialog_w);
+  dll_handle_init((DllHandle *)&self->dialog_w);
   seh_state = (seh_state & 0xffffff00 | (byte)(1));
-  this->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 8);
-  setup_picwnd_reset_fields(this);
-  return this;
+  self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 8);
+  setup_picwnd_reset_fields(self);
+  return self;
 }
 
 /* 00559ed4 auto */
@@ -17472,26 +17472,26 @@ ViewWindow * __thiscall setup_picwnd_ctor(ViewWindow *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall setup_picwnd_dtor(ViewWindow *this)
+void __thiscall setup_picwnd_dtor(ViewWindow *self)
 
 {
   i32 seh_handler;
   i8 *seh_scope;
   int seh_state;
   
-  this->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 8);
+  self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 8);
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   seh_state = seh_state & 0xff;
-  setup_picwnd_reset_fields(this);
+  setup_picwnd_reset_fields(self);
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 00559f30 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x2f8)); }
+  /* inlined unwind funclet 00559f30 */ { dll_free((DllHandle *)(*(int *)((iptr)&self) + 0x2f8)); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00559f3f */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
+  /* inlined unwind funclet 00559f3f */ { frame_wnd_dtor(*(DibSurface **)((iptr)&self)); }
   return;
 }
 
 /* 00559f60 auto */
-void __thiscall setup_picwnd_blit_image_rect(ScaledWindowView *this,int *rect)
+void __thiscall setup_picwnd_blit_image_rect(ScaledWindowView *self,int *rect)
 
 {
   i32 height;
@@ -17499,43 +17499,43 @@ void __thiscall setup_picwnd_blit_image_rect(ScaledWindowView *this,int *rect)
   
   height = rect_height((iptr)rect);
   width = rect_width((iptr)rect);
-  gfx_copy_rect_xywh((iptr)&setup_picwnd_block.setup_picwnd_surface,(iptr)this,*rect - this->client_x,rect[1] - this->client_y,
+  gfx_copy_rect_xywh((iptr)&setup_picwnd_block.setup_picwnd_surface,(iptr)self,*rect - self->client_x,rect[1] - self->client_y,
                      *rect,rect[1],width,height);
   return;
 }
 
 /* 00559fcf auto */
-void __thiscall setup_picwnd_draw_image(ScaledWindowView *this,iptr rect)
+void __thiscall setup_picwnd_draw_image(ScaledWindowView *self,iptr rect)
 
 {
-  gfx_set_draw_target((iptr)this);
-  text_set_surface((iptr)this);
-  setup_picwnd_blit_image_rect(this,rect);
+  gfx_set_draw_target((iptr)self);
+  text_set_surface((iptr)self);
+  setup_picwnd_blit_image_rect(self,rect);
   return;
 }
 
 /* 0055a00b auto */
 void __thiscall
 setup_picwnd_client_rect
-          (SetupPicWndRectView *this,iptr rect,int x,int y,iptr width,iptr height)
+          (SetupPicWndRectView *self,iptr rect,int x,int y,iptr width,iptr height)
 
 {
-  rect_set_xywh(rect,this->client_origin_x + x,this->client_origin_y + y,width,height);
+  rect_set_xywh(rect,self->client_origin_x + x,self->client_origin_y + y,width,height);
   return;
 }
 
 /* 0055a051 auto */
-void __thiscall setup_picwnd_redraw(ViewWindow *this)
+void __thiscall setup_picwnd_redraw(ViewWindow *self)
 
 {
-  frame_wnd_layout((FrameWindow *)this);
-  setup_picwnd_load_image(this->rates_civ,this->max_rate_value);
+  frame_wnd_layout((FrameWindow *)self);
+  setup_picwnd_load_image(self->rates_civ,self->max_rate_value);
   setup_picwnd_client_rect
-            ((SetupPicWndRectView *)this,(iptr)&this->sci_rate_sel,0,0,this->rates_civ,this->max_rate_value);
-  gfx_set_draw_target((iptr)this);
-  frame_wnd_draw_caption((FrameWindow *)this);
-  setup_picwnd_draw_image((ScaledWindowView *)this,(iptr)&this->sci_rate_sel);
-  wnd_blit_surface((DibSurface *)this);
+            ((SetupPicWndRectView *)self,(iptr)&self->sci_rate_sel,0,0,self->rates_civ,self->max_rate_value);
+  gfx_set_draw_target((iptr)self);
+  frame_wnd_draw_caption((FrameWindow *)self);
+  setup_picwnd_draw_image((ScaledWindowView *)self,(iptr)&self->sci_rate_sel);
+  wnd_blit_surface((DibSurface *)self);
   return;
 }
 
@@ -17683,7 +17683,7 @@ i32 __cdecl setup_picwnd_image_size(int is_height,i32 image_id)
 
 /* 0055a41d auto */
 void __thiscall
-setup_picwnd_show(ViewWindow *this,i32 x_pos,i32 y_pos,u32 image_id)
+setup_picwnd_show(ViewWindow *self,i32 x_pos,i32 y_pos,u32 image_id)
 
 {
   u32 size;
@@ -17694,15 +17694,15 @@ setup_picwnd_show(ViewWindow *this,i32 x_pos,i32 y_pos,u32 image_id)
   i32 style;
   RECT rect;
   
-  if (this->lux_rate_sel != 0) {
-    this->tax_rate_sel = image_id;
-    size = setup_picwnd_image_size(0,this->tax_rate_sel);
-    this->rates_civ = size;
-    size = setup_picwnd_image_size(1,this->tax_rate_sel);
-    this->max_rate_value = size;
-    x = setup_picwnd_position_coord(x_pos,this->rates_civ);
-    y = setup_picwnd_position_coord(y_pos,this->max_rate_value);
-    setup_picwnd_frame_rect((iptr)&rect.left,x,y,this->rates_civ,this->max_rate_value);
+  if (self->lux_rate_sel != 0) {
+    self->tax_rate_sel = image_id;
+    size = setup_picwnd_image_size(0,self->tax_rate_sel);
+    self->rates_civ = size;
+    size = setup_picwnd_image_size(1,self->tax_rate_sel);
+    self->max_rate_value = size;
+    x = setup_picwnd_position_coord(x_pos,self->rates_civ);
+    y = setup_picwnd_position_coord(y_pos,self->max_rate_value);
+    setup_picwnd_frame_rect((iptr)&rect.left,x,y,self->rates_civ,self->max_rate_value);
     style = 8;
     y = 8;
     x = 0;
@@ -17710,23 +17710,23 @@ setup_picwnd_show(ViewWindow *this,i32 x_pos,i32 y_pos,u32 image_id)
     height -= sys_dlgframe_h2;
     width = rect_width((iptr)&rect.left);
     frame_wnd_create
-              ((FrameWindow *)this,0,2,rect.left,rect.top,width - sys_dlgframe_w2,height,x,y,
+              ((FrameWindow *)self,0,2,rect.left,rect.top,width - sys_dlgframe_w2,height,x,y,
                style);
-    wnd_set_close_handler((WndEventHandlers *)(this->event_handlers),(iptr)setup_picwnd_on_close);
-    wnd_set_redraw_callback((SurfaceWindow *)this,(iptr)setup_picwnd_on_redraw);
-    wnd_set_restore_handler((WndEventHandlers *)(this->event_handlers),(iptr)setup_picwnd_on_restore);
-    wnd_repaint((SurfaceWindow *)this);
-    window_show((WindowObjectView *)this);
+    wnd_set_close_handler((WndEventHandlers *)(self->event_handlers),(iptr)setup_picwnd_on_close);
+    wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)setup_picwnd_on_redraw);
+    wnd_set_restore_handler((WndEventHandlers *)(self->event_handlers),(iptr)setup_picwnd_on_restore);
+    wnd_repaint((SurfaceWindow *)self);
+    window_show((WindowObjectView *)self);
   }
   return;
 }
 
 /* 0055a567 auto */
-void __thiscall setup_picwnd_close(ViewWindow *this)
+void __thiscall setup_picwnd_close(ViewWindow *self)
 
 {
-  if (this->lux_rate_sel != 0) {
-    wnd_destroy_with_surface((DibSurface *)this);
+  if (self->lux_rate_sel != 0) {
+    wnd_destroy_with_surface((DibSurface *)self);
     surface_release((DibSurface *)((i8 *)&setup_picwnd_block.setup_picwnd_surface));
     ui_flush_input();
   }
@@ -17734,7 +17734,7 @@ void __thiscall setup_picwnd_close(ViewWindow *this)
 }
 
 /* 0055a5e4 auto */
-void __thiscall setup_picwnd_load_dll(ViewWindow *this)
+void __thiscall setup_picwnd_load_dll(ViewWindow *self)
 
 {
   int found;
@@ -17743,19 +17743,19 @@ void __thiscall setup_picwnd_load_dll(ViewWindow *this)
   crt_strcpy(dll_path,str_civ2_intro_dll);
   found = file_resolve_path((iptr)dll_path);
   if (found != 0) {
-    dll_handle_load((DllHandle *)&this->dialog_w,(iptr)dll_path);
-    this->lux_rate_sel = 1;
+    dll_handle_load((DllHandle *)&self->dialog_w,(iptr)dll_path);
+    self->lux_rate_sel = 1;
   }
   return;
 }
 
 /* 0055a64a auto */
-void __thiscall setup_picwnd_free_dll(ViewWindow *this)
+void __thiscall setup_picwnd_free_dll(ViewWindow *self)
 
 {
-  if (this->lux_rate_sel != 0) {
-    dll_handle_free((DllHandle *)&this->dialog_w);
-    this->lux_rate_sel = 0;
+  if (self->lux_rate_sel != 0) {
+    dll_handle_free((DllHandle *)&self->dialog_w);
+    self->lux_rate_sel = 0;
   }
   return;
 }
@@ -19147,7 +19147,7 @@ code_r0x005aea27:
 i32 __cdecl game_timer_create(iptr callback,i32 interval_ms,i32 repeat_count)
 
 {
-  TimerManagerCtorView *this;
+  TimerManagerCtorView *self;
   i32 slot;
   TimerManager *new_mgr;
   i32 seh_prev;
@@ -19156,13 +19156,13 @@ i32 __cdecl game_timer_create(iptr callback,i32 interval_ms,i32 repeat_count)
   
   eh_state = 0xffffffff;
   if (wnd_modal_stack_below_block.game_timer_mgr == (TimerManager *)0x0) {
-    this = operator_new(0x90);
+    self = operator_new(0x90);
     eh_state = 0;
-    if (this == (TimerManagerCtorView *)0x0) {
+    if (self == (TimerManagerCtorView *)0x0) {
       new_mgr = (TimerManager *)0x0;
     }
     else {
-      new_mgr = (TimerManager *)timer_mgr_ctor(this);
+      new_mgr = (TimerManager *)timer_mgr_ctor(self);
     }
     wnd_modal_stack_below_block.game_timer_mgr = new_mgr;
   }
@@ -19186,24 +19186,24 @@ void __cdecl game_timer_destroy(iptr slot)
 
 /* 005d2042 auto */
 iptr __thiscall
-timer_mgr_add(TimerManager *this,u32 callback,i32 interval_ms,u32 repeat_count)
+timer_mgr_add(TimerManager *self,u32 callback,i32 interval_ms,u32 repeat_count)
 
 {
   int started;
   iptr slot;
   
   slot = 1;
-  while ((slot < 0x11 && (((u32 *)&((TimerManagerExt *)this)->timer_callbacks)[slot] != 0))) {
+  while ((slot < 0x11 && (((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] != 0))) {
     slot++;
   }
   if (slot < 0x11) {
-    started = timer_wnd_start_slot(this->timer_hwnd,interval_ms,slot);
+    started = timer_wnd_start_slot(self->timer_hwnd,interval_ms,slot);
     if (started == 0) {
       slot = 0;
     }
     else {
-      ((u32 *)&((TimerManagerExt *)this)->timer_callbacks)[slot] = callback;
-      ((u32 *)&((TimerManagerExt *)this)->timer_repeat_counts)[slot] = repeat_count;
+      ((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] = callback;
+      ((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot] = repeat_count;
     }
   }
   else {
@@ -19213,16 +19213,16 @@ timer_mgr_add(TimerManager *this,u32 callback,i32 interval_ms,u32 repeat_count)
 }
 
 /* 005d20e6 auto */
-void __thiscall game_timer_kill_slot(TimerManager *this,iptr slot)
+void __thiscall game_timer_kill_slot(TimerManager *self,iptr slot)
 
 {
-  ((u32 *)&((TimerManagerExt *)this)->timer_callbacks)[slot] = 0;
-  timer_wnd_kill_slot(this->timer_hwnd,slot);
+  ((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] = 0;
+  timer_wnd_kill_slot(self->timer_hwnd,slot);
   return;
 }
 
 /* 005d211e auto */
-TimerManagerCtorView * __thiscall timer_mgr_ctor(TimerManagerCtorView *this)
+TimerManagerCtorView * __thiscall timer_mgr_ctor(TimerManagerCtorView *self)
 
 {
   u8 *entry;
@@ -19230,34 +19230,34 @@ TimerManagerCtorView * __thiscall timer_mgr_ctor(TimerManagerCtorView *this)
   int i;
   
   for (i = 1; i < 0x11; i++) {
-    entry = this->timer_slot_tables + i * 4;
+    entry = self->timer_slot_tables + i * 4;
     entry[0] = '\0';
     entry[1] = '\0';
     entry[2] = '\0';
     entry[3] = '\0';
-    entry = this->timer_slot_tables + i * 4 + 0x44;
+    entry = self->timer_slot_tables + i * 4 + 0x44;
     entry[0] = '\0';
     entry[1] = '\0';
     entry[2] = '\0';
     entry[3] = '\0';
   }
-  hwnd = timer_wnd_create((iptr)this);
-  this->timer_wnd = hwnd;
-  return this;
+  hwnd = timer_wnd_create((iptr)self);
+  self->timer_wnd = hwnd;
+  return self;
 }
 
 /* 005d2182 auto */
-void __thiscall timer_mgr_dtor(TimerManager *this)
+void __thiscall timer_mgr_dtor(TimerManager *self)
 
 {
   iptr slot;
   
   for (slot = 0; slot < 0x10; slot++) {
-    if (((u32 *)&((TimerManagerExt *)this)->timer_callbacks)[slot] != 0) {
-      game_timer_kill_slot(this,slot);
+    if (((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] != 0) {
+      game_timer_kill_slot(self,slot);
     }
   }
-  timer_wnd_destroy(this->timer_hwnd);
+  timer_wnd_destroy(self->timer_hwnd);
   return;
 }
 
@@ -19380,7 +19380,7 @@ i32 __cdecl timer_wnd_start_slot(HWND hwnd,UINT interval_ms,iptr slot)
         result = 0;
       }
       else {
-        (*default_draw_font_obj_block.timerdll_set_timer_id)(slot,mm_timer_id);
+        call_untyped(default_draw_font_obj_block.timerdll_set_timer_id, slot,mm_timer_id);
         result = 1;
       }
     }
@@ -19392,7 +19392,7 @@ i32 __cdecl timer_wnd_start_slot(HWND hwnd,UINT interval_ms,iptr slot)
       result = 0;
     }
     else {
-      (*default_draw_font_obj_block.timerdll_set_timer_id)(slot,mm_timer_id);
+      call_untyped(default_draw_font_obj_block.timerdll_set_timer_id, slot,mm_timer_id);
       result = 1;
     }
   }
@@ -19420,15 +19420,15 @@ void __cdecl timer_wnd_kill_slot(HWND hwnd,iptr slot)
       KillTimer(hwnd,slot);
     }
     else {
-      mm_timer_id = (*(*(code * *)&default_draw_font_obj_block.timerdll_get_timer_id))(slot);
+      mm_timer_id = call_untyped((*(code * *)&default_draw_font_obj_block.timerdll_get_timer_id), slot);
       timeKillEvent(mm_timer_id);
-      (*default_draw_font_obj_block.timerdll_set_timer_id)(slot,0);
+      call_untyped(default_draw_font_obj_block.timerdll_set_timer_id, slot,0);
     }
   }
   else if (wnd_modal_stack_below_block.timer_alt_kind_request == 0) {
-    mm_timer_id = (*(*(code * *)&default_draw_font_obj_block.timerdll_get_timer_id))(slot);
+    mm_timer_id = call_untyped((*(code * *)&default_draw_font_obj_block.timerdll_get_timer_id), slot);
     timeKillEvent(mm_timer_id);
-    (*default_draw_font_obj_block.timerdll_set_timer_id)(slot,0);
+    call_untyped(default_draw_font_obj_block.timerdll_set_timer_id, slot,0);
   }
   else {
     KillTimer(hwnd,slot);
@@ -19440,24 +19440,24 @@ void __cdecl timer_wnd_kill_slot(HWND hwnd,iptr slot)
 LRESULT __stdcall timer_wnd_proc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 
 {
-  TimerManager *this;
+  TimerManager *self;
   LRESULT result;
   
-  this = (TimerManager *)GetWindowLongA(hwnd,0);
-  if (this == (TimerManager *)0x0) {
+  self = (TimerManager *)GetWindowLongA(hwnd,0);
+  if (self == (TimerManager *)0x0) {
     result = DefWindowProcA(hwnd,msg,wparam,lparam);
   }
   else {
     if (msg == 0x113) {
-      game_timer_fire_slot(this,wparam);
+      game_timer_fire_slot(self,wparam);
     }
     else {
       if (msg != 0x52c) {
         result = DefWindowProcA(hwnd,msg,wparam,lparam);
         return result;
       }
-      game_timer_fire_slot(this,wparam);
-      (*(*(code * *)&default_draw_font_obj_block.timerdll_reset_timer_notified))(wparam);
+      game_timer_fire_slot(self,wparam);
+      call_untyped((*(code * *)&default_draw_font_obj_block.timerdll_reset_timer_notified), wparam);
     }
     result = 0;
   }
@@ -19465,16 +19465,16 @@ LRESULT __stdcall timer_wnd_proc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 }
 
 /* 005d47d0 auto */
-void __thiscall game_timer_fire_slot(TimerManager *this,iptr slot)
+void __thiscall game_timer_fire_slot(TimerManager *self,iptr slot)
 
 {
-  if ((((u32 *)&((TimerManagerExt *)this)->timer_callbacks)[slot] != 0) && (((u32 *)&((TimerManagerExt *)this)->timer_repeat_counts)[slot] != 0)) {
-    if (0 < (int)((u32 *)&((TimerManagerExt *)this)->timer_repeat_counts)[slot]) {
-      ((u32 *)&((TimerManagerExt *)this)->timer_repeat_counts)[slot]--;
+  if ((((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] != 0) && (((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot] != 0)) {
+    if (0 < (int)((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot]) {
+      ((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot]--;
     }
-    (*(code *)((u32 *)&((TimerManagerExt *)this)->timer_callbacks)[slot])(slot,((u32 *)&((TimerManagerExt *)this)->timer_repeat_counts)[slot]);
-    if (((u32 *)&((TimerManagerExt *)this)->timer_repeat_counts)[slot] == 0) {
-      game_timer_kill_slot(this,slot);
+    call_untyped((code *)((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot], slot,((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot]);
+    if (((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot] == 0) {
+      game_timer_kill_slot(self,slot);
     }
   }
   return;
@@ -19612,12 +19612,12 @@ void __cdecl app_register_wnd_classes(void)
 /* 005dbe88: written by hand in src/game/retvals.c */
 
 /* 005dcac0 auto */
-TimerManager * __thiscall timer_mgr_scalar_dtor(TimerManager *this,uint flags)
+TimerManager * __thiscall timer_mgr_scalar_dtor(TimerManager *self,uint flags)
 
 {
-  timer_mgr_dtor(this);
+  timer_mgr_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }

@@ -12,7 +12,9 @@
 #ifndef CIV2_TYPES_H
 #define CIV2_TYPES_H
 
-typedef signed char i8;
+/* plain char: the game keeps text in i8 buffers.  Signed on every target
+   (native.h checks), so arithmetic is that of signed char. */
+typedef char i8;
 typedef unsigned char u8;
 typedef short i16;
 typedef unsigned short u16;

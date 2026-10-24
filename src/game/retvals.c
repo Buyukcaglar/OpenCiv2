@@ -14,9 +14,9 @@
  * method (ECX = the Civilopedia window); the decompiler took ECX for a value
  * left over from the __chkstk call.
  */
-void __thiscall pedia_load_description(void *this, int topic2)
+void __thiscall pedia_load_description(void *self, int topic2)
 {
-  int self = (iptr)this;
+  int obj_addr = (iptr)self;
   bool section_missing;
   int found;
   char *line;
@@ -29,35 +29,35 @@ void __thiscall pedia_load_description(void *this, int topic2)
   i8 section_name[228];
   
   str_clear(section_name);
-  pedia_clear_links((void *)self);
+  pedia_clear_links((void *)obj_addr);
   ui_pump_messages();
-  switch(*(i32 *)(self + 0x118)) {
+  switch(*(i32 *)(obj_addr + 0x118)) {
   case 1:
-    topic2 = *(int *)(self + 0x65c + topic2 * 4);
+    topic2 = *(int *)(obj_addr + 0x65c + topic2 * 4);
     crt_strcpy(section_name,str_advance_index);
     break;
   case 2:
-    topic2 = *(int *)(self + 0x980 + topic2 * 4);
+    topic2 = *(int *)(obj_addr + 0x980 + topic2 * 4);
     crt_strcpy(section_name,str_improvement_index);
     break;
   case 3:
-    topic2 = *(int *)(self + 0xabc + topic2 * 4);
+    topic2 = *(int *)(obj_addr + 0xabc + topic2 * 4);
     crt_strcpy(section_name,str_wonder_index);
     break;
   case 4:
-    topic2 = *(int *)(self + 0xba0 + topic2 * 4);
+    topic2 = *(int *)(obj_addr + 0xba0 + topic2 * 4);
     crt_strcpy(section_name,str_unit_index);
     break;
   case 5:
-    topic2 = *(int *)(self + 0xdd0 + topic2 * 4);
+    topic2 = *(int *)(obj_addr + 0xdd0 + topic2 * 4);
     crt_strcpy(section_name,str_terrain_index);
     break;
   case 6:
-    topic2 = *(int *)(self + 0xd94 + topic2 * 4);
+    topic2 = *(int *)(obj_addr + 0xd94 + topic2 * 4);
     crt_strcpy(section_name,str_government_index);
     break;
   case 7:
-    topic2 = *(int *)(self + 0xedc + topic2 * 4);
+    topic2 = *(int *)(obj_addr + 0xedc + topic2 * 4);
     crt_strcpy(section_name,str_concept_descriptions);
     break;
   default:
@@ -112,8 +112,8 @@ read_text_lines:
       crt_strcpy(desc_text,((i8 *)&map_views_block.text_buffer));
     }
 set_control_text:
-    ctrl_set_text((void *)(self + 0x1a98),desc_text);
-    ctrl_show_and_redraw(self + 0x1a98);
+    ctrl_set_text((void *)(obj_addr + 0x1a98),desc_text);
+    ctrl_show_and_redraw(obj_addr + 0x1a98);
   }
   return;
 }
@@ -334,9 +334,9 @@ int __cdecl save_read_game(char *path)
   if ((count_read != 0) && (result = _strncmp(events_tag,((i8 *)&save_events_tag_check_str),4), result == 0)) {
     count_read = _fread(&event_count2,4,1,_File);
     if (count_read == 0) goto close_file;
-    events_reset(((i8 *)&unit_types_block.scenario_events),50000);
+    events_reset(((ScenarioEvents*)((i8 *)&unit_types_block.scenario_events)),50000);
     for (event_idx = 0; event_idx < event_count2; event_idx = event_idx + 1) {
-      event = (void *)events_alloc(((i8 *)&unit_types_block.scenario_events));
+      event = (void *)events_alloc(((ScenarioEvents*)((i8 *)&unit_types_block.scenario_events)));
       if (event == (void *)0x0) {
         error_report(0xfffffff7,3,0,0,0);
       }
@@ -601,7 +601,7 @@ void __cdecl wnd_obj_set_topmost_child(int parent_obj,int child_obj)
 
 {
   HWND child_parent;
-  void *this;
+  void *self;
   
   if (parent_obj != 0) {
     if (child_obj == 0) {
@@ -610,8 +610,8 @@ void __cdecl wnd_obj_set_topmost_child(int parent_obj,int child_obj)
     else {
       child_parent = GetParent(*(HWND *)(child_obj + 4));
       if (child_parent == *(HWND *)(parent_obj + 4)) {
-        this = (void *)GetWindowLongA(*(HWND *)(child_obj + 4),0);
-        if ((WIN_STYLE(this) & 0x200) == 0) {
+        self = (void *)GetWindowLongA(*(HWND *)(child_obj + 4),0);
+        if ((WIN_STYLE(self) & 0x200) == 0) {
           dbg_log(str_window_not_sws_attached_in_mssettopmostc);
         }
         else {
@@ -1244,7 +1244,7 @@ uint __cdecl game_turn_start_popups(void)
     }
     else {
       text_append(cities[best_city].name);
-      mapview_center_on(((i8 *)&map_views_block.map_views),(int)cities[best_city].x,
+      mapview_center_on(((ViewWindow*)((i8 *)&map_views_block.map_views)),(int)cities[best_city].x,
                          (int)cities[best_city].y);
     }
     text_set_string_arg(1,((i8 *)&map_views_block.text_buffer));
@@ -1366,7 +1366,7 @@ int __cdecl city_process_pollution(int city)
           tile_add_pollution(tile_x,roll);
           check = tile_visible_to(tile_x,roll,human_civ[0]);
           if (check != 0) {
-            mapview_center_on(((i8 *)&map_views_block.map_views),tile_x,roll);
+            mapview_center_on(((ViewWindow*)((i8 *)&map_views_block.map_views)),tile_x,roll);
             if ((game.message_options & 0x100) == 0) {
               city_notify_dialog_ex(str_pollution,city,0,0);
             }
@@ -1521,7 +1521,7 @@ hut_outcome_dispatch:
         if (tmp < 0) {
           return civ;
         }
-        city_window_open(((i8 *)&city_window_block.city_window),tmp);   /* void: the caller ignores our result */
+        city_window_open(((ScaledWindowView*)((i8 *)&city_window_block.city_window)),tmp);   /* void: the caller ignores our result */
         return civ;
       }
       outcome = 5;

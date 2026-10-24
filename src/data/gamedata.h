@@ -5936,6 +5936,6 @@ struct err_report_ctx_block {
 extern struct err_report_ctx_block err_report_ctx_block;
 
 /* Sets the addresses the data holds (functions, other data). */
-void gamedata_init(void);
+EXTERN_C void gamedata_init(void);
 
 #endif

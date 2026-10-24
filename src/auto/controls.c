@@ -3,18 +3,18 @@
 #include "auto_common.h"
 
 /* 0040f380 auto */
-void __thiscall ctrl_show_and_redraw(Control *this)
+void __thiscall ctrl_show_and_redraw(Control *self)
 
 {
-  if (this->hwnd != 0) {
-    hwnd_show(this->hwnd);
-    wnd_invalidate(this->hwnd);
+  if (self->hwnd != 0) {
+    hwnd_show(self->hwnd);
+    wnd_invalidate(self->hwnd);
   }
   return;
 }
 
 /* 0040f3e0 auto */
-Control * __thiscall button_ctor(Control *this)
+Control * __thiscall button_ctor(Control *self)
 
 {
   i32 seh_prev;
@@ -22,43 +22,43 @@ Control * __thiscall button_ctor(Control *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  ctrl_base_ctor(this);
-  this->hotkey_char = '\0';
-  this->on_select = 0xffffffff;
-  return this;
+  ctrl_base_ctor(self);
+  self->hotkey_char = '\0';
+  self->on_select = 0xffffffff;
+  return self;
 }
 
 /* 0040f480 auto */
-Control * __thiscall ctrl_base_ctor(Control *this)
+Control * __thiscall ctrl_base_ctor(Control *self)
 
 {
-  this->ctrl_id = 0;
-  this->parent = 0;
-  SetRect((LPRECT)&this->rect_left,0,0,0,0);
-  this->hwnd = 0;
-  this->next_ctrl = 0;
-  this->wants_initial_focus = '\0';
-  this->hotkey_char = '\0';
-  this->hotkey_pos = 0xffffffff;
-  return this;
+  self->ctrl_id = 0;
+  self->parent = 0;
+  SetRect((LPRECT)&self->rect_left,0,0,0,0);
+  self->hwnd = 0;
+  self->next_ctrl = 0;
+  self->wants_initial_focus = '\0';
+  self->hotkey_char = '\0';
+  self->hotkey_pos = 0xffffffff;
+  return self;
 }
 
 /* 0040f510 auto */
-i32 __thiscall ctrl_base_dtor(ControlBase *this)
+i32 __thiscall ctrl_base_dtor(ControlBase *self)
 
 {
   i32 result;
   
-  if (this->owner_wnd != 0) {
-    wnd_remove_control((WndControlRemoveView *)this->owner_wnd,this->control_id);
+  if (self->owner_wnd != 0) {
+    wnd_remove_control((WndControlRemoveView *)self->owner_wnd,self->control_id);
   }
-  this->next_control = 0;
-  result = ctrl_destroy_hwnd((iptr)this);
+  self->next_control = 0;
+  result = ctrl_destroy_hwnd((iptr)self);
   return result;
 }
 
 /* 0040f570 auto */
-i32 __thiscall ctrl_dtor(Control *this)
+i32 __thiscall ctrl_dtor(Control *self)
 
 {
   i32 seh_prev;
@@ -66,24 +66,24 @@ i32 __thiscall ctrl_dtor(Control *this)
   i32 seh_state;
   
   seh_state = 0;
-  if (this->hwnd != 0) {
-    ctrl_destroy(this);
+  if (self->hwnd != 0) {
+    ctrl_destroy(self);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0040f5c3 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0040f5c3 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
   return seh_prev;
 }
 
 /* 0040f610 auto */
-void __thiscall ctrl_destroy(Control *this)
+void __thiscall ctrl_destroy(Control *self)
 
 {
-  if (this->hwnd != 0) {
-    if (this->parent != 0) {
-      wnd_remove_control((WndControlRemoveView *)this->parent,this->ctrl_id);
+  if (self->hwnd != 0) {
+    if (self->parent != 0) {
+      wnd_remove_control((WndControlRemoveView *)self->parent,self->ctrl_id);
     }
-    this->next_ctrl = 0;
-    ctrl_destroy_hwnd((iptr)this);
+    self->next_ctrl = 0;
+    ctrl_destroy_hwnd((iptr)self);
   }
   return;
 }
@@ -91,81 +91,81 @@ void __thiscall ctrl_destroy(Control *this)
 /* 0040f680 auto */
 void __thiscall
 button_create
-          (Control *this,iptr parent,i32 ctrl_id,iptr rect,iptr label)
+          (Control *self,iptr parent,i32 ctrl_id,iptr rect,iptr label)
 
 {
   u32 new_hwnd;
   
-  if (this->hwnd != 0) {
-    ctrl_destroy(this);
+  if (self->hwnd != 0) {
+    ctrl_destroy(self);
   }
-  this->font = (u32)(*(i8 * *)draw_current_font_rest);
-  ctrl_init(this,parent,6,ctrl_id,rect);
-  this->on_click = 0;
-  new_hwnd = button_create_hwnd(rect,(iptr)this,label,1,this->font);
-  this->hwnd = new_hwnd;
-  this->is_enabled = 1;
+  self->font = (u32)(*(i8 * *)draw_current_font_rest);
+  ctrl_init(self,parent,6,ctrl_id,rect);
+  self->on_click = 0;
+  new_hwnd = button_create_hwnd(rect,(iptr)self,label,1,self->font);
+  self->hwnd = new_hwnd;
+  self->is_enabled = 1;
   return;
 }
 
 /* 0040f730 auto */
 void __thiscall
-ctrl_init(Control *this,iptr parent_wnd,u32 type_code,u32 id,iptr rect)
+ctrl_init(Control *self,iptr parent_wnd,u32 type_code,u32 id,iptr rect)
 
 {
-  this->parent = parent_wnd;
-  this->ctrl_type = type_code;
-  this->ctrl_id = id;
-  this->rect_left = *(u32 *)rect;
-  this->rect_top = *(u32 *)(rect + 4);
-  this->rect_right = *(u32 *)(rect + 8);
-  this->rect_bottom = *(u32 *)(rect + 0xc);
-  this->next_ctrl = 0;
-  this->hwnd = 0;
-  this->wants_initial_focus = '\0';
-  wnd_append_control((WndControlListView *)parent_wnd,(iptr)this);
+  self->parent = parent_wnd;
+  self->ctrl_type = type_code;
+  self->ctrl_id = id;
+  self->rect_left = *(u32 *)rect;
+  self->rect_top = *(u32 *)(rect + 4);
+  self->rect_right = *(u32 *)(rect + 8);
+  self->rect_bottom = *(u32 *)(rect + 0xc);
+  self->next_ctrl = 0;
+  self->hwnd = 0;
+  self->wants_initial_focus = '\0';
+  wnd_append_control((WndControlListView *)parent_wnd,(iptr)self);
   return;
 }
 
 /* 0040f7d0 auto */
-void __thiscall ctrl_set_default_button(Control *this)
+void __thiscall ctrl_set_default_button(Control *self)
 
 {
   iptr parent;
   
-  parent = ctrl_get_parent(this);
-  *(Control **)(parent + 0xbc) = this;
+  parent = ctrl_get_parent(self);
+  *(Control **)(parent + 0xbc) = self;
   return;
 }
 
 /* 0040f810 auto */
-uptr __thiscall ctrl_get_parent(Control *this)
+uptr __thiscall ctrl_get_parent(Control *self)
 
 {
-  return this->parent;
+  return self->parent;
 }
 
 /* 0040f840 auto */
-void __thiscall ctrl_set_cancel_button(Control *this)
+void __thiscall ctrl_set_cancel_button(Control *self)
 
 {
   iptr parent;
   
-  parent = ctrl_get_parent(this);
-  *(Control **)(parent + 0xc0) = this;
+  parent = ctrl_get_parent(self);
+  *(Control **)(parent + 0xc0) = self;
   return;
 }
 
 /* 0040f880 auto */
-void __thiscall button_set_callback(Control *this,iptr callback)
+void __thiscall button_set_callback(Control *self,iptr callback)
 
 {
-  this->on_click = callback;
+  self->on_click = callback;
   return;
 }
 
 /* 0040f8b0 auto */
-Control * __thiscall checkbox_elem_ctor(Control *this)
+Control * __thiscall checkbox_elem_ctor(Control *self)
 
 {
   i32 seh_prev;
@@ -173,12 +173,12 @@ Control * __thiscall checkbox_elem_ctor(Control *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  ctrl_base_ctor(this);
-  return this;
+  ctrl_base_ctor(self);
+  return self;
 }
 
 /* 0040f930 auto */
-void __thiscall checkbox_dtor(Checkbox *this)
+void __thiscall checkbox_dtor(Checkbox *self)
 
 {
   i32 seh_prev;
@@ -186,56 +186,56 @@ void __thiscall checkbox_dtor(Checkbox *this)
   i32 seh_state;
   
   seh_state = 0;
-  if (this->hwnd != 0) {
-    checkbox_destroy_hwnd(this->hwnd);
+  if (self->hwnd != 0) {
+    checkbox_destroy_hwnd(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0040f98a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0040f98a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
   return;
 }
 
 /* 0040f9d0 auto */
 void __thiscall
 checkbox_create
-          (Control *this,iptr parent,i32 ctrl_id,i32 x,i32 y
+          (Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y
           ,iptr label)
 
 {
   u32 new_hwnd;
   i8 rect[16];
   
-  this->font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
-  checkbox_calc_rect(label,x,y,(iptr)rect,this->font);
-  if (this->hwnd != 0) {
-    ctrl_destroy(this);
+  self->font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
+  checkbox_calc_rect(label,x,y,(iptr)rect,self->font);
+  if (self->hwnd != 0) {
+    ctrl_destroy(self);
   }
-  ctrl_init(this,parent,2,ctrl_id,(iptr)rect);
-  this->is_enabled = 0;
-  this->on_select = 1;
-  this->on_click = 0;
-  new_hwnd = checkbox_create_hwnd((iptr)rect,(iptr)this,label,1);
-  this->hwnd = new_hwnd;
+  ctrl_init(self,parent,2,ctrl_id,(iptr)rect);
+  self->is_enabled = 0;
+  self->on_select = 1;
+  self->on_click = 0;
+  new_hwnd = checkbox_create_hwnd((iptr)rect,(iptr)self,label,1);
+  self->hwnd = new_hwnd;
   return;
 }
 
 /* 0040faa0 auto */
-void __thiscall checkbox_set_callback(CheckboxCallbackSetView *this,iptr callback)
+void __thiscall checkbox_set_callback(CheckboxCallbackSetView *self,iptr callback)
 
 {
-  this->on_toggle = callback;
+  self->on_toggle = callback;
   return;
 }
 
 /* 0040fad0 auto */
-void __thiscall checkbox_set_checked(Control *this,u32 checked)
+void __thiscall checkbox_set_checked(Control *self,u32 checked)
 
 {
-  this->on_click = checked;
+  self->on_click = checked;
   return;
 }
 
 /* 0040fb00 auto */
-Control * __thiscall scrollbar_ctor(Control *this)
+Control * __thiscall scrollbar_ctor(Control *self)
 
 {
   i32 seh_prev;
@@ -243,15 +243,15 @@ Control * __thiscall scrollbar_ctor(Control *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  ctrl_base_ctor(this);
-  this->on_select = 1;
-  this->is_enabled = 0;
-  this->on_click = 0;
-  return this;
+  ctrl_base_ctor(self);
+  self->on_select = 1;
+  self->is_enabled = 0;
+  self->on_click = 0;
+  return self;
 }
 
 /* 0040fbb0 auto */
-void __thiscall scrollbar_dtor(Control *this)
+void __thiscall scrollbar_dtor(Control *self)
 
 {
   i32 seh_prev;
@@ -259,75 +259,75 @@ void __thiscall scrollbar_dtor(Control *this)
   i32 seh_state;
   
   seh_state = 0;
-  if (this->hwnd != 0) {
-    scrollbar_destroy_hwnd(this->hwnd);
+  if (self->hwnd != 0) {
+    scrollbar_destroy_hwnd(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0040fc0a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0040fc0a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
   return;
 }
 
 /* 0040fc50 auto */
 void __thiscall
 scrollbar_create
-          (Control *this,iptr parent,iptr ctrl_id,iptr rect,i32 style)
+          (Control *self,iptr parent,iptr ctrl_id,iptr rect,i32 style)
 
 {
   u32 new_hwnd;
   
-  if (this->hwnd != 0) {
-    ctrl_destroy(this);
+  if (self->hwnd != 0) {
+    ctrl_destroy(self);
   }
-  ctrl_init(this,parent,8,ctrl_id,rect);
-  new_hwnd = scrollbar_create_hwnd(rect,(iptr)this,style,1);
-  this->hwnd = new_hwnd;
-  scrollbar_hwnd_set_range(this->hwnd,1,100);
-  this->font = 1;
+  ctrl_init(self,parent,8,ctrl_id,rect);
+  new_hwnd = scrollbar_create_hwnd(rect,(iptr)self,style,1);
+  self->hwnd = new_hwnd;
+  scrollbar_hwnd_set_range(self->hwnd,1,100);
+  self->font = 1;
   return;
 }
 
 /* 0040fcf0 auto */
-void __thiscall scrollbar_set_pos(ClickControl *this,iptr pos)
+void __thiscall scrollbar_set_pos(ClickControl *self,iptr pos)
 
 {
-  this->scroll_pos = pos;
-  scrollbar_hwnd_set_pos(this->hwnd,pos);
+  self->scroll_pos = pos;
+  scrollbar_hwnd_set_pos(self->hwnd,pos);
   return;
 }
 
 /* 0040fd40 auto */
 void __thiscall
-scrollbar_set_range(Control *this,i32 min_value,i32 max_value)
+scrollbar_set_range(Control *self,i32 min_value,i32 max_value)
 
 {
-  scrollbar_hwnd_set_range(this->hwnd,min_value,max_value);
+  scrollbar_hwnd_set_range(self->hwnd,min_value,max_value);
   return;
 }
 
 /* 0040fd80 auto */
-void __thiscall scrollbar_set_callback(Control *this,iptr callback)
+void __thiscall scrollbar_set_callback(Control *self,iptr callback)
 
 {
-  this->is_enabled = callback;
+  self->is_enabled = callback;
   return;
 }
 
 /* 00418740 auto */
-u32 __thiscall ctrl_get_id(ControlIdView *this)
+u32 __thiscall ctrl_get_id(ControlIdView *self)
 
 {
-  return this->ctrl_id;
+  return self->ctrl_id;
 }
 
 /* 00418770 auto */
-u32 __thiscall control_get_hwnd(ControlHwndView *this)
+u32 __thiscall control_get_hwnd(ControlHwndView *self)
 
 {
-  return this->hwnd;
+  return self->hwnd;
 }
 
 /* 004187a0 auto */
-InputControl * __thiscall edit_ctor(InputControl *this)
+InputControl * __thiscall edit_ctor(InputControl *self)
 
 {
   i32 seh_prev;
@@ -335,18 +335,18 @@ InputControl * __thiscall edit_ctor(InputControl *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  ctrl_base_ctor((Control *)this);
-  this->on_click = 0;
-  this->is_enabled = 0;
-  this->items_handle = 0;
-  this->on_select = 0;
-  *(i8 *)&this->font = 0;
-  *(i8 *)((int)&this->font + 1) = 0;
-  return this;
+  ctrl_base_ctor((Control *)self);
+  self->on_click = 0;
+  self->is_enabled = 0;
+  self->items_handle = 0;
+  self->on_select = 0;
+  *(i8 *)&self->font = 0;
+  *(i8 *)((int)&self->font + 1) = 0;
+  return self;
 }
 
 /* 00418870 auto */
-void __thiscall edit_dtor(Control *this)
+void __thiscall edit_dtor(Control *self)
 
 {
   i32 seh_prev;
@@ -354,67 +354,67 @@ void __thiscall edit_dtor(Control *this)
   i32 seh_state;
   
   seh_state = 0;
-  if (this->hwnd != 0) {
-    edit_hwnd_cleanup_stub(this->hwnd);
+  if (self->hwnd != 0) {
+    edit_hwnd_cleanup_stub(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 004188ca */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 004188ca */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
   return;
 }
 
 /* 00418910 auto */
 void __thiscall
 edit_create
-          (EditControl *this,iptr parent,i32 ctrl_id,iptr rect,iptr text)
+          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,iptr text)
 
 {
   u32 new_hwnd;
   
-  if (this->hwnd != 0) {
-    ctrl_destroy((Control *)this);
+  if (self->hwnd != 0) {
+    ctrl_destroy((Control *)self);
   }
-  this->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
-  ctrl_init((Control *)this,parent,4,ctrl_id,rect);
-  new_hwnd = edit_create_window(rect,(iptr)this,1,1,this->edit_font);
-  this->hwnd = new_hwnd;
-  hwnd_send_settext(this->hwnd,text);
+  self->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
+  ctrl_init((Control *)self,parent,4,ctrl_id,rect);
+  new_hwnd = edit_create_window(rect,(iptr)self,1,1,self->edit_font);
+  self->hwnd = new_hwnd;
+  hwnd_send_settext(self->hwnd,text);
   return;
 }
 
 /* 004189c0 auto */
-void __thiscall edit_set_max_len(EditMaxLenView *this,i32 max_len)
+void __thiscall edit_set_max_len(EditMaxLenView *self,i32 max_len)
 
 {
-  edit_hwnd_limit_text(this->hwnd,max_len);
+  edit_hwnd_limit_text(self->hwnd,max_len);
   return;
 }
 
 /* 00418a00 auto */
-void __thiscall edit_set_callback(EditCallbackSetView *this,iptr callback)
+void __thiscall edit_set_callback(EditCallbackSetView *self,iptr callback)
 
 {
-  this->on_change = callback;
+  self->on_change = callback;
   return;
 }
 
 /* 00418a30 auto */
-void __thiscall ctrl_set_text(ControlTextView *this,iptr text)
+void __thiscall ctrl_set_text(ControlTextView *self,iptr text)
 
 {
-  hwnd_send_settext(this->hwnd,text);
+  hwnd_send_settext(self->hwnd,text);
   return;
 }
 
 /* 00418a70 auto */
-void __thiscall ctrl_get_text(ControlTextView *this,iptr buffer)
+void __thiscall ctrl_get_text(ControlTextView *self,iptr buffer)
 
 {
-  hwnd_get_text(this->hwnd,buffer);
+  hwnd_get_text(self->hwnd,buffer);
   return;
 }
 
 /* 00418ab0 auto */
-Control * __thiscall combo_ctor(Control *this)
+Control * __thiscall combo_ctor(Control *self)
 
 {
   i32 seh_prev;
@@ -422,14 +422,14 @@ Control * __thiscall combo_ctor(Control *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  ctrl_base_ctor(this);
-  this->on_click = 0;
-  this->on_select = 0;
-  return this;
+  ctrl_base_ctor(self);
+  self->on_click = 0;
+  self->on_select = 0;
+  return self;
 }
 
 /* 00418b50 auto */
-void __thiscall combo_dtor(ComboDtorView *this)
+void __thiscall combo_dtor(ComboDtorView *self)
 
 {
   i32 seh_prev;
@@ -437,88 +437,88 @@ void __thiscall combo_dtor(ComboDtorView *this)
   i32 seh_state;
   
   seh_state = 0;
-  if (this->hwnd != 0) {
-    combo_hwnd_cleanup_stub(this->hwnd);
+  if (self->hwnd != 0) {
+    combo_hwnd_cleanup_stub(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00418baa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 00418baa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
   return;
 }
 
 /* 00418bf0 auto */
 void __thiscall
-combo_create(Control *this,iptr parent,i32 ctrl_id,iptr rect)
+combo_create(Control *self,iptr parent,i32 ctrl_id,iptr rect)
 
 {
   u32 new_hwnd;
   
-  if (this->hwnd != 0) {
-    ctrl_destroy(this);
+  if (self->hwnd != 0) {
+    ctrl_destroy(self);
   }
-  ctrl_init(this,parent,10,ctrl_id,rect);
-  new_hwnd = combo_create_window(rect,(iptr)this,1);
-  this->hwnd = new_hwnd;
-  this->is_enabled = 0;
+  ctrl_init(self,parent,10,ctrl_id,rect);
+  new_hwnd = combo_create_window(rect,(iptr)self,1);
+  self->hwnd = new_hwnd;
+  self->is_enabled = 0;
   return;
 }
 
 /* 00418c70 auto */
-void __thiscall combo_set_font(ComboBoxFontView *this,iptr font)
+void __thiscall combo_set_font(ComboBoxFontView *self,iptr font)
 
 {
   i32 hfont;
   
   hfont = font_get_hfont((GameFont *)font);
-  combo_hwnd_set_font(this->hwnd,hfont);
+  combo_hwnd_set_font(self->hwnd,hfont);
   return;
 }
 
 /* 00418ce0 auto */
-void __thiscall combo_add_string(ComboBoxAddView *this,iptr text)
+void __thiscall combo_add_string(ComboBoxAddView *self,iptr text)
 
 {
-  combo_hwnd_add_string(this->hwnd,text);
-  this->item_count++;
+  combo_hwnd_add_string(self->hwnd,text);
+  self->item_count++;
   return;
 }
 
 /* 00418d20 auto */
-void __thiscall combo_clear(ComboBoxClearView *this)
+void __thiscall combo_clear(ComboBoxClearView *self)
 
 {
-  combo_hwnd_clear(this->hwnd);
-  this->item_count = 0;
+  combo_hwnd_clear(self->hwnd);
+  self->item_count = 0;
   return;
 }
 
 /* 00418d60 auto */
-i32 __thiscall combo_get_cur_sel(ComboBoxGetSelView *this)
+i32 __thiscall combo_get_cur_sel(ComboBoxGetSelView *self)
 
 {
   i32 sel;
   
-  sel = combo_hwnd_get_cur_sel(this->hwnd);
+  sel = combo_hwnd_get_cur_sel(self->hwnd);
   return sel;
 }
 
 /* 00418d90 auto */
-void __thiscall combo_set_cur_sel(ComboBoxSetSelView *this,iptr index)
+void __thiscall combo_set_cur_sel(ComboBoxSetSelView *self,iptr index)
 
 {
-  combo_hwnd_set_cur_sel(this->hwnd,index);
+  combo_hwnd_set_cur_sel(self->hwnd,index);
   return;
 }
 
 /* 00418dd0 auto */
-void __thiscall combo_set_callback(ComboBoxCallbackSetView *this,iptr callback)
+void __thiscall combo_set_callback(ComboBoxCallbackSetView *self,iptr callback)
 
 {
-  this->on_select = callback;
+  self->on_select = callback;
   return;
 }
 
 /* 00418e00 auto */
-Control * __thiscall checkbox_ctor(Control *this)
+Control * __thiscall checkbox_ctor(Control *self)
 
 {
   i32 seh_prev;
@@ -526,14 +526,14 @@ Control * __thiscall checkbox_ctor(Control *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  ctrl_base_ctor(this);
-  this->on_click = 0;
-  this->on_select = 0;
-  return this;
+  ctrl_base_ctor(self);
+  self->on_click = 0;
+  self->on_select = 0;
+  return self;
 }
 
 /* 00418ea0 auto */
-void __thiscall listbox_dtor(ListBoxControl *this)
+void __thiscall listbox_dtor(ListBoxControl *self)
 
 {
   i32 seh_prev;
@@ -541,58 +541,58 @@ void __thiscall listbox_dtor(ListBoxControl *this)
   i32 seh_state;
   
   seh_state = 0;
-  if (this->hwnd != 0) {
-    listbox_hwnd_cleanup_stub(this->hwnd);
+  if (self->hwnd != 0) {
+    listbox_hwnd_cleanup_stub(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00418efa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 00418efa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
   return;
 }
 
 /* 00418f40 auto */
 void __thiscall
-listbox_create(Control *this,iptr parent,i32 ctrl_id,iptr rect)
+listbox_create(Control *self,iptr parent,i32 ctrl_id,iptr rect)
 
 {
   u32 new_hwnd;
   
-  if (this->hwnd != 0) {
-    ctrl_destroy(this);
+  if (self->hwnd != 0) {
+    ctrl_destroy(self);
   }
-  this->font = (u32)(*(i8 * *)(draw_current_font_rest + 16));
-  ctrl_init(this,parent,7,ctrl_id,rect);
-  new_hwnd = listbox_create_hwnd(rect,(iptr)this,1,0,this->font);
-  this->hwnd = new_hwnd;
-  this->is_enabled = 0;
+  self->font = (u32)(*(i8 * *)(draw_current_font_rest + 16));
+  ctrl_init(self,parent,7,ctrl_id,rect);
+  new_hwnd = listbox_create_hwnd(rect,(iptr)self,1,0,self->font);
+  self->hwnd = new_hwnd;
+  self->is_enabled = 0;
   return;
 }
 
 /* 00418fe0 auto */
-void __thiscall listbox_set_font(ListBoxFontView *this,iptr font)
+void __thiscall listbox_set_font(ListBoxFontView *self,iptr font)
 
 {
   i32 hfont;
   
   hfont = font_get_hfont((GameFont *)font);
-  listbox_hwnd_set_font(this->hwnd,hfont);
+  listbox_hwnd_set_font(self->hwnd,hfont);
   return;
 }
 
 /* 00419020 auto */
-void __thiscall listbox_add_string(ListBoxAddView *this,iptr text)
+void __thiscall listbox_add_string(ListBoxAddView *self,iptr text)
 
 {
-  listbox_hwnd_add_string(this->hwnd,text);
-  this->item_count++;
+  listbox_hwnd_add_string(self->hwnd,text);
+  self->item_count++;
   return;
 }
 
 /* 00419060 auto */
-void __thiscall listbox_clear(ListBoxClearView *this)
+void __thiscall listbox_clear(ListBoxClearView *self)
 
 {
-  listbox_hwnd_clear(this->hwnd);
-  this->item_count = 0;
+  listbox_hwnd_clear(self->hwnd);
+  self->item_count = 0;
   return;
 }
 
@@ -605,36 +605,36 @@ void __cdecl input_flush_events(void)
 }
 
 /* 00421ca0 auto */
-void __thiscall radiogrp_enable_item(RadioGroupEnableView *this,iptr index)
+void __thiscall radiogrp_enable_item(RadioGroupEnableView *self,iptr index)
 
 {
-  if ((index < (int)this->item_count) && (-1 < index)) {
-    *(i32 *)(this->items + 0x18 + index * 0xa4) = 1;
-    radiogrp_hwnd_invalidate(*(i32 *)(this->items + index * 0xa4));
+  if ((index < (int)self->item_count) && (-1 < index)) {
+    *(i32 *)(self->items + 0x18 + index * 0xa4) = 1;
+    radiogrp_hwnd_invalidate(*(i32 *)(self->items + index * 0xa4));
   }
   return;
 }
 
 /* 0043c5f0 auto */
-void __thiscall control_hide(Control *this)
+void __thiscall control_hide(Control *self)
 
 {
-  if (this->hwnd != 0) {
-    hwnd_hide(this->hwnd);
+  if (self->hwnd != 0) {
+    hwnd_hide(self->hwnd);
   }
   return;
 }
 
 /* 00447210 auto */
-void __thiscall radiogrp_disable_item(RadioGroupDisableView *this,iptr index)
+void __thiscall radiogrp_disable_item(RadioGroupDisableView *self,iptr index)
 
 {
-  if ((index < (int)this->item_count) && (-1 < index)) {
-    if (this->selected_index == index) {
-      this->selected_index = 0xffffffff;
+  if ((index < (int)self->item_count) && (-1 < index)) {
+    if (self->selected_index == index) {
+      self->selected_index = 0xffffffff;
     }
-    *(i32 *)(this->items + 0x18 + index * 0xa4) = 0;
-    radiogrp_hwnd_invalidate(*(i32 *)(this->items + index * 0xa4));
+    *(i32 *)(self->items + 0x18 + index * 0xa4) = 0;
+    radiogrp_hwnd_invalidate(*(i32 *)(self->items + index * 0xa4));
   }
   return;
 }
@@ -645,43 +645,43 @@ void __thiscall radiogrp_disable_item(RadioGroupDisableView *this,iptr index)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall radiogrp_get_selected(RadioGroupGetSelView *this)
+u32 __thiscall radiogrp_get_selected(RadioGroupGetSelView *self)
 
 {
-  return this->selected;
+  return self->selected;
 }
 
 /* 004472f0 auto */
-void __thiscall radiogrp_set_selected(RadioGroupSetSelView *this,u32 value)
+void __thiscall radiogrp_set_selected(RadioGroupSetSelView *self,u32 value)
 
 {
-  this->selected = value;
+  self->selected = value;
   return;
 }
 
 /* 00451ac0 auto */
-void __thiscall scrollbar_set_track_callback(ScrollbarTrackSetView *this,iptr callback)
+void __thiscall scrollbar_set_track_callback(ScrollbarTrackSetView *self,iptr callback)
 
 {
-  this->on_track = callback;
+  self->on_track = callback;
   return;
 }
 
 /* 00453c40 auto */
-void __thiscall ctrl_disable(Control *this)
+void __thiscall ctrl_disable(Control *self)
 
 {
-  this->is_enabled = 0;
-  wnd_invalidate(this->hwnd);
+  self->is_enabled = 0;
+  wnd_invalidate(self->hwnd);
   return;
 }
 
 /* 00453c80 auto */
-void __thiscall ctrl_enable(Control *this)
+void __thiscall ctrl_enable(Control *self)
 
 {
-  this->is_enabled = 1;
-  wnd_invalidate(this->hwnd);
+  self->is_enabled = 1;
+  wnd_invalidate(self->hwnd);
   return;
 }
 
@@ -768,113 +768,113 @@ void __cdecl scrollbar_66c768_atexit_dtor(void)
 }
 
 /* 00492ab0 auto */
-i32 __thiscall edit_get_sel_end(EditSelEndView *this)
+i32 __thiscall edit_get_sel_end(EditSelEndView *self)
 
 {
   i32 sel_end;
   
-  sel_end = edit_ctl_get_sel_end(this->hwnd);
+  sel_end = edit_ctl_get_sel_end(self->hwnd);
   return sel_end;
 }
 
 /* 00492ae0 auto */
-void __thiscall edit_replace_sel(Control *this,iptr text)
+void __thiscall edit_replace_sel(Control *self,iptr text)
 
 {
-  edit_hwnd_replace_sel(this->hwnd,text);
+  edit_hwnd_replace_sel(self->hwnd,text);
   return;
 }
 
 /* 00492b20 auto */
-void __thiscall edit_set_sel(EditSelView *this,i32 sel_start,i32 sel_end)
+void __thiscall edit_set_sel(EditSelView *self,i32 sel_start,i32 sel_end)
 
 {
-  edit_hwnd_set_sel(this->hwnd,sel_start,sel_end);
+  edit_hwnd_set_sel(self->hwnd,sel_start,sel_end);
   return;
 }
 
 /* 00497d40 auto */
 void __thiscall
 button_create_with_callback
-          (Control *this,iptr parent,i32 ctrl_id,iptr rect,u32 callback,iptr label
+          (Control *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,iptr label
           )
 
 {
-  this->on_select = callback;
-  this->font = (u32)(*(i8 * *)draw_current_font_rest);
-  button_create(this,parent,ctrl_id,rect,label);
+  self->on_select = callback;
+  self->font = (u32)(*(i8 * *)draw_current_font_rest);
+  button_create(self,parent,ctrl_id,rect,label);
   return;
 }
 
 /* 004bb3b0 auto */
-Control * __thiscall ctrl_scalar_dtor(Control *this,uint flags)
+Control * __thiscall ctrl_scalar_dtor(Control *self,uint flags)
 
 {
-  ctrl_dtor(this);
+  ctrl_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 004bb400 auto */
-Control * __thiscall edit_scalar_dtor(Control *this,uint flags)
+Control * __thiscall edit_scalar_dtor(Control *self,uint flags)
 
 {
-  edit_dtor(this);
+  edit_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 004bb450 auto */
-Checkbox * __thiscall checkbox_scalar_dtor(Checkbox *this,uint flags)
+Checkbox * __thiscall checkbox_scalar_dtor(Checkbox *self,uint flags)
 
 {
-  checkbox_dtor(this);
+  checkbox_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 004bb4a0 auto */
-RadioGroupDtorView * __thiscall radiogrp_scalar_dtor(RadioGroupDtorView *this,uint flags)
+RadioGroupDtorView * __thiscall radiogrp_scalar_dtor(RadioGroupDtorView *self,uint flags)
 
 {
-  radiogrp_dtor(this);
+  radiogrp_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 004bb4f0 auto */
-Control * __thiscall scrollbar_scalar_dtor(Control *this,uint flags)
+Control * __thiscall scrollbar_scalar_dtor(Control *self,uint flags)
 
 {
-  scrollbar_dtor(this);
+  scrollbar_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 004bb5b0 auto */
-void __thiscall ctrl_set_initial_focus(CtrlSetInitialFocusView *this)
+void __thiscall ctrl_set_initial_focus(CtrlSetInitialFocusView *self)
 
 {
-  this->wants_initial_focus = 1;
+  self->wants_initial_focus = 1;
   return;
 }
 
 /* 004bb5e0 auto */
-void __thiscall ctrl_set_focus(ControlFocusView *this)
+void __thiscall ctrl_set_focus(ControlFocusView *self)
 
 {
-  if (this->hwnd != 0) {
-    ctrl_hwnd_set_focus(this->hwnd);
+  if (self->hwnd != 0) {
+    ctrl_hwnd_set_focus(self->hwnd);
   }
   return;
 }
@@ -882,43 +882,43 @@ void __thiscall ctrl_set_focus(ControlFocusView *this)
 /* 004bb620 auto */
 void __thiscall
 edit_create_styled
-          (EditControl *this,iptr parent,i32 ctrl_id,iptr rect,iptr text,
+          (EditControl *self,iptr parent,i32 ctrl_id,iptr rect,iptr text,
           i32 multiline,i32 style)
 
 {
   u32 new_hwnd;
   
-  if (this->hwnd != 0) {
-    ctrl_destroy((Control *)this);
+  if (self->hwnd != 0) {
+    ctrl_destroy((Control *)self);
   }
-  this->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
-  ctrl_init((Control *)this,parent,4,ctrl_id,rect);
-  new_hwnd = edit_create_window(rect,(iptr)this,multiline,style,this->edit_font);
-  this->hwnd = new_hwnd;
-  hwnd_send_settext(this->hwnd,text);
+  self->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
+  ctrl_init((Control *)self,parent,4,ctrl_id,rect);
+  new_hwnd = edit_create_window(rect,(iptr)self,multiline,style,self->edit_font);
+  self->hwnd = new_hwnd;
+  hwnd_send_settext(self->hwnd,text);
   return;
 }
 
 /* 004bb6d0 auto */
-void __thiscall edit_set_caret(ControlTextView *this,i32 pos)
+void __thiscall edit_set_caret(ControlTextView *self,i32 pos)
 
 {
-  edit_hwnd_set_caret(this->hwnd,pos);
+  edit_hwnd_set_caret(self->hwnd,pos);
   return;
 }
 
 /* 004bb710 auto */
-i32 __thiscall edit_get_text_end(ControlTextView *this)
+i32 __thiscall edit_get_text_end(ControlTextView *self)
 
 {
   i32 text_end;
   
-  text_end = edit_hwnd_get_text_end(this->hwnd);
+  text_end = edit_hwnd_get_text_end(self->hwnd);
   return text_end;
 }
 
 /* 004bb740 auto */
-void __thiscall radiogrp_dtor(RadioGroupDtorView *this)
+void __thiscall radiogrp_dtor(RadioGroupDtorView *self)
 
 {
   i32 seh_prev;
@@ -926,23 +926,23 @@ void __thiscall radiogrp_dtor(RadioGroupDtorView *this)
   i32 seh_state;
   
   seh_state = 0;
-  if (this->items_handle != 0) {
-    mem_handle_unlock(this->items_handle);
-    radiogrp_destroy_items(this->item_count,this->items_handle);
+  if (self->items_handle != 0) {
+    mem_handle_unlock(self->items_handle);
+    radiogrp_destroy_items(self->item_count,self->items_handle);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 004bb7b0 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 004bb7b0 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
   return;
 }
 
 /* 004cffb0 auto */
 i32 __thiscall
-edit_get_line(EditLineView *this,i32 line,iptr buffer,i32 max_len)
+edit_get_line(EditLineView *self,i32 line,iptr buffer,i32 max_len)
 
 {
   i32 length;
   
-  length = edit_hwnd_get_line(this->hwnd,line,buffer,max_len);
+  length = edit_hwnd_get_line(self->hwnd,line,buffer,max_len);
   return length;
 }
 
@@ -1010,18 +1010,18 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
 }
 
 /* 00511560 auto */
-SpriteButtonCore * __thiscall spritebtn_scalar_dtor(SpriteButtonCore *this,uint flags)
+SpriteButtonCore * __thiscall spritebtn_scalar_dtor(SpriteButtonCore *self,uint flags)
 
 {
-  spritebtn_dtor(this);
+  spritebtn_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 005115b0 auto */
-void __thiscall spritebtn_dtor(SpriteButtonCore *this)
+void __thiscall spritebtn_dtor(SpriteButtonCore *self)
 
 {
   i32 seh_prev;
@@ -1030,20 +1030,20 @@ void __thiscall spritebtn_dtor(SpriteButtonCore *this)
   
   seh_state = seh_state & 0xff;
   (*(i8 *)((char *)&seh_state + 0)) = 2;
-  if (this->hwnd != 0) {
-    spritebtn_hwnd_cleanup_stub(this->hwnd);
+  if (self->hwnd != 0) {
+    spritebtn_hwnd_cleanup_stub(self->hwnd);
   }
   (*(i8 *)((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 00511624 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x7c)); }
+  /* inlined unwind funclet 00511624 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x7c)); }
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 00511630 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x34)); }
+  /* inlined unwind funclet 00511630 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x34)); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0051163c */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0051163c */ { ctrl_base_dtor(*(ControlBase **)((iptr)&self)); }
   return;
 }
 
 /* 00511720 auto */
-SpriteButton * __thiscall spritebtn_ctor(SpriteButton *this)
+SpriteButton * __thiscall spritebtn_ctor(SpriteButton *self)
 
 {
   i32 seh_prev;
@@ -1051,20 +1051,20 @@ SpriteButton * __thiscall spritebtn_ctor(SpriteButton *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  ctrl_base_ctor((Control *)this);
+  ctrl_base_ctor((Control *)self);
   seh_state = 0;
-  surface_ctor((DibSurface *)&this->on_select);
+  surface_ctor((DibSurface *)&self->on_select);
   seh_state = (seh_state & 0xffffff00 | (byte)(1));
-  surface_ctor((DibSurface *)(this->button_surface));
-  this->pressed_state = '\0';
-  return this;
+  surface_ctor((DibSurface *)(self->button_surface));
+  self->pressed_state = '\0';
+  return self;
 }
 
 /* 005117f0 auto */
-void __thiscall spritebtn_set_click_handler(SpritebtnSetClickHandlerView *this,iptr callback)
+void __thiscall spritebtn_set_click_handler(SpritebtnSetClickHandlerView *self,iptr callback)
 
 {
-  this->on_click = callback;
+  self->on_click = callback;
   return;
 }
 
@@ -1074,49 +1074,49 @@ void __thiscall spritebtn_set_click_handler(SpritebtnSetClickHandlerView *this,i
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall ctrl_is_enabled(ControlEnabledView *this)
+u32 __thiscall ctrl_is_enabled(ControlEnabledView *self)
 
 {
-  return this->is_enabled;
+  return self->is_enabled;
 }
 
 /* 00530eb0 auto */
-void __thiscall edit_set_change_callback(EditChangeSetView *this,iptr callback)
+void __thiscall edit_set_change_callback(EditChangeSetView *self,iptr callback)
 
 {
-  this->on_change = callback;
+  self->on_change = callback;
   return;
 }
 
 /* 00530ee0 auto */
 void __thiscall
 checkbox_create_fixed
-          (Control *this,iptr parent,i32 ctrl_id,i32 x,i32 y
+          (Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y
           ,i32 width,iptr label)
 
 {
   u32 hwnd;
   i8 rect[16];
   
-  this->font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
-  checkbox_calc_rect_fixed(x,y,width,(iptr)rect,this->font);
-  if (this->hwnd != 0) {
-    ctrl_destroy(this);
+  self->font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
+  checkbox_calc_rect_fixed(x,y,width,(iptr)rect,self->font);
+  if (self->hwnd != 0) {
+    ctrl_destroy(self);
   }
-  ctrl_init(this,parent,2,ctrl_id,(iptr)rect);
-  this->is_enabled = 0;
-  this->on_select = 1;
-  this->on_click = 0;
-  hwnd = checkbox_create_hwnd((iptr)rect,(iptr)this,label,1);
-  this->hwnd = hwnd;
+  ctrl_init(self,parent,2,ctrl_id,(iptr)rect);
+  self->is_enabled = 0;
+  self->on_select = 1;
+  self->on_click = 0;
+  hwnd = checkbox_create_hwnd((iptr)rect,(iptr)self,label,1);
+  self->hwnd = hwnd;
   return;
 }
 
 /* 00530fb0 auto */
-void __thiscall checkbox_enable(CheckboxEnableView *this)
+void __thiscall checkbox_enable(CheckboxEnableView *self)
 
 {
-  this->is_enabled = 1;
+  self->is_enabled = 1;
   return;
 }
 
@@ -1126,14 +1126,14 @@ void __thiscall checkbox_enable(CheckboxEnableView *this)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall checkbox_is_checked(Control *this)
+u32 __thiscall checkbox_is_checked(Control *self)
 
 {
-  return this->on_click;
+  return self->on_click;
 }
 
 /* 00531010 auto */
-InputControl * __thiscall radiogrp_ctor(InputControl *this)
+InputControl * __thiscall radiogrp_ctor(InputControl *self)
 
 {
   i32 seh_prev;
@@ -1141,52 +1141,52 @@ InputControl * __thiscall radiogrp_ctor(InputControl *this)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  ctrl_base_ctor((Control *)this);
-  this->items_handle = 0;
-  return this;
+  ctrl_base_ctor((Control *)self);
+  self->items_handle = 0;
+  return self;
 }
 
 /* 005310a0 auto */
 void __thiscall
 radiogrp_create
-          (RadioGroup *this,iptr parent,i32 ctrl_id,iptr rect,u32 columns,u32 item_count,
+          (RadioGroup *self,iptr parent,i32 ctrl_id,iptr rect,u32 columns,u32 item_count,
           iptr labels)
 
 {
   u32 handle;
   
-  if (this->items_handle != 0) {
-    ctrl_destroy((Control *)this);
+  if (self->items_handle != 0) {
+    ctrl_destroy((Control *)self);
   }
-  this->radio_font = (u32)(*(i8 * *)(draw_current_font_rest + 4));
-  ctrl_init((Control *)this,parent,3,ctrl_id,rect);
-  this->is_enabled = 0;
-  this->on_click = 0;
-  this->on_select = 0;
-  this->font = item_count;
-  this->scroll_pos = columns;
-  this->edit_font = 0;
-  handle = radiogrp_create_items((iptr)&this->font,rect,columns,(iptr)this,item_count,labels,1,
-                       this->radio_font);
-  this->items_handle = handle;
-  handle = mem_handle_lock(this->items_handle);
-  this->items_ptr = handle;
+  self->radio_font = (u32)(*(i8 * *)(draw_current_font_rest + 4));
+  ctrl_init((Control *)self,parent,3,ctrl_id,rect);
+  self->is_enabled = 0;
+  self->on_click = 0;
+  self->on_select = 0;
+  self->font = item_count;
+  self->scroll_pos = columns;
+  self->edit_font = 0;
+  handle = radiogrp_create_items((iptr)&self->font,rect,columns,(iptr)self,item_count,labels,1,
+                       self->radio_font);
+  self->items_handle = handle;
+  handle = mem_handle_lock(self->items_handle);
+  self->items_ptr = handle;
   return;
 }
 
 /* 005311b0 auto */
-void __thiscall radiogrp_set_select_callback(Control *this,iptr callback)
+void __thiscall radiogrp_set_select_callback(Control *self,iptr callback)
 
 {
-  this->is_enabled = callback;
+  self->is_enabled = callback;
   return;
 }
 
 /* 005311e0 auto */
-void __thiscall radiogrp_set_dblclick_callback(Control *this,iptr callback)
+void __thiscall radiogrp_set_dblclick_callback(Control *self,iptr callback)
 
 {
-  this->on_click = callback;
+  self->on_click = callback;
   return;
 }
 
@@ -1196,43 +1196,43 @@ void __thiscall radiogrp_set_dblclick_callback(Control *this,iptr callback)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall listbox_get_count(ListboxGetCountView *this)
+u32 __thiscall listbox_get_count(ListboxGetCountView *self)
 
 {
-  return this->item_count;
+  return self->item_count;
 }
 
 /* 00551d50 auto */
-i32 __thiscall listbox_get_cur_sel(ListBoxGetSelView *this)
+i32 __thiscall listbox_get_cur_sel(ListBoxGetSelView *self)
 
 {
   i32 cur_sel;
   
-  cur_sel = listbox_hwnd_get_cur_sel(this->hwnd);
+  cur_sel = listbox_hwnd_get_cur_sel(self->hwnd);
   return cur_sel;
 }
 
 /* 00551d80 auto */
-void __thiscall listbox_set_cur_sel(ListBoxSetSelView *this,i32 index)
+void __thiscall listbox_set_cur_sel(ListBoxSetSelView *self,i32 index)
 
 {
-  listbox_hwnd_set_cur_sel(this->hwnd,index);
+  listbox_hwnd_set_cur_sel(self->hwnd,index);
   return;
 }
 
 /* 00551dc0 auto */
-void __thiscall listbox_set_dblclick_callback(ListBoxDblClickSetView *this,iptr callback)
+void __thiscall listbox_set_dblclick_callback(ListBoxDblClickSetView *self,iptr callback)
 
 {
-  this->on_dblclick = callback;
+  self->on_dblclick = callback;
   return;
 }
 
 /* 00551df0 auto */
-void __thiscall listbox_set_select_callback(ListBoxSelectSetView *this,iptr callback)
+void __thiscall listbox_set_select_callback(ListBoxSelectSetView *self,iptr callback)
 
 {
-  this->on_select = callback;
+  self->on_select = callback;
   return;
 }
 
@@ -1245,20 +1245,20 @@ void __thiscall listbox_set_select_callback(ListBoxSelectSetView *this,iptr call
    
    Library: Visual Studio 1998 Debug */
 
-Checkbox * __thiscall checkbox_vector_dtor(Checkbox *this,uint flags)
+Checkbox * __thiscall checkbox_vector_dtor(Checkbox *self,uint flags)
 
 {
   if ((flags & 2) == 0) {
-    checkbox_dtor(this);
+    checkbox_dtor(self);
     if ((flags & 1) != 0) {
-      operator_delete(this);
+      operator_delete(self);
     }
   }
   else {
-    crt_vector_dtor_iterator(this,0x3c,VECTOR_COUNT(this),checkbox_dtor);
-    operator_delete(&VECTOR_COUNT(this));
+    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),checkbox_dtor);
+    operator_delete(&VECTOR_COUNT(self));
   }
-  return this;
+  return self;
 }
 
 /* 005a93b0 auto */
@@ -1270,20 +1270,20 @@ Checkbox * __thiscall checkbox_vector_dtor(Checkbox *this,uint flags)
    
    Library: Visual Studio 1998 Debug */
 
-Control * __thiscall edit_vector_dtor(Control *this,uint flags)
+Control * __thiscall edit_vector_dtor(Control *self,uint flags)
 
 {
   if ((flags & 2) == 0) {
-    edit_dtor(this);
+    edit_dtor(self);
     if ((flags & 1) != 0) {
-      operator_delete(this);
+      operator_delete(self);
     }
   }
   else {
-    crt_vector_dtor_iterator(this,0x48,VECTOR_COUNT(this),edit_dtor);
-    operator_delete(&VECTOR_COUNT(this));
+    crt_vector_dtor_iterator(self,0x48,VECTOR_COUNT(self),edit_dtor);
+    operator_delete(&VECTOR_COUNT(self));
   }
-  return this;
+  return self;
 }
 
 /* 005a9440 auto */
@@ -1295,54 +1295,54 @@ Control * __thiscall edit_vector_dtor(Control *this,uint flags)
    
    Library: Visual Studio 1998 Debug */
 
-Control * __thiscall ctrl_vector_dtor(Control *this,uint flags)
+Control * __thiscall ctrl_vector_dtor(Control *self,uint flags)
 
 {
   if ((flags & 2) == 0) {
-    ctrl_dtor(this);
+    ctrl_dtor(self);
     if ((flags & 1) != 0) {
-      operator_delete(this);
+      operator_delete(self);
     }
   }
   else {
-    crt_vector_dtor_iterator(this,0x3c,VECTOR_COUNT(this),ctrl_dtor);
-    operator_delete(&VECTOR_COUNT(this));
+    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),ctrl_dtor);
+    operator_delete(&VECTOR_COUNT(self));
   }
-  return this;
+  return self;
 }
 
 /* 005a94d0 auto */
-ListBoxControl * __thiscall listbox_scalar_dtor(ListBoxControl *this,uint flags)
+ListBoxControl * __thiscall listbox_scalar_dtor(ListBoxControl *self,uint flags)
 
 {
-  listbox_dtor(this);
+  listbox_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 005a9640 auto */
-void __thiscall checkbox_disable(CheckboxDisableView *this)
+void __thiscall checkbox_disable(CheckboxDisableView *self)
 
 {
-  this->is_enabled = 0;
+  self->is_enabled = 0;
   return;
 }
 
 /* 005a9670 auto */
-void __thiscall listbox_get_text(ListBoxTextView *this,i32 index,iptr buffer)
+void __thiscall listbox_get_text(ListBoxTextView *self,i32 index,iptr buffer)
 
 {
-  listbox_hwnd_get_text(this->hwnd,index,buffer);
+  listbox_hwnd_get_text(self->hwnd,index,buffer);
   return;
 }
 
 /* 005a96b0 auto */
-void __thiscall listbox_get_sel_text(ListBoxSelTextView *this,iptr buffer)
+void __thiscall listbox_get_sel_text(ListBoxSelTextView *self,iptr buffer)
 
 {
-  listbox_hwnd_get_sel_text(this->hwnd,buffer);
+  listbox_hwnd_get_sel_text(self->hwnd,buffer);
   return;
 }
 
@@ -1390,52 +1390,52 @@ uint __cdecl input_lbutton_down(void)
 }
 
 /* 005c5e60 auto */
-u32 __thiscall control_get_type(ControlTypeView *this)
+u32 __thiscall control_get_type(ControlTypeView *self)
 
 {
-  return this->ctrl_type;
+  return self->ctrl_type;
 }
 
 /* 005c5e80 auto */
-u32 __thiscall control_get_next(ControlNextView *this)
+u32 __thiscall control_get_next(ControlNextView *self)
 
 {
-  return this->next_control;
+  return self->next_control;
 }
 
 /* 005c5ea0 auto */
-u8 __thiscall ctrl_get_initial_focus(ControlInitialFocusView *this)
+u8 __thiscall ctrl_get_initial_focus(ControlInitialFocusView *self)
 
 {
-  return this->initial_focus;
+  return self->initial_focus;
 }
 
 /* 005c5ec0 auto */
-u32 __thiscall checkbox_is_enabled(CheckboxEnabledView *this)
+u32 __thiscall checkbox_is_enabled(CheckboxEnabledView *self)
 
 {
-  return this->is_enabled;
+  return self->is_enabled;
 }
 
 /* 005c5ee0 auto */
-u32 __thiscall radiogrp_get_items(RadioGroupItemsView *this)
+u32 __thiscall radiogrp_get_items(RadioGroupItemsView *self)
 
 {
-  return this->items;
+  return self->items;
 }
 
 /* 005c5f00 auto */
-u32 __thiscall radiogrp_item_count(RadioGroupCountView *this)
+u32 __thiscall radiogrp_item_count(RadioGroupCountView *self)
 
 {
-  return this->item_count;
+  return self->item_count;
 }
 
 /* 005c8f50 auto */
-int __thiscall ctrl_get_rect(void *this)
+int __thiscall ctrl_get_rect(void *self)
 
 {
-  return (int)this + 0xc;
+  return (int)self + 0xc;
 }
 
 /* 005c90b0 auto */
@@ -1451,7 +1451,7 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
 
 {
   LONG own_data;
-  DibSurface *this;
+  DibSurface *self;
   WndBase *parent_wnd;
   iptr window;
   iptr height;
@@ -1473,10 +1473,10 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
     }
   }
   else {
-    this = (DibSurface *)GetWindowLongA(parent_hwnd,0xc);
+    self = (DibSurface *)GetWindowLongA(parent_hwnd,0xc);
     parent_wnd = (WndBase *)GetWindowLongA(parent_hwnd,0);
     window = wnd_get_window(parent_wnd);
-    dib2 = surface_get_dib(this);
+    dib2 = surface_get_dib(self);
     origin.x = *(int *)(paint + 8);
     origin.y = *(int *)(paint + 0xc);
     MapWindowPoints(hwnd,*(HWND *)(window + 4),&origin,1);
@@ -1667,10 +1667,10 @@ void __cdecl ctrl_hwnd_free_block(HWND hwnd)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall control_set_hwnd(ControlHwndSetView *this,u32 hwnd)
+void __thiscall control_set_hwnd(ControlHwndSetView *self,u32 hwnd)
 
 {
-  this->hwnd = hwnd;
+  self->hwnd = hwnd;
   return;
 }
 
@@ -1679,7 +1679,7 @@ HWND __cdecl
 button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
 
 {
-  WndBase *this;
+  WndBase *self;
   iptr window;
   iptr height;
   int value;
@@ -1748,8 +1748,8 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
   hInstance = err_report_ctx_block.app_hinstance;
-  this = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  window = wnd_get_window(this);
+  self = (WndBase *)ctrl_get_parent((Control *)ctrl);
+  window = wnd_get_window(self);
   hWndParent = *(HWND *)(window + 4);
   height = rect_height((iptr)rect);
   value = rect_width((iptr)rect);
@@ -2123,15 +2123,15 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
 void __cdecl button_press_animated(HWND hwnd)
 
 {
-  Control *this;
+  Control *self;
   iptr block;
   int enabled;
   i32 ctrl_id;
   
   block = wnd_from_hwnd(hwnd);
   if (block != 0) {
-    this = *(Control **)(block + 4);
-    enabled = ctrl_is_enabled((ControlEnabledView *)this);
+    self = *(Control **)(block + 4);
+    enabled = ctrl_is_enabled((ControlEnabledView *)self);
     if (enabled != 0) {
       SetFocus(hwnd);
       *(i32 *)(block + 0x18) = 1;
@@ -2140,9 +2140,9 @@ void __cdecl button_press_animated(HWND hwnd)
       ui_pump_messages();
       ui_wait_ticks(8);
       wnd_redraw_client(hwnd);
-      wnd_active_child = ctrl_get_parent(this);
-      ctrl_id = ctrl_get_id((ControlIdView *)this);
-      button_fire_callback((ButtonClickView *)this,ctrl_id);
+      wnd_active_child = ctrl_get_parent(self);
+      ctrl_id = ctrl_get_id((ControlIdView *)self);
+      button_fire_callback((ButtonClickView *)self,ctrl_id);
     }
   }
   return;
@@ -2154,7 +2154,7 @@ void __cdecl button_press_animated(HWND hwnd)
 HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,int visible)
 
 {
-  WndBase *this;
+  WndBase *self;
   iptr window;
   iptr rect_h;
   int value;
@@ -2176,8 +2176,8 @@ HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,in
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
   hInstance = err_report_ctx_block.app_hinstance;
-  this = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  window = wnd_get_window(this);
+  self = (WndBase *)ctrl_get_parent((Control *)ctrl);
+  window = wnd_get_window(self);
   hWndParent = *(HWND *)(window + 4);
   rect_h = rect_height((iptr)&rect);
   value = rect_width((iptr)&rect);
@@ -2199,31 +2199,31 @@ void __cdecl spritebtn_hwnd_cleanup_stub(i32 hwnd)
 /* 005cb6eb: written by hand in src/game/fixups.c */
 
 /* 005cbdf0 auto */
-void __thiscall button_fire_callback(ButtonClickView *this,i32 ctrl_id)
+void __thiscall button_fire_callback(ButtonClickView *self,i32 ctrl_id)
 
 {
-  if (this->on_click != 0) {
-    (*(code *)this->on_click)(ctrl_id);
+  if (self->on_click != 0) {
+    call_untyped((code *)self->on_click, ctrl_id);
   }
   return;
 }
 
 /* 005cbe30 auto */
-void __thiscall spritebtn_fire_click(SpriteButtonClickView *this,i32 ctrl_id)
+void __thiscall spritebtn_fire_click(SpriteButtonClickView *self,i32 ctrl_id)
 
 {
-  if (this->on_click != 0) {
-    (*(code *)this->on_click)(ctrl_id);
+  if (self->on_click != 0) {
+    call_untyped((code *)self->on_click, ctrl_id);
   }
   return;
 }
 
 /* 005cbe70 auto */
-void __thiscall spritebtn_fire_rclick(SpriteButtonRClickView *this,i32 ctrl_id)
+void __thiscall spritebtn_fire_rclick(SpriteButtonRClickView *self,i32 ctrl_id)
 
 {
-  if (this->on_rclick != 0) {
-    (*(code *)this->on_rclick)(ctrl_id);
+  if (self->on_rclick != 0) {
+    call_untyped((code *)self->on_rclick, ctrl_id);
   }
   return;
 }
@@ -2303,7 +2303,7 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
 {
   size_t len;
   void *label_copy;
-  WndBase *this;
+  WndBase *self;
   iptr window;
   iptr height;
   int value;
@@ -2326,8 +2326,8 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
   hInstance = err_report_ctx_block.app_hinstance;
-  this = (WndBase *)ctrl_get_parent((Control *)ctrl);
-  window = wnd_get_window(this);
+  self = (WndBase *)ctrl_get_parent((Control *)ctrl);
+  window = wnd_get_window(self);
   check_hwnd = *(HWND *)(window + 4);
   height = rect_height(rect);
   value = rect_width(rect);
@@ -2361,7 +2361,7 @@ void __cdecl checkbox_destroy_hwnd(int hwnd)
 void __cdecl checkbox_toggle_by_hotkey(HWND hwnd)
 
 {
-  Control *this;
+  Control *self;
   iptr block;
   int checked;
   i32 is_checked;
@@ -2369,21 +2369,21 @@ void __cdecl checkbox_toggle_by_hotkey(HWND hwnd)
   
   block = wnd_from_hwnd(hwnd);
   if (block != 0) {
-    this = *(Control **)(block + 4);
+    self = *(Control **)(block + 4);
     SetFocus(hwnd);
-    checked = checkbox_is_checked(this);
+    checked = checkbox_is_checked(self);
     if (checked == 0) {
-      checkbox_set_checked(this,1);
+      checkbox_set_checked(self,1);
     }
     else {
-      checkbox_set_checked(this,0);
+      checkbox_set_checked(self,0);
     }
     SetCapture(hwnd);
     InvalidateRect(hwnd,(RECT *)0x0,0);
-    wnd_active_child = ctrl_get_parent(this);
-    is_checked = checkbox_is_checked(this);
-    ctrl_id = ctrl_get_id((ControlIdView *)this);
-    checkbox_fire_callback((CheckboxClickView *)this,ctrl_id,is_checked);
+    wnd_active_child = ctrl_get_parent(self);
+    is_checked = checkbox_is_checked(self);
+    ctrl_id = ctrl_get_id((ControlIdView *)self);
+    checkbox_fire_callback((CheckboxClickView *)self,ctrl_id,is_checked);
   }
   return;
 }
@@ -2683,11 +2683,11 @@ default_proc:
 }
 
 /* 005cce40 auto */
-void __thiscall checkbox_fire_callback(CheckboxClickView *this,i32 ctrl_id,i32 checked)
+void __thiscall checkbox_fire_callback(CheckboxClickView *self,i32 ctrl_id,i32 checked)
 
 {
-  if (this->on_toggle != 0) {
-    (*(code *)this->on_toggle)(ctrl_id,checked);
+  if (self->on_toggle != 0) {
+    call_untyped((code *)self->on_toggle, ctrl_id,checked);
   }
   return;
 }
@@ -2697,14 +2697,14 @@ void __stdcall control_subclass_wndproc(HWND hwnd,int msg,i32 wparam,i32 lparam)
 
 {
   DWORD class_extra;
-  code *base_proc;
-  ControlHwndSetView *this;
+  WNDPROC base_proc;
+  ControlHwndSetView *self;
   
   class_extra = GetClassLongA(hwnd,-0x12);
-  base_proc = (code *)GetWindowLongA(hwnd,class_extra - 4);
+  base_proc = (WNDPROC)GetWindowLongA(hwnd,class_extra - 4);
   if ((msg == 2) &&
-     (this = (ControlHwndSetView *)GetWindowLongA(hwnd,class_extra - 8), this != (ControlHwndSetView *)0x0)) {
-    control_set_hwnd(this,0);
+     (self = (ControlHwndSetView *)GetWindowLongA(hwnd,class_extra - 8), self != (ControlHwndSetView *)0x0)) {
+    control_set_hwnd(self,0);
   }
   (*base_proc)(hwnd,msg,wparam,lparam);
   return;
@@ -2796,7 +2796,7 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
 {
   short thumb_pos;
   DWORD class_extra;
-  ScrollbarPosView *this;
+  ScrollbarPosView *self;
   iptr cur_pos;
   iptr parent;
   WPARAM *rect_ptr;
@@ -2806,13 +2806,13 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
   LPARAM pos_lparam;
   
   class_extra = GetClassLongA(hwnd,-0x12);
-  this = (ScrollbarPosView *)GetWindowLongA(hwnd,class_extra - 8);
-  cur_pos = scrollbar_get_cur_pos(this);
+  self = (ScrollbarPosView *)GetWindowLongA(hwnd,class_extra - 8);
+  cur_pos = scrollbar_get_cur_pos(self);
   if (msg == 0x111) {
     if (wparam == 0x7f) {
       SetScrollPos(hwnd,2,lparam,1);
       new_pos = GetScrollPos(hwnd,2);
-      this->cur_pos = new_pos;
+      self->cur_pos = new_pos;
     }
   }
   else if ((0x113 < msg) && (msg < 0x116)) {
@@ -2821,66 +2821,66 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
     case 0:
       value = input_lbutton_down();
       if (value == 0) {
-        value = ctrl_get_rect(this);
+        value = ctrl_get_rect(self);
         pos_lparam = *(LPARAM *)(value + 4);
-        rect_ptr = (WPARAM *)ctrl_get_rect(this);
+        rect_ptr = (WPARAM *)ctrl_get_rect(self);
         PostMessageA(hwnd,0x202,*rect_ptr,pos_lparam);
       }
       else {
         SetScrollPos(hwnd,2,cur_pos - 1,1);
         new_pos = GetScrollPos(hwnd,2);
-        parent = ctrl_get_parent((Control *)this);
+        parent = ctrl_get_parent((Control *)self);
         wnd_set_active_child(parent);
-        this->cur_pos = new_pos;
-        scrollbar_fire_change((ScrollbarChangeView *)this,new_pos);
+        self->cur_pos = new_pos;
+        scrollbar_fire_change((ScrollbarChangeView *)self,new_pos);
       }
       break;
     case 1:
       value = input_lbutton_down();
       if (value == 0) {
-        value = ctrl_get_rect(this);
+        value = ctrl_get_rect(self);
         pos_lparam = *(LPARAM *)(value + 4);
-        rect_ptr = (WPARAM *)ctrl_get_rect(this);
+        rect_ptr = (WPARAM *)ctrl_get_rect(self);
         PostMessageA(hwnd,0x202,*rect_ptr,pos_lparam);
       }
       else {
         SetScrollPos(hwnd,2,cur_pos + 1,1);
         new_pos = GetScrollPos(hwnd,2);
-        parent = ctrl_get_parent((Control *)this);
+        parent = ctrl_get_parent((Control *)self);
         wnd_set_active_child(parent);
-        this->cur_pos = new_pos;
-        scrollbar_fire_change((ScrollbarChangeView *)this,new_pos);
+        self->cur_pos = new_pos;
+        scrollbar_fire_change((ScrollbarChangeView *)self,new_pos);
       }
       break;
     case 2:
-      value = scrollbar_get_page_size((ScrollbarPageView *)this);
+      value = scrollbar_get_page_size((ScrollbarPageView *)self);
       SetScrollPos(hwnd,2,cur_pos - value,1);
       new_pos = GetScrollPos(hwnd,2);
-      parent = ctrl_get_parent((Control *)this);
+      parent = ctrl_get_parent((Control *)self);
       wnd_set_active_child(parent);
-      this->cur_pos = new_pos;
-      scrollbar_fire_change((ScrollbarChangeView *)this,new_pos);
+      self->cur_pos = new_pos;
+      scrollbar_fire_change((ScrollbarChangeView *)self,new_pos);
       break;
     case 3:
-      page_size = scrollbar_get_page_size((ScrollbarPageView *)this);
+      page_size = scrollbar_get_page_size((ScrollbarPageView *)self);
       SetScrollPos(hwnd,2,cur_pos + page_size,1);
       new_pos = GetScrollPos(hwnd,2);
-      parent = ctrl_get_parent((Control *)this);
+      parent = ctrl_get_parent((Control *)self);
       wnd_set_active_child(parent);
-      this->cur_pos = new_pos;
-      scrollbar_fire_change((ScrollbarChangeView *)this,new_pos);
+      self->cur_pos = new_pos;
+      scrollbar_fire_change((ScrollbarChangeView *)self,new_pos);
       break;
     case 4:
       SetScrollPos(hwnd,2,(int)thumb_pos,1);
-      parent = ctrl_get_parent((Control *)this);
+      parent = ctrl_get_parent((Control *)self);
       wnd_set_active_child(parent);
-      this->cur_pos = (int)thumb_pos;
-      scrollbar_fire_change((ScrollbarChangeView *)this,this->cur_pos);
+      self->cur_pos = (int)thumb_pos;
+      scrollbar_fire_change((ScrollbarChangeView *)self,self->cur_pos);
       break;
     case 5:
-      parent = ctrl_get_parent((Control *)this);
+      parent = ctrl_get_parent((Control *)self);
       wnd_set_active_child(parent);
-      scrollbar_fire_track((ScrollbarTrackView *)this,(int)thumb_pos);
+      scrollbar_fire_track((ScrollbarTrackView *)self,(int)thumb_pos);
     }
   }
   return;
@@ -2912,52 +2912,52 @@ void __cdecl scrollbar_hwnd_set_pos(i32 hwnd,i32 pos)
 }
 
 /* 005cd620 auto */
-u32 __thiscall scrollbar_get_cur_pos(ScrollbarPosView *this)
+u32 __thiscall scrollbar_get_cur_pos(ScrollbarPosView *self)
 
 {
-  return this->cur_pos;
+  return self->cur_pos;
 }
 
 /* 005cd640 auto */
-void __thiscall scrollbar_fire_change(ScrollbarChangeView *this,i32 pos)
+void __thiscall scrollbar_fire_change(ScrollbarChangeView *self,i32 pos)
 
 {
-  if (this->on_change != 0) {
-    (*(code *)this->on_change)(pos);
+  if (self->on_change != 0) {
+    call_untyped((code *)self->on_change, pos);
   }
   return;
 }
 
 /* 005cd680 auto */
-void __thiscall scrollbar_fire_track(ScrollbarTrackView *this,i32 pos)
+void __thiscall scrollbar_fire_track(ScrollbarTrackView *self,i32 pos)
 
 {
-  if (this->on_track != 0) {
-    (*(code *)this->on_track)(pos);
+  if (self->on_track != 0) {
+    call_untyped((code *)self->on_track, pos);
   }
   return;
 }
 
 /* 005cd6c0 auto */
-u32 __thiscall scrollbar_get_page_size(ScrollbarPageView *this)
+u32 __thiscall scrollbar_get_page_size(ScrollbarPageView *self)
 
 {
-  return this->page_size;
+  return self->page_size;
 }
 
 /* 005d25c0 auto */
 void __thiscall
 edit_create_at
-          (EditControl *this,iptr parent,i32 ctrl_id,int x,int y,int width,
+          (EditControl *self,iptr parent,i32 ctrl_id,int x,int y,int width,
           iptr text)
 
 {
   tagRECT rect;
   
-  this->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
-  this->is_enabled = 0;
+  self->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
+  self->is_enabled = 0;
   SetRect(&rect,x,y,width + x,y + 0x1e);
-  edit_create(this,parent,ctrl_id,(iptr)&rect,text);
+  edit_create(self,parent,ctrl_id,(iptr)&rect,text);
   return;
 }
 
@@ -3068,7 +3068,7 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
 LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
 
 {
-  Control *this;
+  Control *self;
   DWORD class_extra;
   WNDPROC lpPrevWndFunc;
   iptr key;
@@ -3080,22 +3080,22 @@ LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM 
   iptr long_index;
   int pass_through;
   
-  this = (Control *)GetWindowLongA(hwnd,10);
+  self = (Control *)GetWindowLongA(hwnd,10);
   class_extra = GetClassLongA(hwnd,-0x12);
   lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,class_extra - 8);
   if (msg < 8) {
     if (msg == 7) {
-      parent = ctrl_get_parent(this);
+      parent = ctrl_get_parent(self);
       wnd_set_active_child(parent);
-      if ((char)this->font == '\0') {
+      if ((char)self->font == '\0') {
         edit_hwnd_set_sel(hwnd,0,0xffffffff);
       }
       result = CallWindowProcA(lpPrevWndFunc,hwnd,7,wparam,lparam);
       return result;
     }
     if (msg == 2) {
-      if (this != (Control *)0x0) {
-        control_set_hwnd((ControlHwndSetView *)this,0);
+      if (self != (Control *)0x0) {
+        control_set_hwnd((ControlHwndSetView *)self,0);
       }
       result = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
       return result;
@@ -3127,22 +3127,22 @@ click_focus_parent:
       return 1;
     }
     if (msg == 0x101) {
-      parent = ctrl_get_parent(this);
+      parent = ctrl_get_parent(self);
       wnd_set_active_child(parent);
       key = input_map_vkey(wparam);
       if ((0x2af < key) && (key < 0x2b5)) {
-        edit_fire_key_callback((EditKeyView *)this,key);
+        edit_fire_key_callback((EditKeyView *)self,key);
       }
       result = CallWindowProcA(lpPrevWndFunc,hwnd,0x101,wparam,lparam);
       return result;
     }
     if (msg == 0x102) {
-      parent = ctrl_get_parent(this);
+      parent = ctrl_get_parent(self);
       wnd_set_active_child(parent);
       pass_through = 0;
       if (wparam != 9) {
         parent = input_map_vkey(wparam);
-        pass_through = edit_fire_key_callback((EditKeyView *)this,parent);
+        pass_through = edit_fire_key_callback((EditKeyView *)self,parent);
       }
       if (pass_through == 0) {
         return 1;
@@ -3262,16 +3262,16 @@ void __cdecl edit_hwnd_replace_sel(HWND hwnd,LPARAM text)
 }
 
 /* 005d30e0 auto */
-i32 __thiscall edit_fire_key_callback(EditKeyView *this,iptr key)
+i32 __thiscall edit_fire_key_callback(EditKeyView *self,iptr key)
 
 {
   i32 result;
   
-  if (this->on_key == 0) {
+  if (self->on_key == 0) {
     result = 1;
   }
   else {
-    result = (*(code *)this->on_key)(this->control_id,key);
+    result = call_untyped((code *)self->on_key, self->control_id,key);
   }
   return result;
 }
@@ -3350,7 +3350,7 @@ LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM l
 {
   DWORD class_extra;
   WNDPROC lpPrevWndFunc;
-  Control *this;
+  Control *self;
   iptr parent;
   HWND parent_hwnd;
   WndBase *this_00;
@@ -3360,11 +3360,11 @@ LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM l
   
   class_extra = GetClassLongA(hwnd,-0x12);
   lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,class_extra - 8);
-  this = (Control *)GetWindowLongA(hwnd,class_extra - 4);
-  if (this == (Control *)0x0) {
+  self = (Control *)GetWindowLongA(hwnd,class_extra - 4);
+  if (self == (Control *)0x0) {
     return 1;
   }
-  parent = ctrl_get_parent(this);
+  parent = ctrl_get_parent(self);
   wnd_set_active_child(parent);
   if (msg < 0x103) {
     if (0xff < msg) {
@@ -3377,8 +3377,8 @@ LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM l
       return 1;
     }
     if (msg == 2) {
-      if (this != (Control *)0x0) {
-        control_set_hwnd((ControlHwndSetView *)this,0);
+      if (self != (Control *)0x0) {
+        control_set_hwnd((ControlHwndSetView *)self,0);
       }
       result = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
       return result;
@@ -3401,16 +3401,16 @@ LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM l
     }
     if (msg == 0x4c8) {
       if (wparam >> 0x10 == 1) {
-        if (this == (Control *)0x0) {
+        if (self == (Control *)0x0) {
           return 1;
         }
-        combo_fire_selchange((ComboBoxSelChangeView *)this);
+        combo_fire_selchange((ComboBoxSelChangeView *)self);
         return 1;
       }
       if (wparam >> 0x10 != 2) {
         return 1;
       }
-      combo_fire_dblclick((ComboBoxDblClickView *)this);
+      combo_fire_dblclick((ComboBoxDblClickView *)self);
       return 1;
     }
   }
@@ -3475,21 +3475,21 @@ void __cdecl combo_hwnd_set_cur_sel(HWND hwnd,WPARAM index)
 }
 
 /* 005d3720 auto */
-void __thiscall combo_fire_dblclick(ComboBoxDblClickView *this)
+void __thiscall combo_fire_dblclick(ComboBoxDblClickView *self)
 
 {
-  if (this->on_dblclick != 0) {
-    (*(code *)this->on_dblclick)(this->control_id);
+  if (self->on_dblclick != 0) {
+    call_untyped((code *)self->on_dblclick, self->control_id);
   }
   return;
 }
 
 /* 005d3760 auto */
-void __thiscall combo_fire_selchange(ComboBoxSelChangeView *this)
+void __thiscall combo_fire_selchange(ComboBoxSelChangeView *self)
 
 {
-  if (this->on_selchange != 0) {
-    (*(code *)this->on_selchange)(this->control_id);
+  if (self->on_selchange != 0) {
+    call_untyped((code *)self->on_selchange, self->control_id);
   }
   return;
 }
@@ -3584,7 +3584,7 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM
 {
   DWORD class_extra;
   WNDPROC lpPrevWndFunc;
-  Control *this;
+  Control *self;
   iptr parent;
   HWND parent_hwnd;
   WndBase *this_00;
@@ -3594,11 +3594,11 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM
   
   class_extra = GetClassLongA(hwnd,-0x12);
   lpPrevWndFunc = (WNDPROC)GetWindowLongA(hwnd,class_extra - 8);
-  this = (Control *)GetWindowLongA(hwnd,class_extra - 4);
-  if (this == (Control *)0x0) {
+  self = (Control *)GetWindowLongA(hwnd,class_extra - 4);
+  if (self == (Control *)0x0) {
     return 1;
   }
-  parent = ctrl_get_parent(this);
+  parent = ctrl_get_parent(self);
   wnd_set_active_child(parent);
   if (msg < 0x103) {
     if (0xff < msg) {
@@ -3611,8 +3611,8 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM
       return 1;
     }
     if (msg == 2) {
-      if (this != (Control *)0x0) {
-        control_set_hwnd((ControlHwndSetView *)this,0);
+      if (self != (Control *)0x0) {
+        control_set_hwnd((ControlHwndSetView *)self,0);
       }
       result = CallWindowProcA(lpPrevWndFunc,hwnd,2,wparam,lparam);
       return result;
@@ -3635,16 +3635,16 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM
     }
     if (msg == 0x4c8) {
       if (wparam >> 0x10 == 1) {
-        if (this == (Control *)0x0) {
+        if (self == (Control *)0x0) {
           return 1;
         }
-        listbox_fire_selchange((ListBoxSelChangeView *)this);
+        listbox_fire_selchange((ListBoxSelChangeView *)self);
         return 1;
       }
       if (wparam >> 0x10 != 2) {
         return 1;
       }
-      listbox_fire_dblclick((ListBoxDblClickView *)this);
+      listbox_fire_dblclick((ListBoxDblClickView *)self);
       return 1;
     }
   }
@@ -3733,34 +3733,34 @@ void __cdecl listbox_hwnd_set_cur_sel(HWND hwnd,WPARAM index)
 }
 
 /* 005d3f30 auto */
-void __thiscall listbox_fire_dblclick(ListBoxDblClickView *this)
+void __thiscall listbox_fire_dblclick(ListBoxDblClickView *self)
 
 {
-  if (this->on_dblclick != 0) {
-    (*(code *)this->on_dblclick)(this->control_id);
+  if (self->on_dblclick != 0) {
+    call_untyped((code *)self->on_dblclick, self->control_id);
   }
   return;
 }
 
 /* 005d3f70 auto */
-void __thiscall listbox_fire_selchange(ListBoxSelChangeView *this)
+void __thiscall listbox_fire_selchange(ListBoxSelChangeView *self)
 
 {
-  if (this->on_selchange != 0) {
-    (*(code *)this->on_selchange)(this->control_id);
+  if (self->on_selchange != 0) {
+    call_untyped((code *)self->on_selchange, self->control_id);
   }
   return;
 }
 
 /* 005d4014 auto */
-void __thiscall radiogrp_show_all(RadioGroupShowView *this)
+void __thiscall radiogrp_show_all(RadioGroupShowView *self)
 
 {
   int i;
   
-  for (i = 0; i < (int)this->item_count; i++) {
-    hwnd_show(*(i32 *)(this->items + i * 0xa4));
-    wnd_invalidate(*(i32 *)(this->items + i * 0xa4));
+  for (i = 0; i < (int)self->item_count; i++) {
+    hwnd_show(*(i32 *)(self->items + i * 0xa4));
+    wnd_invalidate(*(i32 *)(self->items + i * 0xa4));
   }
   return;
 }
@@ -3776,7 +3776,7 @@ void __cdecl ctrl_set_pending_font(iptr font)
 /* 005d7cb0 auto */
 void __thiscall
 spritebtn_init_from_sprite
-          (SpriteButton *this,WndPaletteView *parent,i32 ctrl_id,int x,int y,
+          (SpriteButton *self,WndPaletteView *parent,i32 ctrl_id,int x,int y,
           int width,int height,iptr sprite,uint bg_color)
 
 {
@@ -3799,19 +3799,19 @@ spritebtn_init_from_sprite
   tagRECT dst_rect;
   RECT src_rect;
   
-  this->pressed_state = '\0';
+  self->pressed_state = '\0';
   value = wnd_get_palette(parent);
-  this->ctrl_palette = value;
+  self->ctrl_palette = value;
   SetRect(&rect,x,y,width + x,y + height);
-  ctrl_init((Control *)this,(iptr)parent,6,ctrl_id,(iptr)&rect);
-  this->is_enabled = 0;
-  this->on_click = 0;
+  ctrl_init((Control *)self,(iptr)parent,6,ctrl_id,(iptr)&rect);
+  self->is_enabled = 0;
+  self->on_click = 0;
   gfx_get_scale_ratio((iptr)&scale_num2,(iptr)&scale_den2);
   gfx_set_scale_ratio(1,1);
-  surface_create((DibSurface *)(this->button_surface),width,height);
-  surface_create((DibSurface *)&this->on_select,width,height);
-  surface_fill((DibSurface *)(this->button_surface),bg_color & 0xff);
-  surface_fill((DibSurface *)&this->on_select,bg_color & 0xff);
+  surface_create((DibSurface *)(self->button_surface),width,height);
+  surface_create((DibSurface *)&self->on_select,width,height);
+  surface_fill((DibSurface *)(self->button_surface),bg_color & 0xff);
+  surface_fill((DibSurface *)&self->on_select,bg_color & 0xff);
   center_x = width >> 1;
   center_y = height >> 1;
   sprite_get_origin((SpriteOriginGetView *)sprite,(iptr)&origin_x2,(iptr)&origin_y2);
@@ -3821,14 +3821,14 @@ spritebtn_init_from_sprite
   half_h = half_h >> 1;
   sprite_set_origin((SpriteOriginSetView *)sprite,-half_w,-half_h);
   sprite_draw
-            ((Sprite *)sprite,(iptr)draw_ctx_a,(iptr)(this->button_surface),center_x,center_y);
+            ((Sprite *)sprite,(iptr)draw_ctx_a,(iptr)(self->button_surface),center_x,center_y);
   sprite_draw
-            ((Sprite *)sprite,(iptr)draw_ctx_b,(iptr)&this->on_select,center_x,center_y);
+            ((Sprite *)sprite,(iptr)draw_ctx_b,(iptr)&self->on_select,center_x,center_y);
   sprite_set_origin((SpriteOriginSetView *)sprite,origin_x2,origin_y2);
   gfx_set_scale_ratio(scale_num2,scale_den2);
-  size = surface_height((DibSurface *)(this->button_surface));
+  size = surface_height((DibSurface *)(self->button_surface));
   yBottom = y + size - 1;
-  size = surface_width((DibSurface *)(this->button_surface));
+  size = surface_width((DibSurface *)(self->button_surface));
   SetRect(&rect,x,y,x + size - 1,yBottom);
   OffsetRect(&rect,-rect.left,-rect.top);
   dst_rect.left = rect.left;
@@ -3841,18 +3841,18 @@ spritebtn_init_from_sprite
   src_rect.right = dst_rect.right;
   src_rect.bottom = dst_rect.bottom;
   OffsetRect(&dst_rect,2,2);
-  surface_fill((DibSurface *)(this->button_surface),(uint)(*(byte *)&gfx_black_color_index));
+  surface_fill((DibSurface *)(self->button_surface),(uint)(*(byte *)&gfx_black_color_index));
   surface_blit
-            ((DibSurface *)&this->on_select,(iptr)(this->button_surface),(iptr)&src_rect,
+            ((DibSurface *)&self->on_select,(iptr)(self->button_surface),(iptr)&src_rect,
              (iptr)&dst_rect);
-  parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)this);
+  parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)self);
   palette = wnd_get_palette(parent_wnd);
-  surface_apply_palette((DibSurface *)(this->button_surface),palette);
-  parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)this);
+  surface_apply_palette((DibSurface *)(self->button_surface),palette);
+  parent_wnd = (WndPaletteView *)ctrl_get_parent((Control *)self);
   palette = wnd_get_palette(parent_wnd);
-  surface_apply_palette((DibSurface *)&this->on_select,palette);
-  value = spritebtn_create_hwnd(x,y,width,height,(iptr)this,1);
-  this->hwnd = value;
+  surface_apply_palette((DibSurface *)&self->on_select,palette);
+  value = spritebtn_create_hwnd(x,y,width,height,(iptr)self,1);
+  self->hwnd = value;
   return;
 }
 
@@ -3899,7 +3899,7 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
   int col_width;
   int row_height;
   int nHeight;
-  WndBase *this;
+  WndBase *self;
   iptr window;
   int half_row;
   HWND item_hwnd;
@@ -3943,8 +3943,8 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     lpParam = (LPVOID)0x0;
     hMenu = (HMENU)0x0;
     hInstance = err_report_ctx_block.app_hinstance;
-    this = (WndBase *)ctrl_get_parent((Control *)group);
-    window = wnd_get_window(this);
+    self = (WndBase *)ctrl_get_parent((Control *)group);
+    window = wnd_get_window(self);
     half_row = row_height >> 1;
     half_item = nHeight >> 1;
     item_hwnd = CreateWindowExA(4,str_mscontrolclass_5,((i8 *)&radiogrp_item_wnd_title),style2,item_x,
@@ -4044,7 +4044,7 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
 void __cdecl radiogrp_item_activate(HWND hwnd)
 
 {
-  RadioGroupItemsView *this;
+  RadioGroupItemsView *self;
   iptr block;
   iptr selected;
   iptr old_sel;
@@ -4058,27 +4058,27 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
   
   block = wnd_from_hwnd(hwnd);
   if (block != 0) {
-    this = *(RadioGroupItemsView **)(block + 4);
+    self = *(RadioGroupItemsView **)(block + 4);
     item = *(int *)(block + 0x24);
     SetFocus(hwnd);
-    selected = radiogrp_get_selected((RadioGroupGetSelView *)this);
+    selected = radiogrp_get_selected((RadioGroupGetSelView *)self);
     if ((selected != *(int *)(item + 0x14)) && (*(int *)(item + 0x18) == 1)) {
       erase = 0;
       null_rect = (RECT *)0x0;
-      old_sel = radiogrp_get_selected((RadioGroupGetSelView *)this);
-      items = radiogrp_get_items(this);
+      old_sel = radiogrp_get_selected((RadioGroupGetSelView *)self);
+      items = radiogrp_get_items(self);
       InvalidateRect(*(HWND *)(items + old_sel * 0xa4),null_rect,erase);
-      radiogrp_set_selected((RadioGroupSetSelView *)this,*(i32 *)(item + 0x14));
+      radiogrp_set_selected((RadioGroupSetSelView *)self,*(i32 *)(item + 0x14));
       erase = 0;
       null_rect = (RECT *)0x0;
-      new_sel = radiogrp_get_selected((RadioGroupGetSelView *)this);
-      item = radiogrp_get_items(this);
+      new_sel = radiogrp_get_selected((RadioGroupGetSelView *)self);
+      item = radiogrp_get_items(self);
       InvalidateRect(*(HWND *)(item + new_sel * 0xa4),null_rect,erase);
     }
-    wnd_active_child = ctrl_get_parent((Control *)this);
-    sel_index = radiogrp_get_selected((RadioGroupGetSelView *)this);
-    ctrl_id = ctrl_get_id((ControlIdView *)this);
-    radiogrp_fire_callback((RadioGroupClickView *)this,ctrl_id,sel_index);
+    wnd_active_child = ctrl_get_parent((Control *)self);
+    sel_index = radiogrp_get_selected((RadioGroupGetSelView *)self);
+    ctrl_id = ctrl_get_id((ControlIdView *)self);
+    radiogrp_fire_callback((RadioGroupClickView *)self,ctrl_id,sel_index);
   }
   return;
 }
@@ -4569,54 +4569,54 @@ i32 __cdecl radiogrp_hwnds_same_group(int hwnd_a,int hwnd_b)
 }
 
 /* 005dad40 auto */
-void __thiscall radiogrp_fire_callback(RadioGroupClickView *this,i32 ctrl_id,i32 index)
+void __thiscall radiogrp_fire_callback(RadioGroupClickView *self,i32 ctrl_id,i32 index)
 
 {
-  if (this->on_select != 0) {
-    (*(code *)this->on_select)(ctrl_id,index);
+  if (self->on_select != 0) {
+    call_untyped((code *)self->on_select, ctrl_id,index);
   }
   return;
 }
 
 /* 005dad80 auto */
-void __thiscall radiogrp_fire_dblclick(RadioGroupDblClickView *this,i32 ctrl_id,i32 index)
+void __thiscall radiogrp_fire_dblclick(RadioGroupDblClickView *self,i32 ctrl_id,i32 index)
 
 {
-  if (this->on_dblclick != 0) {
-    (*(code *)this->on_dblclick)(ctrl_id,index);
+  if (self->on_dblclick != 0) {
+    call_untyped((code *)self->on_dblclick, ctrl_id,index);
   }
   return;
 }
 
 /* 005dadc0 auto */
-void __thiscall radiogrp_fire_rclick(RadioGroupRClickView *this,i32 ctrl_id,i32 index)
+void __thiscall radiogrp_fire_rclick(RadioGroupRClickView *self,i32 ctrl_id,i32 index)
 
 {
-  if (this->on_rclick != 0) {
-    (*(code *)this->on_rclick)(ctrl_id,index);
+  if (self->on_rclick != 0) {
+    call_untyped((code *)self->on_rclick, ctrl_id,index);
   }
   return;
 }
 
 /* 005db0d0 auto */
-void __thiscall scrollbar_set_page_size(Control *this,u32 page_size)
+void __thiscall scrollbar_set_page_size(Control *self,u32 page_size)
 
 {
   int min_pos;
   int max_pos;
   
-  scrollbar_get_ctl_range(this,(iptr)&min_pos,(iptr)&max_pos);
+  scrollbar_get_ctl_range(self,(iptr)&min_pos,(iptr)&max_pos);
   if ((int)page_size <= max_pos - min_pos) {
-    this->on_select = page_size;
+    self->on_select = page_size;
   }
   return;
 }
 
 /* 005db110 auto */
-void __thiscall scrollbar_get_ctl_range(Control *this,iptr min_out,iptr max_out)
+void __thiscall scrollbar_get_ctl_range(Control *self,iptr min_out,iptr max_out)
 
 {
-  scrollbar_hwnd_get_range(this->hwnd,min_out,max_out);
+  scrollbar_hwnd_get_range(self->hwnd,min_out,max_out);
   return;
 }
 
@@ -4663,21 +4663,21 @@ i32 __cdecl ctrl_list_find_type11_hwnd(ControlNextView *list)
 /* 005eacc0: written by hand in src/game/retvals.c */
 
 /* 005eb2f0 auto */
-void __thiscall edit_fire_maxtext_callback(EditMaxTextView *this)
+void __thiscall edit_fire_maxtext_callback(EditMaxTextView *self)
 
 {
-  if (this->on_maxtext != 0) {
-    (*(code *)this->on_maxtext)(this->control_id);
+  if (self->on_maxtext != 0) {
+    call_untyped((code *)self->on_maxtext, self->control_id);
   }
   return;
 }
 
 /* 005eb330 auto */
-void __thiscall edit_fire_change_callback(EditChangeView *this)
+void __thiscall edit_fire_change_callback(EditChangeView *self)
 
 {
-  if (this->on_change != 0) {
-    (*(code *)this->on_change)(this->control_id);
+  if (self->on_change != 0) {
+    call_untyped((code *)self->on_change, self->control_id);
   }
   return;
 }
@@ -4731,10 +4731,10 @@ uint __cdecl input_ctrl_key_down(void)
    
    Library: Visual Studio 1998 Debug */
 
-int __thiscall ddctrl_get_rect(void *this)
+int __thiscall ddctrl_get_rect(void *self)
 
 {
-  return (int)this + 0x38;
+  return (int)self + 0x38;
 }
 
 /* 005f0f05 auto */
@@ -4746,50 +4746,50 @@ void __cdecl ddctrl_set_msg_target(iptr target)
 }
 
 /* 005f130f auto */
-i32 __thiscall ddctrl_dispatch_msg(DDControl *this,int msg,int x,int y)
+i32 __thiscall ddctrl_dispatch_msg(DDControl *self,int msg,int x,int y)
 
 {
   char handled;
   i32 result;
   
-  handled = ddctrl_dispatch_to_children(this,msg,x,y);
+  handled = ddctrl_dispatch_to_children(self,msg,x,y);
   if (handled == '\0') {
-    ddctrl_set_msg_target((iptr)this);
-    if ((msg == 0x100) && (this->is_active != '\0')) {
-      (*((code **)(this->vtable))[6])(x);
+    ddctrl_set_msg_target((iptr)self);
+    if ((msg == 0x100) && (self->is_active != '\0')) {
+      call_untyped(((code **)(self->vtable))[6], x);
       result = 1;
     }
-    else if ((msg == 0x102) && (this->is_active != '\0')) {
-      (*((code **)(this->vtable))[7])(x);
+    else if ((msg == 0x102) && (self->is_active != '\0')) {
+      call_untyped(((code **)(self->vtable))[7], x);
       result = 1;
     }
     else if (msg == 0xfff0) {
-      (*((code **)(this->vtable))[9])(x,y);
+      call_untyped(((code **)(self->vtable))[9], x,y);
       result = 1;
     }
-    else if ((((x < (int)this->rect_left) || (y < (int)this->rect_top)) ||
-             ((int)this->rect_right < x)) || ((int)this->rect_bottom < y)) {
+    else if ((((x < (int)self->rect_left) || (y < (int)self->rect_top)) ||
+             ((int)self->rect_right < x)) || ((int)self->rect_bottom < y)) {
       result = 0;
     }
     else {
       switch(msg) {
       case 0x200:
-        (*((code **)(this->vtable))[4])(x,y);
+        call_untyped(((code **)(self->vtable))[4], x,y);
         break;
       case 0x201:
-        (*((code **)(this->vtable))[0])(this,x,y);
+        call_untyped(((code **)(self->vtable))[0], self,x,y);
         break;
       case 0x202:
-        (*((code **)(this->vtable))[2])(x,y);
+        call_untyped(((code **)(self->vtable))[2], x,y);
         break;
       case 0x203:
-        (*((code **)(this->vtable))[5])(x,y);
+        call_untyped(((code **)(self->vtable))[5], x,y);
         break;
       case 0x204:
-        (*((code **)(this->vtable))[1])(x,y);
+        call_untyped(((code **)(self->vtable))[1], x,y);
         break;
       case 0x205:
-        (*((code **)(this->vtable))[3])(x,y);
+        call_untyped(((code **)(self->vtable))[3], x,y);
       }
       result = 1;
     }
@@ -4801,35 +4801,35 @@ i32 __thiscall ddctrl_dispatch_msg(DDControl *this,int msg,int x,int y)
 }
 
 /* 005f1514 auto */
-uptr __thiscall ddctrl_get_parent_window(DDControlParentView *this)
+uptr __thiscall ddctrl_get_parent_window(DDControlParentView *self)
 
 {
   uptr parent_wnd;
   uptr result;
   
-  if (this->parent_wnd == 0) {
-    if (this->parent_control == 0) {
+  if (self->parent_wnd == 0) {
+    if (self->parent_control == 0) {
       result = 0;
     }
     else {
-      parent_wnd = ddctrl_get_parent_window((DDControlParentView *)this->parent_control);
-      this->parent_wnd = parent_wnd;
-      result = this->parent_wnd;
+      parent_wnd = ddctrl_get_parent_window((DDControlParentView *)self->parent_control);
+      self->parent_wnd = parent_wnd;
+      result = self->parent_wnd;
     }
   }
   else {
-    result = this->parent_wnd;
+    result = self->parent_wnd;
   }
   return result;
 }
 
 /* 005f15a9 auto */
-void __thiscall ddctrl_on_paint_default(DDControlParentView *this,i32 paint_arg)
+void __thiscall ddctrl_on_paint_default(DDControlParentView *self,i32 paint_arg)
 
 {
   int parent_wnd;
   
-  parent_wnd = ddctrl_get_parent_window(this);
+  parent_wnd = ddctrl_get_parent_window(self);
   if (parent_wnd == 0) {
     __assert(str_getparentgamewin,str_d_ss_smeds32_ddcntrl_cpp,0xd8);
   }
@@ -4837,158 +4837,158 @@ void __thiscall ddctrl_on_paint_default(DDControlParentView *this,i32 paint_arg)
 }
 
 /* 005f1622 auto */
-void __thiscall ddctrl_activate(DDControlActivateView *this)
+void __thiscall ddctrl_activate(DDControlActivateView *self)
 
 {
-  if (this->is_active == '\0') {
-    if (this->parent_control == 0) {
-      ddwin_deactivate_controls(this->owner_ddwin);
+  if (self->is_active == '\0') {
+    if (self->parent_control == 0) {
+      ddwin_deactivate_controls(self->owner_ddwin);
     }
     else {
-      ddctrl_deactivate_children(this->parent_control);
+      ddctrl_deactivate_children(self->parent_control);
     }
-    this->is_active = 1;
-    (*((code **)(this->vtable))[8])(1);
+    self->is_active = 1;
+    call_untyped(((code **)(self->vtable))[8], 1);
   }
   return;
 }
 
 /* 005f1683 auto */
-void __thiscall ddctrl_deactivate(void *this)
+void __thiscall ddctrl_deactivate(void *self)
 
 {
-  if (*(char *)((int)this + 0x34) != '\0') {
-    ddctrl_deactivate_children(this);
-    *(i8 *)((int)this + 0x34) = 0;
-    (*((code **)(*(int **)this))[8])(this,0);
+  if (*(char *)((int)self + 0x34) != '\0') {
+    ddctrl_deactivate_children(self);
+    *(i8 *)((int)self + 0x34) = 0;
+    call_untyped(((code **)(*(int **)self))[8], self,0);
   }
   return;
 }
 
 /* 005f179c auto */
-void __thiscall ddctrl_on_lbuttondown(DDControlActivateView *this,i32 x,i32 y)
+void __thiscall ddctrl_on_lbuttondown(DDControlActivateView *self,i32 x,i32 y)
 
 {
-  ddctrl_activate(this);
+  ddctrl_activate(self);
   return;
 }
 
 /* 005f17bc auto */
-void __thiscall ddctrl_on_rbuttondown_nop(void *this,i32 x,i32 y)
+void __thiscall ddctrl_on_rbuttondown_nop(void *self,i32 x,i32 y)
 
 {
   return;
 }
 
 /* 005f17d4 auto */
-void __thiscall ddctrl_on_lbuttonup(DdctrlOnLbuttonupView *this,i32 x,i32 y)
+void __thiscall ddctrl_on_lbuttonup(DdctrlOnLbuttonupView *self,i32 x,i32 y)
 
 {
-  if (this->on_lbutton_up != 0) {
-    (*(code *)this->on_lbutton_up)(this->control_id,x,y);
+  if (self->on_lbutton_up != 0) {
+    call_untyped((code *)self->on_lbutton_up, self->control_id,x,y);
   }
   return;
 }
 
 /* 005f1811 auto */
-void __thiscall ddctrl_on_rbuttonup(DdctrlOnRbuttonupView *this,i32 x,i32 y)
+void __thiscall ddctrl_on_rbuttonup(DdctrlOnRbuttonupView *self,i32 x,i32 y)
 
 {
-  if (this->on_rbutton_up != 0) {
-    (*(code *)this->on_rbutton_up)(this->control_id,x,y);
+  if (self->on_rbutton_up != 0) {
+    call_untyped((code *)self->on_rbutton_up, self->control_id,x,y);
   }
   return;
 }
 
 /* 005f184e auto */
-void __thiscall ddctrl_on_mousemove(DdctrlOnMousemoveView *this,i32 x,i32 y)
+void __thiscall ddctrl_on_mousemove(DdctrlOnMousemoveView *self,i32 x,i32 y)
 
 {
-  if (this->on_mouse_move != 0) {
-    (*(code *)this->on_mouse_move)(this->control_id,x,y);
+  if (self->on_mouse_move != 0) {
+    call_untyped((code *)self->on_mouse_move, self->control_id,x,y);
   }
   return;
 }
 
 /* 005f188b auto */
-void __thiscall ddctrl_on_dblclick(DdctrlOnDblclickView *this,i32 x,i32 y)
+void __thiscall ddctrl_on_dblclick(DdctrlOnDblclickView *self,i32 x,i32 y)
 
 {
-  if (this->on_dblclick != 0) {
-    (*(code *)this->on_dblclick)(this->control_id,x,y);
+  if (self->on_dblclick != 0) {
+    call_untyped((code *)self->on_dblclick, self->control_id,x,y);
   }
   return;
 }
 
 /* 005f18c8 auto */
-void __thiscall ddctrl_on_msg_fff0_nop(void *this,i32 x,i32 y)
+void __thiscall ddctrl_on_msg_fff0_nop(void *self,i32 x,i32 y)
 
 {
   return;
 }
 
 /* 005f18e0 auto */
-void __thiscall ddctrl_on_keydown_nop(void *this,i32 key)
+void __thiscall ddctrl_on_keydown_nop(void *self,i32 key)
 
 {
   return;
 }
 
 /* 005f18f8 auto */
-void __thiscall ddctrl_on_char_nop(void *this,i32 ch)
+void __thiscall ddctrl_on_char_nop(void *self,i32 ch)
 
 {
   return;
 }
 
 /* 005f1910 auto */
-void __thiscall ddctrl_on_set_active_nop(void *this,i32 active)
+void __thiscall ddctrl_on_set_active_nop(void *self,i32 active)
 
 {
   return;
 }
 
 /* 005f19a6 auto */
-void __thiscall ddctrl_deactivate_children(void *this)
+void __thiscall ddctrl_deactivate_children(void *self)
 
 {
   i32 child;
   
-  child = ptrlist_first((PtrList *)((int)this + 0x10));
+  child = ptrlist_first((PtrList *)((int)self + 0x10));
   while (child != 0) {
     ddctrl_deactivate(child);
-    child = ptrlist_next((PtrList *)((int)this + 0x10));
+    child = ptrlist_next((PtrList *)((int)self + 0x10));
   }
   return;
 }
 
 /* 005f1a40 auto */
-i8 __thiscall ddctrl_dispatch_to_children(DDControl *this,int msg,int x,int y)
+i8 __thiscall ddctrl_dispatch_to_children(DDControl *self,int msg,int x,int y)
 
 {
   int *child_rect;
   int handled;
   DDControl *child;
   
-  if ((this->hover_child != 0) && (msg == 0x200)) {
-    child_rect = (int *)ddctrl_get_rect((void *)this->hover_child);
+  if ((self->hover_child != 0) && (msg == 0x200)) {
+    child_rect = (int *)ddctrl_get_rect((void *)self->hover_child);
     if ((x < *child_rect) ||
        (((child_rect[2] < x || (y < child_rect[1])) || (child_rect[3] < y)))) {
-      ddctrl_dispatch_msg((DDControl *)this->hover_child,0xfff0,x,y);
-      this->hover_child = 0;
+      ddctrl_dispatch_msg((DDControl *)self->hover_child,0xfff0,x,y);
+      self->hover_child = 0;
     }
   }
-  child = (DDControl *)ptrlist_first((PtrList *)(this->child_controls));
+  child = (DDControl *)ptrlist_first((PtrList *)(self->child_controls));
   while( true ) {
     if (child == (DDControl *)0x0) {
       return 0;
     }
     handled = ddctrl_dispatch_msg(child,msg,x,y);
     if (handled != 0) break;
-    child = (DDControl *)ptrlist_next((PtrList *)(this->child_controls));
+    child = (DDControl *)ptrlist_next((PtrList *)(self->child_controls));
   }
   if (msg == 0x200) {
-    this->hover_child = (uptr)child;
+    self->hover_child = (uptr)child;
   }
   return 1;
 }

@@ -1,5 +1,5 @@
 # The dev image: civ2-dev-base (tools/docker: wine, mingw, python) plus what the
-# native builds need: 64-bit mingw, SDL2 (also 32-bit, for the -m32 build), gdb,
+# native builds need: g++ (the game is C++), 64-bit mingw, SDL2 (also 32-bit, for the -m32 build), gdb,
 # and the portable build's toolchain: wasi-sdk (clang for wasm32 with
 # wasi-libc) and wabt (wasm2c).
 #   docker build -t civ2-dev-base tools/docker && docker build -t civ2-dev tools/docker-ext
@@ -13,4 +13,7 @@ RUN curl -fsSL https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sd
     && curl -fsSL https://github.com/WebAssembly/wabt/releases/download/1.0.41/wabt-1.0.41-linux-x64.tar.gz \
         | tar xz -C /opt && ln -s /opt/wabt-1.0.41 /opt/wabt
 ENV PATH="/opt/wabt/bin:${PATH}"
+# the game code is C++ (step 6): g++ for the native builds, -m32 included
+RUN apt-get update && apt-get install -y --no-install-recommends g++-multilib \
+    && rm -rf /var/lib/apt/lists/* /usr/share/doc
 USER dev

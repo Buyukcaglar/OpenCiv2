@@ -8531,6 +8531,9 @@
 #define MM_ANTEX_VP625_WAVEOUT 6
 #define COLOR_INACTIVECAPTIONTEXT 19
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 void WINAPI AVIFileExit(void);
 HRESULT WINAPI AVIFileGetStream (PAVIFILE pfile,PAVISTREAM *ppavi,DWORD fccType,LONG lParam);
 void WINAPI AVIFileInit(void);
@@ -8781,5 +8784,8 @@ MMRESULT WINAPI waveOutPrepareHeader(HWAVEOUT hwo,LPWAVEHDR pwh,UINT cbwh);
 MMRESULT WINAPI waveOutReset(HWAVEOUT hwo);
 MMRESULT WINAPI waveOutUnprepareHeader(HWAVEOUT hwo,LPWAVEHDR pwh,UINT cbwh);
 MMRESULT WINAPI waveOutWrite(HWAVEOUT hwo,LPWAVEHDR pwh,UINT cbwh);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

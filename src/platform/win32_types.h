@@ -284,6 +284,9 @@ typedef struct _AVISTREAMINFOA {
 } AVISTREAMINFOA, *LPAVISTREAMINFOA;
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /* Not __stdcall, so not in win32_api.h. */
 int wsprintfA(LPSTR buf, LPCSTR fmt, ...);
 HWND MCIWndCreateA(HWND parent, HINSTANCE inst, DWORD style, LPCSTR file);
@@ -300,4 +303,7 @@ WINBOOL WINAPI IsWindowEnabled(HWND h);
 HWND WINAPI SetActiveWindow(HWND h);
 void WINAPI PostQuitMessage(int code);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

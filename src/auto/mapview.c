@@ -495,10 +495,10 @@ void __cdecl minimap_window_destroy(void)
 }
 
 /* 00410302 auto */
-void __thiscall mapview_redraw_cursor_tile(ViewWindow *this)
+void __thiscall mapview_redraw_cursor_tile(ViewWindow *self)
 
 {
-  mapview_redraw_area(this,(int)map_cursor_x[0],(int)map_cursor_y[0],0,human_civ[0],1);
+  mapview_redraw_area(self,(int)map_cursor_x[0],(int)map_cursor_y[0],0,human_civ[0],1);
   return;
 }
 
@@ -536,24 +536,24 @@ void __cdecl mapview_on_redraw(void)
 }
 
 /* 00410402 auto */
-void __thiscall mapview_center_on(ViewWindow *this,iptr x,i32 y)
+void __thiscall mapview_center_on(ViewWindow *self,iptr x,i32 y)
 
 {
   i8 saved_blink;
   i32 wrapped_x;
   
   wrapped_x = map_wrap_x(x);
-  *(short *)&this->tax_rate_sel = (short)wrapped_x;
-  *(i16 *)((int)&this->tax_rate_sel + 2) = (i16)y;
+  *(short *)&self->tax_rate_sel = (short)wrapped_x;
+  *(i16 *)((int)&self->tax_rate_sel + 2) = (i16)y;
   saved_blink = unit_blink_active;
   unit_blink_active = 0;
-  mapview_redraw(this,human_civ[0],1);
+  mapview_redraw(self,human_civ[0],1);
   unit_blink_active = saved_blink;
   return;
 }
 
 /* 00410464 auto */
-int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
+int __thiscall mapview_scroll_if_near_edge(ViewWindow *self,int x,int y)
 
 {
   uptr view_left;
@@ -563,15 +563,15 @@ int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
   int need_scroll;
   
   need_scroll = 0;
-  view_left = this->sci_rate_sel;
-  view_top = this->init_tax_rate;
-  if ((((game.rules & 0x8000) == 0) && (x <= (int)(this->dialog_w * 2))) &&
-     ((int)((int)map.width + this->dialog_w * -2) <= (int)view_left)) {
+  view_left = self->sci_rate_sel;
+  view_top = self->init_tax_rate;
+  if ((((game.rules & 0x8000) == 0) && (x <= (int)(self->dialog_w * 2))) &&
+     ((int)((int)map.width + self->dialog_w * -2) <= (int)view_left)) {
     x += map.width;
   }
-  view_cols = this->label_x_value;
-  view_bottom = this->init_sci_rate;
-  if (this->tax_label_y == 0) {
+  view_cols = self->label_x_value;
+  view_bottom = self->init_sci_rate;
+  if (self->tax_label_y == 0) {
     if ((game.rules & 0x8000) != 0) {
       x = int_clamp(x,2,map.width - 3);
     }
@@ -579,7 +579,7 @@ int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
       need_scroll = 1;
     }
   }
-  if ((this->lux_label_y == 0) &&
+  if ((self->lux_label_y == 0) &&
      ((y = int_clamp(y,2,map.height - 3), y <= (int)(view_top + 1) ||
       ((int)(view_bottom - 1) <= y)))) {
     need_scroll = 1;
@@ -587,7 +587,7 @@ int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
   if (need_scroll != 0) {
     unit_blink_skip_tick = 1;
     unit_blink_phase = moving_units_mode == 0;
-    mapview_center_on(this,x,y);
+    mapview_center_on(self,x,y);
   }
   return need_scroll;
 }
@@ -631,7 +631,7 @@ uint __cdecl mapviews_ensure_visible(i32 x,i32 y,iptr civ)
 /* 004106fd auto */
 int __thiscall
 mapview_point_unit_dir
-          (ViewWindow *this,int mouse_x,int mouse_y,i32 unit_x,i32 unit_y)
+          (ViewWindow *self,int mouse_x,int mouse_y,i32 unit_x,i32 unit_y)
 
 {
   short client_dx;
@@ -642,21 +642,21 @@ mapview_point_unit_dir
   int off_x;
   int tile_sy;
   
-  mapview_tile_to_screen(this,(iptr)tile_sx,(iptr)&tile_sy,unit_x,unit_y);
+  mapview_tile_to_screen(self,(iptr)tile_sx,(iptr)&tile_sy,unit_x,unit_y);
   if (((short)mouse_x < tile_sx[0]) || ((short)mouse_y < tile_sy)) {
     dir = 8;
   }
-  else if (((int)(short)mouse_x < (int)(this->total_tax + tile_sx[0])) &&
-          ((int)(short)mouse_y < (int)(this->total_science + tile_sy))) {
+  else if (((int)(short)mouse_x < (int)(self->total_tax + tile_sx[0])) &&
+          ((int)(short)mouse_y < (int)(self->total_science + tile_sy))) {
     off_x = (short)mouse_x - tile_sx[0];
     off_y = (short)mouse_y - tile_sy;
-    client_dx = (short)mouse_x - (short)this->client_x;
-    client_dy = (short)mouse_y - (short)this->client_y;
+    client_dx = (short)mouse_x - (short)self->client_x;
+    client_dy = (short)mouse_y - (short)self->client_y;
     if ((client_dx < 0) || (client_dy < 0)) {
       dir = 8;
     }
-    else if (((int)client_dx < (int)this->client_width) && ((int)client_dy < (int)this->client_height)) {
-      dir = surface_get_pixel((DibSurface *)&this->right_agreed_button,off_x,off_y);
+    else if (((int)client_dx < (int)self->client_width) && ((int)client_dy < (int)self->client_height)) {
+      dir = surface_get_pixel((DibSurface *)&self->right_agreed_button,off_x,off_y);
       dir = dir - 10 >> 4;
     }
     else {
@@ -971,7 +971,7 @@ void __cdecl mapview_on_move(void)
 }
 
 /* 00413476 auto */
-void __thiscall mapview_update_title(FrameWindow *this)
+void __thiscall mapview_update_title(FrameWindow *self)
 
 {
   bool show_mode;
@@ -979,12 +979,12 @@ void __thiscall mapview_update_title(FrameWindow *this)
   int view;
   uint mode;
   
-  mode = (uint)((this->max_rate_value & 0x10000) != 0);
-  if ((this->max_rate_value & 0x20000) != 0) {
+  mode = (uint)((self->max_rate_value & 0x10000) != 0);
+  if ((self->max_rate_value & 0x20000) != 0) {
     mode += 2;
   }
   text_clear();
-  if (this->rates_civ == 0) {
+  if (self->rates_civ == 0) {
     if (game_language != 1) {
       adjective = civ_get_adjective(human_civ[0]);
       text_append_str(adjective);
@@ -1009,7 +1009,7 @@ void __thiscall mapview_update_title(FrameWindow *this)
     text_append_colon();
     text_append_label(mode + 300);
   }
-  frame_wnd_set_caption(this,(iptr)&map_views_block.text_buffer);
+  frame_wnd_set_caption(self,(iptr)&map_views_block.text_buffer);
   return;
 }
 
@@ -1059,7 +1059,7 @@ void __cdecl mapview_on_caption_button(i32 button)
 }
 
 /* 00413717 auto */
-void __thiscall mapview_create(ViewWindow *this)
+void __thiscall mapview_create(ViewWindow *self)
 
 {
   i32 title_text;
@@ -1072,75 +1072,75 @@ void __thiscall mapview_create(ViewWindow *this)
   int top;
   int left;
   
-  mapview_init_state(this,this->rates_civ);
+  mapview_init_state(self,self->rates_civ);
   if ((turn_resume_civ == '\0') || (destroyed_civ_count_block.saved_layout_valid == 0)) {
-    *(i16 *)&this->lux_rate_sel = 0;
+    *(i16 *)&self->lux_rate_sel = 0;
     if (999 < caption_font_block.screen_width) {
-      *(i16 *)&this->lux_rate_sel = 2;
+      *(i16 *)&self->lux_rate_sel = 2;
     }
-    if (this->rates_civ == 0) {
+    if (self->rates_civ == 0) {
       mapview_calc_rect();
     }
   }
-  if (this->rates_civ == 0) {
-    *(i16 *)((int)&this->max_rate_value + 2) = 3;
+  if (self->rates_civ == 0) {
+    *(i16 *)((int)&self->max_rate_value + 2) = 3;
   }
   else {
-    *(i16 *)((int)&this->max_rate_value + 2) = 2;
+    *(i16 *)((int)&self->max_rate_value + 2) = 2;
   }
-  if ((this->rates_civ == 0) || ((short)this->max_rate_value != 0)) {
-    left = *(int *)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + this->rates_civ * 0x10);
-    top = *(int *)(((i8 *)&map_view_saved_rects_block.map_view_saved_rect_tops) + this->rates_civ * 0x10);
-    width2 = rect_width((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + this->rates_civ * 0x10));
+  if ((self->rates_civ == 0) || ((short)self->max_rate_value != 0)) {
+    left = *(int *)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10);
+    top = *(int *)(((i8 *)&map_view_saved_rects_block.map_view_saved_rect_tops) + self->rates_civ * 0x10);
+    width2 = rect_width((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10));
     width2 -= sys_dlgframe_w2;
-    height2 = rect_height((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + this->rates_civ * 0x10));
+    height2 = rect_height((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10));
     height2 -= sys_dlgframe_h2;
   }
   else {
-    left = this->rates_civ * 0x28;
-    top = this->rates_civ * 0x28;
+    left = self->rates_civ * 0x28;
+    top = self->rates_civ * 0x28;
     width2 = 500;
     height2 = 300;
-    rect_set_xywh((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + this->rates_civ * 0x10),left,top,
+    rect_set_xywh((iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + self->rates_civ * 0x10),left,top,
                        sys_dlgframe_w2 + 500,sys_dlgframe_h2 + 300);
   }
-  *(i16 *)&this->max_rate_value = 1;
+  *(i16 *)&self->max_rate_value = 1;
   create_arg9 = 0;
   create_arg8 = 0;
   create_arg7 = 6;
   wnd_style = 6;
   title_text = label_string(*(i32 *)(label_string_ids + 0x10));
   frame_wnd_create
-            ((FrameWindow *)this,title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
+            ((FrameWindow *)self,title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
   ;
-  wnd_set_min_size((ModalMenuWindow *)this->window_2,0x100,0x80);
-  wnd_set_redraw_callback((SurfaceWindow *)this,(iptr)mapview_on_redraw);
-  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_lbuttonup);
-  wnd_set_rbuttonup_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_rbuttonup);
-  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->event_handlers),(iptr)mapview_on_lbuttondown);
-  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(this->event_handlers),(iptr)mapview_on_lbuttonup_any);
-  wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->event_handlers),(iptr)mapview_on_mousemove);
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->event_handlers),(iptr)map_window_double_click);
-  wnd_set_char_handler((WndEventHandlers *)(this->event_handlers),(iptr)map_window_ascii);
-  wnd_set_keydown_handler((WndEventHandlers *)(this->event_handlers),(iptr)map_window_key);
-  wnd_set_close_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_close);
-  wnd_set_size_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_size);
-  wnd_set_move_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_move);
-  mapview_update_title((FrameWindow *)this);
-  if (this->rates_civ != 0) {
-    frame_wnd_add_caption_button((PortraitDialog *)this,(iptr)&caption_close_button_sprite_block.caption_close_button_sprite,1);
+  wnd_set_min_size((ModalMenuWindow *)self->window_2,0x100,0x80);
+  wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)mapview_on_redraw);
+  wnd_set_lbuttonup_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_lbuttonup);
+  wnd_set_rbuttonup_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_rbuttonup);
+  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)mapview_on_lbuttondown);
+  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)mapview_on_lbuttonup_any);
+  wnd_set_mousemove_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)mapview_on_mousemove);
+  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(self->event_handlers),(iptr)map_window_double_click);
+  wnd_set_char_handler((WndEventHandlers *)(self->event_handlers),(iptr)map_window_ascii);
+  wnd_set_keydown_handler((WndEventHandlers *)(self->event_handlers),(iptr)map_window_key);
+  wnd_set_close_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_close);
+  wnd_set_size_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_size);
+  wnd_set_move_handler((WndEventHandlers *)(self->event_handlers),(iptr)mapview_on_move);
+  mapview_update_title((FrameWindow *)self);
+  if (self->rates_civ != 0) {
+    frame_wnd_add_caption_button((PortraitDialog *)self,(iptr)&caption_close_button_sprite_block.caption_close_button_sprite,1);
   }
-  frame_wnd_add_caption_button((PortraitDialog *)this,(iptr)&caption_zoom_out_sprite,2);
-  frame_wnd_add_caption_button((PortraitDialog *)this,(iptr)&caption_zoom_out_button_sprite_block.caption_zoom_out_button_sprite,3);
-  if (this->rates_civ != 0) {
-    frame_wnd_add_caption_button((PortraitDialog *)this,(iptr)&caption_view_mode_button_sprite,4);
+  frame_wnd_add_caption_button((PortraitDialog *)self,(iptr)&caption_zoom_out_sprite,2);
+  frame_wnd_add_caption_button((PortraitDialog *)self,(iptr)&caption_zoom_out_button_sprite_block.caption_zoom_out_button_sprite,3);
+  if (self->rates_civ != 0) {
+    frame_wnd_add_caption_button((PortraitDialog *)self,(iptr)&caption_view_mode_button_sprite,4);
   }
-  wnd_set_caption_button_handler((FrameWindow *)this,(iptr)mapview_on_caption_button);
-  wnd_repaint((SurfaceWindow *)this);
+  wnd_set_caption_button_handler((FrameWindow *)self,(iptr)mapview_on_caption_button);
+  wnd_repaint((SurfaceWindow *)self);
   if (game.multiplayer != 1) {
-    window_show((WindowObjectView *)this);
+    window_show((WindowObjectView *)self);
   }
-  if (this->rates_civ != 0) {
+  if (self->rates_civ != 0) {
     mapview_update_title((FrameWindow *)((i8 *)&map_views_block.map_views));
     wnd_repaint((SurfaceWindow *)((i8 *)&map_views_block.map_views));
   }
@@ -1199,14 +1199,14 @@ void __cdecl mapviews_destroy_all(void)
 }
 
 /* 0046ab30 auto */
-void * __thiscall clickmap_ctor(void *this)
+void * __thiscall clickmap_ctor(void *self)
 
 {
-  return this;
+  return self;
 }
 
 /* 0046ab49 auto */
-void __thiscall clickmap_dtor(void *this)
+void __thiscall clickmap_dtor(void *self)
 
 {
   return;
@@ -1218,15 +1218,15 @@ void __thiscall clickmap_dtor(void *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall clickmap_clear(ClickMapClearView *this)
+void __thiscall clickmap_clear(ClickMapClearView *self)
 
 {
-  this->region_count = 0;
+  self->region_count = 0;
   return;
 }
 
 /* 0046ab82 auto */
-void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int index)
+void __thiscall clickmap_remove_at(ClickMapRemoveView *self,int index)
 
 {
   int n;
@@ -1234,33 +1234,33 @@ void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int index)
   u8 *dst;
   int i;
   
-  for (i = index; i < (int)(this->entry_count - 1); i++) {
-    src = this->hit_regions + i * 0x18 + 0x18;
-    dst = this->hit_regions + i * 0x18;
+  for (i = index; i < (int)(self->entry_count - 1); i++) {
+    src = self->hit_regions + i * 0x18 + 0x18;
+    dst = self->hit_regions + i * 0x18;
     for (n = 6; n != 0; n--) {
       *(i32 *)dst = *(i32 *)src;
       src += 4;
       dst += 4;
     }
   }
-  this->entry_count--;
+  self->entry_count--;
   return;
 }
 
 /* 0046ac89 auto */
-void __thiscall clickmap_remove_by_id(ClickMapRemoveView *this,int id)
+void __thiscall clickmap_remove_by_id(ClickMapRemoveView *self,int id)
 
 {
   u32 count;
   iptr offset;
   u32 idx;
   
-  count = this->entry_count;
+  count = self->entry_count;
   while (idx = count - 1, -1 < (int)idx) {
     offset = count * 0x18;
     count = idx;
-    if (*(int *)(this->hit_regions + offset - 8) == id) {
-      clickmap_remove_at(this,idx);
+    if (*(int *)(self->hit_regions + offset - 8) == id) {
+      clickmap_remove_at(self,idx);
     }
   }
   return;
@@ -1269,26 +1269,26 @@ void __thiscall clickmap_remove_by_id(ClickMapRemoveView *this,int id)
 /* 0046ace7 auto */
 u32 __thiscall
 clickmap_add
-          (ClickMap *this,iptr id,i32 value,i32 x,i32 y,
+          (ClickMap *self,iptr id,i32 value,i32 x,i32 y,
           iptr width,iptr height)
 
 {
   u32 index;
   
   index = 0xffffffff;
-  if ((int)this->entry_count < 200) {
-    index = this->entry_count;
-    this->entry_count++;
-    rect_set_xywh((iptr)(this->hit_regions + index * 0x18),x,y,width,height);
-    *(iptr *)(this->hit_regions + index * 0x18 + 0x14) = id;
-    *(i32 *)(this->hit_regions + index * 0x18 + 0x10) = value;
+  if ((int)self->entry_count < 200) {
+    index = self->entry_count;
+    self->entry_count++;
+    rect_set_xywh((iptr)(self->hit_regions + index * 0x18),x,y,width,height);
+    *(iptr *)(self->hit_regions + index * 0x18 + 0x14) = id;
+    *(i32 *)(self->hit_regions + index * 0x18 + 0x10) = value;
   }
   return index;
 }
 
 /* 0046ad85 auto */
 int __thiscall
-clickmap_hit_test(ClickMapHitTestView *this,int x,int y,iptr out_id,iptr out_value)
+clickmap_hit_test(ClickMapHitTestView *self,int x,int y,iptr out_id,iptr out_value)
 
 {
   int hit;
@@ -1297,22 +1297,22 @@ clickmap_hit_test(ClickMapHitTestView *this,int x,int y,iptr out_id,iptr out_val
   hit = -1;
   i = 0;
   do {
-    if ((int)this->region_count <= i) {
+    if ((int)self->region_count <= i) {
 report_hit:
       if (-1 < hit) {
         if (out_id != 0) {
-          *(i32 *)out_id = *(i32 *)(this->hit_regions + hit * 0x18 + 0x14);
+          *(i32 *)out_id = *(i32 *)(self->hit_regions + hit * 0x18 + 0x14);
         }
         if (out_value != 0) {
-          *(i32 *)out_value = *(i32 *)(this->hit_regions + hit * 0x18 + 0x10);
+          *(i32 *)out_value = *(i32 *)(self->hit_regions + hit * 0x18 + 0x10);
         }
       }
       return hit;
     }
-    if ((((*(int *)(this->hit_regions + i * 0x18) <= x) &&
-         (x < *(int *)(this->hit_regions + i * 0x18 + 8))) &&
-        (*(int *)(this->hit_regions + i * 0x18 + 4) <= y)) &&
-       (y < *(int *)(this->hit_regions + i * 0x18 + 0xc))) {
+    if ((((*(int *)(self->hit_regions + i * 0x18) <= x) &&
+         (x < *(int *)(self->hit_regions + i * 0x18 + 8))) &&
+        (*(int *)(self->hit_regions + i * 0x18 + 4) <= y)) &&
+       (y < *(int *)(self->hit_regions + i * 0x18 + 0xc))) {
       hit = i;
       goto report_hit;
     }
@@ -1357,34 +1357,34 @@ void __cdecl mapview_draw_tile_number(i32 x,i32 y,int number,i32 color)
 }
 
 /* 00479ede auto */
-void __thiscall mapview_init_state(ViewWindow *this,u32 view_index)
+void __thiscall mapview_init_state(ViewWindow *self,u32 view_index)
 
 {
-  this->rates_civ = view_index;
+  self->rates_civ = view_index;
   if (view_index == 0) {
-    *(i16 *)((int)&this->max_rate_value + 2) = 1;
+    *(i16 *)((int)&self->max_rate_value + 2) = 1;
   }
   else {
-    *(i16 *)((int)&this->max_rate_value + 2) = 0;
+    *(i16 *)((int)&self->max_rate_value + 2) = 0;
   }
-  this->tax_scrollbar = 0xffffffff;
+  self->tax_scrollbar = 0xffffffff;
   if (turn_resume_civ == '\0') {
-    *(i16 *)&this->lux_rate_sel = 0;
-    *(i16 *)&this->tax_rate_sel = map.width >> 1;
-    *(i16 *)((int)&this->tax_rate_sel + 2) = map.height >> 1;
-    if ((this->tax_rate_sel & 1) != 0) {
-      *(short *)&this->tax_rate_sel = (short)this->tax_rate_sel - 1;
+    *(i16 *)&self->lux_rate_sel = 0;
+    *(i16 *)&self->tax_rate_sel = map.width >> 1;
+    *(i16 *)((int)&self->tax_rate_sel + 2) = map.height >> 1;
+    if ((self->tax_rate_sel & 1) != 0) {
+      *(short *)&self->tax_rate_sel = (short)self->tax_rate_sel - 1;
     }
-    if ((this->tax_rate_sel & 0x10000) != 0) {
-      *(short *)&this->tax_rate_sel = (short)this->tax_rate_sel + 1;
+    if ((self->tax_rate_sel & 0x10000) != 0) {
+      *(short *)&self->tax_rate_sel = (short)self->tax_rate_sel + 1;
     }
   }
-  this->no_thanks_button_value = 0xfffffc19;
+  self->no_thanks_button_value = 0xfffffc19;
   return;
 }
 
 /* 00479fbe auto */
-void __thiscall mapview_update_layout(ViewWindow *this)
+void __thiscall mapview_update_layout(ViewWindow *self)
 
 {
   u32 scaled;
@@ -1395,85 +1395,85 @@ void __thiscall mapview_update_layout(ViewWindow *this)
   i8 pick_mask_rect[16];
   uptr font_size;
   
-  this->button_area_height = this->client_width;
-  this->row_spacing_value = this->client_height;
-  scaled = mapview_zoom_scale(this,0x40);
-  this->total_tax = scaled;
-  scaled = mapview_zoom_scale(this,0x20);
-  this->total_science = scaled;
-  this->total_upkeep_value = (int)this->total_tax / 2;
-  this->margin_value = (int)this->total_science / 2;
-  this->bar_gap = (int)(this->total_tax + ((int)this->total_tax >> 0x1f & 3U)) >> 2;
-  this->bar_width_value = (int)(this->total_science + ((int)this->total_science >> 0x1f & 3U)) >> 2;
-  this->bar_height = this->total_tax;
-  this->button_row_width = this->total_science + this->margin_value;
-  this->dialog_w = (int)((this->button_area_height - 1) + this->total_tax) / (int)this->total_tax;
-  this->dialog_h = (int)((this->row_spacing_value - 1) + this->total_science) / (int)this->total_science;
-  this->label_x_value = (int)(this->total_upkeep_value * 3 - 1 + this->button_area_height) / (int)this->total_tax;
-  this->header_y_value = (int)(this->margin_value * 3 - 1 + this->row_spacing_value) / (int)this->total_science;
-  this->tax_label_y = 0;
-  this->lux_label_y = 0;
-  if ((int)map.width / 2 < (int)this->dialog_w) {
-    this->dialog_w = (int)map.width / 2;
-    this->tax_label_y = (int)(this->button_area_height - this->total_tax * this->dialog_w) >> 1;
-    this->label_x_value = this->dialog_w + 1;
+  self->button_area_height = self->client_width;
+  self->row_spacing_value = self->client_height;
+  scaled = mapview_zoom_scale(self,0x40);
+  self->total_tax = scaled;
+  scaled = mapview_zoom_scale(self,0x20);
+  self->total_science = scaled;
+  self->total_upkeep_value = (int)self->total_tax / 2;
+  self->margin_value = (int)self->total_science / 2;
+  self->bar_gap = (int)(self->total_tax + ((int)self->total_tax >> 0x1f & 3U)) >> 2;
+  self->bar_width_value = (int)(self->total_science + ((int)self->total_science >> 0x1f & 3U)) >> 2;
+  self->bar_height = self->total_tax;
+  self->button_row_width = self->total_science + self->margin_value;
+  self->dialog_w = (int)((self->button_area_height - 1) + self->total_tax) / (int)self->total_tax;
+  self->dialog_h = (int)((self->row_spacing_value - 1) + self->total_science) / (int)self->total_science;
+  self->label_x_value = (int)(self->total_upkeep_value * 3 - 1 + self->button_area_height) / (int)self->total_tax;
+  self->header_y_value = (int)(self->margin_value * 3 - 1 + self->row_spacing_value) / (int)self->total_science;
+  self->tax_label_y = 0;
+  self->lux_label_y = 0;
+  if ((int)map.width / 2 < (int)self->dialog_w) {
+    self->dialog_w = (int)map.width / 2;
+    self->tax_label_y = (int)(self->button_area_height - self->total_tax * self->dialog_w) >> 1;
+    self->label_x_value = self->dialog_w + 1;
   }
-  if ((int)map.height < (int)this->dialog_h) {
-    this->dialog_h = (int)map.height / 2;
-    this->lux_label_y = (int)(this->row_spacing_value - this->total_science * this->dialog_h) >> 1;
-    this->header_y_value = (int)map.height + 1;
+  if ((int)map.height < (int)self->dialog_h) {
+    self->dialog_h = (int)map.height / 2;
+    self->lux_label_y = (int)(self->row_spacing_value - self->total_science * self->dialog_h) >> 1;
+    self->header_y_value = (int)map.height + 1;
   }
-  wrapped_x = map_wrap_x((int)(short)this->tax_rate_sel);
-  *(short *)&this->tax_rate_sel = (short)wrapped_x;
-  this->init_tax_rate = (int)*(short *)((int)&this->tax_rate_sel + 2) - this->dialog_h;
-  wrapped = map_wrap_x((int)(short)this->tax_rate_sel - this->dialog_w);
-  this->sci_rate_sel = wrapped;
-  if (((game.rules & 0x8000) != 0) && (map.width + 1 < (int)(this->dialog_w * 2 + this->sci_rate_sel))
+  wrapped_x = map_wrap_x((int)(short)self->tax_rate_sel);
+  *(short *)&self->tax_rate_sel = (short)wrapped_x;
+  self->init_tax_rate = (int)*(short *)((int)&self->tax_rate_sel + 2) - self->dialog_h;
+  wrapped = map_wrap_x((int)(short)self->tax_rate_sel - self->dialog_w);
+  self->sci_rate_sel = wrapped;
+  if (((game.rules & 0x8000) != 0) && (map.width + 1 < (int)(self->dialog_w * 2 + self->sci_rate_sel))
      ) {
-    this->sci_rate_sel = map.width + 1 + this->dialog_w * -2;
+    self->sci_rate_sel = map.width + 1 + self->dialog_w * -2;
   }
-  if (map.height + 1 < (int)(this->dialog_h * 2 + this->init_tax_rate)) {
-    this->init_tax_rate = map.height + 1 + this->dialog_h * -2;
+  if (map.height + 1 < (int)(self->dialog_h * 2 + self->init_tax_rate)) {
+    self->init_tax_rate = map.height + 1 + self->dialog_h * -2;
   }
-  clamped = this->sci_rate_sel;
+  clamped = self->sci_rate_sel;
   if (0x7fffffff < clamped) {
     clamped = 0xffffffff;
   }
-  this->sci_rate_sel = clamped;
-  clamped = this->init_tax_rate;
+  self->sci_rate_sel = clamped;
+  clamped = self->init_tax_rate;
   if (0x7fffffff < clamped) {
     clamped = 0xffffffff;
   }
-  this->init_tax_rate = clamped;
-  if ((this->sci_rate_sel & 1) != 0) {
-    this->sci_rate_sel--;
+  self->init_tax_rate = clamped;
+  if ((self->sci_rate_sel & 1) != 0) {
+    self->sci_rate_sel--;
   }
-  if ((this->init_tax_rate & 1) != 0) {
-    this->sci_rate_sel++;
+  if ((self->init_tax_rate & 1) != 0) {
+    self->sci_rate_sel++;
   }
-  wrapped = map_wrap_x(this->label_x_value * 2 - 2 + this->sci_rate_sel);
-  this->init_lux_rate = wrapped;
-  this->init_sci_rate = this->header_y_value * 2 - 2 + this->init_tax_rate;
-  if ((int)(short)this->lux_rate_sel != this->no_thanks_button_value) {
-    surface_create((DibSurface *)&this->counter_button_value,this->total_tax,this->total_science);
-    surface_create((DibSurface *)&this->right_agreed_button,this->total_tax,this->total_science);
-    this->no_thanks_button_value = (int)(short)this->lux_rate_sel;
-    mapview_apply_zoom(this);
+  wrapped = map_wrap_x(self->label_x_value * 2 - 2 + self->sci_rate_sel);
+  self->init_lux_rate = wrapped;
+  self->init_sci_rate = self->header_y_value * 2 - 2 + self->init_tax_rate;
+  if ((int)(short)self->lux_rate_sel != self->no_thanks_button_value) {
+    surface_create((DibSurface *)&self->counter_button_value,self->total_tax,self->total_science);
+    surface_create((DibSurface *)&self->right_agreed_button,self->total_tax,self->total_science);
+    self->no_thanks_button_value = (int)(short)self->lux_rate_sel;
+    mapview_apply_zoom(self);
     sprite_draw
-              ((Sprite *)((i8 *)&tile_pick_mask_sprite_block.tile_pick_mask_sprite),(iptr)pick_mask_rect,(iptr)&this->counter_button_value,0,0);
+              ((Sprite *)((i8 *)&tile_pick_mask_sprite_block.tile_pick_mask_sprite),(iptr)pick_mask_rect,(iptr)&self->counter_button_value,0,0);
     sprite_draw
-              ((Sprite *)((i8 *)&tile_direction_mask_sprite),(iptr)dir_mask_rect,(iptr)&this->right_agreed_button,0,0);
+              ((Sprite *)((i8 *)&tile_direction_mask_sprite),(iptr)dir_mask_rect,(iptr)&self->right_agreed_button,0,0);
     gfx_reset_zoom_scale();
   }
-  font_size = (int)(this->total_science * 3) / 5;
-  if (this->rates_clamped != font_size) {
-    font_set((GameFont *)&this->sci_label_y,0,font_size);
-    this->rates_clamped = font_size;
+  font_size = (int)(self->total_science * 3) / 5;
+  if (self->rates_clamped != font_size) {
+    font_set((GameFont *)&self->sci_label_y,0,font_size);
+    self->rates_clamped = font_size;
   }
-  font_size = (int)(this->total_science + ((int)this->total_science >> 0x1f & 3U)) >> 2;
-  if (this->mode2_button_value != font_size) {
-    font_set((GameFont *)&this->conceal_button_value,1,font_size);
-    this->mode2_button_value = font_size;
+  font_size = (int)(self->total_science + ((int)self->total_science >> 0x1f & 3U)) >> 2;
+  if (self->mode2_button_value != font_size) {
+    font_set((GameFont *)&self->conceal_button_value,1,font_size);
+    self->mode2_button_value = font_size;
   }
   return;
 }
@@ -1481,7 +1481,7 @@ void __thiscall mapview_update_layout(ViewWindow *this)
 /* 0047a540 auto */
 i32 __thiscall
 mapview_screen_to_tile
-          (MapViewHitView *this,iptr out_x,iptr out_y,i32 mouse_x,i32 mouse_y)
+          (MapViewHitView *self,iptr out_x,iptr out_y,i32 mouse_x,i32 mouse_y)
 
 {
   short px;
@@ -1492,20 +1492,20 @@ mapview_screen_to_tile
   iptr tile_x;
   short tile_y;
   
-  px = (short)mouse_x - (short)this->client_x;
-  py = (short)mouse_y - (short)this->client_y;
+  px = (short)mouse_x - (short)self->client_x;
+  py = (short)mouse_y - (short)self->client_y;
   if ((px < 0) || (py < 0)) {
     result = 1;
   }
-  else if (((int)px < (int)this->view_width) && ((int)py < (int)this->view_height)) {
-    px -= (short)this->scroll_px_x;
-    py -= (short)this->scroll_px_y;
-    tile_x = ((int)px / (int)this->tile_width) * 2 + this->origin_tile_x + 1;
-    tile_y = (short)((int)py / (int)this->tile_height) * 2 + (short)this->origin_tile_y + 1;
+  else if (((int)px < (int)self->view_width) && ((int)py < (int)self->view_height)) {
+    px -= (short)self->scroll_px_x;
+    py -= (short)self->scroll_px_y;
+    tile_x = ((int)px / (int)self->tile_width) * 2 + self->origin_tile_x + 1;
+    tile_y = (short)((int)py / (int)self->tile_height) * 2 + (short)self->origin_tile_y + 1;
     pixel = surface_get_pixel
-                      ((DibSurface *)(((MapViewHitViewExt *)this)->view_surface),
-                       (int)(short)((int)px % (int)this->tile_width),
-                       (int)(short)((int)py % (int)this->tile_height));
+                      ((DibSurface *)(((MapViewHitViewExt *)self)->view_surface),
+                       (int)(short)((int)px % (int)self->tile_width),
+                       (int)(short)((int)py % (int)self->tile_height));
     quadrant = pixel - 10 >> 4;
     if (quadrant != 0) {
       tile_x += (char)(((i8 *)&diag_neighbor_bits_block.pick_quadrant_dx_table))[quadrant];
@@ -1524,25 +1524,25 @@ mapview_screen_to_tile
 
 /* 0047a6b0 auto */
 void __thiscall
-mapview_tile_to_screen(ViewWindow *this,iptr out_x,iptr out_y,int x,int y)
+mapview_tile_to_screen(ViewWindow *self,iptr out_x,iptr out_y,int x,int y)
 
 {
   uptr top;
   int dx;
   
-  dx = map_wrap_x(x - this->sci_rate_sel);
-  top = this->init_tax_rate;
-  *(u32 *)out_x = this->total_upkeep_value * (dx - 1) + this->tax_label_y;
-  *(u32 *)out_y = this->margin_value * ((y - top) - 1) + this->lux_label_y;
-  *(u32 *)out_x = *(int *)out_x + this->client_x;
-  *(u32 *)out_y = *(int *)out_y + this->client_y;
+  dx = map_wrap_x(x - self->sci_rate_sel);
+  top = self->init_tax_rate;
+  *(u32 *)out_x = self->total_upkeep_value * (dx - 1) + self->tax_label_y;
+  *(u32 *)out_y = self->margin_value * ((y - top) - 1) + self->lux_label_y;
+  *(u32 *)out_x = *(int *)out_x + self->client_x;
+  *(u32 *)out_y = *(int *)out_y + self->client_y;
   return;
 }
 
 /* 0047a8c9 auto */
 void __thiscall
 mapview_draw_tile_terrain
-          (ViewWindow *this,iptr surface,int screen_x,int screen_y,iptr x,int y,
+          (ViewWindow *self,iptr surface,int screen_x,int screen_y,iptr x,int y,
           int viewer_civ,int zoom,iptr city_tile_idx)
 
 {
@@ -1618,11 +1618,11 @@ mapview_draw_tile_terrain
   u32 tile_h;
   uint dither_terrain[4];
   
-  if ((short)this->lux_rate_sel == zoom) {
-    tile_w = this->total_tax;
-    tile_h = this->total_science;
-    half_w = this->total_upkeep_value;
-    half_h = this->margin_value;
+  if ((short)self->lux_rate_sel == zoom) {
+    tile_w = self->total_tax;
+    tile_h = self->total_science;
+    half_w = self->total_upkeep_value;
+    half_h = self->margin_value;
   }
   else {
     tile_w = gfx_zoom_scale(0x40,zoom);
@@ -2016,7 +2016,7 @@ reset_zoom_done:
 /* 0047ba1d auto */
 void __thiscall
 mapview_draw_tile_city
-          (ViewWindow *this,i32 screen_x,int screen_y,iptr x,iptr y)
+          (ViewWindow *self,i32 screen_x,int screen_y,iptr x,iptr y)
 
 {
   iptr city;
@@ -2039,8 +2039,8 @@ mapview_draw_tile_city
     }
     if (((visible2 != 0) || (game.reveal_map != '\0')) ||
        (((game.game_flags & 0x80) != 0 && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)))) {
-      gfx_draw_city((iptr)this,city,0,screen_x,screen_y - this->margin_value,
-                         (int)(short)this->lux_rate_sel);
+      gfx_draw_city((iptr)self,city,0,screen_x,screen_y - self->margin_value,
+                         (int)(short)self->lux_rate_sel);
     }
   }
   return;
@@ -2049,37 +2049,37 @@ mapview_draw_tile_city
 /* 0047bba5 auto */
 void __thiscall
 mapview_draw_unit_stacked
-          (ViewWindow *this,iptr unit,uint draw_flags,i32 screen_x,i32 screen_y)
+          (ViewWindow *self,iptr unit,uint draw_flags,i32 screen_x,i32 screen_y)
 
 {
-  gfx_draw_unit((iptr)this,unit,draw_flags | 3,screen_x,screen_y,(int)(short)this->lux_rate_sel,0);
+  gfx_draw_unit((iptr)self,unit,draw_flags | 3,screen_x,screen_y,(int)(short)self->lux_rate_sel,0);
   return;
 }
 
 /* 0047bbea auto */
 void __thiscall
 mapview_draw_unit_blinking
-          (ViewWindow *this,iptr unit,i32 screen_x,i32 screen_y)
+          (ViewWindow *self,iptr unit,i32 screen_x,i32 screen_y)
 
 {
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
-    gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->lux_rate_sel,0);
+    gfx_draw_unit((iptr)self,unit,5,screen_x,screen_y,(int)(short)self->lux_rate_sel,0);
   }
   return;
 }
 
 /* 0047bc59 auto */
-void __thiscall mapview_draw_unit_at(ViewWindow *this,iptr unit)
+void __thiscall mapview_draw_unit_at(ViewWindow *self,iptr unit)
 
 {
   int screen_y;
   i32 screen_x;
   
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
-    mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,(int)units[unit].x,
+    mapview_tile_to_screen(self,(iptr)&screen_x,(iptr)&screen_y,(int)units[unit].x,
                        (int)units[unit].y);
-    screen_y -= this->margin_value;
-    gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->lux_rate_sel,0);
+    screen_y -= self->margin_value;
+    gfx_draw_unit((iptr)self,unit,5,screen_x,screen_y,(int)(short)self->lux_rate_sel,0);
   }
   return;
 }
@@ -2087,7 +2087,7 @@ void __thiscall mapview_draw_unit_at(ViewWindow *this,iptr unit)
 /* 0047bd04 auto */
 void __thiscall
 mapview_draw_stack_unit
-          (ViewWindow *this,iptr unit,i32 screen_x,i32 screen_y)
+          (ViewWindow *self,iptr unit,i32 screen_x,i32 screen_y)
 
 {
   int selectable;
@@ -2098,17 +2098,17 @@ mapview_draw_stack_unit
            (units[game.active_unit].y == units[unit].y)) &&
           (((uint)game.human_players & 1 << (units[game.active_unit].owner & 0x1fU)) != 0)) &&
          (selectable = unit_is_selectable((int)game.active_unit), selectable != 0)) {
-        mapview_draw_unit_blinking(this,(int)game.active_unit,screen_x,screen_y);
+        mapview_draw_unit_blinking(self,(int)game.active_unit,screen_x,screen_y);
         return;
       }
-      mapview_draw_unit_stacked(this,unit,4,screen_x,screen_y);
+      mapview_draw_unit_stacked(self,unit,4,screen_x,screen_y);
     }
     else {
-      gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->lux_rate_sel,0);
+      gfx_draw_unit((iptr)self,unit,5,screen_x,screen_y,(int)(short)self->lux_rate_sel,0);
     }
   }
   else {
-    mapview_draw_unit_blinking(this,unit,screen_x,screen_y);
+    mapview_draw_unit_blinking(self,unit,screen_x,screen_y);
   }
   return;
 }
@@ -2116,7 +2116,7 @@ mapview_draw_stack_unit
 /* 0047be63 auto */
 void __thiscall
 mapview_draw_tile_units
-          (ViewWindow *this,i32 screen_x,int screen_y,int x,int y)
+          (ViewWindow *self,i32 screen_x,int screen_y,int x,int y)
 
 {
   int draw_y;
@@ -2124,7 +2124,7 @@ mapview_draw_tile_units
   iptr unit;
   int visible2;
   
-  draw_y = screen_y - this->margin_value;
+  draw_y = screen_y - self->margin_value;
   result = map_in_bounds(x,y);
   if (result != 0) {
     unit = tile_first_unit(x,y);
@@ -2167,17 +2167,17 @@ mapview_draw_tile_units
           }
         }
         if ((visible2 != 0) || (game.reveal_map != '\0')) {
-          mapview_draw_stack_unit(this,unit,screen_x,draw_y);
+          mapview_draw_stack_unit(self,unit,screen_x,draw_y);
         }
       }
       else {
-        mapview_draw_stack_unit(this,anim_origin_stack_unit,screen_x,draw_y);
+        mapview_draw_stack_unit(self,anim_origin_stack_unit,screen_x,draw_y);
       }
     }
     else {
       for (; (unit != anim_combat_defender && (-1 < unit)); unit = unit_next_in_stack(unit)) {
       }
-      mapview_draw_stack_unit(this,unit,screen_x,draw_y);
+      mapview_draw_stack_unit(self,unit,screen_x,draw_y);
     }
   }
   return;
@@ -2185,7 +2185,7 @@ mapview_draw_tile_units
 
 /* 0047c103 auto */
 void __thiscall
-mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
+mapview_draw_tile(ViewWindow *self,iptr x,iptr y,int civ)
 
 {
   int result;
@@ -2196,9 +2196,9 @@ mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
   i32 screen_x;
   int near_city;
   
-  mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,x,y);
-  mapview_draw_tile_terrain(this,(iptr)this,screen_x,screen_y,x,y,civ,
-                     (int)(short)this->lux_rate_sel,-1);
+  mapview_tile_to_screen(self,(iptr)&screen_x,(iptr)&screen_y,x,y);
+  mapview_draw_tile_terrain(self,(iptr)self,screen_x,screen_y,x,y,civ,
+                     (int)(short)self->lux_rate_sel,-1);
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
     net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
@@ -2206,12 +2206,12 @@ mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
   result = map_in_bounds(x,y);
   if (result != 0) {
     if (map_show_hidden_terrain == 0) {
-      mapview_draw_tile_city(this,screen_x,screen_y,x,y);
-      mapview_draw_tile_units(this,screen_x,screen_y,x,y);
+      mapview_draw_tile_city(self,screen_x,screen_y,x,y);
+      mapview_draw_tile_units(self,screen_x,screen_y,x,y);
     }
     if (((byte)game.game_options & 0x20) != 0) {
       near_city = 0;
-      mapview_apply_zoom(this);
+      mapview_apply_zoom(self);
       for (city = 0; city < game.num_cities; city++) {
         if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
            (result = map_distance_diag(x,y,(int)cities[city].x,
@@ -2222,11 +2222,11 @@ mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
       }
       if (near_city == 0) {
         sprite_draw
-                  ((Sprite *)((i8 *)&map_grid_sprite),(iptr)grid_rect,(iptr)this,screen_x,screen_y);
+                  ((Sprite *)((i8 *)&map_grid_sprite),(iptr)grid_rect,(iptr)self,screen_x,screen_y);
       }
       else {
         sprite_draw
-                  ((Sprite *)((i8 *)&icons_pair_sprites_block.city_radius_grid_sprite),(iptr)radius_rect,(iptr)this,screen_x,screen_y);
+                  ((Sprite *)((i8 *)&icons_pair_sprites_block.city_radius_grid_sprite),(iptr)radius_rect,(iptr)self,screen_x,screen_y);
       }
       gfx_reset_zoom_scale();
     }
@@ -2236,20 +2236,20 @@ mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
 
 /* 0047c3e0 auto */
 i32 __thiscall
-mapview_tile_in_view(ViewWindow *this,i32 tile_x,i32 tile_y)
+mapview_tile_in_view(ViewWindow *self,i32 tile_x,i32 tile_y)
 
 {
   i32 in_view;
   
-  in_view = map_tile_in_box(tile_x,tile_y,this->sci_rate_sel,this->init_tax_rate,
-                             this->dialog_w + this->label_x_value,this->dialog_h + this->header_y_value + 1
+  in_view = map_tile_in_box(tile_x,tile_y,self->sci_rate_sel,self->init_tax_rate,
+                             self->dialog_w + self->label_x_value,self->dialog_h + self->header_y_value + 1
                             );
   return in_view;
 }
 
 /* 0047c443 auto */
 void __thiscall
-mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
+mapview_draw_city_names(ViewWindow *self,i32 center_x,i32 center_y,int radius)
 
 {
   int label_x;
@@ -2272,14 +2272,14 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
     if (-1 < radius) {
       radius += 3;
     }
-    text_set_font((iptr)&this->sci_label_y);
+    text_set_font((iptr)&self->sci_label_y);
     for (city = 0; city < game.num_cities; city++) {
       if (cities[city].id != 0) {
         x2 = (int)cities[city].x;
         y2 = (int)cities[city].y;
         if (((radius < 0) ||
             (label_x = map_distance(x2,y2,center_x,center_y), label_x <= radius)) &&
-           (label_x = mapview_tile_in_view(this,x2,y2), label_x != 0)) {
+           (label_x = mapview_tile_in_view(self,x2,y2), label_x != 0)) {
           visible2 = tile_visible_to(x2,y2,(*(i8 *)&human_civ));
           if ((int)cities[city].owner != ((*(i8 *)&human_civ) & 0xffU)) {
             if (((visible2 == 0) ||
@@ -2296,24 +2296,24 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
             visible2 = 1;
           }
           if (visible2 != 0) {
-            mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,x2,y2);
-            label_x = this->total_upkeep_value + screen_x;
-            label_y = ((int)(this->total_science * 3) >> 2) + screen_y;
+            mapview_tile_to_screen(self,(iptr)&screen_x,(iptr)&screen_y,x2,y2);
+            label_x = self->total_upkeep_value + screen_x;
+            label_y = ((int)(self->total_science * 3) >> 2) + screen_y;
             text_set_colors(10,0xffffffff,0xffffffff,0xffffffff);
-            text_width = mapview_zoom_scale(this,2);
+            text_width = mapview_zoom_scale(self,2);
             if (text_width < 3) {
-              shadow_y = mapview_zoom_scale(this,2);
+              shadow_y = mapview_zoom_scale(self,2);
             }
             else {
               shadow_y = 2;
             }
             shadow_y = label_y + shadow_y;
             text_width = font_text_width
-                              ((GameFont *)&this->sci_label_y,(iptr)&cities[city].name);
-            text_draw_shadowed((iptr)this,(iptr)&cities[city].name,label_x - (text_width >> 1),shadow_y);
-            text_width = mapview_zoom_scale(this,2);
+                              ((GameFont *)&self->sci_label_y,(iptr)&cities[city].name);
+            text_draw_shadowed((iptr)self,(iptr)&cities[city].name,label_x - (text_width >> 1),shadow_y);
+            text_width = mapview_zoom_scale(self,2);
             if (text_width < 3) {
-              shadow_offset = mapview_zoom_scale(this,2);
+              shadow_offset = mapview_zoom_scale(self,2);
             }
             else {
               shadow_offset = 2;
@@ -2324,8 +2324,8 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
             text_set_colors(shadow_color,text_color,shadow_offset,shadow_depth);
             text_width = label_y;
             name_width = font_text_width
-                              ((GameFont *)&this->sci_label_y,(iptr)&cities[city].name);
-            text_draw_shadowed((iptr)this,(iptr)&cities[city].name,label_x - (name_width >> 1),text_width);
+                              ((GameFont *)&self->sci_label_y,(iptr)&cities[city].name);
+            text_draw_shadowed((iptr)self,(iptr)&cities[city].name,label_x - (name_width >> 1),text_width);
           }
         }
       }
@@ -2337,7 +2337,7 @@ mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
 /* 0047c7aa auto */
 void __thiscall
 mapview_tile_radius_rect
-          (ViewWindow *this,i32 tile_x,i32 tile_y,int radius,iptr out_rect)
+          (ViewWindow *self,i32 tile_x,i32 tile_y,int radius,iptr out_rect)
 
 {
   i8 rect[16];
@@ -2345,19 +2345,19 @@ mapview_tile_radius_rect
   int top;
   int left;
   
-  mapview_tile_to_screen(this,(iptr)&left,(iptr)&top,tile_x,tile_y);
-  top -= (radius * 2 + 1) * this->margin_value;
-  left += this->total_upkeep_value * radius * -2;
-  width2 = (radius * 2 + 1) * this->total_tax;
-  rect_set_xywh((iptr)rect,left,top,width2,(radius * 4 + 3) * this->margin_value);
-  rect_intersect_into(out_rect,(iptr)rect,(iptr)&this->client_rect);
+  mapview_tile_to_screen(self,(iptr)&left,(iptr)&top,tile_x,tile_y);
+  top -= (radius * 2 + 1) * self->margin_value;
+  left += self->total_upkeep_value * radius * -2;
+  width2 = (radius * 2 + 1) * self->total_tax;
+  rect_set_xywh((iptr)rect,left,top,width2,(radius * 4 + 3) * self->margin_value);
+  rect_intersect_into(out_rect,(iptr)rect,(iptr)&self->client_rect);
   return;
 }
 
 /* 0047c869 auto */
 void __thiscall
 mapview_draw_tile_radius
-          (ViewWindow *this,int center_x,int center_y,int radius,i32 civ)
+          (ViewWindow *self,int center_x,int center_y,int radius,i32 civ)
 
 {
   uint extent;
@@ -2370,8 +2370,8 @@ mapview_draw_tile_radius
   int row_extent;
   i8 clip_rect[16];
   
-  mapview_tile_radius_rect(this,center_x,center_y,radius,(iptr)clip_rect);
-  surface_set_clip((DibSurface *)this,(iptr)clip_rect);
+  mapview_tile_radius_rect(self,center_x,center_y,radius,(iptr)clip_rect);
+  surface_set_clip((DibSurface *)self,(iptr)clip_rect);
   extent = radius * 2 + 2;
   for (dy = -extent; (int)dy <= (int)extent; dy++) {
     if ((int)dy < 1) {
@@ -2390,20 +2390,20 @@ mapview_draw_tile_radius
       }
       if (dx_abs != extent) {
         x = map_wrap_x(dx + center_x);
-        in_view = mapview_tile_in_view(this,x,center_y + dy);
+        in_view = mapview_tile_in_view(self,x,center_y + dy);
         if (in_view != 0) {
-          mapview_draw_tile(this,x,center_y + dy,civ);
+          mapview_draw_tile(self,x,center_y + dy,civ);
         }
       }
     }
   }
-  mapview_draw_city_names(this,center_x,center_y,radius);
-  surface_set_clip((DibSurface *)this,(iptr)&this->client_rect);
+  mapview_draw_city_names(self,center_x,center_y,radius);
+  surface_set_clip((DibSurface *)self,(iptr)&self->client_rect);
   return;
 }
 
 /* 0047c9d4 auto */
-void __thiscall mapview_draw_all_tiles(ViewWindow *this,i32 civ)
+void __thiscall mapview_draw_all_tiles(ViewWindow *self,i32 civ)
 
 {
   uptr origin_y;
@@ -2413,59 +2413,59 @@ void __thiscall mapview_draw_all_tiles(ViewWindow *this,i32 civ)
   int col;
   int row_width;
   
-  if ((this->tax_label_y != 0) || (this->lux_label_y != 0)) {
-    gfx_fill_surface((iptr)this,10);
+  if ((self->tax_label_y != 0) || (self->lux_label_y != 0)) {
+    gfx_fill_surface((iptr)self,10);
   }
-  for (row = 0; (int)row < (int)(this->dialog_h + this->header_y_value + 1);
+  for (row = 0; (int)row < (int)(self->dialog_h + self->header_y_value + 1);
       row = row + 1) {
-    origin_y = this->init_tax_rate;
-    origin_x = this->sci_rate_sel;
+    origin_y = self->init_tax_rate;
+    origin_x = self->sci_rate_sel;
     if ((row & 1) == 0) {
-      row_width = this->label_x_value;
+      row_width = self->label_x_value;
     }
     else {
-      row_width = this->dialog_w;
+      row_width = self->dialog_w;
     }
     for (col = 0; col < row_width; col++) {
       x = map_wrap_x(col * 2 + origin_x + (row & 1));
-      mapview_draw_tile(this,x,origin_y + row,civ);
+      mapview_draw_tile(self,x,origin_y + row,civ);
     }
   }
-  mapview_draw_city_names(this,0,0,0xffffffff);
+  mapview_draw_city_names(self,0,0,0xffffffff);
   return;
 }
 
 /* 0047caea auto */
 void __thiscall
 mapview_blit_tile_radius
-          (ViewWindow *this,i32 tile_x,i32 tile_y,i32 radius)
+          (ViewWindow *self,i32 tile_x,i32 tile_y,i32 radius)
 
 {
   i8 rect[16];
   
-  mapview_tile_radius_rect(this,tile_x,tile_y,radius,(iptr)rect);
-  wnd_blit_surface_rect((DibSurface *)this,(iptr)rect);
+  mapview_tile_radius_rect(self,tile_x,tile_y,radius,(iptr)rect);
+  wnd_blit_surface_rect((DibSurface *)self,(iptr)rect);
   return;
 }
 
 /* 0047cb26 auto */
 void __thiscall
-mapview_blit_tile(ViewWindow *this,i32 tile_x,i32 tile_y)
+mapview_blit_tile(ViewWindow *self,i32 tile_x,i32 tile_y)
 
 {
-  mapview_blit_tile_radius(this,tile_x,tile_y,0);
+  mapview_blit_tile_radius(self,tile_x,tile_y,0);
   return;
 }
 
 /* 0047cb50 auto */
-void __thiscall mapview_blit_with_net_pump(DibSurface *this)
+void __thiscall mapview_blit_with_net_pump(DibSurface *self)
 
 {
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
     net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
   }
-  wnd_blit_surface(this);
+  wnd_blit_surface(self);
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
     net_process_messages((NetSession *)((iptr *)&net_session_block.net_session),1,0);
@@ -2476,7 +2476,7 @@ void __thiscall mapview_blit_with_net_pump(DibSurface *this)
 /* 0047cbb4 auto */
 void __thiscall
 mapview_redraw_area
-          (ViewWindow *this,i32 tile_x,i32 tile_y,i32 radius,
+          (ViewWindow *self,i32 tile_x,i32 tile_y,i32 radius,
           iptr viewer_civ,int do_blit)
 
 {
@@ -2494,18 +2494,18 @@ mapview_redraw_area
     else {
       civ = -1;
     }
-    mapview_draw_tile_radius(this,tile_x,tile_y,radius,civ);
+    mapview_draw_tile_radius(self,tile_x,tile_y,radius,civ);
     if ((((moving_units_mode == 0) && (unit_blink_phase != '\0')) && (unit_blink_active != '\0')) &&
-       ((this->rates_civ == 0 &&
-        (in_view = mapview_tile_in_view(this,(int)map_cursor_x[0],(int)map_cursor_y[0]), in_view != 0)))) {
-      mapview_tile_to_screen(this,(iptr)&cursor_x,(iptr)&cursor_y,(int)map_cursor_x[0],(int)map_cursor_y[0]);
-      mapview_apply_zoom(this);
+       ((self->rates_civ == 0 &&
+        (in_view = mapview_tile_in_view(self,(int)map_cursor_x[0],(int)map_cursor_y[0]), in_view != 0)))) {
+      mapview_tile_to_screen(self,(iptr)&cursor_x,(iptr)&cursor_y,(int)map_cursor_x[0],(int)map_cursor_y[0]);
+      mapview_apply_zoom(self);
       sprite_draw
-                ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite),(iptr)cursor_rect,(iptr)this,cursor_x,cursor_y);
+                ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite),(iptr)cursor_rect,(iptr)self,cursor_x,cursor_y);
       gfx_reset_zoom_scale();
     }
     if (do_blit != 0) {
-      mapview_blit_tile_radius(this,tile_x,tile_y,radius);
+      mapview_blit_tile_radius(self,tile_x,tile_y,radius);
     }
     net_session_block.map_redraw_busy = 0;
   }
@@ -2514,42 +2514,42 @@ mapview_redraw_area
 
 /* 0047cced auto */
 void __thiscall
-mapview_redraw_tile(ViewWindow *this,i32 tile_x,i32 tile_y)
+mapview_redraw_tile(ViewWindow *self,i32 tile_x,i32 tile_y)
 
 {
-  mapview_redraw_area(this,tile_x,tile_y,0,human_civ[0],1);
+  mapview_redraw_area(self,tile_x,tile_y,0,human_civ[0],1);
   return;
 }
 
 /* 0047cd1f auto */
 void __thiscall
-mapview_redraw_tile_neighbors(ViewWindow *this,i32 tile_x,i32 tile_y)
+mapview_redraw_tile_neighbors(ViewWindow *self,i32 tile_x,i32 tile_y)
 
 {
-  mapview_redraw_area(this,tile_x,tile_y,1,human_civ[0],1);
+  mapview_redraw_area(self,tile_x,tile_y,1,human_civ[0],1);
   return;
 }
 
 /* 0047cd51 auto */
-void __thiscall mapview_redraw(ViewWindow *this,iptr viewer_civ,int do_blit)
+void __thiscall mapview_redraw(ViewWindow *self,iptr viewer_civ,int do_blit)
 
 {
   iptr civ;
   
   if (game_loop_active != '\0') {
     net_session_block.map_redraw_busy = 1;
-    frame_wnd_layout((FrameWindow *)this);
-    mapview_update_layout(this);
-    frame_wnd_draw_caption((FrameWindow *)this);
+    frame_wnd_layout((FrameWindow *)self);
+    mapview_update_layout(self);
+    frame_wnd_draw_caption((FrameWindow *)self);
     if (game.reveal_map == '\0') {
       civ = viewer_civ;
     }
     else {
       civ = -1;
     }
-    mapview_draw_all_tiles(this,civ);
+    mapview_draw_all_tiles(self,civ);
     if ((do_blit != 0) &&
-       (mapview_blit_with_net_pump((DibSurface *)this), this->rates_civ == 0)) {
+       (mapview_blit_with_net_pump((DibSurface *)self), self->rates_civ == 0)) {
       minimap_redraw();
     }
     if ((map_click_in_progress == 0) && (net_session_block.mp_simultaneous_moves == '\0')) {
@@ -2561,7 +2561,7 @@ void __thiscall mapview_redraw(ViewWindow *this,iptr viewer_civ,int do_blit)
 }
 
 /* 0047dce0 auto */
-ViewWindow * __thiscall mapview_ctor(ViewWindow *this)
+ViewWindow * __thiscall mapview_ctor(ViewWindow *self)
 
 {
   i32 seh_prev;
@@ -2569,17 +2569,17 @@ ViewWindow * __thiscall mapview_ctor(ViewWindow *this)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  frame_wnd_ctor((SurfaceWindow *)this);
+  frame_wnd_ctor((SurfaceWindow *)self);
   eh_state = 0;
-  font_init_empty((GameFont *)&this->sci_label_y);
+  font_init_empty((GameFont *)&self->sci_label_y);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
-  font_init_empty((GameFont *)&this->conceal_button_value);
+  font_init_empty((GameFont *)&self->conceal_button_value);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  surface_ctor((DibSurface *)&this->counter_button_value);
+  surface_ctor((DibSurface *)&self->counter_button_value);
   eh_state = (eh_state & 0xffffff00 | (byte)(3));
-  surface_ctor((DibSurface *)&this->right_agreed_button);
-  this->vtable = (u32)&ptr_fun_2;
-  return this;
+  surface_ctor((DibSurface *)&self->right_agreed_button);
+  self->vtable = (u32)&ptr_fun_2;
+  return self;
 }
 
 /* 0047de10 auto */
@@ -2588,7 +2588,7 @@ ViewWindow * __thiscall mapview_ctor(ViewWindow *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall mapview_dtor(void *this)
+void __thiscall mapview_dtor(void *self)
 
 {
   i32 seh_prev;
@@ -2597,33 +2597,33 @@ void __thiscall mapview_dtor(void *this)
   
   eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0047de82 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x3a8)); }
+  /* inlined unwind funclet 0047de82 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x3a8)); }
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0047de91 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x360)); }
+  /* inlined unwind funclet 0047de91 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x360)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0047dea0 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x340)); }
+  /* inlined unwind funclet 0047dea0 */ { font_destroy((GameFont *)(*(int *)((iptr)&self) + 0x340)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0047deaf */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x338)); }
+  /* inlined unwind funclet 0047deaf */ { font_destroy((GameFont *)(*(int *)((iptr)&self) + 0x338)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0047debe */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
+  /* inlined unwind funclet 0047debe */ { frame_wnd_dtor(*(DibSurface **)((iptr)&self)); }
   return;
 }
 
 /* 0047dfb0 auto */
-i32 __thiscall mapview_zoom_scale(ViewWindow *this,i32 value)
+i32 __thiscall mapview_zoom_scale(ViewWindow *self,i32 value)
 
 {
   i32 scaled;
   
-  scaled = gfx_zoom_scale(value,(int)(short)this->lux_rate_sel);
+  scaled = gfx_zoom_scale(value,(int)(short)self->lux_rate_sel);
   return scaled;
 }
 
 /* 0047dff0 auto */
-void __thiscall mapview_apply_zoom(ViewWindow *this)
+void __thiscall mapview_apply_zoom(ViewWindow *self)
 
 {
-  gfx_set_zoom_scale((int)(short)this->lux_rate_sel);
+  gfx_set_zoom_scale((int)(short)self->lux_rate_sel);
   return;
 }
 
@@ -2661,10 +2661,10 @@ void __cdecl mapview_center_if_moved(int center_x,int center_y)
 /* 004d8b70 auto */
 void __thiscall
 clickmap_add_xywh
-          (ClickMap *this,iptr id,i32 left,i32 top,i32 width,
+          (ClickMap *self,iptr id,i32 left,i32 top,i32 width,
           i32 height)
 
 {
-  clickmap_add(this,id,0,left,top,width,height);
+  clickmap_add(self,id,0,left,top,width,height);
   return;
 }

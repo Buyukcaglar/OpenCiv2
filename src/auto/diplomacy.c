@@ -4215,7 +4215,7 @@ void __cdecl diplo_greeting_sound_done_cb(void)
 void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
 
 {
-  DiploLeaderWindow *this;
+  DiploLeaderWindow *self;
   int ok;
   iptr parent_wnd2;
   iptr tribe_idx;
@@ -4245,13 +4245,13 @@ void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
     }
     diplo_leader_window = 0;
   }
-  this = operator_new(0x108c);
+  self = operator_new(0x108c);
   seh_state = 0;
-  if (this == (DiploLeaderWindow *)0x0) {
+  if (self == (DiploLeaderWindow *)0x0) {
     view = (DiploLeaderView *)0x0;
   }
   else {
-    view = (DiploLeaderView *)diplo_leader_wnd_ctor(this);
+    view = (DiploLeaderView *)diplo_leader_wnd_ctor(self);
   }
   seh_state = 0xffffffff;
   diplo_leader_window = (iptr)view;
@@ -4309,7 +4309,7 @@ void __cdecl diplo_leader_play_reaction(int reaction)
 }
 
 /* 004942a3 auto */
-DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *this)
+DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *self)
 
 {
   i32 eh_frame;
@@ -4317,25 +4317,25 @@ DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *this)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  wnd_ctor((ModalMenuWindow *)this);
+  wnd_ctor((ModalMenuWindow *)self);
   eh_state = 0;
-  surfwnd_ctor((SurfaceWindow *)this->leader_surface_window);
+  surfwnd_ctor((SurfaceWindow *)self->leader_surface_window);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
-  surface_ctor((DibSurface *)&this->frame_right);
+  surface_ctor((DibSurface *)&self->frame_right);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  palette_init((GamePalette *)(this->leader_palette));
+  palette_init((GamePalette *)(self->leader_palette));
   (*(i8 *)((char *)&eh_state + 0)) = 3;
-  dll_handle_init((DllHandle *)(this->leader_dll));
+  dll_handle_init((DllHandle *)(self->leader_dll));
   (*(i8 *)((char *)&eh_state + 0)) = 4;
-  mmwnd_ctor((DocumentWindow *)(this->leader_video_wnd));
+  mmwnd_ctor((DocumentWindow *)(self->leader_video_wnd));
   eh_state = (eh_state & 0xffffff00 | (byte)(5));
-  gfx_get_screen_rect((iptr)&this->control_list);
-  this->pending_flag_1088 = '\0';
-  return this;
+  gfx_get_screen_rect((iptr)&self->control_list);
+  self->pending_flag_1088 = '\0';
+  return self;
 }
 
 /* 004943c9 auto */
-void __thiscall diplo_leader_wnd_dtor(void *this)
+void __thiscall diplo_leader_wnd_dtor(void *self)
 
 {
   i32 eh_handler;
@@ -4345,22 +4345,22 @@ void __thiscall diplo_leader_wnd_dtor(void *this)
   eh_state = eh_state & 0xff;
   diplo_leader_video_active = 0;
   (*(i8 *)((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 0049444f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x65c)); }
+  /* inlined unwind funclet 0049444f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&self) + 0x65c)); }
   (*(i8 *)((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0049445e */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x658)); }
+  /* inlined unwind funclet 0049445e */ { dll_free((DllHandle *)(*(int *)((iptr)&self) + 0x658)); }
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0049446d */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x224)); }
+  /* inlined unwind funclet 0049446d */ { palette_destroy((GamePalette *)(*(int *)((iptr)&self) + 0x224)); }
   (*(i8 *)((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0049447c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1dc)); }
+  /* inlined unwind funclet 0049447c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&self) + 0x1dc)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0049448b */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 200)); }
+  /* inlined unwind funclet 0049448b */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&self) + 200)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0049449a */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0049449a */ { wnd_dtor(*(WndBase **)((iptr)&self)); }
   return;
 }
 
 /* 004944bb auto */
-i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,i32 viewer_civ,iptr leader_civ)
+i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *self,i32 viewer_civ,iptr leader_civ)
 
 {
   int ok;
@@ -4370,10 +4370,10 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,i32 viewer_civ,iptr l
   
   diplo_leader_video_active = 0;
   palette_get_rgb((GamePalette *)((i8 *)&game_palette_block.game_palette),(iptr)saved_rgb2,10,0x20);
-  palette_set_rgb((GamePalette *)(this->leader_palette),10,0x20,(iptr)saved_rgb2);
-  this->viewer_civ = (u8)viewer_civ;
-  this->leader_civ = (u8)leader_civ;
-  this->leader_tribe = (u8)civs[this->leader_civ].tribe;
+  palette_set_rgb((GamePalette *)(self->leader_palette),10,0x20,(iptr)saved_rgb2);
+  self->viewer_civ = (u8)viewer_civ;
+  self->leader_civ = (u8)leader_civ;
+  self->leader_tribe = (u8)civs[self->leader_civ].tribe;
   str_clear((iptr)dll_path);
   str_append((iptr)dll_path,(iptr)&str_civ2_mk_dll);
   ok = file_resolve_path((iptr)dll_path);
@@ -4381,47 +4381,47 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,i32 viewer_civ,iptr l
     result = 0;
   }
   else {
-    dll_handle_load((DllHandle *)(this->leader_dll),(iptr)dll_path);
-    result = civ_city_style_era((uint)this->leader_civ);
-    this->style_era = (u8)result;
-    ok = diplo_leader_init_tile(this);
+    dll_handle_load((DllHandle *)(self->leader_dll),(iptr)dll_path);
+    result = civ_city_style_era((uint)self->leader_civ);
+    self->style_era = (u8)result;
+    ok = diplo_leader_init_tile(self);
     if (ok == 0) {
       MessageBoxA((HWND)0x0,str_init_tile_failed,str_notice_3,0x40);
       result = 0;
     }
     else {
-      ok = diplo_leader_init_background(this);
+      ok = diplo_leader_init_background(self);
       if (ok == 0) {
         MessageBoxA((HWND)0x0,str_init_background_failed,str_notice_4,0x40);
         result = 0;
       }
       else {
-        ok = diplo_leader_init_main_art(this);
+        ok = diplo_leader_init_main_art(self);
         if (ok == 0) {
           MessageBoxA((HWND)0x0,str_init_main_art_failed,str_notice_5,0x40);
           result = 0;
         }
         else {
-          ok = diplo_leader_init_military(this);
+          ok = diplo_leader_init_military(self);
           if (ok == 0) {
             MessageBoxA((HWND)0x0,str_init_military_failed,str_notice_6,0x40);
             result = 0;
           }
           else {
-            ok = diplo_leader_init_science(this);
+            ok = diplo_leader_init_science(self);
             if (ok == 0) {
               MessageBoxA((HWND)0x0,str_init_science_failed,str_notice_7,0x40);
               result = 0;
             }
             else {
-              ok = diplo_leader_init_portrait(this);
+              ok = diplo_leader_init_portrait(self);
               if (ok == 0) {
                 MessageBoxA((HWND)0x0,str_init_portrait_failed,str_notice_8,0x40);
                 result = 0;
               }
               else {
                 if (((*(i8 *)((char *)&game.game_options + 2)) & 0x20) != 0) {
-                  diplo_leader_video_active = diplo_leader_init_video(this);
+                  diplo_leader_video_active = diplo_leader_init_video(self);
                 }
                 result = 1;
               }
@@ -4435,74 +4435,74 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,i32 viewer_civ,iptr l
 }
 
 /* 00494704 auto */
-void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *this)
+void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *self)
 
 {
-  wnd_handle_show_raise((WndBase *)this);
+  wnd_handle_show_raise((WndBase *)self);
   wnd_flush_paint();
-  wnd_set_palette((WndBase *)this,(iptr)(this->leader_palette));
-  wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)(this->leader_palette));
+  wnd_set_palette((WndBase *)self,(iptr)(self->leader_palette));
+  wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)(self->leader_palette));
   if (diplo_leader_video_active != '\0') {
-    window_show((WindowObjectView *)(this->leader_video_wnd));
+    window_show((WindowObjectView *)(self->leader_video_wnd));
   }
-  window_show((WindowObjectView *)this->leader_surface_window);
+  window_show((WindowObjectView *)self->leader_surface_window);
   wnd_flush_paint();
   if (diplo_leader_video_active != '\0') {
     avi_player_play_range
-              ((AviPlayerRangeView *)(this->leader_video_wnd),
-               *(i32 *)(((i8 *)&leader_anim_frame_starts_block.leader_anim_frame_starts) + (uint)this->leader_tribe * 0x28),
-               *(i32 *)(((i8 *)&leader_anim_frame_starts_block.leader_anim_frame_ends) + (uint)this->leader_tribe * 0x28));
+              ((AviPlayerRangeView *)(self->leader_video_wnd),
+               *(i32 *)(((i8 *)&leader_anim_frame_starts_block.leader_anim_frame_starts) + (uint)self->leader_tribe * 0x28),
+               *(i32 *)(((i8 *)&leader_anim_frame_starts_block.leader_anim_frame_ends) + (uint)self->leader_tribe * 0x28));
   }
-  dll_handle_free((DllHandle *)(this->leader_dll));
+  dll_handle_free((DllHandle *)(self->leader_dll));
   diplo_leader_wnd_busy = 0;
   snd_play_effect(diplo_greeting_sound_id,1,0,(iptr)diplo_greeting_sound_done_cb);
   return;
 }
 
 /* 004947f0 auto */
-void __thiscall diplo_leader_wnd_teardown(WndBase *this)
+void __thiscall diplo_leader_wnd_teardown(WndBase *self)
 
 {
-  wnd_hide(this + 0x11);
+  wnd_hide(self + 0x11);
   wnd_flush_paint();
-  wnd_set_palette(this,(iptr)&game_palette_block.game_palette);
+  wnd_set_palette(self,(iptr)&game_palette_block.game_palette);
   wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&game_palette_block.game_palette);
-  wnd_hide(this);
+  wnd_hide(self);
   wnd_flush_paint();
-  wnd_destroy_native(this);
-  dll_handle_free((DllHandle *)&((PictureFrameWindow *)this)->leader_dll);
+  wnd_destroy_native(self);
+  dll_handle_free((DllHandle *)&((PictureFrameWindow *)self)->leader_dll);
   dlg_set_parent_window(0);
   dlg_set_palette(0);
-  wnd_destroy_with_surface((DibSurface *)&((Wnd *)this)->leader_surface_window);
-  wnd_destroy_native(this);
+  wnd_destroy_with_surface((DibSurface *)&((Wnd *)self)->leader_surface_window);
+  wnd_destroy_native(self);
   dialog_set_default_offset(0,0);
   return;
 }
 
 /* 0049488e auto */
-uint __thiscall diplo_leader_init_tile(DiploLeaderView *this)
+uint __thiscall diplo_leader_init_tile(DiploLeaderView *self)
 
 {
   int loaded;
   
-  surface_create((DibSurface *)&this->bg_tile_surface,0x40,0x40);
-  loaded = surface_load_gif_resource((DibSurface *)&this->bg_tile_surface,299,10,0x20,(iptr)&game_palette_block.game_palette);
+  surface_create((DibSurface *)&self->bg_tile_surface,0x40,0x40);
+  loaded = surface_load_gif_resource((DibSurface *)&self->bg_tile_surface,299,10,0x20,(iptr)&game_palette_block.game_palette);
   return (uint)(loaded != 0);
 }
 
 /* 004948e6 auto */
-i32 __thiscall diplo_leader_init_background(DiploLeaderView *this)
+i32 __thiscall diplo_leader_init_background(DiploLeaderView *self)
 
 {
   wnd_create_with_handlers
-            ((WndBase *)this,(iptr)&str_empty_102,0x800,0,0,this->screen_width_value,this->screen_height_value + 5,(iptr)&game_palette_block.game_palette,
+            ((WndBase *)self,(iptr)&str_empty_102,0x800,0,0,self->screen_width_value,self->screen_height_value + 5,(iptr)&game_palette_block.game_palette,
              (iptr)&main_frame_wnd_block.main_frame_wnd);
-  wnd_set_bg_tile(this,(iptr)&this->bg_tile_surface);
+  wnd_set_bg_tile(self,(iptr)&self->bg_tile_surface);
   return 1;
 }
 
 /* 00494949 auto */
-uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
+uint __thiscall diplo_leader_init_main_art(DiploLeaderView *self)
 
 {
   int loaded;
@@ -4524,26 +4524,26 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
   eh_state = 0xffffffff;
   palette_init(&palette);
   eh_state = 0;
-  wnd_x = (int)(this->screen_width_value - 0x280) / 3;
-  wnd_y = (int)(this->screen_height_value - 0x1e0) / 3;
+  wnd_x = (int)(self->screen_width_value - 0x280) / 3;
+  wnd_y = (int)(self->screen_height_value - 0x1e0) / 3;
   wnd_create_with_surface
-            ((DibSurface *)this->leader_surface,(iptr)&str_empty_103,0x800,wnd_x,wnd_y,0x280,0x1e0,
-             (iptr)(this->leader_palette),(iptr)this);
+            ((DibSurface *)self->leader_surface,(iptr)&str_empty_103,0x800,wnd_x,wnd_y,0x280,0x1e0,
+             (iptr)(self->leader_palette),(iptr)self);
   loaded = surface_load_gif_resource
-                    ((DibSurface *)this->leader_surface,civs[this->leader_civ].government + 200,10,0xec,
+                    ((DibSurface *)self->leader_surface,civs[self->leader_civ].government + 200,10,0xec,
                      (iptr)&palette);
   if (loaded != 0) {
     blue_ptr = &blue;
     green_ptr = &green;
     red_ptr = &red;
-    color_index = civ_color_primary((uint)this->leader_civ);
+    color_index = civ_color_primary((uint)self->leader_civ);
     palette_get_entry
               ((GamePalette *)((i8 *)&game_palette_block.game_palette),color_index,(iptr)red_ptr,(iptr)green_ptr,(iptr)blue_ptr);
     palette_set_entry(&palette,0x91,red,green,blue);
     palette_get_rgb(&palette,(iptr)rgb_buf,0x6a,0x28);
-    palette_set_rgb((GamePalette *)(this->leader_palette),0x6a,0x28,(iptr)rgb_buf)
+    palette_set_rgb((GamePalette *)(self->leader_palette),0x6a,0x28,(iptr)rgb_buf)
     ;
-    surface_set_palette((DibSurface *)this->leader_surface,(iptr)(this->leader_palette));
+    surface_set_palette((DibSurface *)self->leader_surface,(iptr)(self->leader_palette));
     eh_state = 0xffffffff;
     /* inlined unwind funclet 00494b3a */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   }
@@ -4555,7 +4555,7 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
 }
 
 /* 00494b5f auto */
-i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
+i32 __thiscall diplo_leader_init_military(DiploLeaderView *self)
 
 {
   int loaded;
@@ -4581,7 +4581,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   surface_ctor(&surface);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
-  icon_count = game.power_rank[this->leader_civ] - 1;
+  icon_count = game.power_rank[self->leader_civ] - 1;
   if (icon_count == 0) {
     result = 1;
     (*(i8 *)((char *)&eh_state + 0)) = 1;
@@ -4604,7 +4604,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
       result = fail_result;
     }
     else {
-      draw_x = (uint)this->style_era * 0x6d + 1;
+      draw_x = (uint)self->style_era * 0x6d + 1;
       draw_y = 0x9c;
       sprite_grab_from_surface(&sprite,(iptr)&surface,9,draw_x,0x9c,0x6c,0x1e);
       draw_x = 0x2d;
@@ -4612,7 +4612,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
       step_y = 0x1f;
       for (i = 0; i < icon_count; i++) {
         sprite_draw
-                  (&sprite,(iptr)draw_ctx,(iptr)this->leader_surface,draw_x,draw_y);
+                  (&sprite,(iptr)draw_ctx,(iptr)self->leader_surface,draw_x,draw_y);
         draw_y += step_y;
       }
       (*(i8 *)((char *)&eh_state + 0)) = 1;
@@ -4628,7 +4628,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
 }
 
 /* 00494e2a auto */
-i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
+i32 __thiscall diplo_leader_init_science(DiploLeaderView *self)
 
 {
   int value;
@@ -4693,7 +4693,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
   top_techs[10] = 0xffffffff;
   top_techs[0xb] = 0xffffffff;
   tech_count = 0;
-  if (((((*(byte *)&civs[human_civ[0]].treaties[((uint)this->leader_civ)] & 0x80) == 0) &&
+  if (((((*(byte *)&civs[human_civ[0]].treaties[((uint)self->leader_civ)] & 0x80) == 0) &&
        (value = civ_has_wonder(human_civ[0],0x18), value == 0)) &&
       (value = civ_has_wonder(human_civ[0],9), value == 0)) && (game.difficulty != '\0')) {
     top_techs[0xc] = 0;
@@ -4702,7 +4702,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
     top_techs[0xc] = 1;
   }
   for (advance = 0; advance < 100; advance++) {
-    value = civ_has_advance((uint)this->leader_civ,advance);
+    value = civ_has_advance((uint)self->leader_civ,advance);
     if (value != 0) {
       tech_count++;
       if (*(int *)(((i8 *)&map_views_block.tech_prereq_depth_cache) + advance * 4) < 1) {
@@ -4743,7 +4743,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
     (*(i8 *)((char *)&eh_state + 0)) = 1;
     /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&palette)); }
     eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)category_sprites,0x3c,5,sprite_destroy); }
+    /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,sprite_destroy); }
     eh_state = 0xffffffff;
     /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&font2)); }
   }
@@ -4756,14 +4756,14 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       (*(i8 *)((char *)&eh_state + 0)) = 1;
       /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&palette)); }
       eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)category_sprites,0x3c,5,sprite_destroy); }
+      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,sprite_destroy); }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&font2)); }
       result = fail_result;
     }
     else {
-      surface_set_palette(&surface,(iptr)(this->leader_palette));
-      draw_x = (uint)this->style_era * 0x6d + 1;
+      surface_set_palette(&surface,(iptr)(self->leader_palette));
+      draw_x = (uint)self->style_era * 0x6d + 1;
       draw_y = 1;
       sprite_grab_from_surface(category_sprites + 3,(iptr)&surface,9,draw_x,1,0x6c,0x1e);
       draw_y += 0x1f;
@@ -4785,7 +4785,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
         if (-1 < advance) {
           adv_category = (int)(char)advances[advance].category;
           sprite_draw
-                    (category_sprites + adv_category,(iptr)draw_ctx,(iptr)this->leader_surface,draw_x,draw_y);
+                    (category_sprites + adv_category,(iptr)draw_ctx,(iptr)self->leader_surface,draw_x,draw_y);
           for (j = 0; j < 5; j++) {
             str_clear((iptr)(words + j * 0x32));
           }
@@ -4835,12 +4835,12 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
             if (top_techs[0xc] != 0) {
               gfx_set_text_color_index(10);
               surface_draw_text_in_rect
-                        ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
+                        ((DibSurface *)self->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
                          (iptr)&draw_rect,0);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(text_colors[this->style_era]);
+              gfx_set_text_color_index(text_colors[self->style_era]);
               surface_draw_text_in_rect
-                        ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
+                        ((DibSurface *)self->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
                          (iptr)&draw_rect,0);
             }
           }
@@ -4876,12 +4876,12 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
               OffsetRect(&draw_rect,0,((rect_height2 >> 1) - value) + 1);
               gfx_set_text_color_index(10);
               surface_draw_text_in_rect
-                        ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
+                        ((DibSurface *)self->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
                          (iptr)&draw_rect,1);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(text_colors[this->style_era]);
+              gfx_set_text_color_index(text_colors[self->style_era]);
               surface_draw_text_in_rect
-                        ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
+                        ((DibSurface *)self->leader_surface,(iptr)&font2,(iptr)(aCStack_641 + 1),
                          (iptr)&draw_rect,1);
             }
             str_clear((iptr)line2_buf);
@@ -4907,12 +4907,12 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
               OffsetRect(&draw_rect,0,value - 3);
               gfx_set_text_color_index(10);
               surface_draw_text_in_rect
-                        ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)line2_buf,
+                        ((DibSurface *)self->leader_surface,(iptr)&font2,(iptr)line2_buf,
                          (iptr)&draw_rect,1);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(text_colors[this->style_era]);
+              gfx_set_text_color_index(text_colors[self->style_era]);
               surface_draw_text_in_rect
-                        ((DibSurface *)this->leader_surface,(iptr)&font2,(iptr)line2_buf,
+                        ((DibSurface *)self->leader_surface,(iptr)&font2,(iptr)line2_buf,
                          (iptr)&draw_rect,1);
             }
           }
@@ -4925,7 +4925,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       (*(i8 *)((char *)&eh_state + 0)) = 1;
       /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&palette)); }
       eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)category_sprites,0x3c,5,sprite_destroy); }
+      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,sprite_destroy); }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&font2)); }
       result = 1;
@@ -4935,7 +4935,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
 }
 
 /* 00495c35 auto */
-i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
+i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *self)
 
 {
   int loaded;
@@ -4957,7 +4957,7 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
   surface_ctor(&surface);
   (*(i8 *)((char *)&eh_state + 0)) = 2;
   loaded = surface_load_gif_resource
-                    (&surface,civs[this->leader_civ].leader_portrait + 0xdc,10,0xec,
+                    (&surface,civs[self->leader_civ].leader_portrait + 0xdc,10,0xec,
                      (iptr)&palette);
   if (loaded == 0) {
     result = 0;
@@ -4970,11 +4970,11 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
   }
   else {
     palette_get_rgb(&palette,(iptr)rgb_buf,0x2a,0x40);
-    palette_set_rgb((GamePalette *)(this->leader_palette),0x2a,0x40,(iptr)rgb_buf)
+    palette_set_rgb((GamePalette *)(self->leader_palette),0x2a,0x40,(iptr)rgb_buf)
     ;
-    surface_set_palette(&surface,(iptr)(this->leader_palette));
+    surface_set_palette(&surface,(iptr)(self->leader_palette));
     sprite_grab_from_surface(&sprite,(iptr)&surface,9,1,1,0xe1,0x113);
-    sprite_draw(&sprite,(iptr)draw_ctx,(iptr)this->leader_surface,0xd0,0x39);
+    sprite_draw(&sprite,(iptr)draw_ctx,(iptr)self->leader_surface,0xd0,0x39);
     (*(i8 *)((char *)&eh_state + 0)) = 1;
     /* inlined unwind funclet 00495dcf */ { surface_dtor((DibSurface *)((iptr)&surface)); }
     eh_state = eh_state & 0xffffff00;
@@ -4987,7 +4987,7 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
 }
 
 /* 00495e0c auto */
-i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
+i8 __thiscall diplo_leader_init_video(DiploLeaderView *self)
 
 {
   i8 result;
@@ -5004,12 +5004,12 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
   eh_state = 0xffffffff;
   palette_init(&palette);
   eh_state = 0;
-  this->leader_tribe = (u8)civs[this->leader_civ].tribe;
+  self->leader_tribe = (u8)civs[self->leader_civ].tribe;
   str_clear((iptr)video_path);
   str_append((iptr)video_path,(iptr)&str_civ2_kings);
   str_clear((iptr)file_stem);
   str_append((iptr)file_stem,(iptr)&str_hrld);
-  str_append((iptr)file_stem,(iptr)(((i8 * *)&leader_video_tribe_codes))[civs[this->leader_civ].tribe]);
+  str_append((iptr)file_stem,(iptr)(((i8 * *)&leader_video_tribe_codes))[civs[self->leader_civ].tribe]);
   file_stem[7] = 0;
   str_append((iptr)video_path,(iptr)file_stem);
   str_append((iptr)video_path,(iptr)&str_avi);
@@ -5021,22 +5021,22 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
   }
   else {
     avi_player_create_child
-              ((MediaWindow *)(this->video_player),(iptr)&str_empty_108,0x200,
-               *(i32 *)(((i8 *)&leader_video_x_table_block.leader_video_x_table) + (uint)this->leader_tribe * 8),
-               *(i32 *)(((i8 *)&leader_video_x_table_block.leader_video_y_table) + (uint)this->leader_tribe * 8),(iptr)this->leader_surface);
-    open_err = avi_player_open((AviPlayerOpenView *)(this->video_player),(iptr)video_path);
+              ((MediaWindow *)(self->video_player),(iptr)&str_empty_108,0x200,
+               *(i32 *)(((i8 *)&leader_video_x_table_block.leader_video_x_table) + (uint)self->leader_tribe * 8),
+               *(i32 *)(((i8 *)&leader_video_x_table_block.leader_video_y_table) + (uint)self->leader_tribe * 8),(iptr)self->leader_surface);
+    open_err = avi_player_open((AviPlayerOpenView *)(self->video_player),(iptr)video_path);
     if (open_err == 0) {
-      avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->video_player),(iptr)diplo_leader_video_end_cb);
-      avi_player_set_transparent((AviPlayerSetTransparentView *)(this->video_player),1);
-      palette_load_ctab_res(&palette,this->leader_tribe + 1000);
+      avi_player_set_end_callback((AviPlayerEndCbSetView *)(self->video_player),(iptr)diplo_leader_video_end_cb);
+      avi_player_set_transparent((AviPlayerSetTransparentView *)(self->video_player),1);
+      palette_load_ctab_res(&palette,self->leader_tribe + 1000);
       palette_get_rgb(&palette,(iptr)rgb_buf,0x92,100);
       palette_set_rgb
-                ((GamePalette *)(this->leader_palette),0x92,100,(iptr)rgb_buf);
+                ((GamePalette *)(self->leader_palette),0x92,100,(iptr)rgb_buf);
       avi_player_set_palette
-                ((DibSurface *)(this->video_player),(iptr)(this->leader_palette));
+                ((DibSurface *)(self->video_player),(iptr)(self->leader_palette));
       wnd_set_palette
-                ((WndBase *)(this->video_window),(iptr)(this->leader_palette));
-      avi_player_show_frame(this->video_player,0);
+                ((WndBase *)(self->video_window),(iptr)(self->leader_palette));
+      avi_player_show_frame(self->video_player,0);
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00496100 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
       result = 1;
@@ -5083,14 +5083,14 @@ void __cdecl diplo_leader_video_end_cb(void)
 }
 
 /* 00497bf0 auto */
-void * __thiscall diplo_leader_wnd_scalar_dtor(void *this,uint flags)
+void * __thiscall diplo_leader_wnd_scalar_dtor(void *self,uint flags)
 
 {
-  diplo_leader_wnd_dtor(this);
+  diplo_leader_wnd_dtor(self);
   if ((flags & 1) != 0) {
-    operator_delete(this);
+    operator_delete(self);
   }
-  return this;
+  return self;
 }
 
 /* 004b75fb auto */
@@ -5136,7 +5136,7 @@ i32 __cdecl diplo_wnd_close_active(void)
         net_session_block.nm_parley_cancel_count = 0;
         civ_name = civ_name_plural(parley_wnd_block.parley_other_civ);
         text_set_string_arg(0,civ_name);
-        dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+        dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
         popup_game_with_sprite((iptr)&str_parleycancel_3,(iptr)&popup_info_icon_sprite,0);
       }
     }
@@ -5761,7 +5761,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     text_set_string_arg(1,civ_name);
     civ_name = civ_name_plural(civ2);
     text_set_string_arg(2,civ_name);
-    dlg_pending_idle_callback = ((void *)(iptr)mp_meeting_wait_idle);
+    dlg_pending_idle_callback = ((i8*)(mp_meeting_wait_idle));
     civ_rating_title_font_block.mp_meeting_wait_start_i32 = timer_ticks();
     city = popup_game_sprite_flags((iptr)&str_parleywaiting_2,0x2000001,(iptr)&popup_info_icon_sprite,0);
     if (net_session_block.net_host_handoff_stage == '\0') {
@@ -5774,14 +5774,14 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           mp_meeting_pending = 0;
         }
         else if (advisor_window_block.mp_meeting_reply < 1) {
-          dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+          dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
           popup_game_with_sprite((iptr)&str_parleygoaway_2,(iptr)&popup_info_icon_sprite,0);
           mp_meeting_pending = 0;
         }
         else if (advisor_window_block.mp_meeting_reply == 1) {
           advisor_window_block.mp_meeting_reply = -1;
           (*(uptr *)&parley_wnd_block.parley_other_civ) = civ2;
-          dlg_pending_idle_callback = ((void *)(iptr)mp_meeting_wait_idle);
+          dlg_pending_idle_callback = ((i8*)(mp_meeting_wait_idle));
           civ_rating_title_font_block.mp_meeting_wait_start_i32 = timer_ticks();
           civ_name = civ_name_plural(civ);
           text_set_string_arg(0,civ_name);
@@ -5795,20 +5795,20 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
               net_session_block.nm_parley_cancel_count = 0;
               civ_name = civ_name_plural(civ2);
               text_set_string_arg(0,civ_name);
-              dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+              dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
               popup_game_with_sprite((iptr)&str_parleycancel_6,(iptr)&popup_info_icon_sprite,0);
               mp_meeting_pending = 0;
             }
           }
           else {
             (*(uptr *)&parley_wnd_block.parley_other_civ) = 0xffffffff;
-            dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+            dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
             popup_game_with_sprite((iptr)&str_parleybusy_4,(iptr)&popup_info_icon_sprite,0);
             mp_meeting_pending = 0;
           }
         }
         else {
-          dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+          dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
           popup_game_with_sprite((iptr)&str_parleybusy_5,(iptr)&popup_info_icon_sprite,0);
           mp_meeting_pending = 0;
         }
@@ -5817,14 +5817,14 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
         net_session_block.nm_parley_cancel_count = 0;
         civ_name = civ_name_plural(civ2);
         text_set_string_arg(0,civ_name);
-        dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+        dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
         popup_game_with_sprite((iptr)&str_parleycancel_5,(iptr)&popup_info_icon_sprite,0);
         (*(uptr *)&parley_wnd_block.parley_other_civ) = 0xffffffff;
         mp_meeting_pending = 0;
       }
     }
     else {
-      dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+      dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
       popup_game_with_sprite((iptr)&str_parleybusy_3,(iptr)&popup_info_icon_sprite,0);
       mp_meeting_pending = 0;
     }

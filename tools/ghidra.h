@@ -42,6 +42,18 @@ typedef unsigned long long qword;
 typedef double float10;
 /* Calls through function pointers may return pointers. */
 typedef iptr code();
+#ifdef __cplusplus
+/* A call through `code` (a pointer whose real type is not recovered yet):
+   C called it with the arguments as given, after the default promotions,
+   expecting an iptr back.  call_untyped(fn, args...) does just that. */
+template <class F, class... A>
+static inline __attribute__((always_inline)) iptr call_untyped(F fn, A... args)
+{
+    return ((iptr (*)(decltype(+args)...))fn)(+args...);
+}
+#else
+#define call_untyped(fn, ...) ((*(code *)(fn))(__VA_ARGS__))
+#endif
 typedef unsigned char ghidra_bool;
 typedef void *pointer;
 typedef void *pointer32;

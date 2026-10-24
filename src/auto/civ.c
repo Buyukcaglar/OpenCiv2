@@ -466,7 +466,7 @@ void __cdecl tech_editor_on_edit_icon(void)
   i32 flags;
   i8 *save_fn;
   
-  save_fn = ((void *)(iptr)sprite_sheet_save_tech_icons);
+  save_fn = ((i8*)(sprite_sheet_save_tech_icons));
   flags = 0;
   title = label_string(*(i32 *)(label_string_ids + 0x7d8));
   sprite_editor_run((iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
@@ -522,7 +522,7 @@ void __cdecl tech_editor_on_combo(int ctrl_id)
 }
 
 /* 00416354 auto */
-void __thiscall tech_editor_create_combo(ViewWindow *this,int slot)
+void __thiscall tech_editor_create_combo(ViewWindow *self,int slot)
 
 {
   int ctrl_id;
@@ -531,95 +531,95 @@ void __thiscall tech_editor_create_combo(ViewWindow *this,int slot)
   iptr advance;
   i8 rect[16];
   
-  rect_set_xywh((iptr)rect,*(int *)(((i8 *)&tech_editor_combo_x_table_block.tech_editor_combo_x_table) + slot * 8) + this->client_x - 0x1e,
-                     *(int *)(((i8 *)&tech_editor_combo_x_table_block.tech_editor_combo_y_table) + slot * 8) + this->client_y,0xa0,
-                     this->sci_rate_sel << 3);
+  rect_set_xywh((iptr)rect,*(int *)(((i8 *)&tech_editor_combo_x_table_block.tech_editor_combo_x_table) + slot * 8) + self->client_x - 0x1e,
+                     *(int *)(((i8 *)&tech_editor_combo_x_table_block.tech_editor_combo_y_table) + slot * 8) + self->client_y,0xa0,
+                     self->sci_rate_sel << 3);
   ctrl_id = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
-  if (this == (ViewWindow *)0x0) {
+  if (self == (ViewWindow *)0x0) {
     parent_wnd2 = (u8 *)0x0;
   }
   else {
-    parent_wnd2 = this->window_2;
+    parent_wnd2 = self->window_2;
   }
   combo_create
-            ((Control *)(this->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_id,
+            ((Control *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_id,
              (iptr)rect);
-  combo_set_font((ComboBoxFontView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
-  combo_set_callback((ComboBoxCallbackSetView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)tech_editor_on_combo);
+  combo_set_font((ComboBoxFontView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
+  combo_set_callback((ComboBoxCallbackSetView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)tech_editor_on_combo);
   switch(slot) {
   case 0:
     for (advance = 0; advance < 100; advance++) {
       label = label_string(advances[advance].name);
-      combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+      combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     }
     break;
   case 1:
   case 2:
     label = label_string(*(i32 *)(label_string_ids + 0x7c0));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x7c4));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     for (advance = 0; advance < 100; advance++) {
       label = label_string(advances[advance].name);
-      combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+      combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     }
     break;
   case 3:
     label = label_string(*(i32 *)(label_string_ids + 0x810));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x814));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x818));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x81c));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     break;
   case 4:
     label = label_string(*(i32 *)(label_string_ids + 0x820));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x824));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x828));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x82c));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
     label = label_string(*(i32 *)(label_string_ids + 0x830));
-    combo_add_string((ComboBoxAddView *)(this->editor_combo_boxes + slot * 0x38 + 0x28),label);
+    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),label);
   }
   return;
 }
 
 /* 00416734 auto */
-void __thiscall tech_editor_create_edit(ViewWindow *this,int slot)
+void __thiscall tech_editor_create_edit(ViewWindow *self,int slot)
 
 {
   int ctrl_id;
   u8 *parent_wnd2;
   i8 rect[16];
   
-  rect_set_xywh((iptr)rect,(((i32 *)&tech_editor_edit_x_table_block.tech_editor_edit_x_table))[slot * 2] + this->client_x,
-                     (((i32 *)&tech_editor_edit_x_table_block.tech_editor_edit_y_table))[slot * 2] + this->client_y,0x30,this->sci_rate_sel + 6);
+  rect_set_xywh((iptr)rect,(((i32 *)&tech_editor_edit_x_table_block.tech_editor_edit_x_table))[slot * 2] + self->client_x,
+                     (((i32 *)&tech_editor_edit_x_table_block.tech_editor_edit_y_table))[slot * 2] + self->client_y,0x30,self->sci_rate_sel + 6);
   ctrl_id = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
-  if (this == (ViewWindow *)0x0) {
+  if (self == (ViewWindow *)0x0) {
     parent_wnd2 = (u8 *)0x0;
   }
   else {
-    parent_wnd2 = this->window_2;
+    parent_wnd2 = self->window_2;
   }
   edit_create
-            ((EditControl *)(((PediaRedrawView *)this)->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)parent_wnd2,ctrl_id,
+            ((EditControl *)(((PediaRedrawView *)self)->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)parent_wnd2,ctrl_id,
              (iptr)rect,(iptr)&str_empty_11);
-  edit_set_max_len((EditMaxLenView *)(((PediaRedrawView *)this)->numeric_edit_controls_area + slot * 0x48 - 0x2c),4);
-  edit_set_callback((EditCallbackSetView *)(((PediaRedrawView *)this)->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)editor_numeric_edit_filter);
+  edit_set_max_len((EditMaxLenView *)(((PediaRedrawView *)self)->numeric_edit_controls_area + slot * 0x48 - 0x2c),4);
+  edit_set_callback((EditCallbackSetView *)(((PediaRedrawView *)self)->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)editor_numeric_edit_filter);
   return;
 }
 
 /* 00416828 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall tech_editor_paint(ViewWindow *this)
+void __thiscall tech_editor_paint(ViewWindow *self)
 
 {
   byte key_color;
@@ -630,72 +630,72 @@ void __thiscall tech_editor_paint(ViewWindow *this)
   int icon_y;
   int icon_x;
   
-  frame_wnd_draw_caption((FrameWindow *)this);
+  frame_wnd_draw_caption((FrameWindow *)self);
   if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
-    gfx_fill_rect((iptr)this,(iptr)&this->client_rect,0x1d);
+    gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1d);
   }
   else {
-    gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)this,0,0,this->client_x,this->client_y,this->rates_civ,
-                       this->max_rate_value);
+    gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)self,0,0,self->client_x,self->client_y,self->rates_civ,
+                       self->max_rate_value);
   }
-  icon_x = this->client_x + 0x20;
-  icon_y = this->client_y + 0x20;
+  icon_x = self->client_x + 0x20;
+  icon_y = self->client_y + 0x20;
   icon = (Sprite *)
              (((i8 *)&government_sprites_block.advance_category_icon_sprites) +
-             *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field3) + this->init_tax_rate * 0x58) * 0xf0 +
-             *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + this->init_tax_rate * 0x58) * 0x3c);
+             *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field3) + self->init_tax_rate * 0x58) * 0xf0 +
+             *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_item_field2) + self->init_tax_rate * 0x58) * 0x3c);
   key_color = sprite_get_key_color(icon);
-  gfx_fill_rect_xywh((iptr)this,icon_x,icon_y,0x48,0x28,(uint)key_color);
+  gfx_fill_rect_xywh((iptr)self,icon_x,icon_y,0x48,0x28,(uint)key_color);
   gfx_set_scale_ratio(2,1);
-  sprite_draw(icon,(iptr)sprite_rect,(iptr)this,icon_x,icon_y);
+  sprite_draw(icon,(iptr)sprite_rect,(iptr)self,icon_x,icon_y);
   gfx_set_scale_ratio(1,1);
-  gfx_draw_tiled_frame((iptr)this,icon_x,icon_y,0x48,0x28,6);
-  text_set_surface((iptr)this);
+  gfx_draw_tiled_frame((iptr)self,icon_x,icon_y,0x48,0x28,6);
+  text_set_surface((iptr)self);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);
-  label_x = tech_editor_combo_x_table_block.tech_editor_prereq1_ctrl_x + this->client_x + 0x32;
-  label_y = ((tech_editor_combo_x_table_block.tech_editor_prereq1_ctrl_y + this->client_y) - this->sci_rate_sel) - 2;
+  label_x = tech_editor_combo_x_table_block.tech_editor_prereq1_ctrl_x + self->client_x + 0x32;
+  label_y = ((tech_editor_combo_x_table_block.tech_editor_prereq1_ctrl_y + self->client_y) - self->sci_rate_sel) - 2;
   text_clear();
   text_append_label(0x7e);
   crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tech_editor_prereq1_suffix_str));
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
-  label_x = tech_editor_combo_x_table_block.tech_editor_prereq2_ctrl_x + this->client_x + 0x32;
-  label_y = ((tech_editor_combo_x_table_block.tech_editor_prereq2_ctrl_y + this->client_y) - this->sci_rate_sel) - 2;
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
+  label_x = tech_editor_combo_x_table_block.tech_editor_prereq2_ctrl_x + self->client_x + 0x32;
+  label_y = ((tech_editor_combo_x_table_block.tech_editor_prereq2_ctrl_y + self->client_y) - self->sci_rate_sel) - 2;
   text_clear();
   text_append_label(0x7e);
   crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tech_editor_prereq2_suffix_str));
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
-  label_x = tech_editor_combo_x_table_block.tech_editor_epoch_ctrl_x + this->client_x + 0x32;
-  label_y = ((tech_editor_combo_x_table_block.tech_editor_epoch_ctrl_y + this->client_y) - this->sci_rate_sel) - 2;
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
+  label_x = tech_editor_combo_x_table_block.tech_editor_epoch_ctrl_x + self->client_x + 0x32;
+  label_y = ((tech_editor_combo_x_table_block.tech_editor_epoch_ctrl_y + self->client_y) - self->sci_rate_sel) - 2;
   text_clear();
   text_append_label(0x1eb);
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
-  label_x = tech_editor_combo_x_table_block.tech_editor_category_ctrl_x + this->client_x + 0x32;
-  label_y = ((this->client_y + tech_editor_combo_x_table_block.tech_editor_category_ctrl_y_i32) - this->sci_rate_sel) - 2;
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
+  label_x = tech_editor_combo_x_table_block.tech_editor_category_ctrl_x + self->client_x + 0x32;
+  label_y = ((self->client_y + tech_editor_combo_x_table_block.tech_editor_category_ctrl_y_i32) - self->sci_rate_sel) - 2;
   text_clear();
   text_append_label(0x1ec);
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
-  label_x = tech_editor_edit_x_table_block.tech_editor_edit_x_table[0] + this->client_x + 0x18;
-  label_y = ((tech_editor_edit_x_table_block.tech_editor_edit_y_table[0] + this->client_y) - this->sci_rate_sel) - 2;
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
+  label_x = tech_editor_edit_x_table_block.tech_editor_edit_x_table[0] + self->client_x + 0x18;
+  label_y = ((tech_editor_edit_x_table_block.tech_editor_edit_y_table[0] + self->client_y) - self->sci_rate_sel) - 2;
   text_clear();
   text_append_label(0x1ed);
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
-  label_x = tech_editor_edit_x_table_block.tech_editor_modifier_edit_x + this->client_x + 0x18;
-  label_y = ((tech_editor_edit_x_table_block.tech_editor_modifier_edit_y + this->client_y) - this->sci_rate_sel) - 2;
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
+  label_x = tech_editor_edit_x_table_block.tech_editor_modifier_edit_x + self->client_x + 0x18;
+  label_y = ((tech_editor_edit_x_table_block.tech_editor_modifier_edit_y + self->client_y) - self->sci_rate_sel) - 2;
   text_clear();
   text_append_label(0x1ee);
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
-  label_x = this->client_x + (int)this->rates_civ / 2;
-  label_y = (this->client_y - this->sci_rate_sel) + 0xe6;
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
+  label_x = self->client_x + (int)self->rates_civ / 2;
+  label_y = (self->client_y - self->sci_rate_sel) + 0xe6;
   text_clear();
   text_append_label(0x1ea);
-  text_draw_centered((iptr)this,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
-  wnd_blit_surface((DibSurface *)this);
+  text_draw_centered((iptr)self,(iptr)&map_views_block.text_buffer,label_x,label_y,0);
+  wnd_blit_surface((DibSurface *)self);
   return;
 }
 
 /* 00416c9e auto */
-void __thiscall tech_editor_dialog_run(ViewWindow *this)
+void __thiscall tech_editor_dialog_run(ViewWindow *self)
 
 {
   DibSurface *this_00;
@@ -730,7 +730,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *this)
   palette_init(&palette);
   eh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
-  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)this;
+  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
   this_00 = operator_new(0x48);
   (*(i8 *)((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
@@ -747,124 +747,124 @@ void __thiscall tech_editor_dialog_run(ViewWindow *this)
   ui_set_ctrl_text_color(0x29);
   ui_set_ctrl_text_shadow(0x12,1,1);
   ui_set_ctrl_disabled_color(0x25);
-  this->rates_civ = 0x230;
-  this->max_rate_value = 0x17c;
-  this->init_tax_rate = 0;
+  self->rates_civ = 0x230;
+  self->max_rate_value = 0x17c;
+  self->init_tax_rate = 0;
   editor_text_dlg_wnd_block.editor_next_ctrl_id = 0xc9;
   surface_load_gif_file(editor_bg_surface,(iptr)&str_editorpt_gif,10,0xc0,(iptr)&palette);
   font_height = font_cached_height((GameFont *)((i8 *)&editor_font_block.editor_font));
-  this->sci_rate_sel = font_height;
+  self->sci_rate_sel = font_height;
   extra_arg3 = 0;
   extra_arg2 = 0;
   extra_arg1 = 0;
-  height = this->max_rate_value;
-  width = this->rates_civ;
+  height = self->max_rate_value;
+  width = self->rates_civ;
   top = 0;
   left = 0;
   style = 0xd;
   title = label_string(*(i32 *)(label_string_ids + 0x734));
   frame_wnd_create
-            ((FrameWindow *)this,title,style,left,top,width,height,extra_arg1,extra_arg2,extra_arg3);
+            ((FrameWindow *)self,title,style,left,top,width,height,extra_arg1,extra_arg2,extra_arg3);
   for (row = 0; row < 7; row++) {
     if (*(int *)(((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_ctrl_kinds) + row * 8) == 9) {
-      tech_editor_create_edit(this,*(i32 *)(((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_ctrl_slots) + row * 8));
+      tech_editor_create_edit(self,*(i32 *)(((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_ctrl_slots) + row * 8));
     }
     else if (*(int *)(((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_ctrl_kinds) + row * 8) == 0xc) {
-      tech_editor_create_combo(this,*(i32 *)(((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_ctrl_slots) + row * 8));
+      tech_editor_create_combo(self,*(i32 *)(((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_ctrl_slots) + row * 8));
     }
   }
-  rect_set_xywh((iptr)rect,this->client_x + 0x32,this->client_y + 0xe7,0x1cb,0x6e);
+  rect_set_xywh((iptr)rect,self->client_x + 0x32,self->client_y + 0xe7,0x1cb,0x6e);
   pos = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
-  if (this == (ViewWindow *)0x0) {
+  if (self == (ViewWindow *)0x0) {
     list_parent = (u8 *)0x0;
   }
   else {
-    list_parent = this->window_2;
+    list_parent = self->window_2;
   }
   listbox_create
-            ((Control *)&((PictureWindow *)this)->editor_list_box,(iptr)list_parent,pos,(iptr)rect);
-  listbox_set_font((ListBoxFontView *)&((PictureWindow *)this)->editor_list_box,(iptr)&editor_font_block.editor_font);
+            ((Control *)&((PictureWindow *)self)->editor_list_box,(iptr)list_parent,pos,(iptr)rect);
+  listbox_set_font((ListBoxFontView *)&((PictureWindow *)self)->editor_list_box,(iptr)&editor_font_block.editor_font);
   pos = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
-  this->lux_rate_sel = pos + 8;
-  pos = this->client_width - 10;
-  this->tax_rate_sel = (int)(pos + (pos >> 0x1f & 3U)) >> 2;
-  btn_y = (this->client_y + this->client_height) - (this->lux_rate_sel + 2);
-  pos = this->client_x + 2;
-  rect_set_xywh((iptr)rect,pos,btn_y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+  self->lux_rate_sel = pos + 8;
+  pos = self->client_width - 10;
+  self->tax_rate_sel = (int)(pos + (pos >> 0x1f & 3U)) >> 2;
+  btn_y = (self->client_y + self->client_height) - (self->lux_rate_sel + 2);
+  pos = self->client_x + 2;
+  rect_set_xywh((iptr)rect,pos,btn_y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     ok_parent = (u8 *)0x0;
   }
   else {
-    ok_parent = this->window_2;
+    ok_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
-            ((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,(iptr)tech_editor_on_ok);
-  pos = pos + this->tax_rate_sel + 2;
-  rect_set_xywh((iptr)rect,pos,btn_y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+            ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)tech_editor_on_ok);
+  pos = pos + self->tax_rate_sel + 2;
+  rect_set_xywh((iptr)rect,pos,btn_y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     rename_parent = (u8 *)0x0;
   }
   else {
-    rename_parent = this->window_2;
+    rename_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
-            ((Control *)&((PediaAdvanceListView *)this)->editor_rename_button,(iptr)rename_parent,0x65,(iptr)rect,label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_rename_button,(iptr)tech_editor_on_rename);
-  pos = pos + this->tax_rate_sel + 2;
-  rect_set_xywh((iptr)rect,pos,btn_y,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+            ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x65,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)tech_editor_on_rename);
+  pos = pos + self->tax_rate_sel + 2;
+  rect_set_xywh((iptr)rect,pos,btn_y,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     help_parent = (u8 *)0x0;
   }
   else {
-    help_parent = this->window_2;
+    help_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
-            ((Control *)&((PediaAdvanceListView *)this)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_help_button,(iptr)tech_editor_on_help);
-  rect_set_xywh((iptr)rect,pos + this->tax_rate_sel + 2,btn_y,this->tax_rate_sel,
-                     this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+            ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)tech_editor_on_help);
+  rect_set_xywh((iptr)rect,pos + self->tax_rate_sel + 2,btn_y,self->tax_rate_sel,
+                     self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     cancel_parent = (u8 *)0x0;
   }
   else {
-    cancel_parent = this->window_2;
+    cancel_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
-            ((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,(iptr)tech_editor_on_cancel);
-  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button);
-  this->tax_rate_sel = 0x55;
+            ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)tech_editor_on_cancel);
+  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button);
+  self->tax_rate_sel = 0x55;
   pos = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
-  this->lux_rate_sel = pos + 8;
-  rect_set_xywh((iptr)rect,this->client_x + 0x19,this->client_y + 0x50,this->tax_rate_sel,
-                     this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+  self->lux_rate_sel = pos + 8;
+  rect_set_xywh((iptr)rect,self->client_x + 0x19,self->client_y + 0x50,self->tax_rate_sel,
+                     self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     icon_parent = (u8 *)0x0;
   }
   else {
-    icon_parent = this->window_2;
+    icon_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
-            ((Control *)(((DocumentWindow *)this)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)rect,label);
-  button_set_callback((Control *)(((DocumentWindow *)this)->editor_icon_button),(iptr)tech_editor_on_edit_icon);
-  wnd_set_keyboard_nav((Wnd *)this->window_2,0);
+            ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)rect,label);
+  button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)tech_editor_on_edit_icon);
+  wnd_set_keyboard_nav((Wnd *)self->window_2,0);
   tech_editor_load_items();
-  combo_set_cur_sel((ComboBoxSetSelView *)&this->dialog_h,this->init_tax_rate);
+  combo_set_cur_sel((ComboBoxSetSelView *)&self->dialog_h,self->init_tax_rate);
   tech_editor_update_controls();
-  this->dialog_w = 5;
-  wnd_set_move_handler((WndEventHandlers *)(this->event_handlers),(iptr)editor_wnd_on_move_close_dropdowns);
-  wnd_set_redraw_callback((SurfaceWindow *)this,(iptr)tech_editor_redraw);
+  self->dialog_w = 5;
+  wnd_set_move_handler((WndEventHandlers *)(self->event_handlers),(iptr)editor_wnd_on_move_close_dropdowns);
+  wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)tech_editor_redraw);
   tech_editor_on_combo(0xc9);
-  wnd_repaint((SurfaceWindow *)this);
-  window_show((WindowObjectView *)this);
-  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
+  wnd_repaint((SurfaceWindow *)self);
+  window_show((WindowObjectView *)self);
+  wnd_run_modal_loop((ModalMenuWindow *)self->window_2);
   while (editor_text_dlg_wnd_block.editor_running != 0) {
     win_pump_one_message();
   }
@@ -872,7 +872,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *this)
     surface_delete(editor_bg_surface,1);
   }
   editor_bg_surface = (DibSurface *)0x0;
-  this->dialog_w = 0;
+  self->dialog_w = 0;
   eh_state = 0xffffffff;
   /* inlined unwind funclet 00417542 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
@@ -888,7 +888,7 @@ void __cdecl tech_editor_run(void)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  editor_wnd_ctor(&editor_wnd);
+  editor_wnd_ctor((DocumentWindow*)(&editor_wnd));
   seh_state = 0;
   tech_editor_dialog_run((ViewWindow *)&editor_wnd);
   wnd_repaint((SurfaceWindow *)((i8 *)&map_views_block.map_views));
@@ -1448,7 +1448,7 @@ void __cdecl civ_intro_popup(iptr civ)
   }
   text_set_string_arg(2,(iptr)&map_views_block.text_buffer);
   if (2 < game.multiplayer) {
-    dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+    dlg_pending_idle_callback = ((i8*)(turn_popup_timeout_idle));
   }
   popup_game_with_sprite((iptr)&str_init,(iptr)&popup_info_icon_sprite,0);
   return;
@@ -3746,7 +3746,7 @@ i32 __cdecl civ_password_prompt(int civ)
   dialog_load_text_section(&dialog2,(iptr)&str_game_7,(iptr)&str_password1_4,0x1f,(iptr)&str_empty_113,0,0,0,1);
   password_dialog_set_title((iptr)&dialog2,civ,0x26b);
   entered[0] = '\0';
-  dlg_pending_idle_callback = ((void *)(iptr)net_pump_idle_cb);
+  dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
   result = dialog_run_modal(&dialog2,(iptr)entered,0);
   if (result < 0) {
     seh_state = 0xffffffff;
@@ -3763,7 +3763,7 @@ i32 __cdecl civ_password_prompt(int civ)
       status = 0;
     }
     else {
-      dlg_pending_idle_callback = ((void *)(iptr)net_pump_idle_cb);
+      dlg_pending_idle_callback = ((i8*)(net_pump_idle_cb));
       popup_game((iptr)&str_password0_2);
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0049875f */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
@@ -6144,12 +6144,12 @@ i32 __cdecl rules_write_sections(void)
         line_ptr = _fgets(s,0x100,in_file);
         if ((line_ptr == (char *)0x0) || (rc = _fputs(s,out_file), rc == -1))
         goto cleanup;
-        str_strip_newline((iptr)s);
+        str_strip_newline(s);
         str_trim((iptr)s);
         rc = __strcmpi(s,header);
       } while (rc != 0);
       if (*(int *)(((i8 *)&font_size16_bold_block.rules_edit_section_writers) + section * 8) != 0) {
-        (**(code **)(((i8 *)&font_size16_bold_block.rules_edit_section_writers) + section * 8))(out_file,in_file);
+        call_untyped(*(code **)(((i8 *)&font_size16_bold_block.rules_edit_section_writers) + section * 8), out_file,in_file);
       }
       do {
         line_ptr = _fgets(s,0x100,in_file);
@@ -7503,20 +7503,20 @@ void __cdecl cosmic_editor_cancel_clicked(void)
 }
 
 /* 00586eb0 auto */
-void __thiscall cosmic_editor_draw_bg(FrameWindow *this)
+void __thiscall cosmic_editor_draw_bg(FrameWindow *self)
 
 {
-  frame_wnd_draw_caption(this);
-  gfx_fill_rect((iptr)this,(iptr)&this->client_rect,0x1a);
-  text_set_surface((iptr)this);
+  frame_wnd_draw_caption(self);
+  gfx_fill_rect((iptr)self,(iptr)&self->client_rect,0x1a);
+  text_set_surface((iptr)self);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);
-  wnd_blit_surface((DibSurface *)this);
+  wnd_blit_surface((DibSurface *)self);
   return;
 }
 
 /* 00586f16 auto */
-void __thiscall cosmic_editor_dialog(ViewWindow *this)
+void __thiscall cosmic_editor_dialog(ViewWindow *self)
 
 {
   DibSurface *this_00;
@@ -7549,7 +7549,7 @@ void __thiscall cosmic_editor_dialog(ViewWindow *this)
   palette_init(&palette);
   seh_state = 0;
   editor_text_dlg_wnd_block.editor_running = 1;
-  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)this;
+  editor_text_dlg_wnd_block.active_editor_wnd = (iptr)self;
   this_00 = operator_new(0x48);
   (*(i8 *)((char *)&seh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
@@ -7566,100 +7566,100 @@ void __thiscall cosmic_editor_dialog(ViewWindow *this)
   ui_set_ctrl_text_color(0x29);
   ui_set_ctrl_text_shadow(0x12,1,1);
   ui_set_ctrl_disabled_color(0x25);
-  this->rates_civ = 0x230;
-  this->max_rate_value = 0x1c6;
-  this->init_tax_rate = 0;
+  self->rates_civ = 0x230;
+  self->max_rate_value = 0x1c6;
+  self->init_tax_rate = 0;
   editor_text_dlg_wnd_block.editor_next_ctrl_id = 0xc9;
   font_height = font_cached_height((GameFont *)((i8 *)&editor_font_block.editor_font));
-  this->sci_rate_sel = font_height;
+  self->sci_rate_sel = font_height;
   reserved_3 = 0;
   reserved_2 = 0;
   reserved_1 = 0;
-  height = this->max_rate_value;
-  width = this->rates_civ;
+  height = self->max_rate_value;
+  width = self->rates_civ;
   pos_y = 0;
   pos_x = 0;
   style = 0xd;
   title = label_string(*(i32 *)(label_string_ids + 0x94c));
   frame_wnd_create
-            ((FrameWindow *)this,title,style,pos_x,pos_y,width,height,reserved_1,reserved_2,reserved_3);
-  rect_set_xywh((iptr)rect,this->client_x + 2,this->client_y + 2,this->client_width - 5,
-                     this->client_height - 0x14);
+            ((FrameWindow *)self,title,style,pos_x,pos_y,width,height,reserved_1,reserved_2,reserved_3);
+  rect_set_xywh((iptr)rect,self->client_x + 2,self->client_y + 2,self->client_width - 5,
+                     self->client_height - 0x14);
   x_pos = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
-  if (this == (ViewWindow *)0x0) {
+  if (self == (ViewWindow *)0x0) {
     list_parent = (u8 *)0x0;
   }
   else {
-    list_parent = this->window_2;
+    list_parent = self->window_2;
   }
   listbox_create
-            ((Control *)&((PictureWindow *)this)->editor_list_box,(iptr)list_parent,x_pos,(iptr)rect);
-  listbox_set_font((ListBoxFontView *)&((PictureWindow *)this)->editor_list_box,(iptr)&editor_font_block.editor_font);
-  listbox_set_dblclick_callback((ListBoxDblClickSetView *)&((PictureWindow *)this)->editor_list_box,(iptr)cosmic_editor_edit_value);
+            ((Control *)&((PictureWindow *)self)->editor_list_box,(iptr)list_parent,x_pos,(iptr)rect);
+  listbox_set_font((ListBoxFontView *)&((PictureWindow *)self)->editor_list_box,(iptr)&editor_font_block.editor_font);
+  listbox_set_dblclick_callback((ListBoxDblClickSetView *)&((PictureWindow *)self)->editor_list_box,(iptr)cosmic_editor_edit_value);
   cosmic_editor_capture_defaults();
   cosmic_editor_fill_list();
-  listbox_set_cur_sel((ListBoxSetSelView *)&((PictureWindow *)this)->editor_list_box,0);
+  listbox_set_cur_sel((ListBoxSetSelView *)&((PictureWindow *)self)->editor_list_box,0);
   x_pos = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
-  this->lux_rate_sel = x_pos + 8;
-  x_pos = this->client_width - 10;
-  this->tax_rate_sel = (int)(x_pos + (x_pos >> 0x1f & 3U)) >> 2;
-  y_pos = (this->client_y + this->client_height) - (this->lux_rate_sel + 2);
-  x_pos = this->client_x + 2;
-  rect_set_xywh((iptr)rect,x_pos,y_pos,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+  self->lux_rate_sel = x_pos + 8;
+  x_pos = self->client_width - 10;
+  self->tax_rate_sel = (int)(x_pos + (x_pos >> 0x1f & 3U)) >> 2;
+  y_pos = (self->client_y + self->client_height) - (self->lux_rate_sel + 2);
+  x_pos = self->client_x + 2;
+  rect_set_xywh((iptr)rect,x_pos,y_pos,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     ok_parent = (u8 *)0x0;
   }
   else {
-    ok_parent = this->window_2;
+    ok_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
-            ((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_ok_button,(iptr)cosmic_editor_ok_clicked);
-  x_pos = x_pos + this->tax_rate_sel + 2;
-  rect_set_xywh((iptr)rect,x_pos,y_pos,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+            ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)cosmic_editor_ok_clicked);
+  x_pos = x_pos + self->tax_rate_sel + 2;
+  rect_set_xywh((iptr)rect,x_pos,y_pos,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     edit_parent = (u8 *)0x0;
   }
   else {
-    edit_parent = this->window_2;
+    edit_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8e0));
   button_create
-            ((Control *)&((PediaAdvanceListView *)this)->editor_rename_button,(iptr)edit_parent,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_rename_button,(iptr)cosmic_editor_edit_value);
-  ctrl_set_default_button((Control *)&((PediaAdvanceListView *)this)->editor_rename_button);
-  x_pos = x_pos + this->tax_rate_sel + 2;
-  rect_set_xywh((iptr)rect,x_pos,y_pos,this->tax_rate_sel,this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+            ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)edit_parent,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)cosmic_editor_edit_value);
+  ctrl_set_default_button((Control *)&((PediaAdvanceListView *)self)->editor_rename_button);
+  x_pos = x_pos + self->tax_rate_sel + 2;
+  rect_set_xywh((iptr)rect,x_pos,y_pos,self->tax_rate_sel,self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     help_parent = (u8 *)0x0;
   }
   else {
-    help_parent = this->window_2;
+    help_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
-            ((Control *)&((PediaAdvanceListView *)this)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_help_button,(iptr)cosmic_editor_help_clicked);
-  rect_set_xywh((iptr)rect,x_pos + this->tax_rate_sel + 2,y_pos,this->tax_rate_sel,
-                     this->lux_rate_sel);
-  if (this == (ViewWindow *)0x0) {
+            ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)cosmic_editor_help_clicked);
+  rect_set_xywh((iptr)rect,x_pos + self->tax_rate_sel + 2,y_pos,self->tax_rate_sel,
+                     self->lux_rate_sel);
+  if (self == (ViewWindow *)0x0) {
     cancel_parent = (u8 *)0x0;
   }
   else {
-    cancel_parent = this->window_2;
+    cancel_parent = self->window_2;
   }
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
-            ((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button,(iptr)cosmic_editor_cancel_clicked);
-  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)this)->editor_cancel_button);
-  wnd_set_keyboard_nav((Wnd *)this->window_2,0);
-  wnd_set_redraw_callback((SurfaceWindow *)this,(iptr)cosmic_editor_focus_redraw);
-  wnd_repaint((SurfaceWindow *)this);
-  window_show((WindowObjectView *)this);
-  wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
+            ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,label);
+  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cosmic_editor_cancel_clicked);
+  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button);
+  wnd_set_keyboard_nav((Wnd *)self->window_2,0);
+  wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)cosmic_editor_focus_redraw);
+  wnd_repaint((SurfaceWindow *)self);
+  window_show((WindowObjectView *)self);
+  wnd_run_modal_loop((ModalMenuWindow *)self->window_2);
   while (editor_text_dlg_wnd_block.editor_running != 0) {
     win_pump_one_message();
   }
@@ -7682,7 +7682,7 @@ void __cdecl cosmic_editor_run(void)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  editor_wnd_ctor(&editor_wnd);
+  editor_wnd_ctor((DocumentWindow*)(&editor_wnd));
   seh_state = 0;
   cosmic_editor_dialog((ViewWindow *)&editor_wnd);
   wnd_repaint((SurfaceWindow *)((i8 *)&map_views_block.map_views));

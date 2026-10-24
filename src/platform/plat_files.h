@@ -12,6 +12,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Host path for a Windows path; for_create: the last component may not exist. */
 void plat_host_path(const char *win, char *host, size_t n, int for_create);
 int plat_chdir(const char *win);
@@ -22,4 +26,7 @@ unsigned plat_srand(unsigned seed);         /* the seed to use (CIV2_SEED forces
 void plat_suspicious(const char *fmt, ...);  /* see plat.h */
 void plat_fatal(const char *fmt, ...);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

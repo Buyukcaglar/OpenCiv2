@@ -180,30 +180,30 @@ void __cdecl labels_reload(void)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __thiscall file_obj_create(FileObject *this,iptr path)
+i32 __thiscall file_obj_create(FileObject *self,iptr path)
 
 {
   i32 result;
   
-  result = file_obj_create_path(path,(iptr)this);
+  result = file_obj_create_path(path,(iptr)self);
   return result;
 }
 
 /* 00421c30 auto */
-i32 __thiscall file_map_close(FileObject *this)
+i32 __thiscall file_map_close(FileObject *self)
 
 {
   i32 result;
   
-  result = file_obj_close_handle((iptr)this);
+  result = file_obj_close_handle((iptr)self);
   return result;
 }
 
 /* 00421c60 auto */
-void __thiscall file_obj_write(FileObject *this,iptr data,i32 size)
+void __thiscall file_obj_write(FileObject *self,iptr data,i32 size)
 
 {
-  file_obj_write_bytes((iptr)this,data,size);
+  file_obj_write_bytes((iptr)self,data,size);
   return;
 }
 
@@ -430,10 +430,10 @@ int __cdecl strpool_add_padded(iptr text,uint min_size)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dll_free(DllHandle *this)
+void __thiscall dll_free(DllHandle *self)
 
 {
-  dll_unload(this->hmodule);
+  dll_unload(self->hmodule);
   return;
 }
 
@@ -544,35 +544,35 @@ void __cdecl str_append_city_name(iptr dest,int city)
 }
 
 /* 004502b0 auto */
-DllHandle * __thiscall dll_handle_init(DllHandle *this)
+DllHandle * __thiscall dll_handle_init(DllHandle *self)
 
 {
-  this->hmodule = 0;
-  return this;
+  self->hmodule = 0;
+  return self;
 }
 
 /* 004502e0 auto */
-void __thiscall dll_handle_load(DllHandle *this,iptr path)
+void __thiscall dll_handle_load(DllHandle *self,iptr path)
 
 {
   u32 module;
   
-  if (this->hmodule != 0) {
-    dll_unload(this->hmodule);
+  if (self->hmodule != 0) {
+    dll_unload(self->hmodule);
   }
   module = res_dll_load_library(path);
-  this->hmodule = module;
+  self->hmodule = module;
   return;
 }
 
 /* 00450340 auto */
-void __thiscall dll_handle_free(DllHandle *this)
+void __thiscall dll_handle_free(DllHandle *self)
 
 {
-  if (this->hmodule != 0) {
-    dll_unload(this->hmodule);
+  if (self->hmodule != 0) {
+    dll_unload(self->hmodule);
   }
-  this->hmodule = 0;
+  self->hmodule = 0;
   return;
 }
 
@@ -763,12 +763,12 @@ void __cdecl str_append_year(iptr dest,uint year)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __thiscall file_obj_open(FileObject *this,iptr path)
+i32 __thiscall file_obj_open(FileObject *self,iptr path)
 
 {
   i32 result;
   
-  result = file_obj_open_path(path,(iptr)this);
+  result = file_obj_open_path(path,(iptr)self);
   return result;
 }
 
@@ -780,30 +780,30 @@ i32 __thiscall file_obj_open(FileObject *this,iptr path)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __thiscall file_obj_seek_cur(FileSeekView *this,i32 offset)
+i32 __thiscall file_obj_seek_cur(FileSeekView *self,i32 offset)
 
 {
   i32 result;
   
-  result = file_obj_seek_rel((iptr)this,offset);
+  result = file_obj_seek_rel((iptr)self,offset);
   return result;
 }
 
 /* 00492a40 auto */
-void __thiscall file_obj_read_line(FileReadLineView *this,iptr buf,i32 max_len)
+void __thiscall file_obj_read_line(FileReadLineView *self,iptr buf,i32 max_len)
 
 {
-  file_obj_read_line_impl((iptr)this,buf,max_len);
+  file_obj_read_line_impl((iptr)self,buf,max_len);
   return;
 }
 
 /* 00492a80 auto */
-i32 __thiscall file_obj_get_size(FileObject *this)
+i32 __thiscall file_obj_get_size(FileObject *self)
 
 {
   i32 size;
   
-  size = file_obj_get_size_impl((iptr)this);
+  size = file_obj_get_size_impl((iptr)self);
   return size;
 }
 
@@ -850,7 +850,7 @@ int __cdecl text_open_file_section(int filename,int section)
   else {
     text_close_file();
     crt_strcpy(name2,filename);
-    path_default_extension((iptr)name2,(iptr)&lang_file_ext);
+    path_default_extension(name2,(char*)(&lang_file_ext));
     __getcwd(saved_cwd,0x104);
     __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
     text_file_handle = (FILE *)file_open_path((iptr)name2,(iptr)&str_rt);
@@ -882,7 +882,7 @@ int __cdecl text_open_file_section(int filename,int section)
       }
       line = _fgets(((i8 *)&map_views_block.text_buffer),0xff,text_file_handle);
       if (line != (char *)0x0) {
-        str_strip_newline((iptr)&map_views_block.text_buffer);
+        str_strip_newline((char*)(&map_views_block.text_buffer));
         str_trim((iptr)&map_views_block.text_buffer);
         cmp = __strcmpi(((i8 *)&map_views_block.text_buffer),section_tag);
         if (cmp == 0) {
@@ -928,7 +928,7 @@ i8 * __cdecl text_read_line(int trim)
   result = (i8 *)0x0;
   if (((CRT_FEOF(text_file_handle)) == 0) &&
      (line = _fgets(((i8 *)&map_views_block.text_buffer),0xff,text_file_handle), line != (char *)0x0)) {
-    str_strip_newline((iptr)&map_views_block.text_buffer);
+    str_strip_newline((char*)(&map_views_block.text_buffer));
     if (trim == 1) {
       str_trim((iptr)&map_views_block.text_buffer);
     }
@@ -1189,10 +1189,10 @@ void __cdecl str_append_gold(iptr dest,i32 gold)
 }
 
 /* 004bb370 auto */
-void __thiscall file_obj_read(FileObject *this,iptr buf,i32 size)
+void __thiscall file_obj_read(FileObject *self,iptr buf,i32 size)
 
 {
-  file_obj_read_bytes((iptr)this,buf,size);
+  file_obj_read_bytes((iptr)self,buf,size);
   return;
 }
 
@@ -1343,7 +1343,7 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
   __getcwd(((i8 *)&text_section_index_path),0x104);
   crt_strcat(((i8 *)&text_section_index_path),((i8 *)&text_index_path_sep_str));
   crt_strcat(((i8 *)&text_section_index_path),filename);
-  path_default_extension((iptr)&text_section_index_path,(iptr)&lang_file_ext);
+  path_default_extension((char*)(&text_section_index_path),lang_file_ext);
   _File = (FILE *)file_open_path((iptr)&text_section_index_path,(iptr)&str_rt_6);
   if (_File == (FILE *)0x0) {
     text_section_index_path[0] = 0;
@@ -1353,7 +1353,7 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
       line_offset = _ftell(_File);
       line = _fgets(line_buf,0xff,_File);
       if (line == (char *)0x0) break;
-      str_strip_newline((iptr)line_buf);
+      str_strip_newline(line_buf);
       str_trim((iptr)line_buf);
       if (((line_buf[0] == '@') && ('@' < line_buf[1])) && (line_buf[1] < '[')) {
         len = _strlen(line_buf);
@@ -1950,20 +1950,20 @@ void __cdecl res_unlock(i32 handle)
 }
 
 /* 005d7c00 auto */
-FileObject * __thiscall file_obj_init(FileObject *this)
+FileObject * __thiscall file_obj_init(FileObject *self)
 
 {
-  _memset(this,0,0x98);
-  return this;
+  _memset(self,0,0x98);
+  return self;
 }
 
 /* 005d7c6e auto */
-i32 __thiscall file_obj_close(FileObject *this)
+i32 __thiscall file_obj_close(FileObject *self)
 
 {
   i32 result;
   
-  result = file_map_close(this);
+  result = file_map_close(self);
   return result;
 }
 
