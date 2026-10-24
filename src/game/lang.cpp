@@ -188,3 +188,38 @@ void lang_load_menus(void)
     text_close_file();
     export_english();
 }
+
+/* LABELS.TXT is a numbered list (labels_load: label_string_ids[n] is the
+   n-th line's string in the string pool); n is the structure, "label.<n>"
+   the key.  A translated label is given by label_string in place of its
+   pool string (the pool has a fixed size: translations are kept here). */
+static std::unordered_map<int, std::string> pool_translated;
+
+void lang_add_labels(int count)
+{
+    char key[32];
+    int i;
+    pool_translated.clear();        /* (a new pool: labels reloaded) */
+    for (i = 0; i < count; i++) {
+        snprintf(key, sizeof key, "label.%d", i);
+        set_english(key, label_string(label_string_ids[i]));
+    }
+    if (!translation_loaded)
+        load_translation();
+    for (i = 0; i < count; i++) {
+        snprintf(key, sizeof key, "label.%d", i);
+        std::unordered_map<std::string, std::string>::const_iterator it = translated.find(key);
+        if (it != translated.end())
+            pool_translated[label_string_ids[i]] = it->second;
+    }
+    export_english();
+}
+
+char *lang_pool_text(int string_id)
+{
+    std::unordered_map<int, std::string>::iterator it;
+    if (pool_translated.empty())
+        return 0;
+    it = pool_translated.find(string_id);
+    return it != pool_translated.end() ? &it->second[0] : 0;
+}

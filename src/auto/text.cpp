@@ -1,6 +1,7 @@
 /* The game, text: game text files, strings, resources and files: functions translated from the original
  * (tools/gen_c.py, now edited directly), in address order. */
 #include "auto_common.h"
+#include "lang.h"
 
 /* 0040bbb0 auto */
 void __cdecl text_clear(void)
@@ -386,6 +387,11 @@ char * __cdecl label_string(int index)
 {
   char *cursor;
   
+  /* (port) a translated label (lang.h) */
+  cursor = lang_pool_text(index);
+  if (cursor != 0) {
+    return cursor;
+  }
   cursor = strpool_block_block.strpool_data;
   for (; index != 0; index--) {
     for (; *cursor != '\0'; cursor++) {
@@ -659,6 +665,10 @@ int __cdecl labels_load(void)
   text_close_file();
   if (result < 1) {
     labels_free();
+  }
+  else {
+    /* (port) the labels by key: English recorded, a translation's put in */
+    lang_add_labels(result);
   }
   return result;
 }

@@ -27,6 +27,14 @@ int lang_has(const char *key);
    reads its text files); called before the menus are built. */
 void lang_load_menus(void);
 
+/* The labels (LABELS.TXT, label_string_ids[n]: key "label.<n>"), once
+   labels_load has read them: their English texts recorded, a translation's
+   put in their place. */
+void lang_add_labels(int count);
+
+/* The translation of the string pool's string_id (a label), or 0. */
+char *lang_pool_text(int string_id);
+
 /* (port) The main menu bar: one row per menu title, item or separator, in
    order.  cmd: the command id (0 a separator, MENU_TITLE the menu's title);
    key: its text's key; room: the bytes its text has room for (the Orders
