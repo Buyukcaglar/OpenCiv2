@@ -343,7 +343,7 @@ int __cdecl save_read_game(char *path)
       count_read = _fread(event,0x1bc,1,_File);
       if (count_read == 0) goto close_file;
     }
-    for (event_node = unit_types_block.events_list_head; event_node != 0; event_node = *(int *)(event_node + 0x1bc)) {
+    for (event_node = (int)unit_types_block.events_list_head; event_node != 0; event_node = *(int *)(event_node + 0x1bc)) {
       if (*(int *)(event_node + 8) != 0) {
         event_str = save_read_event_str((iptr)_File);
         *(i32 *)(event_node + 8) = event_str;

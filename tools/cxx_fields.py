@@ -613,7 +613,7 @@ def rewrite_uses(text, m, spans, newtype, oldtype, checks, stats, assign=True, r
             else:
                 wrap = True
         elif nt in ('==', '!='):
-            wrap = not re.match(r'\s*(?:==|!=)\s*(?:0x0|0|nullptr)\b(?!x)', m[gb:])
+            wrap = not re.match(r'\s*(?:==|!=)\s*(?:\(\s*(?:const\s+)?\w+\s*\*\s*\)\s*)?(?:0x0|0|nullptr)\b(?!x)', m[gb:])
             cmp = wrap
         elif pt in ('==', '!='):
             wrap = not re.search(r'\b(?:0x0|0|nullptr)\s*(?:==|!=)\s*$', m[:ga])

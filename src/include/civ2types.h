@@ -793,6 +793,89 @@ static_assert(sizeof(MenuNode) == 0x1c, "");
 #endif
 
 
+/* The buffers of the diff engine's run-length coder (0x14 bytes;
+ * diffeng_rle_encode / diffeng_rle_decode, callers' consecutive locals). */
+typedef struct RleStream {
+    u8 *src;                        /* 0x00 input */
+    u8 *src_end;                    /* 0x04 */
+    u8 *dst;                        /* 0x08 output */
+    u8 *dst_end;                    /* 0x0c its capacity */
+    i32 out_len;                    /* 0x10 bytes written */
+} RleStream;
+#ifdef __cplusplus
+static_assert(sizeof(RleStream) == 0x14, "");
+#endif
+
+
+/* Scenario events (game.cpp). */
+/* One @IF/@THEN event of EVENTS.TXT (0x1c4 bytes; ScenarioEvents.event_list,
+ * events_alloc, events_parse_file).  The first 0x1bc bytes are saved with the
+ * game; the strings live in the events' string pool. */
+typedef struct ScenarioEvent {
+    union { i32 trigger; u8 trigger_bytes[4]; };  /* 0x000 1 UnitKilled, 2 CityTaken, 4 Turn, 8 TurnInterval,
+                                       0x10 Negotiation, 0x20 ScenarioLoaded, 0x40 RandomTurn,
+                                       0x80 NoSchism, 0x100 ReceivedTechnology */
+    union { u32 actions; u8 actions_bytes[4]; };  /* 0x004 1 Text, 2 MoveUnit, 4 CreateUnit,
+                                       8 ChangeMoney, 0x10 PlayWaveFile, 0x20 MakeAggression,
+                                       0x40 JustOnce, 0x80 PlayCDTrack, 0x100 DontPlayWonders,
+                                       0x200 ChangeTerrain, 0x400 DestroyACivilization,
+                                       0x800 GiveTechnology */
+    char *unit_name;                /* 0x008 UnitKilled unit */
+    i32 unit_type;                  /* 0x00c */
+    char *city_name;                /* 0x010 CityTaken city */
+    char *who_name;                 /* 0x014 attacker / Negotiation talker */
+    i32 who_civ;                    /* 0x018 */
+    i32 talker_type;                /* 0x01c 1 human, 2 computer, 4 either */
+    char *whom_name;                /* 0x020 defender / listener / NoSchism, ReceivedTechnology civ */
+    i32 whom_civ;                   /* 0x024 */
+    i32 listener_type;              /* 0x028 1 human, 2 computer, 4 either */
+    i32 turn;                       /* 0x02c Turn (-1 every turn) / TurnInterval interval */
+    i32 denominator;                /* 0x030 RandomTurn */
+    i32 technology;                 /* 0x034 ReceivedTechnology */
+    char *text[20];                 /* 0x038 Text lines */
+    char *move_owner_name;          /* 0x088 MoveUnit */
+    i32 move_owner_civ;             /* 0x08c */
+    char *move_unit_name;           /* 0x090 */
+    i32 move_unit_type;             /* 0x094 */
+    i32 move_count;                 /* 0x098 NumberToMove, -2 all */
+    i32 move_rect[8];               /* 0x09c MapRect: 4 x, y pairs */
+    i32 move_to_x;                  /* 0x0bc */
+    i32 move_to_y;                  /* 0x0c0 */
+    char *aggression_whom_name;     /* 0x0c4 MakeAggression */
+    i32 aggression_whom_civ;        /* 0x0c8 */
+    char *aggression_who_name;      /* 0x0cc */
+    i32 aggression_who_civ;         /* 0x0d0 */
+    char *create_owner_name;        /* 0x0d4 CreateUnit */
+    i32 create_owner_civ;           /* 0x0d8 */
+    char *create_unit_name;         /* 0x0dc */
+    i32 create_unit_type;           /* 0x0e0 */
+    i32 create_locations[20];       /* 0x0e4 10 x, y pairs */
+    i32 create_location_count;      /* 0x134 */
+    i32 create_veteran;             /* 0x138 */
+    char *create_homecity;          /* 0x13c */
+    char *field_140;                /* 0x140 a civ name (saved, copied) */
+    i32 field_144;                  /* 0x144 */
+    char *field_148;                /* 0x148 a unit type name (renamed with the type) */
+    u8 pad_14c[0x28];               /* 0x14c */
+    char *money_receiver_name;      /* 0x174 ChangeMoney */
+    i32 money_receiver_civ;         /* 0x178 */
+    i32 money_amount;               /* 0x17c */
+    i32 negotiation_flag;           /* 0x180 0x1000 for a Negotiation trigger */
+    char *wave_file;                /* 0x184 PlayWaveFile */
+    i32 cd_track;                   /* 0x188 PlayCDTrack */
+    i32 terrain_type;               /* 0x18c ChangeTerrain */
+    i32 terrain_rect[8];            /* 0x190 MapRect: 4 x, y pairs */
+    i32 destroy_civ;                /* 0x1b0 DestroyACivilization */
+    i32 give_tech;                  /* 0x1b4 GiveTechnology */
+    i32 give_tech_civ;              /* 0x1b8 */
+    struct ScenarioEvent *next;     /* 0x1bc */
+    struct ScenarioEvent *prev;     /* 0x1c0 */
+} ScenarioEvent;
+#ifdef __cplusplus
+static_assert(sizeof(ScenarioEvent) == 0x1c4, "");
+#endif
+
+
 /* Graphics (graphics.cpp). */
 /* A GDI DIB section and its memory DC (0x28 bytes, a locked mem_handle block;
  * dib_create*; DibSurface.dib). */

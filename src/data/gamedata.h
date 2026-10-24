@@ -3886,7 +3886,7 @@ struct minimap_window_block {
     int mapgen_land_placed;  /* 0063cba4 */
     u8 mapgen_land_placed_rest[8];
     int taxrate_dialog_active;  /* 0063cbb0 */
-    iptr taxrate_dlg;  /* 0063cbb4 */
+    ViewWindow *taxrate_dlg;  /* 0063cbb4 */
     u8 taxrate_dlg_rest[8];
     i32 eot_blink_timer;  /* 0063cbc0 */
     i32 unit_blink_timer;  /* 0063cbc4 */
@@ -4381,7 +4381,7 @@ struct unit_types_block {
     ushort events_pool_bytes_free;  /* 0064b994 */
     u8 events_pool_bytes_free_rest[2];
     int scenario_event_count;  /* 0064b998 */
-    iptr events_list_head;  /* 0064b99c */
+    ScenarioEvent *events_list_head;  /* 0064b99c */
 };
 #pragma pack(pop)
 extern struct unit_types_block unit_types_block;

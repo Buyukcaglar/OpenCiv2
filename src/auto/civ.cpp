@@ -3698,12 +3698,12 @@ void __cdecl civ_change_password_dialog(iptr civ)
   passwords_scramble();
   if (current_password[0] == '\0') {
     dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1_3,0x1f,(iptr)&str_empty_112,0,0,0,1);
-    password_dialog_set_title((iptr)&dialog2,civ,0x26c);
+    password_dialog_set_title(&dialog2,civ,0x26c);
     result = dialog_run_modal(&dialog2,(iptr)entered,0);
   }
   else {
     dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1,0x1f,(iptr)&str_empty_110,0,0,0,1);
-    password_dialog_set_title((iptr)&dialog2,civ,0x26d);
+    password_dialog_set_title(&dialog2,civ,0x26d);
     result = dialog_run_modal(&dialog2,(iptr)entered,0);
     if (result < 0) goto cleanup;
     result = _strcmp(entered,current_password);
@@ -3712,7 +3712,7 @@ void __cdecl civ_change_password_dialog(iptr civ)
       goto cleanup;
     }
     dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1_2,0x1f,(iptr)&str_empty_111,0,0,0,1);
-    password_dialog_set_title((iptr)&dialog2,civ,0x26c);
+    password_dialog_set_title(&dialog2,civ,0x26c);
     result = dialog_run_modal(&dialog2,(iptr)entered,0);
   }
   if (-1 < result) {
@@ -3749,7 +3749,7 @@ i32 __cdecl civ_password_prompt(int civ)
   dialog_ctor(&dialog2,0x4000);
   seh_state = 0;
   dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1_4,0x1f,(iptr)&str_empty_113,0,0,0,1);
-  password_dialog_set_title((iptr)&dialog2,civ,0x26b);
+  password_dialog_set_title(&dialog2,civ,0x26b);
   entered[0] = '\0';
   dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
   result = dialog_run_modal(&dialog2,(iptr)entered,0);

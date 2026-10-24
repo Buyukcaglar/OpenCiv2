@@ -1234,7 +1234,7 @@ void __cdecl passwords_reset(void); /* 00498784 */
 void __cdecl passwords_refresh_flags(void); /* 0049882b */
 void __cdecl passwords_scramble(void); /* 004988b8 */
 void __cdecl passwords_unscramble(void); /* 00498943 */
-void __cdecl password_dialog_set_title(iptr dialog,int civ,i32 label_id); /* 004989d3 */
+void __cdecl password_dialog_set_title(Dialog *dialog,int civ,i32 label_id); /* 004989d3 */
 i32 __cdecl civ_check_password(iptr civ); /* 00498a5c */
 void __cdecl city_load_citypref(void); /* 00498d40 */
 iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_build); /* 00498e8b */
@@ -1350,9 +1350,9 @@ void __cdecl diffeng_apply_image(int *image_buf,char compressed); /* 004b1de3 */
 void __cdecl diffeng_apply_map_header_image(int *image_buf,char compressed); /* 004b2010 */
 int __cdecl diffeng_read_block(iptr cursor_ptr); /* 004b2123 */
 void __cdecl diffeng_register_blocks(void); /* 004b21d7 */
-int __cdecl diffeng_rle_decoded_size(iptr stream); /* 004b24a2 */
-i32 __cdecl diffeng_rle_decode(iptr stream); /* 004b251a */
-i32 __cdecl diffeng_rle_encode(iptr stream); /* 004b263e */
+int __cdecl diffeng_rle_decoded_size(RleStream *stream); /* 004b24a2 */
+i32 __cdecl diffeng_rle_decode(RleStream *stream); /* 004b251a */
+i32 __cdecl diffeng_rle_encode(RleStream *stream); /* 004b263e */
 void __thiscall diffeng_section_init(DiffEngSection *self,iptr data_ptr,u32 data_size,u32 section_id); /* 004b3080 */
 void __cdecl landmass_set_border_bit(int landmass,iptr bit); /* 004b3110 */
 void __cdecl landmass_compute_borders(void); /* 004b315c */
@@ -1538,7 +1538,7 @@ uint __cdecl editor_check_city_name(const char *name2); /* 004ce71b */
 void __cdecl editor_wnd_on_move_close_dropdowns(void); /* 004ce83d */
 i32 __cdecl editor_input_long(const char *file_name,const char *section,int default_value,iptr out_value); /* 004ce8a4 */
 int __cdecl events_alloc_string(char *text,iptr events,uint min_len); /* 004ce903 */
-void __cdecl events_copy(iptr dst_events,iptr src_events); /* 004ce98e */
+void __cdecl events_copy(ScenarioEvents *dst_events,ScenarioEvents *src_events); /* 004ce98e */
 void __cdecl events_compact(void); /* 004cef35 */
 int __cdecl events_rename_unit_refs(char *old_name,iptr new_name); /* 004cefe9 */
 void __thiscall wnd_set_resize_border(WndBase *self,i32 width); /* 004cff70 */
@@ -1742,18 +1742,18 @@ void __thiscall events_init_string_pool(DialogCore *self,uint pool_size); /* 004
 ScenarioEvents * __thiscall events_ctor(ScenarioEvents *self,i32 pool_size); /* 004fa4be */
 void __thiscall events_dtor(DialogCore *self); /* 004fa569 */
 void __thiscall events_reset(ScenarioEvents *self,i32 pool_size); /* 004fa5d9 */
-void * __thiscall events_alloc(ScenarioEvents *self); /* 004fa617 */
-i32 __thiscall events_action_play_wave(DialogCore *self,iptr event); /* 004fa707 */
-i32 __thiscall events_action_dont_play_wonders(DialogCore *self,iptr event); /* 004fa82d */
-i32 __thiscall events_action_play_cd(DialogCore *self,iptr event); /* 004fa854 */
-i32 __thiscall events_action_change_money(DialogCore *self,iptr event); /* 004fa944 */
-i32 __thiscall events_action_text(Dialog *self,iptr event); /* 004faab0 */
-i32 __thiscall events_action_make_aggression(DialogCore *self,iptr event); /* 004faba6 */
-i32 __thiscall events_action_destroy_civ(DialogCore *self,iptr event); /* 004fad02 */
-i32 __thiscall events_action_give_tech(DialogCore *self,iptr event); /* 004fadfb */
-i32 __thiscall events_action_create_unit(DialogCore *self,iptr event); /* 004faed4 */
-int __thiscall events_action_move_unit(DialogCore *self,iptr event); /* 004fb29f */
-int __thiscall events_action_change_terrain(DialogCore *self,iptr event); /* 004fb5b2 */
+ScenarioEvent * __thiscall events_alloc(ScenarioEvents *self); /* 004fa617 */
+i32 __thiscall events_action_play_wave(DialogCore *self,ScenarioEvent *event); /* 004fa707 */
+i32 __thiscall events_action_dont_play_wonders(DialogCore *self,ScenarioEvent *event); /* 004fa82d */
+i32 __thiscall events_action_play_cd(DialogCore *self,ScenarioEvent *event); /* 004fa854 */
+i32 __thiscall events_action_change_money(DialogCore *self,ScenarioEvent *event); /* 004fa944 */
+i32 __thiscall events_action_text(Dialog *self,ScenarioEvent *event); /* 004faab0 */
+i32 __thiscall events_action_make_aggression(DialogCore *self,ScenarioEvent *event); /* 004faba6 */
+i32 __thiscall events_action_destroy_civ(DialogCore *self,ScenarioEvent *event); /* 004fad02 */
+i32 __thiscall events_action_give_tech(DialogCore *self,ScenarioEvent *event); /* 004fadfb */
+i32 __thiscall events_action_create_unit(DialogCore *self,ScenarioEvent *event); /* 004faed4 */
+int __thiscall events_action_move_unit(DialogCore *self,ScenarioEvent *event); /* 004fb29f */
+int __thiscall events_action_change_terrain(DialogCore *self,ScenarioEvent *event); /* 004fb5b2 */
 i32 __thiscall events_check_turn(ScenarioEvents *self,int turn); /* 004fba0c */
 i32 __thiscall events_check_turn_interval(ScenarioEvents *self,int turn); /* 004fba9c */
 i32 __thiscall events_check_random_turn(ScenarioEvents *self,i32 turn); /* 004fbb2f */
@@ -1763,7 +1763,7 @@ i32 __thiscall events_check_unit_killed(ScenarioEvents *self,int unit_type,int a
 i32 __thiscall events_check_negotiation(ScenarioEvents *self,iptr talker_civ,iptr listener_civ); /* 004fbe84 */
 i32 __thiscall events_check_no_schism(ScenarioEvents *self,iptr civ); /* 004fc20d */
 i32 __thiscall events_check_city_taken(ScenarioEvents *self,iptr city_name,iptr attacker_civ,iptr defender_civ); /* 004fc2bb */
-i32 __thiscall event_run_actions(Dialog *self,iptr event); /* 004fc3ae */
+i32 __thiscall event_run_actions(Dialog *self,ScenarioEvent *event); /* 004fc3ae */
 int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const char *section); /* 004fc516 */
 void __cdecl city_window_font_global_init(void); /* 00500e00 */
 void __cdecl city_window_font_static_init(void); /* 00500e1a */
@@ -2032,7 +2032,7 @@ void __cdecl ai_process_civ_units(void); /* 00543cd6 */
 int __cdecl ui_calc_item_spacing(int count,int item_size,int total_size,iptr out_count,iptr out_remainder); /* 00548b70 */
 void __cdecl sprite_draw_spaced_row(iptr surface,iptr sprite,int x,i32 y,int count,int slots, int spacing,i32 item_width,int spread_extra); /* 00548c78 */
 void __cdecl events_editor_focus_redraw(void); /* 00548df0 */
-void __cdecl events_write_actions(iptr fp,iptr event); /* 00548e23 */
+void __cdecl events_write_actions(iptr fp,ScenarioEvent *event); /* 00548e23 */
 void __cdecl events_write_list(iptr fp); /* 00549aee */
 i32 __cdecl events_write_file(void); /* 0054a4c4 */
 uint __cdecl bits_nth_set(int n,uint mask); /* 0054a874 */

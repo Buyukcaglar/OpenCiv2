@@ -3009,7 +3009,7 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
   uint saved_civ;
   iptr civ;
   iptr advance;
-  void *event;
+  ScenarioEvent *event;
   FILE *file;
   i32 result;
   u8 saved_humans;
@@ -3160,73 +3160,72 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
                   rc = _fputs(((i8 *)&save_events_tag_str),file);
                   if (rc == -1) goto cleanup;
                   count = 0;
-                  for (event = (void *)unit_types_block.events_list_head; event != (void *)0x0;
-                      event = *(void **)((int)event + 0x1bc)) {
+                  for (event = (ScenarioEvent *)(void *)unit_types_block.events_list_head; event != (ScenarioEvent *)0x0;
+                      event = (ScenarioEvent *)(void *)event->next) {
                     count++;
                   }
                   nwritten = _fwrite(&count,4,1,file);
                   if (nwritten == 0) goto cleanup;
-                  for (event = (void *)unit_types_block.events_list_head; event != (void *)0x0;
-                      event = *(void **)((int)event + 0x1bc)) {
+                  for (event = (ScenarioEvent *)(void *)unit_types_block.events_list_head; event != (ScenarioEvent *)0x0;
+                      event = (ScenarioEvent *)(void *)event->next) {
                     nwritten = _fwrite(event,0x1bc,1,file);
                     if (nwritten == 0) goto cleanup;
                   }
-                  for (event = (void *)unit_types_block.events_list_head; event != (void *)0x0;
-                      event = *(void **)((int)event + 0x1bc)) {
-                    if (((((*(int *)((int)event + 8) != 0) &&
-                          (rc = save_write_str((char *)*(i32 *)((int)event + 8),
+                  for (event = (ScenarioEvent *)(void *)unit_types_block.events_list_head; event != (ScenarioEvent *)0x0;
+                      event = (ScenarioEvent *)(void *)event->next) {
+                    if (((((event->unit_name != 0) &&
+                          (rc = save_write_str(event->unit_name,
                                                       (iptr)file), rc == -1)) ||
-                         ((*(int *)((int)event + 0x10) != 0 &&
-                          (rc = save_write_str((char *)*(i32 *)((int)event + 0x10),
+                         ((event->city_name != 0 &&
+                          (rc = save_write_str(event->city_name,
                                                       (iptr)file), rc == -1)))) ||
-                        ((*(int *)((int)event + 0x14) != 0 &&
-                         (rc = save_write_str((char *)*(i32 *)((int)event + 0x14),
+                        ((event->who_name != 0 &&
+                         (rc = save_write_str(event->who_name,
                                                      (iptr)file), rc == -1)))) ||
-                       ((*(int *)((int)event + 0x20) != 0 &&
-                        (rc = save_write_str((char *)*(i32 *)((int)event + 0x20),
+                       ((event->whom_name != 0 &&
+                        (rc = save_write_str(event->whom_name,
                                                     (iptr)file), rc == -1))))
                     goto cleanup;
                     count = 0;
                     while ((count < 0x14 &&
-                           (*(int *)((int)event + count * 4 + 0x38) != 0))) {
-                      rc = save_write_str((char *)*(i32 *)
-                                                  ((int)event + count * 4 + 0x38),
+                           (event->text[count] != 0))) {
+                      rc = save_write_str(event->text[count],
                                                  (iptr)file);
                       if (rc == -1) goto cleanup;
                       count++;
                     }
-                    if ((((((*(int *)((int)event + 0x88) != 0) &&
-                           (rc = save_write_str((char *)*(i32 *)((int)event + 0x88),
+                    if ((((((event->move_owner_name != 0) &&
+                           (rc = save_write_str(event->move_owner_name,
                                                        (iptr)file), rc == -1)) ||
-                          ((*(int *)((int)event + 0x90) != 0 &&
-                           (rc = save_write_str((char *)*(i32 *)((int)event + 0x90),
+                          ((event->move_unit_name != 0 &&
+                           (rc = save_write_str(event->move_unit_name,
                                                        (iptr)file), rc == -1)))) ||
-                         (((*(int *)((int)event + 0xc4) != 0 &&
-                           (rc = save_write_str((char *)*(i32 *)((int)event + 0xc4),
+                         (((event->aggression_whom_name != 0 &&
+                           (rc = save_write_str(event->aggression_whom_name,
                                                        (iptr)file), rc == -1)) ||
-                          ((*(int *)((int)event + 0xcc) != 0 &&
-                           (rc = save_write_str((char *)*(i32 *)((int)event + 0xcc),
+                          ((event->aggression_who_name != 0 &&
+                           (rc = save_write_str(event->aggression_who_name,
                                                        (iptr)file), rc == -1)))))) ||
-                        ((((*(int *)((int)event + 0xd4) != 0 &&
-                           (rc = save_write_str((char *)*(i32 *)((int)event + 0xd4),
+                        ((((event->create_owner_name != 0 &&
+                           (rc = save_write_str(event->create_owner_name,
                                                        (iptr)file), rc == -1)) ||
-                          ((*(int *)((int)event + 0xdc) != 0 &&
-                           (rc = save_write_str((char *)*(i32 *)((int)event + 0xdc),
+                          ((event->create_unit_name != 0 &&
+                           (rc = save_write_str(event->create_unit_name,
                                                        (iptr)file), rc == -1)))) ||
-                         (((*(int *)((int)event + 0x13c) != 0 &&
-                           (rc = save_write_str((char *)*(i32 *)((int)event + 0x13c),
+                         (((event->create_homecity != 0 &&
+                           (rc = save_write_str(event->create_homecity,
                                                        (iptr)file), rc == -1)) ||
-                          ((*(int *)((int)event + 0x140) != 0 &&
-                           (rc = save_write_str((char *)*(i32 *)((int)event + 0x140),
+                          ((event->field_140 != 0 &&
+                           (rc = save_write_str(event->field_140,
                                                        (iptr)file), rc == -1)))))))) ||
-                       ((((*(int *)((int)event + 0x148) != 0 &&
-                          (rc = save_write_str((char *)*(i32 *)((int)event + 0x148),
+                       ((((event->field_148 != 0 &&
+                          (rc = save_write_str(event->field_148,
                                                       (iptr)file), rc == -1)) ||
-                         ((*(int *)((int)event + 0x174) != 0 &&
-                          (rc = save_write_str((char *)*(i32 *)((int)event + 0x174),
+                         ((event->money_receiver_name != 0 &&
+                          (rc = save_write_str(event->money_receiver_name,
                                                       (iptr)file), rc == -1)))) ||
-                        ((*(int *)((int)event + 0x184) != 0 &&
-                         (rc = save_write_str((char *)*(i32 *)((int)event + 0x184),
+                        ((event->wave_file != 0 &&
+                         (rc = save_write_str(event->wave_file,
                                                      (iptr)file), rc == -1))))))
                     goto cleanup;
                   }
@@ -3708,7 +3707,7 @@ void __cdecl events_relink_pool(void)
   
   event_count = unit_types_block.scenario_event_count;
   if (scenario_events_loaded != 0) {
-    unit_types_block.events_list_head = (iptr)unit_types_block.events_pool_base;
+    unit_types_block.events_list_head = (ScenarioEvent *)unit_types_block.events_pool_base;
     event = unit_types_block.events_pool_base;
     string_ptr = unit_types_block.events_pool_base + unit_types_block.scenario_event_count * 0x1c4;
     if ((string_ptr <= unit_types_block.events_pool_base) || (unit_types_block.events_pool_base + unit_types_block.events_pool_size <= string_ptr)) {
@@ -3731,9 +3730,9 @@ void __cdecl events_relink_pool(void)
       event += 0x1c4;
     }
     for (event = (char *)unit_types_block.events_list_head; event != (char *)0x0;
-        event = *(char **)((int)event + 0x1bc)) {
-      if (*(int *)((int)event + 8) != 0) {
-        *(char **)((int)event + 8) = string_ptr;
+        event = (char *)((ScenarioEvent *)event)->next) {
+      if ((int)((ScenarioEvent *)event)->unit_name != 0) {
+        ((ScenarioEvent *)event)->unit_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x10) {
           len_08 = 0xf;
@@ -3744,8 +3743,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_08;
       }
-      if (*(int *)((int)event + 0x10) != 0) {
-        *(char **)((int)event + 0x10) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->city_name != 0) {
+        ((ScenarioEvent *)event)->city_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_10 = 0x18;
@@ -3756,8 +3755,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_10;
       }
-      if (*(int *)((int)event + 0x14) != 0) {
-        *(char **)((int)event + 0x14) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->who_name != 0) {
+        ((ScenarioEvent *)event)->who_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_14 = 0x18;
@@ -3768,8 +3767,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_14;
       }
-      if (*(int *)((int)event + 0x20) != 0) {
-        *(char **)((int)event + 0x20) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->whom_name != 0) {
+        ((ScenarioEvent *)event)->whom_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_20 = 0x18;
@@ -3781,8 +3780,8 @@ void __cdecl events_relink_pool(void)
         string_ptr += len_20;
       }
       for (i = 0; i < 0x14; i++) {
-        if (*(int *)((int)event + 0x38 + i * 4) != 0) {
-          *(char **)((int)event + 0x38 + i * 4) = string_ptr;
+        if ((int)((ScenarioEvent *)event)->text[i] != 0) {
+          ((ScenarioEvent *)event)->text[i] = string_ptr;
           str_len = _strlen(string_ptr);
           if (str_len + 1 < 2) {
             len_slot = 1;
@@ -3794,8 +3793,8 @@ void __cdecl events_relink_pool(void)
           string_ptr += len_slot;
         }
       }
-      if (*(int *)((int)event + 0x88) != 0) {
-        *(char **)((int)event + 0x88) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->move_owner_name != 0) {
+        ((ScenarioEvent *)event)->move_owner_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_88 = 0x18;
@@ -3806,8 +3805,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_88;
       }
-      if (*(int *)((int)event + 0x90) != 0) {
-        *(char **)((int)event + 0x90) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->move_unit_name != 0) {
+        ((ScenarioEvent *)event)->move_unit_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x10) {
           len_90 = 0xf;
@@ -3818,8 +3817,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_90;
       }
-      if (*(int *)((int)event + 0xc4) != 0) {
-        *(char **)((int)event + 0xc4) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->aggression_whom_name != 0) {
+        ((ScenarioEvent *)event)->aggression_whom_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_c4 = 0x18;
@@ -3830,8 +3829,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_c4;
       }
-      if (*(int *)((int)event + 0xcc) != 0) {
-        *(char **)((int)event + 0xcc) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->aggression_who_name != 0) {
+        ((ScenarioEvent *)event)->aggression_who_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_cc = 0x18;
@@ -3842,8 +3841,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_cc;
       }
-      if (*(int *)((int)event + 0xd4) != 0) {
-        *(char **)((int)event + 0xd4) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->create_owner_name != 0) {
+        ((ScenarioEvent *)event)->create_owner_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_d4 = 0x18;
@@ -3854,8 +3853,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_d4;
       }
-      if (*(int *)((int)event + 0xdc) != 0) {
-        *(char **)((int)event + 0xdc) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->create_unit_name != 0) {
+        ((ScenarioEvent *)event)->create_unit_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x10) {
           len_dc = 0xf;
@@ -3866,8 +3865,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_dc;
       }
-      if (*(int *)((int)event + 0x13c) != 0) {
-        *(char **)((int)event + 0x13c) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->create_homecity != 0) {
+        ((ScenarioEvent *)event)->create_homecity = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_13c = 0x18;
@@ -3878,8 +3877,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_13c;
       }
-      if (*(int *)((int)event + 0x140) != 0) {
-        *(char **)((int)event + 0x140) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->field_140 != 0) {
+        ((ScenarioEvent *)event)->field_140 = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_140 = 0x18;
@@ -3890,8 +3889,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_140;
       }
-      if (*(int *)((int)event + 0x148) != 0) {
-        *(char **)((int)event + 0x148) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->field_148 != 0) {
+        ((ScenarioEvent *)event)->field_148 = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x10) {
           len_148 = 0xf;
@@ -3902,8 +3901,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_148;
       }
-      if (*(int *)((int)event + 0x174) != 0) {
-        *(char **)((int)event + 0x174) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->money_receiver_name != 0) {
+        ((ScenarioEvent *)event)->money_receiver_name = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 0x19) {
           len_174 = 0x18;
@@ -3914,8 +3913,8 @@ void __cdecl events_relink_pool(void)
         }
         string_ptr += len_174;
       }
-      if (*(int *)((int)event + 0x184) != 0) {
-        *(char **)((int)event + 0x184) = string_ptr;
+      if ((int)((ScenarioEvent *)event)->wave_file != 0) {
+        ((ScenarioEvent *)event)->wave_file = string_ptr;
         str_len = _strlen(string_ptr);
         if (str_len + 1 < 2) {
           len_184 = 1;
@@ -6008,7 +6007,7 @@ void __cdecl passwords_unscramble(void)
 }
 
 /* 004989d3 auto */
-void __cdecl password_dialog_set_title(iptr dialog,int civ,i32 label_id)
+void __cdecl password_dialog_set_title(Dialog *dialog,int civ,i32 label_id)
 
 {
   size_t title_len;
@@ -6018,9 +6017,9 @@ void __cdecl password_dialog_set_title(iptr dialog,int civ,i32 label_id)
   crt_strcpy(title,(const char *)(&civ_names[civ].leader_name));
   str_append_label((iptr)title,label_id);
   title_len = _strlen(title);
-  title_mem = memblock_alloc(dialog + 0x254,title_len + 1);
-  *(i32 *)(dialog + 0x134) = title_mem;
-  crt_strcpy((char *)((void *)*(i32 *)(dialog + 0x134)),title);
+  title_mem = memblock_alloc((iptr)(dialog->string_pool),title_len + 1);
+  dialog->title_text = title_mem;
+  crt_strcpy((char *)((void *)dialog->title_text),title);
   return;
 }
 
@@ -6938,7 +6937,7 @@ i32 __cdecl diffeng_build_full_image(iptr out_buf)
       crt_memcpy(src_copy,(const void *)buf,write_pos);
       dst_begin = *(i32 *)out_buf;
       dst_end = write_pos + *(int *)out_buf;
-      encoded = diffeng_rle_encode((iptr)&src_copy);
+      encoded = diffeng_rle_encode((RleStream *)&src_copy);
       if (encoded == 0) {
         error_code = 0xffffffff;
         result = error_code;
@@ -7045,14 +7044,14 @@ void __cdecl diffeng_apply_image(int *image_buf,char compressed)
     src_begin = *image_buf;
     src_size = __msize((void *)*image_buf);
     src_end = src_begin + src_size;
-    total_size = diffeng_rle_decoded_size((iptr)&src_begin);
+    total_size = diffeng_rle_decoded_size((RleStream *)&src_begin);
     dst_buf = operator_new(total_size);
     if (dst_buf == (void *)0x0) {
       dbg_log((const char *)&str_failed_to_allocate_buffer_2_for_game_sta);
       return;
     }
     dst_end = (int)dst_buf + total_size;
-    decoded = diffeng_rle_decode((iptr)&src_begin);
+    decoded = diffeng_rle_decode((RleStream *)&src_begin);
     if (decoded == 0) {
       dbg_log((const char *)&str_failed_to_rllbufferdecode_in_setgamestat);
       return;
@@ -7179,16 +7178,16 @@ void __cdecl diffeng_register_blocks(void)
 }
 
 /* 004b24a2 auto */
-int __cdecl diffeng_rle_decoded_size(iptr stream)
+int __cdecl diffeng_rle_decoded_size(RleStream *stream)
 
 {
   uint code;
   int total;
   ushort *src;
   
-  src = *(ushort **)stream;
+  src = (ushort *)stream->src;
   total = 0;
-  while (src < *(ushort **)(stream + 4)) {
+  while (src < (ushort *)stream->src_end) {
     code = (uint)*src;
     if (code < 0x8000) {
       src = (ushort *)((int)src + 3);
@@ -7202,7 +7201,7 @@ int __cdecl diffeng_rle_decoded_size(iptr stream)
 }
 
 /* 004b251a auto */
-i32 __cdecl diffeng_rle_decode(iptr stream)
+i32 __cdecl diffeng_rle_decode(RleStream *stream)
 
 {
   ushort *payload;
@@ -7213,13 +7212,13 @@ i32 __cdecl diffeng_rle_decode(iptr stream)
   void *dst;
   
   decoded_size = diffeng_rle_decoded_size(stream);
-  if ((uint)(*(int *)(stream + 0xc) - *(int *)(stream + 8)) < decoded_size) {
+  if ((uint)((int)stream->dst_end - (int)stream->dst) < decoded_size) {
     result = 0;
   }
   else {
-    src = *(ushort **)stream;
-    dst = *(void **)(stream + 8);
-    while (src < *(ushort **)(stream + 4)) {
+    src = (ushort *)stream->src;
+    dst = (void *)stream->dst;
+    while (src < (ushort *)stream->src_end) {
       run_len = *src;
       payload = src + 1;
       if (run_len < 0x7fff) {
@@ -7233,14 +7232,14 @@ i32 __cdecl diffeng_rle_decode(iptr stream)
       }
       dst = (void *)((int)dst + (uint)run_len);
     }
-    *(int *)(stream + 0x10) = (int)dst - *(int *)(stream + 8);
+    stream->out_len = (int)dst - (int)stream->dst;
     result = 1;
   }
   return result;
 }
 
 /* 004b263e auto */
-i32 __cdecl diffeng_rle_encode(iptr stream)
+i32 __cdecl diffeng_rle_encode(RleStream *stream)
 
 {
   short *code_ptr;
@@ -7253,18 +7252,18 @@ i32 __cdecl diffeng_rle_encode(iptr stream)
   uint run_len;
   uint out_len;
   
-  dst = *(short **)(stream + 8);
-  run_start = *(char **)stream;
+  dst = (short *)stream->dst;
+  run_start = (char *)stream->src;
   scan = run_start + 1;
-  src_len = *(int *)(stream + 4) - *(int *)stream;
+  src_len = (int)stream->src_end - (int)stream->src;
   out_len = 0;
-  dst_capacity = *(int *)(stream + 0xc) - *(int *)(stream + 8);
+  dst_capacity = (int)stream->dst_end - (int)stream->dst;
   do {
-    if (*(char **)(stream + 4) <= run_start) {
-      *(uint *)(stream + 0x10) = out_len;
+    if ((char *)stream->src_end <= run_start) {
+      stream->out_len = out_len;
       return 1;
     }
-    for (; (scan < *(char **)(stream + 4) && (*scan == *run_start)); scan = scan + 1
+    for (; (scan < (char *)stream->src_end && (*scan == *run_start)); scan = scan + 1
         ) {
     }
     run_len = (int)scan - (int)run_start;
@@ -7291,7 +7290,7 @@ i32 __cdecl diffeng_rle_encode(iptr stream)
       }
       run_start = scan;
     }
-    for (; (scan < *(char **)(stream + 4) && (scan[1] != *scan));
+    for (; (scan < (char *)stream->src_end && (scan[1] != *scan));
         scan = scan + 1) {
     }
     run_len = (int)scan - (int)run_start;
@@ -7370,143 +7369,143 @@ int __cdecl events_alloc_string(char *text,iptr events,uint min_len)
 }
 
 /* 004ce98e auto */
-void __cdecl events_copy(iptr dst_events,iptr src_events)
+void __cdecl events_copy(ScenarioEvents *dst_events,ScenarioEvents *src_events)
 
 {
-  int new_event;
+  ScenarioEvent *new_event;
   i32 str;
-  uptr dst_event;
-  iptr src_event;
+  ScenarioEvent *dst_event;
+  ScenarioEvent *src_event;
   int i;
   
-  for (src_event = *(iptr *)(src_events + 0x30c); src_event != 0; src_event = *(iptr *)(src_event + 0x1bc)) {
-    new_event = (int)events_alloc((ScenarioEvents *)dst_events);
+  for (src_event = src_events->event_list; src_event != 0; src_event = src_event->next) {
+    new_event = events_alloc(dst_events);
     if (new_event == 0) {
       error_report(0xfffffff7,3,0,0,0);
     }
     crt_memcpy((void *)new_event,(const void *)src_event,0x1bc);
   }
-  src_event = *(iptr *)(src_events + 0x30c);
-  dst_event = *(uptr *)(dst_events + 0x30c);
+  src_event = src_events->event_list;
+  dst_event = dst_events->event_list;
   do {
     if (src_event == 0) {
       return;
     }
-    if (*(int *)(src_event + 8) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 8),dst_events,0xf);
-      *(i32 *)(dst_event + 8) = str;
-      if (*(int *)(dst_event + 8) == 0) {
+    if (src_event->unit_name != 0) {
+      str = events_alloc_string(src_event->unit_name,(iptr)dst_events,0xf);
+      dst_event->unit_name = (char *)str;
+      if (dst_event->unit_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x10) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x10),dst_events,0x18);
-      *(i32 *)(dst_event + 0x10) = str;
-      if (*(int *)(dst_event + 0x10) == 0) {
+    if (src_event->city_name != 0) {
+      str = events_alloc_string(src_event->city_name,(iptr)dst_events,0x18);
+      dst_event->city_name = (char *)str;
+      if (dst_event->city_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x14) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x14),dst_events,0x18);
-      *(i32 *)(dst_event + 0x14) = str;
-      if (*(int *)(dst_event + 0x14) == 0) {
+    if (src_event->who_name != 0) {
+      str = events_alloc_string(src_event->who_name,(iptr)dst_events,0x18);
+      dst_event->who_name = (char *)str;
+      if (dst_event->who_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x20) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x20),dst_events,0x18);
-      *(i32 *)(dst_event + 0x20) = str;
-      if (*(int *)(dst_event + 0x20) == 0) {
+    if (src_event->whom_name != 0) {
+      str = events_alloc_string(src_event->whom_name,(iptr)dst_events,0x18);
+      dst_event->whom_name = (char *)str;
+      if (dst_event->whom_name == 0) {
         return;
       }
     }
-    for (i = 0; (i < 0x14 && (*(int *)(src_event + 0x38 + i * 4) != 0));
+    for (i = 0; (i < 0x14 && (src_event->text[i] != 0));
         i = i + 1) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x38 + i * 4),dst_events,1);
-      *(i32 *)(dst_event + 0x38 + i * 4) = str;
-      if (*(int *)(dst_event + 0x38 + i * 4) == 0) {
+      str = events_alloc_string(src_event->text[i],(iptr)dst_events,1);
+      dst_event->text[i] = (char *)str;
+      if (dst_event->text[i] == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x88) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x88),dst_events,0x18);
-      *(i32 *)(dst_event + 0x88) = str;
-      if (*(int *)(dst_event + 0x88) == 0) {
+    if (src_event->move_owner_name != 0) {
+      str = events_alloc_string(src_event->move_owner_name,(iptr)dst_events,0x18);
+      dst_event->move_owner_name = (char *)str;
+      if (dst_event->move_owner_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x90) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x90),dst_events,0xf);
-      *(i32 *)(dst_event + 0x90) = str;
-      if (*(int *)(dst_event + 0x90) == 0) {
+    if (src_event->move_unit_name != 0) {
+      str = events_alloc_string(src_event->move_unit_name,(iptr)dst_events,0xf);
+      dst_event->move_unit_name = (char *)str;
+      if (dst_event->move_unit_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0xc4) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0xc4),dst_events,0x18);
-      *(i32 *)(dst_event + 0xc4) = str;
-      if (*(int *)(dst_event + 0xc4) == 0) {
+    if (src_event->aggression_whom_name != 0) {
+      str = events_alloc_string(src_event->aggression_whom_name,(iptr)dst_events,0x18);
+      dst_event->aggression_whom_name = (char *)str;
+      if (dst_event->aggression_whom_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0xcc) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0xcc),dst_events,0x18);
-      *(i32 *)(dst_event + 0xcc) = str;
-      if (*(int *)(dst_event + 0xcc) == 0) {
+    if (src_event->aggression_who_name != 0) {
+      str = events_alloc_string(src_event->aggression_who_name,(iptr)dst_events,0x18);
+      dst_event->aggression_who_name = (char *)str;
+      if (dst_event->aggression_who_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0xd4) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0xd4),dst_events,0x18);
-      *(i32 *)(dst_event + 0xd4) = str;
-      if (*(int *)(dst_event + 0xd4) == 0) {
+    if (src_event->create_owner_name != 0) {
+      str = events_alloc_string(src_event->create_owner_name,(iptr)dst_events,0x18);
+      dst_event->create_owner_name = (char *)str;
+      if (dst_event->create_owner_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0xdc) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0xdc),dst_events,0xf);
-      *(i32 *)(dst_event + 0xdc) = str;
-      if (*(int *)(dst_event + 0xdc) == 0) {
+    if (src_event->create_unit_name != 0) {
+      str = events_alloc_string(src_event->create_unit_name,(iptr)dst_events,0xf);
+      dst_event->create_unit_name = (char *)str;
+      if (dst_event->create_unit_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x13c) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x13c),dst_events,0x18);
-      *(i32 *)(dst_event + 0x13c) = str;
-      if (*(int *)(dst_event + 0x13c) == 0) {
+    if (src_event->create_homecity != 0) {
+      str = events_alloc_string(src_event->create_homecity,(iptr)dst_events,0x18);
+      dst_event->create_homecity = (char *)str;
+      if (dst_event->create_homecity == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x140) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x140),dst_events,0x18);
-      *(i32 *)(dst_event + 0x140) = str;
-      if (*(int *)(dst_event + 0x140) == 0) {
+    if (src_event->field_140 != 0) {
+      str = events_alloc_string(src_event->field_140,(iptr)dst_events,0x18);
+      dst_event->field_140 = (char *)str;
+      if (dst_event->field_140 == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x148) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x148),dst_events,0xf);
-      *(i32 *)(dst_event + 0x148) = str;
-      if (*(int *)(dst_event + 0x148) == 0) {
+    if (src_event->field_148 != 0) {
+      str = events_alloc_string(src_event->field_148,(iptr)dst_events,0xf);
+      dst_event->field_148 = (char *)str;
+      if (dst_event->field_148 == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x174) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x174),dst_events,0x18);
-      *(i32 *)(dst_event + 0x174) = str;
-      if (*(int *)(dst_event + 0x174) == 0) {
+    if (src_event->money_receiver_name != 0) {
+      str = events_alloc_string(src_event->money_receiver_name,(iptr)dst_events,0x18);
+      dst_event->money_receiver_name = (char *)str;
+      if (dst_event->money_receiver_name == 0) {
         return;
       }
     }
-    if (*(int *)(src_event + 0x184) != 0) {
-      str = events_alloc_string((char *)*(i32 *)(src_event + 0x184),dst_events,1);
-      *(i32 *)(dst_event + 0x184) = str;
-      if (*(int *)(dst_event + 0x184) == 0) {
+    if (src_event->wave_file != 0) {
+      str = events_alloc_string(src_event->wave_file,(iptr)dst_events,1);
+      dst_event->wave_file = (char *)str;
+      if (dst_event->wave_file == 0) {
         return;
       }
     }
-    src_event = *(iptr *)(src_event + 0x1bc);
-    dst_event = *(uptr *)(dst_event + 0x1bc);
+    src_event = src_event->next;
+    dst_event = dst_event->next;
   } while( true );
 }
 
@@ -7523,9 +7522,9 @@ void __cdecl events_compact(void)
   events_ctor(&temp_events,50000);
   eh_state = 0;
   events_reset(&temp_events,50000);
-  events_copy((iptr)&temp_events,(iptr)&unit_types_block.scenario_events);
+  events_copy(&temp_events,(ScenarioEvents *)&unit_types_block.scenario_events);
   events_reset((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events),50000);
-  events_copy((iptr)&unit_types_block.scenario_events,(iptr)&temp_events);
+  events_copy((ScenarioEvents *)&unit_types_block.scenario_events,&temp_events);
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004cefc5 */ { events_dtor((DialogCore *)&temp_events); }
   return;
@@ -7536,36 +7535,36 @@ int __cdecl events_rename_unit_refs(char *old_name,iptr new_name)
 
 {
   int cmp;
-  iptr event;
+  ScenarioEvent *event;
   i32 count;
   
   count = 0;
-  for (event = unit_types_block.events_list_head; event != 0; event = *(iptr *)(event + 0x1bc)) {
-    if (*(int *)(event + 8) != 0) {
-      cmp = _strcmp(*(char **)(event + 8),old_name);
+  for (event = unit_types_block.events_list_head; event != 0; event = event->next) {
+    if (event->unit_name != 0) {
+      cmp = _strcmp(event->unit_name,old_name);
       if (cmp == 0) {
-        _strncpy(*(char **)(event + 8),(char *)new_name,0xf);
+        _strncpy(event->unit_name,(char *)new_name,0xf);
         count++;
       }
     }
-    if (*(int *)(event + 0x90) != 0) {
-      cmp = _strcmp(*(char **)(event + 0x90),old_name);
+    if (event->move_unit_name != 0) {
+      cmp = _strcmp(event->move_unit_name,old_name);
       if (cmp == 0) {
-        _strncpy(*(char **)(event + 0x90),(char *)new_name,0xf);
+        _strncpy(event->move_unit_name,(char *)new_name,0xf);
         count++;
       }
     }
-    if (*(int *)(event + 0xdc) != 0) {
-      cmp = _strcmp(*(char **)(event + 0xdc),old_name);
+    if (event->create_unit_name != 0) {
+      cmp = _strcmp(event->create_unit_name,old_name);
       if (cmp == 0) {
-        _strncpy(*(char **)(event + 0xdc),(char *)new_name,0xf);
+        _strncpy(event->create_unit_name,(char *)new_name,0xf);
         count++;
       }
     }
-    if (*(int *)(event + 0x148) != 0) {
-      cmp = _strcmp(*(char **)(event + 0x148),old_name);
+    if (event->field_148 != 0) {
+      cmp = _strcmp(event->field_148,old_name);
       if (cmp == 0) {
-        _strncpy(*(char **)(event + 0x148),(char *)new_name,0xf);
+        _strncpy(event->field_148,(char *)new_name,0xf);
         count++;
       }
     }
@@ -7864,32 +7863,32 @@ void __thiscall events_reset(ScenarioEvents *self,i32 pool_size)
 }
 
 /* 004fa617 auto */
-void * __thiscall events_alloc(ScenarioEvents *self)
+ScenarioEvent * __thiscall events_alloc(ScenarioEvents *self)
 
 {
-  void *_Dst;
-  uptr last;
+  ScenarioEvent *_Dst;
+  ScenarioEvent *last;
   
   last = self->event_list;
   if (last != 0) {
-    for (; *(int *)(last + 0x1bc) != 0; last = *(uptr *)(last + 0x1bc)) {
+    for (; (int)last->next != 0; last = last->next) {
     }
   }
-  _Dst = (void *)memblock_alloc((iptr)(self->events_string_pool),0x1c4);
+  _Dst = (ScenarioEvent *)(void *)memblock_alloc((iptr)(self->events_string_pool),0x1c4);
   if (_Dst == (void *)0x0) {
-    _Dst = (void *)0x0;
+    _Dst = (ScenarioEvent *)(void *)0x0;
   }
   else {
     _memset(_Dst,0,0x1c4);
     if (last == 0) {
-      self->event_list = (uptr)_Dst;
-      *(i32 *)((int)_Dst + 0x1bc) = 0;
-      *(i32 *)((int)_Dst + 0x1c0) = 0;
+      self->event_list = _Dst;
+      _Dst->next = 0;
+      _Dst->prev = 0;
     }
     else {
-      *(void **)(last + 0x1bc) = _Dst;
-      *(uptr *)((int)_Dst + 0x1c0) = last;
-      *(i32 *)((int)_Dst + 0x1bc) = 0;
+      last->next = _Dst;
+      _Dst->prev = last;
+      _Dst->next = 0;
     }
     self->event_count++;
   }
@@ -7897,7 +7896,7 @@ void * __thiscall events_alloc(ScenarioEvents *self)
 }
 
 /* 004fa707 auto */
-i32 __thiscall events_action_play_wave(DialogCore *self,iptr event)
+i32 __thiscall events_action_play_wave(DialogCore *self,ScenarioEvent *event)
 
 {
   i32 result;
@@ -7908,15 +7907,15 @@ i32 __thiscall events_action_play_wave(DialogCore *self,iptr event)
     result = 0;
   }
   else {
-    if (*(int *)(event + 0x184) != 0) {
+    if (event->wave_file != 0) {
       crt_strcpy(path,((i8 *)&net_map_lock_slots_block.scenario_dir_path));
       crt_strcat(path,str_sound_2);
-      crt_strcat(path,(const char *)((const void *)*(i32 *)(event + 0x184)));
+      crt_strcat(path,(const char *)((const void *)event->wave_file));
       exists = file_exists((const char *)path);
       if (exists == 0) {
         crt_strcpy(path,((i8 *)&civ_saved_cursor_x_block.game_home_dir));
         crt_strcat(path,str_sound_3);
-        crt_strcat(path,(const char *)((const void *)*(i32 *)(event + 0x184)));
+        crt_strcat(path,(const char *)((const void *)event->wave_file));
         exists = file_exists((const char *)path);
         if (exists != 0) {
           snd_wave_play((const char *)path,0,0,0);
@@ -7932,7 +7931,7 @@ i32 __thiscall events_action_play_wave(DialogCore *self,iptr event)
 }
 
 /* 004fa82d auto */
-i32 __thiscall events_action_dont_play_wonders(DialogCore *self,iptr event)
+i32 __thiscall events_action_dont_play_wonders(DialogCore *self,ScenarioEvent *event)
 
 {
   game_palette_block.event_dont_play_wonders = 1;
@@ -7940,7 +7939,7 @@ i32 __thiscall events_action_dont_play_wonders(DialogCore *self,iptr event)
 }
 
 /* 004fa854 auto */
-i32 __thiscall events_action_play_cd(DialogCore *self,iptr event)
+i32 __thiscall events_action_play_cd(DialogCore *self,ScenarioEvent *event)
 
 {
   i32 result;
@@ -7955,11 +7954,11 @@ i32 __thiscall events_action_play_cd(DialogCore *self,iptr event)
     snd_cd_close();
   }
   if (((track_count == 10) || (track_count == 0x12)) || ((track_count == 0x18 || (track_count == 0xc)))) {
-    if ((*(int *)(event + 0x188) < 2) || (track_count < *(int *)(event + 0x188))) {
+    if ((event->cd_track < 2) || (track_count < event->cd_track)) {
       result = 0;
     }
     else {
-      music_play_track(*(i32 *)(event + 0x188),1);
+      music_play_track(event->cd_track,1);
       result = 1;
     }
   }
@@ -7970,24 +7969,24 @@ i32 __thiscall events_action_play_cd(DialogCore *self,iptr event)
 }
 
 /* 004fa944 auto */
-i32 __thiscall events_action_change_money(DialogCore *self,iptr event)
+i32 __thiscall events_action_change_money(DialogCore *self,ScenarioEvent *event)
 
 {
   i32 result;
   int new_gold;
   iptr civ;
   
-  if (*(int *)(event + 0x178) == -3) {
-    civ = *(iptr *)(event + 0x18);
+  if (event->money_receiver_civ == -3) {
+    civ = event->who_civ;
   }
-  else if (*(int *)(event + 0x178) == -4) {
-    civ = *(iptr *)(event + 0x24);
+  else if (event->money_receiver_civ == -4) {
+    civ = event->whom_civ;
   }
-  else if (*(int *)(event + 0x178) == -4) {
-    civ = *(iptr *)(event + 0x24);
+  else if (event->money_receiver_civ == -4) {
+    civ = event->whom_civ;
   }
   else {
-    civ = *(iptr *)(event + 0x178);
+    civ = event->money_receiver_civ;
   }
   if ((civ < 1) || (7 < civ)) {
     result = 0;
@@ -7996,9 +7995,9 @@ i32 __thiscall events_action_change_money(DialogCore *self,iptr event)
     result = 0;
   }
   else {
-    new_gold = *(int *)(event + 0x17c) + civs[civ].gold;
+    new_gold = event->money_amount + civs[civ].gold;
     if ((new_gold < 0) || (30000 < new_gold)) {
-      if (*(int *)(event + 0x17c) < 0) {
+      if (event->money_amount < 0) {
         civs[civ].gold = 0;
       }
       else {
@@ -8014,7 +8013,7 @@ i32 __thiscall events_action_change_money(DialogCore *self,iptr event)
 }
 
 /* 004faab0 auto */
-i32 __thiscall events_action_text(Dialog *self,iptr event)
+i32 __thiscall events_action_text(Dialog *self,ScenarioEvent *event)
 
 {
   int line;
@@ -8023,12 +8022,12 @@ i32 __thiscall events_action_text(Dialog *self,iptr event)
   arg_count = 0;
   dialog_init_default(self);
   for (line = 0; line < 0x14; line++) {
-    if (*(int *)(event + 0x38 + line * 4) != 0) {
+    if (event->text[line] != 0) {
       dialog_add_line
-                ((DialogAddLineView *)self,(const char *)(*(iptr *)(event + 0x38 + line * 4)),0xffffffff,0xffffffff,
+                ((DialogAddLineView *)self,(const char *)event->text[line],0xffffffff,0xffffffff,
                  0xffffffff,0);
       if (2 < game.multiplayer) {
-        crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + arg_count * 0x104,(const char *)((const void *)*(i32 *)(event + 0x38 + line * 4)));
+        crt_strcpy(((i8 *)&minimap_window_block.text_string_args) + arg_count * 0x104,(const char *)event->text[line]);
         arg_count++;
       }
     }
@@ -8043,36 +8042,36 @@ i32 __thiscall events_action_text(Dialog *self,iptr event)
 }
 
 /* 004faba6 auto */
-i32 __thiscall events_action_make_aggression(DialogCore *self,iptr event)
+i32 __thiscall events_action_make_aggression(DialogCore *self,ScenarioEvent *event)
 
 {
   i32 result;
   int civ2;
   int civ;
   
-  if (*(int *)(event + 0xd0) == -3) {
-    civ2 = *(int *)(event + 0x18);
+  if (event->aggression_who_civ == -3) {
+    civ2 = event->who_civ;
   }
-  else if (*(int *)(event + 0xd0) == -4) {
-    civ2 = *(int *)(event + 0x24);
+  else if (event->aggression_who_civ == -4) {
+    civ2 = event->whom_civ;
   }
-  else if (*(int *)(event + 0xd0) == -4) {
-    civ2 = *(int *)(event + 0x24);
-  }
-  else {
-    civ2 = *(int *)(event + 0xd0);
-  }
-  if (*(int *)(event + 200) == -3) {
-    civ = *(int *)(event + 0x18);
-  }
-  else if (*(int *)(event + 200) == -4) {
-    civ = *(int *)(event + 0x24);
-  }
-  else if (*(int *)(event + 200) == -4) {
-    civ = *(int *)(event + 0x24);
+  else if (event->aggression_who_civ == -4) {
+    civ2 = event->whom_civ;
   }
   else {
-    civ = *(int *)(event + 200);
+    civ2 = event->aggression_who_civ;
+  }
+  if (event->aggression_whom_civ == -3) {
+    civ = event->who_civ;
+  }
+  else if (event->aggression_whom_civ == -4) {
+    civ = event->whom_civ;
+  }
+  else if (event->aggression_whom_civ == -4) {
+    civ = event->whom_civ;
+  }
+  else {
+    civ = event->aggression_whom_civ;
   }
   if (((civ < 1) || (7 < civ)) ||
      ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0)) {
@@ -8089,23 +8088,23 @@ i32 __thiscall events_action_make_aggression(DialogCore *self,iptr event)
 }
 
 /* 004fad02 auto */
-i32 __thiscall events_action_destroy_civ(DialogCore *self,iptr event)
+i32 __thiscall events_action_destroy_civ(DialogCore *self,ScenarioEvent *event)
 
 {
   i32 result;
   int civ;
   
-  if (*(int *)(event + 0x1b0) == -3) {
-    civ = *(int *)(event + 0x18);
+  if (event->destroy_civ == -3) {
+    civ = event->who_civ;
   }
-  else if (*(int *)(event + 0x1b0) == -4) {
-    civ = *(int *)(event + 0x24);
+  else if (event->destroy_civ == -4) {
+    civ = event->whom_civ;
   }
-  else if (*(int *)(event + 0x1b0) == -4) {
-    civ = *(int *)(event + 0x24);
+  else if (event->destroy_civ == -4) {
+    civ = event->whom_civ;
   }
   else {
-    civ = *(int *)(event + 0x1b0);
+    civ = event->destroy_civ;
   }
   if (((civ < 1) || (7 < civ)) ||
      ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0)) {
@@ -8123,37 +8122,37 @@ i32 __thiscall events_action_destroy_civ(DialogCore *self,iptr event)
 }
 
 /* 004fadfb auto */
-i32 __thiscall events_action_give_tech(DialogCore *self,iptr event)
+i32 __thiscall events_action_give_tech(DialogCore *self,ScenarioEvent *event)
 
 {
   i32 result;
   int civ;
   
-  if (*(int *)(event + 0x1b8) == -3) {
-    civ = *(int *)(event + 0x18);
+  if (event->give_tech_civ == -3) {
+    civ = event->who_civ;
   }
-  else if (*(int *)(event + 0x1b8) == -4) {
-    civ = *(int *)(event + 0x24);
+  else if (event->give_tech_civ == -4) {
+    civ = event->whom_civ;
   }
-  else if (*(int *)(event + 0x1b8) == -4) {
-    civ = *(int *)(event + 0x24);
+  else if (event->give_tech_civ == -4) {
+    civ = event->whom_civ;
   }
   else {
-    civ = *(int *)(event + 0x1b8);
+    civ = event->give_tech_civ;
   }
   if (((civ < 1) || (7 < civ)) ||
      ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0)) {
     result = 0;
   }
   else {
-    civ_give_advance(civ,*(iptr *)(event + 0x1b4),0,0,0);
+    civ_give_advance(civ,event->give_tech,0,0,0);
     result = 1;
   }
   return result;
 }
 
 /* 004faed4 auto */
-i32 __thiscall events_action_create_unit(DialogCore *self,iptr event)
+i32 __thiscall events_action_create_unit(DialogCore *self,ScenarioEvent *event)
 
 {
   iptr x;
@@ -8172,29 +8171,29 @@ i32 __thiscall events_action_create_unit(DialogCore *self,iptr event)
   
   x2 = 10000;
   y2 = 10000;
-  if (*(int *)(event + 0xd8) == -3) {
-    civ = *(uptr *)(event + 0x18);
+  if (event->create_owner_civ == -3) {
+    civ = (uptr)event->who_civ;
   }
-  else if (*(int *)(event + 0xd8) == -4) {
-    civ = *(uptr *)(event + 0x24);
+  else if (event->create_owner_civ == -4) {
+    civ = (uptr)event->whom_civ;
   }
-  else if (*(int *)(event + 0xd8) == -4) {
-    civ = *(uptr *)(event + 0x24);
+  else if (event->create_owner_civ == -4) {
+    civ = (uptr)event->whom_civ;
   }
   else {
-    civ = *(uptr *)(event + 0xd8);
+    civ = (uptr)event->create_owner_civ;
   }
   if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0) {
     result = 0;
   }
   else {
-    for (loc = 0; y = y2, x = x2, loc < *(int *)(event + 0x134);
+    for (loc = 0; y = y2, x = x2, loc < event->create_location_count;
         loc = loc + 1) {
-      x = *(iptr *)(event + 0xe4 + loc * 8);
-      y = *(iptr *)(event + 0xe8 + loc * 8);
+      x = event->create_locations[loc * 2];
+      y = event->create_locations[loc * 2 + 1];
       in_bounds = map_in_bounds(x,y);
       if (in_bounds != 0) {
-        if (unit_types[*(int *)(event + 0xe0)].domain == 2) {
+        if (unit_types[event->create_unit_type].domain == 2) {
           is_ocean = tile_is_ocean(x,y);
           if (is_ocean != 0) break;
           city2 = city_at(x,y);
@@ -8207,7 +8206,7 @@ joined_r0x004fb11d:
         }
         else {
           city2 = tile_is_ocean(x,y);
-          if (((city2 == 0) || (unit_types[*(int *)(event + 0xe0)].domain == 1)) &&
+          if (((city2 == 0) || (unit_types[event->create_unit_type].domain == 1)) &&
              ((city2 = city_at(x,y), city2 == -1 ||
               (owner = tile_city_owner(x,y), owner == civ)))) {
             city2 = tile_unit_owner(x,y);
@@ -8226,19 +8225,19 @@ joined_r0x004fb11d:
       result = 0;
     }
     else {
-      unit = unit_create(*(iptr *)(event + 0xe0),civ,x2,y2);
+      unit = unit_create(event->create_unit_type,civ,x2,y2);
       if (unit == -1) {
         result = 0;
       }
       else {
-        if (*(int *)(event + 0x138) != 0) {
+        if (event->create_veteran != 0) {
           units[unit].flags = units[unit].flags | 0x2000;
         }
         units[unit].home_city = -1;
-        if (*(int *)(event + 0x13c) != 0) {
+        if (event->create_homecity != 0) {
           for (city = 0; city < game.num_cities; city++) {
             if ((cities[city].id != 0) &&
-               (city2 = __strcmpi(cities[city].name,*(char **)(event + 0x13c)), city2 == 0)) {
+               (city2 = __strcmpi(cities[city].name,event->create_homecity), city2 == 0)) {
               if ((int)cities[city].owner == civ) {
                 units[unit].home_city = (i8)city;
               }
@@ -8254,7 +8253,7 @@ joined_r0x004fb11d:
 }
 
 /* 004fb29f auto */
-int __thiscall events_action_move_unit(DialogCore *self,iptr event)
+int __thiscall events_action_move_unit(DialogCore *self,ScenarioEvent *event)
 
 {
   int x;
@@ -8267,25 +8266,25 @@ int __thiscall events_action_move_unit(DialogCore *self,iptr event)
   int rect_y[4];
   int rect_x[4];
   
-  if (*(int *)(event + 0x8c) == -3) {
-    civ = *(int *)(event + 0x18);
+  if (event->move_owner_civ == -3) {
+    civ = event->who_civ;
   }
-  else if (*(int *)(event + 0x8c) == -4) {
-    civ = *(int *)(event + 0x24);
+  else if (event->move_owner_civ == -4) {
+    civ = event->whom_civ;
   }
-  else if (*(int *)(event + 0x8c) == -4) {
-    civ = *(int *)(event + 0x24);
+  else if (event->move_owner_civ == -4) {
+    civ = event->whom_civ;
   }
   else {
-    civ = *(int *)(event + 0x8c);
+    civ = event->move_owner_civ;
   }
   if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0) {
     moved = 0;
   }
   else if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
     for (i = 0; i < 4; i++) {
-      rect_x[i] = *(int *)(event + 0x9c + i * 8);
-      rect_y[i] = *(int *)(event + 0xa0 + i * 8);
+      rect_x[i] = event->move_rect[i * 2];
+      rect_y[i] = event->move_rect[i * 2 + 1];
     }
     moved = 0;
     unit = (iptr)game.num_units;
@@ -8297,7 +8296,7 @@ int __thiscall events_action_move_unit(DialogCore *self,iptr event)
             return moved;
           }
         } while ((((units[unit].id == 0) ||
-                  ((((*(int *)(event + 0x94) != unit && (*(int *)(event + 0x94) != -2)) ||
+                  ((((event->move_unit_type != unit && (event->move_unit_type != -2)) ||
                     (units[unit].owner != civ)) ||
                    (('b' < (char)unit_types[units[unit].type].attack ||
                     (units[unit].orders == 16)))))) || (3 < units[unit].orders)) ||
@@ -8311,10 +8310,10 @@ int __thiscall events_action_move_unit(DialogCore *self,iptr event)
               (((y < rect_y[1] || (rect_y[2] < y)) || (rect_y[3] < y))));
       units[unit].orders = 11;
       units[unit].ai_task = '7';
-      units[unit].goto_x = (i16)*(i32 *)(event + 0xbc);
-      units[unit].goto_y = (i16)*(i32 *)(event + 0xc0);
+      units[unit].goto_x = (i16)event->move_to_x;
+      units[unit].goto_y = (i16)event->move_to_y;
       moved++;
-    } while ((moved < *(int *)(event + 0x98)) || (*(int *)(event + 0x98) == -2));
+    } while ((moved < event->move_count) || (event->move_count == -2));
   }
   else {
     moved = 0;
@@ -8323,7 +8322,7 @@ int __thiscall events_action_move_unit(DialogCore *self,iptr event)
 }
 
 /* 004fb5b2 auto */
-int __thiscall events_action_change_terrain(DialogCore *self,iptr event)
+int __thiscall events_action_change_terrain(DialogCore *self,ScenarioEvent *event)
 
 {
   bool has_city;
@@ -8344,8 +8343,8 @@ int __thiscall events_action_change_terrain(DialogCore *self,iptr event)
   
   changed = 0;
   for (i = 0; i < 4; i++) {
-    rect_x[i] = *(int *)(event + 400 + i * 8);
-    rect_y[i] = *(int *)(event + 0x194 + i * 8);
+    rect_x[i] = event->terrain_rect[i * 2];
+    rect_y[i] = event->terrain_rect[i * 2 + 1];
   }
   for (x2 = rect_x[0]; x2 <= rect_x[1]; x2++) {
     for (y2 = rect_y[0]; y2 <= rect_y[3]; y2++) {
@@ -8367,7 +8366,7 @@ int __thiscall events_action_change_terrain(DialogCore *self,iptr event)
       in_bounds2 = map_in_bounds(x2,y2);
       if (in_bounds2 != 0) {
         terrain = (i8 *)tile_at(x2,y2);
-        *terrain = *(i8 *)(event + 0x18c);
+        *terrain = (i8)event->terrain_type;
         tile = tile_at(x2,y2);
         tile->improvements = 0;
         tile = tile_at(x2,y2);
@@ -8423,21 +8422,21 @@ i32 __thiscall events_check_turn(ScenarioEvents *self,int turn)
 
 {
   i32 triggered;
-  int *event;
+  ScenarioEvent *event;
   
   triggered = 0;
-  event = (int *)self->event_list;
-  if (event == (int *)0x0) {
+  event = self->event_list;
+  if (event == (ScenarioEvent *)0x0) {
     triggered = 0;
   }
   else {
     do {
-      if ((*event == 4) && ((event[0xb] == -1 || (event[0xb] == turn)))) {
+      if ((event->trigger == 4) && ((event->turn == -1 || (event->turn == turn)))) {
         triggered = 1;
-        event_run_actions((Dialog *)self,(iptr)event);
+        event_run_actions((Dialog *)self,event);
       }
-      event = (int *)event[0x6f];
-    } while (event != (int *)0x0);
+      event = event->next;
+    } while (event != (ScenarioEvent *)0x0);
   }
   return triggered;
 }
@@ -8447,21 +8446,21 @@ i32 __thiscall events_check_turn_interval(ScenarioEvents *self,int turn)
 
 {
   i32 triggered;
-  int *event;
+  ScenarioEvent *event;
   
   triggered = 0;
-  event = (int *)self->event_list;
-  if (event == (int *)0x0) {
+  event = self->event_list;
+  if (event == (ScenarioEvent *)0x0) {
     triggered = 0;
   }
   else {
     do {
-      if ((*event == 8) && ((event[0xb] == 0 || (turn % event[0xb] == 0)))) {
+      if ((event->trigger == 8) && ((event->turn == 0 || (turn % event->turn == 0)))) {
         triggered = 1;
-        event_run_actions((Dialog *)self,(iptr)event);
+        event_run_actions((Dialog *)self,event);
       }
-      event = (int *)event[0x6f];
-    } while (event != (int *)0x0);
+      event = event->next;
+    } while (event != (ScenarioEvent *)0x0);
   }
   return triggered;
 }
@@ -8473,30 +8472,30 @@ i32 __thiscall events_check_random_turn(ScenarioEvents *self,i32 turn)
   int rnd;
   int roll;
   i32 triggered;
-  int *event;
+  ScenarioEvent *event;
   
   triggered = 0;
-  event = (int *)self->event_list;
-  if (event == (int *)0x0) {
+  event = self->event_list;
+  if (event == (ScenarioEvent *)0x0) {
     triggered = 0;
   }
   else {
     do {
-      if (*event == 0x40) {
-        if (event[0xc] < 2) {
+      if (event->trigger == 0x40) {
+        if (event->denominator < 2) {
           roll = 1;
         }
         else {
           rnd = _rand();
-          roll = rnd % event[0xc] + 1;
+          roll = rnd % event->denominator + 1;
         }
-        if (event[0xc] == roll) {
+        if (event->denominator == roll) {
           triggered = 1;
-          event_run_actions((Dialog *)self,(iptr)event);
+          event_run_actions((Dialog *)self,event);
         }
       }
-      event = (int *)event[0x6f];
-    } while (event != (int *)0x0);
+      event = event->next;
+    } while (event != (ScenarioEvent *)0x0);
   }
   return triggered;
 }
@@ -8508,35 +8507,35 @@ i32 __thiscall events_check_received_tech(ScenarioEvents *self)
   int has_tech;
   int civ;
   i32 triggered;
-  int *event;
+  ScenarioEvent *event;
   
   triggered = 0;
-  event = (int *)self->event_list;
-  if (event == (int *)0x0) {
+  event = self->event_list;
+  if (event == (ScenarioEvent *)0x0) {
     triggered = 0;
   }
   else {
     do {
-      if (*event == 0x100) {
-        if (event[9] == -2) {
+      if (event->trigger == 0x100) {
+        if (event->whom_civ == -2) {
           for (civ = 0; civ < 8; civ++) {
             if (((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
-               (has_tech = civ_has_advance(civ,event[0xd]), has_tech != 0)) {
-              event[9] = civ;
+               (has_tech = civ_has_advance(civ,event->technology), has_tech != 0)) {
+              event->whom_civ = civ;
               triggered = 1;
-              event_run_actions((Dialog *)self,(iptr)event);
+              event_run_actions((Dialog *)self,event);
             }
           }
         }
-        else if ((((0 < event[9]) || (event[9] < 8)) &&
-                 ((1 << (*(byte *)(event + 9) & 0x1f) & (uint)game.civs_alive) != 0)) &&
-                (has_tech = civ_has_advance(event[9],event[0xd]), has_tech != 0)) {
+        else if ((((0 < event->whom_civ) || (event->whom_civ < 8)) &&
+                 ((1 << ((byte)event->whom_civ & 0x1f) & (uint)game.civs_alive) != 0)) &&
+                (has_tech = civ_has_advance(event->whom_civ,event->technology), has_tech != 0)) {
           triggered = 1;
-          event_run_actions((Dialog *)self,(iptr)event);
+          event_run_actions((Dialog *)self,event);
         }
       }
-      event = (int *)event[0x6f];
-    } while (event != (int *)0x0);
+      event = event->next;
+    } while (event != (ScenarioEvent *)0x0);
   }
   return triggered;
 }
@@ -8546,21 +8545,21 @@ i32 __thiscall events_check_scenario_loaded(ScenarioEvents *self)
 
 {
   i32 triggered;
-  int *event;
+  ScenarioEvent *event;
   
   triggered = 0;
-  event = (int *)self->event_list;
-  if (event == (int *)0x0) {
+  event = self->event_list;
+  if (event == (ScenarioEvent *)0x0) {
     triggered = 0;
   }
   else {
     do {
-      if (*event == 0x20) {
+      if (event->trigger == 0x20) {
         triggered = 1;
-        event_run_actions((Dialog *)self,(iptr)event);
+        event_run_actions((Dialog *)self,event);
       }
-      event = (int *)event[0x6f];
-    } while (event != (int *)0x0);
+      event = event->next;
+    } while (event != (ScenarioEvent *)0x0);
   }
   return triggered;
 }
@@ -8571,29 +8570,29 @@ events_check_unit_killed(ScenarioEvents *self,int unit_type,int attacker_civ,int
 
 {
   i32 triggered;
-  int *event;
+  ScenarioEvent *event;
   
   triggered = 0;
-  event = (int *)self->event_list;
-  if (event == (int *)0x0) {
+  event = self->event_list;
+  if (event == (ScenarioEvent *)0x0) {
     triggered = 0;
   }
   else {
     do {
-      if ((((*event == 1) && (event[3] == unit_type)) &&
-          ((event[9] == defender_civ || (event[9] == -2)))) &&
-         ((event[6] == attacker_civ || (event[6] == -2)))) {
+      if ((((event->trigger == 1) && (event->unit_type == unit_type)) &&
+          ((event->whom_civ == defender_civ || (event->whom_civ == -2)))) &&
+         ((event->who_civ == attacker_civ || (event->who_civ == -2)))) {
         triggered = 1;
-        if (event[6] == -2) {
-          event[6] = attacker_civ;
+        if (event->who_civ == -2) {
+          event->who_civ = attacker_civ;
         }
-        if (event[9] == -2) {
-          event[9] = defender_civ;
+        if (event->whom_civ == -2) {
+          event->whom_civ = defender_civ;
         }
-        event_run_actions((Dialog *)self,(iptr)event);
+        event_run_actions((Dialog *)self,event);
       }
-      event = (int *)event[0x6f];
-    } while (event != (int *)0x0);
+      event = event->next;
+    } while (event != (ScenarioEvent *)0x0);
   }
   return triggered;
 }
@@ -8602,31 +8601,31 @@ events_check_unit_killed(ScenarioEvents *self,int unit_type,int attacker_civ,int
 i32 __thiscall events_check_negotiation(ScenarioEvents *self,iptr talker_civ,iptr listener_civ)
 
 {
-  int *event;
+  ScenarioEvent *event;
   bool talker_match;
   bool listener_match;
   
-  event = (int *)self->event_list;
+  event = self->event_list;
   do {
-    if (event == (int *)0x0) {
+    if (event == (ScenarioEvent *)0x0) {
       return 1;
     }
-    if (*event == 0x10) {
-      if (((event[6] == talker_civ) || (event[6] == -2)) &&
-         ((((1 << (*(byte *)(event + 6) & 0x1f) & (uint)game.human_players) != 0 &&
-           ((event[7] == 1 || (event[7] == 4)))) ||
-          (((1 << (*(byte *)(event + 6) & 0x1f) & (uint)game.human_players) == 0 &&
-           ((event[7] == 2 || (event[7] == 4)))))))) {
+    if (event->trigger == 0x10) {
+      if (((event->who_civ == talker_civ) || (event->who_civ == -2)) &&
+         ((((1 << ((byte)event->who_civ & 0x1f) & (uint)game.human_players) != 0 &&
+           ((event->talker_type == 1 || (event->talker_type == 4)))) ||
+          (((1 << ((byte)event->who_civ & 0x1f) & (uint)game.human_players) == 0 &&
+           ((event->talker_type == 2 || (event->talker_type == 4)))))))) {
         talker_match = true;
       }
       else {
         talker_match = false;
       }
-      if (((event[9] == listener_civ) || (event[9] == -2)) &&
-         (((((uint)game.human_players & 1 << (*(byte *)(event + 9) & 0x1f)) != 0 &&
-           ((event[10] == 1 || (event[10] == 4)))) ||
-          ((((uint)game.human_players & 1 << (*(byte *)(event + 9) & 0x1f)) == 0 &&
-           ((event[10] == 2 || (event[10] == 4)))))))) {
+      if (((event->whom_civ == listener_civ) || (event->whom_civ == -2)) &&
+         (((((uint)game.human_players & 1 << ((byte)event->whom_civ & 0x1f)) != 0 &&
+           ((event->listener_type == 1 || (event->listener_type == 4)))) ||
+          ((((uint)game.human_players & 1 << ((byte)event->whom_civ & 0x1f)) == 0 &&
+           ((event->listener_type == 2 || (event->listener_type == 4)))))))) {
         listener_match = true;
       }
       else {
@@ -8634,31 +8633,31 @@ i32 __thiscall events_check_negotiation(ScenarioEvents *self,iptr talker_civ,ipt
       }
       if ((talker_match) && (listener_match)) {
 run_event:
-        if (event[0x60] == 0x1000) {
-          event_run_actions((Dialog *)self,(iptr)event);
+        if (event->negotiation_flag == 0x1000) {
+          event_run_actions((Dialog *)self,event);
           return 0;
         }
-        event_run_actions((Dialog *)self,(iptr)event);
+        event_run_actions((Dialog *)self,event);
         return 1;
       }
       if ((2 < game.multiplayer) &&
          (((1 << ((byte)talker_civ & 0x1f) & (uint)game.human_players) != 0 &&
           ((1 << ((byte)listener_civ & 0x1f) & (uint)game.human_players) != 0)))) {
-        if (((event[6] == listener_civ) || (event[6] == -2)) &&
-           ((((1 << (*(byte *)(event + 6) & 0x1f) & (uint)game.human_players) != 0 &&
-             ((event[7] == 1 || (event[7] == 4)))) ||
-            (((1 << (*(byte *)(event + 6) & 0x1f) & (uint)game.human_players) == 0 &&
-             ((event[7] == 2 || (event[7] == 4)))))))) {
+        if (((event->who_civ == listener_civ) || (event->who_civ == -2)) &&
+           ((((1 << ((byte)event->who_civ & 0x1f) & (uint)game.human_players) != 0 &&
+             ((event->talker_type == 1 || (event->talker_type == 4)))) ||
+            (((1 << ((byte)event->who_civ & 0x1f) & (uint)game.human_players) == 0 &&
+             ((event->talker_type == 2 || (event->talker_type == 4)))))))) {
           talker_match = true;
         }
         else {
           talker_match = false;
         }
-        if (((event[9] == talker_civ) || (event[9] == -2)) &&
-           (((((uint)game.human_players & 1 << (*(byte *)(event + 9) & 0x1f)) != 0 &&
-             ((event[10] == 1 || (event[10] == 4)))) ||
-            ((((uint)game.human_players & 1 << (*(byte *)(event + 9) & 0x1f)) == 0 &&
-             ((event[10] == 2 || (event[10] == 4)))))))) {
+        if (((event->whom_civ == talker_civ) || (event->whom_civ == -2)) &&
+           (((((uint)game.human_players & 1 << ((byte)event->whom_civ & 0x1f)) != 0 &&
+             ((event->listener_type == 1 || (event->listener_type == 4)))) ||
+            ((((uint)game.human_players & 1 << ((byte)event->whom_civ & 0x1f)) == 0 &&
+             ((event->listener_type == 2 || (event->listener_type == 4)))))))) {
           listener_match = true;
         }
         else {
@@ -8667,7 +8666,7 @@ run_event:
         if ((talker_match) && (listener_match)) goto run_event;
       }
     }
-    event = (int *)event[0x6f];
+    event = event->next;
   } while( true );
 }
 
@@ -8677,21 +8676,21 @@ i32 __thiscall events_check_no_schism(ScenarioEvents *self,iptr civ)
 {
   bool triggered;
   i32 result;
-  int *event;
+  ScenarioEvent *event;
   
   triggered = false;
-  event = (int *)self->event_list;
-  if (event == (int *)0x0) {
+  event = self->event_list;
+  if (event == (ScenarioEvent *)0x0) {
     result = 1;
   }
   else {
     do {
-      if ((*event == 0x80) && ((event[9] == civ || (event[9] == -2)))) {
-        event_run_actions((Dialog *)self,(iptr)event);
+      if ((event->trigger == 0x80) && ((event->whom_civ == civ || (event->whom_civ == -2)))) {
+        event_run_actions((Dialog *)self,event);
         triggered = true;
       }
-      event = (int *)event[0x6f];
-    } while (event != (int *)0x0);
+      event = event->next;
+    } while (event != (ScenarioEvent *)0x0);
     if (triggered) {
       result = 0;
     }
@@ -8709,75 +8708,75 @@ events_check_city_taken(ScenarioEvents *self,iptr city_name,iptr attacker_civ,ip
 {
   int cmp;
   i32 triggered;
-  int *event;
+  ScenarioEvent *event;
   
   triggered = 0;
-  event = (int *)self->event_list;
-  if (event == (int *)0x0) {
+  event = self->event_list;
+  if (event == (ScenarioEvent *)0x0) {
     triggered = 0;
   }
   else {
     do {
-      if ((((*event == 2) && (cmp = __strcmpi((char *)event[4],(char *)city_name), cmp == 0))
-          && ((event[6] == attacker_civ || (event[6] == -2)))) &&
-         ((event[9] == defender_civ || (event[9] == -2)))) {
-        if (event[6] == -2) {
-          event[6] = attacker_civ;
+      if ((((event->trigger == 2) && (cmp = __strcmpi(event->city_name,(char *)city_name), cmp == 0))
+          && ((event->who_civ == attacker_civ || (event->who_civ == -2)))) &&
+         ((event->whom_civ == defender_civ || (event->whom_civ == -2)))) {
+        if (event->who_civ == -2) {
+          event->who_civ = attacker_civ;
         }
-        if (event[9] == -2) {
-          event[9] = defender_civ;
+        if (event->whom_civ == -2) {
+          event->whom_civ = defender_civ;
         }
         triggered = 1;
-        event_run_actions((Dialog *)self,(iptr)event);
+        event_run_actions((Dialog *)self,event);
       }
-      event = (int *)event[0x6f];
-    } while (event != (int *)0x0);
+      event = event->next;
+    } while (event != (ScenarioEvent *)0x0);
   }
   return triggered;
 }
 
 /* 004fc3ae auto */
-i32 __thiscall event_run_actions(Dialog *self,iptr event)
+i32 __thiscall event_run_actions(Dialog *self,ScenarioEvent *event)
 
 {
   i32 result;
   
-  if (((*(byte *)(event + 4) & 0x40) == 0) || ((*(byte *)(event + 5) & 0x20) == 0)) {
-    if ((*(byte *)(event + 4) & 0x10) != 0) {
+  if (((event->actions_bytes[0] & 0x40) == 0) || ((event->actions_bytes[1] & 0x20) == 0)) {
+    if ((event->actions_bytes[0] & 0x10) != 0) {
       events_action_play_wave((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 4) & 0x80) != 0) {
+    if ((event->actions_bytes[0] & 0x80) != 0) {
       events_action_play_cd((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 4) & 4) != 0) {
+    if ((event->actions_bytes[0] & 4) != 0) {
       events_action_create_unit((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 4) & 2) != 0) {
+    if ((event->actions_bytes[0] & 2) != 0) {
       events_action_move_unit((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 5) & 2) != 0) {
+    if ((event->actions_bytes[1] & 2) != 0) {
       events_action_change_terrain((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 4) & 0x20) != 0) {
+    if ((event->actions_bytes[0] & 0x20) != 0) {
       events_action_make_aggression((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 4) & 8) != 0) {
+    if ((event->actions_bytes[0] & 8) != 0) {
       events_action_change_money((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 5) & 4) != 0) {
+    if ((event->actions_bytes[1] & 4) != 0) {
       events_action_destroy_civ((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 5) & 8) != 0) {
+    if ((event->actions_bytes[1] & 8) != 0) {
       events_action_give_tech((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 4) & 1) != 0) {
+    if ((event->actions_bytes[0] & 1) != 0) {
       events_action_text(self,event);
     }
-    if ((*(byte *)(event + 5) & 1) != 0) {
+    if ((event->actions_bytes[1] & 1) != 0) {
       events_action_dont_play_wonders((DialogCore *)self,event);
     }
-    if ((*(byte *)(event + 4) & 0x40) != 0) {
-      *(uint *)(event + 4) = *(uint *)(event + 4) | 0x2000;
+    if ((event->actions_bytes[0] & 0x40) != 0) {
+      event->actions = event->actions | 0x2000;
     }
     result = 1;
   }
@@ -8801,7 +8800,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
   int have_unit;
   int have_move_count;
   int have_tech;
-  int *event;
+  ScenarioEvent *event;
   int have_listener_type;
   int have_unit_killed;
   int have_moveto;
@@ -8841,8 +8840,8 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
           if (events_parse_verbose != 0) {
             _printf(str_if_found_creating_new_event_structure);
           }
-          event = (int *)events_alloc(self);
-          if (event == (int *)0x0) {
+          event = events_alloc(self);
+          if (event == (ScenarioEvent *)0x0) {
             if (events_parse_verbose != 0) {
               _printf(str_failed_to_create_new_event_structure);
             }
@@ -8941,10 +8940,10 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               else {
                 len = _strlen(arg);
                 str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                event[2] = str_buf;
-                if (event[2] == 0) goto finish;
-                crt_strcpy((char *)((void *)event[2]),arg);
-                event[3] = cmp;
+                event->unit_name = (char *)str_buf;
+                if (event->unit_name == 0) goto finish;
+                crt_strcpy((char *)((void *)event->unit_name),arg);
+                event->unit_type = cmp;
                 if (events_parse_verbose != 0) {
                   _printf(str_found_unit_s_id_d,arg,cmp);
                 }
@@ -8964,10 +8963,10 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                 else {
                   len = _strlen(arg);
                   cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                  event[5] = cmp;
-                  if (event[5] == 0) goto finish;
-                  crt_strcpy((char *)((void *)event[5]),arg);
-                  event[6] = parsed_civ;
+                  event->who_name = (char *)cmp;
+                  if (event->who_name == 0) goto finish;
+                  crt_strcpy((char *)((void *)event->who_name),arg);
+                  event->who_civ = parsed_civ;
                   if (events_parse_verbose != 0) {
                     _printf(str_found_attacker_s_king_id_d,arg,parsed_civ);
                   }
@@ -8987,10 +8986,10 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   else {
                     len = _strlen(arg);
                     cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                    event[8] = cmp;
-                    if (event[8] == 0) goto finish;
-                    crt_strcpy((char *)((void *)event[8]),arg);
-                    event[9] = parsed_civ;
+                    event->whom_name = (char *)cmp;
+                    if (event->whom_name == 0) goto finish;
+                    crt_strcpy((char *)((void *)event->whom_name),arg);
+                    event->whom_civ = parsed_civ;
                     if (events_parse_verbose != 0) {
                       _printf(str_found_defender_s_king_id_d,arg,parsed_civ);
                     }
@@ -9000,7 +8999,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               }
             }
           }
-          *event = 1;
+          event->trigger = 1;
         }
         cmp = __strcmpi(line,str_negotiation);
         if (cmp == 0) {
@@ -9033,10 +9032,10 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               else {
                 len = _strlen(arg);
                 cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                event[5] = cmp;
-                if (event[5] == 0) goto finish;
-                crt_strcpy((char *)((void *)event[5]),arg);
-                event[6] = parsed_civ;
+                event->who_name = (char *)cmp;
+                if (event->who_name == 0) goto finish;
+                crt_strcpy((char *)((void *)event->who_name),arg);
+                event->who_civ = parsed_civ;
                 if (events_parse_verbose != 0) {
                   _printf(str_found_talker_s_king_id_d,arg,parsed_civ);
                 }
@@ -9049,19 +9048,19 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                 arg = line + 0xb;
                 cmp = __strcmpi(arg,str_human);
                 if (cmp == 0) {
-                  event[7] = 1;
+                  event->talker_type = 1;
                   have_talker_type = 1;
                 }
                 else {
                   cmp = __strcmpi(arg,str_computer);
                   if (cmp == 0) {
-                    event[7] = 2;
+                    event->talker_type = 2;
                     have_talker_type = 1;
                   }
                   else {
                     cmp = __strcmpi(arg,str_humanorcomputer);
                     if (cmp == 0) {
-                      event[7] = 4;
+                      event->talker_type = 4;
                       have_talker_type = 1;
                     }
                   }
@@ -9088,10 +9087,10 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   else {
                     len = _strlen(arg);
                     cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                    event[8] = cmp;
-                    if (event[8] == 0) goto finish;
-                    crt_strcpy((char *)((void *)event[8]),arg);
-                    event[9] = parsed_civ;
+                    event->whom_name = (char *)cmp;
+                    if (event->whom_name == 0) goto finish;
+                    crt_strcpy((char *)((void *)event->whom_name),arg);
+                    event->whom_civ = parsed_civ;
                     if (events_parse_verbose != 0) {
                       _printf(str_found_listener_s_king_id_d,arg,parsed_civ);
                     }
@@ -9104,19 +9103,19 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                     arg = line + 0xd;
                     cmp = __strcmpi(arg,str_human_2);
                     if (cmp == 0) {
-                      event[10] = 1;
+                      event->listener_type = 1;
                       have_listener_type = 1;
                     }
                     else {
                       cmp = __strcmpi(arg,str_computer_2);
                       if (cmp == 0) {
-                        event[10] = 2;
+                        event->listener_type = 2;
                         have_listener_type = 1;
                       }
                       else {
                         cmp = __strcmpi(arg,str_humanorcomputer_2);
                         if (cmp == 0) {
-                          event[10] = 4;
+                          event->listener_type = 4;
                           have_listener_type = 1;
                         }
                       }
@@ -9134,8 +9133,8 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               }
             }
           }
-          *event = 0x10;
-          event[0x60] = 0x1000;
+          event->trigger = 0x10;
+          event->negotiation_flag = 0x1000;
         }
         cmp = __strcmpi(line,str_noschism);
         if (cmp == 0) {
@@ -9168,10 +9167,10 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               else {
                 len = _strlen(arg);
                 cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                event[8] = cmp;
-                if (event[8] == 0) goto finish;
-                crt_strcpy((char *)((void *)event[8]),arg);
-                event[9] = parsed_civ;
+                event->whom_name = (char *)cmp;
+                if (event->whom_name == 0) goto finish;
+                crt_strcpy((char *)((void *)event->whom_name),arg);
+                event->whom_civ = parsed_civ;
                 if (events_parse_verbose != 0) {
                   _printf(str_found_defender_s_king_id_d_2,arg,parsed_civ);
                 }
@@ -9179,7 +9178,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
               }
             }
           }
-          *event = 0x80;
+          event->trigger = 0x80;
         }
         else {
           cmp = __strcmpi(line,str_receivedtechnology);
@@ -9213,11 +9212,11 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                 else {
                   len = _strlen(arg);
                   cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                  event[8] = cmp;
-                  if (event[8] == 0) goto finish;
-                  crt_strcpy((char *)((void *)event[8]),arg);
+                  event->whom_name = (char *)cmp;
+                  if (event->whom_name == 0) goto finish;
+                  crt_strcpy((char *)((void *)event->whom_name),arg);
                   cmp = events_parse_civ((const char *)arg);
-                  event[9] = cmp;
+                  event->whom_civ = cmp;
                   if (events_parse_verbose != 0) {
                     _printf(str_found_receiver_s_king_id_d,arg,parsed_civ);
                   }
@@ -9235,16 +9234,16 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   }
                   else {
                     cmp = str_parse_int_prefixed((const char *)arg);
-                    event[0xd] = cmp;
+                    event->technology = cmp;
                     have_tech = 1;
                     if (events_parse_verbose != 0) {
-                      _printf(str_found_technology_s_technology_id_d,arg,event[0xd]);
+                      _printf(str_found_technology_s_technology_id_d,arg,event->technology);
                     }
                   }
                 }
               }
             }
-            *event = 0x100;
+            event->trigger = 0x100;
           }
           else {
             cmp = __strcmpi(line,str_citytaken);
@@ -9278,11 +9277,11 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   else {
                     len = _strlen(arg);
                     cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                    event[5] = cmp;
-                    if (event[5] == 0) goto finish;
-                    crt_strcpy((char *)((void *)event[5]),arg);
+                    event->who_name = (char *)cmp;
+                    if (event->who_name == 0) goto finish;
+                    crt_strcpy((char *)((void *)event->who_name),arg);
                     cmp = events_parse_civ((const char *)arg);
-                    event[6] = cmp;
+                    event->who_civ = cmp;
                     if (events_parse_verbose != 0) {
                       _printf(str_found_attacker_s_king_id_d_2,arg,parsed_civ);
                     }
@@ -9302,10 +9301,10 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                     else {
                       len = _strlen(arg);
                       cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                      event[8] = cmp;
-                      if (event[8] == 0) goto finish;
-                      crt_strcpy((char *)((void *)event[8]),arg);
-                      event[9] = parsed_civ;
+                      event->whom_name = (char *)cmp;
+                      if (event->whom_name == 0) goto finish;
+                      crt_strcpy((char *)((void *)event->whom_name),arg);
+                      event->whom_civ = parsed_civ;
                       if (events_parse_verbose != 0) {
                         _printf(str_found_defender_s_king_id_d_3,arg,parsed_civ);
                       }
@@ -9318,9 +9317,9 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                       arg += 5;
                       len = _strlen(arg);
                       cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                      event[4] = cmp;
-                      if (event[4] == 0) goto finish;
-                      crt_strcpy((char *)((void *)event[4]),arg);
+                      event->city_name = (char *)cmp;
+                      if (event->city_name == 0) goto finish;
+                      crt_strcpy((char *)((void *)event->city_name),arg);
                       if (events_parse_verbose != 0) {
                         _printf(str_found_city_s,arg,parsed_civ);
                       }
@@ -9329,7 +9328,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   }
                 }
               }
-              *event = 2;
+              event->trigger = 2;
             }
             else {
               cmp = __strcmpi(line,((i8 *)&events_kw_turn_str));
@@ -9357,24 +9356,24 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   arg += 5;
                   cmp = __strcmpi(arg,str_every);
                   if (cmp == 0) {
-                    event[0xb] = -1;
-                    *event = 4;
+                    event->turn = -1;
+                    event->trigger = 4;
                   }
                   else if (((('/' < *arg) && (*arg < ':')) || (*arg == '-')) ||
                           (*arg == '+')) {
                     cmp = str_parse_int_prefixed((const char *)arg);
-                    event[0xb] = cmp;
-                    *event = 4;
+                    event->turn = cmp;
+                    event->trigger = 4;
                   }
                   if (events_parse_verbose != 0) {
-                    if (*event == 4) {
+                    if (event->trigger == 4) {
                       _printf(str_found_turn_s,arg);
                     }
                     else {
                       _printf(str_found_turn_s_but_s_is_not_valid,arg,arg);
                     }
                   }
-                } while (*event != 4);
+                } while (event->trigger != 4);
               }
               else {
                 cmp = __strcmpi(line,str_turninterval);
@@ -9407,14 +9406,14 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                       }
                       else {
                         cmp = str_parse_int_prefixed((const char *)arg);
-                        event[0xb] = cmp;
+                        event->turn = cmp;
                         if (events_parse_verbose != 0) {
                           _printf(str_found_interval_s,arg);
                         }
-                        *event = 8;
+                        event->trigger = 8;
                       }
                     }
-                  } while (*event != 8);
+                  } while (event->trigger != 8);
                 }
                 else {
                   cmp = __strcmpi(line,str_randomturn);
@@ -9446,18 +9445,18 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                         }
                         else {
                           cmp = str_parse_int_prefixed((const char *)arg);
-                          event[0xc] = cmp;
-                          if ((event[0xc] < 1) || (1000 < event[0xc])) {
+                          event->denominator = cmp;
+                          if ((event->denominator < 1) || (1000 < event->denominator)) {
                             _printf(str_found_denominator_s_but_s_is_not_valid,arg,arg);
                             goto finish;
                           }
                           if (events_parse_verbose != 0) {
                             _printf(str_found_denominator_s,arg);
                           }
-                          *event = 0x40;
+                          event->trigger = 0x40;
                         }
                       }
-                    } while (*event != 0x40);
+                    } while (event->trigger != 0x40);
                   }
                   else {
                     cmp = __strcmpi(line,str_scenarioloaded_3);
@@ -9465,7 +9464,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                       if (events_parse_verbose != 0) {
                         _printf(str_if_scenarioloaded);
                       }
-                      *event = 0x20;
+                      event->trigger = 0x20;
                     }
                   }
                 }
@@ -9487,9 +9486,9 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
             if (i != 0x14) {
               len = _strlen(line);
               cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-              event[i + 0xe] = cmp;
-              if (event[i + 0xe] == 0) goto finish;
-              crt_strcpy((char *)((void *)event[i + 0xe]),line);
+              event->text[i] = (char *)cmp;
+              if (event->text[i] == 0) goto finish;
+              crt_strcpy(event->text[i],line);
               i++;
             }
             line = text_read_line(1);
@@ -9509,7 +9508,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
           if (events_parse_verbose != 0) {
             _printf(str_found_endtext);
           }
-          event[1] = event[1] | 1;
+          event->actions = (int)event->actions | 1;
         }
         else {
           cmp = __strcmpi(line,str_changeterrain);
@@ -9543,7 +9542,7 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                 else {
                   cmp = str_parse_int_prefixed((const char *)arg);
                   if ((-1 < cmp) || (cmp < 0xb)) {
-                    event[99] = cmp;
+                    event->terrain_type = cmp;
                     if (events_parse_verbose != 0) {
                       _printf(str_found_terraintype_s_terrainid_d,arg,cmp);
                     }
@@ -9566,19 +9565,19 @@ int __thiscall events_parse_file(ScenarioEvents *self,const char *filename,const
                   }
                   for (i = 0; i < 4; i++) {
                     cmp = text_next_int();
-                    event[i * 2 + 100] = cmp;
+                    event->terrain_rect[i * 2] = cmp;
                     cmp = text_next_int();
-                    event[i * 2 + 0x65] = cmp;
+                    event->terrain_rect[i * 2 + 1] = cmp;
                     if (events_parse_verbose != 0) {
                       _printf(str_found_location_d_d_d,loc_count,
-                              event[i * 2 + 100],event[i * 2 + 0x65]);
+                              event->terrain_rect[i * 2],event->terrain_rect[i * 2 + 1]);
                     }
                     loc_count++;
                   }
                 }
               }
             }
-            event[1] = event[1] | 0x200;
+            event->actions = (int)event->actions | 0x200;
           }
           else {
             cmp = __strcmpi(line,str_createunit);
@@ -9615,10 +9614,10 @@ read_unit_fields:
                   else {
                     len = _strlen(arg);
                     str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                    event[0x37] = str_buf;
-                    if (event[0x37] == 0) goto finish;
-                    crt_strcpy((char *)((void *)event[0x37]),arg);
-                    event[0x38] = cmp;
+                    event->create_unit_name = (char *)str_buf;
+                    if (event->create_unit_name == 0) goto finish;
+                    crt_strcpy((char *)((void *)event->create_unit_name),arg);
+                    event->create_unit_type = cmp;
                     if (events_parse_verbose != 0) {
                       _printf(str_found_unit_s_unit_id_d,arg,cmp);
                     }
@@ -9638,10 +9637,10 @@ read_unit_fields:
                     else {
                       len = _strlen(arg);
                       cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                      event[0x35] = cmp;
-                      if (event[0x35] == 0) goto finish;
-                      crt_strcpy((char *)((void *)event[0x35]),arg);
-                      event[0x36] = parsed_civ;
+                      event->create_owner_name = (char *)cmp;
+                      if (event->create_owner_name == 0) goto finish;
+                      crt_strcpy((char *)((void *)event->create_owner_name),arg);
+                      event->create_owner_civ = parsed_civ;
                       if (events_parse_verbose != 0) {
                         _printf(str_found_owner_s_king_id_d,arg,parsed_civ);
                       }
@@ -9654,14 +9653,14 @@ read_unit_fields:
                       arg += 8;
                       cmp = __strcmpi(arg,((i8 *)&events_bool_yes_str));
                       if ((cmp == 0) || (cmp = __strcmpi(arg,((i8 *)&events_bool_true_str)), cmp == 0)) {
-                        event[0x4e] = 1;
+                        event->create_veteran = 1;
                         have_veteran = 1;
                       }
                       else {
                         cmp = __strcmpi(arg,((i8 *)&events_bool_no_str));
                         if ((cmp == 0) || (cmp = __strcmpi(arg,str_false), cmp == 0)
                            ) {
-                          event[0x4e] = 0;
+                          event->create_veteran = 0;
                           have_veteran = 1;
                         }
                         else if (events_parse_verbose != 0) {
@@ -9675,9 +9674,9 @@ read_unit_fields:
                         arg += 9;
                         len = _strlen(arg);
                         cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                        event[0x4f] = cmp;
-                        if (event[0x4f] == 0) goto finish;
-                        crt_strcpy((char *)((void *)event[0x4f]),arg);
+                        event->create_homecity = (char *)cmp;
+                        if (event->create_homecity == 0) goto finish;
+                        crt_strcpy((char *)((void *)event->create_homecity),arg);
                         if (events_parse_verbose != 0) {
                           _printf(str_found_homecity_s,arg);
                         }
@@ -9709,12 +9708,12 @@ read_unit_fields:
                             }
                             else {
                               cmp = text_next_int();
-                              event[i * 2 + 0x39] = cmp;
+                              event->create_locations[i * 2] = cmp;
                               cmp = text_next_int();
-                              event[i * 2 + 0x3a] = cmp;
+                              event->create_locations[i * 2 + 1] = cmp;
                               if (events_parse_verbose != 0) {
                                 _printf(str_found_location_d_d_d_2,loc_count,
-                                        event[i * 2 + 0x39],event[i * 2 + 0x3a])
+                                        event->create_locations[i * 2],event->create_locations[i * 2 + 1])
                                 ;
                               }
                               loc_count++;
@@ -9727,8 +9726,8 @@ read_unit_fields:
                 }
                 goto read_unit_fields;
               }
-              event[0x4d] = loc_count;
-              event[1] = event[1] | 4;
+              event->create_location_count = loc_count;
+              event->actions = (int)event->actions | 4;
             }
             else {
               cmp = __strcmpi(line,str_changemoney);
@@ -9762,10 +9761,10 @@ read_unit_fields:
                     else {
                       len = _strlen(arg);
                       cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                      event[0x5d] = cmp;
-                      if (event[0x5d] == 0) goto finish;
-                      crt_strcpy((char *)((void *)event[0x5d]),arg);
-                      event[0x5e] = parsed_civ;
+                      event->money_receiver_name = (char *)cmp;
+                      if (event->money_receiver_name == 0) goto finish;
+                      crt_strcpy((char *)((void *)event->money_receiver_name),arg);
+                      event->money_receiver_civ = parsed_civ;
                       if (events_parse_verbose != 0) {
                         _printf(str_found_receiver_s_king_id_d_2,arg,parsed_civ);
                       }
@@ -9778,15 +9777,15 @@ read_unit_fields:
                        ((((arg = arg + 7, '/' < *arg && (*arg < ':')) ||
                          (*arg == '-')) || (*arg == '+')))) {
                       cmp = str_parse_int_prefixed((const char *)arg);
-                      event[0x5f] = cmp;
+                      event->money_amount = cmp;
                       if (events_parse_verbose != 0) {
-                        _printf(str_found_amount_s_integer_d,arg,event[0x5f]);
+                        _printf(str_found_amount_s_integer_d,arg,event->money_amount);
                       }
                       have_amount = 1;
                     }
                   }
                 }
-                event[1] = event[1] | 8;
+                event->actions = (int)event->actions | 8;
               }
               else {
                 cmp = __strcmpi(line,str_justonce);
@@ -9794,7 +9793,7 @@ read_unit_fields:
                   if (events_parse_verbose != 0) {
                     _printf(str_then_justonce_found_not_looking_for_anyt);
                   }
-                  event[1] = event[1] | 0x40;
+                  event->actions = (int)event->actions | 0x40;
                 }
                 else {
                   cmp = __strcmpi(line,str_dontplaywonders);
@@ -9802,7 +9801,7 @@ read_unit_fields:
                     if (events_parse_verbose != 0) {
                       _printf(str_then_dontplaywonders_found_not_looking_f);
                     }
-                    event[1] = event[1] | 0x100;
+                    event->actions = (int)event->actions | 0x100;
                   }
                   else {
                     cmp = __strcmpi(line,str_makeaggression);
@@ -9836,10 +9835,10 @@ read_unit_fields:
                           else {
                             len = _strlen(arg);
                             cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                            event[0x33] = cmp;
-                            if (event[0x33] == 0) goto finish;
-                            crt_strcpy((char *)((void *)event[0x33]),arg);
-                            event[0x34] = parsed_civ;
+                            event->aggression_who_name = (char *)cmp;
+                            if (event->aggression_who_name == 0) goto finish;
+                            crt_strcpy((char *)((void *)event->aggression_who_name),arg);
+                            event->aggression_who_civ = parsed_civ;
                             if (events_parse_verbose != 0) {
                               _printf(str_found_who_s_king_id_d,arg,parsed_civ);
                             }
@@ -9859,10 +9858,10 @@ read_unit_fields:
                             else {
                               len = _strlen(arg);
                               cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                              event[0x31] = cmp;
-                              if (event[0x31] == 0) goto finish;
-                              crt_strcpy((char *)((void *)event[0x31]),arg);
-                              event[0x32] = parsed_civ;
+                              event->aggression_whom_name = (char *)cmp;
+                              if (event->aggression_whom_name == 0) goto finish;
+                              crt_strcpy((char *)((void *)event->aggression_whom_name),arg);
+                              event->aggression_whom_civ = parsed_civ;
                               if (events_parse_verbose != 0) {
                                 _printf(str_found_whom_s_king_id_d,arg,parsed_civ);
                               }
@@ -9871,7 +9870,7 @@ read_unit_fields:
                           }
                         }
                       }
-                      event[1] = event[1] | 0x20;
+                      event->actions = (int)event->actions | 0x20;
                     }
                     else {
                       cmp = __strcmpi(line,str_destroyacivilization);
@@ -9903,7 +9902,7 @@ read_unit_fields:
                               }
                             }
                             else {
-                              event[0x6c] = parsed_civ;
+                              event->destroy_civ = parsed_civ;
                               if (events_parse_verbose != 0) {
                                 _printf(str_found_whom_s_king_id_d_2,arg,parsed_civ);
                               }
@@ -9911,7 +9910,7 @@ read_unit_fields:
                             }
                           }
                         }
-                        event[1] = event[1] | 0x400;
+                        event->actions = (int)event->actions | 0x400;
                       }
                       else {
                         cmp = __strcmpi(line,str_givetechnology);
@@ -9944,7 +9943,7 @@ read_unit_fields:
                                 }
                               }
                               else {
-                                event[0x6e] = parsed_civ;
+                                event->give_tech_civ = parsed_civ;
                                 if (events_parse_verbose != 0) {
                                   _printf(str_found_receiver_s_king_id_d_3,arg,parsed_civ)
                                   ;
@@ -9957,16 +9956,16 @@ read_unit_fields:
                               if (((cmp == 0) && (arg = arg + 0xb, '/' < *arg)) &&
                                  (*arg < ':')) {
                                 cmp = str_parse_int_prefixed((const char *)arg);
-                                event[0x6d] = cmp;
+                                event->give_tech = cmp;
                                 if (events_parse_verbose != 0) {
                                   _printf(str_found_technology_s_integer_d,arg,
-                                          event[0x6d]);
+                                          event->give_tech);
                                 }
                                 have_tech_id = 1;
                               }
                             }
                           }
-                          event[1] = event[1] | 0x800;
+                          event->actions = (int)event->actions | 0x800;
                         }
                         else {
                           cmp = __strcmpi(line,str_moveunit);
@@ -10004,10 +10003,10 @@ read_unit_fields:
                                   len = _strlen(arg);
                                   str_buf = memblock_alloc((iptr)(self->events_string_pool),len + 1)
                                   ;
-                                  event[0x24] = str_buf;
-                                  if (event[0x24] == 0) goto finish;
-                                  crt_strcpy((char *)((void *)event[0x24]),arg);
-                                  event[0x25] = cmp;
+                                  event->move_unit_name = (char *)str_buf;
+                                  if (event->move_unit_name == 0) goto finish;
+                                  crt_strcpy((char *)((void *)event->move_unit_name),arg);
+                                  event->move_unit_type = cmp;
                                   if (events_parse_verbose != 0) {
                                     _printf(str_found_unit_s_unit_id_d_2,arg,cmp);
                                   }
@@ -10029,10 +10028,10 @@ read_unit_fields:
                                     len = _strlen(arg);
                                     cmp = memblock_alloc((iptr)(self->events_string_pool),
                                                                len + 1);
-                                    event[0x22] = cmp;
-                                    if (event[0x22] == 0) goto finish;
-                                    crt_strcpy((char *)((void *)event[0x22]),arg);
-                                    event[0x23] = parsed_civ;
+                                    event->move_owner_name = (char *)cmp;
+                                    if (event->move_owner_name == 0) goto finish;
+                                    crt_strcpy((char *)((void *)event->move_owner_name),arg);
+                                    event->move_owner_civ = parsed_civ;
                                     if (events_parse_verbose != 0) {
                                       _printf(str_found_owner_s_king_id_d_2,arg,parsed_civ
                                              );
@@ -10055,13 +10054,13 @@ read_unit_fields:
                                     }
                                     for (i = 0; i < 4; i++) {
                                       cmp = text_next_int();
-                                      event[i * 2 + 0x27] = cmp;
+                                      event->move_rect[i * 2] = cmp;
                                       cmp = text_next_int();
-                                      event[i * 2 + 0x28] = cmp;
+                                      event->move_rect[i * 2 + 1] = cmp;
                                       if (events_parse_verbose != 0) {
                                         _printf(str_found_location_d_d_d_3,loc_count,
-                                                event[i * 2 + 0x27],
-                                                event[i * 2 + 0x28]);
+                                                event->move_rect[i * 2],
+                                                event->move_rect[i * 2 + 1]);
                                       }
                                       loc_count++;
                                     }
@@ -10082,12 +10081,12 @@ read_unit_fields:
                                       if (((('/' < *arg) && (*arg < ':')) || (*arg == '-'))
                                          || (*arg == '+')) {
                                         cmp = text_next_int();
-                                        event[0x2f] = cmp;
+                                        event->move_to_x = cmp;
                                         cmp = text_next_int();
-                                        event[0x30] = cmp;
+                                        event->move_to_y = cmp;
                                         if (events_parse_verbose != 0) {
-                                          _printf(str_found_moveto_d_d,event[0x2f],
-                                                  event[0x30]);
+                                          _printf(str_found_moveto_d_d,event->move_to_x,
+                                                  event->move_to_y);
                                         }
                                         have_moveto = 1;
                                       }
@@ -10099,7 +10098,7 @@ read_unit_fields:
                                         if ((*arg < '0') || ('9' < *arg)) {
                                           cmp = __strcmpi(arg,((i8 *)&events_numbertomove_all_str));
                                           if (cmp == 0) {
-                                            event[0x26] = -2;
+                                            event->move_count = -2;
                                             if (events_parse_verbose != 0) {
                                               _printf(str_found_numbertomove_s,arg);
                                             }
@@ -10112,10 +10111,10 @@ read_unit_fields:
                                         }
                                         else {
                                           cmp = str_parse_int_prefixed((const char *)arg);
-                                          event[0x26] = cmp;
+                                          event->move_count = cmp;
                                           if (events_parse_verbose != 0) {
                                             _printf(str_found_numbertomove_s_integer_d,
-                                                    arg,event[0x26]);
+                                                    arg,event->move_count);
                                           }
                                           have_move_count = 1;
                                         }
@@ -10125,7 +10124,7 @@ read_unit_fields:
                                 }
                               }
                             }
-                            event[1] = event[1] | 2;
+                            event->actions = (int)event->actions | 2;
                           }
                           else {
                             cmp = __strcmpi(line,str_playcdtrack);
@@ -10141,12 +10140,12 @@ read_unit_fields:
                                 goto finish;
                               }
                               cmp = text_next_int();
-                              event[0x62] = cmp;
-                              if (0 < event[0x62]) {
+                              event->cd_track = cmp;
+                              if (0 < event->cd_track) {
                                 if (events_parse_verbose != 0) {
-                                  _printf(str_found_cd_track_d,event[0x62]);
+                                  _printf(str_found_cd_track_d,event->cd_track);
                                 }
-                                event[1] = event[1] | 0x80;
+                                event->actions = (int)event->actions | 0x80;
                               }
                             }
                             else {
@@ -10164,13 +10163,13 @@ read_unit_fields:
                                 }
                                 len = _strlen(arg);
                                 cmp = memblock_alloc((iptr)(self->events_string_pool),len + 1);
-                                event[0x61] = cmp;
-                                if (event[0x61] == 0) goto finish;
-                                crt_strcpy((char *)((void *)event[0x61]),arg);
+                                event->wave_file = (char *)cmp;
+                                if (event->wave_file == 0) goto finish;
+                                crt_strcpy((char *)((void *)event->wave_file),arg);
                                 if (events_parse_verbose != 0) {
-                                  _printf(str_found_wave_file_name_s,event[0x61]);
+                                  _printf(str_found_wave_file_name_s,(int)event->wave_file);
                                 }
-                                event[1] = event[1] | 0x10;
+                                event->actions = (int)event->actions | 0x10;
                               }
                             }
                           }
@@ -12316,7 +12315,7 @@ void __cdecl events_editor_focus_redraw(void)
 /* 00548e23 auto */
 /* WARNING: Type propagation algorithm not settling */
 
-void __cdecl events_write_actions(iptr fp,iptr event)
+void __cdecl events_write_actions(iptr fp,ScenarioEvent *event)
 
 {
   int rc;
@@ -12327,23 +12326,23 @@ void __cdecl events_write_actions(iptr fp,iptr event)
   char line[80];
   
   rc = _fputs(str_then,(FILE *)fp);
-  if (((rc == -1) || (action_bit = 1, event == 0)) || (*(int *)(event + 4) == 0)) {
+  if (((rc == -1) || (action_bit = 1, event == 0)) || (event->actions == 0)) {
     return;
   }
   do {
-    action = *(uint *)(event + 4) & action_bit;
+    action = event->actions & action_bit;
     if (action < 9) {
       if (action == 8) {
         rc = _fputs(str_changemoney_2,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_receiver_s,*(i32 *)(event + 0x174));
+        _sprintf(line,str_receiver_s,(i32)event->money_receiver_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_amount_d,*(i32 *)(event + 0x17c));
+        _sprintf(line,str_amount_d,event->money_amount);
         rc = _fputs(line,(FILE *)fp);
       }
       else if (action == 1) {
@@ -12351,9 +12350,9 @@ void __cdecl events_write_actions(iptr fp,iptr event)
         if (rc == -1) {
           return;
         }
-        for (i = 0; (i < 0x14 && (*(int *)(event + 0x38 + i * 4) != 0));
+        for (i = 0; (i < 0x14 && (event->text[i] != 0));
             i = i + 1) {
-          rc = _fputs(*(char **)(event + 0x38 + i * 4),(FILE *)fp);
+          rc = _fputs(event->text[i],(FILE *)fp);
           if (rc == -1) {
             return;
           }
@@ -12369,12 +12368,12 @@ void __cdecl events_write_actions(iptr fp,iptr event)
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_unit_s,*(i32 *)(event + 0x90));
+        _sprintf(line,str_unit_s,(i32)event->move_unit_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_owner_s,*(i32 *)(event + 0x88));
+        _sprintf(line,str_owner_s,(i32)event->move_owner_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
@@ -12384,8 +12383,8 @@ void __cdecl events_write_actions(iptr fp,iptr event)
           return;
         }
         for (i = 0; i < 4; i++) {
-          _sprintf(line,str_d_d,*(i32 *)(event + 0x9c + i * 8),
-                   *(i32 *)(event + 0xa0 + i * 8));
+          _sprintf(line,str_d_d,event->move_rect[i * 2],
+                   event->move_rect[i * 2 + 1]);
           if (i < 3) {
             crt_strcat(line,((i8 *)&events_moveunit_rect_sep_str));
           }
@@ -12398,17 +12397,17 @@ void __cdecl events_write_actions(iptr fp,iptr event)
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_d_d_2,*(i32 *)(event + 0xbc),
-                 *(i32 *)(event + 0xc0));
+        _sprintf(line,str_d_d_2,event->move_to_x,
+                 event->move_to_y);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        if (*(int *)(event + 0x98) == -2) {
+        if (event->move_count == -2) {
           _sprintf(line,str_numbertomove_all);
         }
         else {
-          _sprintf(line,str_numbertomove_d,*(i32 *)(event + 0x98));
+          _sprintf(line,str_numbertomove_d,event->move_count);
         }
         rc = _fputs(line,(FILE *)fp);
       }
@@ -12418,23 +12417,23 @@ void __cdecl events_write_actions(iptr fp,iptr event)
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_unit_s_2,*(i32 *)(event + 0xdc));
+        _sprintf(line,str_unit_s_2,(i32)event->create_unit_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_owner_s_2,*(i32 *)(event + 0xd4));
+        _sprintf(line,str_owner_s_2,(i32)event->create_owner_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
         _sprintf(line,str_veteran_s,
-                 ((i8 *)&events_veteran_yes_no_strs) + ((*(int *)(event + 0x138) != 0) - 1 & 4));
+                 ((i8 *)&events_veteran_yes_no_strs) + ((event->create_veteran != 0) - 1 & 4));
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_homecity_s,*(i32 *)(event + 0x13c));
+        _sprintf(line,str_homecity_s,(i32)event->create_homecity);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
@@ -12443,9 +12442,9 @@ void __cdecl events_write_actions(iptr fp,iptr event)
         if (rc == -1) {
           return;
         }
-        for (i = 0; i < *(int *)(event + 0x134); i++) {
-          _sprintf(line,str_d_d_3,*(i32 *)(event + 0xe4 + i * 8),
-                   *(i32 *)(event + 0xe8 + i * 8));
+        for (i = 0; i < event->create_location_count; i++) {
+          _sprintf(line,str_d_d_3,event->create_locations[i * 2],
+                   event->create_locations[i * 2 + 1]);
           rc = _fputs(line,(FILE *)fp);
           if (rc == -1) {
             return;
@@ -12466,7 +12465,7 @@ joined_r0x0054934c:
             if (rc == -1) {
               return;
             }
-            _sprintf(line,((i8 *)&events_cd_track_fmt),*(i32 *)(event + 0x188));
+            _sprintf(line,((i8 *)&events_cd_track_fmt),event->cd_track);
             rc = _fputs(line,(FILE *)fp);
           }
           else {
@@ -12480,7 +12479,7 @@ joined_r0x0054934c:
             if (rc == -1) {
               return;
             }
-            _sprintf(line,str_terraintype_d,*(i32 *)(event + 0x18c));
+            _sprintf(line,str_terraintype_d,event->terrain_type);
             rc = _fputs(line,(FILE *)fp);
             if (rc == -1) {
               return;
@@ -12490,8 +12489,8 @@ joined_r0x0054934c:
               return;
             }
             for (i = 0; i < 4; i++) {
-              _sprintf(line,str_d_d_4,*(i32 *)(event + 400 + i * 8),
-                       *(i32 *)(event + 0x194 + i * 8));
+              _sprintf(line,str_d_d_4,event->terrain_rect[i * 2],
+                       event->terrain_rect[i * 2 + 1]);
               if (i < 3) {
                 crt_strcat(line,((i8 *)&events_terrain_rect_sep_str));
               }
@@ -12512,9 +12511,9 @@ joined_r0x0054934c:
           if (rc == -1) {
             return;
           }
-          if (*(int *)(event + 0x1b0) < 0) {
-            if ((*(byte *)(event + 1) & 1) == 0) {
-              if (*(int *)(event + 0x1b0) == -3) {
+          if (event->destroy_civ < 0) {
+            if ((event->trigger_bytes[1] & 1) == 0) {
+              if (event->destroy_civ == -3) {
                 _sprintf(line,str_whom_triggerattacker);
               }
               else {
@@ -12526,7 +12525,7 @@ joined_r0x0054934c:
             }
           }
           else {
-            civ_name = (i32)(civ_name_plural(*(iptr *)(event + 0x1b0)));
+            civ_name = (i32)(civ_name_plural(event->destroy_civ));
             _sprintf(line,str_whom_s_2,civ_name);
           }
           rc = _fputs(line,(FILE *)fp);
@@ -12536,9 +12535,9 @@ joined_r0x0054934c:
           if (rc == -1) {
             return;
           }
-          if (*(int *)(event + 0x1b8) < 0) {
-            if ((*(byte *)(event + 1) & 1) == 0) {
-              if (*(int *)(event + 0x1b8) == -3) {
+          if (event->give_tech_civ < 0) {
+            if ((event->trigger_bytes[1] & 1) == 0) {
+              if (event->give_tech_civ == -3) {
                 _sprintf(line,str_receiver_triggerattacker);
               }
               else {
@@ -12550,14 +12549,14 @@ joined_r0x0054934c:
             }
           }
           else {
-            civ_name = (i32)(civ_name_plural(*(iptr *)(event + 0x1b8)));
+            civ_name = (i32)(civ_name_plural(event->give_tech_civ));
             _sprintf(line,str_receiver_s_2,civ_name);
           }
           rc = _fputs(line,(FILE *)fp);
           if (rc == -1) {
             return;
           }
-          _sprintf(line,str_technology_d,*(i32 *)(event + 0x1b4));
+          _sprintf(line,str_technology_d,event->give_tech);
           rc = _fputs(line,(FILE *)fp);
         }
         else {
@@ -12571,12 +12570,12 @@ joined_r0x0054934c:
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_who_s,*(i32 *)(event + 0xcc));
+        _sprintf(line,str_who_s,(i32)event->aggression_who_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_whom_s,*(i32 *)(event + 0xc4));
+        _sprintf(line,str_whom_s,(i32)event->aggression_whom_name);
         rc = _fputs(line,(FILE *)fp);
         goto joined_r0x0054934c;
       }
@@ -12585,7 +12584,7 @@ joined_r0x0054934c:
         if (rc == -1) {
           return;
         }
-        _sprintf(line,((i8 *)&events_wave_file_fmt),*(i32 *)(event + 0x184));
+        _sprintf(line,((i8 *)&events_wave_file_fmt),(i32)event->wave_file);
         rc = _fputs(line,(FILE *)fp);
         goto joined_r0x0054934c;
       }
@@ -12604,12 +12603,12 @@ void __cdecl events_write_list(iptr fp)
 {
   uint trigger;
   int rc;
-  uint *event;
+  ScenarioEvent *event;
   char line[256];
   
-  event = (uint *)unit_types_block.events_list_head;
+  event = unit_types_block.events_list_head;
   do {
-    if (event == (uint *)0x0) {
+    if (event == (ScenarioEvent *)0x0) {
       _fputs(((i8 *)&events_list_end_str),(FILE *)fp);
       return;
     }
@@ -12617,75 +12616,75 @@ void __cdecl events_write_list(iptr fp)
     if (rc == -1) {
       return;
     }
-    trigger = *event;
+    trigger = (uint)event->trigger;
     if (trigger < 9) {
       if (trigger == 8) {
         rc = _fputs(str_turninterval_2,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_interval_d,event[0xb]);
+        _sprintf(line,str_interval_d,(uint)event->turn);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
       }
       else if (trigger == 1) {
         rc = _fputs(str_unitkilled_2,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_unit_s_3,event[2]);
+        _sprintf(line,str_unit_s_3,(uint)event->unit_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_attacker_s,event[5]);
+        _sprintf(line,str_attacker_s,(uint)event->who_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_defender_s,event[8]);
+        _sprintf(line,str_defender_s,(uint)event->whom_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
       }
       else if (trigger == 2) {
         rc = _fputs(str_citytaken_2,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_city_s,event[4]);
+        _sprintf(line,str_city_s,(uint)event->city_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_attacker_s_2,event[5]);
+        _sprintf(line,str_attacker_s_2,(uint)event->who_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_defender_s_2,event[8]);
+        _sprintf(line,str_defender_s_2,(uint)event->whom_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
       }
       else if (trigger == 4) {
         rc = _fputs(str_turn_2,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_turn_d,event[0xb]);
+        _sprintf(line,str_turn_d,(uint)event->turn);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
       }
     }
     else {
@@ -12695,45 +12694,45 @@ void __cdecl events_write_list(iptr fp)
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_talker_s,event[5]);
+        _sprintf(line,str_talker_s,(uint)event->who_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
         _sprintf(line,str_talkertype_2);
-        if (event[7] == 1) {
+        if ((uint)event->talker_type == 1) {
           crt_strcat(line,str_human_3);
         }
-        if (event[7] == 2) {
+        if ((uint)event->talker_type == 2) {
           crt_strcat(line,str_computer_3);
         }
-        if (event[7] == 4) {
+        if ((uint)event->talker_type == 4) {
           crt_strcat(line,str_humanorcomputer_3);
         }
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_listener_s,event[8]);
+        _sprintf(line,str_listener_s,(uint)event->whom_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
         _sprintf(line,str_listenertype_2);
-        if (event[10] == 1) {
+        if ((uint)event->listener_type == 1) {
           crt_strcat(line,str_human_4);
         }
-        if (event[10] == 2) {
+        if ((uint)event->listener_type == 2) {
           crt_strcat(line,str_computer_4);
         }
-        if (event[10] == 4) {
+        if ((uint)event->listener_type == 4) {
           crt_strcat(line,str_humanorcomputer_4);
         }
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
         break;
       case 0x11:
       case 0x12:
@@ -12977,55 +12976,55 @@ void __cdecl events_write_list(iptr fp)
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
         break;
       case 0x40:
         rc = _fputs(str_randomturn_2,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_denominator_d,event[0xc]);
+        _sprintf(line,str_denominator_d,(uint)event->denominator);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
         break;
       case 0x80:
         rc = _fputs(str_noschism_2,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_defender_s_3,event[8]);
+        _sprintf(line,str_defender_s_3,(uint)event->whom_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
         break;
       case 0x100:
         rc = _fputs(str_receivedtechnology_2,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_technology_d_2,event[0xd]);
+        _sprintf(line,str_technology_d_2,(uint)event->technology);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        _sprintf(line,str_receiver_s_3,event[8]);
+        _sprintf(line,str_receiver_s_3,(uint)event->whom_name);
         rc = _fputs(line,(FILE *)fp);
         if (rc == -1) {
           return;
         }
-        events_write_actions(fp,(iptr)event);
+        events_write_actions(fp,event);
       }
     }
     rc = _fputs(str_endif_2,(FILE *)fp);
     if (rc == -1) {
       return;
     }
-    event = (uint *)event[0x6f];
+    event = event->next;
   } while( true );
 }
 
@@ -13271,7 +13270,7 @@ void __cdecl events_editor_update_buttons(i32 unused)
 {
   int action_sel;
   uint action_bit;
-  byte *event;
+  ScenarioEvent *event;
   int action_count;
   int sel;
   
@@ -13286,30 +13285,30 @@ void __cdecl events_editor_update_buttons(i32 unused)
   }
   else {
     ctrl_enable((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x9a4));
-    event = (byte *)unit_types_block.events_list_head;
-    while ((event != (byte *)0x0 && (sel != 0))) {
-      event = *(byte **)(event + 0x1bc);
+    event = unit_types_block.events_list_head;
+    while ((event != (ScenarioEvent *)0x0 && (sel != 0))) {
+      event = (ScenarioEvent *)(byte *)event->next;
       sel--;
     }
-    if ((*event & 0x20) == 0) {
+    if ((*((byte *)event) & 0x20) == 0) {
       ctrl_enable((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x968));
     }
     else {
       ctrl_disable((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x968));
     }
-    if (*(int *)event == 0x20) {
+    if (event->trigger == 0x20) {
       action_count = 0;
-      while ((1 << ((byte)action_count & 0x1f) & (*(uint *)(event + 4) | 0xfffffe6f)) != 0) {
+      while ((1 << ((byte)action_count & 0x1f) & (event->actions | 0xfffffe6f)) != 0) {
         action_count++;
       }
     }
     else {
       action_count = 0;
-      while ((*(uint *)(event + 4) & 1 << ((byte)action_count & 0x1f)) != 0) {
+      while ((event->actions & 1 << ((byte)action_count & 0x1f)) != 0) {
         action_count++;
       }
     }
-    if ((action_count < 0xc) && ((*event & 0x90) == 0)) {
+    if ((action_count < 0xc) && ((*((byte *)event) & 0x90) == 0)) {
       ctrl_enable((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x9e0));
     }
     else {
@@ -13322,7 +13321,7 @@ void __cdecl events_editor_update_buttons(i32 unused)
     }
     else {
       ctrl_enable((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa58));
-      action_bit = bits_nth_set(action_sel,*(i32 *)(event + 4));
+      action_bit = bits_nth_set(action_sel,(i32)event->actions);
       if ((action_bit & 0x3140) == 0) {
         ctrl_enable((Control *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xa1c));
       }
@@ -13488,7 +13487,7 @@ void __cdecl events_editor_on_help(void)
 {
   int action_sel;
   iptr parent_wnd2;
-  uint *event;
+  ScenarioEvent *event;
   uint bits2;
   int idx;
   
@@ -13508,34 +13507,34 @@ void __cdecl events_editor_on_help(void)
       events_editor_focus_redraw();
     }
     else {
-      event = (uint *)unit_types_block.events_list_head;
-      while ((event != (uint *)0x0 && (idx != 0))) {
-        event = (uint *)event[0x6f];
+      event = unit_types_block.events_list_head;
+      while ((event != (ScenarioEvent *)0x0 && (idx != 0))) {
+        event = event->next;
         idx--;
       }
-      bits2 = *event;
+      bits2 = (uint)event->trigger;
       idx = 0;
       for (; (bits2 & 1) == 0; bits2 = bits2 >> 1) {
         idx++;
       }
-      if (event != (uint *)0x0) {
+      if (event != (ScenarioEvent *)0x0) {
         events_editor_help_trigger(idx);
       }
     }
   }
   else {
     idx = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0));
-    event = (uint *)unit_types_block.events_list_head;
-    while ((event != (uint *)0x0 && (idx != 0))) {
-      event = *(uint **)((int)event + 0x1bc);
+    event = unit_types_block.events_list_head;
+    while ((event != (ScenarioEvent *)0x0 && (idx != 0))) {
+      event = (ScenarioEvent *)(uint *)event->next;
       idx--;
     }
-    bits2 = bits_nth_set(action_sel,*(i32 *)((int)event + 4));
+    bits2 = bits_nth_set(action_sel,(i32)event->actions);
     idx = 0;
     for (; (bits2 & 1) == 0; bits2 = bits2 >> 1) {
       idx++;
     }
-    if (event != (uint *)0x0) {
+    if (event != (ScenarioEvent *)0x0) {
       events_editor_help_action(idx);
     }
   }
@@ -13547,7 +13546,7 @@ void __cdecl events_editor_on_cancel(void)
 
 {
   events_reset((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events),50000);
-  events_copy((iptr)&unit_types_block.scenario_events,events_editor_backup);
+  events_copy((ScenarioEvents *)&unit_types_block.scenario_events,(ScenarioEvents *)events_editor_backup);
   editor_text_dlg_wnd_block.editor_running = 0;
   wnd_end_modal_loop((ModalMenuWindow *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
   return;
@@ -13561,69 +13560,69 @@ void __cdecl events_editor_fill_triggers(void)
   uint trigger;
   char *talker_type;
   char *listener_type;
-  uint *event;
+  ScenarioEvent *event;
   int num;
   char line[256];
   
   num = 0;
   listbox_clear((ListBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0));
-  for (event = (uint *)unit_types_block.events_list_head; event != (uint *)0x0;
-      event = (uint *)event[0x6f]) {
+  for (event = unit_types_block.events_list_head; event != (ScenarioEvent *)0x0;
+      event = event->next) {
     num++;
-    trigger = *event;
+    trigger = (uint)event->trigger;
     if (trigger < 9) {
       if (trigger == 8) {
-        _sprintf(line,str_d_turninterval_d,num,event[0xb]);
+        _sprintf(line,str_d_turninterval_d,num,(uint)event->turn);
       }
       else if (trigger == 1) {
-        if (((event[2] == 0) || (event[5] == 0)) || (event[8] == 0)) {
+        if (((event->unit_name == 0) || (event->who_name == 0)) || (event->whom_name == 0)) {
           _sprintf(line,str_d_unitkilled,num);
         }
         else {
-          _sprintf(line,str_d_unitkilled_s_attacker_s_defender_s,num,event[2],
-                   event[5],event[8]);
+          _sprintf(line,str_d_unitkilled_s_attacker_s_defender_s,num,(uint)event->unit_name,
+                   (uint)event->who_name,(uint)event->whom_name);
         }
       }
       else if (trigger == 2) {
-        if (((event[4] == 0) || (event[5] == 0)) || (event[8] == 0)) {
+        if (((event->city_name == 0) || (event->who_name == 0)) || (event->whom_name == 0)) {
           _sprintf(line,str_d_citytaken,num);
         }
         else {
-          _sprintf(line,str_d_citytaken_s_attacker_s_defender_s,num,event[4],
-                   event[5],event[8]);
+          _sprintf(line,str_d_citytaken_s_attacker_s_defender_s,num,(uint)event->city_name,
+                   (uint)event->who_name,(uint)event->whom_name);
         }
       }
       else if (trigger == 4) {
-        _sprintf(line,str_d_turn_d,num,event[0xb]);
+        _sprintf(line,str_d_turn_d,num,(uint)event->turn);
       }
     }
     else {
       switch(trigger) {
       case 0x10:
-        if ((event[5] == 0) || (event[8] == 0)) {
+        if ((event->who_name == 0) || (event->whom_name == 0)) {
           _sprintf(line,str_d_negotiation,num);
         }
         else {
-          if (event[10] == 1) {
+          if ((uint)event->listener_type == 1) {
             listener_type = str_human_5;
           }
-          else if (event[10] == 2) {
+          else if ((uint)event->listener_type == 2) {
             listener_type = str_computer_5;
           }
           else {
             listener_type = str_humanorcomputer_5;
           }
-          if (event[7] == 1) {
+          if ((uint)event->talker_type == 1) {
             talker_type = str_human_6;
           }
-          else if (event[7] == 2) {
+          else if ((uint)event->talker_type == 2) {
             talker_type = str_computer_6;
           }
           else {
             talker_type = str_humanorcomputer_6;
           }
-          _sprintf(line,str_d_negotiation_talker_s_s_listener_s_s,num,event[5],
-                   talker_type,event[8],listener_type);
+          _sprintf(line,str_d_negotiation_talker_s_s_listener_s_s,num,(uint)event->who_name,
+                   talker_type,(uint)event->whom_name,listener_type);
         }
         break;
       case 0x11:
@@ -13867,28 +13866,28 @@ void __cdecl events_editor_fill_triggers(void)
         _sprintf(line,str_d_scenarioloaded,num);
         break;
       case 0x40:
-        if (event[0xc] == 0) {
+        if (event->denominator == 0) {
           _sprintf(line,str_d_randomturn,num);
         }
         else {
-          _sprintf(line,str_d_randomturn_denominator_d,num,event[0xc]);
+          _sprintf(line,str_d_randomturn_denominator_d,num,(uint)event->denominator);
         }
         break;
       case 0x80:
-        if (event[8] == 0) {
+        if (event->whom_name == 0) {
           _sprintf(line,str_d_noschism,num);
         }
         else {
-          _sprintf(line,str_d_noschism_s,num,event[8]);
+          _sprintf(line,str_d_noschism_s,num,(uint)event->whom_name);
         }
         break;
       case 0x100:
-        if (event[8] == 0) {
+        if (event->whom_name == 0) {
           _sprintf(line,str_d_receivedtechnology,num);
         }
         else {
-          trigger = event[8];
-          tech_name = (i32)label_string(advances[event[0xd]].name);
+          trigger = (uint)event->whom_name;
+          tech_name = (i32)label_string(advances[(uint)event->technology].name);
           _sprintf(line,str_d_receivedtechnology_s_whom_s,num,tech_name,trigger);
         }
       }
@@ -13909,7 +13908,7 @@ void __cdecl events_editor_fill_actions(i32 unused)
   i32 civ_name;
   bool more;
   char who_str[16];
-  iptr event;
+  ScenarioEvent *event;
   uint action_bit;
   char line[256];
   
@@ -13917,80 +13916,80 @@ void __cdecl events_editor_fill_actions(i32 unused)
   event = unit_types_block.events_list_head;
   while ((event != 0 &&
          (next_idx = action_bit - 1, more = action_bit != 0, action_bit = next_idx, more))) {
-    event = *(iptr *)(event + 0x1bc);
+    event = event->next;
   }
   listbox_clear((ListBoxClearView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xb0c));
   action_bit = 1;
   if (event != 0) {
     do {
       line[0] = '\0';
-      action = *(uint *)(event + 4) & action_bit;
+      action = event->actions & action_bit;
       if (action < 9) {
         if (action == 8) {
-          if (*(int *)(event + 0x174) == 0) {
+          if (event->money_receiver_name == 0) {
             _sprintf(line,str_changemoney_3);
           }
           else {
             _sprintf(line,str_changemoney_receiver_s_amount_d,
-                     *(i32 *)(event + 0x174),*(i32 *)(event + 0x17c));
+                     (i32)event->money_receiver_name,event->money_amount);
           }
         }
         else if (action == 1) {
-          if (*(int *)(event + 0x38) == 0) {
+          if (event->text[0] == 0) {
             _sprintf(line,((i8 *)&events_editor_text_caption));
           }
           else {
-            _sprintf(line,str_text_s,*(i32 *)(event + 0x38));
+            _sprintf(line,str_text_s,(i32)event->text[0]);
           }
         }
         else if (action == 2) {
-          if ((*(int *)(event + 0x90) == 0) || (*(int *)(event + 0x88) == 0)) {
+          if ((event->move_unit_name == 0) || (event->move_owner_name == 0)) {
             _sprintf(line,str_moveunit_3);
           }
           else {
-            _sprintf(line,str_moveunit_s_owner_s,*(i32 *)(event + 0x90),
-                     *(i32 *)(event + 0x88));
+            _sprintf(line,str_moveunit_s_owner_s,(i32)event->move_unit_name,
+                     (i32)event->move_owner_name);
           }
         }
         else if (action == 4) {
-          if (((*(int *)(event + 0xdc) == 0) || (*(int *)(event + 0xd4) == 0)) ||
-             (*(int *)(event + 0x13c) == 0)) {
+          if (((event->create_unit_name == 0) || (event->create_owner_name == 0)) ||
+             (event->create_homecity == 0)) {
             _sprintf(line,str_createunit_3);
           }
           else {
             _sprintf(line,str_createunit_s_owner_s_veteran_s_homecity,
-                     *(i32 *)(event + 0xdc),*(i32 *)(event + 0xd4),
-                     ((i8 *)&events_editor_yes_no_strs) + ((*(int *)(event + 0x138) != 0) - 1 & 4),
-                     *(i32 *)(event + 0x13c));
+                     (i32)event->create_unit_name,(i32)event->create_owner_name,
+                     ((i8 *)&events_editor_yes_no_strs) + ((event->create_veteran != 0) - 1 & 4),
+                     (i32)event->create_homecity);
           }
         }
       }
       else if (action < 0x21) {
         if (action == 0x20) {
-          if ((*(int *)(event + 0xcc) == 0) || (*(int *)(event + 0xc4) == 0)) {
+          if ((event->aggression_who_name == 0) || (event->aggression_whom_name == 0)) {
             _sprintf(line,str_makeaggression_3);
           }
           else {
             _sprintf(line,str_makeaggression_aggressor_s_victim_s,
-                     *(i32 *)(event + 0xcc),*(i32 *)(event + 0xc4));
+                     (i32)event->aggression_who_name,(i32)event->aggression_whom_name);
           }
         }
         else if (action == 0x10) {
-          if (*(int *)(event + 0x184) == 0) {
+          if (event->wave_file == 0) {
             _sprintf(line,str_playwavefile_3);
           }
           else {
-            _sprintf(line,str_playwavefile_s,*(i32 *)(event + 0x184));
+            _sprintf(line,str_playwavefile_s,(i32)event->wave_file);
           }
         }
       }
       else if (action < 0x81) {
         if (action == 0x80) {
-          if (*(int *)(event + 0x188) == 0) {
+          if (event->cd_track == 0) {
             _sprintf(line,str_playcdtrack_3);
           }
           else {
-            _sprintf(line,str_playcdtrack_d,*(i32 *)(event + 0x188));
+            _sprintf(line,str_playcdtrack_d,event->cd_track);
           }
         }
         else if (action == 0x40) {
@@ -13999,7 +13998,7 @@ void __cdecl events_editor_fill_actions(i32 unused)
       }
       else if (action < 0x201) {
         if (action == 0x200) {
-          name_str = (i32)label_string(terrain_types[*(int *)(event + 0x18c)].name);
+          name_str = (i32)label_string(terrain_types[event->terrain_type].name);
           _sprintf(line,str_changeterrain_s,name_str);
         }
         else if (action == 0x100) {
@@ -14007,9 +14006,9 @@ void __cdecl events_editor_fill_actions(i32 unused)
         }
       }
       else if (action == 0x400) {
-        if (*(int *)(event + 0x1b0) < 0) {
-          if ((*(byte *)(event + 1) & 1) == 0) {
-            if (*(int *)(event + 0x1b0) == -3) {
+        if (event->destroy_civ < 0) {
+          if ((event->trigger_bytes[1] & 1) == 0) {
+            if (event->destroy_civ == -3) {
               _sprintf(line,str_destroyacivilization_triggerattacker);
             }
             else {
@@ -14021,17 +14020,17 @@ void __cdecl events_editor_fill_actions(i32 unused)
           }
         }
         else {
-          name_str = (i32)(civ_name_plural(*(iptr *)(event + 0x1b0)));
+          name_str = (i32)(civ_name_plural(event->destroy_civ));
           _sprintf(line,str_destroyacivilization_s,name_str);
         }
       }
       else if (action == 0x800) {
-        if (*(int *)(event + 0x1b8) == 0) {
+        if (event->give_tech_civ == 0) {
           _sprintf(line,str_givetechnology_3);
         }
-        else if (*(int *)(event + 0x1b8) < 0) {
-          if ((*(byte *)(event + 1) & 1) == 0) {
-            if (*(int *)(event + 0x1b8) == -3) {
+        else if (event->give_tech_civ < 0) {
+          if ((event->trigger_bytes[1] & 1) == 0) {
+            if (event->give_tech_civ == -3) {
               _sprintf(who_str,str_triggerattacker_4);
             }
             else {
@@ -14041,12 +14040,12 @@ void __cdecl events_editor_fill_actions(i32 unused)
           else {
             _sprintf(who_str,str_triggerreceiver_4);
           }
-          name_str = (i32)label_string(advances[*(int *)(event + 0x1b4)].name);
+          name_str = (i32)label_string(advances[event->give_tech].name);
           _sprintf(line,str_givetechnology_receiver_s_technology_s_2,who_str,name_str);
         }
         else {
-          name_str = (i32)label_string(advances[*(int *)(event + 0x1b4)].name);
-          civ_name = (i32)(civ_name_plural(*(iptr *)(event + 0x1b8)));
+          name_str = (i32)label_string(advances[event->give_tech].name);
+          civ_name = (i32)(civ_name_plural(event->give_tech_civ));
           _sprintf(line,str_givetechnology_receiver_s_technology_s,civ_name,name_str);
         }
       }
@@ -14069,7 +14068,7 @@ void __cdecl events_editor_on_delete_trigger(void)
 {
   int sel;
   i32 parent_wnd2;
-  iptr event;
+  ScenarioEvent *event;
   i32 idx;
   
   if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
@@ -14083,18 +14082,18 @@ void __cdecl events_editor_on_delete_trigger(void)
   if (sel != 0) {
     sel = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0));
     idx = sel;
-    for (event = unit_types_block.events_list_head; event != 0; event = *(iptr *)(event + 0x1bc)) {
+    for (event = unit_types_block.events_list_head; event != 0; event = event->next) {
       if (idx == 0) break;
       idx--;
     }
-    if (*(int *)(event + 0x1c0) != 0) {
-      *(i32 *)(*(int *)(event + 0x1c0) + 0x1bc) = *(i32 *)(event + 0x1bc);
+    if (event->prev != 0) {
+      event->prev->next = event->next;
     }
-    if (*(int *)(event + 0x1bc) != 0) {
-      *(i32 *)(*(int *)(event + 0x1bc) + 0x1c0) = *(i32 *)(event + 0x1c0);
+    if (event->next != 0) {
+      event->next->prev = event->prev;
     }
     if (sel == 0) {
-      unit_types_block.events_list_head = *(iptr *)(event + 0x1bc);
+      unit_types_block.events_list_head = event->next;
     }
     events_compact();
     events_editor_fill_triggers();
@@ -14124,7 +14123,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
   iptr parent_wnd_c;
   iptr parent_wnd2;
   i32 changed;
-  uint *event;
+  ScenarioEvent *event;
   char city_name[260];
   int skip;
   i32 number;
@@ -14141,13 +14140,13 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
   }
   dlg_set_parent_window(parent_wnd2);
   sel = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0));
-  event = (uint *)unit_types_block.events_list_head;
+  event = unit_types_block.events_list_head;
   skip = sel;
-  while ((event != (uint *)0x0 &&
+  while ((event != (ScenarioEvent *)0x0 &&
          (check = skip - 1, more = skip != 0, skip = check, more))) {
-    event = (uint *)event[0x6f];
+    event = event->next;
   }
-  value = *event;
+  value = (uint)event->trigger;
   if (value < 9) {
     if (value == 8) {
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
@@ -14157,7 +14156,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
         parent_wnd_a = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
       }
       dlg_set_parent_window(parent_wnd_a);
-      choice = dlg_input_number((iptr)&str_debug_11,(const char *)&str_turninterval_3,event[0xb],(iptr)&number);
+      choice = dlg_input_number((iptr)&str_debug_11,(const char *)&str_turninterval_3,(uint)event->turn,(iptr)&number);
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
         parent_wnd_b = 0;
       }
@@ -14167,62 +14166,62 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
       dlg_set_parent_window(parent_wnd_b);
       if (choice == 0) {
         value = editor_clamp_value(number,0,0x7fff);
-        event[0xb] = value;
+        event->turn = value;
         changed = 1;
       }
     }
     else if (value == 1) {
       kind = 1;
       title = (i32)label_string(label_string_ids[0x224]);
-      choice = events_editor_pick_item(event[3],(const char *)title,kind);
+      choice = events_editor_pick_item((uint)event->unit_type,(const char *)title,kind);
       if (choice != 0xffffffff) {
         if ((int)choice < 0) {
-          event[3] = 0xfffffffe;
+          event->unit_type = 0xfffffffe;
           name2 = str_anyunit_3;
         }
         else {
-          event[3] = choice;
-          name2 = label_string(unit_types[event[3]].name);
+          event->unit_type = choice;
+          name2 = label_string(unit_types[(uint)event->unit_type].name);
         }
         len = _strlen(name2);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[2] = value;
-        if (event[2] != 0) {
-          crt_strcpy((char *)((void *)event[2]),name2);
+        event->unit_name = (char *)value;
+        if (event->unit_name != 0) {
+          crt_strcpy((char *)((void *)event->unit_name),name2);
           kind = 4;
           title = (i32)label_string(label_string_ids[0x225]);
-          choice = events_editor_pick_item(event[6],(const char *)title,kind);
+          choice = events_editor_pick_item((uint)event->who_civ,(const char *)title,kind);
           if (choice != 0xffffffff) {
             if ((int)choice < 0) {
-              event[6] = 0xfffffffe;
+              event->who_civ = 0xfffffffe;
               name2 = str_anybody_3;
             }
             else {
-              event[6] = choice;
-              name2 = civ_name_plural(event[6]);
+              event->who_civ = choice;
+              name2 = civ_name_plural((uint)event->who_civ);
             }
             len = _strlen(name2);
             value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-            event[5] = value;
-            if (event[5] != 0) {
-              crt_strcpy((char *)((void *)event[5]),name2);
+            event->who_name = (char *)value;
+            if (event->who_name != 0) {
+              crt_strcpy((char *)((void *)event->who_name),name2);
               kind = 4;
               title = (i32)label_string(label_string_ids[0x226]);
-              choice = events_editor_pick_item(event[9],(const char *)title,kind);
+              choice = events_editor_pick_item((uint)event->whom_civ,(const char *)title,kind);
               if (choice != 0xffffffff) {
                 if ((int)choice < 0) {
-                  event[9] = 0xfffffffe;
+                  event->whom_civ = 0xfffffffe;
                   name2 = str_anybody_4;
                 }
                 else {
-                  event[9] = choice;
-                  name2 = civ_name_plural(event[9]);
+                  event->whom_civ = choice;
+                  name2 = civ_name_plural((uint)event->whom_civ);
                 }
                 len = _strlen(name2);
                 value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-                event[8] = value;
-                if (event[8] != 0) {
-                  crt_strcpy((char *)((void *)event[8]),name2);
+                event->whom_name = (char *)value;
+                if (event->whom_name != 0) {
+                  crt_strcpy((char *)((void *)event->whom_name),name2);
                   changed = 1;
                 }
               }
@@ -14233,8 +14232,8 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
     }
     else if (value == 2) {
       do {
-        if (event[4] == 0) {
-          event[4] = (uint)&events_city_default_str;
+        if (event->city_name == 0) {
+          event->city_name = &events_city_default_str;
         }
         if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
           parent_wnd_c = 0;
@@ -14243,7 +14242,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
           parent_wnd_c = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
         }
         dlg_set_parent_window(parent_wnd_c);
-        choice = dlg_text_input((iptr)&str_debug_11,(const char *)&str_cityname,0x17,event[4],(iptr)city_name);
+        choice = dlg_text_input((iptr)&str_debug_11,(const char *)&str_cityname,0x17,(uint)event->city_name,(iptr)city_name);
         dlg_set_parent_window(0);
       } while ((-1 < (int)choice) &&
               ((len = _strlen(city_name), len == 0 ||
@@ -14251,43 +14250,43 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
       if ((-1 < (int)choice) && (len = _strlen(city_name), len != 0)) {
         len = _strlen(city_name);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[4] = value;
-        if (event[4] != 0) {
-          crt_strcpy((char *)((void *)event[4]),city_name);
+        event->city_name = (char *)value;
+        if (event->city_name != 0) {
+          crt_strcpy((char *)((void *)event->city_name),city_name);
           kind = 4;
           title = (i32)label_string(label_string_ids[0x225]);
-          choice = events_editor_pick_item(event[6],(const char *)title,kind);
+          choice = events_editor_pick_item((uint)event->who_civ,(const char *)title,kind);
           if (choice != 0xffffffff) {
             if ((int)choice < 0) {
-              event[6] = 0xfffffffe;
+              event->who_civ = 0xfffffffe;
               name2 = str_anybody_5;
             }
             else {
-              event[6] = choice;
-              name2 = civ_name_plural(event[6]);
+              event->who_civ = choice;
+              name2 = civ_name_plural((uint)event->who_civ);
             }
             len = _strlen(name2);
             value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-            event[5] = value;
-            if (event[5] != 0) {
-              crt_strcpy((char *)((void *)event[5]),name2);
+            event->who_name = (char *)value;
+            if (event->who_name != 0) {
+              crt_strcpy((char *)((void *)event->who_name),name2);
               kind = 4;
               title = (i32)label_string(label_string_ids[0x226]);
-              choice = events_editor_pick_item(event[9],(const char *)title,kind);
+              choice = events_editor_pick_item((uint)event->whom_civ,(const char *)title,kind);
               if (choice != 0xffffffff) {
                 if ((int)choice < 0) {
-                  event[9] = 0xfffffffe;
+                  event->whom_civ = 0xfffffffe;
                   name2 = str_anybody_6;
                 }
                 else {
-                  event[9] = choice;
-                  name2 = civ_name_plural(event[9]);
+                  event->whom_civ = choice;
+                  name2 = civ_name_plural((uint)event->whom_civ);
                 }
                 len = _strlen(name2);
                 value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-                event[8] = value;
-                if (event[8] != 0) {
-                  crt_strcpy((char *)((void *)event[8]),name2);
+                event->whom_name = (char *)value;
+                if (event->whom_name != 0) {
+                  crt_strcpy((char *)((void *)event->whom_name),name2);
                   changed = 1;
                 }
               }
@@ -14304,11 +14303,11 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
         parent_wnd_d = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
       }
       dlg_set_parent_window(parent_wnd_d);
-      choice = dlg_input_number((iptr)&str_debug_11,(const char *)&str_turncount,event[0xb],(iptr)&number);
+      choice = dlg_input_number((iptr)&str_debug_11,(const char *)&str_turncount,(uint)event->turn,(iptr)&number);
       dlg_set_parent_window(0);
       if (choice == 0) {
         value = editor_clamp_value(number,0xffffffff,0x7fff);
-        event[0xb] = value;
+        event->turn = value;
         changed = 1;
       }
     }
@@ -14318,25 +14317,25 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
     case 0x10:
       kind = 4;
       title = (i32)label_string(label_string_ids[0x227]);
-      choice = events_editor_pick_item(event[6],(const char *)title,kind);
+      choice = events_editor_pick_item((uint)event->who_civ,(const char *)title,kind);
       if (choice != 0xffffffff) {
         if ((int)choice < 0) {
-          event[6] = 0xfffffffe;
+          event->who_civ = 0xfffffffe;
           name2 = str_anybody_7;
         }
         else {
-          event[6] = choice;
-          name2 = civ_name_plural(event[6]);
+          event->who_civ = choice;
+          name2 = civ_name_plural((uint)event->who_civ);
         }
         len = _strlen(name2);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[5] = value;
-        if (event[5] != 0) {
-          crt_strcpy((char *)((void *)event[5]),name2);
-          if ((event[7] == 0) || (event[7] == 1)) {
+        event->who_name = (char *)value;
+        if (event->who_name != 0) {
+          crt_strcpy((char *)((void *)event->who_name),name2);
+          if ((event->talker_type == 0) || ((uint)event->talker_type == 1)) {
             choice = 0;
           }
-          else if (event[7] == 2) {
+          else if ((uint)event->talker_type == 2) {
             choice = 1;
           }
           else {
@@ -14353,35 +14352,35 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
           dlg_set_parent_window(0);
           if (-1 < (int)choice) {
             if (choice == 0) {
-              event[7] = 1;
+              event->talker_type = 1;
             }
             else if (choice == 1) {
-              event[7] = 2;
+              event->talker_type = 2;
             }
             else {
-              event[7] = 4;
+              event->talker_type = 4;
             }
             kind = 4;
             title = (i32)label_string(label_string_ids[0x228]);
-            choice = events_editor_pick_item(event[9],(const char *)title,kind);
+            choice = events_editor_pick_item((uint)event->whom_civ,(const char *)title,kind);
             if (choice != 0xffffffff) {
               if ((int)choice < 0) {
-                event[9] = 0xfffffffe;
+                event->whom_civ = 0xfffffffe;
                 name2 = str_anybody_8;
               }
               else {
-                event[9] = choice;
-                name2 = civ_name_plural(event[9]);
+                event->whom_civ = choice;
+                name2 = civ_name_plural((uint)event->whom_civ);
               }
               len = _strlen(name2);
               value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-              event[8] = value;
-              if (event[8] != 0) {
-                crt_strcpy((char *)((void *)event[8]),name2);
-                if ((event[10] == 0) || (event[10] == 1)) {
+              event->whom_name = (char *)value;
+              if (event->whom_name != 0) {
+                crt_strcpy((char *)((void *)event->whom_name),name2);
+                if ((event->listener_type == 0) || ((uint)event->listener_type == 1)) {
                   choice = 0;
                 }
-                else if (event[10] == 2) {
+                else if ((uint)event->listener_type == 2) {
                   choice = 1;
                 }
                 else {
@@ -14398,13 +14397,13 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
                 dlg_set_parent_window(0);
                 if (-1 < (int)choice) {
                   if (choice == 0) {
-                    event[10] = 1;
+                    event->listener_type = 1;
                   }
                   else if (choice == 1) {
-                    event[10] = 2;
+                    event->listener_type = 2;
                   }
                   else {
-                    event[10] = 4;
+                    event->listener_type = 4;
                   }
                   changed = 1;
                 }
@@ -14655,8 +14654,8 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
       changed = 1;
       break;
     case 0x40:
-      value = editor_clamp_value(event[0xc],1,1000);
-      event[0xc] = value;
+      value = editor_clamp_value((uint)event->denominator,1,1000);
+      event->denominator = value;
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
         parent_wnd_h = 0;
       }
@@ -14664,32 +14663,32 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
         parent_wnd_h = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
       }
       dlg_set_parent_window(parent_wnd_h);
-      choice = dlg_input_number((iptr)&str_debug_11,(const char *)&str_randomdenom,event[0xc],(iptr)&number);
+      choice = dlg_input_number((iptr)&str_debug_11,(const char *)&str_randomdenom,(uint)event->denominator,(iptr)&number);
       dlg_set_parent_window(0);
       if (choice == 0) {
         value = editor_clamp_value(number,1,1000);
-        event[0xc] = value;
+        event->denominator = value;
         changed = 1;
       }
       break;
     case 0x80:
       kind = 4;
       title = (i32)label_string(label_string_ids[0x229]);
-      choice = events_editor_pick_item(event[9],(const char *)title,kind);
+      choice = events_editor_pick_item((uint)event->whom_civ,(const char *)title,kind);
       if (choice != 0xffffffff) {
         if ((int)choice < 0) {
-          event[9] = 0xfffffffe;
+          event->whom_civ = 0xfffffffe;
           name2 = str_anybody_9;
         }
         else {
-          event[9] = choice;
-          name2 = civ_name_plural(event[9]);
+          event->whom_civ = choice;
+          name2 = civ_name_plural((uint)event->whom_civ);
         }
         len = _strlen(name2);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[8] = value;
-        if (event[8] != 0) {
-          crt_strcpy((char *)((void *)event[8]),name2);
+        event->whom_name = (char *)value;
+        if (event->whom_name != 0) {
+          crt_strcpy((char *)((void *)event->whom_name),name2);
           changed = 1;
         }
       }
@@ -14697,26 +14696,26 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
     case 0x100:
       kind = 4;
       title = (i32)label_string(label_string_ids[0x22a]);
-      choice = events_editor_pick_item(event[9],(const char *)title,kind);
+      choice = events_editor_pick_item((uint)event->whom_civ,(const char *)title,kind);
       if (choice != 0xffffffff) {
         if ((int)choice < 0) {
-          event[9] = 0xfffffffe;
+          event->whom_civ = 0xfffffffe;
           name2 = str_anybody_10;
         }
         else {
-          event[9] = choice;
-          name2 = civ_name_plural(event[9]);
+          event->whom_civ = choice;
+          name2 = civ_name_plural((uint)event->whom_civ);
         }
         len = _strlen(name2);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[8] = value;
-        if (event[8] != 0) {
-          crt_strcpy((char *)((void *)event[8]),name2);
+        event->whom_name = (char *)value;
+        if (event->whom_name != 0) {
+          crt_strcpy((char *)((void *)event->whom_name),name2);
           kind = 2;
           title = (i32)label_string(label_string_ids[0x22b]);
-          choice = events_editor_pick_item(event[0xd],(const char *)title,kind);
+          choice = events_editor_pick_item((uint)event->technology,(const char *)title,kind);
           if (choice != 0xffffffff) {
-            event[0xd] = choice;
+            event->technology = choice;
             changed = 1;
           }
         }
@@ -14751,7 +14750,7 @@ void __cdecl events_editor_on_add_trigger(void)
   int result;
   UINT uType;
   iptr parent_wnd2;
-  iptr event;
+  ScenarioEvent *event;
   int trigger_type;
   
   trigger_type = 0;
@@ -14787,14 +14786,14 @@ void __cdecl events_editor_on_add_trigger(void)
       listbox_set_cur_sel((ListBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0),result - 1);
       result = events_editor_edit_trigger(0);
       if (result == 0) {
-        for (event = unit_types_block.events_list_head; *(int *)(event + 0x1bc) != 0;
-            event = *(iptr *)(event + 0x1bc)) {
+        for (event = unit_types_block.events_list_head; (int)event->next != 0;
+            event = event->next) {
         }
-        if (*(int *)(event + 0x1c0) == 0) {
-          unit_types_block.events_list_head = *(iptr *)(event + 0x1bc);
+        if (event->prev == 0) {
+          unit_types_block.events_list_head = event->next;
         }
         else {
-          *(i32 *)(*(int *)(event + 0x1c0) + 0x1bc) = *(i32 *)(event + 0x1bc);
+          event->prev->next = event->next;
         }
         events_compact();
         events_editor_fill_triggers();
@@ -14815,11 +14814,11 @@ void __cdecl events_editor_on_delete_action(void)
   i32 action_sel;
   uint action_bit;
   i32 parent_wnd2;
-  iptr event;
+  ScenarioEvent *event;
   i32 sel_index;
   
   sel_index = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0));
-  for (event = unit_types_block.events_list_head; event != 0; event = *(iptr *)(event + 0x1bc)) {
+  for (event = unit_types_block.events_list_head; event != 0; event = event->next) {
     if (sel_index == 0) break;
     sel_index--;
   }
@@ -14833,12 +14832,12 @@ void __cdecl events_editor_on_delete_action(void)
   result = popup_game((const char *)&str_deleteitem_2);
   if (result != 0) {
     action_sel = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xb0c));
-    result = bits_nth_set(action_sel,*(i32 *)(event + 4));
+    result = bits_nth_set(action_sel,(i32)event->actions);
     if (result == 1) {
-      *(i32 *)(event + 0x38) = 0;
+      event->text[0] = 0;
     }
-    action_bit = bits_nth_set(action_sel,*(i32 *)(event + 4));
-    *(uint *)(event + 4) = *(uint *)(event + 4) & ~action_bit;
+    action_bit = bits_nth_set(action_sel,(i32)event->actions);
+    event->actions = event->actions & ~action_bit;
     events_editor_fill_actions(0);
     events_compact();
   }
@@ -14874,7 +14873,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
   iptr parent_wnd3;
   iptr parent_wnd2;
   uint changed;
-  i32 *event;
+  ScenarioEvent *event;
   char input_buf[260];
   int idx;
   InputControl edit_ctl;
@@ -14899,27 +14898,27 @@ uint __cdecl events_editor_edit_action(i32 mode)
   }
   dlg_set_parent_window(parent_wnd2);
   idx = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0));
-  event = (i32 *)unit_types_block.events_list_head;
-  while ((event != (i32 *)0x0 &&
+  event = unit_types_block.events_list_head;
+  while ((event != (ScenarioEvent *)0x0 &&
          (prev_count = idx - 1, nonzero = idx != 0, idx = prev_count, nonzero))) {
-    event = (i32 *)event[0x6f];
+    event = event->next;
   }
-  value = event[1];
+  value = (i32)event->actions;
   arg2 = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xb0c));
   action_bit = bits_nth_set(arg2,value);
   if (action_bit < 9) {
     if (action_bit == 8) {
       name_out = &name_str;
-      value = *event;
+      value = event->trigger;
       arg2 = (i32)label_string(label_string_ids[0x22a]);
-      result = events_editor_pick_action_civ(event[0x5e],(const char *)arg2,value,(iptr)name_out);
+      result = events_editor_pick_action_civ(event->money_receiver_civ,(const char *)arg2,value,(iptr)name_out);
       if (result != -1) {
-        event[0x5e] = result;
+        event->money_receiver_civ = result;
         len = _strlen(name_str);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[0x5d] = value;
-        if (event[0x5d] != 0) {
-          crt_strcpy((char *)((void *)event[0x5d]),name_str);
+        event->money_receiver_name = (char *)value;
+        if (event->money_receiver_name != 0) {
+          crt_strcpy((char *)((void *)event->money_receiver_name),name_str);
           if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
             parent_wnd22 = 0;
           }
@@ -14927,11 +14926,11 @@ uint __cdecl events_editor_edit_action(i32 mode)
             parent_wnd22 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
           }
           dlg_set_parent_window(parent_wnd22);
-          result = editor_input_long((const char *)&str_debug_11,(const char *)&str_amount_2,event[0x5f],(iptr)&number_value);
+          result = editor_input_long((const char *)&str_debug_11,(const char *)&str_amount_2,event->money_amount,(iptr)&number_value);
           dlg_set_parent_window(0);
           if (result == 0) {
             value = editor_clamp_value(number_value,0xffff8ad0,30000);
-            event[0x5f] = value;
+            event->money_amount = value;
             changed = 1;
           }
         }
@@ -14939,41 +14938,41 @@ uint __cdecl events_editor_edit_action(i32 mode)
     }
     else if (action_bit == 1) {
       value = (i32)label_string(label_string_ids[0x22c]);
-      prev_count = editor_text_edit_dialog((iptr)(event + 0xe),(const char *)value);
+      prev_count = editor_text_edit_dialog((iptr)(((i32 *)event) + 0xe),(const char *)value);
       changed = (uint)(prev_count != 0);
     }
     else if (action_bit == 2) {
       arg2 = 3;
       value = (i32)label_string(label_string_ids[0x22d]);
-      result = events_editor_pick_item(event[0x25],(const char *)value,arg2);
+      result = events_editor_pick_item(event->move_unit_type,(const char *)value,arg2);
       if (result != -1) {
         if (result < 0) {
-          event[0x25] = 0xfffffffe;
+          event->move_unit_type = 0xfffffffe;
           name_str = str_anyunit_4;
         }
         else {
-          event[0x25] = result;
-          name_str = label_string(unit_types[event[0x25]].name);
+          event->move_unit_type = result;
+          name_str = label_string(unit_types[event->move_unit_type].name);
         }
         len = _strlen(name_str);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[0x24] = value;
-        if (event[0x24] != 0) {
-          crt_strcpy((char *)((void *)event[0x24]),name_str);
+        event->move_unit_name = (char *)value;
+        if (event->move_unit_name != 0) {
+          crt_strcpy((char *)((void *)event->move_unit_name),name_str);
           name_out = &name_str;
-          value = *event;
+          value = event->trigger;
           arg2 = (i32)label_string(label_string_ids[0x22e]);
-          result = events_editor_pick_action_civ(event[0x23],(const char *)arg2,value,(iptr)name_out);
+          result = events_editor_pick_action_civ(event->move_owner_civ,(const char *)arg2,value,(iptr)name_out);
           if (result != -1) {
-            event[0x23] = result;
+            event->move_owner_civ = result;
             len = _strlen(name_str);
             value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-            event[0x22] = value;
-            if (event[0x22] != 0) {
-              crt_strcpy((char *)((void *)event[0x22]),name_str);
-              _sprintf(default_text,str_d_d_d_d_d_d_d_d,event[0x27],event[0x28],
-                       event[0x29],event[0x2a],event[0x2b],event[0x2c],
-                       event[0x2d],event[0x2e]);
+            event->move_owner_name = (char *)value;
+            if (event->move_owner_name != 0) {
+              crt_strcpy((char *)((void *)event->move_owner_name),name_str);
+              _sprintf(default_text,str_d_d_d_d_d_d_d_d,event->move_rect[0],event->move_rect[1],
+                       event->move_rect[2],event->move_rect[3],event->move_rect[4],event->move_rect[5],
+                       event->move_rect[6],event->move_rect[7]);
               if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
                 parent_wnd3 = 0;
               }
@@ -14998,16 +14997,16 @@ uint __cdecl events_editor_edit_action(i32 mode)
                     token = text_next_token();
                     parsed = _atol(token);
                     value = editor_clamp_value(parsed,value,arg2);
-                    event[idx * 2 + 0x27] = value;
+                    event->move_rect[idx * 2] = value;
                     arg2 = 0x7fff;
                     value = 0;
                     token = text_next_token();
                     parsed = _atol(token);
                     value = editor_clamp_value(parsed,value,arg2);
-                    event[idx * 2 + 0x28] = value;
+                    event->move_rect[idx * 2 + 1] = value;
                   }
                 }
-                _sprintf(default_text,str_d_d_5,event[0x2f],event[0x30]);
+                _sprintf(default_text,str_d_d_5,event->move_to_x,event->move_to_y);
                 if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
                   parent_wnd4 = 0;
                 }
@@ -15032,13 +15031,13 @@ uint __cdecl events_editor_edit_action(i32 mode)
                     token = text_next_token();
                     parsed = _atol(token);
                     value = editor_clamp_value(parsed,value,arg2);
-                    event[0x2f] = value;
+                    event->move_to_x = value;
                     arg2 = 0x7fff;
                     value = 0;
                     token = text_next_token();
                     parsed = _atol(token);
                     value = editor_clamp_value(parsed,value,arg2);
-                    event[0x30] = value;
+                    event->move_to_y = value;
                   }
                   if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
                     parent_wnd6 = 0;
@@ -15047,21 +15046,21 @@ uint __cdecl events_editor_edit_action(i32 mode)
                     parent_wnd6 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
                   }
                   dlg_set_parent_window(parent_wnd6);
-                  if (event[0x26] == -2) {
+                  if (event->move_count == -2) {
                     default_value = 0xffffffff;
                   }
                   else {
-                    default_value = event[0x26];
+                    default_value = event->move_count;
                   }
                   result = dlg_input_number((iptr)&str_debug_11,(const char *)&str_numunits,default_value,(iptr)&number_value);
                   dlg_set_parent_window(0);
                   if (result == 0) {
                     if (number_value == -1) {
-                      event[0x26] = 0xfffffffe;
+                      event->move_count = 0xfffffffe;
                     }
                     else {
                       value = editor_clamp_value(number_value,0,0x7fff);
-                      event[0x26] = value;
+                      event->move_count = value;
                     }
                     changed = 1;
                   }
@@ -15075,26 +15074,26 @@ uint __cdecl events_editor_edit_action(i32 mode)
     else if (action_bit == 4) {
       arg2 = 1;
       value = (i32)label_string(label_string_ids[0x22f]);
-      result = events_editor_pick_item(event[0x38],(const char *)value,arg2);
+      result = events_editor_pick_item(event->create_unit_type,(const char *)value,arg2);
       if (result != -1) {
-        event[0x38] = result;
-        name_str = label_string(unit_types[event[0x38]].name);
+        event->create_unit_type = result;
+        name_str = label_string(unit_types[event->create_unit_type].name);
         len = _strlen(name_str);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[0x37] = value;
-        if (event[0x37] != 0) {
-          crt_strcpy((char *)((void *)event[0x37]),name_str);
+        event->create_unit_name = (char *)value;
+        if (event->create_unit_name != 0) {
+          crt_strcpy((char *)((void *)event->create_unit_name),name_str);
           name_out = &name_str;
-          value = *event;
+          value = event->trigger;
           arg2 = (i32)label_string(label_string_ids[0x22e]);
-          result = events_editor_pick_action_civ(event[0x36],(const char *)arg2,value,(iptr)name_out);
+          result = events_editor_pick_action_civ(event->create_owner_civ,(const char *)arg2,value,(iptr)name_out);
           if (result != -1) {
-            event[0x36] = result;
+            event->create_owner_civ = result;
             len = _strlen(name_str);
             value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-            event[0x35] = value;
-            if (event[0x35] != 0) {
-              crt_strcpy((char *)((void *)event[0x35]),name_str);
+            event->create_owner_name = (char *)value;
+            if (event->create_owner_name != 0) {
+              crt_strcpy((char *)((void *)event->create_owner_name),name_str);
               if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
                 parent_wnd7 = 0;
               }
@@ -15102,13 +15101,13 @@ uint __cdecl events_editor_edit_action(i32 mode)
                 parent_wnd7 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
               }
               dlg_set_parent_window(parent_wnd7);
-              choice = popup_debug_ex((const char *)&str_veteran_2,event[0x4e],0);
+              choice = popup_debug_ex((const char *)&str_veteran_2,event->create_veteran,0);
               dlg_set_parent_window(0);
               if (-1 < choice) {
-                event[0x4e] = choice;
+                event->create_veteran = choice;
                 do {
-                  if (event[0x4f] == 0) {
-                    event[0x4f] = ((i32)(i8 *)&events_homecity_default_str);
+                  if (event->create_homecity == 0) {
+                    event->create_homecity = (char *)(((i32)(i8 *)&events_homecity_default_str));
                   }
                   if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
                     parent_wnd8 = 0;
@@ -15117,7 +15116,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
                     parent_wnd8 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
                   }
                   dlg_set_parent_window(parent_wnd8);
-                  result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_homecityname,0x17,event[0x4f],
+                  result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_homecityname,0x17,(i32)event->create_homecity,
                                                 (iptr)input_buf);
                   dlg_set_parent_window(0);
                 } while ((-1 < result) &&
@@ -15126,13 +15125,13 @@ uint __cdecl events_editor_edit_action(i32 mode)
                 if ((-1 < result) && (len = _strlen(input_buf), len != 0)) {
                   len = _strlen(input_buf);
                   value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-                  event[0x4f] = value;
-                  if (event[0x4f] != 0) {
-                    crt_strcpy((char *)((void *)event[0x4f]),input_buf);
+                  event->create_homecity = (char *)value;
+                  if (event->create_homecity != 0) {
+                    crt_strcpy((char *)((void *)event->create_homecity),input_buf);
                     for (idx = 0; idx < 10; idx++) {
-                      event[0x4d] = idx;
-                      _sprintf(default_text,str_d_d_6,event[idx * 2 + 0x39],
-                               event[idx * 2 + 0x3a]);
+                      event->create_location_count = idx;
+                      _sprintf(default_text,str_d_d_6,event->create_locations[idx * 2],
+                               event->create_locations[idx * 2 + 1]);
                       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
                         parent_wnd9 = 0;
                       }
@@ -15147,8 +15146,8 @@ uint __cdecl events_editor_edit_action(i32 mode)
                       if (result == -1) {
                         if (idx == 0) break;
                         do {
-                          event[idx * 2 + 0x39] = 0;
-                          event[idx * 2 + 0x3a] = 0;
+                          event->create_locations[idx * 2] = 0;
+                          event->create_locations[idx * 2 + 1] = 0;
                           idx++;
                         } while (idx < 10);
                       }
@@ -15161,17 +15160,17 @@ uint __cdecl events_editor_edit_action(i32 mode)
                           token = text_next_token();
                           parsed = _atol(token);
                           value = editor_clamp_value(parsed,value,arg2);
-                          event[idx * 2 + 0x39] = value;
+                          event->create_locations[idx * 2] = value;
                           arg2 = 0x7fff;
                           value = 0;
                           token = text_next_token();
                           parsed = _atol(token);
                           value = editor_clamp_value(parsed,value,arg2);
-                          event[idx * 2 + 0x3a] = value;
+                          event->create_locations[idx * 2 + 1] = value;
                         }
                       }
                     }
-                    if (event[0x4d] != 0) {
+                    if (event->create_location_count != 0) {
                       changed = 1;
                     }
                   }
@@ -15187,26 +15186,26 @@ uint __cdecl events_editor_edit_action(i32 mode)
     if (action_bit == 0x20) {
       arg2 = 0;
       value = (i32)label_string(label_string_ids[0x230]);
-      result = events_editor_pick_item(event[0x34],(const char *)value,arg2);
+      result = events_editor_pick_item(event->aggression_who_civ,(const char *)value,arg2);
       if (result != -1) {
-        event[0x34] = result;
-        name_str = civ_name_plural(event[0x34]);
+        event->aggression_who_civ = result;
+        name_str = civ_name_plural(event->aggression_who_civ);
         len = _strlen(name_str);
         value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-        event[0x33] = value;
-        if (event[0x33] != 0) {
-          crt_strcpy((char *)((void *)event[0x33]),name_str);
+        event->aggression_who_name = (char *)value;
+        if (event->aggression_who_name != 0) {
+          crt_strcpy((char *)((void *)event->aggression_who_name),name_str);
           arg2 = 0;
           value = (i32)label_string(label_string_ids[0x231]);
-          result = events_editor_pick_item(event[0x32],(const char *)value,arg2);
+          result = events_editor_pick_item(event->aggression_whom_civ,(const char *)value,arg2);
           if (result != -1) {
-            event[0x32] = result;
-            name_str = civ_name_plural(event[0x32]);
+            event->aggression_whom_civ = result;
+            name_str = civ_name_plural(event->aggression_whom_civ);
             len = _strlen(name_str);
             value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-            event[0x31] = value;
-            if (event[0x31] != 0) {
-              crt_strcpy((char *)((void *)event[0x31]),name_str);
+            event->aggression_whom_name = (char *)value;
+            if (event->aggression_whom_name != 0) {
+              crt_strcpy((char *)((void *)event->aggression_whom_name),name_str);
               changed = 1;
             }
           }
@@ -15214,8 +15213,8 @@ uint __cdecl events_editor_edit_action(i32 mode)
       }
     }
     else if (action_bit == 0x10) {
-      if (event[0x61] == 0) {
-        event[0x61] = ((i32)(i8 *)&events_wavfile_default_str);
+      if (event->wave_file == 0) {
+        event->wave_file = (char *)(((i32)(i8 *)&events_wavfile_default_str));
       }
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
         parent_wnd10 = 0;
@@ -15225,7 +15224,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
       }
       dlg_set_parent_window(parent_wnd10);
       do {
-        result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_wavfile,10,event[0x61],(iptr)input_buf);
+        result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_wavfile,10,(i32)event->wave_file,(iptr)input_buf);
         if (result == -1) break;
         len = _strlen(input_buf);
       } while (len == 0);
@@ -15240,9 +15239,9 @@ uint __cdecl events_editor_edit_action(i32 mode)
           __strupr(input_buf);
           len = _strlen(input_buf);
           value = memblock_alloc_checked((iptr)&unit_types_block.str_empty_188,len + 1);
-          event[0x61] = value;
-          if (event[0x61] == 0) goto refresh_editor;
-          crt_strcpy((char *)((void *)event[0x61]),input_buf);
+          event->wave_file = (char *)value;
+          if (event->wave_file == 0) goto refresh_editor;
+          crt_strcpy((char *)((void *)event->wave_file),input_buf);
         }
         changed = 1;
       }
@@ -15250,8 +15249,8 @@ uint __cdecl events_editor_edit_action(i32 mode)
   }
   else if (action_bit < 0x81) {
     if (action_bit == 0x80) {
-      value = editor_clamp_value(event[0x62],2,0x18);
-      event[0x62] = value;
+      value = editor_clamp_value(event->cd_track,2,0x18);
+      event->cd_track = value;
       text_set_number_arg(0,2);
       text_set_number_arg(1,0x18);
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
@@ -15261,11 +15260,11 @@ uint __cdecl events_editor_edit_action(i32 mode)
         parent_wnd11 = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
       }
       dlg_set_parent_window(parent_wnd11);
-      result = dlg_input_number((iptr)&str_debug_11,(const char *)&str_cdtrack,event[0x62],(iptr)&number_value);
+      result = dlg_input_number((iptr)&str_debug_11,(const char *)&str_cdtrack,event->cd_track,(iptr)&number_value);
       dlg_set_parent_window(0);
       if (result == 0) {
         value = editor_clamp_value(number_value,2,0x18);
-        event[0x62] = value;
+        event->cd_track = value;
         changed = 1;
       }
     }
@@ -15277,15 +15276,15 @@ uint __cdecl events_editor_edit_action(i32 mode)
     if (action_bit == 0x200) {
       arg2 = 7;
       value = (i32)label_string(label_string_ids[0x25c]);
-      result = events_editor_pick_item(event[99],(const char *)value,arg2);
+      result = events_editor_pick_item(event->terrain_type,(const char *)value,arg2);
       if (result == -1) {
         result = -1;
       }
       else {
-        event[99] = result;
-        _sprintf(default_text,str_d_d_d_d_d_d_d_d_2,event[100],event[0x65],
-                 event[0x66],event[0x67],event[0x68],event[0x69],event[0x6a],
-                 event[0x6b]);
+        event->terrain_type = result;
+        _sprintf(default_text,str_d_d_d_d_d_d_d_d_2,event->terrain_rect[0],event->terrain_rect[1],
+                 event->terrain_rect[2],event->terrain_rect[3],event->terrain_rect[4],event->terrain_rect[5],event->terrain_rect[6],
+                 event->terrain_rect[7]);
         if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
           parent_wnd12 = 0;
         }
@@ -15309,13 +15308,13 @@ uint __cdecl events_editor_edit_action(i32 mode)
               token = text_next_token();
               parsed = _atol(token);
               value = editor_clamp_value(parsed,value,arg2);
-              event[idx * 2 + 100] = value;
+              event->terrain_rect[idx * 2] = value;
               arg2 = 0x7fff;
               value = 0;
               token = text_next_token();
               parsed = _atol(token);
               value = editor_clamp_value(parsed,value,arg2);
-              event[idx * 2 + 0x65] = value;
+              event->terrain_rect[idx * 2 + 1] = value;
             }
           }
           changed = 1;
@@ -15328,29 +15327,29 @@ uint __cdecl events_editor_edit_action(i32 mode)
   }
   else if (action_bit == 0x400) {
     name_out = &name_str;
-    value = *event;
+    value = event->trigger;
     arg2 = (i32)label_string(label_string_ids[0x232]);
-    result = events_editor_pick_action_civ(event[0x6c],(const char *)arg2,value,(iptr)name_out);
+    result = events_editor_pick_action_civ(event->destroy_civ,(const char *)arg2,value,(iptr)name_out);
     if (result != -1) {
-      event[0x6c] = result;
+      event->destroy_civ = result;
       changed = 1;
     }
   }
   else if (action_bit == 0x800) {
     name_out = &name_str;
-    value = *event;
+    value = event->trigger;
     arg2 = (i32)label_string(label_string_ids[0x22a]);
-    result = events_editor_pick_action_civ(event[0x6e],(const char *)arg2,value,(iptr)name_out);
+    result = events_editor_pick_action_civ(event->give_tech_civ,(const char *)arg2,value,(iptr)name_out);
     if (result == -1) {
       result = -1;
     }
     else {
-      event[0x6e] = result;
+      event->give_tech_civ = result;
       arg2 = 2;
       value = (i32)label_string(label_string_ids[0x22b]);
-      result = events_editor_pick_item(event[0x6d],(const char *)value,arg2);
+      result = events_editor_pick_item(event->give_tech,(const char *)value,arg2);
       if (result != -1) {
-        event[0x6d] = result;
+        event->give_tech = result;
         changed = 1;
       }
     }
@@ -15361,7 +15360,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
 refresh_editor:
   events_compact();
   events_editor_fill_actions(0);
-  choice = bits_index_of(action_bit,event[1]);
+  choice = bits_index_of(action_bit,(i32)event->actions);
   listbox_set_cur_sel((ListBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xb0c),choice);
   events_editor_update_buttons(0);
   events_editor_focus_redraw();
@@ -15389,25 +15388,25 @@ void __cdecl events_editor_on_add_action(void)
   int result;
   UINT uType;
   iptr parent_wnd2;
-  int *event;
+  ScenarioEvent *event;
   int action_index;
   int sel_index;
   
   action_index = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0));
-  event = (int *)unit_types_block.events_list_head;
-  while ((event != (int *)0x0 && (action_index != 0))) {
-    event = (int *)event[0x6f];
+  event = unit_types_block.events_list_head;
+  while ((event != (ScenarioEvent *)0x0 && (action_index != 0))) {
+    event = event->next;
     action_index--;
   }
-  if (*event == 0x20) {
+  if (event->trigger == 0x20) {
     action_index = 0;
-    while ((1 << ((byte)action_index & 0x1f) & (event[1] | 0xfffffe6fU)) != 0) {
+    while ((1 << ((byte)action_index & 0x1f) & ((int)event->actions | 0xfffffe6fU)) != 0) {
       action_index++;
     }
   }
   else {
     action_index = 0;
-    while ((event[1] & 1 << ((byte)action_index & 0x1f)) != 0) {
+    while (((int)event->actions & 1 << ((byte)action_index & 0x1f)) != 0) {
       action_index++;
     }
   }
@@ -15421,31 +15420,31 @@ void __cdecl events_editor_on_add_action(void)
       }
       dlg_set_parent_window(parent_wnd2);
       dlg_help_pressed = 0;
-      if (*event == 0x20) {
-        action_index = editor_options_dialog((const char *)&str_actions,(const char *)action_index,event[1] | 0xfffffe6f,1);
+      if (event->trigger == 0x20) {
+        action_index = editor_options_dialog((const char *)&str_actions,(const char *)action_index,(int)event->actions | 0xfffffe6f,1);
       }
       else {
-        action_index = editor_options_dialog((const char *)&str_actions_2,(const char *)action_index,event[1],1);
+        action_index = editor_options_dialog((const char *)&str_actions_2,(const char *)action_index,(int)event->actions,1);
       }
       dlg_set_parent_window(0);
       if (dlg_help_pressed == 0) break;
       events_editor_help_action(action_index);
     }
     if (action_index != -1) {
-      event[1] = event[1] | 1 << ((byte)action_index & 0x1f);
-      list_pos = bits_index_of(1 << ((byte)action_index & 0x1f),event[1]);
+      event->actions = (int)event->actions | 1 << ((byte)action_index & 0x1f);
+      list_pos = bits_index_of(1 << ((byte)action_index & 0x1f),(int)event->actions);
       events_editor_fill_actions(0);
       listbox_set_cur_sel((ListBoxSetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xb0c),list_pos);
       result = events_editor_edit_action(0);
       if (result == 0) {
         sel_index = listbox_get_cur_sel((ListBoxGetSelView *)(editor_text_dlg_wnd_block.active_editor_wnd + 0xad0));
-        event = (int *)unit_types_block.events_list_head;
-        while ((event != (int *)0x0 && (sel_index != 0))) {
-          event = *(int **)((int)event + 0x1bc);
+        event = unit_types_block.events_list_head;
+        while ((event != (ScenarioEvent *)0x0 && (sel_index != 0))) {
+          event = (ScenarioEvent *)(int *)event->next;
           sel_index--;
         }
-        *(uint *)((int)event + 4) =
-             *(uint *)((int)event + 4) & ~(1 << ((byte)action_index & 0x1f));
+        event->actions =
+             event->actions & ~(1 << ((byte)action_index & 0x1f));
         events_editor_fill_actions(0);
       }
     }
@@ -15556,7 +15555,7 @@ void __thiscall events_editor_run(DocumentWindow *self)
   seh_state = seh_state & 0xffffff00;
   (*(ScenarioEvents * *)&events_editor_backup) = backup;
   events_reset(backup,50000);
-  events_copy((iptr)(*(ScenarioEvents * *)&events_editor_backup),(iptr)&unit_types_block.scenario_events);
+  events_copy((ScenarioEvents *)(iptr)(*(ScenarioEvents * *)&events_editor_backup),(ScenarioEvents *)&unit_types_block.scenario_events);
   font_set((GameFont *)((i8 *)&editor_font_block.editor_font),0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
   ui_set_ctrl_font((iptr)&editor_font_block.editor_font);

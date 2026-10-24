@@ -3685,10 +3685,10 @@ void __thiscall net_process_messages(NetSession *self,int max_msgs,int wait_mode
                 section_id2 = section_id2 & 0x7fff;
                 rle_src_end = section_size + (int)payload;
                 rle_src = payload;
-                decoded_size = diffeng_rle_decoded_size((iptr)&rle_src);
+                decoded_size = diffeng_rle_decoded_size((RleStream *)&rle_src);
                 rle_dst = (((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section_id2 * 6] + section_offset;
                 rle_dst_end = rle_dst + decoded_size;
-                diffeng_rle_decode((iptr)&rle_src);
+                diffeng_rle_decode((RleStream *)&rle_src);
                 crt_memcpy((void *)(*(int *)(((i8 *)&diffeng_sections_block.diffeng_section_offsets) + section_id2 * 0x18) + section_offset + diffeng_mirror_buf),
                              (const void *)((((iptr *)&diffeng_sections_block.diffeng_section_ptrs))[section_id2 * 6] + section_offset),decoded_size);
               }
@@ -5918,7 +5918,7 @@ net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
         rle_src_end = (int)run_start + run_size;
         rle_dst = out_ptr + 3;
         rle_size_ptr = ((i32 *)&map_views_block.diffeng_mirror_size);
-        encoded = diffeng_rle_encode((iptr)&rle_src);
+        encoded = diffeng_rle_encode((RleStream *)&rle_src);
         if (encoded == 0) {
           crt_memcpy(out_ptr + 3,run_start,run_size);
           *out_ptr = run_section;
