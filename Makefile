@@ -18,11 +18,11 @@ images:                       ## build the Docker images (wine/mingw/python/SDL2
 native:                       ## build/civ2-linux32: the native SDL2 build (32-bit Linux, in Docker)
 	$(DK) python3 tools/build_native.py --target linux32
 
-port:                         ## build/civ2-port: the portable native build (in Docker; on a Mac run tools/build_port.py directly)
+port:                         ## build/OpenCiv2: the portable native build (in Docker; on a Mac run tools/build_port.py directly)
 	$(DK) python3 tools/build_port.py
 
-native-suite:                 ## run every scenario on a native build (EXE=civ2-port or civ2-linux32) against the Wine recordings
-	$(DK) sh -c "EXE=$(or $(EXE),civ2-port) sh harness/native_suite.sh"
+native-suite:                 ## run every scenario on a native build (EXE=OpenCiv2 or civ2-linux32) against the Wine recordings
+	$(DK) sh -c "EXE=$(or $(EXE),OpenCiv2) sh harness/native_suite.sh"
 
 hook:                         ## proxy XDaemon.dll: seed control, rand trace, replay, crash log
 	$(DK) make -C hook

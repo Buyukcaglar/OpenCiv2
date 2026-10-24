@@ -5,10 +5,10 @@
 # Also fails on a crash, a timeout or a SUSPICIOUS request (CIV2_STRICT).
 # Runs inside the civ2-dev container:
 #   tools/dk sh harness/diff_suite.sh [SCRIPT...]   (default: harness/diffscripts: autoplay, monkeys)
-# A=, B= select the builds (default civ2-linux32 and civ2-port).
+# A=, B= select the builds (default civ2-linux32 and OpenCiv2).
 cd /work
 A=${A:-civ2-linux32}
-B=${B:-civ2-port}
+B=${B:-OpenCiv2}
 scripts=${*:-harness/diffscripts/*.txt}
 fail=0
 echo "comparing build/$A with build/$B"

@@ -41,7 +41,7 @@ recordings:
 | build | how |
 |-------|-----|
 | `build/civ2-linux32` | gcc -m32 |
-| `build/civ2-port` (64-bit, portable to macOS and Windows) | wasm32 → wasm2c → cc |
+| `build/OpenCiv2` (64-bit, portable to macOS and Windows) | wasm32 → wasm2c → cc |
 
 All 13 scenarios of `harness/scripts` (the six above plus mapview, units,
 reports, saveload, diplomacy, the WWII scenario and the cheat menu with

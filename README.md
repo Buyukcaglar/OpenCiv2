@@ -1,4 +1,4 @@
-# Civilization II reconstruction
+# OpenCiv2
 
 Goal: reconstruct the source of *Sid Meier's Civilization II: Multiplayer Gold Edition*
 (1998) as portable C++ that builds and runs natively on Linux, macOS and Windows,
@@ -55,7 +55,7 @@ pip3 install pefile
 
 git clone https://github.com/richardpenman/civ2 && cd civ2
 tools/fetch-toolchain.sh        # wasi-sdk + wabt into tools/toolchain (once)
-python3 tools/build_port.py     # -> build/civ2-port  (several minutes)
+python3 tools/build_port.py     # -> build/OpenCiv2  (several minutes)
 tools/run-civ2.sh               # plays the game in ~/Civ2
 ```
 
@@ -66,15 +66,15 @@ As on macOS, with `libsdl2-dev` and `python3-pefile` from the package manager:
 ```sh
 git clone https://github.com/richardpenman/civ2 && cd civ2
 tools/fetch-toolchain.sh
-python3 tools/build_port.py     # -> build/civ2-port
+python3 tools/build_port.py     # -> build/OpenCiv2
 tools/run-civ2.sh
 ```
 
 ### Windows
 
-**Download:** [civ2-reconstructed-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/civ2-reconstructed-windows.zip),
+**Download:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip),
 built from the latest commit. Unpack it into your Civilization II folder (the one with
-`civ2.exe`) and double-click `civ2-reconstructed.exe`.
+`civ2.exe`) and double-click `OpenCiv2.exe`.
 
 To build it yourself, in an [MSYS2](https://www.msys2.org) **MINGW64** shell:
 
@@ -82,7 +82,7 @@ To build it yourself, in an [MSYS2](https://www.msys2.org) **MINGW64** shell:
 pacman -S git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python mingw-w64-x86_64-python-pefile
 git clone https://github.com/richardpenman/civ2 && cd civ2
 tools/fetch-toolchain.sh
-python3 tools/build_port.py     # -> build/civ2-port.exe and SDL2.dll
+python3 tools/build_port.py     # -> build/OpenCiv2.exe and SDL2.dll
 ```
 
 Then play from a normal Command Prompt (or double-click) with `tools\run-civ2.bat [GAMEDIR]`;
@@ -90,7 +90,7 @@ the game is looked for in `%USERPROFILE%\Civ2` by default.
 
 The Windows executable can also be cross-compiled on Linux: `tools/fetch-toolchain.sh windows`
 (adds SDL2's MinGW release), then `python3 tools/build_port.py module c exe-windows`; copy
-`build/civ2-port.exe`, `build/SDL2.dll`, `data/native`, `harness/CIV2.DAT` and
+`build/OpenCiv2.exe`, `build/SDL2.dll`, `data/native`, `harness/CIV2.DAT` and
 `tools/run-civ2.bat` (keeping the directories) to the Windows machine.
 
 ## Tooling
@@ -106,9 +106,9 @@ the repository at `/work` and the game at `/civ2`.
 
 ```sh
 make native          # build/civ2-linux32: gcc -m32, the same code, easier to debug
-make port            # build/civ2-port: the portable build
+make port            # build/OpenCiv2: the portable build
 make ref SCRIPT=harness/scripts/turns.txt    # record the original on a scenario
-make native-suite    # replay every scenario on a native build and compare (EXE=civ2-port, civ2-port.exe under Wine)
+make native-suite    # replay every scenario on a native build and compare (EXE=OpenCiv2, OpenCiv2.exe under Wine)
 ```
 
 ## Status
