@@ -123,7 +123,17 @@ message by message and clock event by clock event.
   CIV2_CXX=permissive, tools/cxx_compare.py), which passes the suite as the C
   build did.  Many conversions are still explicit casts where headers give
   the wrong type (`iptr` for pointers, `void *` for strings); the classes,
-  typed callbacks and the rest of the modernization come next.  Two bugs of
+  typed callbacks and the rest of the modernization come next.  Types and
+  fields are recovered per subsystem: raw offset accesses
+  (`*(T *)(p + 0x34)`) went from over 5,100 to 1,100, now struct members
+  (network sessions and messages, native windows, dialog lists, scenario
+  events, Civilopedia lists, ...).  These rewrites are checked by
+  construction instead of by identical machine code: every member's offset
+  and type are static_asserts (tools/cxx_layout.py, tools/cxx_fields.py,
+  tools/cxx_members.py), uses keep their integer meaning (arithmetic stays on
+  the old integer type, never pointer arithmetic), the compiler rejects any
+  implicit pointer/integer conversion, and the suite runs on every batch.
+  Two bugs of
   the C version surfaced and are fixed: the parley window chose its
   right-hand pane's callbacks by adding the distance between two functions in
   the original executable to a function's address (a garbage pointer in any
