@@ -1583,11 +1583,10 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
   i32 red;
   char pixel;
   int info_size;
-  int width2;
-  int height2;
-  short bit_count;
-  int compression;
-  int colors_used;
+  /* (port) the BITMAPINFOHEADER after biSize, read at once: the
+     original's locals lay in its order, ours need not */
+  struct { i32 width2; i32 height2; i16 planes; i16 bit_count; i32 compression; i32 size_image;
+           i32 x_ppm; i32 y_ppm; i32 colors_used; i32 colors_important; i8 v5_rest[84]; } info;
   FILE *file;
   int ok;
   int src_index;
@@ -1599,8 +1598,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
   uint file_header[4];
   uint code;
   char *error_msg;
-  i8 bmp_palette[2];
-  i32 bmp_palette_rest[255];
+  i8 bmp_palette[0x400];
   
   error_msg = ((i8 *)&gfx_load_bmp_no_error_str);
   ok = 0;
@@ -1615,7 +1613,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
     }
     else if ((file_header[0] & 0xffff) == 0x4d42) {
       nread = _fread(&info_size,4,1,file);
-      if ((nread == 0) || (nread = _fread(&width2,info_size - 4,1,file), nread == 0)) {
+      if ((nread == 0) || (nread = (info_size - 4 <= (int)sizeof info && 0 < info_size - 4) && _fread(&info,info_size - 4,1,file), nread == 0)) {
         error_msg = str_error_reading_info_header;
       }
       else {
@@ -1623,11 +1621,11 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
         if (nread == 0) {
           error_msg = str_error_reading_file_palette;
         }
-        else if (((width2 == 0x280) && (height2 == 0x1e0)) && (bit_count == 8)) {
+        else if (((info.width2 == 0x280) && (info.height2 == 0x1e0)) && (info.bit_count == 8)) {
           ok = 1;
           if (palette != 0) {
             tmp = num_colors;
-            if ((colors_used != 0) && (tmp = colors_used, num_colors <= colors_used)) {
+            if ((info.colors_used != 0) && (tmp = info.colors_used, num_colors <= info.colors_used)) {
               tmp = num_colors;
             }
             num_colors = tmp;
@@ -1646,20 +1644,20 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
             }
             palette_commit_range((GamePalette *)palette,first_color,num_colors);
           }
-          surface_create((DibSurface *)surface,width2,height2);
+          surface_create((DibSurface *)surface,info.width2,info.height2);
           color_base = (char)first_color;
-          if (compression == 0) {
+          if (info.compression == 0) {
             do {
-              row = height2 - 1;
+              row = info.height2 - 1;
               if ((row < 0) || (ok == 0)) goto close_file;
               dst = (char *)surface_pixel_ptr((DibSurface *)surface,0,row);
-              for (col = 0; height2 = row, col < width2;
+              for (col = 0; info.height2 = row, col < info.width2;
                   col = col + 1) {
                 code = CRT_GETC(file);
                 if (code == 0xffffffff) {
                   error_msg = str_error_reading_bitmap_image;
                   ok = 0;
-                  height2 = row;
+                  info.height2 = row;
                   break;
                 }
                 *dst = (char)code + color_base;
@@ -1667,8 +1665,8 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
               }
             } while( true );
           }
-          if (compression == 1) {
-            row = height2 - 1;
+          if (info.compression == 1) {
+            row = info.height2 - 1;
             dst = (char *)surface_pixel_ptr((DibSurface *)surface,0,row);
             while( true ) {
               code = CRT_GETC(file);
@@ -1714,7 +1712,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
               }
             }
           }
-          else if (compression == 2) {
+          else if (info.compression == 2) {
             ok = 0;
             error_msg = str_incompatable_compression_mode_bi_rle4;
           }
@@ -1772,6 +1770,10 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,const char *filename,int first_col
   int pixel;
   char *error_msg;
   i8 bmp_palette[1024];
+  /* (port) the headers as the file has them: the original wrote its locals,
+     which lay in this order on its stack, ours need not */
+  u8 file_hdr[0xe];
+  u8 info_hdr[0x28];
   
   ok = 0;
   error_msg = ((i8 *)&gfx_save_bmp_no_error_str);
@@ -1826,12 +1828,28 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,const char *filename,int first_col
     ok = 0;
   }
   else {
-    nwritten = _fwrite(&file_type,0xe,1,file);
+    memcpy(file_hdr,&file_type,2);
+    memcpy(file_hdr + 2,&file_size,4);
+    memcpy(file_hdr + 6,&reserved1,2);
+    memcpy(file_hdr + 8,&reserved2,2);
+    memcpy(file_hdr + 10,&bits_offset,4);
+    nwritten = _fwrite(file_hdr,0xe,1,file);
     if (nwritten == 0) {
       error_msg = str_error_writing_file_header;
     }
     else {
-      nwritten = _fwrite(&info_size,0x28,1,file);
+      memcpy(info_hdr,&info_size,4);
+      memcpy(info_hdr + 4,&width2,4);
+      memcpy(info_hdr + 8,&height2,4);
+      memcpy(info_hdr + 12,&planes,2);
+      memcpy(info_hdr + 14,&bit_count,2);
+      memcpy(info_hdr + 16,&compression,4);
+      memcpy(info_hdr + 20,&image_size,4);
+      memcpy(info_hdr + 24,&x_ppm,4);
+      memcpy(info_hdr + 28,&y_ppm,4);
+      memcpy(info_hdr + 32,&colors_used,4);
+      memcpy(info_hdr + 36,&colors_important,4);
+      nwritten = _fwrite(info_hdr,0x28,1,file);
       if (nwritten == 0) {
         error_msg = str_error_writing_info_header;
       }

@@ -160,9 +160,10 @@ message by message and clock event by clock event.
   function before and after), plus the suite.  Methods are still free
   functions taking the object; member functions and typed callbacks are
   next.
-* Coverage of the comparison: the scripts execute 2,295 of the 3,417
-  compiled game functions (67%, 51% of lines; `tools/coverage_report.py`
+* Coverage of the comparison: the scripts execute 2,520 of the 3,529
+  compiled game functions (71%, 58% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never
-  executed: multiplayer (parley, net), sound and video, council, the
-  editors' rarely used dialogs, atexit destructors.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
+  executed: multiplayer (parley, net, lobby), sound and video (the
+  reference has neither an audio device nor the Indeo codec), council,
+  atexit destructors.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
   `make ref SCRIPT=...` and compare with `make native-suite`.

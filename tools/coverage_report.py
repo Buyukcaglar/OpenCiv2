@@ -24,10 +24,11 @@ def main():
         obj = os.path.join(OBJ, src.replace('/', '_') + '.o')
         if not os.path.exists(obj[:-2] + '.gcda'):
             continue
-        out = subprocess.run(['gcov', '-f', '-n', '-o', obj, src], capture_output=True, text=True).stdout
+        out = subprocess.run(['gcov', '-f', '-m', '-n', '-o', obj, src], capture_output=True, text=True).stdout
         for m in re.finditer(r"Function '([^']+)'\nLines executed:([\d.]+)% of (\d+)", out):
             n = int(m.group(3))
-            rows.append((m.group(1), round(float(m.group(2)) * n / 100), n))
+            name = m.group(1).split('(')[0]      # (demangled: the C++ build's names)
+            rows.append((name, round(float(m.group(2)) * n / 100), n))
     with open('re/coverage.tsv', 'w') as f:
         f.write('function\texecuted\tlines\n')
         for r in rows:

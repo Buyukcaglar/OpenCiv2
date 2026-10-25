@@ -1,0 +1,57 @@
+# New game with custom rules: simplified combat and an
+# accelerated startup (the start played out: the cities, units and
+# advances it gives), a custom tribe (leader, titles), then the first turns.
+wait 8000
+key Return              # Start a New Game
+wait 3000
+key Return              # Normal world
+wait 3000
+key Return              # difficulty
+wait 3000
+key Return              # competition
+wait 3000
+key Return              # aggression
+wait 3000
+key Down                # Customize Rules
+key Return
+wait 3000
+click 300 183           # Simplified Combat
+wait 500
+click 300 279           # Accelerated Startup
+wait 500
+shot 01-features
+key Return
+wait 3000
+shot 02-accelerated
+key Down Down          # 3200 B.C.
+key Return
+wait 3000
+shot 03-gender
+key Return
+wait 3000
+click 211 385           # tribe: Custom
+wait 3000
+type Brutus
+wait 500
+click 291 385           # Titles
+wait 3000
+shot 04-titles
+key Return
+wait 3000
+shot 05-custom
+key Return
+wait 3000
+shot 06-citystyle
+key Down Down           # Far East
+key Return
+wait 600000             # world generation (paced by idle message-loop iterations)
+shot 07-intro
+key Return
+wait 5000
+shot 08
+key Return
+wait 5000
+shot 09
+key Return
+wait 5000
+shot 10

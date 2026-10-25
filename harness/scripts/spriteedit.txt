@@ -1,0 +1,399 @@
+# The sprite editor (Edit Icon in the scenario editors, cheat mode on) on
+# the autosave: drawing, its tools, the sprite picker, saved.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 1793     # 0x701 cheat mode
+wait 3000
+key Down                    # Yes
+key Return
+wait 2000
+call menu_command 4e2803 0 2051     # 0x803 cities editor
+wait 3000
+click 297 328               # Edit Icon
+wait 3000
+shot 01
+mousemove 651 270
+wait 300
+click 651 270
+wait 500
+shot t00
+mousemove 330 498
+wait 300
+click 330 498
+wait 500
+mousemove 345 262
+wait 300
+mousedown 345 262
+mousemove 400 267
+mousemove 470 262
+mousemove 560 265
+mouseup 560 265
+wait 1000
+shot d00
+mousemove 687 270
+wait 300
+click 687 270
+wait 500
+shot t01
+mousemove 400 474
+wait 300
+click 400 474
+wait 500
+mousemove 345 275
+wait 300
+mousedown 345 275
+mousemove 400 280
+mousemove 470 275
+mousemove 560 278
+mouseup 560 278
+wait 1000
+shot d01
+mousemove 615 307
+wait 300
+click 615 307
+wait 500
+shot t02
+mousemove 470 486
+wait 300
+click 470 486
+wait 500
+mousemove 345 288
+wait 300
+mousedown 345 288
+mousemove 400 293
+mousemove 470 288
+mousemove 560 291
+mouseup 560 291
+wait 1000
+shot d02
+mousemove 651 307
+wait 300
+click 651 307
+wait 500
+shot t03
+mousemove 540 510
+wait 300
+click 540 510
+wait 500
+mousemove 345 301
+wait 300
+mousedown 345 301
+mousemove 400 306
+mousemove 470 301
+mousemove 560 304
+mouseup 560 304
+wait 1000
+shot d03
+mousemove 687 307
+wait 300
+click 687 307
+wait 500
+shot t04
+mousemove 610 462
+wait 300
+click 610 462
+wait 500
+mousemove 345 314
+wait 300
+mousedown 345 314
+mousemove 400 319
+mousemove 470 314
+mousemove 560 317
+mouseup 560 317
+wait 1000
+shot d04
+mousemove 615 345
+wait 300
+click 615 345
+wait 500
+shot t05
+mousemove 680 498
+wait 300
+click 680 498
+wait 500
+mousemove 345 327
+wait 300
+mousedown 345 327
+mousemove 400 332
+mousemove 470 327
+mousemove 560 330
+mouseup 560 330
+wait 1000
+shot d05
+mousemove 651 345
+wait 300
+click 651 345
+wait 500
+shot t06
+mousemove 350 522
+wait 300
+click 350 522
+wait 500
+mousemove 345 340
+wait 300
+mousedown 345 340
+mousemove 400 345
+mousemove 470 340
+mousemove 560 343
+mouseup 560 343
+wait 1000
+shot d06
+mousemove 687 345
+wait 300
+click 687 345
+wait 500
+shot t07
+mousemove 420 486
+wait 300
+click 420 486
+wait 500
+mousemove 345 353
+wait 300
+mousedown 345 353
+mousemove 400 358
+mousemove 470 353
+mousemove 560 356
+mouseup 560 356
+wait 1000
+shot d07
+mousemove 615 383
+wait 300
+click 615 383
+wait 500
+shot t08
+mousemove 490 474
+wait 300
+click 490 474
+wait 500
+mousemove 345 366
+wait 300
+mousedown 345 366
+mousemove 400 371
+mousemove 470 366
+mousemove 560 369
+mouseup 560 369
+wait 1000
+shot d08
+mousemove 651 383
+wait 300
+click 651 383
+wait 500
+shot t09
+mousemove 560 498
+wait 300
+click 560 498
+wait 500
+mousemove 345 379
+wait 300
+mousedown 345 379
+mousemove 400 384
+mousemove 470 379
+mousemove 560 382
+mouseup 560 382
+wait 1000
+shot d09
+mousemove 687 383
+wait 300
+click 687 383
+wait 500
+shot t10
+mousemove 630 510
+wait 300
+click 630 510
+wait 500
+mousemove 345 392
+wait 300
+mousedown 345 392
+mousemove 400 397
+mousemove 470 392
+mousemove 560 395
+mouseup 560 395
+wait 1000
+shot d10
+mousemove 615 421
+wait 300
+click 615 421
+wait 500
+shot t11
+mousemove 700 486
+wait 300
+click 700 486
+wait 500
+mousemove 345 405
+wait 300
+mousedown 345 405
+mousemove 400 410
+mousemove 470 405
+mousemove 560 408
+mouseup 560 408
+wait 1000
+shot d11
+mousemove 687 421
+wait 300
+click 687 421
+wait 500
+shot t12
+mousemove 330 462
+wait 300
+click 330 462
+wait 500
+mousemove 345 418
+wait 300
+mousedown 345 418
+mousemove 400 423
+mousemove 470 418
+mousemove 560 421
+mouseup 560 421
+wait 1000
+shot d12
+mousemove 615 270
+wait 300
+click 615 270
+wait 500
+shot t13
+mousemove 450 498
+wait 300
+click 450 498
+wait 500
+mousemove 345 431
+wait 300
+mousedown 345 431
+mousemove 400 436
+mousemove 470 431
+mousemove 560 434
+mouseup 560 434
+wait 1000
+shot d13
+mousemove 470 350
+wait 300
+click 470 350 3             # the right button's colour
+wait 500
+shot r1
+mousemove 415 552
+wait 300
+click 415 552               # OK: CITIES.GIF saved
+wait 3000
+shot ok
+mousemove 330 575
+wait 300
+click 330 575               # Cities editor: OK
+wait 2000
+shot ok-cities
+call menu_command 4e2803 0 2050
+wait 3000
+mousemove 300 304
+wait 300
+click 300 304               # Edit Icon
+wait 2000
+mousemove 340 474
+wait 300
+click 340 474
+wait 2000
+mousemove 350 270
+wait 300
+mousedown 350 270
+mousemove 380 275
+mousemove 400 280
+mouseup 400 280
+wait 1000
+shot tech-1
+mousemove 415 552
+wait 300
+click 415 552               # OK: saved
+wait 2000
+shot tech-2
+mousemove 305 575
+wait 300
+click 305 575               # the editor: OK
+wait 2000
+shot tech-3
+call menu_command 4e2803 0 2053
+wait 3000
+mousemove 300 304
+wait 300
+click 300 304               # Edit Icon
+wait 2000
+mousemove 340 474
+wait 300
+click 340 474
+wait 2000
+mousemove 350 270
+wait 300
+mousedown 350 270
+mousemove 380 275
+mousemove 400 280
+mouseup 400 280
+wait 1000
+shot impr-1
+mousemove 415 552
+wait 300
+click 415 552               # OK: saved
+wait 2000
+shot impr-2
+mousemove 305 575
+wait 300
+click 305 575               # the editor: OK
+wait 2000
+shot impr-3
+call menu_command 4e2803 0 2054
+wait 3000
+mousemove 298 328
+wait 300
+click 298 328               # Edit Icon
+wait 2000
+mousemove 340 474
+wait 300
+click 340 474
+wait 2000
+mousemove 350 270
+wait 300
+mousedown 350 270
+mousemove 380 275
+mousemove 400 280
+mouseup 400 280
+wait 1000
+shot terrain-1
+mousemove 415 552
+wait 300
+click 415 552               # OK: saved
+wait 2000
+shot terrain-2
+mousemove 305 575
+wait 300
+click 305 575               # the editor: OK
+wait 2000
+shot terrain-3
+call menu_command 4e2803 0 2056
+wait 3000
+mousemove 298 328
+wait 300
+click 298 328               # Edit Icon
+wait 2000
+mousemove 340 474
+wait 300
+click 340 474
+wait 2000
+mousemove 350 270
+wait 300
+mousedown 350 270
+mousemove 380 275
+mousemove 400 280
+mouseup 400 280
+wait 1000
+shot units-1
+mousemove 415 552
+wait 300
+click 415 552               # OK: saved
+wait 2000
+shot units-2
+mousemove 305 575
+wait 300
+click 305 575               # the editor: OK
+wait 2000
+shot units-3

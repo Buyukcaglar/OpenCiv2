@@ -1,0 +1,202 @@
+# A spy's missions in a Sioux city (Wounded Knee) on the autosave
+# (Romans civ 1), each kind: the spy created next to it, the mission
+# chosen, its dialogs answered.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call unit_create 5b3d06 47 1 19 69     # a spy
+wait 1000
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Return
+wait 3000
+shot s0a
+key Down                # (Continue / Yes)
+key Return
+wait 3000
+shot s0b
+key Return
+wait 3000
+key Return
+wait 3000
+shot s0c
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot s0d
+call unit_create 5b3d06 47 1 19 69     # a spy
+wait 1000
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Down
+key Return
+wait 3000
+shot s1a
+key Down                # (Continue / Yes)
+key Return
+wait 3000
+shot s1b
+key Return
+wait 3000
+key Return
+wait 3000
+shot s1c
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot s1d
+call unit_create 5b3d06 47 1 19 69     # a spy
+wait 1000
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Down Down
+key Return
+wait 3000
+shot s2a
+key Down                # (Continue / Yes)
+key Return
+wait 3000
+shot s2b
+key Return
+wait 3000
+key Return
+wait 3000
+shot s2c
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot s2d
+call unit_create 5b3d06 47 1 19 69     # a spy
+wait 1000
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Down Down Down
+key Return
+wait 3000
+shot s3a
+key Down                # (Continue / Yes)
+key Return
+wait 3000
+shot s3b
+key Return
+wait 3000
+key Return
+wait 3000
+shot s3c
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot s3d
+call unit_create 5b3d06 47 1 19 69     # a spy
+wait 1000
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Down Down Down Down
+key Return
+wait 3000
+shot s4a
+key Down                # (Continue / Yes)
+key Return
+wait 3000
+shot s4b
+key Return
+wait 3000
+key Return
+wait 3000
+shot s4c
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot s4d
+call unit_create 5b3d06 47 1 19 69     # a spy
+wait 1000
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Down Down Down Down Down
+key Return
+wait 3000
+shot s5a
+key Down                # (Continue / Yes)
+key Return
+wait 3000
+shot s5b
+key Return
+wait 3000
+key Return
+wait 3000
+shot s5c
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot s5d
+call unit_create 5b3d06 47 1 19 69     # a spy
+wait 1000
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Down Down Down Down Down Down
+key Return
+wait 3000
+shot s6a
+key Down                # (Continue / Yes)
+key Return
+wait 3000
+shot s6b
+key Return
+wait 3000
+key Return
+wait 3000
+shot s6c
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot s6d
+call unit_create 5b3d06 47 1 19 69     # a spy
+wait 1000
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+key Down Down Down Down Down Down Down
+key Return
+wait 3000
+shot s7a
+key Down                # (Continue / Yes)
+key Return
+wait 3000
+shot s7b
+key Return
+wait 3000
+key Return
+wait 3000
+shot s7c
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot s7d

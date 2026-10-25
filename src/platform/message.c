@@ -17,10 +17,27 @@
 
 /* ---- queue ---- */
 
-#define QMAX 4096
+/* Posted messages pile up when the game busy-waits without retrieving
+ * them (its window timers' WM_TIMERs during the long dissolves of the end
+ * screens: thousands).  Wine keeps them all; a smaller queue that dropped
+ * some changed the order the backlog was retrieved in. */
+#define QMAX 65536
 static MSG queue[QMAX];
 static int qhead, qlen;
 static DWORD msg_time;
+
+static void queue_remove(int i)
+{
+    int j;
+    if (i == 0) {
+        qhead = (qhead + 1) % QMAX;
+        qlen--;
+        return;
+    }
+    for (j = i; j < qlen - 1; j++)
+        queue[(qhead + j) % QMAX] = queue[(qhead + j + 1) % QMAX];
+    qlen--;
+}
 
 /* Keyboard input is queued without a window: as in Wine's server, it goes
  * to the window that has the focus when the message is retrieved. */
@@ -108,6 +125,7 @@ static int resolve(const MSG *m, MSG *out)
 }
 
 static void key_retrieved(const MSG *m);
+static void mouse_retrieved(UINT msg);
 static int kbd_hook_call(UINT remove, const MSG *m);
 
 /* As Windows: posted messages first, then input (keyboard, mouse), each
@@ -132,21 +150,18 @@ static int take(MSG *out, HWND h, UINT lo, UINT hi, UINT remove)
             continue;
         if (m->hwnd == KBD_PENDING && kbd_hook_call(remove, m)) {
             /* the hook swallowed it (Wine: whether or not removing) */
-            int j;
-            for (j = i; j < qlen - 1; j++)
-                queue[(qhead + j) % QMAX] = queue[(qhead + j + 1) % QMAX];
-            qlen--;
+            queue_remove(i);
             i--;
             continue;
         }
         if (m->hwnd == MOUSE_PENDING && (remove & PM_REMOVE)) {
             MSG raw = *m;
-            int j, got = process_mouse(&raw, h, lo, hi);
+            UINT button_msg = m->message;
+            int got = process_mouse(&raw, h, lo, hi);
             if (got < 0)
                 continue;       /* (Wine) not what the filter asks for once hit-tested: stays queued */
-            for (j = i; j < qlen - 1; j++)
-                queue[(qhead + j) % QMAX] = queue[(qhead + j + 1) % QMAX];
-            qlen--;
+            queue_remove(i);
+            mouse_retrieved(button_msg);
             if (!got) {
                 i--;            /* swallowed: look further */
                 continue;
@@ -156,12 +171,9 @@ static int take(MSG *out, HWND h, UINT lo, UINT hi, UINT remove)
         }
         *out = r;
         if (remove & PM_REMOVE) {
-            int j;
             if (m->hwnd == KBD_PENDING)
                 key_retrieved(m);
-            for (j = i; j < qlen - 1; j++)
-                queue[(qhead + j) % QMAX] = queue[(qhead + j + 1) % QMAX];
-            qlen--;
+            queue_remove(i);
         }
         return 1;
     }
@@ -425,6 +437,12 @@ LRESULT WINAPI DefWindowProcA(HWND h, UINT m, WPARAM wp, LPARAM lp)
     }
     case WM_CLOSE:
         DestroyWindow(h);
+        return 0;
+    case WM_CANCELMODE:
+        /* Wine's DefWindowProc: a window disabled (EnableWindow sends
+           this) gives up the mouse capture */
+        if (GetCapture() == h)
+            ReleaseCapture();
         return 0;
     case WM_SETCURSOR: {
         /* Wine: the parent first (outside the sizing border), then the
@@ -909,6 +927,22 @@ static void key_set(BYTE *st, int vk, int down)
 }
 
 /* A key message leaves the queue: the thread's key state follows it. */
+/* A mouse button message retrieved: as Wine's server, the thread's key
+ * state (GetKeyState) follows the input it has taken, so a click injected
+ * at once (down and up) still shows the button down while the game handles
+ * WM_LBUTTONDOWN. */
+static void mouse_retrieved(UINT msg)
+{
+    switch (msg) {
+    case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK: key_state[VK_LBUTTON] |= 0x80; break;
+    case WM_RBUTTONDOWN: case WM_RBUTTONDBLCLK: key_state[VK_RBUTTON] |= 0x80; break;
+    case WM_MBUTTONDOWN: case WM_MBUTTONDBLCLK: key_state[VK_MBUTTON] |= 0x80; break;
+    case WM_LBUTTONUP: key_state[VK_LBUTTON] &= ~0x80; break;
+    case WM_RBUTTONUP: key_state[VK_RBUTTON] &= ~0x80; break;
+    case WM_MBUTTONUP: key_state[VK_MBUTTON] &= ~0x80; break;
+    }
+}
+
 static void key_retrieved(const MSG *m)
 {
     int vk = (int)m->wParam & 0xff, ext = (m->lParam >> 24) & 1;
@@ -1276,8 +1310,7 @@ void input_mouse_button(int button, int down)
         int hit;
         Window *w = wnd_from_point(cursor, &hit);
         buttons |= 1 << i;
-        key_state[vks[i]] |= 0x80;
-        async_state[vks[i]] |= 0x80;
+        async_state[vks[i]] |= 0x80;       /* (key_state: when retrieved) */
         if (w && (w->cls->wc.style & CS_DBLCLKS) && last_click_button == button &&
             now - last_click_time <= 500 && abs(cursor.x - last_click_pos.x) <= 2 &&
             abs(cursor.y - last_click_pos.y) <= 2) {
@@ -1291,7 +1324,6 @@ void input_mouse_button(int button, int down)
         mouse_message(downs[i], downs[i] - WM_LBUTTONDOWN + WM_NCLBUTTONDOWN);
     } else {
         buttons &= ~(1 << i);
-        key_state[vks[i]] &= ~0x80;
         async_state[vks[i]] &= ~0x80;
         mouse_message(ups[i], ups[i] - WM_LBUTTONUP + WM_NCLBUTTONUP);
     }

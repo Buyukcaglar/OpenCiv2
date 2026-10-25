@@ -1,0 +1,42 @@
+# More game actions called directly on the autosave (Romans civ 1): the
+# throne room improved (a section picked, built).
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call throneroom_show_upgrade 44cc80 1
+wait 5000
+shot 01-throne
+mousemove 512 500
+wait 300
+click 512 500
+wait 5000
+wait 120000            # (the choices dissolve in)
+shot 02-choices
+mousemove 260 330
+wait 300
+click 260 330           # a column
+wait 300000
+shot 03-improved
+mousemove 512 500
+wait 300
+click 512 500
+wait 120000
+shot 04
+mousemove 512 500
+wait 300
+click 512 500
+wait 60000
+shot 05
+key Return
+wait 60000
+shot 06
+mousemove 512 500
+wait 300
+click 512 500
+wait 30000
+shot 07

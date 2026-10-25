@@ -329,6 +329,25 @@ static void press_combo(char *combo, int up)
             send_key(vks[i], 1);
 }
 
+/* mousedown/mousemove/mouseup X Y: the pointer moved there, the left
+ * button pressed or released (drags), as src/platform/replay.c. */
+static void mouse_drag(int x, int y, int down_up)
+{
+    INPUT in[2];
+    int w = GetSystemMetrics(SM_CXSCREEN), h = GetSystemMetrics(SM_CYSCREEN), n = 1;
+    memset(in, 0, sizeof in);
+    in[0].type = INPUT_MOUSE;
+    in[0].mi.dx = (x * 65535 + w / 2) / (w - 1);
+    in[0].mi.dy = (y * 65535 + h / 2) / (h - 1);
+    in[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+    if (down_up) {
+        in[1].type = INPUT_MOUSE;
+        in[1].mi.dwFlags = down_up > 0 ? MOUSEEVENTF_LEFTDOWN : MOUSEEVENTF_LEFTUP;
+        n = 2;
+    }
+    SendInput(n, in, sizeof in[0]);
+}
+
 static void mouse_click(int x, int y, int button)
 {
     INPUT in[3];
@@ -459,6 +478,19 @@ static BOOL file_dialog(OPENFILENAMEA *ofn, const char *kind)
     return TRUE;
 }
 
+/* A message box (a file saved over, an error): answered at once with its
+ * first button, as the native build's replays do (src/platform/misc.c);
+ * Wine's own box would wait for input the script cannot give it. */
+static int WINAPI v_MessageBoxA(HWND owner, LPCSTR text, LPCSTR caption, UINT type)
+{
+    (void)owner;
+    hook_logf("MessageBox: %s: %s\n", caption ? caption : "", text ? text : "");
+    switch (type & MB_TYPEMASK) {
+    case MB_YESNO: case MB_YESNOCANCEL: return IDYES;
+    default: return IDOK;
+    }
+}
+
 static BOOL WINAPI v_GetOpenFileNameA(OPENFILENAMEA *ofn) { return file_dialog(ofn, "open"); }
 static BOOL WINAPI v_GetSaveFileNameA(OPENFILENAMEA *ofn) { return file_dialog(ofn, "save"); }
 
@@ -557,6 +589,12 @@ static void run_script(void)
             int x = 0, y = 0, b = 1;
             sscanf(arg, "%d %d %d", &x, &y, &b);
             mouse_click(x, y, b);
+            next_action_us = vclock_us + 100 * 1000;
+            return;
+        } else if (strcmp(cmd, "mousedown") == 0 || strcmp(cmd, "mouseup") == 0 || strcmp(cmd, "mousemove") == 0) {
+            int x = 0, y = 0;
+            sscanf(arg, "%d %d", &x, &y);
+            mouse_drag(x, y, cmd[5] == 'd' ? 1 : cmd[5] == 'u' ? -1 : 0);
             next_action_us = vclock_us + 100 * 1000;
             return;
         } else if (strcmp(cmd, "call") == 0) {
@@ -728,6 +766,7 @@ void replay_init(void)
     hook_patch_import("KERNEL32.dll", "GetLocalTime", (void *)v_GetLocalTime);
     hook_patch_import("KERNEL32.dll", "GetSystemTime", (void *)v_GetSystemTime);
     real_GetAsyncKeyState = hook_patch_import("USER32.dll", "GetAsyncKeyState", (void *)v_GetAsyncKeyState);
+    hook_patch_import("USER32.dll", "MessageBoxA", (void *)v_MessageBoxA);
     hook_patch_import("comdlg32.dll", "GetOpenFileNameA", (void *)v_GetOpenFileNameA);
     hook_patch_import("comdlg32.dll", "GetSaveFileNameA", (void *)v_GetSaveFileNameA);
     hook_patch_jmp(CRT_TIME, (void *)v_time);

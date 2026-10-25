@@ -1,0 +1,233 @@
+# The scenario editors' other dialogs on the autosave (cheat mode on):
+# the tribe editor's renamings and colours, the terrain editor's rivers,
+# coasts and other graphics, the units editor's sounds and abilities, the
+# improvements' and cities' other settings, each editor closed with OK
+# (the rules written); the cheat menu's leader editor.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 1793     # 0x701 cheat mode
+wait 3000
+key Down                    # Yes
+key Return
+wait 2000
+call menu_command 4e2803 0 2055     # 0x807 tribe editor
+wait 3000
+mousemove 394 521
+wait 300
+click 394 521               # Commodities
+wait 2500
+shot 00
+key Return
+wait 2500
+key Return
+wait 2500
+shot 00b
+mousemove 513 521
+wait 300
+click 513 521               # Government
+wait 2500
+shot 01
+key Return
+wait 2500
+key Return
+wait 2500
+shot 01b
+mousemove 634 521
+wait 300
+click 634 521               # Titles
+wait 2500
+shot 02
+key Return
+wait 2500
+key Return
+wait 2500
+shot 02b
+mousemove 730 275
+wait 300
+click 730 275               # colour
+wait 2500
+shot 03
+key Return
+wait 2500
+key Return
+wait 2500
+shot 03b
+mousemove 514 575
+wait 300
+click 514 575               # Help
+wait 2500
+shot 04
+key Return
+wait 2500
+key Return
+wait 2500
+shot 04b
+mousemove 330 575
+wait 300
+click 330 575               # OK
+wait 2500
+shot 05
+call menu_command 4e2803 0 2054     # 0x806 terrain editor
+wait 3000
+mousemove 732 264
+wait 300
+click 732 264               # Edit River
+wait 2500
+shot 06
+key Return
+wait 2500
+mousemove 415 552
+wait 300
+click 415 552               # the icon editor: OK
+wait 2500
+shot 06b
+mousemove 732 292
+wait 300
+click 732 292               # Edit Coast
+wait 2500
+shot 07
+key Return
+wait 2500
+mousemove 415 552
+wait 300
+click 415 552               # the icon editor: OK
+wait 2500
+shot 07b
+mousemove 732 322
+wait 300
+click 732 322               # Edit Misc
+wait 2500
+shot 08
+key Return
+wait 2500
+mousemove 415 552
+wait 300
+click 415 552               # the icon editor: OK
+wait 2500
+shot 08b
+mousemove 305 575
+wait 300
+click 305 575               # OK
+wait 2500
+shot 09
+call menu_command 4e2803 0 2056     # 0x808 units editor
+wait 3000
+mousemove 298 356
+wait 300
+click 298 356               # Sounds
+wait 2500
+shot 10
+mousemove 380 524
+wait 300
+click 380 524               # its OK
+wait 2500
+shot 10b
+mousemove 298 384
+wait 300
+click 298 384               # Abilities
+wait 2500
+shot 11
+key Return
+wait 2500
+shot 11b
+mousemove 305 575
+wait 300
+click 305 575               # OK
+wait 2500
+shot 12
+call menu_command 4e2803 0 2053     # 0x805 improvements editor
+wait 3000
+mousemove 300 334
+wait 300
+click 300 334               # Edit Misc
+wait 2500
+shot 13
+key Return
+wait 2500
+mousemove 415 552
+wait 300
+click 415 552               # the icon editor: OK
+wait 2500
+shot 13b
+mousemove 305 575
+wait 300
+click 305 575               # OK
+wait 2500
+shot 14
+call menu_command 4e2803 0 2051     # 0x803 cities editor
+wait 3000
+mousemove 297 357
+wait 300
+click 297 357               # Edit Misc
+wait 2500
+shot 15
+key Return
+wait 2500
+key Return
+wait 2500
+mousemove 415 552
+wait 300
+click 415 552               # the icon editor: OK
+wait 2500
+shot 15b
+mousemove 330 575
+wait 300
+click 330 575               # OK
+wait 2500
+shot 16
+call menu_command 4e2803 0 1893     # 0x765 edit a leader
+wait 3000
+key Return              # the Romans
+wait 2500
+shot 17
+key Down Down Down          # Set Attitude
+key Return
+wait 2500
+shot k0
+key Return
+wait 2500
+key Return
+wait 2500
+shot k0b
+key Down Down Down Down          # Set Reputation
+key Return
+wait 2500
+shot k1
+key Return
+wait 2500
+shot k1b
+key Down Down Down Down Down Down Down          # Set Research Goal
+key Return
+wait 2500
+shot k2
+key Return
+wait 2500
+shot k2b
+key Down Down Down Down Down Down Down Down          # Set Research Progress
+key Return
+wait 2500
+shot k3
+key Return
+wait 2500
+shot k3b
+key Down Down Down Down Down          # Clear Patience
+key Return
+wait 2500
+shot k4
+shot k4b
+key Down Down Down Down Down Down Down Down Down Down          # Edit Name
+key Return
+wait 2500
+shot k5
+key Return
+wait 2500
+shot k5b
+key Return              # No Changes
+wait 2500
+shot k9

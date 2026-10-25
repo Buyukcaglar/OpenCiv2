@@ -1,0 +1,212 @@
+# The end of the game on the autosave (Romans civ 1, Sioux civ 7), cheat
+# mode on: the Sioux's spaceship built and launched, ours built, launched
+# from the spaceship window, its arrival at Alpha Centauri and the Sioux's
+# arrival first, the Hall of Fame, the credits, a civilization destroyed
+# and the destroyed civilizations' screen last (its dissolves take minutes
+# of game time; the click that closes it is left out: the original under
+# Wine never gets it).
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 1793     # 0x701 cheat mode
+wait 3000
+key Down                    # Yes
+key Return
+wait 2000
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 0
+wait 500
+call spaceship_add_part 598197 7 1
+wait 500
+call spaceship_add_part 598197 7 1
+wait 500
+call spaceship_add_part 598197 7 1
+wait 500
+call spaceship_add_part 598197 7 1
+wait 500
+call spaceship_add_part 598197 7 2
+wait 500
+call spaceship_add_part 598197 7 2
+wait 500
+call spaceship_add_part 598197 7 2
+wait 500
+shot 00-parts
+wait 3000
+shot 01-sioux-launch
+key Return
+wait 3000
+shot 02-sioux-ship
+key Escape                  # the text typed in at once
+wait 2000
+key Escape                  # closed
+wait 3000
+shot 03
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 0
+wait 500
+call spaceship_add_part 598197 1 1
+wait 1000
+key Return
+wait 500
+call spaceship_add_part 598197 1 1
+wait 1000
+key Down
+key Return
+wait 500
+call spaceship_add_part 598197 1 1
+wait 1000
+key Return
+wait 500
+call spaceship_add_part 598197 1 1
+wait 1000
+key Down
+key Return
+wait 500
+call spaceship_add_part 598197 1 2
+wait 1000
+key Return
+wait 500
+call spaceship_add_part 598197 1 2
+wait 1000
+key Down
+key Return
+wait 500
+call spaceship_add_part 598197 1 2
+wait 1000
+key Down
+key Down
+key Return
+wait 500
+shot h00-parts
+call spaceship_wnd_run 4d0208 1
+wait 5000
+key Return                  # the text typed in at once
+wait 2000
+shot h01-ship
+click 783 580               # Launch
+wait 5000
+shot h02-launch
+wait 30000
+shot h03-launch
+key Return
+wait 3000
+shot h04
+call endgame_spaceship_arrival 4710d0 1
+wait 3000
+shot h05-arrival
+key Return
+wait 3000
+shot h06
+call endgame_show_centauri_beaten 471dd8 7
+wait 120000
+shot 08-beaten0
+wait 120000
+wait 120000
+wait 120000
+shot 08-beaten
+wait 120000
+wait 120000
+wait 120000
+wait 120000
+wait 120000
+wait 120000
+shot 08-beaten9
+call hall_of_fame_add_entry 436f5a 1     # (shows the Hall of Fame)
+wait 3000
+shot 09-halloffame
+click 364 550              # Clear
+wait 3000
+shot 09-clear
+key Return
+wait 3000
+shot 09-cleared
+wait 3000
+call menu_command 4e2803 0 2544     # 0x9f0 credits
+wait 3000
+shot 10-credits-choice
+key Return
+wait 3000
+shot 11-credits
+wait 5000
+shot 12-credits
+click 514 550              # Close
+wait 3000
+shot 13
+call menu_command 4e2803 0 1826     # 0x722 kill a civilization
+wait 3000
+key Down                    # the Japanese
+wait 500
+shot 14-killciv
+key Return
+wait 3000
+shot 15-killed
+key Return
+wait 3000
+call destroyed_civs_show 514e7b 1   # (its dissolves take minutes)
+wait 20000
+shot 16-destroyed
+wait 900000
+shot 17-destroyed

@@ -1899,7 +1899,8 @@ WINBOOL WINAPI ReleaseCapture(void)
     return TRUE;
 }
 
-/* Deepest visible, enabled window at a desktop point; *hit: HTCLIENT or other. */
+/* The window at a desktop point, as Wine's server finds it (deepest visible,
+ * not into a disabled one); *hit: HTCLIENT or other. */
 Window *wnd_from_point(POINT pt, int *hit)
 {
     Window *w = desktop, *c;
@@ -1910,6 +1911,8 @@ Window *wnd_from_point(POINT pt, int *hit)
             RECT r;
             if (!(c->style & WS_VISIBLE) || c->minimized)
                 continue;
+            if ((c->style & (WS_POPUP | WS_CHILD | WS_DISABLED)) == (WS_CHILD | WS_DISABLED))
+                continue;       /* (Wine's is_point_in_window) a disabled child is not hit: its parent is */
             if (w == desktop)
                 wnd_shown_rect(c, &r);
             else
@@ -1947,6 +1950,8 @@ Window *wnd_from_point(POINT pt, int *hit)
             }
         }
         *hit = HTCLIENT;
+        if (w->style & WS_DISABLED)
+            break;      /* (Wine's child_window_from_point) a disabled window: not its children */
     }
     return w == desktop ? NULL : w;
 }
