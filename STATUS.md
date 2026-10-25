@@ -140,6 +140,20 @@ message by message and clock event by clock event.
   other build; the eight handlers it meant are restored), and unit moves
   compared the address of human_civ, not its value, so
   unit_move_by_local_human was never set.
+* **Classes** (step 6).  The decompiler's partial views of each class
+  (structs sized by how far one function reads) are folded into one struct
+  per real class, with C++ inheritance for bases: Dialog (ScenarioEvents
+  on it); the controls on Control (Button, Checkbox, Scrollbar,
+  EditControl, ComboBox, ListBox, Hotspot, Hyperlink, RadioGroup,
+  SpriteButton); the windows on WndBase -> ModalMenuWindow (Wnd, the city
+  view, throne room, spaceship, diplomacy and movie windows); the surfaces
+  on DibSurface -> SurfaceWindow -> FrameWindow (the map, city, editor,
+  picture, Civilopedia, council, parley windows ...).  Sizes are the
+  constructors' allocations.  Each fold was checked by layout (no member
+  moved) and access by access (every member access compared function by
+  function before and after), plus the suite.  Methods are still free
+  functions taking the object; member functions and typed callbacks are
+  next.
 * Coverage of the comparison: the scripts execute 2,295 of the 3,417
   compiled game functions (67%, 51% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never
