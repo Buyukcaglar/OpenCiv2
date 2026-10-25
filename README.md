@@ -82,8 +82,8 @@ brew install sdl2
 pip3 install pefile
 
 git clone https://github.com/richardpenman/civ2 && cd civ2
-tools/fetch-toolchain.sh        # wasi-sdk, wabt, unshield, zlib into tools/toolchain (once)
-python3 tools/build_port.py     # -> build/OpenCiv2  (several minutes)
+python3 tools/build_port.py     # -> build/OpenCiv2  (several minutes; the first time it
+                                #    downloads wasi-sdk, wabt, unshield, zlib into tools/toolchain)
 tools/run-civ2.sh               # plays the game in ~/Civ2
 ```
 
@@ -93,7 +93,6 @@ As on macOS, with `libsdl2-dev` and `python3-pefile` from the package manager:
 
 ```sh
 git clone https://github.com/richardpenman/civ2 && cd civ2
-tools/fetch-toolchain.sh
 python3 tools/build_port.py     # -> build/OpenCiv2
 tools/run-civ2.sh
 ```
@@ -105,15 +104,14 @@ In an [MSYS2](https://www.msys2.org) **MINGW64** shell:
 ```sh
 pacman -S git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python mingw-w64-x86_64-python-pefile
 git clone https://github.com/richardpenman/civ2 && cd civ2
-tools/fetch-toolchain.sh
 python3 tools/build_port.py     # -> build/OpenCiv2.exe and SDL2.dll
 ```
 
 Then play from a normal Command Prompt (or double-click) with `tools\run-civ2.bat [GAMEDIR]`;
 the game is looked for in `%USERPROFILE%\Civ2` by default.
 
-The Windows executable can also be cross-compiled on Linux: `tools/fetch-toolchain.sh windows`
-(adds SDL2's MinGW release), then `python3 tools/build_port.py module c exe-windows`:
+The Windows executable can also be cross-compiled on Linux: `python3 tools/build_port.py module c
+exe-windows` (it also downloads SDL2's MinGW release):
 `build/OpenCiv2.exe`, the one file the release has (SDL2 and the fonts built in).
 
 ## Tooling

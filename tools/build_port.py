@@ -20,8 +20,9 @@ The c step's output is plain C: copy build/wasm/c and src/host to another
 machine and run only the exe step there (the pack step bundles it).
 
 Usage: build_port.py [module] [c] [exe] [exe-windows] [pack]   (default: module c exe)
-wasi-sdk and wabt: tools/fetch-toolchain.sh downloads them (or set WASI_SDK
-and WABT; see tools/paths.py).  Environment: CC (default cc; on macOS the
+What the steps need from tools/fetch-toolchain.sh (wasi-sdk, wabt, unshield's
+and zlib's sources, SDL2's MinGW release) is downloaded first where missing
+(or set WASI_SDK and WABT; see tools/paths.py).  Environment: CC (default cc; on macOS the
 Command Line Tools' clang), CFLAGS, LDFLAGS, SDL2_CONFIG (an sdl2-config),
 SDL2_STATIC=1 (SDL2 linked in), JOBS.
 """
@@ -173,8 +174,6 @@ def exe(cross_windows=False):
             ('port_main.c', 'wasi.c', 'host_sdl.c', 'setup.c') +
             (('host_menu_win.c', 'setup_win.c') if windows else ('setup_unix.c',)) +
             (('host_menu_mac.m', 'setup_mac.m') if mac else ())]
-    if not os.path.exists(os.path.join(paths.UNSHIELD, 'lib', 'libunshield.c')):
-        sys.exit('no unshield and zlib sources: run tools/fetch-toolchain.sh')
     third = (sorted(glob.glob(os.path.join(paths.UNSHIELD, 'lib', '*.c'))) +
              [os.path.join(paths.UNSHIELD, 'lib', 'md5', 'md5c.c')] +
              [os.path.join(paths.ZLIB, f + '.c') for f in ('adler32', 'crc32', 'inffast', 'inflate', 'inftrees',
@@ -231,8 +230,27 @@ def pack():
     print('wrote %s (%d MB)' % (os.path.relpath(out, ROOT), os.path.getsize(out) >> 20))
 
 
+def fetch_toolchain(steps):
+    """What the steps need and tools/toolchain lacks, downloaded first
+    (tools/fetch-toolchain.sh): wasi-sdk and wabt for module and c,
+    unshield's and zlib's sources for exe, SDL2's MinGW release for
+    exe-windows."""
+    global paths
+    wasm = ('module' in steps and not os.path.isdir(paths.WASI_SDK)) or \
+        ('c' in steps and not os.path.isdir(paths.WABT))
+    sources = any(s.startswith('exe') for s in steps) and \
+        not os.path.exists(os.path.join(paths.UNSHIELD, 'lib', 'libunshield.c'))
+    mingw = 'exe-windows' in steps and not os.path.isdir(paths.SDL2_MINGW)
+    if wasm or sources or mingw:
+        run(['sh', os.path.join(ROOT, 'tools', 'fetch-toolchain.sh')] + (['windows'] if mingw else []) +
+            ([] if wasm else ['sources']))
+        import importlib
+        paths = importlib.reload(paths)
+
+
 def main():
     steps = sys.argv[1:] or ['module', 'c', 'exe']
+    fetch_toolchain(steps)
     for s in steps:
         {'module': module, 'c': to_c, 'exe': exe, 'exe-windows': lambda: exe(True), 'pack': pack}[s]()
 
