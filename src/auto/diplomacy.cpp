@@ -4205,7 +4205,7 @@ void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
   int ok;
   iptr parent_wnd2;
   iptr tribe_idx;
-  DiploLeaderView *view;
+  DiploLeaderWindow *view;
   int i;
   i32 seh_handler;
   i8 *seh_prev;
@@ -4234,14 +4234,14 @@ void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
   self = (DiploLeaderWindow *)(operator_new(0x108c));
   seh_state = 0;
   if (self == (DiploLeaderWindow *)0x0) {
-    view = (DiploLeaderView *)0x0;
+    view = (DiploLeaderWindow *)0x0;
   }
   else {
-    view = (DiploLeaderView *)diplo_leader_wnd_ctor(self);
+    view = diplo_leader_wnd_ctor(self);
   }
   seh_state = 0xffffffff;
-  diplo_leader_window = (DiploLeaderWindow *)view;
-  if (((view != (DiploLeaderView *)0x0) && (((*((char *)&game.game_options + 2)) & 4) != 0)) &&
+  diplo_leader_window = view;
+  if (((view != (DiploLeaderWindow *)0x0) && (((*((char *)&game.game_options + 2)) & 4) != 0)) &&
      (ok = diplo_leader_wnd_init(view,civ2,civ), ok != 0)) {
     diplo_leader_wnd_open = 1;
     if ((iptr)diplo_leader_window == -200) {
@@ -4264,7 +4264,7 @@ void __cdecl diplo_leader_wnd_close(void)
   if (diplo_leader_wnd_open != '\0') {
     diplo_leader_wnd_open = '\0';
     if (diplo_leader_window != 0) {
-      diplo_leader_wnd_teardown((WndBase *)diplo_leader_window);
+      diplo_leader_wnd_teardown(diplo_leader_window);
       if (diplo_leader_window != 0) {
         diplo_leader_wnd_scalar_dtor((void *)diplo_leader_window,1);
       }
@@ -4303,7 +4303,7 @@ DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  wnd_ctor((ModalMenuWindow *)self);
+  wnd_ctor(self);
   eh_state = 0;
   surfwnd_ctor((SurfaceWindow *)self->leader_surface_window);
   (*((char *)&eh_state + 0)) = 1;
@@ -4346,7 +4346,7 @@ void __thiscall diplo_leader_wnd_dtor(void *self)
 }
 
 /* 004944bb auto */
-i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *self,i32 viewer_civ,iptr leader_civ)
+i32 __thiscall diplo_leader_wnd_init(DiploLeaderWindow *self,i32 viewer_civ,iptr leader_civ)
 
 {
   int ok;
@@ -4424,9 +4424,9 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *self,i32 viewer_civ,iptr l
 void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *self)
 
 {
-  wnd_handle_show_raise((WndBase *)self);
+  wnd_handle_show_raise(self);
   wnd_flush_paint();
-  wnd_set_palette((WndBase *)self,(iptr)(self->leader_palette));
+  wnd_set_palette(self,(iptr)(self->leader_palette));
   wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)(self->leader_palette));
   if (diplo_leader_video_active != '\0') {
     window_show((WindowObjectView *)self->leader_video_wnd);
@@ -4446,27 +4446,27 @@ void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *self)
 }
 
 /* 004947f0 auto */
-void __thiscall diplo_leader_wnd_teardown(WndBase *self)
+void __thiscall diplo_leader_wnd_teardown(DiploLeaderWindow *self)
 
 {
-  wnd_hide(self + 0x11);
+  wnd_hide((WndBase *)((u8 *)self + 0x110));
   wnd_flush_paint();
   wnd_set_palette(self,(iptr)&game_palette_block.game_palette);
   wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&game_palette_block.game_palette);
   wnd_hide(self);
   wnd_flush_paint();
   wnd_destroy_native(self);
-  dll_handle_free((DllHandle *)&((PictureFrameWindow *)self)->leader_dll);
+  dll_handle_free((DllHandle *)&self->leader_dll);
   dlg_set_parent_window(0);
   dlg_set_palette(0);
-  wnd_destroy_with_surface((DibSurface *)&((Wnd *)self)->leader_surface_window);
+  wnd_destroy_with_surface((DibSurface *)self->leader_surface_window);
   wnd_destroy_native(self);
   dialog_set_default_offset(0,0);
   return;
 }
 
 /* 0049488e auto */
-uint __thiscall diplo_leader_init_tile(DiploLeaderView *self)
+uint __thiscall diplo_leader_init_tile(DiploLeaderWindow *self)
 
 {
   int loaded;
@@ -4477,18 +4477,18 @@ uint __thiscall diplo_leader_init_tile(DiploLeaderView *self)
 }
 
 /* 004948e6 auto */
-i32 __thiscall diplo_leader_init_background(DiploLeaderView *self)
+i32 __thiscall diplo_leader_init_background(DiploLeaderWindow *self)
 
 {
   wnd_create_with_handlers
-            ((WndBase *)self,(const char *)&str_empty_102,0x800,0,0,self->screen_width_value,self->screen_height_value + 5,(iptr)&game_palette_block.game_palette,
+            (self,(const char *)&str_empty_102,0x800,0,0,self->screen_width_value,self->screen_height_value + 5,(iptr)&game_palette_block.game_palette,
              (iptr)&main_frame_wnd_block.main_frame_wnd);
   wnd_set_bg_tile(self,(DibSurface *)&self->bg_tile_surface);
   return 1;
 }
 
 /* 00494949 auto */
-uint __thiscall diplo_leader_init_main_art(DiploLeaderView *self)
+uint __thiscall diplo_leader_init_main_art(DiploLeaderWindow *self)
 
 {
   int loaded;
@@ -4541,7 +4541,7 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderView *self)
 }
 
 /* 00494b5f auto */
-i32 __thiscall diplo_leader_init_military(DiploLeaderView *self)
+i32 __thiscall diplo_leader_init_military(DiploLeaderWindow *self)
 
 {
   int loaded;
@@ -4614,7 +4614,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *self)
 }
 
 /* 00494e2a auto */
-i32 __thiscall diplo_leader_init_science(DiploLeaderView *self)
+i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
 
 {
   int value;
@@ -4921,7 +4921,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *self)
 }
 
 /* 00495c35 auto */
-i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *self)
+i32 __thiscall diplo_leader_init_portrait(DiploLeaderWindow *self)
 
 {
   int loaded;
@@ -4973,7 +4973,7 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *self)
 }
 
 /* 00495e0c auto */
-i8 __thiscall diplo_leader_init_video(DiploLeaderView *self)
+i8 __thiscall diplo_leader_init_video(DiploLeaderWindow *self)
 
 {
   i8 result;

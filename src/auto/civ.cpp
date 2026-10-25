@@ -861,7 +861,7 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   combo_set_cur_sel((ComboBox *)&self->dialog_h,self->init_tax_rate);
   tech_editor_update_controls();
   self->dialog_w = 5;
-  wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
+  wnd_set_move_handler((WndHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)tech_editor_redraw);
   tech_editor_on_combo(0xc9);
   wnd_repaint((SurfaceWindow *)self);
@@ -1949,7 +1949,7 @@ void __cdecl science_advisor_draw(void)
     scrollbar_set_page_size((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),1);
     scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)science_advisor_on_scroll);
     ctrl_show_and_redraw((Control *)((i8 *)&advisor_window_block.advisor_scrollbar));
-    wnd_set_lbuttonup_handler((WndEventHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),(iptr)science_advisor_on_click);
+    wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),(iptr)science_advisor_on_click);
     advisor_window_block.advisor_controls_created = 1;
   }
   wnd_blit_surface((DibSurface *)((i8 *)&advisor_window_block.advisor_window));

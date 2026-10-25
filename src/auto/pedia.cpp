@@ -1666,10 +1666,10 @@ void __thiscall pedia_window_create(DocumentWindow *self)
             ((DibSurface *)self,0,0xe02,left_x / 2 - (int)self->panel_width / 2,
              col_width / 2 - (int)self->panel_height / 2,self->panel_width,self->panel_height,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd)
   ;
-  wnd_set_close_handler((WndEventHandlers *)self->event_handlers,(iptr)pedia_close);
+  wnd_set_close_handler((WndHandlers *)self->event_handlers,(iptr)pedia_close);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)pedia_redraw_page);
   wnd_set_caption_height((WndBase *)self->window_2,self->header_height);
-  wnd_set_keydown_handler((WndEventHandlers *)self->event_handlers,(iptr)pedia_list_on_key);
+  wnd_set_keydown_handler((WndHandlers *)self->event_handlers,(iptr)pedia_list_on_key);
   wnd_set_keyboard_nav((Wnd *)self->window_2,0);
   left_x = panel_padding_x;
   ((PictureWindow *)self)->close_box_sprite = (u32)((i8 *)&caption_close_button_sprite_block.caption_close_button_sprite);

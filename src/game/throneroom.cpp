@@ -26,7 +26,7 @@ void __cdecl throneroom_show_upgrade(iptr civ)
         incomplete = 1;
     if (incomplete)
         throneroom_run_upgrade(&t.room);
-    throneroom_dtor((ThroneRoomDtorView *)&t.room);
+    throneroom_dtor(&t.room);
 }
 
 /* 0x0044cd9b: show the throne room (to look at it). */
@@ -35,5 +35,5 @@ void __cdecl throneroom_show(iptr civ)
     ThroneRoom t;
     throneroom_ctor(&t.room, civ);
     throneroom_run_view(&t.room);
-    throneroom_dtor((ThroneRoomDtorView *)&t.room);
+    throneroom_dtor(&t.room);
 }

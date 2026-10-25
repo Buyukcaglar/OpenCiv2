@@ -46,24 +46,24 @@ void __thiscall wnd_get_rect_in_parent(WndBase *self,iptr rect)
 }
 
 /* 00408130 auto */
-u32 __thiscall wnd_set_lbuttonup_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_lbuttonup_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
   
-  old_handler = self->on_lbuttonup;
-  self->on_lbuttonup = handler;
+  old_handler = self->on_lbutton_up;
+  self->on_lbutton_up = handler;
   return old_handler;
 }
 
 /* 00408170 auto */
-u32 __thiscall wnd_set_rbuttonup_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_rbuttonup_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
   
-  old_handler = self->on_rbuttonup;
-  self->on_rbuttonup = handler;
+  old_handler = self->on_rbutton_up;
+  self->on_rbutton_up = handler;
   return old_handler;
 }
 
@@ -73,13 +73,13 @@ u32 __thiscall wnd_set_rbuttonup_handler(WndEventHandlers *self,iptr handler)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_keydown_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_keydown_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
   
-  old_handler = self->on_keydown;
-  self->on_keydown = handler;
+  old_handler = self->on_key_down;
+  self->on_key_down = handler;
   return old_handler;
 }
 
@@ -93,7 +93,7 @@ u32 __thiscall wnd_set_keydown_handler(WndEventHandlers *self,iptr handler)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_char_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_char_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
@@ -104,7 +104,7 @@ u32 __thiscall wnd_set_char_handler(WndEventHandlers *self,iptr handler)
 }
 
 /* 00408230 auto */
-u32 __thiscall wnd_set_close_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_close_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
@@ -115,7 +115,7 @@ u32 __thiscall wnd_set_close_handler(WndEventHandlers *self,iptr handler)
 }
 
 /* 00408270 auto */
-u32 __thiscall wnd_set_minimize_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_minimize_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
@@ -126,7 +126,7 @@ u32 __thiscall wnd_set_minimize_handler(WndEventHandlers *self,iptr handler)
 }
 
 /* 004082b0 auto */
-u32 __thiscall wnd_set_restore_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_restore_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
@@ -137,7 +137,7 @@ u32 __thiscall wnd_set_restore_handler(WndEventHandlers *self,iptr handler)
 }
 
 /* 004082f0 auto */
-u32 __thiscall wnd_set_size_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_size_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
@@ -148,7 +148,7 @@ u32 __thiscall wnd_set_size_handler(WndEventHandlers *self,iptr handler)
 }
 
 /* 00408330 auto */
-u32 __thiscall wnd_set_move_handler(WndEventHandlers *self,iptr handler)
+u32 __thiscall wnd_set_move_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
@@ -210,7 +210,7 @@ void __thiscall wnd_blit_surface_rect(DibSurface *self,iptr rect)
       view = self + 1;
     }
     surface_blit_to_wnd(self,(iptr)view,(RECT *)&self->bounds_rect,(iptr)&self->bounds_rect);
-    wnd_view_validate_rect((WndValidateRectView *)(self + 1),(iptr)&self->bounds_rect);
+    wnd_view_validate_rect((WndBase *)(self + 1),(iptr)&self->bounds_rect);
   }
   else {
     if (self == (DibSurface *)0x0) {
@@ -220,16 +220,16 @@ void __thiscall wnd_blit_surface_rect(DibSurface *self,iptr rect)
       view2 = self + 1;
     }
     surface_blit_to_wnd(self,(iptr)view2,(RECT *)rect,rect);
-    wnd_view_validate_rect((WndValidateRectView *)(self + 1),rect);
+    wnd_view_validate_rect((WndBase *)(self + 1),rect);
   }
   return;
 }
 
 /* 00408580 auto */
-void __thiscall wnd_view_validate_rect(WndValidateRectView *self,iptr rect)
+void __thiscall wnd_view_validate_rect(WndBase *self,iptr rect)
 
 {
-  wnd_obj_validate_rect(self->wnd_obj,(RECT *)rect);
+  wnd_obj_validate_rect(self->native_wnd,(RECT *)rect);
   return;
 }
 
@@ -258,7 +258,7 @@ void __thiscall window_show(WindowObjectView *self)
 void __thiscall window_show_focus_first(Wnd *self)
 
 {
-  wnd_handle_show_raise((WndBase *)self);
+  wnd_handle_show_raise(self);
   wnd_focus_first_control(self);
   return;
 }
@@ -495,7 +495,7 @@ i32 __cdecl ui_paradrop_cursor_active(void)
 }
 
 /* 00414b70 auto */
-void __thiscall wnd_set_cursor_now(WndCursorView *self,iptr cursor,i32 flag)
+void __thiscall wnd_set_cursor_now(WndBase *self,iptr cursor,i32 flag)
 
 {
   wnd_obj_set_cursor_now(self->native_wnd,cursor,flag);
@@ -513,7 +513,7 @@ i32 __thiscall wnd_client_height(WndBase *self)
 }
 
 /* 00414be0 auto */
-u32 __thiscall wnd_set_mousemove_handler(WndHandlersMouseSetView *self,iptr handler)
+u32 __thiscall wnd_set_mousemove_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
@@ -524,7 +524,7 @@ u32 __thiscall wnd_set_mousemove_handler(WndHandlersMouseSetView *self,iptr hand
 }
 
 /* 00414c20 auto */
-u32 __thiscall wnd_set_lbuttondown_handler(WndHandlersMouseSetView *self,iptr handler)
+u32 __thiscall wnd_set_lbuttondown_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
@@ -535,24 +535,24 @@ u32 __thiscall wnd_set_lbuttondown_handler(WndHandlersMouseSetView *self,iptr ha
 }
 
 /* 00414c60 auto */
-u32 __thiscall wnd_set_lbuttonup_any_handler(WndHandlersMouseSetView *self,iptr handler)
+u32 __thiscall wnd_set_lbuttonup_any_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
   
-  old_handler = ((WndHandlersMouseSetViewExt *)self)->on_lbutton_up_any;
-  ((WndHandlersMouseSetViewExt *)self)->on_lbutton_up_any = handler;
+  old_handler = (self)->on_lbutton_up_raw;
+  (self)->on_lbutton_up_raw = handler;
   return old_handler;
 }
 
 /* 00414ca0 auto */
-u32 __thiscall wnd_set_dblclick_handler(WndHandlersMouseSetView *self,iptr handler)
+u32 __thiscall wnd_set_dblclick_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
   
-  old_handler = ((WndHandlersMouseSetViewExt *)self)->on_dblclick;
-  ((WndHandlersMouseSetViewExt *)self)->on_dblclick = handler;
+  old_handler = (self)->on_dblclick;
+  (self)->on_dblclick = handler;
   return old_handler;
 }
 
@@ -760,7 +760,7 @@ void __thiscall picwnd_close(PictureWindowCore *self)
 {
   if (-1 < (int)self->report_id) {
     self->report_id = 0xffffffff;
-    wnd_remove_all_controls((WndControlRemoveView *)self->window_2);
+    wnd_remove_all_controls((Wnd *)self->window_2);
     surface_release((DibSurface *)&self->rates_civ);
     frame_wnd_close((DibSurface *)self);
   }
@@ -1364,7 +1364,7 @@ Wnd * __thiscall surfwnd_wnd_ctor(Wnd *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  wnd_ctor((ModalMenuWindow *)self);
+  wnd_ctor(self);
   self->control_list = 0;
   self->handler_slot_bc = 0;
   self->handler_slot_c0 = 0;
@@ -1381,9 +1381,9 @@ ModalMenuWindow * __thiscall wnd_ctor(ModalMenuWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  wnd_record_init((WndBase *)self);
+  wnd_record_init(self);
   eh_state = 0;
-  wnd_handlers_ctor((WndHandlers *)self->wnd_handlers);
+  wnd_handlers_ctor(&self->wnd_handlers);
   self->menu = 0;
   self->on_menu_pos_command = 0;
   self->on_command = 0;
@@ -1493,10 +1493,10 @@ void __thiscall wnd_hide(WndBase *self)
 }
 
 /* 00450400 auto */
-void __thiscall wnd_center(WndCenterView *self)
+void __thiscall wnd_center(WndBase *self)
 
 {
-  wnd_obj_center(self->wnd_obj,0,0);
+  wnd_obj_center(self->native_wnd,0,0);
   return;
 }
 
@@ -1523,7 +1523,7 @@ void __thiscall wnd_get_cursor_pos(WndBase *self,iptr out_x,iptr out_y)
 void __thiscall wnd_activate(Wnd *self)
 
 {
-  wnd_focus_and_raise((WndBase *)self);
+  wnd_focus_and_raise(self);
   wnd_focus_first_control(self);
   return;
 }
@@ -1633,13 +1633,13 @@ void __thiscall hotspot_dtor(Hotspot *self)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_keydown_pre_handler(WndSetKeydownPreHandlerView *self,iptr handler)
+u32 __thiscall wnd_set_keydown_pre_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
   
-  old_handler = self->tied_stream;
-  self->tied_stream = handler;
+  old_handler = self->on_key_down_pre;
+  self->on_key_down_pre = handler;
   return old_handler;
 }
 
@@ -1872,10 +1872,10 @@ void __thiscall wnd_set_focus(WndBase *self)
 }
 
 /* 00497cc0 auto */
-void __thiscall wnd_set_bg_tile(DiploLeaderView *self,DibSurface *tile)
+void __thiscall wnd_set_bg_tile(DiploLeaderWindow *self,DibSurface *tile)
 
 {
-  wnd_obj_set_bg_tile(self->wnd_obj,tile);
+  wnd_obj_set_bg_tile(self->native_wnd,tile);
   return;
 }
 
@@ -3806,7 +3806,7 @@ return_result:
 }
 
 /* 00511320 auto */
-u32 __thiscall wnd_get_palette(WndPaletteView *self)
+u32 __thiscall wnd_get_palette(WndBase *self)
 
 {
   return self->wnd_palette;
@@ -3860,7 +3860,7 @@ void __thiscall frame_wnd_set_title_small_font(FrameWindow *self,iptr font)
 }
 
 /* 00518e80 auto */
-void __thiscall wnd_move_xy(WndMoveView *self,i32 x,i32 y)
+void __thiscall wnd_move_xy(WndBase *self,i32 x,i32 y)
 
 {
   wnd_obj_move_xy(self->native_wnd,x,y);
@@ -4753,30 +4753,30 @@ frame_wnd_create
     wnd_set_resize_border((WndBase *)self->window_2,self->resize_border);
   }
   frame_wnd_layout(self);
-  wnd_set_drag_begin_callback((WndDragBeginSetView *)self->event_handlers,(iptr)mp_window_drag_begin);
-  wnd_set_drag_end_callback((WndDragEndSetView *)self->event_handlers,(iptr)mp_window_drag_end);
+  wnd_set_drag_begin_callback((WndHandlers *)self->event_handlers,(iptr)mp_window_drag_begin);
+  wnd_set_drag_end_callback((WndHandlers *)self->event_handlers,(iptr)mp_window_drag_end);
   return;
 }
 
 /* 00553d30 auto */
-u32 __thiscall wnd_set_drag_begin_callback(WndDragBeginSetView *self,iptr callback)
+u32 __thiscall wnd_set_drag_begin_callback(WndHandlers *self,iptr callback)
 
 {
   u32 old_callback;
   
-  old_callback = self->on_drag_begin;
-  self->on_drag_begin = callback;
+  old_callback = self->on_enter_size_move;
+  self->on_enter_size_move = callback;
   return old_callback;
 }
 
 /* 00553d70 auto */
-u32 __thiscall wnd_set_drag_end_callback(WndDragEndSetView *self,iptr callback)
+u32 __thiscall wnd_set_drag_end_callback(WndHandlers *self,iptr callback)
 
 {
   u32 old_callback;
   
-  old_callback = self->on_drag_end;
-  self->on_drag_end = callback;
+  old_callback = self->on_exitsizemove;
+  self->on_exitsizemove = callback;
   return old_callback;
 }
 
@@ -4907,13 +4907,13 @@ void __cdecl frame_texture_free_hook_nop(void)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_rbuttondown_handler(WndHandlersMouseSetView *self,iptr handler)
+u32 __thiscall wnd_set_rbuttondown_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
   
-  old_handler = ((WndHandlersMouseSetViewExt *)self)->on_rbutton_down;
-  ((WndHandlersMouseSetViewExt *)self)->on_rbutton_down = handler;
+  old_handler = (self)->on_rbutton_down;
+  (self)->on_rbutton_down = handler;
   return old_handler;
 }
 
@@ -4923,13 +4923,13 @@ u32 __thiscall wnd_set_rbuttondown_handler(WndHandlersMouseSetView *self,iptr ha
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_rbuttonup_any_handler(WndHandlersMouseSetView *self,iptr handler)
+u32 __thiscall wnd_set_rbuttonup_any_handler(WndHandlers *self,iptr handler)
 
 {
   u32 old_handler;
   
-  old_handler = ((WndHandlersMouseSetViewExt *)self)->on_rbutton_up_any;
-  ((WndHandlersMouseSetViewExt *)self)->on_rbutton_up_any = handler;
+  old_handler = (self)->on_rbutton_up_raw;
+  (self)->on_rbutton_up_raw = handler;
   return old_handler;
 }
 
@@ -5230,7 +5230,7 @@ void __thiscall menu_attach_to_window(GameMenu *self,ModalMenuWindow *window)
     menu_owner_window = window;
     menu_active_object = self;
     wnd_attach_menu(window,(iptr)self);
-    wnd_set_menu_callback((WndMenuCbSetView *)window,(iptr)menu_dispatch_command);
+    wnd_set_menu_callback(window,(iptr)menu_dispatch_command);
   }
   return;
 }
@@ -5549,7 +5549,7 @@ void __thiscall wnd_attach_menu(ModalMenuWindow *self,iptr menu_obj)
   NativeWindow *hwnd;
   
   hmenu = menu_get_hmenu((MenuHandleView *)menu_obj);
-  hwnd = wnd_get_window((WndBase *)self);
+  hwnd = wnd_get_window(self);
   wnd_obj_attach_menu(hwnd,hmenu);
   self->menu = menu_obj;
   return;
@@ -5568,10 +5568,10 @@ u32 __thiscall menu_get_hmenu(MenuHandleView *self)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall wnd_set_menu_callback(WndMenuCbSetView *self,iptr callback)
+void __thiscall wnd_set_menu_callback(ModalMenuWindow *self,iptr callback)
 
 {
-  self->on_menu = callback;
+  self->on_menu_pos_command = callback;
   return;
 }
 
@@ -5582,7 +5582,7 @@ void __thiscall wnd_redraw_menu_bar(ModalMenuWindow *self)
   NativeWindow *hwnd;
   
   if (self->menu != 0) {
-    hwnd = wnd_get_window((WndBase *)self);
+    hwnd = wnd_get_window(self);
     menu_redraw_bar(hwnd);
   }
   return;
@@ -8175,7 +8175,7 @@ i32 __thiscall dialog_create_window(Dialog *self)
       (*(int *)&dlg_pending_idle_callback) = 0;
     }
     if (dlg_pending_move_handler != 0) {
-      wnd_set_move_handler((WndEventHandlers *)(self->surf_wnd + 0x58),dlg_pending_move_handler);
+      wnd_set_move_handler((WndHandlers *)(self->surf_wnd + 0x58),dlg_pending_move_handler);
       dlg_pending_move_handler = 0;
     }
     result = 1;
@@ -8446,10 +8446,10 @@ void __thiscall dialog_create_controls(Dialog *self)
                         ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
             }
           }
-          wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_lbuttondown);
-          wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_lbuttonup);
-          wnd_set_mousemove_handler((WndHandlersMouseSetView *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_mousemove);
-          wnd_set_dblclick_handler((WndHandlersMouseSetView *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_dblclick);
+          wnd_set_lbuttondown_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_lbuttondown);
+          wnd_set_lbuttonup_any_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_lbuttonup);
+          wnd_set_mousemove_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_mousemove);
+          wnd_set_dblclick_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_dblclick);
         }
         else {
           ctrl_mem = (Button *)operator_new(0x3c);
@@ -8740,8 +8740,8 @@ void __thiscall dialog_create_controls(Dialog *self)
       button_set_callback
                 ((Button *)(self->button_controls + i * 0x3c),(iptr)dialog_on_button_click);
     }
-    wnd_set_keydown_handler((WndEventHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_on_keydown);
-    wnd_set_char_handler((WndEventHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_on_char);
+    wnd_set_keydown_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_on_keydown);
+    wnd_set_char_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_on_char);
     self->style_flags = self->style_flags | 0x200;
   }
   return;
@@ -10220,7 +10220,7 @@ bool __thiscall surfwnd_resize_dib(DibSurface *self,iptr rect)
   if (result == 1) {
     height = rect_height((RECT *)rect);
     width = rect_width((RECT *)rect);
-    wnd_set_client_size((WndClientSizeView *)(self + 1),width,height);
+    wnd_set_client_size((WndBase *)(self + 1),width,height);
   }
   return result == 1;
 }
@@ -10240,7 +10240,7 @@ void __thiscall surfwnd_on_resize(SurfaceWindow *self,int width,int height)
   }
   SetRect(&rect,0,0,width,height);
   call_untyped(((code **)self->vtable)[0], self,&rect);
-  palette = wnd_get_palette_obj((WndPaletteObjView *)self->window_2);
+  palette = wnd_get_palette_obj((WndBase *)self->window_2);
   surface_apply_palette((DibSurface *)self,(PaletteVersionView *)palette);
   if (self == (SurfaceWindow *)0x0) {
     (*(u8 * *)&wnd_active_child) = (u8 *)0x0;
@@ -10262,8 +10262,8 @@ void __thiscall wnd_resize_clamped(WindowObjectView *self,int width,int height)
   int max_height2;
   int max_width2;
   
-  wnd_get_min_size((WndMinSizeView *)(self + 0x12),(iptr)&min_width2,(iptr)&min_height2);
-  wnd_get_max_size((WndMaxSizeView *)(self + 0x12),(iptr)&max_width2,(iptr)&max_height2);
+  wnd_get_min_size((ModalMenuWindow *)(self + 0x12),(iptr)&min_width2,(iptr)&min_height2);
+  wnd_get_max_size((ModalMenuWindow *)(self + 0x12),(iptr)&max_width2,(iptr)&max_height2);
   if (width < min_width2) {
     width = min_width2;
   }
@@ -10276,19 +10276,19 @@ void __thiscall wnd_resize_clamped(WindowObjectView *self,int width,int height)
   if (max_height2 < height) {
     height = max_height2;
   }
-  wnd_set_client_size((WndClientSizeView *)(self + 0x12),width,height);
+  wnd_set_client_size((WndBase *)(self + 0x12),width,height);
   return;
 }
 
 /* 005bb8c0 auto */
-u32 __thiscall wnd_get_palette_obj(WndPaletteObjView *self)
+u32 __thiscall wnd_get_palette_obj(WndBase *self)
 
 {
-  return self->palette_obj;
+  return self->wnd_palette;
 }
 
 /* 005bb8e0 auto */
-void __thiscall wnd_set_client_size(WndClientSizeView *self,i32 width,i32 height)
+void __thiscall wnd_set_client_size(WndBase *self,i32 width,i32 height)
 
 {
   wnd_obj_set_client_size(self->native_wnd,width,height);
@@ -10296,7 +10296,7 @@ void __thiscall wnd_set_client_size(WndClientSizeView *self,i32 width,i32 height
 }
 
 /* 005bb910 auto */
-void __thiscall wnd_get_min_size(WndMinSizeView *self,iptr out_width,iptr out_height)
+void __thiscall wnd_get_min_size(ModalMenuWindow *self,iptr out_width,iptr out_height)
 
 {
   *(u32 *)out_width = self->min_width;
@@ -10305,7 +10305,7 @@ void __thiscall wnd_get_min_size(WndMinSizeView *self,iptr out_width,iptr out_he
 }
 
 /* 005bb950 auto */
-void __thiscall wnd_get_max_size(WndMaxSizeView *self,iptr out_width,iptr out_height)
+void __thiscall wnd_get_max_size(ModalMenuWindow *self,iptr out_width,iptr out_height)
 
 {
   *(u32 *)out_width = self->max_width;
@@ -10577,7 +10577,7 @@ void __cdecl wnd_obj_set_bg_color(NativeWindow *wnd,uint color_index)
   HBRUSH brush;
   GamePalette *self;
   i8 green[4];
-  WndPaletteView *wnd_view;
+  WndBase *wnd_view;
   i8 red[4];
   i8 blue[4];
   
@@ -10585,7 +10585,7 @@ void __cdecl wnd_obj_set_bg_color(NativeWindow *wnd,uint color_index)
     DeleteObject(wnd->bg_brush);
   }
   if (gfx_palettized_display == 0) {
-    wnd_view = (WndPaletteView *)GetWindowLongA(wnd->hwnd,0);
+    wnd_view = (WndBase *)GetWindowLongA(wnd->hwnd,0);
     self = (GamePalette *)wnd_get_palette(wnd_view);
     palette_get_entry
               (self,color_index & 0xff,(iptr)red,(iptr)green,(iptr)blue);
@@ -11114,10 +11114,10 @@ void __cdecl wnd_obj_release_capture(NativeWindow *wnd)
 /* 005bd566: written by hand in src/game/retvals.cpp */
 
 /* 005bd610 auto */
-i16 __thiscall wnd_get_style_flags(WndStyleView *self)
+i16 __thiscall wnd_get_style_flags(WndBase *self)
 
 {
-  return (short)self->style_flags;
+  return (short)self->style;
 }
 
 /* 005c5760 auto */
@@ -11151,14 +11151,14 @@ wnd_create_framed_child
 }
 
 /* 005c59c4 auto */
-void __thiscall wnd_append_control(WndControlListView *self,iptr ctrl)
+void __thiscall wnd_append_control(Wnd *self,iptr ctrl)
 
 {
   uptr last;
   
-  last = self->first_control;
+  last = self->control_list;
   if (last == 0) {
-    self->first_control = ctrl;
+    self->control_list = ctrl;
   }
   else {
     for (; *(int *)(last + 0x20) != 0; last = *(uptr *)(last + 0x20)) {
@@ -11169,7 +11169,7 @@ void __thiscall wnd_append_control(WndControlListView *self,iptr ctrl)
 }
 
 /* 005c5a27 auto */
-void __thiscall wnd_remove_control(WndControlRemoveView *self,int ctrl_id)
+void __thiscall wnd_remove_control(Wnd *self,int ctrl_id)
 
 {
   int id;
@@ -11178,11 +11178,11 @@ void __thiscall wnd_remove_control(WndControlRemoveView *self,int ctrl_id)
   u32 next_next;
   Control *ctrl;
   
-  if (self->first_control != 0) {
-    ctrl = (Control *)self->first_control;
+  if (self->control_list != 0) {
+    ctrl = (Control *)self->control_list;
     id = ctrl_get_id(ctrl);
     if (id == ctrl_id) {
-      self->first_control = ctrl->next_ctrl;
+      self->control_list = ctrl->next_ctrl;
     }
     else {
       while( true ) {
@@ -11207,13 +11207,13 @@ void __thiscall wnd_remove_control(WndControlRemoveView *self,int ctrl_id)
 }
 
 /* 005c5aeb auto */
-void __thiscall wnd_remove_all_controls(WndControlRemoveView *self)
+void __thiscall wnd_remove_all_controls(Wnd *self)
 
 {
   i32 ctrl_id;
   Control *ctrl;
   
-  for (ctrl = (Control *)self->first_control; ctrl != (Control *)0x0;
+  for (ctrl = (Control *)self->control_list; ctrl != (Control *)0x0;
       ctrl = (Control *)ctrl->next_ctrl) {
     ctrl_id = ctrl_get_id(ctrl);
     wnd_remove_control(self,ctrl_id);
@@ -11362,7 +11362,7 @@ void __thiscall wnd_run_modal_loop(ModalMenuWindow *self)
     else {
       owner2 = wnd_get_window((WndBase *)(((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack_below))[wnd_modal_depth]);
     }
-    wnd = wnd_get_window((WndBase *)self);
+    wnd = wnd_get_window(self);
     wnd_obj_disable_owner(wnd,owner2);
     while (self->modal_running != 0) {
       win_pump_one_message();
@@ -11376,7 +11376,7 @@ void __thiscall wnd_run_modal_loop(ModalMenuWindow *self)
     else {
       owner_after = wnd_get_window((WndBase *)(((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack_below))[wnd_modal_depth]);
     }
-    wnd = wnd_get_window((WndBase *)self);
+    wnd = wnd_get_window(self);
     wnd_obj_enable_owner(wnd,owner_after);
     wnd_modal_depth--;
     if (-1 < wnd_modal_depth) {
@@ -11418,7 +11418,7 @@ i32 __cdecl wnd_set_active_child(iptr child)
 }
 
 /* 005c63af auto */
-bool __thiscall wnd_fire_menu_select(WndMenuSelectView *self,i32 item_id)
+bool __thiscall wnd_fire_menu_select(ModalMenuWindow *self,i32 item_id)
 
 {
   bool has_handler;
@@ -11567,7 +11567,7 @@ void __cdecl wnd_redraw_client(HWND hwnd)
 }
 
 /* 005cbdd0 auto */
-u8 __thiscall wnd_keyboard_nav_enabled(WndKeyNavView *self)
+u8 __thiscall wnd_keyboard_nav_enabled(Wnd *self)
 
 {
   return self->keyboard_nav;
@@ -11729,13 +11729,13 @@ WndBase * __thiscall wnd_record_init(WndBase *self)
 }
 
 /* 005db650 auto */
-void __thiscall wnd_record_destroy(WndDestroyView *self)
+void __thiscall wnd_record_destroy(WndBase *self)
 
 {
   NativeWindow *destroyed_obj;
   
-  destroyed_obj = (NativeWindow *)wnd_obj_destroy(self->wnd_obj);
-  self->wnd_obj = destroyed_obj;
+  destroyed_obj = (NativeWindow *)wnd_obj_destroy(self->native_wnd);
+  self->native_wnd = destroyed_obj;
   return;
 }
 
@@ -12421,7 +12421,7 @@ void __cdecl wnd_focus_control(iptr wnd,iptr control)
   i32 *items;
   i32 start_hwnd;
   
-  nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)wnd);
+  nav_enabled = wnd_keyboard_nav_enabled((Wnd *)wnd);
   if (nav_enabled != '\0') {
     ctrl_type = control_get_type((Control *)control);
     if (ctrl_type == 3) {
@@ -12460,18 +12460,18 @@ void __cdecl wnd_on_menu_command(HWND hwnd,i32 cmd_id)
 
 {
   char handled;
-  WndOnCommandView *self;
+  ModalMenuWindow *self;
   HMENU hmenu;
   uint pos;
   
-  self = (WndOnCommandView *)GetWindowLongA(hwnd,4);
+  self = (ModalMenuWindow *)GetWindowLongA(hwnd,4);
   handled = wnd_call_command(self,cmd_id);
   if (handled == '\0') {
     err_report_ctx_block.menu_search_pos = 0;
     hmenu = GetMenu(hwnd);
     if (hmenu != (HMENU)0x0) {
       pos = menu_find_item_pos(hmenu,cmd_id);
-      wnd_call_menu_pos_command((WndOnMenuPosCommandView *)self,pos & 0xffff,pos >> 0x10);
+      wnd_call_menu_pos_command(self,pos & 0xffff,pos >> 0x10);
     }
   }
   return;
@@ -12511,77 +12511,77 @@ uint __cdecl menu_find_item_pos(HMENU hmenu,UINT item_id)
 }
 
 /* 005ecf50 auto */
-void __thiscall wnd_call_mousemove(WndOnMouseMoveView *self,i32 x,i32 y)
+void __thiscall wnd_call_mousemove(WndHandlers *self,i32 x,i32 y)
 
 {
-  if (self->on_mousemove != 0) {
-    call_untyped((code *)self->on_mousemove, x,y);
+  if (self->on_mouse_move != 0) {
+    call_untyped((code *)self->on_mouse_move, x,y);
   }
   return;
 }
 
 /* 005ecf90 auto */
-void __thiscall wnd_call_lbuttondown(WndOnLButtonDownView *self,iptr x,iptr y)
+void __thiscall wnd_call_lbuttondown(WndHandlers *self,iptr x,iptr y)
 
 {
-  if (self->on_lbuttondown != 0) {
-    call_untyped((code *)self->on_lbuttondown, x,y);
+  if (self->on_lbutton_down != 0) {
+    call_untyped((code *)self->on_lbutton_down, x,y);
   }
   return;
 }
 
 /* 005ecfd0 auto */
-void __thiscall wnd_call_lbuttonup_raw(WndOnLButtonUpRawView *self,iptr x,iptr y)
+void __thiscall wnd_call_lbuttonup_raw(WndHandlers *self,iptr x,iptr y)
 
 {
-  if (self->on_lbuttonup_raw != 0) {
-    call_untyped((code *)self->on_lbuttonup_raw, x,y);
+  if (self->on_lbutton_up_raw != 0) {
+    call_untyped((code *)self->on_lbutton_up_raw, x,y);
   }
   return;
 }
 
 /* 005ed010 auto */
-void __thiscall wnd_call_lbuttonup(WndOnLButtonUpView *self,i32 x,i32 y)
+void __thiscall wnd_call_lbuttonup(WndHandlers *self,i32 x,i32 y)
 
 {
-  if (self->on_lbuttonup != 0) {
-    call_untyped((code *)self->on_lbuttonup, x,y);
+  if (self->on_lbutton_up != 0) {
+    call_untyped((code *)self->on_lbutton_up, x,y);
   }
   return;
 }
 
 /* 005ed050 auto */
-void __thiscall wnd_call_rbuttondown(WndOnRButtonDownView *self,iptr x,iptr y)
+void __thiscall wnd_call_rbuttondown(WndHandlers *self,iptr x,iptr y)
 
 {
-  if (self->on_rbuttondown != 0) {
-    call_untyped((code *)self->on_rbuttondown, x,y);
+  if (self->on_rbutton_down != 0) {
+    call_untyped((code *)self->on_rbutton_down, x,y);
   }
   return;
 }
 
 /* 005ed090 auto */
-void __thiscall wnd_call_rbuttonup_raw(WndOnRButtonUpRawView *self,i32 x,i32 y)
+void __thiscall wnd_call_rbuttonup_raw(WndHandlers *self,i32 x,i32 y)
 
 {
-  if (self->on_rbuttonup_raw != 0) {
-    call_untyped((code *)self->on_rbuttonup_raw, x,y);
+  if (self->on_rbutton_up_raw != 0) {
+    call_untyped((code *)self->on_rbutton_up_raw, x,y);
   }
   return;
 }
 
 /* 005ed0d0 auto */
-void __thiscall wnd_call_rbuttonup(WndOnRButtonUpView *self,i32 x,i32 y)
+void __thiscall wnd_call_rbuttonup(WndHandlers *self,i32 x,i32 y)
 
 {
-  if (self->on_rbuttonup != 0) {
-    call_untyped((code *)self->on_rbuttonup, x,y);
+  if (self->on_rbutton_up != 0) {
+    call_untyped((code *)self->on_rbutton_up, x,y);
   }
   return;
 }
 
 /* 005ed110 auto */
-void __thiscall wnd_call_dblclick(WndOnDblClickView *self,i32 x,i32 y)
+void __thiscall wnd_call_dblclick(WndHandlers *self,i32 x,i32 y)
 
 {
   if (self->on_dblclick != 0) {
@@ -12591,37 +12591,37 @@ void __thiscall wnd_call_dblclick(WndOnDblClickView *self,i32 x,i32 y)
 }
 
 /* 005ed150 auto */
-void __thiscall wnd_call_keydown_pre(WndOnKeyDownPreView *self,i32 key)
+void __thiscall wnd_call_keydown_pre(WndHandlers *self,i32 key)
 
 {
-  if (self->on_keydown_pre != 0) {
-    call_untyped((code *)self->on_keydown_pre, key);
+  if (self->on_key_down_pre != 0) {
+    call_untyped((code *)self->on_key_down_pre, key);
   }
   return;
 }
 
 /* 005ed190 auto */
-void __thiscall wnd_call_keyup(WndOnKeyUpView *self,i32 key)
+void __thiscall wnd_call_keyup(WndHandlers *self,i32 key)
 
 {
-  if (self->on_keyup != 0) {
-    call_untyped((code *)self->on_keyup, key);
+  if (self->on_key_up != 0) {
+    call_untyped((code *)self->on_key_up, key);
   }
   return;
 }
 
 /* 005ed1d0 auto */
-void __thiscall wnd_call_keydown(WndOnKeyDownView *self,i32 key)
+void __thiscall wnd_call_keydown(WndHandlers *self,i32 key)
 
 {
-  if (self->on_keydown != 0) {
-    call_untyped((code *)self->on_keydown, key);
+  if (self->on_key_down != 0) {
+    call_untyped((code *)self->on_key_down, key);
   }
   return;
 }
 
 /* 005ed210 auto */
-void __thiscall wnd_call_char(WndOnCharView *self,i32 ch)
+void __thiscall wnd_call_char(WndHandlers *self,i32 ch)
 
 {
   if (self->on_char != 0) {
@@ -12631,7 +12631,7 @@ void __thiscall wnd_call_char(WndOnCharView *self,i32 ch)
 }
 
 /* 005ed250 auto */
-i32 __thiscall wnd_call_close(WndOnCloseView *self)
+i32 __thiscall wnd_call_close(WndHandlers *self)
 
 {
   i32 result;
@@ -12646,7 +12646,7 @@ i32 __thiscall wnd_call_close(WndOnCloseView *self)
 }
 
 /* 005ed290 auto */
-void __thiscall wnd_call_minimize(WndOnMinimizeView *self)
+void __thiscall wnd_call_minimize(WndHandlers *self)
 
 {
   if (self->on_minimize != 0) {
@@ -12656,7 +12656,7 @@ void __thiscall wnd_call_minimize(WndOnMinimizeView *self)
 }
 
 /* 005ed2c0 auto */
-void __thiscall wnd_call_restore(WndOnRestoreView *self)
+void __thiscall wnd_call_restore(WndHandlers *self)
 
 {
   if (self->on_restore != 0) {
@@ -12666,17 +12666,17 @@ void __thiscall wnd_call_restore(WndOnRestoreView *self)
 }
 
 /* 005ed2f0 auto */
-void __thiscall wnd_call_setfocus(WndOnSetFocusView *self)
+void __thiscall wnd_call_setfocus(WndHandlers *self)
 
 {
-  if (self->on_setfocus != 0) {
-    call_untyped((code *)self->on_setfocus);
+  if (self->on_set_focus != 0) {
+    call_untyped((code *)self->on_set_focus);
   }
   return;
 }
 
 /* 005ed320 auto */
-void __thiscall wnd_call_size(WndOnSizeView *self,i32 size_type)
+void __thiscall wnd_call_size(WndHandlers *self,i32 size_type)
 
 {
   if (self->on_size != 0) {
@@ -12686,7 +12686,7 @@ void __thiscall wnd_call_size(WndOnSizeView *self,i32 size_type)
 }
 
 /* 005ed360 auto */
-void __thiscall wnd_call_move(WndOnMoveView *self,i32 x,i32 y)
+void __thiscall wnd_call_move(WndHandlers *self,i32 x,i32 y)
 
 {
   if (self->on_move != 0) {
@@ -12696,17 +12696,17 @@ void __thiscall wnd_call_move(WndOnMoveView *self,i32 x,i32 y)
 }
 
 /* 005ed3a0 auto */
-void __thiscall wnd_call_msg44(WndOnMsg44View *self,iptr notify_arg)
+void __thiscall wnd_call_msg44(WndHandlers *self,iptr notify_arg)
 
 {
-  if (self->on_commnotify != 0) {
-    call_untyped((code *)self->on_commnotify, notify_arg);
+  if (self->on_msg_44 != 0) {
+    call_untyped((code *)self->on_msg_44, notify_arg);
   }
   return;
 }
 
 /* 005ed3e0 auto */
-void __thiscall wnd_call_hscroll(WndOnHScrollView *self,i32 scroll_pos)
+void __thiscall wnd_call_hscroll(WndHandlers *self,i32 scroll_pos)
 
 {
   if (self->on_hscroll != 0) {
@@ -12716,7 +12716,7 @@ void __thiscall wnd_call_hscroll(WndOnHScrollView *self,i32 scroll_pos)
 }
 
 /* 005ed420 auto */
-void __thiscall wnd_call_hscroll_track(WndOnHScrollTrackView *self,i32 scroll_pos)
+void __thiscall wnd_call_hscroll_track(WndHandlers *self,i32 scroll_pos)
 
 {
   if (self->on_hscroll_track != 0) {
@@ -12726,7 +12726,7 @@ void __thiscall wnd_call_hscroll_track(WndOnHScrollTrackView *self,i32 scroll_po
 }
 
 /* 005ed460 auto */
-void __thiscall wnd_call_vscroll(WndOnVScrollView *self,i32 scroll_pos)
+void __thiscall wnd_call_vscroll(WndHandlers *self,i32 scroll_pos)
 
 {
   if (self->on_vscroll != 0) {
@@ -12736,7 +12736,7 @@ void __thiscall wnd_call_vscroll(WndOnVScrollView *self,i32 scroll_pos)
 }
 
 /* 005ed4a0 auto */
-void __thiscall wnd_call_vscroll_track(WndOnVScrollTrackView *self,i32 scroll_pos)
+void __thiscall wnd_call_vscroll_track(WndHandlers *self,i32 scroll_pos)
 
 {
   if (self->on_vscroll_track != 0) {
@@ -12746,7 +12746,7 @@ void __thiscall wnd_call_vscroll_track(WndOnVScrollTrackView *self,i32 scroll_po
 }
 
 /* 005ed4e0 auto */
-void __thiscall wnd_call_msg4c8(WndCallMsg4c8View *self,i32 msg_arg)
+void __thiscall wnd_call_msg4c8(WndHandlers *self,i32 msg_arg)
 
 {
   if (self->on_msg_4c8 != 0) {
@@ -12756,17 +12756,17 @@ void __thiscall wnd_call_msg4c8(WndCallMsg4c8View *self,i32 msg_arg)
 }
 
 /* 005ed520 auto */
-void __thiscall wnd_call_entersizemove(WndOnEnterSizeMoveView *self)
+void __thiscall wnd_call_entersizemove(WndHandlers *self)
 
 {
-  if (self->on_entersizemove != 0) {
-    call_untyped((code *)self->on_entersizemove);
+  if (self->on_enter_size_move != 0) {
+    call_untyped((code *)self->on_enter_size_move);
   }
   return;
 }
 
 /* 005ed550 auto */
-void __thiscall wnd_call_exitsizemove(WndOnExitSizeMoveView *self)
+void __thiscall wnd_call_exitsizemove(WndHandlers *self)
 
 {
   if (self->on_exitsizemove != 0) {
@@ -12783,7 +12783,7 @@ void __thiscall wnd_on_size_nop(void *self,i32 width,i32 height)
 }
 
 /* 005ed5a0 auto */
-bool __thiscall wnd_call_menu_pos_command(WndOnMenuPosCommandView *self,i32 menu_pos,i32 item_pos)
+bool __thiscall wnd_call_menu_pos_command(ModalMenuWindow *self,i32 menu_pos,i32 item_pos)
 
 {
   bool has_handler;
@@ -12796,7 +12796,7 @@ bool __thiscall wnd_call_menu_pos_command(WndOnMenuPosCommandView *self,i32 menu
 }
 
 /* 005ed5f0 auto */
-bool __thiscall wnd_call_command(WndOnCommandView *self,i32 cmd_id)
+bool __thiscall wnd_call_command(ModalMenuWindow *self,i32 cmd_id)
 
 {
   bool has_handler;
@@ -12814,7 +12814,7 @@ bool __thiscall wnd_call_command(WndOnCommandView *self,i32 cmd_id)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_get_hscroll_pos(WndHScrollPosView *self)
+u32 __thiscall wnd_get_hscroll_pos(ModalMenuWindow *self)
 
 {
   return self->hscroll_pos;
@@ -12826,7 +12826,7 @@ u32 __thiscall wnd_get_hscroll_pos(WndHScrollPosView *self)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_get_vscroll_pos(WndVScrollPosView *self)
+u32 __thiscall wnd_get_vscroll_pos(ModalMenuWindow *self)
 
 {
   return self->vscroll_pos;
@@ -12838,10 +12838,10 @@ u32 __thiscall wnd_get_vscroll_pos(WndVScrollPosView *self)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_get_hscroll_page(WndHScrollPageView *self)
+u32 __thiscall wnd_get_hscroll_page(ModalMenuWindow *self)
 
 {
-  return self->hscroll_page;
+  return self->hscroll_step;
 }
 
 /* 005ed6a0 auto */
@@ -12850,10 +12850,10 @@ u32 __thiscall wnd_get_hscroll_page(WndHScrollPageView *self)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_get_vscroll_page(WndVScrollPageView *self)
+u32 __thiscall wnd_get_vscroll_page(ModalMenuWindow *self)
 
 {
-  return self->vscroll_page;
+  return self->vscroll_step;
 }
 
 /* 005ed6c0 auto */
@@ -12926,7 +12926,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
       }
       goto default_proc;
     }
-    can_close = wnd_call_close((WndOnCloseView *)self->handlers);
+    can_close = wnd_call_close((WndHandlers *)self->handlers);
     if (can_close != 0) {
       def_result = DefWindowProcA(hwnd,0x10,wparam,lparam);
       return def_result;
@@ -12946,7 +12946,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
       handled = ddwin_dispatch_ctrl_msg(self,0x200,lparam & 0xffff,lparam >> 0x10);
       if (handled == '\0') {
         wnd_call_mousemove
-                  ((WndOnMouseMoveView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
       }
     }
     else if (msg == 0x100) {
@@ -12955,20 +12955,20 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
       handled = ddwin_dispatch_ctrl_msg(self,0x100,key,zero_arg);
       if (handled == '\0') {
         key = input_map_vkey(wparam);
-        wnd_call_keydown_pre((WndOnKeyDownPreView *)self->handlers,key);
+        wnd_call_keydown_pre((WndHandlers *)self->handlers,key);
         key = input_map_vkey(wparam);
-        wnd_call_keydown((WndOnKeyDownView *)self->handlers,key);
+        wnd_call_keydown((WndHandlers *)self->handlers,key);
       }
     }
     else if (msg == 0x101) {
       key = input_map_vkey(wparam);
-      wnd_call_keyup((WndOnKeyUpView *)self->handlers,key);
+      wnd_call_keyup((WndHandlers *)self->handlers,key);
     }
     else {
       if (msg != 0x102) goto default_proc;
       handled = ddwin_dispatch_ctrl_msg(self,0x102,wparam & 0xff,0);
       if (handled == '\0') {
-        wnd_call_char((WndOnCharView *)self->handlers,wparam & 0xff);
+        wnd_call_char((WndHandlers *)self->handlers,wparam & 0xff);
       }
     }
   }
@@ -12976,11 +12976,11 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
     if (msg == 0x210) {
       if ((wparam & 0xffff) == 0x201) {
         wnd_call_lbuttondown
-                  ((WndOnLButtonDownView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
       }
       else if ((wparam & 0xffff) == 0x204) {
         wnd_call_rbuttondown
-                  ((WndOnRButtonDownView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
       }
     }
     else {
@@ -12993,7 +12993,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
           ((DDWindowExt *)self)->lbutton_held_byte2[0] = '\0';
           ((DDWindowExt *)self)->lbutton_held_byte3[0] = '\0';
           wnd_call_lbuttondown
-                    ((WndOnLButtonDownView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                    ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       case 0x202:
@@ -13005,17 +13005,17 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
             ((DDWindowExt *)self)->lbutton_held_byte2[0] = '\0';
             ((DDWindowExt *)self)->lbutton_held_byte3[0] = '\0';
             wnd_call_lbuttonup
-                      ((WndOnLButtonUpView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                      ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
           }
           wnd_call_lbuttonup_raw
-                    ((WndOnLButtonUpRawView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                    ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       case 0x203:
         handled = ddwin_dispatch_ctrl_msg(self,msg,lparam & 0xffff,lparam >> 0x10);
         if (handled == '\0') {
           wnd_call_dblclick
-                    ((WndOnDblClickView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                    ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       case 0x204:
@@ -13026,7 +13026,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
           ((DDWindowExt *)self)->rbutton_held_byte2[0] = '\0';
           ((DDWindowExt *)self)->rbutton_held_byte3[0] = '\0';
           wnd_call_rbuttondown
-                    ((WndOnRButtonDownView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                    ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       case 0x205:
@@ -13038,10 +13038,10 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
             ((DDWindowExt *)self)->rbutton_held_byte2[0] = '\0';
             ((DDWindowExt *)self)->rbutton_held_byte3[0] = '\0';
             wnd_call_rbuttonup
-                      ((WndOnRButtonUpView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                      ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
           }
           wnd_call_rbuttonup_raw
-                    ((WndOnRButtonUpRawView *)self->handlers,lparam & 0xffff,lparam >> 0x10);
+                    ((WndHandlers *)self->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         break;
       default:
@@ -13056,7 +13056,7 @@ default_proc:
       return def_result;
     }
     if (lparam == 0x20d) {
-      wnd_call_msg4c8((WndCallMsg4c8View *)self->handlers,0);
+      wnd_call_msg4c8((WndHandlers *)self->handlers,0);
     }
   }
   return 0;

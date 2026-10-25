@@ -7,45 +7,60 @@
 
 #pragma pack(push, 1)
 
-/* 57 methods, size 0x10 */
+/* The window classes.  WndBase (wnd_record_init 005db610, 0x10 bytes) is
+   the native window record; ModalMenuWindow (wnd_ctor 0044c730, 0xb8) adds
+   the event handlers (WndHandlers at 0x10, wnd_handlers_ctor), the menu, the
+   size limits, the command callbacks and the modal loop state; Wnd
+   (surfwnd_wnd_ctor 0044c670, 0xc8) adds the list of child controls and
+   keyboard navigation (the window of a SurfaceWindow, at its 0x48).  The
+   full-screen game windows (city view, throne room, spaceship, ...) are
+   ModalMenuWindows: each constructor calls wnd_ctor first.  The members of
+   those windows after 0xb8 keep the decompiler's names, which it shared
+   between them: a name tells the offset, not always what the window keeps
+   there. */
 typedef struct WndBase {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
     union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
 } WndBase;
+static_assert(sizeof(WndBase) == 0x10, "");
 
-/* 17 methods, size 0xb8 */
-typedef struct ModalMenuWindow {
-    union { u32 field_0; u32 style; };
-    union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; NativeWindow *native_wnd; };
-    union { u32 field_c; u32 wnd_record; };
-    union { u8 pad_10[104]; struct { u8 wnd_handlers[104]; }; };
-    union { u32 field_78; u32 menu; };
-    union { u32 field_7c; u32 min_width; };
-    union { u32 field_80; u32 min_height; };
-    union { u32 field_84; u32 max_width; };
-    union { u32 field_88; u32 max_height; };
-    union { u32 field_8c; u32 modal_running; };
-    union { u32 field_90; u32 hscroll_step; };
-    union { u32 field_94; u32 vscroll_step; };
-    union { u32 field_98; u32 on_menu_pos_command; };
-    union { u32 field_9c; u32 on_command; };
-    union { u32 field_a0; u32 on_menu_select; };
-    union { uptr field_a4; uptr on_modal_idle; };
-    union { u32 field_a8; u32 handler_slot_a8; };
-    union { u32 field_ac; u32 handler_slot_ac; };
-    u8 pad_b0[8];
-} ModalMenuWindow;
+/* A window's event callbacks (wnd_handlers_ctor 0044c8b0, 0x68 bytes;
+   ModalMenuWindow.wnd_handlers): wnd_set_*_handler set one and return the
+   old one, the window procedure calls them (wnd_call_*). */
+typedef struct WndHandlers {
+    union { u32 field_0; u32 on_mouse_move; };
+    union { u32 field_4; u32 on_lbutton_down; };
+    union { u32 field_8; u32 on_lbutton_up_raw; };
+    union { u32 field_c; u32 on_lbutton_up; };
+    union { u32 field_10; u32 on_rbutton_down; };
+    union { u32 field_14; u32 on_rbutton_up_raw; };
+    union { u32 field_18; u32 on_rbutton_up; };
+    union { u32 field_1c; u32 on_dblclick; };
+    union { u32 field_20; u32 on_key_down_pre; };
+    union { u32 field_24; u32 on_key_up; };
+    union { u32 field_28; u32 on_key_down; };
+    union { u32 field_2c; u32 on_char; };
+    union { u32 field_30; u32 on_close; };
+    union { u32 field_34; u32 on_minimize; };
+    union { u32 field_38; u32 on_restore; };
+    union { u32 field_3c; u32 on_set_focus; };
+    union { u32 field_40; u32 on_size; };
+    union { u32 field_44; u32 on_move; };
+    union { u32 field_48; u32 on_msg_44; };
+    union { u32 field_4c; u32 on_hscroll; };
+    union { u32 field_50; u32 on_hscroll_track; };
+    union { u32 field_54; u32 on_vscroll; };
+    union { u32 field_58; u32 on_vscroll_track; };
+    union { u32 field_5c; u32 on_msg_4c8; };
+    union { u32 field_60; u32 on_enter_size_move; };
+    union { u32 field_64; u32 on_exitsizemove; };
+} WndHandlers;
+static_assert(sizeof(WndHandlers) == 0x68, "");
 
-/* 6 methods, size 0xcc */
-typedef struct Wnd {
-    union { u32 field_0; u32 style; };
-    union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; NativeWindow *native_wnd; };
-    union { u32 field_c; u32 wnd_record; };
-    u8 pad_10[104];
+typedef struct ModalMenuWindow : WndBase {
+    WndHandlers wnd_handlers;
     union { u32 field_78; u32 menu; };
     union { u32 field_7c; u32 min_width; };
     union { u32 field_80; u32 min_height; };
@@ -62,88 +77,20 @@ typedef struct Wnd {
     union { u32 field_ac; u32 handler_slot_ac; u32 rbutton_down; };
     i32 hscroll_pos;                /* 0xb0 last WM_HSCROLL position */
     i32 vscroll_pos;                /* 0xb4 */
+} ModalMenuWindow;
+static_assert(sizeof(ModalMenuWindow) == 0xb8, "");
+
+typedef struct Wnd : ModalMenuWindow {
     union { uptr field_b8; uptr control_list; };
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
     union { u32 field_c4; u32 keyboard_nav; };
-    union { u8 pad_c8[4]; struct { u32 leader_surface_window; }; };
 } Wnd;
+static_assert(sizeof(Wnd) == 0xc8, "");
 
-/* 5 methods, size 0x6f0 */
-typedef struct PictureFrameWindow {
-    union { u32 field_0; u32 style; };
-    union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; NativeWindow *native_wnd; };
-    union { u32 field_c; u32 wnd_record; };
-    u8 pad_10[104];
-    union { u32 field_78; u32 menu; };
-    union { u32 field_7c; u32 min_width; };
-    union { u32 field_80; u32 min_height; };
-    union { u32 field_84; u32 max_width; };
-    union { u32 field_88; u32 max_height; };
-    union { u32 field_8c; u32 modal_running; };
-    union { u32 field_90; u32 hscroll_step; };
-    union { u32 field_94; u32 vscroll_step; };
-    union { u32 field_98; u32 on_menu_pos_command; };
-    union { u32 field_9c; u32 on_command; };
-    union { u32 field_a0; u32 on_menu_select; };
-    union { uptr field_a4; uptr on_modal_idle; };
-    union { u32 field_a8; u32 handler_slot_a8; };
-    union { u32 field_ac; u32 handler_slot_ac; };
-    u8 pad_b0[8];
-    union { uptr field_b8; uptr control_list; };
-    union { u32 field_bc; u32 handler_slot_bc; };
-    union { u32 field_c0; u32 handler_slot_c0; };
-    union { u32 field_c4; u32 keyboard_nav; };
-    union { u8 pad_c8[260]; struct { u8 gap_c8[56]; u8 frame_wnd_base[16]; u8 frame_handlers[188]; }; };
-    union { u32 field_1cc; u32 ship_civ; };
-    u8 pad_1d0[4];
-    union { u32 field_1d4; u32 frame_left; };
-    union { u32 field_1d8; u32 frame_top; };
-    union { u32 field_1dc; u32 frame_right; };
-    union { u32 field_1e0; u32 frame_bottom; };
-    union { u8 pad_1e4[784]; struct { u8 gap_1e4[20]; u8 ship_palette[28]; u32 cityview_palette; u8 gap_218[724]; u32 media_wnd; u8 gap_4f0[4]; }; };
-    union { u32 field_4f4; u32 throne_width; };
-    union { u32 field_4f8; u32 throne_height; };
-    union { u8 pad_4fc[4]; struct { u8 throne_dll[4]; }; };
-    union { u32 field_500; u32 throne_civ; };
-    union { u8 pad_504[296]; struct { u32 throne_surface_wnd; u8 gap_508[68]; u8 throne_wnd_base[16]; u8 throne_handlers[164]; u8 civs_art_surface[44]; }; };
-    union { u32 field_62c; u32 anim_timer; };
-    union { u32 field_630; u32 blink_timer; };
-    union { u32 field_634; u32 flight_timer; };
-    union { u8 pad_638[140]; struct { u8 stats_text[16]; u32 improvement_art_surface; u8 gap_64c[12]; u32 leader_dll; u8 gap_65c[44]; u8 portrait_sprite[8]; u8 wonder_art_surface[52]; }; };
-    union { u32 field_6c4; u32 killer_civ; };
-    u8 pad_6c8[4];
-    union { u32 field_6cc; u32 slide_rect; };
-    union { u32 field_6d0; u32 slide_top; };
-    union { u32 field_6d4; u32 slide_right; };
-    union { u32 field_6d8; u32 resource_dll; };
-    union { u8 pad_6dc[16]; struct { u32 slot_sprites; u8 gap_6e0[12]; }; };
-    union { u32 field_6ec; u32 panel_clip_rect; };
-} PictureFrameWindow;
-
-/* 6 methods, size 0x710 */
-typedef struct DestroyedCivsWindow {
-    union { u32 field_0; u32 style; };
-    union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; NativeWindow *native_wnd; };
-    union { u32 field_c; u32 wnd_record; };
-    u8 pad_10[104];
-    union { u32 field_78; u32 menu; };
-    union { u32 field_7c; u32 min_width; };
-    union { u32 field_80; u32 min_height; };
-    union { u32 field_84; u32 max_width; };
-    union { u32 field_88; u32 max_height; };
-    union { u32 field_8c; u32 modal_running; };
-    union { u32 field_90; u32 hscroll_step; };
-    union { u32 field_94; u32 vscroll_step; };
-    union { u32 field_98; u32 on_menu_pos_command; };
-    union { u32 field_9c; u32 on_command; };
-    union { u32 field_a0; u32 on_menu_select; };
-    union { uptr field_a4; uptr on_modal_idle; };
-    union { u32 field_a8; u32 handler_slot_a8; };
-    union { u32 field_ac; u32 handler_slot_ac; };
-    u8 pad_b0[8];
+/* The destroyed civilizations window (destroyed_civs_wnd_ctor 00514f16, 0x710
+   bytes on destroyed_civs_show's stack). */
+typedef struct DestroyedCivsWindow : ModalMenuWindow {
     union { uptr field_b8; uptr control_list; };
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
@@ -179,34 +126,23 @@ typedef struct DestroyedCivsWindow {
     union { u32 field_6fc; u32 slide_y; };
     union { u8 pad_700[16]; struct { u8 caption_font_2[16]; }; };
 } DestroyedCivsWindow;
+static_assert(sizeof(DestroyedCivsWindow) == 0x710, "");
 
-/* 18 methods, size 0xfb8 */
-typedef struct SpaceshipWindow {
-    union { u32 field_0; u32 style; };
-    union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; NativeWindow *native_wnd; };
-    union { u32 field_c; u32 wnd_record; };
-    u8 pad_10[104];
-    union { u32 field_78; u32 menu; };
-    union { u32 field_7c; u32 min_width; };
-    union { u32 field_80; u32 min_height; };
-    union { u32 field_84; u32 max_width; };
-    union { u32 field_88; u32 max_height; };
-    union { u32 field_8c; u32 modal_running; };
-    union { u32 field_90; u32 hscroll_step; };
-    union { u32 field_94; u32 vscroll_step; };
-    union { u32 field_98; u32 on_menu_pos_command; };
-    union { u32 field_9c; u32 on_command; };
-    union { u32 field_a0; u32 on_menu_select; };
-    union { uptr field_a4; uptr on_modal_idle; };
-    union { u32 field_a8; u32 handler_slot_a8; };
-    union { u32 field_ac; u32 handler_slot_ac; };
-    u8 pad_b0[8];
+/* A star of the launch starfield (perspective: screen = x / depth + centre). */
+typedef struct SpaceshipStar {
+    i32 x;                          /* 0x0 */
+    i32 y;                          /* 0x4 */
+    i32 depth;                      /* 0x8 1..100 */
+} SpaceshipStar;
+
+/* The spaceship window (spaceship_wnd_ctor 004d0517, 0x2180 bytes:
+   spaceship_launch_sprite_xs_block.spaceship_wnd); the launch state past 0xfb8. */
+typedef struct SpaceshipWindow : ModalMenuWindow {
     union { uptr field_b8; uptr control_list; };
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
     union { u32 field_c4; u32 keyboard_nav; };
-    union { u8 pad_c8[260]; struct { u8 gap_c8[56]; u8 frame_wnd_base[204]; }; };
+    union { u8 pad_c8[260]; struct { u8 gap_c8[56]; union { u8 frame_wnd_base[204]; struct { u8 gap_100[16]; u8 frame_handlers[188]; }; }; }; };
     union { u32 field_1cc; u32 ship_civ; };
     u8 pad_1d0[4];
     union { u32 field_1d4; u32 frame_left; };
@@ -247,19 +183,6 @@ typedef struct SpaceshipWindow {
     union { u8 pad_ae4[1076]; struct { u8 hotspot_map[1072]; u8 movie_dll[4]; }; };
     union { u32 field_f18; u32 advance_civ; };
     union { u8 pad_f1c[156]; struct { u8 movie_caption_font[8]; u8 movie_caption_text[148]; }; };
-} SpaceshipWindow;
-
-/* A star of the launch starfield (perspective: screen = x / depth + centre). */
-typedef struct SpaceshipStar {
-    i32 x;                          /* 0x0 */
-    i32 y;                          /* 0x4 */
-    i32 depth;                      /* 0x8 1..100 */
-} SpaceshipStar;
-
-/* The spaceship window (spaceship_wnd_ctor) is larger than SpaceshipWindow:
-   0x2180 bytes (SpaceshipWindowDtorView); the launch state past 0xfb8. */
-typedef struct SpaceshipWindowExt {
-    SpaceshipWindow base;
     u8 pad_fb8[3568];
     u32 launch_video_player;        /* 0x1da8 video window playing the launch (+0x48 its modal window) */
     i32 close_btn_pressed;          /* 0x1dac */
@@ -267,43 +190,27 @@ typedef struct SpaceshipWindowExt {
     i32 typing_label_part;          /* 0x1db4 */
     SpaceshipStar stars[80];        /* 0x1db8 */
     u8 pad_2178[8];
-} SpaceshipWindowExt;
-#ifdef __cplusplus
-static_assert(sizeof(SpaceshipWindowExt) == 0x2180, "");
-#endif
+} SpaceshipWindow;
+static_assert(sizeof(SpaceshipWindow) == 0x2180, "");
 
-/* 2 methods, size 0x108c */
-typedef struct DiploLeaderWindow {
-    union { u32 field_0; u32 style; };
-    union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; NativeWindow *native_wnd; };
-    union { u32 field_c; u32 wnd_record; };
-    u8 pad_10[104];
-    union { u32 field_78; u32 menu; };
-    union { u32 field_7c; u32 min_width; };
-    union { u32 field_80; u32 min_height; };
-    union { u32 field_84; u32 max_width; };
-    union { u32 field_88; u32 max_height; };
-    union { u32 field_8c; u32 modal_running; };
-    union { u32 field_90; u32 hscroll_step; };
-    union { u32 field_94; u32 vscroll_step; };
-    union { u32 field_98; u32 on_menu_pos_command; };
-    union { u32 field_9c; u32 on_command; };
-    union { u32 field_a0; u32 on_menu_select; };
-    union { uptr field_a4; uptr on_modal_idle; };
-    union { u32 field_a8; u32 handler_slot_a8; };
-    union { u32 field_ac; u32 handler_slot_ac; };
-    u8 pad_b0[8];
-    union { uptr field_b8; uptr control_list; };
+/* A leader's diplomacy window (diplo_leader_wnd_ctor 004942a3, operator_new(0x108c):
+   diplo_leader_window). */
+typedef struct DiploLeaderWindow : ModalMenuWindow {
+    union { uptr field_b8; uptr control_list; };   /* 0xb8 the screen rect (gfx_get_screen_rect) */
     union { u32 field_bc; u32 handler_slot_bc; };
-    union { u32 field_c0; u32 handler_slot_c0; };
-    union { u32 field_c4; u32 keyboard_nav; };
-    union { u8 pad_c8[260]; struct { u8 leader_surface_window[260]; }; };
-    union { u32 field_1cc; u32 ship_civ; };
-    u8 pad_1d0[4];
-    union { u32 field_1d4; u32 frame_left; };
-    union { u32 field_1d8; u32 frame_top; };
-    union { u32 field_1dc; u32 frame_right; };
+    union { u32 field_c0; u32 handler_slot_c0; u32 screen_width_value; };
+    union { u32 field_c4; u32 keyboard_nav; u32 screen_height_value; };
+    union {
+        u8 leader_surface[276];     /* 0xc8 SurfaceWindow (surfwnd_ctor) */
+        struct {
+        union { u8 pad_c8[260]; struct { u8 leader_surface_window[260]; }; };
+        union { u32 field_1cc; u32 ship_civ; };
+        u8 pad_1d0[4];
+        union { u32 field_1d4; u32 frame_left; };
+        union { u32 field_1d8; u32 frame_top; };
+        };
+    };
+    union { u32 field_1dc; u32 frame_right; u32 bg_tile_surface; };   /* DibSurface (surface_ctor) */
     union { u32 field_1e0; u32 frame_bottom; };
     union { u8 pad_1e4[784]; struct { u8 gap_1e4[64]; u8 leader_palette[720]; }; };
     union { u32 field_4f4; u32 throne_width; };
@@ -314,7 +221,7 @@ typedef struct DiploLeaderWindow {
     union { u32 field_62c; u32 anim_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 flight_timer; };
-    union { u8 pad_638[140]; struct { u8 gap_638[32]; u8 leader_dll[4]; u8 leader_video_wnd[104]; }; };
+    union { u8 pad_638[140]; struct { u8 gap_638[32]; u8 leader_dll[4]; union { u8 leader_video_wnd[104]; struct { u8 video_player[72]; u8 video_window[32]; }; };   /* 0x65c DocumentWindow (mmwnd_ctor), its window at 0x6a4 */ }; };
     union { u32 field_6c4; u32 killer_civ; };
     u8 pad_6c8[4];
     union { u32 field_6cc; u32 slide_rect; };
@@ -342,33 +249,17 @@ typedef struct DiploLeaderWindow {
     union { i32 field_1074; i32 video_cur_frame; };   /* 0x1074 the leader video player's (at 0x65c) current frame */
     u8 pad_1078[12];
     union { u8 field_1084; u8 leader_tribe; };
-    u8 pad_1085[3];
+    union { u8 field_1085; u8 leader_civ; };
+    union { u8 field_1086; u8 viewer_civ; };
+    union { u8 field_1087; u8 style_era; };
     union { u8 field_1088; u8 pending_flag_1088; };
     u8 pad_1089[3];
 } DiploLeaderWindow;
+static_assert(sizeof(DiploLeaderWindow) == 0x108c, "");
 
-/* 7 methods, size 0x1c44 */
-typedef struct ThroneRoomWindow {
-    union { u32 field_0; u32 style; };
-    union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; NativeWindow *native_wnd; };
-    union { u32 field_c; u32 wnd_record; };
-    u8 pad_10[104];
-    union { u32 field_78; u32 menu; };
-    union { u32 field_7c; u32 min_width; };
-    union { u32 field_80; u32 min_height; };
-    union { u32 field_84; u32 max_width; };
-    union { u32 field_88; u32 max_height; };
-    union { u32 field_8c; u32 modal_running; };
-    union { u32 field_90; u32 hscroll_step; };
-    union { u32 field_94; u32 vscroll_step; };
-    union { u32 field_98; u32 on_menu_pos_command; };
-    union { u32 field_9c; u32 on_command; };
-    union { u32 field_a0; u32 on_menu_select; };
-    union { uptr field_a4; uptr on_modal_idle; };
-    union { u32 field_a8; u32 handler_slot_a8; };
-    union { u32 field_ac; u32 handler_slot_ac; };
-    u8 pad_b0[8];
+/* The throne room (throneroom_ctor 0044ce16, 0x1c44 bytes on the stack of
+   throneroom_show / throneroom_show_upgrade). */
+typedef struct ThroneRoomWindow : ModalMenuWindow {
     union { uptr field_b8; uptr control_list; };
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
@@ -385,7 +276,7 @@ typedef struct ThroneRoomWindow {
     union { u32 field_4f8; u32 throne_height; };
     union { u8 pad_4fc[4]; struct { u8 throne_dll[4]; }; };
     union { u32 field_500; u32 throne_civ; };
-    union { u8 pad_504[296]; struct { u8 throne_surface_wnd[72]; u8 throne_wnd_base[204]; u8 throne_backbuffer[20]; }; };
+    union { u8 pad_504[296]; struct { u8 throne_surface_wnd[72]; union { u8 throne_wnd_base[204]; struct { u8 gap_54c[16]; u8 throne_handlers[188]; }; }; u8 throne_backbuffer[20]; }; };
     union { u32 field_62c; u32 anim_timer; };
     union { u32 field_630; u32 blink_timer; };
     union { u32 field_634; u32 flight_timer; };
@@ -429,29 +320,10 @@ typedef struct ThroneRoomWindow {
     union { u32 field_19f4; u32 houses_left; };
     union { u8 pad_19f8[588]; struct { u8 improvement_slot_tables[164]; u8 starfield_stars[208]; u8 wonder_slot_tables[184]; u32 click_prompt_rect; u8 gap_1c28[12]; u32 click_prompt_font; u8 gap_1c38[12]; }; };
 } ThroneRoomWindow;
+static_assert(sizeof(ThroneRoomWindow) == 0x1c44, "");
 
-/* 13 methods, size 0x1cb4 */
-typedef struct CityViewWindow {
-    union { u32 field_0; u32 style; };
-    union { u32 field_4; u32 wnd_palette; };
-    union { u32 field_8; NativeWindow *native_wnd; };
-    union { u32 field_c; u32 wnd_record; };
-    u8 pad_10[104];
-    union { u32 field_78; u32 menu; };
-    union { u32 field_7c; u32 min_width; };
-    union { u32 field_80; u32 min_height; };
-    union { u32 field_84; u32 max_width; };
-    union { u32 field_88; u32 max_height; };
-    union { u32 field_8c; u32 modal_running; };
-    union { u32 field_90; u32 hscroll_step; };
-    union { u32 field_94; u32 vscroll_step; };
-    union { u32 field_98; u32 on_menu_pos_command; };
-    union { u32 field_9c; u32 on_command; };
-    union { u32 field_a0; u32 on_menu_select; };
-    union { uptr field_a4; uptr on_modal_idle; };
-    union { u32 field_a8; u32 handler_slot_a8; };
-    union { u32 field_ac; u32 handler_slot_ac; };
-    u8 pad_b0[8];
+/* The city view (cityview_ctor 00454354, operator_new(0x1cb4): cityview_wnd). */
+typedef struct CityViewWindow : ModalMenuWindow {
     union { uptr field_b8; uptr control_list; };
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
@@ -479,7 +351,7 @@ typedef struct CityViewWindow {
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
     union { u32 field_6d8; u32 resource_dll; };
-    u8 pad_6dc[16];
+    union { u8 pad_6dc[16]; struct { u32 slot_sprites; u8 gap_6e0[12]; }; };   /* 0x3c Sprites from here (crt_vector_ctor_iterator) */
     union { u32 field_6ec; u32 panel_clip_rect; };
     u8 pad_6f0[4];
     union { u32 field_6f4; u32 panel_clip_right; };
@@ -500,57 +372,42 @@ typedef struct CityViewWindow {
     union { u8 field_1084; u8 leader_tribe; };
     u8 pad_1085[3];
     union { u8 field_1088; u8 pending_flag_1088; };
-    union { u8 pad_1089[2203]; struct { u8 building_art_block[2203]; }; };
+    union { u8 pad_1089[2203]; struct { u8 building_art_block[2203]; }; struct { u8 gap_1089[1111]; u8 slot_ptr_table_lead[12]; u32 slot_sprite_ptrs; u8 gap_14f0[236]; u8 small_building_sprites_a[240]; u8 small_building_sprites_b[240]; u8 large_building_sprites_a[240]; u8 large_building_sprites_b[120]; }; };
     union { u32 field_1924; u32 choosing_item; };
     union { u32 field_1928; u32 throne_complete; };
     union { u32 field_192c; u32 chosen_item; };
-    u8 pad_1930[180];
+    union { u8 pad_1930[180]; struct { u8 gap_1930[108]; u32 icon_surface; u8 gap_19a0[68]; }; };
     union { u32 field_19e4; u32 terrain_kind; };
     union { u32 field_19e8; u32 slot_count; };
     union { u32 field_19ec; u32 wonder_slots_left; };
     union { u32 field_19f0; u32 improvement_slots_left; };
     union { u32 field_19f4; u32 houses_left; };
-    u8 pad_19f8[660];
+    union { u8 pad_19f8[660]; struct { u8 improvement_slot_tables[372]; u8 wonder_slot_tables[288]; }; };
     union { u32 field_1c8c; u32 fixed_slot_used; };
     union { u32 field_1c90; u32 city_id; };
     union { u32 field_1c94; u32 art_era; };
     union { u8 pad_1c98[28]; struct { u8 title_rect[16]; u8 title_font[12]; }; };
-    u8 pad_1cb4[244];
-    u8 launch_video_player[1];
-    u8 launch_video_player_b1[1];
-    u8 launch_video_player_b2[1];
-    u8 launch_video_player_b3[1];
-    u8 close_btn_pressed[1];
-    u8 close_btn_pressed_b1[1];
-    u8 close_btn_pressed_b2[1];
-    u8 close_btn_pressed_b3[1];
-    u8 launch_btn_pressed[1];
-    u8 launch_btn_pressed_b1[1];
-    u8 launch_btn_pressed_b2[1];
-    u8 launch_btn_pressed_b3[1];
-    u8 typing_label_part[1];
-    u8 typing_label_part_b1[1];
-    u8 typing_label_part_b2[1];
-    u8 typing_label_part_b3[1];
 } CityViewWindow;
+static_assert(sizeof(CityViewWindow) == 0x1cb4, "");
 
-/* 9 methods, size 0x9d0 */
-typedef struct WndEventHandlers {
-    u8 pad_0[12];
-    union { u32 field_c; u32 on_lbuttonup; };
-    u8 pad_10[8];
-    union { u32 field_18; u32 on_rbuttonup; };
-    u8 pad_1c[12];
-    union { u32 field_28; u32 on_keydown; };
-    union { u32 field_2c; u32 on_char; };
-    union { u32 field_30; u32 on_close; };
-    union { u32 field_34; u32 on_minimize; };
-    union { u32 field_38; u32 on_restore; };
-    u8 pad_3c[4];
-    union { u32 field_40; u32 on_size; };
-    union { u32 field_44; u32 on_move; };
-    u8 pad_48[2440];
-} WndEventHandlers;
+/* The end-of-game movie windows (defeat_movie_wnd_ctor 004703d4 and
+   arrival_movie_wnd_ctor 00471362 construct the same layout,
+   operator_new(0x137c): endgame_movie_window, spaceship_arrival_window): a
+   video player with a caption. */
+typedef struct EndgameMovieWindow : ModalMenuWindow {
+    u8 palette[1076];               /* 0x0b8 GamePalette (palette_init) */
+    union {                         /* 0x4ec the video player (mmwnd_ctor) */
+        u8 media_wnd[2600];
+        struct { u8 gap_4ec[72]; u8 movie_wnd_base[184]; };   /* 0x534 its window */
+    };
+    u8 movie_dll[4];                /* 0xf14 DllHandle */
+    union { u32 field_f18; u32 advance_civ; };
+    u8 movie_caption_font[8];       /* 0xf1c GameFont */
+    u8 movie_caption_text[1024];    /* 0xf24 */
+    u8 movie_frame_surface[72];     /* 0x1324 DibSurface (surface_ctor) */
+    u8 movie_caption_rect[16];      /* 0x136c RECT */
+} EndgameMovieWindow;
+static_assert(sizeof(EndgameMovieWindow) == 0x137c, "");
 
 /* 39 methods, size 0x4 */
 typedef struct WindowObjectView {
@@ -2200,12 +2057,6 @@ typedef struct DocumentWindow {
     union { u32 field_a24; u32 loop; };
 } DocumentWindow;
 
-/* 1 methods, size 0xc */
-typedef struct WndValidateRectView {
-    u8 pad_0[8];
-    union { u32 field_8; NativeWindow *wnd_obj; };
-} WndValidateRectView;
-
 /* The dialog: dialog_ctor (0059db08) on stack objects; its views (DialogCore,
    DialogTextView, DialogOptionList, ...) are folded in. */
 typedef struct Dialog {
@@ -2511,29 +2362,6 @@ typedef struct PediaListNode {
 } PediaListNode;
 static_assert(sizeof(PediaListNode) == 0xc, "");
 
-/* 1 methods, size 0xc */
-typedef struct WndCursorView {
-    u8 pad_0[8];
-    union { u32 field_8; NativeWindow *native_wnd; };
-} WndCursorView;
-
-/* 6 methods, size 0x8 */
-typedef struct WndHandlersMouseSetView {
-    union { u32 field_0; u32 on_mouse_move; };
-    union { u32 field_4; u32 on_lbutton_down; };
-} WndHandlersMouseSetView;
-
-/* WndHandlersMouseSetView where the code reaches past its end: the object is larger */
-typedef struct WndHandlersMouseSetViewExt {
-    WndHandlersMouseSetView base;
-    u32 on_lbutton_up_any;
-    u8 pad_c[4];
-    u32 on_rbutton_down;
-    u32 on_rbutton_up_any;
-    u8 pad_18[4];
-    u32 on_dblclick;
-} WndHandlersMouseSetViewExt;
-
 /* 61 methods, size 0x3c */
 typedef struct Sprite {
     union { u32 field_0; u32 frame_rect; };
@@ -2749,53 +2577,6 @@ typedef struct LobbyList {
 } LobbyList;
 static_assert(sizeof(LobbyList) == 0x70, "");
 
-/* 2 methods, size 0x68 */
-typedef struct WndHandlers {
-    union { u32 field_0; u32 on_mouse_move; };
-    union { u32 field_4; u32 on_lbutton_down; };
-    union { u32 field_8; u32 on_lbutton_up_raw; };
-    union { u32 field_c; u32 on_lbutton_up; };
-    union { u32 field_10; u32 on_rbutton_down; };
-    union { u32 field_14; u32 on_rbutton_up_raw; };
-    union { u32 field_18; u32 on_rbutton_up; };
-    union { u32 field_1c; u32 on_dblclick; };
-    union { u32 field_20; u32 on_key_down_pre; };
-    union { u32 field_24; u32 on_key_up; };
-    union { u32 field_28; u32 on_key_down; };
-    union { u32 field_2c; u32 on_char; };
-    union { u32 field_30; u32 on_close; };
-    union { u32 field_34; u32 on_minimize; };
-    union { u32 field_38; u32 on_restore; };
-    union { u32 field_3c; u32 on_set_focus; };
-    union { u32 field_40; u32 on_size; };
-    union { u32 field_44; u32 on_move; };
-    union { u32 field_48; u32 on_msg_44; };
-    union { u32 field_4c; u32 on_hscroll; };
-    union { u32 field_50; u32 on_hscroll_track; };
-    union { u32 field_54; u32 on_vscroll; };
-    union { u32 field_58; u32 on_vscroll_track; };
-    union { u32 field_5c; u32 on_msg_4c8; };
-    union { u32 field_60; u32 on_enter_size_move; };
-    union { u32 field_64; u32 on_exitsizemove; };
-} WndHandlers;
-
-/* 1 methods, size 0x1c44 */
-typedef struct ThroneRoomDtorView {
-    union { u8 pad_0[7236]; struct { u8 gap_0[1276]; u8 graphics_dll[5960]; }; };
-} ThroneRoomDtorView;
-
-/* 1 methods, size 0x10 */
-typedef struct WndCenterView {
-    u8 pad_0[8];
-    union { u32 field_8; NativeWindow *wnd_obj; };
-    u8 pad_c[4];
-} WndCenterView;
-
-/* 1 methods, size 0x24 */
-typedef struct WndSetKeydownPreHandlerView {
-    u8 pad_0[32];
-    union { u32 field_20; u32 tied_stream; };
-} WndSetKeydownPreHandlerView;
 
 /* A hotspot of a ClickMap (clickmap_add). */
 typedef struct ClickRegion {
@@ -2997,22 +2778,6 @@ typedef struct FileReadLineView {
     u8 pad_0[160];
 } FileReadLineView;
 
-/* 9 methods, size 0x1088 */
-typedef struct DiploLeaderView {
-    u8 pad_0[8];
-    union { u32 field_8; NativeWindow *wnd_obj; };
-    u8 pad_c[180];
-    union { u32 field_c0; u32 screen_width_value; };
-    union { u32 field_c4; u32 screen_height_value; };
-    union { u8 pad_c8[276]; struct { u8 leader_surface[276]; }; };
-    union { u32 field_1dc; u32 bg_tile_surface; };
-    union { u8 pad_1e0[3748]; struct { u8 gap_1e0[68]; u8 leader_palette[1076]; u8 leader_dll[4]; u8 video_player[72]; u8 video_window[2528]; }; };
-    union { u8 field_1084; u8 leader_tribe; };
-    union { u8 field_1085; u8 leader_civ; };
-    union { u8 field_1086; u8 viewer_civ; };
-    union { u8 field_1087; u8 style_era; };
-} DiploLeaderView;
-
 /* 1 methods, size 0x1dc */
 typedef struct PortraitDlgDtorView {
     union { u8 pad_0[476]; struct { u8 window_base[476]; }; };
@@ -3145,21 +2910,6 @@ typedef struct WonderMovieWindow {
     union { u8 pad_0[4488]; struct { u8 window_base[4488]; }; };
 } WonderMovieWindow;
 
-/* 1 methods, size 0x2180 */
-typedef struct SpaceshipWindowDtorView {
-    union { u8 pad_0[1580]; struct { u8 gap_0[500]; u8 art_dll_2[1080]; }; };
-    union { u32 field_62c; u32 type_timer; };
-    union { u32 field_630; u32 blink_timer; };
-    union { u32 field_634; u32 starfield_timer; };
-    u8 pad_638[6984];
-} SpaceshipWindowDtorView;
-
-/* 1 methods, size 0x8 */
-typedef struct WndPaletteView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 wnd_palette; };
-} WndPaletteView;
-
 /* A received message waiting in the queue (0xc bytes). */
 typedef struct NetMsgSlot {
     i32 sender;                     /* 0x0 */
@@ -3181,34 +2931,10 @@ typedef struct NetMsgQueue {
 } NetMsgQueue;
 static_assert(sizeof(NetMsgQueue) == 0x5dd8, "");
 
-/* 1 methods, size 0x710 */
-typedef struct DestroyedCivsWindowCore {
-    union { u8 pad_0[1808]; struct { u8 gap_0[1608]; u8 art_dll_2[200]; }; };
-} DestroyedCivsWindowCore;
-
 /* 1 methods, size 0x1330 */
 typedef struct CouncilWindow {
     union { u8 pad_0[4912]; struct { u8 window_base[4912]; }; };
 } CouncilWindow;
-
-/* 1 methods, size 0xd4 */
-typedef struct WndMoveView {
-    u8 pad_0[8];
-    union { u32 field_8; NativeWindow *native_wnd; };
-    u8 pad_c[200];
-} WndMoveView;
-
-/* 1 methods, size 0x64 */
-typedef struct WndDragBeginSetView {
-    u8 pad_0[96];
-    union { u32 field_60; u32 on_drag_begin; };
-} WndDragBeginSetView;
-
-/* 1 methods, size 0x68 */
-typedef struct WndDragEndSetView {
-    u8 pad_0[100];
-    union { u32 field_64; u32 on_drag_end; };
-} WndDragEndSetView;
 
 /* 1 methods, size 0x12c */
 typedef struct SetupPicWndRectView {
@@ -3235,43 +2961,6 @@ typedef struct GameMenu {
 typedef struct MenuHandleView {
     union { u32 field_0; u32 hmenu; };
 } MenuHandleView;
-
-/* 1 methods, size 0x9c */
-typedef struct WndMenuCbSetView {
-    u8 pad_0[152];
-    union { u32 field_98; u32 on_menu; };
-} WndMenuCbSetView;
-
-/* 1 methods, size 0x8 */
-typedef struct WndPaletteObjView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 palette_obj; };
-} WndPaletteObjView;
-
-/* 1 methods, size 0xc */
-typedef struct WndClientSizeView {
-    u8 pad_0[8];
-    union { u32 field_8; NativeWindow *native_wnd; };
-} WndClientSizeView;
-
-/* 1 methods, size 0x84 */
-typedef struct WndMinSizeView {
-    u8 pad_0[124];
-    union { u32 field_7c; u32 min_width; };
-    union { u32 field_80; u32 min_height; };
-} WndMinSizeView;
-
-/* 1 methods, size 0x8c */
-typedef struct WndMaxSizeView {
-    u8 pad_0[132];
-    union { u32 field_84; u32 max_width; };
-    union { u32 field_88; u32 max_height; };
-} WndMaxSizeView;
-
-/* 1 methods, size 0x4 */
-typedef struct WndStyleView {
-    union { u32 field_0; u32 style_flags; };
-} WndStyleView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextCurFontView {
@@ -3374,31 +3063,6 @@ typedef struct DDSurfaceIfaceView {
     union { u32 field_0; u32 iface; };
 } DDSurfaceIfaceView;
 
-/* 1 methods, size 0xbc */
-typedef struct WndControlListView {
-    u8 pad_0[184];
-    union { u32 field_b8; u32 first_control; };
-} WndControlListView;
-
-/* 2 methods, size 0xbc */
-typedef struct WndControlRemoveView {
-    u8 pad_0[184];
-    union { uptr field_b8; uptr first_control; };
-} WndControlRemoveView;
-
-/* 1 methods, size 0xbc */
-typedef struct WndControlInvalidateView {
-    u8 pad_0[184];
-    union { u32 field_b8; u32 first_control; };
-} WndControlInvalidateView;
-
-/* 1 methods, size 0xa4 */
-typedef struct WndMenuSelectView {
-    u32 field_0;
-    u8 pad_4[156];
-    union { uptr field_a0; uptr on_menu_select; };
-} WndMenuSelectView;
-
 /* 1 methods, size 0x408 */
 typedef struct PaletteAnimateView {
     u8 pad_0[1028];
@@ -3485,12 +3149,6 @@ typedef struct PaletteHandleView {
     u8 pad_0[1028];
     union { u32 field_404; u32 hpalette; };
 } PaletteHandleView;
-
-/* 1 methods, size 0xc5 */
-typedef struct WndKeyNavView {
-    u8 pad_0[196];
-    union { u8 field_c4; u8 keyboard_nav; };
-} WndKeyNavView;
 
 /* 1 methods, size 0x28 */
 typedef struct SpriteOriginSetView {
@@ -3579,26 +3237,6 @@ typedef struct ErrCtxGetLastCodeView {
     u8 pad_0[1796];
     union { u32 field_704; u32 last_code; };
 } ErrCtxGetLastCodeView;
-
-/* 1 methods, size 0xc */
-typedef struct WndDestroyView {
-    u8 pad_0[8];
-    union { u32 field_8; NativeWindow *wnd_obj; };
-} WndDestroyView;
-
-/* 1 methods, size 0xc */
-typedef struct WndRecordCreateMovieView {
-    union { u32 field_0; u32 style; };
-    u8 pad_4[4];
-    union { u32 field_8; u32 movie_wnd; };
-} WndRecordCreateMovieView;
-
-/* 1 methods, size 0xc */
-typedef struct WndRecordCreateMovieChildView {
-    union { u32 field_0; u32 style; };
-    u8 pad_4[4];
-    union { u32 field_8; u32 movie_wnd; };
-} WndRecordCreateMovieChildView;
 
 /* 3 methods, size 0x4 */
 typedef struct MenuSubmenuView {
@@ -3775,223 +3413,6 @@ typedef struct DdpalFadeStepView {
     u8 pad_1f[9];
     union { u32 field_28; u32 saved_rgb; };
 } DdpalFadeStepView;
-
-/* 1 methods, size 0x4 */
-typedef struct WndOnMouseMoveView {
-    union { uptr field_0; uptr on_mousemove; };
-} WndOnMouseMoveView;
-
-/* 1 methods, size 0x8 */
-typedef struct WndOnLButtonDownView {
-    u32 field_0;
-    union { uptr field_4; uptr on_lbuttondown; };
-} WndOnLButtonDownView;
-
-/* 1 methods, size 0xc */
-typedef struct WndOnLButtonUpRawView {
-    u32 field_0;
-    u8 pad_4[4];
-    union { uptr field_8; uptr on_lbuttonup_raw; };
-} WndOnLButtonUpRawView;
-
-/* 1 methods, size 0x10 */
-typedef struct WndOnLButtonUpView {
-    u32 field_0;
-    u8 pad_4[8];
-    union { uptr field_c; uptr on_lbuttonup; };
-} WndOnLButtonUpView;
-
-/* 1 methods, size 0x14 */
-typedef struct WndOnRButtonDownView {
-    u32 field_0;
-    u8 pad_4[12];
-    union { uptr field_10; uptr on_rbuttondown; };
-} WndOnRButtonDownView;
-
-/* 1 methods, size 0x18 */
-typedef struct WndOnRButtonUpRawView {
-    u32 field_0;
-    u8 pad_4[16];
-    union { uptr field_14; uptr on_rbuttonup_raw; };
-} WndOnRButtonUpRawView;
-
-/* 1 methods, size 0x1c */
-typedef struct WndOnRButtonUpView {
-    u32 field_0;
-    u8 pad_4[20];
-    union { uptr field_18; uptr on_rbuttonup; };
-} WndOnRButtonUpView;
-
-/* 1 methods, size 0x20 */
-typedef struct WndOnDblClickView {
-    u32 field_0;
-    u8 pad_4[24];
-    union { uptr field_1c; uptr on_dblclick; };
-} WndOnDblClickView;
-
-/* 1 methods, size 0x24 */
-typedef struct WndOnKeyDownPreView {
-    u32 field_0;
-    u8 pad_4[28];
-    union { uptr field_20; uptr on_keydown_pre; };
-} WndOnKeyDownPreView;
-
-/* 1 methods, size 0x28 */
-typedef struct WndOnKeyUpView {
-    u32 field_0;
-    u8 pad_4[32];
-    union { uptr field_24; uptr on_keyup; };
-} WndOnKeyUpView;
-
-/* 1 methods, size 0x2c */
-typedef struct WndOnKeyDownView {
-    u32 field_0;
-    u8 pad_4[36];
-    union { uptr field_28; uptr on_keydown; };
-} WndOnKeyDownView;
-
-/* 1 methods, size 0x30 */
-typedef struct WndOnCharView {
-    u32 field_0;
-    u8 pad_4[40];
-    union { uptr field_2c; uptr on_char; };
-} WndOnCharView;
-
-/* 1 methods, size 0x34 */
-typedef struct WndOnCloseView {
-    u32 field_0;
-    u8 pad_4[44];
-    union { uptr field_30; uptr on_close; };
-} WndOnCloseView;
-
-/* 1 methods, size 0x38 */
-typedef struct WndOnMinimizeView {
-    u32 field_0;
-    u8 pad_4[48];
-    union { uptr field_34; uptr on_minimize; };
-} WndOnMinimizeView;
-
-/* 1 methods, size 0x3c */
-typedef struct WndOnRestoreView {
-    u32 field_0;
-    u8 pad_4[52];
-    union { uptr field_38; uptr on_restore; };
-} WndOnRestoreView;
-
-/* 1 methods, size 0x40 */
-typedef struct WndOnSetFocusView {
-    u32 field_0;
-    u8 pad_4[56];
-    union { uptr field_3c; uptr on_setfocus; };
-} WndOnSetFocusView;
-
-/* 1 methods, size 0x44 */
-typedef struct WndOnSizeView {
-    u32 field_0;
-    u8 pad_4[60];
-    union { uptr field_40; uptr on_size; };
-} WndOnSizeView;
-
-/* 1 methods, size 0x48 */
-typedef struct WndOnMoveView {
-    u32 field_0;
-    u8 pad_4[64];
-    union { uptr field_44; uptr on_move; };
-} WndOnMoveView;
-
-/* 1 methods, size 0x4c */
-typedef struct WndOnMsg44View {
-    u32 field_0;
-    u8 pad_4[68];
-    union { uptr field_48; uptr on_commnotify; };
-} WndOnMsg44View;
-
-/* 1 methods, size 0x50 */
-typedef struct WndOnHScrollView {
-    u32 field_0;
-    u8 pad_4[72];
-    union { uptr field_4c; uptr on_hscroll; };
-} WndOnHScrollView;
-
-/* 1 methods, size 0x54 */
-typedef struct WndOnHScrollTrackView {
-    u32 field_0;
-    u8 pad_4[76];
-    union { uptr field_50; uptr on_hscroll_track; };
-} WndOnHScrollTrackView;
-
-/* 1 methods, size 0x58 */
-typedef struct WndOnVScrollView {
-    u32 field_0;
-    u8 pad_4[80];
-    union { uptr field_54; uptr on_vscroll; };
-} WndOnVScrollView;
-
-/* 1 methods, size 0x5c */
-typedef struct WndOnVScrollTrackView {
-    u32 field_0;
-    u8 pad_4[84];
-    union { uptr field_58; uptr on_vscroll_track; };
-} WndOnVScrollTrackView;
-
-/* 1 methods, size 0x60 */
-typedef struct WndCallMsg4c8View {
-    u32 field_0;
-    u8 pad_4[88];
-    union { uptr field_5c; uptr on_msg_4c8; };
-} WndCallMsg4c8View;
-
-/* 1 methods, size 0x64 */
-typedef struct WndOnEnterSizeMoveView {
-    u32 field_0;
-    u8 pad_4[92];
-    union { uptr field_60; uptr on_entersizemove; };
-} WndOnEnterSizeMoveView;
-
-/* 1 methods, size 0x68 */
-typedef struct WndOnExitSizeMoveView {
-    u32 field_0;
-    u8 pad_4[96];
-    union { uptr field_64; uptr on_exitsizemove; };
-} WndOnExitSizeMoveView;
-
-/* 1 methods, size 0x9c */
-typedef struct WndOnMenuPosCommandView {
-    u32 field_0;
-    u8 pad_4[148];
-    union { uptr field_98; uptr on_menu_pos_command; };
-} WndOnMenuPosCommandView;
-
-/* 1 methods, size 0xa0 */
-typedef struct WndOnCommandView {
-    u32 field_0;
-    u8 pad_4[152];
-    union { uptr field_9c; uptr on_command; };
-} WndOnCommandView;
-
-/* 1 methods, size 0xb4 */
-typedef struct WndHScrollPosView {
-    u8 pad_0[176];
-    union { u32 field_b0; u32 hscroll_pos; };
-} WndHScrollPosView;
-
-/* 1 methods, size 0xb8 */
-typedef struct WndVScrollPosView {
-    u8 pad_0[180];
-    union { u32 field_b4; u32 vscroll_pos; };
-} WndVScrollPosView;
-
-/* 1 methods, size 0x94 */
-typedef struct WndHScrollPageView {
-    u8 pad_0[144];
-    union { u32 field_90; u32 hscroll_page; };
-} WndHScrollPageView;
-
-/* 1 methods, size 0x98 */
-typedef struct WndVScrollPageView {
-    u8 pad_0[148];
-    union { u32 field_94; u32 vscroll_page; };
-} WndVScrollPageView;
 
 /* 1 methods, size 0xbc */
 typedef struct WndMciDeviceView {

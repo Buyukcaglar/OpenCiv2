@@ -25,7 +25,7 @@ i32 __thiscall wnd_dtor(void *self)
     member = (self != NULL) ? (void *)((iptr)self + 0x10) : NULL;
     wnd_handlers_dtor(member);
     /* funclet 0044cad3 */
-    wnd_record_destroy((WndDestroyView *)self);
+    wnd_record_destroy((WndBase *)self);
     return seh_list_head();
 }
 

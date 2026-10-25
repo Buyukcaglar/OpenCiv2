@@ -2015,11 +2015,11 @@ i32 __thiscall portrait_dlg_create(PortraitDialog *self)
              frame_border_width * 4 + frame_caption_height + 0x16e,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
   portrait_dlg_create_buttons((WindowObjectView *)self);
   wnd_set_caption_height((WndBase *)self->window_2,frame_caption_height);
-  wnd_set_lbuttonup_handler((WndEventHandlers *)self->event_handlers,(iptr)portrait_dlg_on_click);
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)portrait_dlg_on_dblclick);
+  wnd_set_lbuttonup_handler((WndHandlers *)self->event_handlers,(iptr)portrait_dlg_on_click);
+  wnd_set_dblclick_handler((WndHandlers *)self->event_handlers,(iptr)portrait_dlg_on_dblclick);
   portrait_dlg_paint(self);
   wnd_repaint((SurfaceWindow *)self);
-  wnd_center((WndCenterView *)self->window_2);
+  wnd_center((WndBase *)self->window_2);
   return 1;
 }
 
@@ -5392,12 +5392,12 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,iptr
   button_create(&cancel_button,(iptr)&status_window_block.sprite_editor_wnd,0x66,(iptr)button_rect,(const char *)label);
   button_set_callback(&cancel_button,(iptr)sprite_editor_cancel_clicked);
   ctrl_set_cancel_button(&cancel_button);
-  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
-  wnd_set_rbuttondown_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
-  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_up);
-  wnd_set_rbuttonup_any_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_up);
-  wnd_set_mousemove_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_move);
+  wnd_set_lbuttondown_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
+  wnd_set_rbuttondown_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
+  wnd_set_dblclick_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
+  wnd_set_lbuttonup_any_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_up);
+  wnd_set_rbuttonup_any_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_up);
+  wnd_set_mousemove_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_move);
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window),(iptr)sprite_editor_redraw);
   wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
   window_show((WindowObjectView *)((i8 *)&status_window_block.sprite_editor_window));
@@ -7278,7 +7278,7 @@ surface_blit_to_wnd(DibSurface *self,iptr wnd,RECT *src_rect,iptr dest_pt)
       dbg_log((const char *)&str_warning_port_not_locked_in_copytoscreen);
       surface_lock(self);
     }
-    dest_y = wnd_get_palette_obj((WndPaletteObjView *)wnd);
+    dest_y = wnd_get_palette_obj((WndBase *)wnd);
     surface_apply_palette(self,(PaletteVersionView *)dest_y);
     dest_y = *(i32 *)(dest_pt + 4);
     dest_x = *(i32 *)dest_pt;

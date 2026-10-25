@@ -2439,14 +2439,14 @@ void __cdecl intro_play_opening_video(void)
       wnd_set_bg_color((WndBase *)&host_wnd,0);
       (*(i8 * *)&opening_video_player) = (i8 *)&player;
       avi_player_create((MediaWindow *)&player,(iptr)&str_empty_83,0x800,0,0);
-      wnd_set_lbuttonup_handler((WndEventHandlers *)player.event_handlers,(iptr)intro_video_on_click);
-      wnd_set_keydown_handler((WndEventHandlers *)player.event_handlers,(iptr)intro_video_on_keydown);
+      wnd_set_lbuttonup_handler((WndHandlers *)player.event_handlers,(iptr)intro_video_on_click);
+      wnd_set_keydown_handler((WndHandlers *)player.event_handlers,(iptr)intro_video_on_keydown);
       avi_player_set_end_callback((AviPlayerEndCbSetView *)&player,(iptr)intro_video_on_end);
       avi_player_set_double_size((MediaWindow *)&player,1);
       open_rc = avi_player_open((AviPlayerOpenView *)&player,(const char *)path);
       if (open_rc == 0) {
         surface_fill((DibSurface *)&player,0);
-        wnd_center((WndCenterView *)player.window_2);
+        wnd_center((WndBase *)player.window_2);
         wnd_handle_show_raise((WndBase *)&host_wnd);
         wnd_flush_paint();
         window_show((WindowObjectView *)&player);
@@ -17718,9 +17718,9 @@ setup_picwnd_show(ViewWindow *self,i32 x_pos,i32 y_pos,u32 image_id)
     frame_wnd_create
               ((FrameWindow *)self,0,2,rect.left,rect.top,width - sys_dlgframe_w2,height,x,y,
                style);
-    wnd_set_close_handler((WndEventHandlers *)self->event_handlers,(iptr)setup_picwnd_on_close);
+    wnd_set_close_handler((WndHandlers *)self->event_handlers,(iptr)setup_picwnd_on_close);
     wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)setup_picwnd_on_redraw);
-    wnd_set_restore_handler((WndEventHandlers *)self->event_handlers,(iptr)setup_picwnd_on_restore);
+    wnd_set_restore_handler((WndHandlers *)self->event_handlers,(iptr)setup_picwnd_on_restore);
     wnd_repaint((SurfaceWindow *)self);
     window_show((WindowObjectView *)self);
   }
@@ -18755,17 +18755,17 @@ void __cdecl status_wnd_open(void)
   frame_wnd_create
             ((FrameWindow *)((i8 *)&status_window_block.status_window),(const char *)title,style,x,y,width,height,flags,arg_a,arg_b);
   wnd_set_min_size((ModalMenuWindow *)((i8 *)&status_window_block.status_window_wnd),0x28,0x4c);
-  wnd_set_minimize_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_minimize);
-  wnd_set_restore_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_restore);
-  wnd_set_close_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_close);
+  wnd_set_minimize_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_minimize);
+  wnd_set_restore_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_restore);
+  wnd_set_close_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_close);
   wnd_set_icon((WndBase *)((i8 *)&status_window_block.status_window_wnd),1);
-  wnd_set_lbuttonup_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_click);
-  wnd_set_rbuttonup_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_click);
-  wnd_set_keydown_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)map_window_key);
-  wnd_set_char_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)map_window_ascii);
+  wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_click);
+  wnd_set_rbuttonup_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_click);
+  wnd_set_keydown_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)map_window_key);
+  wnd_set_char_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)map_window_ascii);
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&status_window_block.status_window),(iptr)status_wnd_repaint);
-  wnd_set_size_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_size);
-  wnd_set_move_handler((WndEventHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_move);
+  wnd_set_size_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_size);
+  wnd_set_move_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_move);
   wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.status_window));
   if (game.multiplayer != 1) {
     window_show((WindowObjectView *)((i8 *)&status_window_block.status_window));
@@ -18936,9 +18936,9 @@ uint __cdecl main_frame_create(void)
     intro_play_opening_video();
     palette_set_rgb((GamePalette *)((i8 *)&game_palette_block.game_palette),10,0xec,(iptr)saved_rgb2);
     palette_commit_range((GamePalette *)((i8 *)&game_palette_block.game_palette),10,0xec);
-    wnd_set_close_handler((WndEventHandlers *)((i8 *)&main_frame_wnd_block.main_frame_base_wnd),(iptr)main_frame_on_close);
-    wnd_set_keydown_handler((WndEventHandlers *)((i8 *)&main_frame_wnd_block.main_frame_base_wnd),(iptr)map_window_key);
-    wnd_set_char_handler((WndEventHandlers *)((i8 *)&main_frame_wnd_block.main_frame_base_wnd),(iptr)map_window_ascii);
+    wnd_set_close_handler((WndHandlers *)((i8 *)&main_frame_wnd_block.main_frame_base_wnd),(iptr)main_frame_on_close);
+    wnd_set_keydown_handler((WndHandlers *)((i8 *)&main_frame_wnd_block.main_frame_base_wnd),(iptr)map_window_key);
+    wnd_set_char_handler((WndHandlers *)((i8 *)&main_frame_wnd_block.main_frame_base_wnd),(iptr)map_window_ascii);
     wnd_set_bg_color((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),0x9e);
     wnd_flush_paint();
     main_frame_created = 1;

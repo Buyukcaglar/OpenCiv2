@@ -467,17 +467,17 @@ void __cdecl minimap_window_create(void)
             ((FrameWindow *)((i8 *)&minimap_window_block.minimap_window),(const char *)title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   wnd_set_min_size((ModalMenuWindow *)((i8 *)&minimap_window_block.minimap_wnd),0x28,0x19);
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window),(iptr)minimap_redraw);
-  wnd_set_lbuttonup_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_lbuttonup);
-  wnd_set_rbuttonup_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_rbuttonup);
-  wnd_set_keydown_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)map_window_key);
-  wnd_set_char_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)map_window_ascii);
+  wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_lbuttonup);
+  wnd_set_rbuttonup_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_rbuttonup);
+  wnd_set_keydown_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)map_window_key);
+  wnd_set_char_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)map_window_ascii);
   wnd_set_cursor((WndBase *)((i8 *)&minimap_window_block.minimap_wnd),0x1ff);
   wnd_set_icon((WndBase *)((i8 *)&minimap_window_block.minimap_wnd),1);
-  wnd_set_minimize_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_minimize);
-  wnd_set_restore_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_restore);
-  wnd_set_close_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_close);
-  wnd_set_size_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_size);
-  wnd_set_move_handler((WndEventHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_move);
+  wnd_set_minimize_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_minimize);
+  wnd_set_restore_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_restore);
+  wnd_set_close_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_close);
+  wnd_set_size_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_size);
+  wnd_set_move_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_move);
   wnd_repaint((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window));
   if (game.multiplayer != 1) {
     window_show((WindowObjectView *)((i8 *)&minimap_window_block.minimap_window));
@@ -733,7 +733,7 @@ void __cdecl mapview_on_mousemove(int mouse_x,int mouse_y)
     }
     if (view->tax_scrollbar != cursor_id) {
       view->tax_scrollbar = cursor_id;
-      wnd_set_cursor_now((WndCursorView *)view->window_2,cursor_id,1);
+      wnd_set_cursor_now((WndBase *)view->window_2,cursor_id,1);
     }
   }
   return;
@@ -749,7 +749,7 @@ void __cdecl mapview_cancel_drag(void)
   }
   if ((-1 < mapview_drag_view_index) && ((((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] == 0x1fe)) {
     (((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] = 0x201;
-    wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x201,1);
+    wnd_set_cursor_now((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x201,1);
     wnd_release_capture((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window);
   }
   mapview_drag_view_index = 0xffffffff;
@@ -765,7 +765,7 @@ void __cdecl mapview_drag_hold_expired(void)
     mapview_drag_hold_timer = -1;
     if (-1 < mapview_drag_view_index) {
       (((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] = 0x1fe;
-      wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x1fe,1);
+      wnd_set_cursor_now((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x1fe,1);
       wnd_set_capture((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window);
     }
   }
@@ -799,7 +799,7 @@ void __cdecl mapview_on_lbuttondown(void)
       }
       else {
         (((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] = 0x1fe;
-        wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x1fe,1)
+        wnd_set_cursor_now((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window,0x1fe,1)
         ;
         wnd_set_capture((WndBase *)&map_views_block.map_view_recs[mapview_drag_view_index].window);
       }
@@ -842,7 +842,7 @@ void __cdecl mapviews_set_paradrop_cursor(void)
   for (view = 0; view < 8; view++) {
     if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
       (((i32 *)&map_views_block.mapview_cursor_id))[view * 0xfc] = 0x202;
-      wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[view].window,0x202,1);
+      wnd_set_cursor_now((WndBase *)&map_views_block.map_view_recs[view].window,0x202,1);
     }
   }
   return;
@@ -860,7 +860,7 @@ void __cdecl mapviews_reset_cursor(void)
     for (view = 0; view < 8; view++) {
       if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
         (((i32 *)&map_views_block.mapview_cursor_id))[view * 0xfc] = 0x201;
-        wnd_set_cursor_now((WndCursorView *)&map_views_block.map_view_recs[view].window,0x201,1);
+        wnd_set_cursor_now((WndBase *)&map_views_block.map_view_recs[view].window,0x201,1);
       }
     }
   }
@@ -1115,17 +1115,17 @@ void __thiscall mapview_create(ViewWindow *self)
   ;
   wnd_set_min_size((ModalMenuWindow *)self->window_2,0x100,0x80);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)mapview_on_redraw);
-  wnd_set_lbuttonup_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_lbuttonup);
-  wnd_set_rbuttonup_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_rbuttonup);
-  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)mapview_on_lbuttondown);
-  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)mapview_on_lbuttonup_any);
-  wnd_set_mousemove_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)mapview_on_mousemove);
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)self->event_handlers,(iptr)map_window_double_click);
-  wnd_set_char_handler((WndEventHandlers *)self->event_handlers,(iptr)map_window_ascii);
-  wnd_set_keydown_handler((WndEventHandlers *)self->event_handlers,(iptr)map_window_key);
-  wnd_set_close_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_close);
-  wnd_set_size_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_size);
-  wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)mapview_on_move);
+  wnd_set_lbuttonup_handler((WndHandlers *)self->event_handlers,(iptr)mapview_on_lbuttonup);
+  wnd_set_rbuttonup_handler((WndHandlers *)self->event_handlers,(iptr)mapview_on_rbuttonup);
+  wnd_set_lbuttondown_handler((WndHandlers *)self->event_handlers,(iptr)mapview_on_lbuttondown);
+  wnd_set_lbuttonup_any_handler((WndHandlers *)self->event_handlers,(iptr)mapview_on_lbuttonup_any);
+  wnd_set_mousemove_handler((WndHandlers *)self->event_handlers,(iptr)mapview_on_mousemove);
+  wnd_set_dblclick_handler((WndHandlers *)self->event_handlers,(iptr)map_window_double_click);
+  wnd_set_char_handler((WndHandlers *)self->event_handlers,(iptr)map_window_ascii);
+  wnd_set_keydown_handler((WndHandlers *)self->event_handlers,(iptr)map_window_key);
+  wnd_set_close_handler((WndHandlers *)self->event_handlers,(iptr)mapview_on_close);
+  wnd_set_size_handler((WndHandlers *)self->event_handlers,(iptr)mapview_on_size);
+  wnd_set_move_handler((WndHandlers *)self->event_handlers,(iptr)mapview_on_move);
   mapview_update_title((FrameWindow *)self);
   if (self->rates_civ != 0) {
     frame_wnd_add_caption_button((PortraitDialog *)self,(iptr)&caption_close_button_sprite_block.caption_close_button_sprite,1);

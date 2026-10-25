@@ -5616,7 +5616,7 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   terrain_editor_load_controls();
   terrain_editor_update_visibility();
   self->dialog_w = 6;
-  wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
+  wnd_set_move_handler((WndHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)terrain_editor_redraw);
   wnd_repaint((SurfaceWindow *)self);
   window_show((WindowObjectView *)self);

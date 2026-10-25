@@ -50,7 +50,7 @@ i32 __thiscall ctrl_base_dtor(Control *self)
   i32 result;
   
   if (self->parent != 0) {
-    wnd_remove_control((WndControlRemoveView *)self->parent,self->ctrl_id);
+    wnd_remove_control((Wnd *)self->parent,self->ctrl_id);
   }
   self->next_ctrl = 0;
   result = ctrl_destroy_hwnd((iptr)self);
@@ -80,7 +80,7 @@ void __thiscall ctrl_destroy(Control *self)
 {
   if (self->hwnd != 0) {
     if (self->parent != 0) {
-      wnd_remove_control((WndControlRemoveView *)self->parent,self->ctrl_id);
+      wnd_remove_control((Wnd *)self->parent,self->ctrl_id);
     }
     self->next_ctrl = 0;
     ctrl_destroy_hwnd((iptr)self);
@@ -123,7 +123,7 @@ ctrl_init(Control *self,iptr parent_wnd,u32 type_code,u32 id,RECT *rect)
   self->next_ctrl = 0;
   self->hwnd = 0;
   self->wants_initial_focus = '\0';
-  wnd_append_control((WndControlListView *)parent_wnd,(iptr)self);
+  wnd_append_control((Wnd *)parent_wnd,(iptr)self);
   return;
 }
 
@@ -952,7 +952,7 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
 {
   int *surf_rect;
   int size;
-  WndPaletteView *parent_wnd;
+  WndBase *parent_wnd;
   iptr palette;
   int center;
   i8 shadow_ctx[16];
@@ -967,7 +967,7 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   width2 = rect_width(rect);
   height2 = rect_height(rect);
   spritebtn_init_from_sprite
-            (button,(WndPaletteView *)parent,ctrl_id,rect->left,rect->top,width2,
+            (button,(WndBase *)parent,ctrl_id,rect->left,rect->top,width2,
              height2,sprite,0x17);
   surf_rect = (int *)surface_get_rect((DibSurface *)&button->on_select);
   rect2.left = *surf_rect;
@@ -999,10 +999,10 @@ spritebtn_create_icon_button(iptr parent,i32 ctrl_id,SpriteButton *button,iptr s
   rect_deflate((iptr)&inner_rect,1,1);
   gfx_draw_bevel_rect((iptr)&button->on_select,&inner_rect,0x1f,0xf);
   gfx_draw_bevel_rect((iptr)(button->button_surface),&inner_rect,0xf,10);
-  parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
+  parent_wnd = (WndBase *)ctrl_get_parent(button);
   palette = wnd_get_palette(parent_wnd);
   surface_set_palette((DibSurface *)button->button_surface,palette);
-  parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
+  parent_wnd = (WndBase *)ctrl_get_parent(button);
   palette = wnd_get_palette(parent_wnd);
   surface_set_palette((DibSurface *)&button->on_select,palette);
   return;
@@ -1686,7 +1686,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
   int value2;
   HBITMAP h;
   HBITMAP h_00;
-  WndPaletteView *parent_wnd;
+  WndBase *parent_wnd;
   PaletteHandleView *this_00;
   HPALETTE hPal;
   GamePalette *this_01;
@@ -1799,7 +1799,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         else {
           if (gfx_palettized_display == 1) {
             bForceBkgd = 0;
-            parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
+            parent_wnd = (WndBase *)ctrl_get_parent(button);
             this_00 = (PaletteHandleView *)wnd_get_palette(parent_wnd);
             hPal = palette_get_hpalette(this_00);
             SelectPalette(mem_dc,hPal,bForceBkgd);
@@ -1809,7 +1809,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
           green_out = green;
           red_out = red;
           color_index = button->on_select;
-          parent_wnd = (WndPaletteView *)ctrl_get_parent(button);
+          parent_wnd = (WndBase *)ctrl_get_parent(button);
           this_01 = (GamePalette *)wnd_get_palette(parent_wnd);
           logpal = palette_get_logpalette(this_01);
           palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
@@ -2398,13 +2398,13 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
   int *ctrl_rect;
   int value;
   uint color_index;
-  WndPaletteView *parent_wnd;
+  WndBase *parent_wnd;
   GamePalette *game_palette2;
   size_t len;
   WndBase *parent_base;
   iptr logpal;
   HWND hwnd_tmp;
-  WndKeyNavView *nav_wnd;
+  Wnd *nav_wnd;
   i32 result;
   i8 *red_out;
   i8 *green_out;
@@ -2489,7 +2489,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
         green_out = green;
         red_out = red;
         color_index = (uint)ctrl_shadow_color_index;
-        parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
+        parent_wnd = (WndBase *)ctrl_get_parent(checkbox);
         game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
         palette_get_entry(game_palette2,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
         SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
@@ -2512,7 +2512,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
             green_out = green;
             red_out = red;
             color_index = (uint)ctrl_text_color_index;
-            parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
+            parent_wnd = (WndBase *)ctrl_get_parent(checkbox);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             logpal = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
@@ -2541,7 +2541,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
               green_out = green;
               red_out = red;
               color_index = (uint)ctrl_disabled_color_index;
-              parent_wnd = (WndPaletteView *)ctrl_get_parent(checkbox);
+              parent_wnd = (WndBase *)ctrl_get_parent(checkbox);
               game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
               logpal = (iptr)palette_get_logpalette(game_palette2);
               palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
@@ -2615,7 +2615,7 @@ default_proc:
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
       return result;
     }
-    nav_wnd = (WndKeyNavView *)ctrl_get_parent(checkbox);
+    nav_wnd = (Wnd *)ctrl_get_parent(checkbox);
     nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
     if (nav_enabled == '\0') {
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
@@ -2637,7 +2637,7 @@ default_proc:
     }
     else {
       if (wparam == 0x20) {
-        nav_wnd = (WndKeyNavView *)ctrl_get_parent(checkbox);
+        nav_wnd = (Wnd *)ctrl_get_parent(checkbox);
         nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
         if (nav_enabled != '\0') {
           SendMessageA(hwnd,0x201,0,0);
@@ -3775,13 +3775,13 @@ void __cdecl ctrl_set_pending_font(iptr font)
 /* 005d7cb0 auto */
 void __thiscall
 spritebtn_init_from_sprite
-          (SpriteButton *self,WndPaletteView *parent,i32 ctrl_id,int x,int y,
+          (SpriteButton *self,WndBase *parent,i32 ctrl_id,int x,int y,
           int width,int height,iptr sprite,uint bg_color)
 
 {
   u32 value;
   int size;
-  WndPaletteView *parent_wnd;
+  WndBase *parent_wnd;
   i32 palette;
   int yBottom;
   i8 draw_ctx_b[16];
@@ -3844,10 +3844,10 @@ spritebtn_init_from_sprite
   surface_blit
             ((DibSurface *)&self->on_select,(DibSurface *)(iptr)(self->button_surface),&src_rect,
              &dst_rect);
-  parent_wnd = (WndPaletteView *)ctrl_get_parent(self);
+  parent_wnd = (WndBase *)ctrl_get_parent(self);
   palette = wnd_get_palette(parent_wnd);
   surface_apply_palette((DibSurface *)self->button_surface,(PaletteVersionView *)palette);
-  parent_wnd = (WndPaletteView *)ctrl_get_parent(self);
+  parent_wnd = (WndBase *)ctrl_get_parent(self);
   palette = wnd_get_palette(parent_wnd);
   surface_apply_palette((DibSurface *)&self->on_select,(PaletteVersionView *)palette);
   value = spritebtn_create_hwnd(x,y,width,height,(iptr)self,1);
@@ -4090,14 +4090,14 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
   iptr selected;
   iptr height;
   uint color_index;
-  WndPaletteView *parent_wnd;
+  WndBase *parent_wnd;
   GamePalette *game_palette2;
   size_t len;
   WndBase *parent_base;
   int value;
   iptr parent;
   HWND hwnd_tmp;
-  WndKeyNavView *nav_wnd;
+  Wnd *nav_wnd;
   iptr items2;
   i32 ctrl_id;
   iptr items3;
@@ -4184,7 +4184,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         green_out = green;
         red_out = red;
         color_index = (uint)radio_shadow_color_index;
-        parent_wnd = (WndPaletteView *)ctrl_get_parent(group);
+        parent_wnd = (WndBase *)ctrl_get_parent(group);
         game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
         palette_get_entry(game_palette2,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
         SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
@@ -4206,7 +4206,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             green_out = green;
             red_out = red;
             color_index = (uint)radio_text_color_index;
-            parent_wnd = (WndPaletteView *)ctrl_get_parent(group);
+            parent_wnd = (WndBase *)ctrl_get_parent(group);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             parent = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb((GameLogPalette *)parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
@@ -4232,7 +4232,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
             green_out = green;
             red_out = red;
             color_index = (uint)radio_disabled_color_index;
-            parent_wnd = (WndPaletteView *)ctrl_get_parent(group);
+            parent_wnd = (WndBase *)ctrl_get_parent(group);
             game_palette2 = (GamePalette *)wnd_get_palette(parent_wnd);
             parent = (iptr)palette_get_logpalette(game_palette2);
             palette_get_entry_rgb((GameLogPalette *)parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
@@ -4301,7 +4301,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       }
       goto default_proc;
     }
-    nav_wnd = (WndKeyNavView *)ctrl_get_parent(group);
+    nav_wnd = (Wnd *)ctrl_get_parent(group);
     nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
     if (nav_enabled == '\0') {
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
@@ -4350,7 +4350,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       }
       else {
         if (wparam == 0x20) {
-          nav_wnd = (WndKeyNavView *)ctrl_get_parent(group);
+          nav_wnd = (Wnd *)ctrl_get_parent(group);
           nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
           if (nav_enabled != '\0') {
             SendMessageA(hwnd,0x201,0,0);
@@ -4359,7 +4359,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           }
         }
         if ((((wparam == 0x27) || (wparam == 0x28)) || (wparam == 0x66)) || (wparam == 0x62)) {
-          nav_wnd = (WndKeyNavView *)ctrl_get_parent(group);
+          nav_wnd = (Wnd *)ctrl_get_parent(group);
           nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
           if (nav_enabled != '\0') {
             remaining = radiogrp_item_count(group);
@@ -4402,7 +4402,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           }
         }
         if (((wparam == 0x26) || (wparam == 0x25)) || ((wparam == 0x68 || (wparam == 100)))) {
-          nav_wnd = (WndKeyNavView *)ctrl_get_parent(group);
+          nav_wnd = (Wnd *)ctrl_get_parent(group);
           nav_enabled = wnd_keyboard_nav_enabled(nav_wnd);
           if (nav_enabled != '\0') {
             remaining = radiogrp_item_count(group);

@@ -6316,10 +6316,10 @@ pick_size_mode:
   self->right_kind = parley_mode3_right_kind;
   self->shown_left_kind = 0x15;
   self->shown_right_kind = 0x15;
-  wnd_set_close_handler((WndEventHandlers *)((u8 *)self + 0x58),(iptr)diplo_wnd_close_active);
+  wnd_set_close_handler((WndHandlers *)((u8 *)self + 0x58),(iptr)diplo_wnd_close_active);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)parley_wnd_redraw);
-  wnd_set_move_handler((WndEventHandlers *)((u8 *)self + 0x58),(iptr)parley_wnd_on_move);
-  wnd_set_keydown_handler((WndEventHandlers *)((u8 *)self + 0x58),(iptr)parley_wnd_on_key);
+  wnd_set_move_handler((WndHandlers *)((u8 *)self + 0x58),(iptr)parley_wnd_on_move);
+  wnd_set_keydown_handler((WndHandlers *)((u8 *)self + 0x58),(iptr)parley_wnd_on_key);
   parley_wnd_calc_layout(self);
   parley_wnd_sync_sides(self);
   if (((self->mode == 3) || (self->mode == 2)) || (self->mode == 1)) {

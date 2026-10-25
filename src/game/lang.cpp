@@ -421,7 +421,7 @@ void lang_load_menus(void)
                 if (n == 12)
                     pos = _ftell(text_file_handle);
                 line = text_read_line(1);
-                snprintf(game_lines[n], sizeof game_lines[n], "%s", line ? (char *)line : "");
+                snprintf(game_lines[n], sizeof game_lines[n], "%s", line ? line : "");
             }
             has_profile = game_lines[12][0] != 0 && game_lines[12][0] != '@' && game_lines[12][0] != ';';
             if (!has_profile && line)

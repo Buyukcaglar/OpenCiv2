@@ -5379,7 +5379,7 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
   button_create(&cancel_btn,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,0x66,(iptr)rect,(const char *)label);
   button_set_callback(&cancel_btn,(iptr)unit_sound_editor_cancel_clicked);
   ctrl_set_cancel_button(&cancel_btn);
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_wnd_handlers),(iptr)unit_sound_editor_on_dblclick);
+  wnd_set_dblclick_handler((WndHandlers *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_wnd_handlers),(iptr)unit_sound_editor_on_dblclick);
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window),(iptr)unit_sound_editor_redraw);
   wnd_repaint((SurfaceWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window));
   window_show((WindowObjectView *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window));
@@ -8627,7 +8627,7 @@ void __thiscall unit_editor_window_run(ViewWindow *self)
   unit_editor_load_controls();
   unit_editor_update_domain_ctrls();
   self->dialog_w = 5;
-  wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
+  wnd_set_move_handler((WndHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)unit_editor_redraw);
   wnd_repaint((SurfaceWindow *)self);
   window_show((WindowObjectView *)self);

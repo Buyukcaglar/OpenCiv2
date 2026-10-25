@@ -932,7 +932,7 @@ extern char str_error_writing_file_header[28];
 extern char str_error_writing_info_header[28];
 extern char str_error_writing_file_palette[28];
 extern char str_error_writing_bitmap_image[96];
-extern SpaceshipWindow *endgame_movie_window;
+extern EndgameMovieWindow *endgame_movie_window;
 extern char str_loser_avi[12];
 extern char str_civ2art_dll[16];
 extern u8 str_empty_84[4];
@@ -1560,7 +1560,7 @@ struct spaceship_launch_sprite_xs_block {
     i8 spaceship_launch_sprite_ys[4];  /* 0062e254 */
     i8 spaceship_launch_sprite_widths[4];  /* 0062e258 */
     i8 spaceship_part_sprite_heights[116];  /* 0062e25c */
-    SpaceshipWindowExt *spaceship_wnd;  /* 0062e2d0 */
+    SpaceshipWindow *spaceship_wnd;  /* 0062e2d0 */
 };
 #pragma pack(pop)
 extern struct spaceship_launch_sprite_xs_block spaceship_launch_sprite_xs_block;
@@ -5185,6 +5185,7 @@ extern struct main_menu_block main_menu_block;
 struct pedia_window_block {
     DibSurface pedia_window;  /* 006a6668 */
     Wnd pedia_window_wnd;  /* 006a66b0 */
+    u32 pedia_window_on_paint;  /* 006a6778 SurfaceWindow.on_paint */
     int pedia_closed;  /* 006a677c */
     i32 pedia_category;  /* 006a6780 */
     i32 pedia_page_mode;  /* 006a6784 */

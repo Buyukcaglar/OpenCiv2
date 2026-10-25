@@ -1242,7 +1242,7 @@ void __thiscall tribe_editor_main(ViewWindow *self)
   combo_set_cur_sel((ComboBox *)&self->dialog_h,self->init_tax_rate);
   tribe_editor_load_controls();
   self->dialog_w = 5;
-  wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
+  wnd_set_move_handler((WndHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)tribe_editor_redraw);
   wnd_repaint((SurfaceWindow *)self);
   window_show((WindowObjectView *)self);

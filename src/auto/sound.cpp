@@ -3110,7 +3110,7 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
       case 3:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_move
-                  ((WndOnMoveView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
       default:
@@ -3121,7 +3121,7 @@ handle_size:
         is_iconic = IsIconic(hwnd);
         if (is_iconic == 0) {
           wnd_on_size_nop(wnd2,lparam & 0xffff,lparam >> 0x10);
-          wnd_call_size((WndOnSizeView *)wnd2->handlers,wparam);
+          wnd_call_size((WndHandlers *)wnd2->handlers,wparam);
         }
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
@@ -3129,12 +3129,12 @@ handle_size:
         goto handle_mci;
       case 7:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_setfocus((WndOnSetFocusView *)wnd2->handlers);
+        wnd_call_setfocus((WndHandlers *)wnd2->handlers);
         return 0;
       }
     }
     (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-    value = wnd_call_close((WndOnCloseView *)wnd2->handlers);
+    value = wnd_call_close((WndHandlers *)wnd2->handlers);
     if (value != 0) {
       result = wnd_base_wndproc(hwnd,0x10,wparam,lparam);
       return result;
@@ -3144,7 +3144,7 @@ handle_size:
     if (msg < 0x45) {
       if (msg == 0x44) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_msg44((WndOnMsg44View *)wnd2->handlers,lparam & 0xffff);
+        wnd_call_msg44((WndHandlers *)wnd2->handlers,lparam & 0xffff);
         return 1;
       }
       if (msg == 0x24) {
@@ -3153,8 +3153,8 @@ handle_size:
         frame_height = wnd_obj_frame_height(window);
         window = wnd_get_window((WndBase *)wnd2);
         frame_width = wnd_obj_frame_width(window);
-        wnd_get_min_size((WndMinSizeView *)wnd2,(iptr)&min_width2,(iptr)&min_height2);
-        wnd_get_max_size((WndMaxSizeView *)wnd2,(iptr)&max_width2,(iptr)&max_height2);
+        wnd_get_min_size((ModalMenuWindow *)wnd2,(iptr)&min_width2,(iptr)&min_height2);
+        wnd_get_max_size((ModalMenuWindow *)wnd2,(iptr)&max_width2,(iptr)&max_height2);
         minmax_info->ptMaxTrackSize.x = frame_width + max_width2;
         minmax_info->ptMaxTrackSize.y = frame_height + max_height2;
         minmax_info->ptMinTrackSize.x = frame_width + min_width2;
@@ -3173,20 +3173,20 @@ default_wndproc:
       if (msg == 0x100) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         result = input_map_vkey(wparam);
-        wnd_call_keydown_pre((WndOnKeyDownPreView *)wnd2->handlers,result);
+        wnd_call_keydown_pre((WndHandlers *)wnd2->handlers,result);
         result = input_map_vkey(wparam);
-        wnd_call_keydown((WndOnKeyDownView *)wnd2->handlers,result);
+        wnd_call_keydown((WndHandlers *)wnd2->handlers,result);
         return 0;
       }
       if (msg == 0x101) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         result = input_map_vkey(wparam);
-        wnd_call_keyup((WndOnKeyUpView *)wnd2->handlers,result);
+        wnd_call_keyup((WndHandlers *)wnd2->handlers,result);
         return 0;
       }
       if (msg == 0x102) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_char((WndOnCharView *)wnd2->handlers,wparam & 0xff);
+        wnd_call_char((WndHandlers *)wnd2->handlers,wparam & 0xff);
         return 0;
       }
       goto default_wndproc;
@@ -3195,18 +3195,18 @@ default_wndproc:
       if (msg == 0x200) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_mousemove
-                  ((WndOnMouseMoveView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       if (msg == 0x112) {
         if (wparam == 0xf020) {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_minimize((WndOnMinimizeView *)wnd2->handlers);
+          wnd_call_minimize((WndHandlers *)wnd2->handlers);
         }
         else {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           if (wparam == 0xf120) {
-            wnd_call_restore((WndOnRestoreView *)wnd2->handlers);
+            wnd_call_restore((WndHandlers *)wnd2->handlers);
           }
         }
         result = wnd_base_wndproc(hwnd,0x112,wparam,lparam);
@@ -3214,7 +3214,7 @@ default_wndproc:
       }
       thumb_pos = (short)(wparam >> 0x10);
       if (msg == 0x114) {
-        scroll_pos2 = wnd_get_hscroll_pos((WndHScrollPosView *)wnd2);
+        scroll_pos2 = wnd_get_hscroll_pos((ModalMenuWindow *)wnd2);
         switch(wparam) {
         case 0:
           scroll_pos2--;
@@ -3222,7 +3222,7 @@ default_wndproc:
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll((WndOnHScrollView *)wnd2->handlers,scroll_pos2);
+          wnd_call_hscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
           return 0;
         case 1:
           scroll_pos2++;
@@ -3230,25 +3230,25 @@ default_wndproc:
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll((WndOnHScrollView *)wnd2->handlers,scroll_pos2);
+          wnd_call_hscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
           return 0;
         case 2:
-          value = wnd_get_hscroll_page((WndHScrollPageView *)wnd2);
+          value = wnd_get_hscroll_page((ModalMenuWindow *)wnd2);
           scroll_pos2 -= value;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll((WndOnHScrollView *)wnd2->handlers,scroll_pos2);
+          wnd_call_hscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
           return 0;
         case 3:
-          value = wnd_get_hscroll_page((WndHScrollPageView *)wnd2);
+          value = wnd_get_hscroll_page((ModalMenuWindow *)wnd2);
           scroll_pos2 += value;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll((WndOnHScrollView *)wnd2->handlers,scroll_pos2);
+          wnd_call_hscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
           return 0;
         case 4:
           scroll_pos2 = (int)thumb_pos;
@@ -3256,18 +3256,18 @@ default_wndproc:
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
           wnd_call_hscroll
-                    ((WndOnHScrollView *)wnd2->handlers,*(i32 *)wnd2->hscroll_pos);
+                    ((WndHandlers *)wnd2->handlers,*(i32 *)wnd2->hscroll_pos);
           return 0;
         case 5:
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_hscroll_track((WndOnHScrollTrackView *)wnd2->handlers,(int)thumb_pos);
+          wnd_call_hscroll_track((WndHandlers *)wnd2->handlers,(int)thumb_pos);
           return 0;
         default:
           return 0;
         }
       }
       if (msg == 0x115) {
-        scroll_pos2 = wnd_get_vscroll_pos((WndVScrollPosView *)wnd2);
+        scroll_pos2 = wnd_get_vscroll_pos((ModalMenuWindow *)wnd2);
         switch(wparam) {
         case 0:
           scroll_pos2--;
@@ -3275,7 +3275,7 @@ default_wndproc:
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll((WndOnVScrollView *)wnd2->handlers,scroll_pos2);
+          wnd_call_vscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
           return 0;
         case 1:
           scroll_pos2++;
@@ -3283,25 +3283,25 @@ default_wndproc:
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll((WndOnVScrollView *)wnd2->handlers,scroll_pos2);
+          wnd_call_vscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
           return 0;
         case 2:
-          value = wnd_get_vscroll_page((WndVScrollPageView *)wnd2);
+          value = wnd_get_vscroll_page((ModalMenuWindow *)wnd2);
           scroll_pos2 -= value;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll((WndOnVScrollView *)wnd2->handlers,scroll_pos2);
+          wnd_call_vscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
           return 0;
         case 3:
-          value = wnd_get_vscroll_page((WndVScrollPageView *)wnd2);
+          value = wnd_get_vscroll_page((ModalMenuWindow *)wnd2);
           scroll_pos2 += value;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll((WndOnVScrollView *)wnd2->handlers,scroll_pos2);
+          wnd_call_vscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
           return 0;
         case 4:
           scroll_pos2 = (int)thumb_pos;
@@ -3309,11 +3309,11 @@ default_wndproc:
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
           wnd_call_vscroll
-                    ((WndOnVScrollView *)wnd2->handlers,*(i32 *)wnd2->vscroll_pos);
+                    ((WndHandlers *)wnd2->handlers,*(i32 *)wnd2->vscroll_pos);
           return 0;
         case 5:
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_vscroll_track((WndOnVScrollTrackView *)wnd2->handlers,(int)thumb_pos);
+          wnd_call_vscroll_track((WndHandlers *)wnd2->handlers,(int)thumb_pos);
           return 0;
         default:
           return 0;
@@ -3326,7 +3326,7 @@ default_wndproc:
         if (wparam == 0x201) {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           wnd_call_lbuttondown
-                    ((WndOnLButtonDownView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                    ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
           return 0;
         }
         if (wparam != 0x204) {
@@ -3334,7 +3334,7 @@ default_wndproc:
         }
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_rbuttondown
-                  ((WndOnRButtonDownView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       switch(msg) {
@@ -3351,7 +3351,7 @@ default_wndproc:
         wnd2->wnd_header_area[0xa6] = '\0';
         wnd2->wnd_header_area[0xa7] = '\0';
         wnd_call_lbuttondown
-                  ((WndOnLButtonDownView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x202:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
@@ -3361,15 +3361,15 @@ default_wndproc:
           wnd2->wnd_header_area[0xa6] = '\0';
           wnd2->wnd_header_area[0xa7] = '\0';
           wnd_call_lbuttonup
-                    ((WndOnLButtonUpView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                    ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         wnd_call_lbuttonup_raw
-                  ((WndOnLButtonUpRawView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x203:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_dblclick
-                  ((WndOnDblClickView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x204:
         wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
@@ -3384,7 +3384,7 @@ default_wndproc:
         wnd2->wnd_header_area[0xaa] = '\0';
         wnd2->wnd_header_area[0xab] = '\0';
         wnd_call_rbuttondown
-                  ((WndOnRButtonDownView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x205:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
@@ -3394,10 +3394,10 @@ default_wndproc:
           wnd2->wnd_header_area[0xaa] = '\0';
           wnd2->wnd_header_area[0xab] = '\0';
           wnd_call_rbuttonup
-                    ((WndOnRButtonUpView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                    ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         }
         wnd_call_rbuttonup_raw
-                  ((WndOnRButtonUpRawView *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       goto default_wndproc;

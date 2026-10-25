@@ -1077,13 +1077,13 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
       (*((char *)&shift_flags + 1)) = (char)((ushort)shift_state >> 8);
       shift_flags = tmp;
       if ((wparam == 9) && ((*((char *)&shift_flags + 1)) == '\0')) {
-        nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)frame);
+        nav_enabled = wnd_keyboard_nav_enabled(frame);
         if (nav_enabled != '\0') {
           wnd_cycle_control_focus((iptr)frame,0,2);
         }
       }
       else if ((wparam == 9) && ((*((char *)&shift_flags + 1)) != '\0')) {
-        nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)frame);
+        nav_enabled = wnd_keyboard_nav_enabled(frame);
         if (nav_enabled != '\0') {
           wnd_cycle_control_focus((iptr)frame,0,3);
         }
@@ -1170,9 +1170,9 @@ forward_command:
         }
       }
       else {
-        tmp = (int)wnd_get_window((WndBase *)frame);
+        tmp = (int)wnd_get_window(frame);
         if (((((NativeWindow *)tmp)->flags_bytes[0] & 0x80) != 0) ||
-           (tmp = (iptr)wnd_get_window((WndBase *)frame), (((NativeWindow *)tmp)->flags_bytes[1] & 1) != 0)) {
+           (tmp = (iptr)wnd_get_window(frame), (((NativeWindow *)tmp)->flags_bytes[1] & 1) != 0)) {
           result = wnd_child_wndproc(hwnd,msg,wparam,lparam);
           return result;
         }
