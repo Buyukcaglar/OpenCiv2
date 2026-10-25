@@ -41,10 +41,38 @@ and the same random numbers, call for call, on recorded games.
    Changes to the code are also checked function by function against the previous version's
    machine code (`tools/cxx_compare.py`), which covers the code no scenario reaches.
 
+## Download and play
+
+The game files are not included: you need your own copy of Civilization II Multiplayer
+Gold Edition, installed or on its CD. Each download, built from the latest commit, is one
+program that finds the game where it is usually installed, or its CD (or a copy of it) in
+a drive, else asks where it is, and copies it into a `GameData` folder (from the CD:
+unpacked from the installer's cabinet, with the videos); afterwards it starts the game
+directly. `--setup [FOLDER]` sets the game up again (from FOLDER: the installed game or
+the CD); `FOLDER` plays the game in FOLDER where it is.
+
+- **Windows:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip):
+  `OpenCiv2.exe`. Put it in any folder and double-click it; `GameData` is beside it. It runs
+  full screen with the menu bar shown (`CIV2_WINDOW=1`: in a window).
+- **macOS** (11 or later, Apple silicon or Intel):
+  [OpenCiv2-macos.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-macos.zip):
+  `OpenCiv2.app`. It is not signed by a registered Apple developer, so macOS refuses it the
+  first time: open System Settings > Privacy & Security and click "Open Anyway". `GameData`
+  is in `~/Library/Application Support/OpenCiv2`; the game is also found in a Wine or
+  CrossOver drive C:.
+- **Linux** (x86-64):
+  [OpenCiv2-linux-x86_64.tar.gz](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-linux-x86_64.tar.gz):
+  unpack it and run `OpenCiv2/OpenCiv2` (SDL2 is built in). `GameData` is in
+  `~/.local/share/OpenCiv2`; the game is also found in Wine's drive C:, and asked for with
+  `zenity` or `kdialog` where there is one.
+
+Music: the CD's music is audio tracks, which the set-up does not copy; `tools/extract_disc.py`
+copies it from a disc image.
+
 ## Build and run
 
-The game files are not included: install your copy of Civilization II in `~/Civ2` (the
-directory with `civ2.exe`, `Tiles.dll`, the `.TXT` files …), or point `CIV2_GAME` at it.
+To build it yourself, install your copy of Civilization II in `~/Civ2` (the directory with
+`civ2.exe`, `Tiles.dll`, the `.TXT` files …), or point `CIV2_GAME` at it.
 
 ### macOS
 
@@ -54,7 +82,7 @@ brew install sdl2
 pip3 install pefile
 
 git clone https://github.com/richardpenman/civ2 && cd civ2
-tools/fetch-toolchain.sh        # wasi-sdk + wabt into tools/toolchain (once)
+tools/fetch-toolchain.sh        # wasi-sdk, wabt, unshield, zlib into tools/toolchain (once)
 python3 tools/build_port.py     # -> build/OpenCiv2  (several minutes)
 tools/run-civ2.sh               # plays the game in ~/Civ2
 ```
@@ -72,21 +100,12 @@ tools/run-civ2.sh
 
 ### Windows
 
-**Download:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip),
-built from the latest commit: one program, `OpenCiv2.exe`. Put it in any folder and
-double-click it. The first time, it finds Civilization II Multiplayer Gold Edition where it
-is installed, or its CD in a drive (else it asks where it is), and copies the game into a
-`GameData` folder beside it (from the CD: unpacked from the installer's cabinet, with the
-videos); afterwards it starts the game directly. It runs full screen with the menu bar
-shown (`CIV2_WINDOW=1`: in a window); `OpenCiv2.exe --setup [FOLDER]` sets the game up
-again, `OpenCiv2.exe FOLDER` plays the game in FOLDER where it is.
-
-To build it yourself, in an [MSYS2](https://www.msys2.org) **MINGW64** shell:
+In an [MSYS2](https://www.msys2.org) **MINGW64** shell:
 
 ```sh
 pacman -S git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python mingw-w64-x86_64-python-pefile
 git clone https://github.com/richardpenman/civ2 && cd civ2
-tools/fetch-toolchain.sh windows     # (also unshield's and zlib's sources, for the set-up)
+tools/fetch-toolchain.sh
 python3 tools/build_port.py     # -> build/OpenCiv2.exe and SDL2.dll
 ```
 

@@ -1,0 +1,259 @@
+# Builds the game for Windows, Linux and macOS on every push to main and
+# publishes them as the "latest" release: one program each that sets the
+# game up from the user's installed copy or CD (src/host/setup.c).  The
+# game's C (tools/build_port.py module c) is made once, then compiled for
+# each system.
+name: Build and release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-build
+  cancel-in-progress: true
+
+env:
+  SDL2_VERSION: 2.30.9
+
+jobs:
+  game:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain (wasi-sdk, wabt)
+        run: sh tools/fetch-toolchain.sh
+      - name: The game as C
+        run: python3 tools/build_port.py module c
+      - uses: actions/upload-artifact@v4
+        with:
+          name: game-c
+          path: build/wasm/c
+          retention-days: 1
+
+  windows:
+    needs: game
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: game-c
+          path: build/wasm/c
+      - name: Toolchain (MinGW, SDL2 for MinGW, unshield, zlib)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gcc-mingw-w64-x86-64-posix
+          sh tools/fetch-toolchain.sh windows sources
+      - name: Build
+        env:
+          CC: x86_64-w64-mingw32-gcc-posix
+        run: python3 tools/build_port.py exe-windows
+      - name: Package
+        run: |
+          mkdir -p pkg/OpenCiv2
+          cp build/OpenCiv2.exe pkg/OpenCiv2/OpenCiv2.exe
+          cp LICENSE pkg/OpenCiv2/LICENSE.txt
+          cat > pkg/OpenCiv2/README.txt <<'TXT'
+          OpenCiv2 - Civilization II (Multiplayer Gold) reconstructed
+          https://github.com/${{ github.repository }}
+
+          You need your own copy of Civilization II Multiplayer Gold Edition.
+
+          1. Put OpenCiv2.exe in any folder and double-click it.
+          2. The first time, it finds the game where it is installed, or
+             its CD in a drive (else it asks where it is), and copies it
+             into a GameData folder beside OpenCiv2.exe; then the game
+             starts. Afterwards it starts the game directly.
+
+          OpenCiv2.exe --setup [FOLDER]   set the game up again (from FOLDER:
+                                          the installed game, or the CD)
+          OpenCiv2.exe FOLDER             play the game in FOLDER where it is
+          CIV2_WINDOW=1                   a window, not full screen
+
+          Build ${{ github.sha }}
+          TXT
+          sed -i 's/^          //' pkg/OpenCiv2/README.txt
+          (cd pkg && zip -qr ../OpenCiv2-windows.zip OpenCiv2)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows
+          path: OpenCiv2-windows.zip
+          retention-days: 1
+
+  linux:
+    needs: game
+    # (the oldest supported runner: the program runs on systems at least as new)
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: game-c
+          path: build/wasm/c
+      - name: Toolchain (SDL2 linked in, unshield, zlib)
+        run: |
+          sudo apt-get update
+          # (what SDL2 can use: loaded when the program runs, where the system has it)
+          sudo apt-get install -y --no-install-recommends cmake ninja-build libx11-dev libxext-dev \
+            libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxkbcommon-dev \
+            libwayland-dev wayland-protocols libdecor-0-dev libegl1-mesa-dev libgl1-mesa-dev \
+            libgles2-mesa-dev libasound2-dev libpulse-dev libdbus-1-dev libudev-dev libdrm-dev libgbm-dev
+          curl -fL# https://github.com/libsdl-org/SDL/releases/download/release-$SDL2_VERSION/SDL2-$SDL2_VERSION.tar.gz | tar xz
+          cmake -S SDL2-$SDL2_VERSION -B sdl-build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DSDL_SHARED=OFF -DSDL_STATIC=ON -DSDL_TEST=OFF -DCMAKE_INSTALL_PREFIX=$PWD/sdl
+          cmake --build sdl-build
+          cmake --install sdl-build
+          sh tools/fetch-toolchain.sh sources
+      - name: Build
+        env:
+          SDL2_CONFIG: ${{ github.workspace }}/sdl/bin/sdl2-config
+          SDL2_STATIC: 1
+          JOBS: 4
+        run: python3 tools/build_port.py exe
+      - name: Package
+        run: |
+          mkdir -p pkg/OpenCiv2/data
+          cp build/OpenCiv2 pkg/OpenCiv2/OpenCiv2
+          cp data/native/fonts.bin data/native/fonts_aa.bin pkg/OpenCiv2/data/
+          cp LICENSE pkg/OpenCiv2/LICENSE.txt
+          cat > pkg/OpenCiv2/README.txt <<'TXT'
+          OpenCiv2 - Civilization II (Multiplayer Gold) reconstructed
+          https://github.com/${{ github.repository }}
+
+          You need your own copy of Civilization II Multiplayer Gold Edition.
+
+          1. Unpack this folder anywhere and run OpenCiv2 in it.
+          2. The first time, it finds the game where it is usually installed
+             (~/Civ2, ~/Games/Civ2, or Wine's drive C:), or its CD (or a
+             copy of it) mounted (else it asks where it is, with zenity or
+             kdialog), and copies it into ~/.local/share/OpenCiv2/GameData;
+             then the game starts. Afterwards it starts the game directly.
+
+          ./OpenCiv2 --setup [FOLDER]   set the game up again (from FOLDER:
+                                        the installed game, or the CD)
+          ./OpenCiv2 FOLDER             play the game in FOLDER where it is
+          CIV2_WINDOW=1                 a window, not full screen
+
+          Build ${{ github.sha }}
+          TXT
+          sed -i 's/^          //' pkg/OpenCiv2/README.txt
+          tar czf OpenCiv2-linux-x86_64.tar.gz -C pkg OpenCiv2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux
+          path: OpenCiv2-linux-x86_64.tar.gz
+          retention-days: 1
+
+  macos:
+    needs: game
+    runs-on: macos-14
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '11.0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: game-c
+          path: build/wasm/c
+      - name: Toolchain (SDL2 linked in, for Apple silicon and Intel; unshield, zlib)
+        run: |
+          curl -fL# https://github.com/libsdl-org/SDL/releases/download/release-$SDL2_VERSION/SDL2-$SDL2_VERSION.tar.gz | tar xz
+          cmake -S SDL2-$SDL2_VERSION -B sdl-build -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=OFF -DSDL_STATIC=ON \
+            -DSDL_TEST=OFF -DCMAKE_OSX_ARCHITECTURES='arm64;x86_64' -DCMAKE_INSTALL_PREFIX=$PWD/sdl
+          cmake --build sdl-build -j 3
+          cmake --install sdl-build
+          sh tools/fetch-toolchain.sh sources
+      - name: Build
+        env:
+          CC: clang
+          CFLAGS: -arch arm64 -arch x86_64
+          SDL2_CONFIG: ${{ github.workspace }}/sdl/bin/sdl2-config
+          SDL2_STATIC: 1
+          JOBS: 3
+        run: python3 tools/build_port.py exe
+      - name: Package
+        run: |
+          app=pkg/OpenCiv2.app/Contents
+          mkdir -p $app/MacOS $app/Resources/data
+          cp build/OpenCiv2 $app/MacOS/OpenCiv2
+          cp data/native/fonts.bin data/native/fonts_aa.bin $app/Resources/data/
+          cat > $app/Info.plist <<'PLIST'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>CFBundleExecutable</key><string>OpenCiv2</string>
+            <key>CFBundleIdentifier</key><string>io.github.richardpenman.openciv2</string>
+            <key>CFBundleName</key><string>OpenCiv2</string>
+            <key>CFBundleDisplayName</key><string>OpenCiv2</string>
+            <key>CFBundlePackageType</key><string>APPL</string>
+            <key>CFBundleShortVersionString</key><string>0.0</string>
+            <key>CFBundleVersion</key><string>${{ github.run_number }}</string>
+            <key>LSMinimumSystemVersion</key><string>11.0</string>
+            <key>NSHighResolutionCapable</key><true/>
+          </dict>
+          </plist>
+          PLIST
+          sed -i '' 's/^          //' $app/Info.plist
+          codesign --force --deep --sign - pkg/OpenCiv2.app
+          cp LICENSE pkg/LICENSE.txt
+          cat > pkg/README.txt <<'TXT'
+          OpenCiv2 - Civilization II (Multiplayer Gold) reconstructed
+          https://github.com/${{ github.repository }}
+
+          You need your own copy of Civilization II Multiplayer Gold Edition.
+
+          1. Move OpenCiv2.app to Applications (or anywhere).
+          2. The program is not signed by a registered Apple developer: the
+             first time, macOS refuses to open it. Open System Settings >
+             Privacy & Security and click "Open Anyway" (or, in Terminal:
+             xattr -dr com.apple.quarantine /Applications/OpenCiv2.app).
+          3. The first time, it finds the game where it is usually installed
+             (~/Civ2, ~/Games/Civ2, or a Wine or CrossOver drive C:), or its
+             CD (or a copy of it) mounted (else it asks where it is), and
+             copies it into ~/Library/Application Support/OpenCiv2/GameData;
+             then the game starts. Afterwards it starts the game directly.
+
+          From Terminal, OpenCiv2.app/Contents/MacOS/OpenCiv2:
+            --setup [FOLDER]   set the game up again (from FOLDER: the
+                               installed game, or the CD)
+            FOLDER             play the game in FOLDER where it is
+
+          Build ${{ github.sha }}
+          TXT
+          sed -i '' 's/^          //' pkg/README.txt
+          ditto -c -k --keepParent pkg OpenCiv2-macos.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: OpenCiv2-macos.zip
+          retention-days: 1
+
+  publish:
+    needs: [windows, linux, macos]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - name: Publish as the "latest" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag -f latest
+          git push -f origin latest
+          notes="Build of ${GITHUB_SHA::7} for Windows, Linux (x86-64) and macOS (Apple silicon and Intel): one program that sets the game up from your copy of Civilization II Multiplayer Gold Edition (see README.txt in each)."
+          if gh release view latest >/dev/null 2>&1; then
+            gh release edit latest --title "Latest build" --notes "$notes" --prerelease
+          else
+            gh release create latest --title "Latest build" --notes "$notes" --prerelease
+          fi
+          gh release upload latest out/OpenCiv2-windows.zip out/OpenCiv2-linux-x86_64.tar.gz out/OpenCiv2-macos.zip --clobber
+          gh release delete-asset latest civ2-reconstructed-windows.zip -y || true

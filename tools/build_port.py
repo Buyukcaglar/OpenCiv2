@@ -8,8 +8,9 @@ keeping the original's 32-bit data model.
 Steps (each can run on its own):
   module   build/wasm/civ2.wasm            (needs wasi-sdk and the installed game)
   c        build/wasm/c/civ2_wasm*.c,.h    (needs wabt's wasm2c)
-  exe      build/OpenCiv2                 (needs a C compiler and SDL2; on Windows
-                                           (MSYS2) OpenCiv2.exe and SDL2.dll)
+  exe      build/OpenCiv2                 (needs a C compiler, SDL2, and unshield's and
+                                           zlib's sources; on Windows (MSYS2) OpenCiv2.exe
+                                           and SDL2.dll)
   exe-windows  build/OpenCiv2.exe         cross-compiled with MinGW-w64 (e.g. on
                                            Linux; tools/fetch-toolchain.sh windows)
   pack     dist/OpenCiv2-src.tar.gz       what the exe step needs on another
@@ -21,7 +22,8 @@ machine and run only the exe step there (the pack step bundles it).
 Usage: build_port.py [module] [c] [exe] [exe-windows] [pack]   (default: module c exe)
 wasi-sdk and wabt: tools/fetch-toolchain.sh downloads them (or set WASI_SDK
 and WABT; see tools/paths.py).  Environment: CC (default cc; on macOS the
-Command Line Tools' clang), JOBS.
+Command Line Tools' clang), CFLAGS, LDFLAGS, SDL2_CONFIG (an sdl2-config),
+SDL2_STATIC=1 (SDL2 linked in), JOBS.
 """
 import concurrent.futures
 import glob
@@ -145,7 +147,10 @@ def exe(cross_windows=False):
         obj = OBJ + '-windows'
     else:
         cc = os.environ.get('CC') or default_cc()
-        sdl = subprocess.run(['sdl2-config', '--cflags', '--libs'], capture_output=True, text=True,
+        # (SDL2_CONFIG: another SDL2's sdl2-config; SDL2_STATIC=1: linked in)
+        static = bool(os.environ.get('SDL2_STATIC'))
+        sdl = subprocess.run([os.environ.get('SDL2_CONFIG') or 'sdl2-config', '--cflags',
+                              '--static-libs' if static else '--libs'], capture_output=True, text=True,
                              check=True).stdout.split()
         sdl_cflags = [f for f in sdl if f.startswith(('-I', '-D'))]
         sdl_libs = [f for f in sdl if not f.startswith(('-I', '-D'))]
@@ -161,24 +166,26 @@ def exe(cross_windows=False):
     rt = [os.path.join(CDIR, f) for f in ('wasm-rt-impl.c', 'wasm-rt-mem-impl.c', 'wasm-rt-exceptions-impl.c')]
     # (the native menu bar: Win32 on Windows, Cocoa on macOS)
     mac = sys.platform == 'darwin' and not cross_windows
-    # (Windows: the set-up of the game from the user's copy, src/host/setup.h,
-    # with unshield and zlib for the CD's cabinet: their sources, from
-    # tools/fetch-toolchain.sh windows)
+    # (the set-up of the game from the user's copy, src/host/setup.h, with
+    # unshield and zlib for the CD's cabinet: their sources, from
+    # tools/fetch-toolchain.sh)
     host = [os.path.join(ROOT, 'src', 'host', f) for f in
-            ('port_main.c', 'wasi.c', 'host_sdl.c') + (('host_menu_win.c', 'setup_win.c') if windows else ()) +
-            (('host_menu_mac.m',) if mac else ())]
-    third, third_inc = [], []
-    if windows:
-        if not os.path.exists(os.path.join(paths.UNSHIELD, 'lib', 'libunshield.c')):
-            sys.exit('no unshield and zlib sources: run tools/fetch-toolchain.sh windows')
-        third = (sorted(glob.glob(os.path.join(paths.UNSHIELD, 'lib', '*.c'))) +
-                 [os.path.join(paths.UNSHIELD, 'lib', 'md5', 'md5c.c')] +
-                 [os.path.join(paths.ZLIB, f + '.c') for f in ('adler32', 'crc32', 'inffast', 'inflate', 'inftrees',
-                                                              'zutil')])
-        third_inc = ['-I' + paths.UNSHIELD, '-I' + os.path.join(paths.UNSHIELD, 'lib'), '-I' + paths.ZLIB]
-    jobs = [(s, ['-O2', '-fno-strict-aliasing', '-w']) for s in gen + rt] + \
-           [(s, ['-O2', '-w'] + third_inc) for s in third] + \
-           [(s, ['-O2', '-Wall', '-Werror=implicit-function-declaration'] + sdl_cflags + third_inc +
+            ('port_main.c', 'wasi.c', 'host_sdl.c', 'setup.c') +
+            (('host_menu_win.c', 'setup_win.c') if windows else ('setup_unix.c',)) +
+            (('host_menu_mac.m', 'setup_mac.m') if mac else ())]
+    if not os.path.exists(os.path.join(paths.UNSHIELD, 'lib', 'libunshield.c')):
+        sys.exit('no unshield and zlib sources: run tools/fetch-toolchain.sh')
+    third = (sorted(glob.glob(os.path.join(paths.UNSHIELD, 'lib', '*.c'))) +
+             [os.path.join(paths.UNSHIELD, 'lib', 'md5', 'md5c.c')] +
+             [os.path.join(paths.ZLIB, f + '.c') for f in ('adler32', 'crc32', 'inffast', 'inflate', 'inftrees',
+                                                          'zutil')])
+    third_inc = ['-I' + paths.UNSHIELD, '-I' + os.path.join(paths.UNSHIELD, 'lib'), '-I' + paths.ZLIB]
+    # (CFLAGS, LDFLAGS: added, e.g. macOS's -arch for each architecture)
+    cflags = os.environ.get('CFLAGS', '').split()
+    jobs = [(s, ['-O2', '-fno-strict-aliasing', '-w'] + cflags) for s in gen + rt] + \
+           [(s, ['-O2', '-w'] + cflags + third_inc) for s in third] + \
+           [(s, ['-O2', '-Wall', '-Wno-format-truncation', '-Werror=implicit-function-declaration'] + cflags +
+             sdl_cflags + third_inc +
              (['-fobjc-arc'] if s.endswith('.m') else [])) for s in host]
 
     # Every file depends on the generated header too (the host's files
@@ -206,7 +213,7 @@ def exe(cross_windows=False):
         libs = ['-lole32', '-lshell32', '-luuid'] + libs
     if mac:
         libs += ['-framework', 'Cocoa']
-    run([cc, '-o', out] + objs + sdl_libs + libs)
+    run([cc, '-o', out] + cflags + os.environ.get('LDFLAGS', '').split() + objs + sdl_libs + libs)
     if sdl_dll and os.path.exists(sdl_dll):
         shutil.copy(sdl_dll, os.path.join(ROOT, 'build'))      # the game runs with SDL2.dll beside it
     print('built %s' % os.path.relpath(out, ROOT))
@@ -218,7 +225,8 @@ def pack():
     os.makedirs(os.path.dirname(out), exist_ok=True)
     with tarfile.open(out, 'w:gz') as t:
         for rel in ('build/wasm/c', 'src/host', 'src/platform/win32_vk.h', 'tools/build_port.py',
-                    'tools/paths.py', 'tools/run-civ2.sh', 'data/native', 'harness/CIV2.DAT', 'README.md'):
+                    'tools/paths.py', 'tools/run-civ2.sh', 'tools/toolchain/unshield', 'tools/toolchain/zlib',
+                    'data/native', 'harness/CIV2.DAT', 'README.md'):
             t.add(os.path.join(ROOT, rel), arcname=os.path.join('OpenCiv2', rel))
     print('wrote %s (%d MB)' % (os.path.relpath(out, ROOT), os.path.getsize(out) >> 20))
 
