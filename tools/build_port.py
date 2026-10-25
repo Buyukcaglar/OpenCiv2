@@ -138,10 +138,16 @@ def exe(cross_windows=False):
            [(s, ['-O2', '-Wall', '-Werror=implicit-function-declaration'] + sdl_cflags +
              (['-fobjc-arc'] if s.endswith('.m') else [])) for s in host]
 
+    # Every file depends on the generated header too (the host's files
+    # declare the module struct from it: a stale one instantiates a module
+    # of the old size over the host's other data).
+    header = os.path.join(CDIR, 'civ2_wasm.h')
+
     def compile_one(job):
         src, flags = job
         o = os.path.join(obj, os.path.basename(src) + '.o')
-        if not os.path.exists(o) or os.path.getmtime(o) < os.path.getmtime(src):
+        deps = [src] + ([header] if os.path.exists(header) else [])
+        if not os.path.exists(o) or os.path.getmtime(o) < max(os.path.getmtime(d) for d in deps):
             subprocess.run([cc, '-c', '-o', o, src, '-I', CDIR, '-I', os.path.join(ROOT, 'src', 'host')] + flags,
                            check=True)
         return o
