@@ -180,6 +180,95 @@ static void add_file_sections(const char *file)
     text_close_file();
 }
 
+/* RULES.TXT, its names: per section the lines the rules loaders read
+   (rules_load_*, rules_parse_sections), their names the tokens they put in
+   the string pool.  Read once, from the game's RULES.TXT (the rules of a
+   scenario with its own are read from it, names and all). */
+static void rules_section_names(const char *section, int count, const char *format, int stop_at_blank)
+{
+    char key[64];
+    int i;
+    if (text_open_section(0, section) != 0)
+        return;
+    for (i = 0; i < count; i++) {
+        i8 *line = text_read_line(1);
+        if (stop_at_blank && (!line || !*line || *line == ';'))
+            break;
+        snprintf(key, sizeof key, format, i);
+        set_english(key, (const char *)text_next_token());
+    }
+}
+
+void lang_load_rules(void)
+{
+    static int loaded;
+    char key[64];
+    int i, g;
+    i8 *line;
+
+    if (loaded)
+        return;
+    loaded = 1;
+    if (text_open_section("RULES", 0) != 0)
+        return;
+    rules_section_names("CIVILIZE", 100, "rules.advance.%d", 1);
+    rules_section_names("IMPROVE", 67, "rules.improvement.%d", 0);
+    rules_section_names("UNITS", 62, "rules.unit.%d", 1);
+    rules_section_names("TERRAIN", 33, "rules.terrain.%d", 0);
+    if (text_open_section(0, "GOVERNMENTS") == 0)
+        for (i = 0; i < 7; i++) {
+            text_read_line(1);
+            snprintf(key, sizeof key, "rules.government.%d", i);
+            set_english(key, (const char *)text_next_token());
+            snprintf(key, sizeof key, "rules.government.%d.male", i);
+            set_english(key, (const char *)text_next_token());
+            snprintf(key, sizeof key, "rules.government.%d.female", i);
+            set_english(key, (const char *)text_next_token());
+        }
+    if (text_open_section(0, "LEADERS") == 0)
+        for (i = 0; i < 21; i++) {
+            static const char *const fields[] = {"male", "female", 0, 0, 0, "plural", "adjective", 0, 0, 0};
+            size_t f;
+            text_read_line(1);
+            for (f = 0; f < sizeof fields / sizeof fields[0]; f++) {
+                if (!fields[f]) {
+                    text_next_int();
+                    continue;
+                }
+                snprintf(key, sizeof key, "rules.leader.%d.%s", i, fields[f]);
+                set_english(key, (const char *)text_next_token());
+            }
+            while ((g = text_next_int()) > 0) {
+                snprintf(key, sizeof key, "rules.leader.%d.title.%d.male", i, g);
+                set_english(key, (const char *)text_next_token());
+                snprintf(key, sizeof key, "rules.leader.%d.title.%d.female", i, g);
+                set_english(key, (const char *)text_next_token());
+            }
+        }
+    rules_section_names("CARAVAN", 16, "rules.commodity.%d", 0);
+    if (text_open_section(0, "ORDERS") == 0)
+        for (i = 1; i < 13; i++) {
+            text_read_line(1);
+            snprintf(key, sizeof key, "rules.order.%d", i);
+            set_english(key, (const char *)text_next_token());
+            snprintf(key, sizeof key, "rules.order.%d.key", i);
+            set_english(key, (const char *)text_next_token());
+        }
+    if (text_open_section(0, "DIFFICULTY") == 0)
+        for (i = 0; i < 6; i++) {
+            line = text_read_line(1);
+            snprintf(key, sizeof key, "rules.difficulty.%d", i);
+            set_english(key, line ? (const char *)line : "");
+        }
+    if (text_open_section(0, "ATTITUDES") == 0)
+        for (i = 0; i < 9; i++) {
+            line = text_read_line(1);
+            snprintf(key, sizeof key, "rules.attitude.%d", i);
+            set_english(key, line ? (const char *)line : "");
+        }
+    text_close_file();
+}
+
 /* "@ADVANCE_INDEX", "ADVANCE_DESCRIPTIONS", "TERRAIN_INDEX": the group of
    descriptions, "ADVANCE" ... (DESCRIBE.TXT's terrain is in the section
    TERRAIN_AND_RESOURCE_DESCRIPTIONS, after its @@TERRAIN_INDEX). */
@@ -263,6 +352,7 @@ static void export_english(void)
         for (i = 0; i < sizeof section_files / sizeof section_files[0]; i++)
             add_file_sections(section_files[i]);
         add_descriptions();
+        lang_load_rules();
     }
     if (!(f = fopen(path, "w")))
         return;

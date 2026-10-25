@@ -43,6 +43,9 @@ void lang_add_labels(int count);
 /* The translation of the string pool's string_id (a label), or 0. */
 char *lang_pool_text(int string_id);
 
+/* The English names of the rules (RULES.TXT; their keys: rules.h), once. */
+void lang_load_rules(void);
+
 /* The Civilopedia's description (DESCRIBE.TXT) of entry (its @@ line's
    name) in the group whose index pedia_load_description looked for
    ("@ADVANCE_INDEX", "CONCEPT_DESCRIPTIONS", ...): its translation (key
