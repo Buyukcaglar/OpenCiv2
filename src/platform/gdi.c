@@ -951,7 +951,10 @@ WINBOOL WINAPI MoveToEx(HDC h, int x, int y, LPPOINT old)
     return TRUE;
 }
 
-/* Bresenham, last point excluded, as GDI draws lines. */
+/* Bresenham, last point excluded, as GDI draws lines: Wine's dibdrv
+ * (bres_line_with_bias, init_bres_params), where a tie in the decision
+ * variable steps the minor axis only in octants 3, 5, 6 and 8 (get_bias),
+ * so a slope of 1/2 rounds the same way as on Windows. */
 WINBOOL WINAPI LineTo(HDC h, int x1, int y1)
 {
     API_TRACE();
@@ -959,7 +962,7 @@ WINBOOL WINAPI LineTo(HDC h, int x1, int y1)
     Pen *pen;
     Region clip = {0, 0, NULL};
     Bitmap *b;
-    int x0, y0, dx, dy, sx, sy, err;
+    int x0, y0, dx, dy, adx, ady, sx, sy, err, add1, add2, len, bias, xmajor, oct;
     COLORREF c;
     if (!dc)
         return FALSE;
@@ -972,21 +975,40 @@ WINBOOL WINAPI LineTo(HDC h, int x1, int y1)
         return TRUE;
     c = dc_resolve_color(dc, pen->color);
     dc_clip(dc, &clip, &b);
-    dx = abs(x1 - x0); dy = -abs(y1 - y0);
-    sx = x0 < x1 ? 1 : -1; sy = y0 < y1 ? 1 : -1;
-    err = dx + dy;
-    while (x0 != x1 || y0 != y1) {
+    dx = x1 - x0; dy = y1 - y0;
+    adx = abs(dx); ady = abs(dy);
+    sx = dx > 0 ? 1 : -1; sy = dy > 0 ? 1 : -1;
+    if (dy > 0)
+        oct = dx > 0 ? (dx > dy ? 1 : 2) : (-dx > dy ? 4 : 3);
+    else
+        oct = dx < 0 ? (-dx > -dy ? 5 : 6) : (dx > -dy ? 8 : 7);
+    bias = (1 << (oct - 1)) & 0xb4 ? 1 : 0;
+    xmajor = adx > ady;
+    if (xmajor) {
+        err = 2 * ady - adx; add1 = 2 * ady - 2 * adx; add2 = 2 * ady; len = adx;
+    } else {
+        err = 2 * adx - ady; add1 = 2 * adx - 2 * ady; add2 = 2 * adx; len = ady;
+    }
+    while (len--) {
         int px = x0 + dc->origin.x, py = y0 + dc->origin.y, i;
         for (i = 0; i < clip.n; i++)
             if (px >= clip.r[i].left && px < clip.r[i].right && py >= clip.r[i].top && py < clip.r[i].bottom) {
                 surf_put(b, px, py, c);
                 break;
             }
-        {
-            int e2 = 2 * err;
-            if (e2 >= dy) { err += dy; x0 += sx; }
-            if (e2 <= dx) { err += dx; y0 += sy; }
+        if (err + bias > 0) {
+            if (xmajor)
+                y0 += sy;
+            else
+                x0 += sx;
+            err += add1;
+        } else {
+            err += add2;
         }
+        if (xmajor)
+            x0 += sx;
+        else
+            y0 += sy;
     }
     rgn_free(&clip);
     return TRUE;

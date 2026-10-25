@@ -124,6 +124,79 @@ static void edit_origin(Window *w, int *x, int *y)
     *y = f && ch >= text_height(f) + 2 * bw ? bw : 0;
 }
 
+/* The format rectangle Wine clips the text to (EDIT_SetRectNP,
+ * EDIT_AdjustFormatRect): the origin above, the right margin, and for a
+ * multiline edit whole lines only. */
+static void edit_format_rect(Window *w, RECT *fr)
+{
+    Edit *e = edit_of(w);
+    FontFace *f = font_face_of(e->font);
+    int bw = e->border ? GetSystemMetrics(SM_CXBORDER) + 1 : 0, x, y;
+    RECT c;
+    GetClientRect(w->hwnd, &c);
+    edit_origin(w, &x, &y);
+    fr->left = x;
+    fr->top = y;
+    fr->right = c.right - bw - e->right_margin;
+    fr->bottom = c.bottom - y;
+    if (fr->right < fr->left + 1)
+        fr->right = fr->left + 1;
+    if ((w->style & ES_MULTILINE) && f && text_height(f)) {
+        int vlc = (fr->bottom - fr->top) / text_height(f);
+        fr->bottom = fr->top + (vlc > 1 ? vlc : 1) * text_height(f);
+    } else if (fr->bottom > c.bottom) {
+        fr->bottom = c.bottom;
+    }
+}
+
+/* Uniscribe's itemization as Wine's EDIT draws a line with it
+ * (ScriptStringOut, tools/probe/uspprobe.c): runs of one class -- letters,
+ * digits, and two classes of punctuation -- with spaces joining the run
+ * before them (leading ones the run after).  Bytes as code page 1252. */
+static int edit_char_class(unsigned char c)
+{
+    static const char p1[] = "!\"%()*+-./:=[]", p2[] = "#$&',;<>?@\\^_`{|}~";
+    if (c == ' ')
+        return 0;
+    if ((c >= '0' && c <= '9') || c == 0xa0)
+        return 3;
+    if (c < 0x80 && c && strchr(p1, c))
+        return 1;
+    if (c < 0x80 ? c && strchr(p2, c) != NULL : (c >= 0xa1 && c <= 0xbf) || c == 0xd7 || c == 0xf7)
+        return c == 0xad || c == 0xb2 || c == 0xb3 || c == 0xb9 ? 5 : 2;
+    if (c < 0x20 || c == 0x81 || c == 0x8d || c == 0x8f || c == 0x90 || c == 0x9d)
+        return 5;
+    return 4;
+}
+
+/* The end of the item that starts at s[i] (i < end). */
+static int edit_item_end(const char *s, int i, int end)
+{
+    int cls = 0;
+    for (; i < end; i++) {
+        int k = edit_char_class((unsigned char)s[i]);
+        if (k && cls && k != cls)
+            break;
+        if (k)
+            cls = k;
+    }
+    return i;
+}
+
+/* Unselected text, item by item: each is an ExtTextOut of its own, so in
+ * OPAQUE mode its background box covers the overhang of the item before
+ * (a 't' before a '.'). */
+static void edit_draw_items(DC *dc, FontFace *f, int x, int y, const char *s, int n, const RECT *clip)
+{
+    int i = 0;
+    while (i < n) {
+        int j = edit_item_end(s, i, n);
+        text_draw(dc, x, y, s + i, j - i, clip);
+        x += text_width(f, s + i, j - i);
+        i = j;
+    }
+}
+
 /* WM_SETFONT: Wine's default margins for a TrueType font -- half the
  * average character width (GdiGetCharDimensions) -- if they fit. */
 static void edit_font_margins(Window *w)
@@ -208,7 +281,8 @@ static int edit_layout(Window *w, int *starts, int *lens)
 static void edit_paint(Window *w, HDC hdc)
 {
     Edit *e = edit_of(w);
-    RECT r;
+    RECT r, clip;
+    int mode;
     FontFace *f = font_face_of(e->font);
     HBRUSH br;
     int x, y, a, b, margin;
@@ -234,6 +308,11 @@ static void edit_paint(Window *w, HDC hdc)
     }
     (void)margin;
     edit_origin(w, &x, &y);
+    /* Wine clips the text to the format rectangle (and the client area)
+       and draws it in the DC's background mode, as WM_CTLCOLOR* left it. */
+    edit_format_rect(w, &clip);
+    IntersectRect(&clip, &clip, &r);
+    mode = dc_get(hdc)->bk_mode;
     a = e->sel_start < e->sel_end ? e->sel_start : e->sel_end;
     b = e->sel_start < e->sel_end ? e->sel_end : e->sel_start;
     if (!e->focused && !(w->style & ES_NOHIDESEL))
@@ -252,10 +331,9 @@ static void edit_paint(Window *w, HDC hdc)
                 wnd_nc_paint(w);
             }
         }
-        SetBkMode(hdc, TRANSPARENT);
         for (l = 0; l < n; l++) {
             int lx = x, ly = y + l * text_height(f), i = starts[l], end = starts[l] + lens[l];
-            if (ly >= r.bottom)
+            if (ly >= clip.bottom)
                 break;
             while (i < end) {
                 int run = i, sel = i >= a && i < b, wdt;
@@ -267,10 +345,13 @@ static void edit_paint(Window *w, HDC hdc)
                     hl.left = lx; hl.right = lx + wdt; hl.top = ly; hl.bottom = ly + text_height(f);
                     dc_fill_rect(dc, &hl, GetSysColor(COLOR_HIGHLIGHT));
                     SetTextColor(hdc, GetSysColor(COLOR_HIGHLIGHTTEXT));
+                    SetBkMode(hdc, TRANSPARENT);
+                    text_draw(dc, lx, ly, e->text + i, run - i, &clip);
+                    SetBkMode(hdc, mode);
                 } else {
                     SetTextColor(hdc, GetSysColor(COLOR_WINDOWTEXT));
+                    edit_draw_items(dc, f, lx, ly, e->text + i, run - i, &clip);
                 }
-                text_draw(dc, lx, ly, e->text + i, run - i, &r);
                 lx += wdt;
                 i = run;
             }
@@ -285,7 +366,6 @@ static void edit_paint(Window *w, HDC hdc)
     {
         DC *dc = dc_get(hdc);
         int first = (w->style & ES_MULTILINE) ? 0 : e->first, i;
-        SetBkMode(hdc, TRANSPARENT);
         x -= 0;
         for (i = first; i < e->len; ) {
             int run = i, sel = i >= a && i < b;
@@ -298,10 +378,13 @@ static void edit_paint(Window *w, HDC hdc)
                     hl.left = x; hl.right = x + wdt; hl.top = y; hl.bottom = y + text_height(f);
                     dc_fill_rect(dc, &hl, GetSysColor(COLOR_HIGHLIGHT));
                     SetTextColor(hdc, GetSysColor(COLOR_HIGHLIGHTTEXT));
+                    SetBkMode(hdc, TRANSPARENT);
+                    text_draw(dc, x, y, e->text + i, run - i, &clip);
+                    SetBkMode(hdc, mode);
                 } else {
                     SetTextColor(hdc, GetSysColor(COLOR_WINDOWTEXT));
+                    edit_draw_items(dc, f, x, y, e->text + i, run - i, &clip);
                 }
-                text_draw(dc, x, y, e->text + i, run - i, &r);
                 x += wdt;
             }
             i = run;
@@ -712,6 +795,54 @@ static void lb_set_cur(Window *w, int i, int scroll)
     InvalidateRect(w->hwnd, NULL, TRUE);
 }
 
+/* Focus in and out: Wine does not repaint the list but draws the caret
+ * item's focus rectangle (an inversion) through GetDC at once --
+ * LISTBOX_DrawFocusRect on WM_SETFOCUS, LISTBOX_RepaintItem(ODA_FOCUS),
+ * which asks the owner for WM_CTLCOLORLISTBOX, on WM_KILLFOCUS.  A WM_PAINT
+ * later would draw the whole list over overlapping siblings (the effects
+ * editor's buttons). */
+static void lb_draw_focus(Window *w, int on)
+{
+    ListBox *lb = lb_of(w);
+    int fi = lb->cur >= 0 ? lb->cur : 0, owner = (w->style & (LBS_OWNERDRAWFIXED | LBS_OWNERDRAWVARIABLE)) != 0;
+    RECT r, it;
+    HDC hdc;
+    if (!lb->n) {                   /* the empty list's caret: as before */
+        InvalidateRect(w->hwnd, NULL, FALSE);
+        return;
+    }
+    if (on && !IsWindowVisible(w->hwnd))
+        return;
+    GetClientRect(w->hwnd, &r);
+    it.left = 0; it.right = r.right;
+    it.top = (fi - lb->top) * lb->item_h; it.bottom = it.top + lb->item_h;
+    if (fi >= lb->n || it.top >= r.bottom || it.bottom <= 0 || r.right <= 0)
+        return;
+    hdc = GetDC(w->hwnd);
+    SelectObject(hdc, lb->font);
+    if (!on && w->parent && w->parent != desktop)
+        SendMessageA(w->parent->hwnd, WM_CTLCOLORLISTBOX, (WPARAM)hdc, (LPARAM)w->hwnd);
+    if (owner) {
+        int sel = (w->style & (LBS_MULTIPLESEL | LBS_EXTENDEDSEL)) ? lb->items[fi].sel : fi == lb->cur;
+        DRAWITEMSTRUCT_ di;
+        memset(&di, 0, sizeof di);
+        di.CtlType = ODT_LISTBOX;
+        di.CtlID = (UINT)(uintptr_t)w->menu;
+        di.itemID = (UINT)fi;
+        di.itemAction = ODA_FOCUS;
+        di.itemState = (sel ? ODS_SELECTED : 0) | (on ? ODS_FOCUS : 0);
+        di.hwndItem = w->hwnd;
+        di.hDC = hdc;
+        di.rcItem = it;
+        di.itemData = lb->items[fi].data;
+        if (w->parent)
+            SendMessageA(w->parent->hwnd, WM_DRAWITEM, di.CtlID, (LPARAM)&di);
+    } else {
+        focus_rect(hdc, &it);
+    }
+    ReleaseDC(w->hwnd, hdc);
+}
+
 LRESULT ctl_listbox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
 {
     Window *w = wnd_get(h);
@@ -762,8 +893,8 @@ LRESULT ctl_listbox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
         return 0;
     case WM_GETFONT:
         return (LRESULT)lb->font;
-    case WM_SETFOCUS: lb->focused = 1; InvalidateRect(h, NULL, FALSE); notify(h, LBN_SETFOCUS); return 0;
-    case WM_KILLFOCUS: lb->focused = 0; InvalidateRect(h, NULL, FALSE); notify(h, LBN_KILLFOCUS); return 0;
+    case WM_SETFOCUS: lb->focused = 1; lb_draw_focus(w, 1); notify(h, LBN_SETFOCUS); return 0;
+    case WM_KILLFOCUS: lb->focused = 0; lb_draw_focus(w, 0); notify(h, LBN_KILLFOCUS); return 0;
     case WM_GETDLGCODE: return DLGC_WANTARROWS | DLGC_WANTCHARS;
     case WM_PAINT: {
         PAINTSTRUCT ps;
@@ -1066,10 +1197,10 @@ static void combo_paint(Window *w, Combo *c, HDC hdc)
     SetBkMode(hdc, TRANSPARENT);
     SetTextColor(hdc, GetSysColor(!IsWindowEnabled(w->hwnd) ? COLOR_GRAYTEXT :
                                   hilite ? COLOR_HIGHLIGHTTEXT : COLOR_WINDOWTEXT));
-    in = text;
-    in.left++;
-    in.top++;
-    DrawTextA(hdc, s, -1, &in, DT_SINGLELINE | DT_NOPREFIX);
+    /* Wine's CBPaintText: ExtTextOut at (left + 1, top + 1) of the text
+       rect, ETO_CLIPPED to the text rect itself (a glyph's negative left
+       bearing shows in its first column). */
+    text_draw(dc_get(hdc), text.left + 1, text.top + 1, s, (int)strlen(s), &text);
 }
 
 static void combo_close(Window *w, Combo *c, int ok, int old)
