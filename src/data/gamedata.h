@@ -2250,7 +2250,7 @@ extern u8 str_empty_157[4];
 extern char str_slam[8];
 extern char str_empty_158[12];
 extern i32 council_video_busy_i32;
-extern PictureWindow *council_wnd;
+extern CouncilWindow *council_wnd;
 extern char council_active;
 extern u8 council_active_rest[3];
 extern u8 str_empty_159[4];
@@ -3933,7 +3933,7 @@ struct minimap_window_block {
     int mapgen_land_placed;  /* 0063cba4 */
     u8 mapgen_land_placed_rest[8];
     int taxrate_dialog_active;  /* 0063cbb0 */
-    ViewWindow *taxrate_dlg;  /* 0063cbb4 */
+    TaxRateDialog *taxrate_dlg;  /* 0063cbb4 */
     u8 taxrate_dlg_rest[8];
     i32 eot_blink_timer;  /* 0063cbc0 */
     i32 unit_blink_timer;  /* 0063cbc4 */
@@ -4583,8 +4583,7 @@ struct civ_primary_colors_block {
 extern struct civ_primary_colors_block civ_primary_colors_block;
 #pragma pack(push, 1)
 struct main_frame_wnd_block {
-    WndBase main_frame_wnd;  /* 006553d8 */
-    i8 main_frame_base_wnd[168];  /* 006553e8 */
+    ModalMenuWindow main_frame_wnd;  /* 006553d8 */
     OrderName order_names[13];  /* 00655490 */
     Leader leaders[21];  /* 006554f8 */
     i8 game_txt_path[256];  /* 006558e8 */
@@ -5183,9 +5182,7 @@ struct main_menu_block {
 extern struct main_menu_block main_menu_block;
 #pragma pack(push, 1)
 struct pedia_window_block {
-    DibSurface pedia_window;  /* 006a6668 */
-    Wnd pedia_window_wnd;  /* 006a66b0 */
-    u32 pedia_window_on_paint;  /* 006a6778 SurfaceWindow.on_paint */
+    SurfaceWindow pedia_window;  /* 006a6668 the PediaWindow's SurfaceWindow; its members follow */
     int pedia_closed;  /* 006a677c */
     i32 pedia_category;  /* 006a6780 */
     i32 pedia_page_mode;  /* 006a6784 */

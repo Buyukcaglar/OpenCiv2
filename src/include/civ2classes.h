@@ -409,12 +409,8 @@ typedef struct EndgameMovieWindow : ModalMenuWindow {
 } EndgameMovieWindow;
 static_assert(sizeof(EndgameMovieWindow) == 0x137c, "");
 
-/* 39 methods, size 0x4 */
-typedef struct WindowObjectView {
-    union { u32 field_0; u32 vtable; };
-} WindowObjectView;
-
-/* 109 methods, size 0x48 */
+/* A drawing surface (surface_ctor 005bd630, 0x48 bytes): a DIB section and its
+   clip rectangle. */
 typedef struct DibSurface {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
@@ -435,1627 +431,7 @@ typedef struct DibSurface {
     union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
 } DibSurface;
-
-/* 10 methods, size 0x114 */
-typedef struct SurfaceWindow {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-} SurfaceWindow;
-
-/* 11 methods, size 0x11c */
-typedef struct ListPaneWindow {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-} ListPaneWindow;
-
-/* 1 methods, size 0x120 */
-typedef struct PediaRedrawView {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    u8 pad_120[248];
-    u32 caption_button_slots[34];
-    u8 pedia_history_modes[128];
-    u32 civ_muted_flags[31];
-    u8 pedia_pane_layout[220];
-    u8 numeric_edit_controls_area[1];
-} PediaRedrawView;
-
-/* 16 methods, size 0x12c */
-typedef struct ScaledWindowView {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    union { u8 pad_104[12]; struct { u8 pedia_history_base[12]; }; };
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-} ScaledWindowView;
-
-/* 4 methods, size 0x174 */
-typedef struct ParleyWindowLayout {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 client_width; };
-    union { u32 field_130; u32 client_height; };
-    u8 pad_134[4];
-    union { u32 field_138; u32 dlg_width; };
-    u8 pad_13c[4];
-    union { u32 field_140; u32 panel_rect; };
-    union { u32 field_144; u32 panel_top; };
-    union { u32 field_148; u32 panel_right; };
-    union { u32 field_14c; u32 panel_bottom; };
-    union { uptr field_150; uptr init_rect; };
-    union { u32 field_154; u32 large_layout; };
-    union { u32 field_158; u32 built_layout; };
-    union { u8 pad_15c[24]; struct { u32 parley_title; u8 gap_160[20]; }; };
-} ParleyWindowLayout;
-
-/* 5 methods, size 0x208 */
-typedef struct PortraitDialog {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 client_width; };
-    union { u32 field_130; u32 client_height; };
-    u8 pad_134[4];
-    union { u32 field_138; u32 dlg_width; };
-    u8 pad_13c[4];
-    union { u32 field_140; u32 panel_rect; };
-    union { u32 field_144; u32 panel_top; };
-    union { u32 field_148; u32 panel_right; };
-    union { u32 field_14c; u32 panel_bottom; };
-    union { uptr field_150; uptr init_rect; };
-    union { u32 field_154; u32 large_layout; };
-    union { u32 field_158; u32 built_layout; };
-    union { u8 pad_15c[92]; struct { u8 parley_title[24]; u8 topic_history_area[36]; u8 accept_button_2[32]; }; };
-    union { u8 field_1b8; u8 timer_text; };
-    u8 pad_1b9[1];
-    union { u8 field_1ba; u8 timer_colon; };
-    union { u8 field_1bb; u8 timer_seconds_text; };
-    union { u8 pad_1bc[32]; struct { u8 timer_seconds_digits[24]; u8 portrait_dll[8]; }; };
-    union { u32 field_1dc; u32 portrait_civ; };
-    union { u32 field_1e0; u32 show_turn_timer; };
-    union { u32 field_1e4; u32 show_turn_status; };
-    union { u32 field_1e8; u32 timer_last_value; };
-    union { u32 field_1ec; u32 session_mode; };
-    union { u32 field_1f0; u32 left_civ; };
-    union { u32 field_1f4; u32 right_civ; };
-    union { u32 field_1f8; u32 shown_left_civ; };
-    union { u32 field_1fc; u32 caption_button_count; };
-    union { u8 pad_200[8]; struct { u8 pane_selection_flags_area[8]; }; };
-} PortraitDialog;
-
-/* 35 methods, size 0x2e4 */
-typedef struct FrameWindow {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 client_width; };
-    union { u32 field_130; u32 client_height; };
-    union { u8 pad_134[4]; struct { u8 frame_title[4]; }; };
-    union { u32 field_138; u32 dlg_width; };
-    u8 pad_13c[4];
-    union { u32 field_140; u32 panel_rect; };
-    union { u32 field_144; u32 panel_top; };
-    union { u32 field_148; u32 panel_right; };
-    union { u32 field_14c; u32 panel_bottom; };
-    union { uptr field_150; uptr init_rect; };
-    union { u32 field_154; u32 large_layout; };
-    union { u32 field_158; u32 built_layout; };
-    u8 pad_15c[92];
-    union { u8 field_1b8; u8 timer_text; };
-    union { u8 pad_1b9[1]; struct { u8 timer_minutes_text[1]; }; };
-    union { u8 field_1ba; u8 timer_colon; };
-    union { u8 field_1bb; u8 timer_seconds_text; };
-    union { u8 pad_1bc[32]; struct { u8 timer_seconds_digits[32]; }; };
-    union { u32 field_1dc; u32 portrait_civ; };
-    union { u32 field_1e0; u32 show_turn_timer; };
-    union { u32 field_1e4; u32 show_turn_status; };
-    union { u32 field_1e8; u32 timer_last_value; };
-    union { u32 field_1ec; u32 session_mode; };
-    union { u32 field_1f0; u32 left_civ; };
-    union { u32 field_1f4; u32 right_civ; };
-    union { u32 field_1f8; u32 shown_left_civ; };
-    union { u32 field_1fc; u32 caption_button_count; };
-    union { u8 pad_200[8]; struct { u8 pane_selection_flags_area[8]; }; };
-    union { u32 field_208; u32 saved_mode_choice; };
-    union { u32 field_20c; u32 left_exchange_kind; };
-    union { u32 field_210; u32 right_exchange_kind; };
-    union { u32 field_214; u32 demand_choice; };
-    union { u32 field_218; u32 treaty_type_choice; };
-    union { u32 field_21c; u32 gift_choice; };
-    union { u32 field_220; u32 exchange_choice; };
-    union { u32 field_224; u32 side0_amount; };
-    union { u32 field_228; u32 side0_amount_init; };
-    union { u32 field_22c; u32 side1_amount; };
-    union { u32 field_230; u32 side1_amount_init; };
-    union { uptr field_234; uptr item_buffer; };
-    union { u32 field_238; u32 techs_all_known; };
-    union { u8 pad_23c[24]; struct { u8 gap_23c[20]; u8 close_caption_sprite_slot[4]; }; };
-    union { u32 field_254; u32 text_offset_y; };
-    u8 pad_258[24];
-    union { u32 field_270; u32 list_font; };
-    u8 pad_274[24];
-    union { u32 field_28c; u32 reset_value_28c; };
-    union { uptr field_290; uptr close_button; };
-    union { uptr field_294; uptr side_text_edit; };
-    union { uptr field_298; uptr chat_input_edit; };
-    union { uptr field_29c; uptr chat_history_edit; };
-    union { uptr field_2a0; uptr send_button_value; };
-    union { uptr field_2a4; uptr clear_button_value; };
-    union { u32 field_2a8; u32 on_caption_button; };
-    union { u32 field_2ac; u32 frame_rect; };
-    union { u32 field_2b0; u32 frame_top; };
-    union { u32 field_2b4; u32 frame_right; };
-    union { u32 field_2b8; u32 frame_bottom; };
-    union { u32 field_2bc; u32 client_rect; };
-    union { u32 field_2c0; u32 client_top; };
-    u8 pad_2c4[8];
-    union { uptr field_2cc; uptr title_font; };
-    union { uptr field_2d0; uptr title_small_font; };
-    union { u8 pad_2d4[4]; struct { u8 editor_combo_boxes[4]; }; };
-    union { u32 field_2d8; u32 rates_civ; };
-    union { u32 field_2dc; u32 max_rate_value; };
-    union { u32 field_2e0; u32 tax_rate_sel; };
-} FrameWindow;
-
-/* 86 methods, size 0x430 */
-typedef struct ViewWindow {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 client_width; };
-    union { u32 field_130; u32 client_height; };
-    u8 pad_134[4];
-    union { u32 field_138; u32 dlg_width; };
-    u8 pad_13c[4];
-    union { u32 field_140; u32 panel_rect; };
-    union { u32 field_144; u32 panel_top; };
-    union { u32 field_148; u32 panel_right; };
-    union { u32 field_14c; u32 panel_bottom; };
-    union { uptr field_150; uptr init_rect; };
-    union { u32 field_154; u32 large_layout; };
-    union { u32 field_158; u32 built_layout; };
-    union { u8 pad_15c[92]; struct { u8 parley_title[92]; }; };
-    union { u8 field_1b8; u8 timer_text; };
-    u8 pad_1b9[1];
-    union { u8 field_1ba; u8 timer_colon; };
-    union { u8 field_1bb; u8 timer_seconds_text; };
-    u8 pad_1bc[32];
-    union { u32 field_1dc; u32 portrait_civ; };
-    union { u32 field_1e0; u32 show_turn_timer; };
-    union { u32 field_1e4; u32 show_turn_status; };
-    union { u32 field_1e8; u32 timer_last_value; };
-    union { u32 field_1ec; u32 session_mode; };
-    union { u32 field_1f0; u32 left_civ; };
-    union { u32 field_1f4; u32 right_civ; };
-    union { u32 field_1f8; u32 shown_left_civ; };
-    union { u32 field_1fc; u32 caption_button_count; };
-    union { u8 pad_200[8]; struct { u8 pane_selection_flags_area[8]; }; };
-    union { u32 field_208; u32 saved_mode_choice; };
-    union { u32 field_20c; u32 left_exchange_kind; };
-    union { u32 field_210; u32 right_exchange_kind; };
-    union { u32 field_214; u32 demand_choice; };
-    union { u32 field_218; u32 treaty_type_choice; };
-    union { u32 field_21c; u32 gift_choice; };
-    union { u32 field_220; u32 exchange_choice; };
-    union { u32 field_224; u32 side0_amount; };
-    union { u32 field_228; u32 side0_amount_init; };
-    union { u32 field_22c; u32 side1_amount; };
-    union { u32 field_230; u32 side1_amount_init; };
-    union { uptr field_234; uptr item_buffer; };
-    union { u32 field_238; u32 techs_all_known; };
-    union { u8 pad_23c[24]; struct { u8 parley_caption_buttons[20]; u8 close_caption_sprite_slot[4]; }; };
-    union { u32 field_254; u32 text_offset_y; };
-    union { u8 pad_258[24]; struct { u8 caption_button_hotspots[20]; u8 zoom_out_caption_sprite_slot[4]; }; };
-    union { u32 field_270; u32 list_font; };
-    u8 pad_274[24];
-    union { u32 field_28c; u32 reset_value_28c; };
-    union { uptr field_290; uptr close_button; };
-    union { uptr field_294; uptr side_text_edit; };
-    union { uptr field_298; uptr chat_input_edit; };
-    union { uptr field_29c; uptr chat_history_edit; };
-    union { uptr field_2a0; uptr send_button_value; };
-    union { uptr field_2a4; uptr clear_button_value; };
-    union { u32 field_2a8; u32 on_caption_button; };
-    union { u32 field_2ac; u32 frame_rect; };
-    union { u32 field_2b0; u32 frame_top; };
-    union { u32 field_2b4; u32 frame_right; };
-    union { u32 field_2b8; u32 frame_bottom; };
-    union { u32 field_2bc; u32 client_rect; };
-    union { u32 field_2c0; u32 client_top; };
-    union { u8 pad_2c4[8]; struct { u8 parley_checkboxes[8]; }; };
-    union { uptr field_2cc; uptr title_font; };
-    union { uptr field_2d0; uptr title_small_font; };
-    union { u8 pad_2d4[4]; struct { u8 editor_combo_boxes[4]; }; };
-    union { u32 field_2d8; u32 rates_civ; u32 map_view_index; };   /* map views: index in map_views (0 main) */
-    union { u32 field_2dc; u32 max_rate_value; };
-    union { u32 field_2e0; u32 tax_rate_sel; };
-    union { u32 field_2e4; u32 lux_rate_sel; };
-    union { uptr field_2e8; uptr sci_rate_sel; };
-    union { uptr field_2ec; uptr init_tax_rate; };
-    union { uptr field_2f0; uptr init_lux_rate; };
-    union { u32 field_2f4; u32 init_sci_rate; };
-    union { u32 field_2f8; u32 dialog_w; };
-    union { u32 field_2fc; u32 dialog_h; };
-    union { u32 field_300; u32 label_x_value; };
-    union { u32 field_304; u32 header_y_value; };
-    union { u32 field_308; u32 total_tax; };
-    union { u32 field_30c; u32 total_science; };
-    union { u32 field_310; u32 total_upkeep_value; };
-    union { u32 field_314; u32 margin_value; };
-    union { u32 field_318; u32 bar_gap; };
-    union { u32 field_31c; u32 bar_width_value; };
-    union { u32 field_320; u32 bar_height; };
-    union { u32 field_324; u32 button_row_width; };
-    union { u32 field_328; u32 button_area_height; };
-    union { u32 field_32c; u32 row_spacing_value; };
-    union { u32 field_330; u32 tax_label_y; };
-    union { u32 field_334; u32 lux_label_y; };
-    union { u32 field_338; u32 sci_label_y; };
-    union { u32 field_33c; u32 title_y_value; };
-    union { uptr field_340; uptr conceal_button_value; };
-    union { uptr field_344; uptr reveal_button_value; };
-    union { uptr field_348; uptr rates_clamped; };
-    union { uptr field_34c; uptr mode2_button_value; };
-    union { uptr field_350; uptr never_mind_button_value; };
-    union { uptr field_354; uptr intel_button_value; };
-    union { uptr field_358; uptr tax_scrollbar; };
-    union { uptr field_35c; uptr no_thanks_button_value; };
-    union { uptr field_360; uptr counter_button_value; };
-    union { u8 pad_364[56]; struct { u8 rate_values[8]; u8 sci_rate_combo[8]; u8 import_all_button[8]; u32 advance_list_scrollbars[2]; u32 advance_list_hotspots[5]; u8 lux_rate_scrollbar[4]; }; };
-    union { uptr field_39c; uptr left_accept_button; };
-    union { uptr field_3a0; uptr right_accept_button; };
-    union { uptr field_3a4; uptr left_agreed_button; };
-    union { uptr field_3a8; uptr right_agreed_button; };
-    union { u32 field_3ac; u32 fill_rect_left; };
-    union { u32 field_3b0; u32 fill_rect_top; };
-    union { u32 field_3b4; u32 fill_rect_right; };
-    union { u32 field_3b8; u32 fill_rect_bottom; };
-    union { u8 field_3bc; u8 right_side_accepted; };
-    union { u8 field_3bd; u8 left_side_accepted; };
-    union { u8 field_3be; u8 left_side_confirmed; };
-    union { u8 field_3bf; u8 remote_side_agreed; };
-    union { u8 pad_3c0[112]; struct { u32 advance_pane_rects[1]; u32 advance_pane_rect_top[1]; u32 advance_pane_rect_right[1]; u32 advance_pane_rect_bottom[2]; u8 picwnd_extra_button[4]; u8 sci_rate_scrollbar[8]; u32 advance_pane_columns[2]; u32 advance_pane_item_counts[2]; u32 advance_pane_items[8]; u8 picwnd_scrollbar[8]; u8 rate_lock_checkboxes[24]; }; };
-} ViewWindow;
-
-/* 1 methods, size 0x488 */
-typedef struct PictureWindowCore {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 client_width; };
-    union { u32 field_130; u32 client_height; };
-    u8 pad_134[4];
-    union { u32 field_138; u32 dlg_width; };
-    u8 pad_13c[4];
-    union { u32 field_140; u32 panel_rect; };
-    union { u32 field_144; u32 panel_top; };
-    union { u32 field_148; u32 panel_right; };
-    union { u32 field_14c; u32 panel_bottom; };
-    union { uptr field_150; uptr init_rect; };
-    union { u32 field_154; u32 large_layout; };
-    union { u32 field_158; u32 built_layout; };
-    u8 pad_15c[92];
-    union { u8 field_1b8; u8 timer_text; };
-    u8 pad_1b9[1];
-    union { u8 field_1ba; u8 timer_colon; };
-    union { u8 field_1bb; u8 timer_seconds_text; };
-    u8 pad_1bc[32];
-    union { u32 field_1dc; u32 portrait_civ; };
-    union { u32 field_1e0; u32 show_turn_timer; };
-    union { u32 field_1e4; u32 show_turn_status; };
-    union { u32 field_1e8; u32 timer_last_value; };
-    union { u32 field_1ec; u32 session_mode; };
-    union { u32 field_1f0; u32 left_civ; };
-    union { u32 field_1f4; u32 right_civ; };
-    union { u32 field_1f8; u32 shown_left_civ; };
-    union { u32 field_1fc; u32 caption_button_count; };
-    u8 pad_200[8];
-    union { u32 field_208; u32 saved_mode_choice; };
-    union { u32 field_20c; u32 left_exchange_kind; };
-    union { u32 field_210; u32 right_exchange_kind; };
-    union { u32 field_214; u32 demand_choice; };
-    union { u32 field_218; u32 treaty_type_choice; };
-    union { u32 field_21c; u32 gift_choice; };
-    union { u32 field_220; u32 exchange_choice; };
-    union { u32 field_224; u32 side0_amount; };
-    union { u32 field_228; u32 side0_amount_init; };
-    union { u32 field_22c; u32 side1_amount; };
-    union { u32 field_230; u32 side1_amount_init; };
-    union { uptr field_234; uptr item_buffer; };
-    union { u32 field_238; u32 techs_all_known; };
-    u8 pad_23c[24];
-    union { u32 field_254; u32 text_offset_y; };
-    u8 pad_258[24];
-    union { u32 field_270; u32 list_font; };
-    u8 pad_274[24];
-    union { u32 field_28c; u32 reset_value_28c; };
-    union { uptr field_290; uptr close_button; };
-    union { uptr field_294; uptr side_text_edit; };
-    union { uptr field_298; uptr chat_input_edit; };
-    union { uptr field_29c; uptr chat_history_edit; };
-    union { uptr field_2a0; uptr send_button_value; };
-    union { uptr field_2a4; uptr clear_button_value; };
-    union { u32 field_2a8; u32 on_caption_button; };
-    union { u32 field_2ac; u32 frame_rect; };
-    union { u32 field_2b0; u32 frame_top; };
-    union { u32 field_2b4; u32 frame_right; };
-    union { u32 field_2b8; u32 frame_bottom; };
-    union { u32 field_2bc; u32 client_rect; };
-    union { u32 field_2c0; u32 client_top; };
-    u8 pad_2c4[8];
-    union { uptr field_2cc; uptr title_font; };
-    union { uptr field_2d0; uptr title_small_font; };
-    u8 pad_2d4[4];
-    union { u32 field_2d8; u32 rates_civ; };
-    union { u32 field_2dc; u32 max_rate_value; };
-    union { u32 field_2e0; u32 tax_rate_sel; };
-    union { u32 field_2e4; u32 lux_rate_sel; };
-    union { uptr field_2e8; uptr sci_rate_sel; };
-    union { uptr field_2ec; uptr init_tax_rate; };
-    union { uptr field_2f0; uptr init_lux_rate; };
-    union { u32 field_2f4; u32 init_sci_rate; };
-    union { u32 field_2f8; u32 dialog_w; };
-    union { u32 field_2fc; u32 dialog_h; };
-    union { u32 field_300; u32 label_x_value; };
-    union { u32 field_304; u32 header_y_value; };
-    union { u32 field_308; u32 total_tax; };
-    union { u32 field_30c; u32 total_science; };
-    union { u32 field_310; u32 total_upkeep_value; };
-    union { u32 field_314; u32 margin_value; };
-    union { u32 field_318; u32 bar_gap; };
-    union { u32 field_31c; u32 bar_width_value; };
-    union { u32 field_320; u32 bar_height; };
-    union { u32 field_324; u32 button_row_width; };
-    union { u32 field_328; u32 button_area_height; };
-    union { u32 field_32c; u32 row_spacing_value; };
-    union { u32 field_330; u32 tax_label_y; };
-    union { u32 field_334; u32 lux_label_y; };
-    union { u32 field_338; u32 sci_label_y; };
-    union { u32 field_33c; u32 title_y_value; };
-    union { uptr field_340; uptr conceal_button_value; };
-    union { uptr field_344; uptr reveal_button_value; };
-    union { uptr field_348; uptr rates_clamped; };
-    union { uptr field_34c; uptr mode2_button_value; };
-    union { uptr field_350; uptr never_mind_button_value; };
-    union { uptr field_354; uptr intel_button_value; };
-    union { uptr field_358; uptr tax_scrollbar; };
-    union { uptr field_35c; uptr no_thanks_button_value; };
-    union { uptr field_360; uptr counter_button_value; };
-    u8 pad_364[56];
-    union { uptr field_39c; uptr left_accept_button; };
-    union { uptr field_3a0; uptr right_accept_button; };
-    union { uptr field_3a4; uptr left_agreed_button; };
-    union { uptr field_3a8; uptr right_agreed_button; };
-    union { u32 field_3ac; u32 fill_rect_left; };
-    union { u32 field_3b0; u32 fill_rect_top; };
-    union { u32 field_3b4; u32 fill_rect_right; };
-    union { u32 field_3b8; u32 fill_rect_bottom; };
-    union { u8 field_3bc; u8 right_side_accepted; };
-    union { u8 field_3bd; u8 left_side_accepted; };
-    union { u8 field_3be; u8 left_side_confirmed; };
-    union { u8 field_3bf; u8 remote_side_agreed; };
-    u8 pad_3c0[144];
-    union { u32 field_450; u32 report_id; };
-    union { u32 field_454; u32 frame_state; };
-    union { u32 field_458; u32 page_count; };
-    union { u32 field_45c; u32 report_civ; };
-    union { u32 field_460; u32 first_row; };
-    u8 pad_464[16];
-    union { u32 field_474; u32 image_height; };
-    union { u32 field_478; u32 window_height; };
-    u8 pad_47c[12];
-} PictureWindowCore;
-
-/* 2 methods, size 0x4c4 */
-typedef struct PictureWindow {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; u32 pedia_category; };   /* Civilopedia: topic category (1 advances .. 8) */
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union {
-        struct {
-        union { u32 field_12c; u32 client_width; };
-        union { u32 field_130; u32 client_height; };
-        u8 pad_134[4];
-        union { u32 field_138; u32 dlg_width; };
-        u8 pad_13c[4];
-        union { u32 field_140; u32 panel_rect; };
-        union { u32 field_144; u32 panel_top; };
-        union { u32 field_148; u32 panel_right; };
-        union { u32 field_14c; u32 panel_bottom; };
-        union { uptr field_150; uptr init_rect; };
-        union { u32 field_154; u32 large_layout; };
-        union { u32 field_158; u32 built_layout; };
-        u8 pad_15c[92];
-        union { u8 field_1b8; u8 timer_text; };
-        u8 pad_1b9[1];
-        union { u8 field_1ba; u8 timer_colon; };
-        union { u8 field_1bb; u8 timer_seconds_text; };
-        u8 pad_1bc[32];
-        union { u32 field_1dc; u32 portrait_civ; };
-        union { u32 field_1e0; u32 show_turn_timer; };
-        union { u32 field_1e4; u32 show_turn_status; };
-        union { u32 field_1e8; u32 timer_last_value; };
-        union { u32 field_1ec; u32 session_mode; };
-        union { u32 field_1f0; u32 left_civ; };
-        union { u32 field_1f4; u32 right_civ; };
-        union { u32 field_1f8; u32 shown_left_civ; };
-        union { u32 field_1fc; u32 caption_button_count; };
-        u8 pad_200[8];
-        union { u32 field_208; u32 saved_mode_choice; };
-        union { u32 field_20c; u32 left_exchange_kind; };
-        union { u32 field_210; u32 right_exchange_kind; };
-        union { u32 field_214; u32 demand_choice; };
-        union { u32 field_218; u32 treaty_type_choice; };
-        union { u32 field_21c; u32 gift_choice; };
-        union { u32 field_220; u32 exchange_choice; };
-        union { u32 field_224; u32 side0_amount; };
-        union { u32 field_228; u32 side0_amount_init; };
-        union { u32 field_22c; u32 side1_amount; };
-        union { u32 field_230; u32 side1_amount_init; };
-        union { uptr field_234; uptr item_buffer; };
-        union { u32 field_238; u32 techs_all_known; };
-        u8 pad_23c[24];
-        union { u32 field_254; u32 text_offset_y; };
-        u8 pad_258[24];
-        union { u32 field_270; u32 list_font; };
-        u8 pad_274[24];
-        union { u32 field_28c; u32 reset_value_28c; };
-        union { uptr field_290; uptr close_button; };
-        union { uptr field_294; uptr side_text_edit; };
-        union { uptr field_298; uptr chat_input_edit; };
-        union { uptr field_29c; uptr chat_history_edit; };
-        union { uptr field_2a0; uptr send_button_value; };
-        union { uptr field_2a4; uptr clear_button_value; };
-        union { u32 field_2a8; u32 on_caption_button; };
-        union { u32 field_2ac; u32 frame_rect; };
-        union { u32 field_2b0; u32 frame_top; };
-        union { u32 field_2b4; u32 frame_right; };
-        union { u32 field_2b8; u32 frame_bottom; };
-        union { u32 field_2bc; u32 client_rect; };
-        union { u32 field_2c0; u32 client_top; };
-        u8 pad_2c4[8];
-        union { uptr field_2cc; uptr title_font; };
-        union { uptr field_2d0; uptr title_small_font; };
-        u8 pad_2d4[4];
-        union { u32 field_2d8; u32 rates_civ; };
-        union { u32 field_2dc; u32 max_rate_value; };
-        union { u32 field_2e0; u32 tax_rate_sel; };
-        union { u32 field_2e4; u32 lux_rate_sel; };
-        union { uptr field_2e8; uptr sci_rate_sel; };
-        union { uptr field_2ec; uptr init_tax_rate; };
-        union { uptr field_2f0; uptr init_lux_rate; };
-        union { u32 field_2f4; u32 init_sci_rate; };
-        union { u32 field_2f8; u32 dialog_w; };
-        union { u32 field_2fc; u32 dialog_h; };
-        union { u32 field_300; u32 label_x_value; };
-        union { u32 field_304; u32 header_y_value; };
-        union { u32 field_308; u32 total_tax; };
-        union { u32 field_30c; u32 total_science; };
-        union { u32 field_310; u32 total_upkeep_value; };
-        union { u32 field_314; u32 margin_value; };
-        union { u32 field_318; u32 bar_gap; };
-        union { u32 field_31c; u32 bar_width_value; };
-        union { u32 field_320; u32 bar_height; };
-        union { u32 field_324; u32 button_row_width; };
-        union { u32 field_328; u32 button_area_height; };
-        union { u32 field_32c; u32 row_spacing_value; };
-        union { u32 field_330; u32 tax_label_y; };
-        union { u32 field_334; u32 lux_label_y; };
-        union { u32 field_338; u32 sci_label_y; };
-        union { u32 field_33c; u32 title_y_value; };
-        union { uptr field_340; uptr conceal_button_value; };
-        union { uptr field_344; uptr reveal_button_value; };
-        union { uptr field_348; uptr rates_clamped; };
-        union { uptr field_34c; uptr mode2_button_value; };
-        union { uptr field_350; uptr never_mind_button_value; };
-        union { uptr field_354; uptr intel_button_value; };
-        union { uptr field_358; uptr tax_scrollbar; };
-        union { uptr field_35c; uptr no_thanks_button_value; };
-        union { uptr field_360; uptr counter_button_value; };
-        u8 pad_364[56];
-        union { uptr field_39c; uptr left_accept_button; };
-        union { uptr field_3a0; uptr right_accept_button; };
-        union { uptr field_3a4; uptr left_agreed_button; };
-        union { uptr field_3a8; uptr right_agreed_button; };
-        union { u32 field_3ac; u32 fill_rect_left; };
-        union { u32 field_3b0; u32 fill_rect_top; };
-        union { u32 field_3b4; u32 fill_rect_right; };
-        union { u32 field_3b8; u32 fill_rect_bottom; };
-        union { u8 field_3bc; u8 right_side_accepted; };
-        union { u8 field_3bd; u8 left_side_accepted; };
-        union { u8 field_3be; u8 left_side_confirmed; };
-        union { u8 field_3bf; u8 remote_side_agreed; };
-        u8 pad_3c0[144];
-        union { u32 field_450; u32 report_id; };
-        union { u32 field_454; u32 frame_state; };
-        union { u32 field_458; u32 page_count; };
-        union { u32 field_45c; u32 report_civ; };
-        union { u32 field_460; u32 first_row; };
-        u8 pad_464[16];
-        union { u32 field_474; u32 image_height; };
-        union { u32 field_478; u32 window_height; };
-        u8 pad_47c[16];
-        union { u32 field_48c; u32 image_width; };
-        union { u32 field_490; u32 window_width; };
-        union { u32 field_494; u32 vscroll_width; };
-        union { u32 field_498; u32 controls_created; };
-        union { u32 field_49c; u32 report_param; };
-        union { u32 field_4a0; u32 frame_style; };
-        union { u8 pad_4a4[32]; struct { u8 popup_dialog[32]; }; };
-        u8 pad_4c4[1408];
-        u8 wonder_topic_view[20];
-        u32 delete_action_button;
-        u8 pad_a5c[20];
-        u8 wonder_sort_keys_view[36];
-        uptr editor_list_box;
-        u8 pad_a98[32];
-        u8 wonder_count_b0[1];
-        u8 wonder_count_byte1[1];
-        u8 wonder_count_byte2[1];
-        u8 wonder_count_byte3[1];
-        u8 wonder_sort_keys[4];
-        u8 wonder_items_view[16];
-        u8 trigger_listbox[4];
-        u8 improvement_key_slots[56];
-        u8 action_listbox[32];
-        u8 pedia_improvement_ids[16];
-        u32 council_dialog;
-        u8 pad_b40[32];
-        u8 unit_topic_slots[36];
-        u8 unit_key_slots[12];
-        u8 unit_key_init_slots[12];
-        u8 pedia_unit_count_b0[1];
-        u8 pedia_unit_count_byte1[1];
-        u8 pedia_unit_count_byte2[1];
-        u8 pedia_unit_count_byte3[1];
-        u8 pedia_unit_sort_keys[224];
-        u8 unit_id_slots[24];
-        u32 pedia_unit_ids_0;
-        u8 unit_ids_tail[100];
-        i32 wonder_index;
-        u8 border_tile_surface[40];
-        u8 pedia_key_init_slots[32];
-        u8 movie_palette[64];
-        u8 government_key_slots[4];
-        u8 pedia_government_count_b0[1];
-        u8 pedia_government_count_byte1[1];
-        u8 pedia_government_count_byte2[1];
-        u8 pedia_government_count_byte3[1];
-        u8 pedia_government_sort_keys[4];
-        u8 government_topic_slots[24];
-        u8 pedia_government_ids_0[28];
-        uptr pedia_terrain_count_2;
-        uptr pedia_terrain_sort_keys;
-        u8 pad_dd4[20];
-        u8 terrain_key_slots[72];
-        u8 council_dll_handle[4];
-        u8 council_text_file[4];
-        u8 terrain_id_slots[20];
-        u8 council_speech_lines[8];
-        union { struct { union { i32 council_era; u8 pedia_terrain_ids_2[4]; }; u32 advisor_opinions[5]; }; i32 council_settings[6]; };
-        u32 council_civ;
-        u32 council_active_2;
-        u32 advisor_codes;
-        u32 advisor_codes_part2;
-        u32 advisor_codes_part3;
-        u32 advisor_codes_part4;
-        u32 speech_line_advisors[3];
-        u32 speech_line_values[3];
-        u32 speech_line_params[6];
-        u8 advisor_code_slots[24];
-        u8 concept_key_slots[12];
-        u8 pedia_concept_count_b0[1];
-        u8 pedia_concept_count_byte1[1];
-        u8 pedia_concept_count_byte2[1];
-        u8 pedia_concept_count_byte3[1];
-        u8 pedia_concept_sort_keys[424];
-        u8 pedia_entry_lists[292];
-        union { i32 speech_advisor_index; u8 speech_advisor_index_b[4]; };
-        union { i32 speech_line_y; struct { u8 speech_line_y_b0[1]; u8 speech_line_y_b1[1]; u8 speech_line_y_b2[1]; u8 speech_line_y_b3[1]; }; };
-        i32 speech_rect;
-        union { i32 speech_rect_top; u8 speech_rect_top_b[4]; };
-        union { i32 speech_rect_right; u8 speech_rect_right_b[4]; };
-        union { i32 speech_rect_bottom; u8 speech_rect_bottom_b[4]; };
-        u32 advisor_button_1;
-        u8 pad_11c4[56];
-        u32 advisor_button_4;
-        u8 pad_1200[56];
-        uptr advisor_button_3;
-        u8 pad_123c[56];
-        u32 advisor_button_2;
-        u8 pad_1278[36];
-        u8 pedia_concept_list_base[20];
-        u32 advisor_button_0;
-        u8 pad_12b4[40];
-        u8 pedia_sorted_entries[16];
-        u32 council_close_button;
-        u8 pad_12f0[684];
-        union { i32 city_index; struct { u8 city_index_b0[1]; u8 city_index_b1[1]; u8 city_index_b2[1]; u8 city_index_b3[1]; }; };
-        union { i32 redraw_suspended; struct { u8 redraw_suspended_b0[1]; u8 redraw_suspended_b1[1]; u8 redraw_suspended_b2[1]; u8 redraw_suspended_b3[1]; }; };
-        union { i32 is_closed; struct { u8 is_closed_b0[1]; u8 is_closed_b1[1]; u8 is_closed_b2[1]; u8 is_closed_b3[1]; }; };
-        union { i32 redraw_deferred; struct { u8 redraw_deferred_b0[1]; u8 redraw_deferred_b1[1]; u8 redraw_deferred_b2[1]; u8 redraw_deferred_b3[1]; }; };
-        union { i32 notice_mode; struct { u8 notice_mode_b0[1]; u8 notice_mode_b1[1]; u8 notice_mode_b2[1]; u8 notice_mode_b3[1]; }; };
-        union { i32 info_panel_mode; struct { u8 info_panel_mode_b0[1]; u8 info_panel_mode_b1[1]; u8 info_panel_mode_b2[1]; u8 info_panel_mode_b3[1]; }; };
-        union { i32 improvement_scroll_pos; struct { u8 improvement_scroll_pos_b0[1]; u8 improvement_scroll_pos_b1[1]; u8 improvement_scroll_pos_b2[1]; u8 improvement_scroll_pos_b3[1]; }; };
-        union { i32 panel_toggle_flag; struct { u8 panel_toggle_flag_b0[1]; u8 panel_toggle_flag_b1[1]; u8 panel_toggle_flag_b2[1]; u8 panel_toggle_flag_b3[1]; }; };
-        i32 layout_width;
-        i32 resource_bar_height;
-        union { i32 margin_x_2; struct { u8 margin_x_2_b0[1]; u8 margin_x_b1[1]; u8 content_offset_x_byte2[1]; u8 content_offset_x_byte3[1]; }; };
-        union { i32 content_offset_y; struct { u8 content_offset_y_b0[1]; u8 content_offset_y_byte1[1]; u8 content_offset_y_byte2[1]; u8 content_offset_y_byte3[1]; }; };
-        i32 prev_content_offset_x;
-        union { i32 prev_content_offset_y; struct { u8 prev_content_offset_y_b0[1]; u8 prev_content_offset_y_byte1[1]; u8 prev_content_offset_y_byte2[1]; u8 prev_content_offset_y_byte3[1]; }; };
-        union { i32 view_scale; struct { u8 view_scale_b0[1]; u8 view_scale_byte1[1]; u8 view_scale_byte2[1]; u8 view_scale_byte3[1]; }; };
-        union { i32 map_zoom_level; struct { u8 map_zoom_level_b0[1]; u8 map_zoom_level_byte1[1]; u8 map_zoom_level_byte2[1]; u8 map_zoom_level_byte3[1]; }; };
-        i32 citizens_rect;
-        i32 citizens_rect_top;
-        i32 citizens_rect_right;
-        i32 citizens_rect_bottom;
-        i32 resource_map_rect;
-        i32 resource_map_rect_top;
-        i32 resource_map_rect_right;
-        i32 resource_map_rect_bottom;
-        i32 food_box_rect;
-        i32 food_box_rect_top;
-        i32 food_box_rect_right;
-        i32 food_box_rect_bottom;
-        i32 production_rect;
-        i32 production_rect_top;
-        i32 production_rect_right;
-        u32 production_rect_bottom;
-        u8 button_area_rect[16];
-        u32 supported_units_rect;
-        u32 supported_units_rect_top;
-        u8 pad_1634[8];
-        u32 improvements_rect;
-        i32 improvements_rect_top;
-        i32 improvements_rect_right;
-        i32 improvements_rect_bottom;
-        u32 info_panel_rect;
-        u32 info_panel_rect_top;
-        u8 pad_1654[8];
-        u32 resource_label_rect;
-        u8 pad_1660[8];
-        u32 resource_label_rect_bottom;
-        u32 improvement_list_rect;
-        uptr improvement_list_rect_top;
-        u32 improvement_list_rect_right;
-        u8 pad_1678[4];
-        uptr supported_units_label_rect;
-        i32 supported_units_label_rect_top;
-        i32 supported_units_label_rect_right;
-        i32 supported_units_label_rect_bottom;
-        u32 info_title_rect;
-        u32 info_title_rect_top;
-        u32 info_title_rect_right;
-        u8 pad_1698[4];
-        u8 improvements_scrollbar_rect[16];
-        u32 city_font;
-        u8 pad_16b0[4];
-        u32 buy_button;
-        union { struct Button *change_button; struct { u8 change_button_b0[1]; u8 change_button_byte1[1]; u8 change_button_byte2[1]; u8 change_button_byte3[1]; }; };
-        union { struct Button *exit_button; struct { u8 exit_button_b0[1]; u8 exit_button_byte1[1]; u8 exit_button_byte2[1]; u8 exit_button_byte3[1]; }; };
-        u32 view_button;
-        u32 info_button;
-        u32 happy_button;
-        u32 map_button;
-        u32 rename_button;
-        u32 prev_city_button;
-        u32 next_city_button;
-        };
-        struct {
-            i32 pedia_history_topics[100];
-            i32 pedia_history_page_modes[100];
-            i32 pedia_history_categories[100];
-            u8 pedia_pad_5dc[124];
-            i32 pedia_advance_count;
-            i32 pedia_advance_keys[100];
-            i32 pedia_advance_ids[100];
-            i32 pedia_improve_count;
-            i32 pedia_improve_keys[39];
-            i32 pedia_improve_ids[39];
-            i32 pedia_wonder_count;
-            i32 pedia_wonder_keys[28];
-            i32 pedia_wonder_ids[28];
-            i32 pedia_unit_count;
-            i32 pedia_unit_keys[62];
-            i32 pedia_unit_ids[62];
-            i32 pedia_government_count;
-            i32 pedia_government_keys[7];
-            i32 pedia_government_ids[7];
-            i32 pedia_terrain_count;
-            i32 pedia_terrain_keys[33];
-            i32 pedia_terrain_ids[33];
-            i32 pedia_concept_count;
-            i32 pedia_concept_keys[256];
-            i32 pedia_concept_ids[256];
-        };
-    };
-    union {
-        struct {
-            u8 improvements_scrollbar_b0[1];
-            u8 improvements_scrollbar_byte1[1];
-            u8 improvements_scrollbar_byte2[1];
-            u8 improvements_scrollbar_byte3[1];
-            u8 pedia_list_head_b0[1];
-            u8 pedia_list_head_byte1[1];
-            u8 text_list_1_byte2[1];
-            u8 text_list_1_byte3[1];
-            u8 text_list_2_b0[1];
-            u8 text_list_2_byte1[1];
-            u8 text_list_2_byte2[1];
-            u8 text_list_2_byte3[1];
-            u8 text_list_3_b0[1];
-            u8 text_list_3_byte1[1];
-            u8 text_list_3_byte2[1];
-            u8 text_list_3_byte3[1];
-            u8 text_list_4_b0[1];
-            u8 text_list_4_byte1[1];
-            u8 text_list_4_byte2[1];
-            u8 text_list_4_byte3[1];
-            u8 text_list_5_b0[1];
-            u8 text_list_5_byte1[1];
-            u8 text_list_5_byte2[1];
-            u8 text_list_5_byte3[1];
-            u8 text_list_6_b0[1];
-            u8 text_list_6_byte1[1];
-            u8 text_list_6_byte2[1];
-            u8 text_list_6_byte3[1];
-        };
-        struct {
-            union { struct Scrollbar *improvements_scrollbar; struct PediaListNode *pedia_advance_names; };
-            struct PediaListNode *pedia_improve_names;
-            struct PediaListNode *pedia_wonder_names;
-            struct PediaListNode *pedia_unit_names;
-            struct PediaListNode *pedia_government_names;
-            struct PediaListNode *pedia_terrain_names;
-            struct PediaListNode *pedia_concept_names;
-        };
-    };
-    u32 has_close_box;
-    u8 pad_16fc[8];
-    u32 close_box_width;
-    u32 close_box_height;
-    u32 close_box_sprite;
-    union { struct Hotspot *close_box_hotspot; struct { u8 close_box_hotspot_b0[1]; u8 close_box_hotspot_byte1[1]; u8 close_box_hotspot_byte2[1]; u8 close_box_hotspot_byte3[1]; }; };
-    u8 list_describe_button[60];
-    u32 list_close_button;
-    u8 pad_1754[56];
-    u32 detail_back_button;
-    u8 pad_1790[56];
-    u8 detail_describe_button[60];
-    u32 detail_close_button;
-    u8 pad_1808[56];
-    u8 text_back_button[60];
-    u32 text_close_button;
-    u8 pad_1880[56];
-    u32 concept_list_back_button;
-    u8 pad_18bc[56];
-    u8 advance_list_describe_button[60];
-    u8 advance_list_tech_tree_button[60];
-    u8 advance_list_close_button[60];
-    u32 advance_detail_back_button;
-    u8 pad_19ac[56];
-    u32 advance_detail_tech_tree_button;
-    u8 pad_19e8[56];
-    u8 advance_detail_describe_button[60];
-    u32 advance_detail_close_button;
-    u8 pad_1a60[56];
-    u32 description_edit;
-    u8 pad_1a9c[16];
-    u8 description_edit_body[52];
-    u32 list_scrollbar;
-    u8 pad_1ae4[4];
-    u8 list_scrollbar_body[56];
-    u32 list_hotspot;
-    u32 list_rect;
-    u32 list_rect_top;
-    u32 list_rect_right;
-    u32 list_rect_bottom;
-    union { u8 list_item_table[1028]; struct { i32 list_count; i32 list_items[256]; }; };
-    union { i32 list_selected_index; u8 list_selected_index_b[4]; };
-    union { i32 list_top_index; struct { u8 list_top_index_b0[1]; u8 list_top_index_byte1[1]; u8 list_top_index_byte2[1]; u8 list_top_index_byte3[1]; }; };
-    union { struct PediaLink *link_list_head; struct { u8 link_list_head_b0[1]; u8 link_list_head_byte1[1]; u8 link_list_head_byte2[1]; u8 link_list_head_byte3_region[1]; }; };
-    u8 pad_1f44[25788];
-    u32 advance_pane_item_flags[8184];
-    u8 parley_pane_arrays_base[8];
-    u8 parley_pane_rows_base[40];
-    u32 parley_list_top_index[4];
-    u32 parley_list_page_rows[1];
-} PictureWindow;
-
-/* 13 methods, size 0x61c */
-typedef struct MediaWindow {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[184]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 client_width; };
-    union { u32 field_130; u32 client_height; };
-    u8 pad_134[4];
-    union { u32 field_138; u32 dlg_width; };
-    u8 pad_13c[4];
-    union { u32 field_140; u32 panel_rect; };
-    union { u32 field_144; u32 panel_top; };
-    union { u32 field_148; u32 panel_right; };
-    union { u32 field_14c; u32 panel_bottom; };
-    union { uptr field_150; uptr init_rect; };
-    union { u32 field_154; u32 large_layout; };
-    union { u32 field_158; u32 built_layout; };
-    u8 pad_15c[92];
-    union { u8 field_1b8; u8 timer_text; };
-    u8 pad_1b9[1];
-    union { u8 field_1ba; u8 timer_colon; };
-    union { u8 field_1bb; u8 timer_seconds_text; };
-    u8 pad_1bc[32];
-    union { u32 field_1dc; u32 portrait_civ; };
-    union { u32 field_1e0; u32 show_turn_timer; };
-    union { u32 field_1e4; u32 show_turn_status; };
-    union { u32 field_1e8; u32 timer_last_value; };
-    union { u32 field_1ec; u32 session_mode; };
-    union { u32 field_1f0; u32 left_civ; };
-    union { u32 field_1f4; u32 right_civ; };
-    union { u32 field_1f8; u32 shown_left_civ; };
-    union { u32 field_1fc; u32 caption_button_count; };
-    u8 pad_200[8];
-    union { u32 field_208; u32 saved_mode_choice; };
-    union { u32 field_20c; u32 left_exchange_kind; };
-    union { u32 field_210; u32 right_exchange_kind; };
-    union { u32 field_214; u32 demand_choice; };
-    union { u32 field_218; u32 treaty_type_choice; };
-    union { u32 field_21c; u32 gift_choice; };
-    union { u32 field_220; u32 exchange_choice; };
-    union { u32 field_224; u32 side0_amount; };
-    union { u32 field_228; u32 side0_amount_init; };
-    union { u32 field_22c; u32 side1_amount; };
-    union { u32 field_230; u32 side1_amount_init; };
-    union { uptr field_234; uptr item_buffer; };
-    union { u32 field_238; u32 techs_all_known; };
-    u8 pad_23c[24];
-    union { u32 field_254; u32 text_offset_y; };
-    u8 pad_258[24];
-    union { u32 field_270; u32 list_font; };
-    u8 pad_274[24];
-    union { u32 field_28c; u32 reset_value_28c; };
-    union { uptr field_290; uptr close_button; };
-    union { uptr field_294; uptr side_text_edit; };
-    union { uptr field_298; uptr chat_input_edit; };
-    union { uptr field_29c; uptr chat_history_edit; };
-    union { uptr field_2a0; uptr send_button_value; };
-    union { uptr field_2a4; uptr clear_button_value; };
-    union { u32 field_2a8; u32 on_caption_button; };
-    union { u32 field_2ac; u32 frame_rect; };
-    union { u32 field_2b0; u32 frame_top; };
-    union { u32 field_2b4; u32 frame_right; };
-    union { u32 field_2b8; u32 frame_bottom; };
-    union { u32 field_2bc; u32 client_rect; };
-    union { u32 field_2c0; u32 client_top; };
-    u8 pad_2c4[8];
-    union { uptr field_2cc; uptr title_font; };
-    union { uptr field_2d0; uptr title_small_font; };
-    u8 pad_2d4[4];
-    union { u32 field_2d8; u32 rates_civ; };
-    union { u32 field_2dc; u32 max_rate_value; };
-    union { u32 field_2e0; u32 tax_rate_sel; };
-    union { u32 field_2e4; u32 lux_rate_sel; };
-    union { uptr field_2e8; uptr sci_rate_sel; };
-    union { uptr field_2ec; uptr init_tax_rate; };
-    union { uptr field_2f0; uptr init_lux_rate; };
-    union { u32 field_2f4; u32 init_sci_rate; };
-    union { u32 field_2f8; u32 dialog_w; };
-    union { u32 field_2fc; u32 dialog_h; };
-    union { u32 field_300; u32 label_x_value; };
-    union { u32 field_304; u32 header_y_value; };
-    union { u32 field_308; u32 total_tax; };
-    union { u32 field_30c; u32 total_science; };
-    union { u32 field_310; u32 total_upkeep_value; };
-    union { u32 field_314; u32 margin_value; };
-    union { u32 field_318; u32 bar_gap; };
-    union { u32 field_31c; u32 bar_width_value; };
-    union { u32 field_320; u32 bar_height; };
-    union { u32 field_324; u32 button_row_width; };
-    union { u32 field_328; u32 button_area_height; };
-    union { u32 field_32c; u32 row_spacing_value; };
-    union { u32 field_330; u32 tax_label_y; };
-    union { u32 field_334; u32 lux_label_y; };
-    union { u32 field_338; u32 sci_label_y; };
-    union { u32 field_33c; u32 title_y_value; };
-    union { uptr field_340; uptr conceal_button_value; };
-    union { uptr field_344; uptr reveal_button_value; };
-    union { uptr field_348; uptr rates_clamped; };
-    union { uptr field_34c; uptr mode2_button_value; };
-    union { uptr field_350; uptr never_mind_button_value; };
-    union { uptr field_354; uptr intel_button_value; };
-    union { uptr field_358; uptr tax_scrollbar; };
-    union { uptr field_35c; uptr no_thanks_button_value; };
-    union { uptr field_360; uptr counter_button_value; };
-    u8 pad_364[56];
-    union { uptr field_39c; uptr left_accept_button; };
-    union { uptr field_3a0; uptr right_accept_button; };
-    union { uptr field_3a4; uptr left_agreed_button; };
-    union { uptr field_3a8; uptr right_agreed_button; };
-    union { u32 field_3ac; u32 fill_rect_left; };
-    union { u32 field_3b0; u32 fill_rect_top; };
-    union { u32 field_3b4; u32 fill_rect_right; };
-    union { u32 field_3b8; u32 fill_rect_bottom; };
-    union { u8 field_3bc; u8 right_side_accepted; };
-    union { u8 field_3bd; u8 left_side_accepted; };
-    union { u8 field_3be; u8 left_side_confirmed; };
-    union { u8 field_3bf; u8 remote_side_agreed; };
-    u8 pad_3c0[144];
-    union { u32 field_450; u32 report_id; };
-    union { u32 field_454; u32 frame_state; };
-    union { u32 field_458; u32 page_count; };
-    union { u32 field_45c; u32 report_civ; };
-    union { u32 field_460; u32 first_row; };
-    u8 pad_464[16];
-    union { u32 field_474; u32 image_height; };
-    union { u32 field_478; u32 window_height; };
-    u8 pad_47c[16];
-    union { u32 field_48c; u32 image_width; };
-    union { u32 field_490; u32 window_width; };
-    union { u32 field_494; u32 vscroll_width; };
-    union { u32 field_498; u32 controls_created; };
-    union { u32 field_49c; u32 report_param; };
-    union { u32 field_4a0; u32 frame_style; };
-    union { u8 pad_4a4[252]; struct { u8 gap_4a4[40]; u8 rate_ok_button[212]; }; };
-    union { u32 field_5a0; u32 double_size; };
-    union { u32 field_5a4; u32 avi_option; };
-    union { u32 field_5a8; u32 has_audio; };
-    union { u32 field_5ac; u32 paused; };
-    union { u32 field_5b0; u32 audio_playing; };
-    union { uptr field_5b4; uptr target_surface; };
-    union { u32 field_5b8; u32 pos_x; };
-    union { u32 field_5bc; u32 pos_y; };
-    union { u8 pad_5c0[28]; struct { u8 gap_5c0[20]; u8 advance_topic_view[8]; }; };
-    union { u32 field_5dc; u32 panel_width; };
-    union { u32 field_5e0; u32 panel_height; };
-    union { u32 field_5e4; u32 header_height; };
-    union { u8 pad_5e8[8]; struct { u8 pedia_frame_rect[8]; }; };
-    union { u32 field_5f0; u32 frame_rect_right; };
-    u8 pad_5f4[4];
-    union { u32 field_5f8; u32 content_left; };
-    union { u32 field_5fc; u32 content_top; };
-    union { u32 field_600; u32 content_right; };
-    union { u32 field_604; u32 content_bottom; };
-    union { u8 pad_608[20]; struct { u8 gap_608[16]; u8 pedia_title_text_2[4]; }; };
-} MediaWindow;
-
-/* 1 methods, size 0x798 */
-typedef struct PediaAdvanceListView {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    u8 pad_48[184];
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 client_width; };
-    union { u32 field_130; u32 client_height; };
-    u8 pad_134[4];
-    union { u32 field_138; u32 dlg_width; };
-    u8 pad_13c[4];
-    union { u32 field_140; u32 panel_rect; };
-    union { u32 field_144; u32 panel_top; };
-    union { u32 field_148; u32 panel_right; };
-    union { u32 field_14c; u32 panel_bottom; };
-    union { uptr field_150; uptr init_rect; };
-    union { u32 field_154; u32 large_layout; };
-    union { u32 field_158; u32 built_layout; };
-    u8 pad_15c[92];
-    union { u8 field_1b8; u8 timer_text; };
-    u8 pad_1b9[1];
-    union { u8 field_1ba; u8 timer_colon; };
-    union { u8 field_1bb; u8 timer_seconds_text; };
-    u8 pad_1bc[32];
-    union { u32 field_1dc; u32 portrait_civ; };
-    union { u32 field_1e0; u32 show_turn_timer; };
-    union { u32 field_1e4; u32 show_turn_status; };
-    union { u32 field_1e8; u32 timer_last_value; };
-    union { u32 field_1ec; u32 session_mode; };
-    union { u32 field_1f0; u32 left_civ; };
-    union { u32 field_1f4; u32 right_civ; };
-    union { u32 field_1f8; u32 shown_left_civ; };
-    union { u32 field_1fc; u32 caption_button_count; };
-    u8 pad_200[8];
-    union { u32 field_208; u32 saved_mode_choice; };
-    union { u32 field_20c; u32 left_exchange_kind; };
-    union { u32 field_210; u32 right_exchange_kind; };
-    union { u32 field_214; u32 demand_choice; };
-    union { u32 field_218; u32 treaty_type_choice; };
-    union { u32 field_21c; u32 gift_choice; };
-    union { u32 field_220; u32 exchange_choice; };
-    union { u32 field_224; u32 side0_amount; };
-    union { u32 field_228; u32 side0_amount_init; };
-    union { u32 field_22c; u32 side1_amount; };
-    union { u32 field_230; u32 side1_amount_init; };
-    union { uptr field_234; uptr item_buffer; };
-    union { u32 field_238; u32 techs_all_known; };
-    u8 pad_23c[24];
-    union { u32 field_254; u32 text_offset_y; };
-    u8 pad_258[24];
-    union { u32 field_270; u32 list_font; };
-    u8 pad_274[24];
-    union { u32 field_28c; u32 reset_value_28c; };
-    union { uptr field_290; uptr close_button; };
-    union { uptr field_294; uptr side_text_edit; };
-    union { uptr field_298; uptr chat_input_edit; };
-    union { uptr field_29c; uptr chat_history_edit; };
-    union { uptr field_2a0; uptr send_button_value; };
-    union { uptr field_2a4; uptr clear_button_value; };
-    union { u32 field_2a8; u32 on_caption_button; };
-    union { u32 field_2ac; u32 frame_rect; };
-    union { u32 field_2b0; u32 frame_top; };
-    union { u32 field_2b4; u32 frame_right; };
-    union { u32 field_2b8; u32 frame_bottom; };
-    union { u32 field_2bc; u32 client_rect; };
-    union { u32 field_2c0; u32 client_top; };
-    u8 pad_2c4[8];
-    union { uptr field_2cc; uptr title_font; };
-    union { uptr field_2d0; uptr title_small_font; };
-    u8 pad_2d4[4];
-    union { u32 field_2d8; u32 rates_civ; };
-    union { u32 field_2dc; u32 max_rate_value; };
-    union { u32 field_2e0; u32 tax_rate_sel; };
-    union { u32 field_2e4; u32 lux_rate_sel; };
-    union { uptr field_2e8; uptr sci_rate_sel; };
-    union { uptr field_2ec; uptr init_tax_rate; };
-    union { uptr field_2f0; uptr init_lux_rate; };
-    union { u32 field_2f4; u32 init_sci_rate; };
-    union { u32 field_2f8; u32 dialog_w; };
-    union { u32 field_2fc; u32 dialog_h; };
-    union { u32 field_300; u32 label_x_value; };
-    union { u32 field_304; u32 header_y_value; };
-    union { u32 field_308; u32 total_tax; };
-    union { u32 field_30c; u32 total_science; };
-    union { u32 field_310; u32 total_upkeep_value; };
-    union { u32 field_314; u32 margin_value; };
-    union { u32 field_318; u32 bar_gap; };
-    union { u32 field_31c; u32 bar_width_value; };
-    union { u32 field_320; u32 bar_height; };
-    union { u32 field_324; u32 button_row_width; };
-    union { u32 field_328; u32 button_area_height; };
-    union { u32 field_32c; u32 row_spacing_value; };
-    union { u32 field_330; u32 tax_label_y; };
-    union { u32 field_334; u32 lux_label_y; };
-    union { u32 field_338; u32 sci_label_y; };
-    union { u32 field_33c; u32 title_y_value; };
-    union { uptr field_340; uptr conceal_button_value; };
-    union { uptr field_344; uptr reveal_button_value; };
-    union { uptr field_348; uptr rates_clamped; };
-    union { uptr field_34c; uptr mode2_button_value; };
-    union { uptr field_350; uptr never_mind_button_value; };
-    union { uptr field_354; uptr intel_button_value; };
-    union { uptr field_358; uptr tax_scrollbar; };
-    union { uptr field_35c; uptr no_thanks_button_value; };
-    union { uptr field_360; uptr counter_button_value; };
-    u8 pad_364[56];
-    union { uptr field_39c; uptr left_accept_button; };
-    union { uptr field_3a0; uptr right_accept_button; };
-    union { uptr field_3a4; uptr left_agreed_button; };
-    union { uptr field_3a8; uptr right_agreed_button; };
-    union { u32 field_3ac; u32 fill_rect_left; };
-    union { u32 field_3b0; u32 fill_rect_top; };
-    union { u32 field_3b4; u32 fill_rect_right; };
-    union { u32 field_3b8; u32 fill_rect_bottom; };
-    union { u8 field_3bc; u8 right_side_accepted; };
-    union { u8 field_3bd; u8 left_side_accepted; };
-    union { u8 field_3be; u8 left_side_confirmed; };
-    union { u8 field_3bf; u8 remote_side_agreed; };
-    u8 pad_3c0[144];
-    union { u32 field_450; u32 report_id; };
-    union { u32 field_454; u32 frame_state; };
-    union { u32 field_458; u32 page_count; };
-    union { u32 field_45c; u32 report_civ; };
-    union { u32 field_460; u32 first_row; };
-    u8 pad_464[16];
-    union { u32 field_474; u32 image_height; };
-    union { u32 field_478; u32 window_height; };
-    u8 pad_47c[16];
-    union { u32 field_48c; u32 image_width; };
-    union { u32 field_490; u32 window_width; };
-    union { u32 field_494; u32 vscroll_width; };
-    union { u32 field_498; u32 controls_created; };
-    union { u32 field_49c; u32 report_param; };
-    union { u32 field_4a0; u32 frame_style; };
-    u8 pad_4a4[252];
-    union { u32 field_5a0; u32 double_size; };
-    union { u32 field_5a4; u32 avi_option; };
-    union { u32 field_5a8; u32 has_audio; };
-    union { u32 field_5ac; u32 paused; };
-    union { u32 field_5b0; u32 audio_playing; };
-    union { uptr field_5b4; uptr target_surface; };
-    union { u32 field_5b8; u32 pos_x; };
-    union { u32 field_5bc; u32 pos_y; };
-    u8 pad_5c0[28];
-    union { u32 field_5dc; u32 panel_width; };
-    union { u32 field_5e0; u32 panel_height; };
-    union { u32 field_5e4; u32 header_height; };
-    u8 pad_5e8[8];
-    union { u32 field_5f0; u32 frame_rect_right; };
-    u8 pad_5f4[4];
-    union { u32 field_5f8; u32 content_left; };
-    union { u32 field_5fc; u32 content_top; };
-    union { u32 field_600; u32 content_right; };
-    union { u32 field_604; u32 content_bottom; };
-    union { u8 pad_608[80]; struct { u8 gap_608[28]; u8 pedia_list_init_area[52]; }; };
-    union { u32 field_658; u32 pedia_advance_count; };
-    union { u8 pad_65c[316]; struct { u8 gap_65c[120]; uptr editor_ok_button; u8 gap_6d8[56]; u32 editor_help_button; u8 gap_714[56]; u32 editor_cancel_button; u8 gap_750[56]; uptr editor_rename_button; u8 gap_78c[12]; }; };
-} PediaAdvanceListView;
-
-/* 20 methods, size 0xa28 */
-typedef struct DocumentWindow {
-    union { u32 field_0; u32 vtable; };
-    union { u32 field_4; u32 pixel_width; };
-    union { u32 field_8; u32 pixel_height; };
-    union { u32 field_c; u32 stride; };
-    union { u32 field_10; u32 signed_pitch; };
-    union { u32 field_14; u32 clip_left; };
-    union { u32 field_18; u32 clip_top; };
-    union { u32 field_1c; u32 clip_right; };
-    union { u32 field_20; u32 clip_bottom; };
-    union { u32 field_24; u32 bounds_rect; };
-    union { u32 field_28; u32 bounds_top; };
-    union { u32 field_2c; u32 bounds_right; };
-    union { u32 field_30; u32 bounds_bottom; };
-    union { uptr field_34; uptr bits; };
-    union { uptr field_38; uptr row_offsets; };
-    union { u32 field_3c; u32 palette_version; };
-    union { u32 field_40; GdiDib *dib; };
-    union { u32 field_44; u32 bytes_per_pixel; };
-    union { u8 pad_48[184]; struct { u8 window_2[16]; u8 event_handlers[168]; }; };
-    union { u32 field_100; u32 handler_slot_100; };
-    u8 pad_104[12];
-    union { uptr field_110; uptr on_paint; };
-    union { u32 field_114; u32 style_flags; };
-    union { u32 field_118; u32 caption_height; };
-    union { u32 field_11c; u32 border_width; };
-    union { u32 field_120; u32 resize_border; };
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 client_width; };
-    union { u32 field_130; u32 client_height; };
-    u8 pad_134[4];
-    union { u32 field_138; u32 dlg_width; };
-    u8 pad_13c[4];
-    union { u32 field_140; u32 panel_rect; };
-    union { u32 field_144; u32 panel_top; };
-    union { u32 field_148; u32 panel_right; };
-    union { u32 field_14c; u32 panel_bottom; };
-    union { uptr field_150; uptr init_rect; };
-    union { u32 field_154; u32 large_layout; };
-    union { u32 field_158; u32 built_layout; };
-    u8 pad_15c[92];
-    union { u8 field_1b8; u8 timer_text; };
-    u8 pad_1b9[1];
-    union { u8 field_1ba; u8 timer_colon; };
-    union { u8 field_1bb; u8 timer_seconds_text; };
-    u8 pad_1bc[32];
-    union { u32 field_1dc; u32 portrait_civ; };
-    union { u32 field_1e0; u32 show_turn_timer; };
-    union { u32 field_1e4; u32 show_turn_status; };
-    union { u32 field_1e8; u32 timer_last_value; };
-    union { u32 field_1ec; u32 session_mode; };
-    union { u32 field_1f0; u32 left_civ; };
-    union { u32 field_1f4; u32 right_civ; };
-    union { u32 field_1f8; u32 shown_left_civ; };
-    union { u32 field_1fc; u32 caption_button_count; };
-    u8 pad_200[8];
-    union { u32 field_208; u32 saved_mode_choice; };
-    union { u32 field_20c; u32 left_exchange_kind; };
-    union { u32 field_210; u32 right_exchange_kind; };
-    union { u32 field_214; u32 demand_choice; };
-    union { u32 field_218; u32 treaty_type_choice; };
-    union { u32 field_21c; u32 gift_choice; };
-    union { u32 field_220; u32 exchange_choice; };
-    union { u32 field_224; u32 side0_amount; };
-    union { u32 field_228; u32 side0_amount_init; };
-    union { u32 field_22c; u32 side1_amount; };
-    union { u32 field_230; u32 side1_amount_init; };
-    union { uptr field_234; uptr item_buffer; };
-    union { u32 field_238; u32 techs_all_known; };
-    u8 pad_23c[24];
-    union { u32 field_254; u32 text_offset_y; };
-    u8 pad_258[24];
-    union { u32 field_270; u32 list_font; };
-    u8 pad_274[24];
-    union { u32 field_28c; u32 reset_value_28c; };
-    union { uptr field_290; uptr close_button; };
-    union { uptr field_294; uptr side_text_edit; };
-    union { uptr field_298; uptr chat_input_edit; };
-    union { uptr field_29c; uptr chat_history_edit; };
-    union { uptr field_2a0; uptr send_button_value; };
-    union { uptr field_2a4; uptr clear_button_value; };
-    union { u32 field_2a8; u32 on_caption_button; };
-    union { u32 field_2ac; u32 frame_rect; };
-    union { u32 field_2b0; u32 frame_top; };
-    union { u32 field_2b4; u32 frame_right; };
-    union { u32 field_2b8; u32 frame_bottom; };
-    union { u32 field_2bc; u32 client_rect; };
-    union { u32 field_2c0; u32 client_top; };
-    u8 pad_2c4[8];
-    union { uptr field_2cc; uptr title_font; };
-    union { uptr field_2d0; uptr title_small_font; };
-    u8 pad_2d4[4];
-    union { u32 field_2d8; u32 rates_civ; };
-    union { u32 field_2dc; u32 max_rate_value; };
-    union { u32 field_2e0; u32 tax_rate_sel; };
-    union { u32 field_2e4; u32 lux_rate_sel; };
-    union { uptr field_2e8; uptr sci_rate_sel; };
-    union { uptr field_2ec; uptr init_tax_rate; };
-    union { uptr field_2f0; uptr init_lux_rate; };
-    union { u32 field_2f4; u32 init_sci_rate; };
-    union { u32 field_2f8; u32 dialog_w; };
-    union { u32 field_2fc; u32 dialog_h; };
-    union { u32 field_300; u32 label_x_value; };
-    union { u32 field_304; u32 header_y_value; };
-    union { u32 field_308; u32 total_tax; };
-    union { u32 field_30c; u32 total_science; };
-    union { u32 field_310; u32 total_upkeep_value; };
-    union { u32 field_314; u32 margin_value; };
-    union { u32 field_318; u32 bar_gap; };
-    union { u32 field_31c; u32 bar_width_value; };
-    union { u32 field_320; u32 bar_height; };
-    union { u32 field_324; u32 button_row_width; };
-    union { u32 field_328; u32 button_area_height; };
-    union { u32 field_32c; u32 row_spacing_value; };
-    union { u32 field_330; u32 tax_label_y; };
-    union { u32 field_334; u32 lux_label_y; };
-    union { u32 field_338; u32 sci_label_y; };
-    union { u32 field_33c; u32 title_y_value; };
-    union { uptr field_340; uptr conceal_button_value; };
-    union { uptr field_344; uptr reveal_button_value; };
-    union { uptr field_348; uptr rates_clamped; };
-    union { uptr field_34c; uptr mode2_button_value; };
-    union { uptr field_350; uptr never_mind_button_value; };
-    union { uptr field_354; uptr intel_button_value; };
-    union { uptr field_358; uptr tax_scrollbar; };
-    union { uptr field_35c; uptr no_thanks_button_value; };
-    union { uptr field_360; uptr counter_button_value; };
-    u8 pad_364[56];
-    union { uptr field_39c; uptr left_accept_button; };
-    union { uptr field_3a0; uptr right_accept_button; };
-    union { uptr field_3a4; uptr left_agreed_button; };
-    union { uptr field_3a8; uptr right_agreed_button; };
-    union { u32 field_3ac; u32 fill_rect_left; };
-    union { u32 field_3b0; u32 fill_rect_top; };
-    union { u32 field_3b4; u32 fill_rect_right; };
-    union { u32 field_3b8; u32 fill_rect_bottom; };
-    union { u8 field_3bc; u8 right_side_accepted; };
-    union { u8 field_3bd; u8 left_side_accepted; };
-    union { u8 field_3be; u8 left_side_confirmed; };
-    union { u8 field_3bf; u8 remote_side_agreed; };
-    union { u8 pad_3c0[144]; struct { u8 gap_3c0[140]; u8 editor_edit_controls[4]; }; };
-    union { u32 field_450; u32 report_id; };
-    union { u32 field_454; u32 frame_state; };
-    union { u32 field_458; u32 page_count; };
-    union { u32 field_45c; u32 report_civ; };
-    union { u32 field_460; u32 first_row; };
-    u8 pad_464[16];
-    union { u32 field_474; u32 image_height; };
-    union { u32 field_478; u32 window_height; };
-    u8 pad_47c[16];
-    union { u32 field_48c; u32 image_width; };
-    union { u32 field_490; u32 window_width; };
-    union { u32 field_494; u32 vscroll_width; };
-    union { u32 field_498; u32 controls_created; };
-    union { u32 field_49c; u32 report_param; };
-    union { u32 field_4a0; u32 frame_style; };
-    union { u8 pad_4a4[252]; struct { u8 gap_4a4[180]; u8 movie_surface[72]; }; };
-    union { u32 field_5a0; u32 double_size; };
-    union { u32 field_5a4; u32 avi_option; };
-    union { u32 field_5a8; u32 has_audio; };
-    union { u32 field_5ac; u32 paused; };
-    union { u32 field_5b0; u32 audio_playing; };
-    union { uptr field_5b4; uptr target_surface; };
-    union { u32 field_5b8; u32 pos_x; };
-    union { u32 field_5bc; u32 pos_y; };
-    u8 pad_5c0[28];
-    union { u32 field_5dc; u32 panel_width; };
-    union { u32 field_5e0; u32 panel_height; };
-    union { u32 field_5e4; u32 header_height; };
-    union { u8 pad_5e8[8]; struct { u8 pedia_frame_rect[8]; }; };
-    union { u32 field_5f0; u32 frame_rect_right; };
-    u8 pad_5f4[4];
-    union { u32 field_5f8; u32 content_left; };
-    union { u32 field_5fc; u32 content_top; };
-    union { u32 field_600; u32 content_right; };
-    union { u32 field_604; u32 content_bottom; };
-    union { u8 pad_608[80]; struct { u8 pedia_body_blit_rect[16]; u8 pedia_title_text_2[64]; }; };
-    union { u32 field_658; u32 pedia_advance_count; };
-    union { u8 pad_65c[800]; struct { u8 advance_sort_keys[120]; u8 editor_ok_button[60]; u8 editor_help_button[60]; u8 editor_cancel_button[60]; u8 editor_rename_button[60]; u8 editor_icon_button[28]; u8 advance_items_view[12]; u8 advance_list_items[20]; u8 editor_misc_button[60]; u8 terrain_coast_button[60]; u32 terrain_misc_button; u8 gap_87c[56]; u8 unit_flags_button[60]; u8 unit_sound_button[56]; u8 improvement_topic_view[4]; u8 add_trigger_button[60]; u8 edit_trigger_button[20]; }; };
-    union { u32 field_97c; u32 pedia_improve_count; };
-    union { u8 pad_980[144]; struct { u8 improvement_sort_keys[36]; u32 delete_trigger_button; u8 improvement_list_init_area[56]; u8 add_action_button[48]; }; };
-    union { u32 field_a10; u32 start_frame; };
-    union { u32 field_a14; u32 end_frame; };
-    union { u32 field_a18; u32 current_frame; };
-    union { u32 field_a1c; u32 edit_action_button; };
-    union { u32 field_a20; u32 cue_frame; };
-    union { u32 field_a24; u32 loop; };
-} DocumentWindow;
+static_assert(sizeof(DibSurface) == 0x48, "");
 
 /* The dialog: dialog_ctor (0059db08) on stack objects; its views (DialogCore,
    DialogTextView, DialogOptionList, ...) are folded in. */
@@ -2201,11 +577,6 @@ typedef struct GameFont {
     union { u32 field_0; u32 hfont; };
     union { u32 field_4; u32 cached_height; };
 } GameFont;
-
-/* 1 methods, size 0x510 */
-typedef struct TaxRateDialog {
-    u8 pad_0[1296];
-} TaxRateDialog;
 
 /* The controls.  Control (ctrl_base_ctor 0040f480, 0x2c bytes) is the base
    of every control class: each derived class's constructor calls
@@ -2380,113 +751,6 @@ typedef struct Sprite {
     union { uptr field_38; uptr data_ptr; };
 } Sprite;
 
-/* A rules/scenario editor's window (editor_wnd_ctor, 0xb50 bytes; one class
- * for all editors, each uses the controls it needs).  The editor that runs
- * is editor_text_dlg_wnd_block.active_editor_wnd. */
-typedef struct EditorWindow {
-    DibSurface surface;             /* 0x000 */
-    ModalMenuWindow window;         /* 0x048 */
-    u8 frame_rest[0x1d8];           /* 0x100 the rest of the frame window */
-    i32 wnd_width;                  /* 0x2d8 */
-    i32 wnd_height;                 /* 0x2dc */
-    i32 button_width;               /* 0x2e0 */
-    i32 button_height;              /* 0x2e4 */
-    i32 font_height;                /* 0x2e8 */
-    i32 item;                       /* 0x2ec the item edited (combo 0's selection) */
-    i32 item_2;                     /* 0x2f0 city editor: combo 1's selection */
-    i32 item_3;                     /* 0x2f4 city editor: combo 2's selection */
-    i32 combo_count;                /* 0x2f8 combo boxes created */
-    ComboBox combos[6];          /* 0x2fc */
-    EditControl edits[9];          /* 0x44c */
-    Button ok_button;              /* 0x6d4 */
-    Button help_button;            /* 0x710 */
-    Button cancel_button;          /* 0x74c */
-    Button rename_button;          /* 0x788 */
-    Button icon_button;            /* 0x7c4 */
-    Button misc_button;            /* 0x800 */
-    Button coast_button;           /* 0x83c */
-    Button terrain_misc_button;    /* 0x878 */
-    Button unit_flags_button;      /* 0x8b4 */
-    Button unit_sound_button;      /* 0x8f0 */
-    Button add_trigger_button;     /* 0x92c */
-    Button edit_trigger_button;    /* 0x968 */
-    Button delete_trigger_button;  /* 0x9a4 */
-    Button add_action_button;      /* 0x9e0 */
-    Button edit_action_button;     /* 0xa1c */
-    Button delete_action_button;   /* 0xa58 */
-    ListBox list_box;               /* 0xa94 (listbox_ctor) */
-    ListBox trigger_listbox;        /* 0xad0 */
-    ListBox action_listbox;         /* 0xb0c */
-    u8 pad_b48[8];
-} EditorWindow;
-#ifdef __cplusplus
-static_assert(sizeof(EditorWindow) == 0xb50, "");
-static_assert(__builtin_offsetof(EditorWindow, combos) == 0x2fc, "");
-static_assert(__builtin_offsetof(EditorWindow, edits) == 0x44c, "");
-static_assert(__builtin_offsetof(EditorWindow, ok_button) == 0x6d4, "");
-static_assert(__builtin_offsetof(EditorWindow, add_trigger_button) == 0x92c, "");
-static_assert(__builtin_offsetof(EditorWindow, list_box) == 0xa94, "");
-static_assert(__builtin_offsetof(EditorWindow, wnd_width) == 0x2d8 && __builtin_offsetof(EditorWindow, item) == 0x2ec && __builtin_offsetof(EditorWindow, combo_count) == 0x2f8, "");
-static_assert(__builtin_offsetof(EditorWindow, trigger_listbox) == 0xad0 && __builtin_offsetof(EditorWindow, action_listbox) == 0xb0c, "");
-#endif
-
-/* A map view window (0x3f0 bytes; map_views_block.map_view_recs[8], view 0
- * is the main map). */
-typedef struct MapView {
-    DibSurface surface;             /* 0x000 */
-    ModalMenuWindow window;         /* 0x048 */
-    u8 pad_100[0x24];
-    i32 client_origin_x;            /* 0x124 */
-    i32 client_origin_y;            /* 0x128 */
-    u8 pad_12c[0xb4];
-    i32 timer_shown;                /* 0x1e0 */
-    i32 status_shown;               /* 0x1e4 */
-    i32 timer_cache;                /* 0x1e8 */
-    u8 pad_1ec[0xc0];
-    i32 frame_left;                 /* 0x2ac */
-    i32 frame_top;                  /* 0x2b0 */
-    i32 frame_right;                /* 0x2b4 */
-    u8 pad_2b8[8];
-    i32 client_top;                 /* 0x2c0 */
-    u8 pad_2c4[0x18];
-    i16 open;                       /* 0x2dc nonzero: the view is open */
-    u16 track_moves;                /* 0x2de */
-    i16 center_x;                   /* 0x2e0 */
-    i16 center_y;                   /* 0x2e2 */
-    i16 zoom;                       /* 0x2e4 */
-    i16 field_2e6;
-    i32 origin_x;                   /* 0x2e8 */
-    i32 origin_y;                   /* 0x2ec */
-    i32 end_x;                      /* 0x2f0 */
-    i32 end_y;                      /* 0x2f4 */
-    u8 pad_2f8[0x10];
-    i32 tile_width;                 /* 0x308 */
-    i32 tile_height;                /* 0x30c */
-    i32 half_tile_width;            /* 0x310 */
-    i32 half_tile_height;           /* 0x314 */
-    i32 quarter_tile_width;         /* 0x318 */
-    u8 pad_31c[8];
-    i32 unit_sprite_height;         /* 0x324 */
-    i32 layout_width;               /* 0x328 */
-    i32 layout_height;              /* 0x32c */
-    i32 margin_x;                   /* 0x330 */
-    i32 margin_y;                   /* 0x334 */
-    u8 tile_number_font[0x20];      /* 0x338 */
-    i32 cursor_id;                  /* 0x358 */
-    u8 pad_35c[0x94];
-} MapView;
-#ifdef __cplusplus
-static_assert(sizeof(MapView) == 0x3f0, "");
-static_assert(__builtin_offsetof(MapView, open) == 0x2dc, "");
-static_assert(__builtin_offsetof(MapView, tile_width) == 0x308, "");
-static_assert(__builtin_offsetof(MapView, cursor_id) == 0x358, "");
-static_assert(__builtin_offsetof(MapView, client_origin_x) == 0x124 && __builtin_offsetof(MapView, timer_shown) == 0x1e0, "");
-static_assert(__builtin_offsetof(MapView, frame_left) == 0x2ac && __builtin_offsetof(MapView, client_top) == 0x2c0, "");
-static_assert(__builtin_offsetof(MapView, center_x) == 0x2e0 && __builtin_offsetof(MapView, origin_x) == 0x2e8, "");
-static_assert(__builtin_offsetof(MapView, half_tile_width) == 0x310 && __builtin_offsetof(MapView, quarter_tile_width) == 0x318, "");
-static_assert(__builtin_offsetof(MapView, unit_sprite_height) == 0x324 && __builtin_offsetof(MapView, margin_y) == 0x334, "");
-#endif
-
 /* 11 methods, size 0x98 (file_obj_init clears 0x98 bytes) */
 typedef struct FileObject {
     u8 pad_0[4];
@@ -2576,7 +840,6 @@ typedef struct LobbyList {
     u32 drop_counts[7];             /* 0x54 connections lost, per player */
 } LobbyList;
 static_assert(sizeof(LobbyList) == 0x70, "");
-
 
 /* A hotspot of a ClickMap (clickmap_add). */
 typedef struct ClickRegion {
@@ -2723,51 +986,6 @@ static_assert(sizeof(NetServerInfoMsg) == 0x198 && sizeof(NetServerAnswerMsg) ==
 static_assert(sizeof(NetPlayerNodeMsg) == 0x64 && sizeof(NetPlayerListMsg) == 0x280, "");
 static_assert(sizeof(NetWhoseTurnMsg) == 0x14 && sizeof(NetPlayerInfoMsg) == 0x118, "");
 
-/* 1 methods, size 0x48 */
-typedef struct AviPlayerEndCbSetView {
-    u8 pad_0[72];
-} AviPlayerEndCbSetView;
-
-/* AviPlayerEndCbSetView where the code reaches past its end: the object is larger */
-typedef struct AviPlayerEndCbSetViewExt {
-    AviPlayerEndCbSetView base;
-    u8 pad_48[204];
-    u8 on_end_callback[1];
-} AviPlayerEndCbSetViewExt;
-
-/* 1 methods, size 0xa24 */
-typedef struct AviPlayerSetFrameCallbackView {
-    u8 pad_0[280];
-    union { u32 field_118; u32 on_frame; };
-    u8 pad_11c[2308];
-    union { u32 field_a20; u32 callback_frame; };
-} AviPlayerSetFrameCallbackView;
-
-/* 1 methods, size 0x338 */
-typedef struct MapViewHitView {
-    u8 pad_0[292];
-    union { u32 field_124; u32 client_x; };
-    union { u32 field_128; u32 client_y; };
-    union { u32 field_12c; u32 view_width; };
-    union { u32 field_130; u32 view_height; };
-    u8 pad_134[436];
-    union { u32 field_2e8; u32 origin_tile_x; };
-    union { u32 field_2ec; u32 origin_tile_y; };
-    u8 pad_2f0[24];
-    union { u32 field_308; u32 tile_width; };
-    union { u32 field_30c; u32 tile_height; };
-    u8 pad_310[32];
-    union { u32 field_330; u32 scroll_px_x; };
-    union { u32 field_334; u32 scroll_px_y; };
-} MapViewHitView;
-
-/* MapViewHitView where the code reaches past its end: the object is larger */
-typedef struct MapViewHitViewExt {
-    MapViewHitView base;
-    u8 pad_338[40];
-    u8 view_surface[1];
-} MapViewHitViewExt;
-
 /* 1 methods, size 0xa0 */
 typedef struct FileSeekView {
     u8 pad_0[160];
@@ -2777,11 +995,6 @@ typedef struct FileSeekView {
 typedef struct FileReadLineView {
     u8 pad_0[160];
 } FileReadLineView;
-
-/* 1 methods, size 0x1dc */
-typedef struct PortraitDlgDtorView {
-    union { u8 pad_0[476]; struct { u8 window_base[476]; }; };
-} PortraitDlgDtorView;
 
 /* 1 methods, size 0x18 */
 typedef struct DiffEngSection {
@@ -2804,112 +1017,6 @@ typedef struct ParleyCaptionButton {
 } ParleyCaptionButton;
 static_assert(sizeof(ParleyCaptionButton) == 0x1c, "");
 
-/* The diplomacy (parley) and chat window (0x10430 bytes): two instances,
- * parley_wnd_block and chat_wnd_block (mode 4).  Two sides: [0] left (the
- * local civ), [1] right; each side shows a list pane (units, cities, advances
- * or civs) or one of the offer controls.  Controls are kept as u32. */
-typedef struct ParleyWindow {
-    SurfaceWindow base;             /* 0x000 surface and its window (0x48) */
-    u32 closed;                     /* 0x114 */
-    u32 other_civ;                  /* 0x118 the civ on the right side */
-    u32 wnd_x;                      /* 0x11c */
-    u32 wnd_y;                      /* 0x120 */
-    u32 width;                      /* 0x124 */
-    u32 height;                     /* 0x128 */
-    u32 caption_height;             /* 0x12c */
-    u32 client_left;                /* 0x130 RECT */
-    u32 client_top;                 /* 0x134 */
-    u32 client_right;               /* 0x138 */
-    u32 client_bottom;              /* 0x13c */
-    u32 panel_left;                 /* 0x140 RECT inside the frame */
-    u32 panel_top;                  /* 0x144 */
-    u32 panel_right;                /* 0x148 */
-    u32 panel_bottom;               /* 0x14c */
-    u32 init_rect;                  /* 0x150 RECT * of the initial placement */
-    u32 large_layout;               /* 0x154 */
-    u32 built_layout;               /* 0x158 large_layout the controls were made for */
-    char title[96];                 /* 0x15c */
-    u8 pad_1bc[36];
-    u32 divider_y;                  /* 0x1e0 bottom of the side panes */
-    u32 side_selected[2];           /* 0x1e4 the side has something selected */
-    u32 mode;                       /* 0x1ec 4: chat */
-    u32 left_kind;                  /* 0x1f0 */
-    u32 right_kind;                 /* 0x1f4 */
-    u32 shown_left_kind;            /* 0x1f8 */
-    u32 shown_right_kind;           /* 0x1fc */
-    u32 side_kind[2];               /* 0x200 what each side shows */
-    u32 selected_action;            /* 0x208 */
-    u32 exchange_kind[2];           /* 0x20c */
-    u32 demand_kind;                /* 0x214 */
-    u32 treaty_kind;                /* 0x218 */
-    u32 proposal_kind;              /* 0x21c */
-    u32 gift_kind;                  /* 0x220 */
-    u32 map_choice[2];              /* 0x224 */
-    u32 gold_amount[2];             /* 0x22c */
-    ParleyOfferMsg *received_offer; /* 0x234 the offer received */
-    u32 offer_acceptable;           /* 0x238 */
-    ParleyCaptionButton caption_buttons[3];  /* 0x23c */
-    u32 close_button;               /* 0x290 */
-    u32 desc_edit;                  /* 0x294 the offer's description */
-    u32 chat_input_edit;            /* 0x298 */
-    u32 chat_log_edit;              /* 0x29c */
-    u32 send_button;                /* 0x2a0 */
-    u32 clear_button;               /* 0x2a4 */
-    u32 send_checkboxes[8];         /* 0x2a8 chat: per civ */
-    u32 mute_checkboxes[8];         /* 0x2c8 */
-    u32 anonymous_checkbox;         /* 0x2e8 */
-    u32 mute_anonymous_checkbox;    /* 0x2ec */
-    u32 broadcast_checkbox;         /* 0x2f0 */
-    u32 remain_anonymous;           /* 0x2f4 */
-    u32 mute_anonymous;             /* 0x2f8 */
-    u32 broadcast_all;              /* 0x2fc */
-    u32 send_to_civs[8];            /* 0x300 */
-    u32 muted_civs[8];              /* 0x320 */
-    u32 conceal_button;             /* 0x340 */
-    u32 reveal_button;              /* 0x344 */
-    u32 mode_button;                /* 0x348 */
-    u32 mode2_button;               /* 0x34c */
-    u32 never_mind_button;          /* 0x350 */
-    u32 intel_button;               /* 0x354 */
-    u32 accept_button;              /* 0x358 */
-    u32 no_thanks_button;           /* 0x35c */
-    u32 counter_button;             /* 0x360 */
-    u32 side_checkboxes[2];         /* 0x364 */
-    u32 side_radios[2];             /* 0x36c */
-    u32 gold_edits[2];              /* 0x374 */
-    u32 list_scrollbars[2];         /* 0x37c */
-    u32 list_hotspots[2];           /* 0x384 */
-    u32 sort_by_unit_buttons[2];    /* 0x38c */
-    u32 sort_by_city_buttons[2];    /* 0x394 */
-    u32 info_show_buttons[2];       /* 0x39c units/cities' origin: reveal (left), request (right) */
-    u32 info_hide_buttons[2];       /* 0x3a4 hide (left), request done (right) */
-    u32 fill_left;                  /* 0x3ac RECT of the background */
-    u32 fill_top;                   /* 0x3b0 */
-    u32 fill_right;                 /* 0x3b4 */
-    u32 fill_bottom;                /* 0x3b8 */
-    u8 remote_units_revealed;       /* 0x3bc */
-    u8 local_units_revealed;        /* 0x3bd */
-    u8 local_cities_revealed;       /* 0x3be */
-    u8 remote_cities_revealed;      /* 0x3bf */
-    u32 list_rects[8];              /* 0x3c0 RECT per pane */
-    u32 list_columns[2];            /* 0x3e0 */
-    i32 list_counts[2];             /* 0x3e8 items in each pane */
-    u32 list_items[0x1002];         /* 0x3f0 [pane * 0x801 + i] */
-    u32 list_items_b[0x1002];       /* 0x43f8 */
-    u32 list_selected[0x1002];      /* 0x8400 */
-    u32 list_selected_b[0x1002];    /* 0xc408 */
-    i32 list_first_row[2];          /* 0x10410 scroll position, -1 empty */
-    i32 list_anchor_row[2];         /* 0x10418 selection anchor */
-    i32 list_rows[2];               /* 0x10420 rows shown */
-    u32 offer_counts[2];            /* 0x10428 items offered by each side */
-} ParleyWindow;
-static_assert(sizeof(ParleyWindow) == 0x10430, "");
-
-/* 1 methods, size 0x1188 */
-typedef struct WonderMovieWindow {
-    union { u8 pad_0[4488]; struct { u8 window_base[4488]; }; };
-} WonderMovieWindow;
-
 /* A received message waiting in the queue (0xc bytes). */
 typedef struct NetMsgSlot {
     i32 sender;                     /* 0x0 */
@@ -2930,24 +1037,6 @@ typedef struct NetMsgQueue {
     u32 prio_count;                 /* 0x5dd4 */
 } NetMsgQueue;
 static_assert(sizeof(NetMsgQueue) == 0x5dd8, "");
-
-/* 1 methods, size 0x1330 */
-typedef struct CouncilWindow {
-    union { u8 pad_0[4912]; struct { u8 window_base[4912]; }; };
-} CouncilWindow;
-
-/* 1 methods, size 0x12c */
-typedef struct SetupPicWndRectView {
-    u8 pad_0[292];
-    union { u32 field_124; u32 client_origin_x; };
-    union { u32 field_128; u32 client_origin_y; };
-} SetupPicWndRectView;
-
-/* 1 methods, size 0x2e6 */
-typedef struct MapViewZoomView {
-    u8 pad_0[740];
-    union { u16 field_2e4; u16 zoom; };
-} MapViewZoomView;
 
 /* 33 methods, size 0x20 */
 typedef struct GameMenu {
@@ -3243,61 +1332,6 @@ typedef struct MenuSubmenuView {
     union { u32 field_0; u32 hmenu; };
 } MenuSubmenuView;
 
-/* 1 methods, size 0x48 */
-typedef struct AviPlayerOpenView {
-    u8 pad_0[72];
-} AviPlayerOpenView;
-
-/* 1 methods, size 0x48 */
-typedef struct AviPlayerPlayView {
-    u8 pad_0[72];
-} AviPlayerPlayView;
-
-/* AviPlayerPlayView where the code reaches past its end: the object is larger */
-typedef struct AviPlayerPlayViewExt {
-    AviPlayerPlayView base;
-    u8 pad_48[2524];
-    u8 loop_flag[1];
-    u8 loop_flag_byte1[1];
-    u8 loop_flag_byte2[1];
-    u8 loop_flag_byte3[1];
-} AviPlayerPlayViewExt;
-
-/* 1 methods, size 0xa28 */
-typedef struct AviPlayerRangeView {
-    u8 pad_0[2576];
-    union { u32 field_a10; u32 start_frame; };
-    union { u32 field_a14; u32 end_frame; };
-    u8 pad_a18[12];
-    union { u32 field_a24; u32 loop; };
-} AviPlayerRangeView;
-
-/* 1 methods, size 0xa28 */
-typedef struct AviPlayerPlayFromStartView {
-    u8 pad_0[2596];
-    union { u32 field_a24; u32 is_playing; };
-} AviPlayerPlayFromStartView;
-
-/* 1 methods, size 0xa28 */
-typedef struct AviPlayerLoopView {
-    u8 pad_0[2576];
-    union { u32 field_a10; u32 start_frame; };
-    union { u32 field_a14; u32 end_frame; };
-    u8 pad_a18[12];
-    union { u32 field_a24; u32 loop; };
-} AviPlayerLoopView;
-
-/* 1 methods, size 0x48 */
-typedef struct AviPlayerPauseView {
-    u8 pad_0[72];
-} AviPlayerPauseView;
-
-/* 1 methods, size 0x5a8 */
-typedef struct AviPlayerSetTransparentView {
-    u8 pad_0[1444];
-    union { u32 field_5a4; u32 is_transparent; };
-} AviPlayerSetTransparentView;
-
 /* 1 methods, size 0x3c */
 typedef struct SurfaceRowOffsetsView {
     u8 pad_0[56];
@@ -3308,20 +1342,6 @@ typedef struct SurfaceRowOffsetsView {
 typedef struct DDPaletteIfaceView {
     union { u32 field_0; u32 iface; };
 } DDPaletteIfaceView;
-
-/* 1 methods, size 0x118 */
-typedef struct AviPlayerEndCbCallView {
-    u32 field_0;
-    u8 pad_4[272];
-    union { uptr field_114; uptr on_end; };
-} AviPlayerEndCbCallView;
-
-/* 1 methods, size 0x11c */
-typedef struct AviPlayerCueCbCallView {
-    u32 field_0;
-    u8 pad_4[276];
-    union { uptr field_118; uptr on_cue; };
-} AviPlayerCueCbCallView;
 
 /* 3 methods, size 0x40 */
 typedef struct DDSurfacePixelView {
@@ -3513,35 +1533,6 @@ typedef struct AviAudio {
     u8 pad_0[4];
     union { u32 field_4; u32 audio_stream; };
 } AviAudio;
-
-/* 2 methods, size 0xa48 */
-typedef struct AviPlayer {
-    union { u8 pad_0[284]; struct { u8 media_window_base[284]; }; };
-    AviAudio audio;                                     /* 0x11c */
-    GamePalette palette;                                /* 0x124 */
-    DibSurface backdrop;                                /* 0x558 transparent: what the frame is drawn over */
-    union { i32 field_5a0; i32 double_size; };
-    union { i32 field_5a4; i32 transparent; };
-    union { i32 field_5a8; i32 has_audio; };
-    union { i32 field_5ac; i32 paused; };
-    union { i32 field_5b0; i32 audio_playing; };
-    union { i32 field_5b4; i32 target_surface; };       /* DibSurface * */
-    union { i32 field_5b8; i32 pos_x; };
-    union { i32 field_5bc; i32 pos_y; };
-    BitmapInfoHeader src_format;                        /* 0x5c0 the stream's frames */
-    BitmapInfoHeader dst_format;                        /* 0x5e8 decompressed, followed by */
-    u8 dst_colors[1024];                                /* 0x610 its RGBQUAD palette */
-    union { i32 field_a10; i32 start_frame; };
-    union { i32 field_a14; i32 end_frame; };
-    union { i32 field_a18; i32 cur_frame; };
-    u8 pad_a1c[4];
-    union { i32 field_a20; i32 cue_frame; };
-    union { i32 field_a24; i32 loop; };
-    u8 pad_a28[32];
-} AviPlayer;
-#ifdef __cplusplus
-static_assert(sizeof(AviPlayer) == 0xa48, "");
-#endif
 
 /* 1 methods, size 0x8 */
 typedef struct AviAudioSetStreamView {
@@ -3869,6 +1860,619 @@ typedef struct DdwinGetPaletteView {
     u8 pad_0[172];
     union { u32 field_ac; u32 palette_obj; };
 } DdwinGetPaletteView;
+
+/* The window classes with a drawing surface.  SurfaceWindow (surfwnd_ctor
+   0044c5a0, 0x114 bytes) is a DibSurface with its window (a Wnd, at 0x48)
+   and a paint callback; FrameWindow (frame_wnd_ctor) adds a caption and a
+   border.  Each derived constructor calls its base's first. */
+typedef struct SurfaceWindow : DibSurface {
+    Wnd window;                     /* 0x048 (surfwnd_wnd_ctor) */
+    uptr on_paint;                  /* 0x110 wnd_set_redraw_callback */
+} SurfaceWindow;
+static_assert(sizeof(SurfaceWindow) == 0x114, "");
+
+/* A framed window (frame_wnd_ctor 0055339f, 0x2d8 bytes): a SurfaceWindow
+   with a caption (title, turn timer), up to 6 caption buttons, a border and
+   the client rectangle.  Static ones: minimap_window_block,
+   status_window_block (status, sprite editor), editor_text_dlg_wnd_block,
+   unit_sound_editor_window_block; the classes below derive from it. */
+typedef struct FrameWindow : SurfaceWindow {
+    u32 style_flags;
+    u32 caption_height;
+    u32 border_width;
+    u32 resize_border;
+    union { i32 client_origin_x; u32 client_x; };
+    union { i32 client_origin_y; u32 client_y; };
+    u32 client_width;
+    u32 client_height;
+    u8 frame_title[132];
+    u8 timer_text;
+    u8 timer_minutes_text[1];
+    u8 timer_colon;
+    u8 timer_seconds_text;
+    u8 timer_seconds_digits[32];
+    u8 pad_1dc[4];
+    union { i32 timer_shown; u32 show_turn_timer; };
+    union { i32 status_shown; u32 show_turn_status; };
+    union { i32 timer_cache; u32 timer_last_value; };
+    u8 pad_1ec[16];
+    u32 caption_button_count;
+    union { ParleyCaptionButton caption_buttons[6]; struct { u8 caption_button_area[8]; u8 gap_208_1[16]; u32 caption_button_slots[34]; }; struct { u8 gap_200_2[80]; u8 close_caption_sprite_slot[4]; }; };
+    u32 on_caption_button;
+    union { i32 frame_left; u32 frame_rect; };
+    union { i32 frame_top; u32 frame_top_u; };
+    union { i32 frame_right; u32 frame_right_u; };
+    u32 frame_bottom;
+    u32 client_rect;
+    union { i32 client_top; u32 client_top_u; };
+    u8 pad_2c4[8];
+    uptr title_font;
+    uptr title_small_font;
+    u8 text_font[4];
+} FrameWindow;
+static_assert(sizeof(FrameWindow) == 0x2d8, "");
+
+/* The video player window (mmwnd_ctor 005dd010, operator_new(0xa28)): an
+   AVI stream drawn into the window's surface, with its sound and palette.
+   Embedded in the council, wonder movie, endgame and diplomacy windows. */
+typedef struct AviPlayer : SurfaceWindow {
+    u32 on_end;                     /* 0x114 called when the video ends */
+    u32 on_frame;                   /* 0x118 called at cue_frame */
+    union { AviAudio audio; u32 audio_u; };
+    union { GamePalette palette; u32 palette_u; };
+    union { DibSurface backdrop; u8 backdrop_bytes[72]; };
+    union { i32 double_size; u32 double_size_u; };
+    union { i32 transparent; u32 transparent_u; };
+    union { i32 has_audio; u32 has_audio_u; };
+    union { i32 paused; u32 paused_u; };
+    union { i32 audio_playing; u32 audio_playing_u; };
+    union { i32 target_surface; uptr target_surface_uptr; };
+    union { i32 pos_x; u32 pos_x_u; };
+    union { i32 pos_y; u32 pos_y_u; };
+    BitmapInfoHeader src_format;
+    BitmapInfoHeader dst_format;
+    u8 dst_colors[1024];
+    union { i32 start_frame; u32 start_frame_u; };
+    union { i32 end_frame; u32 end_frame_u; };
+    union { i32 cur_frame; u32 cur_frame_u; };
+    u32 field_a1c;
+    union { i32 cue_frame; u32 cue_frame_u; };
+    union { i32 loop; u32 loop_u; u8 loop_bytes[4]; };
+} AviPlayer;
+static_assert(sizeof(AviPlayer) == 0xa28, "");
+
+/* The leader portrait dialog (portrait_dlg_ctor 0049621d, 0x1e8 bytes on
+   portrait_dlg_show's stack). */
+typedef struct PortraitDialog : SurfaceWindow {
+    union { DibSurface surface; u32 surface_head; };
+    union { Button cancel_button; u8 cancel_button_bytes[24]; };
+    union { Button ok_button; u8 ok_button_bytes[32]; };
+    union { u8 dll_bytes[8]; DllHandle dll; };
+    u32 civ;
+    u32 field_1e0;
+    u32 result;
+} PortraitDialog;
+static_assert(sizeof(PortraitDialog) == 0x1e8, "");
+
+/* The diplomacy (parley) and chat window (parley_wnd_ctor 004b4108, 0x10430
+ * bytes): two instances, parley_wnd_block and chat_wnd_block (mode 4).  Two sides: [0] left (the
+ * local civ), [1] right; each side shows a list pane (units, cities, advances
+ * or civs) or one of the offer controls.  Controls are kept as u32. */
+typedef struct ParleyWindow : SurfaceWindow {
+    u32 closed;                     /* 0x114 */
+    u32 other_civ;                  /* 0x118 the civ on the right side */
+    u32 wnd_x;                      /* 0x11c */
+    u32 wnd_y;                      /* 0x120 */
+    u32 width;                      /* 0x124 */
+    u32 height;                     /* 0x128 */
+    u32 caption_height;             /* 0x12c */
+    u32 client_left;                /* 0x130 RECT */
+    u32 client_top;                 /* 0x134 */
+    u32 client_right;               /* 0x138 */
+    u32 client_bottom;              /* 0x13c */
+    u32 panel_left;                 /* 0x140 RECT inside the frame */
+    u32 panel_top;                  /* 0x144 */
+    u32 panel_right;                /* 0x148 */
+    u32 panel_bottom;               /* 0x14c */
+    u32 init_rect;                  /* 0x150 RECT * of the initial placement */
+    u32 large_layout;               /* 0x154 */
+    u32 built_layout;               /* 0x158 large_layout the controls were made for */
+    char title[96];                 /* 0x15c */
+    u8 pad_1bc[36];
+    u32 divider_y;                  /* 0x1e0 bottom of the side panes */
+    u32 side_selected[2];           /* 0x1e4 the side has something selected */
+    u32 mode;                       /* 0x1ec 4: chat */
+    u32 left_kind;                  /* 0x1f0 */
+    u32 right_kind;                 /* 0x1f4 */
+    u32 shown_left_kind;            /* 0x1f8 */
+    u32 shown_right_kind;           /* 0x1fc */
+    u32 side_kind[2];               /* 0x200 what each side shows */
+    u32 selected_action;            /* 0x208 */
+    u32 exchange_kind[2];           /* 0x20c */
+    u32 demand_kind;                /* 0x214 */
+    u32 treaty_kind;                /* 0x218 */
+    u32 proposal_kind;              /* 0x21c */
+    u32 gift_kind;                  /* 0x220 */
+    u32 map_choice[2];              /* 0x224 */
+    u32 gold_amount[2];             /* 0x22c */
+    ParleyOfferMsg *received_offer; /* 0x234 the offer received */
+    u32 offer_acceptable;           /* 0x238 */
+    ParleyCaptionButton caption_buttons[3];  /* 0x23c */
+    u32 close_button;               /* 0x290 */
+    u32 desc_edit;                  /* 0x294 the offer's description */
+    u32 chat_input_edit;            /* 0x298 */
+    u32 chat_log_edit;              /* 0x29c */
+    u32 send_button;                /* 0x2a0 */
+    u32 clear_button;               /* 0x2a4 */
+    u32 send_checkboxes[8];         /* 0x2a8 chat: per civ */
+    u32 mute_checkboxes[8];         /* 0x2c8 */
+    u32 anonymous_checkbox;         /* 0x2e8 */
+    u32 mute_anonymous_checkbox;    /* 0x2ec */
+    u32 broadcast_checkbox;         /* 0x2f0 */
+    u32 remain_anonymous;           /* 0x2f4 */
+    u32 mute_anonymous;             /* 0x2f8 */
+    u32 broadcast_all;              /* 0x2fc */
+    u32 send_to_civs[8];            /* 0x300 */
+    u32 muted_civs[8];              /* 0x320 */
+    u32 conceal_button;             /* 0x340 */
+    u32 reveal_button;              /* 0x344 */
+    u32 mode_button;                /* 0x348 */
+    u32 mode2_button;               /* 0x34c */
+    u32 never_mind_button;          /* 0x350 */
+    u32 intel_button;               /* 0x354 */
+    u32 accept_button;              /* 0x358 */
+    u32 no_thanks_button;           /* 0x35c */
+    u32 counter_button;             /* 0x360 */
+    u32 side_checkboxes[2];         /* 0x364 */
+    u32 side_radios[2];             /* 0x36c */
+    u32 gold_edits[2];              /* 0x374 */
+    u32 list_scrollbars[2];         /* 0x37c */
+    u32 list_hotspots[2];           /* 0x384 */
+    u32 sort_by_unit_buttons[2];    /* 0x38c */
+    u32 sort_by_city_buttons[2];    /* 0x394 */
+    u32 info_show_buttons[2];       /* 0x39c units/cities' origin: reveal (left), request (right) */
+    u32 info_hide_buttons[2];       /* 0x3a4 hide (left), request done (right) */
+    u32 fill_left;                  /* 0x3ac RECT of the background */
+    u32 fill_top;                   /* 0x3b0 */
+    u32 fill_right;                 /* 0x3b4 */
+    u32 fill_bottom;                /* 0x3b8 */
+    u8 remote_units_revealed;       /* 0x3bc */
+    u8 local_units_revealed;        /* 0x3bd */
+    u8 local_cities_revealed;       /* 0x3be */
+    u8 remote_cities_revealed;      /* 0x3bf */
+    u32 list_rects[8];              /* 0x3c0 RECT per pane */
+    u32 list_columns[2];            /* 0x3e0 */
+    i32 list_counts[2];             /* 0x3e8 items in each pane */
+    u32 list_items[0x1002];         /* 0x3f0 [pane * 0x801 + i] */
+    u32 list_items_b[0x1002];       /* 0x43f8 */
+    u32 list_selected[0x1002];      /* 0x8400 */
+    u32 list_selected_b[0x1002];    /* 0xc408 */
+    i32 list_first_row[2];          /* 0x10410 scroll position, -1 empty */
+    i32 list_anchor_row[2];         /* 0x10418 selection anchor */
+    i32 list_rows[2];               /* 0x10420 rows shown */
+    u32 offer_counts[2];            /* 0x10428 items offered by each side */
+} ParleyWindow;
+static_assert(sizeof(ParleyWindow) == 0x10430, "");
+
+/* The Civilopedia window (pedia_window_ctor 004f3feb; one instance,
+   pedia_window_block.pedia_window, whose members after 0x114 the code also
+   reaches as pedia_window_block globals).  0x1f44 bytes: the end of the
+   last member used. */
+typedef struct PediaWindow : SurfaceWindow {
+    u32 closed;
+    u32 category;
+    u32 border_width;
+    u32 resize_border;
+    u32 client_x;
+    u32 client_y;
+    i32 pedia_history_topics[100];
+    i32 pedia_history_page_modes[100];
+    i32 pedia_history_categories[100];
+    u32 panel_width;
+    u32 panel_height;
+    u32 header_height;
+    u8 pedia_frame_rect[8];
+    u32 frame_rect_right;
+    u8 pad_5f4[4];
+    u32 content_left;
+    u32 content_top;
+    u32 content_right;
+    u32 content_bottom;
+    u8 pedia_body_blit_rect[16];
+    union { u8 pedia_title_text_2_618[64]; struct { u8 pedia_title_text_2[4]; u8 gap_61c_1[8]; u8 pedia_list_init_area[52]; }; };
+    u32 pedia_advance_count;
+    union { i32 pedia_advance_keys[100]; u8 advance_sort_keys[120]; };
+    i32 pedia_advance_ids[100];
+    u32 pedia_improve_count;
+    union { i32 pedia_improve_keys[39]; struct { u8 improvement_sort_keys[36]; u8 gap_9a4_1[4]; u8 improvement_list_init_area[56]; }; };
+    union { i32 pedia_improve_ids[39]; struct { u8 gap_a1c_1[84]; u8 wonder_sort_keys_view[36]; }; };
+    i32 pedia_wonder_count;
+    union { i32 pedia_wonder_keys[28]; struct { u8 gap_abc_1[24]; u8 improvement_key_slots[56]; }; };
+    union { i32 pedia_wonder_ids[28]; struct { u8 gap_b2c_1[88]; u8 unit_key_slots[12]; u8 unit_key_init_slots[12]; }; };
+    i32 pedia_unit_count;
+    i32 pedia_unit_keys[62];
+    union { i32 pedia_unit_ids[62]; struct { u8 gap_c98_1[148]; u8 pedia_key_init_slots[32]; u8 gap_d4c_1[64]; u8 government_key_slots[4]; }; };
+    i32 pedia_government_count;
+    i32 pedia_government_keys[7];
+    i32 pedia_government_ids[7];
+    union { i32 pedia_terrain_count; uptr pedia_terrain_count_2; };
+    union { i32 pedia_terrain_keys[33]; struct { u8 gap_dd0_1[24]; u8 terrain_key_slots[72]; }; };
+    union { i32 pedia_terrain_ids[33]; struct { u8 gap_e54_1[4]; u32 advisor_opinions[5]; u8 gap_e6c_1[96]; u8 concept_key_slots[12]; }; };
+    i32 pedia_concept_count;
+    i32 pedia_concept_keys[256];
+    i32 pedia_concept_ids[256];
+    struct PediaListNode *pedia_advance_names;
+    struct PediaListNode *pedia_improve_names;
+    struct PediaListNode *pedia_wonder_names;
+    struct PediaListNode *pedia_unit_names;
+    struct PediaListNode *pedia_government_names;
+    struct PediaListNode *pedia_terrain_names;
+    struct PediaListNode *pedia_concept_names;
+    u32 has_close_box;
+    u8 pad_16fc[8];
+    u32 close_box_width;
+    u32 close_box_height;
+    u32 close_box_sprite;
+    struct Hotspot *close_box_hotspot;
+    u8 list_describe_button[60];
+    u32 list_close_button;
+    u8 pad_1754[56];
+    u32 detail_back_button;
+    u8 pad_1790[56];
+    u8 detail_describe_button[60];
+    u32 detail_close_button;
+    u8 pad_1808[56];
+    u8 text_back_button[60];
+    u32 text_close_button;
+    u8 pad_1880[56];
+    u32 concept_list_back_button;
+    u8 pad_18bc[56];
+    u8 advance_list_describe_button[60];
+    u8 advance_list_tech_tree_button[60];
+    u8 advance_list_close_button[60];
+    u32 advance_detail_back_button;
+    u8 pad_19ac[56];
+    u32 advance_detail_tech_tree_button;
+    u8 pad_19e8[56];
+    u8 advance_detail_describe_button[60];
+    u32 advance_detail_close_button;
+    u8 pad_1a60[56];
+    u32 description_edit;
+    u8 pad_1a9c[68];
+    u32 list_scrollbar;
+    u8 pad_1ae4[60];
+    u32 list_hotspot;
+    u32 list_rect;
+    u32 list_rect_top;
+    u32 list_rect_right;
+    u32 list_rect_bottom;
+    i32 list_count;
+    i32 list_items[256];
+    i32 list_selected_index;
+    i32 list_top_index;
+    struct PediaLink *link_list_head;
+} PediaWindow;
+static_assert(sizeof(PediaWindow) == 0x1f44, "");
+
+/* The high council (council_wnd_ctor 0051661a, 0x1330 bytes on
+   council_show's stack): a video player for the advisors, a dialog, the
+   speech and the advisor buttons. */
+typedef struct CouncilWindow : SurfaceWindow {
+    union { AviPlayer video; struct { u32 video_head; u8 gap_118_1[68]; u32 video_window_head; }; };
+    union { Dialog dialog; u32 council_dialog; };
+    union { DllHandle dll; u8 council_dll_handle[4]; };
+    u8 council_text_file[4];
+    u8 pad_e38[20];
+    u8 council_speech_lines[8];
+    union { i32 council_settings[6]; struct { i32 council_era; u32 advisor_opinions[5]; }; };
+    u32 council_civ;
+    u32 council_active_2;
+    u32 advisor_codes;
+    u32 advisor_codes_part2;
+    u32 advisor_codes_part3;
+    u32 advisor_codes_part4;
+    u32 speech_line_advisors[3];
+    u32 speech_line_values[3];
+    u32 speech_line_params[6];
+    u8 advisor_code_slots[24];
+    u8 pad_ecc[732];
+    i32 speech_advisor_index;
+    i32 speech_line_y;
+    i32 speech_rect;
+    i32 speech_rect_top;
+    i32 speech_rect_right;
+    i32 speech_rect_bottom;
+    u32 advisor_button_1;
+    u8 pad_11c4[56];
+    u32 advisor_button_4;
+    u8 pad_1200[56];
+    uptr advisor_button_3;
+    u8 pad_123c[56];
+    u32 advisor_button_2;
+    u8 pad_1278[56];
+    u32 advisor_button_0;
+    u8 pad_12b4[56];
+    u32 council_close_button;
+    u8 pad_12f0[64];
+} CouncilWindow;
+static_assert(sizeof(CouncilWindow) == 0x1330, "");
+
+/* The tax rate dialog (taxrate_dialog_ctor 0040f060, 0x510 bytes on
+   taxrate_dialog_show's stack): three rate scrollbars, three lock checkboxes
+   and an OK button. */
+typedef struct TaxRateDialog : FrameWindow {
+    u32 civ;
+    u32 max_rate_value;
+    u32 tax_rate_sel;
+    u32 lux_rate_sel;
+    uptr sci_rate_sel;
+    uptr init_tax_rate;
+    uptr init_lux_rate;
+    u32 init_sci_rate;
+    u32 dialog_w;
+    u32 dialog_h;
+    u32 label_x_value;
+    u32 header_y_value;
+    u32 total_tax;
+    u32 total_science;
+    u32 total_upkeep_value;
+    u32 margin_value;
+    u32 bar_gap;
+    u32 bar_width_value;
+    u32 bar_height;
+    u32 button_row_width;
+    u32 button_area_height;
+    u32 row_spacing_value;
+    u32 tax_label_y;
+    u32 lux_label_y;
+    u32 sci_label_y;
+    u32 title_y_value;
+    uptr conceal_button_value;
+    uptr reveal_button_value;
+    uptr rates_clamped;
+    u8 pad_34c[12];
+    union { Scrollbar tax_scrollbar_obj; struct { uptr tax_scrollbar; u8 gap_35c_1[8]; u8 rate_values[8]; }; };
+    union { Scrollbar lux_scrollbar; struct { u8 lux_rate_scrollbar[4]; u8 gap_39c_1[36]; u32 advance_pane_rects[1]; }; };
+    union { Scrollbar sci_scrollbar; u8 sci_rate_scrollbar[8]; };
+    union { Checkbox lock_checkboxes[3]; u8 rate_lock_checkboxes[24]; };
+    union { Button ok_button; u8 ok_button_bytes[60]; };
+    u8 pad_508[8];
+} TaxRateDialog;
+static_assert(sizeof(TaxRateDialog) == 0x510, "");
+
+/* A map view window (mapview_ctor 0047dce0, 0x3f0 bytes;
+   map_views_block.map_view_recs[8], view 0 is the main map).  The members
+   named *_u, *_uptr, *_u16 are the same fields as the code's other
+   accesses reach them (another integer type). */
+typedef struct MapView : FrameWindow {
+    u32 map_view_index;
+    union { u32 open_u; struct { i16 open; u16 track_moves; }; };
+    union { u32 center_x_u; struct { i16 center_x; i16 center_y; }; };
+    union { u32 zoom_u; struct { i16 zoom; i16 field_2e6; }; u16 zoom_u16; };
+    union { i32 origin_x; u32 origin_x_u; uptr origin_x_uptr; };
+    union { i32 origin_y; u32 origin_y_u; uptr origin_y_uptr; };
+    union { i32 end_x; uptr end_x_uptr; };
+    union { i32 end_y; u32 end_y_u; };
+    u32 field_2f8;
+    u32 field_2fc;
+    u32 field_300;
+    u32 field_304;
+    union { i32 tile_width; u32 tile_width_u; };
+    union { i32 tile_height; u32 tile_height_u; };
+    union { i32 half_tile_width; u32 half_tile_width_u; };
+    union { i32 half_tile_height; u32 half_tile_height_u; };
+    union { i32 quarter_tile_width; u32 quarter_tile_width_u; };
+    u32 field_31c;
+    u32 field_320;
+    union { i32 unit_sprite_height; u32 unit_sprite_height_u; };
+    union { i32 layout_width; u32 layout_width_u; };
+    union { i32 layout_height; u32 layout_height_u; };
+    union { i32 margin_x; u32 margin_x_u; };
+    union { i32 margin_y; u32 margin_y_u; };
+    union { u8 tile_number_font[0x20]; struct { GameFont tile_font; GameFont tile_small_font; uptr field_348; uptr field_34c; }; struct { u32 tile_font_head; u8 gap_33c_2[4]; uptr tile_small_font_head; }; };
+    union { i32 cursor_id; uptr cursor_id_uptr; };
+    uptr field_35c;
+    union { DibSurface map_surface; uptr map_surface_head; u8 view_surface[1]; };
+    union { DibSurface overlay_surface; uptr overlay_surface_head; };
+} MapView;
+static_assert(sizeof(MapView) == 0x3f0, "");
+
+/* A rules/scenario editor's window (editor_wnd_ctor 00417fa0, 0xb50 bytes;
+   one class for all editors, each uses the controls it needs).  The editor
+   that runs is editor_text_dlg_wnd_block.active_editor_wnd.  The members
+   named *_u, *_uptr, *_bytes are the same fields as the code's other
+   accesses reach them. */
+typedef struct EditorWindow : FrameWindow {
+    union { i32 wnd_width; u32 wnd_width_u; };
+    union { i32 wnd_height; u32 wnd_height_u; };
+    union { i32 button_width; u32 button_width_u; };
+    union { i32 button_height; u32 button_height_u; };
+    union { i32 font_height; uptr font_height_uptr; };
+    union { i32 item; uptr item_uptr; };
+    union { i32 item_2; uptr item_2_uptr; };
+    union { i32 item_3; u32 item_3_u; };
+    union { i32 combo_count; u32 combo_count_u; };
+    union { ComboBox combos[6]; struct { u32 combos_u; u8 gap_300_1[52]; u32 field_334; u8 gap_338_1[52]; u8 combo_bytes_36c[8]; }; };
+    union { EditControl edits[9]; struct { u8 edits_bytes[4]; u8 gap_450_1[40]; u8 numeric_edit_controls_area[1]; }; };
+    union { Button ok_button; u8 ok_button_bytes[60]; uptr ok_button_uptr; };
+    union { Button help_button; u8 help_button_bytes[60]; u32 help_button_u; };
+    union { Button cancel_button; u8 cancel_button_bytes[60]; u32 cancel_button_u; };
+    union { Button rename_button; u8 rename_button_bytes[60]; uptr rename_button_uptr; };
+    union { Button icon_button; u8 icon_button_bytes[28]; };
+    union { Button misc_button; u8 misc_button_bytes[60]; };
+    union { Button coast_button; u8 coast_button_bytes[60]; };
+    union { Button terrain_misc_button; u32 terrain_misc_button_u; };
+    union { Button unit_flags_button; u8 unit_flags_button_bytes[60]; };
+    union { Button unit_sound_button; u8 unit_sound_button_bytes[56]; };
+    union { Button add_trigger_button; u8 add_trigger_button_bytes[60]; };
+    union { Button edit_trigger_button; u8 edit_trigger_button_bytes[20]; };
+    union { Button delete_trigger_button; u32 delete_trigger_button_u; };
+    union { Button add_action_button; u8 add_action_button_bytes[48]; };
+    union { Button edit_action_button; u32 edit_action_button_u; };
+    union { Button delete_action_button; u32 delete_action_button_u; };
+    union { ListBox list_box; uptr list_box_uptr; };
+    union { ListBox trigger_listbox; u8 trigger_listbox_bytes[4]; };
+    union { ListBox action_listbox; u8 action_listbox_bytes[32]; };
+    u8 pad_b48[8];
+} EditorWindow;
+static_assert(sizeof(EditorWindow) == 0xb50, "");
+
+/* The wonder movie window (wonder_movie_wnd_ctor 004bb99f, 0x1188 bytes on
+   wonder_show_movie's stack): a video player, a frame surface and a
+   palette. */
+typedef struct WonderMovieWindow : FrameWindow {
+    union { AviPlayer player; struct { u32 player_head; u8 gap_2dc_1[68]; u32 player_field_48; u8 gap_324_1[12]; u32 player_field_58; }; };
+    i32 wonder_index;
+    union { DibSurface frame_surface; u8 frame_surface_bytes[40]; };
+    union { GamePalette palette; u8 palette_bytes[64]; };
+    u8 pad_1180[8];
+} WonderMovieWindow;
+static_assert(sizeof(WonderMovieWindow) == 0x1188, "");
+
+/* The city window (city_window_ctor 00501551; one instance,
+   city_window_block.city_window, 0x16e0 bytes): a click map of its areas,
+   the layout rectangles and the controls.  The *_b0.._b3 members are the
+   bytes of the member before them, as the code reaches them. */
+typedef struct CityWindow : FrameWindow {
+    union { ClickMap clickmap; u32 clickmap_head; };
+    union { i32 city_index; struct { u8 city_index_b0[1]; u8 city_index_b1[1]; u8 city_index_b2[1]; u8 city_index_b3[1]; }; };
+    union { i32 redraw_suspended; struct { u8 redraw_suspended_b0[1]; u8 redraw_suspended_b1[1]; u8 redraw_suspended_b2[1]; u8 redraw_suspended_b3[1]; }; };
+    union { i32 is_closed; struct { u8 is_closed_b0[1]; u8 is_closed_b1[1]; u8 is_closed_b2[1]; u8 is_closed_b3[1]; }; };
+    union { i32 redraw_deferred; struct { u8 redraw_deferred_b0[1]; u8 redraw_deferred_b1[1]; u8 redraw_deferred_b2[1]; u8 redraw_deferred_b3[1]; }; };
+    union { i32 notice_mode; struct { u8 notice_mode_b0[1]; u8 notice_mode_b1[1]; u8 notice_mode_b2[1]; u8 notice_mode_b3[1]; }; };
+    union { i32 info_panel_mode; struct { u8 info_panel_mode_b0[1]; u8 info_panel_mode_b1[1]; u8 info_panel_mode_b2[1]; u8 info_panel_mode_b3[1]; }; };
+    union { i32 improvement_scroll_pos; struct { u8 improvement_scroll_pos_b0[1]; u8 improvement_scroll_pos_b1[1]; u8 improvement_scroll_pos_b2[1]; u8 improvement_scroll_pos_b3[1]; }; };
+    u8 panel_toggle_flag_b0[1];
+    u8 panel_toggle_flag_b1[1];
+    u8 panel_toggle_flag_b2[1];
+    u8 panel_toggle_flag_b3[1];
+    i32 layout_width;
+    i32 resource_bar_height;
+    union { i32 margin_x_2; struct { u8 margin_x_2_b0[1]; u8 margin_x_b1[1]; u8 content_offset_x_byte2[1]; u8 content_offset_x_byte3[1]; }; };
+    union { i32 content_offset_y; struct { u8 content_offset_y_b0[1]; u8 content_offset_y_byte1[1]; u8 content_offset_y_byte2[1]; u8 content_offset_y_byte3[1]; }; };
+    i32 prev_content_offset_x;
+    union { i32 prev_content_offset_y; struct { u8 prev_content_offset_y_b0[1]; u8 prev_content_offset_y_byte1[1]; u8 prev_content_offset_y_byte2[1]; u8 prev_content_offset_y_byte3[1]; }; };
+    union { i32 view_scale; struct { u8 view_scale_b0[1]; u8 view_scale_byte1[1]; u8 view_scale_byte2[1]; u8 view_scale_byte3[1]; }; };
+    union { i32 map_zoom_level; struct { u8 map_zoom_level_b0[1]; u8 map_zoom_level_byte1[1]; u8 map_zoom_level_byte2[1]; u8 map_zoom_level_byte3[1]; }; };
+    i32 citizens_rect;
+    i32 citizens_rect_top;
+    u8 pad_15e4[8];
+    i32 resource_map_rect;
+    i32 resource_map_rect_top;
+    u8 pad_15f4[8];
+    i32 food_box_rect;
+    i32 food_box_rect_top;
+    u8 pad_1604[8];
+    i32 production_rect;
+    i32 production_rect_top;
+    i32 production_rect_right;
+    u32 production_rect_bottom;
+    u8 button_area_rect[16];
+    u32 supported_units_rect;
+    u32 supported_units_rect_top;
+    u8 pad_1634[8];
+    u32 improvements_rect;
+    i32 improvements_rect_top;
+    u8 pad_1644[8];
+    u32 info_panel_rect;
+    u32 info_panel_rect_top;
+    u8 pad_1654[8];
+    u32 resource_label_rect;
+    u8 pad_1660[8];
+    u32 resource_label_rect_bottom;
+    u32 improvement_list_rect;
+    uptr improvement_list_rect_top;
+    u32 improvement_list_rect_right;
+    u8 pad_1678[4];
+    uptr supported_units_label_rect;
+    i32 supported_units_label_rect_top;
+    u8 pad_1684[8];
+    u32 info_title_rect;
+    u32 info_title_rect_top;
+    u32 info_title_rect_right;
+    u8 pad_1698[4];
+    u8 improvements_scrollbar_rect[16];
+    u32 city_font;
+    u8 pad_16b0[4];
+    u32 buy_button;
+    union { struct Button *change_button; struct { u8 change_button_b0[1]; u8 change_button_byte1[1]; u8 change_button_byte2[1]; u8 change_button_byte3[1]; }; };
+    union { struct Button *exit_button; struct { u8 exit_button_b0[1]; u8 exit_button_byte1[1]; u8 exit_button_byte2[1]; u8 exit_button_byte3[1]; }; };
+    u32 view_button;
+    u32 info_button;
+    u32 happy_button;
+    u32 map_button;
+    u32 rename_button;
+    u32 prev_city_button;
+    u32 next_city_button;
+    struct Scrollbar *improvements_scrollbar;
+} CityWindow;
+static_assert(sizeof(CityWindow) == 0x16e0, "");
+
+/* A report picture window (picwnd_ctor 0043c260, 0x4a4 bytes:
+   advisor_window_block, casualty_window_block): a background surface, four
+   buttons and a scrollbar. */
+typedef struct PictureWindow : FrameWindow {
+    union { DibSurface surface; u32 surface_head; };
+    union { Button close_button; u32 close_button_head; };
+    union { Button button_2; uptr button_2_head; };
+    union { Button button_3; u8 button_3_head[4]; };
+    union { Button button_4; u8 button_4_head[4]; };
+    union { Scrollbar scrollbar; u8 scrollbar_head[8]; };
+    u32 report_id;
+    u32 frame_state;
+    u32 page_count;
+    u32 report_civ;
+    u32 first_row;
+    u8 pad_464[16];
+    u32 image_height;
+    u32 window_height;
+    u8 pad_47c[16];
+    u32 image_width;
+    u32 window_width;
+    u32 vscroll_width;
+    u32 controls_created;
+    u32 report_param;
+    u32 frame_style;
+} PictureWindow;
+static_assert(sizeof(PictureWindow) == 0x4a4, "");
+
+/* A city picture popup (city_picture_popup_ctor 004f3d60, 0x798 bytes): a picture
+   window with a dialog. */
+typedef struct CityPicturePopup : PictureWindow {
+    union { Dialog dialog; u8 popup_dialog[32]; };
+} CityPicturePopup;
+static_assert(sizeof(CityPicturePopup) == 0x798, "");
+
+/* The set-up screens' picture window (setup_picwnd_ctor 00559e3c; one instance,
+   setup_picwnd_block.setup_picwnd, 0x2fc bytes): an image from a DLL. */
+typedef struct SetupPicWindow : FrameWindow {
+    u32 rates_civ;
+    u32 max_rate_value;
+    u32 tax_rate_sel;
+    u32 lux_rate_sel;
+    uptr sci_rate_sel;
+    u8 pad_2ec[12];
+    union { DllHandle dll; u32 dll_head; };
+} SetupPicWindow;
+static_assert(sizeof(SetupPicWindow) == 0x2fc, "");
+
+/* The sprite picker (sprite_picker_ctor 005784a0; one instance,
+   status_window_block.sprite_picker_window, 0x3ec bytes): a scrollbar and
+   three buttons. */
+typedef struct SpritePicker : FrameWindow {
+    u32 rates_civ;
+    u32 max_rate_value;
+    u8 pad_2e0[8];
+    uptr sci_rate_sel;
+    u8 pad_2ec[4];
+    uptr init_lux_rate;
+    u32 init_sci_rate;
+    union { Scrollbar scrollbar; u32 scrollbar_head; };
+    union { Button button_1; u32 button_1_head; };
+    union { Button button_2; u8 button_2_head[8]; };
+    union { Button button_3; u32 button_3_head; };
+} SpritePicker;
+static_assert(sizeof(SpritePicker) == 0x3ec, "");
 
 #pragma pack(pop)
 

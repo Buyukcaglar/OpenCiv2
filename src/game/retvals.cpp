@@ -17,7 +17,7 @@
  */
 void __thiscall pedia_load_description(void *self, int topic2)
 {
-  PictureWindow *obj_addr = (PictureWindow *)self;
+  PediaWindow *obj_addr = (PediaWindow *)self;
   bool section_missing;
   int found;
   char *line;
@@ -31,9 +31,9 @@ void __thiscall pedia_load_description(void *self, int topic2)
   const char *translated;
   
   str_clear((char *)section_name);
-  pedia_clear_links((WindowObjectView *)obj_addr);
+  pedia_clear_links(obj_addr);
   ui_pump_messages();
-  switch(obj_addr->pedia_category) {
+  switch(obj_addr->category) {
   case 1:
     topic2 = obj_addr->pedia_advance_keys[topic2];
     crt_strcpy(section_name,str_advance_index);
@@ -1262,7 +1262,7 @@ uint __cdecl game_turn_start_popups(void)
     }
     else {
       text_append((const char *)cities[best_city].name);
-      mapview_center_on(((ViewWindow *)((i8 *)&map_views_block.map_views)),(int)cities[best_city].x,
+      mapview_center_on(((MapView *)((i8 *)&map_views_block.map_views)),(int)cities[best_city].x,
                          (int)cities[best_city].y);
     }
     text_set_string_arg(1,(const char *)&map_views_block.text_buffer);
@@ -1384,7 +1384,7 @@ int __cdecl city_process_pollution(int city)
           tile_add_pollution(tile_x,roll);
           check = tile_visible_to(tile_x,roll,human_civ[0]);
           if (check != 0) {
-            mapview_center_on(((ViewWindow *)((i8 *)&map_views_block.map_views)),tile_x,roll);
+            mapview_center_on(((MapView *)((i8 *)&map_views_block.map_views)),tile_x,roll);
             if ((game.message_options & 0x100) == 0) {
               city_notify_dialog_ex((iptr)str_pollution,city,0,0);
             }
@@ -1540,7 +1540,7 @@ hut_outcome_dispatch:
         if (tmp < 0) {
           return civ;
         }
-        city_window_open(((ScaledWindowView *)((i8 *)&city_window_block.city_window)),tmp);   /* void: the caller ignores our result */
+        city_window_open(((CityWindow *)((i8 *)&city_window_block.city_window)),tmp);   /* void: the caller ignores our result */
         return civ;
       }
       outcome = 5;

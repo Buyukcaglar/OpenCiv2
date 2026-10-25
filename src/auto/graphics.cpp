@@ -1468,7 +1468,7 @@ void __cdecl gfx_grey_out_windows(void)
     for (view = 0; view < 8; view++) {
       if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
         surface_remap_colors
-                  (&map_views_block.map_view_recs[view].surface,remap_table,10,0xec);
+                  (&map_views_block.map_view_recs[view],remap_table,10,0xec);
       }
     }
     surface_remap_colors((DibSurface *)((i8 *)&status_window_block.status_window),remap_table,10,0xec);
@@ -1963,18 +1963,18 @@ PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  surfwnd_ctor((SurfaceWindow *)self);
+  surfwnd_ctor(self);
   eh_state = 0;
-  surface_ctor((DibSurface *)&self->style_flags);
+  surface_ctor(&self->surface);
   (*((char *)&eh_state + 0)) = 1;
-  button_ctor((Button *)self->parley_title);
+  button_ctor(&self->cancel_button);
   (*((char *)&eh_state + 0)) = 2;
-  button_ctor((Button *)self->accept_button_2);
+  button_ctor(&self->ok_button);
   eh_state = (eh_state & 0xffffff00 | (byte)(3));
-  dll_handle_init((DllHandle *)self->portrait_dll);
+  dll_handle_init(&self->dll);
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3);
-  self->portrait_civ = 0;
-  self->show_turn_timer = 0;
+  self->civ = 0;
+  self->field_1e0 = 0;
   return self;
 }
 
@@ -1984,14 +1984,14 @@ PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *self)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall portrait_dlg_dtor(PortraitDlgDtorView *self)
+void __thiscall portrait_dlg_dtor(PortraitDialog *self)
 
 {
   i32 seh_prev;
   i8 *seh_handler;
   int eh_state;
   
-  *(i8 ***)self->window_base = (i8 **)&leader_anim_frame_starts_block.ptr_fun_3;
+  *(i8 ***)&self->vtable = (i8 **)&leader_anim_frame_starts_block.ptr_fun_3;
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 3;
   /* inlined unwind funclet 004963a5 */ { dll_free((DllHandle *)(*(int *)&self + 0x1d4)); }
@@ -2011,48 +2011,48 @@ i32 __thiscall portrait_dlg_create(PortraitDialog *self)
 
 {
   wnd_create_with_surface
-            ((DibSurface *)self,(const char *)&str_empty_109,0xc00,0,0,frame_border_width * 8 + 0x276,
+            (self,(const char *)&str_empty_109,0xc00,0,0,frame_border_width * 8 + 0x276,
              frame_border_width * 4 + frame_caption_height + 0x16e,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
-  portrait_dlg_create_buttons((WindowObjectView *)self);
-  wnd_set_caption_height((WndBase *)self->window_2,frame_caption_height);
-  wnd_set_lbuttonup_handler((WndHandlers *)self->event_handlers,(iptr)portrait_dlg_on_click);
-  wnd_set_dblclick_handler((WndHandlers *)self->event_handlers,(iptr)portrait_dlg_on_dblclick);
+  portrait_dlg_create_buttons(self);
+  wnd_set_caption_height((WndBase *)&self->window,frame_caption_height);
+  wnd_set_lbuttonup_handler(&self->window.wnd_handlers,(iptr)portrait_dlg_on_click);
+  wnd_set_dblclick_handler(&self->window.wnd_handlers,(iptr)portrait_dlg_on_dblclick);
   portrait_dlg_paint(self);
-  wnd_repaint((SurfaceWindow *)self);
-  wnd_center((WndBase *)self->window_2);
+  wnd_repaint(self);
+  wnd_center((WndBase *)&self->window);
   return 1;
 }
 
 /* 004964b3 auto */
-void __thiscall portrait_dlg_create_buttons(WindowObjectView *self)
+void __thiscall portrait_dlg_create_buttons(PortraitDialog *self)
 
 {
-  WindowObjectView *parent_b;
-  WindowObjectView *parent_a;
+  u8 *parent_b;
+  u8 *parent_a;
   tagRECT button_rect;
   
   SetRect(&button_rect,frame_border_width + 2,frame_border_width * 3 + frame_caption_height + frame_bevel_width + 0x14a,
           (frame_border_width * 8 + 0x276 >> 1) - 2,
           frame_border_width * 3 + frame_caption_height + 0x16e + frame_bevel_width);
-  if (self == (WindowObjectView *)0x0) {
-    parent_a = (WindowObjectView *)0x0;
+  if (self == (PortraitDialog *)0x0) {
+    parent_a = (u8 *)0x0;
   }
   else {
-    parent_a = self + 0x12;
+    parent_a = (u8 *)self + 0x48;
   }
   button_create_with_callback
-            ((Button *)(self + 0x66),(iptr)parent_a,0x65,(iptr)&button_rect,0x21,(const char *)&str_ok);
+            ((Button *)((u8 *)self + 0x198),(iptr)parent_a,0x65,(iptr)&button_rect,0x21,(const char *)&str_ok);
   OffsetRect(&button_rect,((frame_border_width * 8 + 0x276 >> 1) + 2) - frame_border_width,0);
-  if (self == (WindowObjectView *)0x0) {
-    parent_b = (WindowObjectView *)0x0;
+  if (self == (PortraitDialog *)0x0) {
+    parent_b = (u8 *)0x0;
   }
   else {
-    parent_b = self + 0x12;
+    parent_b = (u8 *)self + 0x48;
   }
   button_create_with_callback
-            ((Button *)(self + 0x57),(iptr)parent_b,100,(iptr)&button_rect,0x21,(const char *)&str_cancel);
-  button_set_callback((Button *)(self + 0x57),(iptr)portrait_dlg_on_button);
-  button_set_callback((Button *)(self + 0x66),(iptr)portrait_dlg_on_button);
+            ((Button *)((u8 *)self + 0x15c),(iptr)parent_b,100,(iptr)&button_rect,0x21,(const char *)&str_cancel);
+  button_set_callback((Button *)((u8 *)self + 0x15c),(iptr)portrait_dlg_on_button);
+  button_set_callback((Button *)((u8 *)self + 0x198),(iptr)portrait_dlg_on_button);
   return;
 }
 
@@ -2060,19 +2060,19 @@ void __thiscall portrait_dlg_create_buttons(WindowObjectView *self)
 void __thiscall portrait_dlg_run(PortraitDialog *self)
 
 {
-  ctrl_show_and_redraw((Control *)self->parley_title);
-  ctrl_show_and_redraw((Control *)self->accept_button_2);
-  window_show((WindowObjectView *)self);
+  ctrl_show_and_redraw((Control *)self->cancel_button_bytes);
+  ctrl_show_and_redraw((Control *)self->ok_button_bytes);
+  window_show(self);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)self->window_2,(iptr)net_modal_idle_poll);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)&self->window,(iptr)net_modal_idle_poll);
   }
-  wnd_run_modal_loop((ModalMenuWindow *)self->window_2);
-  wnd_set_modal_idle_callback((ModalMenuWindow *)self->window_2,0);
-  wnd_hide((WndBase *)self->window_2);
+  wnd_run_modal_loop((ModalMenuWindow *)&self->window);
+  wnd_set_modal_idle_callback((ModalMenuWindow *)&self->window,0);
+  wnd_hide((WndBase *)&self->window);
   wnd_flush_paint();
-  control_hide((Control *)self->parley_title);
-  control_hide((Control *)self->accept_button_2);
-  civs[self->portrait_civ].leader_portrait = (u8)self->show_turn_status;
+  control_hide((Control *)self->cancel_button_bytes);
+  control_hide((Control *)self->ok_button_bytes);
+  civs[self->civ].leader_portrait = (u8)self->result;
   return;
 }
 
@@ -2097,17 +2097,17 @@ void __thiscall portrait_dlg_paint(PortraitDialog *self)
   iptr title;
   
   title = (iptr)label_string(label_string_ids[0x12a]);
-  dll_handle_load((DllHandle *)self->portrait_dll,(const char *)&str_mk_dll);
+  dll_handle_load(&self->dll,(const char *)&str_mk_dll);
   loaded = surface_load_gif_resource
-                    ((DibSurface *)&self->style_flags,
-                     0xd3 - (uint)(leaders[civs[self->portrait_civ].tribe].female == '\0'),10,0xec,
+                    (&self->surface,
+                     0xd3 - (uint)(leaders[civs[self->civ].tribe].female == '\0'),10,0xec,
                      (iptr)&game_palette_block.game_palette);
   if (loaded != 0) {
-    dll_handle_free((DllHandle *)self->portrait_dll);
+    dll_handle_free(&self->dll);
     loaded = frame_caption_height + frame_bevel_width * -2;
-    height = surface_get_width((DibSurface *)self);
+    height = surface_get_width(self);
     gfx_tile_fill((iptr)self,frame_border_tile,0,frame_bevel_width,height,loaded,0,frame_bevel_width);
-    height = surface_get_height((DibSurface *)self);
+    height = surface_get_height(self);
     loaded = frame_border_width + frame_bevel_width * -2;
     x2 = frame_bevel_width;
     tmp_a = frame_caption_height - frame_bevel_width;
@@ -2117,7 +2117,7 @@ void __thiscall portrait_dlg_paint(PortraitDialog *self)
     }
     tmp_b = frame_border_width + frame_bevel_width * -2;
     y2 = frame_bevel_width + frame_caption_height + 0x6e;
-    tmp_c = surface_get_width((DibSurface *)self);
+    tmp_c = surface_get_width(self);
     tmp_a = frame_bevel_width;
     loaded = frame_bevel_width * -2;
     for (i = 0; i < 2; i++) {
@@ -2125,10 +2125,10 @@ void __thiscall portrait_dlg_paint(PortraitDialog *self)
       y2 = y2 + frame_border_width + 0x6e;
     }
     loaded = frame_border_width * 2;
-    tmp_c = surface_get_width((DibSurface *)self);
+    tmp_c = surface_get_width(self);
     tmp_b = frame_bevel_width;
     tmp_a = frame_bevel_width * -2;
-    tmp_d = surface_get_height((DibSurface *)self);
+    tmp_d = surface_get_height(self);
     tmp_d = tmp_d + frame_border_width * -2 - 0x24 + frame_bevel_width;
     gfx_tile_fill((iptr)self,frame_border_tile,tmp_b,tmp_d,tmp_c + tmp_a,loaded + 0x24,tmp_b,tmp_d);
     SetRect(&dst_rect,frame_border_width - frame_bevel_width,frame_caption_height - frame_bevel_width,
@@ -2142,7 +2142,7 @@ void __thiscall portrait_dlg_paint(PortraitDialog *self)
           InflateRect(&dst_rect,-1,-1);
         }
         surface_blit
-                  ((DibSurface *)&self->style_flags,(DibSurface *)self,&src_rect,&dst_rect);
+                  (&self->surface,self,&src_rect,&dst_rect);
         OffsetRect(&src_rect,0x5b,0);
         InflateRect(&dst_rect,frame_bevel_width,frame_bevel_width);
         OffsetRect(&dst_rect,frame_border_width + 0x5a,0);
@@ -2150,7 +2150,7 @@ void __thiscall portrait_dlg_paint(PortraitDialog *self)
       OffsetRect(&src_rect,-0x27d,0x6f);
       OffsetRect(&dst_rect,(frame_border_width + 0x5a) * -7,frame_border_width + 0x6e);
     }
-    lprcSrc = (RECT *)surface_get_rect((DibSurface *)self);
+    lprcSrc = (RECT *)surface_get_rect(self);
     CopyRect(&dst_rect,lprcSrc);
     for (b = 0; b < frame_bevel_width; b++) {
       gfx_draw_bevel_rect((iptr)self,&dst_rect,frame_highlight_color,frame_shadow_color);
@@ -2163,16 +2163,16 @@ void __thiscall portrait_dlg_paint(PortraitDialog *self)
       gfx_draw_bevel_rect((iptr)self,&dst_rect,0x5e,0x5e);
       InflateRect(&dst_rect,-1,-1);
     }
-    tmp_a = surface_get_width((DibSurface *)self);
+    tmp_a = surface_get_width(self);
     tmp_b = font_text_width((GameFont *)((i8 *)&caption_font_block.caption_font),(const char *)title);
     loaded = frame_bevel_width;
     tmp_b = (tmp_a >> 1) - (tmp_b + 4 >> 1);
     tmp_a = frame_bevel_width + 1;
     gfx_set_text_color_index(0x12);
-    surface_draw_text((DibSurface *)self,(iptr)&caption_font_block.caption_font,(const char *)title,tmp_b + 3,loaded + 2,5);
+    surface_draw_text(self,(iptr)&caption_font_block.caption_font,(const char *)title,tmp_b + 3,loaded + 2,5);
     gfx_set_text_color_index(0x29);
-    surface_draw_text((DibSurface *)self,(iptr)&caption_font_block.caption_font,(const char *)title,tmp_b + 1,tmp_a,5);
-    surface_draw_text((DibSurface *)self,(iptr)&caption_font_block.caption_font,(const char *)title,tmp_b,tmp_a,5);
+    surface_draw_text(self,(iptr)&caption_font_block.caption_font,(const char *)title,tmp_b + 1,tmp_a,5);
+    surface_draw_text(self,(iptr)&caption_font_block.caption_font,(const char *)title,tmp_b,tmp_a,5);
   }
   return;
 }
@@ -3621,7 +3621,7 @@ void __cdecl sprite_editor_window_global_init(void)
 void __cdecl sprite_editor_window_static_init(void)
 
 {
-  frame_wnd_ctor((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
+  frame_wnd_ctor((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window));
   return;
 }
 
@@ -3637,7 +3637,7 @@ void __cdecl sprite_editor_window_reg_atexit(void)
 void __cdecl sprite_editor_window_static_dtor(void)
 
 {
-  frame_wnd_dtor((DibSurface *)((i8 *)&status_window_block.sprite_editor_window));
+  frame_wnd_dtor((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window));
   return;
 }
 
@@ -3662,7 +3662,7 @@ void __cdecl sprite_picker_window_global_init(void)
 void __cdecl sprite_picker_window_static_init(void)
 
 {
-  sprite_picker_ctor((ViewWindow *)((i8 *)&status_window_block.sprite_picker_window));
+  sprite_picker_ctor((SpritePicker *)((i8 *)&status_window_block.sprite_picker_window));
   return;
 }
 
@@ -3678,7 +3678,7 @@ void __cdecl sprite_picker_window_reg_atexit(void)
 void __cdecl sprite_picker_window_static_dtor(void)
 
 {
-  sprite_picker_dtor((WindowObjectView *)((i8 *)&status_window_block.sprite_picker_window));
+  sprite_picker_dtor((SpritePicker *)((i8 *)&status_window_block.sprite_picker_window));
   return;
 }
 
@@ -5400,13 +5400,13 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,iptr
   wnd_set_mousemove_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_move);
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window),(iptr)sprite_editor_redraw);
   wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
-  window_show((WindowObjectView *)((i8 *)&status_window_block.sprite_editor_window));
+  window_show((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd));
   while (status_window_block.sprite_editor_running != 0) {
     win_pump_one_message();
   }
   dlg_set_parent_window(0);
-  frame_wnd_close((DibSurface *)((i8 *)&status_window_block.sprite_editor_window));
+  frame_wnd_close((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window));
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 0057420c */ { ctrl_dtor(&cancel_button); }
   seh_state = 0xffffffff;
@@ -5479,7 +5479,7 @@ void __cdecl sprite_editor_redraw(void)
 }
 
 /* 00574522 auto */
-void __thiscall sprite_picker_draw(FrameWindow *self)
+void __thiscall sprite_picker_draw(SpritePicker *self)
 
 {
   byte key_color;
@@ -5514,7 +5514,7 @@ void __thiscall sprite_picker_draw(FrameWindow *self)
             ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite),(iptr)draw_rect,(iptr)self,0,x2,y2);
   gfx_set_scale_ratio(1,1);
   gfx_draw_tiled_frame((iptr)self,x2,y2,width2,height2,6);
-  wnd_blit_surface((DibSurface *)self);
+  wnd_blit_surface(self);
   return;
 }
 
@@ -5522,7 +5522,7 @@ void __thiscall sprite_picker_draw(FrameWindow *self)
 void __cdecl sprite_picker_redraw_cb(void)
 
 {
-  sprite_picker_draw((*(FrameWindow * *)&status_window_block.sprite_picker_dialog));
+  sprite_picker_draw((*(SpritePicker * *)&status_window_block.sprite_picker_dialog));
   return;
 }
 
@@ -6027,7 +6027,7 @@ void __cdecl sprite_picker_cancel_clicked(void)
 }
 
 /* 00575dec auto */
-void __thiscall sprite_picker_run(ViewWindow *self)
+void __thiscall sprite_picker_run(SpritePicker *self)
 
 {
   i32 title;
@@ -6051,7 +6051,7 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   i8 rect[16];
   iptr scroll_height;
   
-  (*(ViewWindow * *)&status_window_block.sprite_picker_dialog) = self;
+  (*(SpritePicker * *)&status_window_block.sprite_picker_dialog) = self;
   self->rates_civ = 0xf0;
   self->max_rate_value = 0xf0;
   border_width = 0;
@@ -6074,71 +6074,71 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   x2 = self->client_x + 2;
   status_window_block.sprite_sheet_cell_count = sprite_editor_cell_rect(0,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out);
   rect_set_xywh((iptr)rect,x2,y2,self->sci_rate_sel,scroll_height);
-  if (self == (ViewWindow *)0x0) {
+  if (self == (SpritePicker *)0x0) {
     scroll_parent = (u8 *)0x0;
   }
   else {
-    scroll_parent = self->window_2;
+    scroll_parent = (u8 *)&self->window;
   }
   scrollbar_create
-            ((Scrollbar *)&self->dialog_w,(iptr)scroll_parent,0x65,(iptr)rect,0);
-  scrollbar_set_range((Scrollbar *)&self->dialog_w,0,status_window_block.sprite_sheet_cell_count - 1);
-  scrollbar_set_pos((Scrollbar *)&self->dialog_w,0);
-  scrollbar_set_callback((Scrollbar *)&self->dialog_w,(iptr)sprite_picker_select_cell);
+            (&self->scrollbar,(iptr)scroll_parent,0x65,(iptr)rect,0);
+  scrollbar_set_range(&self->scrollbar,0,status_window_block.sprite_sheet_cell_count - 1);
+  scrollbar_set_pos(&self->scrollbar,0);
+  scrollbar_set_callback(&self->scrollbar,(iptr)sprite_picker_select_cell);
   sprite_picker_select_cell(0);
-  ctrl_show_and_redraw((Control *)&self->dialog_w);
+  ctrl_show_and_redraw((Control *)&self->scrollbar_head);
   self->init_lux_rate = (int)(self->client_width - 8) / 3;
   y2 = (self->client_y + self->client_height) - (self->init_sci_rate + 2);
   x2 = self->client_x + 2;
   rect_set_xywh((iptr)rect,x2,y2,self->init_lux_rate,self->init_sci_rate);
-  if (self == (ViewWindow *)0x0) {
+  if (self == (SpritePicker *)0x0) {
     ok_parent = (u8 *)0x0;
   }
   else {
-    ok_parent = self->window_2;
+    ok_parent = (u8 *)&self->window;
   }
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
-            ((Button *)&self->sci_label_y,(iptr)ok_parent,0xc9,(iptr)rect,(const char *)label);
-  button_set_callback((Button *)&self->sci_label_y,(iptr)sprite_picker_ok_clicked);
-  ctrl_set_default_button((Button *)&self->sci_label_y);
+            (&self->button_1,(iptr)ok_parent,0xc9,(iptr)rect,(const char *)label);
+  button_set_callback(&self->button_1,(iptr)sprite_picker_ok_clicked);
+  ctrl_set_default_button(&self->button_1);
   x2 = x2 + self->init_lux_rate + 2;
   rect_set_xywh((iptr)rect,x2,y2,self->init_lux_rate,self->init_sci_rate);
-  if (self == (ViewWindow *)0x0) {
+  if (self == (SpritePicker *)0x0) {
     import_parent = (u8 *)0x0;
   }
   else {
-    import_parent = self->window_2;
+    import_parent = (u8 *)&self->window;
   }
   label = (iptr)label_string(label_string_ids[0x255]);
   button_create
-            ((Button *)self->import_all_button,(iptr)import_parent,0xc9,(iptr)rect,(const char *)label);
-  button_set_callback((Button *)self->import_all_button,(iptr)sprite_picker_import_all_clicked);
-  ctrl_set_default_button((Button *)self->import_all_button);
+            (&self->button_2,(iptr)import_parent,0xc9,(iptr)rect,(const char *)label);
+  button_set_callback(&self->button_2,(iptr)sprite_picker_import_all_clicked);
+  ctrl_set_default_button(&self->button_2);
   if (sprite_picker_sprite_block.sprite_sheet_mode == 5) {
-    ctrl_disable((Button *)self->import_all_button);
+    ctrl_disable(&self->button_2);
   }
   x2 = x2 + self->init_lux_rate + 2;
   rect_set_xywh((iptr)rect,x2,y2,self->init_lux_rate,self->init_sci_rate);
-  if (self == (ViewWindow *)0x0) {
+  if (self == (SpritePicker *)0x0) {
     cancel_parent = (u8 *)0x0;
   }
   else {
-    cancel_parent = self->window_2;
+    cancel_parent = (u8 *)&self->window;
   }
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
-            ((Button *)&self->fill_rect_top,(iptr)cancel_parent,0xca,(iptr)rect,(const char *)label);
-  button_set_callback((Button *)&self->fill_rect_top,(iptr)sprite_picker_cancel_clicked);
-  ctrl_set_cancel_button((Button *)&self->fill_rect_top);
-  wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)sprite_picker_redraw_cb);
-  wnd_repaint((SurfaceWindow *)self);
-  window_show((WindowObjectView *)self);
-  wnd_run_modal_loop((ModalMenuWindow *)self->window_2);
+            (&self->button_3,(iptr)cancel_parent,0xca,(iptr)rect,(const char *)label);
+  button_set_callback(&self->button_3,(iptr)sprite_picker_cancel_clicked);
+  ctrl_set_cancel_button(&self->button_3);
+  wnd_set_redraw_callback(self,(iptr)sprite_picker_redraw_cb);
+  wnd_repaint(self);
+  window_show(self);
+  wnd_run_modal_loop((ModalMenuWindow *)&self->window);
   while (status_window_block.sprite_picker_running != 0) {
     win_pump_one_message();
   }
-  frame_wnd_close((DibSurface *)self);
+  frame_wnd_close(self);
   return;
 }
 
@@ -6146,7 +6146,7 @@ void __thiscall sprite_picker_run(ViewWindow *self)
 void __cdecl sprite_picker_show(void)
 
 {
-  sprite_picker_run((ViewWindow *)((i8 *)&status_window_block.sprite_picker_window));
+  sprite_picker_run((SpritePicker *)((i8 *)&status_window_block.sprite_picker_window));
   return;
 }
 
@@ -6338,12 +6338,12 @@ void __thiscall sprite_picker_dtor(void *self)
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 0057842f */ { scrollbar_dtor((Scrollbar *)(*(int *)&self + 0x2f8)); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0057843e */ { frame_wnd_dtor(*(DibSurface **)&self); }
+  /* inlined unwind funclet 0057843e */ { frame_wnd_dtor(*(FrameWindow **)&self); }
   return;
 }
 
 /* 005784a0 auto */
-ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *self)
+SpritePicker * __thiscall sprite_picker_ctor(SpritePicker *self)
 
 {
   i32 seh_handler;
@@ -6351,15 +6351,15 @@ ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *self)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  frame_wnd_ctor((SurfaceWindow *)self);
+  frame_wnd_ctor(self);
   seh_state = 0;
-  scrollbar_ctor((Scrollbar *)&self->dialog_w);
+  scrollbar_ctor(&self->scrollbar);
   (*((char *)&seh_state + 0)) = 1;
-  button_ctor((Button *)&self->sci_label_y);
+  button_ctor(&self->button_1);
   (*((char *)&seh_state + 0)) = 2;
-  button_ctor((Button *)self->import_all_button);
+  button_ctor(&self->button_2);
   seh_state = (seh_state & 0xffffff00 | (byte)(3));
-  button_ctor((Button *)&self->fill_rect_top);
+  button_ctor(&self->button_3);
   self->vtable = (u32)&leader_anim_frame_starts_block.ptr_fun_4;
   return self;
 }

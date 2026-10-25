@@ -430,9 +430,9 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *self)
     wnd_handle_show_raise(self);
     wnd_flush_paint();
     wnd_set_palette(self,(iptr)(self->ship_palette));
-    window_show((WindowObjectView *)&self->control_list);
+    window_show((SurfaceWindow *)&self->control_list);
     wnd_flush_paint();
-    wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)(self->ship_palette));
+    wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)(self->ship_palette));
     spaceship_wnd_setup_hotspots(self);
     spaceship_wnd_draw_buttons(self);
     if (self->launch_state == 3) {
@@ -473,7 +473,7 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *self)
       wnd_hide((WndBase *)self->frame_wnd_base);
       wnd_flush_paint();
     }
-    wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&game_palette_block.game_palette);
+    wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)&game_palette_block.game_palette);
     wnd_set_palette(self,(iptr)&game_palette_block.game_palette);
     wnd_hide(self);
     wnd_flush_paint();
@@ -506,9 +506,9 @@ void __thiscall spaceship_wnd_present(SpaceshipWindow *self)
       wnd_handle_show_raise(self);
       wnd_flush_paint();
       wnd_set_palette(self,(iptr)(self->ship_palette));
-      window_show((WindowObjectView *)&self->control_list);
+      window_show((SurfaceWindow *)&self->control_list);
       wnd_flush_paint();
-      wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)(self->ship_palette))
+      wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)(self->ship_palette))
       ;
       spaceship_wnd_setup_hotspots(self);
       spaceship_wnd_draw_buttons(self);
@@ -552,7 +552,7 @@ void __thiscall spaceship_wnd_present(SpaceshipWindow *self)
           game_timer_destroy(self->blink_timer);
           self->blink_timer = 0;
         }
-        wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&game_palette_block.game_palette);
+        wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)&game_palette_block.game_palette);
         if (self->launch_state == 2) {
           spaceship_play_launch_video(self);
           self->launch_state = 3;
@@ -578,13 +578,13 @@ void __thiscall spaceship_wnd_launch_sequence(SpaceshipWindow *self)
 {
   wnd_handle_show_raise(self);
   wnd_flush_paint();
-  wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)(self->ship_palette));
+  wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)(self->ship_palette));
   wnd_set_palette(self,(iptr)(self->ship_palette));
   self->launch_state = 2;
   spaceship_play_launch_video(self);
   self->launch_state = 3;
   spaceship_wnd_run_modal(self);
-  wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&game_palette_block.game_palette);
+  wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)&game_palette_block.game_palette);
   wnd_set_palette(self,(iptr)&game_palette_block.game_palette);
   wnd_hide(self);
   wnd_flush_paint();
@@ -853,9 +853,9 @@ void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *self)
 void __thiscall spaceship_play_launch_video(SpaceshipWindow *self)
 
 {
-  DocumentWindow *this_00;
+  AviPlayer *this_00;
   int found;
-  DocumentWindow *player;
+  AviPlayer *player;
   i8 video_path[128];
   int open_result;
   i32 seh_prev;
@@ -864,9 +864,9 @@ void __thiscall spaceship_play_launch_video(SpaceshipWindow *self)
   
   eh_state = 0xffffffff;
   snd_cd_stop();
-  this_00 = (DocumentWindow *)operator_new(0xa28);
+  this_00 = (AviPlayer *)operator_new(0xa28);
   eh_state = 0;
-  if (this_00 == (DocumentWindow *)0x0) {
+  if (this_00 == (AviPlayer *)0x0) {
     player = 0;
   }
   else {
@@ -878,9 +878,9 @@ void __thiscall spaceship_play_launch_video(SpaceshipWindow *self)
   str_append((char *)video_path,(const char *)&str_civ2_video_launch_avi);
   found = file_resolve_path((const char *)video_path);
   if (found != 0) {
-    avi_player_create((MediaWindow *)self->launch_video_player,(iptr)&str_empty_136,0x800,0,0);
-    avi_player_set_double_size((MediaWindow *)self->launch_video_player,1);
-    open_result = avi_player_open((AviPlayerOpenView *)self->launch_video_player,(const char *)video_path);
+    avi_player_create((AviPlayer *)self->launch_video_player,(iptr)&str_empty_136,0x800,0,0);
+    avi_player_set_double_size((AviPlayer *)self->launch_video_player,1);
+    open_result = avi_player_open((AviPlayer *)self->launch_video_player,(const char *)video_path);
     if (open_result != 0) {
       if (open_result == -0x7ffbfeac) {
         popup_game((const char *)&str_vfwnotregistered_6);
@@ -892,12 +892,12 @@ void __thiscall spaceship_play_launch_video(SpaceshipWindow *self)
     surface_fill((DibSurface *)self->launch_video_player,0);
     wnd_set_lbuttonup_handler((WndHandlers *)(self->launch_video_player + 0x58),(iptr)spaceship_video_on_lbuttonup);
     wnd_set_keydown_handler((WndHandlers *)(self->launch_video_player + 0x58),(iptr)spaceship_wnd_on_key);
-    avi_player_set_end_callback((AviPlayerEndCbSetView *)self->launch_video_player,(iptr)spaceship_video_on_end);
+    avi_player_set_end_callback((AviPlayer *)self->launch_video_player,(iptr)spaceship_video_on_end);
     wnd_center((WndBase *)(self->launch_video_player + 0x48));
     wnd_blit_surface((DibSurface *)self->launch_video_player);
-    window_show((WindowObjectView *)self->launch_video_player);
+    window_show((SurfaceWindow *)self->launch_video_player);
     wnd_flush_paint();
-    avi_player_play((AviPlayerPlayView *)self->launch_video_player);
+    avi_player_play((AviPlayer *)self->launch_video_player);
     input_flush_events();
     wnd_set_capture((WndBase *)(self->launch_video_player + 0x48));
     if (2 < game.multiplayer) {

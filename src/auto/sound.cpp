@@ -17,10 +17,10 @@ void __cdecl snd_menu_end(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall avi_player_set_end_callback(AviPlayerEndCbSetView *self,iptr callback)
+void __thiscall avi_player_set_end_callback(AviPlayer *self,iptr callback)
 
 {
-  *(iptr *)(((AviPlayerEndCbSetViewExt *)self)->on_end_callback) = callback;
+  *(iptr *)&self->on_end = callback;
   return;
 }
 
@@ -240,11 +240,11 @@ void __cdecl snd_sync_music_option(void)
 }
 
 /* 00472910 auto */
-void __thiscall avi_player_set_frame_callback(AviPlayerSetFrameCallbackView *self,iptr callback,u32 callback_data)
+void __thiscall avi_player_set_frame_callback(AviPlayer *self,iptr callback,u32 callback_data)
 
 {
   self->on_frame = callback;
-  self->callback_frame = callback_data;
+  self->cue_frame_u = callback_data;
   return;
 }
 
@@ -1901,7 +1901,7 @@ i32 __cdecl snd_avi_fill_buffer(WaveBuffer *buffer,WaveSource *source)
 /* 005dd010 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *self)
+AviPlayer * __thiscall mmwnd_ctor(AviPlayer *self)
 
 {
   i32 eh_next;
@@ -1909,28 +1909,28 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  surfwnd_ctor((SurfaceWindow *)self);
+  surfwnd_ctor(self);
   eh_state = 0;
-  avi_audio_ctor((AviAudio *)&self->border_width);
+  avi_audio_ctor(&self->audio);
   (*((char *)&eh_state + 0)) = 1;
-  palette_init((GamePalette *)&self->client_x);
+  palette_init(&self->palette);
   eh_state = (eh_state & 0xffffff00 | (byte)(2));
-  surface_ctor((DibSurface *)self->movie_surface);
+  surface_ctor(&self->backdrop);
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
-  self->style_flags = 0;
-  self->double_size = 0;
-  self->avi_option = 0;
-  self->target_surface = 0;
-  self->has_audio = 1;
-  self->audio_playing = 0;
-  self->target_surface = 0;
-  self->start_frame = 0;
-  self->end_frame = 0;
-  self->current_frame = 0;
-  self->edit_action_button = 0;
-  self->cue_frame = 0;
-  self->paused = 1;
-  self->loop = 0;
+  self->on_end = 0;
+  self->double_size_u = 0;
+  self->transparent_u = 0;
+  self->target_surface_uptr = 0;
+  self->has_audio_u = 1;
+  self->audio_playing_u = 0;
+  self->target_surface_uptr = 0;
+  self->start_frame_u = 0;
+  self->end_frame_u = 0;
+  self->cur_frame_u = 0;
+  self->field_a1c = 0;
+  self->cue_frame_u = 0;
+  self->paused_u = 1;
+  self->loop_u = 0;
   avi_current_player_i32 = (i32)self;
   return self;
 }
@@ -1945,7 +1945,7 @@ i32 __thiscall avi_player_dtor(AviPlayer *self)
   i8 *eh_handler;
   int eh_state;
   
-  *(i8 ***)self->media_window_base = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
+  *(i8 ***)&self->vtable = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 3;
   avi_play_pause(self);
@@ -1965,22 +1965,22 @@ i32 __thiscall avi_player_dtor(AviPlayer *self)
 /* 005dd27e auto */
 void __thiscall
 avi_player_create
-          (MediaWindow *self,iptr parent,i32 style,u32 x,u32 y)
+          (AviPlayer *self,iptr parent,i32 style,u32 x,u32 y)
 
 {
   surface_wnd_create
-            ((DibSurface *)self,parent,style,x,y,0x140,0xf0,(iptr)&self->client_x
+            (self,parent,style,x,y,0x140,0xf0,(iptr)&self->palette_u
             );
-  surface_fill((DibSurface *)self,0);
-  self->pos_x = x;
-  self->pos_y = y;
+  surface_fill(self,0);
+  self->pos_x_u = x;
+  self->pos_y_u = y;
   return;
 }
 
 /* 005dd2e3 auto */
 void __thiscall
 avi_player_create_child
-          (MediaWindow *self,iptr parent,i32 style,u32 x,u32 y,iptr target
+          (AviPlayer *self,iptr parent,i32 style,u32 x,u32 y,iptr target
           )
 
 {
@@ -1993,23 +1993,23 @@ avi_player_create_child
     target_dib = target + 0x48;
   }
   wnd_create_with_surface
-            ((DibSurface *)self,(const char *)parent,style,x,y,0x140,0xf0,(iptr)&self->client_x
+            (self,(const char *)parent,style,x,y,0x140,0xf0,(iptr)&self->palette_u
              ,target_dib);
-  surface_fill((DibSurface *)self,0);
-  self->target_surface = target;
-  self->pos_x = x;
-  self->pos_y = y;
+  surface_fill(self,0);
+  self->target_surface_uptr = target;
+  self->pos_x_u = x;
+  self->pos_y_u = y;
   return;
 }
 
 /* 005dd377 auto */
-int __thiscall avi_player_open(AviPlayerOpenView *self,const char *filename)
+int __thiscall avi_player_open(AviPlayer *self,const char *filename)
 
 {
   int result;
   
-  avi_close((AviPlayer *)self);
-  result = avi_open_file((AviPlayer *)self,filename);
+  avi_close(self);
+  result = avi_open_file(self,filename);
   if (result == 0) {
     result = 0;
   }
@@ -2017,27 +2017,27 @@ int __thiscall avi_player_open(AviPlayerOpenView *self,const char *filename)
 }
 
 /* 005dd3c2 auto */
-void __thiscall avi_player_play(AviPlayerPlayView *self)
+void __thiscall avi_player_play(AviPlayer *self)
 
 {
-  ((AviPlayerPlayViewExt *)self)->loop_flag[0] = '\0';
-  ((AviPlayerPlayViewExt *)self)->loop_flag_byte1[0] = '\0';
-  ((AviPlayerPlayViewExt *)self)->loop_flag_byte2[0] = '\0';
-  ((AviPlayerPlayViewExt *)self)->loop_flag_byte3[0] = '\0';
-  avi_play_start((AviPlayer *)self);
+  self->loop_bytes[0] = '\0';
+  self->loop_bytes[1] = '\0';
+  self->loop_bytes[2] = '\0';
+  self->loop_bytes[3] = '\0';
+  avi_play_start(self);
   return;
 }
 
 /* 005dd3f1 auto */
-void __thiscall avi_player_play_range(AviPlayerRangeView *self,u32 first_frame,u32 last_frame)
+void __thiscall avi_player_play_range(AviPlayer *self,u32 first_frame,u32 last_frame)
 
 {
   if ((int)first_frame <= (int)last_frame) {
-    self->loop = 0;
-    avi_seek_frame((AviPlayer *)self,first_frame,0);
-    self->end_frame = last_frame;
-    self->start_frame = first_frame;
-    avi_play_start((AviPlayer *)self);
+    self->loop_u = 0;
+    avi_seek_frame(self,first_frame,0);
+    self->end_frame_u = last_frame;
+    self->start_frame_u = first_frame;
+    avi_play_start(self);
   }
   return;
 }
@@ -2051,22 +2051,22 @@ void __thiscall avi_player_show_frame(void *self,i32 frame)
 }
 
 /* 005dd4c2 auto */
-void __thiscall avi_player_loop_range(AviPlayerLoopView *self,u32 first_frame,u32 last_frame)
+void __thiscall avi_player_loop_range(AviPlayer *self,u32 first_frame,u32 last_frame)
 
 {
-  self->start_frame = first_frame;
-  avi_seek_frame((AviPlayer *)self,first_frame,0);
-  self->end_frame = last_frame;
-  self->loop = 1;
-  avi_play_start((AviPlayer *)self);
+  self->start_frame_u = first_frame;
+  avi_seek_frame(self,first_frame,0);
+  self->end_frame_u = last_frame;
+  self->loop_u = 1;
+  avi_play_start(self);
   return;
 }
 
 /* 005dd51d auto */
-void __thiscall avi_player_pause(AviPlayerPauseView *self)
+void __thiscall avi_player_pause(AviPlayer *self)
 
 {
-  avi_play_pause((AviPlayer *)self);
+  avi_play_pause(self);
   return;
 }
 
@@ -2111,33 +2111,33 @@ avi_player_draw_to(DibSurface *self,iptr dest,int x,int y)
 }
 
 /* 005dd71e auto */
-void __thiscall avi_player_set_double_size(MediaWindow *self,i32 enable)
+void __thiscall avi_player_set_double_size(AviPlayer *self,i32 enable)
 
 {
   int height;
   int width;
   
-  height = surface_get_height((DibSurface *)self);
+  height = surface_get_height(self);
   height = height * 2;
-  width = surface_get_width((DibSurface *)self);
-  wnd_resize_clamped((WindowObjectView *)self,width * 2,height);
-  self->double_size = 1;
+  width = surface_get_width(self);
+  wnd_resize_clamped(self,width * 2,height);
+  self->double_size_u = 1;
   return;
 }
 
 /* 005dd761 auto */
-void __thiscall avi_player_set_transparent(AviPlayerSetTransparentView *self,int enable)
+void __thiscall avi_player_set_transparent(AviPlayer *self,int enable)
 
 {
   if (enable == 0) {
-    if (self->is_transparent != 0) {
-      self->is_transparent = 0;
-      avi_restart_decompress((AviPlayer *)self,0);
+    if (self->transparent_u != 0) {
+      self->transparent_u = 0;
+      avi_restart_decompress(self,0);
     }
   }
-  else if (self->is_transparent == 0) {
-    self->is_transparent = 1;
-    avi_restart_decompress((AviPlayer *)self,1);
+  else if (self->transparent_u == 0) {
+    self->transparent_u = 1;
+    avi_restart_decompress(self,1);
   }
   return;
 }
@@ -2498,16 +2498,16 @@ int __cdecl avi_open_file(AviPlayer *player,const char *filename)
         player->dst_format.clr_used = 0x100;
         avi_frame_width = player->src_format.width;
         avi_frame_height = player->src_format.height;
-        dib = surface_get_dib((DibSurface *)player);
+        dib = surface_get_dib(player);
         value = dib_is_top_down(dib);
         if (value != 0) {
           player->dst_format.height = -player->dst_format.height;
         }
         if (player->double_size == 0) {
-          wnd_resize_clamped((WindowObjectView *)player,avi_frame_width,avi_frame_height);
+          wnd_resize_clamped(player,avi_frame_width,avi_frame_height);
         }
         else {
-          wnd_resize_clamped((WindowObjectView *)player,avi_frame_width * 2,avi_frame_height * 2);
+          wnd_resize_clamped(player,avi_frame_width * 2,avi_frame_height * 2);
         }
         if (stream_info.dwSuggestedBufferSize == 0) {
           value = (uint)player->src_format.bit_count * player->src_format.width *
@@ -2748,7 +2748,7 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
   }
   else {
     if ((player->transparent != 0) && (decode_flags == 0)) {
-      surface_blit(&player->backdrop,(DibSurface *)player,(RECT *)&avi_blit_union_left_block.avi_blit_union_left,(RECT *)&avi_blit_union_left_block.avi_blit_union_left);
+      surface_blit(&player->backdrop,player,(RECT *)&avi_blit_union_left_block.avi_blit_union_left,(RECT *)&avi_blit_union_left_block.avi_blit_union_left);
     }
     result = AVIStreamRead(avi_video_stream[0],player->cur_frame,1,avi_frame_buffer,
                             avi_frame_buffer_size,&bytes_read,0);
@@ -2759,7 +2759,7 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
         x_dst = 0;
         dst_dim_b = avi_frame_width;
         dst_dim_a = avi_frame_height;
-        dst_bits = surface_get_bits((DibSurface *)player);
+        dst_bits = surface_get_bits(player);
         result = avi_ic_decompress_ex(avi_decompressor,decode_flags,(iptr)&player->src_format,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
                                avi_frame_height,(iptr)&player->dst_format,dst_bits,x_dst,y_dst,dst_dim_b,dst_dim_a);
       }
@@ -2770,7 +2770,7 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
         dst_dim_a = avi_frame_width * 2;
         y_dst = 0;
         x_dst = 0;
-        dst_bits = surface_get_bits((DibSurface *)player);
+        dst_bits = surface_get_bits(player);
         result = avi_ic_decompress_ex(avi_decompressor,decode_flags,(iptr)&player->src_format,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
                                avi_frame_height,(iptr)&player->dst_format,dst_bits,x_dst,y_dst,dst_dim_a,dst_dim_b);
         player->dst_format.height = player->dst_format.height >> 1;
@@ -2783,12 +2783,12 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
       if ((player->cue_frame != 0) &&
          (player->cue_frame == player->cur_frame)) {
         player->cue_frame = 0;
-        avi_player_call_cue_callback((AviPlayerCueCbCallView *)player);
+        avi_player_call_cue_callback(player);
       }
       if (((uint)player->end_frame < (uint)player->cur_frame) && (avi_playing != 0)) {
         if (player->loop == 0) {
           avi_play_pause(player);
-          avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
+          avi_player_call_end_callback(player);
           result = 0;
         }
         else {
@@ -2866,7 +2866,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
       if ((uint)player->end_frame < target_frame) {
         if (player->loop == 0) {
           avi_play_pause(player);
-          avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
+          avi_player_call_end_callback(player);
           return;
         }
         avi_seek_frame(player,player->start_frame,0);
@@ -2879,7 +2879,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
       if (sample == 0) {
         if (player->loop == 0) {
           avi_play_pause(player);
-          avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
+          avi_player_call_end_callback(player);
           return;
         }
         avi_seek_frame(player,player->start_frame,0);
@@ -2897,7 +2897,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
     }
     if ((*(uint *)&avi_blit_union_left_block.avi_frame_needs_blit) != 0) {
       if (player->transparent == 0) {
-        wnd_blit_surface((DibSurface *)player);
+        wnd_blit_surface(player);
       }
       else {
         dirty_rect.left = err_report_ctx_block.avi_view_rect_x[0];
@@ -2905,7 +2905,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
         dirty_rect.right = err_report_ctx_block.avi_view_rect_x[0] + err_report_ctx_block.avi_view_rect_width_i32;
         dirty_rect.bottom = err_report_ctx_block.avi_view_rect_y + err_report_ctx_block.avi_view_rect_height_i32;
         UnionRect(&dirty_rect,&dirty_rect,(RECT *)((i32 *)&avi_blit_union_left_block.avi_blit_union_left));
-        wnd_blit_surface_rect((DibSurface *)player,(iptr)&dirty_rect);
+        wnd_blit_surface_rect(player,(iptr)&dirty_rect);
         avi_blit_union_left_block.avi_blit_union_left[0] = dirty_rect.left;
         avi_blit_union_left_block.avi_blit_union_top = dirty_rect.top;
         avi_blit_union_left_block.avi_blit_union_right = dirty_rect.right;
@@ -3031,8 +3031,8 @@ void __cdecl avi_restart_decompress(AviPlayer *player,int transparent)
     }
     else {
       surface_create(&player->backdrop,avi_frame_width,avi_frame_height);
-      yBottom = surface_get_height((DibSurface *)player);
-      xRight = surface_get_width((DibSurface *)player);
+      yBottom = surface_get_height(player);
+      xRight = surface_get_width(player);
       SetRect(&src_rect,0,0,xRight,yBottom);
       dst_rect.left = src_rect.left;
       dst_rect.top = src_rect.top;
@@ -3046,10 +3046,10 @@ void __cdecl avi_restart_decompress(AviPlayer *player,int transparent)
       }
       if (avi_file_loaded != 0) {
         surface_blit
-                  (&player->backdrop,(DibSurface *)player,&src_rect,&src_rect);
+                  (&player->backdrop,player,&src_rect,&src_rect);
         cur_frame = player->cur_frame;
         avi_seek_frame(player,cur_frame,0);
-        wnd_blit_surface((DibSurface *)player);
+        wnd_blit_surface(player);
       }
     }
   }
@@ -3057,7 +3057,7 @@ void __cdecl avi_restart_decompress(AviPlayer *player,int transparent)
 }
 
 /* 005e3550 auto */
-void __thiscall avi_player_call_end_callback(AviPlayerEndCbCallView *self)
+void __thiscall avi_player_call_end_callback(AviPlayer *self)
 
 {
   if (self->on_end != 0) {
@@ -3067,11 +3067,11 @@ void __thiscall avi_player_call_end_callback(AviPlayerEndCbCallView *self)
 }
 
 /* 005e3580 auto */
-void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *self)
+void __thiscall avi_player_call_cue_callback(AviPlayer *self)
 
 {
-  if (self->on_cue != 0) {
-    call_untyped((code *)self->on_cue);
+  if (self->on_frame != 0) {
+    call_untyped((code *)self->on_frame);
   }
   return;
 }

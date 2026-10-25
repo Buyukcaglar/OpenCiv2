@@ -5361,7 +5361,7 @@ military_stack_check:
     if ((own_dist == 0) && (cities[city2].size < '\n')) {
       cities[city2].size++;
       unit_destroy_redraw(unit,1);
-      city_window_refresh_if_city((FrameWindow *)((i8 *)&city_window_block.city_window),city2);
+      city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city2);
       map_redraw_area_all_views(x2,y3,1,1,1);
       return 1;
     }

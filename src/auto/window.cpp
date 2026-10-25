@@ -247,10 +247,10 @@ void __thiscall wnd_set_redraw_callback(SurfaceWindow *self,iptr callback)
 }
 
 /* 004085f0 auto */
-void __thiscall window_show(WindowObjectView *self)
+void __thiscall window_show(SurfaceWindow *self)
 
 {
-  window_show_focus_first((Wnd *)(self + 0x12));
+  window_show_focus_first((Wnd *)((u8 *)self + 0x48));
   return;
 }
 
@@ -378,10 +378,10 @@ void __cdecl menu_find_city(void)
     }
     else {
       mapview_center_on
-                ((ViewWindow *)((i8 *)&map_views_block.map_views),(int)cities[city2].x,(int)cities[city2].y);
+                ((MapView *)((i8 *)&map_views_block.map_views),(int)cities[city2].x,(int)cities[city2].y);
       if ((dialog2.result_extra != 0) && ((cities[city2].owner == civ2 || (game.reveal_map != '\0')))
          ) {
-        city_window_open((ScaledWindowView *)((i8 *)&city_window_block.city_window),city2);
+        city_window_open((CityWindow *)((i8 *)&city_window_block.city_window),city2);
       }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 0040e38d */ { dialog_dtor(&dialog2); }
@@ -755,14 +755,14 @@ i32 __cdecl popup_game_sprite_flags(const char *section,i32 dlg_flags,iptr sprit
 }
 
 /* 0042a768 auto */
-void __thiscall picwnd_close(PictureWindowCore *self)
+void __thiscall picwnd_close(PictureWindow *self)
 
 {
   if (-1 < (int)self->report_id) {
     self->report_id = 0xffffffff;
-    wnd_remove_all_controls((Wnd *)self->window_2);
-    surface_release((DibSurface *)&self->rates_civ);
-    frame_wnd_close((DibSurface *)self);
+    wnd_remove_all_controls(&self->window);
+    surface_release(&self->surface);
+    frame_wnd_close(self);
   }
   return;
 }
@@ -787,7 +787,7 @@ picwnd_open
   eh_state = 0xffffffff;
   palette_init(&palette);
   eh_state = 0;
-  picwnd_close((PictureWindowCore *)((i8 *)&advisor_window_block.advisor_window));
+  picwnd_close((PictureWindow *)((i8 *)&advisor_window_block.advisor_window));
   ui_set_button_font((iptr)&advisor_button_font_block.advisor_button_font);
   self->controls_created = 0;
   self->frame_state = 0;
@@ -810,19 +810,19 @@ picwnd_open
   self->image_height = img_height;
   win_flush_pending_msgs();
   if (resource_id == 10000) {
-    surface_load_gif_file((DibSurface *)&self->rates_civ,(const char *)&str_scredits_gif,10,0xc0,(iptr)&palette)
+    surface_load_gif_file(&self->surface,(const char *)&str_scredits_gif,10,0xc0,(iptr)&palette)
     ;
   }
   else {
-    surface_load_gif_resource((DibSurface *)&self->rates_civ,resource_id,10,0xc0,(iptr)&palette);
+    surface_load_gif_resource(&self->surface,resource_id,10,0xc0,(iptr)&palette);
   }
   win_flush_pending_msgs();
   if ((int)img_width < 1) {
-    wnd_w = surface_width((DibSurface *)&self->rates_civ);
+    wnd_w = surface_width(&self->surface);
     self->image_width = wnd_w;
   }
   if ((int)img_height < 1) {
-    wnd_w = surface_height((DibSurface *)&self->rates_civ);
+    wnd_w = surface_height(&self->surface);
     self->image_height = wnd_w;
   }
   self->window_width = win_width;
@@ -842,9 +842,9 @@ picwnd_open
   scr_height = caption_font_block.screen_height;
   wnd_w = self->window_width;
   wnd_h = self->window_height;
-  nonclient_height = wnd_nonclient_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+  nonclient_height = wnd_nonclient_height(&main_frame_wnd_block.main_frame_wnd);
   frame_wnd_create
-            ((FrameWindow *)self,0,(self->frame_style == 0) - 1 & 8,
+            (self,0,(self->frame_style == 0) - 1 & 8,
              (caption_font_block.screen_width >> 1) - ((int)(wnd_w + border * 2) >> 1),
              (scr_height - nonclient_height >> 1) - ((int)(wnd_h + border * 2) >> 1),self->image_width,self->image_height,
              0,border,border);
@@ -856,10 +856,10 @@ picwnd_open
 /* 0042abc1 auto */
 void __thiscall
 picwnd_blit_at
-          (FrameWindow *self,int x,int y,i32 width,i32 height)
+          (PictureWindow *self,int x,int y,i32 width,i32 height)
 
 {
-  gfx_copy_rect_xywh((iptr)&self->rates_civ,(iptr)self,x,y,self->client_x + x,
+  gfx_copy_rect_xywh((iptr)&self->surface_head,(iptr)self,x,y,self->client_x + x,
                      self->client_y + y,width,height);
   return;
 }
@@ -868,7 +868,7 @@ picwnd_blit_at
 void __thiscall picwnd_blit(PictureWindow *self)
 
 {
-  picwnd_blit_at((FrameWindow *)self,0,0,self->image_width,self->image_height);
+  picwnd_blit_at(self,0,0,self->image_width,self->image_height);
   return;
 }
 
@@ -899,12 +899,12 @@ void __thiscall picwnd_dtor(void *self)
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 0043c1e7 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x2d8)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0043c1f6 */ { frame_wnd_dtor(*(DibSurface **)&self); }
+  /* inlined unwind funclet 0043c1f6 */ { frame_wnd_dtor(*(FrameWindow **)&self); }
   return;
 }
 
 /* 0043c260 auto */
-ViewWindow * __thiscall picwnd_ctor(ViewWindow *self)
+PictureWindow * __thiscall picwnd_ctor(PictureWindow *self)
 
 {
   i32 seh_handler;
@@ -912,19 +912,19 @@ ViewWindow * __thiscall picwnd_ctor(ViewWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  frame_wnd_ctor((SurfaceWindow *)self);
+  frame_wnd_ctor(self);
   eh_state = 0;
-  surface_ctor((DibSurface *)&self->rates_civ);
+  surface_ctor(&self->surface);
   (*((char *)&eh_state + 0)) = 1;
-  button_ctor((Button *)&self->bar_height);
+  button_ctor(&self->close_button);
   (*((char *)&eh_state + 0)) = 2;
-  button_ctor((Button *)&self->no_thanks_button_value);
+  button_ctor(&self->button_2);
   (*((char *)&eh_state + 0)) = 3;
-  button_ctor((Button *)self->lux_rate_scrollbar);
+  button_ctor(&self->button_3);
   (*((char *)&eh_state + 0)) = 4;
-  button_ctor((Button *)self->picwnd_extra_button);
+  button_ctor(&self->button_4);
   eh_state = (eh_state & 0xffffff00 | (byte)(5));
-  scrollbar_ctor((Scrollbar *)self->picwnd_scrollbar);
+  scrollbar_ctor(&self->scrollbar);
   self->vtable = (u32)((pointer *)(ptr_fun_rest + 4));
   return self;
 }
@@ -1346,11 +1346,11 @@ SurfaceWindow * __thiscall surfwnd_ctor(SurfaceWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  surface_ctor((DibSurface *)self);
+  surface_ctor(self);
   eh_state = 0;
-  surfwnd_wnd_ctor((Wnd *)self->window_2);
+  surfwnd_wnd_ctor(&self->window);
   self->vtable = (u32)((pointer *)(ptr_fun_rest + 8));
-  self->handler_slot_100 = 0;
+  self->window.control_list = 0;
   self->on_paint = 0;
   return self;
 }
@@ -1710,7 +1710,7 @@ void __cdecl ui_blit_all_windows(void)
   
   for (view = 0; view < 8; view++) {
     if ((view == 0) || (map_views_block.map_view_recs[view].open != 0)) {
-      wnd_blit_surface(&map_views_block.map_view_recs[view].surface);
+      wnd_blit_surface(&map_views_block.map_view_recs[view]);
     }
   }
   wnd_blit_surface((DibSurface *)((i8 *)&minimap_window_block.minimap_window));
@@ -2205,7 +2205,7 @@ void __cdecl ui_reset_window_layout(void)
   int width2;
   int view;
   
-  wnd_maximize((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+  wnd_maximize(&main_frame_wnd_block.main_frame_wnd);
   city_window_init_size();
   wnd_show_restored((WndBase *)((i8 *)&city_window_block.city_window_wnd));
   wnd_move_to_rect((WndBase *)((i8 *)&city_window_block.city_window_wnd),(iptr)&minimap_wnd_rect_block.city_wnd_rect);
@@ -2233,13 +2233,13 @@ void __cdecl ui_reset_window_layout(void)
   parley_wnd_block.caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + parley_font_height;
   width2 = width2 + (panel_padding_x + panel_margin_x) * 2 + 6;
   height2 = height2 + panel_margin_y * 2 + (int)parley_wnd_block.caption_height * 2 + 0xe;
-  left = wnd_client_width((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+  left = wnd_client_width(&main_frame_wnd_block.main_frame_wnd);
   left = (left >> 1) - (width2 >> 1);
   parley_wnd_block.wnd_x = left;
-  client_height = wnd_client_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+  client_height = wnd_client_height(&main_frame_wnd_block.main_frame_wnd);
   parley_wnd_block.wnd_y = (client_height >> 1) - (height2 >> 1);
   SetRect((LPRECT)parley_wnd_block.init_rect,left,(int)parley_wnd_block.wnd_y,left + width2,(int)parley_wnd_block.wnd_y + height2);
-  wnd_move_to_rect((WndBase *)((i8 *)&parley_wnd_block.base.window_2),(iptr)(LPRECT)parley_wnd_block.init_rect);
+  wnd_move_to_rect((WndBase *)((i8 *)&parley_wnd_block.window),(iptr)(LPRECT)parley_wnd_block.init_rect);
   if (chat_wnd_block.large_layout == 0) {
     width2 = 0x208;
     height2 = 0x14f;
@@ -2253,17 +2253,17 @@ void __cdecl ui_reset_window_layout(void)
   chat_wnd_block.caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + chat_font_height;
   width2 = width2 + (panel_padding_x + panel_margin_x) * 2 + 6;
   height2 = height2 + panel_margin_y * 2 + (int)chat_wnd_block.caption_height * 2 + 0xe;
-  left = wnd_client_width((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+  left = wnd_client_width(&main_frame_wnd_block.main_frame_wnd);
   left = (left >> 1) - (width2 >> 1);
   chat_wnd_block.wnd_x = left;
-  client_height = wnd_client_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+  client_height = wnd_client_height(&main_frame_wnd_block.main_frame_wnd);
   chat_wnd_block.wnd_y = (client_height >> 1) - (height2 >> 1);
   SetRect((LPRECT)chat_wnd_block.init_rect,left,(int)chat_wnd_block.wnd_y,left + width2,(int)chat_wnd_block.wnd_y + height2);
-  wnd_move_to_rect((WndBase *)((i8 *)&chat_wnd_block.base.window_2),(iptr)(LPRECT)chat_wnd_block.init_rect);
+  wnd_move_to_rect((WndBase *)((i8 *)&chat_wnd_block.window),(iptr)(LPRECT)chat_wnd_block.init_rect);
   for (view = 1; view < 8; view++) {
     if (map_views_block.map_view_recs[view].open != 0) {
       map_views_block.map_view_recs[view].open = 0;
-      wnd_destroy_with_surface(&map_views_block.map_view_recs[view].surface);
+      wnd_destroy_with_surface(&map_views_block.map_view_recs[view]);
     }
   }
   mapview_calc_rect();
@@ -2287,8 +2287,8 @@ void __cdecl menu_load_game(void)
   parley_wnd_close();
   chat_wnd_close();
   pedia_close();
-  picwnd_close((PictureWindowCore *)((i8 *)&advisor_window_block.advisor_window));
-  picwnd_close((PictureWindowCore *)((i8 *)&casualty_window_block.casualty_window));
+  picwnd_close((PictureWindow *)((i8 *)&advisor_window_block.advisor_window));
+  picwnd_close((PictureWindow *)((i8 *)&casualty_window_block.casualty_window));
   music_was_on = (byte)game.game_options & 8;
   result = game_load_dialog(0,0,0);
   if (result == 0) {
@@ -2316,21 +2316,21 @@ void __cdecl menu_load_game(void)
       ui_reset_window_layout();
       wnd_show_restored((WndBase *)((i8 *)&map_views_block.map_view_wnds));
       wnd_move_to_rect((WndBase *)((i8 *)&map_views_block.map_view_wnds),(iptr)&map_view_saved_rects_block.map_view_saved_rects);
-      mapview_update_title((FrameWindow *)((i8 *)&map_views_block.map_views));
+      mapview_update_title((MapView *)((i8 *)&map_views_block.map_views));
       wnd_repaint((SurfaceWindow *)((i8 *)&map_views_block.map_views));
       for (view = 1; view < 8; view++) {
         if (map_views_block.map_view_recs[view].open != 0) {
-          mapview_create((ViewWindow *)&map_views_block.map_view_recs[view]);
+          mapview_create(&map_views_block.map_view_recs[view]);
           wnd_move_to_rect
                     ((WndBase *)&map_views_block.map_view_recs[view].window,
                      (iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + view * 0x10));
-          mapview_update_title((FrameWindow *)&map_views_block.map_view_recs[view]);
+          mapview_update_title(&map_views_block.map_view_recs[view]);
           wnd_repaint((SurfaceWindow *)&map_views_block.map_view_recs[view]);
         }
       }
     }
     else {
-      wnd_maximize((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+      wnd_maximize(&main_frame_wnd_block.main_frame_wnd);
       wnd_show_restored((WndBase *)((i8 *)&city_window_block.city_window_wnd));
       wnd_move_to_rect((WndBase *)((i8 *)&city_window_block.city_window_wnd),(iptr)&minimap_wnd_rect_block.city_wnd_rect);
       city_window_close();
@@ -2344,15 +2344,15 @@ void __cdecl menu_load_game(void)
       wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.status_window));
       wnd_show_restored((WndBase *)((i8 *)&map_views_block.map_view_wnds));
       wnd_move_to_rect((WndBase *)((i8 *)&map_views_block.map_view_wnds),(iptr)&map_view_saved_rects_block.map_view_saved_rects);
-      mapview_update_title((FrameWindow *)((i8 *)&map_views_block.map_views));
+      mapview_update_title((MapView *)((i8 *)&map_views_block.map_views));
       wnd_repaint((SurfaceWindow *)((i8 *)&map_views_block.map_views));
       for (view = 1; view < 8; view++) {
         if (map_views_block.map_view_recs[view].open != 0) {
-          mapview_create((ViewWindow *)&map_views_block.map_view_recs[view]);
+          mapview_create(&map_views_block.map_view_recs[view]);
           wnd_move_to_rect
                     ((WndBase *)&map_views_block.map_view_recs[view].window,
                      (iptr)(((i8 *)&map_view_saved_rects_block.map_view_saved_rects) + view * 0x10));
-          mapview_update_title((FrameWindow *)&map_views_block.map_view_recs[view]);
+          mapview_update_title(&map_views_block.map_view_recs[view]);
           wnd_repaint((SurfaceWindow *)&map_views_block.map_view_recs[view]);
         }
       }
@@ -2363,7 +2363,7 @@ void __cdecl menu_load_game(void)
     ui_redraw_all_maps(1);
     ui_focus_active_unit(0);
     menu_update_states();
-    pedia_load_indexes((DocumentWindow *)((i8 *)&pedia_window_block.pedia_window));
+    pedia_load_indexes((PediaWindow *)((i8 *)&pedia_window_block.pedia_window));
     ui_flush_input();
     if ((game.multiplayer != '\0') && (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0)) {
       mp_turn_timer_start(1);
@@ -2851,7 +2851,7 @@ void __cdecl menu_command(i32 menu,int cmd)
           if (cmd == 0x310) {
             if (map_views_block.mapview_zoom[0] < 8) {
               map_views_block.mapview_zoom[0]++;
-              mapview_redraw((ViewWindow *)((i8 *)&map_views_block.map_views),human_civ[0],1);
+              mapview_redraw((MapView *)((i8 *)&map_views_block.map_views),human_civ[0],1);
             }
           }
           else if (cmd == 0x302) {
@@ -2861,11 +2861,11 @@ void __cdecl menu_command(i32 menu,int cmd)
         else if (cmd < 0x321) {
           if (cmd == 800) {
             map_views_block.mapview_zoom[0] = 8;
-            mapview_redraw((ViewWindow *)((i8 *)&map_views_block.map_views),human_civ[0],1);
+            mapview_redraw((MapView *)((i8 *)&map_views_block.map_views),human_civ[0],1);
           }
           else if ((cmd == 0x311) && (-7 < map_views_block.mapview_zoom[0])) {
             map_views_block.mapview_zoom[0]--;
-            mapview_redraw((ViewWindow *)((i8 *)&map_views_block.map_views),human_civ[0],1);
+            mapview_redraw((MapView *)((i8 *)&map_views_block.map_views),human_civ[0],1);
           }
         }
         else if (cmd < 0x331) {
@@ -2878,15 +2878,15 @@ void __cdecl menu_command(i32 menu,int cmd)
               map_views_block.mapview_zoom[0] = 0;
               map_views_block.map_view_center_x[0] = map_cursor_x[0];
               map_views_block.mapview_center_y[0] = map_cursor_y[0];
-              mapview_redraw((ViewWindow *)((i8 *)&map_views_block.map_views),human_civ[0],1);
+              mapview_redraw((MapView *)((i8 *)&map_views_block.map_views),human_civ[0],1);
               break;
             case 0x322:
               map_views_block.mapview_zoom[0] = -3;
-              mapview_redraw((ViewWindow *)((i8 *)&map_views_block.map_views),human_civ[0],1);
+              mapview_redraw((MapView *)((i8 *)&map_views_block.map_views),human_civ[0],1);
               break;
             case 0x324:
               map_views_block.mapview_zoom[0] = -7;
-              mapview_redraw((ViewWindow *)((i8 *)&map_views_block.map_views),human_civ[0],1);
+              mapview_redraw((MapView *)((i8 *)&map_views_block.map_views),human_civ[0],1);
               break;
             case 0x327:
               game.game_options = game.game_options ^ 0x20;
@@ -2907,7 +2907,7 @@ void __cdecl menu_command(i32 menu,int cmd)
           }
           else if (cmd == 0x340) {
             mapview_center_on
-                      ((ViewWindow *)((i8 *)&map_views_block.map_views),(int)map_cursor_x[0],(int)map_cursor_y[0]);
+                      ((MapView *)((i8 *)&map_views_block.map_views),(int)map_cursor_x[0],(int)map_cursor_y[0]);
           }
         }
         else if (cmd < 0x431) {
@@ -3182,7 +3182,7 @@ void __cdecl menu_command(i32 menu,int cmd)
         }
         else if (cmd < 0x902) {
           if (cmd == 0x901) {
-            pedia_open_category((MediaWindow *)((i8 *)&pedia_window_block.pedia_window),1,1);
+            pedia_open_category((PediaWindow *)((i8 *)&pedia_window_block.pedia_window),1,1);
           }
           else {
             switch(cmd) {
@@ -3218,19 +3218,19 @@ void __cdecl menu_command(i32 menu,int cmd)
         else {
           switch(cmd) {
           case 0x903:
-            pedia_open_category((MediaWindow *)((i8 *)&pedia_window_block.pedia_window),2,1);
+            pedia_open_category((PediaWindow *)((i8 *)&pedia_window_block.pedia_window),2,1);
             break;
           case 0x905:
-            pedia_open_category((MediaWindow *)((i8 *)&pedia_window_block.pedia_window),3,1);
+            pedia_open_category((PediaWindow *)((i8 *)&pedia_window_block.pedia_window),3,1);
             break;
           case 0x907:
-            pedia_open_category((MediaWindow *)((i8 *)&pedia_window_block.pedia_window),4,1);
+            pedia_open_category((PediaWindow *)((i8 *)&pedia_window_block.pedia_window),4,1);
             break;
           case 0x909:
-            pedia_open_category((MediaWindow *)((i8 *)&pedia_window_block.pedia_window),6,1);
+            pedia_open_category((PediaWindow *)((i8 *)&pedia_window_block.pedia_window),6,1);
             break;
           case 0x90b:
-            pedia_open_category((MediaWindow *)((i8 *)&pedia_window_block.pedia_window),5,1);
+            pedia_open_category((PediaWindow *)((i8 *)&pedia_window_block.pedia_window),5,1);
             break;
           case 0x90d:
             if ((cmd == 0x905) &&
@@ -3238,7 +3238,7 @@ void __cdecl menu_command(i32 menu,int cmd)
               menu_wonder_movies();
             }
             else {
-              pedia_open_category((MediaWindow *)((i8 *)&pedia_window_block.pedia_window),7,1);
+              pedia_open_category((PediaWindow *)((i8 *)&pedia_window_block.pedia_window),7,1);
             }
             break;
           case 0x9f0:
@@ -3702,7 +3702,7 @@ void __thiscall wnd_show_restored(WndBase *self)
 int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,int silent,iptr civ)
 
 {
-  ViewWindow *self;
+  CityPicturePopup *self;
   int result;
   i32 height;
   i32 width;
@@ -3736,9 +3736,9 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
       mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,civ);
       text_set_string_arg_b(0,(const char *)&cities[city].name);
     }
-    self = (ViewWindow *)operator_new(0x798);
+    self = (CityPicturePopup *)operator_new(0x798);
     (*((char *)&eh_state + 0)) = 2;
-    if (self == (ViewWindow *)0x0) {
+    if (self == (CityPicturePopup *)0x0) {
       popup_new = (void *)0x0;
     }
     else {
@@ -4299,7 +4299,7 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
   char caption[256];
   struct { u32 left; u32 top; u32 right; u32 bottom; } rect2;
   
-  surface_reset_clip((DibSurface *)self);
+  surface_reset_clip(self);
   highlight_color2 = frame_highlight_color;
   shadow_color2 = frame_shadow_color;
   bevel = frame_bevel_width;
@@ -4323,8 +4323,8 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
   offset -= (bevel + width2);
   gfx_tile_fill((iptr)self,frame_border_tile,offset,0,width2,height2,offset,0);
   rect2.left = self->frame_rect;
-  rect2.top = self->frame_top;
-  rect2.right = self->frame_right;
+  rect2.top = self->frame_top_u;
+  rect2.right = self->frame_right_u;
   rect2.bottom = self->frame_bottom;
   for (i = 0; i < bevel; i++) {
     gfx_draw_bevel_rect((iptr)self,(RECT *)&rect2,highlight_color2,shadow_color2);
@@ -4345,13 +4345,13 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
   }
   button_x = frame_border_width;
   for (i = 0; i < (int)self->caption_button_count; i++) {
-    width2 = (int)(*(int *)(self->pane_selection_flags_area + i * 0x1c + 0xc) * self->caption_height) / 0x18;
-    height2 = (int)(*(int *)(self->pane_selection_flags_area + i * 0x1c + 0x10) * self->caption_height) / 0x18;
+    width2 = (int)(*(int *)(self->caption_button_area + i * 0x1c + 0xc) * self->caption_height) / 0x18;
+    height2 = (int)(*(int *)(self->caption_button_area + i * 0x1c + 0x10) * self->caption_height) / 0x18;
     button_y2 = ((int)self->caption_height >> 1) - (height2 >> 1);
     rect_set_xywh((iptr)&rect2,button_x,button_y2,width2,height2);
     gfx_set_scale_ratio(self->caption_height,0x18);
     sprite_draw
-              (*(Sprite **)(self->pane_selection_flags_area + i * 0x1c + 0x14),(iptr)sprite_rect,
+              (*(Sprite **)(self->caption_button_area + i * 0x1c + 0x14),(iptr)sprite_rect,
                (iptr)self,button_x,button_y2);
     gfx_reset_zoom_scale();
     button_x = button_x + width2 + frame_padding;
@@ -4487,13 +4487,13 @@ void __thiscall frame_wnd_draw_caption(FrameWindow *self)
   }
   gfx_set_text_color_index(10);
   surface_draw_text
-            ((DibSurface *)self,(iptr)font2,(const char *)caption,text_x2 + 2,text_y2 + 1,5);
+            (self,(iptr)font2,(const char *)caption,text_x2 + 2,text_y2 + 1,5);
   gfx_set_text_color_index(0x1a);
   surface_draw_text
-            ((DibSurface *)self,(iptr)font2,(const char *)caption,text_x2 + 1,text_y2,5);
+            (self,(iptr)font2,(const char *)caption,text_x2 + 1,text_y2,5);
   surface_draw_text
-            ((DibSurface *)self,(iptr)font2,(const char *)caption,text_x2,text_y2,5);
-  surface_set_clip((DibSurface *)self,(RECT *)&self->client_rect);
+            (self,(iptr)font2,(const char *)caption,text_x2,text_y2,5);
+  surface_set_clip(self,(RECT *)&self->client_rect);
   return;
 }
 
@@ -4535,23 +4535,23 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  width = surface_get_width((DibSurface *)self);
-  height = surface_get_height((DibSurface *)self);
+  width = surface_get_width(self);
+  height = surface_get_height(self);
   rect_set_xywh((iptr)&self->frame_rect,0,0,width,height);
   rect_set_xywh((iptr)&self->client_rect,0,0,width + self->border_width * -2,
                      height - (self->caption_height + self->border_width));
   rect_offset((iptr)&self->client_rect,self->border_width,self->caption_height);
   self->client_x = self->client_rect;
-  self->client_y = self->client_top;
+  self->client_y = self->client_top_u;
   size = rect_width((RECT *)&self->client_rect);
   self->client_width = size;
   size = rect_height((RECT *)&self->client_rect);
   self->client_height = size;
-  frame_wnd_destroy_caption_buttons((WindowObjectView *)self);
+  frame_wnd_destroy_caption_buttons(self);
   button_x = frame_border_width;
   for (i = 0; i < (int)self->caption_button_count; i++) {
-    width = (int)(*(int *)(self->pane_selection_flags_area + i * 0x1c + 0xc) * self->caption_height) / 0x18;
-    height = (int)(*(int *)(self->pane_selection_flags_area + i * 0x1c + 0x10) * self->caption_height) / 0x18;
+    width = (int)(*(int *)(self->caption_button_area + i * 0x1c + 0xc) * self->caption_height) / 0x18;
+    height = (int)(*(int *)(self->caption_button_area + i * 0x1c + 0x10) * self->caption_height) / 0x18;
     rect_set_xywh((iptr)button_rect,button_x,((int)self->caption_height >> 1) - (height >> 1),width,
                        height);
     this_00 = (Hotspot *)operator_new(0x40);
@@ -4563,25 +4563,25 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
       hotspot = hotspot_ctor(this_00);
     }
     eh_state = 0xffffffff;
-    *(i32 *)(self->pane_selection_flags_area + i * 0x1c + 0x18) = (i32)hotspot;
+    *(i32 *)(self->caption_button_area + i * 0x1c + 0x18) = (i32)hotspot;
     if (self == (FrameWindow *)0x0) {
       native_wnd2 = (u8 *)0x0;
     }
     else {
-      native_wnd2 = self->window_2;
+      native_wnd2 = (u8 *)&self->window;
     }
     hotspot_create
-              (*(Hotspot **)(self->pane_selection_flags_area + i * 0x1c + 0x18),(iptr)native_wnd2,
+              (*(Hotspot **)(self->caption_button_area + i * 0x1c + 0x18),(iptr)native_wnd2,
                i + 1000,(iptr)button_rect);
     hotspot_set_click_callback
-              (*(Hotspot **)(self->pane_selection_flags_area + i * 0x1c + 0x18),(iptr)frame_wnd_on_caption_button_click);
+              (*(Hotspot **)(self->caption_button_area + i * 0x1c + 0x18),(iptr)frame_wnd_on_caption_button_click);
     button_x = button_x + width + frame_padding;
   }
   return;
 }
 
 /* 0055318c auto */
-void __thiscall frame_wnd_add_caption_button(PortraitDialog *self,iptr sprite,i32 callback)
+void __thiscall frame_wnd_add_caption_button(FrameWindow *self,iptr sprite,i32 callback)
 
 {
   u8 *slot;
@@ -4591,13 +4591,13 @@ void __thiscall frame_wnd_add_caption_button(PortraitDialog *self,iptr sprite,i3
   if ((int)self->caption_button_count < 6) {
     index = self->caption_button_count;
     self->caption_button_count++;
-    *(iptr *)(((FrameWindow *)self)->close_caption_sprite_slot + index * 0x1c - 0x3c) = sprite;
-    *(i32 *)(self->pane_selection_flags_area + index * 0x1c) = callback;
+    *(iptr *)(self->close_caption_sprite_slot + index * 0x1c - 0x3c) = sprite;
+    *(i32 *)(self->caption_button_area + index * 0x1c) = callback;
     dim = sprite_width((Sprite *)sprite);
-    *(i32 *)(((FrameWindow *)self)->close_caption_sprite_slot + index * 0x1c - 0x44) = dim;
+    *(i32 *)(self->close_caption_sprite_slot + index * 0x1c - 0x44) = dim;
     dim = sprite_height((Sprite *)sprite);
-    *(i32 *)(((FrameWindow *)self)->close_caption_sprite_slot + index * 0x1c - 0x40) = dim;
-    slot = ((FrameWindow *)self)->close_caption_sprite_slot + index * 0x1c - 0x38;
+    *(i32 *)(self->close_caption_sprite_slot + index * 0x1c - 0x40) = dim;
+    slot = self->close_caption_sprite_slot + index * 0x1c - 0x38;
     slot[0] = '\0';
     slot[1] = '\0';
     slot[2] = '\0';
@@ -4616,41 +4616,41 @@ void __thiscall frame_wnd_set_caption(FrameWindow *self,const char *title)
   _strncpy((char *)self->frame_title,(char *)title,0x83);
   frame_wnd_draw_caption(self);
   rect2.left = self->frame_rect;
-  rect2.top = self->frame_top;
-  rect2.right = self->frame_right;
-  rect2.bottom = self->client_top;
-  wnd_blit_surface_rect((DibSurface *)self,(iptr)&rect2);
+  rect2.top = self->frame_top_u;
+  rect2.right = self->frame_right_u;
+  rect2.bottom = self->client_top_u;
+  wnd_blit_surface_rect(self,(iptr)&rect2);
   return;
 }
 
 /* 005532d7 auto */
-void __thiscall frame_wnd_destroy_caption_buttons(WindowObjectView *self)
+void __thiscall frame_wnd_destroy_caption_buttons(FrameWindow *self)
 
 {
   int i;
   
   for (i = 0; i < 6; i++) {
-    if (((u32 *)&((PediaRedrawView *)self)->caption_button_slots)[i * 7] != 0) {
-      if ((Hotspot *)((u32 *)&((PediaRedrawView *)self)->caption_button_slots)[i * 7] != (Hotspot *)0x0) {
-        hotspot_scalar_dtor((Hotspot *)((u32 *)&((PediaRedrawView *)self)->caption_button_slots)[i * 7],1);
+    if (((u32 *)&self->caption_button_slots)[i * 7] != 0) {
+      if ((Hotspot *)((u32 *)&self->caption_button_slots)[i * 7] != (Hotspot *)0x0) {
+        hotspot_scalar_dtor((Hotspot *)((u32 *)&self->caption_button_slots)[i * 7],1);
       }
-      ((u32 *)&((PediaRedrawView *)self)->caption_button_slots)[i * 7] = 0;
+      ((u32 *)&self->caption_button_slots)[i * 7] = 0;
     }
   }
   return;
 }
 
 /* 00553379 auto */
-void __thiscall frame_wnd_close(DibSurface *self)
+void __thiscall frame_wnd_close(FrameWindow *self)
 
 {
-  frame_wnd_destroy_caption_buttons((WindowObjectView *)self);
+  frame_wnd_destroy_caption_buttons(self);
   wnd_destroy_with_surface(self);
   return;
 }
 
 /* 0055339f auto */
-SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *self)
+FrameWindow * __thiscall frame_wnd_ctor(FrameWindow *self)
 
 {
   u8 *slot;
@@ -4663,7 +4663,7 @@ SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *self)
   surfwnd_ctor(self);
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 7);
   for (i = 0; i < 6; i++) {
-    slot = (u8 *)&((PediaRedrawView *)self)->caption_button_slots + i * 0x1c;
+    slot = (u8 *)&self->caption_button_slots + i * 0x1c;
     slot[0] = '\0';
     slot[1] = '\0';
     slot[2] = '\0';
@@ -4678,7 +4678,7 @@ SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *self)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall frame_wnd_dtor(DibSurface *self)
+void __thiscall frame_wnd_dtor(FrameWindow *self)
 
 {
   i32 eh_prev;
@@ -4687,7 +4687,7 @@ void __thiscall frame_wnd_dtor(DibSurface *self)
   
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 7);
   eh_state = 0;
-  frame_wnd_destroy_caption_buttons((WindowObjectView *)self);
+  frame_wnd_destroy_caption_buttons(self);
   wnd_destroy_with_surface(self);
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0055349b */ { surfwnd_dtor(*(SurfaceWindow **)&self); }
@@ -4709,7 +4709,7 @@ frame_wnd_create
   else {
     crt_strcpy((char *)((void *)self->frame_title),(const char *)((void *)title));
   }
-  *(i8 **)self->editor_combo_boxes = ((i8 *)&ui_text_font);
+  *(i8 **)self->text_font = ((i8 *)&ui_text_font);
   self->title_font = (uptr)((i8 *)&caption_font_block.caption_font);
   self->title_small_font = (uptr)((i8 *)&caption_small_font_block.caption_small_font);
   self->show_turn_timer = 0;
@@ -4745,16 +4745,16 @@ frame_wnd_create
     y = (caption_font_block.screen_height >> 1) - (height >> 1);
   }
   wnd_create_with_surface
-            ((DibSurface *)self,0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
+            (self,0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
   if (self->caption_height != 0) {
-    wnd_set_caption_height((WndBase *)self->window_2,self->caption_height);
+    wnd_set_caption_height((WndBase *)&self->window,self->caption_height);
   }
   if (self->resize_border != 0) {
-    wnd_set_resize_border((WndBase *)self->window_2,self->resize_border);
+    wnd_set_resize_border((WndBase *)&self->window,self->resize_border);
   }
   frame_wnd_layout(self);
-  wnd_set_drag_begin_callback((WndHandlers *)self->event_handlers,(iptr)mp_window_drag_begin);
-  wnd_set_drag_end_callback((WndHandlers *)self->event_handlers,(iptr)mp_window_drag_end);
+  wnd_set_drag_begin_callback(&self->window.wnd_handlers,(iptr)mp_window_drag_begin);
+  wnd_set_drag_end_callback(&self->window.wnd_handlers,(iptr)mp_window_drag_end);
   return;
 }
 
@@ -6109,7 +6109,7 @@ void __thiscall dialog_close(Dialog *self)
 {
   if ((*(WndBase * *)&dlg_parent_window) == (WndBase *)0x0) {
     if (main_frame_created != 0) {
-      wnd_focus_and_raise((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+      wnd_focus_and_raise(&main_frame_wnd_block.main_frame_wnd);
     }
   }
   else {
@@ -7631,7 +7631,7 @@ i32 __thiscall dialog_compute_layout(Dialog *self)
     self->button_y = tmp - (self->bevel_width + value + self->pad_y);
     if ((self->style_flags & 0x100000) == 0) {
       gfx_get_screen_rect((iptr)((i8 *)&screen_rect2.left));
-      wnd_get_screen_rect((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)((i8 *)&frame_rect2.left));
+      wnd_get_screen_rect(&main_frame_wnd_block.main_frame_wnd,(iptr)((i8 *)&frame_rect2.left));
       if (self->window_x == 0xfffffc19) {
         value = rect_width((RECT *)(iptr)((i8 *)&screen_rect2.left));
         self->window_x = (value >> 1) - ((int)self->wnd_width >> 1);
@@ -7639,7 +7639,7 @@ i32 __thiscall dialog_compute_layout(Dialog *self)
       else if ((((int)self->window_x < 0) &&
                (self->window_x = self->window_x + ((screen_rect2.right - 1) - self->wnd_width),
                main_frame_created != 0)) && ((self->style_flags & 0x10000) != 0)) {
-        value = wnd_frame_width((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+        value = wnd_frame_width(&main_frame_wnd_block.main_frame_wnd);
         self->window_x -= value;
       }
       if (self->window_y == 0xfffffc19) {
@@ -7652,7 +7652,7 @@ i32 __thiscall dialog_compute_layout(Dialog *self)
         }
         self->window_y += ((screen_rect2.bottom - 1) - self->wnd_height);
         if ((main_frame_created != 0) && ((self->style_flags & 0x10000) != 0)) {
-          value = wnd_nonclient_height((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+          value = wnd_nonclient_height(&main_frame_wnd_block.main_frame_wnd);
           self->window_y -= value;
         }
       }
@@ -9719,7 +9719,7 @@ void __thiscall dialog_render(Dialog *self)
     }
   }
   else {
-    window_show((WindowObjectView *)self->surf_wnd);
+    window_show((SurfaceWindow *)self->surf_wnd);
   }
   self->style_flags = self->style_flags | 0x20;
   return;
@@ -9748,10 +9748,10 @@ u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
       dialog_title_font_obj_block.dialog_timeout_start_i32 = timeout_secs * 0x3c - 0x4b0 + dialog_title_font_obj_block.dialog_timeout_start_i32;
     }
     if (game_session_active != 0) {
-      main_hwnd = wnd_get_window((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+      main_hwnd = wnd_get_window(&main_frame_wnd_block.main_frame_wnd);
       is_iconic = IsIconic(main_hwnd->hwnd);
       if (is_iconic != 0) {
-        wnd_show_restored((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+        wnd_show_restored(&main_frame_wnd_block.main_frame_wnd);
       }
     }
     self->style_flags = self->style_flags & 0xffffdfff;
@@ -10201,10 +10201,10 @@ void __thiscall wnd_repaint(SurfaceWindow *self)
     (*(u8 * *)&wnd_active_child) = (u8 *)0x0;
   }
   else {
-    (*(u8 * *)&wnd_active_child) = self->window_2;
+    (*(u8 * *)&wnd_active_child) = (u8 *)&self->window;
   }
   wnd_call_paint_cb(self);
-  wnd_blit_surface((DibSurface *)self);
+  wnd_blit_surface(self);
   return;
 }
 
@@ -10233,28 +10233,28 @@ void __thiscall surfwnd_on_resize(SurfaceWindow *self,int width,int height)
   i32 palette;
   tagRECT rect;
   
-  cur_size = surface_get_width((DibSurface *)self);
+  cur_size = surface_get_width(self);
   if ((cur_size == width) &&
-     (cur_size = surface_get_height((DibSurface *)self), cur_size == height)) {
+     (cur_size = surface_get_height(self), cur_size == height)) {
     return;
   }
   SetRect(&rect,0,0,width,height);
   call_untyped(((code **)self->vtable)[0], self,&rect);
-  palette = wnd_get_palette_obj((WndBase *)self->window_2);
-  surface_apply_palette((DibSurface *)self,(PaletteVersionView *)palette);
+  palette = wnd_get_palette_obj((WndBase *)&self->window);
+  surface_apply_palette(self,(PaletteVersionView *)palette);
   if (self == (SurfaceWindow *)0x0) {
     (*(u8 * *)&wnd_active_child) = (u8 *)0x0;
   }
   else {
-    (*(u8 * *)&wnd_active_child) = self->window_2;
+    (*(u8 * *)&wnd_active_child) = (u8 *)&self->window;
   }
   wnd_call_paint_cb(self);
-  wnd_blit_surface((DibSurface *)self);
+  wnd_blit_surface(self);
   return;
 }
 
 /* 005bb6c7 auto */
-void __thiscall wnd_resize_clamped(WindowObjectView *self,int width,int height)
+void __thiscall wnd_resize_clamped(SurfaceWindow *self,int width,int height)
 
 {
   int min_height2;
@@ -10262,8 +10262,8 @@ void __thiscall wnd_resize_clamped(WindowObjectView *self,int width,int height)
   int max_height2;
   int max_width2;
   
-  wnd_get_min_size((ModalMenuWindow *)(self + 0x12),(iptr)&min_width2,(iptr)&min_height2);
-  wnd_get_max_size((ModalMenuWindow *)(self + 0x12),(iptr)&max_width2,(iptr)&max_height2);
+  wnd_get_min_size((ModalMenuWindow *)((u8 *)self + 0x48),(iptr)&min_width2,(iptr)&min_height2);
+  wnd_get_max_size((ModalMenuWindow *)((u8 *)self + 0x48),(iptr)&max_width2,(iptr)&max_height2);
   if (width < min_width2) {
     width = min_width2;
   }
@@ -10276,7 +10276,7 @@ void __thiscall wnd_resize_clamped(WindowObjectView *self,int width,int height)
   if (max_height2 < height) {
     height = max_height2;
   }
-  wnd_set_client_size((WndBase *)(self + 0x12),width,height);
+  wnd_set_client_size((WndBase *)((u8 *)self + 0x48),width,height);
   return;
 }
 
@@ -12156,7 +12156,7 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
     result = wnd_frame_wndproc(hwnd,msg,wparam,lparam);
   }
   else if (msg == 2) {
-    surface_create((DibSurface *)self,0,0);
+    surface_create(self,0,0);
     SetWindowLongA(hwnd,0xc,0);
     result = wnd_frame_wndproc(hwnd,2,wparam,lparam);
   }
@@ -12165,7 +12165,7 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
       (*(u8 * *)&wnd_active_child) = (u8 *)0x0;
     }
     else {
-      (*(u8 * *)&wnd_active_child) = self->window_2;
+      (*(u8 * *)&wnd_active_child) = (u8 *)&self->window;
     }
     is_iconic = IsIconic(hwnd);
     if (is_iconic == 0) {
@@ -12187,15 +12187,15 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
           owner_ptr = (u8 *)0x0;
         }
         else {
-          owner_ptr = self->window_2;
+          owner_ptr = (u8 *)&self->window;
         }
         surface_blit_to_wnd
-                  ((DibSurface *)self,(iptr)owner_ptr,&paint_rect,(iptr)&paint_rect);
+                  (self,(iptr)owner_ptr,&paint_rect,(iptr)&paint_rect);
         EndPaint(hwnd,&ps);
       }
     }
     else {
-      owner_wnd = wnd_get_window((WndBase *)self->window_2);
+      owner_wnd = wnd_get_window((WndBase *)&self->window);
       if (owner_wnd->icon != 0) {
         result = wnd_base_wndproc(hwnd,0xf,wparam,lparam);
         return result;
@@ -12206,27 +12206,27 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
       paint_rect.right = ps.rcPaint.right;
       paint_rect.bottom = ps.rcPaint.bottom;
       SetRect(&dest_rect,0,0,0,0);
-      surf_width = surface_get_width((DibSurface *)self);
-      src_dim = surface_get_height((DibSurface *)self);
+      surf_width = surface_get_width(self);
+      src_dim = surface_get_height(self);
       if (surf_width < src_dim) {
-        src_dim = surface_get_width((DibSurface *)self);
+        src_dim = surface_get_width(self);
         dim_b = rect_width(&paint_rect);
-        dest_rect.right = surface_get_height((DibSurface *)self);
+        dest_rect.right = surface_get_height(self);
         dest_rect.right = (src_dim * dim_b) / dest_rect.right;
         dest_rect.bottom = rect_height(&paint_rect);
       }
       else {
         dest_rect.right = rect_width(&paint_rect);
-        src_dim = surface_get_height((DibSurface *)self);
+        src_dim = surface_get_height(self);
         dim_b = rect_height(&paint_rect);
-        dest_rect.bottom = surface_get_width((DibSurface *)self);
+        dest_rect.bottom = surface_get_width(self);
         dest_rect.bottom = (src_dim * dim_b) / dest_rect.bottom;
       }
-      src_dim = (int)surface_get_dib((DibSurface *)self);
+      src_dim = (int)surface_get_dib(self);
       hdcSrc = *(HDC *)(src_dim + 4);
       rop = 0xcc0020;
-      src_dim = surface_get_height((DibSurface *)self);
-      dim_b = surface_get_width((DibSurface *)self);
+      src_dim = surface_get_height(self);
+      dim_b = surface_get_width(self);
       ySrc = 0;
       xSrc = 0;
       wDest = dest_rect.right;

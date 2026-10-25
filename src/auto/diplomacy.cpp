@@ -2674,9 +2674,9 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       if (has_advance != 0) {
         attitude_cost = attitude_cost / 2;
       }
-      city_window_refresh_if_city((FrameWindow *)((i8 *)&city_window_block.city_window),city3);
+      city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city3);
       map_redraw_tile_all_views((int)cities[city3].x,(int)cities[city3].y);
-      city_window_refresh_if_city((FrameWindow *)((i8 *)&city_window_block.city_window),city);
+      city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city);
       map_redraw_tile_all_views((int)cities[city].x,(int)cities[city].y);
       civ_adjust_attitude(civ,civ2,-attitude_cost);
       str = civ_get_adjective(civ);
@@ -4313,7 +4313,7 @@ DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *self)
   (*((char *)&eh_state + 0)) = 3;
   dll_handle_init((DllHandle *)self->leader_dll);
   (*((char *)&eh_state + 0)) = 4;
-  mmwnd_ctor((DocumentWindow *)self->leader_video_wnd);
+  mmwnd_ctor((AviPlayer *)self->leader_video_wnd);
   eh_state = (eh_state & 0xffffff00 | (byte)(5));
   gfx_get_screen_rect((iptr)&self->control_list);
   self->pending_flag_1088 = '\0';
@@ -4427,15 +4427,15 @@ void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *self)
   wnd_handle_show_raise(self);
   wnd_flush_paint();
   wnd_set_palette(self,(iptr)(self->leader_palette));
-  wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)(self->leader_palette));
+  wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)(self->leader_palette));
   if (diplo_leader_video_active != '\0') {
-    window_show((WindowObjectView *)self->leader_video_wnd);
+    window_show((SurfaceWindow *)self->leader_video_wnd);
   }
-  window_show((WindowObjectView *)self->leader_surface_window);
+  window_show((SurfaceWindow *)self->leader_surface_window);
   wnd_flush_paint();
   if (diplo_leader_video_active != '\0') {
     avi_player_play_range
-              ((AviPlayerRangeView *)self->leader_video_wnd,
+              ((AviPlayer *)self->leader_video_wnd,
                leader_anim_frame_starts_block.leader_anim_frames[(uint)self->leader_tribe][0][0],
                leader_anim_frame_starts_block.leader_anim_frames[(uint)self->leader_tribe][0][1]);
   }
@@ -4452,7 +4452,7 @@ void __thiscall diplo_leader_wnd_teardown(DiploLeaderWindow *self)
   wnd_hide((WndBase *)((u8 *)self + 0x110));
   wnd_flush_paint();
   wnd_set_palette(self,(iptr)&game_palette_block.game_palette);
-  wnd_set_palette((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd),(iptr)&game_palette_block.game_palette);
+  wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)&game_palette_block.game_palette);
   wnd_hide(self);
   wnd_flush_paint();
   wnd_destroy_native(self);
@@ -5007,13 +5007,13 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderWindow *self)
   }
   else {
     avi_player_create_child
-              ((MediaWindow *)self->video_player,(iptr)&str_empty_108,0x200,
+              ((AviPlayer *)self->video_player,(iptr)&str_empty_108,0x200,
                leader_video_x_table_block.leader_video_pos[(uint)self->leader_tribe][0],
                leader_video_x_table_block.leader_video_pos[(uint)self->leader_tribe][1],(iptr)self->leader_surface);
-    open_err = avi_player_open((AviPlayerOpenView *)self->video_player,(const char *)video_path);
+    open_err = avi_player_open((AviPlayer *)self->video_player,(const char *)video_path);
     if (open_err == 0) {
-      avi_player_set_end_callback((AviPlayerEndCbSetView *)self->video_player,(iptr)diplo_leader_video_end_cb);
-      avi_player_set_transparent((AviPlayerSetTransparentView *)self->video_player,1);
+      avi_player_set_end_callback((AviPlayer *)self->video_player,(iptr)diplo_leader_video_end_cb);
+      avi_player_set_transparent((AviPlayer *)self->video_player,1);
       palette_load_ctab_res(&palette,self->leader_tribe + 1000);
       palette_get_rgb(&palette,(iptr)rgb_buf,0x92,100);
       palette_set_rgb
@@ -5050,7 +5050,7 @@ void __cdecl diplo_leader_video_end_cb(void)
   if (diplo_leader_video_active != '\0') {
     if ((char)diplo_leader_window->pending_flag_1088 == '\0') {
       avi_player_loop_range
-                ((AviPlayerLoopView *)((iptr)diplo_leader_window + 0x65c),
+                ((AviPlayer *)((iptr)diplo_leader_window + 0x65c),
                  leader_anim_frame_starts_block.leader_anim_frames[(uint)diplo_leader_window->leader_tribe][1][0],
                  leader_anim_frame_starts_block.leader_anim_frames[(uint)diplo_leader_window->leader_tribe][1][1]);
     }
@@ -5058,7 +5058,7 @@ void __cdecl diplo_leader_video_end_cb(void)
       reaction = (uptr)diplo_leader_window->pending_flag_1088;
       diplo_leader_window->pending_flag_1088 = 0;
       avi_player_play_range
-                ((AviPlayerRangeView *)((iptr)wnd + 0x65c),
+                ((AviPlayer *)((iptr)wnd + 0x65c),
                  leader_anim_frame_starts_block.leader_anim_frames[(uint)wnd->leader_tribe][reaction][0]
                  ,leader_anim_frame_starts_block.leader_anim_frames[(uint)wnd->leader_tribe][reaction][1]);
       snd_play_effect((((i32 *)&diplo_leader_sound_ids))[reaction],1,0,0);
@@ -5134,7 +5134,7 @@ i32 __cdecl diplo_wnd_close_active(void)
   wnd2->closed = 1;
   wnd2->other_civ = 0xffffffff;
   wnd_hide((WndBase *)((i8 *)wnd2 + 0x48));
-  wnd_focus_and_raise((WndBase *)((i8 *)&main_frame_wnd_block.main_frame_wnd));
+  wnd_focus_and_raise(&main_frame_wnd_block.main_frame_wnd);
   ui_flush_input();
   return 1;
 }
@@ -6176,9 +6176,9 @@ void __cdecl diplo_ai_military_aid(iptr civ)
                   unit_count = (char *)(units[unit2].type + (iptr)((u8 *)&civs + 216) + civ2 * 0x594);
                   *unit_count = *unit_count + 1;
                   unit_stack_link(unit2,x,y,1);
-                  city_window_refresh_if_city((FrameWindow *)((i8 *)&city_window_block.city_window),city);
+                  city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city);
                   map_redraw_tile_all_views((int)cities[city].x,(int)cities[city].y);
-                  city_window_refresh_if_city((FrameWindow *)((i8 *)&city_window_block.city_window),city2);
+                  city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city2);
                   map_redraw_tile_all_views((int)cities[city2].x,(int)cities[city2].y);
                   if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
                      (civ_saved_cursor_x_block.autoplay_active == 0)) {

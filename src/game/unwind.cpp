@@ -132,13 +132,13 @@ void __cdecl portrait_dlg_show(i32 civ)
     PortraitDialog portrait_dlg;
 
     portrait_dlg_ctor(&portrait_dlg);
-    portrait_dlg.portrait_civ = civ;
+    portrait_dlg.civ = civ;
     created = portrait_dlg_create(&portrait_dlg);
     if (created != 0) {
         portrait_dlg_run(&portrait_dlg);
     }
     /* funclet 00493eeb: lea ecx,[ebp-0x1f4] */
-    portrait_dlg_dtor((PortraitDlgDtorView *)(&portrait_dlg));
+    portrait_dlg_dtor(&portrait_dlg);
 }
 
 /* 0x005e0863: builds a window with "OK"/"Cancel" buttons on the stack and
@@ -169,11 +169,11 @@ i32 __cdecl FUN_005e0863(void)
     btn_y = btn_y + -0x23;
     btn_x = surface_get_width((DibSurface *)(&surf_wnd2));
     OffsetRect(&btn_rect, btn_x + -0x46, btn_y);
-    button_create((Button *)ok_button, (i32)surf_wnd2.window_2, 0x65, (i32)&btn_rect,
+    button_create((Button *)ok_button, (i32)(u8 *)&surf_wnd2.window, 0x65, (i32)&btn_rect,
                        (const char *)((i32 *)&str_ok_3));
     button_set_callback((Button *)ok_button, (i32)dlg_radio_choice_button_cb);
     OffsetRect(&btn_rect, 0, -0x23);
-    button_create((Button *)cancel_button, (i32)surf_wnd2.window_2, 0x66, (i32)&btn_rect,
+    button_create((Button *)cancel_button, (i32)(u8 *)&surf_wnd2.window, 0x66, (i32)&btn_rect,
                        (const char *)str_cancel_3);
     button_set_callback((Button *)cancel_button, (i32)dlg_radio_choice_button_cb);
     /* funclets 005e0a31..005e0a6a: destroy the locals in reverse order */
