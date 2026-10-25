@@ -1,5 +1,6 @@
 # Builds the Windows executable on every push to main and publishes it as the
-# "latest" release (a zip to unpack into the Civilization II folder).
+# "latest" release: a zip with OpenCiv2.exe, one file that sets the game up
+# from the user's installed copy or CD (src/host/setup_win.c).
 name: Windows build
 
 on:
@@ -33,10 +34,8 @@ jobs:
 
       - name: Package
         run: |
-          mkdir -p pkg/OpenCiv2/data
+          mkdir -p pkg/OpenCiv2
           cp build/OpenCiv2.exe pkg/OpenCiv2/OpenCiv2.exe
-          cp build/SDL2.dll pkg/OpenCiv2/
-          cp data/native/* pkg/OpenCiv2/data/
           cp LICENSE pkg/OpenCiv2/LICENSE.txt
           cat > pkg/OpenCiv2/README.txt <<'TXT'
           OpenCiv2 - Civilization II (Multiplayer Gold) reconstructed
@@ -44,9 +43,16 @@ jobs:
 
           You need your own copy of Civilization II Multiplayer Gold Edition.
 
-          1. Copy everything in this folder into your Civilization II folder
-             (the folder that contains civ2.exe).
-          2. Double-click OpenCiv2.exe.
+          1. Put OpenCiv2.exe in any folder and double-click it.
+          2. The first time, it finds the game where it is installed, or
+             its CD in a drive (else it asks where it is), and copies it
+             into a GameData folder beside OpenCiv2.exe; then the game
+             starts. Afterwards it starts the game directly.
+
+          OpenCiv2.exe --setup [FOLDER]   set the game up again (from FOLDER:
+                                          the installed game, or the CD)
+          OpenCiv2.exe FOLDER             play the game in FOLDER where it is
+          CIV2_WINDOW=1                   a window, not full screen
 
           Build ${{ github.sha }}
           TXT

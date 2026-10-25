@@ -91,8 +91,13 @@ int host_open_native_window(int32_t *w, int32_t *h, int mode)
         window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768,
                                   flags | (mode == 1 ? 0 : SDL_WINDOW_MAXIMIZED));
 #else
-    flags |= mode == 1 ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_MAXIMIZED;
-    window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768, flags);
+    /* Full screen (also the default): the window without its title bar
+       and frame over the whole display, its menu bar at the top
+       (host_win_full_screen; SDL's full screen and frameless windows have
+       none); mode 2 (CIV2_WINDOW=1): a window, maximized. */
+    window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768,
+                              flags | (mode == 2 ? SDL_WINDOW_MAXIMIZED : 0));
+    mode = mode == 2 ? 2 : 0;           /* (the size: steady, as a window's) */
 #endif
     if (!window)
         return 0;
@@ -109,6 +114,10 @@ int host_open_native_window(int32_t *w, int32_t *h, int mode)
     SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);     /* WM_COMMAND from the menu bar */
 #endif
     host_menu_apply(window, NULL, 0);               /* the client area: what the menu bar leaves */
+#ifdef _WIN32
+    if (mode != 2)
+        host_win_full_screen(window);
+#endif
     if (SDL_GetDisplayBounds(0, &full))
         full.w = full.h = 0;
     /* The size once the window manager is done (maximizing, the full

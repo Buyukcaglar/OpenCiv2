@@ -156,8 +156,9 @@ int main(int argc, char **argv)
     if (!plat_replay) {
         /* As the original on Windows, whose main window fills the screen.
          * Where the system has its own (Windows, macOS): its window and
-         * menu bar (CIV2_FULLSCREEN=1: full screen, CIV2_WINDOW=1: a
-         * window).  Elsewhere, or with CIV2_CLASSIC=1 (the menu bar and
+         * menu bar (Windows: full screen, the menu bar shown; macOS: over
+         * the screen below its menu bar; CIV2_FULLSCREEN=1: full screen,
+         * CIV2_WINDOW=1: a window).  Elsewhere, or with CIV2_CLASSIC=1 (the menu bar and
          * caption drawn as the original's): a desktop of the display's
          * usable area (full screen: of the whole display), in steps of whole
          * pixels per desktop pixel; CIV2_WINDOW or CIV2_SCALE: the 1024x768

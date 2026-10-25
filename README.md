@@ -73,15 +73,20 @@ tools/run-civ2.sh
 ### Windows
 
 **Download:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip),
-built from the latest commit. Unpack it into your Civilization II folder (the one with
-`civ2.exe`) and double-click `OpenCiv2.exe`.
+built from the latest commit: one program, `OpenCiv2.exe`. Put it in any folder and
+double-click it. The first time, it finds Civilization II Multiplayer Gold Edition where it
+is installed, or its CD in a drive (else it asks where it is), and copies the game into a
+`GameData` folder beside it (from the CD: unpacked from the installer's cabinet, with the
+videos); afterwards it starts the game directly. It runs full screen with the menu bar
+shown (`CIV2_WINDOW=1`: in a window); `OpenCiv2.exe --setup [FOLDER]` sets the game up
+again, `OpenCiv2.exe FOLDER` plays the game in FOLDER where it is.
 
 To build it yourself, in an [MSYS2](https://www.msys2.org) **MINGW64** shell:
 
 ```sh
 pacman -S git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python mingw-w64-x86_64-python-pefile
 git clone https://github.com/richardpenman/civ2 && cd civ2
-tools/fetch-toolchain.sh
+tools/fetch-toolchain.sh windows     # (also unshield's and zlib's sources, for the set-up)
 python3 tools/build_port.py     # -> build/OpenCiv2.exe and SDL2.dll
 ```
 
@@ -89,9 +94,8 @@ Then play from a normal Command Prompt (or double-click) with `tools\run-civ2.ba
 the game is looked for in `%USERPROFILE%\Civ2` by default.
 
 The Windows executable can also be cross-compiled on Linux: `tools/fetch-toolchain.sh windows`
-(adds SDL2's MinGW release), then `python3 tools/build_port.py module c exe-windows`; copy
-`build/OpenCiv2.exe`, `build/SDL2.dll`, `data/native`, `harness/CIV2.DAT` and
-`tools/run-civ2.bat` (keeping the directories) to the Windows machine.
+(adds SDL2's MinGW release), then `python3 tools/build_port.py module c exe-windows`:
+`build/OpenCiv2.exe`, the one file the release has (SDL2 and the fonts built in).
 
 ## Tooling
 

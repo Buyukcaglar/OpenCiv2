@@ -100,6 +100,33 @@ def on_windows():
     return sys.platform == 'win32' or bool(os.environ.get('MSYSTEM'))
 
 
+def windows_resources(cc, obj):
+    """src/host/setup.rc compiled: the program's own files the set-up puts
+    beside it (src/host/setup_win.c), the fonts (data/native), each 8 bytes
+    of size and the file deflated."""
+    import zlib
+    res = os.path.join(obj, 'res')
+    os.makedirs(res, exist_ok=True)
+    for name in ('fonts.bin', 'fonts_aa.bin'):
+        src = os.path.join(ROOT, 'data', 'native', name)
+        out = os.path.join(res, name + '.z')
+        if not os.path.exists(out) or os.path.getmtime(out) < os.path.getmtime(src):
+            print('compressing %s' % os.path.relpath(src, ROOT), flush=True)
+            data = open(src, 'rb').read()
+            open(out, 'wb').write(len(data).to_bytes(8, 'little') + zlib.compress(data, 9))
+    rc = os.path.join(ROOT, 'src', 'host', 'setup.rc')
+    o = os.path.join(obj, 'setup.res.o')
+    windres = os.environ.get('WINDRES')
+    if not windres:
+        base = os.path.basename(cc)
+        windres = (cc[:-len(base)] + base[:base.rindex('-gcc')] + '-windres') if '-gcc' in base else 'windres'
+    newer = max(os.path.getmtime(f) for f in [rc, os.path.join(ROOT, 'src', 'host', 'setup.h')] +
+                glob.glob(os.path.join(res, '*')))
+    if not os.path.exists(o) or os.path.getmtime(o) < newer:
+        run([windres, '-I', os.path.dirname(rc), '-I', res, '-O', 'coff', '-i', rc, '-o', o])
+    return o
+
+
 def exe(cross_windows=False):
     """build/OpenCiv2: compile the generated C with the host runtime.
     cross_windows: build/OpenCiv2.exe with MinGW-w64 and SDL2's MinGW
@@ -109,9 +136,12 @@ def exe(cross_windows=False):
         cc = os.environ.get('CC') or 'x86_64-w64-mingw32-gcc'
         sdl = os.path.join(paths.SDL2_MINGW, 'x86_64-w64-mingw32')
         sdl_cflags = ['-I' + os.path.join(sdl, 'include', 'SDL2'), '-Dmain=SDL_main']
-        # (-mwindows: a GUI program, no console window; as sdl2-config gives on MSYS2)
-        sdl_libs = ['-L' + os.path.join(sdl, 'lib'), '-lmingw32', '-mwindows', '-lSDL2main', '-lSDL2']
-        sdl_dll = os.path.join(sdl, 'bin', 'SDL2.dll')
+        # (-mwindows: a GUI program, no console window; as sdl2-config gives
+        # on MSYS2.)  SDL2 linked in: the program is one file.
+        sdl_libs = ['-L' + os.path.join(sdl, 'lib'), '-lmingw32', '-mwindows', '-lSDL2main',
+                    '-Wl,-Bstatic', '-lSDL2', '-Wl,-Bdynamic', '-lsetupapi', '-lwinmm', '-limm32', '-lversion',
+                    '-loleaut32', '-lcfgmgr32', '-lgdi32']
+        sdl_dll = None
         obj = OBJ + '-windows'
     else:
         cc = os.environ.get('CC') or default_cc()
@@ -131,11 +161,24 @@ def exe(cross_windows=False):
     rt = [os.path.join(CDIR, f) for f in ('wasm-rt-impl.c', 'wasm-rt-mem-impl.c', 'wasm-rt-exceptions-impl.c')]
     # (the native menu bar: Win32 on Windows, Cocoa on macOS)
     mac = sys.platform == 'darwin' and not cross_windows
+    # (Windows: the set-up of the game from the user's copy, src/host/setup.h,
+    # with unshield and zlib for the CD's cabinet: their sources, from
+    # tools/fetch-toolchain.sh windows)
     host = [os.path.join(ROOT, 'src', 'host', f) for f in
-            ('port_main.c', 'wasi.c', 'host_sdl.c') + (('host_menu_win.c',) if windows else ()) +
+            ('port_main.c', 'wasi.c', 'host_sdl.c') + (('host_menu_win.c', 'setup_win.c') if windows else ()) +
             (('host_menu_mac.m',) if mac else ())]
+    third, third_inc = [], []
+    if windows:
+        if not os.path.exists(os.path.join(paths.UNSHIELD, 'lib', 'libunshield.c')):
+            sys.exit('no unshield and zlib sources: run tools/fetch-toolchain.sh windows')
+        third = (sorted(glob.glob(os.path.join(paths.UNSHIELD, 'lib', '*.c'))) +
+                 [os.path.join(paths.UNSHIELD, 'lib', 'md5', 'md5c.c')] +
+                 [os.path.join(paths.ZLIB, f + '.c') for f in ('adler32', 'crc32', 'inffast', 'inflate', 'inftrees',
+                                                              'zutil')])
+        third_inc = ['-I' + paths.UNSHIELD, '-I' + os.path.join(paths.UNSHIELD, 'lib'), '-I' + paths.ZLIB]
     jobs = [(s, ['-O2', '-fno-strict-aliasing', '-w']) for s in gen + rt] + \
-           [(s, ['-O2', '-Wall', '-Werror=implicit-function-declaration'] + sdl_cflags +
+           [(s, ['-O2', '-w'] + third_inc) for s in third] + \
+           [(s, ['-O2', '-Wall', '-Werror=implicit-function-declaration'] + sdl_cflags + third_inc +
              (['-fobjc-arc'] if s.endswith('.m') else [])) for s in host]
 
     # Every file depends on the generated header too (the host's files
@@ -146,7 +189,8 @@ def exe(cross_windows=False):
     def compile_one(job):
         src, flags = job
         o = os.path.join(obj, os.path.basename(src) + '.o')
-        deps = [src] + ([header] if os.path.exists(header) else [])
+        deps = [src] + ([header] if os.path.exists(header) else []) + \
+            (glob.glob(os.path.join(ROOT, 'src', 'host', '*.h')) if src in host else [])
         if not os.path.exists(o) or os.path.getmtime(o) < max(os.path.getmtime(d) for d in deps):
             subprocess.run([cc, '-c', '-o', o, src, '-I', CDIR, '-I', os.path.join(ROOT, 'src', 'host')] + flags,
                            check=True)
@@ -157,6 +201,9 @@ def exe(cross_windows=False):
     out = os.path.join(ROOT, 'build', 'OpenCiv2' + ('.exe' if windows else ''))
     # (Windows: the C runtime's threads library linked in, so only SDL2.dll is needed beside the program)
     libs = ['-lm', '-static-libgcc', '-Wl,-Bstatic', '-lpthread', '-Wl,-Bdynamic'] if windows else ['-lm', '-lpthread']
+    if windows:
+        objs.append(windows_resources(cc, obj))
+        libs = ['-lole32', '-lshell32', '-luuid'] + libs
     if mac:
         libs += ['-framework', 'Cocoa']
     run([cc, '-o', out] + objs + sdl_libs + libs)

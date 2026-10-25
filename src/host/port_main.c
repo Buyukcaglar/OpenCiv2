@@ -11,6 +11,9 @@
 #include "wasm-rt-impl.h"
 #include "wasm-rt-exceptions.h"     /* wasm_rt_set_unwind_target (wasm_rt_impl_try) */
 #include "host.h"
+#ifdef _WIN32
+#include "setup.h"
+#endif
 
 wasm_rt_memory_t *port_memory;
 
@@ -151,6 +154,17 @@ int main(int argc, char **argv)
     static struct w2c_wasi__snapshot__preview1 wasi = {&module};
     wasm_rt_trap_t trap;
     char cwd[4096], game[4096], *args[2];
+#ifdef _WIN32
+    /* The game: GameData beside the program, set up from the user's copy
+       first if need be, or the folder named (setup.h). */
+    if (!setup_choose_game(argc, argv, cwd, sizeof cwd))
+        return 0;
+    module_path(cwd, game, sizeof game);
+    args[0] = argv[0];
+    args[1] = game;
+    argc = 2;
+    argv = args;
+#else
     /* The module's working directory starts at "/": name the game
        directory (main.c's argument) when none is given. */
     if (argc < 2 && getcwd(cwd, sizeof cwd)) {
@@ -166,6 +180,7 @@ int main(int argc, char **argv)
         argc = 2;
         argv = args;
     }
+#endif
 #ifdef _WIN32
     {
         /* directories in the environment (CIV2_DATA ...), as the module sees them */

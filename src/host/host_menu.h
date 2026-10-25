@@ -14,6 +14,9 @@ typedef struct HostMenuItem {
 
 /* Make items the window's menu bar (none: an empty bar). */
 void host_menu_apply(SDL_Window *window, const HostMenuItem *items, int n);
+/* Windows: the window over the whole display, without its title bar and
+   frame, its menu bar kept. */
+void host_win_full_screen(SDL_Window *window);
 /* Windows: the item id of a WM_COMMAND from the menu bar (an SDL_SysWMmsg), else 0. */
 int host_menu_syswm_command(const void *msg);
 /* macOS: an item was chosen (host_sdl.c turns it into HOST_EV_COMMAND). */

@@ -48,6 +48,20 @@ void host_menu_apply(SDL_Window *window, const HostMenuItem *items, int n)
     DrawMenuBar(hwnd);
 }
 
+void host_win_full_screen(SDL_Window *window)
+{
+    HWND hwnd = hwnd_of(window);
+    MONITORINFO mi;
+    if (!hwnd)
+        return;
+    mi.cbSize = sizeof mi;
+    if (!GetMonitorInfoA(MonitorFromWindow(hwnd, MONITOR_DEFAULTTOPRIMARY), &mi))
+        return;
+    SetWindowLongA(hwnd, GWL_STYLE, GetWindowLongA(hwnd, GWL_STYLE) & ~(WS_CAPTION | WS_THICKFRAME));
+    SetWindowPos(hwnd, HWND_TOP, mi.rcMonitor.left, mi.rcMonitor.top, mi.rcMonitor.right - mi.rcMonitor.left,
+                 mi.rcMonitor.bottom - mi.rcMonitor.top, SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
+}
+
 int host_menu_syswm_command(const void *msg)
 {
     const SDL_SysWMmsg *m = msg;

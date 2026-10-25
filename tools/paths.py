@@ -32,3 +32,7 @@ WASI_SDK = _first_dir(os.environ.get('WASI_SDK'), os.path.join(ROOT, 'tools', 't
 WABT = _first_dir(os.environ.get('WABT'), os.path.join(ROOT, 'tools', 'toolchain', 'wabt'), '/opt/wabt')
 # SDL2's MinGW release, for cross-compiling the Windows executable.
 SDL2_MINGW = _first_dir(os.environ.get('SDL2_MINGW'), os.path.join(ROOT, 'tools', 'toolchain', 'SDL2-mingw'))
+# unshield's and zlib's sources, for the Windows executable's set-up from the
+# game's CD (tools/fetch-toolchain.sh windows).
+UNSHIELD = os.environ.get('UNSHIELD_SRC') or os.path.join(ROOT, 'tools', 'toolchain', 'unshield')
+ZLIB = os.environ.get('ZLIB_SRC') or os.path.join(ROOT, 'tools', 'toolchain', 'zlib')
