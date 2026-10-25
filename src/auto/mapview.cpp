@@ -466,18 +466,18 @@ void __cdecl minimap_window_create(void)
   frame_wnd_create
             ((FrameWindow *)((i8 *)&minimap_window_block.minimap_window),(const char *)title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   wnd_set_min_size((ModalMenuWindow *)((i8 *)&minimap_window_block.minimap_wnd),0x28,0x19);
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window),(iptr)minimap_redraw);
-  wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_lbuttonup);
-  wnd_set_rbuttonup_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_rbuttonup);
-  wnd_set_keydown_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)map_window_key);
-  wnd_set_char_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)map_window_ascii);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window),minimap_redraw);
+  wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),minimap_on_lbuttonup);
+  wnd_set_rbuttonup_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),minimap_on_rbuttonup);
+  wnd_set_keydown_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),map_window_key);
+  wnd_set_char_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(WndKeyFn)map_window_ascii);
   wnd_set_cursor((WndBase *)((i8 *)&minimap_window_block.minimap_wnd),0x1ff);
   wnd_set_icon((WndBase *)((i8 *)&minimap_window_block.minimap_wnd),1);
-  wnd_set_minimize_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_minimize);
-  wnd_set_restore_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_restore);
-  wnd_set_close_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_close);
-  wnd_set_size_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_size);
-  wnd_set_move_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(iptr)minimap_on_move);
+  wnd_set_minimize_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),minimap_on_minimize);
+  wnd_set_restore_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),minimap_on_restore);
+  wnd_set_close_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),minimap_on_close);
+  wnd_set_size_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(WndSizeFn)minimap_on_size);
+  wnd_set_move_handler((WndHandlers *)((i8 *)&minimap_window_block.minimap_wnd_handlers),(WndMouseFn)minimap_on_move);
   wnd_repaint((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window));
   if (game.multiplayer != 1) {
     window_show((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window));
@@ -795,7 +795,7 @@ void __cdecl mapview_on_lbuttondown(void)
       mapview_drag_view_index = (int)view->map_view_index;
       shift_state = GetAsyncKeyState(0x10);
       if ((char)((ushort)shift_state >> 8) == '\0') {
-        mapview_drag_hold_timer = game_timer_create((iptr)mapview_drag_hold_expired,400,1);
+        mapview_drag_hold_timer = game_timer_create((TimerFn)mapview_drag_hold_expired,400,1);
       }
       else {
         (((i32 *)&map_views_block.mapview_cursor_id))[mapview_drag_view_index * 0xfc] = 0x1fe;
@@ -1114,18 +1114,18 @@ void __thiscall mapview_create(MapView *self)
             (self,(const char *)title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
   ;
   wnd_set_min_size((ModalMenuWindow *)&self->window,0x100,0x80);
-  wnd_set_redraw_callback(self,(iptr)mapview_on_redraw);
-  wnd_set_lbuttonup_handler(&self->window.wnd_handlers,(iptr)mapview_on_lbuttonup);
-  wnd_set_rbuttonup_handler(&self->window.wnd_handlers,(iptr)mapview_on_rbuttonup);
-  wnd_set_lbuttondown_handler(&self->window.wnd_handlers,(iptr)mapview_on_lbuttondown);
-  wnd_set_lbuttonup_any_handler(&self->window.wnd_handlers,(iptr)mapview_on_lbuttonup_any);
-  wnd_set_mousemove_handler(&self->window.wnd_handlers,(iptr)mapview_on_mousemove);
-  wnd_set_dblclick_handler(&self->window.wnd_handlers,(iptr)map_window_double_click);
-  wnd_set_char_handler(&self->window.wnd_handlers,(iptr)map_window_ascii);
-  wnd_set_keydown_handler(&self->window.wnd_handlers,(iptr)map_window_key);
-  wnd_set_close_handler(&self->window.wnd_handlers,(iptr)mapview_on_close);
-  wnd_set_size_handler(&self->window.wnd_handlers,(iptr)mapview_on_size);
-  wnd_set_move_handler(&self->window.wnd_handlers,(iptr)mapview_on_move);
+  wnd_set_redraw_callback(self,mapview_on_redraw);
+  wnd_set_lbuttonup_handler(&self->window.wnd_handlers,mapview_on_lbuttonup);
+  wnd_set_rbuttonup_handler(&self->window.wnd_handlers,mapview_on_rbuttonup);
+  wnd_set_lbuttondown_handler(&self->window.wnd_handlers,(WndMouseFn)mapview_on_lbuttondown);
+  wnd_set_lbuttonup_any_handler(&self->window.wnd_handlers,(WndMouseFn)mapview_on_lbuttonup_any);
+  wnd_set_mousemove_handler(&self->window.wnd_handlers,mapview_on_mousemove);
+  wnd_set_dblclick_handler(&self->window.wnd_handlers,map_window_double_click);
+  wnd_set_char_handler(&self->window.wnd_handlers,(WndKeyFn)map_window_ascii);
+  wnd_set_keydown_handler(&self->window.wnd_handlers,map_window_key);
+  wnd_set_close_handler(&self->window.wnd_handlers,(WndCloseFn)mapview_on_close);
+  wnd_set_size_handler(&self->window.wnd_handlers,(WndSizeFn)mapview_on_size);
+  wnd_set_move_handler(&self->window.wnd_handlers,(WndMouseFn)mapview_on_move);
   mapview_update_title(self);
   if (self->map_view_index != 0) {
     frame_wnd_add_caption_button(self,(iptr)&caption_close_button_sprite_block.caption_close_button_sprite,1);
@@ -1135,7 +1135,7 @@ void __thiscall mapview_create(MapView *self)
   if (self->map_view_index != 0) {
     frame_wnd_add_caption_button(self,(iptr)&caption_view_mode_button_sprite,4);
   }
-  wnd_set_caption_button_handler(self,(iptr)mapview_on_caption_button);
+  wnd_set_caption_button_handler(self,mapview_on_caption_button);
   wnd_repaint(self);
   if (game.multiplayer != 1) {
     window_show(self);
@@ -1174,8 +1174,8 @@ void __cdecl mapviews_create_all(void)
     map_views_block.main_view_timer_shown[0] = 1;
   }
   wnd_modal_stack_below_block.timer_alt_kind_request = 1;
-  minimap_window_block.unit_blink_timer = game_timer_create((iptr)unit_blink_timer_tick,0x96,0xffffffff);
-  minimap_window_block.eot_blink_timer = game_timer_create((iptr)eot_blink_timer_tick,500,0xffffffff);
+  minimap_window_block.unit_blink_timer = game_timer_create((TimerFn)unit_blink_timer_tick,0x96,0xffffffff);
+  minimap_window_block.eot_blink_timer = game_timer_create((TimerFn)eot_blink_timer_tick,500,0xffffffff);
   wnd_modal_stack_below_block.timer_alt_kind_request = 0;
   return;
 }

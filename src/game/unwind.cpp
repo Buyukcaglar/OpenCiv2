@@ -171,11 +171,11 @@ i32 __cdecl FUN_005e0863(void)
     OffsetRect(&btn_rect, btn_x + -0x46, btn_y);
     button_create((Button *)ok_button, (i32)(u8 *)&surf_wnd2.window, 0x65, (i32)&btn_rect,
                        (const char *)((i32 *)&str_ok_3));
-    button_set_callback((Button *)ok_button, (i32)dlg_radio_choice_button_cb);
+    button_set_callback((Button *)ok_button, dlg_radio_choice_button_cb);
     OffsetRect(&btn_rect, 0, -0x23);
     button_create((Button *)cancel_button, (i32)(u8 *)&surf_wnd2.window, 0x66, (i32)&btn_rect,
                        (const char *)str_cancel_3);
-    button_set_callback((Button *)cancel_button, (i32)dlg_radio_choice_button_cb);
+    button_set_callback((Button *)cancel_button, dlg_radio_choice_button_cb);
     /* funclets 005e0a31..005e0a6a: destroy the locals in reverse order */
     edit_dtor((EditControl *)edit);
     ctrl_dtor((Button *)cancel_button);

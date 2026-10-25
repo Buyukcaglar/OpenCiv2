@@ -657,7 +657,7 @@ void __cdecl nuke_anim_sprites_global_init(void)
 void __cdecl nuke_anim_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&hill_sprites_block.nuke_anim_sprites),0x3c,0xb,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&hill_sprites_block.nuke_anim_sprites),0x3c,0xb,sprite_init,sprite_destroy);
   return;
 }
 
@@ -673,7 +673,7 @@ void __cdecl nuke_anim_sprites_reg_atexit(void)
 void __cdecl nuke_anim_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&hill_sprites_block.nuke_anim_sprites),0x3c,0xb,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&hill_sprites_block.nuke_anim_sprites),0x3c,0xb,sprite_destroy);
   return;
 }
 
@@ -731,7 +731,7 @@ void __cdecl unit_sprites_global_init(void)
 void __cdecl unit_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&pollution_sprite_block.unit_sprites),0x3c,0x3f,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&pollution_sprite_block.unit_sprites),0x3c,0x3f,sprite_init,sprite_destroy);
   return;
 }
 
@@ -747,7 +747,7 @@ void __cdecl unit_sprites_reg_atexit(void)
 void __cdecl unit_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&pollution_sprite_block.unit_sprites),0x3c,0x3f,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&pollution_sprite_block.unit_sprites),0x3c,0x3f,sprite_destroy);
   return;
 }
 
@@ -764,7 +764,7 @@ void __cdecl fortify_overlay_sprites_global_init(void)
 void __cdecl fortify_overlay_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),0x3c,8,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),0x3c,8,sprite_init,sprite_destroy);
   return;
 }
 
@@ -780,7 +780,7 @@ void __cdecl fortify_overlay_sprites_reg_atexit(void)
 void __cdecl fortify_overlay_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),0x3c,8,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),0x3c,8,sprite_destroy);
   return;
 }
 
@@ -797,7 +797,7 @@ void __cdecl explosion_sprites_global_init(void)
 void __cdecl explosion_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.explosion_sprites),0x3c,8,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.explosion_sprites),0x3c,8,sprite_init,sprite_destroy);
   return;
 }
 
@@ -813,7 +813,7 @@ void __cdecl explosion_sprites_reg_atexit(void)
 void __cdecl explosion_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.explosion_sprites),0x3c,8,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.explosion_sprites),0x3c,8,sprite_destroy);
   return;
 }
 
@@ -5346,7 +5346,7 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
   seh_state = 0;
   button_ctor(&cancel_btn);
   (*((char *)&seh_state + 0)) = 1;
-  crt_vector_ctor_iterator(slot_btns,0x3c,6,(code *)button_ctor,(code *)ctrl_dtor)
+  crt_vector_ctor_iterator(slot_btns,0x3c,6,button_ctor,ctrl_dtor)
   ;
   seh_state = (seh_state & 0xffffff00 | (byte)(2));
   main_frame_bg_surface_block.unit_sound_editor_running = 1;
@@ -5363,7 +5363,7 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
     label = (iptr)label_string(label_string_ids[unit_sound_button_label_ids[i]]);
     button_create
               (slot_btns + i,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,i + 0xc9,(iptr)rect,(const char *)label);
-    button_set_callback(slot_btns + i,(iptr)unit_sound_editor_pick_wav);
+    button_set_callback(slot_btns + i,unit_sound_editor_pick_wav);
   }
   unit_sound_editor_set_slots(unit_type,(iptr)slot_btns);
   btn_width = (unit_sound_editor_window_block.unit_sound_editor_client_width - 6) / 2;
@@ -5372,15 +5372,15 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
   rect_set_xywh((iptr)rect,btn_x,btn_y,btn_width,btn_height);
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create(&ok_btn,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&ok_btn,(iptr)unit_sound_editor_ok_clicked);
+  button_set_callback(&ok_btn,(CtrlNotifyFn)unit_sound_editor_ok_clicked);
   btn_x = btn_x + btn_width + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,btn_width,btn_height);
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create(&cancel_btn,(iptr)&unit_sound_editor_window_block.unit_sound_editor_wnd,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&cancel_btn,(iptr)unit_sound_editor_cancel_clicked);
+  button_set_callback(&cancel_btn,(CtrlNotifyFn)unit_sound_editor_cancel_clicked);
   ctrl_set_cancel_button(&cancel_btn);
-  wnd_set_dblclick_handler((WndHandlers *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_wnd_handlers),(iptr)unit_sound_editor_on_dblclick);
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window),(iptr)unit_sound_editor_redraw);
+  wnd_set_dblclick_handler((WndHandlers *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_wnd_handlers),unit_sound_editor_on_dblclick);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window),unit_sound_editor_redraw);
   wnd_repaint((SurfaceWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window));
   window_show((SurfaceWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window));
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_wnd));
@@ -5390,7 +5390,7 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
   dlg_set_parent_window(0);
   frame_wnd_close((FrameWindow *)((i8 *)&unit_sound_editor_window_block.unit_sound_editor_window));
   (*((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 0058b859 */ { crt_vector_dtor_iterator(&slot_btns,0x3c,6,(code *)ctrl_dtor); }
+  /* inlined unwind funclet 0058b859 */ { crt_vector_dtor_iterator(&slot_btns,0x3c,6,ctrl_dtor); }
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 0058b86f */ { ctrl_dtor(&cancel_btn); }
   seh_state = 0xffffffff;
@@ -7923,7 +7923,7 @@ void __cdecl unit_editor_on_ok(void)
       }
     }
     unit_editor_store_rules();
-    rules_edit_set_section((iptr)&str_units_3,(iptr)unit_editor_write_units);
+    rules_edit_set_section((iptr)&str_units_3,(RulesSectionWriterFn)unit_editor_write_units);
     result = rules_write_sections();
     if (result == 0) {
       _sprintf(rules_err_msg,str_error_updating_rules_s_6,((i8 *)&lang_file_ext));
@@ -8030,13 +8030,13 @@ void __cdecl unit_editor_edit_sprite(void)
 {
   i32 title;
   i32 count;
-  i8 *save_cb;
+  SpriteSheetSaveFn save_cb;
   
-  save_cb = ((i8 *)sprite_sheet_save_units);
+  save_cb = sprite_sheet_save_units;
   count = 0xb;
   title = (iptr)label_string(label_string_ids[0x1f6]);
   sprite_editor_run((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x3c),(const char *)title,count,
-                     (iptr)save_cb);
+                     save_cb);
   unit_editor_redraw();
   return;
 }
@@ -8263,7 +8263,7 @@ void __thiscall unit_editor_create_combo(EditorWindow *self,int index)
             ((ComboBox *)(self->text_font + index * 0x38 + 0x28),(iptr)parent2,x,
              (iptr)rect);
   combo_set_font((ComboBox *)(self->text_font + index * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
-  combo_set_callback((ComboBox *)(self->text_font + index * 0x38 + 0x28),(iptr)unit_editor_on_combo);
+  combo_set_callback((ComboBox *)(self->text_font + index * 0x38 + 0x28),unit_editor_on_combo);
   switch(index) {
   case 0:
     for (unit_type = 0; unit_type < 0x3e; unit_type++) {
@@ -8333,7 +8333,7 @@ void __thiscall unit_editor_create_edit(EditorWindow *self,int index)
             ((EditControl *)(self->numeric_edit_controls_area + index * 0x48 - 0x2c),(iptr)parent2,ctrl_id,
              (iptr)rect,(const char *)&str_empty_186);
   edit_set_max_len((EditControl *)(self->numeric_edit_controls_area + index * 0x48 - 0x2c),3);
-  edit_set_callback((EditControl *)(self->numeric_edit_controls_area + index * 0x48 - 0x2c),(iptr)editor_numeric_edit_filter);
+  edit_set_callback((EditControl *)(self->numeric_edit_controls_area + index * 0x48 - 0x2c),editor_numeric_edit_filter);
   return;
 }
 
@@ -8537,7 +8537,7 @@ void __thiscall unit_editor_window_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             (&self->ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->ok_button,(iptr)unit_editor_on_ok);
+  button_set_callback(&self->ok_button,(CtrlNotifyFn)unit_editor_on_ok);
   btn_x = btn_x + self->button_width_u + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -8549,7 +8549,7 @@ void __thiscall unit_editor_window_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
             (&self->rename_button,(iptr)rename_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->rename_button,(iptr)unit_editor_on_rename);
+  button_set_callback(&self->rename_button,(CtrlNotifyFn)unit_editor_on_rename);
   btn_x = btn_x + self->button_width_u + 2;
   rect_set_xywh((iptr)rect,btn_x,btn_y,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -8561,7 +8561,7 @@ void __thiscall unit_editor_window_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             (&self->help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->help_button,(iptr)unit_editor_on_help);
+  button_set_callback(&self->help_button,(CtrlNotifyFn)unit_editor_on_help);
   rect_set_xywh((iptr)rect,btn_x + self->button_width_u + 2,btn_y,self->button_width_u,
                      self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -8573,7 +8573,7 @@ void __thiscall unit_editor_window_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             (&self->cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->cancel_button,(iptr)unit_editor_on_cancel);
+  button_set_callback(&self->cancel_button,(CtrlNotifyFn)unit_editor_on_cancel);
   ctrl_set_cancel_button(&self->cancel_button);
   btn_x = sprite_width
                     ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + self->item_uptr * 0x3c));
@@ -8594,7 +8594,7 @@ void __thiscall unit_editor_window_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
             (&self->icon_button,(iptr)sprite_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->icon_button,(iptr)unit_editor_edit_sprite);
+  button_set_callback(&self->icon_button,(CtrlNotifyFn)unit_editor_edit_sprite);
   btn_x = btn_x + self->button_height_u + 2;
   rect_set_xywh((iptr)rect,btn_y,btn_x,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -8606,7 +8606,7 @@ void __thiscall unit_editor_window_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[500]);
   button_create
             (&self->unit_sound_button,(iptr)sound_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->unit_sound_button,(iptr)unit_editor_edit_sound);
+  button_set_callback(&self->unit_sound_button,(CtrlNotifyFn)unit_editor_edit_sound);
   rect_set_xywh((iptr)rect,btn_y,btn_x + self->button_height_u + 2,self->button_width_u,
                      self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -8618,7 +8618,7 @@ void __thiscall unit_editor_window_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x1f5]);
   button_create
             (&self->unit_flags_button,(iptr)flags_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->unit_flags_button,(iptr)unit_editor_edit_flags);
+  button_set_callback(&self->unit_flags_button,(CtrlNotifyFn)unit_editor_edit_flags);
   wnd_set_keyboard_nav(&self->window,0);
   unit_editor_ctrl_kinds_block.unit_editor_move_max_i32 = (i32)(0x7f / (ulonglong)(longlong)(int)(uint)cosmic.road_move_mult);
   unit_editor_ctrl_kinds_block.unit_editor_hp_max_i32 = 0xc;
@@ -8627,8 +8627,8 @@ void __thiscall unit_editor_window_run(EditorWindow *self)
   unit_editor_load_controls();
   unit_editor_update_domain_ctrls();
   self->combo_count_u = 5;
-  wnd_set_move_handler(&self->window.wnd_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
-  wnd_set_redraw_callback(self,(iptr)unit_editor_redraw);
+  wnd_set_move_handler(&self->window.wnd_handlers,(WndMouseFn)editor_wnd_on_move_close_dropdowns);
+  wnd_set_redraw_callback(self,unit_editor_redraw);
   wnd_repaint(self);
   window_show(self);
   wnd_run_modal_loop((ModalMenuWindow *)&self->window);
@@ -10151,9 +10151,9 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cance
   dlg_reset(&dialog2,0x20001 - (uint)(allow_cancel == 0));
   dialog_set_title(&dialog2,title);
   dialog_set_width(&dialog2,0x154);
-  dialog_set_sprite_click_fn(&dialog2,(iptr)unit_dlg_wake_unit_cb);
-  dialog_set_sprite_dblclick_fn(&dialog2,(iptr)unit_dlg_dblclick_accept_cb);
-  dialog_set_sprite_draw_fn(&dialog2,(iptr)unit_dlg_draw_sprite_cb);
+  dialog_set_sprite_click_fn(&dialog2,(DialogSpriteFn)unit_dlg_wake_unit_cb);
+  dialog_set_sprite_dblclick_fn(&dialog2,(DialogSpriteFn)unit_dlg_dblclick_accept_cb);
+  dialog_set_sprite_draw_fn(&dialog2,(DialogSpriteDrawFn)unit_dlg_draw_sprite_cb);
   dialog_set_image_zoom(&dialog2,0xffffffff);
   count = 0;
   for (unit = unit_stack_first(unit); -1 < unit; unit = unit_next_in_stack(unit)) {

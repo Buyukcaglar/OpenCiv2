@@ -17,15 +17,15 @@ void __cdecl snd_menu_end(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall avi_player_set_end_callback(AviPlayer *self,iptr callback)
+void __thiscall avi_player_set_end_callback(AviPlayer *self,VideoNotifyFn callback)
 
 {
-  *(iptr *)&self->on_end = callback;
+  self->on_end = callback;
   return;
 }
 
 /* 0046e020 auto */
-void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
+void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,SoundDoneFn done_callback)
 
 {
   int result;
@@ -83,7 +83,7 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
       sndPlaySoundA(wav_path,snd_flags);
     }
     else {
-      snd_wave_play((const char *)wav_path,(loop == 0) - 1 & 8,effect,user_data);
+      snd_wave_play((const char *)wav_path,(loop == 0) - 1 & 8,effect,done_callback);
     }
     win_flush_pending_msgs();
   }
@@ -161,7 +161,7 @@ void __cdecl snd_cd_detect_layout(void)
 {
   int track_count;
   
-  snd_cd_set_notify_callback((iptr)snd_cd_on_notify);
+  snd_cd_set_notify_callback(snd_cd_on_notify);
   track_count = snd_cd_get_track_count();
   if ((track_count == -1) || (track_count == 1)) {
     cd_music_available = 0;
@@ -205,7 +205,7 @@ void __cdecl music_play_track(uint track,int force)
     else {
       cd_music_continue = 0;
       snd_cd_mci_stop();
-      snd_cd_set_notify_callback((iptr)snd_cd_on_notify);
+      snd_cd_set_notify_callback(snd_cd_on_notify);
       snd_cd_play_track(track);
       cd_music_current_track = track;
       cd_music_continue = 1;
@@ -240,7 +240,7 @@ void __cdecl snd_sync_music_option(void)
 }
 
 /* 00472910 auto */
-void __thiscall avi_player_set_frame_callback(AviPlayer *self,iptr callback,u32 callback_data)
+void __thiscall avi_player_set_frame_callback(AviPlayer *self,VideoNotifyFn callback,u32 callback_data)
 
 {
   self->on_frame = callback;
@@ -401,7 +401,7 @@ void __cdecl snd_waveout_error_box(uint error_code)
 }
 
 /* 005d4c5f auto */
-i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_id)
+i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,SoundDoneFn done_callback)
 
 {
   i16 result;
@@ -480,7 +480,7 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
                   source->avg_bytes_per_sec = wave_format.nAvgBytesPerSec;
                   source->block_align_bits = wave_format.nBlockAlign | (u32)wave_format.wBitsPerSample << 16;
                   source->kind = 1;
-                  source->done_callback = sound_id;
+                  source->done_callback = done_callback;
                   if (snd_wave_sources == 0) {
                     snd_wave_sources = source;
                   }
@@ -1015,7 +1015,7 @@ i16 __cdecl snd_avi_stream_start(void)
 }
 
 /* 005d6038 auto */
-short __cdecl snd_wave_play(const char *filename,uint flags,i32 sound_id,i32 sound_tag)
+short __cdecl snd_wave_play(const char *filename,uint flags,i32 sound_id,SoundDoneFn done_callback)
 
 {
   short result;
@@ -1032,7 +1032,7 @@ short __cdecl snd_wave_play(const char *filename,uint flags,i32 sound_id,i32 sou
   }
   else if ((*(ushort *)&snd_wave_source_count) < 5) {
     if ((flags & 8) == 0) {
-      result = snd_wave_load_file((LPSTR)filename,flags,sound_id,sound_tag);
+      result = snd_wave_load_file((LPSTR)filename,flags,sound_id,done_callback);
     }
     else {
       result = snd_wave_open_stream((LPSTR)filename,flags,sound_id);
@@ -1469,11 +1469,11 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,WaveHeader *wave_hdr)
   WaveSource *prev;
   int active_count;
   uint result;
-  code *done_callback;
+  SoundDoneFn done_callback;
   
   first_source = snd_wave_sources;
   result = result & 0xffff0000;
-  done_callback = (code *)0x0;
+  done_callback = 0;
   sound_id = 0;
   if (snd_wave_device_open != 0) {
     buffer = wave_hdr->owner;
@@ -1570,7 +1570,7 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,WaveHeader *wave_hdr)
           }
           else {
             if (source->done_callback != 0) {
-              done_callback = (code *)source->done_callback;
+              done_callback = source->done_callback;
               source->done_callback = 0;
               sound_id = source->sound_id;
             }
@@ -1580,8 +1580,8 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,WaveHeader *wave_hdr)
         source = snd_wave_sources;
         buffer = buffer->next;
       } while ((active_count != 0) && ((buffer->flags >> 5 & 1) == 0));
-      if (done_callback != (code *)0x0) {
-        call_untyped(done_callback, sound_id);
+      if (done_callback != 0) {
+        done_callback(sound_id);
       }
     }
   }
@@ -2379,14 +2379,14 @@ i32 __cdecl snd_cd_get_track_count(void)
 void __cdecl snd_midi_fire_notify_callback(void)
 
 {
-  if (err_report_ctx_block.snd_midi_notify_callback != (code *)0x0) {
-    (*err_report_ctx_block.snd_midi_notify_callback)();
+  if (err_report_ctx_block.snd_midi_notify_callback != 0) {
+    err_report_ctx_block.snd_midi_notify_callback();
   }
   return;
 }
 
 /* 005de6fc auto */
-void __cdecl snd_cd_set_notify_callback(iptr callback)
+void __cdecl snd_cd_set_notify_callback(MusicNotifyFn callback)
 
 {
   err_report_ctx_block.snd_cd_notify_callback = callback;
@@ -2397,8 +2397,8 @@ void __cdecl snd_cd_set_notify_callback(iptr callback)
 void __cdecl snd_cd_fire_notify_callback(void)
 
 {
-  if ((*(code * *)&err_report_ctx_block.snd_cd_notify_callback) != (code *)0x0) {
-    call_untyped((*(code * *)&err_report_ctx_block.snd_cd_notify_callback));
+  if (err_report_ctx_block.snd_cd_notify_callback != 0) {
+    err_report_ctx_block.snd_cd_notify_callback();
   }
   return;
 }
@@ -3061,7 +3061,7 @@ void __thiscall avi_player_call_end_callback(AviPlayer *self)
 
 {
   if (self->on_end != 0) {
-    call_untyped((code *)self->on_end);
+    self->on_end();
   }
   return;
 }
@@ -3071,7 +3071,7 @@ void __thiscall avi_player_call_cue_callback(AviPlayer *self)
 
 {
   if (self->on_frame != 0) {
-    call_untyped((code *)self->on_frame);
+    self->on_frame();
   }
   return;
 }

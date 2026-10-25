@@ -347,7 +347,7 @@ i32 __cdecl mem_check_available(i32 size)
 }
 
 /* 00589d80 auto */
-int __cdecl err_register_cleanup_fn(iptr callback)
+int __cdecl err_register_cleanup_fn(CleanupFn callback)
 
 {
   int slot;
@@ -479,7 +479,7 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   i = fatal_cleanup_count;
   while (i = i - 1, -1 < i) {
     if (main_frame_bg_surface_block.crash_handler_callbacks[i] != 0) {
-      call_untyped((code *)main_frame_bg_surface_block.crash_handler_callbacks[i]);
+      main_frame_bg_surface_block.crash_handler_callbacks[i]();
     }
   }
   DebugBreak();

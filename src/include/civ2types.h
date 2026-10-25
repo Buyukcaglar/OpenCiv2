@@ -587,6 +587,11 @@ typedef struct WaveBuffer {
     struct WaveBuffer *next;        /* 0x1c */
 } WaveBuffer;
 
+/* Called with the sound's id when a sound ends (snd_play_effect). */
+typedef void (*SoundDoneFn)(i32 sound_id);
+/* Called when the CD audio / MIDI music notifies that it stopped. */
+typedef void (*MusicNotifyFn)(void);
+
 /* One playing sound (0xbc bytes, GlobalAlloc'd): a wave file read through
  * mmio, a streamed wave file, or an AVI audio stream (kind 4); a list linked
  * by next (snd_wave_sources). */
@@ -639,7 +644,7 @@ typedef struct WaveSource {
     u8 pad_a0[8];
     i32 size_mask;                  /* 0xa8 */
     u8 pad_ac[8];
-    i32 done_callback;              /* 0xb4 called with sound_id when it ends */
+    SoundDoneFn done_callback;      /* 0xb4 called with sound_id when it ends */
     struct WaveSource *next;        /* 0xb8 */
 } WaveSource;
 /* A BITMAPINFOHEADER (0x28 bytes): the AVI player's frame formats. */
@@ -974,10 +979,14 @@ static_assert(sizeof(ControlBlock) == 0x30, "");
 static_assert(sizeof(RadioItem) == 0xa4, "");
 #endif
 
+/* Writes a section of RULES.TXT (after its @NAME line) to out_file; in_file
+   is the old RULES.TXT. */
+typedef i32 (*RulesSectionWriterFn)(FILE *out_file, FILE *in_file);
+
 /* A section of RULES.TXT the rules editors rewrite (rules_edit_add_section). */
 typedef struct RulesEditSection {
     iptr name;                      /* 0x0 "@NAME" without the @, 0 ends the list */
-    iptr writer;                    /* 0x4 void (*)(FILE *out, FILE *in) */
+    RulesSectionWriterFn writer;    /* 0x4 */
 } RulesEditSection;
 /* A row of a rules editor's control table: what is on that row. */
 typedef struct EditorCtrlRow {

@@ -26,36 +26,53 @@ typedef struct WndBase {
 } WndBase;
 static_assert(sizeof(WndBase) == 0x10, "");
 
+/* Callback types.  The caller passes every argument of its type (as the
+   original did); a callback that ignores the trailing ones is defined
+   with fewer parameters (often none) or narrower ones, and is stored with
+   an explicit cast to the callback type.  The window callbacks
+   (WndHandlers, ModalMenuWindow, SurfaceWindow): */
+typedef void (*WndMouseFn)(i32 x, i32 y);       /* mouse buttons and moves, double click; window moved */
+typedef void (*WndKeyFn)(i32 key);              /* key down / up, character */
+typedef void (*WndNotifyFn)(void);              /* minimize, restore, focus, size-move begin / end, paint, modal idle */
+typedef i32 (*WndCloseFn)(void);
+typedef void (*WndSizeFn)(i32 size_type);
+typedef void (*WndMsgFn)(i32 arg);              /* the messages 0x44 and 0x4c8 */
+typedef void (*ScrollFn)(i32 pos);              /* a scroll bar's new position */
+typedef void (*MenuPosCommandFn)(i32 menu_pos, i32 item_pos);
+typedef void (*CommandFn)(i32 cmd_id);          /* a menu command, a menu item selected */
+typedef void (*WndActivateFn)(i32 active);      /* the application (de)activated */
+typedef void (*CaptionButtonFn)(i32 button);    /* a FrameWindow's caption button clicked (its id) */
+
 /* A window's event callbacks (wnd_handlers_ctor 0044c8b0, 0x68 bytes;
    ModalMenuWindow.wnd_handlers): wnd_set_*_handler set one and return the
    old one, the window procedure calls them (wnd_call_*). */
 typedef struct WndHandlers {
-    union { u32 field_0; u32 on_mouse_move; };
-    union { u32 field_4; u32 on_lbutton_down; };
-    union { u32 field_8; u32 on_lbutton_up_raw; };
-    union { u32 field_c; u32 on_lbutton_up; };
-    union { u32 field_10; u32 on_rbutton_down; };
-    union { u32 field_14; u32 on_rbutton_up_raw; };
-    union { u32 field_18; u32 on_rbutton_up; };
-    union { u32 field_1c; u32 on_dblclick; };
-    union { u32 field_20; u32 on_key_down_pre; };
-    union { u32 field_24; u32 on_key_up; };
-    union { u32 field_28; u32 on_key_down; };
-    union { u32 field_2c; u32 on_char; };
-    union { u32 field_30; u32 on_close; };
-    union { u32 field_34; u32 on_minimize; };
-    union { u32 field_38; u32 on_restore; };
-    union { u32 field_3c; u32 on_set_focus; };
-    union { u32 field_40; u32 on_size; };
-    union { u32 field_44; u32 on_move; };
-    union { u32 field_48; u32 on_msg_44; };
-    union { u32 field_4c; u32 on_hscroll; };
-    union { u32 field_50; u32 on_hscroll_track; };
-    union { u32 field_54; u32 on_vscroll; };
-    union { u32 field_58; u32 on_vscroll_track; };
-    union { u32 field_5c; u32 on_msg_4c8; };
-    union { u32 field_60; u32 on_enter_size_move; };
-    union { u32 field_64; u32 on_exitsizemove; };
+    union { u32 field_0; WndMouseFn on_mouse_move; };
+    union { u32 field_4; WndMouseFn on_lbutton_down; };
+    union { u32 field_8; WndMouseFn on_lbutton_up_raw; };
+    union { u32 field_c; WndMouseFn on_lbutton_up; };
+    union { u32 field_10; WndMouseFn on_rbutton_down; };
+    union { u32 field_14; WndMouseFn on_rbutton_up_raw; };
+    union { u32 field_18; WndMouseFn on_rbutton_up; };
+    union { u32 field_1c; WndMouseFn on_dblclick; };
+    union { u32 field_20; WndKeyFn on_key_down_pre; };
+    union { u32 field_24; WndKeyFn on_key_up; };
+    union { u32 field_28; WndKeyFn on_key_down; };
+    union { u32 field_2c; WndKeyFn on_char; };
+    union { u32 field_30; WndCloseFn on_close; };
+    union { u32 field_34; WndNotifyFn on_minimize; };
+    union { u32 field_38; WndNotifyFn on_restore; };
+    union { u32 field_3c; WndNotifyFn on_set_focus; };
+    union { u32 field_40; WndSizeFn on_size; };
+    union { u32 field_44; WndMouseFn on_move; };
+    union { u32 field_48; WndMsgFn on_msg_44; };
+    union { u32 field_4c; ScrollFn on_hscroll; };
+    union { u32 field_50; ScrollFn on_hscroll_track; };
+    union { u32 field_54; ScrollFn on_vscroll; };
+    union { u32 field_58; ScrollFn on_vscroll_track; };
+    union { u32 field_5c; WndMsgFn on_msg_4c8; };
+    union { u32 field_60; WndNotifyFn on_enter_size_move; };
+    union { u32 field_64; WndNotifyFn on_exitsizemove; };
 } WndHandlers;
 static_assert(sizeof(WndHandlers) == 0x68, "");
 
@@ -69,10 +86,10 @@ typedef struct ModalMenuWindow : WndBase {
     union { u32 field_8c; u32 modal_running; };
     union { u32 field_90; u32 hscroll_step; };
     union { u32 field_94; u32 vscroll_step; };
-    union { u32 field_98; u32 on_menu_pos_command; };
-    union { u32 field_9c; u32 on_command; };
-    union { u32 field_a0; u32 on_menu_select; };
-    union { uptr field_a4; uptr on_modal_idle; };
+    union { u32 field_98; MenuPosCommandFn on_menu_pos_command; };
+    union { u32 field_9c; CommandFn on_command; };
+    union { u32 field_a0; CommandFn on_menu_select; };
+    union { uptr field_a4; WndNotifyFn on_modal_idle; };
     union { u32 field_a8; u32 handler_slot_a8; u32 lbutton_down; };   /* 1 between WM_LBUTTONDOWN and UP */
     union { u32 field_ac; u32 handler_slot_ac; u32 rbutton_down; };
     i32 hscroll_pos;                /* 0xb0 last WM_HSCROLL position */
@@ -433,6 +450,13 @@ typedef struct DibSurface {
 } DibSurface;
 static_assert(sizeof(DibSurface) == 0x48, "");
 
+/* The dialog's callbacks. */
+typedef i32 (*DialogSpriteFn)(i32 sprite_id);   /* a sprite clicked (its id) or double-clicked (0): nonzero ends the dialog */
+typedef void (*DialogSpriteDrawFn)(i32 sprite, iptr surface, i32 id, i32 data, i32 x, i32 y);   /* draws a sprite (DialogSprite's sprite, id, field_04) */
+typedef i32 (*DialogOptionDrawFn)(struct Dialog *dialog, iptr surface, i32 option_id, i32 flags, i32 x, i32 y, i32 row_height);   /* 0: draw the option the default way */
+typedef void (*DialogSelectFn)(struct Dialog *dialog, i32 option_id);   /* the selected option changed */
+typedef i32 (*DialogPollFn)(struct Dialog *dialog);   /* polled while modal: nonzero ends the dialog */
+
 /* The dialog: dialog_ctor (0059db08) on stack objects; its views (DialogCore,
    DialogTextView, DialogOptionList, ...) are folded in. */
 typedef struct Dialog {
@@ -535,12 +559,12 @@ typedef struct Dialog {
     union { u32 field_230; DialogLine *line_list; };
     union { uptr field_234; DialogSprite *sprite_list; };
     union { u32 field_238; DialogEditField *edit_field_list; };
-    union { u32 field_23c; u32 on_sprite_click; };
-    union { u32 field_240; u32 on_sprite_dblclick; };
-    union { uptr field_244; uptr on_draw_sprite; };
-    union { uptr field_248; uptr on_draw_option; };
-    union { uptr field_24c; uptr on_select_change; };
-    union { uptr field_250; uptr on_modal_poll; };
+    union { u32 field_23c; DialogSpriteFn on_sprite_click; };
+    union { u32 field_240; DialogSpriteFn on_sprite_dblclick; };
+    union { uptr field_244; DialogSpriteDrawFn on_draw_sprite; };
+    union { uptr field_248; DialogOptionDrawFn on_draw_option; };
+    union { uptr field_24c; DialogSelectFn on_select_change; };
+    union { uptr field_250; DialogPollFn on_modal_poll; };
     union { u8 pad_254[1]; struct { u8 string_pool[1]; }; };
     union { u8 field_255; u8 pool_valid; };
     u8 pad_256[2];
@@ -578,6 +602,14 @@ typedef struct GameFont {
     union { u32 field_4; u32 cached_height; };
 } GameFont;
 
+/* The controls' callbacks, called by the control with its id (ctrl_id),
+   which the window's handler dispatches on. */
+typedef void (*CtrlNotifyFn)(i32 ctrl_id);       /* click, select, double click, change, ... */
+typedef void (*CheckboxToggleFn)(i32 ctrl_id, i32 checked);
+typedef i32 (*EditKeyFn)(i32 ctrl_id, i32 key);  /* an edit field's key filter */
+typedef void (*RadioNotifyFn)(i32 ctrl_id, i32 index);
+typedef void (*CtrlMouseFn)(i32 ctrl_id, i32 x, i32 y);
+
 /* The controls.  Control (ctrl_base_ctor 0040f480, 0x2c bytes) is the base
    of every control class: each derived class's constructor calls
    ctrl_base_ctor first, and its create method calls ctrl_init (the type
@@ -604,7 +636,7 @@ static_assert(sizeof(Control) == 0x2c, "");
 /* A push button (button_ctor 0040f3e0, operator_new(0x3c); type 6). */
 typedef struct Button : Control {
     union { u32 field_2c; u32 is_enabled; };
-    union { u32 field_30; u32 on_click; };
+    union { u32 field_30; CtrlNotifyFn on_click; };
     union { u32 field_34; u32 on_select; };   /* -1 (button_ctor), button_create_with_callback's callback */
     union { u32 field_38; u32 font; };
 } Button;
@@ -612,7 +644,7 @@ static_assert(sizeof(Button) == 0x3c, "");
 
 /* A check box (checkbox_elem_ctor 0040f8b0, operator_new(0x3c); type 2). */
 typedef struct Checkbox : Control {
-    union { u32 field_2c; u32 on_toggle; };
+    union { u32 field_2c; CheckboxToggleFn on_toggle; };
     union { u32 field_30; u32 checked; };
     union { u32 field_34; u32 is_enabled; };
     union { u32 field_38; u32 font; };
@@ -621,8 +653,8 @@ static_assert(sizeof(Checkbox) == 0x3c, "");
 
 /* A scroll bar (scrollbar_ctor 0040fb00, operator_new(0x40); type 8). */
 typedef struct Scrollbar : Control {
-    union { u32 field_2c; u32 on_change; };
-    union { u32 field_30; u32 on_track; };
+    union { u32 field_2c; ScrollFn on_change; };
+    union { u32 field_30; ScrollFn on_track; };
     union { u32 field_34; u32 page_size; };
     u32 field_38;                               /* 1 (scrollbar_create) */
     union { u32 field_3c; u32 cur_pos; };
@@ -631,9 +663,9 @@ static_assert(sizeof(Scrollbar) == 0x40, "");
 
 /* An edit field (edit_ctor 004187a0, operator_new(0x48); type 4). */
 typedef struct EditControl : Control {
-    union { u32 field_2c; u32 on_change; };
-    union { u32 field_30; u32 on_maxtext; };
-    union { u32 field_34; u32 on_key; };
+    union { u32 field_2c; CtrlNotifyFn on_change; };
+    union { u32 field_30; CtrlNotifyFn on_maxtext; };
+    union { u32 field_34; EditKeyFn on_key; };
     union { u32 field_38; struct { u8 keep_sel; u8 field_39; }; };   /* keep_sel 0: focus selects all */
     union { u32 field_3c; u32 scroll_pos; };
     union { u32 field_40; u32 edit_font; };
@@ -644,8 +676,8 @@ static_assert(sizeof(EditControl) == 0x48, "");
 /* A combo box (combo_ctor 00418ab0, 0x38 bytes: EditorWindow.combos; type 10). */
 typedef struct ComboBox : Control {
     union { u32 field_2c; u32 item_count; };
-    union { u32 field_30; u32 on_dblclick; };
-    union { u32 field_34; u32 on_select; };
+    union { u32 field_30; CtrlNotifyFn on_dblclick; };
+    union { u32 field_34; CtrlNotifyFn on_select; };
 } ComboBox;
 static_assert(sizeof(ComboBox) == 0x38, "");
 
@@ -653,30 +685,30 @@ static_assert(sizeof(ComboBox) == 0x38, "");
    operator_new(0x3c), EditorWindow.list_box; type 7). */
 typedef struct ListBox : Control {
     union { u32 field_2c; u32 item_count; };
-    union { u32 field_30; u32 on_dblclick; };
-    union { u32 field_34; u32 on_select; };
+    union { u32 field_30; CtrlNotifyFn on_dblclick; };
+    union { u32 field_34; CtrlNotifyFn on_select; };
     union { u32 field_38; u32 font; };
 } ListBox;
 static_assert(sizeof(ListBox) == 0x3c, "");
 
 /* A clickable area (hotspot_ctor 00451930, operator_new(0x40); type 1). */
 typedef struct Hotspot : Control {
-    union { u32 field_2c; u32 on_enter; };
-    union { u32 field_30; u32 on_leave; };
-    union { u32 field_34; u32 on_click; };
-    union { u32 field_38; u32 on_press; };
-    union { u32 field_3c; u32 on_dblclick; };
+    union { u32 field_2c; CtrlNotifyFn on_enter; };
+    union { u32 field_30; CtrlNotifyFn on_leave; };
+    union { u32 field_34; CtrlNotifyFn on_click; };
+    union { u32 field_38; CtrlNotifyFn on_press; };
+    union { u32 field_3c; CtrlNotifyFn on_dblclick; };
 } Hotspot;
 static_assert(sizeof(Hotspot) == 0x40, "");
 
 /* A Civilopedia hyperlink's clickable text (hyperlink_ctor 00453cc0, 0x40
    bytes: PediaLink.control; type 1). */
 typedef struct Hyperlink : Control {
-    union { u32 field_2c; u32 on_enter; };
-    union { u32 field_30; u32 on_leave; };
-    union { u32 field_34; u32 on_click; };
-    union { u32 field_38; u32 on_press; };
-    union { u32 field_3c; u32 on_dblclick; };
+    union { u32 field_2c; CtrlNotifyFn on_enter; };
+    union { u32 field_30; CtrlNotifyFn on_leave; };
+    union { u32 field_34; CtrlNotifyFn on_click; };
+    union { u32 field_38; CtrlNotifyFn on_press; };
+    union { u32 field_3c; CtrlNotifyFn on_dblclick; };
 } Hyperlink;
 static_assert(sizeof(Hyperlink) == 0x40, "");
 
@@ -692,9 +724,9 @@ static_assert(sizeof(PediaLink) == 0x48, "");
 /* A group of radio buttons (radiogrp_ctor 00531010, operator_new(0x50);
    type 3): item_count RadioItems in a movable memory block. */
 typedef struct RadioGroup : Control {
-    union { u32 field_2c; u32 on_select; };
-    union { u32 field_30; u32 on_dblclick; };
-    union { u32 field_34; u32 on_rclick; };
+    union { u32 field_2c; RadioNotifyFn on_select; };
+    union { u32 field_30; RadioNotifyFn on_dblclick; };
+    union { u32 field_34; RadioNotifyFn on_rclick; };
     union { u32 field_38; u32 item_count; };
     union { u32 field_3c; u32 columns; };
     union { u32 field_40; u32 selected; };
@@ -707,8 +739,8 @@ static_assert(sizeof(RadioGroup) == 0x50, "");
 /* A button drawn from a sprite (spritebtn_ctor 00511720, operator_new(0xcc)):
    two surfaces (surface_ctor at 0x34 and at button_surface 0x7c). */
 typedef struct SpriteButton : Control {
-    union { u32 field_2c; u32 on_click; };
-    union { u32 field_30; u32 on_rclick; };
+    union { u32 field_2c; CtrlNotifyFn on_click; };
+    union { u32 field_30; CtrlNotifyFn on_rclick; };
     union { u32 field_34; u32 on_select; };
     union { u32 field_38; u32 font; };
     union { u32 field_3c; u32 scroll_pos; };
@@ -1290,6 +1322,17 @@ typedef struct DDSurfaceRowPrevView {
     union { u32 field_c; u32 row_pitch; };
 } DDSurfaceRowPrevView;
 
+/* A game timer's callback (game_timer_create): the timer's slot and how
+   many more times it fires (negative: until killed). */
+typedef void (*TimerFn)(i32 slot, i32 repeats_left);
+/* timerdll.dll's functions (timer_mgr_init, GetProcAddress): the
+   multimedia timer ids of the slots, and the slot's message (0x52c) sent
+   again only once reset. */
+typedef void (WINAPI *TimerDllSetTimerIdFn)(int slot, UINT timer_id);
+typedef UINT (WINAPI *TimerDllGetTimerIdFn)(int slot);
+typedef int (WINAPI *TimerDllGetTimerIndexFn)(UINT timer_id);
+typedef void (WINAPI *TimerDllResetNotifiedFn)(int slot);
+
 /* 5 methods, size 0x4 */
 typedef struct TimerManager {
     union { u32 field_0; u32 timer_hwnd; };
@@ -1298,7 +1341,7 @@ typedef struct TimerManager {
 /* TimerManager where the code reaches past its end: the object is larger */
 typedef struct TimerManagerExt {
     TimerManager base;
-    u32 timer_callbacks[17];
+    TimerFn timer_callbacks[17];
     u32 timer_repeat_counts[1];
 } TimerManagerExt;
 
@@ -1444,7 +1487,7 @@ typedef struct WndMciDeviceView {
 typedef struct WndOnMciDoneView {
     u32 field_0;
     union { u8 pad_4[184]; struct { u8 wnd_header_area[12]; u8 handlers[152]; u8 lbutton_held[4]; u8 rbutton_held[4]; u8 hscroll_pos[4]; u8 vscroll_pos[8]; }; };
-    union { uptr field_bc; uptr on_mci_done; };
+    union { uptr field_bc; WndNotifyFn on_mci_done; };
 } WndOnMciDoneView;
 
 /* 7 methods, size 0x4 */
@@ -1568,7 +1611,7 @@ typedef struct AviAudioPrepareView {
 typedef struct DDWindowActivateView {
     u32 field_0;
     u8 pad_4[184];
-    union { uptr field_bc; uptr on_activate_app; };
+    union { uptr field_bc; WndActivateFn on_activate_app; };
 } DDWindowActivateView;
 
 /* 3 methods, size 0xbc */
@@ -1828,7 +1871,7 @@ typedef struct DdctrlOnLbuttonupView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[32];
-    union { uptr field_28; uptr on_lbutton_up; };
+    union { uptr field_28; CtrlMouseFn on_lbutton_up; };
 } DdctrlOnLbuttonupView;
 
 /* 1 methods, size 0x30 */
@@ -1836,7 +1879,7 @@ typedef struct DdctrlOnRbuttonupView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[36];
-    union { uptr field_2c; uptr on_rbutton_up; };
+    union { uptr field_2c; CtrlMouseFn on_rbutton_up; };
 } DdctrlOnRbuttonupView;
 
 /* 1 methods, size 0x28 */
@@ -1844,7 +1887,7 @@ typedef struct DdctrlOnMousemoveView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[28];
-    union { uptr field_24; uptr on_mouse_move; };
+    union { uptr field_24; CtrlMouseFn on_mouse_move; };
 } DdctrlOnMousemoveView;
 
 /* 1 methods, size 0x34 */
@@ -1852,7 +1895,7 @@ typedef struct DdctrlOnDblclickView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[40];
-    union { uptr field_30; uptr on_dblclick; };
+    union { uptr field_30; CtrlMouseFn on_dblclick; };
 } DdctrlOnDblclickView;
 
 /* 1 methods, size 0xb0 */
@@ -1867,7 +1910,7 @@ typedef struct DdwinGetPaletteView {
    border.  Each derived constructor calls its base's first. */
 typedef struct SurfaceWindow : DibSurface {
     Wnd window;                     /* 0x048 (surfwnd_wnd_ctor) */
-    uptr on_paint;                  /* 0x110 wnd_set_redraw_callback */
+    WndNotifyFn on_paint;           /* 0x110 wnd_set_redraw_callback */
 } SurfaceWindow;
 static_assert(sizeof(SurfaceWindow) == 0x114, "");
 
@@ -1898,7 +1941,7 @@ typedef struct FrameWindow : SurfaceWindow {
     u8 pad_1ec[16];
     u32 caption_button_count;
     union { ParleyCaptionButton caption_buttons[6]; struct { u8 caption_button_area[8]; u8 gap_208_1[16]; u32 caption_button_slots[34]; }; struct { u8 gap_200_2[80]; u8 close_caption_sprite_slot[4]; }; };
-    u32 on_caption_button;
+    CaptionButtonFn on_caption_button;
     union { i32 frame_left; u32 frame_rect; };
     union { i32 frame_top; u32 frame_top_u; };
     union { i32 frame_right; u32 frame_right_u; };
@@ -1912,12 +1955,15 @@ typedef struct FrameWindow : SurfaceWindow {
 } FrameWindow;
 static_assert(sizeof(FrameWindow) == 0x2d8, "");
 
+/* Called when a video ends, or reaches its cue frame. */
+typedef void (*VideoNotifyFn)(void);
+
 /* The video player window (mmwnd_ctor 005dd010, operator_new(0xa28)): an
    AVI stream drawn into the window's surface, with its sound and palette.
    Embedded in the council, wonder movie, endgame and diplomacy windows. */
 typedef struct AviPlayer : SurfaceWindow {
-    u32 on_end;                     /* 0x114 called when the video ends */
-    u32 on_frame;                   /* 0x118 called at cue_frame */
+    VideoNotifyFn on_end;           /* 0x114 called when the video ends */
+    VideoNotifyFn on_frame;         /* 0x118 called at cue_frame */
     union { AviAudio audio; u32 audio_u; };
     union { GamePalette palette; u32 palette_u; };
     union { DibSurface backdrop; u8 backdrop_bytes[72]; };
@@ -2473,6 +2519,11 @@ typedef struct SpritePicker : FrameWindow {
     union { Button button_3; u32 button_3_head; };
 } SpritePicker;
 static_assert(sizeof(SpritePicker) == 0x3ec, "");
+
+/* Callbacks kept in globals. */
+typedef void (*MenuCommandFn)(i32 menu_id, i32 item_id);   /* menu_set_command_handler: a menu item chosen */
+typedef void (*CleanupFn)(void);                /* err_register_cleanup_fn: called on a fatal error */
+typedef void (*SpriteSheetSaveFn)(void);        /* sprite_editor_run: saves the edited sheet on OK */
 
 #pragma pack(pop)
 

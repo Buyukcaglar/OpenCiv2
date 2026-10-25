@@ -267,7 +267,7 @@ void __cdecl tech_editor_on_ok(void)
   if (errors == 0) {
     tech_editor_save_items();
     tech_editor_relink_prereqs();
-    rules_edit_set_section((iptr)&str_civilize,(iptr)tech_editor_write_civilize);
+    rules_edit_set_section((iptr)&str_civilize,(RulesSectionWriterFn)tech_editor_write_civilize);
     ok = rules_write_sections();
     if (ok == 0) {
       _sprintf(msg,str_error_updating_rules_s,((i8 *)&lang_file_ext));
@@ -466,15 +466,15 @@ void __cdecl tech_editor_on_edit_icon(void)
 {
   i32 title;
   i32 flags;
-  i8 *save_fn;
+  SpriteSheetSaveFn save_fn;
   
-  save_fn = ((i8 *)sprite_sheet_save_tech_icons);
+  save_fn = sprite_sheet_save_tech_icons;
   flags = 0;
   title = (iptr)label_string(label_string_ids[0x1f6]);
   sprite_editor_run((iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                            editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[3] * 0xf0 +
                            editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[2] * 0x3c),
-                     (const char *)title,flags,(iptr)save_fn);
+                     (const char *)title,flags,save_fn);
   tech_editor_redraw();
   return;
 }
@@ -548,7 +548,7 @@ void __thiscall tech_editor_create_combo(EditorWindow *self,int slot)
             ((ComboBox *)(self->text_font + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_id,
              (iptr)rect);
   combo_set_font((ComboBox *)(self->text_font + slot * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
-  combo_set_callback((ComboBox *)(self->text_font + slot * 0x38 + 0x28),(iptr)tech_editor_on_combo);
+  combo_set_callback((ComboBox *)(self->text_font + slot * 0x38 + 0x28),tech_editor_on_combo);
   switch(slot) {
   case 0:
     for (advance = 0; advance < 100; advance++) {
@@ -614,7 +614,7 @@ void __thiscall tech_editor_create_edit(EditorWindow *self,int slot)
             ((EditControl *)(self->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)parent_wnd2,ctrl_id,
              (iptr)rect,(const char *)&str_empty_11);
   edit_set_max_len((EditControl *)(self->numeric_edit_controls_area + slot * 0x48 - 0x2c),4);
-  edit_set_callback((EditControl *)(self->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)editor_numeric_edit_filter);
+  edit_set_callback((EditControl *)(self->numeric_edit_controls_area + slot * 0x48 - 0x2c),editor_numeric_edit_filter);
   return;
 }
 
@@ -803,7 +803,7 @@ void __thiscall tech_editor_dialog_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             (&self->ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->ok_button,(iptr)tech_editor_on_ok);
+  button_set_callback(&self->ok_button,(CtrlNotifyFn)tech_editor_on_ok);
   pos = pos + self->button_width_u + 2;
   rect_set_xywh((iptr)rect,pos,btn_y,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -815,7 +815,7 @@ void __thiscall tech_editor_dialog_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
             (&self->rename_button,(iptr)rename_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->rename_button,(iptr)tech_editor_on_rename);
+  button_set_callback(&self->rename_button,(CtrlNotifyFn)tech_editor_on_rename);
   pos = pos + self->button_width_u + 2;
   rect_set_xywh((iptr)rect,pos,btn_y,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -827,7 +827,7 @@ void __thiscall tech_editor_dialog_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             (&self->help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->help_button,(iptr)tech_editor_on_help);
+  button_set_callback(&self->help_button,(CtrlNotifyFn)tech_editor_on_help);
   rect_set_xywh((iptr)rect,pos + self->button_width_u + 2,btn_y,self->button_width_u,
                      self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -839,7 +839,7 @@ void __thiscall tech_editor_dialog_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             (&self->cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->cancel_button,(iptr)tech_editor_on_cancel);
+  button_set_callback(&self->cancel_button,(CtrlNotifyFn)tech_editor_on_cancel);
   ctrl_set_cancel_button(&self->cancel_button);
   self->button_width_u = 0x55;
   pos = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
@@ -855,14 +855,14 @@ void __thiscall tech_editor_dialog_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
             (&self->icon_button,(iptr)icon_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->icon_button,(iptr)tech_editor_on_edit_icon);
+  button_set_callback(&self->icon_button,(CtrlNotifyFn)tech_editor_on_edit_icon);
   wnd_set_keyboard_nav(&self->window,0);
   tech_editor_load_items();
   combo_set_cur_sel((ComboBox *)&self->combos_u,self->item_uptr);
   tech_editor_update_controls();
   self->combo_count_u = 5;
-  wnd_set_move_handler(&self->window.wnd_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
-  wnd_set_redraw_callback(self,(iptr)tech_editor_redraw);
+  wnd_set_move_handler(&self->window.wnd_handlers,(WndMouseFn)editor_wnd_on_move_close_dropdowns);
+  wnd_set_redraw_callback(self,tech_editor_redraw);
   tech_editor_on_combo(0xc9);
   wnd_repaint(self);
   window_show(self);
@@ -1704,7 +1704,7 @@ void __cdecl civ_intro_popup(iptr civ)
   }
   text_set_string_arg(2,(const char *)&map_views_block.text_buffer);
   if (2 < game.multiplayer) {
-    dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+    dlg_pending_idle_callback = turn_popup_timeout_idle;
   }
   popup_game_with_sprite((const char *)&str_init,(iptr)&popup_info_icon_sprite,0);
   return;
@@ -1947,9 +1947,9 @@ void __cdecl science_advisor_draw(void)
     scrollbar_set_range((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),0,max_value);
     scrollbar_set_pos((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
     scrollbar_set_page_size((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),1);
-    scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)science_advisor_on_scroll);
+    scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),science_advisor_on_scroll);
     ctrl_show_and_redraw((Control *)((i8 *)&advisor_window_block.advisor_scrollbar));
-    wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),(iptr)science_advisor_on_click);
+    wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),science_advisor_on_click);
     advisor_window_block.advisor_controls_created = 1;
   }
   wnd_blit_surface((DibSurface *)((i8 *)&advisor_window_block.advisor_window));
@@ -2024,15 +2024,15 @@ void __cdecl science_advisor_show(iptr civ)
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
-  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(CtrlNotifyFn)advisor_on_close_clicked);
   ctrl_set_default_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
   label = (iptr)label_string(label_string_ids[0x173]);
   button_create
             ((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
-  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)science_advisor_on_goal_clicked);
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)science_advisor_draw);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(CtrlNotifyFn)science_advisor_on_goal_clicked);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),science_advisor_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   return;
@@ -2446,11 +2446,11 @@ void __cdecl civ_score_window_show(iptr civ)
   picwnd_open((PictureWindow *)((i8 *)&advisor_window_block.advisor_window),10,10,1,600,400,0,0);
   advisor_window_block.advisor_report_civ = civ;
   advisor_add_close_button((PictureWindow *)((i8 *)&advisor_window_block.advisor_window));
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)civ_score_window_draw);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),civ_score_window_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),(iptr)advisor_mp_idle);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),advisor_mp_idle);
   }
   advisor_modal_start_ticks_i32 = timer_ticks();
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd));
@@ -2582,12 +2582,12 @@ void __cdecl civ_rating_window_show(iptr civ)
   picwnd_open((PictureWindow *)((i8 *)&advisor_window_block.advisor_window),10,10,1,600,400,0,0);
   advisor_window_block.advisor_report_civ = civ;
   advisor_add_close_button((PictureWindow *)((i8 *)&advisor_window_block.advisor_window));
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)civ_rating_window_draw);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),civ_rating_window_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   music_play_track(3,0);
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),(iptr)advisor_mp_idle);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),advisor_mp_idle);
   }
   advisor_modal_start_ticks_i32 = timer_ticks();
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd));
@@ -2683,7 +2683,7 @@ void __cdecl civ_flag_sprites_global_init(void)
 void __cdecl civ_flag_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites),0x3c,0x10,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites),0x3c,0x10,sprite_init,sprite_destroy);
   return;
 }
 
@@ -2699,7 +2699,7 @@ void __cdecl civ_flag_sprites_reg_atexit(void)
 void __cdecl civ_flag_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites),0x3c,0x10,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites),0x3c,0x10,sprite_destroy);
   return;
 }
 
@@ -2716,7 +2716,7 @@ void __cdecl research_flask_sprites_global_init(void)
 void __cdecl research_flask_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites),0x3c,4,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites),0x3c,4,sprite_init,sprite_destroy);
   return;
 }
 
@@ -2732,7 +2732,7 @@ void __cdecl research_flask_sprites_reg_atexit(void)
 void __cdecl research_flask_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites),0x3c,4,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites),0x3c,4,sprite_destroy);
   return;
 }
 
@@ -2749,7 +2749,7 @@ void __cdecl global_warming_sprites_global_init(void)
 void __cdecl global_warming_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites),0x3c,4,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites),0x3c,4,sprite_init,sprite_destroy);
   return;
 }
 
@@ -2765,7 +2765,7 @@ void __cdecl global_warming_sprites_reg_atexit(void)
 void __cdecl global_warming_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites),0x3c,4,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites),0x3c,4,sprite_destroy);
   return;
 }
 
@@ -2782,7 +2782,7 @@ void __cdecl advance_cat_icon_sprites_global_init(void)
 void __cdecl advance_category_icon_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.advance_category_icon_sprites),0x3c,0x14,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.advance_category_icon_sprites),0x3c,0x14,sprite_init,sprite_destroy);
   return;
 }
 
@@ -2798,7 +2798,7 @@ void __cdecl advance_category_icon_sprites_reg_atexit(void)
 void __cdecl advance_cat_icon_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.advance_category_icon_sprites),0x3c,0x14,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.advance_category_icon_sprites),0x3c,0x14,sprite_destroy);
   return;
 }
 
@@ -2815,7 +2815,7 @@ void __cdecl government_sprites_global_init(void)
 void __cdecl government_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.government_sprites),0x3c,7,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.government_sprites),0x3c,7,sprite_init,sprite_destroy);
   return;
 }
 
@@ -2831,7 +2831,7 @@ void __cdecl government_sprites_reg_atexit(void)
 void __cdecl government_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.government_sprites),0x3c,7,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.government_sprites),0x3c,7,sprite_destroy);
   return;
 }
 
@@ -2848,7 +2848,7 @@ void __cdecl civ_portrait_sprites_global_init(void)
 void __cdecl civ_portrait_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&road_sprites_block.civ_portrait_sprites),0x3c,8,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&road_sprites_block.civ_portrait_sprites),0x3c,8,sprite_init,sprite_destroy);
   return;
 }
 
@@ -2864,7 +2864,7 @@ void __cdecl civ_portrait_sprites_reg_atexit(void)
 void __cdecl civ_portrait_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&road_sprites_block.civ_portrait_sprites),0x3c,8,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&road_sprites_block.civ_portrait_sprites),0x3c,8,sprite_destroy);
   return;
 }
 
@@ -4002,7 +4002,7 @@ i32 __cdecl civ_password_prompt(int civ)
   dialog_load_text_section(&dialog2,(const char *)&str_game_7,(const char *)&str_password1_4,0x1f,(iptr)&str_empty_113,0,0,0,1);
   password_dialog_set_title(&dialog2,civ,0x26b);
   entered[0] = '\0';
-  dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
+  dlg_pending_idle_callback = net_pump_idle_cb;
   result = dialog_run_modal(&dialog2,(iptr)entered,0);
   if (result < 0) {
     seh_state = 0xffffffff;
@@ -4019,7 +4019,7 @@ i32 __cdecl civ_password_prompt(int civ)
       status = 0;
     }
     else {
-      dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
+      dlg_pending_idle_callback = net_pump_idle_cb;
       popup_game((const char *)&str_password0_2);
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0049875f */ { dialog_dtor(&dialog2); }
@@ -5651,7 +5651,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
         dialog_set_columns(&dialog2,2);
         if (diplo_session_active == 0) {
           dialog_set_list_indent(&dialog2,0x4b,0);
-          dialog_set_option_draw_fn(&dialog2,(iptr)research_option_draw_advance);
+          dialog_set_option_draw_fn(&dialog2,(DialogOptionDrawFn)research_option_draw_advance);
         }
         for (advance = 0; advance < 100; advance++) {
           if (((advances[advance].enabled != '\0') &&
@@ -5673,7 +5673,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       else if (mode_state[1] == 1) {
         if (diplo_session_active == 0) {
           dialog_set_list_indent(&dialog2,0x4b,0);
-          dialog_set_option_draw_fn(&dialog2,(iptr)research_option_draw_unit);
+          dialog_set_option_draw_fn(&dialog2,(DialogOptionDrawFn)research_option_draw_unit);
         }
         for (unit_type = 0; unit_type < 0x3e; unit_type++) {
           advance = (iptr)unit_types[unit_type].prerequisite;
@@ -5694,7 +5694,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       else if (mode_state[1] == 2) {
         if (diplo_session_active == 0) {
           dialog_set_list_indent(&dialog2,0x4b,0);
-          dialog_set_option_draw_fn(&dialog2,(iptr)research_option_draw_improvement);
+          dialog_set_option_draw_fn(&dialog2,(DialogOptionDrawFn)research_option_draw_improvement);
         }
         for (improvement = 0; improvement < 0x43; improvement++) {
           advance = (iptr)improvements[improvement].preq;
@@ -6005,7 +6005,7 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
       if (((*((char *)&game.game_options + 1)) & 2) != 0) {
         dialog_set_position(&choice_dialog,5,0xfffffc19);
       }
-      dialog_set_option_draw_fn(&choice_dialog,(iptr)research_option_draw_advance);
+      dialog_set_option_draw_fn(&choice_dialog,(DialogOptionDrawFn)research_option_draw_advance);
       dialog_set_list_indent(&choice_dialog,0x4b,0);
       count = 0;
       for (advance = 0; advance < 100; advance++) {
@@ -6303,7 +6303,7 @@ int __cdecl civ_distance_to_capital(iptr civ,i32 target_x,i32 target_y)
 /* 004ccab9 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl rules_edit_set_section(iptr names,iptr writers)
+void __cdecl rules_edit_set_section(iptr names,RulesSectionWriterFn writers)
 
 {
   font_size16_bold_block.rules_edit_sections[0].name = names;
@@ -6314,7 +6314,7 @@ void __cdecl rules_edit_set_section(iptr names,iptr writers)
 }
 
 /* 004ccaed auto */
-void __cdecl rules_edit_add_section(const char *name2,iptr writer)
+void __cdecl rules_edit_add_section(const char *name2,RulesSectionWriterFn writer)
 
 {
   int slot;
@@ -6402,7 +6402,7 @@ i32 __cdecl rules_write_sections(void)
         rc = __strcmpi(s,header);
       } while (rc != 0);
       if (font_size16_bold_block.rules_edit_sections[section].writer != 0) {
-        call_untyped((code *)font_size16_bold_block.rules_edit_sections[section].writer, out_file,in_file);
+        font_size16_bold_block.rules_edit_sections[section].writer(out_file,in_file);
       }
       do {
         line_ptr = _fgets(s,0x100,in_file);
@@ -7704,7 +7704,7 @@ void __cdecl cosmic_editor_ok_clicked(void)
   UINT uType;
   char message[32];
   
-  rules_edit_set_section((iptr)&str_cosmic_2,(iptr)cosmic_editor_write_section);
+  rules_edit_set_section((iptr)&str_cosmic_2,cosmic_editor_write_section);
   ok = rules_write_sections();
   if (ok == 0) {
     _sprintf(message,str_error_updating_rules_s_5,((i8 *)&lang_file_ext));
@@ -7841,7 +7841,7 @@ void __thiscall cosmic_editor_dialog(EditorWindow *self)
   listbox_create
             (&self->list_box,(iptr)list_parent,x_pos,(iptr)rect);
   listbox_set_font(&self->list_box,(iptr)&editor_font_block.editor_font);
-  listbox_set_dblclick_callback(&self->list_box,(iptr)cosmic_editor_edit_value);
+  listbox_set_dblclick_callback(&self->list_box,(CtrlNotifyFn)cosmic_editor_edit_value);
   cosmic_editor_capture_defaults();
   cosmic_editor_fill_list();
   listbox_set_cur_sel(&self->list_box,0);
@@ -7861,7 +7861,7 @@ void __thiscall cosmic_editor_dialog(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             (&self->ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->ok_button,(iptr)cosmic_editor_ok_clicked);
+  button_set_callback(&self->ok_button,(CtrlNotifyFn)cosmic_editor_ok_clicked);
   x_pos = x_pos + self->button_width_u + 2;
   rect_set_xywh((iptr)rect,x_pos,y_pos,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -7873,7 +7873,7 @@ void __thiscall cosmic_editor_dialog(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x238]);
   button_create
             (&self->rename_button,(iptr)edit_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->rename_button,(iptr)cosmic_editor_edit_value);
+  button_set_callback(&self->rename_button,(CtrlNotifyFn)cosmic_editor_edit_value);
   ctrl_set_default_button(&self->rename_button);
   x_pos = x_pos + self->button_width_u + 2;
   rect_set_xywh((iptr)rect,x_pos,y_pos,self->button_width_u,self->button_height_u);
@@ -7886,7 +7886,7 @@ void __thiscall cosmic_editor_dialog(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             (&self->help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->help_button,(iptr)cosmic_editor_help_clicked);
+  button_set_callback(&self->help_button,(CtrlNotifyFn)cosmic_editor_help_clicked);
   rect_set_xywh((iptr)rect,x_pos + self->button_width_u + 2,y_pos,self->button_width_u,
                      self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -7898,10 +7898,10 @@ void __thiscall cosmic_editor_dialog(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             (&self->cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->cancel_button,(iptr)cosmic_editor_cancel_clicked);
+  button_set_callback(&self->cancel_button,(CtrlNotifyFn)cosmic_editor_cancel_clicked);
   ctrl_set_cancel_button(&self->cancel_button);
   wnd_set_keyboard_nav(&self->window,0);
-  wnd_set_redraw_callback(self,(iptr)cosmic_editor_focus_redraw);
+  wnd_set_redraw_callback(self,cosmic_editor_focus_redraw);
   wnd_repaint(self);
   window_show(self);
   wnd_run_modal_loop((ModalMenuWindow *)&self->window);

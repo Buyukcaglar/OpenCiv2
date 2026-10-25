@@ -324,7 +324,7 @@ void __cdecl sprite_editor_tool_sprites_global_init(void)
 void __cdecl sprite_editor_tool_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites),0x3c,0xf,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites),0x3c,0xf,sprite_init,sprite_destroy);
   return;
 }
 
@@ -340,7 +340,7 @@ void __cdecl sprite_editor_tool_sprites_reg_atexit(void)
 void __cdecl sprite_editor_tool_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites),0x3c,0xf,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites),0x3c,0xf,sprite_destroy);
   return;
 }
 
@@ -357,7 +357,7 @@ void __cdecl small_citizen_sprites_global_init(void)
 void __cdecl small_citizen_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.small_citizen_sprites),0x3c,0xb,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.small_citizen_sprites),0x3c,0xb,sprite_init,sprite_destroy);
   return;
 }
 
@@ -373,7 +373,7 @@ void __cdecl small_citizen_sprites_reg_atexit(void)
 void __cdecl small_citizen_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.small_citizen_sprites),0x3c,0xb,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.small_citizen_sprites),0x3c,0xb,sprite_destroy);
   return;
 }
 
@@ -390,7 +390,7 @@ void __cdecl small_resource_icon_sprites_global_init(void)
 void __cdecl small_resource_icon_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites),0x3c,3,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites),0x3c,3,sprite_init,sprite_destroy);
   return;
 }
 
@@ -406,7 +406,7 @@ void __cdecl small_resource_icon_sprites_reg_atexit(void)
 void __cdecl small_resource_icon_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites),0x3c,3,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites),0x3c,3,sprite_destroy);
   return;
 }
 
@@ -464,7 +464,7 @@ void __cdecl icon_misc_sprites_global_init(void)
 void __cdecl icon_misc_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&icon_misc_sprites_block.icon_misc_sprites),0x3c,6,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&icon_misc_sprites_block.icon_misc_sprites),0x3c,6,sprite_init,sprite_destroy);
   return;
 }
 
@@ -480,7 +480,7 @@ void __cdecl icon_misc_sprites_reg_atexit(void)
 void __cdecl icon_misc_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&icon_misc_sprites_block.icon_misc_sprites),0x3c,6,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&icon_misc_sprites_block.icon_misc_sprites),0x3c,6,sprite_destroy);
   return;
 }
 
@@ -538,7 +538,7 @@ void __cdecl icons_pair_sprites_global_init(void)
 void __cdecl icons_pair_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(((i8 *)&icons_pair_sprites_block.icons_pair_sprites),0x3c,4,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&icons_pair_sprites_block.icons_pair_sprites),0x3c,4,sprite_init,sprite_destroy);
   return;
 }
 
@@ -554,7 +554,7 @@ void __cdecl icons_pair_sprites_reg_atexit(void)
 void __cdecl icons_pair_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(((i8 *)&icons_pair_sprites_block.icons_pair_sprites),0x3c,4,(code *)sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&icons_pair_sprites_block.icons_pair_sprites),0x3c,4,sprite_destroy);
   return;
 }
 
@@ -2015,8 +2015,8 @@ i32 __thiscall portrait_dlg_create(PortraitDialog *self)
              frame_border_width * 4 + frame_caption_height + 0x16e,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
   portrait_dlg_create_buttons(self);
   wnd_set_caption_height((WndBase *)&self->window,frame_caption_height);
-  wnd_set_lbuttonup_handler(&self->window.wnd_handlers,(iptr)portrait_dlg_on_click);
-  wnd_set_dblclick_handler(&self->window.wnd_handlers,(iptr)portrait_dlg_on_dblclick);
+  wnd_set_lbuttonup_handler(&self->window.wnd_handlers,portrait_dlg_on_click);
+  wnd_set_dblclick_handler(&self->window.wnd_handlers,portrait_dlg_on_dblclick);
   portrait_dlg_paint(self);
   wnd_repaint(self);
   wnd_center((WndBase *)&self->window);
@@ -2051,8 +2051,8 @@ void __thiscall portrait_dlg_create_buttons(PortraitDialog *self)
   }
   button_create_with_callback
             ((Button *)((u8 *)self + 0x15c),(iptr)parent_b,100,(iptr)&button_rect,0x21,(const char *)&str_cancel);
-  button_set_callback((Button *)((u8 *)self + 0x15c),(iptr)portrait_dlg_on_button);
-  button_set_callback((Button *)((u8 *)self + 0x198),(iptr)portrait_dlg_on_button);
+  button_set_callback((Button *)((u8 *)self + 0x15c),portrait_dlg_on_button);
+  button_set_callback((Button *)((u8 *)self + 0x198),portrait_dlg_on_button);
   return;
 }
 
@@ -2064,7 +2064,7 @@ void __thiscall portrait_dlg_run(PortraitDialog *self)
   ctrl_show_and_redraw((Control *)self->ok_button_bytes);
   window_show(self);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)&self->window,(iptr)net_modal_idle_poll);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)&self->window,net_modal_idle_poll);
   }
   wnd_run_modal_loop((ModalMenuWindow *)&self->window);
   wnd_set_modal_idle_callback((ModalMenuWindow *)&self->window,0);
@@ -4580,8 +4580,8 @@ void __cdecl sprite_editor_ok_clicked(void)
   sprite_grab_surface_rect(status_window_block.sprite_editor_target_sprite,(iptr)&status_window_block.sprite_editor_surface,(iptr)rect);
   road_sprites_block.unit_shield_x_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item] = status_window_block.sprite_editor_flag_x;
   road_sprites_block.unit_shield_y_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item] = status_window_block.sprite_editor_flag_y;
-  if (status_window_block.sprite_editor_ok_callback != (code *)0x0) {
-    (*status_window_block.sprite_editor_ok_callback)();
+  if (status_window_block.sprite_editor_ok_callback != 0) {
+    status_window_block.sprite_editor_ok_callback();
   }
   status_window_block.sprite_editor_running = 0;
   wnd_end_modal_loop((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd));
@@ -5330,7 +5330,7 @@ void __cdecl sprite_editor_on_mouse_move(int x,int y)
 /* WARNING: Removing unreachable block (ram,0x005740e7) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,iptr ok_callback)
+void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,SpriteSheetSaveFn ok_callback)
 
 {
   byte key_color;
@@ -5359,7 +5359,7 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,iptr
   status_window_block.sprite_editor_height = sprite_height(status_window_block.sprite_editor_target_sprite);
   key_color = sprite_get_key_color(status_window_block.sprite_editor_target_sprite);
   status_window_block.sprite_editor_key_color = (uint)key_color;
-  (*(iptr *)&status_window_block.sprite_editor_ok_callback) = ok_callback;
+  status_window_block.sprite_editor_ok_callback = ok_callback;
   sprite_free((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
   sprite_merge_onto(status_window_block.sprite_editor_target_sprite,(iptr)&status_window_block.sprite_editor_orig_sprite);
   surface_create((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
@@ -5385,20 +5385,20 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,iptr
   rect_set_xywh((iptr)button_rect,button_x,button_y2,button_width2,button_height);
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create(&ok_button,(iptr)&status_window_block.sprite_editor_wnd,0x65,(iptr)button_rect,(const char *)label);
-  button_set_callback(&ok_button,(iptr)sprite_editor_ok_clicked);
+  button_set_callback(&ok_button,(CtrlNotifyFn)sprite_editor_ok_clicked);
   button_x = button_x + button_width2 + 2;
   rect_set_xywh((iptr)button_rect,button_x,button_y2,button_width2,button_height);
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create(&cancel_button,(iptr)&status_window_block.sprite_editor_wnd,0x66,(iptr)button_rect,(const char *)label);
-  button_set_callback(&cancel_button,(iptr)sprite_editor_cancel_clicked);
+  button_set_callback(&cancel_button,(CtrlNotifyFn)sprite_editor_cancel_clicked);
   ctrl_set_cancel_button(&cancel_button);
-  wnd_set_lbuttondown_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
-  wnd_set_rbuttondown_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
-  wnd_set_dblclick_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
-  wnd_set_lbuttonup_any_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_up);
-  wnd_set_rbuttonup_any_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_up);
-  wnd_set_mousemove_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_move);
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window),(iptr)sprite_editor_redraw);
+  wnd_set_lbuttondown_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),sprite_editor_on_mouse_down);
+  wnd_set_rbuttondown_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),sprite_editor_on_mouse_down);
+  wnd_set_dblclick_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),sprite_editor_on_mouse_down);
+  wnd_set_lbuttonup_any_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(WndMouseFn)sprite_editor_on_mouse_up);
+  wnd_set_rbuttonup_any_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),(WndMouseFn)sprite_editor_on_mouse_up);
+  wnd_set_mousemove_handler((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events),sprite_editor_on_mouse_move);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window),sprite_editor_redraw);
   wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
   window_show((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd));
@@ -6084,7 +6084,7 @@ void __thiscall sprite_picker_run(SpritePicker *self)
             (&self->scrollbar,(iptr)scroll_parent,0x65,(iptr)rect,0);
   scrollbar_set_range(&self->scrollbar,0,status_window_block.sprite_sheet_cell_count - 1);
   scrollbar_set_pos(&self->scrollbar,0);
-  scrollbar_set_callback(&self->scrollbar,(iptr)sprite_picker_select_cell);
+  scrollbar_set_callback(&self->scrollbar,sprite_picker_select_cell);
   sprite_picker_select_cell(0);
   ctrl_show_and_redraw((Control *)&self->scrollbar_head);
   self->init_lux_rate = (int)(self->client_width - 8) / 3;
@@ -6100,7 +6100,7 @@ void __thiscall sprite_picker_run(SpritePicker *self)
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             (&self->button_1,(iptr)ok_parent,0xc9,(iptr)rect,(const char *)label);
-  button_set_callback(&self->button_1,(iptr)sprite_picker_ok_clicked);
+  button_set_callback(&self->button_1,(CtrlNotifyFn)sprite_picker_ok_clicked);
   ctrl_set_default_button(&self->button_1);
   x2 = x2 + self->init_lux_rate + 2;
   rect_set_xywh((iptr)rect,x2,y2,self->init_lux_rate,self->init_sci_rate);
@@ -6113,7 +6113,7 @@ void __thiscall sprite_picker_run(SpritePicker *self)
   label = (iptr)label_string(label_string_ids[0x255]);
   button_create
             (&self->button_2,(iptr)import_parent,0xc9,(iptr)rect,(const char *)label);
-  button_set_callback(&self->button_2,(iptr)sprite_picker_import_all_clicked);
+  button_set_callback(&self->button_2,(CtrlNotifyFn)sprite_picker_import_all_clicked);
   ctrl_set_default_button(&self->button_2);
   if (sprite_picker_sprite_block.sprite_sheet_mode == 5) {
     ctrl_disable(&self->button_2);
@@ -6129,9 +6129,9 @@ void __thiscall sprite_picker_run(SpritePicker *self)
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             (&self->button_3,(iptr)cancel_parent,0xca,(iptr)rect,(const char *)label);
-  button_set_callback(&self->button_3,(iptr)sprite_picker_cancel_clicked);
+  button_set_callback(&self->button_3,(CtrlNotifyFn)sprite_picker_cancel_clicked);
   ctrl_set_cancel_button(&self->button_3);
-  wnd_set_redraw_callback(self,(iptr)sprite_picker_redraw_cb);
+  wnd_set_redraw_callback(self,sprite_picker_redraw_cb);
   wnd_repaint(self);
   window_show(self);
   wnd_run_modal_loop((ModalMenuWindow *)&self->window);

@@ -157,7 +157,7 @@ void __thiscall ctrl_set_cancel_button(Button *self)
 }
 
 /* 0040f880 auto */
-void __thiscall button_set_callback(Button *self,iptr callback)
+void __thiscall button_set_callback(Button *self,CtrlNotifyFn callback)
 
 {
   self->on_click = callback;
@@ -219,7 +219,7 @@ checkbox_create
 }
 
 /* 0040faa0 auto */
-void __thiscall checkbox_set_callback(Checkbox *self,iptr callback)
+void __thiscall checkbox_set_callback(Checkbox *self,CheckboxToggleFn callback)
 
 {
   self->on_toggle = callback;
@@ -305,7 +305,7 @@ scrollbar_set_range(Scrollbar *self,i32 min_value,i32 max_value)
 }
 
 /* 0040fd80 auto */
-void __thiscall scrollbar_set_callback(Scrollbar *self,iptr callback)
+void __thiscall scrollbar_set_callback(Scrollbar *self,ScrollFn callback)
 
 {
   self->on_change = callback;
@@ -390,7 +390,7 @@ void __thiscall edit_set_max_len(EditControl *self,i32 max_len)
 }
 
 /* 00418a00 auto */
-void __thiscall edit_set_callback(EditControl *self,iptr callback)
+void __thiscall edit_set_callback(EditControl *self,EditKeyFn callback)
 
 {
   self->on_key = callback;
@@ -510,7 +510,7 @@ void __thiscall combo_set_cur_sel(ComboBox *self,iptr index)
 }
 
 /* 00418dd0 auto */
-void __thiscall combo_set_callback(ComboBox *self,iptr callback)
+void __thiscall combo_set_callback(ComboBox *self,CtrlNotifyFn callback)
 
 {
   self->on_select = callback;
@@ -660,7 +660,7 @@ void __thiscall radiogrp_set_selected(RadioGroup *self,u32 value)
 }
 
 /* 00451ac0 auto */
-void __thiscall scrollbar_set_track_callback(Scrollbar *self,iptr callback)
+void __thiscall scrollbar_set_track_callback(Scrollbar *self,ScrollFn callback)
 
 {
   self->on_track = callback;
@@ -1060,7 +1060,7 @@ SpriteButton * __thiscall spritebtn_ctor(SpriteButton *self)
 }
 
 /* 005117f0 auto */
-void __thiscall spritebtn_set_click_handler(SpriteButton *self,iptr callback)
+void __thiscall spritebtn_set_click_handler(SpriteButton *self,CtrlNotifyFn callback)
 
 {
   self->on_click = callback;
@@ -1080,7 +1080,7 @@ u32 __thiscall ctrl_is_enabled(Button *self)
 }
 
 /* 00530eb0 auto */
-void __thiscall edit_set_change_callback(EditControl *self,iptr callback)
+void __thiscall edit_set_change_callback(EditControl *self,CtrlNotifyFn callback)
 
 {
   self->on_change = callback;
@@ -1174,7 +1174,7 @@ radiogrp_create
 }
 
 /* 005311b0 auto */
-void __thiscall radiogrp_set_select_callback(RadioGroup *self,iptr callback)
+void __thiscall radiogrp_set_select_callback(RadioGroup *self,RadioNotifyFn callback)
 
 {
   self->on_select = callback;
@@ -1182,7 +1182,7 @@ void __thiscall radiogrp_set_select_callback(RadioGroup *self,iptr callback)
 }
 
 /* 005311e0 auto */
-void __thiscall radiogrp_set_dblclick_callback(RadioGroup *self,iptr callback)
+void __thiscall radiogrp_set_dblclick_callback(RadioGroup *self,RadioNotifyFn callback)
 
 {
   self->on_dblclick = callback;
@@ -1220,7 +1220,7 @@ void __thiscall listbox_set_cur_sel(ListBox *self,i32 index)
 }
 
 /* 00551dc0 auto */
-void __thiscall listbox_set_dblclick_callback(ListBox *self,iptr callback)
+void __thiscall listbox_set_dblclick_callback(ListBox *self,CtrlNotifyFn callback)
 
 {
   self->on_dblclick = callback;
@@ -1228,7 +1228,7 @@ void __thiscall listbox_set_dblclick_callback(ListBox *self,iptr callback)
 }
 
 /* 00551df0 auto */
-void __thiscall listbox_set_select_callback(ListBox *self,iptr callback)
+void __thiscall listbox_set_select_callback(ListBox *self,CtrlNotifyFn callback)
 
 {
   self->on_select = callback;
@@ -1254,7 +1254,7 @@ Checkbox * __thiscall checkbox_vector_dtor(Checkbox *self,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),(code *)checkbox_dtor);
+    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),checkbox_dtor);
     operator_delete(&VECTOR_COUNT(self));
   }
   return self;
@@ -1279,7 +1279,7 @@ EditControl * __thiscall edit_vector_dtor(EditControl *self,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(self,0x48,VECTOR_COUNT(self),(code *)edit_dtor);
+    crt_vector_dtor_iterator(self,0x48,VECTOR_COUNT(self),edit_dtor);
     operator_delete(&VECTOR_COUNT(self));
   }
   return self;
@@ -1304,7 +1304,7 @@ Button * __thiscall ctrl_vector_dtor(Button *self,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),(code *)ctrl_dtor);
+    crt_vector_dtor_iterator(self,0x3c,VECTOR_COUNT(self),ctrl_dtor);
     operator_delete(&VECTOR_COUNT(self));
   }
   return self;
@@ -2202,7 +2202,7 @@ void __thiscall button_fire_callback(Button *self,i32 ctrl_id)
 
 {
   if (self->on_click != 0) {
-    call_untyped((code *)self->on_click, ctrl_id);
+    self->on_click(ctrl_id);
   }
   return;
 }
@@ -2212,7 +2212,7 @@ void __thiscall spritebtn_fire_click(SpriteButton *self,i32 ctrl_id)
 
 {
   if (self->on_click != 0) {
-    call_untyped((code *)self->on_click, ctrl_id);
+    self->on_click(ctrl_id);
   }
   return;
 }
@@ -2222,7 +2222,7 @@ void __thiscall spritebtn_fire_rclick(SpriteButton *self,i32 ctrl_id)
 
 {
   if (self->on_rclick != 0) {
-    call_untyped((code *)self->on_rclick, ctrl_id);
+    self->on_rclick(ctrl_id);
   }
   return;
 }
@@ -2686,7 +2686,7 @@ void __thiscall checkbox_fire_callback(Checkbox *self,i32 ctrl_id,i32 checked)
 
 {
   if (self->on_toggle != 0) {
-    call_untyped((code *)self->on_toggle, ctrl_id,checked);
+    self->on_toggle(ctrl_id,checked);
   }
   return;
 }
@@ -2922,7 +2922,7 @@ void __thiscall scrollbar_fire_change(Scrollbar *self,i32 pos)
 
 {
   if (self->on_change != 0) {
-    call_untyped((code *)self->on_change, pos);
+    self->on_change(pos);
   }
   return;
 }
@@ -2932,7 +2932,7 @@ void __thiscall scrollbar_fire_track(Scrollbar *self,i32 pos)
 
 {
   if (self->on_track != 0) {
-    call_untyped((code *)self->on_track, pos);
+    self->on_track(pos);
   }
   return;
 }
@@ -3270,7 +3270,7 @@ i32 __thiscall edit_fire_key_callback(EditControl *self,iptr key)
     result = 1;
   }
   else {
-    result = call_untyped((code *)self->on_key, self->ctrl_id,key);
+    result = self->on_key(self->ctrl_id,key);
   }
   return result;
 }
@@ -3478,7 +3478,7 @@ void __thiscall combo_fire_dblclick(ComboBox *self)
 
 {
   if (self->on_dblclick != 0) {
-    call_untyped((code *)self->on_dblclick, self->ctrl_id);
+    self->on_dblclick(self->ctrl_id);
   }
   return;
 }
@@ -3488,7 +3488,7 @@ void __thiscall combo_fire_selchange(ComboBox *self)
 
 {
   if (self->on_select != 0) {
-    call_untyped((code *)self->on_select, self->ctrl_id);
+    self->on_select(self->ctrl_id);
   }
   return;
 }
@@ -3736,7 +3736,7 @@ void __thiscall listbox_fire_dblclick(ListBox *self)
 
 {
   if (self->on_dblclick != 0) {
-    call_untyped((code *)self->on_dblclick, self->ctrl_id);
+    self->on_dblclick(self->ctrl_id);
   }
   return;
 }
@@ -3746,7 +3746,7 @@ void __thiscall listbox_fire_selchange(ListBox *self)
 
 {
   if (self->on_select != 0) {
-    call_untyped((code *)self->on_select, self->ctrl_id);
+    self->on_select(self->ctrl_id);
   }
   return;
 }
@@ -4571,7 +4571,7 @@ void __thiscall radiogrp_fire_callback(RadioGroup *self,i32 ctrl_id,i32 index)
 
 {
   if (self->on_select != 0) {
-    call_untyped((code *)self->on_select, ctrl_id,index);
+    self->on_select(ctrl_id,index);
   }
   return;
 }
@@ -4581,7 +4581,7 @@ void __thiscall radiogrp_fire_dblclick(RadioGroup *self,i32 ctrl_id,i32 index)
 
 {
   if (self->on_dblclick != 0) {
-    call_untyped((code *)self->on_dblclick, ctrl_id,index);
+    self->on_dblclick(ctrl_id,index);
   }
   return;
 }
@@ -4591,7 +4591,7 @@ void __thiscall radiogrp_fire_rclick(RadioGroup *self,i32 ctrl_id,i32 index)
 
 {
   if (self->on_rclick != 0) {
-    call_untyped((code *)self->on_rclick, ctrl_id,index);
+    self->on_rclick(ctrl_id,index);
   }
   return;
 }
@@ -4665,7 +4665,7 @@ void __thiscall edit_fire_maxtext_callback(EditControl *self)
 
 {
   if (self->on_maxtext != 0) {
-    call_untyped((code *)self->on_maxtext, self->ctrl_id);
+    self->on_maxtext(self->ctrl_id);
   }
   return;
 }
@@ -4675,7 +4675,7 @@ void __thiscall edit_fire_change_callback(EditControl *self)
 
 {
   if (self->on_change != 0) {
-    call_untyped((code *)self->on_change, self->ctrl_id);
+    self->on_change(self->ctrl_id);
   }
   return;
 }
@@ -4883,7 +4883,7 @@ void __thiscall ddctrl_on_lbuttonup(DdctrlOnLbuttonupView *self,i32 x,i32 y)
 
 {
   if (self->on_lbutton_up != 0) {
-    call_untyped((code *)self->on_lbutton_up, self->control_id,x,y);
+    self->on_lbutton_up(self->control_id,x,y);
   }
   return;
 }
@@ -4893,7 +4893,7 @@ void __thiscall ddctrl_on_rbuttonup(DdctrlOnRbuttonupView *self,i32 x,i32 y)
 
 {
   if (self->on_rbutton_up != 0) {
-    call_untyped((code *)self->on_rbutton_up, self->control_id,x,y);
+    self->on_rbutton_up(self->control_id,x,y);
   }
   return;
 }
@@ -4903,7 +4903,7 @@ void __thiscall ddctrl_on_mousemove(DdctrlOnMousemoveView *self,i32 x,i32 y)
 
 {
   if (self->on_mouse_move != 0) {
-    call_untyped((code *)self->on_mouse_move, self->control_id,x,y);
+    self->on_mouse_move(self->control_id,x,y);
   }
   return;
 }
@@ -4913,7 +4913,7 @@ void __thiscall ddctrl_on_dblclick(DdctrlOnDblclickView *self,i32 x,i32 y)
 
 {
   if (self->on_dblclick != 0) {
-    call_untyped((code *)self->on_dblclick, self->control_id,x,y);
+    self->on_dblclick(self->control_id,x,y);
   }
   return;
 }

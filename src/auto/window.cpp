@@ -46,10 +46,10 @@ void __thiscall wnd_get_rect_in_parent(WndBase *self,iptr rect)
 }
 
 /* 00408130 auto */
-u32 __thiscall wnd_set_lbuttonup_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_lbuttonup_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = self->on_lbutton_up;
   self->on_lbutton_up = handler;
@@ -57,10 +57,10 @@ u32 __thiscall wnd_set_lbuttonup_handler(WndHandlers *self,iptr handler)
 }
 
 /* 00408170 auto */
-u32 __thiscall wnd_set_rbuttonup_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_rbuttonup_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = self->on_rbutton_up;
   self->on_rbutton_up = handler;
@@ -73,10 +73,10 @@ u32 __thiscall wnd_set_rbuttonup_handler(WndHandlers *self,iptr handler)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_keydown_handler(WndHandlers *self,iptr handler)
+WndKeyFn __thiscall wnd_set_keydown_handler(WndHandlers *self,WndKeyFn handler)
 
 {
-  u32 old_handler;
+  WndKeyFn old_handler;
   
   old_handler = self->on_key_down;
   self->on_key_down = handler;
@@ -93,10 +93,10 @@ u32 __thiscall wnd_set_keydown_handler(WndHandlers *self,iptr handler)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_char_handler(WndHandlers *self,iptr handler)
+WndKeyFn __thiscall wnd_set_char_handler(WndHandlers *self,WndKeyFn handler)
 
 {
-  u32 old_handler;
+  WndKeyFn old_handler;
   
   old_handler = self->on_char;
   self->on_char = handler;
@@ -104,10 +104,10 @@ u32 __thiscall wnd_set_char_handler(WndHandlers *self,iptr handler)
 }
 
 /* 00408230 auto */
-u32 __thiscall wnd_set_close_handler(WndHandlers *self,iptr handler)
+WndCloseFn __thiscall wnd_set_close_handler(WndHandlers *self,WndCloseFn handler)
 
 {
-  u32 old_handler;
+  WndCloseFn old_handler;
   
   old_handler = self->on_close;
   self->on_close = handler;
@@ -115,10 +115,10 @@ u32 __thiscall wnd_set_close_handler(WndHandlers *self,iptr handler)
 }
 
 /* 00408270 auto */
-u32 __thiscall wnd_set_minimize_handler(WndHandlers *self,iptr handler)
+WndNotifyFn __thiscall wnd_set_minimize_handler(WndHandlers *self,WndNotifyFn handler)
 
 {
-  u32 old_handler;
+  WndNotifyFn old_handler;
   
   old_handler = self->on_minimize;
   self->on_minimize = handler;
@@ -126,10 +126,10 @@ u32 __thiscall wnd_set_minimize_handler(WndHandlers *self,iptr handler)
 }
 
 /* 004082b0 auto */
-u32 __thiscall wnd_set_restore_handler(WndHandlers *self,iptr handler)
+WndNotifyFn __thiscall wnd_set_restore_handler(WndHandlers *self,WndNotifyFn handler)
 
 {
-  u32 old_handler;
+  WndNotifyFn old_handler;
   
   old_handler = self->on_restore;
   self->on_restore = handler;
@@ -137,10 +137,10 @@ u32 __thiscall wnd_set_restore_handler(WndHandlers *self,iptr handler)
 }
 
 /* 004082f0 auto */
-u32 __thiscall wnd_set_size_handler(WndHandlers *self,iptr handler)
+WndSizeFn __thiscall wnd_set_size_handler(WndHandlers *self,WndSizeFn handler)
 
 {
-  u32 old_handler;
+  WndSizeFn old_handler;
   
   old_handler = self->on_size;
   self->on_size = handler;
@@ -148,10 +148,10 @@ u32 __thiscall wnd_set_size_handler(WndHandlers *self,iptr handler)
 }
 
 /* 00408330 auto */
-u32 __thiscall wnd_set_move_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_move_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = self->on_move;
   self->on_move = handler;
@@ -239,7 +239,7 @@ void __thiscall wnd_view_validate_rect(WndBase *self,iptr rect)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall wnd_set_redraw_callback(SurfaceWindow *self,iptr callback)
+void __thiscall wnd_set_redraw_callback(SurfaceWindow *self,WndNotifyFn callback)
 
 {
   self->on_paint = callback;
@@ -431,7 +431,7 @@ void __cdecl menu_revolution(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall wnd_set_modal_idle_callback(ModalMenuWindow *self,iptr callback)
+void __thiscall wnd_set_modal_idle_callback(ModalMenuWindow *self,WndNotifyFn callback)
 
 {
   self->on_modal_idle = callback;
@@ -513,10 +513,10 @@ i32 __thiscall wnd_client_height(WndBase *self)
 }
 
 /* 00414be0 auto */
-u32 __thiscall wnd_set_mousemove_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_mousemove_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = self->on_mouse_move;
   self->on_mouse_move = handler;
@@ -524,10 +524,10 @@ u32 __thiscall wnd_set_mousemove_handler(WndHandlers *self,iptr handler)
 }
 
 /* 00414c20 auto */
-u32 __thiscall wnd_set_lbuttondown_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_lbuttondown_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = self->on_lbutton_down;
   self->on_lbutton_down = handler;
@@ -535,10 +535,10 @@ u32 __thiscall wnd_set_lbuttondown_handler(WndHandlers *self,iptr handler)
 }
 
 /* 00414c60 auto */
-u32 __thiscall wnd_set_lbuttonup_any_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_lbuttonup_any_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = (self)->on_lbutton_up_raw;
   (self)->on_lbutton_up_raw = handler;
@@ -546,10 +546,10 @@ u32 __thiscall wnd_set_lbuttonup_any_handler(WndHandlers *self,iptr handler)
 }
 
 /* 00414ca0 auto */
-u32 __thiscall wnd_set_dblclick_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_dblclick_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = (self)->on_dblclick;
   (self)->on_dblclick = handler;
@@ -591,7 +591,7 @@ void __thiscall wnd_release_capture(WndBase *self)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall wnd_set_caption_button_handler(FrameWindow *self,iptr handler)
+void __thiscall wnd_set_caption_button_handler(FrameWindow *self,CaptionButtonFn handler)
 
 {
   self->on_caption_button = handler;
@@ -1571,7 +1571,7 @@ hotspot_create(Hotspot *self,iptr parent,iptr id,iptr rect)
 }
 
 /* 00451a60 auto */
-void __thiscall hotspot_set_click_callback(Hotspot *self,iptr callback)
+void __thiscall hotspot_set_click_callback(Hotspot *self,CtrlNotifyFn callback)
 
 {
   self->on_click = callback;
@@ -1584,7 +1584,7 @@ void __thiscall hotspot_set_click_callback(Hotspot *self,iptr callback)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall hotspot_set_dblclick_callback(Hotspot *self,iptr callback)
+void __thiscall hotspot_set_dblclick_callback(Hotspot *self,CtrlNotifyFn callback)
 
 {
   self->on_dblclick = callback;
@@ -1633,10 +1633,10 @@ void __thiscall hotspot_dtor(Hotspot *self)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_keydown_pre_handler(WndHandlers *self,iptr handler)
+WndKeyFn __thiscall wnd_set_keydown_pre_handler(WndHandlers *self,WndKeyFn handler)
 
 {
-  u32 old_handler;
+  WndKeyFn old_handler;
   
   old_handler = self->on_key_down_pre;
   self->on_key_down_pre = handler;
@@ -1959,7 +1959,7 @@ i32 __cdecl popup_text_with_city(const char *filename,const char *section,i32 dl
             (&sprite,(2 - (uint)(ui_large_screen == 0)) * 0x40,(2 - (uint)(ui_large_screen == 0)) * 0x30
              ,0);
   dialog_load_text(&dialog2,filename,section,dlg_flags);
-  dialog_set_sprite_draw_fn(&dialog2,(iptr)popup_city_sprite_draw_cb);
+  dialog_set_sprite_draw_fn(&dialog2,(DialogSpriteDrawFn)popup_city_sprite_draw_cb);
   dialog_set_image_zoom(&dialog2,0);
   dialog_add_sprite(&dialog2,(iptr)&sprite,city,0);
   result = dlg_show_modal(&dialog2,0);
@@ -2001,7 +2001,7 @@ i32 __cdecl popup_text_with_unit(const char *filename,const char *section,i32 dl
             (&sprite,(2 - (uint)(ui_large_screen == 0)) * 0x40,(2 - (uint)(ui_large_screen == 0)) * 0x30
              ,0);
   dialog_load_text(&dialog2,filename,section,dlg_flags);
-  dialog_set_sprite_draw_fn(&dialog2,(iptr)popup_unit_sprite_draw_cb);
+  dialog_set_sprite_draw_fn(&dialog2,(DialogSpriteDrawFn)popup_unit_sprite_draw_cb);
   dialog_set_image_zoom(&dialog2,0);
   dialog_add_sprite(&dialog2,(iptr)&sprite,unit,0);
   result = dlg_show_modal(&dialog2,0);
@@ -2569,7 +2569,7 @@ void __cdecl menu_multiplayer_options(void)
           net_session_block.net_vote_replies_pending = net_session_block.net_player_count[0] - 1;
           net_session_block.net_vote_status = 0;
           net_send_text_args(0x43,0xff,2,0,0,0);
-          dlg_pending_idle_callback = ((i8 *)net_vote_wait_idle_cb);
+          dlg_pending_idle_callback = net_vote_wait_idle_cb;
           dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
           result = popup_game_sprite_flags((const char *)&str_pmchangeserver,0x2000001,(iptr)&popup_info_icon_sprite,0);
           if (((result < 0) || (net_session_block.net_vote_status == -1)) || (net_session_block.net_vote_replies_pending != 0)) {
@@ -3339,7 +3339,7 @@ void __cdecl menu_build_main(void)
   menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x418,1);
   menu_set_item_hidden((GameMenu *)((i8 *)&main_menu_block.main_menu),0x41b,1);
   menu_rebuild((GameMenu *)((i8 *)&main_menu_block.main_menu),(iptr)&main_frame_wnd_block.main_frame_wnd);
-  menu_set_command_handler((GameMenu *)((i8 *)&main_menu_block.main_menu),(iptr)menu_command);
+  menu_set_command_handler((GameMenu *)((i8 *)&main_menu_block.main_menu),menu_command);
   return;
 }
 
@@ -4511,8 +4511,8 @@ void __cdecl frame_wnd_on_caption_button_click(int button_id)
   else {
     frame_wnd = child - 0x48;
   }
-  if (*(int *)(frame_wnd + 0x2a8) != 0) {
-    call_untyped(((code **)frame_wnd)[170], *(i32 *)(frame_wnd + 0x200 + (button_id - 1000) * 0x1c));
+  if (((FrameWindow *)frame_wnd)->on_caption_button != 0) {
+    ((FrameWindow *)frame_wnd)->on_caption_button(*(i32 *)(frame_wnd + 0x200 + (button_id - 1000) * 0x1c));
   }
   return;
 }
@@ -4574,7 +4574,7 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
               (*(Hotspot **)(self->caption_button_area + i * 0x1c + 0x18),(iptr)native_wnd2,
                i + 1000,(iptr)button_rect);
     hotspot_set_click_callback
-              (*(Hotspot **)(self->caption_button_area + i * 0x1c + 0x18),(iptr)frame_wnd_on_caption_button_click);
+              (*(Hotspot **)(self->caption_button_area + i * 0x1c + 0x18),frame_wnd_on_caption_button_click);
     button_x = button_x + width + frame_padding;
   }
   return;
@@ -4753,16 +4753,16 @@ frame_wnd_create
     wnd_set_resize_border((WndBase *)&self->window,self->resize_border);
   }
   frame_wnd_layout(self);
-  wnd_set_drag_begin_callback(&self->window.wnd_handlers,(iptr)mp_window_drag_begin);
-  wnd_set_drag_end_callback(&self->window.wnd_handlers,(iptr)mp_window_drag_end);
+  wnd_set_drag_begin_callback(&self->window.wnd_handlers,mp_window_drag_begin);
+  wnd_set_drag_end_callback(&self->window.wnd_handlers,mp_window_drag_end);
   return;
 }
 
 /* 00553d30 auto */
-u32 __thiscall wnd_set_drag_begin_callback(WndHandlers *self,iptr callback)
+WndNotifyFn __thiscall wnd_set_drag_begin_callback(WndHandlers *self,WndNotifyFn callback)
 
 {
-  u32 old_callback;
+  WndNotifyFn old_callback;
   
   old_callback = self->on_enter_size_move;
   self->on_enter_size_move = callback;
@@ -4770,10 +4770,10 @@ u32 __thiscall wnd_set_drag_begin_callback(WndHandlers *self,iptr callback)
 }
 
 /* 00553d70 auto */
-u32 __thiscall wnd_set_drag_end_callback(WndHandlers *self,iptr callback)
+WndNotifyFn __thiscall wnd_set_drag_end_callback(WndHandlers *self,WndNotifyFn callback)
 
 {
-  u32 old_callback;
+  WndNotifyFn old_callback;
   
   old_callback = self->on_exitsizemove;
   self->on_exitsizemove = callback;
@@ -4907,10 +4907,10 @@ void __cdecl frame_texture_free_hook_nop(void)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_rbuttondown_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_rbuttondown_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = (self)->on_rbutton_down;
   (self)->on_rbutton_down = handler;
@@ -4923,10 +4923,10 @@ u32 __thiscall wnd_set_rbuttondown_handler(WndHandlers *self,iptr handler)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall wnd_set_rbuttonup_any_handler(WndHandlers *self,iptr handler)
+WndMouseFn __thiscall wnd_set_rbuttonup_any_handler(WndHandlers *self,WndMouseFn handler)
 
 {
-  u32 old_handler;
+  WndMouseFn old_handler;
   
   old_handler = (self)->on_rbutton_up_raw;
   (self)->on_rbutton_up_raw = handler;
@@ -5214,10 +5214,10 @@ void __cdecl menu_dispatch_command(i32 menu_index,i32 item_index)
   i32 menu_id;
   i32 item_id;
   
-  if (menu_command_callback != (code *)0x0) {
+  if (menu_command_callback != 0) {
     menu_id = menu_id_at_visible_index(menu_active_object,menu_index);
     item_id = menu_item_id_at_visible_index(menu_active_object,menu_id,item_index);
-    call_untyped(menu_command_callback, menu_id,item_id);
+    menu_command_callback(menu_id,item_id);
   }
   return;
 }
@@ -5230,17 +5230,17 @@ void __thiscall menu_attach_to_window(GameMenu *self,ModalMenuWindow *window)
     menu_owner_window = window;
     menu_active_object = self;
     wnd_attach_menu(window,(iptr)self);
-    wnd_set_menu_callback(window,(iptr)menu_dispatch_command);
+    wnd_set_menu_callback(window,menu_dispatch_command);
   }
   return;
 }
 
 /* 00578e38 auto */
-void __thiscall menu_set_command_handler(GameMenu *self,iptr handler)
+void __thiscall menu_set_command_handler(GameMenu *self,MenuCommandFn handler)
 
 {
   menu_active_object = self;
-  (*(iptr *)&menu_command_callback) = handler;
+  menu_command_callback = handler;
   return;
 }
 
@@ -5568,7 +5568,7 @@ u32 __thiscall menu_get_hmenu(MenuHandleView *self)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall wnd_set_menu_callback(ModalMenuWindow *self,iptr callback)
+void __thiscall wnd_set_menu_callback(ModalMenuWindow *self,MenuPosCommandFn callback)
 
 {
   self->on_menu_pos_command = callback;
@@ -6661,7 +6661,7 @@ void __thiscall dialog_set_default_choice(Dialog *self,iptr choice_id)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dialog_set_sprite_click_fn(Dialog *self,iptr callback)
+void __thiscall dialog_set_sprite_click_fn(Dialog *self,DialogSpriteFn callback)
 
 {
   self->on_sprite_click = callback;
@@ -6674,7 +6674,7 @@ void __thiscall dialog_set_sprite_click_fn(Dialog *self,iptr callback)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dialog_set_sprite_dblclick_fn(Dialog *self,iptr callback)
+void __thiscall dialog_set_sprite_dblclick_fn(Dialog *self,DialogSpriteFn callback)
 
 {
   self->on_sprite_dblclick = callback;
@@ -6687,7 +6687,7 @@ void __thiscall dialog_set_sprite_dblclick_fn(Dialog *self,iptr callback)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dialog_set_sprite_draw_fn(Dialog *self,iptr callback)
+void __thiscall dialog_set_sprite_draw_fn(Dialog *self,DialogSpriteDrawFn callback)
 
 {
   (self)->on_draw_sprite = callback;
@@ -6700,7 +6700,7 @@ void __thiscall dialog_set_sprite_draw_fn(Dialog *self,iptr callback)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dialog_set_option_draw_fn(Dialog *self,iptr callback)
+void __thiscall dialog_set_option_draw_fn(Dialog *self,DialogOptionDrawFn callback)
 
 {
   self->on_draw_option = callback;
@@ -6713,7 +6713,7 @@ void __thiscall dialog_set_option_draw_fn(Dialog *self,iptr callback)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dialog_set_select_change_fn(Dialog *self,iptr callback)
+void __thiscall dialog_set_select_change_fn(Dialog *self,DialogSelectFn callback)
 
 {
   self->on_select_change = callback;
@@ -7808,7 +7808,7 @@ uint __thiscall dialog_draw_option(Dialog *self,DialogOption *option,int blit)
         inner_rect.left = cell_rect.left + (int)self->list_indents[option->group];
       }
       if ((self->on_draw_option == 0) ||
-         (group_index = call_untyped((code *)self->on_draw_option, self,self->surf_wnd,option->id,group_index,cell_x,cell_y
+         (group_index = self->on_draw_option(self,self->surf_wnd,option->id,group_index,cell_x,cell_y
                              ,(i32)self->list_row_height[option->group]),
          group_index == 0)) {
         if (is_selected != 0) {
@@ -7971,14 +7971,14 @@ void __thiscall dialog_select_option(Dialog *self,DialogOption *option,int redra
       if (scrolled) {
         dialog_draw_option_list(self);
         if (self->on_select_change != 0) {
-          call_untyped((code *)self->on_select_change, self,option->id);
+          self->on_select_change(self,option->id);
         }
       }
       else {
         dialog_draw_option(self,prev_option,1);
         dialog_draw_option(self,option,1);
         if (self->on_select_change != 0) {
-          call_untyped((code *)self->on_select_change, self,option->id);
+          self->on_select_change(self,option->id);
         }
       }
     }
@@ -8164,15 +8164,15 @@ i32 __thiscall dialog_create_window(Dialog *self)
       new_size = surface_get_height((DibSurface *)self->surf_wnd);
       self->wnd_height = new_size;
     }
-    wnd_set_redraw_callback((SurfaceWindow *)self->surf_wnd,(iptr)dialog_on_redraw);
-    if ((*(int *)&dlg_pending_idle_callback) == 0) {
-      if ((*(int *)&dlg_default_idle_callback) != 0) {
-        wnd_set_modal_idle_callback((ModalMenuWindow *)(self->surf_wnd + 0x48),(*(int *)&dlg_default_idle_callback));
+    wnd_set_redraw_callback((SurfaceWindow *)self->surf_wnd,dialog_on_redraw);
+    if (dlg_pending_idle_callback == 0) {
+      if (dlg_default_idle_callback != 0) {
+        wnd_set_modal_idle_callback((ModalMenuWindow *)(self->surf_wnd + 0x48),dlg_default_idle_callback);
       }
     }
     else {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)(self->surf_wnd + 0x48),(*(int *)&dlg_pending_idle_callback));
-      (*(int *)&dlg_pending_idle_callback) = 0;
+      wnd_set_modal_idle_callback((ModalMenuWindow *)(self->surf_wnd + 0x48),dlg_pending_idle_callback);
+      dlg_pending_idle_callback = 0;
     }
     if (dlg_pending_move_handler != 0) {
       wnd_set_move_handler((WndHandlers *)(self->surf_wnd + 0x58),dlg_pending_move_handler);
@@ -8323,8 +8323,8 @@ void __thiscall dialog_create_controls(Dialog *self)
             }
             item_index++;
           }
-          radiogrp_set_select_callback((RadioGroup *)self->radio_group,(iptr)dialog_radio_on_select);
-          radiogrp_set_dblclick_callback((RadioGroup *)self->radio_group,(iptr)dialog_radio_on_dblclick);
+          radiogrp_set_select_callback((RadioGroup *)self->radio_group,(RadioNotifyFn)dialog_radio_on_select);
+          radiogrp_set_dblclick_callback((RadioGroup *)self->radio_group,dialog_radio_on_dblclick);
         }
         else {
           x = self->option_count;
@@ -8335,8 +8335,8 @@ void __thiscall dialog_create_controls(Dialog *self)
           }
           else {
             *checkboxes2 = x;
-            crt_vector_ctor_iterator(checkboxes2 + 1,0x3c,*checkboxes2,(code *)checkbox_elem_ctor,
-                         (code *)checkbox_dtor);
+            crt_vector_ctor_iterator(checkboxes2 + 1,0x3c,*checkboxes2,checkbox_elem_ctor,
+                         checkbox_dtor);
             checkboxes2++;
           }
           eh_state = 0xffffffff;
@@ -8403,9 +8403,9 @@ void __thiscall dialog_create_controls(Dialog *self)
                         ((Scrollbar *)self->list_vscroll[self->cur_pane],
                          self->list_rows[self->cur_pane] - 1);
               scrollbar_set_callback
-                        ((Scrollbar *)self->list_vscroll[self->cur_pane],(iptr)dialog_list_on_vscroll);
+                        ((Scrollbar *)self->list_vscroll[self->cur_pane],dialog_list_on_vscroll);
               scrollbar_set_track_callback
-                        ((Scrollbar *)self->list_vscroll[self->cur_pane],(iptr)dialog_list_on_vscroll);
+                        ((Scrollbar *)self->list_vscroll[self->cur_pane],dialog_list_on_vscroll);
             }
             else {
               ctrl_mem = (Button *)operator_new(0x40);
@@ -8441,15 +8441,15 @@ void __thiscall dialog_create_controls(Dialog *self)
                         ((Scrollbar *)self->list_hscroll[self->cur_pane],self->columns
                         );
               scrollbar_set_callback
-                        ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
+                        ((Scrollbar *)self->list_hscroll[self->cur_pane],dialog_list_on_hscroll);
               scrollbar_set_track_callback
-                        ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
+                        ((Scrollbar *)self->list_hscroll[self->cur_pane],dialog_list_on_hscroll);
             }
           }
-          wnd_set_lbuttondown_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_lbuttondown);
-          wnd_set_lbuttonup_any_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_lbuttonup);
-          wnd_set_mousemove_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_mousemove);
-          wnd_set_dblclick_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_dblclick);
+          wnd_set_lbuttondown_handler((WndHandlers *)(self->surf_wnd + 0x58),dialog_list_on_lbuttondown);
+          wnd_set_lbuttonup_any_handler((WndHandlers *)(self->surf_wnd + 0x58),dialog_list_on_lbuttonup);
+          wnd_set_mousemove_handler((WndHandlers *)(self->surf_wnd + 0x58),dialog_list_on_mousemove);
+          wnd_set_dblclick_handler((WndHandlers *)(self->surf_wnd + 0x58),dialog_list_on_dblclick);
         }
         else {
           ctrl_mem = (Button *)operator_new(0x3c);
@@ -8487,7 +8487,7 @@ void __thiscall dialog_create_controls(Dialog *self)
             }
           }
           listbox_set_dblclick_callback
-                    ((ListBox *)self->listbox[self->cur_pane],(iptr)dialog_listbox_on_dblclick);
+                    ((ListBox *)self->listbox[self->cur_pane],(CtrlNotifyFn)dialog_listbox_on_dblclick);
         }
         if ((self->style_flags & 0x400000) != 0) {
           self->cur_pane = 1;
@@ -8527,10 +8527,10 @@ void __thiscall dialog_create_controls(Dialog *self)
                           ((Scrollbar *)self->list_vscroll[self->cur_pane],
                            self->list_rows[self->cur_pane] - 1);
                 scrollbar_set_callback
-                          ((Scrollbar *)self->list_vscroll[self->cur_pane],(iptr)dialog_list2_on_vscroll)
+                          ((Scrollbar *)self->list_vscroll[self->cur_pane],dialog_list2_on_vscroll)
                 ;
                 scrollbar_set_track_callback
-                          ((Scrollbar *)self->list_vscroll[self->cur_pane],(iptr)dialog_list2_on_vscroll);
+                          ((Scrollbar *)self->list_vscroll[self->cur_pane],dialog_list2_on_vscroll);
               }
               else {
                 ctrl_mem = (Button *)operator_new(0x40);
@@ -8566,9 +8566,9 @@ void __thiscall dialog_create_controls(Dialog *self)
                           ((Scrollbar *)self->list_hscroll[self->cur_pane],
                            self->columns);
                 scrollbar_set_callback
-                          ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list2_on_hscroll);
+                          ((Scrollbar *)self->list_hscroll[self->cur_pane],dialog_list2_on_hscroll);
                 scrollbar_set_track_callback
-                          ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list2_on_hscroll);
+                          ((Scrollbar *)self->list_hscroll[self->cur_pane],dialog_list2_on_hscroll);
               }
             }
           }
@@ -8608,7 +8608,7 @@ void __thiscall dialog_create_controls(Dialog *self)
               }
             }
             listbox_set_dblclick_callback
-                      ((ListBox *)self->listbox[self->cur_pane],(iptr)dialog_listbox_on_dblclick);
+                      ((ListBox *)self->listbox[self->cur_pane],(CtrlNotifyFn)dialog_listbox_on_dblclick);
           }
           self->cur_pane = 0;
         }
@@ -8623,8 +8623,8 @@ void __thiscall dialog_create_controls(Dialog *self)
       }
       else {
         *hotspots = x;
-        crt_vector_ctor_iterator(hotspots + 1,0x40,*hotspots,(code *)hotspot_ctor,
-                     (code *)hotspot_dtor);
+        crt_vector_ctor_iterator(hotspots + 1,0x40,*hotspots,hotspot_ctor,
+                     hotspot_dtor);
         hotspots++;
       }
       eh_state = 0xffffffff;
@@ -8648,8 +8648,8 @@ void __thiscall dialog_create_controls(Dialog *self)
         hotspot_create
                   ((Hotspot *)(self->sprite_hotspots + i * 0x40),parent_190,i + 300,
                    (iptr)rect);
-        hotspot_set_click_callback((Hotspot *)(self->sprite_hotspots + i * 0x40),(iptr)dialog_on_sprite_click);
-        hotspot_set_dblclick_callback((Hotspot *)(self->sprite_hotspots + i * 0x40),(iptr)dialog_sprite_on_dblclick);
+        hotspot_set_click_callback((Hotspot *)(self->sprite_hotspots + i * 0x40),dialog_on_sprite_click);
+        hotspot_set_dblclick_callback((Hotspot *)(self->sprite_hotspots + i * 0x40),(CtrlNotifyFn)dialog_sprite_on_dblclick);
         y2 = y2 + self->section_gap + count;
         i++;
       }
@@ -8664,8 +8664,8 @@ void __thiscall dialog_create_controls(Dialog *self)
       }
       else {
         *edits = x;
-        crt_vector_ctor_iterator(edits + 1,0x48,*edits,(code *)edit_ctor,
-                     (code *)edit_dtor);
+        crt_vector_ctor_iterator(edits + 1,0x48,*edits,edit_ctor,
+                     edit_dtor);
         edits++;
       }
       eh_state = 0xffffffff;
@@ -8686,7 +8686,7 @@ void __thiscall dialog_create_controls(Dialog *self)
                    self->edit_x + self->edit_label_width,count * i + self->edit_y,text,(const char *)value)
         ;
         if (2 < game.multiplayer) {
-          edit_set_change_callback((EditControl *)(self->edit_controls + i * 0x48),(iptr)dialog_edit_on_change)
+          edit_set_change_callback((EditControl *)(self->edit_controls + i * 0x48),(CtrlNotifyFn)dialog_edit_on_change)
           ;
         }
         edit_set_max_len
@@ -8703,8 +8703,8 @@ void __thiscall dialog_create_controls(Dialog *self)
       }
       else {
         *buttons = count;
-        crt_vector_ctor_iterator(buttons + 1,0x3c,*buttons,(code *)button_ctor,
-                     (code *)ctrl_dtor);
+        crt_vector_ctor_iterator(buttons + 1,0x3c,*buttons,button_ctor,
+                     ctrl_dtor);
         buttons++;
       }
       eh_state = 0xffffffff;
@@ -8738,10 +8738,10 @@ void __thiscall dialog_create_controls(Dialog *self)
         ctrl_set_default_button((Button *)(self->button_controls + i * 0x3c));
       }
       button_set_callback
-                ((Button *)(self->button_controls + i * 0x3c),(iptr)dialog_on_button_click);
+                ((Button *)(self->button_controls + i * 0x3c),dialog_on_button_click);
     }
-    wnd_set_keydown_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_on_keydown);
-    wnd_set_char_handler((WndHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_on_char);
+    wnd_set_keydown_handler((WndHandlers *)(self->surf_wnd + 0x58),dialog_on_keydown);
+    wnd_set_char_handler((WndHandlers *)(self->surf_wnd + 0x58),(WndKeyFn)dialog_on_char);
     self->style_flags = self->style_flags | 0x200;
   }
   return;
@@ -8825,7 +8825,7 @@ void __cdecl dialog_on_sprite_click(int ctrl_id)
       }
     }
     else {
-      done = call_untyped(((code **)dialog_title_font_obj_block.active_dialog)[143], *sprite);
+      done = dialog_title_font_obj_block.active_dialog->on_sprite_click(*sprite);
       dialog_render(dialog_title_font_obj_block.active_dialog);
       if (done != 0) {
         dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
@@ -8843,7 +8843,7 @@ void __cdecl dialog_sprite_on_dblclick(void)
   int done;
   
   if (dialog_title_font_obj_block.active_dialog->on_sprite_dblclick != 0) {
-    done = call_untyped(((code **)dialog_title_font_obj_block.active_dialog)[144], 0);
+    done = dialog_title_font_obj_block.active_dialog->on_sprite_dblclick(0);
     if (done == 0) {
       dialog_render(dialog_title_font_obj_block.active_dialog);
     }
@@ -9632,7 +9632,7 @@ void __thiscall dialog_render(Dialog *self)
                   (sprite->sprite,(iptr)sprite_rect,self->surf_wnd,sprite_x2,sprite_y2);
       }
       else {
-        call_untyped((code *)self->on_draw_sprite, (i32)sprite->sprite,self->surf_wnd,sprite->id,sprite->field_04,sprite_x2,sprite_y2);
+        self->on_draw_sprite((i32)sprite->sprite,self->surf_wnd,sprite->id,sprite->field_04,sprite_x2,sprite_y2);
       }
       if (((self->style_flags & 0x20000) != 0) && ((i32 *)self->selected_sprite == ((i32 *)sprite))) {
         rect_set((iptr)((i8 *)&rect.left),sprite_x2 - 1,sprite_y2 - 1,sprite_w + sprite_x2,
@@ -9768,7 +9768,7 @@ u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
       }
       else {
         while ((self->style_flags & 0x400) == 0) {
-          result = call_untyped((code *)self->on_modal_poll, self);
+          result = self->on_modal_poll(self);
           if (result != 0) {
             dialog_end_current();
           }
@@ -10131,7 +10131,7 @@ Hotspot * __thiscall hotspot_vector_dtor(Hotspot *self,uint flags)
     }
   }
   else {
-    crt_vector_dtor_iterator(self,0x40,VECTOR_COUNT(self),(code *)hotspot_dtor);
+    crt_vector_dtor_iterator(self,0x40,VECTOR_COUNT(self),hotspot_dtor);
     operator_delete(&VECTOR_COUNT(self));
   }
   return self;
@@ -10318,7 +10318,7 @@ void __thiscall wnd_call_paint_cb(SurfaceWindow *self)
 
 {
   if (self->on_paint != 0) {
-    call_untyped((code *)self->on_paint);
+    self->on_paint();
   }
   return;
 }
@@ -11367,7 +11367,7 @@ void __thiscall wnd_run_modal_loop(ModalMenuWindow *self)
     while (self->modal_running != 0) {
       win_pump_one_message();
       if (self->on_modal_idle != 0) {
-        call_untyped((code *)self->on_modal_idle);
+        self->on_modal_idle();
       }
     }
     if (wnd_modal_depth == 0) {
@@ -11425,7 +11425,7 @@ bool __thiscall wnd_fire_menu_select(ModalMenuWindow *self,i32 item_id)
   
   has_handler = self->on_menu_select != 0;
   if (has_handler) {
-    call_untyped((code *)self->on_menu_select, item_id);
+    self->on_menu_select(item_id);
   }
   return has_handler;
 }
@@ -11494,7 +11494,7 @@ void __thiscall hotspot_fire_enter(Hotspot *self,i32 arg)
 
 {
   if (self->on_enter != 0) {
-    call_untyped((code *)self->on_enter, arg);
+    self->on_enter(arg);
   }
   return;
 }
@@ -11504,7 +11504,7 @@ void __thiscall hotspot_fire_leave(Hotspot *self,i32 event_arg)
 
 {
   if (self->on_leave != 0) {
-    call_untyped((code *)self->on_leave, event_arg);
+    self->on_leave(event_arg);
   }
   return;
 }
@@ -11514,7 +11514,7 @@ void __thiscall hotspot_fire_click(Hotspot *self,i32 event_arg)
 
 {
   if (self->on_click != 0) {
-    call_untyped((code *)self->on_click, event_arg);
+    self->on_click(event_arg);
   }
   return;
 }
@@ -11524,7 +11524,7 @@ void __thiscall hotspot_fire_press(Hotspot *self,i32 event_arg)
 
 {
   if (self->on_press != 0) {
-    call_untyped((code *)self->on_press, event_arg);
+    self->on_press(event_arg);
   }
   return;
 }
@@ -11534,7 +11534,7 @@ void __thiscall hotspot_fire_dblclick(Hotspot *self,i32 event_arg)
 
 {
   if (self->on_dblclick != 0) {
-    call_untyped((code *)self->on_dblclick, event_arg);
+    self->on_dblclick(event_arg);
   }
   return;
 }
@@ -12515,7 +12515,7 @@ void __thiscall wnd_call_mousemove(WndHandlers *self,i32 x,i32 y)
 
 {
   if (self->on_mouse_move != 0) {
-    call_untyped((code *)self->on_mouse_move, x,y);
+    self->on_mouse_move(x,y);
   }
   return;
 }
@@ -12525,7 +12525,7 @@ void __thiscall wnd_call_lbuttondown(WndHandlers *self,iptr x,iptr y)
 
 {
   if (self->on_lbutton_down != 0) {
-    call_untyped((code *)self->on_lbutton_down, x,y);
+    self->on_lbutton_down(x,y);
   }
   return;
 }
@@ -12535,7 +12535,7 @@ void __thiscall wnd_call_lbuttonup_raw(WndHandlers *self,iptr x,iptr y)
 
 {
   if (self->on_lbutton_up_raw != 0) {
-    call_untyped((code *)self->on_lbutton_up_raw, x,y);
+    self->on_lbutton_up_raw(x,y);
   }
   return;
 }
@@ -12545,7 +12545,7 @@ void __thiscall wnd_call_lbuttonup(WndHandlers *self,i32 x,i32 y)
 
 {
   if (self->on_lbutton_up != 0) {
-    call_untyped((code *)self->on_lbutton_up, x,y);
+    self->on_lbutton_up(x,y);
   }
   return;
 }
@@ -12555,7 +12555,7 @@ void __thiscall wnd_call_rbuttondown(WndHandlers *self,iptr x,iptr y)
 
 {
   if (self->on_rbutton_down != 0) {
-    call_untyped((code *)self->on_rbutton_down, x,y);
+    self->on_rbutton_down(x,y);
   }
   return;
 }
@@ -12565,7 +12565,7 @@ void __thiscall wnd_call_rbuttonup_raw(WndHandlers *self,i32 x,i32 y)
 
 {
   if (self->on_rbutton_up_raw != 0) {
-    call_untyped((code *)self->on_rbutton_up_raw, x,y);
+    self->on_rbutton_up_raw(x,y);
   }
   return;
 }
@@ -12575,7 +12575,7 @@ void __thiscall wnd_call_rbuttonup(WndHandlers *self,i32 x,i32 y)
 
 {
   if (self->on_rbutton_up != 0) {
-    call_untyped((code *)self->on_rbutton_up, x,y);
+    self->on_rbutton_up(x,y);
   }
   return;
 }
@@ -12585,7 +12585,7 @@ void __thiscall wnd_call_dblclick(WndHandlers *self,i32 x,i32 y)
 
 {
   if (self->on_dblclick != 0) {
-    call_untyped((code *)self->on_dblclick, x,y);
+    self->on_dblclick(x,y);
   }
   return;
 }
@@ -12595,7 +12595,7 @@ void __thiscall wnd_call_keydown_pre(WndHandlers *self,i32 key)
 
 {
   if (self->on_key_down_pre != 0) {
-    call_untyped((code *)self->on_key_down_pre, key);
+    self->on_key_down_pre(key);
   }
   return;
 }
@@ -12605,7 +12605,7 @@ void __thiscall wnd_call_keyup(WndHandlers *self,i32 key)
 
 {
   if (self->on_key_up != 0) {
-    call_untyped((code *)self->on_key_up, key);
+    self->on_key_up(key);
   }
   return;
 }
@@ -12615,7 +12615,7 @@ void __thiscall wnd_call_keydown(WndHandlers *self,i32 key)
 
 {
   if (self->on_key_down != 0) {
-    call_untyped((code *)self->on_key_down, key);
+    self->on_key_down(key);
   }
   return;
 }
@@ -12625,7 +12625,7 @@ void __thiscall wnd_call_char(WndHandlers *self,i32 ch)
 
 {
   if (self->on_char != 0) {
-    call_untyped((code *)self->on_char, ch);
+    self->on_char(ch);
   }
   return;
 }
@@ -12640,7 +12640,7 @@ i32 __thiscall wnd_call_close(WndHandlers *self)
     result = 0;
   }
   else {
-    result = call_untyped((code *)self->on_close);
+    result = self->on_close();
   }
   return result;
 }
@@ -12650,7 +12650,7 @@ void __thiscall wnd_call_minimize(WndHandlers *self)
 
 {
   if (self->on_minimize != 0) {
-    call_untyped((code *)self->on_minimize);
+    self->on_minimize();
   }
   return;
 }
@@ -12660,7 +12660,7 @@ void __thiscall wnd_call_restore(WndHandlers *self)
 
 {
   if (self->on_restore != 0) {
-    call_untyped((code *)self->on_restore);
+    self->on_restore();
   }
   return;
 }
@@ -12670,7 +12670,7 @@ void __thiscall wnd_call_setfocus(WndHandlers *self)
 
 {
   if (self->on_set_focus != 0) {
-    call_untyped((code *)self->on_set_focus);
+    self->on_set_focus();
   }
   return;
 }
@@ -12680,7 +12680,7 @@ void __thiscall wnd_call_size(WndHandlers *self,i32 size_type)
 
 {
   if (self->on_size != 0) {
-    call_untyped((code *)self->on_size, size_type);
+    self->on_size(size_type);
   }
   return;
 }
@@ -12690,7 +12690,7 @@ void __thiscall wnd_call_move(WndHandlers *self,i32 x,i32 y)
 
 {
   if (self->on_move != 0) {
-    call_untyped((code *)self->on_move, x,y);
+    self->on_move(x,y);
   }
   return;
 }
@@ -12700,7 +12700,7 @@ void __thiscall wnd_call_msg44(WndHandlers *self,iptr notify_arg)
 
 {
   if (self->on_msg_44 != 0) {
-    call_untyped((code *)self->on_msg_44, notify_arg);
+    self->on_msg_44(notify_arg);
   }
   return;
 }
@@ -12710,7 +12710,7 @@ void __thiscall wnd_call_hscroll(WndHandlers *self,i32 scroll_pos)
 
 {
   if (self->on_hscroll != 0) {
-    call_untyped((code *)self->on_hscroll, scroll_pos);
+    self->on_hscroll(scroll_pos);
   }
   return;
 }
@@ -12720,7 +12720,7 @@ void __thiscall wnd_call_hscroll_track(WndHandlers *self,i32 scroll_pos)
 
 {
   if (self->on_hscroll_track != 0) {
-    call_untyped((code *)self->on_hscroll_track, scroll_pos);
+    self->on_hscroll_track(scroll_pos);
   }
   return;
 }
@@ -12730,7 +12730,7 @@ void __thiscall wnd_call_vscroll(WndHandlers *self,i32 scroll_pos)
 
 {
   if (self->on_vscroll != 0) {
-    call_untyped((code *)self->on_vscroll, scroll_pos);
+    self->on_vscroll(scroll_pos);
   }
   return;
 }
@@ -12740,7 +12740,7 @@ void __thiscall wnd_call_vscroll_track(WndHandlers *self,i32 scroll_pos)
 
 {
   if (self->on_vscroll_track != 0) {
-    call_untyped((code *)self->on_vscroll_track, scroll_pos);
+    self->on_vscroll_track(scroll_pos);
   }
   return;
 }
@@ -12750,7 +12750,7 @@ void __thiscall wnd_call_msg4c8(WndHandlers *self,i32 msg_arg)
 
 {
   if (self->on_msg_4c8 != 0) {
-    call_untyped((code *)self->on_msg_4c8, msg_arg);
+    self->on_msg_4c8(msg_arg);
   }
   return;
 }
@@ -12760,7 +12760,7 @@ void __thiscall wnd_call_entersizemove(WndHandlers *self)
 
 {
   if (self->on_enter_size_move != 0) {
-    call_untyped((code *)self->on_enter_size_move);
+    self->on_enter_size_move();
   }
   return;
 }
@@ -12770,7 +12770,7 @@ void __thiscall wnd_call_exitsizemove(WndHandlers *self)
 
 {
   if (self->on_exitsizemove != 0) {
-    call_untyped((code *)self->on_exitsizemove);
+    self->on_exitsizemove();
   }
   return;
 }
@@ -12790,7 +12790,7 @@ bool __thiscall wnd_call_menu_pos_command(ModalMenuWindow *self,i32 menu_pos,i32
   
   has_handler = self->on_menu_pos_command != 0;
   if (has_handler) {
-    call_untyped((code *)self->on_menu_pos_command, menu_pos,item_pos);
+    self->on_menu_pos_command(menu_pos,item_pos);
   }
   return has_handler;
 }
@@ -12803,7 +12803,7 @@ bool __thiscall wnd_call_command(ModalMenuWindow *self,i32 cmd_id)
   
   has_handler = self->on_command != 0;
   if (has_handler) {
-    call_untyped((code *)self->on_command, cmd_id);
+    self->on_command(cmd_id);
   }
   return has_handler;
 }
@@ -12873,7 +12873,7 @@ void __thiscall wnd_call_mci_done(WndOnMciDoneView *self)
 
 {
   if (self->on_mci_done != 0) {
-    call_untyped((code *)self->on_mci_done);
+    self->on_mci_done();
   }
   return;
 }
@@ -13067,7 +13067,7 @@ void __thiscall ddwin_call_activate_app(DDWindowActivateView *self,i32 active)
 
 {
   if (self->on_activate_app != 0) {
-    call_untyped((code *)self->on_activate_app, active);
+    self->on_activate_app(active);
   }
   return;
 }

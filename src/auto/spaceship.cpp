@@ -353,10 +353,10 @@ uint __thiscall spaceship_wnd_create(SpaceshipWindow *self)
                     ((DibSurface *)&self->control_list,499,10,0xec,(iptr)(self->ship_palette));
   if (loaded != 0) {
     wnd_center((WndBase *)self->frame_wnd_base);
-    wnd_set_keydown_handler((WndHandlers *)self->frame_handlers,(iptr)spaceship_wnd_on_key);
-    wnd_set_mousemove_handler((WndHandlers *)self->frame_handlers,(iptr)spaceship_wnd_on_mousemove);
-    wnd_set_lbuttondown_handler((WndHandlers *)self->frame_handlers,(iptr)spaceship_wnd_on_lbuttondown);
-    wnd_set_lbuttonup_any_handler((WndHandlers *)self->frame_handlers,(iptr)spaceship_wnd_on_lbuttonup);
+    wnd_set_keydown_handler((WndHandlers *)self->frame_handlers,spaceship_wnd_on_key);
+    wnd_set_mousemove_handler((WndHandlers *)self->frame_handlers,spaceship_wnd_on_mousemove);
+    wnd_set_lbuttondown_handler((WndHandlers *)self->frame_handlers,spaceship_wnd_on_lbuttondown);
+    wnd_set_lbuttonup_any_handler((WndHandlers *)self->frame_handlers,spaceship_wnd_on_lbuttonup);
   }
   return (uint)(loaded != 0);
 }
@@ -420,11 +420,11 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *self)
       game_timer_destroy(self->anim_timer);
     }
     if (self->launch_state == 3) {
-      timer = game_timer_create((iptr)spaceship_wnd_starfield_tick,5,0xffffffff);
+      timer = game_timer_create((TimerFn)spaceship_wnd_starfield_tick,5,0xffffffff);
       self->flight_timer = timer;
     }
     else {
-      timer = game_timer_create((iptr)spaceship_wnd_type_tick,0x3c,0xffffffff);
+      timer = game_timer_create((TimerFn)spaceship_wnd_type_tick,0x3c,0xffffffff);
       self->anim_timer = timer;
     }
     wnd_handle_show_raise(self);
@@ -445,7 +445,7 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *self)
     wnd_set_capture((WndBase *)self->frame_wnd_base);
     input_flush_events();
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)self->frame_wnd_base,(iptr)spaceship_wnd_net_idle);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)self->frame_wnd_base,spaceship_wnd_net_idle);
     }
     editor_text_edit_block.spaceship_wnd_open_ticks_i32 = timer_ticks();
     wnd_run_modal_loop((ModalMenuWindow *)self->frame_wnd_base);
@@ -525,7 +525,7 @@ void __thiscall spaceship_wnd_present(SpaceshipWindow *self)
         SetRect(&screen_rect2,0,0,0x280,0x1e0);
         gfx_dissolve_blit((iptr)&self->control_list,(iptr)&screen_rect2,5,1);
         spaceship_wnd_draw_close_btn(self,1,1);
-        value = game_timer_create((iptr)spaceship_wnd_type_tick,10,0xffffffff);
+        value = game_timer_create((TimerFn)spaceship_wnd_type_tick,10,0xffffffff);
         self->anim_timer = value;
         spaceship_wnd_setup_hotspots(self);
         spaceship_wnd_draw_buttons(self);
@@ -534,7 +534,7 @@ void __thiscall spaceship_wnd_present(SpaceshipWindow *self)
         wnd_set_capture((WndBase *)self->frame_wnd_base);
         input_flush_events();
         if (2 < game.multiplayer) {
-          wnd_set_modal_idle_callback((ModalMenuWindow *)self->frame_wnd_base,(iptr)spaceship_wnd_net_idle);
+          wnd_set_modal_idle_callback((ModalMenuWindow *)self->frame_wnd_base,spaceship_wnd_net_idle);
         }
         editor_text_edit_block.spaceship_wnd_open_ticks_i32 = timer_ticks();
         wnd_run_modal_loop((ModalMenuWindow *)self->frame_wnd_base);
@@ -755,7 +755,7 @@ uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *self,int allow_skip)
         wnd_flush_paint();
       }
       if (self->launch_state == 1) {
-        timer = game_timer_create((iptr)spaceship_wnd_blink_launch_btn,500,0xffffffff);
+        timer = game_timer_create((TimerFn)spaceship_wnd_blink_launch_btn,500,0xffffffff);
         self->blink_timer = timer;
       }
       self->launched = 1;
@@ -890,9 +890,9 @@ void __thiscall spaceship_play_launch_video(SpaceshipWindow *self)
     wnd_hide((WndBase *)((u8 *)self + 0x100));
     wnd_flush_paint();
     surface_fill((DibSurface *)self->launch_video_player,0);
-    wnd_set_lbuttonup_handler((WndHandlers *)(self->launch_video_player + 0x58),(iptr)spaceship_video_on_lbuttonup);
-    wnd_set_keydown_handler((WndHandlers *)(self->launch_video_player + 0x58),(iptr)spaceship_wnd_on_key);
-    avi_player_set_end_callback((AviPlayer *)self->launch_video_player,(iptr)spaceship_video_on_end);
+    wnd_set_lbuttonup_handler((WndHandlers *)(self->launch_video_player + 0x58),spaceship_video_on_lbuttonup);
+    wnd_set_keydown_handler((WndHandlers *)(self->launch_video_player + 0x58),spaceship_wnd_on_key);
+    avi_player_set_end_callback((AviPlayer *)self->launch_video_player,spaceship_video_on_end);
     wnd_center((WndBase *)(self->launch_video_player + 0x48));
     wnd_blit_surface((DibSurface *)self->launch_video_player);
     window_show((SurfaceWindow *)self->launch_video_player);
@@ -901,7 +901,7 @@ void __thiscall spaceship_play_launch_video(SpaceshipWindow *self)
     input_flush_events();
     wnd_set_capture((WndBase *)(self->launch_video_player + 0x48));
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)(self->launch_video_player + 0x48),(iptr)net_modal_idle_poll);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)(self->launch_video_player + 0x48),net_modal_idle_poll);
     }
     wnd_run_modal_loop((ModalMenuWindow *)(self->launch_video_player + 0x48));
     wnd_set_modal_idle_callback((ModalMenuWindow *)(self->launch_video_player + 0x48),0);
@@ -1308,13 +1308,13 @@ void __cdecl spaceship_wnd_on_lbuttonup(i32 x,i32 y)
     if ((((ship_wnd)->close_btn_pressed != 0) &&
         ((ship_wnd)->close_btn_pressed = 0, ship_wnd->launch_state == 1)
         ) && (ship_wnd->blink_timer == 0)) {
-      timer = game_timer_create((iptr)spaceship_wnd_blink_launch_btn,500,0xffffffff);
+      timer = game_timer_create((TimerFn)spaceship_wnd_blink_launch_btn,500,0xffffffff);
       ship_wnd->blink_timer = timer;
     }
     if ((((ship_wnd)->launch_btn_pressed != 0) &&
         ((ship_wnd)->launch_btn_pressed = 0, ship_wnd->launch_state == 1)
         ) && (ship_wnd->blink_timer == 0)) {
-      timer = game_timer_create((iptr)spaceship_wnd_blink_launch_btn,500,0xffffffff);
+      timer = game_timer_create((TimerFn)spaceship_wnd_blink_launch_btn,500,0xffffffff);
       ship_wnd->blink_timer = timer;
     }
   }
@@ -1337,13 +1337,13 @@ void __cdecl spaceship_wnd_on_mousemove(i32 x,i32 y)
     if ((((ship_wnd)->close_btn_pressed != 0) &&
         (spaceship_wnd_draw_close_btn(ship_wnd,1,1), ship_wnd->launch_state == 1)) &&
        (ship_wnd->blink_timer == 0)) {
-      timer = game_timer_create((iptr)spaceship_wnd_blink_launch_btn,500,0xffffffff);
+      timer = game_timer_create((TimerFn)spaceship_wnd_blink_launch_btn,500,0xffffffff);
       ship_wnd->blink_timer = timer;
     }
     if ((((ship_wnd)->launch_btn_pressed != 0) &&
         (spaceship_wnd_draw_launch_btn(ship_wnd,1,1), ship_wnd->launch_state == 1)) &&
        (ship_wnd->blink_timer == 0)) {
-      timer = game_timer_create((iptr)spaceship_wnd_blink_launch_btn,500,0xffffffff);
+      timer = game_timer_create((TimerFn)spaceship_wnd_blink_launch_btn,500,0xffffffff);
       ship_wnd->blink_timer = timer;
     }
   }
@@ -1359,7 +1359,7 @@ void __cdecl spaceship_wnd_on_mousemove(i32 x,i32 y)
     else {
       spaceship_wnd_draw_launch_btn(ship_wnd,1,1);
       if ((ship_wnd->launch_state == 1) && (ship_wnd->blink_timer == 0)) {
-        timer = game_timer_create((iptr)spaceship_wnd_blink_launch_btn,500,0xffffffff);
+        timer = game_timer_create((TimerFn)spaceship_wnd_blink_launch_btn,500,0xffffffff);
         ship_wnd->blink_timer = timer;
       }
     }
@@ -1376,7 +1376,7 @@ void __cdecl spaceship_wnd_on_mousemove(i32 x,i32 y)
     else {
       spaceship_wnd_draw_close_btn(ship_wnd,1,1);
       if ((ship_wnd->launch_state == 1) && (ship_wnd->blink_timer == 0)) {
-        timer = game_timer_create((iptr)spaceship_wnd_blink_launch_btn,500,0xffffffff);
+        timer = game_timer_create((TimerFn)spaceship_wnd_blink_launch_btn,500,0xffffffff);
         ship_wnd->blink_timer = timer;
       }
     }

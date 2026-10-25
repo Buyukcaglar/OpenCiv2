@@ -342,7 +342,7 @@ void __thiscall advisor_add_close_button(PictureWindow *self)
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             (&self->close_button,(iptr)parent_wnd2,100,(iptr)button_rect,(const char *)label);
-  button_set_callback(&self->close_button,(iptr)advisor_on_close_clicked);
+  button_set_callback(&self->close_button,(CtrlNotifyFn)advisor_on_close_clicked);
   ctrl_set_default_button(&self->close_button);
   ctrl_set_cancel_button(&self->close_button);
   return;
@@ -542,9 +542,9 @@ void __cdecl attitude_advisor_draw(void)
     scrollbar_set_range((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),0,max_row);
     scrollbar_set_pos((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
     scrollbar_set_page_size((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_rows_per_page);
-    scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)attitude_advisor_on_scroll);
+    scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),attitude_advisor_on_scroll);
     ctrl_show_and_redraw((Control *)((i8 *)&advisor_window_block.advisor_scrollbar));
-    wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),(iptr)attitude_advisor_on_click);
+    wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),attitude_advisor_on_click);
     advisor_window_block.advisor_controls_created = 1;
   }
   wnd_blit_surface((DibSurface *)((i8 *)&advisor_window_block.advisor_window));
@@ -592,7 +592,7 @@ void __cdecl attitude_advisor_show(iptr report_civ)
   picwnd_open((PictureWindow *)((i8 *)&advisor_window_block.advisor_window),4,4,0,600,400,0,0);
   advisor_window_block.advisor_report_civ = report_civ;
   advisor_add_close_button((PictureWindow *)((i8 *)&advisor_window_block.advisor_window));
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)attitude_advisor_draw);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),attitude_advisor_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   return;
@@ -869,7 +869,7 @@ void __cdecl defense_minister_draw(void)
                            ,bottom);
         scrollbar_create
                   ((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)frame_rect2,1);
-        scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)defense_minister_on_scroll);
+        scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),defense_minister_on_scroll);
       }
       value = int_clamp(type_count - 1,0,999);
       scrollbar_set_range((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),0,value);
@@ -964,20 +964,20 @@ void __cdecl defense_minister_show(iptr report_civ)
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
-  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(CtrlNotifyFn)advisor_on_close_clicked);
   ctrl_set_default_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
   label = (iptr)label_string(label_string_ids[0x159]);
   button_create
             ((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
-  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)defense_minister_on_toggle_view);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(CtrlNotifyFn)defense_minister_on_toggle_view);
   label = (iptr)label_string(label_string_ids[0x158]);
   button_create
             ((Button *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x66,(iptr)button_rect,(const char *)label);
-  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(iptr)defense_minister_on_toggle_view);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(CtrlNotifyFn)defense_minister_on_toggle_view);
   control_hide((Control *)((i8 *)&advisor_window_block.advisor_alt_toggle_button));
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)defense_minister_draw);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),defense_minister_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   return;
@@ -1324,9 +1324,9 @@ void __cdecl intel_report_draw(void)
       scrollbar_set_range((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),0,color);
       scrollbar_set_pos((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
       scrollbar_set_page_size((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),1);
-      scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)intel_report_on_scroll);
+      scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),intel_report_on_scroll);
       ctrl_show_and_redraw((Control *)((i8 *)&advisor_window_block.advisor_scrollbar));
-      wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),(iptr)intel_report_on_click);
+      wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),intel_report_on_click);
       advisor_window_block.advisor_controls_created = 1;
     }
   }
@@ -1459,21 +1459,21 @@ void __cdecl intel_report_show(iptr report_civ,iptr target_civ)
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
             ((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
-  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(CtrlNotifyFn)advisor_on_close_clicked);
   ctrl_set_default_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   ctrl_set_cancel_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
   label = (iptr)label_string(label_string_ids[0xc5]);
   button_create
             ((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
-  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)intel_report_on_cities_clicked);
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)intel_report_draw);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(CtrlNotifyFn)intel_report_on_cities_clicked);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),intel_report_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   do {
     intel_report_reopen = 0;
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),(iptr)advisor_mp_idle);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),advisor_mp_idle);
     }
     advisor_modal_start_ticks_i32 = timer_ticks();
     wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd));
@@ -1524,7 +1524,7 @@ void __cdecl foreign_minister_show(iptr civ)
         else {
           dlg_load_game_section(&dialog2,(const char *)&str_reportforeignmulti,0x2000001);
         }
-        dialog_set_option_draw_fn(&dialog2,(iptr)foreign_minister_draw_civ_city);
+        dialog_set_option_draw_fn(&dialog2,(DialogOptionDrawFn)foreign_minister_draw_civ_city);
         dialog_set_list_indent(&dialog2,0x4b,0);
         contact_count = 0;
         value = civ_has_wonder(civ,0x18);
@@ -1702,7 +1702,7 @@ void __cdecl foreign_minister_show(iptr civ)
           text_set_string_arg(1,(const char *)text);
           text = (iptr)(civ_name_plural(civ2));
           text_set_string_arg(2,(const char *)text);
-          dlg_pending_idle_callback = ((i8 *)mp_meeting_wait_idle);
+          dlg_pending_idle_callback = mp_meeting_wait_idle;
           civ_rating_title_font_block.mp_meeting_wait_start_i32 = timer_ticks();
           popup_result = popup_game_sprite_flags((const char *)&str_parleywaiting,0x2000001,(iptr)&popup_info_icon_sprite,0);
           if (net_session_block.nm_parley_cancel_count == 0) {
@@ -1713,14 +1713,14 @@ void __cdecl foreign_minister_show(iptr civ)
               mp_meeting_pending = 0;
             }
             else if (advisor_window_block.mp_meeting_reply < 1) {
-              dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+              dlg_pending_idle_callback = turn_popup_timeout_idle;
               popup_game_with_sprite((const char *)&str_parleygoaway,(iptr)&popup_info_icon_sprite,0);
               mp_meeting_pending = 0;
             }
             else if (advisor_window_block.mp_meeting_reply == 1) {
               advisor_window_block.mp_meeting_reply = -1;
               parley_wnd_block.other_civ = civ2;
-              dlg_pending_idle_callback = ((i8 *)mp_meeting_wait_idle);
+              dlg_pending_idle_callback = mp_meeting_wait_idle;
               civ_rating_title_font_block.mp_meeting_wait_start_i32 = timer_ticks();
               text = (iptr)(civ_name_plural(civ));
               text_set_string_arg(0,(const char *)text);
@@ -1734,20 +1734,20 @@ void __cdecl foreign_minister_show(iptr civ)
                   net_session_block.nm_parley_cancel_count = 0;
                   text = (iptr)(civ_name_plural(civ2));
                   text_set_string_arg(0,(const char *)text);
-                  dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+                  dlg_pending_idle_callback = turn_popup_timeout_idle;
                   popup_game_with_sprite((const char *)&str_parleycancel_2,(iptr)&popup_info_icon_sprite,0);
                   mp_meeting_pending = 0;
                 }
               }
               else {
                 parley_wnd_block.other_civ = -1;
-                dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+                dlg_pending_idle_callback = turn_popup_timeout_idle;
                 popup_game_with_sprite((const char *)&str_parleybusy,(iptr)&popup_info_icon_sprite,0);
                 mp_meeting_pending = 0;
               }
             }
             else {
-              dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+              dlg_pending_idle_callback = turn_popup_timeout_idle;
               popup_game_with_sprite((const char *)&str_parleybusy_2,(iptr)&popup_info_icon_sprite,0);
               mp_meeting_pending = 0;
             }
@@ -1756,7 +1756,7 @@ void __cdecl foreign_minister_show(iptr civ)
             net_session_block.nm_parley_cancel_count = 0;
             text = (iptr)(civ_name_plural(civ2));
             text_set_string_arg(0,(const char *)text);
-            dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+            dlg_pending_idle_callback = turn_popup_timeout_idle;
             popup_game_with_sprite((const char *)&str_parleycancel,(iptr)&popup_info_icon_sprite,0);
             parley_wnd_block.other_civ = -1;
             mp_meeting_pending = 0;
@@ -2274,11 +2274,11 @@ void __cdecl top_cities_show(iptr report_civ)
   picwnd_open((PictureWindow *)((i8 *)&advisor_window_block.advisor_window),8,8,1,600,400,0,0);
   advisor_window_block.advisor_report_civ = report_civ;
   advisor_add_close_button((PictureWindow *)((i8 *)&advisor_window_block.advisor_window));
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)top_cities_draw);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),top_cities_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),(iptr)advisor_mp_idle);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),advisor_mp_idle);
   }
   advisor_modal_start_ticks_i32 = timer_ticks();
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd));
@@ -2783,11 +2783,11 @@ void __cdecl demographics_show(iptr report_civ)
   picwnd_open((PictureWindow *)((i8 *)&advisor_window_block.advisor_window),9,9,1,600,400,0,0);
   advisor_window_block.advisor_report_civ = report_civ;
   advisor_add_close_button((PictureWindow *)((i8 *)&advisor_window_block.advisor_window));
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)demographics_draw);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),demographics_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),(iptr)advisor_mp_idle);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),advisor_mp_idle);
   }
   advisor_modal_start_ticks_i32 = timer_ticks();
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd));
@@ -3043,20 +3043,20 @@ iptr __cdecl hall_of_fame_show(int highlight)
     label = (iptr)label_string(label_string_ids[0x147]);
     button_create
               ((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
-    button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
+    button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(CtrlNotifyFn)advisor_on_close_clicked);
     ctrl_set_default_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
     ctrl_set_cancel_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
     rect_offset((iptr)button_rect,0xfffffed5,0);
     label = (iptr)label_string(label_string_ids[0x1be]);
     button_create
               ((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
-    button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)hall_of_fame_on_clear_clicked);
+    button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(CtrlNotifyFn)hall_of_fame_on_clear_clicked);
   }
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)hall_of_fame_draw);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),hall_of_fame_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),(iptr)advisor_mp_idle);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),advisor_mp_idle);
   }
   advisor_modal_start_ticks_i32 = timer_ticks();
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd));
@@ -3533,14 +3533,14 @@ void __cdecl credits_show(int section)
       ;
     }
     advisor_add_close_button((PictureWindow *)((i8 *)&advisor_window_block.advisor_window));
-    wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)credits_on_redraw);
+    wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),credits_on_redraw);
     music_play_track(3,0);
     wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
     window_show((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
     ui_flush_input();
-    timer_id = game_timer_create((iptr)credits_on_timer,0x32,0xffffffff);
+    timer_id = game_timer_create((TimerFn)credits_on_timer,0x32,0xffffffff);
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),(iptr)advisor_mp_idle);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd),advisor_mp_idle);
     }
     advisor_modal_start_ticks_i32 = timer_ticks();
     wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&advisor_window_block.advisor_wnd));
@@ -3759,8 +3759,8 @@ void __cdecl casualty_timeline_draw(void)
     rect_set((iptr)scroll_rect,(casualty_window_block.casualty_client_right - casualty_window_block.casualty_vscroll_width_i32) - 2,line_height,casualty_window_block.casualty_client_right - 2,
                        bottom);
     scrollbar_create((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),(iptr)&casualty_window_block.casualty_parent_wnd,200,(iptr)scroll_rect,1);
-    scrollbar_set_callback((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),(iptr)casualty_scrollbar_on_scroll);
-    wnd_set_dblclick_handler((WndHandlers *)((i8 *)&casualty_window_block.casualty_wnd_events),(iptr)casualty_timeline_on_dblclick);
+    scrollbar_set_callback((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),casualty_scrollbar_on_scroll);
+    wnd_set_dblclick_handler((WndHandlers *)((i8 *)&casualty_window_block.casualty_wnd_events),casualty_timeline_on_dblclick);
   }
   max_row = int_clamp(entry_count2 - 1,0,999);
   scrollbar_set_range((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),0,max_row);
@@ -3797,10 +3797,10 @@ void __cdecl casualty_timeline_show(iptr civ)
     label = (iptr)label_string(label_string_ids[0x147]);
     button_create
               ((Button *)((i8 *)&casualty_window_block.casualty_close_button),(iptr)&casualty_window_block.casualty_parent_wnd,100,(iptr)button_rect,(const char *)label);
-    button_set_callback((Button *)((i8 *)&casualty_window_block.casualty_close_button),(iptr)advisor_on_close_clicked);
+    button_set_callback((Button *)((i8 *)&casualty_window_block.casualty_close_button),(CtrlNotifyFn)advisor_on_close_clicked);
     ctrl_set_default_button((Button *)((i8 *)&casualty_window_block.casualty_close_button));
     ctrl_set_cancel_button((Button *)((i8 *)&casualty_window_block.casualty_close_button));
-    wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&casualty_window_block.casualty_window),(iptr)casualty_timeline_draw);
+    wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&casualty_window_block.casualty_window),casualty_timeline_draw);
     wnd_repaint((SurfaceWindow *)((i8 *)&casualty_window_block.casualty_window));
     window_show((SurfaceWindow *)((i8 *)&casualty_window_block.casualty_window));
   }
@@ -3927,8 +3927,8 @@ uint __thiscall throneroom_create_windows(ThroneRoomWindow *self)
               ((DibSurface *)(u8 *)&self->throne_surface_wnd,(const char *)&str_empty_68,0x800,0,0,0x280,0x1e0,(iptr)&self->control_list,
                (iptr)self);
     wnd_center((WndBase *)self->throne_wnd_base);
-    wnd_set_lbuttonup_handler((WndHandlers *)self->throne_handlers,(iptr)throneroom_on_click);
-    wnd_set_keydown_handler((WndHandlers *)self->throne_handlers,(iptr)throneroom_on_key);
+    wnd_set_lbuttonup_handler((WndHandlers *)self->throne_handlers,throneroom_on_click);
+    wnd_set_keydown_handler((WndHandlers *)self->throne_handlers,throneroom_on_key);
   }
   return (uint)(found != 0);
 }
@@ -3984,7 +3984,7 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *self)
     input_flush_events();
     wnd_set_capture((WndBase *)self->throne_wnd_base);
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,(iptr)net_modal_idle_poll);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,net_modal_idle_poll);
     }
     wnd_run_modal_loop((ModalMenuWindow *)self->throne_wnd_base);
     wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,0);
@@ -4023,7 +4023,7 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *self)
       input_flush_events();
       wnd_set_capture((WndBase *)self->throne_wnd_base);
       if (2 < game.multiplayer) {
-        wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,(iptr)net_modal_idle_poll);
+        wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,net_modal_idle_poll);
       }
       wnd_run_modal_loop((ModalMenuWindow *)self->throne_wnd_base);
       wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,0);
@@ -4055,7 +4055,7 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *self)
         self->choosing_item = 0;
         wnd_set_capture((WndBase *)self->throne_wnd_base);
         if (2 < game.multiplayer) {
-          wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,(iptr)net_modal_idle_poll);
+          wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,net_modal_idle_poll);
         }
         wnd_run_modal_loop((ModalMenuWindow *)self->throne_wnd_base);
         wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,0);
@@ -4089,7 +4089,7 @@ void __thiscall throneroom_run_view(ThroneRoomWindow *self)
     window_show((SurfaceWindow *)self->throne_surface_wnd);
     wnd_flush_paint();
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,(iptr)net_modal_idle_poll);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,net_modal_idle_poll);
     }
     wnd_run_modal_loop((ModalMenuWindow *)self->throne_wnd_base);
     wnd_set_modal_idle_callback((ModalMenuWindow *)self->throne_wnd_base,0);
@@ -4953,7 +4953,7 @@ i32 __thiscall defeat_movie_wnd_create(EndgameMovieWindow *self,uint civ)
       if (open_err == 0) {
         surface_fill((DibSurface *)self->media_wnd,0);
         wnd_center((WndBase *)self->movie_wnd_base);
-        avi_player_set_end_callback((AviPlayer *)self->media_wnd,(iptr)defeat_movie_on_video_end);
+        avi_player_set_end_callback((AviPlayer *)self->media_wnd,defeat_movie_on_video_end);
         SetRect((LPRECT)(self->movie_caption_rect),0x28,100,600,0x1e0);
         result = surface_get_height((DibSurface *)self->media_wnd);
         width = surface_get_width((DibSurface *)self->media_wnd);
@@ -5035,7 +5035,7 @@ void __thiscall defeat_movie_wnd_play(EndgameMovieWindow *self)
   }
   avi_player_play((AviPlayer *)self->media_wnd);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,(iptr)net_modal_idle_poll);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,net_modal_idle_poll);
   }
   wnd_run_modal_loop((ModalMenuWindow *)self->movie_wnd_base);
   wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,0);
@@ -5252,8 +5252,8 @@ i32 __thiscall arrival_movie_wnd_create(EndgameMovieWindow *self,iptr civ)
       if (open_err == 0) {
         surface_fill((DibSurface *)self->media_wnd,0);
         wnd_center((WndBase *)self->movie_wnd_base);
-        avi_player_set_end_callback((AviPlayer *)self->media_wnd,(iptr)arrival_movie_on_video_end);
-        avi_player_set_frame_callback((AviPlayer *)self->media_wnd,(iptr)arrival_movie_on_frame,0x2ab);
+        avi_player_set_end_callback((AviPlayer *)self->media_wnd,arrival_movie_on_video_end);
+        avi_player_set_frame_callback((AviPlayer *)self->media_wnd,arrival_movie_on_frame,0x2ab);
         SetRect((LPRECT)(self->movie_caption_rect),2,100,0x27e,0x1e0);
         result = surface_get_height((DibSurface *)self->media_wnd);
         width = surface_get_width((DibSurface *)self->media_wnd);
@@ -5341,7 +5341,7 @@ void __thiscall arrival_movie_wnd_play(EndgameMovieWindow *self)
   }
   avi_player_play((AviPlayer *)self->media_wnd);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,(iptr)net_modal_idle_poll);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,net_modal_idle_poll);
   }
   wnd_run_modal_loop((ModalMenuWindow *)self->movie_wnd_base);
   wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,0);
@@ -6330,10 +6330,10 @@ void __thiscall destroyed_civs_run(DestroyedCivsWindow *self)
   status = font_line_spacing(&font2);
   text_draw_centered((iptr)(self->media_wnd),(const char *)&map_views_block.text_buffer,0,0x1dc - status,width);
   wnd_blit_surface_rect((DibSurface *)self->media_wnd,(iptr)self->slot_sprites);
-  wnd_set_keydown_handler((WndHandlers *)self->destroyed_civs_handlers,(iptr)victory_screen_on_key);
-  wnd_set_lbuttonup_handler((WndHandlers *)self->destroyed_civs_handlers,(iptr)victory_screen_on_click);
+  wnd_set_keydown_handler((WndHandlers *)self->destroyed_civs_handlers,victory_screen_on_key);
+  wnd_set_lbuttonup_handler((WndHandlers *)self->destroyed_civs_handlers,(WndMouseFn)victory_screen_on_click);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,(iptr)net_modal_idle_poll);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,net_modal_idle_poll);
   }
   wnd_run_modal_loop((ModalMenuWindow *)self->movie_wnd_base);
   wnd_set_modal_idle_callback((ModalMenuWindow *)self->movie_wnd_base,0);
@@ -6756,7 +6756,7 @@ prompt_cheat_number:
       if (open_err == 0) {
         avi_player_set_palette((DibSurface *)&self->video_head,(iptr)&art_palette);
         wnd_set_palette((WndBase *)&self->video_window_head,(iptr)&art_palette);
-        avi_player_set_end_callback((AviPlayer *)&self->video_head,(iptr)council_on_video_end);
+        avi_player_set_end_callback((AviPlayer *)&self->video_head,council_on_video_end);
         council_draw_advisor_frames(self);
         result = 1;
       }
@@ -6796,7 +6796,7 @@ void __thiscall council_wnd_run_modal(CouncilWindow *self)
     avi_player_play((AviPlayer *)&self->video_head);
   }
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((ModalMenuWindow *)&self->window,(iptr)net_modal_idle_poll);
+    wnd_set_modal_idle_callback((ModalMenuWindow *)&self->window,net_modal_idle_poll);
   }
   wnd_run_modal_loop((ModalMenuWindow *)&self->window);
   wnd_set_modal_idle_callback((ModalMenuWindow *)&self->window,0);
@@ -6934,7 +6934,7 @@ void __thiscall council_create_buttons(CouncilWindow *self)
   label = (iptr)label_string(label_string_ids[0x9b]);
   button_create_with_callback
             ((Button *)&self->advisor_button_0,(iptr)parent1,0,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Button *)&self->advisor_button_0,(iptr)council_on_advisor_button);
+  button_set_callback((Button *)&self->advisor_button_0,(CtrlNotifyFn)council_on_advisor_button);
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (self == (CouncilWindow *)0x0) {
     parent2 = (Wnd *)0x0;
@@ -6945,7 +6945,7 @@ void __thiscall council_create_buttons(CouncilWindow *self)
   label = (iptr)label_string(label_string_ids[0x5b]);
   button_create_with_callback
             ((Button *)&self->advisor_button_1,(iptr)parent2,1,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Button *)&self->advisor_button_1,(iptr)council_on_advisor_button);
+  button_set_callback((Button *)&self->advisor_button_1,(CtrlNotifyFn)council_on_advisor_button);
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (self == (CouncilWindow *)0x0) {
     parent3 = (Wnd *)0x0;
@@ -6956,7 +6956,7 @@ void __thiscall council_create_buttons(CouncilWindow *self)
   label = (iptr)label_string(label_string_ids[0x45]);
   button_create_with_callback
             ((Button *)&self->advisor_button_2,(iptr)parent3,2,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Button *)&self->advisor_button_2,(iptr)council_on_advisor_button);
+  button_set_callback((Button *)&self->advisor_button_2,(CtrlNotifyFn)council_on_advisor_button);
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (self == (CouncilWindow *)0x0) {
     parent4 = (Wnd *)0x0;
@@ -6967,7 +6967,7 @@ void __thiscall council_create_buttons(CouncilWindow *self)
   label = (iptr)label_string(label_string_ids[0x1b8]);
   button_create_with_callback
             ((Button *)&self->advisor_button_3,(iptr)parent4,3,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Button *)&self->advisor_button_3,(iptr)council_on_advisor_button);
+  button_set_callback((Button *)&self->advisor_button_3,(CtrlNotifyFn)council_on_advisor_button);
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (self == (CouncilWindow *)0x0) {
     parent5 = (Wnd *)0x0;
@@ -6978,7 +6978,7 @@ void __thiscall council_create_buttons(CouncilWindow *self)
   label = (iptr)label_string(label_string_ids[0x1b9]);
   button_create_with_callback
             ((Button *)&self->advisor_button_4,(iptr)parent5,4,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Button *)&self->advisor_button_4,(iptr)council_on_advisor_button);
+  button_set_callback((Button *)&self->advisor_button_4,(CtrlNotifyFn)council_on_advisor_button);
   y = surface_get_height(self);
   y = (y - frame_bevel_width) - 1;
   right = surface_get_width(self);
@@ -6994,7 +6994,7 @@ void __thiscall council_create_buttons(CouncilWindow *self)
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create_with_callback
             ((Button *)&self->council_close_button,(iptr)parent6,0xca,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Button *)&self->council_close_button,(iptr)council_on_advisor_button);
+  button_set_callback((Button *)&self->council_close_button,(CtrlNotifyFn)council_on_advisor_button);
   return;
 }
 

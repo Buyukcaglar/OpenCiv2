@@ -392,7 +392,7 @@ i32 __cdecl app_startup_init(void)
       dlg_set_scale(3,2);
     }
     ui_init_screen_metrics();
-    err_register_cleanup_fn((iptr)app_fatal_cleanup);
+    err_register_cleanup_fn(app_fatal_cleanup);
     rules_parse_sections(1);
     frame_texture_load();
     city_load_citypref();
@@ -1356,7 +1356,7 @@ void __cdecl game_main(void)
       }
       if (2 < game.multiplayer) {
         menu_set_item_enabled((GameMenu *)((i8 *)&main_menu_block.main_menu),0x120,1);
-        dlg_default_idle_callback = ((i8 *)turn_popup_timeout_idle);
+        dlg_default_idle_callback = turn_popup_timeout_idle;
         is_host = net_is_host(&net_session_block);
         if (is_host != '\0') {
           net_send_rules_tables(0xff);
@@ -1409,7 +1409,7 @@ void __cdecl game_main(void)
         }
       }
       prefs_save_civ2dat();
-      dlg_default_idle_callback = (i8 *)0x0;
+      dlg_default_idle_callback = 0;
       scenario_events_loaded = 0;
       mp_turn_timer_stop(1);
       mp_mouse_watchdog_stop();
@@ -1583,7 +1583,7 @@ i32 __cdecl game_profile_popup(int is_join)
     count--;
   }
   str_append_int((iptr)&minimap_window_block.profile_count_text2,count);
-  dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+  dlg_pending_idle_callback = turn_popup_timeout_idle;
   result = popup_text_with_sprite((iptr)&str_game_7,(const char *)&str_gameprofile,(uint)(is_join != 0),(iptr)&popup_info_icon_sprite,0);
   return result;
 }
@@ -2439,9 +2439,9 @@ void __cdecl intro_play_opening_video(void)
       wnd_set_bg_color((WndBase *)&host_wnd,0);
       (*(i8 * *)&opening_video_player) = (i8 *)&player;
       avi_player_create(&player,(iptr)&str_empty_83,0x800,0,0);
-      wnd_set_lbuttonup_handler(&player.window.wnd_handlers,(iptr)intro_video_on_click);
-      wnd_set_keydown_handler(&player.window.wnd_handlers,(iptr)intro_video_on_keydown);
-      avi_player_set_end_callback(&player,(iptr)intro_video_on_end);
+      wnd_set_lbuttonup_handler(&player.window.wnd_handlers,(WndMouseFn)intro_video_on_click);
+      wnd_set_keydown_handler(&player.window.wnd_handlers,intro_video_on_keydown);
+      avi_player_set_end_callback(&player,intro_video_on_end);
       avi_player_set_double_size(&player,1);
       open_rc = avi_player_open(&player,(const char *)path);
       if (open_rc == 0) {
@@ -2454,7 +2454,7 @@ void __cdecl intro_play_opening_video(void)
         avi_player_play(&player);
         wnd_set_capture((WndBase *)&player.window);
         if (2 < game.multiplayer) {
-          wnd_set_modal_idle_callback((ModalMenuWindow *)&player.window,(iptr)net_modal_idle_poll);
+          wnd_set_modal_idle_callback((ModalMenuWindow *)&player.window,net_modal_idle_poll);
         }
         wnd_run_modal_loop((ModalMenuWindow *)&player.window);
         wnd_set_modal_idle_callback((ModalMenuWindow *)&player.window,0);
@@ -5229,7 +5229,7 @@ void __cdecl game_play_loop(void)
           casualties = net_session_block.casualty_counts[(*(i8 *)&human_civ)] -
                      net_session_block.casualty_reported_counts[(*(i8 *)&human_civ)];
           if (civ_saved_cursor_x_block.autoplay_active == 0) {
-            dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+            dlg_pending_idle_callback = turn_popup_timeout_idle;
             name_str = (char *)civ_leader_title((*(i8 *)&human_civ));
             text_set_string_arg(0,name_str);
             name_str = (civ_leader_name((*(i8 *)&human_civ)));
@@ -5396,7 +5396,7 @@ i32 __cdecl game_mp_client_turn_loop(void)
   resume_civ = (*(byte *)&turn_resume_civ);
   if ((1 << ((byte)human_civ[0] & 0x1f) & (uint)game.human_players) == 0) {
     net_heartbeat_send(net_session_block.net_slot_civs[0]);
-    dlg_pending_idle_callback = ((i8 *)net_client_hot_wait_idle);
+    dlg_pending_idle_callback = net_client_hot_wait_idle;
     popup_game_sprite_flags((const char *)&str_clienthotwait,0x2000000,(iptr)&popup_info_icon_sprite,0);
     resume_civ = (*(byte *)&turn_resume_civ);
   }
@@ -5460,7 +5460,7 @@ turn_loop:
       casualties = net_session_block.casualty_counts[human_civ[0]] -
                  net_session_block.casualty_reported_counts[human_civ[0]];
       if (civ_saved_cursor_x_block.autoplay_active == 0) {
-        dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+        dlg_pending_idle_callback = turn_popup_timeout_idle;
         name_str = (char *)civ_leader_title(human_civ[0]);
         text_set_string_arg(0,name_str);
         name_str = civ_leader_name(human_civ[0]);
@@ -5718,7 +5718,7 @@ end_loop:
           casualties = net_session_block.casualty_counts[human_civ[0]] -
                      net_session_block.casualty_reported_counts[human_civ[0]];
           if (civ_saved_cursor_x_block.autoplay_active == 0) {
-            dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+            dlg_pending_idle_callback = turn_popup_timeout_idle;
             name_str = (char *)civ_leader_title(human_civ[0]);
             text_set_string_arg(0,name_str);
             name_str = civ_leader_name(human_civ[0]);
@@ -10744,7 +10744,7 @@ close_timer_dialog:
     net_session_block.net_vote_replies_pending = net_session_block.net_player_count[0] - 1;
     net_session_block.net_vote_status = 0;
     net_send_text_args(0x40,0xff,2,0,0,0);
-    dlg_pending_idle_callback = ((i8 *)net_vote_wait_idle_cb);
+    dlg_pending_idle_callback = net_vote_wait_idle_cb;
     dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
     minutes = popup_game_sprite_flags((const char *)&str_newturntimerserver,0x2000001,(iptr)&popup_info_icon_sprite,0);
     if (((minutes < 0) || (net_session_block.net_vote_status == -1)) || (net_session_block.net_vote_replies_pending != 0)) {
@@ -10879,7 +10879,7 @@ tribe_menu_loop:
                  -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
     }
     if (2 < game_mode) {
-      dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
+      dlg_pending_idle_callback = net_pump_idle_cb;
     }
     choice = dlg_show_modal(&dlg,0);
     snd_play_effect(0x6a,0,0,0);
@@ -11035,7 +11035,7 @@ count_available_tribes:
     dlg.result_id = 0;
     dlg.result_extra = 0;
     if (2 < game_mode) {
-      dlg_pending_idle_callback = ((i8 *)net_lock_wait_idle_cb);
+      dlg_pending_idle_callback = net_lock_wait_idle_cb;
     }
     leader2 = dlg_show_modal(&dlg,0);
     sel_tribe = radiogrp_get_selected((RadioGroup *)dlg.radio_group);
@@ -11146,7 +11146,7 @@ apply_tribe:
                         + 1));
           }
           if (2 < game_mode) {
-            dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
+            dlg_pending_idle_callback = net_pump_idle_cb;
           }
           cancelled = dialog_run_modal(&dlg,(iptr)input_text,0);
         } while (input_text[0] == '\0');
@@ -11227,7 +11227,7 @@ apply_tribe:
                         + 1));
           }
           if (2 < game_mode) {
-            dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
+            dlg_pending_idle_callback = net_pump_idle_cb;
           }
           choice = dlg_show_modal(&dlg,0);
           snd_play_effect(0x6a,0,0,0);
@@ -11297,7 +11297,7 @@ apply_tribe:
                         + 1));
           }
           if (2 < game_mode) {
-            dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
+            dlg_pending_idle_callback = net_pump_idle_cb;
           }
           choice = dlg_show_modal(&dlg,0);
           if (choice == 0) {
@@ -11346,7 +11346,7 @@ apply_tribe:
                      ));
       }
       if (2 < game_mode) {
-        dlg_pending_idle_callback = ((i8 *)net_pump_idle_cb);
+        dlg_pending_idle_callback = net_pump_idle_cb;
       }
       choice = dlg_show_modal(&dlg,0);
       if ((net_session_block.nm_server_canceled_count != 0) || (net_session_block.nm_lost_server_on_join_count != 0)) {
@@ -15611,7 +15611,7 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x237]);
   button_create
             (&self->add_trigger_button,(iptr)parent2,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->add_trigger_button,(iptr)events_editor_on_add_trigger);
+  button_set_callback(&self->add_trigger_button,(CtrlNotifyFn)events_editor_on_add_trigger);
   x = x + self->button_width_u + 3;
   rect_set_xywh((iptr)rect,x,y,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -15623,7 +15623,7 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x238]);
   button_create
             (&self->edit_trigger_button,(iptr)parent22,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->edit_trigger_button,(iptr)events_editor_on_edit_trigger);
+  button_set_callback(&self->edit_trigger_button,events_editor_on_edit_trigger);
   rect_set_xywh((iptr)rect,x + self->button_width_u + 3,y,self->button_width_u,
                      self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -15635,7 +15635,7 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x239]);
   button_create
             ((Button *)((u8 *)&self->delete_trigger_button_u),(iptr)parent3,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Button *)((u8 *)&self->delete_trigger_button_u),(iptr)events_editor_on_delete_trigger);
+  button_set_callback((Button *)((u8 *)&self->delete_trigger_button_u),(CtrlNotifyFn)events_editor_on_delete_trigger);
   y = self->client_y + 0x13a;
   x = self->client_x + 0x32;
   rect_set_xywh((iptr)rect,x,y,self->button_width_u,self->button_height_u);
@@ -15648,7 +15648,7 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x237]);
   button_create
             (&self->add_action_button,(iptr)parent7,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->add_action_button,(iptr)events_editor_on_add_action);
+  button_set_callback(&self->add_action_button,(CtrlNotifyFn)events_editor_on_add_action);
   x = x + self->button_width_u + 3;
   rect_set_xywh((iptr)rect,x,y,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -15660,7 +15660,7 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x238]);
   button_create
             (&self->edit_action_button,(iptr)parent8,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->edit_action_button,(iptr)events_editor_on_edit_action);
+  button_set_callback(&self->edit_action_button,events_editor_on_edit_action);
   rect_set_xywh((iptr)rect,x + self->button_width_u + 3,y,self->button_width_u,
                      self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -15672,7 +15672,7 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x239]);
   button_create
             (&self->delete_action_button,(iptr)parent9,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->delete_action_button,(iptr)events_editor_on_delete_action);
+  button_set_callback(&self->delete_action_button,(CtrlNotifyFn)events_editor_on_delete_action);
   rect_set_xywh((iptr)rect,self->client_x + 0x32,self->client_y + 0x1b,0x1cb,0x6e);
   x = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
@@ -15685,8 +15685,8 @@ void __thiscall events_editor_run(EditorWindow *self)
   listbox_create
             (&self->trigger_listbox,(iptr)list_parent,x,(iptr)rect);
   listbox_set_font(&self->trigger_listbox,(iptr)&editor_font_block.editor_font);
-  listbox_set_select_callback(&self->trigger_listbox,(iptr)events_editor_fill_actions);
-  listbox_set_dblclick_callback(&self->trigger_listbox,(iptr)events_editor_on_edit_trigger);
+  listbox_set_select_callback(&self->trigger_listbox,events_editor_fill_actions);
+  listbox_set_dblclick_callback(&self->trigger_listbox,events_editor_on_edit_trigger);
   events_editor_fill_triggers();
   listbox_set_cur_sel(&self->trigger_listbox,0);
   rect_set_xywh((iptr)rect,self->client_x + 0x32,self->client_y + 0xc5,0x1cb,0x6e);
@@ -15701,8 +15701,8 @@ void __thiscall events_editor_run(EditorWindow *self)
   listbox_create
             (&self->action_listbox,(iptr)list_parent2,x,(iptr)rect);
   listbox_set_font(&self->action_listbox,(iptr)&editor_font_block.editor_font);
-  listbox_set_select_callback(&self->action_listbox,(iptr)events_editor_update_buttons);
-  listbox_set_dblclick_callback(&self->action_listbox,(iptr)events_editor_on_edit_action);
+  listbox_set_select_callback(&self->action_listbox,events_editor_update_buttons);
+  listbox_set_dblclick_callback(&self->action_listbox,events_editor_on_edit_action);
   events_editor_fill_actions(0);
   events_editor_update_buttons(0);
   self->button_width_u = (int)(self->client_width - 8) / 3;
@@ -15718,7 +15718,7 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
             (&self->ok_button,(iptr)parent4,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->ok_button,(iptr)events_editor_on_ok);
+  button_set_callback(&self->ok_button,(CtrlNotifyFn)events_editor_on_ok);
   x = x + self->button_width_u + 2;
   rect_set_xywh((iptr)rect,x,y,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -15730,7 +15730,7 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
             (&self->help_button,(iptr)parent5,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->help_button,(iptr)events_editor_on_help);
+  button_set_callback(&self->help_button,(CtrlNotifyFn)events_editor_on_help);
   rect_set_xywh((iptr)rect,x + self->button_width_u + 2,y,self->button_width_u,
                      self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -15742,11 +15742,11 @@ void __thiscall events_editor_run(EditorWindow *self)
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
             (&self->cancel_button,(iptr)parent6,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->cancel_button,(iptr)events_editor_on_cancel);
+  button_set_callback(&self->cancel_button,(CtrlNotifyFn)events_editor_on_cancel);
   ctrl_set_cancel_button(&self->cancel_button);
   wnd_set_keyboard_nav(&self->window,0);
   editor_value_clamped = 0;
-  wnd_set_redraw_callback(self,(iptr)events_editor_focus_redraw);
+  wnd_set_redraw_callback(self,events_editor_focus_redraw);
   wnd_repaint(self);
   window_show(self);
   wnd_run_modal_loop((ModalMenuWindow *)&self->window);
@@ -17718,9 +17718,9 @@ setup_picwnd_show(SetupPicWindow *self,i32 x_pos,i32 y_pos,u32 image_id)
     frame_wnd_create
               (self,0,2,rect.left,rect.top,width - sys_dlgframe_w2,height,x,y,
                style);
-    wnd_set_close_handler(&self->window.wnd_handlers,(iptr)setup_picwnd_on_close);
-    wnd_set_redraw_callback(self,(iptr)setup_picwnd_on_redraw);
-    wnd_set_restore_handler(&self->window.wnd_handlers,(iptr)setup_picwnd_on_restore);
+    wnd_set_close_handler(&self->window.wnd_handlers,setup_picwnd_on_close);
+    wnd_set_redraw_callback(self,setup_picwnd_on_redraw);
+    wnd_set_restore_handler(&self->window.wnd_handlers,setup_picwnd_on_restore);
     wnd_repaint(self);
     window_show(self);
   }
@@ -18755,17 +18755,17 @@ void __cdecl status_wnd_open(void)
   frame_wnd_create
             ((FrameWindow *)((i8 *)&status_window_block.status_window),(const char *)title,style,x,y,width,height,flags,arg_a,arg_b);
   wnd_set_min_size((ModalMenuWindow *)((i8 *)&status_window_block.status_window_wnd),0x28,0x4c);
-  wnd_set_minimize_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_minimize);
-  wnd_set_restore_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_restore);
-  wnd_set_close_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_close);
+  wnd_set_minimize_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),status_wnd_on_minimize);
+  wnd_set_restore_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),status_wnd_on_restore);
+  wnd_set_close_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),status_wnd_on_close);
   wnd_set_icon((WndBase *)((i8 *)&status_window_block.status_window_wnd),1);
-  wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_click);
-  wnd_set_rbuttonup_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_click);
-  wnd_set_keydown_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)map_window_key);
-  wnd_set_char_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)map_window_ascii);
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&status_window_block.status_window),(iptr)status_wnd_repaint);
-  wnd_set_size_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_size);
-  wnd_set_move_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(iptr)status_wnd_on_move);
+  wnd_set_lbuttonup_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(WndMouseFn)status_wnd_on_click);
+  wnd_set_rbuttonup_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(WndMouseFn)status_wnd_on_click);
+  wnd_set_keydown_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),map_window_key);
+  wnd_set_char_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(WndKeyFn)map_window_ascii);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&status_window_block.status_window),status_wnd_repaint);
+  wnd_set_size_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(WndSizeFn)status_wnd_on_size);
+  wnd_set_move_handler((WndHandlers *)((i8 *)&status_window_block.status_wnd_events),(WndMouseFn)status_wnd_on_move);
   wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.status_window));
   if (game.multiplayer != 1) {
     window_show((SurfaceWindow *)((i8 *)&status_window_block.status_window));
@@ -18936,9 +18936,9 @@ uint __cdecl main_frame_create(void)
     intro_play_opening_video();
     palette_set_rgb((GamePalette *)((i8 *)&game_palette_block.game_palette),10,0xec,(iptr)saved_rgb2);
     palette_commit_range((GamePalette *)((i8 *)&game_palette_block.game_palette),10,0xec);
-    wnd_set_close_handler(&main_frame_wnd_block.main_frame_wnd.wnd_handlers,(iptr)main_frame_on_close);
-    wnd_set_keydown_handler(&main_frame_wnd_block.main_frame_wnd.wnd_handlers,(iptr)map_window_key);
-    wnd_set_char_handler(&main_frame_wnd_block.main_frame_wnd.wnd_handlers,(iptr)map_window_ascii);
+    wnd_set_close_handler(&main_frame_wnd_block.main_frame_wnd.wnd_handlers,main_frame_on_close);
+    wnd_set_keydown_handler(&main_frame_wnd_block.main_frame_wnd.wnd_handlers,map_window_key);
+    wnd_set_char_handler(&main_frame_wnd_block.main_frame_wnd.wnd_handlers,(WndKeyFn)map_window_ascii);
     wnd_set_bg_color(&main_frame_wnd_block.main_frame_wnd,0x9e);
     wnd_flush_paint();
     main_frame_created = 1;
@@ -19150,7 +19150,7 @@ code_r0x005aea27:
 }
 
 /* 005d1f50 auto */
-i32 __cdecl game_timer_create(iptr callback,i32 interval_ms,i32 repeat_count)
+i32 __cdecl game_timer_create(TimerFn callback,i32 interval_ms,i32 repeat_count)
 
 {
   TimerManagerCtorView *self;
@@ -19192,14 +19192,14 @@ void __cdecl game_timer_destroy(iptr slot)
 
 /* 005d2042 auto */
 iptr __thiscall
-timer_mgr_add(TimerManager *self,u32 callback,i32 interval_ms,u32 repeat_count)
+timer_mgr_add(TimerManager *self,TimerFn callback,i32 interval_ms,u32 repeat_count)
 
 {
   int started;
   iptr slot;
   
   slot = 1;
-  while ((slot < 0x11 && (((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] != 0))) {
+  while ((slot < 0x11 && (((TimerManagerExt *)self)->timer_callbacks[slot] != 0))) {
     slot++;
   }
   if (slot < 0x11) {
@@ -19208,7 +19208,7 @@ timer_mgr_add(TimerManager *self,u32 callback,i32 interval_ms,u32 repeat_count)
       slot = 0;
     }
     else {
-      ((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] = callback;
+      ((TimerManagerExt *)self)->timer_callbacks[slot] = callback;
       ((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot] = repeat_count;
     }
   }
@@ -19222,7 +19222,7 @@ timer_mgr_add(TimerManager *self,u32 callback,i32 interval_ms,u32 repeat_count)
 void __thiscall game_timer_kill_slot(TimerManager *self,iptr slot)
 
 {
-  ((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] = 0;
+  ((TimerManagerExt *)self)->timer_callbacks[slot] = 0;
   timer_wnd_kill_slot(self->timer_hwnd,slot);
   return;
 }
@@ -19259,7 +19259,7 @@ void __thiscall timer_mgr_dtor(TimerManager *self)
   iptr slot;
   
   for (slot = 0; slot < 0x10; slot++) {
-    if (((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] != 0) {
+    if (((TimerManagerExt *)self)->timer_callbacks[slot] != 0) {
       game_timer_kill_slot(self,slot);
     }
   }
@@ -19312,14 +19312,14 @@ HWND __cdecl timer_wnd_create(iptr timer_mgr)
     }
   }
   else {
-    default_draw_font_obj_block.timerdll_timer_callback = GetProcAddress(default_draw_font_obj_block.timerdll_module,str_timercallback);
-    (*&default_draw_font_obj_block.timerdll_set_timer_id) = GetProcAddress(default_draw_font_obj_block.timerdll_module,str_settimerid);
-    default_draw_font_obj_block.timerdll_get_timer_id = GetProcAddress(default_draw_font_obj_block.timerdll_module,str_gettimerid);
-    default_draw_font_obj_block.timerdll_get_timer_index = GetProcAddress(default_draw_font_obj_block.timerdll_module,str_gettimerindex);
-    default_draw_font_obj_block.timerdll_reset_timer_notified = GetProcAddress(default_draw_font_obj_block.timerdll_module,str_resettimernotified);
-    if ((((default_draw_font_obj_block.timerdll_timer_callback == (FARPROC)0x0) || ((*&default_draw_font_obj_block.timerdll_set_timer_id) == (FARPROC)0x0)) ||
-        (default_draw_font_obj_block.timerdll_get_timer_id == (FARPROC)0x0)) ||
-       ((default_draw_font_obj_block.timerdll_get_timer_index == (FARPROC)0x0 || (default_draw_font_obj_block.timerdll_reset_timer_notified == (FARPROC)0x0)))) {
+    default_draw_font_obj_block.timerdll_timer_callback = (LPTIMECALLBACK)GetProcAddress(default_draw_font_obj_block.timerdll_module,str_timercallback);
+    default_draw_font_obj_block.timerdll_set_timer_id = (TimerDllSetTimerIdFn)GetProcAddress(default_draw_font_obj_block.timerdll_module,str_settimerid);
+    default_draw_font_obj_block.timerdll_get_timer_id = (TimerDllGetTimerIdFn)GetProcAddress(default_draw_font_obj_block.timerdll_module,str_gettimerid);
+    default_draw_font_obj_block.timerdll_get_timer_index = (TimerDllGetTimerIndexFn)GetProcAddress(default_draw_font_obj_block.timerdll_module,str_gettimerindex);
+    default_draw_font_obj_block.timerdll_reset_timer_notified = (TimerDllResetNotifiedFn)GetProcAddress(default_draw_font_obj_block.timerdll_module,str_resettimernotified);
+    if ((((default_draw_font_obj_block.timerdll_timer_callback == 0) || (default_draw_font_obj_block.timerdll_set_timer_id == 0)) ||
+        (default_draw_font_obj_block.timerdll_get_timer_id == 0)) ||
+       ((default_draw_font_obj_block.timerdll_get_timer_index == 0 || (default_draw_font_obj_block.timerdll_reset_timer_notified == 0)))) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),9,(iptr)&str_err_dynamiclinkfailed,(iptr)&str_d_ss_smeds32_pctimer_cpp,0x55);
       FreeLibrary(default_draw_font_obj_block.timerdll_module);
     }
@@ -19334,7 +19334,7 @@ HWND __cdecl timer_wnd_create(iptr timer_mgr)
       else {
         timeBeginPeriod(5);
         SetWindowLongA(hwnd2,0,timer_mgr);
-        uTimerID = timeSetEvent(100,5,(LPTIMECALLBACK)default_draw_font_obj_block.timerdll_timer_callback,hwnd2,1);
+        uTimerID = timeSetEvent(100,5,default_draw_font_obj_block.timerdll_timer_callback,hwnd2,1);
         if (uTimerID == 0) {
           timer_mm_available = 0;
         }
@@ -19354,7 +19354,7 @@ void __cdecl timer_wnd_destroy(HWND hwnd)
   if (hwnd != (HWND)0x0) {
     timeEndPeriod(5);
     DestroyWindow(hwnd);
-    (*(i32 *)&default_draw_font_obj_block.timerdll_timer_callback) = 0;
+    default_draw_font_obj_block.timerdll_timer_callback = 0;
     FreeLibrary(default_draw_font_obj_block.timerdll_module);
   }
   return;
@@ -19380,25 +19380,25 @@ i32 __cdecl timer_wnd_start_slot(HWND hwnd,UINT interval_ms,iptr slot)
       }
     }
     else {
-      mm_timer_id = timeSetEvent(interval_ms,5,(*(LPTIMECALLBACK *)&default_draw_font_obj_block.timerdll_timer_callback),hwnd,1);
+      mm_timer_id = timeSetEvent(interval_ms,5,default_draw_font_obj_block.timerdll_timer_callback,hwnd,1);
       if (mm_timer_id == 0) {
         err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),0xb,(iptr)&str_err_timersetfailed_4,(iptr)&str_d_ss_smeds32_pctimer_cpp_6,0xd7);
         result = 0;
       }
       else {
-        call_untyped(default_draw_font_obj_block.timerdll_set_timer_id, slot,mm_timer_id);
+        default_draw_font_obj_block.timerdll_set_timer_id(slot,mm_timer_id);
         result = 1;
       }
     }
   }
   else if (wnd_modal_stack_below_block.timer_alt_kind_request == 0) {
-    mm_timer_id = timeSetEvent(interval_ms,5,(*(LPTIMECALLBACK *)&default_draw_font_obj_block.timerdll_timer_callback),hwnd,1);
+    mm_timer_id = timeSetEvent(interval_ms,5,default_draw_font_obj_block.timerdll_timer_callback,hwnd,1);
     if (mm_timer_id == 0) {
       err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),0xb,(iptr)&str_err_timersetfailed,(iptr)&str_d_ss_smeds32_pctimer_cpp_3,0xa8);
       result = 0;
     }
     else {
-      call_untyped(default_draw_font_obj_block.timerdll_set_timer_id, slot,mm_timer_id);
+      default_draw_font_obj_block.timerdll_set_timer_id(slot,mm_timer_id);
       result = 1;
     }
   }
@@ -19426,15 +19426,15 @@ void __cdecl timer_wnd_kill_slot(HWND hwnd,iptr slot)
       KillTimer(hwnd,slot);
     }
     else {
-      mm_timer_id = call_untyped((*&default_draw_font_obj_block.timerdll_get_timer_id), slot);
+      mm_timer_id = default_draw_font_obj_block.timerdll_get_timer_id(slot);
       timeKillEvent(mm_timer_id);
-      call_untyped(default_draw_font_obj_block.timerdll_set_timer_id, slot,0);
+      default_draw_font_obj_block.timerdll_set_timer_id(slot,0);
     }
   }
   else if (wnd_modal_stack_below_block.timer_alt_kind_request == 0) {
-    mm_timer_id = call_untyped((*&default_draw_font_obj_block.timerdll_get_timer_id), slot);
+    mm_timer_id = default_draw_font_obj_block.timerdll_get_timer_id(slot);
     timeKillEvent(mm_timer_id);
-    call_untyped(default_draw_font_obj_block.timerdll_set_timer_id, slot,0);
+    default_draw_font_obj_block.timerdll_set_timer_id(slot,0);
   }
   else {
     KillTimer(hwnd,slot);
@@ -19463,7 +19463,7 @@ LRESULT __stdcall timer_wnd_proc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
         return result;
       }
       game_timer_fire_slot(self,wparam);
-      call_untyped((*&default_draw_font_obj_block.timerdll_reset_timer_notified), wparam);
+      default_draw_font_obj_block.timerdll_reset_timer_notified(wparam);
     }
     result = 0;
   }
@@ -19474,11 +19474,11 @@ LRESULT __stdcall timer_wnd_proc(HWND hwnd,UINT msg,WPARAM wparam,LPARAM lparam)
 void __thiscall game_timer_fire_slot(TimerManager *self,iptr slot)
 
 {
-  if ((((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot] != 0) && (((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot] != 0)) {
+  if ((((TimerManagerExt *)self)->timer_callbacks[slot] != 0) && (((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot] != 0)) {
     if (0 < (int)((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot]) {
       ((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot]--;
     }
-    call_untyped((code *)((u32 *)&((TimerManagerExt *)self)->timer_callbacks)[slot], slot,((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot]);
+    ((TimerManagerExt *)self)->timer_callbacks[slot](slot,((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot]);
     if (((u32 *)&((TimerManagerExt *)self)->timer_repeat_counts)[slot] == 0) {
       game_timer_kill_slot(self,slot);
     }

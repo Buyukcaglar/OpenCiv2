@@ -2976,7 +2976,7 @@ extern i8 sprite_import_bmp_ext_str[4];
 extern i8 sprite_import_gif_ext_str[132];
 extern ModalMenuWindow *menu_owner_window;
 extern GameMenu *menu_active_object;
-extern code *menu_command_callback;
+extern MenuCommandFn menu_command_callback;
 extern i8 menu_title_sep_str[8];
 extern char str_annoyallied[12];
 extern char str_annoypeace[12];
@@ -3340,9 +3340,9 @@ extern int dlg_sel_text_shadow_color;
 extern i32 dialog_default_list_color;
 extern i32 dlg_scale_num;
 extern i32 dlg_scale_den;
-extern i8 *dlg_pending_idle_callback;
-extern i8 *dlg_default_idle_callback;
-extern int dlg_pending_move_handler;
+extern WndNotifyFn dlg_pending_idle_callback;  /* the next dialog's modal idle callback */
+extern WndNotifyFn dlg_default_idle_callback;  /* every dialog's, when no pending one */
+extern WndMouseFn dlg_pending_move_handler;  /* the next dialog's move handler */
 extern i8 *dialog_button_labels[4];
 extern i32 dialog_stack[17];
 extern iptr dialog_stack_depth;
@@ -5442,7 +5442,7 @@ struct status_window_block {
     int sprite_editor_height;  /* 006ac87c */
     int sprite_editor_last_px;  /* 006ac880 */
     int sprite_editor_last_py;  /* 006ac884 */
-    code *sprite_editor_ok_callback;  /* 006ac888 */
+    SpriteSheetSaveFn sprite_editor_ok_callback;  /* 006ac888 */
     i32 sprite_editor_running;  /* 006ac88c */
     i32 sprite_picker_running;  /* 006ac890 */
     int sprite_editor_paint_color;  /* 006ac894 */
@@ -5477,7 +5477,7 @@ struct main_frame_bg_surface_block {
     int main_frame_nonclient_width;  /* 006acbb0 */
     i32 main_frame_nonclient_height_i32;  /* 006acbb4 */
     u8 main_frame_nonclient_height_i32_rest[24];
-    iptr crash_handler_callbacks[10];  /* 006acbd0 */
+    CleanupFn crash_handler_callbacks[10];  /* 006acbd0 */
     i8 crash_debug_buffer[320];  /* 006acbf8 */
     union {
         struct {
@@ -5878,12 +5878,12 @@ struct default_draw_font_obj_block {
     WNDPROC listbox_base_wndproc;  /* 006e47f0 */
     DWORD listbox_base_wnd_extra;  /* 006e47f4 */
     u8 listbox_base_wnd_extra_rest[4];
-    FARPROC timerdll_get_timer_id;  /* 006e47fc */
-    FARPROC timerdll_get_timer_index;  /* 006e4800 */
+    TimerDllGetTimerIdFn timerdll_get_timer_id;  /* 006e47fc */
+    TimerDllGetTimerIndexFn timerdll_get_timer_index;  /* 006e4800 */
     HMODULE timerdll_module;  /* 006e4804 */
-    FARPROC timerdll_timer_callback;  /* 006e4808 */
-    FARPROC timerdll_reset_timer_notified;  /* 006e480c */
-    code *timerdll_set_timer_id;  /* 006e4810 */
+    LPTIMECALLBACK timerdll_timer_callback;  /* 006e4808 */
+    TimerDllResetNotifiedFn timerdll_reset_timer_notified;  /* 006e480c */
+    TimerDllSetTimerIdFn timerdll_set_timer_id;  /* 006e4810 */
     u8 timerdll_set_timer_id_rest[4];
     i8 snd_wave_dev_caps;  /* 006e4818 */
     u8 snd_wave_dev_caps_rest[39];
@@ -5901,8 +5901,8 @@ struct err_report_ctx_block {
     u8 app_hinstance_rest[4];
     HWND snd_mci_notify_hwnd;  /* 006e4ff8 */
     u8 snd_mci_notify_hwnd_rest[4];
-    iptr snd_cd_notify_callback;  /* 006e5000 */
-    code *snd_midi_notify_callback;  /* 006e5004 */
+    MusicNotifyFn snd_cd_notify_callback;  /* 006e5000 */
+    MusicNotifyFn snd_midi_notify_callback;  /* 006e5004 */
     u8 snd_midi_notify_callback_rest[4];
     int palette_static_half_count;  /* 006e500c */
     u8 palette_static_half_count_rest[8];

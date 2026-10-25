@@ -13,10 +13,10 @@ EditorWindow * __thiscall editor_wnd_ctor(EditorWindow *self)
   eh_state = 0xffffffff;
   frame_wnd_ctor(self);
   eh_state = 0;
-  crt_vector_ctor_iterator(&self->combos_u,0x38,6,((code *)combo_ctor),((code *)combo_dtor));
+  crt_vector_ctor_iterator(&self->combos_u,0x38,6,combo_ctor,combo_dtor);
   (*((char *)&eh_state + 0)) = 1;
-  crt_vector_ctor_iterator(self->edits_bytes,0x48,9,(code *)edit_ctor,
-               (code *)edit_dtor);
+  crt_vector_ctor_iterator(self->edits_bytes,0x48,9,edit_ctor,
+               edit_dtor);
   (*((char *)&eh_state + 0)) = 2;
   button_ctor(&self->ok_button);
   (*((char *)&eh_state + 0)) = 3;
@@ -107,9 +107,9 @@ void __thiscall editor_wnd_dtor(void *self)
   (*((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 0041862d */ { ctrl_dtor((Button *)(*(int *)&self + 0x6d4)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0041863c */ { crt_vector_dtor_iterator((u8 *)self + 0x44c,0x48,9,(code *)edit_dtor); }
+  /* inlined unwind funclet 0041863c */ { crt_vector_dtor_iterator((u8 *)self + 0x44c,0x48,9,edit_dtor); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 00418654 */ { crt_vector_dtor_iterator((u8 *)self + 0x2fc,0x38,6,((code *)combo_dtor)); }
+  /* inlined unwind funclet 00418654 */ { crt_vector_dtor_iterator((u8 *)self + 0x2fc,0x38,6,combo_dtor); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0041866c */ { frame_wnd_dtor(*(FrameWindow **)&self); }
   return;
@@ -645,9 +645,9 @@ void __cdecl tribe_editor_on_ok(void)
   tribe_editor_store_controls();
   tribe_editor_update_city_file();
   tribe_editor_apply_tables();
-  rules_edit_set_section((iptr)&str_governments_2,(iptr)tribe_editor_write_governments);
-  rules_edit_add_section((const char *)&str_leaders_2,(iptr)tribe_editor_write_leaders);
-  rules_edit_add_section((const char *)&str_caravan_5,(iptr)tribe_editor_write_caravan);
+  rules_edit_set_section((iptr)&str_governments_2,(RulesSectionWriterFn)tribe_editor_write_governments);
+  rules_edit_add_section((const char *)&str_leaders_2,(RulesSectionWriterFn)tribe_editor_write_leaders);
+  rules_edit_add_section((const char *)&str_caravan_5,(RulesSectionWriterFn)tribe_editor_write_caravan);
   ok = rules_write_sections();
   if (ok == 0) {
     _sprintf(msg,str_error_updating_rules_s_2,((i8 *)&lang_file_ext));
@@ -927,7 +927,7 @@ void __thiscall tribe_editor_create_combo(EditorWindow *self,int slot)
             ((ComboBox *)(self->text_font + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_x,
              (iptr)rect);
   combo_set_font((ComboBox *)(self->text_font + slot * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
-  combo_set_callback((ComboBox *)(self->text_font + slot * 0x38 + 0x28),(iptr)tribe_editor_on_combo);
+  combo_set_callback((ComboBox *)(self->text_font + slot * 0x38 + 0x28),tribe_editor_on_combo);
   switch(slot) {
   case 0:
     for (i = 0; i < 0x15; i++) {
@@ -1174,7 +1174,7 @@ void __thiscall tribe_editor_main(EditorWindow *self)
   label = (iptr)(label_string(label_string_ids[0x250]));
   button_create
             (&self->add_trigger_button,(iptr)parent_wnd1,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->add_trigger_button,(iptr)tribe_editor_rename_commodity);
+  button_set_callback(&self->add_trigger_button,(CtrlNotifyFn)tribe_editor_rename_commodity);
   rect_set_xywh((iptr)rect,height + 0xe1,pos,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
     parent_wnd2 = (u8 *)0x0;
@@ -1185,7 +1185,7 @@ void __thiscall tribe_editor_main(EditorWindow *self)
   label = (iptr)(label_string(label_string_ids[0x251]));
   button_create
             (&self->edit_trigger_button,(iptr)parent_wnd2,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->edit_trigger_button,(iptr)tribe_editor_rename_govt);
+  button_set_callback(&self->edit_trigger_button,(CtrlNotifyFn)tribe_editor_rename_govt);
   rect_set_xywh((iptr)rect,height + 0x159,pos,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
     parent_wnd3 = (u8 *)0x0;
@@ -1196,7 +1196,7 @@ void __thiscall tribe_editor_main(EditorWindow *self)
   label = (iptr)(label_string(label_string_ids[0x252]));
   button_create
             (&self->delete_trigger_button,(iptr)parent_wnd3,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->delete_trigger_button,(iptr)tribe_editor_rename_title);
+  button_set_callback(&self->delete_trigger_button,(CtrlNotifyFn)tribe_editor_rename_title);
   pos = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
   self->button_height_u = pos + 8;
   self->button_width_u = (int)(self->client_width - 8) / 3;
@@ -1212,7 +1212,7 @@ void __thiscall tribe_editor_main(EditorWindow *self)
   label = (iptr)(label_string(label_string_ids[0xfe]));
   button_create
             (&self->ok_button,(iptr)parent_wnd4,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&self->ok_button,(iptr)tribe_editor_on_ok);
+  button_set_callback(&self->ok_button,(CtrlNotifyFn)tribe_editor_on_ok);
   pos = pos + self->button_width_u + 2;
   rect_set_xywh((iptr)rect,pos,button_y,self->button_width_u,self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -1224,7 +1224,7 @@ void __thiscall tribe_editor_main(EditorWindow *self)
   label = (iptr)(label_string(label_string_ids[0x23b]));
   button_create
             (&self->help_button,(iptr)parent_wnd5,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->help_button,(iptr)tribe_editor_on_help);
+  button_set_callback(&self->help_button,(CtrlNotifyFn)tribe_editor_on_help);
   rect_set_xywh((iptr)rect,pos + self->button_width_u + 2,button_y,self->button_width_u,
                      self->button_height_u);
   if (self == (EditorWindow *)0x0) {
@@ -1236,14 +1236,14 @@ void __thiscall tribe_editor_main(EditorWindow *self)
   label = (iptr)(label_string(label_string_ids[0xff]));
   button_create
             (&self->cancel_button,(iptr)parent_wnd6,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&self->cancel_button,(iptr)tribe_editor_on_cancel);
+  button_set_callback(&self->cancel_button,(CtrlNotifyFn)tribe_editor_on_cancel);
   ctrl_set_cancel_button(&self->cancel_button);
   wnd_set_keyboard_nav(&self->window,0);
   combo_set_cur_sel((ComboBox *)&self->combos_u,self->item_uptr);
   tribe_editor_load_controls();
   self->combo_count_u = 5;
-  wnd_set_move_handler(&self->window.wnd_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
-  wnd_set_redraw_callback(self,(iptr)tribe_editor_redraw);
+  wnd_set_move_handler(&self->window.wnd_handlers,(WndMouseFn)editor_wnd_on_move_close_dropdowns);
+  wnd_set_redraw_callback(self,tribe_editor_redraw);
   wnd_repaint(self);
   window_show(self);
   wnd_run_modal_loop((ModalMenuWindow *)&self->window);
@@ -1774,14 +1774,14 @@ i32 __cdecl editor_text_edit_dialog(i32 *lines,const char *title)
   rect_set_xywh((iptr)rect,button_x,button_y,button_width2,button_height);
   label = (iptr)(label_string(label_string_ids[0xfe]));
   button_create(&ok_btn,(iptr)&editor_text_dlg_wnd_block.editor_text_dlg_inner,0x65,(iptr)rect,(const char *)label);
-  button_set_callback(&ok_btn,(iptr)editor_text_dlg_on_ok);
+  button_set_callback(&ok_btn,(CtrlNotifyFn)editor_text_dlg_on_ok);
   button_x = button_x + button_width2 + 2;
   rect_set_xywh((iptr)rect,button_x,button_y,button_width2,button_height);
   label = (iptr)(label_string(label_string_ids[0xff]));
   button_create(&cancel_btn,(iptr)&editor_text_dlg_wnd_block.editor_text_dlg_inner,0x66,(iptr)rect,(const char *)label);
-  button_set_callback(&cancel_btn,(iptr)editor_text_dlg_on_cancel);
+  button_set_callback(&cancel_btn,(CtrlNotifyFn)editor_text_dlg_on_cancel);
   ctrl_set_cancel_button(&cancel_btn);
-  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd),(iptr)editor_text_dlg_redraw);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd),editor_text_dlg_redraw);
   wnd_repaint((SurfaceWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd));
   window_show((SurfaceWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd));
   wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner));

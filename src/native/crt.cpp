@@ -468,21 +468,21 @@ EXTERN_C void crt_exit_process(int code)
     exit(code);
 }
 
-void crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, code *dtor)
+void crt_vector_ctor_iterator(void *array, uint size, int count, VecXtorFn ctor, VecXtorFn dtor)
 {
     char *p = (char *)array;
     int i;
     (void)dtor;
     for (i = 0; i < count; i++, p += size)
-        ((void (*)(void *))ctor)(p);
+        ctor(p);
 }
 
-void crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor)
+void crt_vector_dtor_iterator(void *array, uint size, int count, VecXtorFn dtor)
 {
     char *p = (char *)array + size * count;
     while (--count >= 0) {
         p -= size;
-        ((void (*)(void *))dtor)(p);
+        dtor(p);
     }
 }
 

@@ -2016,7 +2016,7 @@ turn_start:
     civ_process_turn(human_civ[0]);
     net_send_state_diff(0xff,2,0,0,0);
     dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] = dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] + 1;
-    dlg_pending_idle_callback = ((i8 *)net_host_wait_production_idle);
+    dlg_pending_idle_callback = net_host_wait_production_idle;
     popup_game_with_sprite((const char *)str_waitproduction,(iptr)&popup_info_icon_sprite,0);
     clients_done = 0;
 wait_production_loop:
@@ -2100,7 +2100,7 @@ production_complete:
     new_casualties = net_session_block.casualty_counts[human_civ[0]] -
                net_session_block.casualty_reported_counts[human_civ[0]];
     if (civ_saved_cursor_x_block.autoplay_active == 0) {
-      dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+      dlg_pending_idle_callback = turn_popup_timeout_idle;
       civ_name = civ_leader_title(human_civ[0]);
       text_set_string_arg(0,(const char *)civ_name);
       civ_name = (i32)(civ_leader_name(human_civ[0]));
@@ -2169,7 +2169,7 @@ production_complete:
     game.field_06 = game.field_06 & 0xfffe;
     dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] = dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] + 1;
     XD_FlushSendBuffer(60000);
-    dlg_pending_idle_callback = ((i8 *)net_host_wait_human_moves_idle);
+    dlg_pending_idle_callback = net_host_wait_human_moves_idle;
     popup_game_with_sprite((const char *)str_waithumanmoves,(iptr)&popup_info_icon_sprite,0);
     humans_done = 0;
 wait_human_moves_loop:

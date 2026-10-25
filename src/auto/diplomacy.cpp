@@ -4441,7 +4441,7 @@ void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *self)
   }
   dll_handle_free((DllHandle *)self->leader_dll);
   diplo_leader_wnd_busy = 0;
-  snd_play_effect(diplo_greeting_sound_id,1,0,(iptr)diplo_greeting_sound_done_cb);
+  snd_play_effect(diplo_greeting_sound_id,1,0,(SoundDoneFn)diplo_greeting_sound_done_cb);
   return;
 }
 
@@ -4656,7 +4656,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
   eh_state = 0xffffffff;
   font_init(&font2,0,0xb);
   eh_state = 0;
-  crt_vector_ctor_iterator(category_sprites,0x3c,5,(code *)sprite_init,(code *)sprite_destroy);
+  crt_vector_ctor_iterator(category_sprites,0x3c,5,sprite_init,sprite_destroy);
   (*((char *)&eh_state + 0)) = 1;
   palette_init(&palette);
   (*((char *)&eh_state + 0)) = 2;
@@ -4729,7 +4729,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
     (*((char *)&eh_state + 0)) = 1;
     /* inlined unwind funclet 00495bee */ { palette_destroy(&palette); }
     eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,(code *)sprite_destroy); }
+    /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,sprite_destroy); }
     eh_state = 0xffffffff;
     /* inlined unwind funclet 00495c10 */ { font_destroy(&font2); }
   }
@@ -4742,7 +4742,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
       (*((char *)&eh_state + 0)) = 1;
       /* inlined unwind funclet 00495bee */ { palette_destroy(&palette); }
       eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,(code *)sprite_destroy); }
+      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,sprite_destroy); }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00495c10 */ { font_destroy(&font2); }
       result = fail_result;
@@ -4911,7 +4911,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
       (*((char *)&eh_state + 0)) = 1;
       /* inlined unwind funclet 00495bee */ { palette_destroy(&palette); }
       eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,(code *)sprite_destroy); }
+      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator(category_sprites,0x3c,5,sprite_destroy); }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00495c10 */ { font_destroy(&font2); }
       result = 1;
@@ -5012,7 +5012,7 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderWindow *self)
                leader_video_x_table_block.leader_video_pos[(uint)self->leader_tribe][1],(iptr)self->leader_surface);
     open_err = avi_player_open((AviPlayer *)self->video_player,(const char *)video_path);
     if (open_err == 0) {
-      avi_player_set_end_callback((AviPlayer *)self->video_player,(iptr)diplo_leader_video_end_cb);
+      avi_player_set_end_callback((AviPlayer *)self->video_player,diplo_leader_video_end_cb);
       avi_player_set_transparent((AviPlayer *)self->video_player,1);
       palette_load_ctab_res(&palette,self->leader_tribe + 1000);
       palette_get_rgb(&palette,(iptr)rgb_buf,0x92,100);
@@ -5121,7 +5121,7 @@ i32 __cdecl diplo_wnd_close_active(void)
         net_session_block.nm_parley_cancel_count = 0;
         civ_name = (iptr)(civ_name_plural((int)parley_wnd_block.other_civ));
         text_set_string_arg(0,(const char *)civ_name);
-        dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+        dlg_pending_idle_callback = turn_popup_timeout_idle;
         popup_game_with_sprite((const char *)&str_parleycancel_3,(iptr)&popup_info_icon_sprite,0);
       }
     }
@@ -5741,7 +5741,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     text_set_string_arg(1,(const char *)civ_name);
     civ_name = (iptr)(civ_name_plural(civ2));
     text_set_string_arg(2,(const char *)civ_name);
-    dlg_pending_idle_callback = ((i8 *)mp_meeting_wait_idle);
+    dlg_pending_idle_callback = mp_meeting_wait_idle;
     civ_rating_title_font_block.mp_meeting_wait_start_i32 = timer_ticks();
     city = popup_game_sprite_flags((const char *)&str_parleywaiting_2,0x2000001,(iptr)&popup_info_icon_sprite,0);
     if (net_session_block.net_host_handoff_stage == '\0') {
@@ -5753,14 +5753,14 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           mp_meeting_pending = 0;
         }
         else if (advisor_window_block.mp_meeting_reply < 1) {
-          dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+          dlg_pending_idle_callback = turn_popup_timeout_idle;
           popup_game_with_sprite((const char *)&str_parleygoaway_2,(iptr)&popup_info_icon_sprite,0);
           mp_meeting_pending = 0;
         }
         else if (advisor_window_block.mp_meeting_reply == 1) {
           advisor_window_block.mp_meeting_reply = -1;
           parley_wnd_block.other_civ = civ2;
-          dlg_pending_idle_callback = ((i8 *)mp_meeting_wait_idle);
+          dlg_pending_idle_callback = mp_meeting_wait_idle;
           civ_rating_title_font_block.mp_meeting_wait_start_i32 = timer_ticks();
           civ_name = (iptr)(civ_name_plural(civ));
           text_set_string_arg(0,(const char *)civ_name);
@@ -5774,20 +5774,20 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
               net_session_block.nm_parley_cancel_count = 0;
               civ_name = (iptr)(civ_name_plural(civ2));
               text_set_string_arg(0,(const char *)civ_name);
-              dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+              dlg_pending_idle_callback = turn_popup_timeout_idle;
               popup_game_with_sprite((const char *)&str_parleycancel_6,(iptr)&popup_info_icon_sprite,0);
               mp_meeting_pending = 0;
             }
           }
           else {
             parley_wnd_block.other_civ = 0xffffffff;
-            dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+            dlg_pending_idle_callback = turn_popup_timeout_idle;
             popup_game_with_sprite((const char *)&str_parleybusy_4,(iptr)&popup_info_icon_sprite,0);
             mp_meeting_pending = 0;
           }
         }
         else {
-          dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+          dlg_pending_idle_callback = turn_popup_timeout_idle;
           popup_game_with_sprite((const char *)&str_parleybusy_5,(iptr)&popup_info_icon_sprite,0);
           mp_meeting_pending = 0;
         }
@@ -5796,14 +5796,14 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
         net_session_block.nm_parley_cancel_count = 0;
         civ_name = (iptr)(civ_name_plural(civ2));
         text_set_string_arg(0,(const char *)civ_name);
-        dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+        dlg_pending_idle_callback = turn_popup_timeout_idle;
         popup_game_with_sprite((const char *)&str_parleycancel_5,(iptr)&popup_info_icon_sprite,0);
         parley_wnd_block.other_civ = 0xffffffff;
         mp_meeting_pending = 0;
       }
     }
     else {
-      dlg_pending_idle_callback = ((i8 *)turn_popup_timeout_idle);
+      dlg_pending_idle_callback = turn_popup_timeout_idle;
       popup_game_with_sprite((const char *)&str_parleybusy_3,(iptr)&popup_info_icon_sprite,0);
       mp_meeting_pending = 0;
     }
