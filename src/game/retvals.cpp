@@ -3,6 +3,7 @@
  * (values left in ECX/EAX by callees declared with the wrong return type).
  */
 #include "game.h"
+#include "lang.h"
 
 /* 0x00452315 */
 /* _strrchr is declared __thiscall without parameters in protos.h; it is the
@@ -27,6 +28,7 @@ void __thiscall pedia_load_description(void *self, int topic2)
   char *newline_ptr;
   char marker[3];
   i8 section_name[228];
+  const char *translated;
   
   str_clear((char *)section_name);
   pedia_clear_links((WindowObjectView *)obj_addr);
@@ -80,6 +82,22 @@ void __thiscall pedia_load_description(void *self, int topic2)
     } while (marker[0] != '@');
     section_missing = false;
 read_text_lines:
+    /* (port) the description translated (lang.h): its lines as the file's */
+    if (section_missing &&
+        (translated = lang_description((const char *)section_name,(const char *)map_views_block.text_buffer + 2)) != 0) {
+      str_clear((char *)desc_text);
+      for (cur_len = 0; *translated != '\0' && cur_len < 0xffe; translated += line_len + (translated[line_len] != '\0')) {
+        line_len = strcspn(translated,"\n");
+        if (*translated != ';') {
+          cur_len += (size_t)snprintf(desc_text + cur_len,sizeof desc_text - cur_len,"%.*s\r\n",(int)line_len,translated);
+          if (cur_len > 0xffe) {
+            cur_len = 0xffe;
+            desc_text[cur_len] = '\0';
+          }
+        }
+      }
+      goto set_control_text;
+    }
     if (section_missing) {
       str_clear((char *)desc_text);
       do {

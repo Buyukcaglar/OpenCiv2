@@ -136,7 +136,7 @@ static int section_header(const char *line, std::string *name)
 /* The game's text files whose sections are keyed by file and section, in
    lower case ("game.MAINMENU"): their popups and other texts.  (MENU and
    LABELS have keys of their own; RULES is the game's rules; DESCRIBE, the
-   Civilopedia's descriptions, has its own reader.) */
+   Civilopedia's descriptions, has its own reader: add_descriptions.) */
 static const char *const section_files[] = {
     "GAME", "CITY", "ADVICE", "HELP", "TUTORIAL", "COUNCIL0", "COUNCIL1", "COUNCIL2", "HERALD", "PEDIA",
     "MAPMENU", "DEBUG", "CREDITS", "SCREDITS", "FCREDITS", "MPCREDITS",
@@ -180,6 +180,76 @@ static void add_file_sections(const char *file)
     text_close_file();
 }
 
+/* "@ADVANCE_INDEX", "ADVANCE_DESCRIPTIONS", "TERRAIN_INDEX": the group of
+   descriptions, "ADVANCE" ... (DESCRIBE.TXT's terrain is in the section
+   TERRAIN_AND_RESOURCE_DESCRIPTIONS, after its @@TERRAIN_INDEX). */
+static std::string description_group(const char *name)
+{
+    std::string g(name + strspn(name, "@"));
+    size_t n;
+    if ((n = g.rfind("_INDEX")) != std::string::npos && n + 6 == g.size())
+        g.erase(n);
+    else if ((n = g.rfind("_DESCRIPTIONS")) != std::string::npos && n + 13 == g.size())
+        g.erase(n);
+    return g;
+}
+
+/* DESCRIBE.TXT: per group an index (@@ADVANCE_INDEX, the rules' entries'
+   descriptions: structure, no text) and the descriptions, each a line
+   "@@name" and its paragraphs, one per line, up to the next line starting
+   with '@' (pedia_load_description; it passes over ';' lines). */
+static void add_descriptions(void)
+{
+    static char line[0x800];
+    std::string group, key, text;
+    int in_entry = 0, lines = 0;
+
+    if (text_open_section("DESCRIBE", 0) != 0)
+        return;
+    for (;;) {
+        char *got = _fgets(line, 0x800, text_file_handle);
+        if (got)
+            line[strcspn(line, "\r\n")] = 0;
+        if (!got || line[0] == '@') {
+            if (in_entry && !english.count(key))
+                set_english(key.c_str(), text.c_str());
+            if (!got)
+                break;
+            in_entry = 0;
+            if (line[1] != '@') {
+                group = description_group(line + 1);
+            } else if (strstr(line, "_INDEX")) {
+                group = description_group(line + 2);
+            } else {
+                std::string name(line + 2);
+                name.erase(name.find_last_not_of(" \t") + 1);
+                key = "describe." + group + "." + name;
+                in_entry = 1;
+                text.clear();
+                lines = 0;
+            }
+            continue;
+        }
+        if (!in_entry || line[0] == ';')
+            continue;
+        if (lines++)
+            text += '\n';
+        text += line;
+    }
+    text_close_file();
+}
+
+const char *lang_description(const char *group, const char *entry)
+{
+    std::unordered_map<std::string, std::string>::const_iterator it;
+    if (!translation_loaded)
+        load_translation();
+    if (translated.empty())
+        return 0;
+    it = translated.find("describe." + description_group(group) + "." + entry);
+    return it != translated.end() ? it->second.c_str() : 0;
+}
+
 static void export_english(void)
 {
     static int sections_added;
@@ -192,6 +262,7 @@ static void export_english(void)
         sections_added = 1;
         for (i = 0; i < sizeof section_files / sizeof section_files[0]; i++)
             add_file_sections(section_files[i]);
+        add_descriptions();
     }
     if (!(f = fopen(path, "w")))
         return;

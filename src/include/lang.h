@@ -43,6 +43,12 @@ void lang_add_labels(int count);
 /* The translation of the string pool's string_id (a label), or 0. */
 char *lang_pool_text(int string_id);
 
+/* The Civilopedia's description (DESCRIBE.TXT) of entry (its @@ line's
+   name) in the group whose index pedia_load_description looked for
+   ("@ADVANCE_INDEX", "CONCEPT_DESCRIPTIONS", ...): its translation (key
+   "describe.ADVANCE.Advanced Flight": the paragraphs' lines), or 0. */
+const char *lang_description(const char *group, const char *entry);
+
 /* text_open_section found filename's section (filename 0: in the file
    open), in_scenario if in the scenario's copy of the file (which keeps its
    own text): its translation, if there is one, is what text_read_line reads
