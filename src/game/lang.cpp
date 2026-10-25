@@ -6,6 +6,7 @@
  * files is for, and how it differs between their versions, is known here
  * only.  A translation (lang/<code>.txt) replaces texts by key.
  */
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -103,7 +104,7 @@ static void load_translation(void)
         } else if (!key.empty()) {
             if (lines++)
                 text += '\n';
-            text += line;
+            text += line[0] == '\\' ? line + 1 : line;
         }
     }
     if (!key.empty())
@@ -111,16 +112,105 @@ static void load_translation(void)
     fclose(f);
 }
 
+/* A line that starts a section: "@NAME", NAME in capitals, digits and '_'
+   (the lines in a section that start with '@' are in small letters:
+   @title=, @width=, @options, ...).  name: NAME. */
+static int section_header(const char *line, std::string *name)
+{
+    const char *p = line, *end;
+    while (*p == ' ' || *p == '\t')
+        p++;
+    if (*p++ != '@')
+        return 0;
+    for (end = p; (*end >= 'A' && *end <= 'Z') || (*end >= '0' && *end <= '9') || *end == '_'; end++)
+        ;
+    if (end == p)
+        return 0;
+    if (name)
+        name->assign(p, end);
+    while (*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n')
+        end++;
+    return *end == 0;
+}
+
+/* The game's text files whose sections are keyed by file and section, in
+   lower case ("game.MAINMENU"): their popups and other texts.  (MENU and
+   LABELS have keys of their own; RULES is the game's rules; DESCRIBE, the
+   Civilopedia's descriptions, has its own reader.) */
+static const char *const section_files[] = {
+    "GAME", "CITY", "ADVICE", "HELP", "TUTORIAL", "COUNCIL0", "COUNCIL1", "COUNCIL2", "HERALD", "PEDIA",
+    "MAPMENU", "DEBUG", "CREDITS", "SCREDITS", "FCREDITS", "MPCREDITS",
+};
+
+/* file's sections, as English texts: each one's lines (as the game's reader
+   reads them, without the newline) up to the next section.  A name used
+   twice: the first, the one the game finds.  @STOP and @END end lists (city
+   names), they are no sections. */
+static void add_file_sections(const char *file)
+{
+    char line[0x100];
+    std::string prefix(file), name, text;
+    int in_section = 0, lines = 0;
+    size_t i;
+
+    if (text_open_section(file, 0) != 0)
+        return;
+    for (i = 0; i < prefix.size(); i++)
+        prefix[i] = (char)tolower((unsigned char)prefix[i]);
+    prefix += '.';
+    for (;;) {
+        char *got = _fgets(line, 0xff, text_file_handle);
+        if (got)
+            line[strcspn(line, "\r\n")] = 0;
+        if (!got || section_header(line, 0)) {
+            if (in_section && !english.count(prefix + name))
+                set_english((prefix + name).c_str(), text.c_str());
+            if (!got)
+                break;
+            section_header(line, &name);
+            in_section = name != "STOP" && name != "END";
+            text.clear();
+            lines = 0;
+            continue;
+        }
+        if (lines++)
+            text += '\n';
+        text += line;
+    }
+    text_close_file();
+}
+
 static void export_english(void)
 {
+    static int sections_added;
     const char *path = getenv("CIV2_EXPORT_TEXT");
     FILE *f;
-    size_t i;
-    if (!path || !*path || !(f = fopen(path, "w")))
+    size_t i, start, end;
+    if (!path || !*path)
         return;
-    fprintf(f, "; OpenCiv2 text (English), keyed: \"@@key\" and its text on the lines after it.\n");
-    for (i = 0; i < english_order.size(); i++)
-        fprintf(f, "@@%s\n%s\n", english_order[i].c_str(), english[english_order[i]].c_str());
+    if (!sections_added) {
+        sections_added = 1;
+        for (i = 0; i < sizeof section_files / sizeof section_files[0]; i++)
+            add_file_sections(section_files[i]);
+    }
+    if (!(f = fopen(path, "w")))
+        return;
+    fprintf(f, "; OpenCiv2 text (English), keyed: \"@@key\" and its text on the lines after it\n"
+               "; (a line of text that starts with \"@@\" or \"\\\" has a \"\\\" put before it).\n");
+    for (i = 0; i < english_order.size(); i++) {
+        const std::string &text = english[english_order[i]];
+        fprintf(f, "@@%s\n", english_order[i].c_str());
+        for (start = 0;; start = end + 1) {
+            end = text.find('\n', start);
+            if (end == std::string::npos)
+                end = text.size();
+            if (text.compare(start, 2, "@@") == 0 || text.compare(start, 1, "\\") == 0)
+                fputc('\\', f);
+            fprintf(f, "%.*s\n", (int)(end - start), text.c_str() + start);
+            if (end == text.size())
+                break;
+        }
+    }
     fclose(f);
 }
 
@@ -222,4 +312,82 @@ char *lang_pool_text(int string_id)
         return 0;
     it = pool_translated.find(string_id);
     return it != pool_translated.end() ? &it->second[0] : 0;
+}
+
+/* The translated section text_read_line reads: its lines, the next one, in
+   which file; the file of the last section opened by name. */
+static std::vector<std::string> section_lines;
+static size_t section_next;
+static FILE *section_file;
+static std::string section_last_file;
+
+void lang_section_opened(const char *filename, const char *section, int in_scenario)
+{
+    std::unordered_map<std::string, std::string>::const_iterator it;
+    std::string key;
+    const char *base;
+    char line[0x100];
+    i32 pos;
+    size_t i, start, end;
+
+    lang_section_closed();
+    if (filename) {
+        base = filename;
+        for (i = 0; filename[i]; i++)
+            if (filename[i] == '\\' || filename[i] == '/' || filename[i] == ':')
+                base = filename + i + 1;
+        section_last_file.assign(base, strcspn(base, "."));
+        for (i = 0; i < section_last_file.size(); i++)
+            section_last_file[i] = (char)tolower((unsigned char)section_last_file[i]);
+    }
+    if (!translation_loaded)
+        load_translation();
+    if (translated.empty() || in_scenario || !section)
+        return;
+    key = section_last_file + '.';
+    for (i = 0; section[i]; i++)
+        key += (char)toupper((unsigned char)section[i]);
+    it = translated.find(key);
+    if (it == translated.end())
+        return;
+    for (start = 0;; start = end + 1) {
+        end = it->second.find('\n', start);
+        if (end == std::string::npos)
+            end = it->second.size();
+        section_lines.push_back(it->second.substr(start, end - start));
+        if (end == it->second.size())
+            break;
+    }
+    /* the file's own lines of the section passed over: what comes after
+       the translation is the file's next section */
+    for (;;) {
+        pos = _ftell(text_file_handle);
+        if (!_fgets(line, 0xff, text_file_handle))
+            break;
+        if (section_header(line, 0)) {
+            _fseek(text_file_handle, pos, 0);
+            break;
+        }
+    }
+    section_next = 0;
+    section_file = text_file_handle;
+}
+
+int lang_section_line(char *buf)
+{
+    if (!section_file || section_file != text_file_handle)
+        return 0;
+    if (section_next >= section_lines.size()) {
+        lang_section_closed();
+        return 0;
+    }
+    snprintf(buf, 0xff, "%s", section_lines[section_next++].c_str());
+    return 1;
+}
+
+void lang_section_closed(void)
+{
+    section_file = 0;
+    section_lines.clear();
+    section_next = 0;
 }

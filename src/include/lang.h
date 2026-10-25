@@ -11,7 +11,15 @@
  *
  * Text file format: a line "@@key" starts an entry, the following lines up
  * to the next "@@" line are its text (one line for most keys); lines before
- * the first key are comments.
+ * the first key are comments.  A text line starting with "@@" or "\" is
+ * written with a "\" before it.
+ *
+ * The popups and other texts of the game's text files are keyed by file and
+ * section ("game.MAINMENU": GAME.TXT's @MAINMENU): the section's lines, as
+ * they are in the file (its @title=, @width=, @options lines too: a
+ * translation keeps the lines that are not text, and the order of option
+ * lines, which decides what each does).  A translated section is read in
+ * place of the file's lines by text_read_line, whatever reads it.
  */
 #ifndef CIV2_LANG_H
 #define CIV2_LANG_H
@@ -34,6 +42,20 @@ void lang_add_labels(int count);
 
 /* The translation of the string pool's string_id (a label), or 0. */
 char *lang_pool_text(int string_id);
+
+/* text_open_section found filename's section (filename 0: in the file
+   open), in_scenario if in the scenario's copy of the file (which keeps its
+   own text): its translation, if there is one, is what text_read_line reads
+   next, up to the file's next section. */
+void lang_section_opened(const char *filename, const char *section, int in_scenario);
+
+/* The next line of the translated section text_read_line reads (into buf, as
+   fgets would, without the newline): 1, or 0 when there is none (no
+   translated section open, or its lines all read). */
+int lang_section_line(char *buf);
+
+/* text_close_file: no section open. */
+void lang_section_closed(void);
 
 /* (port) The main menu bar: one row per menu title, item or separator, in
    order.  cmd: the command id (0 a separator, MENU_TITLE the menu's title);

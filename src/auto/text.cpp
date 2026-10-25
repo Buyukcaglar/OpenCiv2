@@ -825,8 +825,12 @@ void __cdecl text_close_file(void)
     _fclose(text_file_handle);
     text_file_handle = (FILE *)0x0;
   }
+  lang_section_closed();
   return;
 }
+
+/* (port) whether the text file open is a scenario's (lang_section_opened) */
+static int text_file_in_scenario;
 
 /* 004a2055 auto */
 int __cdecl text_open_file_section(const char *filename,const char *section)
@@ -864,6 +868,10 @@ int __cdecl text_open_file_section(const char *filename,const char *section)
     __getcwd(saved_cwd,0x104);
     __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
     text_file_handle = file_open_path((const char *)name2,(iptr)&str_rt);
+    /* (port) the scenario's copy of the file, which keeps its own text (lang.h) */
+    text_file_in_scenario =
+         text_file_handle != (FILE *)0x0 &&
+         __strcmpi(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)) != 0;
     if ((text_file_handle != (FILE *)0x0) && (len = _strlen(name2), len != 0)) {
       section_offset = text_section_index_lookup((const char *)name2,(const char *)section_tag);
     }
@@ -925,6 +933,9 @@ int __cdecl text_open_section(const char *filename,const char *section)
     result = text_open_file_section(filename,section);
     crt_strcpy(((i8 *)&net_map_lock_slots_block.scenario_dir_path),saved_dir);
   }
+  if (result == 0) {
+    lang_section_opened(filename,section,text_file_in_scenario);
+  }
   return result;
 }
 
@@ -936,6 +947,14 @@ i8 * __cdecl text_read_line(int trim)
   i8 *result;
   
   result = (i8 *)0x0;
+  /* (port) a translated section's line, in place of the file's (lang.h) */
+  if (lang_section_line((char *)&map_views_block.text_buffer) != 0) {
+    if (trim == 1) {
+      str_trim((char *)&map_views_block.text_buffer);
+    }
+    (*(i8 * *)&map_views_block.text_line_cursor) = ((i8 *)&map_views_block.text_buffer);
+    return ((i8 *)&map_views_block.text_buffer);
+  }
   if (((CRT_FEOF(text_file_handle)) == 0) &&
      (line = _fgets(((i8 *)&map_views_block.text_buffer),0xff,text_file_handle), line != (char *)0x0)) {
     str_strip_newline((char *)(&map_views_block.text_buffer));
