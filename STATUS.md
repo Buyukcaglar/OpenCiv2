@@ -43,13 +43,17 @@ recordings:
 | `build/civ2-linux32` | gcc -m32 |
 | `build/OpenCiv2` (64-bit, portable to macOS and Windows) | wasm32 → wasm2c → cc |
 
-All 29 scenarios of `harness/scripts` give pixel-identical screenshots and
+All 31 scenarios of `harness/scripts` give pixel-identical screenshots and
 the identical `rand()` trace.  The last few pixels came from Wine details
 now matched: a combo box's text clipped to its field (a glyph's overhang
 shows), a multiline edit's text clipped to its format rectangle and drawn
 in Uniscribe items each on its own background box, LineTo's Bresenham
 rounding per octant, and a list box drawing its focus rectangle at once
-on losing focus (tools/probe: edititems, uspprobe, lineprobe).  `harness/diff_suite.sh` plays a 30-turn autoplay and two
+on losing focus (tools/probe: edititems, uspprobe, lineprobe); a window
+that grows invalidates only its new strips, as Wine's server keeps the old
+client pixels (menuview-arrange); a CS_OWNDC window has one DC, which
+BeginPaint clips to the update region (conquest-spy: the blinking unit under
+the spy dialog).  `harness/diff_suite.sh` plays a 30-turn autoplay and two
 random-click scripts on both builds: identical (3 392 `rand()` calls).
 
 Reads of locals the 1997 code never initialises are the main source of
@@ -162,16 +166,3 @@ message by message and clock event by clock event.
   executed: multiplayer (parley, net), sound and video, council, the
   editors' rarely used dialogs, atexit destructors.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
   `make ref SCRIPT=...` and compare with `make native-suite`.
-* **Blinking unit under a modal dialog.**  When the spy mission dialog
-  opens over the map (harness/scripts/conquest.txt, Roman phalanx at
-  22,58 of Ca_Auto.SAV), our build has been seen to leave the active unit
-  with its top rows missing; the original showed it whole.  The blink is
-  timer-driven, so the script takes no screenshot there; not yet
-  explained.
-* **Map left black after Arrange Windows.**  After the View menu's zooms
-  and Arrange Windows (harness/scripts/menuview.txt run in the old order),
-  a cancelled Save Game leaves the main map black; the original repaints
-  it.  Message traces (harness/msgdiff.sh) differ in four lines: Wine has a
-  WM_PAINT pending for the map view (window 19) when the large child window
-  Arrange Windows showed and hid (window 23) is hidden again, and does not
-  erase the map frame (window 18) when it is resized.  Not yet explained.

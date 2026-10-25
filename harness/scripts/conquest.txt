@@ -14,9 +14,7 @@ call unit_create 5b3d06 46 1 19 69
 wait 500
 call unit_create 5b3d06 48 1 19 69
 wait 500
-# No screenshot of the mission dialog: the active Roman unit next to it
-# blinks on a timer that the dialog stops in whatever phase it is in (and
-# our build has been seen to leave it half drawn there; see STATUS.md).
+# No screenshot of the mission dialog here: conquest-spy.txt has them.
 call spy_city_mission 4c6bf5 21 8
 wait 4000
 key Return

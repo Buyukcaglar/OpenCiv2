@@ -1,8 +1,7 @@
 # The Game menu's other items (save, load, password, timer, join, retire,
 # quit: each dialog cancelled), then the View menu, through menu_command
-# as menuitems.txt, on the autosave.  (The Game items come first: after
-# Arrange Windows and the zooms a cancelled save leaves the map black
-# here, not in the original -- see STATUS.md.)
+# as menuitems.txt, on the autosave.  (menuview-arrange.txt runs the View
+# items first, then a cancelled save.)
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

@@ -136,7 +136,7 @@ make native-suite    # replay every scenario on a native build and compare (EXE=
 
 Playable. Every function of the game that can run has source; the only parts not reconstructed
 are the original's MSVC runtime (replaced by the platform's C library) and unreachable 16-bit
-leftovers. All 29 recorded scenarios match the original exactly, pixel for pixel. The scenarios run about
+leftovers. All 31 recorded scenarios match the original exactly, pixel for pixel. The scenarios run about
 two thirds of the game's functions; multiplayer, the High Council and some editor dialogs are not
 covered yet.
 

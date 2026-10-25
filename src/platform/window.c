@@ -1423,13 +1423,9 @@ static WINBOOL swp(Window *w, HWND after, int x, int y, int cx, int cy, UINT fla
             rgn_free(&now);
         }
         if (flags & SWP_SHOWWINDOW) {
-            Window *p = w->parent;
-            if ((w->style & WS_CHILD) && p && p != desktop && (p->style & WS_CLIPCHILDREN) && !rgn_empty(&p->update)) {
-                /* the parent's pending update is covered here now */
-                rgn_subtract_rect(&p->update, &w->rect);
-                if (rgn_empty(&p->update))
-                    p->erase &= ~1;
-            }
+            /* the parent's pending update stays as it is, even where the
+               child covers it now (Wine's server only crops it in
+               validate_parents, for parents that do not clip children) */
             invalidate_tree(w, 1);
             erase_now(w);       /* RDW_ERASENOW: frames and backgrounds now */
         } else if (!(flags & SWP_NOSIZE) && !(flags & SWP_NOREDRAW)) {
@@ -1438,15 +1434,32 @@ static WINBOOL swp(Window *w, HWND after, int x, int y, int cx, int cy, UINT fla
             if ((wchg && (cs & CS_HREDRAW)) || (hchg && (cs & CS_VREDRAW)))
                 invalidate_tree(w, 0);
             else {
-                /* only what was not shown before */
+                /* only what was not shown before: the Wine server keeps
+                   the old client area's bits (calc_ncsize's valid rect, at
+                   the top left) and exposes the rest */
                 RECT now = {0, 0, 0, 0};
+                int ow = old_client.right - old_client.left, oh = old_client.bottom - old_client.top;
                 now.right = w->client.right - w->client.left;
                 now.bottom = w->client.bottom - w->client.top;
-                if (now.right > old_client.right - old_client.left || now.bottom > old_client.bottom - old_client.top) {
+                if (now.right > ow || now.bottom > oh) {
                     if (plat_normal_desktop)
                         invalidate_tree(w, 0);      /* children it clipped show more of themselves too */
-                    else
-                        InvalidateRect(h, NULL, TRUE);
+                    else {
+                        RECT strip = now;
+                        if (now.right > ow) {
+                            strip.left = ow;
+                            InvalidateRect(h, &strip, TRUE);
+                        }
+                        if (now.bottom > oh) {
+                            strip.left = 0;
+                            strip.top = oh;
+                            InvalidateRect(h, &strip, TRUE);
+                        }
+                        /* the server flags the window for erasing even if
+                           what it exposed does not show; whether it gets
+                           WM_ERASEBKGND depends on its whole update region */
+                        w->erase |= 1;
+                    }
                 }
             }
             w->erase |= 2;      /* the frame is redrawn */
@@ -1562,6 +1575,10 @@ static UINT min_maximize(Window *w, int cmd, RECT *pos)
         f |= SWP_STATECHANGED_ | SWP_NOCOPYBITS;
         break;
     case SW_MAXIMIZE:
+        /* Wine's window_min_maximize: a visible maximized window is left
+           alone, before WM_GETMINMAXINFO */
+        if (w->maximized && !w->minimized && (w->style & WS_VISIBLE))
+            return 0;
         get_minmax(w, &mmi);
         if (w->maximized && !w->minimized)
             return 0;

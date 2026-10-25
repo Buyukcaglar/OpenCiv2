@@ -1,0 +1,24 @@
+# The diplomat's mission dialog over the map (conquest.txt), with
+# screenshots.  The active Roman phalanx (22,58) blinks on a timer that
+# validates its tile of the map window; the map's WM_PAINT when the dialog
+# opens blits through the window's own DC (CS_OWNDC), which BeginPaint clips
+# to the update region, so the unit stays as the last blink drew it.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call unit_create 5b3d06 46 1 19 69
+wait 500
+call unit_create 5b3d06 48 1 19 69
+wait 500
+shot 00-before
+call spy_city_mission 4c6bf5 21 8
+wait 4000
+shot 01-spy
+key Escape
+wait 2000
+shot 02-after

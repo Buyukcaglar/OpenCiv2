@@ -1,0 +1,72 @@
+# The View menu's zooms and Arrange Windows, then a cancelled Save Game:
+# the map must be repainted after the dialog closes (it was left black,
+# see STATUS.md).  Through menu_command as menuview.txt, on the autosave.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 769     # 0x301
+wait 3000
+shot a09-301
+key Escape
+wait 2000
+call menu_command 4e2803 0 770     # 0x302
+wait 3000
+shot a10-302
+key Escape
+wait 2000
+call menu_command 4e2803 0 784     # 0x310
+wait 3000
+shot a11-310
+key Escape
+wait 2000
+call menu_command 4e2803 0 785     # 0x311
+wait 3000
+shot a12-311
+key Escape
+wait 2000
+call menu_command 4e2803 0 801     # 0x321
+wait 3000
+shot a13-321
+key Escape
+wait 2000
+call menu_command 4e2803 0 802     # 0x322
+wait 3000
+shot a14-322
+key Escape
+wait 2000
+call menu_command 4e2803 0 804     # 0x324
+wait 3000
+shot a15-324
+key Escape
+wait 2000
+call menu_command 4e2803 0 807     # 0x327
+wait 3000
+shot a16-327
+key Escape
+wait 2000
+call menu_command 4e2803 0 808     # 0x328
+wait 3000
+shot a17-328
+key Escape
+wait 2000
+call menu_command 4e2803 0 816     # 0x330
+wait 3000
+shot a18-330
+key Escape
+wait 2000
+call menu_command 4e2803 0 832     # 0x340
+wait 3000
+shot a19-340
+key Escape
+wait 2000
+call menu_command 4e2803 0 272     # 0x110 Save Game
+wait 3000
+shot 20-110
+key Escape
+wait 2000
+shot 21-after

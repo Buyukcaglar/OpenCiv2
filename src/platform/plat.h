@@ -158,6 +158,7 @@ struct Window {
     int nextra;
     LONG_PTR userdata;
     Region update;              /* invalid area, client coordinates */
+    HDC own_dc;                 /* CS_OWNDC: the window's one DC (GetDC, BeginPaint) */
     int erase;                  /* WM_ERASEBKGND pending */
     int destroyed;
     Scroll hscroll, vscroll;

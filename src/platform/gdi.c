@@ -323,9 +323,8 @@ HDC plat_overlay_dc(void)
     return h;
 }
 
-HDC WINAPI GetDC(HWND h)
+static HDC new_window_dc(HWND h)
 {
-    API_TRACE();
     WindowDC *wd = calloc(1, sizeof *wd);
     DC *dc = &wd->dc;
     Window *w = h ? wnd_get(h) : desktop;
@@ -347,10 +346,33 @@ HDC WINAPI GetDC(HWND h)
     return hdc;
 }
 
+/* A window of a CS_OWNDC class has one DC of its own, made with the window:
+ * GetDC and BeginPaint return it, its attributes kept (Wine's owned DCE). */
+static int has_own_dc(const Window *w)
+{
+    return w && w != desktop && w->cls && (w->cls->wc.style & CS_OWNDC);
+}
+
+HDC WINAPI GetDC(HWND h)
+{
+    API_TRACE();
+    Window *w = h ? wnd_get(h) : NULL;
+    if (has_own_dc(w)) {
+        DC *dc = w->own_dc ? get_dc(w->own_dc) : NULL;
+        if (dc) {
+            dc_update_window(dc);
+            return w->own_dc;
+        }
+        w->own_dc = new_window_dc(h);
+        return w->own_dc;
+    }
+    return new_window_dc(h);
+}
+
 HDC WINAPI GetWindowDC(HWND h)
 {
     API_TRACE();
-    HDC hdc = GetDC(h);
+    HDC hdc = new_window_dc(h);
     WindowDC *wd = (WindowDC *)dc_get(hdc);
     if (wd && h) {
         wd->whole = 1;
@@ -435,7 +457,15 @@ WINBOOL WINAPI EndPaint(HWND h, const PAINTSTRUCT *ps)
 {
     API_TRACE();
     DC *dc = get_dc(ps->hdc);
-    (void)h;
+    Window *w = wnd_get(h);
+    if (dc && w && has_own_dc(w) && ps->hdc == w->own_dc) {
+        /* the own DC stays; its clipping is the visible region again
+           (Wine's release_dc deletes the paint's clip region) */
+        dc->paint = 0;
+        ((WindowDC *)dc)->gen = wnd_generation - 1;
+        dc_update_window(dc);
+        return TRUE;
+    }
     if (dc) {
         rgn_free(&dc->clip);
         obj_free(ps->hdc);
