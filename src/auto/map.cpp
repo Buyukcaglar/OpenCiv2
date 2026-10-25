@@ -4488,18 +4488,18 @@ void __cdecl terrain_editor_load_controls(void)
   for (field = 1; field < 0xf; field++) {
     if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].kind == 9) {
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->edits[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
       _sprintf(text,((i8 *)&terrain_editor_ctrl_kinds_block.terrain_editor_int_fmt),
                *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58));
       ctrl_set_text
-                ((ControlTextView *)
+                ((Control *)
                  &editor_text_dlg_wnd_block.active_editor_wnd->edits[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot],
                  (const char *)text);
     }
     else if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].kind == 0xc) {
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->combos[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
       sel = *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58);
       if (field == 0) {
@@ -4512,7 +4512,7 @@ void __cdecl terrain_editor_load_controls(void)
         sel++;
       }
       combo_set_cur_sel
-                ((ComboBoxSetSelView *)
+                (
                  &editor_text_dlg_wnd_block.active_editor_wnd->combos[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot],sel);
     }
   }
@@ -4534,11 +4534,11 @@ int __cdecl terrain_editor_store_controls(void)
   for (field = 1; field < 0xf; field++) {
     if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].kind == 9) {
       ctrl_get_text
-                ((ControlTextView *)
+                ((Control *)
                  &editor_text_dlg_wnd_block.active_editor_wnd->edits[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot],
                  (char *)text);
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->edits[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
       ctrl_id -= 0xca;
       value = _atoi(text);
@@ -4551,7 +4551,7 @@ int __cdecl terrain_editor_store_controls(void)
     }
     else if (terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].kind == 0xc) {
       value = combo_get_cur_sel
-                          ((ComboBoxGetSelView *)
+                          (
                            &editor_text_dlg_wnd_block.active_editor_wnd->combos[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
       if (field == 0) {
         value = terrain_editor_sel_to_terrain(value);
@@ -4563,7 +4563,7 @@ int __cdecl terrain_editor_store_controls(void)
         value--;
       }
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->combos[terrain_editor_ctrl_kinds_block.terrain_editor_ctrl_rows[field].slot]);
       *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58 + ctrl_id * 4) = value;
     }
@@ -4702,7 +4702,7 @@ void __cdecl terrain_editor_on_ok(void)
     dlg_set_parent_window(parent_wnd2);
     popup_text((const char *)&str_debug_11,(const char *)&str_notice_12);
     dlg_set_parent_window(0);
-    hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    hWnd = control_get_hwnd((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
     SetFocus(hWnd);
   }
   return;
@@ -4742,42 +4742,42 @@ void __cdecl terrain_editor_on_rename(void)
   } while (len == 0);
   if (-1 < result) {
     crt_strcpy(editor_text_dlg_wnd_block.editor_item_name_recs[terrain2],new_name);
-    sel1 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
-    sel2 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
-    sel3 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
-    sel4 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5]);
-    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
-    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
-    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
-    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5]);
+    sel1 = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    sel2 = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+    sel3 = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
+    sel4 = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[5]);
+    combo_clear(&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    combo_clear(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+    combo_clear(&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
+    combo_clear(&editor_text_dlg_wnd_block.active_editor_wnd->combos[5]);
     label = (iptr)label_string(label_string_ids[0x1ef]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1ef]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],(const char *)label);
     for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
       if ((terrain2 != 0xd) && (terrain2 != 0x18)) {
         combo_add_string
-                  ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
+                  (&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
       }
     }
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
       combo_add_string
-                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
+                (&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
       combo_add_string
-                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
+                (&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
       combo_add_string
-                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
+                (&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[terrain2]);
     }
-    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],sel1);
-    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],sel2);
-    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],sel3);
-    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],sel4);
+    combo_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],sel1);
+    combo_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],sel2);
+    combo_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[3],sel3);
+    combo_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[5],sel4);
     terrain_editor_redraw();
   }
   return;
@@ -5076,7 +5076,7 @@ void __cdecl terrain_editor_update_visibility(void)
   
   if (editor_text_dlg_wnd_block.active_editor_wnd->item < 0xb) {
     ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
-    sel = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+    sel = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
     if (sel == 0) {
       ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[5]);
       ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[6]);
@@ -5093,7 +5093,7 @@ void __cdecl terrain_editor_update_visibility(void)
       ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
     }
     ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
-    sel = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
+    sel = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[3]);
     if (sel == 0) {
       ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[7]);
       ctrl_show_and_redraw((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->edits[8]);
@@ -5134,7 +5134,7 @@ void __cdecl terrain_editor_on_combo(int ctrl_id)
   if (ctrl_id == 0xc9) {
     errors = terrain_editor_store_controls();
     if (errors == 0) {
-      terrain = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+      terrain = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
       terrain = terrain_editor_sel_to_terrain(terrain);
       editor_text_dlg_wnd_block.active_editor_wnd->item = terrain;
       terrain_editor_load_controls();
@@ -5143,7 +5143,7 @@ void __cdecl terrain_editor_on_combo(int ctrl_id)
     }
     else {
       combo_set_cur_sel
-                ((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],editor_text_dlg_wnd_block.active_editor_wnd->item);
+                (&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],editor_text_dlg_wnd_block.active_editor_wnd->item);
       terrain_editor_load_controls();
       terrain_editor_redraw();
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
@@ -5155,7 +5155,7 @@ void __cdecl terrain_editor_on_combo(int ctrl_id)
       dlg_set_parent_window(parent_wnd2);
       popup_text((const char *)&str_debug_11,(const char *)&str_notice_13);
       dlg_set_parent_window(0);
-      hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+      hWnd = control_get_hwnd((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
       SetFocus(hWnd);
     }
   }
@@ -5197,45 +5197,45 @@ void __thiscall terrain_editor_create_combo(ViewWindow *self,int combo_idx)
     parent2 = self->window_2;
   }
   combo_create
-            ((Control *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(iptr)parent2,left,
+            ((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(iptr)parent2,left,
              (iptr)rect);
-  combo_set_font((ComboBoxFontView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
-  combo_set_callback((ComboBoxCallbackSetView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(iptr)terrain_editor_on_combo);
+  combo_set_font((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
+  combo_set_callback((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(iptr)terrain_editor_on_combo);
   switch(combo_idx) {
   case 0:
     for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
       if ((terrain2 != 0xd) && (terrain2 != 0x18)) {
         label = (iptr)label_string(terrain_types[terrain2].name);
-        combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
+        combo_add_string((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
       }
     }
     break;
   case 1:
   case 3:
     label = (iptr)label_string(label_string_ids[0x1ef]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
       label = (iptr)label_string(terrain_types[terrain2].name);
-      combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
+      combo_add_string((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     }
     break;
   case 2:
   case 4:
     label = (iptr)label_string(label_string_ids[0x1f2]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     for (terrain2 = 1; terrain2 < 7; terrain2++) {
       label = (iptr)label_string(government_names[terrain2]);
-      combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
+      combo_add_string((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     }
     break;
   case 5:
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
       label = (iptr)label_string(terrain_types[terrain2].name);
-      combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
+      combo_add_string((ComboBox *)(self->editor_combo_boxes + combo_idx * 0x38 + 0x28),(const char *)label);
     }
   }
   return;
@@ -5262,8 +5262,8 @@ void __thiscall terrain_editor_create_edit(ViewWindow *self,int field_idx)
   edit_create
             ((EditControl *)(((PediaRedrawView *)self)->numeric_edit_controls_area + field_idx * 0x48 - 0x2c),(iptr)parent2,ctrl_id,
              (iptr)rect,(const char *)&str_empty_162);
-  edit_set_max_len((EditMaxLenView *)(((PediaRedrawView *)self)->numeric_edit_controls_area + field_idx * 0x48 - 0x2c),3);
-  edit_set_callback((EditCallbackSetView *)(((PediaRedrawView *)self)->numeric_edit_controls_area + field_idx * 0x48 - 0x2c),(iptr)editor_numeric_edit_filter);
+  edit_set_max_len((EditControl *)(((PediaRedrawView *)self)->numeric_edit_controls_area + field_idx * 0x48 - 0x2c),3);
+  edit_set_callback((EditControl *)(((PediaRedrawView *)self)->numeric_edit_controls_area + field_idx * 0x48 - 0x2c),(iptr)editor_numeric_edit_filter);
   return;
 }
 
@@ -5514,8 +5514,8 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   }
   btn_label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)terrain_editor_on_ok);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)terrain_editor_on_ok);
   btn_x = btn_x + self->tax_rate_sel + 2;
   rect_set_xywh((iptr)btn_rect,btn_x,btn_y,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -5526,8 +5526,8 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   }
   btn_label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)terrain_editor_on_rename);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)terrain_editor_on_rename);
   btn_x = btn_x + self->tax_rate_sel + 2;
   rect_set_xywh((iptr)btn_rect,btn_x,btn_y,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -5538,8 +5538,8 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   }
   btn_label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)terrain_editor_on_help);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)terrain_editor_on_help);
   rect_set_xywh((iptr)btn_rect,btn_x + self->tax_rate_sel + 2,btn_y,self->tax_rate_sel,
                      self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -5550,9 +5550,9 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   }
   btn_label = (iptr)label_string(label_string_ids[0xff]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)terrain_editor_on_cancel);
-  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)btn_rect,(const char *)btn_label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)terrain_editor_on_cancel);
+  ctrl_set_cancel_button((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button);
   btn_x = sprite_width
                     ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + self->init_tax_rate * 0x3c));
   self->tax_rate_sel = btn_x + 0xd;
@@ -5571,8 +5571,8 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   }
   btn_label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
-            ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
-  button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)terrain_editor_on_edit_icon);
+            ((Button *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
+  button_set_callback((Button *)(((DocumentWindow *)self)->editor_icon_button),(iptr)terrain_editor_on_edit_icon);
   btn_y = (self->client_width + self->client_x - 0x19) - self->tax_rate_sel;
   btn_x = self->client_y + 0x28;
   rect_set_xywh((iptr)btn_rect,btn_y,btn_x,self->tax_rate_sel,self->lux_rate_sel);
@@ -5584,8 +5584,8 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   }
   btn_label = (iptr)label_string(label_string_ids[0x23d]);
   button_create
-            ((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)river_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
-  button_set_callback((Control *)(((DocumentWindow *)self)->editor_misc_button),(iptr)terrain_editor_on_edit_river);
+            ((Button *)(((DocumentWindow *)self)->editor_misc_button),(iptr)river_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
+  button_set_callback((Button *)(((DocumentWindow *)self)->editor_misc_button),(iptr)terrain_editor_on_edit_river);
   btn_x = btn_x + self->lux_rate_sel + 2;
   rect_set_xywh((iptr)btn_rect,btn_y,btn_x,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -5596,8 +5596,8 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   }
   btn_label = (iptr)label_string(label_string_ids[0x23e]);
   button_create
-            ((Control *)(((DocumentWindow *)self)->terrain_coast_button),(iptr)coast_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
-  button_set_callback((Control *)(((DocumentWindow *)self)->terrain_coast_button),(iptr)terrain_editor_on_edit_coast);
+            ((Button *)(((DocumentWindow *)self)->terrain_coast_button),(iptr)coast_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
+  button_set_callback((Button *)(((DocumentWindow *)self)->terrain_coast_button),(iptr)terrain_editor_on_edit_coast);
   rect_set_xywh((iptr)btn_rect,btn_y,btn_x + self->lux_rate_sel + 2,self->tax_rate_sel,
                      self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -5608,11 +5608,11 @@ void __thiscall terrain_editor_run(ViewWindow *self)
   }
   btn_label = (iptr)label_string(label_string_ids[0x23c]);
   button_create
-            ((Control *)&((DocumentWindow *)self)->terrain_misc_button,(iptr)misc_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
-  button_set_callback((Control *)&((DocumentWindow *)self)->terrain_misc_button,(iptr)terrain_editor_on_edit_misc);
+            ((Button *)&((DocumentWindow *)self)->terrain_misc_button,(iptr)misc_parent,0x65,(iptr)btn_rect,(const char *)btn_label);
+  button_set_callback((Button *)&((DocumentWindow *)self)->terrain_misc_button,(iptr)terrain_editor_on_edit_misc);
   wnd_set_keyboard_nav((Wnd *)self->window_2,0);
   terrain_editor_load_rules();
-  combo_set_cur_sel((ComboBoxSetSelView *)&self->dialog_h,self->init_tax_rate);
+  combo_set_cur_sel((ComboBox *)&self->dialog_h,self->init_tax_rate);
   terrain_editor_load_controls();
   terrain_editor_update_visibility();
   self->dialog_w = 6;

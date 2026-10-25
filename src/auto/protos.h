@@ -100,28 +100,28 @@ void __thiscall taxrate_dialog_dtor(void *self); /* 0040f1e0 */
 void __thiscall wnd_set_modal_idle_callback(ModalMenuWindow *self,iptr callback); /* 0040f320 */
 void __thiscall wnd_set_keyboard_nav(Wnd *self,i32 enabled); /* 0040f350 */
 void __thiscall ctrl_show_and_redraw(Control *self); /* 0040f380 */
-Control * __thiscall button_ctor(Control *self); /* 0040f3e0 */
+Button * __thiscall button_ctor(Button *self); /* 0040f3e0 */
 Control * __thiscall ctrl_base_ctor(Control *self); /* 0040f480 */
-i32 __thiscall ctrl_base_dtor(ControlBase *self); /* 0040f510 */
-i32 __thiscall ctrl_dtor(Control *self); /* 0040f570 */
+i32 __thiscall ctrl_base_dtor(Control *self); /* 0040f510 */
+i32 __thiscall ctrl_dtor(Button *self); /* 0040f570 */
 void __thiscall ctrl_destroy(Control *self); /* 0040f610 */
-void __thiscall button_create(Control *self,iptr parent,i32 ctrl_id,iptr rect,const char *label); /* 0040f680 */
+void __thiscall button_create(Button *self,iptr parent,i32 ctrl_id,iptr rect,const char *label); /* 0040f680 */
 void __thiscall ctrl_init(Control *self,iptr parent_wnd,u32 type_code,u32 id,RECT *rect); /* 0040f730 */
-void __thiscall ctrl_set_default_button(Control *self); /* 0040f7d0 */
+void __thiscall ctrl_set_default_button(Button *self); /* 0040f7d0 */
 uptr __thiscall ctrl_get_parent(Control *self); /* 0040f810 */
-void __thiscall ctrl_set_cancel_button(Control *self); /* 0040f840 */
-void __thiscall button_set_callback(Control *self,iptr callback); /* 0040f880 */
-Control * __thiscall checkbox_elem_ctor(Control *self); /* 0040f8b0 */
+void __thiscall ctrl_set_cancel_button(Button *self); /* 0040f840 */
+void __thiscall button_set_callback(Button *self,iptr callback); /* 0040f880 */
+Checkbox * __thiscall checkbox_elem_ctor(Checkbox *self); /* 0040f8b0 */
 void __thiscall checkbox_dtor(Checkbox *self); /* 0040f930 */
-void __thiscall checkbox_create(Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y ,const char *label); /* 0040f9d0 */
-void __thiscall checkbox_set_callback(CheckboxCallbackSetView *self,iptr callback); /* 0040faa0 */
-void __thiscall checkbox_set_checked(Control *self,u32 checked); /* 0040fad0 */
-Control * __thiscall scrollbar_ctor(Control *self); /* 0040fb00 */
-void __thiscall scrollbar_dtor(Control *self); /* 0040fbb0 */
-void __thiscall scrollbar_create(Control *self,iptr parent,iptr ctrl_id,iptr rect,i32 style); /* 0040fc50 */
-void __thiscall scrollbar_set_pos(ClickControl *self,iptr pos); /* 0040fcf0 */
-void __thiscall scrollbar_set_range(Control *self,i32 min_value,i32 max_value); /* 0040fd40 */
-void __thiscall scrollbar_set_callback(Control *self,iptr callback); /* 0040fd80 */
+void __thiscall checkbox_create(Checkbox *self,iptr parent,i32 ctrl_id,i32 x,i32 y ,const char *label); /* 0040f9d0 */
+void __thiscall checkbox_set_callback(Checkbox *self,iptr callback); /* 0040faa0 */
+void __thiscall checkbox_set_checked(Checkbox *self,u32 checked); /* 0040fad0 */
+Scrollbar * __thiscall scrollbar_ctor(Scrollbar *self); /* 0040fb00 */
+void __thiscall scrollbar_dtor(Scrollbar *self); /* 0040fbb0 */
+void __thiscall scrollbar_create(Scrollbar *self,iptr parent,iptr ctrl_id,iptr rect,i32 style); /* 0040fc50 */
+void __thiscall scrollbar_set_pos(Scrollbar *self,iptr pos); /* 0040fcf0 */
+void __thiscall scrollbar_set_range(Scrollbar *self,i32 min_value,i32 max_value); /* 0040fd40 */
+void __thiscall scrollbar_set_callback(Scrollbar *self,iptr callback); /* 0040fd80 */
 void __cdecl gfx_fill_rect(iptr surface,RECT *rect,i32 color); /* 0040fdb0 */
 void __cdecl text_append_space(void); /* 0040fe10 */
 void __cdecl text_append_colon(void); /* 0040fe40 */
@@ -213,31 +213,31 @@ void __thiscall font_set(GameFont *self,i32 face,iptr size); /* 00417ef0 */
 u8 __thiscall sprite_get_key_color(Sprite *self); /* 00417f70 */
 DocumentWindow * __thiscall editor_wnd_ctor(DocumentWindow *self); /* 00417fa0 */
 void __thiscall editor_wnd_dtor(void *self); /* 004183d0 */
-u32 __thiscall ctrl_get_id(ControlIdView *self); /* 00418740 */
-u32 __thiscall control_get_hwnd(ControlHwndView *self); /* 00418770 */
-InputControl * __thiscall edit_ctor(InputControl *self); /* 004187a0 */
-void __thiscall edit_dtor(Control *self); /* 00418870 */
+u32 __thiscall ctrl_get_id(Control *self); /* 00418740 */
+u32 __thiscall control_get_hwnd(Control *self); /* 00418770 */
+EditControl * __thiscall edit_ctor(EditControl *self); /* 004187a0 */
+void __thiscall edit_dtor(EditControl *self); /* 00418870 */
 void __thiscall edit_create(EditControl *self,iptr parent,i32 ctrl_id,iptr rect,const char *text); /* 00418910 */
-void __thiscall edit_set_max_len(EditMaxLenView *self,i32 max_len); /* 004189c0 */
-void __thiscall edit_set_callback(EditCallbackSetView *self,iptr callback); /* 00418a00 */
-void __thiscall ctrl_set_text(ControlTextView *self,const char *text); /* 00418a30 */
-void __thiscall ctrl_get_text(ControlTextView *self,char *buffer); /* 00418a70 */
-Control * __thiscall combo_ctor(Control *self); /* 00418ab0 */
-void __thiscall combo_dtor(ComboDtorView *self); /* 00418b50 */
-void __thiscall combo_create(Control *self,iptr parent,i32 ctrl_id,iptr rect); /* 00418bf0 */
-void __thiscall combo_set_font(ComboBoxFontView *self,iptr font); /* 00418c70 */
+void __thiscall edit_set_max_len(EditControl *self,i32 max_len); /* 004189c0 */
+void __thiscall edit_set_callback(EditControl *self,iptr callback); /* 00418a00 */
+void __thiscall ctrl_set_text(Control *self,const char *text); /* 00418a30 */
+void __thiscall ctrl_get_text(Control *self,char *buffer); /* 00418a70 */
+ComboBox * __thiscall combo_ctor(ComboBox *self); /* 00418ab0 */
+void __thiscall combo_dtor(ComboBox *self); /* 00418b50 */
+void __thiscall combo_create(ComboBox *self,iptr parent,i32 ctrl_id,iptr rect); /* 00418bf0 */
+void __thiscall combo_set_font(ComboBox *self,iptr font); /* 00418c70 */
 u32 __thiscall font_get_hfont(GameFont *self); /* 00418cb0 */
-void __thiscall combo_add_string(ComboBoxAddView *self,const char *text); /* 00418ce0 */
-void __thiscall combo_clear(ComboBoxClearView *self); /* 00418d20 */
-i32 __thiscall combo_get_cur_sel(ComboBoxGetSelView *self); /* 00418d60 */
-void __thiscall combo_set_cur_sel(ComboBoxSetSelView *self,iptr index); /* 00418d90 */
-void __thiscall combo_set_callback(ComboBoxCallbackSetView *self,iptr callback); /* 00418dd0 */
-Control * __thiscall checkbox_ctor(Control *self); /* 00418e00 */
-void __thiscall listbox_dtor(ListBoxControl *self); /* 00418ea0 */
-void __thiscall listbox_create(Control *self,iptr parent,i32 ctrl_id,iptr rect); /* 00418f40 */
-void __thiscall listbox_set_font(ListBoxFontView *self,iptr font); /* 00418fe0 */
-void __thiscall listbox_add_string(ListBoxAddView *self,const char *text); /* 00419020 */
-void __thiscall listbox_clear(ListBoxClearView *self); /* 00419060 */
+void __thiscall combo_add_string(ComboBox *self,const char *text); /* 00418ce0 */
+void __thiscall combo_clear(ComboBox *self); /* 00418d20 */
+i32 __thiscall combo_get_cur_sel(ComboBox *self); /* 00418d60 */
+void __thiscall combo_set_cur_sel(ComboBox *self,iptr index); /* 00418d90 */
+void __thiscall combo_set_callback(ComboBox *self,iptr callback); /* 00418dd0 */
+ListBox * __thiscall listbox_ctor(ListBox *self); /* 00418e00 */
+void __thiscall listbox_dtor(ListBox *self); /* 00418ea0 */
+void __thiscall listbox_create(ListBox *self,iptr parent,i32 ctrl_id,iptr rect); /* 00418f40 */
+void __thiscall listbox_set_font(ListBox *self,iptr font); /* 00418fe0 */
+void __thiscall listbox_add_string(ListBox *self,const char *text); /* 00419020 */
+void __thiscall listbox_clear(ListBox *self); /* 00419060 */
 void __cdecl text_append_spaces(i32 count); /* 004190a0 */
 i32 __cdecl popup_text(const char *filename,const char *section); /* 004190d0 */
 i32 __cdecl popup_text_flags(const char *filename,const char *section,i32 flags); /* 00419100 */
@@ -283,7 +283,7 @@ void __cdecl input_flush_events(void); /* 00421bd0 */
 i32 __thiscall file_obj_create(FileObject *self,const char *path); /* 00421bf0 */
 i32 __thiscall file_map_close(FileObject *self); /* 00421c30 */
 void __thiscall file_obj_write(FileObject *self,iptr data,i32 size); /* 00421c60 */
-void __thiscall radiogrp_enable_item(RadioGroupEnableView *self,iptr index); /* 00421ca0 */
+void __thiscall radiogrp_enable_item(RadioGroup *self,iptr index); /* 00421ca0 */
 void __cdecl text_append_comma(void); /* 00421d30 */
 i32 __cdecl text_set_string_arg_b(int index,const char *text); /* 00421d60 */
 i32 __cdecl text_set_number_arg(int index,i32 value); /* 00421da0 */
@@ -531,9 +531,9 @@ i32 __cdecl setup_mp_load_scenario(i32 mp_mode); /* 00445712 */
 i32 __cdecl net_choose_civ_dialog(int title_offset); /* 00445e46 */
 void * __thiscall net_gamelist_view_scalar_dtor(NetGamelistView *self,uint flags); /* 00447170 */
 LobbyList * __thiscall lobby_list_scalar_dtor(LobbyList *self,uint flags); /* 004471c0 */
-void __thiscall radiogrp_disable_item(RadioGroupDisableView *self,iptr index); /* 00447210 */
-u32 __thiscall radiogrp_get_selected(RadioGroupGetSelView *self); /* 004472c0 */
-void __thiscall radiogrp_set_selected(RadioGroupSetSelView *self,u32 value); /* 004472f0 */
+void __thiscall radiogrp_disable_item(RadioGroup *self,iptr index); /* 00447210 */
+u32 __thiscall radiogrp_get_selected(RadioGroup *self); /* 004472c0 */
+void __thiscall radiogrp_set_selected(RadioGroup *self,u32 value); /* 004472f0 */
 void __cdecl terrain_base_sprites_global_init(void); /* 00447320 */
 void __cdecl terrain_base_sprites_static_init(void); /* 0044733a */
 void __cdecl terrain_base_sprites_reg_atexit(void); /* 00447362 */
@@ -829,20 +829,20 @@ i32 __thiscall sprite_get_height(Sprite *self); /* 00451860 */
 void __thiscall wnd_get_cursor_pos(WndBase *self,iptr out_x,iptr out_y); /* 00451890 */
 void __thiscall wnd_activate(Wnd *self); /* 004518d0 */
 void __thiscall wnd_focus_and_raise(WndBase *self); /* 00451900 */
-Control * __thiscall hotspot_ctor(Control *self); /* 00451930 */
-void __thiscall hotspot_create(ClickControl *self,iptr parent,iptr id,iptr rect); /* 004519b0 */
-void __thiscall hotspot_set_click_callback(HotspotClickSetView *self,iptr callback); /* 00451a60 */
-void __thiscall hotspot_set_dblclick_callback(HotspotDblClickSetView *self,iptr callback); /* 00451a90 */
-void __thiscall scrollbar_set_track_callback(ScrollbarTrackSetView *self,iptr callback); /* 00451ac0 */
+Hotspot * __thiscall hotspot_ctor(Hotspot *self); /* 00451930 */
+void __thiscall hotspot_create(Hotspot *self,iptr parent,iptr id,iptr rect); /* 004519b0 */
+void __thiscall hotspot_set_click_callback(Hotspot *self,iptr callback); /* 00451a60 */
+void __thiscall hotspot_set_dblclick_callback(Hotspot *self,iptr callback); /* 00451a90 */
+void __thiscall scrollbar_set_track_callback(Scrollbar *self,iptr callback); /* 00451ac0 */
 void __thiscall pedia_draw_category_body(DocumentWindow *self,i32 category,i32 flags); /* 00451af0 */
 void __thiscall pedia_update_controls(MediaWindow *self); /* 00451bf0 */
 void __thiscall pedia_dispatch_category_draw(DocumentWindow *self,i32 left,i32 top,i32 right, i32 bottom,i32 category); /* 00452188 */
 void __thiscall pedia_load_description(void *self, int topic2); /* 00452315, hand-written */
 void __thiscall pedia_update_describe_button(ListPaneWindow *self,int list_index); /* 00452768 */
 void __cdecl hyperlink_register_class(void); /* 004529df */
-void __thiscall hyperlink_dtor(HyperlinkDtorView *self); /* 00452a67 */
+void __thiscall hyperlink_dtor(Hyperlink *self); /* 00452a67 */
 HWND __cdecl hyperlink_create_hwnd(int *rect,iptr control); /* 00452ae2 */
-void __thiscall hyperlink_create(ClickControl *self,iptr parent,i32 control_id,iptr rect); /* 00452b89 */
+void __thiscall hyperlink_create(Hyperlink *self,iptr parent,i32 control_id,iptr rect); /* 00452b89 */
 void __thiscall pedia_add_link(DocumentWindow *self,iptr item_id,int x,int y,i32 link_kind, i32 rect_left,i32 rect_top,i32 rect_right,i32 rect_bottom); /* 00452c14 */
 void __cdecl pedia_link_on_click_advance(int control_id); /* 004531b8 */
 void __cdecl pedia_link_on_click_improvement(int control_id); /* 0045323a */
@@ -851,13 +851,13 @@ void __cdecl pedia_link_on_click_unit(int control_id); /* 0045333e */
 void __cdecl pedia_link_on_click_terrain(int control_id); /* 004533c0 */
 Hotspot * __thiscall hotspot_scalar_dtor(Hotspot *self,uint flags); /* 00453aa0 */
 void __cdecl ui_pump_messages(void); /* 00453af0 */
-PediaLinkCtorView * __thiscall pedia_link_ctor(PediaLinkCtorView *self); /* 00453b10 */
+PediaLink * __thiscall pedia_link_ctor(PediaLink *self); /* 00453b10 */
 void __thiscall hotspot_dtor(Hotspot *self); /* 00453ba0 */
-void __thiscall ctrl_disable(Control *self); /* 00453c40 */
-void __thiscall ctrl_enable(Control *self); /* 00453c80 */
-Control * __thiscall hyperlink_ctor(Control *self); /* 00453cc0 */
-void __thiscall hyperlink_set_click_callback(HyperlinkSetClickCallbackView *self,iptr callback); /* 00453d40 */
-void __thiscall hyperlink_set_dblclick_callback(HyperlinkSetDblclickCallbackView *self,iptr callback); /* 00453d70 */
+void __thiscall ctrl_disable(Button *self); /* 00453c40 */
+void __thiscall ctrl_enable(Button *self); /* 00453c80 */
+Hyperlink * __thiscall hyperlink_ctor(Hyperlink *self); /* 00453cc0 */
+void __thiscall hyperlink_set_click_callback(Hyperlink *self,iptr callback); /* 00453d40 */
+void __thiscall hyperlink_set_dblclick_callback(Hyperlink *self,iptr callback); /* 00453d70 */
 i32 __cdecl wonder_is_expired(iptr wonder); /* 00453da0 */
 int __cdecl wonder_get_city(iptr wonder); /* 00453e18 */
 i32 __cdecl civ_has_wonder(iptr civ,iptr wonder); /* 00453e51 */
@@ -1163,15 +1163,15 @@ void __thiscall pedia_draw_terrain_page(DocumentWindow *self); /* 004906fd */
 void __thiscall pedia_show_terrain_modal(DocumentWindow *self,int terrain_id); /* 00491c20 */
 i32 __cdecl pedia_find_terrain_index(iptr terrain_id); /* 00491d61 */
 void __thiscall wnd_set_focus(WndBase *self); /* 004923c0 */
-void __cdecl chat_insert_macro_text(Control *edit,i32 macro_id); /* 004923f0 */
+void __cdecl chat_insert_macro_text(EditControl *edit,i32 macro_id); /* 004923f0 */
 void __cdecl chat_read_macro_line(const char *path,iptr file_offset); /* 0049275a */
 i32 __thiscall file_obj_open(FileObject *self,const char *path); /* 004929c0 */
 i32 __thiscall file_obj_seek_cur(FileSeekView *self,i32 offset); /* 00492a00 */
 void __thiscall file_obj_read_line(FileReadLineView *self,char *buf,i32 max_len); /* 00492a40 */
 i32 __thiscall file_obj_get_size(FileObject *self); /* 00492a80 */
-i32 __thiscall edit_get_sel_end(EditSelEndView *self); /* 00492ab0 */
-void __thiscall edit_replace_sel(Control *self,const char *text); /* 00492ae0 */
-void __thiscall edit_set_sel(EditSelView *self,i32 sel_start,i32 sel_end); /* 00492b20 */
+i32 __thiscall edit_get_sel_end(EditControl *self); /* 00492ab0 */
+void __thiscall edit_replace_sel(EditControl *self,const char *text); /* 00492ae0 */
+void __thiscall edit_set_sel(EditControl *self,i32 sel_start,i32 sel_end); /* 00492b20 */
 void __cdecl civ_ai_goal_negate_priority(int civ,int goal); /* 00492b60 */
 void __cdecl civ_clear_standing_goals_near(iptr civ,i32 role,i32 x,i32 y,int max_dist); /* 00492c15 */
 void __cdecl civ_ai_goal_insert_gap(iptr civ,iptr goal); /* 00492d18 */
@@ -1218,7 +1218,7 @@ void __thiscall palette_get_entry(GamePalette *self,iptr index,iptr red,iptr gre
 u32 * __thiscall surface_get_rect(DibSurface *self); /* 00497c90 */
 void __thiscall wnd_set_bg_tile(DiploLeaderView *self,DibSurface *tile); /* 00497cc0 */
 void __thiscall wnd_set_caption_height(WndBase *self,i32 height); /* 00497d00 */
-void __thiscall button_create_with_callback(Control *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,const char *label); /* 00497d40 */
+void __thiscall button_create_with_callback(Button *self,iptr parent,i32 ctrl_id,iptr rect,u32 callback,const char *label); /* 00497d40 */
 iptr __cdecl save_read_cstr(char *buf,iptr file); /* 00497da0 */
 void __cdecl save_write_cstr_eof(const char *str,iptr file); /* 00497e0f */
 bool __cdecl memblock_init(MemBlock *block,i32 block_id,uint size); /* 00497ea0 */
@@ -1430,19 +1430,19 @@ void __cdecl chat_clear_button_on_click(void); /* 004b95e1 */
 i32 __cdecl parley_edit_escape_filter(i32 control,int key); /* 004b9635 */
 i32 __cdecl chat_input_on_key(i32 control,int key); /* 004b968a */
 void __thiscall file_obj_read(FileObject *self,char *buf,i32 size); /* 004bb370 */
-Control * __thiscall ctrl_scalar_dtor(Control *self,uint flags); /* 004bb3b0 */
-Control * __thiscall edit_scalar_dtor(Control *self,uint flags); /* 004bb400 */
+Button * __thiscall ctrl_scalar_dtor(Button *self,uint flags); /* 004bb3b0 */
+EditControl * __thiscall edit_scalar_dtor(EditControl *self,uint flags); /* 004bb400 */
 Checkbox * __thiscall checkbox_scalar_dtor(Checkbox *self,uint flags); /* 004bb450 */
-RadioGroupDtorView * __thiscall radiogrp_scalar_dtor(RadioGroupDtorView *self,uint flags); /* 004bb4a0 */
-Control * __thiscall scrollbar_scalar_dtor(Control *self,uint flags); /* 004bb4f0 */
+RadioGroup * __thiscall radiogrp_scalar_dtor(RadioGroup *self,uint flags); /* 004bb4a0 */
+Scrollbar * __thiscall scrollbar_scalar_dtor(Scrollbar *self,uint flags); /* 004bb4f0 */
 i32 __thiscall sprite_height(Sprite *self); /* 004bb540 */
 void __thiscall wnd_move_to_rect(WndBase *self,iptr rect); /* 004bb570 */
-void __thiscall ctrl_set_initial_focus(CtrlSetInitialFocusView *self); /* 004bb5b0 */
-void __thiscall ctrl_set_focus(ControlFocusView *self); /* 004bb5e0 */
+void __thiscall ctrl_set_initial_focus(Control *self); /* 004bb5b0 */
+void __thiscall ctrl_set_focus(Control *self); /* 004bb5e0 */
 void __thiscall edit_create_styled(EditControl *self,iptr parent,i32 ctrl_id,iptr rect,const char *text, i32 multiline,i32 style); /* 004bb620 */
-void __thiscall edit_set_caret(ControlTextView *self,i32 pos); /* 004bb6d0 */
-i32 __thiscall edit_get_text_end(ControlTextView *self); /* 004bb710 */
-void __thiscall radiogrp_dtor(RadioGroupDtorView *self); /* 004bb740 */
+void __thiscall edit_set_caret(EditControl *self,i32 pos); /* 004bb6d0 */
+i32 __thiscall edit_get_text_end(EditControl *self); /* 004bb710 */
+void __thiscall radiogrp_dtor(RadioGroup *self); /* 004bb740 */
 void __cdecl rect_deflate(iptr rect,int dx,int dy); /* 004bb800 */
 void __cdecl rect_inflate(iptr rect,int dx,int dy); /* 004bb840 */
 int __cdecl mem_handle_alloc_tracked(i32 size); /* 004bb870 */
@@ -1542,7 +1542,7 @@ void __cdecl events_copy(ScenarioEvents *dst_events,ScenarioEvents *src_events);
 void __cdecl events_compact(void); /* 004cef35 */
 int __cdecl events_rename_unit_refs(char *old_name,iptr new_name); /* 004cefe9 */
 void __thiscall wnd_set_resize_border(WndBase *self,i32 width); /* 004cff70 */
-i32 __thiscall edit_get_line(EditLineView *self,i32 line,char *buffer,i32 max_len); /* 004cffb0 */
+i32 __thiscall edit_get_line(EditControl *self,i32 line,char *buffer,i32 max_len); /* 004cffb0 */
 void __cdecl str_trim_trailing(char *str); /* 004cfff0 */
 void __cdecl str_trim(char *str); /* 004d007e */
 void __cdecl spaceship_wnd_net_idle(void); /* 004d0160 */
@@ -1875,12 +1875,12 @@ void __cdecl text_append_plus(void); /* 00511430 */
 void __thiscall hotspot_add_rect(ClickMap *self,iptr id,i32 cursor,RECT *rect); /* 00511460 */
 void __cdecl city_window_draw_icon_row(iptr sprite,i32 count,i32 x,i32 y, i32 width,i32 spacing,i32 max_width,i32 flags); /* 005114d0 */
 i32 __cdecl popup_game_with_city_flags(const char *section,i32 city,i32 flags); /* 00511520 */
-SpriteButtonCore * __thiscall spritebtn_scalar_dtor(SpriteButtonCore *self,uint flags); /* 00511560 */
-void __thiscall spritebtn_dtor(SpriteButtonCore *self); /* 005115b0 */
+SpriteButton * __thiscall spritebtn_scalar_dtor(SpriteButton *self,uint flags); /* 00511560 */
+void __thiscall spritebtn_dtor(SpriteButton *self); /* 005115b0 */
 int __thiscall city_window_scale(WindowObjectView *self,int value); /* 00511690 */
 void __cdecl text_append_city_population(i32 city); /* 005116f0 */
 SpriteButton * __thiscall spritebtn_ctor(SpriteButton *self); /* 00511720 */
-void __thiscall spritebtn_set_click_handler(SpritebtnSetClickHandlerView *self,iptr callback); /* 005117f0 */
+void __thiscall spritebtn_set_click_handler(SpriteButton *self,iptr callback); /* 005117f0 */
 void __thiscall frame_wnd_set_title_font(FrameWindow *self,iptr font); /* 00511820 */
 void __thiscall frame_wnd_set_title_small_font(FrameWindow *self,iptr font); /* 00511850 */
 void __cdecl net_send_text_args(iptr popup_kind,i32 player_id,int string_count,int number_count,iptr arg_a,iptr arg_b); /* 00511880 */
@@ -2006,15 +2006,15 @@ void __cdecl chat_on_send_checkbox(int ctrl_id); /* 0052e7b7 */
 void __thiscall parley_update_buttons(ParleyWindow *self); /* 0052e971 */
 iptr __thiscall parley_find_unit_by_id(ParleyWindow *self,int unit_id); /* 0052ec47 */
 iptr __thiscall parley_find_city_by_id(ParleyWindow *self,int city_id); /* 0052ed95 */
-u32 __thiscall ctrl_is_enabled(ControlEnabledView *self); /* 00530e80 */
-void __thiscall edit_set_change_callback(EditChangeSetView *self,iptr callback); /* 00530eb0 */
-void __thiscall checkbox_create_fixed(Control *self,iptr parent,i32 ctrl_id,i32 x,i32 y ,i32 width,const char *label); /* 00530ee0 */
-void __thiscall checkbox_enable(CheckboxEnableView *self); /* 00530fb0 */
-u32 __thiscall checkbox_is_checked(Control *self); /* 00530fe0 */
-InputControl * __thiscall radiogrp_ctor(InputControl *self); /* 00531010 */
+u32 __thiscall ctrl_is_enabled(Button *self); /* 00530e80 */
+void __thiscall edit_set_change_callback(EditControl *self,iptr callback); /* 00530eb0 */
+void __thiscall checkbox_create_fixed(Checkbox *self,iptr parent,i32 ctrl_id,i32 x,i32 y ,i32 width,const char *label); /* 00530ee0 */
+void __thiscall checkbox_enable(Checkbox *self); /* 00530fb0 */
+u32 __thiscall checkbox_is_checked(Checkbox *self); /* 00530fe0 */
+RadioGroup * __thiscall radiogrp_ctor(RadioGroup *self); /* 00531010 */
 void __thiscall radiogrp_create(RadioGroup *self,iptr parent,i32 ctrl_id,iptr rect,u32 columns,u32 item_count, iptr labels); /* 005310a0 */
-void __thiscall radiogrp_set_select_callback(Control *self,iptr callback); /* 005311b0 */
-void __thiscall radiogrp_set_dblclick_callback(Control *self,iptr callback); /* 005311e0 */
+void __thiscall radiogrp_set_select_callback(RadioGroup *self,iptr callback); /* 005311b0 */
+void __thiscall radiogrp_set_dblclick_callback(RadioGroup *self,iptr callback); /* 005311e0 */
 int __cdecl ai_unit_role(iptr unit); /* 00531287 */
 iptr __cdecl ai_ship_best_landing_dir(iptr unit); /* 005312e4 */
 void __cdecl unit_stack_wake_by_role(iptr unit,uint role_mask,int wake); /* 00531567 */
@@ -2059,11 +2059,11 @@ void __thiscall events_editor_draw(ViewWindow *self); /* 0054f16b */
 void __thiscall events_editor_run(DocumentWindow *self); /* 0054f3b9 */
 void __cdecl events_editor_open(void); /* 0054ffc8 */
 ScenarioEvents * __thiscall events_delete(ScenarioEvents *self,uint flags); /* 00551cd0 */
-u32 __thiscall listbox_get_count(ListboxGetCountView *self); /* 00551d20 */
-i32 __thiscall listbox_get_cur_sel(ListBoxGetSelView *self); /* 00551d50 */
-void __thiscall listbox_set_cur_sel(ListBoxSetSelView *self,i32 index); /* 00551d80 */
-void __thiscall listbox_set_dblclick_callback(ListBoxDblClickSetView *self,iptr callback); /* 00551dc0 */
-void __thiscall listbox_set_select_callback(ListBoxSelectSetView *self,iptr callback); /* 00551df0 */
+u32 __thiscall listbox_get_count(ListBox *self); /* 00551d20 */
+i32 __thiscall listbox_get_cur_sel(ListBox *self); /* 00551d50 */
+void __thiscall listbox_set_cur_sel(ListBox *self,i32 index); /* 00551d80 */
+void __thiscall listbox_set_dblclick_callback(ListBox *self,iptr callback); /* 00551dc0 */
+void __thiscall listbox_set_select_callback(ListBox *self,iptr callback); /* 00551df0 */
 i32 __cdecl popup_game_ex(const char *section,i32 arg2,i32 arg3); /* 00551e20 */
 i32 __cdecl popup_debug_ex(const char *section,i32 arg2,i32 arg3); /* 00551e60 */
 void __cdecl caption_font_global_init(void); /* 00551ea0 */
@@ -2620,15 +2620,15 @@ i32 __thiscall dialog_load_text_section(Dialog *self,const char *file_name,const
 void __cdecl dlg_push_parent_window(iptr parent); /* 005a6c23 */
 void __cdecl dlg_pop_parent_window(void); /* 005a6c45 */
 Checkbox * __thiscall checkbox_vector_dtor(Checkbox *self,uint flags); /* 005a9320 */
-Control * __thiscall edit_vector_dtor(Control *self,uint flags); /* 005a93b0 */
-Control * __thiscall ctrl_vector_dtor(Control *self,uint flags); /* 005a9440 */
-ListBoxControl * __thiscall listbox_scalar_dtor(ListBoxControl *self,uint flags); /* 005a94d0 */
+EditControl * __thiscall edit_vector_dtor(EditControl *self,uint flags); /* 005a93b0 */
+Button * __thiscall ctrl_vector_dtor(Button *self,uint flags); /* 005a9440 */
+ListBox * __thiscall listbox_scalar_dtor(ListBox *self,uint flags); /* 005a94d0 */
 Hotspot * __thiscall hotspot_vector_dtor(Hotspot *self,uint flags); /* 005a9520 */
 SurfaceWindow * __thiscall surfwnd_scalar_dtor(SurfaceWindow *self,uint flags); /* 005a95b0 */
 void __thiscall wnd_get_screen_rect(WndBase *self,iptr rect); /* 005a9600 */
-void __thiscall checkbox_disable(CheckboxDisableView *self); /* 005a9640 */
-void __thiscall listbox_get_text(ListBoxTextView *self,i32 index,char *buffer); /* 005a9670 */
-void __thiscall listbox_get_sel_text(ListBoxSelTextView *self,char *buffer); /* 005a96b0 */
+void __thiscall checkbox_disable(Checkbox *self); /* 005a9640 */
+void __thiscall listbox_get_text(ListBox *self,i32 index,char *buffer); /* 005a9670 */
+void __thiscall listbox_get_sel_text(ListBox *self,char *buffer); /* 005a96b0 */
 uint __thiscall dialog_uses_alt_text_color(Dialog *self); /* 005a96f0 */
 void __thiscall dialog_draw_text_default_font(Dialog *self,const char *text,i32 x,i32 y, i32 flags); /* 005a9730 */
 void __cdecl gfx_set_draw_target(iptr surface); /* 005a9780 */
@@ -2902,12 +2902,12 @@ void __thiscall wnd_remove_control(WndControlRemoveView *self,int ctrl_id); /* 0
 void __thiscall wnd_remove_all_controls(WndControlRemoveView *self); /* 005c5aeb */
 void __thiscall wnd_focus_first_control(Wnd *self); /* 005c5b7f */
 i32 __thiscall wnd_dispatch_hotkey_char(void *self,i32 ch); /* 005c5c86 */
-u32 __thiscall control_get_type(ControlTypeView *self); /* 005c5e60 */
-u32 __thiscall control_get_next(ControlNextView *self); /* 005c5e80 */
-u8 __thiscall ctrl_get_initial_focus(ControlInitialFocusView *self); /* 005c5ea0 */
-u32 __thiscall checkbox_is_enabled(CheckboxEnabledView *self); /* 005c5ec0 */
-u32 __thiscall radiogrp_get_items(RadioGroupItemsView *self); /* 005c5ee0 */
-u32 __thiscall radiogrp_item_count(RadioGroupCountView *self); /* 005c5f00 */
+u32 __thiscall control_get_type(Control *self); /* 005c5e60 */
+u32 __thiscall control_get_next(Control *self); /* 005c5e80 */
+u8 __thiscall ctrl_get_initial_focus(Control *self); /* 005c5ea0 */
+u32 __thiscall checkbox_is_enabled(Checkbox *self); /* 005c5ec0 */
+u32 __thiscall radiogrp_get_items(RadioGroup *self); /* 005c5ee0 */
+u32 __thiscall radiogrp_item_count(RadioGroup *self); /* 005c5f00 */
 void __thiscall wnd_create_with_cmd_proc(WndBase *self,const char *title,i32 style,i32 x,i32 y ,i32 width,i32 height,iptr palette); /* 005c5f20 */
 void __thiscall wnd_create_with_handlers(WndBase *self,const char *title,i32 style,i32 x,i32 y ,i32 width,i32 height,iptr palette,iptr parent); /* 005c5fc4 */
 void __thiscall wnd_run_modal_loop(ModalMenuWindow *self); /* 005c61b0 */
@@ -2940,11 +2940,11 @@ HWND __cdecl hotspot_create_hwnd(int *rect,iptr ctrl); /* 005c8be1 */
 void __cdecl region_dispose(int region); /* 005c8c83 */
 i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam); /* 005c8caf, hand-written */
 int __thiscall ctrl_get_rect(Control *self); /* 005c8f50 */
-void __thiscall hotspot_fire_enter(HotspotEnterView *self,i32 arg); /* 005c8f70 */
-void __thiscall hotspot_fire_leave(HotspotLeaveView *self,i32 event_arg); /* 005c8fb0 */
-void __thiscall hotspot_fire_click(HotspotClickView *self,i32 event_arg); /* 005c8ff0 */
-void __thiscall hotspot_fire_press(HotspotPressView *self,i32 event_arg); /* 005c9030 */
-void __thiscall hotspot_fire_dblclick(HotspotDblClickView *self,i32 event_arg); /* 005c9070 */
+void __thiscall hotspot_fire_enter(Hotspot *self,i32 arg); /* 005c8f70 */
+void __thiscall hotspot_fire_leave(Hotspot *self,i32 event_arg); /* 005c8fb0 */
+void __thiscall hotspot_fire_click(Hotspot *self,i32 event_arg); /* 005c8ff0 */
+void __thiscall hotspot_fire_press(Hotspot *self,i32 event_arg); /* 005c9030 */
+void __thiscall hotspot_fire_dblclick(Hotspot *self,i32 event_arg); /* 005c9070 */
 void __cdecl ctrl_hwnd_set_focus(HWND hwnd); /* 005c90b0 */
 void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd); /* 005c90ca */
 void __cdecl ctrl_parse_hotkey(iptr ctrl,const char *text); /* 005c9222 */
@@ -2954,7 +2954,7 @@ ControlBlock * __cdecl ctrl_init_block(HWND hwnd,iptr owner); /* 005c9499 */
 ControlBlock * __cdecl wnd_from_hwnd(HWND hwnd); /* 005c9563 */
 void __cdecl ctrl_hwnd_free_block(HWND hwnd); /* 005c9595 */
 void __cdecl wnd_redraw_client(HWND hwnd); /* 005c96cc */
-void __thiscall control_set_hwnd(ControlHwndSetView *self,u32 hwnd); /* 005c9710 */
+void __thiscall control_set_hwnd(Control *self,u32 hwnd); /* 005c9710 */
 HWND __cdecl button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *font); /* 005c9740 */
 void __cdecl button_press_animated(HWND hwnd); /* 005cac22 */
 i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam); /* 005cacd4, hand-written */
@@ -2963,9 +2963,9 @@ void __cdecl spritebtn_hwnd_cleanup_stub(i32 hwnd); /* 005cb6db */
 i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam); /* 005cb6eb, hand-written */
 u32 __thiscall palette_get_hpalette(PaletteHandleView *self); /* 005cbdb0 */
 u8 __thiscall wnd_keyboard_nav_enabled(WndKeyNavView *self); /* 005cbdd0 */
-void __thiscall button_fire_callback(ButtonClickView *self,i32 ctrl_id); /* 005cbdf0 */
-void __thiscall spritebtn_fire_click(SpriteButtonClickView *self,i32 ctrl_id); /* 005cbe30 */
-void __thiscall spritebtn_fire_rclick(SpriteButtonRClickView *self,i32 ctrl_id); /* 005cbe70 */
+void __thiscall button_fire_callback(Button *self,i32 ctrl_id); /* 005cbdf0 */
+void __thiscall spritebtn_fire_click(SpriteButton *self,i32 ctrl_id); /* 005cbe30 */
+void __thiscall spritebtn_fire_rclick(SpriteButton *self,i32 ctrl_id); /* 005cbe70 */
 void __cdecl ui_wait_ticks(i32 ticks); /* 005cbeb0 */
 void __cdecl default_draw_font_static_init(void); /* 005cbed0 */
 void __cdecl default_draw_font_ctor(void); /* 005cbeea */
@@ -2977,7 +2977,7 @@ HWND __cdecl checkbox_create_hwnd(RECT *rect,iptr ctrl,char *label,int visible);
 void __cdecl checkbox_destroy_hwnd(int hwnd); /* 005cc248 */
 void __cdecl checkbox_toggle_by_hotkey(HWND hwnd); /* 005cc274 */
 i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam); /* 005cc320 */
-void __thiscall checkbox_fire_callback(CheckboxClickView *self,i32 ctrl_id,i32 checked); /* 005cce40 */
+void __thiscall checkbox_fire_callback(Checkbox *self,i32 ctrl_id,i32 checked); /* 005cce40 */
 void __stdcall control_subclass_wndproc(HWND hwnd,int msg,i32 wparam,i32 lparam); /* 005cce80 */
 HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visible); /* 005ccf17 */
 void __cdecl scrollbar_destroy_hwnd(i32 hwnd); /* 005cd139 */
@@ -2985,10 +2985,10 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND hwnd,uint msg,uint wparam,int lparam
 void __cdecl scrollbar_hwnd_set_range(HWND hwnd,int min_pos,int max_pos); /* 005cd4c7 */
 void __cdecl scrollbar_hwnd_get_range(HWND hwnd,LPINT min_out,LPINT max_out); /* 005cd535 */
 void __cdecl scrollbar_hwnd_set_pos(i32 hwnd,i32 pos); /* 005cd559 */
-u32 __thiscall scrollbar_get_cur_pos(ScrollbarPosView *self); /* 005cd620 */
-void __thiscall scrollbar_fire_change(ScrollbarChangeView *self,i32 pos); /* 005cd640 */
-void __thiscall scrollbar_fire_track(ScrollbarTrackView *self,i32 pos); /* 005cd680 */
-u32 __thiscall scrollbar_get_page_size(ScrollbarPageView *self); /* 005cd6c0 */
+u32 __thiscall scrollbar_get_cur_pos(Scrollbar *self); /* 005cd620 */
+void __thiscall scrollbar_fire_change(Scrollbar *self,i32 pos); /* 005cd640 */
+void __thiscall scrollbar_fire_track(Scrollbar *self,i32 pos); /* 005cd680 */
+u32 __thiscall scrollbar_get_page_size(Scrollbar *self); /* 005cd6c0 */
 void __cdecl gfx_scale_init(void); /* 005cd6e0 */
 void __cdecl gfx_set_scale_ratio(int num,int den); /* 005cd775 */
 void __cdecl gfx_get_scale_ratio(iptr out_num,iptr out_den); /* 005cda06 */
@@ -3059,7 +3059,7 @@ void __cdecl edit_hwnd_set_caret(HWND hwnd,WPARAM pos); /* 005d2f0d */
 uint __cdecl edit_ctl_get_sel_end(HWND hwnd); /* 005d2f47 */
 int __cdecl edit_hwnd_get_text_end(i32 hwnd); /* 005d2f7e */
 void __cdecl edit_hwnd_replace_sel(HWND hwnd,LPARAM text); /* 005d3035 */
-i32 __thiscall edit_fire_key_callback(EditKeyView *self,iptr key); /* 005d30e0 */
+i32 __thiscall edit_fire_key_callback(EditControl *self,iptr key); /* 005d30e0 */
 HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible); /* 005d3130 */
 LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM lparam); /* 005d3310 */
 void __cdecl combo_hwnd_cleanup_stub(i32 hwnd); /* 005d356e */
@@ -3068,8 +3068,8 @@ void __cdecl combo_hwnd_set_font(HWND hwnd,i32 font_handle); /* 005d35c8 */
 void __cdecl combo_hwnd_clear(HWND hwnd); /* 005d360a */
 LRESULT __cdecl combo_hwnd_get_cur_sel(HWND hwnd); /* 005d36b1 */
 void __cdecl combo_hwnd_set_cur_sel(HWND hwnd,WPARAM index); /* 005d36f6 */
-void __thiscall combo_fire_dblclick(ComboBoxDblClickView *self); /* 005d3720 */
-void __thiscall combo_fire_selchange(ComboBoxSelChangeView *self); /* 005d3760 */
+void __thiscall combo_fire_dblclick(ComboBox *self); /* 005d3720 */
+void __thiscall combo_fire_selchange(ComboBox *self); /* 005d3760 */
 HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_column,GameFont *font); /* 005d37a0 */
 LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM lparam); /* 005d39e2 */
 void __cdecl listbox_hwnd_cleanup_stub(i32 hwnd); /* 005d3c40 */
@@ -3080,9 +3080,9 @@ void __cdecl listbox_hwnd_get_text(HWND hwnd,WPARAM index,LPARAM buffer); /* 005
 void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,char *buffer); /* 005d3d62 */
 LRESULT __cdecl listbox_hwnd_get_cur_sel(HWND hwnd); /* 005d3dbf */
 void __cdecl listbox_hwnd_set_cur_sel(HWND hwnd,WPARAM index); /* 005d3e92 */
-void __thiscall listbox_fire_dblclick(ListBoxDblClickView *self); /* 005d3f30 */
-void __thiscall listbox_fire_selchange(ListBoxSelChangeView *self); /* 005d3f70 */
-void __thiscall radiogrp_show_all(RadioGroupShowView *self); /* 005d4014 */
+void __thiscall listbox_fire_dblclick(ListBox *self); /* 005d3f30 */
+void __thiscall listbox_fire_selchange(ListBox *self); /* 005d3f70 */
+void __thiscall radiogrp_show_all(RadioGroup *self); /* 005d4014 */
 void __cdecl ctrl_set_pending_font(iptr font); /* 005d4167 */
 void __cdecl ui_set_radio_text_color(i32 color_index); /* 005d417f */
 void __cdecl ui_set_radio_disabled_color(i32 color_index); /* 005d4197 */
@@ -3153,9 +3153,9 @@ i32 __cdecl ctrl_hwnd_is_radio(HWND hwnd); /* 005dab5a */
 void __cdecl radiogrp_hwnd_invalidate(HWND hwnd); /* 005dabc7 */
 uint __cdecl radiogrp_hwnd_is_selected(i32 hwnd); /* 005dabe5 */
 i32 __cdecl radiogrp_hwnds_same_group(int hwnd_a,int hwnd_b); /* 005dac39 */
-void __thiscall radiogrp_fire_callback(RadioGroupClickView *self,i32 ctrl_id,i32 index); /* 005dad40 */
-void __thiscall radiogrp_fire_dblclick(RadioGroupDblClickView *self,i32 ctrl_id,i32 index); /* 005dad80 */
-void __thiscall radiogrp_fire_rclick(RadioGroupRClickView *self,i32 ctrl_id,i32 index); /* 005dadc0 */
+void __thiscall radiogrp_fire_callback(RadioGroup *self,i32 ctrl_id,i32 index); /* 005dad40 */
+void __thiscall radiogrp_fire_dblclick(RadioGroup *self,i32 ctrl_id,i32 index); /* 005dad80 */
+void __thiscall radiogrp_fire_rclick(RadioGroup *self,i32 ctrl_id,i32 index); /* 005dadc0 */
 void __cdecl err_report_ctx_global_init(void); /* 005dae00 */
 void __cdecl err_report_ctx_static_init(void); /* 005dae1a */
 void __cdecl err_report_ctx_reg_atexit(void); /* 005dae34 */
@@ -3169,8 +3169,8 @@ void __thiscall err_ctx_set_field_708(ErrorContext *self,i32 value); /* 005db035
 void __thiscall err_ctx_clear_codes(ErrorContext *self); /* 005db059 */
 ErrorContext * __thiscall err_ctx_ctor(ErrorContext *self); /* 005db089 */
 void __thiscall err_ctx_dtor(void *self); /* 005db0b4 */
-void __thiscall scrollbar_set_page_size(Control *self,u32 page_size); /* 005db0d0 */
-void __thiscall scrollbar_get_ctl_range(Control *self,iptr min_out,iptr max_out); /* 005db110 */
+void __thiscall scrollbar_set_page_size(Scrollbar *self,u32 page_size); /* 005db0d0 */
+void __thiscall scrollbar_get_ctl_range(Scrollbar *self,iptr min_out,iptr max_out); /* 005db110 */
 HMODULE __cdecl res_dll_load_library(LPCSTR filename); /* 005db140 */
 void __cdecl res_free_impl(HGLOBAL handle); /* 005db1e0 */
 HGLOBAL __cdecl res_load_impl(CHAR *res_type,LPCSTR res_name); /* 005db1fa */
@@ -3299,15 +3299,15 @@ i32 __cdecl ddraw_init(void); /* 005e89d0, hand-written */
 uint __cdecl ddsurf_iface_can_flip(int *surface); /* 005ea578, hand-written */
 uint __cdecl ddraw_get_vblank_status(void); /* 005ea677, hand-written */
 void __cdecl wnd_install_frame_proc(iptr owner,NativeWindow *wnd); /* 005ea7a0 */
-i32 __cdecl ctrl_list_find_by_hwnd(int hwnd,ControlNextView *list); /* 005ea7d7 */
+i32 __cdecl ctrl_list_find_by_hwnd(int hwnd,Control *list); /* 005ea7d7 */
 HWND __cdecl hwnd_next_sibling_wrap(HWND hwnd); /* 005ea825 */
 HWND __cdecl hwnd_prev_sibling_wrap(HWND hwnd); /* 005ea87c */
 void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction); /* 005ea8d3 */
 void __cdecl wnd_focus_control(iptr wnd,iptr control); /* 005eabcc */
-i32 __cdecl ctrl_list_find_type11_hwnd(ControlNextView *list); /* 005eac6d */
+i32 __cdecl ctrl_list_find_type11_hwnd(Control *list); /* 005eac6d */
 LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam); /* 005eacc0, hand-written */
-void __thiscall edit_fire_maxtext_callback(EditMaxTextView *self); /* 005eb2f0 */
-void __thiscall edit_fire_change_callback(EditChangeView *self); /* 005eb330 */
+void __thiscall edit_fire_maxtext_callback(EditControl *self); /* 005eb2f0 */
+void __thiscall edit_fire_change_callback(EditControl *self); /* 005eb330 */
 void __cdecl wnd_set_owner_ptr(iptr owner,NativeWindow *wnd); /* 005eb370 */
 void __cdecl wnd_install_command_proc(iptr owner,NativeWindow *wnd); /* 005eb393 */
 uint __cdecl input_map_vkey(uint vkey); /* 005eb3ed */

@@ -174,7 +174,7 @@ listbox_add_string	4	4
 listbox_set_font	5	5
 listbox_create	9	10
 listbox_dtor	8	8
-checkbox_ctor	7	7
+listbox_ctor	7	7
 combo_set_callback	3	3
 combo_set_cur_sel	3	3
 combo_get_cur_sel	4	4

@@ -7910,11 +7910,11 @@ C_004083b0_a28 * __thiscall C_004083b0_a28::editor_wnd_ctor(C_004083b0_a28 *this
   local_8._0_1_ = 0x11;
   C_0040f380_3c::thunk_button_ctor((C_0040f380_3c *)&this[1].field_30);
   local_8._0_1_ = 0x12;
-  C_0040f380_3c::thunk_checkbox_ctor((C_0040f380_3c *)(this[1].pad_48 + 0x24));
+  C_0040f380_3c::thunk_listbox_ctor((C_0040f380_3c *)(this[1].pad_48 + 0x24));
   local_8._0_1_ = 0x13;
-  C_0040f380_3c::thunk_checkbox_ctor((C_0040f380_3c *)(this[1].pad_48 + 0x60));
+  C_0040f380_3c::thunk_listbox_ctor((C_0040f380_3c *)(this[1].pad_48 + 0x60));
   local_8 = CONCAT31(local_8._1_3_,0x14);
-  C_0040f380_3c::thunk_checkbox_ctor((C_0040f380_3c *)(this[1].pad_48 + 0x9c));
+  C_0040f380_3c::thunk_listbox_ctor((C_0040f380_3c *)(this[1].pad_48 + 0x9c));
   this->field_0 = (u32)&PTR_FUN_0061c058;
   *unaff_FS_OFFSET = local_10;
   return this;
@@ -8550,10 +8550,10 @@ void __thiscall C_00418dd0::combo_set_callback(C_00418dd0 *this,iptr param_1)
 }
 
 
-// ==== FUNCTION 00418e00 checkbox_ctor
+// ==== FUNCTION 00418e00 listbox_ctor
 // GLOBAL LAB_00418e61	00418e61	undefined	1
 
-C_0040f380_3c * __thiscall C_0040f380_3c::checkbox_ctor(C_0040f380_3c *this)
+C_0040f380_3c * __thiscall C_0040f380_3c::listbox_ctor(C_0040f380_3c *this)
 
 {
   undefined4 *unaff_FS_OFFSET;
@@ -154585,7 +154585,7 @@ void __thiscall C_0040bc40_2f4::dialog_create_controls(C_0040bc40_2f4 *this)
             local_11c = 0;
           }
           else {
-            local_11c = C_0040f380_3c::thunk_checkbox_ctor(pCVar2);
+            local_11c = C_0040f380_3c::thunk_listbox_ctor(pCVar2);
           }
           local_8 = 0xffffffff;
           *(undefined4 *)(this->pad_264 + this->field_48 * 4 + 0x14) = local_11c;
@@ -154706,7 +154706,7 @@ void __thiscall C_0040bc40_2f4::dialog_create_controls(C_0040bc40_2f4 *this)
               local_134 = 0;
             }
             else {
-              local_134 = C_0040f380_3c::thunk_checkbox_ctor(pCVar2);
+              local_134 = C_0040f380_3c::thunk_listbox_ctor(pCVar2);
             }
             local_8 = 0xffffffff;
             *(undefined4 *)(this->pad_264 + this->field_48 * 4 + 0x14) = local_134;

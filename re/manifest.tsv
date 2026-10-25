@@ -275,7 +275,7 @@ addr	name	status	reason
 00418d60	combo_get_cur_sel	auto	
 00418d90	combo_set_cur_sel	auto	
 00418dd0	combo_set_callback	auto	
-00418e00	checkbox_ctor	auto	
+00418e00	listbox_ctor	auto	
 00418ea0	listbox_dtor	auto	
 00418efa	unwind_funclet_00418efa	ehfunclet	unaff_EBP
 00418f40	listbox_create	auto	

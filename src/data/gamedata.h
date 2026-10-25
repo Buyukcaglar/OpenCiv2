@@ -3993,8 +3993,8 @@ struct casualty_window_block {
     u8 casualty_client_width_rest[404];
     int casualty_client_right;  /* 0063e7bc */
     u8 casualty_client_right_rest[88];
-    Control casualty_close_button[4];  /* 0063e818 */
-    ClickControl casualty_scrollbar;  /* 0063e908 */
+    Button casualty_close_button[4];  /* 0063e818 */
+    Scrollbar casualty_scrollbar;  /* 0063e908 */
     int casualty_window_report_id;  /* 0063e948 */
     u8 casualty_window_report_id_rest[4];
     i32 casualty_page_count_i32;  /* 0063e950 */
@@ -4053,10 +4053,10 @@ struct advisor_window_block {
     u8 advisor_client_rect_rest[4];
     int advisor_client_right;  /* 0063edd4 */
     u8 advisor_client_right_rest[88];
-    Control advisor_close_button;  /* 0063ee30 */
-    Control advisor_toggle_button;  /* 0063ee6c */
-    Control advisor_alt_toggle_button[2];  /* 0063eea8 */
-    ClickControl advisor_scrollbar;  /* 0063ef20 */
+    Button advisor_close_button;  /* 0063ee30 */
+    Button advisor_toggle_button;  /* 0063ee6c */
+    Button advisor_alt_toggle_button[2];  /* 0063eea8 */
+    Scrollbar advisor_scrollbar;  /* 0063ef20 */
     int advisor_report_id;  /* 0063ef60 */
     u8 advisor_report_id_rest[4];
     i32 advisor_page_count_i32;  /* 0063ef68 */
@@ -5220,7 +5220,7 @@ struct pedia_window_block {
     PediaListNode *pedia_terrain_names;  /* 006a7d58 */
     PediaListNode *pedia_concept_names;  /* 006a7d5c */
     u8 pedia_concept_names_rest[1000];
-    ClickControl pedia_list_scrollbar;  /* 006a8148 */
+    Scrollbar pedia_list_scrollbar;  /* 006a8148 */
     Hotspot *pedia_close_hotspot;  /* 006a8188 */
     int pedia_list_rect;  /* 006a818c */
     int pedia_list_rect_top;  /* 006a8190 */

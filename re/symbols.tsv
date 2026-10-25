@@ -1893,7 +1893,7 @@ addr	kind	name	type
 0041557b	func	tech_editor_store_controls	
 00415b52	func	tech_editor_fill_usage_list	
 00417566	func	tech_editor_run	
-00418e00	func	checkbox_ctor	
+00418e00	func	listbox_ctor	
 00419d23	func	rules_load_cosmic	
 0041b00e	func	rules_parse_sections	
 0041b8b0	func	app_shutdown_cleanup	

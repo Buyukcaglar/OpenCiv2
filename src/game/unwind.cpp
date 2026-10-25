@@ -158,9 +158,9 @@ i32 __cdecl FUN_005e0863(void)
     palette_init((GamePalette *)palette);
     surfwnd_ctor(&surf_wnd2);
     font_init_empty((GameFont *)font2);
-    button_ctor((Control *)ok_button);
-    button_ctor((Control *)cancel_button);
-    edit_ctor((InputControl *)edit);
+    button_ctor((Button *)ok_button);
+    button_ctor((Button *)cancel_button);
+    edit_ctor((EditControl *)edit);
     font_set((GameFont *)font2, 0, 0x11);
     ui_set_button_font((iptr)font2);
     ui_set_default_font((iptr)font2);
@@ -169,17 +169,17 @@ i32 __cdecl FUN_005e0863(void)
     btn_y = btn_y + -0x23;
     btn_x = surface_get_width((DibSurface *)(&surf_wnd2));
     OffsetRect(&btn_rect, btn_x + -0x46, btn_y);
-    button_create((Control *)ok_button, (i32)surf_wnd2.window_2, 0x65, (i32)&btn_rect,
+    button_create((Button *)ok_button, (i32)surf_wnd2.window_2, 0x65, (i32)&btn_rect,
                        (const char *)((i32 *)&str_ok_3));
-    button_set_callback((Control *)ok_button, (i32)dlg_radio_choice_button_cb);
+    button_set_callback((Button *)ok_button, (i32)dlg_radio_choice_button_cb);
     OffsetRect(&btn_rect, 0, -0x23);
-    button_create((Control *)cancel_button, (i32)surf_wnd2.window_2, 0x66, (i32)&btn_rect,
+    button_create((Button *)cancel_button, (i32)surf_wnd2.window_2, 0x66, (i32)&btn_rect,
                        (const char *)str_cancel_3);
-    button_set_callback((Control *)cancel_button, (i32)dlg_radio_choice_button_cb);
+    button_set_callback((Button *)cancel_button, (i32)dlg_radio_choice_button_cb);
     /* funclets 005e0a31..005e0a6a: destroy the locals in reverse order */
-    edit_dtor((Control *)edit);
-    ctrl_dtor((Control *)cancel_button);
-    ctrl_dtor((Control *)ok_button);
+    edit_dtor((EditControl *)edit);
+    ctrl_dtor((Button *)cancel_button);
+    ctrl_dtor((Button *)ok_button);
     font_destroy((GameFont *)font2);
     surfwnd_dtor(&surf_wnd2);
     palette_destroy((GamePalette *)palette);

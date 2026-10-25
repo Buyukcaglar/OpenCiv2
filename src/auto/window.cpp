@@ -887,15 +887,15 @@ void __thiscall picwnd_dtor(void *self)
   
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 5;
-  /* inlined unwind funclet 0043c19c */ { scrollbar_dtor((Control *)(*(int *)&self + 0x410)); }
+  /* inlined unwind funclet 0043c19c */ { scrollbar_dtor((Scrollbar *)(*(int *)&self + 0x410)); }
   (*((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 0043c1ab */ { ctrl_dtor((Control *)(*(int *)&self + 0x3d4)); }
+  /* inlined unwind funclet 0043c1ab */ { ctrl_dtor((Button *)(*(int *)&self + 0x3d4)); }
   (*((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0043c1ba */ { ctrl_dtor((Control *)(*(int *)&self + 0x398)); }
+  /* inlined unwind funclet 0043c1ba */ { ctrl_dtor((Button *)(*(int *)&self + 0x398)); }
   (*((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0043c1c9 */ { ctrl_dtor((Control *)(*(int *)&self + 0x35c)); }
+  /* inlined unwind funclet 0043c1c9 */ { ctrl_dtor((Button *)(*(int *)&self + 0x35c)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0043c1d8 */ { ctrl_dtor((Control *)(*(int *)&self + 800)); }
+  /* inlined unwind funclet 0043c1d8 */ { ctrl_dtor((Button *)(*(int *)&self + 800)); }
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 0043c1e7 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x2d8)); }
   eh_state = 0xffffffff;
@@ -916,15 +916,15 @@ ViewWindow * __thiscall picwnd_ctor(ViewWindow *self)
   eh_state = 0;
   surface_ctor((DibSurface *)&self->rates_civ);
   (*((char *)&eh_state + 0)) = 1;
-  button_ctor((Control *)&self->bar_height);
+  button_ctor((Button *)&self->bar_height);
   (*((char *)&eh_state + 0)) = 2;
-  button_ctor((Control *)&self->no_thanks_button_value);
+  button_ctor((Button *)&self->no_thanks_button_value);
   (*((char *)&eh_state + 0)) = 3;
-  button_ctor((Control *)self->lux_rate_scrollbar);
+  button_ctor((Button *)self->lux_rate_scrollbar);
   (*((char *)&eh_state + 0)) = 4;
-  button_ctor((Control *)self->picwnd_extra_button);
+  button_ctor((Button *)self->picwnd_extra_button);
   eh_state = (eh_state & 0xffffff00 | (byte)(5));
-  scrollbar_ctor((Control *)self->picwnd_scrollbar);
+  scrollbar_ctor((Scrollbar *)self->picwnd_scrollbar);
   self->vtable = (u32)((pointer *)(ptr_fun_rest + 4));
   return self;
 }
@@ -1537,7 +1537,7 @@ void __thiscall wnd_focus_and_raise(WndBase *self)
 }
 
 /* 00451930 auto */
-Control * __thiscall hotspot_ctor(Control *self)
+Hotspot * __thiscall hotspot_ctor(Hotspot *self)
 
 {
   i32 seh_handler;
@@ -1551,27 +1551,27 @@ Control * __thiscall hotspot_ctor(Control *self)
 
 /* 004519b0 auto */
 void __thiscall
-hotspot_create(ClickControl *self,iptr parent,iptr id,iptr rect)
+hotspot_create(Hotspot *self,iptr parent,iptr id,iptr rect)
 
 {
   u32 new_hwnd;
   
   if (self->hwnd != 0) {
-    ctrl_destroy((Control *)self);
+    ctrl_destroy(self);
   }
-  ctrl_init((Control *)self,parent,1,id,(RECT *)rect);
-  self->is_enabled = 0;
+  ctrl_init(self,parent,1,id,(RECT *)rect);
+  self->on_enter = 0;
+  self->on_leave = 0;
   self->on_click = 0;
-  self->on_select = 0;
-  self->font = 0;
-  self->scroll_pos = 0;
+  self->on_press = 0;
+  self->on_dblclick = 0;
   new_hwnd = hotspot_create_hwnd((int *)rect,(iptr)self);
   self->hwnd = new_hwnd;
   return;
 }
 
 /* 00451a60 auto */
-void __thiscall hotspot_set_click_callback(HotspotClickSetView *self,iptr callback)
+void __thiscall hotspot_set_click_callback(Hotspot *self,iptr callback)
 
 {
   self->on_click = callback;
@@ -1584,7 +1584,7 @@ void __thiscall hotspot_set_click_callback(HotspotClickSetView *self,iptr callba
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall hotspot_set_dblclick_callback(HotspotDblClickSetView *self,iptr callback)
+void __thiscall hotspot_set_dblclick_callback(Hotspot *self,iptr callback)
 
 {
   self->on_dblclick = callback;
@@ -1623,7 +1623,7 @@ void __thiscall hotspot_dtor(Hotspot *self)
     region_dispose(self->hwnd);
   }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 00453bfa */ { ctrl_base_dtor(*(ControlBase **)&self); }
+  /* inlined unwind funclet 00453bfa */ { ctrl_base_dtor(self); }
   return;
 }
 
@@ -4524,9 +4524,9 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
   int width;
   int height;
   u32 size;
-  Control *this_00;
+  Hotspot *this_00;
   u8 *native_wnd2;
-  Control *hotspot;
+  Hotspot *hotspot;
   int button_x;
   int i;
   i8 button_rect[16];
@@ -4554,9 +4554,9 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
     height = (int)(*(int *)(self->pane_selection_flags_area + i * 0x1c + 0x10) * self->caption_height) / 0x18;
     rect_set_xywh((iptr)button_rect,button_x,((int)self->caption_height >> 1) - (height >> 1),width,
                        height);
-    this_00 = (Control *)operator_new(0x40);
+    this_00 = (Hotspot *)operator_new(0x40);
     eh_state = 0;
-    if (this_00 == (Control *)0x0) {
+    if (this_00 == (Hotspot *)0x0) {
       hotspot = 0;
     }
     else {
@@ -4571,10 +4571,10 @@ void __thiscall frame_wnd_layout(FrameWindow *self)
       native_wnd2 = self->window_2;
     }
     hotspot_create
-              (*(ClickControl **)(self->pane_selection_flags_area + i * 0x1c + 0x18),(iptr)native_wnd2,
+              (*(Hotspot **)(self->pane_selection_flags_area + i * 0x1c + 0x18),(iptr)native_wnd2,
                i + 1000,(iptr)button_rect);
     hotspot_set_click_callback
-              (*(HotspotClickSetView **)(self->pane_selection_flags_area + i * 0x1c + 0x18),(iptr)frame_wnd_on_caption_button_click);
+              (*(Hotspot **)(self->pane_selection_flags_area + i * 0x1c + 0x18),(iptr)frame_wnd_on_caption_button_click);
     button_x = button_x + width + frame_padding;
   }
   return;
@@ -6116,8 +6116,8 @@ void __thiscall dialog_close(Dialog *self)
     wnd_focus_and_raise((*(WndBase * *)&dlg_parent_window));
   }
   if (self->radio_group != 0) {
-    if ((RadioGroupDtorView *)self->radio_group != (RadioGroupDtorView *)0x0) {
-      radiogrp_scalar_dtor((RadioGroupDtorView *)self->radio_group,1);
+    if ((RadioGroup *)self->radio_group != (RadioGroup *)0x0) {
+      radiogrp_scalar_dtor((RadioGroup *)self->radio_group,1);
     }
     self->radio_group = 0;
   }
@@ -6128,26 +6128,26 @@ void __thiscall dialog_close(Dialog *self)
     self->checkboxes = 0;
   }
   if (self->edit_controls != 0) {
-    if ((Control *)self->edit_controls != (Control *)0x0) {
-      edit_vector_dtor((Control *)self->edit_controls,3);
+    if ((Button *)self->edit_controls != (Button *)0x0) {
+      edit_vector_dtor((EditControl *)self->edit_controls,3);
     }
     self->edit_controls = 0;
   }
   if (self->button_controls != 0) {
-    if ((Control *)self->button_controls != (Control *)0x0) {
-      ctrl_vector_dtor((Control *)self->button_controls,3);
+    if ((Button *)self->button_controls != (Button *)0x0) {
+      ctrl_vector_dtor((Button *)self->button_controls,3);
     }
     self->button_controls = 0;
   }
   if (self->listbox[0] != 0) {
-    if ((ListBoxControl *)self->listbox[0] != (ListBoxControl *)0x0) {
-      listbox_scalar_dtor((ListBoxControl *)self->listbox[0],1);
+    if ((ListBox *)self->listbox[0] != (ListBox *)0x0) {
+      listbox_scalar_dtor((ListBox *)self->listbox[0],1);
     }
     self->listbox[0] = 0;
   }
   if (self->listbox[1] != 0) {
-    if ((ListBoxControl *)self->listbox[1] != (ListBoxControl *)0x0) {
-      listbox_scalar_dtor((ListBoxControl *)self->listbox[1],1);
+    if ((ListBox *)self->listbox[1] != (ListBox *)0x0) {
+      listbox_scalar_dtor((ListBox *)self->listbox[1],1);
     }
     self->listbox[1] = 0;
   }
@@ -6158,26 +6158,26 @@ void __thiscall dialog_close(Dialog *self)
     self->sprite_hotspots = 0;
   }
   if (self->list_vscroll[0] != 0) {
-    if ((Control *)self->list_vscroll[0] != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)self->list_vscroll[0],1);
+    if ((Button *)self->list_vscroll[0] != (Button *)0x0) {
+      scrollbar_scalar_dtor((Scrollbar *)self->list_vscroll[0],1);
     }
     self->list_vscroll[0] = 0;
   }
   if (self->list_vscroll[1] != 0) {
-    if ((Control *)self->list_vscroll[1] != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)self->list_vscroll[1],1);
+    if ((Button *)self->list_vscroll[1] != (Button *)0x0) {
+      scrollbar_scalar_dtor((Scrollbar *)self->list_vscroll[1],1);
     }
     self->list_vscroll[1] = 0;
   }
   if (self->list_hscroll[0] != 0) {
-    if ((Control *)self->list_hscroll[0] != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)self->list_hscroll[0],1);
+    if ((Button *)self->list_hscroll[0] != (Button *)0x0) {
+      scrollbar_scalar_dtor((Scrollbar *)self->list_hscroll[0],1);
     }
     self->list_hscroll[0] = 0;
   }
   if (self->list_hscroll[1] != 0) {
-    if ((Control *)self->list_hscroll[1] != (Control *)0x0) {
-      scrollbar_scalar_dtor((Control *)self->list_hscroll[1],1);
+    if ((Button *)self->list_hscroll[1] != (Button *)0x0) {
+      scrollbar_scalar_dtor((Scrollbar *)self->list_hscroll[1],1);
     }
     self->list_hscroll[1] = 0;
   }
@@ -7959,12 +7959,12 @@ void __thiscall dialog_select_option(Dialog *self,DialogOption *option,int redra
       if ((self)->list_vscroll[self->cur_pane] != 0) {
         scroll_pos = dialog_option_group_index(self,self->list_top_option[self->cur_pane]);
         scrollbar_set_pos
-                  ((ClickControl *)(self)->list_vscroll[self->cur_pane],scroll_pos);
+                  ((Scrollbar *)(self)->list_vscroll[self->cur_pane],scroll_pos);
       }
       if ((self)->list_hscroll[self->cur_pane] != 0) {
         scroll_pos = dialog_column_of_option(self,self->list_top_option[self->cur_pane]);
         scrollbar_set_pos
-                  ((ClickControl *)(self)->list_hscroll[self->cur_pane],scroll_pos);
+                  ((Scrollbar *)(self)->list_hscroll[self->cur_pane],scroll_pos);
       }
     }
     if (redraw != 0) {
@@ -8201,8 +8201,8 @@ void __thiscall dialog_create_controls(Dialog *self)
 
 {
   uint is_checkbox;
-  Control *ctrl_mem;
-  InputControl *this_00;
+  Button *ctrl_mem;
+  RadioGroup *this_00;
   i32 value;
   int count;
   iptr pos;
@@ -8223,14 +8223,14 @@ void __thiscall dialog_create_controls(Dialog *self)
   int *buttons;
   u32 *edits;
   u32 *hotspots;
-  InputControl *radio_group2;
+  RadioGroup *radio_group2;
   u32 *checkboxes2;
-  Control *hscroll2;
-  Control *vscroll2;
-  Control *listbox22;
-  Control *hscroll;
-  Control *vscroll;
-  Control *listbox3;
+  Scrollbar *hscroll2;
+  Scrollbar *vscroll2;
+  ListBox *listbox22;
+  Scrollbar *hscroll;
+  Scrollbar *vscroll;
+  ListBox *listbox3;
   int item_index;
   DialogEditField *edit_field;
   u32 y2;
@@ -8286,9 +8286,9 @@ void __thiscall dialog_create_controls(Dialog *self)
     if (self->option_count != 0) {
       if (is_listbox == 0) {
         if (is_checkbox == 0) {
-          this_00 = (InputControl *)operator_new(0x50);
+          this_00 = (RadioGroup *)operator_new(0x50);
           eh_state = 7;
-          if (this_00 == (InputControl *)0x0) {
+          if (this_00 == (RadioGroup *)0x0) {
             radio_group2 = 0;
           }
           else {
@@ -8316,15 +8316,15 @@ void __thiscall dialog_create_controls(Dialog *self)
           item_index = 0;
           for (; option != (DialogOption *)0x0; option = option->next) {
             if ((uint *)self->selected_option == ((uint *)option)) {
-              radiogrp_set_selected((RadioGroupSetSelView *)self->radio_group,item_index);
+              radiogrp_set_selected((RadioGroup *)self->radio_group,item_index);
             }
             if ((option->flags & 1) != 0) {
-              radiogrp_disable_item((RadioGroupDisableView *)self->radio_group,item_index);
+              radiogrp_disable_item((RadioGroup *)self->radio_group,item_index);
             }
             item_index++;
           }
-          radiogrp_set_select_callback((Control *)self->radio_group,(iptr)dialog_radio_on_select);
-          radiogrp_set_dblclick_callback((Control *)self->radio_group,(iptr)dialog_radio_on_dblclick);
+          radiogrp_set_select_callback((RadioGroup *)self->radio_group,(iptr)dialog_radio_on_select);
+          radiogrp_set_dblclick_callback((RadioGroup *)self->radio_group,(iptr)dialog_radio_on_dblclick);
         }
         else {
           x = self->option_count;
@@ -8353,12 +8353,12 @@ void __thiscall dialog_create_controls(Dialog *self)
               parent_188 = self->surf_wnd + 0x48;
             }
             checkbox_create
-                      ((Control *)(self->checkboxes + i * 0x3c),parent_188,i + 200
+                      ((Checkbox *)(self->checkboxes + i * 0x3c),parent_188,i + 200
                        ,x,y2,(const char *)option->text);
             checkbox_set_checked
-                      ((Control *)(self->checkboxes + i * 0x3c),option->flags & 4);
+                      ((Checkbox *)(self->checkboxes + i * 0x3c),option->flags & 4);
             if ((option->flags & 1) != 0) {
-              checkbox_disable((CheckboxDisableView *)(self->checkboxes + i * 0x3c));
+              checkbox_disable((Checkbox *)(self->checkboxes + i * 0x3c));
             }
             y2 += self->option_row_height;
             i++;
@@ -8371,13 +8371,13 @@ void __thiscall dialog_create_controls(Dialog *self)
           if (((int)(self->list_rows[self->cur_pane] * self->columns) < (int)self->option_count) ||
              ((self->style_flags & 0x1000000) != 0)) {
             if (self->columns == 1) {
-              ctrl_mem = (Control *)operator_new(0x40);
+              ctrl_mem = (Button *)operator_new(0x40);
               eh_state = 1;
-              if (ctrl_mem == (Control *)0x0) {
+              if (ctrl_mem == (Button *)0x0) {
                 vscroll = 0;
               }
               else {
-                vscroll = scrollbar_ctor(ctrl_mem);
+                vscroll = scrollbar_ctor((Scrollbar *)ctrl_mem);
               }
               eh_state = 0xffffffff;
               self->list_vscroll[self->cur_pane] = (i32)vscroll;
@@ -8388,33 +8388,33 @@ void __thiscall dialog_create_controls(Dialog *self)
                 parent_174 = self->surf_wnd + 0x48;
               }
               scrollbar_create
-                        ((Control *)self->list_vscroll[self->cur_pane],parent_174,
+                        ((Scrollbar *)self->list_vscroll[self->cur_pane],parent_174,
                          0xb,(iptr)&self->list_vscroll_rect[self->cur_pane],1);
               count = dialog_count_group_options(self,self->cur_pane);
               scrollbar_set_range
-                        ((Control *)self->list_vscroll[self->cur_pane],0,
+                        ((Scrollbar *)self->list_vscroll[self->cur_pane],0,
                          count - 1);
               pos = dialog_option_group_index
                                 (self,
                                  self->list_top_option[self->cur_pane]);
               scrollbar_set_pos
-                        ((ClickControl *)self->list_vscroll[self->cur_pane],pos);
+                        ((Scrollbar *)self->list_vscroll[self->cur_pane],pos);
               scrollbar_set_page_size
-                        ((Control *)self->list_vscroll[self->cur_pane],
+                        ((Scrollbar *)self->list_vscroll[self->cur_pane],
                          self->list_rows[self->cur_pane] - 1);
               scrollbar_set_callback
-                        ((Control *)self->list_vscroll[self->cur_pane],(iptr)dialog_list_on_vscroll);
+                        ((Scrollbar *)self->list_vscroll[self->cur_pane],(iptr)dialog_list_on_vscroll);
               scrollbar_set_track_callback
-                        ((ScrollbarTrackSetView *)self->list_vscroll[self->cur_pane],(iptr)dialog_list_on_vscroll);
+                        ((Scrollbar *)self->list_vscroll[self->cur_pane],(iptr)dialog_list_on_vscroll);
             }
             else {
-              ctrl_mem = (Control *)operator_new(0x40);
+              ctrl_mem = (Button *)operator_new(0x40);
               eh_state = 2;
-              if (ctrl_mem == (Control *)0x0) {
+              if (ctrl_mem == (Button *)0x0) {
                 hscroll = 0;
               }
               else {
-                hscroll = scrollbar_ctor(ctrl_mem);
+                hscroll = scrollbar_ctor((Scrollbar *)ctrl_mem);
               }
               eh_state = 0xffffffff;
               self->list_hscroll[self->cur_pane] = (i32)hscroll;
@@ -8425,25 +8425,25 @@ void __thiscall dialog_create_controls(Dialog *self)
                 parent_178 = self->surf_wnd + 0x48;
               }
               scrollbar_create
-                        ((Control *)self->list_hscroll[self->cur_pane],parent_178,0xc,
+                        ((Scrollbar *)self->list_hscroll[self->cur_pane],parent_178,0xc,
                          (iptr)&self->list_hscroll_rect[self->cur_pane],0);
               count = dialog_count_group_options(self,self->cur_pane);
               value = dialog_column_of_index(self,count - 1);
               scrollbar_set_range
-                        ((Control *)self->list_hscroll[self->cur_pane],0,value);
+                        ((Scrollbar *)self->list_hscroll[self->cur_pane],0,value);
               value = dialog_option_group_index
                                 (self,
                                  self->list_top_option[self->cur_pane]);
               pos = dialog_column_of_index(self,value);
               scrollbar_set_pos
-                        ((ClickControl *)self->list_hscroll[self->cur_pane],pos);
+                        ((Scrollbar *)self->list_hscroll[self->cur_pane],pos);
               scrollbar_set_page_size
-                        ((Control *)self->list_hscroll[self->cur_pane],self->columns
+                        ((Scrollbar *)self->list_hscroll[self->cur_pane],self->columns
                         );
               scrollbar_set_callback
-                        ((Control *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
+                        ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
               scrollbar_set_track_callback
-                        ((ScrollbarTrackSetView *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
+                        ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list_on_hscroll);
             }
           }
           wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_lbuttondown);
@@ -8452,13 +8452,13 @@ void __thiscall dialog_create_controls(Dialog *self)
           wnd_set_dblclick_handler((WndHandlersMouseSetView *)(self->surf_wnd + 0x58),(iptr)dialog_list_on_dblclick);
         }
         else {
-          ctrl_mem = (Control *)operator_new(0x3c);
+          ctrl_mem = (Button *)operator_new(0x3c);
           eh_state = 0;
-          if (ctrl_mem == (Control *)0x0) {
+          if (ctrl_mem == (Button *)0x0) {
             listbox3 = 0;
           }
           else {
-            listbox3 = checkbox_ctor(ctrl_mem);
+            listbox3 = listbox_ctor((ListBox *)ctrl_mem);
           }
           eh_state = 0xffffffff;
           self->listbox[self->cur_pane] = (i32)listbox3;
@@ -8471,23 +8471,23 @@ void __thiscall dialog_create_controls(Dialog *self)
             parent_170 = self->surf_wnd + 0x48;
           }
           listbox_create
-                    ((Control *)self->listbox[self->cur_pane],parent_170,10,
+                    ((ListBox *)self->listbox[self->cur_pane],parent_170,10,
                      (iptr)rect);
           option = self->option_list;
           item_index = 0;
           for (; option != (DialogOption *)0x0; option = option->next) {
             if (self->cur_pane == (uint)option->group) {
               listbox_add_string
-                        ((ListBoxAddView *)self->listbox[self->cur_pane],(const char *)option->text);
+                        ((ListBox *)self->listbox[self->cur_pane],(const char *)option->text);
               if ((uint *)self->selected_option == ((uint *)option)) {
                 listbox_set_cur_sel
-                          ((ListBoxSetSelView *)self->listbox[self->cur_pane],item_index);
+                          ((ListBox *)self->listbox[self->cur_pane],item_index);
               }
               item_index++;
             }
           }
           listbox_set_dblclick_callback
-                    ((ListBoxDblClickSetView *)self->listbox[self->cur_pane],(iptr)dialog_listbox_on_dblclick);
+                    ((ListBox *)self->listbox[self->cur_pane],(iptr)dialog_listbox_on_dblclick);
         }
         if ((self->style_flags & 0x400000) != 0) {
           self->cur_pane = 1;
@@ -8495,13 +8495,13 @@ void __thiscall dialog_create_controls(Dialog *self)
             if (((int)(self->list_rows[self->cur_pane] * self->columns) < (int)self->option_count) ||
                ((self->style_flags & 0x1000000) != 0)) {
               if (self->columns == 1) {
-                ctrl_mem = (Control *)operator_new(0x40);
+                ctrl_mem = (Button *)operator_new(0x40);
                 eh_state = 4;
-                if (ctrl_mem == (Control *)0x0) {
+                if (ctrl_mem == (Button *)0x0) {
                   vscroll2 = 0;
                 }
                 else {
-                  vscroll2 = scrollbar_ctor(ctrl_mem);
+                  vscroll2 = scrollbar_ctor((Scrollbar *)ctrl_mem);
                 }
                 eh_state = 0xffffffff;
                 self->list_vscroll[self->cur_pane] = (i32)vscroll2;
@@ -8512,34 +8512,34 @@ void __thiscall dialog_create_controls(Dialog *self)
                   parent_180 = self->surf_wnd + 0x48;
                 }
                 scrollbar_create
-                          ((Control *)self->list_vscroll[self->cur_pane],parent_180
+                          ((Scrollbar *)self->list_vscroll[self->cur_pane],parent_180
                            ,0xb,(iptr)&self->list_vscroll_rect[self->cur_pane],1);
                 count = dialog_count_group_options(self,self->cur_pane);
                 scrollbar_set_range
-                          ((Control *)self->list_vscroll[self->cur_pane],0,
+                          ((Scrollbar *)self->list_vscroll[self->cur_pane],0,
                            count - 1);
                 pos = dialog_option_group_index
                                   (self,
                                    self->list_top_option[self->cur_pane]);
                 scrollbar_set_pos
-                          ((ClickControl *)self->list_vscroll[self->cur_pane],pos);
+                          ((Scrollbar *)self->list_vscroll[self->cur_pane],pos);
                 scrollbar_set_page_size
-                          ((Control *)self->list_vscroll[self->cur_pane],
+                          ((Scrollbar *)self->list_vscroll[self->cur_pane],
                            self->list_rows[self->cur_pane] - 1);
                 scrollbar_set_callback
-                          ((Control *)self->list_vscroll[self->cur_pane],(iptr)dialog_list2_on_vscroll)
+                          ((Scrollbar *)self->list_vscroll[self->cur_pane],(iptr)dialog_list2_on_vscroll)
                 ;
                 scrollbar_set_track_callback
-                          ((ScrollbarTrackSetView *)self->list_vscroll[self->cur_pane],(iptr)dialog_list2_on_vscroll);
+                          ((Scrollbar *)self->list_vscroll[self->cur_pane],(iptr)dialog_list2_on_vscroll);
               }
               else {
-                ctrl_mem = (Control *)operator_new(0x40);
+                ctrl_mem = (Button *)operator_new(0x40);
                 eh_state = 5;
-                if (ctrl_mem == (Control *)0x0) {
+                if (ctrl_mem == (Button *)0x0) {
                   hscroll2 = 0;
                 }
                 else {
-                  hscroll2 = scrollbar_ctor(ctrl_mem);
+                  hscroll2 = scrollbar_ctor((Scrollbar *)ctrl_mem);
                 }
                 eh_state = 0xffffffff;
                 self->list_hscroll[self->cur_pane] = (i32)hscroll2;
@@ -8550,36 +8550,36 @@ void __thiscall dialog_create_controls(Dialog *self)
                   parent_184 = self->surf_wnd + 0x48;
                 }
                 scrollbar_create
-                          ((Control *)self->list_hscroll[self->cur_pane],parent_184,
+                          ((Scrollbar *)self->list_hscroll[self->cur_pane],parent_184,
                            0xc,(iptr)&self->list_hscroll_rect[self->cur_pane],0);
                 count = dialog_count_group_options(self,self->cur_pane);
                 value = dialog_column_of_index(self,count - 1);
                 scrollbar_set_range
-                          ((Control *)self->list_hscroll[self->cur_pane],0,value);
+                          ((Scrollbar *)self->list_hscroll[self->cur_pane],0,value);
                 value = dialog_option_group_index
                                   (self,
                                    self->list_top_option[self->cur_pane]);
                 pos = dialog_column_of_index(self,value);
                 scrollbar_set_pos
-                          ((ClickControl *)self->list_hscroll[self->cur_pane],pos);
+                          ((Scrollbar *)self->list_hscroll[self->cur_pane],pos);
                 scrollbar_set_page_size
-                          ((Control *)self->list_hscroll[self->cur_pane],
+                          ((Scrollbar *)self->list_hscroll[self->cur_pane],
                            self->columns);
                 scrollbar_set_callback
-                          ((Control *)self->list_hscroll[self->cur_pane],(iptr)dialog_list2_on_hscroll);
+                          ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list2_on_hscroll);
                 scrollbar_set_track_callback
-                          ((ScrollbarTrackSetView *)self->list_hscroll[self->cur_pane],(iptr)dialog_list2_on_hscroll);
+                          ((Scrollbar *)self->list_hscroll[self->cur_pane],(iptr)dialog_list2_on_hscroll);
               }
             }
           }
           else {
-            ctrl_mem = (Control *)operator_new(0x3c);
+            ctrl_mem = (Button *)operator_new(0x3c);
             eh_state = 3;
-            if (ctrl_mem == (Control *)0x0) {
+            if (ctrl_mem == (Button *)0x0) {
               listbox22 = 0;
             }
             else {
-              listbox22 = checkbox_ctor(ctrl_mem);
+              listbox22 = listbox_ctor((ListBox *)ctrl_mem);
             }
             eh_state = 0xffffffff;
             self->listbox[self->cur_pane] = (i32)listbox22;
@@ -8592,23 +8592,23 @@ void __thiscall dialog_create_controls(Dialog *self)
               parent_17c = self->surf_wnd + 0x48;
             }
             listbox_create
-                      ((Control *)self->listbox[self->cur_pane],parent_17c,10,
+                      ((ListBox *)self->listbox[self->cur_pane],parent_17c,10,
                        (iptr)rect);
             option = self->option_list;
             item_index = 0;
             for (; option != (DialogOption *)0x0; option = option->next) {
               if (self->cur_pane == (uint)option->group) {
                 listbox_add_string
-                          ((ListBoxAddView *)self->listbox[self->cur_pane],(const char *)option->text);
+                          ((ListBox *)self->listbox[self->cur_pane],(const char *)option->text);
                 if ((uint *)self->selected_option == ((uint *)option)) {
                   listbox_set_cur_sel
-                            ((ListBoxSetSelView *)self->listbox[self->cur_pane],item_index);
+                            ((ListBox *)self->listbox[self->cur_pane],item_index);
                 }
                 item_index++;
               }
             }
             listbox_set_dblclick_callback
-                      ((ListBoxDblClickSetView *)self->listbox[self->cur_pane],(iptr)dialog_listbox_on_dblclick);
+                      ((ListBox *)self->listbox[self->cur_pane],(iptr)dialog_listbox_on_dblclick);
           }
           self->cur_pane = 0;
         }
@@ -8646,10 +8646,10 @@ void __thiscall dialog_create_controls(Dialog *self)
           parent_190 = self->surf_wnd + 0x48;
         }
         hotspot_create
-                  ((ClickControl *)(self->sprite_hotspots + i * 0x40),parent_190,i + 300,
+                  ((Hotspot *)(self->sprite_hotspots + i * 0x40),parent_190,i + 300,
                    (iptr)rect);
-        hotspot_set_click_callback((HotspotClickSetView *)(self->sprite_hotspots + i * 0x40),(iptr)dialog_on_sprite_click);
-        hotspot_set_dblclick_callback((HotspotDblClickSetView *)(self->sprite_hotspots + i * 0x40),(iptr)dialog_sprite_on_dblclick);
+        hotspot_set_click_callback((Hotspot *)(self->sprite_hotspots + i * 0x40),(iptr)dialog_on_sprite_click);
+        hotspot_set_dblclick_callback((Hotspot *)(self->sprite_hotspots + i * 0x40),(iptr)dialog_sprite_on_dblclick);
         y2 = y2 + self->section_gap + count;
         i++;
       }
@@ -8686,11 +8686,11 @@ void __thiscall dialog_create_controls(Dialog *self)
                    self->edit_x + self->edit_label_width,count * i + self->edit_y,text,(const char *)value)
         ;
         if (2 < game.multiplayer) {
-          edit_set_change_callback((EditChangeSetView *)(self->edit_controls + i * 0x48),(iptr)dialog_edit_on_change)
+          edit_set_change_callback((EditControl *)(self->edit_controls + i * 0x48),(iptr)dialog_edit_on_change)
           ;
         }
         edit_set_max_len
-                  ((EditMaxLenView *)(self->edit_controls + i * 0x48),edit_field->max_len);
+                  ((EditControl *)(self->edit_controls + i * 0x48),edit_field->max_len);
         i++;
       }
     }
@@ -8729,16 +8729,16 @@ void __thiscall dialog_create_controls(Dialog *self)
         parent_198 = self->surf_wnd + 0x48;
       }
       button_create
-                ((Control *)(self->button_controls + i * 0x3c),parent_198,i + 100,
+                ((Button *)(self->button_controls + i * 0x3c),parent_198,i + 100,
                  (iptr)rect,(const char *)label);
       if ((button_id == 2) || ((button_id == 0 && ((self->style_flags & 1) == 0)))) {
-        ctrl_set_cancel_button((Control *)(self->button_controls + i * 0x3c));
+        ctrl_set_cancel_button((Button *)(self->button_controls + i * 0x3c));
       }
       if (button_id == 0) {
-        ctrl_set_default_button((Control *)(self->button_controls + i * 0x3c));
+        ctrl_set_default_button((Button *)(self->button_controls + i * 0x3c));
       }
       button_set_callback
-                ((Control *)(self->button_controls + i * 0x3c),(iptr)dialog_on_button_click);
+                ((Button *)(self->button_controls + i * 0x3c),(iptr)dialog_on_button_click);
     }
     wnd_set_keydown_handler((WndEventHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_on_keydown);
     wnd_set_char_handler((WndEventHandlers *)(self->surf_wnd + 0x58),(iptr)dialog_on_char);
@@ -8906,7 +8906,7 @@ void __cdecl dialog_on_button_click(int ctrl_id)
         index = 0;
         found = 0;
         node2 = dialog_title_font_obj_block.active_dialog->option_list;
-        button_index = radiogrp_get_selected((RadioGroupGetSelView *)dialog_title_font_obj_block.active_dialog->radio_group);
+        button_index = radiogrp_get_selected((RadioGroup *)dialog_title_font_obj_block.active_dialog->radio_group);
         for (; node2 != 0; node2 = node2->next) {
           if (button_index == index) {
             found = node2;
@@ -9252,7 +9252,7 @@ void __cdecl dialog_on_char(byte ch)
         }
         if (-1 < match_index) {
           ctrl_set_focus
-                    ((ControlFocusView *)
+                    ((Control *)
                      (((int)dialog_title_font_obj_block.active_dialog->std_button_count + counter2) * 0x3c +
                      (int)dialog_title_font_obj_block.active_dialog->button_controls));
           dialog_on_button_click((int)dialog_title_font_obj_block.active_dialog->std_button_count + counter2 + 100);
@@ -9274,12 +9274,12 @@ void __cdecl dialog_on_char(byte ch)
         if (match != 0) {
           if ((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[1] & 0x10) == 0) {
             if ((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[0] & 4) == 0) {
-              radiogrp_set_selected((RadioGroupSetSelView *)dialog_title_font_obj_block.active_dialog->radio_group,match_index);
+              radiogrp_set_selected((RadioGroup *)dialog_title_font_obj_block.active_dialog->radio_group,match_index);
             }
           }
           else {
             listbox_set_cur_sel
-                      ((ListBoxSetSelView *)dialog_title_font_obj_block.active_dialog->listbox[dialog_title_font_obj_block.active_dialog->cur_pane],
+                      ((ListBox *)dialog_title_font_obj_block.active_dialog->listbox[dialog_title_font_obj_block.active_dialog->cur_pane],
                        match_index);
           }
         }
@@ -9675,7 +9675,7 @@ void __thiscall dialog_render(Dialog *self)
     if (self->option_count != 0) {
       if ((self->style_flags & 0x1000) == 0) {
         if ((self->style_flags & 4) == 0) {
-          radiogrp_show_all((RadioGroupShowView *)self->radio_group);
+          radiogrp_show_all((RadioGroup *)self->radio_group);
         }
         else {
           for (i = 0; i < (int)self->option_count; i++) {
@@ -9775,12 +9775,12 @@ u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
         }
       }
       if ((out_text != 0) && (self->edit_controls != 0)) {
-        ctrl_get_text((ControlTextView *)self->edit_controls,(char *)out_text);
+        ctrl_get_text((Control *)self->edit_controls,(char *)out_text);
       }
       if (1 < (int)self->edit_count) {
         for (i = 0; i < (int)self->edit_count; i++) {
           ctrl_get_text
-                    ((ControlTextView *)(self->edit_controls + i * 0x48),
+                    ((Control *)(self->edit_controls + i * 0x48),
                      (((i8 *)&minimap_window_block.text_string_args) + i * 0x104));
         }
       }
@@ -9791,7 +9791,7 @@ u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
           for (; option != (DialogOption *)0x0; option = option->next) {
             option->flags = option->flags & 0xfffffffb;
             result = checkbox_is_checked
-                              ((Control *)(self->checkboxes + i * 0x3c));
+                              ((Checkbox *)(self->checkboxes + i * 0x3c));
             if (result != 0) {
               option->flags = option->flags | 4;
             }
@@ -9805,13 +9805,13 @@ u32 __thiscall dialog_run_modal(Dialog *self,iptr out_text,iptr timeout_secs)
         }
         else {
           listbox_get_sel_text
-                    ((ListBoxSelTextView *)self->listbox[self->cur_pane],(char *)sel_text);
+                    ((ListBox *)self->listbox[self->cur_pane],(char *)sel_text);
           self->result_id = (u32)self->option_list->id;
           option = self->option_list;
           i = 0;
           for (; option != (DialogOption *)0x0; option = option->next) {
             listbox_get_text
-                      ((ListBoxTextView *)self->listbox[self->cur_pane],i,
+                      ((ListBox *)self->listbox[self->cur_pane],i,
                        (char *)item_text);
             result = _strcmp(sel_text,item_text);
             if (result == 0) {
@@ -11173,34 +11173,34 @@ void __thiscall wnd_remove_control(WndControlRemoveView *self,int ctrl_id)
 
 {
   int id;
-  ControlIdView *this_00;
-  ControlNextView *this_01;
+  Control *this_00;
+  Control *this_01;
   u32 next_next;
-  ControlNextView *ctrl;
+  Control *ctrl;
   
   if (self->first_control != 0) {
-    ctrl = (ControlNextView *)self->first_control;
-    id = ctrl_get_id((ControlIdView *)ctrl);
+    ctrl = (Control *)self->first_control;
+    id = ctrl_get_id(ctrl);
     if (id == ctrl_id) {
-      self->first_control = ctrl->next_control;
+      self->first_control = ctrl->next_ctrl;
     }
     else {
       while( true ) {
-        if (ctrl == (ControlNextView *)0x0) {
+        if (ctrl == (Control *)0x0) {
           return;
         }
         id = control_get_next(ctrl);
         if (id == 0) {
           return;
         }
-        this_00 = (ControlIdView *)control_get_next(ctrl);
+        this_00 = (Control *)control_get_next(ctrl);
         id = ctrl_get_id(this_00);
         if (id == ctrl_id) break;
-        ctrl = (ControlNextView *)control_get_next(ctrl);
+        ctrl = (Control *)control_get_next(ctrl);
       }
-      this_01 = (ControlNextView *)control_get_next(ctrl);
+      this_01 = (Control *)control_get_next(ctrl);
       next_next = control_get_next(this_01);
-      ctrl->next_control = next_next;
+      ctrl->next_ctrl = next_next;
     }
   }
   return;
@@ -11211,10 +11211,10 @@ void __thiscall wnd_remove_all_controls(WndControlRemoveView *self)
 
 {
   i32 ctrl_id;
-  ControlIdView *ctrl;
+  Control *ctrl;
   
-  for (ctrl = (ControlIdView *)self->first_control; ctrl != (ControlIdView *)0x0;
-      ctrl = *(ControlIdView **)((ControlIdViewExt *)ctrl)->next_control) {
+  for (ctrl = (Control *)self->first_control; ctrl != (Control *)0x0;
+      ctrl = (Control *)ctrl->next_ctrl) {
     ctrl_id = ctrl_get_id(ctrl);
     wnd_remove_control(self,ctrl_id);
   }
@@ -11226,11 +11226,11 @@ void __thiscall wnd_focus_first_control(Wnd *self)
 
 {
   char wants_focus;
-  ControlInitialFocusView *ctrl;
+  Control *ctrl;
   
-  ctrl = (ControlInitialFocusView *)self->control_list;
+  ctrl = (Control *)self->control_list;
   while( true ) {
-    if (ctrl == (ControlInitialFocusView *)0x0) {
+    if (ctrl == (Control *)0x0) {
       if ((self->control_list != 0) && ((char)self->keyboard_nav != '\0')) {
         wnd_focus_control((iptr)self,self->control_list);
       }
@@ -11238,7 +11238,7 @@ void __thiscall wnd_focus_first_control(Wnd *self)
     }
     wants_focus = ctrl_get_initial_focus(ctrl);
     if (wants_focus != '\0') break;
-    ctrl = (ControlInitialFocusView *)control_get_next((ControlNextView *)ctrl);
+    ctrl = (Control *)control_get_next(ctrl);
   }
   if ((char)self->keyboard_nav == '\0') {
     return;
@@ -11259,7 +11259,7 @@ i32 __thiscall wnd_dispatch_hotkey_char(void *self,i32 ch)
   int item_count;
   int i;
   i32 handled;
-  RadioGroupItemsView *ctrl;
+  Control *ctrl;
   u8 key_str[4];
   char done;
   
@@ -11269,19 +11269,19 @@ i32 __thiscall wnd_dispatch_hotkey_char(void *self,i32 ch)
   key_str[1] = 0;
   __strlwr((char *)key_str);
   key = key_str[0];
-  ctrl = *(RadioGroupItemsView **)((int)self + 0xb8);
+  ctrl = *(Control **)((int)self + 0xb8);
   do {
-    if (ctrl == (RadioGroupItemsView *)0x0) {
+    if (ctrl == (Control *)0x0) {
       return handled;
     }
     if (done != '\0') {
       return handled;
     }
-    if (*(int *)ctrl->hotkey_index < 0) {
-      value = control_get_type((ControlTypeView *)ctrl);
+    if ((int)ctrl->hotkey_pos < 0) {
+      value = control_get_type(ctrl);
       if (value == 3) {
-        value = radiogrp_get_items(ctrl);
-        item_count = radiogrp_item_count((RadioGroupCountView *)ctrl);
+        value = radiogrp_get_items((RadioGroup *)ctrl);
+        item_count = radiogrp_item_count((RadioGroup *)ctrl);
         for (i = 0; i < item_count; i++) {
           if ((-1 < *(int *)(value + 0xa0 + i * 0xa4)) &&
              (*(u8 *)(value + 0x9c + i * 0xa4) == key)) {
@@ -11293,22 +11293,22 @@ i32 __thiscall wnd_dispatch_hotkey_char(void *self,i32 ch)
         }
       }
     }
-    else if (ctrl->control_header[0x25] == key) {
-      ctrl_type = control_get_type((ControlTypeView *)ctrl);
+    else if (ctrl->hotkey_char == key) {
+      ctrl_type = control_get_type(ctrl);
       if ((ctrl_type == 6) &&
-         (enabled = ctrl_is_enabled((ControlEnabledView *)ctrl), enabled != 0)) {
-        hwnd = control_get_hwnd((ControlHwndView *)ctrl);
+         (enabled = ctrl_is_enabled((Button *)ctrl), enabled != 0)) {
+        hwnd = control_get_hwnd(ctrl);
         button_press_animated(hwnd);
         return 1;
       }
-      value = control_get_type((ControlTypeView *)ctrl);
-      if ((value == 2) && (value = checkbox_is_enabled((CheckboxEnabledView *)ctrl), value != 0)) {
-        hwnd = control_get_hwnd((ControlHwndView *)ctrl);
+      value = control_get_type(ctrl);
+      if ((value == 2) && (value = checkbox_is_enabled((Checkbox *)ctrl), value != 0)) {
+        hwnd = control_get_hwnd(ctrl);
         checkbox_toggle_by_hotkey(hwnd);
         return 1;
       }
     }
-    ctrl = *(RadioGroupItemsView **)ctrl->next_control;
+    ctrl = (Control *)ctrl->next_ctrl;
   } while( true );
 }
 
@@ -11490,7 +11490,7 @@ HWND __cdecl hotspot_create_hwnd(int *rect,iptr ctrl)
 }
 
 /* 005c8f70 auto */
-void __thiscall hotspot_fire_enter(HotspotEnterView *self,i32 arg)
+void __thiscall hotspot_fire_enter(Hotspot *self,i32 arg)
 
 {
   if (self->on_enter != 0) {
@@ -11500,7 +11500,7 @@ void __thiscall hotspot_fire_enter(HotspotEnterView *self,i32 arg)
 }
 
 /* 005c8fb0 auto */
-void __thiscall hotspot_fire_leave(HotspotLeaveView *self,i32 event_arg)
+void __thiscall hotspot_fire_leave(Hotspot *self,i32 event_arg)
 
 {
   if (self->on_leave != 0) {
@@ -11510,7 +11510,7 @@ void __thiscall hotspot_fire_leave(HotspotLeaveView *self,i32 event_arg)
 }
 
 /* 005c8ff0 auto */
-void __thiscall hotspot_fire_click(HotspotClickView *self,i32 event_arg)
+void __thiscall hotspot_fire_click(Hotspot *self,i32 event_arg)
 
 {
   if (self->on_click != 0) {
@@ -11520,7 +11520,7 @@ void __thiscall hotspot_fire_click(HotspotClickView *self,i32 event_arg)
 }
 
 /* 005c9030 auto */
-void __thiscall hotspot_fire_press(HotspotPressView *self,i32 event_arg)
+void __thiscall hotspot_fire_press(Hotspot *self,i32 event_arg)
 
 {
   if (self->on_press != 0) {
@@ -11530,7 +11530,7 @@ void __thiscall hotspot_fire_press(HotspotPressView *self,i32 event_arg)
 }
 
 /* 005c9070 auto */
-void __thiscall hotspot_fire_dblclick(HotspotDblClickView *self,i32 event_arg)
+void __thiscall hotspot_fire_dblclick(Hotspot *self,i32 event_arg)
 
 {
   if (self->on_dblclick != 0) {
@@ -12305,7 +12305,7 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
   NativeWindow *frame_win2;
   HWND start_hwnd;
   int result;
-  CheckboxEnabledView *self;
+  Checkbox *self;
   UINT first_cmd;
   UINT uCmd;
   HWND group_hwnd;
@@ -12387,15 +12387,15 @@ void __cdecl wnd_cycle_control_focus(iptr wnd,HWND hwnd,int direction)
         wnd_cycle_control_focus(wnd,group_hwnd,direction);
         return;
       }
-      self = (CheckboxEnabledView *)ctrl_list_find_by_hwnd(hwnd,(ControlNextView *)*(i32 *)(wnd + 0xb8));
-      if ((self != (CheckboxEnabledView *)0x0) &&
-         ((((result = control_get_type((ControlTypeView *)self), result == 6 &&
-            (result = ctrl_is_enabled((ControlEnabledView *)self), result != 0)) ||
-           ((result = control_get_type((ControlTypeView *)self), result == 2 &&
+      self = (Checkbox *)ctrl_list_find_by_hwnd(hwnd,(Control *)*(i32 *)(wnd + 0xb8));
+      if ((self != (Checkbox *)0x0) &&
+         ((((result = control_get_type(self), result == 6 &&
+            (result = ctrl_is_enabled((Button *)self), result != 0)) ||
+           ((result = control_get_type(self), result == 2 &&
             (result = checkbox_is_enabled(self), result != 0)))) ||
-          (((result = control_get_type((ControlTypeView *)self), result == 4 ||
-            (result = control_get_type((ControlTypeView *)self), result == 7)) ||
-           (result = control_get_type((ControlTypeView *)self), result == 10)))))) {
+          (((result = control_get_type(self), result == 4 ||
+            (result = control_get_type(self), result == 7)) ||
+           (result = control_get_type(self), result == 10)))))) {
         SetFocus(hwnd);
         return;
       }
@@ -12423,14 +12423,14 @@ void __cdecl wnd_focus_control(iptr wnd,iptr control)
   
   nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)wnd);
   if (nav_enabled != '\0') {
-    ctrl_type = control_get_type((ControlTypeView *)control);
+    ctrl_type = control_get_type((Control *)control);
     if (ctrl_type == 3) {
-      items = (i32 *)radiogrp_get_items((RadioGroupItemsView *)control);
+      items = (i32 *)radiogrp_get_items((RadioGroup *)control);
       start_hwnd = hwnd_prev_sibling_wrap(*items);
       wnd_cycle_control_focus(wnd,start_hwnd,2);
     }
     else {
-      start_hwnd = control_get_hwnd((ControlHwndView *)control);
+      start_hwnd = control_get_hwnd((Control *)control);
       start_hwnd = hwnd_prev_sibling_wrap(start_hwnd);
       wnd_cycle_control_focus(wnd,start_hwnd,2);
     }

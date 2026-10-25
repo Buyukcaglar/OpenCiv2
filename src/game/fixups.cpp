@@ -51,8 +51,8 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
                 if (self != (void *)0x0) {
                     ctrl_arg = ctrl_get_parent((Control *)self);
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id((ControlIdView *)self);
-                    hotspot_fire_enter((HotspotEnterView *)self, ctrl_arg);
+                    ctrl_arg = ctrl_get_id((Control *)self);
+                    hotspot_fire_enter((Hotspot *)self, ctrl_arg);
                 }
             }
         }
@@ -71,8 +71,8 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
                     if (self != (void *)0x0) {
                         ctrl_arg = ctrl_get_parent((Control *)self);
                         wnd_set_active_child(ctrl_arg);
-                        ctrl_arg = ctrl_get_id((ControlIdView *)self);
-                        hotspot_fire_leave((HotspotLeaveView *)self, ctrl_arg);
+                        ctrl_arg = ctrl_get_id((Control *)self);
+                        hotspot_fire_leave((Hotspot *)self, ctrl_arg);
                     }
                 }
             }
@@ -83,8 +83,8 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
             g_btn_pressed = 1;
             ctrl_arg = ctrl_get_parent((Control *)self);
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((ControlIdView *)self);
-            hotspot_fire_press((HotspotPressView *)self, ctrl_arg);
+            ctrl_arg = ctrl_get_id((Control *)self);
+            hotspot_fire_press((Hotspot *)self, ctrl_arg);
         }
         break;
     case 0x202:     /* WM_LBUTTONUP */
@@ -94,8 +94,8 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
                 if (self != (void *)0x0) {
                     ctrl_arg = ctrl_get_parent((Control *)self);
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id((ControlIdView *)self);
-                    hotspot_fire_click((HotspotClickView *)self, ctrl_arg);
+                    ctrl_arg = ctrl_get_id((Control *)self);
+                    hotspot_fire_click((Hotspot *)self, ctrl_arg);
                 }
             }
             else {
@@ -103,8 +103,8 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
                 if (self != (void *)0x0) {
                     ctrl_arg = ctrl_get_parent((Control *)self);
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id((ControlIdView *)self);
-                    hotspot_fire_leave((HotspotLeaveView *)self, ctrl_arg);
+                    ctrl_arg = ctrl_get_id((Control *)self);
+                    hotspot_fire_leave((Hotspot *)self, ctrl_arg);
                 }
             }
         }
@@ -113,8 +113,8 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
         if (g_btn_hover != 0) {
             ctrl_arg = ctrl_get_parent((Control *)self);
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((ControlIdView *)self);
-            hotspot_fire_dblclick((HotspotDblClickView *)self, ctrl_arg);
+            ctrl_arg = ctrl_get_id((Control *)self);
+            hotspot_fire_dblclick((Hotspot *)self, ctrl_arg);
         }
         break;
     default:
@@ -157,7 +157,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     ctrl = (void *)wnd_obj2->owner;
     switch (msg) {
     case 0x201:     /* WM_LBUTTONDOWN */
-        tmp = ctrl_is_enabled((ControlEnabledView *)ctrl);
+        tmp = ctrl_is_enabled((Button *)ctrl);
         if (tmp == 0)
             break;
         wnd_obj2->tracking = 1;
@@ -202,8 +202,8 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             button_wndproc(hwnd, 0xf, 0, 0);
             ctrl_arg = ctrl_get_parent((Control *)ctrl);
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((ControlIdView *)ctrl);
-            button_fire_callback((ButtonClickView *)ctrl, ctrl_arg);
+            ctrl_arg = ctrl_get_id((Control *)ctrl);
+            button_fire_callback((Button *)ctrl, ctrl_arg);
         }
         break;
     case 0xf:       /* WM_PAINT */
@@ -214,7 +214,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         rect.right = rect_ptr[2];
         rect.bottom = rect_ptr[3];
         ValidateRect(GetParent(hwnd), &rect);
-        tmp = ctrl_is_enabled((ControlEnabledView *)ctrl);
+        tmp = ctrl_is_enabled((Button *)ctrl);
         if (tmp == 0) {
             focus_wnd = GetFocus();
             if (focus_wnd == hwnd) {
@@ -253,7 +253,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (wparam == 9) {
             SendMessageA(GetParent(hwnd), msg, wparam, lparam);
         }
-        else if (wparam == 0x20 && (tmp = ctrl_is_enabled((ControlEnabledView *)ctrl), tmp != 0) &&
+        else if (wparam == 0x20 && (tmp = ctrl_is_enabled((Button *)ctrl), tmp != 0) &&
                  (parent = (void *)ctrl_get_parent((Control *)ctrl),
                   nav_enabled = wnd_keyboard_nav_enabled((WndKeyNavView *)parent), nav_enabled != '\0')) {
             wnd_obj2->pressed = 1;
@@ -269,8 +269,8 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             wnd_redraw_client(hwnd);
             ctrl_arg = ctrl_get_parent((Control *)ctrl);
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((ControlIdView *)ctrl);
-            button_fire_callback((ButtonClickView *)ctrl, ctrl_arg);
+            ctrl_arg = ctrl_get_id((Control *)ctrl);
+            button_fire_callback((Button *)ctrl, ctrl_arg);
         }
         else {
             SendMessageA(GetParent(hwnd), msg, wparam, lparam);
@@ -372,11 +372,11 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
                 spritebtn_wndproc(hwnd, 0xf, 0, 0);
                 ctrl_arg = ctrl_get_parent((Control *)ctrl);
                 wnd_set_active_child(ctrl_arg);
-                ctrl_arg = ctrl_get_id((ControlIdView *)ctrl);
+                ctrl_arg = ctrl_get_id((Control *)ctrl);
                 if (msg == 0x202)
-                    spritebtn_fire_click((SpriteButtonClickView *)ctrl, ctrl_arg);
+                    spritebtn_fire_click((SpriteButton *)ctrl, ctrl_arg);
                 else
-                    spritebtn_fire_rclick((SpriteButtonRClickView *)ctrl, ctrl_arg);
+                    spritebtn_fire_rclick((SpriteButton *)ctrl, ctrl_arg);
             }
         }
         break;
@@ -448,8 +448,8 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             wnd_redraw_client(hwnd);
             ctrl_arg = ctrl_get_parent((Control *)ctrl);
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((ControlIdView *)ctrl);
-            spritebtn_fire_click((SpriteButtonClickView *)ctrl, ctrl_arg);
+            ctrl_arg = ctrl_get_id((Control *)ctrl);
+            spritebtn_fire_click((SpriteButton *)ctrl, ctrl_arg);
         }
         else {
             SendMessageA(GetParent(hwnd), msg, wparam, lparam);

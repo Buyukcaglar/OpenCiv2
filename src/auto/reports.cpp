@@ -341,10 +341,10 @@ void __thiscall advisor_add_close_button(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)&self->bar_height,(iptr)parent_wnd2,100,(iptr)button_rect,(const char *)label);
-  button_set_callback((Control *)&self->bar_height,(iptr)advisor_on_close_clicked);
-  ctrl_set_default_button((Control *)&self->bar_height);
-  ctrl_set_cancel_button((Control *)&self->bar_height);
+            ((Button *)&self->bar_height,(iptr)parent_wnd2,100,(iptr)button_rect,(const char *)label);
+  button_set_callback((Button *)&self->bar_height,(iptr)advisor_on_close_clicked);
+  ctrl_set_default_button((Button *)&self->bar_height);
+  ctrl_set_cancel_button((Button *)&self->bar_height);
   return;
 }
 
@@ -537,12 +537,12 @@ void __cdecl attitude_advisor_draw(void)
   if (advisor_window_block.advisor_controls_created == 0) {
     rect_set((iptr)scroll_rect,(advisor_window_block.advisor_client_right - advisor_window_block.advisor_vscroll_width) - 2,y,advisor_window_block.advisor_client_right - 2,
                        bottom);
-    scrollbar_create((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)scroll_rect,1);
+    scrollbar_create((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)scroll_rect,1);
     max_row = int_clamp(city_count - 1,0,999);
-    scrollbar_set_range((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),0,max_row);
-    scrollbar_set_pos((ClickControl *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
-    scrollbar_set_page_size((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_rows_per_page);
-    scrollbar_set_callback((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)attitude_advisor_on_scroll);
+    scrollbar_set_range((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),0,max_row);
+    scrollbar_set_pos((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
+    scrollbar_set_page_size((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_rows_per_page);
+    scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)attitude_advisor_on_scroll);
     ctrl_show_and_redraw((Control *)((i8 *)&advisor_window_block.advisor_scrollbar));
     wnd_set_lbuttonup_handler((WndEventHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),(iptr)attitude_advisor_on_click);
     advisor_window_block.advisor_controls_created = 1;
@@ -868,13 +868,13 @@ void __cdecl defense_minister_draw(void)
         rect_set((iptr)frame_rect2,(advisor_window_block.advisor_client_right - advisor_window_block.advisor_vscroll_width) - 2,list_top,advisor_window_block.advisor_client_right - 2
                            ,bottom);
         scrollbar_create
-                  ((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)frame_rect2,1);
-        scrollbar_set_callback((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)defense_minister_on_scroll);
+                  ((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)frame_rect2,1);
+        scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)defense_minister_on_scroll);
       }
       value = int_clamp(type_count - 1,0,999);
-      scrollbar_set_range((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),0,value);
-      scrollbar_set_pos((ClickControl *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
-      scrollbar_set_page_size((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_rows_per_page);
+      scrollbar_set_range((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),0,value);
+      scrollbar_set_pos((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
+      scrollbar_set_page_size((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_rows_per_page);
       if (advisor_window_block.advisor_controls_created == 0) {
         ctrl_show_and_redraw((Control *)((i8 *)&advisor_window_block.advisor_scrollbar));
         advisor_window_block.advisor_controls_created = 1;
@@ -963,19 +963,19 @@ void __cdecl defense_minister_show(iptr report_civ)
   rect_offset((iptr)button_rect,299,0);
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
-  button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
-  ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
-  ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
+            ((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
+  ctrl_set_default_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
+  ctrl_set_cancel_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
   label = (iptr)label_string(label_string_ids[0x159]);
   button_create
-            ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
-  button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)defense_minister_on_toggle_view);
+            ((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)defense_minister_on_toggle_view);
   label = (iptr)label_string(label_string_ids[0x158]);
   button_create
-            ((Control *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x66,(iptr)button_rect,(const char *)label);
-  button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(iptr)defense_minister_on_toggle_view);
+            ((Button *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x66,(iptr)button_rect,(const char *)label);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_alt_toggle_button),(iptr)defense_minister_on_toggle_view);
   control_hide((Control *)((i8 *)&advisor_window_block.advisor_alt_toggle_button));
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)defense_minister_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
@@ -1319,12 +1319,12 @@ void __cdecl intel_report_draw(void)
     if (advisor_window_block.advisor_controls_created == 0) {
       rect_set((iptr)scroll_rect,left_x,list_bottom,right_x,list_bottom + scroll_height);
       scrollbar_create
-                ((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)scroll_rect,0);
+                ((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)scroll_rect,0);
       color = int_clamp((rows_per_page - 1 + advance_count) / rows_per_page - 1,0,999);
-      scrollbar_set_range((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),0,color);
-      scrollbar_set_pos((ClickControl *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
-      scrollbar_set_page_size((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),1);
-      scrollbar_set_callback((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)intel_report_on_scroll);
+      scrollbar_set_range((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),0,color);
+      scrollbar_set_pos((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
+      scrollbar_set_page_size((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),1);
+      scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)intel_report_on_scroll);
       ctrl_show_and_redraw((Control *)((i8 *)&advisor_window_block.advisor_scrollbar));
       wnd_set_lbuttonup_handler((WndEventHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),(iptr)intel_report_on_click);
       advisor_window_block.advisor_controls_created = 1;
@@ -1458,15 +1458,15 @@ void __cdecl intel_report_show(iptr report_civ,iptr target_civ)
   rect_offset((iptr)button_rect,299,0);
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
-  button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
-  ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
-  ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
+            ((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
+  ctrl_set_default_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
+  ctrl_set_cancel_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
   label = (iptr)label_string(label_string_ids[0xc5]);
   button_create
-            ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
-  button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)intel_report_on_cities_clicked);
+            ((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)intel_report_on_cities_clicked);
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)intel_report_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((WindowObjectView *)((i8 *)&advisor_window_block.advisor_window));
@@ -3042,15 +3042,15 @@ iptr __cdecl hall_of_fame_show(int highlight)
     rect_offset((iptr)button_rect,299,0);
     label = (iptr)label_string(label_string_ids[0x147]);
     button_create
-              ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
-    button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
-    ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
-    ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
+              ((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
+    button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
+    ctrl_set_default_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
+    ctrl_set_cancel_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
     rect_offset((iptr)button_rect,0xfffffed5,0);
     label = (iptr)label_string(label_string_ids[0x1be]);
     button_create
-              ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
-    button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)hall_of_fame_on_clear_clicked);
+              ((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
+    button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)hall_of_fame_on_clear_clicked);
   }
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)hall_of_fame_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
@@ -3758,14 +3758,14 @@ void __cdecl casualty_timeline_draw(void)
   if (casualty_window_block.casualty_controls_created == 0) {
     rect_set((iptr)scroll_rect,(casualty_window_block.casualty_client_right - casualty_window_block.casualty_vscroll_width_i32) - 2,line_height,casualty_window_block.casualty_client_right - 2,
                        bottom);
-    scrollbar_create((Control *)((i8 *)&casualty_window_block.casualty_scrollbar),(iptr)&casualty_window_block.casualty_parent_wnd,200,(iptr)scroll_rect,1);
-    scrollbar_set_callback((Control *)((i8 *)&casualty_window_block.casualty_scrollbar),(iptr)casualty_scrollbar_on_scroll);
+    scrollbar_create((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),(iptr)&casualty_window_block.casualty_parent_wnd,200,(iptr)scroll_rect,1);
+    scrollbar_set_callback((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),(iptr)casualty_scrollbar_on_scroll);
     wnd_set_dblclick_handler((WndHandlersMouseSetView *)((i8 *)&casualty_window_block.casualty_wnd_events),(iptr)casualty_timeline_on_dblclick);
   }
   max_row = int_clamp(entry_count2 - 1,0,999);
-  scrollbar_set_range((Control *)((i8 *)&casualty_window_block.casualty_scrollbar),0,max_row);
-  scrollbar_set_pos((ClickControl *)((i8 *)&casualty_window_block.casualty_scrollbar),casualty_window_block.casualty_scroll_pos);
-  scrollbar_set_page_size((Control *)((i8 *)&casualty_window_block.casualty_scrollbar),casualty_window_block.casualty_rows_per_page);
+  scrollbar_set_range((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),0,max_row);
+  scrollbar_set_pos((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),casualty_window_block.casualty_scroll_pos);
+  scrollbar_set_page_size((Scrollbar *)((i8 *)&casualty_window_block.casualty_scrollbar),casualty_window_block.casualty_rows_per_page);
   if (casualty_window_block.casualty_controls_created == 0) {
     ctrl_show_and_redraw((Control *)((i8 *)&casualty_window_block.casualty_scrollbar));
     casualty_window_block.casualty_controls_created = 1;
@@ -3796,10 +3796,10 @@ void __cdecl casualty_timeline_show(iptr civ)
     rect_offset((iptr)button_rect,casualty_window_block.casualty_client_x,(client_y - rect_h) + 0x18e);
     label = (iptr)label_string(label_string_ids[0x147]);
     button_create
-              ((Control *)((i8 *)&casualty_window_block.casualty_close_button),(iptr)&casualty_window_block.casualty_parent_wnd,100,(iptr)button_rect,(const char *)label);
-    button_set_callback((Control *)((i8 *)&casualty_window_block.casualty_close_button),(iptr)advisor_on_close_clicked);
-    ctrl_set_default_button((Control *)((i8 *)&casualty_window_block.casualty_close_button));
-    ctrl_set_cancel_button((Control *)((i8 *)&casualty_window_block.casualty_close_button));
+              ((Button *)((i8 *)&casualty_window_block.casualty_close_button),(iptr)&casualty_window_block.casualty_parent_wnd,100,(iptr)button_rect,(const char *)label);
+    button_set_callback((Button *)((i8 *)&casualty_window_block.casualty_close_button),(iptr)advisor_on_close_clicked);
+    ctrl_set_default_button((Button *)((i8 *)&casualty_window_block.casualty_close_button));
+    ctrl_set_cancel_button((Button *)((i8 *)&casualty_window_block.casualty_close_button));
     wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&casualty_window_block.casualty_window),(iptr)casualty_timeline_draw);
     wnd_repaint((SurfaceWindow *)((i8 *)&casualty_window_block.casualty_window));
     window_show((WindowObjectView *)((i8 *)&casualty_window_block.casualty_window));
@@ -6592,17 +6592,17 @@ ListPaneWindow * __thiscall council_wnd_ctor(ListPaneWindow *self)
   (*((char *)&try_level + 0)) = 2;
   dll_handle_init((DllHandle *)(((PictureWindow *)self)->council_dll_handle));
   (*((char *)&try_level + 0)) = 3;
-  button_ctor((Control *)(self + 0x10));
+  button_ctor((Button *)(self + 0x10));
   (*((char *)&try_level + 0)) = 4;
-  button_ctor((Control *)&((PictureWindow *)self)->advisor_button_4);
+  button_ctor((Button *)&((PictureWindow *)self)->advisor_button_4);
   (*((char *)&try_level + 0)) = 5;
-  button_ctor((Control *)((u8 *)&((PictureWindow *)self)->advisor_button_3));
+  button_ctor((Button *)((u8 *)&((PictureWindow *)self)->advisor_button_3));
   (*((char *)&try_level + 0)) = 6;
-  button_ctor((Control *)((u8 *)&((PictureWindow *)self)->advisor_button_2));
+  button_ctor((Button *)((u8 *)&((PictureWindow *)self)->advisor_button_2));
   (*((char *)&try_level + 0)) = 7;
-  button_ctor((Control *)((u8 *)&((PictureWindow *)self)->advisor_button_0));
+  button_ctor((Button *)((u8 *)&((PictureWindow *)self)->advisor_button_0));
   try_level = (try_level & 0xffffff00 | (byte)(8));
-  button_ctor((Control *)&((PictureWindow *)self)->council_close_button);
+  button_ctor((Button *)&((PictureWindow *)self)->council_close_button);
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 6);
   ((PictureWindow *)self)->speech_line_y = 0xb0;
   ((PictureWindow *)self)->council_active_2 = 0;
@@ -6622,17 +6622,17 @@ void __thiscall council_wnd_dtor(CouncilWindow *self)
   try_level = try_level & 0xff;
   council_wnd = 0;
   (*((char *)&try_level + 0)) = 8;
-  /* inlined unwind funclet 0051689f */ { ctrl_dtor((Control *)(*(int *)&self + 0x12ec)); }
+  /* inlined unwind funclet 0051689f */ { ctrl_dtor((Button *)(*(int *)&self + 0x12ec)); }
   (*((char *)&try_level + 0)) = 7;
-  /* inlined unwind funclet 005168ae */ { ctrl_dtor((Control *)(*(int *)&self + 0x12b0)); }
+  /* inlined unwind funclet 005168ae */ { ctrl_dtor((Button *)(*(int *)&self + 0x12b0)); }
   (*((char *)&try_level + 0)) = 6;
-  /* inlined unwind funclet 005168bd */ { ctrl_dtor((Control *)(*(int *)&self + 0x1274)); }
+  /* inlined unwind funclet 005168bd */ { ctrl_dtor((Button *)(*(int *)&self + 0x1274)); }
   (*((char *)&try_level + 0)) = 5;
-  /* inlined unwind funclet 005168cc */ { ctrl_dtor((Control *)(*(int *)&self + 0x1238)); }
+  /* inlined unwind funclet 005168cc */ { ctrl_dtor((Button *)(*(int *)&self + 0x1238)); }
   (*((char *)&try_level + 0)) = 4;
-  /* inlined unwind funclet 005168db */ { ctrl_dtor((Control *)(*(int *)&self + 0x11fc)); }
+  /* inlined unwind funclet 005168db */ { ctrl_dtor((Button *)(*(int *)&self + 0x11fc)); }
   (*((char *)&try_level + 0)) = 3;
-  /* inlined unwind funclet 005168ea */ { ctrl_dtor((Control *)(*(int *)&self + 0x11c0)); }
+  /* inlined unwind funclet 005168ea */ { ctrl_dtor((Button *)(*(int *)&self + 0x11c0)); }
   (*((char *)&try_level + 0)) = 2;
   /* inlined unwind funclet 005168f9 */ { dll_free((DllHandle *)(*(int *)&self + 0xe30)); }
   (*((char *)&try_level + 0)) = 1;
@@ -6718,11 +6718,11 @@ prompt_cheat_number:
     }
   }
   if (((PictureWindow *)self)->council_active_2 != 0) {
-    ctrl_disable((Control *)(self + 0x10));
-    ctrl_disable((Control *)&((PictureWindow *)self)->advisor_button_4);
-    ctrl_disable((Control *)((u8 *)&((PictureWindow *)self)->advisor_button_3));
-    ctrl_disable((Control *)((u8 *)&((PictureWindow *)self)->advisor_button_2));
-    ctrl_disable((Control *)((u8 *)&((PictureWindow *)self)->advisor_button_0));
+    ctrl_disable((Button *)(self + 0x10));
+    ctrl_disable((Button *)&((PictureWindow *)self)->advisor_button_4);
+    ctrl_disable((Button *)((u8 *)&((PictureWindow *)self)->advisor_button_3));
+    ctrl_disable((Button *)((u8 *)&((PictureWindow *)self)->advisor_button_2));
+    ctrl_disable((Button *)((u8 *)&((PictureWindow *)self)->advisor_button_0));
   }
   str_clear((char *)(((PictureWindow *)self)->council_text_file));
   text_clear();
@@ -6933,8 +6933,8 @@ void __thiscall council_create_buttons(DibSurface *self)
   }
   label = (iptr)label_string(label_string_ids[0x9b]);
   button_create_with_callback
-            ((Control *)&((PictureWindow *)self)->advisor_button_0,(iptr)parent1,0,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_0,(iptr)council_on_advisor_button);
+            ((Button *)&((PictureWindow *)self)->advisor_button_0,(iptr)parent1,0,(iptr)&rect,0x21,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->advisor_button_0,(iptr)council_on_advisor_button);
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (self == (DibSurface *)0x0) {
     parent2 = (DibSurface *)0x0;
@@ -6944,8 +6944,8 @@ void __thiscall council_create_buttons(DibSurface *self)
   }
   label = (iptr)label_string(label_string_ids[0x5b]);
   button_create_with_callback
-            ((Control *)&((PictureWindow *)self)->advisor_button_1,(iptr)parent2,1,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_1,(iptr)council_on_advisor_button);
+            ((Button *)&((PictureWindow *)self)->advisor_button_1,(iptr)parent2,1,(iptr)&rect,0x21,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->advisor_button_1,(iptr)council_on_advisor_button);
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (self == (DibSurface *)0x0) {
     parent3 = (DibSurface *)0x0;
@@ -6955,8 +6955,8 @@ void __thiscall council_create_buttons(DibSurface *self)
   }
   label = (iptr)label_string(label_string_ids[0x45]);
   button_create_with_callback
-            ((Control *)&((PictureWindow *)self)->advisor_button_2,(iptr)parent3,2,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_2,(iptr)council_on_advisor_button);
+            ((Button *)&((PictureWindow *)self)->advisor_button_2,(iptr)parent3,2,(iptr)&rect,0x21,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->advisor_button_2,(iptr)council_on_advisor_button);
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (self == (DibSurface *)0x0) {
     parent4 = (DibSurface *)0x0;
@@ -6966,8 +6966,8 @@ void __thiscall council_create_buttons(DibSurface *self)
   }
   label = (iptr)label_string(label_string_ids[0x1b8]);
   button_create_with_callback
-            ((Control *)&((PictureWindow *)self)->advisor_button_3,(iptr)parent4,3,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_3,(iptr)council_on_advisor_button);
+            ((Button *)&((PictureWindow *)self)->advisor_button_3,(iptr)parent4,3,(iptr)&rect,0x21,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->advisor_button_3,(iptr)council_on_advisor_button);
   OffsetRect(&rect,frame_border_width + 0x5a,0);
   if (self == (DibSurface *)0x0) {
     parent5 = (DibSurface *)0x0;
@@ -6977,8 +6977,8 @@ void __thiscall council_create_buttons(DibSurface *self)
   }
   label = (iptr)label_string(label_string_ids[0x1b9]);
   button_create_with_callback
-            ((Control *)&((PictureWindow *)self)->advisor_button_4,(iptr)parent5,4,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->advisor_button_4,(iptr)council_on_advisor_button);
+            ((Button *)&((PictureWindow *)self)->advisor_button_4,(iptr)parent5,4,(iptr)&rect,0x21,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->advisor_button_4,(iptr)council_on_advisor_button);
   y = surface_get_height(self);
   y = (y - frame_bevel_width) - 1;
   right = surface_get_width(self);
@@ -6993,8 +6993,8 @@ void __thiscall council_create_buttons(DibSurface *self)
   }
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create_with_callback
-            ((Control *)&((PictureWindow *)self)->council_close_button,(iptr)parent6,0xca,(iptr)&rect,0x21,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->council_close_button,(iptr)council_on_advisor_button);
+            ((Button *)&((PictureWindow *)self)->council_close_button,(iptr)parent6,0xca,(iptr)&rect,0x21,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->council_close_button,(iptr)council_on_advisor_button);
   return;
 }
 

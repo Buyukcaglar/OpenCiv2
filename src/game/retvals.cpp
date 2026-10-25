@@ -130,7 +130,7 @@ read_text_lines:
       crt_strcpy(desc_text,((i8 *)&map_views_block.text_buffer));
     }
 set_control_text:
-    ctrl_set_text((ControlTextView *)((iptr)obj_addr + 0x1a98),(const char *)desc_text);
+    ctrl_set_text((Control *)((iptr)obj_addr + 0x1a98),(const char *)desc_text);
     ctrl_show_and_redraw((Control *)((iptr)obj_addr + 0x1a98));
   }
   return;
@@ -1056,7 +1056,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
   }
   if (msg < 6) {
     if (msg == 5) {
-      type11_hwnd = (HWND)ctrl_list_find_type11_hwnd((ControlNextView *)frame->control_list);
+      type11_hwnd = (HWND)ctrl_list_find_type11_hwnd((Control *)frame->control_list);
       if (type11_hwnd != (HWND)0x0) {
         SendMessageA(type11_hwnd,5,wparam,(LPARAM)lparam);
       }
@@ -1090,13 +1090,13 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
       }
       else if ((wparam == 0xd) && ((*((char *)&shift_flags + 1)) == '\0')) {
         if (frame->handler_slot_bc != 0) {
-          ctrl_arg = control_get_hwnd((ControlHwndView *)frame->handler_slot_bc);
+          ctrl_arg = control_get_hwnd((Control *)frame->handler_slot_bc);
           button_press_animated(ctrl_arg);
         }
       }
       else if ((wparam == 0x1b) && ((*((char *)&shift_flags + 1)) == '\0')) {
         if (frame->handler_slot_c0 != 0) {
-          ctrl_arg = control_get_hwnd((ControlHwndView *)frame->handler_slot_c0);
+          ctrl_arg = control_get_hwnd((Control *)frame->handler_slot_c0);
           button_press_animated(ctrl_arg);
         }
       }
@@ -1122,7 +1122,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
           parent_data = wnd_get_window((WndBase *)parent_wnd);
           parent_frame = GetWindowLongA(parent_data->hwnd,8);
           if ((parent_frame != 0) &&
-             (insert_after = ctrl_list_find_type11_hwnd((ControlNextView *)((Wnd *)parent_frame)->control_list), insert_after != 0)) {
+             (insert_after = ctrl_list_find_type11_hwnd((Control *)((Wnd *)parent_frame)->control_list), insert_after != 0)) {
             ((WINDOWPOS *)lparam)->hwndInsertAfter = (HWND)insert_after;
             result = DefWindowProcA(hwnd,0x46,wparam,(LPARAM)lparam);
             return result;
@@ -1144,7 +1144,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
             class_bytes = GetClassLongA(lparam,-0x12);
             edit_offset = class_bytes - 4;
             edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
-            edit_fire_change_callback((EditChangeView *)edit_obj);
+            edit_fire_change_callback((EditControl *)edit_obj);
           }
           else if (notify_code == 1) {
             ctrl_hwnd = lparam;
@@ -1166,7 +1166,7 @@ forward_command:
           class_bytes = GetClassLongA(lparam,-0x12);
           edit_offset = class_bytes - 4;
           edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
-          edit_fire_maxtext_callback((EditMaxTextView *)edit_obj);
+          edit_fire_maxtext_callback((EditControl *)edit_obj);
         }
       }
       else {
@@ -1191,7 +1191,7 @@ forward_command:
         parent_data = wnd_get_window((WndBase *)parent_wnd);
         parent_frame = GetWindowLongA(parent_data->hwnd,8);
         if (((parent_frame != 0) &&
-            (visible_type11 = (HWND)ctrl_list_find_type11_hwnd((ControlNextView *)((Wnd *)parent_frame)->control_list), visible_type11 != (HWND)0x0)
+            (visible_type11 = (HWND)ctrl_list_find_type11_hwnd((Control *)((Wnd *)parent_frame)->control_list), visible_type11 != (HWND)0x0)
             ) && (valid = IsWindowVisible(visible_type11), valid != 0)) {
           tmp = GetSystemMetrics(4);
           GetWindowRect(visible_type11,&moving_rect);

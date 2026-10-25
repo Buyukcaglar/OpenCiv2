@@ -36,11 +36,11 @@ void __thiscall pedia_update_controls(MediaWindow *self)
 {
   u32 view_mode;
   int scroll_height;
-  Control *new_ctrl;
+  Hotspot *new_ctrl;
   u8 *hotspot_parent2;
   u8 *hotspot_parent;
-  Control *hotspot2;
-  Control *hotspot;
+  Hotspot *hotspot2;
+  Hotspot *hotspot;
   struct { u32 left; u32 top; u32 right; u32 bottom; } rect2;
   i32 seh_frame;
   i8 *seh_handler;
@@ -64,7 +64,7 @@ void __thiscall pedia_update_controls(MediaWindow *self)
   control_hide((Control *)(((PictureWindow *)self)->advance_detail_describe_button));
   control_hide((Control *)&((PictureWindow *)self)->advance_detail_close_button);
   control_hide((Control *)&((PictureWindow *)self)->description_edit);
-  ctrl_set_text((ControlTextView *)&((PictureWindow *)self)->description_edit,(const char *)&str_empty_73);
+  ctrl_set_text((Control *)&((PictureWindow *)self)->description_edit,(const char *)&str_empty_73);
   if (((PictureWindow *)self)->list_hotspot != 0) {
     if ((Hotspot *)((PictureWindow *)self)->list_hotspot != (Hotspot *)0x0) {
       hotspot_scalar_dtor((Hotspot *)((PictureWindow *)self)->list_hotspot,1);
@@ -95,9 +95,9 @@ void __thiscall pedia_update_controls(MediaWindow *self)
         rect2.bottom = self->content_bottom;
         scroll_height = GetSystemMetrics(3);
         rect2.bottom -= scroll_height;
-        new_ctrl = (Control *)operator_new(0x40);
+        new_ctrl = (Hotspot *)operator_new(0x40);
         seh_state = 0;
-        if (new_ctrl == (Control *)0x0) {
+        if (new_ctrl == (Hotspot *)0x0) {
           hotspot = 0;
         }
         else {
@@ -112,9 +112,9 @@ void __thiscall pedia_update_controls(MediaWindow *self)
           hotspot_parent = self->window_2;
         }
         hotspot_create
-                  ((ClickControl *)((PictureWindow *)self)->list_hotspot,(iptr)hotspot_parent,0xfa9,(iptr)&rect2);
-        hotspot_set_click_callback((HotspotClickSetView *)((PictureWindow *)self)->list_hotspot,(iptr)pedia_list_on_click);
-        hotspot_set_dblclick_callback((HotspotDblClickSetView *)((PictureWindow *)self)->list_hotspot,(iptr)pedia_toggle_describe);
+                  ((Hotspot *)((PictureWindow *)self)->list_hotspot,(iptr)hotspot_parent,0xfa9,(iptr)&rect2);
+        hotspot_set_click_callback((Hotspot *)((PictureWindow *)self)->list_hotspot,(iptr)pedia_list_on_click);
+        hotspot_set_dblclick_callback((Hotspot *)((PictureWindow *)self)->list_hotspot,(iptr)pedia_toggle_describe);
         ctrl_show_and_redraw((Control *)((PictureWindow *)self)->list_hotspot);
       }
     }
@@ -129,9 +129,9 @@ void __thiscall pedia_update_controls(MediaWindow *self)
         rect2.bottom = self->content_bottom;
         scroll_height = GetSystemMetrics(3);
         rect2.bottom -= scroll_height;
-        new_ctrl = (Control *)operator_new(0x40);
+        new_ctrl = (Hotspot *)operator_new(0x40);
         seh_state = 1;
-        if (new_ctrl == (Control *)0x0) {
+        if (new_ctrl == (Hotspot *)0x0) {
           hotspot2 = 0;
         }
         else {
@@ -146,9 +146,9 @@ void __thiscall pedia_update_controls(MediaWindow *self)
           hotspot_parent2 = self->window_2;
         }
         hotspot_create
-                  ((ClickControl *)((PictureWindow *)self)->list_hotspot,(iptr)hotspot_parent2,0xfa9,(iptr)&rect2);
-        hotspot_set_click_callback((HotspotClickSetView *)((PictureWindow *)self)->list_hotspot,(iptr)pedia_list_on_click);
-        hotspot_set_dblclick_callback((HotspotDblClickSetView *)((PictureWindow *)self)->list_hotspot,(iptr)pedia_toggle_describe);
+                  ((Hotspot *)((PictureWindow *)self)->list_hotspot,(iptr)hotspot_parent2,0xfa9,(iptr)&rect2);
+        hotspot_set_click_callback((Hotspot *)((PictureWindow *)self)->list_hotspot,(iptr)pedia_list_on_click);
+        hotspot_set_dblclick_callback((Hotspot *)((PictureWindow *)self)->list_hotspot,(iptr)pedia_toggle_describe);
         ctrl_show_and_redraw((Control *)((PictureWindow *)self)->list_hotspot);
       }
     }
@@ -259,7 +259,7 @@ void __thiscall pedia_update_describe_button(ListPaneWindow *self,int list_index
     crt_strcat(path,((i8 *)&lang_file_ext));
     result = file_exists((const char *)path);
     if (result == 0) {
-      ctrl_disable((Control *)(((PictureWindow *)self)->detail_describe_button));
+      ctrl_disable((Button *)(((PictureWindow *)self)->detail_describe_button));
       __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
       return;
     }
@@ -289,17 +289,17 @@ void __thiscall pedia_update_describe_button(ListPaneWindow *self,int list_index
   }
   if (topic_id < 0) {
     if (self->caption_height == 1) {
-      ctrl_disable((Control *)(((PictureWindow *)self)->advance_detail_describe_button));
+      ctrl_disable((Button *)(((PictureWindow *)self)->advance_detail_describe_button));
     }
     else {
-      ctrl_disable((Control *)(((PictureWindow *)self)->detail_describe_button));
+      ctrl_disable((Button *)(((PictureWindow *)self)->detail_describe_button));
     }
   }
   else if (self->caption_height == 1) {
-    ctrl_enable((Control *)(((PictureWindow *)self)->advance_detail_describe_button));
+    ctrl_enable((Button *)(((PictureWindow *)self)->advance_detail_describe_button));
   }
   else {
-    ctrl_enable((Control *)(((PictureWindow *)self)->detail_describe_button));
+    ctrl_enable((Button *)(((PictureWindow *)self)->detail_describe_button));
   }
   return;
 }
@@ -328,7 +328,7 @@ void __cdecl hyperlink_register_class(void)
 }
 
 /* 00452a67 auto */
-void __thiscall hyperlink_dtor(HyperlinkDtorView *self)
+void __thiscall hyperlink_dtor(Hyperlink *self)
 
 {
   i32 seh_frame;
@@ -340,7 +340,7 @@ void __thiscall hyperlink_dtor(HyperlinkDtorView *self)
     region_dispose(self->hwnd);
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00452ac1 */ { ctrl_base_dtor(*(ControlBase **)&self); }
+  /* inlined unwind funclet 00452ac1 */ { ctrl_base_dtor(self); }
   return;
 }
 
@@ -377,20 +377,20 @@ HWND __cdecl hyperlink_create_hwnd(int *rect,iptr control)
 
 /* 00452b89 auto */
 void __thiscall
-hyperlink_create(ClickControl *self,iptr parent,i32 control_id,iptr rect)
+hyperlink_create(Hyperlink *self,iptr parent,i32 control_id,iptr rect)
 
 {
   u32 hwnd;
   
   if (self->hwnd != 0) {
-    ctrl_destroy((Control *)self);
+    ctrl_destroy(self);
   }
-  ctrl_init((Control *)self,parent,1,control_id,(RECT *)rect);
-  self->is_enabled = 0;
+  ctrl_init(self,parent,1,control_id,(RECT *)rect);
+  self->on_enter = 0;
+  self->on_leave = 0;
   self->on_click = 0;
-  self->on_select = 0;
-  self->font = 0;
-  self->scroll_pos = 0;
+  self->on_press = 0;
+  self->on_dblclick = 0;
   hwnd = hyperlink_create_hwnd((int *)rect,(iptr)self);
   self->hwnd = hwnd;
   return;
@@ -407,7 +407,7 @@ pedia_add_link
   int text_width;
   int max_width;
   uptr len;
-  PediaLinkCtorView *new_link;
+  PediaLink *new_link;
   int underline_y;
   u8 *parent_wnd2;
   PediaLink *link;
@@ -491,13 +491,13 @@ pedia_add_link
   }
   surface_draw_text((DibSurface *)self,(iptr)&font_size21,(const char *)&map_views_block.text_buffer,x,y,5);
   gfx_set_text_color_index(10);
-  new_link = (PediaLinkCtorView *)operator_new(0x48);
+  new_link = (PediaLink *)operator_new(0x48);
   seh_state = 0;
-  if (new_link == (PediaLinkCtorView *)0x0) {
+  if (new_link == (PediaLink *)0x0) {
     link = (PediaLink *)0x0;
   }
   else {
-    link = (PediaLink *)pedia_link_ctor(new_link);
+    link = pedia_link_ctor(new_link);
   }
   seh_state = 0xffffffff;
   link->topic = list_index;
@@ -524,24 +524,24 @@ pedia_add_link
             (&link->control,(iptr)parent_wnd2,link_index + 0xfb4,(iptr)rect);
   switch(link_kind) {
   case 0:
-    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)&link->control,(iptr)pedia_link_on_click_advance);
-    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)&link->control,(iptr)pedia_link_on_click_advance);
+    hyperlink_set_click_callback(&link->control,(iptr)pedia_link_on_click_advance);
+    hyperlink_set_dblclick_callback(&link->control,(iptr)pedia_link_on_click_advance);
     break;
   case 1:
-    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)&link->control,(iptr)pedia_link_on_click_improvement);
-    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)&link->control,(iptr)pedia_link_on_click_improvement);
+    hyperlink_set_click_callback(&link->control,(iptr)pedia_link_on_click_improvement);
+    hyperlink_set_dblclick_callback(&link->control,(iptr)pedia_link_on_click_improvement);
     break;
   case 2:
-    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)&link->control,(iptr)pedia_link_on_click_wonder);
-    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)&link->control,(iptr)pedia_link_on_click_wonder);
+    hyperlink_set_click_callback(&link->control,(iptr)pedia_link_on_click_wonder);
+    hyperlink_set_dblclick_callback(&link->control,(iptr)pedia_link_on_click_wonder);
     break;
   case 3:
-    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)&link->control,(iptr)pedia_link_on_click_unit);
-    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)&link->control,(iptr)pedia_link_on_click_unit);
+    hyperlink_set_click_callback(&link->control,(iptr)pedia_link_on_click_unit);
+    hyperlink_set_dblclick_callback(&link->control,(iptr)pedia_link_on_click_unit);
     break;
   case 4:
-    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)&link->control,(iptr)pedia_link_on_click_terrain);
-    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)&link->control,(iptr)pedia_link_on_click_terrain);
+    hyperlink_set_click_callback(&link->control,(iptr)pedia_link_on_click_terrain);
+    hyperlink_set_dblclick_callback(&link->control,(iptr)pedia_link_on_click_terrain);
   }
   ctrl_show_and_redraw((Control *)&link->control);
 done:
@@ -654,7 +654,7 @@ void __cdecl pedia_link_on_click_terrain(int control_id)
 }
 
 /* 00453b10 auto */
-PediaLinkCtorView * __thiscall pedia_link_ctor(PediaLinkCtorView *self)
+PediaLink * __thiscall pedia_link_ctor(PediaLink *self)
 
 {
   i32 seh_frame;
@@ -662,12 +662,12 @@ PediaLinkCtorView * __thiscall pedia_link_ctor(PediaLinkCtorView *self)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  hyperlink_ctor((Control *)self->link_control);
+  hyperlink_ctor(&self->control);
   return self;
 }
 
 /* 00453cc0 auto */
-Control * __thiscall hyperlink_ctor(Control *self)
+Hyperlink * __thiscall hyperlink_ctor(Hyperlink *self)
 
 {
   i32 seh_frame;
@@ -680,7 +680,7 @@ Control * __thiscall hyperlink_ctor(Control *self)
 }
 
 /* 00453d40 auto */
-void __thiscall hyperlink_set_click_callback(HyperlinkSetClickCallbackView *self,iptr callback)
+void __thiscall hyperlink_set_click_callback(Hyperlink *self,iptr callback)
 
 {
   self->on_click = callback;
@@ -693,7 +693,7 @@ void __thiscall hyperlink_set_click_callback(HyperlinkSetClickCallbackView *self
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall hyperlink_set_dblclick_callback(HyperlinkSetDblclickCallbackView *self,iptr callback)
+void __thiscall hyperlink_set_dblclick_callback(Hyperlink *self,iptr callback)
 
 {
   self->on_dblclick = callback;
@@ -720,9 +720,9 @@ void __thiscall pedia_init_terrain_list(MediaWindow *self,iptr rect)
          ((PictureWindow *)self)->pedia_terrain_ids[i];
   }
   scrollbar_set_range
-            ((Control *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
   scrollbar_set_pos
-            ((ClickControl *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
   if (((PictureWindow *)self)->list_count < 1) {
     ((PictureWindow *)self)->list_top_index = -1;
   }
@@ -1287,9 +1287,9 @@ void __thiscall pedia_init_concept_list(MediaWindow *self,iptr unused_arg)
          ((PictureWindow *)self)->pedia_concept_ids[i];
   }
   scrollbar_set_range
-            ((Control *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
   scrollbar_set_pos
-            ((ClickControl *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
   if (((PictureWindow *)self)->list_count < 1) {
     ((PictureWindow *)self)->list_top_index = -1;
   }
@@ -1354,39 +1354,39 @@ ScaledWindowView * __thiscall pedia_window_ctor(ScaledWindowView *self)
   eh_state = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)self);
   eh_state = 0;
-  button_ctor((Control *)(((PictureWindow *)self)->list_describe_button));
+  button_ctor((Button *)(((PictureWindow *)self)->list_describe_button));
   (*((char *)&eh_state + 0)) = 1;
-  button_ctor((Control *)((u8 *)&((PictureWindow *)self)->list_close_button));
+  button_ctor((Button *)((u8 *)&((PictureWindow *)self)->list_close_button));
   (*((char *)&eh_state + 0)) = 2;
-  button_ctor((Control *)&((PictureWindow *)self)->detail_back_button);
+  button_ctor((Button *)&((PictureWindow *)self)->detail_back_button);
   (*((char *)&eh_state + 0)) = 3;
-  button_ctor((Control *)(((PictureWindow *)self)->detail_describe_button));
+  button_ctor((Button *)(((PictureWindow *)self)->detail_describe_button));
   (*((char *)&eh_state + 0)) = 4;
-  button_ctor((Control *)((u8 *)&((PictureWindow *)self)->detail_close_button));
+  button_ctor((Button *)((u8 *)&((PictureWindow *)self)->detail_close_button));
   (*((char *)&eh_state + 0)) = 5;
-  button_ctor((Control *)(((PictureWindow *)self)->text_back_button));
+  button_ctor((Button *)(((PictureWindow *)self)->text_back_button));
   (*((char *)&eh_state + 0)) = 6;
-  button_ctor((Control *)((u8 *)&((PictureWindow *)self)->text_close_button));
+  button_ctor((Button *)((u8 *)&((PictureWindow *)self)->text_close_button));
   (*((char *)&eh_state + 0)) = 7;
-  button_ctor((Control *)&((PictureWindow *)self)->concept_list_back_button);
+  button_ctor((Button *)&((PictureWindow *)self)->concept_list_back_button);
   (*((char *)&eh_state + 0)) = 8;
-  button_ctor((Control *)(((PictureWindow *)self)->advance_list_describe_button));
+  button_ctor((Button *)(((PictureWindow *)self)->advance_list_describe_button));
   (*((char *)&eh_state + 0)) = 9;
-  button_ctor((Control *)(((PictureWindow *)self)->advance_list_tech_tree_button));
+  button_ctor((Button *)(((PictureWindow *)self)->advance_list_tech_tree_button));
   (*((char *)&eh_state + 0)) = 10;
-  button_ctor((Control *)(((PictureWindow *)self)->advance_list_close_button));
+  button_ctor((Button *)(((PictureWindow *)self)->advance_list_close_button));
   (*((char *)&eh_state + 0)) = 0xb;
-  button_ctor((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_back_button));
+  button_ctor((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_back_button));
   (*((char *)&eh_state + 0)) = 0xc;
-  button_ctor((Control *)&((PictureWindow *)self)->advance_detail_tech_tree_button);
+  button_ctor((Button *)&((PictureWindow *)self)->advance_detail_tech_tree_button);
   (*((char *)&eh_state + 0)) = 0xd;
-  button_ctor((Control *)(((PictureWindow *)self)->advance_detail_describe_button));
+  button_ctor((Button *)(((PictureWindow *)self)->advance_detail_describe_button));
   (*((char *)&eh_state + 0)) = 0xe;
-  button_ctor((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button));
+  button_ctor((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button));
   (*((char *)&eh_state + 0)) = 0xf;
-  edit_ctor((InputControl *)((u8 *)&((PictureWindow *)self)->description_edit));
+  edit_ctor((EditControl *)((u8 *)&((PictureWindow *)self)->description_edit));
   eh_state = (eh_state & 0xffffff00 | (byte)(0x10));
-  scrollbar_ctor((Control *)&((PictureWindow *)self)->list_scrollbar);
+  scrollbar_ctor((Scrollbar *)&((PictureWindow *)self)->list_scrollbar);
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 4);
   self->style_flags = 1;
   self->border_width = 0;
@@ -1482,39 +1482,39 @@ void __thiscall pedia_window_dtor(DibSurface *self)
   }
   wnd_destroy_with_surface(self);
   (*((char *)&eh_state + 0)) = 0x10;
-  /* inlined unwind funclet 004f4673 */ { scrollbar_dtor((Control *)(*(int *)&self + 0x1ae0)); }
+  /* inlined unwind funclet 004f4673 */ { scrollbar_dtor((Scrollbar *)(*(int *)&self + 0x1ae0)); }
   (*((char *)&eh_state + 0)) = 0xf;
-  /* inlined unwind funclet 004f4682 */ { edit_dtor((Control *)(*(int *)&self + 0x1a98)); }
+  /* inlined unwind funclet 004f4682 */ { edit_dtor((EditControl *)(*(int *)&self + 0x1a98)); }
   (*((char *)&eh_state + 0)) = 0xe;
-  /* inlined unwind funclet 004f4691 */ { ctrl_dtor((Control *)(*(int *)&self + 0x1a5c)); }
+  /* inlined unwind funclet 004f4691 */ { ctrl_dtor((Button *)(*(int *)&self + 0x1a5c)); }
   (*((char *)&eh_state + 0)) = 0xd;
-  /* inlined unwind funclet 004f46a0 */ { ctrl_dtor((Control *)(*(int *)&self + 0x1a20)); }
+  /* inlined unwind funclet 004f46a0 */ { ctrl_dtor((Button *)(*(int *)&self + 0x1a20)); }
   (*((char *)&eh_state + 0)) = 0xc;
-  /* inlined unwind funclet 004f46af */ { ctrl_dtor((Control *)(*(int *)&self + 0x19e4)); }
+  /* inlined unwind funclet 004f46af */ { ctrl_dtor((Button *)(*(int *)&self + 0x19e4)); }
   (*((char *)&eh_state + 0)) = 0xb;
-  /* inlined unwind funclet 004f46be */ { ctrl_dtor((Control *)(*(int *)&self + 0x19a8)); }
+  /* inlined unwind funclet 004f46be */ { ctrl_dtor((Button *)(*(int *)&self + 0x19a8)); }
   (*((char *)&eh_state + 0)) = 10;
-  /* inlined unwind funclet 004f46cd */ { ctrl_dtor((Control *)(*(int *)&self + 0x196c)); }
+  /* inlined unwind funclet 004f46cd */ { ctrl_dtor((Button *)(*(int *)&self + 0x196c)); }
   (*((char *)&eh_state + 0)) = 9;
-  /* inlined unwind funclet 004f46dc */ { ctrl_dtor((Control *)(*(int *)&self + 0x1930)); }
+  /* inlined unwind funclet 004f46dc */ { ctrl_dtor((Button *)(*(int *)&self + 0x1930)); }
   (*((char *)&eh_state + 0)) = 8;
-  /* inlined unwind funclet 004f46eb */ { ctrl_dtor((Control *)(*(int *)&self + 0x18f4)); }
+  /* inlined unwind funclet 004f46eb */ { ctrl_dtor((Button *)(*(int *)&self + 0x18f4)); }
   (*((char *)&eh_state + 0)) = 7;
-  /* inlined unwind funclet 004f46fa */ { ctrl_dtor((Control *)(*(int *)&self + 0x18b8)); }
+  /* inlined unwind funclet 004f46fa */ { ctrl_dtor((Button *)(*(int *)&self + 0x18b8)); }
   (*((char *)&eh_state + 0)) = 6;
-  /* inlined unwind funclet 004f4709 */ { ctrl_dtor((Control *)(*(int *)&self + 0x187c)); }
+  /* inlined unwind funclet 004f4709 */ { ctrl_dtor((Button *)(*(int *)&self + 0x187c)); }
   (*((char *)&eh_state + 0)) = 5;
-  /* inlined unwind funclet 004f4718 */ { ctrl_dtor((Control *)(*(int *)&self + 0x1840)); }
+  /* inlined unwind funclet 004f4718 */ { ctrl_dtor((Button *)(*(int *)&self + 0x1840)); }
   (*((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 004f4727 */ { ctrl_dtor((Control *)(*(int *)&self + 0x1804)); }
+  /* inlined unwind funclet 004f4727 */ { ctrl_dtor((Button *)(*(int *)&self + 0x1804)); }
   (*((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 004f4736 */ { ctrl_dtor((Control *)(*(int *)&self + 0x17c8)); }
+  /* inlined unwind funclet 004f4736 */ { ctrl_dtor((Button *)(*(int *)&self + 0x17c8)); }
   (*((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 004f4745 */ { ctrl_dtor((Control *)(*(int *)&self + 0x178c)); }
+  /* inlined unwind funclet 004f4745 */ { ctrl_dtor((Button *)(*(int *)&self + 0x178c)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 004f4754 */ { ctrl_dtor((Control *)(*(int *)&self + 0x1750)); }
+  /* inlined unwind funclet 004f4754 */ { ctrl_dtor((Button *)(*(int *)&self + 0x1750)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 004f4763 */ { ctrl_dtor((Control *)(*(int *)&self + 0x1714)); }
+  /* inlined unwind funclet 004f4763 */ { ctrl_dtor((Button *)(*(int *)&self + 0x1714)); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004f4772 */ { surfwnd_dtor(*(SurfaceWindow **)&self); }
   return;
@@ -1609,7 +1609,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   int left_x;
   int col_width;
   u32 panel_h;
-  Control *this_00;
+  Hotspot *this_00;
   int avail_width;
   iptr label;
   int yTop;
@@ -1631,7 +1631,7 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   u8 *parent_3;
   u8 *parent_2;
   u8 *close_parent;
-  Control *close_hotspot;
+  Hotspot *close_hotspot;
   tagRECT rect;
   int btn_height;
   i32 exc_link;
@@ -1682,16 +1682,16 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   col_width = ((int)self->header_height >> 1) - (btn_height >> 1);
   SetRect(&rect,left_x,col_width,(int)(((PictureWindow *)self)->close_box_width * self->header_height) / 0x18 + left_x,
           btn_height + col_width);
-  this_00 = (Control *)operator_new(0x40);
+  this_00 = (Hotspot *)operator_new(0x40);
   eh_state = 0;
-  if (this_00 == (Control *)0x0) {
+  if (this_00 == (Hotspot *)0x0) {
     close_hotspot = 0;
   }
   else {
     close_hotspot = hotspot_ctor(this_00);
   }
   eh_state = 0xffffffff;
-  ((PictureWindow *)self)->close_box_hotspot = (Hotspot *)close_hotspot;
+  ((PictureWindow *)self)->close_box_hotspot = close_hotspot;
   if (self == (DocumentWindow *)0x0) {
     close_parent = (u8 *)0x0;
   }
@@ -1699,8 +1699,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
     close_parent = self->window_2;
   }
   hotspot_create
-            ((ClickControl *)((PictureWindow *)self)->close_box_hotspot,(iptr)close_parent,4000,(iptr)&rect);
-  hotspot_set_click_callback((HotspotClickSetView *)((PictureWindow *)self)->close_box_hotspot,(iptr)pedia_on_close);
+            (((PictureWindow *)self)->close_box_hotspot,(iptr)close_parent,4000,(iptr)&rect);
+  hotspot_set_click_callback(((PictureWindow *)self)->close_box_hotspot,(iptr)pedia_on_close);
   left_x = panel_bevel_width + panel_margin_x + 2;
   panel_h = self->panel_height;
   col_width = font_line_spacing((GameFont *)((i8 *)&font_size24));
@@ -1718,8 +1718,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x27]);
   button_create
-            ((Control *)((PictureWindow *)self)->list_describe_button,(iptr)parent_2,0xfa1,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)((PictureWindow *)self)->list_describe_button,(iptr)pedia_toggle_describe);
+            ((Button *)((PictureWindow *)self)->list_describe_button,(iptr)parent_2,0xfa1,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)((PictureWindow *)self)->list_describe_button,(iptr)pedia_toggle_describe);
   SetRect(&rect,col_width + left_x,yTop,col_width * 2 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_3 = (u8 *)0x0;
@@ -1729,10 +1729,10 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)&((PictureWindow *)self)->list_close_button,(iptr)parent_3,0xfa2,(iptr)&rect,(const char *)label);
-  ctrl_set_default_button((Control *)&((PictureWindow *)self)->list_close_button);
-  ctrl_set_cancel_button((Control *)&((PictureWindow *)self)->list_close_button);
-  button_set_callback((Control *)&((PictureWindow *)self)->list_close_button,(iptr)pedia_on_close);
+            ((Button *)&((PictureWindow *)self)->list_close_button,(iptr)parent_3,0xfa2,(iptr)&rect,(const char *)label);
+  ctrl_set_default_button((Button *)&((PictureWindow *)self)->list_close_button);
+  ctrl_set_cancel_button((Button *)&((PictureWindow *)self)->list_close_button);
+  button_set_callback((Button *)&((PictureWindow *)self)->list_close_button,(iptr)pedia_on_close);
   SetRect(&rect,left_x,yTop,avail_width / 2 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_4 = (u8 *)0x0;
@@ -1742,8 +1742,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x356]);
   button_create
-            ((Control *)((u8 *)&((PictureWindow *)self)->concept_list_back_button),(iptr)parent_4,0xfb2,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->concept_list_back_button),(iptr)pedia_on_back);
+            ((Button *)((u8 *)&((PictureWindow *)self)->concept_list_back_button),(iptr)parent_4,0xfb2,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)((u8 *)&((PictureWindow *)self)->concept_list_back_button),(iptr)pedia_on_back);
   col_width = avail_width / 3;
   SetRect(&rect,left_x,yTop,col_width + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
@@ -1754,8 +1754,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x27]);
   button_create
-            ((Control *)((PictureWindow *)self)->advance_list_describe_button,(iptr)parent_5,0xfab,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)((PictureWindow *)self)->advance_list_describe_button,(iptr)pedia_toggle_describe);
+            ((Button *)((PictureWindow *)self)->advance_list_describe_button,(iptr)parent_5,0xfab,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)((PictureWindow *)self)->advance_list_describe_button,(iptr)pedia_toggle_describe);
   SetRect(&rect,col_width + left_x,yTop,col_width * 2 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_6 = (u8 *)0x0;
@@ -1765,8 +1765,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x360]);
   button_create
-            ((Control *)(((PictureWindow *)self)->advance_list_tech_tree_button),(iptr)parent_6,0xfac,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)(((PictureWindow *)self)->advance_list_tech_tree_button),(iptr)pedia_show_tech_tree);
+            ((Button *)(((PictureWindow *)self)->advance_list_tech_tree_button),(iptr)parent_6,0xfac,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)(((PictureWindow *)self)->advance_list_tech_tree_button),(iptr)pedia_show_tech_tree);
   SetRect(&rect,col_width * 2 + left_x,yTop,col_width * 3 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_7 = (u8 *)0x0;
@@ -1776,10 +1776,10 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)(((PictureWindow *)self)->advance_list_close_button),(iptr)parent_7,0xfad,(iptr)&rect,(const char *)label);
-  ctrl_set_default_button((Control *)(((PictureWindow *)self)->advance_list_close_button));
-  ctrl_set_cancel_button((Control *)(((PictureWindow *)self)->advance_list_close_button));
-  button_set_callback((Control *)(((PictureWindow *)self)->advance_list_close_button),(iptr)pedia_on_close);
+            ((Button *)(((PictureWindow *)self)->advance_list_close_button),(iptr)parent_7,0xfad,(iptr)&rect,(const char *)label);
+  ctrl_set_default_button((Button *)(((PictureWindow *)self)->advance_list_close_button));
+  ctrl_set_cancel_button((Button *)(((PictureWindow *)self)->advance_list_close_button));
+  button_set_callback((Button *)(((PictureWindow *)self)->advance_list_close_button),(iptr)pedia_on_close);
   col_width = (int)(avail_width + (avail_width >> 0x1f & 3U)) >> 2;
   SetRect(&rect,left_x,yTop,col_width + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
@@ -1790,8 +1790,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x356]);
   button_create
-            ((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_back_button),(iptr)parent_8,0xfae,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_back_button),(iptr)pedia_on_back);
+            ((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_back_button),(iptr)parent_8,0xfae,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_back_button),(iptr)pedia_on_back);
   SetRect(&rect,col_width + left_x,yTop,col_width * 2 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_9 = (u8 *)0x0;
@@ -1801,8 +1801,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x360]);
   button_create
-            ((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_tech_tree_button),(iptr)parent_9,0xfaf,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_tech_tree_button),(iptr)pedia_show_tech_tree);
+            ((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_tech_tree_button),(iptr)parent_9,0xfaf,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_tech_tree_button),(iptr)pedia_show_tech_tree);
   SetRect(&rect,col_width * 2 + left_x,yTop,col_width * 3 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_10 = (u8 *)0x0;
@@ -1812,8 +1812,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x2c1]);
   button_create
-            ((Control *)(((PictureWindow *)self)->advance_detail_describe_button),(iptr)parent_10,0xfb0,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)(((PictureWindow *)self)->advance_detail_describe_button),(iptr)pedia_toggle_describe);
+            ((Button *)(((PictureWindow *)self)->advance_detail_describe_button),(iptr)parent_10,0xfb0,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)(((PictureWindow *)self)->advance_detail_describe_button),(iptr)pedia_toggle_describe);
   SetRect(&rect,col_width * 3 + left_x,yTop,col_width * 4 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_11 = (u8 *)0x0;
@@ -1823,10 +1823,10 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button),(iptr)parent_11,0xfb1,(iptr)&rect,(const char *)label);
-  ctrl_set_default_button((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button));
-  ctrl_set_cancel_button((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button));
-  button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button),(iptr)pedia_on_close);
+            ((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button),(iptr)parent_11,0xfb1,(iptr)&rect,(const char *)label);
+  ctrl_set_default_button((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button));
+  ctrl_set_cancel_button((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button));
+  button_set_callback((Button *)((u8 *)&((PictureWindow *)self)->advance_detail_close_button),(iptr)pedia_on_close);
   col_width = avail_width / 3;
   SetRect(&rect,left_x,yTop,col_width + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
@@ -1837,8 +1837,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x356]);
   button_create
-            ((Control *)&((PictureWindow *)self)->detail_back_button,(iptr)parent_12,0xfa3,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->detail_back_button,(iptr)pedia_on_back);
+            ((Button *)&((PictureWindow *)self)->detail_back_button,(iptr)parent_12,0xfa3,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->detail_back_button,(iptr)pedia_on_back);
   SetRect(&rect,col_width + left_x,yTop,col_width * 2 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_13 = (u8 *)0x0;
@@ -1848,8 +1848,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x2c1]);
   button_create
-            ((Control *)(((PictureWindow *)self)->detail_describe_button),(iptr)parent_13,0xfa4,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)(((PictureWindow *)self)->detail_describe_button),(iptr)pedia_toggle_describe);
+            ((Button *)(((PictureWindow *)self)->detail_describe_button),(iptr)parent_13,0xfa4,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)(((PictureWindow *)self)->detail_describe_button),(iptr)pedia_toggle_describe);
   SetRect(&rect,col_width * 2 + left_x,yTop,col_width * 3 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_14 = (u8 *)0x0;
@@ -1859,8 +1859,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)&((PictureWindow *)self)->detail_close_button,(iptr)parent_14,0xfa5,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->detail_close_button,(iptr)pedia_on_close);
+            ((Button *)&((PictureWindow *)self)->detail_close_button,(iptr)parent_14,0xfa5,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->detail_close_button,(iptr)pedia_on_close);
   avail_width = avail_width / 2;
   SetRect(&rect,left_x,yTop,avail_width + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
@@ -1871,8 +1871,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x356]);
   button_create
-            ((Control *)(((PictureWindow *)self)->text_back_button),(iptr)parent_15,0xfa6,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)(((PictureWindow *)self)->text_back_button),(iptr)pedia_on_back);
+            ((Button *)(((PictureWindow *)self)->text_back_button),(iptr)parent_15,0xfa6,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)(((PictureWindow *)self)->text_back_button),(iptr)pedia_on_back);
   SetRect(&rect,avail_width + left_x,yTop,avail_width * 2 + left_x,btn_height + yTop);
   if (self == (DocumentWindow *)0x0) {
     parent_16 = (u8 *)0x0;
@@ -1882,8 +1882,8 @@ void __thiscall pedia_window_create(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)((u8 *)&((PictureWindow *)self)->text_close_button),(iptr)parent_16,0xfa7,(iptr)&rect,(const char *)label);
-  button_set_callback((Control *)((u8 *)&((PictureWindow *)self)->text_close_button),(iptr)pedia_on_close);
+            ((Button *)((u8 *)&((PictureWindow *)self)->text_close_button),(iptr)parent_16,0xfa7,(iptr)&rect,(const char *)label);
+  button_set_callback((Button *)((u8 *)&((PictureWindow *)self)->text_close_button),(iptr)pedia_on_close);
   ui_set_button_font((iptr)&font_size24);
   pedia_clear_links((WindowObjectView *)self);
   ui_set_default_font((iptr)&font_size21);
@@ -1910,10 +1910,10 @@ void __thiscall pedia_window_create(DocumentWindow *self)
     scroll_parent = self->window_2;
   }
   scrollbar_create
-            ((Control *)((u8 *)&((PictureWindow *)self)->list_scrollbar),(iptr)scroll_parent,0xfa8,(iptr)&rect,0);
-  scrollbar_set_callback((Control *)((u8 *)&((PictureWindow *)self)->list_scrollbar),(iptr)pedia_list_on_scroll);
-  scrollbar_set_track_callback((ScrollbarTrackSetView *)((u8 *)&((PictureWindow *)self)->list_scrollbar),(iptr)pedia_list_on_scroll);
-  scrollbar_set_page_size((Control *)((u8 *)&((PictureWindow *)self)->list_scrollbar),2);
+            ((Scrollbar *)((u8 *)&((PictureWindow *)self)->list_scrollbar),(iptr)scroll_parent,0xfa8,(iptr)&rect,0);
+  scrollbar_set_callback((Scrollbar *)((u8 *)&((PictureWindow *)self)->list_scrollbar),(iptr)pedia_list_on_scroll);
+  scrollbar_set_track_callback((Scrollbar *)((u8 *)&((PictureWindow *)self)->list_scrollbar),(iptr)pedia_list_on_scroll);
+  scrollbar_set_page_size((Scrollbar *)((u8 *)&((PictureWindow *)self)->list_scrollbar),2);
   pedia_load_indexes(self);
   return;
 }
@@ -2727,7 +2727,7 @@ void __cdecl pedia_list_on_key(i32 key)
         }
         pedia_window_block.pedia_selected_item = pedia_window_block.pedia_topic;
         pedia_redraw((PediaRedrawView *)((i8 *)&pedia_window_block.pedia_window));
-        scrollbar_set_pos((ClickControl *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
+        scrollbar_set_pos((Scrollbar *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
         break;
       case 0xa2:
       case 0xc1:
@@ -2736,7 +2736,7 @@ void __cdecl pedia_list_on_key(i32 key)
           pedia_window_block.pedia_topic = item;
           pedia_window_block.pedia_selected_item = item;
           pedia_scroll_to_item((WindowObjectView *)((i8 *)&pedia_window_block.pedia_window),item);
-          scrollbar_set_pos((ClickControl *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
+          scrollbar_set_pos((Scrollbar *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
         }
         break;
       case 0xa3:
@@ -2748,7 +2748,7 @@ void __cdecl pedia_list_on_key(i32 key)
           pedia_window_block.pedia_topic = item;
           pedia_window_block.pedia_selected_item = item;
           pedia_scroll_to_item((WindowObjectView *)((i8 *)&pedia_window_block.pedia_window),item);
-          scrollbar_set_pos((ClickControl *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
+          scrollbar_set_pos((Scrollbar *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
         }
         break;
       case 0xa4:
@@ -2760,7 +2760,7 @@ void __cdecl pedia_list_on_key(i32 key)
           pedia_window_block.pedia_topic = item;
           pedia_window_block.pedia_selected_item = item;
           pedia_scroll_to_item((WindowObjectView *)((i8 *)&pedia_window_block.pedia_window),item);
-          scrollbar_set_pos((ClickControl *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
+          scrollbar_set_pos((Scrollbar *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
         }
         break;
       case 0xa7:
@@ -2768,7 +2768,7 @@ void __cdecl pedia_list_on_key(i32 key)
         pedia_window_block.pedia_topic = 0;
         pedia_window_block.pedia_selected_item = 0;
         pedia_window_block.pedia_list_top = 0;
-        scrollbar_set_pos((ClickControl *)((i8 *)&pedia_window_block.pedia_list_scrollbar),0);
+        scrollbar_set_pos((Scrollbar *)((i8 *)&pedia_window_block.pedia_list_scrollbar),0);
         pedia_redraw((PediaRedrawView *)((i8 *)&pedia_window_block.pedia_window));
         break;
       case 0xa8:
@@ -2778,7 +2778,7 @@ void __cdecl pedia_list_on_key(i32 key)
           pedia_window_block.pedia_topic = item;
           pedia_window_block.pedia_selected_item = item;
           pedia_scroll_to_item((WindowObjectView *)((i8 *)&pedia_window_block.pedia_window),item);
-          scrollbar_set_pos((ClickControl *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
+          scrollbar_set_pos((Scrollbar *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
         }
         break;
       case 0xd0: ;
@@ -2790,7 +2790,7 @@ void __cdecl pedia_list_on_key(i32 key)
         pedia_window_block.pedia_topic = item;
         pedia_window_block.pedia_selected_item = item;
         pedia_scroll_to_item((WindowObjectView *)((i8 *)&pedia_window_block.pedia_window),item);
-        scrollbar_set_pos((ClickControl *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
+        scrollbar_set_pos((Scrollbar *)((i8 *)&pedia_window_block.pedia_list_scrollbar),pedia_window_block.pedia_list_top / 9);
       }
     }
   }
@@ -3365,7 +3365,7 @@ void __thiscall pedia_link_dtor(void *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004fa17e */ { hyperlink_dtor((HyperlinkDtorView *)(*(int *)&self + 4)); }
+  /* inlined unwind funclet 004fa17e */ { hyperlink_dtor((Hyperlink *)(*(int *)&self + 4)); }
   return;
 }
 
@@ -3389,9 +3389,9 @@ void __thiscall pedia_init_government_list(MediaWindow *self,iptr unused_arg)
          ((PictureWindow *)self)->pedia_government_ids[i];
   }
   scrollbar_set_range
-            ((Control *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
   scrollbar_set_pos
-            ((ClickControl *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
   if (((PictureWindow *)self)->list_count < 1) {
     ((PictureWindow *)self)->list_top_index = -1;
   }
@@ -3455,9 +3455,9 @@ void __thiscall pedia_init_wonder_list(MediaWindow *self,iptr unused_arg)
          ((PictureWindow *)self)->pedia_wonder_ids[i];
   }
   scrollbar_set_range
-            ((Control *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
   scrollbar_set_pos
-            ((ClickControl *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
   if (((PictureWindow *)self)->list_count < 1) {
     ((PictureWindow *)self)->list_top_index = -1;
   }
@@ -3651,9 +3651,9 @@ void __thiscall pedia_init_advance_list(PediaAdvanceListView *self,iptr unused_a
          ((PictureWindow *)self)->pedia_advance_ids[i];
   }
   scrollbar_set_range
-            ((Control *)((u8 *)&((PictureWindow *)self)->list_scrollbar),0,((PictureWindow *)self)->list_count / 9);
+            ((Scrollbar *)((u8 *)&((PictureWindow *)self)->list_scrollbar),0,((PictureWindow *)self)->list_count / 9);
   scrollbar_set_pos
-            ((ClickControl *)((u8 *)&((PictureWindow *)self)->list_scrollbar),((PictureWindow *)self)->list_top_index / 9);
+            ((Scrollbar *)((u8 *)&((PictureWindow *)self)->list_scrollbar),((PictureWindow *)self)->list_top_index / 9);
   if (((PictureWindow *)self)->list_count < 1) {
     ((PictureWindow *)self)->list_top_index = -1;
   }
@@ -3957,7 +3957,7 @@ void __thiscall pedia_draw_advance_page(DocumentWindow *self)
     crt_strcat(line_buf,((i8 *)&lang_file_ext));
     measure = file_exists((const char *)line_buf);
     if (measure == 0) {
-      ctrl_disable((Control *)(((PictureWindow *)self)->advance_detail_describe_button));
+      ctrl_disable((Button *)(((PictureWindow *)self)->advance_detail_describe_button));
       __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
       return;
     }
@@ -4468,9 +4468,9 @@ void __thiscall pedia_init_improvement_list(DocumentWindow *self,iptr unused_arg
          ((PictureWindow *)self)->pedia_improve_ids[i];
   }
   scrollbar_set_range
-            ((Control *)((u8 *)&((PictureWindow *)self)->list_scrollbar),0,((PictureWindow *)self)->list_count / 9);
+            ((Scrollbar *)((u8 *)&((PictureWindow *)self)->list_scrollbar),0,((PictureWindow *)self)->list_count / 9);
   scrollbar_set_pos
-            ((ClickControl *)((u8 *)&((PictureWindow *)self)->list_scrollbar),((PictureWindow *)self)->list_top_index / 9);
+            ((Scrollbar *)((u8 *)&((PictureWindow *)self)->list_scrollbar),((PictureWindow *)self)->list_top_index / 9);
   if (((PictureWindow *)self)->list_count < 1) {
     ((PictureWindow *)self)->list_top_index = -1;
   }
@@ -4707,9 +4707,9 @@ void __thiscall pedia_show_unit_list(MediaWindow *self,iptr unused_arg)
          ((PictureWindow *)self)->pedia_unit_ids[i];
   }
   scrollbar_set_range
-            ((Control *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,0,((PictureWindow *)self)->list_count / 9);
   scrollbar_set_pos
-            ((ClickControl *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
+            ((Scrollbar *)&((PictureWindow *)self)->list_scrollbar,((PictureWindow *)self)->list_top_index / 9);
   if (((PictureWindow *)self)->list_count < 1) {
     ((PictureWindow *)self)->list_top_index = -1;
   }

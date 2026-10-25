@@ -1967,9 +1967,9 @@ PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *self)
   eh_state = 0;
   surface_ctor((DibSurface *)&self->style_flags);
   (*((char *)&eh_state + 0)) = 1;
-  button_ctor((Control *)self->parley_title);
+  button_ctor((Button *)self->parley_title);
   (*((char *)&eh_state + 0)) = 2;
-  button_ctor((Control *)self->accept_button_2);
+  button_ctor((Button *)self->accept_button_2);
   eh_state = (eh_state & 0xffffff00 | (byte)(3));
   dll_handle_init((DllHandle *)self->portrait_dll);
   self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3);
@@ -1996,9 +1996,9 @@ void __thiscall portrait_dlg_dtor(PortraitDlgDtorView *self)
   (*((char *)&eh_state + 0)) = 3;
   /* inlined unwind funclet 004963a5 */ { dll_free((DllHandle *)(*(int *)&self + 0x1d4)); }
   (*((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 004963b4 */ { ctrl_dtor((Control *)(*(int *)&self + 0x198)); }
+  /* inlined unwind funclet 004963b4 */ { ctrl_dtor((Button *)(*(int *)&self + 0x198)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 004963c3 */ { ctrl_dtor((Control *)(*(int *)&self + 0x15c)); }
+  /* inlined unwind funclet 004963c3 */ { ctrl_dtor((Button *)(*(int *)&self + 0x15c)); }
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004963d2 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x114)); }
   eh_state = 0xffffffff;
@@ -2041,7 +2041,7 @@ void __thiscall portrait_dlg_create_buttons(WindowObjectView *self)
     parent_a = self + 0x12;
   }
   button_create_with_callback
-            ((Control *)(self + 0x66),(iptr)parent_a,0x65,(iptr)&button_rect,0x21,(const char *)&str_ok);
+            ((Button *)(self + 0x66),(iptr)parent_a,0x65,(iptr)&button_rect,0x21,(const char *)&str_ok);
   OffsetRect(&button_rect,((frame_border_width * 8 + 0x276 >> 1) + 2) - frame_border_width,0);
   if (self == (WindowObjectView *)0x0) {
     parent_b = (WindowObjectView *)0x0;
@@ -2050,9 +2050,9 @@ void __thiscall portrait_dlg_create_buttons(WindowObjectView *self)
     parent_b = self + 0x12;
   }
   button_create_with_callback
-            ((Control *)(self + 0x57),(iptr)parent_b,100,(iptr)&button_rect,0x21,(const char *)&str_cancel);
-  button_set_callback((Control *)(self + 0x57),(iptr)portrait_dlg_on_button);
-  button_set_callback((Control *)(self + 0x66),(iptr)portrait_dlg_on_button);
+            ((Button *)(self + 0x57),(iptr)parent_b,100,(iptr)&button_rect,0x21,(const char *)&str_cancel);
+  button_set_callback((Button *)(self + 0x57),(iptr)portrait_dlg_on_button);
+  button_set_callback((Button *)(self + 0x66),(iptr)portrait_dlg_on_button);
   return;
 }
 
@@ -5338,12 +5338,12 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,iptr
   iptr label;
   i8 draw_rect[16];
   int button_y2;
-  Control cancel_button;
+  Button cancel_button;
   int button_height;
   int button_x;
   int button_width2;
   i8 button_rect[16];
-  Control ok_button;
+  Button ok_button;
   i32 seh_handler;
   i8 *seh_next;
   uint seh_state;
@@ -6081,10 +6081,10 @@ void __thiscall sprite_picker_run(ViewWindow *self)
     scroll_parent = self->window_2;
   }
   scrollbar_create
-            ((Control *)&self->dialog_w,(iptr)scroll_parent,0x65,(iptr)rect,0);
-  scrollbar_set_range((Control *)&self->dialog_w,0,status_window_block.sprite_sheet_cell_count - 1);
-  scrollbar_set_pos((ClickControl *)&self->dialog_w,0);
-  scrollbar_set_callback((Control *)&self->dialog_w,(iptr)sprite_picker_select_cell);
+            ((Scrollbar *)&self->dialog_w,(iptr)scroll_parent,0x65,(iptr)rect,0);
+  scrollbar_set_range((Scrollbar *)&self->dialog_w,0,status_window_block.sprite_sheet_cell_count - 1);
+  scrollbar_set_pos((Scrollbar *)&self->dialog_w,0);
+  scrollbar_set_callback((Scrollbar *)&self->dialog_w,(iptr)sprite_picker_select_cell);
   sprite_picker_select_cell(0);
   ctrl_show_and_redraw((Control *)&self->dialog_w);
   self->init_lux_rate = (int)(self->client_width - 8) / 3;
@@ -6099,9 +6099,9 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
-            ((Control *)&self->sci_label_y,(iptr)ok_parent,0xc9,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&self->sci_label_y,(iptr)sprite_picker_ok_clicked);
-  ctrl_set_default_button((Control *)&self->sci_label_y);
+            ((Button *)&self->sci_label_y,(iptr)ok_parent,0xc9,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&self->sci_label_y,(iptr)sprite_picker_ok_clicked);
+  ctrl_set_default_button((Button *)&self->sci_label_y);
   x2 = x2 + self->init_lux_rate + 2;
   rect_set_xywh((iptr)rect,x2,y2,self->init_lux_rate,self->init_sci_rate);
   if (self == (ViewWindow *)0x0) {
@@ -6112,11 +6112,11 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x255]);
   button_create
-            ((Control *)self->import_all_button,(iptr)import_parent,0xc9,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)self->import_all_button,(iptr)sprite_picker_import_all_clicked);
-  ctrl_set_default_button((Control *)self->import_all_button);
+            ((Button *)self->import_all_button,(iptr)import_parent,0xc9,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)self->import_all_button,(iptr)sprite_picker_import_all_clicked);
+  ctrl_set_default_button((Button *)self->import_all_button);
   if (sprite_picker_sprite_block.sprite_sheet_mode == 5) {
-    ctrl_disable((Control *)self->import_all_button);
+    ctrl_disable((Button *)self->import_all_button);
   }
   x2 = x2 + self->init_lux_rate + 2;
   rect_set_xywh((iptr)rect,x2,y2,self->init_lux_rate,self->init_sci_rate);
@@ -6128,9 +6128,9 @@ void __thiscall sprite_picker_run(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
-            ((Control *)&self->fill_rect_top,(iptr)cancel_parent,0xca,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&self->fill_rect_top,(iptr)sprite_picker_cancel_clicked);
-  ctrl_set_cancel_button((Control *)&self->fill_rect_top);
+            ((Button *)&self->fill_rect_top,(iptr)cancel_parent,0xca,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&self->fill_rect_top,(iptr)sprite_picker_cancel_clicked);
+  ctrl_set_cancel_button((Button *)&self->fill_rect_top);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)sprite_picker_redraw_cb);
   wnd_repaint((SurfaceWindow *)self);
   window_show((WindowObjectView *)self);
@@ -6330,13 +6330,13 @@ void __thiscall sprite_picker_dtor(void *self)
   
   seh_state = seh_state & 0xff;
   (*((char *)&seh_state + 0)) = 3;
-  /* inlined unwind funclet 00578402 */ { ctrl_dtor((Control *)(*(int *)&self + 0x3b0)); }
+  /* inlined unwind funclet 00578402 */ { ctrl_dtor((Button *)(*(int *)&self + 0x3b0)); }
   (*((char *)&seh_state + 0)) = 2;
-  /* inlined unwind funclet 00578411 */ { ctrl_dtor((Control *)(*(int *)&self + 0x374)); }
+  /* inlined unwind funclet 00578411 */ { ctrl_dtor((Button *)(*(int *)&self + 0x374)); }
   (*((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 00578420 */ { ctrl_dtor((Control *)(*(int *)&self + 0x338)); }
+  /* inlined unwind funclet 00578420 */ { ctrl_dtor((Button *)(*(int *)&self + 0x338)); }
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 0057842f */ { scrollbar_dtor((Control *)(*(int *)&self + 0x2f8)); }
+  /* inlined unwind funclet 0057842f */ { scrollbar_dtor((Scrollbar *)(*(int *)&self + 0x2f8)); }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 0057843e */ { frame_wnd_dtor(*(DibSurface **)&self); }
   return;
@@ -6353,13 +6353,13 @@ ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *self)
   seh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)self);
   seh_state = 0;
-  scrollbar_ctor((Control *)&self->dialog_w);
+  scrollbar_ctor((Scrollbar *)&self->dialog_w);
   (*((char *)&seh_state + 0)) = 1;
-  button_ctor((Control *)&self->sci_label_y);
+  button_ctor((Button *)&self->sci_label_y);
   (*((char *)&seh_state + 0)) = 2;
-  button_ctor((Control *)self->import_all_button);
+  button_ctor((Button *)self->import_all_button);
   seh_state = (seh_state & 0xffffff00 | (byte)(3));
-  button_ctor((Control *)&self->fill_rect_top);
+  button_ctor((Button *)&self->fill_rect_top);
   self->vtable = (u32)&leader_anim_frame_starts_block.ptr_fun_4;
   return self;
 }

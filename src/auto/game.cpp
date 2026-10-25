@@ -890,8 +890,8 @@ i32 __cdecl load_game_pick_civ(int title_offset)
       if (option != 0) {
         enabled_count++;
         dialog_set_option_disabled(&dlg,(uint)option->id,0);
-        if ((RadioGroupEnableView *)dlg.radio_group != (RadioGroupEnableView *)0x0) {
-          radiogrp_enable_item((RadioGroupEnableView *)dlg.radio_group,(uint)option->id);
+        if ((RadioGroup *)dlg.radio_group != (RadioGroup *)0x0) {
+          radiogrp_enable_item((RadioGroup *)dlg.radio_group,(uint)option->id);
         }
       }
     }
@@ -10991,14 +10991,14 @@ count_available_tribes:
          (((int)civ_saved_cursor_x_block.net_claimed_civs_mask & 1 << ((byte)leaders[leader].color & 0x1f)) == 0)) {
         avail_count++;
         dialog_set_option_disabled(&dlg,leader,0);
-        if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
-          radiogrp_enable_item((RadioGroupEnableView *)dlg.radio_group,leader);
+        if ((RadioGroup *)dlg.radio_group != (RadioGroup *)0x0) {
+          radiogrp_enable_item((RadioGroup *)dlg.radio_group,leader);
         }
       }
       else {
         dialog_set_option_disabled(&dlg,leader,1);
-        if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
-          radiogrp_disable_item((RadioGroupDisableView *)dlg.radio_group,leader);
+        if ((RadioGroup *)dlg.radio_group != (RadioGroup *)0x0) {
+          radiogrp_disable_item((RadioGroup *)dlg.radio_group,leader);
         }
       }
     }
@@ -11011,9 +11011,9 @@ count_available_tribes:
       option = dialog_find_option(&dlg,sel_tribe);
       if ((option != (DialogOption *)0x0) && ((option->flags_byte & 1) == 0)) {
         dialog_set_default_choice(&dlg,option->id);
-        if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
+        if ((RadioGroup *)dlg.radio_group != (RadioGroup *)0x0) {
           radiogrp_set_selected
-                    ((RadioGroupSetSelView *)dlg.radio_group,option->id);
+                    ((RadioGroup *)dlg.radio_group,option->id);
         }
         break;
       }
@@ -11038,7 +11038,7 @@ count_available_tribes:
       dlg_pending_idle_callback = ((i8 *)net_lock_wait_idle_cb);
     }
     leader2 = dlg_show_modal(&dlg,0);
-    sel_tribe = radiogrp_get_selected((RadioGroupGetSelView *)dlg.radio_group);
+    sel_tribe = radiogrp_get_selected((RadioGroup *)dlg.radio_group);
     if (2 < game_mode) {
       if (net_session_block.nm_lock_data_count == 0) {
         if ((net_session_block.nm_server_canceled_count == 0) && (net_session_block.nm_lost_server_on_join_count == 0)) goto tribe_selected;
@@ -12216,17 +12216,17 @@ i32 __cdecl setup_join_pick_civ(int player_idx)
           avail_count++;
           dialog_set_option_disabled(&dlg,option->id,0)
           ;
-          if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
+          if ((RadioGroup *)dlg.radio_group != (RadioGroup *)0x0) {
             radiogrp_enable_item
-                      ((RadioGroupEnableView *)dlg.radio_group,option->id);
+                      ((RadioGroup *)dlg.radio_group,option->id);
           }
         }
         else {
           dialog_set_option_disabled(&dlg,option->id,1)
           ;
-          if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
+          if ((RadioGroup *)dlg.radio_group != (RadioGroup *)0x0) {
             radiogrp_disable_item
-                      ((RadioGroupDisableView *)dlg.radio_group,option->id);
+                      ((RadioGroup *)dlg.radio_group,option->id);
           }
         }
       }
@@ -12236,9 +12236,9 @@ i32 __cdecl setup_join_pick_civ(int player_idx)
       option = dialog_find_option(&dlg,sel_idx);
       if ((option != (DialogOption *)0x0) && ((option->flags_byte & 1) == 0)) {
         dialog_set_default_choice(&dlg,option->id);
-        if ((RadioGroupDisableView *)dlg.radio_group != (RadioGroupDisableView *)0x0) {
+        if ((RadioGroup *)dlg.radio_group != (RadioGroup *)0x0) {
           radiogrp_set_selected
-                    ((RadioGroupSetSelView *)dlg.radio_group,option->id);
+                    ((RadioGroup *)dlg.radio_group,option->id);
         }
         break;
       }
@@ -12323,7 +12323,7 @@ void __cdecl events_editor_focus_redraw(void)
 {
   HWND hWnd;
   
-  hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+  hWnd = control_get_hwnd((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
   SetFocus(hWnd);
   events_editor_draw((ViewWindow *)editor_text_dlg_wnd_block.active_editor_wnd);
   return;
@@ -13292,7 +13292,7 @@ void __cdecl events_editor_update_buttons(i32 unused)
   int sel;
   
   ctrl_enable(&editor_text_dlg_wnd_block.active_editor_wnd->add_trigger_button);
-  sel = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+  sel = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
   if (sel < 0) {
     ctrl_disable(&editor_text_dlg_wnd_block.active_editor_wnd->edit_trigger_button);
     ctrl_disable(&editor_text_dlg_wnd_block.active_editor_wnd->delete_trigger_button);
@@ -13331,7 +13331,7 @@ void __cdecl events_editor_update_buttons(i32 unused)
     else {
       ctrl_disable(&editor_text_dlg_wnd_block.active_editor_wnd->add_action_button);
     }
-    action_sel = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
+    action_sel = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
     if (action_sel < 0) {
       ctrl_disable(&editor_text_dlg_wnd_block.active_editor_wnd->edit_action_button);
       ctrl_disable(&editor_text_dlg_wnd_block.active_editor_wnd->delete_action_button);
@@ -13508,9 +13508,9 @@ void __cdecl events_editor_on_help(void)
   uint bits2;
   int idx;
   
-  action_sel = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
+  action_sel = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
   if (action_sel < 0) {
-    idx = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+    idx = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
     if (idx < 0) {
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
         parent_wnd2 = 0;
@@ -13540,7 +13540,7 @@ void __cdecl events_editor_on_help(void)
     }
   }
   else {
-    idx = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+    idx = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
     event = unit_types_block.events_list_head;
     while ((event != (ScenarioEvent *)0x0 && (idx != 0))) {
       event = (ScenarioEvent *)(uint *)event->next;
@@ -13582,7 +13582,7 @@ void __cdecl events_editor_fill_triggers(void)
   char line[256];
   
   num = 0;
-  listbox_clear((ListBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+  listbox_clear(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
   for (event = unit_types_block.events_list_head; event != (ScenarioEvent *)0x0;
       event = event->next) {
     num++;
@@ -13909,7 +13909,7 @@ void __cdecl events_editor_fill_triggers(void)
         }
       }
     }
-    listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox,(const char *)line);
+    listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox,(const char *)line);
   }
   events_editor_update_buttons(0);
   return;
@@ -13929,13 +13929,13 @@ void __cdecl events_editor_fill_actions(i32 unused)
   uint action_bit;
   char line[256];
   
-  action_bit = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+  action_bit = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
   event = unit_types_block.events_list_head;
   while ((event != 0 &&
          (next_idx = action_bit - 1, more = action_bit != 0, action_bit = next_idx, more))) {
     event = event->next;
   }
-  listbox_clear((ListBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
+  listbox_clear(&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
   action_bit = 1;
   if (event != 0) {
     do {
@@ -14070,7 +14070,7 @@ void __cdecl events_editor_fill_actions(i32 unused)
         _sprintf(line,str_hastriggered_2);
       }
       if (line[0] != '\0') {
-        listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox,(const char *)line);
+        listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox,(const char *)line);
       }
       action_bit = action_bit << 1;
     } while (action_bit != 0x8000);
@@ -14097,7 +14097,7 @@ void __cdecl events_editor_on_delete_trigger(void)
   dlg_set_parent_window(parent_wnd2);
   sel = popup_game((const char *)&str_deleteitem);
   if (sel != 0) {
-    sel = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+    sel = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
     idx = sel;
     for (event = unit_types_block.events_list_head; event != 0; event = event->next) {
       if (idx == 0) break;
@@ -14156,7 +14156,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
     parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
-  sel = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+  sel = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
   event = unit_types_block.events_list_head;
   skip = sel;
   while ((event != (ScenarioEvent *)0x0 &&
@@ -14741,7 +14741,7 @@ i32 __cdecl events_editor_edit_trigger(i32 unused)
   }
   events_compact();
   events_editor_fill_triggers();
-  listbox_set_cur_sel((ListBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox,sel);
+  listbox_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox,sel);
   events_editor_update_buttons(0);
   events_editor_focus_redraw();
   dlg_set_parent_window(0);
@@ -14799,8 +14799,8 @@ void __cdecl events_editor_on_add_trigger(void)
       *new_event = 1 << ((byte)trigger_type & 0x1f);
       events_editor_fill_triggers();
       events_editor_fill_actions(0);
-      result = listbox_get_count((ListboxGetCountView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
-      listbox_set_cur_sel((ListBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox,result - 1);
+      result = listbox_get_count(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+      listbox_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox,result - 1);
       result = events_editor_edit_trigger(0);
       if (result == 0) {
         for (event = unit_types_block.events_list_head; (int)event->next != 0;
@@ -14834,7 +14834,7 @@ void __cdecl events_editor_on_delete_action(void)
   ScenarioEvent *event;
   i32 sel_index;
   
-  sel_index = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+  sel_index = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
   for (event = unit_types_block.events_list_head; event != 0; event = event->next) {
     if (sel_index == 0) break;
     sel_index--;
@@ -14848,7 +14848,7 @@ void __cdecl events_editor_on_delete_action(void)
   dlg_set_parent_window(parent_wnd2);
   result = popup_game((const char *)&str_deleteitem_2);
   if (result != 0) {
-    action_sel = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
+    action_sel = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
     result = bits_nth_set(action_sel,(i32)event->actions);
     if (result == 1) {
       event->text[0] = 0;
@@ -14893,7 +14893,7 @@ uint __cdecl events_editor_edit_action(i32 mode)
   ScenarioEvent *event;
   char input_buf[260];
   int idx;
-  InputControl edit_ctl;
+  EditControl edit_ctl;
   int number_value;
   int choice;
   char default_text[64];
@@ -14914,14 +14914,14 @@ uint __cdecl events_editor_edit_action(i32 mode)
     parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
-  idx = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+  idx = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
   event = unit_types_block.events_list_head;
   while ((event != (ScenarioEvent *)0x0 &&
          (prev_count = idx - 1, nonzero = idx != 0, idx = prev_count, nonzero))) {
     event = event->next;
   }
   value = (i32)event->actions;
-  arg2 = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
+  arg2 = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox);
   action_bit = bits_nth_set(arg2,value);
   if (action_bit < 9) {
     if (action_bit == 8) {
@@ -15378,12 +15378,12 @@ refresh_editor:
   events_compact();
   events_editor_fill_actions(0);
   choice = bits_index_of(action_bit,(i32)event->actions);
-  listbox_set_cur_sel((ListBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox,choice);
+  listbox_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox,choice);
   events_editor_update_buttons(0);
   events_editor_focus_redraw();
   dlg_set_parent_window(0);
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0054ee8f */ { edit_dtor((Control *)&edit_ctl); }
+  /* inlined unwind funclet 0054ee8f */ { edit_dtor(&edit_ctl); }
   return changed;
 }
 
@@ -15409,7 +15409,7 @@ void __cdecl events_editor_on_add_action(void)
   int action_index;
   int sel_index;
   
-  action_index = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+  action_index = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
   event = unit_types_block.events_list_head;
   while ((event != (ScenarioEvent *)0x0 && (action_index != 0))) {
     event = event->next;
@@ -15451,10 +15451,10 @@ void __cdecl events_editor_on_add_action(void)
       event->actions = (int)event->actions | 1 << ((byte)action_index & 0x1f);
       list_pos = bits_index_of(1 << ((byte)action_index & 0x1f),(int)event->actions);
       events_editor_fill_actions(0);
-      listbox_set_cur_sel((ListBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox,list_pos);
+      listbox_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->action_listbox,list_pos);
       result = events_editor_edit_action(0);
       if (result == 0) {
-        sel_index = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
+        sel_index = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->trigger_listbox);
         event = unit_types_block.events_list_head;
         while ((event != (ScenarioEvent *)0x0 && (sel_index != 0))) {
           event = (ScenarioEvent *)(int *)event->next;
@@ -15610,8 +15610,8 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x237]);
   button_create
-            ((Control *)self->add_trigger_button,(iptr)parent2,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)self->add_trigger_button,(iptr)events_editor_on_add_trigger);
+            ((Button *)self->add_trigger_button,(iptr)parent2,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)self->add_trigger_button,(iptr)events_editor_on_add_trigger);
   x = x + self->tax_rate_sel + 3;
   rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (DocumentWindow *)0x0) {
@@ -15622,8 +15622,8 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x238]);
   button_create
-            ((Control *)self->edit_trigger_button,(iptr)parent22,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)self->edit_trigger_button,(iptr)events_editor_on_edit_trigger);
+            ((Button *)self->edit_trigger_button,(iptr)parent22,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)self->edit_trigger_button,(iptr)events_editor_on_edit_trigger);
   rect_set_xywh((iptr)rect,x + self->tax_rate_sel + 3,y,self->tax_rate_sel,
                      self->lux_rate_sel);
   if (self == (DocumentWindow *)0x0) {
@@ -15634,8 +15634,8 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x239]);
   button_create
-            ((Control *)((u8 *)&self->delete_trigger_button),(iptr)parent3,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)((u8 *)&self->delete_trigger_button),(iptr)events_editor_on_delete_trigger);
+            ((Button *)((u8 *)&self->delete_trigger_button),(iptr)parent3,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)((u8 *)&self->delete_trigger_button),(iptr)events_editor_on_delete_trigger);
   y = self->client_y + 0x13a;
   x = self->client_x + 0x32;
   rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
@@ -15647,8 +15647,8 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x237]);
   button_create
-            ((Control *)self->add_action_button,(iptr)parent7,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)self->add_action_button,(iptr)events_editor_on_add_action);
+            ((Button *)self->add_action_button,(iptr)parent7,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)self->add_action_button,(iptr)events_editor_on_add_action);
   x = x + self->tax_rate_sel + 3;
   rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (DocumentWindow *)0x0) {
@@ -15659,8 +15659,8 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x238]);
   button_create
-            ((Control *)&self->edit_action_button,(iptr)parent8,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&self->edit_action_button,(iptr)events_editor_on_edit_action);
+            ((Button *)&self->edit_action_button,(iptr)parent8,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&self->edit_action_button,(iptr)events_editor_on_edit_action);
   rect_set_xywh((iptr)rect,x + self->tax_rate_sel + 3,y,self->tax_rate_sel,
                      self->lux_rate_sel);
   if (self == (DocumentWindow *)0x0) {
@@ -15671,8 +15671,8 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x239]);
   button_create
-            ((Control *)&((PictureWindow *)self)->delete_action_button,(iptr)parent9,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PictureWindow *)self)->delete_action_button,(iptr)events_editor_on_delete_action);
+            ((Button *)&((PictureWindow *)self)->delete_action_button,(iptr)parent9,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PictureWindow *)self)->delete_action_button,(iptr)events_editor_on_delete_action);
   rect_set_xywh((iptr)rect,self->client_x + 0x32,self->client_y + 0x1b,0x1cb,0x6e);
   x = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
@@ -15683,12 +15683,12 @@ void __thiscall events_editor_run(DocumentWindow *self)
     list_parent = self->window_2;
   }
   listbox_create
-            ((Control *)(((PictureWindow *)self)->trigger_listbox),(iptr)list_parent,x,(iptr)rect);
-  listbox_set_font((ListBoxFontView *)(((PictureWindow *)self)->trigger_listbox),(iptr)&editor_font_block.editor_font);
-  listbox_set_select_callback((ListBoxSelectSetView *)(((PictureWindow *)self)->trigger_listbox),(iptr)events_editor_fill_actions);
-  listbox_set_dblclick_callback((ListBoxDblClickSetView *)(((PictureWindow *)self)->trigger_listbox),(iptr)events_editor_on_edit_trigger);
+            ((ListBox *)(((PictureWindow *)self)->trigger_listbox),(iptr)list_parent,x,(iptr)rect);
+  listbox_set_font((ListBox *)(((PictureWindow *)self)->trigger_listbox),(iptr)&editor_font_block.editor_font);
+  listbox_set_select_callback((ListBox *)(((PictureWindow *)self)->trigger_listbox),(iptr)events_editor_fill_actions);
+  listbox_set_dblclick_callback((ListBox *)(((PictureWindow *)self)->trigger_listbox),(iptr)events_editor_on_edit_trigger);
   events_editor_fill_triggers();
-  listbox_set_cur_sel((ListBoxSetSelView *)(((PictureWindow *)self)->trigger_listbox),0);
+  listbox_set_cur_sel((ListBox *)(((PictureWindow *)self)->trigger_listbox),0);
   rect_set_xywh((iptr)rect,self->client_x + 0x32,self->client_y + 0xc5,0x1cb,0x6e);
   x = editor_text_dlg_wnd_block.editor_next_ctrl_id;
   editor_text_dlg_wnd_block.editor_next_ctrl_id++;
@@ -15699,10 +15699,10 @@ void __thiscall events_editor_run(DocumentWindow *self)
     list_parent2 = self->window_2;
   }
   listbox_create
-            ((Control *)(((PictureWindow *)self)->action_listbox),(iptr)list_parent2,x,(iptr)rect);
-  listbox_set_font((ListBoxFontView *)(((PictureWindow *)self)->action_listbox),(iptr)&editor_font_block.editor_font);
-  listbox_set_select_callback((ListBoxSelectSetView *)(((PictureWindow *)self)->action_listbox),(iptr)events_editor_update_buttons);
-  listbox_set_dblclick_callback((ListBoxDblClickSetView *)(((PictureWindow *)self)->action_listbox),(iptr)events_editor_on_edit_action);
+            ((ListBox *)(((PictureWindow *)self)->action_listbox),(iptr)list_parent2,x,(iptr)rect);
+  listbox_set_font((ListBox *)(((PictureWindow *)self)->action_listbox),(iptr)&editor_font_block.editor_font);
+  listbox_set_select_callback((ListBox *)(((PictureWindow *)self)->action_listbox),(iptr)events_editor_update_buttons);
+  listbox_set_dblclick_callback((ListBox *)(((PictureWindow *)self)->action_listbox),(iptr)events_editor_on_edit_action);
   events_editor_fill_actions(0);
   events_editor_update_buttons(0);
   self->tax_rate_sel = (int)(self->client_width - 8) / 3;
@@ -15717,8 +15717,8 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
-            ((Control *)self->editor_ok_button,(iptr)parent4,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)self->editor_ok_button,(iptr)events_editor_on_ok);
+            ((Button *)self->editor_ok_button,(iptr)parent4,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)self->editor_ok_button,(iptr)events_editor_on_ok);
   x = x + self->tax_rate_sel + 2;
   rect_set_xywh((iptr)rect,x,y,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (DocumentWindow *)0x0) {
@@ -15729,8 +15729,8 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
-            ((Control *)self->editor_help_button,(iptr)parent5,0x66,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)self->editor_help_button,(iptr)events_editor_on_help);
+            ((Button *)self->editor_help_button,(iptr)parent5,0x66,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)self->editor_help_button,(iptr)events_editor_on_help);
   rect_set_xywh((iptr)rect,x + self->tax_rate_sel + 2,y,self->tax_rate_sel,
                      self->lux_rate_sel);
   if (self == (DocumentWindow *)0x0) {
@@ -15741,9 +15741,9 @@ void __thiscall events_editor_run(DocumentWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
-            ((Control *)self->editor_cancel_button,(iptr)parent6,0x66,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)self->editor_cancel_button,(iptr)events_editor_on_cancel);
-  ctrl_set_cancel_button((Control *)self->editor_cancel_button);
+            ((Button *)self->editor_cancel_button,(iptr)parent6,0x66,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)self->editor_cancel_button,(iptr)events_editor_on_cancel);
+  ctrl_set_cancel_button((Button *)self->editor_cancel_button);
   wnd_set_keyboard_nav((Wnd *)self->window_2,0);
   editor_value_clamped = 0;
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)events_editor_focus_redraw);

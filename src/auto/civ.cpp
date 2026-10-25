@@ -94,25 +94,25 @@ void __cdecl tech_editor_update_controls(void)
   for (row = 1; row < 7; row++) {
     if (tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].kind == 9) {
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->edits[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot]);
       _sprintf(num_text,((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_int_fmt),
                *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58));
       ctrl_set_text
-                ((ControlTextView *)
+                ((Control *)
                  &editor_text_dlg_wnd_block.active_editor_wnd->edits[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot],
                  (const char *)num_text);
     }
     else if (tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].kind == 0xc) {
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->combos[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot]);
       sel = *(iptr *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58);
       if (row < 3) {
         sel += 2;
       }
       combo_set_cur_sel
-                ((ComboBoxSetSelView *)
+                (
                  &editor_text_dlg_wnd_block.active_editor_wnd->combos[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot],sel);
     }
   }
@@ -134,19 +134,19 @@ int __cdecl tech_editor_store_controls(void)
   for (row = 1; row < 7; row++) {
     if (tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].kind == 9) {
       ctrl_get_text
-                ((ControlTextView *)
+                ((Control *)
                  &editor_text_dlg_wnd_block.active_editor_wnd->edits[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot],
                  (char *)num_text);
       value = _atoi(num_text);
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->edits[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot]);
       ctrl_id -= 0xca;
       clamped = int_clamp(value,*(i32 *)(((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_field_min_table) + ctrl_id * 4),
                                  *(i32 *)(((i8 *)&tech_editor_ctrl_kinds_block.tech_editor_field_max_table) + ctrl_id * 4));
       editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[ctrl_id] = clamped;
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->edits[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot]);
       if (*(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58) != value) {
         changed_count++;
@@ -154,13 +154,13 @@ int __cdecl tech_editor_store_controls(void)
     }
     else if (tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].kind == 0xc) {
       value = combo_get_cur_sel
-                          ((ComboBoxGetSelView *)
+                          (
                            &editor_text_dlg_wnd_block.active_editor_wnd->combos[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot]);
       if (row < 3) {
         value -= 2;
       }
       ctrl_id = ctrl_get_id
-                        ((ControlIdView *)
+                        ((Control *)
                          &editor_text_dlg_wnd_block.active_editor_wnd->combos[tech_editor_ctrl_kinds_block.tech_editor_ctrl_rows[row].slot]);
       *(int *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58 + ctrl_id * 4) = value;
     }
@@ -293,7 +293,7 @@ void __cdecl tech_editor_on_ok(void)
     dlg_set_parent_window(parent_wnd2);
     popup_text((const char *)&str_debug_11,(const char *)&str_notice);
     dlg_set_parent_window(0);
-    hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    hWnd = control_get_hwnd((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
     SetFocus(hWnd);
   }
   return;
@@ -315,23 +315,23 @@ void __cdecl tech_editor_fill_usage_list(void)
   
   advances_header = false;
   units_header = false;
-  listbox_clear((ListBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
+  listbox_clear(&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     if ((int)unit_types[unit_type].prerequisite == editor_text_dlg_wnd_block.active_editor_wnd->item) {
       if (!units_header) {
         label = (iptr)label_string(label_string_ids[0x202]);
-        listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)label);
+        listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)label);
         units_header = true;
       }
       label = (iptr)label_string(unit_types[unit_type].name);
-      listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)label);
+      listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)label);
     }
   }
   for (advance = 0; advance < 100; advance++) {
     if ((int)advances[advance].preq[0] == editor_text_dlg_wnd_block.active_editor_wnd->item) {
       if (!advances_header) {
         label = (iptr)label_string(label_string_ids[0x203]);
-        listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)label);
+        listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)label);
         advances_header = true;
       }
       if (advances[advance].preq[1] < '\0') {
@@ -344,12 +344,12 @@ void __cdecl tech_editor_fill_usage_list(void)
         adv_name = (iptr)label_string(advances[advance].name);
         _sprintf(line,str_s_s_s,adv_name,conj,name2);
       }
-      listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)line);
+      listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)line);
     }
     else if ((int)advances[advance].preq[1] == editor_text_dlg_wnd_block.active_editor_wnd->item) {
       if (!advances_header) {
         label = (iptr)label_string(label_string_ids[0x203]);
-        listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)label);
+        listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)label);
         advances_header = true;
       }
       if (advances[advance].preq[0] < '\0') {
@@ -362,7 +362,7 @@ void __cdecl tech_editor_fill_usage_list(void)
         adv_name = (iptr)label_string(advances[advance].name);
         _sprintf(line,str_s_s_s_2,adv_name,conj,name2);
       }
-      listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)line);
+      listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)line);
     }
   }
   return;
@@ -402,31 +402,31 @@ void __cdecl tech_editor_on_rename(void)
   } while (len == 0);
   if (-1 < result) {
     crt_strcpy(editor_text_dlg_wnd_block.editor_item_name_recs[item],new_name);
-    sel1 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
-    sel2 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
-    sel3 = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
-    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
-    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
-    combo_clear((ComboBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
+    sel1 = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    sel2 = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+    sel3 = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
+    combo_clear(&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+    combo_clear(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1]);
+    combo_clear(&editor_text_dlg_wnd_block.active_editor_wnd->combos[2]);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[2],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f1]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f1]);
-    combo_add_string((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2],(const char *)label);
+    combo_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->combos[2],(const char *)label);
     for (i = 0; i < 100; i++) {
       combo_add_string
-                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[i]);
+                (&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[i]);
       combo_add_string
-                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[i]);
+                (&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[i]);
       combo_add_string
-                ((ComboBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[i]);
+                (&editor_text_dlg_wnd_block.active_editor_wnd->combos[2],(const char *)editor_text_dlg_wnd_block.editor_item_name_recs[i]);
     }
-    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],sel1);
-    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],sel2);
-    combo_set_cur_sel((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[2],sel3);
+    combo_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],sel1);
+    combo_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[1],sel2);
+    combo_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[2],sel3);
     tech_editor_fill_usage_list();
     tech_editor_redraw();
   }
@@ -491,7 +491,7 @@ void __cdecl tech_editor_on_combo(int ctrl_id)
   if (ctrl_id == 0xc9) {
     errors = tech_editor_store_controls();
     if (errors == 0) {
-      sel = combo_get_cur_sel((ComboBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+      sel = combo_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
       editor_text_dlg_wnd_block.active_editor_wnd->item = sel;
       tech_editor_update_controls();
       tech_editor_fill_usage_list();
@@ -499,7 +499,7 @@ void __cdecl tech_editor_on_combo(int ctrl_id)
     }
     else {
       combo_set_cur_sel
-                ((ComboBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],editor_text_dlg_wnd_block.active_editor_wnd->item);
+                (&editor_text_dlg_wnd_block.active_editor_wnd->combos[0],editor_text_dlg_wnd_block.active_editor_wnd->item);
       tech_editor_update_controls();
       tech_editor_redraw();
       if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
@@ -511,7 +511,7 @@ void __cdecl tech_editor_on_combo(int ctrl_id)
       dlg_set_parent_window(parent_wnd2);
       popup_text((const char *)&str_debug_11,(const char *)&str_notice_2);
       dlg_set_parent_window(0);
-      hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
+      hWnd = control_get_hwnd((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[0]);
       SetFocus(hWnd);
     }
   }
@@ -545,49 +545,49 @@ void __thiscall tech_editor_create_combo(ViewWindow *self,int slot)
     parent_wnd2 = self->window_2;
   }
   combo_create
-            ((Control *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_id,
+            ((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_id,
              (iptr)rect);
-  combo_set_font((ComboBoxFontView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
-  combo_set_callback((ComboBoxCallbackSetView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)tech_editor_on_combo);
+  combo_set_font((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)&editor_font_block.editor_font);
+  combo_set_callback((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(iptr)tech_editor_on_combo);
   switch(slot) {
   case 0:
     for (advance = 0; advance < 100; advance++) {
       label = (iptr)label_string(advances[advance].name);
-      combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+      combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     }
     break;
   case 1:
   case 2:
     label = (iptr)label_string(label_string_ids[0x1f0]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x1f1]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     for (advance = 0; advance < 100; advance++) {
       label = (iptr)label_string(advances[advance].name);
-      combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+      combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     }
     break;
   case 3:
     label = (iptr)label_string(label_string_ids[0x204]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x205]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x206]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x207]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     break;
   case 4:
     label = (iptr)label_string(label_string_ids[0x208]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x209]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x20a]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x20b]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
     label = (iptr)label_string(label_string_ids[0x20c]);
-    combo_add_string((ComboBoxAddView *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
+    combo_add_string((ComboBox *)(self->editor_combo_boxes + slot * 0x38 + 0x28),(const char *)label);
   }
   return;
 }
@@ -613,8 +613,8 @@ void __thiscall tech_editor_create_edit(ViewWindow *self,int slot)
   edit_create
             ((EditControl *)(((PediaRedrawView *)self)->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)parent_wnd2,ctrl_id,
              (iptr)rect,(const char *)&str_empty_11);
-  edit_set_max_len((EditMaxLenView *)(((PediaRedrawView *)self)->numeric_edit_controls_area + slot * 0x48 - 0x2c),4);
-  edit_set_callback((EditCallbackSetView *)(((PediaRedrawView *)self)->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)editor_numeric_edit_filter);
+  edit_set_max_len((EditControl *)(((PediaRedrawView *)self)->numeric_edit_controls_area + slot * 0x48 - 0x2c),4);
+  edit_set_callback((EditControl *)(((PediaRedrawView *)self)->numeric_edit_controls_area + slot * 0x48 - 0x2c),(iptr)editor_numeric_edit_filter);
   return;
 }
 
@@ -785,8 +785,8 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
     list_parent = self->window_2;
   }
   listbox_create
-            ((Control *)&((PictureWindow *)self)->editor_list_box,(iptr)list_parent,pos,(iptr)rect);
-  listbox_set_font((ListBoxFontView *)&((PictureWindow *)self)->editor_list_box,(iptr)&editor_font_block.editor_font);
+            ((ListBox *)&((PictureWindow *)self)->editor_list_box,(iptr)list_parent,pos,(iptr)rect);
+  listbox_set_font((ListBox *)&((PictureWindow *)self)->editor_list_box,(iptr)&editor_font_block.editor_font);
   pos = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
   self->lux_rate_sel = pos + 8;
   pos = self->client_width - 10;
@@ -802,8 +802,8 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)tech_editor_on_ok);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)tech_editor_on_ok);
   pos = pos + self->tax_rate_sel + 2;
   rect_set_xywh((iptr)rect,pos,btn_y,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -814,8 +814,8 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x2a]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)tech_editor_on_rename);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)rename_parent,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)tech_editor_on_rename);
   pos = pos + self->tax_rate_sel + 2;
   rect_set_xywh((iptr)rect,pos,btn_y,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -826,8 +826,8 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)tech_editor_on_help);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)tech_editor_on_help);
   rect_set_xywh((iptr)rect,pos + self->tax_rate_sel + 2,btn_y,self->tax_rate_sel,
                      self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -838,9 +838,9 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)tech_editor_on_cancel);
-  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)tech_editor_on_cancel);
+  ctrl_set_cancel_button((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button);
   self->tax_rate_sel = 0x55;
   pos = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
   self->lux_rate_sel = pos + 8;
@@ -854,11 +854,11 @@ void __thiscall tech_editor_dialog_run(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x1f3]);
   button_create
-            ((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)(((DocumentWindow *)self)->editor_icon_button),(iptr)tech_editor_on_edit_icon);
+            ((Button *)(((DocumentWindow *)self)->editor_icon_button),(iptr)icon_parent,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)(((DocumentWindow *)self)->editor_icon_button),(iptr)tech_editor_on_edit_icon);
   wnd_set_keyboard_nav((Wnd *)self->window_2,0);
   tech_editor_load_items();
-  combo_set_cur_sel((ComboBoxSetSelView *)&self->dialog_h,self->init_tax_rate);
+  combo_set_cur_sel((ComboBox *)&self->dialog_h,self->init_tax_rate);
   tech_editor_update_controls();
   self->dialog_w = 5;
   wnd_set_move_handler((WndEventHandlers *)self->event_handlers,(iptr)editor_wnd_on_move_close_dropdowns);
@@ -1002,7 +1002,7 @@ void __cdecl rules_load_advances(int keep_names)
     if (from_file == 0) {
       if (rules_advance_count <= advance) break;
       if (keep_names == 0) {
-        snprintf(key,sizeof key,"rules.advance.%d",(int)advance);
+        snprintf(key,sizeof key,"rules.advance.%d",advance);
         advances[advance].name = rules_name(key,0x14);
       }
       advances[advance].ai_value = rules_advances[advance].ai_value;
@@ -1106,7 +1106,7 @@ void __cdecl rules_load_improvements(int keep_names)
     text_close_file();
     for (improvement = 0; improvement < 0x43; improvement++) {
       if (keep_names == 0) {
-        snprintf(key,sizeof key,"rules.improvement.%d",(int)improvement);
+        snprintf(key,sizeof key,"rules.improvement.%d",improvement);
         improvements[improvement].name = rules_name(key,0x19);
       }
       improvements[improvement].cost = rules_improvements[improvement].cost;
@@ -1190,7 +1190,7 @@ void __cdecl rules_load_units(int keep_names)
       if (rules_unit_count <= unit_type) break;
       row = &rules_units[unit_type];
       if (keep_names == 0) {
-        snprintf(key,sizeof key,"rules.unit.%d",(int)unit_type);
+        snprintf(key,sizeof key,"rules.unit.%d",unit_type);
         unit_types[unit_type].name = rules_name(key,0xf);
         prefs_main_menu_choice_block.unit_type_name_ptrs[unit_type] = minimap_window_block.strpool_last_string;
       }
@@ -1294,7 +1294,7 @@ void __cdecl rules_load_terrain(void)
   if (rules_from_scenario() == 0) {
     /* (port) the game's rules (rules.h) */
     for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
-      snprintf(key,sizeof key,"rules.terrain.%d",(int)terrain2);
+      snprintf(key,sizeof key,"rules.terrain.%d",terrain2);
       terrain_types[terrain2].name = rules_name(key,0xf);
       terrain_types[terrain2].move_cost = rules_terrain[terrain2].move_cost;
       terrain_types[terrain2].defense = rules_terrain[terrain2].defense;
@@ -1373,9 +1373,9 @@ static void rules_load_leader_from_table(iptr leader,int load_civ_data)
   
   old_value = leaders[leader].names[0];
   old_value2 = leaders[leader].names[1];
-  snprintf(key,sizeof key,"rules.leader.%d.male",(int)leader);
+  snprintf(key,sizeof key,"rules.leader.%d.male",leader);
   leaders[leader].names[0] = (i16)rules_name(key,0x18);
-  snprintf(key,sizeof key,"rules.leader.%d.female",(int)leader);
+  snprintf(key,sizeof key,"rules.leader.%d.female",leader);
   leaders[leader].names[1] = (i16)rules_name(key,0x18);
   if (load_civ_data == 0) {
     leaders[leader].names[0] = old_value;
@@ -1401,9 +1401,9 @@ static void rules_load_leader_from_table(iptr leader,int load_civ_data)
   }
   old_value = leaders[leader].plural;
   old_value2 = leaders[leader].adjective;
-  snprintf(key,sizeof key,"rules.leader.%d.plural",(int)leader);
+  snprintf(key,sizeof key,"rules.leader.%d.plural",leader);
   leaders[leader].plural = (i16)rules_name(key,0x18);
-  snprintf(key,sizeof key,"rules.leader.%d.adjective",(int)leader);
+  snprintf(key,sizeof key,"rules.leader.%d.adjective",leader);
   leaders[leader].adjective = (i16)rules_name(key,0x18);
   if (load_civ_data == 0) {
     leaders[leader].plural = old_value;
@@ -1435,10 +1435,10 @@ static void rules_load_leader_from_table(iptr leader,int load_civ_data)
     title_govt = row->title_govts[i];
     old_male_title = leaders[leader].titles[title_govt][0];
     old_female_title = leaders[leader].titles[title_govt][1];
-    snprintf(key,sizeof key,"rules.leader.%d.title.%d.male",(int)leader,title_govt);
+    snprintf(key,sizeof key,"rules.leader.%d.title.%d.male",leader,title_govt);
     value = rules_name_pooled(key);
     leaders[leader].titles[title_govt][0] = (short)value;
-    snprintf(key,sizeof key,"rules.leader.%d.title.%d.female",(int)leader,title_govt);
+    snprintf(key,sizeof key,"rules.leader.%d.title.%d.female",leader,title_govt);
     value = rules_name_pooled(key);
     leaders[leader].titles[title_govt][1] = (short)value;
     if (load_civ_data == 0) {
@@ -1478,11 +1478,11 @@ void __cdecl rules_load_govts_leaders(int load_civ_data)
   }
   for (leader = 0; leader < 7; leader++) {
     if (from_file == 0) {
-      snprintf(key,sizeof key,"rules.government.%d",(int)leader);
+      snprintf(key,sizeof key,"rules.government.%d",leader);
       government_names[leader] = rules_name(key,0xf);
-      snprintf(key,sizeof key,"rules.government.%d.male",(int)leader);
+      snprintf(key,sizeof key,"rules.government.%d.male",leader);
       government_titles[leader].male = rules_name(key,0xf);
-      snprintf(key,sizeof key,"rules.government.%d.female",(int)leader);
+      snprintf(key,sizeof key,"rules.government.%d.female",leader);
       government_titles[leader].female = rules_name(key,0xf);
       continue;
     }
@@ -1618,21 +1618,21 @@ void __cdecl rules_parse_sections(i32 load_civ_data)
   if (rules_from_scenario() == 0) {
     /* (port) the game's rules (rules.h) */
     for (i = 0; i < 0x10; i++) {
-      snprintf(key,sizeof key,"rules.commodity.%d",(int)i);
+      snprintf(key,sizeof key,"rules.commodity.%d",i);
       commodity_names[i] = rules_name(key,10);
     }
     for (i = 1; i < 0xd; i++) {
-      snprintf(key,sizeof key,"rules.order.%d",(int)i);
+      snprintf(key,sizeof key,"rules.order.%d",i);
       order_names[i].name = rules_name_pooled(key);
-      snprintf(key,sizeof key,"rules.order.%d.key",(int)i);
+      snprintf(key,sizeof key,"rules.order.%d.key",i);
       order_names[i].key = *lang_text(key);
     }
     for (i = 0; i < 6; i++) {
-      snprintf(key,sizeof key,"rules.difficulty.%d",(int)i);
+      snprintf(key,sizeof key,"rules.difficulty.%d",i);
       difficulty_names[i] = rules_name_pooled(key);
     }
     for (i = 0; i < 9; i++) {
-      snprintf(key,sizeof key,"rules.attitude.%d",(int)i);
+      snprintf(key,sizeof key,"rules.attitude.%d",i);
       attitude_names[i] = rules_name_pooled(key);
     }
     text_close_file();
@@ -1942,12 +1942,12 @@ void __cdecl science_advisor_draw(void)
   }
   if (advisor_window_block.advisor_controls_created == 0) {
     rect_set((iptr)frame_rect2,list_left,list_bottom,list_right,list_bottom + scrollbar_height);
-    scrollbar_create((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)frame_rect2,0);
+    scrollbar_create((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)&advisor_window_block.advisor_wnd,200,(iptr)frame_rect2,0);
     max_value = int_clamp((rows_per_page - 1 + known_count) / rows_per_page - 1,0,999);
-    scrollbar_set_range((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),0,max_value);
-    scrollbar_set_pos((ClickControl *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
-    scrollbar_set_page_size((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),1);
-    scrollbar_set_callback((Control *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)science_advisor_on_scroll);
+    scrollbar_set_range((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),0,max_value);
+    scrollbar_set_pos((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),advisor_window_block.advisor_first_row);
+    scrollbar_set_page_size((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),1);
+    scrollbar_set_callback((Scrollbar *)((i8 *)&advisor_window_block.advisor_scrollbar),(iptr)science_advisor_on_scroll);
     ctrl_show_and_redraw((Control *)((i8 *)&advisor_window_block.advisor_scrollbar));
     wnd_set_lbuttonup_handler((WndEventHandlers *)((i8 *)&advisor_window_block.advisor_wnd_events),(iptr)science_advisor_on_click);
     advisor_window_block.advisor_controls_created = 1;
@@ -2023,15 +2023,15 @@ void __cdecl science_advisor_show(iptr civ)
   rect_offset((iptr)button_rect,299,0);
   label = (iptr)label_string(label_string_ids[0x147]);
   button_create
-            ((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
-  button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
-  ctrl_set_default_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
-  ctrl_set_cancel_button((Control *)((i8 *)&advisor_window_block.advisor_close_button));
+            ((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)&advisor_window_block.advisor_wnd,100,(iptr)button_rect,(const char *)label);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_close_button),(iptr)advisor_on_close_clicked);
+  ctrl_set_default_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
+  ctrl_set_cancel_button((Button *)((i8 *)&advisor_window_block.advisor_close_button));
   rect_offset((iptr)button_rect,0xfffffed5,0);
   label = (iptr)label_string(label_string_ids[0x173]);
   button_create
-            ((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
-  button_set_callback((Control *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)science_advisor_on_goal_clicked);
+            ((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)&advisor_window_block.advisor_wnd,0x65,(iptr)button_rect,(const char *)label);
+  button_set_callback((Button *)((i8 *)&advisor_window_block.advisor_toggle_button),(iptr)science_advisor_on_goal_clicked);
   wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window),(iptr)science_advisor_draw);
   wnd_repaint((SurfaceWindow *)((i8 *)&advisor_window_block.advisor_window));
   window_show((WindowObjectView *)((i8 *)&advisor_window_block.advisor_window));
@@ -7508,7 +7508,7 @@ void __cdecl cosmic_editor_focus_redraw(void)
 {
   HWND hWnd;
   
-  hWnd = control_get_hwnd((ControlHwndView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
+  hWnd = control_get_hwnd((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
   SetFocus(hWnd);
   cosmic_editor_draw_bg((FrameWindow *)editor_text_dlg_wnd_block.active_editor_wnd);
   return;
@@ -7601,7 +7601,7 @@ void __cdecl cosmic_editor_fill_list(void)
   char suffix[32];
   
   index = 0;
-  listbox_clear((ListBoxClearView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
+  listbox_clear(&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
   text_open_section((const char *)&str_debug_11,(const char *)&str_editcosmic);
   while( true ) {
     _Str = text_read_line(1);
@@ -7627,7 +7627,7 @@ void __cdecl cosmic_editor_fill_list(void)
     }
     crt_strcat(line,suffix);
     crt_strcat(line,((i8 *)&map_views_block.text_buffer));
-    listbox_add_string((ListBoxAddView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)line);
+    listbox_add_string(&editor_text_dlg_wnd_block.active_editor_wnd->list_box,(const char *)line);
     index++;
   }
   text_close_file();
@@ -7648,7 +7648,7 @@ void __cdecl cosmic_editor_edit_value(void)
   char input[260];
   char num_buf[16];
   
-  sel = listbox_get_cur_sel((ListBoxGetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
+  sel = listbox_get_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
   if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
     parent_wnd2 = 0;
   }
@@ -7668,9 +7668,9 @@ void __cdecl cosmic_editor_edit_value(void)
     max_value = int_clamp(rc,min_value,max_value);
     editor_text_dlg_wnd_block.editor_item_recs[0].values[sel] = max_value;
     cosmic_editor_fill_list();
-    listbox_set_cur_sel((ListBoxSetSelView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box,sel);
+    listbox_set_cur_sel(&editor_text_dlg_wnd_block.active_editor_wnd->list_box,sel);
   }
-  ctrl_set_focus((ControlFocusView *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
+  ctrl_set_focus((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->list_box);
   dlg_set_parent_window(0);
   cosmic_editor_focus_redraw();
   return;
@@ -7839,12 +7839,12 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
     list_parent = self->window_2;
   }
   listbox_create
-            ((Control *)&((PictureWindow *)self)->editor_list_box,(iptr)list_parent,x_pos,(iptr)rect);
-  listbox_set_font((ListBoxFontView *)&((PictureWindow *)self)->editor_list_box,(iptr)&editor_font_block.editor_font);
-  listbox_set_dblclick_callback((ListBoxDblClickSetView *)&((PictureWindow *)self)->editor_list_box,(iptr)cosmic_editor_edit_value);
+            ((ListBox *)&((PictureWindow *)self)->editor_list_box,(iptr)list_parent,x_pos,(iptr)rect);
+  listbox_set_font((ListBox *)&((PictureWindow *)self)->editor_list_box,(iptr)&editor_font_block.editor_font);
+  listbox_set_dblclick_callback((ListBox *)&((PictureWindow *)self)->editor_list_box,(iptr)cosmic_editor_edit_value);
   cosmic_editor_capture_defaults();
   cosmic_editor_fill_list();
-  listbox_set_cur_sel((ListBoxSetSelView *)&((PictureWindow *)self)->editor_list_box,0);
+  listbox_set_cur_sel((ListBox *)&((PictureWindow *)self)->editor_list_box,0);
   x_pos = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
   self->lux_rate_sel = x_pos + 8;
   x_pos = self->client_width - 10;
@@ -7860,8 +7860,8 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0xfe]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)cosmic_editor_ok_clicked);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)ok_parent,0x65,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_ok_button,(iptr)cosmic_editor_ok_clicked);
   x_pos = x_pos + self->tax_rate_sel + 2;
   rect_set_xywh((iptr)rect,x_pos,y_pos,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -7872,9 +7872,9 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x238]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)edit_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)cosmic_editor_edit_value);
-  ctrl_set_default_button((Control *)&((PediaAdvanceListView *)self)->editor_rename_button);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)edit_parent,0x66,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_rename_button,(iptr)cosmic_editor_edit_value);
+  ctrl_set_default_button((Button *)&((PediaAdvanceListView *)self)->editor_rename_button);
   x_pos = x_pos + self->tax_rate_sel + 2;
   rect_set_xywh((iptr)rect,x_pos,y_pos,self->tax_rate_sel,self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -7885,8 +7885,8 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0x23b]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)cosmic_editor_help_clicked);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)help_parent,0x66,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_help_button,(iptr)cosmic_editor_help_clicked);
   rect_set_xywh((iptr)rect,x_pos + self->tax_rate_sel + 2,y_pos,self->tax_rate_sel,
                      self->lux_rate_sel);
   if (self == (ViewWindow *)0x0) {
@@ -7897,9 +7897,9 @@ void __thiscall cosmic_editor_dialog(ViewWindow *self)
   }
   label = (iptr)label_string(label_string_ids[0xff]);
   button_create
-            ((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
-  button_set_callback((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cosmic_editor_cancel_clicked);
-  ctrl_set_cancel_button((Control *)&((PediaAdvanceListView *)self)->editor_cancel_button);
+            ((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cancel_parent,0x66,(iptr)rect,(const char *)label);
+  button_set_callback((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button,(iptr)cosmic_editor_cancel_clicked);
+  ctrl_set_cancel_button((Button *)&((PediaAdvanceListView *)self)->editor_cancel_button);
   wnd_set_keyboard_nav((Wnd *)self->window_2,0);
   wnd_set_redraw_callback((SurfaceWindow *)self,(iptr)cosmic_editor_focus_redraw);
   wnd_repaint((SurfaceWindow *)self);

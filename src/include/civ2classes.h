@@ -1514,8 +1514,8 @@ typedef struct PictureWindow {
         u32 city_font;
         u8 pad_16b0[4];
         u32 buy_button;
-        union { struct Control *change_button; struct { u8 change_button_b0[1]; u8 change_button_byte1[1]; u8 change_button_byte2[1]; u8 change_button_byte3[1]; }; };
-        union { struct Control *exit_button; struct { u8 exit_button_b0[1]; u8 exit_button_byte1[1]; u8 exit_button_byte2[1]; u8 exit_button_byte3[1]; }; };
+        union { struct Button *change_button; struct { u8 change_button_b0[1]; u8 change_button_byte1[1]; u8 change_button_byte2[1]; u8 change_button_byte3[1]; }; };
+        union { struct Button *exit_button; struct { u8 exit_button_b0[1]; u8 exit_button_byte1[1]; u8 exit_button_byte2[1]; u8 exit_button_byte3[1]; }; };
         u32 view_button;
         u32 info_button;
         u32 happy_button;
@@ -1584,7 +1584,7 @@ typedef struct PictureWindow {
             u8 text_list_6_byte3[1];
         };
         struct {
-            union { struct Control *improvements_scrollbar; struct PediaListNode *pedia_advance_names; };
+            union { struct Scrollbar *improvements_scrollbar; struct PediaListNode *pedia_advance_names; };
             struct PediaListNode *pedia_improve_names;
             struct PediaListNode *pedia_wonder_names;
             struct PediaListNode *pedia_unit_names;
@@ -2356,7 +2356,12 @@ typedef struct TaxRateDialog {
     u8 pad_0[1296];
 } TaxRateDialog;
 
-/* 42 methods, size 0x3c */
+/* The controls.  Control (ctrl_base_ctor 0040f480, 0x2c bytes) is the base
+   of every control class: each derived class's constructor calls
+   ctrl_base_ctor first, and its create method calls ctrl_init (the type
+   code, the parent window, the control id, the rectangle) and makes the
+   native window (hwnd).  The parent window keeps its controls in a list
+   (next_ctrl). */
 typedef struct Control {
     union { u32 field_0; u32 ctrl_type; };
     union { u32 field_4; u32 ctrl_id; };
@@ -2371,143 +2376,117 @@ typedef struct Control {
     union { u8 field_25; u8 hotkey_char; };
     u8 pad_26[2];
     union { u32 field_28; u32 hotkey_pos; };
-    union { u32 field_2c; u32 is_enabled; };
-    union { u32 field_30; u32 on_click; };
-    union { u32 field_34; u32 on_select; };
-    union { u32 field_38; u32 font; };
 } Control;
+static_assert(sizeof(Control) == 0x2c, "");
 
-/* 3 methods, size 0x40 */
-typedef struct ClickControl {
-    union { u32 field_0; u32 ctrl_type; };
-    union { u32 field_4; u32 ctrl_id; };
-    union { uptr field_8; uptr parent; };
-    union { u32 field_c; u32 rect_left; };
-    union { u32 field_10; u32 rect_top; };
-    union { u32 field_14; u32 rect_right; };
-    union { u32 field_18; u32 rect_bottom; };
-    union { u32 field_1c; u32 hwnd; };
-    union { u32 field_20; u32 next_ctrl; };
-    union { u8 field_24; u8 wants_initial_focus; };
-    union { u8 field_25; u8 hotkey_char; };
-    u8 pad_26[2];
-    union { u32 field_28; u32 hotkey_pos; };
+/* A push button (button_ctor 0040f3e0, operator_new(0x3c); type 6). */
+typedef struct Button : Control {
     union { u32 field_2c; u32 is_enabled; };
     union { u32 field_30; u32 on_click; };
+    union { u32 field_34; u32 on_select; };   /* -1 (button_ctor), button_create_with_callback's callback */
+    union { u32 field_38; u32 font; };
+} Button;
+static_assert(sizeof(Button) == 0x3c, "");
+
+/* A check box (checkbox_elem_ctor 0040f8b0, operator_new(0x3c); type 2). */
+typedef struct Checkbox : Control {
+    union { u32 field_2c; u32 on_toggle; };
+    union { u32 field_30; u32 checked; };
+    union { u32 field_34; u32 is_enabled; };
+    union { u32 field_38; u32 font; };
+} Checkbox;
+static_assert(sizeof(Checkbox) == 0x3c, "");
+
+/* A scroll bar (scrollbar_ctor 0040fb00, operator_new(0x40); type 8). */
+typedef struct Scrollbar : Control {
+    union { u32 field_2c; u32 on_change; };
+    union { u32 field_30; u32 on_track; };
+    union { u32 field_34; u32 page_size; };
+    u32 field_38;                               /* 1 (scrollbar_create) */
+    union { u32 field_3c; u32 cur_pos; };
+} Scrollbar;
+static_assert(sizeof(Scrollbar) == 0x40, "");
+
+/* An edit field (edit_ctor 004187a0, operator_new(0x48); type 4). */
+typedef struct EditControl : Control {
+    union { u32 field_2c; u32 on_change; };
+    union { u32 field_30; u32 on_maxtext; };
+    union { u32 field_34; u32 on_key; };
+    union { u32 field_38; struct { u8 keep_sel; u8 field_39; }; };   /* keep_sel 0: focus selects all */
+    union { u32 field_3c; u32 scroll_pos; };
+    union { u32 field_40; u32 edit_font; };
+    u32 field_44;                               /* 0 (edit_ctor) */
+} EditControl;
+static_assert(sizeof(EditControl) == 0x48, "");
+
+/* A combo box (combo_ctor 00418ab0, 0x38 bytes: EditorWindow.combos; type 10). */
+typedef struct ComboBox : Control {
+    union { u32 field_2c; u32 item_count; };
+    union { u32 field_30; u32 on_dblclick; };
+    union { u32 field_34; u32 on_select; };
+} ComboBox;
+static_assert(sizeof(ComboBox) == 0x38, "");
+
+/* A list box (listbox_ctor 00418e00, which is the list box's constructor:
+   operator_new(0x3c), EditorWindow.list_box; type 7). */
+typedef struct ListBox : Control {
+    union { u32 field_2c; u32 item_count; };
+    union { u32 field_30; u32 on_dblclick; };
     union { u32 field_34; u32 on_select; };
     union { u32 field_38; u32 font; };
-    union { u32 field_3c; u32 scroll_pos; };
-} ClickControl;
+} ListBox;
+static_assert(sizeof(ListBox) == 0x3c, "");
 
-/* A Civilopedia list entry (operator_new(0xc)): an index topic's name, its
-   position in the category's key/id arrays, the next entry (sorted by
-   pedia_sort_list). */
-typedef struct PediaListNode {
-    char *name;
-    i32 index;
-    struct PediaListNode *next;
-} PediaListNode;
-static_assert(sizeof(PediaListNode) == 0xc, "");
+/* A clickable area (hotspot_ctor 00451930, operator_new(0x40); type 1). */
+typedef struct Hotspot : Control {
+    union { u32 field_2c; u32 on_enter; };
+    union { u32 field_30; u32 on_leave; };
+    union { u32 field_34; u32 on_click; };
+    union { u32 field_38; u32 on_press; };
+    union { u32 field_3c; u32 on_dblclick; };
+} Hotspot;
+static_assert(sizeof(Hotspot) == 0x40, "");
 
-/* A Civilopedia hyperlink (operator_new(0x48)): its topic, the clickable
-   control, the next link of the page. */
+/* A Civilopedia hyperlink's clickable text (hyperlink_ctor 00453cc0, 0x40
+   bytes: PediaLink.control; type 1). */
+typedef struct Hyperlink : Control {
+    union { u32 field_2c; u32 on_enter; };
+    union { u32 field_30; u32 on_leave; };
+    union { u32 field_34; u32 on_click; };
+    union { u32 field_38; u32 on_press; };
+    union { u32 field_3c; u32 on_dblclick; };
+} Hyperlink;
+static_assert(sizeof(Hyperlink) == 0x40, "");
+
+/* A Civilopedia hyperlink (pedia_link_ctor 00453b10, operator_new(0x48)): its
+   topic, the clickable control, the next link of the page. */
 typedef struct PediaLink {
     i32 topic;
-    ClickControl control;
+    Hyperlink control;
     struct PediaLink *next;
 } PediaLink;
 static_assert(sizeof(PediaLink) == 0x48, "");
 
-/* 5 methods, size 0x44 */
-typedef struct EditControl {
-    union { u32 field_0; u32 ctrl_type; };
-    union { u32 field_4; u32 ctrl_id; };
-    union { uptr field_8; uptr parent; };
-    union { u32 field_c; u32 rect_left; };
-    union { u32 field_10; u32 rect_top; };
-    union { u32 field_14; u32 rect_right; };
-    union { u32 field_18; u32 rect_bottom; };
-    union { u32 field_1c; u32 hwnd; };
-    union { u32 field_20; u32 next_ctrl; };
-    union { u8 field_24; u8 wants_initial_focus; };
-    union { u8 field_25; u8 hotkey_char; };
-    u8 pad_26[2];
-    union { u32 field_28; u32 hotkey_pos; };
-    union { u32 field_2c; u32 is_enabled; };
-    union { u32 field_30; u32 on_click; };
-    union { u32 field_34; u32 on_select; };
-    union { u32 field_38; u32 font; };
-    union { u32 field_3c; u32 scroll_pos; };
-    union { u32 field_40; u32 edit_font; };
-} EditControl;
-
-/* 2 methods, size 0x48 */
-typedef struct InputControl {
-    union { u32 field_0; u32 ctrl_type; };
-    union { u32 field_4; u32 ctrl_id; };
-    union { uptr field_8; uptr parent; };
-    union { u32 field_c; u32 rect_left; };
-    union { u32 field_10; u32 rect_top; };
-    union { u32 field_14; u32 rect_right; };
-    union { u32 field_18; u32 rect_bottom; };
-    union { u32 field_1c; u32 hwnd; };
-    union { u32 field_20; u32 next_ctrl; };
-    union { u8 field_24; u8 wants_initial_focus; };
-    union { u8 field_25; u8 hotkey_char; };
-    u8 pad_26[2];
-    union { u32 field_28; u32 hotkey_pos; };
-    union { u32 field_2c; u32 is_enabled; };
-    union { u32 field_30; u32 on_click; };
-    union { u32 field_34; u32 on_select; };
-    union { u32 field_38; u32 font; };
-    union { u32 field_3c; u32 scroll_pos; };
-    union { u32 field_40; u32 edit_font; };
+/* A group of radio buttons (radiogrp_ctor 00531010, operator_new(0x50);
+   type 3): item_count RadioItems in a movable memory block. */
+typedef struct RadioGroup : Control {
+    union { u32 field_2c; u32 on_select; };
+    union { u32 field_30; u32 on_dblclick; };
+    union { u32 field_34; u32 on_rclick; };
+    union { u32 field_38; u32 item_count; };
+    union { u32 field_3c; u32 columns; };
+    union { u32 field_40; u32 selected; };
     union { u32 field_44; u32 items_handle; };
-} InputControl;
-
-/* 2 methods, size 0x50 */
-typedef struct RadioGroup {
-    union { u32 field_0; u32 ctrl_type; };
-    union { u32 field_4; u32 ctrl_id; };
-    union { uptr field_8; uptr parent; };
-    union { u32 field_c; u32 rect_left; };
-    union { u32 field_10; u32 rect_top; };
-    union { u32 field_14; u32 rect_right; };
-    union { u32 field_18; u32 rect_bottom; };
-    union { u32 field_1c; u32 hwnd; };
-    union { u32 field_20; u32 next_ctrl; };
-    union { u8 field_24; u8 wants_initial_focus; };
-    union { u8 field_25; u8 hotkey_char; };
-    u8 pad_26[2];
-    union { u32 field_28; u32 hotkey_pos; };
-    union { u32 field_2c; u32 is_enabled; };
-    union { u32 field_30; u32 on_click; };
-    union { u32 field_34; u32 on_select; };
-    union { u32 field_38; u32 font; };
-    union { u32 field_3c; u32 scroll_pos; };
-    union { u32 field_40; u32 edit_font; };
-    union { u32 field_44; u32 items_handle; };
-    union { u32 field_48; u32 items_ptr; };
+    union { u32 field_48; u32 items; };       /* RadioItem *, items_handle locked */
     union { u32 field_4c; u32 radio_font; };
 } RadioGroup;
+static_assert(sizeof(RadioGroup) == 0x50, "");
 
-/* 3 methods, size 0xcc */
-typedef struct SpriteButton {
-    union { u32 field_0; u32 ctrl_type; };
-    union { u32 field_4; u32 ctrl_id; };
-    union { uptr field_8; uptr parent; };
-    union { u32 field_c; u32 rect_left; };
-    union { u32 field_10; u32 rect_top; };
-    union { u32 field_14; u32 rect_right; };
-    union { u32 field_18; u32 rect_bottom; };
-    union { u32 field_1c; u32 hwnd; };
-    union { u32 field_20; u32 next_ctrl; };
-    union { u8 field_24; u8 wants_initial_focus; };
-    union { u8 field_25; u8 hotkey_char; };
-    u8 pad_26[2];
-    union { u32 field_28; u32 hotkey_pos; };
-    union { u32 field_2c; u32 is_enabled; };
-    union { u32 field_30; u32 on_click; };
+/* A button drawn from a sprite (spritebtn_ctor 00511720, operator_new(0xcc)):
+   two surfaces (surface_ctor at 0x34 and at button_surface 0x7c). */
+typedef struct SpriteButton : Control {
+    union { u32 field_2c; u32 on_click; };
+    union { u32 field_30; u32 on_rclick; };
     union { u32 field_34; u32 on_select; };
     union { u32 field_38; u32 font; };
     union { u32 field_3c; u32 scroll_pos; };
@@ -2520,27 +2499,17 @@ typedef struct SpriteButton {
     union { u8 field_c8; u8 pressed_state; };
     u8 pad_c9[3];
 } SpriteButton;
+static_assert(sizeof(SpriteButton) == 0xcc, "");
 
-/* 1 methods, size 0x24 */
-typedef struct ControlBase {
-    u8 pad_0[4];
-    union { u32 field_4; u32 control_id; };
-    union { uptr field_8; uptr owner_wnd; };
-    u8 pad_c[20];
-    union { u32 field_20; u32 next_control; };
-} ControlBase;
-
-/* 3 methods, size 0x20 */
-typedef struct Checkbox {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} Checkbox;
-
-/* 1 methods, size 0x30 */
-typedef struct CheckboxCallbackSetView {
-    u8 pad_0[44];
-    union { u32 field_2c; u32 on_toggle; };
-} CheckboxCallbackSetView;
+/* A Civilopedia list entry (operator_new(0xc)): an index topic's name, its
+   position in the category's key/id arrays, the next entry (sorted by
+   pedia_sort_list). */
+typedef struct PediaListNode {
+    char *name;
+    i32 index;
+    struct PediaListNode *next;
+} PediaListNode;
+static_assert(sizeof(PediaListNode) == 0xc, "");
 
 /* 1 methods, size 0xc */
 typedef struct WndCursorView {
@@ -2586,9 +2555,6 @@ typedef struct Sprite {
 /* A rules/scenario editor's window (editor_wnd_ctor, 0xb50 bytes; one class
  * for all editors, each uses the controls it needs).  The editor that runs
  * is editor_text_dlg_wnd_block.active_editor_wnd. */
-typedef struct EditorCombo {
-    u8 raw[0x38];                   /* a combo box control (combo_ctor) */
-} EditorCombo;
 typedef struct EditorWindow {
     DibSurface surface;             /* 0x000 */
     ModalMenuWindow window;         /* 0x048 */
@@ -2602,27 +2568,27 @@ typedef struct EditorWindow {
     i32 item_2;                     /* 0x2f0 city editor: combo 1's selection */
     i32 item_3;                     /* 0x2f4 city editor: combo 2's selection */
     i32 combo_count;                /* 0x2f8 combo boxes created */
-    EditorCombo combos[6];          /* 0x2fc */
-    InputControl edits[9];          /* 0x44c */
-    Control ok_button;              /* 0x6d4 */
-    Control help_button;            /* 0x710 */
-    Control cancel_button;          /* 0x74c */
-    Control rename_button;          /* 0x788 */
-    Control icon_button;            /* 0x7c4 */
-    Control misc_button;            /* 0x800 */
-    Control coast_button;           /* 0x83c */
-    Control terrain_misc_button;    /* 0x878 */
-    Control unit_flags_button;      /* 0x8b4 */
-    Control unit_sound_button;      /* 0x8f0 */
-    Control add_trigger_button;     /* 0x92c */
-    Control edit_trigger_button;    /* 0x968 */
-    Control delete_trigger_button;  /* 0x9a4 */
-    Control add_action_button;      /* 0x9e0 */
-    Control edit_action_button;     /* 0xa1c */
-    Control delete_action_button;   /* 0xa58 */
-    Control list_box;               /* 0xa94 (checkbox_ctor) */
-    Control trigger_listbox;        /* 0xad0 */
-    Control action_listbox;         /* 0xb0c */
+    ComboBox combos[6];          /* 0x2fc */
+    EditControl edits[9];          /* 0x44c */
+    Button ok_button;              /* 0x6d4 */
+    Button help_button;            /* 0x710 */
+    Button cancel_button;          /* 0x74c */
+    Button rename_button;          /* 0x788 */
+    Button icon_button;            /* 0x7c4 */
+    Button misc_button;            /* 0x800 */
+    Button coast_button;           /* 0x83c */
+    Button terrain_misc_button;    /* 0x878 */
+    Button unit_flags_button;      /* 0x8b4 */
+    Button unit_sound_button;      /* 0x8f0 */
+    Button add_trigger_button;     /* 0x92c */
+    Button edit_trigger_button;    /* 0x968 */
+    Button delete_trigger_button;  /* 0x9a4 */
+    Button add_action_button;      /* 0x9e0 */
+    Button edit_action_button;     /* 0xa1c */
+    Button delete_action_button;   /* 0xa58 */
+    ListBox list_box;               /* 0xa94 (listbox_ctor) */
+    ListBox trigger_listbox;        /* 0xad0 */
+    ListBox action_listbox;         /* 0xb0c */
     u8 pad_b48[8];
 } EditorWindow;
 #ifdef __cplusplus
@@ -2693,117 +2659,6 @@ static_assert(__builtin_offsetof(MapView, half_tile_width) == 0x310 && __builtin
 static_assert(__builtin_offsetof(MapView, unit_sprite_height) == 0x324 && __builtin_offsetof(MapView, margin_y) == 0x334, "");
 #endif
 
-/* 1 methods, size 0x8 */
-typedef struct ControlIdView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 ctrl_id; };
-} ControlIdView;
-
-/* ControlIdView where the code reaches past its end: the object is larger */
-typedef struct ControlIdViewExt {
-    ControlIdView base;
-    u8 pad_8[24];
-    u8 next_control[1];
-} ControlIdViewExt;
-
-/* 1 methods, size 0x20 */
-typedef struct ControlHwndView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ControlHwndView;
-
-/* 1 methods, size 0x20 */
-typedef struct EditMaxLenView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} EditMaxLenView;
-
-/* 1 methods, size 0x38 */
-typedef struct EditCallbackSetView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 on_change; };
-} EditCallbackSetView;
-
-/* 4 methods, size 0x20 */
-typedef struct ControlTextView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ControlTextView;
-
-/* 1 methods, size 0x20 */
-typedef struct ComboDtorView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ComboDtorView;
-
-/* 1 methods, size 0x20 */
-typedef struct ComboBoxFontView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ComboBoxFontView;
-
-/* 1 methods, size 0x30 */
-typedef struct ComboBoxAddView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-    u8 pad_20[12];
-    union { u32 field_2c; u32 item_count; };
-} ComboBoxAddView;
-
-/* 1 methods, size 0x30 */
-typedef struct ComboBoxClearView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-    u8 pad_20[12];
-    union { u32 field_2c; u32 item_count; };
-} ComboBoxClearView;
-
-/* 1 methods, size 0x20 */
-typedef struct ComboBoxGetSelView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ComboBoxGetSelView;
-
-/* 1 methods, size 0x20 */
-typedef struct ComboBoxSetSelView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ComboBoxSetSelView;
-
-/* 1 methods, size 0x38 */
-typedef struct ComboBoxCallbackSetView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 on_select; };
-} ComboBoxCallbackSetView;
-
-/* 2 methods, size 0x20 */
-typedef struct ListBoxControl {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ListBoxControl;
-
-/* 1 methods, size 0x20 */
-typedef struct ListBoxFontView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ListBoxFontView;
-
-/* 1 methods, size 0x30 */
-typedef struct ListBoxAddView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-    u8 pad_20[12];
-    union { u32 field_2c; u32 item_count; };
-} ListBoxAddView;
-
-/* 1 methods, size 0x30 */
-typedef struct ListBoxClearView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-    u8 pad_20[12];
-    union { u32 field_2c; u32 item_count; };
-} ListBoxClearView;
-
 /* 11 methods, size 0x98 (file_obj_init clears 0x98 bytes) */
 typedef struct FileObject {
     u8 pad_0[4];
@@ -2815,14 +2670,6 @@ typedef struct FileObject {
 #ifdef __cplusplus
 static_assert(sizeof(FileObject) == 0x98, "");
 #endif
-
-/* 2 methods, size 0x4c */
-typedef struct RadioGroupEnableView {
-    u8 pad_0[56];
-    union { u32 field_38; u32 item_count; };
-    u8 pad_3c[12];
-    union { u32 field_48; u32 items; };
-} RadioGroupEnableView;
 
 /* The network game list window (0x178 bytes; net_session_block.gamelist_view
  * holds it while the game list is shown): its dialog, the names that keep the
@@ -2902,28 +2749,6 @@ typedef struct LobbyList {
 } LobbyList;
 static_assert(sizeof(LobbyList) == 0x70, "");
 
-/* 2 methods, size 0x4c */
-typedef struct RadioGroupDisableView {
-    u8 pad_0[56];
-    union { u32 field_38; u32 item_count; };
-    u8 pad_3c[4];
-    union { u32 field_40; u32 selected_index; };
-    u8 pad_44[4];
-    union { u32 field_48; u32 items; };
-} RadioGroupDisableView;
-
-/* 1 methods, size 0x44 */
-typedef struct RadioGroupGetSelView {
-    u8 pad_0[64];
-    union { u32 field_40; u32 selected; };
-} RadioGroupGetSelView;
-
-/* 1 methods, size 0x44 */
-typedef struct RadioGroupSetSelView {
-    u8 pad_0[64];
-    union { u32 field_40; u32 selected; };
-} RadioGroupSetSelView;
-
 /* 2 methods, size 0x68 */
 typedef struct WndHandlers {
     union { u32 field_0; u32 on_mouse_move; };
@@ -2965,53 +2790,6 @@ typedef struct WndCenterView {
     union { u32 field_8; NativeWindow *wnd_obj; };
     u8 pad_c[4];
 } WndCenterView;
-
-/* 1 methods, size 0x38 */
-typedef struct HotspotClickSetView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 on_click; };
-} HotspotClickSetView;
-
-/* 1 methods, size 0x40 */
-typedef struct HotspotDblClickSetView {
-    u8 pad_0[60];
-    union { u32 field_3c; u32 on_dblclick; };
-} HotspotDblClickSetView;
-
-/* 1 methods, size 0x34 */
-typedef struct ScrollbarTrackSetView {
-    u8 pad_0[48];
-    union { u32 field_30; u32 on_track; };
-} ScrollbarTrackSetView;
-
-/* 1 methods, size 0x20 */
-typedef struct HyperlinkDtorView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} HyperlinkDtorView;
-
-/* 3 methods, size 0x20 */
-typedef struct Hotspot {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} Hotspot;
-
-/* 1 methods, size 0x48 */
-typedef struct PediaLinkCtorView {
-    union { u8 pad_0[72]; struct { u8 gap_0[4]; u8 link_control[68]; }; };
-} PediaLinkCtorView;
-
-/* 1 methods, size 0x38 */
-typedef struct HyperlinkSetClickCallbackView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 on_click; };
-} HyperlinkSetClickCallbackView;
-
-/* 1 methods, size 0x40 */
-typedef struct HyperlinkSetDblclickCallbackView {
-    u8 pad_0[60];
-    union { u32 field_3c; u32 on_dblclick; };
-} HyperlinkSetDblclickCallbackView;
 
 /* 1 methods, size 0x24 */
 typedef struct WndSetKeydownPreHandlerView {
@@ -3219,18 +2997,6 @@ typedef struct FileReadLineView {
     u8 pad_0[160];
 } FileReadLineView;
 
-/* 1 methods, size 0x20 */
-typedef struct EditSelEndView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} EditSelEndView;
-
-/* 1 methods, size 0x20 */
-typedef struct EditSelView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} EditSelView;
-
 /* 9 methods, size 0x1088 */
 typedef struct DiploLeaderView {
     u8 pad_0[8];
@@ -3374,37 +3140,10 @@ typedef struct ParleyWindow {
 } ParleyWindow;
 static_assert(sizeof(ParleyWindow) == 0x10430, "");
 
-/* 2 methods, size 0x610 */
-typedef struct RadioGroupDtorView {
-    u8 pad_0[56];
-    union { u32 field_38; u32 item_count; };
-    u8 pad_3c[8];
-    union { u32 field_44; u32 items_handle; };
-    u8 pad_48[1480];
-} RadioGroupDtorView;
-
-/* 1 methods, size 0x25 */
-typedef struct CtrlSetInitialFocusView {
-    u8 pad_0[36];
-    union { u8 field_24; u8 wants_initial_focus; };
-} CtrlSetInitialFocusView;
-
-/* 1 methods, size 0x20 */
-typedef struct ControlFocusView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ControlFocusView;
-
 /* 1 methods, size 0x1188 */
 typedef struct WonderMovieWindow {
     union { u8 pad_0[4488]; struct { u8 window_base[4488]; }; };
 } WonderMovieWindow;
-
-/* 1 methods, size 0x20 */
-typedef struct EditLineView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} EditLineView;
 
 /* 1 methods, size 0x2180 */
 typedef struct SpaceshipWindowDtorView {
@@ -3420,18 +3159,6 @@ typedef struct WndPaletteView {
     u8 pad_0[4];
     union { u32 field_4; u32 wnd_palette; };
 } WndPaletteView;
-
-/* 2 methods, size 0x20 */
-typedef struct SpriteButtonCore {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} SpriteButtonCore;
-
-/* 1 methods, size 0x30 */
-typedef struct SpritebtnSetClickHandlerView {
-    u8 pad_0[44];
-    union { u32 field_2c; u32 on_click; };
-} SpritebtnSetClickHandlerView;
 
 /* A received message waiting in the queue (0xc bytes). */
 typedef struct NetMsgSlot {
@@ -3470,54 +3197,6 @@ typedef struct WndMoveView {
     union { u32 field_8; NativeWindow *native_wnd; };
     u8 pad_c[200];
 } WndMoveView;
-
-/* 1 methods, size 0x30 */
-typedef struct ControlEnabledView {
-    u8 pad_0[44];
-    union { u32 field_2c; u32 is_enabled; };
-} ControlEnabledView;
-
-/* 1 methods, size 0x30 */
-typedef struct EditChangeSetView {
-    u8 pad_0[44];
-    union { u32 field_2c; u32 on_change; };
-} EditChangeSetView;
-
-/* 1 methods, size 0x38 */
-typedef struct CheckboxEnableView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 is_enabled; };
-} CheckboxEnableView;
-
-/* 1 methods, size 0x30 */
-typedef struct ListboxGetCountView {
-    u8 pad_0[44];
-    union { u32 field_2c; u32 item_count; };
-} ListboxGetCountView;
-
-/* 1 methods, size 0x20 */
-typedef struct ListBoxGetSelView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ListBoxGetSelView;
-
-/* 1 methods, size 0x20 */
-typedef struct ListBoxSetSelView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ListBoxSetSelView;
-
-/* 1 methods, size 0x34 */
-typedef struct ListBoxDblClickSetView {
-    u8 pad_0[48];
-    union { u32 field_30; u32 on_dblclick; };
-} ListBoxDblClickSetView;
-
-/* 1 methods, size 0x38 */
-typedef struct ListBoxSelectSetView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 on_select; };
-} ListBoxSelectSetView;
 
 /* 1 methods, size 0x64 */
 typedef struct WndDragBeginSetView {
@@ -3562,24 +3241,6 @@ typedef struct WndMenuCbSetView {
     u8 pad_0[152];
     union { u32 field_98; u32 on_menu; };
 } WndMenuCbSetView;
-
-/* 1 methods, size 0x38 */
-typedef struct CheckboxDisableView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 is_enabled; };
-} CheckboxDisableView;
-
-/* 1 methods, size 0x20 */
-typedef struct ListBoxTextView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ListBoxTextView;
-
-/* 1 methods, size 0x20 */
-typedef struct ListBoxSelTextView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ListBoxSelTextView;
 
 /* 1 methods, size 0x8 */
 typedef struct WndPaletteObjView {
@@ -3731,47 +3392,6 @@ typedef struct WndControlInvalidateView {
     union { u32 field_b8; u32 first_control; };
 } WndControlInvalidateView;
 
-/* 1 methods, size 0x4 */
-typedef struct ControlTypeView {
-    union { u32 field_0; u32 ctrl_type; };
-} ControlTypeView;
-
-/* 1 methods, size 0x24 */
-typedef struct ControlNextView {
-    u8 pad_0[32];
-    union { u32 field_20; u32 next_control; };
-} ControlNextView;
-
-/* 1 methods, size 0x25 */
-typedef struct ControlInitialFocusView {
-    u8 pad_0[36];
-    union { u8 field_24; u8 initial_focus; };
-} ControlInitialFocusView;
-
-/* 1 methods, size 0x38 */
-typedef struct CheckboxEnabledView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 is_enabled; };
-} CheckboxEnabledView;
-
-/* 1 methods, size 0x4c */
-typedef struct RadioGroupItemsView {
-    union { u8 pad_0[72]; struct { u8 control_header[32]; u8 next_control[8]; u8 hotkey_index[32]; }; };
-    union { u32 field_48; u32 items; };
-} RadioGroupItemsView;
-
-/* RadioGroupItemsView where the code reaches past its end: the object is larger */
-typedef struct RadioGroupItemsViewExt {
-    RadioGroupItemsView base;
-    u8 item_font[1];
-} RadioGroupItemsViewExt;
-
-/* 1 methods, size 0x3c */
-typedef struct RadioGroupCountView {
-    u8 pad_0[56];
-    union { u32 field_38; u32 item_count; };
-} RadioGroupCountView;
-
 /* 1 methods, size 0xa4 */
 typedef struct WndMenuSelectView {
     u32 field_0;
@@ -3860,47 +3480,6 @@ typedef struct ColorKdTreeSearchView {
     u8 pad_820[8];
 } ColorKdTreeSearchView;
 
-/* 1 methods, size 0x30 */
-typedef struct HotspotEnterView {
-    u32 field_0;
-    u8 pad_4[40];
-    union { uptr field_2c; uptr on_enter; };
-} HotspotEnterView;
-
-/* 1 methods, size 0x34 */
-typedef struct HotspotLeaveView {
-    u32 field_0;
-    u8 pad_4[44];
-    union { uptr field_30; uptr on_leave; };
-} HotspotLeaveView;
-
-/* 1 methods, size 0x38 */
-typedef struct HotspotClickView {
-    u32 field_0;
-    u8 pad_4[48];
-    union { uptr field_34; uptr on_click; };
-} HotspotClickView;
-
-/* 1 methods, size 0x3c */
-typedef struct HotspotPressView {
-    u32 field_0;
-    u8 pad_4[52];
-    union { uptr field_38; uptr on_press; };
-} HotspotPressView;
-
-/* 1 methods, size 0x40 */
-typedef struct HotspotDblClickView {
-    u32 field_0;
-    u8 pad_4[56];
-    union { uptr field_3c; uptr on_dblclick; };
-} HotspotDblClickView;
-
-/* 1 methods, size 0x20 */
-typedef struct ControlHwndSetView {
-    u8 pad_0[28];
-    union { u32 field_1c; u32 hwnd; };
-} ControlHwndSetView;
-
 /* 1 methods, size 0x408 */
 typedef struct PaletteHandleView {
     u8 pad_0[1028];
@@ -3912,60 +3491,6 @@ typedef struct WndKeyNavView {
     u8 pad_0[196];
     union { u8 field_c4; u8 keyboard_nav; };
 } WndKeyNavView;
-
-/* 1 methods, size 0x34 */
-typedef struct ButtonClickView {
-    u32 field_0;
-    u8 pad_4[44];
-    union { uptr field_30; uptr on_click; };
-} ButtonClickView;
-
-/* 1 methods, size 0x30 */
-typedef struct SpriteButtonClickView {
-    u32 field_0;
-    u8 pad_4[40];
-    union { uptr field_2c; uptr on_click; };
-} SpriteButtonClickView;
-
-/* 1 methods, size 0x34 */
-typedef struct SpriteButtonRClickView {
-    u32 field_0;
-    u8 pad_4[44];
-    union { uptr field_30; uptr on_rclick; };
-} SpriteButtonRClickView;
-
-/* 1 methods, size 0x30 */
-typedef struct CheckboxClickView {
-    u32 field_0;
-    u8 pad_4[40];
-    union { uptr field_2c; uptr on_toggle; };
-} CheckboxClickView;
-
-/* 1 methods, size 0x40 */
-typedef struct ScrollbarPosView {
-    u8 pad_0[60];
-    union { u32 field_3c; u32 cur_pos; };
-} ScrollbarPosView;
-
-/* 1 methods, size 0x30 */
-typedef struct ScrollbarChangeView {
-    u32 field_0;
-    u8 pad_4[40];
-    union { uptr field_2c; uptr on_change; };
-} ScrollbarChangeView;
-
-/* 1 methods, size 0x34 */
-typedef struct ScrollbarTrackView {
-    u32 field_0;
-    u8 pad_4[44];
-    union { uptr field_30; uptr on_track; };
-} ScrollbarTrackView;
-
-/* 1 methods, size 0x38 */
-typedef struct ScrollbarPageView {
-    u8 pad_0[52];
-    union { u32 field_34; u32 page_size; };
-} ScrollbarPageView;
 
 /* 1 methods, size 0x28 */
 typedef struct SpriteOriginSetView {
@@ -4035,91 +3560,6 @@ typedef struct TimerManagerCtorView {
     union { u32 field_0; u32 timer_wnd; };
     union { u8 pad_4[140]; struct { u8 timer_slot_tables[140]; }; };
 } TimerManagerCtorView;
-
-/* 1 methods, size 0x38 */
-typedef struct EditKeyView {
-    u32 field_0;
-    union { u32 field_4; u32 control_id; };
-    u8 pad_8[44];
-    union { uptr field_34; uptr on_key; };
-} EditKeyView;
-
-/* 1 methods, size 0x34 */
-typedef struct ComboBoxDblClickView {
-    u32 field_0;
-    union { u32 field_4; u32 control_id; };
-    u8 pad_8[40];
-    union { uptr field_30; uptr on_dblclick; };
-} ComboBoxDblClickView;
-
-/* 1 methods, size 0x38 */
-typedef struct ComboBoxSelChangeView {
-    u32 field_0;
-    union { u32 field_4; u32 control_id; };
-    u8 pad_8[44];
-    union { uptr field_34; uptr on_selchange; };
-} ComboBoxSelChangeView;
-
-/* 1 methods, size 0x34 */
-typedef struct ListBoxDblClickView {
-    u32 field_0;
-    union { u32 field_4; u32 control_id; };
-    u8 pad_8[40];
-    union { uptr field_30; uptr on_dblclick; };
-} ListBoxDblClickView;
-
-/* 1 methods, size 0x38 */
-typedef struct ListBoxSelChangeView {
-    u32 field_0;
-    union { u32 field_4; u32 control_id; };
-    u8 pad_8[44];
-    union { uptr field_34; uptr on_selchange; };
-} ListBoxSelChangeView;
-
-/* 1 methods, size 0x4c */
-typedef struct RadiogrpHasHwndView {
-    u8 pad_0[56];
-    union { u32 field_38; u32 item_count; };
-    u8 pad_3c[12];
-    union { u32 field_48; u32 items; };
-} RadiogrpHasHwndView;
-
-/* 1 methods, size 0x4c */
-typedef struct RadioGroupShowView {
-    u8 pad_0[56];
-    union { u32 field_38; u32 item_count; };
-    u8 pad_3c[12];
-    union { u32 field_48; u32 items; };
-} RadioGroupShowView;
-
-/* 1 methods, size 0x4c */
-typedef struct RadiogrpHideAllView {
-    u8 pad_0[56];
-    union { u32 field_38; u32 item_count; };
-    u8 pad_3c[12];
-    union { u32 field_48; u32 items; };
-} RadiogrpHideAllView;
-
-/* 1 methods, size 0x30 */
-typedef struct RadioGroupClickView {
-    u32 field_0;
-    u8 pad_4[40];
-    union { uptr field_2c; uptr on_select; };
-} RadioGroupClickView;
-
-/* 1 methods, size 0x34 */
-typedef struct RadioGroupDblClickView {
-    u32 field_0;
-    u8 pad_4[44];
-    union { uptr field_30; uptr on_dblclick; };
-} RadioGroupDblClickView;
-
-/* 1 methods, size 0x38 */
-typedef struct RadioGroupRClickView {
-    u32 field_0;
-    u8 pad_4[48];
-    union { uptr field_34; uptr on_rclick; };
-} RadioGroupRClickView;
 
 /* 11 methods, size 0x708 */
 typedef struct ErrorContext {
@@ -4335,22 +3775,6 @@ typedef struct DdpalFadeStepView {
     u8 pad_1f[9];
     union { u32 field_28; u32 saved_rgb; };
 } DdpalFadeStepView;
-
-/* 1 methods, size 0x34 */
-typedef struct EditMaxTextView {
-    u32 field_0;
-    union { u32 field_4; u32 control_id; };
-    u8 pad_8[40];
-    union { uptr field_30; uptr on_maxtext; };
-} EditMaxTextView;
-
-/* 1 methods, size 0x30 */
-typedef struct EditChangeView {
-    u32 field_0;
-    union { u32 field_4; u32 control_id; };
-    u8 pad_8[36];
-    union { uptr field_2c; uptr on_change; };
-} EditChangeView;
 
 /* 1 methods, size 0x4 */
 typedef struct WndOnMouseMoveView {
