@@ -16,9 +16,11 @@ and the same random numbers, call for call, on recorded games.
 | `src/platform/` | The Windows API the game uses (windows, GDI, controls, files, sound, video) implemented in portable C. |
 | `src/host/` | What the platform layer needs from the machine: window, input and audio over SDL2; the portable build's runtime. |
 | `src/native/` | The C runtime pieces the native builds need. |
+| `src/third_party/` | Bundled third-party decoders (Indeo 4 video, Ogg Vorbis). |
 | `data/` | Fonts as the original renders them, and the original executable's data sections. |
 | `re/` | Analysis results: function list, calling conventions, data layout, Ghidra's decompilation. |
 | `harness/` | The replay scripts and the comparison with the original (`run.py`, `compare.py`, `native_suite.sh`). |
+| `tests/` | Small standalone tests (data layout, network records, CD music reading). |
 | `hook/` | An `XDaemon.dll` proxy that makes the original deterministic under Wine. |
 | `tools/` | Build, analysis and refactoring scripts. |
 | `docs/`, `STATUS.md` | Notes on the reconstruction and its verification. |
@@ -53,7 +55,7 @@ disc image (`.cue`/`.bin`). Download the program for your system:
 
 The first time, it finds your copy of the game (or asks where it is) and sets it up, music
 included when it comes from the CD or a disc image. `--setup [FOLDER or IMAGE.cue]` sets it
-up again. Third-party licences: [THIRD-PARTY.txt](THIRD-PARTY.txt).
+up again.
 
 ## Build and run
 
@@ -65,17 +67,16 @@ To build it yourself, install your copy of Civilization II in `~/Civ2` (the dire
 ```sh
 xcode-select --install          # C/C++ compiler
 brew install sdl2
-pip3 install pefile
 
 git clone https://github.com/richardpenman/civ2 && cd civ2
-python3 tools/build_port.py     # -> build/OpenCiv2  (several minutes; the first time it
-                                #    downloads wasi-sdk, wabt, unshield, zlib into tools/toolchain)
+python3 tools/build_port.py     # -> build/OpenCiv2  (several minutes; the first time it downloads
+                                #    wasi-sdk, wabt and the libraries' sources into tools/toolchain)
 tools/run-civ2.sh               # plays the game in ~/Civ2
 ```
 
 ### Linux
 
-As on macOS, with `libsdl2-dev` and `python3-pefile` from the package manager:
+As on macOS, with `libsdl2-dev` from the package manager:
 
 ```sh
 git clone https://github.com/richardpenman/civ2 && cd civ2
@@ -88,7 +89,7 @@ tools/run-civ2.sh
 In an [MSYS2](https://www.msys2.org) **MINGW64** shell:
 
 ```sh
-pacman -S git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python mingw-w64-x86_64-python-pefile
+pacman -S git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python
 git clone https://github.com/richardpenman/civ2 && cd civ2
 python3 tools/build_port.py     # -> build/OpenCiv2.exe and SDL2.dll
 ```
@@ -122,13 +123,15 @@ make native-suite    # replay every scenario on a native build and compare (EXE=
 
 Playable. Every function of the game that can run has source; the only parts not reconstructed
 are the original's MSVC runtime (replaced by the platform's C library) and unreachable 16-bit
-leftovers. All 31 recorded scenarios match the original exactly, pixel for pixel. The scenarios run about
-two thirds of the game's functions; multiplayer, the High Council and some editor dialogs are not
-covered yet.
+leftovers. All 39 recorded scenarios match the original exactly, pixel for pixel. They run 72% of
+the game's functions (77% leaving out networking); sound, video and the High Council can't be
+compared under Wine, and network play is being built (compatible with the original's protocol,
+`docs/xdaemon-protocol.md`).
 
 The code is being modernized step by step, each step checked by the harness: it compiles as
-strict C++ and keeps the original's data layout; recovering the remaining types, classes,
-structured control flow and smaller functions is in progress. Details in `STATUS.md`.
+strict C++, keeps the original's data layout, has its classes as C++ class hierarchies and typed
+callbacks; member functions, structured control flow and smaller functions come next. Details in
+`STATUS.md`.
 
 | | |
 | --- | --- |
