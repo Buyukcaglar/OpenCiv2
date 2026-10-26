@@ -43,7 +43,7 @@ recordings:
 | `build/civ2-linux32` | gcc -m32 |
 | `build/OpenCiv2` (64-bit, portable to macOS and Windows) | wasm32 → wasm2c → cc |
 
-All 31 scenarios of `harness/scripts` give pixel-identical screenshots and
+All 36 scenarios of `harness/scripts` give pixel-identical screenshots and
 the identical `rand()` trace.  The last few pixels came from Wine details
 now matched: a combo box's text clipped to its field (a glyph's overhang
 shows), a multiline edit's text clipped to its format rectangle and drawn

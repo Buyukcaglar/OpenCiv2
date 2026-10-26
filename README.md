@@ -123,7 +123,7 @@ make native-suite    # replay every scenario on a native build and compare (EXE=
 
 Playable. Every function of the game that can run has source; the only parts not reconstructed
 are the original's MSVC runtime (replaced by the platform's C library) and unreachable 16-bit
-leftovers. All 39 recorded scenarios match the original exactly, pixel for pixel. They run 72% of
+leftovers. All 36 recorded scenarios match the original exactly, pixel for pixel. They run 72% of
 the game's functions (77% leaving out networking); sound, video and the High Council can't be
 compared under Wine. Network games over TCP/IP work, and are compatible with the original:
 OpenCiv2 and the original game play each other on a LAN or over the Internet, either one
