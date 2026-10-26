@@ -55,11 +55,15 @@ again (from FOLDER: the installed game, the CD, or a disc image's `.cue` or the 
 is in); `FOLDER` plays the game in FOLDER where it is.
 
 Music: the CD's music is its audio tracks. The set-up takes them from a disc image (found
-as above, whatever the game is set up from), encoding them as Ogg Vorbis into
-`GameData/Music` (about 20 MB; a minute or so); a game set up without music gets it with
-`--setup IMAGE.cue`. From a physical CD there is no music yet (reading its audio tracks is
-a later step); an installed game has none either (`tools/extract_disc.py` also writes it,
-as WAV files, from a disc image).
+as above, whatever the game is set up from), else from the CD in its drive (also when the
+game is set up from an installed copy), encoding them as Ogg Vorbis into `GameData/Music`
+(about 20 MB; a minute or so from an image, longer from a drive); a game set up without
+music gets it with `--setup IMAGE.cue` or `--setup CD-FOLDER`. If the drive cannot be read
+(no access to it: on Linux, being in the `cdrom` or `optical` group; or a drive that will
+not read audio), the game is set up without music and the set-up says so. Reading a real
+drive is untested so far on all three systems (it is tested with a simulated drive);
+an installed game alone has no music (`tools/extract_disc.py` also writes it, as WAV
+files, from a disc image).
 
 - **Windows:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip):
   `OpenCiv2.exe`. Put it in any folder and double-click it; `GameData` is beside it. It runs

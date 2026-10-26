@@ -4,9 +4,12 @@
  * folders, or its CD in a drive, or a disc image of the CD in the user's
  * folders, beside the program or at the top of a drive; GameData is beside
  * the program, with the
- * program's own files (the fonts, from its resources) in data.
+ * program's own files (the fonts, from its resources) in data.  The CD's
+ * music is read from its drive (\\.\X:) with the CD-ROM ioctls.
  */
 #include <windows.h>
+#include <winioctl.h>
+#include <ntddcdrm.h>
 #include <shlobj.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -377,4 +380,91 @@ int os_confirm(const char *text)
 {
     (void)text;
     return 1;
+}
+
+/* ---- the CD's music, from its drive ---- */
+
+#define CD_SECTOR 2352
+#define CD_CHUNK 16
+
+struct cd {
+    HANDLE h;
+    unsigned char *buf;         /* (page-aligned, as some drives want) */
+};
+
+int os_cd_open(const char *cd, struct cd_toc *toc, void **h)
+{
+    char root[4] = "A:\\", dev[8] = "\\\\.\\A:";
+    CDROM_TOC t;
+    DWORD n;
+    struct cd *c;
+    HANDLE f;
+    int i, count;
+    UINT type;
+    if (!((cd[0] >= 'A' && cd[0] <= 'Z') || (cd[0] >= 'a' && cd[0] <= 'z')) || cd[1] != ':')
+        return 0;
+    root[0] = dev[4] = cd[0];
+    type = GetDriveTypeA(root);
+    if (type != DRIVE_CDROM)
+        return 0;
+    f = CreateFileA(dev, GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+    if (f == INVALID_HANDLE_VALUE)
+        return -1;
+    memset(&t, 0, sizeof t);
+    count = 0;
+    if (!DeviceIoControl(f, IOCTL_CDROM_READ_TOC, NULL, 0, &t, sizeof t, &n, NULL) || t.LastTrack < t.FirstTrack ||
+        (count = t.LastTrack - t.FirstTrack + 1) >= MAXIMUM_NUMBER_TRACKS) {
+        CloseHandle(f);
+        return -1;
+    }
+    /* (each track's start as MSF, Address[1..3], 150 sectors before
+       sector 0; after the last, the lead-out) */
+    memset(toc, 0, sizeof *toc);
+    for (i = 0; i <= count && i < 99; i++) {
+        const TRACK_DATA *d = &t.TrackData[i];
+        long lba = ((long)d->Address[1] * 60 + d->Address[2]) * 75 + d->Address[3] - 150;
+        if (i == count) {
+            toc->leadout = lba;
+        } else {
+            toc->t[i].number = d->TrackNumber;
+            toc->t[i].audio = !(d->Control & 4);
+            toc->t[i].lba = lba;
+            toc->ntracks++;
+        }
+    }
+    c = malloc(sizeof *c);
+    if (!c || !(c->buf = VirtualAlloc(NULL, CD_CHUNK * CD_SECTOR, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE))) {
+        free(c);
+        CloseHandle(f);
+        return -1;
+    }
+    c->h = f;
+    *h = c;
+    return 1;
+}
+
+int os_cd_read(void *h, long lba, int n, unsigned char *buf)
+{
+    struct cd *c = h;
+    RAW_READ_INFO r;
+    DWORD got = 0;
+    if (n < 1 || n > CD_CHUNK)
+        return 0;
+    memset(&r, 0, sizeof r);
+    r.DiskOffset.QuadPart = (LONGLONG)lba * 2048;     /* (in 2048-byte sectors, though raw ones are read) */
+    r.SectorCount = (ULONG)n;
+    r.TrackMode = CDDA;
+    if (!DeviceIoControl(c->h, IOCTL_CDROM_RAW_READ, &r, sizeof r, c->buf, (DWORD)n * CD_SECTOR, &got, NULL) ||
+        got != (DWORD)n * CD_SECTOR)
+        return 0;
+    memcpy(buf, c->buf, (size_t)n * CD_SECTOR);
+    return 1;
+}
+
+void os_cd_close(void *h)
+{
+    struct cd *c = h;
+    CloseHandle(c->h);
+    VirtualFree(c->buf, 0, MEM_RELEASE);
+    free(c);
 }

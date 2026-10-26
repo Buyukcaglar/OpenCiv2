@@ -6,9 +6,10 @@
  * An installed game's folder is copied; from the CD the game is unpacked
  * from its InstallShield cabinet (DATA1.CAB, with unshield), as its
  * installer would, and its videos copied; from a disc image the same, out
- * of its data track (setup_disc.c).  The music, the CD's audio tracks, only
- * from a disc image (with any source, where one is found): encoded as Ogg
- * Vorbis.  Into GameData: beside the program on Windows, in the user's
+ * of its data track (setup_disc.c).  The music, the CD's audio tracks, from
+ * a disc image (with any source, where one is found), else from the CD in
+ * its drive (read from the drive: setup_win.c, setup_unix.c): encoded as
+ * Ogg Vorbis.  Into GameData: beside the program on Windows, in the user's
  * data folder on macOS and Linux.
  */
 #include <stdio.h>
@@ -202,13 +203,15 @@ static int has_music(const char *game_dir)
 
 /* GameData from source (an installed game's folder, the CD or a disc
    image), from the CD (cd, may be "") its videos, from a disc image
-   (image, may be "") the videos it lacks and the music; music_only: the
-   game is there already (set up without music).  1: done. */
-static int set_up(const char *game_dir, const char *source, const char *cd, const char *image, int music_only)
+   (image, may be "") the videos it lacks and the music; else cd_music
+   (cd_has_music's): the music from the CD's drive; music_only: the game is
+   there already (set up without music).  1: done. */
+static int set_up(const char *game_dir, const char *source, const char *cd, const char *image, int cd_music,
+                  int music_only)
 {
     char done[SETUP_PATH];
     FILE *f;
-    int ok = 1;
+    int ok = 1, unread = cd_music < 0;
     os_make_dirs(game_dir);
     if (music_only) {
     } else if (setup_game_cd(source)) {
@@ -225,14 +228,26 @@ static int set_up(const char *game_dir, const char *source, const char *cd, cons
     }
     if (ok && *cd)
         ok = copy_videos(cd, game_dir);
-    if (ok && *image)
+    if (ok && *image) {
         ok = image_copy_videos(image, game_dir) && image_encode_music(image, game_dir);
+    } else if (ok && cd_music > 0) {
+        int r = cd_encode_music(cd, game_dir);
+        unread = r < 0;
+        ok = r != 0;
+        if (unread) {
+            /* (the tracks read before the drive failed: gone, so that
+               has_music says no and a later --setup tries again) */
+            char music[SETUP_PATH];
+            snprintf(music, sizeof music, "%s" SEP_S "Music", game_dir);
+            os_remove_dir(music);
+        }
+    }
     if (!ok)
         return 0;
     snprintf(done, sizeof done, "%s" SEP_S "%s", game_dir, DONE_FILE);
     if (music_only) {
-        if ((f = fopen(done, "a"))) {
-            fprintf(f, "OpenCiv2: the music from %s.\n", image);
+        if (!unread && (f = fopen(done, "a"))) {
+            fprintf(f, "OpenCiv2: the music from %s%s.\n", *image ? "" : "the CD in ", *image ? image : cd);
             fclose(f);
         }
     } else if ((f = fopen(done, "w"))) {
@@ -240,16 +255,22 @@ static int set_up(const char *game_dir, const char *source, const char *cd, cons
         fprintf(f, "OpenCiv2: the game set up from %s%s%s%s%s.\n", source, *cd && strcmp(cd, source) ? ", videos from " : "",
                 *cd && strcmp(cd, source) ? cd : "", !*image ? "" : other ? ", music from " : ", with its music",
                 other ? image : "");
+        if (cd_music > 0 && !unread)
+            fprintf(f, "OpenCiv2: the music from the CD in %s.\n", cd);
         fclose(f);
     }
+    if (unread)
+        os_message(music_only ? "The music could not be read from the CD's drive." :
+                   "The game is set up, but without its music: it could not be read from the CD's drive.",
+                   OS_WARNING);
     return 1;
 }
 
 int setup_choose_game(int argc, char **argv, char *game, size_t size)
 {
     char game_data[SETUP_PATH], done[SETUP_PATH], source[SETUP_PATH], cd[SETUP_PATH] = "", image[SETUP_PATH] = "";
-    char text[3 * SETUP_PATH + 256];
-    int again, ok, cancelled, music_only;
+    char text[3 * SETUP_PATH + 256], music[SETUP_PATH + 32] = "";
+    int again, ok, cancelled, music_only, cd_music = 0;
 
 #ifdef __APPLE__
     /* (started from the Finder by an older macOS: its process serial number) */
@@ -318,21 +339,29 @@ int setup_choose_game(int argc, char **argv, char *game, size_t size)
         snprintf(cd, sizeof cd, "%s", source);
     if (setup_game_image(source))
         snprintf(image, sizeof image, "%s", source);
+    /* no disc image: the music from the CD in its drive, if it reads */
+    if (!*image && *cd)
+        cd_music = cd_has_music(cd);
+    if (*image)
+        snprintf(music, sizeof music, "the disc image %s", image);
+    else if (cd_music > 0)
+        snprintf(music, sizeof music, "the CD in %s", cd);
     /* (set up already, but without music: only that) */
-    music_only = *image && !strcmp(image, source) && os_file_exists(done) && !has_music(game_data);
+    music_only = ((*image && !strcmp(image, source)) || (cd_music > 0 && !strcmp(cd, source))) &&
+                 os_file_exists(done) && !has_music(game_data);
     if (music_only)
-        snprintf(text, sizeof text, "OpenCiv2 adds the music to the game in\n%s\nfrom the disc image %s (encoding "
-                 "it as Ogg Vorbis).\n\nThis takes a few minutes; then the game starts.", game_data, image);
+        snprintf(text, sizeof text, "OpenCiv2 adds the music to the game in\n%s\nfrom %s (encoding it as Ogg "
+                 "Vorbis).\n\nThis takes a few minutes; then the game starts.", game_data, music);
     else
         snprintf(text, sizeof text, "OpenCiv2 sets up the game from %s, %s it into\n%s%s%s%s\n\nThis takes %s; then "
                  "the game starts.", source, setup_game_folder(source) ? "copying" : "unpacking", game_data,
-                 *image ? "\n\nThe music from the disc image " : "", *image ? image : "",
-                 *image ? " (encoded as Ogg Vorbis)." : "", *image ? "a few minutes" : "a minute or two");
+                 *music ? "\n\nThe music from " : "", music, *music ? " (encoded as Ogg Vorbis)." : "",
+                 *music ? "a few minutes" : "a minute or two");
     if (!os_confirm(text))
         return 0;
     copy_dest = game_data;
     os_progress_open();
-    ok = os_program_files() && set_up(game_data, source, cd, image, music_only);
+    ok = os_program_files() && set_up(game_data, source, cd, image, cd_music, music_only);
     cancelled = !ok && os_progress_stopped();
     os_progress_close();
     if (cancelled)

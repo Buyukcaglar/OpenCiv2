@@ -5,7 +5,9 @@
  * (44.1 kHz 16-bit stereo).  From the data track the installer's cabinet
  * and the videos, as from the CD; the audio tracks encoded to Ogg Vorbis
  * (libvorbis) as Music/TrackNN.ogg: track N of the CD, which the game
- * plays (src/platform/sound.c).  As tools/extract_disc.py does.
+ * plays (src/platform/sound.c).  As tools/extract_disc.py does.  The
+ * same encoding for the music of the CD itself, its audio sectors read from
+ * its drive (os_cd_open, os_cd_read: setup_win.c, setup_unix.c).
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -470,14 +472,39 @@ static int write_page(FILE *f, const ogg_page *og)
     return put(f, og->header, og->header_len) && put(f, og->body, og->body_len);
 }
 
-/* Audio track t as Ogg Vorbis into dst (written as dst.part, then
-   renamed); what: the progress shown.  1: done; 0: failed or stopped
-   (-1: stopped). */
-static int encode_track(struct disc *d, const struct track *t, const char *dst, const char *what)
+/* The raw audio sectors (2352 bytes: 588 frames of 16-bit little-endian
+   stereo) of a disc image's .bin or of the CD in its drive. */
+typedef int (*read_audio_fn)(void *ctx, long long at, int n, unsigned char *buf);
+
+/* n sectors from sector at on of an image's file (ctx). */
+static int image_read_audio(void *ctx, long long at, int n, unsigned char *buf)
+{
+    FILE *f = ctx;
+    return !fseek64(f, at * RAW, SEEK_SET) && fread(buf, RAW, (size_t)n, f) == (size_t)n;
+}
+
+/* n sectors from the drive (ctx: os_cd_open's), each chunk tried again
+   when the drive misreads it. */
+static int cd_read_audio(void *ctx, long long at, int n, unsigned char *buf)
+{
+    int tries;
+    for (tries = 0; tries < 3; tries++)
+        if (os_cd_read(ctx, (long)at, n, buf))
+            return 1;
+    return 0;
+}
+
+enum { ENC_STOPPED = -1, ENC_UNWRITTEN = 0, ENC_DONE = 1, ENC_UNREAD = 2 };
+
+/* Sectors start to end (read) as Ogg Vorbis into dst (written as dst.part,
+   then renamed), the CD's track number; what: the progress shown; from:
+   the ENCODER tag.  ENC_*. */
+static int encode_track(read_audio_fn read, void *ctx, int number, long long start, long long end, const char *dst,
+                        const char *what, const char *from)
 {
     enum { CHUNK = 16 };                    /* sectors read at a time: 588 frames each */
     static unsigned char raw[CHUNK * RAW];
-    FILE *in = d->f[t->file], *out;
+    FILE *out;
     char part[SETUP_PATH], detail[SETUP_PATH + 16];
     vorbis_info vi;
     vorbis_comment vc;
@@ -486,32 +513,32 @@ static int encode_track(struct disc *d, const struct track *t, const char *dst, 
     ogg_stream_state os;
     ogg_page og;
     ogg_packet op, comm, code;
-    long long at = t->index1, total = t->end - t->index1;
-    int ok = 1, eos = 0, shown = -1;
+    long long at = start, total = end - start;
+    int ok = ENC_DONE, eos = 0, shown = -1;
     snprintf(part, sizeof part, "%s.part", dst);
     if (!(out = fopen(part, "wb")))
-        return 0;
+        return ENC_UNWRITTEN;
     vorbis_info_init(&vi);
     if (vorbis_encode_init_vbr(&vi, 2, 44100, MUSIC_QUALITY)) {
         vorbis_info_clear(&vi);
         fclose(out);
         remove(part);
-        return 0;
+        return ENC_UNWRITTEN;
     }
     vorbis_comment_init(&vc);
-    vorbis_comment_add_tag(&vc, "ENCODER", "OpenCiv2 set-up, from the player's disc image");
+    vorbis_comment_add_tag(&vc, "ENCODER", from);
     vorbis_analysis_init(&vd, &vi);
     vorbis_block_init(&vd, &vb);
-    ogg_stream_init(&os, t->number);
+    ogg_stream_init(&os, number);
     vorbis_analysis_headerout(&vd, &vc, &op, &comm, &code);
     ogg_stream_packetin(&os, &op);
     ogg_stream_packetin(&os, &comm);
     ogg_stream_packetin(&os, &code);
-    while (ok && ogg_stream_flush(&os, &og))
-        ok = write_page(out, &og);
-    while (ok && !eos) {
-        long long k = t->end - at < CHUNK ? t->end - at : CHUNK;
-        int pct = (int)(total ? (at - t->index1) * 10 / total : 10) * 10;
+    while (ok == ENC_DONE && ogg_stream_flush(&os, &og))
+        ok = write_page(out, &og) ? ENC_DONE : ENC_UNWRITTEN;
+    while (ok == ENC_DONE && !eos) {
+        long long k = end - at < CHUNK ? end - at : CHUNK;
+        int pct = (int)(total ? (at - start) * 10 / total : 10) * 10;
         long frames = 0, i;
         if (pct != shown) {
             snprintf(detail, sizeof detail, "%s (%d%%)", dst, pct);
@@ -519,13 +546,13 @@ static int encode_track(struct disc *d, const struct track *t, const char *dst, 
         }
         /* (every chunk: the Windows progress window answers, can stop it) */
         if (os_progress_show(what, detail)) {
-            ok = -1;
+            ok = ENC_STOPPED;
             break;
         }
         if (k > 0) {
             float **buf;
-            if (fseek64(in, at * RAW, SEEK_SET) || fread(raw, RAW, (size_t)k, in) != (size_t)k) {
-                ok = 0;
+            if (!read(ctx, at, (int)k, raw)) {
+                ok = ENC_UNREAD;
                 break;
             }
             at += k;
@@ -538,13 +565,13 @@ static int encode_track(struct disc *d, const struct track *t, const char *dst, 
             }
         }
         vorbis_analysis_wrote(&vd, (int)frames);       /* (0: the end) */
-        while (ok > 0 && vorbis_analysis_blockout(&vd, &vb) == 1) {
+        while (ok == ENC_DONE && vorbis_analysis_blockout(&vd, &vb) == 1) {
             vorbis_analysis(&vb, NULL);
             vorbis_bitrate_addblock(&vb);
-            while (ok > 0 && vorbis_bitrate_flushpacket(&vd, &op)) {
+            while (ok == ENC_DONE && vorbis_bitrate_flushpacket(&vd, &op)) {
                 ogg_stream_packetin(&os, &op);
-                while (ok > 0 && ogg_stream_pageout(&os, &og)) {
-                    ok = write_page(out, &og);
+                while (ok == ENC_DONE && ogg_stream_pageout(&os, &og)) {
+                    ok = write_page(out, &og) ? ENC_DONE : ENC_UNWRITTEN;
                     if (ogg_page_eos(&og))
                         eos = 1;
                 }
@@ -556,44 +583,136 @@ static int encode_track(struct disc *d, const struct track *t, const char *dst, 
     vorbis_dsp_clear(&vd);
     vorbis_comment_clear(&vc);
     vorbis_info_clear(&vi);
-    if (fclose(out) != 0 && ok > 0)
-        ok = 0;
-    if (ok > 0) {
+    if (fclose(out) != 0 && ok == ENC_DONE)
+        ok = ENC_UNWRITTEN;
+    if (ok == ENC_DONE) {
         remove(dst);                /* (Windows: rename does not replace) */
         if (rename(part, dst))
-            ok = 0;
+            ok = ENC_UNWRITTEN;
     }
-    if (ok <= 0)
+    if (ok != ENC_DONE)
         remove(part);
+    return ok;
+}
+
+/* The audio tracks of a disc (an image's, the CD's): its track numbers,
+   their sectors (start to end), where they are read from. */
+struct audio {
+    int n;
+    struct {
+        int number;
+        long long start, end;
+        void *ctx;
+    } t[99];
+    read_audio_fn read;
+    const char *from;           /* the ENCODER tag */
+};
+
+/* Its tracks as game_dir/Music/TrackNN.ogg.  ENC_*: on ENC_UNWRITTEN, said. */
+static int encode_music(const struct audio *a, const char *game_dir)
+{
+    char music[SETUP_PATH], dst[SETUP_PATH], what[64];
+    int i, ok = ENC_DONE;
+    if (!a->n)
+        return ENC_DONE;
+    if (!os_entry(game_dir, "Music", music, sizeof music))
+        snprintf(music, sizeof music, "%s" SEP_S "Music", game_dir);
+    os_make_dirs(music);
+    for (i = 0; ok == ENC_DONE && i < a->n; i++) {
+        snprintf(what, sizeof what, "Encoding the music (track %d of %d)", i + 1, a->n);
+        snprintf(dst, sizeof dst, "%s" SEP_S "Track%02d.ogg", music, a->t[i].number);
+        ok = encode_track(a->read, a->t[i].ctx, a->t[i].number, a->t[i].start, a->t[i].end, dst, what, a->from);
+        if (ok == ENC_UNWRITTEN) {
+            char text[SETUP_PATH + 64];
+            snprintf(text, sizeof text, "Could not write %s.", dst);
+            os_message(text, OS_ERROR);
+        }
+    }
     return ok;
 }
 
 int image_encode_music(const char *cue, const char *game_dir)
 {
     struct disc *d = disc_open(cue);
-    char music[SETUP_PATH], dst[SETUP_PATH], what[64];
-    int i, n = 0, k = 0, ok = 1;
+    static struct audio a;
+    int i, ok;
     if (!d)
         return 1;
-    for (i = 0; i < d->ntracks; i++)
-        n += d->t[i].audio;
-    if (n && !os_entry(game_dir, "Music", music, sizeof music))
-        snprintf(music, sizeof music, "%s" SEP_S "Music", game_dir);
-    if (n)
-        os_make_dirs(music);
-    for (i = 0; ok > 0 && i < d->ntracks; i++) {
+    a.n = 0;
+    a.read = image_read_audio;
+    a.from = "OpenCiv2 set-up, from the player's disc image";
+    for (i = 0; i < d->ntracks; i++) {
         const struct track *t = &d->t[i];
         if (!t->audio)
             continue;
-        snprintf(what, sizeof what, "Encoding the music (track %d of %d)", ++k, n);
-        snprintf(dst, sizeof dst, "%s" SEP_S "Track%02d.ogg", music, t->number);
-        ok = encode_track(d, t, dst, what);
-        if (!ok) {
-            char text[SETUP_PATH + 64];
-            snprintf(text, sizeof text, "Could not write %s.", dst);
-            os_message(text, OS_ERROR);
-        }
+        a.t[a.n].number = t->number;
+        a.t[a.n].start = t->index1;
+        a.t[a.n].end = t->end;
+        a.t[a.n].ctx = d->f[t->file];
+        a.n++;
+    }
+    ok = encode_music(&a, game_dir);
+    if (ok == ENC_UNREAD) {
+        char text[SETUP_PATH + 64];
+        snprintf(text, sizeof text, "Could not read %s.", cue);
+        os_message(text, OS_ERROR);
     }
     disc_close(d);
-    return ok > 0;
+    return ok == ENC_DONE;
+}
+
+/* ---- the music from the CD in its drive ---- */
+
+/* The CD's audio tracks, each to the next track (the last to the lead-out). */
+static void cd_audio(const struct cd_toc *toc, void *h, struct audio *a)
+{
+    int i;
+    a->n = 0;
+    a->read = cd_read_audio;
+    a->from = "OpenCiv2 set-up, from the player's CD";
+    for (i = 0; i < toc->ntracks; i++) {
+        long end = i + 1 < toc->ntracks ? toc->t[i + 1].lba : toc->leadout;
+        if (!toc->t[i].audio || end <= toc->t[i].lba)
+            continue;
+        a->t[a->n].number = toc->t[i].number;
+        a->t[a->n].start = toc->t[i].lba;
+        a->t[a->n].end = end;
+        a->t[a->n].ctx = h;
+        a->n++;
+    }
+}
+
+int cd_has_music(const char *cd)
+{
+    static struct cd_toc toc;
+    static struct audio a;
+    void *h;
+    unsigned char *probe;
+    int r = os_cd_open(cd, &toc, &h);
+    if (r <= 0)
+        return r;
+    cd_audio(&toc, h, &a);
+    r = a.n > 0;
+    /* (the drive reads audio: its first sector) */
+    if (r && (probe = malloc(RAW))) {
+        if (!cd_read_audio(h, a.t[0].start, 1, probe))
+            r = -1;
+        free(probe);
+    }
+    os_cd_close(h);
+    return r;
+}
+
+int cd_encode_music(const char *cd, const char *game_dir)
+{
+    static struct cd_toc toc;
+    static struct audio a;
+    void *h;
+    int ok, r = os_cd_open(cd, &toc, &h);
+    if (r <= 0)
+        return r ? -1 : 1;
+    cd_audio(&toc, h, &a);
+    ok = encode_music(&a, game_dir);
+    os_cd_close(h);
+    return ok == ENC_UNREAD ? -1 : ok == ENC_DONE;
 }

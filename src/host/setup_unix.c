@@ -6,16 +6,27 @@
  * (macOS: ~/Library/Application Support/OpenCiv2, Linux:
  * ~/.local/share/OpenCiv2); the program's own files are beside it, in data.
  * Messages are SDL's; the folder is asked with the system's dialog (macOS:
- * setup_mac.m; Linux: zenity or kdialog, where there is one).
+ * setup_mac.m; Linux: zenity or kdialog, where there is one).  The CD's
+ * music is read from its drive with the system's ioctls (Linux: cdrom.h's,
+ * macOS: IOKit's IOCDMediaBSDClient.h's).
  */
 #include <dirent.h>
+#include <fcntl.h>
 #include <glob.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#ifdef __APPLE__
+#include <sys/mount.h>
+#include <IOKit/storage/IOCDMediaBSDClient.h>
+#else
+#include <linux/cdrom.h>
+#endif
 #include "SDL.h"
 #include "setup.h"
 #include "setup_os.h"
@@ -350,4 +361,186 @@ int os_progress_stopped(void)
 
 void os_progress_close(void)
 {
+}
+
+/* ---- the CD's music, from its drive ---- */
+
+#define CD_SECTOR 2352
+
+struct cd {
+    int fd;
+};
+
+/* The drive's device (Linux: /dev/srN; macOS: the whole disc's raw
+   /dev/rdiskN) for the CD mounted at cd; 0: not on a CD drive. */
+static int cd_device(const char *cd, char *out, size_t size)
+{
+#ifdef __APPLE__
+    struct statfs st;
+    const char *p;
+    size_t n;
+    if (statfs(cd, &st) || strncmp(st.f_mntfromname, "/dev/disk", 9))
+        return 0;
+    p = st.f_mntfromname + 9;
+    n = strspn(p, "0123456789");
+    if (!n)
+        return 0;
+    snprintf(out, size, "/dev/rdisk%.*s", (int)n, p);
+    return 1;
+#else
+    /* (the mount point in /proc/mounts: its spaces... as \040...) */
+    char line[2 * SETUP_PATH], dev[SETUP_PATH], dir[SETUP_PATH], real[PATH_MAX], want[PATH_MAX];
+    FILE *f = fopen("/proc/mounts", "r");
+    int found = 0;
+    if (!f)
+        return 0;
+    if (!realpath(cd, want))
+        snprintf(want, sizeof want, "%s", cd);
+    while (!found && fgets(line, sizeof line, f)) {
+        char *r, *w;
+        if (sscanf(line, "%4095s %4095s", dev, dir) != 2)
+            continue;
+        for (r = w = dir; *r; w++)
+            if (r[0] == '\\' && r[1] >= '0' && r[1] <= '3' && r[2] >= '0' && r[2] <= '7' && r[3] >= '0' &&
+                r[3] <= '7') {
+                *w = (char)((r[1] - '0') << 6 | (r[2] - '0') << 3 | (r[3] - '0'));
+                r += 4;
+            } else {
+                *w = *r++;
+            }
+        *w = 0;
+        found = !strcmp(dir, want);
+    }
+    fclose(f);
+    /* (a CD drive: /dev/srN, the name /dev/cdrom... may point to) */
+    if (!found || !realpath(dev, real) || strncmp(real, "/dev/sr", 7))
+        return 0;
+    snprintf(out, size, "%s", real);
+    return 1;
+#endif
+}
+
+int os_cd_open(const char *cd, struct cd_toc *toc, void **h)
+{
+    char dev[SETUP_PATH];
+    struct cd *c;
+    int fd, ok = 1;
+    if (!cd_device(cd, dev, sizeof dev))
+        return 0;
+#ifdef __APPLE__
+    fd = open(dev, O_RDONLY);
+#else
+    fd = open(dev, O_RDONLY | O_NONBLOCK);
+#endif
+    if (fd < 0)
+        return -1;
+    memset(toc, 0, sizeof *toc);
+    {
+#ifdef __APPLE__
+        /* the full TOC (kCDTOCFormatTOC): a header (length, sessions), then
+           11-byte descriptors: session, ADR (high 4 bits) and control (low 4,
+           4: data), TNO, POINT (1-99: a track, 0xA2: the lead-out), ...,
+           PMIN, PSEC, PFRAME (where it starts) */
+        static unsigned char buf[4 + 11 * 256];
+        dk_cd_read_toc_t r;
+        unsigned len, i, k;
+        long leadout = -1;
+        memset(&r, 0, sizeof r);
+        r.format = kCDTOCFormatTOC;
+        r.formatAsTime = 1;
+        r.address.session = 1;
+        r.bufferLength = sizeof buf;
+        r.buffer = buf;
+        if (ioctl(fd, DKIOCCDREADTOC, &r) < 0 || r.bufferLength < 4) {
+            ok = 0;
+        } else {
+            len = (unsigned)(buf[0] << 8 | buf[1]) + 2;
+            if (len > r.bufferLength)
+                len = r.bufferLength;
+            for (i = 4; i + 11 <= len; i += 11) {
+                const unsigned char *d = buf + i;
+                long lba = ((long)d[8] * 60 + d[9]) * 75 + d[10] - 150;
+                if (d[1] >> 4 != 1)
+                    continue;
+                if (d[3] >= 1 && d[3] <= 99 && toc->ntracks < 99) {
+                    /* (in the order of their numbers) */
+                    for (k = (unsigned)toc->ntracks; k > 0 && toc->t[k - 1].number > d[3]; k--)
+                        toc->t[k] = toc->t[k - 1];
+                    toc->t[k].number = d[3];
+                    toc->t[k].audio = !(d[1] & 4);
+                    toc->t[k].lba = lba;
+                    toc->ntracks++;
+                } else if (d[3] == 0xA2 && lba > leadout) {
+                    leadout = lba;
+                }
+            }
+            toc->leadout = leadout;
+            ok = toc->ntracks > 0 && leadout > 0;
+        }
+#else
+        struct cdrom_tochdr hdr;
+        struct cdrom_tocentry e;
+        int t;
+        if (ioctl(fd, CDROMREADTOCHDR, &hdr) < 0) {
+            ok = 0;
+        } else {
+            for (t = hdr.cdth_trk0; ok && t <= hdr.cdth_trk1 && toc->ntracks < 99; t++) {
+                memset(&e, 0, sizeof e);
+                e.cdte_track = (unsigned char)t;
+                e.cdte_format = CDROM_LBA;
+                if (ioctl(fd, CDROMREADTOCENTRY, &e) < 0) {
+                    ok = 0;
+                } else {
+                    toc->t[toc->ntracks].number = t;
+                    toc->t[toc->ntracks].audio = !(e.cdte_ctrl & CDROM_DATA_TRACK);
+                    toc->t[toc->ntracks].lba = e.cdte_addr.lba;
+                    toc->ntracks++;
+                }
+            }
+            memset(&e, 0, sizeof e);
+            e.cdte_track = CDROM_LEADOUT;
+            e.cdte_format = CDROM_LBA;
+            if (ok && ioctl(fd, CDROMREADTOCENTRY, &e) < 0)
+                ok = 0;
+            toc->leadout = e.cdte_addr.lba;
+        }
+#endif
+    }
+    if (!ok || !(c = malloc(sizeof *c))) {
+        close(fd);
+        return -1;
+    }
+    c->fd = fd;
+    *h = c;
+    return 1;
+}
+
+int os_cd_read(void *h, long lba, int n, unsigned char *buf)
+{
+    const struct cd *c = h;
+#ifdef __APPLE__
+    dk_cd_read_t r;
+    memset(&r, 0, sizeof r);
+    r.offset = (uint64_t)lba * CD_SECTOR;
+    r.sectorArea = kCDSectorAreaUser;
+    r.sectorType = kCDSectorTypeCDDA;
+    r.bufferLength = (uint32_t)n * CD_SECTOR;
+    r.buffer = buf;
+    return ioctl(c->fd, DKIOCCDREAD, &r) == 0 && r.bufferLength == (uint32_t)n * CD_SECTOR;
+#else
+    struct cdrom_read_audio r;
+    memset(&r, 0, sizeof r);
+    r.addr.lba = (int)lba;
+    r.addr_format = CDROM_LBA;
+    r.nframes = n;
+    r.buf = buf;
+    return ioctl(c->fd, CDROMREADAUDIO, &r) == 0;
+#endif
+}
+
+void os_cd_close(void *h)
+{
+    struct cd *c = h;
+    close(c->fd);
+    free(c);
 }

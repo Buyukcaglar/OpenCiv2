@@ -2,7 +2,8 @@
  * What the set-up (setup.c) needs of the system: files and folders, where
  * the game usually is, and talking to the user.  setup_win.c on Windows,
  * setup_unix.c on macOS and Linux (with setup_mac.m on macOS).  And what
- * it reads of a disc image of the CD (setup_disc.c).
+ * it reads of a disc image of the CD, or of the CD's music in its drive
+ * (setup_disc.c).
  */
 #ifndef CIV2_SETUP_OS_H
 #define CIV2_SETUP_OS_H
@@ -37,6 +38,32 @@ int image_extract_cabinet(const char *cue, const char *dir, char *cab, size_t si
 int image_copy_videos(const char *cue, const char *game_dir);
 /* its audio tracks as game_dir/Music/TrackNN.ogg (Ogg Vorbis) */
 int image_encode_music(const char *cue, const char *game_dir);
+/* the music of the CD (cd: its folder) read from its drive (os_cd_open):
+   1: there is (the drive reads its audio tracks), 0: none (not a CD in
+   a drive, no audio tracks), -1: the drive could not be read */
+int cd_has_music(const char *cd);
+/* its audio tracks as game_dir/Music/TrackNN.ogg, as an image's: 1: done
+   (or none), 0: failed (said) or stopped, -1: the drive could not be read */
+int cd_encode_music(const char *cd, const char *game_dir);
+
+/* A CD's table of contents: its tracks' starts, in sectors from the
+   start of the disc (LBA). */
+struct cd_toc {
+    int ntracks;
+    struct {
+        int number, audio;
+        long lba;
+    } t[99];
+    long leadout;               /* where the last track ends */
+};
+/* (setup_win.c, setup_unix.c) the drive the CD (cd: its folder, where it
+   is mounted) is in, opened (*h) and its table of contents read: 1;
+   0: cd is not on a CD drive; -1: the drive could not be opened or read */
+int os_cd_open(const char *cd, struct cd_toc *toc, void **h);
+/* n (at most 16) raw audio sectors, 2352 bytes each, from sector lba on
+   into buf; 0: failed */
+int os_cd_read(void *h, long lba, int n, unsigned char *buf);
+void os_cd_close(void *h);
 
 enum { OS_INFO, OS_WARNING, OS_ERROR };
 
