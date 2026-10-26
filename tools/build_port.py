@@ -171,7 +171,7 @@ def exe(cross_windows=False):
     # unshield and zlib for the CD's cabinet, libogg and libvorbis for a
     # disc image's music: their sources, from tools/fetch-toolchain.sh)
     host = [os.path.join(ROOT, 'src', 'host', f) for f in
-            ('port_main.c', 'wasi.c', 'host_sdl.c', 'setup.c', 'setup_disc.c') +
+            ('port_main.c', 'wasi.c', 'host_sdl.c', 'host_net.c', 'setup.c', 'setup_disc.c') +
             (('host_menu_win.c', 'setup_win.c') if windows else ('setup_unix.c',)) +
             (('host_menu_mac.m', 'setup_mac.m') if mac else ())]
     third = (sorted(glob.glob(os.path.join(paths.UNSHIELD, 'lib', '*.c'))) +
@@ -217,7 +217,7 @@ def exe(cross_windows=False):
     libs = ['-lm', '-static-libgcc', '-Wl,-Bstatic', '-lpthread', '-Wl,-Bdynamic'] if windows else ['-lm', '-lpthread']
     if windows:
         objs.append(windows_resources(cc, obj))
-        libs = ['-lole32', '-lshell32', '-luuid'] + libs
+        libs = ['-lole32', '-lshell32', '-luuid', '-lws2_32'] + libs
     if mac:
         libs += ['-framework', 'Cocoa', '-framework', 'IOKit']   # (IOKit: the CD's ioctls, setup_unix.c)
     run([cc, '-o', out] + cflags + os.environ.get('LDFLAGS', '').split() + objs + sdl_libs + libs)

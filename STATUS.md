@@ -160,6 +160,22 @@ message by message and clock event by clock event.
   function before and after), plus the suite.  Methods are still free
   functions taking the object; member functions and typed callbacks are
   next.
+* **Network play** (multiplayer over TCP/IP).  The original's networking
+  library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
+  in the host layer (src/host/host_net.c), speaking its wire protocol
+  (docs/xdaemon-protocol.md: TCP 4993 records, UDP 4994 LAN discovery, the
+  id handshake, host relaying).  Tested: the captured originals' records
+  through it (tests/xdaemon_test.c); ours against ours (LAN, and over
+  127.0.0.1 with the host quitting and the client taking over); ours
+  against the original under Wine on a LAN, either one hosting (join,
+  found a city, next turn, quit).  The game's network code had never run:
+  net_session_init (the join dialog) was a stub, now written; locals the
+  original's frame kept adjacent (net_send_message's buffers,
+  net_process_messages' arguments, four RLE streams) are structs; a packet
+  size computed from the original's absolute address; a 5-entry read of a
+  4-entry label array.  Not yet tried: Internet mode against the original,
+  chat, diplomacy and save/load in network games; more of that code has
+  never run.  Driving two games is by hand (tools/xdnet); not in the suite.
 * Coverage of the comparison: the scripts execute 2,520 of the 3,529
   compiled game functions (71%, 58% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never

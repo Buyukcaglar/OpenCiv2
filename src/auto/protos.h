@@ -2492,12 +2492,12 @@ void __thiscall net_game_list_add(NetSession *self,NetServerInfoMsg *msg); /* 00
 void __thiscall net_add_player(NetSession *self,NetPlayerNodeMsg *player_info); /* 0059b7fc */
 void __thiscall net_remove_player(NetSession *self,int player_id); /* 0059b96a */
 void __thiscall net_free_game_list(NetSession *self); /* 0059baf0 */
-void __cdecl net_on_broadcast_receive(int *msg,ushort size); /* 0059bb54 */
-void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size); /* 0059bc41 */
-void __cdecl net_on_new_client(i32 client_info,uint conn_id); /* 0059bfb5 */
+void __cdecl net_on_broadcast_receive(void *data,ushort size,long header); /* 0059bb54 */
+void __cdecl net_on_secure_receive(ushort conn_id,void *data,unsigned long size,short flags); /* 0059bc41 */
+void __cdecl net_on_new_client(ushort connected_count,ushort conn_id); /* 0059bfb5 */
 void __cdecl net_on_connected_to_server(short conn_id); /* 0059bfdb */
 void __cdecl net_on_connection_lost(ushort player_id); /* 0059c04b */
-void __cdecl net_on_oversized_message(i32 size); /* 0059c0a4 */
+void __cdecl net_on_oversized_message(unsigned long size); /* 0059c0a4 */
 void * __cdecl net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2, i32 arg3,i32 arg4,i32 arg5,i32 arg6, size_t payload_len); /* 0059c0e1 */
 void __cdecl net_reset_msg_counts(void); /* 0059c276 */
 void __cdecl net_reset_error_counts(void); /* 0059c2b8 */

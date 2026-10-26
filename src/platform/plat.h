@@ -211,6 +211,7 @@ extern HWND focus_wnd, capture_wnd, active_wnd;
 
 void msg_post(HWND h, UINT msg, WPARAM wp, LPARAM lp);
 int msg_pump_events(int wait);         /* host events -> input messages */
+void xd_poll(void);                    /* network play's events and callbacks (xdaemon.c) */
 void input_key(int vk, int down);
 void input_mouse_move(int x, int y);
 void input_mouse_button(int button, int down);

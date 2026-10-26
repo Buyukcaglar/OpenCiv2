@@ -6890,10 +6890,7 @@ i32 __cdecl diffeng_build_full_image(iptr out_buf)
   void *alloc;
   i32 checksum;
   int encoded;
-  void *src_copy;
-  int src_end;
-  i32 dst_begin;
-  int dst_end;
+  RleStream rle;  /* (the original's locals in a row) */
   i32 result;
   int section;
   int header[5];
@@ -6927,17 +6924,18 @@ i32 __cdecl diffeng_build_full_image(iptr out_buf)
       diffeng_buf_append((char *)buf,(iptr)&write_pos,capacity,(iptr)header,0x14);
       diffeng_buf_append((char *)buf,(iptr)&write_pos,capacity,(iptr)diffeng_section_table[section].data_ptr,header[0]);
     }
-    src_copy = operator_new(write_pos);
-    if (src_copy == (void *)0x0) {
+    rle.src = (u8 *)operator_new(write_pos);
+    if (rle.src == 0) {
       dbg_log((const char *)&str_failed_to_allocated_buffer_2_for_game_st);
       result = 0;
     }
     else {
-      src_end = write_pos + (int)src_copy;
-      crt_memcpy(src_copy,(const void *)buf,write_pos);
-      dst_begin = *(i32 *)out_buf;
-      dst_end = write_pos + *(int *)out_buf;
-      encoded = diffeng_rle_encode((RleStream *)&src_copy);
+      rle.src_end = rle.src + write_pos;
+      crt_memcpy(rle.src,(const void *)buf,write_pos);
+      rle.dst = *(u8 **)out_buf;
+      rle.dst_end = *(u8 **)out_buf + write_pos;
+      encoded = diffeng_rle_encode(&rle);
+      result = rle.out_len;
       if (encoded == 0) {
         error_code = 0xffffffff;
         result = error_code;
@@ -7014,10 +7012,7 @@ void __cdecl diffeng_apply_image(int *image_buf,char compressed)
   size_t src_size;
   int decoded;
   i32 checksum;
-  int src_begin;
-  int src_end;
-  void *dst_buf;
-  int dst_end;
+  RleStream rle;  /* (the original's locals in a row) */
   u32 saved_game_options;
   u16 saved_msg_options;
   int *header;
@@ -7041,23 +7036,23 @@ void __cdecl diffeng_apply_image(int *image_buf,char compressed)
     total_size = __msize((void *)*image_buf);
   }
   else {
-    src_begin = *image_buf;
+    rle.src = (u8 *)*image_buf;
     src_size = __msize((void *)*image_buf);
-    src_end = src_begin + src_size;
-    total_size = diffeng_rle_decoded_size((RleStream *)&src_begin);
-    dst_buf = operator_new(total_size);
-    if (dst_buf == (void *)0x0) {
+    rle.src_end = rle.src + src_size;
+    total_size = diffeng_rle_decoded_size(&rle);
+    rle.dst = (u8 *)operator_new(total_size);
+    if (rle.dst == 0) {
       dbg_log((const char *)&str_failed_to_allocate_buffer_2_for_game_sta);
       return;
     }
-    dst_end = (int)dst_buf + total_size;
-    decoded = diffeng_rle_decode((RleStream *)&src_begin);
+    rle.dst_end = rle.dst + total_size;
+    decoded = diffeng_rle_decode(&rle);
     if (decoded == 0) {
       dbg_log((const char *)&str_failed_to_rllbufferdecode_in_setgamestat);
       return;
     }
     operator_delete((void *)*image_buf);
-    *image_buf = (int)dst_buf;
+    *image_buf = (int)rle.dst;
     cursor = (int *)*image_buf;
   }
   offset = 0;

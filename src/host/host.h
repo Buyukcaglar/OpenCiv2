@@ -1,10 +1,10 @@
 /*
  * What the platform layer (src/platform) needs from the machine it runs on:
- * a window to show the desktop in, input, time, cursors, audio and message
- * boxes.  Plain C types only: the portable build compiles the game and the
+ * a window to show the desktop in, input, time, cursors, audio, message
+ * boxes and network sockets.  Plain C types only: the portable build compiles the game and the
  * platform layer to wasm32 and these become the module's imports (pointers
  * are then offsets into its memory); native builds call them directly.
- * src/host/host_sdl.c implements them with SDL2.
+ * src/host/host_sdl.c implements them with SDL2, host_net.c the sockets.
  */
 #ifndef CIV2_HOST_H
 #define CIV2_HOST_H
@@ -91,5 +91,31 @@ void HOST_API(host_audio_close)(int dev);
  * the buttons those keys choose (-1: none). */
 int HOST_API(host_message_box)(int icon, const char *title, const char *text, int nbuttons,
                                const char *const *labels, const int *ids, int enter, int escape);
+
+/* Network play (src/host/host_net.c): non-blocking IPv4 sockets; handles
+ * >= 0, -1 on failure.  Addresses in host byte order (a.b.c.d is
+ * a << 24 | b << 16 | c << 8 | d); 0xFFFFFFFF: broadcast. */
+/* This machine's address as others reach it, "a.b.c.d"; its length. */
+int HOST_API(host_net_local_addr)(char *buf, int size);
+/* UDP bound to port on every interface, broadcasts allowed, the port shared. */
+int HOST_API(host_net_udp_open)(int port);
+int HOST_API(host_net_udp_send)(int s, uint32_t ip, int port, const void *p, int n);
+/* One datagram's length (cut to n), -1 if none is waiting. */
+int HOST_API(host_net_udp_recv)(int s, void *p, int n, uint32_t *from_ip);
+/* TCP, bound to port unless it is 0. */
+int HOST_API(host_net_tcp_open)(int port);
+int HOST_API(host_net_tcp_listen)(int s, int backlog);
+/* A new connection's handle, -1 if none is pending. */
+int HOST_API(host_net_tcp_accept)(int s, uint32_t *peer_ip);
+/* Starts connecting: 0, -1 failed at once. */
+int HOST_API(host_net_tcp_connect)(int s, uint32_t ip, int port);
+/* 1 connected, 0 connecting, -1 failed. */
+int HOST_API(host_net_tcp_state)(int s);
+/* Bytes taken (maybe fewer than n), -1 would block, -2 dead. */
+int HOST_API(host_net_tcp_send)(int s, const void *p, int n);
+/* Bytes read, 0 closed by the peer, -1 nothing to read, -2 error. */
+int HOST_API(host_net_tcp_recv)(int s, void *p, int n);
+/* Graceful close (FIN, what is still coming dropped). */
+void HOST_API(host_net_close)(int s);
 
 #endif

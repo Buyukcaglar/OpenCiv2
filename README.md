@@ -125,8 +125,9 @@ Playable. Every function of the game that can run has source; the only parts not
 are the original's MSVC runtime (replaced by the platform's C library) and unreachable 16-bit
 leftovers. All 39 recorded scenarios match the original exactly, pixel for pixel. They run 72% of
 the game's functions (77% leaving out networking); sound, video and the High Council can't be
-compared under Wine, and network play is being built (compatible with the original's protocol,
-`docs/xdaemon-protocol.md`).
+compared under Wine. Network games over TCP/IP work, and are compatible with the original:
+OpenCiv2 and the original game have played each other on a LAN, either one hosting
+(`docs/xdaemon-protocol.md`); this is still being tested.
 
 The code is being modernized step by step, each step checked by the harness: it compiles as
 strict C++, keeps the original's data layout, has its classes as C++ class hierarchies and typed

@@ -283,6 +283,7 @@ WINBOOL WINAPI PeekMessageA(LPMSG msg, HWND h, UINT lo, UINT hi, UINT remove)
 {
     API_TRACE();
     msg_pump_events(0);
+    xd_poll();      /* (the network library's messages, as its windows got them) */
     if (take(msg, h, lo, hi, remove) || paint_message(msg, h, lo, hi)) {
         GetCursorPos(&msg->pt);
         return log_msg(msg, remove, lo, hi);

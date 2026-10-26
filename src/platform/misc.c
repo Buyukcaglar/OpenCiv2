@@ -1,10 +1,9 @@
 /*
- * Services the native build does not provide (DirectDraw, AVI video,
- * network play), message boxes, file dialogs, common controls.
+ * Services the native build does not provide (DirectDraw, AVI video),
+ * message boxes, file dialogs, common controls.
  */
 #include "plat.h"
 #include "../host/host.h"
-#include "xdaemon.h"
 
 /* ---- DirectDraw: not available; the game uses GDI ---- */
 
@@ -83,46 +82,4 @@ static WINBOOL file_dialog(OPENFILENAMEA *ofn, const char *kind)
 WINBOOL WINAPI GetOpenFileNameA(LPOPENFILENAMEA ofn) { API_TRACE(); return file_dialog(ofn, "Open"); }
 WINBOOL WINAPI GetSaveFileNameA(LPOPENFILENAMEA ofn) { API_TRACE(); return file_dialog(ofn, "Save"); }
 
-/* ---- XDaemon (network play): the library as it behaves with no network
- * game set up (the reference run's smeds.log: "Not an IGZ Game!! event = -3",
- * XDaemon v3.5.0). ---- */
-
-#define XD_OK(name, ...) int name(__VA_ARGS__) { return 0; }
-#define XD_FAIL(name, ...) int name(__VA_ARGS__) { return -1; }
-XD_FAIL(XD_ActivateServer, void)
-XD_OK(XD_CloseConnection, void)
-XD_OK(XD_FlushSendBuffer, int timeout_ms)
-XD_OK(XD_InFlushSendBuffer, void)
-XD_FAIL(XD_InitializeModem, int is_server)
-XD_FAIL(XD_InitializeSerial, int is_server)
-XD_FAIL(XD_InitializeSocketsIPXSPX, int version, int port, int port2, int is_server, int max_players, void *callback)
-XD_FAIL(XD_InitializeSocketsTCP, int version, int port, int port2, int is_server, int max_players, void *callback)
-XD_OK(XD_LobbySendMessage, int message)
-XD_FAIL(XD_OpenConnection, const char *address, int timeout_ms)
-XD_OK(XD_ResetLibrary, void)
-XD_FAIL(XD_SendBroadcastData, void *msg, unsigned long size, int flags)
-XD_FAIL(XD_SendSecureData, unsigned short player, void *msg, unsigned long size, int flags)
-XD_OK(XD_ServerCloseConnection, unsigned short conn_id)
-XD_OK(XD_SetBroadcastReceive, XD_BroadcastReceiveCB callback)
-XD_OK(XD_SetNewClientConnection, XD_NewClientCB callback)
-XD_OK(XD_SetOnClientConnectionToServer, XD_ConnectedCB callback)
-XD_OK(XD_SetOnConnectionLost, XD_ConnectionLostCB callback)
-XD_OK(XD_SetOversizedMessageCB, int max_size, XD_OversizedMessageCB callback)
-XD_OK(XD_SetSecureReceive, XD_SecureReceiveCB callback)
-XD_OK(XD_ShutdownModem, void)
-XD_OK(XD_ShutdownSockets, void)
-XD_OK(XD_ShutdownTEN, void)
-XD_OK(XD_StopConnections, void)
-
-char *XD_GetCurrentProtoAddr(int adapter, int protocol) { static char none[1]; (void)adapter; (void)protocol; return none; }
-
-int XD_GetXDaemonVersion(int *major, int *minor, int *patch)
-{
-    API_TRACE();
-    *major = 3;
-    *minor = 5;
-    *patch = 0;
-    return 0;
-}
-
-int XD_LaunchedByLobby(void *hwnd, LobbyLaunchInfo *info) { (void)hwnd; (void)info; return -3; }
+/* XDaemon (network play): xdaemon.c */

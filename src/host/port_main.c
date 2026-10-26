@@ -145,6 +145,42 @@ u32 HOST(message_box)(Host *h, u32 icon, u32 title, u32 text, u32 n, u32 labels,
     return (u32)host_message_box((int)icon, MEM(title), MEM(text), (int)n, l, id, (int)enter, (int)escape);
 }
 
+/* Network sockets (host_net.c) */
+u32 HOST(net_local_addr)(Host *h, u32 buf, u32 size) { (void)h; return (u32)host_net_local_addr(MEM(buf), (int)size); }
+u32 HOST(net_udp_open)(Host *h, u32 port) { (void)h; return (u32)host_net_udp_open((int)port); }
+u32 HOST(net_udp_send)(Host *h, u32 s, u32 ip, u32 port, u32 p, u32 n)
+{
+    (void)h;
+    return (u32)host_net_udp_send((int)s, ip, (int)port, MEM(p), (int)n);
+}
+u32 HOST(net_udp_recv)(Host *h, u32 s, u32 p, u32 n, u32 from)
+{
+    uint32_t ip = 0;
+    int r;
+    (void)h;
+    r = host_net_udp_recv((int)s, MEM(p), (int)n, &ip);
+    if (r >= 0 && from)
+        PUT32(from, ip);
+    return (u32)r;
+}
+u32 HOST(net_tcp_open)(Host *h, u32 port) { (void)h; return (u32)host_net_tcp_open((int)port); }
+u32 HOST(net_tcp_listen)(Host *h, u32 s, u32 backlog) { (void)h; return (u32)host_net_tcp_listen((int)s, (int)backlog); }
+u32 HOST(net_tcp_accept)(Host *h, u32 s, u32 peer)
+{
+    uint32_t ip = 0;
+    int r;
+    (void)h;
+    r = host_net_tcp_accept((int)s, &ip);
+    if (r >= 0 && peer)
+        PUT32(peer, ip);
+    return (u32)r;
+}
+u32 HOST(net_tcp_connect)(Host *h, u32 s, u32 ip, u32 port) { (void)h; return (u32)host_net_tcp_connect((int)s, ip, (int)port); }
+u32 HOST(net_tcp_state)(Host *h, u32 s) { (void)h; return (u32)host_net_tcp_state((int)s); }
+u32 HOST(net_tcp_send)(Host *h, u32 s, u32 p, u32 n) { (void)h; return (u32)host_net_tcp_send((int)s, MEM(p), (int)n); }
+u32 HOST(net_tcp_recv)(Host *h, u32 s, u32 p, u32 n) { (void)h; return (u32)host_net_tcp_recv((int)s, MEM(p), (int)n); }
+void HOST(net_close)(Host *h, u32 s) { (void)h; host_net_close((int)s); }
+
 int main(int argc, char **argv)
 {
     static w2c_civ2 module;

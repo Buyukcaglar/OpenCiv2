@@ -812,7 +812,8 @@ typedef struct NetGamelistView {
     u8 pad_108[32];
     i32 info_lines[9];
     DialogOption *first_option_value;
-    u8 pad_150[36];
+    char button_label[32];          /* 0x150 the list's button, while it is open */
+    i8 *saved_button_label;         /* 0x170 dialog_button_labels[0] before */
     u32 refresh_timer;
 } NetGamelistView;
 static_assert(sizeof(NetGamelistView) == 0x178, "");

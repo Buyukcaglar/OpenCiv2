@@ -296,7 +296,7 @@ def main():
         # The Ogg Vorbis decoder (stb_vorbis, public domain / MIT): the music.
         sources.append(os.path.join(ROOT, 'src', 'third_party', 'stb_vorbis', 'stb_vorbis.c'))
     if args.target.startswith('linux'):
-        sources.append(os.path.join(ROOT, 'src', 'host', 'host_sdl.c'))
+        sources += [os.path.join(ROOT, 'src', 'host', f) for f in ('host_sdl.c', 'host_net.c')]
     headers = max(os.path.getmtime(h) for h in glob.glob(os.path.join(ROOT, 'src', '*', '*.h')))
     jobs = []
     tflags = t.get('cflags', [])
