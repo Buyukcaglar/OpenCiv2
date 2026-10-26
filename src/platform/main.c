@@ -21,7 +21,7 @@ void resources_init(void);
 void sound_poll(void);
 
 static int window_open;
-static uint64_t last_present;
+static uint64_t last_present, present_cost;
 
 void plat_present(void)
 {
@@ -29,12 +29,16 @@ void plat_present(void)
     if (!window_open)
         return;
     now = host_time_us();
-    if (now - last_present < 15000)
+    /* at most ~66 a second, and no more than a third of the time: where
+       presenting is slow (a software renderer) the game, which retrieves
+       messages between the tiles it draws, would spend its time here */
+    if (now - last_present < 15000 || now - last_present < 2 * present_cost)
         return;
     last_present = now;
     if (!plat_overlay)
         plat_compose();
     host_present(screen->bits, screen->stride);
+    present_cost = host_time_us() - now;
 }
 
 /* Closing the window during a game: asked first (Cancel the default:

@@ -126,8 +126,9 @@ are the original's MSVC runtime (replaced by the platform's C library) and unrea
 leftovers. All 39 recorded scenarios match the original exactly, pixel for pixel. They run 72% of
 the game's functions (77% leaving out networking); sound, video and the High Council can't be
 compared under Wine. Network games over TCP/IP work, and are compatible with the original:
-OpenCiv2 and the original game have played each other on a LAN, either one hosting
-(`docs/xdaemon-protocol.md`); this is still being tested.
+OpenCiv2 and the original game play each other on a LAN or over the Internet, either one
+hosting, up to three players tested (`docs/xdaemon-protocol.md`; `tools/xdnet/nettest.py`
+plays two or three games against each other automatically).
 
 The code is being modernized step by step, each step checked by the harness: it compiles as
 strict C++, keeps the original's data layout, has its classes as C++ class hierarchies and typed

@@ -577,6 +577,67 @@ Notes:
 - Some dialogs show black under xdotool driving (difficulty, aggression).
   Keys still work.
 
+### 11.1 The automated two-game test (tools/xdnet/nettest.py)
+
+`tools/xdnet/nettest.py` does the above by itself: two `civ2-dev`
+containers (`xdh` hosting, `xdc` joining; the originals get their own Wine
+volumes, civ2-wine2 and civ2-wine), each game on its own Xvfb, driven with
+xdotool from the docker host:
+
+```sh
+cd /home/labaron/code/civ2
+tools/xdnet/nettest.py ours-ours                          # host-client: ours or orig
+tools/xdnet/nettest.py ours-orig --exe civ2-linux32asan   # our side under ASan
+tools/xdnet/nettest.py orig-ours --inet                   # Internet mode, 127.0.0.1
+tools/xdnet/nettest.py ours-ours --diplo --load --turns 2 # chat, parley, save + load
+```
+
+- Steps: start menu, host a LAN (or Internet) game with 3 civilizations,
+  join it, start, the default civilizations, N turns (1: move the settler;
+  2: found a city, close the city window; then: sentry, end the turn), quit
+  (client first, then host). `--chat`: Chat with Kings both ways
+  (the host ticks "All Humans Can Chat From Start"); `--diplo`: Foreign
+  Minister, Send Emissary, audience granted, peace treaty offered and
+  accepted; `--save`/`--load`: the host saves in its turn 2, then after
+  quitting loads that game ("Load a Saved Multiplayer Game"), the client
+  joins again and N more turns are played; `--rejoin`: the host opens the
+  game ("Open Game"), after the turns the client quits, starts again and
+  joins the game in progress ("Hot Join"), one more turn each; `--third
+  ours|orig`: a third player (container `xdc2`) joins after the client, so
+  the host relays between two clients. `--keep` leaves the containers
+  (drive them by hand with `docker exec -e DISPLAY=:7 xdh xdotool ...`),
+  `--stop-after lobby|join|civ|turns` stops there, `--gdb host|client`
+  runs our game under gdb (a backtrace on a crash or a fatal error),
+  `--exe-host`/`--exe-client` pick our build per side (two ASan games need
+  about 700 MB), `--sniff` also captures the packets (records.txt).
+- Waits are on conditions: the XD logs (a message type sent or received,
+  NM_START_WHOSE_TURN for a civ, the client's NM_PLAYER_INFO), the screen
+  having stopped changing, and which dialogs are open (the original: its
+  top-level windows' names, xdotool; ours: CreateWindowEx/ShowWindow in
+  its log). Each dialog gets Return (a city window Escape); a turn is
+  played once its "It is our turn" dialog has gone.
+- Checks, in `run/xd/cap/NAME/result.txt` (exit status 0 when all pass):
+  every logged game message well formed (magic, size, and the difference
+  engine's records and RLE streams: `tools/xdnet/xdmsgs.py LOG --check`);
+  what each side sent over TCP the other received, in order and byte for
+  byte (the host's last messages after the client left excepted); both
+  reached turn N (NM_START_WHOSE_TURN for civ 0); the expected message
+  types in order (client: PLAYER_LIST_NODE, LOCK_NATION, PLAYER_INFO,
+  CREATE_CITY, TURN_FINISHED, QUIT_REQUEST; host: PLAYER_LIST ...
+  START_WHOSE_TURN, CITY_CREATED), NM_CHAT and the parley messages when
+  asked for; no crash (both alive until they quit, no ASan report, no
+  Wine "Unhandled", no fatal error in our log). With three players the
+  byte-for-byte stream check becomes: every message a game received was
+  sent by another, and every message a client sent to everyone reached
+  both others.
+- A run takes 8 to 15 minutes (world building is in real time); the
+  logs, `msgs-*.txt` (`xdmsgs.py` output), and a screenshot at each step
+  (`shots/`) stay in the run's directory. Our XD log (CIV2_XDLOG) has the
+  payloads in full, as the proxy's.
+- The original under Wine runs in a 640x480 window, so the clicks of
+  `--chat`/`--diplo` (made at our 1024x768 layout) are made only on our
+  side; against the original the test covers the audience and the offer.
+
 ## 12. Proposed design for OpenCiv2's implementation
 
 The goal: an XD_* implementation that speaks this protocol byte for byte,
@@ -656,8 +717,11 @@ High confidence, both static and observed:
 Static only:
 
 - How the host relays a client's dst=0xFF and dst=client messages to
-  *other* clients, including the rewrite to src = 0 (needs a 3-player
-  capture).
+  *other* clients, including the rewrite to src = 0.  At the game level it
+  works both ways round (§11.1 `--third`: an original host relaying
+  between two of ours, ours between an original and ours: every client's
+  messages to everyone reached both others); the record tags of a
+  3-player capture are still to be compared with ours.
 - The oversize path, ping (unused) and the XDPING oddity.
 - Behaviour when the connection table is full.
 

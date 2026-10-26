@@ -164,18 +164,30 @@ message by message and clock event by clock event.
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c), speaking its wire protocol
   (docs/xdaemon-protocol.md: TCP 4993 records, UDP 4994 LAN discovery, the
-  id handshake, host relaying).  Tested: the captured originals' records
-  through it (tests/xdaemon_test.c); ours against ours (LAN, and over
-  127.0.0.1 with the host quitting and the client taking over); ours
-  against the original under Wine on a LAN, either one hosting (join,
-  found a city, next turn, quit).  The game's network code had never run:
-  net_session_init (the join dialog) was a stub, now written; locals the
+  id handshake, host relaying).  `tools/xdnet/nettest.py` plays two (or
+  three) games against each other in containers and checks the logs
+  (docs/xdaemon-protocol.md §11.1).  Passing, our side under ASan: ours vs
+  ours, ours vs the original and the original vs ours, on a LAN and in
+  Internet mode (127.0.0.1): join, several turns (a unit moved, cities
+  founded), quit; ours vs ours: chat, the parley (audience, peace treaty
+  offered and accepted); against the original: chat to it, its audience
+  granted, a treaty offered to it; save, then load ("Load a Saved
+  Multiplayer Game") with the original joining; a player leaving and
+  joining the game in progress; three players with either one hosting
+  (the host relaying between an original and ours).  The game's network
+  code needed: net_session_init (the join dialog) written; locals the
   original's frame kept adjacent (net_send_message's buffers,
-  net_process_messages' arguments, four RLE streams) are structs; a packet
-  size computed from the original's absolute address; a 5-entry read of a
-  4-entry label array.  Not yet tried: Internet mode against the original,
-  chat, diplomacy and save/load in network games; more of that code has
-  never run.  Driving two games is by hand (tools/xdnet); not in the suite.
+  net_process_messages' arguments, four RLE streams, the parley's radio
+  labels: garbage treaty names) made structs or arrays; a game-list text
+  buffer 21 bytes instead of 256; the difference engine's RLE decoder
+  reading a run's byte as a 16-bit word and its encoder reading past its
+  input; a size from the original's absolute address; a 5-entry read of a
+  4-entry label array.  In normal play WM_TIMER is Windows' (one pending
+  per timer, no backlog: the unit blink, which retrieves messages while it
+  redraws, nested without end in a slow build) and presenting the screen
+  takes at most a third of the time.  Not done: the original's parley
+  window driven by the test (its 640x480 layout), barter, a game of many
+  turns.
 * Coverage of the comparison: the scripts execute 2,520 of the 3,529
   compiled game functions (71%, 58% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never

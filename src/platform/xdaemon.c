@@ -17,8 +17,8 @@
  * PeekMessage (message.c) and XD_FlushSendBuffer.  Nothing is opened
  * until the game starts a network game.
  *
- * CIV2_XDLOG=FILE: a log of the calls and callbacks (as the logging proxy
- * tools/xdnet/xdlog.c writes for the original).  CIV2_NET_ADDR=a.b.c.d:
+ * CIV2_XDLOG=FILE: a log of the calls and callbacks, payloads in full (as the
+ * logging proxy tools/xdnet/xdlog.c writes for the original).  CIV2_NET_ADDR=a.b.c.d:
  * the address XD_GetCurrentProtoAddr gives (default: host_net_local_addr).
  */
 #include "plat.h"
@@ -313,7 +313,7 @@ static void connection_lost(Stream *s)
 static void deliver(uint32_t tag, unsigned char *payload, uint32_t len)
 {
     xlog("CB SecureReceive src=%u len=%u tag=%08x", (unsigned)(tag >> 24), (unsigned)len, (unsigned)tag);
-    xlog_hex("rx", payload, len < 64 ? len : 64);
+    xlog_hex("rx", payload, len);
     if (cb_secure)
         cb_secure((unsigned short)(tag >> 24), payload, len, (short)tag);
 }
@@ -486,7 +486,7 @@ static void poll_broadcast(void)
             return;
         memcpy(&header, buf, 4);
         xlog("CB BroadcastReceive size=%d x=%d", n - 4, (int)header);
-        xlog_hex("rx", buf + 4, n > 4 ? (uint32_t)(n - 4 < 64 ? n - 4 : 64) : 0);
+        xlog_hex("rx", buf + 4, n > 4 ? (uint32_t)(n - 4) : 0);
         if (cb_broadcast)
             cb_broadcast(buf + 4, (unsigned short)(n - 4), header);
     }
@@ -821,7 +821,7 @@ int XD_SendSecureData(unsigned short to, void *data, unsigned long len, short fl
     if (!server)
         return -5;
     xlog("XD_SendSecureData(to=%u, size=%lu, flags=%d)", to, len, flags);
-    xlog_hex("tx", data, len < 64 ? (uint32_t)len : 64);
+    xlog_hex("tx", data, (uint32_t)len);
     if (to == 0xFF && is_host) {
         int ok = 1;
         unsigned i;
@@ -873,7 +873,7 @@ int XD_SendBroadcastData(void *data, unsigned long len, long header)
         memcpy(buf + 4, data, n);
     r = host_net_udp_send(udp, 0xFFFFFFFFu, broadcast_port, buf, (int)n + 4);
     xlog("XD_SendBroadcastData(size=%lu, flags=%ld) = %d", len, header, r);
-    xlog_hex("tx", data, n < 64 ? n : 64);
+    xlog_hex("tx", data, n);
     return r;
 }
 

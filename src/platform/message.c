@@ -652,6 +652,17 @@ static UINT next_mm_id = 1;
 static int in_timers;
 unsigned long long vclock_us;          /* the clock, in microseconds since start */
 
+static int timer_pending(HWND h, UINT_PTR id)
+{
+    int i;
+    for (i = 0; i < qlen; i++) {
+        const MSG *m = &queue[(qhead + i) % QMAX];
+        if (m->message == WM_TIMER && m->hwnd == h && m->wParam == id)
+            return 1;
+    }
+    return 0;
+}
+
 void timers_fire(void)
 {
     int rounds;
@@ -667,10 +678,21 @@ void timers_fire(void)
                 t = &timers[i];
         if (!t)
             break;
-        if (t->periodic)
-            t->due_us += (unsigned long long)(t->period ? t->period : 1) * 1000;
-        else
+        if (!t->periodic)
             t->used = 0;
+        else if (!plat_replay && !t->is_mm) {
+            /* Normal play: Windows' WM_TIMER.  At most one is pending per
+               timer and the next is a period after this one (missed ticks
+               are dropped): a handler slower than its period that pumps
+               messages (the unit blink's map redraw, in a network game)
+               would otherwise find the backlog's next WM_TIMER at once and
+               nest without end. */
+            t->due_us = vclock_us + (unsigned long long)(t->period ? t->period : 1) * 1000;
+            if (timer_pending(t->hwnd, t->wm_id))
+                continue;
+        }
+        else
+            t->due_us += (unsigned long long)(t->period ? t->period : 1) * 1000;
         CLK("clk timer %s %u @%llu\n", t->is_mm ? "mm" : "wm", t->is_mm ? t->id : (unsigned)t->wm_id, (unsigned long long)vclock_us);
         if (t->is_mm)
             t->cb(t->id, 0, t->user, 0, 0);

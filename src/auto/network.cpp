@@ -870,8 +870,7 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
   uint civ_bits;
   int civ_count;
   int bit;
-  char text[21];
-  i8 text_cutoff;
+  char text[256];
   NetGameInfo *found_game;
   
   found_game = net_session_block.net_found_games;
@@ -916,7 +915,7 @@ i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
       }
       text_len = _strlen(text);
       if (0x19 < text_len) {
-        text_cutoff = 0;
+        text[21] = 0;           /* a long scenario name cut */
       }
       str_append_space((iptr)text);
       str_append_lparen((iptr)text);
@@ -11516,20 +11515,13 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
   iptr city_header_label;
   int city_btn_height;
   i32 city_list_mode;
-  i32 offer_labels;
-  i32 offer_label1;
-  i32 offer_label2;
-  i32 offer_label3;
-  i32 offer_label4;
-  i32 offer_label5;
-  i32 offer_label6;
+  i32 offer_labels[7];   /* (the original's locals in a row: the radio group's labels) */
   iptr civlist_title_idx;
   iptr civlist_titles[4];
   uptr map_title_idx;
   iptr map_labels[4];
   i32 map_label_last;
-  i32 proposal_labels;
-  i32 proposal_label2;
+  i32 proposal_labels[2];   /* (the original's locals in a row: the radio group's labels) */
   tagRECT btn_rect;
   int btn_area_bottom;
   int btn_width;
@@ -11538,29 +11530,10 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
   i32 unit_list_mode;
   char gold_text[32];
   i32 tech_list_pick_mode;
-  i32 gift_labels;
-  i32 gift_label1;
-  i32 gift_label2;
-  i32 gift_label3;
-  i32 gift_label4;
-  i32 treaty_labels;
-  i32 treaty_label1;
-  i32 treaty_label2;
-  i32 treaty_label3;
-  i32 exch_labels_r;
-  i32 exch_label_r1;
-  i32 exch_label_r2;
-  i32 exch_label_r3;
-  i32 exch_label_r4;
-  i32 exch_label_r5;
-  i32 exch_label_r6;
-  i32 exch_labels_l;
-  i32 exch_label_l1;
-  i32 exch_label_l2;
-  i32 exch_label_l3;
-  i32 exch_label_l4;
-  i32 exch_label_l5;
-  i32 exch_label_l6;
+  i32 gift_labels[5];   /* (the original's locals in a row: the radio group's labels) */
+  i32 treaty_labels[4];   /* (the original's locals in a row: the radio group's labels) */
+  i32 exch_labels_r[7];   /* (the original's locals in a row: the radio group's labels) */
+  i32 exch_labels_l[7];   /* (the original's locals in a row: the radio group's labels) */
   uptr left_col_x;
   uint shown_civ_count;
   int civ;
@@ -12015,13 +11988,13 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     flag_ptr[3] = '\0';
     break;
   case 3:
-    exch_labels_l = (i32)(label_string(label_string_ids[0x2eb]));
-    exch_label_l1 = (i32)(label_string(label_string_ids[0x2ec]));
-    exch_label_l2 = (i32)(label_string(label_string_ids[0x2ed]));
-    exch_label_l3 = (i32)(label_string(label_string_ids[750]));
-    exch_label_l4 = (i32)(label_string(label_string_ids[0x2ef]));
-    exch_label_l5 = (i32)(label_string(label_string_ids[0x2f0]));
-    exch_label_l6 = (i32)(label_string(label_string_ids[0x342]));
+    exch_labels_l[0] = (i32)(label_string(label_string_ids[0x2eb]));
+    exch_labels_l[1] = (i32)(label_string(label_string_ids[0x2ec]));
+    exch_labels_l[2] = (i32)(label_string(label_string_ids[0x2ed]));
+    exch_labels_l[3] = (i32)(label_string(label_string_ids[750]));
+    exch_labels_l[4] = (i32)(label_string(label_string_ids[0x2ef]));
+    exch_labels_l[5] = (i32)(label_string(label_string_ids[0x2f0]));
+    exch_labels_l[6] = (i32)(label_string(label_string_ids[0x342]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     tmp = self->panel_top + panel_margin_y;
@@ -12072,7 +12045,7 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     }
     radiogrp_create
               ((RadioGroup *)self->side_radios[side],(iptr)exch_parent_l,0x3f4,
-               (iptr)&ctrl_rect,1,7,(iptr)&exch_labels_l);
+               (iptr)&ctrl_rect,1,7,(iptr)exch_labels_l);
     if (self->exchange_kind[1] == 0) {
       radiogrp_disable_item((RadioGroup *)self->side_radios[side],0);
     }
@@ -12092,13 +12065,13 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     flag_ptr[3] = '\0';
     break;
   case 4:
-    exch_labels_r = (i32)(label_string(label_string_ids[0x2eb]));
-    exch_label_r1 = (i32)(label_string(label_string_ids[0x2ec]));
-    exch_label_r2 = (i32)(label_string(label_string_ids[0x2ed]));
-    exch_label_r3 = (i32)(label_string(label_string_ids[750]));
-    exch_label_r4 = (i32)(label_string(label_string_ids[0x2ef]));
-    exch_label_r5 = (i32)(label_string(label_string_ids[0x2f1]));
-    exch_label_r6 = (i32)(label_string(label_string_ids[0x342]));
+    exch_labels_r[0] = (i32)(label_string(label_string_ids[0x2eb]));
+    exch_labels_r[1] = (i32)(label_string(label_string_ids[0x2ec]));
+    exch_labels_r[2] = (i32)(label_string(label_string_ids[0x2ed]));
+    exch_labels_r[3] = (i32)(label_string(label_string_ids[750]));
+    exch_labels_r[4] = (i32)(label_string(label_string_ids[0x2ef]));
+    exch_labels_r[5] = (i32)(label_string(label_string_ids[0x2f1]));
+    exch_labels_r[6] = (i32)(label_string(label_string_ids[0x342]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     tmp = self->panel_top + panel_margin_y;
@@ -12149,7 +12122,7 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     }
     radiogrp_create
               ((RadioGroup *)self->side_radios[side],(iptr)exch_parent_r,0x3f5,
-               (iptr)&ctrl_rect,1,7,(iptr)&exch_labels_r);
+               (iptr)&ctrl_rect,1,7,(iptr)exch_labels_r);
     if (self->exchange_kind[0] == 0) {
       radiogrp_disable_item((RadioGroup *)self->side_radios[side],0);
     }
@@ -12169,10 +12142,10 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     flag_ptr[3] = '\0';
     break;
   case 5:
-    treaty_labels = (i32)(label_string(label_string_ids[0x2f3]));
-    treaty_label1 = (i32)(label_string(label_string_ids[0x2f4]));
-    treaty_label2 = (i32)(label_string(label_string_ids[0x2f5]));
-    treaty_label3 = (i32)(label_string(label_string_ids[0x2f6]));
+    treaty_labels[0] = (i32)(label_string(label_string_ids[0x2f3]));
+    treaty_labels[1] = (i32)(label_string(label_string_ids[0x2f4]));
+    treaty_labels[2] = (i32)(label_string(label_string_ids[0x2f5]));
+    treaty_labels[3] = (i32)(label_string(label_string_ids[0x2f6]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     cur_y = self->panel_top + panel_margin_y;
@@ -12288,7 +12261,7 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     }
     radiogrp_create
               ((RadioGroup *)self->side_radios[side],(iptr)treaty_parent,0x3f6,
-               (iptr)&ctrl_rect,1,(is_demand_side == '\0' && is_exchange_side == '\0') + 3,(iptr)&treaty_labels);
+               (iptr)&ctrl_rect,1,(is_demand_side == '\0' && is_exchange_side == '\0') + 3,(iptr)treaty_labels);
     if (((*(byte *)&civs[human_civ[0]].treaties[self->other_civ] & 2) != 0) &&
        (radiogrp_disable_item((RadioGroup *)self->side_radios[side],0),
        self->treaty_kind == 0)) {
@@ -12429,11 +12402,11 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     flag_ptr[3] = '\0';
     break;
   case 7:
-    gift_labels = (i32)(label_string(label_string_ids[0x2fd]));
-    gift_label1 = (i32)(label_string(label_string_ids[0x2fe]));
-    gift_label2 = (i32)(label_string(label_string_ids[0x2ff]));
-    gift_label3 = (i32)(label_string(label_string_ids[0x300]));
-    gift_label4 = (i32)(label_string(label_string_ids[0x301]));
+    gift_labels[0] = (i32)(label_string(label_string_ids[0x2fd]));
+    gift_labels[1] = (i32)(label_string(label_string_ids[0x2fe]));
+    gift_labels[2] = (i32)(label_string(label_string_ids[0x2ff]));
+    gift_labels[3] = (i32)(label_string(label_string_ids[0x300]));
+    gift_labels[4] = (i32)(label_string(label_string_ids[0x301]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     if (self->large_layout == 0) {
@@ -12504,7 +12477,7 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     }
     radiogrp_create
               ((RadioGroup *)self->side_radios[side],(iptr)gift_parent,0x3f7,
-               (iptr)&ctrl_rect,1,5,(iptr)&gift_labels);
+               (iptr)&ctrl_rect,1,5,(iptr)gift_labels);
     radiogrp_set_selected
               ((RadioGroup *)self->side_radios[side],self->gift_kind);
     radiogrp_set_dblclick_callback((RadioGroup *)self->side_radios[side],(RadioNotifyFn)parley_on_radio_dblclick)
@@ -13051,8 +13024,8 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     cur_y = tmp;
     label = (iptr)(label_string(label_string_ids[0x30c]));
     surface_draw_text(self,(iptr)proposal_title_font,(const char *)label,text_x,tmp,text_align);
-    proposal_labels = (i32)(label_string(label_string_ids[0x30d]));
-    proposal_label2 = (i32)(label_string(label_string_ids[0x30e]));
+    proposal_labels[0] = (i32)(label_string(label_string_ids[0x30d]));
+    proposal_labels[1] = (i32)(label_string(label_string_ids[0x30e]));
     if (self->large_layout == 0) {
       proposal_radio_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
     }
@@ -13096,7 +13069,7 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     }
     radiogrp_create
               ((RadioGroup *)self->side_radios[side],(iptr)proposal_parent,0x40c,
-               (iptr)&ctrl_rect,1,2,(iptr)&proposal_labels);
+               (iptr)&ctrl_rect,1,2,(iptr)proposal_labels);
     radiogrp_set_selected
               ((RadioGroup *)self->side_radios[side],self->proposal_kind);
     radiogrp_set_dblclick_callback((RadioGroup *)self->side_radios[side],(RadioNotifyFn)parley_on_radio_dblclick)
@@ -13351,13 +13324,13 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     flag_ptr[3] = '\0';
     break;
   case 0xf:
-    offer_labels = (i32)(label_string(label_string_ids[0x2eb]));
-    offer_label1 = (i32)(label_string(label_string_ids[0x2ec]));
-    offer_label2 = (i32)(label_string(label_string_ids[0x2ed]));
-    offer_label3 = (i32)(label_string(label_string_ids[750]));
-    offer_label4 = (i32)(label_string(label_string_ids[0x2ef]));
-    offer_label5 = (i32)(label_string(label_string_ids[0x2f1]));
-    offer_label6 = (i32)(label_string(label_string_ids[0x342]));
+    offer_labels[0] = (i32)(label_string(label_string_ids[0x2eb]));
+    offer_labels[1] = (i32)(label_string(label_string_ids[0x2ec]));
+    offer_labels[2] = (i32)(label_string(label_string_ids[0x2ed]));
+    offer_labels[3] = (i32)(label_string(label_string_ids[750]));
+    offer_labels[4] = (i32)(label_string(label_string_ids[0x2ef]));
+    offer_labels[5] = (i32)(label_string(label_string_ids[0x2f1]));
+    offer_labels[6] = (i32)(label_string(label_string_ids[0x342]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     if (self->large_layout == 0) {
@@ -13440,7 +13413,7 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     }
     radiogrp_create
               ((RadioGroup *)self->side_radios[side],(iptr)offer_parent,0x41f,
-               (iptr)&ctrl_rect,1,7,(iptr)&offer_labels);
+               (iptr)&ctrl_rect,1,7,(iptr)offer_labels);
     radiogrp_set_selected
               ((RadioGroup *)self->side_radios[side],self->demand_kind);
     radiogrp_set_dblclick_callback((RadioGroup *)self->side_radios[side],(RadioNotifyFn)parley_on_radio_dblclick)

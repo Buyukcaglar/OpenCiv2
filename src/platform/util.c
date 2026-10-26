@@ -3,6 +3,9 @@
  */
 #include "plat.h"
 #include "../host/host.h"
+#ifdef __SANITIZE_ADDRESS__
+#include <sanitizer/common_interface_defs.h>     /* plat_fatal: where from */
+#endif
 
 /* ---- handles: small integers, (type << 16) | slot ---- */
 
@@ -258,6 +261,9 @@ void plat_fatal(const char *fmt, ...)
     va_end(ap);
     plat_log("fatal: %s\n", buf);
     fprintf(stderr, "civ2: %s\n", buf);
+#ifdef __SANITIZE_ADDRESS__
+    __sanitizer_print_stack_trace();
+#endif
     if (!getenv("CIV2_SCRIPT")) {
         static const char *const ok[1] = {"OK"};
         static const int id[1] = {1};

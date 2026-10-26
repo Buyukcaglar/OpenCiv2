@@ -7218,7 +7218,7 @@ i32 __cdecl diffeng_rle_decode(RleStream *stream)
       payload = src + 1;
       if (run_len < 0x7fff) {
         src = (ushort *)((int)src + 3);
-        _memset(dst,(int)(short)(ushort)(byte)*payload,(uint)run_len);
+        _memset(dst,(int)*(byte *)payload,(uint)run_len);   /* (the run's byte: one byte, not a ushort) */
       }
       else {
         run_len += 0x8000;
@@ -7285,7 +7285,9 @@ i32 __cdecl diffeng_rle_encode(RleStream *stream)
       }
       run_start = scan;
     }
-    for (; (scan < (char *)stream->src_end && (scan[1] != *scan));
+    /* (the original compared the last byte with the one after the input;
+       the end ends the literal here instead: the same decoded bytes) */
+    for (; (scan < (char *)stream->src_end && (scan + 1 == (char *)stream->src_end || scan[1] != *scan));
         scan = scan + 1) {
     }
     run_len = (int)scan - (int)run_start;
