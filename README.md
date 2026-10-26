@@ -43,44 +43,17 @@ and the same random numbers, call for call, on recorded games.
 
 ## Download and play
 
-The game files are not included: you need your own copy of Civilization II Multiplayer
-Gold Edition, installed, on its CD, or as a disc image of the CD (a `.cue` file with its
-`.bin`). Each download, built from the latest commit, is one program that finds the game
-where it is usually installed, or its CD (or a copy of it) in a drive, or a disc image
-(in Downloads, on the Desktop, in the home folder or a `Civ2*` folder there, on a mounted
-volume; on Windows also beside the program), else asks where it is, and copies it into a
-`GameData` folder (from the CD or the image: unpacked from the installer's cabinet, with
-the videos); afterwards it starts the game directly. `--setup [FOLDER]` sets the game up
-again (from FOLDER: the installed game, the CD, or a disc image's `.cue` or the folder it
-is in); `FOLDER` plays the game in FOLDER where it is.
+You need your own copy of Civilization II Multiplayer Gold Edition: installed, on CD, or a
+disc image (`.cue`/`.bin`). Download the program for your system:
 
-Music: the CD's music is its audio tracks. The set-up takes them from a disc image (found
-as above, whatever the game is set up from), else from the CD in its drive (also when the
-game is set up from an installed copy), encoding them as Ogg Vorbis into `GameData/Music`
-(about 20 MB; a minute or so from an image, longer from a drive); a game set up without
-music gets it with `--setup IMAGE.cue` or `--setup CD-FOLDER`. If the drive cannot be read
-(no access to it: on Linux, being in the `cdrom` or `optical` group; or a drive that will
-not read audio), the game is set up without music and the set-up says so. Reading a real
-drive is untested so far on all three systems (it is tested with a simulated drive);
-an installed game alone has no music (`tools/extract_disc.py` also writes it, as WAV
-files, from a disc image).
+- **Windows:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip): unzip and run `OpenCiv2.exe`.
+- **macOS** 11+: [OpenCiv2-macos.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-macos.zip): unzip and open `OpenCiv2.app`. The first time macOS
+  blocks it: System Settings > Privacy & Security > "Open Anyway".
+- **Linux** x86-64: [OpenCiv2-linux-x86_64.tar.gz](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-linux-x86_64.tar.gz): unpack and run `OpenCiv2/OpenCiv2`.
 
-- **Windows:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip):
-  `OpenCiv2.exe`. Put it in any folder and double-click it; `GameData` is beside it. It runs
-  full screen with the menu bar shown (`CIV2_WINDOW=1`: in a window).
-- **macOS** (11 or later, Apple silicon or Intel):
-  [OpenCiv2-macos.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-macos.zip):
-  `OpenCiv2.app`. It is not signed by a registered Apple developer, so macOS refuses it the
-  first time: open System Settings > Privacy & Security and click "Open Anyway". `GameData`
-  is in `~/Library/Application Support/OpenCiv2`; the game is also found in a Wine or
-  CrossOver drive C:.
-- **Linux** (x86-64):
-  [OpenCiv2-linux-x86_64.tar.gz](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-linux-x86_64.tar.gz):
-  unpack it and run `OpenCiv2/OpenCiv2` (SDL2 is built in). `GameData` is in
-  `~/.local/share/OpenCiv2`; the game is also found in Wine's drive C:, and asked for with
-  `zenity` or `kdialog` where there is one.
-
-Third-party code in the programs, and its licences: [THIRD-PARTY.txt](THIRD-PARTY.txt).
+The first time, it finds your copy of the game (or asks where it is) and sets it up, music
+included when it comes from the CD or a disc image. `--setup [FOLDER or IMAGE.cue]` sets it
+up again. Third-party licences: [THIRD-PARTY.txt](THIRD-PARTY.txt).
 
 ## Build and run
 
