@@ -8,9 +8,9 @@ keeping the original's 32-bit data model.
 Steps (each can run on its own):
   module   build/wasm/civ2.wasm            (needs wasi-sdk and the installed game)
   c        build/wasm/c/civ2_wasm*.c,.h    (needs wabt's wasm2c)
-  exe      build/OpenCiv2                 (needs a C compiler, SDL2, and unshield's and
-                                           zlib's sources; on Windows (MSYS2) OpenCiv2.exe
-                                           and SDL2.dll)
+  exe      build/OpenCiv2                 (needs a C compiler, SDL2, and unshield's,
+                                           zlib's, libogg's and libvorbis's sources; on
+                                           Windows (MSYS2) OpenCiv2.exe and SDL2.dll)
   exe-windows  build/OpenCiv2.exe         cross-compiled with MinGW-w64 (e.g. on
                                            Linux; tools/fetch-toolchain.sh windows)
   pack     dist/OpenCiv2-src.tar.gz       what the exe step needs on another
@@ -20,8 +20,8 @@ The c step's output is plain C: copy build/wasm/c and src/host to another
 machine and run only the exe step there (the pack step bundles it).
 
 Usage: build_port.py [module] [c] [exe] [exe-windows] [pack]   (default: module c exe)
-What the steps need from tools/fetch-toolchain.sh (wasi-sdk, wabt, unshield's
-and zlib's sources, SDL2's MinGW release) is downloaded first where missing
+What the steps need from tools/fetch-toolchain.sh (wasi-sdk, wabt, unshield's,
+zlib's, libogg's and libvorbis's sources, SDL2's MinGW release) is downloaded first where missing
 (or set WASI_SDK and WABT; see tools/paths.py).  Environment: CC (default cc; on macOS the
 Command Line Tools' clang), CFLAGS, LDFLAGS, SDL2_CONFIG (an sdl2-config),
 SDL2_STATIC=1 (SDL2 linked in), JOBS.
@@ -168,17 +168,25 @@ def exe(cross_windows=False):
     # (the native menu bar: Win32 on Windows, Cocoa on macOS)
     mac = sys.platform == 'darwin' and not cross_windows
     # (the set-up of the game from the user's copy, src/host/setup.h, with
-    # unshield and zlib for the CD's cabinet: their sources, from
-    # tools/fetch-toolchain.sh)
+    # unshield and zlib for the CD's cabinet, libogg and libvorbis for a
+    # disc image's music: their sources, from tools/fetch-toolchain.sh)
     host = [os.path.join(ROOT, 'src', 'host', f) for f in
-            ('port_main.c', 'wasi.c', 'host_sdl.c', 'setup.c') +
+            ('port_main.c', 'wasi.c', 'host_sdl.c', 'setup.c', 'setup_disc.c') +
             (('host_menu_win.c', 'setup_win.c') if windows else ('setup_unix.c',)) +
             (('host_menu_mac.m', 'setup_mac.m') if mac else ())]
     third = (sorted(glob.glob(os.path.join(paths.UNSHIELD, 'lib', '*.c'))) +
              [os.path.join(paths.UNSHIELD, 'lib', 'md5', 'md5c.c')] +
              [os.path.join(paths.ZLIB, f + '.c') for f in ('adler32', 'crc32', 'inffast', 'inflate', 'inftrees',
-                                                          'zutil')])
-    third_inc = ['-I' + paths.UNSHIELD, '-I' + os.path.join(paths.UNSHIELD, 'lib'), '-I' + paths.ZLIB]
+                                                          'zutil')] +
+             [os.path.join(paths.OGG, 'src', f + '.c') for f in ('bitwise', 'framing')] +
+             [os.path.join(paths.VORBIS, 'lib', f + '.c') for f in
+              ('analysis', 'bitrate', 'block', 'codebook', 'envelope', 'floor0', 'floor1', 'info', 'lookup', 'lpc',
+               'lsp', 'mapping0', 'mdct', 'psy', 'registry', 'res0', 'sharedbook', 'smallft', 'synthesis',
+               'vorbisenc', 'window')])
+    third_inc = ['-I' + paths.UNSHIELD, '-I' + os.path.join(paths.UNSHIELD, 'lib'), '-I' + paths.ZLIB,
+                 '-I' + os.path.join(paths.OGG, 'include'), '-I' + os.path.join(paths.VORBIS, 'include'),
+                 '-I' + os.path.join(paths.VORBIS, 'lib')] + \
+        ([] if windows else ['-DHAVE_ALLOCA_H'])
     # (CFLAGS, LDFLAGS: added, e.g. macOS's -arch for each architecture)
     cflags = os.environ.get('CFLAGS', '').split()
     jobs = [(s, ['-O2', '-fno-strict-aliasing', '-w'] + cflags) for s in gen + rt] + \
@@ -225,7 +233,8 @@ def pack():
     with tarfile.open(out, 'w:gz') as t:
         for rel in ('build/wasm/c', 'src/host', 'src/platform/win32_vk.h', 'tools/build_port.py',
                     'tools/paths.py', 'tools/run-civ2.sh', 'tools/toolchain/unshield', 'tools/toolchain/zlib',
-                    'data/native', 'harness/CIV2.DAT', 'README.md'):
+                    'tools/toolchain/libogg', 'tools/toolchain/libvorbis', 'data/native', 'harness/CIV2.DAT',
+                    'README.md', 'THIRD-PARTY.txt'):
             t.add(os.path.join(ROOT, rel), arcname=os.path.join('OpenCiv2', rel))
     print('wrote %s (%d MB)' % (os.path.relpath(out, ROOT), os.path.getsize(out) >> 20))
 
@@ -233,13 +242,15 @@ def pack():
 def fetch_toolchain(steps):
     """What the steps need and tools/toolchain lacks, downloaded first
     (tools/fetch-toolchain.sh): wasi-sdk and wabt for module and c,
-    unshield's and zlib's sources for exe, SDL2's MinGW release for
-    exe-windows."""
+    unshield's, zlib's, libogg's and libvorbis's sources for exe, SDL2's
+    MinGW release for exe-windows."""
     global paths
     wasm = ('module' in steps and not os.path.isdir(paths.WASI_SDK)) or \
         ('c' in steps and not os.path.isdir(paths.WABT))
     sources = any(s.startswith('exe') for s in steps) and \
-        not os.path.exists(os.path.join(paths.UNSHIELD, 'lib', 'libunshield.c'))
+        not all(os.path.exists(f) for f in (os.path.join(paths.UNSHIELD, 'lib', 'libunshield.c'),
+                                            os.path.join(paths.OGG, 'include', 'ogg', 'config_types.h'),
+                                            os.path.join(paths.VORBIS, 'lib', 'vorbisenc.c')))
     mingw = 'exe-windows' in steps and not os.path.isdir(paths.SDL2_MINGW)
     if wasm or sources or mingw:
         run(['sh', os.path.join(ROOT, 'tools', 'fetch-toolchain.sh')] + (['windows'] if mingw else []) +

@@ -1,7 +1,8 @@
 /*
  * macOS and Linux: the system's part of the set-up (setup_os.h).  The game
  * is found in the usual folders (also in Wine's and CrossOver's), or its CD
- * (or a copy of it) mounted; GameData is in the user's data folder
+ * (or a copy of it) mounted, or a disc image of the CD in the user's
+ * folders or on a mounted volume; GameData is in the user's data folder
  * (macOS: ~/Library/Application Support/OpenCiv2, Linux:
  * ~/.local/share/OpenCiv2); the program's own files are beside it, in data.
  * Messages are SDL's; the folder is asked with the system's dialog (macOS:
@@ -45,6 +46,11 @@ void os_make_dirs(const char *path)
             p[i] = '/';
         }
     mkdir(p, 0755);
+}
+
+void os_remove_dir(const char *path)
+{
+    rmdir(path);
 }
 
 int os_entry(const char *dir, const char *name, char *out, size_t size)
@@ -220,6 +226,30 @@ int os_find_cd(char *out, size_t size)
     return 0;
 }
 
+/* A disc image of the CD: in the user's folders (setup_image_in_home), or
+   on a mounted volume (a USB stick...), at its top or in a folder there. */
+int os_find_image(char *out, size_t size)
+{
+    static const char *const mounts[] = {
+#ifdef __APPLE__
+        "/Volumes/*",
+#else
+        "/media/*/*", "/run/media/*/*", "/mnt/*",
+#endif
+    };
+    glob_t g;
+    size_t i, k;
+    int found = setup_image_in_home(home(), out, size);
+    for (i = 0; !found && i < sizeof mounts / sizeof mounts[0]; i++) {
+        if (glob(mounts[i], GLOB_ONLYDIR, NULL, &g))
+            continue;
+        for (k = 0; !found && k < g.gl_pathc; k++)
+            found = setup_image_in(g.gl_pathv[k], 1, out, size);
+        globfree(&g);
+    }
+    return found;
+}
+
 /* ---- talking to the user ---- */
 
 void os_message(const char *text, int kind)
@@ -253,35 +283,36 @@ static int ask_with(const char *command, char *out, size_t size)
 int os_ask_folder(char *out, size_t size)
 {
     static const char prompt[] = "Where is Civilization II Multiplayer Gold Edition? Choose the folder it is "
-                                 "installed in, or its CD.";
+                                 "installed in, its CD, or a disc image of the CD (its .cue file, or the folder it "
+                                 "is in).";
 #ifdef __APPLE__
     return setup_mac_ask_folder(prompt, out, size);
 #else
     if (ask_with("zenity --file-selection --directory --title='Where is Civilization II Multiplayer Gold Edition? "
-                 "(the folder it is installed in, or its CD)' 2>/dev/null", out, size) ||
+                 "(the folder it is installed in, its CD, or the folder of a disc image of the CD)' 2>/dev/null",
+                 out, size) ||
         ask_with("kdialog --getexistingdirectory ~ --title 'Where is Civilization II Multiplayer Gold Edition? "
-                 "(the folder it is installed in, or its CD)' 2>/dev/null", out, size))
+                 "(the folder it is installed in, its CD, or the folder of a disc image of the CD)' 2>/dev/null",
+                 out, size))
         return 1;
     if (system("command -v zenity >/dev/null 2>&1 || command -v kdialog >/dev/null 2>&1")) {
         char text[512];
-        snprintf(text, sizeof text, "%s\n\nStart OpenCiv2 with that folder: OpenCiv2 --setup FOLDER", prompt);
+        snprintf(text, sizeof text, "%s\n\nStart OpenCiv2 with that folder (or the .cue file): OpenCiv2 --setup "
+                 "FOLDER", prompt);
         os_message(text, OS_INFO);
     }
     return 0;
 #endif
 }
 
-int os_confirm(const char *source, const char *dest)
+int os_confirm(const char *text)
 {
     static const SDL_MessageBoxButtonData buttons[] = {
         {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "Set up"},
         {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Quit"},
     };
-    char text[2 * SETUP_PATH + 256];
     SDL_MessageBoxData box;
     int id;
-    snprintf(text, sizeof text, "OpenCiv2 sets up the game from %s, %s it into\n%s\n\nThis takes a minute or two; "
-             "then the game starts.", source, setup_game_cd(source) ? "unpacking" : "copying", dest);
     memset(&box, 0, sizeof box);
     box.flags = SDL_MESSAGEBOX_INFORMATION;
     box.title = TITLE;
@@ -302,7 +333,13 @@ void os_progress_open(void)
 
 int os_progress_show(const char *what, const char *detail)
 {
-    fprintf(stderr, "%s %s\n", what, detail ? detail : "");
+    static char last[2 * SETUP_PATH];
+    char text[sizeof last];
+    snprintf(text, sizeof text, "%s %s", what, detail ? detail : "");
+    if (strcmp(text, last)) {
+        fprintf(stderr, "%s\n", text);
+        snprintf(last, sizeof last, "%s", text);
+    }
     return 0;
 }
 

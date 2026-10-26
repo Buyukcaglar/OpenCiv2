@@ -468,11 +468,15 @@ MMRESULT WINAPI mmioAdvance(HMMIO h, LPMMIOINFO info, UINT flags)
 /* ---- MCI: the CD drive ("cdaudio") as files ----
  *
  * The game plays its music from the CD's audio tracks (data track 1, music
- * from track 2).  Here track N is Music\TrackNN.wav in the game directory
- * (tools/extract_disc.py writes them from a disc image); without those files
- * there is no drive, as before.  Replays have no drive either (as the
+ * from track 2).  Here track N is Music\TrackNN.ogg in the game directory
+ * (the set-up encodes them from a disc image, src/host/setup_disc.c),
+ * decoded as it plays (stb_vorbis), else Music\TrackNN.wav
+ * (tools/extract_disc.py writes them from a disc image); without those
+ * files there is no drive, as before.  Replays have no drive either (as the
  * reference environment).  Other MCI devices (avivideo) are not available. */
 
+#define STB_VORBIS_HEADER_ONLY
+#include "../third_party/stb_vorbis/stb_vorbis.c"
 
 #define CD_ID 0x4344            /* the drive's device id */
 
@@ -480,15 +484,18 @@ static struct {
     int tracks;                 /* 0: no drive (no music files) */
     int open, current;
     FILE *f;                    /* the track playing */
-    uint32_t left;              /* its bytes not yet queued */
+    stb_vorbis *ogg;            /* its decoder (an .ogg), else a WAV file's samples */
+    uint32_t left;              /* (WAV) its bytes not yet queued */
+    int ended;                  /* all of it queued */
+    uint64_t played;            /* bytes of it queued so far */
     int dev, rate, chans;
     HWND notify;                /* MCI_NOTIFY on the play: told when it ends */
 } cd;
 
-static FILE *cd_track_file(int n)
+static FILE *cd_track_file(int n, const char *ext)
 {
     char win[64], host[1024];
-    snprintf(win, sizeof win, "Music\\Track%02d.wav", n);
+    snprintf(win, sizeof win, "Music\\Track%02d.%s", n, ext);
     plat_host_path(win, host, sizeof host, 0);
     return fopen(host, "rb");
 }
@@ -499,8 +506,8 @@ static int cd_count_tracks(void)
     if ((plat_replay && !getenv("CIV2_TEST_AUDIO")) || !audio_ok)
         return 0;
     for (n = 2; n < 100; n++) {
-        FILE *f = cd_track_file(n);
-        if (!f)
+        FILE *f = cd_track_file(n, "ogg");
+        if (!f && !(f = cd_track_file(n, "wav")))
             break;
         fclose(f);
         last = n;
@@ -516,23 +523,72 @@ static void cd_notify(UINT code)
         PostMessageA(h, MM_MCINOTIFY, code, CD_ID);
 }
 
-static void cd_stop(UINT code)
+static void cd_close_track(void)
 {
+    if (cd.f)
+        plat_log("cdaudio: track %d %s after %llu bytes (%.1f s)\n", cd.current, cd.ended ? "ended" : "stopped",
+                 (unsigned long long)cd.played, cd.rate ? cd.played / (cd.rate * cd.chans * 2.0) : 0.0);
+    if (cd.ogg)
+        stb_vorbis_close(cd.ogg);
+    cd.ogg = NULL;
     if (cd.f)
         fclose(cd.f);
     cd.f = NULL;
+}
+
+static void cd_stop(UINT code)
+{
+    cd_close_track();
     if (cd.dev)
         host_audio_clear(cd.dev);
     cd_notify(code);
 }
 
-/* Open track n (a RIFF WAVE file) and start queueing it. */
+/* The drive's output at rate, chans (16-bit samples); 0: none. */
+static int cd_device(int rate, int chans)
+{
+    if (cd.dev && (cd.rate != rate || cd.chans != chans)) {
+        host_audio_close(cd.dev);
+        cd.dev = 0;
+    }
+    if (!cd.dev) {
+        cd.dev = host_audio_open(rate, chans, 16);
+        cd.rate = rate;
+        cd.chans = chans;
+    }
+    return cd.dev != 0;
+}
+
+/* Open track n (Ogg Vorbis, else a RIFF WAVE file) and start queueing it. */
 static int cd_play(int n)
 {
     unsigned char h[12], ck[8];
     uint32_t rate = 0, chans = 0, bits = 0;
-    FILE *f = cd_track_file(n);
-    if (!f)
+    FILE *f = cd_track_file(n, "ogg");
+    if (f) {
+        int err;
+        stb_vorbis *v = stb_vorbis_open_file(f, 0, &err, NULL);     /* (reads the file as it plays) */
+        stb_vorbis_info info;
+        if (!v) {
+            plat_log("cdaudio: Music\\Track%02d.ogg: not Ogg Vorbis (error %d)\n", n, err);
+            fclose(f);
+            return 0;
+        }
+        info = stb_vorbis_get_info(v);
+        if (info.channels < 1 || info.channels > 2 || !cd_device((int)info.sample_rate, info.channels)) {
+            plat_log("cdaudio: no output for %u Hz, %d channel(s)\n", info.sample_rate, info.channels);
+            stb_vorbis_close(v);
+            fclose(f);
+            return 0;
+        }
+        cd.f = f;
+        cd.ogg = v;
+        cd.ended = 0;
+        cd.played = 0;
+        cd.current = n;
+        return 1;
+    }
+    if (!(f = cd_track_file(n, "wav")))
         return 0;
     if (fread(h, 1, 12, f) != 12 || memcmp(h, "RIFF", 4) || memcmp(h + 8, "WAVE", 4)) {
         fclose(f);
@@ -549,21 +605,12 @@ static int cd_play(int n)
             bits = fmt[14] | fmt[15] << 8;
             fseek(f, (long)(len - 16 + (len & 1)), SEEK_CUR);
         } else if (!memcmp(ck, "data", 4)) {
-            if (bits != 16 || !rate || !chans)
-                break;
-            if (cd.dev && (cd.rate != (int)rate || cd.chans != (int)chans)) {
-                host_audio_close(cd.dev);
-                cd.dev = 0;
-            }
-            if (!cd.dev) {
-                cd.dev = host_audio_open((int)rate, (int)chans, 16);
-                cd.rate = (int)rate;
-                cd.chans = (int)chans;
-            }
-            if (!cd.dev)
+            if (bits != 16 || !rate || !chans || !cd_device((int)rate, (int)chans))
                 break;
             cd.f = f;
             cd.left = len;
+            cd.ended = 0;
+            cd.played = 0;
             cd.current = n;
             return 1;
         } else
@@ -573,27 +620,40 @@ static int cd_play(int n)
     return 0;
 }
 
+/* The playing track's next samples into buf (16-bit, interleaved): their
+   size in bytes; 0: its end. */
+static size_t cd_read(short *buf, size_t size)
+{
+    size_t n;
+    if (cd.ogg) {
+        int got = stb_vorbis_get_samples_short_interleaved(cd.ogg, cd.chans, buf, (int)(size / 2));
+        return got > 0 ? (size_t)got * (size_t)cd.chans * 2 : 0;
+    }
+    n = cd.left < size ? cd.left : size;
+    n = fread(buf, 1, n, cd.f);
+    cd.left -= (uint32_t)n;
+    return n;
+}
+
 /* From the message loop: keep about a second queued; at the track's end,
  * tell the window that asked (MCI_NOTIFY_SUCCESSFUL). */
 static void cd_poll(void)
 {
-    static unsigned char buf[44100];
+    static short buf[22050];
     uint32_t want = (uint32_t)(cd.rate * cd.chans * 2);
     if (!cd.f)
         return;
-    while (cd.left && host_audio_queued(cd.dev) < want) {
-        size_t n = cd.left < sizeof buf ? cd.left : sizeof buf;
-        n = fread(buf, 1, n, cd.f);
-        if (!n) {
-            cd.left = 0;
-            break;
+    while (!cd.ended && host_audio_queued(cd.dev) < want) {
+        size_t n = cd_read(buf, sizeof buf);
+        if (n) {
+            host_audio_queue(cd.dev, buf, (uint32_t)n);
+            cd.played += n;
         }
-        host_audio_queue(cd.dev, buf, (uint32_t)n);
-        cd.left -= (uint32_t)n;
+        else
+            cd.ended = 1;
     }
-    if (!cd.left && !host_audio_queued(cd.dev)) {
-        fclose(cd.f);
-        cd.f = NULL;
+    if (cd.ended && !host_audio_queued(cd.dev)) {
+        cd_close_track();
         cd_notify(MCI_NOTIFY_SUCCESSFUL);
     }
 }
@@ -635,12 +695,16 @@ static MCIERROR cd_command(UINT msg, DWORD_PTR flags, DWORD_PTR param)
         MCI_PLAY_PARMS *p = (MCI_PLAY_PARMS *)param;
         int n = (flags & MCI_FROM) ? (int)(p->dwFrom & 0xff) : (cd.current ? cd.current : 2);
         cd_stop(MCI_NOTIFY_SUPERSEDED);
-        if (n < 2 || n > cd.tracks || !cd_play(n))
+        if (n < 2 || n > cd.tracks || !cd_play(n)) {
+            plat_log("cdaudio: cannot play track %d (of %d)\n", n, cd.tracks);
             return MCIERR_OUTOFRANGE;
-        plat_log("cdaudio: playing track %d%s\n", n, (flags & MCI_NOTIFY) ? " (notify)" : "");
+        }
         if (flags & MCI_NOTIFY)
             cd.notify = (HWND)p->dwCallback;
         cd_poll();
+        plat_log("cdaudio: playing track %d%s from Music\\Track%02d.%s, %d Hz, %d channel(s): %u bytes queued\n", n,
+                 (flags & MCI_NOTIFY) ? " (notify)" : "", n, cd.ogg ? "ogg (Vorbis, decoded as it plays)" : "wav",
+                 cd.rate, cd.chans, (unsigned)host_audio_queued(cd.dev));
         return 0;
     }
     }

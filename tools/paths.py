@@ -36,3 +36,7 @@ SDL2_MINGW = _first_dir(os.environ.get('SDL2_MINGW'), os.path.join(ROOT, 'tools'
 # (src/host/setup.c; tools/fetch-toolchain.sh).
 UNSHIELD = os.environ.get('UNSHIELD_SRC') or os.path.join(ROOT, 'tools', 'toolchain', 'unshield')
 ZLIB = os.environ.get('ZLIB_SRC') or os.path.join(ROOT, 'tools', 'toolchain', 'zlib')
+# libogg's and libvorbis's sources, for the music from a disc image
+# (src/host/setup_disc.c; tools/fetch-toolchain.sh).
+OGG = os.environ.get('OGG_SRC') or os.path.join(ROOT, 'tools', 'toolchain', 'libogg')
+VORBIS = os.environ.get('VORBIS_SRC') or os.path.join(ROOT, 'tools', 'toolchain', 'libvorbis')

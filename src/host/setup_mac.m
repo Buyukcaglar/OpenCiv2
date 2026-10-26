@@ -1,6 +1,6 @@
 /*
- * macOS: the folder for the set-up asked with the system's open panel
- * (setup_unix.c).  Compiled with ARC.
+ * macOS: the folder (or disc image, a .cue file) for the set-up asked with
+ * the system's open panel (setup_unix.c).  Compiled with ARC.
  */
 #import <Cocoa/Cocoa.h>
 #include <stdio.h>
@@ -13,7 +13,8 @@ int setup_mac_ask_folder(const char *prompt, char *out, size_t size)
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
         [NSApp activateIgnoringOtherApps:YES];
         panel = [NSOpenPanel openPanel];
-        panel.canChooseFiles = NO;
+        panel.canChooseFiles = YES;
+        panel.allowedFileTypes = @[@"cue"];
         panel.canChooseDirectories = YES;
         panel.allowsMultipleSelection = NO;
         panel.message = [NSString stringWithUTF8String:prompt];

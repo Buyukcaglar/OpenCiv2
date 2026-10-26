@@ -44,12 +44,22 @@ and the same random numbers, call for call, on recorded games.
 ## Download and play
 
 The game files are not included: you need your own copy of Civilization II Multiplayer
-Gold Edition, installed or on its CD. Each download, built from the latest commit, is one
-program that finds the game where it is usually installed, or its CD (or a copy of it) in
-a drive, else asks where it is, and copies it into a `GameData` folder (from the CD:
-unpacked from the installer's cabinet, with the videos); afterwards it starts the game
-directly. `--setup [FOLDER]` sets the game up again (from FOLDER: the installed game or
-the CD); `FOLDER` plays the game in FOLDER where it is.
+Gold Edition, installed, on its CD, or as a disc image of the CD (a `.cue` file with its
+`.bin`). Each download, built from the latest commit, is one program that finds the game
+where it is usually installed, or its CD (or a copy of it) in a drive, or a disc image
+(in Downloads, on the Desktop, in the home folder or a `Civ2*` folder there, on a mounted
+volume; on Windows also beside the program), else asks where it is, and copies it into a
+`GameData` folder (from the CD or the image: unpacked from the installer's cabinet, with
+the videos); afterwards it starts the game directly. `--setup [FOLDER]` sets the game up
+again (from FOLDER: the installed game, the CD, or a disc image's `.cue` or the folder it
+is in); `FOLDER` plays the game in FOLDER where it is.
+
+Music: the CD's music is its audio tracks. The set-up takes them from a disc image (found
+as above, whatever the game is set up from), encoding them as Ogg Vorbis into
+`GameData/Music` (about 20 MB; a minute or so); a game set up without music gets it with
+`--setup IMAGE.cue`. From a physical CD there is no music yet (reading its audio tracks is
+a later step); an installed game has none either (`tools/extract_disc.py` also writes it,
+as WAV files, from a disc image).
 
 - **Windows:** [OpenCiv2-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/OpenCiv2-windows.zip):
   `OpenCiv2.exe`. Put it in any folder and double-click it; `GameData` is beside it. It runs
@@ -66,8 +76,7 @@ the CD); `FOLDER` plays the game in FOLDER where it is.
   `~/.local/share/OpenCiv2`; the game is also found in Wine's drive C:, and asked for with
   `zenity` or `kdialog` where there is one.
 
-Music: the CD's music is audio tracks, which the set-up does not copy; `tools/extract_disc.py`
-copies it from a disc image.
+Third-party code in the programs, and its licences: [THIRD-PARTY.txt](THIRD-PARTY.txt).
 
 ## Build and run
 

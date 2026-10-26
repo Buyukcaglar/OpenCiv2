@@ -1,0 +1,10 @@
+# The music (needs Music/TrackNN.ogg or .wav in the game directory, as the
+# set-up writes from a disc image, and audio in the replay:
+# CIV2_TEST_AUDIO=1 SDL_AUDIODRIVER=disk SDL_DISKAUDIOFILE=/dev/null, and
+# CIV2_REALTIME=1 so that the waits are as long as the music):
+# track 2 (37 s) played to its end; hook.log has "cdaudio: ..." lines.
+wait 8000
+call snd_cd_play_track 5ddbc7 2
+wait 45000
+shot m1-menu
+quit

@@ -1,11 +1,15 @@
 /*
  * The game set up from the user's copy of Civilization II Multiplayer Gold
- * Edition (setup.h).  The game is found where it usually is: installed or
- * its CD in a drive (setup_win.c, setup_unix.c); else the user says where.
+ * Edition (setup.h).  The game is found where it usually is: installed,
+ * its CD in a drive, or a disc image of the CD (a .cue with its .bin) in
+ * the usual folders (setup_win.c, setup_unix.c); else the user says where.
  * An installed game's folder is copied; from the CD the game is unpacked
  * from its InstallShield cabinet (DATA1.CAB, with unshield), as its
- * installer would, and its videos copied.  Into GameData: beside the
- * program on Windows, in the user's data folder on macOS and Linux.
+ * installer would, and its videos copied; from a disc image the same, out
+ * of its data track (setup_disc.c).  The music, the CD's audio tracks, only
+ * from a disc image (with any source, where one is found): encoded as Ogg
+ * Vorbis.  Into GameData: beside the program on Windows, in the user's
+ * data folder on macOS and Linux.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,6 +19,7 @@
 #include "setup_os.h"
 
 #define DONE_FILE "OpenCiv2-setup.txt"      /* in GameData: written when the set-up is complete */
+#define CABINET_DIR "OpenCiv2-cabinet"      /* in GameData: the cabinet out of a disc image, while unpacked */
 
 /* An installed game (or a copy of its folder). */
 int setup_game_folder(const char *dir)
@@ -31,6 +36,36 @@ int setup_game_cd(const char *root)
     char p[SETUP_PATH];
     return *root && os_entry(root, "DATA1.CAB", p, sizeof p) && os_file_exists(p) &&
            os_entry(root, "CIV2", p, sizeof p) && os_dir_exists(p);
+}
+
+/* A disc image of the CD: the folders of home it is usually in. */
+struct civ2_dirs {
+    const char *home;
+    char *out;
+    size_t size;
+};
+
+static int civ2_dir(void *ctx, const char *name, int is_dir)
+{
+    const struct civ2_dirs *c = ctx;
+    char p[SETUP_PATH];
+    if (!is_dir || strlen(name) < 4 || (name[0] | 0x20) != 'c' || (name[1] | 0x20) != 'i' || (name[2] | 0x20) != 'v' ||
+        name[3] != '2')
+        return 1;
+    snprintf(p, sizeof p, "%s" SEP_S "%s", c->home, name);
+    return !setup_image_in(p, 1, c->out, c->size);
+}
+
+int setup_image_in_home(const char *home, char *out, size_t size)
+{
+    static const char *const in[] = {"Downloads", "Desktop"};
+    struct civ2_dirs c = {home, out, size};
+    char p[SETUP_PATH];
+    size_t i;
+    for (i = 0; i < sizeof in / sizeof in[0]; i++)
+        if (os_entry(home, in[i], p, sizeof p) && setup_image_in(p, 1, out, size))
+            return 1;
+    return setup_image_in(home, 0, out, size) || !os_each(home, civ2_dir, &c);
 }
 
 /* ---- copying and unpacking ---- */
@@ -132,32 +167,79 @@ static int copy_videos(const char *cd, const char *game_dir)
     return 1;
 }
 
+static int remove_entry(void *ctx, const char *name, int is_dir)
+{
+    char p[SETUP_PATH];
+    (void)is_dir;
+    snprintf(p, sizeof p, "%s" SEP_S "%s", (const char *)ctx, name);
+    remove(p);
+    return 1;
+}
+
+/* The game from a disc image's cabinet into dst: the cabinet copied out of
+   the image into a folder of dst, unpacked, removed. */
+static int unpack_image(const char *cue, const char *dst)
+{
+    char tmp[SETUP_PATH], cab[SETUP_PATH];
+    int ok;
+    snprintf(tmp, sizeof tmp, "%s" SEP_S "%s", dst, CABINET_DIR);
+    ok = image_extract_cabinet(cue, tmp, cab, sizeof cab) && unpack_cab(cab, dst);
+    os_each(tmp, remove_entry, tmp);
+    os_remove_dir(tmp);
+    return ok;
+}
+
+/* GameData has the music (Music/Track02: the first of the CD's). */
+static int has_music(const char *game_dir)
+{
+    char music[SETUP_PATH], p[SETUP_PATH];
+    return os_entry(game_dir, "Music", music, sizeof music) &&
+           ((os_entry(music, "Track02.ogg", p, sizeof p) && os_file_exists(p)) ||
+            (os_entry(music, "Track02.wav", p, sizeof p) && os_file_exists(p)));
+}
+
 /* ---- the set-up ---- */
 
-/* GameData from source (an installed game's folder or the CD), and from
-   the CD (cd, may be "") its videos.  1: done. */
-static int set_up(const char *game_dir, const char *source, const char *cd)
+/* GameData from source (an installed game's folder, the CD or a disc
+   image), from the CD (cd, may be "") its videos, from a disc image
+   (image, may be "") the videos it lacks and the music; music_only: the
+   game is there already (set up without music).  1: done. */
+static int set_up(const char *game_dir, const char *source, const char *cd, const char *image, int music_only)
 {
     char done[SETUP_PATH];
     FILE *f;
-    int ok;
-    os_progress_show(setup_game_cd(source) ? "Unpacking the game from its CD" : "Copying the game", source);
+    int ok = 1;
     os_make_dirs(game_dir);
-    if (setup_game_cd(source)) {
+    if (music_only) {
+    } else if (setup_game_cd(source)) {
         char cab[SETUP_PATH];
+        os_progress_show("Unpacking the game from its CD", source);
         os_entry(source, "DATA1.CAB", cab, sizeof cab);
         ok = unpack_cab(cab, game_dir);
+    } else if (setup_game_image(source)) {
+        os_progress_show("Unpacking the game from its disc image", source);
+        ok = unpack_image(source, game_dir);
     } else {
+        os_progress_show("Copying the game", source);
         ok = copy_tree(source, game_dir);
     }
     if (ok && *cd)
         ok = copy_videos(cd, game_dir);
+    if (ok && *image)
+        ok = image_copy_videos(image, game_dir) && image_encode_music(image, game_dir);
     if (!ok)
         return 0;
     snprintf(done, sizeof done, "%s" SEP_S "%s", game_dir, DONE_FILE);
-    if ((f = fopen(done, "w"))) {
-        fprintf(f, "OpenCiv2: the game set up from %s%s%s.\n", source, *cd && strcmp(cd, source) ? ", videos from " : "",
-                *cd && strcmp(cd, source) ? cd : "");
+    if (music_only) {
+        if ((f = fopen(done, "a"))) {
+            fprintf(f, "OpenCiv2: the music from %s.\n", image);
+            fclose(f);
+        }
+    } else if ((f = fopen(done, "w"))) {
+        int other = *image && strcmp(image, source);
+        fprintf(f, "OpenCiv2: the game set up from %s%s%s%s%s.\n", source, *cd && strcmp(cd, source) ? ", videos from " : "",
+                *cd && strcmp(cd, source) ? cd : "", !*image ? "" : other ? ", music from " : ", with its music",
+                other ? image : "");
         fclose(f);
     }
     return 1;
@@ -165,8 +247,9 @@ static int set_up(const char *game_dir, const char *source, const char *cd)
 
 int setup_choose_game(int argc, char **argv, char *game, size_t size)
 {
-    char game_data[SETUP_PATH], done[SETUP_PATH], source[SETUP_PATH], cd[SETUP_PATH] = "";
-    int again, ok, cancelled;
+    char game_data[SETUP_PATH], done[SETUP_PATH], source[SETUP_PATH], cd[SETUP_PATH] = "", image[SETUP_PATH] = "";
+    char text[3 * SETUP_PATH + 256];
+    int again, ok, cancelled, music_only;
 
 #ifdef __APPLE__
     /* (started from the Finder by an older macOS: its process serial number) */
@@ -200,34 +283,56 @@ int setup_choose_game(int argc, char **argv, char *game, size_t size)
     if (os_file_exists(done) && !again)
         return os_program_files();
 
-    /* where the game is: --setup FOLDER, the installed game, the CD, else asked */
+    /* where the game is: --setup FOLDER (or IMAGE.cue), the installed
+       game, the CD, a disc image of it, else asked; a disc image for the
+       music in any case */
     if (!os_find_cd(cd, sizeof cd))
         cd[0] = 0;
+    if (!os_find_image(image, sizeof image))
+        image[0] = 0;
     if (again && argc > 2)
         snprintf(source, sizeof source, "%s", argv[2]);
     else if (!os_find_installed(source, sizeof source))
-        snprintf(source, sizeof source, "%s", cd);
-    while (!setup_game_folder(source) && !setup_game_cd(source)) {
+        snprintf(source, sizeof source, "%s", *cd ? cd : image);
+    for (;;) {
+        char found[SETUP_PATH];
+        /* (a folder with a disc image in it: the image) */
+        if (!setup_game_folder(source) && !setup_game_cd(source) && setup_image_in(source, 0, found, sizeof found))
+            snprintf(source, sizeof source, "%s", found);
+        if (setup_game_folder(source) || setup_game_cd(source) || setup_game_image(source))
+            break;
         if (source[0]) {
-            char text[SETUP_PATH + 160];
             snprintf(text, sizeof text, "%s has neither an installed Civilization II Multiplayer Gold Edition nor "
-                     "its CD.", source);
+                     "its CD, nor a disc image of the CD.", source);
             os_message(text, OS_WARNING);
         } else {
-            os_message("Civilization II Multiplayer Gold Edition was found neither where it is usually installed "
-                       "nor in a CD drive. Please show where it is: the folder it is installed in, or its CD.",
-                       OS_INFO);
+            os_message("Civilization II Multiplayer Gold Edition was found neither where it is usually installed, "
+                       "nor in a CD drive, nor as a disc image of its CD (a .cue file with its .bin) in the usual "
+                       "folders. Please show where it is: the folder it is installed in, its CD, or the disc image "
+                       "(or the folder it is in).", OS_INFO);
         }
         if (!os_ask_folder(source, sizeof source))
             return 0;
     }
     if (setup_game_cd(source))
         snprintf(cd, sizeof cd, "%s", source);
-    if (!os_confirm(source, game_data))
+    if (setup_game_image(source))
+        snprintf(image, sizeof image, "%s", source);
+    /* (set up already, but without music: only that) */
+    music_only = *image && !strcmp(image, source) && os_file_exists(done) && !has_music(game_data);
+    if (music_only)
+        snprintf(text, sizeof text, "OpenCiv2 adds the music to the game in\n%s\nfrom the disc image %s (encoding "
+                 "it as Ogg Vorbis).\n\nThis takes a few minutes; then the game starts.", game_data, image);
+    else
+        snprintf(text, sizeof text, "OpenCiv2 sets up the game from %s, %s it into\n%s%s%s%s\n\nThis takes %s; then "
+                 "the game starts.", source, setup_game_folder(source) ? "copying" : "unpacking", game_data,
+                 *image ? "\n\nThe music from the disc image " : "", *image ? image : "",
+                 *image ? " (encoded as Ogg Vorbis)." : "", *image ? "a few minutes" : "a minute or two");
+    if (!os_confirm(text))
         return 0;
     copy_dest = game_data;
     os_progress_open();
-    ok = os_program_files() && set_up(game_data, source, cd);
+    ok = os_program_files() && set_up(game_data, source, cd, image, music_only);
     cancelled = !ok && os_progress_stopped();
     os_progress_close();
     if (cancelled)

@@ -1,7 +1,9 @@
 /*
  * Windows: the system's part of the set-up (setup_os.h).  The game is
  * found where its installer said (in the registry) or in the usual
- * folders, or its CD in a drive; GameData is beside the program, with the
+ * folders, or its CD in a drive, or a disc image of the CD in the user's
+ * folders, beside the program or at the top of a drive; GameData is beside
+ * the program, with the
  * program's own files (the fonts, from its resources) in data.
  */
 #include <windows.h>
@@ -41,6 +43,11 @@ void os_make_dirs(const char *path)
             p[i] = c;
         }
     CreateDirectoryA(p, NULL);
+}
+
+void os_remove_dir(const char *path)
+{
+    RemoveDirectoryA(path);
 }
 
 /* (names are found whatever their case) */
@@ -181,7 +188,42 @@ int os_find_cd(char *out, size_t size)
     return found;
 }
 
-/* The user's choice of folder: the installed game or the CD.  0: none. */
+/* A disc image of the CD: in the user's folders (setup_image_in_home, and
+   the Desktop where Windows has moved it), beside the program (or in a
+   folder there), at the top of a drive other than a floppy or the
+   network's. */
+int os_find_image(char *out, size_t size)
+{
+    char dir[MAX_PATH];
+    const char *v;
+    UINT old;
+    DWORD drives;
+    int i, found = 0;
+    if ((v = getenv("USERPROFILE")) && *v && setup_image_in_home(v, out, size))
+        return 1;
+    if (SHGetFolderPathA(NULL, CSIDL_DESKTOPDIRECTORY, NULL, 0, dir) == S_OK && setup_image_in(dir, 1, out, size))
+        return 1;
+    program_dir(dir, sizeof dir);
+    if (setup_image_in(dir, 1, out, size))
+        return 1;
+    old = SetErrorMode(SEM_FAILCRITICALERRORS);
+    drives = GetLogicalDrives();
+    for (i = 2; i < 26 && !found; i++)
+        if (drives & (1u << i)) {
+            UINT type;
+            snprintf(dir, sizeof dir, "%c:\\", 'A' + i);
+            type = GetDriveTypeA(dir);
+            if (type == DRIVE_FIXED || type == DRIVE_REMOVABLE || type == DRIVE_CDROM) {
+                dir[2] = 0;
+                found = setup_image_in(dir, 0, out, size);
+            }
+        }
+    SetErrorMode(old);
+    return found;
+}
+
+/* The user's choice of folder: the installed game or the CD, or a disc
+   image (its .cue: the dialog shows files too).  0: none. */
 int os_ask_folder(char *out, size_t size)
 {
     BROWSEINFOA bi;
@@ -190,8 +232,8 @@ int os_ask_folder(char *out, size_t size)
     int ok = 0;
     memset(&bi, 0, sizeof bi);
     bi.lpszTitle = "Where is Civilization II Multiplayer Gold Edition? Choose the folder it is "
-                   "installed in, or its CD.";
-    bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
+                   "installed in, its CD, or a disc image of the CD (its .cue file, or the folder it is in).";
+    bi.ulFlags = BIF_NEWDIALOGSTYLE | BIF_BROWSEINCLUDEFILES;     /* (a path: SHGetPathFromIDList) */
     CoInitialize(NULL);
     id = SHBrowseForFolderA(&bi);
     if (id) {
@@ -331,9 +373,8 @@ int os_progress_stopped(void)
 }
 
 /* (the progress window shows what is set up, and can stop it) */
-int os_confirm(const char *source, const char *dest)
+int os_confirm(const char *text)
 {
-    (void)source;
-    (void)dest;
+    (void)text;
     return 1;
 }

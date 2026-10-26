@@ -1,6 +1,7 @@
 # Builds the game for Windows, Linux and macOS on every push to main and
 # publishes them as the "latest" release: one program each that sets the
-# game up from the user's installed copy or CD (src/host/setup.c).  The
+# game up from the user's installed copy, CD or disc image of the CD
+# (src/host/setup.c).  The
 # game's C (tools/build_port.py module c) is made once, then compiled for
 # each system.
 name: Build and release
@@ -44,7 +45,7 @@ jobs:
         with:
           name: game-c
           path: build/wasm/c
-      - name: Toolchain (MinGW, SDL2 for MinGW, unshield, zlib)
+      - name: Toolchain (MinGW, SDL2 for MinGW, unshield, zlib, libogg, libvorbis)
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends gcc-mingw-w64-x86-64-posix
@@ -58,6 +59,7 @@ jobs:
           mkdir -p pkg/OpenCiv2
           cp build/OpenCiv2.exe pkg/OpenCiv2/OpenCiv2.exe
           cp LICENSE pkg/OpenCiv2/LICENSE.txt
+          cp THIRD-PARTY.txt src/third_party/indeo4/COPYING.LGPLv2.1 src/third_party/wasm2c/LICENSE-Apache-2.0.txt pkg/OpenCiv2/
           cat > pkg/OpenCiv2/README.txt <<'TXT'
           OpenCiv2 - Civilization II (Multiplayer Gold) reconstructed
           https://github.com/${{ github.repository }}
@@ -66,12 +68,18 @@ jobs:
 
           1. Put OpenCiv2.exe in any folder and double-click it.
           2. The first time, it finds the game where it is installed, or
-             its CD in a drive (else it asks where it is), and copies it
-             into a GameData folder beside OpenCiv2.exe; then the game
-             starts. Afterwards it starts the game directly.
+             its CD in a drive, or a disc image of the CD (a .cue file with
+             its .bin, in Downloads, on the Desktop, beside OpenCiv2.exe...)
+             (else it asks where it is), and copies it into a GameData
+             folder beside OpenCiv2.exe; then the game starts. Afterwards it
+             starts the game directly.
+          3. The music (the CD's audio tracks) comes only from a disc image:
+             found, it is encoded into GameData\Music (a few minutes).
 
           OpenCiv2.exe --setup [FOLDER]   set the game up again (from FOLDER:
-                                          the installed game, or the CD)
+                                          the installed game, the CD, or a
+                                          disc image's .cue: with only the
+                                          music missing, adds it)
           OpenCiv2.exe FOLDER             play the game in FOLDER where it is
           CIV2_WINDOW=1                   a window, not full screen
 
@@ -95,7 +103,7 @@ jobs:
         with:
           name: game-c
           path: build/wasm/c
-      - name: Toolchain (SDL2 linked in, unshield, zlib)
+      - name: Toolchain (SDL2 linked in, unshield, zlib, libogg, libvorbis)
         run: |
           sudo apt-get update
           # (what SDL2 can use: loaded when the program runs, where the system has it)
@@ -121,6 +129,7 @@ jobs:
           cp build/OpenCiv2 pkg/OpenCiv2/OpenCiv2
           cp data/native/fonts.bin data/native/fonts_aa.bin pkg/OpenCiv2/data/
           cp LICENSE pkg/OpenCiv2/LICENSE.txt
+          cp THIRD-PARTY.txt src/third_party/indeo4/COPYING.LGPLv2.1 src/third_party/wasm2c/LICENSE-Apache-2.0.txt pkg/OpenCiv2/
           cat > pkg/OpenCiv2/README.txt <<'TXT'
           OpenCiv2 - Civilization II (Multiplayer Gold) reconstructed
           https://github.com/${{ github.repository }}
@@ -130,12 +139,18 @@ jobs:
           1. Unpack this folder anywhere and run OpenCiv2 in it.
           2. The first time, it finds the game where it is usually installed
              (~/Civ2, ~/Games/Civ2, or Wine's drive C:), or its CD (or a
-             copy of it) mounted (else it asks where it is, with zenity or
-             kdialog), and copies it into ~/.local/share/OpenCiv2/GameData;
-             then the game starts. Afterwards it starts the game directly.
+             copy of it) mounted, or a disc image of the CD (a .cue file
+             with its .bin, in ~/Downloads, ~/Desktop, ~ or ~/Civ2*) (else
+             it asks where it is, with zenity or kdialog), and copies it
+             into ~/.local/share/OpenCiv2/GameData; then the game starts.
+             Afterwards it starts the game directly.
+          3. The music (the CD's audio tracks) comes only from a disc image:
+             found, it is encoded into GameData/Music (a few minutes).
 
           ./OpenCiv2 --setup [FOLDER]   set the game up again (from FOLDER:
-                                        the installed game, or the CD)
+                                        the installed game, the CD, or a
+                                        disc image's .cue: with only the
+                                        music missing, adds it)
           ./OpenCiv2 FOLDER             play the game in FOLDER where it is
           CIV2_WINDOW=1                 a window, not full screen
 
@@ -160,7 +175,7 @@ jobs:
         with:
           name: game-c
           path: build/wasm/c
-      - name: Toolchain (SDL2 linked in, for Apple silicon and Intel; unshield, zlib)
+      - name: Toolchain (SDL2 linked in, for Apple silicon and Intel; unshield, zlib, libogg, libvorbis)
         run: |
           curl -fL# https://github.com/libsdl-org/SDL/releases/download/release-$SDL2_VERSION/SDL2-$SDL2_VERSION.tar.gz | tar xz
           cmake -S SDL2-$SDL2_VERSION -B sdl-build -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=OFF -DSDL_STATIC=ON \
@@ -202,6 +217,7 @@ jobs:
           sed -i '' 's/^          //' $app/Info.plist
           codesign --force --deep --sign - pkg/OpenCiv2.app
           cp LICENSE pkg/LICENSE.txt
+          cp THIRD-PARTY.txt src/third_party/indeo4/COPYING.LGPLv2.1 src/third_party/wasm2c/LICENSE-Apache-2.0.txt pkg/
           cat > pkg/README.txt <<'TXT'
           OpenCiv2 - Civilization II (Multiplayer Gold) reconstructed
           https://github.com/${{ github.repository }}
@@ -215,13 +231,18 @@ jobs:
              xattr -dr com.apple.quarantine /Applications/OpenCiv2.app).
           3. The first time, it finds the game where it is usually installed
              (~/Civ2, ~/Games/Civ2, or a Wine or CrossOver drive C:), or its
-             CD (or a copy of it) mounted (else it asks where it is), and
-             copies it into ~/Library/Application Support/OpenCiv2/GameData;
-             then the game starts. Afterwards it starts the game directly.
+             CD (or a copy of it) mounted, or a disc image of the CD (a .cue
+             file with its .bin, in ~/Downloads, ~/Desktop, ~ or ~/Civ2*)
+             (else it asks where it is), and copies it into
+             ~/Library/Application Support/OpenCiv2/GameData; then the game
+             starts. Afterwards it starts the game directly.
+          4. The music (the CD's audio tracks) comes only from a disc image:
+             found, it is encoded into GameData/Music (a few minutes).
 
           From Terminal, OpenCiv2.app/Contents/MacOS/OpenCiv2:
             --setup [FOLDER]   set the game up again (from FOLDER: the
-                               installed game, or the CD)
+                               installed game, the CD, or a disc image's
+                               .cue: with only the music missing, adds it)
             FOLDER             play the game in FOLDER where it is
 
           Build ${{ github.sha }}
@@ -249,7 +270,7 @@ jobs:
         run: |
           git tag -f latest
           git push -f origin latest
-          notes="Build of ${GITHUB_SHA::7} for Windows, Linux (x86-64) and macOS (Apple silicon and Intel): one program that sets the game up from your copy of Civilization II Multiplayer Gold Edition (see README.txt in each)."
+          notes="Build of ${GITHUB_SHA::7} for Windows, Linux (x86-64) and macOS (Apple silicon and Intel): one program that sets the game up from your copy of Civilization II Multiplayer Gold Edition, with the music from a disc image of its CD (see README.txt in each)."
           if gh release view latest >/dev/null 2>&1; then
             gh release edit latest --title "Latest build" --notes "$notes" --prerelease
           else
