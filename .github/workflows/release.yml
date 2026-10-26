@@ -29,7 +29,10 @@ jobs:
       - name: Toolchain (wasi-sdk, wabt)
         run: sh tools/fetch-toolchain.sh
       - name: The game as C
-        run: python3 tools/build_port.py module c
+        # (compiler errors as annotations: visible without the log)
+        run: |
+          set -o pipefail
+          python3 tools/build_port.py module c 2>&1 | tee build.log || { grep -E "error|Error" build.log | head -20 | sed 's/^/::error::/'; exit 1; }
       - uses: actions/upload-artifact@v4
         with:
           name: game-c
@@ -53,7 +56,10 @@ jobs:
       - name: Build
         env:
           CC: x86_64-w64-mingw32-gcc-posix
-        run: python3 tools/build_port.py exe-windows
+        # (compiler errors as annotations: visible without the log)
+        run: |
+          set -o pipefail
+          python3 tools/build_port.py exe-windows 2>&1 | tee build.log || { grep -E "error|Error" build.log | head -20 | sed 's/^/::error::/'; exit 1; }
       - name: Package
         run: |
           mkdir -p pkg/OpenCiv2
@@ -122,7 +128,10 @@ jobs:
           SDL2_CONFIG: ${{ github.workspace }}/sdl/bin/sdl2-config
           SDL2_STATIC: 1
           JOBS: 4
-        run: python3 tools/build_port.py exe
+        # (compiler errors as annotations: visible without the log)
+        run: |
+          set -o pipefail
+          python3 tools/build_port.py exe 2>&1 | tee build.log || { grep -E "error|Error" build.log | head -20 | sed 's/^/::error::/'; exit 1; }
       - name: Package
         run: |
           mkdir -p pkg/OpenCiv2/data
@@ -190,7 +199,10 @@ jobs:
           SDL2_CONFIG: ${{ github.workspace }}/sdl/bin/sdl2-config
           SDL2_STATIC: 1
           JOBS: 3
-        run: python3 tools/build_port.py exe
+        # (compiler errors as annotations: visible without the log)
+        run: |
+          set -o pipefail
+          python3 tools/build_port.py exe 2>&1 | tee build.log || { grep -E "error|Error" build.log | head -20 | sed 's/^/::error::/'; exit 1; }
       - name: Package
         run: |
           app=pkg/OpenCiv2.app/Contents

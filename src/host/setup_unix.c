@@ -252,10 +252,10 @@ int os_find_image(char *out, size_t size)
     size_t i, k;
     int found = setup_image_in_home(home(), out, size);
     for (i = 0; !found && i < sizeof mounts / sizeof mounts[0]; i++) {
-        if (glob(mounts[i], GLOB_ONLYDIR, NULL, &g))
+        if (glob(mounts[i], 0, NULL, &g))
             continue;
         for (k = 0; !found && k < g.gl_pathc; k++)
-            found = setup_image_in(g.gl_pathv[k], 1, out, size);
+            found = os_dir_exists(g.gl_pathv[k]) && setup_image_in(g.gl_pathv[k], 1, out, size);
         globfree(&g);
     }
     return found;
