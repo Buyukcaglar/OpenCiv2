@@ -284,9 +284,9 @@ jobs:
           git push -f origin latest
           notes="Build of ${GITHUB_SHA::7} for Windows, Linux (x86-64) and macOS (Apple silicon and Intel): one program that sets the game up from your copy of Civilization II Multiplayer Gold Edition, with the music from a disc image of its CD (see README.txt in each)."
           if gh release view latest >/dev/null 2>&1; then
-            gh release edit latest --title "Latest build" --notes "$notes" --prerelease
+            gh release edit latest --title "Latest build" --notes "$notes" --prerelease=false --latest
           else
-            gh release create latest --title "Latest build" --notes "$notes" --prerelease
+            gh release create latest --title "Latest build" --notes "$notes" --latest
           fi
           gh release upload latest out/OpenCiv2-windows.zip out/OpenCiv2-linux-x86_64.tar.gz out/OpenCiv2-macos.zip --clobber
           gh release delete-asset latest civ2-reconstructed-windows.zip -y || true
