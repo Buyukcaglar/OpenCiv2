@@ -42,15 +42,18 @@ jobs:
   # The unit tests (tests/unit: recorded calls of the game's functions, run
   # again and compared; no game files needed).  The runner is the 32-bit
   # Linux build (gcc -m32).  Not needed by the release.
+  # Debian 12 as the dev container (tools/docker): the same gcc (12) as the
+  # one the cases were recorded with.
   unit-tests:
     runs-on: ubuntu-24.04
+    container: debian:12
     steps:
       - uses: actions/checkout@v4
       - name: 32-bit toolchain, SDL2 and zlib
         run: |
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends gcc-multilib g++-multilib libsdl2-dev:i386 zlib1g-dev:i386
+          dpkg --add-architecture i386
+          apt-get update
+          apt-get install -y --no-install-recommends python3 gcc-multilib g++-multilib libsdl2-dev:i386 zlib1g-dev:i386
       - name: Build the runner
         run: python3 tools/build_native.py --target linux32test
       - name: Run the unit tests
