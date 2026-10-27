@@ -277,7 +277,7 @@ void __cdecl ui_pump_messages_net(void)
 {
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
-    net_session_block.process_messages(1,0);
+    net.process_messages(1,0);
   }
   return;
 }
@@ -329,7 +329,7 @@ void __cdecl menu_find_city(void)
       visible = false;
       civ = (int)cities[city].owner;
       if ((game.reveal_map != '\0') ||
-         (((game.game_flags & GAME_SCENARIO) != 0 && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)))) {
+         (((game.game_flags & GAME_SCENARIO) != 0 && ((scenario.flags[0] & 8) != 0)))) {
         visible = true;
       }
       if (civ == civ2) {
@@ -350,7 +350,7 @@ void __cdecl menu_find_city(void)
           text_append((const char *)adjective);
           text_append_rparen();
         }
-        if ((((game.game_flags & GAME_SCENARIO) != 0) && ((prefs_game_rules_block.scenario_flags[0] & 2) != 0)) &&
+        if ((((game.game_flags & GAME_SCENARIO) != 0) && ((scenario.flags[0] & 2) != 0)) &&
            (objective = city_objective_value(city), objective != 0)) {
           text_append_space();
           text_append_lparen();
@@ -361,7 +361,7 @@ void __cdecl menu_find_city(void)
           }
           text_append_rparen();
         }
-        dialog2.add_option((const char *)&map_views_block.text_buffer,city,0);
+        dialog2.add_option((const char *)&textbuf.buf,city,0);
         count++;
       }
     }
@@ -380,7 +380,7 @@ void __cdecl menu_find_city(void)
       ((MapView *)((i8 *)&map_views_block.map_views))->center_on((int)cities[city2].x,(int)cities[city2].y);
       if ((dialog2.result_extra != 0) && ((cities[city2].owner == civ2 || (game.reveal_map != '\0')))
          ) {
-        ((CityWindow *)((i8 *)&city_window_block.city_window))->open(city2);
+        ((CityWindow *)((i8 *)&city_wnd.window))->open(city2);
       }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 0040e38d */ { dialog2.Dialog::destruct(); }
@@ -398,7 +398,7 @@ void __cdecl menu_revolution(void)
   iptr civ;
   
   civ = human_civ[0];
-  if (((game.game_flags & GAME_SCENARIO) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 0x10) == 0)) {
+  if (((game.game_flags & GAME_SCENARIO) == 0) || ((scenario.flags[0] & 0x10) == 0)) {
     if ((civs[human_civ[0]].flags & CIVF_GOV_CHANGED) == 0) {
       if (civs[human_civ[0]].government != GOV_ANARCHY) {
         text = civ_get_adjective(human_civ[0]);
@@ -406,7 +406,7 @@ void __cdecl menu_revolution(void)
         text_set_label_arg(1,government_names[civs[civ].government]);
         choice = popup_game_with_sprite((const char *)&str_revolution,(iptr)(((i8 *)&government_sprites_block.government_sprites) +
                                                   (uint)civs[civ].government * 0x3c),
-                                   (ui_large_screen == 0) - 1 & 8);
+                                   (ui_metrics.large_screen == 0) - 1 & 8);
         if (choice == 0) {
           snd_play_effect(SND_REVOLT,1,0,0);
           text = (iptr)(civ_name_plural(civ));
@@ -685,8 +685,8 @@ i32 Dialog::load_text(const char *filename,const char *section,i32 flags)
 void __cdecl dlg_set_scale(i32 numerator,i32 denominator)
 
 {
-  dlg_scale_num = numerator;
-  dlg_scale_den = denominator;
+  dlg_style.scale_num = numerator;
+  dlg_style.scale_den = denominator;
   return;
 }
 
@@ -779,7 +779,7 @@ void PictureWindow::open(uint resource_id,u32 report,u32 style,u32 img_width,u32
   eh_state = 0xffffffff;
   palette.init();
   eh_state = 0;
-  ((PictureWindow *)((i8 *)&advisor_window_block.advisor_window))->close();
+  ((PictureWindow *)((i8 *)&advisor_state.window))->close();
   ui_set_button_font((iptr)&advisor_button_font_block.advisor_button_font);
   controls_created = 0;
   frame_state = 0;
@@ -791,7 +791,7 @@ void PictureWindow::open(uint resource_id,u32 report,u32 style,u32 img_width,u32
   frame_style = style;
   wnd_w = GetSystemMetrics(2);
   vscroll_width = wnd_w;
-  border = frame_border_width;
+  border = ui_metrics.border_width;
   if ((int)resource_id < 0) {
     resource_id = ~resource_id + 1;
   }
@@ -1684,7 +1684,7 @@ void __cdecl ui_delay_ticks(int ticks)
     win_flush_pending_msgs();
     now_tick = timeGetTime();
     if (2 < game.multiplayer) {
-      net_session_block.process_messages(1,0);
+      net.process_messages(1,0);
     }
   } while ((int)(now_tick - start_tick) < (ticks * 0x32) / 3);
   return;
@@ -1701,9 +1701,9 @@ void __cdecl ui_blit_all_windows(void)
       map_views_block.map_view_recs[view].wnd_blit_surface();
     }
   }
-  ((DibSurface *)((i8 *)&minimap_window_block.minimap_window))->wnd_blit_surface();
-  ((DibSurface *)((i8 *)&status_window_block.status_window))->wnd_blit_surface();
-  ((DibSurface *)((i8 *)&city_window_block.city_window))->wnd_blit_surface();
+  ((DibSurface *)((i8 *)&minimap_state.window))->wnd_blit_surface();
+  ((DibSurface *)((i8 *)&status_wnd.window))->wnd_blit_surface();
+  ((DibSurface *)((i8 *)&city_wnd.window))->wnd_blit_surface();
   wnd_flush_paint();
   return;
 }
@@ -1756,7 +1756,7 @@ ui_file_name_dialog(iptr parent,const char *title,iptr file_buf,iptr filter,iptr
 void __cdecl ui_flush_input(void)
 
 {
-  if (net_session_block.mp_simultaneous_moves == '\0') {
+  if (net.mp_simultaneous_moves == '\0') {
     input_flush_events();
   }
   win_flush_pending_msgs();
@@ -1771,9 +1771,9 @@ void __cdecl ui_redraw_all_maps(int force)
 {
   if ((moving_units_mode != 0) || (force != 0)) {
     moving_units_mode = 0;
-    unit_blink_phase = 1;
-    unit_blink_skip_tick = 1;
-    unit_blink_active = 0;
+    blink.unit_phase = 1;
+    blink.unit_skip_tick = 1;
+    blink.unit_active = 0;
     status_redraw(1);
     mapviews_redraw_cursor();
     menu_update_states();
@@ -1794,11 +1794,11 @@ void __cdecl ui_focus_active_unit(int auto_next)
   
   start_blink = moving_units_mode != 1;
   if (start_blink) {
-    unit_blink_phase = 0;
-    unit_blink_skip_tick = 1;
+    blink.unit_phase = 0;
+    blink.unit_skip_tick = 1;
     mapviews_redraw_cursor();
     moving_units_mode = 1;
-    unit_blink_active = 0;
+    blink.unit_active = 0;
   }
   selectable = unit_is_selectable((int)game.active_unit);
   if (selectable == 0) {
@@ -1808,21 +1808,21 @@ void __cdecl ui_focus_active_unit(int auto_next)
   unit = (iptr)game.active_unit;
   if ((((-1 < unit) && (unit < game.num_units)) && (units[unit].id != 0)) &&
      ((unit_ok = unit_is_selectable(unit), unit_ok != 0 &&
-      (((game.multiplayer < 3 || (net_session_block.mp_simultaneous_moves != '\0')) ||
-       ((auto_next == 0 || (net_session_block.mp_turn_civ == human_civ[0])))))))) {
+      (((game.multiplayer < 3 || (net.mp_simultaneous_moves != '\0')) ||
+       ((auto_next == 0 || (net.mp_turn_civ == human_civ[0])))))))) {
     if (start_blink) {
       status_redraw(1);
     }
-    map_cursor_x[0] = units[unit].x;
-    map_cursor_y[0] = units[unit].y;
+    map_cursor.x[0] = units[unit].x;
+    map_cursor.y[0] = units[unit].y;
     if (start_blink) {
-      mapviews_ensure_visible((int)map_cursor_x[0],(int)map_cursor_y[0],(int)units[unit].owner);
+      mapviews_ensure_visible((int)map_cursor.x[0],(int)map_cursor.y[0],(int)units[unit].owner);
     }
     menu_update_states();
     map_views_block.unit_focus_done = 1;
     return;
   }
-  unit_blink_active = 0;
+  blink.unit_active = 0;
   ui_redraw_all_maps(0);
   return;
 }
@@ -1923,7 +1923,7 @@ popup_city_sprite_draw_cb(i32 dlg,iptr sprite,iptr city,i32 left,int x,
             i32 y)
 
 {
-  gfx_draw_city(sprite,city,0,x + 2,y,(ui_large_screen == 0) - 1 & 8);
+  gfx_draw_city(sprite,city,0,x + 2,y,(ui_metrics.large_screen == 0) - 1 & 8);
   return;
 }
 
@@ -1943,14 +1943,14 @@ i32 __cdecl popup_text_with_city(const char *filename,const char *section,i32 dl
   eh_state = 0;
   sprite_init(&sprite);
   (*((char *)&eh_state + 0)) = 1;
-  sprite.create_solid((2 - (uint)(ui_large_screen == 0)) * 0x40,(2 - (uint)(ui_large_screen == 0)) * 0x30
+  sprite.create_solid((2 - (uint)(ui_metrics.large_screen == 0)) * 0x40,(2 - (uint)(ui_metrics.large_screen == 0)) * 0x30
              ,0);
   dialog2.load_text(filename,section,dlg_flags);
   dialog2.set_sprite_draw_fn((DialogSpriteDrawFn)popup_city_sprite_draw_cb);
   dialog2.set_image_zoom(0);
   dialog2.add_sprite((iptr)&sprite,city,0);
   result = dialog2.show_modal(0);
-  (*(u32 *)&dlg_help_pressed) = dialog2.result_extra;
+  (*(u32 *)&dlg_input.help_pressed) = dialog2.result_extra;
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004a6dc9 */ { sprite_destroy(&sprite); }
   eh_state = 0xffffffff;
@@ -1964,7 +1964,7 @@ popup_unit_sprite_draw_cb(i32 dlg,iptr sprite,iptr unit,i32 left,int x,
             i32 y)
 
 {
-  gfx_draw_unit(sprite,unit,4,x + 2,y,(ui_large_screen == 0) - 1 & 8,0);
+  gfx_draw_unit(sprite,unit,4,x + 2,y,(ui_metrics.large_screen == 0) - 1 & 8,0);
   return;
 }
 
@@ -1984,14 +1984,14 @@ i32 __cdecl popup_text_with_unit(const char *filename,const char *section,i32 dl
   eh_state = 0;
   sprite_init(&sprite);
   (*((char *)&eh_state + 0)) = 1;
-  sprite.create_solid((2 - (uint)(ui_large_screen == 0)) * 0x40,(2 - (uint)(ui_large_screen == 0)) * 0x30
+  sprite.create_solid((2 - (uint)(ui_metrics.large_screen == 0)) * 0x40,(2 - (uint)(ui_metrics.large_screen == 0)) * 0x30
              ,0);
   dialog2.load_text(filename,section,dlg_flags);
   dialog2.set_sprite_draw_fn((DialogSpriteDrawFn)popup_unit_sprite_draw_cb);
   dialog2.set_image_zoom(0);
   dialog2.add_sprite((iptr)&sprite,unit,0);
   result = dialog2.show_modal(0);
-  (*(u32 *)&dlg_help_pressed) = dialog2.result_extra;
+  (*(u32 *)&dlg_input.help_pressed) = dialog2.result_extra;
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004a6f3d */ { sprite_destroy(&sprite); }
   eh_state = 0xffffffff;
@@ -2193,19 +2193,19 @@ void __cdecl ui_reset_window_layout(void)
   
   main_frame_wnd_block.main_frame_wnd.maximize();
   city_window_init_size();
-  ((WndBase *)((i8 *)&city_window_block.city_window_wnd))->show_restored();
-  ((WndBase *)((i8 *)&city_window_block.city_window_wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.city_wnd_rect);
+  ((WndBase *)((i8 *)&city_wnd.wnd))->show_restored();
+  ((WndBase *)((i8 *)&city_wnd.wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.city_wnd_rect);
   city_window_close();
   minimap_calc_rect();
-  ((WndBase *)((i8 *)&minimap_window_block.minimap_wnd))->show_restored();
+  ((WndBase *)((i8 *)&minimap_state.wnd))->show_restored();
   minimap_hidden = 0;
-  ((WndBase *)((i8 *)&minimap_window_block.minimap_wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
-  ((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window))->repaint();
+  ((WndBase *)((i8 *)&minimap_state.wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
+  ((SurfaceWindow *)((i8 *)&minimap_state.window))->repaint();
   status_calc_wnd_rect();
-  ((WndBase *)((i8 *)&status_window_block.status_window_wnd))->show_restored();
-  status_wnd_hidden = 0;
-  ((WndBase *)((i8 *)&status_window_block.status_window_wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.status_wnd_rect);
-  ((SurfaceWindow *)((i8 *)&status_window_block.status_window))->repaint();
+  ((WndBase *)((i8 *)&status_wnd.wnd))->show_restored();
+  status_bar.wnd_hidden = 0;
+  ((WndBase *)((i8 *)&status_wnd.wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.status_wnd_rect);
+  ((SurfaceWindow *)((i8 *)&status_wnd.window))->repaint();
   if (parley_wnd_block.large_layout == 0) {
     width2 = 0x208;
     height2 = 0x14f;
@@ -2216,9 +2216,9 @@ void __cdecl ui_reset_window_layout(void)
     height2 = 0x1cc;
     parley_font_height = ((GameFont *)((i8 *)&font_size30))->font_cached_height();
   }
-  parley_wnd_block.caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + parley_font_height;
-  width2 = width2 + (panel_padding_x + panel_margin_x) * 2 + 6;
-  height2 = height2 + panel_margin_y * 2 + (int)parley_wnd_block.caption_height * 2 + 0xe;
+  parley_wnd_block.caption_height = panel_layout.margin_y * 2 + panel_layout.bevel_width * 2 + parley_font_height;
+  width2 = width2 + (panel_layout.padding_x + panel_layout.margin_x) * 2 + 6;
+  height2 = height2 + panel_layout.margin_y * 2 + (int)parley_wnd_block.caption_height * 2 + 0xe;
   left = main_frame_wnd_block.main_frame_wnd.client_width();
   left = (left >> 1) - (width2 >> 1);
   parley_wnd_block.wnd_x = left;
@@ -2236,9 +2236,9 @@ void __cdecl ui_reset_window_layout(void)
     height2 = 0x1cc;
     chat_font_height = ((GameFont *)((i8 *)&font_size30))->font_cached_height();
   }
-  chat_wnd_block.caption_height = panel_margin_y * 2 + panel_bevel_width * 2 + chat_font_height;
-  width2 = width2 + (panel_padding_x + panel_margin_x) * 2 + 6;
-  height2 = height2 + panel_margin_y * 2 + (int)chat_wnd_block.caption_height * 2 + 0xe;
+  chat_wnd_block.caption_height = panel_layout.margin_y * 2 + panel_layout.bevel_width * 2 + chat_font_height;
+  width2 = width2 + (panel_layout.padding_x + panel_layout.margin_x) * 2 + 6;
+  height2 = height2 + panel_layout.margin_y * 2 + (int)chat_wnd_block.caption_height * 2 + 0xe;
   left = main_frame_wnd_block.main_frame_wnd.client_width();
   left = (left >> 1) - (width2 >> 1);
   chat_wnd_block.wnd_x = left;
@@ -2273,16 +2273,16 @@ void __cdecl menu_load_game(void)
   parley_wnd_close();
   chat_wnd_close();
   pedia_close();
-  ((PictureWindow *)((i8 *)&advisor_window_block.advisor_window))->close();
-  ((PictureWindow *)((i8 *)&casualty_window_block.casualty_window))->close();
+  ((PictureWindow *)((i8 *)&advisor_state.window))->close();
+  ((PictureWindow *)((i8 *)&casualty.window))->close();
   music_was_on = (byte)game.game_options & OPT_MUSIC;
   result = game_load_dialog(0,0,0);
   if (result == 0) {
     if (game.multiplayer != '\0') {
       load_game_pick_civ(1);
     }
-    (*(byte *)&civ_saved_cursor_x_block.saved_turn_civ) = (byte)(*(i8 *)&human_civ);
-    (*(byte *)&turn_resume_civ) = (byte)(*(i8 *)&human_civ);
+    (*(byte *)&saved_turn.civ) = (byte)(*(i8 *)&human_civ);
+    (*(byte *)&turn_loop.resume_civ) = (byte)(*(i8 *)&human_civ);
     game.multiplayer = '\0';
     game.human_players = (u8)(1 << ((byte)(*(i8 *)&human_civ) & 0x1f));
     if (((byte)game.game_options & OPT_MUSIC) == 0) {
@@ -2316,17 +2316,17 @@ void __cdecl menu_load_game(void)
     }
     else {
       main_frame_wnd_block.main_frame_wnd.maximize();
-      ((WndBase *)((i8 *)&city_window_block.city_window_wnd))->show_restored();
-      ((WndBase *)((i8 *)&city_window_block.city_window_wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.city_wnd_rect);
+      ((WndBase *)((i8 *)&city_wnd.wnd))->show_restored();
+      ((WndBase *)((i8 *)&city_wnd.wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.city_wnd_rect);
       city_window_close();
-      ((WndBase *)((i8 *)&minimap_window_block.minimap_wnd))->show_restored();
+      ((WndBase *)((i8 *)&minimap_state.wnd))->show_restored();
       minimap_hidden = 0;
-      ((WndBase *)((i8 *)&minimap_window_block.minimap_wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
-      ((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window))->repaint();
-      ((WndBase *)((i8 *)&status_window_block.status_window_wnd))->show_restored();
-      status_wnd_hidden = 0;
-      ((WndBase *)((i8 *)&status_window_block.status_window_wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.status_wnd_rect);
-      ((SurfaceWindow *)((i8 *)&status_window_block.status_window))->repaint();
+      ((WndBase *)((i8 *)&minimap_state.wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.minimap_wnd_rect);
+      ((SurfaceWindow *)((i8 *)&minimap_state.window))->repaint();
+      ((WndBase *)((i8 *)&status_wnd.wnd))->show_restored();
+      status_bar.wnd_hidden = 0;
+      ((WndBase *)((i8 *)&status_wnd.wnd))->move_to_rect((iptr)&minimap_wnd_rect_block.status_wnd_rect);
+      ((SurfaceWindow *)((i8 *)&status_wnd.window))->repaint();
       ((WndBase *)((i8 *)&map_views_block.map_view_wnds))->show_restored();
       ((WndBase *)((i8 *)&map_views_block.map_view_wnds))->move_to_rect((iptr)&map_view_saved_rects_block.map_view_saved_rects);
       ((MapView *)((i8 *)&map_views_block.map_views))->update_title();
@@ -2340,14 +2340,14 @@ void __cdecl menu_load_game(void)
           ((SurfaceWindow *)&map_views_block.map_view_recs[view])->repaint();
         }
       }
-      ((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window))->repaint();
+      ((SurfaceWindow *)((i8 *)&minimap_state.window))->repaint();
     }
     moving_units_mode = 0;
-    ((SurfaceWindow *)((i8 *)&status_window_block.status_window))->repaint();
+    ((SurfaceWindow *)((i8 *)&status_wnd.window))->repaint();
     ui_redraw_all_maps(1);
     ui_focus_active_unit(0);
     menu_update_states();
-    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->load_indexes();
+    ((PediaWindow *)((i8 *)&pedia_wnd.window))->load_indexes();
     ui_flush_input();
     if ((game.multiplayer != '\0') && (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0)) {
       mp_turn_timer_start(1);
@@ -2391,8 +2391,8 @@ void __cdecl menu_game_options(void)
   dlg_check_set_bool(9,game.game_options & OPT_MOVE_WITH_MOUSE);
   dlg_check_set_bool(10,game.game_options & OPT_ENTER_CLOSES_CITY);
   text_set_string_arg(0,(const char *)str_ptr_5_4_0f_multiplayer_26_march_99);
-  crt_strcat(((i8 *)&minimap_window_block.text_string_args),((i8 *)&game_options_version_sep_str));
-  crt_strcat(((i8 *)&minimap_window_block.text_string_args),(*(i8 * *)str_ptr_5_4_0f_multiplayer_26_march_99_rest));
+  crt_strcat(((i8 *)&text_args.strings),((i8 *)&game_options_version_sep_str));
+  crt_strcat(((i8 *)&text_args.strings),(*(i8 * *)str_ptr_5_4_0f_multiplayer_26_march_99_rest));
   result = popup_game_flags((const char *)&str_gameoptions,1);
   if (result == 0) {
     game.game_options = game.game_options & 0xffff8027;
@@ -2450,7 +2450,7 @@ void __cdecl menu_game_options(void)
     if (result != 0) {
       game.game_options = game.game_options | OPT_ENTER_CLOSES_CITY;
     }
-    prefs_game_rules_block.prefs_game_options = game.game_options;
+    prefs.game_options = game.game_options;
     prefs_save_civ2dat();
   }
   return;
@@ -2504,7 +2504,7 @@ void __cdecl menu_graphic_options(void)
     if (result != 0) {
       game.game_options = game.game_options | OPT_WONDER_MOVIES;
     }
-    prefs_game_rules_block.prefs_game_options = game.game_options;
+    prefs.game_options = game.game_options;
     prefs_save_civ2dat();
   }
   return;
@@ -2520,13 +2520,13 @@ void __cdecl menu_multiplayer_options(void)
   int choice;
   
   dlg_checks_clear();
-  dlg_check_set_bool(0,(int)(short)(*(ushort *)&prefs_main_menu_choice_block.prefs_clear_chat_on_new_game));
-  dlg_check_set_bool(1,(int)(short)(*(ushort *)&prefs_main_menu_choice_block.prefs_clear_chat_on_boot));
-  if (net_session_block.net_host_flag != '\0') {
-    dlg_check_set_bool(2,(int)(short)(*(ushort *)&civ_saved_cursor_x_block.mp_double_production));
-    dlg_check_set_bool(3,(int)(short)(*(ushort *)&civ_saved_cursor_x_block.mp_double_moves));
+  dlg_check_set_bool(0,(int)(short)(*(ushort *)&menu_prefs.clear_chat_on_new_game));
+  dlg_check_set_bool(1,(int)(short)(*(ushort *)&menu_prefs.clear_chat_on_boot));
+  if (net.host_flag != '\0') {
+    dlg_check_set_bool(2,(int)(short)(*(ushort *)&mp_doubles.production));
+    dlg_check_set_bool(3,(int)(short)(*(ushort *)&mp_doubles.moves));
   }
-  if (((game.multiplayer < 3) || (net_session_block.net_host_flag == '\0')) && (2 < game.multiplayer)) {
+  if (((game.multiplayer < 3) || (net.host_flag == '\0')) && (2 < game.multiplayer)) {
     choice = popup_game_flags((const char *)&str_multiplayeroptions2,1);
   }
   else {
@@ -2534,43 +2534,43 @@ void __cdecl menu_multiplayer_options(void)
   }
   if (choice == 0) {
     result = dlg_check_get(0);
-    (*(ushort *)&prefs_main_menu_choice_block.prefs_clear_chat_on_new_game) = (ushort)(result != 0);
+    (*(ushort *)&menu_prefs.clear_chat_on_new_game) = (ushort)(result != 0);
     result = dlg_check_get(1);
-    (*(ushort *)&prefs_main_menu_choice_block.prefs_clear_chat_on_boot) = (ushort)(result != 0);
+    (*(ushort *)&menu_prefs.clear_chat_on_boot) = (ushort)(result != 0);
     prefs_save_civ2dat();
-    if (((2 < game.multiplayer) && (net_session_block.net_host_flag != '\0')) || (game.multiplayer < 3)) {
+    if (((2 < game.multiplayer) && (net.host_flag != '\0')) || (game.multiplayer < 3)) {
       result = dlg_check_get(2);
-      (*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_production) = (ushort)(result != 0);
+      (*(ushort *)&menu_prefs.mp_double_production) = (ushort)(result != 0);
       result = dlg_check_get(3);
-      (*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_moves) = (ushort)(result != 0);
-      if (((*(ushort *)&civ_saved_cursor_x_block.mp_double_production) != (*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_production)) || ((*(ushort *)&civ_saved_cursor_x_block.mp_double_moves) != (*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_moves))) {
-        if ((2 < game.multiplayer) && (1 < net_session_block.net_player_count[0])) {
-          crt_strcpy(((i8 *)&minimap_window_block.text_string_args),((i8 *)&net_session_block.net_local_player_name));
-          str_clear((char *)&minimap_window_block.text_string_arg1);
-          str_append_label((iptr)&minimap_window_block.text_string_arg1,0x350 - (uint)((*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_production) == 0));
-          crt_strcat(((i8 *)&minimap_window_block.text_string_arg1),((i8 *)&mp_options_vote_sep_str));
-          str_append_label((iptr)&minimap_window_block.text_string_arg1,0x352 - (uint)((*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_moves) == 0));
-          net_session_block.net_vote_replies_pending = net_session_block.net_player_count[0] - 1;
-          net_session_block.net_vote_status = 0;
+      (*(ushort *)&menu_prefs.mp_double_moves) = (ushort)(result != 0);
+      if (((*(ushort *)&mp_doubles.production) != (*(ushort *)&menu_prefs.mp_double_production)) || ((*(ushort *)&mp_doubles.moves) != (*(ushort *)&menu_prefs.mp_double_moves))) {
+        if ((2 < game.multiplayer) && (1 < net.net_player_count[0])) {
+          crt_strcpy(((i8 *)&text_args.strings),((i8 *)&net.local_player_name));
+          str_clear((char *)&text_args.string1);
+          str_append_label((iptr)&text_args.string1,0x350 - (uint)((*(ushort *)&menu_prefs.mp_double_production) == 0));
+          crt_strcat(((i8 *)&text_args.string1),((i8 *)&mp_options_vote_sep_str));
+          str_append_label((iptr)&text_args.string1,0x352 - (uint)((*(ushort *)&menu_prefs.mp_double_moves) == 0));
+          net.vote_replies_pending = net.net_player_count[0] - 1;
+          net.vote_status = 0;
           net_send_text_args(0x43,0xff,2,0,0,0);
-          dlg_pending_idle_callback = net_vote_wait_idle_cb;
-          dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
+          dlg_style.pending_idle_callback = net_vote_wait_idle_cb;
+          dialog_state.timeout_start = timer_ticks();
           result = popup_game_sprite_flags((const char *)&str_pmchangeserver,0x2000001,(iptr)&popup_info_icon_sprite,0);
-          if (((result < 0) || (net_session_block.net_vote_status == -1)) || (net_session_block.net_vote_replies_pending != 0)) {
-            (*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_production) = (*(ushort *)&civ_saved_cursor_x_block.mp_double_production);
-            (*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_moves) = (*(ushort *)&civ_saved_cursor_x_block.mp_double_moves);
+          if (((result < 0) || (net.vote_status == -1)) || (net.vote_replies_pending != 0)) {
+            (*(ushort *)&menu_prefs.mp_double_production) = (*(ushort *)&mp_doubles.production);
+            (*(ushort *)&menu_prefs.mp_double_moves) = (*(ushort *)&mp_doubles.moves);
             net_send_text_args(0x44,0xff,0,0,0,0);
             popup_game_with_sprite((const char *)&str_pmchangeno,(iptr)&popup_info_icon_sprite,0);
             return;
           }
         }
-        (*(ushort *)&civ_saved_cursor_x_block.mp_double_production) = (*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_production);
-        (*(ushort *)&civ_saved_cursor_x_block.mp_double_moves) = (*(ushort *)&prefs_main_menu_choice_block.prefs_mp_double_moves);
+        (*(ushort *)&mp_doubles.production) = (*(ushort *)&menu_prefs.mp_double_production);
+        (*(ushort *)&mp_doubles.moves) = (*(ushort *)&menu_prefs.mp_double_moves);
         rules_apply_double_moves();
-        if ((2 < game.multiplayer) && (1 < net_session_block.net_player_count[0])) {
+        if ((2 < game.multiplayer) && (1 < net.net_player_count[0])) {
           net_send_message(NM_UNITS,0xff,0,0,0,0,0,0,0,0);
-          net_send_message(NM_MULTIOPTIONS_CHANGE,0xff,(int)(short)(*(ushort *)&civ_saved_cursor_x_block.mp_double_production),(int)(short)(*(ushort *)&civ_saved_cursor_x_block.mp_double_moves),
-                             (int)civ_saved_cursor_x_block.mp_simultaneous_setting,0,0,0,0,0);
+          net_send_message(NM_MULTIOPTIONS_CHANGE,0xff,(int)(short)(*(ushort *)&mp_doubles.production),(int)(short)(*(ushort *)&mp_doubles.moves),
+                             (int)mp_options.simultaneous_setting,0,0,0,0,0);
           net_send_text_args(0x45,0xff,0,0,0,0);
           popup_game_with_sprite((const char *)&str_pmchangeyes,(iptr)&popup_info_icon_sprite,0);
         }
@@ -2645,7 +2645,7 @@ void __cdecl menu_message_options(void)
     if (result == 0) {
       game.message_options = game.message_options | MSGOFF_NO_ZOOM_TO_CITY;
     }
-    prefs_game_rules_block.prefs_message_options = game.message_options;
+    prefs.message_options = game.message_options;
     prefs_save_civ2dat();
   }
   return;
@@ -2655,7 +2655,7 @@ void __cdecl menu_message_options(void)
 void __cdecl menu_show_hidden_terrain(void)
 
 {
-  unit_blink_active = 0;
+  blink.unit_active = 0;
   map_show_hidden_terrain = 1;
   map_redraw_all_views(human_civ[0],1);
   popup_game((const char *)&str_hiddenterrain);
@@ -2714,8 +2714,8 @@ void __cdecl menu_select_music(void)
       }
       dialog2.load_game_section((const char *)&str_pickmusic,1);
     }
-    if (1 < (*(int *)&cd_music_current_track)) {
-      dialog2.set_default_choice((*(int *)&cd_music_current_track) - 2);
+    if (1 < (*(int *)&cd_music.current_track)) {
+      dialog2.set_default_choice((*(int *)&cd_music.current_track) - 2);
     }
     choice = dialog2.show_modal(0);
     if (choice < 0) {
@@ -2762,8 +2762,8 @@ static void menu_cmd_view_zoom(int cmd)
   switch(cmd) {
   case CMD_STANDARD_ZOOM:
     map_views_block.mapview_zoom[0] = 0;
-    map_views_block.map_view_center_x[0] = map_cursor_x[0];
-    map_views_block.mapview_center_y[0] = map_cursor_y[0];
+    map_views_block.map_view_center_x[0] = map_cursor.x[0];
+    map_views_block.mapview_center_y[0] = map_cursor.y[0];
     ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
     break;
   case CMD_MEDIUM_ZOOM_OUT:
@@ -2778,7 +2778,7 @@ static void menu_cmd_view_zoom(int cmd)
     game.game_options = game.game_options ^ OPT_MAP_GRID;
     ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_checked(CMD_MAP_GRID,(game.game_options & OPT_MAP_GRID) >> 5);
     map_redraw_all_views(human_civ[0],1);
-    prefs_game_rules_block.prefs_game_options = game.game_options;
+    prefs.game_options = game.game_options;
     prefs_save_civ2dat();
     break;
   case CMD_ARRANGE_WINDOWS:
@@ -2976,19 +2976,19 @@ static void menu_cmd_pedia(int cmd)
 
   switch(cmd) {
   case CMD_PEDIA_IMPROVEMENTS:
-    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(2,1);
+    ((PediaWindow *)((i8 *)&pedia_wnd.window))->open_category(2,1);
     break;
   case CMD_PEDIA_WONDERS:
-    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(3,1);
+    ((PediaWindow *)((i8 *)&pedia_wnd.window))->open_category(3,1);
     break;
   case CMD_PEDIA_UNITS:
-    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(4,1);
+    ((PediaWindow *)((i8 *)&pedia_wnd.window))->open_category(4,1);
     break;
   case CMD_PEDIA_GOVERNMENTS:
-    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(6,1);
+    ((PediaWindow *)((i8 *)&pedia_wnd.window))->open_category(6,1);
     break;
   case CMD_PEDIA_TERRAIN:
-    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(5,1);
+    ((PediaWindow *)((i8 *)&pedia_wnd.window))->open_category(5,1);
     break;
   case CMD_PEDIA_CONCEPTS:
     if ((cmd == CMD_PEDIA_WONDERS) &&
@@ -2996,7 +2996,7 @@ static void menu_cmd_pedia(int cmd)
       menu_wonder_movies();
     }
     else {
-      ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(7,1);
+      ((PediaWindow *)((i8 *)&pedia_wnd.window))->open_category(7,1);
     }
     break;
   case CMD_ABOUT:
@@ -3020,15 +3020,15 @@ void __cdecl menu_command(i32 menu,int cmd)
   int result;
   
   result = XD_InFlushSendBuffer();
-  if ((((((((result == 0) && (net_session_block.unit_create_busy == 0)) && (net_session_block.unit_delete_busy == 0)) &&
-         ((net_session_block.city_create_busy == 0 && (net_session_block.city_delete_busy == 0)))) && (net_session_block.net_lock_map_busy == 0)) &&
-       (((net_session_block.net_unlock_map_busy == 0 && (net_session_block.unit_stack_unlink_busy == 0)) &&
-        ((net_session_block.unit_stack_link_busy == 0 && (((net_session_block.unit_stack_bottom_busy == 0 && (net_session_block.unit_relocate_busy == 0)) && (net_session_block.city_acquire_wonder_busy == 0)))
-         ))))) && ((net_session_block.civ_eliminate_busy == 0 && (net_session_block.civ_create_busy == 0)))) &&
-     ((net_session_block.civ_check_destroyed_busy == 0 &&
-      (((net_session_block.unit_gather_cargo_busy == 0 && (net_session_block.unit_lift_off_map_busy == 0)) && ((net_session_block.unit_delete_cargo_busy == 0 && (net_session_block.unit_destroy_redraw_busy == 0)))))
+  if ((((((((result == 0) && (net.unit_create_busy == 0)) && (net.unit_delete_busy == 0)) &&
+         ((net.city_create_busy == 0 && (net.city_delete_busy == 0)))) && (net.lock_map_busy == 0)) &&
+       (((net.unlock_map_busy == 0 && (net.unit_stack_unlink_busy == 0)) &&
+        ((net.unit_stack_link_busy == 0 && (((net.unit_stack_bottom_busy == 0 && (net.unit_relocate_busy == 0)) && (net.city_acquire_wonder_busy == 0)))
+         ))))) && ((net.civ_eliminate_busy == 0 && (net.civ_create_busy == 0)))) &&
+     ((net.civ_check_destroyed_busy == 0 &&
+      (((net.unit_gather_cargo_busy == 0 && (net.unit_lift_off_map_busy == 0)) && ((net.unit_delete_cargo_busy == 0 && (net.unit_destroy_redraw_busy == 0)))))
       ))) {
-    if (city_turn_processing == 0) {
+    if (city_turn.processing == 0) {
       result = ui_paradrop_cursor_active();
       if ((result == 0) || (mapviews_reset_cursor(), cmd != CMD_PARADROP)) {
         if (cmd < 0x111) {
@@ -3125,7 +3125,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             unit_cmd_build_city();
           }
           else if (cmd == CMD_CENTER_VIEW) {
-            ((MapView *)((i8 *)&map_views_block.map_views))->center_on((int)map_cursor_x[0],(int)map_cursor_y[0]);
+            ((MapView *)((i8 *)&map_views_block.map_views))->center_on((int)map_cursor.x[0],(int)map_cursor.y[0]);
           }
         }
         else if (cmd < 0x431) {
@@ -3284,7 +3284,7 @@ void __cdecl menu_command(i32 menu,int cmd)
         }
         else if (cmd < 0x902) {
           if (cmd == CMD_PEDIA_ADVANCES) {
-            ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(1,1);
+            ((PediaWindow *)((i8 *)&pedia_wnd.window))->open_category(1,1);
           }
           else {
             menu_cmd_editors(cmd);
@@ -3301,9 +3301,9 @@ void __cdecl menu_command(i32 menu,int cmd)
   }
   else {
     dbg_log((const char *)&str_mainmenu_menu_exec_blocked_by_xd_flushse);
-    net_session_block.blocked_input_kind = 5;
-    net_session_block.blocked_input_arg1_i32 = menu;
-    net_session_block.blocked_input_arg2_i32 = cmd;
+    net.blocked_input_kind = 5;
+    net.blocked_input_arg1 = menu;
+    net.blocked_input_arg2 = cmd;
   }
   return;
 }
@@ -3355,7 +3355,7 @@ void __cdecl menu_build_main(void)
              (game.multiplayer != '\0' &((int *)&mp_cheat_menu_allowed) == 0));
   if (((((game.game_options & OPT_CHEAT_MODE) == 0) || (game.multiplayer != '\0')) ||
       ((game.game_flags & GAME_SCENARIO) == 0)) ||
-     (status = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), status == 0)) {
+     (status = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home)), status == 0)) {
     editor_checked = 0;
   }
   else {
@@ -3364,7 +3364,7 @@ void __cdecl menu_build_main(void)
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_checked(CMD_SCENARIO_FLAG,editor_checked);
   if ((((game.game_options & OPT_CHEAT_MODE) == 0) || (game.multiplayer != '\0')) ||
      (((game.game_flags & GAME_SCENARIO) == 0 ||
-      (status = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), status == 0)))) {
+      (status = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home)), status == 0)))) {
     editor_disabled = 1;
   }
   else {
@@ -3391,7 +3391,7 @@ void __cdecl menu_set_item_label(i32 item_id,i32 label_id,i32 enabled)
   
   text_clear();
   text_append_label(label_id);
-  text_expand_vars((iptr)&map_views_block.text_buffer,(iptr)label_text);
+  text_expand_vars((iptr)&textbuf.buf,(iptr)label_text);
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_text(item_id,(const char *)label_text);
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(item_id,enabled);
   return;
@@ -3553,7 +3553,7 @@ static void menu_update_multiplayer_items(void)
       ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(CMD_CHEAT_MODE,1);
     }
     ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(CMD_LOAD_GAME,1);
-    if ((civ_saved_cursor_x_block.mp_open_game == 0) || (game.multiplayer != 1)) {
+    if ((mp_options.open_game == 0) || (game.multiplayer != 1)) {
       ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(CMD_JOIN_GAME,1);
     }
     else {
@@ -3571,7 +3571,7 @@ static void menu_update_multiplayer_items(void)
       ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(CMD_SAVE_GAME,1);
     }
     else {
-      if (net_session_block.net_host_flag == '\0') {
+      if (net.host_flag == '\0') {
         ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(CMD_CHANGE_TIMER,1);
       }
       else {
@@ -3698,12 +3698,12 @@ static void menu_update_cheat_items(void)
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_checked(CMD_CHEAT_MODE,cheat_checked);
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(CMD_CHEAT_MODE,(uint)(game.multiplayer != '\0' &((int *)&mp_cheat_menu_allowed) == 0)
             );
-  if ((2 < game.multiplayer) && (net_session_block.mp_turn_civ != human_civ[0])) {
+  if ((2 < game.multiplayer) && (net.mp_turn_civ != human_civ[0])) {
     ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_menu_enabled(4,1);
   }
   if ((((((*((char *)&game.game_options + 1)) & (OPT_CHEAT_MODE >> 8)) == 0) || (game.multiplayer != '\0')) ||
       ((game.game_flags & GAME_SCENARIO) == 0)) ||
-     (path_cmp = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), path_cmp == 0)) {
+     (path_cmp = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home)), path_cmp == 0)) {
     scenario_checked = 0;
   }
   else {
@@ -3711,7 +3711,7 @@ static void menu_update_cheat_items(void)
   }
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_checked(CMD_SCENARIO_FLAG,scenario_checked);
   if (((((*((char *)&game.game_options + 1)) & (OPT_CHEAT_MODE >> 8)) == 0) || (game.multiplayer != '\0')) ||
-     (((game.game_flags & GAME_SCENARIO) == 0 || (path_cmp2 = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), path_cmp2 == 0)
+     (((game.game_flags & GAME_SCENARIO) == 0 || (path_cmp2 = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home)), path_cmp2 == 0)
       ))) {
     scenario_menu_disabled = 1;
   }
@@ -3735,7 +3735,7 @@ void __cdecl menu_update_states(void)
   menu_update_multiplayer_items();
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(CMD_VIEW_PIECES,(moving_units_mode == 0));
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(CMD_MOVE_PIECES,(moving_units_mode == 1));
-  if ((((game.game_flags & GAME_SCENARIO) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 0x10) == 0)) &&
+  if ((((game.game_flags & GAME_SCENARIO) == 0) || ((scenario.flags[0] & 0x10) == 0)) &&
      (civs[human_civ[0]].government != GOV_ANARCHY)) {
     revolution_disabled = 0;
   }
@@ -3790,9 +3790,9 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
   eh_state = 0;
   sprite_init(&sprite);
   (*((char *)&eh_state + 0)) = 1;
-  if (civ_saved_cursor_x_block.autoplay_active == 0) {
+  if (autoplay.active == 0) {
     if (silent == 0) {
-      if (main_menu_block.city_notify_enabled == 0) {
+      if (city_calc.notify_enabled == 0) {
         eh_state = eh_state & 0xffffff00;
         /* inlined unwind funclet 004ebbad */ { sprite_destroy(&sprite); }
         eh_state = 0xffffffff;
@@ -3830,14 +3830,14 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
     sprite.grab_from_surface((int)popup + 0x2d8,7,0,0,width,height);
     ((Dialog *)((int)popup + 0x4a4))->load_game_text(section);
     ((Dialog *)((int)popup + 0x4a4))->add_sprite((iptr)&sprite,0,0);
-    if ((silent == 0) && (main_menu_block.city_zoom_requested == 0)) {
+    if ((silent == 0) && (city_calc.zoom_requested == 0)) {
       height = 0;
       option_id = 1;
-      option_text = (iptr)label_string(label_string_ids[0x20]);
+      option_text = (iptr)label_string(label_table.string_ids[0x20]);
       ((Dialog *)((int)popup + 0x4a4))->add_option((const char *)option_text,option_id,height);
       height = 0;
       option_id = 0;
-      option_text = (iptr)label_string(label_string_ids[0x21]);
+      option_text = (iptr)label_string(label_table.string_ids[0x21]);
       ((Dialog *)((int)popup + 0x4a4))->add_option((const char *)option_text,option_id,height);
       if ((game.message_options & MSGOFF_NO_ZOOM_TO_CITY) == 0) {
         ((Dialog *)((int)popup + 0x4a4))->set_default_choice(0);
@@ -3848,7 +3848,7 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
     }
     result = ((Dialog *)((int)popup + 0x4a4))->show_modal(0);
     if ((silent == 0) && (0 < result)) {
-      main_menu_block.city_zoom_requested = 1;
+      city_calc.zoom_requested = 1;
     }
     if (popup != (void *)0x0) {
       city_picture_popup_scalar_dtor(popup,1);
@@ -3959,18 +3959,18 @@ popup_text_run(iptr file,const char *section,i32 result,i32 arg4,i32 arg5,
   if (status == 0) {
     if (((byte)dialog2.style_flags & 4) != 0) {
       for (i = 0; i < (int)dialog2.option_count; i++) {
-        dialog2.set_option_checked(i,1 << ((byte)i & 0x1f) & dlg_check_bits
+        dialog2.set_option_checked(i,1 << ((byte)i & 0x1f) & dlg_input.check_bits
                   );
       }
     }
     result = dialog2.show_modal(0);
-    (*(u32 *)&dlg_help_pressed) = dialog2.result_extra;
+    (*(u32 *)&dlg_input.help_pressed) = dialog2.result_extra;
     if (((byte)dialog2.style_flags & 4) != 0) {
-      dlg_check_bits = 0;
+      dlg_input.check_bits = 0;
       for (i = 0; i < (int)dialog2.option_count; i++) {
         status = dialog2.option_is_checked(i);
         if (status != 0) {
-          dlg_check_bits = dlg_check_bits | 1 << ((byte)i & 0x1f);
+          dlg_input.check_bits = dlg_input.check_bits | 1 << ((byte)i & 0x1f);
         }
       }
     }
@@ -3998,7 +3998,7 @@ popup_text_with_sprite(iptr file,const char *section,i32 flags,iptr sprite,i32 z
   dialog2.add_sprite(sprite,0,0);
   dialog2.set_image_zoom(zoom);
   result = dialog2.show_modal(0);
-  (*(u32 *)&dlg_help_pressed) = dialog2.result_extra;
+  (*(u32 *)&dlg_input.help_pressed) = dialog2.result_extra;
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0051d616 */ { dialog2.Dialog::destruct(); }
   return result;
@@ -4056,7 +4056,7 @@ i32 __cdecl dlg_input_number(iptr file,const char *section,int initial,iptr out_
 void __cdecl dlg_checks_clear(void)
 
 {
-  (*(i32 *)&dlg_check_bits) = 0;
+  (*(i32 *)&dlg_input.check_bits) = 0;
   return;
 }
 
@@ -4065,10 +4065,10 @@ void __cdecl dlg_check_set(i32 index,int checked)
 
 {
   if (checked == 0) {
-    dlg_check_bits = dlg_check_bits & ~(1 << ((byte)index & 0x1f));
+    dlg_input.check_bits = dlg_input.check_bits & ~(1 << ((byte)index & 0x1f));
   }
   else {
-    dlg_check_bits = dlg_check_bits | 1 << ((byte)index & 0x1f);
+    dlg_input.check_bits = dlg_input.check_bits | 1 << ((byte)index & 0x1f);
   }
   return;
 }
@@ -4077,7 +4077,7 @@ void __cdecl dlg_check_set(i32 index,int checked)
 uint __cdecl dlg_check_get(i32 index)
 
 {
-  return 1 << ((byte)index & 0x1f) & dlg_check_bits;
+  return 1 << ((byte)index & 0x1f) & dlg_input.check_bits;
 }
 
 /* 0052182c auto */
@@ -4301,21 +4301,21 @@ void __cdecl ui_init_screen_metrics(void)
   gfx_get_screen_rect((iptr)&caption_small_font_block.screen_rect);
   caption_font_block.screen_width = rect_width((RECT *)&caption_small_font_block.screen_rect);
   caption_font_block.screen_height = rect_height((RECT *)&caption_small_font_block.screen_rect);
-  ui_font_height = 0x10;
+  ui_metrics.font_height = 0x10;
   if (999 < caption_font_block.screen_width) {
-    ui_font_height = 0x18;
+    ui_metrics.font_height = 0x18;
   }
-  (*(uint *)&ui_large_screen) = (uint)(999 < caption_font_block.screen_width);
-  ((GameFont *)((i8 *)&caption_font_block.caption_font))->set(0,ui_font_height);
-  ((GameFont *)((i8 *)&caption_small_font_block.caption_small_font))->set(0,(ui_font_height * 2) / 3);
-  ((GameFont *)((i8 *)&ui_text_font))->set(0,ui_font_height);
+  (*(uint *)&ui_metrics.large_screen) = (uint)(999 < caption_font_block.screen_width);
+  ((GameFont *)((i8 *)&caption_font_block.caption_font))->set(0,ui_metrics.font_height);
+  ((GameFont *)((i8 *)&caption_small_font_block.caption_small_font))->set(0,(ui_metrics.font_height * 2) / 3);
+  ((GameFont *)((i8 *)&ui_text_font))->set(0,ui_metrics.font_height);
   metric = ((GameFont *)((i8 *)&caption_font_block.caption_font))->font_cached_height();
-  frame_caption_height = metric + frame_padding * 2 + frame_bevel_width * 2;
-  frame_border_width = frame_bevel_width * 2 + frame_padding * 2;
+  ui_metrics.caption_height = metric + ui_metrics.padding * 2 + ui_metrics.bevel_width * 2;
+  ui_metrics.border_width = ui_metrics.bevel_width * 2 + ui_metrics.padding * 2;
   metric = GetSystemMetrics(7);
-  sys_dlgframe_w2 = metric * 2;
+  ui_metrics.dlgframe_w2 = metric * 2;
   metric = GetSystemMetrics(8);
-  sys_dlgframe_h2 = metric * 2;
+  ui_metrics.dlgframe_h2 = metric * 2;
   return;
 }
 
@@ -4323,7 +4323,7 @@ void __cdecl ui_init_screen_metrics(void)
 void __cdecl frame_set_border_tile(iptr tile)
 
 {
-  frame_border_tile = tile;
+  ui_metrics.border_tile = tile;
   return;
 }
 
@@ -4348,19 +4348,19 @@ int FrameWindow::draw_frame_borders(int bevel,i32 highlight_color2,i32 shadow_co
   else {
     caption_h = caption_height;
   }
-  height2 = caption_h + frame_bevel_width * -2;
+  height2 = caption_h + ui_metrics.bevel_width * -2;
   width2 = rect_width((RECT *)&frame_rect);
-  gfx_tile_fill((iptr)this,frame_border_tile,0,bevel,width2,height2,0,bevel);
+  gfx_tile_fill((iptr)this,ui_metrics.border_tile,0,bevel,width2,height2,0,bevel);
   height2 = border_width + bevel * -2;
   offset = rect_height((RECT *)&frame_rect);
   offset -= (bevel + height2);
-  gfx_tile_fill((iptr)this,frame_border_tile,0,offset,width2,height2,0,offset);
+  gfx_tile_fill((iptr)this,ui_metrics.border_tile,0,offset,width2,height2,0,offset);
   width2 = border_width + bevel * -2;
   height2 = rect_height((RECT *)&frame_rect);
-  gfx_tile_fill((iptr)this,frame_border_tile,bevel,0,width2,height2,bevel,0);
+  gfx_tile_fill((iptr)this,ui_metrics.border_tile,bevel,0,width2,height2,bevel,0);
   offset = rect_width((RECT *)&frame_rect);
   offset -= (bevel + width2);
-  gfx_tile_fill((iptr)this,frame_border_tile,offset,0,width2,height2,offset,0);
+  gfx_tile_fill((iptr)this,ui_metrics.border_tile,offset,0,width2,height2,offset,0);
   rect2.left = frame_rect;
   rect2.top = frame_top_u;
   rect2.right = frame_right_u;
@@ -4382,7 +4382,7 @@ int FrameWindow::draw_frame_borders(int bevel,i32 highlight_color2,i32 shadow_co
     gfx_draw_bevel_rect((iptr)this,(RECT *)&rect2,shadow_color2,highlight_color2);
     rect_deflate((iptr)&rect2,1,1);
   }
-  button_x = frame_border_width;
+  button_x = ui_metrics.border_width;
   for (i = 0; i < (int)caption_button_count; i++) {
     width2 = (int)(*(int *)(caption_button_area + i * 0x1c + 0xc) * caption_height) / 0x18;
     height2 = (int)(*(int *)(caption_button_area + i * 0x1c + 0x10) * caption_height) / 0x18;
@@ -4392,7 +4392,7 @@ int FrameWindow::draw_frame_borders(int bevel,i32 highlight_color2,i32 shadow_co
     (*(Sprite **)(caption_button_area + i * 0x1c + 0x14))->draw((iptr)sprite_rect,
                (iptr)this,button_x,button_y2);
     gfx_reset_zoom_scale();
-    button_x = button_x + width2 + frame_padding;
+    button_x = button_x + width2 + ui_metrics.padding;
   }
   return button_x;
 }
@@ -4404,17 +4404,17 @@ void FrameWindow::update_timer_text()
   int minutes;
   int seconds;
 
-  if ((civ_saved_cursor_x_block.autoplay_active == 0) || (show_turn_status == 0)) {
+  if ((autoplay.active == 0) || (show_turn_status == 0)) {
     if ((((uint)game.human_players & 1 << (game.turn_civ & 0x1fU)) == 0) || (show_turn_timer == 0))
     {
       timer_text = '\0';
     }
-    else if (timer_last_value != (*(u32 *)&mp_turn_seconds_left)) {
+    else if (timer_last_value != (*(u32 *)&mp_timer.seconds_left)) {
       if (timer_last_value == 0xffffffff) {
         timer_last_value = civ_saved_cursor_x_block.mp_turn_time_limit_ms / 1000;
       }
       else {
-        timer_last_value = (*(u32 *)&mp_turn_seconds_left);
+        timer_last_value = (*(u32 *)&mp_timer.seconds_left);
       }
       if ((int)timer_last_value < 0) {
         timer_last_value = 0;
@@ -4441,9 +4441,9 @@ void FrameWindow::update_timer_text()
       }
     }
   }
-  else if ((int)civ_saved_cursor_x_block.autoplay_turns_left != timer_last_value) {
-    timer_last_value = (int)civ_saved_cursor_x_block.autoplay_turns_left;
-    __itoa((int)civ_saved_cursor_x_block.autoplay_turns_left,(char *)&timer_text,10);
+  else if ((int)autoplay.turns_left != timer_last_value) {
+    timer_last_value = (int)autoplay.turns_left;
+    __itoa((int)autoplay.turns_left,(char *)&timer_text,10);
   }
 }
 
@@ -4453,9 +4453,9 @@ void FrameWindow::append_turn_status(char *caption)
 {
   i32 adjective;
 
-  if (((show_turn_status == 0) || (game.multiplayer == '\0')) || (net_session_block.mp_simultaneous_moves != '\0')) {
-    if (((show_turn_status != 0) && (game.multiplayer != '\0')) && (net_session_block.mp_simultaneous_moves != '\0')) {
-      if ((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) {
+  if (((show_turn_status == 0) || (game.multiplayer == '\0')) || (net.mp_simultaneous_moves != '\0')) {
+    if (((show_turn_status != 0) && (game.multiplayer != '\0')) && (net.mp_simultaneous_moves != '\0')) {
+      if ((1 << ((*(byte *)&net.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) {
         crt_strcat(caption,((i8 *)&caption_simul_open_paren_str));
         if (game_language == 1) {
           crt_strcat(caption,((i8 *)&caption_simul_ai_fr_str));
@@ -4480,28 +4480,28 @@ void FrameWindow::append_turn_status(char *caption)
   }
   else {
     crt_strcat(caption,((i8 *)&caption_status_open_paren_str));
-    if ((((*(byte *)&civs[human_civ[0]].treaties[net_session_block.mp_turn_civ] & TREATY_CONTACT) == 0) &&
-        (net_session_block.mp_turn_civ != human_civ[0])) &&
-       ((game.multiplayer != 1 || ((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)net_session_block.hotseat_human_players) == 0)))) {
-      if ((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) {
+    if ((((*(byte *)&civs[human_civ[0]].treaties[net.mp_turn_civ] & TREATY_CONTACT) == 0) &&
+        (net.mp_turn_civ != human_civ[0])) &&
+       ((game.multiplayer != 1 || ((1 << ((*(byte *)&net.mp_turn_civ) & 0x1f) & (uint)net.hotseat_human_players) == 0)))) {
+      if ((1 << ((*(byte *)&net.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) {
         if (game_language == 1) {
           crt_strcat(caption,((i8 *)&caption_ai_fr_str));
         }
         else {
           crt_strcat(caption,((i8 *)&caption_ai_str));
         }
-        if (civ_saved_cursor_x_block.autoplay_active == 0) {
+        if (autoplay.active == 0) {
           timer_text = '\0';
         }
       }
       else {
-        crt_strcat(caption,((i8 *)&net_session_block.net_slot_player_names) + net_session_block.net_civ_slots[net_session_block.mp_turn_civ] * 0x54);
+        crt_strcat(caption,((i8 *)&net.slot_player_names) + net.net_civ_slots[net.mp_turn_civ] * 0x54);
       }
     }
     else {
-      adjective = civ_adjective(net_session_block.mp_turn_civ);
+      adjective = civ_adjective(net.mp_turn_civ);
       crt_strcat((char *)((void *)caption),(const char *)((void *)adjective));
-      if (((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+      if (((1 << ((*(byte *)&net.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) && (autoplay.active == 0)) {
         timer_text = '\0';
       }
     }
@@ -4537,9 +4537,9 @@ void FrameWindow::draw_caption()
   char caption[256];
   
   reset_clip();
-  highlight_color2 = frame_highlight_color;
-  shadow_color2 = frame_shadow_color;
-  bevel = frame_bevel_width;
+  highlight_color2 = ui_metrics.highlight_color;
+  shadow_color2 = ui_metrics.shadow_color;
+  bevel = ui_metrics.bevel_width;
   button_x = draw_frame_borders(bevel,highlight_color2,shadow_color2);
   update_timer_text();
   crt_strcpy(caption,(const char *)frame_title);
@@ -4631,7 +4631,7 @@ void FrameWindow::layout()
   size = rect_height((RECT *)&client_rect);
   client_height = size;
   destroy_caption_buttons();
-  button_x = frame_border_width;
+  button_x = ui_metrics.border_width;
   for (i = 0; i < (int)caption_button_count; i++) {
     width = (int)(*(int *)(caption_button_area + i * 0x1c + 0xc) * caption_height) / 0x18;
     height = (int)(*(int *)(caption_button_area + i * 0x1c + 0x10) * caption_height) / 0x18;
@@ -4656,7 +4656,7 @@ void FrameWindow::layout()
     (*(Hotspot **)(caption_button_area + i * 0x1c + 0x18))->create((iptr)native_wnd2,
                i + 1000,(iptr)button_rect);
     (*(Hotspot **)(caption_button_area + i * 0x1c + 0x18))->set_click_callback(frame_wnd_on_caption_button_click);
-    button_x = button_x + width + frame_padding;
+    button_x = button_x + width + ui_metrics.padding;
   }
   return;
 }
@@ -4799,8 +4799,8 @@ void FrameWindow::create(const char *title,uint flags,int x,int y,int width, int
   caption_button_count = 0;
   on_caption_button = 0;
   if ((flags & 4) != 0) {
-    caption_height = (*(u32 *)&frame_caption_height);
-    border_width = (*(u32 *)&frame_border_width);
+    caption_height = (*(u32 *)&ui_metrics.caption_height);
+    border_width = (*(u32 *)&ui_metrics.border_width);
   }
   if ((flags & 8) == 0) {
     wnd_style = 0x202;
@@ -5289,10 +5289,10 @@ void __cdecl menu_dispatch_command(i32 menu_index,i32 item_index)
   i32 menu_id;
   i32 item_id;
   
-  if (menu_command_callback != 0) {
-    menu_id = menu_active_object->id_at_visible_index(menu_index);
-    item_id = menu_active_object->item_id_at_visible_index(menu_id,item_index);
-    menu_command_callback(menu_id,item_id);
+  if (menu_state.command_callback != 0) {
+    menu_id = menu_state.active_object->id_at_visible_index(menu_index);
+    item_id = menu_state.active_object->item_id_at_visible_index(menu_id,item_index);
+    menu_state.command_callback(menu_id,item_id);
   }
   return;
 }
@@ -5302,8 +5302,8 @@ void GameMenu::attach_to_window(ModalMenuWindow *window)
 
 {
   if (window != (ModalMenuWindow *)0x0) {
-    menu_owner_window = window;
-    menu_active_object = this;
+    menu_state.owner_window = window;
+    menu_state.active_object = this;
     window->attach_menu((iptr)this);
     window->set_menu_callback(menu_dispatch_command);
   }
@@ -5314,8 +5314,8 @@ void GameMenu::attach_to_window(ModalMenuWindow *window)
 void GameMenu::set_command_handler(MenuCommandFn handler)
 
 {
-  menu_active_object = this;
-  menu_command_callback = handler;
+  menu_state.active_object = this;
+  menu_state.command_callback = handler;
   return;
 }
 
@@ -5419,8 +5419,8 @@ void GameMenu::rebuild(iptr window)
     menu_flags = menu_flags | 0x8000;
     attach_to_window((ModalMenuWindow *)window);
   }
-  if (menu_owner_window != (ModalMenuWindow *)0x0) {
-    menu_owner_window->redraw_menu_bar();
+  if (menu_state.owner_window != (ModalMenuWindow *)0x0) {
+    menu_state.owner_window->redraw_menu_bar();
   }
   return;
 }
@@ -5699,15 +5699,15 @@ void __cdecl ui_pick_unit_from_stack(void)
   i32 dialog_flags;
   iptr unit;
   
-  unit_blink_active = 0;
+  blink.unit_active = 0;
   if (moving_units_mode == 1) {
     unit = (iptr)game.active_unit;
     if (units[unit].id == 0) {
-      unit_blink_active = 0;
+      blink.unit_active = 0;
       return;
     }
     if (units[unit].owner != human_civ[0]) {
-      unit_blink_active = 0;
+      blink.unit_active = 0;
       return;
     }
     stack_count = unit_stack_sum(unit,2);
@@ -5716,7 +5716,7 @@ void __cdecl ui_pick_unit_from_stack(void)
     }
   }
   else {
-    unit = tile_first_unit((int)map_cursor_x[0],(int)map_cursor_y[0]);
+    unit = tile_first_unit((int)map_cursor.x[0],(int)map_cursor.y[0]);
     if (unit < 0) {
       return;
     }
@@ -5731,7 +5731,7 @@ void __cdecl ui_pick_unit_from_stack(void)
   /* a stack: choose the unit */
   if (stack_count != 1) {
     dialog_flags = 1;
-    prompt = (iptr)label_string(label_string_ids[0x3e]);
+    prompt = (iptr)label_string(label_table.string_ids[0x3e]);
     unit = unit_stack_select_dialog(unit,(const char *)prompt,dialog_flags);
     if (unit < 0) {
       return;
@@ -5919,7 +5919,7 @@ void __cdecl active_dialog_global_init(void)
 void __cdecl active_dialog_static_init(void)
 
 {
-  dialog_title_font_obj_block.active_dialog = (Dialog *)dialog_stack[0];
+  dialog_state.active = (Dialog *)dlg_style.stack[0];
   return;
 }
 
@@ -5929,7 +5929,7 @@ void __cdecl active_dialog_static_init(void)
 void __cdecl dialog_edit_on_change(void)
 
 {
-  dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
+  dialog_state.timeout_start = timer_ticks();
   return;
 }
 
@@ -5939,7 +5939,7 @@ void __cdecl dialog_edit_on_change(void)
 void __cdecl dialog_radio_on_select(void)
 
 {
-  dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
+  dialog_state.timeout_start = timer_ticks();
   return;
 }
 
@@ -5947,7 +5947,7 @@ void __cdecl dialog_radio_on_select(void)
 void __cdecl dlg_set_palette(iptr palette)
 
 {
-  dlg_palette = palette;
+  dlg_defaults.palette = palette;
   return;
 }
 
@@ -5955,7 +5955,7 @@ void __cdecl dlg_set_palette(iptr palette)
 void __cdecl dlg_set_parent_window(iptr window)
 
 {
-  dlg_parent_window = window;
+  dlg_defaults.parent_window = window;
   return;
 }
 
@@ -5963,8 +5963,8 @@ void __cdecl dlg_set_parent_window(iptr window)
 void __cdecl dialog_set_default_offset(i32 x,i32 y)
 
 {
-  dlg_default_x = x;
-  dlg_default_y = y;
+  dlg_defaults.x = x;
+  dlg_defaults.y = y;
   return;
 }
 
@@ -5983,7 +5983,7 @@ void __cdecl dialog_load_button_labels(void)
       label_id = text_read_line_pooled();
       dialog_plain_font_obj_block.dialog_button_label_ids[i] = label_id;
       label = label_string(dialog_plain_font_obj_block.dialog_button_label_ids[i]);
-      (((i8 * *)&dialog_button_labels))[i] = label;
+      (((i8 * *)&dlg_style.button_labels))[i] = label;
     }
   }
   return;
@@ -5996,15 +5996,15 @@ dialog_set_colors(i32 text_color,i32 text_shadow,i32 frame_color,i32 highlight_c
             i32 title_shadow)
 
 {
-  dlg_text_color = (i8)text_color;
-  dlg_text_shadow_color = (i8)text_shadow;
-  dlg_frame_color = (i8)frame_color;
-  (*(i8 *)&dlg_highlight_text_color) = (i8)highlight_color;
-  (*(i8 *)&dlg_bg_color) = (i8)bg_color;
-  (*(i8 *)&dlg_bevel_light_color) = (i8)bevel_light;
-  (*(i8 *)&dlg_bevel_dark_color) = (i8)bevel_dark;
-  dlg_title_text_color = (i8)title_color;
-  dlg_title_shadow_color = (i8)title_shadow;
+  dlg_style.text_color = (i8)text_color;
+  dlg_style.text_shadow_color = (i8)text_shadow;
+  dlg_style.frame_color = (i8)frame_color;
+  (*(i8 *)&dlg_style.highlight_text_color) = (i8)highlight_color;
+  (*(i8 *)&dlg_style.bg_color) = (i8)bg_color;
+  (*(i8 *)&dlg_style.bevel_light_color) = (i8)bevel_light;
+  (*(i8 *)&dlg_style.bevel_dark_color) = (i8)bevel_dark;
+  dlg_style.title_text_color = (i8)title_color;
+  dlg_style.title_shadow_color = (i8)title_shadow;
   return;
 }
 
@@ -6014,13 +6014,13 @@ dialog_set_list_colors(i32 bg_color,i32 text_color,i32 shadow_color,i32 sel_bg_c
             i32 sel_text_color,i32 sel_shadow_color,i32 default_color)
 
 {
-  list_bg_color = bg_color;
-  list_text_color = text_color;
-  list_shadow_color = shadow_color;
-  list_sel_bg_color = sel_bg_color;
-  dlg_sel_text_color = sel_text_color;
-  dlg_sel_text_shadow_color = sel_shadow_color;
-  dialog_default_list_color = default_color;
+  dlg_style.list_bg = bg_color;
+  dlg_style.list_text = text_color;
+  dlg_style.list_shadow = shadow_color;
+  dlg_style.list_sel_bg = sel_bg_color;
+  dlg_style.sel_text_color = sel_text_color;
+  dlg_style.sel_text_shadow_color = sel_shadow_color;
+  dlg_style.default_list_color = default_color;
   return;
 }
 
@@ -6028,7 +6028,7 @@ dialog_set_list_colors(i32 bg_color,i32 text_color,i32 shadow_color,i32 sel_bg_c
 void __cdecl dialog_set_frame_tile_surface(iptr surface)
 
 {
-  dlg_frame_tile_surface = surface;
+  dlg_style.frame_tile_surface = surface;
   return;
 }
 
@@ -6061,40 +6061,40 @@ void Dialog::init_defaults()
   extra_button_count = 0;
   std_button_count = extra_button_count;
   style_flags = 0;
-  scale_num = (*(u32 *)&dlg_scale_num);
-  scale_den = (*(u32 *)&dlg_scale_den);
+  scale_num = (*(u32 *)&dlg_style.scale_num);
+  scale_den = (*(u32 *)&dlg_style.scale_den);
   window_y = 0xfffffc19;
   window_x = window_y;
   origin_y = 0;
   origin_x = origin_y;
   wnd_height = 0;
   wnd_width = wnd_height;
-  if (((*(u32 *)&dlg_default_x) == 0) && ((*(u32 *)&dlg_default_y) == 0)) {
+  if (((*(u32 *)&dlg_defaults.x) == 0) && ((*(u32 *)&dlg_defaults.y) == 0)) {
     req_y = 0xfffffc19;
     req_x = req_y;
   }
   else {
-    req_x = (*(u32 *)&dlg_default_x);
-    req_y = (*(u32 *)&dlg_default_y);
+    req_x = (*(u32 *)&dlg_defaults.x);
+    req_y = (*(u32 *)&dlg_defaults.y);
   }
   min_height = 0;
   edit_label_width = 0;
-  bg_color = (uint)dlg_bg_color;
-  text_color = (uint)(*(byte *)&dlg_text_color);
-  shadow_color = (uint)(*(byte *)&dlg_text_shadow_color);
-  frame_color = (uint)(*(byte *)&dlg_frame_color);
-  highlight_color = (uint)dlg_highlight_text_color;
-  bevel_light_color = (uint)dlg_bevel_light_color;
-  bevel_dark_color = (uint)dlg_bevel_dark_color;
-  title_color = (uint)(*(byte *)&dlg_title_text_color);
-  title_shadow_color = (uint)(*(byte *)&dlg_title_shadow_color);
-  list_fill_color = (*(u32 *)&list_bg_color);
-  list_fg_color = (*(u32 *)&list_text_color);
-  list_fg_shadow_color = (*(u32 *)&list_shadow_color);
-  list_sel_fill_color = (*(u32 *)&list_sel_bg_color);
-  sel_text_color = (*(u32 *)&dlg_sel_text_color);
-  sel_shadow_color = (*(u32 *)&dlg_sel_text_shadow_color);
-  list_default_color = (*(u32 *)&dialog_default_list_color);
+  bg_color = (uint)dlg_style.bg_color;
+  text_color = (uint)(*(byte *)&dlg_style.text_color);
+  shadow_color = (uint)(*(byte *)&dlg_style.text_shadow_color);
+  frame_color = (uint)(*(byte *)&dlg_style.frame_color);
+  highlight_color = (uint)dlg_style.highlight_text_color;
+  bevel_light_color = (uint)dlg_style.bevel_light_color;
+  bevel_dark_color = (uint)dlg_style.bevel_dark_color;
+  title_color = (uint)(*(byte *)&dlg_style.title_text_color);
+  title_shadow_color = (uint)(*(byte *)&dlg_style.title_shadow_color);
+  list_fill_color = (*(u32 *)&dlg_style.list_bg);
+  list_fg_color = (*(u32 *)&dlg_style.list_text);
+  list_fg_shadow_color = (*(u32 *)&dlg_style.list_shadow);
+  list_sel_fill_color = (*(u32 *)&dlg_style.list_sel_bg);
+  sel_text_color = (*(u32 *)&dlg_style.sel_text_color);
+  sel_shadow_color = (*(u32 *)&dlg_style.sel_text_shadow_color);
+  list_default_color = (*(u32 *)&dlg_style.default_list_color);
   for (i = 0; i < 2; i++) {
     slot = (u8 *)&list_row_height_override[i];
     slot[0] = '\0';
@@ -6178,13 +6178,13 @@ Dialog *Dialog::construct(i32 size)
 void Dialog::close()
 
 {
-  if ((*(WndBase * *)&dlg_parent_window) == (WndBase *)0x0) {
+  if ((*(WndBase * *)&dlg_defaults.parent_window) == (WndBase *)0x0) {
     if (main_frame_created != 0) {
       main_frame_wnd_block.main_frame_wnd.focus_and_raise();
     }
   }
   else {
-    (*(WndBase * *)&dlg_parent_window)->focus_and_raise();
+    (*(WndBase * *)&dlg_defaults.parent_window)->focus_and_raise();
   }
   if (radio_group != 0) {
     if ((RadioGroup *)radio_group != (RadioGroup *)0x0) {
@@ -6259,14 +6259,14 @@ void Dialog::close()
     surf_wnd = 0;
     style_flags = style_flags | 0x10;
   }
-  if (this == dialog_title_font_obj_block.active_dialog) {
-    if ((dialog_stack_depth < 1) || (0x10 < dialog_stack_depth)) {
+  if (this == dialog_state.active) {
+    if ((dlg_style.stack_depth < 1) || (0x10 < dlg_style.stack_depth)) {
       ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(7,(iptr)&str_popupstackindex_0_popupstackindex_17,(iptr)&str_d_ss_franklinton_popup_1_cpp,0x19c);
     }
-    dialog_stack_depth--;
-    (*(iptr *)&net_session_block.dialog_stack_top) = (((i32 *)&dialog_stack))[dialog_stack_depth];
-    dialog_title_font_obj_block.active_dialog = (Dialog *)(*(iptr *)&net_session_block.dialog_stack_top);
-    dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
+    dlg_style.stack_depth--;
+    (*(iptr *)&net.dialog_stack_top) = (((i32 *)&dlg_style.stack))[dlg_style.stack_depth];
+    dialog_state.active = (Dialog *)(*(iptr *)&net.dialog_stack_top);
+    dialog_state.timeout_start = timer_ticks();
   }
   return;
 }
@@ -6296,9 +6296,9 @@ void Dialog::init(iptr surface_wnd,iptr background,RECT *rect,u32 flags)
     init_defaults();
     reset_string_pool((uint)pool_size);
   }
-  set_font((iptr)dialog_default_text_font);
-  set_title_font((iptr)(*(i8 * *)dialog_default_text_font_rest));
-  set_list_font((iptr)(*(i8 * *)(dialog_default_text_font_rest + 4)));
+  set_font((iptr)dlg_style.default_text_font);
+  set_title_font((iptr)(*(i8 * *)dlg_style.default_text_font_rest));
+  set_list_font((iptr)(*(i8 * *)(dlg_style.default_text_font_rest + 4)));
   surf_wnd = surface_wnd;
   bg_surface = background;
   result_id = 0;
@@ -6982,7 +6982,7 @@ DialogEditField *Dialog::add_edit_field(const char *label,iptr initial_text,size
   field->max_len = max_len;
   buffer = memblock_alloc((MemBlock *)string_pool,0x100);
   field->buffer = (char *)buffer;
-  char_width = ((GameFont *)(*(i8 * *)(draw_current_font_rest + 12)))->text_width((const char *)&str_w);
+  char_width = ((GameFont *)(*(i8 * *)(draw_target.font_rest + 12)))->text_width((const char *)&str_w);
   field->width = char_width * max_len;
   field_width = field->width + edit_label_width;
   if ((content_width != 0) && ((int)content_width < (int)field_width)) {
@@ -7428,9 +7428,9 @@ void Dialog::layout_buttons(int sprites_height,int content_height)
   button_x = wnd_width - (border_width - bevel_width);
   button_width = 0;
   for (i = 0; (int)i < 3; i++) {
-    value = button_width_for((const char *)(((i8 * *)&dialog_button_labels))[i]);
+    value = button_width_for((const char *)(((i8 * *)&dlg_style.button_labels))[i]);
     if ((int)button_width <= value) {
-      tmp = button_width_for((const char *)(((i8 * *)&dialog_button_labels))[i]);
+      tmp = button_width_for((const char *)(((i8 * *)&dlg_style.button_labels))[i]);
       button_width = tmp;
     }
   }
@@ -7910,7 +7910,7 @@ void Dialog::draw_option_list()
                          bevel_dark_color);
       ((DibSurface *)surf_wnd)->set_clip(&clip_rect2);
       if (option_count != 0) {
-        node2 = dialog_title_font_obj_block.active_dialog->option_list;
+        node2 = dialog_state.active->option_list;
         first_index = option_group_index(list_top_option[cur_pane]);
         group_pos = 0;
         for (i = 0; (node2 != 0 && (i < (int)option_count));
@@ -8112,12 +8112,12 @@ void __cdecl dialog_list_on_vscroll(i32 scroll_pos)
 {
   DialogOption *top_option;
   
-  if (dialog_title_font_obj_block.active_dialog != 0) {
-    dialog_title_font_obj_block.active_dialog->cur_pane = 0;
-    top_option = dialog_title_font_obj_block.active_dialog->option_at(scroll_pos);
-    if ((int)dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] != (iptr)top_option) {
-      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
-      dialog_title_font_obj_block.active_dialog->draw_option_list();
+  if (dialog_state.active != 0) {
+    dialog_state.active->cur_pane = 0;
+    top_option = dialog_state.active->option_at(scroll_pos);
+    if ((int)dialog_state.active->list_top_option[dialog_state.active->cur_pane] != (iptr)top_option) {
+      dialog_state.active->list_top_option[dialog_state.active->cur_pane] = top_option;
+      dialog_state.active->draw_option_list();
     }
   }
   return;
@@ -8164,7 +8164,7 @@ i32 Dialog::create_window()
     else {
       wnd_style = 0x842;
     }
-    if ((*(i8 * *)&dlg_parent_window) == (i8 *)0x0) {
+    if ((*(i8 * *)&dlg_defaults.parent_window) == (i8 *)0x0) {
       if (main_frame_created == 0) {
         parent2 = (i8 *)0x0;
       }
@@ -8173,13 +8173,13 @@ i32 Dialog::create_window()
       }
     }
     else {
-      parent2 = (*(i8 * *)&dlg_parent_window);
+      parent2 = (*(i8 * *)&dlg_defaults.parent_window);
     }
-    if ((*(i8 * *)&dlg_palette) == (i8 *)0x0) {
+    if ((*(i8 * *)&dlg_defaults.palette) == (i8 *)0x0) {
       palette = ((i8 *)&game_palette_block.game_palette);
     }
     else {
-      palette = (*(i8 * *)&dlg_palette);
+      palette = (*(i8 * *)&dlg_defaults.palette);
     }
     if (parent2 == (i8 *)0x0) {
       ((DibSurface *)surf_wnd)->wnd_create((iptr)title,wnd_style,window_x,
@@ -8203,18 +8203,18 @@ i32 Dialog::create_window()
       wnd_height = new_size;
     }
     ((SurfaceWindow *)surf_wnd)->set_redraw_callback(dialog_on_redraw);
-    if (dlg_pending_idle_callback == 0) {
-      if (dlg_default_idle_callback != 0) {
-        ((ModalMenuWindow *)(surf_wnd + 0x48))->set_modal_idle_callback(dlg_default_idle_callback);
+    if (dlg_style.pending_idle_callback == 0) {
+      if (dlg_style.default_idle_callback != 0) {
+        ((ModalMenuWindow *)(surf_wnd + 0x48))->set_modal_idle_callback(dlg_style.default_idle_callback);
       }
     }
     else {
-      ((ModalMenuWindow *)(surf_wnd + 0x48))->set_modal_idle_callback(dlg_pending_idle_callback);
-      dlg_pending_idle_callback = 0;
+      ((ModalMenuWindow *)(surf_wnd + 0x48))->set_modal_idle_callback(dlg_style.pending_idle_callback);
+      dlg_style.pending_idle_callback = 0;
     }
-    if (dlg_pending_move_handler != 0) {
-      ((WndHandlers *)(surf_wnd + 0x58))->set_move_handler(dlg_pending_move_handler);
-      dlg_pending_move_handler = 0;
+    if (dlg_style.pending_move_handler != 0) {
+      ((WndHandlers *)(surf_wnd + 0x58))->set_move_handler(dlg_style.pending_move_handler);
+      dlg_style.pending_move_handler = 0;
     }
     result = 1;
   }
@@ -8228,8 +8228,8 @@ i32 Dialog::create_window()
 void __cdecl dialog_on_redraw(void)
 
 {
-  if (dialog_title_font_obj_block.active_dialog != 0) {
-    dialog_title_font_obj_block.active_dialog->render();
+  if (dialog_state.active != 0) {
+    dialog_state.active->render();
   }
   return;
 }
@@ -8596,7 +8596,7 @@ void Dialog::create_buttons()
   for (i = 0; i < (int)(std_button_count + extra_button_count); i++) {
     if (i < (int)std_button_count) {
       button_id = *(iptr *)((u8 *)&extra_button_labels + i * 8 + 0x18);
-      label = (((i8 * *)&dialog_button_labels))[button_id];
+      label = (((i8 * *)&dlg_style.button_labels))[button_id];
     }
     else {
       button_id = -1;
@@ -8639,20 +8639,20 @@ void Dialog::create_controls()
   
   eh_state = 0xffffffff;
   label_count2 = 0;
-  if (this != dialog_title_font_obj_block.active_dialog) {
-    if ((dialog_stack_depth < 0) || (0xf < dialog_stack_depth)) {
+  if (this != dialog_state.active) {
+    if ((dlg_style.stack_depth < 0) || (0xf < dlg_style.stack_depth)) {
       ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(7,(iptr)&str_popupstackindex_0_popupstackindex_16,(iptr)&str_d_ss_franklinton_popup_1_cpp_2,0xc75);
     }
-    dialog_stack_depth++;
-    (*(Dialog * *)&net_session_block.dialog_stack_top) = this;
-    dialog_title_font_obj_block.active_dialog = this;
-    (((i32 *)&dialog_stack))[dialog_stack_depth] = (i32)this;
+    dlg_style.stack_depth++;
+    (*(Dialog * *)&net.dialog_stack_top) = this;
+    dialog_state.active = this;
+    (((i32 *)&dlg_style.stack))[dlg_style.stack_depth] = (i32)this;
   }
   if ((style_flags & 0x200) == 0) {
     unused_flag = 0;
-    ctrl_set_pending_font((iptr)dialog_title_font_obj_block.active_dialog->body_font);
+    ctrl_set_pending_font((iptr)dialog_state.active->body_font);
     ui_set_button_font((iptr)&dialog_plain_font_obj_block.dialog_plain_font_obj);
-    ui_set_ctrl_font((iptr)dialog_title_font_obj_block.active_dialog->body_font);
+    ui_set_ctrl_font((iptr)dialog_state.active->body_font);
     ui_set_default_font((iptr)&dialog_plain_font_obj_block.dialog_plain_font_obj);
     is_checkbox = style_flags & 4;
     is_listbox = style_flags & 0x1000;
@@ -8723,20 +8723,20 @@ void __cdecl dialog_radio_on_dblclick(i32 ctrl_id,int item)
   DialogOption *node2;
   
   found = 0;
-  if (dialog_title_font_obj_block.active_dialog != 0) {
+  if (dialog_state.active != 0) {
     index = 0;
-    for (node2 = dialog_title_font_obj_block.active_dialog->option_list; node2 != 0;
+    for (node2 = dialog_state.active->option_list; node2 != 0;
         node2 = node2->next) {
       if (item == index) {
         found = node2;
       }
       index++;
     }
-    dialog_title_font_obj_block.active_dialog->result_id = 0xffffffff;
+    dialog_state.active->result_id = 0xffffffff;
     if (found != 0) {
-      dialog_title_font_obj_block.active_dialog->result_id = found->id;
+      dialog_state.active->result_id = found->id;
     }
-    dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
+    dialog_state.active->style_flags = dialog_state.active->style_flags | 0x2000;
     dialog_end_current();
   }
   return;
@@ -8746,8 +8746,8 @@ void __cdecl dialog_radio_on_dblclick(i32 ctrl_id,int item)
 void __cdecl dialog_end_current(void)
 
 {
-  dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x400;
-  ((ModalMenuWindow *)((int)dialog_title_font_obj_block.active_dialog->surf_wnd + 0x48))->end_modal_loop();
+  dialog_state.active->style_flags = dialog_state.active->style_flags | 0x400;
+  ((ModalMenuWindow *)((int)dialog_state.active->surf_wnd + 0x48))->end_modal_loop();
   return;
 }
 
@@ -8755,8 +8755,8 @@ void __cdecl dialog_end_current(void)
 void __cdecl dialog_listbox_on_dblclick(void)
 
 {
-  if ((dialog_title_font_obj_block.active_dialog != 0) && ((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[1] & 4) == 0)) {
-    dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
+  if ((dialog_state.active != 0) && ((((byte *)&dialog_state.active->style_flags)[1] & 4) == 0)) {
+    dialog_state.active->style_flags = dialog_state.active->style_flags | 0x2000;
     dialog_end_current();
   }
   return;
@@ -8772,7 +8772,7 @@ void __cdecl dialog_on_sprite_click(int ctrl_id)
   int i;
   
   changed = false;
-  sprite = (i32 *)dialog_title_font_obj_block.active_dialog->sprite_list;
+  sprite = (i32 *)dialog_state.active->sprite_list;
   if (sprite != (i32 *)0x0) {
     for (i = 0; i < ctrl_id - 300; i++) {
       sprite = (i32 *)sprite[4];
@@ -8780,22 +8780,22 @@ void __cdecl dialog_on_sprite_click(int ctrl_id)
         return;
       }
     }
-    dialog_title_font_obj_block.active_dialog->result_id = *sprite;
-    if (((i32 *)dialog_title_font_obj_block.active_dialog->selected_sprite != sprite) &&
-       (dialog_title_font_obj_block.active_dialog->selected_sprite = (DialogSprite *)sprite,
-       (((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[2] & 2) != 0)) {
+    dialog_state.active->result_id = *sprite;
+    if (((i32 *)dialog_state.active->selected_sprite != sprite) &&
+       (dialog_state.active->selected_sprite = (DialogSprite *)sprite,
+       (((byte *)&dialog_state.active->style_flags)[2] & 2) != 0)) {
       changed = true;
     }
-    if (dialog_title_font_obj_block.active_dialog->on_sprite_click == 0) {
+    if (dialog_state.active->on_sprite_click == 0) {
       if (changed) {
-        dialog_title_font_obj_block.active_dialog->render();
+        dialog_state.active->render();
       }
     }
     else {
-      done = dialog_title_font_obj_block.active_dialog->on_sprite_click(*sprite);
-      dialog_title_font_obj_block.active_dialog->render();
+      done = dialog_state.active->on_sprite_click(*sprite);
+      dialog_state.active->render();
       if (done != 0) {
-        dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
+        dialog_state.active->style_flags = dialog_state.active->style_flags | 0x2000;
         dialog_end_current();
       }
     }
@@ -8809,13 +8809,13 @@ void __cdecl dialog_sprite_on_dblclick(void)
 {
   int done;
   
-  if (dialog_title_font_obj_block.active_dialog->on_sprite_dblclick != 0) {
-    done = dialog_title_font_obj_block.active_dialog->on_sprite_dblclick(0);
+  if (dialog_state.active->on_sprite_dblclick != 0) {
+    done = dialog_state.active->on_sprite_dblclick(0);
     if (done == 0) {
-      dialog_title_font_obj_block.active_dialog->render();
+      dialog_state.active->render();
     }
     else {
-      dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
+      dialog_state.active->style_flags = dialog_state.active->style_flags | 0x2000;
       dialog_end_current();
     }
   }
@@ -8836,24 +8836,24 @@ void __cdecl dialog_on_button_click(int ctrl_id)
   DialogOption *node2;
   DialogSprite *sprite;
   
-  if (dialog_title_font_obj_block.active_dialog != 0) {
-    dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
+  if (dialog_state.active != 0) {
+    dialog_state.timeout_start = timer_ticks();
     button_index = ctrl_id - 100;
-    if (button_index < (int)dialog_title_font_obj_block.active_dialog->std_button_count) {
-      button_id = *(int *)((iptr)dialog_title_font_obj_block.active_dialog + 0x2ac + button_index * 8);
+    if (button_index < (int)dialog_state.active->std_button_count) {
+      button_id = *(int *)((iptr)dialog_state.active + 0x2ac + button_index * 8);
     }
     else {
-      dialog_title_font_obj_block.active_dialog->result_extra = (button_index - (int)dialog_title_font_obj_block.active_dialog->std_button_count) + 1;
+      dialog_state.active->result_extra = (button_index - (int)dialog_state.active->std_button_count) + 1;
       button_id = 0;
     }
     if (button_id == 1) {
-      dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x80;
+      dialog_state.active->style_flags = dialog_state.active->style_flags | 0x80;
     }
-    if (((button_id == 0) && ((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[2] & 2) != 0)) &&
-       (dialog_title_font_obj_block.active_dialog->selected_sprite != 0)) {
-      sprite = dialog_title_font_obj_block.active_dialog->sprite_list;
+    if (((button_id == 0) && ((((byte *)&dialog_state.active->style_flags)[2] & 2) != 0)) &&
+       (dialog_state.active->selected_sprite != 0)) {
+      sprite = dialog_state.active->sprite_list;
       sprite_index = 0;
-      for (; (sprite != 0 && ((int)dialog_title_font_obj_block.active_dialog->selected_sprite != (iptr)sprite));
+      for (; (sprite != 0 && ((int)dialog_state.active->selected_sprite != (iptr)sprite));
           sprite = sprite->next) {
         sprite_index++;
       }
@@ -8862,18 +8862,18 @@ void __cdecl dialog_on_button_click(int ctrl_id)
       }
     }
     if (button_id == 2) {
-      dialog_title_font_obj_block.active_dialog->result_id = 0xffffffff;
+      dialog_state.active->result_id = 0xffffffff;
     }
     else {
-      if (((int)dialog_title_font_obj_block.active_dialog->sprite_count < 2) || (dialog_title_font_obj_block.active_dialog->option_count != 0)) {
-        dialog_title_font_obj_block.active_dialog->result_id = 0;
+      if (((int)dialog_state.active->sprite_count < 2) || (dialog_state.active->option_count != 0)) {
+        dialog_state.active->result_id = 0;
       }
-      if ((dialog_title_font_obj_block.active_dialog->option_count != 0) && ((dialog_title_font_obj_block.active_dialog->style_flags & 0x1004) == 0)
+      if ((dialog_state.active->option_count != 0) && ((dialog_state.active->style_flags & 0x1004) == 0)
          ) {
         index = 0;
         found = 0;
-        node2 = dialog_title_font_obj_block.active_dialog->option_list;
-        button_index = ((RadioGroup *)dialog_title_font_obj_block.active_dialog->radio_group)->get_selected();
+        node2 = dialog_state.active->option_list;
+        button_index = ((RadioGroup *)dialog_state.active->radio_group)->get_selected();
         for (; node2 != 0; node2 = node2->next) {
           if (button_index == index) {
             found = node2;
@@ -8881,7 +8881,7 @@ void __cdecl dialog_on_button_click(int ctrl_id)
           index++;
         }
         if (found != 0) {
-          dialog_title_font_obj_block.active_dialog->result_id = found->id;
+          dialog_state.active->result_id = found->id;
         }
       }
     }
@@ -8904,120 +8904,120 @@ void __cdecl dialog_on_keydown(i32 key)
   DialogSprite *sprite;
   DialogOption *node2;
   
-  if (dialog_title_font_obj_block.active_dialog == 0) {
+  if (dialog_state.active == 0) {
     return;
   }
-  if (((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[1] & 0x10) == 0) || (dialog_title_font_obj_block.active_dialog->edit_count != 0)) {
-    dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
+  if (((((byte *)&dialog_state.active->style_flags)[1] & 0x10) == 0) || (dialog_state.active->edit_count != 0)) {
+    dialog_state.timeout_start = timer_ticks();
   }
-  if ((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[2] & 2) != 0) {
+  if ((((byte *)&dialog_state.active->style_flags)[2] & 2) != 0) {
     switch(key) {
     case 0xa2:
     case 0xc1:
-      dialog_title_font_obj_block.active_dialog->selected_sprite =
-           (DialogSprite *)*(i32 *)((int)dialog_title_font_obj_block.active_dialog->selected_sprite + 0x10);
-      if (dialog_title_font_obj_block.active_dialog->selected_sprite == 0) {
-        dialog_title_font_obj_block.active_dialog->selected_sprite = dialog_title_font_obj_block.active_dialog->sprite_list;
+      dialog_state.active->selected_sprite =
+           (DialogSprite *)*(i32 *)((int)dialog_state.active->selected_sprite + 0x10);
+      if (dialog_state.active->selected_sprite == 0) {
+        dialog_state.active->selected_sprite = dialog_state.active->sprite_list;
       }
-      dialog_title_font_obj_block.active_dialog->render();
+      dialog_state.active->render();
       break;
     case 0xa8:
     case 0xc0:
-      for (sprite = dialog_title_font_obj_block.active_dialog->sprite_list;
-          ((sprite != 0 && ((int)sprite->next != (int)dialog_title_font_obj_block.active_dialog->selected_sprite)) &&
+      for (sprite = dialog_state.active->sprite_list;
+          ((sprite != 0 && ((int)sprite->next != (int)dialog_state.active->selected_sprite)) &&
           (sprite->next != 0)); sprite = sprite->next) {
       }
-      dialog_title_font_obj_block.active_dialog->selected_sprite = sprite;
-      dialog_title_font_obj_block.active_dialog->render();
+      dialog_state.active->selected_sprite = sprite;
+      dialog_state.active->render();
       break;
     case 0xd1:
-      if (dialog_title_font_obj_block.active_dialog->selected_sprite != 0) {
-        dialog_on_sprite_click(*(i32 *)dialog_title_font_obj_block.active_dialog->selected_sprite);
+      if (dialog_state.active->selected_sprite != 0) {
+        dialog_on_sprite_click(*(i32 *)dialog_state.active->selected_sprite);
       }
     }
   }
-  if ((dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) != 0x1000) {
+  if ((dialog_state.active->style_flags & 0x41000) != 0x1000) {
     return;
   }
-  if (dialog_title_font_obj_block.active_dialog->option_count == 0) {
+  if (dialog_state.active->option_count == 0) {
     key = 0;
   }
   do {
     switch(key) {
     case 0xa1:
     case 199:
-      index = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
-      pos = dialog_title_font_obj_block.active_dialog->count_group_options((i32)dialog_title_font_obj_block.active_dialog->cur_pane);
+      index = dialog_state.active->option_group_index(dialog_state.active->selected_option);
+      pos = dialog_state.active->count_group_options((i32)dialog_state.active->cur_pane);
       if (pos - 1 <= index) {
         return;
       }
-      index = dialog_title_font_obj_block.active_dialog->count_group_options((i32)dialog_title_font_obj_block.active_dialog->cur_pane);
-      redraw = (i32)dialog_title_font_obj_block.active_dialog->option_at(index - 1);
-      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)redraw;
-      dialog_title_font_obj_block.active_dialog->select_option(
-                 dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane],0);
-      dialog_title_font_obj_block.active_dialog->draw_option_list();
+      index = dialog_state.active->count_group_options((i32)dialog_state.active->cur_pane);
+      redraw = (i32)dialog_state.active->option_at(index - 1);
+      dialog_state.active->list_top_option[dialog_state.active->cur_pane] = (DialogOption *)redraw;
+      dialog_state.active->select_option(
+                 dialog_state.active->list_top_option[dialog_state.active->cur_pane],0);
+      dialog_state.active->draw_option_list();
       return;
     case 0xa2:
     case 0xc1:
-      node2 = dialog_title_font_obj_block.active_dialog->selected_option;
+      node2 = dialog_state.active->selected_option;
       while (node2->next != 0) {
         node2 = node2->next;
-        if ((int)dialog_title_font_obj_block.active_dialog->cur_pane == node2->group) break;
+        if ((int)dialog_state.active->cur_pane == node2->group) break;
       }
-      if (((int)dialog_title_font_obj_block.active_dialog->cur_pane == node2->group) &&
-         (dialog_title_font_obj_block.active_dialog->selected_option != node2)) {
-        dialog_title_font_obj_block.active_dialog->select_option(node2,1);
+      if (((int)dialog_state.active->cur_pane == node2->group) &&
+         (dialog_state.active->selected_option != node2)) {
+        dialog_state.active->select_option(node2,1);
       }
       return;
     case 0xa3:
     case 0xc6:
-      if ((int)dialog_title_font_obj_block.active_dialog->columns < 2) {
-        pos = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
-        index = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
-        count = dialog_title_font_obj_block.active_dialog->count_group_options((i32)dialog_title_font_obj_block.active_dialog->cur_pane);
+      if ((int)dialog_state.active->columns < 2) {
+        pos = dialog_state.active->option_group_index(dialog_state.active->selected_option);
+        index = (int)dialog_state.active->list_rows[dialog_state.active->cur_pane];
+        count = dialog_state.active->count_group_options((i32)dialog_state.active->cur_pane);
         if (index + pos < count) {
           redraw = 1;
-          option = (dialog_title_font_obj_block.active_dialog->option_at(
-                             pos + (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
-          dialog_title_font_obj_block.active_dialog->select_option(option,redraw);
+          option = (dialog_state.active->option_at(
+                             pos + (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]));
+          dialog_state.active->select_option(option,redraw);
           return;
         }
-        index = dialog_title_font_obj_block.active_dialog->count_group_options((i32)dialog_title_font_obj_block.active_dialog->cur_pane);
+        index = dialog_state.active->count_group_options((i32)dialog_state.active->cur_pane);
         redraw = 1;
-        option = dialog_title_font_obj_block.active_dialog->option_at(index - 1);
-        dialog_title_font_obj_block.active_dialog->select_option(option,redraw);
+        option = dialog_state.active->option_at(index - 1);
+        dialog_state.active->select_option(option,redraw);
         return;
       }
       key = 0xc3;
       break;
     case 0xa4:
     case 0xc2:
-      if ((int)dialog_title_font_obj_block.active_dialog->columns != 1) {
-        index = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
-        pos = dialog_title_font_obj_block.active_dialog->option_group_index(
-                           dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
-        if ((int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] + pos <= index) {
+      if ((int)dialog_state.active->columns != 1) {
+        index = dialog_state.active->option_group_index(dialog_state.active->selected_option);
+        pos = dialog_state.active->option_group_index(
+                           dialog_state.active->list_top_option[dialog_state.active->cur_pane]);
+        if ((int)dialog_state.active->list_rows[dialog_state.active->cur_pane] + pos <= index) {
           redraw = 1;
-          option = (dialog_title_font_obj_block.active_dialog->option_at(
-                             index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
-          dialog_title_font_obj_block.active_dialog->select_option(option,redraw);
+          option = (dialog_state.active->option_at(
+                             index - (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]));
+          dialog_state.active->select_option(option,redraw);
           return;
         }
-        if (index < (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]) {
+        if (index < (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]) {
           return;
         }
-        index = dialog_title_font_obj_block.active_dialog->option_group_index(
-                           dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
-        redraw = (i32)dialog_title_font_obj_block.active_dialog->option_at(
-                           index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]);
-        dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)redraw;
-        index = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
+        index = dialog_state.active->option_group_index(
+                           dialog_state.active->list_top_option[dialog_state.active->cur_pane]);
+        redraw = (i32)dialog_state.active->option_at(
+                           index - (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]);
+        dialog_state.active->list_top_option[dialog_state.active->cur_pane] = (DialogOption *)redraw;
+        index = dialog_state.active->option_group_index(dialog_state.active->selected_option);
         redraw = 0;
-        option = (dialog_title_font_obj_block.active_dialog->option_at(
-                           index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
-        dialog_title_font_obj_block.active_dialog->select_option(option,redraw);
-        dialog_title_font_obj_block.active_dialog->draw_option_list();
+        option = (dialog_state.active->option_at(
+                           index - (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]));
+        dialog_state.active->select_option(option,redraw);
+        dialog_state.active->draw_option_list();
         return;
       }
       key = 0xc0;
@@ -9026,78 +9026,78 @@ void __cdecl dialog_on_keydown(i32 key)
       return;
     case 0xa6:
     case 0xc3:
-      if ((int)dialog_title_font_obj_block.active_dialog->columns != 1) {
-        pos = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
-        index = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
-        count = dialog_title_font_obj_block.active_dialog->count_group_options((i32)dialog_title_font_obj_block.active_dialog->cur_pane);
+      if ((int)dialog_state.active->columns != 1) {
+        pos = dialog_state.active->option_group_index(dialog_state.active->selected_option);
+        index = (int)dialog_state.active->list_rows[dialog_state.active->cur_pane];
+        count = dialog_state.active->count_group_options((i32)dialog_state.active->cur_pane);
         if (count <= index + pos) {
           return;
         }
         redraw = 1;
-        option = (dialog_title_font_obj_block.active_dialog->option_at(
-                           pos + (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
-        dialog_title_font_obj_block.active_dialog->select_option(option,redraw);
+        option = (dialog_state.active->option_at(
+                           pos + (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]));
+        dialog_state.active->select_option(option,redraw);
         return;
       }
       key = 0xc1;
       break;
     case 0xa7:
     case 0xc4:
-      index = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
+      index = dialog_state.active->option_group_index(dialog_state.active->selected_option);
       if (index < 1) {
         return;
       }
-      redraw = (i32)dialog_title_font_obj_block.active_dialog->option_at(0);
-      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)redraw;
-      dialog_title_font_obj_block.active_dialog->select_option(
-                 dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane],0);
-      dialog_title_font_obj_block.active_dialog->draw_option_list();
+      redraw = (i32)dialog_state.active->option_at(0);
+      dialog_state.active->list_top_option[dialog_state.active->cur_pane] = (DialogOption *)redraw;
+      dialog_state.active->select_option(
+                 dialog_state.active->list_top_option[dialog_state.active->cur_pane],0);
+      dialog_state.active->draw_option_list();
       return;
     case 0xa8:
     case 0xc0:
-      node2 = dialog_title_font_obj_block.active_dialog->selected_option;
+      node2 = dialog_state.active->selected_option;
       while (node2->prev != 0) {
         node2 = node2->prev;
-        if ((int)dialog_title_font_obj_block.active_dialog->cur_pane == node2->group) break;
+        if ((int)dialog_state.active->cur_pane == node2->group) break;
       }
-      if ((int)dialog_title_font_obj_block.active_dialog->cur_pane != node2->group) {
+      if ((int)dialog_state.active->cur_pane != node2->group) {
         return;
       }
-      if (dialog_title_font_obj_block.active_dialog->selected_option == node2) {
+      if (dialog_state.active->selected_option == node2) {
         return;
       }
-      if ((int)dialog_title_font_obj_block.active_dialog->columns != 1) {
-        index = dialog_title_font_obj_block.active_dialog->option_group_index(
-                           dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
-        pos = dialog_title_font_obj_block.active_dialog->option_group_index(node2);
+      if ((int)dialog_state.active->columns != 1) {
+        index = dialog_state.active->option_group_index(
+                           dialog_state.active->list_top_option[dialog_state.active->cur_pane]);
+        pos = dialog_state.active->option_group_index(node2);
         if (pos < index) {
-          index = dialog_title_font_obj_block.active_dialog->option_group_index(
-                             dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
-          redraw = (i32)dialog_title_font_obj_block.active_dialog->option_at(
-                             index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]
+          index = dialog_state.active->option_group_index(
+                             dialog_state.active->list_top_option[dialog_state.active->cur_pane]);
+          redraw = (i32)dialog_state.active->option_at(
+                             index - (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]
                             );
-          dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)redraw;
-          dialog_title_font_obj_block.active_dialog->select_option(node2,0);
-          dialog_title_font_obj_block.active_dialog->draw_option_list();
+          dialog_state.active->list_top_option[dialog_state.active->cur_pane] = (DialogOption *)redraw;
+          dialog_state.active->select_option(node2,0);
+          dialog_state.active->draw_option_list();
           return;
         }
       }
-      dialog_title_font_obj_block.active_dialog->select_option(node2,1);
+      dialog_state.active->select_option(node2,1);
       return;
     case 0xa9:
     case 0xc5:
-      if ((int)dialog_title_font_obj_block.active_dialog->columns < 2) {
-        index = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
-        if ((int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] <= index) {
+      if ((int)dialog_state.active->columns < 2) {
+        index = dialog_state.active->option_group_index(dialog_state.active->selected_option);
+        if ((int)dialog_state.active->list_rows[dialog_state.active->cur_pane] <= index) {
           redraw = 1;
-          option = (dialog_title_font_obj_block.active_dialog->option_at(
-                             index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
-          dialog_title_font_obj_block.active_dialog->select_option(option,redraw);
+          option = (dialog_state.active->option_at(
+                             index - (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]));
+          dialog_state.active->select_option(option,redraw);
           return;
         }
         redraw = 1;
-        option = dialog_title_font_obj_block.active_dialog->option_at(0);
-        dialog_title_font_obj_block.active_dialog->select_option(option,redraw);
+        option = dialog_state.active->option_at(0);
+        dialog_state.active->select_option(option,redraw);
         return;
       }
       key = 0xc2;
@@ -9122,64 +9122,64 @@ void __cdecl dialog_on_char(byte ch)
   DialogOption *node2;
   iptr counter2;
   
-  if ((dialog_title_font_obj_block.active_dialog != 0) && (target_index = _isalpha((uint)ch), target_index != 0)) {
-    dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
+  if ((dialog_state.active != 0) && (target_index = _isalpha((uint)ch), target_index != 0)) {
+    dialog_state.timeout_start = timer_ticks();
     upper_ch = crt_toupper((uint)ch);
-    if ((dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) == 0x1000) {
-      node2 = dialog_title_font_obj_block.active_dialog->selected_option;
+    if ((dialog_state.active->style_flags & 0x41000) == 0x1000) {
+      node2 = dialog_state.active->selected_option;
       match = 0;
       counter2 = 0;
       do {
         do {
           node2 = node2->next;
           if (node2 == 0) {
-            node2 = dialog_title_font_obj_block.active_dialog->option_list;
+            node2 = dialog_state.active->option_list;
           }
-        } while ((int)dialog_title_font_obj_block.active_dialog->cur_pane != node2->group);
+        } while ((int)dialog_state.active->cur_pane != node2->group);
         first_ch = crt_toupper((int)*node2->text);
         if (first_ch == (upper_ch & 0xff)) {
           match = node2;
         }
       } while ((match == 0) && (counter2 = counter2 + 1, counter2 < 2000));
       if (match != 0) {
-        target_index = dialog_title_font_obj_block.active_dialog->option_group_index(match);
+        target_index = dialog_state.active->option_group_index(match);
         counter2 = 0;
         while( true ) {
-          top_index = dialog_title_font_obj_block.active_dialog->option_group_index(
-                             dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
-          bottom_index = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] *
-                  (int)dialog_title_font_obj_block.active_dialog->columns + top_index;
-          if (((int)dialog_title_font_obj_block.active_dialog->columns == 1) || ((top_index <= target_index && (target_index < bottom_index)))) break;
+          top_index = dialog_state.active->option_group_index(
+                             dialog_state.active->list_top_option[dialog_state.active->cur_pane]);
+          bottom_index = (int)dialog_state.active->list_rows[dialog_state.active->cur_pane] *
+                  (int)dialog_state.active->columns + top_index;
+          if (((int)dialog_state.active->columns == 1) || ((top_index <= target_index && (target_index < bottom_index)))) break;
           if (target_index < top_index) {
-            top_option = (dialog_title_font_obj_block.active_dialog->option_at(
-                               top_index - (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
-            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
+            top_option = (dialog_state.active->option_at(
+                               top_index - (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]));
+            dialog_state.active->list_top_option[dialog_state.active->cur_pane] = top_option;
             counter2++;
           }
           else {
             if (target_index < bottom_index) {
               return;
             }
-            top_option = (dialog_title_font_obj_block.active_dialog->option_at(
-                               top_index + (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]));
-            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
+            top_option = (dialog_state.active->option_at(
+                               top_index + (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]));
+            dialog_state.active->list_top_option[dialog_state.active->cur_pane] = top_option;
             counter2++;
           }
         }
         if (counter2 == 0) {
-          dialog_title_font_obj_block.active_dialog->select_option(match,1);
+          dialog_state.active->select_option(match,1);
         }
         else {
-          dialog_title_font_obj_block.active_dialog->select_option(match,0);
-          dialog_title_font_obj_block.active_dialog->draw_option_list();
+          dialog_state.active->select_option(match,0);
+          dialog_state.active->draw_option_list();
         }
       }
     }
-    else if ((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[2] & 2) == 0) {
-      if (dialog_title_font_obj_block.active_dialog->extra_button_count != 0) {
+    else if ((((byte *)&dialog_state.active->style_flags)[2] & 2) == 0) {
+      if (dialog_state.active->extra_button_count != 0) {
         match_index = -1;
-        for (counter2 = 0; counter2 < (int)dialog_title_font_obj_block.active_dialog->extra_button_count; counter2++) {
-          first_ch = crt_toupper((int)**(char **)((iptr)dialog_title_font_obj_block.active_dialog + 0x294 + counter2 * 4));
+        for (counter2 = 0; counter2 < (int)dialog_state.active->extra_button_count; counter2++) {
+          first_ch = crt_toupper((int)**(char **)((iptr)dialog_state.active + 0x294 + counter2 * 4));
           if (first_ch == (upper_ch & 0xff)) {
             match_index = counter2;
             break;
@@ -9187,16 +9187,16 @@ void __cdecl dialog_on_char(byte ch)
         }
         if (-1 < match_index) {
           ((Control *)
-                     (((int)dialog_title_font_obj_block.active_dialog->std_button_count + counter2) * 0x3c +
-                     (int)dialog_title_font_obj_block.active_dialog->button_controls))->set_focus();
-          dialog_on_button_click((int)dialog_title_font_obj_block.active_dialog->std_button_count + counter2 + 100);
+                     (((int)dialog_state.active->std_button_count + counter2) * 0x3c +
+                     (int)dialog_state.active->button_controls))->set_focus();
+          dialog_on_button_click((int)dialog_state.active->std_button_count + counter2 + 100);
           return;
         }
       }
-      if (dialog_title_font_obj_block.active_dialog->option_count != 0) {
+      if (dialog_state.active->option_count != 0) {
         match = 0;
         match_index = 0;
-        for (node2 = dialog_title_font_obj_block.active_dialog->option_list; node2 != 0;
+        for (node2 = dialog_state.active->option_list; node2 != 0;
             node2 = node2->next) {
           first_ch = crt_toupper((int)*node2->text);
           if (first_ch == (upper_ch & 0xff)) {
@@ -9206,13 +9206,13 @@ void __cdecl dialog_on_char(byte ch)
           match_index++;
         }
         if (match != 0) {
-          if ((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[1] & 0x10) == 0) {
-            if ((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[0] & 4) == 0) {
-              ((RadioGroup *)dialog_title_font_obj_block.active_dialog->radio_group)->set_selected(match_index);
+          if ((((byte *)&dialog_state.active->style_flags)[1] & 0x10) == 0) {
+            if ((((byte *)&dialog_state.active->style_flags)[0] & 4) == 0) {
+              ((RadioGroup *)dialog_state.active->radio_group)->set_selected(match_index);
             }
           }
           else {
-            ((ListBox *)dialog_title_font_obj_block.active_dialog->listbox[dialog_title_font_obj_block.active_dialog->cur_pane])->set_cur_sel(
+            ((ListBox *)dialog_state.active->listbox[dialog_state.active->cur_pane])->set_cur_sel(
                        match_index);
           }
         }
@@ -9233,18 +9233,18 @@ void __cdecl dialog_list_on_lbuttondown(i32 x,i32 y)
   DialogOption *option;
   i32 redraw;
   
-  if (dialog_title_font_obj_block.active_dialog != 0) {
-    dialog_title_font_obj_block.active_dialog->pick_pane_at(x,y);
-    dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] = 0;
-    if ((((dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) == 0x1000) &&
-        (dialog_title_font_obj_block.active_dialog->option_count != 0)) &&
-       (hit_index = dialog_title_font_obj_block.active_dialog->option_at_point(x,y),
+  if (dialog_state.active != 0) {
+    dialog_state.active->pick_pane_at(x,y);
+    dialog_state.active->list_left_col[dialog_state.active->cur_pane] = 0;
+    if ((((dialog_state.active->style_flags & 0x41000) == 0x1000) &&
+        (dialog_state.active->option_count != 0)) &&
+       (hit_index = dialog_state.active->option_at_point(x,y),
        -1 < hit_index)) {
-      dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] = 1;
-      ((WndBase *)((int)dialog_title_font_obj_block.active_dialog->surf_wnd + 0x48))->set_capture();
+      dialog_state.active->list_left_col[dialog_state.active->cur_pane] = 1;
+      ((WndBase *)((int)dialog_state.active->surf_wnd + 0x48))->set_capture();
       redraw = 1;
-      option = dialog_title_font_obj_block.active_dialog->option_at(hit_index);
-      dialog_title_font_obj_block.active_dialog->select_option(option,redraw);
+      option = dialog_state.active->option_at(hit_index);
+      dialog_state.active->select_option(option,redraw);
     }
   }
   return;
@@ -9262,80 +9262,80 @@ void __cdecl dialog_list_on_mousemove(i32 x,i32 y)
   i32 value;
   int sel_index;
   
-  if (((dialog_title_font_obj_block.active_dialog != 0) && ((dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) == 0x1000)) &&
-     (dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] != 0)) {
-    hit = dialog_title_font_obj_block.active_dialog->option_at_point(x,y);
+  if (((dialog_state.active != 0) && ((dialog_state.active->style_flags & 0x41000) == 0x1000)) &&
+     (dialog_state.active->list_left_col[dialog_state.active->cur_pane] != 0)) {
+    hit = dialog_state.active->option_at_point(x,y);
     if (hit < 0) {
-      if ((int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] *
-          (int)dialog_title_font_obj_block.active_dialog->columns < (int)dialog_title_font_obj_block.active_dialog->option_count) {
-        top_index = dialog_title_font_obj_block.active_dialog->option_group_index(
-                           dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane]);
+      if ((int)dialog_state.active->list_rows[dialog_state.active->cur_pane] *
+          (int)dialog_state.active->columns < (int)dialog_state.active->option_count) {
+        top_index = dialog_state.active->option_group_index(
+                           dialog_state.active->list_top_option[dialog_state.active->cur_pane]);
         switch(hit) {
         case -4:
-          if ((1 < (int)dialog_title_font_obj_block.active_dialog->columns) &&
-             (hit = dialog_title_font_obj_block.active_dialog->column_start_index((int)dialog_title_font_obj_block.active_dialog->option_count - 1)
+          if ((1 < (int)dialog_state.active->columns) &&
+             (hit = dialog_state.active->column_start_index((int)dialog_state.active->option_count - 1)
              , top_index < hit)) {
-            hit = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
-            rows = (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
-            last_col = dialog_title_font_obj_block.active_dialog->column_of_index((int)dialog_title_font_obj_block.active_dialog->option_count - 1);
+            hit = (int)dialog_state.active->list_rows[dialog_state.active->cur_pane];
+            rows = (int)dialog_state.active->list_rows[dialog_state.active->cur_pane];
+            last_col = dialog_state.active->column_of_index((int)dialog_state.active->option_count - 1);
             hit = int_clamp_b(top_index + hit,0,rows * last_col);
-            top_index = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
-            for (sel_index = top_index % (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] + hit;
-                (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] + sel_index <
-                (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] *
-                (int)dialog_title_font_obj_block.active_dialog->columns + hit;
-                sel_index = sel_index + (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]) {
+            top_index = dialog_state.active->option_group_index(dialog_state.active->selected_option);
+            for (sel_index = top_index % (int)dialog_state.active->list_rows[dialog_state.active->cur_pane] + hit;
+                (int)dialog_state.active->list_rows[dialog_state.active->cur_pane] + sel_index <
+                (int)dialog_state.active->list_rows[dialog_state.active->cur_pane] *
+                (int)dialog_state.active->columns + hit;
+                sel_index = sel_index + (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]) {
             }
-            value = int_clamp_b(sel_index,0,(int)dialog_title_font_obj_block.active_dialog->option_count - 1);
-            value = (i32)dialog_title_font_obj_block.active_dialog->option_at(value);
-            dialog_title_font_obj_block.active_dialog->selected_option = (DialogOption *)value;
-            value = (i32)dialog_title_font_obj_block.active_dialog->option_at(hit);
-            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)value;
-            dialog_title_font_obj_block.active_dialog->draw_option_list();
+            value = int_clamp_b(sel_index,0,(int)dialog_state.active->option_count - 1);
+            value = (i32)dialog_state.active->option_at(value);
+            dialog_state.active->selected_option = (DialogOption *)value;
+            value = (i32)dialog_state.active->option_at(hit);
+            dialog_state.active->list_top_option[dialog_state.active->cur_pane] = (DialogOption *)value;
+            dialog_state.active->draw_option_list();
           }
           break;
         case -3:
-          if ((1 < (int)dialog_title_font_obj_block.active_dialog->columns) && (0 < top_index)) {
-            top_index -= (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane];
+          if ((1 < (int)dialog_state.active->columns) && (0 < top_index)) {
+            top_index -= (int)dialog_state.active->list_rows[dialog_state.active->cur_pane];
             if (top_index < 1) {
               top_index = 0;
             }
-            value = (i32)dialog_title_font_obj_block.active_dialog->option_at(top_index);
-            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)value;
-            hit = dialog_title_font_obj_block.active_dialog->option_group_index(dialog_title_font_obj_block.active_dialog->selected_option);
-            value = (i32)dialog_title_font_obj_block.active_dialog->option_at(
-                               top_index + hit % (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]);
-            dialog_title_font_obj_block.active_dialog->selected_option = (DialogOption *)value;
-            dialog_title_font_obj_block.active_dialog->draw_option_list();
+            value = (i32)dialog_state.active->option_at(top_index);
+            dialog_state.active->list_top_option[dialog_state.active->cur_pane] = (DialogOption *)value;
+            hit = dialog_state.active->option_group_index(dialog_state.active->selected_option);
+            value = (i32)dialog_state.active->option_at(
+                               top_index + hit % (int)dialog_state.active->list_rows[dialog_state.active->cur_pane]);
+            dialog_state.active->selected_option = (DialogOption *)value;
+            dialog_state.active->draw_option_list();
           }
           break;
         case -2:
-          if ((top_index < (int)dialog_title_font_obj_block.active_dialog->option_count - 1) && ((int)dialog_title_font_obj_block.active_dialog->columns == 1)
+          if ((top_index < (int)dialog_state.active->option_count - 1) && ((int)dialog_state.active->columns == 1)
              ) {
-            value = (i32)dialog_title_font_obj_block.active_dialog->option_at(top_index + 1);
-            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = (DialogOption *)value;
-            value = int_clamp_b((int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane]
-                                 * (int)dialog_title_font_obj_block.active_dialog->columns + top_index + 1 - 1,0,
-                                 (int)dialog_title_font_obj_block.active_dialog->option_count - 1);
-            value = (i32)dialog_title_font_obj_block.active_dialog->option_at(value);
-            dialog_title_font_obj_block.active_dialog->selected_option = (DialogOption *)value;
-            dialog_title_font_obj_block.active_dialog->draw_option_list();
+            value = (i32)dialog_state.active->option_at(top_index + 1);
+            dialog_state.active->list_top_option[dialog_state.active->cur_pane] = (DialogOption *)value;
+            value = int_clamp_b((int)dialog_state.active->list_rows[dialog_state.active->cur_pane]
+                                 * (int)dialog_state.active->columns + top_index + 1 - 1,0,
+                                 (int)dialog_state.active->option_count - 1);
+            value = (i32)dialog_state.active->option_at(value);
+            dialog_state.active->selected_option = (DialogOption *)value;
+            dialog_state.active->draw_option_list();
           }
           break;
         case -1:
-          if ((0 < top_index) && ((int)dialog_title_font_obj_block.active_dialog->columns == 1)) {
-            value = (i32)dialog_title_font_obj_block.active_dialog->option_at(top_index - 1);
-            dialog_title_font_obj_block.active_dialog->selected_option = (DialogOption *)value;
-            dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = dialog_title_font_obj_block.active_dialog->selected_option;
-            dialog_title_font_obj_block.active_dialog->draw_option_list();
+          if ((0 < top_index) && ((int)dialog_state.active->columns == 1)) {
+            value = (i32)dialog_state.active->option_at(top_index - 1);
+            dialog_state.active->selected_option = (DialogOption *)value;
+            dialog_state.active->list_top_option[dialog_state.active->cur_pane] = dialog_state.active->selected_option;
+            dialog_state.active->draw_option_list();
           }
         }
       }
     }
     else {
       value = 1;
-      option = dialog_title_font_obj_block.active_dialog->option_at(hit);
-      dialog_title_font_obj_block.active_dialog->select_option(option,value);
+      option = dialog_state.active->option_at(hit);
+      dialog_state.active->select_option(option,value);
     }
   }
   return;
@@ -9345,10 +9345,10 @@ void __cdecl dialog_list_on_mousemove(i32 x,i32 y)
 void __cdecl dialog_list_on_lbuttonup(i32 x,i32 y)
 
 {
-  if (dialog_title_font_obj_block.active_dialog != 0) {
+  if (dialog_state.active != 0) {
     dialog_list_on_mousemove(x,y);
-    dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] = 0;
-    ((WndBase *)((int)dialog_title_font_obj_block.active_dialog->surf_wnd + 0x48))->release_capture();
+    dialog_state.active->list_left_col[dialog_state.active->cur_pane] = 0;
+    ((WndBase *)((int)dialog_state.active->surf_wnd + 0x48))->release_capture();
   }
   return;
 }
@@ -9359,16 +9359,16 @@ void __cdecl dialog_list_on_dblclick(i32 x,i32 y)
 {
   int hit_index;
   
-  if ((((dialog_title_font_obj_block.active_dialog != 0) &&
-       (dialog_title_font_obj_block.active_dialog->pick_pane_at(x,y),
-       (dialog_title_font_obj_block.active_dialog->style_flags & 0x41000) == 0x1000)) &&
-      (dialog_title_font_obj_block.active_dialog->option_count != 0)) &&
-     (((((byte *)&dialog_title_font_obj_block.active_dialog->style_flags)[1] & 4) == 0 &&
-      (hit_index = dialog_title_font_obj_block.active_dialog->option_at_point(x,y),
+  if ((((dialog_state.active != 0) &&
+       (dialog_state.active->pick_pane_at(x,y),
+       (dialog_state.active->style_flags & 0x41000) == 0x1000)) &&
+      (dialog_state.active->option_count != 0)) &&
+     (((((byte *)&dialog_state.active->style_flags)[1] & 4) == 0 &&
+      (hit_index = dialog_state.active->option_at_point(x,y),
       -1 < hit_index)))) {
-    dialog_title_font_obj_block.active_dialog->list_left_col[dialog_title_font_obj_block.active_dialog->cur_pane] = 1;
+    dialog_state.active->list_left_col[dialog_state.active->cur_pane] = 1;
     dialog_list_on_lbuttonup(x,y);
-    dialog_title_font_obj_block.active_dialog->style_flags = dialog_title_font_obj_block.active_dialog->style_flags | 0x2000;
+    dialog_state.active->style_flags = dialog_state.active->style_flags | 0x2000;
     dialog_end_current();
   }
   return;
@@ -9380,14 +9380,14 @@ void __cdecl dialog_list_on_hscroll(int scroll_pos)
 {
   DialogOption *top_option;
   
-  if (dialog_title_font_obj_block.active_dialog != 0) {
-    dialog_title_font_obj_block.active_dialog->cur_pane = 0;
-    top_option = (dialog_title_font_obj_block.active_dialog->option_at(
-                       (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] * scroll_pos
+  if (dialog_state.active != 0) {
+    dialog_state.active->cur_pane = 0;
+    top_option = (dialog_state.active->option_at(
+                       (int)dialog_state.active->list_rows[dialog_state.active->cur_pane] * scroll_pos
                       ));
-    if ((int)dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] != (iptr)top_option) {
-      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
-      dialog_title_font_obj_block.active_dialog->draw_option_list();
+    if ((int)dialog_state.active->list_top_option[dialog_state.active->cur_pane] != (iptr)top_option) {
+      dialog_state.active->list_top_option[dialog_state.active->cur_pane] = top_option;
+      dialog_state.active->draw_option_list();
     }
   }
   return;
@@ -9399,12 +9399,12 @@ void __cdecl dialog_list2_on_vscroll(i32 scroll_pos)
 {
   DialogOption *top_option;
   
-  if (dialog_title_font_obj_block.active_dialog != 0) {
-    dialog_title_font_obj_block.active_dialog->cur_pane = 1;
-    top_option = dialog_title_font_obj_block.active_dialog->option_at(scroll_pos);
-    if ((int)dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] != (iptr)top_option) {
-      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
-      dialog_title_font_obj_block.active_dialog->draw_option_list();
+  if (dialog_state.active != 0) {
+    dialog_state.active->cur_pane = 1;
+    top_option = dialog_state.active->option_at(scroll_pos);
+    if ((int)dialog_state.active->list_top_option[dialog_state.active->cur_pane] != (iptr)top_option) {
+      dialog_state.active->list_top_option[dialog_state.active->cur_pane] = top_option;
+      dialog_state.active->draw_option_list();
     }
   }
   return;
@@ -9416,14 +9416,14 @@ void __cdecl dialog_list2_on_hscroll(int scroll_pos)
 {
   DialogOption *top_option;
   
-  if (dialog_title_font_obj_block.active_dialog != 0) {
-    dialog_title_font_obj_block.active_dialog->cur_pane = 1;
-    top_option = (dialog_title_font_obj_block.active_dialog->option_at(
-                       (int)dialog_title_font_obj_block.active_dialog->list_rows[dialog_title_font_obj_block.active_dialog->cur_pane] * scroll_pos
+  if (dialog_state.active != 0) {
+    dialog_state.active->cur_pane = 1;
+    top_option = (dialog_state.active->option_at(
+                       (int)dialog_state.active->list_rows[dialog_state.active->cur_pane] * scroll_pos
                       ));
-    if ((int)dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] != (iptr)top_option) {
-      dialog_title_font_obj_block.active_dialog->list_top_option[dialog_title_font_obj_block.active_dialog->cur_pane] = top_option;
-      dialog_title_font_obj_block.active_dialog->draw_option_list();
+    if ((int)dialog_state.active->list_top_option[dialog_state.active->cur_pane] != (iptr)top_option) {
+      dialog_state.active->list_top_option[dialog_state.active->cur_pane] = top_option;
+      dialog_state.active->draw_option_list();
     }
   }
   return;
@@ -9439,8 +9439,8 @@ void Dialog::fill_rect_bg(RECT *rect,int area)
   i32 src_y;
   
   if (bg_surface == 0) {
-    if ((dlg_frame_tile_surface == 0) || (area != 1)) {
-      if ((dlg_client_tile_surface == 0) || (area != 2)) {
+    if ((dlg_style.frame_tile_surface == 0) || (area != 1)) {
+      if ((dlg_style.client_tile_surface == 0) || (area != 2)) {
         gfx_fill_rect(surf_wnd,rect,bg_color);
       }
       else {
@@ -9448,7 +9448,7 @@ void Dialog::fill_rect_bg(RECT *rect,int area)
         src_x = 0;
         height = rect_height(rect);
         width = rect_width(rect);
-        gfx_tile_fill(surf_wnd,dlg_client_tile_surface,rect->left,
+        gfx_tile_fill(surf_wnd,dlg_style.client_tile_surface,rect->left,
                            rect->top,width,height,src_x,src_y);
       }
     }
@@ -9457,7 +9457,7 @@ void Dialog::fill_rect_bg(RECT *rect,int area)
       src_x = 0;
       height = rect_height(rect);
       width = rect_width(rect);
-      gfx_tile_fill(surf_wnd,dlg_frame_tile_surface,rect->left,
+      gfx_tile_fill(surf_wnd,dlg_style.frame_tile_surface,rect->left,
                          rect->top,width,height,src_x,src_y);
     }
   }
@@ -9658,13 +9658,13 @@ u32 Dialog::run_modal(iptr out_text,iptr timeout_secs)
   DialogOption *option;
   int i;
   
-  if (dialog_stack_depth != 0x10) {
+  if (dlg_style.stack_depth != 0x10) {
     if (timeout_secs == 0) {
-      dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
+      dialog_state.timeout_start = timer_ticks();
     }
     else {
-      dialog_title_font_obj_block.dialog_timeout_start_i32 = timer_ticks();
-      dialog_title_font_obj_block.dialog_timeout_start_i32 = timeout_secs * 0x3c - 0x4b0 + dialog_title_font_obj_block.dialog_timeout_start_i32;
+      dialog_state.timeout_start = timer_ticks();
+      dialog_state.timeout_start = timeout_secs * 0x3c - 0x4b0 + dialog_state.timeout_start;
     }
     if (game_session_active != 0) {
       main_hwnd = main_frame_wnd_block.main_frame_wnd.get_window();
@@ -9699,7 +9699,7 @@ u32 Dialog::run_modal(iptr out_text,iptr timeout_secs)
       if (1 < (int)edit_count) {
         for (i = 0; i < (int)edit_count; i++) {
           ((Control *)(edit_controls + i * 0x48))->Control::get_text(
-                     (((i8 *)&minimap_window_block.text_string_args) + i * 0x104));
+                     (((i8 *)&text_args.strings) + i * 0x104));
         }
       }
       if ((style_flags & 0x1000) == 0) {
@@ -9998,7 +9998,7 @@ i32 Dialog::load_text_section(const char *file_name,const char *section,int defa
             }
             edit_buf = edit_text;
             if (edit_count != 0) {
-              edit_buf = ((i8 *)&minimap_window_block.text_string_args) + edit_count * 0x104;
+              edit_buf = ((i8 *)&text_args.strings) + edit_count * 0x104;
             }
             add_edit_field((const char *)expanded,(iptr)edit_buf,default_value);
           }
@@ -10017,8 +10017,8 @@ i32 Dialog::load_text_section(const char *file_name,const char *section,int defa
 void __cdecl dlg_push_parent_window(iptr parent)
 
 {
-  dlg_saved_parent_window = dlg_parent_window;
-  dlg_parent_window = parent;
+  dlg_defaults.saved_parent_window = dlg_defaults.parent_window;
+  dlg_defaults.parent_window = parent;
   return;
 }
 
@@ -10026,7 +10026,7 @@ void __cdecl dlg_push_parent_window(iptr parent)
 void __cdecl dlg_pop_parent_window(void)
 
 {
-  dlg_parent_window = dlg_saved_parent_window;
+  dlg_defaults.parent_window = dlg_defaults.saved_parent_window;
   return;
 }
 
@@ -10109,10 +10109,10 @@ void SurfaceWindow::repaint()
 
 {
   if (this == (SurfaceWindow *)0x0) {
-    (*(u8 * *)&wnd_active_child) = (u8 *)0x0;
+    (*(u8 * *)&modal_wnd.active_child) = (u8 *)0x0;
   }
   else {
-    (*(u8 * *)&wnd_active_child) = (u8 *)&window;
+    (*(u8 * *)&modal_wnd.active_child) = (u8 *)&window;
   }
   call_paint_cb();
   wnd_blit_surface();
@@ -10154,10 +10154,10 @@ void SurfaceWindow::on_resize(int width,int height)
   palette = ((WndBase *)&window)->get_palette_obj();
   apply_palette((PaletteVersionView *)palette);
   if (this == (SurfaceWindow *)0x0) {
-    (*(u8 * *)&wnd_active_child) = (u8 *)0x0;
+    (*(u8 * *)&modal_wnd.active_child) = (u8 *)0x0;
   }
   else {
-    (*(u8 * *)&wnd_active_child) = (u8 *)&window;
+    (*(u8 * *)&modal_wnd.active_child) = (u8 *)&window;
   }
   call_paint_cb();
   wnd_blit_surface();
@@ -10495,7 +10495,7 @@ void __cdecl wnd_obj_set_bg_color(NativeWindow *wnd,uint color_index)
   if (wnd->bg_brush != 0) {
     DeleteObject(wnd->bg_brush);
   }
-  if (gfx_palettized_display == 0) {
+  if (display_palette.palettized == 0) {
     wnd_view = (WndBase *)GetWindowLongA(wnd->hwnd,0);
     self = (GamePalette *)wnd_view->get_palette();
     self->get_entry(color_index & 0xff,(iptr)red,(iptr)green,(iptr)blue);
@@ -10825,7 +10825,7 @@ void __cdecl wnd_obj_get_rect_in_parent(NativeWindow *wnd,LPRECT rect)
 void __cdecl wnd_obj_select_palette(NativeWindow *wnd,HPALETTE palette)
 
 {
-  if (gfx_palettized_display == 1) {
+  if (display_palette.palettized == 1) {
     wnd->palette = palette;
     SelectPalette(wnd->hdc,palette,0);
   }
@@ -11250,15 +11250,15 @@ void ModalMenuWindow::run_modal_loop()
   NativeWindow *owner_after;
   NativeWindow *owner2;
   
-  if (wnd_modal_depth != 0xf) {
+  if (modal_wnd.depth != 0xf) {
     modal_running = 1;
-    wnd_modal_depth++;
-    (((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack))[wnd_modal_depth] = (i32)this;
-    if (wnd_modal_depth == 0) {
+    modal_wnd.depth++;
+    (((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack))[modal_wnd.depth] = (i32)this;
+    if (modal_wnd.depth == 0) {
       owner2 = 0;
     }
     else {
-      owner2 = ((WndBase *)(((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack_below))[wnd_modal_depth])->get_window();
+      owner2 = ((WndBase *)(((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack_below))[modal_wnd.depth])->get_window();
     }
     wnd = get_window();
     wnd_obj_disable_owner(wnd,owner2);
@@ -11268,16 +11268,16 @@ void ModalMenuWindow::run_modal_loop()
         on_modal_idle();
       }
     }
-    if (wnd_modal_depth == 0) {
+    if (modal_wnd.depth == 0) {
       owner_after = 0;
     }
     else {
-      owner_after = ((WndBase *)(((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack_below))[wnd_modal_depth])->get_window();
+      owner_after = ((WndBase *)(((i32 *)&wnd_modal_stack_below_block.wnd_modal_stack_below))[modal_wnd.depth])->get_window();
     }
     wnd = get_window();
     wnd_obj_enable_owner(wnd,owner_after);
-    wnd_modal_depth--;
-    if (-1 < wnd_modal_depth) {
+    modal_wnd.depth--;
+    if (-1 < modal_wnd.depth) {
       modal_running = 1;
     }
   }
@@ -11301,7 +11301,7 @@ void ModalMenuWindow::end_modal_loop()
 i32 __cdecl wnd_get_active_child(void)
 
 {
-  return wnd_active_child;
+  return modal_wnd.active_child;
 }
 
 /* 005c6303 auto */
@@ -11310,8 +11310,8 @@ i32 __cdecl wnd_set_active_child(iptr child)
 {
   i32 prev;
   
-  prev = wnd_active_child;
-  wnd_active_child = child;
+  prev = modal_wnd.active_child;
+  modal_wnd.active_child = child;
   return prev;
 }
 
@@ -11524,7 +11524,7 @@ void __cdecl default_draw_font_static_dtor(void)
 void __cdecl ui_set_ctrl_text_color(i32 color_index)
 
 {
-  (*(i8 *)&ctrl_text_color_index) = (i8)color_index;
+  (*(i8 *)&ctrl_colors.text) = (i8)color_index;
   return;
 }
 
@@ -11532,9 +11532,9 @@ void __cdecl ui_set_ctrl_text_color(i32 color_index)
 void __cdecl ui_set_ctrl_text_shadow(i32 color_index,i32 dx,i32 dy)
 
 {
-  (*(i8 *)&ctrl_shadow_color_index) = (i8)color_index;
-  (*(i8 *)&ctrl_shadow_dx) = (i8)dx;
-  (*(i8 *)&ctrl_shadow_dy) = (i8)dy;
+  (*(i8 *)&ctrl_colors.shadow) = (i8)color_index;
+  (*(i8 *)&ctrl_colors.shadow_dx) = (i8)dx;
+  (*(i8 *)&ctrl_colors.shadow_dy) = (i8)dy;
   return;
 }
 
@@ -11542,7 +11542,7 @@ void __cdecl ui_set_ctrl_text_shadow(i32 color_index,i32 dx,i32 dy)
 void __cdecl ui_set_ctrl_disabled_color(i32 color_index)
 
 {
-  (*(i8 *)&ctrl_disabled_color_index) = (i8)color_index;
+  (*(i8 *)&ctrl_colors.disabled) = (i8)color_index;
   return;
 }
 
@@ -11550,7 +11550,7 @@ void __cdecl ui_set_ctrl_disabled_color(i32 color_index)
 void __cdecl ui_set_ctrl_font(iptr font)
 
 {
-  (*(i8 * *)(draw_current_font_rest + 8)) = (i8 *)font;
+  (*(i8 * *)(draw_target.font_rest + 8)) = (i8 *)font;
   return;
 }
 
@@ -11558,7 +11558,7 @@ void __cdecl ui_set_ctrl_font(iptr font)
 void __cdecl ui_set_default_font(iptr font)
 
 {
-  (*(i8 * *)(draw_current_font_rest + 12)) = (i8 *)font;
+  (*(i8 * *)(draw_target.font_rest + 12)) = (i8 *)font;
   return;
 }
 
@@ -11585,7 +11585,7 @@ void __cdecl hwnd_send_settext(HWND hwnd,LPARAM text)
 void __cdecl ui_set_radio_text_color(i32 color_index)
 
 {
-  (*(i8 *)&radio_text_color_index) = (i8)color_index;
+  (*(i8 *)&ctrl_colors.radio_text) = (i8)color_index;
   return;
 }
 
@@ -11593,7 +11593,7 @@ void __cdecl ui_set_radio_text_color(i32 color_index)
 void __cdecl ui_set_radio_disabled_color(i32 color_index)
 
 {
-  (*(i8 *)&radio_disabled_color_index) = (i8)color_index;
+  (*(i8 *)&ctrl_colors.radio_disabled) = (i8)color_index;
   return;
 }
 
@@ -11601,9 +11601,9 @@ void __cdecl ui_set_radio_disabled_color(i32 color_index)
 void __cdecl ui_set_radio_text_shadow(i32 color_index,i32 dx,i32 dy)
 
 {
-  (*(i8 *)&radio_shadow_color_index) = (i8)color_index;
-  (*(i8 *)&radio_shadow_dx) = (i8)dx;
-  (*(i8 *)&radio_shadow_dy) = (i8)dy;
+  (*(i8 *)&ctrl_colors.radio_shadow) = (i8)color_index;
+  (*(i8 *)&ctrl_colors.radio_dx) = (i8)dx;
+  (*(i8 *)&ctrl_colors.radio_dy) = (i8)dy;
   return;
 }
 
@@ -11611,7 +11611,7 @@ void __cdecl ui_set_radio_text_shadow(i32 color_index,i32 dx,i32 dy)
 void __cdecl ui_set_button_font(iptr font)
 
 {
-  (*(i8 * *)draw_current_font_rest) = (i8 *)font;
+  (*(i8 * *)draw_target.font_rest) = (i8 *)font;
   return;
 }
 
@@ -12054,10 +12054,10 @@ i32 __stdcall surfwnd_subclass_wndproc(HWND hwnd,int msg,i32 wparam,uint lparam)
   }
   else if (msg == 5) {
     if (self == (SurfaceWindow *)0x0) {
-      (*(u8 * *)&wnd_active_child) = (u8 *)0x0;
+      (*(u8 * *)&modal_wnd.active_child) = (u8 *)0x0;
     }
     else {
-      (*(u8 * *)&wnd_active_child) = (u8 *)&self->window;
+      (*(u8 * *)&modal_wnd.active_child) = (u8 *)&self->window;
     }
     is_iconic = IsIconic(hwnd);
     if (is_iconic == 0) {

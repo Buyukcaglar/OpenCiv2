@@ -254,22 +254,22 @@ void __cdecl tribe_editor_load_tables(void)
   for (leader = 0; leader < 7; leader++) {
     max_len = 0xf;
     text = label_string(government_names[leader]);
-    _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + leader * 0xf,text,max_len);
-    (((i8 *)&editor_text_dlg_wnd_block.editor_govt_name_ends))[leader * 0xf] = 0;
+    _strncpy(((i8 *)&editor_lists.govt_names) + leader * 0xf,text,max_len);
+    (((i8 *)&editor_lists.govt_name_ends))[leader * 0xf] = 0;
     max_len = 0xf;
     text = label_string(government_titles[leader].male);
-    _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + (leader * 3 + 0x15) * 5,text,max_len);
-    (((i8 *)&editor_text_dlg_wnd_block.editor_govt_name_ends))[leader * 0xf] = 0;
+    _strncpy(((i8 *)&editor_lists.govt_names) + (leader * 3 + 0x15) * 5,text,max_len);
+    (((i8 *)&editor_lists.govt_name_ends))[leader * 0xf] = 0;
     max_len = 0xf;
     text = label_string(government_titles[leader].female);
-    _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + (leader * 3 + 0x2a) * 5,text,max_len);
-    (((i8 *)&editor_text_dlg_wnd_block.editor_govt_name_ends))[leader * 0xf] = 0;
+    _strncpy(((i8 *)&editor_lists.govt_names) + (leader * 3 + 0x2a) * 5,text,max_len);
+    (((i8 *)&editor_lists.govt_name_ends))[leader * 0xf] = 0;
   }
   for (leader = 0; leader < 0x10; leader++) {
     max_len = 10;
     text = label_string(commodity_names[leader]);
-    _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_commodity_names) + leader * 10,text,max_len);
-    (((i8 *)&editor_text_dlg_wnd_block.editor_commodity_name_ends))[leader * 10] = 0;
+    _strncpy(((i8 *)&editor_lists.commodity_names) + leader * 10,text,max_len);
+    (((i8 *)&editor_lists.commodity_name_ends))[leader * 10] = 0;
   }
   return;
 }
@@ -299,21 +299,21 @@ void __cdecl tribe_editor_apply_tables(void)
   }
   for (leader = 0; leader < 7; leader++) {
     max_len = 0xf;
-    src = ((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + leader * 0xf;
+    src = ((i8 *)&editor_lists.govt_names) + leader * 0xf;
     dest = label_string(government_names[leader]);
     _strncpy(dest,src,max_len);
     max_len = 0xf;
-    src = ((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + (leader * 3 + 0x15) * 5;
+    src = ((i8 *)&editor_lists.govt_names) + (leader * 3 + 0x15) * 5;
     dest = label_string(government_titles[leader].male);
     _strncpy(dest,src,max_len);
     max_len = 0xf;
-    src = ((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + (leader * 3 + 0x2a) * 5;
+    src = ((i8 *)&editor_lists.govt_names) + (leader * 3 + 0x2a) * 5;
     dest = label_string(government_titles[leader].female);
     _strncpy(dest,src,max_len);
   }
   for (leader = 0; leader < 0x10; leader++) {
     max_len = 10;
-    src = ((i8 *)&editor_text_dlg_wnd_block.editor_commodity_names) + leader * 10;
+    src = ((i8 *)&editor_lists.commodity_names) + leader * 10;
     dest = label_string(commodity_names[leader]);
     _strncpy(dest,src,max_len);
   }
@@ -330,14 +330,14 @@ void __cdecl tribe_editor_load_controls(void)
   for (i = 1; i < 5; i++) {
     if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 9) {
       ((Control *)
-                 &editor_text_dlg_wnd_block.active_editor_wnd->edits[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot])->set_text(
-                 (const char *)editor_text_dlg_wnd_block.editor_item_name_recs[editor_text_dlg_wnd_block.active_editor_wnd->item + 0x3f]);
+                 &editor_active.wnd->edits[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot])->set_text(
+                 (const char *)editor_text_dlg_wnd_block.editor_item_name_recs[editor_active.wnd->item + 0x3f]);
     }
     else if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 0xc) {
       ctrl_id = ((Control *)
-                         &editor_text_dlg_wnd_block.active_editor_wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot])->get_id();
-      editor_text_dlg_wnd_block.active_editor_wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot].set_cur_sel(
-                 *(iptr *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58));
+                         &editor_active.wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot])->get_id();
+      editor_active.wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot].set_cur_sel(
+                 *(iptr *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + ctrl_id * 4 + editor_active.wnd->item * 0x58));
     }
   }
   return;
@@ -355,15 +355,15 @@ void __cdecl tribe_editor_store_controls(void)
   for (i = 1; i < 5; i++) {
     if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 9) {
       ((Control *)
-                 &editor_text_dlg_wnd_block.active_editor_wnd->edits[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot])->Control::get_text(
+                 &editor_active.wnd->edits[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot])->Control::get_text(
                  (char *)text);
-      _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[editor_text_dlg_wnd_block.active_editor_wnd->item + 0x3f],text,0x18);
+      _strncpy(editor_text_dlg_wnd_block.editor_item_name_recs[editor_active.wnd->item + 0x3f],text,0x18);
     }
     else if (tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].kind == 0xc) {
-      selection = editor_text_dlg_wnd_block.active_editor_wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot].get_cur_sel();
+      selection = editor_active.wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot].get_cur_sel();
       ctrl_id = ((Control *)
-                         &editor_text_dlg_wnd_block.active_editor_wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot])->get_id();
-      *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + editor_text_dlg_wnd_block.active_editor_wnd->item * 0x58 + ctrl_id * 4) = selection;
+                         &editor_active.wnd->combos[tribe_editor_ctrl_kinds_block.tribe_editor_ctrl_rows[i].slot])->get_id();
+      *(i32 *)(((i8 *)&editor_text_dlg_wnd_block.editor_ctrl_values) + editor_active.wnd->item * 0x58 + ctrl_id * 4) = selection;
     }
   }
   return;
@@ -373,7 +373,7 @@ void __cdecl tribe_editor_store_controls(void)
 void __cdecl tribe_editor_redraw(void)
 
 {
-  editor_text_dlg_wnd_block.active_editor_wnd->tribe_editor_paint();
+  editor_active.wnd->tribe_editor_paint();
   return;
 }
 
@@ -390,7 +390,7 @@ i32 __cdecl tribe_editor_write_governments(FILE *file)
   for (gov = 0; gov < 7; gov++) {
     text_clear();
     text_append_string_id(government_names[gov]);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_gov_name_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_gov_name_sep_str));
     text = label_string(government_names[gov]);
     len = _strlen(text);
     if (len < 0xf) {
@@ -402,7 +402,7 @@ i32 __cdecl tribe_editor_write_governments(FILE *file)
     }
     text_append_spaces(0xf - name_len);
     text_append_string_id(government_titles[gov].male);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_gov_male_title_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_gov_male_title_sep_str));
     text = label_string(government_titles[gov].male);
     len = _strlen(text);
     if (len < 0xc) {
@@ -414,8 +414,8 @@ i32 __cdecl tribe_editor_write_governments(FILE *file)
     }
     text_append_spaces(0xc - title_len);
     text_append_string_id(government_titles[gov].female);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_gov_line_end_str));
-    _fputs(((i8 *)&map_views_block.text_buffer),file);
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_gov_line_end_str));
+    _fputs(((i8 *)&textbuf.buf),file);
   }
   return 1;
 }
@@ -466,7 +466,7 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
     text_next_int();
     text_next_int();
     text_next_int();
-    crt_strcpy(line_tail,(const char *)((const void *)map_views_block.text_line_cursor));
+    crt_strcpy(line_tail,(const char *)((const void *)text_parse.line_cursor));
     text_clear();
     if (leaders[leader].names[0] < 1) {
       male_id = ~(int)leaders[leader].names[0] + 1;
@@ -475,7 +475,7 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
       male_id = (int)leaders[leader].names[0];
     }
     text_append_string_id(male_id);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_male_name_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_male_name_sep_str));
     if (leaders[leader].names[0] < 1) {
       male_id2 = ~(int)leaders[leader].names[0] + 1;
     }
@@ -505,7 +505,7 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
       female_id = (int)leaders[leader].names[1];
     }
     text_append_string_id(female_id);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_female_name_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_female_name_sep_str));
     if (leaders[leader].names[1] < 1) {
       female_id2 = ~(int)leaders[leader].names[1] + 1;
     }
@@ -529,11 +529,11 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
     }
     text_append_spaces(0x14 - female_len);
     text_append_int(female_flag);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_female_flag_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_female_flag_sep_str));
     text_append_int((int)leaders[leader].color);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_color_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_color_sep_str));
     text_append_int((int)leaders[leader].city_style);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_city_style_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_city_style_sep_str));
     if (leaders[leader].plural < 1) {
       plural_id = ~(int)leaders[leader].plural + 1;
     }
@@ -541,7 +541,7 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
       plural_id = (int)leaders[leader].plural;
     }
     text_append_string_id(plural_id);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_plural_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_plural_sep_str));
     if (leaders[leader].plural < 1) {
       plural_id2 = ~(int)leaders[leader].plural + 1;
     }
@@ -571,7 +571,7 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
       adjective_id = (int)leaders[leader].adjective;
     }
     text_append_string_id(adjective_id);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_adjective_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_adjective_sep_str));
     if (leaders[leader].adjective < 1) {
       adjective_id2 = ~(int)leaders[leader].adjective + 1;
     }
@@ -595,14 +595,14 @@ i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
     }
     text_append_spaces(0xb - adjective_len);
     text_append_int_2d((int)leaders[leader].attack);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_attack_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_attack_sep_str));
     text_append_int_2d((int)leaders[leader].expand);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_expand_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_expand_sep_str));
     text_append_int_2d((int)leaders[leader].civilize);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_civilize_sep_str));
-    crt_strcat(((i8 *)&map_views_block.text_buffer),line_tail);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_line_end_str));
-    _fputs(((i8 *)&map_views_block.text_buffer),file);
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_civilize_sep_str));
+    crt_strcat(((i8 *)&textbuf.buf),line_tail);
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_leader_line_end_str));
+    _fputs(((i8 *)&textbuf.buf),file);
   }
   (*(i32 *)&text_file_handle) = saved_handle;
   return 1;
@@ -617,8 +617,8 @@ i32 __cdecl tribe_editor_write_caravan(FILE *file)
   for (commodity = 0; commodity < 0x10; commodity++) {
     text_clear();
     text_append_string_id(commodity_names[commodity]);
-    crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&tribe_editor_ctrl_kinds_block.rules_commodity_line_end_str));
-    _fputs(((i8 *)&map_views_block.text_buffer),file);
+    crt_strcat(((i8 *)&textbuf.buf),((i8 *)&tribe_editor_ctrl_kinds_block.rules_commodity_line_end_str));
+    _fputs(((i8 *)&textbuf.buf),file);
   }
   return 1;
 }
@@ -630,7 +630,7 @@ void __cdecl tribe_editor_on_ok(void)
   iptr ok;
   NativeWindow *wnd;
   char *lpText;
-  char *lpCaption;
+  const char *lpCaption;
   UINT uType;
   char msg[32];
   
@@ -646,11 +646,11 @@ void __cdecl tribe_editor_on_ok(void)
     uType = 0x10;
     lpCaption = str_file_i_o_error_2;
     lpText = msg;
-    wnd = ((WndBase *)&editor_text_dlg_wnd_block.active_editor_wnd->window)->get_window();
+    wnd = ((WndBase *)&editor_active.wnd->window)->get_window();
     MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
   }
-  editor_text_dlg_wnd_block.editor_running = 0;
-  editor_text_dlg_wnd_block.active_editor_wnd->window.end_modal_loop();
+  editor_lists.running = 0;
+  editor_active.wnd->window.end_modal_loop();
   menu_update_states();
   return;
 }
@@ -672,30 +672,30 @@ void __cdecl tribe_editor_rename_commodity(void)
   eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
   eh_state = 0;
-  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+  if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
+    parent_wnd2 = (iptr)&editor_active.wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   dialog2.load_text((const char *)&str_debug_11,(const char *)&str_renamecommo,1);
   dialog2.set_width(0xdc);
   dialog2.set_listbox(0x10,0xdc,0);
   for (choice = 0; choice < 0x10; choice++) {
-    dialog2.add_option((const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_commodity_names) + choice * 10),choice,0);
+    dialog2.add_option((const char *)(((i8 *)&editor_lists.commodity_names) + choice * 10),choice,0);
   }
   dialog2.option_width = 0xdc;
   choice = dialog2.show_modal(0);
   if (-1 < choice) {
     do {
-      input_result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_commoname,9,(iptr)(((i8 *)&editor_text_dlg_wnd_block.editor_commodity_names) + choice * 10),
+      input_result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_commoname,9,(iptr)(((i8 *)&editor_lists.commodity_names) + choice * 10),
                                     (iptr)input_buf);
       if (input_result == -1) break;
       len = _strlen(input_buf);
     } while (len == 0);
     if (-1 < input_result) {
-      _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_commodity_names) + choice * 10,input_buf,10);
+      _strncpy(((i8 *)&editor_lists.commodity_names) + choice * 10,input_buf,10);
     }
   }
   dlg_set_parent_window(0);
@@ -721,30 +721,30 @@ void __cdecl tribe_editor_rename_govt(void)
   eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
   eh_state = 0;
-  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+  if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
+    parent_wnd2 = (iptr)&editor_active.wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   dialog2.load_text((const char *)&str_debug_11,(const char *)&str_renamegovt,1);
   dialog2.set_width(0xdc);
   dialog2.set_listbox(7,0xdc,0);
   for (choice = 0; choice < 7; choice++) {
-    dialog2.add_option((const char *)(((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + choice * 0xf),choice,0);
+    dialog2.add_option((const char *)(((i8 *)&editor_lists.govt_names) + choice * 0xf),choice,0);
   }
   dialog2.option_width = 0xdc;
   choice = dialog2.show_modal(0);
   if (-1 < choice) {
     do {
-      input_result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_govtname,0xe,(iptr)(((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + choice * 0xf),
+      input_result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_govtname,0xe,(iptr)(((i8 *)&editor_lists.govt_names) + choice * 0xf),
                                     (iptr)input_buf);
       if (input_result == -1) break;
       len = _strlen(input_buf);
     } while (len == 0);
     if (-1 < input_result) {
-      _strncpy(((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + choice * 0xf,input_buf,0xf);
+      _strncpy(((i8 *)&editor_lists.govt_names) + choice * 0xf,input_buf,0xf);
     }
   }
   dlg_set_parent_window(0);
@@ -776,11 +776,11 @@ void __cdecl tribe_editor_rename_title(void)
   eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
   eh_state = 0;
-  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+  if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
+    parent_wnd2 = (iptr)&editor_active.wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   dialog2.load_text((const char *)&str_debug_11,(const char *)&str_renametitle,1);
@@ -793,14 +793,14 @@ void __cdecl tribe_editor_rename_title(void)
     else {
       title_slot = ((int)choice >> 1) * 3 + 0x2a;
     }
-    title_name = ((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + title_slot * 5;
+    title_name = ((i8 *)&editor_lists.govt_names) + title_slot * 5;
     if ((choice & 1) == 0) {
-      gender_label = (i32)(label_string(label_string_ids[0x23f]));
+      gender_label = (i32)(label_string(label_table.string_ids[0x23f]));
     }
     else {
-      gender_label = (i32)(label_string(label_string_ids[0x240]));
+      gender_label = (i32)(label_string(label_table.string_ids[0x240]));
     }
-    _sprintf(option_text,str_s_s_s_3,((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + ((int)choice >> 1) * 0xf,gender_label,
+    _sprintf(option_text,str_s_s_s_3,((i8 *)&editor_lists.govt_names) + ((int)choice >> 1) * 0xf,gender_label,
              title_name);
     dialog2.add_option((const char *)option_text,choice,0);
   }
@@ -814,7 +814,7 @@ void __cdecl tribe_editor_rename_title(void)
       else {
         title_slot = ((int)choice >> 1) * 3 + 0x2a;
       }
-      current_title = ((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + title_slot * 5;
+      current_title = ((i8 *)&editor_lists.govt_names) + title_slot * 5;
       input_result = dlg_text_input((iptr)&str_debug_11,(const char *)&str_titlename,0xe,(iptr)current_title,(iptr)input_buf);
       if (input_result == -1) break;
       len = _strlen(input_buf);
@@ -826,7 +826,7 @@ void __cdecl tribe_editor_rename_title(void)
       else {
         title_slot = ((int)choice >> 1) * 3 + 0x2a;
       }
-      dest_title = ((i8 *)&editor_text_dlg_wnd_block.editor_govt_names) + title_slot * 5;
+      dest_title = ((i8 *)&editor_lists.govt_names) + title_slot * 5;
       _strncpy(dest_title,input_buf,0xf);
     }
   }
@@ -842,11 +842,11 @@ void __cdecl tribe_editor_on_help(void)
 {
   i32 parent_wnd2;
   
-  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+  if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
+    parent_wnd2 = (iptr)&editor_active.wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   popup_text((const char *)&str_help_3,(const char *)&str_tribes);
@@ -858,8 +858,8 @@ void __cdecl tribe_editor_on_help(void)
 void __cdecl tribe_editor_on_cancel(void)
 
 {
-  editor_text_dlg_wnd_block.editor_running = 0;
-  editor_text_dlg_wnd_block.active_editor_wnd->window.end_modal_loop();
+  editor_lists.running = 0;
+  editor_active.wnd->window.end_modal_loop();
   return;
 }
 
@@ -871,8 +871,8 @@ void __cdecl tribe_editor_on_combo(int ctrl_id)
   
   if (ctrl_id == 0xc9) {
     tribe_editor_store_controls();
-    selection = editor_text_dlg_wnd_block.active_editor_wnd->combos[0].get_cur_sel();
-    editor_text_dlg_wnd_block.active_editor_wnd->item = selection;
+    selection = editor_active.wnd->combos[0].get_cur_sel();
+    editor_active.wnd->item = selection;
     tribe_editor_load_controls();
     tribe_editor_redraw();
   }
@@ -905,8 +905,8 @@ void EditorWindow::tribe_editor_create_combo(int slot)
   else {
     rect_set_xywh((iptr)rect,ctrl_x,ctrl_y,100,font_height_uptr << 3);
   }
-  ctrl_x = editor_text_dlg_wnd_block.editor_next_ctrl_id;
-  editor_text_dlg_wnd_block.editor_next_ctrl_id++;
+  ctrl_x = editor_lists.next_ctrl_id;
+  editor_lists.next_ctrl_id++;
   if (this == (EditorWindow *)0x0) {
     parent_wnd2 = (u8 *)0x0;
   }
@@ -925,37 +925,37 @@ void EditorWindow::tribe_editor_create_combo(int slot)
     }
     break;
   case 1:
-    label = (iptr)(label_string(label_string_ids[0x20d]));
+    label = (iptr)(label_string(label_table.string_ids[0x20d]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x20e]));
+    label = (iptr)(label_string(label_table.string_ids[0x20e]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x20f]));
+    label = (iptr)(label_string(label_table.string_ids[0x20f]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x210]));
+    label = (iptr)(label_string(label_table.string_ids[0x210]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
     break;
   case 2:
-    label = (iptr)(label_string(label_string_ids[0x241]));
+    label = (iptr)(label_string(label_table.string_ids[0x241]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x242]));
+    label = (iptr)(label_string(label_table.string_ids[0x242]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x243]));
+    label = (iptr)(label_string(label_table.string_ids[0x243]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
     break;
   case 3:
-    label = (iptr)(label_string(label_string_ids[0x244]));
+    label = (iptr)(label_string(label_table.string_ids[0x244]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x245]));
+    label = (iptr)(label_string(label_table.string_ids[0x245]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x246]));
+    label = (iptr)(label_string(label_table.string_ids[0x246]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
     break;
   case 4:
-    label = (iptr)(label_string(label_string_ids[0x247]));
+    label = (iptr)(label_string(label_table.string_ids[0x247]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x245]));
+    label = (iptr)(label_string(label_table.string_ids[0x245]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
-    label = (iptr)(label_string(label_string_ids[0x248]));
+    label = (iptr)(label_string(label_table.string_ids[0x248]));
     ((ComboBox *)(text_font + slot * 0x38 + 0x28))->add_string((const char *)label);
   }
   return;
@@ -971,8 +971,8 @@ void EditorWindow::tribe_editor_create_edit(int slot)
   
   rect_set_xywh((iptr)rect,(((i32 *)&tribe_editor_combo_x_table_block.tribe_editor_edit_x_table))[slot * 2] + client_x,
                      (((i32 *)&tribe_editor_combo_x_table_block.tribe_editor_edit_y_table))[slot * 2] + client_y,100,font_height_uptr + 6);
-  ctrl_id = editor_text_dlg_wnd_block.editor_next_ctrl_id;
-  editor_text_dlg_wnd_block.editor_next_ctrl_id++;
+  ctrl_id = editor_lists.next_ctrl_id;
+  editor_lists.next_ctrl_id++;
   if (this == (EditorWindow *)0x0) {
     parent_wnd2 = (u8 *)0x0;
   }
@@ -998,17 +998,17 @@ void EditorWindow::tribe_editor_paint()
   int box_x;
   
   this->FrameWindow::draw_caption();
-  if (((*(int *)&editor_bg_surface) == 0) || (editor_text_dlg_wnd_block.editor_running == 0)) {
+  if (((*(int *)&editor_ui.bg_surface) == 0) || (editor_lists.running == 0)) {
     gfx_fill_rect((iptr)this,(RECT *)&client_rect,0x1d);
   }
   else {
-    gfx_copy_rect_xywh((*(int *)&editor_bg_surface),(iptr)this,0,0,client_x,client_y,wnd_width_u,
+    gfx_copy_rect_xywh((*(int *)&editor_ui.bg_surface),(iptr)this,0,0,client_x,client_y,wnd_width_u,
                        wnd_height_u);
   }
   box_x = client_x + 0x20;
   box_y = client_y + 0x20;
   sprite = (Sprite *)
-             (editor_text_dlg_wnd_block.editor_item_recs[editor_text_dlg_wnd_block.active_editor_wnd->item].values[0] * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 300)));
+             (editor_text_dlg_wnd_block.editor_item_recs[editor_active.wnd->item].values[0] * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 300)));
   key_color = sprite->get_key_color();
   gfx_fill_rect_xywh((iptr)this,box_x,box_y,0x40,0x40,(uint)key_color);
   sprite->draw_keyed((iptr)draw_ctx,(iptr)this,0,box_x,box_y + 8);
@@ -1028,8 +1028,8 @@ void EditorWindow::tribe_editor_paint()
   gfx_fill_rect_xywh((iptr)this,box_x,box_y,100,font_height_uptr + 6,0x29);
   gfx_draw_frame_rect((iptr)this,box_x,box_y,100,font_height_uptr + 6,10);
   text_clear();
-  text_append_str((const char *)editor_text_dlg_wnd_block.editor_item_name_recs[editor_text_dlg_wnd_block.active_editor_wnd->item + 0x3f]);
-  text_draw_shadowed((iptr)this,(const char *)&map_views_block.text_buffer,box_x + 3,box_y + 2);
+  text_append_str((const char *)editor_text_dlg_wnd_block.editor_item_name_recs[editor_active.wnd->item + 0x3f]);
+  text_draw_shadowed((iptr)this,(const char *)&textbuf.buf,box_x + 3,box_y + 2);
   text_set_colors(0x29,0x12,1,1);
   box_x = client_x + 0x59;
   box_y = client_y + 0x109;
@@ -1038,32 +1038,32 @@ void EditorWindow::tribe_editor_paint()
   label_y = client_y + 0x10d;
   text_clear();
   text_append_label(0x25d);
-  text_draw_centered((iptr)this,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
+  text_draw_centered((iptr)this,(const char *)&textbuf.buf,label_x,label_y,0);
   label_x = tribe_editor_combo_x_table_block.tribe_editor_city_style_x + client_x + 0x32;
   label_y = ((tribe_editor_combo_x_table_block.tribe_editor_city_style_y + client_y) - font_height_uptr) - 2;
   text_clear();
   text_append_label(0x219);
-  text_draw_centered((iptr)this,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
+  text_draw_centered((iptr)this,(const char *)&textbuf.buf,label_x,label_y,0);
   label_x = tribe_editor_combo_x_table_block.tribe_editor_edit_x_table[0] + client_x + 0x32;
   label_y = ((tribe_editor_combo_x_table_block.tribe_editor_edit_y_table[0] + client_y) - font_height_uptr) - 2;
   text_clear();
   text_append_label(0x249);
-  text_draw_centered((iptr)this,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
+  text_draw_centered((iptr)this,(const char *)&textbuf.buf,label_x,label_y,0);
   label_x = tribe_editor_combo_x_table_block.tribe_editor_attack_x + client_x + 0x32;
   label_y = ((tribe_editor_combo_x_table_block.tribe_editor_attack_y + client_y) - font_height_uptr) - 2;
   text_clear();
   text_append_label(0x1e5);
-  text_draw_centered((iptr)this,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
+  text_draw_centered((iptr)this,(const char *)&textbuf.buf,label_x,label_y,0);
   label_x = tribe_editor_combo_x_table_block.tribe_editor_expand_x + client_x + 0x32;
   label_y = ((tribe_editor_combo_x_table_block.tribe_editor_expand_y + client_y) - font_height_uptr) - 2;
   text_clear();
   text_append_label(0x24a);
-  text_draw_centered((iptr)this,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
+  text_draw_centered((iptr)this,(const char *)&textbuf.buf,label_x,label_y,0);
   label_x = tribe_editor_combo_x_table_block.tribe_editor_civilize_x + client_x + 0x32;
   label_y = ((tribe_editor_combo_x_table_block.tribe_editor_civilize_y + client_y) - font_height_uptr) - 2;
   text_clear();
   text_append_label(0x24b);
-  text_draw_centered((iptr)this,(const char *)&map_views_block.text_buffer,label_x,label_y,0);
+  text_draw_centered((iptr)this,(const char *)&textbuf.buf,label_x,label_y,0);
   wnd_blit_surface();
   return;
 }
@@ -1103,8 +1103,8 @@ void EditorWindow::tribe_editor_main()
   eh_state = 0xffffffff;
   palette.init();
   eh_state = 0;
-  editor_text_dlg_wnd_block.editor_running = 1;
-  editor_text_dlg_wnd_block.active_editor_wnd = this;
+  editor_lists.running = 1;
+  editor_active.wnd = this;
   this_00 = (DibSurface *)(operator_new(0x48));
   (*((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
@@ -1114,14 +1114,14 @@ void EditorWindow::tribe_editor_main()
     bg_surface2 = surface_ctor(this_00);
   }
   eh_state = eh_state & 0xffffff00;
-  editor_bg_surface = bg_surface2;
+  editor_ui.bg_surface = bg_surface2;
   ((GameFont *)((i8 *)&editor_font_block.editor_font))->set(0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
   wnd_width_u = 0x230;
   wnd_height_u = 0x17c;
   item_uptr = 0;
-  editor_text_dlg_wnd_block.editor_next_ctrl_id = 0xc9;
-  editor_bg_surface->load_gif_file((const char *)&str_editorsa_gif,10,0xc0,(iptr)&palette);
+  editor_lists.next_ctrl_id = 0xc9;
+  editor_ui.bg_surface->load_gif_file((const char *)&str_editorsa_gif,10,0xc0,(iptr)&palette);
   font_height = ((GameFont *)((i8 *)&editor_font_block.editor_font))->font_cached_height();
   font_height_uptr = font_height;
   arg9 = 0;
@@ -1132,7 +1132,7 @@ void EditorWindow::tribe_editor_main()
   pos_y = 0;
   pos_x = 0;
   style = 0xd;
-  title = (i32)(label_string(label_string_ids[0x24c]));
+  title = (i32)(label_string(label_table.string_ids[0x24c]));
   this->FrameWindow::create((const char *)title,style,pos_x,pos_y,width,height,arg7,arg8,arg9);
   tribe_editor_load_tables();
   for (i = 0; i < 5; i++) {
@@ -1145,7 +1145,7 @@ void EditorWindow::tribe_editor_main()
   }
   pos = ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + item_uptr * 0x3c))->width();
   button_width_u = pos + 0x2d;
-  pos = ((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)))->line_spacing();
+  pos = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
   button_height_u = pos + 8;
   pos = client_y + (int)(button_height_u * 3) / 2 + 0x101;
   height = client_x;
@@ -1156,7 +1156,7 @@ void EditorWindow::tribe_editor_main()
   else {
     parent_wnd1 = (u8 *)&window;
   }
-  label = (iptr)(label_string(label_string_ids[0x250]));
+  label = (iptr)(label_string(label_table.string_ids[0x250]));
   add_trigger_button.create((iptr)parent_wnd1,0x65,(iptr)rect,(const char *)label);
   add_trigger_button.set_callback((CtrlNotifyFn)tribe_editor_rename_commodity);
   rect_set_xywh((iptr)rect,height + 0xe1,pos,button_width_u,button_height_u);
@@ -1166,7 +1166,7 @@ void EditorWindow::tribe_editor_main()
   else {
     parent_wnd2 = (u8 *)&window;
   }
-  label = (iptr)(label_string(label_string_ids[0x251]));
+  label = (iptr)(label_string(label_table.string_ids[0x251]));
   edit_trigger_button.create((iptr)parent_wnd2,0x65,(iptr)rect,(const char *)label);
   edit_trigger_button.set_callback((CtrlNotifyFn)tribe_editor_rename_govt);
   rect_set_xywh((iptr)rect,height + 0x159,pos,button_width_u,button_height_u);
@@ -1176,10 +1176,10 @@ void EditorWindow::tribe_editor_main()
   else {
     parent_wnd3 = (u8 *)&window;
   }
-  label = (iptr)(label_string(label_string_ids[0x252]));
+  label = (iptr)(label_string(label_table.string_ids[0x252]));
   delete_trigger_button.create((iptr)parent_wnd3,0x65,(iptr)rect,(const char *)label);
   delete_trigger_button.set_callback((CtrlNotifyFn)tribe_editor_rename_title);
-  pos = ((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)))->line_spacing();
+  pos = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
   button_height_u = pos + 8;
   button_width_u = (int)(client_width - 8) / 3;
   button_y = (client_y + client_height) - (button_height_u + 2);
@@ -1191,7 +1191,7 @@ void EditorWindow::tribe_editor_main()
   else {
     parent_wnd4 = (u8 *)&window;
   }
-  label = (iptr)(label_string(label_string_ids[0xfe]));
+  label = (iptr)(label_string(label_table.string_ids[0xfe]));
   ok_button.create((iptr)parent_wnd4,0x65,(iptr)rect,(const char *)label);
   ok_button.set_callback((CtrlNotifyFn)tribe_editor_on_ok);
   pos = pos + button_width_u + 2;
@@ -1202,7 +1202,7 @@ void EditorWindow::tribe_editor_main()
   else {
     parent_wnd5 = (u8 *)&window;
   }
-  label = (iptr)(label_string(label_string_ids[0x23b]));
+  label = (iptr)(label_string(label_table.string_ids[0x23b]));
   help_button.create((iptr)parent_wnd5,0x66,(iptr)rect,(const char *)label);
   help_button.set_callback((CtrlNotifyFn)tribe_editor_on_help);
   rect_set_xywh((iptr)rect,pos + button_width_u + 2,button_y,button_width_u,
@@ -1213,7 +1213,7 @@ void EditorWindow::tribe_editor_main()
   else {
     parent_wnd6 = (u8 *)&window;
   }
-  label = (iptr)(label_string(label_string_ids[0xff]));
+  label = (iptr)(label_string(label_table.string_ids[0xff]));
   cancel_button.create((iptr)parent_wnd6,0x66,(iptr)rect,(const char *)label);
   cancel_button.set_callback((CtrlNotifyFn)tribe_editor_on_cancel);
   cancel_button.set_cancel_button();
@@ -1226,13 +1226,13 @@ void EditorWindow::tribe_editor_main()
   repaint();
   this->SurfaceWindow::show();
   ((ModalMenuWindow *)&window)->run_modal_loop();
-  while (editor_text_dlg_wnd_block.editor_running != 0) {
+  while (editor_lists.running != 0) {
     win_pump_one_message();
   }
-  if (editor_bg_surface != (DibSurface *)0x0) {
-    editor_bg_surface->surface_delete(1);
+  if (editor_ui.bg_surface != (DibSurface *)0x0) {
+    editor_ui.bg_surface->surface_delete(1);
   }
-  editor_bg_surface = (DibSurface *)0x0;
+  editor_ui.bg_surface = (DibSurface *)0x0;
   combo_count_u = 0;
   eh_state = 0xffffffff;
   /* inlined unwind funclet 004a5d6e */ { palette_destroy(&palette); }
@@ -1279,7 +1279,7 @@ void __cdecl editor_text_dlg_wnd_global_init(void)
 void __cdecl editor_text_dlg_wnd_static_init(void)
 
 {
-  ((FrameWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->FrameWindow::construct();
+  ((FrameWindow *)((i8 *)&editor_text_dlg.wnd))->FrameWindow::construct();
   return;
 }
 
@@ -1295,7 +1295,7 @@ void __cdecl editor_text_dlg_wnd_reg_atexit(void)
 void __cdecl editor_text_dlg_wnd_static_dtor(void)
 
 {
-  ((FrameWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->FrameWindow::destruct();
+  ((FrameWindow *)((i8 *)&editor_text_dlg.wnd))->FrameWindow::destruct();
   return;
 }
 
@@ -1407,7 +1407,7 @@ i32 __cdecl tribe_editor_update_city_file(void)
   crt_strcat(city_file_name,((i8 *)&lang_file_ext));
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-  rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home));
   if (rc != 0) {
     rc = file_exists((const char *)city_file_name);
     if (rc == 0) {
@@ -1507,18 +1507,18 @@ i32 __cdecl editor_options_dialog(const char *file_name,const char *section,uint
   eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
   eh_state = 0;
-  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+  if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
+    parent_wnd2 = (iptr)&editor_active.wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   rc = dlg.load_text_section((const char *)&str_game_7,file_name,(int)section,0,0,0,0,flags);
   if (rc == 0) {
     if (((byte)dlg.style_flags & 4) != 0) {
       for (i = 0; i < (int)dlg.option_count; i++) {
-        dlg.set_option_checked(i,1 << ((byte)i & 0x1f) & dlg_check_bits
+        dlg.set_option_checked(i,1 << ((byte)i & 0x1f) & dlg_input.check_bits
                   );
       }
     }
@@ -1527,13 +1527,13 @@ i32 __cdecl editor_options_dialog(const char *file_name,const char *section,uint
                  (uint)((1 << ((byte)i & 0x1f) & disabled_mask) != 0));
     }
     choice = dlg.show_modal(0);
-    (*(u32 *)&dlg_help_pressed) = dlg.result_extra;
+    (*(u32 *)&dlg_input.help_pressed) = dlg.result_extra;
     if (((byte)dlg.style_flags & 4) != 0) {
-      dlg_check_bits = 0;
+      dlg_input.check_bits = 0;
       for (i = 0; i < (int)dlg.option_count; i++) {
         rc = dlg.option_is_checked(i);
         if (rc != 0) {
-          dlg_check_bits = dlg_check_bits | 1 << ((byte)i & 0x1f);
+          dlg_input.check_bits = dlg_input.check_bits | 1 << ((byte)i & 0x1f);
         }
       }
     }
@@ -1549,12 +1549,12 @@ int __cdecl editor_clamp_value(int value,int min_value,int max_value)
 
 {
   if (value < min_value) {
-    editor_value_clamped = 1;
+    editor_ui.value_clamped = 1;
   }
   else {
     min_value = value;
     if (max_value < value) {
-      editor_value_clamped = 1;
+      editor_ui.value_clamped = 1;
       min_value = max_value;
     }
   }
@@ -1573,23 +1573,23 @@ editor_text_dlg_create(const char *title,uint style,int x,int y,int width,int he
   uint wnd_style;
   
   if (title == 0) {
-    crt_strcpy(((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_title),((i8 *)&editor_text_dlg_empty_title));
+    crt_strcpy(((i8 *)&editor_text_dlg.title),((i8 *)&editor_text_dlg_empty_title));
   }
   else {
-    crt_strcpy(((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_title),(const char *)((const void *)title));
+    crt_strcpy(((i8 *)&editor_text_dlg.title),(const char *)((const void *)title));
   }
-  editor_text_dlg_wnd_block.editor_text_dlg_text_font_i32 = ((i32)((i8 *)&ui_text_font));
-  editor_text_dlg_wnd_block.editor_text_dlg_title_font_i32 = ((i32)((i8 *)&caption_font_block.caption_font));
-  editor_text_dlg_wnd_block.editor_text_dlg_title_small_font_i32 = ((i32)((i8 *)&caption_small_font_block.caption_small_font));
-  editor_text_dlg_wnd_block.editor_text_dlg_style_i32 = style;
-  editor_text_dlg_wnd_block.editor_text_dlg_caption_height = caption_height;
-  editor_text_dlg_wnd_block.editor_text_dlg_border_width = border_width;
-  editor_text_dlg_wnd_block.editor_text_dlg_resize_border = resize_border;
-  editor_text_dlg_wnd_block.editor_text_dlg_caption_buttons_i32 = 0;
-  editor_text_dlg_wnd_block.editor_text_dlg_caption_handler_i32 = 0;
+  editor_text_dlg.text_font = ((i32)((i8 *)&ui_text_font));
+  editor_text_dlg.title_font = ((i32)((i8 *)&caption_font_block.caption_font));
+  editor_text_dlg.title_small_font = ((i32)((i8 *)&caption_small_font_block.caption_small_font));
+  editor_text_dlg.style = style;
+  editor_text_dlg.caption_height = caption_height;
+  editor_text_dlg.border_width = border_width;
+  editor_text_dlg.resize_border = resize_border;
+  editor_text_dlg.caption_buttons = 0;
+  editor_text_dlg.caption_handler = 0;
   if ((style & 4) != 0) {
-    editor_text_dlg_wnd_block.editor_text_dlg_caption_height = frame_caption_height;
-    editor_text_dlg_wnd_block.editor_text_dlg_border_width = frame_border_width;
+    editor_text_dlg.caption_height = ui_metrics.caption_height;
+    editor_text_dlg.border_width = ui_metrics.border_width;
   }
   if ((style & 8) == 0) {
     wnd_style = 0x202;
@@ -1597,35 +1597,35 @@ editor_text_dlg_create(const char *title,uint style,int x,int y,int width,int he
   else {
     wnd_style = 0x802;
   }
-  if (editor_text_dlg_wnd_block.editor_text_dlg_caption_height != 0) {
+  if (editor_text_dlg.caption_height != 0) {
     wnd_style = wnd_style | 0x400;
   }
   if (resize_border != 0) {
     wnd_style = wnd_style | 0x1000;
   }
   if ((style & 2) == 0) {
-    width += editor_text_dlg_wnd_block.editor_text_dlg_border_width * 2;
-    height = height + editor_text_dlg_wnd_block.editor_text_dlg_caption_height + editor_text_dlg_wnd_block.editor_text_dlg_border_width;
+    width += editor_text_dlg.border_width * 2;
+    height = height + editor_text_dlg.caption_height + editor_text_dlg.border_width;
   }
   if ((style & 1) != 0) {
     x = (caption_font_block.screen_width >> 1) - (width >> 1);
     y = (caption_font_block.screen_height >> 1) - (height >> 1);
   }
-  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+  if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
+    parent_wnd2 = (iptr)&editor_active.wnd->window;
   }
-  ((DibSurface *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->wnd_create_with_surface(0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
+  ((DibSurface *)((i8 *)&editor_text_dlg.wnd))->wnd_create_with_surface(0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
              parent_wnd2);
-  if (editor_text_dlg_wnd_block.editor_text_dlg_caption_height != 0) {
-    ((WndBase *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner))->set_caption_height(editor_text_dlg_wnd_block.editor_text_dlg_caption_height);
+  if (editor_text_dlg.caption_height != 0) {
+    ((WndBase *)((i8 *)&editor_text_dlg.inner))->set_caption_height(editor_text_dlg.caption_height);
   }
-  if (editor_text_dlg_wnd_block.editor_text_dlg_resize_border != 0) {
-    ((WndBase *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner))->set_resize_border(editor_text_dlg_wnd_block.editor_text_dlg_resize_border);
+  if (editor_text_dlg.resize_border != 0) {
+    ((WndBase *)((i8 *)&editor_text_dlg.inner))->set_resize_border(editor_text_dlg.resize_border);
   }
-  ((FrameWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->layout();
+  ((FrameWindow *)((i8 *)&editor_text_dlg.wnd))->layout();
   return;
 }
 
@@ -1640,28 +1640,28 @@ void __cdecl editor_text_dlg_on_ok(void)
   char line_buf[256];
   
   for (line_idx = 0; line_idx < 0x14; line_idx++) {
-    editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
+    editor_lists.text_lines_out[line_idx] = 0;
   }
   events_compact();
   for (line_idx = 0; line_idx <= 0x13; line_idx++) {
     has_line = ((EditControl *)((i8 *)&editor_text_edit_block.editor_text_edit))->get_line(line_idx,(char *)line_buf,0x100);
     if (has_line == 0) {
-      editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
+      editor_lists.text_lines_out[line_idx] = 0;
     }
     else {
       len = _strlen(line_buf);
       line_copy = memblock_alloc_checked((MemBlock *)&unit_types_block.str_empty_188,len + 1);
-      editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = line_copy;
-      if (editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] == 0) {
-        editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
+      editor_lists.text_lines_out[line_idx] = line_copy;
+      if (editor_lists.text_lines_out[line_idx] == 0) {
+        editor_lists.text_lines_out[line_idx] = 0;
         break;
       }
-      crt_strcpy((char *)((void *)editor_text_dlg_wnd_block.editor_text_lines_out[line_idx]),line_buf);
+      crt_strcpy((char *)((void *)editor_lists.text_lines_out[line_idx]),line_buf);
     }
   }
   editor_font_block.editor_text_result = 1;
   editor_font_block.editor_text_active = 0;
-  ((ModalMenuWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner))->end_modal_loop();
+  ((ModalMenuWindow *)((i8 *)&editor_text_dlg.inner))->end_modal_loop();
   return;
 }
 
@@ -1671,7 +1671,7 @@ void __cdecl editor_text_dlg_on_cancel(void)
 {
   editor_font_block.editor_text_result = 0;
   editor_font_block.editor_text_active = 0;
-  ((ModalMenuWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner))->end_modal_loop();
+  ((ModalMenuWindow *)((i8 *)&editor_text_dlg.inner))->end_modal_loop();
   return;
 }
 
@@ -1679,12 +1679,12 @@ void __cdecl editor_text_dlg_on_cancel(void)
 void __cdecl editor_text_dlg_redraw(void)
 
 {
-  ((FrameWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->FrameWindow::draw_caption();
-  gfx_fill_rect((iptr)&editor_text_dlg_wnd_block.editor_text_dlg_wnd,(RECT *)&editor_text_dlg_wnd_block.editor_text_fill_rect,0x1d);
-  text_set_surface((iptr)&editor_text_dlg_wnd_block.editor_text_dlg_wnd);
+  ((FrameWindow *)((i8 *)&editor_text_dlg.wnd))->FrameWindow::draw_caption();
+  gfx_fill_rect((iptr)&editor_text_dlg.wnd,(RECT *)&editor_text_dlg.fill_rect,0x1d);
+  text_set_surface((iptr)&editor_text_dlg.wnd);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);
-  ((DibSurface *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->wnd_blit_surface();
+  ((DibSurface *)((i8 *)&editor_text_dlg.wnd))->wnd_blit_surface();
   return;
 }
 
@@ -1716,17 +1716,17 @@ i32 __cdecl editor_text_edit_dialog(i32 *lines,const char *title)
   button_ctor(&cancel_btn);
   eh_state = (eh_state & 0xffffff00 | (byte)(1));
   editor_font_block.editor_text_active = 1;
-  editor_text_dlg_wnd_block.editor_text_lines_out = lines;
-  button_height = ((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)))->line_spacing();
+  editor_lists.text_lines_out = lines;
+  button_height = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
   button_height += 8;
   button_y = ((GameFont *)((i8 *)&editor_font_block.editor_font))->line_spacing();
   editor_text_dlg_create(title,0xd,0,0x14,600,button_y * 0x14 + button_height,0,0,0);
-  button_height = ((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)))->line_spacing();
+  button_height = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
   button_height += 8;
-  button_width2 = (editor_text_dlg_wnd_block.editor_text_dlg_client_width - 6) / 2;
-  rect_set_xywh((iptr)rect,editor_text_dlg_wnd_block.editor_text_dlg_client_x + 4,editor_text_dlg_wnd_block.editor_text_dlg_client_y + 4,editor_text_dlg_wnd_block.editor_text_dlg_client_width - 9,
-                     (editor_text_dlg_wnd_block.editor_text_dlg_client_height - button_height) - 9);
-  ((EditControl *)((i8 *)&editor_text_edit_block.editor_text_edit))->create_styled((iptr)&editor_text_dlg_wnd_block.editor_text_dlg_inner,0xc9,(iptr)rect,0,2,1);
+  button_width2 = (editor_text_dlg.client_width - 6) / 2;
+  rect_set_xywh((iptr)rect,editor_text_dlg.client_x + 4,editor_text_dlg.client_y + 4,editor_text_dlg.client_width - 9,
+                     (editor_text_dlg.client_height - button_height) - 9);
+  ((EditControl *)((i8 *)&editor_text_edit_block.editor_text_edit))->create_styled((iptr)&editor_text_dlg.inner,0xc9,(iptr)rect,0,2,1);
   for (line_idx = 0; (line_idx < 0x14 && (lines[line_idx] != 0));
       line_idx = line_idx + 1) {
     if (line_idx != 0) {
@@ -1734,26 +1734,26 @@ i32 __cdecl editor_text_edit_dialog(i32 *lines,const char *title)
     }
     ((EditControl *)((i8 *)&editor_text_edit_block.editor_text_edit))->replace_sel((const char *)lines[line_idx]);
   }
-  button_y = (editor_text_dlg_wnd_block.editor_text_dlg_client_y + editor_text_dlg_wnd_block.editor_text_dlg_client_height) - (button_height + 2);
-  button_x = editor_text_dlg_wnd_block.editor_text_dlg_client_x + 2;
+  button_y = (editor_text_dlg.client_y + editor_text_dlg.client_height) - (button_height + 2);
+  button_x = editor_text_dlg.client_x + 2;
   rect_set_xywh((iptr)rect,button_x,button_y,button_width2,button_height);
-  label = (iptr)(label_string(label_string_ids[0xfe]));
-  ok_btn.create((iptr)&editor_text_dlg_wnd_block.editor_text_dlg_inner,0x65,(iptr)rect,(const char *)label);
+  label = (iptr)(label_string(label_table.string_ids[0xfe]));
+  ok_btn.create((iptr)&editor_text_dlg.inner,0x65,(iptr)rect,(const char *)label);
   ok_btn.set_callback((CtrlNotifyFn)editor_text_dlg_on_ok);
   button_x = button_x + button_width2 + 2;
   rect_set_xywh((iptr)rect,button_x,button_y,button_width2,button_height);
-  label = (iptr)(label_string(label_string_ids[0xff]));
-  cancel_btn.create((iptr)&editor_text_dlg_wnd_block.editor_text_dlg_inner,0x66,(iptr)rect,(const char *)label);
+  label = (iptr)(label_string(label_table.string_ids[0xff]));
+  cancel_btn.create((iptr)&editor_text_dlg.inner,0x66,(iptr)rect,(const char *)label);
   cancel_btn.set_callback((CtrlNotifyFn)editor_text_dlg_on_cancel);
   cancel_btn.set_cancel_button();
-  ((SurfaceWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->set_redraw_callback(editor_text_dlg_redraw);
-  ((SurfaceWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->repaint();
-  ((SurfaceWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->SurfaceWindow::show();
-  ((ModalMenuWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner))->run_modal_loop();
+  ((SurfaceWindow *)((i8 *)&editor_text_dlg.wnd))->set_redraw_callback(editor_text_dlg_redraw);
+  ((SurfaceWindow *)((i8 *)&editor_text_dlg.wnd))->repaint();
+  ((SurfaceWindow *)((i8 *)&editor_text_dlg.wnd))->SurfaceWindow::show();
+  ((ModalMenuWindow *)((i8 *)&editor_text_dlg.inner))->run_modal_loop();
   while (editor_font_block.editor_text_active != 0) {
     win_pump_one_message();
   }
-  ((FrameWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_wnd))->FrameWindow::close();
+  ((FrameWindow *)((i8 *)&editor_text_dlg.wnd))->FrameWindow::close();
   result = editor_font_block.editor_text_result;
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004ce6ed */ { ctrl_dtor(&cancel_btn); }
@@ -1779,14 +1779,14 @@ uint __cdecl editor_check_city_name(const char *name2)
       rc = (int)(text_read_line(1));
       if (rc == 0) break;
       name_len = _strlen((char *)name2);
-      line_len = _strlen(((i8 *)&map_views_block.text_buffer));
+      line_len = _strlen(((i8 *)&textbuf.buf));
       if (line_len < name_len) {
         cmp_len = _strlen((char *)name2);
       }
       else {
-        cmp_len = _strlen(((i8 *)&map_views_block.text_buffer));
+        cmp_len = _strlen(((i8 *)&textbuf.buf));
       }
-      rc = __strnicmp((char *)name2,((i8 *)&map_views_block.text_buffer),cmp_len);
+      rc = __strnicmp((char *)name2,((i8 *)&textbuf.buf),cmp_len);
       if (rc == 0) {
         text_close_file();
         result = 1;
@@ -1794,11 +1794,11 @@ uint __cdecl editor_check_city_name(const char *name2)
       }
     }
   }
-  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+  if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
   else {
-    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
+    parent_wnd2 = (iptr)&editor_active.wnd->window;
   }
   dlg_set_parent_window(parent_wnd2);
   text_set_string_arg(0,name2);
@@ -1818,11 +1818,11 @@ void __cdecl editor_wnd_on_move_close_dropdowns(void)
   LPARAM lParam;
   int i;
   
-  for (i = 0; i < editor_text_dlg_wnd_block.active_editor_wnd->combo_count; i++) {
+  for (i = 0; i < editor_active.wnd->combo_count; i++) {
     lParam = 0;
     wParam = 0;
     Msg = 0x14f;
-    hWnd = ((Control *)&editor_text_dlg_wnd_block.active_editor_wnd->combos[i])->get_hwnd();
+    hWnd = ((Control *)&editor_active.wnd->combos[i])->get_hwnd();
     SendMessageA(hWnd,Msg,wParam,lParam);
   }
   return;
@@ -1855,7 +1855,7 @@ i32 __cdecl editor_create_scenario_folder(void)
   CHAR path[260];
   int retry;
   
-  rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home));
   if (rc == 0) {
     do {
       retry = 0;
@@ -1868,7 +1868,7 @@ i32 __cdecl editor_create_scenario_folder(void)
       } while (len == 0);
       rc = str_find_bad_filename_char((const char *)folder_name);
       if (rc == 0) {
-        crt_strcpy(path,((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+        crt_strcpy(path,((i8 *)&game_dirs.home));
         crt_strcat(path,str_scenario_4);
         crt_strcat(path,folder_name);
         attrs = GetFileAttributesA(path);
@@ -1918,8 +1918,8 @@ void __cdecl editor_toggle_scenario_flag(void)
   }
   else if (((game.game_options & OPT_CHEAT_MODE) == 0) ||
           (((game.game_flags & GAME_SCENARIO) == 0 ||
-           (rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), rc == 0)))) {
-    rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+           (rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home)), rc == 0)))) {
+    rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home));
     if (rc == 0) {
       popup_text((const char *)&str_help_16,(const char *)&str_warning_4);
     }

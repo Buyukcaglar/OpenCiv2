@@ -97,7 +97,7 @@ void Button::create(iptr parent,i32 ctrl_id,iptr rect,const char *label)
   if (hwnd != 0) {
     destroy();
   }
-  font = (u32)(*(i8 * *)draw_current_font_rest);
+  font = (u32)(*(i8 * *)draw_target.font_rest);
   init(parent,6,ctrl_id,(RECT *)rect);
   on_click = 0;
   new_hwnd = button_create_hwnd((int *)rect,(iptr)this,label,1,(GameFont *)font);
@@ -198,7 +198,7 @@ void Checkbox::create(iptr parent,i32 ctrl_id,i32 x,i32 y ,const char *label)
   u32 new_hwnd;
   i8 rect[16];
   
-  font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
+  font = (u32)(*(i8 * *)(draw_target.font_rest + 8));
   checkbox_calc_rect((char *)label,x,y,(iptr)rect,(GameFont *)font);
   if (hwnd != 0) {
     destroy();
@@ -362,7 +362,7 @@ void EditControl::create(iptr parent,i32 ctrl_id,iptr rect,const char *text)
   if (hwnd != 0) {
     destroy();
   }
-  edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
+  edit_font = (u32)(*(i8 * *)(draw_target.font_rest + 12));
   init(parent,4,ctrl_id,(RECT *)rect);
   new_hwnd = edit_create_window((int *)rect,(iptr)this,1,1,(GameFont *)edit_font);
   hwnd = new_hwnd;
@@ -546,7 +546,7 @@ void ListBox::create(iptr parent,i32 ctrl_id,iptr rect)
   if (hwnd != 0) {
     destroy();
   }
-  font = (u32)(*(i8 * *)(draw_current_font_rest + 16));
+  font = (u32)(*(i8 * *)(draw_target.font_rest + 16));
   init(parent,7,ctrl_id,(RECT *)rect);
   new_hwnd = listbox_create_hwnd((int *)rect,(iptr)this,1,0,(GameFont *)font);
   hwnd = new_hwnd;
@@ -785,7 +785,7 @@ void Button::create_with_callback(iptr parent,i32 ctrl_id,iptr rect,u32 callback
 
 {
   on_select = callback;
-  font = (u32)(*(i8 * *)draw_current_font_rest);
+  font = (u32)(*(i8 * *)draw_target.font_rest);
   create(parent,ctrl_id,rect,label);
   return;
 }
@@ -872,7 +872,7 @@ void EditControl::create_styled(iptr parent,i32 ctrl_id,iptr rect,const char *te
   if (hwnd != 0) {
     destroy();
   }
-  edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
+  edit_font = (u32)(*(i8 * *)(draw_target.font_rest + 12));
   init(parent,4,ctrl_id,(RECT *)rect);
   new_hwnd = edit_create_window((int *)rect,(iptr)this,multiline,style,(GameFont *)edit_font);
   hwnd = new_hwnd;
@@ -1072,7 +1072,7 @@ void Checkbox::create_fixed(iptr parent,i32 ctrl_id,i32 x,i32 y ,i32 width,const
   u32 hwnd;
   i8 rect[16];
   
-  font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
+  font = (u32)(*(i8 * *)(draw_target.font_rest + 8));
   checkbox_calc_rect_fixed(x,y,width,(iptr)rect,(GameFont *)font);
   if (this->hwnd != 0) {
     destroy();
@@ -1129,7 +1129,7 @@ void RadioGroup::create(iptr parent,i32 ctrl_id,iptr rect,u32 columns,u32 item_c
   if (items_handle != 0) {
     destroy();
   }
-  radio_font = (u32)(*(i8 * *)(draw_current_font_rest + 4));
+  radio_font = (u32)(*(i8 * *)(draw_target.font_rest + 4));
   init(parent,3,ctrl_id,(RECT *)rect);
   on_select = 0;
   on_dblclick = 0;
@@ -1451,7 +1451,7 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr paint,HWND hwnd)
     origin.x = *(int *)(paint + 8);
     origin.y = *(int *)(paint + 0xc);
     MapWindowPoints(hwnd,window->hwnd,&origin,1);
-    if ((window->palette != 0) && (gfx_palettized_display == 1)) {
+    if ((window->palette != 0) && (display_palette.palettized == 1)) {
       SelectPalette(*(HDC *)paint,window->palette,0);
       RealizePalette(*(HDC *)paint);
     }
@@ -1668,7 +1668,7 @@ static HPEN button_face_pen(HDC mem_dc,Button *button)
     bg_pen = GetStockObject(1);
   }
   else {
-    if (gfx_palettized_display == 1) {
+    if (display_palette.palettized == 1) {
       bForceBkgd = 0;
       parent_wnd = (WndBase *)button->get_parent();
       this_00 = (PaletteHandleView *)parent_wnd->get_palette();
@@ -2043,7 +2043,7 @@ void __cdecl button_press_animated(HWND hwnd)
       ui_pump_messages();
       ui_wait_ticks(8);
       wnd_redraw_client(hwnd);
-      wnd_active_child = self->get_parent();
+      modal_wnd.active_child = self->get_parent();
       ctrl_id = self->get_id();
       self->fire_callback(ctrl_id);
     }
@@ -2283,7 +2283,7 @@ void __cdecl checkbox_toggle_by_hotkey(HWND hwnd)
     }
     SetCapture(hwnd);
     InvalidateRect(hwnd,(RECT *)0x0,0);
-    wnd_active_child = self->get_parent();
+    modal_wnd.active_child = self->get_parent();
     is_checked = ((Checkbox *)self)->is_checked();
     ctrl_id = self->get_id();
     ((Checkbox *)self)->fire_callback(ctrl_id,is_checked);
@@ -2313,14 +2313,14 @@ static void checkbox_text_color(HDC hdc,Checkbox *checkbox)
     parent_base = (WndBase *)checkbox->get_parent();
     value = (int)parent_base->get_window();
     if (((NativeWindow *)value)->field_40 == 8) {
-      if (ctrl_text_color_index == 0) {
+      if (ctrl_colors.text == 0) {
         SetTextColor(hdc,0);
       }
       else {
         blue_out = blue;
         green_out = green;
         red_out = red;
-        color_index = (uint)ctrl_text_color_index;
+        color_index = (uint)ctrl_colors.text;
         parent_wnd = (WndBase *)checkbox->get_parent();
         game_palette2 = (GamePalette *)parent_wnd->get_palette();
         logpal = (iptr)game_palette2->get_logpalette();
@@ -2329,11 +2329,11 @@ static void checkbox_text_color(HDC hdc,Checkbox *checkbox)
         ;
       }
     }
-    else if (wnd_modal_stack_below_block.ctrl_text_rgb_set == '\0') {
+    else if (ctrl_rgb.text_rgb_set == '\0') {
       SetTextColor(hdc,0);
     }
     else {
-      SetTextColor(hdc,CONCAT12(wnd_modal_stack_below_block.ctrl_text_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_text_rgb_g,wnd_modal_stack_below_block.ctrl_text_rgb_r)));
+      SetTextColor(hdc,CONCAT12(ctrl_rgb.text_rgb_b,CONCAT11(ctrl_rgb.text_rgb_g,ctrl_rgb.text_rgb_r)));
     }
   }
   else {
@@ -2342,14 +2342,14 @@ static void checkbox_text_color(HDC hdc,Checkbox *checkbox)
       parent_base = (WndBase *)checkbox->get_parent();
       value = (int)parent_base->get_window();
       if (((NativeWindow *)value)->field_40 == 8) {
-        if (ctrl_disabled_color_index == 0) {
+        if (ctrl_colors.disabled == 0) {
           SetTextColor(hdc,0x404040);
         }
         else {
           blue_out = blue;
           green_out = green;
           red_out = red;
-          color_index = (uint)ctrl_disabled_color_index;
+          color_index = (uint)ctrl_colors.disabled;
           parent_wnd = (WndBase *)checkbox->get_parent();
           game_palette2 = (GamePalette *)parent_wnd->get_palette();
           logpal = (iptr)game_palette2->get_logpalette();
@@ -2358,11 +2358,11 @@ static void checkbox_text_color(HDC hdc,Checkbox *checkbox)
                        CONCAT12(blue[0],CONCAT11(green[0],red[0])));
         }
       }
-      else if (wnd_modal_stack_below_block.ctrl_disabled_rgb_set == '\0') {
+      else if (ctrl_rgb.disabled_rgb_set == '\0') {
         SetTextColor(hdc,0x404040);
       }
       else {
-        SetTextColor(hdc,CONCAT12(wnd_modal_stack_below_block.ctrl_disabled_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_disabled_rgb_g,wnd_modal_stack_below_block.ctrl_disabled_rgb_r)))
+        SetTextColor(hdc,CONCAT12(ctrl_rgb.disabled_rgb_b,CONCAT11(ctrl_rgb.disabled_rgb_g,ctrl_rgb.disabled_rgb_r)))
         ;
       }
     }
@@ -2500,12 +2500,12 @@ static void checkbox_paint(HWND hwnd,ControlBlock *block,Checkbox *checkbox)
   gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
   rect.left += 0x25;
   label = (char *)block->data;
-  if ((ctrl_shadow_dx != 0) || (ctrl_shadow_dy != 0)) {
-    OffsetRect(&rect,(uint)ctrl_shadow_dx,(uint)ctrl_shadow_dy);
+  if ((ctrl_colors.shadow_dx != 0) || (ctrl_colors.shadow_dy != 0)) {
+    OffsetRect(&rect,(uint)ctrl_colors.shadow_dx,(uint)ctrl_colors.shadow_dy);
     blue_out = blue;
     green_out = green;
     red_out = red;
-    color_index = (uint)ctrl_shadow_color_index;
+    color_index = (uint)ctrl_colors.shadow;
     parent_wnd = (WndBase *)checkbox->get_parent();
     game_palette2 = (GamePalette *)parent_wnd->get_palette();
     game_palette2->get_entry(color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
@@ -2514,7 +2514,7 @@ static void checkbox_paint(HWND hwnd,ControlBlock *block,Checkbox *checkbox)
     draw_rect = &rect;
     len = _strlen(label);
     DrawTextA(hdc,label,len,draw_rect,draw_flags);
-    OffsetRect(&rect,-(uint)ctrl_shadow_dx,-(uint)ctrl_shadow_dy);
+    OffsetRect(&rect,-(uint)ctrl_colors.shadow_dx,-(uint)ctrl_colors.shadow_dy);
   }
   checkbox_text_color(hdc,checkbox);
   draw_flags = 0x24;
@@ -2899,7 +2899,7 @@ void EditControl::create_at(iptr parent,i32 ctrl_id,int x,int y,int width, const
 {
   tagRECT rect;
   
-  edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
+  edit_font = (u32)(*(i8 * *)(draw_target.font_rest + 12));
   on_change = 0;
   SetRect(&rect,x,y,width + x,y + 0x1e);
   create(parent,ctrl_id,(iptr)&rect,text);
@@ -3712,7 +3712,7 @@ void RadioGroup::show_all()
 void __cdecl ctrl_set_pending_font(iptr font)
 
 {
-  (*(i8 * *)(draw_current_font_rest + 4)) = (i8 *)font;
+  (*(i8 * *)(draw_target.font_rest + 4)) = (i8 *)font;
   return;
 }
 
@@ -3779,7 +3779,7 @@ void SpriteButton::init_from_sprite(WndBase *parent,i32 ctrl_id,int x,int y, int
   src_rect.right = dst_rect.right;
   src_rect.bottom = dst_rect.bottom;
   OffsetRect(&dst_rect,2,2);
-  ((DibSurface *)button_surface)->fill((uint)(*(byte *)&gfx_black_color_index));
+  ((DibSurface *)button_surface)->fill((uint)(*(byte *)&display_palette.black_index));
   ((DibSurface *)&on_select)->DibSurface::blit((DibSurface *)(iptr)(button_surface),&src_rect,
              &dst_rect);
   parent_wnd = (WndBase *)get_parent();
@@ -4010,7 +4010,7 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
       item = (RadioItem *)self->get_items();
       InvalidateRect(item[new_sel].hwnd,null_rect,erase);
     }
-    wnd_active_child = self->get_parent();
+    modal_wnd.active_child = self->get_parent();
     sel_index = self->get_selected();
     ctrl_id = self->get_id();
     self->fire_callback(ctrl_id,sel_index);
@@ -4039,14 +4039,14 @@ static void radiogrp_item_text_color(HDC hdc,RadioGroup *group,RadioItem *item)
     parent_base = (WndBase *)group->get_parent();
     value = (int)parent_base->get_window();
     if (((NativeWindow *)value)->field_40 == 8) {
-      if (radio_text_color_index == 0) {
+      if (ctrl_colors.radio_text == 0) {
         SetTextColor(hdc,0);
       }
       else {
         blue_out = blue;
         green_out = green;
         red_out = red;
-        color_index = (uint)radio_text_color_index;
+        color_index = (uint)ctrl_colors.radio_text;
         parent_wnd = (WndBase *)group->get_parent();
         game_palette2 = (GamePalette *)parent_wnd->get_palette();
         parent = (iptr)game_palette2->get_logpalette();
@@ -4054,25 +4054,25 @@ static void radiogrp_item_text_color(HDC hdc,RadioGroup *group,RadioItem *item)
         SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
       }
     }
-    else if (radio_text_rgb_set == '\0') {
+    else if (radio_state.text_set == '\0') {
       SetTextColor(hdc,0);
     }
     else {
-      SetTextColor(hdc,CONCAT12(radio_text_rgb_b,CONCAT11(radio_text_rgb_g,radio_text_rgb_r)));
+      SetTextColor(hdc,CONCAT12(radio_state.text_b,CONCAT11(radio_state.text_g,radio_state.text_r)));
     }
   }
   else if (item->enabled == 0) {
     parent_base = (WndBase *)group->get_parent();
     value = (int)parent_base->get_window();
     if (((NativeWindow *)value)->field_40 == 8) {
-      if (radio_disabled_color_index == 0) {
+      if (ctrl_colors.radio_disabled == 0) {
         SetTextColor(hdc,0x404040);
       }
       else {
         blue_out = blue;
         green_out = green;
         red_out = red;
-        color_index = (uint)radio_disabled_color_index;
+        color_index = (uint)ctrl_colors.radio_disabled;
         parent_wnd = (WndBase *)group->get_parent();
         game_palette2 = (GamePalette *)parent_wnd->get_palette();
         parent = (iptr)game_palette2->get_logpalette();
@@ -4080,11 +4080,11 @@ static void radiogrp_item_text_color(HDC hdc,RadioGroup *group,RadioItem *item)
         SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
       }
     }
-    else if (radio_disabled_rgb_set == '\0') {
+    else if (radio_state.disabled_set == '\0') {
       SetTextColor(hdc,0x404040);
     }
     else {
-      SetTextColor(hdc,CONCAT12(radio_disabled_rgb_b,CONCAT11(radio_disabled_rgb_g,radio_disabled_rgb_r)));
+      SetTextColor(hdc,CONCAT12(radio_state.disabled_b,CONCAT11(radio_state.disabled_g,radio_state.disabled_r)));
     }
   }
 }
@@ -4283,7 +4283,7 @@ static void radiogrp_item_paint(HWND hwnd,ControlBlock *block,RadioGroup *group,
   box_top = rect.top;
   box_right = rect.right;
   box_bottom = rect.bottom;
-  if (radio_lbutton_captured != 0) {
+  if (radio_state.lbutton_captured != 0) {
     box_right = rect.left + 0x20;
     height = rect_height(&rect);
     box_top = height - 0x14 + rect.top >> 1;
@@ -4301,12 +4301,12 @@ static void radiogrp_item_paint(HWND hwnd,ControlBlock *block,RadioGroup *group,
   SetBkMode(hdc,1);
   gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
   rect.left += 0x25;
-  if ((radio_shadow_dx != 0) || (radio_shadow_dy != 0)) {
-    OffsetRect(&rect,(uint)radio_shadow_dx,(uint)radio_shadow_dy);
+  if ((ctrl_colors.radio_dx != 0) || (ctrl_colors.radio_dy != 0)) {
+    OffsetRect(&rect,(uint)ctrl_colors.radio_dx,(uint)ctrl_colors.radio_dy);
     blue_out = blue;
     green_out = green;
     red_out = red;
-    color_index = (uint)radio_shadow_color_index;
+    color_index = (uint)ctrl_colors.radio_shadow;
     parent_wnd = (WndBase *)group->get_parent();
     game_palette2 = (GamePalette *)parent_wnd->get_palette();
     game_palette2->get_entry(color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
@@ -4315,7 +4315,7 @@ static void radiogrp_item_paint(HWND hwnd,ControlBlock *block,RadioGroup *group,
     draw_rect = &rect;
     len = _strlen(item->label);
     DrawTextA(hdc,item->label,len,draw_rect,draw_flags);
-    OffsetRect(&rect,-(uint)radio_shadow_dx,-(uint)radio_shadow_dy);
+    OffsetRect(&rect,-(uint)ctrl_colors.radio_dx,-(uint)ctrl_colors.radio_dy);
   }
   radiogrp_item_text_color(hdc,group,item);
   draw_flags = 0x24;
@@ -4384,7 +4384,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
   }
   else if (msg < 0x202) {
     if (msg == 0x201) {
-      if (radio_lbutton_captured == 0) {
+      if (radio_state.lbutton_captured == 0) {
         value = group->get_selected();
         if ((value != item->index) && (item->enabled == 1)) {
           value = group->get_selected();
@@ -4404,7 +4404,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           ctrl_id = group->get_id();
           group->fire_callback(ctrl_id,result);
         }
-        radio_lbutton_captured = 1;
+        radio_state.lbutton_captured = 1;
         SetCapture(hwnd);
       }
     }
@@ -4452,7 +4452,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
     switch(msg) {
     case 0x202:
       ReleaseCapture();
-      radio_lbutton_captured = 0;
+      radio_state.lbutton_captured = 0;
       break;
     case 0x203:
       if (item->enabled == 1) {
@@ -4476,8 +4476,8 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       }
       break;
     case 0x204:
-      if (radio_rbutton_captured == 0) {
-        radio_rbutton_captured = 1;
+      if (radio_state.rbutton_captured == 0) {
+        radio_state.rbutton_captured = 1;
         SetCapture(hwnd);
         parent = group->get_parent();
         wnd_set_active_child(parent);
@@ -4488,7 +4488,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       break;
     case 0x205:
       ReleaseCapture();
-      radio_rbutton_captured = 0;
+      radio_state.rbutton_captured = 0;
       break;
     default:
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
@@ -4505,7 +4505,7 @@ i32 __cdecl ctrl_hwnd_is_radio(HWND hwnd)
   char *_Str1;
   iptr cmp;
   iptr block;
-  char *_Str2;
+  const char *_Str2;
   CHAR class_name[52];
   
   GetClassNameA(hwnd,class_name,0x32);

@@ -10,8 +10,8 @@ void __cdecl spaceship_wnd_net_idle(void)
 {
   int now;
   
-  net_session_block.process_messages(1,0);
-  if ((net_session_block.net_host_handoff_stage == '\0') && (now = timer_ticks(), now - editor_text_edit_block.spaceship_wnd_open_ticks_i32 < 0x4b1)) {
+  net.process_messages(1,0);
+  if ((net.host_handoff_stage == '\0') && (now = timer_ticks(), now - editor_text_edit_block.spaceship_wnd_open_ticks_i32 < 0x4b1)) {
     return;
   }
   ((ModalMenuWindow *)spaceship_launch_sprite_xs_block.spaceship_wnd)->end_modal_loop();
@@ -46,7 +46,7 @@ i32 __cdecl spaceship_wnd_run(iptr civ_arg)
   
   eh_state = 0xffffffff;
   if (spaceship_launch_sprite_xs_block.spaceship_wnd == 0) {
-    if (council_active == '\0') {
+    if (council_state.active == '\0') {
       if (civ_arg < 1) {
         civ = ~civ_arg + 1;
       }
@@ -99,7 +99,7 @@ i32 __cdecl spaceship_wnd_show_for_civ(iptr civ)
   eh_state = 0xffffffff;
   if (human_civ[0] == civ) {
     if (spaceship_launch_sprite_xs_block.spaceship_wnd == 0) {
-      if (council_active == '\0') {
+      if (council_state.active == '\0') {
         ret_addr = 0x4d03b3;
         window->construct(civ);
         eh_state = 0;
@@ -140,7 +140,7 @@ void __cdecl spaceship_wnd_draw_title(iptr civ)
   text_clear();
   text = (iptr)(civ_name_plural(civ));
   text_append((const char *)text);
-  map_views_block.text_buffer_char_1 = 0;
+  textbuf.char_1 = 0;
   text_append((const char *)&str_s_s);
   text = (iptr)(civ_leader_name(civ));
   text_append((const char *)text);
@@ -151,7 +151,7 @@ void __cdecl spaceship_wnd_draw_title(iptr civ)
   text_append((const char *)&str_empty_124);
   gfx_set_text_color_index(0xfa);
   SetRect(&rect,0,0,0x27f,0x28);
-  ((DibSurface *)((iptr)spaceship_launch_sprite_xs_block.spaceship_wnd + 0xb8))->draw_text_in_rect((iptr)spaceship_launch_sprite_xs_block.spaceship_wnd + 0x8c4,(const char *)&map_views_block.text_buffer,&rect,
+  ((DibSurface *)((iptr)spaceship_launch_sprite_xs_block.spaceship_wnd + 0xb8))->draw_text_in_rect((iptr)spaceship_launch_sprite_xs_block.spaceship_wnd + 0x8c4,(const char *)&textbuf.buf,&rect,
              0);
   win_flush_pending_msgs();
   return;
@@ -299,7 +299,7 @@ i32 SpaceshipWindow::init()
     set_cursor(0x1fc);
     spaceship_calc_stats(ship_civ,1);
     build_stats_text();
-    if ((civs[ship_civ].spaceship_parts[3] != 0) && (unit_sound_editor_window_block.spaceship_success_pct != 0)) {
+    if ((civs[ship_civ].spaceship_parts[3] != 0) && (spaceship_stats.success_pct != 0)) {
       launch_state = 1;
     }
     status = civ_spaceship_launched(ship_civ);
@@ -606,7 +606,7 @@ void SpaceshipWindow::build_stats_text()
   }
   for (part_index = 0; part_index < 6; part_index++) {
     str_append_string_id((iptr)stats_text,
-                       label_string_ids[spaceship_part_table_block.spaceship_parts[part_index].label_id])
+                       label_table.string_ids[spaceship_part_table_block.spaceship_parts[part_index].label_id])
     ;
     str_append_colon((char *)stats_text);
     str_append_int((iptr)stats_text,
@@ -623,25 +623,25 @@ void SpaceshipWindow::build_stats_text()
   str_append((char *)stats_text,(const char *)&str_empty_129);
   str_append_label((iptr)stats_text,0x42);
   str_append_colon((char *)stats_text);
-  str_append_int((iptr)stats_text,unit_sound_editor_window_block.spaceship_support_pct);
+  str_append_int((iptr)stats_text,spaceship_stats.support_pct);
   str_append_percent((iptr)stats_text);
   str_append((char *)stats_text,(const char *)&str_empty_130);
   str_append_label((iptr)stats_text,0xcd);
   str_append_colon((char *)stats_text);
-  str_append_int((iptr)stats_text,unit_sound_editor_window_block.spaceship_energy_pct);
+  str_append_int((iptr)stats_text,spaceship_stats.energy_pct);
   str_append_percent((iptr)stats_text);
   str_append((char *)stats_text,(const char *)&str_empty_131);
   str_append_label((iptr)stats_text,0xce);
   str_append_colon((char *)stats_text);
-  str_append_int((iptr)stats_text,unit_sound_editor_window_block.spaceship_mass / 10);
+  str_append_int((iptr)stats_text,spaceship_stats.mass / 10);
   str_append((char *)stats_text,(const char *)&str_empty_132);
-  str_append_int((iptr)stats_text,unit_sound_editor_window_block.spaceship_mass % 10);
+  str_append_int((iptr)stats_text,spaceship_stats.mass % 10);
   str_append((char *)stats_text,(const char *)&str_00);
   str_append_label((iptr)stats_text,0xd1);
   str_append((char *)stats_text,(const char *)&str_empty_133);
   str_append_label((iptr)stats_text,200);
   str_append_colon((char *)stats_text);
-  str_append_int((iptr)stats_text,unit_sound_editor_window_block.spaceship_fuel_pct);
+  str_append_int((iptr)stats_text,spaceship_stats.fuel_pct);
   str_append_percent((iptr)stats_text);
   if ((civs[ship_civ].spaceship_flags & SHIP_FUSION) != 0) {
     str_append_space((iptr)stats_text);
@@ -652,16 +652,16 @@ void SpaceshipWindow::build_stats_text()
   str_append((char *)stats_text,(const char *)&str_empty_134);
   str_append_label((iptr)stats_text,0xcf);
   str_append_colon((char *)stats_text);
-  str_append_int((iptr)stats_text,unit_sound_editor_window_block.spaceship_flight_time / 10);
+  str_append_int((iptr)stats_text,spaceship_stats.flight_time / 10);
   str_append((char *)stats_text,(const char *)&str_empty_135);
-  str_append_int((iptr)stats_text,unit_sound_editor_window_block.spaceship_flight_time % 10);
+  str_append_int((iptr)stats_text,spaceship_stats.flight_time % 10);
   str_append_space((iptr)stats_text);
   str_append_label((iptr)stats_text,0xd2);
   str_clear((char *)success_text);
   str_append_label((iptr)(success_text),0xd0);
   str_append_colon((char *)success_text);
   str_append_space((iptr)(success_text));
-  str_append_int((iptr)(success_text),unit_sound_editor_window_block.spaceship_success_pct);
+  str_append_int((iptr)(success_text),spaceship_stats.success_pct);
   str_append_percent((iptr)(success_text));
   win_flush_pending_msgs();
   return;
@@ -729,10 +729,10 @@ uint SpaceshipWindow::type_char(int allow_skip)
         ((DibSurface *)&control_list)->draw_text_in_rect((iptr)(medium_font),
                    (const char *)success_text,(RECT *)(iptr)(status_line_rect),0);
         rect_offset((iptr)(status_line_rect),0xffffffff,0xffffffff);
-        if (unit_sound_editor_window_block.spaceship_success_pct < 0x28) {
+        if (spaceship_stats.success_pct < 0x28) {
           gfx_set_text_color_index(0xf9);
         }
-        else if (unit_sound_editor_window_block.spaceship_success_pct < 0x4b) {
+        else if (spaceship_stats.success_pct < 0x4b) {
           gfx_set_text_color_index(0xfb);
         }
         else {
@@ -812,7 +812,7 @@ void SpaceshipWindow::init_starfield()
     value = type_char(0);
   } while (value != 0);
   str_clear((char *)success_text);
-  label = (iptr)label_string(label_string_ids[0x1c6]);
+  label = (iptr)label_string(label_table.string_ids[0x1c6]);
   str_append((char *)success_text,(const char *)label);
   str_append_colon((char *)success_text);
   str_append_space((iptr)(success_text));
@@ -1536,28 +1536,28 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
     }
   }
   flags = civs[civ].spaceship_flags;
-  unit_sound_editor_window_block.spaceship_mass = 0;
+  spaceship_stats.mass = 0;
   for (part = 0; part < 6; part++) {
-    unit_sound_editor_window_block.spaceship_mass = unit_sound_editor_window_block.spaceship_mass +
+    spaceship_stats.mass = spaceship_stats.mass +
                    (int)civs[civ].spaceship_parts[part] *
                    spaceship_part_table_block.spaceship_parts[part].mass;
   }
-  full_mass = unit_sound_editor_window_block.spaceship_mass;
+  full_mass = spaceship_stats.mass;
   for (part = 0; part < 6; part++) {
     if (civs[civ].spaceship_parts[part] == 0) {
       full_mass += spaceship_part_table_block.spaceship_parts[part].mass;
     }
   }
-  unit_sound_editor_window_block.spaceship_success_pct = 100;
+  spaceship_stats.success_pct = 100;
   value = spaceship_part_count(civ,4);
   arg_b = 99;
   arg_a = 1;
   part_count = spaceship_part_count(civ,3);
   divisor = int_clamp(part_count,arg_a,arg_b);
-  unit_sound_editor_window_block.spaceship_support_pct = (value * 100) / divisor;
+  spaceship_stats.support_pct = (value * 100) / divisor;
   if (apply_support != 0) {
-    value = int_clamp(unit_sound_editor_window_block.spaceship_support_pct,0,100);
-    unit_sound_editor_window_block.spaceship_success_pct = (value * unit_sound_editor_window_block.spaceship_success_pct) / 100;
+    value = int_clamp(spaceship_stats.support_pct,0,100);
+    spaceship_stats.success_pct = (value * spaceship_stats.success_pct) / 100;
   }
   value = spaceship_part_count(civ,5);
   arg_b = 99;
@@ -1565,15 +1565,15 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
   divisor = spaceship_part_count(civ,3);
   temp = spaceship_part_count(civ,4);
   divisor = int_clamp(divisor + temp,arg_a,arg_b);
-  unit_sound_editor_window_block.spaceship_energy_pct = (value * 200) / divisor;
-  value = int_clamp(unit_sound_editor_window_block.spaceship_energy_pct,0,100);
-  unit_sound_editor_window_block.spaceship_success_pct = (value * unit_sound_editor_window_block.spaceship_success_pct) / 100;
+  spaceship_stats.energy_pct = (value * 200) / divisor;
+  value = int_clamp(spaceship_stats.energy_pct,0,100);
+  spaceship_stats.success_pct = (value * spaceship_stats.success_pct) / 100;
   value = spaceship_part_count(civ,2);
   arg_b = 99;
   arg_a = 1;
   part_count = spaceship_part_count(civ,1);
   divisor = int_clamp(part_count,arg_a,arg_b);
-  unit_sound_editor_window_block.spaceship_fuel_pct = (value * 100) / divisor;
+  spaceship_stats.fuel_pct = (value * 100) / divisor;
   paradigm = (uint)cosmic.mass_thrust_paradigm;
   if ((flags & SHIP_FUSION) != 0) {
     paradigm = (int)(paradigm * 3) >> 2;
@@ -1582,7 +1582,7 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
   for (; 100 < paradigm; paradigm = (int)paradigm >> 1) {
     scale = scale << 1;
   }
-  temp = unit_sound_editor_window_block.spaceship_mass * paradigm;
+  temp = spaceship_stats.mass * paradigm;
   arg_a = spaceship_part_count(civ,2);
   value = spaceship_component_thrust(arg_a);
   value = value * 10;
@@ -1590,7 +1590,7 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
   arg_a = spaceship_part_count(civ,1);
   divisor = spaceship_component_thrust(arg_a);
   value = int_clamp(divisor * 10,arg_b,value);
-  unit_sound_editor_window_block.spaceship_flight_time = temp / (value + 1);
+  spaceship_stats.flight_time = temp / (value + 1);
   arg_a = spaceship_part_count(civ,2);
   value = spaceship_component_thrust(arg_a);
   value = value * 10;
@@ -1606,14 +1606,14 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
   value = int_clamp(divisor * 10,arg_a,value);
   full_flight_time = (int)(paradigm * full_mass) / (value + 1);
   if (1 < scale) {
-    unit_sound_editor_window_block.spaceship_flight_time = scale * unit_sound_editor_window_block.spaceship_flight_time;
+    spaceship_stats.flight_time = scale * spaceship_stats.flight_time;
     flight_time = scale * flight_time;
     full_flight_time = scale * full_flight_time;
   }
-  if (0x96 < unit_sound_editor_window_block.spaceship_flight_time) {
-    unit_sound_editor_window_block.spaceship_success_pct -= (unit_sound_editor_window_block.spaceship_flight_time - 0x96) / 10;
+  if (0x96 < spaceship_stats.flight_time) {
+    spaceship_stats.success_pct -= (spaceship_stats.flight_time - 0x96) / 10;
   }
-  unit_sound_editor_window_block.spaceship_success_pct = int_clamp(unit_sound_editor_window_block.spaceship_success_pct,0,100);
+  spaceship_stats.success_pct = int_clamp(spaceship_stats.success_pct,0,100);
   value = civ_spaceship_launched(civ);
   if (value == 0) {
     arg_a = spaceship_part_count(civ,3);
@@ -1623,7 +1623,7 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
     arg_a = game_turn_to_year((int)game.turn);
     civs[civ].spaceship_arrival_year = (short)arg_a + (short)(flight_time / 10);
     value = game_turn_to_year((int)game.turn);
-    unit_sound_editor_window_block.spaceship_projected_arrival_year = value + full_flight_time / 10;
+    spaceship_stats.projected_arrival_year = value + full_flight_time / 10;
   }
   return;
 }
@@ -1717,8 +1717,8 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   text_set_string_arg(1,(const char *)str);
   str = (iptr)(civ_name_plural(civ));
   text_set_string_arg(0,(const char *)str);
-  minimap_window_block.text_string_args_plus1 = 0;
-  __strupr(((i8 *)&minimap_window_block.text_string_args));
+  text_args.strings_plus1 = 0;
+  __strupr(((i8 *)&text_args.strings));
   dlg.load_game_text((const char *)&str_spaceship);
   for (part = 0; part < 6; part++) {
     part_count = civs[civ].spaceship_parts[part];
@@ -1729,48 +1729,48 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   }
   for (part = 0; part < 6; part++) {
     text_clear();
-    text_append_string_id(label_string_ids[spaceship_part_table_block.spaceship_parts[part].label_id]
+    text_append_string_id(label_table.string_ids[spaceship_part_table_block.spaceship_parts[part].label_id]
                       );
     text_append_colon();
     text_append_int((int)civs[civ].spaceship_parts[part]);
     if ((over_limit != 0) && (part == 0)) {
       text_append((const char *)&str_empty_176);
     }
-    dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+    dlg.add_option((const char *)&textbuf.buf,0,0);
   }
   text_clear();
-  dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+  dlg.add_option((const char *)&textbuf.buf,0,0);
   text_clear();
   text_append_label(0x22);
   text_append_colon();
   text_append_int((int)civs[civ].spaceship_parts[3]);
   text_append((const char *)&str_0_000_7);
-  dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+  dlg.add_option((const char *)&textbuf.buf,0,0);
   text_clear();
   text_append_label(0x42);
   text_append_colon();
-  text_append_int(unit_sound_editor_window_block.spaceship_support_pct);
+  text_append_int(spaceship_stats.support_pct);
   text_append_percent();
-  dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+  dlg.add_option((const char *)&textbuf.buf,0,0);
   text_clear();
   text_append_label(0xcd);
   text_append_colon();
-  text_append_int(unit_sound_editor_window_block.spaceship_energy_pct);
+  text_append_int(spaceship_stats.energy_pct);
   text_append_percent();
-  dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+  dlg.add_option((const char *)&textbuf.buf,0,0);
   text_clear();
   text_append_label(0xce);
   text_append_colon();
-  text_append_int(unit_sound_editor_window_block.spaceship_mass / 10);
+  text_append_int(spaceship_stats.mass / 10);
   text_append((const char *)&str_empty_177);
-  text_append_int(unit_sound_editor_window_block.spaceship_mass % 10);
+  text_append_int(spaceship_stats.mass % 10);
   text_append((const char *)&str_00_2);
   text_append_label(0xd1);
-  dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+  dlg.add_option((const char *)&textbuf.buf,0,0);
   text_clear();
   text_append_label(200);
   text_append_colon();
-  text_append_int(unit_sound_editor_window_block.spaceship_fuel_pct);
+  text_append_int(spaceship_stats.fuel_pct);
   text_append_percent();
   if ((civs[civ].spaceship_flags & SHIP_FUSION) != 0) {
     text_append_space();
@@ -1778,29 +1778,29 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
     text_append_label(0xeb);
     text_append_rparen();
   }
-  dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+  dlg.add_option((const char *)&textbuf.buf,0,0);
   text_clear();
   text_append_label(0xcf);
   text_append_colon();
-  text_append_int(unit_sound_editor_window_block.spaceship_flight_time / 10);
+  text_append_int(spaceship_stats.flight_time / 10);
   text_append((const char *)&str_empty_178);
-  text_append_int(unit_sound_editor_window_block.spaceship_flight_time % 10);
+  text_append_int(spaceship_stats.flight_time % 10);
   text_append_space();
   text_append_label(0xd2);
-  dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+  dlg.add_option((const char *)&textbuf.buf,0,0);
   text_clear();
   text_append_label(0xd0);
   text_append_colon();
   text_append((const char *)&str_empty_179);
-  text_append_int(unit_sound_editor_window_block.spaceship_success_pct);
+  text_append_int(spaceship_stats.success_pct);
   text_append_percent();
   text_append((const char *)&str_empty_180);
-  dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+  dlg.add_option((const char *)&textbuf.buf,0,0);
   result = civ_spaceship_launched(civ);
   if (result == 0) {
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) && (allow_launch != 0)) &&
-       (unit_sound_editor_window_block.spaceship_success_pct != 0)) {
-      str = (iptr)label_string(label_string_ids[0xd5]);
+       (spaceship_stats.success_pct != 0)) {
+      str = (iptr)label_string(label_table.string_ids[0xd5]);
       dlg.add_button((const char *)str);
     }
   }
@@ -1818,11 +1818,11 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
       text_append_int((int)civs[civ].spaceship_arrival_year);
     }
     text_append((const char *)&str_empty_183);
-    dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
+    dlg.add_option((const char *)&textbuf.buf,0,0);
   }
   dlg.show_modal(0);
   if (dlg.result_extra != 0) {
-    text_set_number_arg(0,unit_sound_editor_window_block.spaceship_success_pct);
+    text_set_number_arg(0,spaceship_stats.success_pct);
     result = popup_game((const char *)&str_launch);
     if (result != 0) {
       spaceship_launch(civ);
@@ -1901,7 +1901,7 @@ iptr __cdecl spaceship_choose_part_group(iptr civ,iptr group)
     for (civ2 = 1; civ2 < 8; civ2++) {
       if (((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
            (count = civ_spaceship_launched(civ2), count != 0)) &&
-          (civs[civ2].spaceship_arrival_year <= unit_sound_editor_window_block.spaceship_projected_arrival_year)) &&
+          (civs[civ2].spaceship_arrival_year <= spaceship_stats.projected_arrival_year)) &&
          ((count = spaceship_group_full(civ,1), count == 0 &&
           (count = civ_has_advance(civ,(int)improvements[IMP_SS_COMPONENT].preq), count != 0)))) {
         earliest_arrival = civs[civ].spaceship_parts[1];
@@ -1995,7 +1995,7 @@ int __cdecl spaceship_add_part(iptr civ,iptr group)
       if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) ||
          ((int)civs[civ].spaceship_parts[part] < (((int *)&spaceship_part_table_block.spaceship_part_max_counts))[part * 3]
          )) break;
-      text_set_label_arg(0,label_string_ids[spaceship_part_table_block.spaceship_parts[part].label_id]);
+      text_set_label_arg(0,label_table.string_ids[spaceship_part_table_block.spaceship_parts[part].label_id]);
       popup_game((const char *)&str_nofurther);
     }
     result = civ_spaceship_exists(civ);
@@ -2022,7 +2022,7 @@ int __cdecl spaceship_add_part(iptr civ,iptr group)
         }
       }
       result = civ_spaceship_launched(civ);
-      if ((result == 0) && (0x27 < unit_sound_editor_window_block.spaceship_success_pct)) {
+      if ((result == 0) && (0x27 < spaceship_stats.success_pct)) {
         if (should_launch) {
           spaceship_launch(civ);
         }
@@ -2051,7 +2051,7 @@ int __cdecl spaceship_add_part(iptr civ,iptr group)
             }
           }
           if (civ4 == 0) {
-            should_launch = 0x4b < unit_sound_editor_window_block.spaceship_success_pct;
+            should_launch = 0x4b < spaceship_stats.success_pct;
             if (!should_launch) {
               for (civ2 = 1; civ2 < 8; civ2++) {
                 if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) {

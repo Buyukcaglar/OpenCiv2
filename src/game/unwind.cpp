@@ -93,7 +93,7 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
             if ((all_govs != 0) || (civ_can_choose_government(civ2, gov, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) != 0)) {
                 text_clear();
                 text_append_string_id(government_names[gov]);
-                dlg.add_option( (const char *)&map_views_block.text_buffer, gov, 0);
+                dlg.add_option( (const char *)&textbuf.buf, gov, 0);
             }
         }
         choice2 = dlg.show_modal( 0);
@@ -117,7 +117,7 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
         }
     }
     else {
-        net_send_message(NM_PICK_GOVT, net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,
+        net_send_message(NM_PICK_GOVT, net.net_slots[net.net_civ_slots[civ2]].id,
                            all_govs, 0, 0, 0, 0, 0, 0, 0);
     }
     /* funclet 0055c679 */
@@ -200,22 +200,22 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
     loaded = ((DibSurface *)surface)->load_gif_resource( 0x1f1, 10, 0xec, (iptr)self + 0x1f8);
     if (loaded != 0) {
         text_clear();
-        label_text = (i32)label_string(label_string_ids[0xfe]);
+        label_text = (i32)label_string(label_table.string_ids[0xfe]);
         text_append((const char *)label_text);
         SetRect(&rect, 0, 0, 0x34, 0x24);
         OffsetRect(&rect, 1, 1);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
         ((Sprite *)((iptr)self + 0x978))->grab_from_surface( (i32)surface, 9, 1, 1, 0x34, 0x24);
         OffsetRect(&rect, 0x35, 0);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
         ((Sprite *)((iptr)self + 0x9f0))->grab_from_surface( (i32)surface, 9, 0x36, 1, 0x34, 0x24);
         OffsetRect(&rect, 0x35, 0);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
         ((Sprite *)((iptr)self + 0x9b4))->grab_from_surface( (i32)surface, 9, 0x6b, 1, 0x34, 0x24);
         gfx_set_text_color_index(0xc6);
         text_clear();
         if (game_language == 0) {
-            label_text = (i32)label_string(label_string_ids[0xd5]);
+            label_text = (i32)label_string(label_table.string_ids[0xd5]);
             text_append((const char *)label_text);
         }
         else if (game_language == 1) {
@@ -226,13 +226,13 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
         }
         SetRect(&rect, 0, 0, 0x43, 0x24);
         OffsetRect(&rect, 1, 0x26);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
         ((Sprite *)((iptr)self + 0xa2c))->grab_from_surface( (i32)surface, 9, 1, 0x26, 0x43, 0x24);
         OffsetRect(&rect, 0x44, 0);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
         ((Sprite *)((iptr)self + 0xaa4))->grab_from_surface( (i32)surface, 9, 0x45, 0x26, 0x43, 0x24);
         OffsetRect(&rect, 0x44, 0);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
         ((Sprite *)((iptr)self + 0xa68))->grab_from_surface( (i32)surface, 9, 0x89, 0x26, 0x43, 0x24);
     }
     /* funclet 004d56ea: lea ecx,[ebp-0x64] */

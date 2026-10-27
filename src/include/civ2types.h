@@ -218,7 +218,7 @@ typedef struct Tile {
  *    prerequisite lookups rules_parse_advance_abbrev / rules_parse_terrain_abbrev strcmp against.
  *  - "Names" are NOT char pointers: text_next_token_str_id -> strpool_add_padded and
  *    text_next_token_pooled -> strpool_add copy the text into a string pool and return
- *    a running string id (strpool_count++); readers turn ids back into text
+ *    a running string id (strpool.count++); readers turn ids back into text
  *    with label_string(id).  So every name field is a fixed-width integer id
  *    and all these tables have the same layout on 32/64-bit.  (NB: the same
  *    holds for UnitType.name at +0x00 -- it is an i32 string id, not char *;
@@ -574,7 +574,7 @@ typedef struct WaveHeader {
 } WaveHeader;
 
 /* One output buffer (0x20 bytes, GlobalAlloc'd), a ring linked by next
- * (snd_wave_buffer_ring; unused ones in snd_wave_spare_buffers). */
+ * (snd_wave.buffer_ring; unused ones in snd_wave.spare_buffers). */
 typedef struct WaveBuffer {
     WaveHeader *hdr;                /* 0x00 header + samples (bytes + 0x20) */
     u32 data_handle;                /* 0x04 HGLOBAL of hdr */
@@ -594,7 +594,7 @@ typedef void (*MusicNotifyFn)(void);
 
 /* One playing sound (0xbc bytes, GlobalAlloc'd): a wave file read through
  * mmio, a streamed wave file, or an AVI audio stream (kind 4); a list linked
- * by next (snd_wave_sources). */
+ * by next (snd_wave.sources). */
 typedef struct WaveSource {
     u32 mmio;                       /* 0x00 HMMIO the samples are read from */
     u32 data_ckid;                  /* 0x04 the 'data' chunk (MMCKINFO) */
@@ -671,7 +671,7 @@ static_assert(sizeof(BitmapInfoHeader) == 0x28, "");
 /* Network (network.cpp). */
 /* A game announced on the network (0x124 bytes): the payload of the server's
  * info message (net_fill_game_info), copied into a node of the found games
- * list (net_session_block.net_found_games, sorted by game name). */
+ * list (net.found_games, sorted by game name). */
 typedef struct NetGameInfo {
     char host_address[32];          /* 0x00 the server's address: the list's key */
     struct NetGameInfo *next;       /* 0x20 found games list */
@@ -705,7 +705,7 @@ typedef struct NetGameInfo {
 #ifdef __cplusplus
 static_assert(sizeof(NetGameInfo) == 0x124, "");
 #endif
-/* A player of the network game (0x54 bytes; net_session_block.net_slots,
+/* A player of the network game (0x54 bytes; net.net_slots,
  * slot 0 is the local player). */
 typedef struct NetPlayerSlot {
     i32 id;                         /* 0x00 the player's connection id */
@@ -724,7 +724,7 @@ typedef struct NetStackedDraw {
     i32 args[15];                   /* 0x04 */
 } NetStackedDraw;
 /* A unit lost, in a civ's casualty log (0x22 bytes;
- * net_session_block.casualty_log, 300 per civ). */
+ * net.casualty_log, 300 per civ). */
 typedef struct CasualtyEntry {
     i16 unit_type;                  /* 0x00 */
     i16 x;                          /* 0x02 */
@@ -1070,7 +1070,7 @@ typedef struct EditorPos {
 } EditorPos;
 /* A spaceship part kind (spaceship_part_table_block.spaceship_parts[6]). */
 typedef struct SpaceshipPartKind {
-    i32 label_id;                   /* 0x0 index in label_string_ids */
+    i32 label_id;                   /* 0x0 index in label_table.string_ids */
     i32 max_count;                  /* 0x4 */
     i32 mass;                       /* 0x8 */
 } SpaceshipPartKind;

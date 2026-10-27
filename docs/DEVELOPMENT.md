@@ -9,7 +9,7 @@ progress: [STATUS.md](STATUS.md).
 | --- | --- |
 | `src/auto/` | The game: decompiled once, now C++ edited directly, a file per subject (`city.cpp`, `unit.cpp`, `ai.cpp`, `diplomacy.cpp`, `map.cpp`, `window.cpp` …). |
 | `src/game/` | Functions the decompiler could not translate, reconstructed by hand. |
-| `src/data/` | The game's static data (`gamedata.h`/`.cpp`), laid out exactly as in the original. |
+| `src/data/` | The game's static data, laid out exactly as in the original: defined in `gamedata.cpp` (address order), declared by subject in `state/` (`game.h`, `city.h`, `network.h` ..., the texts in `strings.h`); records listed in `re/state_records.txt`. |
 | `src/include/` | Types recovered from the binary: units, cities, civilizations, map, the game's classes. |
 | `src/platform/` | The Windows API the game uses (windows, GDI, controls, files, sound, video) implemented in portable C. |
 | `src/host/` | What the platform layer needs from the machine: window, input and audio over SDL2; the portable build's runtime. |

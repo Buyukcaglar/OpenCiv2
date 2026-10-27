@@ -1,0 +1,1240 @@
+# The game's state grouped into records (tools/state_records.py).
+#
+#   record TYPE instance  comment
+#       old_name      member        (a loose global of src/data/gamedata.h)
+#       BLOCK.member  member        (a member of a contiguity block)
+#   end
+#
+# Each record is a run of variables lying together in the original's data
+# and describing one thing; its instance is where they were (the layout and
+# per-member static_asserts check it).
+
+record MapGenChoices mapgen  The world-generation choices (new game setup; the generator reads them).
+    mapgen_land_mass        land_mass
+    mapgen_land_form        land_form
+    mapgen_temperature      temperature
+    mapgen_climate          climate
+    mapgen_age              age
+end
+
+record MapClickState map_click  Dragging the map view and the tile a click is on.
+    mapview_drag_hold_timer drag_hold_timer
+    mapview_drag_view_index drag_view_index
+    map_click_tile_x        tile_x
+    map_click_tile_y        tile_y
+end
+
+record CreditsScroll credits  The scrolling credits screen.
+    credits_line_count      line_count
+    credits_scroll_pos      scroll_pos
+    credits_partial_redraw_ok partial_redraw_ok
+end
+
+record DiploMeeting diplo_meeting  The diplomatic meeting in progress (AI evaluation, emissaries).
+    diplo_initial_eval_done initial_eval_done
+    diplo_opening_eval_active opening_eval_active
+    diplo_session_active    session_active
+    diplo_ai_meeting_active_i32 ai_meeting_active
+    mp_meeting_pending      mp_pending
+    diplo_emissary_asked    emissary_asked
+    diplo_emissary_response emissary_response
+end
+
+record XDaemonVersion xdaemon_required  The networking library version the game requires.
+    xdaemon_required_major  major
+    xdaemon_required_minor  minor
+    xdaemon_required_build  build
+end
+
+record NextIds next_ids  Ids given to the next unit and city created.
+    next_unit_id            unit
+    next_city_id            city
+end
+
+record StartPositions start_positions  Scenario start positions per tribe.
+    start_x                 x
+    start_y                 y
+end
+
+record TurnLoop turn_loop  The main turn loop: running, and the civ to resume with.
+    game_loop_active        active
+    turn_resume_civ         resume_civ
+end
+
+record BlinkState blink  The blinking of the active unit and the status bar's End of Turn.
+    unit_blink_active       unit_active
+    unit_blink_phase        unit_phase
+    status_end_turn_blink_phase end_turn_phase
+    unit_blink_skip_tick    unit_skip_tick
+end
+
+record LabelTable label_table  The interface labels (LABELS.TXT): string ids by label number.
+    label_ids_handle        ids_handle
+    label_string_ids        string_ids
+    label_count             count
+end
+
+record IntroState intro  The opening: theme music and video.
+    intro_theme_started     theme_started
+    opening_video_player    video_player
+end
+
+record CdMusic cd_music  CD audio music.
+    cd_music_available      available
+    cd_music_unknown_disc   unknown_disc
+    cd_music_current_track  current_track
+    cd_music_continue       keep_playing
+end
+
+record ChatMacros chat_macros  The chat macros (Ctrl+F1..F5): next civ for the name substitutions, file offsets.
+    chat_macro_next_adj_civ next_adj_civ
+    chat_macro_next_leader_civ next_leader_civ
+    chat_macro1_file_offset macro1_offset
+    chat_macro2_file_offset macro2_offset
+    chat_macro3_file_offset macro3_offset
+end
+
+record DiploLeaderScreen diplo_leader  The foreign leader's window in a diplomatic meeting: video and sounds.
+    diplo_leader_window     window
+    diplo_leader_wnd_open   wnd_open
+    diplo_leader_wnd_busy   wnd_busy
+    diplo_leader_video_active video_active
+    diplo_greeting_sound_id greeting_sound_id
+    diplo_leader_sound_ids  sound_ids
+    diplo_leader_reaction_sound_ids reaction_sound_ids
+end
+
+record CityPrefs citypref  City production preferences being chosen.
+    citypref_count          count
+    citypref_no_defend      no_defend
+end
+
+record PathSearch pathfind  The path finder's current query.
+    path_unit_type          unit_type
+    path_road_planning      road_planning
+    path_owner_civ          owner_civ
+    path_roads_only         roads_only
+    path_debug_pending      debug_pending
+    path_debug_requested    debug_requested
+end
+
+record DiffEngState diffeng  The difference engine (network game state sync): mirror buffer and packet counts.
+    diffeng_mirror_buf      mirror_buf
+    diffeng_packet_flush_size packet_flush_size
+    diffeng_send_count_i32  send_count
+end
+
+record ParleyPaneKinds parley_panes  The parley window: the kinds of list in its left and right panes per mode.
+    parley_mode_left_kinds  mode_left_kinds
+    parley_mode_right_kinds mode_right_kinds
+    parley_mode2_left_kind  mode2_left_kind
+    parley_mode2_right_kind mode2_right_kind
+    parley_mode3_left_kind  mode3_left_kind
+    parley_mode3_right_kind mode3_right_kind
+    parley_mode5_left_kind  mode5_left_kind
+    parley_mode5_right_kind mode5_right_kind
+end
+
+record PanelLayout panel_layout  Margins of the network game's panels (parley, chat).
+    panel_margin_x          margin_x
+    panel_margin_y          margin_y
+    panel_padding_x         padding_x
+    panel_bevel_width       bevel_width
+    panel_padding_y         padding_y
+end
+
+record ChatBuffers chat  The chat window's text.
+    chat_input_buffer       input_buffer
+    chat_log_buffer         log_buffer
+end
+
+record TextSectionIndex text_index  The index of a text file's @sections.
+    text_section_index_path path
+    text_section_index_valid valid
+    text_section_index_count count
+end
+
+record CityTurnState city_turn  City processing during the turn.
+    city_yield_tile_worked  yield_tile_worked
+    city_turn_processing    processing
+    city_turn_worker_realloc worker_realloc
+    city_turn_window_shown  window_shown
+    city_turn_window_dirty  window_dirty
+    city_calc_cached_id     calc_cached_id
+    city_tile_job_found     tile_job_found
+end
+
+record PediaState pedia  The Civilopedia: missing-text placeholder and the Back button.
+    pedia_missing_text      missing_text
+    pedia_going_back        going_back
+    pedia_back_topic        back_topic
+end
+
+record CityWindowState city_wnd_state  The city window's pending actions.
+    city_window_exit_requested exit_requested
+    city_modal_notice_active modal_notice_active
+    city_window_exit_btn_pending exit_btn_pending
+    city_change_button_variant change_button_variant
+    city_tile_pick_zoom_cached tile_pick_zoom_cached
+    city_unit_dialog_busy   unit_dialog_busy
+    city_dlg_close_pending  dlg_close_pending
+    city_window_bg_size_level bg_size_level
+end
+
+record NetPopupQueue net_popups  Network messages waiting to be shown.
+    net_popup_queue_head    head
+    net_popup_queue_tail    tail
+end
+
+record ParleyPrompts parley_prompts  The parley's reveal prompts open.
+    parley_reveal_units_prompt_open units_open
+    parley_reveal_city_prompt_open city_open
+end
+
+record CouncilState council_state  The High Council.
+    council_video_busy_i32  video_busy
+    council_wnd             wnd
+    council_active          active
+end
+
+record SetupDialogState setup_dlg  The new-game setup dialogs.
+    setup_select_opponents  select_opponents
+    setup_accelerated_start accelerated_start
+    setup_dialog_pos_state  dialog_pos_state
+    setup_side_picture_id   side_picture_id
+end
+
+record UiMetrics ui_metrics  Sizes of the window frames and fonts (chosen by the screen size).
+    frame_border_tile       border_tile
+    ui_font_height          font_height
+    ui_large_screen         large_screen
+    frame_bevel_width       bevel_width
+    frame_padding           padding
+    frame_highlight_color   highlight_color
+    frame_shadow_color      shadow_color
+    frame_caption_height    caption_height
+    frame_border_width      border_width
+    sys_dlgframe_w2         dlgframe_w2
+    sys_dlgframe_h2         dlgframe_h2
+end
+
+record CheatUnitChoices cheat_unit  The cheat menu's Create Unit choices.
+    cheat_unit_last_human_civ last_human_civ
+    cheat_unit_owner_civ    owner_civ
+    cheat_unit_last_type    last_type
+    cheat_unit_veteran      veteran
+    cheat_unit_show_obsolete show_obsolete
+    cheat_unit_ignore_prereq ignore_prereq
+end
+
+record MpTurnTimer mp_timer  The network game's turn timer.
+    mp_turn_timer_handle    handle
+    mp_turn_seconds_left    seconds_left
+    g_timer_last_tick       last_tick
+    mp_mouse_watchdog_timer mouse_watchdog
+end
+
+record MpWindowDrag mp_drag  Dragging a window during a network game.
+    mp_window_drag_active   active
+    mp_window_drag_start_ticks start_ticks
+    mp_window_drag_flag_i32 flag
+    mp_window_drag_wnd      wnd
+end
+
+record StatusBarState status_bar  The status window's fonts, End of Turn and turn timer.
+    status_info_font_scale  info_font_scale
+    status_font_scale       font_scale
+    status_end_turn_visible end_turn_visible
+    status_wnd_hidden       wnd_hidden
+    status_timer_last_width timer_last_width
+    status_timer_last_color timer_last_color
+    status_timer_last_percent timer_last_percent
+end
+
+record CombatAnim combat_anim  The combat and move animation: defender and origin.
+    anim_combat_defender_x  defender_x
+    anim_combat_defender_y  defender_y
+    anim_combat_defender    defender
+    anim_origin_x           origin_x
+    anim_origin_y           origin_y
+    anim_origin_stack_unit  origin_stack_unit
+end
+
+record SpriteEditorColors sprite_editor_colors  The sprite editor's mouse button colors.
+    sprite_editor_right_color right
+    sprite_editor_left_color left
+    sprite_editor_prev_left_color prev_left
+    sprite_editor_prev_right_color prev_right
+end
+
+record MenuState menu_state  The menu being tracked.
+    menu_owner_window       owner_window
+    menu_active_object      active_object
+    menu_command_callback   command_callback
+end
+
+record ErrorState error_state  The last error and what was being done (error reports).
+    fatal_cleanup_count     cleanup_count
+    error_context_text      context_text
+    error_last_open_path    last_open_path
+    error_last_open_failed  last_open_failed
+    error_last_alloc_failed last_alloc_failed
+    mem_last_alloc_size     last_alloc_size
+end
+
+record UnitMoveState unit_move  A unit's move in progress.
+    unit_move_unanimated_state unanimated_state
+    unit_move_in_progress   in_progress
+end
+
+record DialogDefaults dlg_defaults  Where the next dialog opens.
+    dlg_palette             palette
+    dlg_parent_window       parent_window
+    dlg_saved_parent_window saved_parent_window
+    dlg_default_x           x
+    dlg_default_y           y
+end
+
+record DialogStyle dlg_style  The dialogs' fonts, colors and scale, and the next dialog's callbacks; the dialog stack.
+    dialog_default_text_font default_text_font
+    dlg_frame_color         frame_color
+    dlg_text_shadow_color   text_shadow_color
+    dlg_text_color          text_color
+    dlg_highlight_text_color highlight_text_color
+    dlg_bg_color            bg_color
+    dlg_bevel_light_color   bevel_light_color
+    dlg_bevel_dark_color    bevel_dark_color
+    dlg_title_text_color    title_text_color
+    dlg_title_shadow_color  title_shadow_color
+    list_bg_color           list_bg
+    list_text_color         list_text
+    list_shadow_color       list_shadow
+    list_sel_bg_color       list_sel_bg
+    dlg_sel_text_color      sel_text_color
+    dlg_sel_text_shadow_color sel_text_shadow_color
+    dialog_default_list_color default_list_color
+    dlg_scale_num           scale_num
+    dlg_scale_den           scale_den
+    dlg_pending_idle_callback pending_idle_callback
+    dlg_default_idle_callback default_idle_callback
+    dlg_pending_move_handler pending_move_handler
+    dialog_button_labels    button_labels
+    dialog_stack            stack
+    dialog_stack_depth      stack_depth
+    dlg_frame_tile_surface  frame_tile_surface
+    dlg_client_tile_surface client_tile_surface
+end
+
+record MapStorage map_data  The map's tiles and per-civ knowledge, allocated for its size.
+    map_tiles               tiles
+    map_known_handles       known_handles
+    map_known               known
+    map_coarse              coarse
+    map_allocated           allocated
+end
+
+record NetBatch net_batch  The batch of network records being assembled.
+    net_batch_used_dwords   used_dwords
+    net_batch_record_sizes  record_sizes
+end
+
+record TextStyle text_style  How text is drawn: target, font, colors, shadow.
+    text_draw_surface       surface
+    text_draw_font          font
+    text_fg_color           fg_color
+    text_shadow_color       shadow_color
+    text_shadow_dx          shadow_dx
+    text_shadow_dy          shadow_dy
+    text_fake_bold          fake_bold
+end
+
+record ControlColors ctrl_colors  Text colors (palette indexes) of the controls.
+    gfx_text_color_index    gfx_text
+    radio_text_color_index  radio_text
+    radio_shadow_color_index radio_shadow
+    radio_shadow_dx         radio_dx
+    radio_shadow_dy         radio_dy
+    radio_disabled_color_index radio_disabled
+    ctrl_text_color_index   text
+    ctrl_shadow_color_index shadow
+    ctrl_shadow_dx          shadow_dx
+    ctrl_shadow_dy          shadow_dy
+    ctrl_disabled_color_index disabled
+end
+
+record GfxScale gfx_scale  The drawing scale (zoom) factors.
+    gfx_scale_num           num
+    gfx_scale_den           den
+    gfx_scale_x_num         x_num
+    gfx_scale_x_den         x_den
+    gfx_scale_y_num         y_num
+    gfx_scale_y_den         y_den
+end
+
+record WaveOut snd_wave  Digital sound output: the device, its format, buffers and sources (and video soundtracks fed to it).
+    snd_wave_out_handle     out_handle
+    snd_wave_notify_hwnd    notify_hwnd
+    snd_wave_open_buffer_bytes open_buffer_bytes
+    snd_wave_max_buffers    max_buffers
+    snd_wave_buffer_count   buffer_count
+    snd_wave_source_count   source_count
+    snd_avi_feed_count_i32  avi_feed_count
+    snd_avi_fill_count_i32  avi_fill_count
+    snd_avi_feed_samples_i32 avi_feed_samples
+    snd_wave_format         format
+    snd_wave_samples_per_sec samples_per_sec
+    snd_wave_avg_bytes_per_sec avg_bytes_per_sec
+    snd_wave_block_align    block_align
+    snd_wave_device_open    device_open
+    snd_wave_buffers_ready_i32 buffers_ready
+    snd_wave_stop_pending_i16 stop_pending
+    snd_avi_stream_started  avi_stream_started
+    snd_wave_buffer_ring    buffer_ring
+    snd_wave_spare_buffers  spare_buffers
+    snd_wave_cur_buffer     cur_buffer
+    snd_wave_total_buffer_bytes total_buffer_bytes
+    snd_wave_sources        sources
+    snd_stop_drained_msg_count_i32 stop_drained_msg_count
+end
+
+record RadioState radio_state  Radio buttons: their text colors and the mouse capture.
+    radio_text_rgb_r        text_r
+    radio_text_rgb_g        text_g
+    radio_text_rgb_b        text_b
+    radio_text_rgb_set      text_set
+    radio_disabled_rgb_r    disabled_r
+    radio_disabled_rgb_g    disabled_g
+    radio_disabled_rgb_b    disabled_b
+    radio_disabled_rgb_set  disabled_set
+    radio_lbutton_captured  lbutton_captured
+    radio_rbutton_captured  rbutton_captured
+end
+
+record MediaDevices media_devices  The video player and the MIDI and CD audio devices open.
+    avi_current_player_i32  avi_player
+    snd_midi_device_id      midi_device_id
+    snd_cd_device_id        cd_device_id
+    snd_cd_track_count      cd_track_count
+end
+
+record AviPlayback avi_play  The video being played.
+    avi_frame_buffer        frame_buffer
+    avi_frame_buffer_size   frame_buffer_size
+    avi_decompressor        decompressor
+    avi_frame_width         frame_width
+    avi_frame_height        frame_height
+    g_video_start_time      start_time
+    avi_file                file
+    avi_video_stream        video_stream
+    avi_audio_stream        audio_stream
+    avi_file_loaded         file_loaded
+    avi_playing             playing
+    avi_active_window       active_window
+end
+
+record MinimapLayout minimap_layout  The world map window's scale and origin.
+    minimap_tile_width      tile_width
+    minimap_tile_height     tile_height
+    minimap_view_rows       view_rows
+    minimap_view_cols       view_cols
+    minimap_origin_y        origin_y
+    minimap_origin_x        origin_x
+end
+
+record DebugLogTargets dbg_log_to  Where debug messages go.
+    dbg_log_to_file         file
+    dbg_log_to_debugger     debugger
+end
+
+record TaxRateDialogState taxrate_state  The tax rate dialog.
+    taxrate_lock_flags      lock_flags
+    taxrate_bg_surface      bg_surface
+end
+
+record EditorUi editor_ui  The editors' background and font.
+    editor_value_clamped    value_clamped
+    editor_bg_surface       bg_surface
+end
+record GamePrefs prefs  The player's game settings, as saved to CIV.INI (the new-game dialogs' choices).
+    prefs_game_rules_block.prefs_game_rules        game_rules
+    prefs_game_rules_block.prefs_default_level_i16 default_level
+    prefs_game_rules_block.prefs_difficulty        difficulty
+    prefs_game_rules_block.prefs_tribe             tribe
+    prefs_game_rules_block.prefs_gender            gender
+    prefs_game_rules_block.prefs_science_rate      science_rate
+    prefs_game_rules_block.prefs_tax_rate          tax_rate
+    prefs_game_rules_block.prefs_game_options      game_options
+    prefs_game_rules_block.prefs_message_options   message_options
+    prefs_game_rules_block.prefs_enemies_choice    enemies_choice
+    prefs_game_rules_block.prefs_map_size          map_size
+    prefs_game_rules_block.prefs_barbarity         barbarity
+    prefs_game_rules_block.prefs_world_params      world_params
+    prefs_game_rules_block.prefs_world_land_form   world_land_form
+    prefs_game_rules_block.prefs_world_temperature world_temperature
+    prefs_game_rules_block.prefs_world_climate     world_climate
+    prefs_game_rules_block.prefs_world_age         world_age
+    prefs_game_rules_block.prefs_text_field        text_field
+    prefs_game_rules_block.prefs_rules_choice      rules_choice
+    prefs_game_rules_block.prefs_accelerated_start accelerated_start
+end
+
+record ScenarioHeader scenario  The scenario's parameters (saved in .SCN files): name, years, objectives.
+    prefs_game_rules_block.scenario_flags                  flags
+    prefs_game_rules_block.scenario_name                   name
+    prefs_game_rules_block.scenario_tech_paradigm          tech_paradigm
+    prefs_game_rules_block.scenario_year_increment         year_increment
+    prefs_game_rules_block.scenario_start_year             start_year
+    prefs_game_rules_block.scenario_max_turns              max_turns
+    prefs_game_rules_block.scenario_objective_civ          objective_civ
+    prefs_game_rules_block.scenario_victory_thresholds     victory_thresholds
+    prefs_game_rules_block.scenario_marginal_victory_score marginal_victory_score
+    prefs_game_rules_block.scenario_marginal_defeat_score  marginal_defeat_score
+    prefs_game_rules_block.scenario_decisive_defeat_score  decisive_defeat_score
+end
+
+record MenuPrefs menu_prefs  The main menu's and the multiplayer setup's remembered choices (CIV.INI).
+    prefs_main_menu_choice_block.prefs_main_menu_choice       main_menu_choice
+    prefs_main_menu_choice_block.prefs_multiplayer_type       multiplayer_type
+    prefs_main_menu_choice_block.prefs_hotseat_menu_choice    hotseat_menu_choice
+    prefs_main_menu_choice_block.prefs_lan_menu_choice        lan_menu_choice
+    prefs_main_menu_choice_block.mp_prefs_setting_1_i16       mp_prefs_setting_1
+    prefs_main_menu_choice_block.prefs_pbem_menu_choice       pbem_menu_choice
+    prefs_main_menu_choice_block.prefs_net_protocol           net_protocol
+    prefs_main_menu_choice_block.prefs_mp_open_game           mp_open_game
+    prefs_main_menu_choice_block.prefs_mp_kill_on_retire      mp_kill_on_retire
+    prefs_main_menu_choice_block.prefs_mp_show_human_starts   mp_show_human_starts
+    prefs_main_menu_choice_block.prefs_mp_chat_from_start     mp_chat_from_start
+    prefs_main_menu_choice_block.prefs_mp_simultaneous_moves  mp_simultaneous_moves
+    prefs_main_menu_choice_block.prefs_net_game_name          net_game_name
+    prefs_main_menu_choice_block.prefs_net_player_name        net_player_name
+    prefs_main_menu_choice_block.prefs_email_address          email_address
+    prefs_main_menu_choice_block.prefs_net_ip_address         net_ip_address
+    prefs_main_menu_choice_block.prefs_turn_timer_choice      turn_timer_choice
+    prefs_main_menu_choice_block.prefs_turn_timer_custom      turn_timer_custom
+    prefs_main_menu_choice_block.prefs_hotseat_players_choice hotseat_players_choice
+    prefs_main_menu_choice_block.prefs_parley_wnd_rect        parley_wnd_rect
+    prefs_main_menu_choice_block.prefs_chat_wnd_rect          chat_wnd_rect
+    prefs_main_menu_choice_block.prefs_clear_chat_on_new_game clear_chat_on_new_game
+    prefs_main_menu_choice_block.prefs_clear_chat_on_boot     clear_chat_on_boot
+    prefs_main_menu_choice_block.prefs_mp_double_production   mp_double_production
+    prefs_main_menu_choice_block.prefs_mp_double_moves        mp_double_moves
+    prefs_main_menu_choice_block.mp_prefs_setting_2           mp_prefs_setting_2
+    prefs_main_menu_choice_block.mp_prefs_setting_3           mp_prefs_setting_3
+    prefs_main_menu_choice_block.mp_prefs_setting_4           mp_prefs_setting_4
+    prefs_main_menu_choice_block.mp_prefs_settings_table      mp_prefs_settings_table
+    prefs_main_menu_choice_block.mp_prefs_setting_5_i16       mp_prefs_setting_5
+end
+
+record DiploEval diplo_eval  The AI's evaluation of a diplomatic meeting (attitudes, threats, what to offer or demand).
+    tax_rate_icon_sprites_block.diplo_ai_declare_war        ai_declare_war
+    tax_rate_icon_sprites_block.diplo_ai_fear_level         ai_fear_level
+    tax_rate_icon_sprites_block.diplo_gifts_this_meeting    gifts_this_meeting
+    tax_rate_icon_sprites_block.diplo_captured_city_count   captured_city_count
+    tax_rate_icon_sprites_block.diplo_ai_aggressive         ai_aggressive
+    tax_rate_icon_sprites_block.diplo_strongest_enemy       strongest_enemy
+    tax_rate_icon_sprites_block.diplo_weakest_enemy_civ     weakest_enemy_civ
+    tax_rate_icon_sprites_block.diplo_war_target_civ        war_target_civ
+    tax_rate_icon_sprites_block.diplo_last_treaty_turn      last_treaty_turn
+    tax_rate_icon_sprites_block.diplo_offer_tech_2nd        offer_tech_2nd
+    tax_rate_icon_sprites_block.diplo_attitude_civ          attitude_civ
+    tax_rate_icon_sprites_block.diplo_cur_attitude          cur_attitude
+    tax_rate_icon_sprites_block.diplo_tribute_demand        tribute_demand
+    tax_rate_icon_sprites_block.diplo_target_is_leader      target_is_leader
+    tax_rate_icon_sprites_block.diplo_attitude_target       attitude_target
+    tax_rate_icon_sprites_block.diplo_offer_tech_best       offer_tech_best
+    tax_rate_icon_sprites_block.diplo_suppressed_aggression suppressed_aggression
+    tax_rate_icon_sprites_block.diplo_ai_outranks_target    ai_outranks_target
+    tax_rate_icon_sprites_block.diplo_space_race_threat     space_race_threat
+    tax_rate_icon_sprites_block.diplo_ai_units_near_cities  ai_units_near_cities
+    tax_rate_icon_sprites_block.diplo_had_ceasefire         had_ceasefire
+    tax_rate_icon_sprites_block.diplo_ai_initial_aggressive ai_initial_aggressive
+    tax_rate_icon_sprites_block.diplo_peace_inclination     peace_inclination
+    tax_rate_icon_sprites_block.diplo_wanted_tech           wanted_tech
+    tax_rate_icon_sprites_block.diplo_ai_request_mode       ai_request_mode
+end
+
+record CityCalc city_calc  The city being calculated (city_recalc and the city window): yields, happiness, support.
+    main_menu_block.city_saved_shield_box          saved_shield_box
+    main_menu_block.city_tile_flags                tile_flags
+    main_menu_block.city_unassigned_citizens       unassigned_citizens
+    main_menu_block.city_happy_count               happy_count
+    main_menu_block.city_tax_total                 tax_total
+    main_menu_block.city_food_routes_in            food_routes_in
+    main_menu_block.city_home_attack_units         home_attack_units
+    main_menu_block.city_food_box_rows             food_box_rows
+    main_menu_block.city_martial_law_units         martial_law_units
+    main_menu_block.city_shield_support            shield_support
+    main_menu_block.city_shield_waste              shield_waste
+    main_menu_block.city_food_route_partner        food_route_partner
+    main_menu_block.city_capital_link              capital_link
+    main_menu_block.city_science_total             science_total
+    main_menu_block.city_shield_rows               shield_rows
+    main_menu_block.city_trade_corruption          trade_corruption
+    main_menu_block.city_pollution                 pollution
+    main_menu_block.city_capital_distance          capital_distance
+    main_menu_block.city_route_trade_values        route_trade_values
+    main_menu_block.city_angry_count               angry_count
+    main_menu_block.city_zoom_requested            zoom_requested
+    main_menu_block.city_saved_build_category      saved_build_category
+    main_menu_block.city_unhappy_count             unhappy_count
+    main_menu_block.city_notify_enabled            notify_enabled
+    main_menu_block.city_food_routes_out           food_routes_out
+    main_menu_block.city_tile_yields               tile_yields
+    main_menu_block.city_tile_shields              tile_shields
+    main_menu_block.city_tile_trade                tile_trade
+    main_menu_block.city_pop_pollution_factor      pop_pollution_factor
+    main_menu_block.city_yield_totals              yield_totals
+    main_menu_block.city_total_shields             total_shields
+    main_menu_block.city_total_trade               total_trade
+    main_menu_block.city_tile_job_priority         tile_job_priority
+    main_menu_block.city_settlers_supported        settlers_supported
+    main_menu_block.city_workers_overflow          workers_overflow
+    main_menu_block.city_tile_job_x                tile_job_x
+    main_menu_block.city_aggressive_units          aggressive_units
+    main_menu_block.city_tile_job_y                tile_job_y
+    main_menu_block.city_unhappy_by_stage          unhappy_by_stage
+    main_menu_block.city_unhappy_after_lux         unhappy_after_lux
+    main_menu_block.city_unhappy_after_units       unhappy_after_units
+    main_menu_block.city_unhappy_after_wonders     unhappy_after_wonders
+    main_menu_block.city_pollution_divisor         pollution_divisor
+    main_menu_block.city_lux_total                 lux_total
+    main_menu_block.city_capital_nearest           capital_nearest
+    main_menu_block.city_specialist_count          specialist_count
+    main_menu_block.settler_food_cost              settler_food_cost
+    main_menu_block.city_support_unit_count        support_unit_count
+    main_menu_block.city_completed_improvement_i32 completed_improvement
+    main_menu_block.city_building_content          building_content
+    main_menu_block.city_food_surplus              food_surplus
+    main_menu_block.city_happy_by_stage            happy_by_stage
+    main_menu_block.city_happy_after_lux           happy_after_lux
+    main_menu_block.city_happy_after_units         happy_after_units
+    main_menu_block.city_happy_after_wonders       happy_after_wonders
+    main_menu_block.city_angry_by_stage            angry_by_stage
+end
+
+record AdvisorWindowState advisor_state  The advisors' report window and its layout.
+    advisor_window_block.advisor_window            window
+    advisor_window_block.advisor_wnd               wnd
+    advisor_window_block.advisor_wnd_events        wnd_events
+    advisor_window_block.advisor_client_x          client_x
+    advisor_window_block.advisor_client_y          client_y
+    advisor_window_block.advisor_client_width      client_width
+    advisor_window_block.advisor_client_rect       client_rect
+    advisor_window_block.advisor_client_right      client_right
+    advisor_window_block.advisor_close_button      close_button
+    advisor_window_block.advisor_toggle_button     toggle_button
+    advisor_window_block.advisor_alt_toggle_button alt_toggle_button
+    advisor_window_block.advisor_scrollbar         scrollbar
+    advisor_window_block.advisor_report_id         report_id
+    advisor_window_block.advisor_page_count_i32    page_count
+    advisor_window_block.advisor_report_civ        report_civ
+    advisor_window_block.advisor_first_row         first_row
+    advisor_window_block.advisor_rows_per_page     rows_per_page
+    advisor_window_block.advisor_list_top_i32      list_top
+    advisor_window_block.advisor_list_height_i32   list_height
+    advisor_window_block.advisor_row_height        row_height
+    advisor_window_block.advisor_items_per_page    items_per_page
+    advisor_window_block.advisor_list_left_i32     list_left
+    advisor_window_block.advisor_list_width        list_width
+    advisor_window_block.advisor_column_width      column_width
+    advisor_window_block.advisor_vscroll_width     vscroll_width
+    advisor_window_block.advisor_controls_created  controls_created
+    advisor_window_block.advisor_report_param      report_param
+end
+
+record CommodityDemand commodity_demand  Trade: how much a city demands each commodity.
+    advisor_window_block.city_commodity_demand_scores by_commodity
+    advisor_window_block.city_wool_demand_score       wool
+    advisor_window_block.demand_score_beads           beads
+    advisor_window_block.demand_score_cloth_i32       cloth
+    advisor_window_block.demand_score_salt_i32        salt
+    advisor_window_block.demand_score_coal            coal
+    advisor_window_block.demand_score_copper          copper
+    advisor_window_block.demand_score_dye             dye
+    advisor_window_block.demand_score_wine_i32        wine
+    advisor_window_block.demand_score_silk            silk
+    advisor_window_block.demand_score_silver          silver
+    advisor_window_block.demand_score_spice           spice
+    advisor_window_block.demand_score_gems_i32        gems
+    advisor_window_block.demand_score_gold            gold
+    advisor_window_block.demand_score_oil             oil
+    advisor_window_block.demand_score_uranium         uranium
+end
+
+record CommoditySupply commodity_supply  Trade: how much a city supplies each commodity.
+    advisor_window_block.city_commodity_supply_scores by_commodity
+    advisor_window_block.supply_score_wool            wool
+    advisor_window_block.supply_score_beads           beads
+    advisor_window_block.supply_score_cloth           cloth
+    advisor_window_block.supply_score_salt            salt
+    advisor_window_block.supply_score_coal            coal
+    advisor_window_block.supply_score_copper          copper
+    advisor_window_block.supply_score_dye             dye
+    advisor_window_block.supply_score_wine            wine
+    advisor_window_block.supply_score_silk            silk
+    advisor_window_block.supply_score_silver          silver
+    advisor_window_block.supply_score_spice           spice
+    advisor_window_block.supply_score_gems            gems
+    advisor_window_block.supply_score_gold            gold
+    advisor_window_block.supply_score_oil             oil
+    advisor_window_block.supply_score_uranium         uranium
+end
+
+record CasualtyWindowState casualty  The casualty timeline (military advisor) window.
+    casualty_window_block.casualty_window            window
+    casualty_window_block.casualty_parent_wnd        parent_wnd
+    casualty_window_block.casualty_wnd_events        wnd_events
+    casualty_window_block.casualty_client_x          client_x
+    casualty_window_block.casualty_client_y          client_y
+    casualty_window_block.casualty_client_width      client_width
+    casualty_window_block.casualty_client_right      client_right
+    casualty_window_block.casualty_close_button      close_button
+    casualty_window_block.casualty_scrollbar         scrollbar
+    casualty_window_block.casualty_window_report_id report_id
+    casualty_window_block.casualty_page_count_i32    page_count
+    casualty_window_block.casualty_window_civ civ
+    casualty_window_block.casualty_scroll_pos        scroll_pos
+    casualty_window_block.casualty_rows_per_page     rows_per_page
+    casualty_window_block.casualty_first_row_y       first_row_y
+    casualty_window_block.casualty_list_height_i32   list_height
+    casualty_window_block.casualty_row_height        row_height
+    casualty_window_block.casualty_vscroll_width_i32 vscroll_width
+    casualty_window_block.casualty_controls_created  controls_created
+    casualty_window_block.casualty_report_param_i32  report_param
+end
+
+record StatusWindowState status_wnd  The status window and its layout.
+    status_window_block.status_window                 window
+    status_window_block.status_window_wnd wnd
+    status_window_block.status_wnd_events             wnd_events
+    status_window_block.status_client_x               client_x
+    status_window_block.status_client_y               client_y
+    status_window_block.status_client_width           client_width
+    status_window_block.status_client_height          client_height
+    status_window_block.status_indicator_rect         indicator_rect
+    status_window_block.status_client_right           client_right
+    status_window_block.status_client_bottom          client_bottom
+    status_window_block.status_panel_gap              panel_gap
+    status_window_block.status_upper_panel_height     upper_panel_height
+    status_window_block.status_timer_bg_surface       timer_bg_surface
+    status_window_block.status_timer_surface_init     timer_surface_init
+    status_window_block.status_info_font              info_font
+    status_window_block.status_lower_rect             lower_rect
+    status_window_block.status_lower_rect_top         lower_rect_top
+    status_window_block.status_lower_rect_right       lower_rect_right
+    status_window_block.status_lower_rect_bottom      lower_rect_bottom
+    status_window_block.status_timer_last_rect        timer_last_rect
+    status_window_block.status_timer_last_rect_top    timer_last_rect_top
+    status_window_block.status_timer_last_rect_right  timer_last_rect_right
+    status_window_block.status_timer_last_rect_bottom timer_last_rect_bottom
+end
+
+record PediaWindowState pedia_wnd  The Civilopedia window: the page shown, its history and lists.
+    pedia_window_block.pedia_window                  window
+    pedia_window_block.pedia_closed                  closed
+    pedia_window_block.pedia_category                category
+    pedia_window_block.pedia_page_mode               page_mode
+    pedia_window_block.pedia_topic                   topic
+    pedia_window_block.pedia_modal_active            modal_active
+    pedia_window_block.pedia_history_count           history_count
+    pedia_window_block.pedia_history_topics          history_topics
+    pedia_window_block.pedia_history_page_modes      history_page_modes
+    pedia_window_block.pedia_history_categories      history_categories
+    pedia_window_block.pedia_describe_rect           describe_rect
+    pedia_window_block.pedia_title_text              title_text
+    pedia_window_block.pedia_advance_entry_count     advance_entry_count
+    pedia_window_block.pedia_improvement_entry_count improvement_entry_count
+    pedia_window_block.pedia_wonder_entry_count      wonder_entry_count
+    pedia_window_block.pedia_unit_entry_count        unit_entry_count
+    pedia_window_block.pedia_government_entry_count  government_entry_count
+    pedia_window_block.pedia_terrain_count           terrain_count
+    pedia_window_block.pedia_terrain_ids             terrain_ids
+    pedia_window_block.pedia_concept_entry_count     concept_entry_count
+    pedia_window_block.pedia_advance_names           advance_names
+    pedia_window_block.pedia_improvement_names       improvement_names
+    pedia_window_block.pedia_wonder_names            wonder_names
+    pedia_window_block.pedia_unit_names              unit_names
+    pedia_window_block.pedia_government_names        government_names
+    pedia_window_block.pedia_terrain_names           terrain_names
+    pedia_window_block.pedia_concept_names           concept_names
+    pedia_window_block.pedia_list_scrollbar          list_scrollbar
+    pedia_window_block.pedia_close_hotspot           close_hotspot
+    pedia_window_block.pedia_list_rect               list_rect
+    pedia_window_block.pedia_list_rect_top           list_rect_top
+    pedia_window_block.pedia_list_rect_right         list_rect_right
+    pedia_window_block.pedia_list_rect_bottom        list_rect_bottom
+    pedia_window_block.pedia_list_count              list_count
+    pedia_window_block.pedia_selected_item           selected_item
+    pedia_window_block.pedia_list_top                list_top
+    pedia_window_block.pedia_link_list               link_list
+    pedia_window_block.pedia_popped_category         popped_category
+    pedia_window_block.pedia_popped_page_mode        popped_page_mode
+end
+
+record CityWindowLayout city_wnd  The city window and its layout.
+    city_window_block.city_window                     window
+    city_window_block.city_window_wnd                 wnd
+    city_window_block.city_window_clickmap            clickmap
+    city_window_block.city_window_city_i32            city
+    city_window_block.city_window_minimized_i32       minimized
+    city_window_block.city_window_closed              closed
+    city_window_block.city_window_refresh_locked      refresh_locked
+    city_window_block.city_window_open_mode           open_mode
+    city_window_block.city_info_panel_mode            info_panel_mode
+    city_window_block.city_improvement_list_top       improvement_list_top
+    city_window_block.city_improvement_list_count_i32 improvement_list_count
+    city_window_block.city_window_prev_offset_x_i32   prev_offset_x
+    city_window_block.city_window_size_level          size_level
+    city_window_block.city_window_map_zoom            map_zoom
+    city_window_block.city_window_map_rect            map_rect
+    city_window_block.city_window_map_rect_top        map_rect_top
+end
+
+record MinimapWindowState minimap_state  The world map window.
+    minimap_window_block.minimap_window        window
+    minimap_window_block.minimap_wnd           wnd
+    minimap_window_block.minimap_wnd_handlers  wnd_handlers
+    minimap_window_block.minimap_client_x      client_x
+    minimap_window_block.minimap_client_y      client_y
+    minimap_window_block.minimap_client_width  client_width
+    minimap_window_block.minimap_client_height client_height
+    minimap_window_block.minimap_margin_y_i32  margin_y
+    minimap_window_block.minimap_margin_x      margin_x
+end
+
+record MapGenBounds mapgen_bounds  The world generator's working bounds.
+    minimap_window_block.mapgen_max_y       max_y
+    minimap_window_block.mapgen_max_x       max_x
+    minimap_window_block.mapgen_min_x       min_x
+    minimap_window_block.mapgen_min_y       min_y
+    minimap_window_block.mapgen_land_placed land_placed
+end
+
+record UnitSoundEditorState unit_sound_editor  The unit sound editor window.
+    unit_sound_editor_window_block.unit_sound_editor_window                   window
+    unit_sound_editor_window_block.unit_sound_editor_wnd                      wnd
+    unit_sound_editor_window_block.unit_sound_editor_wnd_handlers             wnd_handlers
+    unit_sound_editor_window_block.unit_sound_editor_style_flags_i32          style_flags
+    unit_sound_editor_window_block.unit_sound_editor_caption_height           caption_height
+    unit_sound_editor_window_block.unit_sound_editor_border_width             border_width
+    unit_sound_editor_window_block.unit_sound_editor_resize_border            resize_border
+    unit_sound_editor_window_block.unit_sound_editor_client_x                 client_x
+    unit_sound_editor_window_block.unit_sound_editor_client_y                 client_y
+    unit_sound_editor_window_block.unit_sound_editor_client_width             client_width
+    unit_sound_editor_window_block.unit_sound_editor_client_height_i32        client_height
+    unit_sound_editor_window_block.unit_sound_editor_title                    title
+    unit_sound_editor_window_block.unit_sound_editor_caption_button_count_i32 caption_button_count
+    unit_sound_editor_window_block.unit_sound_editor_caption_button_cb_i32    caption_button_cb
+    unit_sound_editor_window_block.unit_sound_editor_fill_rect                fill_rect
+    unit_sound_editor_window_block.unit_sound_editor_title_font_i32           title_font
+    unit_sound_editor_window_block.unit_sound_editor_title_small_font_i32     title_small_font
+    unit_sound_editor_window_block.unit_sound_editor_text_font_i32            text_font
+end
+
+record SpaceshipStats spaceship_stats  The spaceship's figures (spaceship_calc_stats).
+    unit_sound_editor_window_block.spaceship_fuel_pct               fuel_pct
+    unit_sound_editor_window_block.spaceship_projected_arrival_year projected_arrival_year
+    unit_sound_editor_window_block.spaceship_mass                   mass
+    unit_sound_editor_window_block.spaceship_energy_pct             energy_pct
+    unit_sound_editor_window_block.spaceship_success_pct            success_pct
+    unit_sound_editor_window_block.spaceship_support_pct            support_pct
+    unit_sound_editor_window_block.spaceship_flight_time            flight_time
+end
+
+record MpGameOptions mp_options  The multiplayer game's options (saved with the game).
+    civ_saved_cursor_x_block.mp_open_game            open_game
+    civ_saved_cursor_x_block.mp_kill_civ_on_retire   kill_civ_on_retire
+    civ_saved_cursor_x_block.mp_show_human_starts    show_human_starts
+    civ_saved_cursor_x_block.mp_chat_from_start      chat_from_start
+    civ_saved_cursor_x_block.mp_simultaneous_setting simultaneous_setting
+end
+
+record DestroyedCivs destroyed_civs  The civilizations destroyed: when, by whom.
+    destroyed_civ_count_block.destroyed_civ_count     count
+    destroyed_civ_count_block.destroyed_civ_turns     turns
+    destroyed_civ_count_block.destroyed_civ_killers   killers
+    destroyed_civ_count_block.destroyed_civ_portraits portraits
+    destroyed_civ_count_block.destroyed_civ_names     names
+end
+
+record CivViewState civ_view  Per civilization: where its map view was centred, whether its introduction was shown (hot seat).
+    civ_saved_cursor_x_block.civ_saved_cursor_x saved_cursor_x
+    civ_saved_cursor_x_block.civ_saved_cursor_y saved_cursor_y
+    civ_saved_cursor_x_block.civ_intro_shown    intro_shown
+end
+
+record AutoplayState autoplay  Autoplay (the game playing itself for some turns).
+    civ_saved_cursor_x_block.autoplay_active     active
+    civ_saved_cursor_x_block.autoplay_turns_left turns_left
+end
+
+record NetMeetQueue net_meet_pending  Meetings between civilizations waiting to be held (network game).
+    map_views_block.net_meet_pending_x      x
+    map_views_block.net_meet_pending_y      y
+    map_views_block.net_meet_pending_civ    civ
+    map_views_block.net_meet_pending_ai_civ ai_civ
+end
+
+record ScoreParts civ_score  The parts of the civilization score (civ_calc_score) and the scenario objectives.
+    map_views_block.score_objective_outcome     objective_outcome
+    map_views_block.score_pollution             pollution
+    map_views_block.score_wonders               wonders
+    map_views_block.score_spaceship_arrived     spaceship_arrived
+    map_views_block.score_objective_civ_value   objective_civ_value
+    map_views_block.score_scenario_points       scenario_points
+    map_views_block.score_future_techs          future_techs
+    map_views_block.score_total_objective_value total_objective_value
+    map_views_block.score_barbarian_bonus       barbarian_bonus
+    map_views_block.score_citizens              citizens
+    map_views_block.score_conquest_bonus        conquest_bonus
+    map_views_block.score_civ_objective_value   civ_objective_value
+    map_views_block.score_spaceship_in_flight   spaceship_in_flight
+    map_views_block.score_total                 total
+    map_views_block.score_peace                 peace
+end
+
+record PathQueue path_queue  The path finder's search: goal, coarse grid, flood-fill queue.
+    map_views_block.path_goal_x         goal_x
+    map_views_block.path_goal_y         goal_y
+    map_views_block.path_coarse_start_x coarse_start_x
+    map_views_block.path_coarse_start_y coarse_start_y
+    map_views_block.path_grid_center_x  grid_center_x
+    map_views_block.path_grid_center_y  grid_center_y
+    map_views_block.path_flood_goal_y   flood_goal_y
+    map_views_block.path_queue_tail     queue_tail
+    map_views_block.path_result_cost    result_cost
+    map_views_block.path_queue_head     queue_head
+    map_views_block.path_queue_x        queue_x
+    map_views_block.path_queue_y        queue_y
+    map_views_block.path_flood_goal_x   flood_goal_x
+end
+
+record DiffEngScan diffeng_scan  The difference engine's scan of the game state and the packet being built.
+    map_views_block.diffeng_scan_ptr                scan_ptr
+    map_views_block.diffeng_scan_offset_i32         scan_offset
+    map_views_block.diffeng_packet_i32              packet
+    map_views_block.diffeng_packet_msg_type_i32     packet_msg_type
+    map_views_block.diffeng_packet_size_i32         packet_size
+    map_views_block.diffeng_packet_record_count_i32 packet_record_count
+    map_views_block.diffeng_packet_payload          packet_payload
+    map_views_block.diffeng_mirror_size             mirror_size
+    map_views_block.diffeng_scan_section            scan_section
+    map_views_block.diffeng_mirror_end              mirror_end
+end
+
+record EditorTextDialogState editor_text_dlg  The rules editors' text dialog window.
+    editor_text_dlg_wnd_block.editor_text_dlg_wnd                  wnd
+    editor_text_dlg_wnd_block.editor_text_dlg_inner                inner
+    editor_text_dlg_wnd_block.editor_text_dlg_style_i32            style
+    editor_text_dlg_wnd_block.editor_text_dlg_caption_height       caption_height
+    editor_text_dlg_wnd_block.editor_text_dlg_border_width         border_width
+    editor_text_dlg_wnd_block.editor_text_dlg_resize_border        resize_border
+    editor_text_dlg_wnd_block.editor_text_dlg_client_x             client_x
+    editor_text_dlg_wnd_block.editor_text_dlg_client_y             client_y
+    editor_text_dlg_wnd_block.editor_text_dlg_client_width         client_width
+    editor_text_dlg_wnd_block.editor_text_dlg_client_height        client_height
+    editor_text_dlg_wnd_block.editor_text_dlg_title                title
+    editor_text_dlg_wnd_block.editor_text_dlg_caption_buttons_i32  caption_buttons
+    editor_text_dlg_wnd_block.editor_text_dlg_caption_handler_i32  caption_handler
+    editor_text_dlg_wnd_block.editor_text_fill_rect                fill_rect
+    editor_text_dlg_wnd_block.editor_text_dlg_title_font_i32       title_font
+    editor_text_dlg_wnd_block.editor_text_dlg_title_small_font_i32 title_small_font
+    editor_text_dlg_wnd_block.editor_text_dlg_text_font_i32        text_font
+end
+
+record CosmicEditValues cosmic_edit  The @COSMIC editor's fields.
+    editor_text_dlg_wnd_block.cosmic_edit_values                 values
+    editor_text_dlg_wnd_block.cosmic_edit_trireme_loss           trireme_loss
+    editor_text_dlg_wnd_block.cosmic_edit_food_per_citizen       food_per_citizen
+    editor_text_dlg_wnd_block.cosmic_edit_food_box_rows          food_box_rows
+    editor_text_dlg_wnd_block.cosmic_edit_shield_box_rows        shield_box_rows
+    editor_text_dlg_wnd_block.cosmic_edit_settler_food_low       settler_food_low
+    editor_text_dlg_wnd_block.cosmic_edit_settler_food_high      settler_food_high
+    editor_text_dlg_wnd_block.cosmic_edit_unhappy_size           unhappy_size
+    editor_text_dlg_wnd_block.cosmic_edit_riot_factor            riot_factor
+    editor_text_dlg_wnd_block.cosmic_edit_aqueduct_size          aqueduct_size
+    editor_text_dlg_wnd_block.cosmic_edit_sewer_size             sewer_size
+    editor_text_dlg_wnd_block.cosmic_edit_tech_paradigm          tech_paradigm
+    editor_text_dlg_wnd_block.cosmic_edit_transform_time         transform_time
+    editor_text_dlg_wnd_block.cosmic_edit_monarchy_support       monarchy_support
+    editor_text_dlg_wnd_block.cosmic_edit_communism_support      communism_support
+    editor_text_dlg_wnd_block.cosmic_edit_fundamentalism_support fundamentalism_support
+    editor_text_dlg_wnd_block.cosmic_edit_communism_palace_dist  communism_palace_dist
+    editor_text_dlg_wnd_block.cosmic_edit_fund_science_loss      fund_science_loss
+    editor_text_dlg_wnd_block.cosmic_edit_change_penalty         change_penalty
+    editor_text_dlg_wnd_block.cosmic_edit_paradrop_range         paradrop_range
+    editor_text_dlg_wnd_block.cosmic_edit_mass_thrust_paradigm   mass_thrust_paradigm
+    editor_text_dlg_wnd_block.cosmic_edit_fund_max_science       fund_max_science
+end
+
+record SpriteEditorState sprite_editor  The sprite (unit/icon) editor and its sprite picker.
+    status_window_block.sprite_editor_undo_flag_y              undo_flag_y
+    status_window_block.sprite_editor_undo_flag_x              undo_flag_x
+    status_window_block.sprite_sheet_surface                   sprite_sheet_surface
+    status_window_block.sprite_editor_flag_y                   flag_y
+    status_window_block.sprite_editor_flag_x                   flag_x
+    status_window_block.sprite_editor_marker_rect              marker_rect
+    status_window_block.sprite_editor_plot_rect                plot_rect
+    status_window_block.sprite_editor_paint_tool               paint_tool
+    status_window_block.sprite_picker_dialog                   sprite_picker_dialog
+    status_window_block.sprite_editor_tool                     tool
+    status_window_block.sprite_editor_brush_size               brush_size
+    status_window_block.sprite_editor_surface                  surface
+    status_window_block.sprite_editor_orig_sprite              orig_sprite
+    status_window_block.sprite_editor_window                   window
+    status_window_block.sprite_editor_wnd                      wnd
+    status_window_block.sprite_editor_wnd_events               wnd_events
+    status_window_block.sprite_editor_style_flags_i32          style_flags
+    status_window_block.sprite_editor_caption_height           caption_height
+    status_window_block.sprite_editor_border_width             border_width
+    status_window_block.sprite_editor_resize_border            resize_border
+    status_window_block.sprite_editor_origin_x                 origin_x
+    status_window_block.sprite_editor_origin_y                 origin_y
+    status_window_block.sprite_editor_client_width             client_width
+    status_window_block.sprite_editor_client_height_i32        client_height
+    status_window_block.sprite_editor_title                    title
+    status_window_block.sprite_editor_caption_button_count_i32 caption_button_count
+    status_window_block.sprite_editor_caption_button_cb_i32    caption_button_cb
+    status_window_block.sprite_editor_fill_rect                fill_rect
+    status_window_block.sprite_editor_title_font_i32           title_font
+    status_window_block.sprite_editor_title_small_font_i32     title_small_font
+    status_window_block.sprite_editor_text_font_i32            text_font
+    status_window_block.sprite_picker_window                   sprite_picker_window
+    status_window_block.sprite_picker_wnd                      sprite_picker_wnd
+    status_window_block.sprite_picker_style_flags_i32          sprite_picker_style_flags
+    status_window_block.sprite_picker_caption_height           sprite_picker_caption_height
+    status_window_block.sprite_picker_border_width             sprite_picker_border_width
+    status_window_block.sprite_picker_resize_border            sprite_picker_resize_border
+    status_window_block.sprite_picker_title                    sprite_picker_title
+    status_window_block.sprite_picker_caption_button_count_i32 sprite_picker_caption_button_count
+    status_window_block.sprite_picker_caption_button_cb_i32    sprite_picker_caption_button_cb
+    status_window_block.sprite_picker_title_font_i32           sprite_picker_title_font
+    status_window_block.sprite_picker_title_small_font_i32     sprite_picker_title_small_font
+    status_window_block.sprite_picker_text_font_i32            sprite_picker_text_font
+    status_window_block.sprite_editor_key_color                key_color
+    status_window_block.sprite_editor_width                    width
+    status_window_block.sprite_editor_height                   height
+    status_window_block.sprite_editor_last_px                  last_px
+    status_window_block.sprite_editor_last_py                  last_py
+    status_window_block.sprite_editor_ok_callback              ok_callback
+    status_window_block.sprite_editor_running                  running
+    status_window_block.sprite_picker_running                  sprite_picker_running
+    status_window_block.sprite_editor_paint_color              paint_color
+    status_window_block.sprite_editor_cursor_id                cursor_id
+    status_window_block.sprite_sheet_cell_count                sprite_sheet_cell_count
+    status_window_block.sprite_editor_target_sprite            target_sprite
+    status_window_block.sprite_editor_painting                 painting
+    status_window_block.sprite_editor_result_sprite            result_sprite
+end
+
+record SetupPictureWindow setup_picwnd_state  The picture beside the new-game setup dialogs.
+    setup_picwnd_block.setup_picwnd          window
+    setup_picwnd_block.setup_picwnd_wnd      wnd
+    setup_picwnd_block.setup_picwnd_image_id image_id
+    setup_picwnd_block.setup_picwnd_surface  surface
+end
+
+record BorderIntruders border_intruders  Units of other civilizations inside a civ's borders (AI diplomacy).
+    setup_picwnd_block.diplo_border_intruder_units  intruder_units
+    setup_picwnd_block.border_intruder_city         intruder_city
+    setup_picwnd_block.diplo_border_intruder_count  intruder_count
+    setup_picwnd_block.diplo_border_repeat_offenses repeat_offenses
+end
+
+record GfxScaleTables gfx_scale_tables  The scaling tables in use (from gfx_scale_caches).
+    default_draw_font_obj_block.gfx_scale_x_table x_table
+    default_draw_font_obj_block.gfx_scale_y_table y_table
+    default_draw_font_obj_block.gfx_scale_table   table
+end
+
+record TimerDll timerdll  The timer library's entry points.
+    default_draw_font_obj_block.timerdll_get_timer_id         get_timer_id
+    default_draw_font_obj_block.timerdll_get_timer_index      get_timer_index
+    default_draw_font_obj_block.timerdll_module               module
+    default_draw_font_obj_block.timerdll_timer_callback       timer_callback
+    default_draw_font_obj_block.timerdll_reset_timer_notified reset_timer_notified
+    default_draw_font_obj_block.timerdll_set_timer_id         set_timer_id
+end
+
+record IndeoOptions indeo  The Indeo video codec's options and the video view rectangle.
+    err_report_ctx_block.avi_indeo_frame_opts            frame_opts
+    err_report_ctx_block.avi_indeo_frame_fourcc_i32      frame_fourcc
+    err_report_ctx_block.avi_indeo_frame_version_i32     frame_version
+    err_report_ctx_block.avi_indeo_frame_type_i32        frame_type
+    err_report_ctx_block.avi_indeo_frame_environment_i32 frame_environment
+    err_report_ctx_block.g_video_flags_b                 video_flags_b
+    err_report_ctx_block.avi_indeo_view_rect_ptr_i32     view_rect_ptr
+    err_report_ctx_block.avi_indeo_seq_opts              seq_opts
+    err_report_ctx_block.avi_indeo_seq_fourcc_i32        seq_fourcc
+    err_report_ctx_block.avi_indeo_seq_version_i32       seq_version
+    err_report_ctx_block.avi_indeo_seq_type_i32          seq_type
+    err_report_ctx_block.avi_indeo_seq_environment_i32   seq_environment
+    err_report_ctx_block.g_video_flags_a                 video_flags_a
+    err_report_ctx_block.avi_indeo_seq_extra_i32         seq_extra
+    err_report_ctx_block.avi_vfw_initialized             vfw_initialized
+    err_report_ctx_block.avi_view_rect_x                 view_rect_x
+    err_report_ctx_block.avi_view_rect_y                 view_rect_y
+    err_report_ctx_block.avi_view_rect_width_i32         view_rect_width
+    err_report_ctx_block.avi_view_rect_height_i32        view_rect_height
+    err_report_ctx_block.avi_frames_per_second_i32       frames_per_second
+end
+
+record CtrlRgb ctrl_rgb  The controls' text colors as RGB.
+    wnd_modal_stack_below_block.ctrl_text_rgb_r       text_rgb_r
+    wnd_modal_stack_below_block.ctrl_text_rgb_g       text_rgb_g
+    wnd_modal_stack_below_block.ctrl_text_rgb_b       text_rgb_b
+    wnd_modal_stack_below_block.ctrl_text_rgb_set     text_rgb_set
+    wnd_modal_stack_below_block.ctrl_disabled_rgb_r   disabled_rgb_r
+    wnd_modal_stack_below_block.ctrl_disabled_rgb_g   disabled_rgb_g
+    wnd_modal_stack_below_block.ctrl_disabled_rgb_b   disabled_rgb_b
+    wnd_modal_stack_below_block.ctrl_disabled_rgb_set disabled_rgb_set
+end
+
+record DummyUnit dummy_unit  The scratch unit after the unit table (units[2048]): what the code finds past the last unit.
+    power_graph_history_block.dummy_unit_x             x
+    power_graph_history_block.dummy_unit_y             y
+    power_graph_history_block.dummy_unit_flags         flags
+    power_graph_history_block.dummy_unit_type          type
+    power_graph_history_block.dummy_unit_owner         owner
+    power_graph_history_block.dummy_unit_moves_used    moves_used
+    power_graph_history_block.dummy_unit_visibility    visibility
+    power_graph_history_block.dummy_unit_counter       counter
+    power_graph_history_block.dummy_unit_byte_0e       byte_0e
+    power_graph_history_block.dummy_unit_orders        orders
+    power_graph_history_block.dummy_unit_home_city     home_city
+    power_graph_history_block.dummy_unit_goto_x        goto_x
+    power_graph_history_block.dummy_unit_goto_y        goto_y
+    power_graph_history_block.dummy_unit_prev_in_stack prev_in_stack
+    power_graph_history_block.dummy_unit_next_in_stack next_in_stack
+end
+
+record TurnFlags turn_flags  Flags of the turn being played.
+    year_table_start_years_block.app_shutdown_done             app_shutdown_done
+    year_table_start_years_block.spaceship_winner_civ          spaceship_winner_civ
+    year_table_start_years_block.civ_turn_in_progress          civ_turn_in_progress
+    year_table_start_years_block.active_unit_lost_in_combat    active_unit_lost_in_combat
+    year_table_start_years_block.tutorial_hint_shown_this_turn tutorial_hint_shown_this_turn
+end
+
+record MapCursor map_cursor  The map cursor's tile (the active unit's or the view's).
+    map_cursor_y            y
+    map_cursor_x            x
+end
+
+record MapHandles map_handles  The memory handles of the map's tile and coarse arrays, and the tile returned for coordinates off the map.
+    map_tiles_handle        tiles
+    map_coarse_handles      coarse
+    map_offmap_tile         offmap_tile
+end
+
+record StringPoolState strpool  The string pool's fill.
+    strpool_count           count
+    strpool_initialized     initialized
+end
+
+record DialogInput dlg_input  The dialog being run: its checkboxes' bits, and whether Help was pressed.
+    dlg_check_bits          check_bits
+    dlg_help_pressed        help_pressed
+end
+
+record CityViewState cityview  The city view (the city's picture): its scroll and window.
+    cityview_scroll_x       scroll_x
+    cityview_wnd            wnd
+end
+
+record DisplayPalette display_palette  The display's palette: black's index, and whether the display is palettized.
+    gfx_black_color_index   black_index
+    gfx_palettized_display  palettized
+end
+
+record DibRowOrder dib_rows  The row order of device-independent bitmaps.
+    dib_row_order           order
+    dib_bottom_up_logged    bottom_up_logged
+end
+
+record ButtonMouse button_mouse  The button under the mouse and the one pressed.
+    g_btn_hover             hover
+    g_btn_pressed           pressed
+end
+
+record DrawTarget draw_target  Where drawing goes: the surface and font chosen.
+    draw_current_surface    surface
+    draw_current_font       font
+end
+
+record ModalWindows modal_wnd  The active child window and the depth of modal windows.
+    wnd_active_child        active_child
+    wnd_modal_depth         depth
+end
+record DialogState dialog_state  The dialog running and when its timeout started.
+    dialog_title_font_obj_block.dialog_timeout_start_i32 timeout_start
+    dialog_title_font_obj_block.active_dialog            active
+end
+
+record TaxRateWindow taxrate_wnd  The tax rate dialog open.
+    minimap_window_block.taxrate_dialog_active active
+    minimap_window_block.taxrate_dlg           dlg
+end
+
+record BlinkTimers blink_timers  The timers blinking the End of Turn and the active unit.
+    minimap_window_block.eot_blink_timer       end_of_turn
+    minimap_window_block.unit_blink_timer      unit
+end
+
+record TextArgs text_args  The arguments substituted into game texts (%NUMBER0.., %STRING0..; some named for the game profile that fills them).
+    minimap_window_block.text_number_args         numbers
+    minimap_window_block.text_string_args         strings
+    minimap_window_block.text_string_args_plus1   strings_plus1
+    minimap_window_block.text_string_arg1         string1
+    minimap_window_block.text_string_arg2         string2
+    minimap_window_block.text_string_arg3         string3
+    minimap_window_block.profile_difficulty_text  profile_difficulty
+    minimap_window_block.text_string_arg5         string5
+    minimap_window_block.profile_barbarians_text  profile_barbarians
+    minimap_window_block.game_profile_timer_text  profile_timer
+    minimap_window_block.profile_count_text       profile_count
+    minimap_window_block.profile_count_text2      profile_count2
+    minimap_window_block.profile_map_width_text   profile_map_width
+    minimap_window_block.profile_map_height_text  profile_map_height
+end
+
+record SavedTurn saved_turn  The turn to resume (saved with the game).
+    civ_saved_cursor_x_block.saved_turn_civ        civ
+    civ_saved_cursor_x_block.saved_resume_new_game resume_new_game
+end
+
+record MpDoubles mp_doubles  The multiplayer options doubling production and moves.
+    civ_saved_cursor_x_block.mp_double_production production
+    civ_saved_cursor_x_block.mp_double_moves      moves
+end
+
+record GameDirs game_dirs  The game's directory.
+    civ_saved_cursor_x_block.game_home_dir home
+end
+
+record TextParse text_parse  The text file reader's current token and line.
+    map_views_block.text_token_buf   token_buf
+    map_views_block.text_line_cursor line_cursor
+end
+
+record TextBuffer textbuf  The text being composed (messages, dialogs); the bytes before and after it are read too.
+    map_views_block.text_buffer_minus1 before
+    map_views_block.text_buffer        buf
+    map_views_block.text_buffer_char_1 char_1
+    map_views_block.text_buffer_plus2  plus2
+    map_views_block.text_buffer_char_3 char_3
+end
+
+record EditorLists editor_lists  The rules editors' name lists and controls.
+    editor_text_dlg_wnd_block.editor_govt_names          govt_names
+    editor_text_dlg_wnd_block.editor_govt_name_ends      govt_name_ends
+    editor_text_dlg_wnd_block.editor_commodity_names     commodity_names
+    editor_text_dlg_wnd_block.editor_commodity_name_ends commodity_name_ends
+    editor_text_dlg_wnd_block.editor_text_lines_out      text_lines_out
+    editor_text_dlg_wnd_block.editor_running             running
+    editor_text_dlg_wnd_block.editor_next_ctrl_id        next_ctrl_id
+end
+
+record EditorActive editor_active  The rules editor open.
+    editor_text_dlg_wnd_block.active_editor_wnd wnd
+end

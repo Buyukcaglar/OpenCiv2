@@ -44,9 +44,9 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
     case 0x200:     /* WM_MOUSEMOVE */
         pt.x = lparam & 0xffff;
         pt.y = (lparam >> 0x10) & 0xffff;
-        if (g_btn_hover == 0) {
-            if (g_btn_pressed == 0) {
-                g_btn_hover = 1;
+        if (button_mouse.hover == 0) {
+            if (button_mouse.pressed == 0) {
+                button_mouse.hover = 1;
                 SetCapture(hwnd);
                 if (self != (void *)0x0) {
                     ctrl_arg = ((Control *)self)->get_parent();
@@ -65,8 +65,8 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
             OffsetRect(&rect, -rect.left, -rect.top);
             inside = PtInRect(&rect, pt);
             if (inside == 0) {
-                g_btn_hover = 0;
-                if (g_btn_pressed == 0) {
+                button_mouse.hover = 0;
+                if (button_mouse.pressed == 0) {
                     ReleaseCapture();
                     if (self != (void *)0x0) {
                         ctrl_arg = ((Control *)self)->get_parent();
@@ -79,8 +79,8 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
         }
         break;
     case 0x201:     /* WM_LBUTTONDOWN */
-        if (g_btn_hover != 0) {
-            g_btn_pressed = 1;
+        if (button_mouse.hover != 0) {
+            button_mouse.pressed = 1;
             ctrl_arg = ((Control *)self)->get_parent();
             wnd_set_active_child(ctrl_arg);
             ctrl_arg = ((Control *)self)->get_id();
@@ -88,9 +88,9 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
         }
         break;
     case 0x202:     /* WM_LBUTTONUP */
-        if (g_btn_pressed != 0) {
-            g_btn_pressed = 0;
-            if (g_btn_hover != 0) {
+        if (button_mouse.pressed != 0) {
+            button_mouse.pressed = 0;
+            if (button_mouse.hover != 0) {
                 if (self != (void *)0x0) {
                     ctrl_arg = ((Control *)self)->get_parent();
                     wnd_set_active_child(ctrl_arg);
@@ -110,7 +110,7 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
         }
         break;
     case 0x203:     /* WM_LBUTTONDBLCLK */
-        if (g_btn_hover != 0) {
+        if (button_mouse.hover != 0) {
             ctrl_arg = ((Control *)self)->get_parent();
             wnd_set_active_child(ctrl_arg);
             ctrl_arg = ((Control *)self)->get_id();
@@ -409,7 +409,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         ValidateRect(GetParent(hwnd), &rect);
         OffsetRect(&rect, -rect.left, -rect.top);
         ValidateRect(hwnd, &rect);
-        if (gfx_palettized_display == 1) {
+        if (display_palette.palettized == 1) {
             parent = (void *)((Control *)ctrl)->get_parent();
             parent = (void *)((WndBase *)parent)->get_palette();
             hPal = palette_get_hpalette((PaletteHandleView *)parent);
@@ -420,7 +420,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             parent = (void *)((Control *)ctrl)->get_parent();
             ctrl_arg = ((WndBase *)parent)->get_palette();
             ((DibSurface *)((int)ctrl + 0x34))->apply_palette( (PaletteVersionView *)ctrl_arg);
-            if (gfx_palettized_display == 1)
+            if (display_palette.palettized == 1)
                 RealizePalette(hdc);
             height = (int)((DibSurface *)((int)ctrl + 0x34))->get_dib();
             hdcSrc = ((GdiDib *)height)->hdc;
@@ -491,21 +491,21 @@ void __cdecl avi_play_start(AviPlayer *avi)
 {
     LONG t_end, t_start;
 
-    if (avi == 0 || avi_file_loaded == 0)
+    if (avi == 0 || avi_play.file_loaded == 0)
         return;
-    if (avi_playing != 0)
+    if (avi_play.playing != 0)
         avi_play_pause(avi);
     if (avi->double_size != 0) {
-        ICSendMessage((*(HIC *)&avi_decompressor), 0x403f, 0, 0);
-        (*(uint *)&err_report_ctx_block.g_video_flags_a) = 8;
+        ICSendMessage((*(HIC *)&avi_play.decompressor), 0x403f, 0, 0);
+        (*(uint *)&indeo.video_flags_a) = 8;
         if (avi->transparent != 0)
-            (*(uint *)&err_report_ctx_block.g_video_flags_a) |= 0x80000004;
-        (*(uint *)&err_report_ctx_block.g_video_flags_b) = 0x80000008;
-        ICSendMessage((*(HIC *)&avi_decompressor), 0x5001, (DWORD_PTR)(iptr)&err_report_ctx_block.avi_indeo_seq_opts, 0x2c);
-        ICSendMessage((*(HIC *)&avi_decompressor), 0x5001, (DWORD_PTR)(iptr)&err_report_ctx_block.avi_indeo_frame_opts, 0x70);
+            (*(uint *)&indeo.video_flags_a) |= 0x80000004;
+        (*(uint *)&indeo.video_flags_b) = 0x80000008;
+        ICSendMessage((*(HIC *)&avi_play.decompressor), 0x5001, (DWORD_PTR)(iptr)&indeo.seq_opts, 0x2c);
+        ICSendMessage((*(HIC *)&avi_play.decompressor), 0x5001, (DWORD_PTR)(iptr)&indeo.frame_opts, 0x70);
         avi->dst_format.height <<= 1;
         avi->dst_format.width <<= 1;
-        avi_ic_decompress_ex_begin((i32)(*(HIC *)&avi_decompressor), 0, (iptr)&avi->src_format, 0, 0, 0,
+        avi_ic_decompress_ex_begin((i32)(*(HIC *)&avi_play.decompressor), 0, (iptr)&avi->src_format, 0, 0, 0,
                      avi->src_format.width, avi->src_format.height,
                      (iptr)&avi->dst_format, 0, 0, 0,
                      avi->src_format.width * 2, avi->src_format.height * 2);
@@ -513,18 +513,18 @@ void __cdecl avi_play_start(AviPlayer *avi)
         avi->dst_format.width >>= 1;
     }
     if (avi->has_audio != 0) {
-        t_end = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), avi->end_frame);
-        t_start = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_video_stream), avi->cur_frame);
+        t_end = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_play.video_stream), avi->end_frame);
+        t_start = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_play.video_stream), avi->cur_frame);
         avi_audio_prepare_range((AviAudioPrepareView *)&avi->audio, t_start, t_end);
     }
-    if (avi_file_loaded != 0) {
+    if (avi_play.file_loaded != 0) {
         if (avi->transparent == 0)
             avi_update_frame(avi);
         wnd_modal_stack_below_block.avi_idle_update_enabled = 1;
-        avi_playing = 1;
+        avi_play.playing = 1;
         avi_blit_union_left_block.g_video_frame_count = 0;
         if (avi->has_audio == 0) {
-            (*(DWORD *)&g_video_start_time) = timeGetTime();
+            (*(DWORD *)&avi_play.start_time) = timeGetTime();
         }
         else {
             avi_audio_start((void *)&avi->audio);
@@ -589,12 +589,12 @@ static void wnd_child_on_hscroll(HWND hwnd,Wnd *child2,void *view,WPARAM wp)
   case 4:     /* SB_THUMBPOSITION */
       scroll_pos2 = (int)(short)(wp >> 0x10);
       SetScrollPos(hwnd, 0, scroll_pos2, 1);
-      (*(void * *)&wnd_active_child) = child2;
+      (*(void * *)&modal_wnd.active_child) = child2;
       child2->hscroll_pos = scroll_pos2;
       ((WndHandlers *)view)->call_hscroll( child2->hscroll_pos);
       break;
   case 5:     /* SB_THUMBTRACK */
-      (*(void * *)&wnd_active_child) = child2;
+      (*(void * *)&modal_wnd.active_child) = child2;
       ((WndHandlers *)view)->call_hscroll_track( (int)(short)(wp >> 0x10));
       break;
   case 0:
@@ -619,7 +619,7 @@ static void wnd_child_on_hscroll(HWND hwnd,Wnd *child2,void *view,WPARAM wp)
       }
       SetScrollPos(hwnd, 0, scroll_pos2, 1);
       scroll_pos2 = GetScrollPos(hwnd, 0);
-      (*(void * *)&wnd_active_child) = child2;
+      (*(void * *)&modal_wnd.active_child) = child2;
       child2->hscroll_pos = scroll_pos2;
       ((WndHandlers *)view)->call_hscroll( scroll_pos2);
       break;
@@ -638,12 +638,12 @@ static void wnd_child_on_vscroll(HWND hwnd,Wnd *child2,void *view,WPARAM wp)
   case 4:     /* SB_THUMBPOSITION */
       scroll_pos2 = (int)(short)(wp >> 0x10);
       SetScrollPos(hwnd, 1, scroll_pos2, 1);
-      (*(void * *)&wnd_active_child) = child2;
+      (*(void * *)&modal_wnd.active_child) = child2;
       child2->vscroll_pos = scroll_pos2;
       ((WndHandlers *)view)->call_vscroll( child2->vscroll_pos);
       break;
   case 5:     /* SB_THUMBTRACK */
-      (*(void * *)&wnd_active_child) = child2;
+      (*(void * *)&modal_wnd.active_child) = child2;
       ((WndHandlers *)view)->call_vscroll_track( (int)(short)(wp >> 0x10));
       break;
   case 0:
@@ -668,7 +668,7 @@ static void wnd_child_on_vscroll(HWND hwnd,Wnd *child2,void *view,WPARAM wp)
       }
       SetScrollPos(hwnd, 1, scroll_pos2, 1);
       scroll_pos2 = GetScrollPos(hwnd, 1);
-      (*(void * *)&wnd_active_child) = child2;
+      (*(void * *)&modal_wnd.active_child) = child2;
       child2->vscroll_pos = scroll_pos2;
       ((WndHandlers *)view)->call_vscroll( scroll_pos2);
       break;
@@ -702,11 +702,11 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     case 0x210:     /* WM_PARENTNOTIFY */
         switch (wp & 0xffff) {
         case 0x201:
-            (*(void * *)&wnd_active_child) = child2;
+            (*(void * *)&modal_wnd.active_child) = child2;
             ((WndHandlers *)view)->call_lbuttondown( lparam & 0xffff, lparam >> 0x10);
             break;
         case 0x204:
-            (*(void * *)&wnd_active_child) = child2;
+            (*(void * *)&modal_wnd.active_child) = child2;
             ((WndHandlers *)view)->call_rbuttondown( lparam & 0xffff, lparam >> 0x10);
             break;
         }
@@ -733,7 +733,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
 
     case 0x201:     /* WM_LBUTTONDOWN */
         owner = ((WndBase *)GetWindowLongA(hwnd, 0))->get_window();
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         if ((owner->flags_bytes[1] & 2) != 0) {
             SetFocus(owner->hwnd);
             BringWindowToTop(hwnd);
@@ -742,7 +742,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         ((WndHandlers *)view)->call_lbuttondown( (int)x, (int)y);
         break;
     case 0x202:     /* WM_LBUTTONUP */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         if ((int)child2->lbutton_down == 1) {
             child2->lbutton_down = 0;
             ((WndHandlers *)view)->call_lbuttonup( (int)x, (int)y);
@@ -755,44 +755,44 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
             SetFocus(owner->hwnd);
             BringWindowToTop(hwnd);
         }
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         child2->rbutton_down = 1;
         ((WndHandlers *)view)->call_rbuttondown( (int)x, (int)y);
         break;
     case 0x205:     /* WM_RBUTTONUP */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         if ((int)child2->rbutton_down == 1) {
-            (*(void * *)&wnd_active_child) = child2;
+            (*(void * *)&modal_wnd.active_child) = child2;
             child2->rbutton_down = 0;
             ((WndHandlers *)view)->call_rbuttonup( (int)x, (int)y);
         }
         ((WndHandlers *)view)->call_rbuttonup_raw( (int)x, (int)y);
         break;
     case 0x200:     /* WM_MOUSEMOVE */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_mousemove( (int)x, (int)y);
         break;
     case 0x203:     /* WM_LBUTTONDBLCLK */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_dblclick( (int)x, (int)y);
         break;
 
     case 0x100:     /* WM_KEYDOWN */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_keydown_pre( input_map_vkey(wp));
         ((WndHandlers *)view)->call_keydown( input_map_vkey(wp));
         break;
     case 0x102:     /* WM_CHAR */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_char( wp & 0xff);
         break;
     case 0x101:     /* WM_KEYUP */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_keyup( input_map_vkey(wp));
         break;
 
     case 7:         /* WM_SETFOCUS */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_setfocus();
         break;
 
@@ -814,19 +814,19 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         return (uint)(realized != 0);
 
     case 5:         /* WM_SIZE */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         if (IsIconic(hwnd) == 0) {
             wnd_on_size_nop(child2, (int)x, (int)y);
             ((WndHandlers *)view)->call_size( wp);
         }
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
     case 3:         /* WM_MOVE */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_move( (int)x, (int)y);
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 
     case 0x111:     /* WM_COMMAND */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         if ((short)lparam == 0)
             wnd_on_menu_command(hwnd, wparam_hwnd);
         break;
@@ -835,7 +835,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         return 0;
 
     case 0x11f:     /* WM_MENUSELECT */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         if ((wp >> 0x10 & 0xffff) == 0xffff && lparam == 0)
             child2->fire_menu_select( 0xffffffff);
         else
@@ -843,7 +843,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         break;
 
     case 0x112:     /* WM_SYSCOMMAND */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         switch (wp) {
         case 0xf020:    /* SC_MINIMIZE */
             ((WndHandlers *)view)->call_minimize();
@@ -855,14 +855,14 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 
     case 0x10:      /* WM_CLOSE */
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         wnd_obj = ((WndHandlers *)view)->call_close();
         if (wnd_obj == 0)
             break;
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 
     case 0x44:
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_msg44( lparam & 0xffff);
         return 1;
 
@@ -881,13 +881,13 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     case 0x231:     /* WM_ENTERSIZEMOVE */
         owner = ((WndBase *)GetWindowLongA(hwnd, 0))->get_window();
         (void)owner;
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_entersizemove();
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
     case 0x232:     /* WM_EXITSIZEMOVE */
         owner = ((WndBase *)GetWindowLongA(hwnd, 0))->get_window();
         (void)owner;
-        (*(void * *)&wnd_active_child) = child2;
+        (*(void * *)&modal_wnd.active_child) = child2;
         ((WndHandlers *)view)->call_exitsizemove();
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 

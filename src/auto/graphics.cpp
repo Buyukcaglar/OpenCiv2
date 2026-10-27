@@ -272,7 +272,7 @@ i32 __cdecl gfx_draw_text(const char *text,i32 x,iptr y)
 {
   i32 end_x;
   
-  end_x = text_draw_shadowed(text_draw_surface,text,x,y);
+  end_x = text_draw_shadowed(text_style.surface,text,x,y);
   return end_x;
 }
 
@@ -280,7 +280,7 @@ i32 __cdecl gfx_draw_text(const char *text,i32 x,iptr y)
 void __cdecl gfx_draw_text_centered(const char *text,i32 x,iptr y,i32 width)
 
 {
-  text_draw_centered(text_draw_surface,text,x,y,width);
+  text_draw_centered(text_style.surface,text,x,y,width);
   return;
 }
 
@@ -291,7 +291,7 @@ gfx_draw_text_right(const char *text,i32 right_x,i32 y,i32 flags)
 {
   i32 result;
   
-  result = text_draw_right_aligned(text_draw_surface,text,right_x,y,flags);
+  result = text_draw_right_aligned(text_style.surface,text,right_x,y,flags);
   return result;
 }
 
@@ -629,15 +629,15 @@ void __cdecl gfx_load_terrain_sprites(void)
   if (loaded == 0) {
     loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_terrain1_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_terrain1_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   x2 = 1;
   res_x = 0x83;
@@ -722,15 +722,15 @@ void __cdecl gfx_load_terrain_sprites(void)
   if (loaded == 0) {
     loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_terrain2_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_terrain2_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   base_x = 1;
   base_y = 0x43;
@@ -815,15 +815,15 @@ static void gfx_load_icons_sheet(void)
   if (loaded == 0) {
     loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_icons_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_icons_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite))->free();
   ((Sprite *)((i8 *)&map_grid_sprite))->free();
@@ -915,7 +915,7 @@ static void gfx_load_icons_sheet(void)
   frame_set_border_tile((iptr)&window_border_tile_surface);
   ((DibSurface *)((i8 *)&panel_texture_surface))->DibSurface::create(0x20,0x20);
   gfx_copy_rect_xywh((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&panel_texture_surface,0x12a,0xbe,0,0,0x20,0x20);
-  (*(i8 * *)&dlg_client_tile_surface) = ((i8 *)&panel_texture_surface);
+  (*(i8 * *)&dlg_style.client_tile_surface) = ((i8 *)&panel_texture_surface);
   x2 = 0x157;
   y2 = 1;
   col = 0;
@@ -983,7 +983,7 @@ static void gfx_load_editor_tool_sprites(void)
   int x2;
   int i;
 
-  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  __chdir(((i8 *)&game_dirs.home));
   loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_editorpt_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded != 0) {
     x2 = 1;
@@ -1016,15 +1016,15 @@ static void gfx_load_people_sheet(void)
   if (loaded == 0) {
     loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_people_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_people_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   y2 = 6;
   for (row = 0; row < 4; row++) {
@@ -1060,10 +1060,10 @@ static void gfx_load_diplomacy_sheet(GamePalette &palette)
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x56,10,0xc0,(iptr)&palette);
   if (loaded == 0) {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
     ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x56,10,0xc0,(iptr)&palette);
   }
-  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  __chdir(((i8 *)&game_dirs.home));
   x2 = 2;
   y2 = 0x44;
   ((Sprite *)((i8 *)&government_sprites_block.government_sprites))->free();
@@ -1134,10 +1134,10 @@ void __cdecl gfx_load_icon_sprites(void)
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x55,10,0xc0,(iptr)&palette);
   if (loaded == 0) {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
     ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x55,10,0xc0,(iptr)&palette);
   }
-  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  __chdir(((i8 *)&game_dirs.home));
   x2 = 1;
   y2 = 1;
   frame_count = 0;
@@ -1212,15 +1212,15 @@ void __cdecl gfx_load_city_sprites(void)
   if (cell_x == 0) {
     cell_x = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_cities_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (cell_x == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_cities_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   y2 = 0x27;
   for (style2 = 0; style2 < 6; style2++) {
@@ -1279,15 +1279,15 @@ void __cdecl gfx_load_unit_sprites(void)
   if (loaded == 0) {
     loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_units_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
       ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_units_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   col = 0;
   y2 = 1;
@@ -1506,9 +1506,9 @@ void __cdecl gfx_grey_out_windows(void)
         map_views_block.map_view_recs[view].remap_colors(remap_table,10,0xec);
       }
     }
-    ((DibSurface *)((i8 *)&status_window_block.status_window))->remap_colors(remap_table,10,0xec);
-    ((DibSurface *)((i8 *)&minimap_window_block.minimap_window))->remap_colors(remap_table,10,0xec);
-    ((DibSurface *)((i8 *)&city_window_block.city_window))->remap_colors(remap_table,10,0xec);
+    ((DibSurface *)((i8 *)&status_wnd.window))->remap_colors(remap_table,10,0xec);
+    ((DibSurface *)((i8 *)&minimap_state.window))->remap_colors(remap_table,10,0xec);
+    ((DibSurface *)((i8 *)&city_wnd.window))->remap_colors(remap_table,10,0xec);
     mem_handle_unlock(grey_palette_block.grey_remap_handle);
     ui_blit_all_windows();
   }
@@ -1526,9 +1526,9 @@ void __cdecl gfx_repaint_main_windows(void)
       ((SurfaceWindow *)&map_views_block.map_view_recs[view])->repaint();
     }
   }
-  ((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window))->repaint();
-  ((SurfaceWindow *)((i8 *)&status_window_block.status_window))->repaint();
-  ((SurfaceWindow *)((i8 *)&city_window_block.city_window))->repaint();
+  ((SurfaceWindow *)((i8 *)&minimap_state.window))->repaint();
+  ((SurfaceWindow *)((i8 *)&status_wnd.window))->repaint();
+  ((SurfaceWindow *)((i8 *)&city_wnd.window))->repaint();
   wnd_flush_paint();
   return;
 }
@@ -1539,8 +1539,8 @@ void __cdecl screen_fade_out(void)
 {
   int step;
   
-  unit_blink_active = 0;
-  if (gfx_palettized_display != 0) {
+  blink.unit_active = 0;
+  if (display_palette.palettized != 0) {
     ((GamePalette *)((i8 *)&game_palette_block.game_palette))->fade_begin(10,0xec,10,(iptr)&grey_palette_block.grey_palette);
     ui_blit_all_windows();
     step = 10;
@@ -1563,7 +1563,7 @@ void __cdecl screen_fade_in(void)
 {
   int step;
   
-  if (gfx_palettized_display != 0) {
+  if (display_palette.palettized != 0) {
     ((GamePalette *)((i8 *)&game_palette_block.game_palette))->fade_begin(10,0xec,10,(iptr)&grey_palette_block.grey_palette);
     ((GamePalette *)((i8 *)&game_palette_block.game_palette))->fade_step(0);
     gfx_repaint_main_windows();
@@ -1632,7 +1632,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
   char *dst;
   uint file_header[4];
   uint code;
-  char *error_msg;
+  const char *error_msg;
   i8 bmp_palette[0x400];
   
   error_msg = ((i8 *)&gfx_load_bmp_no_error_str);
@@ -1800,7 +1800,7 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,const char *filename,int first_col
   i16 reserved2;
   i32 bits_offset;
   int pixel;
-  char *error_msg;
+  const char *error_msg;
   i8 bmp_palette[1024];
   /* (port) the headers as the file has them: the original wrote its locals,
      which lay in this order on its stack, ours need not */
@@ -2061,10 +2061,10 @@ void PortraitDialog::destruct()
 i32 PortraitDialog::create()
 
 {
-  wnd_create_with_surface((const char *)&str_empty_109,0xc00,0,0,frame_border_width * 8 + 0x276,
-             frame_border_width * 4 + frame_caption_height + 0x16e,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
+  wnd_create_with_surface((const char *)&str_empty_109,0xc00,0,0,ui_metrics.border_width * 8 + 0x276,
+             ui_metrics.border_width * 4 + ui_metrics.caption_height + 0x16e,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
   create_buttons();
-  ((WndBase *)&window)->set_caption_height(frame_caption_height);
+  ((WndBase *)&window)->set_caption_height(ui_metrics.caption_height);
   window.wnd_handlers.set_lbuttonup_handler(portrait_dlg_on_click);
   window.wnd_handlers.set_dblclick_handler(portrait_dlg_on_dblclick);
   paint();
@@ -2081,9 +2081,9 @@ void PortraitDialog::create_buttons()
   u8 *parent_a;
   tagRECT button_rect;
   
-  SetRect(&button_rect,frame_border_width + 2,frame_border_width * 3 + frame_caption_height + frame_bevel_width + 0x14a,
-          (frame_border_width * 8 + 0x276 >> 1) - 2,
-          frame_border_width * 3 + frame_caption_height + 0x16e + frame_bevel_width);
+  SetRect(&button_rect,ui_metrics.border_width + 2,ui_metrics.border_width * 3 + ui_metrics.caption_height + ui_metrics.bevel_width + 0x14a,
+          (ui_metrics.border_width * 8 + 0x276 >> 1) - 2,
+          ui_metrics.border_width * 3 + ui_metrics.caption_height + 0x16e + ui_metrics.bevel_width);
   if (this == (PortraitDialog *)0x0) {
     parent_a = (u8 *)0x0;
   }
@@ -2091,7 +2091,7 @@ void PortraitDialog::create_buttons()
     parent_a = (u8 *)this + 0x48;
   }
   ((Button *)((u8 *)this + 0x198))->create_with_callback((iptr)parent_a,0x65,(iptr)&button_rect,0x21,(const char *)&str_ok);
-  OffsetRect(&button_rect,((frame_border_width * 8 + 0x276 >> 1) + 2) - frame_border_width,0);
+  OffsetRect(&button_rect,((ui_metrics.border_width * 8 + 0x276 >> 1) + 2) - ui_metrics.border_width,0);
   if (this == (PortraitDialog *)0x0) {
     parent_b = (u8 *)0x0;
   }
@@ -2144,76 +2144,76 @@ void PortraitDialog::paint()
   tagRECT src_rect;
   iptr title;
   
-  title = (iptr)label_string(label_string_ids[0x12a]);
+  title = (iptr)label_string(label_table.string_ids[0x12a]);
   dll.load((const char *)&str_mk_dll);
   loaded = surface.load_gif_resource(
                      0xd3 - (uint)(leaders[civs[civ].tribe].female == '\0'),10,0xec,
                      (iptr)&game_palette_block.game_palette);
   if (loaded != 0) {
     dll.dll_handle_free();
-    loaded = frame_caption_height + frame_bevel_width * -2;
+    loaded = ui_metrics.caption_height + ui_metrics.bevel_width * -2;
     height = get_width();
-    gfx_tile_fill((iptr)this,frame_border_tile,0,frame_bevel_width,height,loaded,0,frame_bevel_width);
+    gfx_tile_fill((iptr)this,ui_metrics.border_tile,0,ui_metrics.bevel_width,height,loaded,0,ui_metrics.bevel_width);
     height = get_height();
-    loaded = frame_border_width + frame_bevel_width * -2;
-    x2 = frame_bevel_width;
-    tmp_a = frame_caption_height - frame_bevel_width;
+    loaded = ui_metrics.border_width + ui_metrics.bevel_width * -2;
+    x2 = ui_metrics.bevel_width;
+    tmp_a = ui_metrics.caption_height - ui_metrics.bevel_width;
     for (i = 0; i < 8; i++) {
-      gfx_tile_fill((iptr)this,frame_border_tile,x2,tmp_a,loaded,height,x2,tmp_a);
-      x2 = x2 + frame_border_width + 0x5a;
+      gfx_tile_fill((iptr)this,ui_metrics.border_tile,x2,tmp_a,loaded,height,x2,tmp_a);
+      x2 = x2 + ui_metrics.border_width + 0x5a;
     }
-    tmp_b = frame_border_width + frame_bevel_width * -2;
-    y2 = frame_bevel_width + frame_caption_height + 0x6e;
+    tmp_b = ui_metrics.border_width + ui_metrics.bevel_width * -2;
+    y2 = ui_metrics.bevel_width + ui_metrics.caption_height + 0x6e;
     tmp_c = get_width();
-    tmp_a = frame_bevel_width;
-    loaded = frame_bevel_width * -2;
+    tmp_a = ui_metrics.bevel_width;
+    loaded = ui_metrics.bevel_width * -2;
     for (i = 0; i < 2; i++) {
-      gfx_tile_fill((iptr)this,frame_border_tile,tmp_a,y2,tmp_c + loaded,tmp_b,tmp_a,y2);
-      y2 = y2 + frame_border_width + 0x6e;
+      gfx_tile_fill((iptr)this,ui_metrics.border_tile,tmp_a,y2,tmp_c + loaded,tmp_b,tmp_a,y2);
+      y2 = y2 + ui_metrics.border_width + 0x6e;
     }
-    loaded = frame_border_width * 2;
+    loaded = ui_metrics.border_width * 2;
     tmp_c = get_width();
-    tmp_b = frame_bevel_width;
-    tmp_a = frame_bevel_width * -2;
+    tmp_b = ui_metrics.bevel_width;
+    tmp_a = ui_metrics.bevel_width * -2;
     tmp_d = get_height();
-    tmp_d = tmp_d + frame_border_width * -2 - 0x24 + frame_bevel_width;
-    gfx_tile_fill((iptr)this,frame_border_tile,tmp_b,tmp_d,tmp_c + tmp_a,loaded + 0x24,tmp_b,tmp_d);
-    SetRect(&dst_rect,frame_border_width - frame_bevel_width,frame_caption_height - frame_bevel_width,
-            frame_bevel_width * 2 + (frame_border_width - frame_bevel_width) + 0x5a,
-            frame_bevel_width * 2 + (frame_caption_height - frame_bevel_width) + 0x6e);
+    tmp_d = tmp_d + ui_metrics.border_width * -2 - 0x24 + ui_metrics.bevel_width;
+    gfx_tile_fill((iptr)this,ui_metrics.border_tile,tmp_b,tmp_d,tmp_c + tmp_a,loaded + 0x24,tmp_b,tmp_d);
+    SetRect(&dst_rect,ui_metrics.border_width - ui_metrics.bevel_width,ui_metrics.caption_height - ui_metrics.bevel_width,
+            ui_metrics.bevel_width * 2 + (ui_metrics.border_width - ui_metrics.bevel_width) + 0x5a,
+            ui_metrics.bevel_width * 2 + (ui_metrics.caption_height - ui_metrics.bevel_width) + 0x6e);
     SetRect(&src_rect,1,1,0x5b,0x6f);
     for (i = 0; i < 3; i++) {
       for (col = 0; col < 7; col++) {
-        for (b = 0; b < frame_bevel_width; b++) {
-          gfx_draw_bevel_rect((iptr)this,&dst_rect,frame_shadow_color,frame_highlight_color);
+        for (b = 0; b < ui_metrics.bevel_width; b++) {
+          gfx_draw_bevel_rect((iptr)this,&dst_rect,ui_metrics.shadow_color,ui_metrics.highlight_color);
           InflateRect(&dst_rect,-1,-1);
         }
         surface.DibSurface::blit(this,&src_rect,&dst_rect);
         OffsetRect(&src_rect,0x5b,0);
-        InflateRect(&dst_rect,frame_bevel_width,frame_bevel_width);
-        OffsetRect(&dst_rect,frame_border_width + 0x5a,0);
+        InflateRect(&dst_rect,ui_metrics.bevel_width,ui_metrics.bevel_width);
+        OffsetRect(&dst_rect,ui_metrics.border_width + 0x5a,0);
       }
       OffsetRect(&src_rect,-0x27d,0x6f);
-      OffsetRect(&dst_rect,(frame_border_width + 0x5a) * -7,frame_border_width + 0x6e);
+      OffsetRect(&dst_rect,(ui_metrics.border_width + 0x5a) * -7,ui_metrics.border_width + 0x6e);
     }
     lprcSrc = (RECT *)get_rect();
     CopyRect(&dst_rect,lprcSrc);
-    for (b = 0; b < frame_bevel_width; b++) {
-      gfx_draw_bevel_rect((iptr)this,&dst_rect,frame_highlight_color,frame_shadow_color);
+    for (b = 0; b < ui_metrics.bevel_width; b++) {
+      gfx_draw_bevel_rect((iptr)this,&dst_rect,ui_metrics.highlight_color,ui_metrics.shadow_color);
       InflateRect(&dst_rect,-1,-1);
     }
-    SetRect(&dst_rect,frame_border_width - frame_bevel_width,frame_caption_height - frame_bevel_width,
-            frame_bevel_width * 2 + (frame_border_width - frame_bevel_width) + 0x5a,
-            frame_bevel_width * 2 + (frame_caption_height - frame_bevel_width) + 0x6e);
-    for (b = 0; b < frame_bevel_width; b++) {
+    SetRect(&dst_rect,ui_metrics.border_width - ui_metrics.bevel_width,ui_metrics.caption_height - ui_metrics.bevel_width,
+            ui_metrics.bevel_width * 2 + (ui_metrics.border_width - ui_metrics.bevel_width) + 0x5a,
+            ui_metrics.bevel_width * 2 + (ui_metrics.caption_height - ui_metrics.bevel_width) + 0x6e);
+    for (b = 0; b < ui_metrics.bevel_width; b++) {
       gfx_draw_bevel_rect((iptr)this,&dst_rect,0x5e,0x5e);
       InflateRect(&dst_rect,-1,-1);
     }
     tmp_a = get_width();
     tmp_b = ((GameFont *)((i8 *)&caption_font_block.caption_font))->text_width((const char *)title);
-    loaded = frame_bevel_width;
+    loaded = ui_metrics.bevel_width;
     tmp_b = (tmp_a >> 1) - (tmp_b + 4 >> 1);
-    tmp_a = frame_bevel_width + 1;
+    tmp_a = ui_metrics.bevel_width + 1;
     gfx_set_text_color_index(0x12);
     draw_text((iptr)&caption_font_block.caption_font,(const char *)title,tmp_b + 3,loaded + 2,5);
     gfx_set_text_color_index(0x29);
@@ -2247,24 +2247,24 @@ void __cdecl portrait_dlg_on_click(int x,int y)
   }
   old_sel = dlg[6].bounds_bottom;
   tmp = dlg->get_height();
-  if (y <= tmp - 0x24 + frame_border_width * -2) {
-    tmp = (y - frame_caption_height) / (frame_border_width + 0x6e);
+  if (y <= tmp - 0x24 + ui_metrics.border_width * -2) {
+    tmp = (y - ui_metrics.caption_height) / (ui_metrics.border_width + 0x6e);
     dlg[6].bounds_bottom =
-         ((x - (frame_border_width >> 1)) / (frame_border_width + 0x5a) - tmp) + tmp * 8;
-    new_x = (((int)dlg[6].bounds_bottom % 7) * (frame_border_width + 0x5a) + frame_border_width) -
-               frame_bevel_width;
-    new_y = (((int)dlg[6].bounds_bottom / 7) * (frame_border_width + 0x6e) + frame_caption_height) -
-               frame_bevel_width;
-    old_x = ((frame_border_width + 0x5a) * ((int)old_sel % 7) + frame_border_width) - frame_bevel_width;
-    old_y = ((frame_border_width + 0x6e) * ((int)old_sel / 7) + frame_caption_height) - frame_bevel_width;
-    SetRect(&new_rect,new_x,new_y,frame_bevel_width * 2 + new_x + 0x5a,
-            frame_bevel_width * 2 + new_y + 0x6e);
-    SetRect(&old_rect,old_x,old_y,frame_bevel_width * 2 + old_x + 0x5a,
-            frame_bevel_width * 2 + old_y + 0x6e);
-    for (b = 0; b < frame_bevel_width; b++) {
+         ((x - (ui_metrics.border_width >> 1)) / (ui_metrics.border_width + 0x5a) - tmp) + tmp * 8;
+    new_x = (((int)dlg[6].bounds_bottom % 7) * (ui_metrics.border_width + 0x5a) + ui_metrics.border_width) -
+               ui_metrics.bevel_width;
+    new_y = (((int)dlg[6].bounds_bottom / 7) * (ui_metrics.border_width + 0x6e) + ui_metrics.caption_height) -
+               ui_metrics.bevel_width;
+    old_x = ((ui_metrics.border_width + 0x5a) * ((int)old_sel % 7) + ui_metrics.border_width) - ui_metrics.bevel_width;
+    old_y = ((ui_metrics.border_width + 0x6e) * ((int)old_sel / 7) + ui_metrics.caption_height) - ui_metrics.bevel_width;
+    SetRect(&new_rect,new_x,new_y,ui_metrics.bevel_width * 2 + new_x + 0x5a,
+            ui_metrics.bevel_width * 2 + new_y + 0x6e);
+    SetRect(&old_rect,old_x,old_y,ui_metrics.bevel_width * 2 + old_x + 0x5a,
+            ui_metrics.bevel_width * 2 + old_y + 0x6e);
+    for (b = 0; b < ui_metrics.bevel_width; b++) {
       gfx_draw_bevel_rect((iptr)dlg,&new_rect,0x5e,0x5e);
       InflateRect(&new_rect,-1,-1);
-      gfx_draw_bevel_rect((iptr)dlg,&old_rect,frame_shadow_color,frame_highlight_color);
+      gfx_draw_bevel_rect((iptr)dlg,&old_rect,ui_metrics.shadow_color,ui_metrics.highlight_color);
       InflateRect(&old_rect,-1,-1);
     }
     dlg->wnd_blit_surface();
@@ -2288,7 +2288,7 @@ void __cdecl portrait_dlg_on_dblclick(i32 x,int y)
   }
   portrait_dlg_on_click(x,y);
   tmp = ((DibSurface *)dlg)->get_height();
-  if (y < tmp - 0x24 + frame_border_width * -2) {
+  if (y < tmp - 0x24 + ui_metrics.border_width * -2) {
     portrait_dlg_on_button(100);
   }
   return;
@@ -3188,7 +3188,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   if ((((unit_types[units[unit2].type].domain == DOMAIN_AIR) &&
        (tmp = map_in_bounds((int)units[unit2].x,(int)units[unit2].y), tmp != 0)) &&
       (tmp = tile_airbase_owner((int)units[unit2].x,(int)units[unit2].y), -1 < tmp)) &&
-     (((game.active_unit != unit2 || (moving_units_mode != 1)) || (unit_blink_active == '\0')))) {
+     (((game.active_unit != unit2 || (moving_units_mode != 1)) || (blink.unit_active == '\0')))) {
     silhouette = 1;
   }
   if (silhouette == 0) {
@@ -3312,7 +3312,7 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
     style2 = 5;
   }
   if ((((human_civ[0] == civ) || (game.reveal_map != '\0')) ||
-      (((game.game_flags & GAME_SCENARIO) != 0 && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)))) || ((draw_flags & 0x1000) != 0))
+      (((game.game_flags & GAME_SCENARIO) != 0 && ((scenario.flags[0] & 8) != 0)))) || ((draw_flags & 0x1000) != 0))
   {
     shown_size = cities[city].size;
   }
@@ -3452,7 +3452,7 @@ void __cdecl sprite_sheet_surface_global_init(void)
 void __cdecl sprite_sheet_surface_static_init(void)
 
 {
-  surface_ctor((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
+  surface_ctor((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface));
   return;
 }
 
@@ -3468,7 +3468,7 @@ void __cdecl sprite_sheet_surface_reg_atexit(void)
 void __cdecl sprite_sheet_surface_static_dtor(void)
 
 {
-  surface_dtor((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
+  surface_dtor((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface));
   return;
 }
 
@@ -3493,7 +3493,7 @@ void __cdecl sprite_editor_orig_sprite_global_init(void)
 void __cdecl sprite_editor_orig_sprite_static_init(void)
 
 {
-  sprite_init((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
+  sprite_init((Sprite *)((i8 *)&sprite_editor.orig_sprite));
   return;
 }
 
@@ -3509,7 +3509,7 @@ void __cdecl sprite_editor_orig_sprite_reg_atexit(void)
 void __cdecl sprite_editor_orig_sprite_static_dtor(void)
 
 {
-  sprite_destroy((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
+  sprite_destroy((Sprite *)((i8 *)&sprite_editor.orig_sprite));
   return;
 }
 
@@ -3534,7 +3534,7 @@ void __cdecl sprite_editor_result_global_init(void)
 void __cdecl sprite_editor_result_static_init(void)
 
 {
-  sprite_init((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite));
+  sprite_init((Sprite *)((i8 *)&sprite_editor.result_sprite));
   return;
 }
 
@@ -3550,7 +3550,7 @@ void __cdecl sprite_editor_result_reg_atexit(void)
 void __cdecl sprite_editor_result_static_dtor(void)
 
 {
-  sprite_destroy((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite));
+  sprite_destroy((Sprite *)((i8 *)&sprite_editor.result_sprite));
   return;
 }
 
@@ -3616,7 +3616,7 @@ void __cdecl sprite_editor_surface_global_init(void)
 void __cdecl sprite_editor_surface_static_init(void)
 
 {
-  surface_ctor((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface));
+  surface_ctor((DibSurface *)((i8 *)&sprite_editor.surface));
   return;
 }
 
@@ -3632,7 +3632,7 @@ void __cdecl sprite_editor_surface_reg_atexit(void)
 void __cdecl sprite_editor_surface_static_dtor(void)
 
 {
-  surface_dtor((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface));
+  surface_dtor((DibSurface *)((i8 *)&sprite_editor.surface));
   return;
 }
 
@@ -3657,7 +3657,7 @@ void __cdecl sprite_editor_window_global_init(void)
 void __cdecl sprite_editor_window_static_init(void)
 
 {
-  ((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window))->FrameWindow::construct();
+  ((FrameWindow *)((i8 *)&sprite_editor.window))->FrameWindow::construct();
   return;
 }
 
@@ -3673,7 +3673,7 @@ void __cdecl sprite_editor_window_reg_atexit(void)
 void __cdecl sprite_editor_window_static_dtor(void)
 
 {
-  ((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window))->FrameWindow::destruct();
+  ((FrameWindow *)((i8 *)&sprite_editor.window))->FrameWindow::destruct();
   return;
 }
 
@@ -3698,7 +3698,7 @@ void __cdecl sprite_picker_window_global_init(void)
 void __cdecl sprite_picker_window_static_init(void)
 
 {
-  ((SpritePicker *)((i8 *)&status_window_block.sprite_picker_window))->construct();
+  ((SpritePicker *)((i8 *)&sprite_editor.sprite_picker_window))->construct();
   return;
 }
 
@@ -3714,7 +3714,7 @@ void __cdecl sprite_picker_window_reg_atexit(void)
 void __cdecl sprite_picker_window_static_dtor(void)
 
 {
-  sprite_picker_dtor((SpritePicker *)((i8 *)&status_window_block.sprite_picker_window));
+  sprite_picker_dtor((SpritePicker *)((i8 *)&sprite_editor.sprite_picker_window));
   return;
 }
 
@@ -3730,14 +3730,14 @@ void __cdecl sprite_sheet_draw_shield_marks(int unit_type,int x,int y)
   left = x - 1;
   top = y - 1;
   for (dx = 0; dx < 0x40; dx++) {
-    ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->set_pixel(left + dx + 1,top,8);
+    ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->set_pixel(left + dx + 1,top,8);
   }
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->set_pixel(left + road_sprites_block.unit_shield_x_offsets[unit_type] + 1,top,
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->set_pixel(left + road_sprites_block.unit_shield_x_offsets[unit_type] + 1,top,
              4);
   for (dy = 0; dy < 0x30; dy++) {
-    ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->set_pixel(left,dy + top + 1,8);
+    ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->set_pixel(left,dy + top + 1,8);
   }
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->set_pixel(left,road_sprites_block.unit_shield_y_offsets[unit_type] + top + 1,
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->set_pixel(left,road_sprites_block.unit_shield_y_offsets[unit_type] + top + 1,
              4);
   return;
 }
@@ -3770,19 +3770,19 @@ void __cdecl sprite_sheet_save_units(void)
   eh_state = 0;
   __getcwd(saved_dir,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_units_bmp_2,10,0xc0,(iptr)&palette);
+  result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_units_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
-    result = ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_units_gif_3,10,0xc0,(iptr)&palette);
+    result = ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_units_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_units_gif_4,10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&game_dirs.home));
+      ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_units_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   start_x2 = 1;
   row = 0;
@@ -3794,9 +3794,9 @@ void __cdecl sprite_sheet_save_units(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_backdrop,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
-    ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c))->draw((iptr)clip_unit,(iptr)&status_window_block.sprite_sheet_surface,x2
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_backdrop,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
+    ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c))->draw((iptr)clip_unit,(iptr)&sprite_editor.sprite_sheet_surface,x2
                ,y2);
     sprite_sheet_draw_shield_marks(unit_type,x2,y2);
     col++;
@@ -3811,10 +3811,10 @@ void __cdecl sprite_sheet_save_units(void)
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_units_bmp_3);
   if ((result == 0) || (result = crt_remove(str_units_bmp_4), result == 0)) {
-    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_units_bmp_5,10,0xc0,(iptr)&palette);
+    gfx_save_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_units_bmp_5,10,0xc0,(iptr)&palette);
   }
   __chdir(saved_dir);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0056ffb6 */ { palette_destroy(&palette); }
   return;
@@ -3863,19 +3863,19 @@ void __cdecl sprite_sheet_save_cities(void)
   eh_state = 0;
   __getcwd(saved_dir,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_cities_bmp_2,10,0xc0,(iptr)&palette);
+  result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_cities_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
-    result = ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_cities_gif_3,10,0xc0,(iptr)&palette);
+    result = ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_cities_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_cities_gif_4,10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&game_dirs.home));
+      ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_cities_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   x2 = 1;
   y2 = 0x27;
@@ -3887,20 +3887,20 @@ void __cdecl sprite_sheet_save_cities(void)
       fill_color = (uint)key_color;
       height = ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + style2 * 0x1e0))->height();
       width = ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + style2 * 0x1e0))->width();
-      gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,cell_x + x2,y2,width,height,fill_color);
-      ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_city_bg,(iptr)&status_window_block.sprite_sheet_surface,cell_x + x2,
+      gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,cell_x + x2,y2,width,height,fill_color);
+      ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_city_bg,(iptr)&sprite_editor.sprite_sheet_surface,cell_x + x2,
                  y2);
       ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + style2 * 0x1e0))->draw(
-                 (iptr)clip_city,(iptr)&status_window_block.sprite_sheet_surface,cell_x + x2,y2);
+                 (iptr)clip_city,(iptr)&sprite_editor.sprite_sheet_surface,cell_x + x2,y2);
       key_color = ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0))->get_key_color();
       fill_color = (uint)key_color;
       height = ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0))->height();
       width = ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0))->width();
-      gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,cell_x + walled_x,y2,width,height,fill_color);
-      ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_walled_bg,(iptr)&status_window_block.sprite_sheet_surface,cell_x + walled_x,
+      gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,cell_x + walled_x,y2,width,height,fill_color);
+      ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_walled_bg,(iptr)&sprite_editor.sprite_sheet_surface,cell_x + walled_x,
                  y2);
       ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0))->draw(
-                 (iptr)clip_walled,(iptr)&status_window_block.sprite_sheet_surface,cell_x + walled_x,y2);
+                 (iptr)clip_walled,(iptr)&sprite_editor.sprite_sheet_surface,cell_x + walled_x,y2);
     }
     y2 += 0x31;
   }
@@ -3912,15 +3912,15 @@ void __cdecl sprite_sheet_save_cities(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78))->height();
     width = ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,flag_y,width,height,fill_color);
-    ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78))->draw((iptr)clip_flag,(iptr)&status_window_block.sprite_sheet_surface,
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,flag_y,width,height,fill_color);
+    ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78))->draw((iptr)clip_flag,(iptr)&sprite_editor.sprite_sheet_surface,
                x2,flag_y);
     key_color = ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78))->height();
     width = ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,flag_dark_y,width,height,fill_color);
-    ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78))->draw((iptr)clip_flag_dark,(iptr)&status_window_block.sprite_sheet_surface,
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,flag_dark_y,width,height,fill_color);
+    ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78))->draw((iptr)clip_flag_dark,(iptr)&sprite_editor.sprite_sheet_surface,
                x2,flag_dark_y);
     x2 += 0xf;
   }
@@ -3928,37 +3928,37 @@ void __cdecl sprite_sheet_save_cities(void)
   fill_color = (uint)key_color;
   height = ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites))->height();
   width = ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites))->width();
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,0x8f,0x1a7,width,height,fill_color);
-  ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_fortify_bg,(iptr)&status_window_block.sprite_sheet_surface,0x8f,0x1a7);
-  ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites))->draw((iptr)clip_fortify,(iptr)&status_window_block.sprite_sheet_surface,0x8f,0x1a7);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,0x8f,0x1a7,width,height,fill_color);
+  ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_fortify_bg,(iptr)&sprite_editor.sprite_sheet_surface,0x8f,0x1a7);
+  ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites))->draw((iptr)clip_fortify,(iptr)&sprite_editor.sprite_sheet_surface,0x8f,0x1a7);
   key_color = ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite))->get_key_color();
   fill_color = (uint)key_color;
   height = ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite))->height();
   width = ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite))->width();
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,0xd0,0x1a7,width,height,fill_color);
-  ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_fortress_bg,(iptr)&status_window_block.sprite_sheet_surface,0xd0,0x1a7);
-  ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite))->draw((iptr)clip_fortress,(iptr)&status_window_block.sprite_sheet_surface,0xd0,0x1a7);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,0xd0,0x1a7,width,height,fill_color);
+  ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_fortress_bg,(iptr)&sprite_editor.sprite_sheet_surface,0xd0,0x1a7);
+  ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite))->draw((iptr)clip_fortress,(iptr)&sprite_editor.sprite_sheet_surface,0xd0,0x1a7);
   key_color = ((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites))->get_key_color();
   fill_color = (uint)key_color;
   height = ((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites))->height();
   width = ((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites))->width();
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,0x111,0x1a7,width,height,fill_color);
-  ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_airbase_bg,(iptr)&status_window_block.sprite_sheet_surface,0x111,0x1a7);
-  ((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites))->draw((iptr)clip_airbase,(iptr)&status_window_block.sprite_sheet_surface,0x111,0x1a7);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,0x111,0x1a7,width,height,fill_color);
+  ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_airbase_bg,(iptr)&sprite_editor.sprite_sheet_surface,0x111,0x1a7);
+  ((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites))->draw((iptr)clip_airbase,(iptr)&sprite_editor.sprite_sheet_surface,0x111,0x1a7);
   key_color = ((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite))->get_key_color();
   fill_color = (uint)key_color;
   height = ((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite))->height();
   width = ((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite))->width();
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,0x152,0x1a7,width,height,fill_color);
-  ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_airbase_occ_bg,(iptr)&status_window_block.sprite_sheet_surface,0x152,0x1a7);
-  ((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite))->draw((iptr)clip_airbase_occ,(iptr)&status_window_block.sprite_sheet_surface,0x152,0x1a7);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,0x152,0x1a7,width,height,fill_color);
+  ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)clip_airbase_occ_bg,(iptr)&sprite_editor.sprite_sheet_surface,0x152,0x1a7);
+  ((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite))->draw((iptr)clip_airbase_occ,(iptr)&sprite_editor.sprite_sheet_surface,0x152,0x1a7);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_cities_bmp_3);
   if ((result == 0) || (result = crt_remove(str_cities_bmp_4), result == 0)) {
-    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_cities_bmp_5,10,0xc0,(iptr)&palette);
+    gfx_save_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_cities_bmp_5,10,0xc0,(iptr)&palette);
   }
   __chdir(saved_dir);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0057075c */ { palette_destroy(&palette); }
   return;
@@ -4008,19 +4008,19 @@ void __cdecl sprite_sheet_save_terrain1(void)
   seh_state = 0;
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_terrain1_bmp_2,10,0xc0,(iptr)&palette);
+  result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_terrain1_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
-    result = ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_terrain1_gif_3,10,0xc0,(iptr)&palette);
+    result = ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_terrain1_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_terrain1_gif_4,10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&game_dirs.home));
+      ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_terrain1_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   x2 = 1;
   res_x = 0x83;
@@ -4031,25 +4031,25 @@ void __cdecl sprite_sheet_save_terrain1(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)base_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
-    ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c))->draw((iptr)base_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)base_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
+    ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c))->draw((iptr)base_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2
                ,y2);
     key_color = ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78))->height();
     width = ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,res_x,y2,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)res_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,res_x,y2);
-    ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78))->draw((iptr)res_rect,(iptr)&status_window_block.sprite_sheet_surface,res_x
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,res_x,y2,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)res_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,res_x,y2);
+    ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78))->draw((iptr)res_rect,(iptr)&sprite_editor.sprite_sheet_surface,res_x
                ,y2);
     key_color = ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78))->height();
     width = ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,res2_x,y2,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)res2_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,res2_x,y2);
-    ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78))->draw((iptr)res2_rect,(iptr)&status_window_block.sprite_sheet_surface,res2_x
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,res2_x,y2,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)res2_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,res2_x,y2);
+    ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78))->draw((iptr)res2_rect,(iptr)&sprite_editor.sprite_sheet_surface,res2_x
                ,y2);
     y2 += 0x21;
   }
@@ -4060,9 +4060,9 @@ void __cdecl sprite_sheet_save_terrain1(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + terrain2 * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)impr_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
-    ((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + i * 0x3c))->draw((iptr)impr_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)impr_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
+    ((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + i * 0x3c))->draw((iptr)impr_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2
                ,y2);
     y2 += 0x21;
   }
@@ -4070,25 +4070,25 @@ void __cdecl sprite_sheet_save_terrain1(void)
   fill_color = (uint)key_color;
   height = ((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite))->height();
   width = ((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite))->width();
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-  ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)pollution_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
-  ((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite))->draw((iptr)pollution_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+  ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)pollution_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
+  ((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite))->draw((iptr)pollution_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
   y2 += 0x21;
   key_color = ((Sprite *)((i8 *)&grassland_shield_sprite))->get_key_color();
   fill_color = (uint)key_color;
   height = ((Sprite *)((i8 *)&grassland_shield_sprite))->height();
   width = ((Sprite *)((i8 *)&grassland_shield_sprite))->width();
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-  ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)shield_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
-  ((Sprite *)((i8 *)&grassland_shield_sprite))->draw((iptr)shield_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+  ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)shield_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
+  ((Sprite *)((i8 *)&grassland_shield_sprite))->draw((iptr)shield_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
   y2 += 0x21;
   key_color = ((Sprite *)((i8 *)&hut_sprite))->get_key_color();
   fill_color = (uint)key_color;
   height = ((Sprite *)((i8 *)&hut_sprite))->height();
   width = ((Sprite *)((i8 *)&hut_sprite))->width();
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-  ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)hut_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
-  ((Sprite *)((i8 *)&hut_sprite))->draw((iptr)hut_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+  ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)hut_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
+  ((Sprite *)((i8 *)&hut_sprite))->draw((iptr)hut_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
   y2 = 0x16c;
   x2 = 1;
   for (i = 0; i < 9; i++) {
@@ -4096,27 +4096,27 @@ void __cdecl sprite_sheet_save_terrain1(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)road_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
-    ((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c))->draw((iptr)road_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)road_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
+    ((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c))->draw((iptr)road_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2
                ,y2);
     key_color = ((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2 + 0x21,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)rail_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2 + 0x21);
-    ((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c))->draw((iptr)rail_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2 + 0x21,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)rail_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2 + 0x21);
+    ((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c))->draw((iptr)rail_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2
                ,y2 + 0x21);
     x2 += 0x41;
   }
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_terrain1_bmp_3);
   if ((result == 0) || (result = crt_remove(str_terrain1_bmp_4), result == 0)) {
-    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_terrain1_bmp_5,10,0xc0,(iptr)&palette);
+    gfx_save_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_terrain1_bmp_5,10,0xc0,(iptr)&palette);
   }
   __chdir(saved_cwd);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00570fa2 */ { palette_destroy(&palette); }
   return;
@@ -4162,19 +4162,19 @@ void __cdecl sprite_sheet_save_terrain2(void)
   seh_state = 0;
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_terrain2_bmp_2,10,0xc0,(iptr)&palette);
+  result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_terrain2_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
-    result = ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_terrain2_gif_3,10,0xc0,(iptr)&palette);
+    result = ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_terrain2_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_terrain2_gif_4,10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&game_dirs.home));
+      ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_terrain2_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   base_x = 1;
   base_y = 0x43;
@@ -4185,40 +4185,40 @@ void __cdecl sprite_sheet_save_terrain2(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,base_y + cell_y,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)river_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x + cell_x,base_y + cell_y,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)river_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,base_x + cell_x,
                base_y + cell_y);
-    ((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c))->draw((iptr)river_rect,(iptr)&status_window_block.sprite_sheet_surface,
+    ((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c))->draw((iptr)river_rect,(iptr)&sprite_editor.sprite_sheet_surface,
                base_x + cell_x,base_y + cell_y);
     key_color = ((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0x42,width,height,fill_color
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0x42,width,height,fill_color
                       );
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)forest_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)forest_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,base_x + cell_x,
                base_y + cell_y + 0x42);
-    ((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c))->draw((iptr)forest_rect,(iptr)&status_window_block.sprite_sheet_surface,
+    ((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c))->draw((iptr)forest_rect,(iptr)&sprite_editor.sprite_sheet_surface,
                base_x + cell_x,base_y + cell_y + 0x42);
     key_color = ((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0x84,width,height,fill_color
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0x84,width,height,fill_color
                       );
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)mountain_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)mountain_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,base_x + cell_x,
                base_y + cell_y + 0x84);
-    ((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c))->draw((iptr)mountain_rect,(iptr)&status_window_block.sprite_sheet_surface,
+    ((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c))->draw((iptr)mountain_rect,(iptr)&sprite_editor.sprite_sheet_surface,
                base_x + cell_x,base_y + cell_y + 0x84);
     key_color = ((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0xc6,width,height,fill_color
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0xc6,width,height,fill_color
                       );
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)hill_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)hill_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,base_x + cell_x,
                base_y + cell_y + 0xc6);
-    ((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c))->draw((iptr)hill_rect,(iptr)&status_window_block.sprite_sheet_surface,
+    ((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c))->draw((iptr)hill_rect,(iptr)&sprite_editor.sprite_sheet_surface,
                base_x + cell_x,base_y + cell_y + 0xc6);
   }
   base_x = 1;
@@ -4228,9 +4228,9 @@ void __cdecl sprite_sheet_save_terrain2(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x,base_y,width,height,fill_color);
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)mouth_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x,base_y);
-    ((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c))->draw((iptr)mouth_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x,base_y,width,height,fill_color);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)mouth_bg_rect,(iptr)&sprite_editor.sprite_sheet_surface,base_x,base_y);
+    ((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c))->draw((iptr)mouth_rect,(iptr)&sprite_editor.sprite_sheet_surface,base_x
                ,base_y);
     base_x += 0x41;
   }
@@ -4241,39 +4241,39 @@ void __cdecl sprite_sheet_save_terrain2(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0))->height();
     width = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x,base_y,width,height,fill_color);
-    ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0))->draw((iptr)coast_n_rect,(iptr)&status_window_block.sprite_sheet_surface,
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x,base_y,width,height,fill_color);
+    ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0))->draw((iptr)coast_n_rect,(iptr)&sprite_editor.sprite_sheet_surface,
                base_x,base_y);
     key_color = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0))->height();
     width = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + 0x21,base_y + 0x22,width,height,fill_color);
-    ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0))->draw((iptr)coast_e_rect,(iptr)&status_window_block.sprite_sheet_surface,
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x + 0x21,base_y + 0x22,width,height,fill_color);
+    ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0))->draw((iptr)coast_e_rect,(iptr)&sprite_editor.sprite_sheet_surface,
                base_x + 0x21,base_y + 0x22);
     key_color = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0))->height();
     width = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x,base_y + 0x11,width,height,fill_color);
-    ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0))->draw((iptr)coast_s_rect,(iptr)&status_window_block.sprite_sheet_surface,
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x,base_y + 0x11,width,height,fill_color);
+    ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0))->draw((iptr)coast_s_rect,(iptr)&sprite_editor.sprite_sheet_surface,
                base_x,base_y + 0x11);
     key_color = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0))->get_key_color();
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0))->height();
     width = ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x,base_y + 0x22,width,height,fill_color);
-    ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0))->draw((iptr)coast_w_rect,(iptr)&status_window_block.sprite_sheet_surface,
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,base_x,base_y + 0x22,width,height,fill_color);
+    ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0))->draw((iptr)coast_w_rect,(iptr)&sprite_editor.sprite_sheet_surface,
                base_x,base_y + 0x22);
     base_x += 0x42;
   }
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_terrain2_bmp_3);
   if ((result == 0) || (result = crt_remove(str_terrain2_bmp_4), result == 0)) {
-    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_terrain2_bmp_5,10,0xc0,(iptr)&palette);
+    gfx_save_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_terrain2_bmp_5,10,0xc0,(iptr)&palette);
   }
   __chdir(saved_cwd);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
   seh_state = 0xffffffff;
   /* inlined unwind funclet 005718ec */ { palette_destroy(&palette); }
   return;
@@ -4304,19 +4304,19 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   seh_state = 0;
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_icons_bmp_2,10,0xc0,(iptr)&palette);
+  result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_icons_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
-    result = ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_icons_gif_3,10,0xc0,(iptr)&palette);
+    result = ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_icons_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_icons_gif_4,10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&game_dirs.home));
+      ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_icons_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   y2 = 0xd3;
   for (row = 0; row < 4; row++) {
@@ -4326,9 +4326,9 @@ void __cdecl sprite_sheet_save_tech_icons(void)
       fill_color = (uint)key_color;
       height = ((Sprite *)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + category2 * 0xf0 + row * 0x3c))->height();
       width = ((Sprite *)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + category2 * 0xf0 + row * 0x3c))->width();
-      gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
+      gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
       ((Sprite *)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + category2 * 0xf0 + row * 0x3c))->draw(
-                 (iptr)icon_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
+                 (iptr)icon_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2,y2);
       x2 += 0x25;
     }
     y2 += 0x15;
@@ -4336,10 +4336,10 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_icons_bmp_3);
   if ((result == 0) || (result = crt_remove(str_icons_bmp_4), result == 0)) {
-    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_icons_bmp_5,10,0xc0,(iptr)&palette);
+    gfx_save_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_icons_bmp_5,10,0xc0,(iptr)&palette);
   }
   __chdir(saved_cwd);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00571baa */ { palette_destroy(&palette); }
   return;
@@ -4373,19 +4373,19 @@ void __cdecl sprite_sheet_save_building_icons(void)
   seh_state = 0;
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_icons_bmp_6,10,0xc0,(iptr)&palette);
+  result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_icons_bmp_6,10,0xc0,(iptr)&palette);
   if (result == 0) {
-    result = ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_icons_gif_5,10,0xc0,(iptr)&palette);
+    result = ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_icons_gif_5,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)&str_icons_gif_6,10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&game_dirs.home));
+      ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)&str_icons_gif_6,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      __chdir(((i8 *)&game_dirs.home));
     }
   }
   else {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    __chdir(((i8 *)&game_dirs.home));
   }
   x2 = 0x157;
   y2 = 1;
@@ -4395,8 +4395,8 @@ void __cdecl sprite_sheet_save_building_icons(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-    ((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c))->draw((iptr)improvement_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+    ((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c))->draw((iptr)improvement_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2
                ,y2);
     x2 += 0x25;
     column++;
@@ -4414,8 +4414,8 @@ void __cdecl sprite_sheet_save_building_icons(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-    ((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c))->draw((iptr)wonder_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+    ((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c))->draw((iptr)wonder_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2
                ,y2);
     x2 += 0x25;
     column++;
@@ -4429,8 +4429,8 @@ void __cdecl sprite_sheet_save_building_icons(void)
   fill_color = (uint)key_color;
   height = ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite))->height();
   width = ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite))->width();
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,199,0x100,width,height,fill_color);
-  ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite))->draw((iptr)cursor_rect,(iptr)&status_window_block.sprite_sheet_surface,199,0x100);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,199,0x100,width,height,fill_color);
+  ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite))->draw((iptr)cursor_rect,(iptr)&sprite_editor.sprite_sheet_surface,199,0x100);
   x2 = 1;
   y2 = 0x164;
   for (i = 0; i < 8; i++) {
@@ -4438,18 +4438,18 @@ void __cdecl sprite_sheet_save_building_icons(void)
     fill_color = (uint)key_color;
     height = ((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c))->height();
     width = ((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c))->width();
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
-    ((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c))->draw((iptr)explosion_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
+    gfx_fill_rect_xywh((iptr)&sprite_editor.sprite_sheet_surface,x2,y2,width,height,fill_color);
+    ((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c))->draw((iptr)explosion_rect,(iptr)&sprite_editor.sprite_sheet_surface,x2
                ,y2);
     x2 += 0x21;
   }
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_icons_bmp_7);
   if ((result == 0) || (result = crt_remove(str_icons_bmp_8), result == 0)) {
-    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_icons_bmp_9,10,0xc0,(iptr)&palette);
+    gfx_save_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_icons_bmp_9,10,0xc0,(iptr)&palette);
   }
   __chdir(saved_cwd);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00572065 */ { palette_destroy(&palette); }
   return;
@@ -4468,23 +4468,23 @@ sprite_editor_create_window(const char *title,uint style_flags,int x,int y,int w
   uint wnd_style;
   
   if (title == 0) {
-    crt_strcpy(((i8 *)&status_window_block.sprite_editor_title),((i8 *)&sprite_editor_default_title));
+    crt_strcpy(((i8 *)&sprite_editor.title),((i8 *)&sprite_editor_default_title));
   }
   else {
-    crt_strcpy(((i8 *)&status_window_block.sprite_editor_title),title);
+    crt_strcpy(((i8 *)&sprite_editor.title),title);
   }
-  status_window_block.sprite_editor_text_font_i32 = (iptr)&ui_text_font;
-  status_window_block.sprite_editor_title_font_i32 = (iptr)&caption_font_block.caption_font;
-  status_window_block.sprite_editor_title_small_font_i32 = (iptr)&caption_small_font_block.caption_small_font;
-  status_window_block.sprite_editor_style_flags_i32 = style_flags;
-  status_window_block.sprite_editor_caption_height = caption_height;
-  status_window_block.sprite_editor_border_width = border_width;
-  status_window_block.sprite_editor_resize_border = resize_border;
-  status_window_block.sprite_editor_caption_button_count_i32 = 0;
-  status_window_block.sprite_editor_caption_button_cb_i32 = 0;
+  sprite_editor.text_font = (iptr)&ui_text_font;
+  sprite_editor.title_font = (iptr)&caption_font_block.caption_font;
+  sprite_editor.title_small_font = (iptr)&caption_small_font_block.caption_small_font;
+  sprite_editor.style_flags = style_flags;
+  sprite_editor.caption_height = caption_height;
+  sprite_editor.border_width = border_width;
+  sprite_editor.resize_border = resize_border;
+  sprite_editor.caption_button_count = 0;
+  sprite_editor.caption_button_cb = 0;
   if ((style_flags & 4) != 0) {
-    status_window_block.sprite_editor_caption_height = frame_caption_height;
-    status_window_block.sprite_editor_border_width = frame_border_width;
+    sprite_editor.caption_height = ui_metrics.caption_height;
+    sprite_editor.border_width = ui_metrics.border_width;
   }
   if ((style_flags & 8) == 0) {
     wnd_style = 0x202;
@@ -4492,36 +4492,36 @@ sprite_editor_create_window(const char *title,uint style_flags,int x,int y,int w
   else {
     wnd_style = 0x802;
   }
-  if (status_window_block.sprite_editor_caption_height != 0) {
+  if (sprite_editor.caption_height != 0) {
     wnd_style = wnd_style | 0x400;
   }
   if (resize_border != 0) {
     wnd_style = wnd_style | 0x1000;
   }
   if ((style_flags & 2) == 0) {
-    width += status_window_block.sprite_editor_border_width * 2;
-    height = height + status_window_block.sprite_editor_caption_height + status_window_block.sprite_editor_border_width;
+    width += sprite_editor.border_width * 2;
+    height = height + sprite_editor.caption_height + sprite_editor.border_width;
   }
   if ((style_flags & 1) != 0) {
     x = (caption_font_block.screen_width >> 1) - (width >> 1);
     y = (caption_font_block.screen_height >> 1) - (height >> 1);
   }
-  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+  if (editor_active.wnd == 0) {
     parent_hwnd = 0;
   }
   else {
-    parent_hwnd = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
+    parent_hwnd = (iptr)&editor_active.wnd->window;
   }
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_create_with_surface(0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
+  ((DibSurface *)((i8 *)&sprite_editor.window))->wnd_create_with_surface(0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
              parent_hwnd);
-  if (status_window_block.sprite_editor_caption_height != 0) {
-    ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_caption_height(status_window_block.sprite_editor_caption_height);
+  if (sprite_editor.caption_height != 0) {
+    ((WndBase *)((i8 *)&sprite_editor.wnd))->set_caption_height(sprite_editor.caption_height);
   }
-  if (status_window_block.sprite_editor_resize_border != 0) {
-    ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_resize_border(status_window_block.sprite_editor_resize_border);
+  if (sprite_editor.resize_border != 0) {
+    ((WndBase *)((i8 *)&sprite_editor.wnd))->set_resize_border(sprite_editor.resize_border);
   }
-  ((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window))->layout();
-  dlg_set_parent_window((iptr)&status_window_block.sprite_editor_wnd);
+  ((FrameWindow *)((i8 *)&sprite_editor.window))->layout();
+  dlg_set_parent_window((iptr)&sprite_editor.wnd);
   return;
 }
 
@@ -4531,16 +4531,16 @@ void __cdecl sprite_editor_ok_clicked(void)
 {
   i8 rect[16];
   
-  rect_set_xywh((iptr)rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->replace_color_clip(0x109,0x107);
-  status_window_block.sprite_editor_target_sprite->grab_surface_rect((iptr)&status_window_block.sprite_editor_surface,(iptr)rect);
-  road_sprites_block.unit_shield_x_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item] = status_window_block.sprite_editor_flag_x;
-  road_sprites_block.unit_shield_y_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item] = status_window_block.sprite_editor_flag_y;
-  if (status_window_block.sprite_editor_ok_callback != 0) {
-    status_window_block.sprite_editor_ok_callback();
+  rect_set_xywh((iptr)rect,0,0,sprite_editor.width,sprite_editor.height);
+  ((DibSurface *)((i8 *)&sprite_editor.surface))->replace_color_clip(0x109,0x107);
+  sprite_editor.target_sprite->grab_surface_rect((iptr)&sprite_editor.surface,(iptr)rect);
+  road_sprites_block.unit_shield_x_offsets[editor_active.wnd->item] = sprite_editor.flag_x;
+  road_sprites_block.unit_shield_y_offsets[editor_active.wnd->item] = sprite_editor.flag_y;
+  if (sprite_editor.ok_callback != 0) {
+    sprite_editor.ok_callback();
   }
-  status_window_block.sprite_editor_running = 0;
-  ((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd))->end_modal_loop();
+  sprite_editor.running = 0;
+  ((ModalMenuWindow *)((i8 *)&sprite_editor.wnd))->end_modal_loop();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   return;
 }
@@ -4549,8 +4549,8 @@ void __cdecl sprite_editor_ok_clicked(void)
 void __cdecl sprite_editor_cancel_clicked(void)
 
 {
-  status_window_block.sprite_editor_running = 0;
-  ((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd))->end_modal_loop();
+  sprite_editor.running = 0;
+  ((ModalMenuWindow *)((i8 *)&sprite_editor.wnd))->end_modal_loop();
   return;
 }
 
@@ -4560,11 +4560,11 @@ void __cdecl sprite_editor_rebuild_sprite(void)
 {
   i8 rect[16];
   
-  ((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite))->free();
-  rect_set_xywh((iptr)rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
-  ((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite))->grab_rect((iptr)&status_window_block.sprite_editor_surface,0xfe,(iptr)rect);
-  status_window_block.sprite_editor_undo_flag_x = status_window_block.sprite_editor_flag_x;
-  status_window_block.sprite_editor_undo_flag_y = status_window_block.sprite_editor_flag_y;
+  ((Sprite *)((i8 *)&sprite_editor.result_sprite))->free();
+  rect_set_xywh((iptr)rect,0,0,sprite_editor.width,sprite_editor.height);
+  ((Sprite *)((i8 *)&sprite_editor.result_sprite))->grab_rect((iptr)&sprite_editor.surface,0xfe,(iptr)rect);
+  sprite_editor.undo_flag_x = sprite_editor.flag_x;
+  sprite_editor.undo_flag_y = sprite_editor.flag_y;
   return;
 }
 
@@ -4578,42 +4578,42 @@ void __cdecl sprite_editor_draw_swatches(void)
   int right_color;
   i8 rect[16];
   
-  if (sprite_editor_right_color == 0) {
-    right_color = (*(int *)&status_window_block.sprite_editor_key_color);
+  if (sprite_editor_colors.right == 0) {
+    right_color = (*(int *)&sprite_editor.key_color);
   }
   else {
-    right_color = sprite_editor_right_color;
+    right_color = sprite_editor_colors.right;
   }
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x142,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,right_color);
-  gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x142,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,10);
-  if (sprite_editor_left_color == 0) {
-    left_color = (*(int *)&status_window_block.sprite_editor_key_color);
-  }
-  else {
-    left_color = sprite_editor_left_color;
-  }
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x14a,status_window_block.sprite_editor_origin_y + 0xb4,0x10,0x10,left_color);
-  gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x14a,status_window_block.sprite_editor_origin_y + 0xb4,0x10,0x10,10);
-  if (sprite_editor_prev_left_color == 0) {
-    prev_left_color = (*(int *)&status_window_block.sprite_editor_key_color);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.window,sprite_editor.origin_x + 0x142,sprite_editor.origin_y + 0xac,0x20,0x20,right_color);
+  gfx_draw_frame_rect((iptr)&sprite_editor.window,sprite_editor.origin_x + 0x142,sprite_editor.origin_y + 0xac,0x20,0x20,10);
+  if (sprite_editor_colors.left == 0) {
+    left_color = (*(int *)&sprite_editor.key_color);
   }
   else {
-    prev_left_color = sprite_editor_prev_left_color;
+    left_color = sprite_editor_colors.left;
   }
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x11e,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,prev_left_color);
-  gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x11e,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,10);
+  gfx_fill_rect_xywh((iptr)&sprite_editor.window,sprite_editor.origin_x + 0x14a,sprite_editor.origin_y + 0xb4,0x10,0x10,left_color);
+  gfx_draw_frame_rect((iptr)&sprite_editor.window,sprite_editor.origin_x + 0x14a,sprite_editor.origin_y + 0xb4,0x10,0x10,10);
+  if (sprite_editor_colors.prev_left == 0) {
+    prev_left_color = (*(int *)&sprite_editor.key_color);
+  }
+  else {
+    prev_left_color = sprite_editor_colors.prev_left;
+  }
+  gfx_fill_rect_xywh((iptr)&sprite_editor.window,sprite_editor.origin_x + 0x11e,sprite_editor.origin_y + 0xac,0x20,0x20,prev_left_color);
+  gfx_draw_frame_rect((iptr)&sprite_editor.window,sprite_editor.origin_x + 0x11e,sprite_editor.origin_y + 0xac,0x20,0x20,10);
   if (sprite_picker_sprite_block.sprite_sheet_mode != 0xb) {
-    if (sprite_editor_prev_right_color == 0) {
-      prev_right_color = (*(int *)&status_window_block.sprite_editor_key_color);
+    if (sprite_editor_colors.prev_right == 0) {
+      prev_right_color = (*(int *)&sprite_editor.key_color);
     }
     else {
-      prev_right_color = sprite_editor_prev_right_color;
+      prev_right_color = sprite_editor_colors.prev_right;
     }
-    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x166,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,prev_right_color);
-    gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x166,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,10);
+    gfx_fill_rect_xywh((iptr)&sprite_editor.window,sprite_editor.origin_x + 0x166,sprite_editor.origin_y + 0xac,0x20,0x20,prev_right_color);
+    gfx_draw_frame_rect((iptr)&sprite_editor.window,sprite_editor.origin_x + 0x166,sprite_editor.origin_y + 0xac,0x20,0x20,10);
   }
-  rect_set_xywh((iptr)rect,status_window_block.sprite_editor_origin_x + 0x11e,status_window_block.sprite_editor_origin_y + 0xac,0x68,0x20);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_blit_surface_rect((iptr)rect);
+  rect_set_xywh((iptr)rect,sprite_editor.origin_x + 0x11e,sprite_editor.origin_y + 0xac,0x68,0x20);
+  ((DibSurface *)((i8 *)&sprite_editor.window))->wnd_blit_surface_rect((iptr)rect);
   return;
 }
 
@@ -4631,11 +4631,11 @@ void __cdecl sprite_editor_draw_palette_cell(iptr surface,int origin_x,int origi
     col = ((color - 10U ^ sign) - sign & 0x1f ^ sign) - sign;
     row = (int)(color - 10 + (color - 10 >> 0x1f & 0x1fU)) >> 5;
     rect_set_xywh((iptr)rect,col * 0xc + origin_x,row * 0xc + origin_y,10,10);
-    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)rect,color);
-    gfx_draw_bevel_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)rect,10,10);
+    gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)rect,color);
+    gfx_draw_bevel_rect((iptr)&sprite_editor.window,(RECT *)rect,10,10);
     rect_set_xywh((iptr)rect,col * 0xc + origin_x - 1,row * 0xc + origin_y - 1,0xc,0xc)
     ;
-    if ((color == sprite_editor_right_color) || (color == sprite_editor_left_color)) {
+    if ((color == sprite_editor_colors.right) || (color == sprite_editor_colors.left)) {
       gfx_draw_bevel_rect(surface,(RECT *)rect,0x29,0x29);
     }
     else {
@@ -4672,18 +4672,18 @@ void __cdecl sprite_editor_draw_backdrop(void)
   i8 tile_rect[16];
   i8 unit_rect[16];
   
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->fill((*(i32 *)&status_window_block.sprite_editor_key_color));
+  ((DibSurface *)((i8 *)&sprite_editor.surface))->fill((*(i32 *)&sprite_editor.key_color));
   switch(sprite_picker_sprite_block.sprite_sheet_mode) {
   case 1:
   case 2:
   case 0xb:
-    ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)unit_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
+    ((Sprite *)((i8 *)&editor_unit_backdrop_sprite))->draw((iptr)unit_rect,(iptr)&sprite_editor.surface,0,0);
     break;
   case 5:
   case 7:
   case 8:
   case 10:
-    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)tile_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
+    ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->draw((iptr)tile_rect,(iptr)&sprite_editor.surface,0,0);
   case 3:
   case 4:
   case 6:
@@ -4708,111 +4708,111 @@ i8 * __cdecl sprite_editor_plot_pixel(int px,int py)
   int pixel_color;
   i8 saved_clip[16];
   
-  if (status_window_block.sprite_editor_brush_size == 0) {
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      pixel_color = (*(int *)&status_window_block.sprite_editor_key_color);
+  if (sprite_editor.brush_size == 0) {
+    if (sprite_editor.paint_color == 0) {
+      pixel_color = (*(int *)&sprite_editor.key_color);
     }
     else {
-      pixel_color = status_window_block.sprite_editor_paint_color;
+      pixel_color = sprite_editor.paint_color;
     }
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->set_pixel(px,py,pixel_color);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0x10,status_window_block.sprite_editor_origin_y + py * 4 + 0x10,
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->set_pixel(px,py,pixel_color);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px * 4 + sprite_editor.origin_x + 0x10,sprite_editor.origin_y + py * 4 + 0x10,
                        4,4);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      screen_color = (*(int *)&status_window_block.sprite_editor_key_color);
+    if (sprite_editor.paint_color == 0) {
+      screen_color = (*(int *)&sprite_editor.key_color);
     }
     else {
-      screen_color = status_window_block.sprite_editor_paint_color;
+      screen_color = sprite_editor.paint_color;
     }
-    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_plot_rect,screen_color);
+    gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.plot_rect,screen_color);
   }
-  else if (status_window_block.sprite_editor_brush_size == 1) {
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->get_clip((RECT *)saved_clip);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,status_window_block.sprite_editor_origin_x + 0x10,status_window_block.sprite_editor_origin_y + 0x10,status_window_block.sprite_editor_width << 2,
-                       status_window_block.sprite_editor_height << 2);
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->set_clip((RECT *)&status_window_block.sprite_editor_plot_rect);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px - 1,py,3,1);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      color1 = (*(int *)&status_window_block.sprite_editor_key_color);
+  else if (sprite_editor.brush_size == 1) {
+    ((DibSurface *)((i8 *)&sprite_editor.window))->get_clip((RECT *)saved_clip);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,sprite_editor.origin_x + 0x10,sprite_editor.origin_y + 0x10,sprite_editor.width << 2,
+                       sprite_editor.height << 2);
+    ((DibSurface *)((i8 *)&sprite_editor.window))->set_clip((RECT *)&sprite_editor.plot_rect);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px - 1,py,3,1);
+    if (sprite_editor.paint_color == 0) {
+      color1 = (*(int *)&sprite_editor.key_color);
     }
     else {
-      color1 = status_window_block.sprite_editor_paint_color;
+      color1 = sprite_editor.paint_color;
     }
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->fill_rect((iptr)&status_window_block.sprite_editor_plot_rect,color1);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0xc,status_window_block.sprite_editor_origin_y + py * 4 + 0x10,
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->fill_rect((iptr)&sprite_editor.plot_rect,color1);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px * 4 + sprite_editor.origin_x + 0xc,sprite_editor.origin_y + py * 4 + 0x10,
                        0xc,4);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      color2 = (*(int *)&status_window_block.sprite_editor_key_color);
+    if (sprite_editor.paint_color == 0) {
+      color2 = (*(int *)&sprite_editor.key_color);
     }
     else {
-      color2 = status_window_block.sprite_editor_paint_color;
+      color2 = sprite_editor.paint_color;
     }
-    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_plot_rect,color2);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px,py - 1,1,3);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      color3 = (*(int *)&status_window_block.sprite_editor_key_color);
+    gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.plot_rect,color2);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px,py - 1,1,3);
+    if (sprite_editor.paint_color == 0) {
+      color3 = (*(int *)&sprite_editor.key_color);
     }
     else {
-      color3 = status_window_block.sprite_editor_paint_color;
+      color3 = sprite_editor.paint_color;
     }
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->fill_rect((iptr)&status_window_block.sprite_editor_plot_rect,color3);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0x10,py * 4 + status_window_block.sprite_editor_origin_y + 0xc,4
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->fill_rect((iptr)&sprite_editor.plot_rect,color3);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px * 4 + sprite_editor.origin_x + 0x10,py * 4 + sprite_editor.origin_y + 0xc,4
                        ,0xc);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      color4 = (*(int *)&status_window_block.sprite_editor_key_color);
+    if (sprite_editor.paint_color == 0) {
+      color4 = (*(int *)&sprite_editor.key_color);
     }
     else {
-      color4 = status_window_block.sprite_editor_paint_color;
+      color4 = sprite_editor.paint_color;
     }
-    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_plot_rect,color4);
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->set_clip((RECT *)saved_clip);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0xc,py * 4 + status_window_block.sprite_editor_origin_y + 0xc,
+    gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.plot_rect,color4);
+    ((DibSurface *)((i8 *)&sprite_editor.window))->set_clip((RECT *)saved_clip);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px * 4 + sprite_editor.origin_x + 0xc,py * 4 + sprite_editor.origin_y + 0xc,
                        0xc,0xc);
   }
-  else if (status_window_block.sprite_editor_brush_size == 2) {
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->get_clip((RECT *)saved_clip);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,status_window_block.sprite_editor_origin_x + 0x10,status_window_block.sprite_editor_origin_y + 0x10,status_window_block.sprite_editor_width << 2,
-                       status_window_block.sprite_editor_height << 2);
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->set_clip((RECT *)&status_window_block.sprite_editor_plot_rect);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px - 1,py,4,2);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      color5 = (*(int *)&status_window_block.sprite_editor_key_color);
+  else if (sprite_editor.brush_size == 2) {
+    ((DibSurface *)((i8 *)&sprite_editor.window))->get_clip((RECT *)saved_clip);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,sprite_editor.origin_x + 0x10,sprite_editor.origin_y + 0x10,sprite_editor.width << 2,
+                       sprite_editor.height << 2);
+    ((DibSurface *)((i8 *)&sprite_editor.window))->set_clip((RECT *)&sprite_editor.plot_rect);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px - 1,py,4,2);
+    if (sprite_editor.paint_color == 0) {
+      color5 = (*(int *)&sprite_editor.key_color);
     }
     else {
-      color5 = status_window_block.sprite_editor_paint_color;
+      color5 = sprite_editor.paint_color;
     }
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->fill_rect((iptr)&status_window_block.sprite_editor_plot_rect,color5);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0xc,status_window_block.sprite_editor_origin_y + py * 4 + 0x10,
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->fill_rect((iptr)&sprite_editor.plot_rect,color5);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px * 4 + sprite_editor.origin_x + 0xc,sprite_editor.origin_y + py * 4 + 0x10,
                        0x10,8);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      color6 = (*(int *)&status_window_block.sprite_editor_key_color);
+    if (sprite_editor.paint_color == 0) {
+      color6 = (*(int *)&sprite_editor.key_color);
     }
     else {
-      color6 = status_window_block.sprite_editor_paint_color;
+      color6 = sprite_editor.paint_color;
     }
-    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_plot_rect,color6);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px,py - 1,2,4);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      color7 = (*(int *)&status_window_block.sprite_editor_key_color);
+    gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.plot_rect,color6);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px,py - 1,2,4);
+    if (sprite_editor.paint_color == 0) {
+      color7 = (*(int *)&sprite_editor.key_color);
     }
     else {
-      color7 = status_window_block.sprite_editor_paint_color;
+      color7 = sprite_editor.paint_color;
     }
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->fill_rect((iptr)&status_window_block.sprite_editor_plot_rect,color7);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0x10,py * 4 + status_window_block.sprite_editor_origin_y + 0xc,8
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->fill_rect((iptr)&sprite_editor.plot_rect,color7);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px * 4 + sprite_editor.origin_x + 0x10,py * 4 + sprite_editor.origin_y + 0xc,8
                        ,0x10);
-    if (status_window_block.sprite_editor_paint_color == 0) {
-      color8 = (*(int *)&status_window_block.sprite_editor_key_color);
+    if (sprite_editor.paint_color == 0) {
+      color8 = (*(int *)&sprite_editor.key_color);
     }
     else {
-      color8 = status_window_block.sprite_editor_paint_color;
+      color8 = sprite_editor.paint_color;
     }
-    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_plot_rect,color8);
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->set_clip((RECT *)saved_clip);
-    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0xc,py * 4 + status_window_block.sprite_editor_origin_y + 0xc,
+    gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.plot_rect,color8);
+    ((DibSurface *)((i8 *)&sprite_editor.window))->set_clip((RECT *)saved_clip);
+    rect_set_xywh((iptr)&sprite_editor.plot_rect,px * 4 + sprite_editor.origin_x + 0xc,py * 4 + sprite_editor.origin_y + 0xc,
                        0x10,0x10);
   }
-  return &status_window_block.sprite_editor_plot_rect;
+  return &sprite_editor.plot_rect;
 }
 
 /* 00572da0 auto */
@@ -4823,33 +4823,33 @@ void __cdecl sprite_editor_draw_flag_marker(void)
   i8 saved_clip[16];
   int flag_x;
   
-  ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
-  flag_y = status_window_block.sprite_editor_flag_y;
-  flag_x = status_window_block.sprite_editor_flag_x;
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->get_clip((RECT *)saved_clip);
-  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,status_window_block.sprite_editor_origin_x + 0x10,status_window_block.sprite_editor_origin_y + 0x10,status_window_block.sprite_editor_width << 2,
-                     status_window_block.sprite_editor_height << 2);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->set_clip((RECT *)&status_window_block.sprite_editor_marker_rect);
-  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,status_window_block.sprite_editor_origin_x + 0x20,status_window_block.sprite_editor_origin_y + 0x10,4,0x3c);
-  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_marker_rect,0x6a);
-  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,status_window_block.sprite_editor_origin_x + 0x20,status_window_block.sprite_editor_origin_y + 0x4c,0xb4,4);
-  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_marker_rect,0x6a);
-  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,status_window_block.sprite_editor_origin_x + 0xd0,status_window_block.sprite_editor_origin_y + 0x10,4,0x3c);
-  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_marker_rect,0x6a);
-  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,flag_x * 4 + status_window_block.sprite_editor_origin_x + 8,status_window_block.sprite_editor_origin_y + flag_y * 4 + 0x10,0x14,4)
+  ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
+  flag_y = sprite_editor.flag_y;
+  flag_x = sprite_editor.flag_x;
+  ((DibSurface *)((i8 *)&sprite_editor.window))->get_clip((RECT *)saved_clip);
+  rect_set_xywh((iptr)&sprite_editor.marker_rect,sprite_editor.origin_x + 0x10,sprite_editor.origin_y + 0x10,sprite_editor.width << 2,
+                     sprite_editor.height << 2);
+  ((DibSurface *)((i8 *)&sprite_editor.window))->set_clip((RECT *)&sprite_editor.marker_rect);
+  rect_set_xywh((iptr)&sprite_editor.marker_rect,sprite_editor.origin_x + 0x20,sprite_editor.origin_y + 0x10,4,0x3c);
+  gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.marker_rect,0x6a);
+  rect_set_xywh((iptr)&sprite_editor.marker_rect,sprite_editor.origin_x + 0x20,sprite_editor.origin_y + 0x4c,0xb4,4);
+  gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.marker_rect,0x6a);
+  rect_set_xywh((iptr)&sprite_editor.marker_rect,sprite_editor.origin_x + 0xd0,sprite_editor.origin_y + 0x10,4,0x3c);
+  gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.marker_rect,0x6a);
+  rect_set_xywh((iptr)&sprite_editor.marker_rect,flag_x * 4 + sprite_editor.origin_x + 8,sprite_editor.origin_y + flag_y * 4 + 0x10,0x14,4)
   ;
-  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_marker_rect,10);
-  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,flag_x * 4 + status_window_block.sprite_editor_origin_x + 0x10,flag_y * 4 + status_window_block.sprite_editor_origin_y + 8,4,0x14)
+  gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.marker_rect,10);
+  rect_set_xywh((iptr)&sprite_editor.marker_rect,flag_x * 4 + sprite_editor.origin_x + 0x10,flag_y * 4 + sprite_editor.origin_y + 8,4,0x14)
   ;
-  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_marker_rect,10);
-  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,flag_x * 4 + status_window_block.sprite_editor_origin_x + 9,status_window_block.sprite_editor_origin_y + flag_y * 4 + 0x11,0x12,2)
+  gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.marker_rect,10);
+  rect_set_xywh((iptr)&sprite_editor.marker_rect,flag_x * 4 + sprite_editor.origin_x + 9,sprite_editor.origin_y + flag_y * 4 + 0x11,0x12,2)
   ;
-  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_marker_rect,0x29);
-  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,flag_x * 4 + status_window_block.sprite_editor_origin_x + 0x11,flag_y * 4 + status_window_block.sprite_editor_origin_y + 9,2,0x12)
+  gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.marker_rect,0x29);
+  rect_set_xywh((iptr)&sprite_editor.marker_rect,flag_x * 4 + sprite_editor.origin_x + 0x11,flag_y * 4 + sprite_editor.origin_y + 9,2,0x12)
   ;
-  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_marker_rect,0x29);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->set_clip((RECT *)saved_clip);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_blit_surface();
+  gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.marker_rect,0x29);
+  ((DibSurface *)((i8 *)&sprite_editor.window))->set_clip((RECT *)saved_clip);
+  ((DibSurface *)((i8 *)&sprite_editor.window))->wnd_blit_surface();
   return;
 }
 
@@ -4870,191 +4870,191 @@ static void sprite_editor_tool_click(i32 tool_index,iptr old_flag_x,iptr old_fla
 
   switch(tool_index) {
   case 0:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    sprite_editor.tool = sprite_editor.paint_tool;
     button_state = GetKeyState(1);
     if (((int)button_state & 0x8000U) != 0) {
-      sprite_editor_prev_left_color = sprite_editor_left_color;
-      old_color = sprite_editor_left_color;
-      sprite_editor_left_color = 0;
+      sprite_editor_colors.prev_left = sprite_editor_colors.left;
+      old_color = sprite_editor_colors.left;
+      sprite_editor_colors.left = 0;
     }
     button_state = GetKeyState(2);
     if (((int)button_state & 0x8000U) != 0) {
-      sprite_editor_prev_right_color = sprite_editor_right_color;
-      old_color = sprite_editor_right_color;
-      sprite_editor_right_color = 0;
+      sprite_editor_colors.prev_right = sprite_editor_colors.right;
+      old_color = sprite_editor_colors.right;
+      sprite_editor_colors.right = 0;
     }
     sprite_editor_draw_swatches();
-    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 10,status_window_block.sprite_editor_origin_y + 0xe0,old_color);
+    sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,sprite_editor.origin_x + 10,sprite_editor.origin_y + 0xe0,old_color);
     y = 0;
     x = 0;
     break;
   case 1:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = 1;
-    status_window_block.sprite_editor_paint_tool = 1;
+    sprite_editor.tool = 1;
+    sprite_editor.paint_tool = 1;
     break;
   case 2:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = 2;
-    status_window_block.sprite_editor_paint_tool = 2;
+    sprite_editor.tool = 2;
+    sprite_editor.paint_tool = 2;
     break;
   case 3:
-    saved_flag_x = status_window_block.sprite_editor_flag_x;
-    saved_flag_y = status_window_block.sprite_editor_flag_y;
-    status_window_block.sprite_editor_flag_x = status_window_block.sprite_editor_undo_flag_x;
-    status_window_block.sprite_editor_flag_y = status_window_block.sprite_editor_undo_flag_y;
-    status_window_block.sprite_editor_undo_flag_x = old_flag_x;
-    status_window_block.sprite_editor_undo_flag_y = old_flag_y;
+    saved_flag_x = sprite_editor.flag_x;
+    saved_flag_y = sprite_editor.flag_y;
+    sprite_editor.flag_x = sprite_editor.undo_flag_x;
+    sprite_editor.flag_y = sprite_editor.undo_flag_y;
+    sprite_editor.undo_flag_x = old_flag_x;
+    sprite_editor.undo_flag_y = old_flag_y;
     temp_sprite.free();
-    rect_set_xywh((iptr)grab_rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
-    temp_sprite.grab_rect((iptr)&status_window_block.sprite_editor_surface,0xfe,(iptr)grab_rect);
-    ((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite))->draw_keyed((iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0xfe,0,0);
-    ((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite))->free();
-    temp_sprite.merge_onto((iptr)&status_window_block.sprite_editor_result_sprite);
+    rect_set_xywh((iptr)grab_rect,0,0,sprite_editor.width,sprite_editor.height);
+    temp_sprite.grab_rect((iptr)&sprite_editor.surface,0xfe,(iptr)grab_rect);
+    ((Sprite *)((i8 *)&sprite_editor.result_sprite))->draw_keyed((iptr)draw_rect,(iptr)&sprite_editor.surface,0xfe,0,0);
+    ((Sprite *)((i8 *)&sprite_editor.result_sprite))->free();
+    temp_sprite.merge_onto((iptr)&sprite_editor.result_sprite);
     sprite_editor_redraw();
-    if (status_window_block.sprite_editor_tool == 3) {
+    if (sprite_editor.tool == 3) {
       sprite_editor_draw_flag_marker();
     }
     break;
   case 4:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = 0;
+    sprite_editor.tool = 0;
     break;
   case 5:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    sprite_editor.tool = sprite_editor.paint_tool;
     sprite_editor_rebuild_sprite();
     sprite_editor_draw_backdrop();
     sprite_editor_redraw();
     break;
   case 6:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    sprite_editor.tool = sprite_editor.paint_tool;
     sprite_editor_rebuild_sprite();
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->replace_color_clip(sprite_editor_right_color,sprite_editor_left_color);
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->replace_color_clip(sprite_editor_colors.right,sprite_editor_colors.left);
     sprite_editor_redraw();
     break;
   case 7:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    sprite_editor.tool = sprite_editor.paint_tool;
     sprite_editor_rebuild_sprite();
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->replace_color_clip(sprite_editor_left_color,1);
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->replace_color_clip(sprite_editor_right_color,sprite_editor_left_color);
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->replace_color_clip(1,sprite_editor_right_color);
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->replace_color_clip(sprite_editor_colors.left,1);
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->replace_color_clip(sprite_editor_colors.right,sprite_editor_colors.left);
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->replace_color_clip(1,sprite_editor_colors.right);
     sprite_editor_redraw();
     break;
   case 8:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    sprite_editor.tool = sprite_editor.paint_tool;
     sprite_editor_import_sheet();
     break;
   case 9:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
-    status_window_block.sprite_editor_brush_size = 0;
+    sprite_editor.tool = sprite_editor.paint_tool;
+    sprite_editor.brush_size = 0;
     break;
   case 10:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
-    status_window_block.sprite_editor_brush_size = 1;
+    sprite_editor.tool = sprite_editor.paint_tool;
+    sprite_editor.brush_size = 1;
     break;
   case 0xb:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
-    status_window_block.sprite_editor_brush_size = 2;
+    sprite_editor.tool = sprite_editor.paint_tool;
+    sprite_editor.brush_size = 2;
     break;
   case 0xc:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    sprite_editor.tool = sprite_editor.paint_tool;
     button_state = GetKeyState(1);
-    temp_x = sprite_editor_left_color;
+    temp_x = sprite_editor_colors.left;
     if (((int)button_state & 0x8000U) != 0) {
-      old_color = sprite_editor_left_color;
-      sprite_editor_left_color = sprite_editor_prev_left_color;
-      new_color = sprite_editor_prev_left_color;
-      sprite_editor_prev_left_color = temp_x;
+      old_color = sprite_editor_colors.left;
+      sprite_editor_colors.left = sprite_editor_colors.prev_left;
+      new_color = sprite_editor_colors.prev_left;
+      sprite_editor_colors.prev_left = temp_x;
     }
     button_state = GetKeyState(2);
-    temp_x = sprite_editor_right_color;
+    temp_x = sprite_editor_colors.right;
     if (((int)button_state & 0x8000U) != 0) {
-      old_color = sprite_editor_right_color;
-      sprite_editor_right_color = sprite_editor_prev_left_color;
-      new_color = sprite_editor_prev_left_color;
-      sprite_editor_prev_right_color = temp_x;
+      old_color = sprite_editor_colors.right;
+      sprite_editor_colors.right = sprite_editor_colors.prev_left;
+      new_color = sprite_editor_colors.prev_left;
+      sprite_editor_colors.prev_right = temp_x;
     }
     sprite_editor_draw_swatches();
-    temp_x = status_window_block.sprite_editor_origin_x + 10;
-    temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
-    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
-    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
+    temp_x = sprite_editor.origin_x + 10;
+    temp_y = sprite_editor.origin_y + 0xe0;
+    sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,temp_x,temp_y,old_color);
+    sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,temp_x,temp_y,new_color);
     y = 0;
     x = 0;
     break;
   case 0xd:
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    sprite_editor.tool = sprite_editor.paint_tool;
     break;
   case 0xe:
     if (sprite_picker_sprite_block.sprite_sheet_mode == 0xb) {
       sprite_editor_rebuild_sprite();
-      status_window_block.sprite_editor_tool = 3;
-      status_window_block.sprite_editor_flag_x = int_clamp(status_window_block.sprite_editor_flag_x,5,0x2f);
-      status_window_block.sprite_editor_flag_y = int_clamp(status_window_block.sprite_editor_flag_y,0,0xe);
+      sprite_editor.tool = 3;
+      sprite_editor.flag_x = int_clamp(sprite_editor.flag_x,5,0x2f);
+      sprite_editor.flag_y = int_clamp(sprite_editor.flag_y,0,0xe);
       sprite_editor_draw_flag_marker();
     }
     else {
-      if (status_window_block.sprite_editor_tool == 3) {
-        ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+      if (sprite_editor.tool == 3) {
+        ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
       }
-      status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+      sprite_editor.tool = sprite_editor.paint_tool;
       button_state = GetKeyState(1);
-      temp_x = sprite_editor_left_color;
+      temp_x = sprite_editor_colors.left;
       if (((int)button_state & 0x8000U) != 0) {
-        old_color = sprite_editor_left_color;
-        sprite_editor_left_color = sprite_editor_prev_right_color;
-        new_color = sprite_editor_prev_right_color;
-        sprite_editor_prev_left_color = temp_x;
+        old_color = sprite_editor_colors.left;
+        sprite_editor_colors.left = sprite_editor_colors.prev_right;
+        new_color = sprite_editor_colors.prev_right;
+        sprite_editor_colors.prev_left = temp_x;
       }
       button_state = GetKeyState(2);
-      temp_x = sprite_editor_right_color;
+      temp_x = sprite_editor_colors.right;
       if (((int)button_state & 0x8000U) != 0) {
-        old_color = sprite_editor_right_color;
-        sprite_editor_right_color = sprite_editor_prev_right_color;
-        new_color = sprite_editor_prev_right_color;
-        sprite_editor_prev_right_color = temp_x;
+        old_color = sprite_editor_colors.right;
+        sprite_editor_colors.right = sprite_editor_colors.prev_right;
+        new_color = sprite_editor_colors.prev_right;
+        sprite_editor_colors.prev_right = temp_x;
       }
       sprite_editor_draw_swatches();
-      temp_x = status_window_block.sprite_editor_origin_x + 10;
-      temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
-      sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
-      sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
+      temp_x = sprite_editor.origin_x + 10;
+      temp_y = sprite_editor.origin_y + 0xe0;
+      sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,temp_x,temp_y,old_color);
+      sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,temp_x,temp_y,new_color);
       y = 0;
       x = 0;
     }
@@ -5071,63 +5071,63 @@ static void sprite_editor_canvas_click(int x,int y,int &old_color,int &new_color
   int temp_y;
   iptr dirty_rect;
 
-  switch(status_window_block.sprite_editor_tool) {
+  switch(sprite_editor.tool) {
   case 0:
-    new_color = ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->get_pixel(x - 0x10 >> 2,
+    new_color = ((DibSurface *)((i8 *)&sprite_editor.surface))->get_pixel(x - 0x10 >> 2,
                           y - 0x10 >> 2);
     button_state = GetKeyState(1);
     if (((int)button_state & 0x8000U) == 0) {
       button_state = GetKeyState(2);
       if (((int)button_state & 0x8000U) != 0) {
-        sprite_editor_prev_right_color = sprite_editor_right_color;
-        old_color = sprite_editor_right_color;
-        sprite_editor_right_color = new_color;
+        sprite_editor_colors.prev_right = sprite_editor_colors.right;
+        old_color = sprite_editor_colors.right;
+        sprite_editor_colors.right = new_color;
       }
     }
     else {
-      sprite_editor_prev_left_color = sprite_editor_left_color;
-      old_color = sprite_editor_left_color;
-      sprite_editor_left_color = new_color;
+      sprite_editor_colors.prev_left = sprite_editor_colors.left;
+      old_color = sprite_editor_colors.left;
+      sprite_editor_colors.left = new_color;
     }
     sprite_editor_draw_swatches();
-    temp_x = status_window_block.sprite_editor_origin_x + 10;
-    temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
-    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
-    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
-    if (status_window_block.sprite_editor_tool == 3) {
-      ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+    temp_x = sprite_editor.origin_x + 10;
+    temp_y = sprite_editor.origin_y + 0xe0;
+    sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,temp_x,temp_y,old_color);
+    sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,temp_x,temp_y,new_color);
+    if (sprite_editor.tool == 3) {
+      ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
     }
-    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
-    status_window_block.sprite_editor_cursor_id = 0x204;
-    ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_cursor(0x204);
+    sprite_editor.tool = sprite_editor.paint_tool;
+    sprite_editor.cursor_id = 0x204;
+    ((WndBase *)((i8 *)&sprite_editor.wnd))->set_cursor(0x204);
     ui_flush_input();
     break;
   case 1:
   case 2:
     sprite_editor_rebuild_sprite();
-    status_window_block.sprite_editor_painting = 1;
+    sprite_editor.painting = 1;
     temp_x = (int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >> 2;
     temp_y = (int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >> 2;
-    status_window_block.sprite_editor_last_px = temp_x;
-    status_window_block.sprite_editor_last_py = temp_y;
+    sprite_editor.last_px = temp_x;
+    sprite_editor.last_py = temp_y;
     button_state = GetKeyState(1);
     if (((int)button_state & 0x8000U) == 0) {
       button_state = GetKeyState(2);
       if (((int)button_state & 0x8000U) != 0) {
-        status_window_block.sprite_editor_paint_color = sprite_editor_right_color;
+        sprite_editor.paint_color = sprite_editor_colors.right;
       }
     }
     else {
-      status_window_block.sprite_editor_paint_color = sprite_editor_left_color;
+      sprite_editor.paint_color = sprite_editor_colors.left;
     }
     dirty_rect = (iptr)sprite_editor_plot_pixel(temp_x,temp_y);
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_blit_surface_rect(dirty_rect);
+    ((DibSurface *)((i8 *)&sprite_editor.window))->wnd_blit_surface_rect(dirty_rect);
     break;
   case 3:
     sprite_editor_rebuild_sprite();
-    status_window_block.sprite_editor_flag_x = int_clamp((int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >>
+    sprite_editor.flag_x = int_clamp((int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >>
                                       2,5,0x2f);
-    status_window_block.sprite_editor_flag_y = int_clamp((int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >>
+    sprite_editor.flag_y = int_clamp((int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >>
                                       2,0,0xe);
     sprite_editor_draw_flag_marker();
   }
@@ -5146,27 +5146,27 @@ static void sprite_editor_palette_click(int x,int y,int &old_color,int &new_colo
   if (((int)button_state & 0x8000U) == 0) {
     button_state = GetKeyState(2);
     if (((int)button_state & 0x8000U) != 0) {
-      sprite_editor_prev_right_color = sprite_editor_right_color;
-      old_color = sprite_editor_right_color;
-      sprite_editor_right_color = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
-      new_color = sprite_editor_right_color;
+      sprite_editor_colors.prev_right = sprite_editor_colors.right;
+      old_color = sprite_editor_colors.right;
+      sprite_editor_colors.right = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
+      new_color = sprite_editor_colors.right;
     }
   }
   else {
-    sprite_editor_prev_left_color = sprite_editor_left_color;
-    old_color = sprite_editor_left_color;
-    sprite_editor_left_color = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
-    new_color = sprite_editor_left_color;
+    sprite_editor_colors.prev_left = sprite_editor_colors.left;
+    old_color = sprite_editor_colors.left;
+    sprite_editor_colors.left = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
+    new_color = sprite_editor_colors.left;
   }
   sprite_editor_draw_swatches();
-  temp_x = status_window_block.sprite_editor_origin_x + 10;
-  temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
-  sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
-  sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
-  if (status_window_block.sprite_editor_tool == 3) {
-    ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+  temp_x = sprite_editor.origin_x + 10;
+  temp_y = sprite_editor.origin_y + 0xe0;
+  sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,temp_x,temp_y,old_color);
+  sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,temp_x,temp_y,new_color);
+  if (sprite_editor.tool == 3) {
+    ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
   }
-  status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+  sprite_editor.tool = sprite_editor.paint_tool;
 }
 
 /* 00572fff auto */
@@ -5187,17 +5187,17 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
   seh_state = 0xffffffff;
   sprite_init(&temp_sprite);
   seh_state = 0;
-  window = ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->get_window();
+  window = ((WndBase *)((i8 *)&sprite_editor.wnd))->get_window();
   SetCapture(window->hwnd);
-  x -= status_window_block.sprite_editor_origin_x;
-  y -= status_window_block.sprite_editor_origin_y;
+  x -= sprite_editor.origin_x;
+  y -= sprite_editor.origin_y;
   tool_index = sprite_editor_tool_hit_test(x,y);
-  old_flag_x = status_window_block.sprite_editor_flag_x;
-  old_flag_y = status_window_block.sprite_editor_flag_y;
+  old_flag_x = sprite_editor.flag_x;
+  old_flag_y = sprite_editor.flag_y;
   sprite_editor_tool_click(tool_index,old_flag_x,old_flag_y,temp_sprite,x,y,old_color,new_color);
   if ((((x < 9) || (0x187 < x)) || (y < 0xdf)) || (0x125 < y)) {
-    if (((0xf < x) && (x < status_window_block.sprite_editor_width * 4 + 0x10)) &&
-       ((0xf < y && (y < status_window_block.sprite_editor_height * 4 + 0x10)))) {
+    if (((0xf < x) && (x < sprite_editor.width * 4 + 0x10)) &&
+       ((0xf < y && (y < sprite_editor.height * 4 + 0x10)))) {
       sprite_editor_canvas_click(x,y,old_color,new_color);
     }
   }
@@ -5213,7 +5213,7 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
 void __cdecl sprite_editor_on_mouse_up(void)
 
 {
-  status_window_block.sprite_editor_painting = 0;
+  sprite_editor.painting = 0;
   ReleaseCapture();
   return;
 }
@@ -5234,50 +5234,50 @@ void __cdecl sprite_editor_on_mouse_move(int x,int y)
   int fixed_x;
   int prev_y;
   
-  x -= status_window_block.sprite_editor_origin_x;
-  y -= status_window_block.sprite_editor_origin_y;
+  x -= sprite_editor.origin_x;
+  y -= sprite_editor.origin_y;
   if ((((x < 9) || (0x187 < x)) || (y < 0xdf)) || (0x125 < y)) {
-    if (((x < 0x10) || (status_window_block.sprite_editor_width * 4 + 0x10 <= x)) ||
-       ((y < 0x10 || (status_window_block.sprite_editor_height * 4 + 0x10 <= y)))) {
-      if (status_window_block.sprite_editor_cursor_id != 0x201) {
-        status_window_block.sprite_editor_cursor_id = 0x201;
-        ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_cursor(0x201);
+    if (((x < 0x10) || (sprite_editor.width * 4 + 0x10 <= x)) ||
+       ((y < 0x10 || (sprite_editor.height * 4 + 0x10 <= y)))) {
+      if (sprite_editor.cursor_id != 0x201) {
+        sprite_editor.cursor_id = 0x201;
+        ((WndBase *)((i8 *)&sprite_editor.wnd))->set_cursor(0x201);
         ui_flush_input();
       }
-      status_window_block.sprite_editor_last_py = -1;
-      status_window_block.sprite_editor_last_px = -1;
-      px = status_window_block.sprite_editor_last_px;
-      py = status_window_block.sprite_editor_last_py;
+      sprite_editor.last_py = -1;
+      sprite_editor.last_px = -1;
+      px = sprite_editor.last_px;
+      py = sprite_editor.last_py;
     }
     else {
-      if (status_window_block.sprite_editor_tool == 0) {
-        if (status_window_block.sprite_editor_cursor_id != 0x205) {
-          status_window_block.sprite_editor_cursor_id = 0x205;
-          ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_cursor(0x205);
+      if (sprite_editor.tool == 0) {
+        if (sprite_editor.cursor_id != 0x205) {
+          sprite_editor.cursor_id = 0x205;
+          ((WndBase *)((i8 *)&sprite_editor.wnd))->set_cursor(0x205);
           ui_flush_input();
         }
       }
-      else if (((0 < status_window_block.sprite_editor_tool) && (status_window_block.sprite_editor_tool < 3)) && (status_window_block.sprite_editor_cursor_id != 0x204)) {
-        status_window_block.sprite_editor_cursor_id = 0x204;
-        ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_cursor(0x204);
+      else if (((0 < sprite_editor.tool) && (sprite_editor.tool < 3)) && (sprite_editor.cursor_id != 0x204)) {
+        sprite_editor.cursor_id = 0x204;
+        ((WndBase *)((i8 *)&sprite_editor.wnd))->set_cursor(0x204);
         ui_flush_input();
       }
-      px = status_window_block.sprite_editor_last_px;
-      py = status_window_block.sprite_editor_last_py;
-      if (status_window_block.sprite_editor_painting != 0) {
+      px = sprite_editor.last_px;
+      py = sprite_editor.last_py;
+      if (sprite_editor.painting != 0) {
         px = (int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >> 2;
         py = (int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >> 2;
-        if (status_window_block.sprite_editor_tool == 1) {
-          if ((status_window_block.sprite_editor_last_px < 0) || (status_window_block.sprite_editor_last_py < 0)) {
-            status_window_block.sprite_editor_last_px = px;
-            status_window_block.sprite_editor_last_py = py;
+        if (sprite_editor.tool == 1) {
+          if ((sprite_editor.last_px < 0) || (sprite_editor.last_py < 0)) {
+            sprite_editor.last_px = px;
+            sprite_editor.last_py = py;
           }
-          dx = px - status_window_block.sprite_editor_last_px;
-          dy = py - status_window_block.sprite_editor_last_py;
+          dx = px - sprite_editor.last_px;
+          dy = py - sprite_editor.last_py;
           prev_y = -1;
           prev_x = -1;
-          fixed_x = status_window_block.sprite_editor_last_px << 8;
-          fixed_y = status_window_block.sprite_editor_last_py << 8;
+          fixed_x = sprite_editor.last_px << 8;
+          fixed_y = sprite_editor.last_py << 8;
           while( true ) {
             cur_x = fixed_x >> 8;
             cur_y = fixed_y >> 8;
@@ -5290,28 +5290,28 @@ void __cdecl sprite_editor_on_mouse_move(int x,int y)
             fixed_x += dx;
             fixed_y += dy;
           }
-          ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_blit_surface();
+          ((DibSurface *)((i8 *)&sprite_editor.window))->wnd_blit_surface();
         }
-        else if (status_window_block.sprite_editor_tool == 2) {
+        else if (sprite_editor.tool == 2) {
           dirty_rect = (iptr)sprite_editor_plot_pixel(px,py);
-          ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_blit_surface_rect(dirty_rect);
+          ((DibSurface *)((i8 *)&sprite_editor.window))->wnd_blit_surface_rect(dirty_rect);
         }
       }
     }
   }
   else {
-    px = status_window_block.sprite_editor_last_px;
-    py = status_window_block.sprite_editor_last_py;
-    if (status_window_block.sprite_editor_cursor_id != 0x205) {
-      status_window_block.sprite_editor_cursor_id = 0x205;
-      ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_cursor(0x205);
+    px = sprite_editor.last_px;
+    py = sprite_editor.last_py;
+    if (sprite_editor.cursor_id != 0x205) {
+      sprite_editor.cursor_id = 0x205;
+      ((WndBase *)((i8 *)&sprite_editor.wnd))->set_cursor(0x205);
       ui_flush_input();
-      px = status_window_block.sprite_editor_last_px;
-      py = status_window_block.sprite_editor_last_py;
+      px = sprite_editor.last_px;
+      py = sprite_editor.last_py;
     }
   }
-  status_window_block.sprite_editor_last_py = py;
-  status_window_block.sprite_editor_last_px = px;
+  sprite_editor.last_py = py;
+  sprite_editor.last_px = px;
   return;
 }
 
@@ -5344,59 +5344,59 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,Spri
   button_ctor(&cancel_button);
   seh_state = (seh_state & 0xffffff00 | (byte)(1));
   sprite_picker_sprite_block.sprite_sheet_mode = sheet_mode;
-  status_window_block.sprite_editor_target_sprite = (Sprite *)sprite;
-  status_window_block.sprite_editor_width = ((Sprite *)sprite)->width();
-  status_window_block.sprite_editor_height = status_window_block.sprite_editor_target_sprite->height();
-  key_color = status_window_block.sprite_editor_target_sprite->get_key_color();
-  status_window_block.sprite_editor_key_color = (uint)key_color;
-  status_window_block.sprite_editor_ok_callback = ok_callback;
-  ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->free();
-  status_window_block.sprite_editor_target_sprite->merge_onto((iptr)&status_window_block.sprite_editor_orig_sprite);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->DibSurface::create(status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
+  sprite_editor.target_sprite = (Sprite *)sprite;
+  sprite_editor.width = ((Sprite *)sprite)->width();
+  sprite_editor.height = sprite_editor.target_sprite->height();
+  key_color = sprite_editor.target_sprite->get_key_color();
+  sprite_editor.key_color = (uint)key_color;
+  sprite_editor.ok_callback = ok_callback;
+  ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->free();
+  sprite_editor.target_sprite->merge_onto((iptr)&sprite_editor.orig_sprite);
+  ((DibSurface *)((i8 *)&sprite_editor.surface))->DibSurface::create(sprite_editor.width,sprite_editor.height);
   sprite_editor_draw_backdrop();
-  ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->draw((iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
-  status_window_block.sprite_editor_undo_flag_x = road_sprites_block.unit_shield_x_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item];
-  status_window_block.sprite_editor_undo_flag_y = road_sprites_block.unit_shield_y_offsets[editor_text_dlg_wnd_block.active_editor_wnd->item];
-  status_window_block.sprite_editor_flag_y = status_window_block.sprite_editor_undo_flag_y;
-  status_window_block.sprite_editor_flag_x = status_window_block.sprite_editor_undo_flag_x;
+  ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->draw((iptr)draw_rect,(iptr)&sprite_editor.surface,0,0);
+  sprite_editor.undo_flag_x = road_sprites_block.unit_shield_x_offsets[editor_active.wnd->item];
+  sprite_editor.undo_flag_y = road_sprites_block.unit_shield_y_offsets[editor_active.wnd->item];
+  sprite_editor.flag_y = sprite_editor.undo_flag_y;
+  sprite_editor.flag_x = sprite_editor.undo_flag_x;
   sprite_editor_rebuild_sprite();
-  status_window_block.sprite_editor_tool = 1;
-  status_window_block.sprite_editor_paint_tool = 1;
-  status_window_block.sprite_editor_brush_size = 0;
-  status_window_block.sprite_editor_cursor_id = 0x201;
-  status_window_block.sprite_editor_running = 1;
-  status_window_block.sprite_editor_painting = 0;
+  sprite_editor.tool = 1;
+  sprite_editor.paint_tool = 1;
+  sprite_editor.brush_size = 0;
+  sprite_editor.cursor_id = 0x201;
+  sprite_editor.running = 1;
+  sprite_editor.painting = 0;
   sprite_editor_create_window(title,0xd,0,0,0x192,0x14e,0,0,0);
-  line_height = ((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)))->line_spacing();
+  line_height = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
   button_height = line_height + 8;
-  button_width2 = (status_window_block.sprite_editor_client_width - 6) / 2;
-  button_y2 = (status_window_block.sprite_editor_origin_y + status_window_block.sprite_editor_client_height_i32) - (line_height + 10);
-  button_x = status_window_block.sprite_editor_origin_x + 2;
+  button_width2 = (sprite_editor.client_width - 6) / 2;
+  button_y2 = (sprite_editor.origin_y + sprite_editor.client_height) - (line_height + 10);
+  button_x = sprite_editor.origin_x + 2;
   rect_set_xywh((iptr)button_rect,button_x,button_y2,button_width2,button_height);
-  label = (iptr)label_string(label_string_ids[0xfe]);
-  ok_button.create((iptr)&status_window_block.sprite_editor_wnd,0x65,(iptr)button_rect,(const char *)label);
+  label = (iptr)label_string(label_table.string_ids[0xfe]);
+  ok_button.create((iptr)&sprite_editor.wnd,0x65,(iptr)button_rect,(const char *)label);
   ok_button.set_callback((CtrlNotifyFn)sprite_editor_ok_clicked);
   button_x = button_x + button_width2 + 2;
   rect_set_xywh((iptr)button_rect,button_x,button_y2,button_width2,button_height);
-  label = (iptr)label_string(label_string_ids[0xff]);
-  cancel_button.create((iptr)&status_window_block.sprite_editor_wnd,0x66,(iptr)button_rect,(const char *)label);
+  label = (iptr)label_string(label_table.string_ids[0xff]);
+  cancel_button.create((iptr)&sprite_editor.wnd,0x66,(iptr)button_rect,(const char *)label);
   cancel_button.set_callback((CtrlNotifyFn)sprite_editor_cancel_clicked);
   cancel_button.set_cancel_button();
-  ((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events))->set_lbuttondown_handler(sprite_editor_on_mouse_down);
-  ((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events))->set_rbuttondown_handler(sprite_editor_on_mouse_down);
-  ((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events))->set_dblclick_handler(sprite_editor_on_mouse_down);
-  ((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events))->set_lbuttonup_any_handler((WndMouseFn)sprite_editor_on_mouse_up);
-  ((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events))->set_rbuttonup_any_handler((WndMouseFn)sprite_editor_on_mouse_up);
-  ((WndHandlers *)((i8 *)&status_window_block.sprite_editor_wnd_events))->set_mousemove_handler(sprite_editor_on_mouse_move);
-  ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->set_redraw_callback(sprite_editor_redraw);
-  ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
-  ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->SurfaceWindow::show();
-  ((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd))->run_modal_loop();
-  while (status_window_block.sprite_editor_running != 0) {
+  ((WndHandlers *)((i8 *)&sprite_editor.wnd_events))->set_lbuttondown_handler(sprite_editor_on_mouse_down);
+  ((WndHandlers *)((i8 *)&sprite_editor.wnd_events))->set_rbuttondown_handler(sprite_editor_on_mouse_down);
+  ((WndHandlers *)((i8 *)&sprite_editor.wnd_events))->set_dblclick_handler(sprite_editor_on_mouse_down);
+  ((WndHandlers *)((i8 *)&sprite_editor.wnd_events))->set_lbuttonup_any_handler((WndMouseFn)sprite_editor_on_mouse_up);
+  ((WndHandlers *)((i8 *)&sprite_editor.wnd_events))->set_rbuttonup_any_handler((WndMouseFn)sprite_editor_on_mouse_up);
+  ((WndHandlers *)((i8 *)&sprite_editor.wnd_events))->set_mousemove_handler(sprite_editor_on_mouse_move);
+  ((SurfaceWindow *)((i8 *)&sprite_editor.window))->set_redraw_callback(sprite_editor_redraw);
+  ((SurfaceWindow *)((i8 *)&sprite_editor.window))->repaint();
+  ((SurfaceWindow *)((i8 *)&sprite_editor.window))->SurfaceWindow::show();
+  ((ModalMenuWindow *)((i8 *)&sprite_editor.wnd))->run_modal_loop();
+  while (sprite_editor.running != 0) {
     win_pump_one_message();
   }
   dlg_set_parent_window(0);
-  ((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window))->FrameWindow::close();
+  ((FrameWindow *)((i8 *)&sprite_editor.window))->FrameWindow::close();
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 0057420c */ { ctrl_dtor(&cancel_button); }
   seh_state = 0xffffffff;
@@ -5420,49 +5420,49 @@ void __cdecl sprite_editor_redraw(void)
   int width2;
   i8 grab_rect[16];
   
-  ((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window))->FrameWindow::draw_caption();
-  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(RECT *)&status_window_block.sprite_editor_fill_rect,0x1d);
-  x2 = status_window_block.sprite_editor_origin_x + 0x10;
-  y2 = status_window_block.sprite_editor_origin_y + 0x10;
-  width2 = status_window_block.sprite_editor_width << 2;
-  height2 = status_window_block.sprite_editor_height << 2;
-  rect_set_xywh((iptr)grab_rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
-  ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->grab_surface_rect((iptr)&status_window_block.sprite_editor_surface,(iptr)grab_rect);
-  key_color = ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->get_key_color();
-  status_window_block.sprite_editor_key_color = (uint)key_color;
-  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,x2,y2,width2,height2,status_window_block.sprite_editor_key_color);
+  ((FrameWindow *)((i8 *)&sprite_editor.window))->FrameWindow::draw_caption();
+  gfx_fill_rect((iptr)&sprite_editor.window,(RECT *)&sprite_editor.fill_rect,0x1d);
+  x2 = sprite_editor.origin_x + 0x10;
+  y2 = sprite_editor.origin_y + 0x10;
+  width2 = sprite_editor.width << 2;
+  height2 = sprite_editor.height << 2;
+  rect_set_xywh((iptr)grab_rect,0,0,sprite_editor.width,sprite_editor.height);
+  ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->grab_surface_rect((iptr)&sprite_editor.surface,(iptr)grab_rect);
+  key_color = ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->get_key_color();
+  sprite_editor.key_color = (uint)key_color;
+  gfx_fill_rect_xywh((iptr)&sprite_editor.window,x2,y2,width2,height2,sprite_editor.key_color);
   gfx_set_scale_ratio(4,1);
-  ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->draw_keyed((iptr)sprite_rect,(iptr)&status_window_block.sprite_editor_window,0,x2,y2);
+  ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->draw_keyed((iptr)sprite_rect,(iptr)&sprite_editor.window,0,x2,y2);
   gfx_set_scale_ratio(1,1);
-  gfx_draw_tiled_frame((iptr)&status_window_block.sprite_editor_window,x2,y2,width2,height2,6);
-  x2 = status_window_block.sprite_editor_origin_x + 10;
-  y2 = status_window_block.sprite_editor_origin_y + 0xe0;
+  gfx_draw_tiled_frame((iptr)&sprite_editor.window,x2,y2,width2,height2,6);
+  x2 = sprite_editor.origin_x + 10;
+  y2 = sprite_editor.origin_y + 0xe0;
   for (i = 0; i < 0xc0; i++) {
-    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,x2,y2,i + 10);
+    sprite_editor_draw_palette_cell((iptr)&sprite_editor.window,x2,y2,i + 10);
   }
-  x2 = status_window_block.sprite_editor_origin_x + 0x11e;
-  y2 = status_window_block.sprite_editor_origin_y + 0x14;
+  x2 = sprite_editor.origin_x + 0x11e;
+  y2 = sprite_editor.origin_y + 0x14;
   for (col = 0; col < 3; col++) {
     for (row = 0; row < 5; row++) {
       if (row == 0 && col == 0) {
-        gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,
-                           status_window_block.sprite_editor_key_color);
+        gfx_fill_rect_xywh((iptr)&sprite_editor.window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,
+                           sprite_editor.key_color);
       }
       else {
-        gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,
+        gfx_fill_rect_xywh((iptr)&sprite_editor.window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,
                            0x29);
         ((Sprite *)(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites) + (row * 3 + col) * 0x3c))->draw(
-                   (iptr)tool_rect,(iptr)&status_window_block.sprite_editor_window,col * 0x24 + x2,row * 0x26 + y2);
+                   (iptr)tool_rect,(iptr)&sprite_editor.window,col * 0x24 + x2,row * 0x26 + y2);
       }
-      gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,10
+      gfx_draw_frame_rect((iptr)&sprite_editor.window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,10
                         );
     }
   }
   sprite_editor_draw_swatches();
-  text_set_surface((iptr)&status_window_block.sprite_editor_window);
+  text_set_surface((iptr)&sprite_editor.window);
   text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);
-  ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_blit_surface();
+  ((DibSurface *)((i8 *)&sprite_editor.window))->wnd_blit_surface();
   return;
 }
 
@@ -5484,19 +5484,19 @@ void SpritePicker::draw()
   text_set_surface((iptr)this);
   text_set_font((iptr)&ui_text_font);
   key_color = ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->get_key_color();
-  status_window_block.sprite_editor_key_color = (uint)key_color;
+  sprite_editor.key_color = (uint)key_color;
   width2 = ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->width();
   width2 = width2 * 2;
   height2 = ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->height();
   height2 = height2 * 2;
-  button_height = ((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)))->line_spacing();
+  button_height = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
   button_height += 8;
   hscroll_height = GetSystemMetrics(3);
   hscroll_height += 2;
   x2 = client_x + (int)(client_width - width2) / 2;
   y2 = client_y + (int)((((client_height - height2) - button_height) - hscroll_height) - 4) / 2
   ;
-  gfx_fill_rect_xywh((iptr)this,x2,y2,width2,height2,status_window_block.sprite_editor_key_color);
+  gfx_fill_rect_xywh((iptr)this,x2,y2,width2,height2,sprite_editor.key_color);
   gfx_set_scale_ratio(2,1);
   ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->draw_keyed((iptr)draw_rect,(iptr)this,0,x2,y2);
   gfx_set_scale_ratio(1,1);
@@ -5509,7 +5509,7 @@ void SpritePicker::draw()
 void __cdecl sprite_picker_redraw_cb(void)
 
 {
-  (*(SpritePicker * *)&status_window_block.sprite_picker_dialog)->draw();
+  (*(SpritePicker * *)&sprite_editor.sprite_picker_dialog)->draw();
   return;
 }
 
@@ -5669,7 +5669,7 @@ void __cdecl sprite_picker_select_cell(i32 cell)
   
   sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2);
   ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->free();
-  ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->grab_from_surface((iptr)&status_window_block.sprite_sheet_surface,7,x2,y2,width2,height2);
+  ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->grab_from_surface((iptr)&sprite_editor.sprite_sheet_surface,7,x2,y2,width2,height2);
   sprite_picker_redraw_cb();
   return;
 }
@@ -5686,23 +5686,23 @@ sprite_picker_create_window(const char *title,uint style_flags,int x,int y,int w
   uint wnd_style;
   
   if (title == 0) {
-    crt_strcpy(((i8 *)&status_window_block.sprite_picker_title),((i8 *)&sprite_picker_default_title));
+    crt_strcpy(((i8 *)&sprite_editor.sprite_picker_title),((i8 *)&sprite_picker_default_title));
   }
   else {
-    crt_strcpy(((i8 *)&status_window_block.sprite_picker_title),title);
+    crt_strcpy(((i8 *)&sprite_editor.sprite_picker_title),title);
   }
-  status_window_block.sprite_picker_text_font_i32 = (iptr)&ui_text_font;
-  status_window_block.sprite_picker_title_font_i32 = (iptr)&caption_font_block.caption_font;
-  status_window_block.sprite_picker_title_small_font_i32 = (iptr)&caption_small_font_block.caption_small_font;
-  status_window_block.sprite_picker_style_flags_i32 = style_flags;
-  status_window_block.sprite_picker_caption_height = caption_height;
-  status_window_block.sprite_picker_border_width = border_width;
-  status_window_block.sprite_picker_resize_border = resize_border;
-  status_window_block.sprite_picker_caption_button_count_i32 = 0;
-  status_window_block.sprite_picker_caption_button_cb_i32 = 0;
+  sprite_editor.sprite_picker_text_font = (iptr)&ui_text_font;
+  sprite_editor.sprite_picker_title_font = (iptr)&caption_font_block.caption_font;
+  sprite_editor.sprite_picker_title_small_font = (iptr)&caption_small_font_block.caption_small_font;
+  sprite_editor.sprite_picker_style_flags = style_flags;
+  sprite_editor.sprite_picker_caption_height = caption_height;
+  sprite_editor.sprite_picker_border_width = border_width;
+  sprite_editor.sprite_picker_resize_border = resize_border;
+  sprite_editor.sprite_picker_caption_button_count = 0;
+  sprite_editor.sprite_picker_caption_button_cb = 0;
   if ((style_flags & 4) != 0) {
-    status_window_block.sprite_picker_caption_height = frame_caption_height;
-    status_window_block.sprite_picker_border_width = frame_border_width;
+    sprite_editor.sprite_picker_caption_height = ui_metrics.caption_height;
+    sprite_editor.sprite_picker_border_width = ui_metrics.border_width;
   }
   if ((style_flags & 8) == 0) {
     wnd_style = 0x202;
@@ -5710,29 +5710,29 @@ sprite_picker_create_window(const char *title,uint style_flags,int x,int y,int w
   else {
     wnd_style = 0x802;
   }
-  if (status_window_block.sprite_picker_caption_height != 0) {
+  if (sprite_editor.sprite_picker_caption_height != 0) {
     wnd_style = wnd_style | 0x400;
   }
   if (resize_border != 0) {
     wnd_style = wnd_style | 0x1000;
   }
   if ((style_flags & 2) == 0) {
-    width += status_window_block.sprite_picker_border_width * 2;
-    height = height + status_window_block.sprite_picker_caption_height + status_window_block.sprite_picker_border_width;
+    width += sprite_editor.sprite_picker_border_width * 2;
+    height = height + sprite_editor.sprite_picker_caption_height + sprite_editor.sprite_picker_border_width;
   }
   if ((style_flags & 1) != 0) {
     x = (caption_font_block.screen_width >> 1) - (width >> 1);
     y = (caption_font_block.screen_height >> 1) - (height >> 1);
   }
-  ((DibSurface *)((i8 *)&status_window_block.sprite_picker_window))->wnd_create_with_surface(0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
-             (iptr)&status_window_block.sprite_editor_wnd);
-  if (status_window_block.sprite_picker_caption_height != 0) {
-    ((WndBase *)((i8 *)&status_window_block.sprite_picker_wnd))->set_caption_height(status_window_block.sprite_picker_caption_height);
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_picker_window))->wnd_create_with_surface(0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
+             (iptr)&sprite_editor.wnd);
+  if (sprite_editor.sprite_picker_caption_height != 0) {
+    ((WndBase *)((i8 *)&sprite_editor.sprite_picker_wnd))->set_caption_height(sprite_editor.sprite_picker_caption_height);
   }
-  if (status_window_block.sprite_picker_resize_border != 0) {
-    ((WndBase *)((i8 *)&status_window_block.sprite_picker_wnd))->set_resize_border(status_window_block.sprite_picker_resize_border);
+  if (sprite_editor.sprite_picker_resize_border != 0) {
+    ((WndBase *)((i8 *)&sprite_editor.sprite_picker_wnd))->set_resize_border(sprite_editor.sprite_picker_resize_border);
   }
-  ((FrameWindow *)((i8 *)&status_window_block.sprite_picker_window))->layout();
+  ((FrameWindow *)((i8 *)&sprite_editor.sprite_picker_window))->layout();
   return;
 }
 
@@ -5750,14 +5750,14 @@ void __cdecl sprite_picker_ok_clicked(void)
   width2 = ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->width();
   height2 = ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->height();
   key_color = ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->get_key_color();
-  status_window_block.sprite_editor_key_color = (uint)key_color;
+  sprite_editor.key_color = (uint)key_color;
   sprite_editor_draw_backdrop();
-  ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->draw((iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
-  ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->free();
+  ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite))->draw((iptr)draw_rect,(iptr)&sprite_editor.surface,0,0);
+  ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->free();
   rect_set_xywh((iptr)grab_rect,0,0,width2,height2);
-  ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->grab_surface_rect((iptr)&status_window_block.sprite_editor_surface,(iptr)grab_rect);
-  status_window_block.sprite_picker_running = 0;
-  ((ModalMenuWindow *)(status_window_block.sprite_picker_dialog + 0x48))->end_modal_loop();
+  ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->grab_surface_rect((iptr)&sprite_editor.surface,(iptr)grab_rect);
+  sprite_editor.sprite_picker_running = 0;
+  ((ModalMenuWindow *)(sprite_editor.sprite_picker_dialog + 0x48))->end_modal_loop();
   return;
 }
 
@@ -5780,13 +5780,13 @@ void __cdecl sprite_picker_import_all_clicked(void)
   uint half_cell;
   int answer;
   
-  dlg_push_parent_window((iptr)&status_window_block.sprite_picker_wnd);
+  dlg_push_parent_window((iptr)&sprite_editor.sprite_picker_wnd);
   answer = popup_text_flags((const char *)&str_debug_11,(const char *)&str_rusure,1);
   dlg_pop_parent_window();
   if (answer == 0) {
     switch(sprite_picker_sprite_block.sprite_sheet_mode) {
     case 0:
-      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < sprite_editor.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         sign = (int)cell >> 0x1f;
@@ -5802,7 +5802,7 @@ void __cdecl sprite_picker_import_all_clicked(void)
       }
       break;
     case 1:
-      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < sprite_editor.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         half_cell = (int)cell % 0x18;
@@ -5817,7 +5817,7 @@ void __cdecl sprite_picker_import_all_clicked(void)
       }
       break;
     case 2:
-      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < sprite_editor.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         switch(cell) {
@@ -5852,7 +5852,7 @@ void __cdecl sprite_picker_import_all_clicked(void)
       }
       break;
     case 4:
-      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < sprite_editor.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         if ((int)cell < 0x26) {
@@ -5870,7 +5870,7 @@ void __cdecl sprite_picker_import_all_clicked(void)
     case 5:
       break;
     case 6:
-      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < sprite_editor.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         ((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + cell * 0x3c))->free();
@@ -5967,22 +5967,22 @@ void __cdecl sprite_picker_import_all_clicked(void)
       }
       break;
     case 0xb:
-      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < sprite_editor.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + cell * 0x3c))->free();
         sprite_editor_grab_from_sheet((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + cell * 0x3c),x2,y2,width2,height2);
       }
     }
-    ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->free();
-    status_window_block.sprite_editor_target_sprite->merge_onto((iptr)&status_window_block.sprite_editor_orig_sprite);
-    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->DibSurface::create(status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
+    ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->free();
+    sprite_editor.target_sprite->merge_onto((iptr)&sprite_editor.orig_sprite);
+    ((DibSurface *)((i8 *)&sprite_editor.surface))->DibSurface::create(sprite_editor.width,sprite_editor.height);
     sprite_editor_draw_backdrop();
-    ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite))->draw((iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
-    ((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite))->free();
-    status_window_block.sprite_editor_target_sprite->merge_onto((iptr)&status_window_block.sprite_editor_result_sprite);
-    status_window_block.sprite_picker_running = 0;
-    ((ModalMenuWindow *)(status_window_block.sprite_picker_dialog + 0x48))->end_modal_loop();
+    ((Sprite *)((i8 *)&sprite_editor.orig_sprite))->draw((iptr)draw_rect,(iptr)&sprite_editor.surface,0,0);
+    ((Sprite *)((i8 *)&sprite_editor.result_sprite))->free();
+    sprite_editor.target_sprite->merge_onto((iptr)&sprite_editor.result_sprite);
+    sprite_editor.sprite_picker_running = 0;
+    ((ModalMenuWindow *)(sprite_editor.sprite_picker_dialog + 0x48))->end_modal_loop();
     ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   }
   return;
@@ -5994,7 +5994,7 @@ sprite_editor_grab_from_sheet(iptr sprite,i32 x,i32 y,i32 width,
             i32 height)
 
 {
-  ((Sprite *)sprite)->grab_from_surface((iptr)&status_window_block.sprite_sheet_surface,7,x,y,width,height);
+  ((Sprite *)sprite)->grab_from_surface((iptr)&sprite_editor.sprite_sheet_surface,7,x,y,width,height);
   ((Sprite *)sprite)->replace_color(9,7);
   return;
 }
@@ -6003,8 +6003,8 @@ sprite_editor_grab_from_sheet(iptr sprite,i32 x,i32 y,i32 width,
 void __cdecl sprite_picker_cancel_clicked(void)
 
 {
-  status_window_block.sprite_picker_running = 0;
-  ((ModalMenuWindow *)(status_window_block.sprite_picker_dialog + 0x48))->end_modal_loop();
+  sprite_editor.sprite_picker_running = 0;
+  ((ModalMenuWindow *)(sprite_editor.sprite_picker_dialog + 0x48))->end_modal_loop();
   return;
 }
 
@@ -6033,7 +6033,7 @@ void SpritePicker::run()
   i8 rect[16];
   iptr scroll_height;
   
-  (*(SpritePicker * *)&status_window_block.sprite_picker_dialog) = this;
+  (*(SpritePicker * *)&sprite_editor.sprite_picker_dialog) = this;
   rates_civ = 0xf0;
   max_rate_value = 0xf0;
   border_width = 0;
@@ -6044,9 +6044,9 @@ void SpritePicker::run()
   win_y = 0;
   win_x = 0;
   style_flags = 0xd;
-  title = (iptr)label_string(label_string_ids[0x254]);
+  title = (iptr)label_string(label_table.string_ids[0x254]);
   sprite_picker_create_window((const char *)title,style_flags,win_x,win_y,win_width,win_height,resize_border,caption_height,border_width);
-  metric = ((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)))->line_spacing();
+  metric = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
   init_sci_rate = metric + 8;
   init_lux_rate = client_width - 4;
   metric = GetSystemMetrics(3);
@@ -6054,7 +6054,7 @@ void SpritePicker::run()
   sci_rate_sel = client_width - 4;
   y2 = ((client_y + client_height) - (init_sci_rate + 2)) - (metric + 4);
   x2 = client_x + 2;
-  status_window_block.sprite_sheet_cell_count = sprite_editor_cell_rect(0,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out);
+  sprite_editor.sprite_sheet_cell_count = sprite_editor_cell_rect(0,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out);
   rect_set_xywh((iptr)rect,x2,y2,sci_rate_sel,scroll_height);
   if (this == (SpritePicker *)0x0) {
     scroll_parent = (u8 *)0x0;
@@ -6063,7 +6063,7 @@ void SpritePicker::run()
     scroll_parent = (u8 *)&window;
   }
   scrollbar.create((iptr)scroll_parent,0x65,(iptr)rect,0);
-  scrollbar.set_range(0,status_window_block.sprite_sheet_cell_count - 1);
+  scrollbar.set_range(0,sprite_editor.sprite_sheet_cell_count - 1);
   scrollbar.set_pos(0);
   scrollbar.set_callback(sprite_picker_select_cell);
   sprite_picker_select_cell(0);
@@ -6078,7 +6078,7 @@ void SpritePicker::run()
   else {
     ok_parent = (u8 *)&window;
   }
-  label = (iptr)label_string(label_string_ids[0xfe]);
+  label = (iptr)label_string(label_table.string_ids[0xfe]);
   button_1.create((iptr)ok_parent,0xc9,(iptr)rect,(const char *)label);
   button_1.set_callback((CtrlNotifyFn)sprite_picker_ok_clicked);
   button_1.set_default_button();
@@ -6090,7 +6090,7 @@ void SpritePicker::run()
   else {
     import_parent = (u8 *)&window;
   }
-  label = (iptr)label_string(label_string_ids[0x255]);
+  label = (iptr)label_string(label_table.string_ids[0x255]);
   button_2.create((iptr)import_parent,0xc9,(iptr)rect,(const char *)label);
   button_2.set_callback((CtrlNotifyFn)sprite_picker_import_all_clicked);
   button_2.set_default_button();
@@ -6105,7 +6105,7 @@ void SpritePicker::run()
   else {
     cancel_parent = (u8 *)&window;
   }
-  label = (iptr)label_string(label_string_ids[0xff]);
+  label = (iptr)label_string(label_table.string_ids[0xff]);
   button_3.create((iptr)cancel_parent,0xca,(iptr)rect,(const char *)label);
   button_3.set_callback((CtrlNotifyFn)sprite_picker_cancel_clicked);
   button_3.set_cancel_button();
@@ -6113,7 +6113,7 @@ void SpritePicker::run()
   repaint();
   show();
   ((ModalMenuWindow *)&window)->run_modal_loop();
-  while (status_window_block.sprite_picker_running != 0) {
+  while (sprite_editor.sprite_picker_running != 0) {
     win_pump_one_message();
   }
   close();
@@ -6124,7 +6124,7 @@ void SpritePicker::run()
 void __cdecl sprite_picker_show(void)
 
 {
-  ((SpritePicker *)((i8 *)&status_window_block.sprite_picker_window))->run();
+  ((SpritePicker *)((i8 *)&sprite_editor.sprite_picker_window))->run();
   return;
 }
 
@@ -6141,9 +6141,9 @@ void __cdecl sprite_editor_import_sheet(void)
   size_t _MaxCount;
   iptr cmp;
   int result;
-  char *str;
+  const char *str;
   i32 arg_a;
-  char *arg_name;
+  const char *arg_name;
   i32 arg_b;
   LPCSTR caption_text;
   LPCSTR title_text;
@@ -6152,7 +6152,7 @@ void __cdecl sprite_editor_import_sheet(void)
   char prompt[132];
   int retry;
   char file_path[260];
-  char *sheet_name;
+  const char *sheet_name;
   char filter[260];
   GamePalette palette;
   Dialog dialog2;
@@ -6193,14 +6193,14 @@ void __cdecl sprite_editor_import_sheet(void)
     arg_a = 0;
     str = sheet_name;
     arg_name = sheet_name;
-    label = (iptr)label_string(label_string_ids[0x256]);
+    label = (iptr)label_string(label_table.string_ids[0x256]);
     _sprintf(filter,str_s_s_c_s_bmp_s_gif_c_c,sheet_name,label,arg_a,str,arg_name,
              arg_b,arg_c);
     _sprintf(file_path,str_s_bmp_s_gif,sheet_name,sheet_name);
     str = sheet_name;
-    label = (iptr)label_string(label_string_ids[0x257]);
+    label = (iptr)label_string(label_table.string_ids[0x257]);
     _sprintf(prompt,str_s_s_2,label,str);
-    ok = ui_file_name_dialog((iptr)&status_window_block.sprite_editor_wnd,(const char *)prompt,(iptr)file_path,(iptr)filter,(iptr)&str_bmp_gif,1,0
+    ok = ui_file_name_dialog((iptr)&sprite_editor.wnd,(const char *)prompt,(iptr)file_path,(iptr)filter,(iptr)&str_bmp_gif,1,0
                               );
     if (ok == 0) goto release_and_cleanup;
     __strupr(file_path);
@@ -6217,13 +6217,13 @@ void __cdecl sprite_editor_import_sheet(void)
     if (cmp == 0) {
       if (((sprite_picker_sprite_block.sprite_sheet_mode == 7) || (sprite_picker_sprite_block.sprite_sheet_mode == 10)) &&
           ((result = _isdigit((int)file_name[7]), result == 0 || ((file_name[7] & 1U) == 0)))) {
-        dlg_push_parent_window((iptr)&status_window_block.sprite_picker_wnd);
+        dlg_push_parent_window((iptr)&sprite_editor.sprite_picker_wnd);
         popup_debug_text((const char *)&str_oddterrain);
         dlg_pop_parent_window();
       }
       else if (((sprite_picker_sprite_block.sprite_sheet_mode == 8) || (sprite_picker_sprite_block.sprite_sheet_mode == 9)) &&
               ((result = _isdigit((int)file_name[7]), result == 0 || ((file_name[7] & 1U) != 0)))) {
-        dlg_push_parent_window((iptr)&status_window_block.sprite_picker_wnd);
+        dlg_push_parent_window((iptr)&sprite_editor.sprite_picker_wnd);
         popup_debug_text((const char *)&str_eventerrain);
         dlg_pop_parent_window();
       }
@@ -6234,18 +6234,18 @@ void __cdecl sprite_editor_import_sheet(void)
           if (str == (char *)0x0) {
             mb_flags = 0x10;
             title_text = (LPCSTR)0x0;
-            caption_text = (LPCSTR)label_string(label_string_ids[0x25a]);
-            result = (int)((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->get_window();
+            caption_text = (LPCSTR)label_string(label_table.string_ids[0x25a]);
+            result = (int)((WndBase *)((i8 *)&sprite_editor.wnd))->get_window();
             MessageBoxA(((NativeWindow *)result)->hwnd,caption_text,title_text,mb_flags);
           }
           else {
-            result = ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->load_gif_file((const char *)file_path,10,0xc0,
+            result = ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->load_gif_file((const char *)file_path,10,0xc0,
                                (iptr)&palette);
             if (result == 0) {
               mb_flags = 0x10;
               title_text = (LPCSTR)0x0;
-              caption_text = (LPCSTR)label_string(label_string_ids[0x259]);
-              result = (int)((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->get_window();
+              caption_text = (LPCSTR)label_string(label_table.string_ids[0x259]);
+              result = (int)((WndBase *)((i8 *)&sprite_editor.wnd))->get_window();
               MessageBoxA(((NativeWindow *)result)->hwnd,caption_text,title_text,mb_flags);
             }
             else {
@@ -6254,12 +6254,12 @@ void __cdecl sprite_editor_import_sheet(void)
           }
         }
         else {
-          result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)file_path,10,0xc0,(iptr)&palette);
+          result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)file_path,10,0xc0,(iptr)&palette);
           if (result == 0) {
             mb_flags = 0x10;
             title_text = (LPCSTR)0x0;
-            caption_text = (LPCSTR)label_string(label_string_ids[0x259]);
-            result = (int)((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->get_window();
+            caption_text = (LPCSTR)label_string(label_table.string_ids[0x259]);
+            result = (int)((WndBase *)((i8 *)&sprite_editor.wnd))->get_window();
             MessageBoxA(((NativeWindow *)result)->hwnd,caption_text,title_text,mb_flags);
           }
           else {
@@ -6270,19 +6270,19 @@ void __cdecl sprite_editor_import_sheet(void)
     }
     else {
       str = sheet_name;
-      label = (iptr)label_string(label_string_ids[0x258]);
+      label = (iptr)label_string(label_table.string_ids[0x258]);
       _sprintf(prompt,str_s_s_3,label,str);
       mb_flags = 0x40;
       caption_text = (LPCSTR)0x0;
       str = prompt;
-      result = (int)((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->get_window();
+      result = (int)((WndBase *)((i8 *)&sprite_editor.wnd))->get_window();
       MessageBoxA(((NativeWindow *)result)->hwnd,str,caption_text,mb_flags);
     }
   } while (retry != 0);
   sprite_picker_show();
   sprite_editor_redraw();
 release_and_cleanup:
-  ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
+  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 005767a7 */ { dialog2.Dialog::destruct(); }
   seh_state = 0xffffffff;
@@ -6579,7 +6579,7 @@ dib_blit_to_wnd_obj(GdiDib *src,int src_x,int src_y,int width,int height,NativeW
 
 {
   if ((src != 0) && (dest != 0)) {
-    if ((dest->palette != 0) && (gfx_palettized_display == 1)) {
+    if ((dest->palette != 0) && (display_palette.palettized == 1)) {
       RealizePalette(dest->hdc);
     }
     BitBlt(dest->hdc,dest_x,dest_y,width,height,src->hdc,src_x,
@@ -6689,8 +6689,8 @@ DibSurface * __thiscall surface_dtor(DibSurface *self)
   new_dib = dib_destroy(self->dib);
   self->dib = (GdiDib *)new_dib;
   self->set_dims(0);
-  if (draw_current_surface == self) {
-    draw_current_surface = (DibSurface *)0x0;
+  if (draw_target.surface == self) {
+    draw_target.surface = (DibSurface *)0x0;
   }
   return self;
 }
@@ -7339,21 +7339,21 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *self,const char *text,int x,i
   int shadow_offset;
   i32 saved_color;
   
-  if (draw_current_font == (i8 *)0x0) {
+  if (draw_target.font == (i8 *)0x0) {
     dbg_log((const char *)&str_error_no_current_font_selected);
   }
   else if (self->dib != 0) {
     if ((flags & 0x10) != 0) {
-      font_height = font_measure_height(*(i32 *)draw_current_font);
+      font_height = font_measure_height(*(i32 *)draw_target.font);
       font_height += (font_height >> 0x1f & 7U);
       shadow_offset = font_height >> 3;
-      old_color = gfx_set_text_color_index(CONCAT31((font_height >> 0xb),gfx_black_color_index));
+      old_color = gfx_set_text_color_index(CONCAT31((font_height >> 0xb),display_palette.black_index));
       saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
-      dib_draw_text_at(self->dib,*(i32 *)draw_current_font,(char *)text,shadow_offset + x,
+      dib_draw_text_at(self->dib,*(i32 *)draw_target.font,(char *)text,shadow_offset + x,
                    shadow_offset + y,(iptr)(self->clip_rect_2),flags);
       gfx_set_text_color_index(saved_color);
     }
-    dib_draw_text_at(self->dib,*(i32 *)draw_current_font,(char *)text,x,y,
+    dib_draw_text_at(self->dib,*(i32 *)draw_target.font,(char *)text,x,y,
                  (iptr)(self->clip_rect_2),flags);
   }
   return;
@@ -7373,7 +7373,7 @@ void DibSurface::draw_text(iptr font,const char *text,iptr x,int y,uint flags)
       font_height = font_measure_height(*(i32 *)font);
       font_height += (font_height >> 0x1f & 7U);
       shadow_offset = font_height >> 3;
-      old_color = gfx_set_text_color_index(CONCAT31((font_height >> 0xb),gfx_black_color_index));
+      old_color = gfx_set_text_color_index(CONCAT31((font_height >> 0xb),display_palette.black_index));
       saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
       dib_draw_text_at(dib,*(i32 *)font,(char *)text,x + shadow_offset,y + shadow_offset,
                    (iptr)&clip_left,flags);
@@ -7404,7 +7404,7 @@ void DibSurface::draw_text_in_rect(iptr font,const char *text,RECT *rect,uint fl
       shadow_rect.right = rect->right;
       shadow_rect.bottom = rect->bottom;
       offset_ok = OffsetRect(&shadow_rect,shadow_offset,shadow_offset);
-      old_color = gfx_set_text_color_index(CONCAT31((int3)((uint)offset_ok >> 8),gfx_black_color_index));
+      old_color = gfx_set_text_color_index(CONCAT31((int3)((uint)offset_ok >> 8),display_palette.black_index));
       saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
       dib_draw_text_rect(dib,*(i32 *)font,(char *)text,(iptr)&shadow_rect,flags);
       gfx_set_text_color_index(saved_color);
@@ -7465,7 +7465,7 @@ void DibSurface::draw_line(u32 x1,u32 y1,u32 x2,u32 y2)
         }
         top_down = crt_abs(x2 - x1);
         top_down++;
-        color = CONCAT31((int3)((uint)top_down >> 8),(*(i8 *)&gfx_text_color_index));
+        color = CONCAT31((int3)((uint)top_down >> 8),(*(i8 *)&ctrl_colors.gfx_text));
         handle = get_bits();
         dib_hline8(handle,color,top_down,start,y1,height,pitch);
       }
@@ -7495,7 +7495,7 @@ void DibSurface::draw_line(u32 x1,u32 y1,u32 x2,u32 y2)
         }
         top_down = crt_abs(y2 - y1);
         top_down++;
-        color = CONCAT31((int3)((uint)top_down >> 8),(*(i8 *)&gfx_text_color_index));
+        color = CONCAT31((int3)((uint)top_down >> 8),(*(i8 *)&ctrl_colors.gfx_text));
         handle = get_bits();
         dib_vline8(handle,color,top_down,x1,start,height,pitch);
       }
@@ -7513,8 +7513,8 @@ i8 __cdecl gfx_set_text_color_index(i32 color_index)
 {
   i8 prev_index;
   
-  prev_index = (*(i8 *)&gfx_text_color_index);
-  (*(i8 *)&gfx_text_color_index) = (i8)color_index;
+  prev_index = (*(i8 *)&ctrl_colors.gfx_text);
+  (*(i8 *)&ctrl_colors.gfx_text) = (i8)color_index;
   return prev_index;
 }
 
@@ -8189,13 +8189,13 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
   if (den < 2) {
     den = 1;
   }
-  gfx_scale_num = num;
-  gfx_scale_den = den;
+  gfx_scale.num = num;
+  gfx_scale.den = den;
   oldest_tick = timer_ticks();
   slot = -1;
   for (index = 0; index < 0x10; index++) {
-    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale_num) &&
-       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale_den)) {
+    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale.num) &&
+       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale.den)) {
       now = timer_ticks();
       default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
       slot = index;
@@ -8207,37 +8207,37 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
     }
   }
   if (0xf < index) {
-    default_draw_font_obj_block.gfx_scale_caches[slot].num = gfx_scale_num;
-    default_draw_font_obj_block.gfx_scale_caches[slot].den = gfx_scale_den;
+    default_draw_font_obj_block.gfx_scale_caches[slot].num = gfx_scale.num;
+    default_draw_font_obj_block.gfx_scale_caches[slot].den = gfx_scale.den;
     now = timer_ticks();
     default_draw_font_obj_block.gfx_scale_caches[slot].last_used = now;
     value = 0;
-    if (gfx_scale_num < gfx_scale_den) {
+    if (gfx_scale.num < gfx_scale.den) {
       accum = 0;
       index = 0;
       while (index < 0x400) {
         for (; (-1 < accum && (index < 0x400)); index++) {
           default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
-          accum -= gfx_scale_den;
+          accum -= gfx_scale.den;
         }
-        accum += gfx_scale_num;
+        accum += gfx_scale.num;
         value++;
       }
     }
     else {
-      accum = gfx_scale_num;
+      accum = gfx_scale.num;
       index = 0;
       while (index < 0x400) {
-        for (; (gfx_scale_den <= accum && (index < 0x400)); index++) {
+        for (; (gfx_scale.den <= accum && (index < 0x400)); index++) {
           default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
-          accum -= gfx_scale_den;
+          accum -= gfx_scale.den;
         }
-        accum += gfx_scale_num;
+        accum += gfx_scale.num;
         value++;
       }
       }
   }
-  default_draw_font_obj_block.gfx_scale_table = (i32 *)default_draw_font_obj_block.gfx_scale_caches[slot].table;
+  gfx_scale_tables.table = (i32 *)default_draw_font_obj_block.gfx_scale_caches[slot].table;
   return;
 }
 
@@ -8245,8 +8245,8 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
 void __cdecl gfx_get_scale_ratio(iptr out_num,iptr out_den)
 
 {
-  *(i32 *)out_num = gfx_scale_num;
-  *(i32 *)out_den = gfx_scale_den;
+  *(i32 *)out_num = gfx_scale.num;
+  *(i32 *)out_den = gfx_scale.den;
   return;
 }
 
@@ -8272,15 +8272,15 @@ void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
   if (y_den < 2) {
     y_den = 1;
   }
-  gfx_scale_x_num = x_num;
-  gfx_scale_x_den = x_den;
-  gfx_scale_y_num = y_num;
-  gfx_scale_y_den = y_den;
+  gfx_scale.x_num = x_num;
+  gfx_scale.x_den = x_den;
+  gfx_scale.y_num = y_num;
+  gfx_scale.y_den = y_den;
   oldest_tick = timer_ticks();
   x_slot = -1;
   for (index = 0; index < 0x10; index++) {
-    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale_x_num) &&
-       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale_x_den)) {
+    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale.x_num) &&
+       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale.x_den)) {
       now = timer_ticks();
       default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
       x_slot = index;
@@ -8292,14 +8292,14 @@ void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
     }
   }
   if (0xf < index) {
-    gfx_scale_build_table(x_slot,gfx_scale_x_num,gfx_scale_x_den);
+    gfx_scale_build_table(x_slot,gfx_scale.x_num,gfx_scale.x_den);
   }
-  default_draw_font_obj_block.gfx_scale_x_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[x_slot].table;
+  gfx_scale_tables.x_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[x_slot].table;
   oldest_tick = timer_ticks();
   y_slot = -1;
   for (index = 0; index < 0x10; index++) {
-    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale_y_num) &&
-       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale_y_den)) {
+    if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale.y_num) &&
+       (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale.y_den)) {
       now = timer_ticks();
       default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
       break;
@@ -8310,10 +8310,10 @@ void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
     }
   }
   if (0xf < index) {
-    gfx_scale_build_table(y_slot,gfx_scale_y_num,gfx_scale_y_den);
+    gfx_scale_build_table(y_slot,gfx_scale.y_num,gfx_scale.y_den);
     index = y_slot;
   }
-  default_draw_font_obj_block.gfx_scale_y_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[index].table;
+  gfx_scale_tables.y_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[index].table;
   return;
 }
 
@@ -8847,8 +8847,8 @@ int *Sprite::blit_to_surface(int *out_rect,DibSurface *surface,int key_arg,int x
   trim_x = bounds_rect - frame_rect;
   trim_y = bounds_top - frame_top;
   tmp = width();
-  if (((tmp * gfx_scale_num) / gfx_scale_den < 0x401) &&
-     (tmp = height(), (tmp * gfx_scale_num) / gfx_scale_den < 0x401)) {
+  if (((tmp * gfx_scale.num) / gfx_scale.den < 0x401) &&
+     (tmp = height(), (tmp * gfx_scale.num) / gfx_scale.den < 0x401)) {
     scaled_trim_x = gfx_scale_length(trim_x,0,1);
     scaled_trim_y = gfx_scale_length(trim_y,0,1);
     tmp = gfx_scale_length(offset_x,0,0);
@@ -8886,7 +8886,7 @@ int *Sprite::blit_to_surface(int *out_rect,DibSurface *surface,int key_arg,int x
       top_down = dib_is_top_down(dib);
       pitch = surface->get_pitch();
       pitch = ((-(uint)(top_down == 0) & 0xfffffffe) + 1) * pitch;
-      scale_tbl = (iptr)default_draw_font_obj_block.gfx_scale_table;
+      scale_tbl = (iptr)gfx_scale_tables.table;
       bits = surface->get_bits();
       sprite_blit_rows_keyed(data_ptr,bits,scale_tbl,key2,dst_x,dst_y,pitch,surf_height,clip_w,clip_h
                    ,skip_x,tmp,scaled_h,trim_y,scaled_trim_x,scaled_trim_y);
@@ -8941,8 +8941,8 @@ int *Sprite::blit_silhouette_to_surface(int *out_rect,DibSurface *surface,int ke
   trim_x = bounds_rect - frame_rect;
   trim_y = bounds_top - frame_top;
   tmp = width();
-  if (((tmp * gfx_scale_num) / gfx_scale_den < 0x401) &&
-     (tmp = height(), (tmp * gfx_scale_num) / gfx_scale_den < 0x401)) {
+  if (((tmp * gfx_scale.num) / gfx_scale.den < 0x401) &&
+     (tmp = height(), (tmp * gfx_scale.num) / gfx_scale.den < 0x401)) {
     scaled_trim_x = gfx_scale_length(trim_x,0,1);
     scaled_trim_y = gfx_scale_length(trim_y,0,1);
     tmp = gfx_scale_length(offset_x,0,0);
@@ -8980,7 +8980,7 @@ int *Sprite::blit_silhouette_to_surface(int *out_rect,DibSurface *surface,int ke
       top_down = dib_is_top_down(dib);
       pitch = surface->get_pitch();
       pitch = ((-(uint)(top_down == 0) & 0xfffffffe) + 1) * pitch;
-      scale_tbl = (iptr)default_draw_font_obj_block.gfx_scale_table;
+      scale_tbl = (iptr)gfx_scale_tables.table;
       bits = surface->get_bits();
       sprite_blit_rows_solid(data_ptr,bits,scale_tbl,key2,dst_x,dst_y,pitch,surf_height,clip_w,clip_h
                    ,skip_x,tmp,scaled_h,trim_y,scaled_trim_x,scaled_trim_y,color);
@@ -9201,19 +9201,19 @@ int __cdecl gfx_scale_length(int length,int start,int round_up)
     if (!positive) {
       length = -length;
     }
-    if (gfx_scale_num < gfx_scale_den) {
+    if (gfx_scale.num < gfx_scale.den) {
       index = start;
-      result = default_draw_font_obj_block.gfx_scale_table[start] + length;
-      for (; default_draw_font_obj_block.gfx_scale_table[index] < result; index++) {
+      result = gfx_scale_tables.table[start] + length;
+      for (; gfx_scale_tables.table[index] < result; index++) {
       }
-      if ((round_up == 0) && (default_draw_font_obj_block.gfx_scale_table[index] != result)) {
+      if ((round_up == 0) && (gfx_scale_tables.table[index] != result)) {
         index--;
       }
     }
     else {
       index = start;
-      for (; default_draw_font_obj_block.gfx_scale_table[index] <
-             default_draw_font_obj_block.gfx_scale_table[start] + length; index++) {
+      for (; gfx_scale_tables.table[index] <
+             gfx_scale_tables.table[start] + length; index++) {
       }
     }
     result = ((-(uint)positive & 2) - 1) * (index - start);
@@ -9237,7 +9237,7 @@ void __cdecl logpal_init_from_system(GameLogPalette *logpal)
   raster_caps = GetDeviceCaps(hdc,0x26);
   if ((raster_caps & 0x100) == 0) {
     err_report_ctx_block.palette_static_half_count = 0;
-    gfx_palettized_display = 0;
+    display_palette.palettized = 0;
   }
   else {
     num_reserved = GetDeviceCaps(hdc,0x18);
@@ -9256,7 +9256,7 @@ void __cdecl logpal_init_from_system(GameLogPalette *logpal)
   for (; i < 0x100; i++) {
     logpal->entries[i].flags = 0;
   }
-  if (gfx_palettized_display == 0) {
+  if (display_palette.palettized == 0) {
     sys_color = ((i8 *)&logpal_static_system_colors);
     for (i = 0; i < 10; i++) {
       logpal->entries[i].red = *sys_color;
@@ -9294,7 +9294,7 @@ void __cdecl logpal_reserve_range(GameLogPalette *logpal,int first,int count)
 void __cdecl palette_animate(GameLogPalette *logpal,HPALETTE hpal,UINT first,UINT count)
 
 {
-  if (gfx_palettized_display == 1) {
+  if (display_palette.palettized == 1) {
     AnimatePalette(hpal,first,count,(PALETTEENTRY *)&logpal->entries[first]);
   }
   return;
@@ -9355,7 +9355,7 @@ HPALETTE __cdecl logpal_create_hpalette(GameLogPalette *logpal)
 {
   i32 hpal;
   
-  if (gfx_palettized_display == 1) {
+  if (display_palette.palettized == 1) {
     hpal = CreatePalette((LOGPALETTE *)logpal);
   }
   else {
@@ -9368,7 +9368,7 @@ HPALETTE __cdecl logpal_create_hpalette(GameLogPalette *logpal)
 void __cdecl logpal_delete_hpalette(HGDIOBJ hpal)
 
 {
-  if (gfx_palettized_display == 1) {
+  if (display_palette.palettized == 1) {
     DeleteObject(hpal);
   }
   return;
@@ -9378,7 +9378,7 @@ void __cdecl logpal_delete_hpalette(HGDIOBJ hpal)
 void __cdecl logpal_apply_range(GameLogPalette *logpal,HPALETTE hpal,UINT first,UINT count)
 
 {
-  if (gfx_palettized_display == 1) {
+  if (display_palette.palettized == 1) {
     SetPaletteEntries(hpal,first,count,(PALETTEENTRY *)&logpal->entries[first]);
   }
   return;
@@ -9434,15 +9434,15 @@ GdiDib * __cdecl dib_create(RECT *rect)
       bmi.bmiHeader.biHeight = 1;
       bmi.bmiHeader.biWidth = dib_row_align4(width);
       if (0 < bmi.bmiHeader.biHeight) {
-        if (dib_bottom_up_logged == 0) {
+        if (dib_rows.bottom_up_logged == 0) {
           dbg_log((const char *)&str_bottom_up_orientation_recommended);
         }
-        dib_bottom_up_logged = 1;
+        dib_rows.bottom_up_logged = 1;
       }
-      if (dib_row_order == -1) {
+      if (dib_rows.order == -1) {
         bmi.bmiHeader.biHeight = height2;
       }
-      else if (dib_row_order == 1) {
+      else if (dib_rows.order == 1) {
         bmi.bmiHeader.biHeight = -height2;
       }
       else {
@@ -9623,7 +9623,7 @@ dib_draw_text_at(GdiDib *dib,int font,char *text,int x,int y,iptr clip_rect,
     half_w = font_measure_width(font,(const char *)text);
     SetRect(&text_rect,x,y,x + half_w,half_h);
     old_font = SelectObject(dib->hdc,(HGDIOBJ)*font_data);
-    GetDIBColorTable(dib->hdc,(uint)gfx_text_color_index,1,&color2);
+    GetDIBColorTable(dib->hdc,(uint)ctrl_colors.gfx_text,1,&color2);
     SetTextColor(dib->hdc,
                  CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
     half_h = rect_height(&text_rect);
@@ -9674,7 +9674,7 @@ void __cdecl dib_draw_text_rect(GdiDib *dib,int font,char *text,iptr rect,uint a
   else if (dib != 0) {
     font_data = (i32 *)mem_handle_lock(font);
     old_font = SelectObject(dib->hdc,(HGDIOBJ)*font_data);
-    GetDIBColorTable(dib->hdc,(uint)gfx_text_color_index,1,&color2);
+    GetDIBColorTable(dib->hdc,(uint)ctrl_colors.gfx_text,1,&color2);
     SetTextColor(dib->hdc,
                  CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
     format = 0;
@@ -9713,7 +9713,7 @@ void __cdecl dib_draw_text_wrap(GdiDib *dib,int font,char *text,LPRECT rect,uint
   else if (dib != 0) {
     font_data = (i32 *)mem_handle_lock(font);
     old_font = SelectObject(dib->hdc,(HGDIOBJ)*font_data);
-    GetDIBColorTable(dib->hdc,(uint)gfx_text_color_index,1,&color2);
+    GetDIBColorTable(dib->hdc,(uint)ctrl_colors.gfx_text,1,&color2);
     SetTextColor(dib->hdc,
                  CONCAT12(color2.rgbBlue,CONCAT11(color2.rgbGreen,color2.rgbRed)));
     format = 0x10;
@@ -9740,7 +9740,7 @@ void __cdecl dib_draw_line(GdiDib *dib,int x1,int y1,int x2,int y2)
   HGDIOBJ old_pen;
   
   if (dib != 0) {
-    GetDIBColorTable(dib->hdc,(uint)gfx_text_color_index,1,&color2);
+    GetDIBColorTable(dib->hdc,(uint)ctrl_colors.gfx_text,1,&color2);
     pen = CreatePen(0,1,CONCAT12(color2.rgbBlue,
                                            CONCAT11(color2.rgbGreen,color2.rgbRed)));
     old_pen = SelectObject(dib->hdc,pen);
@@ -9790,8 +9790,8 @@ GdiDib * __cdecl dib_create16(RECT *rect)
       bmi.masks[2] = 0x1f;
       bmi.bmiHeader.biWidth = dib_row_align4(width);
       bmp_height = height;
-      if (dib_row_order != -1) {
-        if (dib_row_order == 1) {
+      if (dib_rows.order != -1) {
+        if (dib_rows.order == 1) {
           bmp_height = -height;
         }
         else {
@@ -9864,8 +9864,8 @@ GdiDib * __cdecl dib_create24(RECT *rect)
       bmi.bmiHeader.biHeight = 1;
       bmi.bmiHeader.biWidth = dib_row_align4(width);
       bmp_height = height;
-      if (dib_row_order != -1) {
-        if (dib_row_order == 1) {
+      if (dib_rows.order != -1) {
+        if (dib_rows.order == 1) {
           bmp_height = -height;
         }
         else {
@@ -9938,8 +9938,8 @@ GdiDib * __cdecl dib_create32(RECT *rect)
       bmi.bmiHeader.biHeight = 1;
       bmi.bmiHeader.biWidth = dib_row_align4(width);
       bmp_height = height;
-      if (dib_row_order != -1) {
-        if (dib_row_order == 1) {
+      if (dib_rows.order != -1) {
+        if (dib_rows.order == 1) {
           bmp_height = -height;
         }
         else {

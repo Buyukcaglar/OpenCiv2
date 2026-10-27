@@ -374,7 +374,7 @@ typedef struct SpaceshipWindow : ModalMenuWindow {
 static_assert(sizeof(SpaceshipWindow) == 0x2180, "");
 
 /* A leader's diplomacy window (diplo_leader_wnd_ctor 004942a3, operator_new(0x108c):
-   diplo_leader_window). */
+   diplo_leader.window). */
 typedef struct DiploLeaderWindow : ModalMenuWindow {
     union { uptr field_b8; uptr control_list; };   /* 0xb8 the screen rect (gfx_get_screen_rect) */
     union { u32 field_bc; u32 handler_slot_bc; };
@@ -527,7 +527,7 @@ typedef struct ThroneRoomWindow : ModalMenuWindow {
 } ThroneRoomWindow;
 static_assert(sizeof(ThroneRoomWindow) == 0x1c44, "");
 
-/* The city view (cityview_ctor 00454354, operator_new(0x1cb4): cityview_wnd). */
+/* The city view (cityview_ctor 00454354, operator_new(0x1cb4): cityview.wnd). */
 typedef struct CityViewWindow : ModalMenuWindow {
     union { uptr field_b8; uptr control_list; };
     union { u32 field_bc; u32 handler_slot_bc; };
@@ -1400,7 +1400,7 @@ typedef struct FileObject {
 static_assert(sizeof(FileObject) == 0x98, "");
 #endif
 
-/* The network game list window (0x178 bytes; net_session_block.gamelist_view
+/* The network game list window (0x178 bytes; net.gamelist_view
  * holds it while the game list is shown): its dialog, the names that keep the
  * selection across refreshes, the server's answer, the info line controls. */
 typedef struct NetGamelistView {
@@ -1418,7 +1418,7 @@ typedef struct NetGamelistView {
     i32 info_lines[9];
     DialogOption *first_option_value;
     char button_label[32];          /* 0x150 the list's button, while it is open */
-    i8 *saved_button_label;         /* 0x170 dialog_button_labels[0] before */
+    i8 *saved_button_label;         /* 0x170 dlg_style.button_labels[0] before */
     u32 refresh_timer;
     /* methods */
     NetGamelistView *view_construct();    /* 00421f70 */
@@ -1501,7 +1501,7 @@ typedef struct GamePalette {
     void fade_step(int step);    /* 005c738e */
 } GamePalette;
 
-/* The lobby's list of players (0x70 bytes; net_session_block.net_lobby_list):
+/* The lobby's list of players (0x70 bytes; net.net_lobby_list):
  * a dialog listing the players who joined. */
 typedef struct LobbyList {
     Dialog *dialog;                 /* 0x00 */
@@ -1509,7 +1509,7 @@ typedef struct LobbyList {
     u8 pad_8[32];
     uptr entries;                   /* 0x28 the dialog's option list */
     char title[32];                 /* 0x2c */
-    i8 *saved_button_label;         /* 0x4c dialog_button_labels[0] while the dialog runs */
+    i8 *saved_button_label;         /* 0x4c dlg_style.button_labels[0] while the dialog runs */
     u8 pad_50[4];
     u32 drop_counts[7];             /* 0x54 connections lost, per player */
     /* methods */
@@ -1633,7 +1633,7 @@ typedef struct NetPlayerNodeMsg {
     /* methods */
     NetMsgHeader *init(u32 player_id);    /* 0046d780 */
 } NetPlayerNodeMsg;
-/* The players of the game (type 4, 0x280 bytes): net_session_block's copy. */
+/* The players of the game (type 4, 0x280 bytes): net's copy. */
 typedef struct NetPlayerListMsg {
     NetMsgHeader hdr;               /* 0x00 */
     i32 size;                       /* 0x08 */
@@ -1735,7 +1735,7 @@ typedef struct NetMsgSlot {
     i32 size;                       /* 0x8 */
 } NetMsgSlot;
 
-/* The queue of received messages (0x5dd8 bytes; net_session_block.msg_queue):
+/* The queue of received messages (0x5dd8 bytes; net.msg_queue):
  * slots 0..399 a ring for priority messages (types 0x2a..0x66), 400..1999 a
  * ring for the others. */
 typedef struct NetMsgQueue {
@@ -2959,7 +2959,7 @@ typedef struct ParleyWindow : SurfaceWindow {
 static_assert(sizeof(ParleyWindow) == 0x10430, "");
 
 /* The Civilopedia window (pedia_window_ctor 004f3feb; one instance,
-   pedia_window_block.pedia_window, whose members after 0x114 the code also
+   pedia_wnd.window, whose members after 0x114 the code also
    reaches as pedia_window_block globals).  0x1f44 bytes: the end of the
    last member used. */
 typedef struct PediaWindow : SurfaceWindow {
@@ -3106,7 +3106,7 @@ typedef struct PediaWindow : SurfaceWindow {
     void draw_advance_children(GameFont *font2,iptr advance,int list_x2,int row_height,int &y2);    /* part of draw_advance_page */
     void draw_advance_improvements(GameFont *font2,iptr advance,int list_x2,int row_height,u32 &x2,int &y2);    /* part of draw_advance_page */
     void draw_advance_units(GameFont *font2,iptr advance,int related_count,int list_x2,int row_height,u32 &x2,int &y2);    /* part of draw_advance_page */
-    void draw_advance_civ_facts(GameFont *font2,iptr advance,int has_pedia,char *pedia_file,int list_x2,int row_height,u32 x2,int y2);    /* part of draw_advance_page */
+    void draw_advance_civ_facts(GameFont *font2,iptr advance,int has_pedia,const char *pedia_file,int list_x2,int row_height,u32 x2,int y2);    /* part of draw_advance_page */
     void show_topic_modal(iptr advance_id);    /* 00566584 */
     void draw_advance_tree();    /* 005666da */
     void draw_tree_stub(i32 x,int y);    /* 005675b7 */
@@ -3299,7 +3299,7 @@ static_assert(sizeof(MapView) == 0x3f0, "");
 
 /* A rules/scenario editor's window (editor_wnd_ctor 00417fa0, 0xb50 bytes;
    one class for all editors, each uses the controls it needs).  The editor
-   that runs is editor_text_dlg_wnd_block.active_editor_wnd.  The members
+   that runs is editor_active.wnd.  The members
    named *_u, *_uptr, *_bytes are the same fields as the code's other
    accesses reach them. */
 typedef struct EditorWindow : FrameWindow {
@@ -3386,7 +3386,7 @@ typedef struct WonderMovieWindow : FrameWindow {
 static_assert(sizeof(WonderMovieWindow) == 0x1188, "");
 
 /* The city window (city_window_ctor 00501551; one instance,
-   city_window_block.city_window, 0x16e0 bytes): a click map of its areas,
+   city_wnd.window, 0x16e0 bytes): a click map of its areas,
    the layout rectangles and the controls.  The *_b0.._b3 members are the
    bytes of the member before them, as the code reaches them. */
 typedef struct CityWindow : FrameWindow {
@@ -3565,7 +3565,7 @@ typedef struct CityPicturePopup : PictureWindow {
 static_assert(sizeof(CityPicturePopup) == 0x798, "");
 
 /* The set-up screens' picture window (setup_picwnd_ctor 00559e3c; one instance,
-   setup_picwnd_block.setup_picwnd, 0x2fc bytes): an image from a DLL. */
+   setup_picwnd_state.window, 0x2fc bytes): an image from a DLL. */
 typedef struct SetupPicWindow : FrameWindow {
     u32 rates_civ;
     u32 max_rate_value;
@@ -3590,7 +3590,7 @@ typedef struct SetupPicWindow : FrameWindow {
 static_assert(sizeof(SetupPicWindow) == 0x2fc, "");
 
 /* The sprite picker (sprite_picker_ctor 005784a0; one instance,
-   status_window_block.sprite_picker_window, 0x3ec bytes): a scrollbar and
+   sprite_editor.sprite_picker_window, 0x3ec bytes): a scrollbar and
    three buttons. */
 typedef struct SpritePicker : FrameWindow {
     u32 rates_civ;

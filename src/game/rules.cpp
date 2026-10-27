@@ -354,7 +354,7 @@ int rules_from_scenario(void)
     char saved_cwd[260];
     uint exists;
     if (__strcmpi(((i8 *)&net_map_lock_slots_block.scenario_dir_path),
-                  ((i8 *)&civ_saved_cursor_x_block.game_home_dir)) == 0)
+                  ((i8 *)&game_dirs.home)) == 0)
         return 0;
     crt_strcpy(name, ((i8 *)&main_frame_wnd_block.rules_txt_path));
     path_default_extension(name, (char *)&lang_file_ext);

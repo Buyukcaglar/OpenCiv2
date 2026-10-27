@@ -66,8 +66,9 @@ The code is being modernized step by step, each step checked by the harness: it 
 strict C++, keeps the original's data layout, has its classes as C++ class hierarchies with
 member functions, typed callbacks, structured control flow, smaller functions and named
 constants (enums for unit types, improvements, advances, orders, network messages ..., flag
-constants for units, cities, treaties, tiles); grouped state, RAII and recorded unit tests come
-next.
+constants for units, cities, treaties, tiles) and its state grouped by subject (records such as
+`prefs.difficulty` or `net.session_phase` where the original's variables lie together, a header
+per subject, the read-only texts and tables `const`); RAII and recorded unit tests come next.
 
 Details: [STATUS.md](docs/STATUS.md) (progress and verification) and
 [DEVELOPMENT.md](docs/DEVELOPMENT.md) (the code's layout, the approach and the tooling).

@@ -35,7 +35,7 @@ int lang_has(const char *key);
    reads its text files); called before the menus are built. */
 void lang_load_menus(void);
 
-/* The labels (LABELS.TXT, label_string_ids[n]: key "label.<n>"), once
+/* The labels (LABELS.TXT, label_table.string_ids[n]: key "label.<n>"), once
    labels_load has read them: their English texts recorded, a translation's
    put in their place. */
 void lang_add_labels(int count);

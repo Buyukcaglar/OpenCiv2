@@ -242,9 +242,9 @@ int __cdecl mem_handle_alloc_tracked(i32 size)
 {
   int handle;
   
-  mem_last_alloc_size = size;
+  error_state.last_alloc_size = size;
   handle = mem_handle_alloc(size);
-  error_last_alloc_failed = (uint)(handle == 0);
+  error_state.last_alloc_failed = (uint)(handle == 0);
   return handle;
 }
 
@@ -260,9 +260,9 @@ i32 __cdecl memblock_alloc_checked(MemBlock *block,uint size)
   
   if ((uint)block->available < (size & 0xffff)) {
     uType = 0;
-    lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
-    lpText = (LPCSTR)label_string(label_string_ids[0x23a]);
-    wnd = ((WndBase *)&editor_text_dlg_wnd_block.active_editor_wnd->window)->get_window();
+    lpCaption = (LPCSTR)label_string(label_table.string_ids[0x234]);
+    lpText = (LPCSTR)label_string(label_table.string_ids[0x23a]);
+    wnd = ((WndBase *)&editor_active.wnd->window)->get_window();
     MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     result = 0;
   }
@@ -303,7 +303,7 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
       text_clear();
       adjective = civ_get_adjective(civ);
       text_append((const char *)adjective);
-      dlg.add_option((const char *)&map_views_block.text_buffer,civ,0);
+      dlg.add_option((const char *)&textbuf.buf,civ,0);
     }
   }
   dlg.set_default_choice(human_civ[0]);
@@ -353,11 +353,11 @@ int __cdecl err_register_cleanup_fn(CleanupFn callback)
   int slot;
   int index;
   
-  slot = fatal_cleanup_count;
+  slot = error_state.cleanup_count;
   index = -1;
-  if (fatal_cleanup_count < 10) {
-    index = fatal_cleanup_count;
-    fatal_cleanup_count++;
+  if (error_state.cleanup_count < 10) {
+    index = error_state.cleanup_count;
+    error_state.cleanup_count++;
     main_frame_bg_surface_block.crash_handler_callbacks[slot] = callback;
   }
   return index;
@@ -412,7 +412,7 @@ void __cdecl error_report(uint error_code,int module_id,iptr context,iptr data1,
   char data1_text[12];
   
   if (context != 0) {
-    crt_strcpy(((i8 *)&error_context_text),(const char *)((const void *)context));
+    crt_strcpy(((i8 *)&error_state.context_text),(const char *)((const void *)context));
   }
   __itoa(error_code,error_text,10);
   __itoa(module_id,module_text,10);
@@ -443,14 +443,14 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&err_fatal_msg_fmt),msg);
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
   dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
-  len = _strlen(((i8 *)&error_context_text));
+  len = _strlen(((i8 *)&error_state.context_text));
   if (len != 0) {
-    _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),str_s_2,((i8 *)&error_context_text));
+    _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),str_s_2,((i8 *)&error_state.context_text));
     OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
     dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   }
-  if ((*(int *)&error_last_alloc_failed) != 0) {
-    __ltoa((*&mem_last_alloc_size),(char *)data1_text,10);
+  if ((*(int *)&error_state.last_alloc_failed) != 0) {
+    __ltoa((*&error_state.last_alloc_size),(char *)data1_text,10);
     crt_strcpy(msg,str_tried_to_allocate);
     crt_strcat(msg,(const char *)((const void *)data1_text));
     crt_strcat(msg,str_bytes);
@@ -461,8 +461,8 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_alloc_newline_str));
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
   dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
-  if (error_last_open_failed != 0) {
-    _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),str_file_open_failed_s,((i8 *)&error_last_open_path));
+  if (error_state.last_open_failed != 0) {
+    _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),str_file_open_failed_s,((i8 *)&error_state.last_open_path));
     OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
     dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   }
@@ -476,7 +476,7 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
   dbg_log((const char *)&main_frame_bg_surface_block.crash_debug_buffer);
   err_dump_text_file((const char *)&str_warn0_dat);
-  i = fatal_cleanup_count;
+  i = error_state.cleanup_count;
   while (i = i - 1, -1 < i) {
     if (main_frame_bg_surface_block.crash_handler_callbacks[i] != 0) {
       main_frame_bg_surface_block.crash_handler_callbacks[i]();
@@ -889,10 +889,10 @@ i8 __thiscall dbg_log_write(void *self,const char *text)
   tick_count = GetTickCount();
   _sprintf(line,str_5d,(tick_count - *(int *)self) / 1000);
   crt_strcat(line,(const char *)((const void *)text));
-  if (dbg_log_to_debugger != '\0') {
+  if (dbg_log_to.debugger != '\0') {
     dbg_log_write_debugger((const char *)line);
   }
-  if (dbg_log_to_file != '\0') {
+  if (dbg_log_to.file != '\0') {
     dbg_log_write_file((const char *)line);
   }
   return 1;
@@ -957,7 +957,7 @@ ErrorContext *ErrorContext::format_message(const char *fmt,const char *text,i32 
 {
   size_t len;
   i32 trace;
-  char *_Format;
+  const char *_Format;
   
   crt_strcpy((char *)this,((i8 *)&err_format_empty_str));
   _Format = str_error_s_file_s_line_d;

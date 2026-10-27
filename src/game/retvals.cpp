@@ -72,7 +72,7 @@ void __thiscall pedia_load_description(void *self, int topic2)
     section_missing = true;
     while (remaining != 0) {
       text_read_line(1);
-      _strncpy(marker,((i8 *)&map_views_block.text_buffer),2);
+      _strncpy(marker,((i8 *)&textbuf.buf),2);
       found = _strcmp(marker,((i8 *)&pedia_desc_marker_str));
       if (found == 0) {
         remaining = remaining + -1;
@@ -84,7 +84,7 @@ void __thiscall pedia_load_description(void *self, int topic2)
     }
     /* (port) the description translated (lang.h): its lines as the file's */
     if (section_missing &&
-        (translated = lang_description((const char *)section_name,(const char *)map_views_block.text_buffer + 2)) != 0) {
+        (translated = lang_description((const char *)section_name,(const char *)textbuf.buf + 2)) != 0) {
       str_clear((char *)desc_text);
       for (cur_len = 0; *translated != '\0' && cur_len < 0xffe; translated += line_len + (translated[line_len] != '\0')) {
         line_len = strcspn(translated,"\n");
@@ -105,28 +105,28 @@ void __thiscall pedia_load_description(void *self, int topic2)
           break;
         }
         if (CRT_FEOF(text_file_handle) != 0) break;
-        line = _fgets(((i8 *)&map_views_block.text_buffer),0x800,text_file_handle);
-        if ((line == (char *)0x0) || (map_views_block.text_buffer[0] == '@')) break;
-        if (map_views_block.text_buffer[0] == ';') continue;
-        newline_ptr = STRRCHR(((i8 *)&map_views_block.text_buffer),10);
+        line = _fgets(((i8 *)&textbuf.buf),0x800,text_file_handle);
+        if ((line == (char *)0x0) || (textbuf.buf[0] == '@')) break;
+        if (textbuf.buf[0] == ';') continue;
+        newline_ptr = STRRCHR(((i8 *)&textbuf.buf),10);
         if (newline_ptr != (char *)0x0) {
           *newline_ptr = '\0';
-          crt_strcat(((i8 *)&map_views_block.text_buffer),((i8 *)&pedia_desc_crlf_str));
+          crt_strcat(((i8 *)&textbuf.buf),((i8 *)&pedia_desc_crlf_str));
         }
         cur_len = _strlen(desc_text);
-        line_len = _strlen(((i8 *)&map_views_block.text_buffer));
+        line_len = _strlen(((i8 *)&textbuf.buf));
         if (0xffe < cur_len + line_len) {
           cur_len = _strlen(desc_text);
           *(i8 *)((iptr)(((u8 *)&diffeng_events_section_block.diffeng_events_section + 7)) - cur_len) = 0;
         }
-        crt_strcat(desc_text,((i8 *)&map_views_block.text_buffer));
+        crt_strcat(desc_text,((i8 *)&textbuf.buf));
         cur_len = _strlen(desc_text);
         if (cur_len == 0xfff) break;
       }
     }
     else {
       text_append_label(0xe);
-      crt_strcpy(desc_text,((i8 *)&map_views_block.text_buffer));
+      crt_strcpy(desc_text,((i8 *)&textbuf.buf));
     }
     ((Control *)((iptr)obj_addr + 0x1a98))->set_text((const char *)desc_text);
     ((Control *)((iptr)obj_addr + 0x1a98))->show_and_redraw();
@@ -351,14 +351,14 @@ static void save_adapt_game_mode(uint saved_multiplayer)
 {
   int event_idx;
 
-  civ_saved_cursor_x_block.mp_open_game = 1;
+  mp_options.open_game = 1;
   if (saved_multiplayer == 0) {
-    civ_saved_cursor_x_block.mp_double_production = 0;
-    civ_saved_cursor_x_block.mp_double_moves = 0;
+    mp_doubles.production = 0;
+    mp_doubles.moves = 0;
   }
-  prefs_main_menu_choice_block.prefs_mp_simultaneous_moves = 0;
+  menu_prefs.mp_simultaneous_moves = 0;
   if (game.human_players == 0) {
-    if (((*(byte *)&turn_resume_civ) == 0) || ((1 << ((*(byte *)&turn_resume_civ) & 0x1f) & (uint)game.civs_alive) == 0)) {
+    if (((*(byte *)&turn_loop.resume_civ) == 0) || ((1 << ((*(byte *)&turn_loop.resume_civ) & 0x1f) & (uint)game.civs_alive) == 0)) {
       for (event_idx = 1; event_idx < 8; event_idx = event_idx + 1) {
         if ((1 << ((byte)event_idx & 0x1f) & (uint)game.civs_alive) != 0) {
           game.human_players = (byte)(1 << ((byte)event_idx & 0x1f));
@@ -367,7 +367,7 @@ static void save_adapt_game_mode(uint saved_multiplayer)
       }
     }
     else {
-      game.human_players = (byte)(1 << ((*(byte *)&turn_resume_civ) & 0x1f));
+      game.human_players = (byte)(1 << ((*(byte *)&turn_loop.resume_civ) & 0x1f));
     }
   }
   if (saved_multiplayer != 0) {
@@ -444,22 +444,22 @@ int __cdecl save_read_game(char *path)
   }
   slash_ptr = STRRCHR(path,0x5c);
   slash_ptr = slash_ptr + 1;
-  crt_strcpy(((i8 *)&net_session_block.loaded_file_name),slash_ptr);
-  count_read = _strlen(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-  result = __strnicmp(path,((i8 *)&civ_saved_cursor_x_block.game_home_dir),count_read);
+  crt_strcpy(((i8 *)&net.loaded_file_name),slash_ptr);
+  count_read = _strlen(((i8 *)&game_dirs.home));
+  result = __strnicmp(path,((i8 *)&game_dirs.home),count_read);
   if (result == 0) {
-    count_read = _strlen(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    count_read = _strlen(((i8 *)&game_dirs.home));
     slash_ptr = path + count_read;
     count_read = _strlen(slash_ptr);
-    name_len = _strlen(((i8 *)&net_session_block.loaded_file_name));
+    name_len = _strlen(((i8 *)&net.loaded_file_name));
     if (count_read != name_len) {
-      _memset(((i8 *)&net_session_block.loaded_file_subdir),0,0x104);
+      _memset(((i8 *)&net.loaded_file_subdir),0,0x104);
       count_read = _strlen(slash_ptr);
-      name_len = _strlen(((i8 *)&net_session_block.loaded_file_name));
-      _strncpy(((i8 *)&net_session_block.loaded_file_subdir),slash_ptr,(count_read - name_len) - 1);
+      name_len = _strlen(((i8 *)&net.loaded_file_name));
+      _strncpy(((i8 *)&net.loaded_file_subdir),slash_ptr,(count_read - name_len) - 1);
     }
   }
-  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  __chdir(((i8 *)&game_dirs.home));
   ui_flush_input();
   rules_load(1);
   status = 3;
@@ -486,8 +486,8 @@ int __cdecl save_read_game(char *path)
   game.game_flags = game.game_flags & ~GAME_SAVED_AS_SCENARIO;
   result = map_read((iptr)_File,0);
   if (((result != 0) ||
-      (count_read = _fread(map_coarse[0],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0)) ||
-     (count_read = _fread(map_coarse[1],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0))
+      (count_read = _fread(map_data.coarse[0],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0)) ||
+     (count_read = _fread(map_data.coarse[1],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0))
   goto close_file;
   ui_flush_input();
   count_read = _fread(((i8 *)&landmass_table_block.landmass_table),0x400,1,_File);
@@ -499,9 +499,9 @@ int __cdecl save_read_game(char *path)
        || (count_read = _fread(&leaders[idx].female,1,1,_File), count_read == 0))
     goto close_file;
   }
-  count_read = _fread(((i16 *)&map_cursor_x),2,1,_File);
+  count_read = _fread(((i16 *)&map_cursor.x),2,1,_File);
   if ((count_read == 0) ||
-     (count_read = _fread(((i16 *)&map_cursor_y),2,1,_File), saved_player_civ = game.player_civ, game.player_civ = saved_player_civ,
+     (count_read = _fread(((i16 *)&map_cursor.y),2,1,_File), saved_player_civ = game.player_civ, game.player_civ = saved_player_civ,
      count_read == 0)) goto close_file;
   if (game.multiplayer == 0) {
     count_read = _fread(leader_buf,0x30,1,_File);
@@ -534,11 +534,11 @@ int __cdecl save_read_game(char *path)
     scenario_reset_params();
   }
   else {
-    count_read = _fread(((i16 *)&prefs_game_rules_block.scenario_flags),100,1,_File);
+    count_read = _fread(((i16 *)&scenario.flags),100,1,_File);
     if (count_read == 0) goto close_file;
   }
   if (skip_destroyed == 0) {
-    count_read = _fread(((i16 *)&destroyed_civ_count_block.destroyed_civ_count),0x152,1,_File);
+    count_read = _fread(((i16 *)&destroyed_civs.count),0x152,1,_File);
     if (count_read == 0) goto close_file;
   }
   else {
@@ -547,32 +547,32 @@ int __cdecl save_read_game(char *path)
   human_civ[0] = (int)game.field_1c;
   if (((version & 0xffff) < 0x29) || (game.multiplayer == 0)) {
     passwords_reset();
-    civ_saved_cursor_x_block.mp_open_game = 1;
-    civ_saved_cursor_x_block.mp_kill_civ_on_retire = prefs_main_menu_choice_block.prefs_mp_kill_on_retire;
-    civ_saved_cursor_x_block.mp_show_human_starts = prefs_main_menu_choice_block.prefs_mp_show_human_starts;
-    civ_saved_cursor_x_block.mp_chat_from_start = prefs_main_menu_choice_block.prefs_mp_chat_from_start;
-    civ_saved_cursor_x_block.mp_double_production = 0;
-    civ_saved_cursor_x_block.mp_double_moves = 0;
-    prefs_main_menu_choice_block.prefs_mp_simultaneous_moves = 0;
-    (*(byte *)&civ_saved_cursor_x_block.saved_turn_civ) = (byte)human_civ[0];
-    (*(byte *)&turn_resume_civ) = (byte)human_civ[0];
+    mp_options.open_game = 1;
+    mp_options.kill_civ_on_retire = menu_prefs.mp_kill_on_retire;
+    mp_options.show_human_starts = menu_prefs.mp_show_human_starts;
+    mp_options.chat_from_start = menu_prefs.mp_chat_from_start;
+    mp_doubles.production = 0;
+    mp_doubles.moves = 0;
+    menu_prefs.mp_simultaneous_moves = 0;
+    (*(byte *)&saved_turn.civ) = (byte)human_civ[0];
+    (*(byte *)&turn_loop.resume_civ) = (byte)human_civ[0];
   }
   else {
-    _memset(((i8 *)&civ_saved_cursor_x_block.civ_saved_cursor_x),0,0x494);
-    count_read = _fread(((i8 *)&civ_saved_cursor_x_block.civ_saved_cursor_x),0x494,1,_File);
+    _memset(((i8 *)&civ_view.saved_cursor_x),0,0x494);
+    count_read = _fread(((i8 *)&civ_view.saved_cursor_x),0x494,1,_File);
     if (count_read == 0) goto close_file;
-    if ((*(byte *)&civ_saved_cursor_x_block.saved_turn_civ) == 0) {
-      (*(byte *)&civ_saved_cursor_x_block.saved_turn_civ) = game.turn_civ;
+    if ((*(byte *)&saved_turn.civ) == 0) {
+      (*(byte *)&saved_turn.civ) = game.turn_civ;
     }
-    if ((*(byte *)&civ_saved_cursor_x_block.saved_turn_civ) == 0) {
+    if ((*(byte *)&saved_turn.civ) == 0) {
       for (event_count2 = 1; event_count2 < 8; event_count2 = event_count2 + 1) {
         if ((1 << ((byte)event_count2 & 0x1f) & (uint)game.civs_alive) != 0) {
-          (*(byte *)&civ_saved_cursor_x_block.saved_turn_civ) = (byte)event_count2;
+          (*(byte *)&saved_turn.civ) = (byte)event_count2;
           break;
         }
       }
     }
-    (*(byte *)&turn_resume_civ) = (*(byte *)&civ_saved_cursor_x_block.saved_turn_civ);
+    (*(byte *)&turn_loop.resume_civ) = (*(byte *)&saved_turn.civ);
     passwords_refresh_flags();
   }
   if (save_read_events(_File) == 0) goto close_file;
@@ -587,7 +587,7 @@ int __cdecl save_read_game(char *path)
   }
   ui_flush_input();
   save_recount_units();
-  city_calc_cached_id = 0xffffffff;
+  city_turn.calc_cached_id = 0xffffffff;
   rules_load_advances(1);
   rules_load_improvements(1);
   rules_load_units(1);
@@ -685,7 +685,7 @@ static LRESULT wnd_base_on_paint(HWND hwnd)
     }
     else {
       wnd_data = (int)((WndBase *)wnd2)->get_window();
-      if (((int)((NativeWindow *)wnd_data)->palette != 0) && (gfx_palettized_display == 1)) {
+      if (((int)((NativeWindow *)wnd_data)->palette != 0) && (display_palette.palettized == 1)) {
         wnd_data = (int)((WndBase *)wnd2)->get_window();
         RealizePalette(((NativeWindow *)wnd_data)->hdc);
       }
@@ -1298,7 +1298,7 @@ uint __cdecl game_turn_start_popups(void)
     text_set_string_arg(0,(const char *)civ_name);
     text_clear();
     text_append_year((int)game.year);
-    text_set_string_arg(2,(const char *)&map_views_block.text_buffer);
+    text_set_string_arg(2,(const char *)&textbuf.buf);
     text_clear();
     if (best_city < 0) {
       text_append_label(0xe);
@@ -1308,7 +1308,7 @@ uint __cdecl game_turn_start_popups(void)
       ((MapView *)((i8 *)&map_views_block.map_views))->center_on((int)cities[best_city].x,
                          (int)cities[best_city].y);
     }
-    text_set_string_arg(1,(const char *)&map_views_block.text_buffer);
+    text_set_string_arg(1,(const char *)&textbuf.buf);
     ret = popup_game_with_sprite((const char *)str_counciltime,(iptr)&popup_info_icon_sprite,0);
     if (ret == 0) {
       council_show(human_civ[0],0);   /* void; result left in EAX is garbage */
@@ -1362,10 +1362,10 @@ int __cdecl city_recalc(int city,int full)
     result = 0;
   }
   else if (full == 0) {
-    result = main_menu_block.city_happy_count - main_menu_block.city_unhappy_count;
+    result = city_calc.happy_count - city_calc.unhappy_count;
   }
   else {
-    city_calc_cached_id = city;
+    city_turn.calc_cached_id = city;
     city_calc_tile_flags(city);
     city_calc_capital_link(city);
     city_calc_unit_support(city);
@@ -1396,9 +1396,9 @@ int __cdecl city_process_pollution(int city)
   
   owner = cities[city].owner;
   pollution_chance = (int)((uint)civs[owner].num_advances * (uint)game.difficulty) >> 1;
-  if (((game.game_flags & GAME_SCENARIO) != 0) && ((prefs_game_rules_block.scenario_flags[0] & 0x40) != 0)) {
+  if (((game.game_flags & GAME_SCENARIO) != 0) && ((scenario.flags[0] & 0x40) != 0)) {
     pollution_chance = 0;
-    main_menu_block.city_pollution = 0;
+    city_calc.pollution = 0;
   }
   roll = city_has_improvement(city,IMP_SOLAR_PLANT);
   if (roll != 0) {
@@ -1412,7 +1412,7 @@ int __cdecl city_process_pollution(int city)
     pollution_roll = _rand();
     pollution_roll = pollution_roll % (0x100 - pollution_chance);
   }
-  if (pollution_roll < main_menu_block.city_pollution * 2) {
+  if (pollution_roll < city_calc.pollution * 2) {
     roll = _rand();
     tile_x = map_wrap_x((int)cities[city].x +
                                (int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[roll % 0x14]);
@@ -1465,7 +1465,7 @@ int __cdecl city_process_pollution(int city)
           nuclear_blast((int)cities[city].x,
                              (int)cities[city].y);
           city_set_improvement(city,0x15,0);
-          roll = (int)civ_saved_cursor_x_block.autoplay_active;
+          roll = (int)autoplay.active;
           if (roll == 0) {
             /* city_notify_dialog is declared void but returns city_notify_dialog_ex's int:
                it is city_notify_dialog_ex(a, b, 0, c) */
@@ -1523,7 +1523,7 @@ static uint hut_tribe_city(uint civ,int x,uint y)
   if (tmp < 0) {
     return civ;
   }
-  ((CityWindow *)((i8 *)&city_window_block.city_window))->open(tmp);   /* void: the caller ignores our result */
+  ((CityWindow *)((i8 *)&city_wnd.window))->open(tmp);   /* void: the caller ignores our result */
   return civ;
 }
 

@@ -246,6 +246,49 @@ message by message and clock event by clock event.
   four bits or bits without a name; unsigned literals (`0x8000U`, an
   enumerator would be int); flag words reached through pointer arithmetic;
   dialog control ids and other UI message numbers.
+* **Grouped state** (step 6).  The game's ~3,600 globals are grouped by what
+  they describe, without moving a byte.  Records (re/state_records.txt,
+  tools/state_records.py): 109 structs whose single instance is where their
+  variables were: 63 made of 309 loose globals (`mapgen.climate`,
+  `snd_wave.sources`, `dlg_style.text_color`, `map_data.tiles`,
+  `pathfind.unit_type` ...), defined as one variable in gamedata.cpp with
+  the old initializers, and 46 made of 596 members of the contiguity blocks
+  (`prefs.difficulty`, `scenario.max_turns`, `diplo_eval.ai_fear_level`,
+  `city_calc.happy_count`, `advisor_state.scrollbar`, `textbuf.buf` ...),
+  nested in their block and named by an `inline constexpr` reference (the
+  same constant address, so the code is the same); the network session
+  object is `net`, its members without the `net_` prefix
+  (re/state_renames.tsv, tools/state_rename.py).  Uses through a block's
+  name (`some_block.member`) went from 15,000 to 5,200 (window objects,
+  sprites, tables the code indexes across).  The declarations are split
+  into a header per subject (src/data/state/: game, civ, city, unit,
+  diplomacy, map, network, window, graphics, sound ...; the subject is the
+  module whose code names them most, tools/state_split.py), the 2,617
+  texts in state/strings.h sectioned the same way; gamedata.cpp keeps the
+  definitions in address order.  2,891 read-only texts and tables are
+  `const` for the game's code (RODATA: gamedata.cpp defines them writable,
+  as gcc will not mix const and writable variables in one section); the
+  compiler rejected no write (24 locals and two parameters that hold
+  them became `const char *`), and the casts it cannot see through were
+  checked: lang_file_ext and setup_chosen_leaders are written (they stay
+  writable), as is what gamedata_init fills in.  101 loose variables only
+  one function uses (the original's statics) stay where they are, marked
+  `only F uses it`.  Checks: each record member's offset is a
+  static_assert, the layout check and tools/state_compare.py (every data
+  symbol of the previous build at the same section offset with the same
+  size, or folded into a record spanning exactly its members; the data
+  object's bytes the same; the machine code of every function compared
+  with its absolute addresses as symbol+offset): the code is the same but
+  for 52 game functions, all of them using loose variables made records
+  (the block records compile identically: their members already were one
+  object), where gcc, seeing one record instead of separate variables,
+  keeps the record's address in a register and addresses members from it
+  (`movswl 0x30(%eax,%edx,2)` for `start_positions.y[i]`), with the
+  register, operand order and branch layout changes that follow; reviewed
+  by hand.  Besides: gamedata_check_layout (fewer entries) and the C
+  runtime's start-up glue (an end-of-data address).  The suite passes on
+  both builds, a replayed game saves the same file (Ctrl+S after three
+  turns), and the two-game network test with diplomacy passes.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking
