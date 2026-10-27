@@ -1,6 +1,6 @@
 # Developing OpenCiv2
 
-How the reconstruction is organized and checked. Building and playing: [README.md](README.md);
+How the reconstruction is organized and checked. Building and playing: [README.md](../README.md);
 progress: [STATUS.md](STATUS.md).
 
 ## Layout
@@ -21,7 +21,7 @@ progress: [STATUS.md](STATUS.md).
 | `tests/` | Small standalone tests (data layout, network records, CD music reading). |
 | `hook/` | An `XDaemon.dll` proxy that makes the original deterministic under Wine. |
 | `tools/` | Build, analysis and refactoring scripts. |
-| `docs/`, `STATUS.md` | Notes on the reconstruction and its verification. |
+| `docs/` | Notes on the reconstruction and its verification; progress in `STATUS.md`. |
 
 ## Approach
 

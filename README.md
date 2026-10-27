@@ -58,8 +58,8 @@ The code is being modernized step by step, each step checked by the harness: it 
 strict C++, keeps the original's data layout, has its classes as C++ class hierarchies and typed
 callbacks; member functions, structured control flow and smaller functions come next.
 
-Details: [STATUS.md](STATUS.md) (progress and verification) and
-[DEVELOPMENT.md](DEVELOPMENT.md) (the code's layout, the approach and the tooling).
+Details: [STATUS.md](docs/STATUS.md) (progress and verification) and
+[DEVELOPMENT.md](docs/DEVELOPMENT.md) (the code's layout, the approach and the tooling).
 
 | | |
 | --- | --- |

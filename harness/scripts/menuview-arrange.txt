@@ -1,6 +1,6 @@
 # The View menu's zooms and Arrange Windows, then a cancelled Save Game:
 # the map must be repainted after the dialog closes (it was left black,
-# see STATUS.md).  Through menu_command as menuview.txt, on the autosave.
+# see docs/STATUS.md).  Through menu_command as menuview.txt, on the autosave.
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500
