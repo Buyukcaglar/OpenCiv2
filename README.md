@@ -19,8 +19,12 @@ The first time, it finds your copy of the game (or asks where it is) and sets it
 included when it comes from the CD or a disc image. `--setup [FOLDER or IMAGE.cue]` sets it
 up again.
 
-Network games (Multiplayer Game > Network or Internet) play against OpenCiv2 or the original
-game, either one hosting; they use TCP port 4993 and UDP port 4994 (LAN discovery).
+### Multiplayer
+
+All of the original's multiplayer modes are supported: hot seat on one computer, and network
+games on a local network or over the Internet (Multiplayer Game > Network or Internet). Players
+can mix OpenCiv2 on any system with the original game, and either one can host. Network games
+use TCP port 4993, and UDP port 4994 to find games on a local network.
 
 ## Build and run
 
@@ -52,10 +56,11 @@ Playable. Every function of the game that can run has source; the only parts not
 are the original's MSVC runtime (replaced by the platform's C library) and unreachable 16-bit
 leftovers. All 36 recorded scenarios match the original exactly, pixel for pixel. They run 72% of
 the game's functions (77% leaving out networking); sound, video and the High Council can't be
-compared under Wine. Network games over TCP/IP work, and are compatible with the original:
-OpenCiv2 and the original game play each other on a LAN or over the Internet, either one
-hosting, up to three players tested (`docs/xdaemon-protocol.md`; `tools/xdnet/nettest.py`
-plays two or three games against each other automatically).
+compared under Wine. Multiplayer is supported and compatible with the original: OpenCiv2 and
+the original game play each other on a LAN or over the Internet, either one hosting. Automated
+tests (`tools/xdnet/nettest.py`) play two or three games against each other, including
+diplomacy, saving and loading, players leaving and rejoining, and 50-turn games
+(`docs/xdaemon-protocol.md`).
 
 The code is being modernized step by step, each step checked by the harness: it compiles as
 strict C++, keeps the original's data layout, has its classes as C++ class hierarchies and typed
