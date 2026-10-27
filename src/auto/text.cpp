@@ -181,30 +181,30 @@ void __cdecl labels_reload(void)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __thiscall file_obj_create(FileObject *self,const char *path)
+i32 FileObject::create(const char *path)
 
 {
   i32 result;
   
-  result = file_obj_create_path(path,self);
+  result = file_obj_create_path(path,this);
   return result;
 }
 
 /* 00421c30 auto */
-i32 __thiscall file_map_close(FileObject *self)
+i32 FileObject::map_close()
 
 {
   i32 result;
   
-  result = file_obj_close_handle(self);
+  result = file_obj_close_handle(this);
   return result;
 }
 
 /* 00421c60 auto */
-void __thiscall file_obj_write(FileObject *self,iptr data,i32 size)
+void FileObject::write(iptr data,i32 size)
 
 {
-  file_obj_write_bytes(self,(char *)data,size);
+  file_obj_write_bytes(this,(char *)data,size);
   return;
 }
 
@@ -332,7 +332,7 @@ void __cdecl strpool_block_global_init(void)
 void __cdecl strpool_block_static_init(void)
 
 {
-  memblock_ctor((MemBlock *)((i8 *)&strpool_block_block.strpool_block));
+  ((MemBlock *)((i8 *)&strpool_block_block.strpool_block))->construct();
   return;
 }
 
@@ -436,10 +436,10 @@ int __cdecl strpool_add_padded(const char *text,uint min_size)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dll_free(DllHandle *self)
+void DllHandle::free()
 
 {
-  dll_unload(self->hmodule);
+  dll_unload(hmodule);
   return;
 }
 
@@ -550,35 +550,35 @@ void __cdecl str_append_city_name(iptr dest,int city)
 }
 
 /* 004502b0 auto */
-DllHandle * __thiscall dll_handle_init(DllHandle *self)
+DllHandle *DllHandle::init()
 
 {
-  self->hmodule = 0;
-  return self;
+  hmodule = 0;
+  return this;
 }
 
 /* 004502e0 auto */
-void __thiscall dll_handle_load(DllHandle *self,const char *path)
+void DllHandle::load(const char *path)
 
 {
   u32 module;
   
-  if (self->hmodule != 0) {
-    dll_unload(self->hmodule);
+  if (hmodule != 0) {
+    dll_unload(hmodule);
   }
   module = res_dll_load_library(path);
-  self->hmodule = module;
+  hmodule = module;
   return;
 }
 
 /* 00450340 auto */
-void __thiscall dll_handle_free(DllHandle *self)
+void DllHandle::dll_handle_free()
 
 {
-  if (self->hmodule != 0) {
-    dll_unload(self->hmodule);
+  if (hmodule != 0) {
+    dll_unload(hmodule);
   }
-  self->hmodule = 0;
+  hmodule = 0;
   return;
 }
 
@@ -773,12 +773,12 @@ void __cdecl str_append_year(iptr dest,uint year)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __thiscall file_obj_open(FileObject *self,const char *path)
+i32 FileObject::open(const char *path)
 
 {
   i32 result;
   
-  result = file_obj_open_path((char *)path,self);
+  result = file_obj_open_path((char *)path,this);
   return result;
 }
 
@@ -808,12 +808,12 @@ void __thiscall file_obj_read_line(FileReadLineView *self,char *buf,i32 max_len)
 }
 
 /* 00492a80 auto */
-i32 __thiscall file_obj_get_size(FileObject *self)
+i32 FileObject::get_size()
 
 {
   i32 size;
   
-  size = file_obj_get_size_impl(self);
+  size = file_obj_get_size_impl(this);
   return size;
 }
 
@@ -1218,10 +1218,10 @@ void __cdecl str_append_gold(iptr dest,i32 gold)
 }
 
 /* 004bb370 auto */
-void __thiscall file_obj_read(FileObject *self,char *buf,i32 size)
+void FileObject::read(char *buf,i32 size)
 
 {
-  file_obj_read_bytes(self,(LPVOID)buf,size);
+  file_obj_read_bytes(this,(LPVOID)buf,size);
   return;
 }
 
@@ -1239,8 +1239,7 @@ void __cdecl text_list_append_wrapped(iptr dialog,i32 string_id,iptr item_count,
     }
     else {
       *(i32 *)line_count = 0;
-      dialog_add_line
-                ((Dialog *)dialog,(const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+      ((Dialog *)dialog)->add_line((const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
       text_clear();
     }
   }
@@ -1349,7 +1348,7 @@ void __cdecl text_section_index_global_init(void)
 void __cdecl text_section_index_static_init(void)
 
 {
-  memblock_ctor((MemBlock *)((i8 *)&text_section_index_pool_block.text_section_index_pool));
+  ((MemBlock *)((i8 *)&text_section_index_pool_block.text_section_index_pool))->construct();
   return;
 }
 
@@ -1883,20 +1882,17 @@ int __cdecl text_draw_shadowed(iptr surface,const char *text,int x,int y)
   
   if (-1 < text_shadow_color) {
     gfx_set_text_color_index(text_shadow_color);
-    surface_draw_text
-              ((DibSurface *)surface,(iptr)text_draw_font,text,
+    ((DibSurface *)surface)->draw_text((iptr)text_draw_font,text,
                text_shadow_dx + text_fake_bold + x,text_shadow_dy + y,5);
   }
   if (-1 < text_fg_color) {
     gfx_set_text_color_index(text_fg_color);
     if (text_fake_bold != 0) {
-      surface_draw_text
-                ((DibSurface *)surface,(iptr)text_draw_font,text,x + 1,y,5);
+      ((DibSurface *)surface)->draw_text((iptr)text_draw_font,text,x + 1,y,5);
     }
-    surface_draw_text
-              ((DibSurface *)surface,(iptr)text_draw_font,text,x,y,5);
+    ((DibSurface *)surface)->draw_text((iptr)text_draw_font,text,x,y,5);
   }
-  width = font_text_width(text_draw_font,text);
+  width = text_draw_font->text_width(text);
   return x + width;
 }
 
@@ -1907,7 +1903,7 @@ int __cdecl text_draw_centered(iptr surface,const char *text,int x,iptr y,int bo
   int total_width;
   int width2;
   
-  width2 = font_text_width(text_draw_font,text);
+  width2 = text_draw_font->text_width(text);
   if (-1 < text_shadow_color) {
     if ((int)(*(uint *)&text_shadow_dx) < 1) {
       width2 = width2 + ~(*(uint *)&text_shadow_dx) + 1;
@@ -1928,7 +1924,7 @@ int __cdecl text_draw_right_aligned(iptr surface,const char *text,int x,i32 y,in
   int draw_x;
   i32 width2;
   
-  width2 = font_text_width(text_draw_font,text);
+  width2 = text_draw_font->text_width(text);
   if (-1 < text_shadow_color) {
     if ((int)(*(uint *)&text_shadow_dx) < 1) {
       width2 = width2 + ~(*(uint *)&text_shadow_dx) + 1;
@@ -1979,20 +1975,20 @@ void __cdecl res_unlock(i32 handle)
 }
 
 /* 005d7c00 auto */
-FileObject * __thiscall file_obj_init(FileObject *self)
+FileObject *FileObject::init()
 
 {
-  _memset(self,0,0x98);
-  return self;
+  _memset(this,0,0x98);
+  return this;
 }
 
 /* 005d7c6e auto */
-i32 __thiscall file_obj_close(FileObject *self)
+i32 FileObject::close()
 
 {
   i32 result;
   
-  result = file_map_close(self);
+  result = map_close();
   return result;
 }
 

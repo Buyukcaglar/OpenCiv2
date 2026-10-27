@@ -18,22 +18,22 @@ void __cdecl throneroom_show_upgrade(iptr civ)
 {
     ThroneRoom t;
     int i, incomplete = 0;
-    throneroom_ctor(&t.room, civ);
+    t.room.construct( civ);
     for (i = 0; i < 7; i++)
         if (civs[civ].throne_room[i] < 4)
             incomplete = 1;
     if ((~civs[civ].throne_room[8] & 0x7f) != 0)
         incomplete = 1;
     if (incomplete)
-        throneroom_run_upgrade(&t.room);
-    throneroom_dtor(&t.room);
+        t.room.run_upgrade();
+    t.room.destruct();
 }
 
 /* 0x0044cd9b: show the throne room (to look at it). */
 void __cdecl throneroom_show(iptr civ)
 {
     ThroneRoom t;
-    throneroom_ctor(&t.room, civ);
-    throneroom_run_view(&t.room);
-    throneroom_dtor(&t.room);
+    t.room.construct( civ);
+    t.room.run_view();
+    t.room.destruct();
 }

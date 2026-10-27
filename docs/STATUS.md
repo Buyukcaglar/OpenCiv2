@@ -157,9 +157,38 @@ message by message and clock event by clock event.
   picture, Civilopedia, council, parley windows ...).  Sizes are the
   constructors' allocations.  Each fold was checked by layout (no member
   moved) and access by access (every member access compared function by
-  function before and after), plus the suite.  Methods are still free
-  functions taking the object; member functions and typed callbacks are
-  next.
+  function before and after), plus the suite.  The methods are member
+  functions of their classes (tools/cxx_methods.py; old and new names in
+  re/methods.tsv): 927 of the 1,030 `__thiscall` functions.
+  `void __thiscall wnd_show(Wnd *self, int x)` became `void Wnd::show(int x)`,
+  declared in the class, its body using `this` (`self->` dropped where no
+  local has the member's name), and every call `wnd_show(w, 3)` became
+  `w->show(3)`.  Members are named without the class's prefix
+  (`city_window_draw_citizens` -> `CityWindow::draw_citizens`;
+  `*_ctor`/`*_dtor` -> `construct`/`destruct`), the whole old name kept
+  where the short one would clash with a member, a keyword or a macro (13,
+  e.g. `DibSurface::surface_width`, its field being `width`).  No C++
+  constructors, destructors or virtual functions: objects live in the
+  original's static data and are built explicitly, and the original's
+  vtables are data the game reads.  The same name in a base and a derived
+  class (`construct`, `create`) is allowed; a call that could reach the
+  other one is qualified (`obj->Control::construct()`), and a global a
+  member would now hide inside a member function is written `::name`.  What
+  stays free (the reason in re/methods.tsv): 17 whose address is taken (the
+  array constructor/destructor iterators' ctors and dtors, sprite_init and
+  sprite_destroy passed the same way, two in data tables), 49 whose `self`
+  is `void *` (mostly unwind-funclet destructors), 33 on a decompiler view
+  (a struct one function's accesses describe, `FileSeekView`), 3 that
+  assign `self` (font_destroy, menu_dtor, palette_destroy) and
+  net_session_init.  Two members call rand(): their trace still names them
+  by the free name (`crt_rand_at("palette_new_version")`), as the
+  original's does.  Checked function by function: the machine code of every
+  function is the same as before (tools/cxx_compare.py --map re/methods.tsv:
+  member functions under g++ -m32 take `this` as the first stack argument,
+  as the free functions took `self`) but for 22, which differ in register
+  choice, stack slots or the order of independent instructions or
+  comparisons (C++17 evaluates `obj` in `obj->f(args)` before the
+  arguments); and the suite after each subsystem.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

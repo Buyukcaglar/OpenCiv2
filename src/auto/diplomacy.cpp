@@ -496,7 +496,7 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  dialog_ctor(&dlg,0x4000);
+  dlg.Dialog::construct(0x4000);
   seh_state = 0;
   diplo_session_active = 1;
   if (((*((char *)&game.game_options + 2)) & 4) != 0) {
@@ -504,7 +504,7 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
     offset_x = int_clamp((screen_rect2.right - 0x280) / 3,1,9999);
     offset_y = int_clamp((screen_rect2.bottom - 0x1e0) / 3,1,9999);
     dialog_set_default_offset(-offset_x,-offset_y);
-    dialog_set_position(&dlg,-offset_x,-offset_y);
+    dlg.set_position(-offset_x,-offset_y);
     diplo_leader_wnd_launch(civ2,civ);
   }
   diplo_set_attitude_arg(civ2,civ);
@@ -527,11 +527,11 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
   }
   str = rand_range(0,3);
   text_append_int(str);
-  dialog_load_game_text(&dlg,(const char *)&map_views_block.text_buffer);
+  dlg.load_game_text((const char *)&map_views_block.text_buffer);
   if (civs[civ].units_active[0x2d] != '\0') {
-    dlg_load_game_section(&dlg,(const char *)&str_nuclearweapons,0x8000);
+    dlg.load_game_section((const char *)&str_nuclearweapons,0x8000);
   }
-  dlg_show_modal(&dlg,0);
+  dlg.show_modal(0);
   if ((civs[civ2].units_active[0x2d] != '\0') &&
      ((civs[civ2].treaties[civ] & 0x104) != 0x100)) {
     text_clear();
@@ -542,7 +542,7 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
     *treaty = *treaty | 0x100;
   }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00458dd5 */ { dialog_dtor(&dlg); }
+  /* inlined unwind funclet 00458dd5 */ { dlg.Dialog::destruct(); }
   return;
 }
 
@@ -564,7 +564,7 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
   
   seh_state = 0xffffffff;
   refused = 0;
-  dialog_ctor(&dlg,0x4000);
+  dlg.Dialog::construct(0x4000);
   seh_state = 0;
   if (civ_saved_cursor_x_block.autoplay_active == 0) {
     if (diplo_emissary_asked == 0) {
@@ -593,16 +593,16 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
         str = (iptr)(civ_name_plural(civ));
         text_set_string_arg(3,(const char *)str);
         text_set_label_arg(4,label_string_ids[0x76 - (uint)(leaders[civs[civ].tribe].female == '\0')]);
-        dialog_load_game_text(&dlg,(const char *)&str_emissary);
+        dlg.load_game_text((const char *)&str_emissary);
         if ((((*(byte *)&civs[human_civ[0]].treaties[civ] & 0x80) != 0) ||
             (ret = civ_has_wonder(human_civ[0],0x18), ret != 0)) ||
            (ret = civ_has_wonder(human_civ[0],9), ret != 0)) {
           option_flags = 0;
           option_id = 2;
           str = (iptr)(label_string(label_string_ids[0x68]));
-          dialog_add_option(&dlg,(const char *)str,option_id,option_flags);
+          dlg.add_option((const char *)str,option_id,option_flags);
         }
-        ret = dlg_show_modal(&dlg,0);
+        ret = dlg.show_modal(0);
         diplo_emissary_response = -ret;
         if (diplo_emissary_response != -2) break;
         intel_report_show(civ2,civ);
@@ -613,19 +613,19 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
       }
       accepted = (uint)(diplo_emissary_response != -1);
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 00459169 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 00459169 */ { dlg.Dialog::destruct(); }
       result = accepted;
     }
     else {
       result = (uint)(diplo_emissary_response != -1);
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 00459169 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 00459169 */ { dlg.Dialog::destruct(); }
     }
   }
   else {
     diplo_emissary_response = -1;
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 00459169 */ { dialog_dtor(&dlg); }
+    /* inlined unwind funclet 00459169 */ { dlg.Dialog::destruct(); }
     result = 0;
   }
   return result;
@@ -756,7 +756,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  dialog_ctor(&dlg,0x4000);
+  dlg.Dialog::construct(0x4000);
   seh_state = 0;
   if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
     allied = false;
@@ -825,7 +825,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
     }
     if (eval_only != 0) {
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
       goto done;
     }
@@ -848,7 +848,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
           }
         }
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
         goto done;
       }
@@ -867,7 +867,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
           }
         }
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
         goto done;
       }
@@ -877,12 +877,12 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         text_set_label_arg(1,improvements[blocking_wonder + 0x27].name);
         popup_game((const char *)&str_noexchangewonder);
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
       }
       else {
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
       }
       goto done;
@@ -890,7 +890,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
     if (ai_tech_count < civ_tech_count) {
       if (mode == 1) {
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
         goto done;
       }
@@ -905,18 +905,18 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
             diplo_leader_play_reaction(3);
             popup_game((const char *)&str_noexchangemedium_3);
             seh_state = 0xffffffff;
-            /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+            /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
             mode = 0;
           }
           else {
             seh_state = 0xffffffff;
-            /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+            /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
             mode = 0;
           }
         }
         else {
           seh_state = 0xffffffff;
-          /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+          /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         }
         goto done;
       }
@@ -935,7 +935,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         ret = diplo_offer_sell_tech(civ2,civ,mode);
         if (ret != 0) {
           seh_state = 0xffffffff;
-          /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+          /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
           goto done;
         }
         if (mode == 0) {
@@ -943,7 +943,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         }
       }
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
       goto done;
     }
@@ -966,12 +966,12 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
       if (mode < 2) {
         civs[civ].diplo_request_count += 2;
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
       }
       else {
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 1;
       }
       goto done;
@@ -981,7 +981,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         ret = diplo_offer_sell_tech(civ2,civ,mode);
         if (ret != 0) {
           seh_state = 0xffffffff;
-          /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+          /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
           goto done;
         }
         if (mode == 0) {
@@ -989,20 +989,20 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         }
       }
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
       goto done;
     }
     if (1 < mode) {
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
       goto done;
     }
     ret = diplo_ask_receive_emissary(civ2,civ,x,y);
     if (ret == 0) {
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
       goto done;
     }
@@ -1027,18 +1027,18 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
     else {
       text_append((const char *)&str_0_4);
     }
-    dialog_init_defaults(&dlg);
-    dialog_load_game_text(&dlg,(const char *)&map_views_block.text_buffer);
+    dlg.init_defaults();
+    dlg.load_game_text((const char *)&map_views_block.text_buffer);
     if ((-1 < tax_rate_icon_sprites_block.diplo_offer_tech_2nd) && (tax_rate_icon_sprites_block.diplo_offer_tech_2nd != tax_rate_icon_sprites_block.diplo_offer_tech_best)) {
       str_clear((char *)label_buf);
       str_append_label((iptr)label_buf,0x6b);
       text_expand_vars((iptr)label_buf,(iptr)&map_views_block.text_buffer);
-      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,2,0);
+      dlg.add_option((const char *)&map_views_block.text_buffer,2,0);
     }
-    ret = dlg_show_modal(&dlg,0);
+    ret = dlg.show_modal(0);
     if (ret == 0) {
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
       goto done;
     }
@@ -1053,7 +1053,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         popup_game((const char *)&str_exchangepetty);
         civs[civ].diplo_request_count++;
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
         goto done;
       }
@@ -1070,7 +1070,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
     tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
   } while (mode != 0);
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0045a510 */ { dialog_dtor(&dlg); }
+  /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
   mode = 1;
 done:
   return mode;
@@ -2139,7 +2139,7 @@ void __cdecl diplo_favor_menu(iptr civ2,iptr civ)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  dialog_ctor(&dlg,0x4000);
+  dlg.Dialog::construct(0x4000);
   seh_state = 0;
 favor_menu_loop:
   do {
@@ -2148,7 +2148,7 @@ favor_menu_loop:
     if (menu_choice == 0) {
       civs[civ].diplo_request_count--;
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045f08d */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
       goto done;
     }
     if (menu_choice == 1) {
@@ -2162,17 +2162,17 @@ favor_menu_loop:
       net_send_state_diff(0xff,2,0,0,0);
     }
     if (menu_choice != 2) goto check_choice_3;
-    dialog_load_game_text(&dlg,(const char *)&str_mustattack);
+    dlg.load_game_text((const char *)&str_mustattack);
     for (civ4 = 1; civ4 < 8; civ4++) {
       if ((((1 << ((byte)civ4 & 0x1f) & (uint)game.civs_alive) != 0) && (civ4 != civ))
          && (civ4 != civ2)) {
         arg_a = 0;
         civ3 = civ4;
         civ_name = (iptr)(civ_name_plural(civ4));
-        dialog_add_option(&dlg,(const char *)civ_name,civ3,arg_a);
+        dlg.add_option((const char *)civ_name,civ3,arg_a);
       }
     }
-    civ3 = dlg_show_modal(&dlg,0);
+    civ3 = dlg.show_modal(0);
   } while (civ3 == 0);
   civ_name = (iptr)(civ_name_plural(civ3));
   text_set_string_arg(1,(const char *)civ_name);
@@ -2180,7 +2180,7 @@ favor_menu_loop:
     diplo_leader_play_reaction(3);
     popup_game((const char *)&str_nocontact);
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 0045f08d */ { dialog_dtor(&dlg); }
+    /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
   }
   else if (((byte)(civs[civ].treaties[civ3] >> 8) & 0x20) == 0) {
     price = int_clamp((int)(((((uint)civs[civ2].reputation + civs[civ].gold / 100
@@ -2276,7 +2276,7 @@ favor_menu_loop:
       }
       if (choice == 0) {
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045f08d */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
       }
       else {
         if (price < 0) {
@@ -2290,7 +2290,7 @@ favor_menu_loop:
             diplo_leader_play_reaction(3);
             popup_game((const char *)&str_unfortunate);
             seh_state = 0xffffffff;
-            /* inlined unwind funclet 0045f08d */ { dialog_dtor(&dlg); }
+            /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
             goto done;
           }
           civs[civ2].gold -= price;
@@ -2360,7 +2360,7 @@ check_choice_3:
             diplo_leader_play_reaction(3);
             popup_game((const char *)&str_mapno);
             seh_state = 0xffffffff;
-            /* inlined unwind funclet 0045f08d */ { dialog_dtor(&dlg); }
+            /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
             goto done;
           }
           diplo_leader_play_reaction(2);
@@ -2439,21 +2439,21 @@ check_choice_3:
           map_redraw_all_views(human_civ[0],1);
         }
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045f08d */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
       }
     }
     else {
       diplo_leader_play_reaction(3);
       popup_game((const char *)&str_hellnowewontgo);
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045f08d */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
     }
   }
   else {
     diplo_leader_play_reaction(3);
     popup_game((const char *)&str_atwar);
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 0045f08d */ { dialog_dtor(&dlg); }
+    /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
   }
 done:
   return;
@@ -2493,14 +2493,14 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
   i32 seh_state;
   
   seh_state = 0xffffffff;
-  dialog_ctor(&dlg,0x4000);
+  dlg.Dialog::construct(0x4000);
   seh_state = 0;
   diplo_set_attitude_arg(civ2,civ);
   menu_choice = popup_game((const char *)&str_giftmenu);
   if (menu_choice == 0) {
     civs[civ].diplo_request_count--;
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+    /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
   }
   else if (menu_choice == 1) {
     diplo_tech_exchange(civ2,civ,0xffffffff,0xffffffff,0,1);
@@ -2510,7 +2510,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       diplo_leader_play_reaction(4);
       popup_game((const char *)&str_knowno);
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
     }
     else {
       text_set_label_arg(1,advances[tax_rate_icon_sprites_block.diplo_offer_tech_best].name);
@@ -2525,7 +2525,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         diplo_leader_play_reaction(4);
         popup_game((const char *)&str_wasting);
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
       }
       else {
         if (choice == 1) {
@@ -2547,12 +2547,12 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         civs[civ].diplo_request_count -= ((char)tax_rate_icon_sprites_block.diplo_gifts_this_meeting + 2);
         tax_rate_icon_sprites_block.diplo_gifts_this_meeting++;
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
       }
     }
   }
   else if (menu_choice == 2) {
-    dialog_load_game_text(&dlg,(const char *)&str_moneygift);
+    dlg.load_game_text((const char *)&str_moneygift);
     value = civs[civ2].gold / 0x32;
     prev_amount = 0;
     for (i = 1; i < 5; i++) {
@@ -2563,15 +2563,15 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         text_append_label(0x72);
         text_append_space();
         text_append_gold(gold_amount);
-        dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,gold_amount,0);
+        dlg.add_option((const char *)&map_views_block.text_buffer,gold_amount,0);
       }
     }
-    gold_amount = dlg_show_modal(&dlg,0);
+    gold_amount = dlg.show_modal(0);
     if (gold_amount == 0) {
       diplo_leader_play_reaction(4);
       popup_game((const char *)&str_wasting_2);
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
     }
     else {
       civs[civ2].gold -= gold_amount;
@@ -2587,17 +2587,16 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       civs[civ].diplo_request_count -= ((char)tax_rate_icon_sprites_block.diplo_gifts_this_meeting + 2);
       tax_rate_icon_sprites_block.diplo_gifts_this_meeting++;
       seh_state = 0xffffffff;
-      /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+      /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
     }
   }
   else {
     if (menu_choice == 3) {
       city_count = 0;
-      dlg_load_game_section(&dlg,(const char *)&str_militarysource,1);
+      dlg.load_game_section((const char *)&str_militarysource,1);
       for (city2 = 0; city2 < game.num_cities; city2++) {
         if ((cities[city2].id != 0) && (cities[city2].owner == civ2)) {
-          dialog_add_option
-                    (&dlg,(const char *)&cities[city2].name,city2,0);
+          dlg.add_option((const char *)&cities[city2].name,city2,0);
           city_count++;
         }
       }
@@ -2605,14 +2604,14 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         popup_game((const char *)&str_militarynone);
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
         goto done;
       }
-      city = dlg_show_modal(&dlg,0);
+      city = dlg.show_modal(0);
       if (city < 0) {
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
         goto done;
       }
       unit2 = tile_first_unit((int)cities[city].x,(int)cities[city].y);
@@ -2620,7 +2619,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         popup_game((const char *)&str_militarynone_2);
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
         goto done;
       }
       city4 = city_find_nearest((int)cities[city].x,(int)cities[city].y,civ,0xffffffff,
@@ -2634,7 +2633,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         diplo_leader_play_reaction(4);
         popup_game((const char *)&str_militaryno);
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
         goto done;
       }
       text_clear();
@@ -2645,7 +2644,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       if (unit < 0) {
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
         goto done;
       }
       if ((-1 < unit_types[units[unit].type].obsolete_by) &&
@@ -2656,7 +2655,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         diplo_leader_play_reaction(4);
         popup_game((const char *)&str_militaryno_2);
         seh_state = 0xffffffff;
-        /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+        /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
         goto done;
       }
       unit_stack_unlink(unit,1);
@@ -2674,9 +2673,9 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       if (has_advance != 0) {
         attitude_cost = attitude_cost / 2;
       }
-      city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city3);
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->refresh_if_city(city3);
       map_redraw_tile_all_views((int)cities[city3].x,(int)cities[city3].y);
-      city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city);
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->refresh_if_city(city);
       map_redraw_tile_all_views((int)cities[city].x,(int)cities[city].y);
       civ_adjust_attitude(civ,civ2,-attitude_cost);
       str = civ_get_adjective(civ);
@@ -2707,7 +2706,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       }
     }
     seh_state = 0xffffffff;
-    /* inlined unwind funclet 0045fd43 */ { dialog_dtor(&dlg); }
+    /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
   }
 done:
   return;
@@ -2750,14 +2749,14 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
   
   seh_state = 0xffffffff;
   choice = 0;
-  dialog_ctor(&dlg,0x4000);
+  dlg.Dialog::construct(0x4000);
   seh_state = 0;
   diplo_set_attitude_arg(civ2,civ);
-  dialog_load_game_text(&dlg,(const char *)&str_diplomacy);
+  dlg.load_game_text((const char *)&str_diplomacy);
   err = text_open_section((const char *)&main_frame_wnd_block.game_txt_path,(const char *)&str_diplomacymenu);
   if (err == 0) {
     text_read_line(1);
-    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,0,0);
+    dlg.add_option((const char *)&map_views_block.text_buffer,0,0);
     allied = false;
     at_peace = false;
     if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
@@ -2770,37 +2769,37 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
     }
     text_read_line(1);
     if (at_peace) {
-      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,1,0);
+      dlg.add_option((const char *)&map_views_block.text_buffer,1,0);
     }
     text_read_line(1);
     if ((!at_peace) && (!allied)) {
-      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,2,0);
+      dlg.add_option((const char *)&map_views_block.text_buffer,2,0);
     }
     text_read_line(1);
     if (allied) {
-      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,3,0);
+      dlg.add_option((const char *)&map_views_block.text_buffer,3,0);
     }
     text_read_line(1);
     if ((!allied) && (civs[civ2].government < 5)) {
-      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,4,0);
+      dlg.add_option((const char *)&map_views_block.text_buffer,4,0);
     }
     text_read_line(1);
     if ((at_peace) && (((byte)(civs[civ].treaties[civ2] >> 8) & 0x40) == 0)) {
-      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,5,0);
+      dlg.add_option((const char *)&map_views_block.text_buffer,5,0);
     }
     text_read_line(1);
     if (allied) {
-      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,6,0);
+      dlg.add_option((const char *)&map_views_block.text_buffer,6,0);
     }
     text_read_line(1);
-    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,7,0);
+    dlg.add_option((const char *)&map_views_block.text_buffer,7,0);
     text_read_line(1);
-    dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,8,0);
-    choice = dlg_show_modal(&dlg,0);
+    dlg.add_option((const char *)&map_views_block.text_buffer,8,0);
+    choice = dlg.show_modal(0);
   }
   text_close_file();
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00460104 */ { dialog_dtor(&dlg); }
+  /* inlined unwind funclet 00460104 */ { dlg.Dialog::destruct(); }
   return choice;
 }
 
@@ -2861,7 +2860,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
   emissary_sent = false;
   diplo_ai_meeting_active_i32 = 1;
   if ((scenario_events_loaded != 0) &&
-     (allowed = events_check_negotiation((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events),civ2,civ),
+     (allowed = ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->check_negotiation(civ2,civ),
      allowed == 0)) {
     diplo_ai_meeting_active_i32 = 0;
     return;
@@ -4237,12 +4236,12 @@ void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
     view = (DiploLeaderWindow *)0x0;
   }
   else {
-    view = diplo_leader_wnd_ctor(self);
+    view = self->construct();
   }
   seh_state = 0xffffffff;
   diplo_leader_window = view;
   if (((view != (DiploLeaderWindow *)0x0) && (((*((char *)&game.game_options + 2)) & 4) != 0)) &&
-     (ok = diplo_leader_wnd_init(view,civ2,civ), ok != 0)) {
+     (ok = view->init(civ2,civ), ok != 0)) {
     diplo_leader_wnd_open = 1;
     if ((iptr)diplo_leader_window == -200) {
       parent_wnd2 = 0;
@@ -4252,7 +4251,7 @@ void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
     }
     dlg_set_parent_window(parent_wnd2);
     dlg_set_palette((iptr)diplo_leader_window + 0x224);
-    diplo_leader_wnd_show(diplo_leader_window);
+    diplo_leader_window->show();
   }
   return;
 }
@@ -4264,7 +4263,7 @@ void __cdecl diplo_leader_wnd_close(void)
   if (diplo_leader_wnd_open != '\0') {
     diplo_leader_wnd_open = '\0';
     if (diplo_leader_window != 0) {
-      diplo_leader_wnd_teardown(diplo_leader_window);
+      diplo_leader_window->teardown();
       if (diplo_leader_window != 0) {
         diplo_leader_wnd_scalar_dtor((void *)diplo_leader_window,1);
       }
@@ -4295,7 +4294,7 @@ void __cdecl diplo_leader_play_reaction(int reaction)
 }
 
 /* 004942a3 auto */
-DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *self)
+DiploLeaderWindow *DiploLeaderWindow::construct()
 
 {
   i32 eh_frame;
@@ -4303,21 +4302,21 @@ DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  wnd_ctor(self);
+  this->ModalMenuWindow::construct();
   eh_state = 0;
-  surfwnd_ctor((SurfaceWindow *)self->leader_surface_window);
+  ((SurfaceWindow *)leader_surface_window)->SurfaceWindow::construct();
   (*((char *)&eh_state + 0)) = 1;
-  surface_ctor((DibSurface *)&self->frame_right);
+  surface_ctor((DibSurface *)&frame_right);
   (*((char *)&eh_state + 0)) = 2;
-  palette_init((GamePalette *)self->leader_palette);
+  ((GamePalette *)leader_palette)->init();
   (*((char *)&eh_state + 0)) = 3;
-  dll_handle_init((DllHandle *)self->leader_dll);
+  ((DllHandle *)leader_dll)->init();
   (*((char *)&eh_state + 0)) = 4;
-  mmwnd_ctor((AviPlayer *)self->leader_video_wnd);
+  ((AviPlayer *)leader_video_wnd)->construct();
   eh_state = (eh_state & 0xffffff00 | (byte)(5));
-  gfx_get_screen_rect((iptr)&self->control_list);
-  self->pending_flag_1088 = '\0';
-  return self;
+  gfx_get_screen_rect((iptr)&control_list);
+  pending_flag_1088 = '\0';
+  return this;
 }
 
 /* 004943c9 auto */
@@ -4331,9 +4330,9 @@ void __thiscall diplo_leader_wnd_dtor(void *self)
   eh_state = eh_state & 0xff;
   diplo_leader_video_active = 0;
   (*((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 0049444f */ { avi_player_dtor((AviPlayer *)(*(int *)&self + 0x65c)); }
+  /* inlined unwind funclet 0049444f */ { ((AviPlayer *)(*(int *)&self + 0x65c))->destruct(); }
   (*((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0049445e */ { dll_free((DllHandle *)(*(int *)&self + 0x658)); }
+  /* inlined unwind funclet 0049445e */ { ((DllHandle *)(*(int *)&self + 0x658))->free(); }
   (*((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 0049446d */ { palette_destroy((GamePalette *)(*(int *)&self + 0x224)); }
   (*((char *)&eh_state + 0)) = 1;
@@ -4346,7 +4345,7 @@ void __thiscall diplo_leader_wnd_dtor(void *self)
 }
 
 /* 004944bb auto */
-i32 __thiscall diplo_leader_wnd_init(DiploLeaderWindow *self,i32 viewer_civ,iptr leader_civ)
+i32 DiploLeaderWindow::init(i32 viewer_civ,iptr leader_civ)
 
 {
   int ok;
@@ -4355,11 +4354,11 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderWindow *self,i32 viewer_civ,iptr
   i8 dll_path[128];
   
   diplo_leader_video_active = 0;
-  palette_get_rgb((GamePalette *)((i8 *)&game_palette_block.game_palette),(iptr)saved_rgb2,10,0x20);
-  palette_set_rgb((GamePalette *)self->leader_palette,10,0x20,(iptr)saved_rgb2);
-  self->viewer_civ = (u8)viewer_civ;
-  self->leader_civ = (u8)leader_civ;
-  self->leader_tribe = (u8)civs[self->leader_civ].tribe;
+  ((GamePalette *)((i8 *)&game_palette_block.game_palette))->get_rgb((iptr)saved_rgb2,10,0x20);
+  ((GamePalette *)leader_palette)->set_rgb(10,0x20,(iptr)saved_rgb2);
+  this->viewer_civ = (u8)viewer_civ;
+  this->leader_civ = (u8)leader_civ;
+  leader_tribe = (u8)civs[this->leader_civ].tribe;
   str_clear((char *)dll_path);
   str_append((char *)dll_path,(const char *)&str_civ2_mk_dll);
   ok = file_resolve_path((const char *)dll_path);
@@ -4367,47 +4366,47 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderWindow *self,i32 viewer_civ,iptr
     result = 0;
   }
   else {
-    dll_handle_load((DllHandle *)self->leader_dll,(const char *)dll_path);
-    result = civ_city_style_era((uint)self->leader_civ);
-    self->style_era = (u8)result;
-    ok = diplo_leader_init_tile(self);
+    ((DllHandle *)leader_dll)->load((const char *)dll_path);
+    result = civ_city_style_era((uint)this->leader_civ);
+    style_era = (u8)result;
+    ok = init_tile();
     if (ok == 0) {
       MessageBoxA((HWND)0x0,str_init_tile_failed,str_notice_3,0x40);
       result = 0;
     }
     else {
-      ok = diplo_leader_init_background(self);
+      ok = init_background();
       if (ok == 0) {
         MessageBoxA((HWND)0x0,str_init_background_failed,str_notice_4,0x40);
         result = 0;
       }
       else {
-        ok = diplo_leader_init_main_art(self);
+        ok = init_main_art();
         if (ok == 0) {
           MessageBoxA((HWND)0x0,str_init_main_art_failed,str_notice_5,0x40);
           result = 0;
         }
         else {
-          ok = diplo_leader_init_military(self);
+          ok = init_military();
           if (ok == 0) {
             MessageBoxA((HWND)0x0,str_init_military_failed,str_notice_6,0x40);
             result = 0;
           }
           else {
-            ok = diplo_leader_init_science(self);
+            ok = init_science();
             if (ok == 0) {
               MessageBoxA((HWND)0x0,str_init_science_failed,str_notice_7,0x40);
               result = 0;
             }
             else {
-              ok = diplo_leader_init_portrait(self);
+              ok = init_portrait();
               if (ok == 0) {
                 MessageBoxA((HWND)0x0,str_init_portrait_failed,str_notice_8,0x40);
                 result = 0;
               }
               else {
                 if (((*((char *)&game.game_options + 2)) & 0x20) != 0) {
-                  diplo_leader_video_active = diplo_leader_init_video(self);
+                  diplo_leader_video_active = init_video();
                 }
                 result = 1;
               }
@@ -4421,74 +4420,72 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderWindow *self,i32 viewer_civ,iptr
 }
 
 /* 00494704 auto */
-void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *self)
+void DiploLeaderWindow::show()
 
 {
-  wnd_handle_show_raise(self);
+  handle_show_raise();
   wnd_flush_paint();
-  wnd_set_palette(self,(iptr)(self->leader_palette));
-  wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)(self->leader_palette));
+  set_palette((iptr)(leader_palette));
+  main_frame_wnd_block.main_frame_wnd.set_palette((iptr)(leader_palette));
   if (diplo_leader_video_active != '\0') {
-    window_show((SurfaceWindow *)self->leader_video_wnd);
+    ((SurfaceWindow *)leader_video_wnd)->SurfaceWindow::show();
   }
-  window_show((SurfaceWindow *)self->leader_surface_window);
+  ((SurfaceWindow *)leader_surface_window)->SurfaceWindow::show();
   wnd_flush_paint();
   if (diplo_leader_video_active != '\0') {
-    avi_player_play_range
-              ((AviPlayer *)self->leader_video_wnd,
-               leader_anim_frame_starts_block.leader_anim_frames[(uint)self->leader_tribe][0][0],
-               leader_anim_frame_starts_block.leader_anim_frames[(uint)self->leader_tribe][0][1]);
+    ((AviPlayer *)leader_video_wnd)->play_range(
+               leader_anim_frame_starts_block.leader_anim_frames[(uint)leader_tribe][0][0],
+               leader_anim_frame_starts_block.leader_anim_frames[(uint)leader_tribe][0][1]);
   }
-  dll_handle_free((DllHandle *)self->leader_dll);
+  ((DllHandle *)leader_dll)->dll_handle_free();
   diplo_leader_wnd_busy = 0;
   snd_play_effect(diplo_greeting_sound_id,1,0,(SoundDoneFn)diplo_greeting_sound_done_cb);
   return;
 }
 
 /* 004947f0 auto */
-void __thiscall diplo_leader_wnd_teardown(DiploLeaderWindow *self)
+void DiploLeaderWindow::teardown()
 
 {
-  wnd_hide((WndBase *)((u8 *)self + 0x110));
+  ((WndBase *)((u8 *)this + 0x110))->hide();
   wnd_flush_paint();
-  wnd_set_palette(self,(iptr)&game_palette_block.game_palette);
-  wnd_set_palette(&main_frame_wnd_block.main_frame_wnd,(iptr)&game_palette_block.game_palette);
-  wnd_hide(self);
+  set_palette((iptr)&game_palette_block.game_palette);
+  main_frame_wnd_block.main_frame_wnd.set_palette((iptr)&game_palette_block.game_palette);
+  hide();
   wnd_flush_paint();
-  wnd_destroy_native(self);
-  dll_handle_free((DllHandle *)&self->leader_dll);
+  destroy_native();
+  ((DllHandle *)&leader_dll)->dll_handle_free();
   dlg_set_parent_window(0);
   dlg_set_palette(0);
-  wnd_destroy_with_surface((DibSurface *)self->leader_surface_window);
-  wnd_destroy_native(self);
+  ((DibSurface *)leader_surface_window)->wnd_destroy_with_surface();
+  destroy_native();
   dialog_set_default_offset(0,0);
   return;
 }
 
 /* 0049488e auto */
-uint __thiscall diplo_leader_init_tile(DiploLeaderWindow *self)
+uint DiploLeaderWindow::init_tile()
 
 {
   int loaded;
   
-  surface_create((DibSurface *)&self->bg_tile_surface,0x40,0x40);
-  loaded = surface_load_gif_resource((DibSurface *)&self->bg_tile_surface,299,10,0x20,(iptr)&game_palette_block.game_palette);
+  ((DibSurface *)&bg_tile_surface)->DibSurface::create(0x40,0x40);
+  loaded = ((DibSurface *)&bg_tile_surface)->load_gif_resource(299,10,0x20,(iptr)&game_palette_block.game_palette);
   return (uint)(loaded != 0);
 }
 
 /* 004948e6 auto */
-i32 __thiscall diplo_leader_init_background(DiploLeaderWindow *self)
+i32 DiploLeaderWindow::init_background()
 
 {
-  wnd_create_with_handlers
-            (self,(const char *)&str_empty_102,0x800,0,0,self->screen_width_value,self->screen_height_value + 5,(iptr)&game_palette_block.game_palette,
+  create_with_handlers((const char *)&str_empty_102,0x800,0,0,screen_width_value,screen_height_value + 5,(iptr)&game_palette_block.game_palette,
              (iptr)&main_frame_wnd_block.main_frame_wnd);
-  wnd_set_bg_tile(self,(DibSurface *)&self->bg_tile_surface);
+  wnd_set_bg_tile((DibSurface *)&bg_tile_surface);
   return 1;
 }
 
 /* 00494949 auto */
-uint __thiscall diplo_leader_init_main_art(DiploLeaderWindow *self)
+uint DiploLeaderWindow::init_main_art()
 
 {
   int loaded;
@@ -4508,28 +4505,25 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  palette_init(&palette);
+  palette.init();
   eh_state = 0;
-  wnd_x = (int)(self->screen_width_value - 0x280) / 3;
-  wnd_y = (int)(self->screen_height_value - 0x1e0) / 3;
-  wnd_create_with_surface
-            ((DibSurface *)self->leader_surface,(const char *)&str_empty_103,0x800,wnd_x,wnd_y,0x280,0x1e0,
-             (iptr)(self->leader_palette),(iptr)self);
-  loaded = surface_load_gif_resource
-                    ((DibSurface *)self->leader_surface,civs[self->leader_civ].government + 200,10,0xec,
+  wnd_x = (int)(screen_width_value - 0x280) / 3;
+  wnd_y = (int)(screen_height_value - 0x1e0) / 3;
+  ((DibSurface *)leader_surface)->wnd_create_with_surface((const char *)&str_empty_103,0x800,wnd_x,wnd_y,0x280,0x1e0,
+             (iptr)(leader_palette),(iptr)this);
+  loaded = ((DibSurface *)leader_surface)->load_gif_resource(civs[leader_civ].government + 200,10,0xec,
                      (iptr)&palette);
   if (loaded != 0) {
     blue_ptr = &blue;
     green_ptr = &green;
     red_ptr = &red;
-    color_index = civ_color_primary((uint)self->leader_civ);
-    palette_get_entry
-              ((GamePalette *)((i8 *)&game_palette_block.game_palette),color_index,(iptr)red_ptr,(iptr)green_ptr,(iptr)blue_ptr);
-    palette_set_entry(&palette,0x91,red,green,blue);
-    palette_get_rgb(&palette,(iptr)rgb_buf,0x6a,0x28);
-    palette_set_rgb((GamePalette *)self->leader_palette,0x6a,0x28,(iptr)rgb_buf)
+    color_index = civ_color_primary((uint)leader_civ);
+    ((GamePalette *)((i8 *)&game_palette_block.game_palette))->get_entry(color_index,(iptr)red_ptr,(iptr)green_ptr,(iptr)blue_ptr);
+    palette.set_entry(0x91,red,green,blue);
+    palette.get_rgb((iptr)rgb_buf,0x6a,0x28);
+    ((GamePalette *)leader_palette)->set_rgb(0x6a,0x28,(iptr)rgb_buf)
     ;
-    surface_set_palette((DibSurface *)self->leader_surface,(iptr)(self->leader_palette));
+    ((DibSurface *)leader_surface)->set_palette((iptr)(leader_palette));
     eh_state = 0xffffffff;
     /* inlined unwind funclet 00494b3a */ { palette_destroy(&palette); }
   }
@@ -4541,7 +4535,7 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderWindow *self)
 }
 
 /* 00494b5f auto */
-i32 __thiscall diplo_leader_init_military(DiploLeaderWindow *self)
+i32 DiploLeaderWindow::init_military()
 
 {
   int loaded;
@@ -4563,11 +4557,11 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderWindow *self)
   eh_state = 0xffffffff;
   sprite_init(&sprite);
   eh_state = 0;
-  palette_init(&palette);
+  palette.init();
   (*((char *)&eh_state + 0)) = 1;
   surface_ctor(&surface);
   (*((char *)&eh_state + 0)) = 2;
-  icon_count = game.power_rank[self->leader_civ] - 1;
+  icon_count = game.power_rank[leader_civ] - 1;
   if (icon_count == 0) {
     result = 1;
     (*((char *)&eh_state + 0)) = 1;
@@ -4578,7 +4572,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderWindow *self)
     /* inlined unwind funclet 00494d89 */ { sprite_destroy(&sprite); }
   }
   else {
-    loaded = surface_load_gif_resource(&surface,0xd7,10,0xec,(iptr)&palette);
+    loaded = surface.load_gif_resource(0xd7,10,0xec,(iptr)&palette);
     if (loaded == 0) {
       fail_result = 0;
       (*((char *)&eh_state + 0)) = 1;
@@ -4590,15 +4584,14 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderWindow *self)
       result = fail_result;
     }
     else {
-      draw_x = (uint)self->style_era * 0x6d + 1;
+      draw_x = (uint)style_era * 0x6d + 1;
       draw_y = 0x9c;
-      sprite_grab_from_surface(&sprite,(iptr)&surface,9,draw_x,0x9c,0x6c,0x1e);
+      sprite.grab_from_surface((iptr)&surface,9,draw_x,0x9c,0x6c,0x1e);
       draw_x = 0x2d;
       draw_y = 0x82;
       step_y = 0x1f;
       for (i = 0; i < icon_count; i++) {
-        sprite_draw
-                  (&sprite,(iptr)draw_ctx,(iptr)self->leader_surface,draw_x,draw_y);
+        sprite.draw((iptr)draw_ctx,(iptr)leader_surface,draw_x,draw_y);
         draw_y += step_y;
       }
       (*((char *)&eh_state + 0)) = 1;
@@ -4614,7 +4607,7 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderWindow *self)
 }
 
 /* 00494e2a auto */
-i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
+i32 DiploLeaderWindow::init_science()
 
 {
   int value;
@@ -4654,11 +4647,11 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
   int eh_state;
   
   eh_state = 0xffffffff;
-  font_init(&font2,0,0xb);
+  font2.init(0,0xb);
   eh_state = 0;
   crt_vector_ctor_iterator(category_sprites,0x3c,5,sprite_init,sprite_destroy);
   (*((char *)&eh_state + 0)) = 1;
-  palette_init(&palette);
+  palette.init();
   (*((char *)&eh_state + 0)) = 2;
   surface_ctor(&surface);
   eh_state = (eh_state & 0xffffff00 | (byte)(3));
@@ -4679,7 +4672,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
   top_techs[10] = 0xffffffff;
   top_techs[0xb] = 0xffffffff;
   tech_count = 0;
-  if (((((*(byte *)&civs[human_civ[0]].treaties[((uint)self->leader_civ)] & 0x80) == 0) &&
+  if (((((*(byte *)&civs[human_civ[0]].treaties[((uint)leader_civ)] & 0x80) == 0) &&
        (value = civ_has_wonder(human_civ[0],0x18), value == 0)) &&
       (value = civ_has_wonder(human_civ[0],9), value == 0)) && (game.difficulty != '\0')) {
     top_techs[0xc] = 0;
@@ -4688,7 +4681,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
     top_techs[0xc] = 1;
   }
   for (advance = 0; advance < 100; advance++) {
-    value = civ_has_advance((uint)self->leader_civ,advance);
+    value = civ_has_advance((uint)leader_civ,advance);
     if (value != 0) {
       tech_count++;
       if (map_views_block.tech_prereq_depth_cache[advance] < 1) {
@@ -4734,7 +4727,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
     /* inlined unwind funclet 00495c10 */ { font_destroy(&font2); }
   }
   else {
-    value = surface_load_gif_resource(&surface,0xd7,10,0xec,(iptr)&palette);
+    value = surface.load_gif_resource(0xd7,10,0xec,(iptr)&palette);
     if (value == 0) {
       fail_result = 0;
       (*((char *)&eh_state + 0)) = 2;
@@ -4748,18 +4741,18 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
       result = fail_result;
     }
     else {
-      surface_set_palette(&surface,(iptr)(self->leader_palette));
-      draw_x = (uint)self->style_era * 0x6d + 1;
+      surface.set_palette((iptr)(leader_palette));
+      draw_x = (uint)style_era * 0x6d + 1;
       draw_y = 1;
-      sprite_grab_from_surface(category_sprites + 3,(iptr)&surface,9,draw_x,1,0x6c,0x1e);
+      (category_sprites + 3)->grab_from_surface((iptr)&surface,9,draw_x,1,0x6c,0x1e);
       draw_y += 0x1f;
-      sprite_grab_from_surface(category_sprites,(iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
+      category_sprites->grab_from_surface((iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
       draw_y += 0x1f;
-      sprite_grab_from_surface(category_sprites + 1,(iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
+      (category_sprites + 1)->grab_from_surface((iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
       draw_y += 0x1f;
-      sprite_grab_from_surface(category_sprites + 2,(iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
+      (category_sprites + 2)->grab_from_surface((iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
       draw_y += 0x1f;
-      sprite_grab_from_surface((category_sprites + 4),(iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
+      (category_sprites + 4)->grab_from_surface((iptr)&surface,9,draw_x,draw_y,0x6c,0x1e);
       step_y = 0x1f;
       draw_x = 0x1e5;
       draw_y = 0x82;
@@ -4770,8 +4763,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
         advance = top_techs[slot * 2];
         if (-1 < advance) {
           adv_category = (int)(char)advances[advance].category;
-          sprite_draw
-                    (category_sprites + adv_category,(iptr)draw_ctx,(iptr)self->leader_surface,draw_x,draw_y);
+          (category_sprites + adv_category)->draw((iptr)draw_ctx,(iptr)leader_surface,draw_x,draw_y);
           for (j = 0; j < 5; j++) {
             str_clear((words + j * 0x32));
           }
@@ -4797,7 +4789,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
               j = j + 1) {
             str_append((aCStack_641 + 1),(const char *)(words + j * 0x32));
             str_append((aCStack_641 + 1),(const char *)&str_empty_104);
-            value = font_text_width(&font2,(const char *)(aCStack_641 + 1));
+            value = font2.text_width((const char *)(aCStack_641 + 1));
             if (text_width < value) break;
           }
           if ((words[j * 0x32] == '\0') || (word2 == 2)) {
@@ -4806,7 +4798,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
               value = lstrlenA(aCStack_641 + 1);
               char_pos = (char)value;
               while ((char_pos != '\0' &&
-                     (value = font_text_width(&font2,(const char *)(aCStack_641 + 1)),
+                     (value = font2.text_width((const char *)(aCStack_641 + 1)),
                      text_width < value))) {
                 aCStack_641[char_pos + 1] = '\0';
                 char_pos--;
@@ -4820,13 +4812,11 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
             CopyRect(&draw_rect,&text_rect);
             if (top_techs[0xc] != 0) {
               gfx_set_text_color_index(10);
-              surface_draw_text_in_rect
-                        ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)(aCStack_641 + 1),
+              ((DibSurface *)leader_surface)->draw_text_in_rect((iptr)&font2,(const char *)(aCStack_641 + 1),
                          &draw_rect,0);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(text_colors[self->style_era]);
-              surface_draw_text_in_rect
-                        ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)(aCStack_641 + 1),
+              gfx_set_text_color_index(text_colors[style_era]);
+              ((DibSurface *)leader_surface)->draw_text_in_rect((iptr)&font2,(const char *)(aCStack_641 + 1),
                          &draw_rect,0);
             }
           }
@@ -4839,7 +4829,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
               truncated = 0;
               char_pos = (char)value;
               while ((char_pos != '\0' &&
-                     (value = font_text_width(&font2,(const char *)(aCStack_641 + 1)),
+                     (value = font2.text_width((const char *)(aCStack_641 + 1)),
                      text_width < value))) {
                 aCStack_641[char_pos + 1] = '\0';
                 char_pos--;
@@ -4858,16 +4848,14 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
             if (top_techs[0xc] != 0) {
               CopyRect(&draw_rect,&text_rect);
               rect_height2 = text_rect.bottom - text_rect.top;
-              value = font_cached_height(&font2);
+              value = font2.font_cached_height();
               OffsetRect(&draw_rect,0,((rect_height2 >> 1) - value) + 1);
               gfx_set_text_color_index(10);
-              surface_draw_text_in_rect
-                        ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)(aCStack_641 + 1),
+              ((DibSurface *)leader_surface)->draw_text_in_rect((iptr)&font2,(const char *)(aCStack_641 + 1),
                          &draw_rect,1);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(text_colors[self->style_era]);
-              surface_draw_text_in_rect
-                        ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)(aCStack_641 + 1),
+              gfx_set_text_color_index(text_colors[style_era]);
+              ((DibSurface *)leader_surface)->draw_text_in_rect((iptr)&font2,(const char *)(aCStack_641 + 1),
                          &draw_rect,1);
             }
             str_clear((char *)line2_buf);
@@ -4878,7 +4866,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
             truncated = 0;
             char_pos = (char)value;
             while ((char_pos != '\0' &&
-                   (value = font_text_width(&font2,(const char *)line2_buf),
+                   (value = font2.text_width((const char *)line2_buf),
                    text_width < value))) {
               line2_buf[char_pos] = '\0';
               char_pos--;
@@ -4889,16 +4877,14 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
               str_append((char *)line2_buf,(const char *)&str_empty_107);
             }
             if (top_techs[0xc] != 0) {
-              value = font_cached_height(&font2);
+              value = font2.font_cached_height();
               OffsetRect(&draw_rect,0,value - 3);
               gfx_set_text_color_index(10);
-              surface_draw_text_in_rect
-                        ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)line2_buf,
+              ((DibSurface *)leader_surface)->draw_text_in_rect((iptr)&font2,(const char *)line2_buf,
                          &draw_rect,1);
               OffsetRect(&draw_rect,-1,-1);
-              gfx_set_text_color_index(text_colors[self->style_era]);
-              surface_draw_text_in_rect
-                        ((DibSurface *)self->leader_surface,(iptr)&font2,(const char *)line2_buf,
+              gfx_set_text_color_index(text_colors[style_era]);
+              ((DibSurface *)leader_surface)->draw_text_in_rect((iptr)&font2,(const char *)line2_buf,
                          &draw_rect,1);
             }
           }
@@ -4921,7 +4907,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderWindow *self)
 }
 
 /* 00495c35 auto */
-i32 __thiscall diplo_leader_init_portrait(DiploLeaderWindow *self)
+i32 DiploLeaderWindow::init_portrait()
 
 {
   int loaded;
@@ -4938,12 +4924,11 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderWindow *self)
   eh_state = 0xffffffff;
   sprite_init(&sprite);
   eh_state = 0;
-  palette_init(&palette);
+  palette.init();
   (*((char *)&eh_state + 0)) = 1;
   surface_ctor(&surface);
   (*((char *)&eh_state + 0)) = 2;
-  loaded = surface_load_gif_resource
-                    (&surface,civs[self->leader_civ].leader_portrait + 0xdc,10,0xec,
+  loaded = surface.load_gif_resource(civs[leader_civ].leader_portrait + 0xdc,10,0xec,
                      (iptr)&palette);
   if (loaded == 0) {
     result = 0;
@@ -4955,12 +4940,12 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderWindow *self)
     /* inlined unwind funclet 00495de7 */ { sprite_destroy(&sprite); }
   }
   else {
-    palette_get_rgb(&palette,(iptr)rgb_buf,0x2a,0x40);
-    palette_set_rgb((GamePalette *)self->leader_palette,0x2a,0x40,(iptr)rgb_buf)
+    palette.get_rgb((iptr)rgb_buf,0x2a,0x40);
+    ((GamePalette *)leader_palette)->set_rgb(0x2a,0x40,(iptr)rgb_buf)
     ;
-    surface_set_palette(&surface,(iptr)(self->leader_palette));
-    sprite_grab_from_surface(&sprite,(iptr)&surface,9,1,1,0xe1,0x113);
-    sprite_draw(&sprite,(iptr)draw_ctx,(iptr)self->leader_surface,0xd0,0x39);
+    surface.set_palette((iptr)(leader_palette));
+    sprite.grab_from_surface((iptr)&surface,9,1,1,0xe1,0x113);
+    sprite.draw((iptr)draw_ctx,(iptr)leader_surface,0xd0,0x39);
     (*((char *)&eh_state + 0)) = 1;
     /* inlined unwind funclet 00495dcf */ { surface_dtor(&surface); }
     eh_state = eh_state & 0xffffff00;
@@ -4973,7 +4958,7 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderWindow *self)
 }
 
 /* 00495e0c auto */
-i8 __thiscall diplo_leader_init_video(DiploLeaderWindow *self)
+i8 DiploLeaderWindow::init_video()
 
 {
   i8 result;
@@ -4988,14 +4973,14 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderWindow *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  palette_init(&palette);
+  palette.init();
   eh_state = 0;
-  self->leader_tribe = (u8)civs[self->leader_civ].tribe;
+  leader_tribe = (u8)civs[leader_civ].tribe;
   str_clear((char *)video_path);
   str_append((char *)video_path,(const char *)&str_civ2_kings);
   str_clear((char *)file_stem);
   str_append((char *)file_stem,(const char *)&str_hrld);
-  str_append((char *)file_stem,(const char *)(((i8 * *)&leader_video_tribe_codes))[civs[self->leader_civ].tribe]);
+  str_append((char *)file_stem,(const char *)(((i8 * *)&leader_video_tribe_codes))[civs[leader_civ].tribe]);
   file_stem[7] = 0;
   str_append((char *)video_path,(const char *)file_stem);
   str_append((char *)video_path,(const char *)&str_avi);
@@ -5006,23 +4991,19 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderWindow *self)
     result = 0;
   }
   else {
-    avi_player_create_child
-              ((AviPlayer *)self->video_player,(iptr)&str_empty_108,0x200,
-               leader_video_x_table_block.leader_video_pos[(uint)self->leader_tribe][0],
-               leader_video_x_table_block.leader_video_pos[(uint)self->leader_tribe][1],(iptr)self->leader_surface);
-    open_err = avi_player_open((AviPlayer *)self->video_player,(const char *)video_path);
+    ((AviPlayer *)video_player)->create_child((iptr)&str_empty_108,0x200,
+               leader_video_x_table_block.leader_video_pos[(uint)leader_tribe][0],
+               leader_video_x_table_block.leader_video_pos[(uint)leader_tribe][1],(iptr)leader_surface);
+    open_err = ((AviPlayer *)video_player)->open((const char *)video_path);
     if (open_err == 0) {
-      avi_player_set_end_callback((AviPlayer *)self->video_player,diplo_leader_video_end_cb);
-      avi_player_set_transparent((AviPlayer *)self->video_player,1);
-      palette_load_ctab_res(&palette,self->leader_tribe + 1000);
-      palette_get_rgb(&palette,(iptr)rgb_buf,0x92,100);
-      palette_set_rgb
-                ((GamePalette *)self->leader_palette,0x92,100,(iptr)rgb_buf);
-      avi_player_set_palette
-                ((DibSurface *)self->video_player,(iptr)(self->leader_palette));
-      wnd_set_palette
-                ((WndBase *)self->video_window,(iptr)(self->leader_palette));
-      avi_player_show_frame(self->video_player,0);
+      ((AviPlayer *)video_player)->set_end_callback(diplo_leader_video_end_cb);
+      ((AviPlayer *)video_player)->set_transparent(1);
+      palette.load_ctab_res(leader_tribe + 1000);
+      palette.get_rgb((iptr)rgb_buf,0x92,100);
+      ((GamePalette *)leader_palette)->set_rgb(0x92,100,(iptr)rgb_buf);
+      ((DibSurface *)video_player)->avi_player_set_palette((iptr)(leader_palette));
+      ((WndBase *)video_window)->set_palette((iptr)(leader_palette));
+      avi_player_show_frame(video_player,0);
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00496100 */ { palette_destroy(&palette); }
       result = 1;
@@ -5049,16 +5030,14 @@ void __cdecl diplo_leader_video_end_cb(void)
   wnd = diplo_leader_window;
   if (diplo_leader_video_active != '\0') {
     if ((char)diplo_leader_window->pending_flag_1088 == '\0') {
-      avi_player_loop_range
-                ((AviPlayer *)((iptr)diplo_leader_window + 0x65c),
+      ((AviPlayer *)((iptr)diplo_leader_window + 0x65c))->loop_range(
                  leader_anim_frame_starts_block.leader_anim_frames[(uint)diplo_leader_window->leader_tribe][1][0],
                  leader_anim_frame_starts_block.leader_anim_frames[(uint)diplo_leader_window->leader_tribe][1][1]);
     }
     else {
       reaction = (uptr)diplo_leader_window->pending_flag_1088;
       diplo_leader_window->pending_flag_1088 = 0;
-      avi_player_play_range
-                ((AviPlayer *)((iptr)wnd + 0x65c),
+      ((AviPlayer *)((iptr)wnd + 0x65c))->play_range(
                  leader_anim_frame_starts_block.leader_anim_frames[(uint)wnd->leader_tribe][reaction][0]
                  ,leader_anim_frame_starts_block.leader_anim_frames[(uint)wnd->leader_tribe][reaction][1]);
       snd_play_effect((((i32 *)&diplo_leader_sound_ids))[reaction],1,0,0);
@@ -5091,7 +5070,7 @@ void __cdecl diplo_wnd_escape_close(i32 unused)
   else {
     wnd2 -= 0x48;
   }
-  wnd_activate((Wnd *)(wnd2 + 0x48));
+  ((Wnd *)(wnd2 + 0x48))->activate();
   diplo_wnd_close_active();
   return;
 }
@@ -5133,8 +5112,8 @@ i32 __cdecl diplo_wnd_close_active(void)
   }
   wnd2->closed = 1;
   wnd2->other_civ = 0xffffffff;
-  wnd_hide((WndBase *)((i8 *)wnd2 + 0x48));
-  wnd_focus_and_raise(&main_frame_wnd_block.main_frame_wnd);
+  ((WndBase *)((i8 *)wnd2 + 0x48))->hide();
+  main_frame_wnd_block.main_frame_wnd.focus_and_raise();
   ui_flush_input();
   return 1;
 }
@@ -5660,7 +5639,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     return;
   }
   if ((scenario_events_loaded != 0) &&
-     (city = events_check_negotiation((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events),civ,civ2),
+     (city = ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->check_negotiation(civ,civ2),
      city == 0)) {
     return;
   }
@@ -5767,7 +5746,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           popup_game_with_sprite((const char *)&str_parleyok_2,(iptr)&popup_info_icon_sprite,0);
           if (net_session_block.net_host_handoff_stage == '\0') {
             if (net_session_block.nm_parley_cancel_count == 0) {
-              parley_wnd_open(&parley_wnd_block,civ2,3);
+              parley_wnd_block.open(civ2,3);
             }
             else {
               parley_wnd_block.other_civ = 0xffffffff;
@@ -6176,9 +6155,9 @@ void __cdecl diplo_ai_military_aid(iptr civ)
                   unit_count = (char *)(units[unit2].type + (iptr)((u8 *)&civs + 216) + civ2 * 0x594);
                   *unit_count = *unit_count + 1;
                   unit_stack_link(unit2,x,y,1);
-                  city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city);
+                  ((CityWindow *)((i8 *)&city_window_block.city_window))->refresh_if_city(city);
                   map_redraw_tile_all_views((int)cities[city].x,(int)cities[city].y);
-                  city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city2);
+                  ((CityWindow *)((i8 *)&city_window_block.city_window))->refresh_if_city(city2);
                   map_redraw_tile_all_views((int)cities[city2].x,(int)cities[city2].y);
                   if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
                      (civ_saved_cursor_x_block.autoplay_active == 0)) {

@@ -44,13 +44,13 @@ void __cdecl int_pairs_bubble_sort(int count,i32 *values,i32 *keys)
 }
 
 /* 00428cb0 auto */
-MemBlock * __thiscall memblock_ctor(MemBlock *self)
+MemBlock *MemBlock::construct()
 
 {
-  self->mem_handle = 0;
-  self->base_ptr = 0;
-  self->capacity = 0;
-  return self;
+  mem_handle = 0;
+  base_ptr = 0;
+  capacity = 0;
+  return this;
 }
 
 /* 0046aaa0 auto */
@@ -262,7 +262,7 @@ i32 __cdecl memblock_alloc_checked(MemBlock *block,uint size)
     uType = 0;
     lpCaption = (LPCSTR)label_string(label_string_ids[0x234]);
     lpText = (LPCSTR)label_string(label_string_ids[0x23a]);
-    wnd = wnd_get_window((WndBase *)&editor_text_dlg_wnd_block.active_editor_wnd->window);
+    wnd = ((WndBase *)&editor_text_dlg_wnd_block.active_editor_wnd->window)->get_window();
     MessageBoxA(wnd->hwnd,lpText,lpCaption,uType);
     result = 0;
   }
@@ -295,21 +295,21 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  dialog_ctor(&dlg,0x4000);
+  dlg.Dialog::construct(0x4000);
   eh_state = 0;
-  dialog_load_text(&dlg,(const char *)&str_debug_2,(const char *)&str_pickplayer,1);
+  dlg.load_text((const char *)&str_debug_2,(const char *)&str_pickplayer,1);
   for (civ = (uint)(include_barbarians == 0); (int)civ < 8; civ++) {
     if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
       text_clear();
       adjective = civ_get_adjective(civ);
       text_append((const char *)adjective);
-      dialog_add_option(&dlg,(const char *)&map_views_block.text_buffer,civ,0);
+      dlg.add_option((const char *)&map_views_block.text_buffer,civ,0);
     }
   }
-  dialog_set_default_choice(&dlg,human_civ[0]);
-  choice = dlg_show_modal(&dlg,0);
+  dlg.set_default_choice(human_civ[0]);
+  choice = dlg.show_modal(0);
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 00554272 */ { dialog_dtor(&dlg); }
+  /* inlined unwind funclet 00554272 */ { dlg.Dialog::destruct(); }
   return choice;
 }
 
@@ -919,7 +919,7 @@ void __cdecl err_report_ctx_global_init(void)
 void __cdecl err_report_ctx_static_init(void)
 
 {
-  err_ctx_ctor((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx));
+  ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->construct();
   return;
 }
 
@@ -940,48 +940,44 @@ void __cdecl err_report_ctx_atexit_dtor(void)
 }
 
 /* 005dae6b auto */
-void __thiscall
-err_report
-          (ErrorContext *self,i32 code,iptr file,iptr line,i32 extra)
+void ErrorContext::report(i32 code,iptr file,iptr line,i32 extra)
 
 {
   ErrorContext *msg;
   
-  err_set_code(self,code);
-  msg = err_format_message(self,(const char *)&str_fatal_error,(const char *)file,line,extra);
-  err_show_fatal_box(self,(i32)msg);
+  set_code(code);
+  msg = format_message((const char *)&str_fatal_error,(const char *)file,line,extra);
+  show_fatal_box((i32)msg);
   return;
 }
 
 /* 005daef7 auto */
-ErrorContext * __thiscall
-err_format_message
-          (ErrorContext *self,const char *fmt,const char *text,i32 file,i32 line)
+ErrorContext *ErrorContext::format_message(const char *fmt,const char *text,i32 file,i32 line)
 
 {
   size_t len;
   i32 trace;
   char *_Format;
   
-  crt_strcpy((char *)self,((i8 *)&err_format_empty_str));
+  crt_strcpy((char *)this,((i8 *)&err_format_empty_str));
   _Format = str_error_s_file_s_line_d;
-  len = _strlen((char *)self);
-  _sprintf((char *)(self->error_message_text + len),_Format,text,file,line);
-  trace = (i32)err_get_stack_trace(self);
-  crt_strcat((char *)self,(const char *)((const void *)trace));
-  return self;
+  len = _strlen((char *)this);
+  _sprintf((char *)(error_message_text + len),_Format,text,file,line);
+  trace = (i32)get_stack_trace();
+  crt_strcat((char *)this,(const char *)((const void *)trace));
+  return this;
 }
 
 /* 005daf63 auto */
-u8 * __thiscall err_get_stack_trace(ErrorContext *self)
+u8 *ErrorContext::get_stack_trace()
 
 {
-  dbg_stack_trace_stub((char *)self->stack_trace_text);
-  return self->stack_trace_text;
+  dbg_stack_trace_stub((char *)stack_trace_text);
+  return stack_trace_text;
 }
 
 /* 005daf92 auto */
-void __thiscall err_show_fatal_box(ErrorContext *self,i32 msg)
+void ErrorContext::show_fatal_box(i32 msg)
 
 {
   dbg_fatal_msgbox_break((const char *)&str_smeds_application_error,(LPCSTR)msg);
@@ -989,11 +985,11 @@ void __thiscall err_show_fatal_box(ErrorContext *self,i32 msg)
 }
 
 /* 005dafdf auto */
-void __thiscall err_set_code(ErrorContext *self,u32 code)
+void ErrorContext::set_code(u32 code)
 
 {
-  self->last_error_code = code;
-  self->error_bits = self->error_bits | 1 << ((byte)code & 0x1f);
+  last_error_code = code;
+  error_bits = error_bits | 1 << ((byte)code & 0x1f);
   return;
 }
 
@@ -1003,29 +999,29 @@ void __thiscall err_set_code(ErrorContext *self,u32 code)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall err_ctx_set_field_708(ErrorContext *self,i32 value)
+void ErrorContext::set_field_708(i32 value)
 
 {
-  *(i32 *)((ErrorContextExt *)self)->error_ctx_option = value;
+  *(i32 *)((ErrorContextExt *)this)->error_ctx_option = value;
   return;
 }
 
 /* 005db059 auto */
-void __thiscall err_ctx_clear_codes(ErrorContext *self)
+void ErrorContext::clear_codes()
 
 {
-  self->error_bits = 0;
-  self->last_error_code = 0;
+  error_bits = 0;
+  last_error_code = 0;
   return;
 }
 
 /* 005db089 auto */
-ErrorContext * __thiscall err_ctx_ctor(ErrorContext *self)
+ErrorContext *ErrorContext::construct()
 
 {
-  err_ctx_set_field_708(self,0);
-  err_ctx_clear_codes(self);
-  return self;
+  set_field_708(0);
+  clear_codes();
+  return this;
 }
 
 /* 005db0b4 auto */
@@ -1103,7 +1099,7 @@ HGLOBAL __cdecl mem_handle_alloc(SIZE_T size)
   
   handle = GlobalAlloc(0x42,size);
   if (handle == (HGLOBAL)0x0) {
-    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),1,(iptr)&str_err_memallocfailed,(iptr)&str_d_ss_smeds32_pcmem_cpp,0x4c);
+    ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(1,(iptr)&str_err_memallocfailed,(iptr)&str_d_ss_smeds32_pcmem_cpp,0x4c);
   }
   return handle;
 }
@@ -1585,27 +1581,27 @@ void __thiscall ptrlist_dtor(void *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 005f04fe */ { ptrlist_clear(*(PtrList **)&self); }
+  /* inlined unwind funclet 005f04fe */ { (*(PtrList **)&self)->clear(); }
   return;
 }
 
 /* 005f0590 auto */
-i32 __thiscall ptrlist_first(PtrList *self)
+i32 PtrList::first()
 
 {
   i32 data;
   
-  data = ptrlist_first_impl(self);
+  data = first_impl();
   return data;
 }
 
 /* 005f05d0 auto */
-i32 __thiscall ptrlist_next(PtrList *self)
+i32 PtrList::next()
 
 {
   i32 data;
   
-  data = ptrlist_next_impl(self);
+  data = next_impl();
   return data;
 }
 
@@ -1638,113 +1634,113 @@ void __thiscall ptrlist_node_set_prev(PtrListNodePrevSetView *self,iptr prev)
 }
 
 /* 005f0724 auto */
-void __thiscall ptrlist_clear(PtrList *self)
+void PtrList::clear()
 
 {
-  ptrlist_clear_impl(self);
+  clear_impl();
   return;
 }
 
 /* 005f0742 auto */
-uint __thiscall ptrlist_is_empty(PtrList *self)
+uint PtrList::is_empty()
 
 {
-  return (uint)(self->head == 0);
+  return (uint)(head == 0);
 }
 
 /* 005f0770 auto */
-i32 __thiscall ptrlist_first_impl(PtrList *self)
+i32 PtrList::first_impl()
 
 {
   i32 data;
   
-  if (self->head == 0) {
+  if (head == 0) {
     data = 0;
   }
   else {
-    self->iter_node = self->head;
-    data = ptrlist_node_data((PtrListNodeDataView *)self->head);
+    iter_node = head;
+    data = ptrlist_node_data((PtrListNodeDataView *)head);
   }
   return data;
 }
 
 /* 005f0833 auto */
-i32 __thiscall ptrlist_next_impl(PtrList *self)
+i32 PtrList::next_impl()
 
 {
   uptr next;
   i32 data;
   
-  if (self->iter_node == 0) {
+  if (iter_node == 0) {
     data = 0;
   }
   else {
-    next = ptrlist_node_next((PtrListNodeNextView *)self->iter_node);
-    self->iter_node = next;
-    if (self->iter_node == 0) {
+    next = ptrlist_node_next((PtrListNodeNextView *)iter_node);
+    iter_node = next;
+    if (iter_node == 0) {
       data = 0;
     }
     else {
-      data = ptrlist_node_data((PtrListNodeDataView *)self->iter_node);
+      data = ptrlist_node_data((PtrListNodeDataView *)iter_node);
     }
   }
   return data;
 }
 
 /* 005f0c69 auto */
-void __thiscall ptrlist_remove_current(PtrList *self)
+void PtrList::remove_current()
 
 {
   int empty;
   PtrListNodeNextSetView *this_00;
   PtrListNodePrevSetView *this_01;
   
-  if ((self->iter_node != 0) && (empty = ptrlist_is_empty(self), empty == 0)) {
-    this_00 = (PtrListNodeNextSetView *)ptrlist_node_prev((PtrListNodePrevView *)self->iter_node);
-    this_01 = (PtrListNodePrevSetView *)ptrlist_node_next((PtrListNodeNextView *)self->iter_node);
+  if ((iter_node != 0) && (empty = is_empty(), empty == 0)) {
+    this_00 = (PtrListNodeNextSetView *)ptrlist_node_prev((PtrListNodePrevView *)iter_node);
+    this_01 = (PtrListNodePrevSetView *)ptrlist_node_next((PtrListNodeNextView *)iter_node);
     if ((this_00 == (PtrListNodeNextSetView *)0x0) && (this_01 == (PtrListNodePrevSetView *)0x0)) {
-      if ((void *)self->iter_node != (void *)0x0) {
-        ptrlist_node_delete((void *)self->iter_node,1);
+      if ((void *)iter_node != (void *)0x0) {
+        ptrlist_node_delete((void *)iter_node,1);
       }
-      self->head = 0;
-      self->tail = 0;
-      self->iter_node = 0;
+      head = 0;
+      tail = 0;
+      iter_node = 0;
     }
     else if (this_00 == (PtrListNodeNextSetView *)0x0) {
-      self->head = (uptr)this_01;
-      ptrlist_node_set_prev((PtrListNodePrevSetView *)self->head,0);
-      if ((void *)self->iter_node != (void *)0x0) {
-        ptrlist_node_delete((void *)self->iter_node,1);
+      head = (uptr)this_01;
+      ptrlist_node_set_prev((PtrListNodePrevSetView *)head,0);
+      if ((void *)iter_node != (void *)0x0) {
+        ptrlist_node_delete((void *)iter_node,1);
       }
-      self->iter_node = self->head;
+      iter_node = head;
     }
     else if (this_01 == (PtrListNodePrevSetView *)0x0) {
-      self->tail = (uptr)this_00;
-      ptrlist_node_set_next((PtrListNodeNextSetView *)self->tail,0);
-      if ((void *)self->iter_node != (void *)0x0) {
-        ptrlist_node_delete((void *)self->iter_node,1);
+      tail = (uptr)this_00;
+      ptrlist_node_set_next((PtrListNodeNextSetView *)tail,0);
+      if ((void *)iter_node != (void *)0x0) {
+        ptrlist_node_delete((void *)iter_node,1);
       }
-      self->iter_node = self->tail;
+      iter_node = tail;
     }
     else {
       ptrlist_node_set_next(this_00,(iptr)this_01);
       ptrlist_node_set_prev(this_01,(iptr)this_00);
-      if ((void *)self->iter_node != (void *)0x0) {
-        ptrlist_node_delete((void *)self->iter_node,1);
+      if ((void *)iter_node != (void *)0x0) {
+        ptrlist_node_delete((void *)iter_node,1);
       }
-      self->iter_node = (uptr)this_01;
+      iter_node = (uptr)this_01;
     }
   }
   return;
 }
 
 /* 005f0e13 auto */
-void __thiscall ptrlist_clear_impl(PtrList *self)
+void PtrList::clear_impl()
 
 {
-  ptrlist_first_impl(self);
-  while (self->iter_node != 0) {
-    ptrlist_remove_current(self);
+  first_impl();
+  while (iter_node != 0) {
+    remove_current();
   }
   return;
 }

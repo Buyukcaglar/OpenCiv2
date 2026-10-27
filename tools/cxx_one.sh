@@ -25,4 +25,4 @@ if ! g++ -c -o "$out/$obj" -x c++ "$src" -m32 -std=gnu++17 ${OPT:--O1} -g -w -fn
     exit 1
 fi
 rm -f "$out.err"
-python3 tools/cxx_compare.py "$base" "$out" $2
+python3 tools/cxx_compare.py --map re/methods.tsv "$base" "$out" $2

@@ -715,7 +715,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
                 if (done != 0) break;
                 for (city4 = 0; city4 < game.num_cities; city4++) {
                   if (2 < game.multiplayer) {
-                    net_process_messages(&net_session_block,1,0);
+                    net_session_block.process_messages(1,0);
                   }
                   if ((cities[city4].id != 0) && ((int)cities[city4].owner == civ)) {
                     x3 = (int)cities[city4].x;
@@ -790,7 +790,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   }
   for (unit = 0; (int)unit < (int)game.num_units; unit++) {
     if (2 < game.multiplayer) {
-      net_process_messages(&net_session_block,1,0);
+      net_session_block.process_messages(1,0);
     }
     if (((units[unit].id != 0) && ((int)units[unit].owner == civ)) &&
        (units[unit].flags = units[unit].flags & 0xfc7f,
@@ -816,7 +816,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   }
   for (unit = 0; (int)unit < (int)game.num_units; unit++) {
     if (2 < game.multiplayer) {
-      net_process_messages(&net_session_block,1,0);
+      net_session_block.process_messages(1,0);
     }
     if (units[unit].id != 0) {
       if ((int)units[unit].owner == civ) {
@@ -948,7 +948,7 @@ continent_loop_done: ;
   land_city_count = 0;
   for (city = 0; city < game.num_cities; city++) {
     if (2 < game.multiplayer) {
-      net_process_messages(&net_session_block,1,0);
+      net_session_block.process_messages(1,0);
     }
     if (cities[city].id != 0) {
       x2 = (int)cities[city].x;
@@ -1011,7 +1011,7 @@ continent_loop_done: ;
   }
   for (continent = 1; continent < 0x3f; continent++) {
     if (2 < game.multiplayer) {
-      net_process_messages(&net_session_block,1,0);
+      net_session_block.process_messages(1,0);
     }
     threat_count = 0;
     defend_count = 0;
@@ -1166,7 +1166,7 @@ next_unit:
     unit--;
     if (-1 < (int)unit) {
       if (2 < game.multiplayer) {
-        net_process_messages(&net_session_block,1,0);
+        net_session_block.process_messages(1,0);
       }
       if (((units[unit].id != 0) && ((int)units[unit].owner == civ)) &&
          ((is_human == 0 || (((int)(short)units[unit].flags & 0x8000U) != 0)))) {
@@ -5361,7 +5361,7 @@ military_stack_check:
     if ((own_dist == 0) && (cities[city2].size < '\n')) {
       cities[city2].size++;
       unit_destroy_redraw(unit,1);
-      city_window_refresh_if_city((CityWindow *)((i8 *)&city_window_block.city_window),city2);
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->refresh_if_city(city2);
       map_redraw_area_all_views(x2,y3,1,1,1);
       return 1;
     }
@@ -5413,7 +5413,7 @@ void __cdecl ai_process_civ_units(void)
           if (2 < game.multiplayer) {
             net_send_state_diff(0xff,2,0,0,0);
             XD_FlushSendBuffer(5000);
-            net_process_messages(&net_session_block,1,0);
+            net_session_block.process_messages(1,0);
           }
           prev_num_units = game.num_units;
           game.active_unit = (i16)unit;

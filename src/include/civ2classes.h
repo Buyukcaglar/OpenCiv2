@@ -7,6 +7,9 @@
 
 #pragma pack(push, 1)
 
+/* Classes the methods' declarations name before their definitions. */
+struct PaletteVersionView;
+
 /* The window classes.  WndBase (wnd_record_init 005db610, 0x10 bytes) is
    the native window record; ModalMenuWindow (wnd_ctor 0044c730, 0xb8) adds
    the event handlers (WndHandlers at 0x10, wnd_handlers_ctor), the menu, the
@@ -23,6 +26,52 @@ typedef struct WndBase {
     union { u32 field_4; u32 wnd_palette; };
     union { u32 field_8; NativeWindow *native_wnd; };
     union { u32 field_c; u32 wnd_record; };
+    /* methods */
+    void set_cursor(i32 cursor);    /* 00408010 */
+    void set_icon(i32 icon);    /* 00408050 */
+    void minimize();    /* 00408090 */
+    i32 client_width();    /* 004080c0 */
+    void get_rect_in_parent(iptr rect);    /* 004080f0 */
+    void destroy_native();    /* 00408420 */
+    void view_validate_rect(iptr rect);    /* 00408580 */
+    void handle_show_raise();    /* 00408650 */
+    void set_cursor_now(iptr cursor,i32 flag);    /* 00414b70 */
+    i32 client_height();    /* 00414bb0 */
+    void set_capture();    /* 00414ce0 */
+    NativeWindow *get_window();    /* 00414d10 */
+    void release_capture();    /* 00414d40 */
+    void set_bg_color(i32 color);    /* 00419ba0 */
+    void set_bg_surface(DibSurface *surface);    /* 00419be0 */
+    void maximize();    /* 00426f80 */
+    i32 nonclient_height();    /* 0043c5c0 */
+    void disable();    /* 0043c630 */
+    void enable();    /* 0043c660 */
+    void set_palette(iptr palette);    /* 00450390 */
+    void hide();    /* 004503d0 */
+    void center();    /* 00450400 */
+    void apply_palette_handle(iptr palette);    /* 00450440 */
+    void get_cursor_pos(iptr out_x,iptr out_y);    /* 00451890 */
+    void focus_and_raise();    /* 00451900 */
+    void set_focus();    /* 004923c0 */
+    void set_caption_height(i32 height);    /* 00497d00 */
+    void move_to_rect(iptr rect);    /* 004bb570 */
+    void set_resize_border(i32 width);    /* 004cff70 */
+    void show_restored();    /* 004e7240 */
+    u32 get_palette();    /* 00511320 */
+    void move_xy(i32 x,i32 y);    /* 00518e80 */
+    i32 frame_width();    /* 00589d50 */
+    void get_screen_rect(iptr rect);    /* 005a9600 */
+    u32 get_palette_obj();    /* 005bb8c0 */
+    void set_client_size(i32 width,i32 height);    /* 005bb8e0 */
+    i16 get_style_flags();    /* 005bd610 */
+    void create_framed(const char *title,i32 style,i32 x,i32 y ,i32 width,i32 height,iptr palette);    /* 005c5760 */
+    void create_framed_child(const char *title,i32 style,i32 x,i32 y ,i32 width,i32 height,iptr palette,iptr parent);    /* 005c57f9 */
+    void create_with_cmd_proc(const char *title,i32 style,i32 x,i32 y ,i32 width,i32 height,iptr palette);    /* 005c5f20 */
+    void create_with_handlers(const char *title,i32 style,i32 x,i32 y ,i32 width,i32 height,iptr palette,iptr parent);    /* 005c5fc4 */
+    WndBase *init();    /* 005db610 */
+    void destroy();    /* 005db650 */
+    void create(i32 wnd_kind,u32 style,i32 x,i32 y, i32 width,i32 height,iptr palette);    /* 005db67b */
+    void create_child(i32 wnd_kind,u32 style,i32 x,i32 y, i32 width,i32 height,iptr palette,WndBase *parent);    /* 005db893 */
 } WndBase;
 static_assert(sizeof(WndBase) == 0x10, "");
 
@@ -42,6 +91,10 @@ typedef void (*MenuPosCommandFn)(i32 menu_pos, i32 item_pos);
 typedef void (*CommandFn)(i32 cmd_id);          /* a menu command, a menu item selected */
 typedef void (*WndActivateFn)(i32 active);      /* the application (de)activated */
 typedef void (*CaptionButtonFn)(i32 button);    /* a FrameWindow's caption button clicked (its id) */
+typedef void (*MenuCommandFn)(i32 menu_id, i32 item_id);   /* menu_set_command_handler: a menu item chosen */
+/* A game timer's callback (game_timer_create): the timer's slot and how
+   many more times it fires (negative: until killed). */
+typedef void (*TimerFn)(i32 slot, i32 repeats_left);
 
 /* A window's event callbacks (wnd_handlers_ctor 0044c8b0, 0x68 bytes;
    ModalMenuWindow.wnd_handlers): wnd_set_*_handler set one and return the
@@ -73,6 +126,53 @@ typedef struct WndHandlers {
     union { u32 field_5c; WndMsgFn on_msg_4c8; };
     union { u32 field_60; WndNotifyFn on_enter_size_move; };
     union { u32 field_64; WndNotifyFn on_exitsizemove; };
+    /* methods */
+    WndMouseFn set_lbuttonup_handler(WndMouseFn handler);    /* 00408130 */
+    WndMouseFn set_rbuttonup_handler(WndMouseFn handler);    /* 00408170 */
+    WndKeyFn set_keydown_handler(WndKeyFn handler);    /* 004081b0 */
+    WndKeyFn set_char_handler(WndKeyFn handler);    /* 004081f0 */
+    WndCloseFn set_close_handler(WndCloseFn handler);    /* 00408230 */
+    WndNotifyFn set_minimize_handler(WndNotifyFn handler);    /* 00408270 */
+    WndNotifyFn set_restore_handler(WndNotifyFn handler);    /* 004082b0 */
+    WndSizeFn set_size_handler(WndSizeFn handler);    /* 004082f0 */
+    WndMouseFn set_move_handler(WndMouseFn handler);    /* 00408330 */
+    WndMouseFn set_mousemove_handler(WndMouseFn handler);    /* 00414be0 */
+    WndMouseFn set_lbuttondown_handler(WndMouseFn handler);    /* 00414c20 */
+    WndMouseFn set_lbuttonup_any_handler(WndMouseFn handler);    /* 00414c60 */
+    WndMouseFn set_dblclick_handler(WndMouseFn handler);    /* 00414ca0 */
+    WndHandlers *construct();    /* 0044c8b0 */
+    void clear_handlers();    /* 0044c8e0 */
+    WndKeyFn set_keydown_pre_handler(WndKeyFn handler);    /* 00456ee0 */
+    WndNotifyFn set_drag_begin_callback(WndNotifyFn callback);    /* 00553d30 */
+    WndNotifyFn set_drag_end_callback(WndNotifyFn callback);    /* 00553d70 */
+    WndMouseFn set_rbuttondown_handler(WndMouseFn handler);    /* 005785d0 */
+    WndMouseFn set_rbuttonup_any_handler(WndMouseFn handler);    /* 00578610 */
+    void call_mousemove(i32 x,i32 y);    /* 005ecf50 */
+    void call_lbuttondown(iptr x,iptr y);    /* 005ecf90 */
+    void call_lbuttonup_raw(iptr x,iptr y);    /* 005ecfd0 */
+    void call_lbuttonup(i32 x,i32 y);    /* 005ed010 */
+    void call_rbuttondown(iptr x,iptr y);    /* 005ed050 */
+    void call_rbuttonup_raw(i32 x,i32 y);    /* 005ed090 */
+    void call_rbuttonup(i32 x,i32 y);    /* 005ed0d0 */
+    void call_dblclick(i32 x,i32 y);    /* 005ed110 */
+    void call_keydown_pre(i32 key);    /* 005ed150 */
+    void call_keyup(i32 key);    /* 005ed190 */
+    void call_keydown(i32 key);    /* 005ed1d0 */
+    void call_char(i32 ch);    /* 005ed210 */
+    i32 call_close();    /* 005ed250 */
+    void call_minimize();    /* 005ed290 */
+    void call_restore();    /* 005ed2c0 */
+    void call_setfocus();    /* 005ed2f0 */
+    void call_size(i32 size_type);    /* 005ed320 */
+    void call_move(i32 x,i32 y);    /* 005ed360 */
+    void call_msg44(iptr notify_arg);    /* 005ed3a0 */
+    void call_hscroll(i32 scroll_pos);    /* 005ed3e0 */
+    void call_hscroll_track(i32 scroll_pos);    /* 005ed420 */
+    void call_vscroll(i32 scroll_pos);    /* 005ed460 */
+    void call_vscroll_track(i32 scroll_pos);    /* 005ed4a0 */
+    void call_msg4c8(i32 msg_arg);    /* 005ed4e0 */
+    void call_entersizemove();    /* 005ed520 */
+    void call_exitsizemove();    /* 005ed550 */
 } WndHandlers;
 static_assert(sizeof(WndHandlers) == 0x68, "");
 
@@ -94,6 +194,24 @@ typedef struct ModalMenuWindow : WndBase {
     union { u32 field_ac; u32 handler_slot_ac; u32 rbutton_down; };
     i32 hscroll_pos;                /* 0xb0 last WM_HSCROLL position */
     i32 vscroll_pos;                /* 0xb4 */
+    /* methods */
+    void set_min_size(u32 width,u32 height);    /* 00408370 */
+    void set_modal_idle_callback(WndNotifyFn callback);    /* 0040f320 */
+    ModalMenuWindow *construct();    /* 0044c730 */
+    void attach_menu(iptr menu_obj);    /* 00579b40 */
+    void set_menu_callback(MenuPosCommandFn callback);    /* 00579bc0 */
+    void redraw_menu_bar();    /* 00579bf0 */
+    void get_min_size(iptr out_width,iptr out_height);    /* 005bb910 */
+    void get_max_size(iptr out_width,iptr out_height);    /* 005bb950 */
+    void run_modal_loop();    /* 005c61b0 */
+    void end_modal_loop();    /* 005c62cb */
+    bool fire_menu_select(i32 item_id);    /* 005c63af */
+    bool call_menu_pos_command(i32 menu_pos,i32 item_pos);    /* 005ed5a0 */
+    bool call_command(i32 cmd_id);    /* 005ed5f0 */
+    u32 get_hscroll_pos();    /* 005ed640 */
+    u32 get_vscroll_pos();    /* 005ed660 */
+    u32 get_hscroll_page();    /* 005ed680 */
+    u32 get_vscroll_page();    /* 005ed6a0 */
 } ModalMenuWindow;
 static_assert(sizeof(ModalMenuWindow) == 0xb8, "");
 
@@ -102,6 +220,16 @@ typedef struct Wnd : ModalMenuWindow {
     union { u32 field_bc; u32 handler_slot_bc; };
     union { u32 field_c0; u32 handler_slot_c0; };
     union { u32 field_c4; u32 keyboard_nav; };
+    /* methods */
+    void show_focus_first();    /* 00408620 */
+    void set_keyboard_nav(i32 enabled);    /* 0040f350 */
+    Wnd *construct();    /* 0044c670 */
+    void activate();    /* 004518d0 */
+    void append_control(iptr ctrl);    /* 005c59c4 */
+    void remove_control(int ctrl_id);    /* 005c5a27 */
+    void remove_all_controls();    /* 005c5aeb */
+    void focus_first_control();    /* 005c5b7f */
+    u8 keyboard_nav_enabled();    /* 005cbdd0 */
 } Wnd;
 static_assert(sizeof(Wnd) == 0xc8, "");
 
@@ -142,6 +270,16 @@ typedef struct DestroyedCivsWindow : ModalMenuWindow {
     u8 pad_6f8[4];
     union { u32 field_6fc; u32 slide_y; };
     union { u8 pad_700[16]; struct { u8 caption_font_2[16]; }; };
+    /* methods */
+    DestroyedCivsWindow *construct();    /* 00514f16 */
+    void destruct();    /* 005150b9 */
+    i32 create(uint killer);    /* 005151f4 */
+    void run();    /* 00515516 */
+    void draw_entry(iptr entry);    /* 00515999 */
+    void draw_portrait(iptr entry);    /* 00515c15 */
+    void slide_step(int delta);    /* 00515dc8 */
+    void slide_down();    /* 00515f3c */
+    void slide_up();    /* 00516005 */
 } DestroyedCivsWindow;
 static_assert(sizeof(DestroyedCivsWindow) == 0x710, "");
 
@@ -207,6 +345,23 @@ typedef struct SpaceshipWindow : ModalMenuWindow {
     i32 typing_label_part;          /* 0x1db4 */
     SpaceshipStar stars[80];        /* 0x1db8 */
     u8 pad_2178[8];
+    /* methods */
+    SpaceshipWindow *construct(u32 civ);    /* 004d0517 */
+    i32 destruct();    /* 004d08b0 */
+    i32 init();    /* 004d0b58 */
+    uint create();    /* 004d0d64 */
+    void run_modal();    /* 004d0ea6 */
+    void present();    /* 004d13b8 */
+    void launch_sequence();    /* 004d1725 */
+    void build_stats_text();    /* 004d4a7b */
+    uint type_char(int allow_skip);    /* 004d4fd1 */
+    void init_starfield();    /* 004d570b */
+    void play_launch_video();    /* 004d5b21 */
+    void setup_hotspots();    /* 004d5e41 */
+    void draw_buttons();    /* 004d5ef9 */
+    void draw_close_btn(int enabled,int raised);    /* 004d5f79 */
+    void draw_launch_btn(int enabled,int raised);    /* 004d60a5 */
+    i32 render_ship();
 } SpaceshipWindow;
 static_assert(sizeof(SpaceshipWindow) == 0x2180, "");
 
@@ -271,6 +426,19 @@ typedef struct DiploLeaderWindow : ModalMenuWindow {
     union { u8 field_1087; u8 style_era; };
     union { u8 field_1088; u8 pending_flag_1088; };
     u8 pad_1089[3];
+    /* methods */
+    DiploLeaderWindow *construct();    /* 004942a3 */
+    i32 init(i32 viewer_civ,iptr leader_civ);    /* 004944bb */
+    void show();    /* 00494704 */
+    void teardown();    /* 004947f0 */
+    uint init_tile();    /* 0049488e */
+    i32 init_background();    /* 004948e6 */
+    uint init_main_art();    /* 00494949 */
+    i32 init_military();    /* 00494b5f */
+    i32 init_science();    /* 00494e2a */
+    i32 init_portrait();    /* 00495c35 */
+    i8 init_video();    /* 00495e0c */
+    void wnd_set_bg_tile(DibSurface *tile);    /* 00497cc0 */
 } DiploLeaderWindow;
 static_assert(sizeof(DiploLeaderWindow) == 0x108c, "");
 
@@ -336,6 +504,15 @@ typedef struct ThroneRoomWindow : ModalMenuWindow {
     union { u32 field_19f0; u32 improvement_slots_left; };
     union { u32 field_19f4; u32 houses_left; };
     union { u8 pad_19f8[588]; struct { u8 improvement_slot_tables[164]; u8 starfield_stars[208]; u8 wonder_slot_tables[184]; u32 click_prompt_rect; u8 gap_1c28[12]; u32 click_prompt_font; u8 gap_1c38[12]; }; };
+    /* methods */
+    ThroneRoomWindow *construct(iptr civ);    /* 0044ce16 */
+    void destruct();    /* 0044d027 */
+    uint create_windows();    /* 0044d162 */
+    void run_upgrade();    /* 0044d296 */
+    void run_view();    /* 0044d9c1 */
+    void draw_click_prompt();    /* 0044dab5 */
+    i32 render();    /* 0044db92 */
+    i32 render_choices();    /* 0044e790 */
 } ThroneRoomWindow;
 static_assert(sizeof(ThroneRoomWindow) == 0x1c44, "");
 
@@ -404,6 +581,27 @@ typedef struct CityViewWindow : ModalMenuWindow {
     union { u32 field_1c90; u32 city_id; };
     union { u32 field_1c94; u32 art_era; };
     union { u8 pad_1c98[28]; struct { u8 title_rect[16]; u8 title_font[12]; }; };
+    /* methods */
+    CityViewWindow *construct();    /* 00454354 */
+    i32 load(uptr city);    /* 004548a9 */
+    void run_modal();    /* 00454eb2 */
+    void classify_site();    /* 00454f83 */
+    uint load_icon_surface();    /* 0045512b */
+    uint create_windows();    /* 00455183 */
+    i32 layout_buildings();    /* 00455314 */
+    void draw_buildings();    /* 00455add */
+    i32 take_wonder_slot();    /* 00455b8e */
+    i32 take_improvement_slot();    /* 00455c5d */
+    void place_improvement(iptr slot,iptr improvement);    /* 00455d38 */
+    void place_wonder(iptr slot,iptr wonder);    /* 00455dfd */
+    void place_large_house(iptr slot);    /* 00455ebe */
+    void place_small_house(iptr slot);    /* 00455f2e */
+    void place_large_empty_lot(iptr slot);    /* 00455f9e */
+    void place_empty_lot(iptr slot);    /* 00456005 */
+    void redraw_scrolled();    /* 0045606c */
+    void draw_title();    /* 004560f8 */
+    void scroll_right();    /* 0045638b */
+    void scroll_left();    /* 004564a8 */
 } CityViewWindow;
 static_assert(sizeof(CityViewWindow) == 0x1cb4, "");
 
@@ -423,6 +621,14 @@ typedef struct EndgameMovieWindow : ModalMenuWindow {
     u8 movie_caption_text[1024];    /* 0xf24 */
     u8 movie_frame_surface[72];     /* 0x1324 DibSurface (surface_ctor) */
     u8 movie_caption_rect[16];      /* 0x136c RECT */
+    /* methods */
+    EndgameMovieWindow *defeat_movie_wnd_construct();    /* 004703d4 */
+    i32 defeat_movie_wnd_create(uint civ);    /* 004705d7 */
+    void defeat_movie_wnd_play();    /* 004708db */
+    EndgameMovieWindow *defeat_movie_wnd_scalar_destruct(uint flags);    /* 00471020 */
+    EndgameMovieWindow *arrival_movie_wnd_construct();    /* 00471362 */
+    i32 arrival_movie_wnd_create(iptr civ);    /* 00471565 */
+    void arrival_movie_wnd_play();    /* 00471856 */
 } EndgameMovieWindow;
 static_assert(sizeof(EndgameMovieWindow) == 0x137c, "");
 
@@ -447,6 +653,60 @@ typedef struct DibSurface {
     union { u32 field_3c; u32 palette_version; };
     union { u32 field_40; GdiDib *dib; };
     union { u32 field_44; u32 bytes_per_pixel; };
+    /* methods */
+    void wnd_destroy_with_surface();    /* 004083b0 */
+    void release();    /* 004083f0 */
+    void wnd_blit_surface();    /* 00408460 */
+    void wnd_blit_surface_rect(iptr rect);    /* 00408490 */
+    DibSurface *surface_delete(uint flags);    /* 0040f010 */
+    u32 surface_height();    /* 0043c560 */
+    u32 surface_width();    /* 0043c590 */
+    i32 get_width();    /* 00471070 */
+    i32 get_height();    /* 004710a0 */
+    void mapview_blit_with_net_pump();    /* 0047cb50 */
+    u32 *get_rect();    /* 00497c90 */
+    void pedia_draw_tree_connector(int x,int y_from,int x_to,int y_to);    /* 005674b9 */
+    void wnd_create(iptr parent,i32 style,i32 x,i32 y ,i32 width,i32 height,iptr palette);    /* 005bb3f0 */
+    void wnd_create_with_surface(const char *title,i32 style,i32 x,i32 y ,i32 width,i32 height,iptr palette,iptr parent);    /* 005bb4ae */
+    void create(int width,int height);    /* 005bd65c */
+    i32 alloc_dib8(iptr rect);    /* 005bd696 */
+    void set_dims(int *rect);    /* 005bd813 */
+    i32 load_gif_file(const char *filename,uint first_color,uint color_count,iptr palette);    /* 005bf071 */
+    i32 load_gif_resource(iptr res_id,uint first_color,uint color_count,iptr palette);    /* 005bf5e1 */
+    void reset_clip();    /* 005c0034 */
+    void set_clip(RECT *rect);    /* 005c0073 */
+    void get_clip(RECT *out_rect);    /* 005c00ce */
+    i32 resize(iptr rect);    /* 005c019d */
+    void lock();    /* 005c01c1 */
+    void unlock();    /* 005c02e0 */
+    void fill_rect(iptr rect,i32 color);    /* 005c0333 */
+    void fill(i32 color);    /* 005c041f */
+    void replace_color_clip(i32 from_color,i32 to_color);    /* 005c044a */
+    void replace_color(iptr rect,i32 from_color,i32 to_color);    /* 005c0479 */
+    void blit(DibSurface *src,RECT *dest_rect,RECT *src_rect);    /* 005c0593 */
+    void blit_to_wnd(iptr wnd,RECT *src_rect,iptr dest_pt);    /* 005c0979 */
+    uint get_pixel(i32 x,i32 y);    /* 005c0bf2 */
+    void set_pixel(i32 x,i32 y,i32 color);    /* 005c0c5d */
+    void set_palette(iptr palette);    /* 005c0cc5 */
+    void apply_palette(PaletteVersionView *palette);    /* 005c0d12 */
+    void draw_text(iptr font,const char *text,iptr x,int y,uint flags);    /* 005c0f57 */
+    void draw_text_in_rect(iptr font,const char *text,RECT *rect,uint flags);    /* 005c1020 */
+    void draw_text_rect(iptr font,const char *text,iptr rect,i32 flags);    /* 005c1167 */
+    void draw_line(u32 x1,u32 y1,u32 x2,u32 y2);    /* 005c11b2 */
+    int pixel_ptr(int x,int y);    /* 005c19d3 */
+    i8 in_clip(int x,int y);    /* 005c1a00 */
+    void remap_colors(iptr remap_table,iptr base_index,i32 unused);    /* 005c1a62 */
+    i32 alloc_dib16(iptr rect);    /* 005c1b47 */
+    i32 alloc_dib24(iptr rect);    /* 005c1cf7 */
+    i32 alloc_dib32(iptr rect);    /* 005c1ea7 */
+    bool is_locked();    /* 005c54f0 */
+    u32 get_pitch();    /* 005c55d0 */
+    GdiDib *get_dib();    /* 005c55f0 */
+    int next_row(iptr row_ptr);    /* 005c5610 */
+    uptr get_bits();    /* 005c5640 */
+    int prev_row(iptr row_ptr);    /* 005c5710 */
+    void avi_player_set_palette(iptr palette);    /* 005dd561 */
+    void avi_player_draw_to(iptr dest,int x,int y);    /* 005dd64c */
 } DibSurface;
 static_assert(sizeof(DibSurface) == 0x48, "");
 
@@ -582,6 +842,86 @@ typedef struct Dialog {
     union { struct { uptr field_284; uptr field_288; }; uptr list_vscroll[2]; };
     union { struct { uptr field_28c; uptr field_290; }; uptr list_hscroll[2]; };
     union { u8 pad_294[96]; struct { uptr extra_button_labels; u8 gap_298[16]; u32 button_layout; u32 button_alignment; u32 button_x_coords; u8 gap_2b4[64]; }; };
+    /* methods */
+    void reset(i32 flags);    /* 0040bc40 */
+    i32 show_modal(iptr parent);    /* 0040bc80 */
+    i32 load_game_section(const char *section,i32 flags);    /* 0040ffa0 */
+    i32 load_text_ex(const char *filename,const char *section,i32 arg,i32 flags);    /* 0040ffe0 */
+    void init_default();    /* 00421dd0 */
+    i32 load_text(const char *filename,const char *section,i32 flags);    /* 00421e00 */
+    Dialog *scalar_destruct(uint flags);    /* 00426f30 */
+    void set_list_indent(uptr indent,iptr index);    /* 0043c990 */
+    void load_game_text(const char *section);    /* 0043c9d0 */
+    void load_text_noflags(const char *filename,const char *section);    /* 0043ca10 */
+    void reset_string_pool(uint size);    /* 0059d5b5 */
+    void init_defaults();    /* 0059d5f5 */
+    Dialog *construct(i32 size);    /* 0059db08 */
+    void close();    /* 0059db65 */
+    i32 destruct();    /* 0059df8a */
+    void init(iptr surface_wnd,iptr background,RECT *rect,u32 flags);    /* 0059dfb9 */
+    i32 set_item_text(int line_id,const char *text);    /* 0059e0eb */
+    DialogLine *add_line(const char *text,int x,int y,int max_len,int color);    /* 0059e18b */
+    i32 option_icon_width();    /* 0059e356 */
+    int dialog_option_row_height();    /* 0059e376 */
+    u32 dialog_list_row_height();    /* 0059e3fa */
+    int edit_row_height();    /* 0059e448 */
+    void set_font(iptr font);    /* 0059e472 */
+    void set_title_font(iptr font);    /* 0059e4a4 */
+    void set_list_font(iptr font);    /* 0059e4c5 */
+    void set_columns(u32 column_count);    /* 0059e4e6 */
+    void set_list_rows(u32 rows);    /* 0059e507 */
+    void set_current_pane(u32 pane);    /* 0059e585 */
+    void set_listbox(int rows,u32 width,u32 list_flags);    /* 0059e5c9 */
+    int line_height();    /* 0059e648 */
+    int button_width_for(const char *text);    /* 0059e676 */
+    void set_title(const char *title);    /* 0059e6a9 */
+    void set_width(u32 width);    /* 0059e6ff */
+    void set_height(u32 height);    /* 0059e762 */
+    void set_position(u32 x,u32 y);    /* 0059e783 */
+    DialogOption *find_option(int option_id);    /* 0059e7ad */
+    DialogSprite *find_sprite(int sprite_id);    /* 0059e877 */
+    void set_option_disabled(iptr option_id,int disabled);    /* 0059e8db */
+    i32 option_is_checked(i32 option_id);    /* 0059e9f3 */
+    void set_option_checked(i32 option_id,int checked);    /* 0059ea4d */
+    void set_default_choice(iptr choice_id);    /* 0059ea99 */
+    void set_sprite_click_fn(DialogSpriteFn callback);    /* 0059eb8c */
+    void set_sprite_dblclick_fn(DialogSpriteFn callback);    /* 0059ebb0 */
+    void set_sprite_draw_fn(DialogSpriteDrawFn callback);    /* 0059ebd4 */
+    void set_option_draw_fn(DialogOptionDrawFn callback);    /* 0059ebf8 */
+    void set_select_change_fn(DialogSelectFn callback);    /* 0059ec1c */
+    void set_image_zoom(u32 zoom);    /* 0059ec64 */
+    DialogSprite *add_sprite(iptr sprite,iptr sprite_id,const char *label);    /* 0059ec88 */
+    DialogOption *add_option(const char *text,iptr option_id,uint data);    /* 0059edf0 */
+    DialogOption *add_checkbox_option(const char *text,iptr option_id,int checked);    /* 0059f026 */
+    DialogEditField *add_edit_field(const char *label,iptr initial_text,size_t max_len);    /* 0059f06d */
+    void add_button(const char *label);    /* 0059f2a3 */
+    void set_text_color(int highlighted,int use_alt,int shadow);    /* 0059f31a */
+    int draw_text_shadowed(iptr font,char *text,int x,int y,uint flags);    /* 0059f3d7 */
+    void draw_text_line(const char *text,int x_offset,i32 y);    /* 0059f5ba */
+    i32 has_text_lines();    /* 0059f5f7 */
+    int draw_wrapped_text(int draw);    /* 0059f64a */
+    i32 option_group_index(DialogOption *option);    /* 0059fb78 */
+    DialogOption *option_at(int target_index);    /* 0059fc19 */
+    int column_of_option(DialogOption *option);    /* 0059fcba */
+    i32 compute_layout();    /* 0059fd2a */
+    void draw_option_cell(const char *text,int x,int y,int selected,int disabled);    /* 005a0fea */
+    void draw_option_text(char *text,int x,i32 y,i32 selected, i32 disabled);    /* 005a1148 */
+    uint draw_option(DialogOption *option,int blit);    /* 005a120b */
+    void draw_option_list();    /* 005a14d2 */
+    int column_of_index(int index);    /* 005a1766 */
+    int column_start_index(int index);    /* 005a17a4 */
+    void select_option(DialogOption *option,int redraw);    /* 005a17e9 */
+    i32 option_at_point(int x,int y);    /* 005a1a7d */
+    int count_group_options(int group);    /* 005a1c52 */
+    void pick_pane_at(int x,int y);    /* 005a1caf */
+    i32 create_window();    /* 005a1e28 */
+    void create_controls();    /* 005a211c */
+    void fill_rect_bg(RECT *rect,int area);    /* 005a5649 */
+    void render();    /* 005a577e */
+    u32 run_modal(iptr out_text,iptr timeout_secs);    /* 005a5f34 */
+    i32 load_text_section(const char *file_name,const char *section,int default_value,iptr edit_default,iptr init_arg1, iptr init_arg2,iptr init_arg3,uint flags);    /* 005a632a */
+    uint uses_alt_text_color();    /* 005a96f0 */
+    void draw_text_default_font(const char *text,i32 x,i32 y, i32 flags);    /* 005a9730 */
 } Dialog;
 static_assert(sizeof(Dialog) == 0x2f4, "");
 
@@ -593,6 +933,35 @@ typedef struct ScenarioEvents : Dialog {
     u8 pad_2f6[18];
     union { u32 field_308; u32 event_count; };
     union { uptr field_30c; struct ScenarioEvent *event_list; };
+    /* methods */
+    void init_string_pool(uint pool_size);    /* 004fa47e */
+    ScenarioEvents *construct(i32 pool_size);    /* 004fa4be */
+    void destruct();    /* 004fa569 */
+    void reset(i32 pool_size);    /* 004fa5d9 */
+    ScenarioEvent *alloc();    /* 004fa617 */
+    i32 action_play_wave(ScenarioEvent *event);    /* 004fa707 */
+    i32 action_dont_play_wonders(ScenarioEvent *event);    /* 004fa82d */
+    i32 action_play_cd(ScenarioEvent *event);    /* 004fa854 */
+    i32 action_change_money(ScenarioEvent *event);    /* 004fa944 */
+    i32 action_text(ScenarioEvent *event);    /* 004faab0 */
+    i32 action_make_aggression(ScenarioEvent *event);    /* 004faba6 */
+    i32 action_destroy_civ(ScenarioEvent *event);    /* 004fad02 */
+    i32 action_give_tech(ScenarioEvent *event);    /* 004fadfb */
+    i32 action_create_unit(ScenarioEvent *event);    /* 004faed4 */
+    int action_move_unit(ScenarioEvent *event);    /* 004fb29f */
+    int action_change_terrain(ScenarioEvent *event);    /* 004fb5b2 */
+    i32 check_turn(int turn);    /* 004fba0c */
+    i32 check_turn_interval(int turn);    /* 004fba9c */
+    i32 check_random_turn(i32 turn);    /* 004fbb2f */
+    i32 check_received_tech();    /* 004fbbdd */
+    i32 check_scenario_loaded();    /* 004fbd2b */
+    i32 check_unit_killed(int unit_type,int attacker_civ,int defender_civ);    /* 004fbd9d */
+    i32 check_negotiation(iptr talker_civ,iptr listener_civ);    /* 004fbe84 */
+    i32 check_no_schism(iptr civ);    /* 004fc20d */
+    i32 check_city_taken(iptr city_name,iptr attacker_civ,iptr defender_civ);    /* 004fc2bb */
+    i32 run_actions(ScenarioEvent *event);    /* 004fc3ae */
+    int parse_file(const char *filename,const char *section);    /* 004fc516 */
+    ScenarioEvents *events_delete(uint flags);    /* 00551cd0 */
 } ScenarioEvents;
 static_assert(sizeof(ScenarioEvents) == 0x310, "");
 
@@ -600,6 +969,17 @@ static_assert(sizeof(ScenarioEvents) == 0x310, "");
 typedef struct GameFont {
     union { u32 field_0; u32 hfont; };
     union { u32 field_4; u32 cached_height; };
+    /* methods */
+    u32 font_cached_height();    /* 0040ef70 */
+    i32 line_spacing();    /* 0040efa0 */
+    i32 text_width(const char *text);    /* 0040efd0 */
+    void set(i32 face,iptr size);    /* 00417ef0 */
+    u32 get_hfont();    /* 00418cb0 */
+    GameFont *init(i32 face,i32 size);    /* 0043c460 */
+    GameFont *init_styled(i32 face,i32 size,i32 style);    /* 0043c4c0 */
+    GameFont *init_empty();    /* 0043c690 */
+    void set_styled(i32 face,i32 size,i32 style);    /* 0043c6c0 */
+    u32 get_handle();    /* 004d8af0 */
 } GameFont;
 
 /* The controls' callbacks, called by the control with its id (ctrl_id),
@@ -630,6 +1010,25 @@ typedef struct Control {
     union { u8 field_25; u8 hotkey_char; };
     u8 pad_26[2];
     union { u32 field_28; u32 hotkey_pos; };
+    /* methods */
+    void show_and_redraw();    /* 0040f380 */
+    Control *base_construct();    /* 0040f480 */
+    i32 base_destruct();    /* 0040f510 */
+    void destroy();    /* 0040f610 */
+    void init(iptr parent_wnd,u32 type_code,u32 id,RECT *rect);    /* 0040f730 */
+    uptr get_parent();    /* 0040f810 */
+    u32 get_id();    /* 00418740 */
+    u32 get_hwnd();    /* 00418770 */
+    void set_text(const char *text);    /* 00418a30 */
+    void get_text(char *buffer);    /* 00418a70 */
+    void hide();    /* 0043c5f0 */
+    void set_initial_focus();    /* 004bb5b0 */
+    void set_focus();    /* 004bb5e0 */
+    u32 get_type();    /* 005c5e60 */
+    u32 get_next();    /* 005c5e80 */
+    u8 get_initial_focus();    /* 005c5ea0 */
+    int get_rect();    /* 005c8f50 */
+    void set_hwnd(u32 hwnd);    /* 005c9710 */
 } Control;
 static_assert(sizeof(Control) == 0x2c, "");
 
@@ -639,6 +1038,18 @@ typedef struct Button : Control {
     union { u32 field_30; CtrlNotifyFn on_click; };
     union { u32 field_34; u32 on_select; };   /* -1 (button_ctor), button_create_with_callback's callback */
     union { u32 field_38; u32 font; };
+    /* methods */
+    void create(iptr parent,i32 ctrl_id,iptr rect,const char *label);    /* 0040f680 */
+    void set_default_button();    /* 0040f7d0 */
+    void set_cancel_button();    /* 0040f840 */
+    void set_callback(CtrlNotifyFn callback);    /* 0040f880 */
+    void disable();    /* 00453c40 */
+    void enable();    /* 00453c80 */
+    void create_with_callback(iptr parent,i32 ctrl_id,iptr rect,u32 callback,const char *label);    /* 00497d40 */
+    Button *scalar_destruct(uint flags);    /* 004bb3b0 */
+    u32 ctrl_is_enabled();    /* 00530e80 */
+    Button *vector_destruct(uint flags);    /* 005a9440 */
+    void fire_callback(i32 ctrl_id);    /* 005cbdf0 */
 } Button;
 static_assert(sizeof(Button) == 0x3c, "");
 
@@ -648,6 +1059,18 @@ typedef struct Checkbox : Control {
     union { u32 field_30; u32 checked; };
     union { u32 field_34; u32 is_enabled; };
     union { u32 field_38; u32 font; };
+    /* methods */
+    void create(iptr parent,i32 ctrl_id,i32 x,i32 y ,const char *label);    /* 0040f9d0 */
+    void set_callback(CheckboxToggleFn callback);    /* 0040faa0 */
+    void set_checked(u32 checked);    /* 0040fad0 */
+    Checkbox *scalar_destruct(uint flags);    /* 004bb450 */
+    void create_fixed(iptr parent,i32 ctrl_id,i32 x,i32 y ,i32 width,const char *label);    /* 00530ee0 */
+    void enable();    /* 00530fb0 */
+    u32 is_checked();    /* 00530fe0 */
+    Checkbox *vector_destruct(uint flags);    /* 005a9320 */
+    void disable();    /* 005a9640 */
+    u32 checkbox_is_enabled();    /* 005c5ec0 */
+    void fire_callback(i32 ctrl_id,i32 checked);    /* 005cce40 */
 } Checkbox;
 static_assert(sizeof(Checkbox) == 0x3c, "");
 
@@ -658,6 +1081,21 @@ typedef struct Scrollbar : Control {
     union { u32 field_34; u32 page_size; };
     u32 field_38;                               /* 1 (scrollbar_create) */
     union { u32 field_3c; u32 cur_pos; };
+    /* methods */
+    Scrollbar *construct();    /* 0040fb00 */
+    void destruct();    /* 0040fbb0 */
+    void create(iptr parent,iptr ctrl_id,iptr rect,i32 style);    /* 0040fc50 */
+    void set_pos(iptr pos);    /* 0040fcf0 */
+    void set_range(i32 min_value,i32 max_value);    /* 0040fd40 */
+    void set_callback(ScrollFn callback);    /* 0040fd80 */
+    void set_track_callback(ScrollFn callback);    /* 00451ac0 */
+    Scrollbar *scalar_destruct(uint flags);    /* 004bb4f0 */
+    u32 get_cur_pos();    /* 005cd620 */
+    void fire_change(i32 pos);    /* 005cd640 */
+    void fire_track(i32 pos);    /* 005cd680 */
+    u32 get_page_size();    /* 005cd6c0 */
+    void set_page_size(u32 page_size);    /* 005db0d0 */
+    void get_ctl_range(iptr min_out,iptr max_out);    /* 005db110 */
 } Scrollbar;
 static_assert(sizeof(Scrollbar) == 0x40, "");
 
@@ -670,6 +1108,24 @@ typedef struct EditControl : Control {
     union { u32 field_3c; u32 scroll_pos; };
     union { u32 field_40; u32 edit_font; };
     u32 field_44;                               /* 0 (edit_ctor) */
+    /* methods */
+    void create(iptr parent,i32 ctrl_id,iptr rect,const char *text);    /* 00418910 */
+    void set_max_len(i32 max_len);    /* 004189c0 */
+    void set_callback(EditKeyFn callback);    /* 00418a00 */
+    i32 get_sel_end();    /* 00492ab0 */
+    void replace_sel(const char *text);    /* 00492ae0 */
+    void set_sel(i32 sel_start,i32 sel_end);    /* 00492b20 */
+    EditControl *scalar_destruct(uint flags);    /* 004bb400 */
+    void create_styled(iptr parent,i32 ctrl_id,iptr rect,const char *text, i32 multiline,i32 style);    /* 004bb620 */
+    void set_caret(i32 pos);    /* 004bb6d0 */
+    i32 get_text_end();    /* 004bb710 */
+    i32 get_line(i32 line,char *buffer,i32 max_len);    /* 004cffb0 */
+    void set_change_callback(CtrlNotifyFn callback);    /* 00530eb0 */
+    EditControl *vector_destruct(uint flags);    /* 005a93b0 */
+    void create_at(iptr parent,i32 ctrl_id,int x,int y,int width, const char *text);    /* 005d25c0 */
+    i32 fire_key_callback(iptr key);    /* 005d30e0 */
+    void fire_maxtext_callback();    /* 005eb2f0 */
+    void fire_change_callback();    /* 005eb330 */
 } EditControl;
 static_assert(sizeof(EditControl) == 0x48, "");
 
@@ -678,6 +1134,16 @@ typedef struct ComboBox : Control {
     union { u32 field_2c; u32 item_count; };
     union { u32 field_30; CtrlNotifyFn on_dblclick; };
     union { u32 field_34; CtrlNotifyFn on_select; };
+    /* methods */
+    void create(iptr parent,i32 ctrl_id,iptr rect);    /* 00418bf0 */
+    void set_font(iptr font);    /* 00418c70 */
+    void add_string(const char *text);    /* 00418ce0 */
+    void clear();    /* 00418d20 */
+    i32 get_cur_sel();    /* 00418d60 */
+    void set_cur_sel(iptr index);    /* 00418d90 */
+    void set_callback(CtrlNotifyFn callback);    /* 00418dd0 */
+    void fire_dblclick();    /* 005d3720 */
+    void fire_selchange();    /* 005d3760 */
 } ComboBox;
 static_assert(sizeof(ComboBox) == 0x38, "");
 
@@ -688,6 +1154,23 @@ typedef struct ListBox : Control {
     union { u32 field_30; CtrlNotifyFn on_dblclick; };
     union { u32 field_34; CtrlNotifyFn on_select; };
     union { u32 field_38; u32 font; };
+    /* methods */
+    ListBox *construct();    /* 00418e00 */
+    void destruct();    /* 00418ea0 */
+    void create(iptr parent,i32 ctrl_id,iptr rect);    /* 00418f40 */
+    void set_font(iptr font);    /* 00418fe0 */
+    void add_string(const char *text);    /* 00419020 */
+    void clear();    /* 00419060 */
+    u32 get_count();    /* 00551d20 */
+    i32 get_cur_sel();    /* 00551d50 */
+    void set_cur_sel(i32 index);    /* 00551d80 */
+    void set_dblclick_callback(CtrlNotifyFn callback);    /* 00551dc0 */
+    void set_select_callback(CtrlNotifyFn callback);    /* 00551df0 */
+    ListBox *scalar_destruct(uint flags);    /* 005a94d0 */
+    void get_text(i32 index,char *buffer);    /* 005a9670 */
+    void get_sel_text(char *buffer);    /* 005a96b0 */
+    void fire_dblclick();    /* 005d3f30 */
+    void fire_selchange();    /* 005d3f70 */
 } ListBox;
 static_assert(sizeof(ListBox) == 0x3c, "");
 
@@ -698,6 +1181,17 @@ typedef struct Hotspot : Control {
     union { u32 field_34; CtrlNotifyFn on_click; };
     union { u32 field_38; CtrlNotifyFn on_press; };
     union { u32 field_3c; CtrlNotifyFn on_dblclick; };
+    /* methods */
+    void create(iptr parent,iptr id,iptr rect);    /* 004519b0 */
+    void set_click_callback(CtrlNotifyFn callback);    /* 00451a60 */
+    void set_dblclick_callback(CtrlNotifyFn callback);    /* 00451a90 */
+    Hotspot *scalar_destruct(uint flags);    /* 00453aa0 */
+    Hotspot *vector_destruct(uint flags);    /* 005a9520 */
+    void fire_enter(i32 arg);    /* 005c8f70 */
+    void fire_leave(i32 event_arg);    /* 005c8fb0 */
+    void fire_click(i32 event_arg);    /* 005c8ff0 */
+    void fire_press(i32 event_arg);    /* 005c9030 */
+    void fire_dblclick(i32 event_arg);    /* 005c9070 */
 } Hotspot;
 static_assert(sizeof(Hotspot) == 0x40, "");
 
@@ -709,6 +1203,12 @@ typedef struct Hyperlink : Control {
     union { u32 field_34; CtrlNotifyFn on_click; };
     union { u32 field_38; CtrlNotifyFn on_press; };
     union { u32 field_3c; CtrlNotifyFn on_dblclick; };
+    /* methods */
+    void destruct();    /* 00452a67 */
+    void create(iptr parent,i32 control_id,iptr rect);    /* 00452b89 */
+    Hyperlink *construct();    /* 00453cc0 */
+    void set_click_callback(CtrlNotifyFn callback);    /* 00453d40 */
+    void set_dblclick_callback(CtrlNotifyFn callback);    /* 00453d70 */
 } Hyperlink;
 static_assert(sizeof(Hyperlink) == 0x40, "");
 
@@ -718,6 +1218,8 @@ typedef struct PediaLink {
     i32 topic;
     Hyperlink control;
     struct PediaLink *next;
+    /* methods */
+    PediaLink *construct();    /* 00453b10 */
 } PediaLink;
 static_assert(sizeof(PediaLink) == 0x48, "");
 
@@ -733,6 +1235,23 @@ typedef struct RadioGroup : Control {
     union { u32 field_44; u32 items_handle; };
     union { u32 field_48; u32 items; };       /* RadioItem *, items_handle locked */
     union { u32 field_4c; u32 radio_font; };
+    /* methods */
+    void enable_item(iptr index);    /* 00421ca0 */
+    void disable_item(iptr index);    /* 00447210 */
+    u32 get_selected();    /* 004472c0 */
+    void set_selected(u32 value);    /* 004472f0 */
+    RadioGroup *scalar_destruct(uint flags);    /* 004bb4a0 */
+    void destruct();    /* 004bb740 */
+    RadioGroup *construct();    /* 00531010 */
+    void create(iptr parent,i32 ctrl_id,iptr rect,u32 columns,u32 item_count, iptr labels);    /* 005310a0 */
+    void set_select_callback(RadioNotifyFn callback);    /* 005311b0 */
+    void set_dblclick_callback(RadioNotifyFn callback);    /* 005311e0 */
+    u32 get_items();    /* 005c5ee0 */
+    u32 radiogrp_item_count();    /* 005c5f00 */
+    void show_all();    /* 005d4014 */
+    void fire_callback(i32 ctrl_id,i32 index);    /* 005dad40 */
+    void fire_dblclick(i32 ctrl_id,i32 index);    /* 005dad80 */
+    void fire_rclick(i32 ctrl_id,i32 index);    /* 005dadc0 */
 } RadioGroup;
 static_assert(sizeof(RadioGroup) == 0x50, "");
 
@@ -752,6 +1271,14 @@ typedef struct SpriteButton : Control {
     union { u32 field_c4; u32 ctrl_palette; };
     union { u8 field_c8; u8 pressed_state; };
     u8 pad_c9[3];
+    /* methods */
+    SpriteButton *scalar_destruct(uint flags);    /* 00511560 */
+    void destruct();    /* 005115b0 */
+    SpriteButton *construct();    /* 00511720 */
+    void set_click_handler(CtrlNotifyFn callback);    /* 005117f0 */
+    void fire_click(i32 ctrl_id);    /* 005cbe30 */
+    void fire_rclick(i32 ctrl_id);    /* 005cbe70 */
+    void init_from_sprite(WndBase *parent,i32 ctrl_id,int x,int y, int width,int height,iptr sprite,uint bg_color);    /* 005d7cb0 */
 } SpriteButton;
 static_assert(sizeof(SpriteButton) == 0xcc, "");
 
@@ -781,6 +1308,32 @@ typedef struct Sprite {
     u8 pad_31[3];
     union { u32 field_34; u32 data_handle; };
     union { uptr field_38; uptr data_ptr; };
+    /* methods */
+    u8 get_key_color();    /* 00417f70 */
+    Sprite *scalar_destruct(uint flags);    /* 0043cbb0 */
+    i32 get_width();    /* 00451830 */
+    i32 get_height();    /* 00451860 */
+    i32 width();    /* 004a6980 */
+    i32 height();    /* 004bb540 */
+    i32 create_solid(i32 width,i32 height,uint color);    /* 005cdea1 */
+    void free();    /* 005cdf50 */
+    void grab_surface_rect(iptr surface,iptr rect);    /* 005cebb4 */
+    void encode_rect(iptr surface,int x,int y,int width,int height);    /* 005cebec */
+    void grab_rect(iptr surface,uint key_color,iptr rect);    /* 005cec44 */
+    void grab_from_surface(iptr surface,uint key_color,int x,int y,int width, int height);    /* 005cedad */
+    iptr draw(iptr dest,iptr surface,i32 x,i32 y);    /* 005cef31 */
+    iptr draw_keyed(iptr dest,iptr surface,uint key_color,i32 x, i32 y);    /* 005cef66 */
+    iptr draw_silhouette(iptr dest,iptr surface,i32 x,i32 y, i32 color);    /* 005cf126 */
+    void merge_onto(iptr dest);    /* 005cf23f */
+    void lock();    /* 005cf2ff */
+    void unlock();    /* 005cf337 */
+    bool has_data();    /* 005cf36f */
+    void replace_color(i32 old_color,i32 new_color);    /* 005cf467 */
+    int encode_from_surface(iptr surface,int key_mode,RECT *src_rect);    /* 005cf64c */
+    int *blit_to_surface(int *out_rect,DibSurface *surface,int key_arg,int x, int y);    /* 005d056c */
+    int *blit_silhouette_to_surface(int *out_rect,DibSurface *surface,int key_arg,int x, int y,i32 color);    /* 005d10cd */
+    void merge_at(Sprite *src,Sprite *dst,i32 unused,int dx, int dy);    /* 005d1612 */
+    void clear_fields();    /* 005d1b38 */
 } Sprite;
 
 /* 11 methods, size 0x98 (file_obj_init clears 0x98 bytes) */
@@ -790,6 +1343,15 @@ typedef struct FileObject {
     u8 open_info[136];              /* 0x08 OFSTRUCT filled by OpenFile */
     i32 map_view;                   /* 0x90 MapViewOfFile address */
     i32 map_handle;                 /* 0x94 file mapping handle */
+    /* methods */
+    i32 create(const char *path);    /* 00421bf0 */
+    i32 map_close();    /* 00421c30 */
+    void write(iptr data,i32 size);    /* 00421c60 */
+    i32 open(const char *path);    /* 004929c0 */
+    i32 get_size();    /* 00492a80 */
+    void read(char *buf,i32 size);    /* 004bb370 */
+    FileObject *init();    /* 005d7c00 */
+    i32 close();    /* 005d7c6e */
 } FileObject;
 #ifdef __cplusplus
 static_assert(sizeof(FileObject) == 0x98, "");
@@ -815,6 +1377,19 @@ typedef struct NetGamelistView {
     char button_label[32];          /* 0x150 the list's button, while it is open */
     i8 *saved_button_label;         /* 0x170 dialog_button_labels[0] before */
     u32 refresh_timer;
+    /* methods */
+    NetGamelistView *view_construct();    /* 00421f70 */
+    void view_destruct();    /* 00421fad */
+    void restore_selection();    /* 004244e0 */
+    DialogOption *find_option(iptr game_name,iptr host_name);    /* 00424688 */
+    void update_details();    /* 0042472a */
+    void get_entry_names(iptr option,iptr out_game_name,iptr out_host_name);    /* 004247b2 */
+    void add_info_lines();    /* 0042486f */
+    void clear();    /* 004253ef */
+    DialogOption *add_entry(const char *name2,uint id);    /* 004254a8 */
+    void start_timer(TimerFn callback);    /* 00425607 */
+    void kill_timer();    /* 00425650 */
+    void *view_scalar_destruct(uint flags);    /* 00447170 */
 } NetGamelistView;
 static_assert(sizeof(NetGamelistView) == 0x178, "");
 
@@ -830,6 +1405,8 @@ typedef struct MemBlock {
     union { u16 field_e; u16 capacity; };
     u16 available;                  /* 0x10 bytes left */
     u8 pad_12[2];
+    /* methods */
+    MemBlock *construct();    /* 00428cb0 */
 } MemBlock;
 #ifdef __cplusplus
 static_assert(sizeof(MemBlock) == 0x14, "");
@@ -838,6 +1415,12 @@ static_assert(sizeof(MemBlock) == 0x14, "");
 /* 5 methods, size 0x4 */
 typedef struct DllHandle {
     union { u32 field_0; u32 hmodule; };
+    /* methods */
+    DllHandle *resource_dll_load(iptr dll_name);    /* 0043c3f0 */
+    void free();    /* 0043c430 */
+    DllHandle *init();    /* 004502b0 */
+    void load(const char *path);    /* 004502e0 */
+    void dll_handle_free();    /* 00450340 */
 } DllHandle;
 
 /* 25 methods, size 0x434 */
@@ -858,6 +1441,21 @@ typedef struct GamePalette {
     union { u32 field_428; u32 fade_src_rgb; };
     union { u32 field_42c; u32 fade_dst_rgb; };
     union { u32 field_430; u32 tint_saved_rgb; };
+    /* methods */
+    GamePalette *scalar_destruct(uint flags);    /* 0043c740 */
+    GamePalette *get_logpalette();    /* 0046f440 */
+    void get_entry(iptr index,iptr red,iptr green,iptr blue);    /* 00497c40 */
+    void commit_range(int first,int count);    /* 005c6480 */
+    GamePalette *init();    /* 005c64da */
+    void load_ctab_res(i32 res_id);    /* 005c65f9 */
+    void new_version();    /* 005c6a42 */
+    void reserve_range(i32 first,i32 count);    /* 005c6a8d */
+    void get_rgb(iptr dest,i32 first,i32 count);    /* 005c6b63 */
+    void set_entry(i32 index,i32 red,i32 green, i32 blue);    /* 005c6b93 */
+    void set_rgb(int first,int count,iptr rgb);    /* 005c6da8 */
+    void fade_begin(u32 first,u32 count,u32 steps,iptr target_pal);    /* 005c71f3 */
+    void fade_end();    /* 005c72f8 */
+    void fade_step(int step);    /* 005c738e */
 } GamePalette;
 
 /* The lobby's list of players (0x70 bytes; net_session_block.net_lobby_list):
@@ -871,6 +1469,18 @@ typedef struct LobbyList {
     i8 *saved_button_label;         /* 0x4c dialog_button_labels[0] while the dialog runs */
     u8 pad_50[4];
     u32 drop_counts[7];             /* 0x54 connections lost, per player */
+    /* methods */
+    LobbyList *scalar_destruct(uint flags);    /* 004471c0 */
+    LobbyList *construct();    /* 0056e270 */
+    i32 host_wait_players(i32 map_arg,int launch_mode);    /* 0056e2e9 */
+    iptr entry_neighbor(iptr entry);    /* 0056edd3 */
+    void clear_player_list();    /* 0056ee2c */
+    void remove_entry(void *entry);    /* 0056eed7 */
+    uint *add_player_entry(const char *name2,uint entry_id);    /* 0056ef93 */
+    void add_waiting_entry();    /* 0056f301 */
+    i32 find_waiting_entry();    /* 0056f372 */
+    uptr find_entry_by_id(int entry_id);    /* 0056f3e0 */
+    int slot_for_entry_id(int entry_id);    /* 0056f42b */
 } LobbyList;
 static_assert(sizeof(LobbyList) == 0x70, "");
 
@@ -903,6 +1513,10 @@ typedef struct ClickMapRemoveView {
 typedef struct ClickMap {
     ClickRegion hit_regions[200];
     union { u32 field_12c0; u32 entry_count; };
+    /* methods */
+    u32 add(iptr id,i32 value,i32 x,i32 y, iptr width,iptr height);    /* 0046ace7 */
+    void add_xywh(iptr id,i32 left,i32 top,i32 width, i32 height);    /* 004d8b70 */
+    void hotspot_add_rect(iptr id,i32 cursor,RECT *rect);    /* 00511460 */
 } ClickMap;
 
 /* 1 methods, size 0x12c4 */
@@ -915,6 +1529,9 @@ typedef struct ClickMapHitTestView {
 typedef struct NetMsgHeader {
     union { u32 field_0; u32 msg_magic; };
     union { u32 field_4; u32 msg_type; };
+    /* methods */
+    NetMsgHeader *header_init(u32 type);    /* 0046d5a0 */
+    NetMsgHeader *server_path_init();    /* 0046d8a0 */
 } NetMsgHeader;
 
 /* Network messages: a NetMsgHeader (magic 0x66606660, type), the size in
@@ -933,6 +1550,8 @@ typedef struct NetAddrMsg {
     i32 size;                       /* 0x08 */
     i32 seq;                        /* 0x0c */
     char address[32];               /* 0x10 */
+    /* methods */
+    NetMsgHeader *init(i32 msg_type);    /* 0046d6a0 */
 } NetAddrMsg;
 /* A message with a name (0x74 bytes; net_msg_init_header). */
 typedef struct NetNamedMsg {
@@ -943,11 +1562,15 @@ typedef struct NetNamedMsg {
     char name[32];                  /* 0x30 */
     char address2[32];              /* 0x50 */
     i32 inner_type;                 /* 0x70 */
+    /* methods */
+    NetMsgHeader *init_header(u32 msg_type,const char *name2);    /* 0046d5f0 */
 } NetNamedMsg;
 /* The server's announcement (type 2, 0x198 bytes). */
 typedef struct NetServerInfoMsg {
     NetNamedMsg named;              /* 0x00 */
     NetGameInfo game;               /* 0x74 */
+    /* methods */
+    NetMsgHeader *init();    /* 0046d720 */
 } NetServerInfoMsg;
 /* The server's answer (type 0x13, 0x134 bytes). */
 typedef struct NetServerAnswerMsg {
@@ -955,6 +1578,8 @@ typedef struct NetServerAnswerMsg {
     i32 size;                       /* 0x08 */
     i32 seq;                        /* 0x0c */
     NetGameInfo game;               /* 0x10 */
+    /* methods */
+    NetMsgHeader *init();    /* 0046d8e0 */
 } NetServerAnswerMsg;
 /* A player of the game (type 0x2f, 0x64 bytes). */
 typedef struct NetPlayerNodeMsg {
@@ -962,6 +1587,8 @@ typedef struct NetPlayerNodeMsg {
     i32 size;                       /* 0x08 */
     i32 seq;                        /* 0x0c */
     NetPlayerSlot slot;             /* 0x10 */
+    /* methods */
+    NetMsgHeader *init(u32 player_id);    /* 0046d780 */
 } NetPlayerNodeMsg;
 /* The players of the game (type 4, 0x280 bytes): net_session_block's copy. */
 typedef struct NetPlayerListMsg {
@@ -971,6 +1598,8 @@ typedef struct NetPlayerListMsg {
     i32 player_count;               /* 0x10 */
     NetPlayerSlot slots[7];         /* 0x14 */
     i32 civ_slots[8];               /* 0x260 */
+    /* methods */
+    NetMsgHeader *init();    /* 0046d860 */
 } NetPlayerListMsg;
 /* Whose turn it is (type 0x69, 0x14 bytes). */
 typedef struct NetWhoseTurnMsg {
@@ -978,6 +1607,8 @@ typedef struct NetWhoseTurnMsg {
     i32 size;                       /* 0x08 */
     i32 seq;                        /* 0x0c */
     i32 civ;                        /* 0x10 */
+    /* methods */
+    NetMsgHeader *init(u32 turn_civ);    /* 0046d930 */
 } NetWhoseTurnMsg;
 /* A player's civilization (type 0x2e, 0x118 bytes). */
 typedef struct NetPlayerInfoMsg {
@@ -994,6 +1625,8 @@ typedef struct NetPlayerInfoMsg {
     i32 has_titles;                 /* 0x68 */
     char govt_titles[7][24];        /* 0x6c */
     i32 city_style;                 /* 0x114 */
+    /* methods */
+    NetMsgHeader *init();    /* 0059d080 */
 } NetPlayerInfoMsg;
 /* An item of a parley offer: what one side gives (0xc bytes, then for
  * advances, units and cities `value` ids). */
@@ -1037,6 +1670,8 @@ typedef struct DiffEngSection {
     union { u32 field_c; u32 checksum; };
     union { u32 field_10; u32 mirror_offset; };  /* offset of its copy in the mirror buffer */
     union { u32 field_14; u32 data_ptr; };
+    /* methods */
+    void init(iptr data_ptr,u32 data_size,u32 section_id);    /* 004b3080 */
 } DiffEngSection;
 
 /* A caption button of the parley window (0x1c bytes). */
@@ -1068,6 +1703,12 @@ typedef struct NetMsgQueue {
     u32 prio_head;                  /* 0x5dcc */
     u32 prio_tail;                  /* 0x5dd0 */
     u32 prio_count;                 /* 0x5dd4 */
+    /* methods */
+    NetMsgQueue *construct();    /* 00514220 */
+    void clear();    /* 00514254 */
+    void reset();    /* 00514272 */
+    i32 enqueue(int sender,NetMsg *msg,uint msg_size);    /* 0051438f */
+    i32 dequeue(iptr out_sender,iptr out_msg,iptr out_size,int priority_only);    /* 005149d6 */
 } NetMsgQueue;
 static_assert(sizeof(NetMsgQueue) == 0x5dd8, "");
 
@@ -1077,6 +1718,38 @@ typedef struct GameMenu {
     union { u8 pad_4[20]; struct { u8 item_storage[4]; u8 item_flags[16]; }; };
     union { u32 field_18; u32 menu_flags; };
     union { uptr field_1c; MenuNode *menus; };
+    /* methods */
+    void storage_reinit(uint size);    /* 00578650 */
+    void clear_lists();    /* 0057868c */
+    void reset(i32 size);    /* 005786b6 */
+    GameMenu *construct(i32 size);    /* 005786f1 */
+    MenuNode *find_menu(int menu_id);    /* 005787de */
+    int visible_index(MenuNode *menu);    /* 00578840 */
+    i32 id_at_visible_index(int visible_index);    /* 005788a9 */
+    MenuNode *find_item(int item_id);    /* 00578922 */
+    int item_visible_index(MenuNode *item);    /* 005789aa */
+    i32 item_id_at_visible_index(i32 menu_id,int visible_index);    /* 00578a1c */
+    MenuNode *add_menu(i32 menu_id,char *title);    /* 00578b06 */
+    MenuNode *add_item(i32 menu_id,i32 item_id,const char *text,size_t min_len);    /* 00578c12 */
+    void attach_to_window(ModalMenuWindow *window);    /* 00578de8 */
+    void set_command_handler(MenuCommandFn handler);    /* 00578e38 */
+    i32 apply_item_enabled(i32 item_id);    /* 00578e60 */
+    void apply_item_checked(i32 item_id);    /* 00578ec7 */
+    void rebuild(iptr window);    /* 00578f2c */
+    void set_item_hidden(i32 item_id,int hidden);    /* 00579260 */
+    GameMenu *set_item_enabled(i32 item_id,int enabled);    /* 005792e1 */
+    void remove_item(i32 item_id);    /* 005793a3 */
+    void set_item_checked(i32 item_id,int checked);    /* 0057940d */
+    void set_menu_enabled(i32 menu_id,i32 enabled);    /* 005794cf */
+    void set_item_text(i32 item_id,const char *text);    /* 0057953e */
+    void native_build(iptr spec);    /* 005799c0 */
+    void native_insert(i32 menu_index,i32 item_index,const char *text);    /* 00579a00 */
+    void native_delete(i32 menu_index,i32 item_index);    /* 00579a40 */
+    void native_set_text(i32 menu_index,i32 item_index,const char *text);    /* 00579a80 */
+    i32 native_enable(i32 menu_index,i32 item_index,i32 enabled);    /* 00579ac0 */
+    void native_check(i32 menu_index,i32 item_index,i32 checked);    /* 00579b00 */
+    GameMenu *handle_construct();    /* 005dcc10 */
+    void handle_destruct();    /* 005dcc32 */
 } GameMenu;
 
 /* 1 methods, size 0x4 */
@@ -1323,9 +1996,6 @@ typedef struct DDSurfaceRowPrevView {
     union { u32 field_c; u32 row_pitch; };
 } DDSurfaceRowPrevView;
 
-/* A game timer's callback (game_timer_create): the timer's slot and how
-   many more times it fires (negative: until killed). */
-typedef void (*TimerFn)(i32 slot, i32 repeats_left);
 /* timerdll.dll's functions (timer_mgr_init, GetProcAddress): the
    multimedia timer ids of the slots, and the slot's message (0x52c) sent
    again only once reset. */
@@ -1337,6 +2007,12 @@ typedef void (WINAPI *TimerDllResetNotifiedFn)(int slot);
 /* 5 methods, size 0x4 */
 typedef struct TimerManager {
     union { u32 field_0; u32 timer_hwnd; };
+    /* methods */
+    iptr add(TimerFn callback,i32 interval_ms,u32 repeat_count);    /* 005d2042 */
+    void game_timer_kill_slot(iptr slot);    /* 005d20e6 */
+    void destruct();    /* 005d2182 */
+    void game_timer_fire_slot(iptr slot);    /* 005d47d0 */
+    TimerManager *scalar_destruct(uint flags);    /* 005dcac0 */
 } TimerManager;
 
 /* TimerManager where the code reaches past its end: the object is larger */
@@ -1357,6 +2033,15 @@ typedef struct ErrorContext {
     union { u8 pad_0[1792]; struct { u8 error_message_text[1024]; u8 stack_trace_text[768]; }; };
     union { u32 field_700; u32 error_bits; };
     union { u32 field_704; u32 last_error_code; };
+    /* methods */
+    void report(i32 code,iptr file,iptr line,i32 extra);    /* 005dae6b */
+    ErrorContext *format_message(const char *fmt,const char *text,i32 file,i32 line);    /* 005daef7 */
+    u8 *get_stack_trace();    /* 005daf63 */
+    void show_fatal_box(i32 msg);    /* 005daf92 */
+    void set_code(u32 code);    /* 005dafdf */
+    void set_field_708(i32 value);    /* 005db035 */
+    void clear_codes();    /* 005db059 */
+    ErrorContext *construct();    /* 005db089 */
 } ErrorContext;
 
 /* ErrorContext where the code reaches past its end: the object is larger */
@@ -1576,6 +2261,8 @@ typedef struct DDWindowNativeView {
 typedef struct AviAudio {
     u8 pad_0[4];
     union { u32 field_4; u32 audio_stream; };
+    /* methods */
+    AviAudio *construct();    /* 005eeca0 */
 } AviAudio;
 
 /* 1 methods, size 0x8 */
@@ -1644,6 +2331,10 @@ typedef struct DdwinAttachBackBufferView {
 typedef struct DDWindow {
     union { u8 pad_0[204]; struct { u8 gap_0[68]; u8 handlers[124]; u8 child_controls[12]; }; };
     union { uptr field_cc; uptr hover_control; };
+    /* methods */
+    void remove_all_controls();    /* 005f029e */
+    void deactivate_controls();    /* 005f0342 */
+    i8 dispatch_ctrl_msg(int msg,int x,int y);    /* 005f0391 */
 } DDWindow;
 
 /* DDWindow where the code reaches past its end: the object is larger */
@@ -1671,6 +2362,15 @@ typedef struct PtrList {
     union { uptr field_0; uptr head; };
     union { uptr field_4; uptr tail; };
     union { uptr field_8; uptr iter_node; };
+    /* methods */
+    i32 first();    /* 005f0590 */
+    i32 next();    /* 005f05d0 */
+    void clear();    /* 005f0724 */
+    uint is_empty();    /* 005f0742 */
+    i32 first_impl();    /* 005f0770 */
+    i32 next_impl();    /* 005f0833 */
+    void remove_current();    /* 005f0c69 */
+    void clear_impl();    /* 005f0e13 */
 } PtrList;
 
 /* 2 methods, size 0xc */
@@ -1812,6 +2512,12 @@ typedef struct DDControl {
     union { u32 field_3c; u32 rect_top; };
     union { u32 field_40; u32 rect_right; };
     union { u32 field_44; u32 rect_bottom; };
+    /* methods */
+    int get_rect();    /* 005f0620 */
+    i32 dispatch_msg(int msg,int x,int y);    /* 005f130f */
+    void deactivate();    /* 005f1683 */
+    void deactivate_children();    /* 005f19a6 */
+    i8 dispatch_to_children(int msg,int x,int y);    /* 005f1a40 */
 } DDControl;
 
 /* 2 methods, size 0x4 */
@@ -1912,6 +2618,15 @@ typedef struct DdwinGetPaletteView {
 typedef struct SurfaceWindow : DibSurface {
     Wnd window;                     /* 0x048 (surfwnd_wnd_ctor) */
     WndNotifyFn on_paint;           /* 0x110 wnd_set_redraw_callback */
+    /* methods */
+    void set_redraw_callback(WndNotifyFn callback);    /* 004085c0 */
+    void show();    /* 004085f0 */
+    SurfaceWindow *construct();    /* 0044c5a0 */
+    SurfaceWindow *scalar_destruct(uint flags);    /* 005a95b0 */
+    void repaint();    /* 005bb574 */
+    void on_resize(int width,int height);    /* 005bb621 */
+    void resize_clamped(int width,int height);    /* 005bb6c7 */
+    void call_paint_cb();    /* 005bb990 */
 } SurfaceWindow;
 static_assert(sizeof(SurfaceWindow) == 0x114, "");
 
@@ -1953,6 +2668,19 @@ typedef struct FrameWindow : SurfaceWindow {
     uptr title_font;
     uptr title_small_font;
     u8 text_font[4];
+    /* methods */
+    void set_caption_button_handler(CaptionButtonFn handler);    /* 00414da0 */
+    void set_title_font(iptr font);    /* 00511820 */
+    void set_title_small_font(iptr font);    /* 00511850 */
+    void draw_caption();    /* 00552112 */
+    void layout();    /* 00552ed2 */
+    void add_caption_button(iptr sprite,i32 callback);    /* 0055318c */
+    void set_caption(const char *title);    /* 0055324c */
+    void destroy_caption_buttons();    /* 005532d7 */
+    void close();    /* 00553379 */
+    FrameWindow *construct();    /* 0055339f */
+    void destruct();    /* 00553444 */
+    void create(const char *title,uint flags,int x,int y,int width, int height,u32 resize_width,u32 caption_h,u32 border_w);    /* 005534bc */
 } FrameWindow;
 static_assert(sizeof(FrameWindow) == 0x2d8, "");
 
@@ -1985,6 +2713,23 @@ typedef struct AviPlayer : SurfaceWindow {
     u32 field_a1c;
     union { i32 cue_frame; u32 cue_frame_u; };
     union { i32 loop; u32 loop_u; u8 loop_bytes[4]; };
+    /* methods */
+    void set_end_callback(VideoNotifyFn callback);    /* 0046dff0 */
+    void set_frame_callback(VideoNotifyFn callback,u32 callback_data);    /* 00472910 */
+    AviPlayer *scalar_destruct(uint flags);    /* 004d8b20 */
+    AviPlayer *construct();    /* 005dd010 */
+    i32 destruct();    /* 005dd1a0 */
+    void create(iptr parent,i32 style,u32 x,u32 y);    /* 005dd27e */
+    void create_child(iptr parent,i32 style,u32 x,u32 y,iptr target);    /* 005dd2e3 */
+    int open(const char *filename);    /* 005dd377 */
+    void play();    /* 005dd3c2 */
+    void play_range(u32 first_frame,u32 last_frame);    /* 005dd3f1 */
+    void loop_range(u32 first_frame,u32 last_frame);    /* 005dd4c2 */
+    void pause();    /* 005dd51d */
+    void set_double_size(i32 enable);    /* 005dd71e */
+    void set_transparent(int enable);    /* 005dd761 */
+    void call_end_callback();    /* 005e3550 */
+    void call_cue_callback();    /* 005e3580 */
 } AviPlayer;
 static_assert(sizeof(AviPlayer) == 0xa28, "");
 
@@ -1998,6 +2743,13 @@ typedef struct PortraitDialog : SurfaceWindow {
     u32 civ;
     u32 field_1e0;
     u32 result;
+    /* methods */
+    PortraitDialog *construct();    /* 0049621d */
+    void destruct();    /* 0049632a */
+    i32 create();    /* 00496402 */
+    void create_buttons();    /* 004964b3 */
+    void run();    /* 004965ff */
+    void paint();    /* 004966c4 */
 } PortraitDialog;
 static_assert(sizeof(PortraitDialog) == 0x1e8, "");
 
@@ -2098,6 +2850,40 @@ typedef struct ParleyWindow : SurfaceWindow {
     i32 list_anchor_row[2];         /* 0x10418 selection anchor */
     i32 list_rows[2];               /* 0x10420 rows shown */
     u32 offer_counts[2];            /* 0x10428 items offered by each side */
+    /* methods */
+    void create_advance_list_pane(RECT *rect,iptr pane,int their_side);    /* 00450480 */
+    void create_unit_list_pane(RECT *rect,int pane,i32 own_side);    /* 004683f0 */
+    void sort_unit_list(int first,int last,iptr pane);    /* 0046968b */
+    void sort_units_by_city(int first,int last,iptr pane);    /* 0046990a */
+    void build_unit_list(int pane,int keep_selection);    /* 00469bdc */
+    void build_civ_list(RECT *rect,int side);    /* 004af3e0 */
+    ParleyWindow *construct(RECT *rect);    /* 004b4108 */
+    void destruct();    /* 004b4593 */
+    void create(u32 mode);    /* 004b4735 */
+    void pick_size_mode();    /* 004b4c81 */
+    void calc_rect();    /* 004b4cf0 */
+    void calc_layout();    /* 004b4e8a */
+    void sync_sides();    /* 004b4fb2 */
+    void destroy_controls();    /* 004b50cf */
+    void create_controls();    /* 004b5c93 */
+    void draw_frame();    /* 004b794a */
+    void fill_background(RECT *rect,int area_kind);    /* 004b7c90 */
+    void build_title();    /* 004b7d72 */
+    void open(iptr other_civ,u32 mode);    /* 004b7eb6 */
+    void set_mode_sides(int refresh);    /* 004b8676 */
+    void clear_side_controls(int side);    /* 004b888e */
+    void chat_receive_message(iptr civ,iptr civ2,iptr is_private,iptr message);    /* 004b90ad */
+    i32 *send_offer(int mode);    /* 004db690 */
+    void pack_offer_items(ParleyOfferItem *dest,i32 item_type,i32 item_size,iptr side);    /* 004dbab4 */
+    void build_description(ParleyOfferMsg *offer,int received);    /* 004dbee6 */
+    void describe_treaty(int treaty_kind,int exchange);    /* 004def54 */
+    void add_side_dialog(int side_kind,int side);    /* 00526ca0 */
+    void update_buttons();    /* 0052e971 */
+    iptr find_unit_by_id(int unit_id);    /* 0052ec47 */
+    iptr find_city_by_id(int city_id);    /* 0052ed95 */
+    void create_city_list_pane(RECT *rect,int pane,i32 own_cities);    /* 00587a90 */
+    void sort_city_list(int first,int last,int pane);    /* 0058843f */
+    void build_city_list(int pane,int keep_selection);    /* 00588f36 */
 } ParleyWindow;
 static_assert(sizeof(ParleyWindow) == 0x10430, "");
 
@@ -2198,6 +2984,46 @@ typedef struct PediaWindow : SurfaceWindow {
     i32 list_selected_index;
     i32 list_top_index;
     struct PediaLink *link_list_head;
+    /* methods */
+    void draw_category_body(i32 category,i32 flags);    /* 00451af0 */
+    void update_controls();    /* 00451bf0 */
+    void dispatch_category_draw(i32 left,i32 top,i32 right, i32 bottom,i32 category);    /* 00452188 */
+    void update_describe_button(int list_index);    /* 00452768 */
+    void add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left,i32 rect_top,i32 rect_right,i32 rect_bottom);    /* 00452c14 */
+    void init_terrain_list(iptr rect);    /* 00490590 */
+    void draw_terrain_page();    /* 004906fd */
+    void show_terrain_modal(int terrain_id);    /* 00491c20 */
+    void init_concept_list(iptr unused_arg);    /* 004a69b0 */
+    PediaWindow *construct();    /* 004f3feb */
+    void destruct();    /* 004f44a7 */
+    void clear_links();    /* 004f4793 */
+    void free_lists();    /* 004f4809 */
+    void create();    /* 004f4b9f */
+    void draw_frame();    /* 004f6244 */
+    void fill_background(RECT *rect,int style);    /* 004f6564 */
+    void redraw();    /* 004f6646 */
+    void draw_item_list();    /* 004f66c6 */
+    void scroll_to_item(int item);    /* 004f7454 */
+    void set_category_title(i32 category);    /* 004f7ac7 */
+    void open_category(u32 category,int show);    /* 004f7bd1 */
+    void load_indexes();    /* 004f7c99 */
+    void history_push();    /* 004f8af9 */
+    void init_government_list(iptr unused_arg);    /* 00518f00 */
+    void init_wonder_list(iptr unused_arg);    /* 005261a0 */
+    void draw_improvement();    /* 0052630d */
+    void show_wonder_modal(int wonder_id);    /* 00526913 */
+    void init_advance_list(iptr unused_arg);    /* 00564d00 */
+    void draw_advance_page();    /* 00564e6d */
+    void show_topic_modal(iptr advance_id);    /* 00566584 */
+    void draw_advance_tree();    /* 005666da */
+    void draw_tree_stub(i32 x,int y);    /* 005675b7 */
+    void init_improvement_list(iptr unused_arg);    /* 00599a20 */
+    void draw_improvement_page();    /* 00599b8d */
+    void load_improvement_text(iptr improvement_id);    /* 0059a15d */
+    void show_improvement_modal(iptr improvement_id);    /* 0059a2e6 */
+    void show_unit_list(iptr unused_arg);    /* 005ac840 */
+    void draw_unit_page();    /* 005ac9ad */
+    void show_unit_modal(iptr unit_type);    /* 005ad998 */
 } PediaWindow;
 static_assert(sizeof(PediaWindow) == 0x1f44, "");
 
@@ -2241,6 +3067,16 @@ typedef struct CouncilWindow : SurfaceWindow {
     u8 pad_12b4[56];
     u32 council_close_button;
     u8 pad_12f0[64];
+    /* methods */
+    CouncilWindow *construct();    /* 0051661a */
+    void destruct();    /* 005167d9 */
+    i32 init(u32 civ,int cheat_mode);    /* 00516947 */
+    void run_modal();    /* 00516fd4 */
+    void draw_background();    /* 00517158 */
+    void create_buttons();    /* 00517673 */
+    i32 load_speech(uptr advisor);    /* 005179a3 */
+    void draw_speech(int mode);    /* 00517dd3 */
+    void draw_advisor_frames();    /* 00518007 */
 } CouncilWindow;
 static_assert(sizeof(CouncilWindow) == 0x1330, "");
 
@@ -2284,6 +3120,11 @@ typedef struct TaxRateDialog : FrameWindow {
     union { Checkbox lock_checkboxes[3]; u8 rate_lock_checkboxes[24]; };
     union { Button ok_button; u8 ok_button_bytes[60]; };
     u8 pad_508[8];
+    /* methods */
+    void calc_totals();    /* 0040c480 */
+    void paint();    /* 0040c7d0 */
+    void run(uptr civ);    /* 0040cd64 */
+    TaxRateDialog *construct();    /* 0040f060 */
 } TaxRateDialog;
 static_assert(sizeof(TaxRateDialog) == 0x510, "");
 
@@ -2321,6 +3162,39 @@ typedef struct MapView : FrameWindow {
     uptr field_35c;
     union { DibSurface map_surface; uptr map_surface_head; u8 view_surface[1]; };
     union { DibSurface overlay_surface; uptr overlay_surface_head; };
+    /* methods */
+    void redraw_cursor_tile();    /* 00410302 */
+    void center_on(iptr x,i32 y);    /* 00410402 */
+    int scroll_if_near_edge(int x,int y);    /* 00410464 */
+    int point_unit_dir(int mouse_x,int mouse_y,i32 unit_x,i32 unit_y);    /* 004106fd */
+    void update_title();    /* 00413476 */
+    void create();    /* 00413717 */
+    void init_state(u32 view_index);    /* 00479ede */
+    void update_layout();    /* 00479fbe */
+    i32 screen_to_tile(iptr out_x,iptr out_y,i32 mouse_x,i32 mouse_y);    /* 0047a540 */
+    void tile_to_screen(iptr out_x,iptr out_y,int x,int y);    /* 0047a6b0 */
+    void draw_tile_terrain(iptr surface,int screen_x,int screen_y,iptr x,int y, int viewer_civ,int zoom,iptr city_tile_idx);    /* 0047a8c9 */
+    void draw_tile_city(i32 screen_x,int screen_y,iptr x,iptr y);    /* 0047ba1d */
+    void draw_unit_stacked(iptr unit,uint draw_flags,i32 screen_x,i32 screen_y);    /* 0047bba5 */
+    void draw_unit_blinking(iptr unit,i32 screen_x,i32 screen_y);    /* 0047bbea */
+    void draw_unit_at(iptr unit);    /* 0047bc59 */
+    void draw_stack_unit(iptr unit,i32 screen_x,i32 screen_y);    /* 0047bd04 */
+    void draw_tile_units(i32 screen_x,int screen_y,int x,int y);    /* 0047be63 */
+    void draw_tile(iptr x,iptr y,int civ);    /* 0047c103 */
+    i32 tile_in_view(i32 tile_x,i32 tile_y);    /* 0047c3e0 */
+    void draw_city_names(i32 center_x,i32 center_y,int radius);    /* 0047c443 */
+    void tile_radius_rect(i32 tile_x,i32 tile_y,int radius,iptr out_rect);    /* 0047c7aa */
+    void draw_tile_radius(int center_x,int center_y,int radius,i32 civ);    /* 0047c869 */
+    void draw_all_tiles(i32 civ);    /* 0047c9d4 */
+    void blit_tile_radius(i32 tile_x,i32 tile_y,i32 radius);    /* 0047caea */
+    void blit_tile(i32 tile_x,i32 tile_y);    /* 0047cb26 */
+    void redraw_area(i32 tile_x,i32 tile_y,i32 radius, iptr viewer_civ,int do_blit);    /* 0047cbb4 */
+    void redraw_tile(i32 tile_x,i32 tile_y);    /* 0047cced */
+    void redraw_tile_neighbors(i32 tile_x,i32 tile_y);    /* 0047cd1f */
+    void redraw(iptr viewer_civ,int do_blit);    /* 0047cd51 */
+    i32 zoom_scale(i32 value);    /* 0047dfb0 */
+    void apply_zoom();    /* 0047dff0 */
+    i32 zoom_scale_round(i32 value);    /* 0056e180 */
 } MapView;
 static_assert(sizeof(MapView) == 0x3f0, "");
 
@@ -2361,6 +3235,35 @@ typedef struct EditorWindow : FrameWindow {
     union { ListBox trigger_listbox; u8 trigger_listbox_bytes[4]; };
     union { ListBox action_listbox; u8 action_listbox_bytes[32]; };
     u8 pad_b48[8];
+    /* methods */
+    void tech_editor_create_combo(int slot);    /* 00416354 */
+    void tech_editor_create_edit(int slot);    /* 00416734 */
+    void tech_editor_paint();    /* 00416828 */
+    void tech_editor_dialog_run();    /* 00416c9e */
+    EditorWindow *construct();    /* 00417fa0 */
+    void city_editor_create_combo(int combo_index);    /* 0042903e */
+    void city_editor_draw();    /* 004293a8 */
+    void city_editor_open_window();    /* 00429671 */
+    void tribe_editor_create_combo(int slot);    /* 004a4a58 */
+    void tribe_editor_create_edit(int slot);    /* 004a4eb2 */
+    void tribe_editor_paint();    /* 004a4f89 */
+    void tribe_editor_main();    /* 004a54d9 */
+    void impr_editor_create_combo(int combo_index);    /* 004d986e */
+    void impr_editor_create_edit(int edit_index);    /* 004d9a9f */
+    void impr_editor_paint();    /* 004d9b93 */
+    void impr_editor_window_run();    /* 004da107 */
+    void terrain_editor_create_combo(int combo_idx);    /* 0051adfd */
+    void terrain_editor_create_edit(int field_idx);    /* 0051b1c2 */
+    void terrain_editor_draw();    /* 0051b2b6 */
+    void terrain_editor_run();    /* 0051bba1 */
+    void events_editor_draw();    /* 0054f16b */
+    void events_editor_run();    /* 0054f3b9 */
+    void cosmic_editor_draw_bg();    /* 00586eb0 */
+    void cosmic_editor_dialog();    /* 00586f16 */
+    void unit_editor_create_combo(int index);    /* 005b0473 */
+    void unit_editor_create_edit(int index);    /* 005b08e8 */
+    void unit_editor_paint();    /* 005b09dc */
+    void unit_editor_window_run();    /* 005b1037 */
 } EditorWindow;
 static_assert(sizeof(EditorWindow) == 0xb50, "");
 
@@ -2373,6 +3276,13 @@ typedef struct WonderMovieWindow : FrameWindow {
     union { DibSurface frame_surface; u8 frame_surface_bytes[40]; };
     union { GamePalette palette; u8 palette_bytes[64]; };
     u8 pad_1180[8];
+    /* methods */
+    WonderMovieWindow *construct();    /* 004bb99f */
+    void destruct();    /* 004bba79 */
+    void create(int wonder);    /* 004bbb3f */
+    void play();    /* 004bbdfb */
+    void draw_caption();    /* 004bc0d3 */
+    void resize();    /* 004bc10f */
 } WonderMovieWindow;
 static_assert(sizeof(WonderMovieWindow) == 0x1188, "");
 
@@ -2452,6 +3362,56 @@ typedef struct CityWindow : FrameWindow {
     u32 prev_city_button;
     u32 next_city_button;
     struct Scrollbar *improvements_scrollbar;
+    /* methods */
+    u32 city_window_is_closed();    /* 00414e00 */
+    u32 get_city();    /* 00490560 */
+    void reset_state();    /* 00501440 */
+    void remove_citizen_hotspots();    /* 005014bf */
+    void remove_panel_hotspots();    /* 005014e5 */
+    void remove_hotspots();    /* 0050152b */
+    CityWindow *construct();    /* 00501551 */
+    void destruct();    /* 0050160a */
+    void blit_bg_rect(int *rect);    /* 005016b2 */
+    void begin_draw(iptr rect);    /* 00501733 */
+    void recalc_redraw(i32 flag);    /* 00501780 */
+    int draw_citizen_row(int x,int y,i32 width,int happy,int unhappy, int angry);    /* 005019c1 */
+    int happy_draw_citizen_row(int x,i32 y,i32 width,int happy, int unhappy,int angry);    /* 00501e63 */
+    void draw_citizens(int blit,i32 flag);    /* 0050207f */
+    void draw_resource_map(int blit);    /* 005025d5 */
+    void draw_food_box(int blit);    /* 00504c05 */
+    void draw_production(int blit);    /* 0050503e */
+    void draw_button_area(int blit);    /* 005055dd */
+    void draw_supported_units(int blit);    /* 00505666 */
+    void draw_improvements(int blit);    /* 00505ffa */
+    void draw_units_present();    /* 005070e5 */
+    void draw_support_map();    /* 00507b69 */
+    void happy_draw_building_icons(iptr x_ptr,int row_top,int row_h);    /* 00507f31 */
+    void happy_draw_unit_effects(iptr x_ptr,int row_top,int row_h,int max_width);    /* 00508177 */
+    void draw_happiness();    /* 00508552 */
+    void draw_info_panel(int blit);    /* 00508adc */
+    void draw_all(i32 blit);    /* 00508bc5 */
+    void set_scaled_rect(iptr rect,int x,int y,int width,int height);    /* 00508c84 */
+    void layout_rects();    /* 00508d24 */
+    void fill_margins();    /* 00508ec6 */
+    void apply_size();    /* 00509028 */
+    void update_title();    /* 005092af */
+    void refresh();    /* 00509429 */
+    void bring_to_top();    /* 00509545 */
+    void open(iptr city);    /* 00509590 */
+    void close_if_city(iptr city);    /* 0050c449 */
+    void on_unit_change(iptr unit,iptr x,iptr y);    /* 0050c494 */
+    void refresh_if_city(iptr city);    /* 0050c679 */
+    void refresh_if_near(i32 x,i32 y);    /* 0050c6ef */
+    void clear_controls();    /* 0050c7a3 */
+    void destroy_controls();    /* 0050c859 */
+    void create_exit_button(int show);    /* 0050ca8d */
+    void create_change_button(int show);    /* 0050ccb3 */
+    void create_controls();    /* 0050cf06 */
+    void begin_notice();    /* 0050dada */
+    void end_notice();    /* 0050db36 */
+    void create();    /* 0050dcb6 */
+    void destroy();    /* 0050dea8 */
+    int scale(int value);    /* 00511690 */
 } CityWindow;
 static_assert(sizeof(CityWindow) == 0x16e0, "");
 
@@ -2480,6 +3440,13 @@ typedef struct PictureWindow : FrameWindow {
     u32 controls_created;
     u32 report_param;
     u32 frame_style;
+    /* methods */
+    void close();    /* 0042a768 */
+    void open(uint resource_id,u32 report,u32 style,u32 img_width,u32 img_height, u32 win_width,u32 win_height);    /* 0042a7bc */
+    void blit_at(int x,int y,i32 width,i32 height);    /* 0042abc1 */
+    void blit();    /* 0042ac18 */
+    void advisor_add_close_button();    /* 0042acb0 */
+    PictureWindow *construct();    /* 0043c260 */
 } PictureWindow;
 static_assert(sizeof(PictureWindow) == 0x4a4, "");
 
@@ -2487,6 +3454,8 @@ static_assert(sizeof(PictureWindow) == 0x4a4, "");
    window with a dialog. */
 typedef struct CityPicturePopup : PictureWindow {
     union { Dialog dialog; u8 popup_dialog[32]; };
+    /* methods */
+    CityPicturePopup *construct();    /* 004f3d60 */
 } CityPicturePopup;
 static_assert(sizeof(CityPicturePopup) == 0x798, "");
 
@@ -2500,6 +3469,18 @@ typedef struct SetupPicWindow : FrameWindow {
     uptr sci_rate_sel;
     u8 pad_2ec[12];
     union { DllHandle dll; u32 dll_head; };
+    /* methods */
+    void reset_fields();    /* 00559ded */
+    SetupPicWindow *construct();    /* 00559e3c */
+    void destruct();    /* 00559ed4 */
+    void blit_image_rect(int *rect);    /* 00559f60 */
+    void draw_image(iptr rect);    /* 00559fcf */
+    void setup_picwnd_client_rect(iptr rect,int x,int y,iptr width,iptr height);    /* 0055a00b */
+    void redraw();    /* 0055a051 */
+    void show(i32 x_pos,i32 y_pos,u32 image_id);    /* 0055a41d */
+    void close();    /* 0055a567 */
+    void load_dll();    /* 0055a5e4 */
+    void free_dll();    /* 0055a64a */
 } SetupPicWindow;
 static_assert(sizeof(SetupPicWindow) == 0x2fc, "");
 
@@ -2518,11 +3499,14 @@ typedef struct SpritePicker : FrameWindow {
     union { Button button_1; u32 button_1_head; };
     union { Button button_2; u8 button_2_head[8]; };
     union { Button button_3; u32 button_3_head; };
+    /* methods */
+    void draw();    /* 00574522 */
+    void run();    /* 00575dec */
+    SpritePicker *construct();    /* 005784a0 */
 } SpritePicker;
 static_assert(sizeof(SpritePicker) == 0x3ec, "");
 
 /* Callbacks kept in globals. */
-typedef void (*MenuCommandFn)(i32 menu_id, i32 item_id);   /* menu_set_command_handler: a menu item chosen */
 typedef void (*CleanupFn)(void);                /* err_register_cleanup_fn: called on a fatal error */
 typedef void (*SpriteSheetSaveFn)(void);        /* sprite_editor_run: saves the edited sheet on OK */
 

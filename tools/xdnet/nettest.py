@@ -357,14 +357,22 @@ def popups(g, raw=False):
         return []
     cut = data.rfind('\n') + 1
     g.logpos += len(data[:cut].encode('utf-8', 'replace'))
+    created = False
     for line in data[:cut].splitlines():
         m = re.match(r'CreateWindowEx\(\w+, (\w+), "(.*)", (\w+), .*parent (\w+)\)$', line)
         if m:
             if g.pending is not None and m.group(4) not in g.wins:
                 g.wins[m.group(4)] = g.pending
             g.pending = m.group(2) if m.group(1) == 'MSWindowClass' and m.group(3).startswith('8') else None
+            created = g.pending is None
             continue
         m = re.match(r'ShowWindow\((\w+), (\d+)\)$', line)
+        if m and created and m.group(1) in g.wins:
+            # a window just created (not a dialog) shown: a dialog's handle
+            # reused (DestroyWindow is not logged), no longer that dialog
+            del g.wins[m.group(1)]
+            g.shown.discard(m.group(1))
+        created = False
         if m and m.group(1) in g.wins:
             if m.group(2) == '0':
                 g.shown.discard(m.group(1))

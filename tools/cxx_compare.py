@@ -3,13 +3,16 @@
 against the C build it replaces (the same gcc back end, so a conversion that
 keeps the meaning gives the same instructions).
 
-    cxx_compare.py BASE_OBJDIR CXX_OBJDIR [FUNCTION]
+    cxx_compare.py [--map re/methods.tsv] BASE_OBJDIR CXX_OBJDIR [FUNCTION]
 
 BASE_OBJDIR: objects of the C build (e.g. a worktree of the last C commit:
 run/cbase/build/native/linux32), CXX_OBJDIR: build/native/linux32-cxx.
 Lists the functions whose code differs; with FUNCTION, shows the difference.
 Addresses are ignored, as are offsets into .text/.rodata (layout, not code),
 which stack slot holds which local and the frame size.
+--map: functions that became member functions (tools/cxx_methods.py) are
+compared, and their calls matched, under their old free names
+(`Class::member` -> old name, from the plan's old/class/member columns).
 """
 import difflib
 import glob
@@ -19,6 +22,15 @@ import subprocess
 import sys
 
 FUNC = re.compile(r'^[0-9a-f]+ <(.+)>:$')
+RENAMED = {}        # Class::member -> free name (--map)
+
+
+def load_map(path):
+    import csv
+    lines = [l for l in open(path) if not l.startswith('#')]
+    for r in csv.DictReader(lines, delimiter='\t'):
+        if r.get('member'):
+            RENAMED['%s::%s' % (r['class'], r['member'])] = r['old']
 
 
 def strip_params(name):
@@ -31,7 +43,8 @@ def strip_params(name):
             depth -= 1
         elif depth == 0:
             out.append(c)
-    return ''.join(out).strip()
+    name = ''.join(out).strip()
+    return RENAMED.get(name, name)
 
 
 def normalize(line):
@@ -59,7 +72,15 @@ def functions(obj):
             if text.startswith('R_386') or text.startswith('R_'):
                 text = re.sub(r'(R_\w+)\s+(.*)', lambda r: r.group(1) + ' ' + strip_params(r.group(2)), text)
             funcs[cur].append(normalize(re.sub(r'\s+', ' ', text)))
-    return {k: canon_stack(temp_regs(fold_push(v))) for k, v in funcs.items() if v is not None}
+    return {k: canon_stack(temp_regs(fold_push(strip_padding(v)))) for k, v in funcs.items() if v is not None}
+
+
+def strip_padding(lines):
+    """Padding after the last instruction (g++ aligns member functions to 2
+    bytes: a function before one ends with a nop)."""
+    while lines and re.match(r'(nop\w*|xchg %ax,%ax|lea 0x0\(%e[a-z]+(,%eiz,1)?\),%e[a-z]+)\b', lines[-1]):
+        lines = lines[:-1]
+    return lines
 
 
 def temp_regs(lines):
@@ -160,6 +181,9 @@ def canon_stack(lines):
 
 
 def main():
+    if len(sys.argv) > 2 and sys.argv[1] == '--map':
+        load_map(sys.argv[2])
+        del sys.argv[1:3]
     if len(sys.argv) < 3:
         print(__doc__)
         return 1

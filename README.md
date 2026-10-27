@@ -63,8 +63,8 @@ diplomacy, saving and loading, players leaving and rejoining, and 50-turn games
 (`docs/xdaemon-protocol.md`).
 
 The code is being modernized step by step, each step checked by the harness: it compiles as
-strict C++, keeps the original's data layout, has its classes as C++ class hierarchies and typed
-callbacks; member functions, structured control flow and smaller functions come next.
+strict C++, keeps the original's data layout, has its classes as C++ class hierarchies with
+member functions, and typed callbacks; structured control flow and smaller functions come next.
 
 Details: [STATUS.md](docs/STATUS.md) (progress and verification) and
 [DEVELOPMENT.md](docs/DEVELOPMENT.md) (the code's layout, the approach and the tooling).

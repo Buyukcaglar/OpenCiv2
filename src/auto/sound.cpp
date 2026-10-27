@@ -17,10 +17,10 @@ void __cdecl snd_menu_end(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall avi_player_set_end_callback(AviPlayer *self,VideoNotifyFn callback)
+void AviPlayer::set_end_callback(VideoNotifyFn callback)
 
 {
-  self->on_end = callback;
+  on_end = callback;
   return;
 }
 
@@ -240,11 +240,11 @@ void __cdecl snd_sync_music_option(void)
 }
 
 /* 00472910 auto */
-void __thiscall avi_player_set_frame_callback(AviPlayer *self,VideoNotifyFn callback,u32 callback_data)
+void AviPlayer::set_frame_callback(VideoNotifyFn callback,u32 callback_data)
 
 {
-  self->on_frame = callback;
-  self->cue_frame_u = callback_data;
+  on_frame = callback;
+  cue_frame_u = callback_data;
   return;
 }
 
@@ -253,14 +253,14 @@ void __thiscall avi_player_set_frame_callback(AviPlayer *self,VideoNotifyFn call
 /* 004729ab: written by hand in src/game/regargs.cpp */
 
 /* 004d8b20 auto */
-AviPlayer * __thiscall avi_player_scalar_dtor(AviPlayer *self,uint flags)
+AviPlayer *AviPlayer::scalar_destruct(uint flags)
 
 {
-  avi_player_dtor(self);
+  destruct();
   if ((flags & 1) != 0) {
-    operator_delete(self);
+    operator_delete(this);
   }
-  return self;
+  return this;
 }
 
 /* 005d48d0 auto */
@@ -1901,7 +1901,7 @@ i32 __cdecl snd_avi_fill_buffer(WaveBuffer *buffer,WaveSource *source)
 /* 005dd010 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-AviPlayer * __thiscall mmwnd_ctor(AviPlayer *self)
+AviPlayer *AviPlayer::construct()
 
 {
   i32 eh_next;
@@ -1909,79 +1909,73 @@ AviPlayer * __thiscall mmwnd_ctor(AviPlayer *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  surfwnd_ctor(self);
+  this->SurfaceWindow::construct();
   eh_state = 0;
-  avi_audio_ctor(&self->audio);
+  audio.construct();
   (*((char *)&eh_state + 0)) = 1;
-  palette_init(&self->palette);
+  palette.init();
   eh_state = (eh_state & 0xffffff00 | (byte)(2));
-  surface_ctor(&self->backdrop);
-  self->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
-  self->on_end = 0;
-  self->double_size_u = 0;
-  self->transparent_u = 0;
-  self->target_surface_uptr = 0;
-  self->has_audio_u = 1;
-  self->audio_playing_u = 0;
-  self->target_surface_uptr = 0;
-  self->start_frame_u = 0;
-  self->end_frame_u = 0;
-  self->cur_frame_u = 0;
-  self->field_a1c = 0;
-  self->cue_frame_u = 0;
-  self->paused_u = 1;
-  self->loop_u = 0;
-  avi_current_player_i32 = (i32)self;
-  return self;
+  surface_ctor(&backdrop);
+  vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
+  on_end = 0;
+  double_size_u = 0;
+  transparent_u = 0;
+  target_surface_uptr = 0;
+  has_audio_u = 1;
+  audio_playing_u = 0;
+  target_surface_uptr = 0;
+  start_frame_u = 0;
+  end_frame_u = 0;
+  cur_frame_u = 0;
+  field_a1c = 0;
+  cue_frame_u = 0;
+  paused_u = 1;
+  loop_u = 0;
+  avi_current_player_i32 = (i32)this;
+  return this;
 }
 
 /* 005dd1a0 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 __thiscall avi_player_dtor(AviPlayer *self)
+i32 AviPlayer::destruct()
 
 {
   i32 eh_next;
   i8 *eh_handler;
   int eh_state;
   
-  *(i8 ***)&self->vtable = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
+  *(i8 ***)&vtable = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 3;
-  avi_play_pause(self);
-  avi_close(self);
+  avi_play_pause(this);
+  avi_close(this);
   avi_current_player_i32 = 0;
   (*((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x558)); }
+  /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(((int)this) + 0x558)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 005dd23f */ { palette_destroy((GamePalette *)(*(int *)&self + 0x124)); }
+  /* inlined unwind funclet 005dd23f */ { palette_destroy((GamePalette *)(((int)this) + 0x124)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 005dd24e */ { avi_audio_release((AviAudioReleaseView *)(*(int *)&self + 0x11c)); }
+  /* inlined unwind funclet 005dd24e */ { avi_audio_release((AviAudioReleaseView *)(((int)this) + 0x11c)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 005dd25d */ { surfwnd_dtor(*(SurfaceWindow **)&self); }
+  /* inlined unwind funclet 005dd25d */ { surfwnd_dtor(((SurfaceWindow *)this)); }
   return eh_next;
 }
 
 /* 005dd27e auto */
-void __thiscall
-avi_player_create
-          (AviPlayer *self,iptr parent,i32 style,u32 x,u32 y)
+void AviPlayer::create(iptr parent,i32 style,u32 x,u32 y)
 
 {
-  surface_wnd_create
-            (self,parent,style,x,y,0x140,0xf0,(iptr)&self->palette_u
+  wnd_create(parent,style,x,y,0x140,0xf0,(iptr)&palette_u
             );
-  surface_fill(self,0);
-  self->pos_x_u = x;
-  self->pos_y_u = y;
+  fill(0);
+  pos_x_u = x;
+  pos_y_u = y;
   return;
 }
 
 /* 005dd2e3 auto */
-void __thiscall
-avi_player_create_child
-          (AviPlayer *self,iptr parent,i32 style,u32 x,u32 y,iptr target
-          )
+void AviPlayer::create_child(iptr parent,i32 style,u32 x,u32 y,iptr target)
 
 {
   iptr target_dib;
@@ -1992,24 +1986,23 @@ avi_player_create_child
   else {
     target_dib = target + 0x48;
   }
-  wnd_create_with_surface
-            (self,(const char *)parent,style,x,y,0x140,0xf0,(iptr)&self->palette_u
+  wnd_create_with_surface((const char *)parent,style,x,y,0x140,0xf0,(iptr)&palette_u
              ,target_dib);
-  surface_fill(self,0);
-  self->target_surface_uptr = target;
-  self->pos_x_u = x;
-  self->pos_y_u = y;
+  fill(0);
+  target_surface_uptr = target;
+  pos_x_u = x;
+  pos_y_u = y;
   return;
 }
 
 /* 005dd377 auto */
-int __thiscall avi_player_open(AviPlayer *self,const char *filename)
+int AviPlayer::open(const char *filename)
 
 {
   int result;
   
-  avi_close(self);
-  result = avi_open_file(self,filename);
+  avi_close(this);
+  result = avi_open_file(this,filename);
   if (result == 0) {
     result = 0;
   }
@@ -2017,27 +2010,27 @@ int __thiscall avi_player_open(AviPlayer *self,const char *filename)
 }
 
 /* 005dd3c2 auto */
-void __thiscall avi_player_play(AviPlayer *self)
+void AviPlayer::play()
 
 {
-  self->loop_bytes[0] = '\0';
-  self->loop_bytes[1] = '\0';
-  self->loop_bytes[2] = '\0';
-  self->loop_bytes[3] = '\0';
-  avi_play_start(self);
+  loop_bytes[0] = '\0';
+  loop_bytes[1] = '\0';
+  loop_bytes[2] = '\0';
+  loop_bytes[3] = '\0';
+  avi_play_start(this);
   return;
 }
 
 /* 005dd3f1 auto */
-void __thiscall avi_player_play_range(AviPlayer *self,u32 first_frame,u32 last_frame)
+void AviPlayer::play_range(u32 first_frame,u32 last_frame)
 
 {
   if ((int)first_frame <= (int)last_frame) {
-    self->loop_u = 0;
-    avi_seek_frame(self,first_frame,0);
-    self->end_frame_u = last_frame;
-    self->start_frame_u = first_frame;
-    avi_play_start(self);
+    loop_u = 0;
+    avi_seek_frame(this,first_frame,0);
+    end_frame_u = last_frame;
+    start_frame_u = first_frame;
+    avi_play_start(this);
   }
   return;
 }
@@ -2051,38 +2044,37 @@ void __thiscall avi_player_show_frame(void *self,i32 frame)
 }
 
 /* 005dd4c2 auto */
-void __thiscall avi_player_loop_range(AviPlayer *self,u32 first_frame,u32 last_frame)
+void AviPlayer::loop_range(u32 first_frame,u32 last_frame)
 
 {
-  self->start_frame_u = first_frame;
-  avi_seek_frame(self,first_frame,0);
-  self->end_frame_u = last_frame;
-  self->loop_u = 1;
-  avi_play_start(self);
+  start_frame_u = first_frame;
+  avi_seek_frame(this,first_frame,0);
+  end_frame_u = last_frame;
+  loop_u = 1;
+  avi_play_start(this);
   return;
 }
 
 /* 005dd51d auto */
-void __thiscall avi_player_pause(AviPlayer *self)
+void AviPlayer::pause()
 
 {
-  avi_play_pause(self);
+  avi_play_pause(this);
   return;
 }
 
 /* 005dd561 auto */
-void __thiscall avi_player_set_palette(DibSurface *self,iptr palette)
+void DibSurface::avi_player_set_palette(iptr palette)
 
 {
-  avi_apply_palette((AviPlayer *)self,(GamePalette *)palette);
-  surface_set_palette(self,palette);
-  wnd_set_palette((WndBase *)(self + 1),palette);
+  avi_apply_palette((AviPlayer *)this,(GamePalette *)palette);
+  set_palette(palette);
+  ((WndBase *)(this + 1))->set_palette(palette);
   return;
 }
 
 /* 005dd64c auto */
-void __thiscall
-avi_player_draw_to(DibSurface *self,iptr dest,int x,int y)
+void DibSurface::avi_player_draw_to(iptr dest,int x,int y)
 
 {
   int dest_size;
@@ -2091,19 +2083,19 @@ avi_player_draw_to(DibSurface *self,iptr dest,int x,int y)
   tagRECT dst_rect;
   
   if ((-1 < x) && (-1 < y)) {
-    dest_size = surface_width((DibSurface *)dest);
-    src_size = surface_get_width(self);
+    dest_size = ((DibSurface *)dest)->surface_width();
+    src_size = get_width();
     if (src_size <= dest_size - x) {
-      dest_size = surface_height((DibSurface *)dest);
-      src_size = surface_get_height(self);
+      dest_size = ((DibSurface *)dest)->surface_height();
+      src_size = get_height();
       if (src_size <= dest_size - y) {
-        avi_decode_frame((AviPlayer *)self,0);
-        dest_size = surface_get_height(self);
-        src_size = surface_get_width(self);
+        avi_decode_frame((AviPlayer *)this,0);
+        dest_size = get_height();
+        src_size = get_width();
         SetRect(&src_rect,0,0,src_size,dest_size);
         CopyRect(&dst_rect,&src_rect);
         OffsetRect(&dst_rect,x,y);
-        surface_blit(self,(DibSurface *)dest,&src_rect,&dst_rect);
+        blit((DibSurface *)dest,&src_rect,&dst_rect);
       }
     }
   }
@@ -2111,33 +2103,33 @@ avi_player_draw_to(DibSurface *self,iptr dest,int x,int y)
 }
 
 /* 005dd71e auto */
-void __thiscall avi_player_set_double_size(AviPlayer *self,i32 enable)
+void AviPlayer::set_double_size(i32 enable)
 
 {
   int height;
   int width;
   
-  height = surface_get_height(self);
+  height = get_height();
   height = height * 2;
-  width = surface_get_width(self);
-  wnd_resize_clamped(self,width * 2,height);
-  self->double_size_u = 1;
+  width = get_width();
+  resize_clamped(width * 2,height);
+  double_size_u = 1;
   return;
 }
 
 /* 005dd761 auto */
-void __thiscall avi_player_set_transparent(AviPlayer *self,int enable)
+void AviPlayer::set_transparent(int enable)
 
 {
   if (enable == 0) {
-    if (self->transparent_u != 0) {
-      self->transparent_u = 0;
-      avi_restart_decompress(self,0);
+    if (transparent_u != 0) {
+      transparent_u = 0;
+      avi_restart_decompress(this,0);
     }
   }
-  else if (self->transparent_u == 0) {
-    self->transparent_u = 1;
-    avi_restart_decompress(self,1);
+  else if (transparent_u == 0) {
+    transparent_u = 1;
+    avi_restart_decompress(this,1);
   }
   return;
 }
@@ -2498,16 +2490,16 @@ int __cdecl avi_open_file(AviPlayer *player,const char *filename)
         player->dst_format.clr_used = 0x100;
         avi_frame_width = player->src_format.width;
         avi_frame_height = player->src_format.height;
-        dib = surface_get_dib(player);
+        dib = player->get_dib();
         value = dib_is_top_down(dib);
         if (value != 0) {
           player->dst_format.height = -player->dst_format.height;
         }
         if (player->double_size == 0) {
-          wnd_resize_clamped(player,avi_frame_width,avi_frame_height);
+          player->resize_clamped(avi_frame_width,avi_frame_height);
         }
         else {
-          wnd_resize_clamped(player,avi_frame_width * 2,avi_frame_height * 2);
+          player->resize_clamped(avi_frame_width * 2,avi_frame_height * 2);
         }
         if (stream_info.dwSuggestedBufferSize == 0) {
           value = (uint)player->src_format.bit_count * player->src_format.width *
@@ -2535,8 +2527,7 @@ int __cdecl avi_open_file(AviPlayer *player,const char *filename)
               palette_rgb[i * 3 + 1] = (i8)player->dst_colors[0x29 + i * 4];
               palette_rgb[i * 3 + 2] = (i8)player->dst_colors[0x28 + i * 4];
             }
-            palette_set_rgb
-                      (&player->palette,10,0xec,(iptr)palette_rgb);
+            player->palette.set_rgb(10,0xec,(iptr)palette_rgb);
             ICSendMessage(avi_decompressor,0x401d,(iptr)&player->dst_format,0);
             result = avi_ic_decompress_ex_begin(avi_decompressor,0,(iptr)&player->src_format,0,0,0,
                                    player->src_format.width,player->src_format.height
@@ -2748,7 +2739,7 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
   }
   else {
     if ((player->transparent != 0) && (decode_flags == 0)) {
-      surface_blit(&player->backdrop,player,(RECT *)&avi_blit_union_left_block.avi_blit_union_left,(RECT *)&avi_blit_union_left_block.avi_blit_union_left);
+      player->backdrop.DibSurface::blit(player,(RECT *)&avi_blit_union_left_block.avi_blit_union_left,(RECT *)&avi_blit_union_left_block.avi_blit_union_left);
     }
     result = AVIStreamRead(avi_video_stream[0],player->cur_frame,1,avi_frame_buffer,
                             avi_frame_buffer_size,&bytes_read,0);
@@ -2759,7 +2750,7 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
         x_dst = 0;
         dst_dim_b = avi_frame_width;
         dst_dim_a = avi_frame_height;
-        dst_bits = surface_get_bits(player);
+        dst_bits = player->get_bits();
         result = avi_ic_decompress_ex(avi_decompressor,decode_flags,(iptr)&player->src_format,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
                                avi_frame_height,(iptr)&player->dst_format,dst_bits,x_dst,y_dst,dst_dim_b,dst_dim_a);
       }
@@ -2770,7 +2761,7 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
         dst_dim_a = avi_frame_width * 2;
         y_dst = 0;
         x_dst = 0;
-        dst_bits = surface_get_bits(player);
+        dst_bits = player->get_bits();
         result = avi_ic_decompress_ex(avi_decompressor,decode_flags,(iptr)&player->src_format,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
                                avi_frame_height,(iptr)&player->dst_format,dst_bits,x_dst,y_dst,dst_dim_a,dst_dim_b);
         player->dst_format.height = player->dst_format.height >> 1;
@@ -2783,12 +2774,12 @@ int __cdecl avi_decode_frame(AviPlayer *player,int decode_flags)
       if ((player->cue_frame != 0) &&
          (player->cue_frame == player->cur_frame)) {
         player->cue_frame = 0;
-        avi_player_call_cue_callback(player);
+        player->call_cue_callback();
       }
       if (((uint)player->end_frame < (uint)player->cur_frame) && (avi_playing != 0)) {
         if (player->loop == 0) {
           avi_play_pause(player);
-          avi_player_call_end_callback(player);
+          player->call_end_callback();
           result = 0;
         }
         else {
@@ -2866,7 +2857,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
       if ((uint)player->end_frame < target_frame) {
         if (player->loop == 0) {
           avi_play_pause(player);
-          avi_player_call_end_callback(player);
+          player->call_end_callback();
           return;
         }
         avi_seek_frame(player,player->start_frame,0);
@@ -2879,7 +2870,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
       if (sample == 0) {
         if (player->loop == 0) {
           avi_play_pause(player);
-          avi_player_call_end_callback(player);
+          player->call_end_callback();
           return;
         }
         avi_seek_frame(player,player->start_frame,0);
@@ -2897,7 +2888,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
     }
     if ((*(uint *)&avi_blit_union_left_block.avi_frame_needs_blit) != 0) {
       if (player->transparent == 0) {
-        wnd_blit_surface(player);
+        player->wnd_blit_surface();
       }
       else {
         dirty_rect.left = err_report_ctx_block.avi_view_rect_x[0];
@@ -2905,7 +2896,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
         dirty_rect.right = err_report_ctx_block.avi_view_rect_x[0] + err_report_ctx_block.avi_view_rect_width_i32;
         dirty_rect.bottom = err_report_ctx_block.avi_view_rect_y + err_report_ctx_block.avi_view_rect_height_i32;
         UnionRect(&dirty_rect,&dirty_rect,(RECT *)((i32 *)&avi_blit_union_left_block.avi_blit_union_left));
-        wnd_blit_surface_rect(player,(iptr)&dirty_rect);
+        player->wnd_blit_surface_rect((iptr)&dirty_rect);
         avi_blit_union_left_block.avi_blit_union_left[0] = dirty_rect.left;
         avi_blit_union_left_block.avi_blit_union_top = dirty_rect.top;
         avi_blit_union_left_block.avi_blit_union_right = dirty_rect.right;
@@ -2958,7 +2949,7 @@ void __cdecl avi_apply_palette(AviPlayer *player,GamePalette *palette)
   
   if ((player != 0) && (avi_file_loaded != 0)) {
     ICSendMessage(avi_decompressor,0x403f,0,0);
-    palette_get_rgb(palette,(iptr)palette_rgb,0,0xec);
+    palette->get_rgb((iptr)palette_rgb,0,0xec);
     for (i = 0; i < 0xec; i++) {
       player->dst_colors[i * 4] = palette_rgb[i * 3 + 2];
       player->dst_colors[1 + i * 4] = palette_rgb[i * 3 + 1];
@@ -3027,12 +3018,12 @@ void __cdecl avi_restart_decompress(AviPlayer *player,int transparent)
       avi_file_loaded = 0;
     }
     if (transparent == 0) {
-      surface_create(&player->backdrop,0,0);
+      player->backdrop.DibSurface::create(0,0);
     }
     else {
-      surface_create(&player->backdrop,avi_frame_width,avi_frame_height);
-      yBottom = surface_get_height(player);
-      xRight = surface_get_width(player);
+      player->backdrop.DibSurface::create(avi_frame_width,avi_frame_height);
+      yBottom = player->get_height();
+      xRight = player->get_width();
       SetRect(&src_rect,0,0,xRight,yBottom);
       dst_rect.left = src_rect.left;
       dst_rect.top = src_rect.top;
@@ -3040,16 +3031,14 @@ void __cdecl avi_restart_decompress(AviPlayer *player,int transparent)
       dst_rect.bottom = src_rect.bottom;
       OffsetRect(&dst_rect,player->pos_x,player->pos_y);
       if (player->target_surface != 0) {
-        surface_blit
-                  ((DibSurface *)player->target_surface,&player->backdrop,&dst_rect,
+        ((DibSurface *)player->target_surface)->DibSurface::blit(&player->backdrop,&dst_rect,
                    &src_rect);
       }
       if (avi_file_loaded != 0) {
-        surface_blit
-                  (&player->backdrop,player,&src_rect,&src_rect);
+        player->backdrop.DibSurface::blit(player,&src_rect,&src_rect);
         cur_frame = player->cur_frame;
         avi_seek_frame(player,cur_frame,0);
-        wnd_blit_surface(player);
+        player->wnd_blit_surface();
       }
     }
   }
@@ -3057,21 +3046,21 @@ void __cdecl avi_restart_decompress(AviPlayer *player,int transparent)
 }
 
 /* 005e3550 auto */
-void __thiscall avi_player_call_end_callback(AviPlayer *self)
+void AviPlayer::call_end_callback()
 
 {
-  if (self->on_end != 0) {
-    self->on_end();
+  if (on_end != 0) {
+    on_end();
   }
   return;
 }
 
 /* 005e3580 auto */
-void __thiscall avi_player_call_cue_callback(AviPlayer *self)
+void AviPlayer::call_cue_callback()
 
 {
-  if (self->on_frame != 0) {
-    self->on_frame();
+  if (on_frame != 0) {
+    on_frame();
   }
   return;
 }
@@ -3109,8 +3098,7 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
       switch(msg) {
       case 3:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_move
-                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+        ((WndHandlers *)wnd2->handlers)->call_move(lparam & 0xffff,lparam >> 0x10);
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
       default:
@@ -3121,7 +3109,7 @@ handle_size:
         is_iconic = IsIconic(hwnd);
         if (is_iconic == 0) {
           wnd_on_size_nop(wnd2,lparam & 0xffff,lparam >> 0x10);
-          wnd_call_size((WndHandlers *)wnd2->handlers,wparam);
+          ((WndHandlers *)wnd2->handlers)->call_size(wparam);
         }
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
@@ -3129,12 +3117,12 @@ handle_size:
         goto handle_mci;
       case 7:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_setfocus((WndHandlers *)wnd2->handlers);
+        ((WndHandlers *)wnd2->handlers)->call_setfocus();
         return 0;
       }
     }
     (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-    value = wnd_call_close((WndHandlers *)wnd2->handlers);
+    value = ((WndHandlers *)wnd2->handlers)->call_close();
     if (value != 0) {
       result = wnd_base_wndproc(hwnd,0x10,wparam,lparam);
       return result;
@@ -3144,17 +3132,17 @@ handle_size:
     if (msg < 0x45) {
       if (msg == 0x44) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_msg44((WndHandlers *)wnd2->handlers,lparam & 0xffff);
+        ((WndHandlers *)wnd2->handlers)->call_msg44(lparam & 0xffff);
         return 1;
       }
       if (msg == 0x24) {
         minmax_info = (MINMAXINFO *)lparam;
-        window = wnd_get_window((WndBase *)wnd2);
+        window = ((WndBase *)wnd2)->get_window();
         frame_height = wnd_obj_frame_height(window);
-        window = wnd_get_window((WndBase *)wnd2);
+        window = ((WndBase *)wnd2)->get_window();
         frame_width = wnd_obj_frame_width(window);
-        wnd_get_min_size((ModalMenuWindow *)wnd2,(iptr)&min_width2,(iptr)&min_height2);
-        wnd_get_max_size((ModalMenuWindow *)wnd2,(iptr)&max_width2,(iptr)&max_height2);
+        ((ModalMenuWindow *)wnd2)->get_min_size((iptr)&min_width2,(iptr)&min_height2);
+        ((ModalMenuWindow *)wnd2)->get_max_size((iptr)&max_width2,(iptr)&max_height2);
         minmax_info->ptMaxTrackSize.x = frame_width + max_width2;
         minmax_info->ptMaxTrackSize.y = frame_height + max_height2;
         minmax_info->ptMinTrackSize.x = frame_width + min_width2;
@@ -3173,20 +3161,20 @@ default_wndproc:
       if (msg == 0x100) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         result = input_map_vkey(wparam);
-        wnd_call_keydown_pre((WndHandlers *)wnd2->handlers,result);
+        ((WndHandlers *)wnd2->handlers)->call_keydown_pre(result);
         result = input_map_vkey(wparam);
-        wnd_call_keydown((WndHandlers *)wnd2->handlers,result);
+        ((WndHandlers *)wnd2->handlers)->call_keydown(result);
         return 0;
       }
       if (msg == 0x101) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         result = input_map_vkey(wparam);
-        wnd_call_keyup((WndHandlers *)wnd2->handlers,result);
+        ((WndHandlers *)wnd2->handlers)->call_keyup(result);
         return 0;
       }
       if (msg == 0x102) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_char((WndHandlers *)wnd2->handlers,wparam & 0xff);
+        ((WndHandlers *)wnd2->handlers)->call_char(wparam & 0xff);
         return 0;
       }
       goto default_wndproc;
@@ -3194,19 +3182,18 @@ default_wndproc:
     if (msg < 0x201) {
       if (msg == 0x200) {
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_mousemove
-                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+        ((WndHandlers *)wnd2->handlers)->call_mousemove(lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       if (msg == 0x112) {
         if (wparam == 0xf020) {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_minimize((WndHandlers *)wnd2->handlers);
+          ((WndHandlers *)wnd2->handlers)->call_minimize();
         }
         else {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           if (wparam == 0xf120) {
-            wnd_call_restore((WndHandlers *)wnd2->handlers);
+            ((WndHandlers *)wnd2->handlers)->call_restore();
           }
         }
         result = wnd_base_wndproc(hwnd,0x112,wparam,lparam);
@@ -3214,7 +3201,7 @@ default_wndproc:
       }
       thumb_pos = (short)(wparam >> 0x10);
       if (msg == 0x114) {
-        scroll_pos2 = wnd_get_hscroll_pos((ModalMenuWindow *)wnd2);
+        scroll_pos2 = ((ModalMenuWindow *)wnd2)->get_hscroll_pos();
         switch(wparam) {
         case 0:
           scroll_pos2--;
@@ -3222,7 +3209,7 @@ default_wndproc:
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
+          ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
           return 0;
         case 1:
           scroll_pos2++;
@@ -3230,44 +3217,43 @@ default_wndproc:
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
+          ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
           return 0;
         case 2:
-          value = wnd_get_hscroll_page((ModalMenuWindow *)wnd2);
+          value = ((ModalMenuWindow *)wnd2)->get_hscroll_page();
           scroll_pos2 -= value;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
+          ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
           return 0;
         case 3:
-          value = wnd_get_hscroll_page((ModalMenuWindow *)wnd2);
+          value = ((ModalMenuWindow *)wnd2)->get_hscroll_page();
           scroll_pos2 += value;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
+          ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
           return 0;
         case 4:
           scroll_pos2 = (int)thumb_pos;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->hscroll_pos = scroll_pos2;
-          wnd_call_hscroll
-                    ((WndHandlers *)wnd2->handlers,*(i32 *)wnd2->hscroll_pos);
+          ((WndHandlers *)wnd2->handlers)->call_hscroll(*(i32 *)wnd2->hscroll_pos);
           return 0;
         case 5:
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_hscroll_track((WndHandlers *)wnd2->handlers,(int)thumb_pos);
+          ((WndHandlers *)wnd2->handlers)->call_hscroll_track((int)thumb_pos);
           return 0;
         default:
           return 0;
         }
       }
       if (msg == 0x115) {
-        scroll_pos2 = wnd_get_vscroll_pos((ModalMenuWindow *)wnd2);
+        scroll_pos2 = ((ModalMenuWindow *)wnd2)->get_vscroll_pos();
         switch(wparam) {
         case 0:
           scroll_pos2--;
@@ -3275,7 +3261,7 @@ default_wndproc:
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
+          ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
           return 0;
         case 1:
           scroll_pos2++;
@@ -3283,37 +3269,36 @@ default_wndproc:
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
+          ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
           return 0;
         case 2:
-          value = wnd_get_vscroll_page((ModalMenuWindow *)wnd2);
+          value = ((ModalMenuWindow *)wnd2)->get_vscroll_page();
           scroll_pos2 -= value;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
+          ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
           return 0;
         case 3:
-          value = wnd_get_vscroll_page((ModalMenuWindow *)wnd2);
+          value = ((ModalMenuWindow *)wnd2)->get_vscroll_page();
           scroll_pos2 += value;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll((WndHandlers *)wnd2->handlers,scroll_pos2);
+          ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
           return 0;
         case 4:
           scroll_pos2 = (int)thumb_pos;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)wnd2->vscroll_pos = scroll_pos2;
-          wnd_call_vscroll
-                    ((WndHandlers *)wnd2->handlers,*(i32 *)wnd2->vscroll_pos);
+          ((WndHandlers *)wnd2->handlers)->call_vscroll(*(i32 *)wnd2->vscroll_pos);
           return 0;
         case 5:
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_vscroll_track((WndHandlers *)wnd2->handlers,(int)thumb_pos);
+          ((WndHandlers *)wnd2->handlers)->call_vscroll_track((int)thumb_pos);
           return 0;
         default:
           return 0;
@@ -3325,22 +3310,20 @@ default_wndproc:
       if (msg == 0x210) {
         if (wparam == 0x201) {
           (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          wnd_call_lbuttondown
-                    ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+          ((WndHandlers *)wnd2->handlers)->call_lbuttondown(lparam & 0xffff,lparam >> 0x10);
           return 0;
         }
         if (wparam != 0x204) {
           return 0;
         }
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_rbuttondown
-                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+        ((WndHandlers *)wnd2->handlers)->call_rbuttondown(lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       switch(msg) {
       case 0x201:
         wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
-        parent_window = wnd_get_window(wnd_obj);
+        parent_window = wnd_obj->get_window();
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         if ((parent_window->flags_bytes[1] & 2) != 0) {
           SetFocus(parent_window->hwnd);
@@ -3350,8 +3333,7 @@ default_wndproc:
         wnd2->wnd_header_area[0xa5] = '\0';
         wnd2->wnd_header_area[0xa6] = '\0';
         wnd2->wnd_header_area[0xa7] = '\0';
-        wnd_call_lbuttondown
-                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+        ((WndHandlers *)wnd2->handlers)->call_lbuttondown(lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x202:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
@@ -3360,20 +3342,17 @@ default_wndproc:
           wnd2->wnd_header_area[0xa5] = '\0';
           wnd2->wnd_header_area[0xa6] = '\0';
           wnd2->wnd_header_area[0xa7] = '\0';
-          wnd_call_lbuttonup
-                    ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+          ((WndHandlers *)wnd2->handlers)->call_lbuttonup(lparam & 0xffff,lparam >> 0x10);
         }
-        wnd_call_lbuttonup_raw
-                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+        ((WndHandlers *)wnd2->handlers)->call_lbuttonup_raw(lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x203:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-        wnd_call_dblclick
-                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+        ((WndHandlers *)wnd2->handlers)->call_dblclick(lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x204:
         wnd_obj = (WndBase *)GetWindowLongA(hwnd,0);
-        parent_window = wnd_get_window(wnd_obj);
+        parent_window = wnd_obj->get_window();
         if ((parent_window->flags_bytes[1] & 2) != 0) {
           SetFocus(parent_window->hwnd);
           BringWindowToTop(hwnd);
@@ -3383,8 +3362,7 @@ default_wndproc:
         wnd2->wnd_header_area[0xa9] = '\0';
         wnd2->wnd_header_area[0xaa] = '\0';
         wnd2->wnd_header_area[0xab] = '\0';
-        wnd_call_rbuttondown
-                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+        ((WndHandlers *)wnd2->handlers)->call_rbuttondown(lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x205:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
@@ -3393,11 +3371,9 @@ default_wndproc:
           wnd2->wnd_header_area[0xa9] = '\0';
           wnd2->wnd_header_area[0xaa] = '\0';
           wnd2->wnd_header_area[0xab] = '\0';
-          wnd_call_rbuttonup
-                    ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+          ((WndHandlers *)wnd2->handlers)->call_rbuttonup(lparam & 0xffff,lparam >> 0x10);
         }
-        wnd_call_rbuttonup_raw
-                  ((WndHandlers *)wnd2->handlers,lparam & 0xffff,lparam >> 0x10);
+        ((WndHandlers *)wnd2->handlers)->call_rbuttonup_raw(lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       goto default_wndproc;
@@ -3425,11 +3401,11 @@ handle_mci:
 }
 
 /* 005eeca0 auto */
-AviAudio * __thiscall avi_audio_ctor(AviAudio *self)
+AviAudio *AviAudio::construct()
 
 {
-  self->audio_stream = 0;
-  return self;
+  audio_stream = 0;
+  return this;
 }
 
 /* 005eed1b auto */

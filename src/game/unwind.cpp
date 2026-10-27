@@ -25,7 +25,7 @@ i32 __thiscall wnd_dtor(void *self)
     member = (self != NULL) ? (void *)((iptr)self + 0x10) : NULL;
     wnd_handlers_dtor(member);
     /* funclet 0044cad3 */
-    wnd_record_destroy((WndBase *)self);
+    ((WndBase *)self)->destroy();
     return seh_list_head();
 }
 
@@ -51,7 +51,7 @@ void __thiscall city_picture_popup_dtor(void *self)
 
     /* funclet 004f3ebb */
     member = (self != NULL) ? (void *)((iptr)self + 0x4a4) : NULL;
-    dialog_dtor((Dialog *)member);
+    ((Dialog *)member)->Dialog::destruct();
     /* funclet 004f3ee5 */
     picwnd_dtor(self);
 }
@@ -63,7 +63,7 @@ void __thiscall ddwin_dtor(void *self)
     void *member;
 
     *(i32 *)((iptr)self + 0xb0) = ddwin_destroy_native((i32 *)*(i32 *)((iptr)self + 0xb0));
-    ddwin_remove_all_controls((DDWindow *)self);
+    ((DDWindow *)self)->remove_all_controls();
     /* funclet 005eff2b */
     ptrlist_dtor((void *)((iptr)self + 0xc0));
     /* funclet 005eff3a */
@@ -82,21 +82,21 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
     Dialog dlg;
     int gov;
 
-    dialog_ctor(&dlg, 0x4000);
+    dlg.Dialog::construct( 0x4000);
     if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) {
         /* nothing */
     }
     else if ((game.multiplayer < 3) || (human_civ[0] == civ2)) {
-        dialog_load_game_text(&dlg, (const char *)str_pickgovt);
+        dlg.load_game_text( (const char *)str_pickgovt);
         for (gov = (all_govs != 0) ? 0 : 1; gov < 7; gov = gov + 1) {
             /* (civ_can_choose_government's last 19 parameters are a decompiler artifact) */
             if ((all_govs != 0) || (civ_can_choose_government(civ2, gov, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) != 0)) {
                 text_clear();
                 text_append_string_id(government_names[gov]);
-                dialog_add_option(&dlg, (const char *)&map_views_block.text_buffer, gov, 0);
+                dlg.add_option( (const char *)&map_views_block.text_buffer, gov, 0);
             }
         }
-        choice2 = dlg_show_modal(&dlg, 0);
+        choice2 = dlg.show_modal( 0);
         if (-1 < choice2) {
             civ_set_government(civ2, choice2);
             snd_play_effect(0x14, 1, 0, 0);
@@ -121,7 +121,7 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
                            all_govs, 0, 0, 0, 0, 0, 0, 0);
     }
     /* funclet 0055c679 */
-    dialog_dtor(&dlg);
+    dlg.Dialog::destruct();
 }
 
 /* 0x00493e83: builds a temporary object, stores civ in it, runs it if
@@ -131,14 +131,14 @@ void __cdecl portrait_dlg_show(i32 civ)
     int created;
     PortraitDialog portrait_dlg;
 
-    portrait_dlg_ctor(&portrait_dlg);
+    portrait_dlg.construct();
     portrait_dlg.civ = civ;
-    created = portrait_dlg_create(&portrait_dlg);
+    created = portrait_dlg.create();
     if (created != 0) {
-        portrait_dlg_run(&portrait_dlg);
+        portrait_dlg.run();
     }
     /* funclet 00493eeb: lea ecx,[ebp-0x1f4] */
-    portrait_dlg_dtor(&portrait_dlg);
+    portrait_dlg.destruct();
 }
 
 /* 0x005e0863: builds a window with "OK"/"Cancel" buttons on the stack and
@@ -155,27 +155,27 @@ i32 __cdecl FUN_005e0863(void)
     i8 edit[72];
     tagRECT btn_rect;
 
-    palette_init((GamePalette *)palette);
-    surfwnd_ctor(&surf_wnd2);
-    font_init_empty((GameFont *)font2);
+    ((GamePalette *)palette)->init();
+    surf_wnd2.SurfaceWindow::construct();
+    ((GameFont *)font2)->init_empty();
     button_ctor((Button *)ok_button);
     button_ctor((Button *)cancel_button);
     edit_ctor((EditControl *)edit);
-    font_set((GameFont *)font2, 0, 0x11);
+    ((GameFont *)font2)->set( 0, 0x11);
     ui_set_button_font((iptr)font2);
     ui_set_default_font((iptr)font2);
     SetRect(&btn_rect, 0, 0, 0x3c, 0x19);
-    btn_y = surface_get_height((DibSurface *)(&surf_wnd2));
+    btn_y = ((DibSurface *)(&surf_wnd2))->get_height();
     btn_y = btn_y + -0x23;
-    btn_x = surface_get_width((DibSurface *)(&surf_wnd2));
+    btn_x = ((DibSurface *)(&surf_wnd2))->get_width();
     OffsetRect(&btn_rect, btn_x + -0x46, btn_y);
-    button_create((Button *)ok_button, (i32)(u8 *)&surf_wnd2.window, 0x65, (i32)&btn_rect,
+    ((Button *)ok_button)->create( (i32)(u8 *)&surf_wnd2.window, 0x65, (i32)&btn_rect,
                        (const char *)((i32 *)&str_ok_3));
-    button_set_callback((Button *)ok_button, dlg_radio_choice_button_cb);
+    ((Button *)ok_button)->set_callback( dlg_radio_choice_button_cb);
     OffsetRect(&btn_rect, 0, -0x23);
-    button_create((Button *)cancel_button, (i32)(u8 *)&surf_wnd2.window, 0x66, (i32)&btn_rect,
+    ((Button *)cancel_button)->create( (i32)(u8 *)&surf_wnd2.window, 0x66, (i32)&btn_rect,
                        (const char *)str_cancel_3);
-    button_set_callback((Button *)cancel_button, dlg_radio_choice_button_cb);
+    ((Button *)cancel_button)->set_callback( dlg_radio_choice_button_cb);
     /* funclets 005e0a31..005e0a6a: destroy the locals in reverse order */
     edit_dtor((EditControl *)edit);
     ctrl_dtor((Button *)cancel_button);
@@ -197,21 +197,21 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
 
     surface_ctor((DibSurface *)surface);
     gfx_set_text_color_index(0x8b);
-    loaded = surface_load_gif_resource((DibSurface *)surface, 0x1f1, 10, 0xec, (iptr)self + 0x1f8);
+    loaded = ((DibSurface *)surface)->load_gif_resource( 0x1f1, 10, 0xec, (iptr)self + 0x1f8);
     if (loaded != 0) {
         text_clear();
         label_text = (i32)label_string(label_string_ids[0xfe]);
         text_append((const char *)label_text);
         SetRect(&rect, 0, 0, 0x34, 0x24);
         OffsetRect(&rect, 1, 1);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
-        sprite_grab_from_surface((Sprite *)((iptr)self + 0x978), (i32)surface, 9, 1, 1, 0x34, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((Sprite *)((iptr)self + 0x978))->grab_from_surface( (i32)surface, 9, 1, 1, 0x34, 0x24);
         OffsetRect(&rect, 0x35, 0);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
-        sprite_grab_from_surface((Sprite *)((iptr)self + 0x9f0), (i32)surface, 9, 0x36, 1, 0x34, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((Sprite *)((iptr)self + 0x9f0))->grab_from_surface( (i32)surface, 9, 0x36, 1, 0x34, 0x24);
         OffsetRect(&rect, 0x35, 0);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
-        sprite_grab_from_surface((Sprite *)((iptr)self + 0x9b4), (i32)surface, 9, 0x6b, 1, 0x34, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((Sprite *)((iptr)self + 0x9b4))->grab_from_surface( (i32)surface, 9, 0x6b, 1, 0x34, 0x24);
         gfx_set_text_color_index(0xc6);
         text_clear();
         if (game_language == 0) {
@@ -226,14 +226,14 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
         }
         SetRect(&rect, 0, 0, 0x43, 0x24);
         OffsetRect(&rect, 1, 0x26);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
-        sprite_grab_from_surface((Sprite *)((iptr)self + 0xa2c), (i32)surface, 9, 1, 0x26, 0x43, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((Sprite *)((iptr)self + 0xa2c))->grab_from_surface( (i32)surface, 9, 1, 0x26, 0x43, 0x24);
         OffsetRect(&rect, 0x44, 0);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
-        sprite_grab_from_surface((Sprite *)((iptr)self + 0xaa4), (i32)surface, 9, 0x45, 0x26, 0x43, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((Sprite *)((iptr)self + 0xaa4))->grab_from_surface( (i32)surface, 9, 0x45, 0x26, 0x43, 0x24);
         OffsetRect(&rect, 0x44, 0);
-        surface_draw_text_in_rect((DibSurface *)surface, (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
-        sprite_grab_from_surface((Sprite *)((iptr)self + 0xa68), (i32)surface, 9, 0x89, 0x26, 0x43, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&map_views_block.text_buffer), &rect, 0);
+        ((Sprite *)((iptr)self + 0xa68))->grab_from_surface( (i32)surface, 9, 0x89, 0x26, 0x43, 0x24);
     }
     /* funclet 004d56ea: lea ecx,[ebp-0x64] */
     surface_dtor((DibSurface *)surface);

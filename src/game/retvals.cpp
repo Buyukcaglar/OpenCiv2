@@ -31,7 +31,7 @@ void __thiscall pedia_load_description(void *self, int topic2)
   const char *translated;
   
   str_clear((char *)section_name);
-  pedia_clear_links(obj_addr);
+  obj_addr->clear_links();
   ui_pump_messages();
   switch(obj_addr->category) {
   case 1:
@@ -130,8 +130,8 @@ read_text_lines:
       crt_strcpy(desc_text,((i8 *)&map_views_block.text_buffer));
     }
 set_control_text:
-    ctrl_set_text((Control *)((iptr)obj_addr + 0x1a98),(const char *)desc_text);
-    ctrl_show_and_redraw((Control *)((iptr)obj_addr + 0x1a98));
+    ((Control *)((iptr)obj_addr + 0x1a98))->set_text((const char *)desc_text);
+    ((Control *)((iptr)obj_addr + 0x1a98))->show_and_redraw();
   }
   return;
 }
@@ -352,9 +352,9 @@ int __cdecl save_read_game(char *path)
   if ((count_read != 0) && (result = _strncmp(events_tag,((i8 *)&save_events_tag_check_str),4), result == 0)) {
     count_read = _fread(&event_count2,4,1,_File);
     if (count_read == 0) goto close_file;
-    events_reset(((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events)),50000);
+    ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->reset(50000);
     for (event_idx = 0; event_idx < event_count2; event_idx = event_idx + 1) {
-      event = events_alloc(((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events)));
+      event = ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->alloc();
       if (event == (void *)0x0) {
         error_report(0xfffffff7,3,0,0,0);
       }
@@ -681,35 +681,35 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
       iconic = IsIconic(hwnd);
       if (iconic != 0) {
         GetWindowRect(hwnd,&win_rect);
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
         if ((int)((NativeWindow *)wnd_data)->icon == 0) {
           hIcon = LoadIconA((HINSTANCE)0x0,(LPCSTR)0x7f00);
           DrawIcon(paint_dc,0,0,hIcon);
         }
         else {
-          wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+          wnd_data = (int)((WndBase *)wnd2)->get_window();
           if (((int)((NativeWindow *)wnd_data)->palette != 0) && (gfx_palettized_display == 1)) {
-            wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+            wnd_data = (int)((WndBase *)wnd2)->get_window();
             RealizePalette(((NativeWindow *)wnd_data)->hdc);
           }
-          wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+          wnd_data = (int)((WndBase *)wnd2)->get_window();
           DrawIcon(paint_dc,0,0,((NativeWindow *)wnd_data)->icon);
         }
         return 0;
       }
-      wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+      wnd_data = (int)((WndBase *)wnd2)->get_window();
       if ((int)((NativeWindow *)wnd_data)->bg_tile == 0) {
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
         if ((int)((NativeWindow *)wnd_data)->bg_brush != 0) {
-          wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+          wnd_data = (int)((WndBase *)wnd2)->get_window();
           FillRect(paint_dc,&ps.rcPaint,((NativeWindow *)wnd_data)->bg_brush);
         }
       }
       else {
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
-        tile_w = surface_width(((NativeWindow *)wnd_data)->bg_tile);
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
-        tile_h = surface_height(((NativeWindow *)wnd_data)->bg_tile);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
+        tile_w = ((NativeWindow *)wnd_data)->bg_tile->surface_width();
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
+        tile_h = ((NativeWindow *)wnd_data)->bg_tile->surface_height();
         if ((tile_w != 0) && (tile_h != 0)) {
           paint_rect.left = ps.rcPaint.left;
           paint_rect.top = ps.rcPaint.top;
@@ -725,26 +725,26 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
               dst_rect = &blit_rect;
               src_rect = &win_rect;
               tmp_wnd = wnd2;
-              wnd_data = (int)wnd_get_window((WndBase *)wnd2);
-              surface_blit_to_wnd(((NativeWindow *)wnd_data)->bg_tile,(iptr)tmp_wnd,src_rect,(iptr)dst_rect);
+              wnd_data = (int)((WndBase *)wnd2)->get_window();
+              ((NativeWindow *)wnd_data)->bg_tile->blit_to_wnd((iptr)tmp_wnd,src_rect,(iptr)dst_rect);
             }
           }
         }
       }
-      wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+      wnd_data = (int)((WndBase *)wnd2)->get_window();
       if ((int)((NativeWindow *)wnd_data)->bg_surface != 0) {
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
-        tile_w = surface_width(((NativeWindow *)wnd_data)->bg_surface);
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
-        tile_h = surface_height(((NativeWindow *)wnd_data)->bg_surface);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
+        tile_w = ((NativeWindow *)wnd_data)->bg_surface->surface_width();
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
+        tile_h = ((NativeWindow *)wnd_data)->bg_surface->surface_height();
         paint_rect.left = ps.rcPaint.left;
         paint_rect.top = ps.rcPaint.top;
         paint_rect.right = ps.rcPaint.right;
         paint_rect.bottom = ps.rcPaint.bottom;
         SetRect(&win_rect,0,0,tile_w,tile_h);
-        wnd_data = wnd_client_height((WndBase *)wnd2);
+        wnd_data = ((WndBase *)wnd2)->client_height();
         wnd_data = wnd_data - tile_h >> 1;
-        offset_x = wnd_client_width((WndBase *)wnd2);
+        offset_x = ((WndBase *)wnd2)->client_width();
         OffsetRect(&win_rect,offset_x - tile_w >> 1,wnd_data);
         iconic = IntersectRect(&blit_rect,&win_rect,&paint_rect);
         if (iconic != 0) {
@@ -752,15 +752,15 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
           win_rect.top = blit_rect.top;
           win_rect.right = blit_rect.right;
           win_rect.bottom = blit_rect.bottom;
-          wnd_data = wnd_client_height((WndBase *)wnd2);
+          wnd_data = ((WndBase *)wnd2)->client_height();
           wnd_data = -(wnd_data - tile_h >> 1);
-          offset_x = wnd_client_width((WndBase *)wnd2);
+          offset_x = ((WndBase *)wnd2)->client_width();
           OffsetRect(&win_rect,-(offset_x - tile_w >> 1),wnd_data);
           dst_rect = &blit_rect;
           src_rect = &win_rect;
           tmp_wnd = wnd2;
-          wnd_data = (int)wnd_get_window((WndBase *)wnd2);
-          surface_blit_to_wnd(((NativeWindow *)wnd_data)->bg_surface,(iptr)tmp_wnd,src_rect,(iptr)dst_rect);
+          wnd_data = (int)((WndBase *)wnd2)->get_window();
+          ((NativeWindow *)wnd_data)->bg_surface->blit_to_wnd((iptr)tmp_wnd,src_rect,(iptr)dst_rect);
         }
       }
       EndPaint(hwnd,&ps);
@@ -770,13 +770,13 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     case 2:
       SetMenu(hwnd,(HMENU)0x0);
       tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = (int)wnd_get_window((WndBase *)tmp_wnd);
+      wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
       ((NativeWindow *)wnd_data)->destroyed = 1;
       if ((((NativeWindow *)wnd_data)->flags_bytes[1] & 2) != 0) {
         wnd_data = 0;
         parent_hwnd = GetParent(hwnd);
         tmp_wnd = (void *)GetWindowLongA(parent_hwnd,wnd_data);
-        parent_data = wnd_get_window((WndBase *)tmp_wnd);
+        parent_data = ((WndBase *)tmp_wnd)->get_window();
         if (parent_data->active_child == hwnd) {
           parent_data->active_child = 0;
         }
@@ -786,12 +786,12 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     case 3:
       wnd2 = (void *)GetWindowLongA(hwnd,0);
       if (wnd2 != (void *)0x0) {
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
         dc = ((NativeWindow *)wnd_data)->hdc;
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
         ReleaseDC(((NativeWindow *)wnd_data)->hwnd,dc);
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
-        offset_x = (int)wnd_get_window((WndBase *)wnd2);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
+        offset_x = (int)((WndBase *)wnd2)->get_window();
         dc = GetDC(((NativeWindow *)offset_x)->hwnd);
         ((NativeWindow *)wnd_data)->hdc = dc;
       }
@@ -799,30 +799,30 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     case 5:
       wnd2 = (void *)GetWindowLongA(hwnd,0);
       if ((wnd2 != (void *)0x0) &&
-         (wnd_data = (iptr)wnd_get_window((WndBase *)wnd2), (int)((NativeWindow *)wnd_data)->bg_surface != 0)) {
+         (wnd_data = (iptr)((WndBase *)wnd2)->get_window(), (int)((NativeWindow *)wnd_data)->bg_surface != 0)) {
         InvalidateRect(hwnd,(RECT *)0x0,1);
       }
       if (wnd2 != (void *)0x0) {
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
         dc = ((NativeWindow *)wnd_data)->hdc;
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
         ReleaseDC(((NativeWindow *)wnd_data)->hwnd,dc);
-        wnd_data = (int)wnd_get_window((WndBase *)wnd2);
-        offset_x = (int)wnd_get_window((WndBase *)wnd2);
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
+        offset_x = (int)((WndBase *)wnd2)->get_window();
         dc = GetDC(((NativeWindow *)offset_x)->hwnd);
         ((NativeWindow *)wnd_data)->hdc = dc;
       }
       break;
     case 7:
       tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = (int)wnd_get_window((WndBase *)tmp_wnd);
+      wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
       if ((int)((NativeWindow *)wnd_data)->active_child != 0) {
         SendMessageA(((NativeWindow *)wnd_data)->active_child,0x86,1,0);
       }
       break;
     case 8:
       tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = (int)wnd_get_window((WndBase *)tmp_wnd);
+      wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
       if ((int)((NativeWindow *)wnd_data)->active_child != 0) {
         SendMessageA(((NativeWindow *)wnd_data)->active_child,0x86,0,0);
       }
@@ -832,12 +832,12 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     if (msg == 0x46) {
       if (((byte)((WINDOWPOS *)lparam)->flags & 4) == 0) {
         wnd2 = (void *)GetWindowLongA(hwnd,0);
-        wnd_get_window((WndBase *)wnd2);
+        ((WndBase *)wnd2)->get_window();
         if ((WIN_STYLE(wnd2) & 0x200) != 0) {
           wnd_data = 0;
           parent_hwnd = GetParent(hwnd);
           tmp_wnd = (void *)GetWindowLongA(parent_hwnd,wnd_data);
-          parent_data = wnd_get_window((WndBase *)tmp_wnd);
+          parent_data = ((WndBase *)tmp_wnd)->get_window();
           if (((parent_data->topmost_child != 0) && (parent_data->topmost_child != hwnd)) &&
              (iconic = IsWindowVisible(parent_data->topmost_child), iconic != 0)) {
             ((WINDOWPOS *)lparam)->hwndInsertAfter = parent_data->topmost_child;
@@ -847,12 +847,12 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     }
     else if (msg == 0x22) {
       tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = (int)wnd_get_window((WndBase *)tmp_wnd);
+      wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
       if ((((NativeWindow *)wnd_data)->flags_bytes[1] & 2) != 0) {
         wnd_data = 0;
         parent_hwnd = GetParent(hwnd);
         tmp_wnd = (void *)GetWindowLongA(parent_hwnd,wnd_data);
-        parent_data = wnd_get_window((WndBase *)tmp_wnd);
+        parent_data = ((WndBase *)tmp_wnd)->get_window();
         if (parent_data->active_child != 0) {
           SendMessageA(parent_data->active_child,0x86,0,0);
         }
@@ -869,7 +869,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
       if (msg == 0x112) {
         if ((wparam == 0xf100) || (wparam == 0xf090)) {
           tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-          wnd_data = (int)wnd_get_window((WndBase *)tmp_wnd);
+          wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
           if ((((NativeWindow *)wnd_data)->flags_bytes[0] & 0x20) == 0) {
             return 0;
           }
@@ -879,7 +879,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
       if ((msg != 0x201) && (msg != 0x204)) goto default_wndproc;
     }
     tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-    wnd_data = (int)wnd_get_window((WndBase *)tmp_wnd);
+    wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
     if ((((NativeWindow *)wnd_data)->flags_bytes[1] & 2) != 0) {
       SetFocus(((NativeWindow *)wnd_data)->hwnd);
       BringWindowToTop(hwnd);
@@ -889,7 +889,7 @@ default_wndproc:
   hit = DefWindowProcA(hwnd,msg,wparam,lparam);
   if (msg == 0x84) {
     tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-    wnd_data = (int)wnd_get_window((WndBase *)tmp_wnd);
+    wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
     if ((((NativeWindow *)wnd_data)->flag_1000 != 0) && (hit == 1)) {
       GetWindowRect(hwnd,&win_rect);
       pos_x2 = (lparam & 0xffff) - win_rect.left;
@@ -1077,26 +1077,26 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
       (*((char *)&shift_flags + 1)) = (char)((ushort)shift_state >> 8);
       shift_flags = tmp;
       if ((wparam == 9) && ((*((char *)&shift_flags + 1)) == '\0')) {
-        nav_enabled = wnd_keyboard_nav_enabled(frame);
+        nav_enabled = frame->keyboard_nav_enabled();
         if (nav_enabled != '\0') {
           wnd_cycle_control_focus((iptr)frame,0,2);
         }
       }
       else if ((wparam == 9) && ((*((char *)&shift_flags + 1)) != '\0')) {
-        nav_enabled = wnd_keyboard_nav_enabled(frame);
+        nav_enabled = frame->keyboard_nav_enabled();
         if (nav_enabled != '\0') {
           wnd_cycle_control_focus((iptr)frame,0,3);
         }
       }
       else if ((wparam == 0xd) && ((*((char *)&shift_flags + 1)) == '\0')) {
         if (frame->handler_slot_bc != 0) {
-          ctrl_arg = control_get_hwnd((Control *)frame->handler_slot_bc);
+          ctrl_arg = ((Control *)frame->handler_slot_bc)->get_hwnd();
           button_press_animated(ctrl_arg);
         }
       }
       else if ((wparam == 0x1b) && ((*((char *)&shift_flags + 1)) == '\0')) {
         if (frame->handler_slot_c0 != 0) {
-          ctrl_arg = control_get_hwnd((Control *)frame->handler_slot_c0);
+          ctrl_arg = ((Control *)frame->handler_slot_c0)->get_hwnd();
           button_press_animated(ctrl_arg);
         }
       }
@@ -1114,12 +1114,12 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
     if (msg == 0x46) {
       if ((((WINDOWPOS *)lparam)->flags & 4) == 0) {   /* WM_WINDOWPOSCHANGING: SWP_NOZORDER */
         wnd2 = (void *)GetWindowLongA(hwnd,0);
-        wnd_data = wnd_get_window((WndBase *)wnd2);
+        wnd_data = ((WndBase *)wnd2)->get_window();
         if ((WIN_STYLE(wnd2) & 0x200) != 0) {
           tmp = 0;
           parent_hwnd = GetParent(hwnd);
           parent_wnd = (void *)GetWindowLongA(parent_hwnd,tmp);
-          parent_data = wnd_get_window((WndBase *)parent_wnd);
+          parent_data = ((WndBase *)parent_wnd)->get_window();
           parent_frame = GetWindowLongA(parent_data->hwnd,8);
           if ((parent_frame != 0) &&
              (insert_after = ctrl_list_find_type11_hwnd((Control *)((Wnd *)parent_frame)->control_list), insert_after != 0)) {
@@ -1144,7 +1144,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
             class_bytes = GetClassLongA(lparam,-0x12);
             edit_offset = class_bytes - 4;
             edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
-            edit_fire_change_callback((EditControl *)edit_obj);
+            ((EditControl *)edit_obj)->fire_change_callback();
           }
           else if (notify_code == 1) {
             ctrl_hwnd = lparam;
@@ -1166,13 +1166,13 @@ forward_command:
           class_bytes = GetClassLongA(lparam,-0x12);
           edit_offset = class_bytes - 4;
           edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
-          edit_fire_maxtext_callback((EditControl *)edit_obj);
+          ((EditControl *)edit_obj)->fire_maxtext_callback();
         }
       }
       else {
-        tmp = (int)wnd_get_window(frame);
+        tmp = (int)frame->get_window();
         if (((((NativeWindow *)tmp)->flags_bytes[0] & 0x80) != 0) ||
-           (tmp = (iptr)wnd_get_window(frame), (((NativeWindow *)tmp)->flags_bytes[1] & 1) != 0)) {
+           (tmp = (iptr)frame->get_window(), (((NativeWindow *)tmp)->flags_bytes[1] & 1) != 0)) {
           result = wnd_child_wndproc(hwnd,msg,wparam,lparam);
           return result;
         }
@@ -1183,12 +1183,12 @@ forward_command:
     }
     if (msg == 0x216) {
       wnd2 = (void *)GetWindowLongA(hwnd,0);
-      wnd_data = wnd_get_window((WndBase *)wnd2);
+      wnd_data = ((WndBase *)wnd2)->get_window();
       if ((WIN_STYLE(wnd2) & 0x200) != 0) {
         tmp = 0;
         parent_hwnd = GetParent(hwnd);
         parent_wnd = (void *)GetWindowLongA(parent_hwnd,tmp);
-        parent_data = wnd_get_window((WndBase *)parent_wnd);
+        parent_data = ((WndBase *)parent_wnd)->get_window();
         parent_frame = GetWindowLongA(parent_data->hwnd,8);
         if (((parent_frame != 0) &&
             (visible_type11 = (HWND)ctrl_list_find_type11_hwnd((Control *)((Wnd *)parent_frame)->control_list), visible_type11 != (HWND)0x0)
@@ -1262,7 +1262,7 @@ uint __cdecl game_turn_start_popups(void)
     }
     else {
       text_append((const char *)cities[best_city].name);
-      mapview_center_on(((MapView *)((i8 *)&map_views_block.map_views)),(int)cities[best_city].x,
+      ((MapView *)((i8 *)&map_views_block.map_views))->center_on((int)cities[best_city].x,
                          (int)cities[best_city].y);
     }
     text_set_string_arg(1,(const char *)&map_views_block.text_buffer);
@@ -1384,7 +1384,7 @@ int __cdecl city_process_pollution(int city)
           tile_add_pollution(tile_x,roll);
           check = tile_visible_to(tile_x,roll,human_civ[0]);
           if (check != 0) {
-            mapview_center_on(((MapView *)((i8 *)&map_views_block.map_views)),tile_x,roll);
+            ((MapView *)((i8 *)&map_views_block.map_views))->center_on(tile_x,roll);
             if ((game.message_options & 0x100) == 0) {
               city_notify_dialog_ex((iptr)str_pollution,city,0,0);
             }
@@ -1540,7 +1540,7 @@ hut_outcome_dispatch:
         if (tmp < 0) {
           return civ;
         }
-        city_window_open(((CityWindow *)((i8 *)&city_window_block.city_window)),tmp);   /* void: the caller ignores our result */
+        ((CityWindow *)((i8 *)&city_window_block.city_window))->open(tmp);   /* void: the caller ignores our result */
         return civ;
       }
       outcome = 5;

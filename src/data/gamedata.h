@@ -5794,6 +5794,21 @@ typedef struct NetSession {
     int net_last_queued_send_seq;  /* 006c9284 */
     i32 net_active_protocol;  /* 006c9288 */
     u8 net_active_protocol_rest[23020];
+    /* methods */
+    i8 is_host();    /* 00421f40 */
+    i8 send_to(int player,NetMsg *msg);    /* 0046af70 */
+    bool send_to_all(NetMsg *msg);    /* 0046b0a1 */
+    void process_messages(int max_msgs,int wait_mode);    /* 0047e94e */
+    NetSession *construct();    /* 0059a8bb */
+    void clear();    /* 0059a998 */
+    void destruct();    /* 0059ad40 */
+    i8 init_transport(i32 protocol,int is_server);    /* 0059adef */
+    void shutdown(int delay_after);    /* 0059b293 */
+    void close_hook_nop();    /* 0059b55b */
+    void game_list_add(NetServerInfoMsg *msg);    /* 0059b571 */
+    void add_player(NetPlayerNodeMsg *player_info);    /* 0059b7fc */
+    void remove_player(int player_id);    /* 0059b96a */
+    void free_game_list();    /* 0059baf0 */
 } NetSession;
 #pragma pack(pop)
 extern NetSession net_session_block;

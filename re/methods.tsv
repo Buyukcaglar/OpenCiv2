@@ -1,0 +1,1033 @@
+# Methods of the game's classes: the original free name, the class, the member name
+# (empty: left free, the reason in `why`). tools/cxx_methods.py plan; tools/cxx_compare.py --map uses it.
+addr	old	class	member	file	why
+00408010	wnd_set_cursor	WndBase	set_cursor	src/auto/window.cpp	
+00408050	wnd_set_icon	WndBase	set_icon	src/auto/window.cpp	
+00408090	wnd_minimize	WndBase	minimize	src/auto/window.cpp	
+004080c0	wnd_client_width	WndBase	client_width	src/auto/window.cpp	
+004080f0	wnd_get_rect_in_parent	WndBase	get_rect_in_parent	src/auto/window.cpp	
+00408130	wnd_set_lbuttonup_handler	WndHandlers	set_lbuttonup_handler	src/auto/window.cpp	
+00408170	wnd_set_rbuttonup_handler	WndHandlers	set_rbuttonup_handler	src/auto/window.cpp	
+004081b0	wnd_set_keydown_handler	WndHandlers	set_keydown_handler	src/auto/window.cpp	
+004081f0	wnd_set_char_handler	WndHandlers	set_char_handler	src/auto/window.cpp	
+00408230	wnd_set_close_handler	WndHandlers	set_close_handler	src/auto/window.cpp	
+00408270	wnd_set_minimize_handler	WndHandlers	set_minimize_handler	src/auto/window.cpp	
+004082b0	wnd_set_restore_handler	WndHandlers	set_restore_handler	src/auto/window.cpp	
+004082f0	wnd_set_size_handler	WndHandlers	set_size_handler	src/auto/window.cpp	
+00408330	wnd_set_move_handler	WndHandlers	set_move_handler	src/auto/window.cpp	
+00408370	wnd_set_min_size	ModalMenuWindow	set_min_size	src/auto/window.cpp	
+004083b0	wnd_destroy_with_surface	DibSurface	wnd_destroy_with_surface	src/auto/window.cpp	
+004083f0	surface_release	DibSurface	release	src/auto/graphics.cpp	
+00408420	wnd_destroy_native	WndBase	destroy_native	src/auto/window.cpp	
+00408460	wnd_blit_surface	DibSurface	wnd_blit_surface	src/auto/window.cpp	
+00408490	wnd_blit_surface_rect	DibSurface	wnd_blit_surface_rect	src/auto/window.cpp	
+00408580	wnd_view_validate_rect	WndBase	view_validate_rect	src/auto/window.cpp	
+004085c0	wnd_set_redraw_callback	SurfaceWindow	set_redraw_callback	src/auto/window.cpp	
+004085f0	window_show	SurfaceWindow	show	src/auto/window.cpp	
+00408620	window_show_focus_first	Wnd	show_focus_first	src/auto/window.cpp	
+00408650	wnd_handle_show_raise	WndBase	handle_show_raise	src/auto/window.cpp	
+0040bc40	dlg_reset	Dialog	reset	src/auto/window.cpp	
+0040bc80	dlg_show_modal	Dialog	show_modal	src/auto/window.cpp	
+0040c480	taxrate_calc_totals	TaxRateDialog	calc_totals	src/auto/city.cpp	
+0040c7d0	taxrate_dialog_paint	TaxRateDialog	paint	src/auto/city.cpp	
+0040cd64	taxrate_dialog_run	TaxRateDialog	run	src/auto/city.cpp	
+0040ef70	font_cached_height	GameFont	font_cached_height	src/auto/graphics.cpp	kept whole (cached_height clashes)
+0040efa0	font_line_spacing	GameFont	line_spacing	src/auto/graphics.cpp	
+0040efd0	font_text_width	GameFont	text_width	src/auto/graphics.cpp	
+0040f010	surface_delete	DibSurface	surface_delete	src/auto/graphics.cpp	kept whole (delete clashes)
+0040f060	taxrate_dialog_ctor	TaxRateDialog	construct	src/auto/city.cpp	
+0040f1e0	taxrate_dialog_dtor	void		src/auto/city.cpp	self is void (not a class)
+0040f320	wnd_set_modal_idle_callback	ModalMenuWindow	set_modal_idle_callback	src/auto/window.cpp	
+0040f350	wnd_set_keyboard_nav	Wnd	set_keyboard_nav	src/auto/window.cpp	
+0040f380	ctrl_show_and_redraw	Control	show_and_redraw	src/auto/controls.cpp	
+0040f3e0	button_ctor	Button		src/auto/controls.cpp	address taken (src/auto/unit.cpp, src/auto/window.cpp)
+0040f480	ctrl_base_ctor	Control	base_construct	src/auto/controls.cpp	
+0040f510	ctrl_base_dtor	Control	base_destruct	src/auto/controls.cpp	
+0040f570	ctrl_dtor	Button		src/auto/controls.cpp	address taken (src/auto/controls.cpp, src/auto/unit.cpp, src/auto/window.cpp)
+0040f610	ctrl_destroy	Control	destroy	src/auto/controls.cpp	
+0040f680	button_create	Button	create	src/auto/controls.cpp	
+0040f730	ctrl_init	Control	init	src/auto/controls.cpp	
+0040f7d0	ctrl_set_default_button	Button	set_default_button	src/auto/controls.cpp	
+0040f810	ctrl_get_parent	Control	get_parent	src/auto/controls.cpp	
+0040f840	ctrl_set_cancel_button	Button	set_cancel_button	src/auto/controls.cpp	
+0040f880	button_set_callback	Button	set_callback	src/auto/controls.cpp	
+0040f8b0	checkbox_elem_ctor	Checkbox		src/auto/controls.cpp	address taken (src/auto/city.cpp, src/auto/window.cpp)
+0040f930	checkbox_dtor	Checkbox		src/auto/controls.cpp	address taken (src/auto/city.cpp, src/auto/controls.cpp, src/auto/window.cpp)
+0040f9d0	checkbox_create	Checkbox	create	src/auto/controls.cpp	
+0040faa0	checkbox_set_callback	Checkbox	set_callback	src/auto/controls.cpp	
+0040fad0	checkbox_set_checked	Checkbox	set_checked	src/auto/controls.cpp	
+0040fb00	scrollbar_ctor	Scrollbar	construct	src/auto/controls.cpp	
+0040fbb0	scrollbar_dtor	Scrollbar	destruct	src/auto/controls.cpp	
+0040fc50	scrollbar_create	Scrollbar	create	src/auto/controls.cpp	
+0040fcf0	scrollbar_set_pos	Scrollbar	set_pos	src/auto/controls.cpp	
+0040fd40	scrollbar_set_range	Scrollbar	set_range	src/auto/controls.cpp	
+0040fd80	scrollbar_set_callback	Scrollbar	set_callback	src/auto/controls.cpp	
+0040ffa0	dlg_load_game_section	Dialog	load_game_section	src/auto/window.cpp	
+0040ffe0	dialog_load_text_ex	Dialog	load_text_ex	src/auto/window.cpp	
+00410302	mapview_redraw_cursor_tile	MapView	redraw_cursor_tile	src/auto/mapview.cpp	
+00410402	mapview_center_on	MapView	center_on	src/auto/mapview.cpp	
+00410464	mapview_scroll_if_near_edge	MapView	scroll_if_near_edge	src/auto/mapview.cpp	
+004106fd	mapview_point_unit_dir	MapView	point_unit_dir	src/auto/mapview.cpp	
+00413476	mapview_update_title	MapView	update_title	src/auto/mapview.cpp	
+00413717	mapview_create	MapView	create	src/auto/mapview.cpp	
+00414b70	wnd_set_cursor_now	WndBase	set_cursor_now	src/auto/window.cpp	
+00414bb0	wnd_client_height	WndBase	client_height	src/auto/window.cpp	
+00414be0	wnd_set_mousemove_handler	WndHandlers	set_mousemove_handler	src/auto/window.cpp	
+00414c20	wnd_set_lbuttondown_handler	WndHandlers	set_lbuttondown_handler	src/auto/window.cpp	
+00414c60	wnd_set_lbuttonup_any_handler	WndHandlers	set_lbuttonup_any_handler	src/auto/window.cpp	
+00414ca0	wnd_set_dblclick_handler	WndHandlers	set_dblclick_handler	src/auto/window.cpp	
+00414ce0	wnd_set_capture	WndBase	set_capture	src/auto/window.cpp	
+00414d10	wnd_get_window	WndBase	get_window	src/auto/window.cpp	
+00414d40	wnd_release_capture	WndBase	release_capture	src/auto/window.cpp	
+00414da0	wnd_set_caption_button_handler	FrameWindow	set_caption_button_handler	src/auto/window.cpp	
+00414e00	city_window_is_closed	CityWindow	city_window_is_closed	src/auto/city.cpp	kept whole (is_closed clashes)
+00416354	tech_editor_create_combo	EditorWindow	tech_editor_create_combo	src/auto/civ.cpp	
+00416734	tech_editor_create_edit	EditorWindow	tech_editor_create_edit	src/auto/civ.cpp	
+00416828	tech_editor_paint	EditorWindow	tech_editor_paint	src/auto/civ.cpp	
+00416c9e	tech_editor_dialog_run	EditorWindow	tech_editor_dialog_run	src/auto/civ.cpp	
+00417ef0	font_set	GameFont	set	src/auto/graphics.cpp	
+00417f70	sprite_get_key_color	Sprite	get_key_color	src/auto/graphics.cpp	
+00417fa0	editor_wnd_ctor	EditorWindow	construct	src/auto/editor.cpp	
+004183d0	editor_wnd_dtor	void		src/auto/editor.cpp	self is void (not a class)
+00418740	ctrl_get_id	Control	get_id	src/auto/controls.cpp	
+00418770	control_get_hwnd	Control	get_hwnd	src/auto/controls.cpp	
+004187a0	edit_ctor	EditControl		src/auto/controls.cpp	address taken (src/auto/editor.cpp, src/auto/window.cpp)
+00418870	edit_dtor	EditControl		src/auto/controls.cpp	address taken (src/auto/controls.cpp, src/auto/editor.cpp, src/auto/window.cpp)
+00418910	edit_create	EditControl	create	src/auto/controls.cpp	
+004189c0	edit_set_max_len	EditControl	set_max_len	src/auto/controls.cpp	
+00418a00	edit_set_callback	EditControl	set_callback	src/auto/controls.cpp	
+00418a30	ctrl_set_text	Control	set_text	src/auto/controls.cpp	
+00418a70	ctrl_get_text	Control	get_text	src/auto/controls.cpp	
+00418ab0	combo_ctor	ComboBox		src/auto/controls.cpp	address taken (src/auto/editor.cpp)
+00418b50	combo_dtor	ComboBox		src/auto/controls.cpp	address taken (src/auto/editor.cpp)
+00418bf0	combo_create	ComboBox	create	src/auto/controls.cpp	
+00418c70	combo_set_font	ComboBox	set_font	src/auto/controls.cpp	
+00418cb0	font_get_hfont	GameFont	get_hfont	src/auto/graphics.cpp	
+00418ce0	combo_add_string	ComboBox	add_string	src/auto/controls.cpp	
+00418d20	combo_clear	ComboBox	clear	src/auto/controls.cpp	
+00418d60	combo_get_cur_sel	ComboBox	get_cur_sel	src/auto/controls.cpp	
+00418d90	combo_set_cur_sel	ComboBox	set_cur_sel	src/auto/controls.cpp	
+00418dd0	combo_set_callback	ComboBox	set_callback	src/auto/controls.cpp	
+00418e00	listbox_ctor	ListBox	construct	src/auto/controls.cpp	
+00418ea0	listbox_dtor	ListBox	destruct	src/auto/controls.cpp	
+00418f40	listbox_create	ListBox	create	src/auto/controls.cpp	
+00418fe0	listbox_set_font	ListBox	set_font	src/auto/controls.cpp	
+00419020	listbox_add_string	ListBox	add_string	src/auto/controls.cpp	
+00419060	listbox_clear	ListBox	clear	src/auto/controls.cpp	
+00419ba0	wnd_set_bg_color	WndBase	set_bg_color	src/auto/window.cpp	
+00419be0	wnd_set_bg_surface	WndBase	set_bg_surface	src/auto/window.cpp	
+00421bf0	file_obj_create	FileObject	create	src/auto/text.cpp	
+00421c30	file_map_close	FileObject	map_close	src/auto/text.cpp	
+00421c60	file_obj_write	FileObject	write	src/auto/text.cpp	
+00421ca0	radiogrp_enable_item	RadioGroup	enable_item	src/auto/controls.cpp	
+00421dd0	dialog_init_default	Dialog	init_default	src/auto/window.cpp	
+00421e00	dialog_load_text	Dialog	load_text	src/auto/window.cpp	
+00421f40	net_is_host	NetSession	is_host	src/auto/network.cpp	
+00421f70	net_gamelist_view_ctor	NetGamelistView	view_construct	src/auto/network.cpp	
+00421fad	net_gamelist_view_dtor	NetGamelistView	view_destruct	src/auto/network.cpp	
+00421fcd	net_session_init			src/auto/network.cpp	self is not a class pointer
+004244e0	net_gamelist_restore_selection	NetGamelistView	restore_selection	src/auto/network.cpp	
+00424688	net_gamelist_find_option	NetGamelistView	find_option	src/auto/network.cpp	
+0042472a	net_gamelist_update_details	NetGamelistView	update_details	src/auto/network.cpp	
+004247b2	net_gamelist_get_entry_names	NetGamelistView	get_entry_names	src/auto/network.cpp	
+0042486f	net_gamelist_add_info_lines	NetGamelistView	add_info_lines	src/auto/network.cpp	
+004253ef	net_gamelist_clear	NetGamelistView	clear	src/auto/network.cpp	
+004254a8	net_gamelist_add_entry	NetGamelistView	add_entry	src/auto/network.cpp	
+00425607	net_gamelist_start_timer	NetGamelistView	start_timer	src/auto/network.cpp	
+00425650	net_gamelist_kill_timer	NetGamelistView	kill_timer	src/auto/network.cpp	
+00426f30	dialog_scalar_dtor	Dialog	scalar_destruct	src/auto/window.cpp	
+00426f80	wnd_maximize	WndBase	maximize	src/auto/window.cpp	
+00428cb0	memblock_ctor	MemBlock	construct	src/auto/support.cpp	
+0042903e	city_editor_create_combo	EditorWindow	city_editor_create_combo	src/auto/city.cpp	
+004293a8	city_editor_draw	EditorWindow	city_editor_draw	src/auto/city.cpp	
+00429671	city_editor_open_window	EditorWindow	city_editor_open_window	src/auto/city.cpp	
+0042a768	picwnd_close	PictureWindow	close	src/auto/window.cpp	
+0042a7bc	picwnd_open	PictureWindow	open	src/auto/window.cpp	
+0042abc1	picwnd_blit_at	PictureWindow	blit_at	src/auto/window.cpp	
+0042ac18	picwnd_blit	PictureWindow	blit	src/auto/window.cpp	
+0042acb0	advisor_add_close_button	PictureWindow	advisor_add_close_button	src/auto/reports.cpp	
+0043c110	picwnd_dtor	void		src/auto/window.cpp	self is void (not a class)
+0043c260	picwnd_ctor	PictureWindow	construct	src/auto/window.cpp	
+0043c3f0	resource_dll_load	DllHandle	resource_dll_load	src/auto/map.cpp	
+0043c430	dll_free	DllHandle	free	src/auto/text.cpp	
+0043c460	font_init	GameFont	init	src/auto/graphics.cpp	
+0043c4c0	font_init_styled	GameFont	init_styled	src/auto/graphics.cpp	
+0043c520	font_destroy	GameFont		src/auto/graphics.cpp	assigns self or takes its address
+0043c560	surface_height	DibSurface	surface_height	src/auto/graphics.cpp	kept whole (height clashes)
+0043c590	surface_width	DibSurface	surface_width	src/auto/graphics.cpp	kept whole (width clashes)
+0043c5c0	wnd_nonclient_height	WndBase	nonclient_height	src/auto/window.cpp	
+0043c5f0	control_hide	Control	hide	src/auto/controls.cpp	
+0043c630	wnd_disable	WndBase	disable	src/auto/window.cpp	
+0043c660	wnd_enable	WndBase	enable	src/auto/window.cpp	
+0043c690	font_init_empty	GameFont	init_empty	src/auto/graphics.cpp	
+0043c6c0	font_set_styled	GameFont	set_styled	src/auto/graphics.cpp	
+0043c740	palette_scalar_dtor	GamePalette	scalar_destruct	src/auto/graphics.cpp	
+0043c990	dialog_set_list_indent	Dialog	set_list_indent	src/auto/window.cpp	
+0043c9d0	dialog_load_game_text	Dialog	load_game_text	src/auto/window.cpp	
+0043ca10	dialog_load_text_noflags	Dialog	load_text_noflags	src/auto/window.cpp	
+0043cbb0	sprite_scalar_dtor	Sprite	scalar_destruct	src/auto/graphics.cpp	
+00447170	net_gamelist_view_scalar_dtor	NetGamelistView	view_scalar_destruct	src/auto/network.cpp	
+004471c0	lobby_list_scalar_dtor	LobbyList	scalar_destruct	src/auto/network.cpp	
+00447210	radiogrp_disable_item	RadioGroup	disable_item	src/auto/controls.cpp	
+004472c0	radiogrp_get_selected	RadioGroup	get_selected	src/auto/controls.cpp	
+004472f0	radiogrp_set_selected	RadioGroup	set_selected	src/auto/controls.cpp	
+0044c5a0	surfwnd_ctor	SurfaceWindow	construct	src/auto/window.cpp	
+0044c670	surfwnd_wnd_ctor	Wnd	construct	src/auto/window.cpp	
+0044c730	wnd_ctor	ModalMenuWindow	construct	src/auto/window.cpp	
+0044c8b0	wnd_handlers_ctor	WndHandlers	construct	src/auto/window.cpp	
+0044c8e0	wnd_clear_handlers	WndHandlers	clear_handlers	src/auto/window.cpp	
+0044ca40	wnd_handlers_dtor	void		src/auto/window.cpp	self is void (not a class)
+0044cb20	surfwnd_wnd_dtor	void		src/auto/window.cpp	self is void (not a class)
+0044ce16	throneroom_ctor	ThroneRoomWindow	construct	src/auto/reports.cpp	
+0044d027	throneroom_dtor	ThroneRoomWindow	destruct	src/auto/reports.cpp	
+0044d162	throneroom_create_windows	ThroneRoomWindow	create_windows	src/auto/reports.cpp	
+0044d296	throneroom_run_upgrade	ThroneRoomWindow	run_upgrade	src/auto/reports.cpp	
+0044d9c1	throneroom_run_view	ThroneRoomWindow	run_view	src/auto/reports.cpp	
+0044dab5	throneroom_draw_click_prompt	ThroneRoomWindow	draw_click_prompt	src/auto/reports.cpp	
+0044db92	throneroom_render	ThroneRoomWindow	render	src/auto/reports.cpp	
+0044e790	throneroom_render_choices	ThroneRoomWindow	render_choices	src/auto/reports.cpp	
+004502b0	dll_handle_init	DllHandle	init	src/auto/text.cpp	
+004502e0	dll_handle_load	DllHandle	load	src/auto/text.cpp	
+00450340	dll_handle_free	DllHandle	dll_handle_free	src/auto/text.cpp	kept whole (free clashes)
+00450390	wnd_set_palette	WndBase	set_palette	src/auto/window.cpp	
+004503d0	wnd_hide	WndBase	hide	src/auto/window.cpp	
+00450400	wnd_center	WndBase	center	src/auto/window.cpp	
+00450440	wnd_apply_palette_handle	WndBase	apply_palette_handle	src/auto/window.cpp	
+00450480	parley_create_advance_list_pane	ParleyWindow	create_advance_list_pane	src/auto/network.cpp	
+00451830	sprite_get_width	Sprite	get_width	src/auto/graphics.cpp	
+00451860	sprite_get_height	Sprite	get_height	src/auto/graphics.cpp	
+00451890	wnd_get_cursor_pos	WndBase	get_cursor_pos	src/auto/window.cpp	
+004518d0	wnd_activate	Wnd	activate	src/auto/window.cpp	
+00451900	wnd_focus_and_raise	WndBase	focus_and_raise	src/auto/window.cpp	
+00451930	hotspot_ctor	Hotspot		src/auto/window.cpp	address taken (src/auto/window.cpp)
+004519b0	hotspot_create	Hotspot	create	src/auto/window.cpp	
+00451a60	hotspot_set_click_callback	Hotspot	set_click_callback	src/auto/window.cpp	
+00451a90	hotspot_set_dblclick_callback	Hotspot	set_dblclick_callback	src/auto/window.cpp	
+00451ac0	scrollbar_set_track_callback	Scrollbar	set_track_callback	src/auto/controls.cpp	
+00451af0	pedia_draw_category_body	PediaWindow	draw_category_body	src/auto/pedia.cpp	
+00451bf0	pedia_update_controls	PediaWindow	update_controls	src/auto/pedia.cpp	
+00452188	pedia_dispatch_category_draw	PediaWindow	dispatch_category_draw	src/auto/pedia.cpp	
+00452768	pedia_update_describe_button	PediaWindow	update_describe_button	src/auto/pedia.cpp	
+00452a67	hyperlink_dtor	Hyperlink	destruct	src/auto/pedia.cpp	
+00452b89	hyperlink_create	Hyperlink	create	src/auto/pedia.cpp	
+00452c14	pedia_add_link	PediaWindow	add_link	src/auto/pedia.cpp	
+00453aa0	hotspot_scalar_dtor	Hotspot	scalar_destruct	src/auto/window.cpp	
+00453b10	pedia_link_ctor	PediaLink	construct	src/auto/pedia.cpp	
+00453ba0	hotspot_dtor	Hotspot		src/auto/window.cpp	address taken (src/auto/window.cpp)
+00453c40	ctrl_disable	Button	disable	src/auto/controls.cpp	
+00453c80	ctrl_enable	Button	enable	src/auto/controls.cpp	
+00453cc0	hyperlink_ctor	Hyperlink	construct	src/auto/pedia.cpp	
+00453d40	hyperlink_set_click_callback	Hyperlink	set_click_callback	src/auto/pedia.cpp	
+00453d70	hyperlink_set_dblclick_callback	Hyperlink	set_dblclick_callback	src/auto/pedia.cpp	
+00454354	cityview_ctor	CityViewWindow	construct	src/auto/city.cpp	
+00454699	cityview_dtor	void		src/auto/city.cpp	self is void (not a class)
+004548a9	cityview_load	CityViewWindow	load	src/auto/city.cpp	
+00454eb2	cityview_run_modal	CityViewWindow	run_modal	src/auto/city.cpp	
+00454f83	cityview_classify_site	CityViewWindow	classify_site	src/auto/city.cpp	
+0045512b	cityview_load_icon_surface	CityViewWindow	load_icon_surface	src/auto/city.cpp	
+00455183	cityview_create_windows	CityViewWindow	create_windows	src/auto/city.cpp	
+00455314	cityview_layout_buildings	CityViewWindow	layout_buildings	src/auto/city.cpp	
+00455add	cityview_draw_buildings	CityViewWindow	draw_buildings	src/auto/city.cpp	
+00455b8e	cityview_take_wonder_slot	CityViewWindow	take_wonder_slot	src/auto/city.cpp	
+00455c5d	cityview_take_improvement_slot	CityViewWindow	take_improvement_slot	src/auto/city.cpp	
+00455d38	cityview_place_improvement	CityViewWindow	place_improvement	src/auto/city.cpp	
+00455dfd	cityview_place_wonder	CityViewWindow	place_wonder	src/auto/city.cpp	
+00455ebe	cityview_place_large_house	CityViewWindow	place_large_house	src/auto/city.cpp	
+00455f2e	cityview_place_small_house	CityViewWindow	place_small_house	src/auto/city.cpp	
+00455f9e	cityview_place_large_empty_lot	CityViewWindow	place_large_empty_lot	src/auto/city.cpp	
+00456005	cityview_place_empty_lot	CityViewWindow	place_empty_lot	src/auto/city.cpp	
+0045606c	cityview_redraw_scrolled	CityViewWindow	redraw_scrolled	src/auto/city.cpp	
+004560f8	cityview_draw_title	CityViewWindow	draw_title	src/auto/city.cpp	
+0045638b	cityview_scroll_right	CityViewWindow	scroll_right	src/auto/city.cpp	
+004564a8	cityview_scroll_left	CityViewWindow	scroll_left	src/auto/city.cpp	
+00456e90	cityview_scalar_dtor	void		src/auto/city.cpp	self is void (not a class)
+00456ee0	wnd_set_keydown_pre_handler	WndHandlers	set_keydown_pre_handler	src/auto/window.cpp	
+004683f0	parley_create_unit_list_pane	ParleyWindow	create_unit_list_pane	src/auto/network.cpp	
+0046968b	parley_sort_unit_list	ParleyWindow	sort_unit_list	src/auto/network.cpp	
+0046990a	parley_sort_units_by_city	ParleyWindow	sort_units_by_city	src/auto/network.cpp	
+00469bdc	parley_build_unit_list	ParleyWindow	build_unit_list	src/auto/network.cpp	
+0046ab30	clickmap_ctor	void		src/auto/mapview.cpp	self is void (not a class)
+0046ab49	clickmap_dtor	void		src/auto/mapview.cpp	self is void (not a class)
+0046ab5f	clickmap_clear	ClickMapClearView		src/auto/mapview.cpp	self is a decompiler view (ClickMapClearView)
+0046ab82	clickmap_remove_at	ClickMapRemoveView		src/auto/mapview.cpp	self is a decompiler view (ClickMapRemoveView)
+0046ac89	clickmap_remove_by_id	ClickMapRemoveView		src/auto/mapview.cpp	self is a decompiler view (ClickMapRemoveView)
+0046ace7	clickmap_add	ClickMap	add	src/auto/mapview.cpp	
+0046ad85	clickmap_hit_test	ClickMapHitTestView		src/auto/mapview.cpp	self is a decompiler view (ClickMapHitTestView)
+0046af70	net_session_send_to	NetSession	send_to	src/auto/network.cpp	
+0046b0a1	net_session_send_to_all	NetSession	send_to_all	src/auto/network.cpp	
+0046d5a0	net_msg_header_init	NetMsgHeader	header_init	src/auto/network.cpp	
+0046d5f0	net_msg_init_header	NetNamedMsg	init_header	src/auto/network.cpp	
+0046d6a0	net_msg_addr_header_init	NetAddrMsg	init	src/auto/network.cpp	
+0046d720	net_msg_server_info_init	NetServerInfoMsg	init	src/auto/network.cpp	
+0046d780	net_msg_player_list_node_init	NetPlayerNodeMsg	init	src/auto/network.cpp	
+0046d860	net_msg_player_list_init	NetPlayerListMsg	init	src/auto/network.cpp	
+0046d8a0	net_msg_server_path_init	NetMsgHeader	server_path_init	src/auto/network.cpp	
+0046d8e0	net_msg_server_answer_init	NetServerAnswerMsg	init	src/auto/network.cpp	
+0046d930	net_msg_whose_turn_init	NetWhoseTurnMsg	init	src/auto/network.cpp	
+0046dff0	avi_player_set_end_callback	AviPlayer	set_end_callback	src/auto/sound.cpp	
+0046f440	palette_get_logpalette	GamePalette	get_logpalette	src/auto/graphics.cpp	
+004703d4	defeat_movie_wnd_ctor	EndgameMovieWindow	defeat_movie_wnd_construct	src/auto/reports.cpp	
+004704ec	defeat_movie_wnd_dtor	void		src/auto/reports.cpp	self is void (not a class)
+004705d7	defeat_movie_wnd_create	EndgameMovieWindow	defeat_movie_wnd_create	src/auto/reports.cpp	
+004708db	defeat_movie_wnd_play	EndgameMovieWindow	defeat_movie_wnd_play	src/auto/reports.cpp	
+00471020	defeat_movie_wnd_scalar_dtor	EndgameMovieWindow	defeat_movie_wnd_scalar_destruct	src/auto/reports.cpp	
+00471070	surface_get_width	DibSurface	get_width	src/auto/graphics.cpp	
+004710a0	surface_get_height	DibSurface	get_height	src/auto/graphics.cpp	
+00471362	arrival_movie_wnd_ctor	EndgameMovieWindow	arrival_movie_wnd_construct	src/auto/reports.cpp	
+0047147a	arrival_movie_wnd_dtor	void		src/auto/reports.cpp	self is void (not a class)
+00471565	arrival_movie_wnd_create	EndgameMovieWindow	arrival_movie_wnd_create	src/auto/reports.cpp	
+00471856	arrival_movie_wnd_play	EndgameMovieWindow	arrival_movie_wnd_play	src/auto/reports.cpp	
+004728c0	arrival_movie_wnd_scalar_dtor	void		src/auto/reports.cpp	self is void (not a class)
+00472910	avi_player_set_frame_callback	AviPlayer	set_frame_callback	src/auto/sound.cpp	
+00479ede	mapview_init_state	MapView	init_state	src/auto/mapview.cpp	
+00479fbe	mapview_update_layout	MapView	update_layout	src/auto/mapview.cpp	
+0047a540	mapview_screen_to_tile	MapView	screen_to_tile	src/auto/mapview.cpp	
+0047a6b0	mapview_tile_to_screen	MapView	tile_to_screen	src/auto/mapview.cpp	
+0047a8c9	mapview_draw_tile_terrain	MapView	draw_tile_terrain	src/auto/mapview.cpp	
+0047ba1d	mapview_draw_tile_city	MapView	draw_tile_city	src/auto/mapview.cpp	
+0047bba5	mapview_draw_unit_stacked	MapView	draw_unit_stacked	src/auto/mapview.cpp	
+0047bbea	mapview_draw_unit_blinking	MapView	draw_unit_blinking	src/auto/mapview.cpp	
+0047bc59	mapview_draw_unit_at	MapView	draw_unit_at	src/auto/mapview.cpp	
+0047bd04	mapview_draw_stack_unit	MapView	draw_stack_unit	src/auto/mapview.cpp	
+0047be63	mapview_draw_tile_units	MapView	draw_tile_units	src/auto/mapview.cpp	
+0047c103	mapview_draw_tile	MapView	draw_tile	src/auto/mapview.cpp	
+0047c3e0	mapview_tile_in_view	MapView	tile_in_view	src/auto/mapview.cpp	
+0047c443	mapview_draw_city_names	MapView	draw_city_names	src/auto/mapview.cpp	
+0047c7aa	mapview_tile_radius_rect	MapView	tile_radius_rect	src/auto/mapview.cpp	
+0047c869	mapview_draw_tile_radius	MapView	draw_tile_radius	src/auto/mapview.cpp	
+0047c9d4	mapview_draw_all_tiles	MapView	draw_all_tiles	src/auto/mapview.cpp	
+0047caea	mapview_blit_tile_radius	MapView	blit_tile_radius	src/auto/mapview.cpp	
+0047cb26	mapview_blit_tile	MapView	blit_tile	src/auto/mapview.cpp	
+0047cb50	mapview_blit_with_net_pump	DibSurface	mapview_blit_with_net_pump	src/auto/mapview.cpp	
+0047cbb4	mapview_redraw_area	MapView	redraw_area	src/auto/mapview.cpp	
+0047cced	mapview_redraw_tile	MapView	redraw_tile	src/auto/mapview.cpp	
+0047cd1f	mapview_redraw_tile_neighbors	MapView	redraw_tile_neighbors	src/auto/mapview.cpp	
+0047cd51	mapview_redraw	MapView	redraw	src/auto/mapview.cpp	
+0047dce0	mapview_ctor	MapView		src/auto/mapview.cpp	address taken (src/auto/map.cpp)
+0047de10	mapview_dtor	void		src/auto/mapview.cpp	self is void (not a class)
+0047dfb0	mapview_zoom_scale	MapView	zoom_scale	src/auto/mapview.cpp	
+0047dff0	mapview_apply_zoom	MapView	apply_zoom	src/auto/mapview.cpp	
+0047e94e	net_process_messages	NetSession	process_messages	src/auto/network.cpp	
+00490560	citywnd_get_city	CityWindow	get_city	src/auto/city.cpp	
+00490590	pedia_init_terrain_list	PediaWindow	init_terrain_list	src/auto/pedia.cpp	
+004906fd	pedia_draw_terrain_page	PediaWindow	draw_terrain_page	src/auto/pedia.cpp	
+00491c20	pedia_show_terrain_modal	PediaWindow	show_terrain_modal	src/auto/pedia.cpp	
+004923c0	wnd_set_focus	WndBase	set_focus	src/auto/window.cpp	
+004929c0	file_obj_open	FileObject	open	src/auto/text.cpp	
+00492a00	file_obj_seek_cur	FileSeekView		src/auto/text.cpp	self is a decompiler view (FileSeekView)
+00492a40	file_obj_read_line	FileReadLineView		src/auto/text.cpp	self is a decompiler view (FileReadLineView)
+00492a80	file_obj_get_size	FileObject	get_size	src/auto/text.cpp	
+00492ab0	edit_get_sel_end	EditControl	get_sel_end	src/auto/controls.cpp	
+00492ae0	edit_replace_sel	EditControl	replace_sel	src/auto/controls.cpp	
+00492b20	edit_set_sel	EditControl	set_sel	src/auto/controls.cpp	
+004942a3	diplo_leader_wnd_ctor	DiploLeaderWindow	construct	src/auto/diplomacy.cpp	
+004943c9	diplo_leader_wnd_dtor	void		src/auto/diplomacy.cpp	self is void (not a class)
+004944bb	diplo_leader_wnd_init	DiploLeaderWindow	init	src/auto/diplomacy.cpp	
+00494704	diplo_leader_wnd_show	DiploLeaderWindow	show	src/auto/diplomacy.cpp	
+004947f0	diplo_leader_wnd_teardown	DiploLeaderWindow	teardown	src/auto/diplomacy.cpp	
+0049488e	diplo_leader_init_tile	DiploLeaderWindow	init_tile	src/auto/diplomacy.cpp	
+004948e6	diplo_leader_init_background	DiploLeaderWindow	init_background	src/auto/diplomacy.cpp	
+00494949	diplo_leader_init_main_art	DiploLeaderWindow	init_main_art	src/auto/diplomacy.cpp	
+00494b5f	diplo_leader_init_military	DiploLeaderWindow	init_military	src/auto/diplomacy.cpp	
+00494e2a	diplo_leader_init_science	DiploLeaderWindow	init_science	src/auto/diplomacy.cpp	
+00495c35	diplo_leader_init_portrait	DiploLeaderWindow	init_portrait	src/auto/diplomacy.cpp	
+00495e0c	diplo_leader_init_video	DiploLeaderWindow	init_video	src/auto/diplomacy.cpp	
+0049621d	portrait_dlg_ctor	PortraitDialog	construct	src/auto/graphics.cpp	
+0049632a	portrait_dlg_dtor	PortraitDialog	destruct	src/auto/graphics.cpp	
+00496402	portrait_dlg_create	PortraitDialog	create	src/auto/graphics.cpp	
+004964b3	portrait_dlg_create_buttons	PortraitDialog	create_buttons	src/auto/graphics.cpp	
+004965ff	portrait_dlg_run	PortraitDialog	run	src/auto/graphics.cpp	
+004966c4	portrait_dlg_paint	PortraitDialog	paint	src/auto/graphics.cpp	
+00497bf0	diplo_leader_wnd_scalar_dtor	void		src/auto/diplomacy.cpp	self is void (not a class)
+00497c40	palette_get_entry	GamePalette	get_entry	src/auto/graphics.cpp	
+00497c90	surface_get_rect	DibSurface	get_rect	src/auto/graphics.cpp	
+00497cc0	wnd_set_bg_tile	DiploLeaderWindow	wnd_set_bg_tile	src/auto/window.cpp	
+00497d00	wnd_set_caption_height	WndBase	set_caption_height	src/auto/window.cpp	
+00497d40	button_create_with_callback	Button	create_with_callback	src/auto/controls.cpp	
+004a4a58	tribe_editor_create_combo	EditorWindow	tribe_editor_create_combo	src/auto/editor.cpp	
+004a4eb2	tribe_editor_create_edit	EditorWindow	tribe_editor_create_edit	src/auto/editor.cpp	
+004a4f89	tribe_editor_paint	EditorWindow	tribe_editor_paint	src/auto/editor.cpp	
+004a54d9	tribe_editor_main	EditorWindow	tribe_editor_main	src/auto/editor.cpp	
+004a6980	sprite_width	Sprite	width	src/auto/graphics.cpp	
+004a69b0	pedia_init_concept_list	PediaWindow	init_concept_list	src/auto/pedia.cpp	
+004af3e0	parley_build_civ_list	ParleyWindow	build_civ_list	src/auto/network.cpp	
+004b3080	diffeng_section_init	DiffEngSection	init	src/auto/game.cpp	
+004b4108	parley_wnd_ctor	ParleyWindow	construct	src/auto/network.cpp	
+004b4593	parley_wnd_dtor	ParleyWindow	destruct	src/auto/network.cpp	
+004b4735	parley_wnd_create	ParleyWindow	create	src/auto/network.cpp	
+004b4c81	parley_wnd_pick_size_mode	ParleyWindow	pick_size_mode	src/auto/network.cpp	
+004b4cf0	parley_wnd_calc_rect	ParleyWindow	calc_rect	src/auto/network.cpp	
+004b4e8a	parley_wnd_calc_layout	ParleyWindow	calc_layout	src/auto/network.cpp	
+004b4fb2	parley_wnd_sync_sides	ParleyWindow	sync_sides	src/auto/network.cpp	
+004b50cf	parley_wnd_destroy_controls	ParleyWindow	destroy_controls	src/auto/network.cpp	
+004b5c93	parley_wnd_create_controls	ParleyWindow	create_controls	src/auto/network.cpp	
+004b794a	parley_wnd_draw_frame	ParleyWindow	draw_frame	src/auto/network.cpp	
+004b7c90	parley_fill_background	ParleyWindow	fill_background	src/auto/network.cpp	
+004b7d72	parley_wnd_build_title	ParleyWindow	build_title	src/auto/network.cpp	
+004b7eb6	parley_wnd_open	ParleyWindow	open	src/auto/network.cpp	
+004b8676	parley_set_mode_sides	ParleyWindow	set_mode_sides	src/auto/network.cpp	
+004b888e	parley_clear_side_controls	ParleyWindow	clear_side_controls	src/auto/network.cpp	
+004b90ad	chat_receive_message	ParleyWindow	chat_receive_message	src/auto/network.cpp	
+004bb370	file_obj_read	FileObject	read	src/auto/text.cpp	
+004bb3b0	ctrl_scalar_dtor	Button	scalar_destruct	src/auto/controls.cpp	
+004bb400	edit_scalar_dtor	EditControl	scalar_destruct	src/auto/controls.cpp	
+004bb450	checkbox_scalar_dtor	Checkbox	scalar_destruct	src/auto/controls.cpp	
+004bb4a0	radiogrp_scalar_dtor	RadioGroup	scalar_destruct	src/auto/controls.cpp	
+004bb4f0	scrollbar_scalar_dtor	Scrollbar	scalar_destruct	src/auto/controls.cpp	
+004bb540	sprite_height	Sprite	height	src/auto/graphics.cpp	
+004bb570	wnd_move_to_rect	WndBase	move_to_rect	src/auto/window.cpp	
+004bb5b0	ctrl_set_initial_focus	Control	set_initial_focus	src/auto/controls.cpp	
+004bb5e0	ctrl_set_focus	Control	set_focus	src/auto/controls.cpp	
+004bb620	edit_create_styled	EditControl	create_styled	src/auto/controls.cpp	
+004bb6d0	edit_set_caret	EditControl	set_caret	src/auto/controls.cpp	
+004bb710	edit_get_text_end	EditControl	get_text_end	src/auto/controls.cpp	
+004bb740	radiogrp_dtor	RadioGroup	destruct	src/auto/controls.cpp	
+004bb99f	wonder_movie_wnd_ctor	WonderMovieWindow	construct	src/auto/city.cpp	
+004bba79	wonder_movie_wnd_dtor	WonderMovieWindow	destruct	src/auto/city.cpp	
+004bbb3f	wonder_movie_wnd_create	WonderMovieWindow	create	src/auto/city.cpp	
+004bbdfb	wonder_movie_wnd_play	WonderMovieWindow	play	src/auto/city.cpp	
+004bc0d3	wonder_movie_wnd_draw_caption	WonderMovieWindow	draw_caption	src/auto/city.cpp	
+004bc10f	wonder_movie_wnd_resize	WonderMovieWindow	resize	src/auto/city.cpp	
+004cff70	wnd_set_resize_border	WndBase	set_resize_border	src/auto/window.cpp	
+004cffb0	edit_get_line	EditControl	get_line	src/auto/controls.cpp	
+004d0517	spaceship_wnd_ctor	SpaceshipWindow	construct	src/auto/spaceship.cpp	
+004d08b0	spaceship_wnd_dtor	SpaceshipWindow	destruct	src/auto/spaceship.cpp	
+004d0b58	spaceship_wnd_init	SpaceshipWindow	init	src/auto/spaceship.cpp	
+004d0d64	spaceship_wnd_create	SpaceshipWindow	create	src/auto/spaceship.cpp	
+004d0ea6	spaceship_wnd_run_modal	SpaceshipWindow	run_modal	src/auto/spaceship.cpp	
+004d13b8	spaceship_wnd_present	SpaceshipWindow	present	src/auto/spaceship.cpp	
+004d1725	spaceship_wnd_launch_sequence	SpaceshipWindow	launch_sequence	src/auto/spaceship.cpp	
+004d4a7b	spaceship_wnd_build_stats_text	SpaceshipWindow	build_stats_text	src/auto/spaceship.cpp	
+004d4fd1	spaceship_wnd_type_char	SpaceshipWindow	type_char	src/auto/spaceship.cpp	
+004d570b	spaceship_wnd_init_starfield	SpaceshipWindow	init_starfield	src/auto/spaceship.cpp	
+004d5b21	spaceship_play_launch_video	SpaceshipWindow	play_launch_video	src/auto/spaceship.cpp	
+004d5e41	spaceship_wnd_setup_hotspots	SpaceshipWindow	setup_hotspots	src/auto/spaceship.cpp	
+004d5ef9	spaceship_wnd_draw_buttons	SpaceshipWindow	draw_buttons	src/auto/spaceship.cpp	
+004d5f79	spaceship_wnd_draw_close_btn	SpaceshipWindow	draw_close_btn	src/auto/spaceship.cpp	
+004d60a5	spaceship_wnd_draw_launch_btn	SpaceshipWindow	draw_launch_btn	src/auto/spaceship.cpp	
+004d8af0	font_get_handle	GameFont	get_handle	src/auto/graphics.cpp	
+004d8b20	avi_player_scalar_dtor	AviPlayer	scalar_destruct	src/auto/sound.cpp	
+004d8b70	clickmap_add_xywh	ClickMap	add_xywh	src/auto/mapview.cpp	
+004d986e	impr_editor_create_combo	EditorWindow	impr_editor_create_combo	src/auto/city.cpp	
+004d9a9f	impr_editor_create_edit	EditorWindow	impr_editor_create_edit	src/auto/city.cpp	
+004d9b93	impr_editor_paint	EditorWindow	impr_editor_paint	src/auto/city.cpp	
+004da107	impr_editor_window_run	EditorWindow	impr_editor_window_run	src/auto/city.cpp	
+004db690	parley_send_offer	ParleyWindow	send_offer	src/auto/network.cpp	
+004dbab4	parley_pack_offer_items	ParleyWindow	pack_offer_items	src/auto/network.cpp	
+004dbee6	parley_build_description	ParleyWindow	build_description	src/auto/network.cpp	
+004def54	parley_describe_treaty	ParleyWindow	describe_treaty	src/auto/network.cpp	
+004e7240	wnd_show_restored	WndBase	show_restored	src/auto/window.cpp	
+004f3d60	city_picture_popup_ctor	CityPicturePopup	construct	src/auto/city.cpp	
+004f3e20	city_picture_popup_scalar_dtor	void		src/auto/city.cpp	self is void (not a class)
+004f3feb	pedia_window_ctor	PediaWindow	construct	src/auto/pedia.cpp	
+004f44a7	pedia_window_dtor	PediaWindow	destruct	src/auto/pedia.cpp	
+004f4793	pedia_clear_links	PediaWindow	clear_links	src/auto/pedia.cpp	
+004f4809	pedia_free_lists	PediaWindow	free_lists	src/auto/pedia.cpp	
+004f4b9f	pedia_window_create	PediaWindow	create	src/auto/pedia.cpp	
+004f6244	pedia_draw_frame	PediaWindow	draw_frame	src/auto/pedia.cpp	
+004f6564	pedia_fill_background	PediaWindow	fill_background	src/auto/pedia.cpp	
+004f6646	pedia_redraw	PediaWindow	redraw	src/auto/pedia.cpp	
+004f66c6	pedia_draw_item_list	PediaWindow	draw_item_list	src/auto/pedia.cpp	
+004f7454	pedia_scroll_to_item	PediaWindow	scroll_to_item	src/auto/pedia.cpp	
+004f7ac7	pedia_set_category_title	PediaWindow	set_category_title	src/auto/pedia.cpp	
+004f7bd1	pedia_open_category	PediaWindow	open_category	src/auto/pedia.cpp	
+004f7c99	pedia_load_indexes	PediaWindow	load_indexes	src/auto/pedia.cpp	
+004f896a	pedia_sort_list	void		src/auto/pedia.cpp	self is void (not a class)
+004f8af9	pedia_history_push	PediaWindow	history_push	src/auto/pedia.cpp	
+004fa0f0	pedia_link_scalar_dtor	void		src/auto/pedia.cpp	self is void (not a class)
+004fa140	pedia_link_dtor	void		src/auto/pedia.cpp	self is void (not a class)
+004fa47e	events_init_string_pool	ScenarioEvents	init_string_pool	src/auto/game.cpp	
+004fa4be	events_ctor	ScenarioEvents	construct	src/auto/game.cpp	
+004fa569	events_dtor	ScenarioEvents	destruct	src/auto/game.cpp	
+004fa5d9	events_reset	ScenarioEvents	reset	src/auto/game.cpp	
+004fa617	events_alloc	ScenarioEvents	alloc	src/auto/game.cpp	
+004fa707	events_action_play_wave	ScenarioEvents	action_play_wave	src/auto/game.cpp	
+004fa82d	events_action_dont_play_wonders	ScenarioEvents	action_dont_play_wonders	src/auto/game.cpp	
+004fa854	events_action_play_cd	ScenarioEvents	action_play_cd	src/auto/game.cpp	
+004fa944	events_action_change_money	ScenarioEvents	action_change_money	src/auto/game.cpp	
+004faab0	events_action_text	ScenarioEvents	action_text	src/auto/game.cpp	
+004faba6	events_action_make_aggression	ScenarioEvents	action_make_aggression	src/auto/game.cpp	
+004fad02	events_action_destroy_civ	ScenarioEvents	action_destroy_civ	src/auto/game.cpp	
+004fadfb	events_action_give_tech	ScenarioEvents	action_give_tech	src/auto/game.cpp	
+004faed4	events_action_create_unit	ScenarioEvents	action_create_unit	src/auto/game.cpp	
+004fb29f	events_action_move_unit	ScenarioEvents	action_move_unit	src/auto/game.cpp	
+004fb5b2	events_action_change_terrain	ScenarioEvents	action_change_terrain	src/auto/game.cpp	
+004fba0c	events_check_turn	ScenarioEvents	check_turn	src/auto/game.cpp	
+004fba9c	events_check_turn_interval	ScenarioEvents	check_turn_interval	src/auto/game.cpp	
+004fbb2f	events_check_random_turn	ScenarioEvents	check_random_turn	src/auto/game.cpp	
+004fbbdd	events_check_received_tech	ScenarioEvents	check_received_tech	src/auto/game.cpp	
+004fbd2b	events_check_scenario_loaded	ScenarioEvents	check_scenario_loaded	src/auto/game.cpp	
+004fbd9d	events_check_unit_killed	ScenarioEvents	check_unit_killed	src/auto/game.cpp	
+004fbe84	events_check_negotiation	ScenarioEvents	check_negotiation	src/auto/game.cpp	
+004fc20d	events_check_no_schism	ScenarioEvents	check_no_schism	src/auto/game.cpp	
+004fc2bb	events_check_city_taken	ScenarioEvents	check_city_taken	src/auto/game.cpp	
+004fc3ae	event_run_actions	ScenarioEvents	run_actions	src/auto/game.cpp	
+004fc516	events_parse_file	ScenarioEvents	parse_file	src/auto/game.cpp	
+00501440	city_window_reset_state	CityWindow	reset_state	src/auto/city.cpp	
+005014bf	city_window_remove_citizen_hotspots	CityWindow	remove_citizen_hotspots	src/auto/city.cpp	
+005014e5	city_window_remove_panel_hotspots	CityWindow	remove_panel_hotspots	src/auto/city.cpp	
+0050152b	city_window_remove_hotspots	CityWindow	remove_hotspots	src/auto/city.cpp	
+00501551	city_window_ctor	CityWindow	construct	src/auto/city.cpp	
+0050160a	city_window_dtor	CityWindow	destruct	src/auto/city.cpp	
+005016b2	city_window_blit_bg_rect	CityWindow	blit_bg_rect	src/auto/city.cpp	
+00501733	city_window_begin_draw	CityWindow	begin_draw	src/auto/city.cpp	
+00501780	city_window_recalc_redraw	CityWindow	recalc_redraw	src/auto/city.cpp	
+005019c1	city_window_draw_citizen_row	CityWindow	draw_citizen_row	src/auto/city.cpp	
+00501e63	city_happy_draw_citizen_row	CityWindow	happy_draw_citizen_row	src/auto/city.cpp	
+0050207f	city_window_draw_citizens	CityWindow	draw_citizens	src/auto/city.cpp	
+005025d5	city_window_draw_resource_map	CityWindow	draw_resource_map	src/auto/city.cpp	
+00504c05	city_window_draw_food_box	CityWindow	draw_food_box	src/auto/city.cpp	
+0050503e	city_window_draw_production	CityWindow	draw_production	src/auto/city.cpp	
+005055dd	city_window_draw_button_area	CityWindow	draw_button_area	src/auto/city.cpp	
+00505666	city_window_draw_supported_units	CityWindow	draw_supported_units	src/auto/city.cpp	
+00505ffa	city_window_draw_improvements	CityWindow	draw_improvements	src/auto/city.cpp	
+005070e5	city_window_draw_units_present	CityWindow	draw_units_present	src/auto/city.cpp	
+00507b69	city_window_draw_support_map	CityWindow	draw_support_map	src/auto/city.cpp	
+00507f31	city_happy_draw_building_icons	CityWindow	happy_draw_building_icons	src/auto/city.cpp	
+00508177	city_happy_draw_unit_effects	CityWindow	happy_draw_unit_effects	src/auto/city.cpp	
+00508552	city_window_draw_happiness	CityWindow	draw_happiness	src/auto/city.cpp	
+00508adc	city_window_draw_info_panel	CityWindow	draw_info_panel	src/auto/city.cpp	
+00508bc5	city_window_draw_all	CityWindow	draw_all	src/auto/city.cpp	
+00508c84	city_window_set_scaled_rect	CityWindow	set_scaled_rect	src/auto/city.cpp	
+00508d24	city_window_layout_rects	CityWindow	layout_rects	src/auto/city.cpp	
+00508ec6	city_window_fill_margins	CityWindow	fill_margins	src/auto/city.cpp	
+00509028	city_window_apply_size	CityWindow	apply_size	src/auto/city.cpp	
+005092af	city_window_update_title	CityWindow	update_title	src/auto/city.cpp	
+00509429	city_window_refresh	CityWindow	refresh	src/auto/city.cpp	
+00509545	city_window_bring_to_top	CityWindow	bring_to_top	src/auto/city.cpp	
+00509590	city_window_open	CityWindow	open	src/auto/city.cpp	
+0050c449	city_window_close_if_city	CityWindow	close_if_city	src/auto/city.cpp	
+0050c494	city_window_on_unit_change	CityWindow	on_unit_change	src/auto/city.cpp	
+0050c679	city_window_refresh_if_city	CityWindow	refresh_if_city	src/auto/city.cpp	
+0050c6ef	city_window_refresh_if_near	CityWindow	refresh_if_near	src/auto/city.cpp	
+0050c7a3	city_window_clear_controls	CityWindow	clear_controls	src/auto/city.cpp	
+0050c859	city_window_destroy_controls	CityWindow	destroy_controls	src/auto/city.cpp	
+0050ca8d	city_window_create_exit_button	CityWindow	create_exit_button	src/auto/city.cpp	
+0050ccb3	city_window_create_change_button	CityWindow	create_change_button	src/auto/city.cpp	
+0050cf06	city_window_create_controls	CityWindow	create_controls	src/auto/city.cpp	
+0050dada	city_window_begin_notice	CityWindow	begin_notice	src/auto/city.cpp	
+0050db36	city_window_end_notice	CityWindow	end_notice	src/auto/city.cpp	
+0050dcb6	city_window_create	CityWindow	create	src/auto/city.cpp	
+0050dea8	city_window_destroy	CityWindow	destroy	src/auto/city.cpp	
+00511320	wnd_get_palette	WndBase	get_palette	src/auto/window.cpp	
+00511460	hotspot_add_rect	ClickMap	hotspot_add_rect	src/auto/window.cpp	
+00511560	spritebtn_scalar_dtor	SpriteButton	scalar_destruct	src/auto/controls.cpp	
+005115b0	spritebtn_dtor	SpriteButton	destruct	src/auto/controls.cpp	
+00511690	city_window_scale	CityWindow	scale	src/auto/city.cpp	
+00511720	spritebtn_ctor	SpriteButton	construct	src/auto/controls.cpp	
+005117f0	spritebtn_set_click_handler	SpriteButton	set_click_handler	src/auto/controls.cpp	
+00511820	frame_wnd_set_title_font	FrameWindow	set_title_font	src/auto/window.cpp	
+00511850	frame_wnd_set_title_small_font	FrameWindow	set_title_small_font	src/auto/window.cpp	
+00514220	net_msgq_ctor	NetMsgQueue	construct	src/auto/network.cpp	
+00514254	net_msgq_clear	NetMsgQueue	clear	src/auto/network.cpp	
+00514272	net_msgq_reset	NetMsgQueue	reset	src/auto/network.cpp	
+0051438f	net_msgq_enqueue	NetMsgQueue	enqueue	src/auto/network.cpp	
+005149d6	net_msgq_dequeue	NetMsgQueue	dequeue	src/auto/network.cpp	
+00514f16	destroyed_civs_wnd_ctor	DestroyedCivsWindow	construct	src/auto/reports.cpp	
+005150b9	destroyed_civs_wnd_dtor	DestroyedCivsWindow	destruct	src/auto/reports.cpp	
+005151f4	destroyed_civs_wnd_create	DestroyedCivsWindow	create	src/auto/reports.cpp	
+00515516	destroyed_civs_run	DestroyedCivsWindow	run	src/auto/reports.cpp	
+00515999	destroyed_civs_draw_entry	DestroyedCivsWindow	draw_entry	src/auto/reports.cpp	
+00515c15	destroyed_civs_draw_portrait	DestroyedCivsWindow	draw_portrait	src/auto/reports.cpp	
+00515dc8	destroyed_civs_slide_step	DestroyedCivsWindow	slide_step	src/auto/reports.cpp	
+00515f3c	destroyed_civs_slide_down	DestroyedCivsWindow	slide_down	src/auto/reports.cpp	
+00516005	destroyed_civs_slide_up	DestroyedCivsWindow	slide_up	src/auto/reports.cpp	
+0051661a	council_wnd_ctor	CouncilWindow	construct	src/auto/reports.cpp	
+005167d9	council_wnd_dtor	CouncilWindow	destruct	src/auto/reports.cpp	
+00516947	council_wnd_init	CouncilWindow	init	src/auto/reports.cpp	
+00516fd4	council_wnd_run_modal	CouncilWindow	run_modal	src/auto/reports.cpp	
+00517158	council_draw_background	CouncilWindow	draw_background	src/auto/reports.cpp	
+00517673	council_create_buttons	CouncilWindow	create_buttons	src/auto/reports.cpp	
+005179a3	council_load_speech	CouncilWindow	load_speech	src/auto/reports.cpp	
+00517dd3	council_draw_speech	CouncilWindow	draw_speech	src/auto/reports.cpp	
+00518007	council_draw_advisor_frames	CouncilWindow	draw_advisor_frames	src/auto/reports.cpp	
+00518342	council_move_video_to_slot	void		src/auto/reports.cpp	self is void (not a class)
+00518392	council_advisor_from_letter	void		src/auto/reports.cpp	self is void (not a class)
+00518e80	wnd_move_xy	WndBase	move_xy	src/auto/window.cpp	
+00518f00	pedia_init_government_list	PediaWindow	init_government_list	src/auto/pedia.cpp	
+0051adfd	terrain_editor_create_combo	EditorWindow	terrain_editor_create_combo	src/auto/map.cpp	
+0051b1c2	terrain_editor_create_edit	EditorWindow	terrain_editor_create_edit	src/auto/map.cpp	
+0051b2b6	terrain_editor_draw	EditorWindow	terrain_editor_draw	src/auto/map.cpp	
+0051bba1	terrain_editor_run	EditorWindow	terrain_editor_run	src/auto/map.cpp	
+005261a0	pedia_init_wonder_list	PediaWindow	init_wonder_list	src/auto/pedia.cpp	
+0052630d	pedia_draw_improvement	PediaWindow	draw_improvement	src/auto/pedia.cpp	
+00526913	pedia_show_wonder_modal	PediaWindow	show_wonder_modal	src/auto/pedia.cpp	
+00526ca0	parley_add_side_dialog	ParleyWindow	add_side_dialog	src/auto/network.cpp	
+0052e971	parley_update_buttons	ParleyWindow	update_buttons	src/auto/network.cpp	
+0052ec47	parley_find_unit_by_id	ParleyWindow	find_unit_by_id	src/auto/network.cpp	
+0052ed95	parley_find_city_by_id	ParleyWindow	find_city_by_id	src/auto/network.cpp	
+00530e80	ctrl_is_enabled	Button	ctrl_is_enabled	src/auto/controls.cpp	kept whole (is_enabled clashes)
+00530eb0	edit_set_change_callback	EditControl	set_change_callback	src/auto/controls.cpp	
+00530ee0	checkbox_create_fixed	Checkbox	create_fixed	src/auto/controls.cpp	
+00530fb0	checkbox_enable	Checkbox	enable	src/auto/controls.cpp	
+00530fe0	checkbox_is_checked	Checkbox	is_checked	src/auto/controls.cpp	
+00531010	radiogrp_ctor	RadioGroup	construct	src/auto/controls.cpp	
+005310a0	radiogrp_create	RadioGroup	create	src/auto/controls.cpp	
+005311b0	radiogrp_set_select_callback	RadioGroup	set_select_callback	src/auto/controls.cpp	
+005311e0	radiogrp_set_dblclick_callback	RadioGroup	set_dblclick_callback	src/auto/controls.cpp	
+0054f16b	events_editor_draw	EditorWindow	events_editor_draw	src/auto/game.cpp	
+0054f3b9	events_editor_run	EditorWindow	events_editor_run	src/auto/game.cpp	
+00551cd0	events_delete	ScenarioEvents	events_delete	src/auto/game.cpp	kept whole (delete clashes)
+00551d20	listbox_get_count	ListBox	get_count	src/auto/controls.cpp	
+00551d50	listbox_get_cur_sel	ListBox	get_cur_sel	src/auto/controls.cpp	
+00551d80	listbox_set_cur_sel	ListBox	set_cur_sel	src/auto/controls.cpp	
+00551dc0	listbox_set_dblclick_callback	ListBox	set_dblclick_callback	src/auto/controls.cpp	
+00551df0	listbox_set_select_callback	ListBox	set_select_callback	src/auto/controls.cpp	
+00552112	frame_wnd_draw_caption	FrameWindow	draw_caption	src/auto/window.cpp	
+00552ed2	frame_wnd_layout	FrameWindow	layout	src/auto/window.cpp	
+0055318c	frame_wnd_add_caption_button	FrameWindow	add_caption_button	src/auto/window.cpp	
+0055324c	frame_wnd_set_caption	FrameWindow	set_caption	src/auto/window.cpp	
+005532d7	frame_wnd_destroy_caption_buttons	FrameWindow	destroy_caption_buttons	src/auto/window.cpp	
+00553379	frame_wnd_close	FrameWindow	close	src/auto/window.cpp	
+0055339f	frame_wnd_ctor	FrameWindow	construct	src/auto/window.cpp	
+00553444	frame_wnd_dtor	FrameWindow	destruct	src/auto/window.cpp	
+005534bc	frame_wnd_create	FrameWindow	create	src/auto/window.cpp	
+00553d30	wnd_set_drag_begin_callback	WndHandlers	set_drag_begin_callback	src/auto/window.cpp	
+00553d70	wnd_set_drag_end_callback	WndHandlers	set_drag_end_callback	src/auto/window.cpp	
+00559ded	setup_picwnd_reset_fields	SetupPicWindow	reset_fields	src/auto/game.cpp	
+00559e3c	setup_picwnd_ctor	SetupPicWindow	construct	src/auto/game.cpp	
+00559ed4	setup_picwnd_dtor	SetupPicWindow	destruct	src/auto/game.cpp	
+00559f60	setup_picwnd_blit_image_rect	SetupPicWindow	blit_image_rect	src/auto/game.cpp	
+00559fcf	setup_picwnd_draw_image	SetupPicWindow	draw_image	src/auto/game.cpp	
+0055a00b	setup_picwnd_client_rect	SetupPicWindow	setup_picwnd_client_rect	src/auto/game.cpp	kept whole (client_rect clashes)
+0055a051	setup_picwnd_redraw	SetupPicWindow	redraw	src/auto/game.cpp	
+0055a41d	setup_picwnd_show	SetupPicWindow	show	src/auto/game.cpp	
+0055a567	setup_picwnd_close	SetupPicWindow	close	src/auto/game.cpp	
+0055a5e4	setup_picwnd_load_dll	SetupPicWindow	load_dll	src/auto/game.cpp	
+0055a64a	setup_picwnd_free_dll	SetupPicWindow	free_dll	src/auto/game.cpp	
+00564d00	pedia_init_advance_list	PediaWindow	init_advance_list	src/auto/pedia.cpp	
+00564e6d	pedia_draw_advance_page	PediaWindow	draw_advance_page	src/auto/pedia.cpp	
+00566584	pedia_show_topic_modal	PediaWindow	show_topic_modal	src/auto/pedia.cpp	
+005666da	pedia_draw_advance_tree	PediaWindow	draw_advance_tree	src/auto/pedia.cpp	
+005674b9	pedia_draw_tree_connector	DibSurface	pedia_draw_tree_connector	src/auto/pedia.cpp	
+005675b7	pedia_draw_tree_stub	PediaWindow	draw_tree_stub	src/auto/pedia.cpp	
+0056e180	map_view_zoom_scale_round	MapView	zoom_scale_round	src/auto/map.cpp	
+0056e270	lobby_list_ctor	LobbyList	construct	src/auto/network.cpp	
+0056e2c9	lobby_list_dtor	void		src/auto/network.cpp	self is void (not a class)
+0056e2e9	lobby_host_wait_players	LobbyList	host_wait_players	src/auto/network.cpp	
+0056edd3	lobby_entry_neighbor	LobbyList	entry_neighbor	src/auto/network.cpp	
+0056ee2c	lobby_clear_player_list	LobbyList	clear_player_list	src/auto/network.cpp	
+0056eed7	lobby_remove_entry	LobbyList	remove_entry	src/auto/network.cpp	
+0056ef93	lobby_add_player_entry	LobbyList	add_player_entry	src/auto/network.cpp	
+0056f301	lobby_add_waiting_entry	LobbyList	add_waiting_entry	src/auto/network.cpp	
+0056f372	lobby_find_waiting_entry	LobbyList	find_waiting_entry	src/auto/network.cpp	
+0056f3e0	lobby_find_entry_by_id	LobbyList	find_entry_by_id	src/auto/network.cpp	
+0056f42b	lobby_slot_for_entry_id	LobbyList	slot_for_entry_id	src/auto/network.cpp	
+00574522	sprite_picker_draw	SpritePicker	draw	src/auto/graphics.cpp	
+00575dec	sprite_picker_run	SpritePicker	run	src/auto/graphics.cpp	
+00578390	sprite_picker_dtor	void		src/auto/graphics.cpp	self is void (not a class)
+005784a0	sprite_picker_ctor	SpritePicker	construct	src/auto/graphics.cpp	
+005785d0	wnd_set_rbuttondown_handler	WndHandlers	set_rbuttondown_handler	src/auto/window.cpp	
+00578610	wnd_set_rbuttonup_any_handler	WndHandlers	set_rbuttonup_any_handler	src/auto/window.cpp	
+00578650	menu_storage_reinit	GameMenu	storage_reinit	src/auto/window.cpp	
+0057868c	menu_clear_lists	GameMenu	clear_lists	src/auto/window.cpp	
+005786b6	menu_reset	GameMenu	reset	src/auto/window.cpp	
+005786f1	menu_ctor	GameMenu	construct	src/auto/window.cpp	
+00578770	menu_dtor	GameMenu		src/auto/window.cpp	assigns self or takes its address
+005787de	menu_find_menu	GameMenu	find_menu	src/auto/window.cpp	
+00578840	menu_visible_index	GameMenu	visible_index	src/auto/window.cpp	
+005788a9	menu_id_at_visible_index	GameMenu	id_at_visible_index	src/auto/window.cpp	
+00578922	menu_find_item	GameMenu	find_item	src/auto/window.cpp	
+005789aa	menu_item_visible_index	GameMenu	item_visible_index	src/auto/window.cpp	
+00578a1c	menu_item_id_at_visible_index	GameMenu	item_id_at_visible_index	src/auto/window.cpp	
+00578b06	menu_add_menu	GameMenu	add_menu	src/auto/window.cpp	
+00578c12	menu_add_item	GameMenu	add_item	src/auto/window.cpp	
+00578de8	menu_attach_to_window	GameMenu	attach_to_window	src/auto/window.cpp	
+00578e38	menu_set_command_handler	GameMenu	set_command_handler	src/auto/window.cpp	
+00578e60	menu_apply_item_enabled	GameMenu	apply_item_enabled	src/auto/window.cpp	
+00578ec7	menu_apply_item_checked	GameMenu	apply_item_checked	src/auto/window.cpp	
+00578f2c	menu_rebuild	GameMenu	rebuild	src/auto/window.cpp	
+00579260	menu_set_item_hidden	GameMenu	set_item_hidden	src/auto/window.cpp	
+005792e1	menu_set_item_enabled	GameMenu	set_item_enabled	src/auto/window.cpp	
+005793a3	menu_remove_item	GameMenu	remove_item	src/auto/window.cpp	
+0057940d	menu_set_item_checked	GameMenu	set_item_checked	src/auto/window.cpp	
+005794cf	menu_set_menu_enabled	GameMenu	set_menu_enabled	src/auto/window.cpp	
+0057953e	menu_set_item_text	GameMenu	set_item_text	src/auto/window.cpp	
+005799c0	menu_native_build	GameMenu	native_build	src/auto/window.cpp	
+00579a00	menu_native_insert	GameMenu	native_insert	src/auto/window.cpp	
+00579a40	menu_native_delete	GameMenu	native_delete	src/auto/window.cpp	
+00579a80	menu_native_set_text	GameMenu	native_set_text	src/auto/window.cpp	
+00579ac0	menu_native_enable	GameMenu	native_enable	src/auto/window.cpp	
+00579b00	menu_native_check	GameMenu	native_check	src/auto/window.cpp	
+00579b40	wnd_attach_menu	ModalMenuWindow	attach_menu	src/auto/window.cpp	
+00579b90	menu_get_hmenu	MenuHandleView		src/auto/window.cpp	self is a decompiler view (MenuHandleView)
+00579bc0	wnd_set_menu_callback	ModalMenuWindow	set_menu_callback	src/auto/window.cpp	
+00579bf0	wnd_redraw_menu_bar	ModalMenuWindow	redraw_menu_bar	src/auto/window.cpp	
+00586eb0	cosmic_editor_draw_bg	EditorWindow	cosmic_editor_draw_bg	src/auto/civ.cpp	
+00586f16	cosmic_editor_dialog	EditorWindow	cosmic_editor_dialog	src/auto/civ.cpp	
+00587a90	parley_create_city_list_pane	ParleyWindow	create_city_list_pane	src/auto/network.cpp	
+0058843f	parley_sort_city_list	ParleyWindow	sort_city_list	src/auto/network.cpp	
+00588f36	parley_build_city_list	ParleyWindow	build_city_list	src/auto/network.cpp	
+00589d50	wnd_frame_width	WndBase	frame_width	src/auto/window.cpp	
+00599a20	pedia_init_improvement_list	PediaWindow	init_improvement_list	src/auto/pedia.cpp	
+00599b8d	pedia_draw_improvement_page	PediaWindow	draw_improvement_page	src/auto/pedia.cpp	
+0059a15d	pedia_load_improvement_text	PediaWindow	load_improvement_text	src/auto/pedia.cpp	
+0059a2e6	pedia_show_improvement_modal	PediaWindow	show_improvement_modal	src/auto/pedia.cpp	
+0059a8bb	net_session_ctor	NetSession	construct	src/auto/network.cpp	
+0059a998	net_session_clear	NetSession	clear	src/auto/network.cpp	
+0059ad40	net_session_dtor	NetSession	destruct	src/auto/network.cpp	
+0059adef	net_init_transport	NetSession	init_transport	src/auto/network.cpp	
+0059b293	net_session_shutdown	NetSession	shutdown	src/auto/network.cpp	
+0059b55b	net_session_close_hook_nop	NetSession	close_hook_nop	src/auto/network.cpp	
+0059b571	net_game_list_add	NetSession	game_list_add	src/auto/network.cpp	
+0059b7fc	net_add_player	NetSession	add_player	src/auto/network.cpp	
+0059b96a	net_remove_player	NetSession	remove_player	src/auto/network.cpp	
+0059baf0	net_free_game_list	NetSession	free_game_list	src/auto/network.cpp	
+0059d080	net_msg_player_info_init	NetPlayerInfoMsg	init	src/auto/network.cpp	
+0059d5b5	dialog_reset_string_pool	Dialog	reset_string_pool	src/auto/window.cpp	
+0059d5f5	dialog_init_defaults	Dialog	init_defaults	src/auto/window.cpp	
+0059db08	dialog_ctor	Dialog	construct	src/auto/window.cpp	
+0059db65	dialog_close	Dialog	close	src/auto/window.cpp	
+0059df8a	dialog_dtor	Dialog	destruct	src/auto/window.cpp	
+0059dfb9	dialog_init	Dialog	init	src/auto/window.cpp	
+0059e0eb	dialog_set_item_text	Dialog	set_item_text	src/auto/window.cpp	
+0059e18b	dialog_add_line	Dialog	add_line	src/auto/window.cpp	
+0059e356	dialog_option_icon_width	Dialog	option_icon_width	src/auto/window.cpp	
+0059e376	dialog_option_row_height	Dialog	dialog_option_row_height	src/auto/window.cpp	kept whole (option_row_height clashes)
+0059e3fa	dialog_list_row_height	Dialog	dialog_list_row_height	src/auto/window.cpp	kept whole (list_row_height clashes)
+0059e448	dialog_edit_row_height	Dialog	edit_row_height	src/auto/window.cpp	
+0059e472	dialog_set_font	Dialog	set_font	src/auto/window.cpp	
+0059e4a4	dialog_set_title_font	Dialog	set_title_font	src/auto/window.cpp	
+0059e4c5	dialog_set_list_font	Dialog	set_list_font	src/auto/window.cpp	
+0059e4e6	dialog_set_columns	Dialog	set_columns	src/auto/window.cpp	
+0059e507	dialog_set_list_rows	Dialog	set_list_rows	src/auto/window.cpp	
+0059e585	dialog_set_current_pane	Dialog	set_current_pane	src/auto/window.cpp	
+0059e5c9	dialog_set_listbox	Dialog	set_listbox	src/auto/window.cpp	
+0059e648	dialog_line_height	Dialog	line_height	src/auto/window.cpp	
+0059e676	dialog_button_width_for	Dialog	button_width_for	src/auto/window.cpp	
+0059e6a9	dialog_set_title	Dialog	set_title	src/auto/window.cpp	
+0059e6ff	dialog_set_width	Dialog	set_width	src/auto/window.cpp	
+0059e762	dialog_set_height	Dialog	set_height	src/auto/window.cpp	
+0059e783	dialog_set_position	Dialog	set_position	src/auto/window.cpp	
+0059e7ad	dialog_find_option	Dialog	find_option	src/auto/window.cpp	
+0059e877	dialog_find_sprite	Dialog	find_sprite	src/auto/window.cpp	
+0059e8db	dialog_set_option_disabled	Dialog	set_option_disabled	src/auto/window.cpp	
+0059e9f3	dialog_option_is_checked	Dialog	option_is_checked	src/auto/window.cpp	
+0059ea4d	dialog_set_option_checked	Dialog	set_option_checked	src/auto/window.cpp	
+0059ea99	dialog_set_default_choice	Dialog	set_default_choice	src/auto/window.cpp	
+0059eb8c	dialog_set_sprite_click_fn	Dialog	set_sprite_click_fn	src/auto/window.cpp	
+0059ebb0	dialog_set_sprite_dblclick_fn	Dialog	set_sprite_dblclick_fn	src/auto/window.cpp	
+0059ebd4	dialog_set_sprite_draw_fn	Dialog	set_sprite_draw_fn	src/auto/window.cpp	
+0059ebf8	dialog_set_option_draw_fn	Dialog	set_option_draw_fn	src/auto/window.cpp	
+0059ec1c	dialog_set_select_change_fn	Dialog	set_select_change_fn	src/auto/window.cpp	
+0059ec64	dialog_set_image_zoom	Dialog	set_image_zoom	src/auto/window.cpp	
+0059ec88	dialog_add_sprite	Dialog	add_sprite	src/auto/window.cpp	
+0059edf0	dialog_add_option	Dialog	add_option	src/auto/window.cpp	
+0059f026	dialog_add_checkbox_option	Dialog	add_checkbox_option	src/auto/window.cpp	
+0059f06d	dialog_add_edit_field	Dialog	add_edit_field	src/auto/window.cpp	
+0059f2a3	dialog_add_button	Dialog	add_button	src/auto/window.cpp	
+0059f31a	dialog_set_text_color	Dialog	set_text_color	src/auto/window.cpp	
+0059f3d7	dialog_draw_text_shadowed	Dialog	draw_text_shadowed	src/auto/window.cpp	
+0059f5ba	dialog_draw_text_line	Dialog	draw_text_line	src/auto/window.cpp	
+0059f5f7	dialog_has_text_lines	Dialog	has_text_lines	src/auto/window.cpp	
+0059f64a	dialog_draw_wrapped_text	Dialog	draw_wrapped_text	src/auto/window.cpp	
+0059fb78	dialog_option_group_index	Dialog	option_group_index	src/auto/window.cpp	
+0059fc19	dialog_option_at	Dialog	option_at	src/auto/window.cpp	
+0059fcba	dialog_column_of_option	Dialog	column_of_option	src/auto/window.cpp	
+0059fd2a	dialog_compute_layout	Dialog	compute_layout	src/auto/window.cpp	
+005a0fea	dialog_draw_option_cell	Dialog	draw_option_cell	src/auto/window.cpp	
+005a1148	dialog_draw_option_text	Dialog	draw_option_text	src/auto/window.cpp	
+005a120b	dialog_draw_option	Dialog	draw_option	src/auto/window.cpp	
+005a14d2	dialog_draw_option_list	Dialog	draw_option_list	src/auto/window.cpp	
+005a1766	dialog_column_of_index	Dialog	column_of_index	src/auto/window.cpp	
+005a17a4	dialog_column_start_index	Dialog	column_start_index	src/auto/window.cpp	
+005a17e9	dialog_select_option	Dialog	select_option	src/auto/window.cpp	
+005a1a7d	dialog_option_at_point	Dialog	option_at_point	src/auto/window.cpp	
+005a1c52	dialog_count_group_options	Dialog	count_group_options	src/auto/window.cpp	
+005a1caf	dialog_pick_pane_at	Dialog	pick_pane_at	src/auto/window.cpp	
+005a1e28	dialog_create_window	Dialog	create_window	src/auto/window.cpp	
+005a211c	dialog_create_controls	Dialog	create_controls	src/auto/window.cpp	
+005a5649	dialog_fill_rect_bg	Dialog	fill_rect_bg	src/auto/window.cpp	
+005a577e	dialog_render	Dialog	render	src/auto/window.cpp	
+005a5f34	dialog_run_modal	Dialog	run_modal	src/auto/window.cpp	
+005a632a	dialog_load_text_section	Dialog	load_text_section	src/auto/window.cpp	
+005a9320	checkbox_vector_dtor	Checkbox	vector_destruct	src/auto/controls.cpp	
+005a93b0	edit_vector_dtor	EditControl	vector_destruct	src/auto/controls.cpp	
+005a9440	ctrl_vector_dtor	Button	vector_destruct	src/auto/controls.cpp	
+005a94d0	listbox_scalar_dtor	ListBox	scalar_destruct	src/auto/controls.cpp	
+005a9520	hotspot_vector_dtor	Hotspot	vector_destruct	src/auto/window.cpp	
+005a95b0	surfwnd_scalar_dtor	SurfaceWindow	scalar_destruct	src/auto/window.cpp	
+005a9600	wnd_get_screen_rect	WndBase	get_screen_rect	src/auto/window.cpp	
+005a9640	checkbox_disable	Checkbox	disable	src/auto/controls.cpp	
+005a9670	listbox_get_text	ListBox	get_text	src/auto/controls.cpp	
+005a96b0	listbox_get_sel_text	ListBox	get_sel_text	src/auto/controls.cpp	
+005a96f0	dialog_uses_alt_text_color	Dialog	uses_alt_text_color	src/auto/window.cpp	
+005a9730	dialog_draw_text_default_font	Dialog	draw_text_default_font	src/auto/window.cpp	
+005ac840	pedia_show_unit_list	PediaWindow	show_unit_list	src/auto/pedia.cpp	
+005ac9ad	pedia_draw_unit_page	PediaWindow	draw_unit_page	src/auto/pedia.cpp	
+005ad998	pedia_show_unit_modal	PediaWindow	show_unit_modal	src/auto/pedia.cpp	
+005b0473	unit_editor_create_combo	EditorWindow	unit_editor_create_combo	src/auto/unit.cpp	
+005b08e8	unit_editor_create_edit	EditorWindow	unit_editor_create_edit	src/auto/unit.cpp	
+005b09dc	unit_editor_paint	EditorWindow	unit_editor_paint	src/auto/unit.cpp	
+005b1037	unit_editor_window_run	EditorWindow	unit_editor_window_run	src/auto/unit.cpp	
+005bb3f0	surface_wnd_create	DibSurface	wnd_create	src/auto/graphics.cpp	
+005bb4ae	wnd_create_with_surface	DibSurface	wnd_create_with_surface	src/auto/window.cpp	
+005bb574	wnd_repaint	SurfaceWindow	repaint	src/auto/window.cpp	
+005bb5be	surfwnd_resize_dib	DibSurface		src/auto/window.cpp	address taken (src/data/gamedata.cpp)
+005bb621	surfwnd_on_resize	SurfaceWindow	on_resize	src/auto/window.cpp	
+005bb6c7	wnd_resize_clamped	SurfaceWindow	resize_clamped	src/auto/window.cpp	
+005bb8c0	wnd_get_palette_obj	WndBase	get_palette_obj	src/auto/window.cpp	
+005bb8e0	wnd_set_client_size	WndBase	set_client_size	src/auto/window.cpp	
+005bb910	wnd_get_min_size	ModalMenuWindow	get_min_size	src/auto/window.cpp	
+005bb950	wnd_get_max_size	ModalMenuWindow	get_max_size	src/auto/window.cpp	
+005bb990	wnd_call_paint_cb	SurfaceWindow	call_paint_cb	src/auto/window.cpp	
+005bd610	wnd_get_style_flags	WndBase	get_style_flags	src/auto/window.cpp	
+005bd630	surface_ctor	DibSurface		src/auto/graphics.cpp	address taken (src/auto/map.cpp)
+005bd65c	surface_create	DibSurface	create	src/auto/graphics.cpp	
+005bd696	surface_alloc_dib8	DibSurface	alloc_dib8	src/auto/graphics.cpp	
+005bd813	surface_set_dims	DibSurface	set_dims	src/auto/graphics.cpp	
+005bd915	surface_dtor	DibSurface		src/auto/graphics.cpp	address taken (src/auto/map.cpp)
+005bf071	surface_load_gif_file	DibSurface	load_gif_file	src/auto/graphics.cpp	
+005bf5e1	surface_load_gif_resource	DibSurface	load_gif_resource	src/auto/graphics.cpp	
+005c0034	surface_reset_clip	DibSurface	reset_clip	src/auto/graphics.cpp	
+005c0073	surface_set_clip	DibSurface	set_clip	src/auto/graphics.cpp	
+005c00ce	surface_get_clip	DibSurface	get_clip	src/auto/graphics.cpp	
+005c0105	surface_alloc_dib_by_bpp	DibSurface		src/auto/graphics.cpp	address taken (src/data/gamedata.cpp)
+005c019d	surface_resize	DibSurface	resize	src/auto/graphics.cpp	
+005c01c1	surface_lock	DibSurface	lock	src/auto/graphics.cpp	
+005c02e0	surface_unlock	DibSurface	unlock	src/auto/graphics.cpp	
+005c0333	surface_fill_rect	DibSurface	fill_rect	src/auto/graphics.cpp	
+005c041f	surface_fill	DibSurface	fill	src/auto/graphics.cpp	
+005c044a	surface_replace_color_clip	DibSurface	replace_color_clip	src/auto/graphics.cpp	
+005c0479	surface_replace_color	DibSurface	replace_color	src/auto/graphics.cpp	
+005c0593	surface_blit	DibSurface	blit	src/auto/graphics.cpp	
+005c0979	surface_blit_to_wnd	DibSurface	blit_to_wnd	src/auto/graphics.cpp	
+005c0bf2	surface_get_pixel	DibSurface	get_pixel	src/auto/graphics.cpp	
+005c0c5d	surface_set_pixel	DibSurface	set_pixel	src/auto/graphics.cpp	
+005c0cc5	surface_set_palette	DibSurface	set_palette	src/auto/graphics.cpp	
+005c0d12	surface_apply_palette	DibSurface	apply_palette	src/auto/graphics.cpp	
+005c0d69	surface_draw_text_cur_font	SurfaceTextCurFontView		src/auto/graphics.cpp	self is a decompiler view (SurfaceTextCurFontView)
+005c0f57	surface_draw_text	DibSurface	draw_text	src/auto/graphics.cpp	
+005c1020	surface_draw_text_in_rect	DibSurface	draw_text_in_rect	src/auto/graphics.cpp	
+005c1167	surface_draw_text_rect	DibSurface	draw_text_rect	src/auto/graphics.cpp	
+005c11b2	surface_draw_line	DibSurface	draw_line	src/auto/graphics.cpp	
+005c19d3	surface_pixel_ptr	DibSurface	pixel_ptr	src/auto/graphics.cpp	
+005c1a00	surface_in_clip	DibSurface	in_clip	src/auto/graphics.cpp	
+005c1a62	surface_remap_colors	DibSurface	remap_colors	src/auto/graphics.cpp	
+005c1b47	surface_alloc_dib16	DibSurface	alloc_dib16	src/auto/graphics.cpp	
+005c1cf7	surface_alloc_dib24	DibSurface	alloc_dib24	src/auto/graphics.cpp	
+005c1ea7	surface_alloc_dib32	DibSurface	alloc_dib32	src/auto/graphics.cpp	
+005c54f0	surface_is_locked	DibSurface	is_locked	src/auto/graphics.cpp	
+005c55d0	surface_get_pitch	DibSurface	get_pitch	src/auto/graphics.cpp	
+005c55f0	surface_get_dib	DibSurface	get_dib	src/auto/graphics.cpp	
+005c5610	surface_next_row	DibSurface	next_row	src/auto/graphics.cpp	
+005c5640	surface_get_bits	DibSurface	get_bits	src/auto/graphics.cpp	
+005c56f0	palette_get_version	PaletteVersionView		src/auto/graphics.cpp	self is a decompiler view (PaletteVersionView)
+005c5710	surface_prev_row	DibSurface	prev_row	src/auto/graphics.cpp	
+005c5760	wnd_create_framed	WndBase	create_framed	src/auto/window.cpp	
+005c57f9	wnd_create_framed_child	WndBase	create_framed_child	src/auto/window.cpp	
+005c59c4	wnd_append_control	Wnd	append_control	src/auto/window.cpp	
+005c5a27	wnd_remove_control	Wnd	remove_control	src/auto/window.cpp	
+005c5aeb	wnd_remove_all_controls	Wnd	remove_all_controls	src/auto/window.cpp	
+005c5b7f	wnd_focus_first_control	Wnd	focus_first_control	src/auto/window.cpp	
+005c5c86	wnd_dispatch_hotkey_char	void		src/auto/window.cpp	self is void (not a class)
+005c5e60	control_get_type	Control	get_type	src/auto/controls.cpp	
+005c5e80	control_get_next	Control	get_next	src/auto/controls.cpp	
+005c5ea0	ctrl_get_initial_focus	Control	get_initial_focus	src/auto/controls.cpp	
+005c5ec0	checkbox_is_enabled	Checkbox	checkbox_is_enabled	src/auto/controls.cpp	kept whole (is_enabled clashes)
+005c5ee0	radiogrp_get_items	RadioGroup	get_items	src/auto/controls.cpp	
+005c5f00	radiogrp_item_count	RadioGroup	radiogrp_item_count	src/auto/controls.cpp	kept whole (item_count clashes)
+005c5f20	wnd_create_with_cmd_proc	WndBase	create_with_cmd_proc	src/auto/window.cpp	
+005c5fc4	wnd_create_with_handlers	WndBase	create_with_handlers	src/auto/window.cpp	
+005c61b0	wnd_run_modal_loop	ModalMenuWindow	run_modal_loop	src/auto/window.cpp	
+005c62cb	wnd_end_modal_loop	ModalMenuWindow	end_modal_loop	src/auto/window.cpp	
+005c63af	wnd_fire_menu_select	ModalMenuWindow	fire_menu_select	src/auto/window.cpp	
+005c6480	palette_commit_range	GamePalette	commit_range	src/auto/graphics.cpp	
+005c64da	palette_init	GamePalette	init	src/auto/graphics.cpp	
+005c656b	palette_destroy	GamePalette		src/auto/graphics.cpp	assigns self or takes its address
+005c65f9	palette_load_ctab_res	GamePalette	load_ctab_res	src/auto/graphics.cpp	
+005c6a42	palette_new_version	GamePalette	new_version	src/auto/graphics.cpp	
+005c6a8d	palette_reserve_range	GamePalette	reserve_range	src/auto/graphics.cpp	
+005c6b63	palette_get_rgb	GamePalette	get_rgb	src/auto/graphics.cpp	
+005c6b93	palette_set_entry	GamePalette	set_entry	src/auto/graphics.cpp	
+005c6da8	palette_set_rgb	GamePalette	set_rgb	src/auto/graphics.cpp	
+005c71f3	palette_fade_begin	GamePalette	fade_begin	src/auto/graphics.cpp	
+005c72f8	palette_fade_end	GamePalette	fade_end	src/auto/graphics.cpp	
+005c738e	palette_fade_step	GamePalette	fade_step	src/auto/graphics.cpp	
+005c8f50	ctrl_get_rect	Control	get_rect	src/auto/controls.cpp	
+005c8f70	hotspot_fire_enter	Hotspot	fire_enter	src/auto/window.cpp	
+005c8fb0	hotspot_fire_leave	Hotspot	fire_leave	src/auto/window.cpp	
+005c8ff0	hotspot_fire_click	Hotspot	fire_click	src/auto/window.cpp	
+005c9030	hotspot_fire_press	Hotspot	fire_press	src/auto/window.cpp	
+005c9070	hotspot_fire_dblclick	Hotspot	fire_dblclick	src/auto/window.cpp	
+005c9710	control_set_hwnd	Control	set_hwnd	src/auto/controls.cpp	
+005cbdb0	palette_get_hpalette	PaletteHandleView		src/auto/graphics.cpp	self is a decompiler view (PaletteHandleView)
+005cbdd0	wnd_keyboard_nav_enabled	Wnd	keyboard_nav_enabled	src/auto/window.cpp	
+005cbdf0	button_fire_callback	Button	fire_callback	src/auto/controls.cpp	
+005cbe30	spritebtn_fire_click	SpriteButton	fire_click	src/auto/controls.cpp	
+005cbe70	spritebtn_fire_rclick	SpriteButton	fire_rclick	src/auto/controls.cpp	
+005cce40	checkbox_fire_callback	Checkbox	fire_callback	src/auto/controls.cpp	
+005cd620	scrollbar_get_cur_pos	Scrollbar	get_cur_pos	src/auto/controls.cpp	
+005cd640	scrollbar_fire_change	Scrollbar	fire_change	src/auto/controls.cpp	
+005cd680	scrollbar_fire_track	Scrollbar	fire_track	src/auto/controls.cpp	
+005cd6c0	scrollbar_get_page_size	Scrollbar	get_page_size	src/auto/controls.cpp	
+005cde2c	sprite_init	Sprite		src/auto/graphics.cpp	address taken (src/auto/city.cpp, src/auto/civ.cpp, src/auto/diplomacy.cpp, src/auto/graphics.cpp, src/auto/map.cpp, src/auto/unit.cpp)
+005cde4d	sprite_destroy	Sprite		src/auto/graphics.cpp	address taken (src/auto/city.cpp, src/auto/civ.cpp, src/auto/diplomacy.cpp, src/auto/graphics.cpp, src/auto/map.cpp, src/auto/unit.cpp)
+005cdea1	sprite_create_solid	Sprite	create_solid	src/auto/graphics.cpp	
+005cdf50	sprite_free	Sprite	free	src/auto/graphics.cpp	
+005cebb4	sprite_grab_surface_rect	Sprite	grab_surface_rect	src/auto/graphics.cpp	
+005cebec	sprite_encode_rect	Sprite	encode_rect	src/auto/graphics.cpp	
+005cec44	sprite_grab_rect	Sprite	grab_rect	src/auto/graphics.cpp	
+005cedad	sprite_grab_from_surface	Sprite	grab_from_surface	src/auto/graphics.cpp	
+005cef31	sprite_draw	Sprite	draw	src/auto/graphics.cpp	
+005cef66	sprite_draw_keyed	Sprite	draw_keyed	src/auto/graphics.cpp	
+005cf126	sprite_draw_silhouette	Sprite	draw_silhouette	src/auto/graphics.cpp	
+005cf23f	sprite_merge_onto	Sprite	merge_onto	src/auto/graphics.cpp	
+005cf2ff	sprite_lock	Sprite	lock	src/auto/graphics.cpp	
+005cf337	sprite_unlock	Sprite	unlock	src/auto/graphics.cpp	
+005cf36f	sprite_has_data	Sprite	has_data	src/auto/graphics.cpp	
+005cf39b	sprite_set_origin	SpriteOriginSetView		src/auto/graphics.cpp	self is a decompiler view (SpriteOriginSetView)
+005cf3c5	sprite_get_origin	SpriteOriginGetView		src/auto/graphics.cpp	self is a decompiler view (SpriteOriginGetView)
+005cf467	sprite_replace_color	Sprite	replace_color	src/auto/graphics.cpp	
+005cf64c	sprite_encode_from_surface	Sprite	encode_from_surface	src/auto/graphics.cpp	
+005d056c	sprite_blit_to_surface	Sprite	blit_to_surface	src/auto/graphics.cpp	
+005d10cd	sprite_blit_silhouette_to_surface	Sprite	blit_silhouette_to_surface	src/auto/graphics.cpp	
+005d1612	sprite_merge_at	Sprite	merge_at	src/auto/graphics.cpp	
+005d1b38	sprite_clear_fields	Sprite	clear_fields	src/auto/graphics.cpp	
+005d2042	timer_mgr_add	TimerManager	add	src/auto/game.cpp	
+005d20e6	game_timer_kill_slot	TimerManager	game_timer_kill_slot	src/auto/game.cpp	
+005d211e	timer_mgr_ctor	TimerManagerCtorView		src/auto/game.cpp	self is a decompiler view (TimerManagerCtorView)
+005d2182	timer_mgr_dtor	TimerManager	destruct	src/auto/game.cpp	
+005d246f	dbg_log_file_ctor	void		src/auto/support.cpp	self is void (not a class)
+005d2498	dbg_log_file_dtor	void		src/auto/support.cpp	self is void (not a class)
+005d24b3	dbg_log_write	void		src/auto/support.cpp	self is void (not a class)
+005d25c0	edit_create_at	EditControl	create_at	src/auto/controls.cpp	
+005d30e0	edit_fire_key_callback	EditControl	fire_key_callback	src/auto/controls.cpp	
+005d3720	combo_fire_dblclick	ComboBox	fire_dblclick	src/auto/controls.cpp	
+005d3760	combo_fire_selchange	ComboBox	fire_selchange	src/auto/controls.cpp	
+005d3f30	listbox_fire_dblclick	ListBox	fire_dblclick	src/auto/controls.cpp	
+005d3f70	listbox_fire_selchange	ListBox	fire_selchange	src/auto/controls.cpp	
+005d4014	radiogrp_show_all	RadioGroup	show_all	src/auto/controls.cpp	
+005d47d0	game_timer_fire_slot	TimerManager	game_timer_fire_slot	src/auto/game.cpp	
+005d7c00	file_obj_init	FileObject	init	src/auto/text.cpp	
+005d7c6e	file_obj_close	FileObject	close	src/auto/text.cpp	
+005d7cb0	spritebtn_init_from_sprite	SpriteButton	init_from_sprite	src/auto/controls.cpp	
+005dad40	radiogrp_fire_callback	RadioGroup	fire_callback	src/auto/controls.cpp	
+005dad80	radiogrp_fire_dblclick	RadioGroup	fire_dblclick	src/auto/controls.cpp	
+005dadc0	radiogrp_fire_rclick	RadioGroup	fire_rclick	src/auto/controls.cpp	
+005dae6b	err_report	ErrorContext	report	src/auto/support.cpp	
+005daef7	err_format_message	ErrorContext	format_message	src/auto/support.cpp	
+005daf63	err_get_stack_trace	ErrorContext	get_stack_trace	src/auto/support.cpp	
+005daf92	err_show_fatal_box	ErrorContext	show_fatal_box	src/auto/support.cpp	
+005dafdf	err_set_code	ErrorContext	set_code	src/auto/support.cpp	
+005db035	err_ctx_set_field_708	ErrorContext	set_field_708	src/auto/support.cpp	
+005db059	err_ctx_clear_codes	ErrorContext	clear_codes	src/auto/support.cpp	
+005db089	err_ctx_ctor	ErrorContext	construct	src/auto/support.cpp	
+005db0b4	err_ctx_dtor	void		src/auto/support.cpp	self is void (not a class)
+005db0d0	scrollbar_set_page_size	Scrollbar	set_page_size	src/auto/controls.cpp	
+005db110	scrollbar_get_ctl_range	Scrollbar	get_ctl_range	src/auto/controls.cpp	
+005db610	wnd_record_init	WndBase	init	src/auto/window.cpp	
+005db650	wnd_record_destroy	WndBase	destroy	src/auto/window.cpp	
+005db67b	wnd_record_create	WndBase	create	src/auto/window.cpp	
+005db893	wnd_record_create_child	WndBase	create_child	src/auto/window.cpp	
+005dba95	wnd_is_shift_down	void		src/auto/window.cpp	self is void (not a class)
+005dbab8	wnd_is_ctrl_down	void		src/auto/window.cpp	self is void (not a class)
+005dcac0	timer_mgr_scalar_dtor	TimerManager	scalar_destruct	src/auto/game.cpp	
+005dcc10	menu_handle_ctor	GameMenu	handle_construct	src/auto/window.cpp	
+005dcc32	menu_handle_dtor	GameMenu	handle_destruct	src/auto/window.cpp	
+005dd010	mmwnd_ctor	AviPlayer	construct	src/auto/sound.cpp	
+005dd1a0	avi_player_dtor	AviPlayer	destruct	src/auto/sound.cpp	
+005dd27e	avi_player_create	AviPlayer	create	src/auto/sound.cpp	
+005dd2e3	avi_player_create_child	AviPlayer	create_child	src/auto/sound.cpp	
+005dd377	avi_player_open	AviPlayer	open	src/auto/sound.cpp	
+005dd3c2	avi_player_play	AviPlayer	play	src/auto/sound.cpp	
+005dd3f1	avi_player_play_range	AviPlayer	play_range	src/auto/sound.cpp	
+005dd45d	avi_player_show_frame	void		src/auto/sound.cpp	self is void (not a class)
+005dd4c2	avi_player_loop_range	AviPlayer	loop_range	src/auto/sound.cpp	
+005dd51d	avi_player_pause	AviPlayer	pause	src/auto/sound.cpp	
+005dd561	avi_player_set_palette	DibSurface	avi_player_set_palette	src/auto/sound.cpp	
+005dd64c	avi_player_draw_to	DibSurface	avi_player_draw_to	src/auto/sound.cpp	
+005dd71e	avi_player_set_double_size	AviPlayer	set_double_size	src/auto/sound.cpp	
+005dd761	avi_player_set_transparent	AviPlayer	set_transparent	src/auto/sound.cpp	
+005e3550	avi_player_call_end_callback	AviPlayer	call_end_callback	src/auto/sound.cpp	
+005e3580	avi_player_call_cue_callback	AviPlayer	call_cue_callback	src/auto/sound.cpp	
+005e5ee0	ddsurf_dtor	void		src/auto/graphics.cpp	self is void (not a class)
+005eb2f0	edit_fire_maxtext_callback	EditControl	fire_maxtext_callback	src/auto/controls.cpp	
+005eb330	edit_fire_change_callback	EditControl	fire_change_callback	src/auto/controls.cpp	
+005ecf50	wnd_call_mousemove	WndHandlers	call_mousemove	src/auto/window.cpp	
+005ecf90	wnd_call_lbuttondown	WndHandlers	call_lbuttondown	src/auto/window.cpp	
+005ecfd0	wnd_call_lbuttonup_raw	WndHandlers	call_lbuttonup_raw	src/auto/window.cpp	
+005ed010	wnd_call_lbuttonup	WndHandlers	call_lbuttonup	src/auto/window.cpp	
+005ed050	wnd_call_rbuttondown	WndHandlers	call_rbuttondown	src/auto/window.cpp	
+005ed090	wnd_call_rbuttonup_raw	WndHandlers	call_rbuttonup_raw	src/auto/window.cpp	
+005ed0d0	wnd_call_rbuttonup	WndHandlers	call_rbuttonup	src/auto/window.cpp	
+005ed110	wnd_call_dblclick	WndHandlers	call_dblclick	src/auto/window.cpp	
+005ed150	wnd_call_keydown_pre	WndHandlers	call_keydown_pre	src/auto/window.cpp	
+005ed190	wnd_call_keyup	WndHandlers	call_keyup	src/auto/window.cpp	
+005ed1d0	wnd_call_keydown	WndHandlers	call_keydown	src/auto/window.cpp	
+005ed210	wnd_call_char	WndHandlers	call_char	src/auto/window.cpp	
+005ed250	wnd_call_close	WndHandlers	call_close	src/auto/window.cpp	
+005ed290	wnd_call_minimize	WndHandlers	call_minimize	src/auto/window.cpp	
+005ed2c0	wnd_call_restore	WndHandlers	call_restore	src/auto/window.cpp	
+005ed2f0	wnd_call_setfocus	WndHandlers	call_setfocus	src/auto/window.cpp	
+005ed320	wnd_call_size	WndHandlers	call_size	src/auto/window.cpp	
+005ed360	wnd_call_move	WndHandlers	call_move	src/auto/window.cpp	
+005ed3a0	wnd_call_msg44	WndHandlers	call_msg44	src/auto/window.cpp	
+005ed3e0	wnd_call_hscroll	WndHandlers	call_hscroll	src/auto/window.cpp	
+005ed420	wnd_call_hscroll_track	WndHandlers	call_hscroll_track	src/auto/window.cpp	
+005ed460	wnd_call_vscroll	WndHandlers	call_vscroll	src/auto/window.cpp	
+005ed4a0	wnd_call_vscroll_track	WndHandlers	call_vscroll_track	src/auto/window.cpp	
+005ed4e0	wnd_call_msg4c8	WndHandlers	call_msg4c8	src/auto/window.cpp	
+005ed520	wnd_call_entersizemove	WndHandlers	call_entersizemove	src/auto/window.cpp	
+005ed550	wnd_call_exitsizemove	WndHandlers	call_exitsizemove	src/auto/window.cpp	
+005ed580	wnd_on_size_nop	void		src/auto/window.cpp	self is void (not a class)
+005ed5a0	wnd_call_menu_pos_command	ModalMenuWindow	call_menu_pos_command	src/auto/window.cpp	
+005ed5f0	wnd_call_command	ModalMenuWindow	call_command	src/auto/window.cpp	
+005ed640	wnd_get_hscroll_pos	ModalMenuWindow	get_hscroll_pos	src/auto/window.cpp	
+005ed660	wnd_get_vscroll_pos	ModalMenuWindow	get_vscroll_pos	src/auto/window.cpp	
+005ed680	wnd_get_hscroll_page	ModalMenuWindow	get_hscroll_page	src/auto/window.cpp	
+005ed6a0	wnd_get_vscroll_page	ModalMenuWindow	get_vscroll_page	src/auto/window.cpp	
+005ed6c0	wnd_get_mci_device	WndMciDeviceView		src/auto/window.cpp	self is a decompiler view (WndMciDeviceView)
+005ed6e0	wnd_call_mci_done	WndOnMciDoneView		src/auto/window.cpp	self is a decompiler view (WndOnMciDoneView)
+005eeca0	avi_audio_ctor	AviAudio	construct	src/auto/sound.cpp	
+005eed1b	avi_audio_release	AviAudioReleaseView		src/auto/sound.cpp	self is a decompiler view (AviAudioReleaseView)
+005eed43	avi_audio_is_playing	AviAudioPlayingView		src/auto/sound.cpp	self is a decompiler view (AviAudioPlayingView)
+005eed76	avi_audio_attach_stream	AviAudioAttachView		src/auto/sound.cpp	self is a decompiler view (AviAudioAttachView)
+005eedd1	avi_audio_get_position_ms	void		src/auto/sound.cpp	self is void (not a class)
+005eedec	avi_audio_prepare_range	AviAudioPrepareView		src/auto/sound.cpp	self is a decompiler view (AviAudioPrepareView)
+005eee4f	avi_audio_start	void		src/auto/sound.cpp	self is void (not a class)
+005efd70	ddwin_call_activate_app	DDWindowActivateView		src/auto/window.cpp	self is a decompiler view (DDWindowActivateView)
+005f029e	ddwin_remove_all_controls	DDWindow	remove_all_controls	src/auto/window.cpp	
+005f0342	ddwin_deactivate_controls	DDWindow	deactivate_controls	src/auto/window.cpp	
+005f0391	ddwin_dispatch_ctrl_msg	DDWindow	dispatch_ctrl_msg	src/auto/window.cpp	
+005f04c0	ptrlist_dtor	void		src/auto/support.cpp	self is void (not a class)
+005f0590	ptrlist_first	PtrList	first	src/auto/support.cpp	
+005f05d0	ptrlist_next	PtrList	next	src/auto/support.cpp	
+005f0620	ddctrl_get_rect	DDControl	get_rect	src/auto/controls.cpp	
+005f0676	ptrlist_node_dtor	void		src/auto/support.cpp	self is void (not a class)
+005f068c	ptrlist_node_set_next	PtrListNodeNextSetView		src/auto/support.cpp	self is a decompiler view (PtrListNodeNextSetView)
+005f06ad	ptrlist_node_set_prev	PtrListNodePrevSetView		src/auto/support.cpp	self is a decompiler view (PtrListNodePrevSetView)
+005f0724	ptrlist_clear	PtrList	clear	src/auto/support.cpp	
+005f0742	ptrlist_is_empty	PtrList	is_empty	src/auto/support.cpp	
+005f0770	ptrlist_first_impl	PtrList	first_impl	src/auto/support.cpp	
+005f0833	ptrlist_next_impl	PtrList	next_impl	src/auto/support.cpp	
+005f0c69	ptrlist_remove_current	PtrList	remove_current	src/auto/support.cpp	
+005f0e13	ptrlist_clear_impl	PtrList	clear_impl	src/auto/support.cpp	
+005f0e50	ptrlist_node_data	PtrListNodeDataView		src/auto/support.cpp	self is a decompiler view (PtrListNodeDataView)
+005f0e70	ptrlist_node_next	PtrListNodeNextView		src/auto/support.cpp	self is a decompiler view (PtrListNodeNextView)
+005f0e90	ptrlist_node_prev	PtrListNodePrevView		src/auto/support.cpp	self is a decompiler view (PtrListNodePrevView)
+005f0eb0	ptrlist_node_delete	void		src/auto/support.cpp	self is void (not a class)
+005f130f	ddctrl_dispatch_msg	DDControl	dispatch_msg	src/auto/controls.cpp	
+005f1514	ddctrl_get_parent_window	DDControlParentView		src/auto/controls.cpp	self is a decompiler view (DDControlParentView)
+005f15a9	ddctrl_on_paint_default	DDControlParentView		src/auto/controls.cpp	self is a decompiler view (DDControlParentView)
+005f1622	ddctrl_activate	DDControlActivateView		src/auto/controls.cpp	self is a decompiler view (DDControlActivateView)
+005f1683	ddctrl_deactivate	DDControl	deactivate	src/auto/controls.cpp	
+005f179c	ddctrl_on_lbuttondown	DDControlActivateView		src/auto/controls.cpp	self is a decompiler view (DDControlActivateView)
+005f17bc	ddctrl_on_rbuttondown_nop	void		src/auto/controls.cpp	self is void (not a class)
+005f17d4	ddctrl_on_lbuttonup	DdctrlOnLbuttonupView		src/auto/controls.cpp	self is a decompiler view (DdctrlOnLbuttonupView)
+005f1811	ddctrl_on_rbuttonup	DdctrlOnRbuttonupView		src/auto/controls.cpp	self is a decompiler view (DdctrlOnRbuttonupView)
+005f184e	ddctrl_on_mousemove	DdctrlOnMousemoveView		src/auto/controls.cpp	self is a decompiler view (DdctrlOnMousemoveView)
+005f188b	ddctrl_on_dblclick	DdctrlOnDblclickView		src/auto/controls.cpp	self is a decompiler view (DdctrlOnDblclickView)
+005f18c8	ddctrl_on_msg_fff0_nop	void		src/auto/controls.cpp	self is void (not a class)
+005f18e0	ddctrl_on_keydown_nop	void		src/auto/controls.cpp	self is void (not a class)
+005f18f8	ddctrl_on_char_nop	void		src/auto/controls.cpp	self is void (not a class)
+005f1910	ddctrl_on_set_active_nop	void		src/auto/controls.cpp	self is void (not a class)
+005f19a6	ddctrl_deactivate_children	DDControl	deactivate_children	src/auto/controls.cpp	
+005f1a40	ddctrl_dispatch_to_children	DDControl	dispatch_to_children	src/auto/controls.cpp	
+	spaceship_wnd_render_ship	SpaceshipWindow	render_ship	src/game/bigframes.cpp	
+	pedia_load_description	void		src/game/retvals.cpp	self is void (not a class)
+	wnd_dtor	void		src/game/unwind.cpp	self is void (not a class)
+	surfwnd_dtor	void		src/game/unwind.cpp	self is void (not a class)
+	city_picture_popup_dtor	void		src/game/unwind.cpp	self is void (not a class)
+	ddwin_dtor	void		src/game/unwind.cpp	self is void (not a class)
+	spaceship_wnd_make_button_sprites	void		src/game/unwind.cpp	self is void (not a class)

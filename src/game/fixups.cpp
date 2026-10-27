@@ -49,15 +49,15 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
                 g_btn_hover = 1;
                 SetCapture(hwnd);
                 if (self != (void *)0x0) {
-                    ctrl_arg = ctrl_get_parent((Control *)self);
+                    ctrl_arg = ((Control *)self)->get_parent();
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id((Control *)self);
-                    hotspot_fire_enter((Hotspot *)self, ctrl_arg);
+                    ctrl_arg = ((Control *)self)->get_id();
+                    ((Hotspot *)self)->fire_enter( ctrl_arg);
                 }
             }
         }
         else {
-            rect_ptr = (int *)ctrl_get_rect((Control *)self);
+            rect_ptr = (int *)((Control *)self)->get_rect();
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -69,10 +69,10 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
                 if (g_btn_pressed == 0) {
                     ReleaseCapture();
                     if (self != (void *)0x0) {
-                        ctrl_arg = ctrl_get_parent((Control *)self);
+                        ctrl_arg = ((Control *)self)->get_parent();
                         wnd_set_active_child(ctrl_arg);
-                        ctrl_arg = ctrl_get_id((Control *)self);
-                        hotspot_fire_leave((Hotspot *)self, ctrl_arg);
+                        ctrl_arg = ((Control *)self)->get_id();
+                        ((Hotspot *)self)->fire_leave( ctrl_arg);
                     }
                 }
             }
@@ -81,10 +81,10 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
     case 0x201:     /* WM_LBUTTONDOWN */
         if (g_btn_hover != 0) {
             g_btn_pressed = 1;
-            ctrl_arg = ctrl_get_parent((Control *)self);
+            ctrl_arg = ((Control *)self)->get_parent();
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((Control *)self);
-            hotspot_fire_press((Hotspot *)self, ctrl_arg);
+            ctrl_arg = ((Control *)self)->get_id();
+            ((Hotspot *)self)->fire_press( ctrl_arg);
         }
         break;
     case 0x202:     /* WM_LBUTTONUP */
@@ -92,29 +92,29 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
             g_btn_pressed = 0;
             if (g_btn_hover != 0) {
                 if (self != (void *)0x0) {
-                    ctrl_arg = ctrl_get_parent((Control *)self);
+                    ctrl_arg = ((Control *)self)->get_parent();
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id((Control *)self);
-                    hotspot_fire_click((Hotspot *)self, ctrl_arg);
+                    ctrl_arg = ((Control *)self)->get_id();
+                    ((Hotspot *)self)->fire_click( ctrl_arg);
                 }
             }
             else {
                 ReleaseCapture();
                 if (self != (void *)0x0) {
-                    ctrl_arg = ctrl_get_parent((Control *)self);
+                    ctrl_arg = ((Control *)self)->get_parent();
                     wnd_set_active_child(ctrl_arg);
-                    ctrl_arg = ctrl_get_id((Control *)self);
-                    hotspot_fire_leave((Hotspot *)self, ctrl_arg);
+                    ctrl_arg = ((Control *)self)->get_id();
+                    ((Hotspot *)self)->fire_leave( ctrl_arg);
                 }
             }
         }
         break;
     case 0x203:     /* WM_LBUTTONDBLCLK */
         if (g_btn_hover != 0) {
-            ctrl_arg = ctrl_get_parent((Control *)self);
+            ctrl_arg = ((Control *)self)->get_parent();
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((Control *)self);
-            hotspot_fire_dblclick((Hotspot *)self, ctrl_arg);
+            ctrl_arg = ((Control *)self)->get_id();
+            ((Hotspot *)self)->fire_dblclick( ctrl_arg);
         }
         break;
     default:
@@ -157,7 +157,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     ctrl = (void *)wnd_obj2->owner;
     switch (msg) {
     case 0x201:     /* WM_LBUTTONDOWN */
-        tmp = ctrl_is_enabled((Button *)ctrl);
+        tmp = ((Button *)ctrl)->ctrl_is_enabled();
         if (tmp == 0)
             break;
         wnd_obj2->tracking = 1;
@@ -168,7 +168,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (wnd_obj2->tracking != 0) {
             pt.x = lparam & 0xffff;
             pt.y = (lparam >> 0x10) & 0xffff;
-            rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
+            rect_ptr = (int *)((Control *)ctrl)->get_rect();
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -189,7 +189,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         wnd_obj2->tracking = 0;
         pt.x = lparam & 0xffff;
         pt.y = (lparam >> 0x10) & 0xffff;
-        rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
+        rect_ptr = (int *)((Control *)ctrl)->get_rect();
         rect.left = rect_ptr[0];
         rect.top = rect_ptr[1];
         rect.right = rect_ptr[2];
@@ -200,29 +200,29 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         inside = PtInRect(&rect, pt);
         if (inside != 0) {
             button_wndproc(hwnd, 0xf, 0, 0);
-            ctrl_arg = ctrl_get_parent((Control *)ctrl);
+            ctrl_arg = ((Control *)ctrl)->get_parent();
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((Control *)ctrl);
-            button_fire_callback((Button *)ctrl, ctrl_arg);
+            ctrl_arg = ((Control *)ctrl)->get_id();
+            ((Button *)ctrl)->fire_callback( ctrl_arg);
         }
         break;
     case 0xf:       /* WM_PAINT */
         hdc = BeginPaint(hwnd, &ps);
-        rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
+        rect_ptr = (int *)((Control *)ctrl)->get_rect();
         rect.left = rect_ptr[0];
         rect.top = rect_ptr[1];
         rect.right = rect_ptr[2];
         rect.bottom = rect_ptr[3];
         ValidateRect(GetParent(hwnd), &rect);
-        tmp = ctrl_is_enabled((Button *)ctrl);
+        tmp = ((Button *)ctrl)->ctrl_is_enabled();
         if (tmp == 0) {
             focus_wnd = GetFocus();
             if (focus_wnd == hwnd) {
-                parent = (void *)ctrl_get_parent((Control *)ctrl);
-                nav_enabled = wnd_keyboard_nav_enabled((Wnd *)parent);
+                parent = (void *)((Control *)ctrl)->get_parent();
+                nav_enabled = ((Wnd *)parent)->keyboard_nav_enabled();
                 if (nav_enabled == '\0') {
-                    parent = (void *)ctrl_get_parent((Control *)ctrl);
-                    tmp = (int)wnd_get_window((WndBase *)parent);
+                    parent = (void *)((Control *)ctrl)->get_parent();
+                    tmp = (int)((WndBase *)parent)->get_window();
                     SetFocus(((NativeWindow *)tmp)->hwnd);
                 }
                 else {
@@ -253,9 +253,9 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (wparam == 9) {
             SendMessageA(GetParent(hwnd), msg, wparam, lparam);
         }
-        else if (wparam == 0x20 && (tmp = ctrl_is_enabled((Button *)ctrl), tmp != 0) &&
-                 (parent = (void *)ctrl_get_parent((Control *)ctrl),
-                  nav_enabled = wnd_keyboard_nav_enabled((Wnd *)parent), nav_enabled != '\0')) {
+        else if (wparam == 0x20 && (tmp = ((Button *)ctrl)->ctrl_is_enabled(), tmp != 0) &&
+                 (parent = (void *)((Control *)ctrl)->get_parent(),
+                  nav_enabled = ((Wnd *)parent)->keyboard_nav_enabled(), nav_enabled != '\0')) {
             wnd_obj2->pressed = 1;
             wnd_redraw_client(hwnd);
             wnd_obj2->pressed = 0;
@@ -267,18 +267,18 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
                 key_word = (int)key_state;
             }
             wnd_redraw_client(hwnd);
-            ctrl_arg = ctrl_get_parent((Control *)ctrl);
+            ctrl_arg = ((Control *)ctrl)->get_parent();
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((Control *)ctrl);
-            button_fire_callback((Button *)ctrl, ctrl_arg);
+            ctrl_arg = ((Control *)ctrl)->get_id();
+            ((Button *)ctrl)->fire_callback( ctrl_arg);
         }
         else {
             SendMessageA(GetParent(hwnd), msg, wparam, lparam);
         }
         break;
     case 7:         /* WM_SETFOCUS: draw the focus frame */
-        parent = (void *)ctrl_get_parent((Control *)ctrl);
-        nav_enabled = wnd_keyboard_nav_enabled((Wnd *)parent);
+        parent = (void *)((Control *)ctrl)->get_parent();
+        nav_enabled = ((Wnd *)parent)->keyboard_nav_enabled();
         if (nav_enabled == '\0')
             return ctrl_default_wndproc(hwnd, msg, wparam, lparam);
         hdc = GetDC(hwnd);
@@ -338,7 +338,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (wnd_obj->tracking != 0) {
             pt.x = lparam & 0xffff;
             pt.y = (lparam >> 0x10) & 0xffff;
-            rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
+            rect_ptr = (int *)((Control *)ctrl)->get_rect();
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -359,7 +359,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             wnd_obj->tracking = 0;
             pt.x = lparam & 0xffff;
             pt.y = (lparam >> 0x10) & 0xffff;
-            rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
+            rect_ptr = (int *)((Control *)ctrl)->get_rect();
             rect.left = rect_ptr[0];
             rect.top = rect_ptr[1];
             rect.right = rect_ptr[2];
@@ -370,13 +370,13 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             inside = PtInRect(&rect, pt);
             if (inside != 0) {
                 spritebtn_wndproc(hwnd, 0xf, 0, 0);
-                ctrl_arg = ctrl_get_parent((Control *)ctrl);
+                ctrl_arg = ((Control *)ctrl)->get_parent();
                 wnd_set_active_child(ctrl_arg);
-                ctrl_arg = ctrl_get_id((Control *)ctrl);
+                ctrl_arg = ((Control *)ctrl)->get_id();
                 if (msg == 0x202)
-                    spritebtn_fire_click((SpriteButton *)ctrl, ctrl_arg);
+                    ((SpriteButton *)ctrl)->fire_click( ctrl_arg);
                 else
-                    spritebtn_fire_rclick((SpriteButton *)ctrl, ctrl_arg);
+                    ((SpriteButton *)ctrl)->fire_rclick( ctrl_arg);
             }
         }
         break;
@@ -387,7 +387,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         break;
     case 0xf:       /* WM_PAINT */
         hdc = BeginPaint(hwnd, &ps);
-        rect_ptr = (int *)ctrl_get_rect((Control *)ctrl);
+        rect_ptr = (int *)((Control *)ctrl)->get_rect();
         rect.left = rect_ptr[0];
         rect.top = rect_ptr[1];
         rect.right = rect_ptr[2];
@@ -396,38 +396,38 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         OffsetRect(&rect, -rect.left, -rect.top);
         ValidateRect(hwnd, &rect);
         if (gfx_palettized_display == 1) {
-            parent = (void *)ctrl_get_parent((Control *)ctrl);
-            parent = (void *)wnd_get_palette((WndBase *)parent);
+            parent = (void *)((Control *)ctrl)->get_parent();
+            parent = (void *)((WndBase *)parent)->get_palette();
             hPal = palette_get_hpalette((PaletteHandleView *)parent);
             SelectPalette(hdc, hPal, 0);
         }
         if (wnd_obj->pressed == 0) {
-            surface_lock((DibSurface *)((int)ctrl + 0x34));
-            parent = (void *)ctrl_get_parent((Control *)ctrl);
-            ctrl_arg = wnd_get_palette((WndBase *)parent);
-            surface_apply_palette((DibSurface *)((int)ctrl + 0x34), (PaletteVersionView *)ctrl_arg);
+            ((DibSurface *)((int)ctrl + 0x34))->lock();
+            parent = (void *)((Control *)ctrl)->get_parent();
+            ctrl_arg = ((WndBase *)parent)->get_palette();
+            ((DibSurface *)((int)ctrl + 0x34))->apply_palette( (PaletteVersionView *)ctrl_arg);
             if (gfx_palettized_display == 1)
                 RealizePalette(hdc);
-            height = (int)surface_get_dib((DibSurface *)((int)ctrl + 0x34));
+            height = (int)((DibSurface *)((int)ctrl + 0x34))->get_dib();
             hdcSrc = ((GdiDib *)height)->hdc;
-            height = surface_height((DibSurface *)((int)ctrl + 0x34));
-            width = surface_width((DibSurface *)((int)ctrl + 0x34));
+            height = ((DibSurface *)((int)ctrl + 0x34))->surface_height();
+            width = ((DibSurface *)((int)ctrl + 0x34))->surface_width();
             BitBlt(hdc, 0, 0, width, height, hdcSrc, 0, 0, 0xcc0020);
-            surface_unlock((DibSurface *)((int)ctrl + 0x34));
+            ((DibSurface *)((int)ctrl + 0x34))->unlock();
         }
         if (wnd_obj->pressed == 1) {
-            surface_lock((DibSurface *)((int)ctrl + 0x7c));
-            parent = (void *)ctrl_get_parent((Control *)ctrl);
-            ctrl_arg = wnd_get_palette((WndBase *)parent);
-            surface_apply_palette((DibSurface *)((int)ctrl + 0x7c), (PaletteVersionView *)ctrl_arg);
+            ((DibSurface *)((int)ctrl + 0x7c))->lock();
+            parent = (void *)((Control *)ctrl)->get_parent();
+            ctrl_arg = ((WndBase *)parent)->get_palette();
+            ((DibSurface *)((int)ctrl + 0x7c))->apply_palette( (PaletteVersionView *)ctrl_arg);
             RealizePalette(hdc);
-            height = (int)surface_get_dib((DibSurface *)((int)ctrl + 0x7c));
+            height = (int)((DibSurface *)((int)ctrl + 0x7c))->get_dib();
             hdcSrc = ((GdiDib *)height)->hdc;
             /* The original uses the same accessor for both dimensions here. */
-            height = surface_width((DibSurface *)((int)ctrl + 0x7c));
-            width = surface_width((DibSurface *)((int)ctrl + 0x7c));
+            height = ((DibSurface *)((int)ctrl + 0x7c))->surface_width();
+            width = ((DibSurface *)((int)ctrl + 0x7c))->surface_width();
             BitBlt(hdc, 0, 0, width, height, hdcSrc, 0, 0, 0xcc0020);
-            surface_unlock((DibSurface *)((int)ctrl + 0x7c));
+            ((DibSurface *)((int)ctrl + 0x7c))->unlock();
         }
         EndPaint(hwnd, &ps);
         if (GetFocus() == hwnd)
@@ -437,8 +437,8 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (wparam == 9) {
             SendMessageA(GetParent(hwnd), msg, wparam, lparam);
         }
-        else if (wparam == 0x20 && (parent = (void *)ctrl_get_parent((Control *)ctrl),
-                                     nav_enabled = wnd_keyboard_nav_enabled((Wnd *)parent), nav_enabled != '\0')) {
+        else if (wparam == 0x20 && (parent = (void *)((Control *)ctrl)->get_parent(),
+                                     nav_enabled = ((Wnd *)parent)->keyboard_nav_enabled(), nav_enabled != '\0')) {
             wnd_obj->pressed = 1;
             wnd_redraw_client(hwnd);
             wnd_obj->pressed = 0;
@@ -446,18 +446,18 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             while (*((char *)&key_word + 1) != '\0')
                 key_word = (int)GetAsyncKeyState(0x20);
             wnd_redraw_client(hwnd);
-            ctrl_arg = ctrl_get_parent((Control *)ctrl);
+            ctrl_arg = ((Control *)ctrl)->get_parent();
             wnd_set_active_child(ctrl_arg);
-            ctrl_arg = ctrl_get_id((Control *)ctrl);
-            spritebtn_fire_click((SpriteButton *)ctrl, ctrl_arg);
+            ctrl_arg = ((Control *)ctrl)->get_id();
+            ((SpriteButton *)ctrl)->fire_click( ctrl_arg);
         }
         else {
             SendMessageA(GetParent(hwnd), msg, wparam, lparam);
         }
         break;
     case 7:         /* WM_SETFOCUS */
-        parent = (void *)ctrl_get_parent((Control *)ctrl);
-        nav_enabled = wnd_keyboard_nav_enabled((Wnd *)parent);
+        parent = (void *)((Control *)ctrl)->get_parent();
+        nav_enabled = ((Wnd *)parent)->keyboard_nav_enabled();
         if (nav_enabled == '\0')
             return 0;
         return ctrl_default_wndproc(hwnd, 7, wparam, lparam);
@@ -593,27 +593,27 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         switch (wp & 0xffff) {
         case 0x201:
             (*(void * *)&wnd_active_child) = child2;
-            wnd_call_lbuttondown((WndHandlers *)view, lparam & 0xffff, lparam >> 0x10);
+            ((WndHandlers *)view)->call_lbuttondown( lparam & 0xffff, lparam >> 0x10);
             break;
         case 0x204:
             (*(void * *)&wnd_active_child) = child2;
-            wnd_call_rbuttondown((WndHandlers *)view, lparam & 0xffff, lparam >> 0x10);
+            ((WndHandlers *)view)->call_rbuttondown( lparam & 0xffff, lparam >> 0x10);
             break;
         }
         break;
 
     case 0x4c8:
         if (lparam == 0x20d)
-            wnd_call_msg4c8((WndHandlers *)view, 0);
+            ((WndHandlers *)view)->call_msg4c8( 0);
         break;
 
     case 0x24: {    /* WM_GETMINMAXINFO */
         int *mmi = (int *)lparam;
         int border_y, border_x;
-        border_y = wnd_obj_frame_height(wnd_get_window(child2));
-        border_x = wnd_obj_frame_width(wnd_get_window(child2));
-        wnd_get_min_size(child2, (iptr)&min_w, (iptr)&min_h);
-        wnd_get_max_size(child2, (iptr)&max_w, (iptr)&max_h);
+        border_y = wnd_obj_frame_height(child2->get_window());
+        border_x = wnd_obj_frame_width(child2->get_window());
+        child2->get_min_size( (iptr)&min_w, (iptr)&min_h);
+        child2->get_max_size( (iptr)&max_w, (iptr)&max_h);
         mmi[8] = border_x + max_w;        /* ptMaxTrackSize */
         mmi[9] = border_y + max_h;
         mmi[6] = border_x + min_w;       /* ptMinTrackSize */
@@ -622,68 +622,68 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     }
 
     case 0x201:     /* WM_LBUTTONDOWN */
-        owner = wnd_get_window((WndBase *)GetWindowLongA(hwnd, 0));
+        owner = ((WndBase *)GetWindowLongA(hwnd, 0))->get_window();
         (*(void * *)&wnd_active_child) = child2;
         if ((owner->flags_bytes[1] & 2) != 0) {
             SetFocus(owner->hwnd);
             BringWindowToTop(hwnd);
         }
         child2->lbutton_down = 1;
-        wnd_call_lbuttondown((WndHandlers *)view, (int)x, (int)y);
+        ((WndHandlers *)view)->call_lbuttondown( (int)x, (int)y);
         break;
     case 0x202:     /* WM_LBUTTONUP */
         (*(void * *)&wnd_active_child) = child2;
         if ((int)child2->lbutton_down == 1) {
             child2->lbutton_down = 0;
-            wnd_call_lbuttonup((WndHandlers *)view, (int)x, (int)y);
+            ((WndHandlers *)view)->call_lbuttonup( (int)x, (int)y);
         }
-        wnd_call_lbuttonup_raw((WndHandlers *)view, lparam & 0xffff, lparam >> 0x10);
+        ((WndHandlers *)view)->call_lbuttonup_raw( lparam & 0xffff, lparam >> 0x10);
         break;
     case 0x204:     /* WM_RBUTTONDOWN */
-        owner = wnd_get_window((WndBase *)GetWindowLongA(hwnd, 0));
+        owner = ((WndBase *)GetWindowLongA(hwnd, 0))->get_window();
         if ((owner->flags_bytes[1] & 2) != 0) {
             SetFocus(owner->hwnd);
             BringWindowToTop(hwnd);
         }
         (*(void * *)&wnd_active_child) = child2;
         child2->rbutton_down = 1;
-        wnd_call_rbuttondown((WndHandlers *)view, (int)x, (int)y);
+        ((WndHandlers *)view)->call_rbuttondown( (int)x, (int)y);
         break;
     case 0x205:     /* WM_RBUTTONUP */
         (*(void * *)&wnd_active_child) = child2;
         if ((int)child2->rbutton_down == 1) {
             (*(void * *)&wnd_active_child) = child2;
             child2->rbutton_down = 0;
-            wnd_call_rbuttonup((WndHandlers *)view, (int)x, (int)y);
+            ((WndHandlers *)view)->call_rbuttonup( (int)x, (int)y);
         }
-        wnd_call_rbuttonup_raw((WndHandlers *)view, (int)x, (int)y);
+        ((WndHandlers *)view)->call_rbuttonup_raw( (int)x, (int)y);
         break;
     case 0x200:     /* WM_MOUSEMOVE */
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_mousemove((WndHandlers *)view, (int)x, (int)y);
+        ((WndHandlers *)view)->call_mousemove( (int)x, (int)y);
         break;
     case 0x203:     /* WM_LBUTTONDBLCLK */
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_dblclick((WndHandlers *)view, (int)x, (int)y);
+        ((WndHandlers *)view)->call_dblclick( (int)x, (int)y);
         break;
 
     case 0x100:     /* WM_KEYDOWN */
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_keydown_pre((WndHandlers *)view, input_map_vkey(wp));
-        wnd_call_keydown((WndHandlers *)view, input_map_vkey(wp));
+        ((WndHandlers *)view)->call_keydown_pre( input_map_vkey(wp));
+        ((WndHandlers *)view)->call_keydown( input_map_vkey(wp));
         break;
     case 0x102:     /* WM_CHAR */
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_char((WndHandlers *)view, wp & 0xff);
+        ((WndHandlers *)view)->call_char( wp & 0xff);
         break;
     case 0x101:     /* WM_KEYUP */
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_keyup((WndHandlers *)view, input_map_vkey(wp));
+        ((WndHandlers *)view)->call_keyup( input_map_vkey(wp));
         break;
 
     case 7:         /* WM_SETFOCUS */
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_setfocus((WndHandlers *)view);
+        ((WndHandlers *)view)->call_setfocus();
         break;
 
     case 0x311:     /* WM_PALETTECHANGED */
@@ -692,9 +692,9 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         /* fall through */
     case 0x30f:     /* WM_QUERYNEWPALETTE */
         hdc = GetDC(hwnd);
-        wnd_obj = (int)wnd_get_window(child2);
+        wnd_obj = (int)child2->get_window();
         if ((int)((NativeWindow *)wnd_obj)->palette != 0) {
-            wnd_obj = (int)wnd_get_window(child2);
+            wnd_obj = (int)child2->get_window();
             SelectPalette(hdc, ((NativeWindow *)wnd_obj)->palette, 0);
             realized = RealizePalette(hdc);
             InvalidateRect(hwnd, (RECT *)0x0, 1);
@@ -707,12 +707,12 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         (*(void * *)&wnd_active_child) = child2;
         if (IsIconic(hwnd) == 0) {
             wnd_on_size_nop(child2, (int)x, (int)y);
-            wnd_call_size((WndHandlers *)view, wp);
+            ((WndHandlers *)view)->call_size( wp);
         }
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
     case 3:         /* WM_MOVE */
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_move((WndHandlers *)view, (int)x, (int)y);
+        ((WndHandlers *)view)->call_move( (int)x, (int)y);
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 
     case 0x111:     /* WM_COMMAND */
@@ -727,48 +727,48 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     case 0x11f:     /* WM_MENUSELECT */
         (*(void * *)&wnd_active_child) = child2;
         if ((wp >> 0x10 & 0xffff) == 0xffff && lparam == 0)
-            wnd_fire_menu_select(child2, 0xffffffff);
+            child2->fire_menu_select( 0xffffffff);
         else
-            wnd_fire_menu_select(child2, wp & 0xffff);
+            child2->fire_menu_select( wp & 0xffff);
         break;
 
     case 0x112:     /* WM_SYSCOMMAND */
         (*(void * *)&wnd_active_child) = child2;
         switch (wp) {
         case 0xf020:    /* SC_MINIMIZE */
-            wnd_call_minimize((WndHandlers *)view);
+            ((WndHandlers *)view)->call_minimize();
             break;
         case 0xf120:    /* SC_RESTORE */
-            wnd_call_restore((WndHandlers *)view);
+            ((WndHandlers *)view)->call_restore();
             break;
         }
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 
     case 0x10:      /* WM_CLOSE */
         (*(void * *)&wnd_active_child) = child2;
-        wnd_obj = wnd_call_close((WndHandlers *)view);
+        wnd_obj = ((WndHandlers *)view)->call_close();
         if (wnd_obj == 0)
             break;
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 
     case 0x44:
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_msg44((WndHandlers *)view, lparam & 0xffff);
+        ((WndHandlers *)view)->call_msg44( lparam & 0xffff);
         return 1;
 
     case 0x114:     /* WM_HSCROLL */
-        scroll_pos2 = wnd_get_hscroll_pos(child2);
+        scroll_pos2 = child2->get_hscroll_pos();
         switch (wp) {
         case 4:     /* SB_THUMBPOSITION */
             scroll_pos2 = (int)(short)(wp >> 0x10);
             SetScrollPos(hwnd, 0, scroll_pos2, 1);
             (*(void * *)&wnd_active_child) = child2;
             child2->hscroll_pos = scroll_pos2;
-            wnd_call_hscroll((WndHandlers *)view, child2->hscroll_pos);
+            ((WndHandlers *)view)->call_hscroll( child2->hscroll_pos);
             break;
         case 5:     /* SB_THUMBTRACK */
             (*(void * *)&wnd_active_child) = child2;
-            wnd_call_hscroll_track((WndHandlers *)view, (int)(short)(wp >> 0x10));
+            ((WndHandlers *)view)->call_hscroll_track( (int)(short)(wp >> 0x10));
             break;
         case 1:     /* SB_LINEDOWN */
             scroll_pos2 = scroll_pos2 + 1;
@@ -777,35 +777,35 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
             scroll_pos2 = scroll_pos2 - 1;
             goto hscroll_set;
         case 3:     /* SB_PAGEDOWN */
-            page = wnd_get_hscroll_page(child2);
+            page = child2->get_hscroll_page();
             scroll_pos2 = scroll_pos2 + page;
             goto hscroll_set;
         case 2:     /* SB_PAGEUP */
-            page = wnd_get_hscroll_page(child2);
+            page = child2->get_hscroll_page();
             scroll_pos2 = scroll_pos2 - page;
         hscroll_set:
             SetScrollPos(hwnd, 0, scroll_pos2, 1);
             scroll_pos2 = GetScrollPos(hwnd, 0);
             (*(void * *)&wnd_active_child) = child2;
             child2->hscroll_pos = scroll_pos2;
-            wnd_call_hscroll((WndHandlers *)view, scroll_pos2);
+            ((WndHandlers *)view)->call_hscroll( scroll_pos2);
             break;
         }
         break;
 
     case 0x115:     /* WM_VSCROLL */
-        scroll_pos2 = wnd_get_vscroll_pos(child2);
+        scroll_pos2 = child2->get_vscroll_pos();
         switch (wp) {
         case 4:     /* SB_THUMBPOSITION */
             scroll_pos2 = (int)(short)(wp >> 0x10);
             SetScrollPos(hwnd, 1, scroll_pos2, 1);
             (*(void * *)&wnd_active_child) = child2;
             child2->vscroll_pos = scroll_pos2;
-            wnd_call_vscroll((WndHandlers *)view, child2->vscroll_pos);
+            ((WndHandlers *)view)->call_vscroll( child2->vscroll_pos);
             break;
         case 5:     /* SB_THUMBTRACK */
             (*(void * *)&wnd_active_child) = child2;
-            wnd_call_vscroll_track((WndHandlers *)view, (int)(short)(wp >> 0x10));
+            ((WndHandlers *)view)->call_vscroll_track( (int)(short)(wp >> 0x10));
             break;
         case 1:
             scroll_pos2 = scroll_pos2 + 1;
@@ -814,18 +814,18 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
             scroll_pos2 = scroll_pos2 - 1;
             goto vscroll_set;
         case 3:
-            page = wnd_get_vscroll_page(child2);
+            page = child2->get_vscroll_page();
             scroll_pos2 = scroll_pos2 + page;
             goto vscroll_set;
         case 2:
-            page = wnd_get_vscroll_page(child2);
+            page = child2->get_vscroll_page();
             scroll_pos2 = scroll_pos2 - page;
         vscroll_set:
             SetScrollPos(hwnd, 1, scroll_pos2, 1);
             scroll_pos2 = GetScrollPos(hwnd, 1);
             (*(void * *)&wnd_active_child) = child2;
             child2->vscroll_pos = scroll_pos2;
-            wnd_call_vscroll((WndHandlers *)view, scroll_pos2);
+            ((WndHandlers *)view)->call_vscroll( scroll_pos2);
             break;
         }
         break;
@@ -835,16 +835,16 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 
     case 0x231:     /* WM_ENTERSIZEMOVE */
-        owner = wnd_get_window((WndBase *)GetWindowLongA(hwnd, 0));
+        owner = ((WndBase *)GetWindowLongA(hwnd, 0))->get_window();
         (void)owner;
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_entersizemove((WndHandlers *)view);
+        ((WndHandlers *)view)->call_entersizemove();
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
     case 0x232:     /* WM_EXITSIZEMOVE */
-        owner = wnd_get_window((WndBase *)GetWindowLongA(hwnd, 0));
+        owner = ((WndBase *)GetWindowLongA(hwnd, 0))->get_window();
         (void)owner;
         (*(void * *)&wnd_active_child) = child2;
-        wnd_call_exitsizemove((WndHandlers *)view);
+        ((WndHandlers *)view)->call_exitsizemove();
         return wnd_base_wndproc(hwnd, msg, wp, lparam);
 
     default:
