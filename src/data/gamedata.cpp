@@ -12,6 +12,11 @@
    address comments) checks it when the game starts. */
 #ifdef __APPLE__
 #define GAMEDATA_SECTION "__DATA,__civ2data"
+#elif defined(CIV2_FIXED_DATA)
+/* The unit tests' builds (tests/unit_record.c, tests/unit_run.c): a section
+   of its own the link puts at a fixed address, so that pointers into the
+   game's data mean the same in a recording and in later builds. */
+#define GAMEDATA_SECTION "civ2data"
 #else
 #define GAMEDATA_SECTION ".data.civ2"
 #endif

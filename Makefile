@@ -8,7 +8,7 @@ SEED   ?= 7
 SCRIPT ?= harness/scripts/newgame.txt
 NAME   := $(basename $(notdir $(SCRIPT)))
 
-.PHONY: all build run windows images hook ref native port native-suite clean
+.PHONY: all build run windows images hook ref native port native-suite test unit-record clean
 
 # Build and play on this machine (no Docker): needs a C compiler, SDL2 and
 # Python 3 (README "Build and run").  On Windows: in an MSYS2 MINGW64 shell.
@@ -47,6 +47,23 @@ port:                         ## build/OpenCiv2 in Docker (`make build` builds i
 
 native-suite:                 ## run every scenario on a native build (EXE=OpenCiv2 or civ2-linux32) against the Wine recordings
 	$(DK) sh -c "EXE=$(or $(EXE),OpenCiv2) sh harness/native_suite.sh"
+
+# The unit tests (docs/DEVELOPMENT.md): calls of the game's functions recorded
+# from these replays, run again and compared in seconds.  No game files needed.
+UNIT_SCRIPTS ?= long50 turns newgame conquest civilwar spies units talks citywork hotseat accelerated \
+                napoleon ww1 actions actions2 events scenario saveload endgame advisors citywindow conquest-spy \
+                editors editors2 hotseat-scenario mapview menucheat menuitems menuorders menuview \
+                menuview-arrange reports screens setup spriteedit
+
+test:                         ## the unit tests: the recorded cases in tests/unit (build/civ2-unittest)
+	$(DK) sh -c "python3 tools/build_native.py --target linux32test >/dev/null && cd build && ./civ2-unittest --mask ../tests/unit/textmask.tsv ../tests/unit/*.gz"
+
+unit-record:                  ## record the unit tests' cases again from the replays (needs the game and run/ref-*)
+	$(DK) python3 tools/build_native.py --target linux32rec
+	$(DK) python3 tools/build_native.py --target linux32test
+	$(DK) sh -c "python3 tools/unit_textmask.py build/civ2-unittest > tests/unit/textmask.tsv"
+	$(DK) sh tools/unit_record.sh $(patsubst %,harness/scripts/%.txt,$(UNIT_SCRIPTS))
+	$(DK) python3 tools/unit_coverage.py
 
 hook:                         ## proxy XDaemon.dll: seed control, rand trace, replay, crash log
 	$(DK) make -C hook

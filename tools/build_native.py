@@ -11,6 +11,7 @@ Targets:
 Generated helpers (build/native/gen/):
   thunks.h     incremental-link thunk names -> the functions they jump to
   inits.c      the C and C++ static initializer tables the MSVC runtime ran
+  linux32rec, linux32test   the unit tests' recorder and runner (tests/unit_*.c)
 Usage: build_native.py [--target win64] [--jobs-limit]
 """
 import argparse
@@ -56,6 +57,30 @@ TARGETS = {
         'cflags': ['-m32', '-fsanitize=address', '-fsanitize-recover=address', '-fno-omit-frame-pointer'],
         'ldflags': ['-m32', '-rdynamic', '-no-pie', '-fsanitize=address'],
         'libs': ['-lSDL2', '-lm', '-ldl'],
+    },
+    # The unit tests (tests/unit_record.c, tests/unit_run.c; docs/DEVELOPMENT.md):
+    # the game's data at a fixed address in both.
+    'linux32rec': {         # records cases of the game's functions while a replay runs
+        'cc': 'gcc',
+        'exe': 'civ2-linux32rec',
+        'cflags': ['-m32', '-DCIV2_FIXED_DATA', '-DCIV2_UNITREC', '-fno-omit-frame-pointer'],
+        'instrument': ['-finstrument-functions', '-finstrument-functions-exclude-file-list=scoped.h,/usr/'],
+        'extra': ['tests/unit_record.c'],
+        'ldflags': ['-m32', '-rdynamic', '-no-pie', '-Wl,--section-start=civ2data=0x30000000'],
+        'libs': ['-lSDL2', '-lm', '-ldl', '-lz'],
+    },
+    'linux32test': {        # runs the recorded cases: make test
+        'cc': 'gcc',
+        'exe': 'civ2-unittest',
+        'cflags': ['-m32', '-DCIV2_FIXED_DATA', '-DCIV2_UNITTEST'],
+        # as the recording build: gcc passes the arguments of a static
+        # function whose address is not taken in registers, and the
+        # instrumentation takes every function's address (tests/unit_run.c
+        # has empty hooks)
+        'instrument': ['-finstrument-functions', '-finstrument-functions-exclude-file-list=scoped.h,/usr/'],
+        'extra': ['tests/unit_run.c'],
+        'ldflags': ['-m32', '-rdynamic', '-no-pie', '-Wl,--section-start=civ2data=0x30000000'],
+        'libs': ['-lSDL2', '-lm', '-ldl', '-lz'],
     },
     'linux32clang': {       # cross-check: the linux32 build compiled by clang (needs clang installed)
         'cc': 'clang',
@@ -239,7 +264,12 @@ def cxx_of(cc):
 
 
 def compile_one(job):
-    cc, src, o, stale, tflags = job
+    cc, src, o, stale, tflags, instrument = job
+    if instrument and (('/src/platform/' in src and not src.endswith('/aaa_begin.c')) or
+                       (is_game(src) and '/src/native/' not in src)):
+        # the recording build: the game's and the platform's functions call
+        # tests/unit_record.c on entry and exit
+        tflags = tflags + instrument
     if stale:
         flags, extra = CFLAGS, []
         lang = []
@@ -248,7 +278,7 @@ def compile_one(job):
             flags = ['-std=gnu++17' if f == '-std=gnu89' else f for f in CFLAGS]
             lang = ['-x', 'c++']
             extra = ['-fno-exceptions', '-fno-rtti'] + (['-fpermissive'] if CXX_MODE == 'permissive' else [])
-        if '/src/platform/' in src:
+        if '/src/platform/' in src or '/tests/' in src:
             flags = [f for f in CFLAGS if f != '-w']
             # The platform layer is ordinary portable C, with warnings.
             extra = ['-Wall', '-Wno-unused-function', '-std=gnu99', '-D_GNU_SOURCE']
@@ -297,13 +327,17 @@ def main():
         sources.append(os.path.join(ROOT, 'src', 'third_party', 'stb_vorbis', 'stb_vorbis.c'))
     if args.target.startswith('linux'):
         sources += [os.path.join(ROOT, 'src', 'host', f) for f in ('host_sdl.c', 'host_net.c')]
+    sources += [os.path.join(ROOT, f) for f in t.get('extra', [])]
     headers = max(os.path.getmtime(h) for h in glob.glob(os.path.join(ROOT, 'src', '*', '*.h')))
     jobs = []
     tflags = t.get('cflags', [])
     for src in sources:
         o = os.path.join(objdir, os.path.relpath(src, ROOT).replace('/', '_') + '.o')
-        stale = not os.path.exists(o) or os.path.getmtime(o) < max(os.path.getmtime(src), headers)
-        jobs.append((t['cc'], src, o, stale, tflags))
+        newest = max(os.path.getmtime(src), headers)
+        if '/tests/' in src:
+            newest = max([newest] + [os.path.getmtime(h) for h in glob.glob(os.path.join(ROOT, 'tests', '*.h'))])
+        stale = not os.path.exists(o) or os.path.getmtime(o) < newest
+        jobs.append((t['cc'], src, o, stale, tflags, t.get('instrument')))
     with concurrent.futures.ThreadPoolExecutor(os.cpu_count()) as ex:
         results = list(ex.map(compile_one, jobs))
     objs = [o for o, err in results if err is None]

@@ -18,7 +18,7 @@ progress: [STATUS.md](STATUS.md).
 | `data/` | Fonts as the original renders them, and the original executable's data sections. |
 | `re/` | Analysis results: function list, calling conventions, data layout, Ghidra's decompilation. |
 | `harness/` | The replay scripts and the comparison with the original (`run.py`, `compare.py`, `native_suite.sh`). |
-| `tests/` | Small standalone tests (data layout, network records, CD music reading). |
+| `tests/` | The unit tests (`make test`: recorded calls of the game's functions, `tests/unit`) and small standalone tests (data layout, network records, CD music reading). |
 | `hook/` | An `XDaemon.dll` proxy that makes the original deterministic under Wine. |
 | `tools/` | Build, analysis and refactoring scripts. |
 | `docs/` | Notes on the reconstruction and its verification; progress in `STATUS.md`. |
@@ -57,4 +57,53 @@ make native          # build/civ2-linux32: gcc -m32, the same code, easier to de
 make port            # build/OpenCiv2 in the container
 make ref SCRIPT=harness/scripts/turns.txt    # record the original on a scenario
 make native-suite    # replay every scenario on a native build and compare (EXE=OpenCiv2, OpenCiv2.exe under Wine)
+make test            # the unit tests: recorded cases of the game's functions, in seconds (no game files needed)
+make unit-record     # record those cases again from the replays (needs the game and run/ref-*)
 ```
+
+## Unit tests
+
+`make test` checks the game's logic in seconds (2.5 s for the cases, a few more to build):
+10,485 calls of 832 of the game's functions (combat odds and strengths, movement and paths,
+city food, shields, trade, happiness and
+production choice, the AI's assessments and unit orders, research, diplomacy, map generation steps
+...), each recorded from a replay of the reference scenarios, called again with the same arguments
+and state, and compared with what it did then: its return value, every byte of the game's state it
+changed and its `rand()` calls.  A change to the logic that any recorded call sees fails the test,
+naming the function, the call and the first byte that differs (`cities+0x1a2`).
+
+* **Recording** (`tests/unit_record.c`, `make unit-record`).  The recording build
+  (`build_native.py --target linux32rec`) compiles the game and the platform layer with
+  `-finstrument-functions`: every function calls the recorder on entry and exit.  While a replay runs
+  (`tools/unit_record.sh`: the scenarios in `UNIT_SCRIPTS`, 35 of the 36, each run checked against
+  the original's recording as by the suite), the recorder takes some calls of each game function (the 1st, 2nd, 3rd, 4th, 6th,
+  9th ...; at most 6 per scenario and 16 in all): the argument words (by the signatures
+  `tools/unit_sigs.py` gets from the debugging information), the state at entry (the game's data,
+  `src/data/gamedata.cpp`, and the map's blocks), the return value (the function's return address is
+  pointed at a trampoline that catches it) and the state at exit.  A call that reaches the platform
+  layer (windows, drawing, files, the clock: anything but the `rand()` trace), allocates or frees
+  memory, or changes state outside the game's data (`tools/unit_sigs.py --statics`) is not taken.
+  Arguments that point into the caller's stack are recorded with the stack they point into (and what
+  pointers there point to); a pointer anywhere else but the game's data and the map is not taken.
+  The `rand()` generator's seed is game data, so a case replays its random numbers exactly.
+* **Running** (`tests/unit_run.c`, `make test`).  The runner (`--target linux32test`,
+  `build/civ2-unittest`) is the game with its initializers run and no window: for each case it sets the
+  game's data and the map as they were, calls the function, and compares (crashes and hangs are
+  failures, not aborts).  Both builds put the game's data at a fixed address (0x30000000), so
+  pointers into it mean the same in the recording and in later builds; both are instrumented, as gcc
+  passes a static function's arguments in registers unless its address is taken.  After recording,
+  the runner keeps only the cases it reproduces, twice in each of three processes
+  (`civ2-unittest --bless`): calls that read memory outside what is recorded (the heap: the recorder
+  moves its heap away so that such pointers point to nothing) drop out there.
+* **Data** (`tests/unit/*.gz`, 2.6 MB).  A case's state is a delta from the previous case's,
+  compressed.  No text from the game's files is recorded: where the game's data holds text (every
+  `char` array and text buffer, `tools/unit_textmask.py` -> `tests/unit/textmask.tsv`) the cases have
+  what the game's initializers leave there, and on the stack what looks like text is zeroed; the
+  runner compares the same way.  So the tests need no game files and run anywhere the 32-bit Linux
+  build does (the release workflow runs them).  `tools/unit_coverage.py` lists the functions with
+  cases by file (`tests/unit/cases.tsv`).
+* **When the code changes**.  Renamed functions are skipped (named in the report); a change of the
+  game data's size or layout needs a new recording (`make unit-record`, about an hour), as does a
+  function whose signature changes.  A failing case after an intended change of behaviour: check it
+  against the replays (which compare with the original), then record again.
+

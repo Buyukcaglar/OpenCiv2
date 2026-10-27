@@ -120,7 +120,7 @@ message by message and clock event by clock event.
   the address comments) and native_suite.sh fails a run where it differs.  A
   DIB's pixels get a few bytes of slack as on Windows (the GIF decoder
   writes one byte past the last row).
-* **C++** (step 6, in progress).  The game (src/auto, src/game, src/data,
+* **C++** (step 6, complete: this and the items below).  The game (src/auto, src/game, src/data,
   src/native) compiles as strict C++: g++ for the linux32 builds, the wasm
   toolchain's clang++ for the portable ones; the platform layer stays C
   (extern "C" at the boundary).  The conversion was checked function by
@@ -342,6 +342,41 @@ message by message and clock event by clock event.
   the pool is the original's own bug (its callers keep event pointers
   across events_compact, valid under Wine only because the new pool is
   the block just freed), so events_compact keeps the pool's block.
+* **Unit tests** (step 6, the last part).  `make test` runs 10,485 recorded
+  calls of 832 of the game's functions in 2.5 seconds, without the game's
+  files (docs/DEVELOPMENT.md "Unit tests"): each call recorded from the
+  replays of 35 scenarios (all but `menu`, which runs none that qualify) by
+  the recording build (tests/unit_record.c: -finstrument-functions, the
+  arguments, the game's data and the map at entry, the return value through a
+  return-address trampoline, the state at exit), set up again by the runner
+  (tests/unit_run.c) and compared byte for byte, `rand()` calls included (the
+  seed is game data).  Calls that reach the platform layer, the heap or
+  state outside the game's data are not taken; the runner keeps the cases it
+  reproduces twice in each of three processes.  By file: window 112 functions,
+  city 104, unit 99, map 71, civ 68, graphics 55, ai 55 (of the 57 the replays
+  run), text 53, diplomacy 35, game 29 ... (tests/unit/cases.tsv): combat
+  (strengths, odds, the fight, veterans, city defences), movement and paths,
+  city food, shields, trade, happiness, workers and production choice, the
+  AI's assessments and unit orders, research cost and choice, diplomacy's
+  evaluations and treaties, map generation steps; 206 cases call `rand()`.
+  Of the 2,225 game functions these replays run, 832 have cases: the rest
+  draw, wait for input or read files, or are called only with pointers into
+  the heap.  Not covered: rules parsing and the save/load round trip (they
+  read and write files; the replays check them), and the top-level turn
+  functions that redraw (their parts are covered).  2.6 MB of data (gzip;
+  state as deltas from case to case; no text from the game's files: where the
+  data holds text, tests/unit/textmask.tsv from tools/unit_textmask.py, the
+  cases have what the initializers leave).  Deliberate one-line mutations,
+  reverted after, each fail: an attack strength one too high (19 cases of
+  unit_attack_strength and unit_resolve_attack), the AI's food box constant
+  13 -> 12 (6 cases of city_calc_food_box_rows, city_calc_unit_support,
+  city_recalc), the research cost's floor of advances 1 -> 2 (10 cases), one
+  more food per citizen in the production choice's surplus (1 case).  The
+  release workflow runs the tests (a job of its own, the 32-bit Linux
+  build).  The only game-side changes are for the tests' builds and compile
+  to nothing in the others (CIV2_FIXED_DATA: the game's data in a section at
+  a fixed address; CIV2_UNITTEST: main() runs the cases); the suite passes
+  36 of 36 on linux32, and the portable and Windows builds compile.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

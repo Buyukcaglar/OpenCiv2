@@ -70,7 +70,9 @@ constants for units, cities, treaties, tiles) and its state grouped by subject (
 `prefs.difficulty` or `net.session_phase` where the original's variables lie together, a header
 per subject, the read-only texts and tables `const`), and releases bound to scope (a local
 dialog, surface or file released by a guard on every path out of the function instead of on each
-return); recorded unit tests come next.
+return). Its logic has recorded unit tests (`make test`: 10,485 calls of 832 of the game's
+functions recorded from the replays, run again and compared in seconds, no game files needed).
+That completes step 6 of the clean-up.
 
 Details: [STATUS.md](docs/STATUS.md) (progress and verification) and
 [DEVELOPMENT.md](docs/DEVELOPMENT.md) (the code's layout, the approach and the tooling).

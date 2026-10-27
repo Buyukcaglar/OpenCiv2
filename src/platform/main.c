@@ -149,15 +149,23 @@ int main(int argc, char **argv)
     const char *scale = getenv("CIV2_SCALE");
     int i, cover = 0;
     char cmdline[1] = "";
-    plat_replay = getenv("CIV2_SCRIPT") && *getenv("CIV2_SCRIPT");
+#ifdef CIV2_UNITTEST
+    /* The unit tests' runner (tests/unit_run.c): the game's data and
+       initializers, then recorded cases instead of the game; no window. */
+    const int unit_test = 1;
+    setenv("CIV2_HOOK_LOG", "/dev/null", 0);   /* the platform's log: not with the results */
+#else
+    const int unit_test = 0;
+#endif
+    plat_replay = !unit_test && getenv("CIV2_SCRIPT") && *getenv("CIV2_SCRIPT");
     /* Replays reproduce the reference desktop (Wine without a window
        manager) unless CIV2_NORMAL_DESKTOP is set. */
     plat_normal_desktop = !plat_replay || (getenv("CIV2_NORMAL_DESKTOP") && *getenv("CIV2_NORMAL_DESKTOP"));
-    if (!host_init(plat_replay && !getenv("CIV2_SHOW")))
+    if (!host_init(unit_test || (plat_replay && !getenv("CIV2_SHOW"))))
         return 1;
-    set_dirs(argv[0], argc > 1 ? argv[1] : NULL);
+    set_dirs(argv[0], argc > 1 && !unit_test ? argv[1] : NULL);
     clock_init();
-    if (!plat_replay) {
+    if (!plat_replay && !unit_test) {
         /* As the original on Windows, whose main window fills the screen.
          * Where the system has its own (Windows, macOS): its window and
          * menu bar (Windows: full screen, the menu bar shown; macOS: over
@@ -192,7 +200,7 @@ int main(int argc, char **argv)
     wnd_init();
     resources_init();
     sound_init();
-    if (!window_open && (!plat_replay || getenv("CIV2_SHOW")))
+    if (!window_open && !unit_test && (!plat_replay || getenv("CIV2_SHOW")))
         window_open = host_open_window(screen_w, screen_h, cover ? 0 : scale ? atoi(scale) : 1);
     replay_init();
     pointer_init(screen_w / 2, screen_h / 2);      /* where the X server puts it */
@@ -204,6 +212,14 @@ int main(int argc, char **argv)
         civ2_c_inits[i]();
     for (i = 0; civ2_cpp_inits[i]; i++)
         civ2_cpp_inits[i]();
+#ifdef CIV2_UNITTEST
+    {
+        int unit_run_main(int argc, char **argv);
+        int r = unit_run_main(argc, argv);
+        host_quit();
+        return r;
+    }
+#endif
     win_main((int)(uintptr_t)plat_exe_module(), 0, (int)(uintptr_t)cmdline, SW_SHOWNORMAL);
     host_quit();
     return 0;
