@@ -56,7 +56,7 @@ UNIT_SCRIPTS ?= long50 turns newgame conquest civilwar spies units talks citywor
                 menuview-arrange reports screens setup spriteedit
 
 test:                         ## the unit tests: the recorded cases in tests/unit (build/civ2-unittest)
-	$(DK) sh -c "python3 tools/build_native.py --target linux32test >/dev/null && cd build && ./civ2-unittest --mask ../tests/unit/textmask.tsv ../tests/unit/*.gz"
+	$(DK) sh -c "python3 tools/build_native.py --target linux32test >/dev/null && cd build && CIV2_DATA=../data/native ./civ2-unittest --mask ../tests/unit/textmask.tsv ../tests/unit/*.gz"
 
 unit-record:                  ## record the unit tests' cases again from the replays (needs the game and run/ref-*)
 	$(DK) python3 tools/build_native.py --target linux32rec

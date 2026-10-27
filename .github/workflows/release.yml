@@ -57,7 +57,7 @@ jobs:
       - name: Build the runner
         run: python3 tools/build_native.py --target linux32test
       - name: Run the unit tests
-        run: cd build && ./civ2-unittest --mask ../tests/unit/textmask.tsv ../tests/unit/*.gz
+        run: cd build && CIV2_DATA=../data/native ./civ2-unittest --mask ../tests/unit/textmask.tsv ../tests/unit/*.gz
 
   windows:
     needs: game
