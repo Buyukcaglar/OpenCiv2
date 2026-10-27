@@ -11,6 +11,7 @@ cp /work/hook/XDaemon.dll /tmp/g/XDaemon.dll
 cp /work/harness/CIV2.DAT /tmp/g/CIV2.DAT
 [ -n "$SAVE" ] && cp "$SAVE" /tmp/g/     # SAVE=FILE: a saved game to load
 cp /work/harness/CIV.INI /wine/drive_c/windows/CIV.INI 2>/dev/null
+[ -n "$SIMUL" ] && printf 'Simultaneous=1\r\n' >> /wine/drive_c/windows/CIV.INI   # SIMUL=1: simultaneous moves offered
 rm -f /tmp/.X${DISP:-7}-lock /tmp/.X11-unix/X${DISP:-7}
 Xvfb :${DISP:-7} -screen 0 1024x768x24 -nolisten tcp >/dev/null 2>&1 &
 sleep 2

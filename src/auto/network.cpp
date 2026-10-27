@@ -11519,8 +11519,7 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
   iptr civlist_title_idx;
   iptr civlist_titles[4];
   uptr map_title_idx;
-  iptr map_labels[4];
-  i32 map_label_last;
+  iptr map_labels[5];   /* (the original's locals in a row: the radio group's labels) */
   i32 proposal_labels[2];   /* (the original's locals in a row: the radio group's labels) */
   tagRECT btn_rect;
   int btn_area_bottom;
@@ -13203,7 +13202,7 @@ void __thiscall parley_add_side_dialog(ParleyWindow *self,int side_kind,int side
     map_title_idx = 0;
     map_labels[2] = (iptr)(label_string(label_string_ids[0x311]));
     map_labels[3] = (iptr)(label_string(label_string_ids[0x312]));
-    map_label_last = (i32)(label_string(label_string_ids[0x313]));
+    map_labels[4] = (iptr)(label_string(label_string_ids[0x313]));
     gfx_set_text_color_index(10);
     cur_x = side_x;
     cur_y = self->panel_top + panel_margin_y;

@@ -590,15 +590,16 @@ tools/xdnet/nettest.py ours-ours                          # host-client: ours or
 tools/xdnet/nettest.py ours-orig --exe civ2-linux32asan   # our side under ASan
 tools/xdnet/nettest.py orig-ours --inet                   # Internet mode, 127.0.0.1
 tools/xdnet/nettest.py ours-ours --diplo --load --turns 2 # chat, parley, save + load
+tools/xdnet/nettest.py ours-orig --turns 50 --save-end    # a long game; both saves must agree
+tools/xdnet/nettest.py ours-ours --exe civ2-linux32cov --migrate   # coverage (netcov.py), host migration
 ```
 
 - Steps: start menu, host a LAN (or Internet) game with 3 civilizations,
   join it, start, the default civilizations, N turns (1: move the settler;
   2: found a city, close the city window; then: sentry, end the turn), quit
   (client first, then host). `--chat`: Chat with Kings both ways
-  (the host ticks "All Humans Can Chat From Start"); `--diplo`: Foreign
-  Minister, Send Emissary, audience granted, peace treaty offered and
-  accepted; `--save`/`--load`: the host saves in its turn 2, then after
+  (the host ticks "All Humans Can Chat From Start"); `--diplo`: the parley
+  (below); `--save`/`--load`: the host saves in its turn 2, then after
   quitting loads that game ("Load a Saved Multiplayer Game"), the client
   joins again and N more turns are played; `--rejoin`: the host opens the
   game ("Open Game"), after the turns the client quits, starts again and
@@ -634,9 +635,45 @@ tools/xdnet/nettest.py ours-ours --diplo --load --turns 2 # chat, parley, save +
   logs, `msgs-*.txt` (`xdmsgs.py` output), and a screenshot at each step
   (`shots/`) stay in the run's directory. Our XD log (CIV2_XDLOG) has the
   payloads in full, as the proxy's.
-- The original under Wine runs in a 640x480 window, so the clicks of
-  `--chat`/`--diplo` (made at our 1024x768 layout) are made only on our
-  side; against the original the test covers the audience and the offer.
+- The original under Wine opens a 640x480 window; on a 1024x768 screen
+  it uses the large layouts, so its parley and chat windows came out half
+  off it.  The test moves and sizes it as our client area (0,19 1024x749):
+  its dialogs and windows then come where ours do and one set of clicks
+  drives both.  (Its dialogs often show black under Xvfb, its own
+  painting under Wine; the clicks and keys still work.)
+- More options: `--diplo` drives the whole parley (below); `--extras` the
+  advisors F1..F12, Multiplayer Options (Ctrl+Y) and a timer change
+  (Ctrl+T, the others vote); `--features kill,positions,production,movement`
+  ticks those multiplayer features, `--timer N` picks the turn timer (0
+  unlimited, 1 30 s ...); `--simultaneous` simultaneous moves (CIV.INI
+  `Simultaneous=1`, the extra feature ticked; turns start with
+  NM_HUMAN_MOVEMENT); `--migrate` the host leaves first and the client
+  becomes the host (NM_SERVER_QUIT_REQUEST/_ACK, then it opens its sockets
+  as a server) and plays a turn alone; `--kick` (with `--third`) the host
+  rejects the third player in Available Players
+  (XD_ServerCloseConnection; it sees "You were REJECTED"); `--save-end`
+  both players save where the game stands and `tools/xdnet/savecmp.py`
+  compares the two saves section by section (game, civs, map, units,
+  cities; what each civ has seen and the saving player's own header
+  fields apart); `--exe civ2-linux32cov` runs the coverage build with its
+  gcov data in run/xd/cov/RUN-ROLE (`tools/xdnet/netcov.py` merges them
+  and lists the network functions never run); `--exe OpenCiv2.exe` runs
+  the Windows build under Wine (its Winsock code).
+- `--diplo`: Chat with Kings both ways (with the chat macros Ctrl+F1..F3,
+  Clear, the Mute and Anonymous boxes); an audience left unanswered (the
+  requester gives up after 15 s, the request closes itself after 20 s and
+  answers 0, Go away); an audience granted; then, each side offering in
+  turn: a gift of 10 gold declined (No Thanks) and accepted, the reveal and
+  conceal buttons, a cease-fire countered (Make Counter Offer), peace
+  (picked by double-click), maps bartered for maps, a proposal to share
+  maps, a threat (5 gold or else), an alliance, a gift of maps, the treaty
+  cancelled; Check Intelligence, a key typed, the small layout, Escape
+  ends the negotiations; last an audience granted too late (after the
+  requester gave up): the other's parley window opens alone, a new request
+  is answered 2 (busy) at once, End Negotiations closes it.  Checked: each
+  offer, reply and execution on the wire both ways, the replies' values.
+  Knowledge, units, cities and war declarations need advances, units and
+  other contacts: a longer game.
 
 ## 12. Proposed design for OpenCiv2's implementation
 
@@ -720,8 +757,11 @@ Static only:
   *other* clients, including the rewrite to src = 0.  At the game level it
   works both ways round (§11.1 `--third`: an original host relaying
   between two of ours, ours between an original and ours: every client's
-  messages to everyone reached both others); the record tags of a
-  3-player capture are still to be compared with ours.
+  messages to everyone reached both others).  The record tags of a
+  3-player capture (`--sniff`, `tools/xdnet/relaytags.py records.txt`)
+  agree, the original hosting and ours: a client's dst=0xFF record goes
+  to each other client with tag src=0 dst=that client; one to another
+  client is forwarded with its src kept; dst=0 is not forwarded.
 - The oversize path, ping (unused) and the XDPING oddity.
 - Behaviour when the connection table is full.
 

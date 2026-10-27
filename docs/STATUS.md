@@ -162,32 +162,60 @@ message by message and clock event by clock event.
   next.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
-  in the host layer (src/host/host_net.c), speaking its wire protocol
-  (docs/xdaemon-protocol.md: TCP 4993 records, UDP 4994 LAN discovery, the
-  id handshake, host relaying).  `tools/xdnet/nettest.py` plays two (or
-  three) games against each other in containers and checks the logs
-  (docs/xdaemon-protocol.md §11.1).  Passing, our side under ASan: ours vs
-  ours, ours vs the original and the original vs ours, on a LAN and in
-  Internet mode (127.0.0.1): join, several turns (a unit moved, cities
-  founded), quit; ours vs ours: chat, the parley (audience, peace treaty
-  offered and accepted); against the original: chat to it, its audience
-  granted, a treaty offered to it; save, then load ("Load a Saved
-  Multiplayer Game") with the original joining; a player leaving and
-  joining the game in progress; three players with either one hosting
-  (the host relaying between an original and ours).  The game's network
-  code needed: net_session_init (the join dialog) written; locals the
-  original's frame kept adjacent (net_send_message's buffers,
-  net_process_messages' arguments, four RLE streams, the parley's radio
-  labels: garbage treaty names) made structs or arrays; a game-list text
-  buffer 21 bytes instead of 256; the difference engine's RLE decoder
-  reading a run's byte as a 16-bit word and its encoder reading past its
-  input; a size from the original's absolute address; a 5-entry read of a
-  4-entry label array.  In normal play WM_TIMER is Windows' (one pending
-  per timer, no backlog: the unit blink, which retrieves messages while it
-  redraws, nested without end in a slow build) and presenting the screen
-  takes at most a third of the time.  Not done: the original's parley
-  window driven by the test (its 640x480 layout), barter, a game of many
-  turns.
+  in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking
+  its wire protocol (docs/xdaemon-protocol.md: TCP 4993 records, UDP 4994
+  LAN discovery, the id handshake, host relaying).  `tools/xdnet/nettest.py`
+  plays two (or three) games against each other in containers and checks
+  the logs (docs/xdaemon-protocol.md §11.1).  Tested, our side under ASan
+  where it says so:
+  - joining, turns, quitting: ours vs ours, ours vs the original and the
+    original vs ours, on a LAN and in Internet mode (127.0.0.1); save and
+    load; a player leaving and joining the game in progress; three players
+    with either one hosting (the host relaying: the original's and our
+    record tags compared on a capture, the same rules); the host rejecting
+    a player in its lobby; the host leaving, the client becoming the host
+    and playing on (migration); simultaneous moves, the turn timer, the
+    multiplayer features, a timer change and option votes, the advisors
+    during a network game.
+  - the parley, driven on both games (the original's window is fitted to
+    our layout, so the same clicks drive both): audiences granted, refused
+    by the timeout and granted too late (busy replies), gifts of gold, maps,
+    knowledge and units, treaties (cease-fire, peace, alliance, cancelled),
+    maps bartered, a proposal, a threat, offers declined and countered,
+    the reveal buttons, Check Intelligence, the small layout; ours vs the
+    original both ways (ASan), and ours vs ours.  The original and ours put
+    the same offers on the wire and answer the timeouts alike.
+  - 50 turns, ours (ASan) hosting the original and ours vs ours (ASan):
+    no crash, every message received in order and byte for byte, and at
+    the end both players' saves hold the same game
+    (`tools/xdnet/savecmp.py`; what each game keeps of its own: the saving
+    player's header fields, the treaty-turn counters set by the game shown
+    an audience request, who stands on tiles no human has seen).
+  - the Windows build (OpenCiv2.exe, Winsock) under Wine against ours and
+    against the original.
+  The game's network code needed: net_session_init (the join dialog)
+  written; locals the original's frame kept adjacent (net_send_message's
+  buffers, net_process_messages' arguments, four RLE streams, the parley's
+  radio labels: garbage treaty names, and the map choice's: a crash on any
+  map offer) made structs or arrays; a game-list text buffer 21 bytes
+  instead of 256; the difference engine's RLE decoder reading a run's byte
+  as a 16-bit word and its encoder reading past its input; a size from the
+  original's absolute address; a 5-entry read of a 4-entry label array.  In
+  normal play WM_TIMER is Windows' (one pending per timer, no backlog) and
+  presenting the screen takes at most a third of the time.  Network code
+  run by the tests (`tools/xdnet/netcov.py`, the linux32cov build):
+  228 of the 311 network functions (73%; 60% of their lines;
+  the scenarios before this round: 168, 54%).  The parley's unit, city
+  and advance lists ran in the 50-turn game against the original, outside
+  the coverage build.  Never run: the modem, serial, IPX and DirectPlay-lobby
+  paths (XD_InitializeModem/Serial/SocketsIPXSPX, XD_ShutdownModem/TEN,
+  XD_LobbySendMessage: the library's, dropped), the oversized-message
+  callback (no message comes near the limit), the atexit destructors;
+  dragging a window by its caption (our panels are fixed unless
+  CIV2_CLASSIC=1); offers of cities and war declarations (the test's only
+  city to give is a capital, and its civilizations meet no third one);
+  the chat macros (Ctrl+F1..F5: they did not fire in ours under the test's
+  keys, not yet compared with the original).
 * Coverage of the comparison: the scripts execute 2,520 of the 3,529
   compiled game functions (71%, 58% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never

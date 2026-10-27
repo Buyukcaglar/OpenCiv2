@@ -19,6 +19,9 @@ The first time, it finds your copy of the game (or asks where it is) and sets it
 included when it comes from the CD or a disc image. `--setup [FOLDER or IMAGE.cue]` sets it
 up again.
 
+Network games (Multiplayer Game > Network or Internet) play against OpenCiv2 or the original
+game, either one hosting; they use TCP port 4993 and UDP port 4994 (LAN discovery).
+
 ## Build and run
 
 To build it yourself, install your copy of Civilization II in `~/Civ2` (the directory with
