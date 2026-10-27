@@ -150,567 +150,593 @@ void __cdecl mapgen_calc_fertility(void)
   return;
 }
 
-/* 00408d33 auto */
-void __cdecl map_generate(int keep_map)
-
+/* The parts below call rand() as crt_rand_at("map_generate"): the
+   rand trace names the original function, as the original's does. */
+/* Part of map_generate (00408d33): the start positions cleared, a new seed,
+   the map allocated and filled with ocean, then landmasses added until the
+   land target for the chosen land mass and form, and islets up to 64
+   landmasses. */
+static void mapgen_place_landmasses(void)
 {
-  u8 terrain_val;
-  byte terrain_byte;
-  iptr x;
   uint rnd;
-  iptr north_ocean;
-  i8 *tile_byte;
-  iptr south_ocean;
   int tmp;
   uptr sign;
+  iptr civ;
+  int landmass_count;
+  uint i;
+  int coin;
+  int extra_masses;
+  int area_units;
+  int land_target;
+
+  for (civ = 0; civ < 0x15; civ++) {
+    start_x[civ] = -1;
+    start_y[civ] = -1;
+  }
+  map_new_seed();
+  if ((game.rules & 0x8000) != 0) {
+    mapgen_climate = mapgen_climate << 1;
+    mapgen_temperature = mapgen_temperature << 1;
+  }
+  map.flat = game.rules & 0x8000;
+  map_alloc();
+  minimap_window_block.mapgen_land_placed = 0;
+  map_fill_tile_byte((iptr)map_tiles,10);
+  map_fill_tile_byte((iptr)&map_tiles->improvements,0);
+  minimap_window_block.mapgen_min_y = 0;
+  minimap_window_block.mapgen_max_y = map.height - 1;
+  minimap_window_block.mapgen_min_x = 3;
+  minimap_window_block.mapgen_max_x = map.width - 3;
+  rnd = crt_rand_at("map_generate");
+  sign = (int)rnd >> 0x1f;
+  coin = ((rnd ^ sign) - sign & 1 ^ sign) - sign;
+  if (coin == 0) {
+    minimap_window_block.mapgen_max_y = map.height - 5;
+  }
+  else {
+    minimap_window_block.mapgen_min_y = 4;
+  }
+  tmp = mapgen_land_form;
+  if (mapgen_land_form < 1) {
+    tmp = 0;
+  }
+  area_units = ((int)map.height * (int)map.width >> 1) / 400;
+  land_target = (area_units * ((mapgen_land_mass * 8 + 8 + tmp * 8) * 5 + 0x50) * 8) / 10;
+  do {
+    mapgen_add_landmass(0);
+  } while (minimap_window_block.mapgen_land_placed < land_target);
+  map_assign_landmass_ids();
+  landmass_count = 0;
+  for (i = 0; (int)i < 0x40; i++) {
+    if (landmass_table_block.landmass_recs[i].tiles != 0) {
+      landmass_count++;
+    }
+  }
+  extra_masses = 0x40 - (landmass_count + 1);
+  if (0 < extra_masses) {
+    for (i = 0; (int)i < extra_masses; i++) {
+      mapgen_add_landmass(1);
+    }
+  }
+}
+
+/* Part of map_generate (00408d33): land touching only diagonally (the
+   corner patterns 6 and 9 of a 2x2 block) is joined by filling the block. */
+static void mapgen_fill_diagonal_gaps(void)
+{
+  int tmp;
+  uint y2;
+  uint x2;
+  uint new_terrain;
+
+  for (y2 = 1; (int)y2 < map.height - 2; y2++) {
+    for (x2 = y2 & 1; (int)x2 < map.width - 2; x2 += 2) {
+      new_terrain = 0;
+      tmp = (iptr)tile_at(x2,y2);
+      if (((Tile *)tmp)->improvements != '\0') {
+        new_terrain = new_terrain | 1;
+      }
+      tmp = (iptr)tile_at(x2 + 1,y2 + 1);
+      if (((Tile *)tmp)->improvements != '\0') {
+        new_terrain = new_terrain | 2;
+      }
+      tmp = (iptr)tile_at(x2 + 1,y2 - 1);
+      if (((Tile *)tmp)->improvements != '\0') {
+        new_terrain = new_terrain | 4;
+      }
+      tmp = (iptr)tile_at(x2 + 2,y2);
+      if (((Tile *)tmp)->improvements != '\0') {
+        new_terrain = new_terrain | 8;
+      }
+      if ((new_terrain == 6) || (new_terrain == 9)) {
+        tmp = (iptr)tile_at(x2 + 1,y2 + 1);
+        ((Tile *)tmp)->improvements = 1;
+        tmp = (iptr)tile_at(x2 + 1,y2 - 1);
+        ((Tile *)tmp)->improvements = 1;
+        tmp = (iptr)tile_at(x2 + 2,y2);
+        ((Tile *)tmp)->improvements = 1;
+        if (((int)x2 < 2) || ((int)y2 < 2)) {
+          if ((int)y2 < 2) {
+            if (1 < (int)x2) {
+              x2 -= 2;
+            }
+          }
+          else {
+            y2--;
+            x2++;
+          }
+        }
+        else {
+          x2--;
+          y2--;
+        }
+      }
+    }
+  }
+}
+
+/* Part of map_generate (00408d33): each tile's first terrain from its land
+   kind (0 ocean, 1 by latitude and temperature: glacier, tundra, desert or
+   plains, 2 hills, else mountains). */
+static void mapgen_assign_base_terrain(void)
+{
+  uint rnd;
+  int tmp;
   uptr sign2;
   uint sign3;
   int equator;
-  int rand_x4;
-  int rand_x3;
-  int rand_x2;
-  int rand_x1;
-  int rand_col2;
-  int rand_col;
+  uint land_type;
+  uint y2;
+  uint x2;
+  int temp_bias;
+  Tile *tile;
+  int lat_band;
+  uint new_terrain;
+  uptr idx;
+  int lat;
+
+  if ((game.rules & 0x8000) == 0) {
+    lat_band = (int)map.height / 0xc;
+  }
+  else {
+    lat_band = (int)((int)map.height + ((int)map.height >> 0x1f & 7U)) >> 3;
+  }
+  if (lat_band < 3) {
+    lat_band = 2;
+  }
+  tile = map_tiles;
+  y2 = 0;
+  x2 = 0;
+  for (idx = 0; (int)idx < (int)map.area; idx++) {
+    land_type = (uint)tile->improvements;
+    if (land_type == 0) {
+      new_terrain = 10;
+    }
+    else if (land_type == 1) {
+      temp_bias = mapgen_temperature * -3;
+      if ((game.rules & 0x8000) != 0) {
+        temp_bias = mapgen_temperature * -6;
+      }
+      equator = ((int)map.height >> 1) + 8;
+      rnd = crt_rand_at("map_generate");
+      sign2 = (int)rnd >> 0x1f;
+      tmp = y2 + (((rnd ^ sign2) - sign2 & 0xf ^ sign2) - sign2) + 1;
+      if (equator == tmp || equator - tmp < 0) {
+        tmp = (int)map.height;
+        rnd = crt_rand_at("map_generate");
+        sign3 = (int)rnd >> 0x1f;
+        lat = ~(((tmp >> 1) + 8) -
+                    (y2 + (((rnd ^ sign3) - sign3 & 0xf ^ sign3) - sign3) + 1)) + 1;
+      }
+      else {
+        tmp = (int)map.height;
+        rnd = crt_rand_at("map_generate");
+        sign3 = (int)rnd >> 0x1f;
+        lat = ((tmp >> 1) + 8) -
+                   (y2 + (((rnd ^ sign3) - sign3 & 0xf ^ sign3) - sign3) + 1);
+      }
+      lat += temp_bias;
+      if (lat < 1) {
+        lat = 0;
+      }
+      lat = lat / lat_band;
+      switch(lat) {
+      case 0:
+        new_terrain = 0;
+        break;
+      case 1:
+      case 2:
+      case 3:
+        new_terrain = 1;
+        break;
+      case 4:
+        rnd = crt_rand_at("map_generate");
+        sign3 = (int)rnd >> 0x1f;
+        if (((rnd ^ sign3) - sign3 & 1 ^ sign3) == sign3) {
+          new_terrain = 1;
+        }
+        else {
+          new_terrain = 6;
+        }
+        break;
+      case 5:
+      case 6:
+        new_terrain = 6;
+        break;
+      default:
+        new_terrain = 7;
+      }
+    }
+    else if (land_type == 2) {
+      new_terrain = 4;
+    }
+    else {
+      new_terrain = 5;
+    }
+    tile->terrain = (u8)new_terrain;
+    tile++;
+    x2 += 2;
+    if ((int)map.width <= (int)x2) {
+      y2++;
+      x2 = y2 & 1;
+    }
+    ui_pump_messages_net();
+  }
+}
+
+/* Part of map_generate (00408d33): rainfall: each row swept east and
+   west, the rain picked up over ocean turning dry land wetter. */
+static void mapgen_apply_rainfall(void)
+{
+  u8 terrain_val;
+  int tmp;
   int lat_diff3;
   int lat_diff2;
   int lat_diff1;
-  iptr civ;
-  uptr last_terrain;
-  int terrain_votes[11];
-  uint land_type;
-  int landmass_count;
   uint y2;
-  Dialog dialog2;
   uint x2;
-  int temp_bias;
   int rain;
   Tile *tile;
-  int lat_band;
-  uint i;
-  int coin;
-  uptr terr;
-  int y3;
-  uint new_terrain;
   Tile *tile_rev;
-  uptr idx;
-  uint is_hilly;
   int lat;
-  int extra_masses;
-  int area_units;
-  int best_votes;
-  int has_land;
-  int land_target;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 unwind_state;
-  
-  unwind_state = 0xffffffff;
-  dialog2.Dialog::construct(0x4000);
-  unwind_state = 0;
-  dialog2.Dialog::reset(8);
-  dialog2.set_position(
-             -(((int)(caption_font_block.screen_width - 0x280 + (caption_font_block.screen_width - 0x280 >> 0x1f & 7U)) >> 3) + 1),
-             -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-  x = (iptr)label_string(label_string_ids[2]);
-  dialog2.set_title((const char *)x);
-  dialog2.set_width(0x100);
-  dialog2.add_line((const char *)&str_empty_6,0xffffffff,0xffffffff,0xffffffff,0);
-  text_clear();
-  text_append((const char *)&str_empty_7);
-  text_append_label(8);
-  dialog2.add_line((const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
-  dialog2.add_line((const char *)&str_empty_8,0xffffffff,0xffffffff,0xffffffff,0);
-  dialog2.show_modal(0);
-  ((WndBase *)(dialog2.surf_wnd + 0x48))->set_cursor(0x200);
-  main_frame_wnd_block.main_frame_wnd.set_cursor(0x200);
-  ui_flush_input();
-  if (keep_map == 0) {
-    for (civ = 0; civ < 0x15; civ++) {
-      start_x[civ] = -1;
-      start_y[civ] = -1;
-    }
-    map_new_seed();
-    if ((game.rules & 0x8000) != 0) {
-      mapgen_climate = mapgen_climate << 1;
-      mapgen_temperature = mapgen_temperature << 1;
-    }
-    map.flat = game.rules & 0x8000;
-    map_alloc();
-    minimap_window_block.mapgen_land_placed = 0;
-    map_fill_tile_byte((iptr)map_tiles,10);
-    map_fill_tile_byte((iptr)&map_tiles->improvements,0);
-    minimap_window_block.mapgen_min_y = 0;
-    minimap_window_block.mapgen_max_y = map.height - 1;
-    minimap_window_block.mapgen_min_x = 3;
-    minimap_window_block.mapgen_max_x = map.width - 3;
-    rnd = _rand();
-    sign = (int)rnd >> 0x1f;
-    coin = ((rnd ^ sign) - sign & 1 ^ sign) - sign;
-    if (coin == 0) {
-      minimap_window_block.mapgen_max_y = map.height - 5;
+
+  tile = map_tiles;
+  tile_rev = map_tiles + map.area - 1;
+  for (y2 = 0; (int)y2 < (int)map.height; y2++) {
+    if ((int)map.height >> 1 == y2 || (int)(((int)map.height >> 1) - y2) < 0) {
+      lat = ~(((int)map.height >> 1) - y2) + 1;
     }
     else {
-      minimap_window_block.mapgen_min_y = 4;
+      lat = ((int)map.height >> 1) - y2;
     }
-    tmp = mapgen_land_form;
-    if (mapgen_land_form < 1) {
-      tmp = 0;
-    }
-    area_units = ((int)map.height * (int)map.width >> 1) / 400;
-    land_target = (area_units * ((mapgen_land_mass * 8 + 8 + tmp * 8) * 5 + 0x50) * 8) / 10;
-    do {
-      mapgen_add_landmass(0);
-    } while (minimap_window_block.mapgen_land_placed < land_target);
-    map_assign_landmass_ids();
-    landmass_count = 0;
-    for (i = 0; (int)i < 0x40; i++) {
-      if (landmass_table_block.landmass_recs[i].tiles != 0) {
-        landmass_count++;
-      }
-    }
-    extra_masses = 0x40 - (landmass_count + 1);
-    if (0 < extra_masses) {
-      for (i = 0; (int)i < extra_masses; i++) {
-        mapgen_add_landmass(1);
-      }
-    }
-    for (y2 = 1; (int)y2 < map.height - 2; y2++) {
-      for (x2 = y2 & 1; (int)x2 < map.width - 2; x2 += 2) {
-        new_terrain = 0;
-        tmp = (iptr)tile_at(x2,y2);
-        if (((Tile *)tmp)->improvements != '\0') {
-          new_terrain = new_terrain | 1;
-        }
-        tmp = (iptr)tile_at(x2 + 1,y2 + 1);
-        if (((Tile *)tmp)->improvements != '\0') {
-          new_terrain = new_terrain | 2;
-        }
-        tmp = (iptr)tile_at(x2 + 1,y2 - 1);
-        if (((Tile *)tmp)->improvements != '\0') {
-          new_terrain = new_terrain | 4;
-        }
-        tmp = (iptr)tile_at(x2 + 2,y2);
-        if (((Tile *)tmp)->improvements != '\0') {
-          new_terrain = new_terrain | 8;
-        }
-        if ((new_terrain == 6) || (new_terrain == 9)) {
-          tmp = (iptr)tile_at(x2 + 1,y2 + 1);
-          ((Tile *)tmp)->improvements = 1;
-          tmp = (iptr)tile_at(x2 + 1,y2 - 1);
-          ((Tile *)tmp)->improvements = 1;
-          tmp = (iptr)tile_at(x2 + 2,y2);
-          ((Tile *)tmp)->improvements = 1;
-          if (((int)x2 < 2) || ((int)y2 < 2)) {
-            if ((int)y2 < 2) {
-              if (1 < (int)x2) {
-                x2 -= 2;
-              }
-            }
-            else {
-              y2--;
-              x2++;
-            }
-          }
-          else {
-            x2--;
-            y2--;
-          }
-        }
-      }
-    }
-    ui_pump_messages_net();
-    if ((game.rules & 0x8000) == 0) {
-      lat_band = (int)map.height / 0xc;
+    if ((int)map.height >> 2 == lat || ((int)map.height >> 2) - lat < 0) {
+      lat_diff1 = ~(((int)map.height >> 2) - lat) + 1;
     }
     else {
-      lat_band = (int)((int)map.height + ((int)map.height >> 0x1f & 7U)) >> 3;
+      lat_diff1 = ((int)map.height >> 2) - lat;
     }
-    if (lat_band < 3) {
-      lat_band = 2;
-    }
-    tile = map_tiles;
-    y2 = 0;
-    x2 = 0;
-    for (idx = 0; (int)idx < (int)map.area; idx++) {
-      land_type = (uint)tile->improvements;
-      if (land_type == 0) {
-        new_terrain = 10;
-      }
-      else if (land_type == 1) {
-        temp_bias = mapgen_temperature * -3;
-        if ((game.rules & 0x8000) != 0) {
-          temp_bias = mapgen_temperature * -6;
-        }
-        equator = ((int)map.height >> 1) + 8;
-        rnd = _rand();
-        sign2 = (int)rnd >> 0x1f;
-        tmp = y2 + (((rnd ^ sign2) - sign2 & 0xf ^ sign2) - sign2) + 1;
-        if (equator == tmp || equator - tmp < 0) {
-          tmp = (int)map.height;
-          rnd = _rand();
-          sign3 = (int)rnd >> 0x1f;
-          lat = ~(((tmp >> 1) + 8) -
-                      (y2 + (((rnd ^ sign3) - sign3 & 0xf ^ sign3) - sign3) + 1)) + 1;
-        }
-        else {
-          tmp = (int)map.height;
-          rnd = _rand();
-          sign3 = (int)rnd >> 0x1f;
-          lat = ((tmp >> 1) + 8) -
-                     (y2 + (((rnd ^ sign3) - sign3 & 0xf ^ sign3) - sign3) + 1);
-        }
-        lat += temp_bias;
-        if (lat < 1) {
-          lat = 0;
-        }
-        lat = lat / lat_band;
-        switch(lat) {
-        case 0:
-          new_terrain = 0;
-          break;
-        case 1:
-        case 2:
-        case 3:
-          new_terrain = 1;
-          break;
-        case 4:
-          rnd = _rand();
-          sign3 = (int)rnd >> 0x1f;
-          if (((rnd ^ sign3) - sign3 & 1 ^ sign3) == sign3) {
-            new_terrain = 1;
-          }
-          else {
-            new_terrain = 6;
-          }
-          break;
-        case 5:
-        case 6:
-          new_terrain = 6;
-          break;
-        default:
-          new_terrain = 7;
-        }
-      }
-      else if (land_type == 2) {
-        new_terrain = 4;
-      }
-      else {
-        new_terrain = 5;
-      }
-      tile->terrain = (u8)new_terrain;
-      tile++;
-      x2 += 2;
-      if ((int)map.width <= (int)x2) {
-        y2++;
-        x2 = y2 & 1;
-      }
-      ui_pump_messages_net();
-    }
-    tile = map_tiles;
-    tile_rev = map_tiles + map.area - 1;
-    for (y2 = 0; (int)y2 < (int)map.height; y2++) {
-      if ((int)map.height >> 1 == y2 || (int)(((int)map.height >> 1) - y2) < 0) {
-        lat = ~(((int)map.height >> 1) - y2) + 1;
-      }
-      else {
-        lat = ((int)map.height >> 1) - y2;
-      }
-      if ((int)map.height >> 2 == lat || ((int)map.height >> 2) - lat < 0) {
-        lat_diff1 = ~(((int)map.height >> 2) - lat) + 1;
-      }
-      else {
-        lat_diff1 = ((int)map.height >> 2) - lat;
-      }
-      if (mapgen_climate * 4 + 4 + lat_diff1 < 1) {
-        rain = 0;
-      }
-      else {
-        if ((int)map.height >> 2 == lat || ((int)map.height >> 2) - lat < 0) {
-          lat_diff2 = ~(((int)map.height >> 2) - lat) + 1;
-        }
-        else {
-          lat_diff2 = ((int)map.height >> 2) - lat;
-        }
-        rain = _rand();
-        rain = rain % (mapgen_climate * 4 + lat_diff2 + 5);
-      }
-      for (x2 = (uint)((y2 & 1) != 0); (int)x2 < (int)map.width;
-          x2 = x2 + 2) {
-        terrain_val = tile->terrain;
-        if (terrain_val == '\n') {
-          if ((int)map.height >> 2 == lat || ((int)map.height >> 2) - lat < 0) {
-            lat_diff3 = ~(((int)map.height >> 2) - lat) + 1;
-          }
-          else {
-            lat_diff3 = ((int)map.height >> 2) - lat;
-          }
-          if (rain < mapgen_climate * 4 + 4 + lat_diff3) {
-            rain++;
-          }
-        }
-        else if (0 < rain) {
-          if (mapgen_climate * -2 != -6 && -1 < mapgen_climate * -2 + 6) {
-            tmp = _rand();
-            rain -= tmp % (mapgen_climate * -2 + 7);
-          }
-          switch(terrain_val) {
-          case '\0':
-            tile->terrain = 1;
-            break;
-          case 1:
-            tile->terrain = 2;
-            break;
-          case 4:
-            tile->terrain = 3;
-            break;
-          case 5:
-            rain -= 3;
-            break;
-          case 6:
-            tile->terrain = 3;
-          }
-        }
-        tile++;
-      }
+    if (mapgen_climate * 4 + 4 + lat_diff1 < 1) {
       rain = 0;
-      for (x2 = (int)map.width - ((y2 & 1) + 1); -1 < (int)x2;
-          x2 = x2 - 2) {
-        terrain_val = tile_rev->terrain;
-        if (terrain_val == '\n') {
-          if (rain < (lat >> 1) + mapgen_climate + 1) {
-            rain++;
-          }
-        }
-        else if (0 < rain) {
-          tmp = -(mapgen_climate * 2 + 2);
-          if (tmp != -6 && -1 < tmp + 6) {
-            tmp = _rand();
-            rain -= tmp % (7 - (mapgen_climate * 2 + 2));
-          }
-          switch(terrain_val) {
-          case '\0':
-            tile_rev->terrain = 1;
-            break;
-          case 1:
-            tile_rev->terrain = 2;
-            break;
-          case 2:
-            if (lat < (map.height * 3) / 10) {
-              if (lat < 10) {
-                tile_rev->terrain = '\t';
-              }
-              else {
-                tile_rev->terrain = 8;
-              }
-            }
-            else {
-              tile_rev->terrain = 3;
-            }
-            rain -= 2;
-            break;
-          case 4:
-            tile_rev->terrain = 3;
-            break;
-          case 5:
-            rain -= 3;
-            break;
-          case 6:
-            tile_rev->terrain = 1;
-            break;
-          case 8:
-            tile_rev->terrain = 3;
-          }
-        }
-        tile_rev--;
-      }
-      ui_pump_messages_net();
     }
-    for (i = 0; (int)i < (mapgen_age * 5 + 10) * 0xa0; i++) {
-      if ((i & 1) == 0) {
-        if (map.height == 1 || map.height - 1 < 0) {
-          y2 = 0;
-        }
-        else {
-          tmp = _rand();
-          y2 = tmp % (int)map.height;
-        }
-        if ((int)map.width / 2 == 1 || (int)map.width / 2 - 1 < 0) {
-          rand_col = 0;
-        }
-        else {
-          rand_col = _rand();
-          rand_col = rand_col % ((int)map.width / 2);
-        }
-        x2 = (y2 & 1) + rand_col * 2;
+    else {
+      if ((int)map.height >> 2 == lat || ((int)map.height >> 2) - lat < 0) {
+        lat_diff2 = ~(((int)map.height >> 2) - lat) + 1;
       }
       else {
-        rnd = _rand();
-        sign3 = (int)rnd >> 0x1f;
-        tmp = ((rnd ^ sign3) - sign3 & 7 ^ sign3) - sign3;
-        x2 = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x2);
-        y2 += (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp];
+        lat_diff2 = ((int)map.height >> 2) - lat;
       }
-      if ((int)map.height >> 1 == y2 || (int)(((int)map.height >> 1) - y2) < 0) {
-        lat = ~(((int)map.height >> 1) - y2) + 1;
+      rain = crt_rand_at("map_generate");
+      rain = rain % (mapgen_climate * 4 + lat_diff2 + 5);
+    }
+    for (x2 = (uint)((y2 & 1) != 0); (int)x2 < (int)map.width;
+        x2 = x2 + 2) {
+      terrain_val = tile->terrain;
+      if (terrain_val == '\n') {
+        if ((int)map.height >> 2 == lat || ((int)map.height >> 2) - lat < 0) {
+          lat_diff3 = ~(((int)map.height >> 2) - lat) + 1;
+        }
+        else {
+          lat_diff3 = ((int)map.height >> 2) - lat;
+        }
+        if (rain < mapgen_climate * 4 + 4 + lat_diff3) {
+          rain++;
+        }
       }
-      else {
-        lat = ((int)map.height >> 1) - y2;
-      }
-      tmp = map_in_bounds(x2,y2);
-      if (tmp != 0) {
-        tile = tile_at(x2,y2);
-        switch(tile->terrain) {
+      else if (0 < rain) {
+        if (mapgen_climate * -2 != -6 && -1 < mapgen_climate * -2 + 6) {
+          tmp = crt_rand_at("map_generate");
+          rain -= tmp % (mapgen_climate * -2 + 7);
+        }
+        switch(terrain_val) {
         case '\0':
           tile->terrain = 1;
           break;
         case 1:
-          tile->terrain = 4;
-          break;
-        case 2:
-          tile->terrain = 3;
-          break;
-        case 3:
-          if (lat < (map.height * 3) / 10) {
-            tile->terrain = '\t';
-          }
-          else {
-            tile->terrain = 1;
-          }
-          break;
-        case 4:
-          tile->terrain = 5;
-          break;
-        case 5:
-          mapgen_try_place_lake(x2,y2);
-          break;
-        case 6:
-          tile->terrain = 4;
-          break;
-        case 7:
-          tile->terrain = 5;
-          break;
-        case 8:
           tile->terrain = 2;
           break;
-        case '\t':
-          tile->terrain = 8;
+        case 4:
+          tile->terrain = 3;
+          break;
+        case 5:
+          rain -= 3;
+          break;
+        case 6:
+          tile->terrain = 3;
         }
       }
+      tile++;
+    }
+    rain = 0;
+    for (x2 = (int)map.width - ((y2 & 1) + 1); -1 < (int)x2;
+        x2 = x2 - 2) {
+      terrain_val = tile_rev->terrain;
+      if (terrain_val == '\n') {
+        if (rain < (lat >> 1) + mapgen_climate + 1) {
+          rain++;
+        }
+      }
+      else if (0 < rain) {
+        tmp = -(mapgen_climate * 2 + 2);
+        if (tmp != -6 && -1 < tmp + 6) {
+          tmp = crt_rand_at("map_generate");
+          rain -= tmp % (7 - (mapgen_climate * 2 + 2));
+        }
+        switch(terrain_val) {
+        case '\0':
+          tile_rev->terrain = 1;
+          break;
+        case 1:
+          tile_rev->terrain = 2;
+          break;
+        case 2:
+          if (lat < (map.height * 3) / 10) {
+            if (lat < 10) {
+              tile_rev->terrain = '\t';
+            }
+            else {
+              tile_rev->terrain = 8;
+            }
+          }
+          else {
+            tile_rev->terrain = 3;
+          }
+          rain -= 2;
+          break;
+        case 4:
+          tile_rev->terrain = 3;
+          break;
+        case 5:
+          rain -= 3;
+          break;
+        case 6:
+          tile_rev->terrain = 1;
+          break;
+        case 8:
+          tile_rev->terrain = 3;
+        }
+      }
+      tile_rev--;
     }
     ui_pump_messages_net();
-    for (i = 0; (int)i < (3 - (mapgen_age + 2)) * 800; i++) {
-      if ((i & 1) == 0) {
-        if (map.height == 1 || map.height - 1 < 0) {
-          y2 = 0;
-        }
-        else {
-          tmp = _rand();
-          y2 = tmp % (int)map.height;
-        }
-        if ((int)map.width / 2 == 1 || (int)map.width / 2 - 1 < 0) {
-          rand_col2 = 0;
-        }
-        else {
-          rand_col2 = _rand();
-          rand_col2 = rand_col2 % ((int)map.width / 2);
-        }
-        x2 = (y2 & 1) + rand_col2 * 2;
-        last_terrain = 0xffffffff;
+  }
+}
+
+/* Part of map_generate (00408d33): the age of the world: random walks
+   turning terrain along a cycle (mountains raise lakes). */
+static void mapgen_age_terrain(void)
+{
+  uint rnd;
+  int tmp;
+  uint sign3;
+  int rand_col;
+  uint y2;
+  uint x2;
+  Tile *tile;
+  uint i;
+  int lat;
+
+  for (i = 0; (int)i < (mapgen_age * 5 + 10) * 0xa0; i++) {
+    if ((i & 1) == 0) {
+      if (map.height == 1 || map.height - 1 < 0) {
+        y2 = 0;
       }
       else {
-        rnd = _rand();
-        sign3 = (int)rnd >> 0x1f;
-        tmp = ((rnd ^ sign3) - sign3 & 7 ^ sign3) - sign3;
-        x2 = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x2);
-        y2 += (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp];
+        tmp = crt_rand_at("map_generate");
+        y2 = tmp % (int)map.height;
       }
-      tmp = map_in_bounds(x2,y2);
-      if ((tmp != 0) && (tmp = tile_is_ocean(x2,y2), tmp == 0)) {
-        terrain_byte = tile_terrain(x2,y2);
-        terr = (uptr)terrain_byte;
-        if (((int)last_terrain < 0) || (last_terrain != terr)) {
-          is_hilly = (uint)(2 < terr);
-          tile = tile_at(x2,y2);
-          for (terr = 0; (int)terr < 0xb; terr++) {
-            terrain_votes[terr] = 0;
+      if ((int)map.width / 2 == 1 || (int)map.width / 2 - 1 < 0) {
+        rand_col = 0;
+      }
+      else {
+        rand_col = crt_rand_at("map_generate");
+        rand_col = rand_col % ((int)map.width / 2);
+      }
+      x2 = (y2 & 1) + rand_col * 2;
+    }
+    else {
+      rnd = crt_rand_at("map_generate");
+      sign3 = (int)rnd >> 0x1f;
+      tmp = ((rnd ^ sign3) - sign3 & 7 ^ sign3) - sign3;
+      x2 = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x2);
+      y2 += (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp];
+    }
+    if ((int)map.height >> 1 == y2 || (int)(((int)map.height >> 1) - y2) < 0) {
+      lat = ~(((int)map.height >> 1) - y2) + 1;
+    }
+    else {
+      lat = ((int)map.height >> 1) - y2;
+    }
+    tmp = map_in_bounds(x2,y2);
+    if (tmp != 0) {
+      tile = tile_at(x2,y2);
+      switch(tile->terrain) {
+      case '\0':
+        tile->terrain = 1;
+        break;
+      case 1:
+        tile->terrain = 4;
+        break;
+      case 2:
+        tile->terrain = 3;
+        break;
+      case 3:
+        if (lat < (map.height * 3) / 10) {
+          tile->terrain = '\t';
+        }
+        else {
+          tile->terrain = 1;
+        }
+        break;
+      case 4:
+        tile->terrain = 5;
+        break;
+      case 5:
+        mapgen_try_place_lake(x2,y2);
+        break;
+      case 6:
+        tile->terrain = 4;
+        break;
+      case 7:
+        tile->terrain = 5;
+        break;
+      case 8:
+        tile->terrain = 2;
+        break;
+      case '\t':
+        tile->terrain = 8;
+      }
+    }
+  }
+}
+
+/* Part of map_generate (00408d33): random walks giving land tiles the
+   terrain most of their neighbours have, biased by climate and
+   temperature. */
+static void mapgen_smooth_terrain(void)
+{
+  byte terrain_byte;
+  iptr x;
+  uint rnd;
+  int tmp;
+  uint sign3;
+  int rand_col2;
+  uptr last_terrain;
+  int terrain_votes[11];
+  uint y2;
+  uint x2;
+  Tile *tile;
+  uint i;
+  uptr terr;
+  int y3;
+  uptr idx;
+  uint is_hilly;
+  int best_votes;
+
+  for (i = 0; (int)i < (3 - (mapgen_age + 2)) * 800; i++) {
+    if ((i & 1) == 0) {
+      if (map.height == 1 || map.height - 1 < 0) {
+        y2 = 0;
+      }
+      else {
+        tmp = crt_rand_at("map_generate");
+        y2 = tmp % (int)map.height;
+      }
+      if ((int)map.width / 2 == 1 || (int)map.width / 2 - 1 < 0) {
+        rand_col2 = 0;
+      }
+      else {
+        rand_col2 = crt_rand_at("map_generate");
+        rand_col2 = rand_col2 % ((int)map.width / 2);
+      }
+      x2 = (y2 & 1) + rand_col2 * 2;
+      last_terrain = 0xffffffff;
+    }
+    else {
+      rnd = crt_rand_at("map_generate");
+      sign3 = (int)rnd >> 0x1f;
+      tmp = ((rnd ^ sign3) - sign3 & 7 ^ sign3) - sign3;
+      x2 = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x2);
+      y2 += (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp];
+    }
+    tmp = map_in_bounds(x2,y2);
+    if ((tmp != 0) && (tmp = tile_is_ocean(x2,y2), tmp == 0)) {
+      terrain_byte = tile_terrain(x2,y2);
+      terr = (uptr)terrain_byte;
+      if (((int)last_terrain < 0) || (last_terrain != terr)) {
+        is_hilly = (uint)(2 < terr);
+        tile = tile_at(x2,y2);
+        for (terr = 0; (int)terr < 0xb; terr++) {
+          terrain_votes[terr] = 0;
+        }
+        if (mapgen_climate == -1) {
+          terrain_votes[0]++;
+          terrain_votes[1]++;
+          terrain_votes[8]--;
+        }
+        else if (mapgen_climate == 1) {
+          terrain_votes[2]++;
+          terrain_votes[8]++;
+          if (-1 < mapgen_temperature) {
+            terrain_votes[9]++;
           }
+        }
+        if (mapgen_temperature == -1) {
+          terrain_votes[6]++;
+          terrain_votes[3]++;
+          terrain_votes[0]--;
+        }
+        else if (mapgen_temperature == 1) {
+          terrain_votes[1]++;
+          terrain_votes[6]--;
+          terrain_votes[7]--;
           if (mapgen_climate == -1) {
-            terrain_votes[0]++;
-            terrain_votes[1]++;
-            terrain_votes[8]--;
+            terrain_votes[2]--;
+            terrain_votes[9]--;
           }
-          else if (mapgen_climate == 1) {
-            terrain_votes[2]++;
-            terrain_votes[8]++;
-            if (-1 < mapgen_temperature) {
-              terrain_votes[9]++;
-            }
-          }
-          if (mapgen_temperature == -1) {
-            terrain_votes[6]++;
-            terrain_votes[3]++;
-            terrain_votes[0]--;
-          }
-          else if (mapgen_temperature == 1) {
-            terrain_votes[1]++;
-            terrain_votes[6]--;
-            terrain_votes[7]--;
-            if (mapgen_climate == -1) {
-              terrain_votes[2]--;
-              terrain_votes[9]--;
-            }
-          }
-          for (idx = 0; (int)idx < 8; idx++) {
-            x = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[idx] + x2);
-            y3 = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[idx] + y2;
-            tmp = map_in_bounds(x,y3);
-            if (tmp != 0) {
-              terrain_byte = tile_terrain(x,y3);
-              terr = (uptr)terrain_byte;
-              if (terr != 10) {
-                if (((2 < terr) && (is_hilly != 0)) && (terrain_votes[terr] != 0)) {
-                  terrain_votes[terr]++;
-                }
-                if ((idx & 1) == 0) {
-                  terrain_votes[terr]++;
-                }
+        }
+        for (idx = 0; (int)idx < 8; idx++) {
+          x = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[idx] + x2);
+          y3 = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[idx] + y2;
+          tmp = map_in_bounds(x,y3);
+          if (tmp != 0) {
+            terrain_byte = tile_terrain(x,y3);
+            terr = (uptr)terrain_byte;
+            if (terr != 10) {
+              if (((2 < terr) && (is_hilly != 0)) && (terrain_votes[terr] != 0)) {
                 terrain_votes[terr]++;
               }
+              if ((idx & 1) == 0) {
+                terrain_votes[terr]++;
+              }
+              terrain_votes[terr]++;
             }
           }
-          best_votes = 0;
-          for (terr = 0; (int)terr < 0xb; terr++) {
-            if (best_votes < terrain_votes[terr]) {
-              best_votes = terrain_votes[terr];
-              tile->terrain = (u8)terr;
-              last_terrain = terr;
-            }
+        }
+        best_votes = 0;
+        for (terr = 0; (int)terr < 0xb; terr++) {
+          if (best_votes < terrain_votes[terr]) {
+            best_votes = terrain_votes[terr];
+            tile->terrain = (u8)terr;
+            last_terrain = terr;
           }
         }
       }
     }
-    ui_pump_messages_net();
-    mapgen_place_rivers();
-    ui_pump_messages_net();
   }
-  if ((game.rules & 0x8000) == 0) {
-    for (x2 = 0; (int)x2 < (int)map.width; x2 += 2) {
-      north_ocean = tile_is_ocean(x2 + 1,1);
-      if (north_ocean == 0) {
-        tile_byte = (i8 *)tile_at(x2,0);
-        *tile_byte = 7;
-      }
-      south_ocean = tile_is_ocean(x2,map.height - 2);
-      if (south_ocean == 0) {
-        tile_byte = (i8 *)tile_at(x2 + 1,map.height - 1);
-        *tile_byte = 7;
-      }
-    }
-  }
-  map_assign_landmass_ids();
-  map_build_coarse_connectivity();
-  mapgen_calc_fertility();
+}
+
+/* Part of map_generate (00408d33): on a round world the top and bottom
+   rows glacier, with random tundra on a new map. */
+static void mapgen_place_polar_caps(int keep_map)
+{
+  i8 *tile_byte;
+  int rand_x4;
+  int rand_x3;
+  int rand_x2;
+  int rand_x1;
+  uint x2;
+  uint i;
+
   if ((game.rules & 0x8000) == 0) {
     for (x2 = 0; (int)x2 < (int)map.width; x2 += 2) {
       tile_byte = (i8 *)tile_at(x2,0);
@@ -724,7 +750,7 @@ void __cdecl map_generate(int keep_map)
           rand_x1 = 0;
         }
         else {
-          rand_x1 = _rand();
+          rand_x1 = crt_rand_at("map_generate");
           rand_x1 = rand_x1 % ((int)map.width / 2);
         }
         tile_byte = (i8 *)tile_at(rand_x1 * 2,0);
@@ -733,7 +759,7 @@ void __cdecl map_generate(int keep_map)
           rand_x2 = 0;
         }
         else {
-          rand_x2 = _rand();
+          rand_x2 = crt_rand_at("map_generate");
           rand_x2 = rand_x2 % ((int)map.width / 2);
         }
         tile_byte = (i8 *)tile_at(rand_x2 * 2 + 1,1);
@@ -742,7 +768,7 @@ void __cdecl map_generate(int keep_map)
           rand_x3 = 0;
         }
         else {
-          rand_x3 = _rand();
+          rand_x3 = crt_rand_at("map_generate");
           rand_x3 = rand_x3 % ((int)map.width / 2);
         }
         tile_byte = (i8 *)tile_at(rand_x3 * 2 + 1,map.height - 1);
@@ -751,7 +777,7 @@ void __cdecl map_generate(int keep_map)
           rand_x4 = 0;
         }
         else {
-          rand_x4 = _rand();
+          rand_x4 = crt_rand_at("map_generate");
           rand_x4 = rand_x4 % ((int)map.width / 2);
         }
         tile_byte = (i8 *)tile_at(rand_x4 * 2,map.height - 2);
@@ -759,7 +785,22 @@ void __cdecl map_generate(int keep_map)
       }
     }
   }
-  map_fill_tile_byte((iptr)&map_tiles->improvements,0);
+}
+
+/* Part of map_generate (00408d33): ocean resources with no land within
+   the city radius are hidden (terrain bit 0x40). */
+static void mapgen_hide_far_ocean_resources(void)
+{
+  iptr x;
+  int tmp;
+  uint y2;
+  uint x2;
+  Tile *tile;
+  uint i;
+  int y3;
+  uptr idx;
+  int has_land;
+
   if (map_layout_wide == 0) {
     tile = map_tiles;
     y2 = 0;
@@ -788,6 +829,75 @@ void __cdecl map_generate(int keep_map)
       ui_pump_messages_net();
     }
   }
+}
+
+/* 00408d33 auto */
+void __cdecl map_generate(int keep_map)
+
+{
+  iptr x;
+  iptr north_ocean;
+  i8 *tile_byte;
+  iptr south_ocean;
+  Dialog dialog2;
+  uint x2;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 unwind_state;
+  
+  unwind_state = 0xffffffff;
+  dialog2.Dialog::construct(0x4000);
+  unwind_state = 0;
+  dialog2.Dialog::reset(8);
+  dialog2.set_position(
+             -(((int)(caption_font_block.screen_width - 0x280 + (caption_font_block.screen_width - 0x280 >> 0x1f & 7U)) >> 3) + 1),
+             -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
+  x = (iptr)label_string(label_string_ids[2]);
+  dialog2.set_title((const char *)x);
+  dialog2.set_width(0x100);
+  dialog2.add_line((const char *)&str_empty_6,0xffffffff,0xffffffff,0xffffffff,0);
+  text_clear();
+  text_append((const char *)&str_empty_7);
+  text_append_label(8);
+  dialog2.add_line((const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+  dialog2.add_line((const char *)&str_empty_8,0xffffffff,0xffffffff,0xffffffff,0);
+  dialog2.show_modal(0);
+  ((WndBase *)(dialog2.surf_wnd + 0x48))->set_cursor(0x200);
+  main_frame_wnd_block.main_frame_wnd.set_cursor(0x200);
+  ui_flush_input();
+  if (keep_map == 0) {
+    mapgen_place_landmasses();
+    mapgen_fill_diagonal_gaps();
+    ui_pump_messages_net();
+    mapgen_assign_base_terrain();
+    mapgen_apply_rainfall();
+    mapgen_age_terrain();
+    ui_pump_messages_net();
+    mapgen_smooth_terrain();
+    ui_pump_messages_net();
+    mapgen_place_rivers();
+    ui_pump_messages_net();
+  }
+  if ((game.rules & 0x8000) == 0) {
+    for (x2 = 0; (int)x2 < (int)map.width; x2 += 2) {
+      north_ocean = tile_is_ocean(x2 + 1,1);
+      if (north_ocean == 0) {
+        tile_byte = (i8 *)tile_at(x2,0);
+        *tile_byte = 7;
+      }
+      south_ocean = tile_is_ocean(x2,map.height - 2);
+      if (south_ocean == 0) {
+        tile_byte = (i8 *)tile_at(x2 + 1,map.height - 1);
+        *tile_byte = 7;
+      }
+    }
+  }
+  map_assign_landmass_ids();
+  map_build_coarse_connectivity();
+  mapgen_calc_fertility();
+  mapgen_place_polar_caps(keep_map);
+  map_fill_tile_byte((iptr)&map_tiles->improvements,0);
+  mapgen_hide_far_ocean_resources();
   crt_memcpy(&map_offmap_tile,map_tiles,6);
   main_frame_wnd_block.main_frame_wnd.set_cursor(0x201);
   ui_flush_input();
@@ -1839,13 +1949,268 @@ default_key:
   return;
 }
 
+/* Part of map_window_key (004125c6): the commands below 0xd3: close the
+   city window, the advisors and reports of the World/Advisors menus. */
+static void map_key_report_command(int cmd)
+{
+  int result;
+
+  if (cmd == 0xd2) {
+    result = ((CityWindow *)((i8 *)&city_window_block.city_window))->city_window_is_closed();
+    if (result == 0) {
+      city_window_close();
+    }
+  }
+  else {
+    switch(cmd) {
+    case 0xb0:
+      city_status_show(human_civ[0]);
+      break;
+    case 0xb1:
+      defense_minister_show(human_civ[0]);
+      break;
+    case 0xb2:
+      foreign_minister_show(human_civ[0]);
+      break;
+    case 0xb3:
+      attitude_advisor_show(human_civ[0]);
+      break;
+    case 0xb4:
+      trade_advisor_show(human_civ[0]);
+      break;
+    case 0xb5:
+      science_advisor_show(human_civ[0]);
+      break;
+    case 0xb6:
+      wonders_report_show(human_civ[0]);
+      break;
+    case 0xb7:
+      top_cities_show(human_civ[0]);
+      break;
+    case 0xb8:
+      civ_score_window_show(human_civ[0]);
+      if (game.reveal_map != '\0') {
+        civ_rating_window_show(human_civ[0]);
+        powergraph_show();
+      }
+      break;
+    case 0xba:
+      demographics_show(human_civ[0]);
+      break;
+    case 0xbb:
+      if ((game.rules & 0x80) == 0) {
+        spaceship_select_view_dialog(human_civ[0]);
+      }
+    }
+  }
+}
+
+/* Part of map_window_key (004125c6): the commands 0xd3..0x354: the Game
+   menu (options, save/load, quit, zoom, chat, multiplayer) and the high
+   council. */
+static void map_key_game_command(int cmd)
+{
+  SHORT shift_state;
+  int result;
+
+  if (cmd == 0x354) {
+    if ((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
+       (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) == '\0')) {
+      council_show(human_civ[0],0);
+    }
+    else {
+      council_show(human_civ[0],1);
+    }
+  }
+  else {
+    switch(cmd) {
+    case 0x243:
+      if (2 < game.multiplayer) {
+        chat_wnd_block.open(0,4);
+      }
+      break;
+    case 0x244:
+      casualty_timeline_show(human_civ[0]);
+      break;
+    case 0x245:
+      menu_message_options();
+      break;
+    case 0x246:
+      if (game.multiplayer == '\0') {
+        editor_toggle_scenario_flag();
+      }
+      break;
+    case 0x247:
+      game.game_options = game.game_options ^ 0x20;
+      ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_checked(0x327,(game.game_options & 0x20) >> 5);
+      map_redraw_all_views(human_civ[0],1);
+      prefs_game_rules_block.prefs_game_options = game.game_options;
+      prefs_save_civ2dat();
+      break;
+    case 0x248:
+      if ((game.multiplayer == 1) &&
+         (result = popup_game_with_sprite((const char *)&str_reallyquit,(iptr)&popup_info_icon_sprite,0), result != 0)) {
+        snd_cd_stop();
+        map_display_disable();
+      }
+      break;
+    case 0x24a:
+      if ((civ_saved_cursor_x_block.mp_open_game != 0) && (game.multiplayer == 1)) {
+        game_join_dialog();
+      }
+      break;
+    case 0x24b:
+      if ((game.multiplayer == '\0') || (mp_cheat_menu_allowed[0] != 0)) {
+        cheat_toggle_mode();
+      }
+      break;
+    case 0x24c:
+      if (game.multiplayer == '\0') {
+        menu_load_game();
+      }
+      break;
+    case 0x24e:
+      cmd_end_player_turn();
+      break;
+    case 0x24f:
+      menu_game_options();
+      break;
+    case 0x250:
+      menu_graphic_options();
+      break;
+    case 0x251:
+      game_quit_or_retire(0);
+      break;
+    case 0x252:
+      game_quit_or_retire(1);
+      break;
+    case 0x253:
+      if (game.multiplayer != 2) {
+        game_save_dialog(0);
+      }
+      break;
+    case 0x254:
+      if (((game.multiplayer != '\0') && (game.multiplayer != 2)) && (net_session_block.net_host_flag != '\0'))
+      {
+        mp_cmd_change_timer();
+      }
+      break;
+    case 599:
+      civ_change_password_dialog(human_civ[0]);
+      break;
+    case 600:
+      map_views_block.mapview_zoom[0] = 0xfff9;
+      ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
+      break;
+    case 0x259:
+      if (game.multiplayer != '\0') {
+        menu_multiplayer_options();
+      }
+      break;
+    case 0x25a:
+      map_views_block.mapview_zoom[0] = 8;
+      ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
+    }
+  }
+}
+
+/* Part of map_window_key (004125c6): the Cheat menu and the scenario
+   editors (single player, cheat mode on). */
+static void map_key_cheat_command(int cmd)
+{
+
+  if (cmd < 0x332) {
+    if (cmd == 0x331) {
+      tech_editor_run();
+    }
+    else {
+      switch(cmd) {
+      case 0x1b0:
+        cheat_create_unit();
+        break;
+      case 0x1b1:
+        cheat_reveal_map();
+        break;
+      case 0x1b2:
+        cheat_set_human_player();
+        break;
+      case 0x1b3:
+        cheat_set_game_year();
+        break;
+      case 0x1b4:
+        cheat_kill_civ();
+        break;
+      case 0x1b5:
+        cheat_tech_advance();
+        break;
+      case 0x1b6:
+        cheat_force_government();
+        break;
+      case 0x1b7:
+        cheat_terrain_saved_bits = 0xffffffff;
+        cheat_change_terrain();
+        break;
+      case 0x1b8:
+        cheat_change_money();
+      }
+    }
+  }
+  else {
+    switch(cmd) {
+    case 0x332:
+      city_editor_run();
+      break;
+    case 0x333:
+      cosmic_editor_run();
+      break;
+    case 0x334:
+      impr_editor_run();
+      break;
+    case 0x335:
+      terrain_editor_open();
+      break;
+    case 0x336:
+      tribe_editor_run();
+      break;
+    case 0x337:
+      unit_editor_run();
+      break;
+    case 0x338:
+      events_editor_open();
+      break;
+    case 0x343:
+      cheat_edit_city();
+      break;
+    case 0x344:
+      cheat_destroy_units_at_cursor();
+      break;
+    case 0x34b:
+      cheat_edit_king();
+      break;
+    case 0x350:
+      cheat_scenario_params();
+      break;
+    case 0x353:
+      cheat_save_as_scenario();
+      break;
+    case 0x355:
+      cheat_edit_unit();
+      break;
+    case 0x3b5:
+      cheat_edit_technologies();
+      break;
+    case 0x3b7:
+      cheat_change_terrain();
+    }
+  }
+}
+
 /* 004125c6 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl map_window_key(int cmd)
 
 {
-  SHORT shift_state;
   int result;
   uptr move_dir;
   
@@ -1926,241 +2291,13 @@ void __cdecl map_window_key(int cmd)
     }
   }
   if (cmd < 0xd3) {
-    if (cmd == 0xd2) {
-      result = ((CityWindow *)((i8 *)&city_window_block.city_window))->city_window_is_closed();
-      if (result == 0) {
-        city_window_close();
-      }
-    }
-    else {
-      switch(cmd) {
-      case 0xb0:
-        city_status_show(human_civ[0]);
-        break;
-      case 0xb1:
-        defense_minister_show(human_civ[0]);
-        break;
-      case 0xb2:
-        foreign_minister_show(human_civ[0]);
-        break;
-      case 0xb3:
-        attitude_advisor_show(human_civ[0]);
-        break;
-      case 0xb4:
-        trade_advisor_show(human_civ[0]);
-        break;
-      case 0xb5:
-        science_advisor_show(human_civ[0]);
-        break;
-      case 0xb6:
-        wonders_report_show(human_civ[0]);
-        break;
-      case 0xb7:
-        top_cities_show(human_civ[0]);
-        break;
-      case 0xb8:
-        civ_score_window_show(human_civ[0]);
-        if (game.reveal_map != '\0') {
-          civ_rating_window_show(human_civ[0]);
-          powergraph_show();
-        }
-        break;
-      case 0xba:
-        demographics_show(human_civ[0]);
-        break;
-      case 0xbb:
-        if ((game.rules & 0x80) == 0) {
-          spaceship_select_view_dialog(human_civ[0]);
-        }
-      }
-    }
+    map_key_report_command(cmd);
   }
   else if (cmd < 0x355) {
-    if (cmd == 0x354) {
-      if ((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
-         (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) == '\0')) {
-        council_show(human_civ[0],0);
-      }
-      else {
-        council_show(human_civ[0],1);
-      }
-    }
-    else {
-      switch(cmd) {
-      case 0x243:
-        if (2 < game.multiplayer) {
-          chat_wnd_block.open(0,4);
-        }
-        break;
-      case 0x244:
-        casualty_timeline_show(human_civ[0]);
-        break;
-      case 0x245:
-        menu_message_options();
-        break;
-      case 0x246:
-        if (game.multiplayer == '\0') {
-          editor_toggle_scenario_flag();
-        }
-        break;
-      case 0x247:
-        game.game_options = game.game_options ^ 0x20;
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_checked(0x327,(game.game_options & 0x20) >> 5);
-        map_redraw_all_views(human_civ[0],1);
-        prefs_game_rules_block.prefs_game_options = game.game_options;
-        prefs_save_civ2dat();
-        break;
-      case 0x248:
-        if ((game.multiplayer == 1) &&
-           (result = popup_game_with_sprite((const char *)&str_reallyquit,(iptr)&popup_info_icon_sprite,0), result != 0)) {
-          snd_cd_stop();
-          map_display_disable();
-        }
-        break;
-      case 0x24a:
-        if ((civ_saved_cursor_x_block.mp_open_game != 0) && (game.multiplayer == 1)) {
-          game_join_dialog();
-        }
-        break;
-      case 0x24b:
-        if ((game.multiplayer == '\0') || (mp_cheat_menu_allowed[0] != 0)) {
-          cheat_toggle_mode();
-        }
-        break;
-      case 0x24c:
-        if (game.multiplayer == '\0') {
-          menu_load_game();
-        }
-        break;
-      case 0x24e:
-        cmd_end_player_turn();
-        break;
-      case 0x24f:
-        menu_game_options();
-        break;
-      case 0x250:
-        menu_graphic_options();
-        break;
-      case 0x251:
-        game_quit_or_retire(0);
-        break;
-      case 0x252:
-        game_quit_or_retire(1);
-        break;
-      case 0x253:
-        if (game.multiplayer != 2) {
-          game_save_dialog(0);
-        }
-        break;
-      case 0x254:
-        if (((game.multiplayer != '\0') && (game.multiplayer != 2)) && (net_session_block.net_host_flag != '\0'))
-        {
-          mp_cmd_change_timer();
-        }
-        break;
-      case 599:
-        civ_change_password_dialog(human_civ[0]);
-        break;
-      case 600:
-        map_views_block.mapview_zoom[0] = 0xfff9;
-        ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
-        break;
-      case 0x259:
-        if (game.multiplayer != '\0') {
-          menu_multiplayer_options();
-        }
-        break;
-      case 0x25a:
-        map_views_block.mapview_zoom[0] = 8;
-        ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
-      }
-    }
+    map_key_game_command(cmd);
   }
   if (((game.game_options & 0x8000) != 0) && (game.multiplayer == '\0')) {
-    if (cmd < 0x332) {
-      if (cmd == 0x331) {
-        tech_editor_run();
-      }
-      else {
-        switch(cmd) {
-        case 0x1b0:
-          cheat_create_unit();
-          break;
-        case 0x1b1:
-          cheat_reveal_map();
-          break;
-        case 0x1b2:
-          cheat_set_human_player();
-          break;
-        case 0x1b3:
-          cheat_set_game_year();
-          break;
-        case 0x1b4:
-          cheat_kill_civ();
-          break;
-        case 0x1b5:
-          cheat_tech_advance();
-          break;
-        case 0x1b6:
-          cheat_force_government();
-          break;
-        case 0x1b7:
-          cheat_terrain_saved_bits = 0xffffffff;
-          cheat_change_terrain();
-          break;
-        case 0x1b8:
-          cheat_change_money();
-        }
-      }
-    }
-    else {
-      switch(cmd) {
-      case 0x332:
-        city_editor_run();
-        break;
-      case 0x333:
-        cosmic_editor_run();
-        break;
-      case 0x334:
-        impr_editor_run();
-        break;
-      case 0x335:
-        terrain_editor_open();
-        break;
-      case 0x336:
-        tribe_editor_run();
-        break;
-      case 0x337:
-        unit_editor_run();
-        break;
-      case 0x338:
-        events_editor_open();
-        break;
-      case 0x343:
-        cheat_edit_city();
-        break;
-      case 0x344:
-        cheat_destroy_units_at_cursor();
-        break;
-      case 0x34b:
-        cheat_edit_king();
-        break;
-      case 0x350:
-        cheat_scenario_params();
-        break;
-      case 0x353:
-        cheat_save_as_scenario();
-        break;
-      case 0x355:
-        cheat_edit_unit();
-        break;
-      case 0x3b5:
-        cheat_edit_technologies();
-        break;
-      case 0x3b7:
-        cheat_change_terrain();
-      }
-    }
+    map_key_cheat_command(cmd);
   }
   switch(cmd) {
   case 0xa1:
@@ -3622,13 +3759,13 @@ iptr __cdecl map_dir_from_delta(int dx,int dy)
   return result_dir;
 }
 
-/* 004abfe5 auto */
-iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
-
+/* Part of map_path_next_dir (004abfe5): the flood fill of the cost grid from
+   the goal outwards (breadth first through the ring queue), up to max_cost.
+   civ: the caller's, read stale by the direction pick. */
+static void map_path_flood(int x,int y,int max_cost,bool uses_terrain_cost,bool start_on_land,
+                                      bool is_naval,int &civ)
 {
   byte cur_tile_flags;
-  bool uses_terrain_cost;
-  bool start_on_land;
   bool has_road;
   bool has_rail;
   byte terrain;
@@ -3644,23 +3781,368 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
   int y2;
   i32 impr_bits;
   iptr x2;
-  int debug_mode;
-  bool is_naval;
-  int abs_dy2;
   int abs_dy;
   int dist_y;
-  int civ;
   int dist_x;
-  int col;
-  int step_cost;
-  int row;
-  iptr best_dir;
-  int rel_x;
-  int nb_rel_x;
+  iptr dir;
   int new_cost;
+
+  map_views_block.path_flood_goal_x = map_views_block.path_goal_x;
+  map_views_block.path_flood_goal_y = map_views_block.path_goal_y;
+  _memset(((i8 *)&dialog_text_font_obj_block.path_cost_grid),0,0x2400);
+  map_views_block.path_queue_head = 0;
+  map_views_block.path_queue_x[0] = map_views_block.path_goal_x;
+  map_views_block.path_queue_y[0] = map_views_block.path_goal_y;
+  map_views_block.path_queue_tail = 1;
+  path_grid_set_cost(map_views_block.path_goal_x,map_views_block.path_goal_y,1);
+  map_views_block.path_result_cost = max_cost;
+  do {
+    x3 = (((i32 *)&map_views_block.path_queue_x))[map_views_block.path_queue_head];
+    y4 = (((i32 *)&map_views_block.path_queue_y))[map_views_block.path_queue_head];
+    map_views_block.path_queue_head++;
+    if (0x8ff < map_views_block.path_queue_head) {
+      map_views_block.path_queue_head = 0;
+    }
+    y3 = map_wrap_x(x3);
+    cost = path_grid_get_cost(x3,y4);
+    nb_x = map_views_block.path_result_cost;
+    if ((cost <= map_views_block.path_result_cost) && ((y3 != x || (nb_x = cost, y4 != y))))
+    {
+      improvements2 = tile_improvements(y3,y4);
+      if (((improvements2 & 0x10) == 0) && (nb_x = tile_city_owner(y3,y4), nb_x < 0)) {
+        has_road = false;
+      }
+      else {
+        has_road = true;
+      }
+      tile = (byte *)tile_at(y3,y4);
+      cur_tile_flags = *tile;
+      improvements2 = tile_improvements(y3,y4);
+      if (((improvements2 & 0x20) == 0) && (nb_x = tile_city_owner(y3,y4), nb_x < 0)) {
+        has_rail = false;
+      }
+      else {
+        has_rail = true;
+      }
+      for (dir = 0; nb_x = map_views_block.path_result_cost, dir < 8; dir++) {
+        nb_x = (((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x3;
+        y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y4;
+        x2 = map_wrap_x(nb_x);
+        if (nb_x - map_views_block.path_goal_x < 1) {
+          dist_x = ~(nb_x - map_views_block.path_goal_x) + 1;
+        }
+        else {
+          dist_x = nb_x - map_views_block.path_goal_x;
+        }
+        if (y2 - map_views_block.path_goal_y < 1) {
+          dist_y = ~(y2 - map_views_block.path_goal_y) + 1;
+        }
+        else {
+          dist_y = y2 - map_views_block.path_goal_y;
+        }
+        if (((int)(dist_y + dist_x & 0xfffffffeU) < 0x30) &&
+           (check = map_in_bounds(x2,y2), check != 0)) {
+          terrain = tile_terrain(x2,y2);
+          if (((((terrain == 10) == is_naval) || ((x == x2 && (y2 == y)))) ||
+              ((map_views_block.path_flood_goal_x == x2 && (y2 == map_views_block.path_flood_goal_y)))) &&
+             ((!start_on_land ||
+              ((check = tile_landmass(x2,y2), check != 0x3f &&
+               (landmass_table_block.landmass_recs[check].water_body_size != 1)))))) {
+            new_cost = cost;
+            if (-1 < path_owner_civ) {
+              civ = tile_city_or_unit_owner(x2,y2);
+              if ((-1 < civ) && (path_owner_civ != civ)) continue;
+              if ((path_owner_civ == civ) &&
+                 ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 &&
+                   (impr_bits = tile_improvements(x2,y2), ((byte)impr_bits & 0x43) == 1)) &&
+                  (check = tile_adjacent_nonallied_unit(x2,y2,civ), check != 0)))) {
+                unit = tile_first_unit(x2,y2);
+                check = unit_stack_count_role(unit,(int)(char)unit_types[path_unit_type].role);
+                new_cost = cost + check * 0x10;
+              }
+              check = tile_owner_at_peace(x2,y2,path_owner_civ);
+              if ((-1 < check) && ((char)unit_types[path_unit_type].role < 5)) {
+                new_cost += (uint)cosmic.road_move_mult * 4;
+              }
+            }
+            if ((path_road_planning != 0) ||
+               ((has_rail && ((improvements2 = tile_improvements(x2,y2), (improvements2 & 0x20) != 0 ||
+                           (check = tile_city_owner(x2,y2), -1 < check)))))) {
+              new_cost++;
+            }
+            else if ((unit_types[path_unit_type].flags & 0x200) == 0) {
+              if ((has_road) &&
+                 ((improvements2 = tile_improvements(x2,y2), (improvements2 & 0x10) != 0 ||
+                  (check = tile_city_owner(x2,y2), -1 < check)))) {
+                new_cost += 4;
+              }
+              else {
+                if (path_roads_only != 0) continue;
+                if ((((cur_tile_flags & 0x80) != 0) &&
+                    (tile = (byte *)tile_at(x2,y2), (*tile & 0x80) != 0)) &&
+                   (check = map_dx_wrapped(y3,x2), check == 1)) {
+                  if (y4 == y2 || y4 - y2 < 0) {
+                    abs_dy = ~(y4 - y2) + 1;
+                  }
+                  else {
+                    abs_dy = y4 - y2;
+                  }
+                  if (abs_dy == 1) {
+                    new_cost += 4;
+                    goto apply_road_bonus;
+                  }
+                }
+                if (uses_terrain_cost) {
+                  new_cost = new_cost +
+                             (int)(char)terrain_types[terrain].move_cost *
+                             (uint)cosmic.road_move_mult * 4;
+                }
+                else {
+                  new_cost += (uint)cosmic.road_move_mult * 4;
+                }
+              }
+            }
+            else {
+              new_cost += 4;
+            }
+apply_road_bonus:
+            if (((unit_types[path_unit_type].flags & 0x20) != 0) &&
+               (tile = (byte *)tile_at(x2,y2), (*tile & 0x40) != 0)) {
+              new_cost += (uint)cosmic.road_move_mult * 4;
+            }
+            check = path_grid_get_cost(nb_x,y2);
+            if ((check == 0) || (new_cost < check)) {
+              path_grid_set_cost(nb_x,y2,new_cost);
+              (((i32 *)&map_views_block.path_queue_x))[map_views_block.path_queue_tail] = nb_x;
+              (((i32 *)&map_views_block.path_queue_y))[map_views_block.path_queue_tail] = y2;
+              map_views_block.path_queue_tail++;
+              if (0x8ff < map_views_block.path_queue_tail) {
+                map_views_block.path_queue_tail = 0;
+              }
+              if (map_views_block.path_queue_head == map_views_block.path_queue_tail) return;  /* the queue is full */
+            }
+          }
+        }
+      }
+    }
+    map_views_block.path_result_cost = nb_x;
+  } while ((map_views_block.path_queue_head != map_views_block.path_queue_tail) && (map_views_block.path_queue_head != 0));
+}
+
+/* Part of map_path_next_dir (004abfe5): the direction from (x,y) to the
+   neighbour of lowest cost to reach (ties: the nearer to the goal).
+   civ: the caller's, possibly left by the flood fill (read stale when not
+   set here). */
+static void map_path_pick_dir(int x,int y,int rel_x,bool uses_terrain_cost,bool is_naval,int &civ,
+                                         iptr &best_dir)
+{
+  byte cur_tile_flags;
+  bool start_on_land;
+  bool has_road;
+  byte terrain;
+  int y4;
+  uint improvements2;
+  byte *tile;
+  int nb_x;
+  int y3;
+  iptr x3;
+  int cost;
+  int y2;
+  i32 impr_bits;
+  iptr x2;
+  int abs_dy2;
+  int dist_y;
+  int dist_x;
+  int step_cost;
+  int nb_rel_x;
   int best_dist;
   iptr dir;
   int best_cost;
+
+  best_cost = 19999;
+  best_dist = 19999;
+  improvements2 = tile_improvements(x,y);
+  if (((improvements2 & 0x10) == 0) && (y4 = tile_city_owner(x,y), y4 < 0)) {
+    start_on_land = false;
+  }
+  else {
+    start_on_land = true;
+  }
+  tile = (byte *)tile_at(x,y);
+  cur_tile_flags = *tile;
+  improvements2 = tile_improvements(x,y);
+  if (((improvements2 & 0x20) == 0) && (y4 = tile_city_owner(x,y), y4 < 0)) {
+    has_road = false;
+  }
+  else {
+    has_road = true;
+  }
+  y4 = path_grid_get_cost(rel_x,y);
+  for (dir = 0; dir < 8; dir++) {
+    nb_x = (((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x;
+    y3 = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y;
+    x3 = map_wrap_x(nb_x);
+    if (nb_x - map_views_block.path_goal_x < 1) {
+      dist_x = ~(nb_x - map_views_block.path_goal_x) + 1;
+    }
+    else {
+      dist_x = nb_x - map_views_block.path_goal_x;
+    }
+    if (y3 - map_views_block.path_goal_y < 1) {
+      dist_y = ~(y3 - map_views_block.path_goal_y) + 1;
+    }
+    else {
+      dist_y = y3 - map_views_block.path_goal_y;
+    }
+    if (((int)(dist_y + dist_x & 0xfffffffeU) < 0x30) &&
+       (cost = map_in_bounds(x3,y3), cost != 0)) {
+      terrain = tile_terrain(x3,y3);
+      if ((((terrain == 10) == is_naval) || ((x == x3 && (y3 == y)))) ||
+         ((map_views_block.path_flood_goal_x == x3 && (y3 == map_views_block.path_flood_goal_y)))) {
+        nb_rel_x = nb_x - map_views_block.path_grid_center_x;
+        if ((game.rules & 0x8000) == 0) {
+          if (nb_rel_x < 0) {
+            nb_rel_x += map.width;
+          }
+          if ((int)map.width >> 1 <= nb_rel_x) {
+            nb_rel_x -= map.width;
+          }
+        }
+        cost = path_grid_get_cost(nb_rel_x + map_views_block.path_grid_center_x,y3);
+        if (((((cost == 0) || (path_owner_civ < 0)) ||
+             (civ = tile_city_or_unit_owner(x3,y3), civ < 0)) ||
+            (path_owner_civ == civ)) && ((cost != 0 && (cost < y4)))) {
+          if (path_road_planning == 0) {
+            if ((has_road) &&
+               ((improvements2 = tile_improvements(x3,y3), (improvements2 & 0x20) != 0 ||
+                (y2 = tile_city_owner(x3,y3), -1 < y2)))) {
+              step_cost = 1;
+            }
+            else if ((unit_types[path_unit_type].flags & 0x200) == 0) {
+              if ((start_on_land) &&
+                 ((improvements2 = tile_improvements(x3,y3), (improvements2 & 0x10) != 0 ||
+                  (y2 = tile_city_owner(x3,y3), -1 < y2)))) {
+                step_cost = 4;
+              }
+              else {
+                if (path_roads_only != 0) continue;
+                if ((((cur_tile_flags & 0x80) != 0) &&
+                    (tile = (byte *)tile_at(x3,y3), (*tile & 0x80) != 0)) &&
+                   (y2 = map_dx_wrapped(x,x3), y2 == 1)) {
+                  if (y == y3 || y - y3 < 0) {
+                    abs_dy2 = ~(y - y3) + 1;
+                  }
+                  else {
+                    abs_dy2 = y - y3;
+                  }
+                  if (abs_dy2 == 1) {
+                    step_cost = 4;
+                    goto apply_step_road_bonus;
+                  }
+                }
+                if (uses_terrain_cost) {
+                  step_cost = (int)(char)terrain_types[terrain].move_cost *
+                             (uint)cosmic.road_move_mult * 4;
+                }
+                else {
+                  step_cost = (uint)cosmic.road_move_mult << 2;
+                }
+              }
+            }
+            else {
+              step_cost = 4;
+            }
+apply_step_road_bonus:
+            if (((unit_types[path_unit_type].flags & 0x20) != 0) &&
+               (tile = (byte *)tile_at(x3,y3), (*tile & 0x40) != 0)) {
+              step_cost += (uint)cosmic.road_move_mult * 4;
+            }
+            if (((path_owner_civ == civ) &&
+                ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) &&
+               ((impr_bits = tile_improvements(x3,y3), ((byte)impr_bits & 0x43) == 1 &&
+                (y2 = tile_adjacent_nonallied_unit(x3,y3,civ), y2 != 0)))) {
+              x2 = tile_first_unit(x3,y3);
+              y2 = unit_stack_count_role(x2,(int)(char)unit_types[path_unit_type].role);
+              step_cost += y2 * 8;
+            }
+            y2 = tile_owner_at_peace(x3,y3,path_owner_civ);
+            if ((-1 < y2) && ((char)unit_types[path_unit_type].role < 5)) {
+              step_cost += (uint)cosmic.road_move_mult * 4;
+            }
+          }
+          else {
+            step_cost = 1;
+          }
+          cost += step_cost;
+          if (cost <= best_cost) {
+            nb_x = map_distance_diag(map_views_block.path_goal_x,map_views_block.path_goal_y,nb_x,y3);
+            if (cost < best_cost) {
+              best_dir = dir;
+              best_dist = nb_x;
+              best_cost = cost;
+            }
+            else if (nb_x < best_dist) {
+              best_dir = dir;
+              best_dist = nb_x;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Part of map_path_next_dir (004abfe5): the move debug view: the cost grid drawn
+   over the map until the debug popup is closed (1/2 zoom, 3/4 recentre). */
+static void map_path_debug_show(int x,int y,int debug_mode)
+{
+  int col;
+  int row;
+
+  map_views_block.map_view_center_x[0] = (i16)x;
+  map_views_block.mapview_center_y[0] = (i16)y;
+  while( true ) {
+    while( true ) {
+      while( true ) {
+        while( true ) {
+          ((MapView *)((i8 *)&map_views_block.map_views))->redraw(-1,1);
+          for (row = 0; row < 0x30; row++) {
+            for (col = 0; col < 0x30; col++) {
+              if (*(int *)(((i8 *)&dialog_text_font_obj_block.path_cost_grid) + col * 4 + row * 0xc0) != 0) {
+                mapview_draw_tile_number(col - 0x18 + row - 0x18 + map_views_block.path_grid_center_x,
+                                   ((col - 0x18) - (row - 0x18)) + map_views_block.path_grid_center_y,
+                                   *(i32 *)(((i8 *)&dialog_text_font_obj_block.path_cost_grid) + col * 4 + row * 0xc0)
+                                   ,0x29);
+              }
+            }
+          }
+          debug_mode = popup_debug_text((const char *)&str_movedebug);
+          if (debug_mode != 1) break;
+          map_views_block.mapview_zoom[0]--;
+        }
+        if (debug_mode != 2) break;
+        map_views_block.mapview_zoom[0]++;
+      }
+      if (debug_mode != 3) break;
+      ((MapView *)((i8 *)&map_views_block.map_views))->center_on(x,y);
+    }
+    if (debug_mode != 4) break;
+    ((MapView *)((i8 *)&map_views_block.map_views))->center_on(map_views_block.path_goal_x,map_views_block.path_goal_y);
+  }
+}
+
+/* 004abfe5 auto */
+iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
+
+{
+  bool uses_terrain_cost;
+  bool start_on_land;
+  int y4;
+  int debug_mode;
+  bool is_naval;
+  int civ;
+  iptr best_dir;
+  int rel_x;
   civ = 0;  /* stale stack the original reads (FRAME_PRESETS) */
   
   debug_mode = path_debug_pending;
@@ -3687,317 +4169,18 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
   rel_x += map_views_block.path_grid_center_x;
   if (((map_views_block.path_goal_x != map_views_block.path_flood_goal_x) || (map_views_block.path_goal_y != map_views_block.path_flood_goal_y)) ||
      (y4 = path_grid_get_cost(rel_x,y), y4 == 0)) {
-    map_views_block.path_flood_goal_x = map_views_block.path_goal_x;
-    map_views_block.path_flood_goal_y = map_views_block.path_goal_y;
-    _memset(((i8 *)&dialog_text_font_obj_block.path_cost_grid),0,0x2400);
-    map_views_block.path_queue_head = 0;
-    map_views_block.path_queue_x[0] = map_views_block.path_goal_x;
-    map_views_block.path_queue_y[0] = map_views_block.path_goal_y;
-    map_views_block.path_queue_tail = 1;
-    path_grid_set_cost(map_views_block.path_goal_x,map_views_block.path_goal_y,1);
-    map_views_block.path_result_cost = max_cost;
-    do {
-      x3 = (((i32 *)&map_views_block.path_queue_x))[map_views_block.path_queue_head];
-      y4 = (((i32 *)&map_views_block.path_queue_y))[map_views_block.path_queue_head];
-      map_views_block.path_queue_head++;
-      if (0x8ff < map_views_block.path_queue_head) {
-        map_views_block.path_queue_head = 0;
-      }
-      y3 = map_wrap_x(x3);
-      cost = path_grid_get_cost(x3,y4);
-      nb_x = map_views_block.path_result_cost;
-      if ((cost <= map_views_block.path_result_cost) && ((y3 != x || (nb_x = cost, y4 != y))))
-      {
-        improvements2 = tile_improvements(y3,y4);
-        if (((improvements2 & 0x10) == 0) && (nb_x = tile_city_owner(y3,y4), nb_x < 0)) {
-          has_road = false;
-        }
-        else {
-          has_road = true;
-        }
-        tile = (byte *)tile_at(y3,y4);
-        cur_tile_flags = *tile;
-        improvements2 = tile_improvements(y3,y4);
-        if (((improvements2 & 0x20) == 0) && (nb_x = tile_city_owner(y3,y4), nb_x < 0)) {
-          has_rail = false;
-        }
-        else {
-          has_rail = true;
-        }
-        for (dir = 0; nb_x = map_views_block.path_result_cost, dir < 8; dir++) {
-          nb_x = (((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x3;
-          y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y4;
-          x2 = map_wrap_x(nb_x);
-          if (nb_x - map_views_block.path_goal_x < 1) {
-            dist_x = ~(nb_x - map_views_block.path_goal_x) + 1;
-          }
-          else {
-            dist_x = nb_x - map_views_block.path_goal_x;
-          }
-          if (y2 - map_views_block.path_goal_y < 1) {
-            dist_y = ~(y2 - map_views_block.path_goal_y) + 1;
-          }
-          else {
-            dist_y = y2 - map_views_block.path_goal_y;
-          }
-          if (((int)(dist_y + dist_x & 0xfffffffeU) < 0x30) &&
-             (check = map_in_bounds(x2,y2), check != 0)) {
-            terrain = tile_terrain(x2,y2);
-            if (((((terrain == 10) == is_naval) || ((x == x2 && (y2 == y)))) ||
-                ((map_views_block.path_flood_goal_x == x2 && (y2 == map_views_block.path_flood_goal_y)))) &&
-               ((!start_on_land ||
-                ((check = tile_landmass(x2,y2), check != 0x3f &&
-                 (landmass_table_block.landmass_recs[check].water_body_size != 1)))))) {
-              new_cost = cost;
-              if (-1 < path_owner_civ) {
-                civ = tile_city_or_unit_owner(x2,y2);
-                if ((-1 < civ) && (path_owner_civ != civ)) continue;
-                if ((path_owner_civ == civ) &&
-                   ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 &&
-                     (impr_bits = tile_improvements(x2,y2), ((byte)impr_bits & 0x43) == 1)) &&
-                    (check = tile_adjacent_nonallied_unit(x2,y2,civ), check != 0)))) {
-                  unit = tile_first_unit(x2,y2);
-                  check = unit_stack_count_role(unit,(int)(char)unit_types[path_unit_type].role);
-                  new_cost = cost + check * 0x10;
-                }
-                check = tile_owner_at_peace(x2,y2,path_owner_civ);
-                if ((-1 < check) && ((char)unit_types[path_unit_type].role < 5)) {
-                  new_cost += (uint)cosmic.road_move_mult * 4;
-                }
-              }
-              if ((path_road_planning != 0) ||
-                 ((has_rail && ((improvements2 = tile_improvements(x2,y2), (improvements2 & 0x20) != 0 ||
-                             (check = tile_city_owner(x2,y2), -1 < check)))))) {
-                new_cost++;
-              }
-              else if ((unit_types[path_unit_type].flags & 0x200) == 0) {
-                if ((has_road) &&
-                   ((improvements2 = tile_improvements(x2,y2), (improvements2 & 0x10) != 0 ||
-                    (check = tile_city_owner(x2,y2), -1 < check)))) {
-                  new_cost += 4;
-                }
-                else {
-                  if (path_roads_only != 0) continue;
-                  if ((((cur_tile_flags & 0x80) != 0) &&
-                      (tile = (byte *)tile_at(x2,y2), (*tile & 0x80) != 0)) &&
-                     (check = map_dx_wrapped(y3,x2), check == 1)) {
-                    if (y4 == y2 || y4 - y2 < 0) {
-                      abs_dy = ~(y4 - y2) + 1;
-                    }
-                    else {
-                      abs_dy = y4 - y2;
-                    }
-                    if (abs_dy == 1) {
-                      new_cost += 4;
-                      goto apply_road_bonus;
-                    }
-                  }
-                  if (uses_terrain_cost) {
-                    new_cost = new_cost +
-                               (int)(char)terrain_types[terrain].move_cost *
-                               (uint)cosmic.road_move_mult * 4;
-                  }
-                  else {
-                    new_cost += (uint)cosmic.road_move_mult * 4;
-                  }
-                }
-              }
-              else {
-                new_cost += 4;
-              }
-apply_road_bonus:
-              if (((unit_types[path_unit_type].flags & 0x20) != 0) &&
-                 (tile = (byte *)tile_at(x2,y2), (*tile & 0x40) != 0)) {
-                new_cost += (uint)cosmic.road_move_mult * 4;
-              }
-              check = path_grid_get_cost(nb_x,y2);
-              if ((check == 0) || (new_cost < check)) {
-                path_grid_set_cost(nb_x,y2,new_cost);
-                (((i32 *)&map_views_block.path_queue_x))[map_views_block.path_queue_tail] = nb_x;
-                (((i32 *)&map_views_block.path_queue_y))[map_views_block.path_queue_tail] = y2;
-                map_views_block.path_queue_tail++;
-                if (0x8ff < map_views_block.path_queue_tail) {
-                  map_views_block.path_queue_tail = 0;
-                }
-                if (map_views_block.path_queue_head == map_views_block.path_queue_tail) goto flood_done;
-              }
-            }
-          }
-        }
-      }
-      map_views_block.path_result_cost = nb_x;
-    } while ((map_views_block.path_queue_head != map_views_block.path_queue_tail) && (map_views_block.path_queue_head != 0));
+    map_path_flood(x,y,max_cost,uses_terrain_cost,start_on_land,is_naval,civ);
   }
-flood_done:
   best_dir = -1;
   if (map_views_block.path_result_cost < max_cost) {
-    best_cost = 19999;
-    best_dist = 19999;
-    improvements2 = tile_improvements(x,y);
-    if (((improvements2 & 0x10) == 0) && (y4 = tile_city_owner(x,y), y4 < 0)) {
-      start_on_land = false;
-    }
-    else {
-      start_on_land = true;
-    }
-    tile = (byte *)tile_at(x,y);
-    cur_tile_flags = *tile;
-    improvements2 = tile_improvements(x,y);
-    if (((improvements2 & 0x20) == 0) && (y4 = tile_city_owner(x,y), y4 < 0)) {
-      has_road = false;
-    }
-    else {
-      has_road = true;
-    }
-    y4 = path_grid_get_cost(rel_x,y);
-    for (dir = 0; dir < 8; dir++) {
-      nb_x = (((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x;
-      y3 = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir] + y;
-      x3 = map_wrap_x(nb_x);
-      if (nb_x - map_views_block.path_goal_x < 1) {
-        dist_x = ~(nb_x - map_views_block.path_goal_x) + 1;
-      }
-      else {
-        dist_x = nb_x - map_views_block.path_goal_x;
-      }
-      if (y3 - map_views_block.path_goal_y < 1) {
-        dist_y = ~(y3 - map_views_block.path_goal_y) + 1;
-      }
-      else {
-        dist_y = y3 - map_views_block.path_goal_y;
-      }
-      if (((int)(dist_y + dist_x & 0xfffffffeU) < 0x30) &&
-         (cost = map_in_bounds(x3,y3), cost != 0)) {
-        terrain = tile_terrain(x3,y3);
-        if ((((terrain == 10) == is_naval) || ((x == x3 && (y3 == y)))) ||
-           ((map_views_block.path_flood_goal_x == x3 && (y3 == map_views_block.path_flood_goal_y)))) {
-          nb_rel_x = nb_x - map_views_block.path_grid_center_x;
-          if ((game.rules & 0x8000) == 0) {
-            if (nb_rel_x < 0) {
-              nb_rel_x += map.width;
-            }
-            if ((int)map.width >> 1 <= nb_rel_x) {
-              nb_rel_x -= map.width;
-            }
-          }
-          cost = path_grid_get_cost(nb_rel_x + map_views_block.path_grid_center_x,y3);
-          if (((((cost == 0) || (path_owner_civ < 0)) ||
-               (civ = tile_city_or_unit_owner(x3,y3), civ < 0)) ||
-              (path_owner_civ == civ)) && ((cost != 0 && (cost < y4)))) {
-            if (path_road_planning == 0) {
-              if ((has_road) &&
-                 ((improvements2 = tile_improvements(x3,y3), (improvements2 & 0x20) != 0 ||
-                  (y2 = tile_city_owner(x3,y3), -1 < y2)))) {
-                step_cost = 1;
-              }
-              else if ((unit_types[path_unit_type].flags & 0x200) == 0) {
-                if ((start_on_land) &&
-                   ((improvements2 = tile_improvements(x3,y3), (improvements2 & 0x10) != 0 ||
-                    (y2 = tile_city_owner(x3,y3), -1 < y2)))) {
-                  step_cost = 4;
-                }
-                else {
-                  if (path_roads_only != 0) continue;
-                  if ((((cur_tile_flags & 0x80) != 0) &&
-                      (tile = (byte *)tile_at(x3,y3), (*tile & 0x80) != 0)) &&
-                     (y2 = map_dx_wrapped(x,x3), y2 == 1)) {
-                    if (y == y3 || y - y3 < 0) {
-                      abs_dy2 = ~(y - y3) + 1;
-                    }
-                    else {
-                      abs_dy2 = y - y3;
-                    }
-                    if (abs_dy2 == 1) {
-                      step_cost = 4;
-                      goto apply_step_road_bonus;
-                    }
-                  }
-                  if (uses_terrain_cost) {
-                    step_cost = (int)(char)terrain_types[terrain].move_cost *
-                               (uint)cosmic.road_move_mult * 4;
-                  }
-                  else {
-                    step_cost = (uint)cosmic.road_move_mult << 2;
-                  }
-                }
-              }
-              else {
-                step_cost = 4;
-              }
-apply_step_road_bonus:
-              if (((unit_types[path_unit_type].flags & 0x20) != 0) &&
-                 (tile = (byte *)tile_at(x3,y3), (*tile & 0x40) != 0)) {
-                step_cost += (uint)cosmic.road_move_mult * 4;
-              }
-              if (((path_owner_civ == civ) &&
-                  ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) &&
-                 ((impr_bits = tile_improvements(x3,y3), ((byte)impr_bits & 0x43) == 1 &&
-                  (y2 = tile_adjacent_nonallied_unit(x3,y3,civ), y2 != 0)))) {
-                x2 = tile_first_unit(x3,y3);
-                y2 = unit_stack_count_role(x2,(int)(char)unit_types[path_unit_type].role);
-                step_cost += y2 * 8;
-              }
-              y2 = tile_owner_at_peace(x3,y3,path_owner_civ);
-              if ((-1 < y2) && ((char)unit_types[path_unit_type].role < 5)) {
-                step_cost += (uint)cosmic.road_move_mult * 4;
-              }
-            }
-            else {
-              step_cost = 1;
-            }
-            cost += step_cost;
-            if (cost <= best_cost) {
-              nb_x = map_distance_diag(map_views_block.path_goal_x,map_views_block.path_goal_y,nb_x,y3);
-              if (cost < best_cost) {
-                best_dir = dir;
-                best_dist = nb_x;
-                best_cost = cost;
-              }
-              else if (nb_x < best_dist) {
-                best_dir = dir;
-                best_dist = nb_x;
-              }
-            }
-          }
-        }
-      }
-    }
+    map_path_pick_dir(x,y,rel_x,uses_terrain_cost,is_naval,civ,best_dir);
   }
   if (best_dir < 0) {
     map_views_block.path_goal_x = map_views_block.path_flood_goal_x;
     map_views_block.path_goal_y = map_views_block.path_flood_goal_y;
   }
   if (debug_mode != 0) {
-    map_views_block.map_view_center_x[0] = (i16)x;
-    map_views_block.mapview_center_y[0] = (i16)y;
-    while( true ) {
-      while( true ) {
-        while( true ) {
-          while( true ) {
-            ((MapView *)((i8 *)&map_views_block.map_views))->redraw(-1,1);
-            for (row = 0; row < 0x30; row++) {
-              for (col = 0; col < 0x30; col++) {
-                if (*(int *)(((i8 *)&dialog_text_font_obj_block.path_cost_grid) + col * 4 + row * 0xc0) != 0) {
-                  mapview_draw_tile_number(col - 0x18 + row - 0x18 + map_views_block.path_grid_center_x,
-                                     ((col - 0x18) - (row - 0x18)) + map_views_block.path_grid_center_y,
-                                     *(i32 *)(((i8 *)&dialog_text_font_obj_block.path_cost_grid) + col * 4 + row * 0xc0)
-                                     ,0x29);
-                }
-              }
-            }
-            debug_mode = popup_debug_text((const char *)&str_movedebug);
-            if (debug_mode != 1) break;
-            map_views_block.mapview_zoom[0]--;
-          }
-          if (debug_mode != 2) break;
-          map_views_block.mapview_zoom[0]++;
-        }
-        if (debug_mode != 3) break;
-        ((MapView *)((i8 *)&map_views_block.map_views))->center_on(x,y);
-      }
-      if (debug_mode != 4) break;
-      ((MapView *)((i8 *)&map_views_block.map_views))->center_on(map_views_block.path_goal_x,map_views_block.path_goal_y);
-    }
+    map_path_debug_show(x,y,debug_mode);
   }
   return best_dir;
 }

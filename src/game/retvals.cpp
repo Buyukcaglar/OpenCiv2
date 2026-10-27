@@ -134,6 +134,247 @@ void __thiscall pedia_load_description(void *self, int topic2)
   return;
 }
 
+/* Part of save_read_game (00475666): reads one of an event's strings when the
+   event has one (the pointer read with the event is non-zero); 0 when the
+   read fails. */
+static int save_read_event_field(char **field,FILE *_File)
+{
+  i32 event_str;
+
+  if (*field != (char *)0x0) {
+    event_str = save_read_event_str((iptr)_File);
+    *field = (char *)event_str;
+    if (*field == (char *)0x0) return 0;
+  }
+  return 1;
+}
+
+/* Part of save_read_game (00475666): the scenario events (when the file has them):
+   the events, then their strings; 0 when a read fails. */
+static int save_read_events(FILE *_File)
+{
+  size_t count_read;
+  int result;
+  void *event;
+  i32 event_str;
+  ScenarioEvent *event_node;
+  int event_idx;
+  int event_count2;
+  char events_tag[4];
+
+  scenario_events_loaded = 0;
+  count_read = _fread(events_tag,4,1,_File);
+  if ((count_read != 0) && (result = _strncmp(events_tag,((i8 *)&save_events_tag_check_str),4), result == 0)) {
+    count_read = _fread(&event_count2,4,1,_File);
+    if (count_read == 0) return 0;
+    ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->reset(50000);
+    for (event_idx = 0; event_idx < event_count2; event_idx = event_idx + 1) {
+      event = ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->alloc();
+      if (event == (void *)0x0) {
+        error_report(0xfffffff7,3,0,0,0);
+      }
+      count_read = _fread(event,0x1bc,1,_File);
+      if (count_read == 0) return 0;
+    }
+    for (event_node = unit_types_block.events_list_head; event_node != (ScenarioEvent *)0x0; event_node = event_node->next) {
+      if (save_read_event_field(&event_node->unit_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->city_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->who_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->whom_name,_File) == 0) return 0;
+      for (event_idx = 0; (event_idx < 0x14 && (event_node->text[event_idx] != (char *)0x0));
+          event_idx = event_idx + 1) {
+        event_str = save_read_event_str((iptr)_File);
+        event_node->text[event_idx] = (char *)event_str;
+        if (event_node->text[event_idx] == (char *)0x0) return 0;
+      }
+      if (save_read_event_field(&event_node->move_owner_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->move_unit_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->aggression_whom_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->aggression_who_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->create_owner_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->create_unit_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->create_homecity,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->field_140,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->field_148,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->money_receiver_name,_File) == 0) return 0;
+      if (save_read_event_field(&event_node->wave_file,_File) == 0) return 0;
+    }
+    events_compact();
+    scenario_events_loaded = 1;
+  }
+  return 1;
+}
+
+/* Part of save_read_game (00475666): marks the player's (or, in multiplayer, each
+   human player's) leader name, and the tribe names and titles the file had
+   marked, as used (negative label ids). */
+static void save_mark_player_names(char saved_player_civ,i8 *leader_buf)
+{
+  int civ;
+  int idx;
+  int gender;
+
+  if (game.multiplayer == 0) {
+    leaders[civs[game.player_civ].tribe].leader_name =
+         -leaders[civs[game.player_civ].tribe].leader_name;
+    if (((short *)(leader_buf + 12))[0] < 0) {
+      leaders[civs[game.player_civ].tribe].plural =
+           -leaders[civs[game.player_civ].tribe].plural;
+    }
+    if (((short *)(leader_buf + 12))[1] < 0) {
+      leaders[civs[game.player_civ].tribe].adjective =
+           -leaders[civs[game.player_civ].tribe].adjective;
+    }
+    for (idx = 0; idx < 7; idx = idx + 1) {
+      for (gender = 0; gender < 2; gender = gender + 1) {
+        if (((short *)(leader_buf + 12))[gender + idx * 2 + 4] < 0) {
+          leaders[civs[game.player_civ].tribe].titles[idx][gender]
+               = -leaders[civs[game.player_civ].tribe].titles[idx][gender];
+        }
+      }
+    }
+  }
+  else {
+    for (civ = 0; game.player_civ = saved_player_civ, civ < 8; civ = civ + 1) {
+      if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
+        game.player_civ = (byte)civ;
+        leaders[civs[(char)(byte)civ].tribe].leader_name =
+             -leaders[civs[(char)(byte)civ].tribe].leader_name;
+        if (((short *)(leader_buf + 12))[civs[game.player_civ].tribe * 0x18] < 0) {
+          leaders[civs[game.player_civ].tribe].plural = -leaders[civs[game.player_civ].tribe].plural;
+        }
+        if (((short *)(leader_buf + 12))[civs[game.player_civ].tribe * 0x18 + 1] < 0) {
+          leaders[civs[game.player_civ].tribe].adjective = -leaders[civs[game.player_civ].tribe].adjective;
+        }
+        for (idx = 0; idx < 7; idx = idx + 1) {
+          for (gender = 0; gender < 2; gender = gender + 1) {
+            if (((short *)(leader_buf + 12))[idx * 2 +
+                          gender +
+                          civs[game.player_civ].tribe * 0x18 + 4] < 0)
+            {
+              leaders[civs[game.player_civ].tribe].titles[idx][gender] =
+                   -leaders[civs[game.player_civ].tribe].titles[idx][gender];
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Part of save_read_game (00475666): a scenario's civs: the leaders' gender and
+   portrait, the default titles for a tribe with its own name, the names
+   marked as used. */
+static void save_setup_scenario_leaders(void)
+{
+  char *dot_ptr;
+  int result;
+  int title_label;
+  int civ;
+  int idx;
+  int gender;
+
+  for (civ = 1; civ < 8; civ = civ + 1) {
+    if ((civs[civ].flags & 0x200) == 0) {
+      leaders[civs[civ].tribe].female = 0;
+    }
+    else {
+      leaders[civs[civ].tribe].female = 1;
+    }
+    civs[civ].leader_portrait = civs[civ].tribe;
+    if (leaders[civs[civ].tribe].female != '\0') {
+      civs[civ].leader_portrait = civs[civ].leader_portrait + '\x15';
+    }
+    if (leaders[civs[civ].tribe].plural < 1) {
+      title_label = ~(int)leaders[civs[civ].tribe].plural + 1;
+    }
+    else {
+      title_label = (int)leaders[civs[civ].tribe].plural;
+    }
+    dot_ptr = label_string(title_label);
+    result = _strcmp(&civ_names[civ].tribe_name[0],dot_ptr);
+    if (result == 0) {
+      for (idx = 0; idx < 7; idx = idx + 1) {
+        for (gender = 0; gender < 2; gender = gender + 1) {
+          leaders[civs[civ].tribe].titles[idx][gender] =
+               (short)(&government_titles[idx].male)[gender]   /* [0] male, [1] female */;
+        }
+      }
+    }
+    leaders[civs[civ].tribe].leader_name =
+         -leaders[civs[civ].tribe].leader_name;
+    leaders[civs[civ].tribe].plural =
+         -leaders[civs[civ].tribe].plural;
+    leaders[civs[civ].tribe].adjective =
+         -leaders[civs[civ].tribe].adjective;
+  }
+}
+
+/* Part of save_read_game (00475666): recounts each civ's active units and units in
+   production by type. */
+static void save_recount_units(void)
+{
+  int civ;
+  int unit_idx;
+  int city_idx;
+  int type_idx;
+
+  for (civ = 0; civ < 8; civ = civ + 1) {
+    for (type_idx = 0; type_idx < 0x3e; type_idx = type_idx + 1) {
+      civs[civ].units_in_production[type_idx] = 0;
+      civs[civ].units_active[type_idx] = 0;
+    }
+    for (unit_idx = 0; unit_idx < game.num_units; unit_idx = unit_idx + 1) {
+      if ((units[unit_idx].id != 0) &&
+         (units[unit_idx].owner == civ)) {
+        civs[civ].units_active[(uint)units[unit_idx].type] =
+             civs[civ].units_active[(uint)units[unit_idx].type] +
+             '\x01';
+      }
+    }
+    for (city_idx = 0; city_idx < game.num_cities; city_idx = city_idx + 1) {
+      if (((cities[city_idx].id != 0) &&
+          (cities[city_idx].owner == civ)) &&
+         (-1 < cities[city_idx].building)) {
+        civs[civ].units_in_production[(int)cities[city_idx].building] =
+             civs[civ].units_in_production[(int)cities[city_idx].building] +
+             '\x01';
+      }
+    }
+  }
+}
+
+/* Part of save_read_game (00475666): a game saved in another mode (single or
+   multiplayer) than the current one: resets the multiplayer options, picks
+   a human player, keeps the current mode. */
+static void save_adapt_game_mode(uint saved_multiplayer)
+{
+  int event_idx;
+
+  civ_saved_cursor_x_block.mp_open_game = 1;
+  if (saved_multiplayer == 0) {
+    civ_saved_cursor_x_block.mp_double_production = 0;
+    civ_saved_cursor_x_block.mp_double_moves = 0;
+  }
+  prefs_main_menu_choice_block.prefs_mp_simultaneous_moves = 0;
+  if (game.human_players == 0) {
+    if (((*(byte *)&turn_resume_civ) == 0) || ((1 << ((*(byte *)&turn_resume_civ) & 0x1f) & (uint)game.civs_alive) == 0)) {
+      for (event_idx = 1; event_idx < 8; event_idx = event_idx + 1) {
+        if ((1 << ((byte)event_idx & 0x1f) & (uint)game.civs_alive) != 0) {
+          game.human_players = (byte)(1 << ((byte)event_idx & 0x1f));
+          break;
+        }
+      }
+    }
+    else {
+      game.human_players = (byte)(1 << ((*(byte *)&turn_resume_civ) & 0x1f));
+    }
+  }
+  if (saved_multiplayer != 0) {
+    game.multiplayer = (byte)saved_multiplayer;
+  }
+}
+
 /* 0x00475666 */
 int __cdecl save_read_game(char *path)
 
@@ -144,27 +385,16 @@ int __cdecl save_read_game(char *path)
   int result;
   size_t count_read;
   size_t name_len;
-  void *event;
-  i32 event_str;
   int screen_h;
-  int title_label;
-  int civ;
-  int unit_idx;
-  int city_idx;
-  int gender;
-  ScenarioEvent *event_node;
-  int type_idx;
   i8 leader_buf[0x3f0];  /* 21 tribes x 0x30 bytes read from the file */
   int status;
   uint saved_multiplayer;
-  int event_idx;
   uint version;
   int event_count2;
   char header_str[260];
   int is_scenario;
   int idx;
   char save_path[260];
-  char events_tag[4];
   int skip_destroyed;
   char *slash_ptr;
   i8 game_txt_path2[260];
@@ -345,217 +575,18 @@ int __cdecl save_read_game(char *path)
     (*(byte *)&turn_resume_civ) = (*(byte *)&civ_saved_cursor_x_block.saved_turn_civ);
     passwords_refresh_flags();
   }
-  scenario_events_loaded = 0;
-  count_read = _fread(events_tag,4,1,_File);
-  if ((count_read != 0) && (result = _strncmp(events_tag,((i8 *)&save_events_tag_check_str),4), result == 0)) {
-    count_read = _fread(&event_count2,4,1,_File);
-    if (count_read == 0) goto close_file;
-    ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->reset(50000);
-    for (event_idx = 0; event_idx < event_count2; event_idx = event_idx + 1) {
-      event = ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->alloc();
-      if (event == (void *)0x0) {
-        error_report(0xfffffff7,3,0,0,0);
-      }
-      count_read = _fread(event,0x1bc,1,_File);
-      if (count_read == 0) goto close_file;
-    }
-    for (event_node = unit_types_block.events_list_head; event_node != (ScenarioEvent *)0x0; event_node = event_node->next) {
-      if (event_node->unit_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->unit_name = (char *)event_str;
-        if (event_node->unit_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->city_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->city_name = (char *)event_str;
-        if (event_node->city_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->who_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->who_name = (char *)event_str;
-        if (event_node->who_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->whom_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->whom_name = (char *)event_str;
-        if (event_node->whom_name == (char *)0x0) goto close_file;
-      }
-      for (event_idx = 0; (event_idx < 0x14 && (event_node->text[event_idx] != (char *)0x0));
-          event_idx = event_idx + 1) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->text[event_idx] = (char *)event_str;
-        if (event_node->text[event_idx] == (char *)0x0) goto close_file;
-      }
-      if (event_node->move_owner_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->move_owner_name = (char *)event_str;
-        if (event_node->move_owner_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->move_unit_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->move_unit_name = (char *)event_str;
-        if (event_node->move_unit_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->aggression_whom_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->aggression_whom_name = (char *)event_str;
-        if (event_node->aggression_whom_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->aggression_who_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->aggression_who_name = (char *)event_str;
-        if (event_node->aggression_who_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->create_owner_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->create_owner_name = (char *)event_str;
-        if (event_node->create_owner_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->create_unit_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->create_unit_name = (char *)event_str;
-        if (event_node->create_unit_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->create_homecity != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->create_homecity = (char *)event_str;
-        if (event_node->create_homecity == (char *)0x0) goto close_file;
-      }
-      if (event_node->field_140 != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->field_140 = (char *)event_str;
-        if (event_node->field_140 == (char *)0x0) goto close_file;
-      }
-      if (event_node->field_148 != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->field_148 = (char *)event_str;
-        if (event_node->field_148 == (char *)0x0) goto close_file;
-      }
-      if (event_node->money_receiver_name != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->money_receiver_name = (char *)event_str;
-        if (event_node->money_receiver_name == (char *)0x0) goto close_file;
-      }
-      if (event_node->wave_file != (char *)0x0) {
-        event_str = save_read_event_str((iptr)_File);
-        event_node->wave_file = (char *)event_str;
-        if (event_node->wave_file == (char *)0x0) goto close_file;
-      }
-    }
-    events_compact();
-    scenario_events_loaded = 1;
-  }
+  if (save_read_events(_File) == 0) goto close_file;
   ui_flush_input();
   leaders_fixup_names();
   saved_player_civ = game.player_civ;
   if ((is_scenario == 0) && ((game.game_flags & 0x80) == 0)) {
-    if (game.multiplayer == 0) {
-      leaders[civs[game.player_civ].tribe].leader_name =
-           -leaders[civs[game.player_civ].tribe].leader_name;
-      if (((short *)(leader_buf + 12))[0] < 0) {
-        leaders[civs[game.player_civ].tribe].plural =
-             -leaders[civs[game.player_civ].tribe].plural;
-      }
-      if (((short *)(leader_buf + 12))[1] < 0) {
-        leaders[civs[game.player_civ].tribe].adjective =
-             -leaders[civs[game.player_civ].tribe].adjective;
-      }
-      for (idx = 0; idx < 7; idx = idx + 1) {
-        for (gender = 0; gender < 2; gender = gender + 1) {
-          if (((short *)(leader_buf + 12))[gender + idx * 2 + 4] < 0) {
-            leaders[civs[game.player_civ].tribe].titles[idx][gender]
-                 = -leaders[civs[game.player_civ].tribe].titles[idx][gender];
-          }
-        }
-      }
-    }
-    else {
-      for (civ = 0; game.player_civ = saved_player_civ, civ < 8; civ = civ + 1) {
-        if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-          game.player_civ = (byte)civ;
-          leaders[civs[(char)(byte)civ].tribe].leader_name =
-               -leaders[civs[(char)(byte)civ].tribe].leader_name;
-          if (((short *)(leader_buf + 12))[civs[game.player_civ].tribe * 0x18] < 0) {
-            leaders[civs[game.player_civ].tribe].plural = -leaders[civs[game.player_civ].tribe].plural;
-          }
-          if (((short *)(leader_buf + 12))[civs[game.player_civ].tribe * 0x18 + 1] < 0) {
-            leaders[civs[game.player_civ].tribe].adjective = -leaders[civs[game.player_civ].tribe].adjective;
-          }
-          for (idx = 0; idx < 7; idx = idx + 1) {
-            for (gender = 0; gender < 2; gender = gender + 1) {
-              if (((short *)(leader_buf + 12))[idx * 2 +
-                            gender +
-                            civs[game.player_civ].tribe * 0x18 + 4] < 0)
-              {
-                leaders[civs[game.player_civ].tribe].titles[idx][gender] =
-                     -leaders[civs[game.player_civ].tribe].titles[idx][gender];
-              }
-            }
-          }
-        }
-      }
-    }
+    save_mark_player_names(saved_player_civ,leader_buf);
   }
   else {
-    for (civ = 1; civ < 8; civ = civ + 1) {
-      if ((civs[civ].flags & 0x200) == 0) {
-        leaders[civs[civ].tribe].female = 0;
-      }
-      else {
-        leaders[civs[civ].tribe].female = 1;
-      }
-      civs[civ].leader_portrait = civs[civ].tribe;
-      if (leaders[civs[civ].tribe].female != '\0') {
-        civs[civ].leader_portrait = civs[civ].leader_portrait + '\x15';
-      }
-      if (leaders[civs[civ].tribe].plural < 1) {
-        title_label = ~(int)leaders[civs[civ].tribe].plural + 1;
-      }
-      else {
-        title_label = (int)leaders[civs[civ].tribe].plural;
-      }
-      dot_ptr = label_string(title_label);
-      result = _strcmp(&civ_names[civ].tribe_name[0],dot_ptr);
-      if (result == 0) {
-        for (idx = 0; idx < 7; idx = idx + 1) {
-          for (gender = 0; gender < 2; gender = gender + 1) {
-            leaders[civs[civ].tribe].titles[idx][gender] =
-                 (short)(&government_titles[idx].male)[gender]   /* [0] male, [1] female */;
-          }
-        }
-      }
-      leaders[civs[civ].tribe].leader_name =
-           -leaders[civs[civ].tribe].leader_name;
-      leaders[civs[civ].tribe].plural =
-           -leaders[civs[civ].tribe].plural;
-      leaders[civs[civ].tribe].adjective =
-           -leaders[civs[civ].tribe].adjective;
-    }
+    save_setup_scenario_leaders();
   }
   ui_flush_input();
-  for (civ = 0; civ < 8; civ = civ + 1) {
-    for (type_idx = 0; type_idx < 0x3e; type_idx = type_idx + 1) {
-      civs[civ].units_in_production[type_idx] = 0;
-      civs[civ].units_active[type_idx] = 0;
-    }
-    for (unit_idx = 0; unit_idx < game.num_units; unit_idx = unit_idx + 1) {
-      if ((units[unit_idx].id != 0) &&
-         (units[unit_idx].owner == civ)) {
-        civs[civ].units_active[(uint)units[unit_idx].type] =
-             civs[civ].units_active[(uint)units[unit_idx].type] +
-             '\x01';
-      }
-    }
-    for (city_idx = 0; city_idx < game.num_cities; city_idx = city_idx + 1) {
-      if (((cities[city_idx].id != 0) &&
-          (cities[city_idx].owner == civ)) &&
-         (-1 < cities[city_idx].building)) {
-        civs[civ].units_in_production[(int)cities[city_idx].building] =
-             civs[civ].units_in_production[(int)cities[city_idx].building] +
-             '\x01';
-      }
-    }
-  }
+  save_recount_units();
   city_calc_cached_id = 0xffffffff;
   rules_load_advances(1);
   rules_load_improvements(1);
@@ -577,28 +608,7 @@ close_file:
     _fclose(_File);
   }
   if ((status == 0) && (game.multiplayer != saved_multiplayer)) {
-    civ_saved_cursor_x_block.mp_open_game = 1;
-    if (saved_multiplayer == 0) {
-      civ_saved_cursor_x_block.mp_double_production = 0;
-      civ_saved_cursor_x_block.mp_double_moves = 0;
-    }
-    prefs_main_menu_choice_block.prefs_mp_simultaneous_moves = 0;
-    if (game.human_players == 0) {
-      if (((*(byte *)&turn_resume_civ) == 0) || ((1 << ((*(byte *)&turn_resume_civ) & 0x1f) & (uint)game.civs_alive) == 0)) {
-        for (event_idx = 1; event_idx < 8; event_idx = event_idx + 1) {
-          if ((1 << ((byte)event_idx & 0x1f) & (uint)game.civs_alive) != 0) {
-            game.human_players = (byte)(1 << ((byte)event_idx & 0x1f));
-            break;
-          }
-        }
-      }
-      else {
-        game.human_players = (byte)(1 << ((*(byte *)&turn_resume_civ) & 0x1f));
-      }
-    }
-    if (saved_multiplayer != 0) {
-      game.multiplayer = (byte)saved_multiplayer;
-    }
+    save_adapt_game_mode(saved_multiplayer);
   }
   return status;
 }
@@ -641,6 +651,248 @@ void __cdecl wnd_obj_set_topmost_child(NativeWindow *parent_obj,NativeWindow *ch
 }
 
 
+/* Part of wnd_base_wndproc (005dbe88): WM_PAINT: the icon of a minimized window, else
+   the background (tiled bitmap or brush) and the centered background surface. */
+static LRESULT wnd_base_on_paint(HWND hwnd)
+{
+  BOOL iconic;
+  HICON hIcon;
+  void *tmp_wnd;
+  int wnd_data;
+  int offset_x;
+  tagRECT *src_rect;
+  tagRECT *dst_rect;
+  tagPAINTSTRUCT ps;
+  int row;
+  void *wnd2;
+  HDC paint_dc;
+  int col;
+  int tile_h;
+  int tile_w;
+  RECT paint_rect;
+  tagRECT blit_rect;
+  tagRECT win_rect;
+
+  paint_dc = BeginPaint(hwnd,&ps);
+  wnd2 = (void *)GetWindowLongA(hwnd,0);
+  iconic = IsIconic(hwnd);
+  if (iconic != 0) {
+    GetWindowRect(hwnd,&win_rect);
+    wnd_data = (int)((WndBase *)wnd2)->get_window();
+    if ((int)((NativeWindow *)wnd_data)->icon == 0) {
+      hIcon = LoadIconA((HINSTANCE)0x0,(LPCSTR)0x7f00);
+      DrawIcon(paint_dc,0,0,hIcon);
+    }
+    else {
+      wnd_data = (int)((WndBase *)wnd2)->get_window();
+      if (((int)((NativeWindow *)wnd_data)->palette != 0) && (gfx_palettized_display == 1)) {
+        wnd_data = (int)((WndBase *)wnd2)->get_window();
+        RealizePalette(((NativeWindow *)wnd_data)->hdc);
+      }
+      wnd_data = (int)((WndBase *)wnd2)->get_window();
+      DrawIcon(paint_dc,0,0,((NativeWindow *)wnd_data)->icon);
+    }
+    return 0;
+  }
+  wnd_data = (int)((WndBase *)wnd2)->get_window();
+  if ((int)((NativeWindow *)wnd_data)->bg_tile == 0) {
+    wnd_data = (int)((WndBase *)wnd2)->get_window();
+    if ((int)((NativeWindow *)wnd_data)->bg_brush != 0) {
+      wnd_data = (int)((WndBase *)wnd2)->get_window();
+      FillRect(paint_dc,&ps.rcPaint,((NativeWindow *)wnd_data)->bg_brush);
+    }
+  }
+  else {
+    wnd_data = (int)((WndBase *)wnd2)->get_window();
+    tile_w = ((NativeWindow *)wnd_data)->bg_tile->surface_width();
+    wnd_data = (int)((WndBase *)wnd2)->get_window();
+    tile_h = ((NativeWindow *)wnd_data)->bg_tile->surface_height();
+    if ((tile_w != 0) && (tile_h != 0)) {
+      paint_rect.left = ps.rcPaint.left;
+      paint_rect.top = ps.rcPaint.top;
+      paint_rect.right = ps.rcPaint.right;
+      paint_rect.bottom = ps.rcPaint.bottom;
+      SetRect(&win_rect,0,0,tile_w,tile_h);
+      for (row = paint_rect.top / tile_h; row < paint_rect.bottom / tile_h + 1;
+          row = row + 1) {
+        for (col = paint_rect.left / tile_w; col < paint_rect.right / tile_w + 1;
+            col = col + 1) {
+          SetRect(&blit_rect,col * tile_w,row * tile_h,
+                  col * tile_w + tile_w,row * tile_h + tile_h);
+          dst_rect = &blit_rect;
+          src_rect = &win_rect;
+          tmp_wnd = wnd2;
+          wnd_data = (int)((WndBase *)wnd2)->get_window();
+          ((NativeWindow *)wnd_data)->bg_tile->blit_to_wnd((iptr)tmp_wnd,src_rect,(iptr)dst_rect);
+        }
+      }
+    }
+  }
+  wnd_data = (int)((WndBase *)wnd2)->get_window();
+  if ((int)((NativeWindow *)wnd_data)->bg_surface != 0) {
+    wnd_data = (int)((WndBase *)wnd2)->get_window();
+    tile_w = ((NativeWindow *)wnd_data)->bg_surface->surface_width();
+    wnd_data = (int)((WndBase *)wnd2)->get_window();
+    tile_h = ((NativeWindow *)wnd_data)->bg_surface->surface_height();
+    paint_rect.left = ps.rcPaint.left;
+    paint_rect.top = ps.rcPaint.top;
+    paint_rect.right = ps.rcPaint.right;
+    paint_rect.bottom = ps.rcPaint.bottom;
+    SetRect(&win_rect,0,0,tile_w,tile_h);
+    wnd_data = ((WndBase *)wnd2)->client_height();
+    wnd_data = wnd_data - tile_h >> 1;
+    offset_x = ((WndBase *)wnd2)->client_width();
+    OffsetRect(&win_rect,offset_x - tile_w >> 1,wnd_data);
+    iconic = IntersectRect(&blit_rect,&win_rect,&paint_rect);
+    if (iconic != 0) {
+      win_rect.left = blit_rect.left;
+      win_rect.top = blit_rect.top;
+      win_rect.right = blit_rect.right;
+      win_rect.bottom = blit_rect.bottom;
+      wnd_data = ((WndBase *)wnd2)->client_height();
+      wnd_data = -(wnd_data - tile_h >> 1);
+      offset_x = ((WndBase *)wnd2)->client_width();
+      OffsetRect(&win_rect,-(offset_x - tile_w >> 1),wnd_data);
+      dst_rect = &blit_rect;
+      src_rect = &win_rect;
+      tmp_wnd = wnd2;
+      wnd_data = (int)((WndBase *)wnd2)->get_window();
+      ((NativeWindow *)wnd_data)->bg_surface->blit_to_wnd((iptr)tmp_wnd,src_rect,(iptr)dst_rect);
+    }
+  }
+  EndPaint(hwnd,&ps);
+  return 0;
+}
+
+/* Part of wnd_base_wndproc (005dbe88): WM_NCHITTEST on a resizable window: the
+   border or corner under the cursor (corners reach 4 border widths along the
+   edges); hit is DefWindowProc's answer, kept inside the borders. */
+static int wnd_base_border_hit(HWND hwnd,uint lparam,int wnd_data,int hit)
+{
+  int offset_x;
+  int row;
+  int col;
+  int pos_y2;
+  int pos_x2;
+  int tile_w;
+  tagRECT blit_rect;
+  tagRECT win_rect;
+
+  GetWindowRect(hwnd,&win_rect);
+  pos_x2 = (lparam & 0xffff) - win_rect.left;
+  pos_y2 = (lparam >> 0x10) - win_rect.top;
+  if (((NativeWindow *)wnd_data)->resize_border == 0) {
+    tile_w = 5;
+  }
+  else {
+    tile_w = ((NativeWindow *)wnd_data)->resize_border;
+  }
+  GetClientRect(hwnd,&blit_rect);
+  row = 0;
+  col = 0;
+  if (pos_y2 < tile_w) {
+    row = -1;
+  }
+  else {
+    offset_x = rect_height(&blit_rect);
+    if (offset_x - tile_w < pos_y2) {
+      row = 1;
+    }
+  }
+  if (pos_x2 < tile_w) {
+    col = -1;
+  }
+  else {
+    offset_x = rect_width(&blit_rect);
+    if (offset_x - tile_w < pos_x2) {
+      col = 1;
+    }
+  }
+  if (row < 0) {
+    if (pos_x2 < tile_w * 4) {
+      col = -1;
+    }
+    else {
+      offset_x = rect_width(&blit_rect);
+      if (offset_x + tile_w * -4 < pos_x2) {
+        col = 1;
+      }
+    }
+    if (col < 0) {
+      hit = 0xd;
+    }
+    else if (col < 1) {
+      hit = 0xc;
+    }
+    else {
+      hit = 0xe;
+    }
+  }
+  else if (row < 1) {
+    if (col < 0) {
+      if (pos_y2 < tile_w * 4) {
+        row = -1;
+      }
+      else {
+        offset_x = rect_height(&blit_rect);
+        if (offset_x + tile_w * -4 < pos_y2) {
+          row = 1;
+        }
+      }
+      if (row < 0) {
+        hit = 0xd;
+      }
+      else if (row < 1) {
+        hit = 10;
+      }
+      else {
+        hit = 0x10;
+      }
+    }
+    else if (0 < col) {
+      if (pos_y2 < tile_w * 4) {
+        row = -1;
+      }
+      else {
+        offset_x = rect_height(&blit_rect);
+        if (offset_x + tile_w * -4 < pos_y2) {
+          row = 1;
+        }
+      }
+      if (row < 0) {
+        hit = 0xe;
+      }
+      else if (row < 1) {
+        hit = 0xb;
+      }
+      else {
+        hit = 0x11;
+      }
+    }
+  }
+  else {
+    if (pos_x2 < tile_w * 4) {
+      col = -1;
+    }
+    else {
+      offset_x = rect_width(&blit_rect);
+      if (offset_x + tile_w * -4 < pos_x2) {
+        col = 1;
+      }
+    }
+    if (col < 0) {
+      hit = 0x10;
+    }
+    else if (col < 1) {
+      hit = 0xf;
+    }
+    else {
+      hit = 0x11;
+    }
+  }
+  return hit;
+}
+
 /* 0x005dbe88 */
 LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
 
@@ -648,119 +900,19 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
   HWND parent_hwnd;
   HDC dc;
   BOOL iconic;
-  HICON hIcon;
   LRESULT result;
   void *tmp_wnd;
   int wnd_data;
   int offset_x;
-  tagRECT *src_rect;
-  tagRECT *dst_rect;
   int hit;
-  tagPAINTSTRUCT ps;
-  int row;
   void *wnd2;
-  HDC paint_dc;
-  int col;
   int pos_y2;
-  int tile_h;
-  int pos_x2;
-  int tile_w;
-  RECT paint_rect;
-  tagRECT blit_rect;
   NativeWindow *parent_data;
   tagRECT win_rect;
   
   if (msg < 0x10) {
     if (msg == 0xf) {
-      paint_dc = BeginPaint(hwnd,&ps);
-      wnd2 = (void *)GetWindowLongA(hwnd,0);
-      iconic = IsIconic(hwnd);
-      if (iconic != 0) {
-        GetWindowRect(hwnd,&win_rect);
-        wnd_data = (int)((WndBase *)wnd2)->get_window();
-        if ((int)((NativeWindow *)wnd_data)->icon == 0) {
-          hIcon = LoadIconA((HINSTANCE)0x0,(LPCSTR)0x7f00);
-          DrawIcon(paint_dc,0,0,hIcon);
-        }
-        else {
-          wnd_data = (int)((WndBase *)wnd2)->get_window();
-          if (((int)((NativeWindow *)wnd_data)->palette != 0) && (gfx_palettized_display == 1)) {
-            wnd_data = (int)((WndBase *)wnd2)->get_window();
-            RealizePalette(((NativeWindow *)wnd_data)->hdc);
-          }
-          wnd_data = (int)((WndBase *)wnd2)->get_window();
-          DrawIcon(paint_dc,0,0,((NativeWindow *)wnd_data)->icon);
-        }
-        return 0;
-      }
-      wnd_data = (int)((WndBase *)wnd2)->get_window();
-      if ((int)((NativeWindow *)wnd_data)->bg_tile == 0) {
-        wnd_data = (int)((WndBase *)wnd2)->get_window();
-        if ((int)((NativeWindow *)wnd_data)->bg_brush != 0) {
-          wnd_data = (int)((WndBase *)wnd2)->get_window();
-          FillRect(paint_dc,&ps.rcPaint,((NativeWindow *)wnd_data)->bg_brush);
-        }
-      }
-      else {
-        wnd_data = (int)((WndBase *)wnd2)->get_window();
-        tile_w = ((NativeWindow *)wnd_data)->bg_tile->surface_width();
-        wnd_data = (int)((WndBase *)wnd2)->get_window();
-        tile_h = ((NativeWindow *)wnd_data)->bg_tile->surface_height();
-        if ((tile_w != 0) && (tile_h != 0)) {
-          paint_rect.left = ps.rcPaint.left;
-          paint_rect.top = ps.rcPaint.top;
-          paint_rect.right = ps.rcPaint.right;
-          paint_rect.bottom = ps.rcPaint.bottom;
-          SetRect(&win_rect,0,0,tile_w,tile_h);
-          for (row = paint_rect.top / tile_h; row < paint_rect.bottom / tile_h + 1;
-              row = row + 1) {
-            for (col = paint_rect.left / tile_w; col < paint_rect.right / tile_w + 1;
-                col = col + 1) {
-              SetRect(&blit_rect,col * tile_w,row * tile_h,
-                      col * tile_w + tile_w,row * tile_h + tile_h);
-              dst_rect = &blit_rect;
-              src_rect = &win_rect;
-              tmp_wnd = wnd2;
-              wnd_data = (int)((WndBase *)wnd2)->get_window();
-              ((NativeWindow *)wnd_data)->bg_tile->blit_to_wnd((iptr)tmp_wnd,src_rect,(iptr)dst_rect);
-            }
-          }
-        }
-      }
-      wnd_data = (int)((WndBase *)wnd2)->get_window();
-      if ((int)((NativeWindow *)wnd_data)->bg_surface != 0) {
-        wnd_data = (int)((WndBase *)wnd2)->get_window();
-        tile_w = ((NativeWindow *)wnd_data)->bg_surface->surface_width();
-        wnd_data = (int)((WndBase *)wnd2)->get_window();
-        tile_h = ((NativeWindow *)wnd_data)->bg_surface->surface_height();
-        paint_rect.left = ps.rcPaint.left;
-        paint_rect.top = ps.rcPaint.top;
-        paint_rect.right = ps.rcPaint.right;
-        paint_rect.bottom = ps.rcPaint.bottom;
-        SetRect(&win_rect,0,0,tile_w,tile_h);
-        wnd_data = ((WndBase *)wnd2)->client_height();
-        wnd_data = wnd_data - tile_h >> 1;
-        offset_x = ((WndBase *)wnd2)->client_width();
-        OffsetRect(&win_rect,offset_x - tile_w >> 1,wnd_data);
-        iconic = IntersectRect(&blit_rect,&win_rect,&paint_rect);
-        if (iconic != 0) {
-          win_rect.left = blit_rect.left;
-          win_rect.top = blit_rect.top;
-          win_rect.right = blit_rect.right;
-          win_rect.bottom = blit_rect.bottom;
-          wnd_data = ((WndBase *)wnd2)->client_height();
-          wnd_data = -(wnd_data - tile_h >> 1);
-          offset_x = ((WndBase *)wnd2)->client_width();
-          OffsetRect(&win_rect,-(offset_x - tile_w >> 1),wnd_data);
-          dst_rect = &blit_rect;
-          src_rect = &win_rect;
-          tmp_wnd = wnd2;
-          wnd_data = (int)((WndBase *)wnd2)->get_window();
-          ((NativeWindow *)wnd_data)->bg_surface->blit_to_wnd((iptr)tmp_wnd,src_rect,(iptr)dst_rect);
-        }
-      }
-      EndPaint(hwnd,&ps);
-      return 0;
+      return wnd_base_on_paint(hwnd);
     }
     switch(msg) {
     case 2:
@@ -879,118 +1031,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     tmp_wnd = (void *)GetWindowLongA(hwnd,0);
     wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
     if ((((NativeWindow *)wnd_data)->flag_1000 != 0) && (hit == 1)) {
-      GetWindowRect(hwnd,&win_rect);
-      pos_x2 = (lparam & 0xffff) - win_rect.left;
-      pos_y2 = (lparam >> 0x10) - win_rect.top;
-      if (((NativeWindow *)wnd_data)->resize_border == 0) {
-        tile_w = 5;
-      }
-      else {
-        tile_w = ((NativeWindow *)wnd_data)->resize_border;
-      }
-      GetClientRect(hwnd,&blit_rect);
-      row = 0;
-      col = 0;
-      if (pos_y2 < tile_w) {
-        row = -1;
-      }
-      else {
-        offset_x = rect_height(&blit_rect);
-        if (offset_x - tile_w < pos_y2) {
-          row = 1;
-        }
-      }
-      if (pos_x2 < tile_w) {
-        col = -1;
-      }
-      else {
-        offset_x = rect_width(&blit_rect);
-        if (offset_x - tile_w < pos_x2) {
-          col = 1;
-        }
-      }
-      if (row < 0) {
-        if (pos_x2 < tile_w * 4) {
-          col = -1;
-        }
-        else {
-          offset_x = rect_width(&blit_rect);
-          if (offset_x + tile_w * -4 < pos_x2) {
-            col = 1;
-          }
-        }
-        if (col < 0) {
-          hit = 0xd;
-        }
-        else if (col < 1) {
-          hit = 0xc;
-        }
-        else {
-          hit = 0xe;
-        }
-      }
-      else if (row < 1) {
-        if (col < 0) {
-          if (pos_y2 < tile_w * 4) {
-            row = -1;
-          }
-          else {
-            offset_x = rect_height(&blit_rect);
-            if (offset_x + tile_w * -4 < pos_y2) {
-              row = 1;
-            }
-          }
-          if (row < 0) {
-            hit = 0xd;
-          }
-          else if (row < 1) {
-            hit = 10;
-          }
-          else {
-            hit = 0x10;
-          }
-        }
-        else if (0 < col) {
-          if (pos_y2 < tile_w * 4) {
-            row = -1;
-          }
-          else {
-            offset_x = rect_height(&blit_rect);
-            if (offset_x + tile_w * -4 < pos_y2) {
-              row = 1;
-            }
-          }
-          if (row < 0) {
-            hit = 0xe;
-          }
-          else if (row < 1) {
-            hit = 0xb;
-          }
-          else {
-            hit = 0x11;
-          }
-        }
-      }
-      else {
-        if (pos_x2 < tile_w * 4) {
-          col = -1;
-        }
-        else {
-          offset_x = rect_width(&blit_rect);
-          if (offset_x + tile_w * -4 < pos_x2) {
-            col = 1;
-          }
-        }
-        if (col < 0) {
-          hit = 0x10;
-        }
-        else if (col < 1) {
-          hit = 0xf;
-        }
-        else {
-          hit = 0x11;
-        }
-      }
+      hit = wnd_base_border_hit(hwnd,lparam,wnd_data,hit);
     }
     if ((((NativeWindow *)wnd_data)->flag_400 != 0) && (hit == 1)) {
       GetWindowRect(hwnd,&win_rect);
@@ -1007,16 +1048,58 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
 }
 
 
+/* Part of wnd_frame_wndproc (005eacc0): WM_KEYDOWN: (shift-)tab cycles the
+   control focus, enter and escape press the default and cancel buttons, other
+   keys go to the hotkeys. */
+static void wnd_frame_on_keydown(Wnd *frame,uint wparam)
+{
+  char nav_enabled;
+  SHORT shift_state;
+  i32 ctrl_arg;
+  int tmp;
+  i32 shift_flags;
+
+  shift_state = GetAsyncKeyState(0x10);
+  tmp = (int)shift_state;
+  (*((char *)&shift_flags + 1)) = (char)((ushort)shift_state >> 8);
+  shift_flags = tmp;
+  if ((wparam == 9) && ((*((char *)&shift_flags + 1)) == '\0')) {
+    nav_enabled = frame->keyboard_nav_enabled();
+    if (nav_enabled != '\0') {
+      wnd_cycle_control_focus((iptr)frame,0,2);
+    }
+  }
+  else if ((wparam == 9) && ((*((char *)&shift_flags + 1)) != '\0')) {
+    nav_enabled = frame->keyboard_nav_enabled();
+    if (nav_enabled != '\0') {
+      wnd_cycle_control_focus((iptr)frame,0,3);
+    }
+  }
+  else if ((wparam == 0xd) && ((*((char *)&shift_flags + 1)) == '\0')) {
+    if (frame->handler_slot_bc != 0) {
+      ctrl_arg = ((Control *)frame->handler_slot_bc)->get_hwnd();
+      button_press_animated(ctrl_arg);
+    }
+  }
+  else if ((wparam == 0x1b) && ((*((char *)&shift_flags + 1)) == '\0')) {
+    if (frame->handler_slot_c0 != 0) {
+      ctrl_arg = ((Control *)frame->handler_slot_c0)->get_hwnd();
+      button_press_animated(ctrl_arg);
+    }
+  }
+  else {
+    ctrl_arg = input_map_vkey(wparam);
+    wnd_dispatch_hotkey_char(frame,ctrl_arg);
+  }
+}
+
 /* 0x005eacc0 */
 LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
 
 {
-  char nav_enabled;
-  SHORT shift_state;
   LRESULT result;
   HWND parent_hwnd;
   void *parent_wnd;
-  i32 ctrl_arg;
   BOOL valid;
   uint notify_code;
   DWORD class_bytes;
@@ -1060,38 +1143,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
   }
   else if (msg < 0x101) {
     if (msg == 0x100) {
-      shift_state = GetAsyncKeyState(0x10);
-      tmp = (int)shift_state;
-      (*((char *)&shift_flags + 1)) = (char)((ushort)shift_state >> 8);
-      shift_flags = tmp;
-      if ((wparam == 9) && ((*((char *)&shift_flags + 1)) == '\0')) {
-        nav_enabled = frame->keyboard_nav_enabled();
-        if (nav_enabled != '\0') {
-          wnd_cycle_control_focus((iptr)frame,0,2);
-        }
-      }
-      else if ((wparam == 9) && ((*((char *)&shift_flags + 1)) != '\0')) {
-        nav_enabled = frame->keyboard_nav_enabled();
-        if (nav_enabled != '\0') {
-          wnd_cycle_control_focus((iptr)frame,0,3);
-        }
-      }
-      else if ((wparam == 0xd) && ((*((char *)&shift_flags + 1)) == '\0')) {
-        if (frame->handler_slot_bc != 0) {
-          ctrl_arg = ((Control *)frame->handler_slot_bc)->get_hwnd();
-          button_press_animated(ctrl_arg);
-        }
-      }
-      else if ((wparam == 0x1b) && ((*((char *)&shift_flags + 1)) == '\0')) {
-        if (frame->handler_slot_c0 != 0) {
-          ctrl_arg = ((Control *)frame->handler_slot_c0)->get_hwnd();
-          button_press_animated(ctrl_arg);
-        }
-      }
-      else {
-        ctrl_arg = input_map_vkey(wparam);
-        wnd_dispatch_hotkey_char(frame,ctrl_arg);
-      }
+      wnd_frame_on_keydown(frame,wparam);
       valid = IsWindow(hwnd);
       if (valid == 0) {
         return 0;
@@ -1427,33 +1479,292 @@ int __cdecl city_process_pollution(int city)
 }
 
 
+/* The parts below call rand() as crt_rand_at("unit_enter_hut"): the rand
+   trace names the original function, as the original's does. */
+/* Part of unit_enter_hut (0058f040): a friendly tribe makes a city (after 1000 AD
+   bigger, with some improvements). */
+static uint hut_tribe_city(uint civ,int x,uint y)
+{
+  byte owner_byte;
+  int tmp;
+  uint rnd;
+  int check;
+
+  if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+    popup_game_with_sprite((const char *)str_surprisetribe,(iptr)&popup_info_icon_sprite,0);
+  }
+  tmp = city_create(x,y,civ);
+  if (999 < game.year) {
+    check = crt_rand_at("unit_enter_hut");
+    owner_byte = (byte)(check >> 0x1f);
+    cities[tmp].size =
+         ((((byte)check ^ owner_byte) - owner_byte & 3 ^ owner_byte) - owner_byte) + '\x01';
+    city_set_improvement(tmp,4,1);
+    civ = crt_rand_at("unit_enter_hut");
+    rnd = (int)civ >> 0x1f;
+    if (((civ ^ rnd) - rnd & 1 ^ rnd) == rnd) {
+      city_set_improvement(tmp,5,1);
+    }
+    check = crt_rand_at("unit_enter_hut");
+    if (check % 3 == 0) {
+      city_set_improvement(tmp,3,1);
+    }
+    civ = crt_rand_at("unit_enter_hut");
+    rnd = (int)civ >> 0x1f;
+    if (((civ ^ rnd) - rnd & 3 ^ rnd) == rnd) {
+      city_set_improvement(tmp,6,1);
+    }
+  }
+  if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
+    return 0;
+  }
+  map_redraw_neighbors_all_views(x,y);
+  civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+  if (tmp < 0) {
+    return civ;
+  }
+  ((CityWindow *)((i8 *)&city_window_block.city_window))->open(tmp);   /* void: the caller ignores our result */
+  return civ;
+}
+
+/* Part of unit_enter_hut (0058f040): mercenaries join: a unit of the best type the
+   world knows (on a coin flip an older one). */
+static uint hut_mercenaries(uint civ,int x,uint y)
+{
+  int tmp;
+  uint rnd;
+  uint sign;
+  i32 spawn_type;
+  uint outcome;
+  i32 merc_type_a;
+  i32 merc_type_b;
+
+  if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+    popup_game_with_sprite((const char *)str_surprisemercs,(iptr)&popup_info_icon_sprite,0);
+  }
+  merc_type_a = 0x13;
+  if (game.advance_known_by[11] == '\0') {
+    tmp = crt_rand_at("unit_enter_hut");
+    if (tmp % 3 == 0) {
+      merc_type_a = 0x10;
+    }
+    else {
+      merc_type_a = 0xf;
+    }
+    if (game.advance_known_by[64] != '\0') {
+      rnd = crt_rand_at("unit_enter_hut");
+      sign = (int)rnd >> 0x1f;
+      if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
+        merc_type_a = 0x11;
+      }
+    }
+  }
+  if (game.advance_known_by[55] != '\0') {
+    merc_type_a = 0x12;
+  }
+  if (game.advance_known_by[42] != '\0') {
+    merc_type_a = 0x14;
+  }
+  if (game.advance_known_by[17] != '\0') {
+    merc_type_a = 0xb;
+  }
+  merc_type_b = 8;
+  if (game.advance_known_by[34] == '\0') {
+    merc_type_b = 7;
+  }
+  if (game.advance_known_by[35] == '\0') {
+    merc_type_b = 5;
+  }
+  if (game.advance_known_by[39] == '\0') {
+    merc_type_b = 4;
+  }
+  rnd = crt_rand_at("unit_enter_hut");
+  sign = (int)rnd >> 0x1f;
+  if (((rnd ^ sign) - sign & 1 ^ sign) == sign) {
+    spawn_type = merc_type_a;
+  }
+  else {
+    spawn_type = merc_type_b;
+  }
+  tmp = unit_create(spawn_type,civ,x,y);
+  if ((unit_sound_editor_window_block.unit_move_by_local_human == '\0') && ((*(uint *)&human_civ) != civ)) {
+    outcome = civ;
+    if (-1 < tmp) {
+      outcome = tmp * 0x20;
+      *(&units[0].home_city + outcome) = -1;   /* outcome is a byte offset (unit index * 0x20) */
+    }
+  }
+  else {
+    map_redraw_neighbors_all_views(x,y);
+    outcome = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+  }
+  return outcome;
+}
+
+/* Part of unit_enter_hut (0058f040): gold (25, 50 or 100, doubled after 1000 AD). */
+static uint hut_gold(uint civ)
+{
+  int x;
+  int gold2;
+
+  gold2 = 0x32;
+  x = crt_rand_at("unit_enter_hut");
+  if (x % 3 == 0) {
+    x = crt_rand_at("unit_enter_hut");
+    if ((int)((x % 10 - (uint)game.difficulty) + 2) < 5) {
+      gold2 = 0x19;
+    }
+    else {
+      gold2 = 100;
+    }
+  }
+  if (1000 < game.year) {
+    gold2 = gold2 << 1;
+  }
+  civs[civ].gold = civs[civ].gold + gold2;
+  text_set_number_arg(0,gold2);
+  if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+    popup_game_with_sprite((const char *)str_surprisemetals,(iptr)&popup_info_icon_sprite,0);
+  }
+  if ((*(uint *)&human_civ) != civ) {
+    return civ;
+  }
+  status_draw_info(1);   /* void */
+  return civ;
+}
+
+/* Part of unit_enter_hut (0058f040): barbarians: around the hut, one unit early in
+   the game, else a few (unless, early on, the civ has a city near). */
+static uint hut_barbarians(uint civ,int x,uint y)
+{
+  Tile *tile;
+  bool single_spawn;
+  byte owner_byte;
+  int tmp;
+  uint rnd;
+  i32 tile_x;
+  int check;
+  uint sign;
+  i32 flat_type;
+  i32 chosen_type;
+  i32 rough_type;
+  int step;
+
+  single_spawn = false;
+  /* early on (always before turn 30, on a coin flip before turn 50)
+     nothing happens if the civ has a city on this landmass within 24 */
+  if ((game.barbarian_activity < 3) &&
+      ((game.turn < 0x1e) ||
+       ((game.turn < 0x32) &&
+        (rnd = crt_rand_at("unit_enter_hut"), sign = (int)rnd >> 0x1f, ((rnd ^ sign) - sign & 1 ^ sign) == sign)))) {
+    city_find_nearest(x,y,civ,0xffffffff,0xffffffff);
+    tmp = tile_landmass(x,y);
+    if ((civs[civ].continent_cities[tmp] != '\0') && (advisor_window_block.nearest_city_dist < 0x18)) {
+      if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
+        return 0;
+      }
+      civ = popup_game_with_sprite((const char *)str_surprisenothing,(iptr)&popup_info_icon_sprite,0);
+      return civ;
+    }
+  }
+  /* a single unit up to turn 49, and on a coin flip up to turn 74 */
+  if ((game.turn <= 0x31) ||
+      ((game.turn <= 0x4a) &&
+       (rnd = crt_rand_at("unit_enter_hut"), sign = (int)rnd >> 0x1f, ((rnd ^ sign) - sign & 1 ^ sign) == sign))) {
+    single_spawn = true;
+  }
+  rnd = 0;
+  if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+    rnd = popup_game_with_sprite((const char *)str_surprisebarb,(iptr)&popup_info_icon_sprite,0);
+  }
+  step = 0;
+  do {
+    if (7 < step) {
+      return rnd;
+    }
+    rnd = game.turn + step >> 0x1f;
+    tmp = ((game.turn + step ^ rnd) - rnd & 7 ^ rnd) - rnd;
+    tile_x = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x);
+    tmp = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp] + y;
+    check = map_in_bounds(tile_x,tmp);
+    if ((((check != 0) && (check = tile_unit_owner(tile_x,tmp), check < 0)) &&
+        (check = tile_city_owner(tile_x,tmp), check < 0)) &&
+       (check = tile_is_ocean(tile_x,tmp), check == 0)) {
+      owner_byte = tile_terrain(tile_x,tmp);
+      rough_type = 5;
+      flat_type = 0xf;
+      if (game.advance_known_by[51] != '\0') {
+        rough_type = 7;
+        flat_type = 0x13;
+      }
+      if (game.advance_known_by[unit_types[22].prerequisite] != '\0') {
+        rough_type = 0xb;
+        flat_type = 0x15;
+      }
+      if (game.advance_known_by[34] != '\0') {
+        rough_type = 8;
+        flat_type = 9;
+      }
+      if ((char)terrain_types[(uint)owner_byte].move_cost < '\x03') {
+        chosen_type = flat_type;
+      }
+      else {
+        chosen_type = rough_type;
+      }
+      rnd = unit_create(chosen_type,0,tile_x,tmp);
+      if (-1 < (int)rnd) {
+        tile = tile_at(x,y);
+        units[rnd].visibility = tile->visible | units[rnd].visibility;
+        map_redraw_tile_all_views(tile_x,tmp);
+        rnd = (uint)game.multiplayer;
+        if (2 < game.multiplayer) {
+          rnd = net_send_message(0x72,0xff,tile_x,tmp,0,0,0,0,0,0);
+        }
+      }
+      if (single_spawn) {
+        return rnd;
+      }
+    }
+    rnd = int_clamp(4 - civs[civ].num_cities,1,4);
+    step = step + rnd;
+  } while( true );
+}
+
+/* Part of unit_enter_hut (0058f040): nomads: a settler unit without a home city. */
+static uint hut_nomads(uint civ,int x,uint y)
+{
+  int tmp;
+
+  if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+    popup_game_with_sprite((const char *)str_surprisenomads,(iptr)&popup_info_icon_sprite,0);
+  }
+  tmp = unit_create(0,civ,x,y);
+  if (-1 < tmp) {
+    units[tmp].home_city = 0xff;
+  }
+  if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
+    return 0;
+  }
+  map_redraw_neighbors_all_views(x,y);
+  civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+  return civ;
+}
+
 /* 0x0058f040 */
 uint __cdecl unit_enter_hut(int unit_id)
 
 {
-  Tile *tile;
-  bool single_spawn;
   byte owner_byte;
   uint civ;
   int x;
   uint y;
   int tmp;
   uint rnd;
-  i32 tile_x;
-  int check;
   uint sign;
-  i32 spawn_type;
   uint outcome;
   int tech_id;
   int settler_count;
   int attempts;
-  i32 flat_type;
-  i32 chosen_type;
-  i32 rough_type;
-  int gold2;
-  i32 merc_type_a;
-  int step;
-  i32 merc_type_b;
   int settlers;
   
   owner_byte = units[unit_id].owner;
@@ -1498,130 +1809,15 @@ uint __cdecl unit_enter_hut(int unit_id)
         }
         tmp = tile_owner_or_fertility(x,y);
         if (0xb < tmp) {
-          if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-            popup_game_with_sprite((const char *)str_surprisetribe,(iptr)&popup_info_icon_sprite,0);
-          }
-          tmp = city_create(x,y,civ);
-          if (999 < game.year) {
-            check = _rand();
-            owner_byte = (byte)(check >> 0x1f);
-            cities[tmp].size =
-                 ((((byte)check ^ owner_byte) - owner_byte & 3 ^ owner_byte) - owner_byte) + '\x01';
-            city_set_improvement(tmp,4,1);
-            civ = _rand();
-            rnd = (int)civ >> 0x1f;
-            if (((civ ^ rnd) - rnd & 1 ^ rnd) == rnd) {
-              city_set_improvement(tmp,5,1);
-            }
-            check = _rand();
-            if (check % 3 == 0) {
-              city_set_improvement(tmp,3,1);
-            }
-            civ = _rand();
-            rnd = (int)civ >> 0x1f;
-            if (((civ ^ rnd) - rnd & 3 ^ rnd) == rnd) {
-              city_set_improvement(tmp,6,1);
-            }
-          }
-          if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
-            return 0;
-          }
-          map_redraw_neighbors_all_views(x,y);
-          civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
-          if (tmp < 0) {
-            return civ;
-          }
-          ((CityWindow *)((i8 *)&city_window_block.city_window))->open(tmp);   /* void: the caller ignores our result */
-          return civ;
+          return hut_tribe_city(civ,x,y);
         }
         outcome = 5;
         continue;
       case 1:
-        if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-          popup_game_with_sprite((const char *)str_surprisemercs,(iptr)&popup_info_icon_sprite,0);
-        }
-        merc_type_a = 0x13;
-        if (game.advance_known_by[11] == '\0') {
-          tmp = _rand();
-          if (tmp % 3 == 0) {
-            merc_type_a = 0x10;
-          }
-          else {
-            merc_type_a = 0xf;
-          }
-          if (game.advance_known_by[64] != '\0') {
-            rnd = _rand();
-            sign = (int)rnd >> 0x1f;
-            if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
-              merc_type_a = 0x11;
-            }
-          }
-        }
-        if (game.advance_known_by[55] != '\0') {
-          merc_type_a = 0x12;
-        }
-        if (game.advance_known_by[42] != '\0') {
-          merc_type_a = 0x14;
-        }
-        if (game.advance_known_by[17] != '\0') {
-          merc_type_a = 0xb;
-        }
-        merc_type_b = 8;
-        if (game.advance_known_by[34] == '\0') {
-          merc_type_b = 7;
-        }
-        if (game.advance_known_by[35] == '\0') {
-          merc_type_b = 5;
-        }
-        if (game.advance_known_by[39] == '\0') {
-          merc_type_b = 4;
-        }
-        rnd = _rand();
-        sign = (int)rnd >> 0x1f;
-        if (((rnd ^ sign) - sign & 1 ^ sign) == sign) {
-          spawn_type = merc_type_a;
-        }
-        else {
-          spawn_type = merc_type_b;
-        }
-        tmp = unit_create(spawn_type,civ,x,y);
-        if ((unit_sound_editor_window_block.unit_move_by_local_human == '\0') && ((*(uint *)&human_civ) != civ)) {
-          outcome = civ;
-          if (-1 < tmp) {
-            outcome = tmp * 0x20;
-            *(&units[0].home_city + outcome) = -1;   /* outcome is a byte offset (unit index * 0x20) */
-          }
-        }
-        else {
-          map_redraw_neighbors_all_views(x,y);
-          outcome = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
-        }
+        outcome = hut_mercenaries(civ,x,y);
         break;
       case 2:
-        gold2 = 0x32;
-        x = _rand();
-        if (x % 3 == 0) {
-          x = _rand();
-          if ((int)((x % 10 - (uint)game.difficulty) + 2) < 5) {
-            gold2 = 0x19;
-          }
-          else {
-            gold2 = 100;
-          }
-        }
-        if (1000 < game.year) {
-          gold2 = gold2 << 1;
-        }
-        civs[civ].gold = civs[civ].gold + gold2;
-        text_set_number_arg(0,gold2);
-        if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-          popup_game_with_sprite((const char *)str_surprisemetals,(iptr)&popup_info_icon_sprite,0);
-        }
-        if ((*(uint *)&human_civ) != civ) {
-          return civ;
-        }
-        status_draw_info(1);   /* void */
-        return civ;
+        return hut_gold(civ);
       case 3:
         if ((advisor_window_block.nearest_city_dist < 4) ||
            ((civs[civ].num_cities == 0 && (game.turn < 0x32)))) {
@@ -1637,84 +1833,7 @@ uint __cdecl unit_enter_hut(int unit_id)
             continue;
           }
         }
-        single_spawn = false;
-        /* early on (always before turn 30, on a coin flip before turn 50)
-           nothing happens if the civ has a city on this landmass within 24 */
-        if ((game.barbarian_activity < 3) &&
-            ((game.turn < 0x1e) ||
-             ((game.turn < 0x32) &&
-              (rnd = _rand(), sign = (int)rnd >> 0x1f, ((rnd ^ sign) - sign & 1 ^ sign) == sign)))) {
-          city_find_nearest(x,y,civ,0xffffffff,0xffffffff);
-          tmp = tile_landmass(x,y);
-          if ((civs[civ].continent_cities[tmp] != '\0') && (advisor_window_block.nearest_city_dist < 0x18)) {
-            if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
-              return 0;
-            }
-            civ = popup_game_with_sprite((const char *)str_surprisenothing,(iptr)&popup_info_icon_sprite,0);
-            return civ;
-          }
-        }
-        /* a single unit up to turn 49, and on a coin flip up to turn 74 */
-        if ((game.turn <= 0x31) ||
-            ((game.turn <= 0x4a) &&
-             (rnd = _rand(), sign = (int)rnd >> 0x1f, ((rnd ^ sign) - sign & 1 ^ sign) == sign))) {
-          single_spawn = true;
-        }
-        rnd = 0;
-        if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-          rnd = popup_game_with_sprite((const char *)str_surprisebarb,(iptr)&popup_info_icon_sprite,0);
-        }
-        step = 0;
-        do {
-          if (7 < step) {
-            return rnd;
-          }
-          rnd = game.turn + step >> 0x1f;
-          tmp = ((game.turn + step ^ rnd) - rnd & 7 ^ rnd) - rnd;
-          tile_x = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x);
-          tmp = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp] + y;
-          check = map_in_bounds(tile_x,tmp);
-          if ((((check != 0) && (check = tile_unit_owner(tile_x,tmp), check < 0)) &&
-              (check = tile_city_owner(tile_x,tmp), check < 0)) &&
-             (check = tile_is_ocean(tile_x,tmp), check == 0)) {
-            owner_byte = tile_terrain(tile_x,tmp);
-            rough_type = 5;
-            flat_type = 0xf;
-            if (game.advance_known_by[51] != '\0') {
-              rough_type = 7;
-              flat_type = 0x13;
-            }
-            if (game.advance_known_by[unit_types[22].prerequisite] != '\0') {
-              rough_type = 0xb;
-              flat_type = 0x15;
-            }
-            if (game.advance_known_by[34] != '\0') {
-              rough_type = 8;
-              flat_type = 9;
-            }
-            if ((char)terrain_types[(uint)owner_byte].move_cost < '\x03') {
-              chosen_type = flat_type;
-            }
-            else {
-              chosen_type = rough_type;
-            }
-            rnd = unit_create(chosen_type,0,tile_x,tmp);
-            if (-1 < (int)rnd) {
-              tile = tile_at(x,y);
-              units[rnd].visibility = tile->visible | units[rnd].visibility;
-              map_redraw_tile_all_views(tile_x,tmp);
-              rnd = (uint)game.multiplayer;
-              if (2 < game.multiplayer) {
-                rnd = net_send_message(0x72,0xff,tile_x,tmp,0,0,0,0,0,0);
-              }
-            }
-            if (single_spawn) {
-              return rnd;
-            }
-          }
-          rnd = int_clamp(4 - civs[civ].num_cities,1,4);
-          step = step + rnd;
-        } while( true );
+        return hut_barbarians(civ,x,y);
       case 4:
         if ((game.turn == 0) || (tmp = civ_has_advance(civ,0x26), tmp != 0)) {
           outcome = 2;
@@ -1756,19 +1875,7 @@ uint __cdecl unit_enter_hut(int unit_id)
             }
           }
           if (settler_count <= (int)civs[civ].num_cities >> 3) {
-            if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-              popup_game_with_sprite((const char *)str_surprisenomads,(iptr)&popup_info_icon_sprite,0);
-            }
-            tmp = unit_create(0,civ,x,y);
-            if (-1 < tmp) {
-              units[tmp].home_city = 0xff;
-            }
-            if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
-              return 0;
-            }
-            map_redraw_neighbors_all_views(x,y);
-            civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
-            return civ;
+            return hut_nomads(civ,x,y);
           }
           outcome = 4;
         }

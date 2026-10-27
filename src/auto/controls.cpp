@@ -1645,6 +1645,146 @@ void Control::set_hwnd(u32 hwnd)
   return;
 }
 
+/* Part of button_create_hwnd (005c9740): the face color: the window color, or a pen of
+   the palette entry on_select names. */
+static HPEN button_face_pen(HDC mem_dc,Button *button)
+{
+  WndBase *parent_wnd;
+  PaletteHandleView *this_00;
+  HPALETTE hPal;
+  GamePalette *this_01;
+  GamePalette *logpal;
+  u32 color_index;
+  i8 *red_out;
+  i8 *green_out;
+  BOOL bForceBkgd;
+  i8 *blue_out;
+  i8 green[4];
+  i8 red[4];
+  i8 blue[4];
+  HPEN bg_pen;
+
+  if (button->on_select == 0xffffffff) {
+    bg_pen = GetStockObject(1);
+  }
+  else {
+    if (gfx_palettized_display == 1) {
+      bForceBkgd = 0;
+      parent_wnd = (WndBase *)button->get_parent();
+      this_00 = (PaletteHandleView *)parent_wnd->get_palette();
+      hPal = palette_get_hpalette(this_00);
+      SelectPalette(mem_dc,hPal,bForceBkgd);
+      RealizePalette(mem_dc);
+    }
+    blue_out = blue;
+    green_out = green;
+    red_out = red;
+    color_index = button->on_select;
+    parent_wnd = (WndBase *)button->get_parent();
+    this_01 = (GamePalette *)parent_wnd->get_palette();
+    logpal = this_01->get_logpalette();
+    palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+    bg_pen = CreatePen(0,1,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
+    ;
+  }
+  return bg_pen;
+}
+
+/* Part of button_create_hwnd (005c9740): fills a state's bitmap with the face color
+   (line by line with a palette pen). */
+static void button_fill_face(HDC mem_dc,Button *button,tagRECT *bounds,HPEN bg_pen)
+{
+  HGDIOBJ old_obj;
+  int line_y;
+
+  if (button->on_select == 0xffffffff) {
+    FillRect(mem_dc,bounds,bg_pen);
+  }
+  else {
+    old_obj = SelectObject(mem_dc,bg_pen);
+    for (line_y = bounds->top; line_y < bounds->bottom; line_y++) {
+      MoveToEx(mem_dc,bounds->left,line_y,(LPPOINT)0x0);
+      LineTo(mem_dc,bounds->right,line_y);
+    }
+    SelectObject(mem_dc,old_obj);
+  }
+}
+
+/* Part of button_create_hwnd (005c9740): the raised bevel (white top-left, grey
+   bottom-right); old_obj is the caller's: the hotkey underline after it
+   restores the object it holds. */
+static void button_draw_raised_bevel(HDC mem_dc,tagRECT *bounds,HPEN h_01,HPEN h_02,HGDIOBJ &old_obj)
+{
+  old_obj = SelectObject(mem_dc,h_01);
+  MoveToEx(mem_dc,bounds->left,bounds->bottom,(LPPOINT)0x0);
+  LineTo(mem_dc,bounds->left,bounds->top);
+  LineTo(mem_dc,bounds->right,bounds->top);
+  MoveToEx(mem_dc,bounds->left + 1,bounds->bottom - 1,(LPPOINT)0x0);
+  LineTo(mem_dc,bounds->left + 1,bounds->top + 1);
+  LineTo(mem_dc,bounds->right - 1,bounds->top + 1);
+  SelectObject(mem_dc,h_02);
+  MoveToEx(mem_dc,bounds->left + 1,bounds->bottom - 1,(LPPOINT)0x0);
+  LineTo(mem_dc,bounds->right - 1,bounds->bottom - 1);
+  LineTo(mem_dc,bounds->right - 1,bounds->top);
+  MoveToEx(mem_dc,bounds->left + 2,bounds->bottom - 2,(LPPOINT)0x0);
+  LineTo(mem_dc,bounds->right - 2,bounds->bottom - 2);
+  LineTo(mem_dc,bounds->right - 2,bounds->top + 1);
+  SelectObject(mem_dc,old_obj);
+}
+
+/* Part of button_create_hwnd (005c9740): underlines the hotkey letter of the label
+   (text_rect: the label as drawn, saved_*: the same before; old_obj: the
+   object the bevel drawing left selected before it). */
+static void button_underline_hotkey(HDC mem_dc,Button *button,char *label_text,tagRECT *text_rect,int saved_left,int saved_top,int saved_right,int saved_bottom,HPEN h_02,HGDIOBJ old_obj)
+{
+  size_t len;
+  tagRECT *draw_rect;
+  UINT draw_flags;
+  int text_width;
+  int underline_end;
+  char prefix[256];
+  int underline_start;
+
+  if (-1 < (int)button->hotkey_pos) {
+    crt_strcpy(prefix,label_text);
+    prefix[button->hotkey_pos] = '\0';
+    len = _strlen(prefix);
+    if (len == 0) {
+      underline_start = text_rect->left;
+    }
+    else {
+      text_rect->left = saved_left;
+      text_rect->top = saved_top;
+      text_rect->right = saved_right;
+      text_rect->bottom = saved_bottom;
+      draw_flags = 0x424;
+      draw_rect = text_rect;
+      len = _strlen(prefix);
+      DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
+      underline_start = text_rect->right - 1;
+    }
+    crt_strcpy(prefix,label_text);
+    prefix[button->hotkey_pos + 1] = '\0';
+    text_rect->left = saved_left;
+    text_rect->top = saved_top;
+    text_rect->right = saved_right;
+    text_rect->bottom = saved_bottom;
+    draw_flags = 0x424;
+    draw_rect = text_rect;
+    len = _strlen(prefix);
+    DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
+    text_width = (text_rect->right + 1) - underline_start;
+    underline_start = underline_start + (text_width >> 1) - 5;
+    underline_end = underline_start + 10;
+    SelectObject(mem_dc,h_02);
+    MoveToEx(mem_dc,underline_start,text_rect->bottom - 2,(LPPOINT)0x0);
+    LineTo(mem_dc,underline_end,text_rect->bottom - 2);
+    MoveToEx(mem_dc,underline_start,text_rect->bottom - 1,(LPPOINT)0x0);
+    LineTo(mem_dc,underline_end,text_rect->bottom - 1);
+    SelectObject(mem_dc,old_obj);
+  }
+}
+
 /* 005c9740 auto */
 HWND __cdecl
 button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *font)
@@ -1658,11 +1798,6 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
   int value2;
   HBITMAP h;
   HBITMAP h_00;
-  WndBase *parent_wnd;
-  PaletteHandleView *this_00;
-  HPALETTE hPal;
-  GamePalette *this_01;
-  GamePalette *logpal;
   HPEN h_01;
   HPEN h_02;
   i32 font_handle;
@@ -1671,38 +1806,26 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
   HGDIOBJ h_04;
   size_t len;
   HWND hWndParent;
-  u32 color_index;
   HMENU hMenu;
-  i8 *red_out;
   LONG text_top;
   HINSTANCE hInstance;
-  i8 *green_out;
   tagRECT *draw_rect;
   LPVOID lpParam;
-  BOOL bForceBkgd;
-  i8 *blue_out;
   UINT draw_flags;
   LONG text_bottom;
   DWORD style2;
   char label_text[256];
-  int line_y;
-  i8 green[4];
   Button *button;
   int text_width;
   HBITMAP bmp_disabled;
   HDC mem_dc;
-  i8 red[4];
-  i8 blue[4];
-  int underline_end;
   HWND hwnd2;
   tagRECT bounds;
   HGDIOBJ old_obj;
-  char prefix[256];
   int saved_left;
   int saved_top;
   int saved_right;
   int saved_bottom;
-  int underline_start;
   tagRECT text_rect;
   HPEN bg_pen;
   int orig_left;
@@ -1765,29 +1888,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         mem_dc = CreateCompatibleDC(hdc);
         ReleaseDC(hwnd2,hdc);
         SetBkMode(mem_dc,1);
-        if (button->on_select == 0xffffffff) {
-          bg_pen = GetStockObject(1);
-        }
-        else {
-          if (gfx_palettized_display == 1) {
-            bForceBkgd = 0;
-            parent_wnd = (WndBase *)button->get_parent();
-            this_00 = (PaletteHandleView *)parent_wnd->get_palette();
-            hPal = palette_get_hpalette(this_00);
-            SelectPalette(mem_dc,hPal,bForceBkgd);
-            RealizePalette(mem_dc);
-          }
-          blue_out = blue;
-          green_out = green;
-          red_out = red;
-          color_index = button->on_select;
-          parent_wnd = (WndBase *)button->get_parent();
-          this_01 = (GamePalette *)parent_wnd->get_palette();
-          logpal = this_01->get_logpalette();
-          palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-          bg_pen = CreatePen(0,1,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
-          ;
-        }
+        bg_pen = button_face_pen(mem_dc,button);
         h_01 = CreatePen(0,1,0xffffff);
         h_02 = CreatePen(0,1,0x808080);
         font_handle = font->get_handle();
@@ -1800,32 +1901,8 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         orig_top = bounds.top;
         orig_right = bounds.right;
         orig_bottom = bounds.bottom;
-        if (button->on_select == 0xffffffff) {
-          FillRect(mem_dc,&bounds,bg_pen);
-        }
-        else {
-          old_obj = SelectObject(mem_dc,bg_pen);
-          for (line_y = bounds.top; line_y < bounds.bottom; line_y++) {
-            MoveToEx(mem_dc,bounds.left,line_y,(LPPOINT)0x0);
-            LineTo(mem_dc,bounds.right,line_y);
-          }
-          SelectObject(mem_dc,old_obj);
-        }
-        old_obj = SelectObject(mem_dc,h_01);
-        MoveToEx(mem_dc,bounds.left,bounds.bottom,(LPPOINT)0x0);
-        LineTo(mem_dc,bounds.left,bounds.top);
-        LineTo(mem_dc,bounds.right,bounds.top);
-        MoveToEx(mem_dc,bounds.left + 1,bounds.bottom - 1,(LPPOINT)0x0);
-        LineTo(mem_dc,bounds.left + 1,bounds.top + 1);
-        LineTo(mem_dc,bounds.right - 1,bounds.top + 1);
-        SelectObject(mem_dc,h_02);
-        MoveToEx(mem_dc,bounds.left + 1,bounds.bottom - 1,(LPPOINT)0x0);
-        LineTo(mem_dc,bounds.right - 1,bounds.bottom - 1);
-        LineTo(mem_dc,bounds.right - 1,bounds.top);
-        MoveToEx(mem_dc,bounds.left + 2,bounds.bottom - 2,(LPPOINT)0x0);
-        LineTo(mem_dc,bounds.right - 2,bounds.bottom - 2);
-        LineTo(mem_dc,bounds.right - 2,bounds.top + 1);
-        SelectObject(mem_dc,old_obj);
+        button_fill_face(mem_dc,button,&bounds,bg_pen);
+        button_draw_raised_bevel(mem_dc,&bounds,h_01,h_02,old_obj);
         text_rect.left = bounds.left;
         text_rect.top = bounds.top;
         text_rect.right = bounds.right;
@@ -1849,56 +1926,9 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         saved_top = text_rect.top;
         saved_right = text_rect.right;
         saved_bottom = text_rect.bottom;
-        if (-1 < (int)button->hotkey_pos) {
-          crt_strcpy(prefix,label_text);
-          prefix[button->hotkey_pos] = '\0';
-          len = _strlen(prefix);
-          if (len == 0) {
-            underline_start = text_rect.left;
-          }
-          else {
-            text_rect.left = saved_left;
-            text_rect.top = saved_top;
-            text_rect.right = saved_right;
-            text_rect.bottom = saved_bottom;
-            draw_flags = 0x424;
-            draw_rect = &text_rect;
-            len = _strlen(prefix);
-            DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
-            underline_start = text_rect.right - 1;
-          }
-          crt_strcpy(prefix,label_text);
-          prefix[button->hotkey_pos + 1] = '\0';
-          text_rect.left = saved_left;
-          text_rect.top = saved_top;
-          text_rect.right = saved_right;
-          text_rect.bottom = saved_bottom;
-          draw_flags = 0x424;
-          draw_rect = &text_rect;
-          len = _strlen(prefix);
-          DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
-          text_width = (text_rect.right + 1) - underline_start;
-          underline_start = underline_start + (text_width >> 1) - 5;
-          underline_end = underline_start + 10;
-          SelectObject(mem_dc,h_02);
-          MoveToEx(mem_dc,underline_start,text_rect.bottom - 2,(LPPOINT)0x0);
-          LineTo(mem_dc,underline_end,text_rect.bottom - 2);
-          MoveToEx(mem_dc,underline_start,text_rect.bottom - 1,(LPPOINT)0x0);
-          LineTo(mem_dc,underline_end,text_rect.bottom - 1);
-          SelectObject(mem_dc,old_obj);
-        }
+        button_underline_hotkey(mem_dc,button,label_text,&text_rect,saved_left,saved_top,saved_right,saved_bottom,h_02,old_obj);
         SelectObject(mem_dc,h_00);
-        if (button->on_select == 0xffffffff) {
-          FillRect(mem_dc,&bounds,bg_pen);
-        }
-        else {
-          old_obj = SelectObject(mem_dc,bg_pen);
-          for (line_y = bounds.top; line_y < bounds.bottom; line_y++) {
-            MoveToEx(mem_dc,bounds.left,line_y,(LPPOINT)0x0);
-            LineTo(mem_dc,bounds.right,line_y);
-          }
-          SelectObject(mem_dc,old_obj);
-        }
+        button_fill_face(mem_dc,button,&bounds,bg_pen);
         old_obj = SelectObject(mem_dc,h_02);
         MoveToEx(mem_dc,bounds.left,bounds.bottom,(LPPOINT)0x0);
         LineTo(mem_dc,bounds.left,bounds.top);
@@ -1932,75 +1962,14 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         saved_top = text_rect.top;
         saved_right = text_rect.right;
         saved_bottom = text_rect.bottom;
-        if (-1 < (int)button->hotkey_pos) {
-          crt_strcpy(prefix,label_text);
-          prefix[button->hotkey_pos] = '\0';
-          len = _strlen(prefix);
-          if (len == 0) {
-            underline_start = text_rect.left;
-          }
-          else {
-            text_rect.left = saved_left;
-            text_rect.top = saved_top;
-            text_rect.right = saved_right;
-            text_rect.bottom = saved_bottom;
-            draw_flags = 0x424;
-            draw_rect = &text_rect;
-            len = _strlen(prefix);
-            DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
-            underline_start = text_rect.right - 1;
-          }
-          crt_strcpy(prefix,label_text);
-          prefix[button->hotkey_pos + 1] = '\0';
-          text_rect.left = saved_left;
-          text_rect.top = saved_top;
-          text_rect.right = saved_right;
-          text_rect.bottom = saved_bottom;
-          draw_flags = 0x424;
-          draw_rect = &text_rect;
-          len = _strlen(prefix);
-          DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
-          text_width = (text_rect.right + 1) - underline_start;
-          underline_start = underline_start + (text_width >> 1) - 5;
-          underline_end = underline_start + 10;
-          SelectObject(mem_dc,h_02);
-          MoveToEx(mem_dc,underline_start,text_rect.bottom - 2,(LPPOINT)0x0);
-          LineTo(mem_dc,underline_end,text_rect.bottom - 2);
-          MoveToEx(mem_dc,underline_start,text_rect.bottom - 1,(LPPOINT)0x0);
-          LineTo(mem_dc,underline_end,text_rect.bottom - 1);
-          SelectObject(mem_dc,old_obj);
-        }
+        button_underline_hotkey(mem_dc,button,label_text,&text_rect,saved_left,saved_top,saved_right,saved_bottom,h_02,old_obj);
         SelectObject(mem_dc,bmp_disabled);
         bounds.left = orig_left;
         bounds.top = orig_top;
         bounds.right = orig_right;
         bounds.bottom = orig_bottom;
-        if (button->on_select == 0xffffffff) {
-          FillRect(mem_dc,&bounds,bg_pen);
-        }
-        else {
-          old_obj = SelectObject(mem_dc,bg_pen);
-          for (line_y = bounds.top; line_y < bounds.bottom; line_y++) {
-            MoveToEx(mem_dc,bounds.left,line_y,(LPPOINT)0x0);
-            LineTo(mem_dc,bounds.right,line_y);
-          }
-          SelectObject(mem_dc,old_obj);
-        }
-        old_obj = SelectObject(mem_dc,h_01);
-        MoveToEx(mem_dc,bounds.left,bounds.bottom,(LPPOINT)0x0);
-        LineTo(mem_dc,bounds.left,bounds.top);
-        LineTo(mem_dc,bounds.right,bounds.top);
-        MoveToEx(mem_dc,bounds.left + 1,bounds.bottom - 1,(LPPOINT)0x0);
-        LineTo(mem_dc,bounds.left + 1,bounds.top + 1);
-        LineTo(mem_dc,bounds.right - 1,bounds.top + 1);
-        SelectObject(mem_dc,h_02);
-        MoveToEx(mem_dc,bounds.left + 1,bounds.bottom - 1,(LPPOINT)0x0);
-        LineTo(mem_dc,bounds.right - 1,bounds.bottom - 1);
-        LineTo(mem_dc,bounds.right - 1,bounds.top);
-        MoveToEx(mem_dc,bounds.left + 2,bounds.bottom - 2,(LPPOINT)0x0);
-        LineTo(mem_dc,bounds.right - 2,bounds.bottom - 2);
-        LineTo(mem_dc,bounds.right - 2,bounds.top + 1);
-        SelectObject(mem_dc,old_obj);
+        button_fill_face(mem_dc,button,&bounds,bg_pen);
+        button_draw_raised_bevel(mem_dc,&bounds,h_01,h_02,old_obj);
         text_rect.left = bounds.left;
         text_rect.top = bounds.top;
         text_rect.right = bounds.right;
@@ -2032,44 +2001,7 @@ button_create_hwnd(int *rect,iptr ctrl,const char *label,int visible,GameFont *f
         saved_top = text_rect.top;
         saved_right = text_rect.right;
         saved_bottom = text_rect.bottom;
-        if (-1 < (int)button->hotkey_pos) {
-          crt_strcpy(prefix,label_text);
-          prefix[button->hotkey_pos] = '\0';
-          len = _strlen(prefix);
-          if (len == 0) {
-            underline_start = text_rect.left;
-          }
-          else {
-            text_rect.left = saved_left;
-            text_rect.top = saved_top;
-            text_rect.right = saved_right;
-            text_rect.bottom = saved_bottom;
-            draw_flags = 0x424;
-            draw_rect = &text_rect;
-            len = _strlen(prefix);
-            DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
-            underline_start = text_rect.right - 1;
-          }
-          crt_strcpy(prefix,label_text);
-          prefix[button->hotkey_pos + 1] = '\0';
-          text_rect.left = saved_left;
-          text_rect.top = saved_top;
-          text_rect.right = saved_right;
-          text_rect.bottom = saved_bottom;
-          draw_flags = 0x424;
-          draw_rect = &text_rect;
-          len = _strlen(prefix);
-          DrawTextA(mem_dc,prefix,len,draw_rect,draw_flags);
-          text_width = (text_rect.right + 1) - underline_start;
-          underline_start = underline_start + (text_width >> 1) - 5;
-          underline_end = underline_start + 10;
-          SelectObject(mem_dc,h_02);
-          MoveToEx(mem_dc,underline_start,text_rect.bottom - 2,(LPPOINT)0x0);
-          LineTo(mem_dc,underline_end,text_rect.bottom - 2);
-          MoveToEx(mem_dc,underline_start,text_rect.bottom - 1,(LPPOINT)0x0);
-          LineTo(mem_dc,underline_end,text_rect.bottom - 1);
-          SelectObject(mem_dc,old_obj);
-        }
+        button_underline_hotkey(mem_dc,button,label_text,&text_rect,saved_left,saved_top,saved_right,saved_bottom,h_02,old_obj);
         SelectObject(mem_dc,h_04);
         SelectObject(mem_dc,h_03);
         DeleteObject(h_01);
@@ -2359,12 +2291,139 @@ void __cdecl checkbox_toggle_by_hotkey(HWND hwnd)
   return;
 }
 
-/* 005cc320 auto */
-i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
-
+/* Part of checkbox_wndproc (005cc320): the label's text color, enabled or disabled
+   (a palette entry in a palettized window, else the set RGB or black/grey). */
+static void checkbox_text_color(HDC hdc,Checkbox *checkbox)
 {
-  char nav_enabled;
-  i32 ctrl_id;
+  int value;
+  uint color_index;
+  WndBase *parent_wnd;
+  GamePalette *game_palette2;
+  WndBase *parent_base;
+  iptr logpal;
+  i8 *red_out;
+  i8 *green_out;
+  i8 *blue_out;
+  i8 green[4];
+  i8 red[4];
+  i8 blue[4];
+
+  value = checkbox->checkbox_is_enabled();
+  if (value == 1) {
+    parent_base = (WndBase *)checkbox->get_parent();
+    value = (int)parent_base->get_window();
+    if (((NativeWindow *)value)->field_40 == 8) {
+      if (ctrl_text_color_index == 0) {
+        SetTextColor(hdc,0);
+      }
+      else {
+        blue_out = blue;
+        green_out = green;
+        red_out = red;
+        color_index = (uint)ctrl_text_color_index;
+        parent_wnd = (WndBase *)checkbox->get_parent();
+        game_palette2 = (GamePalette *)parent_wnd->get_palette();
+        logpal = (iptr)game_palette2->get_logpalette();
+        palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+        SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
+        ;
+      }
+    }
+    else if (wnd_modal_stack_below_block.ctrl_text_rgb_set == '\0') {
+      SetTextColor(hdc,0);
+    }
+    else {
+      SetTextColor(hdc,CONCAT12(wnd_modal_stack_below_block.ctrl_text_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_text_rgb_g,wnd_modal_stack_below_block.ctrl_text_rgb_r)));
+    }
+  }
+  else {
+    value = checkbox->checkbox_is_enabled();
+    if (value == 0) {
+      parent_base = (WndBase *)checkbox->get_parent();
+      value = (int)parent_base->get_window();
+      if (((NativeWindow *)value)->field_40 == 8) {
+        if (ctrl_disabled_color_index == 0) {
+          SetTextColor(hdc,0x404040);
+        }
+        else {
+          blue_out = blue;
+          green_out = green;
+          red_out = red;
+          color_index = (uint)ctrl_disabled_color_index;
+          parent_wnd = (WndBase *)checkbox->get_parent();
+          game_palette2 = (GamePalette *)parent_wnd->get_palette();
+          logpal = (iptr)game_palette2->get_logpalette();
+          palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+          SetTextColor(hdc,
+                       CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+        }
+      }
+      else if (wnd_modal_stack_below_block.ctrl_disabled_rgb_set == '\0') {
+        SetTextColor(hdc,0x404040);
+      }
+      else {
+        SetTextColor(hdc,CONCAT12(wnd_modal_stack_below_block.ctrl_disabled_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_disabled_rgb_g,wnd_modal_stack_below_block.ctrl_disabled_rgb_r)))
+        ;
+      }
+    }
+  }
+}
+
+/* Part of checkbox_wndproc (005cc320): underlines the hotkey letter of the label. */
+static void checkbox_underline_hotkey(HDC hdc,Checkbox *checkbox,char *label,tagRECT *rect)
+{
+  size_t len;
+  tagRECT *draw_rect;
+  UINT draw_flags;
+  int underline_end;
+  int underline_start;
+  HBRUSH brush;
+  char prefix[256];
+  tagRECT text_rect;
+
+  if (checkbox->hotkey_pos != 0xffffffff) {
+    crt_strcpy(prefix,label);
+    prefix[checkbox->hotkey_pos] = '\0';
+    text_rect.left = rect->left;
+    text_rect.top = rect->top;
+    text_rect.right = rect->right;
+    text_rect.bottom = rect->bottom;
+    len = _strlen(prefix);
+    if (len == 0) {
+      underline_start = text_rect.left;
+    }
+    else {
+      draw_flags = 0x424;
+      draw_rect = &text_rect;
+      len = _strlen(prefix);
+      DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
+      underline_start = text_rect.right - 1;
+    }
+    crt_strcpy(prefix,label);
+    prefix[checkbox->hotkey_pos + 1] = '\0';
+    text_rect.left = rect->left;
+    text_rect.top = rect->top;
+    text_rect.right = rect->right;
+    text_rect.bottom = rect->bottom;
+    draw_flags = 0x424;
+    draw_rect = &text_rect;
+    len = _strlen(prefix);
+    DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
+    underline_start = underline_start + ((text_rect.right + 1) - underline_start >> 1) - 5;
+    underline_end = underline_start + 10;
+    brush = GetStockObject(3);
+    SelectObject(hdc,brush);
+    MoveToEx(hdc,underline_start,rect->bottom - 3,(LPPOINT)0x0);
+    LineTo(hdc,underline_end,rect->bottom - 3);
+    MoveToEx(hdc,underline_start,rect->bottom - 2,(LPPOINT)0x0);
+    LineTo(hdc,underline_end,rect->bottom - 2);
+  }
+}
+
+/* Part of checkbox_wndproc (005cc320): WM_PAINT: the box bitmap (off, on or disabled)
+   and the label with its shadow and hotkey underline. */
+static void checkbox_paint(HWND hwnd,ControlBlock *block,Checkbox *checkbox)
+{
   iptr enabled;
   iptr checked;
   int *ctrl_rect;
@@ -2373,10 +2432,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
   WndBase *parent_wnd;
   GamePalette *game_palette2;
   size_t len;
-  WndBase *parent_base;
-  iptr logpal;
   HWND hwnd_tmp;
-  Wnd *nav_wnd;
   i32 result;
   i8 *red_out;
   i8 *green_out;
@@ -2385,194 +2441,113 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
   UINT draw_flags;
   tagRECT rect;
   HBITMAP bitmap;
-  ControlBlock *block;
-  Checkbox *checkbox;
   tagPAINTSTRUCT ps;
   HGDIOBJ old_font;
   tagSIZE bmp_size;
   i8 green[4];
   HDC hdc;
   char *label;
-  int underline_end;
-  int underline_start;
   int box_left;
   int box_top;
   int box_right;
   int box_bottom;
   i8 red[4];
   i8 blue[4];
-  HBRUSH brush;
   i32 *font_data;
-  char prefix[256];
-  tagRECT text_rect;
+
+  enabled = checkbox->checkbox_is_enabled();
+  if (enabled == 0) {
+    hwnd_tmp = GetFocus();
+    if (hwnd_tmp == hwnd) {
+      SetFocus((HWND)0x0);
+    }
+    bitmap = block->bitmaps[0];
+  }
+  else {
+    checked = checkbox->is_checked();
+    if (checked == 0) {
+      bitmap = block->bitmaps[1];
+    }
+    else {
+      bitmap = block->bitmaps[2];
+    }
+  }
+  GetBitmapDimensionEx(bitmap,&bmp_size);
+  ctrl_rect = (int *)checkbox->get_rect();
+  rect.left = *ctrl_rect;
+  rect.top = ctrl_rect[1];
+  rect.right = ctrl_rect[2];
+  rect.bottom = ctrl_rect[3];
+  box_left = rect.left;
+  box_top = rect.top;
+  box_right = rect.right;
+  box_bottom = rect.bottom;
+  if (wnd_modal_stack_below_block.checkbox_mouse_pressed != 0) {
+    box_right = rect.left + 0x20;
+    value = rect_height(&rect);
+    box_top = value - 0x14 + rect.top >> 1;
+    box_bottom = rect.top + 0x14;
+  }
+  OffsetRect(&rect,-rect.left,-rect.top);
+  hdc = BeginPaint(hwnd,&ps);
+  ctrl_paint_parent_bkgnd((iptr)&ps,hwnd);
+  result = ((GameFont *)checkbox->font)->get_handle();
+  font_data = (i32 *)mem_handle_lock(result);
+  old_font = SelectObject(hdc,(HGDIOBJ)*font_data);
+  result = ((GameFont *)checkbox->font)->get_handle();
+  mem_handle_unlock(result);
+  SetBkMode(hdc,1);
+  gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
+  rect.left += 0x25;
+  label = (char *)block->data;
+  if ((ctrl_shadow_dx != 0) || (ctrl_shadow_dy != 0)) {
+    OffsetRect(&rect,(uint)ctrl_shadow_dx,(uint)ctrl_shadow_dy);
+    blue_out = blue;
+    green_out = green;
+    red_out = red;
+    color_index = (uint)ctrl_shadow_color_index;
+    parent_wnd = (WndBase *)checkbox->get_parent();
+    game_palette2 = (GamePalette *)parent_wnd->get_palette();
+    game_palette2->get_entry(color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+    SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+    draw_flags = 0x24;
+    draw_rect = &rect;
+    len = _strlen(label);
+    DrawTextA(hdc,label,len,draw_rect,draw_flags);
+    OffsetRect(&rect,-(uint)ctrl_shadow_dx,-(uint)ctrl_shadow_dy);
+  }
+  checkbox_text_color(hdc,checkbox);
+  draw_flags = 0x24;
+  draw_rect = &rect;
+  len = _strlen(label);
+  DrawTextA(hdc,label,len,draw_rect,draw_flags);
+  checkbox_underline_hotkey(hdc,checkbox,label,&rect);
+  SelectObject(hdc,old_font);
+  EndPaint(hwnd,&ps);
+}
+
+/* 005cc320 auto */
+i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
+
+{
+  char nav_enabled;
+  i32 ctrl_id;
+  int value;
+  iptr logpal;
+  HWND hwnd_tmp;
+  Wnd *nav_wnd;
+  i32 result;
+  tagRECT rect;
+  ControlBlock *block;
+  Checkbox *checkbox;
+  HDC hdc;
+  HBRUSH brush;
   
   block = wnd_from_hwnd(hwnd);
   checkbox = (Checkbox *)block->owner;
   if (msg < 0x10) {
     if (msg == 0xf) {
-      enabled = checkbox->checkbox_is_enabled();
-      if (enabled == 0) {
-        hwnd_tmp = GetFocus();
-        if (hwnd_tmp == hwnd) {
-          SetFocus((HWND)0x0);
-        }
-        bitmap = block->bitmaps[0];
-      }
-      else {
-        checked = checkbox->is_checked();
-        if (checked == 0) {
-          bitmap = block->bitmaps[1];
-        }
-        else {
-          bitmap = block->bitmaps[2];
-        }
-      }
-      GetBitmapDimensionEx(bitmap,&bmp_size);
-      ctrl_rect = (int *)checkbox->get_rect();
-      rect.left = *ctrl_rect;
-      rect.top = ctrl_rect[1];
-      rect.right = ctrl_rect[2];
-      rect.bottom = ctrl_rect[3];
-      box_left = rect.left;
-      box_top = rect.top;
-      box_right = rect.right;
-      box_bottom = rect.bottom;
-      if (wnd_modal_stack_below_block.checkbox_mouse_pressed != 0) {
-        box_right = rect.left + 0x20;
-        value = rect_height(&rect);
-        box_top = value - 0x14 + rect.top >> 1;
-        box_bottom = rect.top + 0x14;
-      }
-      OffsetRect(&rect,-rect.left,-rect.top);
-      hdc = BeginPaint(hwnd,&ps);
-      ctrl_paint_parent_bkgnd((iptr)&ps,hwnd);
-      result = ((GameFont *)checkbox->font)->get_handle();
-      font_data = (i32 *)mem_handle_lock(result);
-      old_font = SelectObject(hdc,(HGDIOBJ)*font_data);
-      result = ((GameFont *)checkbox->font)->get_handle();
-      mem_handle_unlock(result);
-      SetBkMode(hdc,1);
-      gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
-      rect.left += 0x25;
-      label = (char *)block->data;
-      if ((ctrl_shadow_dx != 0) || (ctrl_shadow_dy != 0)) {
-        OffsetRect(&rect,(uint)ctrl_shadow_dx,(uint)ctrl_shadow_dy);
-        blue_out = blue;
-        green_out = green;
-        red_out = red;
-        color_index = (uint)ctrl_shadow_color_index;
-        parent_wnd = (WndBase *)checkbox->get_parent();
-        game_palette2 = (GamePalette *)parent_wnd->get_palette();
-        game_palette2->get_entry(color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-        SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-        draw_flags = 0x24;
-        draw_rect = &rect;
-        len = _strlen(label);
-        DrawTextA(hdc,label,len,draw_rect,draw_flags);
-        OffsetRect(&rect,-(uint)ctrl_shadow_dx,-(uint)ctrl_shadow_dy);
-      }
-      value = checkbox->checkbox_is_enabled();
-      if (value == 1) {
-        parent_base = (WndBase *)checkbox->get_parent();
-        value = (int)parent_base->get_window();
-        if (((NativeWindow *)value)->field_40 == 8) {
-          if (ctrl_text_color_index == 0) {
-            SetTextColor(hdc,0);
-          }
-          else {
-            blue_out = blue;
-            green_out = green;
-            red_out = red;
-            color_index = (uint)ctrl_text_color_index;
-            parent_wnd = (WndBase *)checkbox->get_parent();
-            game_palette2 = (GamePalette *)parent_wnd->get_palette();
-            logpal = (iptr)game_palette2->get_logpalette();
-            palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-            SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])))
-            ;
-          }
-        }
-        else if (wnd_modal_stack_below_block.ctrl_text_rgb_set == '\0') {
-          SetTextColor(hdc,0);
-        }
-        else {
-          SetTextColor(hdc,CONCAT12(wnd_modal_stack_below_block.ctrl_text_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_text_rgb_g,wnd_modal_stack_below_block.ctrl_text_rgb_r)));
-        }
-      }
-      else {
-        value = checkbox->checkbox_is_enabled();
-        if (value == 0) {
-          parent_base = (WndBase *)checkbox->get_parent();
-          value = (int)parent_base->get_window();
-          if (((NativeWindow *)value)->field_40 == 8) {
-            if (ctrl_disabled_color_index == 0) {
-              SetTextColor(hdc,0x404040);
-            }
-            else {
-              blue_out = blue;
-              green_out = green;
-              red_out = red;
-              color_index = (uint)ctrl_disabled_color_index;
-              parent_wnd = (WndBase *)checkbox->get_parent();
-              game_palette2 = (GamePalette *)parent_wnd->get_palette();
-              logpal = (iptr)game_palette2->get_logpalette();
-              palette_get_entry_rgb((GameLogPalette *)logpal,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-              SetTextColor(hdc,
-                           CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-            }
-          }
-          else if (wnd_modal_stack_below_block.ctrl_disabled_rgb_set == '\0') {
-            SetTextColor(hdc,0x404040);
-          }
-          else {
-            SetTextColor(hdc,CONCAT12(wnd_modal_stack_below_block.ctrl_disabled_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_disabled_rgb_g,wnd_modal_stack_below_block.ctrl_disabled_rgb_r)))
-            ;
-          }
-        }
-      }
-      draw_flags = 0x24;
-      draw_rect = &rect;
-      len = _strlen(label);
-      DrawTextA(hdc,label,len,draw_rect,draw_flags);
-      if (checkbox->hotkey_pos != 0xffffffff) {
-        crt_strcpy(prefix,label);
-        prefix[checkbox->hotkey_pos] = '\0';
-        text_rect.left = rect.left;
-        text_rect.top = rect.top;
-        text_rect.right = rect.right;
-        text_rect.bottom = rect.bottom;
-        len = _strlen(prefix);
-        if (len == 0) {
-          underline_start = text_rect.left;
-        }
-        else {
-          draw_flags = 0x424;
-          draw_rect = &text_rect;
-          len = _strlen(prefix);
-          DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
-          underline_start = text_rect.right - 1;
-        }
-        crt_strcpy(prefix,label);
-        prefix[checkbox->hotkey_pos + 1] = '\0';
-        text_rect.left = rect.left;
-        text_rect.top = rect.top;
-        text_rect.right = rect.right;
-        text_rect.bottom = rect.bottom;
-        draw_flags = 0x424;
-        draw_rect = &text_rect;
-        len = _strlen(prefix);
-        DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
-        underline_start = underline_start + ((text_rect.right + 1) - underline_start >> 1) - 5;
-        underline_end = underline_start + 10;
-        brush = GetStockObject(3);
-        SelectObject(hdc,brush);
-        MoveToEx(hdc,underline_start,rect.bottom - 3,(LPPOINT)0x0);
-        LineTo(hdc,underline_end,rect.bottom - 3);
-        MoveToEx(hdc,underline_start,rect.bottom - 2,(LPPOINT)0x0);
-        LineTo(hdc,underline_end,rect.bottom - 2);
-      }
-      SelectObject(hdc,old_font);
-      EndPaint(hwnd,&ps);
+      checkbox_paint(hwnd,block,checkbox);
       hwnd_tmp = GetFocus();
       if (hwnd_tmp != hwnd) {
         return 0;
@@ -4043,214 +4018,342 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
   return;
 }
 
-/* 005d9b86 auto */
-i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
-
+/* Part of radiogrp_item_wndproc (005d9b86): the label's text color, enabled or disabled
+   (a palette entry in a palettized window, else the set RGB or black/grey). */
+static void radiogrp_item_text_color(HDC hdc,RadioGroup *group,RadioItem *item)
 {
-  char nav_enabled;
-  int items;
+  uint color_index;
+  WndBase *parent_wnd;
+  GamePalette *game_palette2;
+  WndBase *parent_base;
+  int value;
+  iptr parent;
+  i8 *red_out;
+  i8 *green_out;
+  i8 *blue_out;
+  i8 green[4];
+  i8 red[4];
+  i8 blue[4];
+
+  if (item->enabled == 1) {
+    parent_base = (WndBase *)group->get_parent();
+    value = (int)parent_base->get_window();
+    if (((NativeWindow *)value)->field_40 == 8) {
+      if (radio_text_color_index == 0) {
+        SetTextColor(hdc,0);
+      }
+      else {
+        blue_out = blue;
+        green_out = green;
+        red_out = red;
+        color_index = (uint)radio_text_color_index;
+        parent_wnd = (WndBase *)group->get_parent();
+        game_palette2 = (GamePalette *)parent_wnd->get_palette();
+        parent = (iptr)game_palette2->get_logpalette();
+        palette_get_entry_rgb((GameLogPalette *)parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+        SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+      }
+    }
+    else if (radio_text_rgb_set == '\0') {
+      SetTextColor(hdc,0);
+    }
+    else {
+      SetTextColor(hdc,CONCAT12(radio_text_rgb_b,CONCAT11(radio_text_rgb_g,radio_text_rgb_r)));
+    }
+  }
+  else if (item->enabled == 0) {
+    parent_base = (WndBase *)group->get_parent();
+    value = (int)parent_base->get_window();
+    if (((NativeWindow *)value)->field_40 == 8) {
+      if (radio_disabled_color_index == 0) {
+        SetTextColor(hdc,0x404040);
+      }
+      else {
+        blue_out = blue;
+        green_out = green;
+        red_out = red;
+        color_index = (uint)radio_disabled_color_index;
+        parent_wnd = (WndBase *)group->get_parent();
+        game_palette2 = (GamePalette *)parent_wnd->get_palette();
+        parent = (iptr)game_palette2->get_logpalette();
+        palette_get_entry_rgb((GameLogPalette *)parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+        SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+      }
+    }
+    else if (radio_disabled_rgb_set == '\0') {
+      SetTextColor(hdc,0x404040);
+    }
+    else {
+      SetTextColor(hdc,CONCAT12(radio_disabled_rgb_b,CONCAT11(radio_disabled_rgb_g,radio_disabled_rgb_r)));
+    }
+  }
+}
+
+/* Part of radiogrp_item_wndproc (005d9b86): underlines the hotkey letter of the label. */
+static void radiogrp_item_underline_hotkey(HDC hdc,RadioItem *item,tagRECT *rect)
+{
+  size_t len;
+  tagRECT *draw_rect;
+  UINT draw_flags;
+  int underline_end;
+  int underline_start;
+  HBRUSH brush;
+  tagRECT text_rect;
+  char prefix[128];
+
+  if (item->hotkey_pos != -1) {
+    crt_strcpy(prefix,item->label);
+    prefix[item->hotkey_pos] = '\0';
+    text_rect.left = rect->left;
+    text_rect.top = rect->top;
+    text_rect.right = rect->right;
+    text_rect.bottom = rect->bottom;
+    len = _strlen(prefix);
+    if (len == 0) {
+      underline_start = text_rect.left;
+    }
+    else {
+      draw_flags = 0x424;
+      draw_rect = &text_rect;
+      len = _strlen(prefix);
+      DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
+      underline_start = text_rect.right - 1;
+    }
+    crt_strcpy(prefix,item->label);
+    prefix[item->hotkey_pos + 1] = '\0';
+    text_rect.left = rect->left;
+    text_rect.top = rect->top;
+    text_rect.right = rect->right;
+    text_rect.bottom = rect->bottom;
+    draw_flags = 0x424;
+    draw_rect = &text_rect;
+    len = _strlen(prefix);
+    DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
+    underline_start = underline_start + ((text_rect.right + 1) - underline_start >> 1) - 5;
+    underline_end = underline_start + 10;
+    brush = GetStockObject(3);
+    SelectObject(hdc,brush);
+    MoveToEx(hdc,underline_start,rect->bottom - 3,(LPPOINT)0x0);
+    LineTo(hdc,underline_end,rect->bottom - 3);
+    MoveToEx(hdc,underline_start,rect->bottom - 2,(LPPOINT)0x0);
+    LineTo(hdc,underline_end,rect->bottom - 2);
+  }
+}
+
+/* Part of radiogrp_item_wndproc (005d9b86): focuses and selects item
+   next_index (the arrow keys), redraws the old and new selection, notifies. */
+static void radiogrp_focus_select(RadioGroup *group,int next_index)
+{
+  int value;
+  iptr parent;
+  iptr items2;
+  i32 ctrl_id;
+  i32 result;
+  RECT *null_rect;
+  BOOL erase;
+
+  value = group->get_items();
+  SetFocus(((RadioItem *)value)[next_index].hwnd);
+  erase = 0;
+  null_rect = (RECT *)0x0;
+  value = group->get_selected();
+  items2 = group->get_items();
+  InvalidateRect(((RadioItem *)items2)[value].hwnd,null_rect,erase);
+  group->set_selected(next_index);
+  erase = 0;
+  null_rect = (RECT *)0x0;
+  value = group->get_items();
+  InvalidateRect(((RadioItem *)value)[next_index].hwnd,null_rect,erase);
+  parent = group->get_parent();
+  wnd_set_active_child(parent);
+  result = group->get_selected();
+  ctrl_id = group->get_id();
+  group->fire_callback(ctrl_id,result);
+}
+
+/* Part of radiogrp_item_wndproc (005d9b86): right/down: selects the next enabled item
+   (wrapping around), focuses it and notifies. */
+static void radiogrp_select_next(RadioGroup *group,RadioItem *item)
+{
+  int value;
+  int remaining;
+  int next_index;
+
+  remaining = group->radiogrp_item_count();
+  next_index = item->index + 1;
+  value = group->radiogrp_item_count();
+  if (value <= next_index) {
+    next_index = 0;
+  }
+  while ((0 < remaining &&
+         (value = group->get_items(),
+         ((RadioItem *)value)[next_index].enabled == 0))) {
+    remaining--;
+    next_index++;
+    value = group->radiogrp_item_count();
+    if (value <= next_index) {
+      next_index = 0;
+    }
+  }
+  if (remaining < 1) {
+    return;
+  }
+  radiogrp_focus_select(group,next_index);
+}
+
+/* Part of radiogrp_item_wndproc (005d9b86): left/up: selects the previous enabled item
+   (wrapping around), focuses it and notifies. */
+static void radiogrp_select_prev(RadioGroup *group,RadioItem *item)
+{
+  int value;
+  int remaining;
+  int next_index;
+
+  remaining = group->radiogrp_item_count();
+  next_index = item->index - 1;
+  if (next_index < 0) {
+    next_index = group->radiogrp_item_count();
+    next_index--;
+  }
+  while ((0 < remaining &&
+         (value = group->get_items(),
+         ((RadioItem *)value)[next_index].enabled == 0))) {
+    remaining--;
+    next_index--;
+    if (next_index < 0) {
+      next_index = group->radiogrp_item_count();
+      next_index--;
+    }
+  }
+  if (remaining < 1) {
+    return;
+  }
+  radiogrp_focus_select(group,next_index);
+}
+
+/* Part of radiogrp_item_wndproc (005d9b86): WM_PAINT: the button bitmap (off, on or
+   disabled) and the label with its shadow and hotkey underline. */
+static void radiogrp_item_paint(HWND hwnd,ControlBlock *block,RadioGroup *group,RadioItem *item)
+{
   iptr selected;
   iptr height;
   uint color_index;
   WndBase *parent_wnd;
   GamePalette *game_palette2;
   size_t len;
-  WndBase *parent_base;
-  int value;
-  iptr parent;
-  HWND hwnd_tmp;
-  Wnd *nav_wnd;
-  iptr items2;
-  i32 ctrl_id;
-  iptr items3;
   i32 result;
   i8 *red_out;
   i8 *green_out;
   tagRECT *draw_rect;
-  RECT *null_rect;
   i8 *blue_out;
   UINT draw_flags;
-  BOOL erase;
   tagRECT rect;
   HBITMAP bitmap;
-  ControlBlock *block;
   tagPAINTSTRUCT ps;
   HGDIOBJ old_font;
   tagSIZE bmp_size;
-  int remaining;
   HDC hdc;
-  int underline_end;
-  int next_index;
   i8 green[4];
-  int underline_start;
-  RadioItem *item;
   int box_left;
   int box_top;
   int box_right;
   int box_bottom;
-  HBRUSH brush;
   i8 red[4];
   i8 blue[4];
-  RadioGroup *group;
   i32 *font_data;
-  tagRECT text_rect;
-  char prefix[128];
+
+  if (item->enabled == 1) {
+    selected = group->get_selected();
+    if (selected == item->index) {
+      bitmap = block->bitmaps[2];
+    }
+    else {
+      bitmap = block->bitmaps[1];
+    }
+  }
+  else {
+    bitmap = block->bitmaps[0];
+  }
+  GetBitmapDimensionEx(bitmap,&bmp_size);
+  rect.left = item->rect.left;
+  rect.top = item->rect.top;
+  rect.right = item->rect.right;
+  rect.bottom = item->rect.bottom;
+  box_left = rect.left;
+  box_top = rect.top;
+  box_right = rect.right;
+  box_bottom = rect.bottom;
+  if (radio_lbutton_captured != 0) {
+    box_right = rect.left + 0x20;
+    height = rect_height(&rect);
+    box_top = height - 0x14 + rect.top >> 1;
+    box_bottom = rect.top + 0x14;
+  }
+  InvalidateRect(hwnd,(RECT *)0x0,1);
+  OffsetRect(&rect,-rect.left,-rect.top);
+  hdc = BeginPaint(hwnd,&ps);
+  ctrl_paint_parent_bkgnd((iptr)&ps,hwnd);
+  result = ((GameFont *)(group)->radio_font)->get_handle();
+  font_data = (i32 *)mem_handle_lock(result);
+  old_font = SelectObject(hdc,(HGDIOBJ)*font_data);
+  result = ((GameFont *)(group)->radio_font)->get_handle();
+  mem_handle_unlock(result);
+  SetBkMode(hdc,1);
+  gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
+  rect.left += 0x25;
+  if ((radio_shadow_dx != 0) || (radio_shadow_dy != 0)) {
+    OffsetRect(&rect,(uint)radio_shadow_dx,(uint)radio_shadow_dy);
+    blue_out = blue;
+    green_out = green;
+    red_out = red;
+    color_index = (uint)radio_shadow_color_index;
+    parent_wnd = (WndBase *)group->get_parent();
+    game_palette2 = (GamePalette *)parent_wnd->get_palette();
+    game_palette2->get_entry(color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
+    SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
+    draw_flags = 0x24;
+    draw_rect = &rect;
+    len = _strlen(item->label);
+    DrawTextA(hdc,item->label,len,draw_rect,draw_flags);
+    OffsetRect(&rect,-(uint)radio_shadow_dx,-(uint)radio_shadow_dy);
+  }
+  radiogrp_item_text_color(hdc,group,item);
+  draw_flags = 0x24;
+  draw_rect = &rect;
+  len = _strlen(item->label);
+  DrawTextA(hdc,item->label,len,draw_rect,draw_flags);
+  radiogrp_item_underline_hotkey(hdc,item,&rect);
+  SelectObject(hdc,old_font);
+  EndPaint(hwnd,&ps);
+}
+
+/* 005d9b86 auto */
+i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
+
+{
+  char nav_enabled;
+  int items;
+  int value;
+  iptr parent;
+  HWND hwnd_tmp;
+  Wnd *nav_wnd;
+  i32 ctrl_id;
+  i32 result;
+  RECT *null_rect;
+  BOOL erase;
+  tagRECT rect;
+  ControlBlock *block;
+  HDC hdc;
+  RadioItem *item;
+  HBRUSH brush;
+  RadioGroup *group;
   
   block = wnd_from_hwnd(hwnd);
   group = (RadioGroup *)block->owner;
   item = (RadioItem *)block->data;
   if (msg < 0x10) {
     if (msg == 0xf) {
-      if (item->enabled == 1) {
-        selected = group->get_selected();
-        if (selected == item->index) {
-          bitmap = block->bitmaps[2];
-        }
-        else {
-          bitmap = block->bitmaps[1];
-        }
-      }
-      else {
-        bitmap = block->bitmaps[0];
-      }
-      GetBitmapDimensionEx(bitmap,&bmp_size);
-      rect.left = item->rect.left;
-      rect.top = item->rect.top;
-      rect.right = item->rect.right;
-      rect.bottom = item->rect.bottom;
-      box_left = rect.left;
-      box_top = rect.top;
-      box_right = rect.right;
-      box_bottom = rect.bottom;
-      if (radio_lbutton_captured != 0) {
-        box_right = rect.left + 0x20;
-        height = rect_height(&rect);
-        box_top = height - 0x14 + rect.top >> 1;
-        box_bottom = rect.top + 0x14;
-      }
-      InvalidateRect(hwnd,(RECT *)0x0,1);
-      OffsetRect(&rect,-rect.left,-rect.top);
-      hdc = BeginPaint(hwnd,&ps);
-      ctrl_paint_parent_bkgnd((iptr)&ps,hwnd);
-      result = ((GameFont *)(group)->radio_font)->get_handle();
-      font_data = (i32 *)mem_handle_lock(result);
-      old_font = SelectObject(hdc,(HGDIOBJ)*font_data);
-      result = ((GameFont *)(group)->radio_font)->get_handle();
-      mem_handle_unlock(result);
-      SetBkMode(hdc,1);
-      gdi_blit_transparent(hdc,bitmap,rect.left,rect.bottom - 0x14 >> 1,0x20,0x14,0,7);
-      rect.left += 0x25;
-      if ((radio_shadow_dx != 0) || (radio_shadow_dy != 0)) {
-        OffsetRect(&rect,(uint)radio_shadow_dx,(uint)radio_shadow_dy);
-        blue_out = blue;
-        green_out = green;
-        red_out = red;
-        color_index = (uint)radio_shadow_color_index;
-        parent_wnd = (WndBase *)group->get_parent();
-        game_palette2 = (GamePalette *)parent_wnd->get_palette();
-        game_palette2->get_entry(color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-        SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-        draw_flags = 0x24;
-        draw_rect = &rect;
-        len = _strlen(item->label);
-        DrawTextA(hdc,item->label,len,draw_rect,draw_flags);
-        OffsetRect(&rect,-(uint)radio_shadow_dx,-(uint)radio_shadow_dy);
-      }
-      if (item->enabled == 1) {
-        parent_base = (WndBase *)group->get_parent();
-        value = (int)parent_base->get_window();
-        if (((NativeWindow *)value)->field_40 == 8) {
-          if (radio_text_color_index == 0) {
-            SetTextColor(hdc,0);
-          }
-          else {
-            blue_out = blue;
-            green_out = green;
-            red_out = red;
-            color_index = (uint)radio_text_color_index;
-            parent_wnd = (WndBase *)group->get_parent();
-            game_palette2 = (GamePalette *)parent_wnd->get_palette();
-            parent = (iptr)game_palette2->get_logpalette();
-            palette_get_entry_rgb((GameLogPalette *)parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-            SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-          }
-        }
-        else if (radio_text_rgb_set == '\0') {
-          SetTextColor(hdc,0);
-        }
-        else {
-          SetTextColor(hdc,CONCAT12(radio_text_rgb_b,CONCAT11(radio_text_rgb_g,radio_text_rgb_r)));
-        }
-      }
-      else if (item->enabled == 0) {
-        parent_base = (WndBase *)group->get_parent();
-        value = (int)parent_base->get_window();
-        if (((NativeWindow *)value)->field_40 == 8) {
-          if (radio_disabled_color_index == 0) {
-            SetTextColor(hdc,0x404040);
-          }
-          else {
-            blue_out = blue;
-            green_out = green;
-            red_out = red;
-            color_index = (uint)radio_disabled_color_index;
-            parent_wnd = (WndBase *)group->get_parent();
-            game_palette2 = (GamePalette *)parent_wnd->get_palette();
-            parent = (iptr)game_palette2->get_logpalette();
-            palette_get_entry_rgb((GameLogPalette *)parent,color_index,(iptr)red_out,(iptr)green_out,(iptr)blue_out);
-            SetTextColor(hdc,CONCAT12(blue[0],CONCAT11(green[0],red[0])));
-          }
-        }
-        else if (radio_disabled_rgb_set == '\0') {
-          SetTextColor(hdc,0x404040);
-        }
-        else {
-          SetTextColor(hdc,CONCAT12(radio_disabled_rgb_b,CONCAT11(radio_disabled_rgb_g,radio_disabled_rgb_r)));
-        }
-      }
-      draw_flags = 0x24;
-      draw_rect = &rect;
-      len = _strlen(item->label);
-      DrawTextA(hdc,item->label,len,draw_rect,draw_flags);
-      if (item->hotkey_pos != -1) {
-        crt_strcpy(prefix,item->label);
-        prefix[item->hotkey_pos] = '\0';
-        text_rect.left = rect.left;
-        text_rect.top = rect.top;
-        text_rect.right = rect.right;
-        text_rect.bottom = rect.bottom;
-        len = _strlen(prefix);
-        if (len == 0) {
-          underline_start = text_rect.left;
-        }
-        else {
-          draw_flags = 0x424;
-          draw_rect = &text_rect;
-          len = _strlen(prefix);
-          DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
-          underline_start = text_rect.right - 1;
-        }
-        crt_strcpy(prefix,item->label);
-        prefix[item->hotkey_pos + 1] = '\0';
-        text_rect.left = rect.left;
-        text_rect.top = rect.top;
-        text_rect.right = rect.right;
-        text_rect.bottom = rect.bottom;
-        draw_flags = 0x424;
-        draw_rect = &text_rect;
-        len = _strlen(prefix);
-        DrawTextA(hdc,prefix,len,draw_rect,draw_flags);
-        underline_start = underline_start + ((text_rect.right + 1) - underline_start >> 1) - 5;
-        underline_end = underline_start + 10;
-        brush = GetStockObject(3);
-        SelectObject(hdc,brush);
-        MoveToEx(hdc,underline_start,rect.bottom - 3,(LPPOINT)0x0);
-        LineTo(hdc,underline_end,rect.bottom - 3);
-        MoveToEx(hdc,underline_start,rect.bottom - 2,(LPPOINT)0x0);
-        LineTo(hdc,underline_end,rect.bottom - 2);
-      }
-      SelectObject(hdc,old_font);
-      EndPaint(hwnd,&ps);
+      radiogrp_item_paint(hwnd,block,group,item);
       hwnd_tmp = GetFocus();
       if (hwnd_tmp != hwnd) {
         return 0;
@@ -4328,42 +4431,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           nav_wnd = (Wnd *)group->get_parent();
           nav_enabled = nav_wnd->keyboard_nav_enabled();
           if (nav_enabled != '\0') {
-            remaining = group->radiogrp_item_count();
-            next_index = item->index + 1;
-            value = group->radiogrp_item_count();
-            if (value <= next_index) {
-              next_index = 0;
-            }
-            while ((0 < remaining &&
-                   (value = group->get_items(),
-                   ((RadioItem *)value)[next_index].enabled == 0))) {
-              remaining--;
-              next_index++;
-              value = group->radiogrp_item_count();
-              if (value <= next_index) {
-                next_index = 0;
-              }
-            }
-            if (remaining < 1) {
-              return 0;
-            }
-            value = group->get_items();
-            SetFocus(((RadioItem *)value)[next_index].hwnd);
-            erase = 0;
-            null_rect = (RECT *)0x0;
-            value = group->get_selected();
-            items2 = group->get_items();
-            InvalidateRect(((RadioItem *)items2)[value].hwnd,null_rect,erase);
-            group->set_selected(next_index);
-            erase = 0;
-            null_rect = (RECT *)0x0;
-            value = group->get_items();
-            InvalidateRect(((RadioItem *)value)[next_index].hwnd,null_rect,erase);
-            parent = group->get_parent();
-            wnd_set_active_child(parent);
-            result = group->get_selected();
-            ctrl_id = group->get_id();
-            group->fire_callback(ctrl_id,result);
+            radiogrp_select_next(group,item);
             return 0;
           }
         }
@@ -4371,42 +4439,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
           nav_wnd = (Wnd *)group->get_parent();
           nav_enabled = nav_wnd->keyboard_nav_enabled();
           if (nav_enabled != '\0') {
-            remaining = group->radiogrp_item_count();
-            next_index = item->index - 1;
-            if (next_index < 0) {
-              next_index = group->radiogrp_item_count();
-              next_index--;
-            }
-            while ((0 < remaining &&
-                   (value = group->get_items(),
-                   ((RadioItem *)value)[next_index].enabled == 0))) {
-              remaining--;
-              next_index--;
-              if (next_index < 0) {
-                next_index = group->radiogrp_item_count();
-                next_index--;
-              }
-            }
-            if (remaining < 1) {
-              return 0;
-            }
-            value = group->get_items();
-            SetFocus(((RadioItem *)value)[next_index].hwnd);
-            erase = 0;
-            null_rect = (RECT *)0x0;
-            value = group->get_selected();
-            items3 = group->get_items();
-            InvalidateRect(((RadioItem *)items3)[value].hwnd,null_rect,erase);
-            group->set_selected(next_index);
-            erase = 0;
-            null_rect = (RECT *)0x0;
-            value = group->get_items();
-            InvalidateRect(((RadioItem *)value)[next_index].hwnd,null_rect,erase);
-            parent = group->get_parent();
-            wnd_set_active_child(parent);
-            result = group->get_selected();
-            ctrl_id = group->get_id();
-            group->fire_callback(ctrl_id,result);
+            radiogrp_select_prev(group,item);
             return 0;
           }
         }

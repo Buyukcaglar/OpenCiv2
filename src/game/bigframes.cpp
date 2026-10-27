@@ -6,6 +6,277 @@
  */
 #include "game.h"
 
+/* Part of setup_new_game_dialogs (0041ba52): the advanced rules (checkboxes)
+   dialog.  Returns the accelerated start check. */
+static int setup_rules_dialog(Dialog &dlg,int setup_mode,int *pick_opponents)
+{
+  int choice;
+  int accel_choice;
+  int opt_i;
+
+  dlg_checks_clear();
+  dlg_check_set(0,(uint)((game.rules & 0x10) == 0));
+  dlg_check_set(1,game.rules & 0x8000);
+  dlg_check_set(2,0);
+  dlg_check_set(3,(int)prefs_game_rules_block.prefs_accelerated_start);
+  dlg_check_set(4,game.rules & 0x80);
+  dlg_check_set(5,game.rules & 0x100);
+  ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(3,6,9);
+  dlg.load_text_section((const char *)&str_game_7,(const char *)str_advanced,0,0,0,0,0,0);
+  if (((byte)dlg.style_flags & 4) != 0) {
+    for (opt_i = 0; opt_i < (int)dlg.option_count; opt_i = opt_i + 1) {
+      dlg.set_option_checked(opt_i,1 << ((byte)opt_i & 0x1f) & dlg_check_bits);
+    }
+  }
+  dlg.set_position(
+                     ((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3) +
+                     1,-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3
+                         ) + 1));
+  dlg.show_modal(0);
+  snd_play_effect(0x6a,0,0,0);
+  ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+  dlg_help_pressed = (int)dlg.result_extra;
+  if (((byte)dlg.style_flags & 4) != 0) {
+    dlg_check_bits = 0;
+    for (opt_i = 0; opt_i < (int)dlg.option_count; opt_i = opt_i + 1) {
+      choice = dlg.option_is_checked(opt_i);
+      if (choice != 0) {
+        dlg_check_bits = dlg_check_bits | 1 << ((byte)opt_i & 0x1f);
+      }
+    }
+  }
+  game.rules = 0x2f;
+  choice = dlg_check_get(0);
+  if (choice == 0) {
+    game.rules = game.rules | 0x10;
+  }
+  choice = dlg_check_get(1);
+  if (choice != 0) {
+    game.rules = game.rules | 0x8000;
+  }
+  *pick_opponents = dlg_check_get(2);
+  accel_choice = dlg_check_get(3);
+  choice = dlg_check_get(4);
+  if (choice != 0) {
+    game.rules = game.rules | 0x80;
+  }
+  choice = dlg_check_get(5);
+  if (choice != 0) {
+    game.rules = game.rules | 0x100;
+  }
+  if (setup_mode == 0) {
+    prefs_game_rules_block.prefs_game_rules[0] = game.rules;
+  }
+  else {
+    prefs_game_rules_block.prefs_game_rules[0] = game.rules & 0x7fff | prefs_game_rules_block.prefs_game_rules[0] & 0x8000;
+  }
+  return accel_choice;
+}
+
+/* Part of setup_new_game_dialogs (0041ba52): the years of the accelerated
+   starts (turns 0, 21 and 41) as the text arguments. */
+static void setup_accel_year_args(void)
+{
+  uint year_abs;
+  int choice;
+  int year_a;
+  int year_b;
+  int year_c;
+
+  game.first_launch_turn = 0xffff;
+  choice = game_turn_to_year(0);
+  if (choice < 1) {
+    year_abs = game_turn_to_year(0);
+    year_a = ~year_abs + 1;
+  }
+  else {
+    year_a = game_turn_to_year(0);
+  }
+  text_set_number_arg(0,year_a);
+  choice = game_turn_to_year(0x15);
+  if (choice < 1) {
+    year_abs = game_turn_to_year(0x15);
+    year_b = ~year_abs + 1;
+  }
+  else {
+    year_b = game_turn_to_year(0x15);
+  }
+  text_set_number_arg(1,year_b);
+  choice = game_turn_to_year(0x29);
+  if (choice < 1) {
+    year_abs = game_turn_to_year(0x29);
+    year_c = ~year_abs + 1;
+  }
+  else {
+    year_c = game_turn_to_year(0x29);
+  }
+  text_set_number_arg(2,year_c);
+}
+
+/* Part of setup_new_game_dialogs (0041ba52): makes the leaders' name label
+   ids positive again (a chosen name is marked used by negating it). */
+static void setup_restore_leader_labels(void)
+{
+  int leader_i;
+  int title_i;
+
+  for (leader_i = 0; leader_i < 0x15; leader_i = leader_i + 1) {
+    if (leaders[leader_i].leader_name < 1) {
+      leaders[leader_i].leader_name =
+           ~leaders[leader_i].leader_name + 1;
+    }
+    if (leaders[leader_i].plural < 1) {
+      leaders[leader_i].plural =
+           ~leaders[leader_i].plural + 1;
+    }
+    if (leaders[leader_i].adjective < 1) {
+      leaders[leader_i].adjective =
+           ~leaders[leader_i].adjective + 1;
+    }
+    for (title_i = 0; title_i < 7; title_i = title_i + 1) {
+      if (leaders[leader_i].titles[title_i][0] < 1) {
+        leaders[leader_i].titles[title_i][0] =
+             ~leaders[leader_i].titles[title_i][0] + 1;
+      }
+      if (leaders[leader_i].titles[title_i][1] < 1) {
+        leaders[leader_i].titles[title_i][1] =
+             ~leaders[leader_i].titles[title_i][1] + 1;
+      }
+    }
+  }
+}
+
+/* Part of setup_new_game_dialogs (0041ba52): the custom tribe dialogs (leader,
+   tribe and adjective names, the government titles, the portrait).  Returns 0
+   to go on to the city style, 1 to go back to the leaders (gender) dialog, 2
+   to quit (a dialog failed to load). */
+static int setup_custom_tribe_dialogs(Dialog &dlg)
+{
+  int choice;
+  int dlg_err;
+  int title_i;
+
+  while( true ) {
+    while( true ) {
+      text_set_string_arg_b(1,(const char *)&civ_names[game.player_civ].tribe_name[0]);
+      text_set_string_arg_b(2,(const char *)&civ_names[game.player_civ].adjective[0]);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
+      dlg_err = dlg.load_text_section((const char *)&str_game_7,(const char *)str_customtribe,0x17,
+                                    (iptr)&civ_names[game.player_civ].leader_name[0],0,0,0,1);
+      if (dlg_err != 0) {
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+        return 2;
+      }
+      dlg.set_position(0xfffffc19,
+                         -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)
+                                 ) >> 3) + 1));
+      choice = dlg.show_modal(0);
+      snd_play_effect(0x6a,0,0,0);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+      if (choice < 0) return 1;
+      crt_strcpy(&civ_names[game.player_civ].leader_name[0],((i8 *)&minimap_window_block.text_string_args));
+      crt_strcpy(&civ_names[game.player_civ].tribe_name[0],((i8 *)&minimap_window_block.text_string_arg1));
+      crt_strcpy(&civ_names[game.player_civ].adjective[0],((i8 *)&minimap_window_block.text_string_arg2));
+      if ((int)dlg.result_extra != 1) break;
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
+      dlg_err = dlg.load_game_section((const char *)str_customtribe2,1);
+      if (dlg_err != 0) {
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+        return 2;
+      }
+      dlg_err = 0;
+      for (title_i = 0; title_i < 7; title_i = title_i + 1) {
+        text_clear();
+        text_append_string_id(government_names[title_i]);
+        text_append_colon();
+        dlg.add_edit_field((const char *)&map_views_block.text_buffer,
+                           (iptr)&civ_names[game.player_civ].titles[title_i][0],0x17);
+      }
+      dlg.set_position(0xfffffc19,
+                         -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)
+                                 ) >> 3) + 1));
+      choice = dlg.show_modal(0);
+      if (choice == 0) {
+        for (title_i = 0; title_i < 7; title_i = title_i + 1) {
+          crt_strcpy(&civ_names[game.player_civ].titles[title_i][0],
+                       ((i8 *)&minimap_window_block.text_string_args) + title_i * 0x104);
+        }
+      }
+      snd_play_effect(0x6a,0,0,0);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+    }
+    if ((int)dlg.result_extra != 2) break;
+    portrait_dlg_show((int)game.player_civ);
+  }
+  return 0;
+}
+
+/* Part of setup_new_game_dialogs (0041ba52): picks the enemy civs at random,
+   then, if asked, lets the player choose each one's tribe.  Returns 1 when a
+   choice is cancelled (back to the city style dialog).  leader_i is the
+   caller's local (its upper bytes carry over from the tribe list).  It calls
+   rand() as crt_rand_at("setup_new_game_dialogs"): the rand trace names the
+   original function, as the original's does. */
+static int setup_choose_opponents(Dialog &dlg,int pick_opponents,int &leader_i)
+{
+  int choice;
+  int title_i;
+  int opp_number;
+  int leader_pick;
+
+  for (title_i = 0; title_i < (int)(uint)game.num_enemies; title_i = title_i + 1) {
+    choice = crt_rand_at("setup_new_game_dialogs");
+    (*((char *)&leader_i + 0)) = (byte)(choice >> 0x1f);
+    (*((char *)&leader_i + 0)) =
+         (((byte)choice ^ (byte)leader_i) - (byte)leader_i & 7 ^ (byte)leader_i) -
+         (byte)leader_i;
+    if ((1 << ((byte)leader_i & 0x1f) & (uint)game.civs_alive) == 0) {
+      game.civs_alive = game.civs_alive | (byte)(1 << ((byte)leader_i & 0x1f));
+    }
+    else {
+      title_i = title_i + -1;
+    }
+  }
+  if (pick_opponents != 0) {
+    opp_number = 0;
+    leader_i = 1;
+    do {
+      if (7 < leader_i) break;
+      if (((1 << ((byte)leader_i & 0x1f) & (uint)game.human_players) == 0) &&
+         ((1 << ((byte)leader_i & 0x1f) & (uint)game.civs_alive) != 0)) {
+        opp_number = opp_number + 1;
+        text_set_number_arg(0,opp_number);
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,9);
+        dlg.load_game_section((const char *)str_opponent,1);
+        dlg.option_list->id = 0x15;
+        for (leader_pick = 0; leader_pick < 0x15; leader_pick = leader_pick + 1) {
+          if (leaders[leader_pick].color == leader_i) {
+            text_clear();
+            text_append_string_id((int)leaders[leader_pick].plural);
+            text_append_space();
+            text_append_lparen();
+            text_append_string_id((int)leaders[leader_pick].leader_name);
+            text_append_rparen();
+            dlg.add_option((const char *)&map_views_block.text_buffer,leader_pick,0);
+          }
+        }
+        dlg.set_position(0xfffffc19,
+                           -(((int)(caption_font_block.screen_height + -0x1e0 +
+                                   (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
+        leader_pick = dlg.show_modal(0);
+        snd_play_effect(0x6a,0,0,0);
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+        if (leader_pick < 0) return 1;
+        if (leader_pick < 0x15) {
+          (((i8 *)&setup_chosen_leaders))[leader_i] = (i8)leader_pick;
+        }
+      }
+      leader_i = leader_i + 1;
+    } while( true );
+  }
+  return 0;
+}
+
 /* 0x0041ba52: new-game setup dialogs (difficulty, enemies, barbarity, ...).
  * Unwind funclet 0x0041d3f2 destroys the dialog object at EBP-0x320 (dlg). */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -15,14 +286,11 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
 {
   byte rand_sign;
   int choice;
-  uint year_abs;
   i32 label;
+  int next_step;
   char *label_text;
   int leader_arg;
   i32 option_arg;
-  int year_c;
-  int year_b;
-  int year_a;
   int leader_i;
   int style_i;
   i8 female_flag;
@@ -32,10 +300,7 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
   int enemies_choice;
   int accel_choice;
   Dialog dlg;
-  int opt_i;
-  int leader_pick;
   int pick_opponents;
-  int opp_number;
   int title_i;
   int tribe_choice;
   int difficulty_choice;
@@ -138,91 +403,10 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
       else if (setup_mode == 2) {
         game.rules = prefs_game_rules_block.prefs_game_rules[0] | 0x8000;
       }
-      dlg_checks_clear();
-      dlg_check_set(0,(uint)((game.rules & 0x10) == 0));
-      dlg_check_set(1,game.rules & 0x8000);
-      dlg_check_set(2,0);
-      dlg_check_set(3,(int)prefs_game_rules_block.prefs_accelerated_start);
-      dlg_check_set(4,game.rules & 0x80);
-      dlg_check_set(5,game.rules & 0x100);
-      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(3,6,9);
-      dlg.load_text_section((const char *)&str_game_7,(const char *)str_advanced,0,0,0,0,0,0);
-      if (((byte)dlg.style_flags & 4) != 0) {
-        for (opt_i = 0; opt_i < (int)dlg.option_count; opt_i = opt_i + 1) {
-          dlg.set_option_checked(opt_i,1 << ((byte)opt_i & 0x1f) & dlg_check_bits);
-        }
-      }
-      dlg.set_position(
-                         ((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3) +
-                         1,-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3
-                             ) + 1));
-      dlg.show_modal(0);
-      snd_play_effect(0x6a,0,0,0);
-      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-      dlg_help_pressed = (int)dlg.result_extra;
-      if (((byte)dlg.style_flags & 4) != 0) {
-        dlg_check_bits = 0;
-        for (opt_i = 0; opt_i < (int)dlg.option_count; opt_i = opt_i + 1) {
-          choice = dlg.option_is_checked(opt_i);
-          if (choice != 0) {
-            dlg_check_bits = dlg_check_bits | 1 << ((byte)opt_i & 0x1f);
-          }
-        }
-      }
-      game.rules = 0x2f;
-      choice = dlg_check_get(0);
-      if (choice == 0) {
-        game.rules = game.rules | 0x10;
-      }
-      choice = dlg_check_get(1);
-      if (choice != 0) {
-        game.rules = game.rules | 0x8000;
-      }
-      pick_opponents = dlg_check_get(2);
-      accel_choice = dlg_check_get(3);
-      choice = dlg_check_get(4);
-      if (choice != 0) {
-        game.rules = game.rules | 0x80;
-      }
-      choice = dlg_check_get(5);
-      if (choice != 0) {
-        game.rules = game.rules | 0x100;
-      }
-      if (setup_mode == 0) {
-        prefs_game_rules_block.prefs_game_rules[0] = game.rules;
-      }
-      else {
-        prefs_game_rules_block.prefs_game_rules[0] = game.rules & 0x7fff | prefs_game_rules_block.prefs_game_rules[0] & 0x8000;
-      }
+      accel_choice = setup_rules_dialog(dlg,setup_mode,&pick_opponents);
       if (accel_choice == 0) break;
       game.first_launch_turn = 0xffff;
-      choice = game_turn_to_year(0);
-      if (choice < 1) {
-        year_abs = game_turn_to_year(0);
-        year_a = ~year_abs + 1;
-      }
-      else {
-        year_a = game_turn_to_year(0);
-      }
-      text_set_number_arg(0,year_a);
-      choice = game_turn_to_year(0x15);
-      if (choice < 1) {
-        year_abs = game_turn_to_year(0x15);
-        year_b = ~year_abs + 1;
-      }
-      else {
-        year_b = game_turn_to_year(0x15);
-      }
-      text_set_number_arg(1,year_b);
-      choice = game_turn_to_year(0x29);
-      if (choice < 1) {
-        year_abs = game_turn_to_year(0x29);
-        year_c = ~year_abs + 1;
-      }
-      else {
-        year_c = game_turn_to_year(0x29);
-      }
-      text_set_number_arg(2,year_c);
+      setup_accel_year_args();
       ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,9);
       dlg.load_game_section((const char *)str_accelerated,1);
       dlg.set_default_choice((int)prefs_game_rules_block.prefs_accelerated_start);
@@ -237,30 +421,7 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
     prefs_game_rules_block.prefs_accelerated_start = (short)accel_choice;
 leaders_setup:
     do {
-      for (leader_i = 0; leader_i < 0x15; leader_i = leader_i + 1) {
-        if (leaders[leader_i].leader_name < 1) {
-          leaders[leader_i].leader_name =
-               ~leaders[leader_i].leader_name + 1;
-        }
-        if (leaders[leader_i].plural < 1) {
-          leaders[leader_i].plural =
-               ~leaders[leader_i].plural + 1;
-        }
-        if (leaders[leader_i].adjective < 1) {
-          leaders[leader_i].adjective =
-               ~leaders[leader_i].adjective + 1;
-        }
-        for (title_i = 0; title_i < 7; title_i = title_i + 1) {
-          if (leaders[leader_i].titles[title_i][0] < 1) {
-            leaders[leader_i].titles[title_i][0] =
-                 ~leaders[leader_i].titles[title_i][0] + 1;
-          }
-          if (leaders[leader_i].titles[title_i][1] < 1) {
-            leaders[leader_i].titles[title_i][1] =
-                 ~leaders[leader_i].titles[title_i][1] + 1;
-          }
-        }
-      }
+      setup_restore_leader_labels();
       ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,6);
       dlg.load_game_section((const char *)str_gender,1);
       dlg.set_default_choice((int)prefs_game_rules_block.prefs_gender);
@@ -341,58 +502,9 @@ leaders_setup:
                  -leaders[civs[game.player_civ].tribe].titles[title_i][choice]
             ;
           }
-          while( true ) {
-            while( true ) {
-              text_set_string_arg_b(1,(const char *)&civ_names[game.player_civ].tribe_name[0]);
-              text_set_string_arg_b(2,(const char *)&civ_names[game.player_civ].adjective[0]);
-              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
-              dlg_err = dlg.load_text_section((const char *)&str_game_7,(const char *)str_customtribe,0x17,
-                                            (iptr)&civ_names[game.player_civ].leader_name[0],0,0,0,1);
-              if (dlg_err != 0) {
-                ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-                goto cleanup_return;
-              }
-              dlg.set_position(0xfffffc19,
-                                 -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)
-                                         ) >> 3) + 1));
-              choice = dlg.show_modal(0);
-              snd_play_effect(0x6a,0,0,0);
-              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-              if (choice < 0) goto leaders_setup;
-              crt_strcpy(&civ_names[game.player_civ].leader_name[0],((i8 *)&minimap_window_block.text_string_args));
-              crt_strcpy(&civ_names[game.player_civ].tribe_name[0],((i8 *)&minimap_window_block.text_string_arg1));
-              crt_strcpy(&civ_names[game.player_civ].adjective[0],((i8 *)&minimap_window_block.text_string_arg2));
-              if ((int)dlg.result_extra != 1) break;
-              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
-              dlg_err = dlg.load_game_section((const char *)str_customtribe2,1);
-              if (dlg_err != 0) {
-                ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-                goto cleanup_return;
-              }
-              dlg_err = 0;
-              for (title_i = 0; title_i < 7; title_i = title_i + 1) {
-                text_clear();
-                text_append_string_id(government_names[title_i]);
-                text_append_colon();
-                dlg.add_edit_field((const char *)&map_views_block.text_buffer,
-                                   (iptr)&civ_names[game.player_civ].titles[title_i][0],0x17);
-              }
-              dlg.set_position(0xfffffc19,
-                                 -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)
-                                         ) >> 3) + 1));
-              choice = dlg.show_modal(0);
-              if (choice == 0) {
-                for (title_i = 0; title_i < 7; title_i = title_i + 1) {
-                  crt_strcpy(&civ_names[game.player_civ].titles[title_i][0],
-                               ((i8 *)&minimap_window_block.text_string_args) + title_i * 0x104);
-                }
-              }
-              snd_play_effect(0x6a,0,0,0);
-              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-            }
-            if ((int)dlg.result_extra != 2) break;
-            portrait_dlg_show((int)game.player_civ);
-          }
+          next_step = setup_custom_tribe_dialogs(dlg);
+          if (next_step == 1) goto leaders_setup;
+          if (next_step == 2) goto cleanup_return;
         }
 city_style_dialog:
         ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,8);
@@ -413,56 +525,8 @@ city_style_dialog:
         if (-1 < choice) {
           civ_names[game.player_civ].city_style = (short)choice;
           game.civs_alive = game.human_players | 1;
-          for (title_i = 0; title_i < (int)(uint)game.num_enemies; title_i = title_i + 1) {
-            choice = _rand();
-            (*((char *)&leader_i + 0)) = (byte)(choice >> 0x1f);
-            (*((char *)&leader_i + 0)) =
-                 (((byte)choice ^ (byte)leader_i) - (byte)leader_i & 7 ^ (byte)leader_i) -
-                 (byte)leader_i;
-            if ((1 << ((byte)leader_i & 0x1f) & (uint)game.civs_alive) == 0) {
-              game.civs_alive = game.civs_alive | (byte)(1 << ((byte)leader_i & 0x1f));
-            }
-            else {
-              title_i = title_i + -1;
-            }
-          }
-          if (pick_opponents != 0) {
-            opp_number = 0;
-            leader_i = 1;
-            do {
-              if (7 < leader_i) break;
-              if (((1 << ((byte)leader_i & 0x1f) & (uint)game.human_players) == 0) &&
-                 ((1 << ((byte)leader_i & 0x1f) & (uint)game.civs_alive) != 0)) {
-                opp_number = opp_number + 1;
-                text_set_number_arg(0,opp_number);
-                ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,9);
-                dlg.load_game_section((const char *)str_opponent,1);
-                dlg.option_list->id = 0x15;
-                for (leader_pick = 0; leader_pick < 0x15; leader_pick = leader_pick + 1) {
-                  if (leaders[leader_pick].color == leader_i) {
-                    text_clear();
-                    text_append_string_id((int)leaders[leader_pick].plural);
-                    text_append_space();
-                    text_append_lparen();
-                    text_append_string_id((int)leaders[leader_pick].leader_name);
-                    text_append_rparen();
-                    dlg.add_option((const char *)&map_views_block.text_buffer,leader_pick,0);
-                  }
-                }
-                dlg.set_position(0xfffffc19,
-                                   -(((int)(caption_font_block.screen_height + -0x1e0 +
-                                           (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-                leader_pick = dlg.show_modal(0);
-                snd_play_effect(0x6a,0,0,0);
-                ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-                if (leader_pick < 0) goto city_style_dialog;
-                if (leader_pick < 0x15) {
-                  (((i8 *)&setup_chosen_leaders))[leader_i] = (i8)leader_pick;
-                }
-              }
-              leader_i = leader_i + 1;
-            } while( true );
-          }
+          next_step = setup_choose_opponents(dlg,pick_opponents,leader_i);
+          if (next_step != 0) goto city_style_dialog;
           prefs_save_civ2dat();
           rules_load_advances(1);
           rules_load_units(1);
@@ -487,71 +551,58 @@ cleanup_return:
   return label;
 }
 
-/* 0x004d17bf: unwind funclet 0x004d4a11 destroys the control at EBP-0x12c (surf_1eb). */
-i32 SpaceshipWindow::render_ship()
+/* The state render_ship shares with its parts: a spaceship structure row
+   (the 88 rows the original builds on its stack) and the twelve GIF surfaces. */
+struct SpaceshipWindow::ShipPartRow { u8 kind; u8 count; u8 pad[2]; i32 v[6]; };
+struct SpaceshipWindow::ShipSurfaces {   /* the surfaces (render_ship's locals) */
+  i8 *surf_part;
+  i8 *surf_1b9;
+  i8 *surf_1e0;
+  i8 *surf_1c7;
+  i8 *surf_1ea;
+  i8 *surf_1d6;
+  i8 *surf_1eb;
+  i8 *surf_1ba;
+  i8 *surf_1e1;
+  i8 *surf_1c8;
+  i8 *surf_1e9;
+  i8 *surf_1d7;
+};
 
+/* Part of SpaceshipWindow::render_ship (004d17bf): constructs the surfaces. */
+void SpaceshipWindow::render_ship_construct_surfaces(ShipSurfaces &sf,int &unwind_state)
 {
-  byte part_count;
-  int load_ok;
-  i8 sprite_final[16];
-  i8 sprite_part[16];
-  i8 sprite_struct[16];
-  i32 fail_ret_12;
-  i8 sprite_core[16];
-  i32 fail_ret_11;
-  i32 fail_ret_10;
-  i32 fail_ret_9;
-  i32 fail_ret_8;
-  i32 fail_ret_7;
-  i32 fail_ret_6;
-  i32 fail_ret_5;
-  i32 fail_ret_4;
-  i32 fail_ret_3;
-  i32 fail_ret_2;
-  i32 result;
-  i8 surf_1ea[72];
-  i8 surf_1d6[72];
-  struct { u8 kind; u8 count; u8 pad[2]; i32 v[6]; } part_rows[88];  /* the spaceship structure rows */
-  i8 surf_part[72];
-  int row_i;
-  i8 surf_1b9[72];
-  i8 surf_1c8[72];
-  i8 surf_1e1[72];
-  i8 surf_1e0[72];
-  int struct_row;
-  i8 surf_1ba[72];
-  i8 surf_1eb[72];
-  i8 surf_1e9[72];
-  i8 surf_1d7[72];
-  i8 surf_1c7[72];
-  i32 unused_10;
-  int unwind_state;
-  
   unwind_state = 0xffffffff;
-  surface_ctor((DibSurface *)surf_part);
+  surface_ctor((DibSurface *)sf.surf_part);
   unwind_state = 0;
-  surface_ctor((DibSurface *)surf_1b9);
+  surface_ctor((DibSurface *)sf.surf_1b9);
   (*((char *)&unwind_state + 0)) = 1;
-  surface_ctor((DibSurface *)surf_1e0);
+  surface_ctor((DibSurface *)sf.surf_1e0);
   (*((char *)&unwind_state + 0)) = 2;
-  surface_ctor((DibSurface *)surf_1c7);
+  surface_ctor((DibSurface *)sf.surf_1c7);
   (*((char *)&unwind_state + 0)) = 3;
-  surface_ctor((DibSurface *)surf_1ea);
+  surface_ctor((DibSurface *)sf.surf_1ea);
   (*((char *)&unwind_state + 0)) = 4;
-  surface_ctor((DibSurface *)surf_1d6);
+  surface_ctor((DibSurface *)sf.surf_1d6);
   (*((char *)&unwind_state + 0)) = 5;
-  surface_ctor((DibSurface *)surf_1eb);
+  surface_ctor((DibSurface *)sf.surf_1eb);
   (*((char *)&unwind_state + 0)) = 6;
-  surface_ctor((DibSurface *)surf_1ba);
+  surface_ctor((DibSurface *)sf.surf_1ba);
   (*((char *)&unwind_state + 0)) = 7;
-  surface_ctor((DibSurface *)surf_1e1);
+  surface_ctor((DibSurface *)sf.surf_1e1);
   (*((char *)&unwind_state + 0)) = 8;
-  surface_ctor((DibSurface *)surf_1c8);
+  surface_ctor((DibSurface *)sf.surf_1c8);
   (*((char *)&unwind_state + 0)) = 9;
-  surface_ctor((DibSurface *)surf_1e9);
+  surface_ctor((DibSurface *)sf.surf_1e9);
   (*((char *)&unwind_state + 0)) = 10;
-  surface_ctor((DibSurface *)surf_1d7);
+  surface_ctor((DibSurface *)sf.surf_1d7);
   (*((char *)&unwind_state + 0)) = 0xb;
+}
+
+/* Part of SpaceshipWindow::render_ship (004d17bf): the spaceship structure rows
+   (kind, count needed, GIF resource, position, size, source x). */
+void SpaceshipWindow::render_ship_init_rows(ShipPartRow *part_rows)
+{
   part_rows[0].kind = 2;
   part_rows[0].count = 6;
   part_rows[0].v[0] = 0x1cf;
@@ -1256,660 +1307,291 @@ i32 SpaceshipWindow::render_ship()
   part_rows[87].v[3] = 0x38;
   part_rows[87].v[4] = 0x2d;
   part_rows[87].v[5] = 0xef;
-  load_ok = ((DibSurface *)surf_1b9)->load_gif_resource(0x1b9,10,0xec,(iptr)this + 0x1f8);
-  if (load_ok == 0) {
-    result = 0;
-    (*((char *)&unwind_state + 0)) = 10;
-    /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-    (*((char *)&unwind_state + 0)) = 9;
-    /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-    (*((char *)&unwind_state + 0)) = 8;
-    /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-    (*((char *)&unwind_state + 0)) = 7;
-    /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-    (*((char *)&unwind_state + 0)) = 6;
-    /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-    (*((char *)&unwind_state + 0)) = 5;
-    /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-    (*((char *)&unwind_state + 0)) = 4;
-    /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-    (*((char *)&unwind_state + 0)) = 3;
-    /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-    (*((char *)&unwind_state + 0)) = 2;
-    /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-    (*((char *)&unwind_state + 0)) = 1;
-    /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-    unwind_state = unwind_state & 0xffffff00;
-    /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-    unwind_state = 0xffffffff;
-    /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-  }
-  else {
-    win_flush_pending_msgs();
-    load_ok = ((DibSurface *)surf_1e0)->load_gif_resource(0x1e0,10,0xec,(iptr)this + 0x1f8);
-    if (load_ok == 0) {
-      fail_ret_2 = 0;
-      (*((char *)&unwind_state + 0)) = 10;
-      /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-      (*((char *)&unwind_state + 0)) = 9;
-      /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-      (*((char *)&unwind_state + 0)) = 8;
-      /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-      (*((char *)&unwind_state + 0)) = 7;
-      /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-      (*((char *)&unwind_state + 0)) = 6;
-      /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-      (*((char *)&unwind_state + 0)) = 5;
-      /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-      (*((char *)&unwind_state + 0)) = 4;
-      /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-      (*((char *)&unwind_state + 0)) = 3;
-      /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-      (*((char *)&unwind_state + 0)) = 2;
-      /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-      (*((char *)&unwind_state + 0)) = 1;
-      /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-      unwind_state = unwind_state & 0xffffff00;
-      /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-      unwind_state = 0xffffffff;
-      /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-      result = fail_ret_2;
-    }
-    else {
-      win_flush_pending_msgs();
-      load_ok = ((DibSurface *)surf_1c7)->load_gif_resource(0x1c7,10,0xec,(iptr)this + 0x1f8);
-      if (load_ok == 0) {
-        fail_ret_3 = 0;
-        (*((char *)&unwind_state + 0)) = 10;
-        /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-        (*((char *)&unwind_state + 0)) = 9;
-        /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-        (*((char *)&unwind_state + 0)) = 8;
-        /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-        (*((char *)&unwind_state + 0)) = 7;
-        /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-        (*((char *)&unwind_state + 0)) = 6;
-        /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-        (*((char *)&unwind_state + 0)) = 5;
-        /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-        (*((char *)&unwind_state + 0)) = 4;
-        /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-        (*((char *)&unwind_state + 0)) = 3;
-        /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-        (*((char *)&unwind_state + 0)) = 2;
-        /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-        (*((char *)&unwind_state + 0)) = 1;
-        /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-        unwind_state = unwind_state & 0xffffff00;
-        /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-        unwind_state = 0xffffffff;
-        /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-        result = fail_ret_3;
-      }
-      else {
-        win_flush_pending_msgs();
-        load_ok = ((DibSurface *)surf_1ea)->load_gif_resource(0x1ea,10,0xec,(iptr)this + 0x1f8);
-        if (load_ok == 0) {
-          fail_ret_4 = 0;
-          (*((char *)&unwind_state + 0)) = 10;
-          /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-          (*((char *)&unwind_state + 0)) = 9;
-          /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-          (*((char *)&unwind_state + 0)) = 8;
-          /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-          (*((char *)&unwind_state + 0)) = 7;
-          /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-          (*((char *)&unwind_state + 0)) = 6;
-          /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-          (*((char *)&unwind_state + 0)) = 5;
-          /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-          (*((char *)&unwind_state + 0)) = 4;
-          /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-          (*((char *)&unwind_state + 0)) = 3;
-          /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-          (*((char *)&unwind_state + 0)) = 2;
-          /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-          (*((char *)&unwind_state + 0)) = 1;
-          /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-          unwind_state = unwind_state & 0xffffff00;
-          /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-          unwind_state = 0xffffffff;
-          /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-          result = fail_ret_4;
-        }
-        else {
-          win_flush_pending_msgs();
-          load_ok = ((DibSurface *)surf_1d6)->load_gif_resource(0x1d6,10,0xec,(iptr)this + 0x1f8);
-          if (load_ok == 0) {
-            fail_ret_5 = 0;
-            (*((char *)&unwind_state + 0)) = 10;
-            /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-            (*((char *)&unwind_state + 0)) = 9;
-            /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-            (*((char *)&unwind_state + 0)) = 8;
-            /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-            (*((char *)&unwind_state + 0)) = 7;
-            /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-            (*((char *)&unwind_state + 0)) = 6;
-            /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-            (*((char *)&unwind_state + 0)) = 5;
-            /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-            (*((char *)&unwind_state + 0)) = 4;
-            /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-            (*((char *)&unwind_state + 0)) = 3;
-            /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-            (*((char *)&unwind_state + 0)) = 2;
-            /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-            (*((char *)&unwind_state + 0)) = 1;
-            /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-            unwind_state = unwind_state & 0xffffff00;
-            /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-            unwind_state = 0xffffffff;
-            /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-            result = fail_ret_5;
-          }
-          else {
-            win_flush_pending_msgs();
-            load_ok = ((DibSurface *)surf_1ba)->load_gif_resource(0x1ba,10,0xec,(iptr)this + 0x1f8);
-            if (load_ok == 0) {
-              fail_ret_6 = 0;
-              (*((char *)&unwind_state + 0)) = 10;
-              /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-              (*((char *)&unwind_state + 0)) = 9;
-              /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-              (*((char *)&unwind_state + 0)) = 8;
-              /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-              (*((char *)&unwind_state + 0)) = 7;
-              /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-              (*((char *)&unwind_state + 0)) = 6;
-              /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-              (*((char *)&unwind_state + 0)) = 5;
-              /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-              (*((char *)&unwind_state + 0)) = 4;
-              /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-              (*((char *)&unwind_state + 0)) = 3;
-              /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-              (*((char *)&unwind_state + 0)) = 2;
-              /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-              (*((char *)&unwind_state + 0)) = 1;
-              /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-              unwind_state = unwind_state & 0xffffff00;
-              /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-              unwind_state = 0xffffffff;
-              /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-              result = fail_ret_6;
-            }
-            else {
-              win_flush_pending_msgs();
-              load_ok = ((DibSurface *)surf_1e1)->load_gif_resource(0x1e1,10,0xec,(iptr)this + 0x1f8);
-              if (load_ok == 0) {
-                fail_ret_7 = 0;
-                (*((char *)&unwind_state + 0)) = 10;
-                /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-                (*((char *)&unwind_state + 0)) = 9;
-                /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-                (*((char *)&unwind_state + 0)) = 8;
-                /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-                (*((char *)&unwind_state + 0)) = 7;
-                /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-                (*((char *)&unwind_state + 0)) = 6;
-                /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-                (*((char *)&unwind_state + 0)) = 5;
-                /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-                (*((char *)&unwind_state + 0)) = 4;
-                /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-                (*((char *)&unwind_state + 0)) = 3;
-                /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-                (*((char *)&unwind_state + 0)) = 2;
-                /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-                (*((char *)&unwind_state + 0)) = 1;
-                /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-                unwind_state = unwind_state & 0xffffff00;
-                /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-                unwind_state = 0xffffffff;
-                /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-                result = fail_ret_7;
-              }
-              else {
-                win_flush_pending_msgs();
-                load_ok = ((DibSurface *)surf_1c8)->load_gif_resource(0x1c8,10,0xec,(iptr)this + 0x1f8);
-                if (load_ok == 0) {
-                  fail_ret_8 = 0;
-                  (*((char *)&unwind_state + 0)) = 10;
-                  /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-                  (*((char *)&unwind_state + 0)) = 9;
-                  /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-                  (*((char *)&unwind_state + 0)) = 8;
-                  /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-                  (*((char *)&unwind_state + 0)) = 7;
-                  /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-                  (*((char *)&unwind_state + 0)) = 6;
-                  /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-                  (*((char *)&unwind_state + 0)) = 5;
-                  /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-                  (*((char *)&unwind_state + 0)) = 4;
-                  /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-                  (*((char *)&unwind_state + 0)) = 3;
-                  /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-                  (*((char *)&unwind_state + 0)) = 2;
-                  /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-                  (*((char *)&unwind_state + 0)) = 1;
-                  /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-                  unwind_state = unwind_state & 0xffffff00;
-                  /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-                  unwind_state = 0xffffffff;
-                  /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-                  result = fail_ret_8;
-                }
-                else {
-                  win_flush_pending_msgs();
-                  load_ok = ((DibSurface *)surf_1e9)->load_gif_resource(0x1e9,10,0xec,(iptr)this + 0x1f8);
-                  if (load_ok == 0) {
-                    fail_ret_9 = 0;
-                    (*((char *)&unwind_state + 0)) = 10;
-                    /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-                    (*((char *)&unwind_state + 0)) = 9;
-                    /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-                    (*((char *)&unwind_state + 0)) = 8;
-                    /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-                    (*((char *)&unwind_state + 0)) = 7;
-                    /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-                    (*((char *)&unwind_state + 0)) = 6;
-                    /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-                    (*((char *)&unwind_state + 0)) = 5;
-                    /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-                    (*((char *)&unwind_state + 0)) = 4;
-                    /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-                    (*((char *)&unwind_state + 0)) = 3;
-                    /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-                    (*((char *)&unwind_state + 0)) = 2;
-                    /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-                    (*((char *)&unwind_state + 0)) = 1;
-                    /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-                    unwind_state = unwind_state & 0xffffff00;
-                    /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-                    unwind_state = 0xffffffff;
-                    /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-                    result = fail_ret_9;
-                  }
-                  else {
-                    win_flush_pending_msgs();
-                    load_ok = ((DibSurface *)surf_1d7)->load_gif_resource(0x1d7,10,0xec,(iptr)this + 0x1f8);
-                    if (load_ok == 0) {
-                      fail_ret_10 = 0;
-                      (*((char *)&unwind_state + 0)) = 10;
-                      /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-                      (*((char *)&unwind_state + 0)) = 9;
-                      /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-                      (*((char *)&unwind_state + 0)) = 8;
-                      /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-                      (*((char *)&unwind_state + 0)) = 7;
-                      /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-                      (*((char *)&unwind_state + 0)) = 6;
-                      /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-                      (*((char *)&unwind_state + 0)) = 5;
-                      /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-                      (*((char *)&unwind_state + 0)) = 4;
-                      /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-                      (*((char *)&unwind_state + 0)) = 3;
-                      /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-                      (*((char *)&unwind_state + 0)) = 2;
-                      /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-                      (*((char *)&unwind_state + 0)) = 1;
-                      /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-                      unwind_state = unwind_state & 0xffffff00;
-                      /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-                      unwind_state = 0xffffffff;
-                      /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-                      result = fail_ret_10;
-                    }
-                    else {
-                      win_flush_pending_msgs();
-                      load_ok = ((DibSurface *)surf_1eb)->load_gif_resource(0x1eb,10,0xec,(iptr)this + 0x1f8);
-                      if (load_ok == 0) {
-                        fail_ret_11 = 0;
-                        (*((char *)&unwind_state + 0)) = 10;
-                        /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-                        (*((char *)&unwind_state + 0)) = 9;
-                        /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-                        (*((char *)&unwind_state + 0)) = 8;
-                        /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-                        (*((char *)&unwind_state + 0)) = 7;
-                        /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-                        (*((char *)&unwind_state + 0)) = 6;
-                        /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-                        (*((char *)&unwind_state + 0)) = 5;
-                        /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-                        (*((char *)&unwind_state + 0)) = 4;
-                        /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-                        (*((char *)&unwind_state + 0)) = 3;
-                        /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-                        (*((char *)&unwind_state + 0)) = 2;
-                        /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-                        (*((char *)&unwind_state + 0)) = 1;
-                        /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-                        unwind_state = unwind_state & 0xffffff00;
-                        /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-                        unwind_state = 0xffffffff;
-                        /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-                        result = fail_ret_11;
-                      }
-                      else {
-                        win_flush_pending_msgs();
-                        for (row_i = 0; row_i < 7; row_i = row_i + 1) {
-                          win_flush_pending_msgs();
-                          if ((int)(uint)part_rows[row_i].count <=
-                              editor_text_edit_block.spaceship_wnd_part_count_list[(uint)part_rows[row_i].kind]) {
-                            if (part_rows[row_i].kind == 1) {
-                              part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count((i32)ship_civ,1);
-                              if (load_ok < (int)(uint)part_count) {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1ba,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                              else {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1b9,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                            }
-                            else if (part_rows[row_i].kind == 4) {
-                              part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count((i32)ship_civ,4);
-                              if (load_ok < (int)(uint)part_count) {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1e1,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                              else {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1e0,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                            }
-                            else if (part_rows[row_i].kind == 2) {
-                              part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count((i32)ship_civ,2);
-                              if (load_ok < (int)(uint)part_count) {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1c8,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                              else {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1c7,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                            }
-                            else if (part_rows[row_i].kind == 5) {
-                              part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count((i32)ship_civ,5);
-                              if (load_ok < (int)(uint)part_count) {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1e9,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                              else {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1ea,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                            }
-                            else if (part_rows[row_i].kind == 3) {
-                              part_count = part_rows[row_i].count;
-                              load_ok = spaceship_part_count((i32)ship_civ,3);
-                              if (load_ok < (int)(uint)part_count) {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1d7,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                              else {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1d6,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                            }
-                            else {
-                              ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1eb,9,
-                                           part_rows[row_i].v[5],1,
-                                           part_rows[row_i].v[3],part_rows[row_i].v[4]
-                                          );
-                            }
-                            ((Sprite *)((iptr)this + 0x93c))->draw((iptr)sprite_core,(iptr)this + 0x8f4,
-                                         part_rows[row_i].v[1] + -0xaf,
-                                         part_rows[row_i].v[2] + -99);
-                          }
-                        }
-                        struct_row = 0;
-                        for (row_i = 7; row_i < 0x1f; row_i = row_i + 1) {
-                          if ((int)(uint)part_rows[row_i].count <=
-                              editor_text_edit_block.spaceship_wnd_part_count_list[(uint)part_rows[row_i].kind]) {
-                            struct_row = row_i;
-                          }
-                        }
-                        win_flush_pending_msgs();
-                        load_ok = ((DibSurface *)surf_part)->load_gif_resource(part_rows[struct_row].v[0],10,0xec,
-                                             (iptr)this + 0x1f8);
-                        if (load_ok == 0) {
-                          fail_ret_12 = 0;
-                          (*((char *)&unwind_state + 0)) = 10;
-                          /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-                          (*((char *)&unwind_state + 0)) = 9;
-                          /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-                          (*((char *)&unwind_state + 0)) = 8;
-                          /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-                          (*((char *)&unwind_state + 0)) = 7;
-                          /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-                          (*((char *)&unwind_state + 0)) = 6;
-                          /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-                          (*((char *)&unwind_state + 0)) = 5;
-                          /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-                          (*((char *)&unwind_state + 0)) = 4;
-                          /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-                          (*((char *)&unwind_state + 0)) = 3;
-                          /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-                          (*((char *)&unwind_state + 0)) = 2;
-                          /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-                          (*((char *)&unwind_state + 0)) = 1;
-                          /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-                          unwind_state = unwind_state & 0xffffff00;
-                          /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-                          unwind_state = 0xffffffff;
-                          /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-                          result = fail_ret_12;
-                        }
-                        else {
-                          win_flush_pending_msgs();
-                          ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_part,9,
-                                       part_rows[struct_row].v[1],part_rows[struct_row].v[2],
-                                       part_rows[struct_row].v[3],part_rows[struct_row].v[4]);
-                          ((Sprite *)((iptr)this + 0x93c))->draw((iptr)sprite_struct,(iptr)this + 0x8f4,
-                                       part_rows[struct_row].v[1] + -0xaf,
-                                       part_rows[struct_row].v[2] + -99);
-                          for (row_i = 0x1f; row_i < 0x58; row_i = row_i + 1) {
-                            win_flush_pending_msgs();
-                            win_flush_pending_msgs();
-                            if ((int)(uint)part_rows[row_i].count <=
-                                editor_text_edit_block.spaceship_wnd_part_count_list[(uint)part_rows[row_i].kind]) {
-                              if (part_rows[row_i].kind == 1) {
-                                part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count((i32)ship_civ,1);
-                                if (load_ok < (int)(uint)part_count) {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1ba,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                                else {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1b9,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                              }
-                              else if (part_rows[row_i].kind == 4) {
-                                part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count((i32)ship_civ,4);
-                                if (load_ok < (int)(uint)part_count) {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1e1,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                                else {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1e0,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                              }
-                              else if (part_rows[row_i].kind == 2) {
-                                part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count((i32)ship_civ,2);
-                                if (load_ok < (int)(uint)part_count) {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1c8,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                                else {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1c7,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                              }
-                              else if (part_rows[row_i].kind == 5) {
-                                part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count((i32)ship_civ,5);
-                                if (load_ok < (int)(uint)part_count) {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1e9,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                                else {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1ea,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                              }
-                              else if (part_rows[row_i].kind == 3) {
-                                part_count = part_rows[row_i].count;
-                                load_ok = spaceship_part_count((i32)ship_civ,3);
-                                if (load_ok < (int)(uint)part_count) {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1d7,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                                else {
-                                  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1d6,9,
-                                               part_rows[row_i].v[5],1,
-                                               part_rows[row_i].v[3],
-                                               part_rows[row_i].v[4]);
-                                }
-                              }
-                              else {
-                                ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)surf_1eb,9,
-                                             part_rows[row_i].v[5],1,
-                                             part_rows[row_i].v[3],
-                                             part_rows[row_i].v[4]);
-                              }
-                              ((Sprite *)((iptr)this + 0x93c))->draw((iptr)sprite_part,(iptr)this + 0x8f4,
-                                           part_rows[row_i].v[1] + -0xaf,
-                                           part_rows[row_i].v[2] + -99);
-                            }
-                          }
-                          ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)this + 0x8f4,9,0,0,0x1c9,
-                                       0x130);
-                          win_flush_pending_msgs();
-                          if ((int)launch_state == 3) {
-                            ((DibSurface *)((iptr)this + 0xb8))->fill(0);
-                          }
-                          ((Sprite *)((iptr)this + 0x93c))->draw((iptr)sprite_final,(iptr)this + 0xb8,0xaf,
-                                       99);
-                          spaceship_wnd_draw_title((i32)ship_civ);
-                          (*((char *)&unwind_state + 0)) = 10;
-                          /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(&surf_1d7)); }
-                          (*((char *)&unwind_state + 0)) = 9;
-                          /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(&surf_1e9)); }
-                          (*((char *)&unwind_state + 0)) = 8;
-                          /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(&surf_1c8)); }
-                          (*((char *)&unwind_state + 0)) = 7;
-                          /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(&surf_1e1)); }
-                          (*((char *)&unwind_state + 0)) = 6;
-                          /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(&surf_1ba)); }
-                          (*((char *)&unwind_state + 0)) = 5;
-                          /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(&surf_1eb)); }
-                          (*((char *)&unwind_state + 0)) = 4;
-                          /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(&surf_1d6)); }
-                          (*((char *)&unwind_state + 0)) = 3;
-                          /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(&surf_1ea)); }
-                          (*((char *)&unwind_state + 0)) = 2;
-                          /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(&surf_1c7)); }
-                          (*((char *)&unwind_state + 0)) = 1;
-                          /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(&surf_1e0)); }
-                          unwind_state = unwind_state & 0xffffff00;
-                          /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(&surf_1b9)); }
-                          unwind_state = 0xffffffff;
-                          /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(&surf_part)); }
-                          result = 1;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-  return result;
 }
 
-/* 0x005aa0e5: unwind funclet 0x005ab07f destroys the object at EBP-0x320 (dlg). */
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+/* Part of SpaceshipWindow::render_ship (004d17bf): destroys the surfaces (the
+   original's unwind funclets, inlined at each exit). */
+void SpaceshipWindow::render_ship_free_surfaces(ShipSurfaces &sf,int &unwind_state)
+{
+  (*((char *)&unwind_state + 0)) = 10;
+  /* inlined unwind funclet 004d49d5 */ { surface_dtor((DibSurface *)(sf.surf_1d7)); }
+  (*((char *)&unwind_state + 0)) = 9;
+  /* inlined unwind funclet 004d49e1 */ { surface_dtor((DibSurface *)(sf.surf_1e9)); }
+  (*((char *)&unwind_state + 0)) = 8;
+  /* inlined unwind funclet 004d49ed */ { surface_dtor((DibSurface *)(sf.surf_1c8)); }
+  (*((char *)&unwind_state + 0)) = 7;
+  /* inlined unwind funclet 004d49f9 */ { surface_dtor((DibSurface *)(sf.surf_1e1)); }
+  (*((char *)&unwind_state + 0)) = 6;
+  /* inlined unwind funclet 004d4a05 */ { surface_dtor((DibSurface *)(sf.surf_1ba)); }
+  (*((char *)&unwind_state + 0)) = 5;
+  /* inlined unwind funclet 004d4a11 */ { surface_dtor((DibSurface *)(sf.surf_1eb)); }
+  (*((char *)&unwind_state + 0)) = 4;
+  /* inlined unwind funclet 004d4a1d */ { surface_dtor((DibSurface *)(sf.surf_1d6)); }
+  (*((char *)&unwind_state + 0)) = 3;
+  /* inlined unwind funclet 004d4a29 */ { surface_dtor((DibSurface *)(sf.surf_1ea)); }
+  (*((char *)&unwind_state + 0)) = 2;
+  /* inlined unwind funclet 004d4a35 */ { surface_dtor((DibSurface *)(sf.surf_1c7)); }
+  (*((char *)&unwind_state + 0)) = 1;
+  /* inlined unwind funclet 004d4a3e */ { surface_dtor((DibSurface *)(sf.surf_1e0)); }
+  unwind_state = unwind_state & 0xffffff00;
+  /* inlined unwind funclet 004d4a4a */ { surface_dtor((DibSurface *)(sf.surf_1b9)); }
+  unwind_state = 0xffffffff;
+  /* inlined unwind funclet 004d4a56 */ { surface_dtor((DibSurface *)(sf.surf_part)); }
+}
 
-void __cdecl net_host_turn_loop(void)
+/* Part of SpaceshipWindow::render_ship (004d17bf): loads the part GIFs; 0 when
+   one fails. */
+int SpaceshipWindow::render_ship_load_surfaces(ShipSurfaces &sf)
+{
+  int load_ok;
 
+  load_ok = ((DibSurface *)sf.surf_1b9)->load_gif_resource(0x1b9,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1e0)->load_gif_resource(0x1e0,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1c7)->load_gif_resource(0x1c7,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1ea)->load_gif_resource(0x1ea,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1d6)->load_gif_resource(0x1d6,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1ba)->load_gif_resource(0x1ba,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1e1)->load_gif_resource(0x1e1,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1c8)->load_gif_resource(0x1c8,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1e9)->load_gif_resource(0x1e9,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1d7)->load_gif_resource(0x1d7,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_1eb)->load_gif_resource(0x1eb,10,0xec,(iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    return 0;
+  }
+  return 1;
+}
+
+/* Part of SpaceshipWindow::render_ship (004d17bf): draws one part of the ship
+   onto sprite (when the civ has built it: its full or its empty picture). */
+void SpaceshipWindow::render_ship_draw_part(ShipSurfaces &sf,ShipPartRow *row,i8 *sprite)
+{
+  byte part_count;
+  int load_ok;
+
+  if ((int)(uint)row->count <=
+      editor_text_edit_block.spaceship_wnd_part_count_list[(uint)row->kind]) {
+    if (row->kind == 1) {
+      part_count = row->count;
+      load_ok = spaceship_part_count((i32)ship_civ,1);
+      if (load_ok < (int)(uint)part_count) {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1ba,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+      else {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1b9,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+    }
+    else if (row->kind == 4) {
+      part_count = row->count;
+      load_ok = spaceship_part_count((i32)ship_civ,4);
+      if (load_ok < (int)(uint)part_count) {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1e1,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+      else {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1e0,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+    }
+    else if (row->kind == 2) {
+      part_count = row->count;
+      load_ok = spaceship_part_count((i32)ship_civ,2);
+      if (load_ok < (int)(uint)part_count) {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1c8,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+      else {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1c7,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+    }
+    else if (row->kind == 5) {
+      part_count = row->count;
+      load_ok = spaceship_part_count((i32)ship_civ,5);
+      if (load_ok < (int)(uint)part_count) {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1e9,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+      else {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1ea,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+    }
+    else if (row->kind == 3) {
+      part_count = row->count;
+      load_ok = spaceship_part_count((i32)ship_civ,3);
+      if (load_ok < (int)(uint)part_count) {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1d7,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+      else {
+        ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1d6,9,
+                     row->v[5],1,
+                     row->v[3],
+                     row->v[4]);
+      }
+    }
+    else {
+      ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_1eb,9,
+                   row->v[5],1,
+                   row->v[3],
+                   row->v[4]);
+    }
+    ((Sprite *)((iptr)this + 0x93c))->draw((iptr)sprite,(iptr)this + 0x8f4,
+                 row->v[1] + -0xaf,
+                 row->v[2] + -99);
+  }
+}
+
+/* 0x004d17bf: unwind funclet 0x004d4a11 destroys the control at EBP-0x12c (surf_1eb). */
+i32 SpaceshipWindow::render_ship()
+{
+  int load_ok;
+  i8 sprite_final[16];
+  i8 sprite_part[16];
+  i8 sprite_struct[16];
+  i8 sprite_core[16];
+  i8 surf_1ea[72];
+  i8 surf_1d6[72];
+  ShipPartRow part_rows[88];  /* the spaceship structure rows */
+  i8 surf_part[72];
+  int row_i;
+  i8 surf_1b9[72];
+  i8 surf_1c8[72];
+  i8 surf_1e1[72];
+  i8 surf_1e0[72];
+  int struct_row;
+  i8 surf_1ba[72];
+  i8 surf_1eb[72];
+  i8 surf_1e9[72];
+  i8 surf_1d7[72];
+  i8 surf_1c7[72];
+  int unwind_state;
+  ShipSurfaces sf = { surf_part,surf_1b9,surf_1e0,surf_1c7,surf_1ea,surf_1d6,surf_1eb,surf_1ba,
+                      surf_1e1,surf_1c8,surf_1e9,surf_1d7 };
+
+  render_ship_construct_surfaces(sf,unwind_state);
+  render_ship_init_rows(part_rows);
+  if (render_ship_load_surfaces(sf) == 0) {
+    render_ship_free_surfaces(sf,unwind_state);
+    return 0;
+  }
+  win_flush_pending_msgs();
+  for (row_i = 0; row_i < 7; row_i = row_i + 1) {
+    win_flush_pending_msgs();
+    render_ship_draw_part(sf,&part_rows[row_i],sprite_core);
+  }
+  struct_row = 0;
+  for (row_i = 7; row_i < 0x1f; row_i = row_i + 1) {
+    if ((int)(uint)part_rows[row_i].count <=
+        editor_text_edit_block.spaceship_wnd_part_count_list[(uint)part_rows[row_i].kind]) {
+      struct_row = row_i;
+    }
+  }
+  win_flush_pending_msgs();
+  load_ok = ((DibSurface *)sf.surf_part)->load_gif_resource(part_rows[struct_row].v[0],10,0xec,
+                       (iptr)this + 0x1f8);
+  if (load_ok == 0) {
+    render_ship_free_surfaces(sf,unwind_state);
+    return 0;
+  }
+  win_flush_pending_msgs();
+  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)sf.surf_part,9,
+               part_rows[struct_row].v[1],part_rows[struct_row].v[2],
+               part_rows[struct_row].v[3],part_rows[struct_row].v[4]);
+  ((Sprite *)((iptr)this + 0x93c))->draw((iptr)sprite_struct,(iptr)this + 0x8f4,
+               part_rows[struct_row].v[1] + -0xaf,
+               part_rows[struct_row].v[2] + -99);
+  for (row_i = 0x1f; row_i < 0x58; row_i = row_i + 1) {
+    win_flush_pending_msgs();
+    win_flush_pending_msgs();
+    render_ship_draw_part(sf,&part_rows[row_i],sprite_part);
+  }
+  ((Sprite *)((iptr)this + 0x93c))->grab_from_surface((iptr)this + 0x8f4,9,0,0,0x1c9,
+               0x130);
+  win_flush_pending_msgs();
+  if ((int)launch_state == 3) {
+    ((DibSurface *)((iptr)this + 0xb8))->fill(0);
+  }
+  ((Sprite *)((iptr)this + 0x93c))->draw((iptr)sprite_final,(iptr)this + 0xb8,0xaf,
+               99);
+  spaceship_wnd_draw_title((i32)ship_civ);
+  render_ship_free_surfaces(sf,unwind_state);
+  return 1;
+}
+
+/* Part of net_host_turn_loop (005aa0e5): logs the server and the clients, centers the map
+   on one of the host's units (or cities) and finds the civ a resumed turn starts
+   with. */
+static void net_host_begin(void)
 {
   byte resume_start;
-  SHORT esc_state;
   i32 civ_name;
   int result;
   int civ;
-  int city_idx;
   int unit_idx;
-  Dialog dlg;
-  int humans_done;
-  int clients_done;
-  i32 rect_left2;
-  i32 rect_top2;
-  i32 rect_right2;
-  i32 rect_bottom2;
   int found_owned;
-  int new_casualties;
-  i32 unused_pad;
-  i32 unwind_state;
-  
-  unwind_state = 0xffffffff;
-  dlg.Dialog::construct(0x4000);
-  unwind_state = 0;
+
   result = human_civ[0];
   civ_name = (i32)(civ_name_plural(human_civ[0]));
   dbg_logf_str_int((const char *)str_server_s_d_3,(const char *)civ_name,result);
@@ -1961,6 +1643,193 @@ void __cdecl net_host_turn_loop(void)
       }
     }
   }
+}
+
+/* Part of net_host_turn_loop (005aa0e5): waits until every human player has sent the
+   current phase done (or only one player is left).  civ is the caller's: the
+   value the search leaves is read after the second wait. */
+static void net_host_wait_phase_done(int &civ)
+{
+  int done;
+
+  done = 0;
+  while (done == 0) {
+    net_session_block.process_messages(1,0);
+    if (net_session_block.net_player_count[0] < 2) {
+      done = 1;
+      break;
+    }
+    done = 1;
+    for (civ = 1; civ < 8; civ = civ + 1) {
+      if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
+          ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
+         (dialog_text_font_obj_block.net_civ_phase_done[civ] == 0)) {
+        done = 0;
+        break;
+      }
+    }
+  }
+}
+
+/* Part of net_host_turn_loop (005aa0e5): the AI civs move their units. */
+static void net_host_ai_units_phase(void)
+{
+  int civ;
+
+  for (civ = 0; (game_loop_active != '\0' && (civ < 8)); civ = civ + 1) {
+    if (((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
+       ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
+      game.turn_civ = (byte)civ;
+      net_session_block.mp_turn_civ = civ;
+      menu_update_states();
+      status_draw_civ_color(civ);
+      if (((((*(byte *)&turn_resume_civ) == 0) || (turn_resume_new_game != 0)) && ((*(byte *)&turn_resume_civ) != 0)) &&
+         (turn_resume_new_game != 0)) {
+        ((MapView *)((i8 *)&map_views_block.map_views))->update_title();
+        map_redraw_all_views(human_civ[0],1);
+        wnd_flush_paint();
+      }
+      ai_process_civ_units();
+    }
+  }
+}
+
+/* Part of net_host_turn_loop (005aa0e5): the host's turn: the intro, the turn timer, the
+   caption, the casualties or "our turn to move" popup, then the host plays its
+   turn (or autoplay moves its units). */
+static void net_host_human_turn(Dialog &dlg)
+{
+  SHORT esc_state;
+  i32 civ_name;
+  i32 rect_left2;
+  i32 rect_top2;
+  i32 rect_right2;
+  i32 rect_bottom2;
+  int new_casualties;
+
+  if ((civ_saved_cursor_x_block.civ_intro_shown[human_civ[0]] == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+    civ_intro_popup(human_civ[0]);
+    civ_saved_cursor_x_block.civ_intro_shown[human_civ[0]] = 1;
+  }
+  if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
+    mp_turn_seconds_left = civ_saved_cursor_x_block.mp_turn_time_limit_ms / 1000;
+    map_views_block.main_view_timer_cache_i32 = 0xffffffff;
+  }
+  net_session_block.mp_turn_civ = human_civ[0];
+  menu_update_states();
+  map_views_block.main_view_timer_cache_i32 = 0xffffffff;
+  ((FrameWindow *)((i8 *)&map_views_block.map_views))->FrameWindow::draw_caption();
+  rect_left2 = map_views_block.main_view_frame_left;
+  rect_top2 = map_views_block.main_view_frame_top;
+  rect_right2 = map_views_block.main_view_frame_right;
+  rect_bottom2 = map_views_block.main_view_client_top;
+  ((DibSurface *)((i8 *)&map_views_block.map_views))->wnd_blit_surface_rect((iptr)&rect_left2);
+  ((MapView *)((i8 *)&map_views_block.map_views))->update_title();
+  map_redraw_all_views(human_civ[0],1);
+  status_draw_civ_color(human_civ[0]);
+  new_casualties = net_session_block.casualty_counts[human_civ[0]] -
+             net_session_block.casualty_reported_counts[human_civ[0]];
+  if (civ_saved_cursor_x_block.autoplay_active == 0) {
+    dlg_pending_idle_callback = turn_popup_timeout_idle;
+    civ_name = civ_leader_title(human_civ[0]);
+    text_set_string_arg(0,(const char *)civ_name);
+    civ_name = (i32)(civ_leader_name(human_civ[0]));
+    text_set_string_arg(1,(const char *)civ_name);
+    if (net_session_block.casualty_reported_counts[human_civ[0]] < net_session_block.casualty_counts[human_civ[0]]) {
+      net_session_block.casualty_reported_counts[human_civ[0]] =
+           net_session_block.casualty_counts[human_civ[0]];
+      text_set_number_arg(0,new_casualties);
+      if (new_casualties == 1) {
+        dlg.load_text_noflags((const char *)&str_game_7,(const char *)str_casualty_4);
+      }
+      else {
+        dlg.load_text_noflags((const char *)&str_game_7,(const char *)str_casualties_4);
+      }
+      dlg.add_sprite((iptr)&popup_info_icon_sprite,0,0);
+      dlg.set_image_zoom(0);
+      input_flush_events();
+      snd_play_effect(0x30,0,0,0);
+      dlg.show_modal(0);
+      if (dlg.result_extra != 0) {
+        casualty_timeline_show(human_civ[0]);
+      }
+    }
+    else {
+      dlg.load_text_noflags((const char *)&str_game_7,(const char *)str_ourturntomove_3);
+      dlg.add_sprite((iptr)&popup_info_icon_sprite,0,0);
+      dlg.set_image_zoom(0);
+      input_flush_events();
+      snd_play_effect(0x30,0,0,0);
+      dlg.show_modal(0);
+    }
+  }
+  if (civ_saved_cursor_x_block.autoplay_active == 0) {
+    game_turn_start_popups();
+    if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
+      mp_turn_timer_start(1);
+    }
+    game_player_move_loop();
+  }
+  else {
+    map_views_block.saved_human_players = (uint)game.human_players;
+    game.human_players = 0;
+    if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
+      mp_turn_timer_start(1);
+    }
+    ai_process_civ_units();
+    game.human_players = (*(byte *)&map_views_block.saved_human_players);
+    esc_state = GetAsyncKeyState(0x1b);
+    if (((int)esc_state & 0x8001U) != 0) {
+      civ_saved_cursor_x_block.autoplay_turns_left = 1;
+    }
+    civ_saved_cursor_x_block.autoplay_turns_left = civ_saved_cursor_x_block.autoplay_turns_left + -1;
+    if (civ_saved_cursor_x_block.autoplay_turns_left == 0) {
+      civ_saved_cursor_x_block.autoplay_active = 0;
+    }
+  }
+  if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
+    mp_turn_timer_stop(1);
+  }
+}
+
+/* Part of net_host_turn_loop (005aa0e5): the end of the turn: civ's units have no moves
+   left, the cities' flag 0x400000 is cleared. */
+static void net_host_exhaust_moves(int civ)
+{
+  int city_idx;
+  int unit_idx;
+
+  for (unit_idx = 0; unit_idx < game.num_units; unit_idx = unit_idx + 1) {
+    if ((units[unit_idx].id != 0) &&
+       (units[unit_idx].owner == civ)) {
+      unit_exhaust_moves(unit_idx);
+    }
+  }
+  city_idx = (int)game.num_cities;
+  while (city_idx = city_idx + -1, -1 < city_idx) {
+    if (cities[city_idx].id != 0) {
+      cities[city_idx].flags =
+           cities[city_idx].flags & 0xffbfffff;
+    }
+  }
+}
+
+/* 0x005aa0e5: unwind funclet 0x005ab07f destroys the object at EBP-0x320 (dlg). */
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void __cdecl net_host_turn_loop(void)
+
+{
+  int result;
+  int civ;
+  Dialog dlg;
+  i32 unused_pad;
+  i32 unwind_state;
+  
+  unwind_state = 0xffffffff;
+  dlg.Dialog::construct(0x4000);
+  unwind_state = 0;
+  net_host_begin();
   do {
     game.human_players = net_session_block.pending_human_players | game.human_players;
     net_session_block.pending_human_players = 0;
@@ -2019,23 +1888,7 @@ void __cdecl net_host_turn_loop(void)
     dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] = dialog_text_font_obj_block.net_civ_phase_done[human_civ[0]] + 1;
     dlg_pending_idle_callback = net_host_wait_production_idle;
     popup_game_with_sprite((const char *)str_waitproduction,(iptr)&popup_info_icon_sprite,0);
-    clients_done = 0;
-    while (clients_done == 0) {
-      net_session_block.process_messages(1,0);
-      if (net_session_block.net_player_count[0] < 2) {
-        clients_done = 1;
-        break;
-      }
-      clients_done = 1;
-      for (civ = 1; civ < 8; civ = civ + 1) {
-        if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
-            ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
-           (dialog_text_font_obj_block.net_civ_phase_done[civ] == 0)) {
-          clients_done = 0;
-          break;
-        }
-      }
-    }
+    net_host_wait_phase_done(civ);
     net_session_block.nm_production_complete_count = 0;
     net_send_state_diff(0xff,2,0,0,0);
     XD_FlushSendBuffer(60000);
@@ -2046,22 +1899,7 @@ void __cdecl net_host_turn_loop(void)
     if ((*(byte *)&turn_resume_civ) == 0) {
       units_reset_for_turn(0xffffffff);
     }
-    for (civ = 0; (game_loop_active != '\0' && (civ < 8)); civ = civ + 1) {
-      if (((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
-         ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
-        game.turn_civ = (byte)civ;
-        net_session_block.mp_turn_civ = civ;
-        menu_update_states();
-        status_draw_civ_color(civ);
-        if (((((*(byte *)&turn_resume_civ) == 0) || (turn_resume_new_game != 0)) && ((*(byte *)&turn_resume_civ) != 0)) &&
-           (turn_resume_new_game != 0)) {
-          ((MapView *)((i8 *)&map_views_block.map_views))->update_title();
-          map_redraw_all_views(human_civ[0],1);
-          wnd_flush_paint();
-        }
-        ai_process_civ_units();
-      }
-    }
+    net_host_ai_units_phase();
     for (civ = 0; civ < 8; civ = civ + 1) {
       dialog_text_font_obj_block.net_civ_phase_done[civ] = 0;
       net_session_block.net_civ_new_player_flags[civ] = 0;
@@ -2075,89 +1913,7 @@ void __cdecl net_host_turn_loop(void)
       net_send_message(0x31,0,0,human_civ[0],0,0,0,0,0,0);
       break;
     }
-    if ((civ_saved_cursor_x_block.civ_intro_shown[human_civ[0]] == 0) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
-      civ_intro_popup(human_civ[0]);
-      civ_saved_cursor_x_block.civ_intro_shown[human_civ[0]] = 1;
-    }
-    if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
-      mp_turn_seconds_left = civ_saved_cursor_x_block.mp_turn_time_limit_ms / 1000;
-      map_views_block.main_view_timer_cache_i32 = 0xffffffff;
-    }
-    net_session_block.mp_turn_civ = human_civ[0];
-    menu_update_states();
-    map_views_block.main_view_timer_cache_i32 = 0xffffffff;
-    ((FrameWindow *)((i8 *)&map_views_block.map_views))->FrameWindow::draw_caption();
-    rect_left2 = map_views_block.main_view_frame_left;
-    rect_top2 = map_views_block.main_view_frame_top;
-    rect_right2 = map_views_block.main_view_frame_right;
-    rect_bottom2 = map_views_block.main_view_client_top;
-    ((DibSurface *)((i8 *)&map_views_block.map_views))->wnd_blit_surface_rect((iptr)&rect_left2);
-    ((MapView *)((i8 *)&map_views_block.map_views))->update_title();
-    map_redraw_all_views(human_civ[0],1);
-    status_draw_civ_color(human_civ[0]);
-    new_casualties = net_session_block.casualty_counts[human_civ[0]] -
-               net_session_block.casualty_reported_counts[human_civ[0]];
-    if (civ_saved_cursor_x_block.autoplay_active == 0) {
-      dlg_pending_idle_callback = turn_popup_timeout_idle;
-      civ_name = civ_leader_title(human_civ[0]);
-      text_set_string_arg(0,(const char *)civ_name);
-      civ_name = (i32)(civ_leader_name(human_civ[0]));
-      text_set_string_arg(1,(const char *)civ_name);
-      if (net_session_block.casualty_reported_counts[human_civ[0]] < net_session_block.casualty_counts[human_civ[0]]) {
-        net_session_block.casualty_reported_counts[human_civ[0]] =
-             net_session_block.casualty_counts[human_civ[0]];
-        text_set_number_arg(0,new_casualties);
-        if (new_casualties == 1) {
-          dlg.load_text_noflags((const char *)&str_game_7,(const char *)str_casualty_4);
-        }
-        else {
-          dlg.load_text_noflags((const char *)&str_game_7,(const char *)str_casualties_4);
-        }
-        dlg.add_sprite((iptr)&popup_info_icon_sprite,0,0);
-        dlg.set_image_zoom(0);
-        input_flush_events();
-        snd_play_effect(0x30,0,0,0);
-        dlg.show_modal(0);
-        if (dlg.result_extra != 0) {
-          casualty_timeline_show(human_civ[0]);
-        }
-      }
-      else {
-        dlg.load_text_noflags((const char *)&str_game_7,(const char *)str_ourturntomove_3);
-        dlg.add_sprite((iptr)&popup_info_icon_sprite,0,0);
-        dlg.set_image_zoom(0);
-        input_flush_events();
-        snd_play_effect(0x30,0,0,0);
-        dlg.show_modal(0);
-      }
-    }
-    if (civ_saved_cursor_x_block.autoplay_active == 0) {
-      game_turn_start_popups();
-      if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
-        mp_turn_timer_start(1);
-      }
-      game_player_move_loop();
-    }
-    else {
-      map_views_block.saved_human_players = (uint)game.human_players;
-      game.human_players = 0;
-      if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
-        mp_turn_timer_start(1);
-      }
-      ai_process_civ_units();
-      game.human_players = (*(byte *)&map_views_block.saved_human_players);
-      esc_state = GetAsyncKeyState(0x1b);
-      if (((int)esc_state & 0x8001U) != 0) {
-        civ_saved_cursor_x_block.autoplay_turns_left = 1;
-      }
-      civ_saved_cursor_x_block.autoplay_turns_left = civ_saved_cursor_x_block.autoplay_turns_left + -1;
-      if (civ_saved_cursor_x_block.autoplay_turns_left == 0) {
-        civ_saved_cursor_x_block.autoplay_active = 0;
-      }
-    }
-    if (civ_saved_cursor_x_block.mp_turn_time_limit_ms != 0) {
-      mp_turn_timer_stop(1);
-    }
+    net_host_human_turn(dlg);
     status_redraw(1);
     net_send_state_diff(0xff,2,0,0,0);
     civ_saved_cursor_x_block.saved_turn_civ = 0;
@@ -2169,39 +1925,11 @@ void __cdecl net_host_turn_loop(void)
     XD_FlushSendBuffer(60000);
     dlg_pending_idle_callback = net_host_wait_human_moves_idle;
     popup_game_with_sprite((const char *)str_waithumanmoves,(iptr)&popup_info_icon_sprite,0);
-    humans_done = 0;
-    while (humans_done == 0) {
-      net_session_block.process_messages(1,0);
-      if (net_session_block.net_player_count[0] < 2) {
-        humans_done = 1;
-        break;
-      }
-      humans_done = 1;
-      for (civ = 1; civ < 8; civ = civ + 1) {
-        if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
-            ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
-           (dialog_text_font_obj_block.net_civ_phase_done[civ] == 0)) {
-          humans_done = 0;
-          break;
-        }
-      }
-    }
+    net_host_wait_phase_done(civ);
     net_session_block.nm_human_move_complete_count = 0;
     net_check_lost_connections();
     if ((net_session_block.player_has_quit == '\0') || (net_session_block.mp_turn_civ == human_civ[0])) {
-      for (unit_idx = 0; unit_idx < game.num_units; unit_idx = unit_idx + 1) {
-        if ((units[unit_idx].id != 0) &&
-           (units[unit_idx].owner == civ)) {
-          unit_exhaust_moves(unit_idx);
-        }
-      }
-      city_idx = (int)game.num_cities;
-      while (city_idx = city_idx + -1, -1 < city_idx) {
-        if (cities[city_idx].id != 0) {
-          cities[city_idx].flags =
-               cities[city_idx].flags & 0xffbfffff;
-        }
-      }
+      net_host_exhaust_moves(civ);
     }
     ui_pump_messages();
     if (game_loop_active == '\0') break;

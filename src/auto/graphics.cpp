@@ -797,49 +797,19 @@ sprite_grab_from_sheet(iptr sprite,i32 x,i32 y,i32 width,
   return;
 }
 
-/* 00449a0e auto */
-void __cdecl gfx_load_icon_sprites(void)
-
+/* Part of gfx_load_icon_sprites (00449a0e): ICONS.BMP (or ICONS.GIF): map cursor
+   and grid, unit and city icons, resource and tax icons, explosions, window
+   textures, improvement, wonder and advance icons, caption buttons. */
+static void gfx_load_icons_sheet(void)
 {
   int loaded;
-  int civ;
   int col;
-  int frame_count;
-  GamePalette palette;
   int k;
   int y2;
   int x2;
   int j;
   int i;
-  int row;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
-  
-  eh_state = 0xffffffff;
-  palette.init();
-  eh_state = 0;
-  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-  loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x55,10,0xc0,(iptr)&palette);
-  if (loaded == 0) {
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-    ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x55,10,0xc0,(iptr)&palette);
-  }
-  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-  x2 = 1;
-  y2 = 1;
-  frame_count = 0;
-  for (i = 0; i < 0xb; i++) {
-    ((Sprite *)(((i8 *)&hill_sprites_block.nuke_anim_sprites) + i * 0x3c))->free();
-    sprite_grab_from_sheet((iptr)(((i8 *)&hill_sprites_block.nuke_anim_sprites) + i * 0x3c),x2,y2,0x5b,0x48);
-    x2 += 0x5c;
-    frame_count++;
-    if (frame_count == 6) {
-      x2 = 1;
-      y2 += 0x49;
-    }
-  }
-  ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->release();
+
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   loaded = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(const char *)&str_icons_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded == 0) {
@@ -1002,6 +972,17 @@ void __cdecl gfx_load_icon_sprites(void)
   sprite_grab_from_sheet((iptr)&scroll_up_button_sprite,0xe3,0x185,0x12,0x18);
   sprite_grab_from_sheet((iptr)&city_down_arrow_sprite_block.city_down_arrow_sprite,0xf6,0x185,0x12,0x18);
   ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->release();
+}
+
+/* Part of gfx_load_icon_sprites (00449a0e): EDITORPT.GIF: the sprite editor's
+   tools and backdrops. */
+static void gfx_load_editor_tool_sprites(void)
+{
+  int loaded;
+  int y2;
+  int x2;
+  int i;
+
   __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_file((const char *)&str_editorpt_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded != 0) {
@@ -1018,6 +999,18 @@ void __cdecl gfx_load_icon_sprites(void)
   ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->free();
   ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite))->grab_from_surface((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,7,0x23f,0x32,0x40,0x20);
   ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->release();
+}
+
+/* Part of gfx_load_icon_sprites (00449a0e): PEOPLE.BMP (or PEOPLE.GIF): the
+   citizens of the four eras and the small citizens. */
+static void gfx_load_people_sheet(void)
+{
+  int loaded;
+  int y2;
+  int x2;
+  int i;
+  int row;
+
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   loaded = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(const char *)&str_people_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded == 0) {
@@ -1052,6 +1045,18 @@ void __cdecl gfx_load_icon_sprites(void)
     x2 += 0x10;
   }
   ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->release();
+}
+
+/* Part of gfx_load_icon_sprites (00449a0e): the resource sheet 0x56:
+   government pictures, treaty icons, popup icons and the civ portraits in
+   each civ's colour. palette: the caller's (the sheet's palette). */
+static void gfx_load_diplomacy_sheet(GamePalette &palette)
+{
+  int loaded;
+  int y2;
+  int x2;
+  int civ;
+
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x56,10,0xc0,(iptr)&palette);
   if (loaded == 0) {
@@ -1107,6 +1112,50 @@ void __cdecl gfx_load_icon_sprites(void)
                civ_primary_colors_block.civ_colors[civ].primary);
   }
   ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->release();
+}
+
+/* 00449a0e auto */
+void __cdecl gfx_load_icon_sprites(void)
+
+{
+  int loaded;
+  int frame_count;
+  GamePalette palette;
+  int y2;
+  int x2;
+  int i;
+  i32 seh_prev;
+  i8 *seh_handler;
+  i32 eh_state;
+  
+  eh_state = 0xffffffff;
+  palette.init();
+  eh_state = 0;
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x55,10,0xc0,(iptr)&palette);
+  if (loaded == 0) {
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x55,10,0xc0,(iptr)&palette);
+  }
+  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  x2 = 1;
+  y2 = 1;
+  frame_count = 0;
+  for (i = 0; i < 0xb; i++) {
+    ((Sprite *)(((i8 *)&hill_sprites_block.nuke_anim_sprites) + i * 0x3c))->free();
+    sprite_grab_from_sheet((iptr)(((i8 *)&hill_sprites_block.nuke_anim_sprites) + i * 0x3c),x2,y2,0x5b,0x48);
+    x2 += 0x5c;
+    frame_count++;
+    if (frame_count == 6) {
+      x2 = 1;
+      y2 += 0x49;
+    }
+  }
+  ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->release();
+  gfx_load_icons_sheet();
+  gfx_load_editor_tool_sprites();
+  gfx_load_people_sheet();
+  gfx_load_diplomacy_sheet(palette);
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0044ab4e */ { palette_destroy(&palette); }
   return;
@@ -4804,39 +4853,21 @@ void __cdecl sprite_editor_draw_flag_marker(void)
   return;
 }
 
-/* 00572fff auto */
-void __cdecl sprite_editor_on_mouse_down(int x,int y)
-
+/* Part of sprite_editor_on_mouse_down (00572fff): a click
+   on a tool button (tool_index): pick, pencil, brush, undo, the colour
+   swaps, brush sizes, the flag marker. x/y are zeroed by the colour tools;
+   old_color/new_color: the caller's (read stale by the swatch redraws). */
+static void sprite_editor_tool_click(i32 tool_index,iptr old_flag_x,iptr old_flag_y,Sprite &temp_sprite,
+                                                int &x,int &y,int &old_color,int &new_color)
 {
-  iptr old_flag_y;
-  iptr old_flag_x;
   SHORT button_state;
-  NativeWindow *window;
-  i32 tool_index;
   int temp_x;
   int temp_y;
   i8 draw_rect[16];
-  int old_color;
   iptr saved_flag_y;
   iptr saved_flag_x;
-  iptr dirty_rect;
-  int new_color;
   i8 grab_rect[16];
-  Sprite temp_sprite;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
-  
-  seh_state = 0xffffffff;
-  sprite_init(&temp_sprite);
-  seh_state = 0;
-  window = ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->get_window();
-  SetCapture(window->hwnd);
-  x -= status_window_block.sprite_editor_origin_x;
-  y -= status_window_block.sprite_editor_origin_y;
-  tool_index = sprite_editor_tool_hit_test(x,y);
-  old_flag_x = status_window_block.sprite_editor_flag_x;
-  old_flag_y = status_window_block.sprite_editor_flag_y;
+
   switch(tool_index) {
   case 0:
     if (status_window_block.sprite_editor_tool == 3) {
@@ -5028,87 +5059,35 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
       x = 0;
     }
   }
-  if ((((x < 9) || (0x187 < x)) || (y < 0xdf)) || (0x125 < y)) {
-    if (((0xf < x) && (x < status_window_block.sprite_editor_width * 4 + 0x10)) &&
-       ((0xf < y && (y < status_window_block.sprite_editor_height * 4 + 0x10)))) {
-      switch(status_window_block.sprite_editor_tool) {
-      case 0:
-        new_color = ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->get_pixel(x - 0x10 >> 2,
-                              y - 0x10 >> 2);
-        button_state = GetKeyState(1);
-        if (((int)button_state & 0x8000U) == 0) {
-          button_state = GetKeyState(2);
-          if (((int)button_state & 0x8000U) != 0) {
-            sprite_editor_prev_right_color = sprite_editor_right_color;
-            old_color = sprite_editor_right_color;
-            sprite_editor_right_color = new_color;
-          }
-        }
-        else {
-          sprite_editor_prev_left_color = sprite_editor_left_color;
-          old_color = sprite_editor_left_color;
-          sprite_editor_left_color = new_color;
-        }
-        sprite_editor_draw_swatches();
-        temp_x = status_window_block.sprite_editor_origin_x + 10;
-        temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
-        sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
-        sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
-        if (status_window_block.sprite_editor_tool == 3) {
-          ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
-        }
-        status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
-        status_window_block.sprite_editor_cursor_id = 0x204;
-        ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_cursor(0x204);
-        ui_flush_input();
-        break;
-      case 1:
-      case 2:
-        sprite_editor_rebuild_sprite();
-        status_window_block.sprite_editor_painting = 1;
-        temp_x = (int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >> 2;
-        temp_y = (int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >> 2;
-        status_window_block.sprite_editor_last_px = temp_x;
-        status_window_block.sprite_editor_last_py = temp_y;
-        button_state = GetKeyState(1);
-        if (((int)button_state & 0x8000U) == 0) {
-          button_state = GetKeyState(2);
-          if (((int)button_state & 0x8000U) != 0) {
-            status_window_block.sprite_editor_paint_color = sprite_editor_right_color;
-          }
-        }
-        else {
-          status_window_block.sprite_editor_paint_color = sprite_editor_left_color;
-        }
-        dirty_rect = (iptr)sprite_editor_plot_pixel(temp_x,temp_y);
-        ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_blit_surface_rect(dirty_rect);
-        break;
-      case 3:
-        sprite_editor_rebuild_sprite();
-        status_window_block.sprite_editor_flag_x = int_clamp((int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >>
-                                          2,5,0x2f);
-        status_window_block.sprite_editor_flag_y = int_clamp((int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >>
-                                          2,0,0xe);
-        sprite_editor_draw_flag_marker();
-      }
-    }
-  }
-  else {
+}
+
+/* Part of sprite_editor_on_mouse_down (00572fff): a click on the
+   enlarged sprite with the current tool: pick a colour, paint, or move the
+   flag. old_color/new_color: the caller's. */
+static void sprite_editor_canvas_click(int x,int y,int &old_color,int &new_color)
+{
+  SHORT button_state;
+  int temp_x;
+  int temp_y;
+  iptr dirty_rect;
+
+  switch(status_window_block.sprite_editor_tool) {
+  case 0:
+    new_color = ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface))->get_pixel(x - 0x10 >> 2,
+                          y - 0x10 >> 2);
     button_state = GetKeyState(1);
     if (((int)button_state & 0x8000U) == 0) {
       button_state = GetKeyState(2);
       if (((int)button_state & 0x8000U) != 0) {
         sprite_editor_prev_right_color = sprite_editor_right_color;
         old_color = sprite_editor_right_color;
-        sprite_editor_right_color = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
-        new_color = sprite_editor_right_color;
+        sprite_editor_right_color = new_color;
       }
     }
     else {
       sprite_editor_prev_left_color = sprite_editor_left_color;
       old_color = sprite_editor_left_color;
-      sprite_editor_left_color = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
-      new_color = sprite_editor_left_color;
+      sprite_editor_left_color = new_color;
     }
     sprite_editor_draw_swatches();
     temp_x = status_window_block.sprite_editor_origin_x + 10;
@@ -5119,6 +5098,111 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
       ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
     }
     status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    status_window_block.sprite_editor_cursor_id = 0x204;
+    ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->set_cursor(0x204);
+    ui_flush_input();
+    break;
+  case 1:
+  case 2:
+    sprite_editor_rebuild_sprite();
+    status_window_block.sprite_editor_painting = 1;
+    temp_x = (int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >> 2;
+    temp_y = (int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >> 2;
+    status_window_block.sprite_editor_last_px = temp_x;
+    status_window_block.sprite_editor_last_py = temp_y;
+    button_state = GetKeyState(1);
+    if (((int)button_state & 0x8000U) == 0) {
+      button_state = GetKeyState(2);
+      if (((int)button_state & 0x8000U) != 0) {
+        status_window_block.sprite_editor_paint_color = sprite_editor_right_color;
+      }
+    }
+    else {
+      status_window_block.sprite_editor_paint_color = sprite_editor_left_color;
+    }
+    dirty_rect = (iptr)sprite_editor_plot_pixel(temp_x,temp_y);
+    ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window))->wnd_blit_surface_rect(dirty_rect);
+    break;
+  case 3:
+    sprite_editor_rebuild_sprite();
+    status_window_block.sprite_editor_flag_x = int_clamp((int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >>
+                                      2,5,0x2f);
+    status_window_block.sprite_editor_flag_y = int_clamp((int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >>
+                                      2,0,0xe);
+    sprite_editor_draw_flag_marker();
+  }
+}
+
+/* Part of sprite_editor_on_mouse_down (00572fff): a click on the
+   palette: the left or right colour set from the cell. old_color/new_color:
+   the caller's. */
+static void sprite_editor_palette_click(int x,int y,int &old_color,int &new_color)
+{
+  SHORT button_state;
+  int temp_x;
+  int temp_y;
+
+  button_state = GetKeyState(1);
+  if (((int)button_state & 0x8000U) == 0) {
+    button_state = GetKeyState(2);
+    if (((int)button_state & 0x8000U) != 0) {
+      sprite_editor_prev_right_color = sprite_editor_right_color;
+      old_color = sprite_editor_right_color;
+      sprite_editor_right_color = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
+      new_color = sprite_editor_right_color;
+    }
+  }
+  else {
+    sprite_editor_prev_left_color = sprite_editor_left_color;
+    old_color = sprite_editor_left_color;
+    sprite_editor_left_color = ((y - 0xdf) / 0xc) * 0x20 + (x - 9) / 0xc + 10;
+    new_color = sprite_editor_left_color;
+  }
+  sprite_editor_draw_swatches();
+  temp_x = status_window_block.sprite_editor_origin_x + 10;
+  temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
+  sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
+  sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
+  if (status_window_block.sprite_editor_tool == 3) {
+    ((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window))->repaint();
+  }
+  status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+}
+
+/* 00572fff auto */
+void __cdecl sprite_editor_on_mouse_down(int x,int y)
+
+{
+  iptr old_flag_y;
+  iptr old_flag_x;
+  NativeWindow *window;
+  i32 tool_index;
+  int old_color;
+  int new_color;
+  Sprite temp_sprite;
+  i32 seh_handler;
+  i8 *seh_next;
+  i32 seh_state;
+  
+  seh_state = 0xffffffff;
+  sprite_init(&temp_sprite);
+  seh_state = 0;
+  window = ((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd))->get_window();
+  SetCapture(window->hwnd);
+  x -= status_window_block.sprite_editor_origin_x;
+  y -= status_window_block.sprite_editor_origin_y;
+  tool_index = sprite_editor_tool_hit_test(x,y);
+  old_flag_x = status_window_block.sprite_editor_flag_x;
+  old_flag_y = status_window_block.sprite_editor_flag_y;
+  sprite_editor_tool_click(tool_index,old_flag_x,old_flag_y,temp_sprite,x,y,old_color,new_color);
+  if ((((x < 9) || (0x187 < x)) || (y < 0xdf)) || (0x125 < y)) {
+    if (((0xf < x) && (x < status_window_block.sprite_editor_width * 4 + 0x10)) &&
+       ((0xf < y && (y < status_window_block.sprite_editor_height * 4 + 0x10)))) {
+      sprite_editor_canvas_click(x,y,old_color,new_color);
+    }
+  }
+  else {
+    sprite_editor_palette_click(x,y,old_color,new_color);
   }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00573adc */ { sprite_destroy(&temp_sprite); }

@@ -3065,28 +3065,163 @@ void AviPlayer::call_cue_callback()
   return;
 }
 
+/* Part of moviewnd_wndproc (005ec317): WM_GETMINMAXINFO: the window's min and max
+   client sizes plus the frame. */
+static void moviewnd_on_getminmaxinfo(WndOnMciDoneView *wnd2,uint lparam)
+{
+  NativeWindow *window;
+  int frame_height;
+  MINMAXINFO *minmax_info;
+  int frame_width;
+  int min_height2;
+  int min_width2;
+  int max_height2;
+  int max_width2;
+
+  minmax_info = (MINMAXINFO *)lparam;
+  window = ((WndBase *)wnd2)->get_window();
+  frame_height = wnd_obj_frame_height(window);
+  window = ((WndBase *)wnd2)->get_window();
+  frame_width = wnd_obj_frame_width(window);
+  ((ModalMenuWindow *)wnd2)->get_min_size((iptr)&min_width2,(iptr)&min_height2);
+  ((ModalMenuWindow *)wnd2)->get_max_size((iptr)&max_width2,(iptr)&max_height2);
+  minmax_info->ptMaxTrackSize.x = frame_width + max_width2;
+  minmax_info->ptMaxTrackSize.y = frame_height + max_height2;
+  minmax_info->ptMinTrackSize.x = frame_width + min_width2;
+  minmax_info->ptMinTrackSize.y = frame_height + min_height2;
+}
+
+/* Part of moviewnd_wndproc (005ec317): WM_HSCROLL: moves the horizontal scroll bar
+   (line, page, thumb) and tells the window. */
+static void moviewnd_on_hscroll(HWND hwnd,WndOnMciDoneView *wnd2,uint wparam,short thumb_pos)
+{
+  int value;
+  int scroll_pos2;
+
+  scroll_pos2 = ((ModalMenuWindow *)wnd2)->get_hscroll_pos();
+  switch(wparam) {
+  case 0:
+    scroll_pos2--;
+    SetScrollPos(hwnd,0,scroll_pos2,1);
+    scroll_pos2 = GetScrollPos(hwnd,0);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->hscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
+    return;
+  case 1:
+    scroll_pos2++;
+    SetScrollPos(hwnd,0,scroll_pos2,1);
+    scroll_pos2 = GetScrollPos(hwnd,0);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->hscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
+    return;
+  case 2:
+    value = ((ModalMenuWindow *)wnd2)->get_hscroll_page();
+    scroll_pos2 -= value;
+    SetScrollPos(hwnd,0,scroll_pos2,1);
+    scroll_pos2 = GetScrollPos(hwnd,0);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->hscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
+    return;
+  case 3:
+    value = ((ModalMenuWindow *)wnd2)->get_hscroll_page();
+    scroll_pos2 += value;
+    SetScrollPos(hwnd,0,scroll_pos2,1);
+    scroll_pos2 = GetScrollPos(hwnd,0);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->hscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
+    return;
+  case 4:
+    scroll_pos2 = (int)thumb_pos;
+    SetScrollPos(hwnd,0,scroll_pos2,1);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->hscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_hscroll(*(i32 *)wnd2->hscroll_pos);
+    return;
+  case 5:
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    ((WndHandlers *)wnd2->handlers)->call_hscroll_track((int)thumb_pos);
+    return;
+  default:
+    return;
+  }
+}
+
+/* Part of moviewnd_wndproc (005ec317): WM_VSCROLL: moves the vertical scroll bar
+   (line, page, thumb) and tells the window. */
+static void moviewnd_on_vscroll(HWND hwnd,WndOnMciDoneView *wnd2,uint wparam,short thumb_pos)
+{
+  int value;
+  int scroll_pos2;
+
+  scroll_pos2 = ((ModalMenuWindow *)wnd2)->get_vscroll_pos();
+  switch(wparam) {
+  case 0:
+    scroll_pos2--;
+    SetScrollPos(hwnd,1,scroll_pos2,1);
+    scroll_pos2 = GetScrollPos(hwnd,1);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->vscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
+    return;
+  case 1:
+    scroll_pos2++;
+    SetScrollPos(hwnd,1,scroll_pos2,1);
+    scroll_pos2 = GetScrollPos(hwnd,1);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->vscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
+    return;
+  case 2:
+    value = ((ModalMenuWindow *)wnd2)->get_vscroll_page();
+    scroll_pos2 -= value;
+    SetScrollPos(hwnd,1,scroll_pos2,1);
+    scroll_pos2 = GetScrollPos(hwnd,1);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->vscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
+    return;
+  case 3:
+    value = ((ModalMenuWindow *)wnd2)->get_vscroll_page();
+    scroll_pos2 += value;
+    SetScrollPos(hwnd,1,scroll_pos2,1);
+    scroll_pos2 = GetScrollPos(hwnd,1);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->vscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
+    return;
+  case 4:
+    scroll_pos2 = (int)thumb_pos;
+    SetScrollPos(hwnd,1,scroll_pos2,1);
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    *(int *)wnd2->vscroll_pos = scroll_pos2;
+    ((WndHandlers *)wnd2->handlers)->call_vscroll(*(i32 *)wnd2->vscroll_pos);
+    return;
+  case 5:
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
+    ((WndHandlers *)wnd2->handlers)->call_vscroll_track((int)thumb_pos);
+    return;
+  default:
+    return;
+  }
+}
+
 /* 005ec317 auto */
 i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
 
 {
   short thumb_pos;
   i32 result;
-  NativeWindow *window;
   WndBase *wnd_obj;
   BOOL is_iconic;
   int value;
   i8 generic_parms[4];
-  int frame_height;
-  MINMAXINFO *minmax_info;
-  int frame_width;
   NativeWindow *parent_window;
-  int min_height2;
-  int min_width2;
-  int scroll_pos2;
   WndOnMciDoneView *wnd2;
   iptr mci_device2;
-  int max_height2;
-  int max_width2;
   
   wnd2 = (WndOnMciDoneView *)GetWindowLongA(hwnd,4);
   if (wnd2 == (WndOnMciDoneView *)0x0) {
@@ -3137,17 +3272,7 @@ handle_size:
         return 1;
       }
       if (msg == 0x24) {
-        minmax_info = (MINMAXINFO *)lparam;
-        window = ((WndBase *)wnd2)->get_window();
-        frame_height = wnd_obj_frame_height(window);
-        window = ((WndBase *)wnd2)->get_window();
-        frame_width = wnd_obj_frame_width(window);
-        ((ModalMenuWindow *)wnd2)->get_min_size((iptr)&min_width2,(iptr)&min_height2);
-        ((ModalMenuWindow *)wnd2)->get_max_size((iptr)&max_width2,(iptr)&max_height2);
-        minmax_info->ptMaxTrackSize.x = frame_width + max_width2;
-        minmax_info->ptMaxTrackSize.y = frame_height + max_height2;
-        minmax_info->ptMinTrackSize.x = frame_width + min_width2;
-        minmax_info->ptMinTrackSize.y = frame_height + min_height2;
+        moviewnd_on_getminmaxinfo(wnd2,lparam);
         return 0;
       }
       result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
@@ -3202,108 +3327,12 @@ handle_size:
       }
       thumb_pos = (short)(wparam >> 0x10);
       if (msg == 0x114) {
-        scroll_pos2 = ((ModalMenuWindow *)wnd2)->get_hscroll_pos();
-        switch(wparam) {
-        case 0:
-          scroll_pos2--;
-          SetScrollPos(hwnd,0,scroll_pos2,1);
-          scroll_pos2 = GetScrollPos(hwnd,0);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->hscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
-          return 0;
-        case 1:
-          scroll_pos2++;
-          SetScrollPos(hwnd,0,scroll_pos2,1);
-          scroll_pos2 = GetScrollPos(hwnd,0);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->hscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
-          return 0;
-        case 2:
-          value = ((ModalMenuWindow *)wnd2)->get_hscroll_page();
-          scroll_pos2 -= value;
-          SetScrollPos(hwnd,0,scroll_pos2,1);
-          scroll_pos2 = GetScrollPos(hwnd,0);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->hscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
-          return 0;
-        case 3:
-          value = ((ModalMenuWindow *)wnd2)->get_hscroll_page();
-          scroll_pos2 += value;
-          SetScrollPos(hwnd,0,scroll_pos2,1);
-          scroll_pos2 = GetScrollPos(hwnd,0);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->hscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_hscroll(scroll_pos2);
-          return 0;
-        case 4:
-          scroll_pos2 = (int)thumb_pos;
-          SetScrollPos(hwnd,0,scroll_pos2,1);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->hscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_hscroll(*(i32 *)wnd2->hscroll_pos);
-          return 0;
-        case 5:
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          ((WndHandlers *)wnd2->handlers)->call_hscroll_track((int)thumb_pos);
-          return 0;
-        default:
-          return 0;
-        }
+        moviewnd_on_hscroll(hwnd,wnd2,wparam,thumb_pos);
+        return 0;
       }
       if (msg == 0x115) {
-        scroll_pos2 = ((ModalMenuWindow *)wnd2)->get_vscroll_pos();
-        switch(wparam) {
-        case 0:
-          scroll_pos2--;
-          SetScrollPos(hwnd,1,scroll_pos2,1);
-          scroll_pos2 = GetScrollPos(hwnd,1);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->vscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
-          return 0;
-        case 1:
-          scroll_pos2++;
-          SetScrollPos(hwnd,1,scroll_pos2,1);
-          scroll_pos2 = GetScrollPos(hwnd,1);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->vscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
-          return 0;
-        case 2:
-          value = ((ModalMenuWindow *)wnd2)->get_vscroll_page();
-          scroll_pos2 -= value;
-          SetScrollPos(hwnd,1,scroll_pos2,1);
-          scroll_pos2 = GetScrollPos(hwnd,1);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->vscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
-          return 0;
-        case 3:
-          value = ((ModalMenuWindow *)wnd2)->get_vscroll_page();
-          scroll_pos2 += value;
-          SetScrollPos(hwnd,1,scroll_pos2,1);
-          scroll_pos2 = GetScrollPos(hwnd,1);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->vscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_vscroll(scroll_pos2);
-          return 0;
-        case 4:
-          scroll_pos2 = (int)thumb_pos;
-          SetScrollPos(hwnd,1,scroll_pos2,1);
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          *(int *)wnd2->vscroll_pos = scroll_pos2;
-          ((WndHandlers *)wnd2->handlers)->call_vscroll(*(i32 *)wnd2->vscroll_pos);
-          return 0;
-        case 5:
-          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
-          ((WndHandlers *)wnd2->handlers)->call_vscroll_track((int)thumb_pos);
-          return 0;
-        default:
-          return 0;
-        }
+        moviewnd_on_vscroll(hwnd,wnd2,wparam,thumb_pos);
+        return 0;
       }
       result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
       return result;

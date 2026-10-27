@@ -80,6 +80,8 @@ def target(text):
 
 
 LOOSE = False       # --regs: register names ignored
+SLOTS_RETRY = False  # --slots: a function that differs is compared again with SLOTS
+SLOTS = False       # stack slots not paired (any slot matches any other)
 
 
 class Walk:
@@ -92,7 +94,13 @@ class Walk:
         if LOOSE:
             text = re.sub(r'%(e?[abcd]x|[abcd][lh]|e?[sd]i|[sd]il|ebp)\b', '%r', text)
 
+        if SLOTS:
+            text = re.sub(r'^(sub|add) \$0x[0-9a-f]+,%esp$', r'\1 $FRAME,%esp', text)
+            text = re.sub(r'-?0x[0-9a-f]+\(%esp,', '[s](%esp,', text)
+
         def slot(m):
+            if SLOTS:
+                return '[s]'
             k = m.group(1) or '0'
             if k not in self.slots:
                 self.slots[k] = 's%d' % len(self.slots)
@@ -166,6 +174,10 @@ def compare(fa, fb):
 
 def main():
     args = sys.argv[1:]
+    global SLOTS_RETRY
+    if args[:1] == ['--slots']:
+        SLOTS_RETRY = True
+        args = args[1:]
     if args[:1] == ['--map']:
         cc.load_map(args[1])
         args = args[2:]
@@ -187,6 +199,17 @@ def main():
                 why = 'same graph and instructions but for register choice (%s)' % why
                 regs.append(name)
             LOOSE = False
+        if why is not None and SLOTS_RETRY and name not in regs:
+            global SLOTS
+            SLOTS = True
+            if compare(a[name], b[name]) is None:
+                why = 'same graph and instructions but for which stack slots hold which locals (%s)' % why
+            else:
+                LOOSE = True
+                if compare(a[name], b[name]) is None:
+                    why = 'same graph and instructions but for stack slots and register choice (%s)' % why
+                LOOSE = False
+            SLOTS = False
         if why is None:
             same += 1
         else:

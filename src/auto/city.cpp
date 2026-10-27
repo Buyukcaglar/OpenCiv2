@@ -1351,6 +1351,176 @@ void __cdecl trade_supply_search_dialog(iptr civ)
   return;
 }
 
+/* Part of trade_advisor_draw (0042bd8f): the left column of a row: a city
+   with its tax and science, then the totals. */
+static void trade_advisor_draw_left_cell(iptr civ,int row_y,int total_science2,int col_x,uint row,int text_y2,int city_count,int item,int total_tax2,int total_upkeep)
+{
+  i8 sprite_rect4[16];
+  i8 sprite_rect3[16];
+  i8 sprite_rect2[16];
+  i8 sprite_rect1[16];
+  i8 sprite_rect0[16];
+  iptr city2;
+  iptr city;
+  int upkeep2;
+  int draw_x;
+  int n;
+
+  if (item < city_count) {
+    n = 0;
+    city2 = -1;
+    for (city = 0; city < game.num_cities; city++) {
+      if ((cities[city].id != 0) && (cities[city].owner == civ)) {
+        if (item == n) {
+          city2 = city;
+          break;
+        }
+        n++;
+      }
+    }
+    if (-1 < city2) {
+      city = city2;
+      draw_x = (row & 1) * 0x40 + col_x;
+      gfx_draw_city((iptr)&advisor_window_block.advisor_window,city2,0,draw_x,row_y,0);
+      text_set_font((iptr)&advisor_bold_font);
+      text_set_colors(0x25,0x12,1,1);
+      col_x += 0x8a;
+      gfx_draw_text((const char *)&cities[city].name,col_x,text_y2);
+      col_x += 0x69;
+      draw_x = col_x;
+      if ((cities[city].flags & 1) == 0) {
+        text_clear();
+        text_append_int((int)cities[city].tax);
+        draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,draw_x,text_y2);
+        draw_x += 2;
+        ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect0,(iptr)&advisor_window_block.advisor_window,draw_x,
+                   text_y2 + 2);
+        draw_x += 0x12;
+        text_clear();
+        text_append_int((int)cities[city].science);
+        draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,draw_x,text_y2);
+        draw_x += 2;
+        ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.science_icon_sprite))->draw((iptr)sprite_rect1,(iptr)&advisor_window_block.advisor_window,draw_x,
+                   text_y2 + 2);
+        draw_x += 0x12;
+      }
+      else {
+        text_clear();
+        text_append_label(0x86);
+        text_set_colors(0x6a,0x12,1,1);
+        gfx_draw_text((const char *)&map_views_block.text_buffer,draw_x,text_y2);
+      }
+    }
+  }
+  else if (city_count + 1 == item) {
+    text_set_font((iptr)&advisor_bold_font);
+    text_set_colors(0x29,10,1,1);
+    text_clear();
+    text_append_label(0x87);
+    text_append_colon();
+    text_append_int(total_upkeep);
+    draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
+    ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect2,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2);
+  }
+  else if (city_count + 2 == item) {
+    text_clear();
+    text_append_label(0x88);
+    text_append_colon();
+    text_append_long(total_tax2);
+    text_set_font((iptr)&advisor_bold_font);
+    text_set_colors(0x29,10,1,1);
+    draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
+    ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect3,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2);
+  }
+  else if (city_count + 3 == item) {
+    text_clear();
+    text_append_label(0x16e);
+    text_append_colon();
+    text_append_int(total_science2);
+    text_set_font((iptr)&advisor_bold_font);
+    text_set_colors(0x29,10,1,1);
+    draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
+    ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.science_icon_sprite))->draw((iptr)sprite_rect4,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2);
+  }
+  else if (city_count + 4 == item) {
+    text_clear();
+    text_append_label(0x89);
+    text_append_colon();
+    upkeep2 = civ_research_cost(civ);
+    if (upkeep2 < 2) {
+      upkeep2 = 1;
+    }
+    if (total_science2 < 2) {
+      total_science2 = 1;
+    }
+    text_append_int((total_science2 - 1 + upkeep2) / total_science2);
+    text_append_space();
+    text_append_label(0x2c);
+    text_set_font((iptr)&advisor_bold_font);
+    text_set_colors(0x29,10,1,1);
+    gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
+  }
+}
+
+/* Part of trade_advisor_draw (0042bd8f): the right column of a row: an
+   improvement kind with its count and upkeep, then the total upkeep. */
+static void trade_advisor_draw_right_cell(iptr civ,int text_y2,int improvement_kinds,int item,int right_col_x,int improvement_counts[39],int total_upkeep)
+{
+  int value;
+  i8 sprite_rect6[16];
+  i8 sprite_rect5[16];
+  iptr city2;
+  iptr improvement;
+  int draw_x;
+  int n;
+
+  if (item < improvement_kinds) {
+    city2 = -1;
+    n = 0;
+    for (improvement = 0; improvement < 0x27; improvement++) {
+      if (improvement_counts[improvement] != 0) {
+        if (item == n) {
+          city2 = improvement;
+          break;
+        }
+        n++;
+      }
+    }
+    if (-1 < city2) {
+      text_set_font((iptr)&advisor_bold_font);
+      improvement = city2;
+      text_clear();
+      text_append_int(improvement_counts[improvement]);
+      text_append_space();
+      text_append_string_id(improvements[improvement].name);
+      text_append_space();
+      text_append_lparen();
+      text_append_label(0x84);
+      text_append_colon();
+      value = civ_improvement_upkeep(civ,improvement);
+      text_append_int(value * improvement_counts[improvement]);
+      text_set_colors(0x7a,10,1,1);
+      draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,right_col_x,text_y2);
+      ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect5,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2
+                );
+      draw_x += 0xe;
+      text_clear();
+      text_append_rparen();
+      draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,draw_x,text_y2);
+    }
+  }
+  else if (improvement_kinds + 1 == item) {
+    text_set_font((iptr)&advisor_bold_font);
+    text_set_colors(0x7a,10,1,1);
+    text_clear();
+    text_append_label(0x87);
+    text_append_colon();
+    text_append_int(total_upkeep);
+    draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,right_col_x,text_y2);
+    ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect6,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2);
+  }
+}
+
 /* 0042bd8f auto */
 /* WARNING: Removing unreachable block (ram,0x0042cc50) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -1361,17 +1531,9 @@ void __cdecl trade_advisor_draw(void)
   char *text;
   int value;
   i32 max_row;
-  i8 sprite_rect6[16];
-  i8 sprite_rect5[16];
-  i8 sprite_rect4[16];
-  i8 sprite_rect3[16];
-  i8 sprite_rect2[16];
-  i8 sprite_rect1[16];
-  i8 sprite_rect0[16];
   iptr civ;
   int row_y;
   int total_science2;
-  iptr city2;
   int list_bottom;
   int gov_index;
   uint first_row2;
@@ -1384,13 +1546,11 @@ void __cdecl trade_advisor_draw(void)
   int upkeep2;
   int text_y2;
   int city_count;
-  int draw_x;
   int improvement_kinds;
   int item;
   int right_col_x;
   int total_tax2;
   int improvement_counts[39];
-  int n;
   int left_rows;
   int total_rows;
   int line_height;
@@ -1519,145 +1679,8 @@ void __cdecl trade_advisor_draw(void)
       else {
         text_y2 = row_y + 9;
         item = row - 1;
-        if (item < city_count) {
-          n = 0;
-          city2 = -1;
-          for (city = 0; city < game.num_cities; city++) {
-            if ((cities[city].id != 0) && (cities[city].owner == civ)) {
-              if (item == n) {
-                city2 = city;
-                break;
-              }
-              n++;
-            }
-          }
-          if (-1 < city2) {
-            city = city2;
-            draw_x = (row & 1) * 0x40 + col_x;
-            gfx_draw_city((iptr)&advisor_window_block.advisor_window,city2,0,draw_x,row_y,0);
-            text_set_font((iptr)&advisor_bold_font);
-            text_set_colors(0x25,0x12,1,1);
-            col_x += 0x8a;
-            gfx_draw_text((const char *)&cities[city].name,col_x,text_y2);
-            col_x += 0x69;
-            draw_x = col_x;
-            if ((cities[city].flags & 1) == 0) {
-              text_clear();
-              text_append_int((int)cities[city].tax);
-              draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,draw_x,text_y2);
-              draw_x += 2;
-              ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect0,(iptr)&advisor_window_block.advisor_window,draw_x,
-                         text_y2 + 2);
-              draw_x += 0x12;
-              text_clear();
-              text_append_int((int)cities[city].science);
-              draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,draw_x,text_y2);
-              draw_x += 2;
-              ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.science_icon_sprite))->draw((iptr)sprite_rect1,(iptr)&advisor_window_block.advisor_window,draw_x,
-                         text_y2 + 2);
-              draw_x += 0x12;
-            }
-            else {
-              text_clear();
-              text_append_label(0x86);
-              text_set_colors(0x6a,0x12,1,1);
-              gfx_draw_text((const char *)&map_views_block.text_buffer,draw_x,text_y2);
-            }
-          }
-        }
-        else if (city_count + 1 == item) {
-          text_set_font((iptr)&advisor_bold_font);
-          text_set_colors(0x29,10,1,1);
-          text_clear();
-          text_append_label(0x87);
-          text_append_colon();
-          text_append_int(total_upkeep);
-          draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
-          ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect2,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2);
-        }
-        else if (city_count + 2 == item) {
-          text_clear();
-          text_append_label(0x88);
-          text_append_colon();
-          text_append_long(total_tax2);
-          text_set_font((iptr)&advisor_bold_font);
-          text_set_colors(0x29,10,1,1);
-          draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
-          ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect3,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2);
-        }
-        else if (city_count + 3 == item) {
-          text_clear();
-          text_append_label(0x16e);
-          text_append_colon();
-          text_append_int(total_science2);
-          text_set_font((iptr)&advisor_bold_font);
-          text_set_colors(0x29,10,1,1);
-          draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
-          ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.science_icon_sprite))->draw((iptr)sprite_rect4,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2);
-        }
-        else if (city_count + 4 == item) {
-          text_clear();
-          text_append_label(0x89);
-          text_append_colon();
-          upkeep2 = civ_research_cost(civ);
-          if (upkeep2 < 2) {
-            upkeep2 = 1;
-          }
-          if (total_science2 < 2) {
-            total_science2 = 1;
-          }
-          text_append_int((total_science2 - 1 + upkeep2) / total_science2);
-          text_append_space();
-          text_append_label(0x2c);
-          text_set_font((iptr)&advisor_bold_font);
-          text_set_colors(0x29,10,1,1);
-          gfx_draw_text((const char *)&map_views_block.text_buffer,col_x + 0x8a,text_y2);
-        }
-        if (item < improvement_kinds) {
-          city2 = -1;
-          n = 0;
-          for (improvement = 0; improvement < 0x27; improvement++) {
-            if (improvement_counts[improvement] != 0) {
-              if (item == n) {
-                city2 = improvement;
-                break;
-              }
-              n++;
-            }
-          }
-          if (-1 < city2) {
-            text_set_font((iptr)&advisor_bold_font);
-            improvement = city2;
-            text_clear();
-            text_append_int(improvement_counts[improvement]);
-            text_append_space();
-            text_append_string_id(improvements[improvement].name);
-            text_append_space();
-            text_append_lparen();
-            text_append_label(0x84);
-            text_append_colon();
-            value = civ_improvement_upkeep(civ,improvement);
-            text_append_int(value * improvement_counts[improvement]);
-            text_set_colors(0x7a,10,1,1);
-            draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,right_col_x,text_y2);
-            ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect5,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2
-                      );
-            draw_x += 0xe;
-            text_clear();
-            text_append_rparen();
-            draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,draw_x,text_y2);
-          }
-        }
-        else if (improvement_kinds + 1 == item) {
-          text_set_font((iptr)&advisor_bold_font);
-          text_set_colors(0x7a,10,1,1);
-          text_clear();
-          text_append_label(0x87);
-          text_append_colon();
-          text_append_int(total_upkeep);
-          draw_x = gfx_draw_text((const char *)&map_views_block.text_buffer,right_col_x,text_y2);
-          ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)sprite_rect6,(iptr)&advisor_window_block.advisor_window,draw_x,text_y2 + 2);
-        }
+        trade_advisor_draw_left_cell(civ,row_y,total_science2,col_x,row,text_y2,city_count,item,total_tax2,total_upkeep);
+        trade_advisor_draw_right_cell(civ,text_y2,improvement_kinds,item,right_col_x,improvement_counts,total_upkeep);
         row_y += line_height;
       }
     }
@@ -2263,61 +2286,683 @@ i32 __cdecl city_has_improvement(iptr city,iptr improvement_id)
 
 /* 0043d289: written by hand in src/game/regargs.cpp */
 
+/* Part of city_calc_commodity_demand (0043d400): the terrain of the city radius:
+   the count of each terrain, rivers and roads; the scores cleared. */
+static void city_commodity_count_terrain(int &road_tiles,int terrain_counts[11],iptr supply_order[16],int &river_tiles,int y3,int x3,iptr demand_order[16])
+{
+  byte terrain_byte;
+  iptr in_bounds;
+  int city2;
+  byte *tile;
+  uint tile_flags;
+  int y2;
+  uptr terrain2;
+  iptr x2;
+  iptr i;
+
+  river_tiles = 0;
+  for (i = 0; i < 0xb; i++) {
+    terrain_counts[i] = 0;
+  }
+  for (i = 0; i < 0x10; i++) {
+    (((int *)&advisor_window_block.city_commodity_demand_scores))[i] = 0;
+    (((int *)&advisor_window_block.city_commodity_supply_scores))[i] = (((int *)&advisor_window_block.city_commodity_demand_scores))[i];
+    demand_order[i] = i;
+    supply_order[i] = demand_order[i];
+  }
+  for (i = 0; i < 0x15; i++) {
+    x2 = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x3);
+    y2 = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y3;
+    in_bounds = map_in_bounds(x2,y2);
+    if (in_bounds != 0) {
+      terrain_byte = tile_terrain(x2,y2);
+      terrain2 = (uint)terrain_byte;
+      terrain_counts[terrain_byte]++;
+      city2 = tile_resource(x2,y2);
+      if (city2 != 0) {
+        terrain_counts[terrain2] += 3;
+      }
+      tile = (byte *)tile_at(x2,y2);
+      if ((*tile & 0x80) != 0) {
+        river_tiles++;
+      }
+      tile_flags = tile_improvements(x2,y2);
+      if ((tile_flags & 0x10) != 0) {
+        road_tiles++;
+      }
+    }
+  }
+  terrain_counts[6] += terrain_counts[7];
+  terrain_counts[7] = 0;
+}
+
+/* Part of city_calc_commodity_demand (0043d400): the supply score of each
+   commodity, from the terrain, the advances, the size and the place. */
+static void city_commodity_supply_scores(uptr city,iptr civ,int terrain_counts[11],int river_tiles,int size_class,uint landmass2,uint south_dist,uint advance_count,uint center_dx,uint east_dist,uint center_dy)
+{
+  int city2;
+  i32 shift;
+  int cloth_base;
+  int wool_factor;
+  iptr wine_bonus;
+  int wine_base;
+
+  advisor_window_block.city_commodity_supply_scores[0] = terrain_counts[9] * 3 + terrain_counts[6] * 6 + terrain_counts[3] * 4 + river_tiles * 3;
+  if ((int)advance_count < 0x10) {
+    advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] * 2;
+  }
+  if ((int)advance_count < 0x18) {
+    advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] << 1;
+  }
+  if ((int)advance_count < 0x31) {
+    if (cities[city].size < 3) {
+      advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] << 1;
+    }
+  }
+  else {
+    advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] / 2;
+  }
+  if (7 < cities[city].size) {
+    advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] / 2;
+  }
+  wool_factor = terrain_counts[6] + 2;
+  if ((int)map.height / 3 < (int)center_dy) {
+    wool_factor = terrain_counts[6] + 3;
+  }
+  advisor_window_block.supply_score_wool[0] = (river_tiles / 2 + terrain_counts[4] * 2 + terrain_counts[2]) * wool_factor;
+  advisor_window_block.supply_score_beads = terrain_counts[10] * 8 - center_dy;
+  if ('\t' < cities[city].size) {
+    advisor_window_block.supply_score_beads = advisor_window_block.supply_score_beads >> 1;
+  }
+  if (0x20 < (int)advance_count) {
+    advisor_window_block.supply_score_beads = advisor_window_block.supply_score_beads >> 1;
+  }
+  cloth_base = (terrain_counts[1] * 3 + terrain_counts[0]) - river_tiles;
+  city2 = int_clamp((int)advance_count / 10,1,2);
+  advisor_window_block.supply_score_cloth = cloth_base * city2;
+  city2 = civ_has_advance(civ,0x25);
+  if (city2 != 0) {
+    advisor_window_block.supply_score_cloth = advisor_window_block.supply_score_cloth * 3 >> 1;
+  }
+  if ((int)advance_count < 8) {
+    advisor_window_block.supply_score_cloth = advisor_window_block.supply_score_cloth >> 1;
+  }
+  if ((int)advance_count < 0x10) {
+    advisor_window_block.supply_score_cloth = advisor_window_block.supply_score_cloth >> 1;
+  }
+  advisor_window_block.supply_score_salt = (terrain_counts[10] * 3 + terrain_counts[0] * 4 + terrain_counts[8] * 2) - (int)advance_count / 6;
+  city2 = civ_has_advance(civ,0x41);
+  if (city2 == 0) {
+    advisor_window_block.supply_score_salt = advisor_window_block.supply_score_salt / 3;
+  }
+  city2 = city_has_improvement(city,9);
+  if (city2 != 0) {
+    advisor_window_block.supply_score_salt += (advisor_window_block.supply_score_salt >> 1);
+  }
+  if (((landmass2 & 1) != 0) && ((int)landmass2 < 6)) {
+    advisor_window_block.supply_score_salt += (advisor_window_block.supply_score_salt >> 1);
+  }
+  advisor_window_block.supply_score_coal = (terrain_counts[9] + terrain_counts[1] + terrain_counts[3] + terrain_counts[8] + 1) * terrain_counts[4] *
+                 5;
+  city2 = size_class / 2;
+  if (1 < city2) {
+    city2 = 2;
+  }
+  advisor_window_block.supply_score_coal = int_shift_signed(advisor_window_block.supply_score_coal,city2 - 1);
+  if (((landmass2 & 1) != 0) && (1 < (int)landmass2)) {
+    advisor_window_block.supply_score_coal += (advisor_window_block.supply_score_coal >> 1);
+  }
+  if ((int)advance_count < 0x14) {
+    advisor_window_block.supply_score_coal = advisor_window_block.supply_score_coal >> 1;
+  }
+  advisor_window_block.supply_score_copper = terrain_counts[5] * 5 + terrain_counts[4] * 5;
+  if ((landmass2 != 0) && ((landmass2 & 1) == 0)) {
+    advisor_window_block.supply_score_copper = advisor_window_block.supply_score_copper * 2;
+  }
+  city2 = (terrain_counts[2] * 5 - terrain_counts[1]) + river_tiles;
+  advisor_window_block.supply_score_dye = city2 * 2;
+  if ((landmass2 != 0) && ((landmass2 & 3) == 0)) {
+    advisor_window_block.supply_score_dye = city2 * 4;
+  }
+  wine_base = river_tiles * 5 - terrain_counts[2];
+  wine_bonus = terrain_counts[1] << 2;
+  wine_base = int_clamp(wine_base,0,wine_bonus);
+  wine_bonus = int_clamp(wine_bonus,0,wine_base);
+  advisor_window_block.supply_score_wine = wine_bonus + (int)(((int)map.width >> 1) - center_dx) / 2 + wine_base;
+  if (south_dist != 0) {
+    advisor_window_block.supply_score_wine = advisor_window_block.supply_score_wine >> 1;
+  }
+  shift = int_clamp(size_class - 1,0xfffffffe,1);
+  advisor_window_block.supply_score_wine = int_shift_signed(advisor_window_block.supply_score_wine,shift);
+  if ((landmass2 - 2 & 3) == 0) {
+    advisor_window_block.supply_score_wine += (advisor_window_block.supply_score_wine >> 1);
+  }
+  if (civs[civ].tribe == 9) {
+    advisor_window_block.supply_score_wine = advisor_window_block.supply_score_wine << 1;
+  }
+  if ('\n' < cities[city].size) {
+    advisor_window_block.supply_score_wine = advisor_window_block.supply_score_wine >> 1;
+  }
+  advisor_window_block.supply_score_silk = (terrain_counts[3] * 2 + terrain_counts[9] + 1) * (terrain_counts[4] + 1);
+  if (((advisor_window_block.supply_score_silk != 0) && (advisor_window_block.supply_score_silk = advisor_window_block.supply_score_silk + east_dist * 2, landmass2 != 0)) &&
+     ((int)landmass2 % 5 == 0)) {
+    advisor_window_block.supply_score_silk = advisor_window_block.supply_score_silk * 2;
+  }
+  if (civs[civ].tribe == 0xb) {
+    advisor_window_block.supply_score_silk = advisor_window_block.supply_score_silk << 1;
+  }
+  advisor_window_block.supply_score_silver = terrain_counts[5] * 8;
+  if (advisor_window_block.supply_score_silver != 0) {
+    advisor_window_block.supply_score_silver = advisor_window_block.supply_score_silver + terrain_counts[4] + center_dx;
+    city2 = civ_has_advance(civ,0x27);
+    if (city2 == 0) {
+      advisor_window_block.supply_score_silver = advisor_window_block.supply_score_silver >> 1;
+    }
+    if (8 < (int)landmass2) {
+      advisor_window_block.supply_score_silver += (advisor_window_block.supply_score_silver >> 1);
+    }
+    if (cities[city].size < 5) {
+      advisor_window_block.supply_score_silver = advisor_window_block.supply_score_silver >> 1;
+    }
+  }
+  if (civs[civ].tribe == 10) {
+    advisor_window_block.supply_score_silk = advisor_window_block.supply_score_silk << 1;
+  }
+  advisor_window_block.supply_score_spice = (terrain_counts[9] * 3 + terrain_counts[8] * 2 + terrain_counts[0] * 2) *
+                 ((terrain_counts[10] + river_tiles) / 2);
+  if (advisor_window_block.supply_score_spice != 0) {
+    if ((int)center_dy < 10) {
+      advisor_window_block.supply_score_spice = advisor_window_block.supply_score_spice * 2;
+    }
+    advisor_window_block.supply_score_spice -= center_dy;
+    if (landmass_table_block.landmass_recs[landmass2].tiles < 0x1a) {
+      advisor_window_block.supply_score_spice += (advisor_window_block.supply_score_spice >> 1);
+    }
+    if (300 < landmass_table_block.landmass_recs[landmass2].tiles) {
+      advisor_window_block.supply_score_spice = advisor_window_block.supply_score_spice >> 1;
+    }
+    if (landmass2 == 1) {
+      advisor_window_block.supply_score_spice = advisor_window_block.supply_score_spice >> 1;
+    }
+  }
+  advisor_window_block.supply_score_gems = (terrain_counts[5] + 1) * (terrain_counts[8] + 1) * (terrain_counts[0] + 1) + terrain_counts[1];
+  if (advisor_window_block.supply_score_gems != 0) {
+    city2 = int_clamp(size_class,1,4);
+    advisor_window_block.supply_score_gems = (city2 * advisor_window_block.supply_score_gems) / 2;
+    if (landmass2 == 7) {
+      advisor_window_block.supply_score_gems += (advisor_window_block.supply_score_gems >> 1);
+    }
+  }
+  advisor_window_block.supply_score_gold = (terrain_counts[5] + terrain_counts[4] / 2 + 1) * (river_tiles + 2);
+  if (2 < terrain_counts[5]) {
+    advisor_window_block.supply_score_gold = advisor_window_block.supply_score_gold * 2;
+  }
+  if (4 < cities[city].size) {
+    advisor_window_block.supply_score_gold = advisor_window_block.supply_score_gold << 1;
+  }
+  if ('\t' < cities[city].size) {
+    advisor_window_block.supply_score_gold = advisor_window_block.supply_score_gold << 1;
+  }
+  advisor_window_block.supply_score_oil = terrain_counts[6] * 8 + terrain_counts[0] * 10 + terrain_counts[8] * 6 + terrain_counts[7] * 0xc;
+  if (game.advance_known_by[0xe] == '\0') {
+    advisor_window_block.supply_score_oil = advisor_window_block.supply_score_oil >> 3;
+  }
+  if (advisor_window_block.supply_score_oil == 0) {
+    advisor_window_block.supply_score_oil = -1;
+  }
+  else {
+    if (landmass2 == 0x11) {
+      advisor_window_block.supply_score_oil = advisor_window_block.supply_score_oil * 3;
+    }
+    else if ((1 < (int)landmass2) && ((landmass2 - 1 & 7) == 0)) {
+      advisor_window_block.supply_score_oil += (advisor_window_block.supply_score_oil >> 1);
+    }
+    city2 = int_clamp(size_class / 2 - 2,1,2);
+    advisor_window_block.supply_score_oil = city2 * advisor_window_block.supply_score_oil;
+  }
+  advisor_window_block.supply_score_uranium = (terrain_counts[6] + terrain_counts[0] + 1) * (terrain_counts[4] + river_tiles + 1) *
+                 (terrain_counts[5] + 1);
+  city2 = civ_has_advance(civ,0x3a);
+  if (city2 == 0) {
+    advisor_window_block.supply_score_uranium = 0;
+  }
+  if (advisor_window_block.supply_score_uranium == 0) {
+    advisor_window_block.supply_score_uranium = -1;
+  }
+  else {
+    if ((landmass2 != 0) && ((int)landmass2 % 10 == 0)) {
+      advisor_window_block.supply_score_uranium += (advisor_window_block.supply_score_uranium >> 1);
+    }
+    city2 = size_class;
+    if (5 < size_class) {
+      city2 = 6;
+    }
+    advisor_window_block.supply_score_uranium = (advisor_window_block.supply_score_uranium * city2) / 6;
+  }
+}
+
+/* Part of city_calc_commodity_demand (0043d400): the demand score of each
+   commodity. */
+static void city_commodity_demand_scores(uptr city,iptr civ,int road_tiles,int terrain_counts[11],int river_tiles,int size_class,uint landmass2,uint advance_count,uint center_dx,uint center_dy)
+{
+  int city2;
+  i32 shift;
+  int x4;
+  int polar_dist;
+  int chunk;
+  int remaining_size;
+  iptr metal_commodity;
+  int weight;
+
+  advisor_window_block.city_commodity_demand_scores[0] = (terrain_counts[6] + terrain_counts[7]) * 5 + (int)(center_dy * 3) / 2 + terrain_counts[5] * 2 +
+                 terrain_counts[3];
+  city2 = ((int)advance_count / 10) * advisor_window_block.city_commodity_demand_scores[0];
+  advisor_window_block.demand_score_cloth_i32 = terrain_counts[4] * 4 + terrain_counts[3] * 4 + ((int)(city2 + (city2 >> 0x1f & 7U)) >> 3)
+  ;
+  if (cities[city].size < 3) {
+    advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] * 2;
+  }
+  city2 = civ_has_advance(civ,0x25);
+  if (city2 != 0) {
+    advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] / 3;
+  }
+  city2 = civ_has_advance(civ,0x30);
+  if (city2 != 0) {
+    advisor_window_block.city_commodity_demand_scores[0] = 1;
+  }
+  if ((int)advance_count < 10) {
+    advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] << 1;
+  }
+  if ((int)advance_count < 0x14) {
+    advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] << 1;
+  }
+  if (0x2f < (int)advance_count) {
+    advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] / 2;
+  }
+  if ((int)map.height >> 2 == center_dy || (int)(((int)map.height >> 2) - center_dy) < 0) {
+    polar_dist = ~(((int)map.height >> 2) - center_dy) + 1;
+  }
+  else {
+    polar_dist = ((int)map.height >> 2) - center_dy;
+  }
+  advisor_window_block.city_wool_demand_score[0] = polar_dist * 2 + terrain_counts[1] * 2 + terrain_counts[3];
+  city2 = civ_has_advance(civ,0x25);
+  if (city2 != 0) {
+    advisor_window_block.city_wool_demand_score[0] = advisor_window_block.city_wool_demand_score[0] << 1;
+  }
+  advisor_window_block.demand_score_beads = center_dy + ((0x15 - terrain_counts[10]) * 3) / 2;
+  if (cities[city].size < 4) {
+    advisor_window_block.demand_score_beads += (advisor_window_block.demand_score_beads >> 1);
+  }
+  if (11 < cities[city].size) {
+    advisor_window_block.demand_score_beads = advisor_window_block.demand_score_beads / 2;
+  }
+  if (0x2f < (int)advance_count) {
+    advisor_window_block.demand_score_beads = advisor_window_block.demand_score_beads / 2;
+  }
+  weight = 8;
+  for (remaining_size = (int)cities[city].size; (weight != 0 && (0 < remaining_size));
+      remaining_size = remaining_size - chunk) {
+    chunk = int_clamp(remaining_size,0,5);
+    advisor_window_block.demand_score_salt_i32 += chunk * weight;
+    weight = weight / 2;
+  }
+  advisor_window_block.demand_score_salt_i32 -= (int)advance_count / 2;
+  advisor_window_block.demand_score_coal = (center_dy + 10) * size_class + advance_count;
+  if (cities[city].size < 5) {
+    advisor_window_block.demand_score_coal = 0;
+  }
+  if (cities[city].size < 8) {
+    advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal >> 1;
+  }
+  city2 = civ_has_advance(civ,0x25);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal << 1;
+  }
+  city2 = civ_has_advance(civ,0x17);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal << 1;
+  }
+  city2 = city_has_improvement(city,0x13);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal << 1;
+  }
+  city2 = city_has_improvement(city,0x14);
+  if (((city2 != 0) || (city2 = city_has_improvement(city,0x15), city2 != 0)) ||
+     (city2 = city_has_improvement(city,0x1d), city2 != 0)) {
+    advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal >> 3;
+  }
+  advisor_window_block.demand_score_copper = (river_tiles + road_tiles + 1) * size_class;
+  if (advisor_window_block.demand_score_copper <= advisor_window_block.supply_score_copper) {
+    advisor_window_block.demand_score_copper = advisor_window_block.demand_score_copper >> 1;
+  }
+  city2 = city_has_improvement(city,5);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_copper += (advisor_window_block.demand_score_copper >> 1);
+  }
+  city2 = city_has_improvement(city,10);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_copper += (advisor_window_block.demand_score_copper >> 1);
+  }
+  city2 = civ_has_advance(civ,0x17);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_copper += (advisor_window_block.demand_score_copper >> 1);
+  }
+  city2 = civ_has_advance(civ,0x10);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_copper = (int)(advisor_window_block.demand_score_copper + (advisor_window_block.demand_score_copper >> 0x1f & 3U)) >> 2;
+  }
+  if (cities[city].size < 5) {
+    advisor_window_block.demand_score_copper = advisor_window_block.demand_score_copper >> 1;
+  }
+  advisor_window_block.demand_score_dye = advisor_window_block.supply_score_cloth + road_tiles;
+  city2 = civ_has_advance(civ,10);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_dye = advisor_window_block.demand_score_dye / 2;
+  }
+  city2 = civ_has_advance(civ,0x30);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_dye = advisor_window_block.demand_score_dye / 2;
+  }
+  if ((int)cities[city].x == (int)cities[city].y ||
+      (int)cities[city].x - (int)cities[city].y < 0) {
+    x4 = ~((int)cities[city].x - (int)cities[city].y) + 1;
+  }
+  else {
+    x4 = (int)cities[city].x - (int)cities[city].y;
+  }
+  advisor_window_block.demand_score_wine_i32 = size_class * 4 + 4 + x4;
+  advisor_window_block.demand_score_silk = ((((int)map.height >> 1) - center_dy) * 2 - center_dx) + ((int)map.width >> 1) +
+                 terrain_counts[9] * 4 + terrain_counts[1] / 2 + terrain_counts[8] * 2 + terrain_counts[0] * 4;
+  shift = int_clamp(size_class - 1,0xffffffff,1);
+  advisor_window_block.demand_score_silk = int_shift_signed(advisor_window_block.demand_score_silk,shift);
+  if ((landmass2 == 1) && ((city & 2) != 0)) {
+    advisor_window_block.demand_score_silk += (advisor_window_block.demand_score_silk >> 1);
+  }
+  if (cities[city].size < 7) {
+    advisor_window_block.demand_score_silk = advisor_window_block.demand_score_silk >> 1;
+  }
+  advisor_window_block.demand_score_silver = (int)cities[city].size << 3;
+  advisor_window_block.demand_score_gold = 0;
+  advisor_window_block.demand_score_gems_i32 = 0;
+  metal_commodity = 10;
+  city2 = ((int)cities[city].y + (int)cities[city].x) % 3;
+  if (city2 == 1) {
+    metal_commodity = 0xc;
+    advisor_window_block.demand_score_gems_i32 = advisor_window_block.demand_score_silver;
+  }
+  else if (city2 == 2) {
+    metal_commodity = 0xd;
+    advisor_window_block.demand_score_gold = advisor_window_block.demand_score_silver;
+  }
+  city2 = city_has_improvement(city,0xb);
+  if ((city2 != 0) || (city2 = civ_has_wonder(civ,10), city2 != 0)) {
+    (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] * 3 >> 1;
+  }
+  city2 = city_has_improvement(city,10);
+  if (city2 != 0) {
+    (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] * 3 >> 1;
+  }
+  city2 = civ_has_advance(civ,0x16);
+  if (city2 != 0) {
+    (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] >> 1;
+  }
+  city2 = civ_has_advance(civ,0x10);
+  if (city2 != 0) {
+    (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] >> 1;
+  }
+  if (civs[civ].tribe == 0x11) {
+    (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] << 1;
+  }
+  city2 = advance_count - 0xc;
+  if (city2 < 1) {
+    city2 = 0;
+  }
+  advisor_window_block.demand_score_spice = (int)landmass_table_block.landmass_recs[landmass2].tiles / 10 - city2;
+  if (cities[city].size < 4) {
+    advisor_window_block.demand_score_spice = advisor_window_block.demand_score_spice / 2;
+  }
+  if (400 < landmass_table_block.landmass_recs[landmass2].tiles) {
+    if (7 < cities[city].size) {
+      advisor_window_block.demand_score_spice = advisor_window_block.demand_score_spice << 1;
+    }
+    if ((-(int)cities[city].x - (int)cities[city].y & 3U) == 0) {
+      advisor_window_block.demand_score_spice = 0;
+    }
+  }
+  city2 = civ_has_advance(civ,0x46);
+  if (city2 != 0) {
+    advisor_window_block.demand_score_spice = advisor_window_block.demand_score_spice >> 1;
+  }
+  city2 = civ_has_advance(civ,0x25);
+  if (city2 == 0) {
+    advisor_window_block.demand_score_oil = -1;
+  }
+  else {
+    advisor_window_block.demand_score_oil = ((int)advance_count / 3) * (size_class + 2);
+    if (advisor_window_block.demand_score_oil <= advisor_window_block.supply_score_oil) {
+      advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
+    }
+    city2 = city_has_improvement(city,0xf);
+    if (city2 == 0) {
+      if (cities[city].size < 5) {
+        advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
+      }
+      if (cities[city].size < '\n') {
+        advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
+      }
+      if (cities[city].size < 20) {
+        advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
+      }
+    }
+    else {
+      advisor_window_block.demand_score_oil = (advisor_window_block.demand_score_oil * 3) / 2;
+    }
+    city2 = civ_has_advance(civ,5);
+    if (city2 != 0) {
+      advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil * 3;
+    }
+    city2 = city_has_improvement(city,0x19);
+    if (city2 != 0) {
+      advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil << 1;
+    }
+    city2 = city_has_improvement(city,0xd);
+    if (city2 != 0) {
+      advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
+    }
+    city2 = city_has_improvement(city,0x12);
+    if (city2 != 0) {
+      advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
+    }
+  }
+  city2 = civ_has_advance(civ,0x3a);
+  if (city2 == 0) {
+    advisor_window_block.demand_score_uranium = -1;
+  }
+  else {
+    advisor_window_block.demand_score_uranium = advance_count * advance_count;
+    shift = int_clamp(size_class - 3,0xfffffffd,0);
+    advisor_window_block.demand_score_uranium = int_shift_signed(advisor_window_block.demand_score_uranium,shift);
+    city2 = city_has_improvement(city,0x15);
+    if ((city2 != 0) || (city2 = city_has_improvement(city,0x11), city2 != 0)) {
+      advisor_window_block.demand_score_uranium = advisor_window_block.demand_score_uranium << 1;
+    }
+  }
+}
+
+/* Part of city_calc_commodity_demand (0043d400): the three commodities the city
+   supplies and demands, the extra ones, and the caravans and trade
+   routes kept up to date. */
+static void city_commodity_pick(uptr city,iptr civ,iptr supply_order[16],uint advance_count,iptr demand_order[16])
+{
+  iptr *entry;
+  char route_good;
+  iptr saved_demand;
+  int city2;
+  iptr saved_supply;
+  iptr unit;
+  iptr slot;
+  uint special_flags;
+  iptr j;
+  iptr commodity;
+  iptr i;
+  uint extra_demand;
+  uint extra_supply;
+
+  for (i = 0; i < 0x10; i++) {
+    if ((((int *)&advisor_window_block.city_commodity_supply_scores))[i] < (((int *)&advisor_window_block.city_commodity_demand_scores))[i]) {
+      if (0 < (((int *)&advisor_window_block.city_commodity_supply_scores))[i]) {
+        (((int *)&advisor_window_block.city_commodity_supply_scores))[i] = 0;
+      }
+    }
+    else if (0 < (((int *)&advisor_window_block.city_commodity_demand_scores))[i]) {
+      (((int *)&advisor_window_block.city_commodity_demand_scores))[i] = 0;
+    }
+  }
+  int_pairs_bubble_sort(0x10,(i32 *)supply_order,(i32 *)&advisor_window_block.city_commodity_supply_scores);
+  int_pairs_bubble_sort(0x10,(i32 *)demand_order,(i32 *)&advisor_window_block.city_commodity_demand_scores);
+  slot = 0xf;
+  for (i = 0; i < 3; i++) {
+    do {
+      entry = supply_order + slot;
+      commodity = *entry;
+      saved_supply = commodity;
+      slot--;
+    } while (*(int *)(((i8 *)&advisor_window_block.supply_score_wool) + slot * 4) < 0);
+    (*((char *)&commodity + 0)) = (i8)*entry;
+    *(i8 *)&cities[city].supplies[i] = (i8)commodity;
+    commodity = saved_supply;
+  }
+  slot = 0xf;
+  for (i = 0; i < 3; i++) {
+    do {
+      entry = demand_order + slot;
+      commodity = *entry;
+      saved_demand = commodity;
+      slot--;
+    } while ((((i32 *)&advisor_window_block.city_wool_demand_score))[slot] < 0);
+    (*((char *)&commodity + 0)) = (i8)*entry;
+    *(i8 *)&cities[city].demands[i] = (i8)commodity;
+    commodity = saved_demand;
+  }
+  if ((int)advance_count < 0x20) {
+    extra_demand = (cities[city].y * 5 + cities[city].x * 3) % 0xe;
+    extra_supply = (cities[city].y * 7 + cities[city].x * 0xd) % 0xe;
+  }
+  else {
+    extra_demand = (cities[city].y * 5 + cities[city].x * 3) % 9 + 5;
+    extra_supply = (cities[city].y * 7 + cities[city].x * 0xd) % 9 + 5;
+  }
+  if (extra_supply == extra_demand) {
+    extra_supply = 0xfffffffe;
+  }
+  special_flags = 0;
+  for (i = 0; i < 3; i++) {
+    if ('\r' < *(char *)&cities[city].demands[i]) {
+      special_flags = special_flags | 1;
+    }
+    if ('\r' < *(char *)&cities[city].supplies[i]) {
+      special_flags = special_flags | 2;
+    }
+    if (((int)*(char *)&cities[city].supplies[i] == extra_demand) ||
+       ((int)*(char *)&cities[city].demands[i] == extra_demand)) {
+      extra_demand = 0xfffffffe;
+    }
+    if (((int)*(char *)&cities[city].supplies[i] == extra_supply) ||
+       ((int)*(char *)&cities[city].demands[i] == extra_supply)) {
+      extra_supply = 0xfffffffe;
+    }
+  }
+  if (((int)extra_demand < 0) && ((special_flags & 1) == 0)) {
+    city2 = civ_has_advance(civ,0x25);
+    if ((city2 == 0) || ((extra_demand & 1) == 0)) {
+      city2 = civ_has_advance(civ,0x3a);
+      if ((city2 != 0) && ((extra_demand & 1) == 0)) {
+        extra_demand = 0xf;
+      }
+    }
+    else {
+      extra_demand = 0xe;
+    }
+  }
+  if (-1 < (int)extra_demand) {
+    cities[city].demands[1] = (u8)extra_demand;
+  }
+  if (((int)extra_supply < 0) && ((special_flags & 2) == 0)) {
+    extra_supply = (extra_supply & 1) + 0xe;
+    if ((extra_supply == 0xe) && (city2 = civ_has_advance(civ,0x25), city2 == 0)) {
+      extra_supply = 0xffffffff;
+    }
+    if ((extra_supply == 0xf) && (city2 = civ_has_advance(civ,0x3a), city2 == 0)) {
+      extra_supply = 0xffffffff;
+    }
+  }
+  if (-1 < (int)extra_supply) {
+    cities[city].supplies[1] = (u8)extra_supply;
+  }
+  for (i = 0; i < (char)cities[city].trade_routes; i++) {
+    route_good = *(char *)&cities[city].route_goods[i];
+    if (-1 < route_good) {
+      for (j = 0; j < 3; j++) {
+        if (*(char *)&cities[city].supplies[j] == route_good) {
+          *(char *)&cities[city].supplies[j] =
+               -*(char *)&cities[city].supplies[j];
+        }
+      }
+      city2 = (int)cities[city].route_partner[i];
+      commodity = -1;
+      for (j = 0; j < (char)cities[city2].trade_routes; j++) {
+        if ((int)cities[city2].route_partner[j] == city) {
+          commodity = (iptr)*(char *)&cities[city2].route_goods[j];
+        }
+      }
+      if (-1 < commodity) {
+        for (j = 0; j < 3; j++) {
+          if (*(char *)&cities[city].demands[j] == commodity) {
+            *(char *)&cities[city].demands[j] =
+                 -*(char *)&cities[city].demands[j];
+          }
+        }
+      }
+    }
+  }
+  for (unit = 0; unit < game.num_units; unit++) {
+    if ((((units[unit].id != 0) && ((byte)units[unit].home_city == city)) &&
+        (unit_types[units[unit].type].role == 7)) && (-1 < (char)units[unit].counter)
+       ) {
+      for (i = 0; i < 3; i++) {
+        if (cities[city].supplies[i] == units[unit].counter) {
+          *(char *)&cities[city].supplies[i] =
+               -*(char *)&cities[city].supplies[i];
+        }
+      }
+    }
+  }
+}
+
 /* 0043d400 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_calc_commodity_demand(uptr city)
 
 {
-  iptr *entry;
-  char route_good;
-  iptr saved_demand;
-  byte terrain_byte;
   iptr civ;
-  iptr in_bounds;
-  int city2;
-  byte *tile;
-  uint tile_flags;
-  i32 shift;
-  int cloth_base;
-  iptr saved_supply;
-  int x4;
-  int polar_dist;
-  iptr unit;
   int road_tiles;
   int terrain_counts[11];
   iptr supply_order[16];
-  int wool_factor;
-  iptr slot;
   int river_tiles;
   int size_class;
   int west_dist;
-  uint special_flags;
   uint landmass2;
   int north_dist;
-  int chunk;
   int y3;
   uint south_dist;
   int x3;
   uint advance_count;
-  int remaining_size;
-  iptr metal_commodity;
-  int y2;
-  iptr j;
-  uptr terrain2;
-  iptr commodity;
-  iptr x2;
   uint center_dx;
-  iptr i;
   uint east_dist;
-  uint extra_demand;
   iptr demand_order[16];
-  iptr wine_bonus;
-  int weight;
   uint center_dy;
-  uint extra_supply;
-  int wine_base;
-  road_tiles = 0;  /* stale stack the original reads (FRAME_PRESETS) */
   
   if ((((cities[city].flags & 0x20000) != 0) || (game.reveal_map != '\0')) ||
      (((int)game.turn + city & 0xf) == 0)) {
@@ -2352,595 +2997,10 @@ void __cdecl city_calc_commodity_demand(uptr city)
     if ((int)center_dx < 1) {
       center_dx = ~center_dx + 1;
     }
-    river_tiles = 0;
-    for (i = 0; i < 0xb; i++) {
-      terrain_counts[i] = 0;
-    }
-    for (i = 0; i < 0x10; i++) {
-      (((int *)&advisor_window_block.city_commodity_demand_scores))[i] = 0;
-      (((int *)&advisor_window_block.city_commodity_supply_scores))[i] = (((int *)&advisor_window_block.city_commodity_demand_scores))[i];
-      demand_order[i] = i;
-      supply_order[i] = demand_order[i];
-    }
-    for (i = 0; i < 0x15; i++) {
-      x2 = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[i] + x3);
-      y2 = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[i] + y3;
-      in_bounds = map_in_bounds(x2,y2);
-      if (in_bounds != 0) {
-        terrain_byte = tile_terrain(x2,y2);
-        terrain2 = (uint)terrain_byte;
-        terrain_counts[terrain_byte]++;
-        city2 = tile_resource(x2,y2);
-        if (city2 != 0) {
-          terrain_counts[terrain2] += 3;
-        }
-        tile = (byte *)tile_at(x2,y2);
-        if ((*tile & 0x80) != 0) {
-          river_tiles++;
-        }
-        tile_flags = tile_improvements(x2,y2);
-        if ((tile_flags & 0x10) != 0) {
-          road_tiles++;
-        }
-      }
-    }
-    terrain_counts[6] += terrain_counts[7];
-    terrain_counts[7] = 0;
-    advisor_window_block.city_commodity_supply_scores[0] = terrain_counts[9] * 3 + terrain_counts[6] * 6 + terrain_counts[3] * 4 + river_tiles * 3;
-    if ((int)advance_count < 0x10) {
-      advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] * 2;
-    }
-    if ((int)advance_count < 0x18) {
-      advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] << 1;
-    }
-    if ((int)advance_count < 0x31) {
-      if (cities[city].size < 3) {
-        advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] << 1;
-      }
-    }
-    else {
-      advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] / 2;
-    }
-    if (7 < cities[city].size) {
-      advisor_window_block.city_commodity_supply_scores[0] = advisor_window_block.city_commodity_supply_scores[0] / 2;
-    }
-    wool_factor = terrain_counts[6] + 2;
-    if ((int)map.height / 3 < (int)center_dy) {
-      wool_factor = terrain_counts[6] + 3;
-    }
-    advisor_window_block.supply_score_wool[0] = (river_tiles / 2 + terrain_counts[4] * 2 + terrain_counts[2]) * wool_factor;
-    advisor_window_block.supply_score_beads = terrain_counts[10] * 8 - center_dy;
-    if ('\t' < cities[city].size) {
-      advisor_window_block.supply_score_beads = advisor_window_block.supply_score_beads >> 1;
-    }
-    if (0x20 < (int)advance_count) {
-      advisor_window_block.supply_score_beads = advisor_window_block.supply_score_beads >> 1;
-    }
-    cloth_base = (terrain_counts[1] * 3 + terrain_counts[0]) - river_tiles;
-    city2 = int_clamp((int)advance_count / 10,1,2);
-    advisor_window_block.supply_score_cloth = cloth_base * city2;
-    city2 = civ_has_advance(civ,0x25);
-    if (city2 != 0) {
-      advisor_window_block.supply_score_cloth = advisor_window_block.supply_score_cloth * 3 >> 1;
-    }
-    if ((int)advance_count < 8) {
-      advisor_window_block.supply_score_cloth = advisor_window_block.supply_score_cloth >> 1;
-    }
-    if ((int)advance_count < 0x10) {
-      advisor_window_block.supply_score_cloth = advisor_window_block.supply_score_cloth >> 1;
-    }
-    advisor_window_block.supply_score_salt = (terrain_counts[10] * 3 + terrain_counts[0] * 4 + terrain_counts[8] * 2) - (int)advance_count / 6;
-    city2 = civ_has_advance(civ,0x41);
-    if (city2 == 0) {
-      advisor_window_block.supply_score_salt = advisor_window_block.supply_score_salt / 3;
-    }
-    city2 = city_has_improvement(city,9);
-    if (city2 != 0) {
-      advisor_window_block.supply_score_salt += (advisor_window_block.supply_score_salt >> 1);
-    }
-    if (((landmass2 & 1) != 0) && ((int)landmass2 < 6)) {
-      advisor_window_block.supply_score_salt += (advisor_window_block.supply_score_salt >> 1);
-    }
-    advisor_window_block.supply_score_coal = (terrain_counts[9] + terrain_counts[1] + terrain_counts[3] + terrain_counts[8] + 1) * terrain_counts[4] *
-                   5;
-    city2 = size_class / 2;
-    if (1 < city2) {
-      city2 = 2;
-    }
-    advisor_window_block.supply_score_coal = int_shift_signed(advisor_window_block.supply_score_coal,city2 - 1);
-    if (((landmass2 & 1) != 0) && (1 < (int)landmass2)) {
-      advisor_window_block.supply_score_coal += (advisor_window_block.supply_score_coal >> 1);
-    }
-    if ((int)advance_count < 0x14) {
-      advisor_window_block.supply_score_coal = advisor_window_block.supply_score_coal >> 1;
-    }
-    advisor_window_block.supply_score_copper = terrain_counts[5] * 5 + terrain_counts[4] * 5;
-    if ((landmass2 != 0) && ((landmass2 & 1) == 0)) {
-      advisor_window_block.supply_score_copper = advisor_window_block.supply_score_copper * 2;
-    }
-    city2 = (terrain_counts[2] * 5 - terrain_counts[1]) + river_tiles;
-    advisor_window_block.supply_score_dye = city2 * 2;
-    if ((landmass2 != 0) && ((landmass2 & 3) == 0)) {
-      advisor_window_block.supply_score_dye = city2 * 4;
-    }
-    wine_base = river_tiles * 5 - terrain_counts[2];
-    wine_bonus = terrain_counts[1] << 2;
-    wine_base = int_clamp(wine_base,0,wine_bonus);
-    wine_bonus = int_clamp(wine_bonus,0,wine_base);
-    advisor_window_block.supply_score_wine = wine_bonus + (int)(((int)map.width >> 1) - center_dx) / 2 + wine_base;
-    if (south_dist != 0) {
-      advisor_window_block.supply_score_wine = advisor_window_block.supply_score_wine >> 1;
-    }
-    shift = int_clamp(size_class - 1,0xfffffffe,1);
-    advisor_window_block.supply_score_wine = int_shift_signed(advisor_window_block.supply_score_wine,shift);
-    if ((landmass2 - 2 & 3) == 0) {
-      advisor_window_block.supply_score_wine += (advisor_window_block.supply_score_wine >> 1);
-    }
-    if (civs[civ].tribe == 9) {
-      advisor_window_block.supply_score_wine = advisor_window_block.supply_score_wine << 1;
-    }
-    if ('\n' < cities[city].size) {
-      advisor_window_block.supply_score_wine = advisor_window_block.supply_score_wine >> 1;
-    }
-    advisor_window_block.supply_score_silk = (terrain_counts[3] * 2 + terrain_counts[9] + 1) * (terrain_counts[4] + 1);
-    if (((advisor_window_block.supply_score_silk != 0) && (advisor_window_block.supply_score_silk = advisor_window_block.supply_score_silk + east_dist * 2, landmass2 != 0)) &&
-       ((int)landmass2 % 5 == 0)) {
-      advisor_window_block.supply_score_silk = advisor_window_block.supply_score_silk * 2;
-    }
-    if (civs[civ].tribe == 0xb) {
-      advisor_window_block.supply_score_silk = advisor_window_block.supply_score_silk << 1;
-    }
-    advisor_window_block.supply_score_silver = terrain_counts[5] * 8;
-    if (advisor_window_block.supply_score_silver != 0) {
-      advisor_window_block.supply_score_silver = advisor_window_block.supply_score_silver + terrain_counts[4] + center_dx;
-      city2 = civ_has_advance(civ,0x27);
-      if (city2 == 0) {
-        advisor_window_block.supply_score_silver = advisor_window_block.supply_score_silver >> 1;
-      }
-      if (8 < (int)landmass2) {
-        advisor_window_block.supply_score_silver += (advisor_window_block.supply_score_silver >> 1);
-      }
-      if (cities[city].size < 5) {
-        advisor_window_block.supply_score_silver = advisor_window_block.supply_score_silver >> 1;
-      }
-    }
-    if (civs[civ].tribe == 10) {
-      advisor_window_block.supply_score_silk = advisor_window_block.supply_score_silk << 1;
-    }
-    advisor_window_block.supply_score_spice = (terrain_counts[9] * 3 + terrain_counts[8] * 2 + terrain_counts[0] * 2) *
-                   ((terrain_counts[10] + river_tiles) / 2);
-    if (advisor_window_block.supply_score_spice != 0) {
-      if ((int)center_dy < 10) {
-        advisor_window_block.supply_score_spice = advisor_window_block.supply_score_spice * 2;
-      }
-      advisor_window_block.supply_score_spice -= center_dy;
-      if (landmass_table_block.landmass_recs[landmass2].tiles < 0x1a) {
-        advisor_window_block.supply_score_spice += (advisor_window_block.supply_score_spice >> 1);
-      }
-      if (300 < landmass_table_block.landmass_recs[landmass2].tiles) {
-        advisor_window_block.supply_score_spice = advisor_window_block.supply_score_spice >> 1;
-      }
-      if (landmass2 == 1) {
-        advisor_window_block.supply_score_spice = advisor_window_block.supply_score_spice >> 1;
-      }
-    }
-    advisor_window_block.supply_score_gems = (terrain_counts[5] + 1) * (terrain_counts[8] + 1) * (terrain_counts[0] + 1) + terrain_counts[1];
-    if (advisor_window_block.supply_score_gems != 0) {
-      city2 = int_clamp(size_class,1,4);
-      advisor_window_block.supply_score_gems = (city2 * advisor_window_block.supply_score_gems) / 2;
-      if (landmass2 == 7) {
-        advisor_window_block.supply_score_gems += (advisor_window_block.supply_score_gems >> 1);
-      }
-    }
-    advisor_window_block.supply_score_gold = (terrain_counts[5] + terrain_counts[4] / 2 + 1) * (river_tiles + 2);
-    if (2 < terrain_counts[5]) {
-      advisor_window_block.supply_score_gold = advisor_window_block.supply_score_gold * 2;
-    }
-    if (4 < cities[city].size) {
-      advisor_window_block.supply_score_gold = advisor_window_block.supply_score_gold << 1;
-    }
-    if ('\t' < cities[city].size) {
-      advisor_window_block.supply_score_gold = advisor_window_block.supply_score_gold << 1;
-    }
-    advisor_window_block.supply_score_oil = terrain_counts[6] * 8 + terrain_counts[0] * 10 + terrain_counts[8] * 6 + terrain_counts[7] * 0xc;
-    if (game.advance_known_by[0xe] == '\0') {
-      advisor_window_block.supply_score_oil = advisor_window_block.supply_score_oil >> 3;
-    }
-    if (advisor_window_block.supply_score_oil == 0) {
-      advisor_window_block.supply_score_oil = -1;
-    }
-    else {
-      if (landmass2 == 0x11) {
-        advisor_window_block.supply_score_oil = advisor_window_block.supply_score_oil * 3;
-      }
-      else if ((1 < (int)landmass2) && ((landmass2 - 1 & 7) == 0)) {
-        advisor_window_block.supply_score_oil += (advisor_window_block.supply_score_oil >> 1);
-      }
-      city2 = int_clamp(size_class / 2 - 2,1,2);
-      advisor_window_block.supply_score_oil = city2 * advisor_window_block.supply_score_oil;
-    }
-    advisor_window_block.supply_score_uranium = (terrain_counts[6] + terrain_counts[0] + 1) * (terrain_counts[4] + river_tiles + 1) *
-                   (terrain_counts[5] + 1);
-    city2 = civ_has_advance(civ,0x3a);
-    if (city2 == 0) {
-      advisor_window_block.supply_score_uranium = 0;
-    }
-    if (advisor_window_block.supply_score_uranium == 0) {
-      advisor_window_block.supply_score_uranium = -1;
-    }
-    else {
-      if ((landmass2 != 0) && ((int)landmass2 % 10 == 0)) {
-        advisor_window_block.supply_score_uranium += (advisor_window_block.supply_score_uranium >> 1);
-      }
-      city2 = size_class;
-      if (5 < size_class) {
-        city2 = 6;
-      }
-      advisor_window_block.supply_score_uranium = (advisor_window_block.supply_score_uranium * city2) / 6;
-    }
-    advisor_window_block.city_commodity_demand_scores[0] = (terrain_counts[6] + terrain_counts[7]) * 5 + (int)(center_dy * 3) / 2 + terrain_counts[5] * 2 +
-                   terrain_counts[3];
-    city2 = ((int)advance_count / 10) * advisor_window_block.city_commodity_demand_scores[0];
-    advisor_window_block.demand_score_cloth_i32 = terrain_counts[4] * 4 + terrain_counts[3] * 4 + ((int)(city2 + (city2 >> 0x1f & 7U)) >> 3)
-    ;
-    if (cities[city].size < 3) {
-      advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] * 2;
-    }
-    city2 = civ_has_advance(civ,0x25);
-    if (city2 != 0) {
-      advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] / 3;
-    }
-    city2 = civ_has_advance(civ,0x30);
-    if (city2 != 0) {
-      advisor_window_block.city_commodity_demand_scores[0] = 1;
-    }
-    if ((int)advance_count < 10) {
-      advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] << 1;
-    }
-    if ((int)advance_count < 0x14) {
-      advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] << 1;
-    }
-    if (0x2f < (int)advance_count) {
-      advisor_window_block.city_commodity_demand_scores[0] = advisor_window_block.city_commodity_demand_scores[0] / 2;
-    }
-    if ((int)map.height >> 2 == center_dy || (int)(((int)map.height >> 2) - center_dy) < 0) {
-      polar_dist = ~(((int)map.height >> 2) - center_dy) + 1;
-    }
-    else {
-      polar_dist = ((int)map.height >> 2) - center_dy;
-    }
-    advisor_window_block.city_wool_demand_score[0] = polar_dist * 2 + terrain_counts[1] * 2 + terrain_counts[3];
-    city2 = civ_has_advance(civ,0x25);
-    if (city2 != 0) {
-      advisor_window_block.city_wool_demand_score[0] = advisor_window_block.city_wool_demand_score[0] << 1;
-    }
-    advisor_window_block.demand_score_beads = center_dy + ((0x15 - terrain_counts[10]) * 3) / 2;
-    if (cities[city].size < 4) {
-      advisor_window_block.demand_score_beads += (advisor_window_block.demand_score_beads >> 1);
-    }
-    if (11 < cities[city].size) {
-      advisor_window_block.demand_score_beads = advisor_window_block.demand_score_beads / 2;
-    }
-    if (0x2f < (int)advance_count) {
-      advisor_window_block.demand_score_beads = advisor_window_block.demand_score_beads / 2;
-    }
-    weight = 8;
-    for (remaining_size = (int)cities[city].size; (weight != 0 && (0 < remaining_size));
-        remaining_size = remaining_size - chunk) {
-      chunk = int_clamp(remaining_size,0,5);
-      advisor_window_block.demand_score_salt_i32 += chunk * weight;
-      weight = weight / 2;
-    }
-    advisor_window_block.demand_score_salt_i32 -= (int)advance_count / 2;
-    advisor_window_block.demand_score_coal = (center_dy + 10) * size_class + advance_count;
-    if (cities[city].size < 5) {
-      advisor_window_block.demand_score_coal = 0;
-    }
-    if (cities[city].size < 8) {
-      advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal >> 1;
-    }
-    city2 = civ_has_advance(civ,0x25);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal << 1;
-    }
-    city2 = civ_has_advance(civ,0x17);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal << 1;
-    }
-    city2 = city_has_improvement(city,0x13);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal << 1;
-    }
-    city2 = city_has_improvement(city,0x14);
-    if (((city2 != 0) || (city2 = city_has_improvement(city,0x15), city2 != 0)) ||
-       (city2 = city_has_improvement(city,0x1d), city2 != 0)) {
-      advisor_window_block.demand_score_coal = advisor_window_block.demand_score_coal >> 3;
-    }
-    advisor_window_block.demand_score_copper = (river_tiles + road_tiles + 1) * size_class;
-    if (advisor_window_block.demand_score_copper <= advisor_window_block.supply_score_copper) {
-      advisor_window_block.demand_score_copper = advisor_window_block.demand_score_copper >> 1;
-    }
-    city2 = city_has_improvement(city,5);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_copper += (advisor_window_block.demand_score_copper >> 1);
-    }
-    city2 = city_has_improvement(city,10);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_copper += (advisor_window_block.demand_score_copper >> 1);
-    }
-    city2 = civ_has_advance(civ,0x17);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_copper += (advisor_window_block.demand_score_copper >> 1);
-    }
-    city2 = civ_has_advance(civ,0x10);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_copper = (int)(advisor_window_block.demand_score_copper + (advisor_window_block.demand_score_copper >> 0x1f & 3U)) >> 2;
-    }
-    if (cities[city].size < 5) {
-      advisor_window_block.demand_score_copper = advisor_window_block.demand_score_copper >> 1;
-    }
-    advisor_window_block.demand_score_dye = advisor_window_block.supply_score_cloth + road_tiles;
-    city2 = civ_has_advance(civ,10);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_dye = advisor_window_block.demand_score_dye / 2;
-    }
-    city2 = civ_has_advance(civ,0x30);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_dye = advisor_window_block.demand_score_dye / 2;
-    }
-    if ((int)cities[city].x == (int)cities[city].y ||
-        (int)cities[city].x - (int)cities[city].y < 0) {
-      x4 = ~((int)cities[city].x - (int)cities[city].y) + 1;
-    }
-    else {
-      x4 = (int)cities[city].x - (int)cities[city].y;
-    }
-    advisor_window_block.demand_score_wine_i32 = size_class * 4 + 4 + x4;
-    advisor_window_block.demand_score_silk = ((((int)map.height >> 1) - center_dy) * 2 - center_dx) + ((int)map.width >> 1) +
-                   terrain_counts[9] * 4 + terrain_counts[1] / 2 + terrain_counts[8] * 2 + terrain_counts[0] * 4;
-    shift = int_clamp(size_class - 1,0xffffffff,1);
-    advisor_window_block.demand_score_silk = int_shift_signed(advisor_window_block.demand_score_silk,shift);
-    if ((landmass2 == 1) && ((city & 2) != 0)) {
-      advisor_window_block.demand_score_silk += (advisor_window_block.demand_score_silk >> 1);
-    }
-    if (cities[city].size < 7) {
-      advisor_window_block.demand_score_silk = advisor_window_block.demand_score_silk >> 1;
-    }
-    advisor_window_block.demand_score_silver = (int)cities[city].size << 3;
-    advisor_window_block.demand_score_gold = 0;
-    advisor_window_block.demand_score_gems_i32 = 0;
-    metal_commodity = 10;
-    city2 = ((int)cities[city].y + (int)cities[city].x) % 3;
-    if (city2 == 1) {
-      metal_commodity = 0xc;
-      advisor_window_block.demand_score_gems_i32 = advisor_window_block.demand_score_silver;
-    }
-    else if (city2 == 2) {
-      metal_commodity = 0xd;
-      advisor_window_block.demand_score_gold = advisor_window_block.demand_score_silver;
-    }
-    city2 = city_has_improvement(city,0xb);
-    if ((city2 != 0) || (city2 = civ_has_wonder(civ,10), city2 != 0)) {
-      (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] * 3 >> 1;
-    }
-    city2 = city_has_improvement(city,10);
-    if (city2 != 0) {
-      (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] * 3 >> 1;
-    }
-    city2 = civ_has_advance(civ,0x16);
-    if (city2 != 0) {
-      (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] >> 1;
-    }
-    city2 = civ_has_advance(civ,0x10);
-    if (city2 != 0) {
-      (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] >> 1;
-    }
-    if (civs[civ].tribe == 0x11) {
-      (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] = (((int *)&advisor_window_block.city_commodity_demand_scores))[metal_commodity] << 1;
-    }
-    city2 = advance_count - 0xc;
-    if (city2 < 1) {
-      city2 = 0;
-    }
-    advisor_window_block.demand_score_spice = (int)landmass_table_block.landmass_recs[landmass2].tiles / 10 - city2;
-    if (cities[city].size < 4) {
-      advisor_window_block.demand_score_spice = advisor_window_block.demand_score_spice / 2;
-    }
-    if (400 < landmass_table_block.landmass_recs[landmass2].tiles) {
-      if (7 < cities[city].size) {
-        advisor_window_block.demand_score_spice = advisor_window_block.demand_score_spice << 1;
-      }
-      if ((-(int)cities[city].x - (int)cities[city].y & 3U) == 0) {
-        advisor_window_block.demand_score_spice = 0;
-      }
-    }
-    city2 = civ_has_advance(civ,0x46);
-    if (city2 != 0) {
-      advisor_window_block.demand_score_spice = advisor_window_block.demand_score_spice >> 1;
-    }
-    city2 = civ_has_advance(civ,0x25);
-    if (city2 == 0) {
-      advisor_window_block.demand_score_oil = -1;
-    }
-    else {
-      advisor_window_block.demand_score_oil = ((int)advance_count / 3) * (size_class + 2);
-      if (advisor_window_block.demand_score_oil <= advisor_window_block.supply_score_oil) {
-        advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
-      }
-      city2 = city_has_improvement(city,0xf);
-      if (city2 == 0) {
-        if (cities[city].size < 5) {
-          advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
-        }
-        if (cities[city].size < '\n') {
-          advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
-        }
-        if (cities[city].size < 20) {
-          advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
-        }
-      }
-      else {
-        advisor_window_block.demand_score_oil = (advisor_window_block.demand_score_oil * 3) / 2;
-      }
-      city2 = civ_has_advance(civ,5);
-      if (city2 != 0) {
-        advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil * 3;
-      }
-      city2 = city_has_improvement(city,0x19);
-      if (city2 != 0) {
-        advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil << 1;
-      }
-      city2 = city_has_improvement(city,0xd);
-      if (city2 != 0) {
-        advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
-      }
-      city2 = city_has_improvement(city,0x12);
-      if (city2 != 0) {
-        advisor_window_block.demand_score_oil = advisor_window_block.demand_score_oil >> 1;
-      }
-    }
-    city2 = civ_has_advance(civ,0x3a);
-    if (city2 == 0) {
-      advisor_window_block.demand_score_uranium = -1;
-    }
-    else {
-      advisor_window_block.demand_score_uranium = advance_count * advance_count;
-      shift = int_clamp(size_class - 3,0xfffffffd,0);
-      advisor_window_block.demand_score_uranium = int_shift_signed(advisor_window_block.demand_score_uranium,shift);
-      city2 = city_has_improvement(city,0x15);
-      if ((city2 != 0) || (city2 = city_has_improvement(city,0x11), city2 != 0)) {
-        advisor_window_block.demand_score_uranium = advisor_window_block.demand_score_uranium << 1;
-      }
-    }
-    for (i = 0; i < 0x10; i++) {
-      if ((((int *)&advisor_window_block.city_commodity_supply_scores))[i] < (((int *)&advisor_window_block.city_commodity_demand_scores))[i]) {
-        if (0 < (((int *)&advisor_window_block.city_commodity_supply_scores))[i]) {
-          (((int *)&advisor_window_block.city_commodity_supply_scores))[i] = 0;
-        }
-      }
-      else if (0 < (((int *)&advisor_window_block.city_commodity_demand_scores))[i]) {
-        (((int *)&advisor_window_block.city_commodity_demand_scores))[i] = 0;
-      }
-    }
-    int_pairs_bubble_sort(0x10,(i32 *)supply_order,(i32 *)&advisor_window_block.city_commodity_supply_scores);
-    int_pairs_bubble_sort(0x10,(i32 *)demand_order,(i32 *)&advisor_window_block.city_commodity_demand_scores);
-    slot = 0xf;
-    for (i = 0; i < 3; i++) {
-      do {
-        entry = supply_order + slot;
-        commodity = *entry;
-        saved_supply = commodity;
-        slot--;
-      } while (*(int *)(((i8 *)&advisor_window_block.supply_score_wool) + slot * 4) < 0);
-      (*((char *)&commodity + 0)) = (i8)*entry;
-      *(i8 *)&cities[city].supplies[i] = (i8)commodity;
-      commodity = saved_supply;
-    }
-    slot = 0xf;
-    for (i = 0; i < 3; i++) {
-      do {
-        entry = demand_order + slot;
-        commodity = *entry;
-        saved_demand = commodity;
-        slot--;
-      } while ((((i32 *)&advisor_window_block.city_wool_demand_score))[slot] < 0);
-      (*((char *)&commodity + 0)) = (i8)*entry;
-      *(i8 *)&cities[city].demands[i] = (i8)commodity;
-      commodity = saved_demand;
-    }
-    if ((int)advance_count < 0x20) {
-      extra_demand = (cities[city].y * 5 + cities[city].x * 3) % 0xe;
-      extra_supply = (cities[city].y * 7 + cities[city].x * 0xd) % 0xe;
-    }
-    else {
-      extra_demand = (cities[city].y * 5 + cities[city].x * 3) % 9 + 5;
-      extra_supply = (cities[city].y * 7 + cities[city].x * 0xd) % 9 + 5;
-    }
-    if (extra_supply == extra_demand) {
-      extra_supply = 0xfffffffe;
-    }
-    special_flags = 0;
-    for (i = 0; i < 3; i++) {
-      if ('\r' < *(char *)&cities[city].demands[i]) {
-        special_flags = special_flags | 1;
-      }
-      if ('\r' < *(char *)&cities[city].supplies[i]) {
-        special_flags = special_flags | 2;
-      }
-      if (((int)*(char *)&cities[city].supplies[i] == extra_demand) ||
-         ((int)*(char *)&cities[city].demands[i] == extra_demand)) {
-        extra_demand = 0xfffffffe;
-      }
-      if (((int)*(char *)&cities[city].supplies[i] == extra_supply) ||
-         ((int)*(char *)&cities[city].demands[i] == extra_supply)) {
-        extra_supply = 0xfffffffe;
-      }
-    }
-    if (((int)extra_demand < 0) && ((special_flags & 1) == 0)) {
-      city2 = civ_has_advance(civ,0x25);
-      if ((city2 == 0) || ((extra_demand & 1) == 0)) {
-        city2 = civ_has_advance(civ,0x3a);
-        if ((city2 != 0) && ((extra_demand & 1) == 0)) {
-          extra_demand = 0xf;
-        }
-      }
-      else {
-        extra_demand = 0xe;
-      }
-    }
-    if (-1 < (int)extra_demand) {
-      cities[city].demands[1] = (u8)extra_demand;
-    }
-    if (((int)extra_supply < 0) && ((special_flags & 2) == 0)) {
-      extra_supply = (extra_supply & 1) + 0xe;
-      if ((extra_supply == 0xe) && (city2 = civ_has_advance(civ,0x25), city2 == 0)) {
-        extra_supply = 0xffffffff;
-      }
-      if ((extra_supply == 0xf) && (city2 = civ_has_advance(civ,0x3a), city2 == 0)) {
-        extra_supply = 0xffffffff;
-      }
-    }
-    if (-1 < (int)extra_supply) {
-      cities[city].supplies[1] = (u8)extra_supply;
-    }
-    for (i = 0; i < (char)cities[city].trade_routes; i++) {
-      route_good = *(char *)&cities[city].route_goods[i];
-      if (-1 < route_good) {
-        for (j = 0; j < 3; j++) {
-          if (*(char *)&cities[city].supplies[j] == route_good) {
-            *(char *)&cities[city].supplies[j] =
-                 -*(char *)&cities[city].supplies[j];
-          }
-        }
-        city2 = (int)cities[city].route_partner[i];
-        commodity = -1;
-        for (j = 0; j < (char)cities[city2].trade_routes; j++) {
-          if ((int)cities[city2].route_partner[j] == city) {
-            commodity = (iptr)*(char *)&cities[city2].route_goods[j];
-          }
-        }
-        if (-1 < commodity) {
-          for (j = 0; j < 3; j++) {
-            if (*(char *)&cities[city].demands[j] == commodity) {
-              *(char *)&cities[city].demands[j] =
-                   -*(char *)&cities[city].demands[j];
-            }
-          }
-        }
-      }
-    }
-    for (unit = 0; unit < game.num_units; unit++) {
-      if ((((units[unit].id != 0) && ((byte)units[unit].home_city == city)) &&
-          (unit_types[units[unit].type].role == 7)) && (-1 < (char)units[unit].counter)
-         ) {
-        for (i = 0; i < 3; i++) {
-          if (cities[city].supplies[i] == units[unit].counter) {
-            *(char *)&cities[city].supplies[i] =
-                 -*(char *)&cities[city].supplies[i];
-          }
-        }
-      }
-    }
+    city_commodity_count_terrain(road_tiles,terrain_counts,supply_order,river_tiles,y3,x3,demand_order);
+    city_commodity_supply_scores(city,civ,terrain_counts,river_tiles,size_class,landmass2,south_dist,advance_count,center_dx,east_dist,center_dy);
+    city_commodity_demand_scores(city,civ,road_tiles,terrain_counts,river_tiles,size_class,landmass2,advance_count,center_dx,center_dy);
+    city_commodity_pick(city,civ,supply_order,advance_count,demand_order);
   }
   return;
 }
@@ -5064,200 +5124,92 @@ void __cdecl city_load_citypref(void)
   return;
 }
 
-/* 00498e8b auto */
-/* WARNING: Type propagation algorithm not settling */
-
-iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_build)
-
-{
+/* The state city_choose_production (00498e8b) shares between its parts: the
+   survey of the city, its civ and the other cities, and the best choices so
+   far. */
+struct ChooseProdState {
   byte civ5;
-  char leader_trait;
-  iptr saved_type;
-  byte terrain_byte;
   uptr civ;
-  iptr behind;
-  iptr city_landmass;
+  iptr landmass2;
+  uint policy;
+  uint threatened;
+  int space_race;
+  int food_surplus;
+  int ocean_tiles;
+  int shield_surplus;
+  int net_trade;
+  int wonder_in_progress;
+  int wonders_here;
+  int wonders_owned;
+  int unrest_state;
+  int nearest_dist;
+  int enemy_strength;
+  int farmland_count;
+  int wonders_building;
+  int airport_count;
+  int port_count;
+  int unit_total;
+  int barracks_count;
+  int rivals_ahead;
+  int same_build_count;
+  int foreign_same_build;
+  int space_builders;
+  int human_space_builders;
+  int palace_count;
+  int palace_size;
+  int flagged_settlers;
+  int homeless_settlers;
+  int expand_bonus;
+  int settle_goals;
+  int enemy_offshore;
+  int defense_urgent;
+  int defense_need;
+  int naval_units;
+  /* the original's city loop counter: the palace score reads the value the
+     survey left in it (stale) */
+  iptr city2;
+  int best_build_score;
+  int best_unit_score;
+  int choice_score;
+  iptr best_build;
+  iptr best_unit;
+  iptr choice;
+  int best_raw_score;
+  /* the main function's arrays */
+  i8 *wonder_builders;
+  int *units_in_build;
+  int *unit_counts;
+};
+
+/* Part of city_choose_production (00498e8b): the tiles around the city:
+   ocean tiles, enemy strength next to it, farmland, and for an AI city short
+   of food a tile to irrigate, irrigated for free where no human sees it. */
+static void city_choose_production_scan_tiles(ChooseProdState *s,iptr city)
+{
+  byte terrain_byte;
   int ret;
   i32 bits;
   uint adjusted;
   byte *tile;
   Tile *map_tile;
-  int count;
-  iptr unit2;
-  iptr cur_improvement;
-  int settler_base;
-  int explorer_cap;
-  int extra_defender;
-  int unit_counts[62];
-  int best_unit_score;
-  int barracks_count;
-  int defense_urgent;
-  int rivals_ahead;
-  int combat_value;
   iptr unit;
-  iptr best_build;
-  int under_threat;
   int want_irrigation;
-  int human_launched;
-  iptr improvement;
-  iptr best_unit;
-  int race_behind;
-  int wonders_building;
-  int palace_count;
-  int watchers;
-  int naval_units;
-  iptr civ3;
-  iptr city2;
-  int food_surplus;
-  int units_in_build[62];
-  int unit_total;
-  int flagged_settlers;
-  int support_penalty;
-  iptr obsolete_by2;
-  int lost_cities;
-  iptr part_group;
-  int own_parts_cost;
-  uint defenders_wanted;
-  int palace_size;
-  int expand_bonus;
-  iptr landmass2;
-  uint policy;
-  iptr unit_type;
-  int same_build_count;
   int y2;
-  uint role2;
-  int wonder_cost;
-  int port_count;
   iptr x2;
-  int unrest_state;
-  int enemy_strength;
   uint tmp;
-  i8 wonder_builders[28];
-  uint threatened;
-  int nearest_dist;
-  int defenders;
-  int foreign_same_build;
-  iptr preq2;
-  int expired;
-  int net_trade;
-  int part;
-  uint defensive;
-  int wonders_here;
-  int leader_parts_cost;
-  iptr unit3;
-  int defense_need;
   uptr terrain2;
-  int wonder_in_progress;
-  iptr wonder;
   uptr civ2;
-  int airport_count;
-  int dist;
-  int human_space_builders;
-  int ocean_tiles;
   iptr irrigate_tile;
-  iptr choice;
-  int space_race;
   iptr unit_type2;
-  int homeless_settlers;
-  int shield_surplus;
-  uptr civ4;
-  int space_builders;
-  int settle_goals;
-  int hp_factor;
-  int enemy_offshore;
-  int choice_score;
-  int ship_count;
-  iptr wonder_group;
-  int farmland_count;
-  int best_build_score;
-  uint score;
-  int wonders_owned;
-  int size_per_defender;
-  int threat_level;
-  int raw_score;
-  int best_raw_score;
-  
-  expand_bonus = 0;
-  if (out_best_unit != 0) {
-    *(i32 *)out_best_unit = 999;
-  }
-  if (out_best_build != 0) {
-    *(i32 *)out_best_build = 999;
-  }
-  city_recalc(city,0);
-  civ5 = cities[city].owner;
-  civ = (uptr)(char)civ5;
-  landmass2 = tile_landmass((int)cities[city].x,(int)cities[city].y);
-  policy = (uint)civs[civ].continent_policy[landmass2];
-  if ((policy == 0) || (policy == 1)) {
-    threatened = 1;
-  }
-  else {
-    threatened = 0;
-  }
-  if (((game.game_flags & 1) != 0) && (policy == 4)) {
-    threatened = 1;
-  }
-  behind = ai_spaceship_race_behind(civ);
-  space_race = spaceship_race_active();
-  space_race = behind + space_race;
-  lost_cities = 0;
-  for (city2 = 0; city2 < game.num_cities; city2++) {
-    if ((((cities[city2].id != 0) && ((int)cities[city2].founder == civ)) &&
-        ((int)cities[city2].owner != civ)) &&
-       ((city_landmass = tile_landmass((int)cities[city2].x,(int)cities[city2].y), city_landmass == landmass2
-        && (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0)))) {
-      lost_cities++;
-    }
-  }
-  if (leaders[civs[civ].tribe].attack + 1 < lost_cities) {
-    threatened = 1;
-  }
-  food_surplus = (main_menu_block.city_yield_totals[0] - (int)cities[city].size * (uint)cosmic.food_per_citizen) -
-              main_menu_block.city_settlers_supported * main_menu_block.settler_food_cost;
-  ocean_tiles = 0;
-  shield_surplus = main_menu_block.city_total_shields * 2 - main_menu_block.city_shield_support;
-  net_trade = main_menu_block.city_total_trade - main_menu_block.city_trade_corruption;
-  if ((cities[city].building < -0x26) && (0x27 < cities[city].shield_box)) {
-    wonder_in_progress = 1;
-  }
-  else {
-    wonder_in_progress = 0;
-  }
-  wonders_here = 0;
-  wonders_owned = 0;
-  for (wonder = 0; wonder < 0x1c; wonder++) {
-    wonder_builders[wonder] = 0;
-    ret = wonder_get_city(wonder);
-    if (ret == city) {
-      wonders_here++;
-    }
-    ret = civ_has_wonder(civ,wonder);
-    if (ret != 0) {
-      wonders_owned++;
-    }
-  }
-  if (((cities[city].flags & 1) == 0) && (((byte)(cities[city].flags >> 8) & 0xc0) != 0xc0)) {
-    if (main_menu_block.city_unhappy_count == main_menu_block.city_happy_count) {
-      unrest_state = 1;
-    }
-    else {
-      unrest_state = 0;
-    }
-  }
-  else {
-    unrest_state = 2;
-  }
-  city_find_nearest((int)cities[city].x,(int)cities[city].y,civ,0xfffffffe,-1);
-  nearest_dist = advisor_window_block.nearest_city_dist;
+
   irrigate_tile = -1;
   want_irrigation = 0;
-  if ((((food_surplus == 0) && ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
+  if ((((s->food_surplus == 0) && ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
       ((cities[city].flags & 0x40) == 0)) && (main_menu_block.city_settlers_supported == 0)) {
     want_irrigation = 1;
   }
-  enemy_strength = 0;
-  farmland_count = 0;
+  s->enemy_strength = 0;
+  s->farmland_count = 0;
   for (unit_type2 = 0; unit_type2 < 0x14; unit_type2++) {
     x2 = map_wrap_x((int)cities[city].x + (int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[unit_type2]);
     y2 = (int)cities[city].y + (int)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[unit_type2];
@@ -5266,24 +5218,24 @@ iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_b
       terrain_byte = tile_terrain(x2,y2);
       terrain2 = (uptr)terrain_byte;
       if (terrain2 == 10) {
-        ocean_tiles++;
+        s->ocean_tiles++;
         ret = city_tile_worked(city,unit_type2);
         if (ret != 0) {
-          ocean_tiles += 3;
+          s->ocean_tiles += 3;
         }
       }
       civ2 = tile_unit_owner(x2,y2);
-      if (((-1 < (int)civ2) && (civ2 != civ)) &&
+      if (((-1 < (int)civ2) && (civ2 != s->civ)) &&
          ((unit = tile_first_unit(x2,y2), -1 < unit &&
-          ((int)units[unit].owner != civ)))) {
+          ((int)units[unit].owner != s->civ)))) {
         ret = unit_stack_sum(unit,2);
-        enemy_strength += ret;
+        s->enemy_strength += ret;
       }
       bits = tile_improvements(x2,y2);
       if (((byte)bits & 0xc) == 0xc) {
-        farmland_count++;
+        s->farmland_count++;
       }
-      if (((want_irrigation != 0) && (ret = ai_tile_improve_choice(civ,x2,y2), ret == 1)) &&
+      if (((want_irrigation != 0) && (ret = ai_tile_improve_choice(s->civ,x2,y2), ret == 1)) &&
          ((adjusted = tile_improvements(x2,y2), (adjusted & 4) == 0 &&
           (terrain_types[terrain2].irrigate_to < '\0')))) {
         irrigate_tile = unit_type2;
@@ -5305,219 +5257,238 @@ iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_b
         tmp = tmp | 0x10;
       }
       tile_set_improvements(x2,y2,tmp,1,1);
-      food_surplus++;
+      s->food_surplus++;
     }
   }
-  for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-    units_in_build[unit_type] = 0;
-    unit_counts[unit_type] = 0;
-  }
-  wonders_building = 0;
-  airport_count = 0;
-  port_count = 0;
-  unit_total = 0;
-  ret = civ_has_wonder(civ,7);
+}
+
+/* Part of city_choose_production (00498e8b): the civ's other cities: palaces,
+   the same build, spaceship parts, barracks, airports, ports and wonders being
+   built on the landmass, the units being built; the wonders other civs build. */
+static void city_choose_production_survey_cities(ChooseProdState *s,iptr city)
+{
+  int ret;
+
+  s->wonders_building = 0;
+  s->airport_count = 0;
+  s->port_count = 0;
+  s->unit_total = 0;
+  ret = civ_has_wonder(s->civ,7);
   if (ret == 0) {
-    barracks_count = 0;
+    s->barracks_count = 0;
   }
   else {
-    barracks_count = 4;
+    s->barracks_count = 4;
   }
-  rivals_ahead = 0;
-  same_build_count = 0;
-  foreign_same_build = 0;
-  space_builders = 0;
-  human_space_builders = 0;
-  palace_count = 0;
-  palace_size = 0;
-  for (city2 = 0; city2 < game.num_cities; city2++) {
-    if (cities[city2].id != 0) {
-      if ((int)cities[city2].owner == civ) {
-        ret = city_has_improvement(city2,1);
-        if (((ret != 0) || (cities[city2].building == -1)) &&
-           (palace_count = palace_count + 1, palace_size < cities[city2].size)) {
-          palace_size = (int)cities[city2].size;
+  s->rivals_ahead = 0;
+  s->same_build_count = 0;
+  s->foreign_same_build = 0;
+  s->space_builders = 0;
+  s->human_space_builders = 0;
+  s->palace_count = 0;
+  s->palace_size = 0;
+  for (s->city2 = 0; s->city2 < game.num_cities; s->city2++) {
+    if (cities[s->city2].id != 0) {
+      if ((int)cities[s->city2].owner == s->civ) {
+        ret = city_has_improvement(s->city2,1);
+        if (((ret != 0) || (cities[s->city2].building == -1)) &&
+           (s->palace_count = s->palace_count + 1, s->palace_size < cities[s->city2].size)) {
+          s->palace_size = (int)cities[s->city2].size;
         }
-        if (city2 != city) {
-          if ((cities[city].building == cities[city2].building) &&
-             (same_build_count = same_build_count + 1,
-             cities[city].total_shields < cities[city2].total_shields)) {
-            rivals_ahead++;
+        if (s->city2 != city) {
+          if ((cities[city].building == cities[s->city2].building) &&
+             (s->same_build_count = s->same_build_count + 1,
+             cities[city].total_shields < cities[s->city2].total_shields)) {
+            s->rivals_ahead++;
           }
-          if ((-0x26 < cities[city2].building) && (cities[city2].building < -0x22)) {
-            space_builders++;
+          if ((-0x26 < cities[s->city2].building) && (cities[s->city2].building < -0x22)) {
+            s->space_builders++;
           }
-          ret = tile_landmass((int)cities[city2].x,(int)cities[city2].y);
-          if (ret == landmass2) {
-            ret = city_has_improvement(city2,2);
+          ret = tile_landmass((int)cities[s->city2].x,(int)cities[s->city2].y);
+          if (ret == s->landmass2) {
+            ret = city_has_improvement(s->city2,2);
             if (ret != 0) {
-              barracks_count++;
+              s->barracks_count++;
             }
-            ret = city_has_improvement(city2,0x20);
+            ret = city_has_improvement(s->city2,0x20);
             if (ret != 0) {
-              airport_count++;
+              s->airport_count++;
             }
-            ret = city_has_improvement(city2,0x22);
+            ret = city_has_improvement(s->city2,0x22);
             if (ret != 0) {
-              port_count++;
+              s->port_count++;
             }
-            if (cities[city2].building == -2) {
-              barracks_count++;
+            if (cities[s->city2].building == -2) {
+              s->barracks_count++;
             }
-            if (cities[city2].building < -0x26) {
-              wonders_building++;
-              if (cities[city].total_shields < cities[city2].total_shields) {
-                *(byte *)&wonder_builders[-0x27 - cities[city2].building] =
-                     *(byte *)&wonder_builders[-0x27 - cities[city2].building] |
-                     (byte)(1 << (civ5 & 0x1f));
+            if (cities[s->city2].building < -0x26) {
+              s->wonders_building++;
+              if (cities[city].total_shields < cities[s->city2].total_shields) {
+                *(byte *)&s->wonder_builders[-0x27 - cities[s->city2].building] =
+                     *(byte *)&s->wonder_builders[-0x27 - cities[s->city2].building] |
+                     (byte)(1 << (s->civ5 & 0x1f));
               }
-              ret = (uint)improvements[-(int)cities[city2].building].cost * main_menu_block.city_shield_rows;
-              if (ret - cities[city2].shield_box == 0 || ret < cities[city2].shield_box)
+              ret = (uint)improvements[-(int)cities[s->city2].building].cost * main_menu_block.city_shield_rows;
+              if (ret - cities[s->city2].shield_box == 0 || ret < cities[s->city2].shield_box)
               {
-                *(byte *)&wonder_builders[-0x27 - cities[city2].building] =
-                     *(byte *)&wonder_builders[-0x27 - cities[city2].building] | 1;
+                *(byte *)&s->wonder_builders[-0x27 - cities[s->city2].building] =
+                     *(byte *)&s->wonder_builders[-0x27 - cities[s->city2].building] | 1;
               }
             }
-            if (-1 < cities[city2].building) {
-              units_in_build[cities[city2].building] = units_in_build[cities[city2].building] + 1;
+            if (-1 < cities[s->city2].building) {
+              s->units_in_build[cities[s->city2].building] = s->units_in_build[cities[s->city2].building] + 1;
             }
           }
         }
       }
       else {
-        if (cities[city].building == cities[city2].building) {
-          foreign_same_build++;
+        if (cities[city].building == cities[s->city2].building) {
+          s->foreign_same_build++;
         }
-        if (cities[city2].building < -0x26) {
-          *(byte *)&wonder_builders[-0x27 - cities[city2].building] =
-               *(byte *)&wonder_builders[-0x27 - cities[city2].building] |
-               (byte)(1 << (cities[city2].owner & 0x1fU));
+        if (cities[s->city2].building < -0x26) {
+          *(byte *)&s->wonder_builders[-0x27 - cities[s->city2].building] =
+               *(byte *)&s->wonder_builders[-0x27 - cities[s->city2].building] |
+               (byte)(1 << (cities[s->city2].owner & 0x1fU));
         }
-        if (((((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0) &&
-            (-0x26 < cities[city2].building)) && (cities[city2].building < -0x22)) {
-          human_space_builders++;
+        if (((((uint)game.human_players & 1 << (cities[s->city2].owner & 0x1fU)) != 0) &&
+            (-0x26 < cities[s->city2].building)) && (cities[s->city2].building < -0x22)) {
+          s->human_space_builders++;
         }
       }
     }
   }
-  flagged_settlers = 0;
-  homeless_settlers = 0;
+}
+
+/* Part of city_choose_production (00498e8b): the civ's units: settlers
+   flagged or without a home city, units of each type on the landmass.
+   unit_type is the original's loop counter, left at 0x3e by the loop that
+   clears the counts: the settler test reads it so. */
+static void city_choose_production_count_units(ChooseProdState *s,iptr unit_type)
+{
+  int ret;
+  iptr unit;
+
+  s->flagged_settlers = 0;
+  s->homeless_settlers = 0;
   for (unit = 0; unit < game.num_units; unit++) {
-    if ((units[unit].id != 0) && ((int)units[unit].owner == civ)) {
-      unit_total++;
+    if ((units[unit].id != 0) && ((int)units[unit].owner == s->civ)) {
+      s->unit_total++;
       if (unit_types[unit_type].role == 5) {
         if ((units[unit].flags & 0x200) != 0) {
-          flagged_settlers++;
+          s->flagged_settlers++;
         }
         if (units[unit].home_city == -1) {
-          homeless_settlers++;
+          s->homeless_settlers++;
           continue;
         }
       }
       ret = tile_landmass((int)units[unit].x,(int)units[unit].y);
-      if (ret == landmass2) {
-        unit_counts[units[unit].type] = unit_counts[units[unit].type] + 1;
+      if (ret == s->landmass2) {
+        s->unit_counts[units[unit].type] = s->unit_counts[units[unit].type] + 1;
       }
     }
   }
-  if ((((cities[city].flags & 0x80040) == 0x80000) && (enemy_strength == 0)) &&
-     ((main_menu_block.city_settlers_supported == 0 && ((policy != 1 && (2 < cities[city].size)))))) {
-    choice_score = 9999;
-    for (city2 = 0; city2 < game.num_cities; city2++) {
-      if ((((cities[city2].id != 0) && (city2 != city)) &&
-          ((int)cities[city2].owner == civ)) &&
+}
+
+/* Part of city_choose_production (00498e8b): the bonus for settlers when the
+   city is far from the civ's other cities or big. */
+static void city_choose_production_expand_bonus(ChooseProdState *s,iptr city)
+{
+  int dist;
+
+  if ((((cities[city].flags & 0x80040) == 0x80000) && (s->enemy_strength == 0)) &&
+     ((main_menu_block.city_settlers_supported == 0 && ((s->policy != 1 && (2 < cities[city].size)))))) {
+    s->choice_score = 9999;
+    for (s->city2 = 0; s->city2 < game.num_cities; s->city2++) {
+      if ((((cities[s->city2].id != 0) && (s->city2 != city)) &&
+          ((int)cities[s->city2].owner == s->civ)) &&
          (dist = map_distance((int)cities[city].x,(int)cities[city].y,
-                                        (int)cities[city2].x,(int)cities[city2].y),
-         dist < choice_score)) {
-        choice_score = dist;
+                                        (int)cities[s->city2].x,(int)cities[s->city2].y),
+         dist < s->choice_score)) {
+        s->choice_score = dist;
       }
     }
-    if (8 < choice_score) {
-      expand_bonus = 1;
+    if (8 < s->choice_score) {
+      s->expand_bonus = 1;
     }
-    if (((6 < cities[city].size) && (4 < civs[civ].government)) &&
-       ((0 < food_surplus && (policy != 0)))) {
-      expand_bonus++;
-    }
-  }
-  settle_goals = 0;
-  for (unit_type2 = 0; unit_type2 < 0x10; unit_type2++) {
-    if ((civs[civ].ai_standing_goals[unit_type2].role == 1) &&
-       (ret = tile_landmass((int)civs[civ].ai_standing_goals[unit_type2].x,
-                              (int)civs[civ].ai_standing_goals[unit_type2].y),
-       ret == landmass2)) {
-      settle_goals++;
+    if (((6 < cities[city].size) && (4 < civs[s->civ].government)) &&
+       ((0 < s->food_surplus && (s->policy != 0)))) {
+      s->expand_bonus++;
     }
   }
-  if (threatened != 0) {
-    settle_goals += (settle_goals >> 1);
-  }
-  if ((((unit_total == 0) && ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
-      (civs[civ].government < 2)) && ((out_best_unit == 0 && (out_best_build == 0)))) {
-    for (unit_type = 0x3d; -1 < unit_type; unit_type--) {
-      if (((unit_types[unit_type].role == 1) && ((unit_types[unit_type].flags & 0x100) == 0)) &&
-         (ret = civ_can_build_unit(civ,city,unit_type), ret != 0)) {
-        return unit_type;
-      }
+}
+
+/* Part of city_choose_production (00498e8b): the barbarians' choice: keep the
+   unit being built or its upgrade. */
+static iptr city_choose_production_barbarian(iptr city)
+{
+  int ret;
+  iptr obsolete_by2;
+  iptr unit_type;
+  iptr unit_type2;
+
+  if (cities[city].building < 1) {
+    if (game.advance_known_by[0x1c] != '\0') {
+      return 0x13;
     }
+    return 5;
   }
-  if (civ == 0) {
-    if (cities[city].building < 1) {
-      if (game.advance_known_by[0x1c] != '\0') {
-        return 0x13;
-      }
-      return 5;
-    }
-    unit_type = (iptr)cities[city].building;
-    obsolete_by2 = (iptr)unit_types[unit_type].obsolete_by;
-    if (obsolete_by2 < 0) {
+  unit_type = (iptr)cities[city].building;
+  obsolete_by2 = (iptr)unit_types[unit_type].obsolete_by;
+  if (obsolete_by2 < 0) {
+    return unit_type;
+  }
+  if (game.difficulty == '\0') {
+    return unit_type;
+  }
+  ret = bits_count8((int)(char)game.advance_known_by[obsolete_by2]);
+  if (ret < 2) {
+    return unit_type;
+  }
+  if (((game.human_players & game.advance_known_by[obsolete_by2]) == 0) && (game.difficulty < 4)) {
+    return unit_type;
+  }
+  unit_type2 = 0;
+  while( true ) {
+    if (0x3d < unit_type2) {
       return unit_type;
     }
-    if (game.difficulty == '\0') {
-      return unit_type;
-    }
-    ret = bits_count8((int)(char)game.advance_known_by[obsolete_by2]);
-    if (ret < 2) {
-      return unit_type;
-    }
-    if (((game.human_players & game.advance_known_by[obsolete_by2]) == 0) && (game.difficulty < 4)) {
-      return unit_type;
-    }
-    unit_type2 = 0;
-    while( true ) {
-      if (0x3d < unit_type2) {
-        return unit_type;
-      }
-      if ((unit_types[unit_type2].prerequisite == obsolete_by2) &&
-         (unit_types[unit_type].role == unit_types[unit_type2].role)) break;
-      unit_type2++;
-    }
-    return unit_type2;
+    if ((unit_types[unit_type2].prerequisite == obsolete_by2) &&
+       (unit_types[unit_type].role == unit_types[unit_type2].role)) break;
+    unit_type2++;
   }
-  enemy_offshore = 0;
-  if (policy == 4) {
-    for (civ2 = 1; (int)civ2 < 8; civ2++) {
-      if (((*((byte *)&civs[civ].treaties[civ2] + 1) & 0x20) != 0) &&
-         (*(char *)&civs[civ2].continent_cities[landmass2] == '\0')) {
-        enemy_offshore = 1;
-      }
-    }
-  }
+  return unit_type2;
+}
+
+/* Part of city_choose_production (00498e8b): the defenders the city needs
+   (defense_need, defense_urgent) and its naval units. */
+static void city_choose_production_defense_need(ChooseProdState *s,iptr city)
+{
+  int ret;
+  uint adjusted;
+  int extra_defender;
+  iptr unit;
+  int under_threat;
+  uint defenders_wanted;
+  uint tmp;
+  int defenders;
+  int size_per_defender;
+
   under_threat = 0;
-  defense_urgent = 0;
-  defense_need = 0;
+  s->defense_urgent = 0;
+  s->defense_need = 0;
   unit = tile_first_unit((int)cities[city].x,(int)cities[city].y);
   defenders = unit_stack_count_role(unit,1);
   ret = unit_stack_count_role(unit,4);
-  naval_units = unit_stack_count_role(unit,2);
-  naval_units = (ret >> 1) + naval_units;
+  s->naval_units = unit_stack_count_role(unit,2);
+  s->naval_units = (ret >> 1) + s->naval_units;
   if (defenders < 1) {
-    defense_urgent = 2;
-    defense_need = 2;
+    s->defense_urgent = 2;
+    s->defense_need = 2;
   }
   else {
     if ((under_threat == 0) &&
-       (ret = tile_zoc_unit_adjacent((int)cities[city].x,(int)cities[city].y,civ), ret == 0)
+       (ret = tile_zoc_unit_adjacent((int)cities[city].x,(int)cities[city].y,s->civ), ret == 0)
        ) {
       size_per_defender = 4;
     }
@@ -5526,14 +5497,14 @@ iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_b
     }
     ret = city_has_improvement(city,1);
     if (ret == 0) {
-      if ((policy == 5) && (under_threat == 0)) {
+      if ((s->policy == 5) && (under_threat == 0)) {
         size_per_defender++;
       }
     }
     else {
       size_per_defender--;
     }
-    if ((threatened == 0) && (*(char *)&civs[civ].continent_flags[landmass2] == '\0')) {
+    if ((s->threatened == 0) && (*(char *)&civs[s->civ].continent_flags[s->landmass2] == '\0')) {
       extra_defender = 0;
     }
     else {
@@ -5547,10 +5518,10 @@ iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_b
       if (3 < cities[city].size) {
         tmp = 2;
       }
-      if (7 < civs[civ].num_cities) {
+      if (7 < civs[s->civ].num_cities) {
         tmp = 3;
       }
-      if (0xb < civs[civ].num_cities) {
+      if (0xb < civs[s->civ].num_cities) {
         tmp = 4;
       }
       adjusted = tmp;
@@ -5559,1467 +5530,1639 @@ iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_b
       }
     }
     defenders_wanted = adjusted;
-    if ((defenders < (int)defenders_wanted) && (defense_need = 1, defenders + 1 < (int)defenders_wanted)) {
-      defense_urgent = 1;
+    if ((defenders < (int)defenders_wanted) && (s->defense_need = 1, defenders + 1 < (int)defenders_wanted)) {
+      s->defense_urgent = 1;
     }
   }
-  if ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) {
-    ret = civ_has_wonder(civ,0);
-    if ((ret != 0) && (ret = city_has_improvement(city,3), ret != 0)) {
-      city_set_improvement(city,3,0);
-      civs[civ].gold += (uint)improvements[3].cost * main_menu_block.city_shield_rows;
-    }
-    ret = civ_has_wonder(civ,0x1a);
-    if ((ret != 0) && (ret = city_has_improvement(city,0x1a), ret != 0)) {
-      city_set_improvement(city,0x1a,0);
-      civs[civ].gold += (uint)improvements[0x1a].cost * main_menu_block.city_shield_rows;
-    }
-    ret = civ_has_wonder(civ,0x15);
-    if ((ret != 0) && (ret = city_has_improvement(city,0x21), ret != 0)) {
-      city_set_improvement(city,0x21,0);
-      civs[civ].gold += (uint)improvements[0x21].cost * main_menu_block.city_shield_rows;
-    }
-    ret = civ_has_wonder(civ,10);
-    if ((ret != 0) && (ret = city_has_improvement(city,0xb), ret != 0)) {
-      city_set_improvement(city,0xb,0);
-      civs[civ].gold += (uint)improvements[0xb].cost * main_menu_block.city_shield_rows;
-    }
-    ret = city_has_improvement(city,0x20);
-    if ((((ret != 0) && ((int)game.turn_civ == civ)) && ((cities[city].flags & 0x10000) == 0)
-        ) && ((policy != 4 && (policy != 5)))) {
-      for (city2 = 0; city2 < game.num_cities; city2++) {
-        if (((cities[city2].id != 0) && ((int)cities[city2].owner == civ)) &&
-           ((city2 != city &&
-            (((ret = city_has_improvement(city2,0x20), ret != 0 &&
-              ((cities[city2].flags & 0x10000) == 0)) &&
-             (ret = tile_adjacent_nonallied_unit((int)cities[city2].x,(int)cities[city2].y,civ),
-             ret == 0)))))) {
-          ret = tile_landmass((int)cities[city2].x,(int)cities[city2].y);
-          if (((ret == landmass2) && (1 < defense_need)) ||
-              ((ret != landmass2) && (civs[civ].continent_policy[ret] != policy))) {
-            unit = tile_first_unit((int)cities[city2].x,(int)cities[city2].y);
-            if (((-1 < unit) &&
-                ((policy != 1 || (count = unit_stack_count_role(unit,1), 1 < count)))) &&
-               (leader_trait = *(char *)&civs[civ].continent_policy[ret],
-               ret = unit_stack_sum(unit,2),
-               (int)(3 - (uint)(leader_trait == 4)) <= ret)) {
-              while ((-1 < unit && ((int)(char)unit_types[units[unit].type].role != policy))) {
-                unit = unit_next_in_stack(unit);
-              }
-              if (-1 < unit) {
-                cities[city].flags = cities[city].flags | 0x10000;
-                cities[city2].flags = cities[city2].flags | 0x10000;
-                unit_exhaust_moves(unit);
-                unit_relocate(unit,(int)cities[city].x,(int)cities[city].y,1);
-                unit3 = unit;
-                watchers = 0;
-                for (unit = 0; unit < game.num_units; unit++) {
-                  if ((((units[unit].id != 0) && (unit_types[units[unit].type].role == 3)) &&
-                      (((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) != 0)) &&
-                     (((byte)(civs[units[unit].owner].treaties[civ] >> 8) & 0x20) != 0)) {
-                    ret = map_distance((int)cities[city].x,(int)cities[city].y,
+}
+
+/* Part of city_choose_production (00498e8b): an AI city sells the
+   improvements its civ's wonders make redundant. */
+static void city_choose_production_sell_redundant(ChooseProdState *s,iptr city)
+{
+  int ret;
+
+  ret = civ_has_wonder(s->civ,0);
+  if ((ret != 0) && (ret = city_has_improvement(city,3), ret != 0)) {
+    city_set_improvement(city,3,0);
+    civs[s->civ].gold += (uint)improvements[3].cost * main_menu_block.city_shield_rows;
+  }
+  ret = civ_has_wonder(s->civ,0x1a);
+  if ((ret != 0) && (ret = city_has_improvement(city,0x1a), ret != 0)) {
+    city_set_improvement(city,0x1a,0);
+    civs[s->civ].gold += (uint)improvements[0x1a].cost * main_menu_block.city_shield_rows;
+  }
+  ret = civ_has_wonder(s->civ,0x15);
+  if ((ret != 0) && (ret = city_has_improvement(city,0x21), ret != 0)) {
+    city_set_improvement(city,0x21,0);
+    civs[s->civ].gold += (uint)improvements[0x21].cost * main_menu_block.city_shield_rows;
+  }
+  ret = civ_has_wonder(s->civ,10);
+  if ((ret != 0) && (ret = city_has_improvement(city,0xb), ret != 0)) {
+    city_set_improvement(city,0xb,0);
+    civs[s->civ].gold += (uint)improvements[0xb].cost * main_menu_block.city_shield_rows;
+  }
+}
+
+/* Part of city_choose_production (00498e8b): an AI city with an airport
+   airlifts a defender in from another (and a human's diplomat may see it). */
+static void city_choose_production_airlift_defender(ChooseProdState *s,iptr city)
+{
+  char leader_trait;
+  int ret;
+  int count;
+  iptr unit;
+  int watchers;
+  iptr unit3;
+
+  ret = city_has_improvement(city,0x20);
+  if ((((ret != 0) && ((int)game.turn_civ == s->civ)) && ((cities[city].flags & 0x10000) == 0)
+      ) && ((s->policy != 4 && (s->policy != 5)))) {
+    for (s->city2 = 0; s->city2 < game.num_cities; s->city2++) {
+      if (((cities[s->city2].id != 0) && ((int)cities[s->city2].owner == s->civ)) &&
+         ((s->city2 != city &&
+          (((ret = city_has_improvement(s->city2,0x20), ret != 0 &&
+            ((cities[s->city2].flags & 0x10000) == 0)) &&
+           (ret = tile_adjacent_nonallied_unit((int)cities[s->city2].x,(int)cities[s->city2].y,s->civ),
+           ret == 0)))))) {
+        ret = tile_landmass((int)cities[s->city2].x,(int)cities[s->city2].y);
+        if (((ret == s->landmass2) && (1 < s->defense_need)) ||
+            ((ret != s->landmass2) && (civs[s->civ].continent_policy[ret] != s->policy))) {
+          unit = tile_first_unit((int)cities[s->city2].x,(int)cities[s->city2].y);
+          if (((-1 < unit) &&
+              ((s->policy != 1 || (count = unit_stack_count_role(unit,1), 1 < count)))) &&
+             (leader_trait = *(char *)&civs[s->civ].continent_policy[ret],
+             ret = unit_stack_sum(unit,2),
+             (int)(3 - (uint)(leader_trait == 4)) <= ret)) {
+            while ((-1 < unit && ((int)(char)unit_types[units[unit].type].role != s->policy))) {
+              unit = unit_next_in_stack(unit);
+            }
+            if (-1 < unit) {
+              cities[city].flags = cities[city].flags | 0x10000;
+              cities[s->city2].flags = cities[s->city2].flags | 0x10000;
+              unit_exhaust_moves(unit);
+              unit_relocate(unit,(int)cities[city].x,(int)cities[city].y,1);
+              unit3 = unit;
+              watchers = 0;
+              for (unit = 0; unit < game.num_units; unit++) {
+                if ((((units[unit].id != 0) && (unit_types[units[unit].type].role == 3)) &&
+                    (((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) != 0)) &&
+                   (((byte)(civs[units[unit].owner].treaties[s->civ] >> 8) & 0x20) != 0)) {
+                  ret = map_distance((int)cities[city].x,(int)cities[city].y,
+                                             (int)units[unit].x,(int)units[unit].y);
+                  count = unit_max_moves(unit);
+                  if (count / (int)(uint)cosmic.road_move_mult < ret) {
+                    ret = map_distance((int)cities[s->city2].x,(int)cities[s->city2].y,
                                                (int)units[unit].x,(int)units[unit].y);
                     count = unit_max_moves(unit);
-                    if (count / (int)(uint)cosmic.road_move_mult < ret) {
-                      ret = map_distance((int)cities[city2].x,(int)cities[city2].y,
-                                                 (int)units[unit].x,(int)units[unit].y);
-                      count = unit_max_moves(unit);
-                      if (count / (int)(uint)cosmic.road_move_mult < ret) continue;
-                    }
-                    ret = rand_range(0,(-(uint)((units[unit].flags & 0x2000) == 0) & 2) + 3);
-                    if (ret == 0) {
-                      unit_delete(unit3,1);
-                      unit3 = -1;
-                      break;
-                    }
-                    watchers++;
+                    if (count / (int)(uint)cosmic.road_move_mult < ret) continue;
                   }
-                }
-                if (unit3 < 0) {
-                  text_set_string_arg(0,(const char *)&cities[city].name);
-                  popup_game((const char *)&str_weshot);
-                }
-                else if (watchers != 0) {
-                  text_set_string_arg(0,(const char *)&cities[city].name);
-                  popup_game((const char *)&str_wesaw);
-                }
-              }
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
-  best_build_score = 999;
-  best_unit_score = 999;
-  choice_score = 999;
-  best_build = 999;
-  best_unit = 999;
-  choice = 999;
-  for (improvement = 1; improvement < 0x27; improvement++) {
-    ret = city_can_build_improvement(civ,city,improvement);
-    if (ret != 0) {
-      score = 999;
-      defensive = 0;
-      if (improvement - 1U < 0x23) {
-        ret = food_surplus >> 1;
-        switch(improvement) {
-        case 1:
-          if ((((palace_count == 0) || ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
-              ((palace_count == 0 ||
-               ((palace_count == 1 && (palace_size * 2 < (int)cities[city2].size)))))) &&
-             ((policy == 4 || (((policy == 5 || (policy == 0)) || (3 < main_menu_block.city_shield_waste)))))) {
-            score = 2;
-            if ('\t' < cities[city2].size) {
-              score = 1;
-            }
-            if (14 < cities[city2].size) {
-              score--;
-            }
-            if (3 < main_menu_block.city_shield_waste) {
-              defensive = threatened;
-            }
-          }
-          break;
-        case 2:
-          score = (leaders[civs[civ].tribe].civilize + barracks_count + 4) -
-                     (int)leaders[civs[civ].tribe].attack;
-          if (((leaders[civs[civ].tribe].attack < '\0') ||
-              ('\0' < leaders[civs[civ].tribe].civilize)) &&
-             ((int)leaders[civs[civ].tribe].civilize + (int)leaders[civs[civ].tribe].attack != 0
-             )) {
-            score += barracks_count;
-          }
-          defensive = 1;
-          if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
-            if (game.difficulty == 3) {
-              score = (int)(score * 3) / 2;
-            }
-            if (3 < game.difficulty) {
-              score = score << 1;
-            }
-          }
-          break;
-        case 3:
-          ret = civ_has_wonder(civ,0);
-          if (ret == 0) {
-            if (main_menu_block.city_total_shields < 3) {
-              score = 8;
-            }
-            else {
-              score = 4;
-            }
-            if (main_menu_block.city_happy_count <= main_menu_block.city_unhappy_count) {
-              score += 2;
-            }
-            if (((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) &&
-               (tmp = (game.difficulty + 4) - (int)cities[city2].size, 0 < (int)tmp))
-            {
-              score += tmp;
-            }
-          }
-          break;
-        case 4:
-          if (unrest_state == 1) {
-            score = 9;
-          }
-          if (unrest_state == 2) {
-            score = 0xfffffffb;
-          }
-          break;
-        case 5:
-          score = int_clamp(10 - (net_trade >> 1),1,10);
-          if (unrest_state == 1) {
-            score--;
-          }
-          if (unrest_state == 2) {
-            score = 0xfffffffc;
-          }
-          break;
-        case 6:
-          score = int_clamp(10 - net_trade / 3,1,10);
-          break;
-        case 7:
-          score = 0xe - (main_menu_block.city_shield_waste * 2 + main_menu_block.city_trade_corruption);
-          if (civs[civ].government == 6) {
-            if (unrest_state == 2) {
-              score = 0xffffffff;
-            }
-          }
-          else if ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) {
-            score -= (int)civs[game.best_human_rank].subversion_count / 2;
-          }
-          break;
-        case 8:
-          ret = civ_has_wonder(civ,6);
-          if (ret == 0) {
-            score = 10 - ((int)cities[city].size >> 1);
-            for (civ3 = 1; civ3 < 8; civ3++) {
-              if ((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) {
-                if ((civs[civ].treaties[civ3] & 0x2010) != 0) {
-                  score -= 2;
-                }
-                if (*(char *)&civs[civ3].continent_cities[landmass2] != '\0') {
-                  score--;
-                }
-              }
-            }
-            if (game.advance_known_by[0x48] != '\0') {
-              score += 2;
-            }
-            if (game.advance_known_by[0] != '\0') {
-              score += 2;
-            }
-            if (game.advance_known_by[0x49] != '\0') {
-              score += 2;
-            }
-            score = int_clamp(score,1,10);
-            ret = city_has_improvement(city,1);
-            if (ret != 0) {
-              score -= 4;
-            }
-            defensive = 1;
-          }
-          break;
-        case 9:
-          if ((int)((uint)cosmic.aqueduct_size - ret) <= (int)cities[city].size) {
-            score = ((cosmic.aqueduct_size + 4) - (int)cities[city].size) - ret;
-            score = int_clamp(score,1,0x14);
-          }
-          break;
-        case 10:
-          score = int_clamp(10 - net_trade / 3,1,10);
-          if (unrest_state == 1) {
-            score--;
-          }
-          if (unrest_state == 2) {
-            score = 0;
-          }
-          break;
-        case 0xb:
-          ret = civ_has_wonder(civ,10);
-          if (ret == 0) {
-            if (unrest_state == 1) {
-              score = 8;
-            }
-            if (unrest_state == 2) {
-              score = 0xfffffffd;
-            }
-          }
-          break;
-        case 0xc:
-          if ((civs[civ].science_rate != '\0') &&
-             ((space_race == 0 || (ret = civ_has_advance(civ,0x4c), ret == 0)))) {
-            score = int_clamp(10 - (net_trade >> 2),2,10);
-          }
-          break;
-        case 0xd:
-          break;
-        case 0xe:
-          if (unrest_state == 2) {
-            score = 0xfffffffe;
-          }
-          break;
-        case 0xf:
-        case 0x14:
-          score = int_clamp(0xe - main_menu_block.city_total_shields,1,0xe);
-          break;
-        default:
-          score = int_clamp(0xc - ((int)(main_menu_block.city_total_shields + (main_menu_block.city_total_shields >> 0x1f & 3U)) >>
-                                              2),2,0xc);
-          break;
-        case 0x11:
-          if (unrest_state < 2) {
-            ret = int_clamp(0xf - cities[city].size,1,0xf);
-            score = (ret + 1) / 2;
-            if (game.wonder_city[0x17] == -1) {
-              score = score << 1;
-            }
-            if (civs[game.best_human_rank].units_active[0x2d] == '\0') {
-              score = score << 1;
-            }
-            if ('\t' < cities[city].size) {
-              score--;
-            }
-            ret = city_has_improvement(city,1);
-            if (ret != 0) {
-              score = 0;
-            }
-          }
-          defensive = 1;
-          break;
-        case 0x13:
-          score = int_clamp(0xc - main_menu_block.city_total_shields / 5,2,0xe);
-          break;
-        case 0x16:
-          if ((unrest_state != 0) || (space_race < 2)) {
-            score = int_clamp(0xb - (net_trade >> 2),2,0xb);
-            if (unrest_state == 1) {
-              score--;
-            }
-            if (unrest_state == 2) {
-              score = 0;
-            }
-          }
-          break;
-        case 0x17:
-          if ((space_race < 2) &&
-             ((int)((uint)cosmic.sewer_size - ret) <= (int)cities[city].size)) {
-            score = ((cosmic.sewer_size + 4) - (int)cities[city].size) - ret;
-            score = int_clamp(score,1,0x14);
-          }
-          break;
-        case 0x18:
-          score = (0xe - ((int)cities[city].size >> 1)) + farmland_count * -2 + space_race * 2 + ret
-          ;
-          score = int_clamp(score,2,0xe);
-          break;
-        case 0x19:
-          score = (0xf - ((int)cities[city].size >> 1)) + space_race * 6;
-          score = int_clamp(score,2,0xf);
-          break;
-        case 0x1a:
-          if (((space_race == 0) || (ret = civ_has_advance(civ,0x4c), ret == 0)) &&
-             (civs[civ].science_rate != '\0')) {
-            score = int_clamp(0xb - (net_trade >> 2),2,10);
-          }
-          break;
-        case 0x1b:
-          threat_level = ((uint)civs[game.best_human_rank].units_active[0x1f] * 2 +
-                      (uint)civs[game.best_human_rank].units_active[0x1c] * 2 +
-                      (uint)civs[game.best_human_rank].units_active[0x2c] +
-                     (uint)civs[game.best_human_rank].units_active[0x1d]) * 2;
-          if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
-            threat_level = 0;
-            for (civ2 = 1; (int)civ2 < 8; civ2++) {
-              if (civ2 != civ) {
-                tmp = (uint)civs[civ2].units_active[0x2c] +
-                           (uint)civs[civ2].units_active[0x1c] +
-                           (uint)civs[civ2].units_active[0x1d] +
-                           (uint)civs[civ2].units_active[0x1f];
-                if (((*((byte *)&civs[civ].treaties[civ2] + 1) & 0x20) == 0) &&
-                   ((*(byte *)&civs[civ2].treaties[civ] & 0x10) == 0)) {
-                  tmp = tmp / 2;
-                }
-                threat_level += tmp;
-              }
-            }
-          }
-          score = 0xc - threat_level;
-          score = int_clamp(score,1,0xc);
-          if ((cities[city].flags & 0x40000) != 0) {
-            score -= 3;
-          }
-          defensive = 1;
-          for (civ3 = 1; civ3 < 8; civ3++) {
-            if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
-               ((4 < civs[civ3].reputation ||
-                (((byte)(civs[civ].treaties[civ3] >> 8) & 0x20) != 0)))) {
-              defensive = (uint)(threatened != 0);
-              break;
-            }
-          }
-          break;
-        case 0x1c:
-          ret = city_adjacent_to_body(city,1);
-          if (ret != 0) {
-            threat_level = (uint)civs[game.best_human_rank].units_active[0x26] * 3 +
-                       (uint)civs[game.best_human_rank].units_active[0x27] * 3 +
-                       (uint)civs[game.best_human_rank].units_active[0x28] * 5 +
-                       (uint)civs[game.best_human_rank].units_active[0x24] +
-                       (uint)civs[game.best_human_rank].units_active[0x25];
-            if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
-              threat_level = 0;
-              for (civ2 = 1; (int)civ2 < 8; civ2++) {
-                if (civ2 != civ) {
-                  tmp = ((int)(uint)civs[civ2].units_active[0x24] >> 1) +
-                             ((int)(uint)civs[civ2].units_active[0x25] >> 1) +
-                             (uint)civs[civ2].units_active[0x28] * 2 +
-                             (uint)civs[civ2].units_active[0x26] +
-                             (uint)civs[civ2].units_active[0x27];
-                  if (((*((byte *)&civs[civ].treaties[civ2] + 1) & 0x20) == 0) &&
-                     ((*(byte *)&civs[civ2].treaties[civ] & 0x10) == 0)) {
-                    tmp = tmp / 2;
+                  ret = rand_range(0,(-(uint)((units[unit].flags & 0x2000) == 0) & 2) + 3);
+                  if (ret == 0) {
+                    unit_delete(unit3,1);
+                    unit3 = -1;
+                    break;
                   }
-                  threat_level += tmp;
+                  watchers++;
                 }
               }
-            }
-            score = 0xc - threat_level;
-            score = int_clamp(score,1,0xc);
-            defensive = 1;
-            for (civ3 = 1; civ3 < 8; civ3++) {
-              if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
-                 ((4 < civs[civ3].reputation ||
-                  (((byte)(civs[civ].treaties[civ3] >> 8) & 0x20) != 0)))) {
-                defensive = (uint)(threatened != 0);
-                break;
+              if (unit3 < 0) {
+                text_set_string_arg(0,(const char *)&cities[city].name);
+                popup_game((const char *)&str_weshot);
+              }
+              else if (watchers != 0) {
+                text_set_string_arg(0,(const char *)&cities[city].name);
+                popup_game((const char *)&str_wesaw);
               }
             }
-          }
-          break;
-        case 0x1d:
-          break;
-        case 0x1e:
-          if ((unrest_state < 2) &&
-             (score = int_clamp(0x10 - ocean_tiles,2,0x10), food_surplus < 1)) {
-            score = (int)score / 2;
-          }
-          break;
-        case 0x1f:
-          if (unrest_state < 2) {
-            score = 0x10 - ocean_tiles;
-            score = int_clamp(score,2,0x10);
-            if (0 < (int)score) {
-              ret = city_has_improvement(city,0xf);
-              if (ret != 0) {
-                score = (int)score / 2;
-              }
-              ret = city_has_improvement(city,0x10);
-              if (ret != 0) {
-                score = (int)score / 2;
-              }
-            }
-            if (((main_menu_block.city_total_shields - main_menu_block.city_shield_support <= main_menu_block.city_total_shields / 3) ||
-                (main_menu_block.city_total_shields < (int)cities[city2].size / 2)) &&
-               ((int)cities[city2].size / 2 <= (int)(ocean_tiles + (ocean_tiles >> 0x1f & 3U)) >> 2))
-            {
-              score -= 2;
-            }
-          }
-          break;
-        case 0x20:
-          score = (airport_count * 4 + 4) - (int)leaders[civs[civ].tribe].attack;
-          if (*(char *)&civs[civ].continent_policy[landmass2] == 4) {
-            score = (int)score / 2;
-          }
-          ret = civ_has_advance(civ,0);
-          if (ret == 0) {
-            score = score << 1;
-          }
-          if (((*(char *)&civs[civ].continent_cities[landmass2] == 1) ||
-              (((civs[civ].continent_flags[landmass2] & 0x10) != 0 && (airport_count == 0))))
-             && ((int)(uint)civs[civ].continent_cities[landmass2] < (int)score)) {
-            score = (uint)civs[civ].continent_cities[landmass2];
-          }
-          ret = city_has_improvement(city,1);
-          if ((ret != 0) && (-1 < (int)score)) {
-            score = 0;
-          }
-          defensive = threatened;
-          break;
-        case 0x21:
-          ret = civ_has_wonder(civ,0x15);
-          if (ret == 0) {
-            tmp = (*(uint *)&main_menu_block.city_aggressive_units);
-            if (5 < civs[civ].government) {
-              tmp = (*(uint *)&main_menu_block.city_aggressive_units) << 1;
-            }
-            if (((4 < civs[civ].government) && (tmp != 0)) &&
-               (main_menu_block.city_happy_count - main_menu_block.city_unhappy_count < 2)) {
-              tmp += 2;
-            }
-            score = 10 - tmp;
-          }
-          break;
-        case 0x22:
-          ret = city_adjacent_to_body(city,1);
-          if (ret != 0) {
-            ret = nearest_dist;
-            if (0x27 < nearest_dist) {
-              ret = 0x28;
-            }
-            score = (0xb - (ret >> 2)) + naval_units * -5 +
-                       (port_count * 2 - (int)leaders[civs[civ].tribe].attack) +
-                       (int)leaders[civs[civ].tribe].civilize;
-            score = int_clamp(score,2,0xf);
-            if (leaders[civs[civ].tribe].attack < '\0') {
-              score += port_count;
-            }
-          }
-          break;
-        case 0x23:
-          ret = civ_spaceship_launched(civ);
-          if (((ret == 0) && ((game.game_flags & 2) == 0)) &&
-             ((ret = spaceship_choose_part_group(civ,0), -1 < ret &&
-              (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0 ||
-               (civs[civ].spaceship_parts[0] < 0x26)))))) {
-            score = 4;
-            for (civ3 = 1; civ3 < 8; civ3++) {
-              if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
-                 (ret = civ_spaceship_exists(civ3), ret != 0)) {
-                score = 2;
-                break;
-              }
-            }
-            if ((policy != 0) && ((civs[civ].continent_flags[landmass2] & 0x10) == 0)) {
-              defensive = threatened;
-            }
-            human_launched = 0;
-            if ((game.game_flags & 2) == 0) {
-              for (civ3 = 1; civ3 < 8; civ3++) {
-                if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
-                   (ret = civ_spaceship_launched(civ3), ret != 0)) {
-                  human_launched = 1;
-                  break;
-                }
-              }
-            }
-            if ((1 < space_race) && (game.difficulty != '\0')) {
-              adjusted = score - 1;
-              if (human_launched != 0) {
-                adjusted = score - 2;
-              }
-              score = adjusted;
-              if (defense_urgent == 0) {
-                defensive = threatened;
-              }
-            }
-            leader_parts_cost = 0;
-            own_parts_cost = 0;
-            for (part = 0; part < 6; part++) {
-              part_group = int_clamp((part + 1) / 2,0,2);
-              own_parts_cost = own_parts_cost +
-                          (int)civs[civ].spaceship_parts[part] *
-                          (uint)improvements[part_group + 0x23].cost;
-              leader_parts_cost = leader_parts_cost +
-                         (int)civs[((uint)game.best_human_rank)].spaceship_parts[part] *
-                         (uint)improvements[part_group + 0x23].cost;
-            }
-            if (((space_builders == 0) ||
-                (((space_builders <= human_space_builders && (own_parts_cost <= leader_parts_cost)) || (human_launched != 0)))) &&
-               ((((cities[city].flags & 1) == 0 && (game.difficulty != '\0')) &&
-                (((int)civs[civ].best_shield_surplus >> 1 <= shield_surplus || (0x13 < shield_surplus)))))) {
-              choice_score = 999;
-            }
+            break;
           }
         }
-      }
-      if ((int)score < 400) {
-        score = (int)(((-(uint)(threatened == defensive) & 0xfffffff6) + 0x14) * score * 3) /
-                   (leaders[civs[civ].tribe].civilize + 3);
-      }
-      else {
-        score = 0x3fff;
-      }
-      ret = city_has_improvement(city,2);
-      if (ret != 0) {
-        score += (int)score / ((barracks_count >> 1) + 3);
-      }
-      ret = wonder_get_city(0xd);
-      if (ret == city) {
-        score += (int)score / 3;
-      }
-      if ((int)score < choice_score) {
-        choice_score = score;
-        choice = -improvement;
-      }
-      if ((int)score < best_build_score) {
-        best_build_score = score;
-        best_build = -improvement;
       }
     }
   }
-  if (((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) && (citypref_count != 0)) {
-    for (unit_type2 = 0; unit_type2 < citypref_count; unit_type2++) {
-      improvement = (((i32 *)&map_views_block.citypref_improvements))[unit_type2];
-      ret = city_has_improvement(city,improvement);
-      if ((ret == 0) && (ret = city_can_build_improvement(civ,city,improvement), ret != 0)) {
-        best_build = -improvement;
-        choice = -improvement;
-        goto choose_military_unit;
-      }
-    }
-  }
-  if ((wonder_in_progress != 0) ||
-     (((((civs[civ].continent_flags[landmass2] & 0x10) == 0 &&
-        (2 < cities[city].size)) && (((byte)(cities[city].flags >> 8) & 0xc0) != 0xc0))
-      && ((4 - leaders[civs[civ].tribe].civilize <=
-           (int)(uint)civs[civ].continent_cities[landmass2] ||
-          ((*(char *)&civs[civ].continent_flags[landmass2] == '\0' &&
-           (4 - leaders[civs[civ].tribe].civilize <= (int)civs[civ].num_cities)))))))) {
-    for (wonder = 0; wonder < 0x1c; wonder++) {
-      improvement = wonder + 0x27;
-      ret = city_can_build_improvement(civ,city,improvement);
-      if (ret != 0) {
-        defensive = 0;
-        if (policy == 4) {
-          defensive = threatened;
+}
+
+/* Part of city_choose_production (00498e8b): the score of City Walls. */
+static uint city_choose_production_walls_score(ChooseProdState *s,iptr city,uint score,uint *defensive)
+{
+  int ret;
+  iptr civ3;
+
+  ret = civ_has_wonder(s->civ,6);
+  if (ret == 0) {
+    score = 10 - ((int)cities[city].size >> 1);
+    for (civ3 = 1; civ3 < 8; civ3++) {
+      if ((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) {
+        if ((civs[s->civ].treaties[civ3] & 0x2010) != 0) {
+          score -= 2;
         }
-        ret = (wonders_owned + wonders_here + 8) - civs[civ].gold / 200;
-        if (ret < 2) {
-          ret = 1;
-        }
-        wonder_group = wonder / 7;
-        score = ret + (uint)civs[civ].wonders_by_group[wonder_group];
-        if ((byte)(((i8 *)&map_views_block.human_wonders_by_group_min))[wonder_group] < civs[civ].wonders_by_group[wonder_group]) {
-          score += 2;
-        }
-        if (civs[civ].wonders_by_group[wonder_group] <
-            civs[((uint)game.worst_human_rank)].wonders_by_group[wonder_group]) {
+        if (*(char *)&civs[civ3].continent_cities[s->landmass2] != '\0') {
           score--;
         }
-        if ((((wonder_in_progress == 0) || ((int)cities[city].building == -improvement)) ||
-            ((((game.human_players & *(byte *)&wonder_builders[-0x27 - cities[city].building]) ==
-               0 || ((*(short *)((int)&game + cities[city].building * -2 + 0xb0) != -1 ||
-                     ((int)cities[city].shield_box <
-                      (int)((uint)improvements[-(int)cities[city].building].cost * main_menu_block.city_shield_rows)
-                      / 2)))) &&
-             ((*(byte *)&wonder_builders[-0x27 - cities[city].building] & 1) == 0)))) &&
-           (((1 < game.difficulty || (preq2 = (iptr)improvements[improvement].preq, preq2 < 0))
-            || ((game.human_players & game.advance_known_by[preq2]) != 0)))) {
-          if (wonder != 0x17) {
-            if (game.difficulty < 2) {
-              for (city2 = 0; city2 < game.num_cities; city2++) {
-                if (((cities[city2].id != 0) &&
-                    (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0)) &&
-                   ((int)cities[city2].building == -improvement)) {
-                  score = 999;
-                }
-              }
-              if (score == 999) continue;
-            }
-            ret = civ_has_advance(civ,0x49);
-            if ((ret != 0) && ((game.human_players & game.advance_known_by[0x49]) == 0))
-            continue;
-          }
-          adjusted = score;
-          switch(wonder) {
-          case 0:
-            adjusted = score - (leaders[civs[civ].tribe].civilize * 3 + 2);
-            break;
-          case 1:
-            adjusted = score - ((int)civs[civ].num_cities / 3 + 1);
-            break;
-          case 2:
-            ret = city_has_improvement(city,1);
-            if (ret != 0) {
-              score--;
-            }
-            ret = city_has_improvement(city,5);
-            if (ret != 0) {
-              score--;
-            }
-            adjusted = score - (int)cities[city].size / 3;
-            break;
-          case 3:
-            adjusted = score -
-                    ((int)(civs[civ].units_active[0x21] + 2 + (uint)civs[civ].units_active[0x20]
-                          ) >> 2);
-            break;
-          case 4:
-            for (civ4 = 1; adjusted = score, (int)civ4 < 8; civ4++) {
-              if (civs[civ4].num_advances < civs[civ].num_advances) {
-                if ((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) {
-                  adjusted = score + 1;
-                }
-              }
-              else {
-                adjusted = score - 1;
-                if (((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) &&
-                   (civs[civ].num_advances + 5 < (uint)civs[civ4].num_advances)) {
-                  adjusted = score - 3;
-                }
-              }
-              score = adjusted;
-            }
-            break;
-          case 5:
-            adjusted = score -
-                    (((int)((int)civs[civ].num_cities + ((int)civs[civ].num_cities >> 0x1f & 3U)
-                           ) >> 2) - (int)game.turn / 0x19);
-            break;
-          case 6:
-            adjusted = score + leaders[civs[civ].tribe].civilize * -2;
-            break;
-          case 7:
-            adjusted = score -
-                    (leaders[civs[civ].tribe].attack * 3 + (int)leaders[civs[civ].tribe].expand
-                     + leaders[civs[civ].tribe].civilize * -2 + 1);
-            break;
-          case 8:
-            ret = int_clamp((main_menu_block.city_total_shields * 2) / 3,0,3);
-            adjusted = score - ret;
-            break;
-          case 9:
-            for (civ3 = 1; adjusted = score, civ3 < 8; civ3++) {
-              if ((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) {
-                if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
-                  score--;
-                }
-                if ((*(byte *)&civs[civ].treaties[civ3] & 6) != 0) {
-                  score--;
-                }
-              }
-            }
-            break;
-          case 10:
-            adjusted = score -
-                    ((int)((int)civs[civ].num_cities + ((int)civs[civ].num_cities >> 0x1f & 3U))
-                    >> 2);
-            break;
-          case 0xb:
-            score = (score - ((int)(net_trade + (net_trade >> 0x1f & 7U)) >> 3)) - 1;
-            ret = city_has_improvement(city,1);
-            adjusted = score;
-            if (ret != 0) {
-              adjusted = score - 1;
-            }
-            break;
-          case 0xc:
-            ship_count = 0;
-            for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-              if (unit_types[unit_type].domain == 2) {
-                ship_count += (uint)civs[civ].units_active[unit_type];
-              }
-            }
-            adjusted = score - ((int)(ship_count + 3 + (ship_count + 3 >> 0x1f & 3U)) >> 2);
-            break;
-          case 0xd:
-            adjusted = score - (int)cities[city].size / 5;
-            break;
-          case 0xe:
-            defensive = threatened;
-            adjusted = score - 4;
-            break;
-          case 0xf:
-            score -= ((int)(uint)civs[civ].continent_city_size[landmass2] >> 4);
-            ret = city_has_improvement(city,1);
-            adjusted = score;
-            if (ret != 0) {
-              adjusted = score - 1;
-            }
-            break;
-          case 0x10:
-            score -= (int)cities[city].size / 6;
-            ret = city_has_improvement(city,1);
-            adjusted = score;
-            if (ret != 0) {
-              adjusted = score - 1;
-            }
-            break;
-          case 0x11:
-            adjusted = score -
-                    ((int)((int)civs[civ].num_cities + ((int)civs[civ].num_cities >> 0x1f & 3U))
-                    >> 2);
-            break;
-          case 0x12:
-            adjusted = score - 3;
-            break;
-          case 0x13:
-            ret = civ_has_advance(civ,0xf);
-            if (ret == 0) {
-              adjusted = score - 2;
-            }
-            else {
-              adjusted = score - 1;
-            }
-            break;
-          case 0x14:
-            if (((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) {
-              adjusted = score - 1;
-              if (3 < civs[game.civ_by_rank[7]].reputation) {
-                adjusted = score - 2;
-              }
-              score = adjusted;
-              adjusted = score;
-              if ((7 < civs[game.civ_by_rank[7]].num_cities) &&
-                 (adjusted = score - 1, game.power_rank[civ] == 6)) {
-                adjusted = score - 2;
-              }
-            }
-            break;
-          case 0x15:
-            adjusted = score - 1;
-            if (((-1 < leaders[civs[civ].tribe].expand) &&
-                (-1 < leaders[civs[civ].tribe].civilize)) &&
-               (-1 < leaders[civs[civ].tribe].attack)) {
-              adjusted = score - 2;
-            }
-            score = adjusted;
-            if (0 < civs[civ].government_score[5]) {
-              score--;
-            }
-            if (4 < civs[civ].government) {
-              score--;
-            }
-            adjusted = score;
-            if (5 < civs[civ].government) {
-              adjusted = score - 1;
-            }
-            break;
-          case 0x16:
-            adjusted = score - civs[civ].continent_city_size[landmass2] / 0x14;
-            break;
-          case 0x17:
-            ret = civ_has_advance(civ,0x49);
-            if (ret != 0) {
-              tmp = 0;
-              for (civ3 = 1; civ3 < 8; civ3++) {
-                if ((((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
-                    (ret = civ_has_advance(civ3,0x49), ret != 0)) &&
-                   (civs[civ3].military_strength < civs[civ].military_strength)) {
-                  tmp = 1;
-                  break;
-                }
-              }
-              if (tmp == 0) {
-                if (((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) {
-                  score--;
-                  ret = civ_has_advance((uint)game.civ_by_rank[7],0x49);
-                  if (ret == 0) {
-                    score--;
-                  }
-                }
-                adjusted = score +
-                        (leaders[civs[civ].tribe].civilize * 2 -
-                        (int)leaders[civs[civ].tribe].attack);
-                break;
-              }
-            }
-            continue;
-          case 0x18:
-            adjusted = score -
-                    ((int)leaders[civs[civ].tribe].civilize +
-                    leaders[civs[civ].tribe].attack * -2);
-            if (game.power_rank[civ] == 7) {
-              adjusted--;
-            }
-            break;
-          case 0x19:
-            adjusted = score -
-                    (leaders[civs[civ].tribe].civilize * 3 +
-                    leaders[civs[civ].tribe].attack * -2);
-            break;
-          case 0x1a:
-            adjusted = score - (leaders[civs[civ].tribe].civilize * 2 + 2);
-            break;
-          case 0x1b:
-            adjusted = score - (leaders[civs[civ].tribe].attack + 2);
-          }
-          score = adjusted;
-          expired = wonder_is_expired(wonder);
-          if (expired != 0) {
-            score = score * 3 + (uint)game.difficulty * 0x32;
-          }
-          score += wonders_building * 5;
-          if (((wonders_building == 0) || (wonder_in_progress != 0)) &&
-             (*(char *)&civs[civ].wonders_by_group[wonder_group] == '\0')) {
-            score -= 2;
-          }
-          if (policy == 1) {
-            score = score + enemy_strength + 1;
-          }
-          else {
-            score += enemy_strength / 2;
-          }
-          if ((int)cities[city].building == -improvement) {
-            if (foreign_same_build != 0) {
-              score = (int)score / 2;
-            }
-            score = (rivals_ahead + 1) * score + rivals_ahead;
-          }
-          else if ((1 << (civ5 & 0x1f) &
-                   (uint)*(byte *)&wonder_builders[-0x27 - cities[city].building]) != 0) {
-            score = score * 2 + 1;
-          }
-          raw_score = score;
-          wonder_cost = (uint)improvements[improvement].cost * main_menu_block.city_shield_rows + 1;
-          if (((wonder_in_progress != 0) && (defense_urgent == 0)) && (expired == 0)) {
-            if (wonders_building == 0) {
-              if (threatened == defensive) {
-                score = (int)score / 2;
-              }
-              else {
-                defensive = threatened;
-              }
-            }
-            if ((int)(wonder_cost * 3 + (wonder_cost * 3 >> 0x1f & 3U)) >> 2 <=
-                (int)cities[city].shield_box) {
-              defensive = threatened;
-            }
-            if (((threatened != defensive) && (wonder_cost / 2 <= (int)cities[city].shield_box)) &&
-               (wonders_building < 3)) {
-              defensive = threatened;
-            }
-          }
-          if (wonder_in_progress == 0) {
-            if ((int)civs[civ].best_shield_surplus >> 1 < shield_surplus) {
-              if ((((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) &&
-                  (civs[civ].best_shield_surplus != shield_surplus)) && (shield_surplus < 6)) {
-                score = score << 1;
-              }
-            }
-            else {
-              score = score << 1;
-            }
-          }
-          if (civs[civ].best_shield_surplus == shield_surplus) {
-            score -= (int)score / 3;
-          }
-          score = (int)(((-(uint)(threatened == defensive) & 0xfffffff6) + 0x14) * score * 3) /
-                     (leaders[civs[civ].tribe].civilize + 3);
-          ret = city_has_improvement(city,2);
-          if (ret != 0) {
-            score += (int)score / ((barracks_count >> 1) + 3);
-          }
-          ret = city_has_improvement(city,1);
-          if ((ret != 0) &&
-             ((score = score - (int)score / 3, wonders_here == 0 ||
-              (*(char *)&civs[civ].wonders_by_group[wonder_group] == '\0')))) {
-            score = (int)score / 2;
-          }
-          if ((cities[city].flags & 0x100) == 0) {
-            if ((wonder_in_progress != 0) && (expired == 0)) {
-              score = (((wonder_cost - cities[city].shield_box) *
-                          ((int)(score * 3 + ((int)(score * 3) >> 0x1f & 3U)) >> 2)) /
-                          wonder_cost + ((int)(score + ((int)score >> 0x1f & 3U)) >> 2)) / 3;
-            }
-          }
-          else {
-            score = score * 3;
-          }
-          if (choice < -0x26) {
-            if (raw_score < best_raw_score) {
-              best_raw_score = raw_score;
-              choice = -improvement;
-              best_build = -improvement;
-              if ((int)score < choice_score) {
-                choice_score = score;
-              }
-              if ((int)score < best_build_score) {
-                best_build_score = score;
-              }
-            }
-          }
-          else {
-            if ((int)score < choice_score) {
-              best_raw_score = raw_score;
-              choice_score = score;
-              choice = -improvement;
-            }
-            if ((int)score < best_build_score) {
-              best_build_score = score;
-              best_build = -improvement;
-            }
-          }
+      }
+    }
+    if (game.advance_known_by[0x48] != '\0') {
+      score += 2;
+    }
+    if (game.advance_known_by[0] != '\0') {
+      score += 2;
+    }
+    if (game.advance_known_by[0x49] != '\0') {
+      score += 2;
+    }
+    score = int_clamp(score,1,10);
+    ret = city_has_improvement(city,1);
+    if (ret != 0) {
+      score -= 4;
+    }
+    *defensive = 1;
+  }
+  return score;
+}
+
+/* Part of city_choose_production (00498e8b): the score of a SAM Missile Battery. */
+static uint city_choose_production_sam_score(ChooseProdState *s,iptr city,uint score,uint *defensive)
+{
+  iptr civ3;
+  uint tmp;
+  uptr civ2;
+  int threat_level;
+
+  threat_level = ((uint)civs[game.best_human_rank].units_active[0x1f] * 2 +
+              (uint)civs[game.best_human_rank].units_active[0x1c] * 2 +
+              (uint)civs[game.best_human_rank].units_active[0x2c] +
+             (uint)civs[game.best_human_rank].units_active[0x1d]) * 2;
+  if ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) != 0) {
+    threat_level = 0;
+    for (civ2 = 1; (int)civ2 < 8; civ2++) {
+      if (civ2 != s->civ) {
+        tmp = (uint)civs[civ2].units_active[0x2c] +
+                   (uint)civs[civ2].units_active[0x1c] +
+                   (uint)civs[civ2].units_active[0x1d] +
+                   (uint)civs[civ2].units_active[0x1f];
+        if (((*((byte *)&civs[s->civ].treaties[civ2] + 1) & 0x20) == 0) &&
+           ((*(byte *)&civs[civ2].treaties[s->civ] & 0x10) == 0)) {
+          tmp = tmp / 2;
         }
+        threat_level += tmp;
       }
     }
   }
-  if (civs[civ].num_military_units < 0x200) {
-    for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-      if ((5 < (char)unit_types[unit_type].role) &&
-         (ret = civ_can_build_unit(civ,city,unit_type), ret != 0)) {
-        score = 999;
-        defensive = 0;
-        if (unit_types[unit_type].role == 6) {
-          race_behind = ai_spaceship_race_behind(civ);
-          if (race_behind != 0) {
-            ret = civ_has_advance(civ,0x4c);
-            if ((((ret != 0) &&
-                 (ret = civ_has_advance(civ,(int)improvements[0x24].preq), ret != 0)) &&
-                (ret = civ_has_advance(civ,(int)improvements[0x25].preq), ret != 0)) &&
-               (ret = civ_has_advance(civ,0x20), ret != 0)) {
-              race_behind = 0;
-            }
-            if ((defense_urgent != 0) || ((cities[city].flags & 1) != 0)) {
-              race_behind = 0;
-            }
-            if (game.difficulty < 2) {
-              race_behind = 0;
-            }
+  score = 0xc - threat_level;
+  score = int_clamp(score,1,0xc);
+  if ((cities[city].flags & 0x40000) != 0) {
+    score -= 3;
+  }
+  *defensive = 1;
+  for (civ3 = 1; civ3 < 8; civ3++) {
+    if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+       ((4 < civs[civ3].reputation ||
+        (((byte)(civs[s->civ].treaties[civ3] >> 8) & 0x20) != 0)))) {
+      *defensive = (uint)(s->threatened != 0);
+      break;
+    }
+  }
+  return score;
+}
+
+/* Part of city_choose_production (00498e8b): the score of a Coastal Fortress. */
+static uint city_choose_production_coastal_fortress_score(ChooseProdState *s,iptr city,uint score,uint *defensive)
+{
+  int ret;
+  iptr civ3;
+  uint tmp;
+  uptr civ2;
+  int threat_level;
+
+  ret = city_adjacent_to_body(city,1);
+  if (ret != 0) {
+    threat_level = (uint)civs[game.best_human_rank].units_active[0x26] * 3 +
+               (uint)civs[game.best_human_rank].units_active[0x27] * 3 +
+               (uint)civs[game.best_human_rank].units_active[0x28] * 5 +
+               (uint)civs[game.best_human_rank].units_active[0x24] +
+               (uint)civs[game.best_human_rank].units_active[0x25];
+    if ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) != 0) {
+      threat_level = 0;
+      for (civ2 = 1; (int)civ2 < 8; civ2++) {
+        if (civ2 != s->civ) {
+          tmp = ((int)(uint)civs[civ2].units_active[0x24] >> 1) +
+                     ((int)(uint)civs[civ2].units_active[0x25] >> 1) +
+                     (uint)civs[civ2].units_active[0x28] * 2 +
+                     (uint)civs[civ2].units_active[0x26] +
+                     (uint)civs[civ2].units_active[0x27];
+          if (((*((byte *)&civs[s->civ].treaties[civ2] + 1) & 0x20) == 0) &&
+             ((*(byte *)&civs[civ2].treaties[s->civ] & 0x10) == 0)) {
+            tmp = tmp / 2;
           }
-          if (!(((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) ||
-               ((cities[city].flags & 0x10) == 0))) continue;
-          if ((units_in_build[unit_type] <= race_behind) &&
-             (unit_counts[unit_type] < (int)(uint)civs[civ].continent_cities[landmass2]))
-          {
-            score = 0xb;
-            civ4 = 0xffffffff;
-            for (civ2 = 1; (int)civ2 < 8; civ2++) {
-              if (((civ2 != civ) &&
-                  (((*(byte *)&civs[civ].treaties[civ2] & 6) == 0 ||
-                   (((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0 &&
-                      ((game.power_rank[civ] <= game.power_rank[civ2] || (race_behind != 0))))
-                     && ((unit_type == 0x2f ||
-                         (((7 < (int)((uint)civs[civ2].num_advances -
-                                     (uint)civs[civ].num_advances) || (race_behind != 0)) ||
-                          (game.power_rank[civ2] == 7)))))) &&
-                    ((((*(byte *)&civs[civ].treaties[civ2] & 8) != 0 ||
-                      (race_behind != 0)) ||
-                     ((civs[civ2].government < 5 ||
-                      ((civs[civ2].continent_attack[landmass2] <=
-                        civs[civ].continent_military[landmass2] ||
-                       (*(char *)&civs[civ].continent_cities[landmass2] == '\0')))))))))))) &&
-                 (*(char *)&civs[civ2].continent_cities[landmass2] != '\0')) {
-                civ4 = civ2;
-              }
-            }
-            if ((int)civ4 < 0) {
-              civ4 = (uint)game.best_human_rank;
-              if ((policy == 4) && (game.difficulty != '\0')) {
-                defensive = threatened;
-                score = 8;
-                ret = civs[civ].num_cities + 3;
-                if ((int)((uint)civs[civ].units_active[unit_type] +
-                         (uint)civs[civ].units_in_production[unit_type]) <
-                    (int)(ret + (ret >> 0x1f & 3U)) >> 2) {
-                  if (civs[game.best_human_rank].gold < civs[civ].gold) {
-                    score = 7;
-                  }
-                  if (civs[game.best_human_rank].gold * 2 < civs[civ].gold) {
-                    score--;
-                  }
-                  if (civs[civ].num_advances < civs[game.best_human_rank].num_advances) {
-                    if (unit_counts[unit_type] + units_in_build[unit_type] == 0) {
-                      score -= 3;
-                    }
-                    score = score -
-                               ((uint)civs[game.best_human_rank].num_advances -
-                               (uint)civs[civ].num_advances);
-                  }
-                  score = int_clamp(score,civs[civ].units_active[unit_type] + 1,10);
-                }
-              }
-              if (race_behind != 0) {
-                score = (int)score / 2;
-              }
-              if (unit_counts[unit_type] != 0) {
-                score = 999;
-              }
-            }
-            else {
-              score = int_clamp(10 - ((uint)civs[civ4].num_advances -
-                                                 (uint)civs[civ].num_advances),2,10);
-              if ((((*(byte *)&civs[civ].treaties[civ2] & 6) != 0) &&
-                  (score = score + 1, unit_counts[unit_type] != 0)) && (race_behind == 0)) {
-                score = 999;
-              }
-              if (civs[civ4].military_strength <= civs[civ].military_strength) {
-                defensive = threatened;
-              }
-            }
-            if (civs[civ].government == 3) {
-              score--;
-            }
-            if ((race_behind != 0) && ((int)score < 0x14)) {
-              for (improvement = 0x23; improvement < 0x26; improvement++) {
-                ret = civ_has_advance(civ,(int)improvements[improvement].preq);
-                if ((ret == 0) &&
-                   (ret = civ_has_advance(civ4,(int)improvements[improvement].preq),
-                   ret != 0)) {
-                  defensive = threatened;
-                  adjusted = units_in_build[unit_type] * 2 + 1;
-                  if ((int)score <= (int)adjusted) {
-                    adjusted = score;
-                  }
-                  score = adjusted;
-                  if ((((units_in_build[unit_type] == 0) &&
-                       (*(char *)&civs[civ].units_active[unit_type] == '\0')) &&
-                      (score = adjusted - 1, -0x26 < choice)) && (choice < -0x22)) {
-                    choice = unit_type;
-                  }
-                }
-              }
-            }
-          }
+          threat_level += tmp;
         }
-        else if (unit_types[unit_type].role == 7) {
-          if ((cities[city].flags & 0x1000) != 0) continue;
-          score = 10;
-          if ((char)cities[city].trade_routes < 3) {
-            score = 10 - ((5 - leaders[civs[civ].tribe].expand) * main_menu_block.city_total_trade) / 10;
-          }
-          ret = score + (char)cities[city].trade_routes * 2;
-          if (ret < 3) {
-            ret = 2;
-          }
-          score = ret + (uint)civs[civ].continent_trade_units[landmass2];
-          if (!(((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) ||
-               ((cities[city].flags & 0x10) == 0))) continue;
+      }
+    }
+    score = 0xc - threat_level;
+    score = int_clamp(score,1,0xc);
+    *defensive = 1;
+    for (civ3 = 1; civ3 < 8; civ3++) {
+      if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+         ((4 < civs[civ3].reputation ||
+          (((byte)(civs[s->civ].treaties[civ3] >> 8) & 0x20) != 0)))) {
+        *defensive = (uint)(s->threatened != 0);
+        break;
+      }
+    }
+  }
+  return score;
+}
+
+/* Part of city_choose_production (00498e8b): the score of a spaceship
+   structural, and whether the AI holds back the other builds for it. */
+static uint city_choose_production_spaceship_score(ChooseProdState *s,iptr city,uint score,uint *defensive)
+{
+  int ret;
+  uint adjusted;
+  int human_launched;
+  iptr civ3;
+  iptr part_group;
+  int own_parts_cost;
+  int part;
+  int leader_parts_cost;
+
+  ret = civ_spaceship_launched(s->civ);
+  if (((ret == 0) && ((game.game_flags & 2) == 0)) &&
+     ((ret = spaceship_choose_part_group(s->civ,0), -1 < ret &&
+      (((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0 ||
+       (civs[s->civ].spaceship_parts[0] < 0x26)))))) {
+    score = 4;
+    for (civ3 = 1; civ3 < 8; civ3++) {
+      if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+         (ret = civ_spaceship_exists(civ3), ret != 0)) {
+        score = 2;
+        break;
+      }
+    }
+    if ((s->policy != 0) && ((civs[s->civ].continent_flags[s->landmass2] & 0x10) == 0)) {
+      *defensive = s->threatened;
+    }
+    human_launched = 0;
+    if ((game.game_flags & 2) == 0) {
+      for (civ3 = 1; civ3 < 8; civ3++) {
+        if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+           (ret = civ_spaceship_launched(civ3), ret != 0)) {
+          human_launched = 1;
+          break;
         }
-        if ((int)score < 400) {
-          score = (int)(((-(uint)(threatened == defensive) & 0xfffffff6) + 0x14) * score * 3) /
-                     (leaders[civs[civ].tribe].civilize + 3);
+      }
+    }
+    if ((1 < s->space_race) && (game.difficulty != '\0')) {
+      adjusted = score - 1;
+      if (human_launched != 0) {
+        adjusted = score - 2;
+      }
+      score = adjusted;
+      if (s->defense_urgent == 0) {
+        *defensive = s->threatened;
+      }
+    }
+    leader_parts_cost = 0;
+    own_parts_cost = 0;
+    for (part = 0; part < 6; part++) {
+      part_group = int_clamp((part + 1) / 2,0,2);
+      own_parts_cost = own_parts_cost +
+                  (int)civs[s->civ].spaceship_parts[part] *
+                  (uint)improvements[part_group + 0x23].cost;
+      leader_parts_cost = leader_parts_cost +
+                 (int)civs[((uint)game.best_human_rank)].spaceship_parts[part] *
+                 (uint)improvements[part_group + 0x23].cost;
+    }
+    if (((s->space_builders == 0) ||
+        (((s->space_builders <= s->human_space_builders && (own_parts_cost <= leader_parts_cost)) || (human_launched != 0)))) &&
+       ((((cities[city].flags & 1) == 0 && (game.difficulty != '\0')) &&
+        (((int)civs[s->civ].best_shield_surplus >> 1 <= s->shield_surplus || (0x13 < s->shield_surplus)))))) {
+      s->choice_score = 999;
+    }
+  }
+  return score;
+}
+
+/* Part of city_choose_production (00498e8b): the base score of an
+   improvement, and whether it is defensive. */
+static uint city_choose_production_improvement_score(ChooseProdState *s,iptr city,iptr improvement,uint *defensive)
+{
+  int ret;
+  uint tmp;
+  uint score;
+
+  score = 999;
+  *defensive = 0;
+  if (improvement - 1U < 0x23) {
+    ret = s->food_surplus >> 1;
+    switch(improvement) {
+    case 1:
+      if ((((s->palace_count == 0) || ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
+          ((s->palace_count == 0 ||
+           ((s->palace_count == 1 && (s->palace_size * 2 < (int)cities[s->city2].size)))))) &&
+         ((s->policy == 4 || (((s->policy == 5 || (s->policy == 0)) || (3 < main_menu_block.city_shield_waste)))))) {
+        score = 2;
+        if ('\t' < cities[s->city2].size) {
+          score = 1;
+        }
+        if (14 < cities[s->city2].size) {
+          score--;
+        }
+        if (3 < main_menu_block.city_shield_waste) {
+          *defensive = s->threatened;
+        }
+      }
+      break;
+    case 2:
+      score = (leaders[civs[s->civ].tribe].civilize + s->barracks_count + 4) -
+                 (int)leaders[civs[s->civ].tribe].attack;
+      if (((leaders[civs[s->civ].tribe].attack < '\0') ||
+          ('\0' < leaders[civs[s->civ].tribe].civilize)) &&
+         ((int)leaders[civs[s->civ].tribe].civilize + (int)leaders[civs[s->civ].tribe].attack != 0
+         )) {
+        score += s->barracks_count;
+      }
+      *defensive = 1;
+      if ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) != 0) {
+        if (game.difficulty == 3) {
+          score = (int)(score * 3) / 2;
+        }
+        if (3 < game.difficulty) {
+          score = score << 1;
+        }
+      }
+      break;
+    case 3:
+      ret = civ_has_wonder(s->civ,0);
+      if (ret == 0) {
+        if (main_menu_block.city_total_shields < 3) {
+          score = 8;
         }
         else {
-          score = 0x3fff;
+          score = 4;
         }
-        ret = city_has_improvement(city,2);
+        if (main_menu_block.city_happy_count <= main_menu_block.city_unhappy_count) {
+          score += 2;
+        }
+        if (((1 << (s->civ5 & 0x1f) & (uint)game.human_players) != 0) &&
+           (tmp = (game.difficulty + 4) - (int)cities[s->city2].size, 0 < (int)tmp))
+        {
+          score += tmp;
+        }
+      }
+      break;
+    case 4:
+      if (s->unrest_state == 1) {
+        score = 9;
+      }
+      if (s->unrest_state == 2) {
+        score = 0xfffffffb;
+      }
+      break;
+    case 5:
+      score = int_clamp(10 - (s->net_trade >> 1),1,10);
+      if (s->unrest_state == 1) {
+        score--;
+      }
+      if (s->unrest_state == 2) {
+        score = 0xfffffffc;
+      }
+      break;
+    case 6:
+      score = int_clamp(10 - s->net_trade / 3,1,10);
+      break;
+    case 7:
+      score = 0xe - (main_menu_block.city_shield_waste * 2 + main_menu_block.city_trade_corruption);
+      if (civs[s->civ].government == 6) {
+        if (s->unrest_state == 2) {
+          score = 0xffffffff;
+        }
+      }
+      else if ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0) {
+        score -= (int)civs[game.best_human_rank].subversion_count / 2;
+      }
+      break;
+    case 8:
+      score = city_choose_production_walls_score(s,city,score,defensive);
+      break;
+    case 9:
+      if ((int)((uint)cosmic.aqueduct_size - ret) <= (int)cities[city].size) {
+        score = ((cosmic.aqueduct_size + 4) - (int)cities[city].size) - ret;
+        score = int_clamp(score,1,0x14);
+      }
+      break;
+    case 10:
+      score = int_clamp(10 - s->net_trade / 3,1,10);
+      if (s->unrest_state == 1) {
+        score--;
+      }
+      if (s->unrest_state == 2) {
+        score = 0;
+      }
+      break;
+    case 0xb:
+      ret = civ_has_wonder(s->civ,10);
+      if (ret == 0) {
+        if (s->unrest_state == 1) {
+          score = 8;
+        }
+        if (s->unrest_state == 2) {
+          score = 0xfffffffd;
+        }
+      }
+      break;
+    case 0xc:
+      if ((civs[s->civ].science_rate != '\0') &&
+         ((s->space_race == 0 || (ret = civ_has_advance(s->civ,0x4c), ret == 0)))) {
+        score = int_clamp(10 - (s->net_trade >> 2),2,10);
+      }
+      break;
+    case 0xd:
+      break;
+    case 0xe:
+      if (s->unrest_state == 2) {
+        score = 0xfffffffe;
+      }
+      break;
+    case 0xf:
+    case 0x14:
+      score = int_clamp(0xe - main_menu_block.city_total_shields,1,0xe);
+      break;
+    default:
+      score = int_clamp(0xc - ((int)(main_menu_block.city_total_shields + (main_menu_block.city_total_shields >> 0x1f & 3U)) >>
+                                          2),2,0xc);
+      break;
+    case 0x11:
+      if (s->unrest_state < 2) {
+        ret = int_clamp(0xf - cities[city].size,1,0xf);
+        score = (ret + 1) / 2;
+        if (game.wonder_city[0x17] == -1) {
+          score = score << 1;
+        }
+        if (civs[game.best_human_rank].units_active[0x2d] == '\0') {
+          score = score << 1;
+        }
+        if ('\t' < cities[city].size) {
+          score--;
+        }
+        ret = city_has_improvement(city,1);
         if (ret != 0) {
-          score += ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
+          score = 0;
         }
-        if ((int)score < choice_score) {
-          choice_score = score;
-          choice = unit_type;
+      }
+      *defensive = 1;
+      break;
+    case 0x13:
+      score = int_clamp(0xc - main_menu_block.city_total_shields / 5,2,0xe);
+      break;
+    case 0x16:
+      if ((s->unrest_state != 0) || (s->space_race < 2)) {
+        score = int_clamp(0xb - (s->net_trade >> 2),2,0xb);
+        if (s->unrest_state == 1) {
+          score--;
         }
-        if ((int)score < best_build_score) {
-          best_build_score = score;
-          best_build = unit_type;
+        if (s->unrest_state == 2) {
+          score = 0;
+        }
+      }
+      break;
+    case 0x17:
+      if ((s->space_race < 2) &&
+         ((int)((uint)cosmic.sewer_size - ret) <= (int)cities[city].size)) {
+        score = ((cosmic.sewer_size + 4) - (int)cities[city].size) - ret;
+        score = int_clamp(score,1,0x14);
+      }
+      break;
+    case 0x18:
+      score = (0xe - ((int)cities[city].size >> 1)) + s->farmland_count * -2 + s->space_race * 2 + ret
+      ;
+      score = int_clamp(score,2,0xe);
+      break;
+    case 0x19:
+      score = (0xf - ((int)cities[city].size >> 1)) + s->space_race * 6;
+      score = int_clamp(score,2,0xf);
+      break;
+    case 0x1a:
+      if (((s->space_race == 0) || (ret = civ_has_advance(s->civ,0x4c), ret == 0)) &&
+         (civs[s->civ].science_rate != '\0')) {
+        score = int_clamp(0xb - (s->net_trade >> 2),2,10);
+      }
+      break;
+    case 0x1b:
+      score = city_choose_production_sam_score(s,city,score,defensive);
+      break;
+    case 0x1c:
+      score = city_choose_production_coastal_fortress_score(s,city,score,defensive);
+      break;
+    case 0x1d:
+      break;
+    case 0x1e:
+      if ((s->unrest_state < 2) &&
+         (score = int_clamp(0x10 - s->ocean_tiles,2,0x10), s->food_surplus < 1)) {
+        score = (int)score / 2;
+      }
+      break;
+    case 0x1f:
+      if (s->unrest_state < 2) {
+        score = 0x10 - s->ocean_tiles;
+        score = int_clamp(score,2,0x10);
+        if (0 < (int)score) {
+          ret = city_has_improvement(city,0xf);
+          if (ret != 0) {
+            score = (int)score / 2;
+          }
+          ret = city_has_improvement(city,0x10);
+          if (ret != 0) {
+            score = (int)score / 2;
+          }
+        }
+        if (((main_menu_block.city_total_shields - main_menu_block.city_shield_support <= main_menu_block.city_total_shields / 3) ||
+            (main_menu_block.city_total_shields < (int)cities[s->city2].size / 2)) &&
+           ((int)cities[s->city2].size / 2 <= (int)(s->ocean_tiles + (s->ocean_tiles >> 0x1f & 3U)) >> 2))
+        {
+          score -= 2;
+        }
+      }
+      break;
+    case 0x20:
+      score = (s->airport_count * 4 + 4) - (int)leaders[civs[s->civ].tribe].attack;
+      if (*(char *)&civs[s->civ].continent_policy[s->landmass2] == 4) {
+        score = (int)score / 2;
+      }
+      ret = civ_has_advance(s->civ,0);
+      if (ret == 0) {
+        score = score << 1;
+      }
+      if (((*(char *)&civs[s->civ].continent_cities[s->landmass2] == 1) ||
+          (((civs[s->civ].continent_flags[s->landmass2] & 0x10) != 0 && (s->airport_count == 0))))
+         && ((int)(uint)civs[s->civ].continent_cities[s->landmass2] < (int)score)) {
+        score = (uint)civs[s->civ].continent_cities[s->landmass2];
+      }
+      ret = city_has_improvement(city,1);
+      if ((ret != 0) && (-1 < (int)score)) {
+        score = 0;
+      }
+      *defensive = s->threatened;
+      break;
+    case 0x21:
+      ret = civ_has_wonder(s->civ,0x15);
+      if (ret == 0) {
+        tmp = (*(uint *)&main_menu_block.city_aggressive_units);
+        if (5 < civs[s->civ].government) {
+          tmp = (*(uint *)&main_menu_block.city_aggressive_units) << 1;
+        }
+        if (((4 < civs[s->civ].government) && (tmp != 0)) &&
+           (main_menu_block.city_happy_count - main_menu_block.city_unhappy_count < 2)) {
+          tmp += 2;
+        }
+        score = 10 - tmp;
+      }
+      break;
+    case 0x22:
+      ret = city_adjacent_to_body(city,1);
+      if (ret != 0) {
+        ret = s->nearest_dist;
+        if (0x27 < s->nearest_dist) {
+          ret = 0x28;
+        }
+        score = (0xb - (ret >> 2)) + s->naval_units * -5 +
+                   (s->port_count * 2 - (int)leaders[civs[s->civ].tribe].attack) +
+                   (int)leaders[civs[s->civ].tribe].civilize;
+        score = int_clamp(score,2,0xf);
+        if (leaders[civs[s->civ].tribe].attack < '\0') {
+          score += s->port_count;
+        }
+      }
+      break;
+    case 0x23:
+      score = city_choose_production_spaceship_score(s,city,score,defensive);
+    }
+  }
+  return score;
+}
+
+/* Part of city_choose_production (00498e8b): an improvement: its score and
+   whether it is the best so far. */
+static void city_choose_production_try_improvement(ChooseProdState *s,iptr city,iptr improvement)
+{
+  int ret;
+  uint defensive;
+  uint score;
+
+  ret = city_can_build_improvement(s->civ,city,improvement);
+  if (ret != 0) {
+    score = city_choose_production_improvement_score(s,city,improvement,&defensive);
+    if ((int)score < 400) {
+      score = (int)(((-(uint)(s->threatened == defensive) & 0xfffffff6) + 0x14) * score * 3) /
+                 (leaders[civs[s->civ].tribe].civilize + 3);
+    }
+    else {
+      score = 0x3fff;
+    }
+    ret = city_has_improvement(city,2);
+    if (ret != 0) {
+      score += (int)score / ((s->barracks_count >> 1) + 3);
+    }
+    ret = wonder_get_city(0xd);
+    if (ret == city) {
+      score += (int)score / 3;
+    }
+    if ((int)score < s->choice_score) {
+      s->choice_score = score;
+      s->choice = -improvement;
+    }
+    if ((int)score < s->best_build_score) {
+      s->best_build_score = score;
+      s->best_build = -improvement;
+    }
+  }
+}
+
+/* Part of city_choose_production (00498e8b): the bias of each wonder for the
+   civ's situation and its leader; 0 to leave the wonder out. */
+static int city_choose_production_wonder_bias(ChooseProdState *s,iptr city,iptr wonder,uint score,uint *defensive,uint *out)
+{
+  int ret;
+  uint adjusted;
+  iptr civ3;
+  iptr unit_type;
+  uint tmp;
+  uptr civ4;
+  int ship_count;
+
+  adjusted = score;
+  switch(wonder) {
+  case 0:
+    adjusted = score - (leaders[civs[s->civ].tribe].civilize * 3 + 2);
+    break;
+  case 1:
+    adjusted = score - ((int)civs[s->civ].num_cities / 3 + 1);
+    break;
+  case 2:
+    ret = city_has_improvement(city,1);
+    if (ret != 0) {
+      score--;
+    }
+    ret = city_has_improvement(city,5);
+    if (ret != 0) {
+      score--;
+    }
+    adjusted = score - (int)cities[city].size / 3;
+    break;
+  case 3:
+    adjusted = score -
+            ((int)(civs[s->civ].units_active[0x21] + 2 + (uint)civs[s->civ].units_active[0x20]
+                  ) >> 2);
+    break;
+  case 4:
+    for (civ4 = 1; adjusted = score, (int)civ4 < 8; civ4++) {
+      if (civs[civ4].num_advances < civs[s->civ].num_advances) {
+        if ((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) {
+          adjusted = score + 1;
+        }
+      }
+      else {
+        adjusted = score - 1;
+        if (((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) &&
+           (civs[s->civ].num_advances + 5 < (uint)civs[civ4].num_advances)) {
+          adjusted = score - 3;
+        }
+      }
+      score = adjusted;
+    }
+    break;
+  case 5:
+    adjusted = score -
+            (((int)((int)civs[s->civ].num_cities + ((int)civs[s->civ].num_cities >> 0x1f & 3U)
+                   ) >> 2) - (int)game.turn / 0x19);
+    break;
+  case 6:
+    adjusted = score + leaders[civs[s->civ].tribe].civilize * -2;
+    break;
+  case 7:
+    adjusted = score -
+            (leaders[civs[s->civ].tribe].attack * 3 + (int)leaders[civs[s->civ].tribe].expand
+             + leaders[civs[s->civ].tribe].civilize * -2 + 1);
+    break;
+  case 8:
+    ret = int_clamp((main_menu_block.city_total_shields * 2) / 3,0,3);
+    adjusted = score - ret;
+    break;
+  case 9:
+    for (civ3 = 1; adjusted = score, civ3 < 8; civ3++) {
+      if ((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) {
+        if ((*(byte *)&civs[s->civ].treaties[civ3] & 8) != 0) {
+          score--;
+        }
+        if ((*(byte *)&civs[s->civ].treaties[civ3] & 6) != 0) {
+          score--;
         }
       }
     }
-choose_military_unit:
-    if (civs[civ].num_military_units < 0x200) {
-      for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-        role2 = (uint)(char)unit_types[unit_type].role;
-        if (((((((int)role2 < 6) &&
-               (ret = civ_can_build_unit(civ,city,unit_type), ret != 0)) &&
-              (unit_type != 0x2a)) &&
-             ((role2 != 5 ||
-              (((main_menu_block.settler_food_cost <= food_surplus ||
-                (((main_menu_block.city_settlers_supported == 0 &&
-                  ((uint)civs[civ].units_active[0] + (uint)civs[civ].units_active[1] ==
-                   flagged_settlers)) && (units_in_build[1] + units_in_build[0] < 2)))) &&
-               (1 < cities[city].size)))))) &&
-            (((unit_type != 2 || (civs[civ].government < 2)) &&
-             (((char)unit_types[unit_type].attack < 'c' ||
-              ((civs[civ].units_active[unit_type] < 4 &&
-               (civs[civ].units_in_production[unit_type] < 2)))))))) &&
-           ((role2 != 3 ||
-            (((uint)civs[civ].units_active[0x1b] + (uint)civs[civ].units_in_production[0x1b] +
-              (uint)civs[civ].units_active[0x1e] + (uint)civs[civ].units_in_production[0x1e] <
-              (uint)civs[game.best_human_rank].units_active[0x1c] +
-              (uint)civs[game.best_human_rank].units_active[0x1d] +
-              (uint)civs[game.best_human_rank].units_active[0x1f] + 2 &&
-             (((*(byte *)&civs[civ].treaties[((uint)game.best_human_rank)] & 4) == 0 ||
-              ((uint)civs[civ].units_active[unit_type] +
-               (uint)civs[civ].units_in_production[unit_type] == 0)))))))) {
-          if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
-            if (unit_type == 2) {
-              ret = civ_has_advance(civ,(int)unit_types[3].prerequisite);
-              if (ret != 0) continue;
-            }
-            else if (unit_type == 4) {
-              ret = civ_has_advance(civ,(int)unit_types[5].prerequisite);
-              if (ret != 0) continue;
-            }
-            else if (unit_type == 0xf) {
-              ret = civ_has_advance(civ,(int)unit_types[0x10].prerequisite);
-              if (ret != 0) continue;
-              ret = civ_has_advance(civ,(int)unit_types[0x11].prerequisite);
-              if (ret != 0) continue;
+    break;
+  case 10:
+    adjusted = score -
+            ((int)((int)civs[s->civ].num_cities + ((int)civs[s->civ].num_cities >> 0x1f & 3U))
+            >> 2);
+    break;
+  case 0xb:
+    score = (score - ((int)(s->net_trade + (s->net_trade >> 0x1f & 7U)) >> 3)) - 1;
+    ret = city_has_improvement(city,1);
+    adjusted = score;
+    if (ret != 0) {
+      adjusted = score - 1;
+    }
+    break;
+  case 0xc:
+    ship_count = 0;
+    for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+      if (unit_types[unit_type].domain == 2) {
+        ship_count += (uint)civs[s->civ].units_active[unit_type];
+      }
+    }
+    adjusted = score - ((int)(ship_count + 3 + (ship_count + 3 >> 0x1f & 3U)) >> 2);
+    break;
+  case 0xd:
+    adjusted = score - (int)cities[city].size / 5;
+    break;
+  case 0xe:
+    *defensive = s->threatened;
+    adjusted = score - 4;
+    break;
+  case 0xf:
+    score -= ((int)(uint)civs[s->civ].continent_city_size[s->landmass2] >> 4);
+    ret = city_has_improvement(city,1);
+    adjusted = score;
+    if (ret != 0) {
+      adjusted = score - 1;
+    }
+    break;
+  case 0x10:
+    score -= (int)cities[city].size / 6;
+    ret = city_has_improvement(city,1);
+    adjusted = score;
+    if (ret != 0) {
+      adjusted = score - 1;
+    }
+    break;
+  case 0x11:
+    adjusted = score -
+            ((int)((int)civs[s->civ].num_cities + ((int)civs[s->civ].num_cities >> 0x1f & 3U))
+            >> 2);
+    break;
+  case 0x12:
+    adjusted = score - 3;
+    break;
+  case 0x13:
+    ret = civ_has_advance(s->civ,0xf);
+    if (ret == 0) {
+      adjusted = score - 2;
+    }
+    else {
+      adjusted = score - 1;
+    }
+    break;
+  case 0x14:
+    if (((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) {
+      adjusted = score - 1;
+      if (3 < civs[game.civ_by_rank[7]].reputation) {
+        adjusted = score - 2;
+      }
+      score = adjusted;
+      adjusted = score;
+      if ((7 < civs[game.civ_by_rank[7]].num_cities) &&
+         (adjusted = score - 1, game.power_rank[s->civ] == 6)) {
+        adjusted = score - 2;
+      }
+    }
+    break;
+  case 0x15:
+    adjusted = score - 1;
+    if (((-1 < leaders[civs[s->civ].tribe].expand) &&
+        (-1 < leaders[civs[s->civ].tribe].civilize)) &&
+       (-1 < leaders[civs[s->civ].tribe].attack)) {
+      adjusted = score - 2;
+    }
+    score = adjusted;
+    if (0 < civs[s->civ].government_score[5]) {
+      score--;
+    }
+    if (4 < civs[s->civ].government) {
+      score--;
+    }
+    adjusted = score;
+    if (5 < civs[s->civ].government) {
+      adjusted = score - 1;
+    }
+    break;
+  case 0x16:
+    adjusted = score - civs[s->civ].continent_city_size[s->landmass2] / 0x14;
+    break;
+  case 0x17:
+    ret = civ_has_advance(s->civ,0x49);
+    if (ret != 0) {
+      tmp = 0;
+      for (civ3 = 1; civ3 < 8; civ3++) {
+        if ((((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+            (ret = civ_has_advance(civ3,0x49), ret != 0)) &&
+           (civs[civ3].military_strength < civs[s->civ].military_strength)) {
+          tmp = 1;
+          break;
+        }
+      }
+      if (tmp == 0) {
+        if (((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) {
+          score--;
+          ret = civ_has_advance((uint)game.civ_by_rank[7],0x49);
+          if (ret == 0) {
+            score--;
+          }
+        }
+        adjusted = score +
+                (leaders[civs[s->civ].tribe].civilize * 2 -
+                (int)leaders[civs[s->civ].tribe].attack);
+        break;
+      }
+    }
+    return 0;
+  case 0x18:
+    adjusted = score -
+            ((int)leaders[civs[s->civ].tribe].civilize +
+            leaders[civs[s->civ].tribe].attack * -2);
+    if (game.power_rank[s->civ] == 7) {
+      adjusted--;
+    }
+    break;
+  case 0x19:
+    adjusted = score -
+            (leaders[civs[s->civ].tribe].civilize * 3 +
+            leaders[civs[s->civ].tribe].attack * -2);
+    break;
+  case 0x1a:
+    adjusted = score - (leaders[civs[s->civ].tribe].civilize * 2 + 2);
+    break;
+  case 0x1b:
+    adjusted = score - (leaders[civs[s->civ].tribe].attack + 2);
+  }
+  *out = adjusted;
+  return 1;
+}
+
+/* Part of city_choose_production (00498e8b): a wonder: its score and whether
+   it is the best so far. */
+static void city_choose_production_try_wonder(ChooseProdState *s,iptr city,iptr wonder)
+{
+  int ret;
+  uint adjusted;
+  iptr improvement;
+  int wonder_cost;
+  iptr preq2;
+  int expired;
+  uint defensive;
+  iptr wonder_group;
+  uint score;
+  int raw_score;
+
+  improvement = wonder + 0x27;
+  ret = city_can_build_improvement(s->civ,city,improvement);
+  if (ret != 0) {
+    defensive = 0;
+    if (s->policy == 4) {
+      defensive = s->threatened;
+    }
+    ret = (s->wonders_owned + s->wonders_here + 8) - civs[s->civ].gold / 200;
+    if (ret < 2) {
+      ret = 1;
+    }
+    wonder_group = wonder / 7;
+    score = ret + (uint)civs[s->civ].wonders_by_group[wonder_group];
+    if ((byte)(((i8 *)&map_views_block.human_wonders_by_group_min))[wonder_group] < civs[s->civ].wonders_by_group[wonder_group]) {
+      score += 2;
+    }
+    if (civs[s->civ].wonders_by_group[wonder_group] <
+        civs[((uint)game.worst_human_rank)].wonders_by_group[wonder_group]) {
+      score--;
+    }
+    if ((((s->wonder_in_progress == 0) || ((int)cities[city].building == -improvement)) ||
+        ((((game.human_players & *(byte *)&s->wonder_builders[-0x27 - cities[city].building]) ==
+           0 || ((*(short *)((int)&game + cities[city].building * -2 + 0xb0) != -1 ||
+                 ((int)cities[city].shield_box <
+                  (int)((uint)improvements[-(int)cities[city].building].cost * main_menu_block.city_shield_rows)
+                  / 2)))) &&
+         ((*(byte *)&s->wonder_builders[-0x27 - cities[city].building] & 1) == 0)))) &&
+       (((1 < game.difficulty || (preq2 = (iptr)improvements[improvement].preq, preq2 < 0))
+        || ((game.human_players & game.advance_known_by[preq2]) != 0)))) {
+      if (wonder != 0x17) {
+        if (game.difficulty < 2) {
+          for (s->city2 = 0; s->city2 < game.num_cities; s->city2++) {
+            if (((cities[s->city2].id != 0) &&
+                (((uint)game.human_players & 1 << (cities[s->city2].owner & 0x1fU)) != 0)) &&
+               ((int)cities[s->city2].building == -improvement)) {
+              score = 999;
             }
           }
-          if (unit_type == 0x10) {
-            ret = civ_has_advance(civ,(int)unit_types[0x13].prerequisite);
-            if (ret != 0) continue;
-            ret = civ_has_advance(civ,(int)unit_types[0x12].prerequisite);
-            if (ret != 0) continue;
+          if (score == 999) return;
+        }
+        ret = civ_has_advance(s->civ,0x49);
+        if ((ret != 0) && ((game.human_players & game.advance_known_by[0x49]) == 0))
+        return;
+      }
+      if (city_choose_production_wonder_bias(s,city,wonder,score,&defensive,&adjusted) == 0) return;
+      score = adjusted;
+      expired = wonder_is_expired(wonder);
+      if (expired != 0) {
+        score = score * 3 + (uint)game.difficulty * 0x32;
+      }
+      score += s->wonders_building * 5;
+      if (((s->wonders_building == 0) || (s->wonder_in_progress != 0)) &&
+         (*(char *)&civs[s->civ].wonders_by_group[wonder_group] == '\0')) {
+        score -= 2;
+      }
+      if (s->policy == 1) {
+        score = score + s->enemy_strength + 1;
+      }
+      else {
+        score += s->enemy_strength / 2;
+      }
+      if ((int)cities[city].building == -improvement) {
+        if (s->foreign_same_build != 0) {
+          score = (int)score / 2;
+        }
+        score = (s->rivals_ahead + 1) * score + s->rivals_ahead;
+      }
+      else if ((1 << (s->civ5 & 0x1f) &
+               (uint)*(byte *)&s->wonder_builders[-0x27 - cities[city].building]) != 0) {
+        score = score * 2 + 1;
+      }
+      raw_score = score;
+      wonder_cost = (uint)improvements[improvement].cost * main_menu_block.city_shield_rows + 1;
+      if (((s->wonder_in_progress != 0) && (s->defense_urgent == 0)) && (expired == 0)) {
+        if (s->wonders_building == 0) {
+          if (s->threatened == defensive) {
+            score = (int)score / 2;
           }
-          else if (unit_type == 0x11) {
-            ret = civ_has_advance(civ,(int)unit_types[0x13].prerequisite);
-            if (ret != 0) continue;
+          else {
+            defensive = s->threatened;
           }
-          if (unit_types[unit_type].domain == '\0') {
-            score = units_in_build[unit_type] * 2 + unit_counts[unit_type];
-            if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
-              score = (int)score / 2;
-              if (((unit_type == 0xc) || (unit_type == 10)) || (unit_type == 9)) {
-                score += 2;
-              }
+        }
+        if ((int)(wonder_cost * 3 + (wonder_cost * 3 >> 0x1f & 3U)) >> 2 <=
+            (int)cities[city].shield_box) {
+          defensive = s->threatened;
+        }
+        if (((s->threatened != defensive) && (wonder_cost / 2 <= (int)cities[city].shield_box)) &&
+           (s->wonders_building < 3)) {
+          defensive = s->threatened;
+        }
+      }
+      if (s->wonder_in_progress == 0) {
+        if ((int)civs[s->civ].best_shield_surplus >> 1 < s->shield_surplus) {
+          if ((((1 << (s->civ5 & 0x1f) & (uint)game.human_players) != 0) &&
+              (civs[s->civ].best_shield_surplus != s->shield_surplus)) && (s->shield_surplus < 6)) {
+            score = score << 1;
+          }
+        }
+        else {
+          score = score << 1;
+        }
+      }
+      if (civs[s->civ].best_shield_surplus == s->shield_surplus) {
+        score -= (int)score / 3;
+      }
+      score = (int)(((-(uint)(s->threatened == defensive) & 0xfffffff6) + 0x14) * score * 3) /
+                 (leaders[civs[s->civ].tribe].civilize + 3);
+      ret = city_has_improvement(city,2);
+      if (ret != 0) {
+        score += (int)score / ((s->barracks_count >> 1) + 3);
+      }
+      ret = city_has_improvement(city,1);
+      if ((ret != 0) &&
+         ((score = score - (int)score / 3, s->wonders_here == 0 ||
+          (*(char *)&civs[s->civ].wonders_by_group[wonder_group] == '\0')))) {
+        score = (int)score / 2;
+      }
+      if ((cities[city].flags & 0x100) == 0) {
+        if ((s->wonder_in_progress != 0) && (expired == 0)) {
+          score = (((wonder_cost - cities[city].shield_box) *
+                      ((int)(score * 3 + ((int)(score * 3) >> 0x1f & 3U)) >> 2)) /
+                      wonder_cost + ((int)(score + ((int)score >> 0x1f & 3U)) >> 2)) / 3;
+        }
+      }
+      else {
+        score = score * 3;
+      }
+      if (s->choice < -0x26) {
+        if (raw_score < s->best_raw_score) {
+          s->best_raw_score = raw_score;
+          s->choice = -improvement;
+          s->best_build = -improvement;
+          if ((int)score < s->choice_score) {
+            s->choice_score = score;
+          }
+          if ((int)score < s->best_build_score) {
+            s->best_build_score = score;
+          }
+        }
+      }
+      else {
+        if ((int)score < s->choice_score) {
+          s->best_raw_score = raw_score;
+          s->choice_score = score;
+          s->choice = -improvement;
+        }
+        if ((int)score < s->best_build_score) {
+          s->best_build_score = score;
+          s->best_build = -improvement;
+        }
+      }
+    }
+  }
+}
+
+/* Part of city_choose_production (00498e8b): the score of a diplomat or spy
+   (to steal the spaceship advances when behind in the race); 0 to leave it
+   out. */
+static int city_choose_production_diplomat_score(ChooseProdState *s,iptr city,iptr unit_type,uint *score,uint *defensive)
+{
+  int ret;
+  uint adjusted;
+  iptr improvement;
+  int race_behind;
+  uptr civ2;
+  uptr civ4;
+
+  race_behind = ai_spaceship_race_behind(s->civ);
+  if (race_behind != 0) {
+    ret = civ_has_advance(s->civ,0x4c);
+    if ((((ret != 0) &&
+         (ret = civ_has_advance(s->civ,(int)improvements[0x24].preq), ret != 0)) &&
+        (ret = civ_has_advance(s->civ,(int)improvements[0x25].preq), ret != 0)) &&
+       (ret = civ_has_advance(s->civ,0x20), ret != 0)) {
+      race_behind = 0;
+    }
+    if ((s->defense_urgent != 0) || ((cities[city].flags & 1) != 0)) {
+      race_behind = 0;
+    }
+    if (game.difficulty < 2) {
+      race_behind = 0;
+    }
+  }
+  if (!(((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0) ||
+       ((cities[city].flags & 0x10) == 0))) return 0;
+  if ((s->units_in_build[unit_type] <= race_behind) &&
+     (s->unit_counts[unit_type] < (int)(uint)civs[s->civ].continent_cities[s->landmass2]))
+  {
+    *score = 0xb;
+    civ4 = 0xffffffff;
+    for (civ2 = 1; (int)civ2 < 8; civ2++) {
+      if (((civ2 != s->civ) &&
+          (((*(byte *)&civs[s->civ].treaties[civ2] & 6) == 0 ||
+           (((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0 &&
+              ((game.power_rank[s->civ] <= game.power_rank[civ2] || (race_behind != 0))))
+             && ((unit_type == 0x2f ||
+                 (((7 < (int)((uint)civs[civ2].num_advances -
+                             (uint)civs[s->civ].num_advances) || (race_behind != 0)) ||
+                  (game.power_rank[civ2] == 7)))))) &&
+            ((((*(byte *)&civs[s->civ].treaties[civ2] & 8) != 0 ||
+              (race_behind != 0)) ||
+             ((civs[civ2].government < 5 ||
+              ((civs[civ2].continent_attack[s->landmass2] <=
+                civs[s->civ].continent_military[s->landmass2] ||
+               (*(char *)&civs[s->civ].continent_cities[s->landmass2] == '\0')))))))))))) &&
+         (*(char *)&civs[civ2].continent_cities[s->landmass2] != '\0')) {
+        civ4 = civ2;
+      }
+    }
+    if ((int)civ4 < 0) {
+      civ4 = (uint)game.best_human_rank;
+      if ((s->policy == 4) && (game.difficulty != '\0')) {
+        *defensive = s->threatened;
+        *score = 8;
+        ret = civs[s->civ].num_cities + 3;
+        if ((int)((uint)civs[s->civ].units_active[unit_type] +
+                 (uint)civs[s->civ].units_in_production[unit_type]) <
+            (int)(ret + (ret >> 0x1f & 3U)) >> 2) {
+          if (civs[game.best_human_rank].gold < civs[s->civ].gold) {
+            *score = 7;
+          }
+          if (civs[game.best_human_rank].gold * 2 < civs[s->civ].gold) {
+            *score--;
+          }
+          if (civs[s->civ].num_advances < civs[game.best_human_rank].num_advances) {
+            if (s->unit_counts[unit_type] + s->units_in_build[unit_type] == 0) {
+              *score -= 3;
             }
-            if (unit_type == 4) {
-              score = score + units_in_build[5] * 2 + unit_counts[5];
-            }
-            if (leaders[civs[civ].tribe].attack < '\0') {
-              if (unit_type == 0x13) {
-                score = score + units_in_build[0x12] * 2 + unit_counts[0x12];
-              }
-            }
-            else if (unit_type == 0x12) {
-              score = score + units_in_build[0x13] * 2 + unit_counts[0x13];
-            }
-            if ((unit_types[unit_type].role == '\0') && (unit_types[unit_type].attack == '\0')) {
-              if ((policy == 0) || (policy == 1)) continue;
-              if (policy == 4) {
-                explorer_cap = 1;
-              }
-              else {
-                explorer_cap = (landmass_table_block.landmass_recs[landmass2].tiles + 199) / 200;
-              }
-              if (!((units_in_build[unit_type] * 2 + unit_counts[unit_type] <= explorer_cap) &&
-                   (civs[civ].units_active[unit_type] < 2))) continue;
-            }
-            if (policy == 4) {
-              tmp = 1 - (int)leaders[civs[civ].tribe].expand;
-              if (unit_types[unit_type].role != 5) {
-                tmp = tmp * 2;
-              }
-              if (enemy_offshore != 0) {
-                tmp = (int)tmp / 2;
-              }
-              score += tmp;
-              if ((enemy_offshore != 0) && (unit_types[unit_type].role == '\0')) {
-                tmp = (int)leaders[civs[civ].tribe].attack + 1;
-                ret = civ_has_advance(civ,(int)unit_types[0x2b].prerequisite);
-                if (ret != 0) {
-                  tmp = tmp << 1;
-                }
-                score = int_clamp(score - tmp,0,99);
-              }
+            *score = *score -
+                       ((uint)civs[game.best_human_rank].num_advances -
+                       (uint)civs[s->civ].num_advances);
+          }
+          *score = int_clamp(*score,civs[s->civ].units_active[unit_type] + 1,10);
+        }
+      }
+      if (race_behind != 0) {
+        *score = (int)*score / 2;
+      }
+      if (s->unit_counts[unit_type] != 0) {
+        *score = 999;
+      }
+    }
+    else {
+      *score = int_clamp(10 - ((uint)civs[civ4].num_advances -
+                                         (uint)civs[s->civ].num_advances),2,10);
+      if ((((*(byte *)&civs[s->civ].treaties[civ2] & 6) != 0) &&
+          (*score = *score + 1, s->unit_counts[unit_type] != 0)) && (race_behind == 0)) {
+        *score = 999;
+      }
+      if (civs[civ4].military_strength <= civs[s->civ].military_strength) {
+        *defensive = s->threatened;
+      }
+    }
+    if (civs[s->civ].government == 3) {
+      *score--;
+    }
+    if ((race_behind != 0) && ((int)*score < 0x14)) {
+      for (improvement = 0x23; improvement < 0x26; improvement++) {
+        ret = civ_has_advance(s->civ,(int)improvements[improvement].preq);
+        if ((ret == 0) &&
+           (ret = civ_has_advance(civ4,(int)improvements[improvement].preq),
+           ret != 0)) {
+          *defensive = s->threatened;
+          adjusted = s->units_in_build[unit_type] * 2 + 1;
+          if ((int)*score <= (int)adjusted) {
+            adjusted = *score;
+          }
+          *score = adjusted;
+          if ((((s->units_in_build[unit_type] == 0) &&
+               (*(char *)&civs[s->civ].units_active[unit_type] == '\0')) &&
+              (*score = adjusted - 1, -0x26 < s->choice)) && (s->choice < -0x22)) {
+            s->choice = unit_type;
+          }
+        }
+      }
+    }
+  }
+  return 1;
+}
+
+/* Part of city_choose_production (00498e8b): a diplomat or a caravan: its
+   score and whether it is the best so far. */
+static void city_choose_production_try_special_unit(ChooseProdState *s,iptr city,iptr unit_type)
+{
+  int ret;
+  uint defensive;
+  uint score;
+
+  if ((5 < (char)unit_types[unit_type].role) &&
+     (ret = civ_can_build_unit(s->civ,city,unit_type), ret != 0)) {
+    score = 999;
+    defensive = 0;
+    if (unit_types[unit_type].role == 6) {
+      if (city_choose_production_diplomat_score(s,city,unit_type,&score,&defensive) == 0) return;
+    }
+    else if (unit_types[unit_type].role == 7) {
+      if ((cities[city].flags & 0x1000) != 0) return;
+      score = 10;
+      if ((char)cities[city].trade_routes < 3) {
+        score = 10 - ((5 - leaders[civs[s->civ].tribe].expand) * main_menu_block.city_total_trade) / 10;
+      }
+      ret = score + (char)cities[city].trade_routes * 2;
+      if (ret < 3) {
+        ret = 2;
+      }
+      score = ret + (uint)civs[s->civ].continent_trade_units[s->landmass2];
+      if (!(((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0) ||
+           ((cities[city].flags & 0x10) == 0))) return;
+    }
+    if ((int)score < 400) {
+      score = (int)(((-(uint)(s->threatened == defensive) & 0xfffffff6) + 0x14) * score * 3) /
+                 (leaders[civs[s->civ].tribe].civilize + 3);
+    }
+    else {
+      score = 0x3fff;
+    }
+    ret = city_has_improvement(city,2);
+    if (ret != 0) {
+      score += ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
+    }
+    if ((int)score < s->choice_score) {
+      s->choice_score = score;
+      s->choice = unit_type;
+    }
+    if ((int)score < s->best_build_score) {
+      s->best_build_score = score;
+      s->best_build = unit_type;
+    }
+  }
+}
+
+/* Part of city_choose_production (00498e8b): whether a military or settler
+   unit is one to consider (not obsolete, not too many). */
+static int city_choose_production_unit_allowed(ChooseProdState *s,iptr city,iptr unit_type,uint role2)
+{
+  int ret;
+
+  if (((((((int)role2 < 6) &&
+         (ret = civ_can_build_unit(s->civ,city,unit_type), ret != 0)) &&
+        (unit_type != 0x2a)) &&
+       ((role2 != 5 ||
+        (((main_menu_block.settler_food_cost <= s->food_surplus ||
+          (((main_menu_block.city_settlers_supported == 0 &&
+            ((uint)civs[s->civ].units_active[0] + (uint)civs[s->civ].units_active[1] ==
+             s->flagged_settlers)) && (s->units_in_build[1] + s->units_in_build[0] < 2)))) &&
+         (1 < cities[city].size)))))) &&
+      (((unit_type != 2 || (civs[s->civ].government < 2)) &&
+       (((char)unit_types[unit_type].attack < 'c' ||
+        ((civs[s->civ].units_active[unit_type] < 4 &&
+         (civs[s->civ].units_in_production[unit_type] < 2)))))))) &&
+     ((role2 != 3 ||
+      (((uint)civs[s->civ].units_active[0x1b] + (uint)civs[s->civ].units_in_production[0x1b] +
+        (uint)civs[s->civ].units_active[0x1e] + (uint)civs[s->civ].units_in_production[0x1e] <
+        (uint)civs[game.best_human_rank].units_active[0x1c] +
+        (uint)civs[game.best_human_rank].units_active[0x1d] +
+        (uint)civs[game.best_human_rank].units_active[0x1f] + 2 &&
+       (((*(byte *)&civs[s->civ].treaties[((uint)game.best_human_rank)] & 4) == 0 ||
+        ((uint)civs[s->civ].units_active[unit_type] +
+         (uint)civs[s->civ].units_in_production[unit_type] == 0)))))))) {
+    if ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) != 0) {
+      if (unit_type == 2) {
+        ret = civ_has_advance(s->civ,(int)unit_types[3].prerequisite);
+        if (ret != 0) return 0;
+      }
+      else if (unit_type == 4) {
+        ret = civ_has_advance(s->civ,(int)unit_types[5].prerequisite);
+        if (ret != 0) return 0;
+      }
+      else if (unit_type == 0xf) {
+        ret = civ_has_advance(s->civ,(int)unit_types[0x10].prerequisite);
+        if (ret != 0) return 0;
+        ret = civ_has_advance(s->civ,(int)unit_types[0x11].prerequisite);
+        if (ret != 0) return 0;
+      }
+    }
+    if (unit_type == 0x10) {
+      ret = civ_has_advance(s->civ,(int)unit_types[0x13].prerequisite);
+      if (ret != 0) return 0;
+      ret = civ_has_advance(s->civ,(int)unit_types[0x12].prerequisite);
+      if (ret != 0) return 0;
+    }
+    else if (unit_type == 0x11) {
+      ret = civ_has_advance(s->civ,(int)unit_types[0x13].prerequisite);
+      if (ret != 0) return 0;
+    }
+    return 1;
+  }
+  return 0;
+}
+
+/* Part of city_choose_production (00498e8b): the base score of a unit from the
+   units of its kind there are and being built; 0 to leave it out. */
+static int city_choose_production_unit_base_score(ChooseProdState *s,iptr unit_type,uint *out)
+{
+  int ret;
+  int explorer_cap;
+  uint tmp;
+  uint score;
+
+  if (unit_types[unit_type].domain == '\0') {
+    score = s->units_in_build[unit_type] * 2 + s->unit_counts[unit_type];
+    if ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) != 0) {
+      score = (int)score / 2;
+      if (((unit_type == 0xc) || (unit_type == 10)) || (unit_type == 9)) {
+        score += 2;
+      }
+    }
+    if (unit_type == 4) {
+      score = score + s->units_in_build[5] * 2 + s->unit_counts[5];
+    }
+    if (leaders[civs[s->civ].tribe].attack < '\0') {
+      if (unit_type == 0x13) {
+        score = score + s->units_in_build[0x12] * 2 + s->unit_counts[0x12];
+      }
+    }
+    else if (unit_type == 0x12) {
+      score = score + s->units_in_build[0x13] * 2 + s->unit_counts[0x13];
+    }
+    if ((unit_types[unit_type].role == '\0') && (unit_types[unit_type].attack == '\0')) {
+      if ((s->policy == 0) || (s->policy == 1)) return 0;
+      if (s->policy == 4) {
+        explorer_cap = 1;
+      }
+      else {
+        explorer_cap = (landmass_table_block.landmass_recs[s->landmass2].tiles + 199) / 200;
+      }
+      if (!((s->units_in_build[unit_type] * 2 + s->unit_counts[unit_type] <= explorer_cap) &&
+           (civs[s->civ].units_active[unit_type] < 2))) return 0;
+    }
+    if (s->policy == 4) {
+      tmp = 1 - (int)leaders[civs[s->civ].tribe].expand;
+      if (unit_types[unit_type].role != 5) {
+        tmp = tmp * 2;
+      }
+      if (s->enemy_offshore != 0) {
+        tmp = (int)tmp / 2;
+      }
+      score += tmp;
+      if ((s->enemy_offshore != 0) && (unit_types[unit_type].role == '\0')) {
+        tmp = (int)leaders[civs[s->civ].tribe].attack + 1;
+        ret = civ_has_advance(s->civ,(int)unit_types[0x2b].prerequisite);
+        if (ret != 0) {
+          tmp = tmp << 1;
+        }
+        score = int_clamp(score - tmp,0,99);
+      }
+    }
+  }
+  else {
+    if (!((ushort)(((civs[s->civ].continent_cities[s->landmass2] < 2) - 1 & 4) + 4) <=
+           civs[s->civ].continent_military[s->landmass2])) return 0;
+    score = (int)(((uint)civs[s->civ].units_active[unit_type] +
+                     (uint)civs[s->civ].units_in_production[unit_type] * 2) *
+                    (uint)civs[s->civ].continent_military[s->landmass2]) /
+               (s->unit_total + 1);
+    if (((unit_types[unit_type].flags & 0x4000) != 0) &&
+       (score = score - civs[game.best_human_rank].units_active[0x29], (int)score < 1))
+    {
+      score = 0;
+    }
+  }
+  *out = score;
+  return 1;
+}
+
+/* Part of city_choose_production (00498e8b): the score of settlers. */
+static uint city_choose_production_settler_score(ChooseProdState *s,iptr city,iptr unit_type,uint score)
+{
+  char leader_trait;
+  iptr saved_type;
+  int ret;
+  int settler_base;
+  int support_penalty;
+  iptr unit_type2;
+  int threat_level;
+
+  ret = city_has_improvement(city,3);
+  if ((ret == 0) && (ret = civ_has_wonder(s->civ,0), ret == 0)) {
+    settler_base = 6;
+  }
+  else {
+    settler_base = 4;
+  }
+  saved_type = unit_type;
+  if (s->unit_counts[unit_type] < ((civs[s->civ].government + 1) / 2)) {
+    leader_trait = leaders[civs[s->civ].tribe].civilize;
+  }
+  else {
+    leader_trait = leaders[civs[s->civ].tribe].expand;
+  }
+  score = ((settler_base - leader_trait) - s->expand_bonus) * score;
+  if (main_menu_block.city_settlers_supported != 0) {
+    support_penalty = 8;
+    if (cities[city].size < 4) {
+      support_penalty = 0x10;
+    }
+    for (unit_type2 = 0; unit_type2 < main_menu_block.city_settlers_supported; unit_type2++) {
+      score += (unit_type2 + 1) * support_penalty;
+    }
+  }
+  if (cities[city].size < 2) {
+    score = score << 1;
+  }
+  if ((s->unit_counts[unit_type] == 0) && (main_menu_block.settler_food_cost == s->food_surplus)) {
+    score -= (int)score / 2;
+  }
+  if (s->defense_need < 2) {
+    if (s->units_in_build[unit_type] == 0) {
+      if (civs[s->civ].government < 5) {
+        if (1 < civs[s->civ].government) {
+          ret = int_clamp((int)(uint)civs[s->civ].continent_cities[s->landmass2] >> 1,1,3);
+          if (s->unit_counts[unit_type] < ret) {
+            score = (int)score / 2;
+          }
+          if (s->unit_counts[unit_type] <
+              (civs[s->civ].continent_cities[s->landmass2] / 5)) {
+            score = (int)score / 2;
+          }
+        }
+      }
+      else {
+        ret = int_clamp(civs[s->civ].continent_cities[s->landmass2]
+                                   - 1,1,6);
+        if (s->unit_counts[saved_type] < ret) {
+          score = (int)score / 2;
+        }
+        if (s->unit_counts[unit_type] <
+            (int)(uint)civs[s->civ].continent_cities[s->landmass2] >> 2) {
+          score = (int)score / 2;
+        }
+      }
+    }
+    if (((s->unit_counts[unit_type] == 0) && (s->units_in_build[unit_type] == 0)) &&
+       (score = (int)score / 2, s->policy != 4)) {
+      threat_level = leaders[civs[s->civ].tribe].expand + 3;
+      if (s->policy == 1) {
+        threat_level = leaders[civs[s->civ].tribe].expand + 2;
+      }
+      if (s->policy == 5) {
+        threat_level++;
+      }
+      if ((int)(uint)civs[s->civ].continent_cities[s->landmass2] < threat_level) {
+        score = 0;
+      }
+    }
+  }
+  return score;
+}
+
+/* Part of city_choose_production (00498e8b): a military or settler unit: its
+   score and whether it is the best so far. */
+static void city_choose_production_try_military_unit(ChooseProdState *s,iptr city,iptr unit_type)
+{
+  int ret;
+  uint adjusted;
+  int count;
+  int combat_value;
+  int support_penalty;
+  uint role2;
+  int hp_factor;
+  uint score;
+
+  role2 = (uint)(char)unit_types[unit_type].role;
+  if (city_choose_production_unit_allowed(s,city,unit_type,role2) != 0) {
+    if (city_choose_production_unit_base_score(s,unit_type,&score) == 0) return;
+    if ((unit_types[unit_type].flags & 0x100) != 0) {
+      role2 = 0;
+    }
+    if ((s->defense_need != 0) &&
+       (((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0 || (citypref_no_defend == 0))))
+    {
+      if (role2 == 1) {
+        score = (uint)(2 / (longlong)s->defense_need);
+        if ((s->defense_need == 2) && (s->unrest_state < 2)) {
+          score = -1;
+        }
+      }
+      else if (s->defense_need == 2) return;
+    }
+    adjusted = score;
+    if (((role2 != 1) && (role2 != 5)) &&
+       (adjusted = score << 1, s->policy != role2)) {
+      adjusted = score << 2;
+    }
+    score = adjusted;
+    if (((unit_type != 9) ||
+        ((s->defense_need == 0 &&
+         ((civs[s->civ].continent_flags[s->landmass2] & 0x10) != 0)))) &&
+       ((unit_types[unit_type].domain != 2 ||
+        ((((ret = city_adjacent_sea_info(city,0,0), ret != 0x3f &&
+           ((cities[city].flags & 0x80) != 0)) && (ret != 0)) &&
+         ((count = landmass_count_bordering(ret), 1 < count ||
+          (((role2 != 4 && (0x2f < landmass_table_block.landmass_recs[ret].water_body_size)) &&
+           (ret < 0x3f)))))))))) {
+      if (role2 == 4) {
+        if (s->policy == 4) {
+          score = (int)(score * 3) / 2;
+        }
+        else {
+          if ((s->policy == 1) ||
+             (*(char *)&civs[s->civ].units_active[unit_type] != '\0'))
+          return;
+          if (unit_type != 0x2b) {
+            score = score * 2 << ((byte)s->threatened & 0x1f);
+          }
+        }
+      }
+      if (role2 == 5) {
+        score = city_choose_production_settler_score(s,city,unit_type,score);
+      }
+      else {
+        score = score << 4;
+      }
+      score = ((char)unit_types[unit_type].cost + 2) * score;
+      if ((unit_types[unit_type].attack == '\0') &&
+         (unit_types[unit_type].defense == '\0')) {
+        score = 0;
+      }
+      else {
+        if ((game.rules & 0x10) == 0) {
+          hp_factor = 2;
+        }
+        else {
+          hp_factor = int_clamp((int)(char)unit_types[unit_type].hit_points / 10
+                                        + (int)(char)unit_types[unit_type].firepower,2,4)
+          ;
+        }
+        combat_value = ((int)(char)unit_types[unit_type].attack +
+                    (int)(char)unit_types[unit_type].defense) * hp_factor;
+        if ((unit_types[unit_type].flags & 0x400) != 0) {
+          combat_value++;
+        }
+        if (unit_type == 9) {
+          combat_value++;
+        }
+        score = (int)score /
+                   ((((int)(char)unit_types[unit_type].move /
+                      (int)(uint)cosmic.road_move_mult + 1) * combat_value) / 2);
+      }
+      if (role2 == 2) {
+        if ((game.game_flags & 4) != 0) {
+          score -= ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
+        }
+        if ((s->policy == 4) && (0 < (int)score)) {
+          score -= ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
+        }
+        if (s->threatened == 0) {
+          score = score << 1;
+        }
+        else {
+          score = score << 2;
+        }
+        ret = city_has_improvement(city,0x22);
+        if (ret != 0) {
+          score -= ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
+        }
+      }
+      if (unit_types[unit_type].domain == 1) {
+        score = score << 1;
+        ret = city_has_improvement(city,0x20);
+        if (ret != 0) {
+          score -= ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
+        }
+      }
+      if (role2 == 1) {
+        score -= (s->settle_goals + 1 >> 1);
+      }
+      if (0x77 < s->unit_total) {
+        score = score << 2;
+      }
+      if ((s->defense_need == 0) && ((int)role2 < 6)) {
+        support_penalty = 0;
+        if ((main_menu_block.city_shield_support != 0) && (main_menu_block.city_total_shields != 0)) {
+          support_penalty = (int)((3 - s->threatened) * (main_menu_block.city_shield_support + 1) * score) /
+                      main_menu_block.city_total_shields;
+        }
+        if (role2 == 5) {
+          if ((((uint)civs[s->civ].units_active[unit_type] - s->homeless_settlers) +
+               s->units_in_build[unit_type] == 0) &&
+             (3 - leaders[civs[s->civ].tribe].expand < (int)cities[city].size)) {
+            support_penalty = 0;
+            if (main_menu_block.city_total_shields <=
+                (int)((uint)(-1 < leaders[civs[s->civ].tribe].expand) + main_menu_block.city_shield_support * 2)
+               ) {
+              score -= (int)score / 3;
             }
           }
           else {
-            if (!((ushort)(((civs[civ].continent_cities[landmass2] < 2) - 1 & 4) + 4) <=
-                   civs[civ].continent_military[landmass2])) continue;
-            score = (int)(((uint)civs[civ].units_active[unit_type] +
-                             (uint)civs[civ].units_in_production[unit_type] * 2) *
-                            (uint)civs[civ].continent_military[landmass2]) /
-                       (unit_total + 1);
-            if (((unit_types[unit_type].flags & 0x4000) != 0) &&
-               (score = score - civs[game.best_human_rank].units_active[0x29], (int)score < 1))
-            {
-              score = 0;
-            }
-          }
-          if ((unit_types[unit_type].flags & 0x100) != 0) {
-            role2 = 0;
-          }
-          if ((defense_need != 0) &&
-             (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0 || (citypref_no_defend == 0))))
-          {
-            if (role2 == 1) {
-              score = (uint)(2 / (longlong)defense_need);
-              if ((defense_need == 2) && (unrest_state < 2)) {
-                score = -1;
-              }
-            }
-            else if (defense_need == 2) continue;
-          }
-          adjusted = score;
-          if (((role2 != 1) && (role2 != 5)) &&
-             (adjusted = score << 1, policy != role2)) {
-            adjusted = score << 2;
-          }
-          score = adjusted;
-          if (((unit_type != 9) ||
-              ((defense_need == 0 &&
-               ((civs[civ].continent_flags[landmass2] & 0x10) != 0)))) &&
-             ((unit_types[unit_type].domain != 2 ||
-              ((((ret = city_adjacent_sea_info(city,0,0), ret != 0x3f &&
-                 ((cities[city].flags & 0x80) != 0)) && (ret != 0)) &&
-               ((count = landmass_count_bordering(ret), 1 < count ||
-                (((role2 != 4 && (0x2f < landmass_table_block.landmass_recs[ret].water_body_size)) &&
-                 (ret < 0x3f)))))))))) {
-            if (role2 == 4) {
-              if (policy == 4) {
-                score = (int)(score * 3) / 2;
-              }
-              else {
-                if ((policy == 1) ||
-                   (*(char *)&civs[civ].units_active[unit_type] != '\0'))
-                continue;
-                if (unit_type != 0x2b) {
-                  score = score * 2 << ((byte)threatened & 0x1f);
-                }
-              }
-            }
-            if (role2 == 5) {
-              ret = city_has_improvement(city,3);
-              if ((ret == 0) && (ret = civ_has_wonder(civ,0), ret == 0)) {
-                settler_base = 6;
-              }
-              else {
-                settler_base = 4;
-              }
-              saved_type = unit_type;
-              if (unit_counts[unit_type] < ((civs[civ].government + 1) / 2)) {
-                leader_trait = leaders[civs[civ].tribe].civilize;
-              }
-              else {
-                leader_trait = leaders[civs[civ].tribe].expand;
-              }
-              score = ((settler_base - leader_trait) - expand_bonus) * score;
-              if (main_menu_block.city_settlers_supported != 0) {
-                support_penalty = 8;
-                if (cities[city].size < 4) {
-                  support_penalty = 0x10;
-                }
-                for (unit_type2 = 0; unit_type2 < main_menu_block.city_settlers_supported; unit_type2++) {
-                  score += (unit_type2 + 1) * support_penalty;
-                }
-              }
-              if (cities[city].size < 2) {
-                score = score << 1;
-              }
-              if ((unit_counts[unit_type] == 0) && (main_menu_block.settler_food_cost == food_surplus)) {
-                score -= (int)score / 2;
-              }
-              if (defense_need < 2) {
-                if (units_in_build[unit_type] == 0) {
-                  if (civs[civ].government < 5) {
-                    if (1 < civs[civ].government) {
-                      ret = int_clamp((int)(uint)civs[civ].continent_cities[landmass2] >> 1,1,3);
-                      if (unit_counts[unit_type] < ret) {
-                        score = (int)score / 2;
-                      }
-                      if (unit_counts[unit_type] <
-                          (civs[civ].continent_cities[landmass2] / 5)) {
-                        score = (int)score / 2;
-                      }
-                    }
-                  }
-                  else {
-                    ret = int_clamp(civs[civ].continent_cities[landmass2]
-                                               - 1,1,6);
-                    if (unit_counts[saved_type] < ret) {
-                      score = (int)score / 2;
-                    }
-                    if (unit_counts[unit_type] <
-                        (int)(uint)civs[civ].continent_cities[landmass2] >> 2) {
-                      score = (int)score / 2;
-                    }
-                  }
-                }
-                if (((unit_counts[unit_type] == 0) && (units_in_build[unit_type] == 0)) &&
-                   (score = (int)score / 2, policy != 4)) {
-                  threat_level = leaders[civs[civ].tribe].expand + 3;
-                  if (policy == 1) {
-                    threat_level = leaders[civs[civ].tribe].expand + 2;
-                  }
-                  if (policy == 5) {
-                    threat_level++;
-                  }
-                  if ((int)(uint)civs[civ].continent_cities[landmass2] < threat_level) {
-                    score = 0;
-                  }
-                }
-              }
-            }
-            else {
-              score = score << 4;
-            }
-            score = ((char)unit_types[unit_type].cost + 2) * score;
-            if ((unit_types[unit_type].attack == '\0') &&
-               (unit_types[unit_type].defense == '\0')) {
-              score = 0;
-            }
-            else {
-              if ((game.rules & 0x10) == 0) {
-                hp_factor = 2;
-              }
-              else {
-                hp_factor = int_clamp((int)(char)unit_types[unit_type].hit_points / 10
-                                              + (int)(char)unit_types[unit_type].firepower,2,4)
-                ;
-              }
-              combat_value = ((int)(char)unit_types[unit_type].attack +
-                          (int)(char)unit_types[unit_type].defense) * hp_factor;
-              if ((unit_types[unit_type].flags & 0x400) != 0) {
-                combat_value++;
-              }
-              if (unit_type == 9) {
-                combat_value++;
-              }
-              score = (int)score /
-                         ((((int)(char)unit_types[unit_type].move /
-                            (int)(uint)cosmic.road_move_mult + 1) * combat_value) / 2);
-            }
-            if (role2 == 2) {
-              if ((game.game_flags & 4) != 0) {
-                score -= ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
-              }
-              if ((policy == 4) && (0 < (int)score)) {
-                score -= ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
-              }
-              if (threatened == 0) {
-                score = score << 1;
-              }
-              else {
-                score = score << 2;
-              }
-              ret = city_has_improvement(city,0x22);
-              if (ret != 0) {
-                score -= ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
-              }
-            }
-            if (unit_types[unit_type].domain == 1) {
-              score = score << 1;
-              ret = city_has_improvement(city,0x20);
-              if (ret != 0) {
-                score -= ((int)(score + ((int)score >> 0x1f & 3U)) >> 2);
-              }
-            }
-            if (role2 == 1) {
-              score -= (settle_goals + 1 >> 1);
-            }
-            if (0x77 < unit_total) {
-              score = score << 2;
-            }
-            if ((defense_need == 0) && ((int)role2 < 6)) {
-              support_penalty = 0;
-              if ((main_menu_block.city_shield_support != 0) && (main_menu_block.city_total_shields != 0)) {
-                support_penalty = (int)((3 - threatened) * (main_menu_block.city_shield_support + 1) * score) /
-                            main_menu_block.city_total_shields;
-              }
-              if (role2 == 5) {
-                if ((((uint)civs[civ].units_active[unit_type] - homeless_settlers) +
-                     units_in_build[unit_type] == 0) &&
-                   (3 - leaders[civs[civ].tribe].expand < (int)cities[city].size)) {
-                  support_penalty = 0;
-                  if (main_menu_block.city_total_shields <=
-                      (int)((uint)(-1 < leaders[civs[civ].tribe].expand) + main_menu_block.city_shield_support * 2)
-                     ) {
-                    score -= (int)score / 3;
-                  }
-                }
-                else {
-                  support_penalty = support_penalty / 2;
-                }
-              }
-              else if (((threatened == 0) && (main_menu_block.city_total_shields <= main_menu_block.city_support_unit_count)) ||
-                      ((civs[civ].flags & 2) == 0)) {
-                score = score << 1;
-              }
-              score += support_penalty;
-            }
-            if (((role2 == 1) && ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0))
-               && (citypref_no_defend != 0)) {
-              score = 999;
-            }
-            if (((int)score < choice_score) ||
-               (((choice < 0 && ((cities[city].flags & 1) == 0)) &&
-                ((1 < defense_need ||
-                 (((defense_urgent != 0 && (unrest_state < 2)) &&
-                  ((civs[civ].continent_flags[landmass2] & 0x10) != 0)))))))) {
-              choice_score = score;
-              choice = unit_type;
-            }
-            if ((int)score < best_unit_score) {
-              best_unit_score = score;
-              best_unit = unit_type;
-            }
+            support_penalty = support_penalty / 2;
           }
         }
+        else if (((s->threatened == 0) && (main_menu_block.city_total_shields <= main_menu_block.city_support_unit_count)) ||
+                ((civs[s->civ].flags & 2) == 0)) {
+          score = score << 1;
+        }
+        score += support_penalty;
+      }
+      if (((role2 == 1) && ((1 << (s->civ5 & 0x1f) & (uint)game.human_players) != 0))
+         && (citypref_no_defend != 0)) {
+        score = 999;
+      }
+      if (((int)score < s->choice_score) ||
+         (((s->choice < 0 && ((cities[city].flags & 1) == 0)) &&
+          ((1 < s->defense_need ||
+           (((s->defense_urgent != 0 && (s->unrest_state < 2)) &&
+            ((civs[s->civ].continent_flags[s->landmass2] & 0x10) != 0)))))))) {
+        s->choice_score = score;
+        s->choice = unit_type;
+      }
+      if ((int)score < s->best_unit_score) {
+        s->best_unit_score = score;
+        s->best_unit = unit_type;
       }
     }
-    else if (choice == 999) {
-      choice = -0x26;
-    }
   }
-  else if (choice == 999) {
-    choice = -0x26;
-  }
-  if (out_best_build != 0) {
-    *(iptr *)out_best_build = best_build;
-  }
-  if (out_best_unit != 0) {
-    *(iptr *)out_best_unit = best_unit;
-  }
-  if (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) ||
+}
+
+/* Part of city_choose_production (00498e8b): the final choice: an AI city
+   keeps its wonder or palace, a human's city follows its governor's
+   preference. */
+static iptr city_choose_production_final_choice(ChooseProdState *s,iptr city)
+{
+  int ret;
+  i32 bits;
+  iptr unit2;
+  iptr cur_improvement;
+  iptr wonder;
+
+  if (((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0) ||
      ((cities[city].flags & 0x10) == 0)) {
-    if (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) && (cities[city].building == -1))
+    if (((1 << (s->civ5 & 0x1f) & (uint)game.human_players) == 0) && (cities[city].building == -1))
     {
-      choice = -1;
+      s->choice = -1;
     }
-    else if ((choice < -0x26) && (ret = city_has_improvement(city,4), ret == 0)) {
-      choice = -4;
+    else if ((s->choice < -0x26) && (ret = city_has_improvement(city,4), ret == 0)) {
+      s->choice = -4;
     }
     else if ((cities[city].building < -0x26) &&
-            (((same_build_count == 0 && (-0x27 < choice)) && ((cities[city].flags & 0x2000) == 0)))) {
+            (((s->same_build_count == 0 && (-0x27 < s->choice)) && ((cities[city].flags & 0x2000) == 0)))) {
       if (cities[city].building < 1) {
         cur_improvement = ~(int)cities[city].building + 1;
       }
@@ -7027,32 +7170,231 @@ choose_military_unit:
         cur_improvement = (iptr)cities[city].building;
       }
       wonder = cur_improvement - 0x27;
-      if (((defense_need < 2) && (ret = wonder_is_expired(wonder), ret == 0)) &&
+      if (((s->defense_need < 2) && (ret = wonder_is_expired(wonder), ret == 0)) &&
          ((game.wonder_city[wonder] == -1 &&
-          ((defense_urgent == 0 || ((cities[city].flags & 0x20) == 0)))))) {
+          ((s->defense_urgent == 0 || ((cities[city].flags & 0x20) == 0)))))) {
         bits = 1;
         unit2 = tile_first_unit((int)cities[city].x,(int)cities[city].y);
         ret = unit_stack_count_role(unit2,bits);
         if (1 < ret) {
-          choice = (iptr)cities[city].building;
+          s->choice = (iptr)cities[city].building;
         }
       }
     }
   }
   else if ((cities[city].flags & 0x1000000) == 0) {
     if ((cities[city].flags & 0x2000000) == 0) {
-      if (500 < choice_score) {
-        choice = 99;
+      if (500 < s->choice_score) {
+        s->choice = 99;
       }
     }
-    else if ((0x62 < best_build) || (choice = best_build, 500 < best_build_score)) {
-      choice = 99;
+    else if ((0x62 < s->best_build) || (s->choice = s->best_build, 500 < s->best_build_score)) {
+      s->choice = 99;
     }
   }
-  else if ((0x62 < best_unit) || (choice = best_unit, 500 < best_unit_score)) {
-    choice = 99;
+  else if ((0x62 < s->best_unit) || (s->choice = s->best_unit, 500 < s->best_unit_score)) {
+    s->choice = 99;
   }
-  return choice;
+  return s->choice;
+}
+
+/* 00498e8b auto */
+/* WARNING: Type propagation algorithm not settling */
+
+iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_build)
+
+{
+  iptr behind;
+  iptr city_landmass;
+  int ret;
+  int unit_counts[62];
+  iptr improvement;
+  int units_in_build[62];
+  int lost_cities;
+  iptr unit_type;
+  i8 wonder_builders[28];
+  iptr wonder;
+  uptr civ2;
+  iptr unit_type2;
+  ChooseProdState st;
+
+  st.wonder_builders = wonder_builders;
+  st.units_in_build = units_in_build;
+  st.unit_counts = unit_counts;
+  st.expand_bonus = 0;
+  if (out_best_unit != 0) {
+    *(i32 *)out_best_unit = 999;
+  }
+  if (out_best_build != 0) {
+    *(i32 *)out_best_build = 999;
+  }
+  city_recalc(city,0);
+  st.civ5 = cities[city].owner;
+  st.civ = (uptr)(char)st.civ5;
+  st.landmass2 = tile_landmass((int)cities[city].x,(int)cities[city].y);
+  st.policy = (uint)civs[st.civ].continent_policy[st.landmass2];
+  if ((st.policy == 0) || (st.policy == 1)) {
+    st.threatened = 1;
+  }
+  else {
+    st.threatened = 0;
+  }
+  if (((game.game_flags & 1) != 0) && (st.policy == 4)) {
+    st.threatened = 1;
+  }
+  behind = ai_spaceship_race_behind(st.civ);
+  st.space_race = spaceship_race_active();
+  st.space_race = behind + st.space_race;
+  lost_cities = 0;
+  for (st.city2 = 0; st.city2 < game.num_cities; st.city2++) {
+    if ((((cities[st.city2].id != 0) && ((int)cities[st.city2].founder == st.civ)) &&
+        ((int)cities[st.city2].owner != st.civ)) &&
+       ((city_landmass = tile_landmass((int)cities[st.city2].x,(int)cities[st.city2].y), city_landmass == st.landmass2
+        && (((uint)game.human_players & 1 << (cities[st.city2].owner & 0x1fU)) != 0)))) {
+      lost_cities++;
+    }
+  }
+  if (leaders[civs[st.civ].tribe].attack + 1 < lost_cities) {
+    st.threatened = 1;
+  }
+  st.food_surplus = (main_menu_block.city_yield_totals[0] - (int)cities[city].size * (uint)cosmic.food_per_citizen) -
+              main_menu_block.city_settlers_supported * main_menu_block.settler_food_cost;
+  st.ocean_tiles = 0;
+  st.shield_surplus = main_menu_block.city_total_shields * 2 - main_menu_block.city_shield_support;
+  st.net_trade = main_menu_block.city_total_trade - main_menu_block.city_trade_corruption;
+  if ((cities[city].building < -0x26) && (0x27 < cities[city].shield_box)) {
+    st.wonder_in_progress = 1;
+  }
+  else {
+    st.wonder_in_progress = 0;
+  }
+  st.wonders_here = 0;
+  st.wonders_owned = 0;
+  for (wonder = 0; wonder < 0x1c; wonder++) {
+    st.wonder_builders[wonder] = 0;
+    ret = wonder_get_city(wonder);
+    if (ret == city) {
+      st.wonders_here++;
+    }
+    ret = civ_has_wonder(st.civ,wonder);
+    if (ret != 0) {
+      st.wonders_owned++;
+    }
+  }
+  if (((cities[city].flags & 1) == 0) && (((byte)(cities[city].flags >> 8) & 0xc0) != 0xc0)) {
+    if (main_menu_block.city_unhappy_count == main_menu_block.city_happy_count) {
+      st.unrest_state = 1;
+    }
+    else {
+      st.unrest_state = 0;
+    }
+  }
+  else {
+    st.unrest_state = 2;
+  }
+  city_find_nearest((int)cities[city].x,(int)cities[city].y,st.civ,0xfffffffe,-1);
+  st.nearest_dist = advisor_window_block.nearest_city_dist;
+  city_choose_production_scan_tiles(&st,city);
+  for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+    st.units_in_build[unit_type] = 0;
+    st.unit_counts[unit_type] = 0;
+  }
+  city_choose_production_survey_cities(&st,city);
+  city_choose_production_count_units(&st,unit_type);
+  city_choose_production_expand_bonus(&st,city);
+  st.settle_goals = 0;
+  for (unit_type2 = 0; unit_type2 < 0x10; unit_type2++) {
+    if ((civs[st.civ].ai_standing_goals[unit_type2].role == 1) &&
+       (ret = tile_landmass((int)civs[st.civ].ai_standing_goals[unit_type2].x,
+                              (int)civs[st.civ].ai_standing_goals[unit_type2].y),
+       ret == st.landmass2)) {
+      st.settle_goals++;
+    }
+  }
+  if (st.threatened != 0) {
+    st.settle_goals += (st.settle_goals >> 1);
+  }
+  if ((((st.unit_total == 0) && ((1 << (st.civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
+      (civs[st.civ].government < 2)) && ((out_best_unit == 0 && (out_best_build == 0)))) {
+    for (unit_type = 0x3d; -1 < unit_type; unit_type--) {
+      if (((unit_types[unit_type].role == 1) && ((unit_types[unit_type].flags & 0x100) == 0)) &&
+         (ret = civ_can_build_unit(st.civ,city,unit_type), ret != 0)) {
+        return unit_type;
+      }
+    }
+  }
+  if (st.civ == 0) {
+    return city_choose_production_barbarian(city);
+  }
+  st.enemy_offshore = 0;
+  if (st.policy == 4) {
+    for (civ2 = 1; (int)civ2 < 8; civ2++) {
+      if (((*((byte *)&civs[st.civ].treaties[civ2] + 1) & 0x20) != 0) &&
+         (*(char *)&civs[civ2].continent_cities[st.landmass2] == '\0')) {
+        st.enemy_offshore = 1;
+      }
+    }
+  }
+  city_choose_production_defense_need(&st,city);
+  if ((1 << (st.civ5 & 0x1f) & (uint)game.human_players) == 0) {
+    city_choose_production_sell_redundant(&st,city);
+    city_choose_production_airlift_defender(&st,city);
+  }
+  st.best_build_score = 999;
+  st.best_unit_score = 999;
+  st.choice_score = 999;
+  st.best_build = 999;
+  st.best_unit = 999;
+  st.choice = 999;
+  for (improvement = 1; improvement < 0x27; improvement++) {
+    city_choose_production_try_improvement(&st,city,improvement);
+  }
+  if (((1 << (st.civ5 & 0x1f) & (uint)game.human_players) != 0) && (citypref_count != 0)) {
+    for (unit_type2 = 0; unit_type2 < citypref_count; unit_type2++) {
+      improvement = (((i32 *)&map_views_block.citypref_improvements))[unit_type2];
+      ret = city_has_improvement(city,improvement);
+      if ((ret == 0) && (ret = city_can_build_improvement(st.civ,city,improvement), ret != 0)) {
+        st.best_build = -improvement;
+        st.choice = -improvement;
+        goto choose_military_unit;
+      }
+    }
+  }
+  if ((st.wonder_in_progress != 0) ||
+     (((((civs[st.civ].continent_flags[st.landmass2] & 0x10) == 0 &&
+        (2 < cities[city].size)) && (((byte)(cities[city].flags >> 8) & 0xc0) != 0xc0))
+      && ((4 - leaders[civs[st.civ].tribe].civilize <=
+           (int)(uint)civs[st.civ].continent_cities[st.landmass2] ||
+          ((*(char *)&civs[st.civ].continent_flags[st.landmass2] == '\0' &&
+           (4 - leaders[civs[st.civ].tribe].civilize <= (int)civs[st.civ].num_cities)))))))) {
+    for (wonder = 0; wonder < 0x1c; wonder++) {
+      city_choose_production_try_wonder(&st,city,wonder);
+    }
+  }
+  if (civs[st.civ].num_military_units < 0x200) {
+    for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+      city_choose_production_try_special_unit(&st,city,unit_type);
+    }
+choose_military_unit:
+    if (civs[st.civ].num_military_units < 0x200) {
+      for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+        city_choose_production_try_military_unit(&st,city,unit_type);
+      }
+    }
+    else if (st.choice == 999) {
+      st.choice = -0x26;
+    }
+  }
+  else if (st.choice == 999) {
+    st.choice = -0x26;
+  }
+  if (out_best_build != 0) {
+    *(iptr *)out_best_build = st.best_build;
+  }
+  if (out_best_unit != 0) {
+    *(iptr *)out_best_unit = st.best_unit;
+  }
+  return city_choose_production_final_choice(&st,city);
 }
 
 /* 004bb8e0 auto */
@@ -10043,60 +10385,747 @@ i32 __cdecl city_process_food(uptr city)
   return 0;
 }
 
+/* Part of city_process_production (004ec3fe): the announcement of a completed
+   improvement or wonder: sound, message or dialog (human), and the next
+   build. */
+static void city_process_production_announce(uptr city,uptr civ,iptr wonder,iptr improvement,int acquired)
+{
+  iptr str;
+  i8 *built_sprite;
+  i8 *notify_sprite;
+  Dialog built_dialog;
+  int announce;
+  uptr city3;
+  iptr sound;
+  i32 try_level;
+
+  if ((human_civ[0] == civ) || (0x22 < improvement)) {
+    announce = 1;
+  }
+  else {
+    announce = 0;
+  }
+  if (civ_saved_cursor_x_block.autoplay_active != 0) {
+    announce = 0;
+  }
+  if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
+    cities[city].known_to = 0xff;
+  }
+  text_set_label_arg(1,improvements[improvement].name);
+  str = civ_get_adjective(civ);
+  text_set_string_arg(2,(const char *)str);
+  city3 = 0xbb;
+  if (wonder == 0x1b) {
+    city3 = 0xb8;
+  }
+  if ((((wonder == 9) || (wonder == 7)) || (wonder == 8)) || (wonder == 0xe)) {
+    city3 = 0xba;
+  }
+  if ((wonder == 0x12) || (wonder == 0xc)) {
+    city3 = 0xba;
+  }
+  if (wonder == 0x15) {
+    city3 = 0xb9;
+  }
+  text_set_label_arg(3,label_string_ids[city3]);
+  if (announce != 0) {
+    if (wonder < 0) {
+      if ((improvement < 0x23) || (0x25 < improvement)) {
+        switch(improvement) {
+        case 2:
+          sound = 5;
+          break;
+        default:
+          sound = 2;
+          break;
+        case 9:
+          sound = 4;
+          break;
+        case 10:
+          sound = 0x2f;
+          break;
+        case 0xb:
+          sound = 0xb;
+          break;
+        case 0xc:
+          sound = 0x37;
+          break;
+        case 0x16:
+          sound = 0x45;
+        }
+        snd_play_effect(sound,1,0,0);
+      }
+      else {
+        snd_play_effect(8,1,0,0);
+      }
+    }
+    else {
+      snd_play_effect(0x30,1,0,0);
+    }
+  }
+  if ((human_civ[0] == civ) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+    if ((2 < game.multiplayer) && (0x22 < improvement)) {
+      text_set_string_arg(0,(const char *)&cities[city].name);
+      net_send_text_args(0x47,0xff,4,0,wonder,improvement);
+    }
+    if ((game.message_options & 2) == 0) {
+      if (wonder < 0) {
+        notify_sprite = ((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c;
+      }
+      else {
+        notify_sprite = ((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + wonder * 0x3c;
+      }
+      city_notify_dialog_ex((iptr)&str_built_4,city,1,(iptr)notify_sprite);
+    }
+  }
+  else if (announce != 0) {
+    text_set_string_arg(0,(const char *)&cities[city].name);
+    if ((civ_saved_cursor_x_block.autoplay_active == 0) && (2 < game.multiplayer)) {
+      net_send_text_args(0x47,0xff,4,0,wonder,improvement);
+    }
+    built_dialog.Dialog::construct(0x4000);
+    try_level = 1;
+    built_dialog.load_game_text((const char *)&str_built2);
+    if (wonder < 0) {
+      built_sprite = ((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c;
+    }
+    else {
+      built_sprite = ((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + wonder * 0x3c;
+    }
+    built_dialog.add_sprite((iptr)built_sprite,0,0)
+    ;
+    built_dialog.set_image_zoom(8);
+    built_dialog.show_modal(0);
+    try_level = 0xffffffff;
+    /* inlined unwind funclet 004eeef3 */ { built_dialog.Dialog::destruct(); }
+  }
+  if ((((announce != 0) && (-1 < wonder)) && (human_civ[0] == civ)) &&
+     ((civ_saved_cursor_x_block.autoplay_active == 0 && (((*((char *)&game.game_options + 2)) & 1) != 0)))) {
+    wonder_show_movie(wonder);
+  }
+  if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
+    main_menu_block.city_completed_improvement_i32 = improvement;
+  }
+  if (acquired == 0) {
+    cities[city].shield_box = 0;
+  }
+  if (((cities[city].flags & 0x10) != 0) ||
+     ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
+    city_set_production(city,99);
+  }
+}
+
+/* Part of city_process_production (004ec3fe): a completed improvement or
+   wonder: build it, announce it, and its effects (spaceship part, palace,
+   wonders with an effect when built). */
+static void city_process_production_complete_improvement(uptr city,uptr civ,int cost2,iptr wonder,iptr improvement,int acquired)
+{
+  int result;
+  iptr str;
+  i32 value;
+  uptr city2;
+  uptr city3;
+  iptr part;
+  uptr civ2;
+
+  if (-1 < improvement) {
+    if (city_turn_window_shown != 0) {
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_production(1);
+    }
+    if (wonder == 0x17) {
+      for (civ2 = 1; (int)civ2 < 8; civ2++) {
+        value = int_clamp((civs[civ2].reputation + 1) / 2,0,6);
+        civs[civ2].reputation = (u8)value;
+      }
+      if (civ_saved_cursor_x_block.autoplay_active == 0) {
+        for (civ2 = 1; (int)civ2 < 8; civ2++) {
+          if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.civs_alive) != 0) &&
+              ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
+             (((1 << ((byte)civ2 & 0x1f) & (int)(char)cities[city].known_to) != 0 ||
+              ((int)cities[city].owner == (civ2 & 0xff))))) {
+            if (human_civ[0] == civ2) {
+              snd_play_effect(0x23,1,0,0);
+              city_notify_dialog((iptr)&str_manhattan,city,(iptr)&caption_close_button_sprite_block.city_notify_sprite);
+            }
+            else if (2 < game.multiplayer) {
+              net_send_text_args(0x46,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,1,0,
+                                 city,0);
+            }
+          }
+        }
+      }
+    }
+    if (acquired == 0) {
+      city_set_improvement(city,improvement,1);
+      cities[city].shield_box -= (short)cost2;
+    }
+    if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) &&
+       (improvement < 0x23)) {
+      if (improvement == 1) {
+        cities[city].building--;
+      }
+      city_set_production(city,99);
+    }
+    else {
+      city_process_production_announce(city,civ,wonder,improvement,acquired);
+    }
+    if ((0x22 < improvement) && (improvement < 0x26)) {
+      part = improvement - 0x23;
+      part = spaceship_add_part(civ,part);
+      if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
+         ((result = civ_spaceship_launched(civ), result == 0 && (part < 0)))) {
+        text_set_label_arg(1,improvements[improvement].name);
+        city_notify_dialog((iptr)&str_badspace_2,city,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c));
+      }
+    }
+    if (improvement == 1) {
+      for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
+        if ((cities[city2].id != 0) && ((int)cities[city2].owner == civ)) {
+          city_set_improvement(city2,1,0);
+        }
+      }
+      city_set_improvement(city,1,1);
+      civs[civ].capital_x = cities[city].x;
+      if (civ_saved_cursor_x_block.autoplay_active == 0) {
+        text_set_string_arg(0,(const char *)&cities[city].name);
+        str = civ_adjective(civ);
+        text_set_string_arg(1,(const char *)str);
+        if ((civ_saved_cursor_x_block.autoplay_active == 0) && (2 < game.multiplayer)) {
+          net_send_text_args(0x48,0xff,2,0,0,0);
+        }
+        popup_game((const char *)&str_movecapital);
+      }
+    }
+    if (wonder == 0x12) {
+      civ_research_complete(civ,0);
+      civ_research_complete(civ,0);
+    }
+    if (wonder == 0xe) {
+      civ_leonardo_upgrade(civ);
+    }
+    if (wonder == 0x14) {
+      civ_apply_eiffel_tower(civ);
+    }
+    if (wonder == 0x19) {
+      wonder_apollo_reveal_map();
+    }
+    if (city_turn_window_shown != 0) {
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_production(1);
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_improvements(1);
+    }
+    if (-1 < wonder) {
+      city3 = city;
+      for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
+        if ((((cities[city2].id != 0) && (city2 != city3)) &&
+            (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) == 0)) &&
+           ((int)cities[city2].building == -improvement)) {
+          city_set_production(city2,99);
+        }
+      }
+      city_recalc(city3,0);
+    }
+  }
+}
+
+/* Part of city_process_production (004ec3fe): an AI diplomat: created next
+   to the foreign city it is likely to reach first. */
+static void city_process_production_ai_diplomat(uptr city,uptr civ,iptr &unit,iptr unit_type)
+{
+  int result;
+  int landmass2;
+  int roll;
+  uptr target_city;
+  uptr city2;
+  int tie_count;
+  iptr unit2;
+  int best_dist;
+
+  target_city = 0xffffffff;
+  best_dist = 0x7fff;
+  tie_count = 0;
+  for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
+    if (((cities[city2].id != 0) && ((int)cities[city2].owner != civ)) &&
+       ((*(byte *)&civs[civ].treaties[cities[city2].owner] & 6) == 0)) {
+      unit = unit_find_nearest((int)cities[city2].x,(int)cities[city2].y,civ
+                                    ,-1);
+      if (dialog_text_font_obj_block.unit_nearest_dist == 3 || dialog_text_font_obj_block.unit_nearest_dist - 3 < 0) {
+        dialog_text_font_obj_block.unit_nearest_dist = ~(dialog_text_font_obj_block.unit_nearest_dist - 3U) + 1;
+      }
+      else {
+        dialog_text_font_obj_block.unit_nearest_dist -= 3;
+      }
+      if (-1 < unit) {
+        if (((cities[city2].flags & 8) != 0) && (dialog_text_font_obj_block.unit_nearest_dist < 4)) {
+          dialog_text_font_obj_block.unit_nearest_dist = 3;
+        }
+        if (dialog_text_font_obj_block.unit_nearest_dist <= best_dist) {
+          if (best_dist == dialog_text_font_obj_block.unit_nearest_dist) {
+            if (tie_count + 1 == 1 || tie_count < 0) {
+              roll = 0;
+              tie_count++;
+            }
+            else {
+              tie_count += 2;
+              roll = crt_rand_at("city_process_production");
+              roll = roll % tie_count;
+            }
+            if (roll != 0) continue;
+          }
+          result = tile_is_ocean((int)units[unit].x,(int)units[unit].y);
+          if (result == 0) {
+            result = tile_landmass((int)cities[city2].x,(int)cities[city2].y);
+            landmass2 = tile_landmass((int)units[unit].x,(int)units[unit].y);
+            if (result == landmass2) {
+              if (best_dist < dialog_text_font_obj_block.unit_nearest_dist) {
+                tie_count = 1;
+                best_dist = dialog_text_font_obj_block.unit_nearest_dist;
+              }
+              target_city = city2;
+              unit2 = unit;
+            }
+          }
+        }
+      }
+    }
+  }
+  if ((best_dist < 4) && (result = crt_rand_at("city_process_production"), result % 10 <= (int)(uint)game.difficulty)) {
+    city2 = target_city;
+    unit = unit2;
+    unit = unit_create(unit_type,civ,(int)units[unit2].x,
+                                  (int)units[unit2].y);
+  }
+  else {
+    unit = unit_create(unit_type,civ,(int)cities[city].x,
+                                  (int)cities[city].y);
+  }
+  if (civs[civ].government == 3) {
+    units[unit].flags = units[unit].flags | 0x2000;
+  }
+}
+
+/* Part of city_process_production (004ec3fe): a human's caravan: the dialog to
+   choose its commodity. */
+static void city_process_production_caravan_dialog(uptr city,uptr civ,iptr unit)
+{
+  int result;
+  iptr str;
+  iptr option_id;
+  i32 value;
+  iptr option_index;
+  char goods_amount;
+  Dialog caravan_dialog;
+  iptr choice;
+  iptr unit_type2;
+  i32 try_level;
+
+  caravan_dialog.Dialog::construct(0x4000);
+  try_level = 0;
+  mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,
+                     (int)cities[city].owner);
+  do {
+    text_set_string_arg(0,(const char *)&cities[city].name);
+    caravan_dialog.load_game_text((const char *)&str_caravanbuilt);
+    for (unit_type2 = 0; unit_type2 < 3; unit_type2++) {
+      if (-1 < *(char *)&cities[city].supplies[unit_type2]) {
+        value = 0;
+        option_index = unit_type2;
+        str = (iptr)label_string(commodity_names
+                                   [*(char *)&cities[city].supplies[unit_type2]]);
+        caravan_dialog.add_option((const char *)str,option_index,value)
+        ;
+      }
+    }
+    value = 0;
+    option_id = 3;
+    str = (iptr)label_string(label_string_ids[0xc0]);
+    caravan_dialog.add_option((const char *)str,option_id,value);
+    choice = caravan_dialog.show_modal(0);
+    if (caravan_dialog.result_extra == 0) {
+      if (choice < 3) {
+        text_set_label_arg(0,commodity_names
+                             [*(char *)&cities[city].supplies[choice]]);
+      }
+      else {
+        str = (iptr)label_string(label_string_ids[0xc0]);
+        text_set_string_arg(0,(const char *)str);
+      }
+      result = popup_game((const char *)&str_caraconfirm);
+      if (result != 0) {
+        caravan_dialog.result_extra = 1;
+      }
+    }
+    else if (choice < 3) {
+      trade_commodity_cities_dialog(civ,(int)*(char *)&cities[city].supplies[choice]);
+    }
+    else {
+      popup_game((const char *)&str_nofoodreport);
+    }
+  } while (caravan_dialog.result_extra != 0);
+  if (dlg_help_pressed != 0) {
+    main_menu_block.city_zoom_requested = 1;
+  }
+  if (choice < 3) {
+    if (*(char *)&cities[city].supplies[choice] < 1) {
+      units[unit].counter = ~cities[city].supplies[choice] + 1;
+    }
+    else {
+      units[unit].counter = cities[city].supplies[choice];
+    }
+    if (*(char *)&cities[city].supplies[choice] < 1) {
+      goods_amount = ~cities[city].supplies[choice] + 1;
+    }
+    else {
+      goods_amount = *(char *)&cities[city].supplies[choice];
+    }
+    *(char *)&cities[city].supplies[choice] = -goods_amount;
+  }
+  else {
+    units[unit].counter = 0xff;
+  }
+  try_level = 0xffffffff;
+  /* inlined unwind funclet 004eeeff */ { caravan_dialog.Dialog::destruct(); }
+}
+
+/* Part of city_process_production (004ec3fe): a completed unit: create it
+   (settlers shrink the city), place an AI diplomat, a human's caravan
+   dialog or notice.  1 when city_process_production returns at once (the
+   city is gone or the unit was refused), 0 to go on. */
+static int city_process_production_unit(uptr city,uptr civ)
+{
+  byte cost_byte;
+  int result;
+  iptr str;
+  iptr unit;
+  int civ3;
+  iptr unit_type;
+  int cost2;
+  int y2;
+  int x2;
+  uptr city3;
+  iptr unit_type2;
+
+  unit_type = (iptr)cities[city].building;
+  if ((-1 < unit_types[unit_type].obsolete_by) &&
+     (result = civ_has_advance(civ,(int)unit_types[unit_type].obsolete_by), result != 0)) {
+    for (unit_type2 = 0; unit_type2 < 0x3e; unit_type2++) {
+      if ((unit_types[unit_type2].prerequisite == unit_types[unit_type].obsolete_by) &&
+         (unit_types[unit_type2].role == unit_types[unit_type].role)) {
+        if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
+          text_set_label_arg(1,unit_types[unit_type].name);
+          text_set_label_arg(2,unit_types[unit_type2].name);
+          city_notify_dialog((iptr)&str_upgraded,city,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type2 * 0x3c));
+        }
+        unit_type = unit_type2;
+        str = unit_type;
+        (*((char *)&unit_type + 0)) = (i8)unit_type2;
+        cities[city].building = (i8)unit_type;
+        unit_type = str;
+        break;
+      }
+    }
+  }
+  cost2 = (char)unit_types[unit_type].cost * main_menu_block.city_shield_rows;
+  if (cost2 <= cities[city].shield_box) {
+    cities[city].flags = cities[city].flags & 0xfffffeff;
+    if (city_turn_window_shown != 0) {
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_production(1);
+    }
+    if (((unit_types[unit_type].role == 5) && (cities[city].size == 1)) &&
+       (game.difficulty == '\0')) return 1;
+    cities[city].shield_box -= (short)cost2;
+    if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) ||
+       (unit_types[unit_type].role != 6)) {
+      unit = unit_create(unit_type,civ,(int)cities[city].x,
+                                    (int)cities[city].y);
+      if (unit < 0) return 0;
+      if ((unit_types[unit_type].role == 6) && (civs[civ].government == 3)) {
+        units[unit].flags = units[unit].flags | 0x2000;
+      }
+      else if ((unit_types[unit_type].domain == '\0') || ((game.rules & 0x10) == 0)) {
+        result = city_has_improvement(city,2);
+        if ((((result != 0) || (result = civ_has_wonder(civ,7), result != 0)) &&
+            ((char)unit_types[unit_type].role < 6)) &&
+           ((unit_types[unit_type].flags & 0x1000) == 0)) {
+          units[unit].flags = units[unit].flags | 0x2000;
+        }
+      }
+      else if (unit_types[unit_type].domain == 2) {
+        result = city_has_improvement(city,0x22);
+        if (((result != 0) || (result = civ_has_wonder(civ,3), result != 0)) &&
+           ((unit_types[unit_type].flags & 0x1000) == 0)) {
+          units[unit].flags = units[unit].flags | 0x2000;
+        }
+      }
+      else if (((unit_types[unit_type].domain == 1) &&
+               (result = city_has_improvement(city,0x20), result != 0)) &&
+              ((unit_types[unit_type].flags & 0x1000) == 0)) {
+        units[unit].flags = units[unit].flags | 0x2000;
+      }
+      if (unit_types[unit_type].role == 4) {
+        units[unit].counter = 0xff - ((byte)city & 0x3f);
+      }
+    }
+    if (unit_types[unit_type].role == 5) {
+      if ((cities[city].size == 1) && (civs[civ].num_cities == 1)) return 1;
+      if ((cities[city].size == 1) &&
+         ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
+        text_set_string_arg(0,(const char *)&cities[city].name);
+        text_set_label_arg(1,unit_types[unit_type].name);
+        if ((civ_saved_cursor_x_block.autoplay_active != 0) || (result = popup_game((const char *)&str_ghosttown), result == 0)) {
+          unit_delete(unit,1);
+          return 1;
+        }
+      }
+      cities[city].size--;
+      if (cities[city].size < 1) {
+        x2 = (int)cities[city].x;
+        y2 = (int)cities[city].y;
+        text_set_string_arg(0,(const char *)&cities[city].name);
+        text_set_label_arg(1,unit_types[unit_type].name);
+        text_set_label_arg(3,label_string_ids[0xbb]);
+        city_delete(city,0);
+        result = civ_check_destroyed(civ,0);
+        if (((result == 0) &&
+            (unit_create(unit_type,civ,x2,y2),
+            (game.message_options & 4) == 0)) && (main_menu_block.city_notify_enabled != 0)) {
+          popup_game((const char *)&str_built_2);
+        }
+        city_turn_window_shown = 0;
+        main_menu_block.city_notify_enabled = 0;
+        map_redraw_tile_all_views(x2,y2);
+        return 1;
+      }
+    }
+    if (city_turn_window_shown != 0) {
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_supported_units(1);
+      ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_info_panel(1);
+    }
+    if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
+      if (unit_types[unit_type].role == 7) {
+        unit_pick_caravan_commodity(city,unit);
+      }
+      if (unit_types[unit_type].role == 6) {
+        city_process_production_ai_diplomat(city,civ,unit,unit_type);
+      }
+      if (('b' < (char)unit_types[unit_type].attack) &&
+         (*(char *)&civs[civ].units_active[unit_type] == 1)) {
+        for (civ3 = 1; civ3 < 8; civ3++) {
+          civs[civ3].last_treaty_turn[civ] = 0xffff;
+        }
+      }
+      city_set_production(city,99);
+    }
+    else {
+      if ((unit_types[unit_type].role == 5) || (5 < (char)unit_types[unit_type].role)) {
+        text_set_label_arg(1,unit_types[unit_type].name);
+        if (unit_types[unit_type].role == 7) {
+          city_process_production_caravan_dialog(city,civ,unit);
+        }
+        else {
+          if (unit_types[unit_type].role == 7) {
+            result = _rand();
+            cost_byte = (byte)(result >> 0x1f);
+            units[unit].counter = (((byte)result ^ cost_byte) - cost_byte & 0xf ^ cost_byte) - cost_byte;
+          }
+          if ((game.message_options & 4) == 0) {
+            city3 = 0xbb;
+            if (unit_types[unit_type].role == 6) {
+              city3 = 0xb6;
+            }
+            if (unit_types[unit_type].role == 7) {
+              city3 = 0xbc;
+            }
+            text_set_label_arg(3,label_string_ids[city3]);
+            city_notify_dialog((iptr)&str_built_3,city,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c));
+          }
+        }
+      }
+      cities[city].shield_box = 0;
+      if ((cities[city].flags & 0x10) != 0) {
+        city_set_production(city,99);
+      }
+      if (city_turn_window_shown != 0) {
+        ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_production(1);
+      }
+    }
+  }
+  return 0;
+}
+
+/* Part of city_process_production (004ec3fe): the notice that an AI city will
+   soon complete a wonder. */
+static void city_process_production_almost_wonder(uptr city,uptr civ)
+{
+  iptr str;
+  Dialog wonder_dialog;
+  iptr improvement2;
+  int cost2;
+  i32 try_level;
+
+  if (cities[city].building < -0x26) {
+    if (cities[city].building < 1) {
+      improvement2 = ~(int)cities[city].building + 1;
+    }
+    else {
+      improvement2 = (iptr)cities[city].building;
+    }
+    cost2 = (uint)improvements[improvement2].cost * main_menu_block.city_shield_rows;
+    if (((cost2 <= (cities[city].shield_box + main_menu_block.city_total_shields) - main_menu_block.city_shield_support) &&
+        (game.wonder_city[improvement2 - 0x27] == -1)) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+      str = (iptr)(civ_name_plural(civ));
+      text_set_string_arg(1,(const char *)str);
+      text_set_label_arg(2,improvements[improvement2].name);
+      if ((civ_saved_cursor_x_block.autoplay_active == 0) && (2 < game.multiplayer)) {
+        net_send_text_args(0x4a,0xff,3,0,improvement2,0);
+      }
+      wonder_dialog.Dialog::construct(0x4000);
+      try_level = 2;
+      wonder_dialog.load_game_text((const char *)&str_almostwonder);
+      wonder_dialog.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
+      wonder_dialog.set_image_zoom(8);
+      wonder_dialog.show_modal(0);
+      try_level = 0xffffffff;
+      /* inlined unwind funclet 004eeee7 */ { wonder_dialog.Dialog::destruct(); }
+    }
+  }
+}
+
+/* Part of city_process_production (004ec3fe): an AI city buys part of its
+   production. */
+static void city_process_production_ai_buy(uptr city,uptr civ,int net_shields)
+{
+  byte cost_byte;
+  int result;
+  uint base_cost;
+  int civ3;
+  iptr landmass3;
+  int cost2;
+  int refund;
+  uint policy;
+  int gold_spent;
+  iptr improvement;
+  iptr group;
+
+  if (((cities[city].flags & 0x20) != 0) ||
+     (result = tile_unit_owner((int)cities[city].x,(int)cities[city].y), result < 0)) {
+    city_set_production(city,99);
+  }
+  gold_spent = 0;
+  if (cities[city].building < '\0') {
+    if (cities[city].building < 1) {
+      improvement = ~(int)cities[city].building + 1;
+    }
+    else {
+      improvement = (iptr)cities[city].building;
+    }
+  }
+  else {
+    improvement = 0;
+  }
+  if (improvement == 0) {
+    cost_byte = unit_types[cities[city].building].cost;
+  }
+  else {
+    cost_byte = improvements[improvement].cost;
+  }
+  base_cost = (uint)cost_byte;
+  cost2 = base_cost * main_menu_block.city_shield_rows;
+  landmass3 = tile_land_landmass((int)cities[city].x,(int)cities[city].y);
+  if (landmass3 < 0) {
+    policy = 0;
+  }
+  else {
+    policy = (uint)civs[civ].continent_policy[landmass3];
+  }
+  if (((((policy == 0) || (policy == 1)) || (policy == 4)) &&
+      ((net_shields != 0 && (-1 < cities[city].building)))) &&
+     ((int)(char)unit_types[cities[city].building].role == policy)) {
+    gold_spent = civs[civ].gold >> 6;
+  }
+  if (0x26 < improvement) {
+    group = (improvement - 0x27) / 7;
+    if ((*(char *)&civs[civ].wonders_by_group[group] == '\0') ||
+       (civs[civ].wonders_by_group[group] < (byte)(((i8 *)&map_views_block.human_wonders_by_group_min))[group])) {
+      gold_spent = civs[civ].gold >> 6;
+    }
+    else if ((byte)(((i8 *)&map_views_block.human_wonders_by_group_max))[group] + 1 <
+             (uint)civs[civ].wonders_by_group[group]) {
+      gold_spent = civs[civ].gold >> 8;
+    }
+    else {
+      gold_spent = civs[civ].gold >> 7;
+    }
+    if (0x9c3 < civs[civ].gold) {
+      gold_spent = gold_spent << 1;
+    }
+  }
+  if ((0x22 < improvement) && (improvement < 0x27)) {
+    for (civ3 = 1; civ3 < 8; civ3++) {
+      if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+         (result = civ_spaceship_exists(civ3), result != 0)) {
+        gold_spent = civs[civ].gold >> 7;
+        break;
+      }
+    }
+    result = ai_spaceship_race_behind(civ);
+    if (result != 0) {
+      gold_spent = gold_spent << 1;
+    }
+  }
+  if ((((cities[city].flags & 1) != 0) && (improvement != 0)) && (cities[city].shield_box != 0)
+     ) {
+    gold_spent = civs[civ].gold >> 3;
+  }
+  result = tile_unit_owner((int)cities[city].x,(int)cities[city].y);
+  if (((result < 0) || ((cities[city].flags & 0x20) != 0)) &&
+     ((-1 < cities[city].building && (cities[city].shield_box != 0)))) {
+    gold_spent = civs[civ].gold >> 3;
+  }
+  if ((improvement == 1) && (cities[city].shield_box != 0)) {
+    gold_spent = civs[civ].gold >> 3;
+  }
+  if (((cities[city].building == '-') && (civs[civ].units_active[0x2d] == '\0')) &&
+     (cities[city].shield_box != 0)) {
+    gold_spent = civs[civ].gold >> 4;
+  }
+  if (2000 < civs[civ].gold) {
+    gold_spent += (civs[civ].gold >> 9);
+  }
+  gold_spent = int_clamp(0,gold_spent,cost2 - cities[city].shield_box);
+  cities[city].shield_box += (short)gold_spent;
+  refund = ((int)((uint)game.difficulty * gold_spent) / 10) /
+             (int)(8 - (uint)game.power_rank[game.best_human_rank]);
+  if (civs[game.worst_human_rank].gold < civs[civ].gold) {
+    if (999 < civs[civ].gold) {
+      refund = refund / 2;
+    }
+    if (1999 < civs[civ].gold) {
+      refund = 0;
+    }
+  }
+  civs[civ].gold -= (gold_spent - refund);
+  city_process_production_almost_wonder(city,civ);
+}
+
 /* 004ec3fe auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_process_production(uptr city)
 
 {
-  byte cost_byte;
   iptr unit_owner;
   int result;
-  int landmass2;
-  iptr str;
-  iptr option_id;
-  i32 value;
-  iptr option_index;
-  uint base_cost;
-  i8 *built_sprite;
-  i8 *notify_sprite;
   i8 *done_sprite;
-  char goods_amount;
-  int roll;
-  Dialog wonder_dialog;
-  Dialog built_dialog;
-  Dialog caravan_dialog;
   uptr civ;
-  iptr unit;
-  uptr target_city;
-  iptr choice;
-  int civ3;
   iptr improvement2;
   uptr city2;
-  int tie_count;
-  iptr unit_type;
   iptr landmass3;
-  int announce;
   int cost2;
-  int y2;
-  int x2;
-  uptr city3;
   iptr part;
-  int refund;
-  iptr sound;
   iptr wonder;
-  uint policy;
-  int gold_spent;
-  uptr civ2;
   int net_shields;
-  iptr unit2;
   iptr improvement;
-  iptr unit_type2;
-  int best_dist;
-  iptr group;
   int acquired;
-  i32 seh_prev;
-  i8 *seh_handler;
   i32 try_level;
   
   try_level = 0xffffffff;
@@ -10189,216 +11218,7 @@ void __cdecl city_process_production(uptr city)
         if (((improvement < 0x23) || (0x25 < improvement)) ||
            ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
 complete_improvement:
-          if (-1 < improvement) {
-            if (city_turn_window_shown != 0) {
-              ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_production(1);
-            }
-            if (wonder == 0x17) {
-              for (civ2 = 1; (int)civ2 < 8; civ2++) {
-                value = int_clamp((civs[civ2].reputation + 1) / 2,0,6);
-                civs[civ2].reputation = (u8)value;
-              }
-              if (civ_saved_cursor_x_block.autoplay_active == 0) {
-                for (civ2 = 1; (int)civ2 < 8; civ2++) {
-                  if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.civs_alive) != 0) &&
-                      ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
-                     (((1 << ((byte)civ2 & 0x1f) & (int)(char)cities[city].known_to) != 0 ||
-                      ((int)cities[city].owner == (civ2 & 0xff))))) {
-                    if (human_civ[0] == civ2) {
-                      snd_play_effect(0x23,1,0,0);
-                      city_notify_dialog((iptr)&str_manhattan,city,(iptr)&caption_close_button_sprite_block.city_notify_sprite);
-                    }
-                    else if (2 < game.multiplayer) {
-                      net_send_text_args(0x46,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,1,0,
-                                         city,0);
-                    }
-                  }
-                }
-              }
-            }
-            if (acquired == 0) {
-              city_set_improvement(city,improvement,1);
-              cities[city].shield_box -= (short)cost2;
-            }
-            if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) &&
-               (improvement < 0x23)) {
-              if (improvement == 1) {
-                cities[city].building--;
-              }
-              city_set_production(city,99);
-            }
-            else {
-              if ((human_civ[0] == civ) || (0x22 < improvement)) {
-                announce = 1;
-              }
-              else {
-                announce = 0;
-              }
-              if (civ_saved_cursor_x_block.autoplay_active != 0) {
-                announce = 0;
-              }
-              if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
-                cities[city].known_to = 0xff;
-              }
-              text_set_label_arg(1,improvements[improvement].name);
-              str = civ_get_adjective(civ);
-              text_set_string_arg(2,(const char *)str);
-              city3 = 0xbb;
-              if (wonder == 0x1b) {
-                city3 = 0xb8;
-              }
-              if ((((wonder == 9) || (wonder == 7)) || (wonder == 8)) || (wonder == 0xe)) {
-                city3 = 0xba;
-              }
-              if ((wonder == 0x12) || (wonder == 0xc)) {
-                city3 = 0xba;
-              }
-              if (wonder == 0x15) {
-                city3 = 0xb9;
-              }
-              text_set_label_arg(3,label_string_ids[city3]);
-              if (announce != 0) {
-                if (wonder < 0) {
-                  if ((improvement < 0x23) || (0x25 < improvement)) {
-                    switch(improvement) {
-                    case 2:
-                      sound = 5;
-                      break;
-                    default:
-                      sound = 2;
-                      break;
-                    case 9:
-                      sound = 4;
-                      break;
-                    case 10:
-                      sound = 0x2f;
-                      break;
-                    case 0xb:
-                      sound = 0xb;
-                      break;
-                    case 0xc:
-                      sound = 0x37;
-                      break;
-                    case 0x16:
-                      sound = 0x45;
-                    }
-                    snd_play_effect(sound,1,0,0);
-                  }
-                  else {
-                    snd_play_effect(8,1,0,0);
-                  }
-                }
-                else {
-                  snd_play_effect(0x30,1,0,0);
-                }
-              }
-              if ((human_civ[0] == civ) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
-                if ((2 < game.multiplayer) && (0x22 < improvement)) {
-                  text_set_string_arg(0,(const char *)&cities[city].name);
-                  net_send_text_args(0x47,0xff,4,0,wonder,improvement);
-                }
-                if ((game.message_options & 2) == 0) {
-                  if (wonder < 0) {
-                    notify_sprite = ((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c;
-                  }
-                  else {
-                    notify_sprite = ((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + wonder * 0x3c;
-                  }
-                  city_notify_dialog_ex((iptr)&str_built_4,city,1,(iptr)notify_sprite);
-                }
-              }
-              else if (announce != 0) {
-                text_set_string_arg(0,(const char *)&cities[city].name);
-                if ((civ_saved_cursor_x_block.autoplay_active == 0) && (2 < game.multiplayer)) {
-                  net_send_text_args(0x47,0xff,4,0,wonder,improvement);
-                }
-                built_dialog.Dialog::construct(0x4000);
-                try_level = 1;
-                built_dialog.load_game_text((const char *)&str_built2);
-                if (wonder < 0) {
-                  built_sprite = ((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c;
-                }
-                else {
-                  built_sprite = ((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + wonder * 0x3c;
-                }
-                built_dialog.add_sprite((iptr)built_sprite,0,0)
-                ;
-                built_dialog.set_image_zoom(8);
-                built_dialog.show_modal(0);
-                try_level = 0xffffffff;
-                /* inlined unwind funclet 004eeef3 */ { built_dialog.Dialog::destruct(); }
-              }
-              if ((((announce != 0) && (-1 < wonder)) && (human_civ[0] == civ)) &&
-                 ((civ_saved_cursor_x_block.autoplay_active == 0 && (((*((char *)&game.game_options + 2)) & 1) != 0)))) {
-                wonder_show_movie(wonder);
-              }
-              if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-                main_menu_block.city_completed_improvement_i32 = improvement;
-              }
-              if (acquired == 0) {
-                cities[city].shield_box = 0;
-              }
-              if (((cities[city].flags & 0x10) != 0) ||
-                 ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
-                city_set_production(city,99);
-              }
-            }
-            if ((0x22 < improvement) && (improvement < 0x26)) {
-              part = improvement - 0x23;
-              part = spaceship_add_part(civ,part);
-              if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
-                 ((result = civ_spaceship_launched(civ), result == 0 && (part < 0)))) {
-                text_set_label_arg(1,improvements[improvement].name);
-                city_notify_dialog((iptr)&str_badspace_2,city,(iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c));
-              }
-            }
-            if (improvement == 1) {
-              for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
-                if ((cities[city2].id != 0) && ((int)cities[city2].owner == civ)) {
-                  city_set_improvement(city2,1,0);
-                }
-              }
-              city_set_improvement(city,1,1);
-              civs[civ].capital_x = cities[city].x;
-              if (civ_saved_cursor_x_block.autoplay_active == 0) {
-                text_set_string_arg(0,(const char *)&cities[city].name);
-                str = civ_adjective(civ);
-                text_set_string_arg(1,(const char *)str);
-                if ((civ_saved_cursor_x_block.autoplay_active == 0) && (2 < game.multiplayer)) {
-                  net_send_text_args(0x48,0xff,2,0,0,0);
-                }
-                popup_game((const char *)&str_movecapital);
-              }
-            }
-            if (wonder == 0x12) {
-              civ_research_complete(civ,0);
-              civ_research_complete(civ,0);
-            }
-            if (wonder == 0xe) {
-              civ_leonardo_upgrade(civ);
-            }
-            if (wonder == 0x14) {
-              civ_apply_eiffel_tower(civ);
-            }
-            if (wonder == 0x19) {
-              wonder_apollo_reveal_map();
-            }
-            if (city_turn_window_shown != 0) {
-              ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_production(1);
-              ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_improvements(1);
-            }
-            if (-1 < wonder) {
-              city3 = city;
-              for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
-                if ((((cities[city2].id != 0) && (city2 != city3)) &&
-                    (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) == 0)) &&
-                   ((int)cities[city2].building == -improvement)) {
-                  city_set_production(city2,99);
-                }
-              }
-              city_recalc(city3,0);
-            }
-          }
+          city_process_production_complete_improvement(city,civ,cost2,wonder,improvement,acquired);
         }
         else {
           result = civ_spaceship_launched(civ);
@@ -10427,278 +11247,8 @@ complete_improvement:
     }
   }
   else {
-    unit_type = (iptr)cities[city].building;
-    if ((-1 < unit_types[unit_type].obsolete_by) &&
-       (result = civ_has_advance(civ,(int)unit_types[unit_type].obsolete_by), result != 0)) {
-      for (unit_type2 = 0; unit_type2 < 0x3e; unit_type2++) {
-        if ((unit_types[unit_type2].prerequisite == unit_types[unit_type].obsolete_by) &&
-           (unit_types[unit_type2].role == unit_types[unit_type].role)) {
-          if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-            text_set_label_arg(1,unit_types[unit_type].name);
-            text_set_label_arg(2,unit_types[unit_type2].name);
-            city_notify_dialog((iptr)&str_upgraded,city,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type2 * 0x3c));
-          }
-          unit_type = unit_type2;
-          str = unit_type;
-          (*((char *)&unit_type + 0)) = (i8)unit_type2;
-          cities[city].building = (i8)unit_type;
-          unit_type = str;
-          break;
-        }
-      }
-    }
-    cost2 = (char)unit_types[unit_type].cost * main_menu_block.city_shield_rows;
-    if (cost2 <= cities[city].shield_box) {
-      cities[city].flags = cities[city].flags & 0xfffffeff;
-      if (city_turn_window_shown != 0) {
-        ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_production(1);
-      }
-      if (((unit_types[unit_type].role == 5) && (cities[city].size == 1)) &&
-         (game.difficulty == '\0')) return;
-      cities[city].shield_box -= (short)cost2;
-      if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) ||
-         (unit_types[unit_type].role != 6)) {
-        unit = unit_create(unit_type,civ,(int)cities[city].x,
-                                      (int)cities[city].y);
-        if (unit < 0) goto post_production;
-        if ((unit_types[unit_type].role == 6) && (civs[civ].government == 3)) {
-          units[unit].flags = units[unit].flags | 0x2000;
-        }
-        else if ((unit_types[unit_type].domain == '\0') || ((game.rules & 0x10) == 0)) {
-          result = city_has_improvement(city,2);
-          if ((((result != 0) || (result = civ_has_wonder(civ,7), result != 0)) &&
-              ((char)unit_types[unit_type].role < 6)) &&
-             ((unit_types[unit_type].flags & 0x1000) == 0)) {
-            units[unit].flags = units[unit].flags | 0x2000;
-          }
-        }
-        else if (unit_types[unit_type].domain == 2) {
-          result = city_has_improvement(city,0x22);
-          if (((result != 0) || (result = civ_has_wonder(civ,3), result != 0)) &&
-             ((unit_types[unit_type].flags & 0x1000) == 0)) {
-            units[unit].flags = units[unit].flags | 0x2000;
-          }
-        }
-        else if (((unit_types[unit_type].domain == 1) &&
-                 (result = city_has_improvement(city,0x20), result != 0)) &&
-                ((unit_types[unit_type].flags & 0x1000) == 0)) {
-          units[unit].flags = units[unit].flags | 0x2000;
-        }
-        if (unit_types[unit_type].role == 4) {
-          units[unit].counter = 0xff - ((byte)city & 0x3f);
-        }
-      }
-      if (unit_types[unit_type].role == 5) {
-        if ((cities[city].size == 1) && (civs[civ].num_cities == 1)) return;
-        if ((cities[city].size == 1) &&
-           ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
-          text_set_string_arg(0,(const char *)&cities[city].name);
-          text_set_label_arg(1,unit_types[unit_type].name);
-          if ((civ_saved_cursor_x_block.autoplay_active != 0) || (result = popup_game((const char *)&str_ghosttown), result == 0)) {
-            unit_delete(unit,1);
-            return;
-          }
-        }
-        cities[city].size--;
-        if (cities[city].size < 1) {
-          x2 = (int)cities[city].x;
-          y2 = (int)cities[city].y;
-          text_set_string_arg(0,(const char *)&cities[city].name);
-          text_set_label_arg(1,unit_types[unit_type].name);
-          text_set_label_arg(3,label_string_ids[0xbb]);
-          city_delete(city,0);
-          result = civ_check_destroyed(civ,0);
-          if (((result == 0) &&
-              (unit_create(unit_type,civ,x2,y2),
-              (game.message_options & 4) == 0)) && (main_menu_block.city_notify_enabled != 0)) {
-            popup_game((const char *)&str_built_2);
-          }
-          city_turn_window_shown = 0;
-          main_menu_block.city_notify_enabled = 0;
-          map_redraw_tile_all_views(x2,y2);
-          return;
-        }
-      }
-      if (city_turn_window_shown != 0) {
-        ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_supported_units(1);
-        ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_info_panel(1);
-      }
-      if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
-        if (unit_types[unit_type].role == 7) {
-          unit_pick_caravan_commodity(city,unit);
-        }
-        if (unit_types[unit_type].role == 6) {
-          target_city = 0xffffffff;
-          best_dist = 0x7fff;
-          tie_count = 0;
-          for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
-            if (((cities[city2].id != 0) && ((int)cities[city2].owner != civ)) &&
-               ((*(byte *)&civs[civ].treaties[cities[city2].owner] & 6) == 0)) {
-              unit = unit_find_nearest((int)cities[city2].x,(int)cities[city2].y,civ
-                                            ,-1);
-              if (dialog_text_font_obj_block.unit_nearest_dist == 3 || dialog_text_font_obj_block.unit_nearest_dist - 3 < 0) {
-                dialog_text_font_obj_block.unit_nearest_dist = ~(dialog_text_font_obj_block.unit_nearest_dist - 3U) + 1;
-              }
-              else {
-                dialog_text_font_obj_block.unit_nearest_dist -= 3;
-              }
-              if (-1 < unit) {
-                if (((cities[city2].flags & 8) != 0) && (dialog_text_font_obj_block.unit_nearest_dist < 4)) {
-                  dialog_text_font_obj_block.unit_nearest_dist = 3;
-                }
-                if (dialog_text_font_obj_block.unit_nearest_dist <= best_dist) {
-                  if (best_dist == dialog_text_font_obj_block.unit_nearest_dist) {
-                    if (tie_count + 1 == 1 || tie_count < 0) {
-                      roll = 0;
-                      tie_count++;
-                    }
-                    else {
-                      tie_count += 2;
-                      roll = _rand();
-                      roll = roll % tie_count;
-                    }
-                    if (roll != 0) continue;
-                  }
-                  result = tile_is_ocean((int)units[unit].x,(int)units[unit].y);
-                  if (result == 0) {
-                    result = tile_landmass((int)cities[city2].x,(int)cities[city2].y);
-                    landmass2 = tile_landmass((int)units[unit].x,(int)units[unit].y);
-                    if (result == landmass2) {
-                      if (best_dist < dialog_text_font_obj_block.unit_nearest_dist) {
-                        tie_count = 1;
-                        best_dist = dialog_text_font_obj_block.unit_nearest_dist;
-                      }
-                      target_city = city2;
-                      unit2 = unit;
-                    }
-                  }
-                }
-              }
-            }
-          }
-          if ((best_dist < 4) && (result = _rand(), result % 10 <= (int)(uint)game.difficulty)) {
-            city2 = target_city;
-            unit = unit2;
-            unit = unit_create(unit_type,civ,(int)units[unit2].x,
-                                          (int)units[unit2].y);
-          }
-          else {
-            unit = unit_create(unit_type,civ,(int)cities[city].x,
-                                          (int)cities[city].y);
-          }
-          if (civs[civ].government == 3) {
-            units[unit].flags = units[unit].flags | 0x2000;
-          }
-        }
-        if (('b' < (char)unit_types[unit_type].attack) &&
-           (*(char *)&civs[civ].units_active[unit_type] == 1)) {
-          for (civ3 = 1; civ3 < 8; civ3++) {
-            civs[civ3].last_treaty_turn[civ] = 0xffff;
-          }
-        }
-        city_set_production(city,99);
-      }
-      else {
-        if ((unit_types[unit_type].role == 5) || (5 < (char)unit_types[unit_type].role)) {
-          text_set_label_arg(1,unit_types[unit_type].name);
-          if (unit_types[unit_type].role == 7) {
-            caravan_dialog.Dialog::construct(0x4000);
-            try_level = 0;
-            mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,
-                               (int)cities[city].owner);
-            do {
-              text_set_string_arg(0,(const char *)&cities[city].name);
-              caravan_dialog.load_game_text((const char *)&str_caravanbuilt);
-              for (unit_type2 = 0; unit_type2 < 3; unit_type2++) {
-                if (-1 < *(char *)&cities[city].supplies[unit_type2]) {
-                  value = 0;
-                  option_index = unit_type2;
-                  str = (iptr)label_string(commodity_names
-                                             [*(char *)&cities[city].supplies[unit_type2]]);
-                  caravan_dialog.add_option((const char *)str,option_index,value)
-                  ;
-                }
-              }
-              value = 0;
-              option_id = 3;
-              str = (iptr)label_string(label_string_ids[0xc0]);
-              caravan_dialog.add_option((const char *)str,option_id,value);
-              choice = caravan_dialog.show_modal(0);
-              if (caravan_dialog.result_extra == 0) {
-                if (choice < 3) {
-                  text_set_label_arg(0,commodity_names
-                                       [*(char *)&cities[city].supplies[choice]]);
-                }
-                else {
-                  str = (iptr)label_string(label_string_ids[0xc0]);
-                  text_set_string_arg(0,(const char *)str);
-                }
-                result = popup_game((const char *)&str_caraconfirm);
-                if (result != 0) {
-                  caravan_dialog.result_extra = 1;
-                }
-              }
-              else if (choice < 3) {
-                trade_commodity_cities_dialog(civ,(int)*(char *)&cities[city].supplies[choice]);
-              }
-              else {
-                popup_game((const char *)&str_nofoodreport);
-              }
-            } while (caravan_dialog.result_extra != 0);
-            if (dlg_help_pressed != 0) {
-              main_menu_block.city_zoom_requested = 1;
-            }
-            if (choice < 3) {
-              if (*(char *)&cities[city].supplies[choice] < 1) {
-                units[unit].counter = ~cities[city].supplies[choice] + 1;
-              }
-              else {
-                units[unit].counter = cities[city].supplies[choice];
-              }
-              if (*(char *)&cities[city].supplies[choice] < 1) {
-                goods_amount = ~cities[city].supplies[choice] + 1;
-              }
-              else {
-                goods_amount = *(char *)&cities[city].supplies[choice];
-              }
-              *(char *)&cities[city].supplies[choice] = -goods_amount;
-            }
-            else {
-              units[unit].counter = 0xff;
-            }
-            try_level = 0xffffffff;
-            /* inlined unwind funclet 004eeeff */ { caravan_dialog.Dialog::destruct(); }
-          }
-          else {
-            if (unit_types[unit_type].role == 7) {
-              result = _rand();
-              cost_byte = (byte)(result >> 0x1f);
-              units[unit].counter = (((byte)result ^ cost_byte) - cost_byte & 0xf ^ cost_byte) - cost_byte;
-            }
-            if ((game.message_options & 4) == 0) {
-              city3 = 0xbb;
-              if (unit_types[unit_type].role == 6) {
-                city3 = 0xb6;
-              }
-              if (unit_types[unit_type].role == 7) {
-                city3 = 0xbc;
-              }
-              text_set_label_arg(3,label_string_ids[city3]);
-              city_notify_dialog((iptr)&str_built_3,city,(iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c));
-            }
-          }
-        }
-        cities[city].shield_box = 0;
-        if ((cities[city].flags & 0x10) != 0) {
-          city_set_production(city,99);
-        }
-        if (city_turn_window_shown != 0) {
-          ((CityWindow *)((i8 *)&city_window_block.city_window))->draw_production(1);
-        }
-      }
-    }
+    if (city_process_production_unit(city,civ) != 0) return;
   }
-post_production:
   if (((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
        ((cities[city].flags & 0x10) != 0)) &&
       ((cities[city].shield_box == 0 || ((cities[city].building < '\0' && (improvement < 0))))))
@@ -10706,130 +11256,7 @@ post_production:
     cities[city].flags = cities[city].flags & 0xfcffffef;
   }
   if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
-    if (((cities[city].flags & 0x20) != 0) ||
-       (result = tile_unit_owner((int)cities[city].x,(int)cities[city].y), result < 0)) {
-      city_set_production(city,99);
-    }
-    gold_spent = 0;
-    if (cities[city].building < '\0') {
-      if (cities[city].building < 1) {
-        improvement = ~(int)cities[city].building + 1;
-      }
-      else {
-        improvement = (iptr)cities[city].building;
-      }
-    }
-    else {
-      improvement = 0;
-    }
-    if (improvement == 0) {
-      cost_byte = unit_types[cities[city].building].cost;
-    }
-    else {
-      cost_byte = improvements[improvement].cost;
-    }
-    base_cost = (uint)cost_byte;
-    cost2 = base_cost * main_menu_block.city_shield_rows;
-    landmass3 = tile_land_landmass((int)cities[city].x,(int)cities[city].y);
-    if (landmass3 < 0) {
-      policy = 0;
-    }
-    else {
-      policy = (uint)civs[civ].continent_policy[landmass3];
-    }
-    if (((((policy == 0) || (policy == 1)) || (policy == 4)) &&
-        ((net_shields != 0 && (-1 < cities[city].building)))) &&
-       ((int)(char)unit_types[cities[city].building].role == policy)) {
-      gold_spent = civs[civ].gold >> 6;
-    }
-    if (0x26 < improvement) {
-      group = (improvement - 0x27) / 7;
-      if ((*(char *)&civs[civ].wonders_by_group[group] == '\0') ||
-         (civs[civ].wonders_by_group[group] < (byte)(((i8 *)&map_views_block.human_wonders_by_group_min))[group])) {
-        gold_spent = civs[civ].gold >> 6;
-      }
-      else if ((byte)(((i8 *)&map_views_block.human_wonders_by_group_max))[group] + 1 <
-               (uint)civs[civ].wonders_by_group[group]) {
-        gold_spent = civs[civ].gold >> 8;
-      }
-      else {
-        gold_spent = civs[civ].gold >> 7;
-      }
-      if (0x9c3 < civs[civ].gold) {
-        gold_spent = gold_spent << 1;
-      }
-    }
-    if ((0x22 < improvement) && (improvement < 0x27)) {
-      for (civ3 = 1; civ3 < 8; civ3++) {
-        if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
-           (result = civ_spaceship_exists(civ3), result != 0)) {
-          gold_spent = civs[civ].gold >> 7;
-          break;
-        }
-      }
-      result = ai_spaceship_race_behind(civ);
-      if (result != 0) {
-        gold_spent = gold_spent << 1;
-      }
-    }
-    if ((((cities[city].flags & 1) != 0) && (improvement != 0)) && (cities[city].shield_box != 0)
-       ) {
-      gold_spent = civs[civ].gold >> 3;
-    }
-    result = tile_unit_owner((int)cities[city].x,(int)cities[city].y);
-    if (((result < 0) || ((cities[city].flags & 0x20) != 0)) &&
-       ((-1 < cities[city].building && (cities[city].shield_box != 0)))) {
-      gold_spent = civs[civ].gold >> 3;
-    }
-    if ((improvement == 1) && (cities[city].shield_box != 0)) {
-      gold_spent = civs[civ].gold >> 3;
-    }
-    if (((cities[city].building == '-') && (civs[civ].units_active[0x2d] == '\0')) &&
-       (cities[city].shield_box != 0)) {
-      gold_spent = civs[civ].gold >> 4;
-    }
-    if (2000 < civs[civ].gold) {
-      gold_spent += (civs[civ].gold >> 9);
-    }
-    gold_spent = int_clamp(0,gold_spent,cost2 - cities[city].shield_box);
-    cities[city].shield_box += (short)gold_spent;
-    refund = ((int)((uint)game.difficulty * gold_spent) / 10) /
-               (int)(8 - (uint)game.power_rank[game.best_human_rank]);
-    if (civs[game.worst_human_rank].gold < civs[civ].gold) {
-      if (999 < civs[civ].gold) {
-        refund = refund / 2;
-      }
-      if (1999 < civs[civ].gold) {
-        refund = 0;
-      }
-    }
-    civs[civ].gold -= (gold_spent - refund);
-    if (cities[city].building < -0x26) {
-      if (cities[city].building < 1) {
-        improvement2 = ~(int)cities[city].building + 1;
-      }
-      else {
-        improvement2 = (iptr)cities[city].building;
-      }
-      cost2 = (uint)improvements[improvement2].cost * main_menu_block.city_shield_rows;
-      if (((cost2 <= (cities[city].shield_box + main_menu_block.city_total_shields) - main_menu_block.city_shield_support) &&
-          (game.wonder_city[improvement2 - 0x27] == -1)) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
-        str = (iptr)(civ_name_plural(civ));
-        text_set_string_arg(1,(const char *)str);
-        text_set_label_arg(2,improvements[improvement2].name);
-        if ((civ_saved_cursor_x_block.autoplay_active == 0) && (2 < game.multiplayer)) {
-          net_send_text_args(0x4a,0xff,3,0,improvement2,0);
-        }
-        wonder_dialog.Dialog::construct(0x4000);
-        try_level = 2;
-        wonder_dialog.load_game_text((const char *)&str_almostwonder);
-        wonder_dialog.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
-        wonder_dialog.set_image_zoom(8);
-        wonder_dialog.show_modal(0);
-        try_level = 0xffffffff;
-        /* inlined unwind funclet 004eeee7 */ { wonder_dialog.Dialog::destruct(); }
-      }
-    }
+    city_process_production_ai_buy(city,civ,net_shields);
   }
   cities[city].flags = cities[city].flags & 0xffffffdf;
   return;
@@ -12262,102 +12689,988 @@ void __cdecl city_window_toggle_worked_tile(int mouse_x,int mouse_y)
   return;
 }
 
+/* Part of CityWindow::draw_resource_map (005025d5): the terrain, units, cities and huts
+   of the 21 tiles of the city radius. */
+void CityWindow::draw_resource_tiles(int half_tile_w,int half_tile_h,int origin_x2,int origin_y2)
+{
+  i8 cursor_rect[16];
+  i8 hut_rect[16];
+  int x2;
+  int tile_y;
+  iptr unit;
+  int tile_x;
+  int city;
+  int unit_y;
+  iptr tile_idx;
+  iptr j;
+  iptr y2;
+  iptr i;
+  i32 drew_city;
+
+  for (i = 0; i < 0x15; i++) {
+    x2 = map_wrap_x((int)cities[city_index].x +
+                          (int)(((i8 *)&city_resmap_draw_dx_table))[i]);
+    y2 = (int)cities[city_index].y + (int)(((i8 *)&city_resmap_draw_dy_table))[i]
+    ;
+    tile_x = (((i8 *)&city_resmap_draw_dx_table))[i] * half_tile_w + origin_x2;
+    tile_y = (((i8 *)&city_resmap_draw_dy_table))[i] * half_tile_h + origin_y2;
+    unit_y = tile_y - half_tile_h;
+    tile_idx = 0;
+    for (j = 0; j < 0x15; j++) {
+      if (((((i8 *)&dir_dy_table_block.city_tile_dx_table))[j] == (((i8 *)&city_resmap_draw_dx_table))[i]) &&
+         ((((i8 *)&dir_dy_table_block.city_tile_dy_table))[j] == (((i8 *)&city_resmap_draw_dy_table))[i])) {
+        tile_idx = j;
+        break;
+      }
+    }
+    ((MapView *)((i8 *)&map_views_block.map_views))->draw_tile_terrain((iptr)this,tile_x,tile_y,x2,y2,
+               (int)cities[city_index].owner,
+               map_zoom_level,tile_idx);
+    if (i < 0x15) {
+      if (((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 8) == 0) {
+        if (((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 4) == 0) {
+          if (((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 2) != 0) {
+            gfx_set_zoom_scale(map_zoom_level);
+            ((Sprite *)((i8 *)&hut_sprite))->draw((iptr)hut_rect,(iptr)this,tile_x,tile_y
+                      );
+            gfx_reset_zoom_scale();
+          }
+        }
+        else {
+          unit = tile_first_unit(x2,y2);
+          while ((-1 < unit && (unit_types[units[unit].type].attack == '\0'))) {
+            unit = unit_next_in_stack(unit);
+          }
+          if (-1 < unit) {
+            gfx_draw_unit((iptr)this,unit,7,tile_x,unit_y,
+                               map_zoom_level,0);
+          }
+        }
+      }
+      else {
+        city = city_at(x2,y2);
+        if (-1 < city) {
+          drew_city = 1;
+          gfx_draw_city((iptr)this,city,1,tile_x,unit_y,
+                             map_zoom_level);
+        }
+      }
+      if ((((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 0x10) != 0) && (((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 9) == 0)) {
+        gfx_set_zoom_scale(map_zoom_level);
+        ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite))->draw((iptr)cursor_rect,(iptr)this,tile_x,tile_y);
+        gfx_reset_zoom_scale();
+      }
+    }
+  }
+}
+
+/* Part of CityWindow::draw_resource_map (005025d5): the food, shield and trade icons
+   on each worked tile. */
+void CityWindow::draw_resource_yields(int tile_w,int half_tile_w,int half_tile_h,int origin_x2,int origin_y2)
+{
+  int scaled;
+  int scaled2;
+  int scaled3;
+  iptr zero_a;
+  iptr zero_b;
+  i8 unhappy_icon_rect[16];
+  i8 yield_icon_rect[16];
+  int x2;
+  int no_yield;
+  int tile_y;
+  int tile_x;
+  iptr yield_kind;
+  int unit_y;
+  iptr tile_idx;
+  int icon_y;
+  int per_row;
+  int icon_x;
+  int min_per_row;
+  int spacing;
+  int row_count;
+  iptr j;
+  iptr y2;
+  iptr i;
+
+  for (i = 0; i < 0x15; i++) {
+    x2 = map_wrap_x((int)cities[city_index].x +
+                          (int)(((i8 *)&city_resmap_draw_dx_table))[i]);
+    y2 = (int)cities[city_index].y + (int)(((i8 *)&city_resmap_draw_dy_table))[i]
+    ;
+    tile_x = (((i8 *)&city_resmap_draw_dx_table))[i] * half_tile_w + origin_x2;
+    tile_y = (((i8 *)&city_resmap_draw_dy_table))[i] * half_tile_h + origin_y2;
+    unit_y = tile_y - half_tile_h;
+    tile_idx = 0;
+    for (j = 0; j < 0x15; j++) {
+      if (((((i8 *)&dir_dy_table_block.city_tile_dx_table))[j] == (((i8 *)&city_resmap_draw_dx_table))[i]) &&
+         ((((i8 *)&dir_dy_table_block.city_tile_dy_table))[j] == (((i8 *)&city_resmap_draw_dy_table))[i])) {
+        tile_idx = j;
+        break;
+      }
+    }
+    scaled = city_tile_worked(city_index,tile_idx);
+    if (scaled != 0) {
+      gfx_set_zoom_scale(view_scale * 4 - 8);
+      no_yield = 0;
+      city_calc_tile_yields(city_index,tile_idx,0);
+      scaled = tile_w;
+      per_row = main_menu_block.city_tile_shields + main_menu_block.city_tile_trade + main_menu_block.city_tile_yields[0];
+      if (per_row == 0) {
+        per_row = 1;
+        no_yield = 1;
+      }
+      zero_b = 0;
+      zero_a = 0;
+      scaled2 = scale(8);
+      scaled += scaled2 * -2;
+      scaled2 = scale(10);
+      spacing = ui_calc_item_spacing(per_row,scaled2 + 1,scaled,zero_a,zero_b);
+      scaled = tile_w;
+      scaled2 = scale(8);
+      scaled3 = scale(10);
+      min_per_row = (scaled + scaled2 * -2) / (scaled3 + 1);
+      if (per_row <= min_per_row) {
+        per_row = min_per_row;
+      }
+      yield_kind = 0;
+      row_count = 0;
+      icon_x = scale(8);
+      icon_x = tile_x + icon_x;
+      scaled2 = half_tile_h + tile_y;
+      scaled = scale(10);
+      icon_y = scaled2 - (scaled >> 1);
+      for (; yield_kind < 3; yield_kind++) {
+        while ((((i32 *)&main_menu_block.city_tile_yields))[yield_kind] != 0) {
+          ((Sprite *)(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites) + yield_kind * 0x3c))->draw((iptr)yield_icon_rect,(iptr)this
+                     ,icon_x,icon_y);
+          row_count++;
+          if (row_count < per_row) {
+            icon_x += spacing;
+          }
+          else {
+            row_count = 0;
+            icon_x = scale(8);
+            icon_x = tile_x + icon_x;
+            scaled = scale(0xb);
+            icon_y += scaled;
+          }
+          (((i32 *)&main_menu_block.city_tile_yields))[yield_kind] = (((i32 *)&main_menu_block.city_tile_yields))[yield_kind] - 1;
+        }
+      }
+      if (no_yield != 0) {
+        ((Sprite *)((i8 *)&small_unhappy_icon_sprite))->draw((iptr)unhappy_icon_rect,(iptr)this,icon_x,icon_y);
+      }
+      gfx_reset_zoom_scale();
+    }
+  }
+}
+
+/* Part of CityWindow::draw_resource_map (005025d5): the food bar: eaten, surplus or
+   shortage, and its labels. */
+void CityWindow::draw_resource_food(int panel_left,int panel_top2,uint big_zoom)
+{
+  int scaled;
+  int scaled2;
+  i32 bar_height;
+  i32 color;
+  uint food_surplus_text;
+  uint food_surplus_count;
+  uint abs_food_surplus;
+  i8 food_surplus_rect[16];
+  i8 food_rect[16];
+  int x2;
+  int left_width;
+  int food_needed;
+  int icon_count;
+  int icon_w;
+  int right_x;
+  int food_eaten;
+  int label_x;
+  int spacing;
+  int right_width;
+  int label_right;
+  iptr y2;
+  int produced;
+  iptr i;
+  int food_need_shown;
+  int food_fit_count;
+  int avail_width;
+  int bar_x;
+  uint surplus;
+
+  food_needed = (int)cities[city_index].size * (uint)cosmic.food_per_citizen +
+             main_menu_block.city_settlers_supported * main_menu_block.settler_food_cost;
+  produced = main_menu_block.city_yield_totals[0];
+  surplus = main_menu_block.city_yield_totals[0] - food_needed;
+  icon_count = food_needed;
+  if (food_needed <= main_menu_block.city_yield_totals[0]) {
+    icon_count = main_menu_block.city_yield_totals[0];
+  }
+  food_eaten = food_needed;
+  if ((int)surplus < 0) {
+    food_eaten = main_menu_block.city_yield_totals[0];
+  }
+  food_need_shown = food_needed;
+  scaled = scale(0xe2);
+  avail_width = scale(2);
+  avail_width = scaled - avail_width;
+  icon_w = scale(0xe);
+  icon_w++;
+  if ((((int)surplus < 0) && (produced != 0)) || ((0 < (int)surplus && (food_needed != 0)))) {
+    scaled = scale(4);
+    avail_width = (avail_width - scaled) - icon_w;
+    icon_count--;
+  }
+  spacing = ui_calc_item_spacing(icon_count,icon_w,avail_width,(iptr)&food_fit_count,0);
+  while (food_fit_count < icon_count) {
+    icon_count--;
+    if (produced < food_need_shown) {
+      food_need_shown--;
+    }
+    else if (food_need_shown == produced) {
+      produced--;
+      food_need_shown--;
+      food_eaten--;
+    }
+    else {
+      produced--;
+      food_eaten--;
+    }
+  }
+  if ((surplus == 0) || (produced != 0)) {
+    if (surplus == 0) {
+      right_width = 0;
+    }
+    else {
+      if ((int)surplus < 1) {
+        abs_food_surplus = ~surplus + 1;
+      }
+      else {
+        abs_food_surplus = surplus;
+      }
+      scaled = scale(2);
+      scaled2 = scale(1);
+      right_width = scaled + scaled2 + (abs_food_surplus - 1) * spacing + icon_w;
+    }
+  }
+  else {
+    right_width = scale(0xe2);
+  }
+  left_width = scale(0xe2);
+  left_width -= right_width;
+  bar_x = scale(0xcd);
+  bar_x = panel_left + bar_x;
+  right_x = left_width + bar_x;
+  scaled = scale(0xe);
+  scaled2 = scale(2);
+  resource_bar_height = scaled + scaled2;
+  y2 = scale(0xe);
+  y2 = panel_top2 + y2;
+  if (view_scale == 3) {
+    y2--;
+  }
+  if ((int)surplus < 0) {
+    left_width += right_width;
+    right_width = 0;
+  }
+  if (left_width != 0) {
+    gfx_target_fill_rect(bar_x,y2,left_width,resource_bar_height,0x2d);
+  }
+  if (right_width != 0) {
+    color = 0x30;
+    bar_height = resource_bar_height;
+    scaled = scale(6);
+    gfx_target_fill_rect(right_x,y2,right_width + scaled,bar_height,color);
+  }
+  scaled = scale(1);
+  y2 = y2 + big_zoom + scaled;
+  if (0 < food_eaten) {
+    x2 = scale(1);
+    x2 = bar_x + x2;
+    for (i = 0; i < food_eaten; i++) {
+      ((Sprite *)((i8 *)&war_icon_sprite_block.resource_icon_sprites))->draw((iptr)food_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+    }
+  }
+  if (surplus != 0) {
+    x2 = right_x;
+    if (food_eaten < 1) {
+      scaled = scale(1);
+      x2 += scaled;
+    }
+    else {
+      scaled = scale(4);
+      x2 += (scaled >> 1);
+    }
+    i = 0;
+    while( true ) {
+      if ((int)surplus < 1) {
+        food_surplus_count = ~surplus + 1;
+      }
+      else {
+        food_surplus_count = surplus;
+      }
+      if ((int)food_surplus_count <= i) break;
+      ((Sprite *)(((i8 *)&war_icon_sprite_block.resource_shortage_icon_sprites) + (uint)(0 < (int)surplus) * 0x3c))->draw(
+                 (iptr)food_surplus_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+      i++;
+    }
+  }
+  label_x = scale(0xcd);
+  label_x = panel_left + label_x;
+  scaled = scale(0xe2);
+  label_right = label_x + scaled - 1;
+  scaled = scale(0xe);
+  scaled = panel_top2 + scaled;
+  y2 = scale(0xe);
+  y2 = scaled - y2;
+  text_clear();
+  text_append_label(0x40);
+  text_set_colors(0x2a,10,1,1);
+  text_append_colon();
+  text_append_int(main_menu_block.city_food_routes_out + food_eaten);
+  if (main_menu_block.city_food_routes_in != main_menu_block.city_food_routes_out) {
+    text_append_space();
+    text_append_lparen();
+    text_append_int(main_menu_block.city_food_routes_in - main_menu_block.city_food_routes_out);
+    text_append_space();
+    text_append_label(0xa9);
+    text_append_rparen();
+  }
+  gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
+  text_clear();
+  if ((int)surplus < 0) {
+    text_append_label(0x4a);
+    text_set_colors(0xb,0x1d,1,1);
+  }
+  else {
+    text_append_label(0x41);
+    text_set_colors(0x2e,10,1,1);
+  }
+  text_append_colon();
+  if ((int)surplus < 1) {
+    food_surplus_text = ~surplus + 1;
+  }
+  else {
+    food_surplus_text = surplus;
+  }
+  text_append_int(food_surplus_text);
+  gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
+}
+
+/* Part of CityWindow::draw_resource_map (005025d5): the shield bar: support, waste,
+   surplus or shortage, and its labels. */
+void CityWindow::draw_resource_shields(int panel_left,int panel_top2,uint big_zoom,uint &surplus)
+{
+  int scaled;
+  int scaled2;
+  int scaled3;
+  i32 bar_height;
+  int scaled4;
+  i32 color;
+  uint shield_surplus_text;
+  uint shield_surplus_count;
+  uint abs_shield_surplus;
+  i8 shortage_rect[16];
+  i8 coin_rect[16];
+  i8 waste_rect[16];
+  i8 shield_rect[16];
+  int x2;
+  int left_width;
+  int mid_width;
+  int fit_count;
+  int icon_w;
+  int mid_x;
+  int support_shown;
+  int right_x;
+  int label_x;
+  int spacing;
+  int right_width;
+  int label_right;
+  int total_icons;
+  iptr y2;
+  int produced;
+  iptr i;
+  int lux_x;
+  int avail_width;
+  int shields_shown;
+  int bar_x;
+
+  support_shown = main_menu_block.city_shield_support;
+  produced = main_menu_block.city_total_shields + main_menu_block.city_shield_waste;
+  surplus = main_menu_block.city_total_shields - main_menu_block.city_shield_support;
+  total_icons = main_menu_block.city_shield_support;
+  if (main_menu_block.city_shield_support <= produced) {
+    total_icons = produced;
+  }
+  shields_shown = produced;
+  if (-1 < (int)surplus) {
+    shields_shown = main_menu_block.city_shield_support;
+  }
+  scaled = scale(0xe2);
+  avail_width = scale(2);
+  avail_width = scaled - avail_width;
+  icon_w = scale(0xe);
+  icon_w++;
+  if ((((int)surplus < 0) && (produced != 0)) || ((0 < (int)surplus && (main_menu_block.city_shield_support != 0)))) {
+    scaled = scale(4);
+    avail_width = (avail_width - scaled) - icon_w;
+    total_icons--;
+  }
+  if (main_menu_block.city_shield_waste != 0) {
+    scaled = scale(4);
+    avail_width = (avail_width - scaled) - icon_w;
+    total_icons--;
+  }
+  spacing = ui_calc_item_spacing(total_icons,icon_w,avail_width,(iptr)&fit_count,0);
+  while (fit_count < total_icons) {
+    total_icons--;
+    if (produced - main_menu_block.city_shield_waste < support_shown) {
+      support_shown--;
+    }
+    else {
+      if (produced == main_menu_block.city_shield_waste) break;
+      if (produced - main_menu_block.city_shield_waste == support_shown) {
+        produced--;
+        support_shown--;
+        shields_shown--;
+      }
+      else {
+        produced--;
+        shields_shown--;
+      }
+    }
+  }
+  mid_width = 0;
+  if (main_menu_block.city_shield_waste != 0) {
+    mid_width = (main_menu_block.city_shield_waste - 1) * spacing + icon_w;
+    if (surplus != 0) {
+      scaled = scale(4);
+      mid_width += (scaled >> 1);
+    }
+    if (produced != main_menu_block.city_shield_waste) {
+      scaled = scale(4);
+      mid_width += (scaled >> 1);
+    }
+  }
+  if ((surplus == 0) || (produced != 0)) {
+    if (surplus == 0) {
+      right_width = 0;
+    }
+    else {
+      if ((int)surplus < 1) {
+        abs_shield_surplus = ~surplus + 1;
+      }
+      else {
+        abs_shield_surplus = surplus;
+      }
+      scaled = scale(2);
+      scaled2 = scale(1);
+      right_width = scaled + scaled2 + (abs_shield_surplus - 1) * spacing + icon_w;
+    }
+  }
+  else {
+    right_width = scale(0xe2);
+  }
+  left_width = scale(0xe2);
+  left_width -= (mid_width + right_width);
+  if (mid_width != 0) {
+    if (main_menu_block.city_shield_support == 0) {
+      left_width = 0;
+    }
+    else {
+      scaled = scale(2);
+      scaled2 = scale(1);
+      left_width = scaled + scaled2 + (main_menu_block.city_shield_support - 1) * spacing + icon_w;
+    }
+    mid_width = scale(0xe2);
+    mid_width -= (right_width + left_width);
+  }
+  bar_x = scale(0xcd);
+  bar_x = panel_left + bar_x;
+  lux_x = left_width + bar_x;
+  right_x = mid_width + lux_x;
+  if (mid_width != 0) {
+    mid_x = ((mid_width >> 1) + lux_x) - ((main_menu_block.city_shield_waste - 1) * spacing + icon_w >> 1);
+  }
+  scaled = scale(0xe);
+  scaled2 = scale(2);
+  resource_bar_height = scaled + scaled2;
+  y2 = scale(0x78);
+  y2 = panel_top2 + y2;
+  if (view_scale == 3) {
+    y2--;
+  }
+  if ((int)surplus < 0) {
+    left_width += right_width;
+    right_width = 0;
+  }
+  if (left_width != 0) {
+    gfx_target_fill_rect(bar_x,y2,left_width,resource_bar_height,0x54);
+  }
+  if (mid_width != 0) {
+    gfx_target_fill_rect(lux_x,y2,mid_width,resource_bar_height,0xb);
+  }
+  if (right_width != 0) {
+    color = 0x5c;
+    bar_height = resource_bar_height;
+    scaled = scale(6);
+    gfx_target_fill_rect(right_x,y2,right_width + scaled,bar_height,color);
+  }
+  scaled = scale(1);
+  y2 = y2 + big_zoom + scaled;
+  if (0 < shields_shown) {
+    x2 = scale(1);
+    x2 = bar_x + x2;
+    for (i = 0; i < shields_shown; i++) {
+      ((Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite))->draw((iptr)shield_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+    }
+  }
+  if (0 < main_menu_block.city_shield_waste) {
+    x2 = scale(2);
+    x2 = mid_x + x2;
+    for (i = 0; i < main_menu_block.city_shield_waste; i++) {
+      ((Sprite *)((i8 *)&war_icon_sprite_block.shield_shortage_icon_sprite))->draw((iptr)waste_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+    }
+  }
+  if (surplus != 0) {
+    x2 = right_x;
+    if (shields_shown < 1) {
+      scaled = scale(1);
+      x2 += scaled;
+    }
+    else {
+      scaled = scale(4);
+      x2 += (scaled >> 1);
+    }
+    i = 0;
+    while( true ) {
+      if ((int)surplus < 1) {
+        shield_surplus_count = ~surplus + 1;
+      }
+      else {
+        shield_surplus_count = surplus;
+      }
+      if ((int)shield_surplus_count <= i) break;
+      if (cities[city_index].building == -0x26) {
+        ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)coin_rect,(iptr)this,x2,y2);
+      }
+      else {
+        ((Sprite *)(((i8 *)&war_icon_sprite_block.shield_shortage_icon_sprite) + (uint)(0 < (int)surplus) * 0x3c))->draw(
+                   (iptr)shortage_rect,(iptr)this,x2,y2);
+      }
+      x2 += spacing;
+      i++;
+    }
+  }
+  label_x = scale(0xcd);
+  label_x = panel_left + label_x;
+  scaled = scale(0xe2);
+  label_right = label_x + scaled - 1;
+  scaled = scale(0xe);
+  scaled2 = scale(2);
+  scaled3 = scale(0x78);
+  scaled4 = scale(0xffffffff);
+  y2 = scaled + scaled2 + scaled3 + scaled4 + panel_top2;
+  text_clear();
+  text_append_label(0xcc);
+  text_append_colon();
+  scaled = main_menu_block.city_shield_support;
+  if (produced <= main_menu_block.city_shield_support) {
+    scaled = produced;
+  }
+  text_append_int(scaled);
+  text_set_colors(0x54,10,1,1);
+  gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
+  if (main_menu_block.city_shield_waste != 0) {
+    text_clear();
+    text_append_label(0x43);
+    text_append_colon();
+    text_append_int(main_menu_block.city_shield_waste);
+    text_set_colors(0xb,0x1d,1,1);
+    bar_height = scale(0xe2);
+    gfx_draw_text_centered((const char *)&map_views_block.text_buffer,label_x,y2,bar_height);
+  }
+  text_clear();
+  if ((int)surplus < 0) {
+    text_append_label(0x4b);
+    text_set_colors(0xb,0x1d,1,1);
+  }
+  else {
+    text_append_label(0x44);
+    text_set_colors(0x5c,10,1,1);
+  }
+  text_append_colon();
+  if ((int)surplus < 1) {
+    shield_surplus_text = ~surplus + 1;
+  }
+  else {
+    shield_surplus_text = surplus;
+  }
+  text_append_int(shield_surplus_text);
+  gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
+}
+
+/* Part of CityWindow::draw_resource_map (005025d5): the trade bar: trade and
+   corruption, and its labels; surplus is the shield surplus
+   draw_resource_shields left (the original reads it here). */
+void CityWindow::draw_resource_trade(int panel_left,int panel_top2,uint big_zoom,uint surplus)
+{
+  int scaled;
+  int scaled2;
+  uint abs_corruption;
+  i8 corruption_rect[16];
+  i8 trade_rect[16];
+  int x2;
+  int left_width;
+  int fit_count;
+  int text_end_x;
+  int icon_w;
+  int right_x;
+  int label_x;
+  int spacing;
+  int right_width;
+  int label_right;
+  int total_icons;
+  iptr y2;
+  int produced;
+  iptr i;
+  int avail_width;
+  int bar_x;
+
+  produced = main_menu_block.city_total_trade;
+  total_icons = main_menu_block.city_total_trade;
+  scaled = scale(0xe2);
+  avail_width = scale(2);
+  avail_width = scaled - avail_width;
+  icon_w = scale(0xe);
+  icon_w++;
+  if ((*(uint *)&main_menu_block.city_trade_corruption) != 0) {
+    scaled = scale(4);
+    avail_width = (avail_width - scaled) - icon_w;
+    total_icons--;
+  }
+  spacing = ui_calc_item_spacing(total_icons,icon_w,avail_width,(iptr)&fit_count,0);
+  for (; fit_count < total_icons; total_icons--) {
+    produced--;
+  }
+  right_width = 0;
+  if ((*(uint *)&main_menu_block.city_trade_corruption) != 0) {
+    if ((int)(*(uint *)&main_menu_block.city_trade_corruption) < 1) {
+      abs_corruption = ~(*(uint *)&main_menu_block.city_trade_corruption) + 1;
+    }
+    else {
+      abs_corruption = (*(uint *)&main_menu_block.city_trade_corruption);
+    }
+    scaled = scale(2);
+    scaled2 = scale(1);
+    right_width = scaled + scaled2 + (abs_corruption - 1) * spacing + icon_w;
+  }
+  left_width = scale(0xe2);
+  left_width -= right_width;
+  bar_x = scale(0xcd);
+  bar_x = panel_left + bar_x;
+  right_x = left_width + bar_x;
+  scaled = scale(0xe);
+  scaled2 = scale(2);
+  resource_bar_height = scaled + scaled2;
+  y2 = scale(0x37);
+  y2 = panel_top2 + y2;
+  if ((int)surplus < 0) {
+    left_width += right_width;
+    right_width = 0;
+  }
+  if (left_width != 0) {
+    gfx_target_fill_rect(bar_x,y2,left_width,resource_bar_height,0x76);
+  }
+  if (right_width != 0) {
+    gfx_target_fill_rect(right_x,y2,right_width,resource_bar_height,0x79);
+  }
+  scaled = scale(1);
+  y2 = y2 + big_zoom + scaled;
+  if (0 < (int)(main_menu_block.city_total_trade - (*(uint *)&main_menu_block.city_trade_corruption))) {
+    x2 = bar_x + 1;
+    for (i = 0; i < (int)(main_menu_block.city_total_trade - (*(uint *)&main_menu_block.city_trade_corruption)); i++) {
+      ((Sprite *)((i8 *)&war_icon_sprite_block.trade_icon_sprite))->draw((iptr)trade_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+    }
+  }
+  if ((*(uint *)&main_menu_block.city_trade_corruption) != 0) {
+    x2 = right_x;
+    scaled = scale(4);
+    x2 += (scaled >> 1);
+    for (i = 0; i < (int)(*(uint *)&main_menu_block.city_trade_corruption); i++) {
+      ((Sprite *)((i8 *)&war_icon_sprite_block.trade_corruption_icon_sprite))->draw((iptr)corruption_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+    }
+  }
+  label_x = scale(0xcd);
+  label_x = panel_left + label_x;
+  scaled = scale(0xe2);
+  label_right = label_x + scaled - 1;
+  scaled = scale(0x37);
+  scaled = panel_top2 + scaled;
+  y2 = scale(0xe);
+  y2 = scaled - y2;
+  text_clear();
+  text_append_label(0x45);
+  text_set_colors(0x76,10,1,1);
+  text_append_colon();
+  text_append_int(main_menu_block.city_total_trade - (*(uint *)&main_menu_block.city_trade_corruption));
+  text_end_x = gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
+  if ((civs[cities[city_index].owner].government == 4) &&
+     (main_menu_block.city_building_content != 0)) {
+    scaled = scale(4);
+    text_end_x += scaled;
+    text_clear();
+    text_append_label(0x5d);
+    text_append_colon();
+    text_append((const char *)&str_empty_144);
+    text_append_int(main_menu_block.city_building_content);
+    text_set_colors(0x79,10,1,1);
+    gfx_draw_text((const char *)&map_views_block.text_buffer,text_end_x,y2);
+  }
+  text_clear();
+  text_append_label(0x46);
+  text_set_colors(0x79,10,1,1);
+  text_append_colon();
+  text_append_int((*(uint *)&main_menu_block.city_trade_corruption));
+  gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
+}
+
+/* Part of CityWindow::draw_resource_map (005025d5): the tax, luxury and science bar
+   and its labels. */
+void CityWindow::draw_resource_rates(int panel_left,int panel_top2,uint big_zoom)
+{
+  int scaled;
+  int scaled2;
+  int scaled3;
+  i32 bar_height;
+  int scaled4;
+  i32 color;
+  i32 fill_color;
+  i8 science_rect[16];
+  i8 lux_rect[16];
+  i8 tax_rect[16];
+  int x2;
+  iptr civ;
+  int left_width;
+  int mid_width;
+  int fit_count;
+  int icon_w;
+  int mid_x;
+  int tax_icons;
+  int lux_align;
+  int right_x;
+  int label_x;
+  int spacing;
+  int right_width;
+  int lux_icons;
+  int label_right;
+  int total_icons;
+  iptr y2;
+  int produced;
+  int sci_icons;
+  iptr i;
+  int lux_x;
+  int avail_width;
+  int nonzero_kinds;
+  int bar_x;
+
+  produced = main_menu_block.city_total_trade;
+  tax_icons = main_menu_block.city_tax_total;
+  lux_icons = main_menu_block.city_lux_total;
+  sci_icons = main_menu_block.city_science_total;
+  total_icons = main_menu_block.city_science_total + main_menu_block.city_lux_total + main_menu_block.city_tax_total;
+  nonzero_kinds = (uint)(0 < main_menu_block.city_science_total) + (uint)(0 < main_menu_block.city_lux_total) + (uint)(0 < main_menu_block.city_tax_total);
+  scaled = scale(0xe2);
+  avail_width = scale(2);
+  avail_width = scaled - avail_width;
+  icon_w = scale(0xe);
+  icon_w++;
+  for (; 1 < nonzero_kinds; nonzero_kinds--) {
+    scaled = scale(4);
+    avail_width -= (icon_w + scaled);
+    total_icons--;
+  }
+  spacing = ui_calc_item_spacing(total_icons,icon_w,avail_width,(iptr)&fit_count,0);
+  for (; fit_count < total_icons; fit_count++) {
+    if ((lux_icons < tax_icons) && (sci_icons < tax_icons)) {
+      tax_icons--;
+    }
+    else if (lux_icons < sci_icons) {
+      sci_icons--;
+    }
+    else {
+      lux_icons--;
+    }
+  }
+  left_width = 0;
+  bar_x = scale(0xcd);
+  bar_x = panel_left + bar_x;
+  if (tax_icons != 0) {
+    scaled = scale(1);
+    left_width = scaled + (tax_icons - 1) * spacing + icon_w;
+  }
+  right_width = 0;
+  if (sci_icons != 0) {
+    scaled = scale(1);
+    right_width = scaled + (sci_icons - 1) * spacing + icon_w;
+  }
+  scaled = scale(0xe2);
+  scaled2 = scale(0xcd);
+  right_x = (scaled + scaled2 + panel_left) - right_width;
+  mid_width = scale(0xe2);
+  mid_width -= (right_width + left_width);
+  lux_x = scale(0xcd);
+  lux_x = panel_left + lux_x;
+  if (left_width != 0) {
+    scaled = scale(4);
+    mid_width -= scaled;
+    scaled = scale(4);
+    lux_x = lux_x + left_width + scaled;
+  }
+  if (right_width != 0) {
+    scaled = scale(4);
+    mid_width -= scaled;
+  }
+  mid_x = lux_x;
+  lux_x += (mid_width >> 1);
+  if (lux_icons != 0) {
+    lux_x -= ((lux_icons - 1) * spacing + icon_w >> 1);
+  }
+  lux_align = 0;
+  if ((lux_icons == 0) || (tax_icons != 0)) {
+    if ((lux_icons != 0) && (sci_icons == 0)) {
+      lux_align = 2;
+      scaled = scale(1);
+      nonzero_kinds = scaled + (lux_icons - 1) * spacing + icon_w;
+      scaled = scale(0xe2);
+      scaled2 = scale(0xcd);
+      lux_x = (scaled + scaled2 + panel_left) - nonzero_kinds;
+    }
+  }
+  else {
+    lux_align = 1;
+    lux_x = bar_x;
+  }
+  scaled = scale(0xe);
+  scaled2 = scale(2);
+  resource_bar_height = scaled + scaled2;
+  y2 = scale(0x4f);
+  y2 = panel_top2 + y2;
+  fill_color = 0x79;
+  bar_height = resource_bar_height;
+  color = scale(0xe2);
+  gfx_target_fill_rect(bar_x,y2,color,bar_height,fill_color);
+  scaled = scale(1);
+  y2 = y2 + big_zoom + scaled;
+  if (0 < tax_icons) {
+    x2 = scale(1);
+    x2 = bar_x + x2;
+    for (i = 0; i < tax_icons; i++) {
+      ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)tax_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+    }
+  }
+  if (lux_icons != 0) {
+    x2 = lux_x;
+    for (i = 0; i < lux_icons; i++) {
+      ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.tax_rate_icon_sprites))->draw((iptr)lux_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+    }
+  }
+  if (sci_icons != 0) {
+    x2 = right_x;
+    for (i = 0; i < sci_icons; i++) {
+      ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.science_icon_sprite))->draw((iptr)science_rect,(iptr)this,x2,y2);
+      x2 += spacing;
+    }
+  }
+  label_x = scale(0xcd);
+  label_x = panel_left + label_x;
+  scaled = scale(0xe2);
+  label_right = label_x + scaled - 1;
+  scaled = scale(0x4f);
+  scaled2 = scale(0xe);
+  scaled3 = scale(2);
+  scaled4 = scale(0);
+  y2 = scaled + scaled2 + scaled3 + scaled4 + panel_top2;
+  civ = (iptr)cities[city_index].owner;
+  text_clear();
+  text_append_int((uint)civs[civ].tax_rate * 10);
+  text_append_percent();
+  text_append_space();
+  text_append_label(0x47);
+  text_append_colon();
+  text_append_int(main_menu_block.city_tax_total);
+  text_set_colors(0x76,10,1,1);
+  if (lux_align == 1) {
+    bar_height = scale(0xe2);
+    gfx_draw_text_centered((const char *)&map_views_block.text_buffer,label_x,y2,bar_height);
+  }
+  else {
+    gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
+  }
+  text_clear();
+  text_append_int((10 - ((uint)civs[civ].tax_rate + (uint)civs[civ].science_rate)) *
+                     10);
+  text_append_percent();
+  text_append_space();
+  text_append_label(0x48);
+  text_append_colon();
+  text_append_int(main_menu_block.city_lux_total);
+  text_set_colors(0x29,10,1,1);
+  if (lux_align == 1) {
+    gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
+  }
+  else if (lux_align == 2) {
+    gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
+  }
+  else {
+    bar_height = scale(0xe2);
+    gfx_draw_text_centered((const char *)&map_views_block.text_buffer,label_x,y2,bar_height);
+  }
+  text_clear();
+  text_append_int((uint)civs[civ].science_rate * 10);
+  text_append_percent();
+  text_append_space();
+  text_append_label(0x49);
+  text_append_colon();
+  text_append_int(main_menu_block.city_science_total);
+  text_set_colors(0x5e,10,1,1);
+  if (lux_align == 2) {
+    bar_height = scale(0xe2);
+    gfx_draw_text_centered((const char *)&map_views_block.text_buffer,label_x,y2,bar_height);
+  }
+  else {
+    gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
+  }
+}
+
 /* 005025d5 auto */
 void CityWindow::draw_resource_map(int blit)
 
 {
   u32 text_bottom;
   int scaled;
-  int scaled2;
-  int scaled3;
   i32 bar_height;
-  int scaled4;
-  iptr zero_a;
-  iptr zero_b;
-  i32 color;
-  i32 fill_color;
-  uint abs_corruption;
-  uint shield_surplus_text;
-  uint shield_surplus_count;
-  uint abs_shield_surplus;
-  uint food_surplus_text;
-  uint food_surplus_count;
-  uint abs_food_surplus;
-  i8 science_rect[16];
-  i8 lux_rect[16];
-  i8 tax_rect[16];
-  i8 corruption_rect[16];
-  i8 trade_rect[16];
-  i8 shortage_rect[16];
-  i8 coin_rect[16];
-  i8 waste_rect[16];
-  i8 shield_rect[16];
-  i8 food_surplus_rect[16];
-  i8 food_rect[16];
-  i8 unhappy_icon_rect[16];
-  i8 yield_icon_rect[16];
-  i8 cursor_rect[16];
-  i8 hut_rect[16];
   int tile_h;
-  int x2;
-  iptr civ;
-  int left_width;
-  int food_needed;
-  int icon_count;
-  int no_yield;
-  int tile_y;
   int tile_w;
-  iptr unit;
-  int mid_width;
-  int fit_count;
-  int text_end_x;
-  int tile_x;
-  int icon_w;
-  iptr yield_kind;
-  int city;
-  int mid_x;
-  int support_shown;
   int origin_x2;
-  int tax_icons;
-  int lux_align;
   int map_top;
-  int right_x;
   int panel_top2;
-  int unit_y;
-  int food_eaten;
-  iptr tile_idx;
   int panel_left;
   int origin_y2;
-  int icon_y;
-  int label_x;
   int half_tile_w;
-  int per_row;
-  int icon_x;
-  int min_per_row;
-  int spacing;
-  int row_count;
-  int right_width;
-  int lux_icons;
-  int label_right;
-  iptr j;
   int map_left;
-  int total_icons;
   int half_tile_h;
-  iptr y2;
-  int produced;
-  int sci_icons;
   uint big_zoom;
-  iptr i;
-  int food_need_shown;
-  int lux_x;
-  int food_fit_count;
-  int avail_width;
-  int shields_shown;
-  int nonzero_kinds;
   i8 map_rect[16];
-  int bar_x;
   uint surplus;
-  i32 drew_city;
   
   if ((((is_closed == 0) && (redraw_suspended == 0)) &&
       (redraw_deferred == 0)) && (-1 < city_index)) {
@@ -12377,132 +13690,8 @@ void CityWindow::draw_resource_map(int blit)
     clickmap.hotspot_add_rect(0,1,(RECT *)map_rect);
     origin_x2 = half_tile_w * 3 + map_left;
     origin_y2 = half_tile_h * 4 + map_top;
-    for (i = 0; i < 0x15; i++) {
-      x2 = map_wrap_x((int)cities[city_index].x +
-                            (int)(((i8 *)&city_resmap_draw_dx_table))[i]);
-      y2 = (int)cities[city_index].y + (int)(((i8 *)&city_resmap_draw_dy_table))[i]
-      ;
-      tile_x = (((i8 *)&city_resmap_draw_dx_table))[i] * half_tile_w + origin_x2;
-      tile_y = (((i8 *)&city_resmap_draw_dy_table))[i] * half_tile_h + origin_y2;
-      unit_y = tile_y - half_tile_h;
-      tile_idx = 0;
-      for (j = 0; j < 0x15; j++) {
-        if (((((i8 *)&dir_dy_table_block.city_tile_dx_table))[j] == (((i8 *)&city_resmap_draw_dx_table))[i]) &&
-           ((((i8 *)&dir_dy_table_block.city_tile_dy_table))[j] == (((i8 *)&city_resmap_draw_dy_table))[i])) {
-          tile_idx = j;
-          break;
-        }
-      }
-      ((MapView *)((i8 *)&map_views_block.map_views))->draw_tile_terrain((iptr)this,tile_x,tile_y,x2,y2,
-                 (int)cities[city_index].owner,
-                 map_zoom_level,tile_idx);
-      if (i < 0x15) {
-        if (((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 8) == 0) {
-          if (((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 4) == 0) {
-            if (((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 2) != 0) {
-              gfx_set_zoom_scale(map_zoom_level);
-              ((Sprite *)((i8 *)&hut_sprite))->draw((iptr)hut_rect,(iptr)this,tile_x,tile_y
-                        );
-              gfx_reset_zoom_scale();
-            }
-          }
-          else {
-            unit = tile_first_unit(x2,y2);
-            while ((-1 < unit && (unit_types[units[unit].type].attack == '\0'))) {
-              unit = unit_next_in_stack(unit);
-            }
-            if (-1 < unit) {
-              gfx_draw_unit((iptr)this,unit,7,tile_x,unit_y,
-                                 map_zoom_level,0);
-            }
-          }
-        }
-        else {
-          city = city_at(x2,y2);
-          if (-1 < city) {
-            drew_city = 1;
-            gfx_draw_city((iptr)this,city,1,tile_x,unit_y,
-                               map_zoom_level);
-          }
-        }
-        if ((((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 0x10) != 0) && (((((i8 *)&main_menu_block.city_tile_flags))[tile_idx] & 9) == 0)) {
-          gfx_set_zoom_scale(map_zoom_level);
-          ((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite))->draw((iptr)cursor_rect,(iptr)this,tile_x,tile_y);
-          gfx_reset_zoom_scale();
-        }
-      }
-    }
-    for (i = 0; i < 0x15; i++) {
-      x2 = map_wrap_x((int)cities[city_index].x +
-                            (int)(((i8 *)&city_resmap_draw_dx_table))[i]);
-      y2 = (int)cities[city_index].y + (int)(((i8 *)&city_resmap_draw_dy_table))[i]
-      ;
-      tile_x = (((i8 *)&city_resmap_draw_dx_table))[i] * half_tile_w + origin_x2;
-      tile_y = (((i8 *)&city_resmap_draw_dy_table))[i] * half_tile_h + origin_y2;
-      unit_y = tile_y - half_tile_h;
-      tile_idx = 0;
-      for (j = 0; j < 0x15; j++) {
-        if (((((i8 *)&dir_dy_table_block.city_tile_dx_table))[j] == (((i8 *)&city_resmap_draw_dx_table))[i]) &&
-           ((((i8 *)&dir_dy_table_block.city_tile_dy_table))[j] == (((i8 *)&city_resmap_draw_dy_table))[i])) {
-          tile_idx = j;
-          break;
-        }
-      }
-      scaled = city_tile_worked(city_index,tile_idx);
-      if (scaled != 0) {
-        gfx_set_zoom_scale(view_scale * 4 - 8);
-        no_yield = 0;
-        city_calc_tile_yields(city_index,tile_idx,0);
-        scaled = tile_w;
-        per_row = main_menu_block.city_tile_shields + main_menu_block.city_tile_trade + main_menu_block.city_tile_yields[0];
-        if (per_row == 0) {
-          per_row = 1;
-          no_yield = 1;
-        }
-        zero_b = 0;
-        zero_a = 0;
-        scaled2 = scale(8);
-        scaled += scaled2 * -2;
-        scaled2 = scale(10);
-        spacing = ui_calc_item_spacing(per_row,scaled2 + 1,scaled,zero_a,zero_b);
-        scaled = tile_w;
-        scaled2 = scale(8);
-        scaled3 = scale(10);
-        min_per_row = (scaled + scaled2 * -2) / (scaled3 + 1);
-        if (per_row <= min_per_row) {
-          per_row = min_per_row;
-        }
-        yield_kind = 0;
-        row_count = 0;
-        icon_x = scale(8);
-        icon_x = tile_x + icon_x;
-        scaled2 = half_tile_h + tile_y;
-        scaled = scale(10);
-        icon_y = scaled2 - (scaled >> 1);
-        for (; yield_kind < 3; yield_kind++) {
-          while ((((i32 *)&main_menu_block.city_tile_yields))[yield_kind] != 0) {
-            ((Sprite *)(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites) + yield_kind * 0x3c))->draw((iptr)yield_icon_rect,(iptr)this
-                       ,icon_x,icon_y);
-            row_count++;
-            if (row_count < per_row) {
-              icon_x += spacing;
-            }
-            else {
-              row_count = 0;
-              icon_x = scale(8);
-              icon_x = tile_x + icon_x;
-              scaled = scale(0xb);
-              icon_y += scaled;
-            }
-            (((i32 *)&main_menu_block.city_tile_yields))[yield_kind] = (((i32 *)&main_menu_block.city_tile_yields))[yield_kind] - 1;
-          }
-        }
-        if (no_yield != 0) {
-          ((Sprite *)((i8 *)&small_unhappy_icon_sprite))->draw((iptr)unhappy_icon_rect,(iptr)this,icon_x,icon_y);
-        }
-        gfx_reset_zoom_scale();
-      }
-    }
+    draw_resource_tiles(half_tile_w,half_tile_h,origin_x2,origin_y2);
+    draw_resource_yields(tile_w,half_tile_w,half_tile_h,origin_x2,origin_y2);
     text_set_font((iptr)&city_font);
     gfx_set_zoom_scale(view_scale * 4 - 8);
     text_clear();
@@ -12514,647 +13703,10 @@ void CityWindow::draw_resource_map(int blit)
     gfx_draw_text_centered((const char *)&map_views_block.text_buffer,resource_label_rect,text_bottom - scaled,bar_height);
     text_set_colors(0x29,10,1,1);
     big_zoom = (uint)(view_scale == 3);
-    food_needed = (int)cities[city_index].size * (uint)cosmic.food_per_citizen +
-               main_menu_block.city_settlers_supported * main_menu_block.settler_food_cost;
-    produced = main_menu_block.city_yield_totals[0];
-    surplus = main_menu_block.city_yield_totals[0] - food_needed;
-    icon_count = food_needed;
-    if (food_needed <= main_menu_block.city_yield_totals[0]) {
-      icon_count = main_menu_block.city_yield_totals[0];
-    }
-    food_eaten = food_needed;
-    if ((int)surplus < 0) {
-      food_eaten = main_menu_block.city_yield_totals[0];
-    }
-    food_need_shown = food_needed;
-    scaled = scale(0xe2);
-    avail_width = scale(2);
-    avail_width = scaled - avail_width;
-    icon_w = scale(0xe);
-    icon_w++;
-    if ((((int)surplus < 0) && (produced != 0)) || ((0 < (int)surplus && (food_needed != 0)))) {
-      scaled = scale(4);
-      avail_width = (avail_width - scaled) - icon_w;
-      icon_count--;
-    }
-    spacing = ui_calc_item_spacing(icon_count,icon_w,avail_width,(iptr)&food_fit_count,0);
-    while (food_fit_count < icon_count) {
-      icon_count--;
-      if (produced < food_need_shown) {
-        food_need_shown--;
-      }
-      else if (food_need_shown == produced) {
-        produced--;
-        food_need_shown--;
-        food_eaten--;
-      }
-      else {
-        produced--;
-        food_eaten--;
-      }
-    }
-    if ((surplus == 0) || (produced != 0)) {
-      if (surplus == 0) {
-        right_width = 0;
-      }
-      else {
-        if ((int)surplus < 1) {
-          abs_food_surplus = ~surplus + 1;
-        }
-        else {
-          abs_food_surplus = surplus;
-        }
-        scaled = scale(2);
-        scaled2 = scale(1);
-        right_width = scaled + scaled2 + (abs_food_surplus - 1) * spacing + icon_w;
-      }
-    }
-    else {
-      right_width = scale(0xe2);
-    }
-    left_width = scale(0xe2);
-    left_width -= right_width;
-    bar_x = scale(0xcd);
-    bar_x = panel_left + bar_x;
-    right_x = left_width + bar_x;
-    scaled = scale(0xe);
-    scaled2 = scale(2);
-    resource_bar_height = scaled + scaled2;
-    y2 = scale(0xe);
-    y2 = panel_top2 + y2;
-    if (view_scale == 3) {
-      y2--;
-    }
-    if ((int)surplus < 0) {
-      left_width += right_width;
-      right_width = 0;
-    }
-    if (left_width != 0) {
-      gfx_target_fill_rect(bar_x,y2,left_width,resource_bar_height,0x2d);
-    }
-    if (right_width != 0) {
-      color = 0x30;
-      bar_height = resource_bar_height;
-      scaled = scale(6);
-      gfx_target_fill_rect(right_x,y2,right_width + scaled,bar_height,color);
-    }
-    scaled = scale(1);
-    y2 = y2 + big_zoom + scaled;
-    if (0 < food_eaten) {
-      x2 = scale(1);
-      x2 = bar_x + x2;
-      for (i = 0; i < food_eaten; i++) {
-        ((Sprite *)((i8 *)&war_icon_sprite_block.resource_icon_sprites))->draw((iptr)food_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-      }
-    }
-    if (surplus != 0) {
-      x2 = right_x;
-      if (food_eaten < 1) {
-        scaled = scale(1);
-        x2 += scaled;
-      }
-      else {
-        scaled = scale(4);
-        x2 += (scaled >> 1);
-      }
-      i = 0;
-      while( true ) {
-        if ((int)surplus < 1) {
-          food_surplus_count = ~surplus + 1;
-        }
-        else {
-          food_surplus_count = surplus;
-        }
-        if ((int)food_surplus_count <= i) break;
-        ((Sprite *)(((i8 *)&war_icon_sprite_block.resource_shortage_icon_sprites) + (uint)(0 < (int)surplus) * 0x3c))->draw(
-                   (iptr)food_surplus_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-        i++;
-      }
-    }
-    label_x = scale(0xcd);
-    label_x = panel_left + label_x;
-    scaled = scale(0xe2);
-    label_right = label_x + scaled - 1;
-    scaled = scale(0xe);
-    scaled = panel_top2 + scaled;
-    y2 = scale(0xe);
-    y2 = scaled - y2;
-    text_clear();
-    text_append_label(0x40);
-    text_set_colors(0x2a,10,1,1);
-    text_append_colon();
-    text_append_int(main_menu_block.city_food_routes_out + food_eaten);
-    if (main_menu_block.city_food_routes_in != main_menu_block.city_food_routes_out) {
-      text_append_space();
-      text_append_lparen();
-      text_append_int(main_menu_block.city_food_routes_in - main_menu_block.city_food_routes_out);
-      text_append_space();
-      text_append_label(0xa9);
-      text_append_rparen();
-    }
-    gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
-    text_clear();
-    if ((int)surplus < 0) {
-      text_append_label(0x4a);
-      text_set_colors(0xb,0x1d,1,1);
-    }
-    else {
-      text_append_label(0x41);
-      text_set_colors(0x2e,10,1,1);
-    }
-    text_append_colon();
-    if ((int)surplus < 1) {
-      food_surplus_text = ~surplus + 1;
-    }
-    else {
-      food_surplus_text = surplus;
-    }
-    text_append_int(food_surplus_text);
-    gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
-    support_shown = main_menu_block.city_shield_support;
-    produced = main_menu_block.city_total_shields + main_menu_block.city_shield_waste;
-    surplus = main_menu_block.city_total_shields - main_menu_block.city_shield_support;
-    total_icons = main_menu_block.city_shield_support;
-    if (main_menu_block.city_shield_support <= produced) {
-      total_icons = produced;
-    }
-    shields_shown = produced;
-    if (-1 < (int)surplus) {
-      shields_shown = main_menu_block.city_shield_support;
-    }
-    scaled = scale(0xe2);
-    avail_width = scale(2);
-    avail_width = scaled - avail_width;
-    icon_w = scale(0xe);
-    icon_w++;
-    if ((((int)surplus < 0) && (produced != 0)) || ((0 < (int)surplus && (main_menu_block.city_shield_support != 0)))) {
-      scaled = scale(4);
-      avail_width = (avail_width - scaled) - icon_w;
-      total_icons--;
-    }
-    if (main_menu_block.city_shield_waste != 0) {
-      scaled = scale(4);
-      avail_width = (avail_width - scaled) - icon_w;
-      total_icons--;
-    }
-    spacing = ui_calc_item_spacing(total_icons,icon_w,avail_width,(iptr)&fit_count,0);
-    while (fit_count < total_icons) {
-      total_icons--;
-      if (produced - main_menu_block.city_shield_waste < support_shown) {
-        support_shown--;
-      }
-      else {
-        if (produced == main_menu_block.city_shield_waste) break;
-        if (produced - main_menu_block.city_shield_waste == support_shown) {
-          produced--;
-          support_shown--;
-          shields_shown--;
-        }
-        else {
-          produced--;
-          shields_shown--;
-        }
-      }
-    }
-    mid_width = 0;
-    if (main_menu_block.city_shield_waste != 0) {
-      mid_width = (main_menu_block.city_shield_waste - 1) * spacing + icon_w;
-      if (surplus != 0) {
-        scaled = scale(4);
-        mid_width += (scaled >> 1);
-      }
-      if (produced != main_menu_block.city_shield_waste) {
-        scaled = scale(4);
-        mid_width += (scaled >> 1);
-      }
-    }
-    if ((surplus == 0) || (produced != 0)) {
-      if (surplus == 0) {
-        right_width = 0;
-      }
-      else {
-        if ((int)surplus < 1) {
-          abs_shield_surplus = ~surplus + 1;
-        }
-        else {
-          abs_shield_surplus = surplus;
-        }
-        scaled = scale(2);
-        scaled2 = scale(1);
-        right_width = scaled + scaled2 + (abs_shield_surplus - 1) * spacing + icon_w;
-      }
-    }
-    else {
-      right_width = scale(0xe2);
-    }
-    left_width = scale(0xe2);
-    left_width -= (mid_width + right_width);
-    if (mid_width != 0) {
-      if (main_menu_block.city_shield_support == 0) {
-        left_width = 0;
-      }
-      else {
-        scaled = scale(2);
-        scaled2 = scale(1);
-        left_width = scaled + scaled2 + (main_menu_block.city_shield_support - 1) * spacing + icon_w;
-      }
-      mid_width = scale(0xe2);
-      mid_width -= (right_width + left_width);
-    }
-    bar_x = scale(0xcd);
-    bar_x = panel_left + bar_x;
-    lux_x = left_width + bar_x;
-    right_x = mid_width + lux_x;
-    if (mid_width != 0) {
-      mid_x = ((mid_width >> 1) + lux_x) - ((main_menu_block.city_shield_waste - 1) * spacing + icon_w >> 1);
-    }
-    scaled = scale(0xe);
-    scaled2 = scale(2);
-    resource_bar_height = scaled + scaled2;
-    y2 = scale(0x78);
-    y2 = panel_top2 + y2;
-    if (view_scale == 3) {
-      y2--;
-    }
-    if ((int)surplus < 0) {
-      left_width += right_width;
-      right_width = 0;
-    }
-    if (left_width != 0) {
-      gfx_target_fill_rect(bar_x,y2,left_width,resource_bar_height,0x54);
-    }
-    if (mid_width != 0) {
-      gfx_target_fill_rect(lux_x,y2,mid_width,resource_bar_height,0xb);
-    }
-    if (right_width != 0) {
-      color = 0x5c;
-      bar_height = resource_bar_height;
-      scaled = scale(6);
-      gfx_target_fill_rect(right_x,y2,right_width + scaled,bar_height,color);
-    }
-    scaled = scale(1);
-    y2 = y2 + big_zoom + scaled;
-    if (0 < shields_shown) {
-      x2 = scale(1);
-      x2 = bar_x + x2;
-      for (i = 0; i < shields_shown; i++) {
-        ((Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite))->draw((iptr)shield_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-      }
-    }
-    if (0 < main_menu_block.city_shield_waste) {
-      x2 = scale(2);
-      x2 = mid_x + x2;
-      for (i = 0; i < main_menu_block.city_shield_waste; i++) {
-        ((Sprite *)((i8 *)&war_icon_sprite_block.shield_shortage_icon_sprite))->draw((iptr)waste_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-      }
-    }
-    if (surplus != 0) {
-      x2 = right_x;
-      if (shields_shown < 1) {
-        scaled = scale(1);
-        x2 += scaled;
-      }
-      else {
-        scaled = scale(4);
-        x2 += (scaled >> 1);
-      }
-      i = 0;
-      while( true ) {
-        if ((int)surplus < 1) {
-          shield_surplus_count = ~surplus + 1;
-        }
-        else {
-          shield_surplus_count = surplus;
-        }
-        if ((int)shield_surplus_count <= i) break;
-        if (cities[city_index].building == -0x26) {
-          ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)coin_rect,(iptr)this,x2,y2);
-        }
-        else {
-          ((Sprite *)(((i8 *)&war_icon_sprite_block.shield_shortage_icon_sprite) + (uint)(0 < (int)surplus) * 0x3c))->draw(
-                     (iptr)shortage_rect,(iptr)this,x2,y2);
-        }
-        x2 += spacing;
-        i++;
-      }
-    }
-    label_x = scale(0xcd);
-    label_x = panel_left + label_x;
-    scaled = scale(0xe2);
-    label_right = label_x + scaled - 1;
-    scaled = scale(0xe);
-    scaled2 = scale(2);
-    scaled3 = scale(0x78);
-    scaled4 = scale(0xffffffff);
-    y2 = scaled + scaled2 + scaled3 + scaled4 + panel_top2;
-    text_clear();
-    text_append_label(0xcc);
-    text_append_colon();
-    scaled = main_menu_block.city_shield_support;
-    if (produced <= main_menu_block.city_shield_support) {
-      scaled = produced;
-    }
-    text_append_int(scaled);
-    text_set_colors(0x54,10,1,1);
-    gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
-    if (main_menu_block.city_shield_waste != 0) {
-      text_clear();
-      text_append_label(0x43);
-      text_append_colon();
-      text_append_int(main_menu_block.city_shield_waste);
-      text_set_colors(0xb,0x1d,1,1);
-      bar_height = scale(0xe2);
-      gfx_draw_text_centered((const char *)&map_views_block.text_buffer,label_x,y2,bar_height);
-    }
-    text_clear();
-    if ((int)surplus < 0) {
-      text_append_label(0x4b);
-      text_set_colors(0xb,0x1d,1,1);
-    }
-    else {
-      text_append_label(0x44);
-      text_set_colors(0x5c,10,1,1);
-    }
-    text_append_colon();
-    if ((int)surplus < 1) {
-      shield_surplus_text = ~surplus + 1;
-    }
-    else {
-      shield_surplus_text = surplus;
-    }
-    text_append_int(shield_surplus_text);
-    gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
-    produced = main_menu_block.city_total_trade;
-    total_icons = main_menu_block.city_total_trade;
-    scaled = scale(0xe2);
-    avail_width = scale(2);
-    avail_width = scaled - avail_width;
-    icon_w = scale(0xe);
-    icon_w++;
-    if ((*(uint *)&main_menu_block.city_trade_corruption) != 0) {
-      scaled = scale(4);
-      avail_width = (avail_width - scaled) - icon_w;
-      total_icons--;
-    }
-    spacing = ui_calc_item_spacing(total_icons,icon_w,avail_width,(iptr)&fit_count,0);
-    for (; fit_count < total_icons; total_icons--) {
-      produced--;
-    }
-    right_width = 0;
-    if ((*(uint *)&main_menu_block.city_trade_corruption) != 0) {
-      if ((int)(*(uint *)&main_menu_block.city_trade_corruption) < 1) {
-        abs_corruption = ~(*(uint *)&main_menu_block.city_trade_corruption) + 1;
-      }
-      else {
-        abs_corruption = (*(uint *)&main_menu_block.city_trade_corruption);
-      }
-      scaled = scale(2);
-      scaled2 = scale(1);
-      right_width = scaled + scaled2 + (abs_corruption - 1) * spacing + icon_w;
-    }
-    left_width = scale(0xe2);
-    left_width -= right_width;
-    bar_x = scale(0xcd);
-    bar_x = panel_left + bar_x;
-    right_x = left_width + bar_x;
-    scaled = scale(0xe);
-    scaled2 = scale(2);
-    resource_bar_height = scaled + scaled2;
-    y2 = scale(0x37);
-    y2 = panel_top2 + y2;
-    if ((int)surplus < 0) {
-      left_width += right_width;
-      right_width = 0;
-    }
-    if (left_width != 0) {
-      gfx_target_fill_rect(bar_x,y2,left_width,resource_bar_height,0x76);
-    }
-    if (right_width != 0) {
-      gfx_target_fill_rect(right_x,y2,right_width,resource_bar_height,0x79);
-    }
-    scaled = scale(1);
-    y2 = y2 + big_zoom + scaled;
-    if (0 < (int)(main_menu_block.city_total_trade - (*(uint *)&main_menu_block.city_trade_corruption))) {
-      x2 = bar_x + 1;
-      for (i = 0; i < (int)(main_menu_block.city_total_trade - (*(uint *)&main_menu_block.city_trade_corruption)); i++) {
-        ((Sprite *)((i8 *)&war_icon_sprite_block.trade_icon_sprite))->draw((iptr)trade_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-      }
-    }
-    if ((*(uint *)&main_menu_block.city_trade_corruption) != 0) {
-      x2 = right_x;
-      scaled = scale(4);
-      x2 += (scaled >> 1);
-      for (i = 0; i < (int)(*(uint *)&main_menu_block.city_trade_corruption); i++) {
-        ((Sprite *)((i8 *)&war_icon_sprite_block.trade_corruption_icon_sprite))->draw((iptr)corruption_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-      }
-    }
-    label_x = scale(0xcd);
-    label_x = panel_left + label_x;
-    scaled = scale(0xe2);
-    label_right = label_x + scaled - 1;
-    scaled = scale(0x37);
-    scaled = panel_top2 + scaled;
-    y2 = scale(0xe);
-    y2 = scaled - y2;
-    text_clear();
-    text_append_label(0x45);
-    text_set_colors(0x76,10,1,1);
-    text_append_colon();
-    text_append_int(main_menu_block.city_total_trade - (*(uint *)&main_menu_block.city_trade_corruption));
-    text_end_x = gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
-    if ((civs[cities[city_index].owner].government == 4) &&
-       (main_menu_block.city_building_content != 0)) {
-      scaled = scale(4);
-      text_end_x += scaled;
-      text_clear();
-      text_append_label(0x5d);
-      text_append_colon();
-      text_append((const char *)&str_empty_144);
-      text_append_int(main_menu_block.city_building_content);
-      text_set_colors(0x79,10,1,1);
-      gfx_draw_text((const char *)&map_views_block.text_buffer,text_end_x,y2);
-    }
-    text_clear();
-    text_append_label(0x46);
-    text_set_colors(0x79,10,1,1);
-    text_append_colon();
-    text_append_int((*(uint *)&main_menu_block.city_trade_corruption));
-    gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
-    produced = main_menu_block.city_total_trade;
-    tax_icons = main_menu_block.city_tax_total;
-    lux_icons = main_menu_block.city_lux_total;
-    sci_icons = main_menu_block.city_science_total;
-    total_icons = main_menu_block.city_science_total + main_menu_block.city_lux_total + main_menu_block.city_tax_total;
-    nonzero_kinds = (uint)(0 < main_menu_block.city_science_total) + (uint)(0 < main_menu_block.city_lux_total) + (uint)(0 < main_menu_block.city_tax_total);
-    scaled = scale(0xe2);
-    avail_width = scale(2);
-    avail_width = scaled - avail_width;
-    icon_w = scale(0xe);
-    icon_w++;
-    for (; 1 < nonzero_kinds; nonzero_kinds--) {
-      scaled = scale(4);
-      avail_width -= (icon_w + scaled);
-      total_icons--;
-    }
-    spacing = ui_calc_item_spacing(total_icons,icon_w,avail_width,(iptr)&fit_count,0);
-    for (; fit_count < total_icons; fit_count++) {
-      if ((lux_icons < tax_icons) && (sci_icons < tax_icons)) {
-        tax_icons--;
-      }
-      else if (lux_icons < sci_icons) {
-        sci_icons--;
-      }
-      else {
-        lux_icons--;
-      }
-    }
-    left_width = 0;
-    bar_x = scale(0xcd);
-    bar_x = panel_left + bar_x;
-    if (tax_icons != 0) {
-      scaled = scale(1);
-      left_width = scaled + (tax_icons - 1) * spacing + icon_w;
-    }
-    right_width = 0;
-    if (sci_icons != 0) {
-      scaled = scale(1);
-      right_width = scaled + (sci_icons - 1) * spacing + icon_w;
-    }
-    scaled = scale(0xe2);
-    scaled2 = scale(0xcd);
-    right_x = (scaled + scaled2 + panel_left) - right_width;
-    mid_width = scale(0xe2);
-    mid_width -= (right_width + left_width);
-    lux_x = scale(0xcd);
-    lux_x = panel_left + lux_x;
-    if (left_width != 0) {
-      scaled = scale(4);
-      mid_width -= scaled;
-      scaled = scale(4);
-      lux_x = lux_x + left_width + scaled;
-    }
-    if (right_width != 0) {
-      scaled = scale(4);
-      mid_width -= scaled;
-    }
-    mid_x = lux_x;
-    lux_x += (mid_width >> 1);
-    if (lux_icons != 0) {
-      lux_x -= ((lux_icons - 1) * spacing + icon_w >> 1);
-    }
-    lux_align = 0;
-    if ((lux_icons == 0) || (tax_icons != 0)) {
-      if ((lux_icons != 0) && (sci_icons == 0)) {
-        lux_align = 2;
-        scaled = scale(1);
-        nonzero_kinds = scaled + (lux_icons - 1) * spacing + icon_w;
-        scaled = scale(0xe2);
-        scaled2 = scale(0xcd);
-        lux_x = (scaled + scaled2 + panel_left) - nonzero_kinds;
-      }
-    }
-    else {
-      lux_align = 1;
-      lux_x = bar_x;
-    }
-    scaled = scale(0xe);
-    scaled2 = scale(2);
-    resource_bar_height = scaled + scaled2;
-    y2 = scale(0x4f);
-    y2 = panel_top2 + y2;
-    fill_color = 0x79;
-    bar_height = resource_bar_height;
-    color = scale(0xe2);
-    gfx_target_fill_rect(bar_x,y2,color,bar_height,fill_color);
-    scaled = scale(1);
-    y2 = y2 + big_zoom + scaled;
-    if (0 < tax_icons) {
-      x2 = scale(1);
-      x2 = bar_x + x2;
-      for (i = 0; i < tax_icons; i++) {
-        ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.gold_coin_icon_sprite))->draw((iptr)tax_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-      }
-    }
-    if (lux_icons != 0) {
-      x2 = lux_x;
-      for (i = 0; i < lux_icons; i++) {
-        ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.tax_rate_icon_sprites))->draw((iptr)lux_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-      }
-    }
-    if (sci_icons != 0) {
-      x2 = right_x;
-      for (i = 0; i < sci_icons; i++) {
-        ((Sprite *)((i8 *)&tax_rate_icon_sprites_block.science_icon_sprite))->draw((iptr)science_rect,(iptr)this,x2,y2);
-        x2 += spacing;
-      }
-    }
-    label_x = scale(0xcd);
-    label_x = panel_left + label_x;
-    scaled = scale(0xe2);
-    label_right = label_x + scaled - 1;
-    scaled = scale(0x4f);
-    scaled2 = scale(0xe);
-    scaled3 = scale(2);
-    scaled4 = scale(0);
-    y2 = scaled + scaled2 + scaled3 + scaled4 + panel_top2;
-    civ = (iptr)cities[city_index].owner;
-    text_clear();
-    text_append_int((uint)civs[civ].tax_rate * 10);
-    text_append_percent();
-    text_append_space();
-    text_append_label(0x47);
-    text_append_colon();
-    text_append_int(main_menu_block.city_tax_total);
-    text_set_colors(0x76,10,1,1);
-    if (lux_align == 1) {
-      bar_height = scale(0xe2);
-      gfx_draw_text_centered((const char *)&map_views_block.text_buffer,label_x,y2,bar_height);
-    }
-    else {
-      gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
-    }
-    text_clear();
-    text_append_int((10 - ((uint)civs[civ].tax_rate + (uint)civs[civ].science_rate)) *
-                       10);
-    text_append_percent();
-    text_append_space();
-    text_append_label(0x48);
-    text_append_colon();
-    text_append_int(main_menu_block.city_lux_total);
-    text_set_colors(0x29,10,1,1);
-    if (lux_align == 1) {
-      gfx_draw_text((const char *)&map_views_block.text_buffer,label_x,y2);
-    }
-    else if (lux_align == 2) {
-      gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
-    }
-    else {
-      bar_height = scale(0xe2);
-      gfx_draw_text_centered((const char *)&map_views_block.text_buffer,label_x,y2,bar_height);
-    }
-    text_clear();
-    text_append_int((uint)civs[civ].science_rate * 10);
-    text_append_percent();
-    text_append_space();
-    text_append_label(0x49);
-    text_append_colon();
-    text_append_int(main_menu_block.city_science_total);
-    text_set_colors(0x5e,10,1,1);
-    if (lux_align == 2) {
-      bar_height = scale(0xe2);
-      gfx_draw_text_centered((const char *)&map_views_block.text_buffer,label_x,y2,bar_height);
-    }
-    else {
-      gfx_draw_text_right((const char *)&map_views_block.text_buffer,label_right,y2,0);
-    }
+    draw_resource_food(panel_left,panel_top2,big_zoom);
+    draw_resource_shields(panel_left,panel_top2,big_zoom,surplus);
+    draw_resource_trade(panel_left,panel_top2,big_zoom,surplus);
+    draw_resource_rates(panel_left,panel_top2,big_zoom);
     gfx_reset_zoom_scale();
     if (blit != 0) {
       wnd_blit_surface_rect((iptr)(&resource_map_rect));
@@ -15375,6 +15927,176 @@ city_change_draw_option_icon(i32 dialog,iptr surface,int option,byte flags,int x
   return 0;
 }
 
+/* Part of city_button_change (0050a473): with the advisors option, the
+   build the advisors suggest, in two dialogs beside the list. */
+static void city_button_change_advice(Dialog &unit_dialog,Dialog &improvement_dialog)
+{
+  int city;
+  iptr city6;
+  iptr *unit_out;
+  iptr *improvement_out;
+  iptr improvement;
+  iptr unit_type;
+  i8 caption[80];
+
+  if (((*((char *)&game.game_options + 1)) & 2) != 0) {
+    improvement_out = &improvement;
+    unit_out = &unit_type;
+    city6 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
+    city_choose_production(city6,(iptr)unit_out,(iptr)improvement_out);
+    if (unit_type != 999) {
+      text_set_label_arg(0,unit_types[unit_type].name);
+      unit_dialog.load_text((const char *)&str_advice_2,(const char *)&str_military,8);
+      str_clear((char *)caption);
+      str_append((char *)caption,(const char *)&str_empty_145);
+      str_append_string_id((iptr)caption,unit_types[unit_type].name);
+      unit_dialog.add_sprite((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c),0,0);
+      city = unit_dialog.load_text((const char *)&str_advice_3,(const char *)caption,0x8000)
+      ;
+      if (city != 0) {
+        unit_dialog.load_text((const char *)&str_advice_4,(const char *)&str_default,0x8000);
+      }
+      unit_dialog.run_modal(0,300);
+    }
+    if (improvement != 999) {
+      str_clear((char *)caption);
+      str_append((char *)caption,(const char *)&str_empty_146);
+      improvement_dialog.load_text((const char *)&str_advice_5,(const char *)&str_domestic,8);
+      if (improvement < 0) {
+        city = -improvement;
+        improvement = -improvement;
+        text_set_label_arg(0,improvements[city].name);
+        if (improvement < 0x27) {
+          str_append_string_id((iptr)caption,improvements[improvement].name);
+          improvement_dialog.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c),
+                     (ui_large_screen == 0) - 1 & 8,0);
+        }
+        else {
+          str_append((char *)caption,(const char *)&str_wonder);
+          improvement_dialog.add_sprite(
+                     (iptr)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + (improvement * 4 - 0x9c) * 0xf),
+                     (ui_large_screen == 0) - 1 & 8,0);
+        }
+      }
+      else {
+        unit_type = improvement;
+        text_set_label_arg(0,unit_types[improvement].name);
+        str_append_string_id((iptr)caption,unit_types[unit_type].name);
+        improvement_dialog.add_sprite((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c),0,0
+                  );
+      }
+      city = improvement_dialog.load_text((const char *)&str_advice_6,(const char *)caption,0x8000)
+      ;
+      if (city != 0) {
+        improvement_dialog.load_text((const char *)&str_advice_7,(const char *)&str_default_2,0x8000);
+      }
+      improvement_dialog.run_modal(0,300);
+    }
+  }
+}
+
+/* Part of city_button_change (0050a473): the units, improvements and
+   wonders the city can build, the options of the dialog. */
+static void city_button_change_add_options(int city2,int &option_count2,iptr current_build,Dialog &change_dialog)
+{
+  iptr city3;
+  int city;
+  iptr city4;
+  i32 on;
+  iptr improvement;
+  iptr unit_type;
+  int wonder;
+
+  option_count2 = 0;
+  for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+    city3 = unit_type;
+    city4 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
+    city = civ_can_build_unit(city2,city4,city3);
+    if (city != 0) {
+      text_clear();
+      text_append_string_id(unit_types[unit_type].name);
+      text_append_space();
+      text_append((const char *)&str_empty_147);
+      text_append_lparen();
+      city3 = unit_type;
+      city4 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
+      on = city_shields_after_change(city4,city3);
+      city_text_append_build_turns((int)(char)unit_types[unit_type].cost,on);
+      text_append_comma();
+      text_append_label(0xaa);
+      text_append_colon();
+      text_append_int((int)(char)unit_types[unit_type].attack);
+      text_append((const char *)&str_empty_148);
+      text_append_int((int)(char)unit_types[unit_type].defense);
+      if ((unit_types[unit_type].flags & 0x400) != 0) {
+        text_append((const char *)&str_empty_149);
+      }
+      text_append((const char *)&str_empty_150);
+      text_append_int((int)(char)unit_types[unit_type].move /
+                         (int)(uint)cosmic.road_move_mult);
+      text_append_space();
+      text_append_label(0xab);
+      text_append_colon();
+      text_append_int((int)(char)unit_types[unit_type].hit_points / 10);
+      text_append((const char *)&str_empty_151);
+      text_append_int((int)(char)unit_types[unit_type].firepower);
+      text_append_rparen();
+      change_dialog.add_option((const char *)&map_views_block.text_buffer,unit_type,0);
+      if (current_build == unit_type) {
+        change_dialog.set_default_choice(unit_type);
+      }
+      option_count2++;
+    }
+  }
+  for (improvement = 1; improvement < 0x27; improvement++) {
+    city3 = improvement;
+    city4 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
+    city = city_can_build_improvement(city2,city4,city3);
+    if (city != 0) {
+      text_clear();
+      text_append_string_id(improvements[improvement].name);
+      text_append_space();
+      text_append((const char *)&str_empty_152);
+      text_append_lparen();
+      city = -improvement;
+      city3 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
+      on = city_shields_after_change(city3,city);
+      city_text_append_build_turns((uint)improvements[improvement].cost,on);
+      text_append_rparen();
+      change_dialog.add_option((const char *)&map_views_block.text_buffer,improvement + 0x3e,0);
+      if (-current_build == improvement) {
+        change_dialog.set_default_choice(improvement + 0x3e);
+      }
+      option_count2++;
+    }
+  }
+  for (wonder = 0; wonder < 0x1c; wonder++) {
+    city = civ_can_build_wonder(city2,wonder);
+    if (city != 0) {
+      improvement = wonder + 0x27;
+      text_clear();
+      city = wonder_is_expired(wonder);
+      if (city != 0) {
+        text_append_str((const char *)&str_empty_153);
+      }
+      text_append_string_id(improvements[improvement].name);
+      text_append_space();
+      text_append((const char *)&str_empty_154);
+      text_append_lparen();
+      city = -improvement;
+      city3 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
+      on = city_shields_after_change(city3,city);
+      city_text_append_build_turns((uint)improvements[improvement].cost,on);
+      text_append_rparen();
+      change_dialog.add_option((const char *)&map_views_block.text_buffer,wonder + 0x65,0);
+      if (-current_build == improvement) {
+        change_dialog.set_default_choice(improvement + 0x3e);
+      }
+      option_count2++;
+    }
+  }
+}
+
 /* 0050a473 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -15389,27 +16111,18 @@ void __cdecl city_button_change(i32 control_id)
   iptr city3;
   iptr city5;
   int city;
-  iptr city6;
   iptr city4;
   iptr city7;
   iptr city8;
-  iptr *unit_out;
   i32 on;
-  iptr *improvement_out;
-  iptr improvement;
   iptr unit_type3;
   Dialog unit_dialog;
-  iptr unit_type;
   int option_count2;
   iptr current_build;
   Dialog change_dialog;
   Dialog improvement_dialog;
-  int wonder;
   int new_shields;
-  i8 caption[80];
   iptr unit_type2;
-  i32 eh_next;
-  i8 *eh_handler;
   int eh_state;
   
   eh_state = 0xffffffff;
@@ -15449,153 +16162,13 @@ void __cdecl city_button_change(i32 control_id)
         current_build = (iptr)cities[city5].building;
         while (city = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city(),
               city != -1) {
-          if (((*((char *)&game.game_options + 1)) & 2) != 0) {
-            improvement_out = &improvement;
-            unit_out = &unit_type;
-            city6 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
-            city_choose_production(city6,(iptr)unit_out,(iptr)improvement_out);
-            if (unit_type != 999) {
-              text_set_label_arg(0,unit_types[unit_type].name);
-              unit_dialog.load_text((const char *)&str_advice_2,(const char *)&str_military,8);
-              str_clear((char *)caption);
-              str_append((char *)caption,(const char *)&str_empty_145);
-              str_append_string_id((iptr)caption,unit_types[unit_type].name);
-              unit_dialog.add_sprite((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c),0,0);
-              city = unit_dialog.load_text((const char *)&str_advice_3,(const char *)caption,0x8000)
-              ;
-              if (city != 0) {
-                unit_dialog.load_text((const char *)&str_advice_4,(const char *)&str_default,0x8000);
-              }
-              unit_dialog.run_modal(0,300);
-            }
-            if (improvement != 999) {
-              str_clear((char *)caption);
-              str_append((char *)caption,(const char *)&str_empty_146);
-              improvement_dialog.load_text((const char *)&str_advice_5,(const char *)&str_domestic,8);
-              if (improvement < 0) {
-                city = -improvement;
-                improvement = -improvement;
-                text_set_label_arg(0,improvements[city].name);
-                if (improvement < 0x27) {
-                  str_append_string_id((iptr)caption,improvements[improvement].name);
-                  improvement_dialog.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c),
-                             (ui_large_screen == 0) - 1 & 8,0);
-                }
-                else {
-                  str_append((char *)caption,(const char *)&str_wonder);
-                  improvement_dialog.add_sprite(
-                             (iptr)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + (improvement * 4 - 0x9c) * 0xf),
-                             (ui_large_screen == 0) - 1 & 8,0);
-                }
-              }
-              else {
-                unit_type = improvement;
-                text_set_label_arg(0,unit_types[improvement].name);
-                str_append_string_id((iptr)caption,unit_types[unit_type].name);
-                improvement_dialog.add_sprite((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c),0,0
-                          );
-              }
-              city = improvement_dialog.load_text((const char *)&str_advice_6,(const char *)caption,0x8000)
-              ;
-              if (city != 0) {
-                improvement_dialog.load_text((const char *)&str_advice_7,(const char *)&str_default_2,0x8000);
-              }
-              improvement_dialog.run_modal(0,300);
-            }
-          }
+          city_button_change_advice(unit_dialog,improvement_dialog);
           city = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
           text_set_string_arg(0,(const char *)&cities[city].name);
           change_dialog.load_game_text((const char *)&str_production);
           change_dialog.set_option_draw_fn((DialogOptionDrawFn)city_change_draw_option_icon);
           change_dialog.set_list_indent(0x4b,0);
-          option_count2 = 0;
-          for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-            city3 = unit_type;
-            city4 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
-            city = civ_can_build_unit(city2,city4,city3);
-            if (city != 0) {
-              text_clear();
-              text_append_string_id(unit_types[unit_type].name);
-              text_append_space();
-              text_append((const char *)&str_empty_147);
-              text_append_lparen();
-              city3 = unit_type;
-              city4 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
-              on = city_shields_after_change(city4,city3);
-              city_text_append_build_turns((int)(char)unit_types[unit_type].cost,on);
-              text_append_comma();
-              text_append_label(0xaa);
-              text_append_colon();
-              text_append_int((int)(char)unit_types[unit_type].attack);
-              text_append((const char *)&str_empty_148);
-              text_append_int((int)(char)unit_types[unit_type].defense);
-              if ((unit_types[unit_type].flags & 0x400) != 0) {
-                text_append((const char *)&str_empty_149);
-              }
-              text_append((const char *)&str_empty_150);
-              text_append_int((int)(char)unit_types[unit_type].move /
-                                 (int)(uint)cosmic.road_move_mult);
-              text_append_space();
-              text_append_label(0xab);
-              text_append_colon();
-              text_append_int((int)(char)unit_types[unit_type].hit_points / 10);
-              text_append((const char *)&str_empty_151);
-              text_append_int((int)(char)unit_types[unit_type].firepower);
-              text_append_rparen();
-              change_dialog.add_option((const char *)&map_views_block.text_buffer,unit_type,0);
-              if (current_build == unit_type) {
-                change_dialog.set_default_choice(unit_type);
-              }
-              option_count2++;
-            }
-          }
-          for (improvement = 1; improvement < 0x27; improvement++) {
-            city3 = improvement;
-            city4 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
-            city = city_can_build_improvement(city2,city4,city3);
-            if (city != 0) {
-              text_clear();
-              text_append_string_id(improvements[improvement].name);
-              text_append_space();
-              text_append((const char *)&str_empty_152);
-              text_append_lparen();
-              city = -improvement;
-              city3 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
-              on = city_shields_after_change(city3,city);
-              city_text_append_build_turns((uint)improvements[improvement].cost,on);
-              text_append_rparen();
-              change_dialog.add_option((const char *)&map_views_block.text_buffer,improvement + 0x3e,0);
-              if (-current_build == improvement) {
-                change_dialog.set_default_choice(improvement + 0x3e);
-              }
-              option_count2++;
-            }
-          }
-          for (wonder = 0; wonder < 0x1c; wonder++) {
-            city = civ_can_build_wonder(city2,wonder);
-            if (city != 0) {
-              improvement = wonder + 0x27;
-              text_clear();
-              city = wonder_is_expired(wonder);
-              if (city != 0) {
-                text_append_str((const char *)&str_empty_153);
-              }
-              text_append_string_id(improvements[improvement].name);
-              text_append_space();
-              text_append((const char *)&str_empty_154);
-              text_append_lparen();
-              city = -improvement;
-              city3 = ((CityWindow *)((i8 *)&city_window_block.city_window))->get_city();
-              on = city_shields_after_change(city3,city);
-              city_text_append_build_turns((uint)improvements[improvement].cost,on);
-              text_append_rparen();
-              change_dialog.add_option((const char *)&map_views_block.text_buffer,wonder + 0x65,0);
-              if (-current_build == improvement) {
-                change_dialog.set_default_choice(improvement + 0x3e);
-              }
-              option_count2++;
-            }
-          }
+          city_button_change_add_options(city2,option_count2,current_build,change_dialog);
           if ((((*((char *)&game.game_options + 1)) & 0x80) != 0) && (game.multiplayer == '\0')) {
             city3 = (iptr)label_string(label_string_ids[0x4c]);
             change_dialog.add_button((const char *)city3);
@@ -16963,403 +17536,298 @@ void __cdecl city_transfer_for_civil_war(iptr city,iptr civ2,iptr civ)
   return;
 }
 
-/* 0057b5df auto */
-void __cdecl city_capture_aftermath(uptr city,iptr civ,int capture_mode)
-
+/* Part of city_capture_aftermath (0057b5df): the capital taken: the loser may
+   buy its palace into its best other city (1000 gold), else loses its
+   spaceship. */
+static void city_capture_aftermath_palace_escape(uptr city,int x2,int y,iptr city4,iptr civ2)
 {
-  uint *attitude_flags;
-  char *build_count;
   char size;
-  bool is_weaker;
-  byte terrain;
-  int x2;
-  int y;
-  iptr loser_launched;
-  iptr winner_launched;
   int improvement2;
-  Tile *map_tile;
   int value;
   iptr x;
-  uptr wonder_city;
-  uint rnd;
-  i32 tile_bits;
-  uint sign;
-  int veteran_roll;
-  int rank_diff;
-  int gov_diff;
-  iptr improvement4;
-  int civ3;
   iptr unit;
   uptr city3;
   int save_palace;
-  iptr improvement3;
-  int civ4;
-  int partisan_count;
-  iptr unit_type;
-  iptr city4;
-  int partisans_made;
-  iptr y3;
-  Dialog dialog2;
-  iptr x3;
-  int same_build_count;
-  int partisan_idx;
-  iptr wonder;
-  uint founded_count;
-  iptr civ2;
-  iptr y2;
-  uint was_founder;
-  int human_on_continent;
-  iptr plunder;
-  iptr improvement;
-  i8 city_name[80];
   uptr city2;
   int best_score;
   int score;
-  i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
-  
-  eh_state = 0xffffffff;
-  dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
-  civ2 = (iptr)cities[city].owner;
-  x2 = (int)cities[city].x;
-  y = (int)cities[city].y;
-  if (capture_mode < 2) {
-    diplo_force_war(civ,civ2);
-  }
-  was_founder = (uint)(cities[city].founder == civ);
-  crt_strcpy(city_name,(const char *)(&cities[city].name));
-  if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) ||
-      ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
-     (((loser_launched = civ_spaceship_launched(civ2), loser_launched == 0 &&
-       (winner_launched = civ_spaceship_launched(civ), winner_launched == 0)) || (game.difficulty < 2)))) {
-    diplo_set_treaty_flags(civ,civ2,0x10000);
-    if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) ||
-        (civs[civ].government != 6)) || (game.power_rank[civ] != 7)) {
-      if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
-         (game.power_rank[civ2] < game.power_rank[civ])) {
-        founded_count = 0;
-        for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
-          if (((cities[city2].id != 0) && (city2 != city)) &&
-             ((cities[city2].founder == civ2 && (cities[city2].owner == civ)))) {
-            founded_count++;
-          }
-        }
-        if ((1 < (int)founded_count) && ((founded_count & 1) == 0)) {
-          attitude_flags = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
-          *attitude_flags = *attitude_flags | 0x400000;
-        }
+
+  best_score = -999;
+  city3 = 0xffffffff;
+  for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
+    if ((((cities[city2].id != 0) && (cities[city2].owner == civ2)) &&
+        (city2 != city)) &&
+       (((int)cities[city].size / 2 <= (int)cities[city2].size &&
+        (7 < cities[city2].size)))) {
+      size = cities[city2].size;
+      score = map_distance_diag((int)cities[city2].x,(int)cities[city2].y,x2,y);
+      score = size * 3 - score;
+      unit = tile_first_unit((int)cities[city2].x,(int)cities[city2].y);
+      improvement2 = unit_stack_sum(unit,2);
+      score += improvement2 * 4;
+      improvement2 = city_has_improvement(city2,0x1b);
+      if (improvement2 != 0) {
+        score = (score * 3) / 2;
+      }
+      improvement2 = city_has_improvement(city2,8);
+      if ((improvement2 != 0) || (improvement2 = civ_has_wonder(civ2,6), improvement2 != 0)) {
+        score = score << 1;
+      }
+      improvement2 = city_has_improvement(city2,0x11);
+      if (improvement2 != 0) {
+        score = score * 3;
+      }
+      improvement2 = tile_landmass((int)cities[city2].x,(int)cities[city2].y);
+      value = tile_landmass(x2,y);
+      if (improvement2 != value) {
+        score = score / 2;
+      }
+      if (best_score < score) {
+        best_score = score;
+        city3 = city2;
       }
     }
-    else {
-      attitude_flags = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
-      *attitude_flags = *attitude_flags | 0x400000;
-    }
   }
-  diplo_clear_treaty_flags(civ,civ2,0x800);
-  if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) &&
-      (14 < cities[city].size)) && (was_founder == 0)) {
-    attitude_flags = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
-    *attitude_flags = *attitude_flags | 0x10;
-  }
-  city4 = -1;
-  if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) &&
-      (improvement2 = city_has_improvement(city,1), improvement2 != 0)) && (4 < civs[civ2].num_cities)) {
-    if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
-      if (game.power_rank[game.worst_human_rank] < game.power_rank[civ2]) {
-        is_weaker = true;
+  save_palace = 0;
+  if (((999 < civs[civ2].gold) && (0 < (int)city3)) && (city4 < 0)) {
+    city2 = city3;
+    text_set_string_arg(1,(const char *)&cities[city3].name);
+    x = civ_get_adjective(civ2);
+    text_set_string_arg(2,(const char *)x);
+    text_set_number_arg(0,1000);
+    if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
+        (human_civ[0] != civ2)) || (civ_saved_cursor_x_block.autoplay_active != 0)) {
+      if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
+          (game.multiplayer < 3)) || (civ_saved_cursor_x_block.autoplay_active != 0)) {
+        if ((2 < game.difficulty) &&
+           (((improvement2 = civ_spaceship_exists(civ2), improvement2 != 0 ||
+             (0xb < civs[civ2].num_cities)) || (1999 < civs[civ2].gold)))) {
+          save_palace = 1;
+        }
       }
       else {
-        is_weaker = false;
-      }
-    }
-    else {
-      is_weaker = game.power_rank[civ] < game.power_rank[civ2];
-    }
-    if ((is_weaker) && (improvement2 = civ_civil_war(civ2), improvement2 == 0)) {
-      cities[city].owner = -1;
-      city4 = civ_find_central_city(civ2);
-      cities[city].owner = (byte)civ2;
-    }
-  }
-  plunder = city_treasury_share(city);
-  improvement2 = city_has_improvement(city,1);
-  if (improvement2 != 0) {
-    best_score = -999;
-    city3 = 0xffffffff;
-    for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
-      if ((((cities[city2].id != 0) && (cities[city2].owner == civ2)) &&
-          (city2 != city)) &&
-         (((int)cities[city].size / 2 <= (int)cities[city2].size &&
-          (7 < cities[city2].size)))) {
-        size = cities[city2].size;
-        score = map_distance_diag((int)cities[city2].x,(int)cities[city2].y,x2,y);
-        score = size * 3 - score;
-        unit = tile_first_unit((int)cities[city2].x,(int)cities[city2].y);
-        improvement2 = unit_stack_sum(unit,2);
-        score += improvement2 * 4;
-        improvement2 = city_has_improvement(city2,0x1b);
-        if (improvement2 != 0) {
-          score = (score * 3) / 2;
+        sprite_picker_sprite_block.net_can_escape_reply = -1;
+        net_send_text_args(0x17,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3
+                           ,1,human_civ[0],0);
+        improvement2 = timer_ticks();
+        while ((value = timer_ticks(), value - improvement2 < 0xe10 && (sprite_picker_sprite_block.net_can_escape_reply == -1))) {
+          net_session_block.process_messages(1,0);
         }
-        improvement2 = city_has_improvement(city2,8);
-        if ((improvement2 != 0) || (improvement2 = civ_has_wonder(civ2,6), improvement2 != 0)) {
-          score = score << 1;
-        }
-        improvement2 = city_has_improvement(city2,0x11);
-        if (improvement2 != 0) {
-          score = score * 3;
-        }
-        improvement2 = tile_landmass((int)cities[city2].x,(int)cities[city2].y);
-        value = tile_landmass(x2,y);
-        if (improvement2 != value) {
-          score = score / 2;
-        }
-        if (best_score < score) {
-          best_score = score;
-          city3 = city2;
-        }
-      }
-    }
-    save_palace = 0;
-    if (((999 < civs[civ2].gold) && (0 < (int)city3)) && (city4 < 0)) {
-      city2 = city3;
-      text_set_string_arg(1,(const char *)&cities[city3].name);
-      x = civ_get_adjective(civ2);
-      text_set_string_arg(2,(const char *)x);
-      text_set_number_arg(0,1000);
-      if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
-          (human_civ[0] != civ2)) || (civ_saved_cursor_x_block.autoplay_active != 0)) {
-        if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
-            (game.multiplayer < 3)) || (civ_saved_cursor_x_block.autoplay_active != 0)) {
-          if ((2 < game.difficulty) &&
-             (((improvement2 = civ_spaceship_exists(civ2), improvement2 != 0 ||
-               (0xb < civs[civ2].num_cities)) || (1999 < civs[civ2].gold)))) {
+        if (sprite_picker_sprite_block.net_can_escape_reply == -1) {
+          save_palace = 0;
+          improvement2 = civ_spaceship_exists(civ2);
+          if (((improvement2 != 0) || (0xb < civs[civ2].num_cities)) || (1999 < civs[civ2].gold)
+             ) {
             save_palace = 1;
           }
         }
-        else {
-          sprite_picker_sprite_block.net_can_escape_reply = -1;
-          net_send_text_args(0x17,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3
-                             ,1,human_civ[0],0);
-          improvement2 = timer_ticks();
-          while ((value = timer_ticks(), value - improvement2 < 0xe10 && (sprite_picker_sprite_block.net_can_escape_reply == -1))) {
-            net_session_block.process_messages(1,0);
-          }
-          if (sprite_picker_sprite_block.net_can_escape_reply == -1) {
-            save_palace = 0;
-            improvement2 = civ_spaceship_exists(civ2);
-            if (((improvement2 != 0) || (0xb < civs[civ2].num_cities)) || (1999 < civs[civ2].gold)
-               ) {
-              save_palace = 1;
-            }
-          }
-        }
-      }
-      else {
-        save_palace = popup_game_with_sprite((const char *)&str_canescape_2,(iptr)&popup_info_icon_sprite,0);
-      }
-    }
-    if (save_palace == 1) {
-      civs[civ2].gold -= 1000;
-      city_set_improvement(city2,1,1);
-      if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
-          (game.multiplayer < 3)) || (human_civ[0] == civ2)) {
-        popup_game_with_city((const char *)&str_escape_2,city2);
-      }
-      else {
-        net_send_text_args(0x18,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3,0
-                           ,city2,0);
-      }
-      if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) {
-        city_set_production(city3,99);
       }
     }
     else {
-      civ_spaceship_lost_notify(civ2);
-      if (-1 < city4) {
-        cities[city4].building = -1;
+      save_palace = popup_game_with_sprite((const char *)&str_canescape_2,(iptr)&popup_info_icon_sprite,0);
+    }
+  }
+  if (save_palace == 1) {
+    civs[civ2].gold -= 1000;
+    city_set_improvement(city2,1,1);
+    if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
+        (game.multiplayer < 3)) || (human_civ[0] == civ2)) {
+      popup_game_with_city((const char *)&str_escape_2,city2);
+    }
+    else {
+      net_send_text_args(0x18,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3,0
+                         ,city2,0);
+    }
+    if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) {
+      city_set_production(city3,99);
+    }
+  }
+  else {
+    civ_spaceship_lost_notify(civ2);
+    if (-1 < city4) {
+      cities[city4].building = -1;
+    }
+  }
+}
+
+/* Part of city_capture_aftermath (0057b5df): the wonder the city was building is
+   abandoned (the dialog). */
+static void city_capture_aftermath_abandon_wonder(uptr city,Dialog &dialog2,iptr civ2)
+{
+  int improvement2;
+  iptr x;
+  iptr improvement3;
+  int same_build_count;
+  uptr city2;
+
+  if (cities[city].building < 1) {
+    improvement3 = ~(int)cities[city].building + 1;
+  }
+  else {
+    improvement3 = (iptr)cities[city].building;
+  }
+  same_build_count = 0;
+  for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
+    if (((cities[city2].id != 0) && (city2 != city)) &&
+       ((cities[city2].owner == civ2 &&
+        (cities[city2].building == cities[city].building)))) {
+      same_build_count++;
+    }
+  }
+  x = (iptr)(civ_name_plural(civ2));
+  text_set_string_arg(1,(const char *)x);
+  text_set_label_arg(2,improvements[improvement3].name);
+  text_set_number_arg(0,same_build_count);
+  if (same_build_count == 0) {
+    dialog2.load_game_text((const char *)&str_abandonwonder_3);
+    if (2 < game.multiplayer) {
+      net_send_text_args(0x14,0xff,3,0,improvement3,8);
+    }
+  }
+  else {
+    text_clear();
+    text_append((const char *)&str_stillwonder);
+    x = int_clamp(same_build_count,1,2);
+    text_append_int(x);
+    dialog2.load_game_text((const char *)&map_views_block.text_buffer);
+    improvement2 = int_clamp(same_build_count,1,2);
+    if (improvement2 == 1) {
+      if (game.multiplayer < 3) {
+        net_send_text_args(0x4c,0xff,3,0,improvement3,0);
+      }
+      else {
+        net_send_text_args(0x4b,0xff,3,0,improvement3,0);
       }
     }
   }
-  if ((cities[city].building < -0x26) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
-    if (cities[city].building < 1) {
-      improvement3 = ~(int)cities[city].building + 1;
-    }
-    else {
-      improvement3 = (iptr)cities[city].building;
-    }
-    same_build_count = 0;
-    for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
-      if (((cities[city2].id != 0) && (city2 != city)) &&
-         ((cities[city2].owner == civ2 &&
-          (cities[city2].building == cities[city].building)))) {
-        same_build_count++;
-      }
-    }
-    x = (iptr)(civ_name_plural(civ2));
-    text_set_string_arg(1,(const char *)x);
-    text_set_label_arg(2,improvements[improvement3].name);
-    text_set_number_arg(0,same_build_count);
-    if (same_build_count == 0) {
-      dialog2.load_game_text((const char *)&str_abandonwonder_3);
-      if (2 < game.multiplayer) {
-        net_send_text_args(0x14,0xff,3,0,improvement3,8);
-      }
-    }
-    else {
+  dialog2.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement3 * 0x3c),0,0);
+  dialog2.set_image_zoom(8);
+  dialog2.show_modal(0);
+}
+
+/* Part of city_capture_aftermath (0057b5df): the wonders of the city change hands
+   (the dialogs). */
+static void city_capture_aftermath_wonder_notices(uptr city,iptr civ,Dialog &dialog2,iptr civ2)
+{
+  int improvement2;
+  uptr wonder_city;
+  iptr wonder;
+
+  for (wonder = 0; wonder < 0x1c; wonder++) {
+    wonder_city = wonder_get_city(wonder);
+    if (wonder_city == city) {
+      improvement2 = wonder + 0x27;
+      text_set_label_arg(1,improvements[improvement2].name);
       text_clear();
-      text_append((const char *)&str_stillwonder);
-      x = int_clamp(same_build_count,1,2);
-      text_append_int(x);
-      dialog2.load_game_text((const char *)&map_views_block.text_buffer);
-      improvement2 = int_clamp(same_build_count,1,2);
-      if (improvement2 == 1) {
-        if (game.multiplayer < 3) {
-          net_send_text_args(0x4c,0xff,3,0,improvement3,0);
-        }
-        else {
-          net_send_text_args(0x4b,0xff,3,0,improvement3,0);
-        }
+      if (((wonder < 7) || (wonder == 0x13)) || ((wonder == 0x14 || (0x16 < wonder)))) {
+        text_append_label(0xf3);
+        text_append_space();
       }
-    }
-    dialog2.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement3 * 0x3c),0,0);
-    dialog2.set_image_zoom(8);
-    dialog2.show_modal(0);
-  }
-  if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) ||
-      ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
-    for (wonder = 0; wonder < 0x1c; wonder++) {
-      wonder_city = wonder_get_city(wonder);
-      if (wonder_city == city) {
-        improvement2 = wonder + 0x27;
-        text_set_label_arg(1,improvements[improvement2].name);
-        text_clear();
-        if (((wonder < 7) || (wonder == 0x13)) || ((wonder == 0x14 || (0x16 < wonder)))) {
-          text_append_label(0xf3);
-          text_append_space();
-        }
-        text_set_string_arg(2,(const char *)&map_views_block.text_buffer);
-        if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
-            (2 < game.multiplayer)) && (human_civ[0] != civ2)) {
-          net_send_text_args(0x1a,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3
-                             ,0,improvement2,0);
-        }
-        if ((human_civ[0] == civ) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
-          dialog2.load_game_text((const char *)&str_capturewonder_2);
-          dialog2.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
-          dialog2.set_image_zoom(8);
-          dialog2.show_modal(0);
-        }
-        else if ((human_civ[0] == civ2) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
-          dialog2.load_game_text((const char *)&str_lostwonder_2);
-          dialog2.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
-          dialog2.set_image_zoom(8);
-          dialog2.show_modal(0);
-        }
-        if (wonder == 0x14) {
-          civ_apply_eiffel_tower(civ);
-        }
+      text_set_string_arg(2,(const char *)&map_views_block.text_buffer);
+      if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
+          (2 < game.multiplayer)) && (human_civ[0] != civ2)) {
+        net_send_text_args(0x1a,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,3
+                           ,0,improvement2,0);
+      }
+      if ((human_civ[0] == civ) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+        dialog2.load_game_text((const char *)&str_capturewonder_2);
+        dialog2.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
+        dialog2.set_image_zoom(8);
+        dialog2.show_modal(0);
+      }
+      else if ((human_civ[0] == civ2) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+        dialog2.load_game_text((const char *)&str_lostwonder_2);
+        dialog2.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
+        dialog2.set_image_zoom(8);
+        dialog2.show_modal(0);
+      }
+      if (wonder == 0x14) {
+        civ_apply_eiffel_tower(civ);
       }
     }
   }
-  plunder = int_clamp(plunder,0,civs[civ2].gold);
-  civs[civ2].gold -= plunder;
-  if (civ != 0) {
-    civs[civ].gold += plunder;
-  }
-  if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
-    status_draw_info(1);
-  }
-  cities[city].shield_box = 0;
-  cities[city].flags = cities[city].flags & 0xffffffc4;
-  if (-1 < cities[city].building) {
-    build_count = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + civ2 * 0x594);
-    *build_count = *build_count - 1;
-  }
-  if (was_founder == 0) {
-    city_set_improvement(city,1,0);
-    city_set_improvement(city,4,0);
-    city_set_improvement(city,0xb,0);
-    city_set_improvement(city,7,0);
-  }
-  if ((capture_mode == 0) && (was_founder == 0)) {
-    improvement2 = _rand();
-    terrain = (byte)(improvement2 >> 0x1f);
-    for (improvement = 0; improvement < 5; improvement++) {
-      cities[city].improvements[improvement] =
-           cities[city].improvements[improvement] &
-           (byte)(0xaa >> ((((byte)improvement2 ^ terrain) - terrain & 1 ^ terrain) - terrain & 0x1f));
-    }
-  }
-  if (((capture_mode == 0) && (was_founder == 0)) || (1 < cities[city].size)) {
-    human_on_continent = 0;
-    if (civ == 0) {
-      improvement2 = tile_landmass(x2,y);
-      for (civ4 = 1; civ4 < 8; civ4++) {
-        if (((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) &&
-           (*(char *)&civs[civ4].continent_cities[improvement2] != '\0')) {
-          human_on_continent = 1;
-        }
+}
+
+/* Part of city_capture_aftermath (0057b5df): the city shrinks (an AI may keep it
+   whole), city = -1 when it is destroyed. */
+static void city_capture_aftermath_shrink(uptr &city,iptr civ,int x2,int y,iptr civ2)
+{
+  int improvement2;
+  uint rnd;
+  uint sign;
+  int civ4;
+  int human_on_continent;
+
+  human_on_continent = 0;
+  if (civ == 0) {
+    improvement2 = tile_landmass(x2,y);
+    for (civ4 = 1; civ4 < 8; civ4++) {
+      if (((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) &&
+         (*(char *)&civs[civ4].continent_cities[improvement2] != '\0')) {
+        human_on_continent = 1;
       }
     }
-    if ((cities[city].size < 2) &&
-       (((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 &&
-          ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0)) ||
-         ((civ == 0 && ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)))) &&
-        ((((civ != 0 || (human_on_continent != 0)) &&
-          ((game.human_players & cities[city].known_to) == 0)) &&
-         (game.power_rank[civ] != 7)))))) {
-      if (game.power_rank[game.worst_human_rank] < game.power_rank[civ]) {
-        rnd = _rand();
-        sign = (int)rnd >> 0x1f;
-        if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
-          cities[city].size--;
-        }
+  }
+  if ((cities[city].size < 2) &&
+     (((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 &&
+        ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0)) ||
+       ((civ == 0 && ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)))) &&
+      ((((civ != 0 || (human_on_continent != 0)) &&
+        ((game.human_players & cities[city].known_to) == 0)) &&
+       (game.power_rank[civ] != 7)))))) {
+    if (game.power_rank[game.worst_human_rank] < game.power_rank[civ]) {
+      rnd = crt_rand_at("city_capture_aftermath");
+      sign = (int)rnd >> 0x1f;
+      if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
+        cities[city].size--;
       }
     }
-    else {
-      cities[city].size--;
-    }
-    if (cities[city].size == '\0') {
-      city_delete(city,0);
-      city = 0xffffffff;
+  }
+  else {
+    cities[city].size--;
+  }
+  if (cities[city].size == '\0') {
+    city_delete(city,0);
+    city = 0xffffffff;
+  }
+}
+
+/* Part of city_capture_aftermath (0057b5df): the new owner takes the city radius
+   and the city. */
+static void city_capture_aftermath_take_tiles(uptr city,iptr civ,int x2,int y,iptr civ2)
+{
+  int improvement2;
+  iptr x;
+  iptr y2;
+  iptr improvement;
+
+  civs[civ].last_city_turn = game.turn;
+  civ_clear_standing_goals_near(civ,5,x2,y,4);
+  net_batch_begin();
+  for (improvement = 0; improvement < 0x15; improvement++) {
+    x = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[improvement] + x2);
+    y2 = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[improvement] + y;
+    improvement2 = map_in_bounds(x,y2);
+    if ((improvement2 != 0) && (tile_set_radius_civ(x,y2,civ,1), civ == 0)) {
+      tile_set_visible(x,y2,1,1,1);
     }
   }
-  if (-1 < (int)city) {
-    civs[civ].last_city_turn = game.turn;
-    civ_clear_standing_goals_near(civ,5,x2,y,4);
-    net_batch_begin();
-    for (improvement = 0; improvement < 0x15; improvement++) {
-      x = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[improvement] + x2);
-      y2 = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[improvement] + y;
-      improvement2 = map_in_bounds(x,y2);
-      if ((improvement2 != 0) && (tile_set_radius_civ(x,y2,civ,1), civ == 0)) {
-        tile_set_visible(x,y2,1,1,1);
-      }
-    }
-    net_batch_flush();
-    cities[city].owner = (byte)civ;
-    city_reveal_to_civ(city,civ2);
-    if (scenario_events_loaded != 0) {
-      ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->check_city_taken((iptr)&cities[city].name,civ,civ2);
-    }
+  net_batch_flush();
+  cities[city].owner = (byte)civ;
+  city_reveal_to_civ(city,civ2);
+  if (scenario_events_loaded != 0) {
+    ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->check_city_taken((iptr)&cities[city].name,civ,civ2);
   }
-  tile_set_owner(x2,y,civ,1);
-  if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
-    snd_play_effect(5,0,0,0);
-  }
-  text_set_string_arg(0,(const char *)city_name);
-  text_set_label_arg(3,label_string_ids[175 - (uint)(was_founder == 0)]);
-  text_set_label_arg(4,label_string_ids[0xb1 - (uint)(was_founder == 0)]);
-  tile_update_known(x2,y,civ);
-  tile_update_known(x2,y,civ2);
-  if (2 < game.multiplayer) {
-    net_send_state_diff(0xff,2,0,0,0);
-    net_send_message(0x78,0xff,0,0,0,0,0,0,0,0);
-    XD_FlushSendBuffer(5000);
-  }
+}
+
+/* Part of city_capture_aftermath (0057b5df): the news of the capture: plunder,
+   messages to the humans and the multiplayer peers. */
+static void city_capture_aftermath_announce(uptr city,iptr civ,int x2,int y,iptr civ2,iptr plunder)
+{
+  int improvement2;
+  iptr x;
+  int civ3;
+
   if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) &&
       ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0)) || (civ_saved_cursor_x_block.autoplay_active != 0)) {
     if (civ_saved_cursor_x_block.autoplay_active == 0) {
@@ -17464,237 +17932,436 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int capture_mode)
                          civ,city);
     }
   }
+}
+
+/* Part of city_capture_aftermath (0057b5df): the units the city supported:
+   rehomed or disbanded. */
+static void city_capture_aftermath_rehome_units(uptr city,iptr civ,int x2,int y,iptr civ2)
+{
+  char *build_count;
+  int improvement2;
+  Tile *map_tile;
+  iptr x;
+  iptr improvement4;
+  iptr unit;
+  iptr unit_type;
+  iptr y2;
+  iptr improvement;
+  uptr city2;
+  int best_score;
+  int score;
+
+  for (unit = (iptr)game.num_units - 1; -1 < unit; unit--) {
+    if (((units[unit].id != 0) && (units[unit].owner == civ2)) &&
+       ((byte)units[unit].home_city == city)) {
+      if (units[unit].type != '\t') {
+        if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) &&
+            (city2 = city_at((int)units[unit].x,(int)units[unit].y),
+            -1 < (int)city2)) && (city2 != city)) {
+          if ((unit_types[units[unit].type].role == 1) &&
+             (improvement2 = unit_stack_count_role(unit,1), improvement2 == 1)) {
+            units[unit].home_city = (i8)city2;
+            continue;
+          }
+          cities[city2].flags = cities[city2].flags | 0x20;
+        }
+        unit_destroy_redraw(unit,1);
+        /* rescan from the last unit */
+        unit = (iptr)game.num_units;
+        continue;
+      }
+      units[unit].home_city = -1;
+    }
+  }
+  if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
+     (((4 < civs[civ].government || (4 < civs[civ2].government)) &&
+      (game.difficulty != '\0')))) {
+    cities[city].flags = cities[city].flags | 1;
+  }
+  if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
+    cities[city].building = '\0';
+    if (civ == 0) {
+      cities[city].building = 5;
+      unit = tile_first_unit(x2,y);
+      if (-1 < unit) {
+        cities[city].building = units[unit].type;
+      }
+    }
+    build_count = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + civ * 0x594);
+    *build_count = *build_count + 1;
+    city_set_production(city,99);
+  }
+  else {
+    map_redraw_neighbors_all_views((int)cities[city].x,(int)cities[city].y);
+    if ((cities[city].building < '\0') ||
+       (improvement2 = civ_can_build_unit(civ,city,(int)cities[city].building), improvement2 != 0)) {
+      if (cities[city].building < '\0') {
+        if (cities[city].building < 1) {
+          improvement4 = ~(int)cities[city].building + 1;
+        }
+        else {
+          improvement4 = (iptr)cities[city].building;
+        }
+        improvement2 = city_can_build_improvement(civ,city,improvement4);
+      }
+    }
+    /* improvement2 == 0: the current build can't be built */
+    if (improvement2 == 0) {
+      cities[city].building = '\0';
+      best_score = 0;
+      for (unit_type = 0x3e; -1 < unit_type; unit_type--) {
+        if ((unit_types[unit_type].role == 1) &&
+           (improvement2 = civ_can_build_unit(civ,city,unit_type), improvement2 != 0)) {
+          score = ((int)(char)unit_types[unit_type].defense << 3) /
+                     (int)(char)unit_types[unit_type].cost;
+          if ((unit_types[unit_type].flags & 0x400) != 0) {
+            score++;
+          }
+          if (best_score < score) {
+            best_score = score;
+            cities[city].building = (i8)unit_type;
+          }
+          break;
+        }
+      }
+    }
+    net_batch_begin();
+    for (improvement = 0; improvement < 8; improvement++) {
+      x = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[improvement] + x2);
+      y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[improvement] + y;
+      improvement2 = map_in_bounds(x,y2);
+      if ((improvement2 != 0) &&
+         (map_tile = tile_at(x,y2),
+         ((uint)map_tile->visible & 1 << ((byte)civ & 0x1f)) == 0)) {
+        tile_set_visible(x,y2,1 << ((byte)civ & 0x1f),1,1);
+        map_redraw_tile_all_views(x,y2);
+      }
+    }
+    net_batch_flush();
+    city_turn_processing = 1;
+    ((CityWindow *)((i8 *)&city_window_block.city_window))->begin_notice();
+    ((CityWindow *)((i8 *)&city_window_block.city_window))->open(city);
+    ((CityWindow *)((i8 *)&city_window_block.city_window))->end_notice();
+    city_turn_processing = 0;
+  }
+}
+
+/* Part of city_capture_aftermath (0057b5df): partisans rise for the loser. */
+static void city_capture_aftermath_partisans(uptr city,iptr civ,int capture_mode,int x2,int y,iptr civ2,i8 city_name[80])
+{
+  byte terrain;
+  int improvement2;
+  int value;
+  iptr x;
+  uint rnd;
+  i32 tile_bits;
+  int veteran_roll;
+  int rank_diff;
+  int gov_diff;
+  iptr unit;
+  int partisan_count;
+  int partisans_made;
+  iptr y3;
+  iptr x3;
+  int partisan_idx;
+  iptr y2;
+  iptr improvement;
+  int best_score;
+  int score;
+
+  if ((uint)civs[civ2].government == (uint)civs[civ].government ||
+      (int)((uint)civs[civ2].government - (uint)civs[civ].government) < 0) {
+    gov_diff = ~((uint)civs[civ2].government - (uint)civs[civ].government) + 1;
+  }
+  else {
+    gov_diff = (uint)civs[civ2].government - (uint)civs[civ].government;
+  }
+  if ((uint)game.power_rank[civ2] == (uint)game.power_rank[civ] ||
+      (int)((uint)game.power_rank[civ2] - (uint)game.power_rank[civ]) < 0) {
+    rank_diff = ~((uint)game.power_rank[civ2] - (uint)game.power_rank[civ]) + 1;
+  }
+  else {
+    rank_diff = (uint)game.power_rank[civ2] - (uint)game.power_rank[civ];
+  }
+  improvement2 = cities[city].size + 5;
+  partisan_count = (((int)(improvement2 + (improvement2 >> 0x1f & 7U)) >> 3) * (gov_diff + rank_diff + 1)) / 2;
+  if (capture_mode != 0) {
+    partisan_count = partisan_count / 2;
+  }
+  improvement2 = civ_has_advance(civ2,0x11);
+  if (improvement2 == 0) {
+    partisan_count--;
+  }
+  improvement2 = civ_has_advance(civ2,0x22);
+  if (improvement2 == 0) {
+    improvement2 = civ_has_advance(civ2,0xf);
+    if (improvement2 == 0) {
+      partisan_count = 0;
+    }
+    improvement2 = civ_has_advance(civ2,0x23);
+    if (improvement2 == 0) {
+      partisan_count = 0;
+    }
+  }
+  else {
+    improvement2 = civ_has_advance(civ,0x22);
+    if (improvement2 == 0) {
+      partisan_count = partisan_count << 1;
+    }
+    else {
+      partisan_count++;
+    }
+  }
+  improvement2 = (((civs[civ2].treaties[civ] & 0x10) == 0) - 1 & 2) +
+           (civs[civ].reputation - 4);
+  if (improvement2 < 1) {
+    improvement2 = 0;
+  }
+  partisans_made = 0;
+  for (partisan_idx = 0; partisan_idx < partisan_count; partisan_idx++) {
+    best_score = 0;
+    for (improvement = 0; improvement < 0x14; improvement++) {
+      x = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[improvement] + x2);
+      y2 = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[improvement] + y;
+      value = map_in_bounds(x,y2);
+      if (((value != 0) && (value = tile_is_ocean(x,y2), value == 0)) &&
+         (value = tile_city_or_unit_owner(x,y2), value < 0)) {
+        terrain = tile_terrain(x,y2);
+        score = (char)terrain_types[terrain].defense * 2;
+        rnd = tile_improvements(x,y2);
+        if ((rnd & 0x10) != 0) {
+          score++;
+        }
+        rnd = tile_improvements(x,y2);
+        if ((rnd & 0x20) != 0) {
+          score++;
+        }
+        tile_bits = tile_improvements(x,y2);
+        if (((byte)tile_bits & 0x42) == 0x40) {
+          score = score << 1;
+        }
+        if (best_score < score) {
+          best_score = score;
+          y3 = y2;
+          x3 = x;
+        }
+      }
+    }
+    if ((best_score != 0) &&
+       (unit = unit_create(9,civ2,x3,y3), -1 < unit)) {
+      if (partisans_made == 0) {
+        if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
+          snd_play_effect(0x22,1,0,0);
+        }
+        if (((2 < game.multiplayer) &&
+            ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
+           (human_civ[0] != civ2)) {
+          net_send_message(0x7a,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id
+                             ,0x22,1,0,0,0,0,0,0);
+        }
+      }
+      partisans_made++;
+      units[unit].orders = 2;
+      if (improvement2 != 0) {
+        if (improvement2 < 1) {
+          veteran_roll = 0;
+        }
+        else {
+          veteran_roll = crt_rand_at("city_capture_aftermath");
+          veteran_roll = veteran_roll % (improvement2 + 1);
+        }
+        if (veteran_roll != 0) {
+          units[unit].flags = units[unit].flags | 0x2000;
+        }
+      }
+      unit_set_seen_by(unit,civ);
+      map_redraw_tile_all_views(x3,y3);
+      if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
+        ui_delay_ticks(1);
+      }
+    }
+  }
+  if (((partisans_made != 0) &&
+      (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0 ||
+       ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)))) && (civ_saved_cursor_x_block.autoplay_active == 0))
+  {
+    x = civ_get_adjective(civ2);
+    text_set_string_arg(0,(const char *)x);
+    text_set_string_arg(1,(const char *)city_name);
+    if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
+      dlg_game_txt_with_unit((const char *)&str_partisans_2,unit);
+    }
+    if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
+        (2 < game.multiplayer)) && (human_civ[0] != civ2)) {
+      net_send_text_args(0x1f,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,2,0
+                         ,unit,0);
+    }
+  }
+}
+
+/* 0057b5df auto */
+void __cdecl city_capture_aftermath(uptr city,iptr civ,int capture_mode)
+
+{
+  uint *attitude_flags;
+  char *build_count;
+  bool is_weaker;
+  byte terrain;
+  int x2;
+  int y;
+  iptr loser_launched;
+  iptr winner_launched;
+  int improvement2;
+  uptr wonder_city;
+  iptr city4;
+  Dialog dialog2;
+  uint founded_count;
+  iptr civ2;
+  uint was_founder;
+  iptr plunder;
+  iptr improvement;
+  i8 city_name[80];
+  uptr city2;
+  i32 eh_state;
+  
+  eh_state = 0xffffffff;
+  dialog2.Dialog::construct(0x4000);
+  eh_state = 0;
+  civ2 = (iptr)cities[city].owner;
+  x2 = (int)cities[city].x;
+  y = (int)cities[city].y;
+  if (capture_mode < 2) {
+    diplo_force_war(civ,civ2);
+  }
+  was_founder = (uint)(cities[city].founder == civ);
+  crt_strcpy(city_name,(const char *)(&cities[city].name));
+  if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) ||
+      ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
+     (((loser_launched = civ_spaceship_launched(civ2), loser_launched == 0 &&
+       (winner_launched = civ_spaceship_launched(civ), winner_launched == 0)) || (game.difficulty < 2)))) {
+    diplo_set_treaty_flags(civ,civ2,0x10000);
+    if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) ||
+        (civs[civ].government != 6)) || (game.power_rank[civ] != 7)) {
+      if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
+         (game.power_rank[civ2] < game.power_rank[civ])) {
+        founded_count = 0;
+        for (city2 = 0; (int)city2 < (int)game.num_cities; city2++) {
+          if (((cities[city2].id != 0) && (city2 != city)) &&
+             ((cities[city2].founder == civ2 && (cities[city2].owner == civ)))) {
+            founded_count++;
+          }
+        }
+        if ((1 < (int)founded_count) && ((founded_count & 1) == 0)) {
+          attitude_flags = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
+          *attitude_flags = *attitude_flags | 0x400000;
+        }
+      }
+    }
+    else {
+      attitude_flags = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
+      *attitude_flags = *attitude_flags | 0x400000;
+    }
+  }
+  diplo_clear_treaty_flags(civ,civ2,0x800);
+  if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) &&
+      (14 < cities[city].size)) && (was_founder == 0)) {
+    attitude_flags = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
+    *attitude_flags = *attitude_flags | 0x10;
+  }
+  city4 = -1;
+  if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) &&
+      (improvement2 = city_has_improvement(city,1), improvement2 != 0)) && (4 < civs[civ2].num_cities)) {
+    if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
+      if (game.power_rank[game.worst_human_rank] < game.power_rank[civ2]) {
+        is_weaker = true;
+      }
+      else {
+        is_weaker = false;
+      }
+    }
+    else {
+      is_weaker = game.power_rank[civ] < game.power_rank[civ2];
+    }
+    if ((is_weaker) && (improvement2 = civ_civil_war(civ2), improvement2 == 0)) {
+      cities[city].owner = -1;
+      city4 = civ_find_central_city(civ2);
+      cities[city].owner = (byte)civ2;
+    }
+  }
+  plunder = city_treasury_share(city);
+  improvement2 = city_has_improvement(city,1);
+  if (improvement2 != 0) {
+    city_capture_aftermath_palace_escape(city,x2,y,city4,civ2);
+  }
+  if ((cities[city].building < -0x26) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+    city_capture_aftermath_abandon_wonder(city,dialog2,civ2);
+  }
+  if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) ||
+      ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) && (civ_saved_cursor_x_block.autoplay_active == 0)) {
+    city_capture_aftermath_wonder_notices(city,civ,dialog2,civ2);
+  }
+  plunder = int_clamp(plunder,0,civs[civ2].gold);
+  civs[civ2].gold -= plunder;
+  if (civ != 0) {
+    civs[civ].gold += plunder;
+  }
+  if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
+    status_draw_info(1);
+  }
+  cities[city].shield_box = 0;
+  cities[city].flags = cities[city].flags & 0xffffffc4;
+  if (-1 < cities[city].building) {
+    build_count = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + civ2 * 0x594);
+    *build_count = *build_count - 1;
+  }
+  if (was_founder == 0) {
+    city_set_improvement(city,1,0);
+    city_set_improvement(city,4,0);
+    city_set_improvement(city,0xb,0);
+    city_set_improvement(city,7,0);
+  }
+  if ((capture_mode == 0) && (was_founder == 0)) {
+    improvement2 = _rand();
+    terrain = (byte)(improvement2 >> 0x1f);
+    for (improvement = 0; improvement < 5; improvement++) {
+      cities[city].improvements[improvement] =
+           cities[city].improvements[improvement] &
+           (byte)(0xaa >> ((((byte)improvement2 ^ terrain) - terrain & 1 ^ terrain) - terrain & 0x1f));
+    }
+  }
+  if (((capture_mode == 0) && (was_founder == 0)) || (1 < cities[city].size)) {
+    city_capture_aftermath_shrink(city,civ,x2,y,civ2);
+  }
+  if (-1 < (int)city) {
+    city_capture_aftermath_take_tiles(city,civ,x2,y,civ2);
+  }
+  tile_set_owner(x2,y,civ,1);
+  if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
+    snd_play_effect(5,0,0,0);
+  }
+  text_set_string_arg(0,(const char *)city_name);
+  text_set_label_arg(3,label_string_ids[175 - (uint)(was_founder == 0)]);
+  text_set_label_arg(4,label_string_ids[0xb1 - (uint)(was_founder == 0)]);
+  tile_update_known(x2,y,civ);
+  tile_update_known(x2,y,civ2);
+  if (2 < game.multiplayer) {
+    net_send_state_diff(0xff,2,0,0,0);
+    net_send_message(0x78,0xff,0,0,0,0,0,0,0,0);
+    XD_FlushSendBuffer(5000);
+  }
+  city_capture_aftermath_announce(city,civ,x2,y,civ2,plunder);
   if (((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 0x20) == 0)) {
     civ_steal_advance(civ,civ2);
   }
   if (-1 < (int)city) {
-    for (unit = (iptr)game.num_units - 1; -1 < unit; unit--) {
-      if (((units[unit].id != 0) && (units[unit].owner == civ2)) &&
-         ((byte)units[unit].home_city == city)) {
-        if (units[unit].type != '\t') {
-          if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) &&
-              (city2 = city_at((int)units[unit].x,(int)units[unit].y),
-              -1 < (int)city2)) && (city2 != city)) {
-            if ((unit_types[units[unit].type].role == 1) &&
-               (improvement2 = unit_stack_count_role(unit,1), improvement2 == 1)) {
-              units[unit].home_city = (i8)city2;
-              continue;
-            }
-            cities[city2].flags = cities[city2].flags | 0x20;
-          }
-          unit_destroy_redraw(unit,1);
-          /* rescan from the last unit */
-          unit = (iptr)game.num_units;
-          continue;
-        }
-        units[unit].home_city = -1;
-      }
-    }
-    if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
-       (((4 < civs[civ].government || (4 < civs[civ2].government)) &&
-        (game.difficulty != '\0')))) {
-      cities[city].flags = cities[city].flags | 1;
-    }
-    if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
-      cities[city].building = '\0';
-      if (civ == 0) {
-        cities[city].building = 5;
-        unit = tile_first_unit(x2,y);
-        if (-1 < unit) {
-          cities[city].building = units[unit].type;
-        }
-      }
-      build_count = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + civ * 0x594);
-      *build_count = *build_count + 1;
-      city_set_production(city,99);
-    }
-    else {
-      map_redraw_neighbors_all_views((int)cities[city].x,(int)cities[city].y);
-      if ((cities[city].building < '\0') ||
-         (improvement2 = civ_can_build_unit(civ,city,(int)cities[city].building), improvement2 != 0)) {
-        if (cities[city].building < '\0') {
-          if (cities[city].building < 1) {
-            improvement4 = ~(int)cities[city].building + 1;
-          }
-          else {
-            improvement4 = (iptr)cities[city].building;
-          }
-          improvement2 = city_can_build_improvement(civ,city,improvement4);
-        }
-      }
-      /* improvement2 == 0: the current build can't be built */
-      if (improvement2 == 0) {
-        cities[city].building = '\0';
-        best_score = 0;
-        for (unit_type = 0x3e; -1 < unit_type; unit_type--) {
-          if ((unit_types[unit_type].role == 1) &&
-             (improvement2 = civ_can_build_unit(civ,city,unit_type), improvement2 != 0)) {
-            score = ((int)(char)unit_types[unit_type].defense << 3) /
-                       (int)(char)unit_types[unit_type].cost;
-            if ((unit_types[unit_type].flags & 0x400) != 0) {
-              score++;
-            }
-            if (best_score < score) {
-              best_score = score;
-              cities[city].building = (i8)unit_type;
-            }
-            break;
-          }
-        }
-      }
-      net_batch_begin();
-      for (improvement = 0; improvement < 8; improvement++) {
-        x = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[improvement] + x2);
-        y2 = (((i8 *)&dir_dy_table_block.dir_dy_table))[improvement] + y;
-        improvement2 = map_in_bounds(x,y2);
-        if ((improvement2 != 0) &&
-           (map_tile = tile_at(x,y2),
-           ((uint)map_tile->visible & 1 << ((byte)civ & 0x1f)) == 0)) {
-          tile_set_visible(x,y2,1 << ((byte)civ & 0x1f),1,1);
-          map_redraw_tile_all_views(x,y2);
-        }
-      }
-      net_batch_flush();
-      city_turn_processing = 1;
-      ((CityWindow *)((i8 *)&city_window_block.city_window))->begin_notice();
-      ((CityWindow *)((i8 *)&city_window_block.city_window))->open(city);
-      ((CityWindow *)((i8 *)&city_window_block.city_window))->end_notice();
-      city_turn_processing = 0;
-    }
+    city_capture_aftermath_rehome_units(city,civ,x2,y,civ2);
   }
   improvement2 = civ_check_destroyed(civ2,civ);
   if ((((improvement2 == 0) && (-1 < (int)city)) && (was_founder == 0)) &&
      (((civs[civ2].government == 3 || (civs[civ2].government == 6)) ||
       ((game.first_discoverer[0x22] != '\0' ||
        (improvement2 = civ_has_advance(civ2,0xf), improvement2 != 0)))))) {
-    if ((uint)civs[civ2].government == (uint)civs[civ].government ||
-        (int)((uint)civs[civ2].government - (uint)civs[civ].government) < 0) {
-      gov_diff = ~((uint)civs[civ2].government - (uint)civs[civ].government) + 1;
-    }
-    else {
-      gov_diff = (uint)civs[civ2].government - (uint)civs[civ].government;
-    }
-    if ((uint)game.power_rank[civ2] == (uint)game.power_rank[civ] ||
-        (int)((uint)game.power_rank[civ2] - (uint)game.power_rank[civ]) < 0) {
-      rank_diff = ~((uint)game.power_rank[civ2] - (uint)game.power_rank[civ]) + 1;
-    }
-    else {
-      rank_diff = (uint)game.power_rank[civ2] - (uint)game.power_rank[civ];
-    }
-    improvement2 = cities[city].size + 5;
-    partisan_count = (((int)(improvement2 + (improvement2 >> 0x1f & 7U)) >> 3) * (gov_diff + rank_diff + 1)) / 2;
-    if (capture_mode != 0) {
-      partisan_count = partisan_count / 2;
-    }
-    improvement2 = civ_has_advance(civ2,0x11);
-    if (improvement2 == 0) {
-      partisan_count--;
-    }
-    improvement2 = civ_has_advance(civ2,0x22);
-    if (improvement2 == 0) {
-      improvement2 = civ_has_advance(civ2,0xf);
-      if (improvement2 == 0) {
-        partisan_count = 0;
-      }
-      improvement2 = civ_has_advance(civ2,0x23);
-      if (improvement2 == 0) {
-        partisan_count = 0;
-      }
-    }
-    else {
-      improvement2 = civ_has_advance(civ,0x22);
-      if (improvement2 == 0) {
-        partisan_count = partisan_count << 1;
-      }
-      else {
-        partisan_count++;
-      }
-    }
-    improvement2 = (((civs[civ2].treaties[civ] & 0x10) == 0) - 1 & 2) +
-             (civs[civ].reputation - 4);
-    if (improvement2 < 1) {
-      improvement2 = 0;
-    }
-    partisans_made = 0;
-    for (partisan_idx = 0; partisan_idx < partisan_count; partisan_idx++) {
-      best_score = 0;
-      for (improvement = 0; improvement < 0x14; improvement++) {
-        x = map_wrap_x((((i8 *)&dir_dy_table_block.city_tile_dx_table))[improvement] + x2);
-        y2 = (((i8 *)&dir_dy_table_block.city_tile_dy_table))[improvement] + y;
-        value = map_in_bounds(x,y2);
-        if (((value != 0) && (value = tile_is_ocean(x,y2), value == 0)) &&
-           (value = tile_city_or_unit_owner(x,y2), value < 0)) {
-          terrain = tile_terrain(x,y2);
-          score = (char)terrain_types[terrain].defense * 2;
-          rnd = tile_improvements(x,y2);
-          if ((rnd & 0x10) != 0) {
-            score++;
-          }
-          rnd = tile_improvements(x,y2);
-          if ((rnd & 0x20) != 0) {
-            score++;
-          }
-          tile_bits = tile_improvements(x,y2);
-          if (((byte)tile_bits & 0x42) == 0x40) {
-            score = score << 1;
-          }
-          if (best_score < score) {
-            best_score = score;
-            y3 = y2;
-            x3 = x;
-          }
-        }
-      }
-      if ((best_score != 0) &&
-         (unit = unit_create(9,civ2,x3,y3), -1 < unit)) {
-        if (partisans_made == 0) {
-          if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
-            snd_play_effect(0x22,1,0,0);
-          }
-          if (((2 < game.multiplayer) &&
-              ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
-             (human_civ[0] != civ2)) {
-            net_send_message(0x7a,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id
-                               ,0x22,1,0,0,0,0,0,0);
-          }
-        }
-        partisans_made++;
-        units[unit].orders = 2;
-        if (improvement2 != 0) {
-          if (improvement2 < 1) {
-            veteran_roll = 0;
-          }
-          else {
-            veteran_roll = _rand();
-            veteran_roll = veteran_roll % (improvement2 + 1);
-          }
-          if (veteran_roll != 0) {
-            units[unit].flags = units[unit].flags | 0x2000;
-          }
-        }
-        unit_set_seen_by(unit,civ);
-        map_redraw_tile_all_views(x3,y3);
-        if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
-          ui_delay_ticks(1);
-        }
-      }
-    }
-    if (((partisans_made != 0) &&
-        (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0 ||
-         ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)))) && (civ_saved_cursor_x_block.autoplay_active == 0))
-    {
-      x = civ_get_adjective(civ2);
-      text_set_string_arg(0,(const char *)x);
-      text_set_string_arg(1,(const char *)city_name);
-      if ((human_civ[0] == civ) || (human_civ[0] == civ2)) {
-        dlg_game_txt_with_unit((const char *)&str_partisans_2,unit);
-      }
-      if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
-          (2 < game.multiplayer)) && (human_civ[0] != civ2)) {
-        net_send_text_args(0x1f,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,2,0
-                           ,unit,0);
-      }
-    }
+    city_capture_aftermath_partisans(city,civ,capture_mode,x2,y,civ2,city_name);
   }
   if (-1 < (int)city) {
     cities[city].founder = (byte)civ2;

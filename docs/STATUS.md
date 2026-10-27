@@ -203,6 +203,25 @@ message by message and clock event by clock event.
   replays run by the suite too.  Found on the way: diplo_count_border_intruders
   examines only the first tile with an intruder per city (the original
   does the same; kept, commented).
+* **Smaller functions** (step 6).  The functions the original wrote as one
+  long body are split into named parts, each beside the function it came
+  from with a comment saying so: before, 69 functions were over 300 lines
+  and 9 over 1,000 (the AI's unit orders 2,849, the parley window 2,282,
+  production choice 1,985); now 9 are over 300 (data tables and flat
+  switches of short cases: the spaceship's part rows, the network message
+  dispatch, the events editor's trigger lists) and none over 1,000.
+  Locals shared between parts are passed by reference or in a small state
+  struct, so values that carry over (the original's stale reads included)
+  flow as before; a part that called `_rand()` names the original function
+  in the rand trace (`crt_rand_at("...")`).  Checks: each split function
+  compiled with its parts forced inline and compared with the previous
+  version (tools/cfg_compare.py, machine code; optimized GIMPLE graphs;
+  for ai.cpp a round trip that puts every part back and gets the original
+  text token for token), the uninitialized-read warnings compared (no new
+  real ones), then the suite and the network test.  Splitting moves gcc's
+  register and block choices, so most split functions are not identical
+  at the instruction level: those were reviewed by hand and by the
+  replays.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

@@ -9,6 +9,7 @@
 
 /* Classes the methods' declarations name before their definitions. */
 struct PaletteVersionView;
+struct EventsParseState;    /* game.cpp: the parts of ScenarioEvents::parse_file */
 
 /* The window classes.  WndBase (wnd_record_init 005db610, 0x10 bytes) is
    the native window record; ModalMenuWindow (wnd_ctor 0044c730, 0xb8) adds
@@ -362,6 +363,13 @@ typedef struct SpaceshipWindow : ModalMenuWindow {
     void draw_close_btn(int enabled,int raised);    /* 004d5f79 */
     void draw_launch_btn(int enabled,int raised);    /* 004d60a5 */
     i32 render_ship();
+    struct ShipPartRow;    /* part of render_ship */
+    struct ShipSurfaces;    /* part of render_ship */
+    void render_ship_construct_surfaces(ShipSurfaces &sf,int &unwind_state);    /* part of render_ship */
+    void render_ship_init_rows(ShipPartRow *part_rows);    /* part of render_ship */
+    int render_ship_load_surfaces(ShipSurfaces &sf);    /* part of render_ship */
+    void render_ship_draw_part(ShipSurfaces &sf,ShipPartRow *row,i8 *sprite);    /* part of render_ship */
+    void render_ship_free_surfaces(ShipSurfaces &sf,int &unwind_state);    /* part of render_ship */
 } SpaceshipWindow;
 static_assert(sizeof(SpaceshipWindow) == 0x2180, "");
 
@@ -436,6 +444,8 @@ typedef struct DiploLeaderWindow : ModalMenuWindow {
     uint init_main_art();    /* 00494949 */
     i32 init_military();    /* 00494b5f */
     i32 init_science();    /* 00494e2a */
+    void science_rank_top_techs(int (&top_techs)[13],int &tech_count);    /* part of init_science */
+    void science_draw_tech(iptr advance,struct GameFont &font2,Sprite (&category_sprites)[5],i8 (&draw_ctx)[16],i32 draw_x,int draw_y,tagRECT &text_rect,int text_width,int (&top_techs)[13],i8 (&text_colors)[4],CHAR (&words)[252],CHAR (&aCStack_641)[53],CHAR (&line2_buf)[51]);    /* part of init_science */
     i32 init_portrait();    /* 00495c35 */
     i8 init_video();    /* 00495e0c */
     void wnd_set_bg_tile(DibSurface *tile);    /* 00497cc0 */
@@ -513,6 +523,7 @@ typedef struct ThroneRoomWindow : ModalMenuWindow {
     void draw_click_prompt();    /* 0044dab5 */
     i32 render();    /* 0044db92 */
     i32 render_choices();    /* 0044e790 */
+    void add_choice_regions();    /* part of render_choices */
 } ThroneRoomWindow;
 static_assert(sizeof(ThroneRoomWindow) == 0x1c44, "");
 
@@ -904,6 +915,10 @@ typedef struct Dialog {
     DialogOption *option_at(int target_index);    /* 0059fc19 */
     int column_of_option(DialogOption *option);    /* 0059fcba */
     i32 compute_layout();    /* 0059fd2a */
+    int layout_sprites();    /* part of compute_layout */
+    void layout_list_pane(int pane,u32 &lists_height);    /* part of compute_layout */
+    void layout_buttons(int sprites_height,int content_height);    /* part of compute_layout */
+    void layout_place_window();    /* part of compute_layout */
     void draw_option_cell(const char *text,int x,int y,int selected,int disabled);    /* 005a0fea */
     void draw_option_text(char *text,int x,i32 y,i32 selected, i32 disabled);    /* 005a1148 */
     uint draw_option(DialogOption *option,int blit);    /* 005a120b */
@@ -916,10 +931,18 @@ typedef struct Dialog {
     void pick_pane_at(int x,int y);    /* 005a1caf */
     i32 create_window();    /* 005a1e28 */
     void create_controls();    /* 005a211c */
+    void create_radio_group(uint *labels);    /* part of create_controls */
+    void create_checkboxes();    /* part of create_controls */
+    void create_list_scrollbar(ScrollFn vscroll_cb,ScrollFn hscroll_cb);    /* part of create_controls */
+    void create_list_listbox();    /* part of create_controls */
+    void create_sprite_hotspots();    /* part of create_controls */
+    void create_edit_fields();    /* part of create_controls */
+    void create_buttons();    /* part of create_controls */
     void fill_rect_bg(RECT *rect,int area);    /* 005a5649 */
     void render();    /* 005a577e */
     u32 run_modal(iptr out_text,iptr timeout_secs);    /* 005a5f34 */
     i32 load_text_section(const char *file_name,const char *section,int default_value,iptr edit_default,iptr init_arg1, iptr init_arg2,iptr init_arg3,uint flags);    /* 005a632a */
+    void load_section_keyword(char *line,i8 *expanded,int &mode,int &default_value,uint has_edit,iptr edit_default,i8 *edit_text);    /* part of load_text_section */
     uint uses_alt_text_color();    /* 005a96f0 */
     void draw_text_default_font(const char *text,i32 x,i32 y, i32 flags);    /* 005a9730 */
 } Dialog;
@@ -961,6 +984,26 @@ typedef struct ScenarioEvents : Dialog {
     i32 check_city_taken(iptr city_name,iptr attacker_civ,iptr defender_civ);    /* 004fc2bb */
     i32 run_actions(ScenarioEvent *event);    /* 004fc3ae */
     int parse_file(const char *filename,const char *section);    /* 004fc516 */
+    int parse_trigger_unit_killed(EventsParseState *ps);    /* part of parse_file */
+    int parse_trigger_negotiation(EventsParseState *ps);    /* part of parse_file */
+    int parse_trigger_no_schism(EventsParseState *ps);    /* part of parse_file */
+    int parse_trigger_received_tech(EventsParseState *ps);    /* part of parse_file */
+    int parse_trigger_city_taken(EventsParseState *ps);    /* part of parse_file */
+    int parse_trigger_turn(EventsParseState *ps);    /* part of parse_file */
+    int parse_trigger_turn_interval(EventsParseState *ps);    /* part of parse_file */
+    int parse_trigger_random_turn(EventsParseState *ps);    /* part of parse_file */
+    int parse_trigger(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_text(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_change_terrain(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_create_unit(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_change_money(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_make_aggression(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_destroy_civ(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_give_tech(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_move_unit(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_play_cd(EventsParseState *ps);    /* part of parse_file */
+    int parse_action_play_wave(EventsParseState *ps);    /* part of parse_file */
+    int parse_action(EventsParseState *ps);    /* part of parse_file */
     ScenarioEvents *events_delete(uint flags);    /* 00551cd0 */
 } ScenarioEvents;
 static_assert(sizeof(ScenarioEvents) == 0x310, "");
@@ -2673,6 +2716,9 @@ typedef struct FrameWindow : SurfaceWindow {
     void set_title_font(iptr font);    /* 00511820 */
     void set_title_small_font(iptr font);    /* 00511850 */
     void draw_caption();    /* 00552112 */
+    int draw_frame_borders(int bevel,i32 highlight_color2,i32 shadow_color2);    /* part of draw_caption */
+    void update_timer_text();    /* part of draw_caption */
+    void append_turn_status(char *caption);    /* part of draw_caption */
     void layout();    /* 00552ed2 */
     void add_caption_button(iptr sprite,i32 callback);    /* 0055318c */
     void set_caption(const char *title);    /* 0055324c */
@@ -2866,6 +2912,10 @@ typedef struct ParleyWindow : SurfaceWindow {
     void sync_sides();    /* 004b4fb2 */
     void destroy_controls();    /* 004b50cf */
     void create_controls();    /* 004b5c93 */
+    void create_caption_buttons();    /* part of create_controls */
+    void create_close_button();    /* part of create_controls */
+    void create_chat_controls(int &ctrl_top,int &ctrl_height);    /* part of create_controls */
+    void create_parley_buttons(int ctrl_top,int ctrl_height);    /* part of create_controls */
     void draw_frame();    /* 004b794a */
     void fill_background(RECT *rect,int area_kind);    /* 004b7c90 */
     void build_title();    /* 004b7d72 */
@@ -2876,8 +2926,29 @@ typedef struct ParleyWindow : SurfaceWindow {
     i32 *send_offer(int mode);    /* 004db690 */
     void pack_offer_items(ParleyOfferItem *dest,i32 item_type,i32 item_size,iptr side);    /* 004dbab4 */
     void build_description(ParleyOfferMsg *offer,int received);    /* 004dbee6 */
+    void describe_barter_give(ParleyOfferMsg *second_offer,i32 *second_items);    /* part of build_description */
+    void describe_barter_want(ParleyOfferMsg *offer,int *first_items);    /* part of build_description */
+    void describe_threat(ParleyOfferMsg *offer,int *first_items);    /* part of build_description */
     void describe_treaty(int treaty_kind,int exchange);    /* 004def54 */
     void add_side_dialog(int side_kind,int side);    /* 00526ca0 */
+    void show_description(int received);    /* part of add_side_dialog */
+    void add_chat_pane(u32 side_x);    /* part of add_side_dialog */
+    void add_mode_pane(int side);    /* part of add_side_dialog */
+    void add_exchange_kind_pane_left(int side,u32 side_x);    /* part of add_side_dialog */
+    void add_exchange_kind_pane_right(int side,u32 side_x);    /* part of add_side_dialog */
+    void add_treaty_pane(int side,u32 side_x,char is_exchange_side,char is_demand_side);    /* part of add_side_dialog */
+    void add_status_pane(int side,u32 side_x);    /* part of add_side_dialog */
+    void add_gift_pane(int side,u32 side_x);    /* part of add_side_dialog */
+    void add_tech_pane(int side,u32 side_x,char is_exchange_side,char is_demand_side);    /* part of add_side_dialog */
+    void add_gold_pane(int side,u32 side_x,char is_exchange_side,char is_demand_side);    /* part of add_side_dialog */
+    void add_unit_pane(int side,u32 side_x,char is_exchange_side,char is_demand_side);    /* part of add_side_dialog */
+    void add_proposal_pane(int side,u32 side_x);    /* part of add_side_dialog */
+    void add_civ_list_pane(int side,u32 side_x,char is_exchange_side,char is_demand_side);    /* part of add_side_dialog */
+    void add_map_pane(int side,u32 side_x,char is_exchange_side);    /* part of add_side_dialog */
+    void add_offer_pane(int side,u32 side_x);    /* part of add_side_dialog */
+    void add_city_pane(int side,u32 side_x,char is_exchange_side,char is_demand_side);    /* part of add_side_dialog */
+    void add_waiting_pane();    /* part of add_side_dialog */
+    void add_review_pane();    /* part of add_side_dialog */
     void update_buttons();    /* 0052e971 */
     iptr find_unit_by_id(int unit_id);    /* 0052ec47 */
     iptr find_city_by_id(int city_id);    /* 0052ed95 */
@@ -2992,6 +3063,9 @@ typedef struct PediaWindow : SurfaceWindow {
     void add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left,i32 rect_top,i32 rect_right,i32 rect_bottom);    /* 00452c14 */
     void init_terrain_list(iptr rect);    /* 00490590 */
     void draw_terrain_page();    /* 004906fd */
+    void draw_terrain_special_bonus(GameFont *font2,iptr terrain2,iptr terrain3,int y2,int line_height,int margin);    /* part of draw_terrain_page */
+    void draw_terrain_improve_rows(GameFont *font2,iptr terrain2,int y2,int line_height,int margin,int value_x,int row_height);    /* part of draw_terrain_page */
+    void draw_terrain_transform_column(GameFont *font2,iptr terrain2,int stats_top,int line_height,int right_col_x,int row_height);    /* part of draw_terrain_page */
     void show_terrain_modal(int terrain_id);    /* 00491c20 */
     void init_concept_list(iptr unused_arg);    /* 004a69b0 */
     PediaWindow *construct();    /* 004f3feb */
@@ -2999,14 +3073,28 @@ typedef struct PediaWindow : SurfaceWindow {
     void clear_links();    /* 004f4793 */
     void free_lists();    /* 004f4809 */
     void create();    /* 004f4b9f */
+    void create_list_buttons(int left_x,int yTop,int btn_height,int avail_width);    /* part of create */
+    void create_advance_buttons(int left_x,int yTop,int btn_height,int avail_width);    /* part of create */
+    void create_detail_buttons(int left_x,int yTop,int btn_height,int avail_width);    /* part of create */
     void draw_frame();    /* 004f6244 */
     void fill_background(RECT *rect,int style);    /* 004f6564 */
     void redraw();    /* 004f6646 */
     void draw_item_list();    /* 004f66c6 */
+    void draw_list_terrain_icon(iptr advance,uint is_selected,int col_base,int row,int col_x,int row_y,tagRECT &row_rect,int &text_x_off);    /* part of draw_item_list */
+    void draw_list_icon(int icon_mode,uint is_selected,int col_base,int row,int col_x,int row_y,int row_height,Sprite *&icon_sprite,tagRECT &row_rect,int &text_x_off);    /* part of draw_item_list */
+    void copy_list_item_name(iptr advance);    /* part of draw_item_list */
     void scroll_to_item(int item);    /* 004f7454 */
     void set_category_title(i32 category);    /* 004f7ac7 */
     void open_category(u32 category,int show);    /* 004f7bd1 */
     void load_indexes();    /* 004f7c99 */
+    void clear_index_keys();    /* part of load_indexes */
+    void load_advance_index(PediaListNode *&prev_node2);    /* part of load_indexes */
+    void load_improvement_index(PediaListNode *&prev_node2);    /* part of load_indexes */
+    void load_wonder_index(PediaListNode *&prev_node2);    /* part of load_indexes */
+    void load_unit_index(PediaListNode *&prev_node2);    /* part of load_indexes */
+    void load_government_index(PediaListNode *&prev_node2);    /* part of load_indexes */
+    void load_terrain_index(PediaListNode *&prev_node2);    /* part of load_indexes */
+    void load_concept_index(PediaListNode *&prev_node2);    /* part of load_indexes */
     void history_push();    /* 004f8af9 */
     void init_government_list(iptr unused_arg);    /* 00518f00 */
     void init_wonder_list(iptr unused_arg);    /* 005261a0 */
@@ -3014,6 +3102,11 @@ typedef struct PediaWindow : SurfaceWindow {
     void show_wonder_modal(int wonder_id);    /* 00526913 */
     void init_advance_list(iptr unused_arg);    /* 00564d00 */
     void draw_advance_page();    /* 00564e6d */
+    void draw_advance_requires(GameFont *font2,iptr advance,int y2);    /* part of draw_advance_page */
+    void draw_advance_children(GameFont *font2,iptr advance,int list_x2,int row_height,int &y2);    /* part of draw_advance_page */
+    void draw_advance_improvements(GameFont *font2,iptr advance,int list_x2,int row_height,u32 &x2,int &y2);    /* part of draw_advance_page */
+    void draw_advance_units(GameFont *font2,iptr advance,int related_count,int list_x2,int row_height,u32 &x2,int &y2);    /* part of draw_advance_page */
+    void draw_advance_civ_facts(GameFont *font2,iptr advance,int has_pedia,char *pedia_file,int list_x2,int row_height,u32 x2,int y2);    /* part of draw_advance_page */
     void show_topic_modal(iptr advance_id);    /* 00566584 */
     void draw_advance_tree();    /* 005666da */
     void draw_tree_stub(i32 x,int y);    /* 005675b7 */
@@ -3023,6 +3116,7 @@ typedef struct PediaWindow : SurfaceWindow {
     void show_improvement_modal(iptr improvement_id);    /* 0059a2e6 */
     void show_unit_list(iptr unused_arg);    /* 005ac840 */
     void draw_unit_page();    /* 005ac9ad */
+    void append_unit_fact(iptr unit_type,u32 mask,char *desc_buf,int &has_text);    /* part of draw_unit_page */
     void show_unit_modal(iptr unit_type);    /* 005ad998 */
 } PediaWindow;
 static_assert(sizeof(PediaWindow) == 0x1f44, "");
@@ -3174,6 +3268,11 @@ typedef struct MapView : FrameWindow {
     i32 screen_to_tile(iptr out_x,iptr out_y,i32 mouse_x,i32 mouse_y);    /* 0047a540 */
     void tile_to_screen(iptr out_x,iptr out_y,int x,int y);    /* 0047a6b0 */
     void draw_tile_terrain(iptr surface,int screen_x,int screen_y,iptr x,int y, int viewer_civ,int zoom,iptr city_tile_idx);    /* 0047a8c9 */
+    void draw_tile_ocean(iptr surface,int screen_x,int screen_y,iptr x,int y,int zoom,u32 half_w,u32 half_h);    /* part of draw_tile_terrain */
+    void draw_tile_land(iptr surface,int screen_x,int screen_y,iptr x,int y,int zoom,uint terrain2,uint improvements2,uint has_river,u32 half_w,u32 half_h,uint *dither_terrain);    /* part of draw_tile_terrain */
+    void draw_tile_roads(iptr surface,int screen_x,int screen_y,iptr x,int y,int viewer_civ,uint improvements2);    /* part of draw_tile_terrain */
+    void draw_tile_specials(iptr surface,int screen_x,int screen_y,iptr x,int y,uint improvements2,u32 tile_w,u32 tile_h,u32 half_h);    /* part of draw_tile_terrain */
+    void draw_tile_unexplored_edges(iptr surface,int screen_x,int screen_y,iptr x,int y,int viewer_civ,iptr city_tile_idx,u32 half_w,u32 half_h);    /* part of draw_tile_terrain */
     void draw_tile_city(i32 screen_x,int screen_y,iptr x,iptr y);    /* 0047ba1d */
     void draw_unit_stacked(iptr unit,uint draw_flags,i32 screen_x,i32 screen_y);    /* 0047bba5 */
     void draw_unit_blinking(iptr unit,i32 screen_x,i32 screen_y);    /* 0047bbea */
@@ -3378,6 +3477,12 @@ typedef struct CityWindow : FrameWindow {
     int happy_draw_citizen_row(int x,i32 y,i32 width,int happy, int unhappy,int angry);    /* 00501e63 */
     void draw_citizens(int blit,i32 flag);    /* 0050207f */
     void draw_resource_map(int blit);    /* 005025d5 */
+    void draw_resource_tiles(int half_tile_w,int half_tile_h,int origin_x2,int origin_y2);    /* part of draw_resource_map */
+    void draw_resource_yields(int tile_w,int half_tile_w,int half_tile_h,int origin_x2,int origin_y2);    /* part of draw_resource_map */
+    void draw_resource_food(int panel_left,int panel_top2,uint big_zoom);    /* part of draw_resource_map */
+    void draw_resource_shields(int panel_left,int panel_top2,uint big_zoom,uint &surplus);    /* part of draw_resource_map */
+    void draw_resource_trade(int panel_left,int panel_top2,uint big_zoom,uint surplus);    /* part of draw_resource_map */
+    void draw_resource_rates(int panel_left,int panel_top2,uint big_zoom);    /* part of draw_resource_map */
     void draw_food_box(int blit);    /* 00504c05 */
     void draw_production(int blit);    /* 0050503e */
     void draw_button_area(int blit);    /* 005055dd */

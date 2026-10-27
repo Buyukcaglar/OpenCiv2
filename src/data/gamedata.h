@@ -5799,6 +5799,26 @@ typedef struct NetSession {
     i8 send_to(int player,NetMsg *msg);    /* 0046af70 */
     bool send_to_all(NetMsg *msg);    /* 0046b0a1 */
     void process_messages(int max_msgs,int wait_mode);    /* 0047e94e */
+    struct MsgArgs;    /* part of process_messages */
+    void run_blocked_input();    /* part of process_messages */
+    void dispatch_message(int *&msg,int *msg_hdr,uint *payload,int sender,uint msg_size,char &gamelist_dirty,MsgArgs &a);    /* part of process_messages */
+    void recv_hello(int *msg,char &gamelist_dirty);    /* part of process_messages */
+    void recv_server_info(int *msg,int *msg_hdr);    /* part of process_messages */
+    void recv_state_diff(int *msg,uint *payload,MsgArgs &a);    /* part of process_messages */
+    void recv_join_request(int *msg_hdr,int sender);    /* part of process_messages */
+    void recv_player_node(int *msg,int sender);    /* part of process_messages */
+    void recv_claim_civ(int *msg,int sender,MsgArgs &a);    /* part of process_messages */
+    void recv_stack_relocate(int *msg,int sender,MsgArgs &a);    /* part of process_messages */
+    void recv_unit_bribed(int *msg,MsgArgs &a);    /* part of process_messages */
+    void recv_wait_game_xmit();    /* part of process_messages */
+    void recv_turn_civ(int *msg_hdr);    /* part of process_messages */
+    void recv_popup_request(int *msg,int sender,MsgArgs &a);    /* part of process_messages */
+    void recv_turn_time_limit(int *msg,MsgArgs &a);    /* part of process_messages */
+    void recv_war_pretext(int *msg,MsgArgs &a);    /* part of process_messages */
+    void recv_parley_cities_hidden(int *msg,MsgArgs &a);    /* part of process_messages */
+    void recv_parley_cities_shown(int *msg,MsgArgs &a);    /* part of process_messages */
+    void recv_parley_units_hidden(int *msg,MsgArgs &a);    /* part of process_messages */
+    void recv_parley_units_shown(int *msg,MsgArgs &a);    /* part of process_messages */
     NetSession *construct();    /* 0059a8bb */
     void clear();    /* 0059a998 */
     void destruct();    /* 0059ad40 */

@@ -2731,6 +2731,285 @@ void __cdecl menu_select_music(void)
   return;
 }
 
+/* Part of menu_command (004e2803): the Game menu's options dialogs (0x101-0x106). */
+static void menu_cmd_game_options(int cmd)
+{
+  switch(cmd) {
+  case 0x101:
+    menu_game_options();
+    break;
+  case 0x102:
+    menu_graphic_options();
+    break;
+  case 0x103:
+    menu_message_options();
+    break;
+  case 0x104:
+    menu_multiplayer_options();
+    break;
+  case 0x105:
+    game_profile_popup(0);
+    break;
+  case 0x106:
+    menu_select_music();
+  }
+}
+
+/* Part of menu_command (004e2803): the View menu's zoom presets, the
+   grid-style toggle and the window layout reset (0x321-0x328). */
+static void menu_cmd_view_zoom(int cmd)
+{
+  switch(cmd) {
+  case 0x321:
+    map_views_block.mapview_zoom[0] = 0;
+    map_views_block.map_view_center_x[0] = map_cursor_x[0];
+    map_views_block.mapview_center_y[0] = map_cursor_y[0];
+    ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
+    break;
+  case 0x322:
+    map_views_block.mapview_zoom[0] = -3;
+    ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
+    break;
+  case 0x324:
+    map_views_block.mapview_zoom[0] = -7;
+    ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
+    break;
+  case 0x327:
+    game.game_options = game.game_options ^ 0x20;
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_checked(0x327,(game.game_options & 0x20) >> 5);
+    map_redraw_all_views(human_civ[0],1);
+    prefs_game_rules_block.prefs_game_options = game.game_options;
+    prefs_save_civ2dat();
+    break;
+  case 0x328:
+    ui_reset_window_layout();
+  }
+}
+
+/* Part of menu_command (004e2803): the Orders menu's terrain orders,
+   automate and pillage (0x410-0x421). */
+static void menu_cmd_terraform(int cmd)
+{
+  switch(cmd) {
+  case 0x410:
+    unit_cmd_terraform(5);
+    break;
+  case 0x411:
+    unit_cmd_terraform(6);
+    break;
+  case 0x412:
+    unit_cmd_terraform(7);
+    break;
+  case 0x413:
+    unit_cmd_terraform(8);
+    break;
+  case 0x417:
+    unit_cmd_terraform(10);
+    break;
+  case 0x418:
+    unit_cmd_terraform(4);
+    break;
+  case 0x41b:
+    unit_cmd_automate();
+    break;
+  case 0x420:
+    unit_cmd_terraform(9);
+    break;
+  case 0x421:
+    unit_cmd_pillage();
+  }
+}
+
+/* Part of menu_command (004e2803): the Orders menu's go to, paradrop,
+   airlift and home city (0x440-0x445). */
+static void menu_cmd_unit_moves(int cmd)
+{
+  switch(cmd) {
+  case 0x440:
+    unit_cmd_goto_city();
+    break;
+  case 0x441:
+    unit_cmd_paradrop();
+    break;
+  case 0x442:
+    unit_cmd_airlift();
+    break;
+  case 0x445:
+    unit_cmd_home_city();
+  }
+}
+
+/* Part of menu_command (004e2803): the Advisors menu (0x500-0x508). */
+static void menu_cmd_advisors(int cmd)
+{
+  SHORT shift_state;
+
+  switch(cmd) {
+  case 0x500:
+    if ((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
+       (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) == '\0')) {
+      council_show(human_civ[0],0);
+    }
+    else {
+      council_show(human_civ[0],1);
+    }
+    break;
+  case 0x501:
+    city_status_show(human_civ[0]);
+    break;
+  case 0x502:
+    defense_minister_show(human_civ[0]);
+    break;
+  case 0x503:
+    foreign_minister_show(human_civ[0]);
+    break;
+  case 0x504:
+    attitude_advisor_show(human_civ[0]);
+    break;
+  case 0x505:
+    trade_advisor_show(human_civ[0]);
+    break;
+  case 0x506:
+    science_advisor_show(human_civ[0]);
+    break;
+  case 0x507:
+    chat_wnd_block.open(0,4);
+    break;
+  case 0x508:
+    casualty_timeline_show(human_civ[0]);
+  }
+}
+
+/* Part of menu_command (004e2803): the World menu's reports (0x602-0x606;
+   with shift in cheat mode: the endgame movies, the destroyed civs). */
+static void menu_cmd_world_reports(int cmd)
+{
+  SHORT shift_state;
+
+  switch(cmd) {
+  case 0x602:
+    shift_state = GetAsyncKeyState(0x10);
+    if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+       (game.multiplayer != '\0')) {
+      top_cities_show(human_civ[0]);
+    }
+    else {
+      endgame_defeat_movie(human_civ[0]);
+    }
+    break;
+  case 0x603:
+    shift_state = GetAsyncKeyState(0x10);
+    if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+       (game.multiplayer != '\0')) {
+      civ_score_window_show(human_civ[0]);
+      if (game.reveal_map != '\0') {
+        civ_rating_window_show(human_civ[0]);
+        powergraph_show();
+      }
+    }
+    else {
+      destroyed_civs_show(human_civ[0]);
+    }
+    break;
+  case 0x605:
+    shift_state = GetAsyncKeyState(0x10);
+    if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+       (game.multiplayer != '\0')) {
+      demographics_show(human_civ[0]);
+    }
+    else {
+      endgame_spaceship_arrival(-(human_civ[0] + 1U & 7));
+    }
+    break;
+  case 0x606:
+    shift_state = GetAsyncKeyState(0x10);
+    if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
+       (game.multiplayer != '\0')) {
+      spaceship_select_view_dialog(human_civ[0]);
+    }
+    else {
+      endgame_spaceship_arrival(human_civ[0]);
+    }
+  }
+}
+
+/* Part of menu_command (004e2803): the Cheat menu's scenario editors
+   (0x801-0x809). */
+static void menu_cmd_editors(int cmd)
+{
+  switch(cmd) {
+  case 0x801:
+    editor_toggle_scenario_flag();
+    break;
+  case 0x802:
+    tech_editor_run();
+    break;
+  case 0x803:
+    city_editor_run();
+    break;
+  case 0x804:
+    cosmic_editor_run();
+    break;
+  case 0x805:
+    impr_editor_run();
+    break;
+  case 0x806:
+    terrain_editor_open();
+    break;
+  case 0x807:
+    tribe_editor_run();
+    break;
+  case 0x808:
+    unit_editor_run();
+    break;
+  case 0x809:
+    events_editor_open();
+  }
+}
+
+/* Part of menu_command (004e2803): the Civilopedia pages and the credits
+   (0x903-0x9f0). */
+static void menu_cmd_pedia(int cmd)
+{
+  SHORT shift_state;
+  int result;
+
+  switch(cmd) {
+  case 0x903:
+    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(2,1);
+    break;
+  case 0x905:
+    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(3,1);
+    break;
+  case 0x907:
+    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(4,1);
+    break;
+  case 0x909:
+    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(6,1);
+    break;
+  case 0x90b:
+    ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(5,1);
+    break;
+  case 0x90d:
+    if ((cmd == 0x905) &&
+       (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) != '\0')) {
+      menu_wonder_movies();
+    }
+    else {
+      ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(7,1);
+    }
+    break;
+  case 0x9f0:
+    if (game.multiplayer < 3) {
+      result = popup_game_flags((const char *)&str_newcredits_2,1);
+      if (-1 < result) {
+        credits_show(result);
+      }
+      text_close_file();
+    }
+  }
+}
+
 /* 004e2803 auto */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -2757,25 +3036,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             game_save_dialog(0);
           }
           else {
-            switch(cmd) {
-            case 0x101:
-              menu_game_options();
-              break;
-            case 0x102:
-              menu_graphic_options();
-              break;
-            case 0x103:
-              menu_message_options();
-              break;
-            case 0x104:
-              menu_multiplayer_options();
-              break;
-            case 0x105:
-              game_profile_popup(0);
-              break;
-            case 0x106:
-              menu_select_music();
-            }
+            menu_cmd_game_options(cmd);
           }
         }
         else if (cmd < 0x131) {
@@ -2856,31 +3117,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             menu_show_hidden_terrain();
           }
           else {
-            switch(cmd) {
-            case 0x321:
-              map_views_block.mapview_zoom[0] = 0;
-              map_views_block.map_view_center_x[0] = map_cursor_x[0];
-              map_views_block.mapview_center_y[0] = map_cursor_y[0];
-              ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
-              break;
-            case 0x322:
-              map_views_block.mapview_zoom[0] = -3;
-              ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
-              break;
-            case 0x324:
-              map_views_block.mapview_zoom[0] = -7;
-              ((MapView *)((i8 *)&map_views_block.map_views))->redraw(human_civ[0],1);
-              break;
-            case 0x327:
-              game.game_options = game.game_options ^ 0x20;
-              ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_checked(0x327,(game.game_options & 0x20) >> 5);
-              map_redraw_all_views(human_civ[0],1);
-              prefs_game_rules_block.prefs_game_options = game.game_options;
-              prefs_save_civ2dat();
-              break;
-            case 0x328:
-              ui_reset_window_layout();
-            }
+            menu_cmd_view_zoom(cmd);
           }
         }
         else if (cmd < 0x402) {
@@ -2896,34 +3133,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             unit_cmd_unload();
           }
           else {
-            switch(cmd) {
-            case 0x410:
-              unit_cmd_terraform(5);
-              break;
-            case 0x411:
-              unit_cmd_terraform(6);
-              break;
-            case 0x412:
-              unit_cmd_terraform(7);
-              break;
-            case 0x413:
-              unit_cmd_terraform(8);
-              break;
-            case 0x417:
-              unit_cmd_terraform(10);
-              break;
-            case 0x418:
-              unit_cmd_terraform(4);
-              break;
-            case 0x41b:
-              unit_cmd_automate();
-              break;
-            case 0x420:
-              unit_cmd_terraform(9);
-              break;
-            case 0x421:
-              unit_cmd_pillage();
-            }
+            menu_cmd_terraform(cmd);
           }
         }
         else if (cmd < 0x451) {
@@ -2931,19 +3141,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             unit_cmd_fortify();
           }
           else {
-            switch(cmd) {
-            case 0x440:
-              unit_cmd_goto_city();
-              break;
-            case 0x441:
-              unit_cmd_paradrop();
-              break;
-            case 0x442:
-              unit_cmd_airlift();
-              break;
-            case 0x445:
-              unit_cmd_home_city();
-            }
+            menu_cmd_unit_moves(cmd);
           }
         }
         else if (cmd < 0x461) {
@@ -2982,40 +3180,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             }
           }
           else {
-            switch(cmd) {
-            case 0x500:
-              if ((((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) ||
-                 (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) == '\0')) {
-                council_show(human_civ[0],0);
-              }
-              else {
-                council_show(human_civ[0],1);
-              }
-              break;
-            case 0x501:
-              city_status_show(human_civ[0]);
-              break;
-            case 0x502:
-              defense_minister_show(human_civ[0]);
-              break;
-            case 0x503:
-              foreign_minister_show(human_civ[0]);
-              break;
-            case 0x504:
-              attitude_advisor_show(human_civ[0]);
-              break;
-            case 0x505:
-              trade_advisor_show(human_civ[0]);
-              break;
-            case 0x506:
-              science_advisor_show(human_civ[0]);
-              break;
-            case 0x507:
-              chat_wnd_block.open(0,4);
-              break;
-            case 0x508:
-              casualty_timeline_show(human_civ[0]);
-            }
+            menu_cmd_advisors(cmd);
           }
         }
         else if (cmd < 0x702) {
@@ -3025,51 +3190,7 @@ void __cdecl menu_command(i32 menu,int cmd)
             }
           }
           else {
-            switch(cmd) {
-            case 0x602:
-              shift_state = GetAsyncKeyState(0x10);
-              if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
-                 (game.multiplayer != '\0')) {
-                top_cities_show(human_civ[0]);
-              }
-              else {
-                endgame_defeat_movie(human_civ[0]);
-              }
-              break;
-            case 0x603:
-              shift_state = GetAsyncKeyState(0x10);
-              if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
-                 (game.multiplayer != '\0')) {
-                civ_score_window_show(human_civ[0]);
-                if (game.reveal_map != '\0') {
-                  civ_rating_window_show(human_civ[0]);
-                  powergraph_show();
-                }
-              }
-              else {
-                destroyed_civs_show(human_civ[0]);
-              }
-              break;
-            case 0x605:
-              shift_state = GetAsyncKeyState(0x10);
-              if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
-                 (game.multiplayer != '\0')) {
-                demographics_show(human_civ[0]);
-              }
-              else {
-                endgame_spaceship_arrival(-(human_civ[0] + 1U & 7));
-              }
-              break;
-            case 0x606:
-              shift_state = GetAsyncKeyState(0x10);
-              if ((((char)((ushort)shift_state >> 8) == '\0') || ((game.game_options & 0x8000) == 0)) ||
-                 (game.multiplayer != '\0')) {
-                spaceship_select_view_dialog(human_civ[0]);
-              }
-              else {
-                endgame_spaceship_arrival(human_civ[0]);
-              }
-            }
+            menu_cmd_world_reports(cmd);
           }
         }
         else if (cmd < 0x722) {
@@ -3166,71 +3287,11 @@ void __cdecl menu_command(i32 menu,int cmd)
             ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(1,1);
           }
           else {
-            switch(cmd) {
-            case 0x801:
-              editor_toggle_scenario_flag();
-              break;
-            case 0x802:
-              tech_editor_run();
-              break;
-            case 0x803:
-              city_editor_run();
-              break;
-            case 0x804:
-              cosmic_editor_run();
-              break;
-            case 0x805:
-              impr_editor_run();
-              break;
-            case 0x806:
-              terrain_editor_open();
-              break;
-            case 0x807:
-              tribe_editor_run();
-              break;
-            case 0x808:
-              unit_editor_run();
-              break;
-            case 0x809:
-              events_editor_open();
-            }
+            menu_cmd_editors(cmd);
           }
         }
         else {
-          switch(cmd) {
-          case 0x903:
-            ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(2,1);
-            break;
-          case 0x905:
-            ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(3,1);
-            break;
-          case 0x907:
-            ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(4,1);
-            break;
-          case 0x909:
-            ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(6,1);
-            break;
-          case 0x90b:
-            ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(5,1);
-            break;
-          case 0x90d:
-            if ((cmd == 0x905) &&
-               (shift_state = GetAsyncKeyState(0x10), (char)((ushort)shift_state >> 8) != '\0')) {
-              menu_wonder_movies();
-            }
-            else {
-              ((PediaWindow *)((i8 *)&pedia_window_block.pedia_window))->open_category(7,1);
-            }
-            break;
-          case 0x9f0:
-            if (game.multiplayer < 3) {
-              result = popup_game_flags((const char *)&str_newcredits_2,1);
-              if (-1 < result) {
-                credits_show(result);
-              }
-              text_close_file();
-            }
-          }
+          menu_cmd_pedia(cmd);
         }
       }
     }
@@ -3336,22 +3397,13 @@ void __cdecl menu_set_item_label(i32 item_id,i32 label_id,i32 enabled)
   return;
 }
 
-/* 004e4ceb auto */
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
-void __cdecl menu_update_states(void)
-
+/* Part of menu_update_states (004e4ceb): the settlers' orders (build city / join city, road
+   and railroad, irrigation and farmland, mine, transform, fortress, airbase,
+   pillage) for the unit's tile. */
+static void menu_update_settler_orders(int unit,int x,int y,int civ,uptr terrain,bool is_ocean)
 {
-  u8 unit_role;
   char dy;
   bool no_adjacent_city;
-  byte terrain_byte;
-  int unit;
-  int x;
-  int y;
-  int civ;
-  iptr has_airbase_tech;
-  iptr has_fortress_tech;
   int city;
   iptr x2;
   uint improvements2;
@@ -3360,27 +3412,130 @@ void __cdecl menu_update_states(void)
   iptr airbase_owner2;
   int terrain2;
   byte *tile;
-  iptr path_cmp;
-  iptr path_cmp2;
-  uptr terrain;
-  bool is_ocean;
-  i32 scenario_menu_disabled;
-  i32 scenario_checked;
-  i32 cheat_checked;
-  i32 cheat_menu_disabled;
   i32 mine_disabled;
   i32 irrigate_disabled;
   i32 farmland_disabled;
   i32 road_disabled;
   i32 railroad_disabled;
   i32 build_city_disabled;
-  i32 fortress_hidden;
-  i32 airbase_hidden;
-  i32 pillage_hidden;
-  i32 revolution_disabled;
   iptr dir;
-  
-  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x606,game.rules & 0x80);
+
+  no_adjacent_city = true;
+  for (dir = 0; dir < 8; dir++) {
+    x2 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
+    dy = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir];
+    city = map_in_bounds(x2,dy + y);
+    if ((city != 0) && (city = tile_city_owner(x2,dy + y), -1 < city)) {
+      no_adjacent_city = false;
+    }
+  }
+  city = city_at(x,y);
+  if (city < 0) {
+    terrain2 = tile_is_ocean(x,y);
+    if ((terrain2 == 0) && (no_adjacent_city)) {
+      build_city_disabled = 0;
+    }
+    else {
+      build_city_disabled = 1;
+    }
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x401,build_city_disabled);
+  }
+  else {
+    menu_set_item_label(0x401,0x33,(uint)('\t' < cities[city].size));
+  }
+  improvements2 = tile_improvements(x,y);
+  if ((improvements2 & 0x80) == 0) {
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x420,1);
+  }
+  improvements22 = tile_improvements(x,y);
+  if ((((((byte)improvements22 & 0x42) == 0x40) ||
+       (airbase_owner = tile_airbase_owner(x,y), -1 < airbase_owner)) || (is_ocean)) || (-1 < city)) {
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x418,1);
+  }
+  improvements22 = tile_improvements(x,y);
+  if (((((byte)improvements22 & 0x42) == 0x40) ||
+      (airbase_owner2 = tile_airbase_owner(x,y), -1 < airbase_owner2)) || ((is_ocean || (-1 < city)))) {
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x417,1);
+  }
+  improvements2 = tile_improvements(x,y);
+  if (((improvements2 & 0x10) == 0) || (terrain2 = civ_has_advance(civ,0x43), terrain2 == 0)) {
+    if (((is_ocean) ||
+        ((-1 < city || (improvements2 = tile_improvements(x,y), (improvements2 & 0x10) != 0)))) ||
+       ((tile = (byte *)tile_at(x,y), (*tile & 0x80) != 0 &&
+        (terrain2 = civ_has_advance(civ,7), terrain2 == 0)))) {
+      road_disabled = 1;
+    }
+    else {
+      road_disabled = 0;
+    }
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x410,road_disabled);
+  }
+  else {
+    improvements2 = tile_improvements(x,y);
+    if ((((improvements2 & 0x20) != 0) || (-1 < city)) || (is_ocean)) {
+      railroad_disabled = 1;
+    }
+    else {
+      railroad_disabled = 0;
+    }
+    menu_set_item_label(0x410,0x35,railroad_disabled);
+  }
+  terrain2 = (int)terrain_types[terrain].irrigate_to;
+  if (terrain2 < 0) {
+    improvements2 = tile_improvements(x,y);
+    if ((improvements2 & 4) == 0) {
+      if (((terrain2 == -1) || (is_ocean)) || (-1 < city)) {
+        irrigate_disabled = 1;
+      }
+      else {
+        irrigate_disabled = 0;
+      }
+      ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x411,irrigate_disabled);
+    }
+    else {
+      terrain2 = civ_has_advance(civ,0x46);
+      if (((terrain2 == 0) || (is_ocean)) || (-1 < city)) {
+        farmland_disabled = 1;
+      }
+      else {
+        farmland_disabled = 0;
+      }
+      menu_set_item_label(0x411,0x3d,farmland_disabled);
+    }
+  }
+  else {
+    text_set_label_arg(0,terrain_types[terrain2].name);
+    menu_set_item_label(0x411,0x37,0);
+  }
+  terrain2 = (int)terrain_types[terrain].mine_to;
+  if (terrain2 < 0) {
+    if (((terrain2 == -1) || (is_ocean)) || (-1 < city)) {
+      mine_disabled = 1;
+    }
+    else {
+      mine_disabled = 0;
+    }
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x412,mine_disabled);
+  }
+  else {
+    text_set_label_arg(0,terrain_types[terrain2].name);
+    menu_set_item_label(0x412,0x39,0);
+  }
+  civ = civ_can_build_unit(civ,-1,1);
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x413,(uint)(civ == 0));
+  if (terrain_types[terrain].transform_to < 0) {
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x413,1);
+  }
+  else {
+    text_set_label_arg(0,terrain_types[terrain_types[terrain].transform_to].name);
+    menu_set_item_label(0x413,0x3c,(uint)(units[unit].type != 1));
+  }
+}
+
+/* Part of menu_update_states (004e4ceb): the Game and Kingdom items that depend on single
+   or multiplayer (join, load, chat, timer, save, quit, retire). */
+static void menu_update_multiplayer_items(void)
+{
   if (game.multiplayer == '\0') {
     ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x130,1);
     ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x132,1);
@@ -3427,202 +3582,106 @@ void __cdecl menu_update_states(void)
     ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x1f1,0);
     ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x1f0,0);
   }
-  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x302,(moving_units_mode == 0));
-  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x301,(moving_units_mode == 1));
-  if ((((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 0x10) == 0)) &&
-     (civs[human_civ[0]].government != '\0')) {
-    revolution_disabled = 0;
+}
+
+/* Part of menu_update_states (004e4ceb): the Orders menu for the active unit. */
+static void menu_update_unit_orders(void)
+{
+  u8 unit_role;
+  byte terrain_byte;
+  int unit;
+  int x;
+  int y;
+  int civ;
+  iptr has_airbase_tech;
+  iptr has_fortress_tech;
+  int city;
+  uptr terrain;
+  bool is_ocean;
+  i32 fortress_hidden;
+  i32 airbase_hidden;
+  i32 pillage_hidden;
+
+  unit = (int)game.active_unit;
+  x = (int)units[unit].x;
+  y = (int)units[unit].y;
+  civ = (int)units[unit].owner;
+  terrain_byte = tile_terrain(x,y);
+  terrain = (uptr)terrain_byte;
+  is_ocean = terrain == 10;
+  unit_role = unit_types[units[unit].type].role;
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_menu_enabled(4,0);
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x401,(uint)(unit_role != 5));
+  menu_set_item_label(0x401,0x32,(uint)(unit_role != 5));
+  menu_set_item_label(0x410,0x34,(uint)(unit_role != 5));
+  menu_set_item_label(0x411,0x36,(uint)(unit_role != 5));
+  menu_set_item_label(0x412,0x38,(uint)(unit_role != 5));
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x450,(uint)(unit_role == 5));
+  if ((unit_role == 5) && (has_airbase_tech = civ_has_advance(civ,0x12), has_airbase_tech != 0)) {
+    pillage_hidden = 0;
   }
   else {
-    revolution_disabled = 1;
+    pillage_hidden = 1;
   }
-  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x220,revolution_disabled);
-  if (((moving_units_mode == 0) || (game.num_units == 0)) ||
-     ((game.active_unit < 0 ||
-      ((game.num_units < game.active_unit || (units[game.active_unit].id == 0)))))) {
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_menu_enabled(4,1);
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x460,0);
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x468,0);
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x418,pillage_hidden);
+  if ((unit_role == 5) && (has_fortress_tech = civ_has_advance(civ,0x42), has_fortress_tech != 0)) {
+    airbase_hidden = 0;
   }
   else {
-    unit = (int)game.active_unit;
-    x = (int)units[unit].x;
-    y = (int)units[unit].y;
-    civ = (int)units[unit].owner;
-    terrain_byte = tile_terrain(x,y);
-    terrain = (uptr)terrain_byte;
-    is_ocean = terrain == 10;
-    unit_role = unit_types[units[unit].type].role;
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_menu_enabled(4,0);
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x401,(uint)(unit_role != 5));
-    menu_set_item_label(0x401,0x32,(uint)(unit_role != 5));
-    menu_set_item_label(0x410,0x34,(uint)(unit_role != 5));
-    menu_set_item_label(0x411,0x36,(uint)(unit_role != 5));
-    menu_set_item_label(0x412,0x38,(uint)(unit_role != 5));
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x450,(uint)(unit_role == 5));
-    if ((unit_role == 5) && (has_airbase_tech = civ_has_advance(civ,0x12), has_airbase_tech != 0)) {
-      pillage_hidden = 0;
-    }
-    else {
-      pillage_hidden = 1;
-    }
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x418,pillage_hidden);
-    if ((unit_role == 5) && (has_fortress_tech = civ_has_advance(civ,0x42), has_fortress_tech != 0)) {
-      airbase_hidden = 0;
-    }
-    else {
-      airbase_hidden = 1;
-    }
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x417,airbase_hidden);
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x430,(uint)(unit_role == 5));
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x41b,(uint)(unit_role != 5));
-    city = civ_has_advance(civ,0xd);
-    if ((city == 0) && ((unit_types[units[unit].type].flags & 0x100) == 0)) {
-      fortress_hidden = 1;
-    }
-    else {
-      fortress_hidden = 0;
-    }
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x441,fortress_hidden);
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x441,
-               ((unit_types[units[unit].type].flags & 0x100) == 0));
-    city = civ_has_advance(civ,0x42);
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x442,(uint)(city == 0));
-    city = tile_city_owner(x,y);
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x442,(city < 0));
-    if (unit_role == 5) {
-      no_adjacent_city = true;
-      for (dir = 0; dir < 8; dir++) {
-        x2 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x);
-        dy = (((i8 *)&dir_dy_table_block.dir_dy_table))[dir];
-        city = map_in_bounds(x2,dy + y);
-        if ((city != 0) && (city = tile_city_owner(x2,dy + y), -1 < city)) {
-          no_adjacent_city = false;
-        }
-      }
-      city = city_at(x,y);
-      if (city < 0) {
-        terrain2 = tile_is_ocean(x,y);
-        if ((terrain2 == 0) && (no_adjacent_city)) {
-          build_city_disabled = 0;
-        }
-        else {
-          build_city_disabled = 1;
-        }
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x401,build_city_disabled);
-      }
-      else {
-        menu_set_item_label(0x401,0x33,(uint)('\t' < cities[city].size));
-      }
-      improvements2 = tile_improvements(x,y);
-      if ((improvements2 & 0x80) == 0) {
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x420,1);
-      }
-      improvements22 = tile_improvements(x,y);
-      if ((((((byte)improvements22 & 0x42) == 0x40) ||
-           (airbase_owner = tile_airbase_owner(x,y), -1 < airbase_owner)) || (is_ocean)) || (-1 < city)) {
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x418,1);
-      }
-      improvements22 = tile_improvements(x,y);
-      if (((((byte)improvements22 & 0x42) == 0x40) ||
-          (airbase_owner2 = tile_airbase_owner(x,y), -1 < airbase_owner2)) || ((is_ocean || (-1 < city)))) {
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x417,1);
-      }
-      improvements2 = tile_improvements(x,y);
-      if (((improvements2 & 0x10) == 0) || (terrain2 = civ_has_advance(civ,0x43), terrain2 == 0)) {
-        if (((is_ocean) ||
-            ((-1 < city || (improvements2 = tile_improvements(x,y), (improvements2 & 0x10) != 0)))) ||
-           ((tile = (byte *)tile_at(x,y), (*tile & 0x80) != 0 &&
-            (terrain2 = civ_has_advance(civ,7), terrain2 == 0)))) {
-          road_disabled = 1;
-        }
-        else {
-          road_disabled = 0;
-        }
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x410,road_disabled);
-      }
-      else {
-        improvements2 = tile_improvements(x,y);
-        if ((((improvements2 & 0x20) != 0) || (-1 < city)) || (is_ocean)) {
-          railroad_disabled = 1;
-        }
-        else {
-          railroad_disabled = 0;
-        }
-        menu_set_item_label(0x410,0x35,railroad_disabled);
-      }
-      terrain2 = (int)terrain_types[terrain].irrigate_to;
-      if (terrain2 < 0) {
-        improvements2 = tile_improvements(x,y);
-        if ((improvements2 & 4) == 0) {
-          if (((terrain2 == -1) || (is_ocean)) || (-1 < city)) {
-            irrigate_disabled = 1;
-          }
-          else {
-            irrigate_disabled = 0;
-          }
-          ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x411,irrigate_disabled);
-        }
-        else {
-          terrain2 = civ_has_advance(civ,0x46);
-          if (((terrain2 == 0) || (is_ocean)) || (-1 < city)) {
-            farmland_disabled = 1;
-          }
-          else {
-            farmland_disabled = 0;
-          }
-          menu_set_item_label(0x411,0x3d,farmland_disabled);
-        }
-      }
-      else {
-        text_set_label_arg(0,terrain_types[terrain2].name);
-        menu_set_item_label(0x411,0x37,0);
-      }
-      terrain2 = (int)terrain_types[terrain].mine_to;
-      if (terrain2 < 0) {
-        if (((terrain2 == -1) || (is_ocean)) || (-1 < city)) {
-          mine_disabled = 1;
-        }
-        else {
-          mine_disabled = 0;
-        }
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x412,mine_disabled);
-      }
-      else {
-        text_set_label_arg(0,terrain_types[terrain2].name);
-        menu_set_item_label(0x412,0x39,0);
-      }
-      civ = civ_can_build_unit(civ,-1,1);
-      ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x413,(uint)(civ == 0));
-      if (terrain_types[terrain].transform_to < 0) {
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x413,1);
-      }
-      else {
-        text_set_label_arg(0,terrain_types[terrain_types[terrain].transform_to].name);
-        menu_set_item_label(0x413,0x3c,(uint)(units[unit].type != 1));
-      }
-    }
-    else {
-      ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x413,1);
-      ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x418,1);
-      ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x420,1);
-    }
-    civ = tile_city_owner(x,y);
-    if (civ < 0) {
-      menu_set_item_label(0x445,0x3b,0);
-    }
-    else {
-      x = tile_city_owner(x,y);
-      menu_set_item_label(0x445,0x3a,(uint)(x < 0));
-    }
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x430,(unit_types[units[unit].type].hold == '\0'))
-    ;
-    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x421,(uint)(unit_role == 5));
-    if ((unit_types[units[unit].type].attack == '\0') ||
-       (unit_types[units[unit].type].domain != '\0')) {
-      ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x421,1);
-    }
+    airbase_hidden = 1;
   }
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x417,airbase_hidden);
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x430,(uint)(unit_role == 5));
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x41b,(uint)(unit_role != 5));
+  city = civ_has_advance(civ,0xd);
+  if ((city == 0) && ((unit_types[units[unit].type].flags & 0x100) == 0)) {
+    fortress_hidden = 1;
+  }
+  else {
+    fortress_hidden = 0;
+  }
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x441,fortress_hidden);
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x441,
+             ((unit_types[units[unit].type].flags & 0x100) == 0));
+  city = civ_has_advance(civ,0x42);
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x442,(uint)(city == 0));
+  city = tile_city_owner(x,y);
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x442,(city < 0));
+  if (unit_role == 5) {
+    menu_update_settler_orders(unit,x,y,civ,terrain,is_ocean);
+  }
+  else {
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x413,1);
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x418,1);
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x420,1);
+  }
+  civ = tile_city_owner(x,y);
+  if (civ < 0) {
+    menu_set_item_label(0x445,0x3b,0);
+  }
+  else {
+    x = tile_city_owner(x,y);
+    menu_set_item_label(0x445,0x3a,(uint)(x < 0));
+  }
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x430,(unit_types[units[unit].type].hold == '\0'))
+  ;
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(0x421,(uint)(unit_role == 5));
+  if ((unit_types[units[unit].type].attack == '\0') ||
+     (unit_types[units[unit].type].domain != '\0')) {
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x421,1);
+  }
+}
+
+/* Part of menu_update_states (004e4ceb): the Cheat and Scenario menus. */
+static void menu_update_cheat_items(void)
+{
+  iptr path_cmp;
+  iptr path_cmp2;
+  i32 scenario_menu_disabled;
+  i32 scenario_checked;
+  i32 cheat_checked;
+  i32 cheat_menu_disabled;
+
   if ((((*((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
     cheat_menu_disabled = 1;
   }
@@ -3662,6 +3721,39 @@ void __cdecl menu_update_states(void)
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_menu_enabled(8,scenario_menu_disabled);
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x801,(game.multiplayer != '\0'))
   ;
+}
+
+/* 004e4ceb auto */
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void __cdecl menu_update_states(void)
+
+{
+  i32 revolution_disabled;
+  
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x606,game.rules & 0x80);
+  menu_update_multiplayer_items();
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x302,(moving_units_mode == 0));
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x301,(moving_units_mode == 1));
+  if ((((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 0x10) == 0)) &&
+     (civs[human_civ[0]].government != '\0')) {
+    revolution_disabled = 0;
+  }
+  else {
+    revolution_disabled = 1;
+  }
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x220,revolution_disabled);
+  if (((moving_units_mode == 0) || (game.num_units == 0)) ||
+     ((game.active_unit < 0 ||
+      ((game.num_units < game.active_unit || (units[game.active_unit].id == 0)))))) {
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_menu_enabled(4,1);
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x460,0);
+    ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_enabled(0x468,0);
+  }
+  else {
+    menu_update_unit_orders();
+  }
+  menu_update_cheat_items();
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->rebuild(0);
   return;
 }
@@ -4235,42 +4327,21 @@ void __cdecl frame_set_border_tile(iptr tile)
   return;
 }
 
-/* 00552112 auto */
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
-
-void FrameWindow::draw_caption()
-
+/* Part of FrameWindow::draw_caption (00552112): the border tiles, the outer and inner bevels
+   and the caption buttons; returns the x after the buttons. */
+int FrameWindow::draw_frame_borders(int bevel,i32 highlight_color2,i32 shadow_color2)
 {
-  i32 adjective;
-  int title_height;
-  int small_height;
-  uptr len;
-  uptr len2;
+  int button_x;
   u32 caption_h2;
   u32 caption_h;
   i8 sprite_rect[16];
-  int minutes;
-  int seconds;
   int height2;
-  int bevel;
-  i32 shadow_color2;
-  int text_width;
   int width2;
   int button_y2;
-  int button_x;
   int offset;
-  GameFont *font2;
-  int text_y2;
-  i32 highlight_color2;
-  int text_x2;
   int i;
-  char caption[256];
   struct { u32 left; u32 top; u32 right; u32 bottom; } rect2;
-  
-  reset_clip();
-  highlight_color2 = frame_highlight_color;
-  shadow_color2 = frame_shadow_color;
-  bevel = frame_bevel_width;
+
   if (caption_height == 0) {
     caption_h = border_width;
   }
@@ -4323,6 +4394,16 @@ void FrameWindow::draw_caption()
     gfx_reset_zoom_scale();
     button_x = button_x + width2 + frame_padding;
   }
+  return button_x;
+}
+
+/* Part of FrameWindow::draw_caption (00552112): the turn timer text (m:ss) of a multiplayer
+   turn, or the autoplay turns left. */
+void FrameWindow::update_timer_text()
+{
+  int minutes;
+  int seconds;
+
   if ((civ_saved_cursor_x_block.autoplay_active == 0) || (show_turn_status == 0)) {
     if ((((uint)game.human_players & 1 << (game.turn_civ & 0x1fU)) == 0) || (show_turn_timer == 0))
     {
@@ -4364,7 +4445,14 @@ void FrameWindow::draw_caption()
     timer_last_value = (int)civ_saved_cursor_x_block.autoplay_turns_left;
     __itoa((int)civ_saved_cursor_x_block.autoplay_turns_left,(char *)&timer_text,10);
   }
-  crt_strcpy(caption,(const char *)frame_title);
+}
+
+/* Part of FrameWindow::draw_caption (00552112): in multiplayer, appends whose turn it is (and
+   the timer) to the caption. */
+void FrameWindow::append_turn_status(char *caption)
+{
+  i32 adjective;
+
   if (((show_turn_status == 0) || (game.multiplayer == '\0')) || (net_session_block.mp_simultaneous_moves != '\0')) {
     if (((show_turn_status != 0) && (game.multiplayer != '\0')) && (net_session_block.mp_simultaneous_moves != '\0')) {
       if ((1 << ((*(byte *)&net_session_block.mp_turn_civ) & 0x1f) & (uint)game.human_players) == 0) {
@@ -4425,6 +4513,37 @@ void FrameWindow::draw_caption()
     }
     crt_strcat(caption,((i8 *)&caption_close_paren_str));
   }
+}
+
+/* 00552112 auto */
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+void FrameWindow::draw_caption()
+
+{
+  int title_height;
+  int small_height;
+  uptr len;
+  uptr len2;
+  int bevel;
+  i32 shadow_color2;
+  int text_width;
+  int width2;
+  int button_x;
+  GameFont *font2;
+  int text_y2;
+  i32 highlight_color2;
+  int text_x2;
+  char caption[256];
+  
+  reset_clip();
+  highlight_color2 = frame_highlight_color;
+  shadow_color2 = frame_shadow_color;
+  bevel = frame_bevel_width;
+  button_x = draw_frame_borders(bevel,highlight_color2,shadow_color2);
+  update_timer_text();
+  crt_strcpy(caption,(const char *)frame_title);
+  append_turn_status(caption);
   width2 = rect_width((RECT *)&frame_rect);
   text_width = ((GameFont *)title_font)->text_width((const char *)caption);
   text_width += 4;
@@ -7182,6 +7301,246 @@ int Dialog::column_of_option(DialogOption *option)
   return group_index / (int)list_rows[cur_pane];
 }
 
+/* Part of Dialog::compute_layout (0059fd2a): the sprites' column: moves the text, list
+   and edit fields right of it (or widens the content for labelled sprites);
+   returns the sprites' total height. */
+int Dialog::layout_sprites()
+{
+  i32 height;
+  u32 tmp;
+  int value;
+  int sprites_height;
+  DialogSprite *sprite;
+  u32 sprite_width2;
+
+  sprites_height = 0;
+  if (sprite_list != 0) {
+    sprite_width2 = gfx_zoom_scale(max_sprite_width,sprite_zoom);
+    if (sprite_list->label == 0) {
+      text_x += sprite_width2;
+      list_x += sprite_width2;
+      edit_x += sprite_width2;
+      wnd_width += sprite_width2;
+    }
+    else {
+      tmp = content_width;
+      if ((int)content_width <= (int)sprite_width2) {
+        tmp = sprite_width2;
+      }
+      content_width = tmp;
+    }
+    for (sprite = sprite_list; sprite != 0; sprite = sprite->next) {
+      tmp = sprite_zoom;
+      height = sprite->sprite->height();
+      value = gfx_zoom_scale(height,tmp);
+      sprites_height += value;
+      if (sprite->next != 0) {
+        sprites_height += section_gap;
+      }
+    }
+  }
+  return sprites_height;
+}
+
+/* Part of Dialog::compute_layout (0059fd2a): the geometry of a list pane (pane 0, or pane 1
+   of a two-pane list): its scroll bar, client rect, column width, row height
+   and the top option that shows the selection.  The two panes' code is the
+   same but for the index and how lists_height follows a pane grown for a
+   horizontal scroll bar (pane 0: its height, pane 1: the larger). */
+void Dialog::layout_list_pane(int pane,u32 &lists_height)
+{
+  u32 tmp;
+  int value;
+  int top_index;
+  DialogOption *first_option;
+
+  if ((style_flags & 0x40000) == 0) {
+    tmp = GetSystemMetrics(2);
+    list_vscroll_width[pane] = tmp;
+    tmp = GetSystemMetrics(3);
+    list_hscroll_height[pane] = tmp;
+    rect_set_xywh((iptr)&pane_rect[pane].left,list_x_offset[pane] + list_x,
+                       list_y,list_width[pane],list_height[pane]);
+    list_client_rect[pane].left = pane_rect[pane].left;
+    list_client_rect[pane].top = pane_rect[pane].top;
+    list_client_rect[pane].right = pane_rect[pane].right;
+    list_client_rect[pane].bottom = pane_rect[pane].bottom;
+    if (((int)(list_rows[pane] * columns) < (int)option_count) ||
+       ((style_flags & 0x1000000) != 0)) {
+      if (columns == 1) {
+        rect_set_xywh((iptr)&list_vscroll_rect[pane],pane_rect[pane].right - list_vscroll_width[pane],
+                           list_y,list_vscroll_width[pane],list_height[pane]);
+        list_client_rect[pane].right -= list_vscroll_width[pane];
+      }
+      else {
+        list_height[pane] += list_hscroll_height[pane];
+        pane_rect[pane].bottom += list_hscroll_height[pane];
+        list_client_rect[pane].bottom += list_hscroll_height[pane];
+        if (pane == 0) {
+          lists_height = list_height[0];
+        }
+        else if ((int)lists_height < (int)list_height[1]) {
+          lists_height = list_height[1];
+        }
+        rect_set_xywh((iptr)&list_hscroll_rect[pane],list_x_offset[pane] + list_x,
+                           pane_rect[pane].bottom - list_hscroll_height[pane],list_width[pane],list_hscroll_height[pane])
+        ;
+        list_client_rect[pane].bottom -= list_hscroll_height[pane];
+      }
+    }
+    rect_deflate((iptr)&list_client_rect[pane].left,1,1);
+    list_origin_x[pane] = list_client_rect[pane].left;
+    list_origin_y[pane] = list_client_rect[pane].top;
+    value = rect_width((RECT *)&list_client_rect[pane].left);
+    list_column_width[pane] = value / (int)columns;
+    tmp = dialog_list_row_height();
+    list_row_height[pane] = tmp;
+    first_option = option_at(0);
+    top_index = option_group_index(first_option);
+    value = option_group_index(selected_option);
+    while ((int)(list_rows[pane] * columns + top_index) <= value) {
+      if (columns == 1) {
+        top_index++;
+      }
+      else {
+        top_index += list_rows[pane];
+      }
+    }
+    tmp = (u32)option_at(top_index);
+    list_top_option[pane] = (DialogOption *)tmp;
+  }
+}
+
+/* Part of Dialog::compute_layout (0059fd2a): the buttons: their width (the widest label,
+   or an equal share of the window's width) and x positions, right to left,
+   the remainder spread one pixel at a time. */
+void Dialog::layout_buttons(int sprites_height,int content_height)
+{
+  u32 pos;
+  int value;
+  u32 tmp;
+  int button_x;
+  int remainder_acc;
+  int extra_space;
+  u32 avail_width;
+  uptr i;
+
+  button_x = wnd_width - (border_width - bevel_width);
+  button_width = 0;
+  for (i = 0; (int)i < 3; i++) {
+    value = button_width_for((const char *)(((i8 * *)&dialog_button_labels))[i]);
+    if ((int)button_width <= value) {
+      tmp = button_width_for((const char *)(((i8 * *)&dialog_button_labels))[i]);
+      button_width = tmp;
+    }
+  }
+  for (i = 0; (int)i < (int)extra_button_count; i++) {
+    value = button_width_for((const char *)((&(*&(this)->extra_button_labels))[i]));
+    if ((int)button_width <= value) {
+      tmp = button_width_for((const char *)((&(*&(this)->extra_button_labels))[i]));
+      button_width = tmp;
+    }
+  }
+  value = (wnd_width + (border_width - bevel_width) * -2) -
+          (std_button_count + extra_button_count - 1) * pad_x;
+  extra_space = value % (int)(std_button_count + extra_button_count);
+  avail_width = value / (int)(std_button_count + extra_button_count);
+  tmp = button_width;
+  if ((int)button_width <= (int)avail_width) {
+    tmp = avail_width;
+  }
+  button_width = tmp;
+  if (button_width != avail_width) {
+    extra_space = 0;
+  }
+  if ((style_flags & 0x100000) == 0) {
+    if ((sprites_height != 0) || (content_height != 0)) {
+      wnd_height += section_gap * 2;
+    }
+    value = line_height();
+    wnd_height += value;
+    if (border_width != 0) {
+      if ((sprites_height != 0) || (content_height != 0)) {
+        chrome_height += section_gap * 2;
+      }
+      value = line_height();
+      chrome_height += value;
+    }
+  }
+  remainder_acc = std_button_count + extra_button_count - 1;
+  tmp = std_button_count;
+  while (i = tmp - 1, -1 < (int)i) {
+    pos = button_x - button_width;
+    (&(this)->button_layout)[tmp * 2] = pos;
+    button_x = pos - pad_x;
+    for (remainder_acc = remainder_acc + extra_space; tmp = i,
+        (int)(std_button_count + extra_button_count) <= remainder_acc;
+        remainder_acc = remainder_acc - (std_button_count + extra_button_count)) {
+      button_x--;
+    }
+  }
+  tmp = extra_button_count;
+  while (i = tmp - 1, -1 < (int)i) {
+    pos = button_x - button_width;
+    (&(this)->button_layout)[tmp * 2 + std_button_count * 2] = pos;
+    button_x = pos - pad_x;
+    for (remainder_acc = remainder_acc + extra_space; tmp = i,
+        (int)(std_button_count + extra_button_count) <= remainder_acc;
+        remainder_acc = remainder_acc - (std_button_count + extra_button_count)) {
+      button_x--;
+    }
+  }
+}
+
+/* Part of Dialog::compute_layout (0059fd2a): places the window on the screen (centered, or
+   negative positions counted from the right/bottom edge) and moves the
+   text, list and edit positions by the origin. */
+void Dialog::layout_place_window()
+{
+  int value;
+  RECT frame_rect2;
+  RECT screen_rect2;
+
+  if ((style_flags & 0x100000) == 0) {
+    gfx_get_screen_rect((iptr)((i8 *)&screen_rect2.left));
+    main_frame_wnd_block.main_frame_wnd.get_screen_rect((iptr)((i8 *)&frame_rect2.left));
+    if (window_x == 0xfffffc19) {
+      value = rect_width((RECT *)(iptr)((i8 *)&screen_rect2.left));
+      window_x = (value >> 1) - ((int)wnd_width >> 1);
+    }
+    else if ((((int)window_x < 0) &&
+             (window_x = window_x + ((screen_rect2.right - 1) - wnd_width),
+             main_frame_created != 0)) && ((style_flags & 0x10000) != 0)) {
+      value = main_frame_wnd_block.main_frame_wnd.frame_width();
+      window_x -= value;
+    }
+    if (window_y == 0xfffffc19) {
+      value = rect_height((RECT *)(iptr)((i8 *)&screen_rect2.left));
+      window_y = (value >> 1) - ((int)wnd_height >> 1);
+    }
+    else if ((int)window_y < 0) {
+      if (-(screen_rect2.bottom - frame_rect2.bottom) < (int)window_y) {
+        window_y -= (screen_rect2.bottom - frame_rect2.bottom);
+      }
+      window_y += ((screen_rect2.bottom - 1) - wnd_height);
+      if ((main_frame_created != 0) && ((style_flags & 0x10000) != 0)) {
+        value = main_frame_wnd_block.main_frame_wnd.nonclient_height();
+        window_y -= value;
+      }
+    }
+    if ((dialog_clamp_overflow == 0) &&
+       (value = rect_width((RECT *)(iptr)((i8 *)&screen_rect2.left)), (int)wnd_width <= value)) {
+      rect_height((RECT *)(iptr)((i8 *)&screen_rect2.left));
+    }
+    list_x += origin_x;
+    list_y += origin_y;
+    text_x += origin_x;
+    text_y += origin_y;
+    edit_x += origin_x;
+    edit_y += origin_y;
+  }
+}
+
 /* 0059fd2a auto */
 i32 Dialog::compute_layout()
 
@@ -7189,30 +7548,20 @@ i32 Dialog::compute_layout()
   u32 pos;
   int value;
   size_t len;
-  i32 height;
   u32 tmp;
   uptr column_count;
-  int button_x;
   int text_height;
-  int top_index;
-  RECT frame_rect2;
   u32 text_width;
-  RECT screen_rect2;
   i32 result;
-  int remainder_acc;
   int rows;
   u32 left;
-  int extra_space;
   u32 top;
-  u32 avail_width;
   int sprites_height;
   int edit_height;
   DialogSprite *sprite;
   uptr i;
-  u32 sprite_width2;
   DialogLine *line;
   u32 lists_height;
-  DialogOption *first_option;
   int content_height;
   
   result = 1;
@@ -7306,32 +7655,7 @@ i32 Dialog::compute_layout()
     }
   }
   else if ((option_count != 0) || ((style_flags & 0x1004) == 0)) {
-    sprites_height = 0;
-    if (sprite_list != 0) {
-      sprite_width2 = gfx_zoom_scale(max_sprite_width,sprite_zoom);
-      if (sprite_list->label == 0) {
-        text_x += sprite_width2;
-        list_x += sprite_width2;
-        edit_x += sprite_width2;
-        wnd_width += sprite_width2;
-      }
-      else {
-        tmp = content_width;
-        if ((int)content_width <= (int)sprite_width2) {
-          tmp = sprite_width2;
-        }
-        content_width = tmp;
-      }
-      for (sprite = sprite_list; sprite != 0; sprite = sprite->next) {
-        tmp = sprite_zoom;
-        height = sprite->sprite->height();
-        value = gfx_zoom_scale(height,tmp);
-        sprites_height += value;
-        if (sprite->next != 0) {
-          sprites_height += section_gap;
-        }
-      }
-    }
+    sprites_height = layout_sprites();
     if ((line_list != 0) && (value = has_text_lines(), value != 0)) {
       text_height = draw_wrapped_text(0);
       list_y = list_y + section_gap + text_height;
@@ -7347,112 +7671,13 @@ i32 Dialog::compute_layout()
       if ((style_flags & 0x1000) != 0) {
         cur_pane = 0;
         lists_height = list_height[0];
-        if ((style_flags & 0x40000) == 0) {
-          tmp = GetSystemMetrics(2);
-          list_vscroll_width[0] = tmp;
-          tmp = GetSystemMetrics(3);
-          list_hscroll_height[0] = tmp;
-          rect_set_xywh((iptr)&pane_rect[0].left,list_x_offset[0] + list_x,list_y,
-                             list_width[0],list_height[0]);
-          list_client_rect[0].left = pane_rect[0].left;
-          list_client_rect[0].top = pane_rect[0].top;
-          list_client_rect[0].right = pane_rect[0].right;
-          list_client_rect[0].bottom = pane_rect[0].bottom;
-          if (((int)(list_rows[0] * columns) < (int)option_count) ||
-             ((style_flags & 0x1000000) != 0)) {
-            if (columns == 1) {
-              rect_set_xywh((iptr)&list_vscroll_rect[0],pane_rect[0].right - list_vscroll_width[0],
-                                 list_y,list_vscroll_width[0],list_height[0]);
-              list_client_rect[0].right -= list_vscroll_width[0];
-            }
-            else {
-              list_height[0] += list_hscroll_height[0];
-              pane_rect[0].bottom += list_hscroll_height[0];
-              list_client_rect[0].bottom += list_hscroll_height[0];
-              lists_height = list_height[0];
-              rect_set_xywh((iptr)&list_hscroll_rect[0],list_x_offset[0] + list_x,
-                                 pane_rect[0].bottom - list_hscroll_height[0],list_width[0],list_hscroll_height[0]);
-              list_client_rect[0].bottom -= list_hscroll_height[0];
-            }
-          }
-          rect_deflate((iptr)&list_client_rect[0].left,1,1);
-          list_origin_x[0] = list_client_rect[0].left;
-          list_origin_y[0] = list_client_rect[0].top;
-          value = rect_width((RECT *)&list_client_rect[0].left);
-          list_column_width[0] = value / (int)columns;
-          tmp = dialog_list_row_height();
-          list_row_height[0] = tmp;
-          first_option = option_at(0);
-          top_index = option_group_index(first_option);
-          value = option_group_index(selected_option);
-          while ((int)(list_rows[0] * columns + top_index) <= value) {
-            if (columns == 1) {
-              top_index++;
-            }
-            else {
-              top_index += list_rows[0];
-            }
-          }
-          tmp = (u32)option_at(top_index);
-          list_top_option[0] = (DialogOption *)tmp;
-        }
+        layout_list_pane(0,lists_height);
         if ((style_flags & 0x400000) != 0) {
           cur_pane = 1;
           if ((int)lists_height < (int)list_height[1]) {
             lists_height = list_height[1];
           }
-          if ((style_flags & 0x40000) == 0) {
-            tmp = GetSystemMetrics(2);
-            list_vscroll_width[1] = tmp;
-            tmp = GetSystemMetrics(3);
-            list_hscroll_height[1] = tmp;
-            rect_set_xywh((iptr)&pane_rect[1].left,list_x_offset[1] + list_x,
-                               list_y,list_width[1],list_height[1]);
-            list_client_rect[1].left = pane_rect[1].left;
-            list_client_rect[1].top = pane_rect[1].top;
-            list_client_rect[1].right = pane_rect[1].right;
-            list_client_rect[1].bottom = pane_rect[1].bottom;
-            if (((int)(list_rows[1] * columns) < (int)option_count) ||
-               ((style_flags & 0x1000000) != 0)) {
-              if (columns == 1) {
-                rect_set_xywh((iptr)&list_vscroll_rect[1],pane_rect[1].right - list_vscroll_width[1],
-                                   list_y,list_vscroll_width[1],list_height[1]);
-                list_client_rect[1].right -= list_vscroll_width[1];
-              }
-              else {
-                list_height[1] += list_hscroll_height[1];
-                pane_rect[1].bottom += list_hscroll_height[1];
-                list_client_rect[1].bottom += list_hscroll_height[1];
-                if ((int)lists_height < (int)list_height[1]) {
-                  lists_height = list_height[1];
-                }
-                rect_set_xywh((iptr)&list_hscroll_rect[1],list_x_offset[1] + list_x,
-                                   pane_rect[1].bottom - list_hscroll_height[1],list_width[1],list_hscroll_height[1])
-                ;
-                list_client_rect[1].bottom -= list_hscroll_height[1];
-              }
-            }
-            rect_deflate((iptr)&list_client_rect[1].left,1,1);
-            list_origin_x[1] = list_client_rect[1].left;
-            list_origin_y[1] = list_client_rect[1].top;
-            value = rect_width((RECT *)&list_client_rect[1].left);
-            list_column_width[1] = value / (int)columns;
-            tmp = dialog_list_row_height();
-            list_row_height[1] = tmp;
-            first_option = option_at(0);
-            top_index = option_group_index(first_option);
-            value = option_group_index(selected_option);
-            while ((int)(list_rows[1] * columns + top_index) <= value) {
-              if (columns == 1) {
-                top_index++;
-              }
-              else {
-                top_index += list_rows[1];
-              }
-            }
-            tmp = (u32)option_at(top_index);
-            list_top_option[1] = (DialogOption *)tmp;
-          }
+          layout_list_pane(1,lists_height);
           cur_pane = 0;
         }
       }
@@ -7483,71 +7708,7 @@ i32 Dialog::compute_layout()
       chrome_height += border_width;
     }
     else {
-      button_x = wnd_width - (border_width - bevel_width);
-      button_width = 0;
-      for (i = 0; (int)i < 3; i++) {
-        value = button_width_for((const char *)(((i8 * *)&dialog_button_labels))[i]);
-        if ((int)button_width <= value) {
-          tmp = button_width_for((const char *)(((i8 * *)&dialog_button_labels))[i]);
-          button_width = tmp;
-        }
-      }
-      for (i = 0; (int)i < (int)extra_button_count; i++) {
-        value = button_width_for((const char *)((&(*&(this)->extra_button_labels))[i]));
-        if ((int)button_width <= value) {
-          tmp = button_width_for((const char *)((&(*&(this)->extra_button_labels))[i]));
-          button_width = tmp;
-        }
-      }
-      value = (wnd_width + (border_width - bevel_width) * -2) -
-              (std_button_count + extra_button_count - 1) * pad_x;
-      extra_space = value % (int)(std_button_count + extra_button_count);
-      avail_width = value / (int)(std_button_count + extra_button_count);
-      tmp = button_width;
-      if ((int)button_width <= (int)avail_width) {
-        tmp = avail_width;
-      }
-      button_width = tmp;
-      if (button_width != avail_width) {
-        extra_space = 0;
-      }
-      if ((style_flags & 0x100000) == 0) {
-        if ((sprites_height != 0) || (content_height != 0)) {
-          wnd_height += section_gap * 2;
-        }
-        value = line_height();
-        wnd_height += value;
-        if (border_width != 0) {
-          if ((sprites_height != 0) || (content_height != 0)) {
-            chrome_height += section_gap * 2;
-          }
-          value = line_height();
-          chrome_height += value;
-        }
-      }
-      remainder_acc = std_button_count + extra_button_count - 1;
-      tmp = std_button_count;
-      while (i = tmp - 1, -1 < (int)i) {
-        pos = button_x - button_width;
-        (&(this)->button_layout)[tmp * 2] = pos;
-        button_x = pos - pad_x;
-        for (remainder_acc = remainder_acc + extra_space; tmp = i,
-            (int)(std_button_count + extra_button_count) <= remainder_acc;
-            remainder_acc = remainder_acc - (std_button_count + extra_button_count)) {
-          button_x--;
-        }
-      }
-      tmp = extra_button_count;
-      while (i = tmp - 1, -1 < (int)i) {
-        pos = button_x - button_width;
-        (&(this)->button_layout)[tmp * 2 + std_button_count * 2] = pos;
-        button_x = pos - pad_x;
-        for (remainder_acc = remainder_acc + extra_space; tmp = i,
-            (int)(std_button_count + extra_button_count) <= remainder_acc;
-            remainder_acc = remainder_acc - (std_button_count + extra_button_count)) {
-          button_x--;
-        }
-      }
+      layout_buttons(sprites_height,content_height);
     }
     tmp = min_height;
     if ((int)min_height <= (int)wnd_height) {
@@ -7557,44 +7718,7 @@ i32 Dialog::compute_layout()
     tmp = wnd_height;
     value = line_height();
     button_y = tmp - (bevel_width + value + pad_y);
-    if ((style_flags & 0x100000) == 0) {
-      gfx_get_screen_rect((iptr)((i8 *)&screen_rect2.left));
-      main_frame_wnd_block.main_frame_wnd.get_screen_rect((iptr)((i8 *)&frame_rect2.left));
-      if (window_x == 0xfffffc19) {
-        value = rect_width((RECT *)(iptr)((i8 *)&screen_rect2.left));
-        window_x = (value >> 1) - ((int)wnd_width >> 1);
-      }
-      else if ((((int)window_x < 0) &&
-               (window_x = window_x + ((screen_rect2.right - 1) - wnd_width),
-               main_frame_created != 0)) && ((style_flags & 0x10000) != 0)) {
-        value = main_frame_wnd_block.main_frame_wnd.frame_width();
-        window_x -= value;
-      }
-      if (window_y == 0xfffffc19) {
-        value = rect_height((RECT *)(iptr)((i8 *)&screen_rect2.left));
-        window_y = (value >> 1) - ((int)wnd_height >> 1);
-      }
-      else if ((int)window_y < 0) {
-        if (-(screen_rect2.bottom - frame_rect2.bottom) < (int)window_y) {
-          window_y -= (screen_rect2.bottom - frame_rect2.bottom);
-        }
-        window_y += ((screen_rect2.bottom - 1) - wnd_height);
-        if ((main_frame_created != 0) && ((style_flags & 0x10000) != 0)) {
-          value = main_frame_wnd_block.main_frame_wnd.nonclient_height();
-          window_y -= value;
-        }
-      }
-      if ((dialog_clamp_overflow == 0) &&
-         (value = rect_width((RECT *)(iptr)((i8 *)&screen_rect2.left)), (int)wnd_width <= value)) {
-        rect_height((RECT *)(iptr)((i8 *)&screen_rect2.left));
-      }
-      list_x += origin_x;
-      list_y += origin_y;
-      text_x += origin_x;
-      text_y += origin_y;
-      edit_x += origin_x;
-      edit_y += origin_y;
-    }
+    layout_place_window();
     button_y += origin_y;
     for (i = 0; (int)i < (int)(std_button_count + extra_button_count);
         i = i + 1) {
@@ -8110,54 +8234,404 @@ void __cdecl dialog_on_redraw(void)
   return;
 }
 
+/* Part of Dialog::create_controls (005a211c): the radio buttons of the options. */
+void Dialog::create_radio_group(uint *labels)
+{
+  RadioGroup *this_00;
+  u32 x;
+  iptr parent_18c;
+  RadioGroup *radio_group2;
+  int item_index;
+  i8 rect[16];
+  DialogOption *option;
+  i32 eh_state;
+
+  this_00 = (RadioGroup *)operator_new(0x50);
+  eh_state = 7;
+  if (this_00 == (RadioGroup *)0x0) {
+    radio_group2 = 0;
+  }
+  else {
+    radio_group2 = this_00->construct();
+  }
+  eh_state = 0xffffffff;
+  radio_group = (uptr)radio_group2;
+  x = columns;
+  if ((int)x < 2) {
+    x = 1;
+  }
+  rect_set_xywh((iptr)rect,list_x,list_y,option_width,
+                     option_row_height *
+                     ((int)((columns - 1) + option_count) / (int)x));
+  if (surf_wnd == 0) {
+    parent_18c = 0;
+  }
+  else {
+    parent_18c = surf_wnd + 0x48;
+  }
+  ((RadioGroup *)radio_group)->create(parent_18c,200,(iptr)rect,columns,
+             option_count,(iptr)labels);
+  option = option_list;
+  item_index = 0;
+  for (; option != (DialogOption *)0x0; option = option->next) {
+    if ((uint *)selected_option == ((uint *)option)) {
+      ((RadioGroup *)radio_group)->set_selected(item_index);
+    }
+    if ((option->flags & 1) != 0) {
+      ((RadioGroup *)radio_group)->disable_item(item_index);
+    }
+    item_index++;
+  }
+  ((RadioGroup *)radio_group)->set_select_callback((RadioNotifyFn)dialog_radio_on_select);
+  ((RadioGroup *)radio_group)->set_dblclick_callback(dialog_radio_on_dblclick);
+}
+
+/* Part of Dialog::create_controls (005a211c): the checkboxes of the options. */
+void Dialog::create_checkboxes()
+{
+  u32 x;
+  iptr parent_188;
+  u32 *checkboxes2;
+  u32 y2;
+  DialogOption *option;
+  int i;
+  i32 eh_state;
+
+  x = option_count;
+  checkboxes2 = (u32 *)operator_new(x * 0x3c + 4);
+  eh_state = 6;
+  if (checkboxes2 == (u32 *)0x0) {
+    checkboxes2 = (u32 *)0x0;
+  }
+  else {
+    *checkboxes2 = x;
+    crt_vector_ctor_iterator(checkboxes2 + 1,0x3c,*checkboxes2,checkbox_elem_ctor,
+                 checkbox_dtor);
+    checkboxes2++;
+  }
+  eh_state = 0xffffffff;
+  checkboxes = (uptr)checkboxes2;
+  x = list_x;
+  y2 = list_y;
+  i = 0;
+  for (option = option_list; option != (DialogOption *)0x0;
+      option = option->next) {
+    if (surf_wnd == 0) {
+      parent_188 = 0;
+    }
+    else {
+      parent_188 = surf_wnd + 0x48;
+    }
+    ((Checkbox *)(checkboxes + i * 0x3c))->create(parent_188,i + 200
+               ,x,y2,(const char *)option->text);
+    ((Checkbox *)(checkboxes + i * 0x3c))->set_checked(option->flags & 4);
+    if ((option->flags & 1) != 0) {
+      ((Checkbox *)(checkboxes + i * 0x3c))->disable();
+    }
+    y2 += option_row_height;
+    i++;
+  }
+}
+
+/* Part of Dialog::create_controls (005a211c): the scroll bar of the current pane's list
+   (vertical with one column, else horizontal), when the options do not fit.
+   Pane 0 and pane 1 differ only in the callbacks (the original's dead
+   exception-state stores, 1 2 and 4 5, are left out). */
+void Dialog::create_list_scrollbar(ScrollFn vscroll_cb,ScrollFn hscroll_cb)
+{
+  Button *ctrl_mem;
+  Scrollbar *new_vscroll;
+  Scrollbar *new_hscroll;
+  iptr parent;
+  int count;
+  i32 value;
+  iptr pos;
+
+  if (((int)(list_rows[cur_pane] * columns) < (int)option_count) ||
+     ((style_flags & 0x1000000) != 0)) {
+    if (columns == 1) {
+      ctrl_mem = (Button *)operator_new(0x40);
+      if (ctrl_mem == (Button *)0x0) {
+        new_vscroll = 0;
+      }
+      else {
+        new_vscroll = ((Scrollbar *)ctrl_mem)->construct();
+      }
+      list_vscroll[cur_pane] = (i32)new_vscroll;
+      if (surf_wnd == 0) {
+        parent = 0;
+      }
+      else {
+        parent = surf_wnd + 0x48;
+      }
+      ((Scrollbar *)list_vscroll[cur_pane])->create(parent,
+                 0xb,(iptr)&list_vscroll_rect[cur_pane],1);
+      count = count_group_options(cur_pane);
+      ((Scrollbar *)list_vscroll[cur_pane])->set_range(0,
+                 count - 1);
+      pos = option_group_index(
+                         list_top_option[cur_pane]);
+      ((Scrollbar *)list_vscroll[cur_pane])->set_pos(pos);
+      ((Scrollbar *)list_vscroll[cur_pane])->set_page_size(
+                 list_rows[cur_pane] - 1);
+      ((Scrollbar *)list_vscroll[cur_pane])->set_callback(vscroll_cb);
+      ((Scrollbar *)list_vscroll[cur_pane])->set_track_callback(vscroll_cb);
+    }
+    else {
+      ctrl_mem = (Button *)operator_new(0x40);
+      if (ctrl_mem == (Button *)0x0) {
+        new_hscroll = 0;
+      }
+      else {
+        new_hscroll = ((Scrollbar *)ctrl_mem)->construct();
+      }
+      list_hscroll[cur_pane] = (i32)new_hscroll;
+      if (surf_wnd == 0) {
+        parent = 0;
+      }
+      else {
+        parent = surf_wnd + 0x48;
+      }
+      ((Scrollbar *)list_hscroll[cur_pane])->create(parent,0xc,
+                 (iptr)&list_hscroll_rect[cur_pane],0);
+      count = count_group_options(cur_pane);
+      value = column_of_index(count - 1);
+      ((Scrollbar *)list_hscroll[cur_pane])->set_range(0,value);
+      value = option_group_index(
+                         list_top_option[cur_pane]);
+      pos = column_of_index(value);
+      ((Scrollbar *)list_hscroll[cur_pane])->set_pos(pos);
+      ((Scrollbar *)list_hscroll[cur_pane])->set_page_size(columns
+                );
+      ((Scrollbar *)list_hscroll[cur_pane])->set_callback(hscroll_cb);
+      ((Scrollbar *)list_hscroll[cur_pane])->set_track_callback(hscroll_cb);
+    }
+  }
+}
+
+/* Part of Dialog::create_controls (005a211c): the current pane's list as a list box control
+   (the original's dead exception-state stores, 0 and 3, are left out). */
+void Dialog::create_list_listbox()
+{
+  Button *ctrl_mem;
+  ListBox *new_listbox;
+  iptr parent;
+  i8 rect[16];
+  DialogOption *option;
+  int item_index;
+
+  ctrl_mem = (Button *)operator_new(0x3c);
+  if (ctrl_mem == (Button *)0x0) {
+    new_listbox = 0;
+  }
+  else {
+    new_listbox = ((ListBox *)ctrl_mem)->construct();
+  }
+  listbox[cur_pane] = (i32)new_listbox;
+  rect_set_xywh((iptr)rect,list_x,list_y,
+                     list_width[cur_pane],list_height[cur_pane]);
+  if (surf_wnd == 0) {
+    parent = 0;
+  }
+  else {
+    parent = surf_wnd + 0x48;
+  }
+  ((ListBox *)listbox[cur_pane])->create(parent,10,
+             (iptr)rect);
+  option = option_list;
+  item_index = 0;
+  for (; option != (DialogOption *)0x0; option = option->next) {
+    if (cur_pane == (uint)option->group) {
+      ((ListBox *)listbox[cur_pane])->add_string((const char *)option->text);
+      if ((uint *)selected_option == ((uint *)option)) {
+        ((ListBox *)listbox[cur_pane])->set_cur_sel(item_index);
+      }
+      item_index++;
+    }
+  }
+  ((ListBox *)listbox[cur_pane])->set_dblclick_callback((CtrlNotifyFn)dialog_listbox_on_dblclick);
+}
+
+/* Part of Dialog::create_controls (005a211c): the hotspots of the sprites (a picture
+   choice). */
+void Dialog::create_sprite_hotspots()
+{
+  i32 value;
+  int count;
+  u32 zoom;
+  iptr parent_190;
+  i8 rect[16];
+  iptr width2;
+  u32 x;
+  u32 *hotspots;
+  u32 y2;
+  DialogSprite *sprite;
+  int i;
+  i32 eh_state;
+
+  if ((1 < (int)sprite_count) && (option_count == 0)) {
+    x = sprite_count;
+    hotspots = (u32 *)operator_new(x * 0x40 + 4);
+    eh_state = 8;
+    if (hotspots == (u32 *)0x0) {
+      hotspots = (u32 *)0x0;
+    }
+    else {
+      *hotspots = x;
+      crt_vector_ctor_iterator(hotspots + 1,0x40,*hotspots,hotspot_ctor,
+                   hotspot_dtor);
+      hotspots++;
+    }
+    eh_state = 0xffffffff;
+    sprite_hotspots = (uptr)hotspots;
+    x = sprite_x;
+    y2 = sprite_y;
+    sprite = sprite_list;
+    i = 0;
+    for (; sprite != 0; sprite = sprite->next) {
+      width2 = gfx_zoom_scale(max_sprite_width,sprite_zoom);
+      zoom = sprite_zoom;
+      value = sprite->sprite->height();
+      count = gfx_zoom_scale(value,zoom);
+      rect_set_xywh((iptr)rect,x,y2,width2,count);
+      if (surf_wnd == 0) {
+        parent_190 = 0;
+      }
+      else {
+        parent_190 = surf_wnd + 0x48;
+      }
+      ((Hotspot *)(sprite_hotspots + i * 0x40))->create(parent_190,i + 300,
+                 (iptr)rect);
+      ((Hotspot *)(sprite_hotspots + i * 0x40))->set_click_callback(dialog_on_sprite_click);
+      ((Hotspot *)(sprite_hotspots + i * 0x40))->set_dblclick_callback((CtrlNotifyFn)dialog_sprite_on_dblclick);
+      y2 = y2 + section_gap + count;
+      i++;
+    }
+  }
+}
+
+/* Part of Dialog::create_controls (005a211c): the edit fields. */
+void Dialog::create_edit_fields()
+{
+  i32 value;
+  int count;
+  i32 text;
+  int parent_194;
+  DialogEditField *edit_field;
+  u32 x;
+  u32 *edits;
+  int i;
+  i32 eh_state;
+
+  if (edit_field_list != 0) {
+    edit_field = edit_field_list;
+    x = edit_count;
+    edits = (u32 *)operator_new(x * 0x48 + 4);
+    eh_state = 9;
+    if (edits == (u32 *)0x0) {
+      edits = (u32 *)0x0;
+    }
+    else {
+      *edits = x;
+      crt_vector_ctor_iterator(edits + 1,0x48,*edits,edit_ctor,
+                   edit_dtor);
+      edits++;
+    }
+    eh_state = 0xffffffff;
+    edit_controls = (uptr)edits;
+    i = 0;
+    for (; edit_field != 0; edit_field = edit_field->next) {
+      if (surf_wnd == 0) {
+        parent_194 = 0;
+      }
+      else {
+        parent_194 = surf_wnd + 0x48;
+      }
+      value = (i32)edit_field->buffer;
+      text = edit_field->width;
+      count = edit_row_height();
+      ((EditControl *)(edit_controls + i * 0x48))->create_at(parent_194,0x14,
+                 edit_x + edit_label_width,count * i + edit_y,text,(const char *)value)
+      ;
+      if (2 < game.multiplayer) {
+        ((EditControl *)(edit_controls + i * 0x48))->set_change_callback((CtrlNotifyFn)dialog_edit_on_change)
+        ;
+      }
+      ((EditControl *)(edit_controls + i * 0x48))->set_max_len(edit_field->max_len);
+      i++;
+    }
+  }
+}
+
+/* Part of Dialog::create_controls (005a211c): the buttons (the standard ones, then the
+   extra ones). */
+void Dialog::create_buttons()
+{
+  int count;
+  int *buttons;
+  int i;
+  iptr pos;
+  i8 rect[16];
+  iptr parent_198;
+  iptr button_id;
+  i8 *label;
+  i32 eh_state;
+
+  if (std_button_count + extra_button_count != 0) {
+    count = std_button_count + extra_button_count;
+    buttons = (int *)operator_new(count * 0x3c + 4);
+    eh_state = 10;
+    if (buttons == (int *)0x0) {
+      buttons = (int *)0x0;
+    }
+    else {
+      *buttons = count;
+      crt_vector_ctor_iterator(buttons + 1,0x3c,*buttons,button_ctor,
+                   ctrl_dtor);
+      buttons++;
+    }
+    eh_state = 0xffffffff;
+    button_controls = (uptr)buttons;
+  }
+  for (i = 0; i < (int)(std_button_count + extra_button_count); i++) {
+    if (i < (int)std_button_count) {
+      button_id = *(iptr *)((u8 *)&extra_button_labels + i * 8 + 0x18);
+      label = (((i8 * *)&dialog_button_labels))[button_id];
+    }
+    else {
+      button_id = -1;
+      label = *(i8 **)((int)this + (i - std_button_count) * 4 + 0x294);
+    }
+    pos = line_height();
+    rect_set_xywh((iptr)rect,*(i32 *)((u8 *)&extra_button_labels + i * 8 + 0x1c),
+                       button_y,button_width,pos);
+    if (surf_wnd == 0) {
+      parent_198 = 0;
+    }
+    else {
+      parent_198 = surf_wnd + 0x48;
+    }
+    ((Button *)(button_controls + i * 0x3c))->create(parent_198,i + 100,
+               (iptr)rect,(const char *)label);
+    if ((button_id == 2) || ((button_id == 0 && ((style_flags & 1) == 0)))) {
+      ((Button *)(button_controls + i * 0x3c))->set_cancel_button();
+    }
+    if (button_id == 0) {
+      ((Button *)(button_controls + i * 0x3c))->set_default_button();
+    }
+    ((Button *)(button_controls + i * 0x3c))->set_callback(dialog_on_button_click);
+  }
+}
+
 /* 005a211c auto */
 void Dialog::create_controls()
 
 {
   uint is_checkbox;
-  Button *ctrl_mem;
-  RadioGroup *this_00;
-  i32 value;
-  int count;
-  iptr pos;
-  u32 x;
-  i32 text;
-  u32 zoom;
-  iptr parent_198;
-  int parent_194;
-  iptr parent_190;
-  iptr parent_18c;
-  iptr parent_188;
-  iptr parent_184;
-  iptr parent_180;
-  iptr parent_17c;
-  iptr parent_178;
-  iptr parent_174;
-  iptr parent_170;
-  int *buttons;
-  u32 *edits;
-  u32 *hotspots;
-  RadioGroup *radio_group2;
-  u32 *checkboxes2;
-  Scrollbar *hscroll2;
-  Scrollbar *vscroll2;
-  ListBox *listbox22;
-  Scrollbar *hscroll;
-  Scrollbar *vscroll;
-  ListBox *listbox3;
-  int item_index;
-  DialogEditField *edit_field;
-  u32 y2;
-  i8 *label;
-  i8 rect[16];
   iptr label_count2;
-  iptr button_id;
   uint is_listbox;
   DialogOption *option;
-  DialogSprite *sprite;
-  int i;
   i8 unused_flag;
-  iptr width2;
   uint labels[41];
   i32 saved_seh;
   i8 *seh_handler;
@@ -8200,416 +8674,39 @@ void Dialog::create_controls()
     if (option_count != 0) {
       if (is_listbox == 0) {
         if (is_checkbox == 0) {
-          this_00 = (RadioGroup *)operator_new(0x50);
-          eh_state = 7;
-          if (this_00 == (RadioGroup *)0x0) {
-            radio_group2 = 0;
-          }
-          else {
-            radio_group2 = this_00->construct();
-          }
-          eh_state = 0xffffffff;
-          radio_group = (uptr)radio_group2;
-          x = columns;
-          if ((int)x < 2) {
-            x = 1;
-          }
-          rect_set_xywh((iptr)rect,list_x,list_y,option_width,
-                             option_row_height *
-                             ((int)((columns - 1) + option_count) / (int)x));
-          if (surf_wnd == 0) {
-            parent_18c = 0;
-          }
-          else {
-            parent_18c = surf_wnd + 0x48;
-          }
-          ((RadioGroup *)radio_group)->create(parent_18c,200,(iptr)rect,columns,
-                     option_count,(iptr)labels);
-          option = option_list;
-          item_index = 0;
-          for (; option != (DialogOption *)0x0; option = option->next) {
-            if ((uint *)selected_option == ((uint *)option)) {
-              ((RadioGroup *)radio_group)->set_selected(item_index);
-            }
-            if ((option->flags & 1) != 0) {
-              ((RadioGroup *)radio_group)->disable_item(item_index);
-            }
-            item_index++;
-          }
-          ((RadioGroup *)radio_group)->set_select_callback((RadioNotifyFn)dialog_radio_on_select);
-          ((RadioGroup *)radio_group)->set_dblclick_callback(dialog_radio_on_dblclick);
+          create_radio_group(labels);
         }
         else {
-          x = option_count;
-          checkboxes2 = (u32 *)operator_new(x * 0x3c + 4);
-          eh_state = 6;
-          if (checkboxes2 == (u32 *)0x0) {
-            checkboxes2 = (u32 *)0x0;
-          }
-          else {
-            *checkboxes2 = x;
-            crt_vector_ctor_iterator(checkboxes2 + 1,0x3c,*checkboxes2,checkbox_elem_ctor,
-                         checkbox_dtor);
-            checkboxes2++;
-          }
-          eh_state = 0xffffffff;
-          checkboxes = (uptr)checkboxes2;
-          x = list_x;
-          y2 = list_y;
-          i = 0;
-          for (option = option_list; option != (DialogOption *)0x0;
-              option = option->next) {
-            if (surf_wnd == 0) {
-              parent_188 = 0;
-            }
-            else {
-              parent_188 = surf_wnd + 0x48;
-            }
-            ((Checkbox *)(checkboxes + i * 0x3c))->create(parent_188,i + 200
-                       ,x,y2,(const char *)option->text);
-            ((Checkbox *)(checkboxes + i * 0x3c))->set_checked(option->flags & 4);
-            if ((option->flags & 1) != 0) {
-              ((Checkbox *)(checkboxes + i * 0x3c))->disable();
-            }
-            y2 += option_row_height;
-            i++;
-          }
+          create_checkboxes();
         }
       }
       else {
         cur_pane = 0;
         if ((style_flags & 0x40000) == 0) {
-          if (((int)(list_rows[cur_pane] * columns) < (int)option_count) ||
-             ((style_flags & 0x1000000) != 0)) {
-            if (columns == 1) {
-              ctrl_mem = (Button *)operator_new(0x40);
-              eh_state = 1;
-              if (ctrl_mem == (Button *)0x0) {
-                vscroll = 0;
-              }
-              else {
-                vscroll = ((Scrollbar *)ctrl_mem)->construct();
-              }
-              eh_state = 0xffffffff;
-              list_vscroll[cur_pane] = (i32)vscroll;
-              if (surf_wnd == 0) {
-                parent_174 = 0;
-              }
-              else {
-                parent_174 = surf_wnd + 0x48;
-              }
-              ((Scrollbar *)list_vscroll[cur_pane])->create(parent_174,
-                         0xb,(iptr)&list_vscroll_rect[cur_pane],1);
-              count = count_group_options(cur_pane);
-              ((Scrollbar *)list_vscroll[cur_pane])->set_range(0,
-                         count - 1);
-              pos = option_group_index(
-                                 list_top_option[cur_pane]);
-              ((Scrollbar *)list_vscroll[cur_pane])->set_pos(pos);
-              ((Scrollbar *)list_vscroll[cur_pane])->set_page_size(
-                         list_rows[cur_pane] - 1);
-              ((Scrollbar *)list_vscroll[cur_pane])->set_callback(dialog_list_on_vscroll);
-              ((Scrollbar *)list_vscroll[cur_pane])->set_track_callback(dialog_list_on_vscroll);
-            }
-            else {
-              ctrl_mem = (Button *)operator_new(0x40);
-              eh_state = 2;
-              if (ctrl_mem == (Button *)0x0) {
-                hscroll = 0;
-              }
-              else {
-                hscroll = ((Scrollbar *)ctrl_mem)->construct();
-              }
-              eh_state = 0xffffffff;
-              list_hscroll[cur_pane] = (i32)hscroll;
-              if (surf_wnd == 0) {
-                parent_178 = 0;
-              }
-              else {
-                parent_178 = surf_wnd + 0x48;
-              }
-              ((Scrollbar *)list_hscroll[cur_pane])->create(parent_178,0xc,
-                         (iptr)&list_hscroll_rect[cur_pane],0);
-              count = count_group_options(cur_pane);
-              value = column_of_index(count - 1);
-              ((Scrollbar *)list_hscroll[cur_pane])->set_range(0,value);
-              value = option_group_index(
-                                 list_top_option[cur_pane]);
-              pos = column_of_index(value);
-              ((Scrollbar *)list_hscroll[cur_pane])->set_pos(pos);
-              ((Scrollbar *)list_hscroll[cur_pane])->set_page_size(columns
-                        );
-              ((Scrollbar *)list_hscroll[cur_pane])->set_callback(dialog_list_on_hscroll);
-              ((Scrollbar *)list_hscroll[cur_pane])->set_track_callback(dialog_list_on_hscroll);
-            }
-          }
+          create_list_scrollbar(dialog_list_on_vscroll,dialog_list_on_hscroll);
           ((WndHandlers *)(surf_wnd + 0x58))->set_lbuttondown_handler(dialog_list_on_lbuttondown);
           ((WndHandlers *)(surf_wnd + 0x58))->set_lbuttonup_any_handler(dialog_list_on_lbuttonup);
           ((WndHandlers *)(surf_wnd + 0x58))->set_mousemove_handler(dialog_list_on_mousemove);
           ((WndHandlers *)(surf_wnd + 0x58))->set_dblclick_handler(dialog_list_on_dblclick);
         }
         else {
-          ctrl_mem = (Button *)operator_new(0x3c);
-          eh_state = 0;
-          if (ctrl_mem == (Button *)0x0) {
-            listbox3 = 0;
-          }
-          else {
-            listbox3 = ((ListBox *)ctrl_mem)->construct();
-          }
-          eh_state = 0xffffffff;
-          listbox[cur_pane] = (i32)listbox3;
-          rect_set_xywh((iptr)rect,list_x,list_y,
-                             list_width[cur_pane],list_height[cur_pane]);
-          if (surf_wnd == 0) {
-            parent_170 = 0;
-          }
-          else {
-            parent_170 = surf_wnd + 0x48;
-          }
-          ((ListBox *)listbox[cur_pane])->create(parent_170,10,
-                     (iptr)rect);
-          option = option_list;
-          item_index = 0;
-          for (; option != (DialogOption *)0x0; option = option->next) {
-            if (cur_pane == (uint)option->group) {
-              ((ListBox *)listbox[cur_pane])->add_string((const char *)option->text);
-              if ((uint *)selected_option == ((uint *)option)) {
-                ((ListBox *)listbox[cur_pane])->set_cur_sel(item_index);
-              }
-              item_index++;
-            }
-          }
-          ((ListBox *)listbox[cur_pane])->set_dblclick_callback((CtrlNotifyFn)dialog_listbox_on_dblclick);
+          create_list_listbox();
         }
         if ((style_flags & 0x400000) != 0) {
           cur_pane = 1;
           if ((style_flags & 0x40000) == 0) {
-            if (((int)(list_rows[cur_pane] * columns) < (int)option_count) ||
-               ((style_flags & 0x1000000) != 0)) {
-              if (columns == 1) {
-                ctrl_mem = (Button *)operator_new(0x40);
-                eh_state = 4;
-                if (ctrl_mem == (Button *)0x0) {
-                  vscroll2 = 0;
-                }
-                else {
-                  vscroll2 = ((Scrollbar *)ctrl_mem)->construct();
-                }
-                eh_state = 0xffffffff;
-                list_vscroll[cur_pane] = (i32)vscroll2;
-                if (surf_wnd == 0) {
-                  parent_180 = 0;
-                }
-                else {
-                  parent_180 = surf_wnd + 0x48;
-                }
-                ((Scrollbar *)list_vscroll[cur_pane])->create(parent_180
-                           ,0xb,(iptr)&list_vscroll_rect[cur_pane],1);
-                count = count_group_options(cur_pane);
-                ((Scrollbar *)list_vscroll[cur_pane])->set_range(0,
-                           count - 1);
-                pos = option_group_index(
-                                   list_top_option[cur_pane]);
-                ((Scrollbar *)list_vscroll[cur_pane])->set_pos(pos);
-                ((Scrollbar *)list_vscroll[cur_pane])->set_page_size(
-                           list_rows[cur_pane] - 1);
-                ((Scrollbar *)list_vscroll[cur_pane])->set_callback(dialog_list2_on_vscroll)
-                ;
-                ((Scrollbar *)list_vscroll[cur_pane])->set_track_callback(dialog_list2_on_vscroll);
-              }
-              else {
-                ctrl_mem = (Button *)operator_new(0x40);
-                eh_state = 5;
-                if (ctrl_mem == (Button *)0x0) {
-                  hscroll2 = 0;
-                }
-                else {
-                  hscroll2 = ((Scrollbar *)ctrl_mem)->construct();
-                }
-                eh_state = 0xffffffff;
-                list_hscroll[cur_pane] = (i32)hscroll2;
-                if (surf_wnd == 0) {
-                  parent_184 = 0;
-                }
-                else {
-                  parent_184 = surf_wnd + 0x48;
-                }
-                ((Scrollbar *)list_hscroll[cur_pane])->create(parent_184,
-                           0xc,(iptr)&list_hscroll_rect[cur_pane],0);
-                count = count_group_options(cur_pane);
-                value = column_of_index(count - 1);
-                ((Scrollbar *)list_hscroll[cur_pane])->set_range(0,value);
-                value = option_group_index(
-                                   list_top_option[cur_pane]);
-                pos = column_of_index(value);
-                ((Scrollbar *)list_hscroll[cur_pane])->set_pos(pos);
-                ((Scrollbar *)list_hscroll[cur_pane])->set_page_size(
-                           columns);
-                ((Scrollbar *)list_hscroll[cur_pane])->set_callback(dialog_list2_on_hscroll);
-                ((Scrollbar *)list_hscroll[cur_pane])->set_track_callback(dialog_list2_on_hscroll);
-              }
-            }
+            create_list_scrollbar(dialog_list2_on_vscroll,dialog_list2_on_hscroll);
           }
           else {
-            ctrl_mem = (Button *)operator_new(0x3c);
-            eh_state = 3;
-            if (ctrl_mem == (Button *)0x0) {
-              listbox22 = 0;
-            }
-            else {
-              listbox22 = ((ListBox *)ctrl_mem)->construct();
-            }
-            eh_state = 0xffffffff;
-            listbox[cur_pane] = (i32)listbox22;
-            rect_set_xywh((iptr)rect,list_x,list_y,
-                               list_width[cur_pane],list_height[cur_pane]);
-            if (surf_wnd == 0) {
-              parent_17c = 0;
-            }
-            else {
-              parent_17c = surf_wnd + 0x48;
-            }
-            ((ListBox *)listbox[cur_pane])->create(parent_17c,10,
-                       (iptr)rect);
-            option = option_list;
-            item_index = 0;
-            for (; option != (DialogOption *)0x0; option = option->next) {
-              if (cur_pane == (uint)option->group) {
-                ((ListBox *)listbox[cur_pane])->add_string((const char *)option->text);
-                if ((uint *)selected_option == ((uint *)option)) {
-                  ((ListBox *)listbox[cur_pane])->set_cur_sel(item_index);
-                }
-                item_index++;
-              }
-            }
-            ((ListBox *)listbox[cur_pane])->set_dblclick_callback((CtrlNotifyFn)dialog_listbox_on_dblclick);
+            create_list_listbox();
           }
           cur_pane = 0;
         }
       }
     }
-    if ((1 < (int)sprite_count) && (option_count == 0)) {
-      x = sprite_count;
-      hotspots = (u32 *)operator_new(x * 0x40 + 4);
-      eh_state = 8;
-      if (hotspots == (u32 *)0x0) {
-        hotspots = (u32 *)0x0;
-      }
-      else {
-        *hotspots = x;
-        crt_vector_ctor_iterator(hotspots + 1,0x40,*hotspots,hotspot_ctor,
-                     hotspot_dtor);
-        hotspots++;
-      }
-      eh_state = 0xffffffff;
-      sprite_hotspots = (uptr)hotspots;
-      x = sprite_x;
-      y2 = sprite_y;
-      sprite = sprite_list;
-      i = 0;
-      for (; sprite != 0; sprite = sprite->next) {
-        width2 = gfx_zoom_scale(max_sprite_width,sprite_zoom);
-        zoom = sprite_zoom;
-        value = sprite->sprite->height();
-        count = gfx_zoom_scale(value,zoom);
-        rect_set_xywh((iptr)rect,x,y2,width2,count);
-        if (surf_wnd == 0) {
-          parent_190 = 0;
-        }
-        else {
-          parent_190 = surf_wnd + 0x48;
-        }
-        ((Hotspot *)(sprite_hotspots + i * 0x40))->create(parent_190,i + 300,
-                   (iptr)rect);
-        ((Hotspot *)(sprite_hotspots + i * 0x40))->set_click_callback(dialog_on_sprite_click);
-        ((Hotspot *)(sprite_hotspots + i * 0x40))->set_dblclick_callback((CtrlNotifyFn)dialog_sprite_on_dblclick);
-        y2 = y2 + section_gap + count;
-        i++;
-      }
-    }
-    if (edit_field_list != 0) {
-      edit_field = edit_field_list;
-      x = edit_count;
-      edits = (u32 *)operator_new(x * 0x48 + 4);
-      eh_state = 9;
-      if (edits == (u32 *)0x0) {
-        edits = (u32 *)0x0;
-      }
-      else {
-        *edits = x;
-        crt_vector_ctor_iterator(edits + 1,0x48,*edits,edit_ctor,
-                     edit_dtor);
-        edits++;
-      }
-      eh_state = 0xffffffff;
-      edit_controls = (uptr)edits;
-      i = 0;
-      for (; edit_field != 0; edit_field = edit_field->next) {
-        if (surf_wnd == 0) {
-          parent_194 = 0;
-        }
-        else {
-          parent_194 = surf_wnd + 0x48;
-        }
-        value = (i32)edit_field->buffer;
-        text = edit_field->width;
-        count = edit_row_height();
-        ((EditControl *)(edit_controls + i * 0x48))->create_at(parent_194,0x14,
-                   edit_x + edit_label_width,count * i + edit_y,text,(const char *)value)
-        ;
-        if (2 < game.multiplayer) {
-          ((EditControl *)(edit_controls + i * 0x48))->set_change_callback((CtrlNotifyFn)dialog_edit_on_change)
-          ;
-        }
-        ((EditControl *)(edit_controls + i * 0x48))->set_max_len(edit_field->max_len);
-        i++;
-      }
-    }
-    if (std_button_count + extra_button_count != 0) {
-      count = std_button_count + extra_button_count;
-      buttons = (int *)operator_new(count * 0x3c + 4);
-      eh_state = 10;
-      if (buttons == (int *)0x0) {
-        buttons = (int *)0x0;
-      }
-      else {
-        *buttons = count;
-        crt_vector_ctor_iterator(buttons + 1,0x3c,*buttons,button_ctor,
-                     ctrl_dtor);
-        buttons++;
-      }
-      eh_state = 0xffffffff;
-      button_controls = (uptr)buttons;
-    }
-    for (i = 0; i < (int)(std_button_count + extra_button_count); i++) {
-      if (i < (int)std_button_count) {
-        button_id = *(iptr *)((u8 *)&extra_button_labels + i * 8 + 0x18);
-        label = (((i8 * *)&dialog_button_labels))[button_id];
-      }
-      else {
-        button_id = -1;
-        label = *(i8 **)((int)this + (i - std_button_count) * 4 + 0x294);
-      }
-      pos = line_height();
-      rect_set_xywh((iptr)rect,*(i32 *)((u8 *)&extra_button_labels + i * 8 + 0x1c),
-                         button_y,button_width,pos);
-      if (surf_wnd == 0) {
-        parent_198 = 0;
-      }
-      else {
-        parent_198 = surf_wnd + 0x48;
-      }
-      ((Button *)(button_controls + i * 0x3c))->create(parent_198,i + 100,
-                 (iptr)rect,(const char *)label);
-      if ((button_id == 2) || ((button_id == 0 && ((style_flags & 1) == 0)))) {
-        ((Button *)(button_controls + i * 0x3c))->set_cancel_button();
-      }
-      if (button_id == 0) {
-        ((Button *)(button_controls + i * 0x3c))->set_default_button();
-      }
-      ((Button *)(button_controls + i * 0x3c))->set_callback(dialog_on_button_click);
-    }
+    create_sprite_hotspots();
+    create_edit_fields();
+    create_buttons();
     ((WndHandlers *)(surf_wnd + 0x58))->set_keydown_handler(dialog_on_keydown);
     ((WndHandlers *)(surf_wnd + 0x58))->set_char_handler((WndKeyFn)dialog_on_char);
     style_flags = style_flags | 0x200;
@@ -9651,24 +9748,196 @@ u32 Dialog::run_modal(iptr out_text,iptr timeout_secs)
   return result_id;
 }
 
+/* Part of Dialog::load_text_section (005a632a): an @ line: @OPTIONS/@PROMPT
+   (options follow), @TEXT, @TITLE=, @BUTTON=, @COLUMNS, @HEIGHT, @SMALLFONT, @X,
+   @Y, @WIDTH, @LENGTH, @CHECKBOX, @LISTBOX, @SYSTEM, @DEFAULT; another @ word
+   ends the section. */
+void Dialog::load_section_keyword(char *line,i8 *expanded,int &mode,int &default_value,uint has_edit,iptr edit_default,i8 *edit_text)
+{
+  int cmp;
+  size_t len;
+  u32 coord;
+  int list_rows2;
+  char *key2;
+  int number;
+
+  key2 = line + 1;
+  cmp = __strcmpi(key2,str_options);
+  if ((cmp == 0) || (cmp = _strcmp(key2,str_prompt), cmp == 0)) {
+    mode = 2;
+  }
+  else {
+    cmp = __strcmpi(key2,((i8 *)&dlg_key_text_str));
+    if (cmp == 0) {
+      mode = 1;
+    }
+    else {
+      cmp = __strnicmp(key2,str_title,5);
+      if (cmp == 0) {
+        for (; (*key2 != '\0' && (*key2 != '=')); key2++) {
+        }
+        if (*key2 != '\0') {
+          key2++;
+        }
+        text_expand_vars((iptr)key2,(iptr)expanded);
+        set_title((const char *)expanded);
+      }
+      else {
+        cmp = __strnicmp(key2,str_button,6);
+        if (cmp == 0) {
+          for (; (*key2 != '\0' && (*key2 != '=')); key2++) {
+          }
+          if (*key2 != '\0') {
+            key2++;
+          }
+          text_expand_vars((iptr)key2,(iptr)expanded);
+          add_button((const char *)expanded);
+        }
+        else {
+          cmp = __strnicmp(key2,str_columns,7);
+          if (cmp == 0) {
+            while ((*key2 != '\0' && (cmp = _isdigit((int)*key2), cmp == 0))) {
+              key2++;
+            }
+            number = _atoi(key2);
+            set_columns(number);
+          }
+          else {
+            cmp = __strnicmp(key2,str_height,6);
+            if (cmp == 0) {
+              while ((*key2 != '\0' && (cmp = _isdigit((int)*key2), cmp == 0)))
+              {
+                key2++;
+              }
+              number = _atoi(key2);
+              set_height(number);
+            }
+            else {
+              cmp = __strcmpi(key2,str_smallfont);
+              if (cmp != 0) {
+                cmp = __strnicmp(key2,((i8 *)&dlg_key_y_prefix),1);
+                if ((cmp == 0) && (cmp = _isalpha((int)key2[1]), cmp == 0)) {
+                  while (((*key2 != '\0' &&
+                          (cmp = _isdigit((int)*key2), cmp == 0)) &&
+                         (*key2 != '-'))) {
+                    key2++;
+                  }
+                  coord = _atoi(key2);
+                  req_y = coord;
+                }
+                else {
+                  cmp = __strnicmp(key2,((i8 *)&dlg_key_x_prefix),1);
+                  if ((cmp == 0) && (cmp = _isalpha((int)key2[1]), cmp == 0)) {
+                    while (((*key2 != '\0' &&
+                            (cmp = _isdigit((int)*key2), cmp == 0)) &&
+                           (*key2 != '-'))) {
+                      key2++;
+                    }
+                    coord = _atoi(key2);
+                    req_x = coord;
+                  }
+                  else {
+                    cmp = __strnicmp(key2,str_width,5);
+                    if (cmp == 0) {
+                      while ((*key2 != '\0' &&
+                             (cmp = _isdigit((int)*key2), cmp == 0))) {
+                        key2++;
+                      }
+                      number = _atoi(key2);
+                      set_width(number);
+                    }
+                    else {
+                      cmp = __strnicmp(key2,str_length,6);
+                      if (cmp == 0) {
+                        while ((*key2 != '\0' &&
+                               (cmp = _isdigit((int)*key2), cmp == 0))) {
+                          key2++;
+                        }
+                        if (default_value == 0) {
+                          default_value = _atoi(key2);
+                        }
+                      }
+                      else {
+                        cmp = __strnicmp(key2,str_checkbox,7);
+                        if (cmp == 0) {
+                          style_flags = style_flags | 5;
+                        }
+                        else {
+                          cmp = __strnicmp(key2,str_listbox,7);
+                          if (cmp == 0) {
+                            while ((*key2 != '\0' &&
+                                   (cmp = _isdigit((int)*key2), cmp == 0))) {
+                              key2++;
+                            }
+                            list_rows2 = _atoi(key2);
+                            if (list_rows2 == 0) {
+                              list_rows2 = 0x10;
+                            }
+                            set_listbox(list_rows2,content_width,0);
+                          }
+                          else {
+                            cmp = __strnicmp(key2,str_system,6);
+                            if (cmp == 0) {
+                              style_flags = style_flags | 0x40000;
+                            }
+                            else {
+                              cmp = __strnicmp(key2,str_default_3,7);
+                              if (cmp == 0) {
+                                if (has_edit == 0) {
+                                  while ((*key2 != '\0' &&
+                                         (cmp = _isdigit((int)*key2), cmp == 0))) {
+                                    key2++;
+                                  }
+                                  if (default_value == 0) {
+                                    default_value = _atoi(key2);
+                                  }
+                                }
+                                else {
+                                  for (; (*key2 != '\0' && (*key2 != '='));
+                                      key2 = key2 + 1) {
+                                  }
+                                  if (*key2 != '\0') {
+                                    key2++;
+                                  }
+                                  len = _strlen((char *)edit_default);
+                                  if (len == 0) {
+                                    crt_strcpy(edit_text,key2);
+                                  }
+                                }
+                              }
+                              else if (*key2 != '@') {
+                                mode = 3;
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 /* 005a632a auto */
 i32 Dialog::load_text_section(const char *file_name,const char *section,int default_value,iptr edit_default,iptr init_arg1, iptr init_arg2,iptr init_arg3,uint flags)
 
 {
   int cmp;
   size_t len;
-  u32 coord;
   i8 expanded[256];
   int mode;
   i32 result;
   uint has_edit;
   char *line;
   i8 edit_text[80];
-  int list_rows2;
-  char *key2;
   DialogOption *option;
   int option_index;
-  int number;
   i8 *edit_buf;
   
   result = 1;
@@ -9703,167 +9972,7 @@ i32 Dialog::load_text_section(const char *file_name,const char *section,int defa
           }
         }
         else if (*line == '@') {
-          key2 = line + 1;
-          cmp = __strcmpi(key2,str_options);
-          if ((cmp == 0) || (cmp = _strcmp(key2,str_prompt), cmp == 0)) {
-            mode = 2;
-          }
-          else {
-            cmp = __strcmpi(key2,((i8 *)&dlg_key_text_str));
-            if (cmp == 0) {
-              mode = 1;
-            }
-            else {
-              cmp = __strnicmp(key2,str_title,5);
-              if (cmp == 0) {
-                for (; (*key2 != '\0' && (*key2 != '=')); key2++) {
-                }
-                if (*key2 != '\0') {
-                  key2++;
-                }
-                text_expand_vars((iptr)key2,(iptr)expanded);
-                set_title((const char *)expanded);
-              }
-              else {
-                cmp = __strnicmp(key2,str_button,6);
-                if (cmp == 0) {
-                  for (; (*key2 != '\0' && (*key2 != '=')); key2++) {
-                  }
-                  if (*key2 != '\0') {
-                    key2++;
-                  }
-                  text_expand_vars((iptr)key2,(iptr)expanded);
-                  add_button((const char *)expanded);
-                }
-                else {
-                  cmp = __strnicmp(key2,str_columns,7);
-                  if (cmp == 0) {
-                    while ((*key2 != '\0' && (cmp = _isdigit((int)*key2), cmp == 0))) {
-                      key2++;
-                    }
-                    number = _atoi(key2);
-                    set_columns(number);
-                  }
-                  else {
-                    cmp = __strnicmp(key2,str_height,6);
-                    if (cmp == 0) {
-                      while ((*key2 != '\0' && (cmp = _isdigit((int)*key2), cmp == 0)))
-                      {
-                        key2++;
-                      }
-                      number = _atoi(key2);
-                      set_height(number);
-                    }
-                    else {
-                      cmp = __strcmpi(key2,str_smallfont);
-                      if (cmp != 0) {
-                        cmp = __strnicmp(key2,((i8 *)&dlg_key_y_prefix),1);
-                        if ((cmp == 0) && (cmp = _isalpha((int)key2[1]), cmp == 0)) {
-                          while (((*key2 != '\0' &&
-                                  (cmp = _isdigit((int)*key2), cmp == 0)) &&
-                                 (*key2 != '-'))) {
-                            key2++;
-                          }
-                          coord = _atoi(key2);
-                          req_y = coord;
-                        }
-                        else {
-                          cmp = __strnicmp(key2,((i8 *)&dlg_key_x_prefix),1);
-                          if ((cmp == 0) && (cmp = _isalpha((int)key2[1]), cmp == 0)) {
-                            while (((*key2 != '\0' &&
-                                    (cmp = _isdigit((int)*key2), cmp == 0)) &&
-                                   (*key2 != '-'))) {
-                              key2++;
-                            }
-                            coord = _atoi(key2);
-                            req_x = coord;
-                          }
-                          else {
-                            cmp = __strnicmp(key2,str_width,5);
-                            if (cmp == 0) {
-                              while ((*key2 != '\0' &&
-                                     (cmp = _isdigit((int)*key2), cmp == 0))) {
-                                key2++;
-                              }
-                              number = _atoi(key2);
-                              set_width(number);
-                            }
-                            else {
-                              cmp = __strnicmp(key2,str_length,6);
-                              if (cmp == 0) {
-                                while ((*key2 != '\0' &&
-                                       (cmp = _isdigit((int)*key2), cmp == 0))) {
-                                  key2++;
-                                }
-                                if (default_value == 0) {
-                                  default_value = _atoi(key2);
-                                }
-                              }
-                              else {
-                                cmp = __strnicmp(key2,str_checkbox,7);
-                                if (cmp == 0) {
-                                  style_flags = style_flags | 5;
-                                }
-                                else {
-                                  cmp = __strnicmp(key2,str_listbox,7);
-                                  if (cmp == 0) {
-                                    while ((*key2 != '\0' &&
-                                           (cmp = _isdigit((int)*key2), cmp == 0))) {
-                                      key2++;
-                                    }
-                                    list_rows2 = _atoi(key2);
-                                    if (list_rows2 == 0) {
-                                      list_rows2 = 0x10;
-                                    }
-                                    set_listbox(list_rows2,content_width,0);
-                                  }
-                                  else {
-                                    cmp = __strnicmp(key2,str_system,6);
-                                    if (cmp == 0) {
-                                      style_flags = style_flags | 0x40000;
-                                    }
-                                    else {
-                                      cmp = __strnicmp(key2,str_default_3,7);
-                                      if (cmp == 0) {
-                                        if (has_edit == 0) {
-                                          while ((*key2 != '\0' &&
-                                                 (cmp = _isdigit((int)*key2), cmp == 0))) {
-                                            key2++;
-                                          }
-                                          if (default_value == 0) {
-                                            default_value = _atoi(key2);
-                                          }
-                                        }
-                                        else {
-                                          for (; (*key2 != '\0' && (*key2 != '='));
-                                              key2 = key2 + 1) {
-                                          }
-                                          if (*key2 != '\0') {
-                                            key2++;
-                                          }
-                                          len = _strlen((char *)edit_default);
-                                          if (len == 0) {
-                                            crt_strcpy(edit_text,key2);
-                                          }
-                                        }
-                                      }
-                                      else if (*key2 != '@') {
-                                        mode = 3;
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
+          load_section_keyword(line,expanded,mode,default_value,has_edit,edit_default,edit_text);
         }
         else if (mode == 1) {
           text_expand_vars((iptr)line,(iptr)expanded);

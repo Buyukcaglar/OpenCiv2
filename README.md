@@ -64,7 +64,8 @@ diplomacy, saving and loading, players leaving and rejoining, and 50-turn games
 
 The code is being modernized step by step, each step checked by the harness: it compiles as
 strict C++, keeps the original's data layout, has its classes as C++ class hierarchies with
-member functions, typed callbacks and structured control flow; smaller functions come next.
+member functions, typed callbacks, structured control flow and smaller functions; enums, grouped
+state, RAII and recorded unit tests come next.
 
 Details: [STATUS.md](docs/STATUS.md) (progress and verification) and
 [DEVELOPMENT.md](docs/DEVELOPMENT.md) (the code's layout, the approach and the tooling).

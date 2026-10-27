@@ -124,6 +124,64 @@ i32 __stdcall hotspot_wndproc(HWND hwnd,i32 msg,i32 wparam,uint lparam)
 }
 
 /* ------------------------------------------------------------------------ */
+/* Part of button_wndproc (005cacd4): WM_PAINT: blits the normal, pressed or
+   disabled bitmap. */
+static void button_on_paint(HWND hwnd,ControlBlock *wnd_obj2,void *ctrl)
+{
+  char nav_enabled;
+  int *rect_ptr;
+  HWND focus_wnd;
+  int tmp;
+  HGDIOBJ h;
+  int cx;
+  void *parent;
+  tagPAINTSTRUCT ps;
+  HDC hdc;
+  HGDIOBJ bitmap2;
+  tagRECT rect;
+  HDC mem_dc;
+
+  hdc = BeginPaint(hwnd, &ps);
+  rect_ptr = (int *)((Control *)ctrl)->get_rect();
+  rect.left = rect_ptr[0];
+  rect.top = rect_ptr[1];
+  rect.right = rect_ptr[2];
+  rect.bottom = rect_ptr[3];
+  ValidateRect(GetParent(hwnd), &rect);
+  tmp = ((Button *)ctrl)->ctrl_is_enabled();
+  if (tmp == 0) {
+      focus_wnd = GetFocus();
+      if (focus_wnd == hwnd) {
+          parent = (void *)((Control *)ctrl)->get_parent();
+          nav_enabled = ((Wnd *)parent)->keyboard_nav_enabled();
+          if (nav_enabled == '\0') {
+              parent = (void *)((Control *)ctrl)->get_parent();
+              tmp = (int)((WndBase *)parent)->get_window();
+              SetFocus(((NativeWindow *)tmp)->hwnd);
+          }
+          else {
+              SetFocus((HWND)0x0);
+          }
+      }
+      bitmap2 = wnd_obj2->bitmaps[2];
+  }
+  else {
+      if (wnd_obj2->pressed == 0)
+          bitmap2 = wnd_obj2->bitmaps[0];
+      if (wnd_obj2->pressed == 1)
+          bitmap2 = wnd_obj2->bitmaps[1];
+  }
+  mem_dc = CreateCompatibleDC(hdc);
+  RealizePalette(mem_dc);
+  h = SelectObject(mem_dc, bitmap2);
+  tmp = rect_height(&rect);      /* height */
+  cx = rect_width(&rect);         /* width */
+  BitBlt(hdc, 0, 0, cx, tmp, mem_dc, 0, 0, 0xcc0020);
+  SelectObject(mem_dc, h);
+  DeleteDC(mem_dc);
+  EndPaint(hwnd, &ps);
+}
+
 /* 0x005cacd4: bitmap push-button window procedure (normal / pressed /
  * disabled bitmaps, focus frame, space bar activation). */
 i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
@@ -132,20 +190,14 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
     SHORT key_state;
     int *rect_ptr;
     BOOL inside;
-    HWND focus_wnd;
     int tmp;
-    HGDIOBJ h;
-    int cx;
     void *parent;
     i32 ctrl_arg;
     POINT pt;
-    tagPAINTSTRUCT ps;
     ControlBlock *wnd_obj2;
     HDC hdc;
-    HGDIOBJ bitmap2;
     tagRECT rect;
     void *ctrl;
-    HDC mem_dc;
     uint inside_flag;
     HBRUSH brush;
     tagRECT focus_rect;
@@ -207,45 +259,7 @@ i32 __stdcall button_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         }
         break;
     case 0xf:       /* WM_PAINT */
-        hdc = BeginPaint(hwnd, &ps);
-        rect_ptr = (int *)((Control *)ctrl)->get_rect();
-        rect.left = rect_ptr[0];
-        rect.top = rect_ptr[1];
-        rect.right = rect_ptr[2];
-        rect.bottom = rect_ptr[3];
-        ValidateRect(GetParent(hwnd), &rect);
-        tmp = ((Button *)ctrl)->ctrl_is_enabled();
-        if (tmp == 0) {
-            focus_wnd = GetFocus();
-            if (focus_wnd == hwnd) {
-                parent = (void *)((Control *)ctrl)->get_parent();
-                nav_enabled = ((Wnd *)parent)->keyboard_nav_enabled();
-                if (nav_enabled == '\0') {
-                    parent = (void *)((Control *)ctrl)->get_parent();
-                    tmp = (int)((WndBase *)parent)->get_window();
-                    SetFocus(((NativeWindow *)tmp)->hwnd);
-                }
-                else {
-                    SetFocus((HWND)0x0);
-                }
-            }
-            bitmap2 = wnd_obj2->bitmaps[2];
-        }
-        else {
-            if (wnd_obj2->pressed == 0)
-                bitmap2 = wnd_obj2->bitmaps[0];
-            if (wnd_obj2->pressed == 1)
-                bitmap2 = wnd_obj2->bitmaps[1];
-        }
-        mem_dc = CreateCompatibleDC(hdc);
-        RealizePalette(mem_dc);
-        h = SelectObject(mem_dc, bitmap2);
-        tmp = rect_height(&rect);      /* height */
-        cx = rect_width(&rect);         /* width */
-        BitBlt(hdc, 0, 0, cx, tmp, mem_dc, 0, 0, 0xcc0020);
-        SelectObject(mem_dc, h);
-        DeleteDC(mem_dc);
-        EndPaint(hwnd, &ps);
+        button_on_paint(hwnd,wnd_obj2,ctrl);
         if (GetFocus() == hwnd)
             button_wndproc(hwnd, 7, 0, 0);
         break;
@@ -563,11 +577,108 @@ i32 __cdecl ddraw_init(void)
 
 /* ------------------------------------------------------------------------ */
 
+/* Part of wnd_child_wndproc (005eb447): WM_HSCROLL: moves the horizontal scroll bar
+   (line, page, thumb) and tells the window. */
+static void wnd_child_on_hscroll(HWND hwnd,Wnd *child2,void *view,WPARAM wp)
+{
+  int page;
+  int scroll_pos2;
+
+  scroll_pos2 = child2->get_hscroll_pos();
+  switch (wp) {
+  case 4:     /* SB_THUMBPOSITION */
+      scroll_pos2 = (int)(short)(wp >> 0x10);
+      SetScrollPos(hwnd, 0, scroll_pos2, 1);
+      (*(void * *)&wnd_active_child) = child2;
+      child2->hscroll_pos = scroll_pos2;
+      ((WndHandlers *)view)->call_hscroll( child2->hscroll_pos);
+      break;
+  case 5:     /* SB_THUMBTRACK */
+      (*(void * *)&wnd_active_child) = child2;
+      ((WndHandlers *)view)->call_hscroll_track( (int)(short)(wp >> 0x10));
+      break;
+  case 0:
+  case 1:
+  case 2:
+  case 3:
+      switch (wp) {
+      case 1:     /* SB_LINEDOWN */
+          scroll_pos2 = scroll_pos2 + 1;
+          break;
+      case 0:     /* SB_LINEUP */
+          scroll_pos2 = scroll_pos2 - 1;
+          break;
+      case 3:     /* SB_PAGEDOWN */
+          page = child2->get_hscroll_page();
+          scroll_pos2 = scroll_pos2 + page;
+          break;
+      case 2:     /* SB_PAGEUP */
+          page = child2->get_hscroll_page();
+          scroll_pos2 = scroll_pos2 - page;
+          break;
+      }
+      SetScrollPos(hwnd, 0, scroll_pos2, 1);
+      scroll_pos2 = GetScrollPos(hwnd, 0);
+      (*(void * *)&wnd_active_child) = child2;
+      child2->hscroll_pos = scroll_pos2;
+      ((WndHandlers *)view)->call_hscroll( scroll_pos2);
+      break;
+  }
+}
+
+/* Part of wnd_child_wndproc (005eb447): WM_VSCROLL: moves the vertical scroll bar
+   (line, page, thumb) and tells the window. */
+static void wnd_child_on_vscroll(HWND hwnd,Wnd *child2,void *view,WPARAM wp)
+{
+  int page;
+  int scroll_pos2;
+
+  scroll_pos2 = child2->get_vscroll_pos();
+  switch (wp) {
+  case 4:     /* SB_THUMBPOSITION */
+      scroll_pos2 = (int)(short)(wp >> 0x10);
+      SetScrollPos(hwnd, 1, scroll_pos2, 1);
+      (*(void * *)&wnd_active_child) = child2;
+      child2->vscroll_pos = scroll_pos2;
+      ((WndHandlers *)view)->call_vscroll( child2->vscroll_pos);
+      break;
+  case 5:     /* SB_THUMBTRACK */
+      (*(void * *)&wnd_active_child) = child2;
+      ((WndHandlers *)view)->call_vscroll_track( (int)(short)(wp >> 0x10));
+      break;
+  case 0:
+  case 1:
+  case 2:
+  case 3:
+      switch (wp) {
+      case 1:
+          scroll_pos2 = scroll_pos2 + 1;
+          break;
+      case 0:
+          scroll_pos2 = scroll_pos2 - 1;
+          break;
+      case 3:
+          page = child2->get_vscroll_page();
+          scroll_pos2 = scroll_pos2 + page;
+          break;
+      case 2:
+          page = child2->get_vscroll_page();
+          scroll_pos2 = scroll_pos2 - page;
+          break;
+      }
+      SetScrollPos(hwnd, 1, scroll_pos2, 1);
+      scroll_pos2 = GetScrollPos(hwnd, 1);
+      (*(void * *)&wnd_active_child) = child2;
+      child2->vscroll_pos = scroll_pos2;
+      ((WndHandlers *)view)->call_vscroll( scroll_pos2);
+      break;
+  }
+}
+
 /* 0x005eb447: MDI-style child window procedure: forwards input, sizing,
  * scrolling and palette messages to the window object (GWL 4). */
 uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam)
 {
-    int page;
     int wnd_obj;
     NativeWindow *owner;
     void *view;
@@ -576,7 +687,6 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     short y = (short)(lparam >> 0x10);
     int min_h;
     int min_w;
-    int scroll_pos2;
     HDC hdc;
     Wnd *child2;
     UINT realized;
@@ -757,89 +867,11 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
         return 1;
 
     case 0x114:     /* WM_HSCROLL */
-        scroll_pos2 = child2->get_hscroll_pos();
-        switch (wp) {
-        case 4:     /* SB_THUMBPOSITION */
-            scroll_pos2 = (int)(short)(wp >> 0x10);
-            SetScrollPos(hwnd, 0, scroll_pos2, 1);
-            (*(void * *)&wnd_active_child) = child2;
-            child2->hscroll_pos = scroll_pos2;
-            ((WndHandlers *)view)->call_hscroll( child2->hscroll_pos);
-            break;
-        case 5:     /* SB_THUMBTRACK */
-            (*(void * *)&wnd_active_child) = child2;
-            ((WndHandlers *)view)->call_hscroll_track( (int)(short)(wp >> 0x10));
-            break;
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-            switch (wp) {
-            case 1:     /* SB_LINEDOWN */
-                scroll_pos2 = scroll_pos2 + 1;
-                break;
-            case 0:     /* SB_LINEUP */
-                scroll_pos2 = scroll_pos2 - 1;
-                break;
-            case 3:     /* SB_PAGEDOWN */
-                page = child2->get_hscroll_page();
-                scroll_pos2 = scroll_pos2 + page;
-                break;
-            case 2:     /* SB_PAGEUP */
-                page = child2->get_hscroll_page();
-                scroll_pos2 = scroll_pos2 - page;
-                break;
-            }
-            SetScrollPos(hwnd, 0, scroll_pos2, 1);
-            scroll_pos2 = GetScrollPos(hwnd, 0);
-            (*(void * *)&wnd_active_child) = child2;
-            child2->hscroll_pos = scroll_pos2;
-            ((WndHandlers *)view)->call_hscroll( scroll_pos2);
-            break;
-        }
+        wnd_child_on_hscroll(hwnd,child2,view,wp);
         break;
 
     case 0x115:     /* WM_VSCROLL */
-        scroll_pos2 = child2->get_vscroll_pos();
-        switch (wp) {
-        case 4:     /* SB_THUMBPOSITION */
-            scroll_pos2 = (int)(short)(wp >> 0x10);
-            SetScrollPos(hwnd, 1, scroll_pos2, 1);
-            (*(void * *)&wnd_active_child) = child2;
-            child2->vscroll_pos = scroll_pos2;
-            ((WndHandlers *)view)->call_vscroll( child2->vscroll_pos);
-            break;
-        case 5:     /* SB_THUMBTRACK */
-            (*(void * *)&wnd_active_child) = child2;
-            ((WndHandlers *)view)->call_vscroll_track( (int)(short)(wp >> 0x10));
-            break;
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-            switch (wp) {
-            case 1:
-                scroll_pos2 = scroll_pos2 + 1;
-                break;
-            case 0:
-                scroll_pos2 = scroll_pos2 - 1;
-                break;
-            case 3:
-                page = child2->get_vscroll_page();
-                scroll_pos2 = scroll_pos2 + page;
-                break;
-            case 2:
-                page = child2->get_vscroll_page();
-                scroll_pos2 = scroll_pos2 - page;
-                break;
-            }
-            SetScrollPos(hwnd, 1, scroll_pos2, 1);
-            scroll_pos2 = GetScrollPos(hwnd, 1);
-            (*(void * *)&wnd_active_child) = child2;
-            child2->vscroll_pos = scroll_pos2;
-            ((WndHandlers *)view)->call_vscroll( scroll_pos2);
-            break;
-        }
+        wnd_child_on_vscroll(hwnd,child2,view,wp);
         break;
 
     case 2:         /* WM_DESTROY */

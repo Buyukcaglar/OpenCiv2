@@ -719,9 +719,10 @@ void PediaWindow::init_terrain_list(iptr rect)
   return;
 }
 
-/* 004906fd auto */
-void PediaWindow::draw_terrain_page()
-
+/* Part of PediaWindow::draw_terrain_page (004906fd): a special resource:
+   what it adds to its base terrain's food, shields and trade. */
+void PediaWindow::draw_terrain_special_bonus(GameFont *font2,iptr terrain2,iptr terrain3,int y2,
+                                                       int line_height,int margin)
 {
   u8 shields;
   int measured;
@@ -730,9 +731,286 @@ void PediaWindow::draw_terrain_page()
   char *_Format;
   int icon_center_y;
   i8 *name_arg;
-  i8 trade_sprite_ctx2[16];
+  char format_buf[256];
+  int base_trade2;
+  i8 base_name[40];
+  int base_shields;
+  int special_trade;
+  int base_food;
+  int special_shields;
+  int special_food;
+  u32 x2;
+
+  x2 = content_left + margin;
+  y2 += line_height * 2;
+  terrain_index = pedia_find_terrain_index(terrain3);
+  label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
+  crt_strcpy(base_name,label);
+  base_food = (int)(char)terrain_types[terrain3].food;
+  if (terrain3 == 2) {
+    shields = '\0';
+  }
+  else {
+    shields = terrain_types[terrain3].shields;
+  }
+  base_shields = (int)(char)shields;
+  base_trade2 = (int)(char)terrain_types[terrain3].trade;
+  special_food = (int)(char)terrain_types[terrain2].food;
+  special_shields = (int)(char)terrain_types[terrain2].shields;
+  special_trade = (int)(char)terrain_types[terrain2].trade;
+  text_clear();
+  if (base_food < special_food) {
+    name_arg = base_name;
+    measured = base_food;
+    icon_center_y = special_food;
+    _Format = label_string(label_string_ids[0x2c4]);
+    _sprintf(((i8 *)&map_views_block.text_buffer),_Format,name_arg,measured,icon_center_y);
+  }
+  else {
+    label = label_string(label_string_ids[0x2c5]);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
+  }
+  draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+  y2 += line_height;
+  text_clear();
+  str_clear((char *)format_buf);
+  if (base_shields < special_shields) {
+    label = label_string(label_string_ids[0x2c6]);
+    crt_strcpy(format_buf,label);
+    _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_shields,special_shields);
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+    y2 += line_height;
+    text_clear();
+    str_clear((char *)format_buf);
+    if (base_trade2 < special_trade) {
+      label = label_string(label_string_ids[0x2c7]);
+      crt_strcat(format_buf,label);
+      _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_trade2,special_trade);
+    }
+    else {
+      label = label_string(label_string_ids[0x2c8]);
+      crt_strcat(((i8 *)&map_views_block.text_buffer),label);
+    }
+  }
+  else {
+    label = label_string(label_string_ids[0x2c9]);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+    y2 += line_height;
+    text_clear();
+    str_clear((char *)format_buf);
+    if (base_trade2 < special_trade) {
+      label = label_string(label_string_ids[0x2c7]);
+      crt_strcat(format_buf,label);
+      _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_trade2,special_trade);
+    }
+    else {
+      label = label_string(label_string_ids[0x2ca]);
+      crt_strcat(((i8 *)&map_views_block.text_buffer),label);
+    }
+  }
+  draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+}
+
+/* Part of PediaWindow::draw_terrain_page (004906fd): a base terrain's
+   irrigation and mining rows: the bonus (or the terrain it turns into, as
+   a link) and the turns it takes. */
+void PediaWindow::draw_terrain_improve_rows(GameFont *font2,iptr terrain2,int y2,int line_height,
+                                                      int margin,int value_x,int row_height)
+{
+  int measured;
+  iptr terrain_index;
+  char *label;
+  int icon_center_y;
   i8 shield_sprite_ctx2[16];
   i8 food_sprite_ctx2[16];
+  int link_height;
+  iptr improve_kind;
+  u32 x2;
+  int link_width;
+  tagRECT link_rect;
+
+  for (improve_kind = 0; improve_kind < 2; improve_kind++) {
+    x2 = content_left + margin;
+    y2 += line_height;
+    text_clear();
+    if (improve_kind == 0) {
+      text_append_label(0x297);
+    }
+    else {
+      text_append_label(0x299);
+    }
+    text_append_colon();
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+    text_clear();
+    if (terrain_types[terrain2].improve_to[improve_kind] < '\0') {
+      if ((char)terrain_types[terrain2].improve_bonus[improve_kind] < 1) {
+        text_append_label(0x29b);
+        draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
+      }
+      else {
+        _sprintf(((i8 *)&map_views_block.text_buffer),((i8 *)&pedia_terrain_improve_bonus_fmt),(int)(char)terrain_types[terrain2].improve_bonus[improve_kind]
+                );
+        draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
+        measured = font2->text_width((const char *)&map_views_block.text_buffer);
+        x2 = value_x + measured + 3;
+        if (improve_kind == 0) {
+          icon_center_y = y2 + row_height / 2;
+          measured = ((Sprite *)((i8 *)&war_icon_sprite_block.resource_icon_sprites))->get_height();
+          ((Sprite *)((i8 *)&war_icon_sprite_block.resource_icon_sprites))->draw((iptr)food_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,
+                     (icon_center_y - 2) - measured / 2);
+        }
+        else {
+          icon_center_y = y2 + row_height / 2;
+          measured = ((Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite))->get_height();
+          ((Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite))->draw((iptr)shield_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,
+                     (icon_center_y - 2) - measured / 2);
+        }
+      }
+    }
+    else {
+      terrain_index = pedia_find_terrain_index((int)terrain_types[terrain2].improve_to[improve_kind]);
+      label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
+      crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
+      link_width = font2->text_width((const char *)&map_views_block.text_buffer);
+      link_height = font2->line_spacing();
+      SetRect(&link_rect,value_x,y2,link_width + value_x + 5,y2 + link_height);
+      add_link((int)terrain_types[terrain2].improve_to[improve_kind],value_x,
+                         y2,4,link_rect.left,link_rect.top,link_rect.right,link_rect.bottom);
+    }
+    x2 = content_left + margin;
+    y2 += line_height;
+    text_clear();
+    if (improve_kind == 0) {
+      text_append_label(0x298);
+    }
+    else {
+      text_append_label(0x29a);
+    }
+    text_append_colon();
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+    text_clear();
+    if ((char)terrain_types[terrain2].improve_turns[improve_kind] < 1) {
+      text_append_label(0x29b);
+    }
+    else {
+      _sprintf(((i8 *)&map_views_block.text_buffer),((i8 *)&pedia_terrain_improve_turns_fmt),(int)(char)terrain_types[terrain2].improve_turns[improve_kind]);
+    }
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
+  }
+}
+
+/* Part of PediaWindow::draw_terrain_page (004906fd): the
+   right column of a base terrain: what it transforms to, the road bonus,
+   and links to its two special resources. */
+void PediaWindow::draw_terrain_transform_column(GameFont *font2,iptr terrain2,int stats_top,
+                                                          int line_height,int right_col_x,int row_height)
+{
+  int measured;
+  iptr terrain_index;
+  char *label;
+  int icon_center_y;
+  i8 trade_sprite_ctx2[16];
+  int link_height;
+  int y2;
+  u32 x2;
+  int link_width;
+  tagRECT link_rect;
+
+  x2 = right_col_x;
+  text_clear();
+  y2 = stats_top;
+  text_append_label(0x29c);
+  text_append_colon();
+  draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+  x2 += 0x14;
+  y2 += line_height;
+  text_clear();
+  if (terrain_types[terrain2].transform_to < '\0') {
+    text_append_label(0x29b);
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+  }
+  else {
+    terrain_index = pedia_find_terrain_index((int)terrain_types[terrain2].transform_to);
+    label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
+    link_width = font2->text_width((const char *)&map_views_block.text_buffer);
+    link_height = font2->line_spacing();
+    SetRect(&link_rect,x2,y2,x2 + link_width + 5,y2 + link_height);
+    add_link((int)terrain_types[terrain2].transform_to,x2,y2,4,
+                       link_rect.left,link_rect.top,link_rect.right,link_rect.bottom);
+  }
+  if (terrain2 != 10) {
+    x2 = right_col_x;
+    y2 += line_height;
+    text_clear();
+    text_append_label(0x29d);
+    text_append_colon();
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+    text_clear();
+    x2 += 0x14;
+    y2 += line_height;
+    text_append_label(0x293);
+    text_append_colon();
+    text_append_space();
+    terrain_index = (iptr)label_string(label_string_ids[0x2c3]);
+    text_append((const char *)terrain_index);
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+    if (((terrain2 == 0) || (terrain2 == 2)) || (terrain2 == 1)) {
+      y2 += line_height;
+      text_clear();
+      text_append_label(0x45);
+      text_append_colon();
+      text_append((const char *)&str_1_4);
+      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+      measured = font2->text_width((const char *)&map_views_block.text_buffer);
+      x2 = x2 + measured + 3;
+      icon_center_y = y2 + row_height / 2;
+      measured = ((Sprite *)((i8 *)&war_icon_sprite_block.trade_icon_sprite))->get_height();
+      ((Sprite *)((i8 *)&war_icon_sprite_block.trade_icon_sprite))->draw((iptr)trade_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,
+                 (icon_center_y - 2) - measured / 2);
+    }
+  }
+  x2 = right_col_x;
+  y2 += line_height;
+  text_clear();
+  text_append_label(0x29e);
+  text_append_colon();
+  draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+  x2 += 0x14;
+  y2 += line_height;
+  text_clear();
+  terrain_index = pedia_find_terrain_index(terrain2 + 0xb);
+  label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
+  crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
+  link_width = font2->text_width((const char *)&map_views_block.text_buffer);
+  link_height = font2->line_spacing();
+  SetRect(&link_rect,x2,y2,x2 + link_width + 5,y2 + link_height);
+  add_link(terrain2 + 0xb,x2,y2,4,link_rect.left,link_rect.top,
+                     link_rect.right,link_rect.bottom);
+  if (terrain2 != 2) {
+    text_clear();
+    y2 += line_height;
+    terrain_index = pedia_find_terrain_index(terrain2 + 0x16);
+    label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
+    link_width = font2->text_width((const char *)&map_views_block.text_buffer);
+    link_height = font2->line_spacing();
+    SetRect(&link_rect,x2,y2,x2 + link_width + 5,y2 + link_height);
+    add_link(terrain2 + 0x16,x2,y2,4,link_rect.left,link_rect.top,
+                       link_rect.right,link_rect.bottom);
+  }
+}
+
+/* 004906fd auto */
+void PediaWindow::draw_terrain_page()
+
+{
+  u8 shields;
+  int measured;
+  iptr terrain_index;
+  char *label;
+  int icon_center_y;
   i8 trade_sprite_ctx[16];
   i8 shield_sprite_ctx[16];
   i8 food_sprite_ctx[16];
@@ -744,21 +1022,12 @@ void PediaWindow::draw_terrain_page()
   i8 hill_sprite_ctx[16];
   i8 forest_sprite_ctx[16];
   i8 base_sprite_ctx[16];
-  char format_buf[256];
-  int base_trade2;
-  i8 base_name[40];
-  int base_shields;
-  int special_trade;
-  int base_food;
-  int special_shields;
-  int special_food;
   int line_height;
   iptr terrain2;
   int half_width;
   int link_height;
   iptr terrain3;
   int sprite_area_width;
-  iptr improve_kind;
   int sprite_height2;
   int stats_top;
   int y2;
@@ -955,228 +1224,11 @@ void PediaWindow::draw_terrain_page()
   ((Sprite *)((i8 *)&war_icon_sprite_block.trade_icon_sprite))->draw((iptr)trade_sprite_ctx,(iptr)&pedia_window_block.pedia_window,x2,
              (icon_center_y - 2) - measured / 2);
   if ((terrain2 < 0) || (10 < terrain2)) {
-    x2 = content_left + margin;
-    y2 += line_height * 2;
-    terrain_index = pedia_find_terrain_index(terrain3);
-    label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
-    crt_strcpy(base_name,label);
-    base_food = (int)(char)terrain_types[terrain3].food;
-    if (terrain3 == 2) {
-      shields = '\0';
-    }
-    else {
-      shields = terrain_types[terrain3].shields;
-    }
-    base_shields = (int)(char)shields;
-    base_trade2 = (int)(char)terrain_types[terrain3].trade;
-    special_food = (int)(char)terrain_types[terrain2].food;
-    special_shields = (int)(char)terrain_types[terrain2].shields;
-    special_trade = (int)(char)terrain_types[terrain2].trade;
-    text_clear();
-    if (base_food < special_food) {
-      name_arg = base_name;
-      measured = base_food;
-      icon_center_y = special_food;
-      _Format = label_string(label_string_ids[0x2c4]);
-      _sprintf(((i8 *)&map_views_block.text_buffer),_Format,name_arg,measured,icon_center_y);
-    }
-    else {
-      label = label_string(label_string_ids[0x2c5]);
-      crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
-    }
-    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-    y2 += line_height;
-    text_clear();
-    str_clear((char *)format_buf);
-    if (base_shields < special_shields) {
-      label = label_string(label_string_ids[0x2c6]);
-      crt_strcpy(format_buf,label);
-      _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_shields,special_shields);
-      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-      y2 += line_height;
-      text_clear();
-      str_clear((char *)format_buf);
-      if (base_trade2 < special_trade) {
-        label = label_string(label_string_ids[0x2c7]);
-        crt_strcat(format_buf,label);
-        _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_trade2,special_trade);
-      }
-      else {
-        label = label_string(label_string_ids[0x2c8]);
-        crt_strcat(((i8 *)&map_views_block.text_buffer),label);
-      }
-    }
-    else {
-      label = label_string(label_string_ids[0x2c9]);
-      crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
-      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-      y2 += line_height;
-      text_clear();
-      str_clear((char *)format_buf);
-      if (base_trade2 < special_trade) {
-        label = label_string(label_string_ids[0x2c7]);
-        crt_strcat(format_buf,label);
-        _sprintf(((i8 *)&map_views_block.text_buffer),format_buf,base_trade2,special_trade);
-      }
-      else {
-        label = label_string(label_string_ids[0x2ca]);
-        crt_strcat(((i8 *)&map_views_block.text_buffer),label);
-      }
-    }
-    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+    draw_terrain_special_bonus(font2,terrain2,terrain3,y2,line_height,margin);
   }
   else {
-    for (improve_kind = 0; improve_kind < 2; improve_kind++) {
-      x2 = content_left + margin;
-      y2 += line_height;
-      text_clear();
-      if (improve_kind == 0) {
-        text_append_label(0x297);
-      }
-      else {
-        text_append_label(0x299);
-      }
-      text_append_colon();
-      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-      text_clear();
-      if (terrain_types[terrain2].improve_to[improve_kind] < '\0') {
-        if ((char)terrain_types[terrain2].improve_bonus[improve_kind] < 1) {
-          text_append_label(0x29b);
-          draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
-        }
-        else {
-          _sprintf(((i8 *)&map_views_block.text_buffer),((i8 *)&pedia_terrain_improve_bonus_fmt),(int)(char)terrain_types[terrain2].improve_bonus[improve_kind]
-                  );
-          draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
-          measured = font2->text_width((const char *)&map_views_block.text_buffer);
-          x2 = value_x + measured + 3;
-          if (improve_kind == 0) {
-            icon_center_y = y2 + row_height / 2;
-            measured = ((Sprite *)((i8 *)&war_icon_sprite_block.resource_icon_sprites))->get_height();
-            ((Sprite *)((i8 *)&war_icon_sprite_block.resource_icon_sprites))->draw((iptr)food_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,
-                       (icon_center_y - 2) - measured / 2);
-          }
-          else {
-            icon_center_y = y2 + row_height / 2;
-            measured = ((Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite))->get_height();
-            ((Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite))->draw((iptr)shield_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,
-                       (icon_center_y - 2) - measured / 2);
-          }
-        }
-      }
-      else {
-        terrain_index = pedia_find_terrain_index((int)terrain_types[terrain2].improve_to[improve_kind]);
-        label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
-        crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
-        link_width = font2->text_width((const char *)&map_views_block.text_buffer);
-        link_height = font2->line_spacing();
-        SetRect(&link_rect,value_x,y2,link_width + value_x + 5,y2 + link_height);
-        add_link((int)terrain_types[terrain2].improve_to[improve_kind],value_x,
-                           y2,4,link_rect.left,link_rect.top,link_rect.right,link_rect.bottom);
-      }
-      x2 = content_left + margin;
-      y2 += line_height;
-      text_clear();
-      if (improve_kind == 0) {
-        text_append_label(0x298);
-      }
-      else {
-        text_append_label(0x29a);
-      }
-      text_append_colon();
-      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-      text_clear();
-      if ((char)terrain_types[terrain2].improve_turns[improve_kind] < 1) {
-        text_append_label(0x29b);
-      }
-      else {
-        _sprintf(((i8 *)&map_views_block.text_buffer),((i8 *)&pedia_terrain_improve_turns_fmt),(int)(char)terrain_types[terrain2].improve_turns[improve_kind]);
-      }
-      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,value_x,y2,5);
-    }
-    x2 = right_col_x;
-    text_clear();
-    y2 = stats_top;
-    text_append_label(0x29c);
-    text_append_colon();
-    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-    x2 += 0x14;
-    y2 += line_height;
-    text_clear();
-    if (terrain_types[terrain2].transform_to < '\0') {
-      text_append_label(0x29b);
-      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-    }
-    else {
-      terrain_index = pedia_find_terrain_index((int)terrain_types[terrain2].transform_to);
-      label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
-      crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
-      link_width = font2->text_width((const char *)&map_views_block.text_buffer);
-      link_height = font2->line_spacing();
-      SetRect(&link_rect,x2,y2,x2 + link_width + 5,y2 + link_height);
-      add_link((int)terrain_types[terrain2].transform_to,x2,y2,4,
-                         link_rect.left,link_rect.top,link_rect.right,link_rect.bottom);
-    }
-    if (terrain2 != 10) {
-      x2 = right_col_x;
-      y2 += line_height;
-      text_clear();
-      text_append_label(0x29d);
-      text_append_colon();
-      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-      text_clear();
-      x2 += 0x14;
-      y2 += line_height;
-      text_append_label(0x293);
-      text_append_colon();
-      text_append_space();
-      terrain_index = (iptr)label_string(label_string_ids[0x2c3]);
-      text_append((const char *)terrain_index);
-      draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-      if (((terrain2 == 0) || (terrain2 == 2)) || (terrain2 == 1)) {
-        y2 += line_height;
-        text_clear();
-        text_append_label(0x45);
-        text_append_colon();
-        text_append((const char *)&str_1_4);
-        draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-        measured = font2->text_width((const char *)&map_views_block.text_buffer);
-        x2 = x2 + measured + 3;
-        icon_center_y = y2 + row_height / 2;
-        measured = ((Sprite *)((i8 *)&war_icon_sprite_block.trade_icon_sprite))->get_height();
-        ((Sprite *)((i8 *)&war_icon_sprite_block.trade_icon_sprite))->draw((iptr)trade_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,
-                   (icon_center_y - 2) - measured / 2);
-      }
-    }
-    x2 = right_col_x;
-    y2 += line_height;
-    text_clear();
-    text_append_label(0x29e);
-    text_append_colon();
-    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-    x2 += 0x14;
-    y2 += line_height;
-    text_clear();
-    terrain_index = pedia_find_terrain_index(terrain2 + 0xb);
-    label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
-    crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
-    link_width = font2->text_width((const char *)&map_views_block.text_buffer);
-    link_height = font2->line_spacing();
-    SetRect(&link_rect,x2,y2,x2 + link_width + 5,y2 + link_height);
-    add_link(terrain2 + 0xb,x2,y2,4,link_rect.left,link_rect.top,
-                       link_rect.right,link_rect.bottom);
-    if (terrain2 != 2) {
-      text_clear();
-      y2 += line_height;
-      terrain_index = pedia_find_terrain_index(terrain2 + 0x16);
-      label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
-      crt_strcpy(((i8 *)&map_views_block.text_buffer),label);
-      link_width = font2->text_width((const char *)&map_views_block.text_buffer);
-      link_height = font2->line_spacing();
-      SetRect(&link_rect,x2,y2,x2 + link_width + 5,y2 + link_height);
-      add_link(terrain2 + 0x16,x2,y2,4,link_rect.left,link_rect.top,
-                         link_rect.right,link_rect.bottom);
-    }
+    draw_terrain_improve_rows(font2,terrain2,y2,line_height,margin,value_x,row_height);
+    draw_terrain_transform_column(font2,terrain2,stats_top,line_height,right_col_x,row_height);
   }
   update_describe_button(resize_border);
   set_clip((RECT *)saved_clip);
@@ -1569,110 +1621,17 @@ void PediaWindow::free_lists()
   return;
 }
 
-/* 004f4b9f auto */
-void PediaWindow::create()
-
+/* Part of PediaWindow::create (004f4b9f): the buttons of the item
+   lists: Describe and Close, and Back (concept list). */
+void PediaWindow::create_list_buttons(int left_x,int yTop,int btn_height,int avail_width)
 {
-  int left_x;
   int col_width;
-  u32 panel_h;
-  Hotspot *this_00;
-  int avail_width;
   iptr label;
-  int yTop;
-  u8 *scroll_parent;
-  u8 *edit_parent;
-  u8 *parent_16;
-  u8 *parent_15;
-  u8 *parent_14;
-  u8 *parent_13;
-  u8 *parent_12;
-  u8 *parent_11;
-  u8 *parent_10;
-  u8 *parent_9;
-  u8 *parent_8;
-  u8 *parent_7;
-  u8 *parent_6;
-  u8 *parent_5;
-  u8 *parent_4;
-  u8 *parent_3;
   u8 *parent_2;
-  u8 *close_parent;
-  Hotspot *close_hotspot;
+  u8 *parent_3;
+  u8 *parent_4;
   tagRECT rect;
-  int btn_height;
-  i32 exc_link;
-  i8 *seh_handler;
-  i32 eh_state;
-  
-  eh_state = 0xffffffff;
-  free_lists();
-  clear_links();
-  client_y = 0;
-  if (close_box_hotspot != (Hotspot *)0x0) {
-    if (close_box_hotspot != (Hotspot *)0x0) {
-      close_box_hotspot->scalar_destruct(1);
-    }
-    close_box_hotspot = (Hotspot *)0x0;
-  }
-  panel_width = 0x280;
-  panel_height = 400;
-  left_x = ((GameFont *)((i8 *)&font_size30))->font_cached_height();
-  header_height = left_x + panel_bevel_width * 2 + panel_margin_y * 2;
-  SetRect((LPRECT)pedia_frame_rect,0,0,panel_width,panel_height);
-  panel_h = panel_height;
-  left_x = header_height + panel_margin_y;
-  col_width = ((GameFont *)((i8 *)&font_size24))->line_spacing();
-  SetRect((LPRECT)&content_left,0,0,panel_width + (panel_padding_x + panel_margin_x) * -2,
-          (panel_h - left_x) + ((panel_margin_y * -3 + panel_padding_y * -2) - col_width) + panel_bevel_width * -2);
-  OffsetRect((LPRECT)&content_left,panel_padding_x + panel_margin_x,header_height + panel_margin_y);
-  left_x = main_frame_wnd_block.main_frame_wnd.client_width();
-  col_width = main_frame_wnd_block.main_frame_wnd.client_height();
-  crt_strcpy((char *)pedia_title_text_2_618,((i8 *)&pedia_window_empty_title_str));
-  wnd_create_with_surface(0,0xe02,left_x / 2 - (int)panel_width / 2,
-             col_width / 2 - (int)panel_height / 2,panel_width,panel_height,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd)
-  ;
-  window.wnd_handlers.set_close_handler(pedia_close);
-  set_redraw_callback(pedia_redraw_page);
-  ((WndBase *)&window)->set_caption_height(header_height);
-  window.wnd_handlers.set_keydown_handler(pedia_list_on_key);
-  window.set_keyboard_nav(0);
-  left_x = panel_padding_x;
-  close_box_sprite = (u32)((i8 *)&caption_close_button_sprite_block.caption_close_button_sprite);
-  has_close_box = 1;
-  panel_h = ((Sprite *)close_box_sprite)->width();
-  close_box_width = panel_h;
-  panel_h = ((Sprite *)close_box_sprite)->height();
-  close_box_height = panel_h;
-  btn_height = (int)(close_box_height * header_height) / 0x18;
-  col_width = ((int)header_height >> 1) - (btn_height >> 1);
-  SetRect(&rect,left_x,col_width,(int)(close_box_width * header_height) / 0x18 + left_x,
-          btn_height + col_width);
-  this_00 = (Hotspot *)operator_new(0x40);
-  eh_state = 0;
-  if (this_00 == (Hotspot *)0x0) {
-    close_hotspot = 0;
-  }
-  else {
-    close_hotspot = hotspot_ctor(this_00);
-  }
-  eh_state = 0xffffffff;
-  close_box_hotspot = close_hotspot;
-  if (this == (PediaWindow *)0x0) {
-    close_parent = (u8 *)0x0;
-  }
-  else {
-    close_parent = (u8 *)&window;
-  }
-  close_box_hotspot->create((iptr)close_parent,4000,(iptr)&rect);
-  close_box_hotspot->set_click_callback((CtrlNotifyFn)pedia_on_close);
-  left_x = panel_bevel_width + panel_margin_x + 2;
-  panel_h = panel_height;
-  col_width = ((GameFont *)((i8 *)&font_size24))->line_spacing();
-  yTop = panel_h - (col_width + (panel_margin_y + panel_padding_y) * 2);
-  avail_width = panel_width - (panel_margin_x * 2 + panel_bevel_width * 2 + 5);
-  btn_height = ((GameFont *)((i8 *)&font_size24))->line_spacing();
-  btn_height += panel_padding_y * 2;
+
   col_width = avail_width / 2;
   SetRect(&rect,left_x,yTop,col_width + left_x,btn_height + yTop);
   if (this == (PediaWindow *)0x0) {
@@ -1706,6 +1665,24 @@ void PediaWindow::create()
   label = (iptr)label_string(label_string_ids[0x356]);
   ((Button *)((u8 *)&concept_list_back_button))->create((iptr)parent_4,0xfb2,(iptr)&rect,(const char *)label);
   ((Button *)((u8 *)&concept_list_back_button))->set_callback((CtrlNotifyFn)pedia_on_back);
+}
+
+/* Part of PediaWindow::create (004f4b9f): the buttons of the
+   advance list (Describe, Tech tree, Close) and of an advance's page (Back,
+   Tech tree, Describe, Close). */
+void PediaWindow::create_advance_buttons(int left_x,int yTop,int btn_height,int avail_width)
+{
+  int col_width;
+  iptr label;
+  u8 *parent_5;
+  u8 *parent_6;
+  u8 *parent_7;
+  u8 *parent_8;
+  u8 *parent_9;
+  u8 *parent_10;
+  u8 *parent_11;
+  tagRECT rect;
+
   col_width = avail_width / 3;
   SetRect(&rect,left_x,yTop,col_width + left_x,btn_height + yTop);
   if (this == (PediaWindow *)0x0) {
@@ -1782,6 +1759,21 @@ void PediaWindow::create()
   ((Button *)((u8 *)&advance_detail_close_button))->set_default_button();
   ((Button *)((u8 *)&advance_detail_close_button))->set_cancel_button();
   ((Button *)((u8 *)&advance_detail_close_button))->set_callback((CtrlNotifyFn)pedia_on_close);
+}
+
+/* Part of PediaWindow::create (004f4b9f): the buttons of the other
+   pages (Back, Describe, Close) and of the description text (Back, Close). */
+void PediaWindow::create_detail_buttons(int left_x,int yTop,int btn_height,int avail_width)
+{
+  int col_width;
+  iptr label;
+  u8 *parent_12;
+  u8 *parent_13;
+  u8 *parent_14;
+  u8 *parent_15;
+  u8 *parent_16;
+  tagRECT rect;
+
   col_width = avail_width / 3;
   SetRect(&rect,left_x,yTop,col_width + left_x,btn_height + yTop);
   if (this == (PediaWindow *)0x0) {
@@ -1834,6 +1826,99 @@ void PediaWindow::create()
   label = (iptr)label_string(label_string_ids[0x147]);
   ((Button *)((u8 *)&text_close_button))->create((iptr)parent_16,0xfa7,(iptr)&rect,(const char *)label);
   ((Button *)((u8 *)&text_close_button))->set_callback((CtrlNotifyFn)pedia_on_close);
+}
+
+/* 004f4b9f auto */
+void PediaWindow::create()
+
+{
+  int left_x;
+  int col_width;
+  u32 panel_h;
+  Hotspot *this_00;
+  int avail_width;
+  int yTop;
+  u8 *scroll_parent;
+  u8 *edit_parent;
+  u8 *close_parent;
+  Hotspot *close_hotspot;
+  tagRECT rect;
+  int btn_height;
+  i32 exc_link;
+  i8 *seh_handler;
+  i32 eh_state;
+  
+  eh_state = 0xffffffff;
+  free_lists();
+  clear_links();
+  client_y = 0;
+  if (close_box_hotspot != (Hotspot *)0x0) {
+    if (close_box_hotspot != (Hotspot *)0x0) {
+      close_box_hotspot->scalar_destruct(1);
+    }
+    close_box_hotspot = (Hotspot *)0x0;
+  }
+  panel_width = 0x280;
+  panel_height = 400;
+  left_x = ((GameFont *)((i8 *)&font_size30))->font_cached_height();
+  header_height = left_x + panel_bevel_width * 2 + panel_margin_y * 2;
+  SetRect((LPRECT)pedia_frame_rect,0,0,panel_width,panel_height);
+  panel_h = panel_height;
+  left_x = header_height + panel_margin_y;
+  col_width = ((GameFont *)((i8 *)&font_size24))->line_spacing();
+  SetRect((LPRECT)&content_left,0,0,panel_width + (panel_padding_x + panel_margin_x) * -2,
+          (panel_h - left_x) + ((panel_margin_y * -3 + panel_padding_y * -2) - col_width) + panel_bevel_width * -2);
+  OffsetRect((LPRECT)&content_left,panel_padding_x + panel_margin_x,header_height + panel_margin_y);
+  left_x = main_frame_wnd_block.main_frame_wnd.client_width();
+  col_width = main_frame_wnd_block.main_frame_wnd.client_height();
+  crt_strcpy((char *)pedia_title_text_2_618,((i8 *)&pedia_window_empty_title_str));
+  wnd_create_with_surface(0,0xe02,left_x / 2 - (int)panel_width / 2,
+             col_width / 2 - (int)panel_height / 2,panel_width,panel_height,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd)
+  ;
+  window.wnd_handlers.set_close_handler(pedia_close);
+  set_redraw_callback(pedia_redraw_page);
+  ((WndBase *)&window)->set_caption_height(header_height);
+  window.wnd_handlers.set_keydown_handler(pedia_list_on_key);
+  window.set_keyboard_nav(0);
+  left_x = panel_padding_x;
+  close_box_sprite = (u32)((i8 *)&caption_close_button_sprite_block.caption_close_button_sprite);
+  has_close_box = 1;
+  panel_h = ((Sprite *)close_box_sprite)->width();
+  close_box_width = panel_h;
+  panel_h = ((Sprite *)close_box_sprite)->height();
+  close_box_height = panel_h;
+  btn_height = (int)(close_box_height * header_height) / 0x18;
+  col_width = ((int)header_height >> 1) - (btn_height >> 1);
+  SetRect(&rect,left_x,col_width,(int)(close_box_width * header_height) / 0x18 + left_x,
+          btn_height + col_width);
+  this_00 = (Hotspot *)operator_new(0x40);
+  eh_state = 0;
+  if (this_00 == (Hotspot *)0x0) {
+    close_hotspot = 0;
+  }
+  else {
+    close_hotspot = hotspot_ctor(this_00);
+  }
+  eh_state = 0xffffffff;
+  close_box_hotspot = close_hotspot;
+  if (this == (PediaWindow *)0x0) {
+    close_parent = (u8 *)0x0;
+  }
+  else {
+    close_parent = (u8 *)&window;
+  }
+  close_box_hotspot->create((iptr)close_parent,4000,(iptr)&rect);
+  close_box_hotspot->set_click_callback((CtrlNotifyFn)pedia_on_close);
+  left_x = panel_bevel_width + panel_margin_x + 2;
+  panel_h = panel_height;
+  col_width = ((GameFont *)((i8 *)&font_size24))->line_spacing();
+  yTop = panel_h - (col_width + (panel_margin_y + panel_padding_y) * 2);
+  avail_width = panel_width - (panel_margin_x * 2 + panel_bevel_width * 2 + 5);
+  btn_height = ((GameFont *)((i8 *)&font_size24))->line_spacing();
+  btn_height += panel_padding_y * 2;
+  create_list_buttons(left_x,yTop,btn_height,avail_width);
+  create_advance_buttons(left_x,yTop,btn_height,avail_width);
+  create_detail_buttons(left_x,yTop,btn_height,avail_width);
   ui_set_button_font((iptr)&font_size24);
   clear_links();
   ui_set_default_font((iptr)&font_size21);
@@ -2175,25 +2260,14 @@ void PediaWindow::redraw()
   return;
 }
 
-/* 004f66c6 auto */
-void PediaWindow::draw_item_list()
-
+/* Part of PediaWindow::draw_item_list (004f66c6): a terrain
+   row's picture (base terrain with its forest, hills, mountains or
+   resource), its background filled from text_x_off. */
+void PediaWindow::draw_list_terrain_icon(iptr advance,uint is_selected,int col_base,int row,int col_x,
+                                                   int row_y,tagRECT &row_rect,int &text_x_off)
 {
   int dim_a;
-  int dim_b;
-  int dim_c;
-  char *name_text;
-  i32 fill_color_e;
-  i32 fill_color_d;
-  int shield_x;
-  i32 fill_color_c;
-  int icon_x2;
-  i32 fill_color_b;
-  i32 fill_color_a;
   i32 terrain_fill_color;
-  i8 shield_ctx[16];
-  i8 icon_ctx2[16];
-  i8 icon_ctx[16];
   i8 resource_ctx[16];
   i8 hill_ctx2[16];
   i8 forest_ctx2[16];
@@ -2202,11 +2276,231 @@ void PediaWindow::draw_item_list()
   i8 hill_ctx[16];
   i8 forest_ctx[16];
   i8 base_ctx[16];
+  int base_terrain;
+  int icon_x;
+  uint resource_variant;
+
+  base_terrain = advance % 0xb;
+  if ((((u32)list_top_index) + col_base + row & 1) == 0) {
+    icon_x = panel_margin_x;
+  }
+  else {
+    dim_a = ((Sprite *)((i8 *)&forest_sprites))->width();
+    icon_x = panel_margin_x + dim_a / 2;
+  }
+  dim_a = ((Sprite *)((i8 *)&forest_sprites))->width();
+  text_x_off = panel_margin_x + (dim_a * 3) / 2 + 2;
+  row_rect.left += text_x_off;
+  if (is_selected == 0) {
+    terrain_fill_color = list_bg_color;
+  }
+  else {
+    terrain_fill_color = list_sel_bg_color;
+  }
+  fill_rect((iptr)&row_rect,terrain_fill_color);
+  ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + base_terrain * 0x3c))->draw((iptr)base_ctx,(iptr)&pedia_window_block.pedia_window,
+             icon_x + col_x,row_y);
+  if (advance < 0xb) {
+    if (advance == 3) {
+      ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
+                 row_y);
+    }
+    else if (advance == 4) {
+      ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
+                 row_y);
+    }
+    else if (advance == 5) {
+      ((Sprite *)((i8 *)&mountain_sprites))->draw((iptr)mountain_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
+                 row_y);
+    }
+  }
+  else {
+    resource_variant = (uint)(0x15 < advance);
+    if ((advance == 0xd) || (advance == 0x18)) {
+      ((Sprite *)((i8 *)&grassland_shield_sprite))->draw((iptr)grass_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
+                 row_y);
+    }
+    else {
+      switch(advance) {
+      case 0xe:
+      case 0x19:
+        ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_ctx2,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
+                   row_y);
+        break;
+      case 0xf:
+      case 0x1a:
+        ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_ctx2,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
+                   row_y);
+        break;
+      case 0x10:
+      case 0x11:
+      case 0x12:
+      case 0x13:
+      case 0x14:
+      case 0x15:
+      case 0x16:
+      case 0x17: ;
+      }
+      ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + base_terrain * 0x78 + resource_variant * 0x3c))->draw(
+                 (iptr)resource_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,row_y);
+    }
+  }
+}
+
+/* Part of PediaWindow::draw_item_list (004f66c6): a row's icon by icon_mode
+   (3: advance or improvement, 0: unit, 2: shield) and its background.
+   icon_sprite: the caller's, changed by mode 2 and kept for the next row. */
+void PediaWindow::draw_list_icon(int icon_mode,uint is_selected,int col_base,int row,int col_x,int row_y,
+                                           int row_height,Sprite *&icon_sprite,tagRECT &row_rect,int &text_x_off)
+{
+  int dim_a;
+  int dim_b;
+  int dim_c;
+  i32 fill_color_e;
+  i32 fill_color_d;
+  int shield_x;
+  i32 fill_color_c;
+  int icon_x2;
+  i32 fill_color_b;
+  i32 fill_color_a;
+  i8 shield_ctx[16];
+  i8 icon_ctx2[16];
+  i8 icon_ctx[16];
+  int icon_x;
+
+  if (icon_mode == 3) {
+    dim_a = icon_sprite->width();
+    text_x_off = (dim_a * 3) / 2 + panel_margin_x * 2;
+    row_rect.left += text_x_off;
+    if (is_selected == 0) {
+      fill_color_a = list_bg_color;
+    }
+    else {
+      fill_color_a = list_sel_bg_color;
+    }
+    fill_rect((iptr)&row_rect,fill_color_a);
+    icon_sprite->draw((iptr)icon_ctx,(iptr)&pedia_window_block.pedia_window,panel_margin_x + col_x,row_rect.top + 1);
+  }
+  else if (icon_mode == 0) {
+    dim_a = icon_sprite->width();
+    text_x_off = panel_margin_x * 3 + dim_a * 2;
+    row_rect.left += text_x_off;
+    if (is_selected == 0) {
+      fill_color_b = list_bg_color;
+    }
+    else {
+      fill_color_b = list_sel_bg_color;
+    }
+    fill_rect((iptr)&row_rect,fill_color_b);
+    icon_x = icon_sprite->width();
+    icon_x += panel_margin_x * 2;
+    icon_x2 = icon_x;
+    if ((((u32)list_top_index) + col_base + row & 1) == 0) {
+      icon_x2 = panel_margin_x;
+    }
+    dim_b = row_y + row_height / 2;
+    dim_a = icon_sprite->get_height();
+    icon_sprite->draw((iptr)icon_ctx2,(iptr)&pedia_window_block.pedia_window,col_x + icon_x2,dim_b - dim_a / 2);
+  }
+  else if (icon_mode == 2) {
+    dim_a = icon_sprite->width();
+    text_x_off = panel_margin_x * 3 + dim_a * 2;
+    row_rect.left += text_x_off;
+    if (is_selected == 0) {
+      fill_color_c = list_bg_color;
+    }
+    else {
+      fill_color_c = list_sel_bg_color;
+    }
+    fill_rect((iptr)&row_rect,fill_color_c);
+    dim_a = icon_sprite->width();
+    dim_b = icon_sprite->width();
+    dim_c = icon_sprite->width();
+    icon_x = ((int)(dim_a + (dim_a >> 0x1f & 3U)) >> 2) + dim_b / 6 + dim_c +
+               panel_margin_x * 2;
+    icon_sprite = (Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite);
+    shield_x = icon_x;
+    if ((((u32)list_top_index) + col_base + row & 1) == 0) {
+      shield_x = panel_margin_x;
+    }
+    dim_b = row_y + row_height / 2;
+    dim_a = ((Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite))->get_height();
+    icon_sprite->draw((iptr)shield_ctx,(iptr)&pedia_window_block.pedia_window,col_x + shield_x,dim_b - dim_a / 2);
+  }
+  else if (icon_mode == -1) {
+    dim_a = icon_sprite->width();
+    text_x_off = panel_margin_x * 3 + dim_a * 2;
+    row_rect.left += text_x_off;
+    if (is_selected == 0) {
+      fill_color_d = list_bg_color;
+    }
+    else {
+      fill_color_d = list_sel_bg_color;
+    }
+    fill_rect((iptr)&row_rect,fill_color_d);
+  }
+  else if (icon_mode != -5) {
+    text_x_off = panel_margin_x * 5 + 2;
+    row_rect.left += text_x_off;
+    if (is_selected == 0) {
+      fill_color_e = list_bg_color;
+    }
+    else {
+      fill_color_e = list_sel_bg_color;
+    }
+    fill_rect((iptr)&row_rect,fill_color_e);
+  }
+}
+
+/* Part of PediaWindow::draw_item_list (004f66c6): the name of item number advance of
+   the category's list into the text buffer. */
+void PediaWindow::copy_list_item_name(iptr advance)
+{
+  char *name_text;
+
+  switch(category) {
+  case 1:
+    name_text = pedia_lookup_text(pedia_window_block.pedia_advance_names,advance);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
+    break;
+  case 2:
+    name_text = pedia_lookup_text(pedia_window_block.pedia_improvement_names,advance);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
+    break;
+  case 3:
+    name_text = pedia_lookup_text(pedia_window_block.pedia_wonder_names,advance);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
+    break;
+  case 4:
+    name_text = pedia_lookup_text(pedia_window_block.pedia_unit_names,advance);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
+    break;
+  case 5:
+    name_text = pedia_lookup_text(pedia_window_block.pedia_terrain_names,advance);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
+    break;
+  case 6:
+    name_text = pedia_lookup_text(pedia_window_block.pedia_government_names,advance);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
+    break;
+  case 7:
+    name_text = pedia_lookup_text(pedia_window_block.pedia_concept_names,advance);
+    crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
+    break;
+  default:
+    text_append((const char *)&str_this_should_never_be_seen);
+  }
+}
+
+/* 004f66c6 auto */
+void PediaWindow::draw_item_list()
+
+{
+  int dim_a;
+  int dim_b;
   int text_y_off;
   iptr advance;
   int col_width;
-  int base_terrain;
-  int icon_x;
   i32 scale_num2;
   int col;
   int col_base;
@@ -2216,7 +2510,6 @@ void PediaWindow::draw_item_list()
   int col_x;
   int list_width2;
   int shadow_color2;
-  uint resource_variant;
   int text_x_off;
   int icon_mode;
   Sprite *icon_sprite;
@@ -2289,71 +2582,7 @@ void PediaWindow::draw_item_list()
           break;
         case 5:
           icon_mode = -5;
-          base_terrain = advance % 0xb;
-          if ((((u32)list_top_index) + col_base + row & 1) == 0) {
-            icon_x = panel_margin_x;
-          }
-          else {
-            dim_a = ((Sprite *)((i8 *)&forest_sprites))->width();
-            icon_x = panel_margin_x + dim_a / 2;
-          }
-          dim_a = ((Sprite *)((i8 *)&forest_sprites))->width();
-          text_x_off = panel_margin_x + (dim_a * 3) / 2 + 2;
-          row_rect.left += text_x_off;
-          if (is_selected == 0) {
-            terrain_fill_color = list_bg_color;
-          }
-          else {
-            terrain_fill_color = list_sel_bg_color;
-          }
-          fill_rect((iptr)&row_rect,terrain_fill_color);
-          ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + base_terrain * 0x3c))->draw((iptr)base_ctx,(iptr)&pedia_window_block.pedia_window,
-                     icon_x + col_x,row_y);
-          if (advance < 0xb) {
-            if (advance == 3) {
-              ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
-                         row_y);
-            }
-            else if (advance == 4) {
-              ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
-                         row_y);
-            }
-            else if (advance == 5) {
-              ((Sprite *)((i8 *)&mountain_sprites))->draw((iptr)mountain_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
-                         row_y);
-            }
-          }
-          else {
-            resource_variant = (uint)(0x15 < advance);
-            if ((advance == 0xd) || (advance == 0x18)) {
-              ((Sprite *)((i8 *)&grassland_shield_sprite))->draw((iptr)grass_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
-                         row_y);
-            }
-            else {
-              switch(advance) {
-              case 0xe:
-              case 0x19:
-                ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_ctx2,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
-                           row_y);
-                break;
-              case 0xf:
-              case 0x1a:
-                ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_ctx2,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
-                           row_y);
-                break;
-              case 0x10:
-              case 0x11:
-              case 0x12:
-              case 0x13:
-              case 0x14:
-              case 0x15:
-              case 0x16:
-              case 0x17: ;
-              }
-              ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + base_terrain * 0x78 + resource_variant * 0x3c))->draw(
-                         (iptr)resource_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,row_y);
-            }
-          }
+          draw_list_terrain_icon(advance,is_selected,col_base,row,col_x,row_y,row_rect,text_x_off);
           break;
         case 6:
         case 7:
@@ -2362,124 +2591,13 @@ void PediaWindow::draw_item_list()
         default:
           text_append((const char *)&str_this_should_not_happen_2);
         }
-        if (icon_mode == 3) {
-          dim_a = icon_sprite->width();
-          text_x_off = (dim_a * 3) / 2 + panel_margin_x * 2;
-          row_rect.left += text_x_off;
-          if (is_selected == 0) {
-            fill_color_a = list_bg_color;
-          }
-          else {
-            fill_color_a = list_sel_bg_color;
-          }
-          fill_rect((iptr)&row_rect,fill_color_a);
-          icon_sprite->draw((iptr)icon_ctx,(iptr)&pedia_window_block.pedia_window,panel_margin_x + col_x,row_rect.top + 1);
-        }
-        else if (icon_mode == 0) {
-          dim_a = icon_sprite->width();
-          text_x_off = panel_margin_x * 3 + dim_a * 2;
-          row_rect.left += text_x_off;
-          if (is_selected == 0) {
-            fill_color_b = list_bg_color;
-          }
-          else {
-            fill_color_b = list_sel_bg_color;
-          }
-          fill_rect((iptr)&row_rect,fill_color_b);
-          icon_x = icon_sprite->width();
-          icon_x += panel_margin_x * 2;
-          icon_x2 = icon_x;
-          if ((((u32)list_top_index) + col_base + row & 1) == 0) {
-            icon_x2 = panel_margin_x;
-          }
-          dim_b = row_y + row_height / 2;
-          dim_a = icon_sprite->get_height();
-          icon_sprite->draw((iptr)icon_ctx2,(iptr)&pedia_window_block.pedia_window,col_x + icon_x2,dim_b - dim_a / 2);
-        }
-        else if (icon_mode == 2) {
-          dim_a = icon_sprite->width();
-          text_x_off = panel_margin_x * 3 + dim_a * 2;
-          row_rect.left += text_x_off;
-          if (is_selected == 0) {
-            fill_color_c = list_bg_color;
-          }
-          else {
-            fill_color_c = list_sel_bg_color;
-          }
-          fill_rect((iptr)&row_rect,fill_color_c);
-          dim_a = icon_sprite->width();
-          dim_b = icon_sprite->width();
-          dim_c = icon_sprite->width();
-          icon_x = ((int)(dim_a + (dim_a >> 0x1f & 3U)) >> 2) + dim_b / 6 + dim_c +
-                     panel_margin_x * 2;
-          icon_sprite = (Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite);
-          shield_x = icon_x;
-          if ((((u32)list_top_index) + col_base + row & 1) == 0) {
-            shield_x = panel_margin_x;
-          }
-          dim_b = row_y + row_height / 2;
-          dim_a = ((Sprite *)((i8 *)&war_icon_sprite_block.shield_icon_sprite))->get_height();
-          icon_sprite->draw((iptr)shield_ctx,(iptr)&pedia_window_block.pedia_window,col_x + shield_x,dim_b - dim_a / 2);
-        }
-        else if (icon_mode == -1) {
-          dim_a = icon_sprite->width();
-          text_x_off = panel_margin_x * 3 + dim_a * 2;
-          row_rect.left += text_x_off;
-          if (is_selected == 0) {
-            fill_color_d = list_bg_color;
-          }
-          else {
-            fill_color_d = list_sel_bg_color;
-          }
-          fill_rect((iptr)&row_rect,fill_color_d);
-        }
-        else if (icon_mode != -5) {
-          text_x_off = panel_margin_x * 5 + 2;
-          row_rect.left += text_x_off;
-          if (is_selected == 0) {
-            fill_color_e = list_bg_color;
-          }
-          else {
-            fill_color_e = list_sel_bg_color;
-          }
-          fill_rect((iptr)&row_rect,fill_color_e);
-        }
+        draw_list_icon(icon_mode,is_selected,col_base,row,col_x,row_y,row_height,icon_sprite,row_rect,
+                       text_x_off);
         icon_mode = 0;
         gfx_set_scale_ratio(scale_num2,scale_den2);
         text_clear();
         advance = ((u32)list_top_index) + col_base + row;
-        switch(category) {
-        case 1:
-          name_text = pedia_lookup_text(pedia_window_block.pedia_advance_names,advance);
-          crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
-          break;
-        case 2:
-          name_text = pedia_lookup_text(pedia_window_block.pedia_improvement_names,advance);
-          crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
-          break;
-        case 3:
-          name_text = pedia_lookup_text(pedia_window_block.pedia_wonder_names,advance);
-          crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
-          break;
-        case 4:
-          name_text = pedia_lookup_text(pedia_window_block.pedia_unit_names,advance);
-          crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
-          break;
-        case 5:
-          name_text = pedia_lookup_text(pedia_window_block.pedia_terrain_names,advance);
-          crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
-          break;
-        case 6:
-          name_text = pedia_lookup_text(pedia_window_block.pedia_government_names,advance);
-          crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
-          break;
-        case 7:
-          name_text = pedia_lookup_text(pedia_window_block.pedia_concept_names,advance);
-          crt_strcpy(((i8 *)&map_views_block.text_buffer),name_text);
-          break;
-        default:
-          text_append((const char *)&str_this_should_never_be_seen);
-        }
+        copy_list_item_name(advance);
         set_clip(&row_rect);
         if (shadow_color2 != text_color2) {
           gfx_set_text_color_index(shadow_color2);
@@ -2803,25 +2921,13 @@ void PediaWindow::open_category(u32 category,int show)
   return;
 }
 
-/* 004f7c99 auto */
-void PediaWindow::load_indexes()
-
+/* Part of PediaWindow::load_indexes (004f7c99): every sort key slot of the seven
+   lists set to -1. */
+void PediaWindow::clear_index_keys()
 {
   u8 *slot;
-  bool reading;
-  int status;
-  char *name_str;
-  size_t name_len;
-  void *name_buf;
-  char *name_text;
-  iptr terrain_label;
-  iptr improvement;
   int i;
-  int sort_key;
-  char line_prefix[3];
-  PediaListNode *node2;
-  PediaListNode *prev_node2;
-  
+
   for (i = 0; i < 100; i++) {
     slot = advance_sort_keys + i * 4;
     slot[0] = 0xff;
@@ -2871,7 +2977,22 @@ void PediaWindow::load_indexes()
     slot[2] = 0xff;
     slot[3] = 0xff;
   }
-  free_lists();
+}
+
+/* Part of PediaWindow::load_indexes (004f7c99): the advances (@ADVANCE_INDEX of DESCRIBE.TXT): the enabled ones, sorted
+   into their list. prev_node2: the caller's, the last node added (carried
+   from list to list). */
+void PediaWindow::load_advance_index(PediaListNode *&prev_node2)
+{
+  int status;
+  char *name_str;
+  size_t name_len;
+  void *name_buf;
+  char *name_text;
+  iptr improvement;
+  int sort_key;
+  PediaListNode *node2;
+
   status = text_open_section((const char *)&str_describe_3,(const char *)&str_advance_index_2);
   if (status == 0) {
     text_read_line(1);
@@ -2910,6 +3031,22 @@ void PediaWindow::load_indexes()
                          pedia_advance_count);
     }
   }
+}
+
+/* Part of PediaWindow::load_indexes (004f7c99): the improvements (@IMPROVEMENT_INDEX), sorted
+   into their list. prev_node2: the caller's, the last node added (carried
+   from list to list). */
+void PediaWindow::load_improvement_index(PediaListNode *&prev_node2)
+{
+  int status;
+  char *name_str;
+  size_t name_len;
+  void *name_buf;
+  char *name_text;
+  iptr improvement;
+  int sort_key;
+  PediaListNode *node2;
+
   status = text_open_section((const char *)&str_describe_3,(const char *)&str_improvement_index_2);
   if (status == 0) {
     text_read_line(1);
@@ -2949,6 +3086,22 @@ void PediaWindow::load_indexes()
                          pedia_improve_count);
     }
   }
+}
+
+/* Part of PediaWindow::load_indexes (004f7c99): the wonders (@WONDER_INDEX), sorted
+   into their list. prev_node2: the caller's, the last node added (carried
+   from list to list). */
+void PediaWindow::load_wonder_index(PediaListNode *&prev_node2)
+{
+  int status;
+  char *name_str;
+  size_t name_len;
+  void *name_buf;
+  char *name_text;
+  iptr improvement;
+  int sort_key;
+  PediaListNode *node2;
+
   status = text_open_section((const char *)&str_describe_3,(const char *)&str_wonder_index_2);
   if (status == 0) {
     text_read_line(1);
@@ -2987,6 +3140,22 @@ void PediaWindow::load_indexes()
                          pedia_wonder_count);
     }
   }
+}
+
+/* Part of PediaWindow::load_indexes (004f7c99): the unit types (@UNIT_INDEX), sorted
+   into their list. prev_node2: the caller's, the last node added (carried
+   from list to list). */
+void PediaWindow::load_unit_index(PediaListNode *&prev_node2)
+{
+  int status;
+  char *name_str;
+  size_t name_len;
+  void *name_buf;
+  char *name_text;
+  iptr improvement;
+  int sort_key;
+  PediaListNode *node2;
+
   status = text_open_section((const char *)&str_describe_3,(const char *)&str_unit_index_2);
   if (status == 0) {
     text_read_line(1);
@@ -3024,6 +3193,22 @@ void PediaWindow::load_indexes()
       pedia_sort_list(this,pedia_unit_names,pedia_unit_keys,pedia_unit_ids,pedia_unit_count);
     }
   }
+}
+
+/* Part of PediaWindow::load_indexes (004f7c99): the governments (@GOVERNMENT_INDEX), sorted
+   into their list. prev_node2: the caller's, the last node added (carried
+   from list to list). */
+void PediaWindow::load_government_index(PediaListNode *&prev_node2)
+{
+  int status;
+  char *name_str;
+  size_t name_len;
+  void *name_buf;
+  char *name_text;
+  iptr improvement;
+  int sort_key;
+  PediaListNode *node2;
+
   status = text_open_section((const char *)&str_describe_3,(const char *)&str_government_index_2);
   if (status == 0) {
     text_read_line(1);
@@ -3059,6 +3244,23 @@ void PediaWindow::load_indexes()
       pedia_sort_list(this,pedia_government_names,pedia_government_keys,pedia_government_ids,pedia_government_count);
     }
   }
+}
+
+/* Part of PediaWindow::load_indexes (004f7c99): the terrain types and resources (@TERRAIN_INDEX), "(shield)" after
+   grassland with shields, sorted
+   into their list. prev_node2: the caller's, the last node added (carried
+   from list to list). */
+void PediaWindow::load_terrain_index(PediaListNode *&prev_node2)
+{
+  int status;
+  size_t name_len;
+  void *name_buf;
+  char *name_text;
+  iptr terrain_label;
+  iptr improvement;
+  int sort_key;
+  PediaListNode *node2;
+
   status = text_open_section((const char *)&str_describe_3,(const char *)&str_terrain_index_2);
   if (status == 0) {
     text_read_line(1);
@@ -3103,6 +3305,21 @@ void PediaWindow::load_indexes()
       pedia_sort_list(this,pedia_terrain_names,pedia_terrain_keys,pedia_terrain_ids,pedia_terrain_count_2);
     }
   }
+}
+
+/* Part of PediaWindow::load_indexes (004f7c99): the game concepts (@CONCEPT_DESCRIPTIONS, the ^^ lines), in file order, sorted
+   into their list. prev_node2: the caller's, the last node added (carried
+   from list to list). */
+void PediaWindow::load_concept_index(PediaListNode *&prev_node2)
+{
+  bool reading;
+  int status;
+  size_t name_len;
+  void *name_buf;
+  iptr improvement;
+  char line_prefix[3];
+  PediaListNode *node2;
+
   status = text_open_section((const char *)&str_describe_3,(const char *)&str_concept_descriptions_2);
   if (status == 0) {
     reading = true;
@@ -3142,6 +3359,23 @@ void PediaWindow::load_indexes()
       pedia_sort_list(this,pedia_concept_names,pedia_concept_keys,pedia_concept_ids,pedia_concept_count);
     }
   }
+}
+
+/* 004f7c99 auto */
+void PediaWindow::load_indexes()
+
+{
+  PediaListNode *prev_node2;
+  
+  clear_index_keys();
+  free_lists();
+  load_advance_index(prev_node2);
+  load_improvement_index(prev_node2);
+  load_wonder_index(prev_node2);
+  load_unit_index(prev_node2);
+  load_government_index(prev_node2);
+  load_terrain_index(prev_node2);
+  load_concept_index(prev_node2);
   return;
 }
 
@@ -3584,73 +3818,16 @@ void PediaWindow::init_advance_list(iptr unused_arg)
   return;
 }
 
-/* 00564e6d auto */
-void PediaWindow::draw_advance_page()
-
+/* Part of PediaWindow::draw_advance_page (00564e6d): the "Requires" line: the
+   prerequisites as links (or "None"). */
+void PediaWindow::draw_advance_requires(GameFont *font2,iptr advance,int y2)
 {
   int measure;
-  iptr label;
-  size_t rest_len;
-  int center_y;
-  bool was_right;
-  i8 unit_ctx[16];
-  i8 impr_ctx[16];
-  i8 icon_ctx[16];
-  iptr wonder;
-  int is_child;
-  iptr advance3;
-  int prev_unit_height;
-  iptr advance;
-  char *pedia_file;
-  iptr improvement;
   int line_height;
-  iptr unit_type;
-  int y2;
   u32 x2;
-  char *line;
-  iptr advance2;
-  int unit_text_y;
-  int has_pedia;
   tagRECT link_rect;
   int text_width;
-  int related_count;
-  char line_buf[260];
-  int row_height;
-  int list_x2;
-  i8 saved_clip[16];
-  GameFont *font2;
-  uint in_right_col;
-  
-  get_clip((RECT *)saved_clip);
-  set_clip((RECT *)&content_left);
-  update_controls();
-  fill_background((RECT *)&content_left,2);
-  font2 = (GameFont *)((i8 *)&font_size21);
-  x2 = content_left;
-  row_height = ((GameFont *)((i8 *)&font_size21))->font_cached_height();
-  y2 = content_top + 5;
-  advance = pedia_advance_ids[resize_border];
-  ((Sprite *)
-             (((i8 *)&government_sprites_block.advance_category_icon_sprites) +
-             (char)advances[advance].epoch * 0x3c + (char)advances[advance].category * 0xf0))->draw(
-             (iptr)icon_ctx,(iptr)&pedia_window_block.pedia_window,panel_margin_x + x2,y2);
-  gfx_set_text_color_index(list_text_color);
-  related_count = 0;
-  for (advance2 = 0; advance2 < 100; advance2++) {
-    if ((advances[advance2].preq[0] == advance) || (advances[advance2].preq[1] == advance)) {
-      related_count++;
-    }
-  }
-  for (improvement = 1; improvement < 0x43; improvement++) {
-    if (improvements[improvement].preq == advance) {
-      related_count++;
-    }
-  }
-  for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-    if (unit_types[unit_type].prerequisite == advance) {
-      related_count++;
-    }
-  }
+
   x2 = content_left + 0x32;
   text_clear();
   text_append_label(0x79);
@@ -3691,17 +3868,22 @@ void PediaWindow::draw_advance_page()
                          link_rect.top,link_rect.right,link_rect.bottom);
     }
   }
-  y2 += row_height;
-  x2 = content_left + 2;
-  text_clear();
-  text_append_label(0x7a);
-  text_append_colon();
-  measure = font2->text_width((const char *)&map_views_block.text_buffer);
-  list_x2 = x2 + measure + 2;
-  if (related_count != 0) {
-    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-  }
-  text_clear();
+}
+
+/* Part of PediaWindow::draw_advance_page (00564e6d): the "Allows" list:
+   each advance this one leads to, with its other prerequisite. */
+void PediaWindow::draw_advance_children(GameFont *font2,iptr advance,int list_x2,int row_height,
+                                                  int &y2)
+{
+  int measure;
+  int is_child;
+  iptr advance3;
+  int line_height;
+  u32 x2;
+  iptr advance2;
+  tagRECT link_rect;
+  int text_width;
+
   for (advance2 = 0; advance2 < 100; advance2++) {
     is_child = 0;
     advance3 = -1;
@@ -3749,6 +3931,22 @@ void PediaWindow::draw_advance_page()
       y2 += row_height;
     }
   }
+}
+
+/* Part of PediaWindow::draw_advance_page (00564e6d): the improvements
+   and wonders this advance allows, two to a row. */
+void PediaWindow::draw_advance_improvements(GameFont *font2,iptr advance,int list_x2,int row_height,
+                                                      u32 &x2,int &y2)
+{
+  int measure;
+  bool was_right;
+  i8 impr_ctx[16];
+  iptr improvement;
+  int line_height;
+  tagRECT link_rect;
+  int text_width;
+  uint in_right_col;
+
   in_right_col = 0;
   x2 = list_x2;
   for (improvement = 1; improvement < 0x43; improvement++) {
@@ -3793,6 +3991,26 @@ void PediaWindow::draw_advance_page()
   if (in_right_col == 1) {
     y2 += row_height;
   }
+}
+
+/* Part of PediaWindow::draw_advance_page (00564e6d): the units this
+   advance allows, two to a row (with their pictures when the page has
+   room: fewer than 11 items). */
+void PediaWindow::draw_advance_units(GameFont *font2,iptr advance,int related_count,int list_x2,
+                                               int row_height,u32 &x2,int &y2)
+{
+  int measure;
+  iptr label;
+  int center_y;
+  i8 unit_ctx[16];
+  int prev_unit_height;
+  int line_height;
+  iptr unit_type;
+  int unit_text_y;
+  tagRECT link_rect;
+  int text_width;
+  uint in_right_col;
+
   in_right_col = 0;
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     if (unit_types[unit_type].prerequisite == advance) {
@@ -3856,32 +4074,24 @@ void PediaWindow::draw_advance_page()
       y2 += measure;
     }
   }
-  pedia_file = str_pedia_3;
-  measure = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-  if (measure != 0) {
-    __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-    crt_strcpy(line_buf,str_describe_4);
-    crt_strcat(line_buf,((i8 *)&lang_file_ext));
-    measure = file_exists((const char *)line_buf);
-    if (measure == 0) {
-      ((Button *)advance_detail_describe_button)->disable();
-      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-      return;
-    }
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-  }
-  has_pedia = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-  if (has_pedia != 0) {
-    __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
-    crt_strcpy(line_buf,str_pedia_4);
-    crt_strcat(line_buf,((i8 *)&lang_file_ext));
-    measure = file_exists((const char *)line_buf);
-    if (measure == 0) {
-      has_pedia = 0;
-    }
-    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
-  }
-  str_clear((char *)line_buf);
+}
+
+/* Part of PediaWindow::draw_advance_page (00564e6d): the
+   facts of the @PEDIACIVFACTS section: the special notes of some advances
+   (when the scenario has no Pedia of its own) and the wonders this advance
+   makes obsolete. */
+void PediaWindow::draw_advance_civ_facts(GameFont *font2,iptr advance,int has_pedia,char *pedia_file,
+                                                   int list_x2,int row_height,u32 x2,int y2)
+{
+  int measure;
+  size_t rest_len;
+  iptr wonder;
+  int line_height;
+  char *line;
+  tagRECT link_rect;
+  int text_width;
+  char line_buf[260];
+
   measure = text_open_section((const char *)pedia_file,(const char *)&str_pediacivfacts);
   if (measure == 0) {
     line = text_read_line(1);
@@ -3987,6 +4197,101 @@ void PediaWindow::draw_advance_page()
       }
     }
   }
+}
+
+/* 00564e6d auto */
+void PediaWindow::draw_advance_page()
+
+{
+  int measure;
+  i8 icon_ctx[16];
+  iptr advance;
+  char *pedia_file;
+  iptr improvement;
+  iptr unit_type;
+  int y2;
+  u32 x2;
+  iptr advance2;
+  int has_pedia;
+  int related_count;
+  char line_buf[260];
+  int row_height;
+  int list_x2;
+  i8 saved_clip[16];
+  GameFont *font2;
+  
+  get_clip((RECT *)saved_clip);
+  set_clip((RECT *)&content_left);
+  update_controls();
+  fill_background((RECT *)&content_left,2);
+  font2 = (GameFont *)((i8 *)&font_size21);
+  x2 = content_left;
+  row_height = ((GameFont *)((i8 *)&font_size21))->font_cached_height();
+  y2 = content_top + 5;
+  advance = pedia_advance_ids[resize_border];
+  ((Sprite *)
+             (((i8 *)&government_sprites_block.advance_category_icon_sprites) +
+             (char)advances[advance].epoch * 0x3c + (char)advances[advance].category * 0xf0))->draw(
+             (iptr)icon_ctx,(iptr)&pedia_window_block.pedia_window,panel_margin_x + x2,y2);
+  gfx_set_text_color_index(list_text_color);
+  related_count = 0;
+  for (advance2 = 0; advance2 < 100; advance2++) {
+    if ((advances[advance2].preq[0] == advance) || (advances[advance2].preq[1] == advance)) {
+      related_count++;
+    }
+  }
+  for (improvement = 1; improvement < 0x43; improvement++) {
+    if (improvements[improvement].preq == advance) {
+      related_count++;
+    }
+  }
+  for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+    if (unit_types[unit_type].prerequisite == advance) {
+      related_count++;
+    }
+  }
+  draw_advance_requires(font2,advance,y2);
+  y2 += row_height;
+  x2 = content_left + 2;
+  text_clear();
+  text_append_label(0x7a);
+  text_append_colon();
+  measure = font2->text_width((const char *)&map_views_block.text_buffer);
+  list_x2 = x2 + measure + 2;
+  if (related_count != 0) {
+    draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
+  }
+  text_clear();
+  draw_advance_children(font2,advance,list_x2,row_height,y2);
+  draw_advance_improvements(font2,advance,list_x2,row_height,x2,y2);
+  draw_advance_units(font2,advance,related_count,list_x2,row_height,x2,y2);
+  pedia_file = str_pedia_3;
+  measure = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  if (measure != 0) {
+    __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+    crt_strcpy(line_buf,str_describe_4);
+    crt_strcat(line_buf,((i8 *)&lang_file_ext));
+    measure = file_exists((const char *)line_buf);
+    if (measure == 0) {
+      ((Button *)advance_detail_describe_button)->disable();
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      return;
+    }
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  }
+  has_pedia = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  if (has_pedia != 0) {
+    __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+    crt_strcpy(line_buf,str_pedia_4);
+    crt_strcat(line_buf,((i8 *)&lang_file_ext));
+    measure = file_exists((const char *)line_buf);
+    if (measure == 0) {
+      has_pedia = 0;
+    }
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  }
+  str_clear((char *)line_buf);
+  draw_advance_civ_facts(font2,advance,has_pedia,pedia_file,list_x2,row_height,x2,y2);
   update_describe_button(resize_border);
   set_clip((RECT *)saved_clip);
   wnd_blit_surface_rect((iptr)&content_left);
@@ -4598,6 +4903,26 @@ void PediaWindow::show_unit_list(iptr unused_arg)
   return;
 }
 
+/* Part of PediaWindow::draw_unit_page (005ac9ad): one line of the
+   @PEDIAUNITFACTS section, read for each of the 15 unit flags in turn and
+   added to the description when the unit has the flag (mask). */
+void PediaWindow::append_unit_fact(iptr unit_type,u32 mask,char *desc_buf,int &has_text)
+{
+  int line;
+
+  line = (int)text_read_line(1);
+  if ((unit_types[unit_type].flags & mask) != 0) {
+    if (has_text == 0) {
+      crt_strcpy(desc_buf,(char *)(line + 1));
+      has_text = 1;
+    }
+    else {
+      crt_strcat(desc_buf,(char *)(line + 1));
+    }
+    str_append_space((iptr)desc_buf);
+  }
+}
+
 /* 005ac9ad auto */
 void PediaWindow::draw_unit_page()
 
@@ -4625,7 +4950,6 @@ void PediaWindow::draw_unit_page()
   u32 x2;
   int content_width2;
   int value_x;
-  int line;
   i32 unused_b;
   int margin;
   i32 text_color2;
@@ -4761,171 +5085,21 @@ void PediaWindow::draw_unit_page()
   if (measure == 0) {
     has_text = 0;
     str_clear((char *)desc_buf);
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 1) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 2) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 4) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 8) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x10) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x20) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x40) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x80) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x100) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x200) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x400) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x800) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x1000) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x2000) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
-    line = (int)text_read_line(1);
-    if ((unit_types[unit_type].flags & 0x4000) != 0) {
-      if (has_text == 0) {
-        crt_strcpy(desc_buf,(char *)(line + 1));
-        has_text = 1;
-      }
-      else {
-        crt_strcat(desc_buf,(char *)(line + 1));
-      }
-      str_append_space((iptr)desc_buf);
-    }
+    append_unit_fact(unit_type,1,desc_buf,has_text);
+    append_unit_fact(unit_type,2,desc_buf,has_text);
+    append_unit_fact(unit_type,4,desc_buf,has_text);
+    append_unit_fact(unit_type,8,desc_buf,has_text);
+    append_unit_fact(unit_type,0x10,desc_buf,has_text);
+    append_unit_fact(unit_type,0x20,desc_buf,has_text);
+    append_unit_fact(unit_type,0x40,desc_buf,has_text);
+    append_unit_fact(unit_type,0x80,desc_buf,has_text);
+    append_unit_fact(unit_type,0x100,desc_buf,has_text);
+    append_unit_fact(unit_type,0x200,desc_buf,has_text);
+    append_unit_fact(unit_type,0x400,desc_buf,has_text);
+    append_unit_fact(unit_type,0x800,desc_buf,has_text);
+    append_unit_fact(unit_type,0x1000,desc_buf,has_text);
+    append_unit_fact(unit_type,0x2000,desc_buf,has_text);
+    append_unit_fact(unit_type,0x4000,desc_buf,has_text);
     text_close_file();
     x2 = content_left + half_width;
     measure = ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c))->get_height();
