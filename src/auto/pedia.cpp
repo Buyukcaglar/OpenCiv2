@@ -246,7 +246,7 @@ void PediaWindow::update_describe_button(int list_index)
   int topic_id;
   i8 path[260];
   
-  if ((((game.game_flags & 0x80) != 0) && (category != 7)) &&
+  if ((((game.game_flags & GAME_SCENARIO) != 0) && (category != 7)) &&
      (result = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), result != 0)) {
     __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
     crt_strcpy(path,str_describe_2);
@@ -747,7 +747,7 @@ void PediaWindow::draw_terrain_special_bonus(GameFont *font2,iptr terrain2,iptr 
   label = pedia_lookup_text(pedia_window_block.pedia_terrain_names,terrain_index);
   crt_strcpy(base_name,label);
   base_food = (int)(char)terrain_types[terrain3].food;
-  if (terrain3 == 2) {
+  if (terrain3 == TERRAIN_GRASSLAND) {
     shields = '\0';
   }
   else {
@@ -940,7 +940,7 @@ void PediaWindow::draw_terrain_transform_column(GameFont *font2,iptr terrain2,in
     add_link((int)terrain_types[terrain2].transform_to,x2,y2,4,
                        link_rect.left,link_rect.top,link_rect.right,link_rect.bottom);
   }
-  if (terrain2 != 10) {
+  if (terrain2 != TERRAIN_OCEAN) {
     x2 = right_col_x;
     y2 += line_height;
     text_clear();
@@ -956,7 +956,7 @@ void PediaWindow::draw_terrain_transform_column(GameFont *font2,iptr terrain2,in
     terrain_index = (iptr)label_string(label_string_ids[0x2c3]);
     text_append((const char *)terrain_index);
     draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
-    if (((terrain2 == 0) || (terrain2 == 2)) || (terrain2 == 1)) {
+    if (((terrain2 == TERRAIN_DESERT) || (terrain2 == TERRAIN_GRASSLAND)) || (terrain2 == TERRAIN_PLAINS)) {
       y2 += line_height;
       text_clear();
       text_append_label(0x45);
@@ -988,7 +988,7 @@ void PediaWindow::draw_terrain_transform_column(GameFont *font2,iptr terrain2,in
   SetRect(&link_rect,x2,y2,x2 + link_width + 5,y2 + link_height);
   add_link(terrain2 + 0xb,x2,y2,4,link_rect.left,link_rect.top,
                      link_rect.right,link_rect.bottom);
-  if (terrain2 != 2) {
+  if (terrain2 != TERRAIN_GRASSLAND) {
     text_clear();
     y2 += line_height;
     terrain_index = pedia_find_terrain_index(terrain2 + 0x16);
@@ -1072,13 +1072,13 @@ void PediaWindow::draw_terrain_page()
   ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain3 * 0x3c))->draw((iptr)base_sprite_ctx,(iptr)&pedia_window_block.pedia_window,x2,
              y2);
   if (terrain2 < 0xb) {
-    if (terrain2 == 3) {
+    if (terrain2 == TERRAIN_FOREST) {
       ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_sprite_ctx,(iptr)&pedia_window_block.pedia_window,x2,y2);
     }
-    else if (terrain2 == 4) {
+    else if (terrain2 == TERRAIN_HILLS) {
       ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_sprite_ctx,(iptr)&pedia_window_block.pedia_window,x2,y2);
     }
-    else if (terrain2 == 5) {
+    else if (terrain2 == TERRAIN_MOUNTAINS) {
       ((Sprite *)((i8 *)&mountain_sprites))->draw((iptr)mountain_sprite_ctx,(iptr)&pedia_window_block.pedia_window,x2,y2);
     }
   }
@@ -1194,7 +1194,7 @@ void PediaWindow::draw_terrain_page()
   text_append_colon();
   draw_text((iptr)font2,(const char *)&map_views_block.text_buffer,x2,y2,5);
   text_clear();
-  if (terrain2 == 2) {
+  if (terrain2 == TERRAIN_GRASSLAND) {
     shields = '\0';
   }
   else {
@@ -2301,15 +2301,15 @@ void PediaWindow::draw_list_terrain_icon(iptr advance,uint is_selected,int col_b
   ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + base_terrain * 0x3c))->draw((iptr)base_ctx,(iptr)&pedia_window_block.pedia_window,
              icon_x + col_x,row_y);
   if (advance < 0xb) {
-    if (advance == 3) {
+    if (advance == TERRAIN_FOREST) {
       ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
                  row_y);
     }
-    else if (advance == 4) {
+    else if (advance == TERRAIN_HILLS) {
       ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
                  row_y);
     }
-    else if (advance == 5) {
+    else if (advance == TERRAIN_MOUNTAINS) {
       ((Sprite *)((i8 *)&mountain_sprites))->draw((iptr)mountain_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
                  row_y);
     }
@@ -3268,7 +3268,7 @@ void PediaWindow::load_terrain_index(PediaListNode *&prev_node2)
     pedia_terrain_count_2 = 0;
     improvement = 0;
     while (sort_key != -2) {
-      if (improvement != 0x18) {
+      if (improvement != IMP_SUPERMARKET) {
         pedia_terrain_keys[pedia_terrain_count_2] = sort_key;
         pedia_terrain_ids[pedia_terrain_count_2] = improvement;
         node2 = (PediaListNode *)operator_new(0xc);
@@ -4096,74 +4096,74 @@ void PediaWindow::draw_advance_civ_facts(GameFont *font2,iptr advance,int has_pe
   if (measure == 0) {
     line = text_read_line(1);
     if ((has_pedia == 0) &&
-       ((((advance == 0x36 || (advance == 0xf)) || (advance == 0x1f)) ||
-        ((advance == 0x47 || (advance == 0x15)))))) {
+       ((((advance == ADV_MONARCHY || (advance == ADV_COMMUNISM)) || (advance == ADV_FUNDAMENTALISM)) ||
+        ((advance == ADV_REPUBLIC || (advance == ADV_DEMOCRACY)))))) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x12)) {
+    if ((has_pedia == 0) && (advance == ADV_CONSTRUCTION)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x42)) {
+    if ((has_pedia == 0) && (advance == ADV_RADIO)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x43)) {
+    if ((has_pedia == 0) && (advance == ADV_RAILROAD)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x46)) {
+    if ((has_pedia == 0) && (advance == ADV_REFRIGERATION)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x38)) {
+    if ((has_pedia == 0) && (advance == ADV_MYSTICISM)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x18)) {
+    if ((has_pedia == 0) && (advance == ADV_ELECTRONICS)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x59)) {
+    if ((has_pedia == 0) && (advance == ADV_FUTURE_TECH)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x3b)) {
+    if ((has_pedia == 0) && (advance == ADV_NUCLEAR_POWER)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x20)) {
+    if ((has_pedia == 0) && (advance == ADV_FUSION_POWER)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0x3c)) {
+    if ((has_pedia == 0) && (advance == ADV_PHILOSOPHY)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;
     }
     line = text_read_line(1);
-    if ((has_pedia == 0) && (advance == 0xf)) {
+    if ((has_pedia == 0) && (advance == ADV_COMMUNISM)) {
       draw_text((iptr)font2,(const char *)(line + (*line == '^')),
                  x2,y2,5);
       y2 += row_height;

@@ -1903,21 +1903,21 @@ void __cdecl editor_toggle_scenario_flag(void)
 {
   int rc;
   
-  if (((game.game_options & 0x8000) == 0) && ((game.game_flags & 0x10) == 0)) {
+  if (((game.game_options & OPT_CHEAT_MODE) == 0) && ((game.game_flags & GAME_CHEATED) == 0)) {
     rc = popup_game_with_sprite((const char *)&str_reallycheat,(iptr)&popup_info_icon_sprite,0);
     if (rc == 0) {
       return;
     }
-    game.game_flags = game.game_flags | 0x10;
-    game.game_options = game.game_options | 0x8000;
+    game.game_flags = game.game_flags | GAME_CHEATED;
+    game.game_options = game.game_options | OPT_CHEAT_MODE;
     rc = editor_create_scenario_folder();
     if (rc != 0) {
       popup_text((const char *)&str_help_15,(const char *)&str_warning_3);
-      game.game_flags = game.game_flags | 0x80;
+      game.game_flags = game.game_flags | GAME_SCENARIO;
     }
   }
-  else if (((game.game_options & 0x8000) == 0) ||
-          (((game.game_flags & 0x80) == 0 ||
+  else if (((game.game_options & OPT_CHEAT_MODE) == 0) ||
+          (((game.game_flags & GAME_SCENARIO) == 0 ||
            (rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir)), rc == 0)))) {
     rc = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     if (rc == 0) {
@@ -1927,11 +1927,11 @@ void __cdecl editor_toggle_scenario_flag(void)
     if (rc == 0) {
       return;
     }
-    game.game_options = game.game_options | 0x8000;
-    game.game_flags = game.game_flags | 0x80;
+    game.game_options = game.game_options | OPT_CHEAT_MODE;
+    game.game_flags = game.game_flags | GAME_SCENARIO;
   }
   else {
-    game.game_flags = game.game_flags & 0xff7f;
+    game.game_flags = game.game_flags & ~GAME_SCENARIO;
   }
   menu_update_states();
   return;

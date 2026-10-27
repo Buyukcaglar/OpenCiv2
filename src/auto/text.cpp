@@ -713,7 +713,7 @@ void __cdecl str_append_year(iptr dest,uint year)
   int month_neg;
   int month_pos;
   
-  if (((game.game_flags & 0x80) == 0) || (-1 < prefs_game_rules_block.scenario_year_increment[0])) {
+  if (((game.game_flags & GAME_SCENARIO) == 0) || (-1 < prefs_game_rules_block.scenario_year_increment[0])) {
     if ((-1 < (int)year) && (game_language == 0)) {
       str_append_label(dest,1);
       str_append_space(dest);
@@ -1460,7 +1460,7 @@ void __cdecl text_set_unit_info_args(iptr unit)
   text_clear();
   adjective = civ_get_adjective((int)units[unit].owner);
   text_append((const char *)adjective);
-  if ((units[unit].flags & 0x2000) != 0) {
+  if ((units[unit].flags & UNITF_VETERAN) != 0) {
     text_append_space();
     text_append_label(0xd);
   }

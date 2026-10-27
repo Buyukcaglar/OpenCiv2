@@ -275,7 +275,7 @@ static void save_setup_scenario_leaders(void)
   int gender;
 
   for (civ = 1; civ < 8; civ = civ + 1) {
-    if ((civs[civ].flags & 0x200) == 0) {
+    if ((civs[civ].flags & CIVF_FEMALE_LEADER) == 0) {
       leaders[civs[civ].tribe].female = 0;
     }
     else {
@@ -467,23 +467,23 @@ int __cdecl save_read_game(char *path)
   result = save_load_gpk(version & 0xffff,(iptr)_File);
   if (result == 0) goto close_file;
   if (game.multiplayer != 0) {
-    game.game_options = game.game_options & 0xffff7fff;
+    game.game_options = game.game_options & ~OPT_CHEAT_MODE;
   }
-  if (((game.game_flags & 0x40) == 0) && ((game.game_flags & 0x80) == 0)) {
+  if (((game.game_flags & GAME_SAVED_AS_SCENARIO) == 0) && ((game.game_flags & GAME_SCENARIO) == 0)) {
     is_scenario = 0;
   }
   else {
     is_scenario = 1;
   }
   if (is_scenario != 0) {
-    game.game_flags = game.game_flags | 0x80;
+    game.game_flags = game.game_flags | GAME_SCENARIO;
   }
-  if ((game.game_flags & 0x40) != 0) {
-    game.game_options = game.game_options & 0xffff7fff;
+  if ((game.game_flags & GAME_SAVED_AS_SCENARIO) != 0) {
+    game.game_options = game.game_options & ~OPT_CHEAT_MODE;
     game.reveal_map = 0;
-    game.game_flags = game.game_flags & 0xffef;
+    game.game_flags = game.game_flags & ~GAME_CHEATED;
   }
-  game.game_flags = game.game_flags & 0xffbf;
+  game.game_flags = game.game_flags & ~GAME_SAVED_AS_SCENARIO;
   result = map_read((iptr)_File,0);
   if (((result != 0) ||
       (count_read = _fread(map_coarse[0],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0)) ||
@@ -530,7 +530,7 @@ int __cdecl save_read_game(char *path)
         (count_read = _fread(((i16 *)&map_views_block.mapview_zoom) + idx * 0x1f8,2,1,_File), count_read == 0))))
     goto close_file;
   }
-  if ((is_scenario == 0) && ((game.game_flags & 0x80) == 0)) {
+  if ((is_scenario == 0) && ((game.game_flags & GAME_SCENARIO) == 0)) {
     scenario_reset_params();
   }
   else {
@@ -579,7 +579,7 @@ int __cdecl save_read_game(char *path)
   ui_flush_input();
   leaders_fixup_names();
   saved_player_civ = game.player_civ;
-  if ((is_scenario == 0) && ((game.game_flags & 0x80) == 0)) {
+  if ((is_scenario == 0) && ((game.game_flags & GAME_SCENARIO) == 0)) {
     save_mark_player_names(saved_player_civ,leader_buf);
   }
   else {
@@ -1271,13 +1271,13 @@ uint __cdecl game_turn_start_popups(void)
   ret = (uint)game.turn;
   if (((1 < (int)ret) &&
       (ret = (game.turn + -1) / 0x32, (game.turn + -1) % 0x32 == 0)) &&
-     (((*((char *)&game.game_options + 2)) & 0x10) != 0)) {
+     (((*((char *)&game.game_options + 2)) & (OPT_HIGH_COUNCIL >> 16)) != 0)) {
     best_score = -1;
     for (city_idx = 0; city_idx < game.num_cities; city_idx = city_idx + 1) {
       if ((cities[city_idx].id != 0) &&
          (cities[city_idx].owner == human_civ[0])) {
         score = (int)cities[city_idx].size;
-        has_improv = city_has_improvement(city_idx,1);
+        has_improv = city_has_improvement(city_idx,IMP_PALACE);
         if (has_improv != 0) {
           score = score << 1;
         }
@@ -1314,7 +1314,7 @@ uint __cdecl game_turn_start_popups(void)
       council_show(human_civ[0],0);   /* void; result left in EAX is garbage */
     }
   }
-  if (((*((char *)&game.game_options + 1)) & 1) != 0) {
+  if (((*((char *)&game.game_options + 1)) & (OPT_TUTORIAL >> 8)) != 0) {
     if (game.turn == 1) {
       popup_file_with_sprite(((const char *)((iptr)*(i8 * *)str_ptr_labels_rest)),(const char *)str_firstmove,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
     }
@@ -1326,8 +1326,8 @@ uint __cdecl game_turn_start_popups(void)
     }
     if ((((civs[human_civ[0]].num_cities == 1) &&
          (2 < civs[human_civ[0]].total_city_size)) && (game.turn == 0x23)) &&
-       ((civs[human_civ[0]].units_active[0] == '\0' &&
-        (civs[human_civ[0]].units_in_production[0] == '\0')))) {
+       ((civs[human_civ[0]].units_active[UNIT_SETTLERS] == '\0' &&
+        (civs[human_civ[0]].units_in_production[UNIT_SETTLERS] == '\0')))) {
       ret = city_find_nearest((int)map.width / 2,(int)map.height / 2,human_civ[0],0xffffffff
                                  ,0xffffffff);
       if (-1 < (int)ret) {
@@ -1341,7 +1341,7 @@ uint __cdecl game_turn_start_popups(void)
       ret = (int)game.turn - (int)civs[human_civ[0]].last_city_turn;
       if ((0x18 < (int)ret) &&
          ((ret = (uint)civs[human_civ[0]].num_cities, (int)ret < 6 &&
-          (ret = human_civ[0] * 0x165, civs[human_civ[0]].units_active[0] == '\0')))) {
+          (ret = human_civ[0] * 0x165, civs[human_civ[0]].units_active[UNIT_SETTLERS] == '\0')))) {
         popup_file_with_sprite(((const char *)((iptr)*(i8 * *)str_ptr_labels_rest)),(const char *)str_expand0,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
         ret = (uint)game.turn;
         civs[human_civ[0]].last_city_turn = game.turn;
@@ -1396,11 +1396,11 @@ int __cdecl city_process_pollution(int city)
   
   owner = cities[city].owner;
   pollution_chance = (int)((uint)civs[owner].num_advances * (uint)game.difficulty) >> 1;
-  if (((game.game_flags & 0x80) != 0) && ((prefs_game_rules_block.scenario_flags[0] & 0x40) != 0)) {
+  if (((game.game_flags & GAME_SCENARIO) != 0) && ((prefs_game_rules_block.scenario_flags[0] & 0x40) != 0)) {
     pollution_chance = 0;
     main_menu_block.city_pollution = 0;
   }
-  roll = city_has_improvement(city,0x1d);
+  roll = city_has_improvement(city,IMP_SOLAR_PLANT);
   if (roll != 0) {
     for (; 0xff < pollution_chance; pollution_chance = pollution_chance / 2) {
     }
@@ -1421,14 +1421,14 @@ int __cdecl city_process_pollution(int city)
     check = map_in_bounds(tile_x,roll);
     if (check != 0) {
       improvements2 = tile_improvements(tile_x,roll);
-      if ((improvements2 & 0x82) == 0) {
+      if ((improvements2 & (TILE_CITY | TILE_POLLUTION)) == 0) {
         check = tile_is_ocean(tile_x,roll);
         if (check == 0) {
           tile_add_pollution(tile_x,roll);
           check = tile_visible_to(tile_x,roll,human_civ[0]);
           if (check != 0) {
             ((MapView *)((i8 *)&map_views_block.map_views))->center_on(tile_x,roll);
-            if ((game.message_options & 0x100) == 0) {
+            if ((game.message_options & MSGOFF_POLLUTION) == 0) {
               city_notify_dialog_ex((iptr)str_pollution,city,0,0);
             }
           }
@@ -1437,11 +1437,11 @@ int __cdecl city_process_pollution(int city)
     }
   }
   roll = city * 0xb;
-  if ((cities[city].flags & 1) != 0) {
-    check = city_has_improvement(city,0x15);
+  if ((cities[city].flags & CITYF_DISORDER) != 0) {
+    check = city_has_improvement(city,IMP_NUCLEAR_PLANT);
     roll = 0;
     if (check != 0) {
-      roll = civ_has_advance((int)owner,0x20);
+      roll = civ_has_advance((int)owner,ADV_FUSION_POWER);
       if (roll == 0) {
         roll = 5 - (uint)game.difficulty;
         if (roll < 1) {
@@ -1519,7 +1519,7 @@ static uint hut_tribe_city(uint civ,int x,uint y)
     return 0;
   }
   map_redraw_neighbors_all_views(x,y);
-  civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+  civ = net_send_message(NM_DRAW_AREA,0xff,x,y,0,0,0,0,0,0);
   if (tmp < 0) {
     return civ;
   }
@@ -1543,7 +1543,7 @@ static uint hut_mercenaries(uint civ,int x,uint y)
     popup_game_with_sprite((const char *)str_surprisemercs,(iptr)&popup_info_icon_sprite,0);
   }
   merc_type_a = 0x13;
-  if (game.advance_known_by[11] == '\0') {
+  if (game.advance_known_by[ADV_CHIVALRY] == '\0') {
     tmp = crt_rand_at("unit_enter_hut");
     if (tmp % 3 == 0) {
       merc_type_a = 0x10;
@@ -1551,7 +1551,7 @@ static uint hut_mercenaries(uint civ,int x,uint y)
     else {
       merc_type_a = 0xf;
     }
-    if (game.advance_known_by[64] != '\0') {
+    if (game.advance_known_by[ADV_POLYTHEISM] != '\0') {
       rnd = crt_rand_at("unit_enter_hut");
       sign = (int)rnd >> 0x1f;
       if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
@@ -1559,23 +1559,23 @@ static uint hut_mercenaries(uint civ,int x,uint y)
       }
     }
   }
-  if (game.advance_known_by[55] != '\0') {
+  if (game.advance_known_by[ADV_MONOTHEISM] != '\0') {
     merc_type_a = 0x12;
   }
-  if (game.advance_known_by[42] != '\0') {
+  if (game.advance_known_by[ADV_LEADERSHIP] != '\0') {
     merc_type_a = 0x14;
   }
-  if (game.advance_known_by[17] != '\0') {
+  if (game.advance_known_by[ADV_CONSCRIPTION] != '\0') {
     merc_type_a = 0xb;
   }
   merc_type_b = 8;
-  if (game.advance_known_by[34] == '\0') {
+  if (game.advance_known_by[ADV_GUERRILLA_WARFARE] == '\0') {
     merc_type_b = 7;
   }
-  if (game.advance_known_by[35] == '\0') {
+  if (game.advance_known_by[ADV_GUNPOWDER] == '\0') {
     merc_type_b = 5;
   }
-  if (game.advance_known_by[39] == '\0') {
+  if (game.advance_known_by[ADV_IRON_WORKING] == '\0') {
     merc_type_b = 4;
   }
   rnd = crt_rand_at("unit_enter_hut");
@@ -1596,7 +1596,7 @@ static uint hut_mercenaries(uint civ,int x,uint y)
   }
   else {
     map_redraw_neighbors_all_views(x,y);
-    outcome = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+    outcome = net_send_message(NM_DRAW_AREA,0xff,x,y,0,0,0,0,0,0);
   }
   return outcome;
 }
@@ -1693,15 +1693,15 @@ static uint hut_barbarians(uint civ,int x,uint y)
       owner_byte = tile_terrain(tile_x,tmp);
       rough_type = 5;
       flat_type = 0xf;
-      if (game.advance_known_by[51] != '\0') {
+      if (game.advance_known_by[ADV_METALLURGY] != '\0') {
         rough_type = 7;
         flat_type = 0x13;
       }
-      if (game.advance_known_by[unit_types[22].prerequisite] != '\0') {
+      if (game.advance_known_by[unit_types[UNIT_ARMOR].prerequisite] != '\0') {
         rough_type = 0xb;
         flat_type = 0x15;
       }
-      if (game.advance_known_by[34] != '\0') {
+      if (game.advance_known_by[ADV_GUERRILLA_WARFARE] != '\0') {
         rough_type = 8;
         flat_type = 9;
       }
@@ -1718,7 +1718,7 @@ static uint hut_barbarians(uint civ,int x,uint y)
         map_redraw_tile_all_views(tile_x,tmp);
         rnd = (uint)game.multiplayer;
         if (2 < game.multiplayer) {
-          rnd = net_send_message(0x72,0xff,tile_x,tmp,0,0,0,0,0,0);
+          rnd = net_send_message(NM_DRAW_SQUARE,0xff,tile_x,tmp,0,0,0,0,0,0);
         }
       }
       if (single_spawn) {
@@ -1738,7 +1738,7 @@ static uint hut_nomads(uint civ,int x,uint y)
   if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
     popup_game_with_sprite((const char *)str_surprisenomads,(iptr)&popup_info_icon_sprite,0);
   }
-  tmp = unit_create(0,civ,x,y);
+  tmp = unit_create(UNIT_SETTLERS,civ,x,y);
   if (-1 < tmp) {
     units[tmp].home_city = 0xff;
   }
@@ -1746,7 +1746,7 @@ static uint hut_nomads(uint civ,int x,uint y)
     return 0;
   }
   map_redraw_neighbors_all_views(x,y);
-  civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+  civ = net_send_message(NM_DRAW_AREA,0xff,x,y,0,0,0,0,0,0);
   return civ;
 }
 
@@ -1774,7 +1774,7 @@ uint __cdecl unit_enter_hut(int unit_id)
   outcome = y;
   if ((civ != 0) &&
      (outcome = (int)(char)unit_types[(uint)units[unit_id].type].domain,
-     (int)(char)unit_types[(uint)units[unit_id].type].domain == 0)) {
+     (int)(char)unit_types[(uint)units[unit_id].type].domain == DOMAIN_LAND)) {
     city_find_nearest(x,y,0xffffffff,0xffffffff,0xffffffff);
     tmp = _rand();
     outcome = tmp % 5;
@@ -1835,7 +1835,7 @@ uint __cdecl unit_enter_hut(int unit_id)
         }
         return hut_barbarians(civ,x,y);
       case 4:
-        if ((game.turn == 0) || (tmp = civ_has_advance(civ,0x26), tmp != 0)) {
+        if ((game.turn == 0) || (tmp = civ_has_advance(civ,ADV_INVENTION), tmp != 0)) {
           outcome = 2;
         }
         else {
@@ -1864,7 +1864,7 @@ uint __cdecl unit_enter_hut(int unit_id)
         }
         continue;
       case 5:
-        if (game.advance_known_by[28] == '\0') {
+        if (game.advance_known_by[ADV_EXPLOSIVES] == '\0') {
           settler_count = 0;
           for (unit_id = 0; unit_id < game.num_units; unit_id = unit_id + 1) {
             if ((((units[unit_id].id != 0) &&

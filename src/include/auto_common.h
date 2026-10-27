@@ -17,6 +17,7 @@
 #define long int
 #include "civ2types.h"
 #include "civ2classes.h"
+#include "enums.h"
 #include "../data/gamedata.h"
 
 /* new T[n] (MSVC): the element count is kept in the 4 bytes before the

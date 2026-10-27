@@ -99,7 +99,7 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
         choice2 = dlg.show_modal( 0);
         if (-1 < choice2) {
             civ_set_government(civ2, choice2);
-            snd_play_effect(0x14, 1, 0, 0);
+            snd_play_effect(SND_NEWGOVT_20, 1, 0, 0);
             text_arg = (i32)civ_leader_name(civ2);
             text_set_string_arg(0, (const char *)text_arg);
             text_arg = civ_leader_title(civ2);
@@ -108,7 +108,7 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
             text_set_string_arg(2, (const char *)text_arg);
             text_set_label_arg(3, government_names[choice2]);
             popup_game_with_sprite((const char *)str_newgovt, (iptr)(((i8 *)&government_sprites_block.government_sprites) + choice2 * 0x3c), 0);
-            if (((4 < choice2) && (((*((char *)&game.game_options + 1)) & 1) != 0)) &&
+            if (((4 < choice2) && (((*((char *)&game.game_options + 1)) & (OPT_TUTORIAL >> 8)) != 0)) &&
                 ((game.field_0c & 0x20) == 0)) {
                 text_set_label_arg(0, government_names[choice2]);
                 popup_file_with_sprite((const char *)(*(i8 * *)str_ptr_labels_rest), (const char *)str_democrats, (iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite, 0);
@@ -117,7 +117,7 @@ void __cdecl civ_select_government_dialog(int civ2, int all_govs)
         }
     }
     else {
-        net_send_message(0x9f, net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,
+        net_send_message(NM_PICK_GOVT, net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,
                            all_govs, 0, 0, 0, 0, 0, 0, 0);
     }
     /* funclet 0055c679 */

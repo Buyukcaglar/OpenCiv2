@@ -118,7 +118,7 @@ void __cdecl minimap_calc_layout(void)
     (*(uint *)&minimap_origin_y) = 0;
   }
   (*(uint *)&minimap_origin_x) = map_wrap_x(map_views_block.map_view_center_x[0] - minimap_view_cols);
-  if ((game.rules & 0x8000) != 0) {
+  if ((game.rules & RULE_FLAT_WORLD) != 0) {
     if (minimap_view_cols < map.width) {
       (*(uint *)&minimap_origin_x) = int_clamp((*(uint *)&minimap_origin_x),0,map_views_block.mapview_layout_width - minimap_view_cols);
     }
@@ -144,7 +144,7 @@ void __cdecl minimap_tile_to_screen(int x,uint y,iptr out_x,iptr out_y)
   int dx;
   
   dx = x - minimap_origin_x;
-  if (((game.rules & 0x8000) == 0) && (dx < 0)) {
+  if (((game.rules & RULE_FLAT_WORLD) == 0) && (dx < 0)) {
     dx += map.width;
   }
   *(uint *)out_y = (y - minimap_origin_y) * minimap_tile_height + minimap_window_block.minimap_margin_y_i32;
@@ -563,14 +563,14 @@ int MapView::scroll_if_near_edge(int x,int y)
   need_scroll = 0;
   view_left = origin_x_uptr;
   view_top = origin_y_uptr;
-  if ((((game.rules & 0x8000) == 0) && (x <= (int)(field_2f8 * 2))) &&
+  if ((((game.rules & RULE_FLAT_WORLD) == 0) && (x <= (int)(field_2f8 * 2))) &&
      ((int)((int)map.width + field_2f8 * -2) <= (int)view_left)) {
     x += map.width;
   }
   view_cols = field_300;
   view_bottom = end_y_u;
   if (margin_x_u == 0) {
-    if ((game.rules & 0x8000) != 0) {
+    if ((game.rules & RULE_FLAT_WORLD) != 0) {
       x = int_clamp(x,2,map.width - 3);
     }
     if ((x <= (int)(view_left + 1)) || ((int)(view_cols * 2 + view_left - 3) <= x)) {
@@ -689,7 +689,7 @@ void __cdecl mapview_on_mousemove(int mouse_x,int mouse_y)
     check = ui_paradrop_cursor_active();
     if (check == 0) {
       cursor_id = 0x201;
-      if ((((((byte)game.game_options & 0x80) != 0) && (moving_units_mode == 1)) &&
+      if ((((((byte)game.game_options & OPT_MOVE_WITH_MOUSE) != 0) && (moving_units_mode == 1)) &&
           (unit = (iptr)game.active_unit, -1 < unit)) &&
          ((dir = view->point_unit_dir(mouse_x,mouse_y,(int)units[unit].x,
                                 (int)units[unit].y), -1 < dir && (dir < 8)))) {
@@ -1395,7 +1395,7 @@ void MapView::update_layout()
   origin_y_uptr = (int)*(short *)((int)&center_x_u + 2) - field_2fc;
   wrapped = map_wrap_x((int)(short)center_x_u - field_2f8);
   origin_x_uptr = wrapped;
-  if (((game.rules & 0x8000) != 0) && (map.width + 1 < (int)(field_2f8 * 2 + origin_x_uptr))
+  if (((game.rules & RULE_FLAT_WORLD) != 0) && (map.width + 1 < (int)(field_2f8 * 2 + origin_x_uptr))
      ) {
     origin_x_uptr = map.width + 1 + field_2f8 * -2;
   }
@@ -1630,15 +1630,15 @@ void MapView::draw_tile_land(iptr surface,int screen_x,int screen_y,iptr x,int y
       }
     }
   }
-  if (terrain2 == 3) {
+  if (terrain2 == TERRAIN_FOREST) {
     ((Sprite *)(((i8 *)&forest_sprites) + variant * 0x3c))->draw((iptr)forest_rect,surface,screen_x,
                screen_y);
   }
-  else if (terrain2 == 5) {
+  else if (terrain2 == TERRAIN_MOUNTAINS) {
     ((Sprite *)(((i8 *)&mountain_sprites) + variant * 0x3c))->draw((iptr)mountain_rect,surface,screen_x,
                screen_y);
   }
-  else if (terrain2 == 4) {
+  else if (terrain2 == TERRAIN_HILLS) {
     ((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + variant * 0x3c))->draw((iptr)hill_rect,surface,screen_x,
                screen_y);
   }
@@ -1659,7 +1659,7 @@ void MapView::draw_tile_land(iptr surface,int screen_x,int screen_y,iptr x,int y
         new_flags = irrig_flags;
         if (((check != 0) &&
             (nbr_improvements = tile_improvements(x2,y2), new_flags = irrig_flags,
-            (nbr_improvements & 4) != 0)) && (new_flags = irrig_flags | 1, (nbr_improvements & 8) != 0)) {
+            (nbr_improvements & TILE_IRRIGATION) != 0)) && (new_flags = irrig_flags | 1, (nbr_improvements & TILE_MINE) != 0)) {
           new_flags = irrig_flags | 3;
         }
         irrig_flags = new_flags;
@@ -1674,7 +1674,7 @@ void MapView::draw_tile_land(iptr surface,int screen_x,int screen_y,iptr x,int y
       }
     }
   }
-  if (((-4 < zoom) && (terrain2 == 2)) &&
+  if (((-4 < zoom) && (terrain2 == TERRAIN_GRASSLAND)) &&
      (check = tile_grassland_has_shield(x,y), check != 0)) {
     ((Sprite *)((i8 *)&grassland_shield_sprite))->draw((iptr)shield_rect,surface,screen_x,screen_y);
   }
@@ -1788,7 +1788,7 @@ void MapView::draw_tile_specials(iptr surface,int screen_x,int screen_y,iptr x,i
     variant = 0;
     for (unit = tile_first_unit(x,y); -1 < unit;
         unit = unit_next_in_stack(unit)) {
-      if (unit_types[units[unit].type].domain == 1) {
+      if (unit_types[units[unit].type].domain == DOMAIN_AIR) {
         variant = 1;
         break;
       }
@@ -1980,7 +1980,7 @@ void MapView::draw_tile_terrain(iptr surface,int screen_x,int screen_y,iptr x,in
   for (dir = 0; dir < 4; dir++) {
     dither_terrain[dir] = 0xffffffff;
   }
-  if (terrain2 == 10) {
+  if (terrain2 == TERRAIN_OCEAN) {
     draw_tile_ocean(surface,screen_x,screen_y,x,y,zoom,half_w,half_h);
   }
   else {
@@ -2031,7 +2031,7 @@ void MapView::draw_tile_city(i32 screen_x,int screen_y,iptr x,iptr y)
       }
     }
     if (((visible2 != 0) || (game.reveal_map != '\0')) ||
-       (((game.game_flags & 0x80) != 0 && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)))) {
+       (((game.game_flags & GAME_SCENARIO) != 0 && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)))) {
       gfx_draw_city((iptr)this,city,0,screen_x,screen_y - half_tile_height_u,
                          (int)(short)zoom_u);
     }
@@ -2133,10 +2133,10 @@ void MapView::draw_tile_units(i32 screen_x,int screen_y,int x,int y)
           if (result == 0) {
             return;
           }
-          if (units[unit].orders == 1) {
+          if (units[unit].orders == ORDER_FORTIFYING) {
             return;
           }
-          if (units[unit].orders == 2) {
+          if (units[unit].orders == ORDER_FORTIFIED) {
             return;
           }
         }
@@ -2193,7 +2193,7 @@ void MapView::draw_tile(iptr x,iptr y,int civ)
       draw_tile_city(screen_x,screen_y,x,y);
       draw_tile_units(screen_x,screen_y,x,y);
     }
-    if (((byte)game.game_options & 0x20) != 0) {
+    if (((byte)game.game_options & OPT_MAP_GRID) != 0) {
       near_city = 0;
       apply_zoom();
       for (city = 0; city < game.num_cities; city++) {

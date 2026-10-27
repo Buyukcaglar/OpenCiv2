@@ -47,135 +47,135 @@ static void ai_advance_tribe_bonus(iptr civ, iptr advance,
 {
   switch(civs[civ].tribe) {
   case 0:
-    if (((advance == 0x27) || (advance == 8)) || (advance == 0x56)) {
+    if (((advance == ADV_IRON_WORKING) || (advance == ADV_BRONZE_WORKING)) || (advance == ADV_WARRIOR_CODE)) {
       value += 2;
     }
-    if (advance == 0x37) {
+    if (advance == ADV_MONOTHEISM) {
       value--;
     }
     break;
   case 1:
-    if (advance == 0xc) {
+    if (advance == ADV_CODE_OF_LAWS) {
       value++;
     }
     break;
   case 2:
-    if (advance == 6) {
+    if (advance == ADV_BANKING) {
       value++;
     }
-    if (advance == 0x52) {
+    if (advance == ADV_THEOLOGY) {
       value++;
     }
-    if (advance == 0x3c) {
+    if (advance == ADV_PHILOSOPHY) {
       value++;
     }
     break;
   case 3:
-    if (advance == 0x2f) {
+    if (advance == ADV_MASONRY) {
       value += 2;
     }
     break;
   case 4:
-    if (advance == 0x15) {
+    if (advance == ADV_DEMOCRACY) {
       value += 2;
     }
-    if (advance == 0xf) {
+    if (advance == ADV_COMMUNISM) {
       value--;
     }
-    if (advance == 0x49) {
+    if (advance == ADV_ROCKETRY) {
       value++;
     }
-    if (advance == 0x10) {
+    if (advance == ADV_COMPUTERS) {
       value++;
     }
-    if (advance == 0x2a) {
+    if (advance == ADV_LEADERSHIP) {
       value++;
     }
     break;
   case 5:
-    if (advance == 0x40) {
+    if (advance == ADV_POLYTHEISM) {
       value++;
     }
-    if (advance == 8) {
+    if (advance == ADV_BRONZE_WORKING) {
       value++;
     }
-    if (advance == 1) {
+    if (advance == ADV_ALPHABET) {
       value++;
     }
-    if (advance == 0x2e) {
+    if (advance == ADV_MAP_MAKING) {
       value++;
     }
-    if (advance == 0x37) {
+    if (advance == ADV_MONOTHEISM) {
       value--;
     }
-    if (advance == 0x3c) {
+    if (advance == ADV_PHILOSOPHY) {
       value += 2;
     }
     break;
   case 6:
-    if (advance == 0x40) {
+    if (advance == ADV_POLYTHEISM) {
       value += 2;
     }
-    if (advance == 0x24) {
+    if (advance == ADV_HORSEBACK_RIDING) {
       value++;
     }
-    if (advance == 0x38) {
+    if (advance == ADV_MYSTICISM) {
       value++;
     }
-    if (advance == 9) {
+    if (advance == ADV_CEREMONIAL_BURIAL) {
       value++;
     }
-    if (advance == 0x37) {
+    if (advance == ADV_MONOTHEISM) {
       value--;
     }
     break;
   case 7:
-    if (advance == 0xf) {
+    if (advance == ADV_COMMUNISM) {
       value += 2;
     }
-    if (advance == 0x3c) {
+    if (advance == ADV_PHILOSOPHY) {
       value++;
     }
-    if (advance == 0x22) {
+    if (advance == ADV_GUERRILLA_WARFARE) {
       value++;
     }
     break;
   case 8:
-    if (advance == 0x40) {
+    if (advance == ADV_POLYTHEISM) {
       value += 2;
     }
-    if (advance == 0x24) {
+    if (advance == ADV_HORSEBACK_RIDING) {
       value++;
     }
-    if (advance == 0x38) {
+    if (advance == ADV_MYSTICISM) {
       value++;
     }
-    if (advance == 9) {
+    if (advance == ADV_CEREMONIAL_BURIAL) {
       value++;
     }
-    if (advance == 8) {
+    if (advance == ADV_BRONZE_WORKING) {
       value--;
     }
-    if (advance == 0x27) {
+    if (advance == ADV_IRON_WORKING) {
       value--;
     }
     break;
   case 9:
-    if (advance == 0x2a) {
+    if (advance == ADV_LEADERSHIP) {
       value++;
     }
-    if (advance == 0x51) {
+    if (advance == ADV_TACTICS) {
       value++;
     }
-    if (advance == 0x11) {
+    if (advance == ADV_CONSCRIPTION) {
       value++;
     }
     break;
   case 10:
-    if (advance == 0x23) {
+    if (advance == ADV_GUNPOWDER) {
       value -= 2;
     }
-    if (advance == 0x37) {
+    if (advance == ADV_MONOTHEISM) {
       value--;
     }
     break;
@@ -183,12 +183,12 @@ static void ai_advance_tribe_bonus(iptr civ, iptr advance,
     if (free_continent != 0) {
       value -= expand_bonus;
     }
-    if (advance == 0x23) {
+    if (advance == ADV_GUNPOWDER) {
       value++;
     }
     break;
   case 0xc:
-    if (advance == 0x37) {
+    if (advance == ADV_MONOTHEISM) {
       value++;
     }
     if (expand_bonus != 0) {
@@ -196,15 +196,15 @@ static void ai_advance_tribe_bonus(iptr civ, iptr advance,
     }
     break;
   case 0xf:
-    if (advance == 0x4f) {
+    if (advance == ADV_STEEL) {
       value++;
     }
-    if (advance == 0x34) {
+    if (advance == ADV_MINIATURIZATION) {
       value++;
     }
     break;
   case 0x10:
-    if (advance == 0x2e) {
+    if (advance == ADV_MAP_MAKING) {
       value++;
     }
     break;
@@ -212,30 +212,30 @@ static void ai_advance_tribe_bonus(iptr civ, iptr advance,
     if (1 < expand_bonus) {
       value++;
     }
-    if (advance == 0x37) {
+    if (advance == ADV_MONOTHEISM) {
       value++;
     }
     break;
   case 0x12:
   case 0x13:
-    if (advance == 0x40) {
+    if (advance == ADV_POLYTHEISM) {
       value += 2;
     }
-    if (advance == 0x24) {
+    if (advance == ADV_HORSEBACK_RIDING) {
       value++;
     }
-    if (advance == 0x38) {
+    if (advance == ADV_MYSTICISM) {
       value++;
     }
-    if (advance == 9) {
+    if (advance == ADV_CEREMONIAL_BURIAL) {
       value++;
     }
-    if (advance == 0x37) {
+    if (advance == ADV_MONOTHEISM) {
       value--;
     }
     break;
   case 0x14:
-    if (advance == 0x24) {
+    if (advance == ADV_HORSEBACK_RIDING) {
       value += 2;
     }
   }
@@ -252,8 +252,8 @@ static void ai_advance_ai_bonus(iptr advance, iptr civ, int &check,
   iptr improvement;
   iptr wonder;
   if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
-    if ((game.human_players & game.advance_known_by[0x4c]) != 0) {
-      has_prereq = advance_has_prereq(0x20,advance);
+    if ((game.human_players & game.advance_known_by[ADV_SPACE_FLIGHT]) != 0) {
+      has_prereq = advance_has_prereq(ADV_FUSION_POWER,advance);
       if (has_prereq != 0) {
         value += 2;
       }
@@ -264,17 +264,17 @@ static void ai_advance_ai_bonus(iptr advance, iptr civ, int &check,
       }
     }
     city2 = value;
-    if ((((-1 < unit_types[0x1c].prerequisite) &&
-         ((game.human_players & game.advance_known_by[unit_types[0x1c].prerequisite]) != 0)) &&
-        (check = advance_has_prereq((int)unit_types[0x1c].prerequisite,advance), check != 0)) &&
-       (city2 = value + 2, unit_types[0x1c].prerequisite == advance)) {
+    if ((((-1 < unit_types[UNIT_BOMBER].prerequisite) &&
+         ((game.human_players & game.advance_known_by[unit_types[UNIT_BOMBER].prerequisite]) != 0)) &&
+        (check = advance_has_prereq((int)unit_types[UNIT_BOMBER].prerequisite,advance), check != 0)) &&
+       (city2 = value + 2, unit_types[UNIT_BOMBER].prerequisite == advance)) {
       city2 = value + 5;
     }
     value = city2;
     for (wonder = 0; wonder < 0x1c; wonder++) {
       if (wonder_expires[wonder] == advance) {
         city2 = civ_has_wonder(civ,wonder);
-        if ((city2 != 0) && (advance != 0x25)) {
+        if ((city2 != 0) && (advance != ADV_INDUSTRIALIZATION)) {
           value -= 2;
         }
         city2 = wonder_get_city(wonder);
@@ -299,12 +299,12 @@ static void ai_advance_expansion(iptr civ, iptr advance, int &city2,
   bool human_contact;
   bool contested;
   iptr settler_prereq;
-  settler_prereq = advance_has_prereq((int)unit_types[0x20].prerequisite,advance);
+  settler_prereq = advance_has_prereq((int)unit_types[UNIT_TRIREME].prerequisite,advance);
   if (settler_prereq == 0) {
-    city2 = advance_has_prereq((int)unit_types[0x21].prerequisite,advance);
+    city2 = advance_has_prereq((int)unit_types[UNIT_CARAVEL].prerequisite,advance);
     if ((city2 == 0) &&
-       (city2 = advance_has_prereq((int)unit_types[0x23].prerequisite,advance), city2 == 0)) {
-      city2 = advance_has_prereq((int)unit_types[0x2b].prerequisite,advance);
+       (city2 = advance_has_prereq((int)unit_types[UNIT_FRIGATE].prerequisite,advance), city2 == 0)) {
+      city2 = advance_has_prereq((int)unit_types[UNIT_TRANSPORT].prerequisite,advance);
       if (city2 == 0) {
         expand_bonus = 0;
       }
@@ -319,7 +319,7 @@ static void ai_advance_expansion(iptr civ, iptr advance, int &city2,
   else {
     expand_bonus = 3;
   }
-  if ((game.game_flags & 4) != 0) {
+  if ((game.game_flags & GAME_LARGE_MAP) != 0) {
     expand_bonus = expand_bonus << 1;
   }
   if (expand_bonus != 0) {
@@ -346,7 +346,7 @@ static void ai_advance_expansion(iptr civ, iptr advance, int &city2,
       }
     }
     if (free_continent == 0) {
-      if ((!human_contact) || ((game.game_flags & 4) != 0)) {
+      if ((!human_contact) || ((game.game_flags & GAME_LARGE_MAP) != 0)) {
         value++;
       }
     }
@@ -378,7 +378,7 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
   if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) && (-1 < civilize_mod)) {
     for (civ2 = 1; civ2 < 8; civ2++) {
       if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
-          (((byte)(civs[civ].treaties[civ2] >> 8) & 0x20) != 0)) &&
+          (((byte)(civs[civ].treaties[civ2] >> 8) & (TREATY_WAR >> 8)) != 0)) &&
          (civs[civ].num_advances < civs[civ2].num_advances)) {
         for (continent = 1; continent < 0x3f; continent++) {
           if ((*(char *)&civs[civ].continent_cities[continent] != '\0') &&
@@ -396,12 +396,12 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
   }
   value = advances[advance].civilized_mod * civilize_mod + (int)advances[advance].ai_value;
   ai_advance_expansion(civ, advance, city2, free_continent, continent, civ2, expand_bonus, value);
-  if (improvements[0x22].preq == advance) {
+  if (improvements[IMP_PORT_FACILITY].preq == advance) {
     value = value + ((int)((int)civs[civ].num_ships +
                               ((int)civs[civ].num_ships >> 0x1f & 3U)) >> 2);
   }
   ai_advance_ai_bonus(advance, civ, check, city2, value);
-  if ((improvements[9].preq == advance) || (improvements[0x17].preq == advance)) {
+  if ((improvements[IMP_AQUEDUCT].preq == advance) || (improvements[IMP_SEWER_SYSTEM].preq == advance)) {
     max_size = 0;
     for (city = 0; city < game.num_cities; city++) {
       city2 = max_size;
@@ -412,7 +412,7 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
       max_size = city2;
     }
     size_limit = cosmic.sewer_size;
-    if (improvements[9].preq == advance) {
+    if (improvements[IMP_AQUEDUCT].preq == advance) {
       size_limit = cosmic.aqueduct_size;
     }
     size_needed = (uint)size_limit;
@@ -421,19 +421,19 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
     }
   }
   if ((-1 < leaders[civs[civ].tribe].civilize) &&
-     (city2 = civ_has_advance(civ,0x55), city2 != 0)) {
-    city2 = advance_has_prereq(0x10,advance);
+     (city2 = civ_has_advance(civ,ADV_UNIVERSITY), city2 != 0)) {
+    city2 = advance_has_prereq(ADV_COMPUTERS,advance);
     if (city2 != 0) {
       value = value + leaders[civs[civ].tribe].civilize + 1;
     }
-    if (advance == 0x10) {
+    if (advance == ADV_COMPUTERS) {
       value += 2;
     }
   }
-  check = civ_has_advance(civ,0x26);
+  check = civ_has_advance(civ,ADV_INVENTION);
   city2 = value;
-  if ((check != 0) && (check = advance_has_prereq(0x25,advance), check != 0)) {
-    check = civ_has_advance(civ,0x39);
+  if ((check != 0) && (check = advance_has_prereq(ADV_INDUSTRIALIZATION,advance), check != 0)) {
+    check = civ_has_advance(civ,ADV_NAVIGATION);
     city2 = value + 1;
     if (check != 0) {
       city2 = value + 2;
@@ -484,7 +484,7 @@ i32 __cdecl ai_find_road_link_tile(iptr city)
         if (((cities[city2].id != 0) && (city != city2)) &&
            ((cities[city2].owner == civ ||
             ((pass != 0 &&
-             ((*(byte *)&civs[civ].treaties[cities[city2].owner] & 0xc) != 0)))))) {
+             ((*(byte *)&civs[civ].treaties[cities[city2].owner] & (TREATY_PEACE | TREATY_ALLIANCE)) != 0)))))) {
           x = (int)cities[city2].x;
           y = (int)cities[city2].y;
           x2 = (int)cities[city].x;
@@ -506,16 +506,16 @@ i32 __cdecl ai_find_road_link_tile(iptr city)
               dir = tile_city_owner(x2,y2);
               if (dir < 0) {
                 tile_imps = tile_improvements(x2,y2);
-                if ((tile_imps & 0x10) == 0) {
+                if ((tile_imps & TILE_ROAD) == 0) {
                   tile = (byte *)tile_at(x2,y2);
-                  if (((*tile & 0x80) == 0) || (dir = civ_has_advance(civ,7), dir != 0))
+                  if (((*tile & 0x80) == 0) || (dir = civ_has_advance(civ,ADV_BRIDGE_BUILDING), dir != 0))
                   {
                     road_ok = false;
                   }
                 }
                 else {
                   tile_imps = tile_improvements(x2,y2);
-                  if (((tile_imps & 0x20) == 0) && (dir = civ_has_advance(civ,0x43), dir != 0))
+                  if (((tile_imps & TILE_RAILROAD) == 0) && (dir = civ_has_advance(civ,ADV_RAILROAD), dir != 0))
                   {
                     road_ok = false;
                   }
@@ -549,7 +549,7 @@ int __cdecl ai_unit_role(iptr unit)
   int ai_role;
   
   ai_role = (int)(char)unit_types[units[unit].type].role;
-  if ((ai_role == 5) && ((units[unit].flags & 0x200) != 0)) {
+  if ((ai_role == ROLE_SETTLE) && ((units[unit].flags & UNITF_AI_COLONIST) != 0)) {
     ai_role = 0x15;
   }
   return ai_role;
@@ -594,7 +594,7 @@ iptr __cdecl ai_ship_best_landing_dir(iptr unit)
             (owner_civ = tile_unit_owner(x,y), owner_civ < 0)) &&
            (((owner_civ = tile_owner_or_fertility(x,y), 7 < owner_civ ||
              (owner_byte = (byte)owner_civ, (1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0)) ||
-            ((*(byte *)&civs[civ].treaties[owner_civ] & 6) == 0)))) {
+            ((*(byte *)&civs[civ].treaties[owner_civ] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0)))) {
           owner_civ = tile_city_owner(x,y);
           if (((-1 < owner_civ) && (owner_civ != civ)) &&
              ((y = tile_unit_owner(x,y), y < 0 &&
@@ -720,13 +720,13 @@ static int ai_assess_unit_goal(AiCivAssess *o)
   best_dist = 9999;
   best_goal = -1;
   ai_role = ai_unit_role(unit);
-  if (((((ai_role != 7) || (units[unit].orders != 11)) ||
+  if (((((ai_role != 7) || (units[unit].orders != ORDER_GOTO)) ||
        (y = map_in_bounds((int)units[unit].goto_x,(int)units[unit].goto_y)
        , y == 0)) ||
       ((civ2 = tile_city_owner((int)units[unit].goto_x,
                                    (int)units[unit].goto_y), (int)civ2 < 0 ||
        (civ == civ2)))) &&
-     ((unit_types[units[unit].type].role != '\0' ||
+     ((unit_types[units[unit].type].role != ROLE_ATTACK ||
       (unit_types[units[unit].type].attack != '\0')))) {
     for (goal = 0; goal < 0x30; goal++) {
       if (((civs[civ].ai_goals[goal].role != -1) &&
@@ -735,21 +735,21 @@ static int ai_assess_unit_goal(AiCivAssess *o)
                                 (int)civs[civ].ai_goals[goal].y), y != 0)) {
         if (((civs[civ].ai_goals[goal].role == 18) &&
             (ai_role == 2)) &&
-           ((unit_types[units[unit].type].flags & 0x4000) != 0)) {
+           ((unit_types[units[unit].type].flags & UTYPE_SPOT_SUBMARINES) != 0)) {
           ai_role = 0x12;
         }
         if (((civs[civ].ai_goals[goal].role == ai_role) &&
             (y = tile_landmass((int)civs[civ].ai_goals[goal].x,
                                    (int)civs[civ].ai_goals[goal].y), y == continent))
-           || (((unit_types[units[unit].type].domain == 1 &&
-                ((char)unit_types[0x1c].attack <=
+           || (((unit_types[units[unit].type].domain == DOMAIN_AIR &&
+                ((char)unit_types[UNIT_BOMBER].attack <=
                  (char)unit_types[units[unit].type].attack)) &&
                ((civs[civ].ai_goals[goal].role == ai_role ||
-                (civs[civ].ai_goals[goal].role == 2)))))) {
+                (civs[civ].ai_goals[goal].role == ROLE_NAVAL_SUPERIORITY)))))) {
           goal_dist = map_distance_diag(x2,y2,
                                         (int)civs[civ].ai_goals[goal].x,
                                         (int)civs[civ].ai_goals[goal].y);
-          if (unit_types[units[unit].type].domain == 1) {
+          if (unit_types[units[unit].type].domain == DOMAIN_AIR) {
             if (unit_types[units[unit].type].range == 1) {
               if (!(goal_dist <=
                     (int)(char)unit_types[units[unit].type].move /
@@ -768,22 +768,22 @@ static int ai_assess_unit_goal(AiCivAssess *o)
           else {
             goal_dist = ((goal_weight[goal] /
                         ((civs[civ].ai_goals[goal].role ==
-                              '\0') + 1)) * goal_dist) /
+                              ROLE_ATTACK) + 1)) * goal_dist) /
                        (civs[civ].ai_goals[goal].priority + 1);
           }
-          if (((units[unit].orders != 1) &&
-              (units[unit].orders != 2)) ||
+          if (((units[unit].orders != ORDER_FORTIFYING) &&
+              (units[unit].orders != ORDER_FORTIFIED)) ||
              ((1 < civs[civ].ai_goals[goal].priority &&
               (((goal_dist <=
                  civs[civ].ai_goals[goal].priority * city6 ||
                 (goal_weight[goal] /
-                 ((civs[civ].ai_goals[goal].role == '\0')
+                 ((civs[civ].ai_goals[goal].role == ROLE_ATTACK)
                       + 1) == city6)) &&
                (y = tile_city_owner(x2,y2), y < 0)))))) {
             if (((is_human != 0) && (goal_weight[goal] == city6)) &&
                (tile_imps = tile_improvements((int)civs[civ].ai_goals[goal].x,
                                            (int)civs[civ].ai_goals[goal].y),
-               (tile_imps & 0x80) != 0)) {
+               (tile_imps & TILE_POLLUTION) != 0)) {
               goal_dist = (int)(goal_dist + (goal_dist >> 0x1f & 7U)) >> 3;
             }
             if ((goal_dist < best_dist) &&
@@ -800,8 +800,8 @@ static int ai_assess_unit_goal(AiCivAssess *o)
       if ((civs[civ].ai_goals[best_goal].x == units[unit].x)
          && (civs[civ].ai_goals[best_goal].y == units[unit].y)
          ) {
-        units[unit].orders = 16;
-        units[unit].flags = units[unit].flags | 0x80;
+        units[unit].orders = ORDER_AI_IDLE;
+        units[unit].flags = units[unit].flags | UNITF_GOAL_REACHED;
         return AI_ASSESS_CONTINUE;
       }
       if ((ai_role == 1) &&
@@ -809,16 +809,16 @@ static int ai_assess_unit_goal(AiCivAssess *o)
          ((byte)imps & 0x42) == 0x40)) {
         if ((*(byte *)&civs[civ].ai_goals[best_goal].priority & 1) == 0)
         return AI_ASSESS_CONTINUE;
-        civ_add_standing_goal(civ,(int)units[unit].x,(int)units[unit].y,1,2);
+        civ_add_standing_goal(civ,(int)units[unit].x,(int)units[unit].y,ROLE_DEFEND,2);
       }
-      if (((unit_types[units[unit].type].flags & 0x100) == 0) ||
+      if (((unit_types[units[unit].type].flags & UTYPE_PARADROP) == 0) ||
          (owner_civ = tile_city_owner((int)civs[civ].ai_goals[best_goal].x,
                                    (int)civs[civ].ai_goals[best_goal].y), owner_civ == civ))
       {
         unit_set_goto(unit,0x31,
                            (int)civs[civ].ai_goals[best_goal].x,
                            (int)civs[civ].ai_goals[best_goal].y);
-        if ((unit_types[units[unit].type].role == 5) &&
+        if ((unit_types[units[unit].type].role == ROLE_SETTLE) &&
            (y = tile_city_owner((int)civs[civ].ai_goals[best_goal].x,
                                     (int)civs[civ].ai_goals[best_goal].y), -1 < y)) {
           civs[civ].ai_goals[best_goal].priority = 0;
@@ -843,30 +843,30 @@ static int ai_assess_scenario_unit(AiCivAssess *o)
   i32 &imps = o->imps; uptr &unit = o->unit; int &y2 = o->y2;
   int &scenario_mode = o->scenario_mode;
   if (((scenario_mode != 0) &&
-      (((units[unit].type == 22 || (units[unit].type == '\n')) &&
+      (((units[unit].type == UNIT_ARMOR || (units[unit].type == UNIT_ALPINE_TROOPS)) &&
        (0x27 < y2)))) && (y2 < 0x5d)) {
     saved_flags = units[unit].flags;
     if (((game.turn == 1) || (owner_civ = tile_owner(0x2b,0x35), owner_civ != civ)) ||
-       ((units[unit].type == '\n') &&
+       ((units[unit].type == UNIT_ALPINE_TROOPS) &&
         (imps = 2, unit2 = tile_first_unit(0x2b,0x35),
          y = unit_stack_sum(unit2,imps), y < 3))) {
       unit_set_goto(unit,0x31,0x2b,0x35);
-      units[unit].flags = units[unit].flags & 0xfffc;
+      units[unit].flags = units[unit].flags & ~(UNITF_SCRATCH | UNITF_SPY_ON_MISSION);
       return AI_ASSESS_CONTINUE;
     }
-    if (((units[unit].type == 22) && (3 < game.turn)) && (game.turn < 0xd)) {
-      if ((units[unit].flags & 3) == 0) {
+    if (((units[unit].type == UNIT_ARMOR) && (3 < game.turn)) && (game.turn < 0xd)) {
+      if ((units[unit].flags & (UNITF_SCRATCH | UNITF_SPY_ON_MISSION)) == 0) {
         y = crt_rand_at("ai_civ_turn_assess");
         if (y % 3 == 0) {
-          units[unit].flags = units[unit].flags | 2;
+          units[unit].flags = units[unit].flags | UNITF_SPY_ON_MISSION;
         }
         else {
-          units[unit].flags = units[unit].flags | 1;
+          units[unit].flags = units[unit].flags | UNITF_SCRATCH;
         }
       }
-      if (((units[unit].flags & 1) == 0) ||
+      if (((units[unit].flags & UNITF_SCRATCH) == 0) ||
          (owner_civ = tile_owner(0x4c,0x22), owner_civ == civ)) {
-        if ((units[unit].flags & 2) != 0) {
+        if ((units[unit].flags & UNITF_SPY_ON_MISSION) != 0) {
           owner_civ = tile_owner(0x3e,0x48);
           if (owner_civ == civ) {
             owner_civ = tile_owner(0x43,0x5b);
@@ -904,9 +904,9 @@ static int ai_assess_unit_upgrade(AiCivAssess *o)
      ((((-1 < unit_types[units[unit].type].obsolete_by &&
         (y = civ_has_advance(civ,(int)unit_types[units[unit].type].
                                                  obsolete_by), y != 0)) ||
-       (((1 < civs[civ].government &&
+       (((GOV_DESPOTISM < civs[civ].government &&
          (*(char *)&civs[civ].continent_policy[continent] == 4)) &&
-        (units[unit].type == 2)))) &&
+        (units[unit].type == UNIT_WARRIORS)))) &&
       ((y = tile_zoc_unit_adjacent(x2,y2,civ), y == 0 &&
        (((y = tile_city_owner(x2,y2), y < 0 ||
          (y = unit_stack_sum(unit,2), 1 < y)) &&
@@ -937,7 +937,7 @@ static int ai_assess_unit_upgrade(AiCivAssess *o)
            unit_types[unit_type].prerequisite) &&
          (unit_types[units[unit].type].role == unit_types[unit_type].role)) {
         units[unit].type = (u8)unit_type;
-        units[unit].flags = units[unit].flags & 0xdfff;
+        units[unit].flags = units[unit].flags & ~UNITF_VETERAN;
         break;
       }
     }
@@ -969,7 +969,7 @@ static void ai_assess_continent_policy(AiCivAssess *o)
       (4 < civs[game.civ_by_rank[7]].num_cities)) && (0x96 < game.turn)) {
     base_density = 7;
   }
-  if ((game.game_flags & 4) != 0) {
+  if ((game.game_flags & GAME_LARGE_MAP) != 0) {
     base_density++;
   }
   city6 = ((uint)civs[civ].continent_military[continent] + rival_military) * 2;
@@ -986,7 +986,7 @@ static void ai_assess_continent_policy(AiCivAssess *o)
   {
     crowded = 1;
   }
-  city6 = civ_has_advance(civ,0x2e);
+  city6 = civ_has_advance(civ,ADV_MAP_MAKING);
   if (city6 == 0) {
     crowded = 0;
   }
@@ -1037,7 +1037,7 @@ static void ai_assess_continent_rivals(AiCivAssess *o)
         (*(char *)&civs[civ2].continent_cities[continent] != '\0')))) {
       if (civ != civ2) {
         city6 = diplo_is_hostile(civ,civ2);
-        if ((city6 != 0) || ((*(byte *)&civs[civ].treaties[civ2] & 0x20) != 0))
+        if ((city6 != 0) || ((*(byte *)&civs[civ].treaties[civ2] & TREATY_HOSTILE_INTENT) != 0))
         {
           if ((civs[civ2].continent_military[continent] <
                civs[civ].continent_attack[continent]) ||
@@ -1052,7 +1052,7 @@ static void ai_assess_continent_rivals(AiCivAssess *o)
         }
         if ((((*(short *)&civs[civ2].continent_military[continent] != 0) &&
              ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
-            ((*(byte *)&civs[civ].treaties[civ2] & 6) != 0)) &&
+            ((*(byte *)&civs[civ].treaties[civ2] & (TREATY_CEASEFIRE | TREATY_PEACE)) != 0)) &&
            (((int)(uint)civs[civ].continent_attack[continent] >> 1) +
             (uint)civs[civ].continent_military[continent] <
             (uint)civs[civ2].continent_attack[continent])) {
@@ -1062,9 +1062,9 @@ static void ai_assess_continent_rivals(AiCivAssess *o)
       rival_military += (uint)civs[civ2].continent_military[continent];
       rival_cities += (uint)civs[civ2].continent_cities[continent];
       if (civ != civ2) {
-        if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
+        if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) == 0) {
           if (*(char *)&civs[civ2].continent_cities[continent] != '\0') {
-            if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
+            if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_PEACE) == 0) {
               civs[civ].continent_flags[continent] =
                    civs[civ].continent_flags[continent] | 1;
             }
@@ -1074,7 +1074,7 @@ static void ai_assess_continent_rivals(AiCivAssess *o)
             }
           }
           if (*(short *)&civs[civ2].continent_military[continent] != 0) {
-            if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
+            if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_PEACE) == 0) {
               civs[civ].continent_flags[continent] =
                    civs[civ].continent_flags[continent] | 4;
             }
@@ -1134,7 +1134,7 @@ static void ai_assess_count_cities(AiCivAssess *o)
           }
           city6 = tile_unit_owner(x2,y2);
           if (city6 < 0) {
-            civ_add_ai_goal(civ,x2,y2,1,5);
+            civ_add_ai_goal(civ,x2,y2,ROLE_DEFEND,5);
           }
         }
         else if ((((200 < (int)((uint)game.difficulty * (int)game.turn)) ||
@@ -1143,17 +1143,17 @@ static void ai_assess_count_cities(AiCivAssess *o)
                 (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) == 0)) {
           city6 = diplo_is_hostile(civ,(int)cities[city].owner);
           if (((city6 != 0) ||
-              (((*(byte *)&civs[civ].treaties[cities[city].owner] & 0x20) != 0 &&
-               ((*(byte *)&civs[civ].treaties[cities[city].owner] & 8) == 0))))
+              (((*(byte *)&civs[civ].treaties[cities[city].owner] & TREATY_HOSTILE_INTENT) != 0 &&
+               ((*(byte *)&civs[civ].treaties[cities[city].owner] & TREATY_ALLIANCE) == 0))))
              && ((game.turn + city) % 3 != 0)) {
-            city6 = city_has_improvement(city,8);
-            civ_add_ai_goal(civ,x2,y2,0,(-(uint)(city6 == 0) & 2) + 2);
+            city6 = city_has_improvement(city,IMP_CITY_WALLS);
+            civ_add_ai_goal(civ,x2,y2,ROLE_ATTACK,(-(uint)(city6 == 0) & 2) + 2);
           }
           city6 = tile_unit_owner(x2,y2);
           if ((city6 < 0) &&
-             ((*(byte *)&civs[civ].treaties[cities[city].owner] & 0xe) == 0)) {
-            civ_add_ai_goal(civ,x2,y2,1,2);
-            civ_add_ai_goal(civ,x2,y2,0,3);
+             ((*(byte *)&civs[civ].treaties[cities[city].owner] & (TREATY_CEASEFIRE | TREATY_PEACE | TREATY_ALLIANCE)) == 0)) {
+            civ_add_ai_goal(civ,x2,y2,ROLE_DEFEND,2);
+            civ_add_ai_goal(civ,x2,y2,ROLE_ATTACK,3);
           }
         }
       }
@@ -1190,8 +1190,8 @@ static void ai_assess_count_units(AiCivAssess *o)
         counter = (char *)(unit_type + (iptr)((u8 *)&civs + 216) + civ * 0x594);
         *counter = *counter + 1;
         if ((char)unit_types[unit_type].attack < 'c') {
-          if ((units[unit].orders == 1) || (units[unit].orders == 2)) {
-            units[unit].flags = units[unit].flags | 0x100;
+          if ((units[unit].orders == ORDER_FORTIFYING) || (units[unit].orders == ORDER_FORTIFIED)) {
+            units[unit].flags = units[unit].flags | UNITF_AI_GARRISON;
           }
           x2 = (int)units[unit].x;
           y2 = (int)units[unit].y;
@@ -1203,21 +1203,21 @@ static void ai_assess_count_units(AiCivAssess *o)
           else {
             continent = tile_land_landmass(x2,y2);
             if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
-              if ((units[unit].orders == 3) &&
-                 ((unit_types[unit_type].domain != '\0' ||
+              if ((units[unit].orders == ORDER_SLEEP) &&
+                 ((unit_types[unit_type].domain != DOMAIN_LAND ||
                   (city6 = tile_is_ocean(x2,y2), city6 == 0)))) {
-                units[unit].orders = -1;
+                units[unit].orders = ORDER_NONE;
               }
               if (15 < units[unit].orders) {
-                units[unit].orders = -1;
+                units[unit].orders = ORDER_NONE;
               }
-              if ((units[unit].orders == -1) &&
+              if ((units[unit].orders == ORDER_NONE) &&
                  (city6 = tile_zoc_unit_adjacent(x2,y2,civ), city6 != 0)) {
-                units[unit].orders = 16;
+                units[unit].orders = ORDER_AI_IDLE;
               }
             }
             city6 = tile_is_ocean(x2,y2);
-            if ((city6 != 0) && (unit_types[units[unit].type].domain == '\0')) {
+            if ((city6 != 0) && (unit_types[units[unit].type].domain == DOMAIN_LAND)) {
               unit_set_sleep(unit);
             }
           }
@@ -1228,22 +1228,22 @@ static void ai_assess_count_units(AiCivAssess *o)
             mil_counter = (short *)(continent * 2 + (iptr)((u8 *)&civs + 402) + civ * 0x594);
             *mil_counter = *mil_counter + 1;
           }
-          if (((unit_types[units[unit].type].role == 7) &&
+          if (((unit_types[units[unit].type].role == ROLE_TRADE) &&
               (units[unit].home_city != -1)) &&
              (cities[(byte)units[unit].home_city].flags =
-                   cities[(byte)units[unit].home_city].flags | 0x1000, -1 < continent)) {
+                   cities[(byte)units[unit].home_city].flags | CITYF_COMMODITY_PICKED, -1 < continent)) {
             counter = (char *)(continent + (iptr)((u8 *)&civs + 786) + civ * 0x594);
             *counter = *counter + 1;
           }
-          if ((unit_types[unit_type].role == 5) && (units[unit].home_city != -1)) {
+          if ((unit_types[unit_type].role == ROLE_SETTLE) && (units[unit].home_city != -1)) {
             settlers_total++;
             if (continent < 0) continue;
             settler_count[continent]++;
             if (*(char *)&civs[civ].continent_cities[continent] != '\0') {
-              if (civs[civ].government < 2) {
+              if (civs[civ].government < GOV_MONARCHY) {
                 settler_divisor = 4;
               }
-              else if (civs[civ].government < 5) {
+              else if (civs[civ].government < GOV_REPUBLIC) {
                 settler_divisor = 3;
               }
               else {
@@ -1251,7 +1251,7 @@ static void ai_assess_count_units(AiCivAssess *o)
               }
               settler_quota = (int)(((settler_divisor >> 1) - (int)leaders[civs[civ].tribe].expand) - 1 +
                              (uint)civs[civ].continent_cities[continent]) / settler_divisor;
-              if (unit_type == 1) {
+              if (unit_type == UNIT_ENGINEERS) {
                 settler_quota++;
               }
               city6 = settle_goals[continent];
@@ -1260,24 +1260,24 @@ static void ai_assess_count_units(AiCivAssess *o)
               }
               settler_quota = city6;
               if (settler_count[continent] <= city6) {
-                units[unit].flags = units[unit].flags | 0x200;
+                units[unit].flags = units[unit].flags | UNITF_AI_COLONIST;
               }
             }
             if (units[unit].home_city != -1) {
               city2 = units[unit].home_city;
-              if ((((cities[city2].flags & 0x40) != 0) && ((units[unit].flags & 0x200) != 0))
+              if ((((cities[city2].flags & CITYF_AI_SETTLER_NEAR) != 0) && ((units[unit].flags & UNITF_AI_COLONIST) != 0))
                  && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
                 settler_count[continent]--;
-                units[unit].flags = units[unit].flags & 0xfdff;
+                units[unit].flags = units[unit].flags & ~UNITF_AI_COLONIST;
               }
-              if (((units[unit].flags & 0x200) != 0) &&
+              if (((units[unit].flags & UNITF_AI_COLONIST) != 0) &&
                  (city6 = map_distance_diag(x2,y2,(int)cities[city2].x,
                                              (int)cities[city2].y), city6 < 5)) {
-                cities[city2].flags = cities[city2].flags | 0x40;
+                cities[city2].flags = cities[city2].flags | CITYF_AI_SETTLER_NEAR;
               }
             }
           }
-          if (unit_types[units[unit].type].domain == 2) {
+          if (unit_types[units[unit].type].domain == DOMAIN_SEA) {
             civs[civ].num_ships++;
           }
           civs[civ].total_attack =
@@ -1292,8 +1292,8 @@ static void ai_assess_count_units(AiCivAssess *o)
           }
         }
       }
-      else if ((((game.rules & 0x10) != 0) &&
-               ((*(byte *)&civs[civ].treaties[units[unit].owner] & 6) == 0)) &&
+      else if ((((game.rules & RULE_NORMAL_COMBAT) != 0) &&
+               ((*(byte *)&civs[civ].treaties[units[unit].owner] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0)) &&
               (((1 << ((byte)civ & 0x1f) & (uint)units[unit].visibility) != 0 ||
                ((int)units[unit].owner == (civ & 0xff))))) {
         city6 = unit_max_hp(unit);
@@ -1322,22 +1322,22 @@ static void ai_assess_count_settlers(AiCivAssess *o)
       net_session_block.process_messages(1,0);
     }
     if (((units[unit].id != 0) && ((int)units[unit].owner == civ)) &&
-       (units[unit].flags = units[unit].flags & 0xfc7f,
-       unit_types[units[unit].type].role == 5)) {
+       (units[unit].flags = units[unit].flags & ~(UNITF_GOAL_REACHED | UNITF_AI_GARRISON | UNITF_AI_COLONIST),
+       unit_types[units[unit].type].role == ROLE_SETTLE)) {
       if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-        units[unit].flags = units[unit].flags | 0x200;
+        units[unit].flags = units[unit].flags | UNITF_AI_COLONIST;
       }
       if (units[unit].home_city == -1) {
         settlers_total++;
         city6 = tile_is_ocean((int)units[unit].x,(int)units[unit].y);
         if (city6 == 0) {
-          units[unit].flags = units[unit].flags | 0x200;
+          units[unit].flags = units[unit].flags | UNITF_AI_COLONIST;
           city6 = tile_landmass((int)units[unit].x,(int)units[unit].y);
           settler_count[city6]++;
           city6 = city_find_nearest((int)units[unit].x,(int)units[unit].y,-1,0xffffffff,
                                      -1);
           if ((advisor_window_block.nearest_city_dist < 4) && ((int)cities[city6].owner == civ)) {
-            cities[city6].flags = cities[city6].flags | 0x40;
+            cities[city6].flags = cities[city6].flags | CITYF_AI_SETTLER_NEAR;
           }
         }
       }
@@ -1361,11 +1361,11 @@ static void ai_assess_paratroopers(AiCivAssess *o)
   uptr &civ = o->civ; iptr &has_para = o->has_para; int &city6 = o->city6;
   int &y = o->y; uptr &unit = o->unit; iptr &city = o->city; int &y2 = o->y2;
   int &x2 = o->x2;
-  if (((has_para != 0) && (civs[civ].units_active[0xd] != '\0')) &&
+  if (((has_para != 0) && (civs[civ].units_active[UNIT_PARATROOPERS] != '\0')) &&
      ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
     for (city = 0; city < game.num_cities; city++) {
       if (((cities[city].id != 0) && ((int)cities[city].owner != civ)) &&
-         (((byte)(civs[civ].treaties[cities[city].owner] >> 8) & 0x20) != 0)) {
+         (((byte)(civs[civ].treaties[cities[city].owner] >> 8) & (TREATY_WAR >> 8)) != 0)) {
         x2 = (int)cities[city].x;
         y2 = (int)cities[city].y;
         occupant = tile_unit_owner(x2,y2);
@@ -1379,7 +1379,7 @@ static void ai_assess_paratroopers(AiCivAssess *o)
                 done = 0;
                 for (unit = tile_first_unit(city6,y3); -1 < (int)unit;
                     unit = unit_next_in_stack(unit)) {
-                  if ((unit_types[units[unit].type].flags & 0x100) != 0) {
+                  if ((unit_types[units[unit].type].flags & UTYPE_PARADROP) != 0) {
                     done = 1;
                     break;
                   }
@@ -1398,7 +1398,7 @@ static void ai_assess_paratroopers(AiCivAssess *o)
                        dist <= (int)(uint)cosmic.paradrop_range)) {
                       for (unit = tile_first_unit(x3,y); -1 < (int)unit;
                           unit = unit_next_in_stack(unit)) {
-                        if (((unit_types[units[unit].type].flags & 0x100) != 0) &&
+                        if (((unit_types[units[unit].type].flags & UTYPE_PARADROP) != 0) &&
                            (y = unit_moves_left(unit), y != 0)) {
                           unit_relocate(unit,city6,y3,1);
                           units[unit].visibility = '\0';
@@ -1515,7 +1515,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   
   settlers_total = 0;
   scenario_mode = 0;
-  has_para = civ_has_advance(civ,(int)unit_types[0xd].prerequisite);
+  has_para = civ_has_advance(civ,(int)unit_types[UNIT_PARATROOPERS].prerequisite);
   ai_assess_paratroopers(&st);
   ai_assess_reset_counts(&st);
   ai_assess_count_settlers(&st);
@@ -1526,11 +1526,11 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   ai_assess_count_cities(&st);
   civs[civ].continent_policy[0] = 5;
   civs[civ].continent_policy[0x3f] = 5;
-  civs[civ].flags = civs[civ].flags & 0xfffd;
+  civs[civ].flags = civs[civ].flags & ~CIVF_AT_WAR;
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     if ((civ != civ2) &&
-       (((byte)(civs[civ].treaties[civ2] >> 8) & 0x20) != 0)) {
-      civs[civ].flags = civs[civ].flags | 2;
+       (((byte)(civs[civ].treaties[civ2] >> 8) & (TREATY_WAR >> 8)) != 0)) {
+      civs[civ].flags = civs[civ].flags | CIVF_AT_WAR;
     }
   }
   for (continent = 1; continent < 0x3f; continent++) {
@@ -1563,12 +1563,12 @@ void __cdecl ai_civ_turn_assess(uptr civ)
     city6 = int_clamp((int)civs[civ].num_military_units >> 3,3,99);
     for (goal_idx = 0; goal_idx < 0x30; goal_idx++) {
       goal_weight[goal_idx] = city6;
-      if (civs[civ].ai_goals[goal_idx].role == '\0') {
+      if (civs[civ].ai_goals[goal_idx].role == ROLE_ATTACK) {
         goal_weight[goal_idx] = goal_weight[goal_idx] << 1;
       }
     }
     scenario_mode = 0;
-    if (((((game.game_flags & 0x80) != 0) && (((int)(*(short *)&prefs_game_rules_block.scenario_flags) & 0x8000U) != 0)) && (civ == 3)
+    if (((((game.game_flags & GAME_SCENARIO) != 0) && (((int)(*(short *)&prefs_game_rules_block.scenario_flags) & 0x8000U) != 0)) && (civ == 3)
         ) && (is_human == 0)) {
       scenario_mode = 1;
     }
@@ -1577,12 +1577,12 @@ void __cdecl ai_civ_turn_assess(uptr civ)
         net_session_block.process_messages(1,0);
       }
       if (((units[unit].id != 0) && ((int)units[unit].owner == civ)) &&
-         ((is_human == 0 || (((int)(short)units[unit].flags & 0x8000U) != 0)))) {
+         ((is_human == 0 || ((units[unit].flags & UNITF_AUTOMATED) != 0)))) {
         if ((char)unit_types[units[unit].type].attack < 'c') {
-          if ((units[unit].orders != 16) &&
-             ((((15 < units[unit].orders || (units[unit].orders == 11)) ||
+          if ((units[unit].orders != ORDER_AI_IDLE) &&
+             ((((15 < units[unit].orders || (units[unit].orders == ORDER_GOTO)) ||
                (units[unit].ai_task = '?', units[unit].orders < 4)) &&
-              (units[unit].orders != 3)))) {
+              (units[unit].orders != ORDER_SLEEP)))) {
             x2 = (int)units[unit].x;
             y2 = (int)units[unit].y;
             y = map_in_bounds(x2,y2);
@@ -1602,10 +1602,10 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   }
   for (city = 0; city < game.num_cities; city++) {
     if ((cities[city].id != 0) && ((int)cities[city].owner == civ)) {
-      if ((cities[city].flags & 0x400) == 0) {
-        cities[city].flags = cities[city].flags & 0xfffffdff;
+      if ((cities[city].flags & CITYF_AI_FERRY_PORT_FRESH) == 0) {
+        cities[city].flags = cities[city].flags & ~CITYF_AI_FERRY_PORT;
       }
-      cities[city].flags = cities[city].flags & 0xfffffbff;
+      cities[city].flags = cities[city].flags & ~CITYF_AI_FERRY_PORT_FRESH;
     }
   }
   civ_refresh_ai_goals(civ);
@@ -1749,7 +1749,7 @@ static int ai_barb_score_dir(AiBarbMove *o)
   check = map_in_bounds(x,y2);
   if (check != 0) {
     terrain = tile_terrain(x,y2);
-    if ((unit_types[unit_type].domain == 2) == (terrain == 10)) {
+    if ((unit_types[unit_type].domain == DOMAIN_SEA) == (terrain == TERRAIN_OCEAN)) {
       check = tile_unit_owner(x,y2);
       unit2 = tile_first_unit(x,y2);
       score = 0;
@@ -1766,13 +1766,13 @@ static int ai_barb_score_dir(AiBarbMove *o)
             default: break;
             }
           }
-          if ((unit_type != 9) || (value = tile_unit_owner(x,y2), value < 0)) {
+          if ((unit_type != UNIT_PARTISANS) || (value = tile_unit_owner(x,y2), value < 0)) {
             best_dir = dir;
             return AI_BARB_FINALIZE_DIR;
           }
           if ((game.turn + unit & 7U) == 0) return AI_BARB_NEXT;
           value = unit_stack_sum(unit,2);
-          if ((value < 2) && (units[unit].orders = 1, best_score < 99)) {
+          if ((value < 2) && (units[unit].orders = ORDER_FORTIFYING, best_score < 99)) {
             best_score = 99;
             best_dir = 8;
           }
@@ -1782,9 +1782,9 @@ static int ai_barb_score_dir(AiBarbMove *o)
           score = 4;
         }
         tile_imps = tile_improvements(x,y2);
-        if ((tile_imps & 0x40) == 0) {
+        if ((tile_imps & TILE_FORTRESS) == 0) {
           tile_imps = tile_improvements(x,y2);
-          if ((tile_imps & 0xc) != 0) {
+          if ((tile_imps & TILE_FARMLAND) != 0) {
             score += 6;
           }
         }
@@ -1802,18 +1802,18 @@ static int ai_barb_score_dir(AiBarbMove *o)
           else {
             check = tile_is_ocean(x2,y);
             if (check != 0) return AI_BARB_NEXT;
-            if (unit_type == 9) {
+            if (unit_type == UNIT_PARTISANS) {
               if ((char)unit_types[units[unit2].type].role < 5) return AI_BARB_NEXT;
               score += 99;
             }
-            else if (unit_types[units[unit2].type].role != 6) {
+            else if (unit_types[units[unit2].type].role != ROLE_DIPLOMACY) {
               score += 99;
             }
           }
         }
-        if ((((y3 == 0) || (unit_types[unit_type].role != '\0')) || (-1 < unit2)) ||
+        if ((((y3 == 0) || (unit_types[unit_type].role != ROLE_ATTACK)) || (-1 < unit2)) ||
            ((y2 = tile_in_enemy_zoc(x,y2,civ2), y2 == 0 ||
-            ((unit_types[units[unit].type].flags & 2) != 0)))) {
+            ((unit_types[units[unit].type].flags & UTYPE_IGNORE_ZOC) != 0)))) {
           if ((char)units[unit].last_dir == dir) {
             score += 6;
           }
@@ -1889,12 +1889,12 @@ static int ai_barb_leader(AiBarbMove *o)
   iptr &best_dir = o->best_dir;
   here_terrain = tile_terrain(x2,y);
   y2 = unit_stack_sum(unit,2);
-  if (((1 < y2) && (here_terrain != '\n')) &&
+  if (((1 < y2) && (here_terrain != TERRAIN_OCEAN)) &&
      (y2 = unit_stack_count_role(unit,(int)(char)unit_types[unit_type].role), y2 < 2)) {
     best_dir = 8;
     return AI_BARB_FINALIZE_DIR;
   }
-  if (here_terrain == '\n') {
+  if (here_terrain == TERRAIN_OCEAN) {
     if (advisor_window_block.nearest_city_dist < 3) {
       unit_destroy_redraw(unit,1);
       return AI_BARB_RETURN_1;
@@ -1933,7 +1933,7 @@ static void ai_barb_head_for_city(AiBarbMove *o)
     if ((y2 == check) &&
        (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) != 0)) {
       x3 = cities[city].x - x2;
-      if ((game.rules & 0x8000) == 0) {
+      if ((game.rules & RULE_FLAT_WORLD) == 0) {
         abs_dx = x3;
         if ((int)x3 < 1) {
           abs_dx = ~x3 + 1;
@@ -1998,7 +1998,7 @@ static int ai_barb_ship_target(AiBarbMove *o)
   iptr &unit = o->unit; int &x2 = o->x2; iptr &y = o->y; int &y3 = o->y3;
   int &y2 = o->y2; i32 &misc = o->misc; iptr &city = o->city;
   int &best_score = o->best_score;
-  if (units[unit].orders != 11) {
+  if (units[unit].orders != ORDER_GOTO) {
     best_score = 0;
     city2 = -1;
     y3 = tile_is_ocean(x2,y);
@@ -2058,8 +2058,8 @@ static int ai_barb_ship_land(AiBarbMove *o)
         check = tile_landmass(x,y3);
         if (y2 == check) {
           y2 = unit_stack_sum(unit,2);
-          if (((y2 < 3) && (y2 = unit_stack_count_role(unit,0), y2 == 0)) &&
-             ((y2 = unit_stack_count_role(unit,1), y2 == 0 && (advisor_window_block.nearest_city_dist < 3)))) {
+          if (((y2 < 3) && (y2 = unit_stack_count_role(unit,ROLE_ATTACK), y2 == 0)) &&
+             ((y2 = unit_stack_count_role(unit,ROLE_DEFEND), y2 == 0 && (advisor_window_block.nearest_city_dist < 3)))) {
             unit_destroy_redraw(unit,1);
           }
           else {
@@ -2136,8 +2136,8 @@ i32 __cdecl ai_barbarian_unit_move(void)
   best_dir = 8;
   unit = (iptr)game.active_unit;
   civ2 = (iptr)units[unit].owner;
-  if (units[unit].orders != 11) {
-    units[unit].orders = -1;
+  if (units[unit].orders != ORDER_GOTO) {
+    units[unit].orders = ORDER_NONE;
   }
   x2 = (int)units[unit].x;
   y4 = units[unit].y;
@@ -2152,7 +2152,7 @@ i32 __cdecl ai_barbarian_unit_move(void)
   city = city_find_nearest(x2,y,-1,0xffffffff,-1);
   if (unit_types[unit_type].hold != '\0') {
     y3 = unit_stack_sum(unit,2);
-    transport_count = unit_stack_count_role(unit,6);
+    transport_count = unit_stack_count_role(unit,ROLE_DIPLOMACY);
     if (y3 - transport_count < 2) {
       unit_destroy_redraw(unit,1);
       return 1;
@@ -2172,12 +2172,12 @@ i32 __cdecl ai_barbarian_unit_move(void)
   }
   if (((advisor_window_block.nearest_city_dist == 0) ||
       (misc = tile_improvements(x2,y), ((byte)misc & 0x42) == 0x40)) &&
-     (y2 = unit_stack_sum(unit,2), check = unit_stack_count_role(unit,6),
-      !((((1 < y2 - check) || (y3 != 0)) && (unit_types[unit_type].role != 1)) ||
+     (y2 = unit_stack_sum(unit,2), check = unit_stack_count_role(unit,ROLE_DIPLOMACY),
+      !((((1 < y2 - check) || (y3 != 0)) && (unit_types[unit_type].role != ROLE_DEFEND)) ||
         ((at_city = advisor_window_block.nearest_city_dist == 0, y2 = unit_stack_sum(unit,2),
          (int)(at_city + 2 + (uint)(y3 == 0)) <= y2 &&
          ((char)unit_types[unit_type].defense <= (char)unit_types[unit_type].attack)))))) {
-    units[unit].orders = 1;
+    units[unit].orders = ORDER_FORTIFYING;
     best_dir = 8;
   }
   else {
@@ -2215,8 +2215,8 @@ i32 __cdecl ai_barbarian_unit_move(void)
           (-1 < city)) &&
          (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) != 0)) {
         map_tile = tile_at(x2,y);
-        if (((map_tile->improvements & 0x4c) != 0) ||
-           ((unit_type == 9 && ((map_tile->improvements & 0x10) != 0)))) {
+        if (((map_tile->improvements & (TILE_IRRIGATION | TILE_MINE | TILE_FORTRESS)) != 0) ||
+           ((unit_type == UNIT_PARTISANS && ((map_tile->improvements & TILE_ROAD) != 0)))) {
           unit_pillage(unit,0);
           unit_exhaust_moves(unit);
           goto clear_goto_done;
@@ -2231,22 +2231,22 @@ finalize_dir:
   if (best_dir == 8) {
     units[unit].last_dir = 0xff;
     unit_exhaust_moves(unit);
-    if (((unit_types[unit_type].role == 1) ||
+    if (((unit_types[unit_type].role == ROLE_DEFEND) ||
         (misc = tile_improvements(x2,y), ((byte)misc & 0x42) == 0x40)) &&
-       (units[unit].orders = 1, (units[unit].flags & 0x100) != 0)) {
-      units[unit].orders = 2;
+       (units[unit].orders = ORDER_FORTIFYING, (units[unit].flags & UNITF_AI_GARRISON) != 0)) {
+      units[unit].orders = ORDER_FORTIFIED;
     }
   }
   else {
-    units[unit].orders = 27;
+    units[unit].orders = ORDER_AI_GOTO;
     misc = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[best_dir] + x2);
     units[unit].goto_x = (i16)misc;
     units[unit].goto_y = (((i8 *)&dir_dy_table_block.dir_dy_table))[best_dir] + y4;
   }
 clear_goto_done:
-  if (((units[unit].orders == 11) && (units[unit].goto_x == x2)) &&
+  if (((units[unit].orders == ORDER_GOTO) && (units[unit].goto_x == x2)) &&
      (units[unit].goto_y == y)) {
-    units[unit].orders = -1;
+    units[unit].orders = ORDER_NONE;
   }
   return 0;
 }
@@ -2270,7 +2270,7 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
       civ = (int)units[unit].owner;
       if ((((civ != 0) && ((1 << (units[unit].owner & 0x1fU) & (uint)game.human_players) == 0)
            ) && (civ2 != civ)) &&
-         ((((*(byte *)&civs[civ].treaties[civ2] & 4) == 0 &&
+         ((((*(byte *)&civs[civ].treaties[civ2] & TREATY_PEACE) == 0 &&
            (unit_types[units[unit].type].hold != '\0')) &&
           ((civ = unit_stack_sum(unit,2), 1 < civ &&
            (civ = tile_is_ocean((int)units[unit].x,(int)units[unit].y), civ != 0)))))) {
@@ -2278,7 +2278,7 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
                                    (int)units[unit].y);
         max_moves = unit_max_moves(unit);
         if (civ < max_moves) {
-          units[unit].orders = 11;
+          units[unit].orders = ORDER_GOTO;
           units[unit].goto_x = x;
           units[unit].goto_y = y;
         }
@@ -2353,7 +2353,7 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
             unit_relocate(unit,x,y,1);
             units[unit].visibility = '\0';
             if (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0) {
-              if (((byte)(civs[civ].treaties[cities[city2].owner] >> 16) & 2) == 0) {
+              if (((byte)(civs[civ].treaties[cities[city2].owner] >> 16) & (TREATY_NUKED >> 16)) == 0) {
                 treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + cities[city2].owner * 4);
                 *treaty = *treaty | 0x20000;
                 treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + cities[city2].owner * 4);
@@ -2372,16 +2372,16 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
       return 8;
     }
     if ((((((cities[city].id != 0) && (civ2 = (iptr)cities[city].owner, civ2 != civ)) &&
-          (y = city_has_improvement(city,0x11), y == 0)) &&
+          (y = city_has_improvement(city,IMP_SDI_DEFENSE), y == 0)) &&
          (4 < cities[city].size)) &&
         (((strength = (uint)civs[civ2].military_strength * 2,
           strength + (uint)civs[civ].military_strength * -3 != 0 &&
           (uint)civs[civ].military_strength * 3 <= strength ||
-          ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0)) ||
-         ((civs[civ2].units_active[0x2d] == '\0' &&
+          ((*(byte *)&civs[civ].treaties[civ2] & TREATY_VENDETTA) != 0)) ||
+         ((civs[civ2].units_active[UNIT_NUCLEAR_MISSILE] == '\0' &&
           (strength = (uint)civs[civ2].military_strength * 2,
           strength - civs[civ].military_strength != 0 && civs[civ].military_strength <= strength))))))
-       && ((civs[civ].treaties[civ2] & 0x104) == 0x100)) {
+       && ((civs[civ].treaties[civ2] & (TREATY_PEACE | TREATY_NUCLEAR_THREAT)) == 0x100)) {
       score = 0;
       for (dir = 0; (int)dir < 9; dir++) {
         x = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + (int)cities[city].x);
@@ -2391,7 +2391,7 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
           if (owner_civ == civ) {
             score -= 2;
           }
-          else if ((civs[civ].treaties[owner_civ] & 0x104) == 0x100) {
+          else if ((civs[civ].treaties[owner_civ] & (TREATY_PEACE | TREATY_NUCLEAR_THREAT)) == 0x100) {
             for (unit2 = tile_first_unit(x,y); -1 < unit2;
                 unit2 = unit_next_in_stack(unit2)) {
               score++;
@@ -2478,7 +2478,7 @@ static i32 ai_air_raid_city(AiAirOrders *o)
   uptr &dir = o->dir; int &best_score = o->best_score; int &score = o->score;
   if (((mode == 0) && (unit_types[units[unit2].type].range != '\0')) &&
      ((char)unit_types[unit_type].attack < 'c')) {
-    if (units[unit2].orders == 11) {
+    if (units[unit2].orders == ORDER_GOTO) {
       if ((units[unit2].counter == '\0') && (set_flag != 0)) {
         *(i32 *)out_flag = 1;
         if (*(int *)out_flag != 0) {
@@ -2490,7 +2490,7 @@ static i32 ai_air_raid_city(AiAirOrders *o)
     else {
       unit3 = -1;
       best_score = -9999;
-      if ((((game.game_flags & 0x80) != 0) && (((int)(*(short *)&prefs_game_rules_block.scenario_flags) & 0x8000U) != 0)) &&
+      if ((((game.game_flags & GAME_SCENARIO) != 0) && (((int)(*(short *)&prefs_game_rules_block.scenario_flags) & 0x8000U) != 0)) &&
          ((game.turn == 1 &&
           ((prefs_game_rules_block.scenario_objective_civ == civ && (value = tile_unit_owner(0x2d,0x35), -1 < value)))))) {
         unit_set_goto(unit2,0x42,0x2d,0x35);
@@ -2504,7 +2504,7 @@ static i32 ai_air_raid_city(AiAirOrders *o)
       }
       for (city = 0; city < game.num_cities; city++) {
         if (((cities[city].id != 0) && (cities[city].owner != civ)) &&
-           ((*(byte *)&civs[civ].treaties[cities[city].owner] & 6) == 0)) {
+           ((*(byte *)&civs[civ].treaties[cities[city].owner] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0)) {
           value = map_distance(*(i32 *)x,*(i32 *)y,
                                       (int)cities[city].x,(int)cities[city].y);
           y2 = unit_moves_left(unit2);
@@ -2609,14 +2609,14 @@ static i32 ai_air_strike_target(AiAirOrders *o)
     for (city = 0; city < game.num_cities; city++) {
       if (((cities[city].id != 0) &&
           (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) != 0)) &&
-         ((cities[city].flags & 0x10000) != 0)) {
+         ((cities[city].flags & CITYF_AIRLIFTED) != 0)) {
         city_dist = map_distance(x3,y3,(int)cities[city].x,
                                       (int)cities[city].y);
-        if ((*(byte *)&civs[civ].treaties[cities[city].owner] & 0x10) == 0) {
-          if (((byte)(civs[civ].treaties[cities[city].owner] >> 8) & 0x20) == 0) {
+        if ((*(byte *)&civs[civ].treaties[cities[city].owner] & TREATY_VENDETTA) == 0) {
+          if (((byte)(civs[civ].treaties[cities[city].owner] >> 8) & (TREATY_WAR >> 8)) == 0) {
             city_dist = city_dist << 1;
           }
-          if ((*(byte *)&civs[civ].treaties[cities[city].owner] & 4) != 0) continue;
+          if ((*(byte *)&civs[civ].treaties[cities[city].owner] & TREATY_PEACE) != 0) continue;
         }
         if (city_dist < best_score) {
           best_score = city_dist;
@@ -2670,10 +2670,10 @@ static void ai_air_pick_target(AiAirOrders *o)
   int &best_threat = o->best_threat; int &best_score = o->best_score;
   for (unit = 0; unit < game.num_units; unit++) {
     if ((((units[unit].id != 0) && (units[unit].owner != civ)) &&
-        ((*(byte *)&civs[civ].treaties[units[unit].owner] & 6) == 0)) &&
+        ((*(byte *)&civs[civ].treaties[units[unit].owner] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0)) &&
        (((1 << (civ2 & 0x1f) & (uint)units[unit].visibility) != 0 ||
         ((int)units[unit].owner == (uint)civ2)))) {
-      if (unit_types[units[unit].type].domain != 1) {
+      if (unit_types[units[unit].type].domain != DOMAIN_AIR) {
         if (unit_types[units[unit].type].hold == '\0') {
           value = unit_stack_sum(unit,2);
         }
@@ -2688,14 +2688,14 @@ static void ai_air_pick_target(AiAirOrders *o)
         defense_power = (int)(char)unit_types[units[unit].type].hit_points *
                    (int)(char)unit_types[units[unit].type].defense *
                    (int)(char)unit_types[units[unit].type].firepower *
-                   (3 - (uint)((units[unit].flags & 0x2000) == 0));
+                   (3 - (uint)((units[unit].flags & UNITF_VETERAN) == 0));
         if ((unit_types[units[unit].type].hold != '\0') &&
            (value = unit_stack_sum(unit,2), value == 1)) {
           defense_power = defense_power * 2;
         }
         terrain = tile_terrain((int)units[unit].x,(int)units[unit].y);
         if ((defense_power * (char)terrain_types[terrain].defense >> 1) * 3 >
-            (int)((3 - (uint)((own_flags & 0x2000) == 0)) * (int)(char)stat_a * (int)(char)stat_b *
+            (int)((3 - (uint)((own_flags & UNITF_VETERAN) == 0)) * (int)(char)stat_a * (int)(char)stat_b *
                   (int)(char)att_fp * 2)) continue;
       }
       value = map_distance(*(i32 *)x,*(i32 *)y,
@@ -2740,7 +2740,7 @@ static i32 ai_air_jump_attack(AiAirOrders *o)
   int &value = o->value; int &y2 = o->y2; iptr &x2 = o->x2;
   iptr &unit2 = o->unit2; iptr &unit3 = o->unit3; iptr &city = o->city;
   uptr &dir = o->dir; int &best_score = o->best_score; int &score = o->score;
-  if (((unit_types[units[unit].type].flags & 0x1000) != 0) &&
+  if (((unit_types[units[unit].type].flags & UTYPE_DESTROYED_AFTER_ATTACK) != 0) &&
      ((char)unit_types[unit_type].attack < 'c')) {
     best_score = (int)(char)unit_types[units[unit].type].cost << 2;
     unit3 = -1;
@@ -2787,8 +2787,8 @@ static i32 ai_air_jump_attack(AiAirOrders *o)
         return 8;
       }
       if ((((units[unit].id != 0) && (units[unit].owner != civ)) &&
-          (((byte)(civs[civ].treaties[units[unit].owner] >> 8) & 0x20) != 0)) &&
-         (unit_types[units[unit].type].domain != 1)) {
+          (((byte)(civs[civ].treaties[units[unit].owner] >> 8) & (TREATY_WAR >> 8)) != 0)) &&
+         (unit_types[units[unit].type].domain != DOMAIN_AIR)) {
         value = (int)units[unit].x;
         y2 = (int)units[unit].y;
         check = map_in_bounds(value,y2);
@@ -2799,7 +2799,7 @@ static i32 ai_air_jump_attack(AiAirOrders *o)
           if (target_dist <= check / (int)move_mult) {
             score = (int)(char)unit_types[units[unit].type].cost;
             tile_imps = tile_improvements(value,y2);
-            if ((((byte)tile_imps & 0x42) == 0x40) ||
+            if ((((byte)tile_imps & TILE_AIRBASE) == 0x40) ||
                (check = tile_airbase_owner(value,y2), check != 0)) {
               at_airbase = true;
             }
@@ -2832,7 +2832,7 @@ static i32 ai_air_jump_attack(AiAirOrders *o)
               score = score << 1;
             }
             tile_imps = tile_improvements(value,y2);
-            if (((byte)tile_imps & 0x42) == 0x40) {
+            if (((byte)tile_imps & TILE_AIRBASE) == 0x40) {
               score = score << 1;
             }
             score += (char)unit_types[units[unit].type].hold;
@@ -2904,7 +2904,7 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int mode,iptr out_flag
   }
   if (unit_types[units[unit].type].range != '\0') {
     if (unit_types[units[unit].type].range == 1) {
-      if (units[unit].orders != 11) {
+      if (units[unit].orders != ORDER_GOTO) {
         value = unit_max_moves(unit);
         y2 = unit_moves_left(unit);
         if (((y2 <= value >> 1) && (range_left < home_dist + 1)) && (home_dist <= range_left)) {
@@ -3057,7 +3057,7 @@ static int ai_orders_caravan(AiUnitOrders *o)
   int &cand_score = o->cand_score; uptr &dir = o->dir; uptr &city5 = o->city5;
   uptr &city2 = o->city2; int &best_score = o->best_score;
   int &score = o->score;
-  if (units[unit].orders == 11) return AI_ORDERS_FINISH_ORDERS;
+  if (units[unit].orders == ORDER_GOTO) return AI_ORDERS_FINISH_ORDERS;
   city7 = tile_is_ocean(x2,y3);
   if (city7 != 0) {
     city6 = 0xffffffff;
@@ -3177,11 +3177,11 @@ static int ai_orders_diplomat(AiUnitOrders *o)
   int &has_orders = o->has_orders; uptr &civ2 = o->civ2; uint &y2 = o->y2;
   int &cand_score = o->cand_score; uptr &dir = o->dir;
   int &best_score = o->best_score; int &score = o->score;
-  if ((((units[unit].orders == 11) &&
+  if ((((units[unit].orders == ORDER_GOTO) &&
        (city7 = city_at((int)units[unit].goto_x,
                                     (int)units[unit].goto_y), -1 < city7)) &&
       ((int)cities[city7].owner != civ)) &&
-     ((*(byte *)&civs[civ].treaties[cities[city7].owner] & 0xe) == 0)) {
+     ((*(byte *)&civs[civ].treaties[cities[city7].owner] & (TREATY_CEASEFIRE | TREATY_PEACE | TREATY_ALLIANCE)) == 0)) {
     has_orders = 1;
   }
   else {
@@ -3225,27 +3225,27 @@ static int ai_orders_diplomat(AiUnitOrders *o)
           }
           else {
             score = 100;
-            if ((*(byte *)&civs[civ].treaties[civ2] & 0xe) != 0) {
+            if ((*(byte *)&civs[civ].treaties[civ2] & (TREATY_CEASEFIRE | TREATY_PEACE | TREATY_ALLIANCE)) != 0) {
               if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
-                  ((cities[city].flags & 8) != 0)) ||
+                  ((cities[city].flags & CITYF_TECH_STOLEN) != 0)) ||
                  ((city7 = ai_spaceship_race_behind(civ), city7 == 0 &&
                   ((game.power_rank[civ2] < game.power_rank[civ] ||
-                   ((((units[unit].type != '/' &&
+                   ((((units[unit].type != UNIT_SPY &&
                       ((int)((uint)civs[civ2].num_advances -
                             (uint)civs[civ].num_advances) < 10)) &&
-                     (((4 < civs[civ].government || (game.power_rank[civ2] < 7))
-                      || (((*(byte *)&civs[civ].treaties[civ2] & 8) !=
+                     (((GOV_FUNDAMENTALISM < civs[civ].government || (game.power_rank[civ2] < 7))
+                      || (((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) !=
                            0 && (civs[civ2].num_advances <
                                  civs[civ].num_advances)))))) ||
-                    (((*(byte *)&civs[civ].treaties[civ2] & 8) == 0 &&
-                     (((4 < civs[civ2].government &&
+                    (((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) == 0 &&
+                     (((GOV_FUNDAMENTALISM < civs[civ2].government &&
                        (civs[civ].continent_military[landmass] <
                         civs[civ2].continent_attack[landmass])) &&
                       (*(char *)&civs[civ].continent_cities[landmass] != '\0')))))))))))
                  ) continue;
               score = score / 2;
             }
-            if (((byte)(civs[civ].treaties[civ2] >> 8) & 0x20) == 0) {
+            if (((byte)(civs[civ].treaties[civ2] >> 8) & (TREATY_WAR >> 8)) == 0) {
               city7 = civ_get_attitude(civ,civ2);
               score += city7;
             }
@@ -3253,7 +3253,7 @@ static int ai_orders_diplomat(AiUnitOrders *o)
               score += 100;
             }
             score = score / (cand_score + 1);
-            if ((cities[city].flags & 8) != 0) {
+            if ((cities[city].flags & CITYF_TECH_STOLEN) != 0) {
               score = score / 2;
               if (civs[civ].num_advances + 6 < (uint)civs[civ2].num_advances) {
                 score = score / 2;
@@ -3271,14 +3271,14 @@ static int ai_orders_diplomat(AiUnitOrders *o)
         }
       }
       if ((int)city6 < 0) {
-        if (units[unit].orders != 11) {
+        if (units[unit].orders != ORDER_GOTO) {
           unit_destroy_redraw(unit,1);
           return AI_ORDERS_RETURN_1;
         }
         return AI_ORDERS_FINISH_ORDERS;
       }
       has_orders = 1;
-      if ((units[unit].orders != 11) || ((int)cities[city6].owner != civ)) {
+      if ((units[unit].orders != ORDER_GOTO) || ((int)cities[city6].owner != civ)) {
         unit_set_goto(unit,0x53,(int)cities[city6].x,
                            (int)cities[city6].y);
       }
@@ -3305,12 +3305,12 @@ static int ai_orders_paratrooper(AiUnitOrders *o)
   uptr &city2 = o->city2; int &own_dist = o->own_dist;
   int &best_score = o->best_score; int &score = o->score;
   if (own_dist == 0) {
-    if ((units[unit].moves_used == '\0') && (units[unit].orders != 11)) {
+    if ((units[unit].moves_used == '\0') && (units[unit].orders != ORDER_GOTO)) {
       best_score = 0;
       for (city = 0; (int)city < (int)game.num_cities; city = city + 1
           ) {
         if ((((cities[city].id != 0) && ((int)cities[city].owner != civ)) &&
-            (((byte)(civs[civ].treaties[cities[city].owner] >> 8) & 0x20) !=
+            (((byte)(civs[civ].treaties[cities[city].owner] >> 8) & (TREATY_WAR >> 8)) !=
              0)) && (city7 = map_distance(x2,y3,
                                                  (int)cities[city].x,
                                                  (int)cities[city].y),
@@ -3366,7 +3366,7 @@ static int ai_orders_paratrooper(AiUnitOrders *o)
         }
       }
     }
-    if (units[unit].orders != 11) {
+    if (units[unit].orders != ORDER_GOTO) {
       hold_pos = 1;
       return AI_ORDERS_PLAN_MOVE;
     }
@@ -3405,7 +3405,7 @@ static int ai_orders_city_site(AiUnitOrders *o)
   uptr &city4 = o->city4; uint &y2 = o->y2; uptr &dir = o->dir;
   int &best_score = o->best_score; int &score = o->score;
   is_settler = ai_role == 5;
-  settler_type = unit_types[units[unit].type].role == 5;
+  settler_type = unit_types[units[unit].type].role == ROLE_SETTLE;
   best_score = tile_owner_or_fertility(x2,y3);
   if (((near_dist < 4) && (landmass == near_landmass)) && (7 < best_score)) {
     best_score = 8;
@@ -3415,7 +3415,7 @@ static int ai_orders_city_site(AiUnitOrders *o)
     best_score = 0;
   }
   if ((((is_settler) &&
-       (civ_clear_standing_goals_near(civ,5,x2,y3,0), civs[civ].num_cities == 0)) &&
+       (civ_clear_standing_goals_near(civ,ROLE_SETTLE,x2,y3,0), civs[civ].num_cities == 0)) &&
       (game.turn == 1)) &&
      (((start_x[civs[civ].tribe] == x2 && (start_y[civs[civ].tribe] == y3))
       && (7 < best_score)))) {
@@ -3479,7 +3479,7 @@ static int ai_orders_city_site(AiUnitOrders *o)
       }
     }
   }
-  if (((((((is_settler) && (game.difficulty != '\0')) && (-1 < (int)city4)) &&
+  if (((((((is_settler) && (game.difficulty != DIFF_CHIEFTAIN)) && (-1 < (int)city4)) &&
         ((city = city4,
          ((uint)game.human_players & 1 << (cities[city4].owner & 0x1fU)) != 0 &&
          (in_enemy_zoc == 0)))) && (1 < near_dist)) &&
@@ -3508,7 +3508,7 @@ static void ai_orders_city_guard(AiUnitOrders *o)
   int &defender_count = o->defender_count; int &is_guard = o->is_guard;
   uptr &city2 = o->city2; int &own_dist = o->own_dist;
   if (own_dist == 0) {
-    role_count = unit_stack_count_role(unit,1);
+    role_count = unit_stack_count_role(unit,ROLE_DEFEND);
     if (((ai_role == 1) && (1 < role_count)) || (ai_role == 4)) {
       city7 = tile_zoc_unit_adjacent(x2,y3,civ);
       if (city7 == 0) {
@@ -3517,7 +3517,7 @@ static void ai_orders_city_guard(AiUnitOrders *o)
       else {
         divisor = 3;
       }
-      city7 = city_has_improvement(city2,1);
+      city7 = city_has_improvement(city2,IMP_PALACE);
       if (city7 == 0) {
         if (policy == 5) {
           divisor++;
@@ -3527,7 +3527,7 @@ static void ai_orders_city_guard(AiUnitOrders *o)
         divisor--;
       }
       quota = (int)cities[city2].size / divisor + 1;
-      city7 = city_has_improvement(city2,1);
+      city7 = city_has_improvement(city2,IMP_PALACE);
       needed_defenders = quota;
       if (city7 != 0) {
         unit4 = 1;
@@ -3557,11 +3557,11 @@ static void ai_orders_city_guard(AiUnitOrders *o)
         }
         else {
           if (role_count < (int)needed_defenders) {
-            civ_add_ai_goal(civ,x2,y3,1,3);
+            civ_add_ai_goal(civ,x2,y3,ROLE_DEFEND,3);
           }
           if ((int)needed_defenders < role_count) {
             unit4 = (uptr)units[unit].orders;
-            units[unit].orders = 2;
+            units[unit].orders = ORDER_FORTIFIED;
             city7 = unit_stack_best_defender(unit,-1);
             if ((city7 == unit) &&
                (city7 = unit_stack_sum(unit,4), city7 <= (int)needed_defenders)) {
@@ -3571,9 +3571,9 @@ static void ai_orders_city_guard(AiUnitOrders *o)
             else {
               units[unit].orders = (i8)unit4;
               if (((game.turn + unit & 7U) == 0) &&
-                 (((units[unit].orders == 3 || (units[unit].orders == 1)
-                   ) || (units[unit].orders == 2)))) {
-                units[unit].orders = -1;
+                 (((units[unit].orders == ORDER_SLEEP || (units[unit].orders == ORDER_FORTIFYING)
+                   ) || (units[unit].orders == ORDER_FORTIFIED)))) {
+                units[unit].orders = ORDER_NONE;
               }
             }
           }
@@ -3586,7 +3586,7 @@ static void ai_orders_city_guard(AiUnitOrders *o)
     else {
       city7 = unit_stack_sum(unit,2);
       if ((city7 < 2) &&
-         ((civ_add_ai_goal(civ,x2,y3,1,5), !settler_type ||
+         ((civ_add_ai_goal(civ,x2,y3,ROLE_DEFEND,5), !settler_type ||
           (city7 = tile_zoc_unit_adjacent(x2,y3,civ), city7 != 0)))) {
         is_guard = 1;
       }
@@ -3607,7 +3607,7 @@ static void ai_orders_ship_goal_land(AiUnitOrders *o)
   int &cand_score = o->cand_score; uptr &dir = o->dir; uptr &city2 = o->city2;
   int &own_dist = o->own_dist; int &best_score = o->best_score;
   int &here_landmass = o->here_landmass; uint &tasks_mask = o->tasks_mask;
-  if (units[unit].orders != 11) {
+  if (units[unit].orders != ORDER_GOTO) {
     best_score = 999;
     here_landmass = tile_land_landmass(x2,y3);
     for (city = 0; (int)city < (int)game.num_cities;
@@ -3641,7 +3641,7 @@ static void ai_orders_ship_goal_land(AiUnitOrders *o)
       }
     }
   }
-  if ((units[unit].orders != 11) &&
+  if ((units[unit].orders != ORDER_GOTO) &&
      (unit_types[units[unit].type].hold != '\0')) {
     if (units[unit].ai_task == 'V') {
       x4 = (uint)units[unit].goto_x;
@@ -3681,7 +3681,7 @@ static void ai_orders_ship_goal_land(AiUnitOrders *o)
       }
     }
   }
-  if (units[unit].orders != 11) {
+  if (units[unit].orders != ORDER_GOTO) {
     for (dir = 2; (int)dir < 0x18; dir++) {
       dir2 = rand_range(0,7);
       x = map_wrap_x((int)(((i8 *)&dir_dx_table_block.dir_dx_table))[dir2] * dir +
@@ -3720,7 +3720,7 @@ static void ai_orders_ship_goal_trade(AiUnitOrders *o)
   uptr &city2 = o->city2; int &own_dist = o->own_dist;
   int &best_score = o->best_score; int &here_landmass = o->here_landmass;
   uint &tasks_mask = o->tasks_mask;
-  if (((units[unit2].orders != 11) && ((tasks_mask & 0x80) != 0)) &&
+  if (((units[unit2].orders != ORDER_GOTO) && ((tasks_mask & 0x80) != 0)) &&
      (unit_types[units[unit2].type].hold != '\0')) {
     best_score = -999;
     here_landmass = tile_land_landmass(x2,y3);
@@ -3728,7 +3728,7 @@ static void ai_orders_ship_goal_trade(AiUnitOrders *o)
     unit5 = unit2;
     for (unit = unit_stack_first(unit2); x = unit5, -1 < unit;
         unit = unit_next_in_stack(unit)) {
-      if ((unit_types[units[unit].type].role == 7) &&
+      if ((unit_types[units[unit].type].role == ROLE_TRADE) &&
          (units[unit].home_city != -1)) {
         city5 = (uptr)(byte)units[unit].home_city;
       }
@@ -3767,11 +3767,11 @@ static void ai_orders_ship_goal_trade(AiUnitOrders *o)
             cand_score = cand_score / 2;
           }
           if (((byte)(civs[civ].treaties[cities[city].owner] >> 8) &
-              0x20) != 0) {
+              (TREATY_WAR >> 8)) != 0) {
             cand_score -= cand_score / 3;
           }
           if ((*(byte *)&civs[civ].treaties[cities[city].owner] &
-              8) != 0) {
+              TREATY_ALLIANCE) != 0) {
             cand_score += cand_score / 3;
           }
           if (((((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)
@@ -3808,7 +3808,7 @@ static void ai_orders_ship_goal_war(AiUnitOrders *o)
   int &cand_score = o->cand_score; uptr &city2 = o->city2;
   int &own_dist = o->own_dist; int &best_score = o->best_score;
   int &here_landmass = o->here_landmass; uint &tasks_mask = o->tasks_mask;
-  if ((units[unit2].orders != 11) &&
+  if ((units[unit2].orders != ORDER_GOTO) &&
      (((tasks_mask & 3) != 0 && (unit_types[units[unit2].type].hold != '\0')))) {
     best_score = 0x18;
     for (city = 0; (int)city < (int)game.num_cities;
@@ -3833,7 +3833,7 @@ static void ai_orders_ship_goal_war(AiUnitOrders *o)
           }
           else {
             city7 = civ_ai_goal_get_priority(civ,(int)cities[city].x,
-                                        (int)cities[city].y,1);
+                                        (int)cities[city].y,ROLE_DEFEND);
             if (city7 != 0) {
               cand_score -= cand_score / 3;
             }
@@ -3847,13 +3847,13 @@ static void ai_orders_ship_goal_war(AiUnitOrders *o)
       }
     }
   }
-  if ((units[unit2].orders != 11) && ((tasks_mask & 3) != 0)) {
+  if ((units[unit2].orders != ORDER_GOTO) && ((tasks_mask & 3) != 0)) {
     best_score = 999;
     for (city = 0; (int)city < (int)game.num_cities;
         city = city + 1) {
       if (((cities[city].id != 0) &&
           (civ2 = (uptr)cities[city].owner, civ2 != civ)) &&
-         ((((byte)(civs[civ].treaties[civ2] >> 8) & 0x20) != 0 &&
+         ((((byte)(civs[civ].treaties[civ2] >> 8) & (TREATY_WAR >> 8)) != 0 &&
           (city7 = tile_unit_owner((int)cities[city].x,
                                     (int)cities[city].y), city7 < 0)))) {
         tile_landmass((int)cities[city].x,(int)cities[city].y);
@@ -3868,14 +3868,14 @@ static void ai_orders_ship_goal_war(AiUnitOrders *o)
                                         ,(int)cities[city].y);
           for (civ4 = 1; civ4 < 8; civ4++) {
             if ((((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0)
-                && ((*(byte *)&civs[civ].treaties[civ4] & 8) != 0
+                && ((*(byte *)&civs[civ].treaties[civ4] & TREATY_ALLIANCE) != 0
                    )) && (((byte)(civs[civ4].treaties[civ2] >> 8)
-                          & 0x20) != 0)) {
+                          & (TREATY_WAR >> 8)) != 0)) {
               cand_score = cand_score / 2;
               break;
             }
           }
-          if ((cities[city].flags & 0x8000000) != 0) {
+          if ((cities[city].flags & CITYF_COASTAL_FORT_USED) != 0) {
             cand_score = cand_score << 1;
           }
           if (cand_score < best_score) {
@@ -3888,10 +3888,10 @@ static void ai_orders_ship_goal_war(AiUnitOrders *o)
       }
     }
   }
-  if (units[unit2].orders != 11) {
+  if (units[unit2].orders != ORDER_GOTO) {
     ally_civ = 0xffffffff;
     for (civ2 = 0; (int)civ2 < 8; civ2++) {
-      if (((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) &&
+      if (((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) != 0) &&
          (((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0 ||
           ((int)ally_civ < 0)))) {
         ally_civ = civ2;
@@ -3904,9 +3904,9 @@ static void ai_orders_ship_goal_war(AiUnitOrders *o)
           (int)city < (int)game.num_cities; city += 8) {
         if ((((((cities[city].id != 0) &&
                (civ2 = (uptr)cities[city].owner, civ2 != civ)) &&
-              ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0)) &&
-             (((*(byte *)&civs[civ].treaties[civ2] & 4) == 0 ||
-              ((*(byte *)&civs[civ].treaties[civ2] & 0x20) != 0)))
+              ((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) == 0)) &&
+             (((*(byte *)&civs[civ].treaties[civ2] & TREATY_PEACE) == 0 ||
+              ((*(byte *)&civs[civ].treaties[civ2] & TREATY_HOSTILE_INTENT) != 0)))
              ) && ((((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f))
                     == 0 || (game.civ_by_rank[7] == civ)))) &&
            (city7 = tile_landmass((int)cities[city].x,
@@ -3923,20 +3923,20 @@ static void ai_orders_ship_goal_war(AiUnitOrders *o)
                                           (int)cities[city].x,
                                           (int)cities[city].y);
             if ((0 < (int)ally_civ) &&
-               (((byte)(civs[ally_civ].treaties[civ2] >> 8) & 0x20) !=
+               (((byte)(civs[ally_civ].treaties[civ2] >> 8) & (TREATY_WAR >> 8)) !=
                 0)) {
               cand_score = cand_score / 2;
             }
-            if (((byte)(civs[civ].treaties[civ2] >> 8) & 8) != 0) {
+            if (((byte)(civs[civ].treaties[civ2] >> 8) & (TREATY_AGGRESSOR >> 8)) != 0) {
               cand_score = cand_score / 2;
             }
-            if ((((byte)(civs[civ].treaties[civ2] >> 8) & 0x20) != 0)
+            if ((((byte)(civs[civ].treaties[civ2] >> 8) & (TREATY_WAR >> 8)) != 0)
                && (city7 = tile_unit_owner((int)cities[city].x,
                                             (int)cities[city].y), city7 < 0)
                ) {
               cand_score = cand_score / 2;
             }
-            if ((cities[city].flags & 0x8000000) != 0) {
+            if ((cities[city].flags & CITYF_COASTAL_FORT_USED) != 0) {
               cand_score = cand_score << 1;
             }
             if (cand_score < best_score) {
@@ -4006,7 +4006,7 @@ static int ai_orders_transport_unload(AiUnitOrders *o)
         city5 = 0xffffffff;
         for (unit4 = unit_stack_first(unit2); -1 < (int)unit4;
             unit4 = unit_next_in_stack(unit4)) {
-          if (unit_types[units[unit4].type].role == 7) {
+          if (unit_types[units[unit4].type].role == ROLE_TRADE) {
             if (units[unit4].home_city == -1) {
               city5 = 0xffffffff;
             }
@@ -4071,11 +4071,11 @@ static int ai_orders_transport_unload(AiUnitOrders *o)
          (((10 < own_dist && (near_dist < 4)) &&
           ((city7 == near_landmass &&
            ((((uint)game.human_players & 1 << (cities[city4].owner & 0x1fU))
-             != 0 && (((byte)(civs[civ].treaties[cities[city4].owner] >> 8) & 0x20) != 0))))))))
+             != 0 && (((byte)(civs[civ].treaties[cities[city4].owner] >> 8) & (TREATY_WAR >> 8)) != 0))))))))
       {
         needs_units = 1;
       }
-      if (((units[unit2].orders == 11) &&
+      if (((units[unit2].orders == ORDER_GOTO) &&
           (y = tile_landmass((int)units[unit2].goto_x,
                                   (int)units[unit2].goto_y), y == city7))
          && (units[unit2].ai_task != '3')) {
@@ -4132,11 +4132,11 @@ static int ai_orders_transport_unload(AiUnitOrders *o)
           return AI_ORDERS_APPLY_DIR;
         }
         if (*(char *)&civs[civ].continent_policy[city7] == '\0') {
-          civ_add_ai_goal(civ,x2,y3,2,5);
+          civ_add_ai_goal(civ,x2,y3,ROLE_NAVAL_SUPERIORITY,5);
         }
         units[unit2].ai_task = 'U';
         unit_exhaust_moves(unit2);
-        units[unit2].orders = -1;
+        units[unit2].orders = ORDER_NONE;
         if (!trade_drop) {
           tasks_mask = tasks_mask & 0xffffff7f;
         }
@@ -4146,7 +4146,7 @@ static int ai_orders_transport_unload(AiUnitOrders *o)
       if (((trade_drop) && (1 < (int)y2)) && ((int)y2 < map.height - 2)
          ) {
         if (*(char *)&civs[civ].continent_policy[city7] == '\0') {
-          civ_add_ai_goal(civ,x2,y3,2,5);
+          civ_add_ai_goal(civ,x2,y3,ROLE_NAVAL_SUPERIORITY,5);
         }
         units[unit2].ai_task = 'u';
         unit_exhaust_moves(unit2);
@@ -4155,17 +4155,17 @@ static int ai_orders_transport_unload(AiUnitOrders *o)
           tasks_mask = 0x82;
         }
         unit_stack_wake_by_role(unit2,tasks_mask,explore_flag);
-        units[unit2].orders = -1;
+        units[unit2].orders = ORDER_NONE;
         return AI_ORDERS_FINISH_ORDERS;
       }
       if ((game.turn & 3U) == 0) {
-        units[unit2].orders = -1;
+        units[unit2].orders = ORDER_NONE;
       }
     }
   }
   city7 = unit_moves_left(unit2);
   if ((city7 <= (int)(uint)cosmic.road_move_mult) &&
-     (units[unit2].orders == 11)) {
+     (units[unit2].orders == ORDER_GOTO)) {
     x4 = units[unit2].goto_x + x2 >> 1;
     y2 = units[unit2].goto_y + y3 >> 1;
     if ((x4 & 1) != 0) {
@@ -4174,7 +4174,7 @@ static int ai_orders_transport_unload(AiUnitOrders *o)
     if ((y2 & 1) != 0) {
       x4++;
     }
-    civ_add_ai_goal(civ,x4,y2,2,3);
+    civ_add_ai_goal(civ,x4,y2,ROLE_NAVAL_SUPERIORITY,3);
   }
   return AI_ORDERS_NEXT;
 }
@@ -4217,8 +4217,8 @@ static int ai_orders_transport_port(AiUnitOrders *o)
         city = city + 1) {
       if ((((cities[city].id != 0) &&
            ((int)cities[city].owner == civ)) &&
-          ((cities[city].flags & 0x80) != 0)) &&
-         (((cities[city].flags & 0x200) == 0 ||
+          ((cities[city].flags & CITYF_COASTAL) != 0)) &&
+         (((cities[city].flags & CITYF_AI_FERRY_PORT) == 0 ||
           (((char)units[unit2].counter < '\0' &&
            ((int)(char)units[unit2].counter == -1 - (city & 0x3f))))))) {
         dest_landmass = tile_landmass((int)cities[city].x,(int)cities[city].y
@@ -4245,7 +4245,7 @@ static int ai_orders_transport_port(AiUnitOrders *o)
           unit3 = tile_first_unit((int)cities[city].x,
                                         (int)cities[city].y);
           if ((-1 < unit3) &&
-             (city7 = unit_stack_count_role(unit3,4),
+             (city7 = unit_stack_count_role(unit3,ROLE_SEA_TRANSPORT),
              (int)(uint)(cand_score == 0) < city7)) {
             cand_score += 0x10;
           }
@@ -4285,7 +4285,7 @@ static int ai_orders_transport_port(AiUnitOrders *o)
     }
     if (best_score < cand_score * 3) {
       units[unit2].counter = 0xff - ((byte)city6 & 0x3f);
-      cities[city6].flags = cities[city6].flags | 0x600;
+      cities[city6].flags = cities[city6].flags | (CITYF_AI_FERRY_PORT | CITYF_AI_FERRY_PORT_FRESH);
       if (trade_target == 0) {
         result = 5;
         x = tile_first_unit((int)units[unit2].goto_x,
@@ -4294,7 +4294,7 @@ static int ai_orders_transport_port(AiUnitOrders *o)
         if (city7 == 0) {
           if (target_policy != 5) {
             civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                               (int)units[unit2].goto_y,5,cand_score);
+                               (int)units[unit2].goto_y,ROLE_SETTLE,cand_score);
           }
           if (target_policy != 5) {
             civ_add_ai_goal(civ,(int)units[unit2].goto_x,
@@ -4303,22 +4303,22 @@ static int ai_orders_transport_port(AiUnitOrders *o)
         }
         if (target_policy != 1) {
           civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                             (int)units[unit2].goto_y,1,cand_score);
+                             (int)units[unit2].goto_y,ROLE_DEFEND,cand_score);
         }
         if (target_policy != 0) {
           civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                             (int)units[unit2].goto_y,0,cand_score);
+                             (int)units[unit2].goto_y,ROLE_ATTACK,cand_score);
         }
         if ((target_policy == 4) || (target_policy == 5)) {
           civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                             (int)units[unit2].goto_y,6,cand_score);
+                             (int)units[unit2].goto_y,ROLE_DIPLOMACY,cand_score);
         }
       }
       civ_add_ai_goal(civ,(int)units[unit2].goto_x,(int)units[unit2].goto_y
-                         ,7,2);
+                         ,ROLE_TRADE,2);
     }
     else if (((own_dist == 0) &&
-             (city7 = unit_stack_count_role(unit2,4), city7 < 2)) &&
+             (city7 = unit_stack_count_role(unit2,ROLE_SEA_TRANSPORT), city7 < 2)) &&
             (((city7 = rand_range(0,3), city7 != 0 ||
               (best_score == 1000)) &&
              ((civs[civ].continent_flags[landmass] & 0x10) == 0)))) {
@@ -4332,7 +4332,7 @@ static int ai_orders_transport_port(AiUnitOrders *o)
         trade_target = 1;
       }
       if ((needs_units != 0) || (trade_target != 0)) {
-        cities[city2].flags = cities[city2].flags | 0x600;
+        cities[city2].flags = cities[city2].flags | (CITYF_AI_FERRY_PORT | CITYF_AI_FERRY_PORT_FRESH);
         if (needs_units != 0) {
           result = 5;
           x = tile_first_unit((int)cities[city2].x,
@@ -4340,24 +4340,24 @@ static int ai_orders_transport_port(AiUnitOrders *o)
           near_dist = unit_stack_count_role(x,result);
           if ((near_dist == 0) && (policy != 5)) {
             civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y
-                               ,5,cand_score);
+                               ,ROLE_SETTLE,cand_score);
             civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y
                                ,0x15,cand_score - 1);
           }
           if (policy != 1) {
             civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y
-                               ,1,cand_score);
+                               ,ROLE_DEFEND,cand_score);
           }
           if (policy != 0) {
             civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y
-                               ,0,cand_score);
+                               ,ROLE_ATTACK,cand_score);
           }
           if ((policy == 4) || (policy == 5)) {
             civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                               (int)units[unit2].goto_y,6,cand_score);
+                               (int)units[unit2].goto_y,ROLE_DIPLOMACY,cand_score);
           }
         }
-        civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y,7,2
+        civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y,ROLE_TRADE,2
                           );
         best_dir = 8;
         city3 = best_dir;
@@ -4388,7 +4388,7 @@ static void ai_orders_fortress_site(AiUnitOrders *o)
   uptr &dir = o->dir; uptr &city2 = o->city2; int &own_dist = o->own_dist;
   fort_need = 0;
   if (((settler_type) || (ai_role == 1)) &&
-     (city7 = civ_has_advance(civ,0x12), city7 != 0)) {
+     (city7 = civ_has_advance(civ,ADV_CONSTRUCTION), city7 != 0)) {
     home_dist = own_dist;
     if (-1 < (int)city2) {
       home_dist = map_distance(x2,y3,(int)cities[city2].x,
@@ -4429,7 +4429,7 @@ static void ai_orders_fortress_site(AiUnitOrders *o)
               sea_east = 1;
             }
           }
-          city7 = civ_ai_goal_get_priority(civ,x,y2,1);
+          city7 = civ_ai_goal_get_priority(civ,x,y2,ROLE_DEFEND);
           if (city7 != 0) return;
         }
       }
@@ -4482,7 +4482,7 @@ static void ai_orders_fortress_site(AiUnitOrders *o)
       }
       if (fort_need != 0) {
         if (settler_type) {
-          civ_add_standing_goal(civ,x2,y3,1,2);
+          civ_add_standing_goal(civ,x2,y3,ROLE_DEFEND,2);
         }
         else {
           civ_add_standing_goal(civ,x2,y3,0x15,
@@ -4528,9 +4528,9 @@ static int ai_orders_terraformer(AiUnitOrders *o)
   terrain = tile_improvements(x2,y3);
   if (((terrain & 0x10) == 0) &&
      ((tile = (byte *)tile_at(x2,y3), (*tile & 0x80) == 0 ||
-      (city7 = civ_has_advance(civ,7), city7 != 0)))) {
+      (city7 = civ_has_advance(civ,ADV_BRIDGE_BUILDING), city7 != 0)))) {
     units[unit].ai_task = 'r';
-    units[unit].orders = 5;
+    units[unit].orders = ORDER_BUILD_ROAD;
     return AI_ORDERS_FINISH_ORDERS;
   }
   if ((-1 < (int)city2) && (in_enemy_zoc != 0)) {
@@ -4546,23 +4546,23 @@ static int ai_orders_terraformer(AiUnitOrders *o)
       if ((terrain_types[terrain2].mine_ai_govt != '\0') &&
          ((char)terrain_types[terrain2].mine_ai_govt <
           (char)terrain_types[terrain2].irrigate_ai_govt)) {
-        units[unit].orders = 7;
+        units[unit].orders = ORDER_MINE;
         return AI_ORDERS_FINISH_ORDERS;
       }
       if (terrain_types[terrain2].irrigate_ai_govt != '\0') {
-        units[unit].orders = 6;
+        units[unit].orders = ORDER_IRRIGATE;
         return AI_ORDERS_FINISH_ORDERS;
       }
     }
     if ((tile_byte & 0x80) != 0) {
-      units[unit].orders = '\t';
+      units[unit].orders = ORDER_CLEAN_POLLUTION;
       return AI_ORDERS_FINISH_ORDERS;
     }
     terrain = tile_improvements(x2,y3);
     if (((terrain & 0x20) == 0) &&
-       (city7 = civ_has_advance(civ,0x43), city7 != 0)) {
+       (city7 = civ_has_advance(civ,ADV_RAILROAD), city7 != 0)) {
       units[unit].ai_task = 'r';
-      units[unit].orders = 5;
+      units[unit].orders = ORDER_BUILD_ROAD;
       return AI_ORDERS_FINISH_ORDERS;
     }
     city3 = city2;
@@ -4589,10 +4589,10 @@ static int ai_orders_terraformer(AiUnitOrders *o)
         }
         tile = (byte *)tile_at(x,y2);
         if ((((*tile & 0x80) == 0) ||
-            (city7 = civ_has_advance(civ,7), city7 != 0)) &&
+            (city7 = civ_has_advance(civ,ADV_BRIDGE_BUILDING), city7 != 0)) &&
            ((terrain = tile_improvements(x,y2), (terrain & 0x10) == 0 ||
             ((terrain = tile_improvements(x,y2), (terrain & 0x20) == 0 &&
-             (city7 = civ_has_advance(civ,0x43), city7 != 0)))))) {
+             (city7 = civ_has_advance(civ,ADV_RAILROAD), city7 != 0)))))) {
           unit_set_goto(unit,0x72,x,y2);
           return AI_ORDERS_FINISH_ORDERS;
         }
@@ -4602,9 +4602,9 @@ static int ai_orders_terraformer(AiUnitOrders *o)
   else {
     terrain = tile_improvements(x2,y3);
     if (((terrain & 0x20) == 0) &&
-       (city7 = civ_has_advance(civ,0x43), city7 != 0)) {
+       (city7 = civ_has_advance(civ,ADV_RAILROAD), city7 != 0)) {
       units[unit].ai_task = 'r';
-      units[unit].orders = 5;
+      units[unit].orders = ORDER_BUILD_ROAD;
       return AI_ORDERS_FINISH_ORDERS;
     }
   }
@@ -4646,31 +4646,31 @@ static int ai_orders_settler_work(AiUnitOrders *o)
     }
   }
   if (flag == 0) {
-    civ_add_ai_goal(civ,x2,y3,1,2);
+    civ_add_ai_goal(civ,x2,y3,ROLE_DEFEND,2);
   }
   civ_clear_standing_goals_near(civ,0x15,x2,y3,0);
   here_imps = tile_improvements(x2,y3);
-  if ((here_imps & 0x80) != 0) {
-    units[unit].orders = '\t';
+  if ((here_imps & TILE_POLLUTION) != 0) {
+    units[unit].orders = ORDER_CLEAN_POLLUTION;
     units[unit].ai_task = 'p';
     return AI_ORDERS_FINISH_ORDERS;
   }
   if (((((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0) ||
-       (units[unit].orders != 11)) ||
+       (units[unit].orders != ORDER_GOTO)) ||
       (city7 = map_in_bounds((int)units[unit].goto_x,
                               (int)units[unit].goto_y), city7 == 0)) ||
      (goto_imps = tile_improvements((int)units[unit].goto_x,
-                                 (int)units[unit].goto_y), (goto_imps & 0x80) == 0
+                                 (int)units[unit].goto_y), (goto_imps & TILE_POLLUTION) == 0
      )) {
     if (((fort_need == 2) && ((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0))
        && ((city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 == 0 ||
            (city7 = unit_stack_sum(unit,2), 1 < city7)))) {
-      units[unit].orders = 4;
+      units[unit].orders = ORDER_BUILD_FORTRESS;
       units[unit].ai_task = 'X';
       return AI_ORDERS_FINISH_ORDERS;
     }
     work_flags = 0;
-    if ((is_settler) && ((units[unit].flags & 0x80) != 0)) {
+    if ((is_settler) && ((units[unit].flags & UNITF_GOAL_REACHED) != 0)) {
       work_flags = 1;
     }
     else {
@@ -4679,8 +4679,8 @@ static int ai_orders_settler_work(AiUnitOrders *o)
         work_flags = 1;
       }
     }
-    if ((((2 < own_dist) || ((cities[city2].flags & 0x40) == 0)) || (!is_settler)) ||
-       (units[unit].orders != 11)) {
+    if ((((2 < own_dist) || ((cities[city2].flags & CITYF_AI_SETTLER_NEAR) == 0)) || (!is_settler)) ||
+       (units[unit].orders != ORDER_GOTO)) {
       if ((((own_dist != 0) && (own_dist < 3)) &&
           ((((int)(char)terrain_types[terrain2].irrigate_turns / 5) * 3 - 3 <=
             (int)cities[city2].size ||
@@ -4693,12 +4693,12 @@ static int ai_orders_settler_work(AiUnitOrders *o)
         if ((work_flags & 2) != 0) {
           city7 = ai_tile_improve_choice(civ,x2,y3);
           if (city7 == 1) {
-            units[unit].orders = 6;
+            units[unit].orders = ORDER_IRRIGATE;
             units[unit].ai_task = 'I';
             return AI_ORDERS_FINISH_ORDERS;
           }
           if (city7 == 2) {
-            units[unit].orders = 7;
+            units[unit].orders = ORDER_MINE;
             units[unit].ai_task = 'M';
             return AI_ORDERS_FINISH_ORDERS;
           }
@@ -4709,7 +4709,7 @@ static int ai_orders_settler_work(AiUnitOrders *o)
         if (((tile_byte & 0x10) == 0) || ((tile_byte & 0x20) != 0)) {
           if (((tile_byte & 0x10) == 0) &&
              ((tile = (byte *)tile_at(x2,y3), (*tile & 0x80) == 0
-              || (city7 = civ_has_advance(civ,7), city7 != 0)))) {
+              || (city7 = civ_has_advance(civ,ADV_BRIDGE_BUILDING), city7 != 0)))) {
             work_flags = work_flags & 1;
             if (((tile_flags & 0xc) != 0) &&
                ((tile = (byte *)tile_at(x2,y3),
@@ -4717,14 +4717,14 @@ static int ai_orders_settler_work(AiUnitOrders *o)
               work_flags = work_flags | 2;
             }
             if (work_flags != 0) {
-              units[unit].orders = 5;
+              units[unit].orders = ORDER_BUILD_ROAD;
               units[unit].ai_task = 'r';
               return AI_ORDERS_FINISH_ORDERS;
             }
           }
         }
         else {
-          city7 = civ_has_advance(civ,0x43);
+          city7 = civ_has_advance(civ,ADV_RAILROAD);
           if (city7 != 0) {
             work_flags = work_flags & 1;
             city7 = tile_resource(x2,y3);
@@ -4738,7 +4738,7 @@ static int ai_orders_settler_work(AiUnitOrders *o)
               work_flags = work_flags | 2;
             }
             if (work_flags != 0) {
-              units[unit].orders = 5;
+              units[unit].orders = ORDER_BUILD_ROAD;
               units[unit].ai_task = 'R';
               return AI_ORDERS_FINISH_ORDERS;
             }
@@ -4749,13 +4749,13 @@ static int ai_orders_settler_work(AiUnitOrders *o)
           ((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0)) &&
          ((city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 == 0 ||
           (city7 = unit_stack_sum(unit,2), 1 < city7)))) {
-        units[unit].orders = 4;
+        units[unit].orders = ORDER_BUILD_FORTRESS;
         units[unit].ai_task = 'X';
         return AI_ORDERS_FINISH_ORDERS;
       }
       city3 = city2;
-      if (((units[unit].orders == 11) &&
-          ((units[unit].flags & 0x200) == 0)) &&
+      if (((units[unit].orders == ORDER_GOTO) &&
+          ((units[unit].flags & UNITF_AI_COLONIST) == 0)) &&
          (city7 = (leaders[civs[civ].tribe].expand + 1) *
                    (int)landmass_table_block.landmass_recs[landmass].fertile_tiles,
          terrain = (uint)civs[civ].continent_cities[landmass],
@@ -4771,7 +4771,7 @@ static int ai_orders_settler_work(AiUnitOrders *o)
               (city7 = tile_city_owner(x,y2), city7 < 0)) &&
              (((unit3 = tile_first_unit(x,y2), unit3 < 0 ||
                (((int)units[unit3].owner == civ &&
-                (city7 = unit_stack_count_role(unit3,5), city7 == 0)))) &&
+                (city7 = unit_stack_count_role(unit3,ROLE_SETTLE), city7 == 0)))) &&
               (city7 = ai_tile_improve_choice(civ,x,y2), city7 != 0)))) {
             tile_byte = tile_terrain(x,y2);
             unit4 = (uptr)tile_byte;
@@ -4791,10 +4791,10 @@ static int ai_orders_settler_work(AiUnitOrders *o)
       terrain = tile_improvements(x2,y3);
       if ((((terrain & 0x10) == 0) &&
           ((tile = (byte *)tile_at(x2,y3), (*tile & 0x80) == 0 ||
-           (city7 = civ_has_advance(civ,7), city7 != 0)))) &&
+           (city7 = civ_has_advance(civ,ADV_BRIDGE_BUILDING), city7 != 0)))) &&
          ((own_dist < 3 && ((int)terrain2 < 3)))) {
         units[unit].ai_task = 'r';
-        units[unit].orders = 5;
+        units[unit].orders = ORDER_BUILD_ROAD;
         return AI_ORDERS_FINISH_ORDERS;
       }
     }
@@ -4878,7 +4878,7 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
   int &score = o->score;
   is_attack = 1;
   attack_bonus = 0;
-  if (((settler_type) || (unit_types[units[unit].type].role == 7)) ||
+  if (((settler_type) || (unit_types[units[unit].type].role == ROLE_TRADE)) ||
      ((((unit_domain == 2 && (unit_types[units[unit].type].hold != '\0')) &&
        (((city7 = tile_is_ocean(x,y2), city7 == 0 &&
          ((char)unit_types[units[unit].type].attack < 3)) ||
@@ -4888,24 +4888,24 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
           ((char)unit_types[units[unit3].type].attack <=
            (char)unit_types[units[unit].type].defense)))))))) ||
       ((city7 = tile_is_ocean(x2,y3), city7 != 0 &&
-       ((unit_domain == 0 && ((unit_types[units[unit].type].flags & 4) == 0))))
+       ((unit_domain == 0 && ((unit_types[units[unit].type].flags & UTYPE_AMPHIBIOUS) == 0))))
       )))) return AI_ORDERS_CONTINUE;
-  if (((*(byte *)&civs[civ].treaties[civ2] & 6) == 0) &&
+  if (((*(byte *)&civs[civ].treaties[civ2] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0) &&
      (((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
       ((ai_role != 6) &&
        (owner_byte = civs[civ2].reputation, city7 = civ_get_attitude(civ,civ2),
         y = rand_range(0,0x13), 0x32 < (int)((uint)owner_byte * 5 + city7 + y - 10))))) {
     unit3 = unit_stack_best_defender(unit3,unit);
-    if (!(((((unit_types[units[unit3].type].domain != 1) ||
+    if (!(((((unit_types[units[unit3].type].domain != DOMAIN_AIR) ||
            (unit_types[units[unit3].type].range == '\0')) ||
-          ((unit_types[units[unit].type].flags & 0x10) != 0)) ||
+          ((unit_types[units[unit].type].flags & UTYPE_ATTACK_AIR) != 0)) ||
          (((city7 = tile_city_owner(x,y2), -1 < city7 ||
            (city7 = tile_airbase_owner(x,y2), -1 < city7)) ||
           (city7 = unit_stack_sum(unit3,9), city7 != 0)))) &&
-        (((unit_types[units[unit3].type].role != 7 ||
+        (((unit_types[units[unit3].type].role != ROLE_TRADE ||
           (city2 != city4)) ||
          (((civs[civ].government < civs[civ2].government ||
-           ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0)) &&
+           ((*(byte *)&civs[civ].treaties[civ2] & TREATY_VENDETTA) != 0)) &&
           (city7 = rand_range(0,(uint)civs[civ2].government -
                                          (uint)civs[civ].government),
           city7 != 0))))))) return AI_ORDERS_CONTINUE;
@@ -4917,7 +4917,7 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
     if (-1 < city7) {
       attack_value = attack_value * 3;
     }
-    if ((ai_role == 2) && (unit_types[units[unit3].type].role == 4))
+    if ((ai_role == 2) && (unit_types[units[unit3].type].role == ROLE_SEA_TRANSPORT))
     {
       attack_value = attack_value << 1;
     }
@@ -4932,17 +4932,17 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
           attack_value = attack_value << 1;
           attack_bonus = 1;
         }
-        city7 = unit_stack_count_role(unit3,0);
+        city7 = unit_stack_count_role(unit3,ROLE_ATTACK);
         if (city7 != 0) {
           attack_value = attack_value << 1;
           attack_bonus = 1;
         }
-        city7 = civ_ai_goal_get_priority(civ,x2,y3,0);
+        city7 = civ_ai_goal_get_priority(civ,x2,y3,ROLE_ATTACK);
         if (city7 != 0) {
           attack_value = attack_value << 1;
         }
       }
-      if ((game.rules & 0x10) != 0) {
+      if ((game.rules & RULE_NORMAL_COMBAT) != 0) {
         city7 = unit_max_hp(unit3);
         y = unit_hp_remaining(unit3);
         if (y <= city7 / 3) {
@@ -4950,7 +4950,7 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
           attack_value = attack_value << 1;
         }
       }
-      if ((unit_types[units[unit3].type].flags & 8) != 0) {
+      if ((unit_types[units[unit3].type].flags & UTYPE_SUBMARINE) != 0) {
         attack_value = attack_value * 3;
       }
     }
@@ -4961,7 +4961,7 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
         attack_value = 0;
       }
     }
-    if ((unit_type == 9) &&
+    if ((unit_type == UNIT_PARTISANS) &&
        (4 < (char)unit_types[units[unit3].type].role)) {
       attack_bonus = 2;
     }
@@ -4983,8 +4983,8 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
     else {
       score = -999;
       if ((((((policy == 0) && (ai_role == 0)) && (unit_domain == 0)) &&
-           (((units[unit3].flags & 0x2000) != 0 ||
-            (units[unit3].orders == 2)))) &&
+           (((units[unit3].flags & UNITF_VETERAN) != 0 ||
+            (units[unit3].orders == ORDER_FORTIFIED)))) &&
           ((3 < (char)terrain_types[terrain].defense ||
            (result = tile_improvements(x,y2),
            ((byte)result & 0x42) == 0x40)))) &&
@@ -4997,8 +4997,8 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
     }
   }
   else {
-    if (((((*(byte *)&civs[civ].treaties[civ2] & 6) == 0) ||
-         (unit_types[units[unit3].type].role != 6)) ||
+    if (((((*(byte *)&civs[civ].treaties[civ2] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0) ||
+         (unit_types[units[unit3].type].role != ROLE_DIPLOMACY)) ||
         (city7 = unit_stack_sum(unit3,2), city7 != 1)) ||
        ((unit_types[units[unit].type].attack == '\0' ||
         (city7 = city_find_nearest(x,y2,-1,0xffffffff,-1),
@@ -5006,10 +5006,10 @@ static int ai_orders_move_attack_score(AiUnitOrders *o)
       if (((ai_role == 6) &&
            ((policy == 0) ||
             ((policy == 5 ||
-             ((*(byte *)&civs[civ].treaties[civ2] & 6) == 0))))) ||
+             ((*(byte *)&civs[civ].treaties[civ2] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0))))) ||
           ((policy == 0) && (ai_role == 0))) {
-        if (!(((ai_role == 6) || (city2 == city4)) && (2 < game.difficulty))) {
-          if (units[unit3].orders != 2) return AI_ORDERS_CONTINUE;
+        if (!(((ai_role == 6) || (city2 == city4)) && (DIFF_PRINCE < game.difficulty))) {
+          if (units[unit3].orders != ORDER_FORTIFIED) return AI_ORDERS_CONTINUE;
           unit4 = 0;
           for (civ4 = 1; civ4 < 8; civ4++) {
             if (((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0)
@@ -5086,12 +5086,12 @@ static int ai_orders_move_base_score(AiUnitOrders *o)
   uptr &city2 = o->city2; int &score = o->score;
   score = 0;
   if (settler_type) {
-    if ((terrain2 == 10) &&
+    if ((terrain2 == TERRAIN_OCEAN) &&
        (city7 = tile_zoc_unit_adjacent(x,y2,civ), city7 != 0))
     return AI_ORDERS_CONTINUE;
     score = rand_range(0,4);
   }
-  else if ((units[unit].visibility == '\0') && (terrain2 != 10)) {
+  else if ((units[unit].visibility == '\0') && (terrain2 != TERRAIN_OCEAN)) {
     if (ai_role == 0) {
       score = rand_range(0,2);
       score += (char)terrain_types[terrain].move_cost * -2;
@@ -5126,7 +5126,7 @@ static int ai_orders_move_base_score(AiUnitOrders *o)
           else if (((cand_score == 2) &&
                    ((int)(char)terrain_types[terrain].move_cost <=
                     (int)(uint)cosmic.road_move_mult)) &&
-                  (road_imps = tile_improvements(x,y2), (road_imps & 0x10) != 0))
+                  (road_imps = tile_improvements(x,y2), (road_imps & TILE_ROAD) != 0))
           {
             score += 4;
           }
@@ -5139,9 +5139,9 @@ static int ai_orders_move_base_score(AiUnitOrders *o)
          (city7 = tile_adjacent_nonallied_unit(x,y2,civ), city7 != 0)) {
         switch(ai_role) {
         case 0:
-          unit4 = unit_stack_count_role(unit3,0);
+          unit4 = unit_stack_count_role(unit3,ROLE_ATTACK);
           if (((int)unit4 < 1) &&
-             (city7 = unit_stack_count_role(unit3,1), city7 != 0)) {
+             (city7 = unit_stack_count_role(unit3,ROLE_DEFEND), city7 != 0)) {
             score += 8;
           }
           else {
@@ -5149,7 +5149,7 @@ static int ai_orders_move_base_score(AiUnitOrders *o)
           }
           break;
         case 1:
-          unit4 = unit_stack_count_role(unit3,1);
+          unit4 = unit_stack_count_role(unit3,ROLE_DEFEND);
           if ((int)unit4 < 1) {
             score += 8;
           }
@@ -5158,19 +5158,19 @@ static int ai_orders_move_base_score(AiUnitOrders *o)
           }
           break;
         case 2:
-          city7 = unit_stack_count_role(unit3,4);
+          city7 = unit_stack_count_role(unit3,ROLE_SEA_TRANSPORT);
           if (city7 != 0) {
             score += 8;
           }
-          city7 = unit_stack_count_role(unit3,2);
+          city7 = unit_stack_count_role(unit3,ROLE_NAVAL_SUPERIORITY);
           score += city7 * -4;
           break;
         case 4:
-          city7 = unit_stack_count_role(unit3,2);
+          city7 = unit_stack_count_role(unit3,ROLE_NAVAL_SUPERIORITY);
           if (city7 != 0) {
             score += 8;
           }
-          city7 = unit_stack_count_role(unit3,4);
+          city7 = unit_stack_count_role(unit3,ROLE_SEA_TRANSPORT);
           score += city7 * -8;
           break;
         case 5:
@@ -5178,8 +5178,8 @@ static int ai_orders_move_base_score(AiUnitOrders *o)
           score -= 4;
           break;
         case 6:
-          city7 = unit_stack_count_role(unit3,0);
-          y = unit_stack_count_role(unit3,1);
+          city7 = unit_stack_count_role(unit3,ROLE_ATTACK);
+          y = unit_stack_count_role(unit3,ROLE_DEFEND);
           if (city7 + y != 0) {
             score += 8;
           }
@@ -5203,8 +5203,8 @@ static int ai_orders_move_base_score(AiUnitOrders *o)
           score += ((char)stat + city7) * 2;
           break;
         case 6:
-          city7 = unit_stack_count_role(unit3,0);
-          y = unit_stack_count_role(unit3,1);
+          city7 = unit_stack_count_role(unit3,ROLE_ATTACK);
+          y = unit_stack_count_role(unit3,ROLE_DEFEND);
           if (city7 + y != 0) {
             score += 8;
           }
@@ -5249,7 +5249,7 @@ static void ai_orders_move_score_dir(AiUnitOrders *o)
     civ2 = tile_owner(x,y2);
     owner_byte = tile_terrain(x,y2);
     terrain = (uint)owner_byte;
-    is_ocean = (uint)(terrain == 10);
+    is_ocean = (uint)(terrain == TERRAIN_OCEAN);
     if ((is_ocean == 0) || (unit_domain != 0)) {
       unit3 = tile_first_unit(x,y2);
       while (((-1 < unit3 && (-1 < units[unit3].next_in_stack)) &&
@@ -5262,7 +5262,7 @@ static void ai_orders_move_score_dir(AiUnitOrders *o)
                ((type_flags & 2) != 0)))))) || (is_ocean != 0)) &&
            ((((is_ocean == 0 || (unit_domain != 0)) || (unit3 < 0)) || (civ2 == civ))
            )) && (((unit_domain != 2 || (is_ocean != 0)) ||
-                  (((-1 < unit3 && ((civ2 != civ && (terrain2 == 10)))) &&
+                  (((-1 < unit3 && ((civ2 != civ && (terrain2 == TERRAIN_OCEAN)))) &&
                    ((type_flags & 8) == 0)))))) &&
          ((((unit3 < 0 || (civ2 != civ)) ||
            (city7 = unit_stack_sum(unit3,2), city7 < 2)) ||
@@ -5292,10 +5292,10 @@ static void ai_orders_move_score_dir(AiUnitOrders *o)
             (city7 = tile_is_ocean(x,y2), city3 = city4, city7 == 0)) &&
            ((char)unit_types[units[unit].type].role < 5)) {
           if ((((near_dist < 4) && ((int)cities[city4].owner != civ)) &&
-              (((*(byte *)&civs[civ].treaties[cities[city4].owner] & 6) != 0
-               && ((*(byte *)&civs[civ].treaties[cities[city4].owner] & 8) ==
+              (((*(byte *)&civs[civ].treaties[cities[city4].owner] & (TREATY_CEASEFIRE | TREATY_PEACE)) != 0
+               && ((*(byte *)&civs[civ].treaties[cities[city4].owner] & TREATY_ALLIANCE) ==
                    0)))) &&
-             (((*(byte *)&civs[civ].treaties[cities[city4].owner] & 4) != 0
+             (((*(byte *)&civs[civ].treaties[cities[city4].owner] & TREATY_PEACE) != 0
               || (city7 = civ_get_attitude(civ,(int)cities[city4].owner),
                  city7 < 0x32)))) {
             cand_score = map_distance_diag((int)cities[city3].x,(int)cities[city3].y,x
@@ -5311,13 +5311,13 @@ static void ai_orders_move_score_dir(AiUnitOrders *o)
           }
           civ3 = tile_radius_civ(x,y2);
           if ((((0 < (int)civ3) && (civ3 != civ)) &&
-              ((*(byte *)&civs[civ].treaties[civ3] & 6) != 0)) &&
-             ((*(byte *)&civs[civ].treaties[civ3] & 8) == 0)) {
-            if ((((*(byte *)&civs[civ].treaties[civ3] & 4) != 0) &&
+              ((*(byte *)&civs[civ].treaties[civ3] & (TREATY_CEASEFIRE | TREATY_PEACE)) != 0)) &&
+             ((*(byte *)&civs[civ].treaties[civ3] & TREATY_ALLIANCE) == 0)) {
+            if ((((*(byte *)&civs[civ].treaties[civ3] & TREATY_PEACE) != 0) &&
                 ((int)((uint)civs[civ3].reputation -
                       (int)civs[civ].reputation_credit[civ]) < 7)) &&
                (flag == 0)) return;
-            if ((((*(byte *)&civs[civ].treaties[civ3] & 4) != 0) &&
+            if ((((*(byte *)&civs[civ].treaties[civ3] & TREATY_PEACE) != 0) &&
                 ((int)((uint)civs[civ3].reputation -
                       (int)civs[civ].reputation_credit[civ]) < 7)) ||
                (city7 = civ_get_attitude(civ,civ3), city7 < 0x32)) {
@@ -5329,16 +5329,16 @@ static void ai_orders_move_score_dir(AiUnitOrders *o)
             }
           }
         }
-        if ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) {
+        if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) != 0) {
           score -= 6;
         }
         if (unit3 < 0) {
           city7 = tile_city_owner(x,y2);
           if ((-1 < city7) && (civ2 != civ)) {
-            if (((*(byte *)&civs[civ].treaties[civ2] & 0xe) != 0) &&
+            if (((*(byte *)&civs[civ].treaties[civ2] & (TREATY_CEASEFIRE | TREATY_PEACE | TREATY_ALLIANCE)) != 0) &&
                (((civs[civ2].reputation < 7 ||
-                 ((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0)) ||
-                ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0))))
+                 ((*(byte *)&civs[civ].treaties[civ2] & TREATY_VENDETTA) == 0)) ||
+                ((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) != 0))))
             return;
             score = 999;
             has_orders = 0;
@@ -5423,7 +5423,7 @@ static int ai_orders_plan_move(AiUnitOrders *o)
   will_attack = 0;
   if (((ai_role == 4) && (own_dist != 0)) &&
      ((city7 = unit_stack_sum(unit,2), 1 < city7 &&
-      (units[unit].orders == 11)))) {
+      (units[unit].orders == ORDER_GOTO)))) {
     has_orders = 1;
   }
   city7 = tile_zoc_unit_adjacent(x2,y3,civ);
@@ -5438,7 +5438,7 @@ static int ai_orders_plan_move(AiUnitOrders *o)
   else {
     units[unit].last_dir = 0xff;
   }
-  if (((game.game_flags & 0x80) != 0) && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)) {
+  if (((game.game_flags & GAME_SCENARIO) != 0) && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)) {
     explore = 0;
   }
   if (ai_role == 1) {
@@ -5491,22 +5491,22 @@ static void ai_orders_transport_cargo(AiUnitOrders *o)
   unit5 = unit;
   for (unit = unit_stack_first(unit); unit2 = unit5, -1 < unit;
       unit = unit_next_in_stack(unit)) {
-    if (unit_types[units[unit].type].domain == '\0') {
-      if (units[unit].orders == 2) {
+    if (unit_types[units[unit].type].domain == DOMAIN_LAND) {
+      if (units[unit].orders == ORDER_FORTIFIED) {
         if (((own_dist == 0) && (defender_count = defender_count + 1, (int)needed_defenders < defender_count)
             ) && ((policy == 4 || (freed_count == 0)))) {
-          units[unit].orders = -1;
+          units[unit].orders = ORDER_NONE;
           tasks_mask = tasks_mask | 1 << (unit_types[units[unit].type].role & 0x1f);
           freed_count++;
         }
       }
-      else if ((unit_types[units[unit].type].role == 1) &&
+      else if ((unit_types[units[unit].type].role == ROLE_DEFEND) &&
               (defender_count < (int)needed_defenders)) {
         defender_count++;
-        units[unit].orders = 1;
+        units[unit].orders = ORDER_FORTIFYING;
       }
       else {
-        units[unit].orders = -1;
+        units[unit].orders = ORDER_NONE;
         tasks_mask = tasks_mask | 1 << (unit_types[units[unit].type].role & 0x1f);
         freed_count++;
       }
@@ -5537,7 +5537,7 @@ static int ai_orders_transport(AiUnitOrders *o)
   else {
     room_aboard = 0;
   }
-  if ((tasks_mask == 0x20) && (units[unit2].orders != 11)) {
+  if ((tasks_mask == 0x20) && (units[unit2].orders != ORDER_GOTO)) {
     unit4 = 1;
   }
   else {
@@ -5550,18 +5550,18 @@ static int ai_orders_transport(AiUnitOrders *o)
   if (own_dist == 0) {
     for (unit4 = unit_stack_first(unit2); -1 < (int)unit4;
         unit4 = unit_next_in_stack(unit4)) {
-      if (unit_types[units[unit4].type].role == 5) {
+      if (unit_types[units[unit4].type].role == ROLE_SETTLE) {
         unit_relocate_in_place(unit4,1);
         break;
       }
     }
   }
   if (((((flag != 0) && (units[unit2].ai_task == 'A')) &&
-       (units[unit2].orders == 11)) &&
+       (units[unit2].orders == ORDER_GOTO)) &&
       ((near_dist != 0 &&
        (city7 = city_at((int)units[unit2].goto_x,
                                     (int)units[unit2].goto_y), -1 < city7)))) &&
-     (((cities[city7].flags & 0x80) != 0 &&
+     (((cities[city7].flags & CITYF_COASTAL) != 0 &&
       ((city7 = city_adjacent_to_body(city7,landmass), city7 != 0 &&
        ((game.turn & 0xfU) != 0)))))) {
     flag = 0;
@@ -5593,8 +5593,8 @@ static int ai_orders_pillage(AiUnitOrders *o)
   city7 = unit_max_moves(unit);
   if (((((city7 <= (int)(uint)cosmic.road_move_mult) && (-1 < (int)city3)) &&
        (((uint)game.human_players & 1 << (cities[city3].owner & 0x1fU)) != 0)) &&
-      ((((byte)(civs[civ].treaties[cities[city3].owner] >> 8) & 0x20) != 0
-       && (unit_types[units[unit].type].domain == '\0')))) &&
+      ((((byte)(civs[civ].treaties[cities[city3].owner] >> 8) & (TREATY_WAR >> 8)) != 0
+       && (unit_types[units[unit].type].domain == DOMAIN_LAND)))) &&
      (unit_types[units[unit].type].attack != '\0')) {
     map_tile = tile_at(x2,y3);
     tile_byte = map_tile->improvements;
@@ -5603,7 +5603,7 @@ static int ai_orders_pillage(AiUnitOrders *o)
     if (((tile_byte & 0x4c) == 0) || (3 < near_dist)) {
       if (((tile_byte & 0x5c) != 0) &&
          (((*(char *)&civs[civ].continent_cities[landmass] == '\0' && (near_dist < 8)) ||
-          (unit_type == 9)))) {
+          (unit_type == UNIT_PARTISANS)))) {
         unit4 = 1;
       }
     }
@@ -5632,13 +5632,13 @@ static int ai_orders_partisan(AiUnitOrders *o)
   int &has_orders = o->has_orders; iptr &unit5 = o->unit5;
   uptr &civ2 = o->civ2; uint &y2 = o->y2; int &cand_score = o->cand_score;
   uptr &dir = o->dir;
-  if (unit_type == 9) {
+  if (unit_type == UNIT_PARTISANS) {
     unit5 = unit;
     for (unit = 0; unit < game.num_units; unit++) {
       if (((((units[unit].id != 0) &&
             (4 < (char)unit_types[units[unit].type].role)) &&
            ((civ2 = (uptr)units[unit].owner, civ2 != civ &&
-            (((*(byte *)&civs[civ].treaties[civ2] & 6) == 0 &&
+            (((*(byte *)&civs[civ].treaties[civ2] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0 &&
              (city7 = map_distance(x2,y3,(int)units[unit].x,
                                           (int)units[unit].y), city7 < 4))))))
           && (((1 << (owner_byte & 0x1f) & (uint)units[unit].visibility) != 0 ||
@@ -5654,9 +5654,9 @@ static int ai_orders_partisan(AiUnitOrders *o)
     unit = unit5;
     if (has_orders != 0) return AI_ORDERS_BREAK;
   }
-  if ((((unit_type == 9) && (-1 < (int)city3)) &&
+  if ((((unit_type == UNIT_PARTISANS) && (-1 < (int)city3)) &&
       (((uint)game.human_players & 1 << (cities[city3].owner & 0x1fU)) != 0)) &&
-     ((*(byte *)&civs[civ].treaties[cities[city3].owner] & 6) == 0)) {
+     ((*(byte *)&civs[civ].treaties[cities[city3].owner] & (TREATY_CEASEFIRE | TREATY_PEACE)) == 0)) {
     cand_score = map_distance_diag(x2,y3,(int)cities[city3].x,
                                   (int)cities[city3].y);
     city6 = 0xffffffff;
@@ -5699,7 +5699,7 @@ static int ai_orders_keep_goto(AiUnitOrders *o)
   uint &ai_role = o->ai_role; int &x2 = o->x2; uint &flag = o->flag;
   int &has_orders = o->has_orders; int &retried = o->retried;
   uptr &civ2 = o->civ2;
-  if ((units[unit].orders == 11) &&
+  if ((units[unit].orders == ORDER_GOTO) &&
      (((ai_role != 2) ||
        (city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 == 0)) && (!forced_attack))) {
     flag = 1;
@@ -5718,16 +5718,16 @@ static int ai_orders_keep_goto(AiUnitOrders *o)
       if (!(((int)civ2 < 0) || (civ2 == civ))) {
         if ((ai_role != 4) ||
            ((city7 = unit_stack_sum(unit,2), city7 < 2 || (retried != 0)))) {
-          if (((*(byte *)&civs[civ].treaties[civ2] & 0xe) != 0) &&
+          if (((*(byte *)&civs[civ].treaties[civ2] & (TREATY_CEASEFIRE | TREATY_PEACE | TREATY_ALLIANCE)) != 0) &&
              ((ai_role != 7 ||
               (city7 = tile_city_owner((int)units[unit].goto_x,(int)units[unit].goto_y),
               city7 < 0)))) {
             flag = 0;
-            units[unit].orders = -1;
+            units[unit].orders = ORDER_NONE;
           }
         }
         else {
-          units[unit].orders = -1;
+          units[unit].orders = ORDER_NONE;
           retried = 1;
           return AI_ORDERS_CONTINUE;
         }
@@ -5754,26 +5754,26 @@ static int ai_orders_defender_fortify(AiUnitOrders *o)
   int &hold_pos = o->hold_pos; uptr &city4 = o->city4;
   uptr &terrain2 = o->terrain2; uptr &civ2 = o->civ2; uptr &city2 = o->city2;
   int &own_dist = o->own_dist;
-  if ((((ai_role == 1) && (terrain2 != 10)) && (has_orders == 0)) && (!forced_attack)) {
+  if ((((ai_role == 1) && (terrain2 != TERRAIN_OCEAN)) && (has_orders == 0)) && (!forced_attack)) {
     flag = 0;
     city7 = unit_stack_sum(unit,2);
     if ((city7 < 2) && (own_dist < 4)) {
       flag = flag | 1;
     }
-    if (((in_enemy_zoc != 0) && (city7 = unit_stack_count_role(unit,1), city7 == 1)) &&
+    if (((in_enemy_zoc != 0) && (city7 = unit_stack_count_role(unit,ROLE_DEFEND), city7 == 1)) &&
        ((((int)city4 < 0 ||
          (((city4 == city2 || (4 < near_dist)) ||
-          (((byte)(civs[civ].treaties[cities[city4].owner] >> 8) & 0x20) != 0)))) ||
+          (((byte)(civs[civ].treaties[cities[city4].owner] >> 8) & (TREATY_WAR >> 8)) != 0)))) ||
         (6 < (int)((uint)civs[cities[city4].owner].reputation -
                   (int)civs[civ].reputation_credit[cities[city4].owner]))))) {
       flag = flag | 2;
     }
     if ((fort_need != 0) || (on_fortress != 0)) {
-      city7 = unit_stack_count_role(unit,1);
+      city7 = unit_stack_count_role(unit,ROLE_DEFEND);
       if (city7 == 1) {
         flag = flag | 4;
       }
-      if ((flag != 0) || ((units[unit].flags & 0x100) != 0)) {
+      if ((flag != 0) || ((units[unit].flags & UNITF_AI_GARRISON) != 0)) {
         flag = flag | 8;
       }
     }
@@ -5786,14 +5786,14 @@ static int ai_orders_defender_fortify(AiUnitOrders *o)
     flag = terrain;
     civ2 = tile_radius_civ(x2,y3);
     if ((((0 < (int)civ2) && (civ2 != civ)) &&
-        ((*(byte *)&civs[civ].treaties[civ2] & 4) != 0)) &&
+        ((*(byte *)&civs[civ].treaties[civ2] & TREATY_PEACE) != 0)) &&
        ((int)((uint)civs[civ2].reputation - (int)civs[civ].reputation_credit[civ2])
         < 7)) {
       flag = 0;
     }
     if (flag != 0) {
       if ((flag & 0xc) != 0) {
-        civ_clear_standing_goals_near(civ,1,x2,y3,1);
+        civ_clear_standing_goals_near(civ,ROLE_DEFEND,x2,y3,1);
       }
       units[unit].ai_task = 'F';
       if ((char)unit_types[unit_type].attack < (char)unit_types[unit_type].defense) {
@@ -5820,7 +5820,7 @@ static void ai_orders_partisan_fortress(AiUnitOrders *o)
   int &x2 = o->x2; uint &on_fortress = o->on_fortress; uptr &city4 = o->city4;
   int &cand_score = o->cand_score; uptr &city2 = o->city2;
   int &best_score = o->best_score;
-  if ((unit_type == 9) && (units[unit].moves_used == '\0')) {
+  if ((unit_type == UNIT_PARTISANS) && (units[unit].moves_used == '\0')) {
     if (in_enemy_zoc == 0) {
       if ((char)units[unit].counter < 15) {
         units[unit].counter++;
@@ -5867,11 +5867,11 @@ static void ai_orders_trespassers(AiUnitOrders *o)
   uptr &civ = o->civ; int &in_enemy_zoc = o->in_enemy_zoc;
   uptr &city4 = o->city4; uptr &city2 = o->city2;
   if (((in_enemy_zoc != 0) && (dialog_text_font_obj_block.adjacent_foreign_civ != 0)) &&
-     ((city2 == city4 && ((*(byte *)&civs[civ].treaties[dialog_text_font_obj_block.adjacent_foreign_civ] & 4) != 0))
+     ((city2 == city4 && ((*(byte *)&civs[civ].treaties[dialog_text_font_obj_block.adjacent_foreign_civ] & TREATY_PEACE) != 0))
      )) {
     civ_adjust_attitude(civ,dialog_text_font_obj_block.adjacent_foreign_civ,1);
     if ((((1 << ((byte)dialog_text_font_obj_block.adjacent_foreign_civ & 0x1f) & (uint)game.human_players) != 0) &&
-        (2 < game.difficulty)) &&
+        (DIFF_PRINCE < game.difficulty)) &&
        ((attitude = civ_get_attitude(civ,dialog_text_font_obj_block.adjacent_foreign_civ), 0x3c < attitude &&
         ((game.power_rank[civ] < game.power_rank[dialog_text_font_obj_block.adjacent_foreign_civ] &&
          (roll = rand_range(0,3), roll == 0)))))) {
@@ -5894,7 +5894,7 @@ static int ai_orders_badly_damaged(AiUnitOrders *o)
   uptr &terrain2 = o->terrain2; int &own_dist = o->own_dist;
   units[unit].ai_task = 'D';
   if (((unit_domain == 0) && ((int)ai_role < 2)) &&
-     (((((units[unit].flags & 0x100) != 0 ||
+     (((((units[unit].flags & UNITF_AI_GARRISON) != 0 ||
         (2 < (char)terrain_types[terrain2].defense)) &&
        ((((ai_role == 1 ||
           (city7 = unit_max_moves(unit), city7 <= (int)(uint)cosmic.road_move_mult))
@@ -5905,7 +5905,7 @@ static int ai_orders_badly_damaged(AiUnitOrders *o)
   else {
     if (((unit_domain != 0) || (on_fortress == 0)) || (ally_territory != 0)) {
       if (((ai_role != 4) || (city7 = unit_stack_sum(unit,2), city7 < 2)) &&
-         ((unit_go_home(unit), units[unit].orders == 11 ||
+         ((unit_go_home(unit), units[unit].orders == ORDER_GOTO ||
           (city7 = unit_moves_left(unit), city7 == 0)))) return AI_ORDERS_FINISH_ORDERS;
       return AI_ORDERS_SCENARIO_GUARD_CHECK;
     }
@@ -5928,7 +5928,7 @@ static int ai_orders_damaged(AiUnitOrders *o)
   uint &ai_role = o->ai_role; uint &damage_level = o->damage_level;
   int &x2 = o->x2; uptr &best_dir = o->best_dir;
   int &has_orders = o->has_orders; int &own_dist = o->own_dist;
-  units[unit].flags = units[unit].flags & 0xfff7;
+  units[unit].flags = units[unit].flags & ~UNITF_AI_RETREATING;
   if (((((damage_level != 0) && (units[unit].moves_used == '\0')) && (ally_territory == 0)) &&
       ((unit_domain == 0 ||
        (((unit_domain == 2 && (city7 = unit_stack_sum(unit,2), city7 < 2)) &&
@@ -5961,7 +5961,7 @@ static int ai_orders_damaged(AiUnitOrders *o)
     unit_go_home(unit);
     city7 = unit_moves_left(unit);
     if (city7 == 0) return AI_ORDERS_FINISH_ORDERS;
-    if (units[unit].orders == 11) {
+    if (units[unit].orders == ORDER_GOTO) {
       has_orders = 1;
       return AI_ORDERS_PLAN_MOVE;
     }
@@ -5977,37 +5977,37 @@ static i32 ai_orders_finish(AiUnitOrders *o)
 {
   bool &stay_home = o->stay_home; int &near_dist = o->near_dist;
   iptr &unit = o->unit; int &unit_domain = o->unit_domain;
-  if ((((units[unit].orders == -1) || (units[unit].orders == 16)) ||
-      (units[unit].orders == 1)) || (units[unit].orders == 2)) {
-    if (units[unit].orders == 16) {
+  if ((((units[unit].orders == ORDER_NONE) || (units[unit].orders == ORDER_AI_IDLE)) ||
+      (units[unit].orders == ORDER_FORTIFYING)) || (units[unit].orders == ORDER_FORTIFIED)) {
+    if (units[unit].orders == ORDER_AI_IDLE) {
       units[unit].ai_task = '0';
     }
-    if (unit_types[units[unit].type].domain == 1) {
-      units[unit].orders = -1;
+    if (unit_types[units[unit].type].domain == DOMAIN_AIR) {
+      units[unit].orders = ORDER_NONE;
       units[unit].moves_used += cosmic.road_move_mult;
       return 1;
     }
     unit_exhaust_moves(unit);
-    if ((unit_domain == 0) && (unit_types[units[unit].type].role != 5)) {
-      units[unit].orders = 1;
-      if ((units[unit].flags & 0x100) != 0) {
-        units[unit].orders = 2;
+    if ((unit_domain == 0) && (unit_types[units[unit].type].role != ROLE_SETTLE)) {
+      units[unit].orders = ORDER_FORTIFYING;
+      if ((units[unit].flags & UNITF_AI_GARRISON) != 0) {
+        units[unit].orders = ORDER_FORTIFIED;
       }
       if (stay_home) {
-        units[unit].orders = -1;
+        units[unit].orders = ORDER_NONE;
       }
     }
     else {
-      units[unit].orders = -1;
+      units[unit].orders = ORDER_NONE;
     }
   }
-  if (((units[unit].orders == 11) && (units[unit].goto_x == units[unit].x)) &&
+  if (((units[unit].orders == ORDER_GOTO) && (units[unit].goto_x == units[unit].x)) &&
      (units[unit].y == units[unit].goto_y)) {
-    units[unit].flags = units[unit].flags | 0x80;
-    units[unit].orders = -1;
+    units[unit].flags = units[unit].flags | UNITF_GOAL_REACHED;
+    units[unit].orders = ORDER_NONE;
     if (units[unit].moves_used != '\0') {
-      if (unit_types[units[unit].type].role == 2) {
-        near_dist = unit_stack_count_role(unit,4);
+      if (unit_types[units[unit].type].role == ROLE_NAVAL_SUPERIORITY) {
+        near_dist = unit_stack_count_role(unit,ROLE_SEA_TRANSPORT);
         if (near_dist != 0) {
           unit_exhaust_moves(unit);
         }
@@ -6168,7 +6168,7 @@ i32 __cdecl ai_unit_choose_orders(void)
   on_fortress = (uint)(((byte)result & 0x42) == 0x40);
   if (((8 < own_dist) || (landmass != own_landmass)) &&
      ((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0)) {
-    units[unit].flags = units[unit].flags & 0xfdff;
+    units[unit].flags = units[unit].flags & ~UNITF_AI_COLONIST;
   }
   ai_role = ai_unit_role(unit);
   type_flags = unit_types[units[unit].type].flags;
@@ -6176,11 +6176,11 @@ i32 __cdecl ai_unit_choose_orders(void)
   policy = (uint)civs[civ].continent_policy[landmass];
   ai_orders_trespassers(&st);
   city3 = city4;
-  if (((((near_dist == 1) && (city2 != city4)) && (unit_domain == 0)) &&
+  if (((((near_dist == 1) && (city2 != city4)) && (unit_domain == DOMAIN_LAND)) &&
       (((char)unit_types[units[unit].type].role < 6 &&
        (city7 = tile_unit_owner((int)cities[city4].x,(int)cities[city4].y), city7 < 0)))) &&
-     ((*(byte *)&civs[civ].treaties[cities[city3].owner] & 0xe) == 0)) {
-    units[unit].orders = -1;
+     ((*(byte *)&civs[civ].treaties[cities[city3].owner] & (TREATY_CEASEFIRE | TREATY_PEACE | TREATY_ALLIANCE)) == 0)) {
+    units[unit].orders = ORDER_NONE;
     in_enemy_zoc = 1;
     dialog_text_font_obj_block.adjacent_foreign_civ = (iptr)cities[city3].owner;
     forced_attack = true;
@@ -6200,8 +6200,8 @@ i32 __cdecl ai_unit_choose_orders(void)
   if (damage_level != 0) {
     ally_territory = 0;
     civ2 = tile_radius_civ(x2,y3);
-    if ((((0 < (int)civ2) && ((*(byte *)&civs[civ].treaties[civ2] & 4) != 0)) &&
-        ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0)) &&
+    if ((((0 < (int)civ2) && ((*(byte *)&civs[civ].treaties[civ2] & TREATY_PEACE) != 0)) &&
+        ((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) == 0)) &&
        ((int)((uint)civs[civ2].reputation - (int)civs[civ].reputation_credit[civ2])
         < 6)) {
       ally_territory = 1;
@@ -6222,10 +6222,10 @@ i32 __cdecl ai_unit_choose_orders(void)
     }
   }
   if ((((((damage_level == 0) || (units[unit].moves_used != '\0')) ||
-        ((ally_territory != 0 || ((unit_domain != 1 || (unit_types[units[unit].type].range != '\0')))))
+        ((ally_territory != 0 || ((unit_domain != DOMAIN_AIR || (unit_types[units[unit].type].range != '\0')))))
         ) || (city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 != 0)) ||
       ((own_dist < 0xd || (units[unit].visibility != '\0')))) ||
-     (((damage_level != 2 && ((units[unit].flags & 8) == 0)) &&
+     (((damage_level != 2 && ((units[unit].flags & UNITF_AI_RETREATING) == 0)) &&
       ((((damage_level != 3 || (own_dist == 0)) || (own_dist < 0x18)) || (near_dist < 9)))))) {
     switch (ai_orders_damaged(&st)) {
     case AI_ORDERS_APPLY_DIR: goto apply_dir;
@@ -6242,17 +6242,17 @@ i32 __cdecl ai_unit_choose_orders(void)
     }
     else {
 scenario_guard_check:
-      if (((((game.game_flags & 0x80) == 0) || (((int)(short)prefs_game_rules_block.scenario_flags[0] & 0x8000U) == 0)) ||
+      if (((((game.game_flags & GAME_SCENARIO) == 0) || (((int)(short)prefs_game_rules_block.scenario_flags[0] & 0x8000U) == 0)) ||
           (civ != 1)) ||
-         (((((*((char *)&civs[1].treaties[3] + 1)) & 0x20) != 0 || (5 < game.turn)) ||
+         (((((*((char *)&civs[1].treaties[3] + 1)) & (TREATY_WAR >> 8)) != 0 || (5 < game.turn)) ||
           (0x4f < units[unit].x)))) {
-        if (((unit_domain == 0) && (own_dist == 0)) &&
-           (((units[unit].flags & 0x100) == 0 &&
-            (((cities[city2].flags & 0x200) != 0 && (policy != ai_role)))))) {
+        if (((unit_domain == DOMAIN_LAND) && (own_dist == 0)) &&
+           (((units[unit].flags & UNITF_AI_GARRISON) == 0 &&
+            (((cities[city2].flags & CITYF_AI_FERRY_PORT) != 0 && (policy != ai_role)))))) {
           stay_home = true;
         }
         else {
-          if (unit_domain == 1) {
+          if (unit_domain == DOMAIN_AIR) {
             unit4 = ai_air_unit_orders(unit,unit_type,(iptr)&x2,(iptr)&y3,ai_role,
                                           (iptr)&has_orders,own_dist,landmass,in_enemy_zoc);
             if (unit4 == 0xfffffffe) goto plan_move;
@@ -6287,7 +6287,7 @@ scenario_guard_check:
           case AI_ORDERS_RETURN_1: return 1;
           default: break;
           }
-          if ((unit_types[units[unit].type].flags & 0x100) != 0) {
+          if ((unit_types[units[unit].type].flags & UTYPE_PARADROP) != 0) {
             switch (ai_orders_paratrooper(&st)) {
             case AI_ORDERS_FINISH_ORDERS: goto finish_orders;
             case AI_ORDERS_PLAN_MOVE: goto plan_move;
@@ -6299,10 +6299,10 @@ scenario_guard_check:
         ai_orders_partisan_fortress(&st);
         if ((((on_fortress == 0) || (unit4 = tile_radius_civ(x2,y3), (int)unit4 < 1))
             || (unit4 == civ)) ||
-           ((((*(byte *)&civs[civ].treaties[unit4] & 4) != 0 &&
+           ((((*(byte *)&civs[civ].treaties[unit4] & TREATY_PEACE) != 0 &&
              ((int)((uint)civs[unit4].reputation -
                    (int)civs[civ].reputation_credit[unit4]) < 7)) &&
-            (((*(byte *)&civs[civ].treaties[unit4] & 8) != 0 || (2 < own_dist)))))) {
+            (((*(byte *)&civs[civ].treaties[unit4] & TREATY_ALLIANCE) != 0 || (2 < own_dist)))))) {
 guard_check:
           ai_orders_city_guard(&st);
           if (is_guard == 0) {
@@ -6312,10 +6312,10 @@ guard_check:
             if (hold_pos == 0) {
 load_transport_loop:
               for (;;) {
-                if (unit_domain == 2) {
+                if (unit_domain == DOMAIN_SEA) {
                   ai_orders_transport_cargo(&st);
                   if (ai_role == 2) {
-                    civ_clear_standing_goals_near(civ,2,x2,y3,0);
+                    civ_clear_standing_goals_near(civ,ROLE_NAVAL_SUPERIORITY,x2,y3,0);
                     civ_clear_standing_goals_near(civ,0x12,x2,y3,0);
                   }
                   if (ai_role == 4) {
@@ -6339,7 +6339,7 @@ load_transport_loop:
                 if (next == AI_ORDERS_APPLY_DIR) goto apply_dir;
                 if (next == AI_ORDERS_BREAK) break;
                 ai_orders_fortress_site(&st);
-                if (((ai_role == 5) && (units[unit].orders == 11)) &&
+                if (((ai_role == 5) && (units[unit].orders == ORDER_GOTO)) &&
                    (city7 = tile_city_owner((int)units[unit].goto_x,
                                              (int)units[unit].goto_y), -1 < city7)) {
                   goto_city = 1;
@@ -6354,7 +6354,7 @@ load_transport_loop:
                   default: break;
                   }
                 }
-                if (((ai_role == 0x15) && (units[unit].orders != 11)) &&
+                if (((ai_role == 0x15) && (units[unit].orders != ORDER_GOTO)) &&
                    ((!forced_attack &&
                     (((goto_city == 0 && (own_dist != 0)) &&
                      (city7 = tile_is_ocean(x2,y3), city7 == 0)))))) {
@@ -6388,9 +6388,9 @@ load_transport_loop:
           }
           else {
             unit4 = (uptr)(char)unit_types[units[unit].type].defense;
-            city7 = city_has_improvement(city2,8);
+            city7 = city_has_improvement(city2,IMP_CITY_WALLS);
             if (city7 == 0) {
-              if ((units[unit].flags & 0x100) != 0) {
+              if ((units[unit].flags & UNITF_AI_GARRISON) != 0) {
                 unit4 = (int)(unit4 * 3) / 2;
               }
             }
@@ -6423,8 +6423,8 @@ load_transport_loop:
             }
             goto guard_check;
           }
-          city7 = unit_stack_count_role(unit,1);
-          if ((1 < city7) && (units[unit].orders == 11)) goto guard_check;
+          city7 = unit_stack_count_role(unit,ROLE_DEFEND);
+          if ((1 < city7) && (units[unit].orders == ORDER_GOTO)) goto guard_check;
           units[unit].ai_task = 'F';
           hold_pos = 1;
         }
@@ -6438,7 +6438,7 @@ plan_move:
     }
   }
   else {
-    units[unit].flags = units[unit].flags | 8;
+    units[unit].flags = units[unit].flags | UNITF_AI_RETREATING;
     units[unit].ai_task = 'd';
     best_dir = 8;
     city3 = best_dir;
@@ -6447,18 +6447,18 @@ apply_dir:
   best_dir = city3;
   if (best_dir == 8) {
     units[unit].last_dir = 0xff;
-    units[unit].orders = -1;
+    units[unit].orders = ORDER_NONE;
   }
   else {
     x2 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[best_dir] + x2);
     y3 += (((i8 *)&dir_dy_table_block.dir_dy_table))[best_dir];
     near_dist = map_in_bounds(x2,y3);
     if (near_dist == 0) {
-      units[unit].orders = -1;
+      units[unit].orders = ORDER_NONE;
       unit_exhaust_moves(unit);
     }
     else {
-      units[unit].orders = 27;
+      units[unit].orders = ORDER_AI_GOTO;
       units[unit].goto_x = (i16)x2;
       units[unit].goto_y = (i16)y3;
     }
@@ -6481,7 +6481,7 @@ void __cdecl ai_process_civ_units(void)
   
   civ = (int)game.turn_civ;
   naval_first_turn = false;
-  if (((((game.game_flags & 0x80) != 0) && (((int)(*(short *)&prefs_game_rules_block.scenario_flags) & 0x8000U) != 0)) && (game.turn == 1)
+  if (((((game.game_flags & GAME_SCENARIO) != 0) && (((int)(*(short *)&prefs_game_rules_block.scenario_flags) & 0x8000U) != 0)) && (game.turn == 1)
       ) && (prefs_game_rules_block.scenario_objective_civ == civ)) {
     naval_first_turn = true;
   }
@@ -6502,7 +6502,7 @@ void __cdecl ai_process_civ_units(void)
       }
       if (((units[unit].id != 0) && (units[unit].owner == civ)) &&
          ((order_steps = 0, !naval_first_turn ||
-          ((pass != 0 || (unit_types[units[unit].type].domain == 1)))))) {
+          ((pass != 0 || (unit_types[units[unit].type].domain == DOMAIN_AIR)))))) {
         while (result = unit_is_awake_with_moves(unit), result != 0) {
           if (2 < game.multiplayer) {
             net_send_state_diff(0xff,2,0,0,0);
@@ -6513,8 +6513,8 @@ void __cdecl ai_process_civ_units(void)
           game.active_unit = (i16)unit;
           unit_continue_active_orders();
           if (game.num_units != prev_num_units) break;
-          if ((units[unit].orders != 11) &&
-             (unit_types[units[unit].type].domain != 1)) {
+          if ((units[unit].orders != ORDER_GOTO) &&
+             (unit_types[units[unit].type].domain != DOMAIN_AIR)) {
             order_steps++;
           }
           order_steps++;
@@ -6557,12 +6557,12 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
         if (((units[unit].id != 0) &&
             ((((units[unit].owner == civ ||
                (((units[unit].owner != civ2 &&
-                 ((*(byte *)&civs[civ].treaties[units[unit].owner] & 8) != 0)) &&
+                 ((*(byte *)&civs[civ].treaties[units[unit].owner] & TREATY_ALLIANCE) != 0)) &&
                 (((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) == 0)))) &&
-              (((unit_types[units[unit].type].domain == '\0' &&
+              (((unit_types[units[unit].type].domain == DOMAIN_LAND &&
                 (unit_types[units[unit].type].attack != '\0')) &&
                (result = unit_moves_left(unit), result != 0)))) &&
-             ((unit_types[units[unit].type].role != 1 ||
+             ((unit_types[units[unit].type].role != ROLE_DEFEND ||
               (result = tile_city_owner((int)units[unit].x,(int)units[unit].y), result < 0))))
             )) && ((result = map_distance(x,y,(int)units[unit].x,
                                                (int)units[unit].y), result < 7 &&
@@ -6575,7 +6575,7 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
           result = unit_moves_left(unit);
           result = map_path_next_dir((int)units[unit].x,(int)units[unit].y,result * 2);
           if ((0 < result) && (result != 8)) {
-            units[unit].orders = 11;
+            units[unit].orders = ORDER_GOTO;
             units[unit].goto_x = (i16)x;
             units[unit].goto_y = (i16)y;
             units[unit].ai_task = 'K';
@@ -6585,10 +6585,10 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
       return;
     }
     if (((((units[unit].id != 0) && (units[unit].owner == civ)) &&
-         ((unit_types[units[unit].type].flags & 0x100) != 0)) &&
+         ((unit_types[units[unit].type].flags & UTYPE_PARADROP) != 0)) &&
         (civ2 = tile_city_owner((int)units[unit].x,(int)units[unit].y), -1 < civ2)) &&
-       (((units[unit].moves_used == '\0' || ((units[unit].flags & 0x100) != 0)) &&
-        (((units[unit].flags & 0x10) == 0 &&
+       (((units[unit].moves_used == '\0' || ((units[unit].flags & UNITF_AI_GARRISON) != 0)) &&
+        (((units[unit].flags & UNITF_PARADROPPED) == 0 &&
          (civ2 = map_distance((int)units[unit].x,(int)units[unit].y,x,y),
          civ2 <= (int)(uint)cosmic.paradrop_range)))))) break;
     unit++;
@@ -6611,8 +6611,8 @@ i32 __cdecl ai_spaceship_race_behind(iptr civ)
   
   race_active = spaceship_race_active();
   if ((((race_active != 0) && (launched = civ_spaceship_launched(civ), launched == 0)) &&
-      ((game.game_flags & 2) == 0)) &&
-     ((game.difficulty != '\0' && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0))))
+      ((game.game_flags & GAME_WON) == 0)) &&
+     ((game.difficulty != DIFF_CHIEFTAIN && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0))))
   {
     for (civ2 = 1; civ2 < 8; civ2++) {
       if (((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
@@ -6629,7 +6629,7 @@ i32 __cdecl ai_spaceship_race_behind(iptr civ)
     }
     for (civ2 = 1; civ2 < 8; civ2++) {
       if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
-          (result = civ_has_advance(civ2,0x4c), result != 0)) && (civ2 != civ)) {
+          (result = civ_has_advance(civ2,ADV_SPACE_FLIGHT), result != 0)) && (civ2 != civ)) {
         rival_progress = 0;
         for (part = 0; part < 6; part++) {
           result = int_clamp((part + 1) / 2,0,2);
@@ -6656,8 +6656,8 @@ i32 __cdecl ai_tile_improve_choice(iptr civ,iptr x,i32 y)
   iptr level;
   
   result = tile_city_owner(x,y);
-  if (((result < 0) && (improvements_mask = tile_improvements(x,y), (improvements_mask & 8) == 0)) &&
-     (((improvements_mask & 4) == 0 || (result = civ_has_advance(civ,0x46), result != 0)))) {
+  if (((result < 0) && (improvements_mask = tile_improvements(x,y), (improvements_mask & TILE_MINE) == 0)) &&
+     (((improvements_mask & TILE_IRRIGATION) == 0 || (result = civ_has_advance(civ,ADV_REFRIGERATION), result != 0)))) {
     terrain_byte = tile_terrain(x,y);
     terrain = (uint)terrain_byte;
     for (level = 0; level < 2; level++) {
@@ -6667,7 +6667,7 @@ i32 __cdecl ai_tile_improve_choice(iptr civ,iptr x,i32 y)
           return 0;
         }
       }
-      else if ((improvements_mask & 4) != 0) {
+      else if ((improvements_mask & TILE_IRRIGATION) != 0) {
         return 0;
       }
       if (((terrain_types[terrain].improve_to[level] != -1) &&

@@ -3029,7 +3029,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   civ = (iptr)units[unit2].owner;
   unit_type = (uint)units[unit2].type;
   sprite_type = unit_type;
-  if ((unit_type == 0x2e) && (civ == 0)) {
+  if ((unit_type == UNIT_DIPLOMAT) && (civ == 0)) {
     sprite_type = 0x3e;
   }
   color_primary = civ_color_primary(civ);
@@ -3099,7 +3099,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   if (max_hp == 0) {
     max_hp = 10;
   }
-  if ((game.rules & 0x10) == 0) {
+  if ((game.rules & RULE_NORMAL_COMBAT) == 0) {
     dmg = 0;
   }
   if ((draw_flags & 4) == 0) {
@@ -3129,12 +3129,12 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     gfx_fill_rect(surface,(RECT *)&band_rect.left,hp_color);
   }
   order = (int)units[unit2].orders & 0xf;
-  if (units[unit2].orders == 16) {
+  if (units[unit2].orders == ORDER_AI_IDLE) {
     order = 0xffffffff;
   }
   if ((int)order < 1) {
     order_char = '-';
-    if (((int)(short)units[unit2].flags & 0x8000U) != 0) {
+    if ((units[unit2].flags & UNITF_AUTOMATED) != 0) {
       order_char = '*';
     }
   }
@@ -3157,7 +3157,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   }
   else {
     order_char = '-';
-    if (((int)(short)units[unit2].flags & 0x8000U) != 0) {
+    if ((units[unit2].flags & UNITF_AUTOMATED) != 0) {
       order_char = '*';
     }
   }
@@ -3175,7 +3175,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     }
     gfx_select_zoom_font(zoom);
     gfx_set_text_color_index(10);
-    if (((int)(short)units[unit2].flags & 0x8000U) != 0) {
+    if ((units[unit2].flags & UNITF_AUTOMATED) != 0) {
       gfx_set_text_color_index(0x1d);
     }
     value = 0;
@@ -3184,8 +3184,8 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     tmp = rect_width((RECT *)&shield_rect.left);
     ((DibSurface *)surface)->draw_text((iptr)&status_window_block.map_label_font,(const char *)order_text,shield_rect.left + tmp / 2,text_y,value);
   }
-  silhouette = (uint)(units[unit2].orders == 3);
-  if ((((unit_types[units[unit2].type].domain == 1) &&
+  silhouette = (uint)(units[unit2].orders == ORDER_SLEEP);
+  if ((((unit_types[units[unit2].type].domain == DOMAIN_AIR) &&
        (tmp = map_in_bounds((int)units[unit2].x,(int)units[unit2].y), tmp != 0)) &&
       (tmp = tile_airbase_owner((int)units[unit2].x,(int)units[unit2].y), -1 < tmp)) &&
      (((game.active_unit != unit2 || (moving_units_mode != 1)) || (unit_blink_active == '\0')))) {
@@ -3199,13 +3199,13 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + sprite_type * 0x3c))->draw_silhouette((iptr)clip_silhouette,surface,px,
                py,0x1a);
   }
-  if (units[unit2].orders == 2) {
+  if (units[unit2].orders == ORDER_FORTIFIED) {
     ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites))->draw((iptr)clip_fortify,surface,px,py);
   }
   tmp = map_in_bounds((int)units[unit2].x,(int)units[unit2].y);
   if (((tmp != 0) &&
       (value = tile_improvements((int)units[unit2].x,(int)units[unit2].y),
-      ((byte)value & 0x42) == 0x40)) && (no_fortress == 0)) {
+      ((byte)value & TILE_AIRBASE) == 0x40)) && (no_fortress == 0)) {
     ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite))->draw((iptr)clip_fortress,surface,px,py);
   }
   gfx_reset_zoom_scale();
@@ -3290,8 +3290,8 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
   color_primary = civ_color_primary(civ);
   tmp = tile_unit_owner((int)cities[city].x,(int)cities[city].y);
   occupied = (uint)(-1 < tmp);
-  tmp = city_has_improvement(city,8);
-  if ((tmp == 0) && (tmp = civ_has_wonder(civ,6), tmp == 0)) {
+  tmp = city_has_improvement(city,IMP_CITY_WALLS);
+  if ((tmp == 0) && (tmp = civ_has_wonder(civ,WONDER_GREAT_WALL), tmp == 0)) {
     walled = 0;
   }
   else {
@@ -3303,16 +3303,16 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
     style_id = civ_names[civ].city_style;
   }
   style2 = (int)style_id;
-  tmp = civ_has_advance(civ,0x25);
+  tmp = civ_has_advance(civ,ADV_INDUSTRIALIZATION);
   if (tmp != 0) {
     style2 = 4;
   }
-  tmp = civ_has_advance(civ,5);
-  if ((tmp != 0) && (tmp = civ_has_advance(civ,0x18), tmp != 0)) {
+  tmp = civ_has_advance(civ,ADV_AUTOMOBILE);
+  if ((tmp != 0) && (tmp = civ_has_advance(civ,ADV_ELECTRONICS), tmp != 0)) {
     style2 = 5;
   }
   if ((((human_civ[0] == civ) || (game.reveal_map != '\0')) ||
-      (((game.game_flags & 0x80) != 0 && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)))) || ((draw_flags & 0x1000) != 0))
+      (((game.game_flags & GAME_SCENARIO) != 0 && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)))) || ((draw_flags & 0x1000) != 0))
   {
     shown_size = cities[city].size;
   }
@@ -3360,10 +3360,10 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
   else {
     size_idx = 3;
   }
-  tmp = city_has_improvement(city,1);
+  tmp = city_has_improvement(city,IMP_PALACE);
   if ((tmp != 0) &&
      (((human_civ[0] == civ ||
-       ((game.difficulty < 3 && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0))))
+       ((game.difficulty < DIFF_KING && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0))))
       && (size_idx < 3)))) {
     size_idx++;
   }
@@ -3380,7 +3380,7 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
                flag_y);
   }
   if ((draw_flags & 1) == 0) {
-    if ((cities[city].flags & 1) == 0) {
+    if ((cities[city].flags & CITYF_DISORDER) == 0) {
       gfx_select_zoom_font(zoom);
       text_set_font((iptr)&status_window_block.map_label_font);
       text_set_surface(surface);

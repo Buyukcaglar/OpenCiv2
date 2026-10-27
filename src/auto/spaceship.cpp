@@ -643,7 +643,7 @@ void SpaceshipWindow::build_stats_text()
   str_append_colon((char *)stats_text);
   str_append_int((iptr)stats_text,unit_sound_editor_window_block.spaceship_fuel_pct);
   str_append_percent((iptr)stats_text);
-  if ((civs[ship_civ].spaceship_flags & 8) != 0) {
+  if ((civs[ship_civ].spaceship_flags & SHIP_FUSION) != 0) {
     str_append_space((iptr)stats_text);
     str_append_lparen((iptr)stats_text);
     str_append_label((iptr)stats_text,0xeb);
@@ -1530,9 +1530,9 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
   
   value = civ_spaceship_launched(civ);
   if (value == 0) {
-    value = civ_has_advance(civ,0x20);
+    value = civ_has_advance(civ,ADV_FUSION_POWER);
     if (value != 0) {
-      civs[civ].spaceship_flags = civs[civ].spaceship_flags | 8;
+      civs[civ].spaceship_flags = civs[civ].spaceship_flags | SHIP_FUSION;
     }
   }
   flags = civs[civ].spaceship_flags;
@@ -1575,7 +1575,7 @@ void __cdecl spaceship_calc_stats(iptr civ,int apply_support)
   divisor = int_clamp(part_count,arg_a,arg_b);
   unit_sound_editor_window_block.spaceship_fuel_pct = (value * 100) / divisor;
   paradigm = (uint)cosmic.mass_thrust_paradigm;
-  if ((flags & 8) != 0) {
+  if ((flags & SHIP_FUSION) != 0) {
     paradigm = (int)(paradigm * 3) >> 2;
   }
   scale = 1;
@@ -1638,7 +1638,7 @@ void __cdecl spaceship_launch(iptr civ)
   iptr city;
   iptr civ2;
   
-  civs[civ].spaceship_flags = civs[civ].spaceship_flags | 2;
+  civs[civ].spaceship_flags = civs[civ].spaceship_flags | SHIP_LAUNCHED;
   if (game.first_launch_turn < 0) {
     game.first_launch_turn = game.turn;
   }
@@ -1664,8 +1664,8 @@ void __cdecl spaceship_launch(iptr civ)
       if ((((civ2 != civ) && ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0))
           && (launched = civ_spaceship_launched(civ2), launched != 0)) &&
          (civs[civ].spaceship_arrival_year < civs[civ2].spaceship_arrival_year)) {
-        if (game.difficulty < 4) {
-          if ((game.difficulty < 2) || (civs[civ].reputation == '\0')) {
+        if (game.difficulty < DIFF_EMPEROR) {
+          if ((game.difficulty < DIFF_PRINCE) || (civs[civ].reputation == '\0')) {
             diplo_set_treaty_flags(civ,civ2,0x10000);
           }
           else {
@@ -1673,7 +1673,7 @@ void __cdecl spaceship_launch(iptr civ)
             *treaty = *treaty | 0x20;
           }
         }
-        else if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
+        else if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) == 0) {
           treaty = (uint *)(civ * 4 + (iptr)((u8 *)&civs + 32) + civ2 * 0x594);
           *treaty = *treaty & 0xffffffd9;
           treaty = (uint *)(civ * 4 + (iptr)((u8 *)&civs + 32) + civ2 * 0x594);
@@ -1772,7 +1772,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   text_append_colon();
   text_append_int(unit_sound_editor_window_block.spaceship_fuel_pct);
   text_append_percent();
-  if ((civs[civ].spaceship_flags & 8) != 0) {
+  if ((civs[civ].spaceship_flags & SHIP_FUSION) != 0) {
     text_append_space();
     text_append_lparen();
     text_append_label(0xeb);
@@ -1903,7 +1903,7 @@ iptr __cdecl spaceship_choose_part_group(iptr civ,iptr group)
            (count = civ_spaceship_launched(civ2), count != 0)) &&
           (civs[civ2].spaceship_arrival_year <= unit_sound_editor_window_block.spaceship_projected_arrival_year)) &&
          ((count = spaceship_group_full(civ,1), count == 0 &&
-          (count = civ_has_advance(civ,(int)improvements[0x24].preq), count != 0)))) {
+          (count = civ_has_advance(civ,(int)improvements[IMP_SS_COMPONENT].preq), count != 0)))) {
         earliest_arrival = civs[civ].spaceship_parts[1];
         count = spaceship_part_limit(civ,1);
         if (earliest_arrival <= count) {
@@ -2000,7 +2000,7 @@ int __cdecl spaceship_add_part(iptr civ,iptr group)
     }
     result = civ_spaceship_exists(civ);
     if (result == 0) {
-      civs[civ].spaceship_flags = civs[civ].spaceship_flags | 1;
+      civs[civ].spaceship_flags = civs[civ].spaceship_flags | SHIP_EXISTS;
       for (civ2 = 1; civ2 < 8; civ2++) {
         if (((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
            ((civ2 == civ || (result = civ_spaceship_exists(civ2), result == 0)))) {
@@ -2040,7 +2040,7 @@ int __cdecl spaceship_add_part(iptr civ,iptr group)
               }
             }
           }
-          if ((civ4 == 0) && (3 < game.difficulty)) {
+          if ((civ4 == 0) && (DIFF_KING < game.difficulty)) {
             for (civ3 = 1; civ3 < 8; civ3++) {
               if ((((civ3 != civ) &&
                    ((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) == 0)) &&
@@ -2142,8 +2142,8 @@ i32 __cdecl spaceship_race_active(void)
 {
   i32 active;
   
-  if ((game.rules & 0x80) == 0) {
-    if ((game.wonder_city[0x19] == -1) && ((game.human_players & game.advance_known_by[0x4c]) == 0))
+  if ((game.rules & RULE_BLOODLUST) == 0) {
+    if ((game.wonder_city[WONDER_APOLLO] == -1) && ((game.human_players & game.advance_known_by[ADV_SPACE_FLIGHT]) == 0))
     {
       active = 0;
     }

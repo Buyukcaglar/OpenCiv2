@@ -222,6 +222,30 @@ message by message and clock event by clock event.
   register and block choices, so most split functions are not identical
   at the instruction level: those were reviewed by hand and by the
   replays.
+* **Named constants** (step 6).  The game's magic numbers are enumerations
+  and flag constants (src/include/enums.h): unit types, improvements and
+  wonders, advances, governments, terrain, unit orders, roles, domains,
+  difficulty levels (named after the original RULES.TXT's slots, as
+  modders do: a scenario's rules may put another unit in slot 46), the
+  network message types (the original's NM_* table), the main menu's
+  commands and the sound effects (the original's WAV table); flag bits of
+  units, unit types, cities, civilizations, treaties (civ a toward civ b),
+  tiles, the game options, rules, game state, messages and spaceships.
+  About 4,900 numbers replaced by tools/name_constants.py (comparisons,
+  assignments, switch cases, call arguments and table indexes where the
+  value is known to be of the kind: a field, a call, a local named for it
+  or assigned only from such values; a flag word read a byte at a time as
+  `(byte)(t >> 8) & (TREATY_WAR >> 8)`).  The enums are unscoped with the
+  underlying type of the field (the 32-bit flag words: i32), so each
+  enumerator promotes and converts as the int literal did: the machine code
+  of every function is the same as before (tools/cxx_compare.py, all
+  files), and the suite passes.  Bit meanings come from the functions that
+  set and test them; the uncertain ones are marked "?" in the header.  Left
+  as numbers: sizes, coordinates and arithmetic; ranges (`orders < 4`,
+  `improvement < 0x27`); resources (terrain 11..32); masks of more than
+  four bits or bits without a name; unsigned literals (`0x8000U`, an
+  enumerator would be int); flag words reached through pointer arithmetic;
+  dialog control ids and other UI message numbers.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

@@ -566,7 +566,7 @@ void __cdecl int_swap(iptr a,iptr b)
 int __cdecl coarse_wrap_x(int x)
 
 {
-  if ((game.rules & 0x8000) == 0) {
+  if ((game.rules & RULE_FLAT_WORLD) == 0) {
     if (x < 0) {
       x = map.quarter_w + x;
     }

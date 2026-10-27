@@ -449,8 +449,8 @@ void __cdecl attitude_advisor_draw(void)
   int rows_per_page;
   
   civ = advisor_window_block.advisor_report_civ;
-  recalc_flag = game.transient_flags & 4;
-  game.transient_flags = game.transient_flags & 0xfffb;
+  recalc_flag = game.transient_flags & TRANSIENT_ATTITUDE_DIRTY;
+  game.transient_flags = game.transient_flags & ~TRANSIENT_ATTITUDE_DIRTY;
   ((FrameWindow *)((i8 *)&advisor_window_block.advisor_window))->layout();
   ((FrameWindow *)((i8 *)&advisor_window_block.advisor_window))->FrameWindow::draw_caption();
   ((PictureWindow *)((i8 *)&advisor_window_block.advisor_window))->blit();
@@ -506,7 +506,7 @@ void __cdecl attitude_advisor_draw(void)
     next_row = row_index;
     if ((((cities[city].id != 0) && (cities[city].owner == civ)) &&
         (next_row = row_index + 1, line_height <= (int)row_index)) && ((int)row_index < line_height + rows_per_page)) {
-      if ((recalc_flag != 0) && (4 < civs[civ].government)) {
+      if ((recalc_flag != 0) && (GOV_FUNDAMENTALISM < civs[civ].government)) {
         city_recalc(city,1);
       }
       gfx_draw_city((iptr)&advisor_window_block.advisor_window,city,0,(next_row & 1) * 0x40 + advisor_window_block.advisor_client_x + 2,row_y,0);
@@ -616,7 +616,7 @@ static void defense_draw_unit_stats(iptr civ,iptr unit_type,int row_x,int col_x,
   text_append_int((int)(char)unit_types[unit_type].attack);
   text_append((const char *)&str_empty_34);
   text_append_int((int)(char)unit_types[unit_type].defense);
-  if ((unit_types[unit_type].flags & 0x400) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_X2_VS_HORSE) != 0) {
     text_append((const char *)&str_empty_35);
   }
   text_append((const char *)&str_empty_36);
@@ -658,51 +658,51 @@ static void defense_draw_unit_stats(iptr civ,iptr unit_type,int row_x,int col_x,
     text_append_int((int)(char)unit_types[unit_type].hold);
   }
   (*(uint *)&tiles_dll_block.unit_ability_list_nonempty) = (uint)has_hold;
-  if ((unit_types[unit_type].flags & 0x10) == 0) {
-    if (unit_types[unit_type].domain == 1) {
+  if ((unit_types[unit_type].flags & UTYPE_ATTACK_AIR) == 0) {
+    if (unit_types[unit_type].domain == DOMAIN_AIR) {
       defense_append_ability_label(0x15d);
     }
   }
   else {
     defense_append_ability_label(0x15e);
   }
-  if ((unit_types[unit_type].flags & 1) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_SEE_TWO_SPACES) != 0) {
     defense_append_ability_label(0x15f);
   }
-  if ((unit_types[unit_type].flags & 2) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_IGNORE_ZOC) != 0) {
     defense_append_ability_label(0x160);
   }
-  if ((unit_types[unit_type].flags & 0x40) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_IGNORE_WALLS) != 0) {
     defense_append_ability_label(0x161);
   }
-  if ((unit_types[unit_type].flags & 4) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_AMPHIBIOUS) != 0) {
     defense_append_ability_label(0x162);
   }
-  if ((unit_types[unit_type].flags & 8) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_SUBMARINE) != 0) {
     defense_append_ability_label(0x163);
   }
-  if ((unit_types[unit_type].flags & 0x80) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_CARRY_AIR) != 0) {
     defense_append_ability_label(0x164);
   }
-  if ((unit_types[unit_type].flags & 0x100) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_PARADROP) != 0) {
     defense_append_ability_label(0x165);
   }
-  if ((unit_types[unit_type].flags & 0x200) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_ALPINE) != 0) {
     defense_append_ability_label(0x166);
   }
-  if ((unit_types[unit_type].flags & 0x400) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_X2_VS_HORSE) != 0) {
     defense_append_ability_label(0x167);
   }
-  if ((unit_types[unit_type].flags & 0x2000) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_X2_VS_AIR) != 0) {
     defense_append_ability_label(0x168);
   }
-  if ((unit_types[unit_type].flags & 0x20) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_COAST_BOUND) != 0) {
     defense_append_ability_label(0x169);
   }
-  if ((unit_types[unit_type].flags & 0x800) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_FUNDAMENTALISM_FREE) != 0) {
     defense_append_ability_label(0x16a);
   }
-  if ((unit_types[unit_type].flags & 0x4000) != 0) {
+  if ((unit_types[unit_type].flags & UTYPE_SPOT_SUBMARINES) != 0) {
     defense_append_ability_label(0x16b);
   }
   if ((*(uint *)&tiles_dll_block.unit_ability_list_nonempty) != 0) {
@@ -738,11 +738,11 @@ static void defense_draw_unit_losses(iptr civ,iptr unit_type,int text_y2,int &ro
   col_x += 0x1e;
   for (civ2 = 1; civ2 < 8; civ2++) {
     if ((civ2 != civ) &&
-       ((((*(byte *)&civs[human_civ[0]].treaties[civ2] & 0x80) != 0 ||
-         (name_y = civ_has_wonder(human_civ[0],0x18), name_y != 0)) ||
-        ((name_y = civ_has_wonder(human_civ[0],9), name_y != 0 ||
-         ((name_y = civ_has_wonder(civ,9), name_y != 0 ||
-          (name_y = civ_has_wonder(civ,0x18), name_y != 0)))))))) {
+       ((((*(byte *)&civs[human_civ[0]].treaties[civ2] & TREATY_EMBASSY) != 0 ||
+         (name_y = civ_has_wonder(human_civ[0],WONDER_UNITED_NATIONS), name_y != 0)) ||
+        ((name_y = civ_has_wonder(human_civ[0],WONDER_MARCO_POLO), name_y != 0 ||
+         ((name_y = civ_has_wonder(civ,WONDER_MARCO_POLO), name_y != 0 ||
+          (name_y = civ_has_wonder(civ,WONDER_UNITED_NATIONS), name_y != 0)))))))) {
       if (*(char *)&civs[civ2].units_lost[unit_type] != '\0') {
         shadow_color2 = 0xffffffff;
         shadow_color = 0xffffffff;
@@ -915,11 +915,11 @@ void __cdecl defense_minister_draw(void)
       for (civ2 = 1; civ2 < 8; civ2++) {
         if ((*(char *)&civs[civ2].units_lost[unit_type] != '\0') &&
            (((((civ2 == civ ||
-               ((*(byte *)&civs[human_civ[0]].treaties[civ2] & 0x80) != 0)) ||
-              (y = civ_has_wonder(human_civ[0],0x18), y != 0)) ||
-             ((y = civ_has_wonder(human_civ[0],9), y != 0 ||
-              (y = civ_has_wonder(civ,9), y != 0)))) ||
-            (y = civ_has_wonder(civ,0x18), y != 0)))) {
+               ((*(byte *)&civs[human_civ[0]].treaties[civ2] & TREATY_EMBASSY) != 0)) ||
+              (y = civ_has_wonder(human_civ[0],WONDER_UNITED_NATIONS), y != 0)) ||
+             ((y = civ_has_wonder(human_civ[0],WONDER_MARCO_POLO), y != 0 ||
+              (y = civ_has_wonder(civ,WONDER_MARCO_POLO), y != 0)))) ||
+            (y = civ_has_wonder(civ,WONDER_UNITED_NATIONS), y != 0)))) {
           type_listed[unit_type] = 1;
           type_count++;
           break;
@@ -1026,9 +1026,9 @@ static void intel_draw_civ_heading(iptr civ3,iptr civ,int line_height,int &y2)
   text_append_lparen();
   text_append_string_id(attitude_names[attitude_level]);
   if ((*(byte *)(civ * 4 + (iptr)((u8 *)&civs + 33) + civ3 * 0x594) & 0x20) == 0) {
-    if ((*(byte *)&civs[civ3].treaties[civ] & 8) == 0) {
-      if ((*(byte *)&civs[civ3].treaties[civ] & 4) == 0) {
-        if ((*(byte *)&civs[civ3].treaties[civ] & 2) != 0) {
+    if ((*(byte *)&civs[civ3].treaties[civ] & TREATY_ALLIANCE) == 0) {
+      if ((*(byte *)&civs[civ3].treaties[civ] & TREATY_PEACE) == 0) {
+        if ((*(byte *)&civs[civ3].treaties[civ] & TREATY_CEASEFIRE) != 0) {
           text_append_comma();
           text_append_label(0x8f);
         }
@@ -1106,7 +1106,7 @@ static void intel_draw_civ_facts(iptr civ,int left_x,int right_x,int line_height
   city2 = -1;
   for (city = 0; city < game.num_cities; city++) {
     if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
-       (value = city_has_improvement(city,1), value != 0)) {
+       (value = city_has_improvement(city,IMP_PALACE), value != 0)) {
       city2 = city;
       break;
     }
@@ -1137,7 +1137,7 @@ static void intel_draw_civ_facts(iptr civ,int left_x,int right_x,int line_height
   text_append_gold(civs[civ].gold);
   text_set_colors(0x25,0x12,0xffffffff,0xffffffff);
   text_x2 = gfx_draw_text((const char *)&map_views_block.text_buffer,text_x2,y2);
-  if (game.difficulty < 2) {
+  if (game.difficulty < DIFF_PRINCE) {
     text_x2 += 6;
     text_clear();
     text_append_label(0x9b);
@@ -1188,13 +1188,13 @@ static void intel_draw_contacts(iptr civ,int line_height,int &y2)
 
   for (civ2 = 1; civ2 < 8; civ2++) {
     if (((civ2 != civ) && ((1 << ((byte)civ2 & 0x1f) & (uint)game.civs_alive) != 0)) &&
-       ((*(byte *)&civs[civ].treaties[civ2] & 1) != 0)) {
+       ((*(byte *)&civs[civ].treaties[civ2] & TREATY_CONTACT) != 0)) {
       text_clear();
       str_clear((char *)buf);
       if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0) {
-        if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
-          if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
-            if ((*(byte *)&civs[civ].treaties[civ2] & 2) == 0) {
+        if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) == 0) {
+          if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_PEACE) == 0) {
+            if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_CEASEFIRE) == 0) {
               str_append_label((iptr)buf,0x9d);
             }
             else {
@@ -1460,7 +1460,7 @@ void __cdecl intel_report_on_cities_clicked(void)
     if ((cities[city].id != 0) && (cities[city].owner == civ)) {
       text_clear();
       text_append((const char *)(city * 0x58 + (iptr)((u8 *)&cities + 32)));
-      has_palace = city_has_improvement(city,1);
+      has_palace = city_has_improvement(city,IMP_PALACE);
       if (has_palace != 0) {
         text_append_space();
         text_append_lparen();
@@ -1584,14 +1584,14 @@ void __cdecl foreign_minister_show(iptr civ)
         dialog2.set_option_draw_fn((DialogOptionDrawFn)foreign_minister_draw_civ_city);
         dialog2.set_list_indent(0x4b,0);
         contact_count = 0;
-        value = civ_has_wonder(civ,0x18);
-        if ((value == 0) && (value = civ_has_wonder(civ,9), value == 0)) {
+        value = civ_has_wonder(civ,WONDER_UNITED_NATIONS);
+        if ((value == 0) && (value = civ_has_wonder(civ,WONDER_MARCO_POLO), value == 0)) {
           has_embassy_wonder = 0;
         }
         else {
           has_embassy_wonder = 1;
         }
-        if (((game.wonder_city[0x18] == -1) && (value = civ_has_wonder(civ,9), value == 0))
+        if (((game.wonder_city[WONDER_UNITED_NATIONS] == -1) && (value = civ_has_wonder(civ,WONDER_MARCO_POLO), value == 0))
            && (game.reveal_map == '\0')) {
           sees_all = 0;
         }
@@ -1603,14 +1603,14 @@ void __cdecl foreign_minister_show(iptr civ)
              ) {
             if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) ||
                 ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0)) ||
-               ((civ_saved_cursor_x_block.mp_show_human_starts == 0 && (game.difficulty != '\0')))) {
+               ((civ_saved_cursor_x_block.mp_show_human_starts == 0 && (game.difficulty != DIFF_CHIEFTAIN)))) {
               both_human = 0;
             }
             else {
               both_human = 1;
             }
             if (((sees_all != 0) || (both_human != 0)) ||
-               ((*(byte *)&civs[civ].treaties[civ2] & 1) != 0)) {
+               ((*(byte *)&civs[civ].treaties[civ2] & TREATY_CONTACT) != 0)) {
               contact_count++;
               text_clear();
               text = civ_leader_title(civ2);
@@ -1629,9 +1629,9 @@ void __cdecl foreign_minister_show(iptr civ)
               text_append_lparen();
               text_append_string_id(attitude_names[choice]);
               if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0) {
-                if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
-                  if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
-                    if ((*(byte *)&civs[civ].treaties[civ2] & 2) != 0) {
+                if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_ALLIANCE) == 0) {
+                  if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_PEACE) == 0) {
+                    if ((*(byte *)&civs[civ].treaties[civ2] & TREATY_CEASEFIRE) != 0) {
                       text_append_comma();
                       text_append_label(0x8f);
                     }
@@ -1650,7 +1650,7 @@ void __cdecl foreign_minister_show(iptr civ)
                 text_append_comma();
                 text_append_label(0x90);
               }
-              if (((*(byte *)&civs[civ].treaties[civ2] & 0x80) == 0) &&
+              if (((*(byte *)&civs[civ].treaties[civ2] & TREATY_EMBASSY) == 0) &&
                  (has_embassy_wonder == 0)) {
                 text_append_comma();
                 text_append_label(0x91);
@@ -1658,7 +1658,7 @@ void __cdecl foreign_minister_show(iptr civ)
               else {
                 text_append_comma();
                 text_append_gold(civs[civ2].gold);
-                if (game.difficulty < 2) {
+                if (game.difficulty < DIFF_PRINCE) {
                   text_append_comma();
                   text_append_int((int)civs[civ2].num_military_units);
                   text_append_space();
@@ -1686,7 +1686,7 @@ void __cdecl foreign_minister_show(iptr civ)
           return;
         }
         if (dialog2.result_extra != 1) break;
-        if ((((*(byte *)&civs[civ].treaties[civ2] & 0x80) == 0) &&
+        if ((((*(byte *)&civs[civ].treaties[civ2] & TREATY_EMBASSY) == 0) &&
             (has_embassy_wonder == 0)) && (game.reveal_map == '\0')) {
           popup_game_with_sprite((const char *)&str_nointel,(iptr)&popup_info_icon_sprite,0);
         }
@@ -1740,7 +1740,7 @@ void __cdecl foreign_minister_show(iptr civ)
           attitude_values[7] = 0x5f;
           attitude_values[8] = 100;
           civs[civ].attitude[civ2] = attitude_values[choice];
-          net_send_message(0x98,0xff,civ,civ2,(uint)attitude_values[choice],0,0,0,0,0);
+          net_send_message(NM_SET_ATTITUDE,0xff,civ,civ2,(uint)attitude_values[choice],0,0,0,0,0);
         }
       }
     }
@@ -1768,7 +1768,7 @@ void __cdecl foreign_minister_show(iptr civ)
           popup_result = popup_game_sprite_flags((const char *)&str_parleywaiting,0x2000001,(iptr)&popup_info_icon_sprite,0);
           if (net_session_block.nm_parley_cancel_count == 0) {
             if (popup_result == -1) {
-              net_send_message(0x81,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,0,0,0,0,0,0,0,
+              net_send_message(NM_PARLEYREQUEST_CANCEL,net_session_block.net_slots[net_session_block.net_civ_slots[civ2]].id,0,0,0,0,0,0,0,
                                  0);
               parley_wnd_block.other_civ = -1;
               mp_meeting_pending = 0;
@@ -1954,14 +1954,14 @@ void __cdecl powergraph_show(void)
   gfx_fill_rect((iptr)graph_wnd,(RECT *)&rect2,0x14);
   rect_set_xywh((iptr)&rect2,origin_x2 + 8,origin_y2 + 2,0x248,0x16e);
   gfx_draw_rect_frame((iptr)graph_wnd,(RECT *)&rect2,10);
-  if (((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
+  if (((game.game_flags & GAME_SCENARIO) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
     sample_count = (int)((int)game.turn + ((int)game.turn >> 0x1f & 3U)) >> 2;
   }
   else {
     sample_count = (int)game.turn / 2;
   }
   sample_count = int_clamp(sample_count,0,0x96);
-  if (((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
+  if (((game.game_flags & GAME_SCENARIO) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
     grid_step = 0x32;
   }
   else {
@@ -1977,7 +1977,7 @@ void __cdecl powergraph_show(void)
   }
   for (sample = 0; (sample <= game.turn && (sample < 0x259)); sample += grid_step)
   {
-    if (((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
+    if (((game.game_flags & GAME_SCENARIO) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
       grid_x = sample;
     }
     else {
@@ -2170,8 +2170,8 @@ void __cdecl historian_report_show(void)
           civ_name = (iptr)(civ_name_plural(civ2));
           text_append((const char *)civ_name);
           if (((human_civ[0] == civ2) ||
-              ((*(byte *)&civs[human_civ[0]].treaties[civ2] & 1) != 0)) ||
-             (game.difficulty == '\0')) {
+              ((*(byte *)&civs[human_civ[0]].treaties[civ2] & TREATY_CONTACT) != 0)) ||
+             (game.difficulty == DIFF_CHIEFTAIN)) {
             dialog2.add_line((const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
           }
         }
@@ -2380,11 +2380,11 @@ demographics_draw_rank(i32 *values,iptr civ,uint y,iptr unit_suffix,int left_x,i
   text_append_label(rank + 0x189);
   gfx_draw_text((const char *)&map_views_block.text_buffer,left_x,y);
   if ((civ != civ2) &&
-     (((((*(byte *)&civs[human_civ[0]].treaties[civ2] & 0x80) != 0 ||
-        (has_wonder = civ_has_wonder(human_civ[0],0x18), has_wonder != 0)) ||
-       (has_wonder = civ_has_wonder(human_civ[0],9), has_wonder != 0)) ||
-      (((game.reveal_map != '\0' || (has_wonder = civ_has_wonder(civ,9), has_wonder != 0)) ||
-       (has_wonder = civ_has_wonder(civ,0x18), has_wonder != 0)))))) {
+     (((((*(byte *)&civs[human_civ[0]].treaties[civ2] & TREATY_EMBASSY) != 0 ||
+        (has_wonder = civ_has_wonder(human_civ[0],WONDER_UNITED_NATIONS), has_wonder != 0)) ||
+       (has_wonder = civ_has_wonder(human_civ[0],WONDER_MARCO_POLO), has_wonder != 0)) ||
+      (((game.reveal_map != '\0' || (has_wonder = civ_has_wonder(civ,WONDER_MARCO_POLO), has_wonder != 0)) ||
+       (has_wonder = civ_has_wonder(civ,WONDER_UNITED_NATIONS), has_wonder != 0)))))) {
     text_clear();
     text_append_lparen();
     civ_name = (iptr)(civ_name_plural(civ2));
@@ -2455,23 +2455,23 @@ static void demographics_gather(int *life_expect,int *pollution,int *approval,in
       if (0 < city_pollution2) {
         pollution[civ2] += city_pollution2;
       }
-      row_y = city_has_improvement(city,3);
-      if ((row_y != 0) || (row_y = civ_has_wonder(civ2,0), row_y != 0)) {
+      row_y = city_has_improvement(city,IMP_GRANARY);
+      if ((row_y != 0) || (row_y = civ_has_wonder(civ2,WONDER_PYRAMIDS), row_y != 0)) {
         life_expect[civ2] += (int)cities[city].size;
       }
-      row_y = city_has_improvement(city,9);
+      row_y = city_has_improvement(city,IMP_AQUEDUCT);
       if (row_y != 0) {
         life_expect[civ2] += (int)cities[city].size;
       }
-      row_y = city_has_improvement(city,0x17);
+      row_y = city_has_improvement(city,IMP_SEWER_SYSTEM);
       if (row_y != 0) {
         life_expect[civ2] += (int)cities[city].size;
       }
-      row_y = city_has_improvement(city,6);
+      row_y = city_has_improvement(city,IMP_LIBRARY);
       if (row_y != 0) {
         literacy[civ2] += (int)cities[city].size;
       }
-      row_y = city_has_improvement(city,0xc);
+      row_y = city_has_improvement(city,IMP_UNIVERSITY);
       if (row_y != 0) {
         literacy[civ2] += (int)cities[city].size;
       }
@@ -2650,19 +2650,19 @@ void __cdecl demographics_draw(void)
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] =
          ((population[civ2] * 2 + literacy[civ2]) * 2) / population[civ2];
-    value = civ_has_advance(civ2,1);
+    value = civ_has_advance(civ2,ADV_ALPHABET);
     if (value != 0) {
       values[civ2] = values[civ2] << 1;
     }
-    value = civ_has_advance(civ2,0x58);
+    value = civ_has_advance(civ2,ADV_WRITING);
     if (value != 0) {
       values[civ2] = values[civ2] << 1;
     }
-    value = civ_has_advance(civ2,0x2b);
+    value = civ_has_advance(civ2,ADV_LITERACY);
     if (value != 0) {
       values[civ2] = values[civ2] << 1;
     }
-    value = civ_has_advance(civ2,0x55);
+    value = civ_has_advance(civ2,ADV_UNIVERSITY);
     if (value != 0) {
       values[civ2] = values[civ2] << 1;
     }
@@ -2681,11 +2681,11 @@ void __cdecl demographics_draw(void)
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     values[civ2] =
          (population[civ2] * 0x32) / (life_expect[civ2] + population[civ2]);
-    value = civ_has_advance(civ2,0x32);
+    value = civ_has_advance(civ2,ADV_MEDICINE);
     if (value != 0) {
       values[civ2] = values[civ2] / 2;
     }
-    value = civ_has_wonder(civ2,0x1b);
+    value = civ_has_wonder(civ2,WONDER_CURE_FOR_CANCER);
     if (value != 0) {
       values[civ2] = values[civ2] / 2;
     }
@@ -3166,14 +3166,14 @@ void __cdecl hall_of_fame_add_entry(iptr civ)
   }
   advisor_font_block.hof_new_entry.score = (i16)score;
   advisor_font_block.hof_new_entry.difficulty = (ushort)game.difficulty;
-  if ((game.game_flags & 0x10) != 0) {
+  if ((game.game_flags & GAME_CHEATED) != 0) {
     advisor_font_block.hof_new_entry.difficulty = advisor_font_block.hof_new_entry.difficulty | 0x80;
   }
   advisor_font_block.hof_new_entry.turn = game.turn;
   advisor_font_block.hof_new_entry.year = game.year;
   value = civ_total_population(civ);
   advisor_font_block.hof_new_entry.population = (i16)value;
-  if (((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
+  if (((game.game_flags & GAME_SCENARIO) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 2) == 0)) {
     advisor_font_block.hof_new_entry.objective_score = 0xffff;
   }
   else {
@@ -3181,7 +3181,7 @@ void __cdecl hall_of_fame_add_entry(iptr civ)
   }
   advisor_font_block.hof_new_entry.year_increment = prefs_game_rules_block.scenario_year_increment[0];
   advisor_font_block.hof_new_entry.start_year = prefs_game_rules_block.scenario_start_year;
-  advisor_font_block.hof_new_entry.is_scenario = game.game_flags & 0x80;
+  advisor_font_block.hof_new_entry.is_scenario = game.game_flags & GAME_SCENARIO;
   advisor_font_block.hof_new_entry.rating = (short)casualty_window_block.civ_rating_percent;
   advisor_font_block.hof_new_entry.leader_female = (ushort)leaders[civs[civ].tribe].female;
   advisor_font_block.hof_new_entry.title_index = (i16)civ_rating_title_font_block.civ_rating_title_index;
@@ -4028,7 +4028,7 @@ void ThroneRoomWindow::run_upgrade()
       ((ModalMenuWindow *)throne_wnd_base)->run_modal_loop();
       ((ModalMenuWindow *)throne_wnd_base)->set_modal_idle_callback(0);
       ((WndBase *)throne_wnd_base)->release_capture();
-      snd_play_effect(0xd,1,0,0);
+      snd_play_effect(SND_CHEERS_13,1,0,0);
       SetRect(&rect,0,0,0x280,0x1e0);
       ((DibSurface *)throne_backbuffer)->DibSurface::blit((DibSurface *)throne_surface_wnd,&rect,
                  &rect);
@@ -4046,7 +4046,7 @@ void ThroneRoomWindow::run_upgrade()
       }
       result = render();
       if (result != 0) {
-        snd_play_effect(0xd,1,0,0);
+        snd_play_effect(SND_CHEERS_13,1,0,0);
         SetRect(&rect,0,0,0x280,0x1e0);
         gfx_dissolve_blit((iptr)throne_surface_wnd,(iptr)&rect,4,1);
         draw_click_prompt();
@@ -4724,29 +4724,29 @@ void __cdecl throneroom_on_click(i32 x,i32 y)
                        (iptr)&throneroom_wnd->chosen_item);
     if (hit < 0) {
       wnd2->chosen_item = 0;
-      snd_play_effect(0x5e,1,0,0);
+      snd_play_effect(SND_FEEDBK04,1,0,0);
     }
     else {
       if (wnd2->throne_complete == 0) {
         if (9 < (int)wnd2->chosen_item) {
-          snd_play_effect(0x5e,1,0,0);
+          snd_play_effect(SND_FEEDBK04,1,0,0);
           return;
         }
         if (3 < civs[civ].throne_room[((int)wnd2->chosen_item)]) {
-          snd_play_effect(0x5e,1,0,0);
+          snd_play_effect(SND_FEEDBK04,1,0,0);
           return;
         }
       }
       else {
         if ((int)wnd2->chosen_item < 10) {
-          snd_play_effect(0x5e,1,0,0);
+          snd_play_effect(SND_FEEDBK04,1,0,0);
           return;
         }
         wnd2->chosen_item = (int)wnd2->chosen_item - 10;
         bonus_bits = civs[civ].throne_room[8];
         if (((int)wnd2->chosen_item == 4) || ((int)wnd2->chosen_item == 5)) {
           if (((bonus_bits & 0x10) != 0) && ((bonus_bits & 0x20) != 0)) {
-            snd_play_effect(0x5e,1,0,0);
+            snd_play_effect(SND_FEEDBK04,1,0,0);
             return;
           }
           if ((int)wnd2->chosen_item == 4) {
@@ -4759,7 +4759,7 @@ void __cdecl throneroom_on_click(i32 x,i32 y)
           }
         }
         if ((1 << ((byte)wnd2->chosen_item & 0x1f) & (uint)civs[civ].throne_room[8]) != 0) {
-          snd_play_effect(0x5e,1,0,0);
+          snd_play_effect(SND_FEEDBK04,1,0,0);
           return;
         }
       }
@@ -4779,7 +4779,7 @@ void __cdecl throneroom_on_key(int key)
     }
   }
   else {
-    snd_play_effect(0x5e,1,0,0);
+    snd_play_effect(SND_FEEDBK04,1,0,0);
   }
   return;
 }
@@ -5554,11 +5554,11 @@ i32 __cdecl council_military_advice(iptr civ,i32 era)
   city2 = -1;
   for (city = 0; city < game.num_cities; city++) {
     if ((cities[city].id != 0) && (cities[city].owner == civ)) {
-      has = city_has_improvement(city,2);
+      has = city_has_improvement(city,IMP_BARRACKS);
       if (has != 0) {
         barracks_count++;
       }
-      has = city_has_improvement(city,1);
+      has = city_has_improvement(city,IMP_PALACE);
       if (has != 0) {
         city2 = city;
       }
@@ -5574,7 +5574,7 @@ i32 __cdecl council_military_advice(iptr civ,i32 era)
       unit_count++;
     }
   }
-  if ((city_count - 1 + unit_count) / city_count < ((civs[civ].government < 5) + 2)) {
+  if ((city_count - 1 + unit_count) / city_count < ((civs[civ].government < GOV_REPUBLIC) + 2)) {
     result = 1;
   }
   else {
@@ -5583,21 +5583,21 @@ i32 __cdecl council_military_advice(iptr civ,i32 era)
       land_strength[civ2] = air_strength[civ2];
     }
     for (civ2 = 1; civ2 < 8; civ2++) {
-      has = civ_has_advance(civ2,0x4b);
+      has = civ_has_advance(civ2,ADV_SEAFARING);
       if (has != 0) {
         air_strength[civ2]++;
       }
-      has = civ_has_advance(civ2,0x3b);
+      has = civ_has_advance(civ2,ADV_NUCLEAR_POWER);
       if (has != 0) {
         air_strength[civ2]++;
       }
       for (unit_type = 0; unit_type < 0x3e; unit_type++) {
         has = civ_has_advance(civ2,(int)unit_types[unit_type].prerequisite);
         if (has != 0) {
-          if (unit_types[unit_type].domain == 2) {
+          if (unit_types[unit_type].domain == DOMAIN_SEA) {
             air_strength[civ2]++;
           }
-          else if ((unit_types[unit_type].role == '\0') || (unit_types[unit_type].role == 1)) {
+          else if ((unit_types[unit_type].role == ROLE_ATTACK) || (unit_types[unit_type].role == ROLE_DEFEND)) {
             land_strength[civ2]++;
           }
         }
@@ -5629,10 +5629,10 @@ i32 __cdecl council_military_advice(iptr civ,i32 era)
         result = 3;
       }
       else {
-        has = civ_has_advance(civ,0x2f);
+        has = civ_has_advance(civ,ADV_MASONRY);
         if ((((has == 0) || (city2 < 0)) ||
-            (has = city_has_improvement(city2,8), has != 0)) ||
-           (has = civ_has_wonder(civ,6), has != 0)) {
+            (has = city_has_improvement(city2,IMP_CITY_WALLS), has != 0)) ||
+           (has = civ_has_wonder(civ,WONDER_GREAT_WALL), has != 0)) {
           if (barracks_count == 0) {
             result = 4;
           }
@@ -5676,8 +5676,8 @@ i32 __cdecl council_science_advice(iptr civ,int era)
     result = 7;
   }
   else {
-    if (civs[civ].government < 5) {
-      if ((civs[civ].government != 4) && (civs[civ].science_rate < 6)) {
+    if (civs[civ].government < GOV_REPUBLIC) {
+      if ((civs[civ].government != GOV_FUNDAMENTALISM) && (civs[civ].science_rate < 6)) {
         return 2;
       }
     }
@@ -5686,7 +5686,7 @@ i32 __cdecl council_science_advice(iptr civ,int era)
     }
     city_count = 0;
     built_count = 0;
-    route_total = (uint)civs[civ].units_active[0x30] + (uint)civs[civ].units_active[0x31];
+    route_total = (uint)civs[civ].units_active[UNIT_CARAVAN] + (uint)civs[civ].units_active[UNIT_FREIGHT];
     if (era == 0) {
       improvement = 6;
     }
@@ -5708,7 +5708,7 @@ i32 __cdecl council_science_advice(iptr civ,int era)
     }
     has = civ_has_advance(civ,(int)improvements[improvement].preq);
     if ((has == 0) || (city_count / 2 <= built_count)) {
-      has = civ_has_advance(civ,0x54);
+      has = civ_has_advance(civ,ADV_TRADE);
       if ((has == 0) || ((int)(city_count + (city_count >> 0x1f & 3U)) >> 2 <= route_total)) {
         has = bits_count8((uint)game.civs_alive);
         if (rivals_ahead < has / 2) {
@@ -5751,7 +5751,7 @@ i32 __cdecl council_trade_advice(iptr civ,int era)
   upkeep_total = 0;
   built_count = 0;
   city_count = 0;
-  route_total = (uint)civs[civ].units_active[0x30] + (uint)civs[civ].units_active[0x31];
+  route_total = (uint)civs[civ].units_active[UNIT_CARAVAN] + (uint)civs[civ].units_active[UNIT_FREIGHT];
   if (era == 0) {
     needed_advance = 0x14;
     target_improvement = 5;
@@ -5785,7 +5785,7 @@ i32 __cdecl council_trade_advice(iptr civ,int era)
       if (value != 0) {
         built_count++;
       }
-      if ((cities[city].flags & 1) == 0) {
+      if ((cities[city].flags & CITYF_DISORDER) == 0) {
         tax_total += cities[city].tax;
       }
     }
@@ -5807,7 +5807,7 @@ i32 __cdecl council_trade_advice(iptr civ,int era)
       result = 3;
     }
     else {
-      value = civ_has_advance(civ,0x54);
+      value = civ_has_advance(civ,ADV_TRADE);
       if (value == 0) {
         result = 4;
       }
@@ -5844,18 +5844,18 @@ i32 __cdecl council_foreign_advice(iptr civ,int era)
   contact_count = 0;
   for (other_civ = 1; other_civ < 8; other_civ++) {
     if (other_civ != civ) {
-      if ((*(byte *)&civs[civ].treaties[other_civ] & 1) != 0) {
+      if ((*(byte *)&civs[civ].treaties[other_civ] & TREATY_CONTACT) != 0) {
         contact_count++;
       }
-      if ((*(byte *)&civs[civ].treaties[other_civ] & 8) != 0) {
+      if ((*(byte *)&civs[civ].treaties[other_civ] & TREATY_ALLIANCE) != 0) {
         alliance_count++;
       }
       if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + other_civ * 4) & 0x20) != 0) {
         war_count++;
       }
-      if ((((*(byte *)&civs[human_civ[0]].treaties[other_civ] & 0x80) != 0) ||
-          (has = civ_has_wonder(human_civ[0],0x18), has != 0)) ||
-         (has = civ_has_wonder(human_civ[0],9), has != 0)) {
+      if ((((*(byte *)&civs[human_civ[0]].treaties[other_civ] & TREATY_EMBASSY) != 0) ||
+          (has = civ_has_wonder(human_civ[0],WONDER_UNITED_NATIONS), has != 0)) ||
+         (has = civ_has_wonder(human_civ[0],WONDER_MARCO_POLO), has != 0)) {
         embassy_count++;
       }
     }
@@ -5875,12 +5875,12 @@ i32 __cdecl council_foreign_advice(iptr civ,int era)
       result = 3;
     }
     else if ((((contact_count < 2) || (1 < civs[civ].reputation)) || (alliance_count != 0)) ||
-            (((civs[civ].flags & 0x100) != 0 || (6 < game.power_rank[civ])))) {
+            (((civs[civ].flags & CIVF_HAS_ALLIED) != 0 || (6 < game.power_rank[civ])))) {
       if (civs[civ].reputation < 3) {
         if ((war_count == contact_count) && (1 < civs[civ].reputation)) {
           result = 4;
         }
-        else if ((civs[civ].flags & 0x80) == 0) {
+        else if ((civs[civ].flags & CIVF_TRADED_TECH) == 0) {
           result = 6;
         }
         else if ((embassy_count == 0) || ((war_count == contact_count && (embassy_count < contact_count)))) {
@@ -5917,32 +5917,32 @@ i32 __cdecl council_attitude_advice(iptr civ,i32 era)
   int unhappy_count;
   int disorder_count;
   
-  recalc_flag = game.transient_flags & 4;
-  game.transient_flags = game.transient_flags & 0xfffb;
+  recalc_flag = game.transient_flags & TRANSIENT_ATTITUDE_DIRTY;
+  game.transient_flags = game.transient_flags & ~TRANSIENT_ATTITUDE_DIRTY;
   content_count = 0;
   disorder_count = 0;
   celebrate_count = 0;
   unhappy_count = 0;
   for (city = 0; city < game.num_cities; city++) {
     if ((cities[city].id != 0) && (cities[city].owner == civ)) {
-      if ((recalc_flag != 0) && (4 < civs[civ].government)) {
+      if ((recalc_flag != 0) && (GOV_FUNDAMENTALISM < civs[civ].government)) {
         city_recalc(city,1);
       }
       if ((char)cities[city].happy < (char)cities[city].unhappy) {
         unhappy_count++;
-        if ((cities[city].flags & 1) != 0) {
+        if ((cities[city].flags & CITYF_DISORDER) != 0) {
           disorder_count++;
         }
       }
       else if (cities[city].happy == cities[city].unhappy) {
         content_count++;
       }
-      if ((cities[city].flags & 2) != 0) {
+      if ((cities[city].flags & CITYF_CELEBRATING) != 0) {
         celebrate_count++;
       }
     }
   }
-  if (civs[civ].government < 5) {
+  if (civs[civ].government < GOV_REPUBLIC) {
     rates_off = true;
     if ((((unhappy_count == 0) && (content_count != 0)) && (celebrate_count == 0)) &&
        ((uint)civs[civ].science_rate + (uint)civs[civ].tax_rate == 10)) {
@@ -5966,7 +5966,7 @@ i32 __cdecl council_attitude_advice(iptr civ,i32 era)
     }
   }
   else if (rates_off) {
-    if ((disorder_count == 0) || (civs[civ].government != 6)) {
+    if ((disorder_count == 0) || (civs[civ].government != GOV_DEMOCRACY)) {
       result = 3;
     }
     else {
@@ -5997,11 +5997,11 @@ foreign_minister_draw_civ_city(i32 ctx,iptr surface,int civ,byte flags,int x,int
   for (city = 0; city < game.num_cities; city++) {
     if ((cities[city].id != 0) && (cities[city].owner == civ)) {
       score = (int)cities[city].size;
-      value = city_has_improvement(city,1);
+      value = city_has_improvement(city,IMP_PALACE);
       if (value != 0) {
         score += 200;
       }
-      if (cities[city].building == -1) {
+      if (cities[city].building == -IMP_PALACE) {
         score += 100;
       }
       if (best_score < score) {
@@ -6432,7 +6432,7 @@ void DestroyedCivsWindow::slide_down()
   ((DibSurface *)civs_art_surface)->DibSurface::blit((DibSurface *)(iptr)(media_wnd),
              (RECT *)&panel_clip_rect,(RECT *)&panel_clip_rect);
   snd_wave_stop_all();
-  snd_play_effect(0x6f,1,0,0);
+  snd_play_effect(SND_GUILLOTN,1,0,0);
   tick = timeGetTime();
   while (start_time = tick, (int)slide_y < 0x133) {
     slide_step(0xf);
@@ -6629,7 +6629,7 @@ i32 CouncilWindow::init(u32 civ,int cheat_mode)
       }
     }
   }
-  if (civs[council_civ].government == '\0') {
+  if (civs[council_civ].government == GOV_ANARCHY) {
     council_active_2 = 1;
   }
   else {

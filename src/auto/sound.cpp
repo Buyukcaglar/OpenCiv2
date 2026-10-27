@@ -7,7 +7,7 @@ void __cdecl snd_menu_end(void)
 
 {
   snd_play_effect(-0x6b,0,1,0);
-  snd_play_effect(0x6c,0,0,0);
+  snd_play_effect(SND_MENUEND,0,0,0);
   return;
 }
 
@@ -43,7 +43,7 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,SoundDoneFn don
   if (effect < 0) {
     snd_wave_free_by_id(~effect + 1);
   }
-  else if ((((byte)game.game_options & 0x10) != 0) && (effect < 0x85)) {
+  else if ((((byte)game.game_options & OPT_SOUND) != 0) && (effect < 0x85)) {
     crt_strcpy(wav_name,((char *)&str_aircombt) + effect * 9);
     result = _strcmp(wav_name,str_cheers);
     if (result == 0) {
@@ -186,7 +186,7 @@ void __cdecl music_play_track(uint track,int force)
   int track_count;
   int tries;
   
-  if (((byte)game.game_options & 8) == 0) {
+  if (((byte)game.game_options & OPT_MUSIC) == 0) {
     if (cd_music_available == 0) {
       snd_cd_stop();
     }
@@ -228,7 +228,7 @@ void __cdecl snd_cd_stop(void)
 void __cdecl snd_sync_music_option(void)
 
 {
-  if (((byte)game.game_options & 8) == 0) {
+  if (((byte)game.game_options & OPT_MUSIC) == 0) {
     if (cd_music_available == 0) {
       snd_cd_stop();
     }
