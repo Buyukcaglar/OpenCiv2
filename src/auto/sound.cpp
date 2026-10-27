@@ -1905,16 +1905,10 @@ AviPlayer *AviPlayer::construct()
 
 {
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   this->SurfaceWindow::construct();
-  eh_state = 0;
   audio.construct();
-  (*((char *)&eh_state + 0)) = 1;
   palette.init();
-  eh_state = (eh_state & 0xffffff00 | (byte)(2));
   surface_ctor(&backdrop);
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   on_end = 0;
@@ -1942,7 +1936,6 @@ i32 AviPlayer::destruct()
 
 {
   i32 eh_next;
-  i8 *eh_handler;
   int eh_state;
   
   *(i8 ***)&vtable = (i8 **)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);

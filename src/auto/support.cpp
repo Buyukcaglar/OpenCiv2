@@ -290,13 +290,9 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
   i32 choice;
   uint civ;
   Dialog dlg;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   dlg.load_text((const char *)&str_debug_2,(const char *)&str_pickplayer,1);
   for (civ = (uint)(include_barbarians == 0); (int)civ < 8; civ++) {
     if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
@@ -308,8 +304,6 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
   }
   dlg.set_default_choice(human_civ[0]);
   choice = dlg.show_modal(0);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 00554272 */ { dlg.Dialog::destruct(); }
   return choice;
 }
 
@@ -1593,8 +1587,6 @@ i32 __cdecl sys_msgbox_mapped(LPCSTR caption,LPCSTR text,i32 severity,i32 button
 void __thiscall ptrlist_dtor(void *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   i32 eh_state;
   
   eh_state = 0xffffffff;

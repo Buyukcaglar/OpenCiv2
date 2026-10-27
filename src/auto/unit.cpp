@@ -2978,13 +2978,9 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
   uint is_spy;
   Dialog dlg;
   uptr civ2;
-  i32 seh_handler;
-  i8 *seh_prev;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   blink.unit_active = 0;
   civ = (uptr)units[unit].owner;
   civ2 = (uptr)cities[city].owner;
@@ -3001,8 +2997,6 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
   if (((autoplay.active == 0) && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
      (human_civ[0] == civ)) {
     if (spy_city_mission_menu(dlg,unit,city,civ,civ2,is_spy,choice) != 0) {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 004c9504 */ { dlg.Dialog::destruct(); }
       return;
     }
   }
@@ -3040,8 +3034,6 @@ void __cdecl spy_city_mission(iptr unit,iptr city)
     }
     break;
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 004c9504 */ { dlg.Dialog::destruct(); }
   return;
 }
 
@@ -5443,18 +5435,10 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
   char dest_path[256];
   Dialog dlg;
   int choice;
-  i32 seh_handler;
-  i8 *seh_prev;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  seh_state = 0;
-  if (sprite_picker_sprite_block.unit_sound_effects_by_ctrl[slot] < 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0058abca */ { dlg.Dialog::destruct(); }
-  }
-  else {
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
+  if (sprite_picker_sprite_block.unit_sound_effects_by_ctrl[slot] >= 0) {
     dlg_set_parent_window((iptr)&unit_sound_editor.wnd);
     do {
       fmt_arg3 = 0;
@@ -5471,8 +5455,6 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
       title = (iptr)label_string(label_table.string_ids[0x223]);
       ret = ui_file_name_dialog((iptr)&unit_sound_editor.wnd,(const char *)title,(iptr)file_buf,(iptr)filter,(iptr)default_ext,filter_arg,dlg_arg);
       if (ret == 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0058abca */ { dlg.Dialog::destruct(); }
         return;
       }
       dlg.load_text((const char *)&str_debug_10,(const char *)&str_playsound,0x801);
@@ -5489,11 +5471,7 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
     crt_strcpy(dest_path,((i8 *)&net_map_lock_slots_block.scenario_dir_path));
     crt_strcat(dest_path,str_sound_5);
     attrs = GetFileAttributesA(dest_path);
-    if (attrs == 0xffffffff) {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 0058abca */ { dlg.Dialog::destruct(); }
-    }
-    else {
+    if (attrs != 0xffffffff) {
       crt_strcat(dest_path,((i8 *)&unit_sound_path_sep_str));
       crt_strcat(dest_path,((char *)&str_aircombt) + sprite_picker_sprite_block.unit_sound_effects_by_ctrl[slot] * 9);
       crt_strcat(dest_path,((i8 *)&unit_sound_wav_suffix_str));
@@ -5501,8 +5479,6 @@ void __cdecl unit_sound_editor_pick_wav(int slot)
       if ((ret == 0) || (ret = crt_remove(dest_path), ret == 0)) {
         file_copy((iptr)wav_path,(iptr)dest_path);
       }
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 0058abca */ { dlg.Dialog::destruct(); }
     }
   }
   return;
@@ -5762,18 +5738,13 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
   int btn_width;
   i8 rect[16];
   Button ok_btn;
-  i32 seh_handler;
-  i8 *seh_prev;
-  int seh_state;
   
-  seh_state = 0xffffffff;
   button_ctor(&ok_btn);
-  seh_state = 0;
+  ON_SCOPE_EXIT(ctrl_dtor(&ok_btn));
   button_ctor(&cancel_btn);
-  (*((char *)&seh_state + 0)) = 1;
-  crt_vector_ctor_iterator(slot_btns,0x3c,6,button_ctor,ctrl_dtor)
-  ;
-  seh_state = (seh_state & 0xffffff00 | (byte)(2));
+  ON_SCOPE_EXIT(ctrl_dtor(&cancel_btn));
+  crt_vector_ctor_iterator(slot_btns,0x3c,6,button_ctor,ctrl_dtor);
+  ON_SCOPE_EXIT(crt_vector_dtor_iterator(&slot_btns,0x3c,6,ctrl_dtor));
   main_frame_bg_surface_block.unit_sound_editor_running = 1;
   unit_sound_editor_create_wnd(title,0xd,0,0,0x21c,0x118,0,0,0);
   btn_height = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
@@ -5813,12 +5784,6 @@ void __cdecl unit_sound_editor_run(const char *title,i32 unit_type)
   }
   dlg_set_parent_window(0);
   ((FrameWindow *)((i8 *)&unit_sound_editor.window))->FrameWindow::close();
-  (*((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 0058b859 */ { crt_vector_dtor_iterator(&slot_btns,0x3c,6,ctrl_dtor); }
-  seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 0058b86f */ { ctrl_dtor(&cancel_btn); }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 0058b87b */ { ctrl_dtor(&ok_btn); }
   return;
 }
 
@@ -6250,21 +6215,17 @@ void __cdecl unit_cmd_pillage(void)
   int choice;
   uint improvements_mask;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   Tile *map_tile;
   
-  eh_state = 0xffffffff;
   choice = 0;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   unit = (iptr)game.active_unit;
   civ = (int)units[unit].owner;
   x = (iptr)units[unit].x;
   y = (iptr)units[unit].y;
   if (unit_types[units[unit].type].attack == '\0') {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0058d41e */ { dialog2.Dialog::destruct(); }
+    /* a unit that cannot attack: nothing */
   }
   else if (unit_types[units[unit].type].domain == DOMAIN_LAND) {
     city_owner = tile_city_owner(x,y);
@@ -6273,8 +6234,6 @@ void __cdecl unit_cmd_pillage(void)
       improvements_mask = (uint)map_tile->improvements;
       if ((map_tile->improvements & (TILE_IRRIGATION | TILE_MINE | TILE_ROAD | TILE_FORTRESS)) == 0) {
         popup_game((const char *)&str_cantdo_5);
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0058d41e */ { dialog2.Dialog::destruct(); }
       }
       else {
         dialog2.load_game_section((const char *)&str_pillagewhat,1);
@@ -6319,8 +6278,6 @@ void __cdecl unit_cmd_pillage(void)
           }
           if ((1 < option_count) &&
              (choice = dialog2.show_modal(0), choice < 0)) {
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 0058d41e */ { dialog2.Dialog::destruct(); }
             return;
           }
         }
@@ -6330,8 +6287,6 @@ void __cdecl unit_cmd_pillage(void)
           (*(i8 *)&unit_sound_editor_window_block.unit_move_flags) = 1;
           city = diplo_confirm_attack(civ,civ2,0xe);
           if (city != 0) {
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 0058d41e */ { dialog2.Dialog::destruct(); }
             return;
           }
           if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0) {
@@ -6339,19 +6294,11 @@ void __cdecl unit_cmd_pillage(void)
           }
         }
         unit_pillage(unit,choice);
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0058d41e */ { dialog2.Dialog::destruct(); }
       }
     }
     else {
       popup_game((const char *)&str_cantdo_4);
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0058d41e */ { dialog2.Dialog::destruct(); }
     }
-  }
-  else {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0058d41e */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -6408,12 +6355,9 @@ void __cdecl unit_cmd_goto_city(void)
   iptr tile_index;
   iptr city3;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x2000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   unit = (iptr)game.active_unit;
   civ = (iptr)units[unit].owner;
   x = (int)units[unit].x;
@@ -6497,24 +6441,18 @@ void __cdecl unit_cmd_goto_city(void)
     if (option_count2 != 0) {
       city2 = dialog2.show_modal(0);
       if (city2 < 0) {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0058ddaa */ { dialog2.Dialog::destruct(); }
         return;
       }
       if (dialog2.result_extra == 0) {
         units[unit].orders = ORDER_GOTO;
         units[unit].goto_x = cities[city2].x;
         units[unit].goto_y = cities[city2].y;
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0058ddaa */ { dialog2.Dialog::destruct(); }
         return;
       }
       show_all = (uint)(show_all == 0);
       continue;
     }
     if (show_all != 0) {
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0058ddaa */ { dialog2.Dialog::destruct(); }
       return;
     }
     show_all = 1;
@@ -6588,42 +6526,27 @@ void __cdecl unit_cmd_airlift(void)
   int civ2;
   iptr city;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x2000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   unit2 = (iptr)game.active_unit;
-  if (unit2 < 0) {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (unit2 >= 0) {
     civ = (int)units[unit2].owner;
     if (unit_types[units[unit2].type].domain == DOMAIN_SEA) {
       dlg_game_txt_with_unit((const char *)&str_liftship,unit2);
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
     }
     else if (unit_types[units[unit2].type].domain == DOMAIN_AIR) {
       dlg_game_txt_with_unit((const char *)&str_liftplane,unit2);
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
     }
     else {
       city2 = city_at((int)units[unit2].x,(int)units[unit2].y);
       if (city2 < 0) {
         popup_game_with_sprite((const char *)&str_noairport,(iptr)&popup_info_icon_sprite,0);
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
       }
       else {
         threat = city_has_improvement(city2,IMP_AIRPORT);
         if (threat == 0) {
           popup_game_with_city((const char *)&str_noairport_2,city2);
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
         }
         else if ((cities[city2].flags & CITYF_AIRLIFTED) == 0) {
           dialog2.load_game_section((const char *)&str_airliftselect,1);
@@ -6637,14 +6560,11 @@ void __cdecl unit_cmd_airlift(void)
           }
           if (option_count2 == 0) {
             popup_game_with_improvement((const char *)&str_noairport2,IMP_AIRPORT,8);
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
           }
           else {
             city = dialog2.show_modal(0);
             if (city < 0) {
-              eh_state = 0xffffffff;
-              /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
+              /* cancelled */
             }
             else if ((cities[city].flags & CITYF_AIRLIFTED) == 0) {
               threat_count = 0;
@@ -6678,27 +6598,17 @@ void __cdecl unit_cmd_airlift(void)
                  (civ = dlg_game_txt_with_unit_flags((const char *)&str_enemyfighters,0x1b,(ui_metrics.large_screen == 0) - 1 & 8), civ != 0)
                  ) {
                 unit_airlift_perform(unit3,city2,city,threat_count,civ2);
-                eh_state = 0xffffffff;
-                /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
-              }
-              else {
-                eh_state = 0xffffffff;
-                /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
               }
             }
             else {
               text_set_string_arg(0,(const char *)&cities[city].name);
               popup_game_with_city((const char *)&str_alreadyairlift_2,city2);
-              eh_state = 0xffffffff;
-              /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
             }
           }
         }
         else {
           text_set_string_arg(0,(const char *)&cities[city2].name);
           popup_game_with_city((const char *)&str_alreadyairlift,city2);
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 0058e5c4 */ { dialog2.Dialog::destruct(); }
         }
       }
     }
@@ -6725,12 +6635,9 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
   iptr k;
   int in_demand;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   if (autoplay.active == 0) {
     civ2 = units[unit].owner;
     civ = (int)(char)civ2;
@@ -6810,8 +6717,6 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
       if (2 < game.multiplayer) {
         net_send_state_diff(0xff,2,0,0,0);
       }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 00590607 */ { dialog2.Dialog::destruct(); }
       result = 1;
     }
     else if (choice == 2) {
@@ -6848,19 +6753,13 @@ i32 __cdecl unit_caravan_enter_city(iptr unit,uptr city)
       if (2 < game.multiplayer) {
         net_send_state_diff(0xff,2,0,0,0);
       }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 00590607 */ { dialog2.Dialog::destruct(); }
       result = 1;
     }
     else {
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 00590607 */ { dialog2.Dialog::destruct(); }
       result = 0;
     }
   }
   else {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 00590607 */ { dialog2.Dialog::destruct(); }
     result = 0;
   }
   return result;
@@ -9079,23 +8978,18 @@ void EditorWindow::unit_editor_window_run()
   i8 rect[16];
   GamePalette palette;
   i32 eh_next;
-  i8 *eh_handler;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
-  (*((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     bg_surface2 = (DibSurface *)0x0;
   }
   else {
     bg_surface2 = surface_ctor(this_00);
   }
-  eh_state = eh_state & 0xffffff00;
   editor_ui.bg_surface = bg_surface2;
   ((GameFont *)((i8 *)&editor_font_block.editor_font))->set(0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
@@ -9238,8 +9132,6 @@ void EditorWindow::unit_editor_window_run()
   }
   editor_ui.bg_surface = (DibSurface *)0x0;
   combo_count_u = 0;
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 005b1a05 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -9249,16 +9141,11 @@ void __cdecl unit_editor_run(void)
 {
   EditorWindow editor_wnd;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   editor_wnd.construct();
-  eh_state = 0;
+  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
   editor_wnd.unit_editor_window_run();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 005b1a82 */ { editor_wnd_dtor(&editor_wnd); }
   return;
 }
 
@@ -10752,15 +10639,12 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cance
   int count;
   Dialog dialog2;
   Sprite sprite;
-  i32 seh_handler;
   i8 *seh_scope;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   sprite_init(&sprite);
-  eh_state = 0;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   dialog2.Dialog::construct(0x4000);
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   sprite.create_solid(0x42,0x30,0);
   dlg_unit_sprite_zoom = 0xffffffff;
   dialog2.Dialog::reset(0x20001 - (uint)(allow_cancel == 0));
@@ -10806,10 +10690,6 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cance
     }
   }
   choice = dialog2.show_modal(0);
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 005b6d9f */ { dialog2.Dialog::destruct(); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 005b6dab */ { sprite_destroy(&sprite); }
   return choice;
 }
 

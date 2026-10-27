@@ -615,15 +615,11 @@ void __cdecl gfx_load_terrain_sprites(void)
   int terrain2;
   uint i;
   Sprite dither_mask;
-  i32 seh_prev;
-  i8 *seh_handler;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   sprite_init(&dither_mask);
-  eh_state = 0;
+  ON_SCOPE_EXIT(sprite_destroy(&dither_mask));
   sprite_init(&blank_sprite);
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(sprite_destroy(&blank_sprite));
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   loaded = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(const char *)&str_terrain1_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded == 0) {
@@ -770,10 +766,6 @@ void __cdecl gfx_load_terrain_sprites(void)
     base_x += 0x41;
   }
   ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->release();
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0044996f */ { sprite_destroy(&blank_sprite); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044997b */ { sprite_destroy(&dither_mask); }
   return;
 }
 
@@ -1124,13 +1116,9 @@ void __cdecl gfx_load_icon_sprites(void)
   int y2;
   int x2;
   int i;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x55,10,0xc0,(iptr)&palette);
   if (loaded == 0) {
@@ -1156,8 +1144,6 @@ void __cdecl gfx_load_icon_sprites(void)
   gfx_load_editor_tool_sprites();
   gfx_load_people_sheet();
   gfx_load_diplomacy_sheet(palette);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044ab4e */ { palette_destroy(&palette); }
   return;
 }
 
@@ -1315,19 +1301,13 @@ void __cdecl gfx_load_game_sprites(void)
 
 {
   SurfaceWindow surf_wnd2;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   surf_wnd2.SurfaceWindow::construct();
-  eh_state = 0;
+  ON_SCOPE_EXIT(surfwnd_dtor(&surf_wnd2));
   gfx_load_city_sprites();
   gfx_load_icon_sprites();
   gfx_load_terrain_sprites();
   gfx_load_unit_sprites();
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044b4f6 */ { surfwnd_dtor(&surf_wnd2); }
   return;
 }
 
@@ -2009,19 +1989,11 @@ void __cdecl rect_intersect_into(LPRECT dest,iptr rect_a,iptr rect_b)
 PortraitDialog *PortraitDialog::construct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   SurfaceWindow::construct();
-  eh_state = 0;
   surface_ctor(&surface);
-  (*((char *)&eh_state + 0)) = 1;
   button_ctor(&cancel_button);
-  (*((char *)&eh_state + 0)) = 2;
   button_ctor(&ok_button);
-  eh_state = (eh_state & 0xffffff00 | (byte)(3));
   dll.init();
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3);
   civ = 0;
@@ -2038,8 +2010,6 @@ PortraitDialog *PortraitDialog::construct()
 void PortraitDialog::destruct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   int eh_state;
   
   *(i8 ***)&vtable = (i8 **)&leader_anim_frame_starts_block.ptr_fun_3;
@@ -3761,13 +3731,9 @@ void __cdecl sprite_sheet_save_units(void)
   GamePalette palette;
   char saved_dir[260];
   int x2;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   __getcwd(saved_dir,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_units_bmp_2,10,0xc0,(iptr)&palette);
@@ -3815,8 +3781,6 @@ void __cdecl sprite_sheet_save_units(void)
   }
   __chdir(saved_dir);
   ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0056ffb6 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -3854,13 +3818,9 @@ void __cdecl sprite_sheet_save_cities(void)
   GamePalette palette;
   char saved_dir[260];
   int size_idx;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   __getcwd(saved_dir,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_cities_bmp_2,10,0xc0,(iptr)&palette);
@@ -3959,8 +3919,6 @@ void __cdecl sprite_sheet_save_cities(void)
   }
   __chdir(saved_dir);
   ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0057075c */ { palette_destroy(&palette); }
   return;
 }
 
@@ -3999,13 +3957,9 @@ void __cdecl sprite_sheet_save_terrain1(void)
   char saved_cwd[260];
   int terrain2;
   int i;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_terrain1_bmp_2,10,0xc0,(iptr)&palette);
@@ -4117,8 +4071,6 @@ void __cdecl sprite_sheet_save_terrain1(void)
   }
   __chdir(saved_cwd);
   ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00570fa2 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -4153,13 +4105,9 @@ void __cdecl sprite_sheet_save_terrain2(void)
   GamePalette palette;
   char saved_cwd[260];
   uint i;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_terrain2_bmp_2,10,0xc0,(iptr)&palette);
@@ -4274,8 +4222,6 @@ void __cdecl sprite_sheet_save_terrain2(void)
   }
   __chdir(saved_cwd);
   ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 005718ec */ { palette_destroy(&palette); }
   return;
 }
 
@@ -4295,13 +4241,9 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   char saved_cwd[260];
   int category2;
   int row;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_icons_bmp_2,10,0xc0,(iptr)&palette);
@@ -4340,8 +4282,6 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   }
   __chdir(saved_cwd);
   ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00571baa */ { palette_destroy(&palette); }
   return;
 }
 
@@ -4364,13 +4304,9 @@ void __cdecl sprite_sheet_save_building_icons(void)
   int x2;
   char saved_cwd[260];
   int i;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_icons_bmp_6,10,0xc0,(iptr)&palette);
@@ -4450,8 +4386,6 @@ void __cdecl sprite_sheet_save_building_icons(void)
   }
   __chdir(saved_cwd);
   ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00572065 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -5180,13 +5114,9 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
   int old_color;
   int new_color;
   Sprite temp_sprite;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   sprite_init(&temp_sprite);
-  seh_state = 0;
+  ON_SCOPE_EXIT(sprite_destroy(&temp_sprite));
   window = ((WndBase *)((i8 *)&sprite_editor.wnd))->get_window();
   SetCapture(window->hwnd);
   x -= sprite_editor.origin_x;
@@ -5204,8 +5134,6 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
   else {
     sprite_editor_palette_click(x,y,old_color,new_color);
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00573adc */ { sprite_destroy(&temp_sprite); }
   return;
 }
 
@@ -5334,15 +5262,11 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,Spri
   int button_width2;
   i8 button_rect[16];
   Button ok_button;
-  i32 seh_handler;
-  i8 *seh_next;
-  uint seh_state;
   
-  seh_state = 0xffffffff;
   button_ctor(&ok_button);
-  seh_state = 0;
+  ON_SCOPE_EXIT(ctrl_dtor(&ok_button));
   button_ctor(&cancel_button);
-  seh_state = (seh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(ctrl_dtor(&cancel_button));
   sprite_picker_sprite_block.sprite_sheet_mode = sheet_mode;
   sprite_editor.target_sprite = (Sprite *)sprite;
   sprite_editor.width = ((Sprite *)sprite)->width();
@@ -5397,10 +5321,6 @@ void __cdecl sprite_editor_run(iptr sprite,const char *title,i32 sheet_mode,Spri
   }
   dlg_set_parent_window(0);
   ((FrameWindow *)((i8 *)&sprite_editor.window))->FrameWindow::close();
-  seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 0057420c */ { ctrl_dtor(&cancel_button); }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00574218 */ { ctrl_dtor(&ok_button); }
   return;
 }
 
@@ -6157,15 +6077,12 @@ void __cdecl sprite_editor_import_sheet(void)
   GamePalette palette;
   Dialog dialog2;
   char *file_name;
-  i32 seh_handler;
-  i8 *seh_next;
-  uint seh_state;
   
-  seh_state = 0xffffffff;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   dialog2.Dialog::construct(0x4000);
-  seh_state = (seh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
+  ON_SCOPE_EXIT(((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release());
   switch(sprite_picker_sprite_block.sprite_sheet_mode) {
   case 0:
   case 4:
@@ -6202,7 +6119,7 @@ void __cdecl sprite_editor_import_sheet(void)
     _sprintf(prompt,str_s_s_2,label,str);
     ok = ui_file_name_dialog((iptr)&sprite_editor.wnd,(const char *)prompt,(iptr)file_path,(iptr)filter,(iptr)&str_bmp_gif,1,0
                               );
-    if (ok == 0) goto release_and_cleanup;
+    if (ok == 0) return;
     __strupr(file_path);
     retry = 1;
     file_name = _strrchr(file_path,0x5c);
@@ -6281,12 +6198,6 @@ void __cdecl sprite_editor_import_sheet(void)
   } while (retry != 0);
   sprite_picker_show();
   sprite_editor_redraw();
-release_and_cleanup:
-  ((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release();
-  seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 005767a7 */ { dialog2.Dialog::destruct(); }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 005767b3 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -6299,8 +6210,6 @@ release_and_cleanup:
 void __thiscall sprite_picker_dtor(void *self)
 
 {
-  i32 seh_handler;
-  i8 *seh_next;
   int seh_state;
   
   seh_state = seh_state & 0xff;
@@ -6321,19 +6230,11 @@ void __thiscall sprite_picker_dtor(void *self)
 SpritePicker *SpritePicker::construct()
 
 {
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   FrameWindow::construct();
-  seh_state = 0;
   scrollbar.construct();
-  (*((char *)&seh_state + 0)) = 1;
   button_ctor(&button_1);
-  (*((char *)&seh_state + 0)) = 2;
   button_ctor(&button_2);
-  seh_state = (seh_state & 0xffffff00 | (byte)(3));
   button_ctor(&button_3);
   vtable = (u32)&leader_anim_frame_starts_block.ptr_fun_4;
   return this;
@@ -6713,17 +6614,11 @@ i32 DibSurface::load_gif_file(const char *filename,uint first_color,uint color_c
   char *cursor;
   char *image_desc;
   char *image_data;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   file.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(file.close());
   result = file.open(filename);
   if (result == 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 005bf5ba */ { file.close(); }
     ret = 0;
   }
   else {
@@ -6731,8 +6626,6 @@ i32 DibSurface::load_gif_file(const char *filename,uint first_color,uint color_c
     mem = mem_handle_alloc(ret);
     win_flush_pending_msgs();
     if (mem == 0) {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 005bf5ba */ { file.close(); }
       ret = 0;
     }
     else {
@@ -6744,8 +6637,6 @@ i32 DibSurface::load_gif_file(const char *filename,uint first_color,uint color_c
       if (mem == 0) {
         dbg_logf_str((const char *)&str_error_gif_resource_not_found,filename);
         ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(3,(iptr)&str_err_resourcenotfound,(iptr)&str_d_ss_smeds32_port_cpp_2,0x382);
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 005bf5ba */ { file.close(); }
         ret = 0;
       }
       else {
@@ -6757,8 +6648,6 @@ i32 DibSurface::load_gif_file(const char *filename,uint first_color,uint color_c
             mem_handle_unlock(mem);
             mem_handle_free(mem);
             ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(4,(iptr)&str_err_badpicformat_2,(iptr)&str_d_ss_smeds32_port_cpp_4,0x396);
-            seh_state = 0xffffffff;
-            /* inlined unwind funclet 005bf5ba */ { file.close(); }
             ret = 0;
           }
           else {
@@ -6792,8 +6681,6 @@ i32 DibSurface::load_gif_file(const char *filename,uint first_color,uint color_c
               if (result == 0) {
                 mem_handle_unlock(mem);
                 mem_handle_free(mem);
-                seh_state = 0xffffffff;
-                /* inlined unwind funclet 005bf5ba */ { file.close(); }
                 ret = 0;
               }
               else {
@@ -6812,8 +6699,6 @@ i32 DibSurface::load_gif_file(const char *filename,uint first_color,uint color_c
                 mem_handle_unlock(mem);
                 mem_handle_free(mem);
                 file.map_close();
-                seh_state = 0xffffffff;
-                /* inlined unwind funclet 005bf5ba */ { file.close(); }
                 ret = 1;
               }
             }
@@ -6822,8 +6707,6 @@ i32 DibSurface::load_gif_file(const char *filename,uint first_color,uint color_c
               mem_handle_unlock(mem);
               mem_handle_free(mem);
               ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(4,(iptr)&str_err_badpicformat_3,(iptr)&str_d_ss_smeds32_port_cpp_5,0x3b3);
-              seh_state = 0xffffffff;
-              /* inlined unwind funclet 005bf5ba */ { file.close(); }
               ret = 0;
             }
           }
@@ -6833,8 +6716,6 @@ i32 DibSurface::load_gif_file(const char *filename,uint first_color,uint color_c
           mem_handle_unlock(mem);
           mem_handle_free(mem);
           ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(4,(iptr)&str_err_badpicformat,(iptr)&str_d_ss_smeds32_port_cpp_3,0x38d);
-          seh_state = 0xffffffff;
-          /* inlined unwind funclet 005bf5ba */ { file.close(); }
           ret = 0;
         }
       }
@@ -8393,18 +8274,13 @@ i32 Sprite::create_solid(i32 width,i32 height,uint color)
 {
   DibSurface surface;
   i32 result;
-  i8 *seh_handler;
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   surface_ctor(&surface);
-  unwind_state = 0;
+  ON_SCOPE_EXIT(surface_dtor(&surface));
   surface.DibSurface::create(width,height);
   surface.fill(color & 0xff);
   encode_rect((iptr)&surface,0,0,width,height);
   SetRect((LPRECT)&bounds_rect,0,0,0,0);
-  unwind_state = 0xffffffff;
-  /* inlined unwind funclet 005cdf2d */ { surface_dtor(&surface); }
   return result;
 }
 
@@ -8841,8 +8717,6 @@ int *Sprite::blit_to_surface(int *out_rect,DibSurface *surface,int key_arg,int x
   if (key_arg == -1) {
     (*((char *)&key_arg + 0)) = key_color;
   }
-  else {
-  }
   key2 = (key2 & 0xffffff00 | ((u8)key_arg));
   trim_x = bounds_rect - frame_rect;
   trim_y = bounds_top - frame_top;
@@ -8934,8 +8808,6 @@ int *Sprite::blit_silhouette_to_surface(int *out_rect,DibSurface *surface,int ke
   
   if (key_arg == -1) {
     (*((char *)&key_arg + 0)) = key_color;
-  }
-  else {
   }
   key2 = (key2 & 0xffffff00 | ((u8)key_arg));
   trim_x = bounds_rect - frame_rect;

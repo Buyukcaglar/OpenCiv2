@@ -841,13 +841,9 @@ void __cdecl map_generate(int keep_map)
   iptr south_ocean;
   Dialog dialog2;
   uint x2;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  unwind_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   dialog2.Dialog::reset(8);
   dialog2.set_position(
              -(((int)(caption_font_block.screen_width - 0x280 + (caption_font_block.screen_width - 0x280 >> 0x1f & 7U)) >> 3) + 1),
@@ -901,8 +897,6 @@ void __cdecl map_generate(int keep_map)
   crt_memcpy(&map_handles.offmap_tile,map_data.tiles,6);
   main_frame_wnd_block.main_frame_wnd.set_cursor(0x201);
   ui_flush_input();
-  unwind_state = 0xffffffff;
-  /* inlined unwind funclet 0040a54e */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -5604,24 +5598,18 @@ void EditorWindow::terrain_editor_run()
   int ctrl_idx;
   i8 btn_rect[16];
   GamePalette palette;
-  i32 seh_prev;
-  i8 *seh_handler;
-  int seh_state;
   
-  seh_state = 0xffffffff;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
-  (*((char *)&seh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     new_surface = (DibSurface *)0x0;
   }
   else {
     new_surface = surface_ctor(this_00);
   }
-  seh_state = seh_state & 0xffffff00;
   editor_ui.bg_surface = new_surface;
   ((GameFont *)((i8 *)&editor_font_block.editor_font))->set(0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
@@ -5770,8 +5758,6 @@ void EditorWindow::terrain_editor_run()
   }
   editor_ui.bg_surface = (DibSurface *)0x0;
   combo_count_u = 0;
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 0051c611 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -5780,17 +5766,11 @@ void __cdecl terrain_editor_open(void)
 
 {
   EditorWindow editor_wnd;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   editor_wnd.construct();
-  seh_state = 0;
+  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
   editor_wnd.terrain_editor_run();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 0051c68e */ { editor_wnd_dtor(&editor_wnd); }
   return;
 }
 
@@ -5972,14 +5952,10 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
   i8 rect[16];
   int step_y[8];
   int saved_origin_x[8];
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   any_visible = 0;
   crt_vector_ctor_iterator(saved_bg,0x48,8,surface_ctor,surface_dtor);
-  seh_state = 0;
+  ON_SCOPE_EXIT(crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor));
   sound_played = 0;
   net.map_redraw_busy = 1;
   net.move_anim_sound = 0xffffffff;
@@ -6070,8 +6046,6 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
   }
   if (any_visible == 0) {
     net.map_redraw_busy = 0;
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0056d25b */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor); }
   }
   else {
     last_time = timeGetTime();
@@ -6141,8 +6115,6 @@ map_animate_unit_move(iptr unit,int from_x,int from_y,iptr dir,int sound_id,iptr
       }
     }
     net.map_redraw_busy = 0;
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0056d25b */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor); }
   }
   return;
 }
@@ -6179,13 +6151,9 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
   iptr view;
   i8 view_rects[128];
   int saved_origin_x[8];
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   crt_vector_ctor_iterator(saved_bg,0x48,8,surface_ctor,surface_dtor);
-  seh_state = 0;
+  ON_SCOPE_EXIT(crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor));
   any_visible = 0;
   net.map_redraw_busy = 1;
   net.nm_abort_kaboom_count = 0;
@@ -6218,10 +6186,11 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
   if (any_visible == 0) {
     net.map_redraw_busy = 0;
     result = 0;
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0057f628 */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor); }
   }
   else {
+    ON_SCOPE_EXIT(
+      gfx_reset_zoom_scale();
+      net.map_redraw_busy = 0);
     if (sound_id != 0) {
       snd_play_effect(sound_id,1,0,0);
     }
@@ -6271,7 +6240,7 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
         now = timeGetTime();
         if ((2 < game.multiplayer) &&
            (net.process_messages(1,0), net.nm_abort_kaboom_count != 0))
-        goto explosion_cleanup;
+        return 1;
       } while ((int)(now - last_time) < 0x40);
       last_time = now;
       for (view = 0; view < 8; view++) {
@@ -6284,11 +6253,6 @@ i32 __cdecl map_animate_explosion(i32 x,i32 y,int sound_id)
       }
     }
     ui_delay_ticks(10);
-explosion_cleanup:
-    gfx_reset_zoom_scale();
-    net.map_redraw_busy = 0;
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0057f628 */ { crt_vector_dtor_iterator(&saved_bg,0x48,8,surface_dtor); }
     result = 1;
   }
   return result;
@@ -6313,23 +6277,17 @@ void __cdecl map_animate_nuke(iptr x,iptr y)
   int screen_y;
   DibSurface *saved_bg;
   RECT dirty_rect;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   ok = map_in_bounds(x,y);
   if ((ok != 0) && (ok = tile_visible_to(x,y,human_civ[0]), ok != 0)) {
     net.map_redraw_busy = 1;
     alloc = (DibSurface *)operator_new(0x48);
-    seh_state = 0;
     if (alloc == (DibSurface *)0x0) {
       new_surface = (DibSurface *)0x0;
     }
     else {
       new_surface = surface_ctor(alloc);
     }
-    seh_state = 0xffffffff;
     saved_bg = new_surface;
     mapviews_ensure_visible(x,y,human_civ[0]);
     ui_flush_input();

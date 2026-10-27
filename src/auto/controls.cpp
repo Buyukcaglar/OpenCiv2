@@ -17,11 +17,7 @@ void Control::show_and_redraw()
 Button * __thiscall button_ctor(Button *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   self->base_construct();
   self->hotkey_char = '\0';
   self->on_select = 0xffffffff;
@@ -62,7 +58,6 @@ i32 __thiscall ctrl_dtor(Button *self)
 
 {
   i32 seh_prev;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;
@@ -165,11 +160,7 @@ void Button::set_callback(CtrlNotifyFn callback)
 Checkbox * __thiscall checkbox_elem_ctor(Checkbox *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   self->base_construct();
   return self;
 }
@@ -178,8 +169,6 @@ Checkbox * __thiscall checkbox_elem_ctor(Checkbox *self)
 void __thiscall checkbox_dtor(Checkbox *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;
@@ -232,11 +221,7 @@ void Checkbox::set_checked(u32 checked)
 Scrollbar *Scrollbar::construct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   base_construct();
   page_size = 1;
   on_change = 0;
@@ -248,8 +233,6 @@ Scrollbar *Scrollbar::construct()
 void Scrollbar::destruct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;
@@ -321,11 +304,7 @@ u32 Control::get_hwnd()
 EditControl * __thiscall edit_ctor(EditControl *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   self->base_construct();
   self->on_maxtext = 0;
   self->on_change = 0;
@@ -340,8 +319,6 @@ EditControl * __thiscall edit_ctor(EditControl *self)
 void __thiscall edit_dtor(EditControl *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;
@@ -406,11 +383,7 @@ void Control::get_text(char *buffer)
 ComboBox * __thiscall combo_ctor(ComboBox *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   self->base_construct();
   self->on_dblclick = 0;
   self->on_select = 0;
@@ -421,8 +394,6 @@ ComboBox * __thiscall combo_ctor(ComboBox *self)
 void __thiscall combo_dtor(ComboBox *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;
@@ -509,11 +480,7 @@ void ComboBox::set_callback(CtrlNotifyFn callback)
 ListBox *ListBox::construct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   base_construct();
   on_dblclick = 0;
   on_select = 0;
@@ -524,8 +491,6 @@ ListBox *ListBox::construct()
 void ListBox::destruct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;
@@ -902,8 +867,6 @@ i32 EditControl::get_text_end()
 void RadioGroup::destruct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;
@@ -1001,8 +964,6 @@ SpriteButton *SpriteButton::scalar_destruct(uint flags)
 void SpriteButton::destruct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   int seh_state;
   
   seh_state = seh_state & 0xff;
@@ -1023,15 +984,9 @@ void SpriteButton::destruct()
 SpriteButton *SpriteButton::construct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   base_construct();
-  seh_state = 0;
   surface_ctor((DibSurface *)&on_select);
-  seh_state = (seh_state & 0xffffff00 | (byte)(1));
   surface_ctor((DibSurface *)button_surface);
   pressed_state = '\0';
   return this;
@@ -1110,11 +1065,7 @@ u32 Checkbox::is_checked()
 RadioGroup *RadioGroup::construct()
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   base_construct();
   items_handle = 0;
   return this;

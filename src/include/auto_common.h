@@ -55,6 +55,8 @@ typedef struct mmtime_tag mmtime_tag;
 #include "protos.h"
 /* Calls through incremental-link thunks go straight to their targets. */
 #include "thunks.h"
+/* Scope-bound release: files, DCs, locks, local objects (step 6, RAII). */
+#include "scoped.h"
 /* rand() calls name their caller for the rand trace (src/native/crt.cpp). */
 int crt_rand_at(const char *caller);
 #define _rand() crt_rand_at(__func__)

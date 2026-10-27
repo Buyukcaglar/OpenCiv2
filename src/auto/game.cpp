@@ -32,15 +32,11 @@ i32 __cdecl setup_hotseat_game(void)
   Dialog dlg;
   i32 map_source;
   int num_players;
-  i32 seh_prev;
-  i8 *seh_handler;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  (*((char *)&eh_state + 0)) = 1;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   for (i = 0; i < 8; i++) {
     civ_view.intro_shown[i] = 0;
   }
@@ -63,10 +59,6 @@ i32 __cdecl setup_hotseat_game(void)
     snd_play_effect(SND_MENUOK,0,0,0);
     ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
     if (choice < 0) {
-      eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 00419940 */ { palette_destroy(&palette); }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0041994c */ { dlg.Dialog::destruct(); }
       result = 1;
       return result;
     }
@@ -152,10 +144,6 @@ i32 __cdecl setup_hotseat_game(void)
             main_frame_wnd_block.main_frame_wnd.set_bg_surface((DibSurface *)&minimap_window_block.setup_backdrop_surface);
             main_frame_wnd_block.main_frame_wnd.set_bg_color(0x9e);
             wnd_flush_paint();
-            eh_state = eh_state & 0xffffff00;
-            /* inlined unwind funclet 00419940 */ { palette_destroy(&palette); }
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 0041994c */ { dlg.Dialog::destruct(); }
             result = 0;
             return result;
           }
@@ -185,10 +173,6 @@ i32 __cdecl setup_hotseat_game(void)
         main_frame_wnd_block.main_frame_wnd.set_bg_surface((DibSurface *)&minimap_window_block.setup_backdrop_surface);
         main_frame_wnd_block.main_frame_wnd.set_bg_color(0x9e);
         wnd_flush_paint();
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 00419940 */ { palette_destroy(&palette); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0041994c */ { dlg.Dialog::destruct(); }
         result = 0;
         return result;
       }
@@ -231,10 +215,6 @@ choose_players:
       text_clear();
       text_append_label(0x363);
       ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(1,0x1f2,(const char *)&textbuf.buf,0);
-      eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 00419940 */ { palette_destroy(&palette); }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0041994c */ { dlg.Dialog::destruct(); }
       result = 0;
       return result;
     }
@@ -431,14 +411,10 @@ i32 __cdecl setup_choose_map_size(void)
   i32 result;
   Dialog dlg;
   int rc;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   result = 1;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   game.game_flags = 0;
   do {
     ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->show(2,6,2);
@@ -502,8 +478,6 @@ apply_map_size:
     game.game_flags = game.game_flags | GAME_SMALL_MAP;
   }
   map.width = map.width * 2;
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0041d7c5 */ { dlg.Dialog::destruct(); }
   return result;
 }
 
@@ -514,14 +488,10 @@ int __cdecl setup_custom_world(void)
   int choice;
   int result;
   Dialog dlg;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   result = 1;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->show(2,6,2);
   dlg.load_game_section((const char *)&str_customland,1);
   dlg.set_default_choice(prefs.world_params[0] + 1);
@@ -621,8 +591,6 @@ int __cdecl setup_custom_world(void)
   if (result == 0) {
     prefs_save_civ2dat();
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0041dc9e */ { dlg.Dialog::destruct(); }
   return result;
 }
 
@@ -660,15 +628,11 @@ int __cdecl setup_start_scenario(void)
   i8 dst[256];
   int level;
   int option_civs[8];
-  i32 seh_prev;
-  i8 *seh_handler;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   for (;;) {
     if (cd_music.available == 0) {
       snd_cd_stop();
@@ -800,10 +764,6 @@ finish_load_choice:
   main_frame_wnd_block.main_frame_wnd.set_bg_surface((DibSurface *)&minimap_window_block.setup_backdrop_surface);
   main_frame_wnd_block.main_frame_wnd.set_bg_color(0x9e);
   choice = result;
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0041e7b2 */ { palette_destroy(&palette); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0041e7be */ { dlg.Dialog::destruct(); }
   return choice;
 }
 
@@ -827,13 +787,9 @@ i32 __cdecl load_game_pick_civ(int title_offset)
   Dialog dlg;
   DialogOption *option;
   iptr option_civs[8];
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   while( true ) {
     game.human_players = '\0';
     dlg.Dialog::reset(1);
@@ -915,8 +871,6 @@ i32 __cdecl load_game_pick_civ(int title_offset)
           choice = dlg.run_modal((iptr)name_buf,0);
           if (choice == 0) {
             crt_strcpy((char *)(&civ_names[game.player_civ].leader_name),name_buf);
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 0041eec6 */ { dlg.Dialog::destruct(); }
             arg4 = 0;
             return arg4;
           }
@@ -924,8 +878,6 @@ i32 __cdecl load_game_pick_civ(int title_offset)
       }
     }
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0041eec6 */ { dlg.Dialog::destruct(); }
   arg4 = 1;
   return arg4;
 }
@@ -945,17 +897,13 @@ int __cdecl game_main_menu_loop(void)
   int xd_minor;
   int retry;
   int xd_build;
-  i32 seh_prev;
-  i8 *seh_handler;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   result = 1;
   retry = 1;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   __chdir(((i8 *)&game_dirs.home));
   crt_strcpy(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home));
   prefs_load_civ2dat();
@@ -1131,10 +1079,6 @@ cleanup:
   }
   ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->free_dll();
   rc = result;
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0041f66e */ { palette_destroy(&palette); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0041f67a */ { dlg.Dialog::destruct(); }
   return rc;
 }
 
@@ -1220,15 +1164,11 @@ void __cdecl game_main(void)
   UINT ini_value;
   GamePalette palette;
   Dialog dlg;
-  i32 seh_prev;
-  i8 *seh_handler;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   dbg_log((const char *)str_ptr_5_4_0f_multiplayer_26_march_99);
   dbg_log((const char *)(*(i8 * *)str_ptr_5_4_0f_multiplayer_26_march_99_rest));
   net.clear();
@@ -1254,10 +1194,6 @@ void __cdecl game_main(void)
         if (send_rc != 0) {
           dbg_logf((const char *)&str_igz_xd_lobbysendmessage_returned_error_d,send_rc);
         }
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 004201fb */ { palette_destroy(&palette); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 00420207 */ { dlg.Dialog::destruct(); }
         return;
       }
       dbg_logf((const char *)&str_not_an_igz_game_event_d,lobby_rc);
@@ -1314,10 +1250,6 @@ void __cdecl game_main(void)
       result = game_main_menu_loop();
       if (result != 0) {
         app_shutdown_cleanup();
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 004201fb */ { palette_destroy(&palette); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 00420207 */ { dlg.Dialog::destruct(); }
         return;
       }
       minimap_window_create();
@@ -1403,7 +1335,7 @@ void __cdecl game_main(void)
       mp_mouse_watchdog_stop();
       if (2 < game.multiplayer) {
         log_file.init();
-        eh_state = (eh_state & 0xffffff00 | (byte)(2));
+        ON_SCOPE_EXIT(log_file.close());
         diffeng_free_mirror();
         if (net.host_flag != '\0') {
           net.shutdown(1);
@@ -1423,32 +1355,18 @@ void __cdecl game_main(void)
         chat_wnd_block.mute_anonymous = 0;
         parley_wnd_close();
         chat_wnd_close();
-        eh_state = (eh_state & 0xffffff00 | (byte)(1));
-        /* inlined unwind funclet 004201ef */ { log_file.close(); }
       }
       pedia_close();
       ((PictureWindow *)((i8 *)&advisor_state.window))->close();
       ((PictureWindow *)((i8 *)&casualty.window))->close();
       if (turn_flags.app_shutdown_done != 0) {
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 004201fb */ { palette_destroy(&palette); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 00420207 */ { dlg.Dialog::destruct(); }
         return;
       }
       game_session_end();
     } while (net.lobby_launch_mode == -1);
-    eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 004201fb */ { palette_destroy(&palette); }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 00420207 */ { dlg.Dialog::destruct(); }
   }
   else {
     app_shutdown_cleanup();
-    eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 004201fb */ { palette_destroy(&palette); }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 00420207 */ { dlg.Dialog::destruct(); }
   }
   return;
 }
@@ -1849,16 +1767,13 @@ i32 __cdecl setup_network_game(int conn_type)
   i32 map_source;
   int saved_open_game;
   int rc;
-  i32 seh_prev;
-  i8 *seh_handler;
   uint eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   first_pass = 1;
   palette.init();
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   if ((((conn_type != 0) && (conn_type != 1)) && (conn_type != 4)) && ((conn_type != 2 && (conn_type != 3))))
   {
     ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(7,(iptr)&str_whichnetwork_internet_whichnetwork_local,(iptr)&str_d_ss_franklinton_startup_lan_cpp,0x21);
@@ -1872,10 +1787,6 @@ i32 __cdecl setup_network_game(int conn_type)
     }
     rc = dlg.show_modal(0);
     if (rc == -1) {
-      eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 0044525d */ { palette_destroy(&palette); }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 00445269 */ { dlg.Dialog::destruct(); }
       result = 1;
       return result;
     }
@@ -1938,10 +1849,6 @@ i32 __cdecl setup_network_game(int conn_type)
     ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
     first_pass = 0;
     if (choice < 0) {
-      eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 0044525d */ { palette_destroy(&palette); }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 00445269 */ { dlg.Dialog::destruct(); }
       result = 1;
       return result;
     }
@@ -2018,10 +1925,6 @@ i32 __cdecl setup_network_game(int conn_type)
   mp_options.open_game = (short)saved_open_game;
   civ_saved_cursor_x_block.game_setup_complete = 1;
   prefs_save_civ2dat();
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0044525d */ { palette_destroy(&palette); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 00445269 */ { dlg.Dialog::destruct(); }
   result = 0;
   return result;
 }
@@ -2039,15 +1942,11 @@ i32 __cdecl setup_mp_load_scenario(i32 mp_mode)
   int i;
   i8 dst[260];
   int level;
-  i32 seh_prev;
-  i8 *seh_handler;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   for (;;) {
     if (cd_music.available == 0) {
       snd_cd_stop();
@@ -2063,10 +1962,6 @@ i32 __cdecl setup_mp_load_scenario(i32 mp_mode)
       main_frame_wnd_block.main_frame_wnd.set_bg_surface((DibSurface *)&minimap_window_block.setup_backdrop_surface);
       main_frame_wnd_block.main_frame_wnd.set_bg_color(0x9e);
       wnd_flush_paint();
-      eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 00445e15 */ { palette_destroy(&palette); }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 00445e21 */ { dlg.Dialog::destruct(); }
       value = 1;
       return value;
     }
@@ -2189,10 +2084,6 @@ i32 __cdecl setup_mp_load_scenario(i32 mp_mode)
         if (unit == 0) {
           turn_loop.resume_civ = *(i8 *)&human_civ;
           saved_turn.civ = *(i8 *)&human_civ;
-          eh_state = eh_state & 0xffffff00;
-          /* inlined unwind funclet 00445e15 */ { palette_destroy(&palette); }
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 00445e21 */ { dlg.Dialog::destruct(); }
           value = 0;
           return value;
         }
@@ -2417,50 +2308,26 @@ void __cdecl intro_play_opening_video(void)
   AviPlayer player;  /* the video player and its window (at 0x48) */
   RECT screen_rect2;
   int open_rc;
-  i32 seh_prev;
-  i8 *seh_handler;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   player.construct();
-  eh_state = 0;
+  ON_SCOPE_EXIT(player.destruct());
   host_wnd.ModalMenuWindow::construct();
-  (*((char *)&eh_state + 0)) = 1;
+  ON_SCOPE_EXIT(wnd_dtor((WndBase *)&host_wnd));
   palette.init();
-  (*((char *)&eh_state + 0)) = 2;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   dll.init();
-  (*((char *)&eh_state + 0)) = 3;
+  ON_SCOPE_EXIT(dll.free());
   gfx_get_screen_rect((iptr)((i8 *)&screen_rect2.left));
   (*(i8 * *)&intro.video_player) = (i8 *)&player;
   str_clear((char *)path);
   str_append((char *)path,(const char *)&str_civ2_civ2art_dll);
   found = file_resolve_path((const char *)path);
-  if (found == 0) {
-    (*((char *)&eh_state + 0)) = 2;
-    /* inlined unwind funclet 0046dd98 */ { dll.free(); }
-    (*((char *)&eh_state + 0)) = 1;
-    /* inlined unwind funclet 0046dda4 */ { palette_destroy(&palette); }
-    eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 0046ddb0 */ { wnd_dtor((WndBase *)&host_wnd); }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0046ddbc */ { player.destruct(); }
-  }
-  else {
+  if (found != 0) {
     dll.load((const char *)path);
     str_clear((char *)path);
     str_append((char *)path,(const char *)&str_civ2_video_opening_avi);
     found = file_resolve_path((const char *)path);
-    if (found == 0) {
-      (*((char *)&eh_state + 0)) = 2;
-      /* inlined unwind funclet 0046dd98 */ { dll.free(); }
-      (*((char *)&eh_state + 0)) = 1;
-      /* inlined unwind funclet 0046dda4 */ { palette_destroy(&palette); }
-      eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 0046ddb0 */ { wnd_dtor((WndBase *)&host_wnd); }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0046ddbc */ { player.destruct(); }
-    }
-    else {
+    if (found != 0) {
       ((WndBase *)&host_wnd)->create_with_cmd_proc((const char *)&str_empty_82,0x800,0,0,screen_rect2.right,screen_rect2.bottom + 5,(iptr)&game_palette_block.game_palette);
       ((WndBase *)&host_wnd)->set_bg_color(0);
       (*(i8 * *)&intro.video_player) = (i8 *)&player;
@@ -2491,28 +2358,12 @@ void __cdecl intro_play_opening_video(void)
         ((WndBase *)&host_wnd)->hide();
         (*(i8 * *)&intro.video_player) = (i8 *)0x0;
         dll.dll_handle_free();
-        (*((char *)&eh_state + 0)) = 2;
-        /* inlined unwind funclet 0046dd98 */ { dll.free(); }
-        (*((char *)&eh_state + 0)) = 1;
-        /* inlined unwind funclet 0046dda4 */ { palette_destroy(&palette); }
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 0046ddb0 */ { wnd_dtor((WndBase *)&host_wnd); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0046ddbc */ { player.destruct(); }
       }
       else {
         if (open_rc == -0x7ffbfeac) {
           popup_game((const char *)&str_vfwnotregistered);
         }
         (*(i8 * *)&intro.video_player) = (i8 *)0x0;
-        (*((char *)&eh_state + 0)) = 2;
-        /* inlined unwind funclet 0046dd98 */ { dll.free(); }
-        (*((char *)&eh_state + 0)) = 1;
-        /* inlined unwind funclet 0046dda4 */ { palette_destroy(&palette); }
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 0046ddb0 */ { wnd_dtor((WndBase *)&host_wnd); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0046ddbc */ { player.destruct(); }
       }
     }
   }
@@ -3036,7 +2887,6 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
   iptr civ;
   iptr advance;
   ScenarioEvent *event;
-  FILE *file;
   i32 result;
   u8 saved_humans;
   i16 version[2];
@@ -3054,7 +2904,8 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
   if (dot == (char *)0x0) {
     crt_strcat(path,((i8 *)&grey_palette_block.save_file_path));
   }
-  file = _fopen(path,((i8 *)&save_write_mode));
+  ScopedFile file(_fopen(path,((i8 *)&save_write_mode)));
+  ON_SCOPE_EXIT(if (game.multiplayer == 1) { game.human_players = saved_humans; });
   if (file != (FILE *)0x0) {
     save_write_cstr_eof((const char *)str_ptr_civilize,(iptr)file);
     game.saved_current_civ = *(i8 *)&human_civ;
@@ -3131,13 +2982,13 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
           if (((nwritten == 0) ||
               (nwritten = _fwrite(&leaders[leader].city_name_index,1,1,file), nwritten == 0)) ||
              (nwritten = _fwrite(&leaders[leader].female,1,1,file), nwritten == 0))
-          goto cleanup;
+          return result;
         }
         nwritten = _fwrite(((i16 *)&map_cursor.x),2,1,file);
         if ((nwritten != 0) && (nwritten = _fwrite(((i16 *)&map_cursor.y),2,1,file), nwritten != 0)) {
           if (game.multiplayer == '\0') {
             nwritten = _fwrite(leaders + civs[game.player_civ].tribe,0x30,1,file);
-            if (nwritten == 0) goto cleanup;
+            if (nwritten == 0) return result;
           }
           else {
             civ = (iptr)game.player_civ;
@@ -3147,7 +2998,7 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
                 nwritten = _fwrite(leaders + civs[(char)(byte)leader].tribe,0x30,1,file);
                 if (nwritten == 0) {
                   game.player_civ = (byte)civ;
-                  goto cleanup;
+                  return result;
                 }
               }
             }
@@ -3170,7 +3021,7 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
                        || ((nwritten = _fwrite(((i16 *)&map_views_block.mapview_center_y) + leader * 0x1f8,2,1,file),
                            nwritten == 0 ||
                            (nwritten = _fwrite(((i16 *)&map_views_block.mapview_zoom) + leader * 0x1f8,2,1,file),
-                           nwritten == 0)))))) goto cleanup;
+                           nwritten == 0)))))) return result;
               }
               if ((((is_scenario == 0) && ((game.game_flags & GAME_SCENARIO) == 0)) ||
                   (nwritten = _fwrite(((i16 *)&scenario.flags),100,1,file), nwritten != 0)) &&
@@ -3179,23 +3030,23 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
                   saved_civ = (uint)(*(byte *)&saved_turn.civ);
                   (*(byte *)&saved_turn.civ) = (*(byte *)&net.mp_turn_civ);
                   nwritten = _fwrite(((i8 *)&civ_view.saved_cursor_x),0x494,1,file);
-                  if (nwritten == 0) goto cleanup;
+                  if (nwritten == 0) return result;
                   (*(byte *)&saved_turn.civ) = (byte)saved_civ;
                 }
                 if ((scenario_events_loaded != 0) && (is_scenario == 0)) {
                   rc = _fputs(((i8 *)&save_events_tag_str),file);
-                  if (rc == -1) goto cleanup;
+                  if (rc == -1) return result;
                   count = 0;
                   for (event = (ScenarioEvent *)(void *)unit_types_block.events_list_head; event != (ScenarioEvent *)0x0;
                       event = (ScenarioEvent *)(void *)event->next) {
                     count++;
                   }
                   nwritten = _fwrite(&count,4,1,file);
-                  if (nwritten == 0) goto cleanup;
+                  if (nwritten == 0) return result;
                   for (event = (ScenarioEvent *)(void *)unit_types_block.events_list_head; event != (ScenarioEvent *)0x0;
                       event = (ScenarioEvent *)(void *)event->next) {
                     nwritten = _fwrite(event,0x1bc,1,file);
-                    if (nwritten == 0) goto cleanup;
+                    if (nwritten == 0) return result;
                   }
                   for (event = (ScenarioEvent *)(void *)unit_types_block.events_list_head; event != (ScenarioEvent *)0x0;
                       event = (ScenarioEvent *)(void *)event->next) {
@@ -3211,13 +3062,13 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
                        ((event->whom_name != 0 &&
                         (rc = save_write_str(event->whom_name,
                                                     (iptr)file), rc == -1))))
-                    goto cleanup;
+                    return result;
                     count = 0;
                     while ((count < 0x14 &&
                            (event->text[count] != 0))) {
                       rc = save_write_str(event->text[count],
                                                  (iptr)file);
-                      if (rc == -1) goto cleanup;
+                      if (rc == -1) return result;
                       count++;
                     }
                     if ((((((event->move_owner_name != 0) &&
@@ -3253,7 +3104,7 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
                         ((event->wave_file != 0 &&
                          (rc = save_write_str(event->wave_file,
                                                      (iptr)file), rc == -1))))))
-                    goto cleanup;
+                    return result;
                   }
                 }
                 result = 0;
@@ -3263,13 +3114,6 @@ i32 __cdecl save_write_game(const char *file_name,int is_scenario)
         }
       }
     }
-  }
-cleanup:
-  if (game.multiplayer == 1) {
-    game.human_players = saved_humans;
-  }
-  if (file != (FILE *)0x0) {
-    _fclose(file);
   }
   return result;
 }
@@ -3483,14 +3327,10 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
   int view_index;
   char upper_path[260];
   int load_error;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   failed = 1;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   if (is_scenario == 0) {
     save_set_file_ext(0);
     net.loaded_file_kind = 1;
@@ -3680,8 +3520,6 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
   if (failed != 0) {
     net.loaded_file_kind = 0;
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 004786f8 */ { palette_destroy(&palette); }
   return result;
 }
 
@@ -5262,15 +5100,11 @@ void __cdecl game_play_loop(void)
   int views_hidden;
   int human_count;
   int quit;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   views_hidden = 0;
   pbem_saved = false;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   ((PictureWindow *)((i8 *)&advisor_state.window))->close();
   ((PictureWindow *)((i8 *)&casualty.window))->close();
   menu_update_states();
@@ -5396,8 +5230,6 @@ void __cdecl game_play_loop(void)
   }
 exit_loop:
   mp_turn_timer_stop(0);
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 0048bf2d */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -5420,14 +5252,10 @@ i32 __cdecl game_mp_client_turn_loop(void)
   int found_unit;
   int casualties;
   i32 first_turn;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   first_turn = 1;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   still_playing = 1;
   slot_civ = net.slot_civs[0];
   name_str = civ_name_plural(net.slot_civs[0]);
@@ -5494,8 +5322,6 @@ i32 __cdecl game_mp_client_turn_loop(void)
       net_heartbeat_check(net.slot_civs[0]);
       result = net_check_lost_connections();
       if (result != 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0048c9ce */ { dialog2.Dialog::destruct(); }
         ret = 0;
         return ret;
       }
@@ -5503,14 +5329,10 @@ i32 __cdecl game_mp_client_turn_loop(void)
     if (net.host_handoff_stage != '\0') {
       result = net_client_transfer_server();
       if (result == 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0048c9ce */ { dialog2.Dialog::destruct(); }
         ret = 0;
         return ret;
       }
       if (net.host_flag != '\0') {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0048c9ce */ { dialog2.Dialog::destruct(); }
         ret = 1;
         return ret;
       }
@@ -5630,8 +5452,6 @@ i32 __cdecl game_mp_client_turn_loop(void)
       if (game_over_reason != 0) {
         game_handle_game_over();
       }
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 0048c9ce */ { dialog2.Dialog::destruct(); }
       ret = 0;
       return ret;
     }
@@ -5849,13 +5669,9 @@ void __cdecl game_mp_host_turn_loop(i32 force_process)
   iptr unit;
   Dialog dialog2;
   int found_unit;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   host_civ = human_civ[0];
   name_str = civ_name_plural(human_civ[0]);
   dbg_logf_str_int((const char *)&str_server_s_d_2,(const char *)name_str,host_civ);
@@ -5993,8 +5809,6 @@ end_loop:
   if (game_over_reason != 0) {
     game_handle_game_over();
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 0048d989 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -7617,18 +7431,13 @@ void __cdecl events_compact(void)
 {
   ScenarioEvents temp_events;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   temp_events.construct(50000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(temp_events.destruct());
   temp_events.reset(50000);
   events_copy(&temp_events,(ScenarioEvents *)&unit_types_block.scenario_events);
   ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->reset(50000);
   events_copy((ScenarioEvents *)&unit_types_block.scenario_events,&temp_events);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004cefc5 */ { temp_events.destruct(); }
   return;
 }
 
@@ -7942,12 +7751,8 @@ ScenarioEvents *ScenarioEvents::construct(i32 pool_size)
 
 {
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   Dialog::construct(0x4000);
-  eh_state = 0;
   ((MemBlock *)events_string_pool)->construct();
   events_pool_valid = '\0';
   event_list = 0;
@@ -7961,7 +7766,6 @@ void ScenarioEvents::destruct()
 
 {
   i32 eh_next;
-  i8 *eh_handler;
   i32 eh_state;
   
   eh_state = 0;
@@ -10559,12 +10363,9 @@ i32 __cdecl setup_choose_multiplayer_type(void)
   UINT max_players;
   Dialog dialog2;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   adapter = GetPrivateProfileIntA
                     (str_civilization_gold_10,str_nettimeout,-1,str_civ_ini_10);
   if (adapter == 0xffffffff) {
@@ -10616,8 +10417,6 @@ i32 __cdecl setup_choose_multiplayer_type(void)
       snd_play_effect(SND_MENUOK,0,0,0);
       ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
       if (choice < 0) {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0051dd72 */ { dialog2.Dialog::destruct(); }
         result = 1;
         return result;
       }
@@ -10639,16 +10438,12 @@ i32 __cdecl setup_choose_multiplayer_type(void)
     case 2:
       status = setup_network_game(0);
       if (status == 0) {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0051dd72 */ { dialog2.Dialog::destruct(); }
         result = 0;
         return result;
       }
       adapter = net.adapter_index;
       xd_adapter = net.xd_adapter_index;
       if (net.lobby_launch_mode != -1) {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0051dd72 */ { dialog2.Dialog::destruct(); }
         result = 1;
         return result;
       }
@@ -10658,16 +10453,12 @@ i32 __cdecl setup_choose_multiplayer_type(void)
       status = setup_network_game(4);
       break;
     default:
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0051dd72 */ { dialog2.Dialog::destruct(); }
       result = 0;
       return result;
     }
     adapter = net.adapter_index;
     xd_adapter = net.xd_adapter_index;
     if (status == 0) {
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0051dd72 */ { dialog2.Dialog::destruct(); }
       result = 0;
       return result;
     }
@@ -10861,12 +10652,9 @@ i32 __cdecl setup_choose_game_options(int rules_mode,int mp_mode)
   int i;
   int difficulty2;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   setup_dlg.select_opponents = 0;
   setup_dlg.accelerated_start = 0;
   leaders_fixup_names();
@@ -10884,8 +10672,6 @@ i32 __cdecl setup_choose_game_options(int rules_mode,int mp_mode)
         snd_play_effect(SND_MENUOK,0,0,0);
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
         if (difficulty2 < 0) {
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 0051e9e7 */ { dialog2.Dialog::destruct(); }
           value = 1;
           return value;
         }
@@ -10995,8 +10781,6 @@ i32 __cdecl setup_choose_game_options(int rules_mode,int mp_mode)
         if (choice < 0) break;
         game_options_read_mp(&dialog2,mp_mode);
         if ((mp_mode == 2) || (choice = setup_choose_game_timer(0), choice == 0)) {
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 0051e9e7 */ { dialog2.Dialog::destruct(); }
           value = 0;
           return value;
         }
@@ -11020,13 +10804,9 @@ i32 __cdecl setup_choose_game_timer(int in_game)
   int custom_seconds;
   short saved_choice;
   int saved_limit;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   dlg.Dialog::construct(0x2000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   saved_choice = menu_prefs.turn_timer_choice;
   saved_limit = civ_saved_cursor_x_block.mp_turn_time_limit_ms;
   for (;;) {
@@ -11048,8 +10828,6 @@ i32 __cdecl setup_choose_game_timer(int in_game)
       if (in_game == 0) {
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
       }
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0051f0f5 */ { dlg.Dialog::destruct(); }
       result = 1;
       return result;
     }
@@ -11080,8 +10858,6 @@ i32 __cdecl setup_choose_game_timer(int in_game)
           if (in_game == 0) {
             ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
           }
-          try_level = 0xffffffff;
-          /* inlined unwind funclet 0051f0f5 */ { dlg.Dialog::destruct(); }
           result = 1;
           return result;
         }
@@ -11120,8 +10896,6 @@ i32 __cdecl setup_choose_game_timer(int in_game)
     if (choice == 6) {
       crt_strcpy(((i8 *)&menu_prefs.turn_timer_custom),custom_text);
     }
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 0051f0f5 */ { dlg.Dialog::destruct(); }
     result = 0;
     return result;
   }
@@ -11155,16 +10929,12 @@ i32 __cdecl setup_choose_game_timer(int in_game)
       civ_saved_cursor_x_block.mp_turn_time_limit_ms = saved_limit;
       net_send_text_args(0x41,0xff,0,0,0,0);
       popup_game_with_sprite((const char *)&str_newturntimerno_2,(iptr)&popup_info_icon_sprite,0);
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0051f0f5 */ { dlg.Dialog::destruct(); }
       result = 1;
       return result;
     }
     net_send_text_args(0x42,0xff,0,0,0,0);
     popup_game_with_sprite((const char *)&str_newturntimeryes_2,(iptr)&popup_info_icon_sprite,0);
   }
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 0051f0f5 */ { dlg.Dialog::destruct(); }
   result = 0;
   return result;
 }
@@ -11606,17 +11376,13 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
   iptr leader2;
   iptr title;
   int cancelled;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   TribeStep step;
   
-  try_level = 0xffffffff;
   leader2 = -1;
   result = 1;
   retry_tribe = -1;
   dlg.Dialog::construct(0x2000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   sel_tribe = 0;
   do {
     if (-1 < leader2) {
@@ -11828,8 +11594,6 @@ finish_choice:
          ~(byte)(1 << ((byte)leaders[game_section_dialog_block.setup_slot_tribes[player_slot]].color & 0x1f)) &
          game.human_players;
   }
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 00521807 */ { dlg.Dialog::destruct(); }
   return choice;
 }
 
@@ -11846,15 +11610,11 @@ i32 __cdecl scenario_start_dialog(int game_mode)
   int opt;
   i8 dst[260];
   int difficulty2;
-  i32 seh_prev;
-  i8 *seh_handler;
-  uint try_level;
   
-  try_level = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  try_level = (try_level & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   for (;;) {
     do {
       if (cd_music.available == 0) {
@@ -11872,10 +11632,6 @@ i32 __cdecl scenario_start_dialog(int game_mode)
         main_frame_wnd_block.main_frame_wnd.set_bg_surface((DibSurface *)&minimap_window_block.setup_backdrop_surface);
         main_frame_wnd_block.main_frame_wnd.set_bg_color(0x9e);
         wnd_flush_paint();
-        try_level = try_level & 0xffffff00;
-        /* inlined unwind funclet 00521faf */ { palette_destroy(&palette); }
-        try_level = 0xffffffff;
-        /* inlined unwind funclet 00521fbb */ { dlg.Dialog::destruct(); }
         value = 1;
         return value;
       }
@@ -11991,10 +11747,6 @@ i32 __cdecl scenario_start_dialog(int game_mode)
           menu_prefs.mp_simultaneous_moves = mp_options.simultaneous_setting;
         }
         if ((game_mode == 2) || (unit = setup_choose_game_timer(0), unit == 0)) {
-          try_level = try_level & 0xffffff00;
-          /* inlined unwind funclet 00521faf */ { palette_destroy(&palette); }
-          try_level = 0xffffffff;
-          /* inlined unwind funclet 00521fbb */ { dlg.Dialog::destruct(); }
           value = 0;
           return value;
         }
@@ -12021,13 +11773,9 @@ i32 __cdecl scenario_pick_human_civs(int num_players)
   DialogOption *option;
   iptr govt;
   uptr option_civs[8];
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   game.human_players = '\0';
   (*(byte *)&turn_loop.resume_civ) = 0;
   player_idx = 0;
@@ -12038,8 +11786,6 @@ i32 __cdecl scenario_pick_human_civs(int num_players)
       game.turn_civ = (*(byte *)&turn_loop.resume_civ);
       saved_turn.resume_new_game = 1;
       turn_resume_new_game = 1;
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 00522617 */ { dlg.Dialog::destruct(); }
       ret = 0;
       return ret;
     }
@@ -12084,8 +11830,6 @@ i32 __cdecl scenario_pick_human_civs(int num_players)
           }
           choice = dlg.show_modal(0);
           if (choice < 0) {
-            try_level = 0xffffffff;
-            /* inlined unwind funclet 00522617 */ { dlg.Dialog::destruct(); }
             ret = 1;
             return ret;
           }
@@ -12197,13 +11941,9 @@ int __cdecl setup_choose_hotseat_players(void)
   int civ;
   Dialog dlg;
   int num_players;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   if (game.multiplayer < 3) {
     setup_show_side_picture(0xffffffff,0);
     dlg.load_game_section((const char *)&str_hotseat2,1);
@@ -12249,8 +11989,6 @@ int __cdecl setup_choose_hotseat_players(void)
     }
     num_players = dlg.show_modal(0);
     if (num_players < 0) {
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 00522b06 */ { dlg.Dialog::destruct(); }
       result = 0;
       return result;
     }
@@ -12268,8 +12006,6 @@ int __cdecl setup_choose_hotseat_players(void)
     }
   }
   result = num_players;
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 00522b06 */ { dlg.Dialog::destruct(); }
   return result;
 }
 
@@ -12288,14 +12024,10 @@ void __cdecl game_join_dialog(void)
   int ai_count;
   int alive_count;
   int view_idx;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   dlg.Dialog::construct(0x4000);
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   saved_human_civ = human_civ[0];
-  try_level = 0;
   saved_player_civ = (int)game.player_civ;
   saved_humans = (uint)game.human_players;
   game.human_players = net.hotseat_human_players;
@@ -12350,8 +12082,6 @@ void __cdecl game_join_dialog(void)
     }
   }
   mp_turn_timer_resume(1);
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 00522dd6 */ { dlg.Dialog::destruct(); }
   return;
 }
 
@@ -12367,13 +12097,9 @@ void __cdecl setup_choose_opponents(int num_humans)
   iptr leader;
   int i;
   int opponent_num;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   game.civs_alive = game.human_players | 1;
   for (leader = 1; leader < 8; leader++) {
     if ((1 << ((byte)leader & 0x1f) & (uint)game.human_players) == 0) {
@@ -12437,8 +12163,6 @@ void __cdecl setup_choose_opponents(int num_humans)
         snd_play_effect(SND_MENUOK,0,0,0);
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
         if (leader < 0) {
-          try_level = 0xffffffff;
-          /* inlined unwind funclet 005233d8 */ { dlg.Dialog::destruct(); }
           return;
         }
         if (leader < 0x15) {
@@ -12447,8 +12171,6 @@ void __cdecl setup_choose_opponents(int num_humans)
       }
     }
   }
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 005233d8 */ { dlg.Dialog::destruct(); }
   return;
 }
 
@@ -12477,13 +12199,9 @@ i32 __cdecl setup_join_pick_civ(int player_idx)
   DialogOption *option;
   iptr govt;
   iptr option_civs[8];
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   sel_idx = 0;
   do {
     dlg.Dialog::reset(1);
@@ -12555,8 +12273,6 @@ i32 __cdecl setup_join_pick_civ(int player_idx)
     }
     choice = dlg.show_modal(0);
     if (choice < 0) {
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 005246bf */ { dlg.Dialog::destruct(); }
       ret = 1;
       return ret;
     }
@@ -12604,8 +12320,6 @@ i32 __cdecl setup_join_pick_civ(int player_idx)
                 leaders[civs[game.player_civ].tribe].titles[govt][sex] = (short)(&government_titles[govt].male)[sex];
               }
             }
-            try_level = 0xffffffff;
-            /* inlined unwind funclet 005246bf */ { dlg.Dialog::destruct(); }
             ret = 0;
             return ret;
           }
@@ -13359,6 +13073,14 @@ i32 __cdecl events_write_file(void)
   ok = 0;
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  ON_SCOPE_EXIT(
+    if (src_fp != (FILE *)0x0) {
+      _fclose(src_fp);
+    }
+    if (dst_fp != (FILE *)0x0) {
+      _fclose(dst_fp);
+    }
+    __chdir(saved_cwd));
   rc = file_exists((const char *)&str_events_bak);
   if (((rc == 0) || (rc = crt_remove(str_events_bak_2), rc == 0)) &&
      ((rc = file_exists((const char *)filename), rc == 0 ||
@@ -13368,13 +13090,13 @@ i32 __cdecl events_write_file(void)
     if (dst_fp != (FILE *)0x0) {
       if (src_fp == (FILE *)0x0) {
         rc = _fputs(str_beginevents_3,dst_fp);
-        if (rc == -1) goto cleanup;
+        if (rc == -1) return ok;
       }
       else {
         do {
           got = _fgets(s,0x100,src_fp);
           if ((got == (char *)0x0) || (rc = _fputs(s,dst_fp), rc == -1))
-          goto cleanup;
+          return ok;
           str_strip_newline(s);
           str_trim((char *)s);
           rc = __strcmpi(s,str_beginevents_2);
@@ -13390,7 +13112,7 @@ i32 __cdecl events_write_file(void)
       else {
         do {
           got = _fgets(s,0x100,src_fp);
-          if (got == (char *)0x0) goto cleanup;
+          if (got == (char *)0x0) return ok;
           str_strip_newline(s);
           str_trim((char *)s);
           rc = __strcmpi(s,str_endevents_2);
@@ -13407,14 +13129,6 @@ i32 __cdecl events_write_file(void)
       }
     }
   }
-cleanup:
-  if (src_fp != (FILE *)0x0) {
-    _fclose(src_fp);
-  }
-  if (dst_fp != (FILE *)0x0) {
-    _fclose(dst_fp);
-  }
-  __chdir(saved_cwd);
   return ok;
 }
 
@@ -13431,13 +13145,9 @@ i32 __cdecl events_editor_pick_item(int default_choice,const char *title,i32 kin
   iptr civ;
   Dialog dlg;
   iptr terrain2;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   dlg.Dialog::reset(0x1001);
   dlg.set_title(title);
   dlg.set_width(0xdc);
@@ -13534,8 +13244,6 @@ i32 __cdecl events_editor_pick_item(int default_choice,const char *title,i32 kin
   dlg_set_parent_window(parent_wnd2);
   result = dlg.show_modal(0);
   dlg_set_parent_window(0);
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 0054ada1 */ { dlg.Dialog::destruct(); }
   return result;
 }
 
@@ -15512,13 +15220,10 @@ uint __cdecl events_editor_edit_action(i32 mode)
   int choice;
   int result;
   char *name_str;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   edit_ctor(&edit_ctl);
-  seh_state = 0;
+  ON_SCOPE_EXIT(edit_dtor(&edit_ctl));
   changed = 0;
   if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
@@ -15632,8 +15337,6 @@ uint __cdecl events_editor_edit_action(i32 mode)
   events_editor_update_buttons(0);
   events_editor_focus_redraw();
   dlg_set_parent_window(0);
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 0054ee8f */ { edit_dtor(&edit_ctl); }
   return changed;
 }
 
@@ -15802,24 +15505,19 @@ void EditorWindow::events_editor_run()
   ScenarioEvents *backup;
   i8 rect[16];
   GamePalette palette;
-  i32 seh_handler;
   i8 *seh_scope;
-  int seh_state;
   
-  seh_state = 0xffffffff;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (ScenarioEvents *)operator_new(0x310);
-  (*((char *)&seh_state + 0)) = 1;
   if (this_00 == (ScenarioEvents *)0x0) {
     backup = (ScenarioEvents *)0x0;
   }
   else {
     backup = this_00->construct(50000);
   }
-  seh_state = seh_state & 0xffffff00;
   (*(ScenarioEvents * *)&events_editor_backup) = backup;
   backup->reset(50000);
   events_copy((ScenarioEvents *)(iptr)(*(ScenarioEvents * *)&events_editor_backup),(ScenarioEvents *)&unit_types_block.scenario_events);
@@ -15995,8 +15693,6 @@ void EditorWindow::events_editor_run()
     (*(ScenarioEvents * *)&events_editor_backup)->events_delete(1);
   }
   (*(ScenarioEvents * *)&events_editor_backup) = (ScenarioEvents *)0x0;
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 0054ffa4 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -16005,16 +15701,11 @@ void __cdecl events_editor_open(void)
 
 {
   EditorWindow editor_wnd;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   editor_wnd.construct();
-  seh_state = 0;
+  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
   editor_wnd.events_editor_run();
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00550017 */ { editor_wnd_dtor(&editor_wnd); }
   return;
 }
 
@@ -16142,21 +15833,14 @@ void __cdecl cheat_edit_technologies(void)
   i8 bit_mask[4];
   Dialog dialog2;
   int last_choice;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   last_choice = -1;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   blink.unit_active = 0;
   civ = dbg_pick_player(0);
-  if ((int)civ < 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0055493e */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if ((int)civ >= 0) {
     while( true ) {
       dialog2.load_game_section((const char *)&str_edittech,1);
       for (advance = 0; advance < 100; advance++) {
@@ -16210,8 +15894,6 @@ void __cdecl cheat_edit_technologies(void)
         cheat_toggle_all_advances(civ);
       }
     }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0055493e */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -16249,19 +15931,12 @@ void __cdecl cheat_change_terrain(void)
   int y2;
   iptr dir;
   byte improvements2;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   result = map_in_bounds((int)map_cursor.x[0],(int)map_cursor.y[0]);
-  if (result == 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0055518f */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (result != 0) {
     result = tile_city_owner((int)map_cursor.x[0],(int)map_cursor.y[0]);
     if (result < 0) {
       tile = (byte *)tile_at((int)map_cursor.x[0],(int)map_cursor.y[0]);
@@ -16285,8 +15960,6 @@ void __cdecl cheat_change_terrain(void)
         if (old_terrain != terrain2) {
           if ((cheat_terrain_saved_bits < 0) &&
              (terrain2 = dialog2.show_modal(0), (int)terrain2 < 0)) {
-            seh_state = 0xffffffff;
-            /* inlined unwind funclet 0055518f */ { dialog2.Dialog::destruct(); }
             return;
           }
           *tile = *tile & 0x80;
@@ -16303,8 +15976,6 @@ void __cdecl cheat_change_terrain(void)
         if (cheat_terrain_saved_bits < 0) {
           result = popup_text_flags((const char *)&str_debug_4,(const char *)&str_terrain_4,1);
           if (result < 0) {
-            seh_state = 0xffffffff;
-            /* inlined unwind funclet 0055518f */ { dialog2.Dialog::destruct(); }
             return;
           }
           if (dlg_input.help_pressed == 0) {
@@ -16356,8 +16027,6 @@ void __cdecl cheat_change_terrain(void)
             }
           }
           map_redraw_area_all_views((int)map_cursor.x[0],(int)map_cursor.y[0],1,human_civ[0],1);
-          seh_state = 0xffffffff;
-          /* inlined unwind funclet 0055518f */ { dialog2.Dialog::destruct(); }
           return;
         }
       }
@@ -16375,14 +16044,9 @@ void __cdecl cheat_change_terrain(void)
       }
       terrain2 = dialog2.show_modal(0);
       if ((int)terrain2 < 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0055518f */ { dialog2.Dialog::destruct(); }
+        /* cancelled */
       }
-      else if (old_terrain == terrain2) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0055518f */ { dialog2.Dialog::destruct(); }
-      }
-      else {
+      else if (old_terrain != terrain2) {
         if (terrain2 == TERRAIN_OCEAN) {
           *tile = 10;
           min_landmass = 0x3f;
@@ -16415,13 +16079,7 @@ void __cdecl cheat_change_terrain(void)
           }
         }
         map_redraw_tile_all_views((int)map_cursor.x[0],(int)map_cursor.y[0]);
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0055518f */ { dialog2.Dialog::destruct(); }
       }
-    }
-    else {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 0055518f */ { dialog2.Dialog::destruct(); }
     }
   }
   return;
@@ -16439,13 +16097,10 @@ void __cdecl cheat_create_unit(void)
   iptr option_civ;
   iptr unit_type;
   Dialog dialog2;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   if (human_civ[0] != cheat_unit.last_human_civ) {
     cheat_unit.last_human_civ = human_civ[0];
     cheat_unit.owner_civ = 0xffffffff;
@@ -16494,8 +16149,6 @@ void __cdecl cheat_create_unit(void)
       }
       cheat_unit.owner_civ = dialog2.show_modal(0);
       if ((int)cheat_unit.owner_civ < 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 005555eb */ { dialog2.Dialog::destruct(); }
         return;
       }
       /* fall through */
@@ -16506,8 +16159,6 @@ void __cdecl cheat_create_unit(void)
       }
       map_redraw_tile_all_views((int)map_cursor.x[0],(int)map_cursor.y[0]);
       blink.unit_active = 0;
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 005555eb */ { dialog2.Dialog::destruct(); }
       return;
     case 2:
       cheat_unit.veteran = cheat_unit.veteran == '\0';
@@ -16523,8 +16174,6 @@ void __cdecl cheat_create_unit(void)
       break;
     }
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 005555eb */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -16539,13 +16188,10 @@ void __cdecl cheat_reveal_map(void)
   int civ;
   i8 view_civ_byte;
   Dialog dialog2;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   dialog2.load_text((const char *)&str_debug_7,(const char *)&str_revealmap,1);
   for (civ = 0; civ < 8; civ++) {
     text_clear();
@@ -16568,11 +16214,7 @@ void __cdecl cheat_reveal_map(void)
     dialog2.set_default_choice(99);
   }
   choice = dialog2.show_modal(0);
-  if (choice < 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0055581b */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (choice >= 0) {
     if (choice == 0x62) {
       game.reveal_map = 1;
       game.view_civ = -1;
@@ -16592,8 +16234,6 @@ void __cdecl cheat_reveal_map(void)
     }
     ((MapView *)((i8 *)&map_views_block.map_views))->update_title();
     map_redraw_all_views(human_civ[0],1);
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0055581b */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -16609,13 +16249,10 @@ void __cdecl cheat_set_human_player(void)
   int civ;
   byte civ_byte;
   Dialog dialog2;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   dialog2.load_text((const char *)&str_debug_8,(const char *)&str_sethuman,1);
   for (civ = 1; civ < 8; civ++) {
     if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
@@ -16630,11 +16267,7 @@ void __cdecl cheat_set_human_player(void)
   label = (iptr)label_string(label_table.string_ids[0x50]);
   dialog2.add_option((const char *)label,option_id,option_flags);
   choice = dialog2.show_modal(0);
-  if (choice < 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 005559de */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (choice >= 0) {
     if (choice == 99) {
       game.human_players = '\0';
       player_turn_active = 0;
@@ -16648,8 +16281,6 @@ void __cdecl cheat_set_human_player(void)
       map_redraw_all_views(choice,1);
       ui_redraw_all_maps(1);
     }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 005559de */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -16683,13 +16314,10 @@ void __cdecl cheat_kill_civ(void)
   int civ2;
   uptr city;
   Dialog dialog2;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   dialog2.load_text((const char *)&str_debug_9,(const char *)&str_killciv,1);
   for (civ2 = 1; civ2 < 8; civ2++) {
     if ((1 << ((byte)civ2 & 0x1f) & (uint)game.civs_alive) != 0) {
@@ -16700,11 +16328,7 @@ void __cdecl cheat_kill_civ(void)
     }
   }
   civ = dialog2.show_modal(0);
-  if (civ < 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00555c8d */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (civ >= 0) {
     (*((char *)&civ2 + 0)) = (byte)civ;
     game.human_players = game.human_players & ~(byte)(1 << ((byte)civ2 & 0x1f));
     if (2 < game.multiplayer) {
@@ -16717,8 +16341,6 @@ void __cdecl cheat_kill_civ(void)
       }
     }
     civ_check_destroyed(civ,human_civ[0]);
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00555c8d */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -16781,33 +16403,20 @@ void __cdecl cheat_edit_unit(void)
   Dialog dialog2;
   u8 damage_input[4];
   iptr commodity;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   choice = map_in_bounds((int)map_cursor.x[0],(int)map_cursor.y[0]);
-  if (choice == 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 005569bf */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (choice != 0) {
     unit = tile_first_unit((int)map_cursor.x[0],(int)map_cursor.y[0]);
-    if (unit < 0) {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 005569bf */ { dialog2.Dialog::destruct(); }
-    }
-    else {
+    if (unit >= 0) {
       choice = unit_stack_sum(unit,2);
       if (1 < choice) {
         arg = 1;
         label = (iptr)label_string(label_table.string_ids[0x3e]);
         unit = unit_stack_select_dialog(unit,(const char *)label,arg);
         if (unit < 0) {
-          seh_state = 0xffffffff;
-          /* inlined unwind funclet 005569bf */ { dialog2.Dialog::destruct(); }
           return;
         }
       }
@@ -16840,8 +16449,6 @@ void __cdecl cheat_edit_unit(void)
                   text_set_string_arg(1,(const char *)&textbuf.buf);
                   choice = popup_game((const char *)&str_unitedit);
                   if (choice == 0) {
-                    seh_state = 0xffffffff;
-                    /* inlined unwind funclet 005569bf */ { dialog2.Dialog::destruct(); }
                     return;
                   }
                   if (choice != 1) break;
@@ -16931,8 +16538,6 @@ void __cdecl cheat_edit_unit(void)
           }
         }
       }
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 005569bf */ { dialog2.Dialog::destruct(); }
     }
   }
   return;
@@ -16954,25 +16559,14 @@ void __cdecl cheat_edit_city(void)
   i8 number_input[4];
   iptr improvement;
   iptr city2;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   in_bounds = map_in_bounds((int)map_cursor.x[0],(int)map_cursor.y[0]);
-  if (in_bounds == 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00556f30 */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (in_bounds != 0) {
     city = city_at((int)map_cursor.x[0],(int)map_cursor.y[0]);
-    if (city < 0) {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 00556f30 */ { dialog2.Dialog::destruct(); }
-    }
-    else {
+    if (city >= 0) {
       civ = cities[city].owner;
       while( true ) {
         text_set_number_arg(0,(cities[city].flags & CITYF_OBJECTIVE) >> 0x1a);
@@ -17038,15 +16632,11 @@ void __cdecl cheat_edit_city(void)
         }
         else {
           if (choice != 6) {
-            seh_state = 0xffffffff;
-            /* inlined unwind funclet 00556f30 */ { dialog2.Dialog::destruct(); }
             return;
           }
           cities[city].flags = cities[city].flags ^ CITYF_OBJECTIVE;
         }
       }
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 00556f30 */ { dialog2.Dialog::destruct(); }
     }
   }
   return;
@@ -17068,19 +16658,12 @@ void __cdecl cheat_edit_king(void)
   iptr civ2;
   iptr gov;
   int other_civ;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   civ = dbg_pick_player(0);
-  if (civ < 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00557e08 */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (civ >= 0) {
     while( true ) {
       text_set_number_arg(0,(civs[civ].flags & CIVF_FEMALE_LEADER) >> 9);
       text_clear();
@@ -17256,8 +16839,6 @@ void __cdecl cheat_edit_king(void)
       }
       else {
         if (choice != 0xc) {
-          seh_state = 0xffffffff;
-          /* inlined unwind funclet 00557e08 */ { dialog2.Dialog::destruct(); }
           return;
         }
         civs[civ].flags = civs[civ].flags ^ CIVF_FEMALE_LEADER;
@@ -17273,8 +16854,6 @@ void __cdecl cheat_edit_king(void)
         }
       }
     }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00557e08 */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -17296,13 +16875,10 @@ void __cdecl cheat_edit_victory(void)
   i8 number_input[4];
   int total_value;
   int objective_value;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   while( true ) {
     total_value = 0;
     objective_value = 0;
@@ -17357,8 +16933,6 @@ void __cdecl cheat_edit_victory(void)
     }
     else {
       if ((choice < 4) || (7 < choice)) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 00558177 */ { dialog2.Dialog::destruct(); }
         return;
       }
       result = dlg_input_number_game((const char *)&str_editvictoryobj,(int)(((i16 *)&scenario.year_increment))[choice],(iptr)number_input);
@@ -17367,8 +16941,6 @@ void __cdecl cheat_edit_victory(void)
       }
     }
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00558177 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -17648,25 +17220,18 @@ void __cdecl setup_picwnd_load_image(i32 width,i32 height)
 {
   DibSurface surface;
   GamePalette palette;
-  i32 seh_handler;
   i8 *seh_scope;
-  int seh_state;
   
-  seh_state = 0xffffffff;
   surface_ctor(&surface);
-  seh_state = 0;
+  ON_SCOPE_EXIT(surface_dtor(&surface));
   palette.init();
-  (*((char *)&seh_state + 0)) = 1;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   win_flush_pending_msgs();
   surface.load_gif_resource(setup_picwnd_state.image_id + 900,10,0xc0,(iptr)&palette);
   win_flush_pending_msgs();
   ((DibSurface *)((i8 *)&setup_picwnd_state.surface))->DibSurface::create(width,height);
   gfx_copy_rect_same_pos((iptr)&surface,(iptr)&setup_picwnd_state.surface,0,0,width,height);
   surface.release();
-  seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 00559dbd */ { palette_destroy(&palette); }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00559dc9 */ { surface_dtor(&surface); }
   return;
 }
 
@@ -17685,15 +17250,10 @@ void SetupPicWindow::reset_fields()
 SetupPicWindow *SetupPicWindow::construct()
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   FrameWindow::construct();
-  seh_state = 0;
   dll.init();
-  seh_state = (seh_state & 0xffffff00 | (byte)(1));
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 8);
   reset_fields();
   return this;
@@ -17708,7 +17268,6 @@ SetupPicWindow *SetupPicWindow::construct()
 void SetupPicWindow::destruct()
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
   int seh_state;
   
@@ -19156,13 +18715,9 @@ uint __cdecl main_frame_create(void)
   i32 wave_bits;
   i8 saved_rgb2[708];
   GamePalette palette;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   text_clear();
   text_append_label(2);
   WritePrivateProfileStringA
@@ -19192,12 +18747,6 @@ uint __cdecl main_frame_create(void)
     main_frame_wnd_block.main_frame_wnd.set_bg_color(0x9e);
     wnd_flush_paint();
     main_frame_created = 1;
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 00589c54 */ { palette_destroy(&palette); }
-  }
-  else {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 00589c54 */ { palette_destroy(&palette); }
   }
   return (uint)(cd_ok != 0);
 }
@@ -19221,13 +18770,9 @@ i32 __cdecl setup_pbem_game(void)
   Dialog dialog2;
   i32 map_mode;
   int num_players;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   for (i = 0; i < 8; i++) {
     civ_view.intro_shown[i] = 0;
     (((i8 *)&civ_saved_cursor_x_block.civ_email_addresses))[i * 0x20] = 0;
@@ -19247,8 +18792,6 @@ i32 __cdecl setup_pbem_game(void)
     snd_play_effect(SND_MENUOK,0,0,0);
     ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
     if (choice < 0) {
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 005aebef */ { dialog2.Dialog::destruct(); }
       result = 1;
       return result;
     }
@@ -19327,8 +18870,6 @@ i32 __cdecl setup_pbem_game(void)
           choice = scenario_pick_human_civs(num_players);
           if (choice == 0) {
             prefs_save_civ2dat();
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 005aebef */ { dialog2.Dialog::destruct(); }
             result = 0;
             return result;
           }
@@ -19345,8 +18886,6 @@ i32 __cdecl setup_pbem_game(void)
       if (choice == 0) {
         if (game.multiplayer == 2) {
           prefs_save_civ2dat();
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 005aebef */ { dialog2.Dialog::destruct(); }
           result = 0;
           return result;
         }
@@ -19387,8 +18926,6 @@ choose_players:
         game.player_civ = turn_loop.resume_civ;
         human_civ[0] = (iptr)turn_loop.resume_civ;
       }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 005aebef */ { dialog2.Dialog::destruct(); }
       result = 0;
       return result;
     }
@@ -19402,14 +18939,9 @@ i32 __cdecl game_timer_create(TimerFn callback,i32 interval_ms,i32 repeat_count)
   TimerManagerCtorView *self;
   i32 slot;
   TimerManager *new_mgr;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   if (wnd_modal_stack_below_block.game_timer_mgr == (TimerManager *)0x0) {
     self = (TimerManagerCtorView *)operator_new(0x90);
-    eh_state = 0;
     if (self == (TimerManagerCtorView *)0x0) {
       new_mgr = (TimerManager *)0x0;
     }
@@ -19418,7 +18950,6 @@ i32 __cdecl game_timer_create(TimerFn callback,i32 interval_ms,i32 repeat_count)
     }
     wnd_modal_stack_below_block.game_timer_mgr = new_mgr;
   }
-  eh_state = 0xffffffff;
   slot = wnd_modal_stack_below_block.game_timer_mgr->add(callback,interval_ms,repeat_count);
   return slot;
 }

@@ -2529,19 +2529,11 @@ void MapView::redraw(iptr viewer_civ,int do_blit)
 MapView * __thiscall mapview_ctor(MapView *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   self->FrameWindow::construct();
-  eh_state = 0;
   self->tile_font.init_empty();
-  (*((char *)&eh_state + 0)) = 1;
   self->tile_small_font.init_empty();
-  (*((char *)&eh_state + 0)) = 2;
   surface_ctor(&self->map_surface);
-  eh_state = (eh_state & 0xffffff00 | (byte)(3));
   surface_ctor(&self->overlay_surface);
   self->vtable = (u32)&ptr_fun_2;
   return self;
@@ -2556,8 +2548,6 @@ MapView * __thiscall mapview_ctor(MapView *self)
 void __thiscall mapview_dtor(void *self)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
   int eh_state;
   
   eh_state = eh_state & 0xff;

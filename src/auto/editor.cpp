@@ -8,52 +8,29 @@ EditorWindow *EditorWindow::construct()
 {
   i32 eh_frame;
   i8 *eh_prev;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   this->FrameWindow::construct();
-  eh_state = 0;
   crt_vector_ctor_iterator(&combos_u,0x38,6,combo_ctor,combo_dtor);
-  (*((char *)&eh_state + 0)) = 1;
   crt_vector_ctor_iterator(edits_bytes,0x48,9,edit_ctor,
                edit_dtor);
-  (*((char *)&eh_state + 0)) = 2;
   button_ctor(&ok_button);
-  (*((char *)&eh_state + 0)) = 3;
   button_ctor(&help_button);
-  (*((char *)&eh_state + 0)) = 4;
   button_ctor(&cancel_button);
-  (*((char *)&eh_state + 0)) = 5;
   button_ctor(&rename_button);
-  (*((char *)&eh_state + 0)) = 6;
   button_ctor(&icon_button);
-  (*((char *)&eh_state + 0)) = 7;
   button_ctor(&misc_button);
-  (*((char *)&eh_state + 0)) = 8;
   button_ctor(&coast_button);
-  (*((char *)&eh_state + 0)) = 9;
   button_ctor((Button *)((u8 *)&terrain_misc_button_u));
-  (*((char *)&eh_state + 0)) = 10;
   button_ctor(&unit_flags_button);
-  (*((char *)&eh_state + 0)) = 0xb;
   button_ctor(&unit_sound_button);
-  (*((char *)&eh_state + 0)) = 0xc;
   button_ctor(&add_trigger_button);
-  (*((char *)&eh_state + 0)) = 0xd;
   button_ctor(&edit_trigger_button);
-  (*((char *)&eh_state + 0)) = 0xe;
   button_ctor((Button *)((u8 *)&delete_trigger_button_u));
-  (*((char *)&eh_state + 0)) = 0xf;
   button_ctor(&add_action_button);
-  (*((char *)&eh_state + 0)) = 0x10;
   button_ctor(&edit_action_button);
-  (*((char *)&eh_state + 0)) = 0x11;
   button_ctor(&delete_action_button);
-  (*((char *)&eh_state + 0)) = 0x12;
   ((ListBox *)((u8 *)&list_box_uptr))->construct();
-  (*((char *)&eh_state + 0)) = 0x13;
   trigger_listbox.construct();
-  eh_state = (eh_state & 0xffffff00 | (byte)(0x14));
   action_listbox.construct();
   vtable = (u32)((pointer *)ptr_fun_rest);
   return this;
@@ -63,7 +40,6 @@ EditorWindow *EditorWindow::construct()
 void __thiscall editor_wnd_dtor(void *self)
 
 {
-  i32 eh_handler;
   i8 *eh_prev;
   int eh_state;
   
@@ -665,13 +641,10 @@ void __cdecl tribe_editor_rename_commodity(void)
   Dialog dialog2;
   int choice;
   int input_result;
-  i32 eh_handler;
   i8 *eh_prev;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
@@ -699,8 +672,6 @@ void __cdecl tribe_editor_rename_commodity(void)
     }
   }
   dlg_set_parent_window(0);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a44a2 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -714,13 +685,10 @@ void __cdecl tribe_editor_rename_govt(void)
   Dialog dialog2;
   int choice;
   int input_result;
-  i32 eh_handler;
   i8 *eh_prev;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
@@ -748,8 +716,6 @@ void __cdecl tribe_editor_rename_govt(void)
     }
   }
   dlg_set_parent_window(0);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a4667 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -769,13 +735,10 @@ void __cdecl tribe_editor_rename_title(void)
   Dialog dialog2;
   uint choice;
   int input_result;
-  i32 eh_handler;
   i8 *eh_prev;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
@@ -831,8 +794,6 @@ void __cdecl tribe_editor_rename_title(void)
     }
   }
   dlg_set_parent_window(0);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a4948 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -1096,24 +1057,19 @@ void EditorWindow::tribe_editor_main()
   int i;
   i8 rect[16];
   GamePalette palette;
-  i32 eh_handler;
   i8 *eh_prev;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)(operator_new(0x48));
-  (*((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     bg_surface2 = (DibSurface *)0x0;
   }
   else {
     bg_surface2 = surface_ctor(this_00);
   }
-  eh_state = eh_state & 0xffffff00;
   editor_ui.bg_surface = bg_surface2;
   ((GameFont *)((i8 *)&editor_font_block.editor_font))->set(0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
@@ -1234,8 +1190,6 @@ void EditorWindow::tribe_editor_main()
   }
   editor_ui.bg_surface = (DibSurface *)0x0;
   combo_count_u = 0;
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a5d6e */ { palette_destroy(&palette); }
   return;
 }
 
@@ -1244,17 +1198,11 @@ void __cdecl tribe_editor_run(void)
 
 {
   EditorWindow editor_wnd;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   editor_wnd.construct();
-  eh_state = 0;
+  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
   editor_wnd.tribe_editor_main();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a5deb */ { editor_wnd_dtor(&editor_wnd); }
   return;
 }
 
@@ -1500,13 +1448,9 @@ i32 __cdecl editor_options_dialog(const char *file_name,const char *section,uint
   i32 choice;
   Dialog dlg;
   int i;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   if (editor_active.wnd == 0) {
     parent_wnd2 = 0;
   }
@@ -1539,8 +1483,6 @@ i32 __cdecl editor_options_dialog(const char *file_name,const char *section,uint
     }
   }
   dlg_set_parent_window(0);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004cdf26 */ { dlg.Dialog::destruct(); }
   return choice;
 }
 
@@ -1706,15 +1648,11 @@ i32 __cdecl editor_text_edit_dialog(i32 *lines,const char *title)
   int button_width2;
   i8 rect[16];
   Button ok_btn;
-  i32 seh_prev;
-  i8 *seh_handler;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   button_ctor(&ok_btn);
-  eh_state = 0;
+  ON_SCOPE_EXIT(ctrl_dtor(&ok_btn));
   button_ctor(&cancel_btn);
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(ctrl_dtor(&cancel_btn));
   editor_font_block.editor_text_active = 1;
   editor_lists.text_lines_out = lines;
   button_height = ((GameFont *)(*(i8 * *)(dlg_style.default_text_font_rest + 8)))->line_spacing();
@@ -1755,10 +1693,6 @@ i32 __cdecl editor_text_edit_dialog(i32 *lines,const char *title)
   }
   ((FrameWindow *)((i8 *)&editor_text_dlg.wnd))->FrameWindow::close();
   result = editor_font_block.editor_text_result;
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 004ce6ed */ { ctrl_dtor(&cancel_btn); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004ce6f9 */ { ctrl_dtor(&ok_btn); }
   return result;
 }
 

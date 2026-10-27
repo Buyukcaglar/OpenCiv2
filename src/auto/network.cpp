@@ -422,7 +422,9 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
   Dialog dlg;
 
   dlg.Dialog::construct(0x4000);
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   retries = 0;
   net_reset_msg_counts();
   if ((conn_type == 2) || (conn_type == 3)) {
@@ -435,15 +437,15 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
         crt_strcpy(((i8 *)&text_args.strings),(*(char * *)&net.connection_title));
         popup_game_with_sprite("SERVERCONNECTTIME",(iptr)&popup_info_icon_sprite,0);
       }
-      goto fail;
+      return 0;
     }
   }
   else if (conn_type == 0) {
-    if (net_join_by_address(self,conn_type,retries,dlg) == 0) goto fail;
+    if (net_join_by_address(self,conn_type,retries,dlg) == 0) return 0;
   }
   else {
   /* LAN: the games the hosts announce, in a list */
-    if (net_join_from_list(self,conn_type) == 0) goto fail;
+    if (net_join_from_list(self,conn_type) == 0) return 0;
   }
 
   /* the host's id */
@@ -457,7 +459,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
   if (popup == -1) {
     net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(180000);
-    goto fail;
+    return 0;
   }
   if ((net.nm_server_reject_count != 0) || (net.nm_server_canceled_count != 0) ||
       (net.nm_server_full_count != 0)) {
@@ -472,13 +474,13 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
     else {
       popup_game_with_sprite("JOINEDMAX",(iptr)&popup_info_icon_sprite,0);
     }
-    goto fail;
+    return 0;
   }
   if (popup == -2) {
     crt_strcpy(((i8 *)&text_args.strings),(*(char * *)&net.connection_title));
     crt_strcpy(((i8 *)&text_args.string1),((i8 *)&net.net_game_name));
     popup_game_with_sprite("SERVERCONNECTTIME",(iptr)&popup_info_icon_sprite,0);
-    goto fail;
+    return 0;
   }
   /* the game's state */
   diffeng_register_blocks();
@@ -499,7 +501,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
       popup_game_with_sprite("SERVERQUIT",(iptr)&popup_info_icon_sprite,0);
     }
     XD_FlushSendBuffer(180000);
-    goto fail;
+    return 0;
   }
   /* a scenario: its directory, its intro */
   if ((0 < net.loaded_file_kind) && (_strlen(((i8 *)&net.loaded_file_subdir)) != 0)) {
@@ -507,9 +509,15 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
     case JOIN_GO_ON:
       break;
     case JOIN_FAIL:
-      goto fail;
+      return 0;
     case JOIN_SCENARIO_CANCELLED:
-      goto scenario_cancelled;
+      /* the scenario's intro cancelled: out of the game */
+      net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
+      net_send_message(NM_UNLOCK_NATION,0,0,human_civ[0],0,0,0,0,0,0);
+      XD_FlushSendBuffer(180000);
+      palette_destroy(&scen_palette);
+      scen_dlg.Dialog::destruct();
+      return 0;
     }
   }
 
@@ -518,7 +526,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
   if (game_profile_popup(1) == -1) {
     net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(180000);
-    goto fail;
+    return 0;
   }
   if (((saved_turn.resume_new_game == 0) && (saved_turn.civ == '\0')) &&
      (net.session_phase < 2)) {
@@ -531,7 +539,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
     net_join_restore_backdrop(&palette);
     net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(180000);
-    goto fail;
+    return 0;
   }
   /* in: wait for the player list, then the game */
   net_send_message(NM_PLAYER_INFO,0,0,0,0,0,0,0,0,0);
@@ -546,7 +554,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
     net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
     net_send_message(NM_UNLOCK_NATION,0,0,human_civ[0],0,0,0,0,0,0);
     XD_FlushSendBuffer(180000);
-    goto fail;
+    return 0;
   }
   if ((net.nm_server_canceled_count != 0) || (net.nm_lost_server_on_join_count != 0)) {
     net_join_restore_backdrop(&palette);
@@ -558,7 +566,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
     else {
       popup_game_with_sprite("SERVERQUIT",(iptr)&popup_info_icon_sprite,0);
     }
-    goto fail;
+    return 0;
   }
   net.nm_start_civ_count = 0;
   dlg_style.pending_idle_callback = net_join_wait_start_civ_idle;
@@ -570,32 +578,19 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
     net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
     net_send_message(NM_UNLOCK_NATION,0,0,human_civ[0],0,0,0,0,0,0);
     XD_FlushSendBuffer(180000);
-    goto fail;
+    return 0;
   }
   if (net.nm_server_canceled_count != 0) {
     net_join_restore_backdrop(&palette);
     text_set_string_arg(1,self->server_game_name);
     crt_strcpy(((i8 *)&text_args.strings),(*(char * *)&net.connection_title));
     popup_game_with_sprite("SERVERQUIT",(iptr)&popup_info_icon_sprite,0);
-    goto fail;
+    return 0;
   }
   net_reset_msg_counts();
   text_close_file();
   snd_menu_end();
-  palette_destroy(&palette);
-  dlg.Dialog::destruct();
   return 1;
-scenario_cancelled:
-  /* the scenario's intro cancelled: out of the game */
-  net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
-  net_send_message(NM_UNLOCK_NATION,0,0,human_civ[0],0,0,0,0,0,0);
-  XD_FlushSendBuffer(180000);
-  palette_destroy(&scen_palette);
-  scen_dlg.Dialog::destruct();
-fail:
-  palette_destroy(&palette);
-  dlg.Dialog::destruct();
-  return 0;
 }
 
 /* 0042415c auto */
@@ -1277,13 +1272,9 @@ i32 __cdecl net_prompt_ip_address(void)
   char input[260];
   Dialog dlg;
   int choice;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   if ((net.lobby_launch_mode == -1) || (net.lobby_launch_mode == 1)) {
     proto_addr = XD_GetCurrentProtoAddr(net.adapter_index,net.net_protocol);
     if (proto_addr == (char *)0x0) {
@@ -1291,8 +1282,6 @@ i32 __cdecl net_prompt_ip_address(void)
         dlg.load_text_section((const char *)&str_game_7,(const char *)&str_ipaddress,0x1f,(iptr)&menu_prefs.net_ip_address,0,0,0,1);
         choice = dlg.run_modal((iptr)input,0);
         if (choice == -1) {
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 00445407 */ { dlg.Dialog::destruct(); }
           result = 0;
           return result;
         }
@@ -1308,8 +1297,6 @@ i32 __cdecl net_prompt_ip_address(void)
   else {
     crt_strcpy(((i8 *)&menu_prefs.net_ip_address),((i8 *)&net.lobby_launch_info));
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 00445407 */ { dlg.Dialog::destruct(); }
   result = 1;
   return result;
 }
@@ -1323,20 +1310,14 @@ i32 __cdecl net_prompt_player_name(void)
   char input[260];
   Dialog dlg;
   int choice;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   if (net.lobby_launch_mode == -1) {
     do {
       dlg.load_text_section((const char *)&str_game_7,(const char *)&str_netname,0x1f,(iptr)&menu_prefs.net_player_name,0,0,0,1);
       choice = dlg.run_modal((iptr)input,0);
       if (choice == -1) {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0044556d */ { dlg.Dialog::destruct(); }
         result = 0;
         return result;
       }
@@ -1349,8 +1330,6 @@ i32 __cdecl net_prompt_player_name(void)
     _memset(((i8 *)&menu_prefs.net_player_name),0,0x20);
     _strncpy(((i8 *)&menu_prefs.net_player_name),((i8 *)&net.lobby_short_name),0x1f);
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044556d */ { dlg.Dialog::destruct(); }
   result = 1;
   return result;
 }
@@ -1364,20 +1343,14 @@ i32 __cdecl net_prompt_game_name(void)
   char input[260];
   Dialog dlg;
   int choice;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   if (net.lobby_launch_mode == -1) {
     do {
       dlg.load_text_section((const char *)&str_game_7,(const char *)&str_gamename,0x1f,(iptr)&menu_prefs.net_game_name,0,0,0,1);
       choice = dlg.run_modal((iptr)input,0);
       if (choice == -1) {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 004456ed */ { dlg.Dialog::destruct(); }
         result = 0;
         return result;
       }
@@ -1391,8 +1364,6 @@ i32 __cdecl net_prompt_game_name(void)
     _memset(((i8 *)&menu_prefs.net_game_name),0,0x20);
     _strncpy(((i8 *)&menu_prefs.net_game_name),((i8 *)&net.lobby_session_name),0x1f);
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004456ed */ { dlg.Dialog::destruct(); }
   result = 1;
   return result;
 }
@@ -1422,13 +1393,9 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
   DialogOption *option;
   iptr option_civs[8];
   int wait_start;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   selected2 = 0;
   net.player_info_has_names = 0;
   net.player_info_has_titles = 0;
@@ -1489,8 +1456,6 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
         if (available_count == 0) {
           popup_game((const char *)&str_joinedmax);
           dlg.close();
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 004467fa */ { dlg.Dialog::destruct(); }
           ret = 1;
           return ret;
         }
@@ -1517,16 +1482,12 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
         choice = dlg.show_modal(0);
         selected2 = ((RadioGroup *)dlg.radio_group)->get_selected();
         if (choice < 0) {
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 004467fa */ { dlg.Dialog::destruct(); }
           ret = 1;
           return ret;
         }
       } while (net.nm_lock_data_count != 0);
       if (net.nm_server_canceled_count != 0) {
         popup_game_with_sprite((const char *)&str_gamecanceled,(iptr)&popup_info_icon_sprite,0);
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 004467fa */ { dlg.Dialog::destruct(); }
         ret = 1;
         return ret;
       }
@@ -1545,8 +1506,6 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
       if ((net.nm_nation_accept_count == 0) && (net.nm_nation_reject_count == 0)) {
         dlg.close();
         popup_game_with_sprite((const char *)&str_serverconnectfail,(iptr)&popup_info_icon_sprite,0);
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 004467fa */ { dlg.Dialog::destruct(); }
         ret = 1;
         return ret;
       }
@@ -1601,8 +1560,6 @@ i32 __cdecl net_choose_civ_dialog(int title_offset)
             crt_strcpy(((i8 *)&net.player_info_leader_name),input);
             net.player_info_tribe_name[0] = 0;
             net.player_info_adjective[0] = 0;
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 004467fa */ { dlg.Dialog::destruct(); }
             ret = 0;
             return ret;
           }
@@ -1651,11 +1608,7 @@ void ParleyWindow::create_advance_list_pane(RECT *rect,iptr pane,int their_side)
   RECT sb_rect;
   int can_see_other;
   iptr civ;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   can_see_other = 0;
   sb_rect.left = rect->left;
   sb_rect.top = rect->top;
@@ -1721,14 +1674,12 @@ void ParleyWindow::create_advance_list_pane(RECT *rect,iptr pane,int their_side)
     sb_rect.left = GetSystemMetrics(2);
     sb_rect.left = result - sb_rect.left;
     new_ctrl = (Button *)(operator_new(0x40));
-    eh_state = 0;
     if (new_ctrl == (Button *)0x0) {
       scrollbar = 0;
     }
     else {
       scrollbar = (u32)(((Scrollbar *)new_ctrl)->construct());
     }
-    eh_state = 0xffffffff;
     list_scrollbars[pane] = scrollbar;
     if (this == (ParleyWindow *)0x0) {
       parent2 = (Wnd *)0x0;
@@ -1748,14 +1699,12 @@ void ParleyWindow::create_advance_list_pane(RECT *rect,iptr pane,int their_side)
                (pane == 0 ? parley_advance_list0_on_scroll : parley_advance_list1_on_scroll));
   }
   new_ctrl = (Button *)(operator_new(0x40));
-  eh_state = 1;
   if (new_ctrl == (Button *)0x0) {
     hotspot = 0;
   }
   else {
     hotspot = (u32)(hotspot_ctor((Hotspot *)new_ctrl));
   }
-  eh_state = 0xffffffff;
   list_hotspots[pane] = hotspot;
   if (this == (ParleyWindow *)0x0) {
     parent22 = (Wnd *)0x0;
@@ -2079,11 +2028,7 @@ void ParleyWindow::create_unit_list_pane(RECT *rect,int pane,i32 own_side)
   i32 scrollbar;
   RECT sb_rect;
   int window;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   window = wnd_get_active_child();
   if (window == 0) {
     window = 0;
@@ -2130,14 +2075,12 @@ void ParleyWindow::create_unit_list_pane(RECT *rect,int pane,i32 own_side)
     sb_rect.left = GetSystemMetrics(2);
     sb_rect.left = sb_right_orig - sb_rect.left;
     new_ctrl = (Button *)(operator_new(0x40));
-    eh_state = 0;
     if (new_ctrl == (Button *)0x0) {
       scrollbar = 0;
     }
     else {
       scrollbar = (i32)(((Scrollbar *)new_ctrl)->construct());
     }
-    eh_state = 0xffffffff;
     list_scrollbars[pane] = scrollbar;
     if (this == (ParleyWindow *)0x0) {
       parent2 = (u8 *)0x0;
@@ -2159,14 +2102,12 @@ void ParleyWindow::create_unit_list_pane(RECT *rect,int pane,i32 own_side)
                (pane == 0 ? parley_unit_list_scroll_left : parley_unit_list_scroll_right));
   }
   new_ctrl = (Button *)(operator_new(0x40));
-  eh_state = 1;
   if (new_ctrl == (Button *)0x0) {
     hotspot = 0;
   }
   else {
     hotspot = (i32)(hotspot_ctor((Hotspot *)new_ctrl));
   }
-  eh_state = 0xffffffff;
   list_hotspots[pane] = hotspot;
   if (this == (ParleyWindow *)0x0) {
     parent22 = (u8 *)0x0;
@@ -3983,7 +3924,6 @@ void NetSession::recv_join_request(int *msg_hdr,int sender)
   int slot;
   Dialog join_dialog;
   int wait_start;
-  i32 unwind_state;
   
   if (net.host_flag == '\0') {
     ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(7,(iptr)&str_gnetmgr_bserver,(iptr)&str_d_ss_franklinton_netmgr_poll_cpp_4,0x22a);
@@ -3997,7 +3937,7 @@ void NetSession::recv_join_request(int *msg_hdr,int sender)
       net.nm_lock_nation_count++;
       if (2 < (int)(*(uptr *)&net.session_phase)) {
         join_dialog.Dialog::construct(0x4000);
-        unwind_state = 1;
+        ON_SCOPE_EXIT(join_dialog.Dialog::destruct());
         net_send_message(NM_HOLD_FOR_JOIN,0xff,0,0,0,0,0,0,0,0);
         mp_turn_timer_stop(0);
         join_dialog.load_game_section((const char *)&str_waitongamexmit_2,0x2000000);
@@ -4038,8 +3978,6 @@ void NetSession::recv_join_request(int *msg_hdr,int sender)
           civ_flag[2] = '\0';
           civ_flag[3] = '\0';
         }
-        unwind_state = 0xffffffff;
-        /* inlined unwind funclet 00482305 */ { join_dialog.Dialog::destruct(); }
       }
     }
   }
@@ -4159,10 +4097,9 @@ void NetSession::recv_wait_game_xmit()
 {
   Dialog wait_dialog;
   u32 saved_busy;
-  i32 unwind_state;
   
   wait_dialog.Dialog::construct(0x4000);
-  unwind_state = 0;
+  ON_SCOPE_EXIT(wait_dialog.Dialog::destruct());
   saved_busy = (u32)popup_in_progress;
   popup_in_progress = 1;
   mp_turn_timer_stop(0);
@@ -4172,8 +4109,6 @@ void NetSession::recv_wait_game_xmit()
   wait_dialog.close();
   popup_in_progress = saved_busy;
   mp_turn_timer_resume(0);
-  unwind_state = 0xffffffff;
-  /* inlined unwind funclet 00482311 */ { wait_dialog.Dialog::destruct(); }
 }
 
 /* Part of NetSession::process_messages (0047e94e): the turn passes to a civ
@@ -5179,9 +5114,7 @@ void NetSession::process_messages(int max_msgs,int wait_mode)
   int *msg_hdr;
   int *msg;
   char gamelist_dirty;
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   gamelist_dirty = '\0';
   unused_flag = 0;
   if ((((((((unit_create_busy == 0) && (unit_delete_busy == 0)) &&
@@ -5876,16 +5809,12 @@ void __cdecl chat_read_macro_line(const char *path,iptr file_offset)
   int ok;
   size_t line_len;
   i8 file[160];
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   ((FileObject *)file)->init();
-  unwind_state = 0;
+  ON_SCOPE_EXIT(((FileObject *)&file)->close());
   ok = ((FileObject *)file)->open(path);
   if (ok == 0) {
     *(i32 *)file_offset = 0;
-    unwind_state = 0xffffffff;
-    /* inlined unwind funclet 00492868 */ { ((FileObject *)&file)->close(); }
   }
   else {
     ok = ((FileObject *)file)->get_size();
@@ -5896,16 +5825,12 @@ void __cdecl chat_read_macro_line(const char *path,iptr file_offset)
     if (ok == 0) {
       *(i32 *)file_offset = 0;
       ((FileObject *)file)->map_close();
-      unwind_state = 0xffffffff;
-      /* inlined unwind funclet 00492868 */ { ((FileObject *)&file)->close(); }
     }
     else {
       file_obj_read_line((FileReadLineView *)file,(char *)&textbuf.buf,0x100);
       ((FileObject *)file)->map_close();
       line_len = _strlen(((i8 *)&textbuf.buf));
       *(size_t *)file_offset = *(int *)file_offset + line_len + 2;
-      unwind_state = 0xffffffff;
-      /* inlined unwind funclet 00492868 */ { ((FileObject *)&file)->close(); }
     }
   }
   return;
@@ -5926,11 +5851,7 @@ void ParleyWindow::build_civ_list(RECT *rect,int side)
   u32 other_civ;
   RECT rect2;
   int all_contact;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   rect2.left = rect->left;
   rect2.top = rect->top;
   rect2.right = rect->right;
@@ -5990,14 +5911,12 @@ void ParleyWindow::build_civ_list(RECT *rect,int side)
     rect2.left = GetSystemMetrics(2);
     rect2.left = has_wonder - rect2.left;
     new_ctrl = (Button *)(operator_new(0x40));
-    unwind_state = 0;
     if (new_ctrl == (Button *)0x0) {
       scrollbar = 0;
     }
     else {
       scrollbar = (i32)(((Scrollbar *)new_ctrl)->construct());
     }
-    unwind_state = 0xffffffff;
     list_scrollbars[side] = scrollbar;
     if (this == (ParleyWindow *)0x0) {
       scroll_parent = (u8 *)0x0;
@@ -6019,14 +5938,12 @@ void ParleyWindow::build_civ_list(RECT *rect,int side)
                (side == 0 ? parley_civ_list_scroll_local : parley_civ_list_scroll_remote));
   }
   new_ctrl = (Button *)(operator_new(0x40));
-  unwind_state = 1;
   if (new_ctrl == (Button *)0x0) {
     hotspot = 0;
   }
   else {
     hotspot = (i32)(hotspot_ctor((Hotspot *)new_ctrl));
   }
-  unwind_state = 0xffffffff;
   list_hotspots[side] = hotspot;
   if (this == (ParleyWindow *)0x0) {
     hotspot_parent = (u8 *)0x0;
@@ -6659,13 +6576,8 @@ ParleyWindow *ParleyWindow::construct(RECT *rect)
   u8 *field;
   int width;
   int i;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   this->SurfaceWindow::construct();
-  unwind_state = 0;
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 1);
   init_rect = (u32)rect;
   closed = 1;
@@ -6810,8 +6722,6 @@ void ParleyWindow::destruct()
   int created;
   size_t log_len;
   FileObject log_file;
-  i32 seh_prev;
-  i8 *seh_handler;
   uint unwind_state;
   
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 1);
@@ -6857,9 +6767,7 @@ void ParleyWindow::create(u32 mode)
   i8 *parent;
   u8 *wnd2;
   i8 log_file[160];
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   closed = 1;
   if (this == (ParleyWindow *)0x0) {
     wnd2 = (u8 *)0x0;
@@ -6894,7 +6802,7 @@ void ParleyWindow::create(u32 mode)
     }
     _memset(chat.input_buffer,0,0x101);
     ((FileObject *)log_file)->init();
-    unwind_state = 0;
+    ON_SCOPE_EXIT(((FileObject *)&log_file)->close());
     if (menu_prefs.clear_chat_on_new_game == 0) {
       file_size = ((FileObject *)log_file)->open((const char *)&str_chatlog_txt_3);
       if (file_size != 0) {
@@ -6912,8 +6820,6 @@ void ParleyWindow::create(u32 mode)
     else {
       *(*&chat.log_buffer) = 0;
     }
-    unwind_state = 0xffffffff;
-    /* inlined unwind funclet 004b4be3 */ { ((FileObject *)&log_file)->close(); }
   }
   if ((wnd_x == 0) && (wnd_y == 0)) {
     pick_size_mode();
@@ -7365,7 +7271,6 @@ void ParleyWindow::create_caption_buttons()
   int i;
   tagRECT rect;
   int ctrl_height;
-  i32 eh_state;
   
   caption_x = panel_layout.padding_x;
   for (i = 0; i < 3; i++) {
@@ -7393,14 +7298,12 @@ void ParleyWindow::create_caption_buttons()
     ctrl_left = ((int)caption_height >> 1) - (ctrl_height >> 1);
     SetRect(&rect,caption_x,ctrl_left,ctrl_width + caption_x,ctrl_left + ctrl_height);
     new_ctrl = (Button *)(operator_new(0x40));
-    eh_state = 0;
     if (new_ctrl == (Button *)0x0) {
       hotspot = 0;
     }
     else {
       hotspot = (i32)(hotspot_ctor((Hotspot *)new_ctrl));
     }
-    eh_state = 0xffffffff;
     caption_buttons[i].hotspot = hotspot;
     if (this == (ParleyWindow *)0x0) {
       caption_parent = (u8 *)0x0;
@@ -7433,7 +7336,6 @@ void ParleyWindow::create_close_button()
   i8 *button_font;
   tagRECT rect;
   int ctrl_height;
-  i32 eh_state;
   
   if (large_layout == 0) {
     button_font = ((i8 *)&font_size16);
@@ -7443,14 +7345,12 @@ void ParleyWindow::create_close_button()
   }
   ui_set_button_font((iptr)button_font);
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 1;
   if (new_ctrl == (Button *)0x0) {
     close_btn = 0;
   }
   else {
     close_btn = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   close_button = close_btn;
   ctrl_width = panel_layout.bevel_width + panel_layout.margin_x + 2;
   if (large_layout == 0) {
@@ -7520,17 +7420,14 @@ void ParleyWindow::create_chat_controls(int &ctrl_top,int &ctrl_height)
   uptr history_edit;
   tagRECT rect;
   i32 input_style;
-  i32 eh_state;
   
   new_edit = (EditControl *)(operator_new(0x48));
-  eh_state = 2;
   if (new_edit == (EditControl *)0x0) {
     history_edit = 0;
   }
   else {
     history_edit = (uptr)(edit_ctor(new_edit));
   }
-  eh_state = 0xffffffff;
   chat_log_edit = history_edit;
   ctrl_left = panel_left + panel_layout.margin_x;
   ctrl_width = rect_width((RECT *)&panel_left);
@@ -7587,14 +7484,12 @@ void ParleyWindow::create_chat_controls(int &ctrl_top,int &ctrl_height)
   ((EditControl *)chat_log_edit)->set_callback(parley_edit_escape_filter);
   ((Control *)chat_log_edit)->show_and_redraw();
   new_edit = (EditControl *)(operator_new(0x48));
-  eh_state = 3;
   if (new_edit == (EditControl *)0x0) {
     input_edit = 0;
   }
   else {
     input_edit = (uptr)(edit_ctor(new_edit));
   }
-  eh_state = 0xffffffff;
   chat_input_edit = input_edit;
   ctrl_width -= ctrl_width / 10;
   if (mode == 4) {
@@ -7657,7 +7552,6 @@ void ParleyWindow::create_chat_controls(int &ctrl_top,int &ctrl_height)
   ((Control *)chat_input_edit)->set_initial_focus();
   ((Control *)chat_input_edit)->show_and_redraw();
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 4;
   if (new_ctrl == (Button *)0x0) {
     send_button = 0;
   }
@@ -7665,7 +7559,6 @@ void ParleyWindow::create_chat_controls(int &ctrl_top,int &ctrl_height)
     send_button = (uptr)(button_ctor(new_ctrl));
   }
   xLeft = rect.right;
-  eh_state = 0xffffffff;
   this->send_button = send_button;
   ctrl_width = ctrl_width / 9;
   ctrl_height = ctrl_height / 2;
@@ -7680,14 +7573,12 @@ void ParleyWindow::create_chat_controls(int &ctrl_top,int &ctrl_height)
   ((Button *)this->send_button)->create((iptr)send_parent,0x3f0,(iptr)&rect,(const char *)label);
   ((Button *)this->send_button)->set_callback((CtrlNotifyFn)chat_send_button_on_click);
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 5;
   if (new_ctrl == (Button *)0x0) {
     clear_button = 0;
   }
   else {
     clear_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->clear_button = clear_button;
   ctrl_top += ctrl_height;
   SetRect(&rect,xLeft,ctrl_top,ctrl_width + xLeft,ctrl_top + ctrl_height);
@@ -7740,17 +7631,14 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   uptr reveal_button;
   uptr conceal_button;
   tagRECT rect;
-  i32 eh_state;
   
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 6;
   if (new_ctrl == (Button *)0x0) {
     conceal_button = 0;
   }
   else {
     conceal_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->conceal_button = conceal_button;
   ctrl_width = panel_left + panel_layout.margin_x;
   ctrl_left = rect_width((RECT *)&panel_left);
@@ -7768,14 +7656,12 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   ((Control *)this->conceal_button)->hide();
   ((Button *)this->conceal_button)->disable();
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 7;
   if (new_ctrl == (Button *)0x0) {
     reveal_button = 0;
   }
   else {
     reveal_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->reveal_button = reveal_button;
   ctrl_width = panel_left + panel_layout.margin_x;
   SetRect(&rect,ctrl_width,ctrl_top - ctrl_height,ctrl_left + ctrl_width,ctrl_top);
@@ -7791,14 +7677,12 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   ((Control *)this->reveal_button)->hide();
   ((Button *)this->reveal_button)->disable();
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 8;
   if (new_ctrl == (Button *)0x0) {
     intel_button = 0;
   }
   else {
     intel_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->intel_button = intel_button;
   ctrl_width = panel_left + panel_layout.margin_x;
   ctrl_left = rect_width((RECT *)&panel_left);
@@ -7815,14 +7699,12 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   ((Button *)this->intel_button)->set_callback((CtrlNotifyFn)parley_on_check_intel);
   ((Button *)this->intel_button)->enable();
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 9;
   if (new_ctrl == (Button *)0x0) {
     mode_button = 0;
   }
   else {
     mode_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->mode_button = mode_button;
   SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
   if (this == (ParleyWindow *)0x0) {
@@ -7836,14 +7718,12 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   ((Button *)this->mode_button)->set_callback(parley_on_mode_chosen);
   ((Button *)this->mode_button)->enable();
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 10;
   if (new_ctrl == (Button *)0x0) {
     mode2_button = 0;
   }
   else {
     mode2_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->mode2_button = mode2_button;
   if (this == (ParleyWindow *)0x0) {
     mode2_parent = (u8 *)0x0;
@@ -7857,14 +7737,12 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   ((Button *)this->mode2_button)->disable();
   ((Control *)this->mode2_button)->hide();
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 0xb;
   if (new_ctrl == (Button *)0x0) {
     never_mind_button = 0;
   }
   else {
     never_mind_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->never_mind_button = never_mind_button;
   SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
   if (this == (ParleyWindow *)0x0) {
@@ -7877,14 +7755,12 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   ((Button *)this->never_mind_button)->create((iptr)never_mind_parent,0x3f2,(iptr)&rect,(const char *)label);
   ((Button *)this->never_mind_button)->set_callback((CtrlNotifyFn)parley_on_never_mind);
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 0xc;
   if (new_ctrl == (Button *)0x0) {
     accept_button = 0;
   }
   else {
     accept_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->accept_button = accept_button;
   ctrl_width = panel_left + panel_layout.margin_x;
   ctrl_left = rect_width((RECT *)&panel_left);
@@ -7901,14 +7777,12 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   ((Button *)this->accept_button)->set_callback((CtrlNotifyFn)parley_on_accept_offer);
   ((Control *)this->accept_button)->hide();
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 0xd;
   if (new_ctrl == (Button *)0x0) {
     no_thanks_button = 0;
   }
   else {
     no_thanks_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->no_thanks_button = no_thanks_button;
   SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
   if (this == (ParleyWindow *)0x0) {
@@ -7922,14 +7796,12 @@ void ParleyWindow::create_parley_buttons(int ctrl_top,int ctrl_height)
   ((Button *)this->no_thanks_button)->set_callback((CtrlNotifyFn)parley_on_no_thanks);
   ((Control *)this->no_thanks_button)->hide();
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 0xe;
   if (new_ctrl == (Button *)0x0) {
     counter_button = 0;
   }
   else {
     counter_button = (uptr)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->counter_button = counter_button;
   SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
   if (this == (ParleyWindow *)0x0) {
@@ -7950,9 +7822,7 @@ void ParleyWindow::create_controls()
 {
   int ctrl_top;
   int ctrl_height;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   create_caption_buttons();
   create_close_button();
   create_chat_controls(ctrl_top,ctrl_height);
@@ -11559,18 +11429,15 @@ void ParleyWindow::show_description(int received)
   tagRECT ctrl_rect;
   i8 *desc_font;
   u8 *desc_parent;
-  i32 eh_state;
 
   build_description(received_offer,received);
   new_input = (EditControl *)(operator_new(0x48));
-  eh_state = received;
   if (new_input == (EditControl *)0x0) {
     desc_edit = 0;
   }
   else {
     desc_edit = (uptr)(edit_ctor(new_input));
   }
-  eh_state = 0xffffffff;
   this->desc_edit = desc_edit;
   cur_x = panel_left + panel_layout.margin_x;
   col_width = rect_width((RECT *)&panel_left);
@@ -11633,7 +11500,6 @@ void ParleyWindow::add_chat_pane(u32 side_x)
   uptr cur_x;
   int col_width;
   int block_height;
-  i32 eh_state;
   
   if (((game.wonder_city[WONDER_UNITED_NATIONS] == -1) && (tmp = civ_has_wonder(human_civ[0],WONDER_MARCO_POLO), tmp == 0)
       ) && (game.reveal_map == '\0')) {
@@ -11663,14 +11529,12 @@ void ParleyWindow::add_chat_pane(u32 side_x)
   }
   ui_set_ctrl_font((iptr)chat_font);
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 3;
   if (new_ctrl == (Button *)0x0) {
     anon_checkbox = 0;
   }
   else {
     anon_checkbox = (uptr)(checkbox_elem_ctor((Checkbox *)new_ctrl));
   }
-  eh_state = 0xffffffff;
   anonymous_checkbox = anon_checkbox;
   if (this == (ParleyWindow *)0x0) {
     anon_parent = (u8 *)0x0;
@@ -11685,14 +11549,12 @@ void ParleyWindow::add_chat_pane(u32 side_x)
   ((Checkbox *)anonymous_checkbox)->enable();
   ((Checkbox *)anonymous_checkbox)->set_callback((CheckboxToggleFn)chat_on_send_checkbox);
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 4;
   if (new_ctrl == (Button *)0x0) {
     mute_anon_checkbox = 0;
   }
   else {
     mute_anon_checkbox = (uptr)(checkbox_elem_ctor((Checkbox *)new_ctrl));
   }
-  eh_state = 0xffffffff;
   mute_anonymous_checkbox = mute_anon_checkbox;
   if (this == (ParleyWindow *)0x0) {
     mute_anon_parent = (u8 *)0x0;
@@ -11707,14 +11569,12 @@ void ParleyWindow::add_chat_pane(u32 side_x)
   ((Checkbox *)mute_anonymous_checkbox)->enable();
   ((Checkbox *)mute_anonymous_checkbox)->set_callback((CheckboxToggleFn)chat_on_send_checkbox);
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 5;
   if (new_ctrl == (Button *)0x0) {
     broadcast_checkbox = 0;
   }
   else {
     broadcast_checkbox = (uptr)(checkbox_elem_ctor((Checkbox *)new_ctrl));
   }
-  eh_state = 0xffffffff;
   this->broadcast_checkbox = broadcast_checkbox;
   if (this == (ParleyWindow *)0x0) {
     broadcast_parent = (u8 *)0x0;
@@ -11774,14 +11634,12 @@ void ParleyWindow::add_chat_pane(u32 side_x)
     }
     else {
       new_ctrl = (Button *)(operator_new(0x3c));
-      eh_state = 6;
       if (new_ctrl == (Button *)0x0) {
         mute_checkbox = 0;
       }
       else {
         mute_checkbox = (i32)(checkbox_elem_ctor((Checkbox *)new_ctrl));
       }
-      eh_state = 0xffffffff;
       mute_checkboxes[civ] = mute_checkbox;
       if (this == (ParleyWindow *)0x0) {
         mute_parent = (u8 *)0x0;
@@ -11796,14 +11654,12 @@ void ParleyWindow::add_chat_pane(u32 side_x)
       ((Checkbox *)mute_checkboxes[civ])->enable();
       ((Checkbox *)mute_checkboxes[civ])->set_callback((CheckboxToggleFn)chat_on_mute_checkbox);
       new_ctrl = (Button *)(operator_new(0x3c));
-      eh_state = 7;
       if (new_ctrl == (Button *)0x0) {
         send_checkbox = 0;
       }
       else {
         send_checkbox = (i32)(checkbox_elem_ctor((Checkbox *)new_ctrl));
       }
-      eh_state = 0xffffffff;
       send_checkboxes[civ] = send_checkbox;
       if (this == (ParleyWindow *)0x0) {
         send_parent = (u8 *)0x0;
@@ -11873,7 +11729,6 @@ void ParleyWindow::add_mode_pane(int side)
   u32 side_x;
   tagRECT ctrl_rect;
   int block_height;
-  i32 eh_state;
   
   mode_labels[0] = (iptr)(label_string(label_table.string_ids[0x2e4]));
   mode_labels[1] = (iptr)(label_string(label_table.string_ids[0x2e5]));
@@ -11933,14 +11788,12 @@ void ParleyWindow::add_mode_pane(int side)
   }
   ctrl_set_pending_font((iptr)mode_radio_font);
   new_input = (EditControl *)(operator_new(0x50));
-  eh_state = 2;
   if (new_input == (EditControl *)0x0) {
     mode_radio = 0;
   }
   else {
     mode_radio = (i32)(((RadioGroup *)new_input)->construct());
   }
-  eh_state = 0xffffffff;
   side_radios[side] = mode_radio;
   cur_x = side_x;
   col_width = max_label_width + max_label_width / 2;
@@ -11997,7 +11850,6 @@ void ParleyWindow::add_exchange_kind_pane_left(int side,u32 side_x)
   uptr cur_x;
   int col_width;
   tagRECT ctrl_rect;
-  i32 eh_state;
   
   exch_labels_l[0] = (i32)(label_string(label_table.string_ids[0x2eb]));
   exch_labels_l[1] = (i32)(label_string(label_table.string_ids[0x2ec]));
@@ -12028,14 +11880,12 @@ void ParleyWindow::add_exchange_kind_pane_left(int side,u32 side_x)
   }
   ctrl_set_pending_font((iptr)exch_radio_font_l);
   new_input = (EditControl *)(operator_new(0x50));
-  eh_state = 8;
   if (new_input == (EditControl *)0x0) {
     exch_radio_l = 0;
   }
   else {
     exch_radio_l = (i32)(((RadioGroup *)new_input)->construct());
   }
-  eh_state = 0xffffffff;
   side_radios[side] = exch_radio_l;
   cur_x = side_x;
   tmp = rect_width((RECT *)&panel_left);
@@ -12094,7 +11944,6 @@ void ParleyWindow::add_exchange_kind_pane_right(int side,u32 side_x)
   uptr cur_x;
   int col_width;
   tagRECT ctrl_rect;
-  i32 eh_state;
   
   exch_labels_r[0] = (i32)(label_string(label_table.string_ids[0x2eb]));
   exch_labels_r[1] = (i32)(label_string(label_table.string_ids[0x2ec]));
@@ -12125,14 +11974,12 @@ void ParleyWindow::add_exchange_kind_pane_right(int side,u32 side_x)
   }
   ctrl_set_pending_font((iptr)exch_radio_font_r);
   new_input = (EditControl *)(operator_new(0x50));
-  eh_state = 9;
   if (new_input == (EditControl *)0x0) {
     exch_radio_r = 0;
   }
   else {
     exch_radio_r = (i32)(((RadioGroup *)new_input)->construct());
   }
-  eh_state = 0xffffffff;
   side_radios[side] = exch_radio_r;
   tmp = rect_width((RECT *)&panel_left);
   col_width = (tmp + panel_layout.margin_x * -2) / 2;
@@ -12197,7 +12044,6 @@ void ParleyWindow::add_treaty_pane(int side,u32 side_x,char is_exchange_side,cha
   int col_width;
   tagRECT ctrl_rect;
   int block_height;
-  i32 eh_state;
   
   treaty_labels[0] = (i32)(label_string(label_table.string_ids[0x2f3]));
   treaty_labels[1] = (i32)(label_string(label_table.string_ids[0x2f4]));
@@ -12273,14 +12119,12 @@ void ParleyWindow::add_treaty_pane(int side,u32 side_x,char is_exchange_side,cha
   }
   ctrl_set_pending_font((iptr)treaty_radio_font);
   new_input = (EditControl *)(operator_new(0x50));
-  eh_state = 10;
   if (new_input == (EditControl *)0x0) {
     treaty_radio = 0;
   }
   else {
     treaty_radio = (i32)(((RadioGroup *)new_input)->construct());
   }
-  eh_state = 0xffffffff;
   side_radios[side] = treaty_radio;
   cur_x = side_x;
   if (large_layout == 0) {
@@ -12501,7 +12345,6 @@ void ParleyWindow::add_gift_pane(int side,u32 side_x)
   int col_width;
   tagRECT ctrl_rect;
   int block_height;
-  i32 eh_state;
   
   gift_labels[0] = (i32)(label_string(label_table.string_ids[0x2fd]));
   gift_labels[1] = (i32)(label_string(label_table.string_ids[0x2fe]));
@@ -12543,14 +12386,12 @@ void ParleyWindow::add_gift_pane(int side,u32 side_x)
   }
   ctrl_set_pending_font((iptr)gift_radio_font);
   new_input = (EditControl *)(operator_new(0x50));
-  eh_state = 0xb;
   if (new_input == (EditControl *)0x0) {
     gift_radio = 0;
   }
   else {
     gift_radio = (i32)(((RadioGroup *)new_input)->construct());
   }
-  eh_state = 0xffffffff;
   side_radios[side] = gift_radio;
   cur_x = side_x;
   tmp = rect_width((RECT *)&panel_left);
@@ -12725,7 +12566,6 @@ void ParleyWindow::add_gold_pane(int side,u32 side_x,char is_exchange_side,char 
   int col_width;
   tagRECT ctrl_rect;
   int block_height;
-  i32 eh_state;
   
   gfx_set_text_color_index(10);
   cur_x = side_x;
@@ -12842,14 +12682,12 @@ void ParleyWindow::add_gold_pane(int side,u32 side_x,char is_exchange_side,char 
   }
   draw_text((iptr)gold_prompt_font,(const char *)&textbuf.buf,cur_x,cur_y,1);
   new_input = (EditControl *)(operator_new(0x48));
-  eh_state = 0xc;
   if (new_input == (EditControl *)0x0) {
     gold_edit = 0;
   }
   else {
     gold_edit = (i32)(edit_ctor(new_input));
   }
-  eh_state = 0xffffffff;
   gold_edits[side] = gold_edit;
   if (large_layout == 0) {
     gold_edit_font = ((i8 *)&font_size16_bold_block.font_size16_bold);
@@ -12927,7 +12765,6 @@ void ParleyWindow::add_unit_pane(int side,u32 side_x,char is_exchange_side,char 
   uptr cur_x;
   int col_width;
   tagRECT ctrl_rect;
-  i32 eh_state;
   
   if (is_exchange_side == '\0') {
     flag_ptr = (u8 *)&list_rows[side];
@@ -13038,14 +12875,12 @@ void ParleyWindow::add_unit_pane(int side,u32 side_x,char is_exchange_side,char 
     SetRect(&btn_rect,panel_layout.margin_x * 2 + ctrl_rect.left,btn_top,ctrl_rect.left + btn_width,
             btn_top + btn_height);
     new_ctrl = (Button *)(operator_new(0x3c));
-    eh_state = 0xd;
     if (new_ctrl == (Button *)0x0) {
       reveal_button = 0;
     }
     else {
       reveal_button = (i32)(button_ctor(new_ctrl));
     }
-    eh_state = 0xffffffff;
     info_show_buttons[side] = reveal_button;
     if (side == 0) {
       reveal_label = (iptr)(label_string(label_table.string_ids[0x36f]));
@@ -13064,14 +12899,12 @@ void ParleyWindow::add_unit_pane(int side,u32 side_x,char is_exchange_side,char 
     ((Button *)info_show_buttons[side])->set_callback(
                (CtrlNotifyFn)(side == 0 ? parley_reveal_city_origin_clicked : parley_request_city_origin_clicked));
     new_ctrl = (Button *)(operator_new(0x3c));
-    eh_state = 0xe;
     if (new_ctrl == (Button *)0x0) {
       hide_button = 0;
     }
     else {
       hide_button = (i32)(button_ctor(new_ctrl));
     }
-    eh_state = 0xffffffff;
     info_hide_buttons[side] = hide_button;
     if (side == 0) {
       hide_label = (iptr)(label_string(label_table.string_ids[0x371]));
@@ -13112,14 +12945,12 @@ void ParleyWindow::add_unit_pane(int side,u32 side_x,char is_exchange_side,char 
             btn_top + btn_height);
   }
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 0xf;
   if (new_ctrl == (Button *)0x0) {
     sort_unit_button = 0;
   }
   else {
     sort_unit_button = (i32)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   sort_by_unit_buttons[side] = sort_unit_button;
   if (this == (ParleyWindow *)0x0) {
     sort_unit_parent = (u8 *)0x0;
@@ -13140,14 +12971,12 @@ void ParleyWindow::add_unit_pane(int side,u32 side_x,char is_exchange_side,char 
   SetRect(&btn_rect,btn_rect.right,btn_top,btn_rect.right + btn_width + panel_layout.margin_x * -3,
           btn_top + btn_height);
   new_ctrl = (Button *)(operator_new(0x3c));
-  eh_state = 0x10;
   if (new_ctrl == (Button *)0x0) {
     sort_city_button = 0;
   }
   else {
     sort_city_button = (i32)(button_ctor(new_ctrl));
   }
-  eh_state = 0xffffffff;
   sort_by_city_buttons[side] = sort_city_button;
   if (this == (ParleyWindow *)0x0) {
     sort_city_parent = (u8 *)0x0;
@@ -13202,7 +13031,6 @@ void ParleyWindow::add_proposal_pane(int side,u32 side_x)
   int col_width;
   tagRECT ctrl_rect;
   int block_height;
-  i32 eh_state;
   
   gfx_set_text_color_index(10);
   if (large_layout == 0) {
@@ -13235,14 +13063,12 @@ void ParleyWindow::add_proposal_pane(int side,u32 side_x)
   }
   ctrl_set_pending_font((iptr)proposal_radio_font);
   new_input = (EditControl *)(operator_new(0x50));
-  eh_state = 0x11;
   if (new_input == (EditControl *)0x0) {
     proposal_radio = 0;
   }
   else {
     proposal_radio = (i32)(((RadioGroup *)new_input)->construct());
   }
-  eh_state = 0xffffffff;
   side_radios[side] = proposal_radio;
   cur_x = side_x;
   tmp = rect_width((RECT *)&panel_left);
@@ -13443,7 +13269,6 @@ void ParleyWindow::add_map_pane(int side,u32 side_x,char is_exchange_side)
   int col_width;
   tagRECT ctrl_rect;
   int block_height;
-  i32 eh_state;
   
   map_labels[0] = (iptr)(label_string(label_table.string_ids[0x30f]));
   map_labels[1] = (iptr)(label_string(label_table.string_ids[0x310]));
@@ -13537,14 +13362,12 @@ void ParleyWindow::add_map_pane(int side,u32 side_x,char is_exchange_side)
   }
   ctrl_set_pending_font((iptr)map_radio_font);
   new_input = (EditControl *)(operator_new(0x50));
-  eh_state = 0x12;
   if (new_input == (EditControl *)0x0) {
     map_radio = 0;
   }
   else {
     map_radio = (i32)(((RadioGroup *)new_input)->construct());
   }
-  eh_state = 0xffffffff;
   side_radios[side] = map_radio;
   if (this == (ParleyWindow *)0x0) {
     map_parent = (u8 *)0x0;
@@ -13592,7 +13415,6 @@ void ParleyWindow::add_offer_pane(int side,u32 side_x)
   int col_width;
   tagRECT ctrl_rect;
   int block_height;
-  i32 eh_state;
   
   offer_labels[0] = (i32)(label_string(label_table.string_ids[0x2eb]));
   offer_labels[1] = (i32)(label_string(label_table.string_ids[0x2ec]));
@@ -13655,14 +13477,12 @@ void ParleyWindow::add_offer_pane(int side,u32 side_x)
   }
   ctrl_set_pending_font((iptr)offer_radio_font);
   new_input = (EditControl *)(operator_new(0x50));
-  eh_state = 0x13;
   if (new_input == (EditControl *)0x0) {
     offer_radio = 0;
   }
   else {
     offer_radio = (i32)(((RadioGroup *)new_input)->construct());
   }
-  eh_state = 0xffffffff;
   side_radios[side] = offer_radio;
   cur_x = side_x;
   tmp = rect_width((RECT *)&panel_left);
@@ -13724,7 +13544,6 @@ void ParleyWindow::add_city_pane(int side,u32 side_x,char is_exchange_side,char 
   uptr cur_x;
   int col_width;
   tagRECT ctrl_rect;
-  i32 eh_state;
   
   if (is_exchange_side == '\0') {
     flag_ptr = (u8 *)&list_rows[side];
@@ -13806,14 +13625,12 @@ void ParleyWindow::add_city_pane(int side,u32 side_x,char is_exchange_side,char 
     SetRect(&city_btn_rect,panel_layout.margin_x * 2 + ctrl_rect.left,city_btn_top,ctrl_rect.left + city_btn_width,
             city_btn_height + city_btn_top);
     new_ctrl = (Button *)(operator_new(0x3c));
-    eh_state = 0x14;
     if (new_ctrl == (Button *)0x0) {
       city_reveal_button = 0;
     }
     else {
       city_reveal_button = (i32)(button_ctor(new_ctrl));
     }
-    eh_state = 0xffffffff;
     info_show_buttons[side] = city_reveal_button;
     if (side == 0) {
       city_reveal_label = (iptr)(label_string(label_table.string_ids[0x372]));
@@ -13832,14 +13649,12 @@ void ParleyWindow::add_city_pane(int side,u32 side_x,char is_exchange_side,char 
     ((Button *)info_show_buttons[side])->set_callback(
                (CtrlNotifyFn)(side == 0 ? parley_reveal_city_info : parley_request_city_info));
     new_ctrl = (Button *)(operator_new(0x3c));
-    eh_state = 0x15;
     if (new_ctrl == (Button *)0x0) {
       city_hide_button = 0;
     }
     else {
       city_hide_button = (i32)(button_ctor(new_ctrl));
     }
-    eh_state = 0xffffffff;
     info_hide_buttons[side] = city_hide_button;
     if (side == 0) {
       city_hide_label = (iptr)(label_string(label_table.string_ids[0x374]));
@@ -14007,9 +13822,7 @@ void ParleyWindow::add_side_dialog(int side_kind,int side)
   char is_demand_side;
   u32 side_x;
   char is_exchange_side;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   if ((side != 0) && (side != 1)) {
     ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(7,(iptr)&str_leftright_left_leftright_right_2,(iptr)&str_d_ss_franklinton_parleywin_add_dialog_cp,0xc);
   }
@@ -15177,10 +14990,7 @@ i32 LobbyList::host_wait_players(i32 map_arg,int launch_mode)
   i32 ret;
   uptr new_dialog;
   i32 seh_frame;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   if ((launch_mode == 2) || (launch_mode == 3)) {
     net_send_message(NM_SERVER_INFO,0,0,0,0,0,0,0,0,0);
     dialog = 0;
@@ -15191,14 +15001,12 @@ i32 LobbyList::host_wait_players(i32 map_arg,int launch_mode)
   }
   else {
     this_00 = (Dialog *)(operator_new(0x2f4));
-    seh_state = 0;
     if (this_00 == (Dialog *)0x0) {
       new_dialog = 0;
     }
     else {
       new_dialog = (uptr)(this_00->Dialog::construct(0x4000));
     }
-    seh_state = 0xffffffff;
     dialog = (Dialog *)new_dialog;
     if (dialog == 0) {
       ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(7,(iptr)&str_pplayerpopup_null,(iptr)&str_d_ss_franklinton_startup_playerbox_cpp,0x34);
@@ -15647,10 +15455,7 @@ void ParleyWindow::create_city_list_pane(RECT *rect,int pane,i32 own_cities)
   i32 scrollbar;
   RECT rect2;
   i32 seh_frame;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   rect2.left = rect->left;
   rect2.top = rect->top;
   rect2.right = rect->right;
@@ -15689,14 +15494,12 @@ void ParleyWindow::create_city_list_pane(RECT *rect,int pane,i32 own_cities)
     rect2.left = GetSystemMetrics(2);
     rect2.left = right - rect2.left;
     new_ctrl = (Button *)(operator_new(0x40));
-    seh_state = 0;
     if (new_ctrl == (Button *)0x0) {
       scrollbar = 0;
     }
     else {
       scrollbar = (i32)(((Scrollbar *)new_ctrl)->construct());
     }
-    seh_state = 0xffffffff;
     list_scrollbars[pane] = scrollbar;
     if (this == (ParleyWindow *)0x0) {
       scroll_parent = (u8 *)0x0;
@@ -15718,14 +15521,12 @@ void ParleyWindow::create_city_list_pane(RECT *rect,int pane,i32 own_cities)
                (pane == 0 ? parley_city_list_scroll_local : parley_city_list_scroll_remote));
   }
   new_ctrl = (Button *)(operator_new(0x40));
-  seh_state = 1;
   if (new_ctrl == (Button *)0x0) {
     hotspot = 0;
   }
   else {
     hotspot = (i32)(hotspot_ctor((Hotspot *)new_ctrl));
   }
-  seh_state = 0xffffffff;
   list_hotspots[pane] = hotspot;
   if (this == (ParleyWindow *)0x0) {
     hotspot_parent = (u8 *)0x0;
@@ -16506,13 +16307,9 @@ NetSession *NetSession::construct()
 
 {
   i32 seh_frame;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   player_info_msg.init();
   msg_queue.construct();
-  seh_state = 0;
   ((u8 *)&connection_title)[0] = '\0';
   ((u8 *)&connection_title)[1] = '\0';
   ((u8 *)&connection_title)[2] = '\0';
@@ -16612,7 +16409,6 @@ void NetSession::destruct()
 
 {
   i32 seh_frame;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;

@@ -1759,7 +1759,6 @@ void __cdecl str_pipes_to_tabs(char *str)
 i32 __cdecl file_read_nth_line(iptr dest,const char *filename,int line_num)
 
 {
-  FILE *_File;
   char *line;
   size_t len;
   i32 result;
@@ -1767,12 +1766,11 @@ i32 __cdecl file_read_nth_line(iptr dest,const char *filename,int line_num)
   char line_buf[80];
   
   result = 1;
-  _File = file_open_path(filename,(iptr)&str_rt_9);
-  if (_File != (FILE *)0x0) {
+  ScopedFile file(file_open_path(filename,(iptr)&str_rt_9));
+  if (file != (FILE *)0x0) {
     for (i = 1; i <= line_num; i++) {
-      if (((CRT_FEOF(_File)) != 0) ||
-         (line = _fgets(line_buf,0x4c,_File), line == (char *)0x0)) {
-        _fclose(_File);
+      if (((CRT_FEOF(file)) != 0) ||
+         (line = _fgets(line_buf,0x4c,file), line == (char *)0x0)) {
         return result;
       }
     }
@@ -1783,9 +1781,6 @@ i32 __cdecl file_read_nth_line(iptr dest,const char *filename,int line_num)
     }
     crt_strcpy((char *)((void *)dest),(const char *)((void *)line_buf));
     result = 0;
-  }
-  if (_File != (FILE *)0x0) {
-    _fclose(_File);
   }
   return result;
 }

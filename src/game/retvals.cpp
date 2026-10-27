@@ -381,7 +381,6 @@ int __cdecl save_read_game(char *path)
 {
   char saved_player_civ;
   char *dot_ptr;
-  FILE *_File;
   int result;
   size_t count_read;
   size_t name_len;
@@ -402,30 +401,35 @@ int __cdecl save_read_game(char *path)
   status = 1;
   skip_destroyed = 0;
   saved_multiplayer = (uint)game.multiplayer;
+  /* after the file is closed: a game saved in the other mode adapted */
+  ON_SCOPE_EXIT(
+    if ((status == 0) && (game.multiplayer != saved_multiplayer)) {
+      save_adapt_game_mode(saved_multiplayer);
+    });
   save_set_file_ext(0);
   crt_strcpy(save_path,path);
   dot_ptr = _strchr(save_path,0x2e);
   if (dot_ptr == (char *)0x0) {
     crt_strcat(save_path,((i8 *)&grey_palette_block.save_file_path));
   }
-  _File = _fopen(save_path,((i8 *)&save_read_mode));
+  ScopedFile _File(_fopen(save_path,((i8 *)&save_read_mode)));
   if ((_File == (FILE *)0x0) || (result = save_read_cstr((char *)header_str,(iptr)_File), result == 0))
-  goto close_file;
+  return status;
   result = _strcmp(str_ptr_civilize,header_str);
   if (result != 0) {
     status = 1;
-    goto close_file;
+    return status;
   }
   count_read = _fread(&version,2,1,_File);
-  if (count_read == 0) goto close_file;
+  if (count_read == 0) return status;
   if (0x2c < (version & 0xffff)) {
     status = 4;
-    goto close_file;
+    return status;
   }
   if (((((version & 0xffff) < 0x26) || ((version & 0xffff) == 0x29)) ||
       ((version & 0xffff) == 0x2a)) || ((version & 0xffff) == 0x2b)) {
     status = 2;
-    goto close_file;
+    return status;
   }
   ui_flush_input();
   crt_strcpy(((i8 *)&net_map_lock_slots_block.scenario_dir_path),path);
@@ -465,7 +469,7 @@ int __cdecl save_read_game(char *path)
   status = 3;
   ui_flush_input();
   result = save_load_gpk(version & 0xffff,(iptr)_File);
-  if (result == 0) goto close_file;
+  if (result == 0) return status;
   if (game.multiplayer != 0) {
     game.game_options = game.game_options & ~OPT_CHEAT_MODE;
   }
@@ -488,24 +492,24 @@ int __cdecl save_read_game(char *path)
   if (((result != 0) ||
       (count_read = _fread(map_data.coarse[0],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0)) ||
      (count_read = _fread(map_data.coarse[1],(int)map.quarter_w * (int)map.quarter_h,1,_File), count_read == 0))
-  goto close_file;
+  return status;
   ui_flush_input();
   count_read = _fread(((i8 *)&landmass_table_block.landmass_table),0x400,1,_File);
   if ((count_read == 0) || (result = save_read_units_cities(version & 0xffff,(iptr)_File), result == 0))
-  goto close_file;
+  return status;
   for (idx = 0; idx < 0x15; idx = idx + 1) {
     count_read = _fread(&leaders[idx].times_used,1,1,_File);
     if (((count_read == 0) || (count_read = _fread(&leaders[idx].city_name_index,1,1,_File), count_read == 0))
        || (count_read = _fread(&leaders[idx].female,1,1,_File), count_read == 0))
-    goto close_file;
+    return status;
   }
   count_read = _fread(((i16 *)&map_cursor.x),2,1,_File);
   if ((count_read == 0) ||
      (count_read = _fread(((i16 *)&map_cursor.y),2,1,_File), saved_player_civ = game.player_civ, game.player_civ = saved_player_civ,
-     count_read == 0)) goto close_file;
+     count_read == 0)) return status;
   if (game.multiplayer == 0) {
     count_read = _fread(leader_buf,0x30,1,_File);
-    if (count_read == 0) goto close_file;
+    if (count_read == 0) return status;
   }
   else {
     for (idx = 0; game.player_civ = saved_player_civ, idx < 8; idx = idx + 1) {
@@ -514,12 +518,12 @@ int __cdecl save_read_game(char *path)
         count_read = _fread(leader_buf + civs[(char)(byte)idx].tribe * 0x30,
                        0x30,1,_File);
         game.player_civ = saved_player_civ;
-        if (count_read == 0) goto close_file;
+        if (count_read == 0) return status;
       }
     }
   }
   count_read = _fread(((i8 *)&power_graph_history_block.power_graph_history),0x4b0,1,_File);
-  if ((count_read == 0) || (count_read = _fread(((i16 *)&grey_palette_block.save_layout_record),0x6a,1,_File), count_read == 0)) goto close_file;
+  if ((count_read == 0) || (count_read = _fread(((i16 *)&grey_palette_block.save_layout_record),0x6a,1,_File), count_read == 0)) return status;
   save_unpack_layout_rects();
   ui_flush_input();
   for (idx = 0; idx < 8; idx = idx + 1) {
@@ -528,18 +532,18 @@ int __cdecl save_read_game(char *path)
         || (count_read = _fread(((i16 *)&map_views_block.map_view_center_x) + idx * 0x1f8,2,1,_File), count_read == 0)) ||
        ((count_read = _fread(((i16 *)&map_views_block.mapview_center_y) + idx * 0x1f8,2,1,_File), count_read == 0 ||
         (count_read = _fread(((i16 *)&map_views_block.mapview_zoom) + idx * 0x1f8,2,1,_File), count_read == 0))))
-    goto close_file;
+    return status;
   }
   if ((is_scenario == 0) && ((game.game_flags & GAME_SCENARIO) == 0)) {
     scenario_reset_params();
   }
   else {
     count_read = _fread(((i16 *)&scenario.flags),100,1,_File);
-    if (count_read == 0) goto close_file;
+    if (count_read == 0) return status;
   }
   if (skip_destroyed == 0) {
     count_read = _fread(((i16 *)&destroyed_civs.count),0x152,1,_File);
-    if (count_read == 0) goto close_file;
+    if (count_read == 0) return status;
   }
   else {
     destroyed_civs_clear();
@@ -560,7 +564,7 @@ int __cdecl save_read_game(char *path)
   else {
     _memset(((i8 *)&civ_view.saved_cursor_x),0,0x494);
     count_read = _fread(((i8 *)&civ_view.saved_cursor_x),0x494,1,_File);
-    if (count_read == 0) goto close_file;
+    if (count_read == 0) return status;
     if ((*(byte *)&saved_turn.civ) == 0) {
       (*(byte *)&saved_turn.civ) = game.turn_civ;
     }
@@ -575,7 +579,7 @@ int __cdecl save_read_game(char *path)
     (*(byte *)&turn_loop.resume_civ) = (*(byte *)&saved_turn.civ);
     passwords_refresh_flags();
   }
-  if (save_read_events(_File) == 0) goto close_file;
+  if (save_read_events(_File) == 0) return status;
   ui_flush_input();
   leaders_fixup_names();
   saved_player_civ = game.player_civ;
@@ -603,13 +607,6 @@ int __cdecl save_read_game(char *path)
     destroyed_civ_count_block.saved_layout_valid = 0;
   }
   status = 0;
-close_file:
-  if (_File != (FILE *)0x0) {
-    _fclose(_File);
-  }
-  if ((status == 0) && (game.multiplayer != saved_multiplayer)) {
-    save_adapt_game_mode(saved_multiplayer);
-  }
   return status;
 }
 

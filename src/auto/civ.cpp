@@ -708,23 +708,18 @@ void EditorWindow::tech_editor_dialog_run()
   i8 rect[16];
   GamePalette palette;
   i32 eh_next;
-  i8 *eh_handler;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
-  (*((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     surface = (DibSurface *)0x0;
   }
   else {
     surface = surface_ctor(this_00);
   }
-  eh_state = eh_state & 0xffffff00;
   editor_ui.bg_surface = surface;
   ((GameFont *)((i8 *)&editor_font_block.editor_font))->set(0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
@@ -851,8 +846,6 @@ void EditorWindow::tech_editor_dialog_run()
   }
   editor_ui.bg_surface = (DibSurface *)0x0;
   combo_count_u = 0;
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 00417542 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -861,17 +854,11 @@ void __cdecl tech_editor_run(void)
 
 {
   EditorWindow editor_wnd;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   editor_wnd.construct();
-  seh_state = 0;
+  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
   editor_wnd.tech_editor_dialog_run();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 004175bf */ { editor_wnd_dtor(&editor_wnd); }
   return;
 }
 
@@ -3952,14 +3939,14 @@ void __cdecl civ_change_password_dialog(iptr civ)
   Dialog dialog2;
   char current_password[32];
   int result;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   mp_turn_timer_stop(1);
+  ON_SCOPE_EXIT(
+    passwords_refresh_flags();
+    map_views_block.civ_password_prompt_pending[civ] = 0;
+    mp_turn_timer_resume(1));
   passwords_unscramble();
   crt_strcpy(current_password,((i8 *)&civ_saved_cursor_x_block.civ_passwords) + civ * 0x20);
   passwords_scramble();
@@ -3972,11 +3959,11 @@ void __cdecl civ_change_password_dialog(iptr civ)
     dialog2.load_text_section((const char *)&str_game_7,(const char *)&str_password1,0x1f,(iptr)&str_empty_110,0,0,0,1);
     password_dialog_set_title(&dialog2,civ,0x26d);
     result = dialog2.run_modal((iptr)entered,0);
-    if (result < 0) goto cleanup;
+    if (result < 0) return;
     result = _strcmp(entered,current_password);
     if (result != 0) {
       popup_game((const char *)&str_password0);
-      goto cleanup;
+      return;
     }
     dialog2.load_text_section((const char *)&str_game_7,(const char *)&str_password1_2,0x1f,(iptr)&str_empty_111,0,0,0,1);
     password_dialog_set_title(&dialog2,civ,0x26c);
@@ -3991,12 +3978,6 @@ void __cdecl civ_change_password_dialog(iptr civ)
       popup_game((const char *)&str_password4);
     }
   }
-cleanup:
-  passwords_refresh_flags();
-  map_views_block.civ_password_prompt_pending[civ] = 0;
-  mp_turn_timer_resume(1);
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 004985d0 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -4008,21 +3989,15 @@ i32 __cdecl civ_password_prompt(int civ)
   char entered[32];
   Dialog dialog2;
   int result;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   dialog2.load_text_section((const char *)&str_game_7,(const char *)&str_password1_4,0x1f,(iptr)&str_empty_113,0,0,0,1);
   password_dialog_set_title(&dialog2,civ,0x26b);
   entered[0] = '\0';
   dlg_style.pending_idle_callback = net_pump_idle_cb;
   result = dialog2.run_modal((iptr)entered,0);
   if (result < 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0049875f */ { dialog2.Dialog::destruct(); }
     status = 2;
   }
   else {
@@ -4030,15 +4005,11 @@ i32 __cdecl civ_password_prompt(int civ)
     result = _strcmp(entered,((i8 *)&civ_saved_cursor_x_block.civ_passwords) + civ * 0x20);
     passwords_scramble();
     if (result == 0) {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 0049875f */ { dialog2.Dialog::destruct(); }
       status = 0;
     }
     else {
       dlg_style.pending_idle_callback = net_pump_idle_cb;
       popup_game((const char *)&str_password0_2);
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 0049875f */ { dialog2.Dialog::destruct(); }
       status = 1;
     }
   }
@@ -5405,14 +5376,10 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
   int civ4;
   int first_discovery;
   int count;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   first_discovery = 0;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   if ((((game.multiplayer < 3) || (from_network != 0)) ||
       ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0)) ||
      (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 || ((*(i8 *)&human_civ) == civ)))
@@ -5438,8 +5405,6 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
       if (2 < game.multiplayer) {
         net_send_state_diff(0xff,2,0,0,0);
       }
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 004bfd9a */ { dialog2.Dialog::destruct(); }
     }
     else {
       civs[civ].num_advances++;
@@ -5507,15 +5472,11 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr skip_pedia,in
       if (2 < game.multiplayer) {
         net_send_state_diff(0xff,2,0,0,0);
       }
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 004bfd9a */ { dialog2.Dialog::destruct(); }
     }
   }
   else {
     net_send_message(NM_SET_CIV,net.net_slots[net.net_civ_slots[civ]].id,civ,
                        advance,civ2,skip_pedia,0,0,0,0);
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 004bfd9a */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -5879,13 +5840,9 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
   iptr button_count;
   Dialog dialog2;
   iptr i;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x2000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   mode_state[1] = 0;
   while( true ) {
     while( true ) {
@@ -5893,8 +5850,6 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       dialog2.load_game_section((const char *)&str_researchgoal,1);
       research_goal_add_options(civ,exclude_current,mode_state[1],dialog2,option_count2);
       if (option_count2 == 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
         return;
       }
       button_count = 0;
@@ -5918,8 +5873,6 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       }
       choice = dialog2.show_modal(0);
       if (choice < 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
         return;
       }
       if (dialog2.result_extra != 1) break;
@@ -5973,8 +5926,6 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
     else {
       popup_game((const char *)&str_stealnone);
     }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
   }
   else {
     if (civ2 == 0) {
@@ -6002,8 +5953,6 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       dialog2.add_line((const char *)&textbuf.buf,0xffffffff,0xffffffff,0xffffffff,0);
     }
     dialog2.show_modal(0);
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -6027,15 +5976,11 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
   iptr advance3;
   Dialog info_dialog;
   iptr i;
-  i32 seh_prev;
-  i8 *seh_handler;
-  uint seh_state;
   
-  seh_state = 0xffffffff;
   choice_dialog.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(choice_dialog.Dialog::destruct());
   info_dialog.Dialog::construct(0x4000);
-  seh_state = (seh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(info_dialog.Dialog::destruct());
   chosen = civ_pick_research_advance(civ);
   if ((forced != 0) ||
      (((advance2 = chosen, game.turn != 0 &&
@@ -6172,10 +6117,6 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int forced)
   chosen = advance2;
   advance2 = chosen;
   civs[civ].researching = (i16)chosen;
-  seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 004c217c */ { info_dialog.Dialog::destruct(); }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 004c2188 */ { choice_dialog.Dialog::destruct(); }
   return advance2;
 }
 
@@ -6197,24 +6138,16 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
   int has_philosophy;
   iptr advance;
   Dialog dialog2;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   current_research = civs[civ].researching;
   if (civs[civ].researching < 0) {
     civ_choose_research(civ);
     current_research = civs[civ].researching;
   }
   advance = (iptr)current_research;
-  if (advance < 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 004c2763 */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (advance >= 0) {
     if (research_notice_mode != 2) {
       civs[civ].research_progress = 0;
     }
@@ -6228,8 +6161,6 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
           ((cities[city].id != 0 && ((int)cities[city].owner == civ)))))) {
         city_recalc(city,0);
       }
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 004c2763 */ { dialog2.Dialog::destruct(); }
     }
     else if ((human_civ[0] == civ) && (autoplay.active == 0)) {
       adjective = civ_adjective(civ);
@@ -6283,12 +6214,6 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
         civ_choose_research(civ);
         civ_advance_gov_prompts(civ,advance);
       }
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 004c2763 */ { dialog2.Dialog::destruct(); }
-    }
-    else {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 004c2763 */ { dialog2.Dialog::destruct(); }
     }
   }
   return advance;
@@ -6483,6 +6408,14 @@ i32 __cdecl rules_write_sections(void)
   crt_strcat(rules_name,((i8 *)&lang_file_ext));
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  ON_SCOPE_EXIT(
+    if (in_file != (FILE *)0x0) {
+      _fclose(in_file);
+    }
+    if (out_file != (FILE *)0x0) {
+      _fclose(out_file);
+    }
+    __chdir(saved_cwd));
   cmp_result = _strcmp(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home));
   if ((cmp_result == 0) || (exists = file_exists((const char *)rules_name), exists == 0)) {
     __chdir(((i8 *)&game_dirs.home));
@@ -6491,7 +6424,7 @@ i32 __cdecl rules_write_sections(void)
     if (rc == 0) {
       rc = file_exists((const char *)&str_rules_bak_5);
       if ((rc != 0) && (rc = crt_remove(str_rules_bak_6), rc != 0))
-      goto cleanup;
+      return success;
       out_file = file_open_path((const char *)&str_rules_bak_7,(iptr)&str_wt_2);
       uType = 0x40;
       lpCaption = str_warning_2;
@@ -6507,7 +6440,7 @@ i32 __cdecl rules_write_sections(void)
   else {
     rc = file_exists((const char *)&str_rules_bak);
     if (((rc != 0) && (rc = crt_remove(str_rules_bak_2), rc != 0)) ||
-       (rc = crt_rename(rules_name,str_rules_bak_3), rc != 0)) goto cleanup;
+       (rc = crt_rename(rules_name,str_rules_bak_3), rc != 0)) return success;
     in_file = file_open_path((const char *)&str_rules_bak_4,(iptr)&str_rt_3);
     out_file = file_open_path((const char *)rules_name,(iptr)&str_wt);
   }
@@ -6520,7 +6453,7 @@ i32 __cdecl rules_write_sections(void)
       do {
         line_ptr = _fgets(s,0x100,in_file);
         if ((line_ptr == (char *)0x0) || (rc = _fputs(s,out_file), rc == -1))
-        goto cleanup;
+        return success;
         str_strip_newline(s);
         str_trim((char *)s);
         rc = __strcmpi(s,header);
@@ -6530,11 +6463,11 @@ i32 __cdecl rules_write_sections(void)
       }
       do {
         line_ptr = _fgets(s,0x100,in_file);
-        if (line_ptr == (char *)0x0) goto cleanup;
+        if (line_ptr == (char *)0x0) return success;
         line_len = _strlen(s);
       } while (1 < line_len);
       rc = _fputs(s,out_file);
-      if (rc == -1) goto cleanup;
+      if (rc == -1) return success;
     }
     do {
       line_ptr = _fgets(s,0x100,in_file);
@@ -6545,14 +6478,6 @@ i32 __cdecl rules_write_sections(void)
       rc = _fputs(s,out_file);
     } while (rc != -1);
   }
-cleanup:
-  if (in_file != (FILE *)0x0) {
-    _fclose(in_file);
-  }
-  if (out_file != (FILE *)0x0) {
-    _fclose(out_file);
-  }
-  __chdir(saved_cwd);
   return success;
 }
 
@@ -7292,20 +7217,12 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
   Dialog dialog2;
   int best_value;
   int value;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   best_advance = -1;
   best_value = -999;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
-  if ((civ == 0) || (civ2 == 0)) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0057a661 */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
+  if (!((civ == 0) || (civ2 == 0))) {
     interactive = human_civ[0] == civ;
     if (autoplay.active != 0) {
       interactive = false;
@@ -7335,8 +7252,6 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
         }
       }
       if (best_advance < 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0057a661 */ { dialog2.Dialog::destruct(); }
         return;
       }
       advance = best_advance;
@@ -7363,8 +7278,6 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
     if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
       civ_reset_city_production(civ,-1);
     }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0057a661 */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -7909,24 +7822,18 @@ void EditorWindow::cosmic_editor_dialog()
   DibSurface *surface;
   i8 rect[16];
   GamePalette palette;
-  i32 seh_prev;
-  i8 *seh_handler;
-  int seh_state;
   
-  seh_state = 0xffffffff;
   palette.init();
-  seh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
-  (*((char *)&seh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     surface = (DibSurface *)0x0;
   }
   else {
     surface = surface_ctor(this_00);
   }
-  seh_state = seh_state & 0xffffff00;
   editor_ui.bg_surface = surface;
   ((GameFont *)((i8 *)&editor_font_block.editor_font))->set(0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
@@ -8029,8 +7936,6 @@ void EditorWindow::cosmic_editor_dialog()
     editor_ui.bg_surface->surface_delete(1);
   }
   editor_ui.bg_surface = (DibSurface *)0x0;
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 005875e9 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -8039,17 +7944,11 @@ void __cdecl cosmic_editor_run(void)
 
 {
   EditorWindow editor_wnd;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   editor_wnd.construct();
-  seh_state = 0;
+  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
   editor_wnd.cosmic_editor_dialog();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00587666 */ { editor_wnd_dtor(&editor_wnd); }
   return;
 }
 

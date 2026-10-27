@@ -68,7 +68,9 @@ member functions, typed callbacks, structured control flow, smaller functions an
 constants (enums for unit types, improvements, advances, orders, network messages ..., flag
 constants for units, cities, treaties, tiles) and its state grouped by subject (records such as
 `prefs.difficulty` or `net.session_phase` where the original's variables lie together, a header
-per subject, the read-only texts and tables `const`); RAII and recorded unit tests come next.
+per subject, the read-only texts and tables `const`), and releases bound to scope (a local
+dialog, surface or file released by a guard on every path out of the function instead of on each
+return); recorded unit tests come next.
 
 Details: [STATUS.md](docs/STATUS.md) (progress and verification) and
 [DEVELOPMENT.md](docs/DEVELOPMENT.md) (the code's layout, the approach and the tooling).

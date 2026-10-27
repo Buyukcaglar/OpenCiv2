@@ -41,10 +41,7 @@ i32 __cdecl spaceship_wnd_run(iptr civ_arg)
   int civ;
   SpaceshipWindow window[1];   /* 0x2180 bytes */
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   if (spaceship_launch_sprite_xs_block.spaceship_wnd == 0) {
     if (council_state.active == '\0') {
       if (civ_arg < 1) {
@@ -55,11 +52,9 @@ i32 __cdecl spaceship_wnd_run(iptr civ_arg)
       }
       ret_addr = 0x4d0293;
       window->construct(civ);
-      eh_state = 0;
+      ON_SCOPE_EXIT(((SpaceshipWindow *)&window)->destruct());
       init_ok = window->init();
       if (init_ok == 0) {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 004d0314 */ { ((SpaceshipWindow *)&window)->destruct(); }
         result = 0;
       }
       else {
@@ -69,8 +64,6 @@ i32 __cdecl spaceship_wnd_run(iptr civ_arg)
         else {
           window->run_modal();
         }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 004d0314 */ { ((SpaceshipWindow *)&window)->destruct(); }
         result = 1;
       }
     }
@@ -93,26 +86,19 @@ i32 __cdecl spaceship_wnd_show_for_civ(iptr civ)
   i32 ret_addr;
   SpaceshipWindow window[1];   /* 0x2180 bytes */
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   if (human_civ[0] == civ) {
     if (spaceship_launch_sprite_xs_block.spaceship_wnd == 0) {
       if (council_state.active == '\0') {
         ret_addr = 0x4d03b3;
         window->construct(civ);
-        eh_state = 0;
+        ON_SCOPE_EXIT(((SpaceshipWindow *)&window)->destruct());
         init_ok = window->init();
         if (init_ok == 0) {
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 004d041a */ { ((SpaceshipWindow *)&window)->destruct(); }
           result = 0;
         }
         else {
           window->present();
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 004d041a */ { ((SpaceshipWindow *)&window)->destruct(); }
           result = 1;
         }
       }
@@ -161,43 +147,23 @@ void __cdecl spaceship_wnd_draw_title(iptr civ)
 SpaceshipWindow *SpaceshipWindow::construct(u32 civ)
 
 {
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   this->ModalMenuWindow::construct();
-  eh_state = 0;
   ((SurfaceWindow *)&control_list)->SurfaceWindow::construct();
-  (*((char *)&eh_state + 0)) = 1;
   ((DllHandle *)ship_dll)->init();
-  (*((char *)&eh_state + 0)) = 2;
   ((GamePalette *)ship_palette)->init();
-  (*((char *)&eh_state + 0)) = 3;
   ((GameFont *)large_font)->init_empty();
-  (*((char *)&eh_state + 0)) = 4;
   ((GameFont *)medium_font)->init_empty();
-  (*((char *)&eh_state + 0)) = 5;
   ((GameFont *)typing_font)->init_empty();
-  (*((char *)&eh_state + 0)) = 6;
   surface_ctor((DibSurface *)ship_view_surface);
-  (*((char *)&eh_state + 0)) = 7;
   sprite_init((Sprite *)ship_image_sprite);
-  (*((char *)&eh_state + 0)) = 8;
   sprite_init((Sprite *)close_btn_disabled_sprite);
-  (*((char *)&eh_state + 0)) = 9;
   sprite_init((Sprite *)close_btn_normal_sprite);
-  (*((char *)&eh_state + 0)) = 10;
   sprite_init((Sprite *)close_btn_pressed_sprite);
-  (*((char *)&eh_state + 0)) = 0xb;
   sprite_init((Sprite *)launch_btn_disabled_sprite);
-  (*((char *)&eh_state + 0)) = 0xc;
   sprite_init((Sprite *)launch_btn_normal_sprite);
-  (*((char *)&eh_state + 0)) = 0xd;
   sprite_init((Sprite *)launch_btn_pressed_sprite);
-  (*((char *)&eh_state + 0)) = 0xe;
   clickmap_ctor(hotspot_map);
-  eh_state = (eh_state & 0xffffff00 | (byte)(0xf));
   ship_civ = civ;
   anim_timer = 0;
   gfx_get_screen_rect((iptr)&frame_left);
@@ -227,7 +193,6 @@ i32 SpaceshipWindow::destruct()
 
 {
   i32 ret_value;
-  i8 *seh_handler;
   int eh_state;
   
   eh_state = 0xf;
@@ -368,24 +333,14 @@ void SpaceshipWindow::run_modal()
   i8 clip_rect[16];
   Sprite launch_sprite;
   DibSurface launch_surface;
-  i32 seh_prev;
-  i8 *seh_handler;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   surface_ctor(&launch_surface);
-  eh_state = 0;
+  ON_SCOPE_EXIT(surface_dtor(&launch_surface));
   sprite_init(&launch_sprite);
-  (*((char *)&eh_state + 0)) = 1;
+  ON_SCOPE_EXIT(sprite_destroy(&launch_sprite));
   spaceship_wnd_load_parts(ship_civ);
   rendered = render_ship();
-  if (rendered == 0) {
-    eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 004d138b */ { sprite_destroy(&launch_sprite); }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 004d1397 */ { surface_dtor(&launch_surface); }
-  }
-  else {
+  if (rendered != 0) {
     if (launch_state == 3) {
       launch_surface.load_gif_resource(editor_text_edit_block.spaceship_wnd_component_count + 19999,10,0xec,(iptr)(ship_palette));
       launch_sprite.grab_from_surface((iptr)&launch_surface,0xff,
@@ -470,10 +425,6 @@ void SpaceshipWindow::run_modal()
     set_palette((iptr)&game_palette_block.game_palette);
     hide();
     wnd_flush_paint();
-    eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 004d138b */ { sprite_destroy(&launch_sprite); }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 004d1397 */ { surface_dtor(&launch_surface); }
   }
   return;
 }
@@ -844,21 +795,15 @@ void SpaceshipWindow::play_launch_video()
   AviPlayer *player;
   i8 video_path[128];
   int open_result;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   snd_cd_stop();
   this_00 = (AviPlayer *)operator_new(0xa28);
-  eh_state = 0;
   if (this_00 == (AviPlayer *)0x0) {
     player = 0;
   }
   else {
     player = this_00->construct();
   }
-  eh_state = 0xffffffff;
   launch_video_player = (u32)player;
   str_clear((char *)video_path);
   str_append((char *)video_path,(const char *)&str_civ2_video_launch_avi);
@@ -1699,13 +1644,9 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
   Dialog dlg;
   int part;
   int over_limit;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x2000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   over_limit = 0;
   spaceship_calc_stats(civ,1);
   if (civs[civ].spaceship_parts[3] == 0) {
@@ -1828,8 +1769,6 @@ void __cdecl spaceship_status_dialog(iptr civ,int allow_launch)
       spaceship_launch(civ);
     }
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 00597d4b */ { dlg.Dialog::destruct(); }
   return;
 }
 
@@ -2092,13 +2031,9 @@ void __cdecl spaceship_select_view_dialog(iptr unused)
   i32 flags;
   int civ2;
   Dialog dlg;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   dlg.load_game_section((const char *)&str_spaceships,1);
   any_ship = false;
   for (civ2 = 1; civ2 < 8; civ2++) {
@@ -2113,25 +2048,17 @@ void __cdecl spaceship_select_view_dialog(iptr unused)
   }
   if (any_ship) {
     civ = dlg.show_modal(0);
-    if (civ < 0) {
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 00598cc7 */ { dlg.Dialog::destruct(); }
-    }
-    else {
+    if (civ >= 0) {
       spaceship_wnd_load_parts(civ);
       shown = spaceship_wnd_run(civ);
       if (shown == 0) {
         (*((char *)&civ2 + 0)) = (byte)civ;
         spaceship_status_dialog(civ,(uint)game.human_players & 1 << ((byte)civ2 & 0x1f));
       }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 00598cc7 */ { dlg.Dialog::destruct(); }
     }
   }
   else {
     popup_game((const char *)&str_nospaceships);
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 00598cc7 */ { dlg.Dialog::destruct(); }
   }
   return;
 }

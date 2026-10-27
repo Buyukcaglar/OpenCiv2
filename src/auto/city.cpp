@@ -380,26 +380,20 @@ void TaxRateDialog::run(uptr civ)
   i8 rect[16];
   int label_x;
   GamePalette palette;
-  i32 seh_next;
-  i8 *seh_handler;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   rates_changed = 0;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   taxrate_wnd.dlg = this;
   this->civ = civ;
   taxrate_wnd.active = 1;
   this_00 = (DibSurface *)operator_new(0x48);
-  (*((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     bg_surface2 = (DibSurface *)0x0;
   }
   else {
     bg_surface2 = surface_ctor(this_00);
   }
-  eh_state = eh_state & 0xffffff00;
   (*(DibSurface * *)&taxrate_state.bg_surface) = bg_surface2;
   value = civ_max_tax_rate(civ);
   max_rate_value = value;
@@ -605,8 +599,6 @@ void TaxRateDialog::run(uptr civ)
   advisor_refresh_if_open(4);
   advisor_refresh_if_open(5);
   advisor_refresh_if_open(6);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0040dda0 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -615,18 +607,10 @@ void __cdecl taxrate_dialog_show(iptr civ)
 
 {
   TaxRateDialog dialog2;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.construct();
-  eh_state = 0;
-  if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0040dea8 */ { taxrate_dialog_dtor(&dialog2); }
-  }
-  else {
+  ON_SCOPE_EXIT(taxrate_dialog_dtor(&dialog2));
+  if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
     if ((game.multiplayer < 3) || (human_civ[0] == civ)) {
       dialog2.run(civ);
       ((CityWindow *)((i8 *)&city_wnd.window))->refresh();
@@ -635,8 +619,6 @@ void __cdecl taxrate_dialog_show(iptr civ)
       net_send_message(NM_KINGDOM_RATES,net.net_slots[net.net_civ_slots[civ]].id,0,0,0,
                          0,0,0,0,0);
     }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0040dea8 */ { taxrate_dialog_dtor(&dialog2); }
   }
   return;
 }
@@ -672,22 +654,13 @@ void __cdecl taxrate_enforce_max_rate(iptr civ)
 TaxRateDialog *TaxRateDialog::construct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   FrameWindow::construct();
-  eh_state = 0;
   tax_scrollbar_obj.construct();
-  (*((char *)&eh_state + 0)) = 1;
   lux_scrollbar.construct();
-  (*((char *)&eh_state + 0)) = 2;
   sci_scrollbar.construct();
-  (*((char *)&eh_state + 0)) = 3;
   crt_vector_ctor_iterator(rate_lock_checkboxes,0x3c,3,checkbox_elem_ctor,
                checkbox_dtor);
-  eh_state = (eh_state & 0xffffff00 | (byte)(4));
   button_ctor(&ok_button);
   vtable = (u32)&ptr_fun;
   return this;
@@ -697,8 +670,6 @@ TaxRateDialog *TaxRateDialog::construct()
 void __thiscall taxrate_dialog_dtor(void *self)
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
   int eh_state;
   
   eh_state = eh_state & 0xff;
@@ -728,15 +699,11 @@ void __cdecl city_info_popup(iptr city)
   Dialog dialog2;
   Sprite sprite;
   uptr demand;
-  i32 seh_next;
-  i8 *seh_handler;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   sprite_init(&sprite);
-  eh_state = 0;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   dialog2.Dialog::construct(0x4000);
-  eh_state = (eh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   sprite.create_solid(0x40,0x30,0);
   text_set_string_arg(0,(const char *)&cities[city].name);
   text_clear();
@@ -773,10 +740,6 @@ void __cdecl city_info_popup(iptr city)
     text_set_string_arg(i + 2,(const char *)&textbuf.buf);
   }
   popup_game_with_city((const char *)&str_cityinfo,city);
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 004102d5 */ { dialog2.Dialog::destruct(); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004102e1 */ { sprite_destroy(&sprite); }
   return;
 }
 
@@ -1063,24 +1026,18 @@ void EditorWindow::city_editor_open_window()
   int i;
   i8 rect[16];
   GamePalette palette;
-  i32 seh_next;
-  i8 *seh_handler;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
-  (*((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     bg_surface2 = (DibSurface *)0x0;
   }
   else {
     bg_surface2 = surface_ctor(this_00);
   }
-  eh_state = eh_state & 0xffffff00;
   editor_ui.bg_surface = bg_surface2;
   ((GameFont *)((i8 *)&editor_font_block.editor_font))->set(0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
@@ -1193,8 +1150,6 @@ void EditorWindow::city_editor_open_window()
   }
   editor_ui.bg_surface = (DibSurface *)0x0;
   combo_count_u = 0;
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 00429e53 */ { palette_destroy(&palette); }
   return;
 }
 
@@ -1203,17 +1158,11 @@ void __cdecl city_editor_run(void)
 
 {
   EditorWindow editor_wnd;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   editor_wnd.construct();
-  eh_state = 0;
+  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
   editor_wnd.city_editor_open_window();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 00429ed0 */ { editor_wnd_dtor(&editor_wnd); }
   return;
 }
 
@@ -1231,13 +1180,9 @@ i32 __cdecl trade_commodity_cities_dialog(iptr civ,iptr commodity)
   Dialog dialog2;
   int pass;
   iptr slot;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   text_set_label_arg(0,commodity_names[commodity]);
   dialog2.load_game_section((const char *)&str_supplyshow,0x40001);
   total_count = 0;
@@ -1301,8 +1246,6 @@ i32 __cdecl trade_commodity_cities_dialog(iptr civ,iptr commodity)
   else {
     result = dialog2.show_modal(0);
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0042bc22 */ { dialog2.Dialog::destruct(); }
   return result;
 }
 
@@ -1316,19 +1259,11 @@ void __cdecl trade_supply_search_dialog(iptr civ)
   iptr option_id;
   Dialog dialog2;
   iptr commodity;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   choice = civ_has_advance(civ,ADV_TRADE);
-  if (choice == 0) {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0042bd6b */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (choice != 0) {
     do {
       dialog2.load_game_section((const char *)&str_supplysearch,0x40001);
       for (commodity = 0; commodity < 0x10; commodity++) {
@@ -1339,14 +1274,10 @@ void __cdecl trade_supply_search_dialog(iptr civ)
       }
       choice = dialog2.show_modal(0);
       if (choice < 0) {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0042bd6b */ { dialog2.Dialog::destruct(); }
         return;
       }
       choice = trade_commodity_cities_dialog(civ,choice);
     } while (-1 < choice);
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0042bd6b */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -3566,13 +3497,9 @@ void __cdecl city_set_production(iptr city,int production)
   iptr city3;
   iptr wonder_group;
   iptr city2;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   old_building = cities[city].building;
   civ2 = cities[city].owner;
   civ = (int)(char)civ2;
@@ -3721,8 +3648,6 @@ void __cdecl city_set_production(iptr city,int production)
     build_counter = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + civ * 0x594);
     *build_counter = *build_counter + 1;
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 0044251d */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -4181,20 +4106,14 @@ void __cdecl cityview_open(uptr city)
   CityViewWindow *self;
   int loaded;
   CityViewWindow *this2;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   self = (CityViewWindow *)operator_new(0x1cb4);
-  seh_state = 0;
   if (self == (CityViewWindow *)0x0) {
     this2 = (CityViewWindow *)0x0;
   }
   else {
     this2 = self->construct();
   }
-  seh_state = 0xffffffff;
   if (this2 != (CityViewWindow *)0x0) {
     loaded = this2->load(city);
     if (loaded != 0) {
@@ -4213,43 +4132,25 @@ CityViewWindow *CityViewWindow::construct()
 {
   u8 *slot;
   int i;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   this->ModalMenuWindow::construct();
-  seh_state = 0;
   ((SurfaceWindow *)&control_list)->SurfaceWindow::construct();
-  (*((char *)&seh_state + 0)) = 1;
   surface_ctor((DibSurface *)&ship_civ);
-  (*((char *)&seh_state + 0)) = 2;
   ((GamePalette *)((u8 *)&cityview_palette))->init();
-  (*((char *)&seh_state + 0)) = 3;
   surface_ctor((DibSurface *)((u8 *)&improvement_art_surface));
-  (*((char *)&seh_state + 0)) = 4;
   surface_ctor((DibSurface *)wonder_art_surface);
-  (*((char *)&seh_state + 0)) = 5;
   ((DllHandle *)&resource_dll)->init();
-  (*((char *)&seh_state + 0)) = 6;
   crt_vector_ctor_iterator((u8 *)&slot_sprites,0x3c,0x3c,sprite_init,sprite_destroy);
-  (*((char *)&seh_state + 0)) = 7;
   crt_vector_ctor_iterator(small_building_sprites_a,0x3c,4,sprite_init,sprite_destroy)
   ;
-  (*((char *)&seh_state + 0)) = 8;
   crt_vector_ctor_iterator(small_building_sprites_b,0x3c,4,sprite_init,sprite_destroy
               );
-  (*((char *)&seh_state + 0)) = 9;
   crt_vector_ctor_iterator(large_building_sprites_a,0x3c,4,sprite_init,
                sprite_destroy);
-  (*((char *)&seh_state + 0)) = 10;
   crt_vector_ctor_iterator(large_building_sprites_b,0x3c,4,sprite_init,
                sprite_destroy);
-  (*((char *)&seh_state + 0)) = 0xb;
   surface_ctor((DibSurface *)((u8 *)&icon_surface));
-  (*((char *)&seh_state + 0)) = 0xc;
   ((GameFont *)title_font)->init_empty();
-  seh_state = (seh_state & 0xffffff00 | (byte)(0xd));
   gfx_get_screen_rect((iptr)&tax_rate_icon_sprites_block.cityview_screen_rect);
   cityview.scroll_x = (0x500 - tax_rate_icon_sprites_block.screen_rect_right) / 2;
   mem_copy_src_dst((iptr)&cityview_slot_x_table_block.cityview_slot_tables_init,(iptr)(improvement_slot_tables),0x174);
@@ -4271,8 +4172,6 @@ CityViewWindow *CityViewWindow::construct()
 void __thiscall cityview_dtor(void *self)
 
 {
-  i32 seh_handler;
-  i8 *seh_next;
   int seh_state;
   
   seh_state = seh_state & 0xff;
@@ -4322,20 +4221,14 @@ i32 CityViewWindow::load(uptr city)
   int i;
   int src_x;
   i8 path[128];
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   surface_ctor(&art_surface);
-  seh_state = 0;
+  ON_SCOPE_EXIT(surface_dtor(&art_surface));
   city_id = city;
   str_clear((char *)path);
   str_append((char *)path,(const char *)&str_cv_dll);
   ok = file_resolve_path((const char *)path);
   if (ok == 0) {
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00454e8b */ { surface_dtor(&art_surface); }
     result = 0;
   }
   else {
@@ -4352,23 +4245,17 @@ i32 CityViewWindow::load(uptr city)
     ok = ((DibSurface *)improvement_art_surface)->load_gif_resource(300,10,0xec,
                        (iptr)(cityview_palette));
     if (ok == 0) {
-      seh_state = 0xffffffff;
-      /* inlined unwind funclet 00454e8b */ { surface_dtor(&art_surface); }
       result = 0;
     }
     else {
       ok = ((DibSurface *)wonder_art_surface)->load_gif_resource(0x131,10,0xec,
                          (iptr)(cityview_palette));
       if (ok == 0) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 00454e8b */ { surface_dtor(&art_surface); }
         result = 0;
       }
       else {
         ok = art_surface.load_gif_resource(0x136,10,0xec,(iptr)(cityview_palette));
         if (ok == 0) {
-          seh_state = 0xffffffff;
-          /* inlined unwind funclet 00454e8b */ { surface_dtor(&art_surface); }
           result = 0;
         }
         else {
@@ -4414,28 +4301,20 @@ i32 CityViewWindow::load(uptr city)
           }
           ok = load_icon_surface();
           if (ok == 0) {
-            seh_state = 0xffffffff;
-            /* inlined unwind funclet 00454e8b */ { surface_dtor(&art_surface); }
             result = 0;
           }
           else {
             ok = create_windows();
             if (ok == 0) {
-              seh_state = 0xffffffff;
-              /* inlined unwind funclet 00454e8b */ { surface_dtor(&art_surface); }
               result = 0;
             }
             else {
               ok = layout_buildings();
               if (ok == 0) {
-                seh_state = 0xffffffff;
-                /* inlined unwind funclet 00454e8b */ { surface_dtor(&art_surface); }
                 result = 0;
               }
               else {
                 draw_buildings();
-                seh_state = 0xffffffff;
-                /* inlined unwind funclet 00454e8b */ { surface_dtor(&art_surface); }
                 result = 1;
               }
             }
@@ -7403,14 +7282,10 @@ void __cdecl wonder_show_movie(iptr wonder)
 {
   i32 ret_addr;
   WonderMovieWindow movie_wnd2;
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   snd_wave_stop_all();
   movie_wnd2.construct();
-  seh_state = 0;
+  ON_SCOPE_EXIT(movie_wnd2.destruct());
   blink.unit_active = 0;
   snd_cd_stop();
   ret_addr = 0x4bb937;
@@ -7422,8 +7297,6 @@ void __cdecl wonder_show_movie(iptr wonder)
     ret_addr = 0x4bb96a;
     ((PediaWindow *)((i8 *)&pedia_wnd.window))->show_improvement_modal(wonder + 0x27);
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 004bb97b */ { movie_wnd2.destruct(); }
   return;
 }
 
@@ -7431,17 +7304,10 @@ void __cdecl wonder_show_movie(iptr wonder)
 WonderMovieWindow *WonderMovieWindow::construct()
 
 {
-  i32 seh_handler;
-  i8 *seh_next;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   this->FrameWindow::construct();
-  seh_state = 0;
   player.construct();
-  (*((char *)&seh_state + 0)) = 1;
   surface_ctor(&frame_surface);
-  seh_state = (seh_state & 0xffffff00 | (byte)(2));
   palette.init();
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 2);
   (*(FrameWindow * *)&font_size16_bold_block.wonder_movie_wnd) = this;
@@ -7452,8 +7318,6 @@ WonderMovieWindow *WonderMovieWindow::construct()
 void WonderMovieWindow::destruct()
 
 {
-  i32 seh_handler;
-  i8 *seh_next;
   int seh_state;
   
   *(pointer *)&vtable = ((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 2);
@@ -7493,17 +7357,13 @@ void WonderMovieWindow::create(int wonder)
   Sprite sprite;
   i8 path[128];
   i32 width2;
-  i32 seh_handler;
-  i8 *seh_next;
-  int seh_state;
   
-  seh_state = 0xffffffff;
   width2 = 0x140;
   height2 = 0xf0;
   sprite_init(&sprite);
-  seh_state = 0;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   surface_ctor(&art_surface);
-  (*((char *)&seh_state + 0)) = 1;
+  ON_SCOPE_EXIT(surface_dtor(&art_surface));
   compacted = GlobalCompact(0x100000);
   str_clear((char *)path);
   str_append((char *)path,(const char *)&str_civ2_wonder_dll);
@@ -7514,7 +7374,7 @@ void WonderMovieWindow::create(int wonder)
   }
   else {
     art_dll.resource_dll_load((iptr)path);
-    seh_state = (seh_state & 0xffffff00 | (byte)(2));
+    ON_SCOPE_EXIT(art_dll.free());
     ok = art_surface.load_gif_resource(wonder + 20000,10,0xec,(iptr)palette_bytes);
     if (ok == 0) {
       MessageBoxA((HWND)0x0,str_failed_to_load_civ2art_gif,str_notice_9,0x40);
@@ -7527,8 +7387,6 @@ void WonderMovieWindow::create(int wonder)
       art_surface.release();
     }
     art_dll.dll_handle_free();
-    (*((char *)&seh_state + 0)) = 1;
-    /* inlined unwind funclet 004bbdbd */ { art_dll.free(); }
   }
   wonder_index = wonder;
   arg9 = 0;
@@ -7549,10 +7407,6 @@ void WonderMovieWindow::create(int wonder)
   repaint();
   ((WndBase *)&window)->center();
   window.wnd_handlers.set_lbuttonup_handler((WndMouseFn)wonder_movie_on_lbuttonup);
-  seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 004bbdc9 */ { surface_dtor(&art_surface); }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 004bbdd5 */ { sprite_destroy(&sprite); }
   return;
 }
 
@@ -8423,24 +8277,18 @@ void EditorWindow::impr_editor_window_run()
   int ctrl_index;
   i8 button_rect[16];
   GamePalette palette;
-  i32 seh_prev;
-  i8 *seh_handler;
-  int try_level;
   
-  try_level = 0xffffffff;
   palette.init();
-  try_level = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
-  (*((char *)&try_level + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     bg_surface2 = (DibSurface *)0x0;
   }
   else {
     bg_surface2 = surface_ctor(this_00);
   }
-  try_level = try_level & 0xffffff00;
   editor_ui.bg_surface = bg_surface2;
   ((GameFont *)((i8 *)&editor_font_block.editor_font))->set(0,editor_font_size);
   ui_set_default_font((iptr)&editor_font_block.editor_font);
@@ -8568,8 +8416,6 @@ void EditorWindow::impr_editor_window_run()
   }
   editor_ui.bg_surface = (DibSurface *)0x0;
   combo_count_u = 0;
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 004da9be */ { palette_destroy(&palette); }
   return;
 }
 
@@ -8578,17 +8424,11 @@ void __cdecl impr_editor_run(void)
 
 {
   EditorWindow editor_wnd;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   editor_wnd.construct();
-  try_level = 0;
+  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
   editor_wnd.impr_editor_window_run();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 004daa3b */ { editor_wnd_dtor(&editor_wnd); }
   return;
 }
 
@@ -10201,17 +10041,11 @@ int __cdecl city_notify_dialog_ex(iptr msg_key,iptr city,int force,iptr sprite)
   iptr option_id;
   i32 option_flags;
   Dialog dialog2;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  try_level = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   if (autoplay.active == 0) {
     if ((city_calc.notify_enabled == 0) && (force == 0)) {
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 004eb7e5 */ { dialog2.Dialog::destruct(); }
       result = 0;
     }
     else {
@@ -10248,13 +10082,9 @@ int __cdecl city_notify_dialog_ex(iptr msg_key,iptr city,int force,iptr sprite)
       if (0 < result) {
         city_calc.zoom_requested = 1;
       }
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 004eb7e5 */ { dialog2.Dialog::destruct(); }
     }
   }
   else {
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 004eb7e5 */ { dialog2.Dialog::destruct(); }
     result = 0;
   }
   return result;
@@ -10397,7 +10227,6 @@ static void city_process_production_announce(uptr city,uptr civ,iptr wonder,iptr
   int announce;
   uptr city3;
   iptr sound;
-  i32 try_level;
 
   if ((human_civ[0] == civ) || (0x22 < improvement)) {
     announce = 1;
@@ -10484,7 +10313,7 @@ static void city_process_production_announce(uptr city,uptr civ,iptr wonder,iptr
       net_send_text_args(0x47,0xff,4,0,wonder,improvement);
     }
     built_dialog.Dialog::construct(0x4000);
-    try_level = 1;
+    ON_SCOPE_EXIT(built_dialog.Dialog::destruct());
     built_dialog.load_game_text((const char *)&str_built2);
     if (wonder < 0) {
       built_sprite = ((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement * 0x3c;
@@ -10496,8 +10325,6 @@ static void city_process_production_announce(uptr city,uptr civ,iptr wonder,iptr
     ;
     built_dialog.set_image_zoom(8);
     built_dialog.show_modal(0);
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 004eeef3 */ { built_dialog.Dialog::destruct(); }
   }
   if ((((announce != 0) && (-1 < wonder)) && (human_civ[0] == civ)) &&
      ((autoplay.active == 0 && (((*((char *)&game.game_options + 2)) & (OPT_WONDER_MOVIES >> 16)) != 0)))) {
@@ -10716,10 +10543,9 @@ static void city_process_production_caravan_dialog(uptr city,uptr civ,iptr unit)
   Dialog caravan_dialog;
   iptr choice;
   iptr unit_type2;
-  i32 try_level;
 
   caravan_dialog.Dialog::construct(0x4000);
-  try_level = 0;
+  ON_SCOPE_EXIT(caravan_dialog.Dialog::destruct());
   mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,
                      (int)cities[city].owner);
   do {
@@ -10782,8 +10608,6 @@ static void city_process_production_caravan_dialog(uptr city,uptr civ,iptr unit)
   else {
     units[unit].counter = 0xff;
   }
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 004eeeff */ { caravan_dialog.Dialog::destruct(); }
 }
 
 /* Part of city_process_production (004ec3fe): a completed unit: create it
@@ -10960,7 +10784,6 @@ static void city_process_production_almost_wonder(uptr city,uptr civ)
   Dialog wonder_dialog;
   iptr improvement2;
   int cost2;
-  i32 try_level;
 
   if (cities[city].building < -0x26) {
     if (cities[city].building < 1) {
@@ -10979,13 +10802,11 @@ static void city_process_production_almost_wonder(uptr city,uptr civ)
         net_send_text_args(0x4a,0xff,3,0,improvement2,0);
       }
       wonder_dialog.Dialog::construct(0x4000);
-      try_level = 2;
+      ON_SCOPE_EXIT(wonder_dialog.Dialog::destruct());
       wonder_dialog.load_game_text((const char *)&str_almostwonder);
       wonder_dialog.add_sprite((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + improvement2 * 0x3c),0,0);
       wonder_dialog.set_image_zoom(8);
       wonder_dialog.show_modal(0);
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 004eeee7 */ { wonder_dialog.Dialog::destruct(); }
     }
   }
 }
@@ -11126,9 +10947,7 @@ void __cdecl city_process_production(uptr city)
   int net_shields;
   iptr improvement;
   int acquired;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   improvement = -1;
   acquired = 0;
   city_calc.completed_improvement = -1;
@@ -11832,13 +11651,8 @@ uint __cdecl city_tile_status_flags(iptr city,iptr tile_idx)
 CityPicturePopup *CityPicturePopup::construct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   PictureWindow::construct();
-  seh_state = 0;
   dialog.Dialog::construct(0x4000);
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 3);
   return this;
@@ -12082,26 +11896,14 @@ void __cdecl city_window_load_background(void)
   DibSurface surface;
   GamePalette palette;
   Sprite sprite;
-  i32 seh_next;
-  i8 *seh_handler;
-  int seh_state;
   
-  seh_state = 0xffffffff;
   surface_ctor(&surface);
-  seh_state = 0;
+  ON_SCOPE_EXIT(surface_dtor(&surface));
   sprite_init(&sprite);
-  (*((char *)&seh_state + 0)) = 1;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   palette.init();
-  (*((char *)&seh_state + 0)) = 2;
-  if (city_wnd.size_level == city_wnd_state.bg_size_level) {
-    (*((char *)&seh_state + 0)) = 1;
-    /* inlined unwind funclet 0050117b */ { palette_destroy(&palette); }
-    seh_state = seh_state & 0xffffff00;
-    /* inlined unwind funclet 00501187 */ { sprite_destroy(&sprite); }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00501190 */ { surface_dtor(&surface); }
-  }
-  else {
+  ON_SCOPE_EXIT(palette_destroy(&palette));
+  if (city_wnd.size_level != city_wnd_state.bg_size_level) {
     city_wnd_state.bg_size_level = city_wnd.size_level;
     ((DibSurface *)((i8 *)&city_window_bg_surface))->release();
     surface.load_gif_file((const char *)&str_city_gif,10,0xc0,(iptr)&palette);
@@ -12113,12 +11915,6 @@ void __cdecl city_window_load_background(void)
     gfx_set_zoom_scale(city_wnd_state.bg_size_level * 4 - 8);
     sprite.draw((iptr)dest_rect,(iptr)&city_window_bg_surface,0,0);
     gfx_reset_zoom_scale();
-    (*((char *)&seh_state + 0)) = 1;
-    /* inlined unwind funclet 0050117b */ { palette_destroy(&palette); }
-    seh_state = seh_state & 0xffffff00;
-    /* inlined unwind funclet 00501187 */ { sprite_destroy(&sprite); }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00501190 */ { surface_dtor(&surface); }
   }
   return;
 }
@@ -12213,17 +12009,10 @@ void CityWindow::remove_hotspots()
 CityWindow *CityWindow::construct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   this->FrameWindow::construct();
-  seh_state = 0;
   clickmap_ctor(&clickmap_head);
-  (*((char *)&seh_state + 0)) = 1;
   ((GameFont *)&city_font)->init_empty();
-  seh_state = (seh_state & 0xffffff00 | (byte)(2));
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 5);
   reset_state();
   return this;
@@ -12233,8 +12022,6 @@ CityWindow *CityWindow::construct()
 void CityWindow::destruct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
   int seh_state;
   
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 5);
@@ -14378,15 +14165,11 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
   i32 arg;
   Dialog dialog2;
   Sprite sprite;
-  i32 seh_next;
-  i8 *seh_handler;
-  uint seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   sprite_init(&sprite);
-  seh_state = (seh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   if (city_wnd_state.unit_dialog_busy == 0) {
     city_wnd_state.unit_dialog_busy = 1;
     city3 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
@@ -14453,16 +14236,6 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
       }
     }
     city_wnd_state.unit_dialog_busy = 0;
-    seh_state = seh_state & 0xffffff00;
-    /* inlined unwind funclet 00506a15 */ { sprite_destroy(&sprite); }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00506a1e */ { dialog2.Dialog::destruct(); }
-  }
-  else {
-    seh_state = seh_state & 0xffffff00;
-    /* inlined unwind funclet 00506a15 */ { sprite_destroy(&sprite); }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 00506a1e */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -14484,37 +14257,30 @@ void __cdecl city_window_present_unit_menu(int stack_idx)
   i32 unit2;
   Dialog dialog2;
   Sprite sprite;
-  i32 seh_next;
-  i8 *seh_handler;
-  uint seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   sprite_init(&sprite);
-  seh_state = (seh_state & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   if (city_wnd_state.unit_dialog_busy != 0) {
-    seh_state = seh_state & 0xffffff00;
-    /* inlined unwind funclet 005070b8 */ { sprite_destroy(&sprite); }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 005070c1 */ { dialog2.Dialog::destruct(); }
     return;
   }
   city_wnd_state.unit_dialog_busy = 1;
+  ON_SCOPE_EXIT(city_wnd_state.unit_dialog_busy = 0);
   sprite.create_solid(0x40,0x20,0);
   city3 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-  if ((cities[city3].owner != human_civ[0]) && (game.reveal_map == '\0')) goto dialog_cleanup;
+  if ((cities[city3].owner != human_civ[0]) && (game.reveal_map == '\0')) return;
   unit2 = 0;
   city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
   city_recalc(city,unit2);
-  if (city_wnd.info_panel_mode != 0) goto dialog_cleanup;
+  if (city_wnd.info_panel_mode != 0) return;
   nth = (iptr)(short)stack_idx;
   city4 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
   y = (iptr)cities[city4].y;
   city5 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
   unit2 = tile_first_unit((int)cities[city5].x,y);
   unit = unit_stack_nth(unit2,nth);
-  if (unit < 0) goto dialog_cleanup;
+  if (unit < 0) return;
   text_set_unit_info_args(unit);
   dialog2.load_game_section((const char *)&str_unitoptions,1);
   dlg_unit_sprite_zoom = 8;
@@ -14591,10 +14357,10 @@ void __cdecl city_window_present_unit_menu(int stack_idx)
     unit2 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
     units[unit].home_city = (i8)unit2;
     ((CityWindow *)((i8 *)&city_wnd.window))->refresh();
-    goto dialog_cleanup;
+    return;
   case 6:
     ((CityWindow *)((i8 *)&city_wnd.window))->open((uint)(byte)units[unit].home_city);
-    goto dialog_cleanup;
+    return;
   case 7:
     city2 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
     cities[city2].shield_box =
@@ -14604,7 +14370,7 @@ void __cdecl city_window_present_unit_menu(int stack_idx)
     city_save_build_state(city);
     unit_destroy_redraw(unit,1);
     ((CityWindow *)((i8 *)&city_wnd.window))->refresh();
-    goto dialog_cleanup;
+    return;
   case 8:
     game.active_unit = (i16)unit;
     units[unit].orders = ORDER_NONE;
@@ -14617,18 +14383,12 @@ void __cdecl city_window_present_unit_menu(int stack_idx)
     moving_units_mode = 0;
     ui_focus_active_unit(0);
     city_window_close();
-    goto dialog_cleanup;
+    return;
   }
   unit2 = 0;
   city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
   city_recalc(city,unit2);
   ((CityWindow *)((i8 *)&city_wnd.window))->draw_info_panel(1);
-dialog_cleanup:
-  city_wnd_state.unit_dialog_busy = 0;
-  seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 005070b8 */ { sprite_destroy(&sprite); }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 005070c1 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -15743,18 +15503,11 @@ void __cdecl city_button_buy(i32 control_id)
   Dialog dialog2;
   i8 text_key[80];
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   cur_city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-  if (cur_city == -1) {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0050a1b2 */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (cur_city != -1) {
     flushing = XD_InFlushSendBuffer();
     if (((((((flushing == 0) && (net.unit_create_busy == 0)) && (net.unit_delete_busy == 0)) &&
           ((net.city_create_busy == 0 && (net.city_delete_busy == 0)))) &&
@@ -15774,11 +15527,7 @@ void __cdecl city_button_buy(i32 control_id)
       city4 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
       building = (int)cities[city4].building;
       if ((human_civ[0] == civ) || (game.reveal_map != '\0')) {
-        if (-building == 0x26) {
-          eh_state = 0xffffffff;
-          /* inlined unwind funclet 0050a1b2 */ { dialog2.Dialog::destruct(); }
-        }
-        else {
+        if (-building != 0x26) {
           city5 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
           if (cities[city5].building < '\0') {
             cost2 = (uint)improvements[-building].cost;
@@ -15851,18 +15600,8 @@ void __cdecl city_button_buy(i32 control_id)
               ((CityWindow *)((i8 *)&city_wnd.window))->update_title();
               status_draw_info(1);
             }
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 0050a1b2 */ { dialog2.Dialog::destruct(); }
-          }
-          else {
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 0050a1b2 */ { dialog2.Dialog::destruct(); }
           }
         }
-      }
-      else {
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0050a1b2 */ { dialog2.Dialog::destruct(); }
       }
     }
     else {
@@ -15872,8 +15611,6 @@ void __cdecl city_button_buy(i32 control_id)
       civ = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
       net.blocked_input_arg2 = (int)cities[civ].owner;
       net.blocked_input_arg3 = control_id;
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0050a1b2 */ { dialog2.Dialog::destruct(); }
     }
   }
   return;
@@ -16123,25 +15860,15 @@ void __cdecl city_button_change(i32 control_id)
   Dialog improvement_dialog;
   int new_shields;
   iptr unit_type2;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   change_dialog.Dialog::construct(0x8000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(change_dialog.Dialog::destruct());
   unit_dialog.Dialog::construct(0x4000);
-  (*((char *)&eh_state + 0)) = 1;
+  ON_SCOPE_EXIT(unit_dialog.Dialog::destruct());
   improvement_dialog.Dialog::construct(0x4000);
-  (*((char *)&eh_state + 0)) = 2;
+  ON_SCOPE_EXIT(improvement_dialog.Dialog::destruct());
   cur_city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-  if (cur_city == -1) {
-    (*((char *)&eh_state + 0)) = 1;
-    /* inlined unwind funclet 0050b638 */ { improvement_dialog.Dialog::destruct(); }
-    eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 0050b644 */ { unit_dialog.Dialog::destruct(); }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0050b650 */ { change_dialog.Dialog::destruct(); }
-  }
-  else {
+  if (cur_city != -1) {
     flushing = XD_InFlushSendBuffer();
     if (((((((flushing == 0) && (net.unit_create_busy == 0)) && (net.unit_delete_busy == 0)) &&
           ((net.city_create_busy == 0 && (net.city_delete_busy == 0)))) &&
@@ -16195,12 +15922,6 @@ void __cdecl city_button_change(i32 control_id)
              )) {
 dialog_cleanup:
             ((CityWindow *)((i8 *)&city_wnd.window))->create_change_button(1);
-            (*((char *)&eh_state + 0)) = 1;
-            /* inlined unwind funclet 0050b638 */ { improvement_dialog.Dialog::destruct(); }
-            eh_state = eh_state & 0xffffff00;
-            /* inlined unwind funclet 0050b644 */ { unit_dialog.Dialog::destruct(); }
-            eh_state = 0xffffffff;
-            /* inlined unwind funclet 0050b650 */ { change_dialog.Dialog::destruct(); }
             return;
           }
           if (((*((char *)&game.game_options + 1)) & (OPT_INSTANT_ADVICE >> 8)) != 0) {
@@ -16348,20 +16069,6 @@ recalc_city:
         change_dialog.close();
         unit_dialog.close();
         improvement_dialog.close();
-        (*((char *)&eh_state + 0)) = 1;
-        /* inlined unwind funclet 0050b638 */ { improvement_dialog.Dialog::destruct(); }
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 0050b644 */ { unit_dialog.Dialog::destruct(); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0050b650 */ { change_dialog.Dialog::destruct(); }
-      }
-      else {
-        (*((char *)&eh_state + 0)) = 1;
-        /* inlined unwind funclet 0050b638 */ { improvement_dialog.Dialog::destruct(); }
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 0050b644 */ { unit_dialog.Dialog::destruct(); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 0050b650 */ { change_dialog.Dialog::destruct(); }
       }
     }
     else {
@@ -16371,12 +16078,6 @@ recalc_city:
       city2 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
       net.blocked_input_arg2 = (int)cities[city2].owner;
       net.blocked_input_arg3 = control_id;
-      (*((char *)&eh_state + 0)) = 1;
-      /* inlined unwind funclet 0050b638 */ { improvement_dialog.Dialog::destruct(); }
-      eh_state = eh_state & 0xffffff00;
-      /* inlined unwind funclet 0050b644 */ { unit_dialog.Dialog::destruct(); }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0050b650 */ { change_dialog.Dialog::destruct(); }
     }
   }
   return;
@@ -16931,10 +16632,7 @@ void CityWindow::create_exit_button(int show)
   Button *button;
   i8 rect[16];
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   if (exit_button != 0) {
     if (exit_button != (Button *)0x0) {
       exit_button->scalar_destruct(1);
@@ -16945,14 +16643,12 @@ void CityWindow::create_exit_button(int show)
     exit_button_byte3[0] = '\0';
   }
   this_00 = (Button *)operator_new(0x3c);
-  eh_state = 0;
   if (this_00 == (Button *)0x0) {
     button = 0;
   }
   else {
     button = button_ctor(this_00);
   }
-  eh_state = 0xffffffff;
   exit_button = button;
   ui_set_button_font((iptr)((u8 *)&city_font));
   height = scale(0x18);
@@ -16996,10 +16692,7 @@ void CityWindow::create_change_button(int show)
   i8 rect[16];
   char auto_mode;
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   auto_mode = (cities[city_index].flags & CITYF_AUTOBUILD) != 0;
   if (city_wnd_state.change_button_variant != auto_mode) {
     city_wnd_state.change_button_variant = auto_mode;
@@ -17013,14 +16706,12 @@ void CityWindow::create_change_button(int show)
       change_button_byte3[0] = '\0';
     }
     this_00 = (Button *)operator_new(0x3c);
-    eh_state = 0;
     if (this_00 == (Button *)0x0) {
       button = 0;
     }
     else {
       button = button_ctor(this_00);
     }
-    eh_state = 0xffffffff;
     change_button = button;
     ui_set_button_font((iptr)((u8 *)&city_font));
     origin_x = margin_x_2;
@@ -17097,111 +16788,88 @@ void CityWindow::create_controls()
   i8 icon_char_end;
   i8 rect[16];
   i32 eh_next;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   window.set_keyboard_nav(0);
   destroy_controls();
   buy_btn_mem = (Button *)operator_new(0x3c);
-  eh_state = 0;
   if (buy_btn_mem == (Button *)0x0) {
     buy_btn = 0;
   }
   else {
     buy_btn = button_ctor(buy_btn_mem);
   }
-  eh_state = 0xffffffff;
   buy_button = (i32)buy_btn;
   change_btn_mem = (Button *)operator_new(0x3c);
-  eh_state = 1;
   if (change_btn_mem == (Button *)0x0) {
     change_btn = 0;
   }
   else {
     change_btn = button_ctor(change_btn_mem);
   }
-  eh_state = 0xffffffff;
   change_button = change_btn;
   info_btn_mem = (Button *)operator_new(0x3c);
-  eh_state = 2;
   if (info_btn_mem == (Button *)0x0) {
     info_btn = 0;
   }
   else {
     info_btn = button_ctor(info_btn_mem);
   }
-  eh_state = 0xffffffff;
   info_button = (i32)info_btn;
   map_btn_mem = (Button *)operator_new(0x3c);
-  eh_state = 3;
   if (map_btn_mem == (Button *)0x0) {
     map_btn = 0;
   }
   else {
     map_btn = button_ctor(map_btn_mem);
   }
-  eh_state = 0xffffffff;
   map_button = (i32)map_btn;
   rename_btn_mem = (Button *)operator_new(0x3c);
-  eh_state = 4;
   if (rename_btn_mem == (Button *)0x0) {
     rename_btn = 0;
   }
   else {
     rename_btn = button_ctor(rename_btn_mem);
   }
-  eh_state = 0xffffffff;
   rename_button = (i32)rename_btn;
   happy_btn_mem = (Button *)operator_new(0x3c);
-  eh_state = 5;
   if (happy_btn_mem == (Button *)0x0) {
     happy_btn = 0;
   }
   else {
     happy_btn = button_ctor(happy_btn_mem);
   }
-  eh_state = 0xffffffff;
   happy_button = (i32)happy_btn;
   view_btn_mem = (Button *)operator_new(0x3c);
-  eh_state = 6;
   if (view_btn_mem == (Button *)0x0) {
     view_btn = 0;
   }
   else {
     view_btn = button_ctor(view_btn_mem);
   }
-  eh_state = 0xffffffff;
   view_button = (i32)view_btn;
   prev_btn_mem = (SpriteButton *)operator_new(0xcc);
-  eh_state = 7;
   if (prev_btn_mem == (SpriteButton *)0x0) {
     prev_btn = 0;
   }
   else {
     prev_btn = prev_btn_mem->construct();
   }
-  eh_state = 0xffffffff;
   prev_city_button = (i32)prev_btn;
   next_btn_mem = (SpriteButton *)operator_new(0xcc);
-  eh_state = 8;
   if (next_btn_mem == (SpriteButton *)0x0) {
     next_btn = 0;
   }
   else {
     next_btn = next_btn_mem->construct();
   }
-  eh_state = 0xffffffff;
   next_city_button = (i32)next_btn;
   scrollbar_mem = (Scrollbar *)operator_new(0x40);
-  eh_state = 9;
   if (scrollbar_mem == (Scrollbar *)0x0) {
     scrollbar = 0;
   }
   else {
     scrollbar = scrollbar_mem->construct();
   }
-  eh_state = 0xffffffff;
   improvements_scrollbar = scrollbar;
   origin_x2 = margin_x_2 + client_x;
   origin_y2 = client_y + content_offset_y;
@@ -18222,11 +17890,9 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int capture_mode)
   iptr improvement;
   i8 city_name[80];
   uptr city2;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   civ2 = (iptr)cities[city].owner;
   x2 = (int)cities[city].x;
   y = (int)cities[city].y;
@@ -18376,7 +18042,5 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int capture_mode)
     net_send_message(NM_INFO_STATUS,0xff,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(5000);
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0057e29f */ { dialog2.Dialog::destruct(); }
   return;
 }

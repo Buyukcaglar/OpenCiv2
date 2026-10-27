@@ -42,10 +42,7 @@ void PediaWindow::update_controls()
   Hotspot *hotspot;
   struct { u32 left; u32 top; u32 right; u32 bottom; } rect2;
   i32 seh_frame;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   ((Control *)list_describe_button)->hide();
   ((Control *)((u8 *)&list_close_button))->hide();
   ((Control *)((u8 *)&detail_back_button))->hide();
@@ -95,14 +92,12 @@ void PediaWindow::update_controls()
         scroll_height = GetSystemMetrics(3);
         rect2.bottom -= scroll_height;
         new_ctrl = (Hotspot *)operator_new(0x40);
-        seh_state = 0;
         if (new_ctrl == (Hotspot *)0x0) {
           hotspot = 0;
         }
         else {
           hotspot = hotspot_ctor(new_ctrl);
         }
-        seh_state = 0xffffffff;
         list_hotspot = (u32)hotspot;
         if (this == (PediaWindow *)0x0) {
           hotspot_parent = (u8 *)0x0;
@@ -128,14 +123,12 @@ void PediaWindow::update_controls()
         scroll_height = GetSystemMetrics(3);
         rect2.bottom -= scroll_height;
         new_ctrl = (Hotspot *)operator_new(0x40);
-        seh_state = 1;
         if (new_ctrl == (Hotspot *)0x0) {
           hotspot2 = 0;
         }
         else {
           hotspot2 = hotspot_ctor(new_ctrl);
         }
-        seh_state = 0xffffffff;
         list_hotspot = (u32)hotspot2;
         if (this == (PediaWindow *)0x0) {
           hotspot_parent2 = (u8 *)0x0;
@@ -326,7 +319,6 @@ void Hyperlink::destruct()
 
 {
   i32 seh_frame;
-  i8 *seh_handler;
   i32 seh_state;
   
   seh_state = 0;
@@ -405,10 +397,7 @@ void PediaWindow::add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left
   int link_index;
   PediaLink *last_link;
   i32 seh_frame;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   switch(link_kind) {
   case 0:
     list_index = 0;
@@ -482,14 +471,12 @@ void PediaWindow::add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left
   draw_text((iptr)&font_size21,(const char *)&textbuf.buf,x,y,5);
   gfx_set_text_color_index(10);
   new_link = (PediaLink *)operator_new(0x48);
-  seh_state = 0;
   if (new_link == (PediaLink *)0x0) {
     link = (PediaLink *)0x0;
   }
   else {
     link = new_link->construct();
   }
-  seh_state = 0xffffffff;
   link->topic = list_index;
   link->next = 0;
   link_index = 0;
@@ -646,10 +633,7 @@ PediaLink *PediaLink::construct()
 
 {
   i32 seh_frame;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   control.construct();
   return this;
 }
@@ -659,10 +643,7 @@ Hyperlink *Hyperlink::construct()
 
 {
   i32 seh_frame;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   base_construct();
   return this;
 }
@@ -1367,44 +1348,24 @@ PediaWindow *PediaWindow::construct()
   u8 *slot;
   int i;
   i32 exc_link;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   this->SurfaceWindow::construct();
-  eh_state = 0;
   button_ctor((Button *)list_describe_button);
-  (*((char *)&eh_state + 0)) = 1;
   button_ctor((Button *)((u8 *)&list_close_button));
-  (*((char *)&eh_state + 0)) = 2;
   button_ctor((Button *)&detail_back_button);
-  (*((char *)&eh_state + 0)) = 3;
   button_ctor((Button *)detail_describe_button);
-  (*((char *)&eh_state + 0)) = 4;
   button_ctor((Button *)((u8 *)&detail_close_button));
-  (*((char *)&eh_state + 0)) = 5;
   button_ctor((Button *)text_back_button);
-  (*((char *)&eh_state + 0)) = 6;
   button_ctor((Button *)((u8 *)&text_close_button));
-  (*((char *)&eh_state + 0)) = 7;
   button_ctor((Button *)&concept_list_back_button);
-  (*((char *)&eh_state + 0)) = 8;
   button_ctor((Button *)advance_list_describe_button);
-  (*((char *)&eh_state + 0)) = 9;
   button_ctor((Button *)advance_list_tech_tree_button);
-  (*((char *)&eh_state + 0)) = 10;
   button_ctor((Button *)advance_list_close_button);
-  (*((char *)&eh_state + 0)) = 0xb;
   button_ctor((Button *)((u8 *)&advance_detail_back_button));
-  (*((char *)&eh_state + 0)) = 0xc;
   button_ctor((Button *)&advance_detail_tech_tree_button);
-  (*((char *)&eh_state + 0)) = 0xd;
   button_ctor((Button *)advance_detail_describe_button);
-  (*((char *)&eh_state + 0)) = 0xe;
   button_ctor((Button *)((u8 *)&advance_detail_close_button));
-  (*((char *)&eh_state + 0)) = 0xf;
   edit_ctor((EditControl *)((u8 *)&description_edit));
-  eh_state = (eh_state & 0xffffff00 | (byte)(0x10));
   ((Scrollbar *)&list_scrollbar)->construct();
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 4);
   closed = 1;
@@ -1480,7 +1441,6 @@ void PediaWindow::destruct()
 
 {
   i32 exc_link;
-  i8 *seh_handler;
   int eh_state;
   
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 4);
@@ -1845,10 +1805,7 @@ void PediaWindow::create()
   tagRECT rect;
   int btn_height;
   i32 exc_link;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   free_lists();
   clear_links();
   client_y = 0;
@@ -1892,14 +1849,12 @@ void PediaWindow::create()
   SetRect(&rect,left_x,col_width,(int)(close_box_width * header_height) / 0x18 + left_x,
           btn_height + col_width);
   this_00 = (Hotspot *)operator_new(0x40);
-  eh_state = 0;
   if (this_00 == (Hotspot *)0x0) {
     close_hotspot = 0;
   }
   else {
     close_hotspot = hotspot_ctor(this_00);
   }
-  eh_state = 0xffffffff;
   close_box_hotspot = close_hotspot;
   if (this == (PediaWindow *)0x0) {
     close_parent = (u8 *)0x0;
@@ -3523,7 +3478,6 @@ void __thiscall pedia_link_dtor(void *self)
 
 {
   i32 exc_link;
-  i8 *seh_handler;
   i32 eh_state;
   
   eh_state = 0xffffffff;

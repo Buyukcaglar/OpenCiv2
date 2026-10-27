@@ -1445,13 +1445,9 @@ void __cdecl intel_report_on_cities_clicked(void)
   iptr city;
   Dialog dialog2;
   iptr civ;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   civ = advisor_state.report_param;
   civ_name = (iptr)(civ_name_plural(advisor_state.report_param));
   text_set_string_arg(0,(const char *)civ_name);
@@ -1489,8 +1485,6 @@ void __cdecl intel_report_on_cities_clicked(void)
   ((WndBase *)((i8 *)&advisor_state.wnd))->enable();
   ((ModalMenuWindow *)((i8 *)&advisor_state.wnd))->end_modal_loop();
   intel_report_reopen = 1;
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 004305e7 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -1561,13 +1555,9 @@ void __cdecl foreign_minister_show(iptr civ)
   int both_human;
   iptr civ2;
   int sees_all;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   if ((game.multiplayer < 3) || (parley_wnd_block.closed != 0)) {
     while( true ) {
       while( true ) {
@@ -1672,8 +1662,6 @@ void __cdecl foreign_minister_show(iptr civ)
         }
         if (contact_count == 0) {
           popup_game((const char *)&str_noforeign);
-          seh_state = 0xffffffff;
-          /* inlined unwind funclet 0043154f */ { dialog2.Dialog::destruct(); }
           return;
         }
         civ2 = dialog2.show_modal(0);
@@ -1681,8 +1669,6 @@ void __cdecl foreign_minister_show(iptr civ)
           dialog2.result_extra = 2;
         }
         if (dialog2.result_extra == 0) {
-          seh_state = 0xffffffff;
-          /* inlined unwind funclet 0043154f */ { dialog2.Dialog::destruct(); }
           return;
         }
         if (dialog2.result_extra != 1) break;
@@ -1696,8 +1682,6 @@ void __cdecl foreign_minister_show(iptr civ)
       }
       if (dialog2.result_extra == 2) break;
       if (dialog2.result_extra != 3) {
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 0043154f */ { dialog2.Dialog::destruct(); }
         return;
       }
       text_clear();
@@ -1832,14 +1816,10 @@ void __cdecl foreign_minister_show(iptr civ)
     else {
       popup_game((const char *)&str_peacenobetray);
     }
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0043154f */ { dialog2.Dialog::destruct(); }
   }
   else {
     parley_hwnd_obj = ((WndBase *)((i8 *)&parley_wnd_block.window))->get_window();
     BringWindowToTop(parley_hwnd_obj->hwnd);
-    seh_state = 0xffffffff;
-    /* inlined unwind funclet 0043154f */ { dialog2.Dialog::destruct(); }
   }
   return;
 }
@@ -1886,8 +1866,6 @@ void __cdecl powergraph_show(void)
   uint max_power;
   DibSurface *bg_surface2;
   GamePalette *bg_palette;
-  i32 seh_prev;
-  i8 *seh_handler;
   int seh_state;
   
   seh_state = 0xffffffff;
@@ -2079,13 +2057,9 @@ void __cdecl historian_report_show(void)
   i8 title_buf[80];
   int best_score;
   int scores[8];
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   dialog2.Dialog::construct(0x2000);
-  seh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   category = text_open_section((const char *)&main_frame_wnd_block.game_txt_path,(const char *)&str_historians);
   if (category == 0) {
     text_read_line(1);
@@ -2179,8 +2153,6 @@ void __cdecl historian_report_show(void)
       }
     }
   }
-  seh_state = 0xffffffff;
-  /* inlined unwind funclet 00432bf8 */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -3345,11 +3317,7 @@ void __cdecl credits_draw_scroll(int full_redraw)
   int line_height;
   RECT rect2;
   int found_slot;
-  i32 seh_prev;
-  i8 *seh_handler;
-  i32 seh_state;
   
-  seh_state = 0xffffffff;
   if (credits.partial_redraw_ok == 0) {
     full_redraw = 1;
   }
@@ -3418,14 +3386,12 @@ void __cdecl credits_draw_scroll(int full_redraw)
         }
         text_width = ((GameFont *)((i8 *)&credits_font_block.credits_font))->text_width((const char *)line_text);
         surface_mem = (DibSurface *)operator_new(0x48);
-        seh_state = 0;
         if (surface_mem == (DibSurface *)0x0) {
           new_surface = (DibSurface *)0x0;
         }
         else {
           new_surface = surface_ctor(surface_mem);
         }
-        seh_state = 0xffffffff;
         line_surface = new_surface;
         if (text_width != 0) {
           new_surface->DibSurface::create(text_width,line_height);
@@ -3435,14 +3401,12 @@ void __cdecl credits_draw_scroll(int full_redraw)
           gfx_draw_text((const char *)line_text,0,0);
         }
         sprite_mem = (Sprite *)operator_new(0x3c);
-        seh_state = 1;
         if (sprite_mem == (Sprite *)0x0) {
           new_sprite = 0;
         }
         else {
           new_sprite = sprite_init(sprite_mem);
         }
-        seh_state = 0xffffffff;
         advisor_window_block.credits_slot_sprites[free_slot] = new_sprite;
         if (text_width != 0) {
           advisor_window_block.credits_slot_sprites[free_slot]->grab_from_surface((iptr)line_surface,0xfa,0,0,
@@ -3848,27 +3812,15 @@ ThroneRoomWindow *ThroneRoomWindow::construct(iptr civ)
 
 {
   iptr i;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   this->ModalMenuWindow::construct();
-  try_level = 0;
   ((GamePalette *)&control_list)->init();
-  (*((char *)&try_level + 0)) = 1;
   ((DllHandle *)throne_dll)->init();
-  (*((char *)&try_level + 0)) = 2;
   ((SurfaceWindow *)throne_surface_wnd)->SurfaceWindow::construct();
-  (*((char *)&try_level + 0)) = 3;
   surface_ctor((DibSurface *)throne_backbuffer);
-  (*((char *)&try_level + 0)) = 4;
   clickmap_ctor(choice_clickmap);
-  (*((char *)&try_level + 0)) = 5;
   ((Dialog *)choice_dialog_2)->Dialog::construct(0x4000);
-  (*((char *)&try_level + 0)) = 6;
   ((GameFont *)((u8 *)&click_prompt_font))->init_empty();
-  try_level = (try_level & 0xffffff00 | (byte)(7));
   gfx_get_screen_rect((iptr)(media_wnd));
   throne_civ = civ;
   throneroom_wnd = this;
@@ -3887,8 +3839,6 @@ ThroneRoomWindow *ThroneRoomWindow::construct(iptr civ)
 void ThroneRoomWindow::destruct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
   int try_level;
   
   try_level = try_level & 0xff;
@@ -3947,11 +3897,7 @@ void ThroneRoomWindow::run_upgrade()
   GameFont font2;
   i8 text_buf[1024];
   tagRECT rect;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   result = create_windows();
   if ((result != 0) && (result = render(), result != 0)) {
     ((DibSurface *)throne_backbuffer)->DibSurface::create(0x280,0x1e0);
@@ -3959,7 +3905,7 @@ void ThroneRoomWindow::run_upgrade()
     ((DibSurface *)throne_surface_wnd)->DibSurface::blit((DibSurface *)(iptr)(throne_backbuffer),&rect,
                &rect);
     font2.init(1,0x18);
-    try_level = 0;
+    ON_SCOPE_EXIT(font_destroy(&font2));
     result = text_open_section((const char *)&main_frame_wnd_block.game_txt_path,(const char *)&str_throne);
     if (result == 0) {
       str_clear((char *)text_buf);
@@ -3992,11 +3938,7 @@ void ThroneRoomWindow::run_upgrade()
     ((ModalMenuWindow *)throne_wnd_base)->set_modal_idle_callback(0);
     ((WndBase *)throne_wnd_base)->release_capture();
     result = render_choices();
-    if (result == 0) {
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0044d99d */ { font_destroy(&font2); }
-    }
-    else {
+    if (result != 0) {
       result = text_open_section((const char *)&main_frame_wnd_block.game_txt_path,(const char *)&str_addtothrone);
       if (result == 0) {
         str_clear((char *)text_buf);
@@ -4065,8 +4007,6 @@ void ThroneRoomWindow::run_upgrade()
       set_palette((iptr)&game_palette_block.game_palette);
       hide();
       wnd_flush_paint();
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0044d99d */ { font_destroy(&font2); }
     }
   }
   return;
@@ -4150,15 +4090,11 @@ i32 ThroneRoomWindow::render()
   iptr slot;
   int level;
   Sprite sprite;
-  i32 seh_next;
-  i8 *seh_handler;
-  int try_level;
   
-  try_level = 0xffffffff;
   surface_ctor(&surface);
-  try_level = 0;
+  ON_SCOPE_EXIT(surface_dtor(&surface));
   sprite_init(&sprite);
-  (*((char *)&try_level + 0)) = 1;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   for (slot = 0; slot < 3; slot++) {
     win_flush_pending_msgs();
     if (*(char *)&civs[(throne_civ)].throne_room[slot] != '\0') {
@@ -4166,10 +4102,6 @@ i32 ThroneRoomWindow::render()
       loaded = surface.load_gif_resource(slot * 5 + level + 0x69,10,0xec,(iptr)&control_list);
       if (loaded == 0) {
         result = 0;
-        try_level = try_level & 0xffffff00;
-        /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-        try_level = 0xffffffff;
-        /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
         return result;
       }
       sprite.grab_from_surface((iptr)&surface,9,
@@ -4188,10 +4120,6 @@ i32 ThroneRoomWindow::render()
     loaded = surface.load_gif_resource(0xa0,10,0xec,(iptr)&control_list);
     if (loaded == 0) {
       fail1 = 0;
-      try_level = try_level & 0xffffff00;
-      /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
       result = fail1;
       return result;
     }
@@ -4206,10 +4134,6 @@ i32 ThroneRoomWindow::render()
                        (iptr)&control_list);
     if (loaded == 0) {
       fail2 = 0;
-      try_level = try_level & 0xffffff00;
-      /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
       result = fail2;
       return result;
     }
@@ -4231,10 +4155,6 @@ i32 ThroneRoomWindow::render()
         ;
         if (loaded == 0) {
           fail3 = 0;
-          try_level = try_level & 0xffffff00;
-          /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-          try_level = 0xffffffff;
-          /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
           result = fail3;
           return result;
         }
@@ -4254,10 +4174,6 @@ i32 ThroneRoomWindow::render()
                        (iptr)&control_list);
     if (loaded == 0) {
       fail4 = 0;
-      try_level = try_level & 0xffffff00;
-      /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
       result = fail4;
       return result;
     }
@@ -4275,10 +4191,6 @@ i32 ThroneRoomWindow::render()
     loaded = surface.load_gif_resource(0xa3,10,0xec,(iptr)&control_list);
     if (loaded == 0) {
       fail5 = 0;
-      try_level = try_level & 0xffffff00;
-      /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
       result = fail5;
       return result;
     }
@@ -4293,10 +4205,6 @@ i32 ThroneRoomWindow::render()
       loaded = surface.load_gif_resource(slot * 5 + level + 0x69,10,0xec,(iptr)&control_list);
       if (loaded == 0) {
         fail6 = 0;
-        try_level = try_level & 0xffffff00;
-        /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-        try_level = 0xffffffff;
-        /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
         result = fail6;
         return result;
       }
@@ -4319,10 +4227,6 @@ i32 ThroneRoomWindow::render()
         ;
         if (loaded == 0) {
           fail7 = 0;
-          try_level = try_level & 0xffffff00;
-          /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-          try_level = 0xffffffff;
-          /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
           result = fail7;
           return result;
         }
@@ -4342,10 +4246,6 @@ i32 ThroneRoomWindow::render()
                        (iptr)&control_list);
     if (loaded == 0) {
       fail8 = 0;
-      try_level = try_level & 0xffffff00;
-      /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
       result = fail8;
       return result;
     }
@@ -4359,10 +4259,6 @@ i32 ThroneRoomWindow::render()
                throneroom_piece_rects[7][level].y - 1);
   }
   win_flush_pending_msgs();
-  try_level = try_level & 0xffffff00;
-  /* inlined unwind funclet 0044e762 */ { sprite_destroy(&sprite); }
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 0044e76b */ { surface_dtor(&surface); }
   result = 1;
   return result;
 }
@@ -4568,15 +4464,11 @@ i32 ThroneRoomWindow::render_choices()
   int piece_rects[60];
   Sprite sprite;
   byte bonus_bits;
-  i32 seh_next;
-  i8 *seh_handler;
-  uint try_level;
   
-  try_level = 0xffffffff;
   surface_ctor(&surface);
-  try_level = 0;
+  ON_SCOPE_EXIT(surface_dtor(&surface));
   sprite_init(&sprite);
-  try_level = (try_level & 0xffffff00 | (byte)(1));
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   piece_rects[0] = 0xd4;
   piece_rects[1] = 1;
   piece_rects[2] = 0xb3;
@@ -4641,10 +4533,6 @@ i32 ThroneRoomWindow::render_choices()
   loaded = ((DibSurface *)throne_surface_wnd)->load_gif_resource(100,10,0xec,(iptr)&control_list);
   if (loaded == 0) {
     result = 0;
-    try_level = try_level & 0xffffff00;
-    /* inlined unwind funclet 0044f498 */ { sprite_destroy(&sprite); }
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 0044f4a4 */ { surface_dtor(&surface); }
   }
   else {
     if (throne_complete == 0) {
@@ -4654,10 +4542,6 @@ i32 ThroneRoomWindow::render_choices()
           loaded = surface.load_gif_resource(idx + 0xaa,10,0xec,(iptr)&control_list);
           if (loaded == 0) {
             fail1 = 0;
-            try_level = try_level & 0xffffff00;
-            /* inlined unwind funclet 0044f498 */ { sprite_destroy(&sprite); }
-            try_level = 0xffffffff;
-            /* inlined unwind funclet 0044f4a4 */ { surface_dtor(&surface); }
             result = fail1;
             return result;
           }
@@ -4678,10 +4562,6 @@ i32 ThroneRoomWindow::render_choices()
           loaded = surface.load_gif_resource(idx + 0xb2,10,0xec,(iptr)&control_list);
           if (loaded == 0) {
             fail2 = 0;
-            try_level = try_level & 0xffffff00;
-            /* inlined unwind funclet 0044f498 */ { sprite_destroy(&sprite); }
-            try_level = 0xffffffff;
-            /* inlined unwind funclet 0044f4a4 */ { surface_dtor(&surface); }
             result = fail2;
             return result;
           }
@@ -4694,10 +4574,6 @@ i32 ThroneRoomWindow::render_choices()
         }
       }
     }
-    try_level = try_level & 0xffffff00;
-    /* inlined unwind funclet 0044f498 */ { sprite_destroy(&sprite); }
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 0044f4a4 */ { surface_dtor(&surface); }
     result = 1;
   }
   return result;
@@ -4801,20 +4677,14 @@ void __cdecl endgame_defeat_movie(iptr civ)
   EndgameMovieWindow *self;
   int created;
   EndgameMovieWindow *window;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   self = (EndgameMovieWindow *)operator_new(0x137c);
-  try_level = 0;
   if (self == (EndgameMovieWindow *)0x0) {
     window = (EndgameMovieWindow *)0x0;
   }
   else {
     window = self->defeat_movie_wnd_construct();
   }
-  try_level = 0xffffffff;
   endgame_movie_window = window;
   if (window != (EndgameMovieWindow *)0x0) {
     created = window->defeat_movie_wnd_create(civ);
@@ -4833,21 +4703,12 @@ void __cdecl endgame_defeat_movie(iptr civ)
 EndgameMovieWindow *EndgameMovieWindow::defeat_movie_wnd_construct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   this->ModalMenuWindow::construct();
-  try_level = 0;
   ((GamePalette *)&palette)->init();
-  (*((char *)&try_level + 0)) = 1;
   ((AviPlayer *)media_wnd)->construct();
-  (*((char *)&try_level + 0)) = 2;
   ((DllHandle *)movie_dll)->init();
-  (*((char *)&try_level + 0)) = 3;
   ((GameFont *)movie_caption_font)->init_empty();
-  try_level = (try_level & 0xffffff00 | (byte)(4));
   surface_ctor((DibSurface *)movie_frame_surface);
   advance_civ = 0;
   return this;
@@ -4857,8 +4718,6 @@ EndgameMovieWindow *EndgameMovieWindow::defeat_movie_wnd_construct()
 void __thiscall defeat_movie_wnd_dtor(void *self)
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
   int try_level;
   
   try_level = try_level & 0xff;
@@ -5066,25 +4925,19 @@ void __cdecl endgame_spaceship_arrival(iptr civ)
   iptr str;
   EndgameMovieWindow *window;
   Dialog dialog2;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   if (civ < 0) {
     endgame_show_centauri_beaten(civ);
   }
   else {
     snd_cd_stop();
     self = (EndgameMovieWindow *)operator_new(0x137c);
-    try_level = 0;
     if (self == (EndgameMovieWindow *)0x0) {
       window = (EndgameMovieWindow *)0x0;
     }
     else {
       window = self->arrival_movie_wnd_construct();
     }
-    try_level = 0xffffffff;
     spaceship_arrival_window = (iptr)window;
     if (window != (EndgameMovieWindow *)0x0) {
       created = window->arrival_movie_wnd_create(civ);
@@ -5104,12 +4957,10 @@ void __cdecl endgame_spaceship_arrival(iptr civ)
         str = (iptr)(civ_leader_name(civ));
         text_set_string_arg(4,(const char *)str);
         dialog2.Dialog::construct(0x4000);
-        try_level = 1;
+        ON_SCOPE_EXIT(dialog2.Dialog::destruct());
         dialog2.load_game_text((const char *)&str_centauri);
         dialog2.add_sprite((iptr)&popup_info_icon_sprite,0,0);
         dialog2.show_modal(0);
-        try_level = 0xffffffff;
-        /* inlined unwind funclet 0047132e */ { dialog2.Dialog::destruct(); }
       }
       else {
         ((EndgameMovieWindow *)spaceship_arrival_window)->arrival_movie_wnd_play();
@@ -5127,21 +4978,12 @@ void __cdecl endgame_spaceship_arrival(iptr civ)
 EndgameMovieWindow *EndgameMovieWindow::arrival_movie_wnd_construct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   this->ModalMenuWindow::construct();
-  try_level = 0;
   ((GamePalette *)&palette)->init();
-  (*((char *)&try_level + 0)) = 1;
   ((AviPlayer *)media_wnd)->construct();
-  (*((char *)&try_level + 0)) = 2;
   ((DllHandle *)movie_dll)->init();
-  (*((char *)&try_level + 0)) = 3;
   ((GameFont *)movie_caption_font)->init_empty();
-  try_level = (try_level & 0xffffff00 | (byte)(4));
   surface_ctor((DibSurface *)movie_frame_surface);
   advance_civ = 0;
   return this;
@@ -5151,8 +4993,6 @@ EndgameMovieWindow *EndgameMovieWindow::arrival_movie_wnd_construct()
 void __thiscall arrival_movie_wnd_dtor(void *self)
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
   int try_level;
   
   try_level = try_level & 0xff;
@@ -5380,23 +5220,19 @@ void __cdecl endgame_show_centauri_beaten(uptr civ)
   RECT screen_bounds;
   i8 dll_path[128];
   GamePalette palette;
-  i32 seh_next;
-  i8 *seh_handler;
-  int try_level;
   
-  try_level = 0xffffffff;
   ((SurfaceWindow *)surface_wnd)->SurfaceWindow::construct();
-  try_level = 0;
+  ON_SCOPE_EXIT(surfwnd_dtor((SurfaceWindow *)&surface_wnd));
   dll.init();
-  (*((char *)&try_level + 0)) = 1;
+  ON_SCOPE_EXIT(dll.free());
   frame_wnd.ModalMenuWindow::construct();
-  (*((char *)&try_level + 0)) = 2;
+  ON_SCOPE_EXIT(wnd_dtor((WndBase *)&frame_wnd));
   palette.init();
-  (*((char *)&try_level + 0)) = 3;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   surface_ctor(&backup_surface);
-  (*((char *)&try_level + 0)) = 4;
+  ON_SCOPE_EXIT(surface_dtor(&backup_surface));
   font2.init_empty();
-  (*((char *)&try_level + 0)) = 5;
+  ON_SCOPE_EXIT(font_destroy(&font2));
   if ((int)civ < 1) {
     civ = ~civ + 1;
   }
@@ -5404,21 +5240,7 @@ void __cdecl endgame_show_centauri_beaten(uptr civ)
   str_clear((char *)dll_path);
   str_append((char *)dll_path,(const char *)&str_civ2_civ2art_dll_3);
   status = file_resolve_path((const char *)dll_path);
-  if (status == 0) {
-    (*((char *)&try_level + 0)) = 4;
-    /* inlined unwind funclet 00472393 */ { font_destroy(&font2); }
-    (*((char *)&try_level + 0)) = 3;
-    /* inlined unwind funclet 0047239f */ { surface_dtor(&backup_surface); }
-    (*((char *)&try_level + 0)) = 2;
-    /* inlined unwind funclet 004723ab */ { palette_destroy(&palette); }
-    (*((char *)&try_level + 0)) = 1;
-    /* inlined unwind funclet 004723b7 */ { wnd_dtor((WndBase *)&frame_wnd); }
-    try_level = try_level & 0xffffff00;
-    /* inlined unwind funclet 004723c3 */ { dll.free(); }
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 004723cf */ { surfwnd_dtor((SurfaceWindow *)&surface_wnd); }
-  }
-  else {
+  if (status != 0) {
     dll.load((const char *)dll_path);
     gfx_get_screen_rect((iptr)&screen_bounds);
     SetRect(&text_rect,0,0,0x280,0xf0);
@@ -5487,18 +5309,6 @@ void __cdecl endgame_show_centauri_beaten(uptr civ)
     ((WndBase *)&frame_wnd)->hide();
     wnd_flush_paint();
     dll.dll_handle_free();
-    (*((char *)&try_level + 0)) = 4;
-    /* inlined unwind funclet 00472393 */ { font_destroy(&font2); }
-    (*((char *)&try_level + 0)) = 3;
-    /* inlined unwind funclet 0047239f */ { surface_dtor(&backup_surface); }
-    (*((char *)&try_level + 0)) = 2;
-    /* inlined unwind funclet 004723ab */ { palette_destroy(&palette); }
-    (*((char *)&try_level + 0)) = 1;
-    /* inlined unwind funclet 004723b7 */ { wnd_dtor((WndBase *)&frame_wnd); }
-    try_level = try_level & 0xffffff00;
-    /* inlined unwind funclet 004723c3 */ { dll.free(); }
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 004723cf */ { surfwnd_dtor((SurfaceWindow *)&surface_wnd); }
   }
   return;
 }
@@ -6068,20 +5878,12 @@ void __cdecl destroyed_civs_show(iptr killer_civ)
 {
   int created;
   i8 window[1808];
-  i32 try_level;
   
-  try_level = 0xffffffff;
   ((DestroyedCivsWindow *)window)->construct();
-  try_level = 0;
+  ON_SCOPE_EXIT(((DestroyedCivsWindow *)&window)->destruct());
   created = ((DestroyedCivsWindow *)window)->create(killer_civ);
-  if (created == 0) {
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 00514ef2 */ { ((DestroyedCivsWindow *)&window)->destruct(); }
-  }
-  else {
+  if (created != 0) {
     ((DestroyedCivsWindow *)window)->run();
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 00514ef2 */ { ((DestroyedCivsWindow *)&window)->destruct(); }
   }
   return;
 }
@@ -6090,27 +5892,15 @@ void __cdecl destroyed_civs_show(iptr killer_civ)
 DestroyedCivsWindow *DestroyedCivsWindow::construct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   this->ModalMenuWindow::construct();
-  try_level = 0;
   ((GamePalette *)&control_list)->init();
-  (*((char *)&try_level + 0)) = 1;
   ((SurfaceWindow *)media_wnd)->SurfaceWindow::construct();
-  (*((char *)&try_level + 0)) = 2;
   surface_ctor((DibSurface *)civs_art_surface);
-  (*((char *)&try_level + 0)) = 3;
   ((DllHandle *)improvement_art_surface)->init();
-  (*((char *)&try_level + 0)) = 4;
   sprite_init((Sprite *)panel_sprite);
-  (*((char *)&try_level + 0)) = 5;
   sprite_init((Sprite *)portrait_sprite);
-  (*((char *)&try_level + 0)) = 6;
   ((GameFont *)caption_font_2)->init_empty();
-  try_level = (try_level & 0xffffff00 | (byte)(7));
   killer_civ = 0;
   (*(DestroyedCivsWindow * *)&victory_screen_wnd) = this;
   slide_y = 0;
@@ -6123,8 +5913,6 @@ DestroyedCivsWindow *DestroyedCivsWindow::construct()
 void DestroyedCivsWindow::destruct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
   int try_level;
   
   try_level = try_level & 0xff;
@@ -6217,13 +6005,9 @@ void DestroyedCivsWindow::run()
   i8 text_buf[256];
   DWORD now;
   GameFont font2;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   font2.init_empty();
-  try_level = 0;
+  ON_SCOPE_EXIT(font_destroy(&font2));
   handle_show_raise();
   wnd_flush_paint();
   set_palette((iptr)&control_list);
@@ -6290,8 +6074,6 @@ void DestroyedCivsWindow::run()
   set_palette((iptr)&game_palette_block.game_palette);
   hide();
   wnd_flush_paint();
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 00515978 */ { font_destroy(&font2); }
   return;
 }
 
@@ -6354,15 +6136,11 @@ void DestroyedCivsWindow::draw_portrait(iptr entry)
   DibSurface portrait_surface;
   i8 rgb_buf[192];
   GamePalette palette;
-  i32 seh_next;
-  i8 *seh_handler;
-  int try_level;
   
-  try_level = 0xffffffff;
   surface_ctor(&portrait_surface);
-  try_level = 0;
+  ON_SCOPE_EXIT(surface_dtor(&portrait_surface));
   palette.init();
-  (*((char *)&try_level + 0)) = 1;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   ((DibSurface *)civs_art_surface)->DibSurface::blit((DibSurface *)(iptr)((u8 *)&media_wnd),
              (RECT *)&panel_clip_rect,(RECT *)&panel_clip_rect);
   portrait_surface.load_gif_resource((byte)(((i8 *)&destroyed_civs.portraits))[entry] + 0xdc,10,0xec,(iptr)&palette);
@@ -6373,10 +6151,6 @@ void DestroyedCivsWindow::draw_portrait(iptr entry)
   ((Sprite *)portrait_sprite)->draw((iptr)draw_tmp,(iptr)((u8 *)&media_wnd),
              0xd0,0x39);
   SetRect((LPRECT)&panel_clip_rect,0xd0,0x39,0x1b1,0x14c);
-  try_level = try_level & 0xffffff00;
-  /* inlined unwind funclet 00515d96 */ { palette_destroy(&palette); }
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 00515da2 */ { surface_dtor(&portrait_surface); }
   return;
 }
 
@@ -6483,14 +6257,10 @@ void __cdecl council_show(iptr civ,i32 cheat_mode)
   int ok;
   i32 ret_addr;
   CouncilWindow council;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   council_state.active = 1;
   council.construct();
-  try_level = 0;
+  ON_SCOPE_EXIT(council.destruct());
   snd_cd_stop();
   ret_addr = 0x5165c6;
   ok = council.init(civ,cheat_mode);
@@ -6499,8 +6269,6 @@ void __cdecl council_show(iptr civ,i32 cheat_mode)
   }
   snd_sync_music_option();
   council_state.active = 0;
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 005165f6 */ { council.destruct(); }
   return;
 }
 
@@ -6508,29 +6276,16 @@ void __cdecl council_show(iptr civ,i32 cheat_mode)
 CouncilWindow *CouncilWindow::construct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   this->SurfaceWindow::construct();
-  try_level = 0;
   video.construct();
-  (*((char *)&try_level + 0)) = 1;
   dialog.Dialog::construct(0x4000);
-  (*((char *)&try_level + 0)) = 2;
   dll.init();
-  (*((char *)&try_level + 0)) = 3;
   button_ctor((Button *)((u8 *)this + 0x11c0));
-  (*((char *)&try_level + 0)) = 4;
   button_ctor((Button *)&advisor_button_4);
-  (*((char *)&try_level + 0)) = 5;
   button_ctor((Button *)((u8 *)&advisor_button_3));
-  (*((char *)&try_level + 0)) = 6;
   button_ctor((Button *)((u8 *)&advisor_button_2));
-  (*((char *)&try_level + 0)) = 7;
   button_ctor((Button *)((u8 *)&advisor_button_0));
-  try_level = (try_level & 0xffffff00 | (byte)(8));
   button_ctor((Button *)&council_close_button);
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 6);
   speech_line_y = 0xb0;
@@ -6543,8 +6298,6 @@ CouncilWindow *CouncilWindow::construct()
 void CouncilWindow::destruct()
 
 {
-  i32 seh_next;
-  i8 *seh_handler;
   int try_level;
   
   *(pointer *)&vtable = ((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 6);
@@ -7044,26 +6797,16 @@ void CouncilWindow::draw_speech(int mode)
   int spacing;
   GameFont font2;
   tagRECT rect;
-  i32 seh_next;
-  i8 *seh_handler;
-  i32 try_level;
   
-  try_level = 0xffffffff;
   font2.init(0,0xe);
-  try_level = 0;
-  if ((speech_advisor_index < 0) || (2 < speech_advisor_index)) {
-    try_level = 0xffffffff;
-    /* inlined unwind funclet 00517fe4 */ { font_destroy(&font2); }
-  }
-  else {
+  ON_SCOPE_EXIT(font_destroy(&font2));
+  if (!((speech_advisor_index < 0) || (2 < speech_advisor_index))) {
     if (mode != 1) {
       fill_rect((iptr)((u8 *)&speech_rect),0x1d);
       speech_line_y = 2;
     }
     if (mode == -1) {
       repaint();
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 00517fe4 */ { font_destroy(&font2); }
     }
     else {
       rect.bottom = speech_rect_bottom;
@@ -7094,8 +6837,6 @@ void CouncilWindow::draw_speech(int mode)
       }
       repaint();
       wnd_flush_paint();
-      try_level = 0xffffffff;
-      /* inlined unwind funclet 00517fe4 */ { font_destroy(&font2); }
     }
   }
   return;
@@ -7111,32 +6852,20 @@ void CouncilWindow::draw_advisor_frames()
   int advisor;
   DibSurface surface;
   Sprite sprite;
-  i32 seh_next;
-  i8 *seh_handler;
-  int try_level;
   
-  try_level = 0xffffffff;
   surface_ctor(&surface);
-  try_level = 0;
+  ON_SCOPE_EXIT(surface_dtor(&surface));
   sprite_init(&sprite);
-  (*((char *)&try_level + 0)) = 1;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   if (council_active_2 == 0) {
     for (advisor = 0; advisor < 5; advisor++) {
       status = text_open_section((const char *)council_text_file,
                                  (const char *)(advisor_code_slots + advisor * 3 - 0x40));
       if (status != 0) {
-        try_level = try_level & 0xffffff00;
-        /* inlined unwind funclet 005181ab */ { sprite_destroy(&sprite); }
-        try_level = 0xffffffff;
-        /* inlined unwind funclet 005181b4 */ { surface_dtor(&surface); }
         return;
       }
       line = text_read_line(1);
       if (line == 0) {
-        try_level = try_level & 0xffffff00;
-        /* inlined unwind funclet 005181ab */ { sprite_destroy(&sprite); }
-        try_level = 0xffffffff;
-        /* inlined unwind funclet 005181b4 */ { surface_dtor(&surface); }
         return;
       }
       frame_no = text_next_int();
@@ -7150,10 +6879,6 @@ void CouncilWindow::draw_advisor_frames()
     avi_player_show_frame(&video_head,1);
     ((DibSurface *)&video_head)->avi_player_draw_to((iptr)this,ui_metrics.border_width + 2,ui_metrics.caption_height + 2);
   }
-  try_level = try_level & 0xffffff00;
-  /* inlined unwind funclet 005181ab */ { sprite_destroy(&sprite); }
-  try_level = 0xffffffff;
-  /* inlined unwind funclet 005181b4 */ { surface_dtor(&surface); }
   return;
 }
 

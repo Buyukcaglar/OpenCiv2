@@ -314,14 +314,11 @@ void __cdecl menu_find_city(void)
   int count;
   Dialog dialog2;
   int civ;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   civ2 = human_civ[0];
-  eh_state = 0;
   count = 0;
   dialog2.load_game_section((const char *)&str_findcity,0x800001);
   for (city = 0; city < game.num_cities; city++) {
@@ -366,24 +363,14 @@ void __cdecl menu_find_city(void)
       }
     }
   }
-  if (count == 0) {
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 0040e38d */ { dialog2.Dialog::destruct(); }
-  }
-  else {
+  if (count != 0) {
     city2 = dialog2.show_modal(0);
-    if (city2 < 0) {
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0040e38d */ { dialog2.Dialog::destruct(); }
-    }
-    else {
+    if (city2 >= 0) {
       ((MapView *)((i8 *)&map_views_block.map_views))->center_on((int)cities[city2].x,(int)cities[city2].y);
       if ((dialog2.result_extra != 0) && ((cities[city2].owner == civ2 || (game.reveal_map != '\0')))
          ) {
         ((CityWindow *)((i8 *)&city_wnd.window))->open(city2);
       }
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 0040e38d */ { dialog2.Dialog::destruct(); }
     }
   }
   return;
@@ -772,13 +759,10 @@ void PictureWindow::open(uint resource_id,u32 report,u32 style,u32 img_width,u32
   u32 wnd_w;
   int nonclient_height;
   GamePalette palette;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   ((PictureWindow *)((i8 *)&advisor_state.window))->close();
   ui_set_button_font((iptr)&advisor_button_font_block.advisor_button_font);
   controls_created = 0;
@@ -839,8 +823,6 @@ void PictureWindow::open(uint resource_id,u32 report,u32 style,u32 img_width,u32
              (caption_font_block.screen_width >> 1) - ((int)(wnd_w + border * 2) >> 1),
              (scr_height - nonclient_height >> 1) - ((int)(wnd_h + border * 2) >> 1),image_width,image_height,
              0,border,border);
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0042ab9b */ { palette_destroy(&palette); }
   return;
 }
 
@@ -870,7 +852,6 @@ void PictureWindow::blit()
 void __thiscall picwnd_dtor(void *self)
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
   int eh_state;
   
@@ -896,23 +877,14 @@ void __thiscall picwnd_dtor(void *self)
 PictureWindow *PictureWindow::construct()
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   FrameWindow::construct();
-  eh_state = 0;
   surface_ctor(&surface);
-  (*((char *)&eh_state + 0)) = 1;
   button_ctor(&close_button);
-  (*((char *)&eh_state + 0)) = 2;
   button_ctor(&button_2);
-  (*((char *)&eh_state + 0)) = 3;
   button_ctor(&button_3);
-  (*((char *)&eh_state + 0)) = 4;
   button_ctor(&button_4);
-  eh_state = (eh_state & 0xffffff00 | (byte)(5));
   scrollbar.construct();
   vtable = (u32)((pointer *)(ptr_fun_rest + 4));
   return this;
@@ -1330,13 +1302,9 @@ void __cdecl panel_texture_surface_static_dtor(void)
 SurfaceWindow *SurfaceWindow::construct()
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   surface_ctor(this);
-  eh_state = 0;
   window.construct();
   vtable = (u32)((pointer *)(ptr_fun_rest + 8));
   window.control_list = 0;
@@ -1348,11 +1316,8 @@ SurfaceWindow *SurfaceWindow::construct()
 Wnd *Wnd::construct()
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   ModalMenuWindow::construct();
   control_list = 0;
   handler_slot_bc = 0;
@@ -1365,13 +1330,9 @@ Wnd *Wnd::construct()
 ModalMenuWindow *ModalMenuWindow::construct()
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   init();
-  eh_state = 0;
   wnd_handlers.construct();
   menu = 0;
   on_menu_pos_command = 0;
@@ -1529,11 +1490,8 @@ void WndBase::focus_and_raise()
 Hotspot * __thiscall hotspot_ctor(Hotspot *self)
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   self->base_construct();
   return self;
 }
@@ -1602,7 +1560,6 @@ void __cdecl ui_pump_messages(void)
 void __thiscall hotspot_dtor(Hotspot *self)
 
 {
-  i32 seh_handler;
   i8 *seh_scope;
   i32 eh_state;
   
@@ -1934,15 +1891,12 @@ i32 __cdecl popup_text_with_city(const char *filename,const char *section,i32 dl
   i32 result;
   Dialog dialog2;
   Sprite sprite;
-  i32 seh_handler;
   i8 *seh_scope;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   sprite_init(&sprite);
-  (*((char *)&eh_state + 0)) = 1;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   sprite.create_solid((2 - (uint)(ui_metrics.large_screen == 0)) * 0x40,(2 - (uint)(ui_metrics.large_screen == 0)) * 0x30
              ,0);
   dialog2.load_text(filename,section,dlg_flags);
@@ -1951,10 +1905,6 @@ i32 __cdecl popup_text_with_city(const char *filename,const char *section,i32 dl
   dialog2.add_sprite((iptr)&sprite,city,0);
   result = dialog2.show_modal(0);
   (*(u32 *)&dlg_input.help_pressed) = dialog2.result_extra;
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 004a6dc9 */ { sprite_destroy(&sprite); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a6dd2 */ { dialog2.Dialog::destruct(); }
   return result;
 }
 
@@ -1975,15 +1925,12 @@ i32 __cdecl popup_text_with_unit(const char *filename,const char *section,i32 dl
   i32 result;
   Dialog dialog2;
   Sprite sprite;
-  i32 seh_handler;
   i8 *seh_scope;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   sprite_init(&sprite);
-  (*((char *)&eh_state + 0)) = 1;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   sprite.create_solid((2 - (uint)(ui_metrics.large_screen == 0)) * 0x40,(2 - (uint)(ui_metrics.large_screen == 0)) * 0x30
              ,0);
   dialog2.load_text(filename,section,dlg_flags);
@@ -1992,10 +1939,6 @@ i32 __cdecl popup_text_with_unit(const char *filename,const char *section,i32 dl
   dialog2.add_sprite((iptr)&sprite,unit,0);
   result = dialog2.show_modal(0);
   (*(u32 *)&dlg_input.help_pressed) = dialog2.result_extra;
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 004a6f3d */ { sprite_destroy(&sprite); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004a6f46 */ { dialog2.Dialog::destruct(); }
   return result;
 }
 
@@ -2150,13 +2093,10 @@ void __cdecl menu_wonder_movies(void)
   Dialog dialog2;
   iptr wonder;
   iptr last_choice;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   last_choice = 0;
   while( true ) {
     dialog2.Dialog::reset(0x1001);
@@ -2174,8 +2114,6 @@ void __cdecl menu_wonder_movies(void)
     if (wonder < 0) break;
     wonder_show_movie(wonder);
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 004e02cb */ { dialog2.Dialog::destruct(); }
   return;
 }
 
@@ -2672,13 +2610,10 @@ void __cdecl menu_select_music(void)
   Dialog dialog2;
   int track_count;
   int tries;
-  i32 seh_handler;
   i8 *seh_scope;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   tries = 0;
   while (tries < 5) {
     tries++;
@@ -2692,8 +2627,6 @@ void __cdecl menu_select_music(void)
   }
   if (track_count == -1) {
     popup_game((const char *)&str_nopickmusicnew);
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 004e27df */ { dialog2.Dialog::destruct(); }
   }
   else {
     if (track_count == 0x18) {
@@ -2708,8 +2641,6 @@ void __cdecl menu_select_music(void)
     else {
       if (track_count != 10) {
         popup_game((const char *)&str_nopickmusicnew_2);
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 004e27df */ { dialog2.Dialog::destruct(); }
         return;
       }
       dialog2.load_game_section((const char *)&str_pickmusic,1);
@@ -2718,14 +2649,8 @@ void __cdecl menu_select_music(void)
       dialog2.set_default_choice((*(int *)&cd_music.current_track) - 2);
     }
     choice = dialog2.show_modal(0);
-    if (choice < 0) {
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 004e27df */ { dialog2.Dialog::destruct(); }
-    }
-    else {
+    if (choice >= 0) {
       music_play_track(choice + 2,1);
-      eh_state = 0xffffffff;
-      /* inlined unwind funclet 004e27df */ { dialog2.Dialog::destruct(); }
     }
   }
   return;
@@ -3782,21 +3707,14 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
   void *popup;
   GamePalette palette;
   i32 eh_prev;
-  i8 *eh_handler;
-  uint eh_state;
   
-  eh_state = 0xffffffff;
   palette.init();
-  eh_state = 0;
+  ON_SCOPE_EXIT(palette_destroy(&palette));
   sprite_init(&sprite);
-  (*((char *)&eh_state + 0)) = 1;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   if (autoplay.active == 0) {
     if (silent == 0) {
       if (city_calc.notify_enabled == 0) {
-        eh_state = eh_state & 0xffffff00;
-        /* inlined unwind funclet 004ebbad */ { sprite_destroy(&sprite); }
-        eh_state = 0xffffffff;
-        /* inlined unwind funclet 004ebbb9 */ { palette_destroy(&palette); }
         result = 0;
         return result;
       }
@@ -3805,14 +3723,12 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
       text_set_string_arg_b(0,(const char *)&cities[city].name);
     }
     self = (CityPicturePopup *)operator_new(0x798);
-    (*((char *)&eh_state + 0)) = 2;
     if (self == (CityPicturePopup *)0x0) {
       popup_new = (void *)0x0;
     }
     else {
       popup_new = (void *)self->construct();
     }
-    eh_state = (eh_state & 0xffffff00 | (byte)(1));
     popup = popup_new;
     result = civ_has_advance(civ,ADV_INDUSTRIALIZATION);
     if (result != 0) {
@@ -3853,16 +3769,8 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
     if (popup != (void *)0x0) {
       city_picture_popup_scalar_dtor(popup,1);
     }
-    eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 004ebbad */ { sprite_destroy(&sprite); }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 004ebbb9 */ { palette_destroy(&palette); }
   }
   else {
-    eh_state = eh_state & 0xffffff00;
-    /* inlined unwind funclet 004ebbad */ { sprite_destroy(&sprite); }
-    eh_state = 0xffffffff;
-    /* inlined unwind funclet 004ebbb9 */ { palette_destroy(&palette); }
     result = 0;
   }
   return result;
@@ -3949,12 +3857,9 @@ popup_text_run(iptr file,const char *section,i32 result,i32 arg4,i32 arg5,
   Dialog dialog2;
   int i;
   i32 eh_prev;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   status = dialog2.load_text_section((const char *)file,section,result,0,arg4,arg5,arg6,arg7);
   if (status == 0) {
     if (((byte)dialog2.style_flags & 4) != 0) {
@@ -3975,8 +3880,6 @@ popup_text_run(iptr file,const char *section,i32 result,i32 arg4,i32 arg5,
       }
     }
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0051d53f */ { dialog2.Dialog::destruct(); }
   return result;
 }
 
@@ -3988,19 +3891,14 @@ popup_text_with_sprite(iptr file,const char *section,i32 flags,iptr sprite,i32 z
   i32 result;
   Dialog dialog2;
   i32 eh_prev;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   dialog2.load_text((const char *)file,section,flags);
   dialog2.add_sprite(sprite,0,0);
   dialog2.set_image_zoom(zoom);
   result = dialog2.show_modal(0);
   (*(u32 *)&dlg_input.help_pressed) = dialog2.result_extra;
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0051d616 */ { dialog2.Dialog::destruct(); }
   return result;
 }
 
@@ -4014,13 +3912,10 @@ dlg_text_input(iptr file,const char *section,i32 max_len,iptr initial_text,iptr 
   Dialog dialog2;
   char *p;
   i32 eh_prev;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   result = 0;
   dialog2.Dialog::construct(0x4000);
-  eh_state = 0;
+  ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   str_clear((char *)out_text);
   status = dialog2.load_text_section((const char *)file,section,max_len,initial_text,0,0,0,1);
   if (status == 0) {
@@ -4031,8 +3926,6 @@ dlg_text_input(iptr file,const char *section,i32 max_len,iptr initial_text,iptr 
       *p = '_';
     }
   }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0051d738 */ { dialog2.Dialog::destruct(); }
   return result;
 }
 
@@ -4614,10 +4507,7 @@ void FrameWindow::layout()
   int i;
   i8 button_rect[16];
   i32 eh_prev;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   width = get_width();
   height = get_height();
   rect_set_xywh((iptr)&frame_rect,0,0,width,height);
@@ -4638,14 +4528,12 @@ void FrameWindow::layout()
     rect_set_xywh((iptr)button_rect,button_x,((int)caption_height >> 1) - (height >> 1),width,
                        height);
     this_00 = (Hotspot *)operator_new(0x40);
-    eh_state = 0;
     if (this_00 == (Hotspot *)0x0) {
       hotspot = 0;
     }
     else {
       hotspot = hotspot_ctor(this_00);
     }
-    eh_state = 0xffffffff;
     *(i32 *)(caption_button_area + i * 0x1c + 0x18) = (i32)hotspot;
     if (this == (FrameWindow *)0x0) {
       native_wnd2 = (u8 *)0x0;
@@ -4737,10 +4625,7 @@ FrameWindow *FrameWindow::construct()
   u8 *slot;
   int i;
   i32 eh_prev;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   SurfaceWindow::construct();
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 7);
   for (i = 0; i < 6; i++) {
@@ -4763,7 +4648,6 @@ void FrameWindow::destruct()
 
 {
   i32 eh_prev;
-  i8 *eh_handler;
   i32 eh_state;
   
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 7);
@@ -4911,15 +4795,12 @@ void __cdecl frame_texture_load(void)
   i8 path[128];
   Sprite sprite;
   i32 eh_prev;
-  i8 *eh_handler;
-  int eh_state;
   
-  eh_state = 0xffffffff;
   gfx_build_grey_remap();
   surface_ctor(&surface);
-  eh_state = 0;
+  ON_SCOPE_EXIT(surface_dtor(&surface));
   sprite_init(&sprite);
-  (*((char *)&eh_state + 0)) = 1;
+  ON_SCOPE_EXIT(sprite_destroy(&sprite));
   frame_texture_loaded_i32 = 1;
   str_clear((char *)path);
   str_append((char *)path,(const char *)&str_civ2_civ2art_dll_4);
@@ -4930,7 +4811,7 @@ void __cdecl frame_texture_load(void)
   }
   else {
     dll.resource_dll_load((iptr)path);
-    eh_state = (eh_state & 0xffffff00 | (byte)(2));
+    ON_SCOPE_EXIT(dll.free());
     ok = surface.load_gif_resource(999,10,0xec,(iptr)&art_palette);
     if (ok == 0) {
       MessageBoxA((HWND)0x0,str_failed_to_load_civ2art_gif_2,str_notice_15,0x40);
@@ -4943,14 +4824,8 @@ void __cdecl frame_texture_load(void)
       surface.release();
     }
     dll.dll_handle_free();
-    (*((char *)&eh_state + 0)) = 1;
-    /* inlined unwind funclet 00568348 */ { dll.free(); }
   }
   frame_texture_load_hook_nop();
-  eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 00568354 */ { sprite_destroy(&sprite); }
-  eh_state = 0xffffffff;
-  /* inlined unwind funclet 0056835d */ { surface_dtor(&surface); }
   return;
 }
 
@@ -5048,12 +4923,8 @@ GameMenu *GameMenu::construct(i32 size)
 
 {
   i32 eh_prev;
-  i8 *eh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   handle_construct();
-  eh_state = 0;
   ((MemBlock *)item_storage)->construct();
   reset(size);
   return this;
@@ -5064,7 +4935,6 @@ void __thiscall menu_dtor(GameMenu *self)
 
 {
   i32 eh_prev;
-  i8 *eh_handler;
   i32 eh_state;
   
   eh_state = 0;
@@ -8138,20 +8008,15 @@ i32 Dialog::create_window()
   i8 *title;
   i8 empty_title[4];
   i32 saved_seh;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   if (surf_wnd == 0) {
     this_00 = (SurfaceWindow *)operator_new(0x114);
-    eh_state = 0;
     if (this_00 == (SurfaceWindow *)0x0) {
       surf_wnd2 = 0;
     }
     else {
       surf_wnd2 = this_00->SurfaceWindow::construct();
     }
-    eh_state = 0xffffffff;
     surf_wnd = (uptr)surf_wnd2;
     empty_title[0] = 0;
     title = (i8 *)title_text;
@@ -8244,17 +8109,14 @@ void Dialog::create_radio_group(uint *labels)
   int item_index;
   i8 rect[16];
   DialogOption *option;
-  i32 eh_state;
 
   this_00 = (RadioGroup *)operator_new(0x50);
-  eh_state = 7;
   if (this_00 == (RadioGroup *)0x0) {
     radio_group2 = 0;
   }
   else {
     radio_group2 = this_00->construct();
   }
-  eh_state = 0xffffffff;
   radio_group = (uptr)radio_group2;
   x = columns;
   if ((int)x < 2) {
@@ -8295,11 +8157,9 @@ void Dialog::create_checkboxes()
   u32 y2;
   DialogOption *option;
   int i;
-  i32 eh_state;
 
   x = option_count;
   checkboxes2 = (u32 *)operator_new(x * 0x3c + 4);
-  eh_state = 6;
   if (checkboxes2 == (u32 *)0x0) {
     checkboxes2 = (u32 *)0x0;
   }
@@ -8309,7 +8169,6 @@ void Dialog::create_checkboxes()
                  checkbox_dtor);
     checkboxes2++;
   }
-  eh_state = 0xffffffff;
   checkboxes = (uptr)checkboxes2;
   x = list_x;
   y2 = list_y;
@@ -8467,12 +8326,10 @@ void Dialog::create_sprite_hotspots()
   u32 y2;
   DialogSprite *sprite;
   int i;
-  i32 eh_state;
 
   if ((1 < (int)sprite_count) && (option_count == 0)) {
     x = sprite_count;
     hotspots = (u32 *)operator_new(x * 0x40 + 4);
-    eh_state = 8;
     if (hotspots == (u32 *)0x0) {
       hotspots = (u32 *)0x0;
     }
@@ -8482,7 +8339,6 @@ void Dialog::create_sprite_hotspots()
                    hotspot_dtor);
       hotspots++;
     }
-    eh_state = 0xffffffff;
     sprite_hotspots = (uptr)hotspots;
     x = sprite_x;
     y2 = sprite_y;
@@ -8521,13 +8377,11 @@ void Dialog::create_edit_fields()
   u32 x;
   u32 *edits;
   int i;
-  i32 eh_state;
 
   if (edit_field_list != 0) {
     edit_field = edit_field_list;
     x = edit_count;
     edits = (u32 *)operator_new(x * 0x48 + 4);
-    eh_state = 9;
     if (edits == (u32 *)0x0) {
       edits = (u32 *)0x0;
     }
@@ -8537,7 +8391,6 @@ void Dialog::create_edit_fields()
                    edit_dtor);
       edits++;
     }
-    eh_state = 0xffffffff;
     edit_controls = (uptr)edits;
     i = 0;
     for (; edit_field != 0; edit_field = edit_field->next) {
@@ -8575,12 +8428,10 @@ void Dialog::create_buttons()
   iptr parent_198;
   iptr button_id;
   i8 *label;
-  i32 eh_state;
 
   if (std_button_count + extra_button_count != 0) {
     count = std_button_count + extra_button_count;
     buttons = (int *)operator_new(count * 0x3c + 4);
-    eh_state = 10;
     if (buttons == (int *)0x0) {
       buttons = (int *)0x0;
     }
@@ -8590,7 +8441,6 @@ void Dialog::create_buttons()
                    ctrl_dtor);
       buttons++;
     }
-    eh_state = 0xffffffff;
     button_controls = (uptr)buttons;
   }
   for (i = 0; i < (int)(std_button_count + extra_button_count); i++) {
@@ -8634,10 +8484,7 @@ void Dialog::create_controls()
   i8 unused_flag;
   uint labels[41];
   i32 saved_seh;
-  i8 *seh_handler;
-  i32 eh_state;
   
-  eh_state = 0xffffffff;
   label_count2 = 0;
   if (this != dialog_state.active) {
     if ((dlg_style.stack_depth < 0) || (0xf < dlg_style.stack_depth)) {

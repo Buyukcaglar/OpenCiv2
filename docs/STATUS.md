@@ -289,6 +289,54 @@ message by message and clock event by clock event.
   runtime's start-up glue (an end-of-data address).  The suite passes on
   both builds, a replayed game saves the same file (Ctrl+S after three
   turns), and the two-game network test with diplomacy passes.
+* **Scope-bound release** (step 6, RAII).  src/include/scoped.h:
+  `ON_SCOPE_EXIT(stmt)` (a statement run on every path out of the scope,
+  in reverse order of declaration) and `ScopedFile` (a C runtime file
+  closed at scope exit), forced inline (the builds use -fno-inline).  The
+  decompiler's inlined MSVC unwind funclets that destroyed a local object
+  on each return (`/* inlined unwind funclet ... */ { dlg.Dialog::destruct(); }`)
+  became one `ON_SCOPE_EXIT(dlg.Dialog::destruct());` after the object's
+  construction, in the block that holds it (tools/raii_locals.py; with
+  the hand conversions below, 225 guards in 169 functions: dialogs,
+  palettes, surfaces, sprites, fonts, buttons, DLL handles, arrays of
+  them), and the MSVC trylevel locals
+  (`eh_state`, `try_level`, `seh_handler` ..., written, never read) were
+  dropped (tools/raii_tidy.py, with the `if (c) { } else` blocks this
+  left).  By hand, the shared cleanups that `goto cleanup;` reached:
+  save_read_game and save_write_game (the file, the hot-seat player mask,
+  the mode adaptation after the close), rules_write_sections and
+  events_write_file (two files and the directory), the password dialog
+  (the turn timer), net_session_init, the unit menu's busy flag, the
+  sprite sheet import, the explosion animation (zoom scale, redraw flag),
+  file_read_nth_line; gotos 180 -> 112.  The game's objects keep their
+  explicit construct/destruct (no C++ constructors or destructors).  Left
+  as written: the funclets inside class destructors (members of objects
+  in static data, 201), two functions whose dialog a split-off part
+  destroys on some paths (net_client_turn_loop, net_popup_queue_show_next);
+  releases followed by more work on a single path (GetDC/ReleaseDC,
+  SelectObject restores, GlobalLock/Unlock, the wait cursor, the modal
+  loop's owner disable/enable: no function releases them on several
+  paths), releases in a different order on different paths or before a
+  long epilogue (gfx_build_grey_remap's memory handles, file_copy,
+  unit_move_dir's map lock, prefs_save_civ2dat's remove after the close),
+  and gotos to epilogues that are not releases (diplo_ai_meet_player,
+  setup_choose_tribe, the city change dialog, the parley lists, the
+  events parser's error report) or jumps out of nested loops.  Checked
+  function by function (tools/raii_check.sh): each converted file
+  compiled at -O1 with the build's -fno-inline against the previous
+  version, the control-flow graphs compared (tools/cfg_compare.py); the
+  85 functions whose graph differs (the compiler shares one copy of the
+  release between paths) make the same sequences of calls on every path
+  (tools/calls_compare.py: the two call automata accept the same words;
+  it caught the two functions above).  20 of them are not run by the
+  replays (network dialogs, council, the PBEM and network setup ...).
+  The suite passes on both builds (linux32 and the portable build, 36
+  of 36), the Windows build compiles, the replays under ASan report
+  nothing new (two reports, in code this step did not touch, that the
+  previous commit has too: events_compact frees the string pool
+  editor_text_dlg_on_ok then writes to, and a split part of
+  city_choose_production reads past a local), and the two-game network
+  test with diplomacy passes (the client under ASan).
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

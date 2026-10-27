@@ -306,14 +306,12 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
   int difficulty_choice;
   int dlg_err;
   i32 unused_10;
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   result = 1;
   pick_opponents = 0;
   accel_choice = 0;
   dlg.Dialog::construct(0x2000);
-  unwind_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   leaders_fixup_names();
   game.field_0e = 0;
   for (;;) {
@@ -329,7 +327,7 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
         difficulty_choice = dlg.show_modal(0);
         snd_play_effect(SND_MENUOK,0,0,0);
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
-        if (difficulty_choice < 0) goto cleanup_return;
+        if (difficulty_choice < 0) return result;
         game.difficulty = (byte)difficulty_choice;
         prefs.difficulty = (short)difficulty_choice;
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->show(1,6,4);
@@ -393,7 +391,7 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
       choice = dlg.show_modal(0);
       snd_play_effect(SND_MENUOK,0,0,0);
       ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
-      if (choice < 0) goto cleanup_return;
+      if (choice < 0) return result;
       prefs.rules_choice = (short)choice;
       if (choice == 0) goto leaders_setup;
       game.rules = prefs.game_rules[0];
@@ -437,7 +435,7 @@ leaders_setup:
       dlg_err = dlg.load_text((const char *)&str_game,(const char *)str_tribe,1);
       if (dlg_err != 0) {
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
-        goto cleanup_return;
+        return result;
       }
       dlg.set_columns(3);
       for (leader_i = 0; leader_i < 0x15; leader_i = leader_i + 1) {
@@ -504,7 +502,7 @@ leaders_setup:
           }
           next_step = setup_custom_tribe_dialogs(dlg);
           if (next_step == 1) goto leaders_setup;
-          if (next_step == 2) goto cleanup_return;
+          if (next_step == 2) return result;
         }
 city_style_dialog:
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->show(1,6,8);
@@ -539,15 +537,12 @@ city_style_dialog:
           }
           civ_intro_popup((int)game.player_civ);
           result = 0;
-          goto cleanup_return;
+          return result;
         }
       }
     } while( true );
   }
-cleanup_return:
   label = result;
-  unwind_state = 0xffffffff;
-  /* inlined unwind funclet 0041d3f2 */ { dlg.Dialog::destruct(); }
   return label;
 }
 
@@ -572,31 +567,18 @@ struct SpaceshipWindow::ShipSurfaces {   /* the surfaces (render_ship's locals) 
 /* Part of SpaceshipWindow::render_ship (004d17bf): constructs the surfaces. */
 void SpaceshipWindow::render_ship_construct_surfaces(ShipSurfaces &sf,int &unwind_state)
 {
-  unwind_state = 0xffffffff;
   surface_ctor((DibSurface *)sf.surf_part);
-  unwind_state = 0;
   surface_ctor((DibSurface *)sf.surf_1b9);
-  (*((char *)&unwind_state + 0)) = 1;
   surface_ctor((DibSurface *)sf.surf_1e0);
-  (*((char *)&unwind_state + 0)) = 2;
   surface_ctor((DibSurface *)sf.surf_1c7);
-  (*((char *)&unwind_state + 0)) = 3;
   surface_ctor((DibSurface *)sf.surf_1ea);
-  (*((char *)&unwind_state + 0)) = 4;
   surface_ctor((DibSurface *)sf.surf_1d6);
-  (*((char *)&unwind_state + 0)) = 5;
   surface_ctor((DibSurface *)sf.surf_1eb);
-  (*((char *)&unwind_state + 0)) = 6;
   surface_ctor((DibSurface *)sf.surf_1ba);
-  (*((char *)&unwind_state + 0)) = 7;
   surface_ctor((DibSurface *)sf.surf_1e1);
-  (*((char *)&unwind_state + 0)) = 8;
   surface_ctor((DibSurface *)sf.surf_1c8);
-  (*((char *)&unwind_state + 0)) = 9;
   surface_ctor((DibSurface *)sf.surf_1e9);
-  (*((char *)&unwind_state + 0)) = 10;
   surface_ctor((DibSurface *)sf.surf_1d7);
-  (*((char *)&unwind_state + 0)) = 0xb;
 }
 
 /* Part of SpaceshipWindow::render_ship (004d17bf): the spaceship structure rows
@@ -1824,11 +1806,9 @@ void __cdecl net_host_turn_loop(void)
   int civ;
   Dialog dlg;
   i32 unused_pad;
-  i32 unwind_state;
   
-  unwind_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
-  unwind_state = 0;
+  ON_SCOPE_EXIT(dlg.Dialog::destruct());
   net_host_begin();
   do {
     game.human_players = net.pending_human_players | game.human_players;
@@ -1943,8 +1923,6 @@ void __cdecl net_host_turn_loop(void)
   if (game_over_reason != 0) {
     game_handle_game_over();
   }
-  unwind_state = 0xffffffff;
-  /* inlined unwind funclet 005ab07f */ { dlg.Dialog::destruct(); }
   return;
 }
 
