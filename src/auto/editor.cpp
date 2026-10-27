@@ -1411,7 +1411,6 @@ i32 __cdecl tribe_editor_update_city_file(void)
   if (rc != 0) {
     rc = file_exists((const char *)city_file_name);
     if (rc == 0) {
-success:
       result = 1;
     }
     else {
@@ -1421,12 +1420,13 @@ success:
         in_file = file_open_path((const char *)&str_city_tmp_4,(iptr)&str_rt_5);
         out_file = file_open_path((const char *)city_file_name,(iptr)&str_wt_4);
         if ((in_file != (FILE *)0x0) && (out_file != (FILE *)0x0)) {
-          do {
-            while( true ) {
-              read_ptr = _fgets(line,0x100,in_file);
-              if (read_ptr == (char *)0x0) goto success;
-              if ((line[0] != '@') || (rc = __strnicmp((line + 1),((i8 *)&city_file_stop_str),4), rc == 0))
+          for (;;) {
+            read_ptr = _fgets(line,0x100,in_file);
+            if (read_ptr == (char *)0x0) {
+              result = 1;
               break;
+            }
+            if ((line[0] == '@') && (rc = __strnicmp((line + 1),((i8 *)&city_file_stop_str),4), rc != 0)) {
               for (leader = 0; leader < 0x15; leader++) {
                 civ = 1;
                 while ((civ < 8 && (civs[civ].tribe != leader))) {
@@ -1450,21 +1450,18 @@ success:
                   _sprintf(line,str_c_s,0x40,
                            editor_text_dlg_wnd_block.editor_item_name_recs[leader + 0x2a]);
                   __strupr(line);
-                  rc = _fputs(line,out_file);
-                  if (rc == -1) goto cleanup;
                   break;
                 }
               }
-              if ((leader == 0x15) && (rc = _fputs(line,out_file), rc == -1))
-              goto cleanup;
             }
+            /* the line as read, or the tribe's line renamed */
             rc = _fputs(line,out_file);
-          } while (rc != -1);
+            if (rc == -1) break;
+          }
         }
       }
     }
   }
-cleanup:
   if (in_file != (FILE *)0x0) {
     _fclose(in_file);
   }
@@ -1646,15 +1643,7 @@ void __cdecl editor_text_dlg_on_ok(void)
     editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
   }
   events_compact();
-  line_idx = 0;
-  do {
-    if (0x13 < line_idx) {
-finish_ok:
-      editor_font_block.editor_text_result = 1;
-      editor_font_block.editor_text_active = 0;
-      ((ModalMenuWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner))->end_modal_loop();
-      return;
-    }
+  for (line_idx = 0; line_idx <= 0x13; line_idx++) {
     has_line = ((EditControl *)((i8 *)&editor_text_edit_block.editor_text_edit))->get_line(line_idx,(char *)line_buf,0x100);
     if (has_line == 0) {
       editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
@@ -1665,12 +1654,15 @@ finish_ok:
       editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = line_copy;
       if (editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] == 0) {
         editor_text_dlg_wnd_block.editor_text_lines_out[line_idx] = 0;
-        goto finish_ok;
+        break;
       }
       crt_strcpy((char *)((void *)editor_text_dlg_wnd_block.editor_text_lines_out[line_idx]),line_buf);
     }
-    line_idx++;
-  } while( true );
+  }
+  editor_font_block.editor_text_result = 1;
+  editor_font_block.editor_text_active = 0;
+  ((ModalMenuWindow *)((i8 *)&editor_text_dlg_wnd_block.editor_text_dlg_inner))->end_modal_loop();
+  return;
 }
 
 /* 004ce2f3 auto */
@@ -1783,9 +1775,9 @@ uint __cdecl editor_check_city_name(const char *name2)
   
   rc = text_open_section((const char *)&str_city_4,0);
   if (rc == 0) {
-    do {
+    for (;;) {
       rc = (int)(text_read_line(1));
-      if (rc == 0) goto show_error_dialog;
+      if (rc == 0) break;
       name_len = _strlen((char *)name2);
       line_len = _strlen(((i8 *)&map_views_block.text_buffer));
       if (line_len < name_len) {
@@ -1795,24 +1787,24 @@ uint __cdecl editor_check_city_name(const char *name2)
         cmp_len = _strlen(((i8 *)&map_views_block.text_buffer));
       }
       rc = __strnicmp((char *)name2,((i8 *)&map_views_block.text_buffer),cmp_len);
-    } while (rc != 0);
-    text_close_file();
-    result = 1;
+      if (rc == 0) {
+        text_close_file();
+        result = 1;
+        return result;
+      }
+    }
+  }
+  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
+    parent_wnd2 = 0;
   }
   else {
-show_error_dialog:
-    if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
-      parent_wnd2 = 0;
-    }
-    else {
-      parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
-    }
-    dlg_set_parent_window(parent_wnd2);
-    text_set_string_arg(0,name2);
-    rc = popup_debug_text((const char *)&str_nocity);
-    dlg_set_parent_window(0);
-    result = (uint)(rc == 0);
+    parent_wnd2 = (iptr)&editor_text_dlg_wnd_block.active_editor_wnd->window;
   }
+  dlg_set_parent_window(parent_wnd2);
+  text_set_string_arg(0,name2);
+  rc = popup_debug_text((const char *)&str_nocity);
+  dlg_set_parent_window(0);
+  result = (uint)(rc == 0);
   return result;
 }
 

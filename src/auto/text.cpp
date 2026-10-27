@@ -882,7 +882,10 @@ int __cdecl text_open_file_section(const char *filename,const char *section)
       section_offset = text_section_index_lookup((const char *)name2,(const char *)section_tag);
     }
     __chdir(saved_cwd);
-    if (text_file_handle == (FILE *)0x0) goto close_if_failed;
+    if (text_file_handle == (FILE *)0x0) {
+      text_close_file();
+      return result;
+    }
   }
   if (section == 0) {
     result = 0;
@@ -894,7 +897,10 @@ int __cdecl text_open_file_section(const char *filename,const char *section)
     found = false;
     while (!found) {
       if ((CRT_FEOF(text_file_handle)) != 0) {
-        if (!allow_rewind) goto close_if_failed;
+        if (!allow_rewind) {
+          text_close_file();
+          return result;
+        }
         allow_rewind = false;
         _rewind(text_file_handle);
       }
@@ -912,7 +918,6 @@ int __cdecl text_open_file_section(const char *filename,const char *section)
     (*(i8 * *)&map_views_block.text_line_cursor) = ((i8 *)&map_views_block.text_buffer) + len;
     result = 0;
   }
-close_if_failed:
   if (result != 0) {
     text_close_file();
   }
@@ -1589,19 +1594,7 @@ i8 * __cdecl file_find_fallback_drive(const char *filename)
   drive_mask = GetLogicalDrives();
   GetLogicalDriveStringsA(0x100,drive_strings);
   drive_root = drive_strings;
-  drive = 0;
-  do {
-    if (0x19 < drive) {
-restore_error_mode:
-      SetErrorMode(uMode);
-      if (setup_picwnd_block.fallback_drive_root[0] == '\0') {
-        result = (i8 *)0x0;
-      }
-      else {
-        result = ((i8 *)&setup_picwnd_block.fallback_drive_root);
-      }
-      return result;
-    }
+  for (drive = 0; drive <= 0x19; drive++) {
     drive_bit = 1 << ((byte)drive & 0x1f);
     if ((drive_mask & drive_bit) != 0) {
       drive_type = GetDriveTypeA(drive_root);
@@ -1614,14 +1607,21 @@ restore_error_mode:
         setup_picwnd_block.fallback_drive_root[0] = *drive_root;
         setup_picwnd_block.fallback_drive_root_end = 0;
         str_append((char *)&setup_picwnd_block.fallback_drive_root,(const char *)&str_empty_173);
-        goto restore_error_mode;
+        break;
       }
       for (; *drive_root != '\0'; drive_root++) {
       }
       drive_root++;
     }
-    drive++;
-  } while( true );
+  }
+  SetErrorMode(uMode);
+  if (setup_picwnd_block.fallback_drive_root[0] == '\0') {
+    result = (i8 *)0x0;
+  }
+  else {
+    result = ((i8 *)&setup_picwnd_block.fallback_drive_root);
+  }
+  return result;
 }
 
 /* 00564713 auto */
@@ -1771,7 +1771,10 @@ i32 __cdecl file_read_nth_line(iptr dest,const char *filename,int line_num)
   if (_File != (FILE *)0x0) {
     for (i = 1; i <= line_num; i++) {
       if (((CRT_FEOF(_File)) != 0) ||
-         (line = _fgets(line_buf,0x4c,_File), line == (char *)0x0)) goto close_file;
+         (line = _fgets(line_buf,0x4c,_File), line == (char *)0x0)) {
+        _fclose(_File);
+        return result;
+      }
     }
     for (i = 0; len = _strlen(line_buf), i < (int)len; i++) {
       if (line_buf[i] < ' ') {
@@ -1781,7 +1784,6 @@ i32 __cdecl file_read_nth_line(iptr dest,const char *filename,int line_num)
     crt_strcpy((char *)((void *)dest),(const char *)((void *)line_buf));
     result = 0;
   }
-close_file:
   if (_File != (FILE *)0x0) {
     _fclose(_File);
   }

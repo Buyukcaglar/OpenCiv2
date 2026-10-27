@@ -189,6 +189,20 @@ message by message and clock event by clock event.
   choice, stack slots or the order of independent instructions or
   comparisons (C++17 evaluates `obj` in `obj->f(args)` before the
   arguments); and the suite after each subsystem.
+* **Structured control flow** (step 6).  The decompiler's gotos (836) are
+  loops, if/else, break/continue and early returns; 327 remain, each a
+  forward jump to a function's shared cleanup exit (most: the RAII step
+  removes them), a jump out of nested loops, or a jump between distant
+  sections of the largest functions (ai_unit_choose_orders' shared tails:
+  the function-splitting step).  tools/cxx_gotos.py did the safe patterns
+  (a third), the rest was rewritten by hand.  Checked function by function
+  with tools/cfg_compare.py (cfg_check.sh): each function's control-flow
+  graph walked against the previous version's, at -O0 and then -O2; the
+  functions that still differ (duplicated tests, folded conditions,
+  cleanup copied into early returns) were reviewed by hand twice, those
+  replays run by the suite too.  Found on the way: diplo_count_border_intruders
+  examines only the first tile with an intruder per city (the original
+  does the same; kept, commented).
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

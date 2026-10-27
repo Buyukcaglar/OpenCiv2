@@ -1478,17 +1478,17 @@ void __cdecl ctrl_parse_hotkey(iptr ctrl,const char *text)
   
   cursor = (char *)text;
   *(i32 *)(ctrl + 0x28) = 0;
-  while( true ) {
-    if (*cursor == '\0') goto store_hotkey;
-    if (*cursor == '~') break;
+  for (; *cursor != '\0'; cursor++) {
+    if (*cursor == '~') {
+      /* remove the '~' */
+      for (pos = *(uptr *)(ctrl + 0x28); len = _strlen((char *)text), pos < len;
+          pos = pos + 1) {
+        *(i8 *)(pos + text) = *(i8 *)(pos + 1 + text);
+      }
+      break;
+    }
     *(int *)(ctrl + 0x28) = *(int *)(ctrl + 0x28) + 1;
-    cursor++;
   }
-  for (pos = *(uptr *)(ctrl + 0x28); len = _strlen((char *)text), pos < len;
-      pos = pos + 1) {
-    *(i8 *)(pos + text) = *(i8 *)(pos + 1 + text);
-  }
-store_hotkey:
   len = _strlen((char *)text);
   if (*(uint *)(ctrl + 0x28) < len) {
     hotkey[0] = *(char *)(*(int *)(ctrl + 0x28) + text);
@@ -2583,7 +2583,6 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
         wnd_redraw_client(hwnd);
         return 0;
       }
-default_proc:
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
       return result;
     }
@@ -2643,7 +2642,10 @@ default_proc:
     }
   }
   else {
-    if (msg != 0x202) goto default_proc;
+    if (msg != 0x202) {
+      result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
+      return result;
+    }
     value = checkbox->checkbox_is_enabled();
     if (value != 0) {
       ReleaseCapture();
@@ -3069,22 +3071,21 @@ LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM 
       return result;
     }
   }
-  else if (msg < 0x202) {
-    if (msg == 0x201) {
-click_focus_parent:
-      long_index = 0;
+  else if ((msg == 0x201) || (msg == 0x204)) {
+    long_index = 0;
+    parent_hwnd = GetParent(hwnd);
+    this_00 = (WndBase *)GetWindowLongA(parent_hwnd,long_index);
+    window = this_00->get_window();
+    if ((window->flags_bytes[1] & 2) != 0) {
       parent_hwnd = GetParent(hwnd);
-      this_00 = (WndBase *)GetWindowLongA(parent_hwnd,long_index);
-      window = this_00->get_window();
-      if ((window->flags_bytes[1] & 2) != 0) {
-        parent_hwnd = GetParent(hwnd);
-        SetFocus(parent_hwnd);
-        parent_hwnd = GetParent(hwnd);
-        BringWindowToTop(parent_hwnd);
-      }
-      result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
-      return result;
+      SetFocus(parent_hwnd);
+      parent_hwnd = GetParent(hwnd);
+      BringWindowToTop(parent_hwnd);
     }
+    result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
+    return result;
+  }
+  else if (msg < 0x202) {
     if (msg == 0x100) {
       if (((wparam != 9) && (wparam != 0xd)) && (wparam != 0x1b)) {
         result = CallWindowProcA(lpPrevWndFunc,hwnd,0x100,wparam,lparam);
@@ -3119,7 +3120,6 @@ click_focus_parent:
       return result;
     }
   }
-  else if (msg == 0x204) goto click_focus_parent;
   result = CallWindowProcA(lpPrevWndFunc,hwnd,msg,wparam,lparam);
   return result;
 }
@@ -3945,20 +3945,19 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     crt_strcpy(((RadioItem *)items)[index].label,(const char *)((void *)label));
     cursor = ((RadioItem *)items)[index].label;
     ((RadioItem *)items)[index].hotkey_pos = 0;
-    while( true ) {
-      if (*cursor == '\0') goto store_hotkey;
-      if (*cursor == '~') break;
+    for (; *cursor != '\0'; cursor++) {
+      if (*cursor == '~') {
+        for (index = (uint)((RadioItem *)items)[index].hotkey_pos;
+            len = _strlen(((RadioItem *)items)[index].label), index < len;
+            index = index + 1) {
+          *(i8 *)(index * 0xa5 + 0x1c + items) =
+               *(i8 *)(index * 0xa5 + 0x1d + items);
+        }
+        break;
+      }
       hotkey_pos = &((RadioItem *)items)[index].hotkey_pos;
       *hotkey_pos = *hotkey_pos + 1;
-      cursor++;
     }
-    for (index = (uint)((RadioItem *)items)[index].hotkey_pos;
-        len = _strlen(((RadioItem *)items)[index].label), index < len;
-        index = index + 1) {
-      *(i8 *)(index * 0xa5 + 0x1c + items) =
-           *(i8 *)(index * 0xa5 + 0x1d + items);
-    }
-store_hotkey:
     len = _strlen(((RadioItem *)items)[index].label);
     if ((uint)((RadioItem *)items)[index].hotkey_pos < len) {
       hotkey[0] = ((RadioItem *)items)[index].label[((RadioItem *)items)[index].hotkey_pos];
@@ -4262,7 +4261,8 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
         wnd_redraw_client(hwnd);
         return 0;
       }
-      goto default_proc;
+      result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
+      return result;
     }
     nav_wnd = (Wnd *)group->get_parent();
     nav_enabled = nav_wnd->keyboard_nav_enabled();
@@ -4306,7 +4306,10 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       }
     }
     else {
-      if (msg != 0x100) goto default_proc;
+      if (msg != 0x100) {
+        result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
+        return result;
+      }
       if (wparam == 9) {
         hwnd_tmp = GetParent(hwnd);
         SendMessageA(hwnd_tmp,msg,wparam,lparam);
@@ -4455,7 +4458,6 @@ i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lpar
       radio_rbutton_captured = 0;
       break;
     default:
-default_proc:
       result = ctrl_default_wndproc(hwnd,msg,wparam,lparam);
       return result;
     }

@@ -2076,92 +2076,92 @@ void __cdecl map_window_key(int cmd)
       }
     }
   }
-  if (((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0'))
-  goto dispatch_move_dir;
-  if (cmd < 0x332) {
-    if (cmd == 0x331) {
-      tech_editor_run();
-      goto dispatch_move_dir;
+  if (((game.game_options & 0x8000) != 0) && (game.multiplayer == '\0')) {
+    if (cmd < 0x332) {
+      if (cmd == 0x331) {
+        tech_editor_run();
+      }
+      else {
+        switch(cmd) {
+        case 0x1b0:
+          cheat_create_unit();
+          break;
+        case 0x1b1:
+          cheat_reveal_map();
+          break;
+        case 0x1b2:
+          cheat_set_human_player();
+          break;
+        case 0x1b3:
+          cheat_set_game_year();
+          break;
+        case 0x1b4:
+          cheat_kill_civ();
+          break;
+        case 0x1b5:
+          cheat_tech_advance();
+          break;
+        case 0x1b6:
+          cheat_force_government();
+          break;
+        case 0x1b7:
+          cheat_terrain_saved_bits = 0xffffffff;
+          cheat_change_terrain();
+          break;
+        case 0x1b8:
+          cheat_change_money();
+        }
+      }
     }
-    switch(cmd) {
-    case 0x1b0:
-      cheat_create_unit();
-      break;
-    case 0x1b1:
-      cheat_reveal_map();
-      break;
-    case 0x1b2:
-      cheat_set_human_player();
-      break;
-    case 0x1b3:
-      cheat_set_game_year();
-      break;
-    case 0x1b4:
-      cheat_kill_civ();
-      break;
-    case 0x1b5:
-      cheat_tech_advance();
-      break;
-    case 0x1b6:
-      cheat_force_government();
-      break;
-    case 0x1b7:
-      cheat_terrain_saved_bits = 0xffffffff;
-      goto cheat_terrain_change;
-    case 0x1b8:
-      cheat_change_money();
+    else {
+      switch(cmd) {
+      case 0x332:
+        city_editor_run();
+        break;
+      case 0x333:
+        cosmic_editor_run();
+        break;
+      case 0x334:
+        impr_editor_run();
+        break;
+      case 0x335:
+        terrain_editor_open();
+        break;
+      case 0x336:
+        tribe_editor_run();
+        break;
+      case 0x337:
+        unit_editor_run();
+        break;
+      case 0x338:
+        events_editor_open();
+        break;
+      case 0x343:
+        cheat_edit_city();
+        break;
+      case 0x344:
+        cheat_destroy_units_at_cursor();
+        break;
+      case 0x34b:
+        cheat_edit_king();
+        break;
+      case 0x350:
+        cheat_scenario_params();
+        break;
+      case 0x353:
+        cheat_save_as_scenario();
+        break;
+      case 0x355:
+        cheat_edit_unit();
+        break;
+      case 0x3b5:
+        cheat_edit_technologies();
+        break;
+      case 0x3b7:
+        cheat_change_terrain();
+      }
     }
   }
-  else {
-    switch(cmd) {
-    case 0x332:
-      city_editor_run();
-      break;
-    case 0x333:
-      cosmic_editor_run();
-      break;
-    case 0x334:
-      impr_editor_run();
-      break;
-    case 0x335:
-      terrain_editor_open();
-      break;
-    case 0x336:
-      tribe_editor_run();
-      break;
-    case 0x337:
-      unit_editor_run();
-      break;
-    case 0x338:
-      events_editor_open();
-      break;
-    case 0x343:
-      cheat_edit_city();
-      break;
-    case 0x344:
-      cheat_destroy_units_at_cursor();
-      break;
-    case 0x34b:
-      cheat_edit_king();
-      break;
-    case 0x350:
-      cheat_scenario_params();
-      break;
-    case 0x353:
-      cheat_save_as_scenario();
-      break;
-    case 0x355:
-      cheat_edit_unit();
-      break;
-    case 0x3b5:
-      cheat_edit_technologies();
-      break;
-    case 0x3b7:
-cheat_terrain_change:
-      cheat_change_terrain();
-    }
-  }
-dispatch_move_dir:
   switch(cmd) {
   case 0xa1:
   case 199:
@@ -3510,31 +3510,32 @@ i32 __cdecl map_road_connection(iptr civ,int x,int y,int x2,int y2)
       blocked = true;
       while( true ) {
         dir = map_path_next_dir(x3,y3,99);
-        if ((dir < 0) || (dir == 8)) goto finish_road_check;
+        if ((dir < 0) || (dir == 8)) break;
         x3 = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[dir] + x3);
         y3 += (((i8 *)&dir_dy_table_block.dir_dy_table))[dir];
         dir = map_in_bounds(x3,y3);
-        if (dir == 0) goto finish_road_check;
-        if ((x3 == x2) && (y3 == y2)) break;
+        if (dir == 0) break;
+        if ((x3 == x2) && (y3 == y2)) {
+          blocked = false;
+          break;
+        }
         dir = tile_city_owner(x3,y3);
         if (civ == dir) {
           blocked = false;
-          goto finish_road_check;
+          break;
         }
         if ((((-1 < dir) && ((*(byte *)&civs[civ].treaties[dir] & 8) == 0)) ||
             ((dir = tile_city_or_unit_owner(x3,y3), 0 < dir &&
              ((civ != dir && ((*(byte *)&civs[civ].treaties[dir] & 8) == 0))))
             )) || (improvements2 = tile_improvements(x3,y3), (improvements2 & 0x10) == 0))
-        goto finish_road_check;
+        break;
         improvements2 = tile_improvements(x3,y3);
         if ((improvements2 & 0x20) == 0) {
           all_railroad = false;
         }
         steps++;
-        if (0x32 < steps) goto finish_road_check;
+        if (0x32 < steps) break;
       }
-      blocked = false;
-finish_road_check:
       path_road_planning = 0;
       path_roads_only = 0;
       if (blocked) {
@@ -3750,7 +3751,7 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
               new_cost = cost;
               if (-1 < path_owner_civ) {
                 civ = tile_city_or_unit_owner(x2,y2);
-                if ((-1 < civ) && (path_owner_civ != civ)) goto next_neighbor;
+                if ((-1 < civ) && (path_owner_civ != civ)) continue;
                 if ((path_owner_civ == civ) &&
                    ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 &&
                      (impr_bits = tile_improvements(x2,y2), ((byte)impr_bits & 0x43) == 1)) &&
@@ -3776,7 +3777,7 @@ iptr __cdecl map_path_next_dir(int x,int y,int max_cost)
                   new_cost += 4;
                 }
                 else {
-                  if (path_roads_only != 0) goto next_neighbor;
+                  if (path_roads_only != 0) continue;
                   if ((((cur_tile_flags & 0x80) != 0) &&
                       (tile = (byte *)tile_at(x2,y2), (*tile & 0x80) != 0)) &&
                      (check = map_dx_wrapped(y3,x2), check == 1)) {
@@ -3822,7 +3823,6 @@ apply_road_bonus:
               }
             }
           }
-next_neighbor: ;
         }
       }
       map_views_block.path_result_cost = nb_x;
@@ -3897,7 +3897,7 @@ flood_done:
                   step_cost = 4;
                 }
                 else {
-                  if (path_roads_only != 0) goto next_neighbor_back;
+                  if (path_roads_only != 0) continue;
                   if ((((cur_tile_flags & 0x80) != 0) &&
                       (tile = (byte *)tile_at(x3,y3), (*tile & 0x80) != 0)) &&
                      (y2 = map_dx_wrapped(x,x3), y2 == 1)) {
@@ -3961,7 +3961,6 @@ apply_step_road_bonus:
           }
         }
       }
-next_neighbor_back: ;
     }
   }
   if (best_dir < 0) {

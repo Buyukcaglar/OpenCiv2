@@ -70,18 +70,18 @@ void __thiscall pedia_load_description(void *self, int topic2)
     remaining = topic2 + 1;
     marker[2] = 0;
     section_missing = true;
-    do {
-      while( true ) {
-        if (remaining == 0) goto read_text_lines;
-        text_read_line(1);
-        _strncpy(marker,((i8 *)&map_views_block.text_buffer),2);
-        found = _strcmp(marker,((i8 *)&pedia_desc_marker_str));
-        if (found != 0) break;
+    while (remaining != 0) {
+      text_read_line(1);
+      _strncpy(marker,((i8 *)&map_views_block.text_buffer),2);
+      found = _strcmp(marker,((i8 *)&pedia_desc_marker_str));
+      if (found == 0) {
         remaining = remaining + -1;
       }
-    } while (marker[0] != '@');
-    section_missing = false;
-read_text_lines:
+      else if (marker[0] == '@') {
+        section_missing = false;
+        break;
+      }
+    }
     /* (port) the description translated (lang.h): its lines as the file's */
     if (section_missing &&
         (translated = lang_description((const char *)section_name,(const char *)map_views_block.text_buffer + 2)) != 0) {
@@ -96,20 +96,18 @@ read_text_lines:
           }
         }
       }
-      goto set_control_text;
     }
-    if (section_missing) {
+    else if (section_missing) {
       str_clear((char *)desc_text);
-      do {
-        do {
-          if (!section_missing) {
-            text_close_file();
-            goto set_control_text;
-          }
-          if (CRT_FEOF(text_file_handle) != 0) goto set_control_text;
-          line = _fgets(((i8 *)&map_views_block.text_buffer),0x800,text_file_handle);
-          if ((line == (char *)0x0) || (map_views_block.text_buffer[0] == '@')) goto set_control_text;
-        } while (map_views_block.text_buffer[0] == ';');
+      for (;;) {
+        if (!section_missing) {
+          text_close_file();
+          break;
+        }
+        if (CRT_FEOF(text_file_handle) != 0) break;
+        line = _fgets(((i8 *)&map_views_block.text_buffer),0x800,text_file_handle);
+        if ((line == (char *)0x0) || (map_views_block.text_buffer[0] == '@')) break;
+        if (map_views_block.text_buffer[0] == ';') continue;
         newline_ptr = STRRCHR(((i8 *)&map_views_block.text_buffer),10);
         if (newline_ptr != (char *)0x0) {
           *newline_ptr = '\0';
@@ -123,13 +121,13 @@ read_text_lines:
         }
         crt_strcat(desc_text,((i8 *)&map_views_block.text_buffer));
         cur_len = _strlen(desc_text);
-      } while (cur_len != 0xfff);
+        if (cur_len == 0xfff) break;
+      }
     }
     else {
       text_append_label(0xe);
       crt_strcpy(desc_text,((i8 *)&map_views_block.text_buffer));
     }
-set_control_text:
     ((Control *)((iptr)obj_addr + 0x1a98))->set_text((const char *)desc_text);
     ((Control *)((iptr)obj_addr + 0x1a98))->show_and_redraw();
   }
@@ -569,10 +567,8 @@ int __cdecl save_read_game(char *path)
   if (result == screen_h) {
     result = rect_height((RECT *)&saved_screen_rect_block.saved_screen_rect);
     screen_h = rect_height((RECT *)&caption_small_font_block.screen_rect);
-    if ((result != screen_h) || (is_scenario != 0)) goto invalid_layout;
   }
-  else {
-invalid_layout:
+  if ((result != screen_h) || (is_scenario != 0)) {
     destroyed_civ_count_block.saved_layout_valid = 0;
   }
   status = 0;
@@ -861,23 +857,16 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
       }
     }
   }
-  else {
-    if (msg < 0xa5) {
-      if ((msg != 0xa4) && (msg != 0xa1)) goto default_wndproc;
-    }
-    else {
-      if (msg == 0x112) {
-        if ((wparam == 0xf100) || (wparam == 0xf090)) {
-          tmp_wnd = (void *)GetWindowLongA(hwnd,0);
-          wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
-          if ((((NativeWindow *)wnd_data)->flags_bytes[0] & 0x20) == 0) {
-            return 0;
-          }
-        }
-        goto default_wndproc;
+  else if (msg == 0x112) {
+    if ((wparam == 0xf100) || (wparam == 0xf090)) {
+      tmp_wnd = (void *)GetWindowLongA(hwnd,0);
+      wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
+      if ((((NativeWindow *)wnd_data)->flags_bytes[0] & 0x20) == 0) {
+        return 0;
       }
-      if ((msg != 0x201) && (msg != 0x204)) goto default_wndproc;
     }
+  }
+  else if ((msg == 0xa4) || (msg == 0xa1) || (msg == 0x201) || (msg == 0x204)) {
     tmp_wnd = (void *)GetWindowLongA(hwnd,0);
     wnd_data = (int)((WndBase *)tmp_wnd)->get_window();
     if ((((NativeWindow *)wnd_data)->flags_bytes[1] & 2) != 0) {
@@ -885,7 +874,6 @@ LRESULT __stdcall wnd_base_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
       BringWindowToTop(hwnd);
     }
   }
-default_wndproc:
   hit = DefWindowProcA(hwnd,msg,wparam,lparam);
   if (msg == 0x84) {
     tmp_wnd = (void *)GetWindowLongA(hwnd,0);
@@ -1136,37 +1124,41 @@ LRESULT __stdcall wnd_frame_wndproc(HWND hwnd,uint msg,uint wparam,HWND lparam)
   else {
     if (msg < 0x116) {
       if (msg < 0x114) {
-        if (msg != 0x111) goto forward_to_child;
-        notify_code = wparam >> 0x10;
-        if (notify_code < 0x301) {
-          if (notify_code == 0x300) {
+        if (msg == 0x111) {
+          notify_code = wparam >> 0x10;
+          if (notify_code < 0x301) {
+            if (notify_code == 0x300) {
+              notify_hwnd = lparam;
+              class_bytes = GetClassLongA(lparam,-0x12);
+              edit_offset = class_bytes - 4;
+              edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
+              ((EditControl *)edit_obj)->fire_change_callback();
+            }
+            else if (notify_code == 1) {
+              ctrl_hwnd = lparam;
+              SendMessageA(lparam,0x4c8,wparam,(LPARAM)lparam);
+            }
+            else if (notify_code == 2) {
+              ctrl_hwnd = lparam;
+              SendMessageA(lparam,0x4c8,wparam,(LPARAM)lparam);
+            }
+            else {
+              result = wnd_child_wndproc(hwnd,0x111,wparam,lparam);
+              return result;
+            }
+          }
+          else if (notify_code == 0x501) {
             notify_hwnd = lparam;
             class_bytes = GetClassLongA(lparam,-0x12);
             edit_offset = class_bytes - 4;
             edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
-            ((EditControl *)edit_obj)->fire_change_callback();
-          }
-          else if (notify_code == 1) {
-            ctrl_hwnd = lparam;
-            SendMessageA(lparam,0x4c8,wparam,(LPARAM)lparam);
+            ((EditControl *)edit_obj)->fire_maxtext_callback();
           }
           else {
-            if (notify_code != 2) goto forward_command;
-            ctrl_hwnd = lparam;
-            SendMessageA(lparam,0x4c8,wparam,(LPARAM)lparam);
-          }
-        }
-        else {
-          if (notify_code != 0x501) {
-forward_command:
             result = wnd_child_wndproc(hwnd,0x111,wparam,lparam);
             return result;
           }
-          notify_hwnd = lparam;
-          class_bytes = GetClassLongA(lparam,-0x12);
-          edit_offset = class_bytes - 4;
-          edit_obj = GetWindowLongA(notify_hwnd,edit_offset);
-          ((EditControl *)edit_obj)->fire_maxtext_callback();
+          return 0;
         }
       }
       else {
@@ -1178,10 +1170,10 @@ forward_command:
         }
         scroll_hwnd = lparam;
         scrollbar_hwnd_handle_msg(lparam,msg,wparam,lparam);
+        return 0;
       }
-      return 0;
     }
-    if (msg == 0x216) {
+    else if (msg == 0x216) {
       wnd2 = (void *)GetWindowLongA(hwnd,0);
       wnd_data = ((WndBase *)wnd2)->get_window();
       if ((WIN_STYLE(wnd2) & 0x200) != 0) {
@@ -1206,7 +1198,6 @@ forward_command:
       return result;
     }
   }
-forward_to_child:
   result = wnd_child_wndproc(hwnd,msg,wparam,lparam);
   return result;
 }
@@ -1484,172 +1475,175 @@ uint __cdecl unit_enter_hut(int unit_id)
        (civs[civ].continent_cities[tmp] == '\0')) {
       outcome = 0;
     }
-hut_outcome_dispatch:
-    switch(outcome) {
-    case 0:
-      if (advisor_window_block.nearest_city_dist < 4) {
-        outcome = 1;
-        goto hut_outcome_dispatch;
-      }
-      if ((civs[civ].num_cities == 0) && (game.turn < 0x32)) {
-        settlers = 0;
-        for (unit_id = 0; unit_id < game.num_units; unit_id = unit_id + 1) {
-          if (((units[unit_id].id != 0) &&
-              (unit_types[(uint)units[unit_id].type].role == '\x05')) &&
-             (units[unit_id].home_city == -1)) {
-            settlers = settlers + 1;
-          }
-        }
-        if (1 < settlers) {
+    for (;;) {    /* a case may redirect to another outcome (continue) */
+      switch(outcome) {
+      case 0:
+        if (advisor_window_block.nearest_city_dist < 4) {
           outcome = 1;
-          goto hut_outcome_dispatch;
+          continue;
         }
-      }
-      tmp = tile_owner_or_fertility(x,y);
-      if (0xb < tmp) {
-        if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-          popup_game_with_sprite((const char *)str_surprisetribe,(iptr)&popup_info_icon_sprite,0);
-        }
-        tmp = city_create(x,y,civ);
-        if (999 < game.year) {
-          check = _rand();
-          owner_byte = (byte)(check >> 0x1f);
-          cities[tmp].size =
-               ((((byte)check ^ owner_byte) - owner_byte & 3 ^ owner_byte) - owner_byte) + '\x01';
-          city_set_improvement(tmp,4,1);
-          civ = _rand();
-          rnd = (int)civ >> 0x1f;
-          if (((civ ^ rnd) - rnd & 1 ^ rnd) == rnd) {
-            city_set_improvement(tmp,5,1);
+        if ((civs[civ].num_cities == 0) && (game.turn < 0x32)) {
+          settlers = 0;
+          for (unit_id = 0; unit_id < game.num_units; unit_id = unit_id + 1) {
+            if (((units[unit_id].id != 0) &&
+                (unit_types[(uint)units[unit_id].type].role == '\x05')) &&
+               (units[unit_id].home_city == -1)) {
+              settlers = settlers + 1;
+            }
           }
-          check = _rand();
-          if (check % 3 == 0) {
-            city_set_improvement(tmp,3,1);
-          }
-          civ = _rand();
-          rnd = (int)civ >> 0x1f;
-          if (((civ ^ rnd) - rnd & 3 ^ rnd) == rnd) {
-            city_set_improvement(tmp,6,1);
+          if (1 < settlers) {
+            outcome = 1;
+            continue;
           }
         }
-        if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
-          return 0;
-        }
-        map_redraw_neighbors_all_views(x,y);
-        civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
-        if (tmp < 0) {
+        tmp = tile_owner_or_fertility(x,y);
+        if (0xb < tmp) {
+          if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+            popup_game_with_sprite((const char *)str_surprisetribe,(iptr)&popup_info_icon_sprite,0);
+          }
+          tmp = city_create(x,y,civ);
+          if (999 < game.year) {
+            check = _rand();
+            owner_byte = (byte)(check >> 0x1f);
+            cities[tmp].size =
+                 ((((byte)check ^ owner_byte) - owner_byte & 3 ^ owner_byte) - owner_byte) + '\x01';
+            city_set_improvement(tmp,4,1);
+            civ = _rand();
+            rnd = (int)civ >> 0x1f;
+            if (((civ ^ rnd) - rnd & 1 ^ rnd) == rnd) {
+              city_set_improvement(tmp,5,1);
+            }
+            check = _rand();
+            if (check % 3 == 0) {
+              city_set_improvement(tmp,3,1);
+            }
+            civ = _rand();
+            rnd = (int)civ >> 0x1f;
+            if (((civ ^ rnd) - rnd & 3 ^ rnd) == rnd) {
+              city_set_improvement(tmp,6,1);
+            }
+          }
+          if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
+            return 0;
+          }
+          map_redraw_neighbors_all_views(x,y);
+          civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+          if (tmp < 0) {
+            return civ;
+          }
+          ((CityWindow *)((i8 *)&city_window_block.city_window))->open(tmp);   /* void: the caller ignores our result */
           return civ;
         }
-        ((CityWindow *)((i8 *)&city_window_block.city_window))->open(tmp);   /* void: the caller ignores our result */
-        return civ;
-      }
-      outcome = 5;
-      goto hut_outcome_dispatch;
-    case 1:
-      if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-        popup_game_with_sprite((const char *)str_surprisemercs,(iptr)&popup_info_icon_sprite,0);
-      }
-      merc_type_a = 0x13;
-      if (game.advance_known_by[11] == '\0') {
-        tmp = _rand();
-        if (tmp % 3 == 0) {
-          merc_type_a = 0x10;
+        outcome = 5;
+        continue;
+      case 1:
+        if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+          popup_game_with_sprite((const char *)str_surprisemercs,(iptr)&popup_info_icon_sprite,0);
         }
-        else {
-          merc_type_a = 0xf;
-        }
-        if (game.advance_known_by[64] != '\0') {
-          rnd = _rand();
-          sign = (int)rnd >> 0x1f;
-          if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
-            merc_type_a = 0x11;
+        merc_type_a = 0x13;
+        if (game.advance_known_by[11] == '\0') {
+          tmp = _rand();
+          if (tmp % 3 == 0) {
+            merc_type_a = 0x10;
+          }
+          else {
+            merc_type_a = 0xf;
+          }
+          if (game.advance_known_by[64] != '\0') {
+            rnd = _rand();
+            sign = (int)rnd >> 0x1f;
+            if (((rnd ^ sign) - sign & 1 ^ sign) != sign) {
+              merc_type_a = 0x11;
+            }
           }
         }
-      }
-      if (game.advance_known_by[55] != '\0') {
-        merc_type_a = 0x12;
-      }
-      if (game.advance_known_by[42] != '\0') {
-        merc_type_a = 0x14;
-      }
-      if (game.advance_known_by[17] != '\0') {
-        merc_type_a = 0xb;
-      }
-      merc_type_b = 8;
-      if (game.advance_known_by[34] == '\0') {
-        merc_type_b = 7;
-      }
-      if (game.advance_known_by[35] == '\0') {
-        merc_type_b = 5;
-      }
-      if (game.advance_known_by[39] == '\0') {
-        merc_type_b = 4;
-      }
-      rnd = _rand();
-      sign = (int)rnd >> 0x1f;
-      if (((rnd ^ sign) - sign & 1 ^ sign) == sign) {
-        spawn_type = merc_type_a;
-      }
-      else {
-        spawn_type = merc_type_b;
-      }
-      tmp = unit_create(spawn_type,civ,x,y);
-      if ((unit_sound_editor_window_block.unit_move_by_local_human == '\0') && ((*(uint *)&human_civ) != civ)) {
-        outcome = civ;
-        if (-1 < tmp) {
-          outcome = tmp * 0x20;
-          *(&units[0].home_city + outcome) = -1;   /* outcome is a byte offset (unit index * 0x20) */
+        if (game.advance_known_by[55] != '\0') {
+          merc_type_a = 0x12;
         }
-      }
-      else {
-        map_redraw_neighbors_all_views(x,y);
-        outcome = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
-      }
-      break;
-    case 2:
-      gold2 = 0x32;
-      x = _rand();
-      if (x % 3 == 0) {
-        x = _rand();
-        if ((int)((x % 10 - (uint)game.difficulty) + 2) < 5) {
-          gold2 = 0x19;
+        if (game.advance_known_by[42] != '\0') {
+          merc_type_a = 0x14;
         }
-        else {
-          gold2 = 100;
+        if (game.advance_known_by[17] != '\0') {
+          merc_type_a = 0xb;
         }
-      }
-      if (1000 < game.year) {
-        gold2 = gold2 << 1;
-      }
-      civs[civ].gold = civs[civ].gold + gold2;
-      text_set_number_arg(0,gold2);
-      if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-        popup_game_with_sprite((const char *)str_surprisemetals,(iptr)&popup_info_icon_sprite,0);
-      }
-      if ((*(uint *)&human_civ) != civ) {
-        return civ;
-      }
-      status_draw_info(1);   /* void */
-      return civ;
-    case 3:
-      if ((advisor_window_block.nearest_city_dist < 4) ||
-         ((civs[civ].num_cities == 0 && (game.turn < 0x32)))) {
-        outcome = 1;
-        goto hut_outcome_dispatch;
-      }
-      if (((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0) &&
-         (game.power_rank[civ] < game.power_rank[game.field_139])) {
+        merc_type_b = 8;
+        if (game.advance_known_by[34] == '\0') {
+          merc_type_b = 7;
+        }
+        if (game.advance_known_by[35] == '\0') {
+          merc_type_b = 5;
+        }
+        if (game.advance_known_by[39] == '\0') {
+          merc_type_b = 4;
+        }
         rnd = _rand();
         sign = (int)rnd >> 0x1f;
-        if ((int)(((rnd ^ sign) - sign & 7 ^ sign) - sign) < (int)(uint)game.difficulty) {
-          outcome = 0;
-          goto hut_outcome_dispatch;
+        if (((rnd ^ sign) - sign & 1 ^ sign) == sign) {
+          spawn_type = merc_type_a;
         }
-      }
-      single_spawn = false;
-      if (game.barbarian_activity < 3) {
-        if (game.turn < 0x1e) {
-check_nearby_city:
+        else {
+          spawn_type = merc_type_b;
+        }
+        tmp = unit_create(spawn_type,civ,x,y);
+        if ((unit_sound_editor_window_block.unit_move_by_local_human == '\0') && ((*(uint *)&human_civ) != civ)) {
+          outcome = civ;
+          if (-1 < tmp) {
+            outcome = tmp * 0x20;
+            *(&units[0].home_city + outcome) = -1;   /* outcome is a byte offset (unit index * 0x20) */
+          }
+        }
+        else {
+          map_redraw_neighbors_all_views(x,y);
+          outcome = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+        }
+        break;
+      case 2:
+        gold2 = 0x32;
+        x = _rand();
+        if (x % 3 == 0) {
+          x = _rand();
+          if ((int)((x % 10 - (uint)game.difficulty) + 2) < 5) {
+            gold2 = 0x19;
+          }
+          else {
+            gold2 = 100;
+          }
+        }
+        if (1000 < game.year) {
+          gold2 = gold2 << 1;
+        }
+        civs[civ].gold = civs[civ].gold + gold2;
+        text_set_number_arg(0,gold2);
+        if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+          popup_game_with_sprite((const char *)str_surprisemetals,(iptr)&popup_info_icon_sprite,0);
+        }
+        if ((*(uint *)&human_civ) != civ) {
+          return civ;
+        }
+        status_draw_info(1);   /* void */
+        return civ;
+      case 3:
+        if ((advisor_window_block.nearest_city_dist < 4) ||
+           ((civs[civ].num_cities == 0 && (game.turn < 0x32)))) {
+          outcome = 1;
+          continue;
+        }
+        if (((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0) &&
+           (game.power_rank[civ] < game.power_rank[game.field_139])) {
+          rnd = _rand();
+          sign = (int)rnd >> 0x1f;
+          if ((int)(((rnd ^ sign) - sign & 7 ^ sign) - sign) < (int)(uint)game.difficulty) {
+            outcome = 0;
+            continue;
+          }
+        }
+        single_spawn = false;
+        /* early on (always before turn 30, on a coin flip before turn 50)
+           nothing happens if the civ has a city on this landmass within 24 */
+        if ((game.barbarian_activity < 3) &&
+            ((game.turn < 0x1e) ||
+             ((game.turn < 0x32) &&
+              (rnd = _rand(), sign = (int)rnd >> 0x1f, ((rnd ^ sign) - sign & 1 ^ sign) == sign)))) {
           city_find_nearest(x,y,civ,0xffffffff,0xffffffff);
           tmp = tile_landmass(x,y);
           if ((civs[civ].continent_cities[tmp] != '\0') && (advisor_window_block.nearest_city_dist < 0x18)) {
@@ -1660,137 +1654,131 @@ check_nearby_city:
             return civ;
           }
         }
-        else if (game.turn < 0x32) {
-          rnd = _rand();
-          sign = (int)rnd >> 0x1f;
-          if (((rnd ^ sign) - sign & 1 ^ sign) == sign) goto check_nearby_city;
+        /* a single unit up to turn 49, and on a coin flip up to turn 74 */
+        if ((game.turn <= 0x31) ||
+            ((game.turn <= 0x4a) &&
+             (rnd = _rand(), sign = (int)rnd >> 0x1f, ((rnd ^ sign) - sign & 1 ^ sign) == sign))) {
+          single_spawn = true;
         }
-      }
-      if (0x31 < game.turn) {
-        if (0x4a < game.turn) goto barbarian_surprise;
-        rnd = _rand();
-        sign = (int)rnd >> 0x1f;
-        if (((rnd ^ sign) - sign & 1 ^ sign) != sign) goto barbarian_surprise;
-      }
-      single_spawn = true;
-barbarian_surprise:
-      rnd = 0;
-      if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-        rnd = popup_game_with_sprite((const char *)str_surprisebarb,(iptr)&popup_info_icon_sprite,0);
-      }
-      step = 0;
-      do {
-        if (7 < step) {
-          return rnd;
+        rnd = 0;
+        if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+          rnd = popup_game_with_sprite((const char *)str_surprisebarb,(iptr)&popup_info_icon_sprite,0);
         }
-        rnd = game.turn + step >> 0x1f;
-        tmp = ((game.turn + step ^ rnd) - rnd & 7 ^ rnd) - rnd;
-        tile_x = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x);
-        tmp = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp] + y;
-        check = map_in_bounds(tile_x,tmp);
-        if ((((check != 0) && (check = tile_unit_owner(tile_x,tmp), check < 0)) &&
-            (check = tile_city_owner(tile_x,tmp), check < 0)) &&
-           (check = tile_is_ocean(tile_x,tmp), check == 0)) {
-          owner_byte = tile_terrain(tile_x,tmp);
-          rough_type = 5;
-          flat_type = 0xf;
-          if (game.advance_known_by[51] != '\0') {
-            rough_type = 7;
-            flat_type = 0x13;
-          }
-          if (game.advance_known_by[unit_types[22].prerequisite] != '\0') {
-            rough_type = 0xb;
-            flat_type = 0x15;
-          }
-          if (game.advance_known_by[34] != '\0') {
-            rough_type = 8;
-            flat_type = 9;
-          }
-          if ((char)terrain_types[(uint)owner_byte].move_cost < '\x03') {
-            chosen_type = flat_type;
-          }
-          else {
-            chosen_type = rough_type;
-          }
-          rnd = unit_create(chosen_type,0,tile_x,tmp);
-          if (-1 < (int)rnd) {
-            tile = tile_at(x,y);
-            units[rnd].visibility = tile->visible | units[rnd].visibility;
-            map_redraw_tile_all_views(tile_x,tmp);
-            rnd = (uint)game.multiplayer;
-            if (2 < game.multiplayer) {
-              rnd = net_send_message(0x72,0xff,tile_x,tmp,0,0,0,0,0,0);
-            }
-          }
-          if (single_spawn) {
+        step = 0;
+        do {
+          if (7 < step) {
             return rnd;
           }
-        }
-        rnd = int_clamp(4 - civs[civ].num_cities,1,4);
-        step = step + rnd;
-      } while( true );
-    case 4:
-      if ((game.turn == 0) || (tmp = civ_has_advance(civ,0x26), tmp != 0)) {
-        outcome = 2;
-      }
-      else {
-        attempts = 0;
-        tech_id = _rand();
-        tech_id = tech_id % 100;
-        do {
-          tmp = civ_can_research_advance(civ,tech_id);
-          if (tmp == 0) {
-            rnd = (tech_id + 1) / 100;
-            tech_id = (tech_id + 1) % 100;
-          }
-          else {
-            if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-              popup_game_with_sprite((const char *)str_surprisescrolls,(iptr)&popup_info_icon_sprite,0);
+          rnd = game.turn + step >> 0x1f;
+          tmp = ((game.turn + step ^ rnd) - rnd & 7 ^ rnd) - rnd;
+          tile_x = map_wrap_x((((i8 *)&dir_dx_table_block.dir_dx_table))[tmp] + x);
+          tmp = (int)(((i8 *)&dir_dy_table_block.dir_dy_table))[tmp] + y;
+          check = map_in_bounds(tile_x,tmp);
+          if ((((check != 0) && (check = tile_unit_owner(tile_x,tmp), check < 0)) &&
+              (check = tile_city_owner(tile_x,tmp), check < 0)) &&
+             (check = tile_is_ocean(tile_x,tmp), check == 0)) {
+            owner_byte = tile_terrain(tile_x,tmp);
+            rough_type = 5;
+            flat_type = 0xf;
+            if (game.advance_known_by[51] != '\0') {
+              rough_type = 7;
+              flat_type = 0x13;
             }
-            civ_give_advance(civ,tech_id,civ,0,0);   /* void */
-            tech_id = -1;
+            if (game.advance_known_by[unit_types[22].prerequisite] != '\0') {
+              rough_type = 0xb;
+              flat_type = 0x15;
+            }
+            if (game.advance_known_by[34] != '\0') {
+              rough_type = 8;
+              flat_type = 9;
+            }
+            if ((char)terrain_types[(uint)owner_byte].move_cost < '\x03') {
+              chosen_type = flat_type;
+            }
+            else {
+              chosen_type = rough_type;
+            }
+            rnd = unit_create(chosen_type,0,tile_x,tmp);
+            if (-1 < (int)rnd) {
+              tile = tile_at(x,y);
+              units[rnd].visibility = tile->visible | units[rnd].visibility;
+              map_redraw_tile_all_views(tile_x,tmp);
+              rnd = (uint)game.multiplayer;
+              if (2 < game.multiplayer) {
+                rnd = net_send_message(0x72,0xff,tile_x,tmp,0,0,0,0,0,0);
+              }
+            }
+            if (single_spawn) {
+              return rnd;
+            }
           }
-          attempts = attempts + 1;
-        } while ((attempts < 999) && (-1 < tech_id));
-        if (tech_id < 0) {
-          return rnd;
+          rnd = int_clamp(4 - civs[civ].num_cities,1,4);
+          step = step + rnd;
+        } while( true );
+      case 4:
+        if ((game.turn == 0) || (tmp = civ_has_advance(civ,0x26), tmp != 0)) {
+          outcome = 2;
         }
-        outcome = 0;
-      }
-      goto hut_outcome_dispatch;
-    case 5:
-      if (game.advance_known_by[28] == '\0') {
-        settler_count = 0;
-        for (unit_id = 0; unit_id < game.num_units; unit_id = unit_id + 1) {
-          if ((((units[unit_id].id != 0) &&
-               ((int)units[unit_id].owner == civ)) &&
-              (unit_types[(uint)units[unit_id].type].role == '\x05')) &&
-             (units[unit_id].home_city == -1)) {
-            settler_count = settler_count + 1;
+        else {
+          attempts = 0;
+          tech_id = _rand();
+          tech_id = tech_id % 100;
+          do {
+            tmp = civ_can_research_advance(civ,tech_id);
+            if (tmp == 0) {
+              rnd = (tech_id + 1) / 100;
+              tech_id = (tech_id + 1) % 100;
+            }
+            else {
+              if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+                popup_game_with_sprite((const char *)str_surprisescrolls,(iptr)&popup_info_icon_sprite,0);
+              }
+              civ_give_advance(civ,tech_id,civ,0,0);   /* void */
+              tech_id = -1;
+            }
+            attempts = attempts + 1;
+          } while ((attempts < 999) && (-1 < tech_id));
+          if (tech_id < 0) {
+            return rnd;
           }
+          outcome = 0;
         }
-        if (settler_count <= (int)civs[civ].num_cities >> 3) {
-          if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
-            popup_game_with_sprite((const char *)str_surprisenomads,(iptr)&popup_info_icon_sprite,0);
+        continue;
+      case 5:
+        if (game.advance_known_by[28] == '\0') {
+          settler_count = 0;
+          for (unit_id = 0; unit_id < game.num_units; unit_id = unit_id + 1) {
+            if ((((units[unit_id].id != 0) &&
+                 ((int)units[unit_id].owner == civ)) &&
+                (unit_types[(uint)units[unit_id].type].role == '\x05')) &&
+               (units[unit_id].home_city == -1)) {
+              settler_count = settler_count + 1;
+            }
           }
-          tmp = unit_create(0,civ,x,y);
-          if (-1 < tmp) {
-            units[tmp].home_city = 0xff;
+          if (settler_count <= (int)civs[civ].num_cities >> 3) {
+            if (unit_sound_editor_window_block.unit_move_by_local_human != '\0') {
+              popup_game_with_sprite((const char *)str_surprisenomads,(iptr)&popup_info_icon_sprite,0);
+            }
+            tmp = unit_create(0,civ,x,y);
+            if (-1 < tmp) {
+              units[tmp].home_city = 0xff;
+            }
+            if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
+              return 0;
+            }
+            map_redraw_neighbors_all_views(x,y);
+            civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
+            return civ;
           }
-          if (unit_sound_editor_window_block.unit_move_by_local_human == '\0') {
-            return 0;
-          }
-          map_redraw_neighbors_all_views(x,y);
-          civ = net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
-          return civ;
+          outcome = 4;
         }
-        outcome = 4;
+        else {
+          outcome = 2;
+        }
+        continue;
+      default:
+        break;
       }
-      else {
-        outcome = 2;
-      }
-      goto hut_outcome_dispatch;
-    default:
       break;
     }
   }

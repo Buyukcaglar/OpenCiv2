@@ -3028,79 +3028,74 @@ void __cdecl civ_update_power_ranks(void)
       break;
     }
   }
-  civ = 0;
-  do {
-    if (7 < (int)civ) {
-check_alert_ai:
-      alert_ai = 0;
-      civ = (uptr)game.civ_by_rank[7];
-      if ((((((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) &&
-           (4 < civs[game.civ_by_rank[7]].num_cities)) &&
-          (civs[game.civ_by_rank[7]].units_active[0x2d] == '\0')) &&
-         ((200 < game.turn && (game.difficulty != '\0')))) {
-        alert_ai = 1;
-      }
-      if (3 < game.difficulty) {
-        for (civ2 = 1; (int)civ2 < 8; civ2++) {
-          if (((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
-             (result = civ_spaceship_launched(civ2), result != 0)) {
-            civ = civ2;
-            alert_ai = 1;
-          }
-        }
-      }
-      leader_civ = civ;
-      if (alert_ai != 0) {
-        game.game_flags = game.game_flags | 1;
-        civ2 = civ;
-        ally_count = 0;
-        for (civ = 1; (int)civ < 8; civ++) {
-          if (((byte)(civs[leader_civ].treaties[civ] >> 8) & 0x20) != 0) {
-            ally_count++;
-          }
-        }
-        for (civ = 1; (int)civ < 8; civ++) {
-          if (((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
-               ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) &&
-              (1 < civs[civ].num_cities)) &&
-             (((ally_count * 3 + 3 < (int)(uint)civs[civ2].reputation ||
-               ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0)) ||
-              (result = spaceship_race_active(), result != 0)))) {
-            if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
-              if ((*(byte *)&civs[civ].treaties[civ2] & 6) == 0) {
-                civ_adjust_attitude(civ,civ2,1);
-                treaty_ptr = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
-                *treaty_ptr = *treaty_ptr | 1;
-              }
-              else {
-                rand_value = _rand();
-                sign = (int)rand_value >> 0x1f;
-                if (((int)(((rand_value ^ sign) - sign & 0x1f ^ sign) - sign) <=
-                     (int)(uint)game.difficulty) ||
-                   (result = civ_spaceship_launched(civ), result != 0)) {
-                  treaty_ptr = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
-                  *treaty_ptr = *treaty_ptr | 0x20;
-                }
-              }
-            }
-            else {
-              result = civ_spaceship_launched(civ);
-              if ((result != 0) && (3 < game.difficulty)) {
-                treaty_ptr = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
-                *treaty_ptr = *treaty_ptr | 0x20;
-              }
-            }
-          }
-        }
-      }
-      return;
-    }
+  for (civ = 0; (int)civ < 8; civ++) {
     if (((uint)game.human_players & 1 << (game.civ_by_rank[civ] & 0x1f)) != 0) {
       game.worst_human_rank = (byte)civ;
-      goto check_alert_ai;
+      break;
     }
-    civ++;
-  } while( true );
+  }
+  alert_ai = 0;
+  civ = (uptr)game.civ_by_rank[7];
+  if ((((((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) &&
+       (4 < civs[game.civ_by_rank[7]].num_cities)) &&
+      (civs[game.civ_by_rank[7]].units_active[0x2d] == '\0')) &&
+     ((200 < game.turn && (game.difficulty != '\0')))) {
+    alert_ai = 1;
+  }
+  if (3 < game.difficulty) {
+    for (civ2 = 1; (int)civ2 < 8; civ2++) {
+      if (((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
+         (result = civ_spaceship_launched(civ2), result != 0)) {
+        civ = civ2;
+        alert_ai = 1;
+      }
+    }
+  }
+  leader_civ = civ;
+  if (alert_ai != 0) {
+    game.game_flags = game.game_flags | 1;
+    civ2 = civ;
+    ally_count = 0;
+    for (civ = 1; (int)civ < 8; civ++) {
+      if (((byte)(civs[leader_civ].treaties[civ] >> 8) & 0x20) != 0) {
+        ally_count++;
+      }
+    }
+    for (civ = 1; (int)civ < 8; civ++) {
+      if (((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
+           ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) &&
+          (1 < civs[civ].num_cities)) &&
+         (((ally_count * 3 + 3 < (int)(uint)civs[civ2].reputation ||
+           ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0)) ||
+          (result = spaceship_race_active(), result != 0)))) {
+        if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
+          if ((*(byte *)&civs[civ].treaties[civ2] & 6) == 0) {
+            civ_adjust_attitude(civ,civ2,1);
+            treaty_ptr = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
+            *treaty_ptr = *treaty_ptr | 1;
+          }
+          else {
+            rand_value = _rand();
+            sign = (int)rand_value >> 0x1f;
+            if (((int)(((rand_value ^ sign) - sign & 0x1f ^ sign) - sign) <=
+                 (int)(uint)game.difficulty) ||
+               (result = civ_spaceship_launched(civ), result != 0)) {
+              treaty_ptr = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
+              *treaty_ptr = *treaty_ptr | 0x20;
+            }
+          }
+        }
+        else {
+          result = civ_spaceship_launched(civ);
+          if ((result != 0) && (3 < game.difficulty)) {
+            treaty_ptr = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
+            *treaty_ptr = *treaty_ptr | 0x20;
+          }
+        }
+      }
+    }
+  }
+  return;
 }
 
 /* 00486e15 auto */
@@ -5677,7 +5672,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       if (option_count2 == 0) {
         seh_state = 0xffffffff;
         /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
-        goto done;
+        return;
       }
       button_count = 0;
       if (mode_state[1] != 0) {
@@ -5702,7 +5697,7 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
       if (choice < 0) {
         seh_state = 0xffffffff;
         /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
-        goto done;
+        return;
       }
       if (dialog2.result_extra != 1) break;
       if (diplo_session_active == 0) {
@@ -5762,84 +5757,74 @@ void __cdecl civ_research_goal_dialog(iptr civ,int exclude_current,int civ2)
   }
   option_count2 = 0;
   path_count = 0;
-  advance = 0;
-  do {
-    if (99 < advance) {
-      text_set_label_arg(0,advances[choice].name);
-      if (path_count == 0) {
-        if (civ2 == 0) {
-          popup_game((const char *)&str_researchnone);
-        }
-        else {
-          popup_game((const char *)&str_stealnone);
-        }
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
-      }
-      else {
-        if (civ2 == 0) {
-          dialog2.load_game_text((const char *)&str_researchthese);
-        }
-        else {
-          dialog2.load_game_text((const char *)&str_stealthese);
-        }
-        for (i = 0; i < path_count; i++) {
-          advance = path_advances[i];
-          text_clear();
-          text_append_string_id(advances[advance].name);
-          if ((i < path_count - 1) && (2 < path_count)) {
-            text_append_comma();
-          }
-          else if (path_count - 2 == i) {
-            text_append_space();
-          }
-          if (path_count - 2 == i) {
-            text_append_label(0xb5);
-          }
-          if (path_count - 1 == i) {
-            text_append_period();
-          }
-          dialog2.add_line((const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
-        }
-        dialog2.show_modal(0);
-        seh_state = 0xffffffff;
-        /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
-      }
-done:
-      return;
-    }
+  for (advance = 0; advance <= 99; advance++) {
     if ((advances[advance].enabled != '\0') &&
        (known = civ_has_advance(civ,advance), known == 0)) {
       if (civ2 == 0) {
         known = civ_has_advance(civ,(int)advances[advance].preq[0]);
-        if (((known != 0) &&
-            (known = civ_has_advance(civ,(int)advances[advance].preq[1]), known != 0)) &&
-           ((exclude_current == 0 || (civs[civ].researching != advance)))) {
-          if (((option_count2 != 0) && (game.difficulty != '\0')) && ((game.game_flags & 0x80) == 0)) {
-            known = (int)(advance - ((uint)civs[civ].num_advances + exclude_current)) % 3;
-            goto joined_r0x004c1729;
-          }
-          goto add_path_option;
+        if (!(((known != 0) &&
+              (known = civ_has_advance(civ,(int)advances[advance].preq[1]), known != 0)) &&
+             ((exclude_current == 0 || (civs[civ].researching != advance))))) continue;
+        if (((option_count2 != 0) && (game.difficulty != '\0')) && ((game.game_flags & 0x80) == 0)) {
+          known = (int)(advance - ((uint)civs[civ].num_advances + exclude_current)) % 3;
+          if (known == 0) continue;
         }
       }
       else {
         known = civ_has_advance(civ2,advance);
-joined_r0x004c1729:
+        if (known == 0) continue;
+      }
+      if ((advances[advance].preq[0] != -2) || (advances[advance].preq[1] != -2)) {
+        option_count2++;
+        known = advance_has_prereq(choice,advance);
         if (known != 0) {
-add_path_option:
-          if ((advances[advance].preq[0] != -2) || (advances[advance].preq[1] != -2)) {
-            option_count2++;
-            known = advance_has_prereq(choice,advance);
-            if (known != 0) {
-              path_advances[path_count] = advance;
-              path_count++;
-            }
-          }
+          path_advances[path_count] = advance;
+          path_count++;
         }
       }
     }
-    advance++;
-  } while( true );
+  }
+  text_set_label_arg(0,advances[choice].name);
+  if (path_count == 0) {
+    if (civ2 == 0) {
+      popup_game((const char *)&str_researchnone);
+    }
+    else {
+      popup_game((const char *)&str_stealnone);
+    }
+    seh_state = 0xffffffff;
+    /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
+  }
+  else {
+    if (civ2 == 0) {
+      dialog2.load_game_text((const char *)&str_researchthese);
+    }
+    else {
+      dialog2.load_game_text((const char *)&str_stealthese);
+    }
+    for (i = 0; i < path_count; i++) {
+      advance = path_advances[i];
+      text_clear();
+      text_append_string_id(advances[advance].name);
+      if ((i < path_count - 1) && (2 < path_count)) {
+        text_append_comma();
+      }
+      else if (path_count - 2 == i) {
+        text_append_space();
+      }
+      if (path_count - 2 == i) {
+        text_append_label(0xb5);
+      }
+      if (path_count - 1 == i) {
+        text_append_period();
+      }
+      dialog2.add_line((const char *)&map_views_block.text_buffer,0xffffffff,0xffffffff,0xffffffff,0);
+    }
+    dialog2.show_modal(0);
+    seh_state = 0xffffffff;
+    /* inlined unwind funclet 004c193a */ { dialog2.Dialog::destruct(); }
+  }
+  return;
 }
 
 /* 004c195e auto */
@@ -7171,7 +7156,7 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
       if (best_advance < 0) {
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0057a661 */ { dialog2.Dialog::destruct(); }
-        goto done;
+        return;
       }
       advance = best_advance;
       if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) ||
@@ -7200,7 +7185,6 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0057a661 */ { dialog2.Dialog::destruct(); }
   }
-done:
   return;
 }
 

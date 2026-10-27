@@ -1257,19 +1257,28 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
         while (out_pos = out, run_len != 0) {
           if (run_len < 0x80) {
             *out = (char)run_len;
-            if (size <= written + 1) goto compress_fail;
+            if (size <= written + 1) {
+              operator_delete(out_buf);
+              return 0xffffffff;
+            }
             run_len = 0;
           }
           else {
             *out = 127;
-            if (size <= written + 1) goto compress_fail;
+            if (size <= written + 1) {
+              operator_delete(out_buf);
+              return 0xffffffff;
+            }
             run_len -= 0x7f;
           }
           out++;
           *out = *src;
           out = out_pos + 2;
           written += 2;
-          if (size <= written) goto compress_fail;
+          if (size <= written) {
+            operator_delete(out_buf);
+            return 0xffffffff;
+          }
         }
         src = scan;
       }
@@ -1281,7 +1290,10 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
           *out = (char)run_len - 0x80;
           out++;
           written++;
-          if (size <= written) goto compress_fail;
+          if (size <= written) {
+            operator_delete(out_buf);
+            return 0xffffffff;
+          }
           literal_len = run_len;
           run_len = 0;
         }
@@ -1289,7 +1301,10 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
           *out = -1;
           out++;
           written++;
-          if (size <= written) goto compress_fail;
+          if (size <= written) {
+            operator_delete(out_buf);
+            return 0xffffffff;
+          }
           run_len -= 0x7f;
           literal_len = 0x7f;
         }
@@ -1299,13 +1314,15 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
           out++;
           written++;
           literal_len--;
-          if (size <= written) goto compress_fail;
+          if (size <= written) {
+            operator_delete(out_buf);
+            return 0xffffffff;
+          }
         }
       }
     }
     out_size = (int)out - (int)out_buf;
     if (size < (int)out_size) {
-compress_fail:
       operator_delete(out_buf);
       out_size = 0xffffffff;
     }

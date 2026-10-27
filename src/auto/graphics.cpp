@@ -1633,9 +1633,9 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
           ((DibSurface *)surface)->DibSurface::create(info.width2,info.height2);
           color_base = (char)first_color;
           if (info.compression == 0) {
-            do {
+            while( true ) {
               row = info.height2 - 1;
-              if ((row < 0) || (ok == 0)) goto close_file;
+              if ((row < 0) || (ok == 0)) break;
               dst = (char *)((DibSurface *)surface)->pixel_ptr(0,row);
               for (col = 0; info.height2 = row, col < info.width2;
                   col = col + 1) {
@@ -1649,9 +1649,9 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
                 *dst = (char)code + color_base;
                 dst++;
               }
-            } while( true );
+            }
           }
-          if (info.compression == 1) {
+          else if (info.compression == 1) {
             row = info.height2 - 1;
             dst = (char *)((DibSurface *)surface)->pixel_ptr(0,row);
             while( true ) {
@@ -1709,7 +1709,6 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,const char *filename,int first_col
     else {
       error_msg = str_invalid_bitmap_file;
     }
-close_file:
     _fclose(file);
     if (ok == 0) {
       MessageBoxA((HWND)0x0,error_msg,(LPCSTR)0x0,0);
@@ -1839,12 +1838,15 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,const char *filename,int first_col
       }
       else {
         nwritten = _fwrite(bmp_palette,0x400,1,file);
-        if (nwritten != 0) {
+        if (nwritten == 0) {
+          error_msg = str_error_writing_file_palette;
+        }
+        else {
           ok = 1;
           row = height2;
-          do {
+          while( true ) {
             row--;
-            if ((row < 0) || (ok == 0)) goto close_file;
+            if ((row < 0) || (ok == 0)) break;
             src = (byte *)((DibSurface *)surface)->pixel_ptr(0,row);
             for (col = 0; col < width2; col++) {
               pixel = (uint)*src - first_color;
@@ -1856,12 +1858,10 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,const char *filename,int first_col
                 break;
               }
             }
-          } while( true );
+          }
         }
-        error_msg = str_error_writing_file_palette;
       }
     }
-close_file:
     _fclose(file);
     if (ok == 0) {
       MessageBoxA((HWND)0x0,error_msg,(LPCSTR)0x0,0);
@@ -2973,8 +2973,10 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   order_char = '\0';
   gfx_set_zoom_scale(zoom);
   unit2 = unit;
-  if (((draw_flags & 2) != 0) && (unit2 = unit_stack_pick_display_unit(unit), unit2 < 0))
-  goto reset_zoom_done;
+  if (((draw_flags & 2) != 0) && (unit2 = unit_stack_pick_display_unit(unit), unit2 < 0)) {
+    gfx_reset_zoom_scale();
+    return;
+  }
   civ = (iptr)units[unit2].owner;
   unit_type = (uint)units[unit2].type;
   sprite_type = unit_type;
@@ -3082,7 +3084,6 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     order = 0xffffffff;
   }
   if ((int)order < 1) {
-default_order_char:
     order_char = '-';
     if (((int)(short)units[unit2].flags & 0x8000U) != 0) {
       order_char = '*';
@@ -3091,8 +3092,7 @@ default_order_char:
   else if ((int)order < 0xb) {
     order_char = order_names[order].key;
   }
-  else {
-    if (order != 0xb) goto default_order_char;
+  else if (order == 0xb) {
     if ((game.reveal_map == '\0') ||
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
       if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
@@ -3104,6 +3104,12 @@ default_order_char:
     }
     else {
       order_char = units[unit2].ai_task;
+    }
+  }
+  else {
+    order_char = '-';
+    if (((int)(short)units[unit2].flags & 0x8000U) != 0) {
+      order_char = '*';
     }
   }
   if (order_char != '\0') {
@@ -3153,7 +3159,6 @@ default_order_char:
       ((byte)value & 0x42) == 0x40)) && (no_fortress == 0)) {
     ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite))->draw((iptr)clip_fortress,surface,px,py);
   }
-reset_zoom_done:
   gfx_reset_zoom_scale();
   return;
 }
@@ -3756,12 +3761,9 @@ void __cdecl sprite_sheet_save_units(void)
   }
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_units_bmp_3);
-  if (result != 0) {
-    result = crt_remove(str_units_bmp_4);
-    if (result != 0) goto cleanup;
+  if ((result == 0) || (result = crt_remove(str_units_bmp_4), result == 0)) {
+    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_units_bmp_5,10,0xc0,(iptr)&palette);
   }
-  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_units_bmp_5,10,0xc0,(iptr)&palette);
-cleanup:
   __chdir(saved_dir);
   ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
   eh_state = 0xffffffff;
@@ -3903,12 +3905,9 @@ void __cdecl sprite_sheet_save_cities(void)
   ((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite))->draw((iptr)clip_airbase_occ,(iptr)&status_window_block.sprite_sheet_surface,0x152,0x1a7);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_cities_bmp_3);
-  if (result != 0) {
-    result = crt_remove(str_cities_bmp_4);
-    if (result != 0) goto cleanup;
+  if ((result == 0) || (result = crt_remove(str_cities_bmp_4), result == 0)) {
+    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_cities_bmp_5,10,0xc0,(iptr)&palette);
   }
-  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_cities_bmp_5,10,0xc0,(iptr)&palette);
-cleanup:
   __chdir(saved_dir);
   ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
   eh_state = 0xffffffff;
@@ -4064,12 +4063,9 @@ void __cdecl sprite_sheet_save_terrain1(void)
   }
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_terrain1_bmp_3);
-  if (result != 0) {
-    result = crt_remove(str_terrain1_bmp_4);
-    if (result != 0) goto cleanup;
+  if ((result == 0) || (result = crt_remove(str_terrain1_bmp_4), result == 0)) {
+    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_terrain1_bmp_5,10,0xc0,(iptr)&palette);
   }
-  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_terrain1_bmp_5,10,0xc0,(iptr)&palette);
-cleanup:
   __chdir(saved_cwd);
   ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
   seh_state = 0xffffffff;
@@ -4224,12 +4220,9 @@ void __cdecl sprite_sheet_save_terrain2(void)
   }
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_terrain2_bmp_3);
-  if (result != 0) {
-    result = crt_remove(str_terrain2_bmp_4);
-    if (result != 0) goto cleanup;
+  if ((result == 0) || (result = crt_remove(str_terrain2_bmp_4), result == 0)) {
+    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_terrain2_bmp_5,10,0xc0,(iptr)&palette);
   }
-  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_terrain2_bmp_5,10,0xc0,(iptr)&palette);
-cleanup:
   __chdir(saved_cwd);
   ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
   seh_state = 0xffffffff;
@@ -4293,12 +4286,9 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   }
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_icons_bmp_3);
-  if (result != 0) {
-    result = crt_remove(str_icons_bmp_4);
-    if (result != 0) goto restore_cwd_and_cleanup;
+  if ((result == 0) || (result = crt_remove(str_icons_bmp_4), result == 0)) {
+    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_icons_bmp_5,10,0xc0,(iptr)&palette);
   }
-  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_icons_bmp_5,10,0xc0,(iptr)&palette);
-restore_cwd_and_cleanup:
   __chdir(saved_cwd);
   ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
   seh_state = 0xffffffff;
@@ -4406,12 +4396,9 @@ void __cdecl sprite_sheet_save_building_icons(void)
   }
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = file_exists((const char *)&str_icons_bmp_7);
-  if (result != 0) {
-    result = crt_remove(str_icons_bmp_8);
-    if (result != 0) goto restore_cwd_and_cleanup;
+  if ((result == 0) || (result = crt_remove(str_icons_bmp_8), result == 0)) {
+    gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_icons_bmp_9,10,0xc0,(iptr)&palette);
   }
-  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(const char *)&str_icons_bmp_9,10,0xc0,(iptr)&palette);
-restore_cwd_and_cleanup:
   __chdir(saved_cwd);
   ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface))->release();
   seh_state = 0xffffffff;
@@ -6144,9 +6131,8 @@ void __cdecl sprite_editor_import_sheet(void)
     _MaxCount = _strlen(sheet_name);
     cmp = _strncmp(file_name,sheet_name,_MaxCount);
     if (cmp == 0) {
-      if ((sprite_picker_sprite_block.sprite_sheet_mode == 7) || (sprite_picker_sprite_block.sprite_sheet_mode == 10)) {
-        result = _isdigit((int)file_name[7]);
-        if ((result != 0) && ((file_name[7] & 1U) != 0)) goto check_file_extension;
+      if (((sprite_picker_sprite_block.sprite_sheet_mode == 7) || (sprite_picker_sprite_block.sprite_sheet_mode == 10)) &&
+          ((result = _isdigit((int)file_name[7]), result == 0 || ((file_name[7] & 1U) == 0)))) {
         dlg_push_parent_window((iptr)&status_window_block.sprite_picker_wnd);
         popup_debug_text((const char *)&str_oddterrain);
         dlg_pop_parent_window();
@@ -6158,7 +6144,6 @@ void __cdecl sprite_editor_import_sheet(void)
         dlg_pop_parent_window();
       }
       else {
-check_file_extension:
         str = _strstr(file_path,((i8 *)&sprite_import_bmp_ext_str));
         if (str == (char *)0x0) {
           str = _strstr(file_path,((i8 *)&sprite_import_gif_ext_str));
@@ -8124,55 +8109,52 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
   gfx_scale_den = den;
   oldest_tick = timer_ticks();
   slot = -1;
-  index = 0;
-  do {
-    if (0xf < index) {
-      default_draw_font_obj_block.gfx_scale_caches[slot].num = gfx_scale_num;
-      default_draw_font_obj_block.gfx_scale_caches[slot].den = gfx_scale_den;
-      now = timer_ticks();
-      default_draw_font_obj_block.gfx_scale_caches[slot].last_used = now;
-      value = 0;
-      if (gfx_scale_num < gfx_scale_den) {
-        accum = 0;
-        index = 0;
-        while (index < 0x400) {
-          for (; (-1 < accum && (index < 0x400)); index++) {
-            default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
-            accum -= gfx_scale_den;
-          }
-          accum += gfx_scale_num;
-          value++;
-        }
-      }
-      else {
-        accum = gfx_scale_num;
-        index = 0;
-        while (index < 0x400) {
-          for (; (gfx_scale_den <= accum && (index < 0x400)); index++) {
-            default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
-            accum -= gfx_scale_den;
-          }
-          accum += gfx_scale_num;
-          value++;
-        }
-      }
-use_cached_slot:
-      default_draw_font_obj_block.gfx_scale_table = (i32 *)default_draw_font_obj_block.gfx_scale_caches[slot].table;
-      return;
-    }
+  for (index = 0; index < 0x10; index++) {
     if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale_num) &&
        (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale_den)) {
       now = timer_ticks();
       default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
       slot = index;
-      goto use_cached_slot;
+      break;
     }
     if (default_draw_font_obj_block.gfx_scale_caches[index].last_used <= oldest_tick) {
       oldest_tick = default_draw_font_obj_block.gfx_scale_caches[index].last_used;
       slot = index;
     }
-    index++;
-  } while( true );
+  }
+  if (0xf < index) {
+    default_draw_font_obj_block.gfx_scale_caches[slot].num = gfx_scale_num;
+    default_draw_font_obj_block.gfx_scale_caches[slot].den = gfx_scale_den;
+    now = timer_ticks();
+    default_draw_font_obj_block.gfx_scale_caches[slot].last_used = now;
+    value = 0;
+    if (gfx_scale_num < gfx_scale_den) {
+      accum = 0;
+      index = 0;
+      while (index < 0x400) {
+        for (; (-1 < accum && (index < 0x400)); index++) {
+          default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
+          accum -= gfx_scale_den;
+        }
+        accum += gfx_scale_num;
+        value++;
+      }
+    }
+    else {
+      accum = gfx_scale_num;
+      index = 0;
+      while (index < 0x400) {
+        for (; (gfx_scale_den <= accum && (index < 0x400)); index++) {
+          default_draw_font_obj_block.gfx_scale_caches[slot].table[index] = value;
+          accum -= gfx_scale_den;
+        }
+        accum += gfx_scale_num;
+        value++;
+      }
+      }
+  }
+  default_draw_font_obj_block.gfx_scale_table = (i32 *)default_draw_font_obj_block.gfx_scale_caches[slot].table;
+  return;
 }
 
 /* 005cda06 auto */
@@ -8218,39 +8200,37 @@ void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
       now = timer_ticks();
       default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
       x_slot = index;
-      goto set_x_table;
+      break;
     }
     if (default_draw_font_obj_block.gfx_scale_caches[index].last_used <= oldest_tick) {
       oldest_tick = default_draw_font_obj_block.gfx_scale_caches[index].last_used;
       x_slot = index;
     }
   }
-  gfx_scale_build_table(x_slot,gfx_scale_x_num,gfx_scale_x_den);
-set_x_table:
+  if (0xf < index) {
+    gfx_scale_build_table(x_slot,gfx_scale_x_num,gfx_scale_x_den);
+  }
   default_draw_font_obj_block.gfx_scale_x_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[x_slot].table;
   oldest_tick = timer_ticks();
   y_slot = -1;
-  index = 0;
-  do {
-    if (0xf < index) {
-      gfx_scale_build_table(y_slot,gfx_scale_y_num,gfx_scale_y_den);
-      index = y_slot;
-set_y_table:
-      default_draw_font_obj_block.gfx_scale_y_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[index].table;
-      return;
-    }
+  for (index = 0; index < 0x10; index++) {
     if ((default_draw_font_obj_block.gfx_scale_caches[index].num == gfx_scale_y_num) &&
        (default_draw_font_obj_block.gfx_scale_caches[index].den == gfx_scale_y_den)) {
       now = timer_ticks();
       default_draw_font_obj_block.gfx_scale_caches[index].last_used = now;
-      goto set_y_table;
+      break;
     }
     if ((default_draw_font_obj_block.gfx_scale_caches[index].last_used <= oldest_tick) && (x_slot != index)) {
       oldest_tick = default_draw_font_obj_block.gfx_scale_caches[index].last_used;
       y_slot = index;
     }
-    index++;
-  } while( true );
+  }
+  if (0xf < index) {
+    gfx_scale_build_table(y_slot,gfx_scale_y_num,gfx_scale_y_den);
+    index = y_slot;
+  }
+  default_draw_font_obj_block.gfx_scale_y_table = (i8 *)default_draw_font_obj_block.gfx_scale_caches[index].table;
+  return;
 }
 
 /* 005cdcdb auto */
@@ -10209,7 +10189,6 @@ gif_lzw_decode_stream(byte *src,i8 *dest,iptr prefix_tbl,int pitch,uint width,ui
   code_bits = init_bits;
   code_mask = init_mask;
   prev_code = clear_code;
-decode_next_code:
   do {
     while( true ) {
       if (((short)pitch <= (short)row_pos) &&
@@ -10298,7 +10277,7 @@ decode_next_code:
         code_bits++;
         code_mask = code_mask * 2 + 2;
       }
-      goto decode_next_code;
+      continue;
     }
     dst += *(ushort *)(length_tbl + (uint)code);
     row_pos += *(ushort *)(length_tbl + (uint)code);

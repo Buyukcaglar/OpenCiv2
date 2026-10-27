@@ -51,440 +51,440 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
   unwind_state = 0;
   leaders_fixup_names();
   game.field_0e = 0;
-difficulty_dialog:
-  do {
+  for (;;) {
     do {
-      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(3,6,3);
-      dlg.load_game_section((const char *)str_difficulty_2,1);
-      dlg.set_default_choice((int)prefs_game_rules_block.prefs_difficulty);
-      dlg.set_position(
-                         ((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3)
-                         + 1,-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U))
-                               >> 3) + 1));
-      difficulty_choice = dlg.show_modal(0);
-      snd_play_effect(0x6a,0,0,0);
-      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-      if (difficulty_choice < 0) {
-cleanup_return:
-        label = result;
-        unwind_state = 0xffffffff;
-        /* inlined unwind funclet 0041d3f2 */ { dlg.Dialog::destruct(); }
-        return label;
-      }
-      game.difficulty = (byte)difficulty_choice;
-      prefs_game_rules_block.prefs_difficulty = (short)difficulty_choice;
-      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,4);
-      dlg.load_game_section((const char *)str_enemies,1);
-      dlg.set_default_choice((int)prefs_game_rules_block.prefs_enemies_choice);
-      dlg.set_position(
-                         -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3
-                           ) + 1),-(((int)(caption_font_block.screen_height + -0x1e0 +
-                                          (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-      enemies_choice = dlg.show_modal(0);
-      snd_play_effect(0x6a,0,0,0);
-      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-    } while (enemies_choice < 0);
-    if (dlg.result_extra == 0) {
-      prefs_game_rules_block.prefs_enemies_choice = (short)enemies_choice;
-      game.num_enemies = 6 - (char)enemies_choice;
-    }
-    else {
-      choice = _rand();
-      game.num_enemies = (char)(choice % 5) + 2;
-    }
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(3,6,5);
-    dlg.load_game_section((const char *)str_barbarity,1);
-    dlg.set_default_choice((int)prefs_game_rules_block.prefs_barbarity);
-    dlg.set_position(
-                       ((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3) +
-                       1,-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3
-                           ) + 1));
-    choice = dlg.show_modal(0);
-    snd_play_effect(0x6a,0,0,0);
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-  } while (choice < 0);
-  if (dlg.result_extra == 0) {
-    barb_level = (char)choice;
-    game.barbarian_activity = barb_level;
-    prefs_game_rules_block.prefs_barbarity = (short)choice;
-  }
-  else if (game.difficulty < 2) {
-    choice = _rand();
-    rand_sign = (byte)(choice >> 0x1f);
-    game.barbarian_activity = ((((byte)choice ^ rand_sign) - rand_sign & 1 ^ rand_sign) - rand_sign) + game.difficulty;
-  }
-  else if (game.difficulty < 5) {
-    choice = _rand();
-    game.barbarian_activity = (char)(choice % 3) + '\x01';
-  }
-  else {
-    choice = _rand();
-    rand_sign = (byte)(choice >> 0x1f);
-    game.barbarian_activity = ((((byte)choice ^ rand_sign) - rand_sign & 1 ^ rand_sign) - rand_sign) + '\x02';
-  }
-  do {
-    game.rules = 0x3f;
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,9);
-    dlg.load_game_section((const char *)str_rules_2,1);
-    dlg.set_default_choice((int)prefs_game_rules_block.prefs_rules_choice);
-    dlg.set_position(
-                       -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3)
-                        + 1),-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U))
-                               >> 3) + 1));
-    choice = dlg.show_modal(0);
-    snd_play_effect(0x6a,0,0,0);
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-    if (choice < 0) goto cleanup_return;
-    prefs_game_rules_block.prefs_rules_choice = (short)choice;
-    if (choice == 0) goto leaders_setup;
-    game.rules = prefs_game_rules_block.prefs_game_rules[0];
-    if (setup_mode == 1) {
-      game.rules = prefs_game_rules_block.prefs_game_rules[0] & 0x7fff;
-    }
-    else if (setup_mode == 2) {
-      game.rules = prefs_game_rules_block.prefs_game_rules[0] | 0x8000;
-    }
-    dlg_checks_clear();
-    dlg_check_set(0,(uint)((game.rules & 0x10) == 0));
-    dlg_check_set(1,game.rules & 0x8000);
-    dlg_check_set(2,0);
-    dlg_check_set(3,(int)prefs_game_rules_block.prefs_accelerated_start);
-    dlg_check_set(4,game.rules & 0x80);
-    dlg_check_set(5,game.rules & 0x100);
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(3,6,9);
-    dlg.load_text_section((const char *)&str_game_7,(const char *)str_advanced,0,0,0,0,0,0);
-    if (((byte)dlg.style_flags & 4) != 0) {
-      for (opt_i = 0; opt_i < (int)dlg.option_count; opt_i = opt_i + 1) {
-        dlg.set_option_checked(opt_i,1 << ((byte)opt_i & 0x1f) & dlg_check_bits);
-      }
-    }
-    dlg.set_position(
-                       ((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3) +
-                       1,-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3
-                           ) + 1));
-    dlg.show_modal(0);
-    snd_play_effect(0x6a,0,0,0);
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-    dlg_help_pressed = (int)dlg.result_extra;
-    if (((byte)dlg.style_flags & 4) != 0) {
-      dlg_check_bits = 0;
-      for (opt_i = 0; opt_i < (int)dlg.option_count; opt_i = opt_i + 1) {
-        choice = dlg.option_is_checked(opt_i);
-        if (choice != 0) {
-          dlg_check_bits = dlg_check_bits | 1 << ((byte)opt_i & 0x1f);
-        }
-      }
-    }
-    game.rules = 0x2f;
-    choice = dlg_check_get(0);
-    if (choice == 0) {
-      game.rules = game.rules | 0x10;
-    }
-    choice = dlg_check_get(1);
-    if (choice != 0) {
-      game.rules = game.rules | 0x8000;
-    }
-    pick_opponents = dlg_check_get(2);
-    accel_choice = dlg_check_get(3);
-    choice = dlg_check_get(4);
-    if (choice != 0) {
-      game.rules = game.rules | 0x80;
-    }
-    choice = dlg_check_get(5);
-    if (choice != 0) {
-      game.rules = game.rules | 0x100;
-    }
-    if (setup_mode == 0) {
-      prefs_game_rules_block.prefs_game_rules[0] = game.rules;
-    }
-    else {
-      prefs_game_rules_block.prefs_game_rules[0] = game.rules & 0x7fff | prefs_game_rules_block.prefs_game_rules[0] & 0x8000;
-    }
-    if (accel_choice == 0) break;
-    game.first_launch_turn = 0xffff;
-    choice = game_turn_to_year(0);
-    if (choice < 1) {
-      year_abs = game_turn_to_year(0);
-      year_a = ~year_abs + 1;
-    }
-    else {
-      year_a = game_turn_to_year(0);
-    }
-    text_set_number_arg(0,year_a);
-    choice = game_turn_to_year(0x15);
-    if (choice < 1) {
-      year_abs = game_turn_to_year(0x15);
-      year_b = ~year_abs + 1;
-    }
-    else {
-      year_b = game_turn_to_year(0x15);
-    }
-    text_set_number_arg(1,year_b);
-    choice = game_turn_to_year(0x29);
-    if (choice < 1) {
-      year_abs = game_turn_to_year(0x29);
-      year_c = ~year_abs + 1;
-    }
-    else {
-      year_c = game_turn_to_year(0x29);
-    }
-    text_set_number_arg(2,year_c);
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,9);
-    dlg.load_game_section((const char *)str_accelerated,1);
-    dlg.set_default_choice((int)prefs_game_rules_block.prefs_accelerated_start);
-    dlg.set_position(
-                       -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3)
-                        + 1),-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U))
-                               >> 3) + 1));
-    accel_choice = dlg.show_modal(0);
-    snd_play_effect(0x6a,0,0,0);
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-  } while (accel_choice < 0);
-  prefs_game_rules_block.prefs_accelerated_start = (short)accel_choice;
-leaders_setup:
-  do {
-    for (leader_i = 0; leader_i < 0x15; leader_i = leader_i + 1) {
-      if (leaders[leader_i].leader_name < 1) {
-        leaders[leader_i].leader_name =
-             ~leaders[leader_i].leader_name + 1;
-      }
-      if (leaders[leader_i].plural < 1) {
-        leaders[leader_i].plural =
-             ~leaders[leader_i].plural + 1;
-      }
-      if (leaders[leader_i].adjective < 1) {
-        leaders[leader_i].adjective =
-             ~leaders[leader_i].adjective + 1;
-      }
-      for (title_i = 0; title_i < 7; title_i = title_i + 1) {
-        if (leaders[leader_i].titles[title_i][0] < 1) {
-          leaders[leader_i].titles[title_i][0] =
-               ~leaders[leader_i].titles[title_i][0] + 1;
-        }
-        if (leaders[leader_i].titles[title_i][1] < 1) {
-          leaders[leader_i].titles[title_i][1] =
-               ~leaders[leader_i].titles[title_i][1] + 1;
-        }
-      }
-    }
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,6);
-    dlg.load_game_section((const char *)str_gender,1);
-    dlg.set_default_choice((int)prefs_game_rules_block.prefs_gender);
-    dlg.set_position(0xfffffc19,
-                       -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3)
-                        + 1));
-    choice = dlg.show_modal(0);
-    snd_play_effect(0x6a,0,0,0);
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-    if (choice < 0) goto difficulty_dialog;
-    prefs_game_rules_block.prefs_gender = (short)choice;
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
-    dlg_err = dlg.load_text((const char *)&str_game,(const char *)str_tribe,1);
-    if (dlg_err != 0) {
-      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-      goto cleanup_return;
-    }
-    dlg.set_columns(3);
-    for (leader_i = 0; leader_i < 0x15; leader_i = leader_i + 1) {
-      option_arg = 0;
-      leader_arg = leader_i;
-      label_text = label_string((int)leaders[leader_i].plural);
-      dlg.add_option((const char *)label_text,leader_arg,option_arg);
-    }
-    dlg.set_default_choice((int)prefs_game_rules_block.prefs_tribe);
-    dlg.set_position(0xfffffc19,
-                       -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3)
-                        + 1));
-    tribe_choice = dlg.show_modal(0);
-    snd_play_effect(0x6a,0,0,0);
-    ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-    if (-1 < tribe_choice) {
-      game.player_civ = leaders[tribe_choice].color;
-      prefs_game_rules_block.prefs_tribe = (short)tribe_choice;
-      civs[game.player_civ].tribe = prefs_game_rules_block.prefs_tribe;
-      civs[game.player_civ].leader_portrait = (i8)tribe_choice;
-      if (choice != 0) {
-        civs[game.player_civ].leader_portrait =
-             civs[game.player_civ].leader_portrait + '\x15';
-      }
-      human_civ[0] = (int)game.player_civ;
-      game.human_players = (byte)(1 << (game.player_civ & 0x1f));
-      female_flag = (i8)choice;
-      leaders[civs[game.player_civ].tribe].female = female_flag;
-      leaders[civs[game.player_civ].tribe].leader_name
-           = leaders[civs[game.player_civ].tribe].names[(uint)(&leaders[0].female)
-                          [civs[game.player_civ].tribe * 0x30]];
-      label_text = label_string((int)leaders[civs[game.player_civ].tribe].leader_name);
-      crt_strcpy(&civ_names[game.player_civ].leader_name[0],label_text);
-      leaders[civs[game.player_civ].tribe].leader_name =
-           -leaders[civs[game.player_civ].tribe].leader_name;
-      if (dlg.result_extra == 0) {
-        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
-        dlg.load_text_section((const char *)&str_game_7,(const char *)&str_name,0x17,
-                           (iptr)&civ_names[game.player_civ].leader_name[0],0,0,0,1);
-        dlg.set_position(0xfffffc19,
-                           -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >>
-                             3) + 1));
-        dlg_err = dlg.run_modal((iptr)custom_name,0);
+      do {
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(3,6,3);
+        dlg.load_game_section((const char *)str_difficulty_2,1);
+        dlg.set_default_choice((int)prefs_game_rules_block.prefs_difficulty);
+        dlg.set_position(
+                           ((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3)
+                           + 1,-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U))
+                                 >> 3) + 1));
+        difficulty_choice = dlg.show_modal(0);
         snd_play_effect(0x6a,0,0,0);
         ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-        if (dlg_err != 0) goto leaders_setup;
-        crt_strcpy(&civ_names[game.player_civ].leader_name[0],custom_name);
+        if (difficulty_choice < 0) goto cleanup_return;
+        game.difficulty = (byte)difficulty_choice;
+        prefs_game_rules_block.prefs_difficulty = (short)difficulty_choice;
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,4);
+        dlg.load_game_section((const char *)str_enemies,1);
+        dlg.set_default_choice((int)prefs_game_rules_block.prefs_enemies_choice);
+        dlg.set_position(
+                           -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3
+                             ) + 1),-(((int)(caption_font_block.screen_height + -0x1e0 +
+                                            (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
+        enemies_choice = dlg.show_modal(0);
+        snd_play_effect(0x6a,0,0,0);
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+      } while (enemies_choice < 0);
+      if (dlg.result_extra == 0) {
+        prefs_game_rules_block.prefs_enemies_choice = (short)enemies_choice;
+        game.num_enemies = 6 - (char)enemies_choice;
       }
       else {
-        label_text = label_string((int)leaders[civs[game.player_civ].tribe].plural);
-        crt_strcpy(&civ_names[game.player_civ].tribe_name[0],label_text);
-        label_text = label_string((int)leaders[civs[game.player_civ].tribe].adjective);
-        crt_strcpy(&civ_names[game.player_civ].adjective[0],label_text);
-        leaders[civs[game.player_civ].tribe].plural =
-             -leaders[civs[game.player_civ].tribe].plural;
-        leaders[civs[game.player_civ].tribe].adjective =
-             -leaders[civs[game.player_civ].tribe].adjective;
-        for (title_i = 0; title_i < 7; title_i = title_i + 1) {
-          label_text = label_string((int)leaders[civs[game.player_civ].tribe].titles[title_i][choice]);
-          crt_strcpy(&civ_names[game.player_civ].titles[title_i][0],label_text);
-          leaders[civs[game.player_civ].tribe].titles[title_i][choice] =
-               -leaders[civs[game.player_civ].tribe].titles[title_i][choice]
-          ;
-        }
-        while( true ) {
-          while( true ) {
-            text_set_string_arg_b(1,(const char *)&civ_names[game.player_civ].tribe_name[0]);
-            text_set_string_arg_b(2,(const char *)&civ_names[game.player_civ].adjective[0]);
-            ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
-            dlg_err = dlg.load_text_section((const char *)&str_game_7,(const char *)str_customtribe,0x17,
-                                          (iptr)&civ_names[game.player_civ].leader_name[0],0,0,0,1);
-            if (dlg_err != 0) {
-              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-              goto cleanup_return;
-            }
-            dlg.set_position(0xfffffc19,
-                               -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)
-                                       ) >> 3) + 1));
-            choice = dlg.show_modal(0);
-            snd_play_effect(0x6a,0,0,0);
-            ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-            if (choice < 0) goto leaders_setup;
-            crt_strcpy(&civ_names[game.player_civ].leader_name[0],((i8 *)&minimap_window_block.text_string_args));
-            crt_strcpy(&civ_names[game.player_civ].tribe_name[0],((i8 *)&minimap_window_block.text_string_arg1));
-            crt_strcpy(&civ_names[game.player_civ].adjective[0],((i8 *)&minimap_window_block.text_string_arg2));
-            if ((int)dlg.result_extra != 1) break;
-            ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
-            dlg_err = dlg.load_game_section((const char *)str_customtribe2,1);
-            if (dlg_err != 0) {
-              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-              goto cleanup_return;
-            }
-            dlg_err = 0;
-            for (title_i = 0; title_i < 7; title_i = title_i + 1) {
-              text_clear();
-              text_append_string_id(government_names[title_i]);
-              text_append_colon();
-              dlg.add_edit_field((const char *)&map_views_block.text_buffer,
-                                 (iptr)&civ_names[game.player_civ].titles[title_i][0],0x17);
-            }
-            dlg.set_position(0xfffffc19,
-                               -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)
-                                       ) >> 3) + 1));
-            choice = dlg.show_modal(0);
-            if (choice == 0) {
-              for (title_i = 0; title_i < 7; title_i = title_i + 1) {
-                crt_strcpy(&civ_names[game.player_civ].titles[title_i][0],
-                             ((i8 *)&minimap_window_block.text_string_args) + title_i * 0x104);
-              }
-            }
-            snd_play_effect(0x6a,0,0,0);
-            ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-          }
-          if ((int)dlg.result_extra != 2) break;
-          portrait_dlg_show((int)game.player_civ);
-        }
+        choice = _rand();
+        game.num_enemies = (char)(choice % 5) + 2;
       }
-city_style_dialog:
-      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,8);
-      dlg.load_game_section((const char *)str_customcity,0x20001);
-      for (style_i = 0; style_i < 4; style_i = style_i + 1) {
-        label_text = label_string(label_string_ids[0xf6 + style_i]);
-        dlg.add_sprite(style_i * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 360)),style_i,(const char *)label_text);
-      }
-      dlg.set_default_choice(
-                         (int)leaders[civs[game.player_civ].tribe].city_style);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(3,6,5);
+      dlg.load_game_section((const char *)str_barbarity,1);
+      dlg.set_default_choice((int)prefs_game_rules_block.prefs_barbarity);
       dlg.set_position(
-                         -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3
-                           ) + 1),-(((int)(caption_font_block.screen_height + -0x1e0 +
-                                          (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
+                         ((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3) +
+                         1,-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3
+                             ) + 1));
       choice = dlg.show_modal(0);
       snd_play_effect(0x6a,0,0,0);
       ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-      if (-1 < choice) {
-        civ_names[game.player_civ].city_style = (short)choice;
-        game.civs_alive = game.human_players | 1;
-        for (title_i = 0; title_i < (int)(uint)game.num_enemies; title_i = title_i + 1) {
-          choice = _rand();
-          (*((char *)&leader_i + 0)) = (byte)(choice >> 0x1f);
-          (*((char *)&leader_i + 0)) =
-               (((byte)choice ^ (byte)leader_i) - (byte)leader_i & 7 ^ (byte)leader_i) -
-               (byte)leader_i;
-          if ((1 << ((byte)leader_i & 0x1f) & (uint)game.civs_alive) == 0) {
-            game.civs_alive = game.civs_alive | (byte)(1 << ((byte)leader_i & 0x1f));
+    } while (choice < 0);
+    if (dlg.result_extra == 0) {
+      barb_level = (char)choice;
+      game.barbarian_activity = barb_level;
+      prefs_game_rules_block.prefs_barbarity = (short)choice;
+    }
+    else if (game.difficulty < 2) {
+      choice = _rand();
+      rand_sign = (byte)(choice >> 0x1f);
+      game.barbarian_activity = ((((byte)choice ^ rand_sign) - rand_sign & 1 ^ rand_sign) - rand_sign) + game.difficulty;
+    }
+    else if (game.difficulty < 5) {
+      choice = _rand();
+      game.barbarian_activity = (char)(choice % 3) + '\x01';
+    }
+    else {
+      choice = _rand();
+      rand_sign = (byte)(choice >> 0x1f);
+      game.barbarian_activity = ((((byte)choice ^ rand_sign) - rand_sign & 1 ^ rand_sign) - rand_sign) + '\x02';
+    }
+    do {
+      game.rules = 0x3f;
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,9);
+      dlg.load_game_section((const char *)str_rules_2,1);
+      dlg.set_default_choice((int)prefs_game_rules_block.prefs_rules_choice);
+      dlg.set_position(
+                         -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3)
+                          + 1),-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U))
+                                 >> 3) + 1));
+      choice = dlg.show_modal(0);
+      snd_play_effect(0x6a,0,0,0);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+      if (choice < 0) goto cleanup_return;
+      prefs_game_rules_block.prefs_rules_choice = (short)choice;
+      if (choice == 0) goto leaders_setup;
+      game.rules = prefs_game_rules_block.prefs_game_rules[0];
+      if (setup_mode == 1) {
+        game.rules = prefs_game_rules_block.prefs_game_rules[0] & 0x7fff;
+      }
+      else if (setup_mode == 2) {
+        game.rules = prefs_game_rules_block.prefs_game_rules[0] | 0x8000;
+      }
+      dlg_checks_clear();
+      dlg_check_set(0,(uint)((game.rules & 0x10) == 0));
+      dlg_check_set(1,game.rules & 0x8000);
+      dlg_check_set(2,0);
+      dlg_check_set(3,(int)prefs_game_rules_block.prefs_accelerated_start);
+      dlg_check_set(4,game.rules & 0x80);
+      dlg_check_set(5,game.rules & 0x100);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(3,6,9);
+      dlg.load_text_section((const char *)&str_game_7,(const char *)str_advanced,0,0,0,0,0,0);
+      if (((byte)dlg.style_flags & 4) != 0) {
+        for (opt_i = 0; opt_i < (int)dlg.option_count; opt_i = opt_i + 1) {
+          dlg.set_option_checked(opt_i,1 << ((byte)opt_i & 0x1f) & dlg_check_bits);
+        }
+      }
+      dlg.set_position(
+                         ((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3) +
+                         1,-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3
+                             ) + 1));
+      dlg.show_modal(0);
+      snd_play_effect(0x6a,0,0,0);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+      dlg_help_pressed = (int)dlg.result_extra;
+      if (((byte)dlg.style_flags & 4) != 0) {
+        dlg_check_bits = 0;
+        for (opt_i = 0; opt_i < (int)dlg.option_count; opt_i = opt_i + 1) {
+          choice = dlg.option_is_checked(opt_i);
+          if (choice != 0) {
+            dlg_check_bits = dlg_check_bits | 1 << ((byte)opt_i & 0x1f);
           }
-          else {
-            title_i = title_i + -1;
+        }
+      }
+      game.rules = 0x2f;
+      choice = dlg_check_get(0);
+      if (choice == 0) {
+        game.rules = game.rules | 0x10;
+      }
+      choice = dlg_check_get(1);
+      if (choice != 0) {
+        game.rules = game.rules | 0x8000;
+      }
+      pick_opponents = dlg_check_get(2);
+      accel_choice = dlg_check_get(3);
+      choice = dlg_check_get(4);
+      if (choice != 0) {
+        game.rules = game.rules | 0x80;
+      }
+      choice = dlg_check_get(5);
+      if (choice != 0) {
+        game.rules = game.rules | 0x100;
+      }
+      if (setup_mode == 0) {
+        prefs_game_rules_block.prefs_game_rules[0] = game.rules;
+      }
+      else {
+        prefs_game_rules_block.prefs_game_rules[0] = game.rules & 0x7fff | prefs_game_rules_block.prefs_game_rules[0] & 0x8000;
+      }
+      if (accel_choice == 0) break;
+      game.first_launch_turn = 0xffff;
+      choice = game_turn_to_year(0);
+      if (choice < 1) {
+        year_abs = game_turn_to_year(0);
+        year_a = ~year_abs + 1;
+      }
+      else {
+        year_a = game_turn_to_year(0);
+      }
+      text_set_number_arg(0,year_a);
+      choice = game_turn_to_year(0x15);
+      if (choice < 1) {
+        year_abs = game_turn_to_year(0x15);
+        year_b = ~year_abs + 1;
+      }
+      else {
+        year_b = game_turn_to_year(0x15);
+      }
+      text_set_number_arg(1,year_b);
+      choice = game_turn_to_year(0x29);
+      if (choice < 1) {
+        year_abs = game_turn_to_year(0x29);
+        year_c = ~year_abs + 1;
+      }
+      else {
+        year_c = game_turn_to_year(0x29);
+      }
+      text_set_number_arg(2,year_c);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,9);
+      dlg.load_game_section((const char *)str_accelerated,1);
+      dlg.set_default_choice((int)prefs_game_rules_block.prefs_accelerated_start);
+      dlg.set_position(
+                         -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3)
+                          + 1),-(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U))
+                                 >> 3) + 1));
+      accel_choice = dlg.show_modal(0);
+      snd_play_effect(0x6a,0,0,0);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+    } while (accel_choice < 0);
+    prefs_game_rules_block.prefs_accelerated_start = (short)accel_choice;
+leaders_setup:
+    do {
+      for (leader_i = 0; leader_i < 0x15; leader_i = leader_i + 1) {
+        if (leaders[leader_i].leader_name < 1) {
+          leaders[leader_i].leader_name =
+               ~leaders[leader_i].leader_name + 1;
+        }
+        if (leaders[leader_i].plural < 1) {
+          leaders[leader_i].plural =
+               ~leaders[leader_i].plural + 1;
+        }
+        if (leaders[leader_i].adjective < 1) {
+          leaders[leader_i].adjective =
+               ~leaders[leader_i].adjective + 1;
+        }
+        for (title_i = 0; title_i < 7; title_i = title_i + 1) {
+          if (leaders[leader_i].titles[title_i][0] < 1) {
+            leaders[leader_i].titles[title_i][0] =
+                 ~leaders[leader_i].titles[title_i][0] + 1;
+          }
+          if (leaders[leader_i].titles[title_i][1] < 1) {
+            leaders[leader_i].titles[title_i][1] =
+                 ~leaders[leader_i].titles[title_i][1] + 1;
           }
         }
-        if (pick_opponents != 0) {
-          opp_number = 0;
-          leader_i = 1;
-          do {
-            if (7 < leader_i) break;
-            if (((1 << ((byte)leader_i & 0x1f) & (uint)game.human_players) == 0) &&
-               ((1 << ((byte)leader_i & 0x1f) & (uint)game.civs_alive) != 0)) {
-              opp_number = opp_number + 1;
-              text_set_number_arg(0,opp_number);
-              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,9);
-              dlg.load_game_section((const char *)str_opponent,1);
-              dlg.option_list->id = 0x15;
-              for (leader_pick = 0; leader_pick < 0x15; leader_pick = leader_pick + 1) {
-                if (leaders[leader_pick].color == leader_i) {
-                  text_clear();
-                  text_append_string_id((int)leaders[leader_pick].plural);
-                  text_append_space();
-                  text_append_lparen();
-                  text_append_string_id((int)leaders[leader_pick].leader_name);
-                  text_append_rparen();
-                  dlg.add_option((const char *)&map_views_block.text_buffer,leader_pick,0);
-                }
-              }
-              dlg.set_position(0xfffffc19,
-                                 -(((int)(caption_font_block.screen_height + -0x1e0 +
-                                         (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-              leader_pick = dlg.show_modal(0);
-              snd_play_effect(0x6a,0,0,0);
-              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
-              if (leader_pick < 0) goto city_style_dialog;
-              if (leader_pick < 0x15) {
-                (((i8 *)&setup_chosen_leaders))[leader_i] = (i8)leader_pick;
-              }
-            }
-            leader_i = leader_i + 1;
-          } while( true );
-        }
-        prefs_save_civ2dat();
-        rules_load_advances(1);
-        rules_load_units(1);
-        rules_load_improvements(1);
-        snd_menu_end();
-        map_generate(setup_mode);
-        game_init_new();
-        if (accel_choice != 0) {
-          game_accelerated_start(accel_choice + -1);
-        }
-        civ_intro_popup((int)game.player_civ);
-        result = 0;
+      }
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,6);
+      dlg.load_game_section((const char *)str_gender,1);
+      dlg.set_default_choice((int)prefs_game_rules_block.prefs_gender);
+      dlg.set_position(0xfffffc19,
+                         -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3)
+                          + 1));
+      choice = dlg.show_modal(0);
+      snd_play_effect(0x6a,0,0,0);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+      if (choice < 0) break;  /* back to the difficulty dialog */
+      prefs_game_rules_block.prefs_gender = (short)choice;
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
+      dlg_err = dlg.load_text((const char *)&str_game,(const char *)str_tribe,1);
+      if (dlg_err != 0) {
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
         goto cleanup_return;
       }
-    }
-  } while( true );
+      dlg.set_columns(3);
+      for (leader_i = 0; leader_i < 0x15; leader_i = leader_i + 1) {
+        option_arg = 0;
+        leader_arg = leader_i;
+        label_text = label_string((int)leaders[leader_i].plural);
+        dlg.add_option((const char *)label_text,leader_arg,option_arg);
+      }
+      dlg.set_default_choice((int)prefs_game_rules_block.prefs_tribe);
+      dlg.set_position(0xfffffc19,
+                         -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3)
+                          + 1));
+      tribe_choice = dlg.show_modal(0);
+      snd_play_effect(0x6a,0,0,0);
+      ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+      if (-1 < tribe_choice) {
+        game.player_civ = leaders[tribe_choice].color;
+        prefs_game_rules_block.prefs_tribe = (short)tribe_choice;
+        civs[game.player_civ].tribe = prefs_game_rules_block.prefs_tribe;
+        civs[game.player_civ].leader_portrait = (i8)tribe_choice;
+        if (choice != 0) {
+          civs[game.player_civ].leader_portrait =
+               civs[game.player_civ].leader_portrait + '\x15';
+        }
+        human_civ[0] = (int)game.player_civ;
+        game.human_players = (byte)(1 << (game.player_civ & 0x1f));
+        female_flag = (i8)choice;
+        leaders[civs[game.player_civ].tribe].female = female_flag;
+        leaders[civs[game.player_civ].tribe].leader_name
+             = leaders[civs[game.player_civ].tribe].names[(uint)(&leaders[0].female)
+                            [civs[game.player_civ].tribe * 0x30]];
+        label_text = label_string((int)leaders[civs[game.player_civ].tribe].leader_name);
+        crt_strcpy(&civ_names[game.player_civ].leader_name[0],label_text);
+        leaders[civs[game.player_civ].tribe].leader_name =
+             -leaders[civs[game.player_civ].tribe].leader_name;
+        if (dlg.result_extra == 0) {
+          ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
+          dlg.load_text_section((const char *)&str_game_7,(const char *)&str_name,0x17,
+                             (iptr)&civ_names[game.player_civ].leader_name[0],0,0,0,1);
+          dlg.set_position(0xfffffc19,
+                             -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >>
+                               3) + 1));
+          dlg_err = dlg.run_modal((iptr)custom_name,0);
+          snd_play_effect(0x6a,0,0,0);
+          ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+          if (dlg_err != 0) continue;
+          crt_strcpy(&civ_names[game.player_civ].leader_name[0],custom_name);
+        }
+        else {
+          label_text = label_string((int)leaders[civs[game.player_civ].tribe].plural);
+          crt_strcpy(&civ_names[game.player_civ].tribe_name[0],label_text);
+          label_text = label_string((int)leaders[civs[game.player_civ].tribe].adjective);
+          crt_strcpy(&civ_names[game.player_civ].adjective[0],label_text);
+          leaders[civs[game.player_civ].tribe].plural =
+               -leaders[civs[game.player_civ].tribe].plural;
+          leaders[civs[game.player_civ].tribe].adjective =
+               -leaders[civs[game.player_civ].tribe].adjective;
+          for (title_i = 0; title_i < 7; title_i = title_i + 1) {
+            label_text = label_string((int)leaders[civs[game.player_civ].tribe].titles[title_i][choice]);
+            crt_strcpy(&civ_names[game.player_civ].titles[title_i][0],label_text);
+            leaders[civs[game.player_civ].tribe].titles[title_i][choice] =
+                 -leaders[civs[game.player_civ].tribe].titles[title_i][choice]
+            ;
+          }
+          while( true ) {
+            while( true ) {
+              text_set_string_arg_b(1,(const char *)&civ_names[game.player_civ].tribe_name[0]);
+              text_set_string_arg_b(2,(const char *)&civ_names[game.player_civ].adjective[0]);
+              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
+              dlg_err = dlg.load_text_section((const char *)&str_game_7,(const char *)str_customtribe,0x17,
+                                            (iptr)&civ_names[game.player_civ].leader_name[0],0,0,0,1);
+              if (dlg_err != 0) {
+                ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+                goto cleanup_return;
+              }
+              dlg.set_position(0xfffffc19,
+                                 -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)
+                                         ) >> 3) + 1));
+              choice = dlg.show_modal(0);
+              snd_play_effect(0x6a,0,0,0);
+              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+              if (choice < 0) goto leaders_setup;
+              crt_strcpy(&civ_names[game.player_civ].leader_name[0],((i8 *)&minimap_window_block.text_string_args));
+              crt_strcpy(&civ_names[game.player_civ].tribe_name[0],((i8 *)&minimap_window_block.text_string_arg1));
+              crt_strcpy(&civ_names[game.player_civ].adjective[0],((i8 *)&minimap_window_block.text_string_arg2));
+              if ((int)dlg.result_extra != 1) break;
+              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,7);
+              dlg_err = dlg.load_game_section((const char *)str_customtribe2,1);
+              if (dlg_err != 0) {
+                ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+                goto cleanup_return;
+              }
+              dlg_err = 0;
+              for (title_i = 0; title_i < 7; title_i = title_i + 1) {
+                text_clear();
+                text_append_string_id(government_names[title_i]);
+                text_append_colon();
+                dlg.add_edit_field((const char *)&map_views_block.text_buffer,
+                                   (iptr)&civ_names[game.player_civ].titles[title_i][0],0x17);
+              }
+              dlg.set_position(0xfffffc19,
+                                 -(((int)(caption_font_block.screen_height + -0x1e0 + (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)
+                                         ) >> 3) + 1));
+              choice = dlg.show_modal(0);
+              if (choice == 0) {
+                for (title_i = 0; title_i < 7; title_i = title_i + 1) {
+                  crt_strcpy(&civ_names[game.player_civ].titles[title_i][0],
+                               ((i8 *)&minimap_window_block.text_string_args) + title_i * 0x104);
+                }
+              }
+              snd_play_effect(0x6a,0,0,0);
+              ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+            }
+            if ((int)dlg.result_extra != 2) break;
+            portrait_dlg_show((int)game.player_civ);
+          }
+        }
+city_style_dialog:
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(1,6,8);
+        dlg.load_game_section((const char *)str_customcity,0x20001);
+        for (style_i = 0; style_i < 4; style_i = style_i + 1) {
+          label_text = label_string(label_string_ids[0xf6 + style_i]);
+          dlg.add_sprite(style_i * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 360)),style_i,(const char *)label_text);
+        }
+        dlg.set_default_choice(
+                           (int)leaders[civs[game.player_civ].tribe].city_style);
+        dlg.set_position(
+                           -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3
+                             ) + 1),-(((int)(caption_font_block.screen_height + -0x1e0 +
+                                            (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
+        choice = dlg.show_modal(0);
+        snd_play_effect(0x6a,0,0,0);
+        ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+        if (-1 < choice) {
+          civ_names[game.player_civ].city_style = (short)choice;
+          game.civs_alive = game.human_players | 1;
+          for (title_i = 0; title_i < (int)(uint)game.num_enemies; title_i = title_i + 1) {
+            choice = _rand();
+            (*((char *)&leader_i + 0)) = (byte)(choice >> 0x1f);
+            (*((char *)&leader_i + 0)) =
+                 (((byte)choice ^ (byte)leader_i) - (byte)leader_i & 7 ^ (byte)leader_i) -
+                 (byte)leader_i;
+            if ((1 << ((byte)leader_i & 0x1f) & (uint)game.civs_alive) == 0) {
+              game.civs_alive = game.civs_alive | (byte)(1 << ((byte)leader_i & 0x1f));
+            }
+            else {
+              title_i = title_i + -1;
+            }
+          }
+          if (pick_opponents != 0) {
+            opp_number = 0;
+            leader_i = 1;
+            do {
+              if (7 < leader_i) break;
+              if (((1 << ((byte)leader_i & 0x1f) & (uint)game.human_players) == 0) &&
+                 ((1 << ((byte)leader_i & 0x1f) & (uint)game.civs_alive) != 0)) {
+                opp_number = opp_number + 1;
+                text_set_number_arg(0,opp_number);
+                ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->show(2,6,9);
+                dlg.load_game_section((const char *)str_opponent,1);
+                dlg.option_list->id = 0x15;
+                for (leader_pick = 0; leader_pick < 0x15; leader_pick = leader_pick + 1) {
+                  if (leaders[leader_pick].color == leader_i) {
+                    text_clear();
+                    text_append_string_id((int)leaders[leader_pick].plural);
+                    text_append_space();
+                    text_append_lparen();
+                    text_append_string_id((int)leaders[leader_pick].leader_name);
+                    text_append_rparen();
+                    dlg.add_option((const char *)&map_views_block.text_buffer,leader_pick,0);
+                  }
+                }
+                dlg.set_position(0xfffffc19,
+                                   -(((int)(caption_font_block.screen_height + -0x1e0 +
+                                           (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
+                leader_pick = dlg.show_modal(0);
+                snd_play_effect(0x6a,0,0,0);
+                ((SetupPicWindow *)((i8 *)&setup_picwnd_block.setup_picwnd))->close();
+                if (leader_pick < 0) goto city_style_dialog;
+                if (leader_pick < 0x15) {
+                  (((i8 *)&setup_chosen_leaders))[leader_i] = (i8)leader_pick;
+                }
+              }
+              leader_i = leader_i + 1;
+            } while( true );
+          }
+          prefs_save_civ2dat();
+          rules_load_advances(1);
+          rules_load_units(1);
+          rules_load_improvements(1);
+          snd_menu_end();
+          map_generate(setup_mode);
+          game_init_new();
+          if (accel_choice != 0) {
+            game_accelerated_start(accel_choice + -1);
+          }
+          civ_intro_popup((int)game.player_civ);
+          result = 0;
+          goto cleanup_return;
+        }
+      }
+    } while( true );
+  }
+cleanup_return:
+  label = result;
+  unwind_state = 0xffffffff;
+  /* inlined unwind funclet 0041d3f2 */ { dlg.Dialog::destruct(); }
+  return label;
 }
 
 /* 0x004d17bf: unwind funclet 0x004d4a11 destroys the control at EBP-0x12c (surf_1eb). */
@@ -1950,16 +1950,17 @@ void __cdecl net_host_turn_loop(void)
   }
   resume_start = (*(byte *)&turn_resume_civ);
   if ((*(byte *)&turn_resume_civ) != 0) {
-    do {
-      if ((1 << ((*(byte *)&turn_resume_civ) & 0x1f) & (uint)game.civs_alive) != 0) goto turn_start;
+    while ((1 << ((*(byte *)&turn_resume_civ) & 0x1f) & (uint)game.civs_alive) == 0) {
       (*(byte *)&turn_resume_civ) = (*(byte *)&turn_resume_civ) + 1;
       if ((*(byte *)&turn_resume_civ) == 8) {
         (*(byte *)&turn_resume_civ) = 0;
       }
-    } while ((*(byte *)&turn_resume_civ) != resume_start);
-    game_over_reason = 1;
+      if ((*(byte *)&turn_resume_civ) == resume_start) {
+        game_over_reason = 1;
+        break;
+      }
+    }
   }
-turn_start:
   do {
     game.human_players = net_session_block.pending_human_players | game.human_players;
     net_session_block.pending_human_players = 0;
@@ -2019,12 +2020,11 @@ turn_start:
     dlg_pending_idle_callback = net_host_wait_production_idle;
     popup_game_with_sprite((const char *)str_waitproduction,(iptr)&popup_info_icon_sprite,0);
     clients_done = 0;
-wait_production_loop:
-    if (clients_done == 0) {
+    while (clients_done == 0) {
       net_session_block.process_messages(1,0);
       if (net_session_block.net_player_count[0] < 2) {
         clients_done = 1;
-        goto production_complete;
+        break;
       }
       clients_done = 1;
       for (civ = 1; civ < 8; civ = civ + 1) {
@@ -2035,9 +2035,7 @@ wait_production_loop:
           break;
         }
       }
-      goto wait_production_loop;
     }
-production_complete:
     net_session_block.nm_production_complete_count = 0;
     net_send_state_diff(0xff,2,0,0,0);
     XD_FlushSendBuffer(60000);
@@ -2172,12 +2170,11 @@ production_complete:
     dlg_pending_idle_callback = net_host_wait_human_moves_idle;
     popup_game_with_sprite((const char *)str_waithumanmoves,(iptr)&popup_info_icon_sprite,0);
     humans_done = 0;
-wait_human_moves_loop:
-    if (humans_done == 0) {
+    while (humans_done == 0) {
       net_session_block.process_messages(1,0);
       if (net_session_block.net_player_count[0] < 2) {
         humans_done = 1;
-        goto human_moves_complete;
+        break;
       }
       humans_done = 1;
       for (civ = 1; civ < 8; civ = civ + 1) {
@@ -2188,9 +2185,7 @@ wait_human_moves_loop:
           break;
         }
       }
-      goto wait_human_moves_loop;
     }
-human_moves_complete:
     net_session_block.nm_human_move_complete_count = 0;
     net_check_lost_connections();
     if ((net_session_block.player_has_quit == '\0') || (net_session_block.mp_turn_civ == human_civ[0])) {

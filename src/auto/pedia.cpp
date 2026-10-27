@@ -416,7 +416,7 @@ void PediaWindow::add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left
            (pedia_advance_ids[list_index] != item_id))) {
       list_index++;
     }
-    if (pedia_advance_count == list_index) goto done;
+    if (pedia_advance_count == list_index) return;
     break;
   case 1:
     list_index = 0;
@@ -424,14 +424,14 @@ void PediaWindow::add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left
            (pedia_improve_ids[list_index] != item_id))) {
       list_index++;
     }
-    if (pedia_improve_count == list_index) goto done;
+    if (pedia_improve_count == list_index) return;
     break;
   case 2:
     for (list_index = 0;
         ((int)list_index < pedia_wonder_count &&
         (pedia_wonder_ids[list_index] != item_id)); list_index++) {
     }
-    if ((u32)pedia_wonder_count == list_index) goto done;
+    if ((u32)pedia_wonder_count == list_index) return;
     break;
   case 3:
     list_index = 0;
@@ -439,7 +439,7 @@ void PediaWindow::add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left
            (pedia_unit_ids[list_index] != item_id))) {
       list_index++;
     }
-    if ((u32)pedia_unit_count == list_index) goto done;
+    if ((u32)pedia_unit_count == list_index) return;
     break;
   case 4:
     list_index = 0;
@@ -447,10 +447,10 @@ void PediaWindow::add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left
            (pedia_terrain_ids[list_index] != item_id))) {
       list_index++;
     }
-    if (pedia_terrain_count_2 == list_index) goto done;
+    if (pedia_terrain_count_2 == list_index) return;
     break;
   default:
-    goto done;
+    return;
   }
   while( true ) {
     text_width = ((GameFont *)((i8 *)&font_size21))->text_width((const char *)&map_views_block.text_buffer);
@@ -533,7 +533,6 @@ void PediaWindow::add_link(iptr item_id,int x,int y,i32 link_kind, i32 rect_left
     link->control.set_dblclick_callback(pedia_link_on_click_terrain);
   }
   ((Control *)&link->control)->show_and_redraw();
-done:
   return;
 }
 
@@ -816,32 +815,32 @@ void PediaWindow::draw_terrain_page()
   }
   else {
     resource_variant = (uint)(0x15 < terrain2);
-    switch(terrain2) {
-    case 0xd:
-    case 0x18:
+    if ((terrain2 == 0xd) || (terrain2 == 0x18)) {
       ((Sprite *)((i8 *)&grassland_shield_sprite))->draw((iptr)grass_shield_ctx,(iptr)&pedia_window_block.pedia_window,x2,y2);
-      goto restore_scale_draw_text;
-    case 0xe:
-    case 0x19:
-      ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,y2);
-      break;
-    case 0xf:
-    case 0x1a:
-      ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,y2);
-      break;
-    case 0x10:
-    case 0x11:
-    case 0x12:
-    case 0x13:
-    case 0x14:
-    case 0x15:
-    case 0x16:
-    case 0x17: ;
     }
-    ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain3 * 0x78 + resource_variant * 0x3c))->draw((iptr)resource_sprite_ctx,
-               (iptr)&pedia_window_block.pedia_window,x2,y2);
+    else {
+      switch(terrain2) {
+      case 0xe:
+      case 0x19:
+        ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,y2);
+        break;
+      case 0xf:
+      case 0x1a:
+        ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_sprite_ctx2,(iptr)&pedia_window_block.pedia_window,x2,y2);
+        break;
+      case 0x10:
+      case 0x11:
+      case 0x12:
+      case 0x13:
+      case 0x14:
+      case 0x15:
+      case 0x16:
+      case 0x17: ;
+      }
+      ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain3 * 0x78 + resource_variant * 0x3c))->draw((iptr)resource_sprite_ctx,
+                 (iptr)&pedia_window_block.pedia_window,x2,y2);
+    }
   }
-restore_scale_draw_text:
   gfx_set_scale_ratio(scale_num2,scale_den2);
   text_color2 = list_text_color;
   gfx_set_text_color_index(list_text_color);
@@ -2326,33 +2325,34 @@ void PediaWindow::draw_item_list()
           }
           else {
             resource_variant = (uint)(0x15 < advance);
-            switch(advance) {
-            case 0xd:
-            case 0x18:
+            if ((advance == 0xd) || (advance == 0x18)) {
               ((Sprite *)((i8 *)&grassland_shield_sprite))->draw((iptr)grass_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
                          row_y);
-              goto draw_row_text;
-            case 0xe:
-            case 0x19:
-              ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_ctx2,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
-                         row_y);
-              break;
-            case 0xf:
-            case 0x1a:
-              ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_ctx2,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
-                         row_y);
-              break;
-            case 0x10:
-            case 0x11:
-            case 0x12:
-            case 0x13:
-            case 0x14:
-            case 0x15:
-            case 0x16:
-            case 0x17: ;
             }
-            ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + base_terrain * 0x78 + resource_variant * 0x3c))->draw(
-                       (iptr)resource_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,row_y);
+            else {
+              switch(advance) {
+              case 0xe:
+              case 0x19:
+                ((Sprite *)((i8 *)&forest_sprites))->draw((iptr)forest_ctx2,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
+                           row_y);
+                break;
+              case 0xf:
+              case 0x1a:
+                ((Sprite *)((i8 *)&hill_sprites_block.hill_sprites))->draw((iptr)hill_ctx2,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,
+                           row_y);
+                break;
+              case 0x10:
+              case 0x11:
+              case 0x12:
+              case 0x13:
+              case 0x14:
+              case 0x15:
+              case 0x16:
+              case 0x17: ;
+              }
+              ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + base_terrain * 0x78 + resource_variant * 0x3c))->draw(
+                         (iptr)resource_ctx,(iptr)&pedia_window_block.pedia_window,icon_x + col_x,row_y);
+            }
           }
           break;
         case 6:
@@ -2362,7 +2362,6 @@ void PediaWindow::draw_item_list()
         default:
           text_append((const char *)&str_this_should_not_happen_2);
         }
-draw_row_text:
         if (icon_mode == 3) {
           dim_a = icon_sprite->width();
           text_x_off = (dim_a * 3) / 2 + panel_margin_x * 2;

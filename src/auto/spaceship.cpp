@@ -871,7 +871,7 @@ void SpaceshipWindow::play_launch_video()
       if (open_result == -0x7ffbfeac) {
         popup_game((const char *)&str_vfwnotregistered_6);
       }
-      goto done;
+      return;
     }
     ((WndBase *)((u8 *)this + 0x100))->hide();
     wnd_flush_paint();
@@ -900,7 +900,6 @@ void SpaceshipWindow::play_launch_video()
   }
   launch_video_player = 0;
   snd_sync_music_option();
-done:
   return;
 }
 
@@ -1882,24 +1881,22 @@ iptr __cdecl spaceship_choose_part_group(iptr civ,iptr group)
       }
     }
   }
-  if ((!chosen) && ((group != 1 || (!race_close)))) {
-    count = spaceship_group_count_clamped(civ,group);
-    limit = spaceship_group_limit(civ,group);
-    if ((count < limit) && (count = spaceship_group_can_build(civ,group), count != 0))
-    goto check_group_zero;
-  }
-  for (grp = 2; (int)(uint)(group == 0) <= grp; grp--) {
-    count = spaceship_group_can_build(civ,grp);
-    if ((count != 0) && ((grp != 1 || (!race_close)))) {
-      count = spaceship_group_count_clamped(civ,grp);
-      limit = spaceship_group_limit(civ,grp);
-      if (count < limit) {
-        group = grp;
-        break;
+  if (!(((!chosen) && ((group != 1 || (!race_close)))) &&
+        (count = spaceship_group_count_clamped(civ,group),
+         limit = spaceship_group_limit(civ,group), count < limit) &&
+        (count = spaceship_group_can_build(civ,group), count != 0))) {
+    for (grp = 2; (int)(uint)(group == 0) <= grp; grp--) {
+      count = spaceship_group_can_build(civ,grp);
+      if ((count != 0) && ((grp != 1 || (!race_close)))) {
+        count = spaceship_group_count_clamped(civ,grp);
+        limit = spaceship_group_limit(civ,grp);
+        if (count < limit) {
+          group = grp;
+          break;
+        }
       }
     }
   }
-check_group_zero:
   if (group == 0) {
     for (civ2 = 1; civ2 < 8; civ2++) {
       if (((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&

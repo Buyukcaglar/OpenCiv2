@@ -770,20 +770,26 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
             (*(void * *)&wnd_active_child) = child2;
             ((WndHandlers *)view)->call_hscroll_track( (int)(short)(wp >> 0x10));
             break;
-        case 1:     /* SB_LINEDOWN */
-            scroll_pos2 = scroll_pos2 + 1;
-            goto hscroll_set;
-        case 0:     /* SB_LINEUP */
-            scroll_pos2 = scroll_pos2 - 1;
-            goto hscroll_set;
-        case 3:     /* SB_PAGEDOWN */
-            page = child2->get_hscroll_page();
-            scroll_pos2 = scroll_pos2 + page;
-            goto hscroll_set;
-        case 2:     /* SB_PAGEUP */
-            page = child2->get_hscroll_page();
-            scroll_pos2 = scroll_pos2 - page;
-        hscroll_set:
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+            switch (wp) {
+            case 1:     /* SB_LINEDOWN */
+                scroll_pos2 = scroll_pos2 + 1;
+                break;
+            case 0:     /* SB_LINEUP */
+                scroll_pos2 = scroll_pos2 - 1;
+                break;
+            case 3:     /* SB_PAGEDOWN */
+                page = child2->get_hscroll_page();
+                scroll_pos2 = scroll_pos2 + page;
+                break;
+            case 2:     /* SB_PAGEUP */
+                page = child2->get_hscroll_page();
+                scroll_pos2 = scroll_pos2 - page;
+                break;
+            }
             SetScrollPos(hwnd, 0, scroll_pos2, 1);
             scroll_pos2 = GetScrollPos(hwnd, 0);
             (*(void * *)&wnd_active_child) = child2;
@@ -807,20 +813,26 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
             (*(void * *)&wnd_active_child) = child2;
             ((WndHandlers *)view)->call_vscroll_track( (int)(short)(wp >> 0x10));
             break;
-        case 1:
-            scroll_pos2 = scroll_pos2 + 1;
-            goto vscroll_set;
         case 0:
-            scroll_pos2 = scroll_pos2 - 1;
-            goto vscroll_set;
-        case 3:
-            page = child2->get_vscroll_page();
-            scroll_pos2 = scroll_pos2 + page;
-            goto vscroll_set;
+        case 1:
         case 2:
-            page = child2->get_vscroll_page();
-            scroll_pos2 = scroll_pos2 - page;
-        vscroll_set:
+        case 3:
+            switch (wp) {
+            case 1:
+                scroll_pos2 = scroll_pos2 + 1;
+                break;
+            case 0:
+                scroll_pos2 = scroll_pos2 - 1;
+                break;
+            case 3:
+                page = child2->get_vscroll_page();
+                scroll_pos2 = scroll_pos2 + page;
+                break;
+            case 2:
+                page = child2->get_vscroll_page();
+                scroll_pos2 = scroll_pos2 - page;
+                break;
+            }
             SetScrollPos(hwnd, 1, scroll_pos2, 1);
             scroll_pos2 = GetScrollPos(hwnd, 1);
             (*(void * *)&wnd_active_child) = child2;

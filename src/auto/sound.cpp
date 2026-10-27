@@ -3102,7 +3102,8 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
         return result;
       default:
-        goto default_wndproc;
+        result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+        return result;
       case 5:
 handle_size:
         (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
@@ -3149,7 +3150,6 @@ handle_size:
         minmax_info->ptMinTrackSize.y = frame_height + min_height2;
         return 0;
       }
-default_wndproc:
       result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
       return result;
     }
@@ -3177,7 +3177,8 @@ default_wndproc:
         ((WndHandlers *)wnd2->handlers)->call_char(wparam & 0xff);
         return 0;
       }
-      goto default_wndproc;
+      result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+      return result;
     }
     if (msg < 0x201) {
       if (msg == 0x200) {
@@ -3304,7 +3305,8 @@ default_wndproc:
           return 0;
         }
       }
-      goto default_wndproc;
+      result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+      return result;
     }
     if (msg < 0x211) {
       if (msg == 0x210) {
@@ -3376,7 +3378,8 @@ default_wndproc:
         ((WndHandlers *)wnd2->handlers)->call_rbuttonup_raw(lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
-      goto default_wndproc;
+      result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+      return result;
     }
     if ((msg != 0x30f) && (msg != 0x311)) {
       if (msg == 0x3b9) {
@@ -3386,7 +3389,8 @@ default_wndproc:
         }
         goto handle_size;
       }
-      goto default_wndproc;
+      result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+      return result;
     }
 handle_mci:
     mci_device2 = wnd_get_mci_device((WndMciDeviceView *)wnd2);

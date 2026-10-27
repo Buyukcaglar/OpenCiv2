@@ -255,210 +255,205 @@ void __cdecl diplo_eval_ai_stance(iptr civ2,iptr civ)
     tax_rate_icon_sprites_block.diplo_tribute_demand = tax_rate_icon_sprites_block.diplo_tribute_demand << 1;
   }
   tax_rate_icon_sprites_block.diplo_ai_units_near_cities = 0;
-  city = 0;
-  do {
-    if (game.num_cities <= city) {
-compute_tribute_demand:
-      value = (game.difficulty + 1) * tax_rate_icon_sprites_block.diplo_tribute_demand;
-      value = int_clamp((int)(value + (value >> 0x1f & 0x1fU)) >> 5,0,0x14);
-      tax_rate_icon_sprites_block.diplo_tribute_demand = value * 0x32;
-      if (((civs[civ2].gold < tax_rate_icon_sprites_block.diplo_tribute_demand) && (tax_rate_icon_sprites_block.diplo_tribute_demand < civs[civ2].gold * 2)) &&
-         (0x31 < civs[civ2].gold)) {
-        tax_rate_icon_sprites_block.diplo_tribute_demand = (civs[civ2].gold / 0x32) * 0x32;
-      }
-      if ((tax_rate_icon_sprites_block.diplo_tribute_demand == 0) ||
-         ((uint)civs[civ].military_strength * 3 < (uint)civs[civ2].military_strength)) {
-        tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
-      }
-      if (9 < civs[civ].aggression_counter[civ2]) {
-        *(i8 *)&civs[civ].aggression_counter[civ2] = 0;
-        tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
-      }
-      if (tax_rate_icon_sprites_block.diplo_ai_aggressive == 0) {
-        if ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) {
-          tax_rate_icon_sprites_block.diplo_ai_request_mode = 0;
-        }
-      }
-      else {
-        tax_rate_icon_sprites_block.diplo_ai_request_mode = 2;
-      }
-      tax_rate_icon_sprites_block.diplo_ai_initial_aggressive = tax_rate_icon_sprites_block.diplo_ai_aggressive;
-      tax_rate_icon_sprites_block.diplo_peace_inclination = 0;
-      if ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0) {
-        tax_rate_icon_sprites_block.diplo_peace_inclination = -2;
-      }
-      if (((game.rules & 0x80) != 0) && (civs[civ].science_rate == '\0')) {
-        tax_rate_icon_sprites_block.diplo_peace_inclination--;
-      }
-      if (civs[civ2].reputation != '\0') {
-        tax_rate_icon_sprites_block.diplo_peace_inclination -= (civs[civ2].reputation - 1) / 2;
-      }
-      tax_rate_icon_sprites_block.diplo_weakest_enemy_civ = -1;
-      tax_rate_icon_sprites_block.diplo_strongest_enemy = -1;
-      tax_rate_icon_sprites_block.diplo_war_target_civ = -1;
-      max_strength = 0;
-      min_strength = 9999;
-      alliance_count = 0;
-      for (civ3 = 1; civ3 < 8; civ3++) {
-        if ((civ2 != civ3) && (civ != civ3)) {
-          if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
-            if (game.power_rank[civ] < game.power_rank[civ2]) {
-              tax_rate_icon_sprites_block.diplo_peace_inclination--;
-            }
-            if ((((game.power_rank[civ2] == 7) && (4 < civs[civ2].num_cities)) &&
-                (200 < game.turn)) &&
-               ((game.difficulty != '\0' &&
-                ((*(byte *)&civs[civ3].treaties[civ2] & 1) != 0)))) {
-              if ((*(uint *)&tax_rate_icon_sprites_block.diplo_ai_fear_level) == 0) {
-                if (((((byte)(civs[civ3].treaties[civ2] >> 8) & 0x20) != 0) &&
-                    (value = civ_has_wonder(civ2,6), value == 0)) &&
-                   (value = civ_has_wonder(civ2,0x18), value == 0)) {
-                  tax_rate_icon_sprites_block.diplo_ai_aggressive = 1;
-                }
-              }
-              else {
-                (*(uint *)&tax_rate_icon_sprites_block.diplo_ai_fear_level) = int_clamp((*(uint *)&tax_rate_icon_sprites_block.diplo_ai_fear_level) - 4,0,99);
-              }
-            }
-          }
-          if (((byte)(civs[civ].treaties[civ3] >> 8) & 8) != 0) {
-            alliance_count++;
-          }
-          value = diplo_is_hostile(civ,civ3);
-          if (value != 0) {
-            strength = (uint)civs[civ3].military_strength * 4;
-            if (strength - civs[civ].military_strength != 0 &&
-                civs[civ].military_strength <= strength) {
-              tax_rate_icon_sprites_block.diplo_peace_inclination++;
-            }
-            if (civs[civ].military_strength < civs[civ3].military_strength) {
-              tax_rate_icon_sprites_block.diplo_peace_inclination++;
-            }
-            if (((*(byte *)&civs[civ2].treaties[civ3] & 1) != 0) &&
-               (((byte)(civs[civ2].treaties[civ3] >> 8) & 0x20) == 0)) {
-              tax_rate_icon_sprites_block.diplo_war_target_civ = civ3;
-            }
-            if ((((byte)(civs[civ].treaties[civ3] >> 8) & 0x20) != 0) &&
-               (((byte)(civs[civ].treaties[civ3] >> 8) & 2) != 0)) {
-              if (max_strength < civs[civ3].military_strength) {
-                max_strength = civs[civ3].military_strength;
-                tax_rate_icon_sprites_block.diplo_strongest_enemy = civ3;
-              }
-              if (civs[civ3].military_strength < min_strength) {
-                min_strength = civs[civ3].military_strength;
-                tax_rate_icon_sprites_block.diplo_weakest_enemy_civ = civ3;
-              }
-            }
-          }
-        }
-      }
-      if (alliance_count == 0) {
-        diplo_clear_treaty_flags(civ,civ2,0x100000);
-      }
-      tax_rate_icon_sprites_block.diplo_peace_inclination -= leaders[civs[civ].tribe].attack;
-      if (civs[civ2].military_strength < civs[civ].military_strength) {
-        tax_rate_icon_sprites_block.diplo_peace_inclination--;
-      }
-      value = diplo_is_hostile(civ,civ2);
-      if (((((int)(uint)(value != 0) < tax_rate_icon_sprites_block.diplo_peace_inclination) && (tax_rate_icon_sprites_block.diplo_target_is_leader == 0)) &&
-          ((civs[civ].treaties[civ2] & 0x808) == 0)) &&
-         (tax_rate_icon_sprites_block.diplo_ai_aggressive = 0, (game.turn + civ + civ2 & 0x20U) != 0)) {
-        tax_rate_icon_sprites_block.diplo_tribute_demand = 0;
-      }
-      tax_rate_icon_sprites_block.diplo_captured_city_count = 0;
-      for (city = 0; city < game.num_cities; city++) {
-        if (((cities[city].id != 0) && (cities[city].founder == civ)) &&
-           (cities[city].owner == civ2)) {
-          tax_rate_icon_sprites_block.diplo_captured_city_count++;
-        }
-      }
-      if ((((((diplo_initial_eval_done == 0) ||
-             (6 < (int)((uint)civs[civ2].reputation -
-                       (int)civs[civ].reputation_credit[civ2]))) &&
-            ((tax_rate_icon_sprites_block.diplo_ai_declare_war = 0, ((byte)(civs[civ].treaties[civ2] >> 8) & 0x20) == 0 ||
-             (4 < tax_rate_icon_sprites_block.diplo_captured_city_count)))) &&
-           ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0)) &&
-          (((tax_rate_icon_sprites_block.diplo_ai_aggressive != 0 || ((tax_rate_icon_sprites_block.diplo_space_race_threat != 0 && (2 < game.difficulty)))) ||
-           ((tax_rate_icon_sprites_block.diplo_suppressed_aggression != 0 &&
-            ((6 < (int)((uint)civs[civ2].reputation -
-                       (int)civs[civ].reputation_credit[civ2]) &&
-             ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0)))))))) &&
-         ((civs[civ].military_strength < civs[civ2].military_strength ||
-          (((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0 ||
-           (6 < (int)((uint)civs[civ2].reputation -
-                     (int)civs[civ].reputation_credit[civ2]))))))) {
-        tax_rate_icon_sprites_block.diplo_ai_declare_war = 1;
-      }
-      if (tax_rate_icon_sprites_block.diplo_ai_declare_war != 0) {
-        tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
-        tax_rate_icon_sprites_block.diplo_ai_request_mode = 0;
-        if (0x1d < (int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude)) {
-          (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 0x1e;
-        }
-      }
-      if (((game.game_flags & 0x80) != 0) && (((int)(short)prefs_game_rules_block.scenario_flags[0] & 0x8000U) != 0)) {
-        if (civ == 6) {
-          if (civ2 == 7) {
-            if (((byte)civs[6].treaties[7] & 8) != 0) {
-              tax_rate_icon_sprites_block.diplo_ai_aggressive = 1;
-            }
-          }
-          else if (civ2 == 1) {
-            tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
-          }
-          else if (civ2 == 3) {
-            tax_rate_icon_sprites_block.diplo_ai_aggressive = 1;
-          }
-          else {
-            tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
-          }
-        }
-        if ((civ == 3) && ((civ2 == 6 || (civ2 == 1)))) {
-          tax_rate_icon_sprites_block.diplo_ai_aggressive = 1;
-        }
-      }
-      if (((((diplo_opening_eval_active != 0) &&
-            (patience = civs[civ].diplo_request_count, value = diplo_patience_limit(civ2,civ),
-            patience < value)) && (4 < civs[civ].government)) &&
-          ((tax_rate_icon_sprites_block.diplo_ai_aggressive != 0 &&
-           ((civs[civ].treaties[civ2] & 0x400008) == 0)))) &&
-         (((game.game_flags & 0x80) == 0 || ((prefs_game_rules_block.scenario_flags[0] & 1) == 0)))) {
-        if ((((uint)civs[civ].military_strength * 2 < (uint)civs[civ2].military_strength * 3)
-            && (tax_rate_icon_sprites_block.diplo_target_is_leader == 0)) &&
-           ((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0)) {
-          tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
-        }
-        else {
-          ai_choose_government(civ,1);
-        }
-      }
-      if (((*(uint *)&tax_rate_icon_sprites_block.diplo_ai_fear_level) == 0) && ((int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) < 2)) {
-        (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 1;
-      }
-      if ((((byte)(civs[civ2].treaties[civ] >> 8) & 0x20) == 0) &&
-         (0x62 < (int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude))) {
-        (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 99;
-      }
-      if ((((*(byte *)&civs[civ2].treaties[civ] & 8) != 0) || (tax_rate_icon_sprites_block.diplo_ai_request_mode == 0))
-         && (0x49 < (int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude))) {
-        (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 0x4a;
-      }
-      if ((((byte)(civs[civ2].treaties[civ] >> 8) & 0x20) != 0) &&
-         ((int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) < 0x1b)) {
-        (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 0x1a;
-      }
-      return;
-    }
+  for (city = 0; city < game.num_cities; city++) {
     if ((((cities[city].id != 0) && (cities[city].owner == civ2)) &&
         (value = tile_unit_owner((int)cities[city].x,(int)cities[city].y), value < 0)) &&
        ((value = unit_find_nearest((int)cities[city].x,(int)cities[city].y,civ,-1),
         -1 < value && (dialog_text_font_obj_block.unit_nearest_dist < 3)))) {
       tax_rate_icon_sprites_block.diplo_tribute_demand = tax_rate_icon_sprites_block.diplo_tribute_demand << 1;
       tax_rate_icon_sprites_block.diplo_ai_units_near_cities++;
-      goto compute_tribute_demand;
+      break;
     }
-    city++;
-  } while( true );
+  }
+  value = (game.difficulty + 1) * tax_rate_icon_sprites_block.diplo_tribute_demand;
+  value = int_clamp((int)(value + (value >> 0x1f & 0x1fU)) >> 5,0,0x14);
+  tax_rate_icon_sprites_block.diplo_tribute_demand = value * 0x32;
+  if (((civs[civ2].gold < tax_rate_icon_sprites_block.diplo_tribute_demand) && (tax_rate_icon_sprites_block.diplo_tribute_demand < civs[civ2].gold * 2)) &&
+     (0x31 < civs[civ2].gold)) {
+    tax_rate_icon_sprites_block.diplo_tribute_demand = (civs[civ2].gold / 0x32) * 0x32;
+  }
+  if ((tax_rate_icon_sprites_block.diplo_tribute_demand == 0) ||
+     ((uint)civs[civ].military_strength * 3 < (uint)civs[civ2].military_strength)) {
+    tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
+  }
+  if (9 < civs[civ].aggression_counter[civ2]) {
+    *(i8 *)&civs[civ].aggression_counter[civ2] = 0;
+    tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
+  }
+  if (tax_rate_icon_sprites_block.diplo_ai_aggressive == 0) {
+    if ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) {
+      tax_rate_icon_sprites_block.diplo_ai_request_mode = 0;
+    }
+  }
+  else {
+    tax_rate_icon_sprites_block.diplo_ai_request_mode = 2;
+  }
+  tax_rate_icon_sprites_block.diplo_ai_initial_aggressive = tax_rate_icon_sprites_block.diplo_ai_aggressive;
+  tax_rate_icon_sprites_block.diplo_peace_inclination = 0;
+  if ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0) {
+    tax_rate_icon_sprites_block.diplo_peace_inclination = -2;
+  }
+  if (((game.rules & 0x80) != 0) && (civs[civ].science_rate == '\0')) {
+    tax_rate_icon_sprites_block.diplo_peace_inclination--;
+  }
+  if (civs[civ2].reputation != '\0') {
+    tax_rate_icon_sprites_block.diplo_peace_inclination -= (civs[civ2].reputation - 1) / 2;
+  }
+  tax_rate_icon_sprites_block.diplo_weakest_enemy_civ = -1;
+  tax_rate_icon_sprites_block.diplo_strongest_enemy = -1;
+  tax_rate_icon_sprites_block.diplo_war_target_civ = -1;
+  max_strength = 0;
+  min_strength = 9999;
+  alliance_count = 0;
+  for (civ3 = 1; civ3 < 8; civ3++) {
+    if ((civ2 != civ3) && (civ != civ3)) {
+      if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
+        if (game.power_rank[civ] < game.power_rank[civ2]) {
+          tax_rate_icon_sprites_block.diplo_peace_inclination--;
+        }
+        if ((((game.power_rank[civ2] == 7) && (4 < civs[civ2].num_cities)) &&
+            (200 < game.turn)) &&
+           ((game.difficulty != '\0' &&
+            ((*(byte *)&civs[civ3].treaties[civ2] & 1) != 0)))) {
+          if ((*(uint *)&tax_rate_icon_sprites_block.diplo_ai_fear_level) == 0) {
+            if (((((byte)(civs[civ3].treaties[civ2] >> 8) & 0x20) != 0) &&
+                (value = civ_has_wonder(civ2,6), value == 0)) &&
+               (value = civ_has_wonder(civ2,0x18), value == 0)) {
+              tax_rate_icon_sprites_block.diplo_ai_aggressive = 1;
+            }
+          }
+          else {
+            (*(uint *)&tax_rate_icon_sprites_block.diplo_ai_fear_level) = int_clamp((*(uint *)&tax_rate_icon_sprites_block.diplo_ai_fear_level) - 4,0,99);
+          }
+        }
+      }
+      if (((byte)(civs[civ].treaties[civ3] >> 8) & 8) != 0) {
+        alliance_count++;
+      }
+      value = diplo_is_hostile(civ,civ3);
+      if (value != 0) {
+        strength = (uint)civs[civ3].military_strength * 4;
+        if (strength - civs[civ].military_strength != 0 &&
+            civs[civ].military_strength <= strength) {
+          tax_rate_icon_sprites_block.diplo_peace_inclination++;
+        }
+        if (civs[civ].military_strength < civs[civ3].military_strength) {
+          tax_rate_icon_sprites_block.diplo_peace_inclination++;
+        }
+        if (((*(byte *)&civs[civ2].treaties[civ3] & 1) != 0) &&
+           (((byte)(civs[civ2].treaties[civ3] >> 8) & 0x20) == 0)) {
+          tax_rate_icon_sprites_block.diplo_war_target_civ = civ3;
+        }
+        if ((((byte)(civs[civ].treaties[civ3] >> 8) & 0x20) != 0) &&
+           (((byte)(civs[civ].treaties[civ3] >> 8) & 2) != 0)) {
+          if (max_strength < civs[civ3].military_strength) {
+            max_strength = civs[civ3].military_strength;
+            tax_rate_icon_sprites_block.diplo_strongest_enemy = civ3;
+          }
+          if (civs[civ3].military_strength < min_strength) {
+            min_strength = civs[civ3].military_strength;
+            tax_rate_icon_sprites_block.diplo_weakest_enemy_civ = civ3;
+          }
+        }
+      }
+    }
+  }
+  if (alliance_count == 0) {
+    diplo_clear_treaty_flags(civ,civ2,0x100000);
+  }
+  tax_rate_icon_sprites_block.diplo_peace_inclination -= leaders[civs[civ].tribe].attack;
+  if (civs[civ2].military_strength < civs[civ].military_strength) {
+    tax_rate_icon_sprites_block.diplo_peace_inclination--;
+  }
+  value = diplo_is_hostile(civ,civ2);
+  if (((((int)(uint)(value != 0) < tax_rate_icon_sprites_block.diplo_peace_inclination) && (tax_rate_icon_sprites_block.diplo_target_is_leader == 0)) &&
+      ((civs[civ].treaties[civ2] & 0x808) == 0)) &&
+     (tax_rate_icon_sprites_block.diplo_ai_aggressive = 0, (game.turn + civ + civ2 & 0x20U) != 0)) {
+    tax_rate_icon_sprites_block.diplo_tribute_demand = 0;
+  }
+  tax_rate_icon_sprites_block.diplo_captured_city_count = 0;
+  for (city = 0; city < game.num_cities; city++) {
+    if (((cities[city].id != 0) && (cities[city].founder == civ)) &&
+       (cities[city].owner == civ2)) {
+      tax_rate_icon_sprites_block.diplo_captured_city_count++;
+    }
+  }
+  if ((((((diplo_initial_eval_done == 0) ||
+         (6 < (int)((uint)civs[civ2].reputation -
+                   (int)civs[civ].reputation_credit[civ2]))) &&
+        ((tax_rate_icon_sprites_block.diplo_ai_declare_war = 0, ((byte)(civs[civ].treaties[civ2] >> 8) & 0x20) == 0 ||
+         (4 < tax_rate_icon_sprites_block.diplo_captured_city_count)))) &&
+       ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0)) &&
+      (((tax_rate_icon_sprites_block.diplo_ai_aggressive != 0 || ((tax_rate_icon_sprites_block.diplo_space_race_threat != 0 && (2 < game.difficulty)))) ||
+       ((tax_rate_icon_sprites_block.diplo_suppressed_aggression != 0 &&
+        ((6 < (int)((uint)civs[civ2].reputation -
+                   (int)civs[civ].reputation_credit[civ2]) &&
+         ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0)))))))) &&
+     ((civs[civ].military_strength < civs[civ2].military_strength ||
+      (((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0 ||
+       (6 < (int)((uint)civs[civ2].reputation -
+                 (int)civs[civ].reputation_credit[civ2]))))))) {
+    tax_rate_icon_sprites_block.diplo_ai_declare_war = 1;
+  }
+  if (tax_rate_icon_sprites_block.diplo_ai_declare_war != 0) {
+    tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
+    tax_rate_icon_sprites_block.diplo_ai_request_mode = 0;
+    if (0x1d < (int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude)) {
+      (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 0x1e;
+    }
+  }
+  if (((game.game_flags & 0x80) != 0) && (((int)(short)prefs_game_rules_block.scenario_flags[0] & 0x8000U) != 0)) {
+    if (civ == 6) {
+      if (civ2 == 7) {
+        if (((byte)civs[6].treaties[7] & 8) != 0) {
+          tax_rate_icon_sprites_block.diplo_ai_aggressive = 1;
+        }
+      }
+      else if (civ2 == 1) {
+        tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
+      }
+      else if (civ2 == 3) {
+        tax_rate_icon_sprites_block.diplo_ai_aggressive = 1;
+      }
+      else {
+        tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
+      }
+    }
+    if ((civ == 3) && ((civ2 == 6 || (civ2 == 1)))) {
+      tax_rate_icon_sprites_block.diplo_ai_aggressive = 1;
+    }
+  }
+  if (((((diplo_opening_eval_active != 0) &&
+        (patience = civs[civ].diplo_request_count, value = diplo_patience_limit(civ2,civ),
+        patience < value)) && (4 < civs[civ].government)) &&
+      ((tax_rate_icon_sprites_block.diplo_ai_aggressive != 0 &&
+       ((civs[civ].treaties[civ2] & 0x400008) == 0)))) &&
+     (((game.game_flags & 0x80) == 0 || ((prefs_game_rules_block.scenario_flags[0] & 1) == 0)))) {
+    if ((((uint)civs[civ].military_strength * 2 < (uint)civs[civ2].military_strength * 3)
+        && (tax_rate_icon_sprites_block.diplo_target_is_leader == 0)) &&
+       ((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0)) {
+      tax_rate_icon_sprites_block.diplo_ai_aggressive = 0;
+    }
+    else {
+      ai_choose_government(civ,1);
+    }
+  }
+  if (((*(uint *)&tax_rate_icon_sprites_block.diplo_ai_fear_level) == 0) && ((int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) < 2)) {
+    (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 1;
+  }
+  if ((((byte)(civs[civ2].treaties[civ] >> 8) & 0x20) == 0) &&
+     (0x62 < (int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude))) {
+    (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 99;
+  }
+  if ((((*(byte *)&civs[civ2].treaties[civ] & 8) != 0) || (tax_rate_icon_sprites_block.diplo_ai_request_mode == 0))
+     && (0x49 < (int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude))) {
+    (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 0x4a;
+  }
+  if ((((byte)(civs[civ2].treaties[civ] >> 8) & 0x20) != 0) &&
+     ((int)(*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) < 0x1b)) {
+    (*(uint *)&tax_rate_icon_sprites_block.diplo_cur_attitude) = 0x1a;
+  }
+  return;
 }
 
 /* 00458a3b auto */
@@ -827,7 +822,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
-      goto done;
+      return mode;
     }
     diplo_set_attitude_arg(civ2,civ);
     str = civ_get_adjective(civ);
@@ -850,7 +845,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
-        goto done;
+        return mode;
       }
       if (((((byte)(civs[civ].treaties[civ2] >> 8) & 2) != 0) ||
           ((tax_rate_icon_sprites_block.diplo_ai_aggressive != 0 && (5 < civ_tech_count)))) ||
@@ -869,7 +864,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
-        goto done;
+        return mode;
       }
     }
     if ((-1 < blocking_wonder) && (3 < game.difficulty)) {
@@ -885,14 +880,14 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
       }
-      goto done;
+      return mode;
     }
     if (ai_tech_count < civ_tech_count) {
       if (mode == 1) {
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
-        goto done;
+        return mode;
       }
       treaty = civs[civ].treaties[civ2];
       ret = diplo_attitude_level(tax_rate_icon_sprites_block.diplo_cur_attitude);
@@ -918,7 +913,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
           seh_state = 0xffffffff;
           /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         }
-        goto done;
+        return mode;
       }
     }
     if ((((((game.power_rank[civ2] == 7) && (4 < civs[civ2].num_cities)) && (!allied)) &&
@@ -936,7 +931,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         if (ret != 0) {
           seh_state = 0xffffffff;
           /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
-          goto done;
+          return mode;
         }
         if (mode == 0) {
           popup_game((const char *)&str_noexchangenow);
@@ -945,7 +940,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
-      goto done;
+      return mode;
     }
     if ((((tax_rate_icon_sprites_block.diplo_offer_tech_best < 0) && (-1 < tax_rate_icon_sprites_block.diplo_wanted_tech)) &&
         ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0)) &&
@@ -974,7 +969,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 1;
       }
-      goto done;
+      return mode;
     }
     if ((tax_rate_icon_sprites_block.diplo_wanted_tech < 0) || (tax_rate_icon_sprites_block.diplo_offer_tech_best < 0)) {
       if (mode != 1) {
@@ -982,7 +977,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         if (ret != 0) {
           seh_state = 0xffffffff;
           /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
-          goto done;
+          return mode;
         }
         if (mode == 0) {
           popup_game((const char *)&str_noexchangenow_2);
@@ -991,20 +986,20 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
-      goto done;
+      return mode;
     }
     if (1 < mode) {
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
-      goto done;
+      return mode;
     }
     ret = diplo_ask_receive_emissary(civ2,civ,x,y);
     if (ret == 0) {
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
-      goto done;
+      return mode;
     }
     text_set_label_arg(1,advances[tax_rate_icon_sprites_block.diplo_wanted_tech].name);
     str = civ_get_adjective(civ2);
@@ -1040,7 +1035,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
       mode = 0;
-      goto done;
+      return mode;
     }
     attitude_cost = offer_value * 2;
     if (ret == 2) {
@@ -1055,7 +1050,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
         mode = 0;
-        goto done;
+        return mode;
       }
       int_swap((iptr)&tax_rate_icon_sprites_block.diplo_offer_tech_best,(iptr)&tax_rate_icon_sprites_block.diplo_offer_tech_2nd);
       attitude_cost = offer2_value;
@@ -1072,7 +1067,6 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
   seh_state = 0xffffffff;
   /* inlined unwind funclet 0045a510 */ { dlg.Dialog::destruct(); }
   mode = 1;
-done:
   return mode;
 }
 
@@ -1944,35 +1938,34 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
     }
     if (((*(byte *)&civs[civ].treaties[civ2] & 4) != 0) &&
        ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0)) {
-      if (((tax_rate_icon_sprites_block.diplo_ai_initial_aggressive != 0) || (0x4a < tax_rate_icon_sprites_block.diplo_cur_attitude)) && ((tax_rate_icon_sprites_block.diplo_ai_fear_level == 0 && (!paid)))) {
-        rnd = _rand();
-        rnd_sign = (int)rnd >> 0x1f;
-        if (((int)(uint)civs[civ].government <
-             (int)((((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) - rnd_sign) + 5)) &&
-           ((((byte)(civs[civ].treaties[civ2] >> 8) & 0x40) == 0 &&
-            (0x19 < tax_rate_icon_sprites_block.diplo_cur_attitude)))) goto apply_attitude_change;
-      }
-      for (unit = 0; unit < game.num_units; unit++) {
-        if (((units[unit].id != 0) && (units[unit].owner == civ)) &&
-           ((char)unit_types[units[unit].type].role < 6)) {
-          x2 = (int)units[unit].x;
-          y2 = (int)units[unit].y;
-          city = tile_is_ocean(x2,y2);
-          if (((city == 0) &&
-              (city = city_find_nearest(x2,y2,civ2,0xffffffff,-1), -1 < city))
-             && ((advisor_window_block.nearest_city_dist < 3 &&
-                 (city = city_find_nearest(x2,y2,civ,0xffffffff,-1), -1 < city)
-                 ))) {
-            unit_relocate(unit,(int)cities[city].x,(int)cities[city].y,1);
-            units[unit].visibility = '\0';
-            units[unit].orders = -1;
-            map_redraw_tile_all_views(x2,y2);
-            units_moved++;
+      if (!(((tax_rate_icon_sprites_block.diplo_ai_initial_aggressive != 0) || (0x4a < tax_rate_icon_sprites_block.diplo_cur_attitude)) &&
+            ((tax_rate_icon_sprites_block.diplo_ai_fear_level == 0 && (!paid)))) ||
+          (rnd = _rand(), rnd_sign = (int)rnd >> 0x1f,
+           !(((int)(uint)civs[civ].government <
+              (int)((((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) - rnd_sign) + 5)) &&
+             ((((byte)(civs[civ].treaties[civ2] >> 8) & 0x40) == 0 &&
+              (0x19 < tax_rate_icon_sprites_block.diplo_cur_attitude)))))) {
+        for (unit = 0; unit < game.num_units; unit++) {
+          if (((units[unit].id != 0) && (units[unit].owner == civ)) &&
+             ((char)unit_types[units[unit].type].role < 6)) {
+            x2 = (int)units[unit].x;
+            y2 = (int)units[unit].y;
+            city = tile_is_ocean(x2,y2);
+            if (((city == 0) &&
+                (city = city_find_nearest(x2,y2,civ2,0xffffffff,-1), -1 < city))
+               && ((advisor_window_block.nearest_city_dist < 3 &&
+                   (city = city_find_nearest(x2,y2,civ,0xffffffff,-1), -1 < city)
+                   ))) {
+              unit_relocate(unit,(int)cities[city].x,(int)cities[city].y,1);
+              units[unit].visibility = '\0';
+              units[unit].orders = -1;
+              map_redraw_tile_all_views(x2,y2);
+              units_moved++;
+            }
           }
         }
       }
     }
-apply_attitude_change:
     if (proposal == 5) {
       civ_adjust_attitude(civ,civ2,2);
     }
@@ -2141,15 +2134,14 @@ void __cdecl diplo_favor_menu(iptr civ2,iptr civ)
   seh_state = 0xffffffff;
   dlg.Dialog::construct(0x4000);
   seh_state = 0;
-favor_menu_loop:
-  do {
+  while( true ) {
     diplo_set_attitude_arg(civ2,civ);
     menu_choice = popup_game((const char *)&str_favormenu);
     if (menu_choice == 0) {
       civs[civ].diplo_request_count--;
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
-      goto done;
+      return;
     }
     if (menu_choice == 1) {
       exchanged = diplo_tech_exchange(civ2,civ,0xffffffff,0xffffffff,0,0);
@@ -2157,11 +2149,104 @@ favor_menu_loop:
          (patience = civs[civ].diplo_request_count, patience_limit = diplo_patience_limit(civ2,civ),
          patience + 1 < patience_limit)) {
         civs[civ].diplo_request_count++;
-        goto favor_menu_loop;
+        continue;
       }
       net_send_state_diff(0xff,2,0,0,0);
     }
-    if (menu_choice != 2) goto check_choice_3;
+    if (menu_choice != 2) {
+      if (menu_choice == 3) {
+        if ((((((*(byte *)&civs[civ2].treaties[civ] & 8) == 0) &&
+              (0 < tax_rate_icon_sprites_block.diplo_cur_attitude)) && (civ3 = civ_has_wonder(civ2,9), civ3 == 0)) &&
+            (civ3 = civ_has_wonder(civ2,0xc), civ3 == 0)) ||
+           (((0x19 < tax_rate_icon_sprites_block.diplo_cur_attitude || (civ3 = civ_has_advance(civ,0x2e), civ3 == 0)) ||
+            (civ3 = civ_has_advance(civ2,0x2e), civ3 == 0)))) {
+          civ_name = civ_get_adjective(civ2);
+          text_set_string_arg(1,(const char *)civ_name);
+          diplo_leader_play_reaction(3);
+          popup_game((const char *)&str_mapno);
+          seh_state = 0xffffffff;
+          /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
+          return;
+        }
+        diplo_leader_play_reaction(2);
+        popup_game((const char *)&str_mapyes);
+        civs[civ].diplo_request_count += 2;
+        civ_mask = 1 << ((byte)civ & 0x1f);
+        civ2_mask = 1 << ((byte)civ2 & 0x1f);
+        y2 = 0;
+        x2 = 0;
+        net_batch_begin();
+        for (i = 0; i < map.area; i++) {
+          civ3 = (int)(tile_at(x2,y2));
+          if ((civ_mask & ((Tile *)civ3)->visible) == 0) {
+            if ((((civ2_mask & ((Tile *)civ3)->visible) != 0) &&
+                (tile_set_visible(x2,y2,civ_mask,1,1), civ != 0)) &&
+               (civ2 != 0)) {
+              arg_b = 1;
+              arg_a = 1;
+              target_civ = civ;
+              civ3 = (int)(tile_at(x2,y2));
+              visible_bits = ((Tile *)civ3)->improvements;
+              known = known_at(x2,y2,civ2);
+              known_set(x2,y2,(uint)(visible_bits & *known),target_civ,arg_a,arg_b);
+            }
+          }
+          else {
+            tile_set_visible(x2,y2,civ2_mask,1,1);
+            if ((civ != 0) && (civ2 != 0)) {
+              arg_b = 1;
+              arg_a = 1;
+              civ_name = civ2;
+              civ3 = (int)(tile_at(x2,y2));
+              visible_bits = ((Tile *)civ3)->improvements;
+              known = known_at(x2,y2,civ);
+              known_set(x2,y2,(uint)(visible_bits & *known),civ_name,arg_a,arg_b);
+            }
+          }
+          x2 += 2;
+          if ((int)map.width <= (int)x2) {
+            y2++;
+            x2 = y2 & 1;
+          }
+        }
+        net_batch_flush();
+        for (unit = 0; civ_mask_byte = (byte)civ_mask, unit < game.num_units;
+            unit = unit + 1) {
+          if (units[unit].id != 0) {
+            if (((civ_mask & units[unit].visibility) == 0) &&
+               (units[unit].owner != civ)) {
+              if (((civ2_mask & units[unit].visibility) != 0) ||
+                 (units[unit].owner == civ2)) {
+                units[unit].visibility = units[unit].visibility | civ_mask_byte;
+              }
+            }
+            else {
+              civ2_mask_byte = (byte)civ2_mask;
+              units[unit].visibility = units[unit].visibility | civ2_mask_byte;
+            }
+          }
+        }
+        for (city = 0; city < game.num_cities; city++) {
+          if (cities[city].id != 0) {
+            if (((civ_mask & (int)(char)cities[city].known_to) == 0) &&
+               (cities[city].owner != civ)) {
+              if (((civ2_mask & (int)(char)cities[city].known_to) != 0) ||
+                 (cities[city].owner == civ2)) {
+                cities[city].known_to = cities[city].known_to | civ_mask_byte;
+              }
+            }
+            else {
+              city_reveal_to_civ(city,civ2);
+            }
+          }
+        }
+        net_send_state_diff(0xff,2,0,0,0);
+        map_redraw_all_views(human_civ[0],1);
+      }
+      seh_state = 0xffffffff;
+      /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
+      return;
+    }
     dlg.load_game_text((const char *)&str_mustattack);
     for (civ4 = 1; civ4 < 8; civ4++) {
       if ((((1 << ((byte)civ4 & 0x1f) & (uint)game.civs_alive) != 0) && (civ4 != civ))
@@ -2173,7 +2258,8 @@ favor_menu_loop:
       }
     }
     civ3 = dlg.show_modal(0);
-  } while (civ3 == 0);
+    if (civ3 != 0) break;
+  }
   civ_name = (iptr)(civ_name_plural(civ3));
   text_set_string_arg(1,(const char *)civ_name);
   if ((*(byte *)&civs[civ].treaties[civ3] & 1) == 0) {
@@ -2291,7 +2377,7 @@ favor_menu_loop:
             popup_game((const char *)&str_unfortunate);
             seh_state = 0xffffffff;
             /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
-            goto done;
+            return;
           }
           civs[civ2].gold -= price;
           civs[civ].gold += price;
@@ -2348,96 +2434,6 @@ favor_menu_loop:
           }
         }
         net_send_state_diff(0xff,2,0,0,0);
-check_choice_3:
-        if (menu_choice == 3) {
-          if ((((((*(byte *)&civs[civ2].treaties[civ] & 8) == 0) &&
-                (0 < tax_rate_icon_sprites_block.diplo_cur_attitude)) && (civ3 = civ_has_wonder(civ2,9), civ3 == 0)) &&
-              (civ3 = civ_has_wonder(civ2,0xc), civ3 == 0)) ||
-             (((0x19 < tax_rate_icon_sprites_block.diplo_cur_attitude || (civ3 = civ_has_advance(civ,0x2e), civ3 == 0)) ||
-              (civ3 = civ_has_advance(civ2,0x2e), civ3 == 0)))) {
-            civ_name = civ_get_adjective(civ2);
-            text_set_string_arg(1,(const char *)civ_name);
-            diplo_leader_play_reaction(3);
-            popup_game((const char *)&str_mapno);
-            seh_state = 0xffffffff;
-            /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
-            goto done;
-          }
-          diplo_leader_play_reaction(2);
-          popup_game((const char *)&str_mapyes);
-          civs[civ].diplo_request_count += 2;
-          civ_mask = 1 << ((byte)civ & 0x1f);
-          civ2_mask = 1 << ((byte)civ2 & 0x1f);
-          y2 = 0;
-          x2 = 0;
-          net_batch_begin();
-          for (i = 0; i < map.area; i++) {
-            civ3 = (int)(tile_at(x2,y2));
-            if ((civ_mask & ((Tile *)civ3)->visible) == 0) {
-              if ((((civ2_mask & ((Tile *)civ3)->visible) != 0) &&
-                  (tile_set_visible(x2,y2,civ_mask,1,1), civ != 0)) &&
-                 (civ2 != 0)) {
-                arg_b = 1;
-                arg_a = 1;
-                target_civ = civ;
-                civ3 = (int)(tile_at(x2,y2));
-                visible_bits = ((Tile *)civ3)->improvements;
-                known = known_at(x2,y2,civ2);
-                known_set(x2,y2,(uint)(visible_bits & *known),target_civ,arg_a,arg_b);
-              }
-            }
-            else {
-              tile_set_visible(x2,y2,civ2_mask,1,1);
-              if ((civ != 0) && (civ2 != 0)) {
-                arg_b = 1;
-                arg_a = 1;
-                civ_name = civ2;
-                civ3 = (int)(tile_at(x2,y2));
-                visible_bits = ((Tile *)civ3)->improvements;
-                known = known_at(x2,y2,civ);
-                known_set(x2,y2,(uint)(visible_bits & *known),civ_name,arg_a,arg_b);
-              }
-            }
-            x2 += 2;
-            if ((int)map.width <= (int)x2) {
-              y2++;
-              x2 = y2 & 1;
-            }
-          }
-          net_batch_flush();
-          for (unit = 0; civ_mask_byte = (byte)civ_mask, unit < game.num_units;
-              unit = unit + 1) {
-            if (units[unit].id != 0) {
-              if (((civ_mask & units[unit].visibility) == 0) &&
-                 (units[unit].owner != civ)) {
-                if (((civ2_mask & units[unit].visibility) != 0) ||
-                   (units[unit].owner == civ2)) {
-                  units[unit].visibility = units[unit].visibility | civ_mask_byte;
-                }
-              }
-              else {
-                civ2_mask_byte = (byte)civ2_mask;
-                units[unit].visibility = units[unit].visibility | civ2_mask_byte;
-              }
-            }
-          }
-          for (city = 0; city < game.num_cities; city++) {
-            if (cities[city].id != 0) {
-              if (((civ_mask & (int)(char)cities[city].known_to) == 0) &&
-                 (cities[city].owner != civ)) {
-                if (((civ2_mask & (int)(char)cities[city].known_to) != 0) ||
-                   (cities[city].owner == civ2)) {
-                  cities[city].known_to = cities[city].known_to | civ_mask_byte;
-                }
-              }
-              else {
-                city_reveal_to_civ(city,civ2);
-              }
-            }
-          }
-          net_send_state_diff(0xff,2,0,0,0);
-          map_redraw_all_views(human_civ[0],1);
-        }
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
       }
@@ -2455,7 +2451,6 @@ check_choice_3:
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0045f08d */ { dlg.Dialog::destruct(); }
   }
-done:
   return;
 }
 
@@ -2605,14 +2600,14 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
-        goto done;
+        return;
       }
       city = dlg.show_modal(0);
       if (city < 0) {
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
-        goto done;
+        return;
       }
       unit2 = tile_first_unit((int)cities[city].x,(int)cities[city].y);
       if (unit2 < 0) {
@@ -2620,7 +2615,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
-        goto done;
+        return;
       }
       city4 = city_find_nearest((int)cities[city].x,(int)cities[city].y,civ,0xffffffff,
                                     -1);
@@ -2634,7 +2629,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         popup_game((const char *)&str_militaryno);
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
-        goto done;
+        return;
       }
       text_clear();
       text_append_label(0x77);
@@ -2645,7 +2640,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
-        goto done;
+        return;
       }
       if ((-1 < unit_types[units[unit].type].obsolete_by) &&
          (has_advance = civ_has_advance(civ,(int)unit_types[units[unit].type].obsolete_by),
@@ -2656,7 +2651,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         popup_game((const char *)&str_militaryno_2);
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
-        goto done;
+        return;
       }
       unit_stack_unlink(unit,1);
       city3 = city4;
@@ -2708,7 +2703,6 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0045fd43 */ { dlg.Dialog::destruct(); }
   }
-done:
   return;
 }
 
@@ -3557,31 +3551,25 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
       choice = popup_game_with_sprite((const char *)&str_proposepeace,(iptr)&peace_treaty_icon_sprite_block.peace_treaty_icon_sprite,0);
       if (choice != 0) {
         advance2 = civ_has_wonder(civ,6);
-        if ((advance2 == 0) && (advance2 = civ_has_wonder(civ,0x18), advance2 == 0)) {
-check_senate:
+        if (((advance2 == 0) && (advance2 = civ_has_wonder(civ,0x18), advance2 == 0)) ||
+            ((senate_blocked) &&
+             (rnd = _rand(), rnd_sign = (int)rnd >> 0x1f,
+              ((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) == rnd_sign))) {
           advance2 = diplo_senate_intervenes(civ2,civ);
-          if (advance2 == 0) {
-senate_hawks_check:
+          if ((advance2 == 0) ||
+              ((senate_blocked) &&
+               (rnd = _rand(), rnd_sign = (int)rnd >> 0x1f,
+                ((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) == rnd_sign))) {
             if (((byte)(civs[civ].treaties[civ2] >> 8) & 0x40) == 0) {
               diplo_ai_senate_hawks_notice(civ2,civ);
             }
           }
           else {
-            if (senate_blocked) {
-              rnd = _rand();
-              rnd_sign = (int)rnd >> 0x1f;
-              if (((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) == rnd_sign) goto senate_hawks_check;
-            }
             popup_game_with_sprite((const char *)&str_overrulepeace,(iptr)&peace_treaty_icon_sprite_block.peace_treaty_icon_sprite,0);
             choice = 0;
           }
         }
         else {
-          if (senate_blocked) {
-            rnd = _rand();
-            rnd_sign = (int)rnd >> 0x1f;
-            if (((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) == rnd_sign) goto check_senate;
-          }
           advance2 = civ_has_wonder(civ,6);
           if (advance2 == 0) {
             popup_game_with_sprite((const char *)&str_unoverpeace,(iptr)&peace_treaty_icon_sprite_block.peace_treaty_icon_sprite,0);
@@ -5258,15 +5246,13 @@ int __cdecl diplo_count_border_intruders(iptr civ,iptr intruder_civ)
     for (city = 0; city < game.num_cities; city++) {
       if ((cities[city].id != 0) && (cities[city].owner == civ)) {
         intruders = 0;
-        tile = 0;
-tile_loop:
-        if (tile < 0x14) {
+        for (tile = 0; tile < 0x14; tile++) {
           x = map_wrap_x((int)cities[city].x + (int)(((i8 *)&dir_dy_table_block.city_tile_dx_table))[tile]);
           y = (int)cities[city].y + (int)(((i8 *)&dir_dy_table_block.city_tile_dy_table))[tile];
           check = map_in_bounds(x,y);
           if ((((check == 0) || (check = tile_is_ocean(x,y), check != 0)) ||
               (check = tile_city_owner(x,y), -1 < check)) ||
-             (check = tile_unit_owner(x,y), check != intruder_civ)) goto next_tile;
+             (check = tile_unit_owner(x,y), check != intruder_civ)) continue;
           improvements2 = tile_improvements(x,y);
           for (unit = tile_first_unit(x,y); -1 < unit;
               unit = unit_next_in_stack(unit)) {
@@ -5304,6 +5290,8 @@ tile_loop:
               }
             }
           }
+          /* only the first tile with a unit of intruder_civ is examined */
+          break;
         }
         if (3 < intruders) {
           setup_picwnd_block.diplo_border_repeat_offenses++;
@@ -5315,9 +5303,6 @@ tile_loop:
     setup_picwnd_block.diplo_border_intruder_count = 0;
   }
   return setup_picwnd_block.diplo_border_intruder_count;
-next_tile:
-  tile++;
-  goto tile_loop;
 }
 
 /* 0055bef9 auto */
@@ -5905,12 +5890,14 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
               else {
                 target_leader = true;
               }
-              if (target_leader) goto found_third_civ;
+              if (target_leader) {
+                civ3 = civ4;
+                break;
+              }
               if (game.difficulty != '\0') {
                 if (first_or_allied) {
                   if (((*(byte *)&civs[civ].treaties[civ4] & 4) == 0) &&
                      ((*(byte *)&civs[civ2].treaties[civ4] & 4) == 0)) {
-found_third_civ:
                     civ3 = civ4;
                     break;
                   }
@@ -5918,8 +5905,10 @@ found_third_civ:
                 else if (((!leader_gap) && (city = diplo_is_hostile(civ,civ4), city != 0)) &&
                         ((game.power_rank[civ] <= game.power_rank[civ4] &&
                          ((city = diplo_is_hostile(civ2,civ4), city != 0 &&
-                          (game.power_rank[civ2] <= game.power_rank[civ4]))))))
-                goto found_third_civ;
+                          (game.power_rank[civ2] <= game.power_rank[civ4])))))) {
+                  civ3 = civ4;
+                  break;
+                }
               }
             }
             else {
@@ -6351,20 +6340,16 @@ void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
         popup_game_with_sprite((const char *)&map_views_block.text_buffer,(iptr)&peace_treaty_icon_sprite_block.peace_treaty_icon_sprite,0);
       }
       else {
-        if (civs[civ2].government == 6) {
-senate_scandal:
+        if ((civs[civ2].government == 6) ||
+            ((rand_val = _rand(), sign = (int)rand_val >> 0x1f,
+              ((rand_val ^ sign) - sign & 1 ^ sign) != sign) &&
+             (civs[civ2].government == 5))) {
           if (((game.game_flags & 0x80) == 0) || ((prefs_game_rules_block.scenario_flags[0] & 1) == 0)) {
             civ_name = civ_get_adjective(civ2);
             text_set_string_arg(0,(const char *)civ_name);
             popup_game((const char *)&str_senatescandal_2);
             civ_change_government(civ2,0);
           }
-        }
-        else {
-          rand_val = _rand();
-          sign = (int)rand_val >> 0x1f;
-          if ((((rand_val ^ sign) - sign & 1 ^ sign) != sign) &&
-             (civs[civ2].government == 5)) goto senate_scandal;
         }
         civ_adjust_attitude(civ,civ2,0x32);
         diplo_declare_war(civ2,civ,-1);

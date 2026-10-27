@@ -1271,29 +1271,24 @@ clickmap_hit_test(ClickMapHitTestView *self,int x,int y,iptr out_id,iptr out_val
   int i;
   
   hit = -1;
-  i = 0;
-  do {
-    if ((int)self->region_count <= i) {
-report_hit:
-      if (-1 < hit) {
-        if (out_id != 0) {
-          *(i32 *)out_id = self->hit_regions[hit].id;
-        }
-        if (out_value != 0) {
-          *(i32 *)out_value = self->hit_regions[hit].value;
-        }
-      }
-      return hit;
-    }
+  for (i = 0; i < (int)self->region_count; i++) {
     if ((((self->hit_regions[i].left <= x) &&
          (x < self->hit_regions[i].right)) &&
         (self->hit_regions[i].top <= y)) &&
        (y < self->hit_regions[i].bottom)) {
       hit = i;
-      goto report_hit;
+      break;
     }
-    i++;
-  } while( true );
+  }
+  if (-1 < hit) {
+    if (out_id != 0) {
+      *(i32 *)out_id = self->hit_regions[hit].id;
+    }
+    if (out_value != 0) {
+      *(i32 *)out_value = self->hit_regions[hit].value;
+    }
+  }
+  return hit;
 }
 
 /* 00472b0a auto */
@@ -1622,7 +1617,8 @@ void MapView::draw_tile_terrain(iptr surface,int screen_x,int screen_y,iptr x,in
     }
     if (hidden != 0) {
       ((Sprite *)((i8 *)&unexplored_tile_sprite))->draw((iptr)hidden_rect,surface,screen_x,screen_y);
-      goto reset_zoom_done;
+      gfx_reset_zoom_scale();
+      return;
     }
   }
   check = map_in_bounds(x,y);
@@ -1885,7 +1881,7 @@ void MapView::draw_tile_terrain(iptr surface,int screen_x,int screen_y,iptr x,in
       nbr_hidden = 0;
       if (city_tile_idx < 0) {
         check = map_in_bounds(x2,y2);
-        if (check != 0) goto check_neighbor_visible;
+        if (check == 0) continue;
       }
       else {
         if (city_tile_idx < 0x15) {
@@ -1915,38 +1911,36 @@ void MapView::draw_tile_terrain(iptr surface,int screen_x,int screen_y,iptr x,in
         else {
           nbr_hidden = 1;
         }
-check_neighbor_visible:
-        if (nbr_hidden == 0) {
-          check = tile_visible_to(x2,y2,viewer_civ);
-          if (check == 0) {
-            nbr_hidden = 1;
-          }
-          else {
-            nbr_hidden = 0;
-          }
+      }
+      if (nbr_hidden == 0) {
+        check = tile_visible_to(x2,y2,viewer_civ);
+        if (check == 0) {
+          nbr_hidden = 1;
         }
-        if (nbr_hidden != 0) {
-          if (dir < 2) {
-            unexp_dx = half_w;
-          }
-          else {
-            unexp_dx = 0;
-          }
-          draw_x = unexp_dx + screen_x;
-          if (((char)dir + 1U & 3) < 2) {
-            unexp_dy = 0;
-          }
-          else {
-            unexp_dy = half_h;
-          }
-          draw_y = unexp_dy + screen_y;
-          ((Sprite *)(((i8 *)&map_cursor_sprite_block.unexplored_dither_sprites) + dir * 0x3c))->draw((iptr)unexp_rect,surface,
-                     draw_x,draw_y);
+        else {
+          nbr_hidden = 0;
         }
+      }
+      if (nbr_hidden != 0) {
+        if (dir < 2) {
+          unexp_dx = half_w;
+        }
+        else {
+          unexp_dx = 0;
+        }
+        draw_x = unexp_dx + screen_x;
+        if (((char)dir + 1U & 3) < 2) {
+          unexp_dy = 0;
+        }
+        else {
+          unexp_dy = half_h;
+        }
+        draw_y = unexp_dy + screen_y;
+        ((Sprite *)(((i8 *)&map_cursor_sprite_block.unexplored_dither_sprites) + dir * 0x3c))->draw((iptr)unexp_rect,surface,
+                   draw_x,draw_y);
       }
     }
   }
-reset_zoom_done:
   gfx_reset_zoom_scale();
   return;
 }
