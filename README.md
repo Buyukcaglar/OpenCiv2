@@ -36,9 +36,9 @@ What to install first:
 - **macOS:** `xcode-select --install` (compiler and make) and `brew install sdl2`.
 - **Linux:** a C compiler, make, Python 3 and `libsdl2-dev` from the package manager.
 - **Windows:** in an [MSYS2](https://www.msys2.org) **MINGW64** shell, `pacman -S git make
-  mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python`; `make` gives
-  `build/OpenCiv2.exe` and `SDL2.dll`. Play from a normal Command Prompt (or double-click) with
-  `tools\run-civ2.bat [GAMEDIR]`; the game is looked for in `%USERPROFILE%\Civ2` by default.
+  mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python`, then `make` and
+  `make run` there as above (the game is looked for in `%USERPROFILE%\Civ2`). Outside MSYS2,
+  play with `tools\run-civ2.bat [GAMEDIR]` from a Command Prompt or by double-clicking it.
 
 `make windows` cross-compiles `build/OpenCiv2.exe` on Linux (it also downloads SDL2's MinGW
 release): the one file the release has, SDL2 and the fonts built in.

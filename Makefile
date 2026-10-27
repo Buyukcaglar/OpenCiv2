@@ -11,16 +11,23 @@ NAME   := $(basename $(notdir $(SCRIPT)))
 .PHONY: all build run windows images hook ref native port native-suite clean
 
 # Build and play on this machine (no Docker): needs a C compiler, SDL2 and
-# Python 3 (README "Build and run").
+# Python 3 (README "Build and run").  On Windows: in an MSYS2 MINGW64 shell.
+ifeq ($(OS),Windows_NT)
+EXE  := .exe
+PLAY  = cmd //c "tools\run-civ2.bat $(GAME)"
+else
+PLAY  = tools/run-civ2.sh $(GAME)
+endif
+
 all: build
 
 build:                        ## build/OpenCiv2 (first time: downloads its toolchain into tools/toolchain)
 	python3 tools/build_port.py
 
-run: | build/OpenCiv2         ## play the game in GAME (default $$CIV2_GAME or ~/Civ2); builds first if there is no build
-	tools/run-civ2.sh $(GAME)
+run: | build/OpenCiv2$(EXE)   ## play the game in GAME (default $$CIV2_GAME or ~/Civ2; Windows: %USERPROFILE%\Civ2); builds first if there is no build
+	$(PLAY)
 
-build/OpenCiv2:
+build/OpenCiv2$(EXE):
 	python3 tools/build_port.py
 
 windows:                      ## build/OpenCiv2.exe, cross-compiled from Linux
