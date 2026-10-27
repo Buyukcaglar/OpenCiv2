@@ -62,44 +62,24 @@ up again.
 To build it yourself, install your copy of Civilization II in `~/Civ2` (the directory with
 `civ2.exe`, `Tiles.dll`, the `.TXT` files …), or point `CIV2_GAME` at it.
 
-### macOS
-
-```sh
-xcode-select --install          # C/C++ compiler
-brew install sdl2
-
-git clone https://github.com/richardpenman/civ2 && cd civ2
-python3 tools/build_port.py     # -> build/OpenCiv2  (several minutes; the first time it downloads
-                                #    wasi-sdk, wabt and the libraries' sources into tools/toolchain)
-tools/run-civ2.sh               # plays the game in ~/Civ2
-```
-
-### Linux
-
-As on macOS, with `libsdl2-dev` from the package manager:
-
 ```sh
 git clone https://github.com/richardpenman/civ2 && cd civ2
-python3 tools/build_port.py     # -> build/OpenCiv2
-tools/run-civ2.sh
+make            # -> build/OpenCiv2 (several minutes; the first time it downloads wasi-sdk,
+                #    wabt and the libraries' sources into tools/toolchain)
+make run        # plays the game in ~/Civ2 (or: make run GAME=/path/to/Civ2)
 ```
 
-### Windows
+What to install first:
 
-In an [MSYS2](https://www.msys2.org) **MINGW64** shell:
+- **macOS:** `xcode-select --install` (compiler and make) and `brew install sdl2`.
+- **Linux:** a C compiler, make, Python 3 and `libsdl2-dev` from the package manager.
+- **Windows:** in an [MSYS2](https://www.msys2.org) **MINGW64** shell, `pacman -S git make
+  mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python`; `make` gives
+  `build/OpenCiv2.exe` and `SDL2.dll`. Play from a normal Command Prompt (or double-click) with
+  `tools\run-civ2.bat [GAMEDIR]`; the game is looked for in `%USERPROFILE%\Civ2` by default.
 
-```sh
-pacman -S git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python
-git clone https://github.com/richardpenman/civ2 && cd civ2
-python3 tools/build_port.py     # -> build/OpenCiv2.exe and SDL2.dll
-```
-
-Then play from a normal Command Prompt (or double-click) with `tools\run-civ2.bat [GAMEDIR]`;
-the game is looked for in `%USERPROFILE%\Civ2` by default.
-
-The Windows executable can also be cross-compiled on Linux: `python3 tools/build_port.py module c
-exe-windows` (it also downloads SDL2's MinGW release):
-`build/OpenCiv2.exe`, the one file the release has (SDL2 and the fonts built in).
+`make windows` cross-compiles `build/OpenCiv2.exe` on Linux (it also downloads SDL2's MinGW
+release): the one file the release has, SDL2 and the fonts built in.
 
 ## Tooling
 
@@ -114,7 +94,7 @@ the repository at `/work` and the game at `/civ2`.
 
 ```sh
 make native          # build/civ2-linux32: gcc -m32, the same code, easier to debug
-make port            # build/OpenCiv2: the portable build
+make port            # build/OpenCiv2 in the container
 make ref SCRIPT=harness/scripts/turns.txt    # record the original on a scenario
 make native-suite    # replay every scenario on a native build and compare (EXE=OpenCiv2, OpenCiv2.exe under Wine)
 ```
