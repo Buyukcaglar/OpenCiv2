@@ -6525,7 +6525,7 @@ static int city_choose_production_diplomat_score(ChooseProdState *s,iptr city,ip
             *score = 7;
           }
           if (civs[game.best_human_rank].gold * 2 < civs[s->civ].gold) {
-            *score--;
+            (*score)--;
           }
           if (civs[s->civ].num_advances < civs[game.best_human_rank].num_advances) {
             if (s->unit_counts[unit_type] + s->units_in_build[unit_type] == 0) {
@@ -6557,7 +6557,7 @@ static int city_choose_production_diplomat_score(ChooseProdState *s,iptr city,ip
       }
     }
     if (civs[s->civ].government == GOV_COMMUNISM) {
-      *score--;
+      (*score)--;
     }
     if ((race_behind != 0) && ((int)*score < 0x14)) {
       for (improvement = 0x23; improvement < 0x26; improvement++) {

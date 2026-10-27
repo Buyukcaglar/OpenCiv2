@@ -7425,6 +7425,36 @@ void __cdecl events_copy(ScenarioEvents *dst_events,ScenarioEvents *src_events)
   } while( true );
 }
 
+/* (port) ScenarioEvents::reset (004fa5d9) for events_compact: the pool
+   frees its block and allocates one of the same size, which under Wine is
+   the block just freed, at the same address (seen in the events replay:
+   the editor's text lines go there).  The original relies on it: its
+   callers keep event pointers across events_compact (editor_text_dlg_on_ok
+   writes the text lines through editor_lists.text_lines_out,
+   events_editor_edit_action reads event->actions), and they stay valid
+   while compacting does not move the event.  So the pool keeps its block
+   here, cleared as GMEM_ZEROINIT clears a new one, and unlocked as
+   memblock_free leaves it. */
+static void events_reset_keep_block(ScenarioEvents *events,uint pool_size)
+{
+  MemBlock *pool;
+
+  pool = (MemBlock *)events->events_string_pool;
+  if ((char)pool->owns_handle == '\0' || pool->mem_handle == 0 || pool->capacity != (pool_size & 0xffff)) {
+    events->reset(pool_size);
+    return;
+  }
+  events->event_list = 0;
+  events->event_count = 0;
+  memblock_ensure_locked(pool);
+  _memset((void *)pool->base_ptr,0,pool->capacity);
+  memblock_unlock(pool);
+  pool->block_id = 0xc;
+  pool->used = 0;
+  pool->available = (u16)pool_size;
+  pool->capacity = (u16)pool_size;
+}
+
 /* 004cef35 auto */
 void __cdecl events_compact(void)
 
@@ -7436,7 +7466,7 @@ void __cdecl events_compact(void)
   ON_SCOPE_EXIT(temp_events.destruct());
   temp_events.reset(50000);
   events_copy(&temp_events,(ScenarioEvents *)&unit_types_block.scenario_events);
-  ((ScenarioEvents *)((i8 *)&unit_types_block.scenario_events))->reset(50000);
+  events_reset_keep_block((ScenarioEvents *)&unit_types_block.scenario_events,50000);
   events_copy((ScenarioEvents *)&unit_types_block.scenario_events,&temp_events);
   return;
 }

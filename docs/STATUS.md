@@ -337,6 +337,11 @@ message by message and clock event by clock event.
   editor_text_dlg_on_ok then writes to, and a split part of
   city_choose_production reads past a local), and the two-game network
   test with diplomacy passes (the client under ASan).
+  Both fixed after: the split had turned `score--` into `*score--`
+  (the pointer, not the score) in city_choose_production_diplomat_score;
+  the pool is the original's own bug (its callers keep event pointers
+  across events_compact, valid under Wine only because the new pool is
+  the block just freed), so events_compact keeps the pool's block.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking
