@@ -503,7 +503,24 @@ void __cdecl str_append_population(iptr dest,iptr civ,int population)
   else {
     pop = population;
   }
-  if (99 < pop) {
+  if (extra_rule(X_POP_LIMIT) && (99999 < pop)) {
+    /* X51: past 999 million, a separator in the millions too */
+    str_append_int(dest,pop / 100000);
+    crt_strcat((char *)((void *)dest),((i8 *)&pop_thousands_sep_str));
+    if ((pop / 100) % 1000 < 100) {
+      crt_strcat((char *)((void *)dest),((i8 *)&pop_zero_pad_str));
+    }
+    if ((pop / 100) % 1000 < 10) {
+      crt_strcat((char *)((void *)dest),((i8 *)&pop_zero_pad_str));
+    }
+    str_append_int(dest,(pop / 100) % 1000);
+    crt_strcat((char *)((void *)dest),((i8 *)&pop_thousands_sep_str));
+    pop = pop % 100;
+    if (pop < 10) {
+      crt_strcat((char *)((void *)dest),((i8 *)&pop_zero_pad_str));
+    }
+  }
+  else if (99 < pop) {
     str_append_int(dest,pop / 100);
     crt_strcat((char *)((void *)dest),((i8 *)&pop_thousands_sep_str));
     pop = pop % 100;

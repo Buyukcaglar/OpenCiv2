@@ -1,0 +1,52 @@
+# Rule change X50 (docs/EXTRAS.md, RetirementYear): the retirement and its
+# warning in the years set.  Run with CIV2_TEST_EXTRAS=5,50 and
+# CIV2_TEST_SETTINGS=RetirementYear=1902,RetirementWarningYear=1901: the
+# autosave's turn set to 451 (1900 A.D. at its difficulty), then two turns
+# ended: the warning in 1901 (its text, GAME.TXT's, still says 20 years),
+# the retirement in 1902, then the end of the game (the power graph, the
+# score...); the original: 2000 and 2020, neither here.  (In 1903 the
+# throne room grows, a screen the replay cannot close.)
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call cheat_set_game_year 555a02
+wait 1500
+key BackSpace BackSpace BackSpace BackSpace BackSpace
+type 451
+key Return
+wait 1500
+shot x50-a-year
+call menu_command 4e2803 0 1168     # 0x490 End Player Turn
+wait 15000
+shot x50-b-turn1
+key Escape
+wait 2000
+shot x50-b-turn1-2
+key Escape
+wait 2000
+shot x50-b-turn1-3
+key Escape
+wait 2000
+key Escape
+wait 2000
+call menu_command 4e2803 0 1168     # 0x490 End Player Turn
+wait 15000
+shot x50-c-turn2
+key Escape
+wait 2000
+shot x50-c-turn2-2
+key Escape
+wait 2000
+shot x50-c-turn2-3
+key Escape
+wait 2000
+key Escape
+wait 2000
+key Escape
+wait 2000
+shot x50-d-end

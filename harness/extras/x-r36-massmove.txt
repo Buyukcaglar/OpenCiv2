@@ -1,0 +1,31 @@
+# Rule change X36 (docs/EXTRAS.md, MassMove): Shift+right click moves the
+# active unit and the units of its type on its square there.
+# CIV2_TEST_EXTRAS=36; without it the right click only centres the map.
+# Made on the autosave: three armors and a legion at (34,58); they go to
+# (32,58) and the legion stays.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call unit_create 5b3d06 22 1 34 58
+wait 300
+call unit_create 5b3d06 22 1 34 58
+wait 300
+call unit_create 5b3d06 5 1 34 58
+wait 300
+call unit_create 5b3d06 22 1 34 58
+wait 300
+key g                       # the phalanx (the active unit) to Rome
+wait 1000
+key Return
+wait 4000
+shot x36-a-armor            # an armor active
+keydown shift
+click 150 248 3
+keyup shift
+wait 6000
+shot x36-b-moved

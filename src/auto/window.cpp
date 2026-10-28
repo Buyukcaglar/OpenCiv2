@@ -5628,6 +5628,9 @@ void __cdecl ui_pick_unit_from_stack(void)
   units[unit].orders = ORDER_NONE;
   units[unit].flags = units[unit].flags & ~UNITF_AUTOMATED;
   moving_units_mode = 0;
+  if (extra_rule(X_ROTATION)) {
+    extras_rotation_activated(unit);  /* X19: this stack's units next, the others wait */
+  }
   ui_focus_active_unit(0);
   if (units[unit].moves_used == '\0') {
     unit_reveal_surroundings(unit,1);

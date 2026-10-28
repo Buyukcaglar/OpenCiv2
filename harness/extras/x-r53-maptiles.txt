@@ -1,0 +1,43 @@
+# Rule change X53 (docs/EXTRAS.md, MapTilesLimit): a custom world of more
+# than 10,000 squares.  CIV2_TEST_EXTRAS=53 (the limit 32767 in a replay):
+# 150 x 200 squares are taken and the world made (the original's custom
+# size dialog comes back: 30,000 squares are too many); then the first turn
+# and the world map.
+wait 8000
+key Return                  # Start a New Game
+wait 3000
+click 351 385               # Custom
+wait 2000
+key BackSpace BackSpace BackSpace
+type 150
+key Tab
+key BackSpace BackSpace BackSpace
+type 200
+wait 500
+shot x53-a-custom
+key Return
+wait 3000
+shot x53-b-next             # the difficulty (without the rule: the custom size again)
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 5000
+key Return
+wait 2400000                # world generation (30,000 squares: long)
+key Return
+wait 5000
+key Return
+wait 5000
+shot x53-c-map
+key ctrl+w
+wait 3000

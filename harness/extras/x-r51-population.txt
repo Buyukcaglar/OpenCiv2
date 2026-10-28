@@ -1,0 +1,82 @@
+# Rule change X51 (docs/EXTRAS.md, PopulationLimit): a civilization's
+# population past 320 million.  CIV2_TEST_EXTRAS=51: two more Roman
+# cities founded on the autosave and the four set to size 127 with the
+# cheat (8128 x 10,000 people each; the settlers that found them are in
+# slots 21 and 55: a unit's slot is not taken again at once): the status
+# panel and the demographics show 325,120,000 people (the original:
+# 320,000,000).
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call unit_create 5b3d06 0 1 40 54
+wait 300
+call unit_found_city 4c4d1e 21 -1 0
+wait 1000
+call unit_create 5b3d06 0 1 30 54
+wait 300
+call unit_found_city 4c4d1e 55 -1 0
+wait 1000
+call map_set_cursor_pos 410d98 36 60
+call cheat_edit_city 5569e3
+wait 1000
+key Down
+key Return                  # Change Size
+wait 1000
+key BackSpace BackSpace BackSpace
+type 127
+key Return
+wait 1000
+key Up
+key Return                  # No Changes
+wait 1000
+call map_set_cursor_pos 410d98 34 42
+call cheat_edit_city 5569e3
+wait 1000
+key Down
+key Return
+wait 1000
+key BackSpace BackSpace BackSpace
+type 127
+key Return
+wait 1000
+key Up
+key Return
+wait 1000
+call map_set_cursor_pos 410d98 40 54
+call cheat_edit_city 5569e3
+wait 1000
+key Down
+key Return
+wait 1000
+key BackSpace BackSpace BackSpace
+type 127
+key Return
+wait 1000
+key Up
+key Return
+wait 1000
+call map_set_cursor_pos 410d98 30 54
+call cheat_edit_city 5569e3
+wait 1000
+key Down
+key Return
+wait 1000
+key BackSpace BackSpace BackSpace
+type 127
+key Return
+wait 1000
+key Up
+key Return
+wait 1000
+wait 1000
+shot x51-a-population
+call menu_command 4e2803 0 1541
+wait 3000
+shot x51-b-demographics
+key Escape
+wait 1000

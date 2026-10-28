@@ -2666,7 +2666,12 @@ int __cdecl civ_total_population(iptr civ)
       total += city_pop;
     }
   }
-  if ((total < 0) || (32000 < total)) {
+  if (extra_rule(X_POP_LIMIT)) {
+    if ((total < 0) || (extras_population_limit() < total)) {
+      total = extras_population_limit();  /* X51 */
+    }
+  }
+  else if ((total < 0) || (32000 < total)) {
     total = 32000;
   }
   if (total < 2) {
@@ -3564,11 +3569,16 @@ void __cdecl civ_process_turn(uptr civ)
   }
   spaceship_wnd_load_parts(civ);
   ((PictureWindow *)((i8 *)&advisor_state.window))->close();
-  if (30000 < civs[civ].gold) {
+  if (extra_rule(X_GOLD_LIMIT)) {
+    if (extras_gold_limit() < civs[civ].gold) {
+      civs[civ].gold = extras_gold_limit();  /* X52 */
+    }
+  }
+  else if (30000 < civs[civ].gold) {
     civs[civ].gold = 30000;
   }
   if (civs[civ].gold < -0x4000) {
-    civs[civ].gold = 30000;
+    civs[civ].gold = extra_rule(X_GOLD_LIMIT) ? extras_gold_limit() : 30000;
   }
   if (civs[civ].gold < 0) {
     civs[civ].gold = 0;

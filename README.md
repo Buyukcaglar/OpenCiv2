@@ -22,7 +22,9 @@ up again.
 OpenCiv2 fixes the original game's bugs ([BUGS.md](docs/BUGS.md)) and adds the interface
 improvements of FoxAhead's [CIV2UIA](https://github.com/FoxAhead/Civ2-UI-Additions) (mouse
 wheel, scrolling lists, more figures in the advisors, quick information with Ctrl ...:
-[EXTRAS.md](docs/EXTRAS.md); each can be switched off in `CIV.INI`). Set `CIV2_CLASSIC=1` to play
+[EXTRAS.md](docs/EXTRAS.md); each can be switched off in `CIV.INI`), and, off unless switched
+on in `CIV.INI`, its rule changes (Go To past enemy units, moving a stack's units of a type
+together, higher limits for gold, population and the map ...). Set `CIV2_CLASSIC=1` to play
 the original game instead: its bugs, its interface, and its menu bar and window caption drawn as
 the original's.
 

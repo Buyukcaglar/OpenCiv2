@@ -3177,6 +3177,9 @@ void __cdecl hall_of_fame_add_entry(iptr civ)
   advisor_font_block.hof_new_entry.turn = game.turn;
   advisor_font_block.hof_new_entry.year = game.year;
   value = civ_total_population(civ);
+  if (extra_rule(X_POP_LIMIT) && (32000 < value)) {
+    value = 32000;  /* X51: the Hall of Fame keeps 16 bits */
+  }
   advisor_font_block.hof_new_entry.population = (i16)value;
   if (((game.game_flags & GAME_SCENARIO) == 0) || ((scenario.flags[0] & 2) == 0)) {
     advisor_font_block.hof_new_entry.objective_score = 0xffff;

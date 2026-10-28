@@ -463,7 +463,7 @@ i32 __cdecl setup_choose_map_size(void)
       choice = _atoi(((i8 *)&text_args.string1));
       map.height = (i16)choice;
       if ((((0x13 < map.width) && (map.width < 0xfb)) && (0x13 < map.height)) &&
-         (((map.height < 0xfb && ((int)map.height * (int)map.width < 0x2711)) &&
+         (((map.height < 0xfb && ((int)map.height * (int)map.width <= extras_map_tiles_limit())) &&  /* X53 */
           (999 < (int)map.height * (int)map.width)))) {
         result = 0;
         goto apply_map_size;
@@ -4853,13 +4853,17 @@ i32 __cdecl game_check_retirement(void)
     name_str = civ_leader_name(human_civ[0]);
     text_set_string_arg(1,name_str);
     if (((game.game_flags & GAME_SCENARIO) == 0) || (scenario.max_turns == 0)) {
-      if (game.year == 2000) {
+      if (extra_rule(X_RETIREMENT) ?
+          /* X50: the years set; a warning the turn the year is passed */
+          (extras_year_reached(extras_retirement_warning_year()) &&
+           !extras_year_reached(extras_retirement_year())) : (game.year == 2000)) {
         if (2 < game.multiplayer) {
           net_send_text_args(9,0xff,0,0,0,0);
         }
         popup_game_with_sprite((const char *)&str_planretire,(iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0);
       }
-      else if (game.year == 0x7e4) {
+      else if (extra_rule(X_RETIREMENT) ? extras_year_reached(extras_retirement_year()) :
+               (game.year == 0x7e4)) {
         if (2 < game.multiplayer) {
           net_send_text_args(10,0xff,0,0,0,0);
         }
@@ -4928,7 +4932,11 @@ uint __cdecl game_handle_game_over(void)
   }
   if (game.multiplayer == '\0') {
     if ((((game_over_reason == 1) || (game_over_reason == 2)) || (game_over_reason == 4)) ||
-       (((game_over_reason == 5 && (game.year == 0x7e4)) || (game_over_reason == 3)))) {
+       (((game_over_reason == 5 &&
+          (extra_rule(X_RETIREMENT) ?  /* X50: retired (not a scenario's end) */
+           (((game.game_flags & GAME_SCENARIO) == 0 || (scenario.max_turns == 0)) &&
+            extras_retirement_year() <= game.year) : (game.year == 0x7e4))) ||
+         (game_over_reason == 3)))) {
       if (game_over_reason == 4) {
         quit = 1;
       }
@@ -7955,12 +7963,12 @@ i32 ScenarioEvents::action_change_money(ScenarioEvent *event)
   }
   else {
     new_gold = event->money_amount + civs[civ].gold;
-    if ((new_gold < 0) || (30000 < new_gold)) {
+    if ((new_gold < 0) || (extras_gold_limit() < new_gold)) {  /* X52: 30000 unless set */
       if (event->money_amount < 0) {
         civs[civ].gold = 0;
       }
       else {
-        civs[civ].gold = 30000;
+        civs[civ].gold = extras_gold_limit();
       }
     }
     else {
@@ -16408,8 +16416,8 @@ void __cdecl cheat_change_money(void)
     text_set_number_arg_v(0,civs[civ].gold);
     result = dlg_input_number((iptr)&str_debug_11,(const char *)&str_money,civs[civ].gold,(iptr)&gold2);
     if (result == 0) {
-      if (30000 < gold2) {
-        gold2 = 30000;
+      if (extras_gold_limit() < gold2) {
+        gold2 = extras_gold_limit();  /* X52: 30000 unless set */
       }
       if (gold2 < 0) {
         gold2 = 0;

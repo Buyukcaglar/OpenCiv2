@@ -12,6 +12,7 @@
 EXTERN_C int plat_replay;
 
 uint64_t extras_enabled;
+uint64_t extras_rules;
 
 static void messages_expire(void);
 
@@ -29,6 +30,25 @@ static const struct { int item; const char *key; } extra_keys[] = {
     {X_FOREIGN_GOLD, "ForeignGold"}, {X_ARRANGE, "ArrangeWindowsSL"}, {X_PATH_LINES, "PathLines"},
     {X_SENTRY_GREY, "SentryHalftone"}, {X_ZOOM_1, "DefaultZoom1"},
 };
+
+/* The rule changes (extra_rule): off unless their key is set (=1; the
+   limits: their value, 0 the original's). */
+static const struct { int item; const char *key; } rule_keys[] = {
+    {X_WORKER_HANDOVER, "WorkerHandover"}, {X_GOTO_ZOC, "GotoNoZocStop"},
+    {X_ROTATION, "UnitRotation"}, {X_MASS_MOVE, "MassMove"}, {X_STACK_SENTRY, "StackSentry"},
+    {X_RETIREMENT, "RetirementYear"}, {X_POP_LIMIT, "PopulationLimit"},
+    {X_GOLD_LIMIT, "GoldLimit"}, {X_MAP_TILES, "MapTilesLimit"},
+};
+
+/* The limits' values (with their rule on) and their ranges: the most the
+   game's fields and arithmetic hold (docs/EXTRAS.md). */
+static int retire_year = 2020, retire_warning = 2000, pop_limit = 32000, gold_limit = 30000,
+    map_tiles = 10000;
+
+static int clamp_setting(int v, int lo, int hi)
+{
+    return v < lo ? lo : v > hi ? hi : v;
+}
 
 int extras_setting(const char *key, int def)
 {
@@ -67,19 +87,46 @@ static void color_correction_load(void)
     plat_color_lut_on = 1;
 }
 
+/* The limits' values, for the rules that are on.  In a replay: those of
+   CIV2_TEST_SETTINGS, else the largest. */
+static void limits_load(void)
+{
+    int v;
+    v = extras_setting("RetirementYear", plat_replay ? 2020 : 0);
+    retire_year = clamp_setting(v, 1, 9999);
+    v = extras_setting("RetirementWarningYear", retire_year - 20);
+    retire_warning = clamp_setting(v, 0, retire_year - 1);
+    /* PopulationLimit: civ_total_population's cap, in 10,000 people.  At
+       most what population_milestone (16 bits, total / 100 + 9) holds. */
+    v = extras_setting("PopulationLimit", plat_replay ? 3275800 : 0);
+    pop_limit = clamp_setting(v, 32000, 3275800);
+    /* GoldLimit: the treasury is 32 bits, but the AI's sums (gold / 50 *
+       military strength, gold * 2) overflow past about a million. */
+    v = extras_setting("GoldLimit", plat_replay ? 1000000 : 0);
+    gold_limit = clamp_setting(v, 30000, 1000000);
+    /* MapTilesLimit: a custom map's width x height; map.area is 16 bits. */
+    v = extras_setting("MapTilesLimit", plat_replay ? 32767 : 0);
+    map_tiles = clamp_setting(v, 10000, 32767);
+}
+
 void extras_load(void)
 {
     const char *test = getenv("CIV2_TEST_EXTRAS");
     unsigned i;
+    uint64_t rule_bits = 0;
     extras_enabled = 0;
+    extras_rules = 0;
     plat_color_lut_on = 0;
     if (!plat_extras)
         return;
+    for (i = 0; i < sizeof rule_keys / sizeof rule_keys[0]; i++)
+        rule_bits |= (uint64_t)1 << rule_keys[i].item;
     if (plat_replay && test && *test && strcmp(test, "1") && strcmp(test, "all")) {
-        /* a list of item numbers; "-N": all but item N */
+        /* a list of item numbers; "-N": all the additions but item N (the
+           rule changes only by number) */
         const char *p = test;
         if (*p == '-')
-            extras_enabled = ~(uint64_t)0;
+            extras_enabled = ~rule_bits;
         while (*p) {
             int n = atoi(p);
             if (n < 0 && -n < X_COUNT)
@@ -89,14 +136,36 @@ void extras_load(void)
             p += strcspn(p, ",");
             p += *p == ',';
         }
+        extras_rules = extras_enabled & rule_bits;
+        extras_enabled &= ~rule_bits;
+        limits_load();
         color_correction_load();
         return;
     }
     for (i = 0; i < sizeof extra_keys / sizeof extra_keys[0]; i++)
         if (extras_setting(extra_keys[i].key, 1))
             extras_enabled |= (uint64_t)1 << extra_keys[i].item;
+    if (plat_replay)    /* "1": the additions; "all": and the rule changes */
+        extras_rules = test && !strcmp(test, "all") ? rule_bits : 0;
+    else
+        for (i = 0; i < sizeof rule_keys / sizeof rule_keys[0]; i++)
+            if (extras_setting(rule_keys[i].key, 0))
+                extras_rules |= (uint64_t)1 << rule_keys[i].item;
+    limits_load();
     color_correction_load();
 }
+
+int extras_retirement_year(void) { return extra_rule(X_RETIREMENT) ? retire_year : 2020; }
+/* X50: the game's year passed year this turn (0: never). */
+int extras_year_reached(int year)
+{
+    return year != 0 && game.year >= year && (game.turn < 1 || game_turn_to_year(game.turn - 1) < year);
+}
+
+int extras_retirement_warning_year(void) { return extra_rule(X_RETIREMENT) ? retire_warning : 2000; }
+int extras_population_limit(void) { return extra_rule(X_POP_LIMIT) ? pop_limit : 32000; }
+int extras_gold_limit(void) { return extra_rule(X_GOLD_LIMIT) ? gold_limit : 30000; }
+int extras_map_tiles_limit(void) { return extra_rule(X_MAP_TILES) ? map_tiles : 10000; }
 
 /* An addition's text: a translation's (lang/<code>.txt, key
    "openciv2.<key>") or the English. */
@@ -1488,4 +1557,123 @@ int extras_path_input(const MSG *m, HWND under, POINT pt)
     path.x = x;
     path.y = y;
     return 0;
+}
+
+/* ---- The rule changes (extra_rule) ---- */
+
+static int human_unit(int unit)
+{
+    return unit >= 0 && unit < game.num_units && units[unit].id != 0 &&
+        ((1 << (units[unit].owner & 0x1f)) & (int)game.human_players) != 0;
+}
+
+/* X19: where the unit last activated stood when it was (by the player or
+   as the next unit): the next unit is looked for near there, not where the
+   unit has moved to, so that the turn goes round the units near each other. */
+static struct { int x, y, civ, turn; } rotation = {0, 0, -1, -1};
+
+static void rotation_note(int unit)
+{
+    rotation.x = units[unit].x;
+    rotation.y = units[unit].y;
+    rotation.civ = units[unit].owner;
+    rotation.turn = game.turn;
+}
+
+int extras_rotation_origin(int unit, int *x, int *y)
+{
+    if (!human_unit(unit) || rotation.civ != units[unit].owner || rotation.turn != game.turn)
+        return 0;
+    *x = rotation.x;
+    *y = rotation.y;
+    return 1;
+}
+
+void extras_rotation_found(int unit)
+{
+    if (human_unit(unit))
+        rotation_note(unit);
+}
+
+/* The player activated a unit: the units of its stack come next (their
+   Wait flags cleared), the civ's others wait. */
+void extras_rotation_activated(int unit)
+{
+    int i;
+    if (!human_unit(unit))
+        return;
+    for (i = 0; i < game.num_units; i++) {
+        Unit *u = &units[i];
+        if (u->id == 0 || u->owner != units[unit].owner)
+            continue;
+        if (u->x == units[unit].x && u->y == units[unit].y)
+            u->flags &= ~UNITF_WAITING;
+        else
+            u->flags |= UNITF_WAITING;
+    }
+    rotation_note(unit);
+}
+
+/* X36: Shift+right click on (x, y): the active unit and the units of its
+   type on its square that can move (no orders: not fortified, on sentry or
+   working) go there, as with Go To; the others first, each as far as it
+   gets this turn, then the active unit as by a Go To.  1 if done. */
+int extras_mass_move(int x, int y)
+{
+    int active = game.active_unit, ux, uy, i, n = 0;
+    static short movers[2048];
+    if (!human_unit(active) || units[active].owner != human_civ[0] || moving_units_mode == 0)
+        return 0;
+    ux = units[active].x;
+    uy = units[active].y;
+    if (ux == x && uy == y)
+        return 0;
+    for (i = 0; i < game.num_units && n < 2048; i++)
+        if (i != active && units[i].id != 0 && units[i].x == ux && units[i].y == uy &&
+            units[i].owner == units[active].owner && units[i].type == units[active].type &&
+            units[i].orders == ORDER_NONE && unit_is_selectable(i))
+            movers[n++] = (short)i;
+    for (i = 0; i < n; i++) {
+        int unit = movers[i], id = units[unit].id, steps;
+        units[unit].goto_x = (i16)x;
+        units[unit].goto_y = (i16)y;
+        units[unit].orders = ORDER_GOTO;
+        units[unit].aux_timer = 0;
+        for (steps = 0; steps < 64; steps++) {
+            int px = units[unit].x, py = units[unit].y, used = units[unit].moves_used;
+            game.active_unit = (i16)unit;
+            unit_goto_step(unit);
+            if (units[unit].id != id || units[unit].orders != ORDER_GOTO || !unit_is_selectable(unit))
+                break;
+            if (units[unit].x == px && units[unit].y == py && units[unit].moves_used == used)
+                break;      /* stuck: it waits with its order */
+        }
+    }
+    game.active_unit = (i16)active;
+    if (units[active].id == 0)
+        return 1;
+    units[active].goto_x = (i16)x;
+    units[active].goto_y = (i16)y;
+    units[active].orders = ORDER_GOTO;
+    units[active].aux_timer = 0;
+    unit_goto_step(active);
+    return 1;
+}
+
+/* X42: U with no land unit on sentry in the stack: its land units that can
+   move (no orders) go on sentry.  1 if any did. */
+int extras_stack_sentry(void)
+{
+    int unit, any = 0;
+    if (game.active_unit < 0)
+        return 0;
+    for (unit = unit_stack_first(game.active_unit); unit >= 0; unit = unit_next_in_stack(unit))
+        if (unit_types[units[unit].type].domain == DOMAIN_LAND && units[unit].orders == ORDER_NONE &&
+            unit_is_selectable(unit)) {
+            unit_set_sleep(unit);
+            any = 1;
+        }
+    if (any)
+        map_redraw_tile_all_views(units[game.active_unit].x, units[game.active_unit].y);
+    return any;
 }

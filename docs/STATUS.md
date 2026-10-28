@@ -402,7 +402,17 @@ message by message and clock event by clock event.
   correction, coins in the Foreign Minister, Arrange Windows S/L, path lines with
   Shift, sentries in halftones, new games at zoom 1:1.  Off with `CIV2_CLASSIC=1`
   and in replays and unit tests (`CIV2_TEST_EXTRAS` turns them on in a replay);
-  not done yet: resizable advisors and their larger caption area (CIV2UIA 26, 27).
+  not done yet: resizable advisors and their larger caption area (CIV2UIA 26, 27:
+  each advisor lays itself out for its fixed height).
+* **Rule changes** (docs/EXTRAS.md): CIV2UIA's, off by default, each switched on
+  in CIV.INI's `[OpenCiv2]` section, off in network games, replays and unit
+  tests: a worker hands its work to the one that joins it and stops, Go To past
+  foreign units, Wait flags per stack and rotation from where the last unit
+  started, Shift+right click moves the stack's units of a type, `U` sentries the
+  stack's land units; limits for the retirement year, the population (to 3,275,800
+  x 10,000), the gold (to 1,000,000) and a custom map's squares (to 32767).  The
+  units' limit (2048) is left out: more units need a larger unit table than the
+  original's state layout and make saves the original cannot load.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

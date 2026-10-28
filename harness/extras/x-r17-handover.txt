@@ -1,0 +1,33 @@
+# Rule change X17 (docs/EXTRAS.md, WorkerHandover): an engineer given the
+# order of the engineer already working on its square takes its work, and
+# the other one stops.  CIV2_TEST_EXTRAS=3,17 (with the work counter).
+# Two engineers made on the autosave at (22,60) (slots 21, 55), both told
+# to transform; then the square's list (View Pieces, a click): one with the
+# order (O) and the work (4), the other without (-); without the rule both
+# have the order.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call unit_create 5b3d06 1 1 22 60
+wait 500
+call unit_create 5b3d06 1 1 22 60
+wait 500
+shot x17-a-two
+call unit_do_terrain_work 4c42a0 21 8
+wait 500
+shot x17-b-first
+call unit_do_terrain_work 4c42a0 55 8
+wait 1000
+shot x17-c-second
+key v                       # View Pieces
+wait 1000
+click 205 290
+wait 2000
+shot x17-d-list
+key Escape
+wait 1000

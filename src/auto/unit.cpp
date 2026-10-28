@@ -25,6 +25,9 @@ void __cdecl unit_blink_timer_tick(void)
 void __cdecl unit_cancel_goto_on_contact(iptr unit)
 
 {
+  if (extra_rule(X_GOTO_ZOC) && ((1 << (units[unit].owner & 0x1f) & (uint)game.human_players) != 0)) {
+    return;  /* X18: a human player's Go To goes on next to foreign units, as a caravan's */
+  }
   if (((units[unit].orders & 0xfU) == 0xb) && (unit_types[units[unit].type].role != ROLE_TRADE)) {
     units[unit].orders = ORDER_NONE;
   }
@@ -1703,6 +1706,11 @@ void __cdecl unit_do_terrain_work(iptr unit,iptr order)
   if (-1 < unit3) {
     units[unit2].counter += units[unit3].counter;
     units[unit3].counter = '\0';
+    if (extra_rule(X_WORKER_HANDOVER) && ((1 << (units[unit3].owner & 0x1f) & (uint)game.human_players) != 0)) {
+      /* X17: the worker that was there stops; one worker with the order on the tile */
+      units[unit3].orders = ORDER_NONE;
+      ((CityWindow *)((i8 *)&city_wnd.window))->on_unit_change(unit3,-99,-99);
+    }
   }
   units[unit2].counter++;
   if (units[unit2].type == UNIT_ENGINEERS) {
@@ -6470,6 +6478,7 @@ void __cdecl unit_cmd_unload(void)
   int selectable;
   iptr new_active;
   iptr unit;
+  bool woken = false;
   
   new_active = -1;
   if (-1 < game.active_unit) {
@@ -6481,6 +6490,7 @@ void __cdecl unit_cmd_unload(void)
         unit = unit_next_in_stack(unit)) {
       if ((unit_types[units[unit].type].domain == DOMAIN_LAND) && (units[unit].orders == ORDER_SLEEP)) {
         units[unit].orders = ORDER_NONE;
+        woken = true;
         selectable = unit_is_selectable(unit);
         if (selectable != 0) {
           new_active = unit;
@@ -6491,6 +6501,9 @@ void __cdecl unit_cmd_unload(void)
       game.active_unit = (i16)new_active;
       moving_units_mode = 0;
       ui_focus_active_unit(0);
+    }
+    else if (extra_rule(X_STACK_SENTRY) && !woken) {
+      extras_stack_sentry();  /* X42: none to unload: the stack's land units sentry */
     }
   }
   return;
@@ -10526,6 +10539,9 @@ iptr __cdecl unit_find_nearest_selectable(iptr unit,int human_only)
     x2 = (int)units[unit].x;
     y2 = (int)units[unit].y;
     prev_active = (int)game.active_unit;
+    if (extra_rule(X_ROTATION)) {
+      extras_rotation_origin(unit,&x2,&y2);  /* X19: from where the last unit started */
+    }
   }
   pass = 0;
   while( true ) {
@@ -10557,6 +10573,9 @@ iptr __cdecl unit_find_nearest_selectable(iptr unit,int human_only)
       }
     }
     pass++;
+  }
+  if (extra_rule(X_ROTATION)) {
+    extras_rotation_found(best_unit);  /* X19 */
   }
   return best_unit;
 }

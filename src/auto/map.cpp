@@ -1417,6 +1417,13 @@ void __cdecl map_window_click(i32 screen_x,i32 screen_y,int alt_click)
           if (result != 0) {
             map_click.tile_x = x2;
             map_click.tile_y = y2;
+            if ((extra_rule(X_MASS_MOVE) && (alt_click != 0)) && (GetKeyState(VK_SHIFT) < 0) &&
+               (extras_mass_move(x2,y2) != 0)) {
+              /* X36: Shift+right click, the active unit's like there */
+              map_click_in_progress = 0;
+              net.ui_input_busy = 0;
+              return;
+            }
             if ((paradrop_active != 0) && (alt_click != 0)) {
               blink.unit_phase = 0;
               view->redraw_cursor_tile();
