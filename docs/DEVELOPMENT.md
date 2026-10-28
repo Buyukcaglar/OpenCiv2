@@ -61,6 +61,23 @@ make test            # the unit tests: recorded cases of the game's functions, i
 make unit-record     # record those cases again from the replays (needs the game and run/ref-*)
 ```
 
+The replay checker requires a nonempty, matching set of PNG screenshots (including
+dimensions and pixels) and nonempty `rand.log` traces on both sides. A seed-only
+trace is valid; missing or empty logs are not evidence of matching random calls.
+Both `native_suite.sh` and `diff_suite.sh` fail a scenario if its runner or BMP
+conversion fails, then continue with the remaining scenarios and return failure
+for the suite. A failed run is not subsequently reported as `PASS` or `SAME`.
+
+Checker regression tests use synthetic images and a stub game runner. They need
+Python 3, Pillow and a POSIX `sh` for the suite tests, but no game assets, native
+build or Wine. Without `sh`, only the suite tests are skipped.
+
+```sh
+python3 tests/test_replay_harness.py -v
+# Or in the development container:
+tools/dk python3 tests/test_replay_harness.py -v
+```
+
 ## Unit tests
 
 `make test` checks the game's logic in seconds (2.5 s for the cases, a few more to build):
@@ -106,4 +123,3 @@ naming the function, the call and the first byte that differs (`cities+0x1a2`).
   game data's size or layout needs a new recording (`make unit-record`, about an hour), as does a
   function whose signature changes.  A failing case after an intended change of behaviour: check it
   against the replays (which compare with the original), then record again.
-
