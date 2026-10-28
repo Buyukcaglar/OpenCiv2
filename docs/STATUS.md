@@ -401,10 +401,30 @@ message by message and clock event by clock event.
   changes production, Shift on specialists, popups shown on the map, colour
   correction, coins in the Foreign Minister, Arrange Windows S/L, path lines with
   Shift, sentries in halftones, new games at zoom 1:1.  Off with `CIV2_CLASSIC=1`
-  and in replays and unit tests (`CIV2_TEST_EXTRAS` turns them on in a replay);
-  not done yet: resizable advisors and their larger caption area (CIV2UIA 26, 27:
-  each advisor lays itself out for its fixed height).  Tested by `make test-extras`
-  (docs/DEVELOPMENT.md): the 20 scripts of `harness/extras` compared with our own
+  and in replays and unit tests (`CIV2_TEST_EXTRAS` turns them on in a replay).
+  Game > OpenCiv2 Options (CMD_OPENCIV2_OPTIONS 0x107, extras_options_dialog)
+  switches them, the rule changes and the limits in the game: the game's own
+  dialogs built in code (checkboxes as a GAME.TXT @checkbox section, text fields
+  as @CUSTOMSIZE's; the game's checkboxes are in one column, so
+  Dialog::create_checkboxes places them in columns when a dialog asks for more:
+  only ours does), our texts; it writes CIV.INI and keeps the changes for the
+  run (in replays too), redraws what they change and hides or shows Arrange
+  Windows S/L (now always in the menu, hidden while X38 is off); the rule pages
+  are disabled in network games.  The trade-road path line (X39's second half)
+  walks the path finder as map_road_connection does (road planning: every land
+  step costs 1, ties to the square nearer the goal), its state saved and put
+  back, so the game's next search is unchanged; it uses the real map, so on
+  unexplored land it shows the way the game would take there.  The additions'
+  texts are keyed `openciv2.<key>` (src/game/extras.cpp texts[], exported with
+  the rest by CIV2_EXPORT_TEXT, src/include/lang.h).  Not done: resizable
+  advisors and their larger caption area (CIV2UIA 26, 27): each advisor opens at
+  600x400 and draws its list, buttons and background for that size from
+  constants in its own drawing and opening functions (list bottom at client_y +
+  0x174, buttons at + 0x18e, the background picture blitted once), so a taller
+  window needs each advisor's drawing, its buttons and scroll bar moved and the
+  background tiled, and a taller caption moves every advisor's client area; no
+  helper common to them would contain it.  Tested by `make test-extras`
+  (docs/DEVELOPMENT.md): the scripts of `harness/extras` compared with our own
   recorded output.
 * **Late painting on larger desktops in replays** (`CIV2_TEST_FULL=800x600` and up):
   a test artefact of the virtual clock, not a fault of the platform layer.  In a

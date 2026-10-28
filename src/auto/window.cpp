@@ -2677,6 +2677,9 @@ static void menu_cmd_game_options(int cmd)
     break;
   case CMD_PICK_MUSIC:
     menu_select_music();
+    break;
+  case CMD_OPENCIV2_OPTIONS:
+    extras_options_dialog();
   }
 }
 
@@ -3250,6 +3253,7 @@ void __cdecl menu_build_main(void)
   i32 cheat_checked;
   i32 cheat_disabled;
   int row;
+  int options_added = 0;
   
   ((GameMenu *)((i8 *)&main_menu_block.main_menu))->reset(0x1bbc);
   /* (port) The menus' structure is menu_rows; their texts are looked up by
@@ -3267,16 +3271,28 @@ void __cdecl menu_build_main(void)
     else if (lang_has(menu_rows[row].key) != 0) {
       ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(menu_rows[row].menu,menu_rows[row].cmd,
                     lang_text(menu_rows[row].key),menu_rows[row].room);
-      if (menu_rows[row].cmd == CMD_ARRANGE_WINDOWS && extra_ui(X_ARRANGE)) {
-        /* X38: Arrange Windows S and L */
+      if (menu_rows[row].cmd == CMD_ARRANGE_WINDOWS && plat_extras) {
+        /* X38: Arrange Windows S and L (hidden while X38 is off: the options
+           dialog can switch it) */
         static char label_s[64], label_l[64];
         const char *label = lang_text(menu_rows[row].key);
         int n = (int)strcspn(label, "|");
         snprintf(label_s, sizeof label_s, "%.*s S", n, label);
         snprintf(label_l, sizeof label_l, "%.*s L", n, label);
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(menu_rows[row].menu,CMD_ARRANGE_WINDOWS_S,label_s,0);
-        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(menu_rows[row].menu,CMD_ARRANGE_WINDOWS_L,label_l,0);
+        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(menu_rows[row].menu,CMD_ARRANGE_WINDOWS_S,
+                      extras_text_translated("menu.arrange_s") ? extras_text("menu.arrange_s") : label_s,0);
+        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(menu_rows[row].menu,CMD_ARRANGE_WINDOWS_L,
+                      extras_text_translated("menu.arrange_l") ? extras_text("menu.arrange_l") : label_l,0);
+        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(CMD_ARRANGE_WINDOWS_S,!extra_ui(X_ARRANGE));
+        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->set_item_hidden(CMD_ARRANGE_WINDOWS_L,!extra_ui(X_ARRANGE));
       }
+    }
+    if (plat_extras && menu_rows[row].menu == 1 && menu_rows[row + 1].menu == 1 &&
+        menu_rows[row + 1].cmd == 0 && !options_added) {
+      /* OpenCiv2's options, after the Game menu's options dialogs */
+      ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(1,CMD_OPENCIV2_OPTIONS,
+                    extras_text("menu.options"),0);
+      options_added = 1;
     }
   }
   if (((game.game_options & OPT_CHEAT_MODE) == 0) || (game.multiplayer != '\0')) {
@@ -8225,6 +8241,12 @@ void Dialog::create_checkboxes()
   i = 0;
   for (option = option_list; option != (DialogOption *)0x0;
       option = option->next) {
+    if ((1 < (int)columns) && (i != 0) && (i % (int)((columns - 1 + option_count) / columns) == 0)) {
+      /* (OpenCiv2) in columns, as compute_layout made room for them (the
+         options dialog; the game's checkboxes are in one column) */
+      x += option_width / columns;
+      y2 = list_y;
+    }
     if (surf_wnd == 0) {
       parent_188 = 0;
     }

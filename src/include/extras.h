@@ -41,8 +41,8 @@ enum {
     X_CITY_ATTITUDE = 23,   /* CityAttitude: colours under the citizens */
     X_RADIO_KEYS = 24,      /* RadioHotkeys */
     X_QUICKINFO = 25,       /* Quickinfo: Ctrl over a city or unit */
-    X_RESIZABLE = 26,       /* ResizableLists: advisors and lists */
-    X_CAPTION = 27,         /* AdvisorCaption: taller caption area */
+    X_RESIZABLE = 26,       /* resizable advisors and lists (not done, docs/STATUS.md) */
+    X_CAPTION = 27,         /* taller caption area (not done) */
     X_UNIT_LIST_KEYS = 28,  /* UnitListKeys: keys and page size in that list */
     X_PROD_CANCEL = 29,     /* ProductionCancel */
     X_PROD_COST = 30,       /* ProductionCost: cost and upkeep in the list */
@@ -83,7 +83,11 @@ EXTRAS_C int plat_profile_string(const char *file, const char *section, const ch
 EXTRAS_C void extras_load(void);                /* the settings, once at start */
 EXTRAS_C int extras_input(void *msg);           /* a mouse message (MSG *) before dispatch: 1 if used */
 EXTRAS_C int extras_setting(const char *key, int def);   /* [OpenCiv2] key=number */
-EXTRAS_C const char *extras_text(const char *key, const char *english);   /* translatable text */
+EXTRAS_C const char *extras_text(const char *key);   /* an addition's text (translatable) */
+EXTRAS_C int extras_text_translated(const char *key);  /* whether a translation gives it */
+/* each of the additions' texts: add("openciv2.<key>", English) (lang.cpp's export) */
+EXTRAS_C void extras_texts_each(void (*add)(const char *key, const char *english));
+EXTRAS_C void extras_options_dialog(void);      /* Game > OpenCiv2 Options */
 
 /* In a dialog list row's text (X30, X37): EXTRAS_ICON then 'g' (a gold coin),
    's' (a shield) or 'f' (food): that icon. */

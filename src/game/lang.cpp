@@ -371,6 +371,7 @@ static void export_english(void)
             add_file_sections(section_files[i]);
         add_descriptions();
         lang_load_rules();
+        extras_texts_each(set_english);     /* OpenCiv2's additions: openciv2.<key> */
     }
     if (!(f = fopen(path, "w")))
         return;
@@ -403,6 +404,13 @@ const char *lang_text(const char *key)
         return it->second.c_str();
     it = english.find(key);
     return it != english.end() ? it->second.c_str() : "";
+}
+
+int lang_translated(const char *key)
+{
+    if (!translation_loaded)
+        load_translation();
+    return translated.count(key) != 0;
 }
 
 int lang_has(const char *key)

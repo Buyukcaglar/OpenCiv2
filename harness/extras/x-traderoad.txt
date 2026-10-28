@@ -1,0 +1,32 @@
+# Path lines (X39), trade roads: a city under the cursor (View Pieces),
+# Shift held, the pointer over another city: the way their road must take.
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call menu_command 4e2803 0 528
+wait 3000
+key Return
+wait 12000
+call menu_command 4e2803 0 770     # 0x302 View Pieces
+wait 12000
+click 235 265 3     # the cursor on Rome
+wait 12000
+call menu_command 4e2803 0 802     # 0x322 Medium Zoom Out
+wait 12000
+shot xt-a-cursor
+keydown shift
+mousemove 188 100
+wait 12000
+shot xt-b-veii
+mousemove 268 436
+wait 12000
+shot xt-c-foreign
+keyup shift
+wait 12000
+shot xt-d-gone

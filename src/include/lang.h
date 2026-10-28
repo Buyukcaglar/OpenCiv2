@@ -20,6 +20,15 @@
  * translation keeps the lines that are not text, and the order of option
  * lines, which decides what each does).  A translated section is read in
  * place of the file's lines by text_read_line, whatever reads it.
+ *
+ * OpenCiv2's own texts (its interface additions and their options dialog,
+ * docs/EXTRAS.md) are keyed "openciv2.<key>": their English is in the
+ * table of src/game/extras.cpp (texts[]), which the export writes with the
+ * rest.  The Game menu's item ("openciv2.menu.options") marks its hotkey
+ * with '&' as MENU.TXT does; "openciv2.menu.arrange_s" and "_l", when not
+ * translated, are the translated Arrange Windows with " S" and " L".
+ * The options dialog's labels ("openciv2.option.<CIV.INI key>") are short:
+ * the dialog's width is fixed.
  */
 #ifndef CIV2_LANG_H
 #define CIV2_LANG_H
@@ -30,6 +39,9 @@ const char *lang_text(const char *key);
 
 /* Whether key has a text (a translation's or the English). */
 int lang_has(const char *key);
+
+/* Whether the translation has key. */
+int lang_translated(const char *key);
 
 /* The English menu texts, from MENU.TXT (the scenario's first, as the game
    reads its text files); called before the menus are built. */

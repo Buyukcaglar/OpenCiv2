@@ -18001,7 +18001,7 @@ void __cdecl status_draw_info(int full_redraw)
     /* X5: and the turn */
     text_append_space();
     text_append_lparen();
-    text_append(extras_text("turn", "Turn"));
+    text_append(extras_text("turn"));
     text_append_space();
     text_append_int((uint)game.turn);
     text_append_rparen();
