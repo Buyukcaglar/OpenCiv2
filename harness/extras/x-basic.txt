@@ -1,6 +1,7 @@
 # Interface additions (docs/EXTRAS.md) on the autosave: the turn in the
 # status panel (X5), the advisors' additions (X6, X10, X22, X37) and the
 # city window's attitude colours (X23).
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500
@@ -11,7 +12,7 @@ key Return
 wait 8000
 shot x05-status
 call menu_command 4e2803 0 1286
-wait 3000
+wait 12000
 shot x06-science
 key Escape
 wait 2000
@@ -33,9 +34,9 @@ wait 2000
 call menu_command 4e2803 0 528
 wait 3000
 key Return
-wait 4000
-click 205 245
-wait 4000
+wait 12000
+click 235 265
+wait 12000
 shot x23-city
 key Escape
 wait 2000

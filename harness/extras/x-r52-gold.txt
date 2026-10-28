@@ -2,6 +2,7 @@
 # CIV2_TEST_EXTRAS=52 (the limit 1,000,000 in a replay): the cheat sets
 # 99999 gold (the field takes five digits), kept at the next turn (with
 # its income); without the rule 30000.
+# test: CIV2_TEST_EXTRAS=52
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

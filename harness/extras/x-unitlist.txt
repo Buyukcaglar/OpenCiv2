@@ -1,5 +1,6 @@
 # The Activate Unit list of a stack of more than 9 units (X2, X28): all of
 # them, in a list that scrolls (the wheel too).
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

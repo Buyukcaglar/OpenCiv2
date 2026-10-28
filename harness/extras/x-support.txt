@@ -1,5 +1,6 @@
 # The city window's supported units (X11, X16): a total, sorted, and a
 # scroll bar when they do not fit (the wheel too).
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500
@@ -35,7 +36,7 @@ wait 300
 call menu_command 4e2803 0 528
 wait 3000
 key Return
-wait 4000
+wait 12000
 click 228 298
 wait 3000
 click 230 242

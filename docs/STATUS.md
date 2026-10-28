@@ -403,7 +403,22 @@ message by message and clock event by clock event.
   Shift, sentries in halftones, new games at zoom 1:1.  Off with `CIV2_CLASSIC=1`
   and in replays and unit tests (`CIV2_TEST_EXTRAS` turns them on in a replay);
   not done yet: resizable advisors and their larger caption area (CIV2UIA 26, 27:
-  each advisor lays itself out for its fixed height).
+  each advisor lays itself out for its fixed height).  Tested by `make test-extras`
+  (docs/DEVELOPMENT.md): the 20 scripts of `harness/extras` compared with our own
+  recorded output.
+* **Late painting on larger desktops in replays** (`CIV2_TEST_FULL=800x600` and up):
+  a test artefact of the virtual clock, not a fault of the platform layer.  In a
+  replay each empty check of the message queue lets 10 ms of virtual time pass (as
+  the harness's hook does for the original, so that the two keep time alike), and
+  the script's next action runs there.  The map view checks the queue after each
+  square it draws (MapView::draw_tile -> win_flush_pending_msgs), so redrawing the
+  map takes 10 ms per square: about 10 s for the 800x600 map (less on smaller
+  ones), during which the window or dialog the
+  game is about to paint stays as it was and screenshots and clicks see the old
+  screen.  With the real clock (`CIV2_REALTIME=1`, as in play) the same Science
+  Advisor is painted completely within half a second, identical to the replay's
+  final picture.  The scripts allow for it with longer waits; nothing to fix in
+  real play.
 * **Rule changes** (docs/EXTRAS.md): CIV2UIA's, off by default, each switched on
   in CIV.INI's `[OpenCiv2]` section, off in network games, replays and unit
   tests: a worker hands its work to the one that joins it and stops, Go To past

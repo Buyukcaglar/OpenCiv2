@@ -1,5 +1,6 @@
 # The City Status advisor (X31): the total, the headings that sort the
 # list, a city's production clicked: its Change Production.
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

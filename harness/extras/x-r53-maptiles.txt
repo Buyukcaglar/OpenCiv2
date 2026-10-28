@@ -3,6 +3,7 @@
 # 150 x 200 squares are taken and the world made (the original's custom
 # size dialog comes back: 30,000 squares are too many); then the first turn
 # and the world map.
+# test: CIV2_TEST_EXTRAS=53
 wait 8000
 key Return                  # Start a New Game
 wait 3000

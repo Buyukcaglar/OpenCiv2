@@ -3,6 +3,7 @@
 # CIV2_TEST_EXTRAS=36; without it the right click only centres the map.
 # Made on the autosave: three armors and a legion at (34,58); they go to
 # (32,58) and the legion stays.
+# test: CIV2_TEST_EXTRAS=36
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

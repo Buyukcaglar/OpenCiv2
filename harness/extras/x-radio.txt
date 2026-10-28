@@ -1,4 +1,6 @@
 # Radio buttons' hotkeys (X24): the main menu's items each get a letter
 # (underlined); colour correction (X35) when run with CIV2_TEST_SETTINGS.
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
+# test colour: CIV2_TEST_EXTRAS=1 CIV2_TEST_SETTINGS=Gamma=150,Brightness=10,Contrast=20 CIV2_TEST_FULL=640x480
 wait 8000
 shot x24-menu

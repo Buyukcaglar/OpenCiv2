@@ -5,6 +5,7 @@
 # to transform; then the square's list (View Pieces, a click): one with the
 # order (O) and the work (4), the other without (-); without the rule both
 # have the order.
+# test: CIV2_TEST_EXTRAS=3,17
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

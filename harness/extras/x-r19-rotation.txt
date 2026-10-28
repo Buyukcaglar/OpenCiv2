@@ -4,6 +4,7 @@
 # autosave: three warriors at (34,58), all told to wait (W); one of them
 # activated from the stack's list and its turn done (Space): with the rule
 # the next unit is another of the warriors, without it a unit elsewhere.
+# test: CIV2_TEST_EXTRAS=19
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

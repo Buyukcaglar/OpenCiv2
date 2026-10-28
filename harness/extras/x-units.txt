@@ -1,6 +1,7 @@
 # Interface additions on units (docs/EXTRAS.md): the settlers' work counter
 # (X3) and the sentries in grey halftones (X41).  Units made on the
 # autosave fill slots 21, 55, 56...
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

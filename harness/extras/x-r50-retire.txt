@@ -6,6 +6,7 @@
 # the retirement in 1902, then the end of the game (the power graph, the
 # score...); the original: 2000 and 2020, neither here.  (In 1903 the
 # throne room grows, a screen the replay cannot close.)
+# test: CIV2_TEST_EXTRAS=5,50 CIV2_TEST_SETTINGS=RetirementYear=1902,RetirementWarningYear=1901
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

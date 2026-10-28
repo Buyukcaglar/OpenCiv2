@@ -2,6 +2,7 @@
 # sentry in the stack puts its land units on sentry; U again wakes them (the
 # original's U).  CIV2_TEST_EXTRAS=42.  Made on the autosave: an armor, a
 # legion and warriors at (34,58); the armor is the active unit.
+# test: CIV2_TEST_EXTRAS=42
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

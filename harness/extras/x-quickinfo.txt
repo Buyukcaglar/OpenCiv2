@@ -1,5 +1,6 @@
 # Quick information (X25): Ctrl held, the pointer over a city, then over a
 # unit; released: gone.
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500
@@ -11,14 +12,14 @@ wait 8000
 call menu_command 4e2803 0 528
 wait 3000
 key Return
-wait 4000
+wait 12000
 keydown ctrl
-mousemove 205 245
-wait 2000
+mousemove 235 265
+wait 12000
 shot x25-a-city
-mousemove 125 362
-wait 2000
+mousemove 165 365
+wait 12000
 shot x25-b-unit
 keyup ctrl
-wait 2000
+wait 12000
 shot x25-c-gone

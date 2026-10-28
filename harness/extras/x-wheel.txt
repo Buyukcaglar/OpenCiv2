@@ -1,6 +1,7 @@
 # The mouse wheel and middle button (X1): Ctrl+wheel zooms the map, a
 # middle click centres it, a middle drag pans it, the wheel scrolls an
 # advisor's list.
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

@@ -8,7 +8,7 @@ SEED   ?= 7
 SCRIPT ?= harness/scripts/newgame.txt
 NAME   := $(basename $(notdir $(SCRIPT)))
 
-.PHONY: all build run windows images hook ref native port native-suite test unit-record clean
+.PHONY: all build run windows images hook ref native port native-suite test test-extras extras-bless unit-record clean
 
 # Build and play on this machine (no Docker): needs a C compiler, SDL2 and
 # Python 3 (README "Build and run").  On Windows: in an MSYS2 MINGW64 shell.
@@ -57,6 +57,15 @@ UNIT_SCRIPTS ?= long50 turns newgame conquest civilwar spies units talks citywor
 
 test:                         ## the unit tests: the recorded cases in tests/unit (build/civ2-unittest)
 	$(DK) sh -c "python3 tools/build_native.py --target linux32test >/dev/null && cd build && CIV2_DATA=../data/native ./civ2-unittest --mask ../tests/unit/textmask.tsv ../tests/unit/*.gz"
+
+# The additions' regression tests (harness/extras_suite.py): our own output,
+# checked by eye and recorded (extras-bless), replayed and compared.  Needs
+# the game files; NAMES limits them to some scripts.
+test-extras: native          ## replay harness/extras on build/civ2-linux32 and compare with harness/extras/expected
+	$(DK) python3 harness/extras_suite.py $(NAMES)
+
+extras-bless: native         ## record harness/extras/expected again (check run/extras-*/*.png by eye first)
+	$(DK) python3 harness/extras_suite.py --bless $(NAMES)
 
 unit-record:                  ## record the unit tests' cases again from the replays (needs the game and run/ref-*)
 	$(DK) python3 tools/build_native.py --target linux32rec

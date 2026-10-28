@@ -58,6 +58,7 @@ make port            # build/OpenCiv2 in the container
 make ref SCRIPT=harness/scripts/turns.txt    # record the original on a scenario
 make native-suite    # replay every scenario on a native build and compare (EXE=OpenCiv2, OpenCiv2.exe under Wine)
 make test            # the unit tests: recorded cases of the game's functions, in seconds (no game files needed)
+make test-extras     # the additions' tests: harness/extras replayed and compared with our recorded output
 make unit-record     # record those cases again from the replays (needs the game and run/ref-*)
 ```
 
@@ -77,6 +78,41 @@ python3 tests/test_replay_harness.py -v
 # Or in the development container:
 tools/dk python3 tests/test_replay_harness.py -v
 ```
+
+## Tests of the additions
+
+`make test-extras` checks OpenCiv2's additions to the original (docs/EXTRAS.md: the interface
+additions and the rule changes), which the original game has no recording of.  The scripts in
+`harness/extras` replay them on the native build (`harness/extras_suite.py`) and are compared with
+our own output, recorded once after checking its screenshots by eye: `harness/extras/expected/NAME.txt`
+holds a hash of each screenshot's pixels and of the `rand()` trace, `NAME.rand.gz` the trace itself
+(about 200 KB in all; no image or text of the game's).
+
+* A script says how it is run in its first comment lines: `# test: CIV2_TEST_EXTRAS=1
+  CIV2_TEST_FULL=640x480` (the variables of the run), and `# test LABEL: ...` for a further run of
+  it, named `NAME-LABEL`.  `CIV2_TEST_EXTRAS` turns additions on by number (`1`: all the interface
+  additions; `17,42`: those rule changes), `CIV2_TEST_SETTINGS` sets `CIV.INI` values
+  (`RetirementYear=1902,Gamma=150`), `CIV2_TEST_SUPPRESS` the popups shown on the map, and
+  `CIV2_TEST_FULL=WxH` shows the whole game window on a WxH desktop (the interface scripts: 640x480)
+  instead of the reference desktop of the replays (the rule changes' scripts).
+* Each run's screenshots (PNG) and logs are in `run/extras-NAME`.  On a failure the suite names
+  the screenshots that differ and the first `rand()` call that does, and writes
+  `run/report-extras-NAME/index.html`: the differences from the blessed screenshots where this
+  machine has them (`run/extras-blessed`, kept by the last bless), else this run's screenshots.
+* An intended change of what a script shows: run `make test-extras` (or `NAMES="x-prod x-wheel"`),
+  look at `run/extras-NAME/*.png`, then `make extras-bless NAMES=...`.  Blessing runs each script
+  twice and refuses one whose two runs differ (`--twice` checks that without blessing).  A new
+  addition gets a script and is blessed the same way.
+* The replays' virtual clock (as the original's under the harness) lets 10 ms pass at each empty
+  check of the message queue, and the map's drawing checks once per square, so redrawing a large
+  map takes seconds of the script's time (docs/STATUS.md): wait long enough (about 12 s) after
+  anything that redraws the map before a screenshot or a click.
+* The tests need the game's files, like the replays, so they do not run in the release workflow
+  (which has no game files and must not get them); run them locally before pushing changes to the
+  additions.
+
+`tools/native-run.sh` stops a run that hangs after `TIMEOUT` seconds (default 600; the suites:
+900): the game ignores SIGTERM, so it is killed `TIMEOUT_KILL` seconds (default 10) later.
 
 ## Unit tests
 

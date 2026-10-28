@@ -5,6 +5,7 @@
 # slots 21 and 55: a unit's slot is not taken again at once): the status
 # panel and the demographics show 325,120,000 people (the original:
 # 320,000,000).
+# test: CIV2_TEST_EXTRAS=51
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

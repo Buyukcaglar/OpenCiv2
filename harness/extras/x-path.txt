@@ -1,5 +1,6 @@
 # Path lines (X39): Shift held, the pointer over the map: the active unit's
 # way there.
+# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

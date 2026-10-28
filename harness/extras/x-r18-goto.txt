@@ -4,6 +4,7 @@
 # autosave: our armor at (34,58), barbarian warriors at (37,59); the armor
 # goes to Rome (36,60), where our units let it pass the warriors' zone of
 # control.
+# test: CIV2_TEST_EXTRAS=18
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500
