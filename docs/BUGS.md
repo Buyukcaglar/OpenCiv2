@@ -410,7 +410,8 @@ games: the state fixes are on there (MGE has no play by e-mail: docs/STATUS.md).
 - **Where:** `src/auto/unit.cpp`, `unit_move_dir` (0059062c): `civ_sees[8]` (which players see
   the move) is filled only when the unit moves; a move that stops early still reads
   `civ_sees[human_civ]` to pause (`ui_delay_ticks`) after an enemy's move. The original's stack
-  held non-zero there (FRAME_PRESETS: entries 1 to 7 set to 1).
+  held non-zero there for players 1 to 5 and zero for 6 and 7 (FRAME_PRESETS; probed in the
+  Rome scenario, where the human player is 6).
 - **What goes wrong:** every failed move of another civilization's unit, seen or not, makes the
   human player's game wait a moment, which also hints at units the player cannot see.
 - **Source:** our code (stale-stack reads).

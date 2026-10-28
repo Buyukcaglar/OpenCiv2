@@ -38,7 +38,7 @@ PY
         echo "FAIL $n"; grep "not laid out" "run/native-$n.log" | sed 's/^/    /'
         fail=1
     elif python3 harness/compare.py "run/ref-$n" "run/native-$n" --report "run/report-native-$n" > "run/compare-native-$n.txt" 2>&1; then
-        echo "PASS $n ($(tail -1 "run/compare-native-$n.txt"))"
+        echo "PASS $n ($(grep -E '^(rand trace|sounds and videos):' "run/compare-native-$n.txt" | paste -sd ';' - | sed 's/;/; /'))"
     else
         echo "FAIL $n"; grep -v ": identical" "run/compare-native-$n.txt" | sed 's/^/    /'
         fail=1

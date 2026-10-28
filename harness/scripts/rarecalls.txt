@@ -1,0 +1,116 @@
+# Rarely reached game functions called directly on the autosave (Romans,
+# civ 1): a paradrop, global warming, the trade dialogs, the cheat
+# editors of victory and scenario rules, the wonder movies list, the
+# Apollo map reveal, and the password prompt;
+# all advances given, the civilization list of a
+# loaded game.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+shot 00
+call unit_create 5b3d06 13 1 36 60     # paratroopers in Rome (unit 21)
+wait 1000
+call unit_paradrop 4ca39e 21 36 20     # out of range
+wait 3000
+shot p0
+key Return
+wait 2000
+call unit_paradrop 4ca39e 21 38 64     # the sea
+wait 3000
+key Return
+wait 2000
+call unit_paradrop 4ca39e 21 35 59
+wait 5000
+shot p1
+key Return
+wait 2000
+call map_apply_global_warming 4868fb 1
+wait 5000
+shot gw
+key Return
+wait 3000
+call trade_supply_search_dialog 42bc47 1
+wait 3000
+shot ts
+key Escape
+wait 2000
+call trade_commodity_cities_dialog 42b824 1 0
+wait 3000
+shot tc
+key Escape
+wait 2000
+call cheat_edit_victory 557e2c
+wait 3000
+shot cv
+key Escape
+wait 2000
+call cheat_edit_scenario_rules 55819b
+wait 3000
+shot cr
+key Escape
+wait 2000
+call menu_wonder_movies 4e01b0
+wait 3000
+shot wm
+key Return
+wait 3000
+shot wm2
+key Escape
+wait 2000
+call wonder_apollo_reveal_map 4f1220
+wait 8000
+shot ap
+key Return
+wait 3000
+call civ_password_prompt 4985f4 1
+wait 3000
+shot pw
+type secret
+key Return
+wait 3000
+shot pw2
+key Return
+wait 2000
+key shift+t             # tax rates
+wait 3000
+shot tx
+click 718 398           # taxes up (the maximum rate is 60%)
+wait 1500
+click 718 398
+wait 1500
+click 238 460           # science down
+wait 1500
+click 718 522           # luxuries up
+wait 1500
+click 400 522           # luxuries: the trough
+wait 1500
+click 770 395           # lock taxes
+wait 1500
+click 718 460           # science up
+wait 1500
+click 238 398           # taxes down (locked)
+wait 1500
+shot tx2
+click 770 395
+wait 1500
+click 238 398
+wait 1500
+shot tx3
+key Return
+wait 2000
+call cheat_toggle_all_advances 554460 1
+wait 3000
+shot adv
+key Return
+wait 2000
+call load_game_pick_civ 41e8fb 0
+wait 3000
+shot pick
+key Escape
+wait 3000
+shot end

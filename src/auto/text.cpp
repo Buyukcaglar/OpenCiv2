@@ -1657,6 +1657,7 @@ i32 __cdecl file_resolve_path(const char *path)
   char *cursor;
   HFILE result;
   
+  replay_log_video(path);
   len = lstrlenA(path);
   cursor = (char *)(path + len);
   name_offset = lstrlenA(path);

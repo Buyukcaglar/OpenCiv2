@@ -1,0 +1,66 @@
+# Clicks on the autosave (Romans): the intelligence report's advances and
+# cities, Civilopedia terrain pages, a link followed and Go Back; the world
+# map (the right button opens a second map window, "Track Enemy Moves"),
+# then clicks on the map windows' caption buttons and a double click.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+shot 00
+call intel_report_show 43060b 1 6   # the Greeks
+wait 3000
+shot i0
+click 260 320               # Alphabet: its Civilopedia page
+wait 3000
+shot i1
+key Escape
+wait 3000
+shot i2
+click 365 550               # Cities
+wait 3000
+shot i3
+key Return
+wait 2000
+key Escape
+wait 2000
+call menu_command 4e2803 0 2315     # Civilopedia: terrain
+wait 3000
+click 128 125               # Desert
+wait 1000
+click 144 381               # Info
+wait 3000
+shot p1
+click 347 163               # the link to Plains
+wait 3000
+shot p2
+click 93 381                # Go Back
+wait 3000
+shot p3
+key Escape
+wait 2000
+shot p4
+click 664 550               # the report: Close
+wait 3000
+shot p5
+click 520 120               # the world map: centre there
+wait 8000
+shot m1
+click 500 110 3             # right button
+wait 8000
+shot m2
+click 21 59                 # map caption buttons
+wait 8000
+shot c1
+click 49 59
+wait 8000
+shot c2
+click 200 250
+click 200 250               # a double click on the map
+wait 8000
+shot d1
+key Escape
+wait 3000

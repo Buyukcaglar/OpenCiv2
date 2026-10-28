@@ -1,5 +1,6 @@
 # The events editor on the autosave (cheat mode on): triggers and actions
-# of each kind added, edited, deleted, the help pages, saved (EVENTS.TXT).
+# of each kind added, edited, deleted, the help pages, saved (EVENTS.TXT),
+# then a turn played.
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500
@@ -792,16 +793,35 @@ shot e1
 click 514 575               # Help
 wait 2000
 shot h1
-click 514 588               # its OK
+key Return                  # its OK
 wait 2000
+shot h2
 click 330 575               # OK
 wait 2000
 shot ok1
-click 514 462               # values out of range: OK
+key Return                  # values out of range: OK
 wait 2000
+shot ok2
 click 330 575               # OK: EVENTS.TXT written
 wait 3000
-shot ok2
-click 330 575
-wait 3000
 shot ok3
+key Return
+wait 3000
+shot ok4
+key ctrl+n                   # a turn
+wait 20000
+shot t00
+key Return
+wait 4000
+shot t01
+key Return
+wait 4000
+shot t02
+key Return
+wait 4000
+shot t03
+key Return
+wait 4000
+shot t04
+key Return
+wait 4000

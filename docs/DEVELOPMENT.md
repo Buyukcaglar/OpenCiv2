@@ -65,6 +65,12 @@ make unit-record     # record those cases again from the replays (needs the game
 The replay checker requires a nonempty, matching set of PNG screenshots (including
 dimensions and pixels) and nonempty `rand.log` traces on both sides. A seed-only
 trace is valid; missing or empty logs are not evidence of matching random calls.
+Where the recording has a `calls.log` it must match too: the sounds the game plays
+(`snd_play_effect`: effect, mode, loop) and the videos it looks for (each `.avi` path
+`file_resolve_path` is given), in order, which the reference cannot play (no audio
+device, no video files or Indeo codec). The hook logs them from breakpoints on the
+original's two functions (`CIV2_CALL_LOG`, hook/stackprobe.c), the native builds
+from the same functions (src/platform/replay.c).
 Both `native_suite.sh` and `diff_suite.sh` fail a scenario if its runner or BMP
 conversion fails, then continue with the remaining scenarios and return failure
 for the suite. A failed run is not subsequently reported as `PASS` or `SAME`.
@@ -128,7 +134,7 @@ naming the function, the call and the first byte that differs (`cities+0x1a2`).
 * **Recording** (`tests/unit_record.c`, `make unit-record`).  The recording build
   (`build_native.py --target linux32rec`) compiles the game and the platform layer with
   `-finstrument-functions`: every function calls the recorder on entry and exit.  While a replay runs
-  (`tools/unit_record.sh`: the scenarios in `UNIT_SCRIPTS`, 35 of the 36, each run checked against
+  (`tools/unit_record.sh`: the scenarios in `UNIT_SCRIPTS`, 35 of the 41, each run checked against
   the original's recording as by the suite), the recorder takes some calls of each game function (the 1st, 2nd, 3rd, 4th, 6th,
   9th ...; at most 6 per scenario and 16 in all): the argument words (by the signatures
   `tools/unit_sigs.py` gets from the debugging information), the state at entry (the game's data,

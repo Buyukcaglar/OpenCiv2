@@ -202,7 +202,7 @@ int main(int argc, char **argv)
     {
         /* directories in the environment (CIV2_DATA ...), as the module sees them */
         static const char *const vars[] = {"CIV2_DATA", "CIV2_WINDIR", "CIV2_SHOT_DIR", "CIV2_SCRIPT",
-                                           "CIV2_RAND_LOG", "CIV2_HOOK_LOG"};
+                                           "CIV2_RAND_LOG", "CIV2_HOOK_LOG", "CIV2_CALL_LOG"};
         size_t i;
         for (i = 0; i < sizeof vars / sizeof vars[0]; i++) {
             const char *v = getenv(vars[i]);

@@ -63,9 +63,9 @@ release): the one file the release has, SDL2 and the fonts built in.
 
 Playable. Every function of the game that can run has source; the only parts not reconstructed
 are the original's MSVC runtime (replaced by the platform's C library) and unreachable 16-bit
-leftovers. All 36 recorded scenarios match the original exactly, pixel for pixel. They run 72% of
-the game's functions (77% leaving out networking); sound, video and the High Council can't be
-compared under Wine. Multiplayer is supported and compatible with the original: OpenCiv2 and
+leftovers. All 41 recorded scenarios match the original exactly, pixel for pixel, with the same
+sounds and videos asked for. They run 72% of the game's functions (78% leaving out networking);
+playing sound and video and the High Council's window can't be compared under Wine. Multiplayer is supported and compatible with the original: OpenCiv2 and
 the original game play each other on a LAN or over the Internet, either one hosting. Automated
 tests (`tools/xdnet/nettest.py`) play two or three games against each other, including
 diplomacy, saving and loading, players leaving and rejoining, and 50-turn games

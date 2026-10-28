@@ -9,6 +9,8 @@
  *   CIV2_SEED=N          force the seed of every srand()
  *   CIV2_RAND_LOG=FILE   log every rand(): calling function and value
  *   CIV2_HOOK_LOG=FILE   log of script actions (plat_log)
+ *   CIV2_CALL_LOG=FILE   log of the sounds played and the videos looked for
+ *                        (as hook/stackprobe.c logs the original's)
  */
 #ifndef __wasm__
 #include <dlfcn.h>
@@ -22,8 +24,27 @@ static unsigned long long next_action_us;
 static char shot_dir[1024] = ".";
 static char next_file[1024];
 static FILE *rand_log;
+static FILE *call_log;
 static int seed_forced;
 static unsigned forced_seed;
+
+/* ---- sounds and videos (CIV2_CALL_LOG) ----
+ * The reference has no audio device, no video files and no Indeo codec,
+ * so what is compared is what the game asks for: every snd_play_effect
+ * (effect, mode, loop) and every video path file_resolve_path is given. */
+
+void replay_log_sound(int effect, int mode, int loop)
+{
+    if (call_log)
+        fprintf(call_log, "sound %d %d %d\n", effect, mode, loop);
+}
+
+void replay_log_video(const char *path)
+{
+    size_t n = path ? strlen(path) : 0;
+    if (call_log && n >= 4 && strcasecmp(path + n - 4, ".avi") == 0)
+        fprintf(call_log, "video %s\n", path);
+}
 
 /* ---- rand trace ---- */
 
@@ -248,6 +269,8 @@ static void finish(void)
     plat_log("replay: script finished\n");
     if (rand_log)
         fclose(rand_log);
+    if (call_log)
+        fclose(call_log);
     crt_exit_process(0);
 }
 
@@ -379,6 +402,12 @@ void replay_init(void)
         rand_log = fopen(r, "w");
         if (rand_log)
             setvbuf(rand_log, NULL, _IOLBF, 0);   /* complete even if the game crashes */
+    }
+    r = getenv("CIV2_CALL_LOG");
+    if (r && *r && plat_replay) {
+        call_log = fopen(r, "w");
+        if (call_log)
+            setvbuf(call_log, NULL, _IOLBF, 0);
     }
     if (!plat_replay)
         return;

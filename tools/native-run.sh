@@ -17,11 +17,13 @@ case "$exe" in
     w() { printf 'Z:%s' "$1" | tr / '\\'; }
     export CIV2_DATA=$(w /work/data/native) CIV2_SCRIPT=$(w "$script") CIV2_SHOT_DIR=$(w "$out") \
            CIV2_SEED=${SEED:-7} CIV2_RAND_LOG=$(w "$out/rand.log") CIV2_HOOK_LOG=$(w "$out/hook.log") \
+           CIV2_CALL_LOG=$(w "$out/calls.log") \
            CIV2_WINDIR=$(w /tmp/g) CIV2_WINE_TEXT=1 WINEDEBUG=-all WINEARCH=win64 WINEPREFIX=$HOME/wine64
     exec timeout -k ${TIMEOUT_KILL:-10} ${TIMEOUT:-600} /usr/lib/wine/wine64 /work/build/$exe ;;
 esac
 export CIV2_DATA=/work/data/native CIV2_SCRIPT=$script CIV2_SHOT_DIR=$out CIV2_SEED=${SEED:-7} \
-       CIV2_RAND_LOG=$out/rand.log CIV2_HOOK_LOG=$out/hook.log CIV2_WINDIR=/tmp/g CIV2_WINE_TEXT=1
+       CIV2_RAND_LOG=$out/rand.log CIV2_HOOK_LOG=$out/hook.log CIV2_CALL_LOG=$out/calls.log \
+       CIV2_WINDIR=/tmp/g CIV2_WINE_TEXT=1
 if [ "$3" = gdb ]; then
     exec gdb -batch ${GDBX:--ex run -ex bt} /work/build/$exe
 fi

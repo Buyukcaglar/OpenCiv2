@@ -7946,7 +7946,10 @@ i32 __cdecl unit_move_dir(iptr unit,uptr dir,i32 move_flags)
     memset(civ_sees,0,sizeof civ_sees);
   }
   else {
-    civ_sees[1] = civ_sees[2] = civ_sees[3] = civ_sees[4] = civ_sees[5] = civ_sees[6] = civ_sees[7] = 1;  /* stale stack the original reads (FRAME_PRESETS) */
+    /* stale stack the original reads (FRAME_PRESETS; CIV2_STACKPROBE=59062c:a0:20
+       in the Rome scenario: entries 1 to 5 non-zero, 6 and 7 zero) */
+    civ_sees[1] = civ_sees[2] = civ_sees[3] = civ_sees[4] = civ_sees[5] = 1;
+    civ_sees[6] = civ_sees[7] = 0;
   }
   
   attack_done = 0;

@@ -1,0 +1,53 @@
+# The sprite editor's import (cheat mode on, the cities editor's Edit Icon on
+# the autosave): CITIES.GIF chosen, the sprite picker, a cell picked, Import
+# All.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 1793     # 0x701 cheat mode
+wait 3000
+key Down                    # Yes
+key Return
+wait 2000
+call menu_command 4e2803 0 2051     # 0x803 cities editor
+wait 3000
+click 297 328               # Edit Icon
+wait 3000
+file CITIES.GIF
+mousemove 687 345
+wait 300
+click 687 345               # import a sheet
+wait 4000
+shot p0
+click 624 480               # the next cells
+wait 1500
+click 624 480
+wait 1500
+click 560 480               # the trough
+wait 1500
+shot p1
+click 435 505               # OK: that cell
+wait 3000
+shot p2
+file CITIES.GIF
+mousemove 687 345
+wait 300
+click 687 345               # import again
+wait 4000
+click 514 505               # Import All
+wait 4000
+shot p3
+key Return                  # cannot be undone: OK
+wait 4000
+shot p4
+click 415 552               # the icon editor: OK (CITIES.GIF saved)
+wait 4000
+shot p5
+click 330 575               # the cities editor: OK
+wait 3000
+shot p6

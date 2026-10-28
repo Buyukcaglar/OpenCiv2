@@ -43,8 +43,8 @@ recordings:
 | `build/civ2-linux32` | gcc -m32 |
 | `build/OpenCiv2` (64-bit, portable to macOS and Windows) | wasm32 → wasm2c → cc |
 
-All 36 scenarios of `harness/scripts` give pixel-identical screenshots and
-the identical `rand()` trace.  The last few pixels came from Wine details
+All 41 scenarios of `harness/scripts` give pixel-identical screenshots,
+the identical `rand()` trace and the same sounds and videos asked for.  The last few pixels came from Wine details
 now matched: a combo box's text clipped to its field (a glyph's overhang
 shows), a multiline edit's text clipped to its format rectangle and drawn
 in Uniscribe items each on its own background box, LineTo's Bresenham
@@ -502,8 +502,10 @@ message by message and clock event by clock event.
   dragging a window by its caption (our panels are fixed unless
   CIV2_CLASSIC=1); offers of cities and war declarations (the test's only
   city to give is a capital, and its civilizations meet no third one);
-  the chat macros (Ctrl+F1..F5: they did not fire in ours under the test's
-  keys, not yet compared with the original).
+  the chat macros (Ctrl+F1..F5: under the test's keys, xdotool's Ctrl+F1..F3
+  in the chat window's input, neither game inserts anything, ours as the
+  client of the original and the original as ours' (`--chat`): the same
+  behaviour, but the macros' texts are not compared).
 * **Play by e-mail** is not in this version of the game, so no scenario can
   record it on the original.  Multiplayer Gold's Multiplayer Game offers Hot
   Seat, Network, Internet and Dial-Up only (GAME.TXT's `@MULTITYPE2`; the main
@@ -521,10 +523,37 @@ message by message and clock event by clock event.
   and the "EMAIL the Game" popup (`@EMAILDONE1`/`2`, play_loop_human_turn_start)
   before the turn loop ends.  The game never sends mail itself.  Kept as
   translated, run by no replay.
-* Coverage of the comparison: the scripts execute 2,520 of the 3,529
-  compiled game functions (71%, 58% of lines; `tools/coverage_report.py`
-  with the linux32cov build, per function in re/coverage.tsv).  Never
-  executed: multiplayer (parley, net, lobby), sound and video (the
-  reference has neither an audio device nor the Indeo codec), council,
-  atexit destructors.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
+* Coverage of the comparison: the 41 scripts execute 2,964 of the 4,122
+  compiled game functions (72%, 60% of lines; `tools/coverage_report.py`
+  with the linux32cov build, per function in re/coverage.tsv; the 36 scripts
+  before rome, rarecalls, spritepick, uimisc and editrename: 2,872, 70%, 57% of
+  lines; the count includes OpenCiv2's additions, off in replays and tested by
+  `make test-extras`).  The new scripts: the Rome scenario (ROME.SCN, as the
+  Independent Greeks, barbarians taking Delphi: the casualties popups at the
+  start of the next turns); paradrops, global warming, the trade and cheat
+  dialogs, the wonder movies list, the Apollo reveal, the password prompt and
+  the tax rates' scroll bars and locks (rarecalls, mostly through `call`); the
+  sprite editor's import (the sprite picker, a cell and Import All); the
+  intelligence report's advance and city lists, Civilopedia links and Go Back,
+  a second map window from the world map (uimisc); the editors' Rename and the
+  units' Sounds (editrename); `events` now also writes EVENTS.TXT.  The Rome
+  scenario found a stale-stack preset that was too broad: `unit_move_dir`'s
+  `civ_sees` (B14) is zero for players 6 and 7 in the original.  Sounds and
+  videos: the reference has neither an audio device nor video files or the
+  Indeo codec, so what is compared is what the game asks for: `calls.log`,
+  every `snd_play_effect` (effect, mode, loop) and every `.avi` path
+  `file_resolve_path` is given, logged by the hook from breakpoints on the
+  original and by the native builds (docs/DEVELOPMENT.md); every recording
+  has one.  The mixing and playing code (snd_wave_*, the AVI player) still
+  runs in neither.  The High Council cannot be reached here: CouncilWindow::init
+  gives up when `civ2\video\councilN.avi` (or anarchyN.avi) is not found, so
+  council_show never opens the window (its video path is in calls.log); the
+  original does the same.  Never executed: multiplayer (parley, net, lobby),
+  sound mixing and video playing, the council's window, atexit destructors.
+  Known difference: a single-line edit whose selected text ends in a glyph that
+  overhangs its cell ("Advanced Flight" in the Rename dialog) shows, under the
+  caret just after it, one pixel of the glyph on the original (11 vs 0 after
+  inversion): Wine keeps that pixel from a paint before the selection, ours
+  repaints it; editrename takes no screenshot there.  Untested paths may still
+  differ.  Add a script under `harness/scripts/`, record it with
   `make ref SCRIPT=...` and compare with `make native-suite`.

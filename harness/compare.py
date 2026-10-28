@@ -5,6 +5,9 @@
 
 Exit status is 0 when both runs contain the same nonempty set of screenshots,
 every screenshot is pixel-identical, and both nonempty rand.log traces match.
+calls.log (the sounds the game plays and the videos it looks for: the
+reference has no audio device and no videos to play) must match too when the
+first run has one (recordings made before it was logged have none).
 """
 import argparse, os, re, sys
 from PIL import Image, ImageChops
@@ -104,6 +107,20 @@ def main():
         else:
             i = next((i for i, (x, y) in enumerate(zip(ta, tb)) if x != y), min(len(ta), len(tb)))
             print(f'rand trace: DIVERGES at call {i}: {ta[i] if i < len(ta) else "<end>"} vs {tb[i] if i < len(tb) else "<end>"}')
+            ok = False
+    ca, cb = (os.path.join(r, 'calls.log') for r in (args.a, args.b))
+    if os.path.exists(ca):
+        la = open(ca, errors='replace').read().splitlines()
+        lb = open(cb, errors='replace').read().splitlines() if os.path.exists(cb) else None
+        if lb is None:
+            problems.append(f'{cb}: MISSING')
+        elif la == lb:
+            print(f'sounds and videos: identical ({sum(l.startswith("sound") for l in la)} sounds, '
+                  f'{sum(l.startswith("video") for l in la)} videos)')
+        else:
+            i = next((i for i, (x, y) in enumerate(zip(la, lb)) if x != y), min(len(la), len(lb)))
+            print(f'sounds and videos: DIFFER at {i}: {la[i] if i < len(la) else "<end>"} vs '
+                  f'{lb[i] if i < len(lb) else "<end>"}')
             ok = False
     if problems:
         ok = False

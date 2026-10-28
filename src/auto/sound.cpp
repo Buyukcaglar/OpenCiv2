@@ -38,6 +38,7 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,SoundDoneFn don
   i8 local_path[0x140];
   uint snd_flags;
   
+  replay_log_sound(effect,play_mode,loop);
   prefs_main_menu_choice_block.snd_last_effect_id = effect;
   prefs_main_menu_choice_block.snd_last_effect_arg = play_mode;
   if (effect < 0) {

@@ -109,6 +109,7 @@ def main():
     env = dict(os.environ, DISPLAY=DISPLAY, CIV2_SEED=str(a.seed),
                CIV2_HOOK_LOG='Z:' + os.path.abspath(f'{a.out}/hook.log'),
                CIV2_RAND_LOG='Z:' + os.path.abspath(f'{a.out}/rand.log'), CIV2_HOOKS='none',
+               CIV2_CALL_LOG='Z:' + os.path.abspath(f'{a.out}/calls.log'),
                CIV2_RAND_STACK=a.rand_stack, CIV2_LOG_KEYS='1')
     if not os.path.exists('/wine/system.reg'):
         subprocess.run(['wineboot', '-i'], env=env, capture_output=True)

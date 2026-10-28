@@ -1,0 +1,220 @@
+# The Rome scenario (ROME.SCN, the game folder's): begin it as the
+# Independent Greeks (Hiero) and play six turns.  Barbarian catapults and
+# legions put next to Delphi demand a ransom, take the city and kill its
+# units: the casualties popup at the start of the next turns (2 units, then
+# 1).  Each turn: end it (the first Ctrl+N activates a unit), then Escape
+# through the others' popups (emissaries, treaties, reports).
+wait 8000
+key Down Down Down      # Begin Scenario
+wait 500
+file ROME.SCN
+key Return
+wait 20000
+shot 00-intro
+key Return
+wait 8000
+key Down Down Down Down Down    # Ind. Greeks and Allies
+shot 01-civ
+key Return
+wait 8000
+key Return              # difficulty (Deity)
+wait 8000
+key Return              # gender
+wait 8000
+key Return              # name
+wait 20000
+shot 02-start
+call unit_create 5b3d06 23 0 58 42     # barbarians next to Delphi: catapults
+call unit_create 5b3d06 23 0 58 42
+call unit_create 5b3d06 23 0 58 42
+call unit_create 5b3d06 5 0 58 42      # legions
+call unit_create 5b3d06 5 0 58 42
+wait 2000
+shot 03-barbarians
+# turn 1
+key Escape
+wait 1000
+key ctrl+n
+wait 3000
+key ctrl+n
+wait 20000
+shot t00
+key Escape
+wait 5000
+shot t01
+key Escape
+wait 5000
+shot t02
+key Escape
+wait 5000
+shot t03
+key Escape
+wait 5000
+shot t04
+key Escape
+wait 5000
+shot t05
+key Escape
+wait 5000
+shot t06
+key Escape
+wait 5000
+shot t07
+key Escape
+wait 5000
+# turn 2
+key Escape
+wait 1000
+key ctrl+n
+wait 3000
+key ctrl+n
+wait 20000
+shot t10
+key Escape
+wait 5000
+shot t11
+key Escape
+wait 5000
+shot t12
+key Escape
+wait 5000
+shot t13
+key Escape
+wait 5000
+shot t14
+key Escape
+wait 5000
+shot t15
+key Escape
+wait 5000
+shot t16
+key Escape
+wait 5000
+shot t17
+key Escape
+wait 5000
+# turn 3
+key Escape
+wait 1000
+key ctrl+n
+wait 3000
+key ctrl+n
+wait 20000
+shot t20
+key Escape
+wait 5000
+shot t21
+key Escape
+wait 5000
+shot t22
+key Escape
+wait 5000
+shot t23
+key Escape
+wait 5000
+shot t24
+key Escape
+wait 5000
+shot t25
+key Escape
+wait 5000
+shot t26
+key Escape
+wait 5000
+shot t27
+key Escape
+wait 5000
+# turn 4
+key Escape
+wait 1000
+key ctrl+n
+wait 3000
+key ctrl+n
+wait 20000
+shot t30
+key Escape
+wait 5000
+shot t31
+key Escape
+wait 5000
+shot t32
+key Escape
+wait 5000
+shot t33
+key Escape
+wait 5000
+shot t34
+key Escape
+wait 5000
+shot t35
+key Escape
+wait 5000
+shot t36
+key Escape
+wait 5000
+shot t37
+key Escape
+wait 5000
+# turn 5
+key Escape
+wait 1000
+key ctrl+n
+wait 3000
+key ctrl+n
+wait 20000
+shot t40
+key Escape
+wait 5000
+shot t41
+key Escape
+wait 5000
+shot t42
+key Escape
+wait 5000
+shot t43
+key Escape
+wait 5000
+shot t44
+key Escape
+wait 5000
+shot t45
+key Escape
+wait 5000
+shot t46
+key Escape
+wait 5000
+shot t47
+key Escape
+wait 5000
+# turn 6
+key Escape
+wait 1000
+key ctrl+n
+wait 3000
+key ctrl+n
+wait 20000
+shot t50
+key Escape
+wait 5000
+shot t51
+key Escape
+wait 5000
+shot t52
+key Escape
+wait 5000
+shot t53
+key Escape
+wait 5000
+shot t54
+key Escape
+wait 5000
+shot t55
+key Escape
+wait 5000
+shot t56
+key Escape
+wait 5000
+shot t57
+key Escape
+wait 5000
+quit

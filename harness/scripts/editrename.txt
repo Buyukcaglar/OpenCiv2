@@ -1,0 +1,79 @@
+# The scenario editors' Rename (cheat mode on, the autosave): an advance,
+# an improvement, a terrain and a unit type renamed, each editor cancelled;
+# the units editor's Sounds.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 1793     # 0x701 cheat mode
+wait 3000
+key Down                    # Yes
+key Return
+wait 2000
+call menu_command 4e2803 0 2050     # 0x802
+wait 3000
+key Return
+wait 3000
+shot tech-0
+click 444 575               # Rename
+wait 3000
+# (no shot: the caret over the selection's last glyph, "t", is one pixel off: docs/STATUS.md)
+type Xyz
+key Return
+wait 3000
+shot tech-2
+click 722 575               # Cancel
+wait 3000
+call menu_command 4e2803 0 2053     # 0x805
+wait 3000
+key Return
+wait 3000
+shot impr-0
+click 444 575               # Rename
+wait 3000
+shot impr-1
+type Xyz
+key Return
+wait 3000
+shot impr-2
+click 722 575               # Cancel
+wait 3000
+call menu_command 4e2803 0 2054     # 0x806
+wait 3000
+key Return
+wait 3000
+shot terrain-0
+click 444 575               # Rename
+wait 3000
+# (no shot: the caret over the selection's last glyph, "t", is one pixel off: docs/STATUS.md)
+type Xyz
+key Return
+wait 3000
+shot terrain-2
+click 722 575               # Cancel
+wait 3000
+call menu_command 4e2803 0 2056     # 0x808
+wait 3000
+key Return
+wait 3000
+shot units-0
+click 444 575               # Rename
+wait 3000
+shot units-1
+type Xyz
+key Return
+wait 3000
+shot units-2
+click 298 357               # Sounds
+wait 3000
+shot units-3
+key Escape
+wait 3000
+shot units-4
+click 722 575               # Cancel
+wait 3000
+shot end
