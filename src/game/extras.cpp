@@ -37,7 +37,8 @@ static const KeyItem extra_keys[] = {
 };
 
 /* The rule changes (extra_rule): off unless their key is set (=1; the
-   limits: their value, 0 the original's). */
+   limits: their value, 0 the original's; the options dialog shows the
+   original's values while off). */
 static const KeyItem rule_keys[] = {
     {X_WORKER_HANDOVER, "WorkerHandover"}, {X_GOTO_ZOC, "GotoNoZocStop"},
     {X_ROTATION, "UnitRotation"}, {X_MASS_MOVE, "MassMove"}, {X_STACK_SENTRY, "StackSentry"},
@@ -214,7 +215,6 @@ static const struct { const char *key, *english; } texts[] = {
     {"options.other", "Colours and messages"},
     {"options.network", "Rule changes and limits are off in network games."},
     {"options.rules_note", "For the human players' units only."},
-    {"options.limits_note", "0: the original game's."},
     {"options.other_note", "Messages shown on the map: GAME.TXT sections, separated by commas."},
     {"option.MouseWheel", "Mouse wheel and button"},
     {"option.UnitListScroll", "Unit list past 9 units"},
@@ -1963,26 +1963,41 @@ static void options_limits(void)
         "RetirementYear", "RetirementWarningYear", "PopulationLimit", "GoldLimit", "MapTilesLimit",
     };
     static const int items[5] = {X_RETIREMENT, -1, X_POP_LIMIT, X_GOLD_LIMIT, X_MAP_TILES};
+    static const int original[5] = {2020, 2000, 32000, 30000, 10000};
     char shown[5][256];
-    int value[5], changed_field[5], i, on = extra_rule(X_RETIREMENT);
-    snprintf(shown[0], 256, "%d", on ? retire_year : 0);
-    snprintf(shown[1], 256, "%d", on ? retire_warning : 0);
-    snprintf(shown[2], 256, "%d", extra_rule(X_POP_LIMIT) ? pop_limit : 0);
-    snprintf(shown[3], 256, "%d", extra_rule(X_GOLD_LIMIT) ? gold_limit : 0);
-    snprintf(shown[4], 256, "%d", extra_rule(X_MAP_TILES) ? map_tiles : 0);
-    if (!options_fields(extras_text("options.limits"), extras_text("options.limits_note"), keys, 5, shown, 0,
-                        value, changed_field))
+    int value[5], changed_field[5], i, year, warn;
+    /* the limits in force: the original's while a rule is off */
+    int now[5] = {extras_retirement_year(), extras_retirement_warning_year(), extras_population_limit(),
+                  extras_gold_limit(), extras_map_tiles_limit()};
+    for (i = 0; i < 5; i++)
+        snprintf(shown[i], 256, "%d", now[i]);
+    if (!options_fields(extras_text("options.limits"), NULL, keys, 5, shown, 0, value, changed_field))
         return;
-    for (i = 0; i < 5; i++) {
+    if (changed_field[0] || changed_field[1]) {
+        year = value[0];
+        warn = value[1];
+        if (!changed_field[1] && now[1] == now[0] - 20)
+            warn = year - 20;  /* a warning 20 years before moves with the year */
+        if (year == original[0] && warn == original[1]) {
+            setting_write(keys[0], 0);
+            extras_rules &= ~((uint64_t)1 << X_RETIREMENT);
+        } else {
+            setting_write(keys[0], year);
+            setting_write(keys[1], warn);
+            extras_rules |= (uint64_t)1 << X_RETIREMENT;
+        }
+    }
+    /* a limit set back to the original's (or 0) turns its rule off */
+    for (i = 2; i < 5; i++) {
         if (!changed_field[i])
             continue;
+        if (value[i] == original[i])
+            value[i] = 0;
         setting_write(keys[i], value[i]);
-        if (items[i] >= 0) {
-            if (value[i])
-                extras_rules |= (uint64_t)1 << items[i];
-            else
-                extras_rules &= ~((uint64_t)1 << items[i]);
-        }
+        if (value[i])
+            extras_rules |= (uint64_t)1 << items[i];
+        else
+            extras_rules &= ~((uint64_t)1 << items[i]);
     }
     limits_load();
 }

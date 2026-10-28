@@ -110,7 +110,8 @@ message by message and clock event by clock event.
   with AddressSanitizer over every replay (build_native.py --target
   linux32asan; learned extents in re/data_extents.tsv), by checking that
   every initial value and every data pointer matches the original image, and
-  by the replays: every replay runs clean under AddressSanitizer.  Code no
+  by the replays: every replay runs clean under AddressSanitizer (all 41,
+  each to the original's last rand() call).  Code no
   replay runs may still reach from one variable into the next, so the data
   keeps the original's layout exactly: one section, in address order, each
   variable at its original alignment, the bytes nothing names kept

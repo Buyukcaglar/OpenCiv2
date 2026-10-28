@@ -40,6 +40,18 @@ key Down
 key Return
 wait 3000
 shot xo-f-limits
+type 2050                   # the retirement year: its warning moves to 2030
+key Return
+wait 3000
+key Return
+wait 3000
+shot xo-f2-limits-2050
+type 2020                   # back to the original's: the rule off again
+key Return
+wait 3000
+key Return
+wait 3000
+shot xo-f3-limits-back
 key Escape
 wait 2000
 key Down
