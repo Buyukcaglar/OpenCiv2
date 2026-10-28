@@ -1810,6 +1810,23 @@ void __cdecl science_advisor_draw(void)
     text_append_label(0xec);
     text_append_colon();
     text_append_string_id(advances[civs[civ].researching].name);
+    if (extra_ui(X_RESEARCH)) {
+      /* X6: the bulbs so far, the advance's cost and the bulbs per turn */
+      int per_turn = 0;
+      for (city = 0; city < game.num_cities; city++) {
+        if ((cities[city].id != 0) && (cities[city].owner == civ)) {
+          per_turn += cities[city].science;
+        }
+      }
+      text_append_space();
+      text_append_lparen();
+      text_append_int((int)civs[civ].research_progress);
+      text_append("/");
+      text_append_int(civ_research_cost(civ));
+      text_append(", +");
+      text_append_int(per_turn);
+      text_append_rparen();
+    }
     gfx_draw_text_centered((const char *)&textbuf.buf,advisor_state.client_x,cur_y,advisor_state.client_width);
     cur_y += line_height;
     draw_y = cur_y + 9;

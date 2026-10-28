@@ -111,6 +111,9 @@ int msg_pump_events(int wait)
             input_mouse_move(e.x, e.y);
             input_mouse_button(e.button, e.type == HOST_EV_BUTTONDOWN);
             break;
+        case HOST_EV_WHEEL:
+            input_mouse_wheel(e.button);
+            break;
         case HOST_EV_EXPOSED:
             last_present = 0;
             break;
@@ -164,6 +167,10 @@ int main(int argc, char **argv)
        with the original; CIV2_TEST_FIXES=1 fixes them in a replay (tests). */
     plat_fix_bugs = !classic && !unit_test &&
         (!plat_replay || (getenv("CIV2_TEST_FIXES") && *getenv("CIV2_TEST_FIXES")));
+    /* The interface additions (docs/EXTRAS.md) likewise; CIV2_TEST_EXTRAS
+       turns them on in a replay (tests). */
+    plat_extras = !classic && !unit_test &&
+        (!plat_replay || (getenv("CIV2_TEST_EXTRAS") && *getenv("CIV2_TEST_EXTRAS")));
     /* Replays reproduce the reference desktop (Wine without a window
        manager) unless CIV2_NORMAL_DESKTOP is set. */
     plat_normal_desktop = !plat_replay || (getenv("CIV2_NORMAL_DESKTOP") && *getenv("CIV2_NORMAL_DESKTOP"));
@@ -197,6 +204,16 @@ int main(int argc, char **argv)
             cover = !fullscreen;
         }
     }
+    if (plat_replay && getenv("CIV2_TEST_FULL") && *getenv("CIV2_TEST_FULL")) {
+        /* Tests of OpenCiv2's additions, which have no reference: the
+           game's window maximized on a smaller desktop, all of it shown
+           (CIV2_TEST_FULL=WxH, or 800x600) */
+        int w = 0, h = 0;
+        if (sscanf(getenv("CIV2_TEST_FULL"), "%dx%d", &w, &h) != 2 || w < 640 || h < 480)
+            w = 800, h = 600;
+        screen_w = w;
+        screen_h = h;
+    }
     if (plat_replay && getenv("CIV2_TEST_NATIVE") && *getenv("CIV2_TEST_NATIVE"))
         /* Tests: the game as on Windows and macOS (the host's menu bar, no
            caption of its own, panels locked), the host's part left out. */
@@ -208,6 +225,7 @@ int main(int argc, char **argv)
     if (!window_open && !unit_test && (!plat_replay || getenv("CIV2_SHOW")))
         window_open = host_open_window(screen_w, screen_h, cover ? 0 : scale ? atoi(scale) : 1);
     replay_init();
+    extras_load();
     pointer_init(screen_w / 2, screen_h / 2);      /* where the X server puts it */
     /* The game's static data, then the C and C++ initializers the MSVC
      * runtime ran before WinMain. */

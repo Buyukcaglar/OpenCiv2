@@ -1544,7 +1544,9 @@ void __cdecl trade_advisor_draw(void)
       city_count++;
       for (improvement = 0; improvement < 0x27; improvement++) {
         upkeep2 = civ_improvement_upkeep(civ,improvement);
-        if ((upkeep2 != 0) && (value = city_has_improvement(city,improvement), value != 0)) {
+        /* X10: the buildings with no upkeep listed too */
+        if ((upkeep2 != 0 || (extra_ui(X_ZERO_UPKEEP) && improvement != 0)) &&
+            (value = city_has_improvement(city,improvement), value != 0)) {
           improvement_counts[improvement]++;
         }
       }
@@ -1701,6 +1703,10 @@ void __cdecl city_status_draw(void)
   i8 scroll_rect[16];
   int rows_per_page;
   
+  if (extra_ui(X_CITY_STATUS)) {
+    extras_city_status_draw();   /* X31 */
+    return;
+  }
   civ = advisor_state.report_civ;
   ((FrameWindow *)((i8 *)&advisor_state.window))->layout();
   ((FrameWindow *)((i8 *)&advisor_state.window))->FrameWindow::draw_caption();
@@ -1858,6 +1864,10 @@ void __cdecl city_status_on_click(i32 mouse_x,int mouse_y)
   iptr city;
   int row;
   
+  if (extra_ui(X_CITY_STATUS)) {
+    extras_city_status_click(mouse_x,mouse_y);   /* X31 */
+    return;
+  }
   if ((-1 < mouse_y - advisor_state.list_top) &&
      (clicked_row = (mouse_y - advisor_state.list_top) / advisor_state.row_height, clicked_row < advisor_state.rows_per_page)) {
     row = 0;
@@ -12354,6 +12364,11 @@ void CityWindow::draw_citizens(int blit,i32 flag)
     x2 = citizens_rect;
     top = citizens_rect_top;
     text_set_colors(0x7c,0x12,1,1);
+    if (extra_ui(X_CITY_ATTITUDE)) {
+      /* X23: coloured as in the Attitude Advisor: yellow celebrating, red
+         in disorder */
+      text_set_colors(extras_attitude_color(city_index, 0x7c),0x12,1,1);
+    }
     text_clear();
     text_append_label(0x193);
     value = scale(0xc6);
@@ -13833,6 +13848,12 @@ void CityWindow::draw_supported_units(int blit)
   int max_cols;
   i8 hotspot_rect[16];
   
+  if ((((is_closed == 0) && (redraw_suspended == 0)) &&
+      (redraw_deferred == 0)) && (-1 < city_index) &&
+      (extra_ui(X_SUPPORT_LIST) || extra_ui(X_SUPPORT_SORT))) {
+    extras_draw_supported_units(this,blit);   /* X11, X16 */
+    return;
+  }
   if ((((is_closed == 0) && (redraw_suspended == 0)) &&
       (redraw_deferred == 0)) && (-1 < city_index)) {
     begin_draw((iptr)&supported_units_rect);
@@ -15784,6 +15805,9 @@ static void city_button_change_add_options(int city2,int &option_count2,iptr cur
       text_append_string_id(unit_types[unit_type].name);
       text_append_space();
       text_append((const char *)&str_empty_147);
+      if (extra_ui(X_PROD_COST)) {
+        extras_append_shield_cost((int)(char)unit_types[unit_type].cost);   /* X30 */
+      }
       text_append_lparen();
       city3 = unit_type;
       city4 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
@@ -15824,11 +15848,20 @@ static void city_button_change_add_options(int city2,int &option_count2,iptr cur
       text_append_string_id(improvements[improvement].name);
       text_append_space();
       text_append((const char *)&str_empty_152);
+      if (extra_ui(X_PROD_COST)) {
+        extras_append_shield_cost((uint)improvements[improvement].cost);   /* X30 */
+      }
       text_append_lparen();
       city = -improvement;
       city3 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
       on = city_shields_after_change(city3,city);
       city_text_append_build_turns((uint)improvements[improvement].cost,on);
+      if (extra_ui(X_PROD_COST)) {
+        /* X30: and its upkeep */
+        text_append_comma();
+        text_append_int((int)civ_improvement_upkeep(city2,improvement));
+        text_append(EXTRAS_ICON_S "g");
+      }
       text_append_rparen();
       change_dialog.add_option((const char *)&textbuf.buf,improvement + 0x3e,0);
       if (-current_build == improvement) {
@@ -15849,6 +15882,9 @@ static void city_button_change_add_options(int city2,int &option_count2,iptr cur
       text_append_string_id(improvements[improvement].name);
       text_append_space();
       text_append((const char *)&str_empty_154);
+      if (extra_ui(X_PROD_COST)) {
+        extras_append_shield_cost((uint)improvements[improvement].cost);   /* X30 */
+      }
       text_append_lparen();
       city = -improvement;
       city3 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
@@ -15922,6 +15958,11 @@ void __cdecl city_button_change(i32 control_id)
           city_button_change_advice(unit_dialog,improvement_dialog);
           city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
           text_set_string_arg(0,(const char *)&cities[city].name);
+          if (extra_ui(X_PROD_CANCEL)) {
+            /* X29: with a Cancel button (Escape) */
+            change_dialog.load_text((const char *)&str_game_7,(const char *)&str_production,1);
+          }
+          else
           change_dialog.load_game_text((const char *)&str_production);
           change_dialog.set_option_draw_fn((DialogOptionDrawFn)city_change_draw_option_icon);
           change_dialog.set_list_indent(0x4b,0);
@@ -16604,6 +16645,7 @@ void CityWindow::clear_controls()
 void CityWindow::destroy_controls()
 
 {
+  extras_city_window_controls_destroyed();   /* X11 */
   if (buy_button != 0) {
     ((Wnd *)((u8 *)this + 0x48))->remove_all_controls();
     if ((Button *)buy_button != (Button *)0x0) {

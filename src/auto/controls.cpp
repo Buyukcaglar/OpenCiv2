@@ -1093,6 +1093,9 @@ void RadioGroup::create(iptr parent,i32 ctrl_id,iptr rect,u32 columns,u32 item_c
   items_handle = handle;
   handle = (u32)mem_handle_lock(items_handle);
   items = handle;
+  if (extra_ui(X_RADIO_KEYS)) {
+    extras_radio_hotkeys((RadioItem *)items,(int)item_count);   /* X24 */
+  }
   return;
 }
 

@@ -407,6 +407,9 @@ void __cdecl minimap_calc_rect(void)
   if (height2 < map.height) {
     height2 = (int)map.height;
   }
+  if (extra_ui(X_ARRANGE)) {
+    width2 = extras_panel_width(width2);   /* X38: Arrange Windows S or L */
+  }
   width2 += ui_metrics.border_width * 2;
   top = 0;
   if (map_layout_wide != 0) {
@@ -1066,8 +1069,8 @@ void MapView::create()
   init_state(map_view_index);
   if ((turn_loop.resume_civ == '\0') || (destroyed_civ_count_block.saved_layout_valid == 0)) {
     *(i16 *)&zoom_u = 0;
-    if (999 < caption_font_block.screen_width) {
-      *(i16 *)&zoom_u = 2;
+    if (999 < caption_font_block.screen_width && !extra_ui(X_ZOOM_1)) {
+      *(i16 *)&zoom_u = 2;    /* X43: 1:1 (zoom 0) whatever the screen */
     }
     if (map_view_index == 0) {
       mapview_calc_rect();
@@ -2513,6 +2516,9 @@ void MapView::redraw(iptr viewer_civ,int do_blit)
       civ = -1;
     }
     draw_all_tiles(civ);
+    if (extra_ui(X_SUPPRESS_POPUPS) && map_view_index == 0) {
+      extras_draw_map_messages((iptr)this,0);   /* X33 */
+    }
     if ((do_blit != 0) &&
        (mapview_blit_with_net_pump(), map_view_index == 0)) {
       minimap_redraw();

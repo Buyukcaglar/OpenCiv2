@@ -55,6 +55,8 @@ extern int plat_lock_panels;            /* the game's panels (child windows: map
                                            moved or sized by the mouse, as the original allows */
 extern int plat_fix_bugs;               /* the original's bugs fixed (docs/BUGS.md): not with
                                            CIV2_CLASSIC=1, in replays or the unit tests */
+#include "../include/extras.h"              /* plat_extras: the interface additions (docs/EXTRAS.md),
+                                           on or off as plat_fix_bugs */
 
 /* ---- regions: lists of rectangles ---- */
 
@@ -217,6 +219,7 @@ void xd_poll(void);                    /* network play's events and callbacks (x
 void input_key(int vk, int down);
 void input_mouse_move(int x, int y);
 void input_mouse_button(int button, int down);
+void input_mouse_wheel(int notches);       /* WM_MOUSEWHEEL to the focus window */
 void pointer_init(int x, int y);
 void pointer_check(void);              /* the pointer's window changed: WM_MOUSEMOVE */
 extern BYTE key_state[256];

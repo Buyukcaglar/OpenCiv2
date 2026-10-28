@@ -21,7 +21,8 @@
 enum {
     HOST_EV_NONE, HOST_EV_QUIT, HOST_EV_KEYDOWN, HOST_EV_KEYUP, HOST_EV_MOTION,
     HOST_EV_BUTTONDOWN, HOST_EV_BUTTONUP, HOST_EV_EXPOSED,
-    HOST_EV_COMMAND         /* a native menu's item chosen: vk is its id */
+    HOST_EV_COMMAND,        /* a native menu's item chosen: vk is its id */
+    HOST_EV_WHEEL           /* the mouse wheel turned: button notches, positive away from the user */
 };
 typedef struct HostEvent {
     int32_t type;

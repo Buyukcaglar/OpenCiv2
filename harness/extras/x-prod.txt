@@ -1,0 +1,32 @@
+# Interface additions (docs/EXTRAS.md): the Change Production list with
+# costs and a Cancel button (X29, X30), Arrange Windows S and L (X38).
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call menu_command 4e2803 0 528
+wait 3000
+key Return
+wait 4000
+click 205 245
+wait 4000
+call city_button_change 50a473 0
+wait 3000
+shot x30-change
+key Escape
+wait 3000
+shot x29-cancelled
+key Escape
+wait 2000
+call menu_command 4e2803 0 809     # 0x329 Arrange Windows S
+wait 3000
+shot x38-s
+call menu_command 4e2803 0 810     # 0x32a Arrange Windows L
+wait 3000
+shot x38-l
+call menu_command 4e2803 0 808     # 0x328 Arrange Windows
+wait 3000

@@ -1,0 +1,24 @@
+# Quick information (X25): Ctrl held, the pointer over a city, then over a
+# unit; released: gone.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call menu_command 4e2803 0 528
+wait 3000
+key Return
+wait 4000
+keydown ctrl
+mousemove 205 245
+wait 2000
+shot x25-a-city
+mousemove 125 362
+wait 2000
+shot x25-b-unit
+keyup ctrl
+wait 2000
+shot x25-c-gone

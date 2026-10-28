@@ -1,0 +1,17 @@
+# Simple popups shown on the map (X33; run with CIV2_TEST_SUPPRESS=
+# HIDDENTERRAIN): View > Show Hidden Terrain's popup on the map instead.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call menu_command 4e2803 0 816     # 0x330 Show Hidden Terrain
+wait 5000
+shot x33-a-message
+wait 6000
+mousemove 300 300
+wait 3000
+shot x33-b-expired

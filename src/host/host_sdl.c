@@ -328,6 +328,12 @@ static int convert(const SDL_Event *s, HostEvent *e)
         e->y = s->button.y;
         e->button = s->button.button == SDL_BUTTON_LEFT ? 1 : s->button.button == SDL_BUTTON_RIGHT ? 2 : 3;
         return 1;
+    case SDL_MOUSEWHEEL:
+        if (s->wheel.y == 0)
+            return 0;
+        e->type = HOST_EV_WHEEL;
+        e->button = s->wheel.direction == SDL_MOUSEWHEEL_FLIPPED ? -s->wheel.y : s->wheel.y;
+        return 1;
     case SDL_WINDOWEVENT:
         if (s->window.event != SDL_WINDOWEVENT_EXPOSED)
             return 0;

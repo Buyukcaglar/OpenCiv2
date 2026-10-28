@@ -3165,6 +3165,11 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + sprite_type * 0x3c))->draw((iptr)clip_unit,surface,px,
                py);
   }
+  else if (extra_ui(X_SENTRY_GREY)) {
+    /* X41: in grey halftones, not a grey shape */
+    extras_draw_grey_sprite((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + sprite_type * 0x3c),
+                            surface,px,py);
+  }
   else {
     ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + sprite_type * 0x3c))->draw_silhouette((iptr)clip_silhouette,surface,px,
                py,0x1a);
@@ -3177,6 +3182,9 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
       (value = tile_improvements((int)units[unit2].x,(int)units[unit2].y),
       ((byte)value & TILE_AIRBASE) == 0x40)) && (no_fortress == 0)) {
     ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite))->draw((iptr)clip_fortress,surface,px,py);
+  }
+  if (extra_ui(X_WORK_COUNTER)) {
+    extras_draw_work_counter(surface,unit2,px,py,zoom);    /* X3 */
   }
   gfx_reset_zoom_scale();
   return;

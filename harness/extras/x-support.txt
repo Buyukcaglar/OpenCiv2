@@ -1,0 +1,48 @@
+# The city window's supported units (X11, X16): a total, sorted, and a
+# scroll bar when they do not fit (the wheel too).
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call unit_create 5b3d06 4 1 36 60
+wait 300
+call unit_create 5b3d06 0 1 36 60
+wait 300
+call unit_create 5b3d06 2 1 36 60
+wait 300
+call unit_create 5b3d06 3 1 36 60
+wait 300
+call unit_create 5b3d06 5 1 36 60
+wait 300
+call unit_create 5b3d06 0 1 36 60
+wait 300
+call unit_create 5b3d06 4 1 36 60
+wait 300
+call unit_create 5b3d06 2 1 36 60
+wait 300
+call unit_create 5b3d06 9 1 36 60
+wait 300
+call unit_create 5b3d06 3 1 36 60
+wait 300
+call unit_create 5b3d06 1 1 36 60
+wait 300
+call unit_create 5b3d06 5 1 36 60
+wait 300
+call menu_command 4e2803 0 528
+wait 3000
+key Return
+wait 4000
+click 228 298
+wait 3000
+click 230 242
+wait 4000
+shot x11-a-support
+wheel 60 330 -1
+wait 2000
+shot x11-b-wheel
+key Escape
+wait 2000

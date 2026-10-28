@@ -1,0 +1,4 @@
+# Radio buttons' hotkeys (X24): the main menu's items each get a letter
+# (underlined); colour correction (X35) when run with CIV2_TEST_SETTINGS.
+wait 8000
+shot x24-menu

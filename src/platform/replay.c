@@ -290,11 +290,12 @@ void replay_run_script(void)
             next_action_us = vclock_us + 100 * 1000;
             break;
         } else if (!strcmp(cmd, "click")) {
+            /* click X Y [B]: B 1 left, 2 middle, 3 right */
             int x = 0, y = 0, b = 1;
             sscanf(arg, "%d %d %d", &x, &y, &b);
             input_mouse_move(x, y);
-            input_mouse_button(b == 3 ? 2 : 1, 1);
-            input_mouse_button(b == 3 ? 2 : 1, 0);
+            input_mouse_button(b == 3 ? 2 : b == 2 ? 3 : 1, 1);
+            input_mouse_button(b == 3 ? 2 : b == 2 ? 3 : 1, 0);
             next_action_us = vclock_us + 100 * 1000;
             break;
         } else if (!strcmp(cmd, "call")) {
@@ -322,12 +323,20 @@ void replay_run_script(void)
             }
             break;
         } else if (!strcmp(cmd, "mousedown") || !strcmp(cmd, "mouseup") || !strcmp(cmd, "mousemove")) {
-            /* mousedown/mousemove/mouseup X Y: drags */
-            int x = 0, y = 0;
-            sscanf(arg, "%d %d", &x, &y);
+            /* mousedown/mousemove/mouseup X Y [B]: drags (B as for click) */
+            int x = 0, y = 0, b = 1;
+            sscanf(arg, "%d %d %d", &x, &y, &b);
             input_mouse_move(x, y);
             if (cmd[5] != 'm')
-                input_mouse_button(1, cmd[5] == 'd');
+                input_mouse_button(b == 3 ? 2 : b == 2 ? 3 : 1, cmd[5] == 'd');
+            next_action_us = vclock_us + 100 * 1000;
+            break;
+        } else if (!strcmp(cmd, "wheel")) {
+            /* wheel X Y N: the wheel turned N notches (positive: away) */
+            int x = 0, y = 0, n = 0;
+            sscanf(arg, "%d %d %d", &x, &y, &n);
+            input_mouse_move(x, y);
+            input_mouse_wheel(n);
             next_action_us = vclock_us + 100 * 1000;
             break;
         } else if (!strcmp(cmd, "menu")) {

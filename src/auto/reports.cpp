@@ -520,7 +520,16 @@ void __cdecl attitude_advisor_draw(void)
       if ((char)cities[city].happy < (char)cities[city].unhappy) {
         text_set_colors(0x6a,0x12,0xffffffff,0xffffffff);
       }
+      if (extra_ui(X_CELEBRATING) && extras_attitude_color(city, 0) == 0x72) {
+        text_set_colors(0x72,0x12,0xffffffff,0xffffffff);   /* X22: celebrating in yellow */
+      }
       gov_index = advisor_state.client_x;
+      if (extra_ui(X_CELEBRATING)) {
+        /* X22: and the food surplus or shortage after the name */
+        int name_end = gfx_draw_text((const char *)&cities[city].name,advisor_state.client_x + 0x8c,row_y + 9);
+        extras_draw_food_trend((iptr)&advisor_state.window, city, name_end + 4, row_y + 9);
+      }
+      else
       gfx_draw_text((const char *)&cities[city].name,advisor_state.client_x + 0x8c,row_y + 9);
       advisor_draw_city_citizens(city,gov_index + 0xf5,row_y + 3,
                          ((advisor_state.client_right - advisor_state.vscroll_width) - 0x20) - (gov_index + 0xf5),
@@ -1650,6 +1659,12 @@ void __cdecl foreign_minister_show(iptr civ)
               }
               else {
                 text_append_comma();
+                if (extra_ui(X_FOREIGN_GOLD)) {
+                  /* X37: the gold with a coin */
+                  text_append_int(civs[civ2].gold);
+                  text_append(EXTRAS_ICON_S "g");
+                }
+                else
                 text_append_gold(civs[civ2].gold);
                 if (game.difficulty < DIFF_PRINCE) {
                   text_append_comma();

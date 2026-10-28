@@ -67,6 +67,8 @@ typedef struct mmtime_tag mmtime_tag;
 EXTERN_C int plat_fix_bugs;
 static inline int bugfix_ui(void) { return plat_fix_bugs; }
 static inline int bugfix_state(void) { return plat_fix_bugs && game.multiplayer < 3; }
+/* The interface additions (docs/EXTRAS.md): extra_ui(X_...), marked X<n>. */
+#include "extras.h"
 /* rand() calls name their caller for the rand trace (src/native/crt.cpp). */
 int crt_rand_at(const char *caller);
 #define _rand() crt_rand_at(__func__)

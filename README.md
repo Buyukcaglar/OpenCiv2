@@ -19,8 +19,12 @@ The first time, it finds your copy of the game (or asks where it is) and sets it
 included when it comes from the CD or a disc image. `--setup [FOLDER or IMAGE.cue]` sets it
 up again.
 
-OpenCiv2 fixes the original game's bugs ([BUGS.md](docs/BUGS.md)). Set `CIV2_CLASSIC=1` to play
-the original game instead: its bugs, and its menu bar and window caption drawn as the original's.
+OpenCiv2 fixes the original game's bugs ([BUGS.md](docs/BUGS.md)) and adds the interface
+improvements of FoxAhead's [CIV2UIA](https://github.com/FoxAhead/Civ2-UI-Additions) (mouse
+wheel, scrolling lists, more figures in the advisors, quick information with Ctrl ...:
+[EXTRAS.md](docs/EXTRAS.md); each can be switched off in `CIV.INI`). Set `CIV2_CLASSIC=1` to play
+the original game instead: its bugs, its interface, and its menu bar and window caption drawn as
+the original's.
 
 ### Multiplayer
 

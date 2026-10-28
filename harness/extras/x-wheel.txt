@@ -1,0 +1,43 @@
+# The mouse wheel and middle button (X1): Ctrl+wheel zooms the map, a
+# middle click centres it, a middle drag pans it, the wheel scrolls an
+# advisor's list.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+shot x01-a-start
+keydown ctrl
+wheel 200 250 1
+wait 1000
+wheel 200 250 1
+wait 1000
+keyup ctrl
+wait 5000
+shot x01-b-zoomed
+click 100 150 2
+wait 5000
+shot x01-c-centred
+mousedown 300 300 2
+mousemove 250 280 2
+mousemove 200 260 2
+mousemove 150 240 2
+mouseup 150 240 2
+wait 5000
+shot x01-d-dragged
+keydown ctrl
+click 200 250 2
+keyup ctrl
+wait 5000
+shot x01-e-zoom0
+call menu_command 4e2803 0 1286
+wait 3000
+shot x01-f-science
+wheel 300 300 -1
+wait 5000
+shot x01-g-scrolled
+key Escape
+wait 5000

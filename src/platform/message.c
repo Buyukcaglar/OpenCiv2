@@ -325,6 +325,12 @@ LRESULT WINAPI DispatchMessageA(const MSG *m)
     }
     if (!w)
         return 0;
+    /* The interface additions (docs/EXTRAS.md) see the mouse first: the
+       wheel, the middle button, Shift or Ctrl with the mouse */
+    if (plat_extras && ((m->message >= WM_MOUSEFIRST && m->message <= WM_MOUSELAST) ||
+                        m->message == WM_KEYDOWN || m->message == WM_KEYUP) &&
+        extras_input((void *)m))
+        return 0;
     if (m->message == WM_PAINT) {
         LRESULT r = wnd_send(w, WM_PAINT, 0, 0);
         /* A window that does not validate would repaint forever. */
@@ -796,6 +802,7 @@ int plat_replay;
 int plat_normal_desktop = 1;
 int plat_lock_panels;
 int plat_fix_bugs;
+int plat_extras;
 static uint64_t real_start;
 
 /* CIV2_REALTIME: a replay script on the real clock (its waits are real
@@ -1353,6 +1360,17 @@ void input_mouse_button(int button, int down)
     }
 }
 
+/* The wheel (Windows: WM_MOUSEWHEEL, WHEEL_DELTA 120 a notch) to the window
+ * with the focus, else the active one; the pointer in screen coordinates. */
+void input_mouse_wheel(int notches)
+{
+    HWND h = GetFocus() ? GetFocus() : (wnd_get(active_wnd) ? active_wnd : 0);
+    if (!h || !notches)
+        return;
+    msg_post(h, WM_MOUSEWHEEL, MAKEWPARAM(mouse_keys(), (WORD)(short)(notches * 120)),
+             MAKELPARAM(cursor.x, cursor.y));
+}
+
 /* ---- cursor ---- */
 
 static HCURSOR current_cursor;
@@ -1373,4 +1391,15 @@ int WINAPI ShowCursor(WINBOOL show)
     cursor_count += show ? 1 : -1;
     host_cursor_show(cursor_count >= 0);
     return cursor_count;
+}
+
+/* (docs/EXTRAS.md) The window under the pointer, and the pointer, in desktop
+   coordinates. */
+HWND plat_window_at_cursor(POINT *pt)
+{
+    int hit;
+    Window *w = wnd_from_point(cursor, &hit);
+    if (pt)
+        *pt = cursor;
+    return w ? w->hwnd : 0;
 }

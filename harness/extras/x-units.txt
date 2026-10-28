@@ -1,0 +1,26 @@
+# Interface additions on units (docs/EXTRAS.md): the settlers' work counter
+# (X3) and the sentries in grey halftones (X41).  Units made on the
+# autosave fill slots 21, 55, 56...
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call unit_create 5b3d06 3 1 22 60
+wait 500
+call unit_create 5b3d06 0 1 21 59
+wait 500
+call unit_create 5b3d06 1 1 23 59
+wait 500
+call unit_do_terrain_work 4c42a0 21 3
+wait 500
+call unit_do_terrain_work 4c42a0 55 5
+wait 500
+call unit_do_terrain_work 4c42a0 56 6
+wait 500
+call unit_do_terrain_work 4c42a0 56 6
+wait 2000
+shot x41-x03

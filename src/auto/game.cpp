@@ -17950,6 +17950,7 @@ void __cdecl status_draw_info(int full_redraw)
   int stage;
   int line_x;
   int line_height;
+  int year_end = 0;
   
   if (full_redraw != 0) {
     gfx_set_draw_target((iptr)&status_wnd.window);
@@ -17988,6 +17989,17 @@ void __cdecl status_draw_info(int full_redraw)
   text_y2 += line_height;
   text_clear();
   text_append_year((int)game.year);
+  if (extra_ui(X_GAME_TURN)) {
+    /* X5: and the turn */
+    text_append_space();
+    text_append_lparen();
+    text_append(extras_text("turn", "Turn"));
+    text_append_space();
+    text_append_int((uint)game.turn);
+    text_append_rparen();
+    year_end = gfx_draw_text((const char *)&textbuf.buf,text_x2,text_y2);
+  }
+  else
   gfx_draw_text((const char *)&textbuf.buf,text_x2,text_y2);
   text_x2 = line_x;
   text_y2 += line_height;
@@ -18015,6 +18027,8 @@ void __cdecl status_draw_info(int full_redraw)
     icon_offset = icon_offset >> 1;
   }
   icon_x = frame_texture_surface_block.status_upper_rect + icon_offset;
+  if (extra_ui(X_GAME_TURN) && icon_x < year_end + 4)
+    icon_x = year_end + 4;     /* X5: the icons after the turn */
   gfx_set_zoom_scale(zoom2);
   progress = civs[human_civ[0]].research_progress;
   stage = civ_research_cost(human_civ[0]);

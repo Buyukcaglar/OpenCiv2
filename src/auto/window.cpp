@@ -2707,6 +2707,13 @@ static void menu_cmd_view_zoom(int cmd)
     prefs_save_civ2dat();
     break;
   case CMD_ARRANGE_WINDOWS:
+    extras_set_panel_size(0);
+    ui_reset_window_layout();
+    break;
+  case CMD_ARRANGE_WINDOWS_S:
+  case CMD_ARRANGE_WINDOWS_L:
+    /* X38: Arrange Windows with a smaller or larger side panel */
+    extras_set_panel_size(cmd == CMD_ARRANGE_WINDOWS_S ? -1 : 1);
     ui_reset_window_layout();
   }
 }
@@ -3260,6 +3267,16 @@ void __cdecl menu_build_main(void)
     else if (lang_has(menu_rows[row].key) != 0) {
       ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(menu_rows[row].menu,menu_rows[row].cmd,
                     lang_text(menu_rows[row].key),menu_rows[row].room);
+      if (menu_rows[row].cmd == CMD_ARRANGE_WINDOWS && extra_ui(X_ARRANGE)) {
+        /* X38: Arrange Windows S and L */
+        static char label_s[64], label_l[64];
+        const char *label = lang_text(menu_rows[row].key);
+        int n = (int)strcspn(label, "|");
+        snprintf(label_s, sizeof label_s, "%.*s S", n, label);
+        snprintf(label_l, sizeof label_l, "%.*s L", n, label);
+        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(menu_rows[row].menu,CMD_ARRANGE_WINDOWS_S,label_s,0);
+        ((GameMenu *)((i8 *)&main_menu_block.main_menu))->add_item(menu_rows[row].menu,CMD_ARRANGE_WINDOWS_L,label_l,0);
+      }
     }
   }
   if (((game.game_options & OPT_CHEAT_MODE) == 0) || (game.multiplayer != '\0')) {
@@ -7609,6 +7626,33 @@ void Dialog::draw_option_cell(const char *text,int x,int y,int selected,int disa
   u32 shadow_color2;
   u32 fg_color;
   
+  if (plat_extras && strchr(text, EXTRAS_ICON)) {
+    /* X30, X37: the text with icons, part by part */
+    char part[256];
+    while (*text != '\0') {
+      size_t n = strcspn(text, EXTRAS_ICON_S);
+      if (n >= sizeof part) n = sizeof part - 1;
+      memcpy(part, text, n);
+      part[n] = 0;
+      if (n != 0) {
+        draw_option_cell(part, x, y, selected, disabled);
+        x += ((GameFont *)list_font)->text_width(part);
+      }
+      text += n;
+      if (*text == EXTRAS_ICON && text[1] != '\0') {
+        Sprite *icon = extras_icon(text[1]);
+        if (icon != 0) {
+          i8 icon_rect[16];
+          int dy = ((int)list_row_height[cur_pane] - icon->get_height()) / 2;
+          icon->draw((iptr)icon_rect, surf_wnd, x, y + (dy > 0 ? dy : 0));
+          x += icon->get_width() + 1;
+        }
+        text += 2;
+      }
+      else if (*text != '\0') text++;
+    }
+    return;
+  }
   while (*(char *)text != '\0') {
     col_width = (int)list_column_width[cur_pane];
     text_width = ((GameFont *)list_font)->text_width(text);
@@ -7659,6 +7703,9 @@ void Dialog::draw_option_text(char *text,int x,i32 y,i32 selected, i32 disabled)
                      ,y,selected,disabled);
   if (right_text != (char *)0x0) {
     col_width = (int)list_column_width[cur_pane];
+    if (plat_extras && strchr(right_text, EXTRAS_ICON))
+      right_width = extras_rich_width(list_font, right_text);   /* X30: with icons */
+    else
     right_width = ((GameFont *)list_font)->text_width((const char *)right_text);
     draw_option_cell((const char *)right_text,(col_width + x - 4) - right_width,y,selected,disabled);
     *separator = '|';
@@ -9505,6 +9552,11 @@ u32 Dialog::run_modal(iptr out_text,iptr timeout_secs)
   DialogOption *option;
   int i;
   
+  if (extra_ui(X_SUPPRESS_POPUPS) && extras_popup_suppressed(this)) {
+    /* X33: a simple popup of the list: shown on the map instead */
+    result_extra = 0;
+    return result_id;
+  }
   if (dlg_style.stack_depth != 0x10) {
     if (timeout_secs == 0) {
       dialog_state.timeout_start = timer_ticks();
@@ -9790,6 +9842,9 @@ i32 Dialog::load_text_section(const char *file_name,const char *section,int defa
   result = 1;
   mode = 1;
   option_index = 0;
+  if (plat_extras) {
+    extras_note_dialog(this,file_name,section);   /* X33 */
+  }
   crt_strcpy((char *)((void *)(((i8 *)&dialog_text_font_obj_block.dialog_section_name))),(const char *)((void *)section));
   cmp = text_open_section(file_name,section);
   if (cmp == 0) {

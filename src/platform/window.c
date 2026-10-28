@@ -1692,7 +1692,10 @@ static WINBOOL show_window(HWND h, int cmd)
         else
             w->style &= ~WS_VISIBLE;
         wnd_generation++;
-    } else if (cmd == SW_SHOWMAXIMIZED && !plat_normal_desktop && !(w->style & WS_CHILD)) {
+    } else if (cmd == SW_SHOWMAXIMIZED && !plat_normal_desktop && !(w->style & WS_CHILD) &&
+               !(getenv("CIV2_TEST_FULL") && *getenv("CIV2_TEST_FULL"))) {
+        /* (CIV2_TEST_FULL=1, tests of OpenCiv2's additions, which have no
+           reference: the window maximized, all of the desktop shown) */
         /* The reference desktop has no window manager.  Wine makes the
          * window maximized, but leaves resizing its X window to the
          * (absent) manager: the window keeps showing in its old X window --

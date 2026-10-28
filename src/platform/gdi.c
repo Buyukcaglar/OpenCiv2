@@ -281,6 +281,9 @@ Bitmap *dc_target(DC *dc)
 
 /* The desktop: the background, then the top-level windows from the bottom
  * up, each where it shows (see wnd_shown_rect). */
+int plat_color_lut_on;
+unsigned char plat_color_lut[256];
+
 void plat_compose(void)
 {
     Window *order[512], *w;
@@ -310,6 +313,18 @@ void plat_compose(void)
             if (x1 - dx > s->w) x1 = dx + s->w;
             if (x1 > x0)
                 memcpy((DWORD *)bmp_row(screen, y) + x0, (DWORD *)bmp_row(s, sy) + (x0 - dx), (size_t)(x1 - x0) * 4);
+        }
+    }
+    if (plat_color_lut_on) {
+        /* X35 (docs/EXTRAS.md): the colour correction, on what is shown */
+        for (y = 0; y < screen->h; y++) {
+            DWORD *p = (DWORD *)bmp_row(screen, y);
+            int x;
+            for (x = 0; x < screen->w; x++) {
+                DWORD c = p[x];
+                p[x] = (c & 0xff000000u) | ((DWORD)plat_color_lut[(c >> 16) & 0xff] << 16) |
+                       ((DWORD)plat_color_lut[(c >> 8) & 0xff] << 8) | plat_color_lut[c & 0xff];
+            }
         }
     }
 }

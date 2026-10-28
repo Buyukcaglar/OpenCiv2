@@ -1,0 +1,43 @@
+# The Activate Unit list of a stack of more than 9 units (X2, X28): all of
+# them, in a list that scrolls (the wheel too).
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call unit_create 5b3d06 3 1 22 58
+wait 300
+call unit_create 5b3d06 4 1 22 58
+wait 300
+call unit_create 5b3d06 5 1 22 58
+wait 300
+call unit_create 5b3d06 6 1 22 58
+wait 300
+call unit_create 5b3d06 2 1 22 58
+wait 300
+call unit_create 5b3d06 3 1 22 58
+wait 300
+call unit_create 5b3d06 4 1 22 58
+wait 300
+call unit_create 5b3d06 5 1 22 58
+wait 300
+call unit_create 5b3d06 6 1 22 58
+wait 300
+call unit_create 5b3d06 2 1 22 58
+wait 300
+call unit_create 5b3d06 3 1 22 58
+wait 300
+call ui_pick_unit_from_stack 58d442
+wait 3000
+shot x02-a-list
+key Down Down Down Down Down Down Down Down Down Down
+wait 2000
+shot x02-b-down
+wheel 350 300 3
+wait 2000
+shot x02-c-wheel
+key Escape
+wait 2000

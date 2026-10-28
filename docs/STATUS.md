@@ -391,6 +391,18 @@ message by message and clock event by clock event.
   with the fixes on in the replays (`CIV2_TEST_FIXES=1`, tests only) none
   crashes, and the WWII scenario's AI goes on calling `rand()` where the
   original's, gone hostile, stops.
+* **Interface additions** (docs/EXTRAS.md): CIV2UIA's interface features, written
+  anew from its description, on by default and each switchable in CIV.INI's
+  `[OpenCiv2]` section: the mouse wheel and middle button, the Activate Unit list
+  past 9 units, settlers' work counters, the turn in the status panel, research
+  figures, free buildings in the Trade Advisor, the supported units' total, scroll
+  bar and order, attitude colours, radio button hotkeys, quick information with
+  Ctrl, Cancel and costs in Change Production, a City Status advisor that sorts and
+  changes production, Shift on specialists, popups shown on the map, colour
+  correction, coins in the Foreign Minister, Arrange Windows S/L, path lines with
+  Shift, sentries in halftones, new games at zoom 1:1.  Off with `CIV2_CLASSIC=1`
+  and in replays and unit tests (`CIV2_TEST_EXTRAS` turns them on in a replay);
+  not done yet: resizable advisors and their larger caption area (CIV2UIA 26, 27).
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

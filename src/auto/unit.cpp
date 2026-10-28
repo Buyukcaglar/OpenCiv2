@@ -10638,13 +10638,48 @@ unit_dlg_draw_sprite_cb(i32 dlg,iptr sprite,iptr unit,i32 left,int x,
   return;
 }
 
+/* Part of unit_stack_select_dialog (005b6aea): a unit's line: its owner,
+   veteran, type, home city (and a caravan's commodity). */
+static void unit_stack_select_text(iptr unit)
+{
+  iptr adjective;
+  uint city;
+
+  text_clear();
+  adjective = civ_adjective((int)units[unit].owner);
+  text_append_str((const char *)adjective);
+  text_append_space();
+  if ((units[unit].flags & UNITF_VETERAN) != 0) {
+    text_append_label(0xd);
+    text_append_space();
+  }
+  text_append_string_id(unit_types[units[unit].type].name);
+  text_append_space();
+  text_append_lparen();
+  if (units[unit].home_city == -1) {
+    city = 0xffffffff;
+  }
+  else {
+    city = (uint)(byte)units[unit].home_city;
+  }
+  text_append_city_name(city);
+  if (unit_types[units[unit].type].role == ROLE_TRADE) {
+    text_append_comma();
+    if ((char)units[unit].counter < '\0') {
+      text_append_string_id(label_table.string_ids[0xc0]);
+    }
+    else {
+      text_append_string_id(commodity_names[(char)units[unit].counter]);
+    }
+  }
+  text_append_rparen();
+}
+
 /* 005b6aea auto */
 i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cancel)
 
 {
-  iptr adjective;
   i32 choice;
-  uint city;
   int count;
   Dialog dialog2;
   Sprite sprite;
@@ -10654,6 +10689,20 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cance
   ON_SCOPE_EXIT(sprite_destroy(&sprite));
   dialog2.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dialog2.Dialog::destruct());
+  if (extra_ui(X_UNIT_LIST) && unit_stack_sum(unit,2) > 9) {
+    /* X2, X28: more than 9 units: all of them, in a list that scrolls */
+    dialog2.Dialog::reset(allow_cancel != 0);
+    dialog2.set_title(title);
+    dialog2.set_width(0x154);
+    dialog2.set_option_draw_fn((DialogOptionDrawFn)extras_unit_list_draw);
+    dialog2.set_list_indent(0x2c,0);
+    for (unit = unit_stack_first(unit); -1 < unit; unit = unit_next_in_stack(unit)) {
+      unit_stack_select_text(unit);
+      dialog2.add_option((const char *)&textbuf.buf,unit,0);
+    }
+    dialog2.set_listbox(9,0x14c,0);
+    return dialog2.show_modal(0);
+  }
   sprite.create_solid(0x42,0x30,0);
   dlg_unit_sprite_zoom = 0xffffffff;
   dialog2.Dialog::reset(0x20001 - (uint)(allow_cancel == 0));
@@ -10667,34 +10716,7 @@ i32 __cdecl unit_stack_select_dialog(iptr unit,const char *title,int allow_cance
   for (unit = unit_stack_first(unit); -1 < unit; unit = unit_next_in_stack(unit)) {
     count++;
     if (count < 10) {
-      text_clear();
-      adjective = civ_adjective((int)units[unit].owner);
-      text_append_str((const char *)adjective);
-      text_append_space();
-      if ((units[unit].flags & UNITF_VETERAN) != 0) {
-        text_append_label(0xd);
-        text_append_space();
-      }
-      text_append_string_id(unit_types[units[unit].type].name);
-      text_append_space();
-      text_append_lparen();
-      if (units[unit].home_city == -1) {
-        city = 0xffffffff;
-      }
-      else {
-        city = (uint)(byte)units[unit].home_city;
-      }
-      text_append_city_name(city);
-      if (unit_types[units[unit].type].role == ROLE_TRADE) {
-        text_append_comma();
-        if ((char)units[unit].counter < '\0') {
-          text_append_string_id(label_table.string_ids[0xc0]);
-        }
-        else {
-          text_append_string_id(commodity_names[(char)units[unit].counter]);
-        }
-      }
-      text_append_rparen();
+      unit_stack_select_text(unit);
       dialog2.add_sprite((iptr)&sprite,unit,(const char *)&textbuf.buf);
     }
   }

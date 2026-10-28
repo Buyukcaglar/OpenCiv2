@@ -598,6 +598,15 @@ static int profile_get(LPCSTR file, LPCSTR section, LPCSTR key, char *out, size_
     return 0;
 }
 
+/* (docs/EXTRAS.md) A key's text in an INI file, as GetPrivateProfileString:
+   1 if found. */
+int plat_profile_string(const char *file, const char *section, const char *key, char *out, int n)
+{
+    if (n > 0)
+        out[0] = 0;
+    return profile_get(file, section, key, out, (size_t)n);
+}
+
 UINT WINAPI GetPrivateProfileIntA(LPCSTR section, LPCSTR key, INT def, LPCSTR file)
 { API_TRACE();
     char v[256];

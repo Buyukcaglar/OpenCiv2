@@ -1,0 +1,32 @@
+# The City Status advisor (X31): the total, the headings that sort the
+# list, a city's production clicked: its Change Production.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+call menu_command 4e2803 0 1281
+wait 3000
+mousemove 600 470
+wait 1000
+shot x31-a-status
+click 330 132
+wait 2000
+mousemove 600 470
+wait 1000
+shot x31-b-sorted
+click 450 160
+wait 4000
+mousemove 600 470
+wait 1000
+shot x31-c-change
+key Escape
+wait 3000
+mousemove 601 470
+wait 1000
+shot x31-d-back
+key Escape
+wait 2000
