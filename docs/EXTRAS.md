@@ -29,30 +29,30 @@ keeps its own settings in, in its Windows directory): its key `=0`.
 
 | Key | What |
 | --- | --- |
-| `MouseWheel` | The mouse wheel scrolls the list or scroll bar under the pointer (advisors, dialogs, the city window's improvements and supported units, the Civilopedia), changes a specialist under the pointer in the city window, turns the tax rates' bars; Ctrl+wheel zooms the map, Ctrl+middle button sets the normal zoom; a middle click centres the map there, a middle drag pans it. |
-| `UnitListScroll` | The Activate Unit list of a stack of more than 9 units shows all of them, in a list that scrolls. |
-| `UnitListKeys` | (with `UnitListScroll`) that list's keys (arrows, Page Up/Down) and wheel. |
-| `WorkCounter` | A settler's or engineer's work counter on its picture on the map (own units). |
-| `GameTurn` | The game turn in the status panel, after the year. |
-| `ResearchNumbers` | The Science Advisor: the bulbs so far, the advance's cost and the bulbs per turn. |
-| `ZeroUpkeep` | The Trade Advisor lists the buildings that cost no upkeep too. |
-| `SupportScroll` | The city window's supported units: their total, and a scroll bar when they do not fit. |
-| `SupportSort` | That list sorted: settlers, then the units that can attack (land, air, sea; stronger defence, then attack, first), then the rest. |
-| `AttitudeColors` | The Attitude Advisor: celebrating cities in yellow, the food surplus or shortage icon after the name. |
-| `CityAttitude` | The city window: the texts under the citizens coloured as in the Attitude Advisor (yellow celebrating, red in disorder). |
-| `RadioHotkeys` | Each radio button of a dialog gets a hotkey (the first letter of its label no other has, underlined). |
-| `Quickinfo` | Ctrl held with the pointer over the map: the city's and the units' details on that square. |
-| `ProductionCancel` | A Cancel button in the city's Change Production list (Escape). |
-| `ProductionCost` | The shields each item costs, and the upkeep of buildings, in that list. |
-| `CityStatus` | The City Status advisor: the number of cities, headings that sort the list (size, name, food, shields, trade, production; again: the game's order), the production's picture; a click on a city's production opens its Change Production. |
-| `MassSpecialists` | In the city window, Shift+wheel over a specialist changes all of them, Shift+click on one makes all the others the same. |
-| `SuppressPopups` | Simple popups of GAME.TXT (text and an OK button only) whose sections are listed in `SuppressList=` (`[OpenCiv2]`, names separated by commas: `SuppressList=HIDDENTERRAIN,CITYSIZE`) are shown over the top of the map for a few seconds instead. Empty by default. |
-| `ColorCorrection` | Colour correction of the whole screen: `Gamma=` (percent, 100 none), `Brightness=` and `Contrast=` (-100 to 100, 0 none). |
-| `ForeignGold` | Gold coins in the Foreign Minister's list. |
-| `ArrangeWindowsSL` | View > Arrange Windows S and L: a smaller or larger side panel than Arrange Windows. |
-| `PathLines` | Shift held with the pointer over the map: the way the active unit would go there over the map as the player knows it (Dijkstra's over the known terrain, roads and railroads; hidden units and cities not counted); over the city under the cursor (View Pieces): lines to its trade routes' cities. |
-| `SentryHalftone` | Units on sentry (and aircraft at a base) drawn in grey halftones instead of a grey shape. |
-| `DefaultZoom1` | The map of a new game (or of a save without its layout) at zoom 1:1, whatever the screen width. |
+| `MouseWheel` | Use the mouse wheel and middle button. The wheel scrolls whatever list or scroll bar is under the pointer (advisors, dialogs, the city window, the Civilopedia), changes the specialist under the pointer in the city window, and moves the tax rate bars. Ctrl+wheel zooms the map and Ctrl+middle click returns to normal zoom. Middle click centres the map on that spot; dragging with the middle button pans it. |
+| `UnitListScroll` | When you click a stack of more than 9 units, the list of units to activate shows all of them and scrolls, instead of stopping at 9. |
+| `UnitListKeys` | In that scrolling unit list, the arrow keys, Page Up/Down and the mouse wheel move through the list. Needs `UnitListScroll`. |
+| `WorkCounter` | Your settlers and engineers show on the map how much terrain work they have done so far. |
+| `GameTurn` | The status panel shows the turn number after the year. |
+| `ResearchNumbers` | The Science Advisor shows the research points collected so far, the cost of the current advance, and the points gained per turn. |
+| `ZeroUpkeep` | The Trade Advisor also lists buildings that cost nothing to maintain. |
+| `SupportScroll` | The city window shows how many units the city supports, with a scroll bar when they don't all fit. |
+| `SupportSort` | The city window's supported units are sorted: settlers and engineers first, then attack units (land, air, then sea; strongest first), then the rest. |
+| `AttitudeColors` | The Attitude Advisor shows celebrating cities in yellow, and an icon after a city's name when it has a food surplus or shortage. |
+| `CityAttitude` | In the city window, the text under the citizens is coloured as in the Attitude Advisor: yellow when the city celebrates, red when it is in disorder. |
+| `RadioHotkeys` | Options in dialogs get a keyboard shortcut: a letter of the option's name, shown underlined. |
+| `Quickinfo` | Hold Ctrl with the pointer over a map square to see details of the city and units there. |
+| `ProductionCancel` | The city's Change Production dialog gets a Cancel button; Escape cancels too. |
+| `ProductionCost` | The Change Production list shows what each item costs in shields, and each building's upkeep. |
+| `CityStatus` | The City Status advisor shows how many cities you have and each city's production as a picture. Click a column heading (size, name, food, shields, trade, production) to sort by it; click it again for the game's usual order. Click a city's production to change it. |
+| `MassSpecialists` | In the city window, Shift+wheel over a specialist changes all specialists at once, and Shift+click on one makes all the others the same type. |
+| `SuppressPopups` | Simple messages that only have an OK button can be shown for a few seconds across the top of the map instead of waiting for a click. List which ones by their GAME.TXT section names in `SuppressList=`, separated by commas, for example `SuppressList=HIDDENTERRAIN,CITYSIZE`. The list is empty by default. |
+| `ColorCorrection` | Adjusts the colours of the whole screen: `Gamma=` (a percentage, 100 means no change), `Brightness=` and `Contrast=` (-100 to 100, 0 means no change). |
+| `ForeignGold` | The Foreign Minister shows each civilization's gold with a coin icon. |
+| `ArrangeWindowsSL` | The View menu gets Arrange Windows S and Arrange Windows L, which arrange the windows with a narrower or wider side panel than Arrange Windows. |
+| `PathLines` | Hold Shift with the pointer over the map to see the path the active unit would take there, based on the map as you know it (units and cities you can't see aren't counted). Hold Shift over a city to see lines to the cities it has trade routes with. |
+| `SentryHalftone` | Units on sentry, and aircraft at a base, are drawn in grey shades so you can still tell what they are, instead of as a flat grey shape. |
+| `DefaultZoom1` | A new game (or a save without a saved window layout) starts with the map at normal 1:1 zoom, whatever the screen size. |
 
 ## Rule changes
 
@@ -66,12 +66,12 @@ players' units only: the computer players play by the original rules.
 
 | Key | What |
 | --- | --- |
-| `WorkerHandover` | A settler or engineer given the terrain order of one already working on its square takes its work (as the original) and the other one stops (no orders), so that it can go elsewhere at once: one worker with the order on a square. |
-| `GotoNoZocStop` | A unit on Go To does not stop when it comes next to a foreign unit (the original: only caravans and freight go on). Zones of control still apply: it stops when they block its way or its moves run out; a unit sent at an enemy attacks what is in its way. |
-| `UnitRotation` | Activating a unit (from the map or the stack's list) clears the Wait of the units of its stack and sets it on all the civilization's other units: the stack's units come next. And the next unit is looked for near the square where the last unit was activated (by the player or as the next one), not where it has moved to. |
-| `MassMove` | Shift+right click on a square: the active unit and the units of its type on its square that can move and have no orders (not fortified, on sentry or working) go there, as with Go To, the others first, each as far as it gets this turn. |
-| `StackSentry` | `U` (unload: wakes the land units on sentry in the stack) when none is on sentry: the stack's land units that can move and have no orders go on sentry (loaded, on a ship). |
-| `RetirementYear=` | The year of the retirement (1 to 9999; the original's 2020), and `RetirementWarningYear=` its warning's (0: none; default 20 years before). Each comes the turn the year is reached or passed (the original: the turn of that very year). The texts (GAME.TXT's PLANRETIRE, "in 20 years") are the game's. |
-| `PopulationLimit=` | A civilization's population, in 10,000 people (32000 to 3275800; the original's 32000, 320 million). Past 999 million the figure gets a second separator. The Hall of Fame keeps at most 32000 (its field is 16 bits). |
-| `GoldLimit=` | The treasury (30000 to 1000000; the original's 30000), at the start of each turn, by scenario events and the cheat. |
-| `MapTilesLimit=` | A custom world's width x height (10000 to 32767; the original's 10000). The dialog's text (GAME.TXT's CUSTOMSIZE) still says 10,000; the sides stay 20 to 250. |
+| `WorkerHandover` | When a settler or engineer joins another already doing the same terrain work on its square, the newcomer takes over the work done so far and the first one is freed to go elsewhere. Only one worker keeps the order on each square. |
+| `GotoNoZocStop` | A unit on Go To keeps going when it comes next to a foreign unit, instead of stopping (in the original, only caravans and freight do). Zones of control still apply: it stops when one blocks its way or it runs out of moves. A unit sent at an enemy will attack whatever is in its way. |
+| `UnitRotation` | When you activate a unit, the other units on its square come next before any elsewhere. After that, the next unit is the one nearest to where you last activated a unit, rather than to where that unit has since moved. |
+| `MassMove` | Shift+right click on a square sends the active unit there along with every unit of the same type on its square that can move and has no orders (not fortified, on sentry or working). Each goes as far as it can this turn, as with Go To. |
+| `StackSentry` | `U` normally wakes the land units on sentry in a stack. If none is on sentry, `U` instead puts all the stack's land units that have no orders on sentry (on a ship: loads them). |
+| `RetirementYear=` | Sets the year the game ends with retirement (1 to 9999; the original is 2020). `RetirementWarningYear=` sets the year of the warning (0 for none; by default 20 years earlier). Each happens on the first turn on or after that year. The game's own messages still say "in 20 years". |
+| `PopulationLimit=` | Raises the highest population a civilization can reach, in units of 10,000 people (32000 to 3275800; the original is 32000, which is 320 million). The Hall of Fame still records at most 320 million. |
+| `GoldLimit=` | Raises the most gold a treasury can hold (30000 to 1000000; the original is 30000). |
+| `MapTilesLimit=` | Raises the largest custom world, as width × height in squares (10000 to 32767; the original is 10000). Each side is still 20 to 250 squares. The dialog's text still says 10,000. |
