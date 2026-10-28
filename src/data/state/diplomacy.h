@@ -82,7 +82,7 @@ typedef struct DiploEval {
     iptr strongest_enemy;  /* 0064b0fc */
     iptr weakest_enemy_civ;  /* 0064b100 */
     iptr war_target_civ;  /* 0064b104 */
-    int last_treaty_turn;  /* 0064b108 */
+    int last_contact_turn;  /* 0064b108 */
     int offer_tech_2nd;  /* 0064b10c */
     int attitude_civ;  /* 0064b110 */
     int cur_attitude;  /* 0064b114 */

@@ -4210,7 +4210,7 @@ static void unit_resolve_attack_break_treaty(iptr unit,uptr civ,uptr civ2,byte c
       }
     }
     attack_power = attack_power << 1;
-    civs[civ2].last_treaty_turn[civ] = game.turn;
+    civs[civ2].last_contact_turn[civ] = game.turn;
   }
 }
 

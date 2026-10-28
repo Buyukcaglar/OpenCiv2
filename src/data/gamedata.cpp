@@ -3749,7 +3749,7 @@ static_assert(offsetof(DiploEval, ai_aggressive) == 0x10, "diplo_eval.ai_aggress
 static_assert(offsetof(DiploEval, strongest_enemy) == 0x14, "diplo_eval.strongest_enemy");
 static_assert(offsetof(DiploEval, weakest_enemy_civ) == 0x18, "diplo_eval.weakest_enemy_civ");
 static_assert(offsetof(DiploEval, war_target_civ) == 0x1c, "diplo_eval.war_target_civ");
-static_assert(offsetof(DiploEval, last_treaty_turn) == 0x20, "diplo_eval.last_treaty_turn");
+static_assert(offsetof(DiploEval, last_contact_turn) == 0x20, "diplo_eval.last_contact_turn");
 static_assert(offsetof(DiploEval, offer_tech_2nd) == 0x24, "diplo_eval.offer_tech_2nd");
 static_assert(offsetof(DiploEval, attitude_civ) == 0x28, "diplo_eval.attitude_civ");
 static_assert(offsetof(DiploEval, cur_attitude) == 0x2c, "diplo_eval.cur_attitude");

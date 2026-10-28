@@ -534,7 +534,7 @@ record DiploEval diplo_eval  The AI's evaluation of a diplomatic meeting (attitu
     tax_rate_icon_sprites_block.diplo_strongest_enemy       strongest_enemy
     tax_rate_icon_sprites_block.diplo_weakest_enemy_civ     weakest_enemy_civ
     tax_rate_icon_sprites_block.diplo_war_target_civ        war_target_civ
-    tax_rate_icon_sprites_block.diplo_last_treaty_turn      last_treaty_turn
+    tax_rate_icon_sprites_block.diplo_last_contact_turn      last_contact_turn
     tax_rate_icon_sprites_block.diplo_offer_tech_2nd        offer_tech_2nd
     tax_rate_icon_sprites_block.diplo_attitude_civ          attitude_civ
     tax_rate_icon_sprites_block.diplo_cur_attitude          cur_attitude

@@ -566,11 +566,11 @@ int MapView::scroll_if_near_edge(int x,int y)
   need_scroll = 0;
   view_left = origin_x_uptr;
   view_top = origin_y_uptr;
-  if ((((game.rules & RULE_FLAT_WORLD) == 0) && (x <= (int)(field_2f8 * 2))) &&
-     ((int)((int)map.width + field_2f8 * -2) <= (int)view_left)) {
+  if ((((game.rules & RULE_FLAT_WORLD) == 0) && (x <= (int)(half_view_width * 2))) &&
+     ((int)((int)map.width + half_view_width * -2) <= (int)view_left)) {
     x += map.width;
   }
-  view_cols = field_300;
+  view_cols = tile_columns;
   view_bottom = end_y_u;
   if (margin_x_u == 0) {
     if ((game.rules & RULE_FLAT_WORLD) != 0) {
@@ -1349,7 +1349,7 @@ void MapView::init_state(u32 view_index)
       *(short *)&center_x_u = (short)center_x_u + 1;
     }
   }
-  field_35c = 0xfffffc19;
+  cached_zoom = 0xfffffc19;
   return;
 }
 
@@ -1374,19 +1374,19 @@ void MapView::update_layout()
   half_tile_width_u = (int)tile_width_u / 2;
   half_tile_height_u = (int)tile_height_u / 2;
   quarter_tile_width_u = (int)(tile_width_u + ((int)tile_width_u >> 0x1f & 3U)) >> 2;
-  field_31c = (int)(tile_height_u + ((int)tile_height_u >> 0x1f & 3U)) >> 2;
+  quarter_tile_height = (int)(tile_height_u + ((int)tile_height_u >> 0x1f & 3U)) >> 2;
   field_320 = tile_width_u;
   unit_sprite_height_u = tile_height_u + half_tile_height_u;
-  field_2f8 = (int)((layout_width_u - 1) + tile_width_u) / (int)tile_width_u;
+  half_view_width = (int)((layout_width_u - 1) + tile_width_u) / (int)tile_width_u;
   field_2fc = (int)((layout_height_u - 1) + tile_height_u) / (int)tile_height_u;
-  field_300 = (int)(half_tile_width_u * 3 - 1 + layout_width_u) / (int)tile_width_u;
+  tile_columns = (int)(half_tile_width_u * 3 - 1 + layout_width_u) / (int)tile_width_u;
   field_304 = (int)(half_tile_height_u * 3 - 1 + layout_height_u) / (int)tile_height_u;
   margin_x_u = 0;
   margin_y_u = 0;
-  if ((int)map.width / 2 < (int)field_2f8) {
-    field_2f8 = (int)map.width / 2;
-    margin_x_u = (int)(layout_width_u - tile_width_u * field_2f8) >> 1;
-    field_300 = field_2f8 + 1;
+  if ((int)map.width / 2 < (int)half_view_width) {
+    half_view_width = (int)map.width / 2;
+    margin_x_u = (int)(layout_width_u - tile_width_u * half_view_width) >> 1;
+    tile_columns = half_view_width + 1;
   }
   if ((int)map.height < (int)field_2fc) {
     field_2fc = (int)map.height / 2;
@@ -1396,11 +1396,11 @@ void MapView::update_layout()
   wrapped_x = map_wrap_x((int)(short)center_x_u);
   *(short *)&center_x_u = (short)wrapped_x;
   origin_y_uptr = (int)*(short *)((int)&center_x_u + 2) - field_2fc;
-  wrapped = map_wrap_x((int)(short)center_x_u - field_2f8);
+  wrapped = map_wrap_x((int)(short)center_x_u - half_view_width);
   origin_x_uptr = wrapped;
-  if (((game.rules & RULE_FLAT_WORLD) != 0) && (map.width + 1 < (int)(field_2f8 * 2 + origin_x_uptr))
+  if (((game.rules & RULE_FLAT_WORLD) != 0) && (map.width + 1 < (int)(half_view_width * 2 + origin_x_uptr))
      ) {
-    origin_x_uptr = map.width + 1 + field_2f8 * -2;
+    origin_x_uptr = map.width + 1 + half_view_width * -2;
   }
   if (map.height + 1 < (int)(field_2fc * 2 + origin_y_uptr)) {
     origin_y_uptr = map.height + 1 + field_2fc * -2;
@@ -1421,27 +1421,27 @@ void MapView::update_layout()
   if ((origin_y_uptr & 1) != 0) {
     origin_x_uptr++;
   }
-  wrapped = map_wrap_x(field_300 * 2 - 2 + origin_x_uptr);
+  wrapped = map_wrap_x(tile_columns * 2 - 2 + origin_x_uptr);
   end_x_uptr = wrapped;
   end_y_u = field_304 * 2 - 2 + origin_y_uptr;
-  if ((int)(short)zoom_u != field_35c) {
+  if ((int)(short)zoom_u != cached_zoom) {
     map_surface.DibSurface::create(tile_width_u,tile_height_u);
     overlay_surface.DibSurface::create(tile_width_u,tile_height_u);
-    field_35c = (int)(short)zoom_u;
+    cached_zoom = (int)(short)zoom_u;
     apply_zoom();
     ((Sprite *)((i8 *)&tile_pick_mask_sprite_block.tile_pick_mask_sprite))->draw((iptr)pick_mask_rect,(iptr)&map_surface_head,0,0);
     ((Sprite *)((i8 *)&tile_direction_mask_sprite))->draw((iptr)dir_mask_rect,(iptr)&overlay_surface_head,0,0);
     gfx_reset_zoom_scale();
   }
   font_size = (int)(tile_height_u * 3) / 5;
-  if (field_348 != font_size) {
+  if (tile_font_size != font_size) {
     tile_font.set(0,font_size);
-    field_348 = font_size;
+    tile_font_size = font_size;
   }
   font_size = (int)(tile_height_u + ((int)tile_height_u >> 0x1f & 3U)) >> 2;
-  if (field_34c != font_size) {
+  if (tile_small_font_size != font_size) {
     tile_small_font.set(1,font_size);
-    field_34c = font_size;
+    tile_small_font_size = font_size;
   }
   return;
 }
@@ -2226,7 +2226,7 @@ i32 MapView::tile_in_view(i32 tile_x,i32 tile_y)
   i32 in_view;
   
   in_view = map_tile_in_box(tile_x,tile_y,origin_x_uptr,origin_y_uptr,
-                             field_2f8 + field_300,field_2fc + field_304 + 1
+                             half_view_width + tile_columns,field_2fc + field_304 + 1
                             );
   return in_view;
 }
@@ -2398,10 +2398,10 @@ void MapView::draw_all_tiles(i32 civ)
     origin_y = origin_y_uptr;
     origin_x = origin_x_uptr;
     if ((row & 1) == 0) {
-      row_width = field_300;
+      row_width = tile_columns;
     }
     else {
-      row_width = field_2f8;
+      row_width = half_view_width;
     }
     for (col = 0; col < row_width; col++) {
       x = map_wrap_x(col * 2 + origin_x + (row & 1));

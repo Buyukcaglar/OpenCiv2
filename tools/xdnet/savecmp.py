@@ -67,12 +67,12 @@ def main():
             text = ', '.join('+0x%x' % i for i in dd[:12]) + (' ...' if len(dd) > 12 else '')
         same = not dd
         # (the game header holds the saving player's own civ and view flags;
-        # a civ's last_treaty_turn[] (+0x3e2..0x3f1) is set by the game that
+        # a civ's last_contact_turn[] (+0x3e2..0x3f1) is set by the game that
         # showed the audience request, and not sent to the others)
         shared = name not in ('game',)
         if name == 'civs' and dd and all(0x3e2 <= i % CIV < 0x3f2 for i in dd):
             shared = False
-            text += '   (last_treaty_turn: each game its own)'
+            text += '   (last_contact_turn: each game its own)'
         if name == 'tiles' and dd:
             # (a client hears of a tile only when a human civ has seen it: a
             # tile no human has seen may hold an AI unit in the host's map
