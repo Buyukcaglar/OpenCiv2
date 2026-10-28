@@ -1604,7 +1604,7 @@ void Control::set_hwnd(u32 hwnd)
 static HPEN button_face_pen(HDC mem_dc,Button *button)
 {
   WndBase *parent_wnd;
-  PaletteHandleView *this_00;
+  GamePalette *this_00;
   HPALETTE hPal;
   GamePalette *this_01;
   GamePalette *logpal;
@@ -1625,8 +1625,8 @@ static HPEN button_face_pen(HDC mem_dc,Button *button)
     if (display_palette.palettized == 1) {
       bForceBkgd = 0;
       parent_wnd = (WndBase *)button->get_parent();
-      this_00 = (PaletteHandleView *)parent_wnd->get_palette();
-      hPal = palette_get_hpalette(this_00);
+      this_00 = (GamePalette *)parent_wnd->get_palette();
+      hPal = this_00->get_hpalette();
       SelectPalette(mem_dc,hPal,bForceBkgd);
       RealizePalette(mem_dc);
     }
@@ -3708,15 +3708,15 @@ void SpriteButton::init_from_sprite(WndBase *parent,i32 ctrl_id,int x,int y, int
   ((DibSurface *)&on_select)->fill(bg_color & 0xff);
   center_x = width >> 1;
   center_y = height >> 1;
-  sprite_get_origin((SpriteOriginGetView *)sprite,(iptr)&origin_x2,(iptr)&origin_y2);
+  ((Sprite *)sprite)->get_origin((iptr)&origin_x2,(iptr)&origin_y2);
   half_w = ((Sprite *)sprite)->get_width();
   half_w = half_w >> 1;
   half_h = ((Sprite *)sprite)->get_height();
   half_h = half_h >> 1;
-  sprite_set_origin((SpriteOriginSetView *)sprite,-half_w,-half_h);
+  ((Sprite *)sprite)->set_origin(-half_w,-half_h);
   ((Sprite *)sprite)->draw((iptr)draw_ctx_a,(iptr)(button_surface),center_x,center_y);
   ((Sprite *)sprite)->draw((iptr)draw_ctx_b,(iptr)&on_select,center_x,center_y);
-  sprite_set_origin((SpriteOriginSetView *)sprite,origin_x2,origin_y2);
+  ((Sprite *)sprite)->set_origin(origin_x2,origin_y2);
   gfx_set_scale_ratio(scale_num2,scale_den2);
   size = ((DibSurface *)button_surface)->surface_height();
   yBottom = y + size - 1;
@@ -3738,10 +3738,10 @@ void SpriteButton::init_from_sprite(WndBase *parent,i32 ctrl_id,int x,int y, int
              &dst_rect);
   parent_wnd = (WndBase *)get_parent();
   palette = parent_wnd->get_palette();
-  ((DibSurface *)button_surface)->apply_palette((PaletteVersionView *)palette);
+  ((DibSurface *)button_surface)->apply_palette((GamePalette *)palette);
   parent_wnd = (WndBase *)get_parent();
   palette = parent_wnd->get_palette();
-  ((DibSurface *)&on_select)->apply_palette((PaletteVersionView *)palette);
+  ((DibSurface *)&on_select)->apply_palette((GamePalette *)palette);
   value = spritebtn_create_hwnd(x,y,width,height,(iptr)this,1);
   hwnd = value;
   return;
@@ -4751,35 +4751,35 @@ i32 DDControl::dispatch_msg(int msg,int x,int y)
 }
 
 /* 005f1514 auto */
-uptr __thiscall ddctrl_get_parent_window(DDControlParentView *self)
+uptr DDControl::get_parent_window()
 
 {
-  uptr parent_wnd;
+  uptr wnd;
   uptr result;
   
-  if (self->parent_wnd == 0) {
-    if (self->parent_control == 0) {
+  if (parent_wnd == 0) {
+    if (parent_control == 0) {
       result = 0;
     }
     else {
-      parent_wnd = ddctrl_get_parent_window((DDControlParentView *)self->parent_control);
-      self->parent_wnd = parent_wnd;
-      result = self->parent_wnd;
+      wnd = ((DDControl *)parent_control)->get_parent_window();
+      parent_wnd = wnd;
+      result = parent_wnd;
     }
   }
   else {
-    result = self->parent_wnd;
+    result = parent_wnd;
   }
   return result;
 }
 
 /* 005f15a9 auto */
-void __thiscall ddctrl_on_paint_default(DDControlParentView *self,i32 paint_arg)
+void __thiscall ddctrl_on_paint_default(DDControl *self,i32 paint_arg)
 
 {
   int parent_wnd;
   
-  parent_wnd = ddctrl_get_parent_window(self);
+  parent_wnd = self->get_parent_window();
   if (parent_wnd == 0) {
     __assert(str_getparentgamewin,str_d_ss_smeds32_ddcntrl_cpp,0xd8);
   }
@@ -4787,18 +4787,18 @@ void __thiscall ddctrl_on_paint_default(DDControlParentView *self,i32 paint_arg)
 }
 
 /* 005f1622 auto */
-void __thiscall ddctrl_activate(DDControlActivateView *self)
+void DDControl::activate()
 
 {
-  if (self->is_active == '\0') {
-    if (self->parent_control == 0) {
-      ((DDWindow *)(void *)self->owner_ddwin)->deactivate_controls();
+  if (is_active == '\0') {
+    if (parent_control == 0) {
+      ((DDWindow *)(void *)parent_wnd)->deactivate_controls();
     }
     else {
-      ((DDControl *)(void *)self->parent_control)->deactivate_children();
+      ((DDControl *)(void *)parent_control)->deactivate_children();
     }
-    self->is_active = 1;
-    call_untyped(((code **)self->vtable)[8], 1);
+    is_active = 1;
+    call_untyped(((code **)vtable)[8], 1);
   }
   return;
 }
@@ -4816,10 +4816,10 @@ void DDControl::deactivate()
 }
 
 /* 005f179c auto */
-void __thiscall ddctrl_on_lbuttondown(DDControlActivateView *self,i32 x,i32 y)
+void __thiscall ddctrl_on_lbuttondown(DDControl *self,i32 x,i32 y)
 
 {
-  ddctrl_activate(self);
+  self->activate();
   return;
 }
 

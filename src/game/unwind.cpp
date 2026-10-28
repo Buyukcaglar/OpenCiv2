@@ -17,60 +17,60 @@ static inline i32 seh_list_head(void)
 }
 
 /* 0x0044ca60: destructor - destroys the member at this+0x10, then the base. */
-i32 __thiscall wnd_dtor(void *self)
+i32 ModalMenuWindow::destruct()
 {
-    void *member;
+    WndHandlers *member;
 
     /* funclet 0044caab */
-    member = (self != NULL) ? (void *)((iptr)self + 0x10) : NULL;
-    wnd_handlers_dtor(member);
+    member = (this != NULL) ? (WndHandlers *)((iptr)this + 0x10) : NULL;
+    member->destruct();
     /* funclet 0044cad3 */
-    ((WndBase *)self)->destroy();
+    ((WndBase *)this)->destroy();
     return seh_list_head();
 }
 
 /* 0x0044cba0: destructor - resets the vtable, clears this+0x110, destroys
    the member at this+0x48, then the base. */
-void __thiscall surfwnd_dtor(void *self)
+void SurfaceWindow::destruct()
 {
-    void *member;
+    Wnd *member;
 
-    *(i8 ***)self = (i8 **)((pointer *)(ptr_fun_rest + 8));
-    *(i32 *)((iptr)self + 0x110) = 0;
+    *(i8 ***)this = (i8 **)((pointer *)(ptr_fun_rest + 8));
+    *(i32 *)((iptr)this + 0x110) = 0;
     /* funclet 0044cc01 */
-    member = (self != NULL) ? (void *)((iptr)self + 0x48) : NULL;
-    surfwnd_wnd_dtor(member);
+    member = (this != NULL) ? (Wnd *)((iptr)this + 0x48) : NULL;
+    member->destruct();
     /* funclet 0044cc29 */
-    surface_dtor((DibSurface *)self);
+    surface_dtor((DibSurface *)this);
 }
 
 /* 0x004f3e70: destructor - destroys the member at this+0x4a4, then the base. */
-void __thiscall city_picture_popup_dtor(void *self)
+void CityPicturePopup::destruct()
 {
-    void *member;
+    Dialog *member;
 
     /* funclet 004f3ebb */
-    member = (self != NULL) ? (void *)((iptr)self + 0x4a4) : NULL;
-    ((Dialog *)member)->Dialog::destruct();
+    member = (this != NULL) ? (Dialog *)((iptr)this + 0x4a4) : NULL;
+    member->Dialog::destruct();
     /* funclet 004f3ee5 */
-    picwnd_dtor(self);
+    PictureWindow::destruct();
 }
 
 /* 0x005efeb0: destructor - releases the handle at this+0xb0, runs the
    cleanup, destroys the members at this+0xc0 and this+0x44, then the base. */
-void __thiscall ddwin_dtor(void *self)
+void DDWindow::destruct()
 {
-    void *member;
+    WndHandlers *member;
 
-    *(i32 *)((iptr)self + 0xb0) = ddwin_destroy_native((i32 *)*(i32 *)((iptr)self + 0xb0));
-    ((DDWindow *)self)->remove_all_controls();
+    *(i32 *)((iptr)this + 0xb0) = ddwin_destroy_native((i32 *)*(i32 *)((iptr)this + 0xb0));
+    remove_all_controls();
     /* funclet 005eff2b */
-    ptrlist_dtor((void *)((iptr)self + 0xc0));
+    ((PtrList *)((iptr)this + 0xc0))->destruct();
     /* funclet 005eff3a */
-    member = (self != NULL) ? (void *)((iptr)self + 0x44) : NULL;
-    wnd_handlers_dtor(member);
+    member = (this != NULL) ? (WndHandlers *)((iptr)this + 0x44) : NULL;
+    member->destruct();
     /* funclet 005eff62 */
-    ddsurf_dtor(self);
+    ((DDSurface *)this)->destruct();
 }
 
 /* 0x0055c3d3: "PICKGOVT" dialog - lets civ civ2 pick a government
@@ -180,15 +180,15 @@ i32 __cdecl FUN_005e0863(void)
     edit_dtor((EditControl *)edit);
     ctrl_dtor((Button *)cancel_button);
     ctrl_dtor((Button *)ok_button);
-    font_destroy((GameFont *)font2);
-    surfwnd_dtor(&surf_wnd2);
-    palette_destroy((GamePalette *)palette);
+    ((GameFont *)font2)->destroy();
+    surf_wnd2.SurfaceWindow::destruct();
+    ((GamePalette *)palette)->destroy();
     return 0;
 }
 
 /* 0x004d53ab: loads picture 0x1f1 and cuts it into six button images
    (two rows of three; the second row's caption depends on the language). */
-void __thiscall spaceship_wnd_make_button_sprites(void *self)
+void SpaceshipWindow::make_button_sprites()
 {
     int loaded;
     i32 label_text;
@@ -197,21 +197,21 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
 
     surface_ctor((DibSurface *)surface);
     gfx_set_text_color_index(0x8b);
-    loaded = ((DibSurface *)surface)->load_gif_resource( 0x1f1, 10, 0xec, (iptr)self + 0x1f8);
+    loaded = ((DibSurface *)surface)->load_gif_resource( 0x1f1, 10, 0xec, (iptr)this + 0x1f8);
     if (loaded != 0) {
         text_clear();
         label_text = (i32)label_string(label_table.string_ids[0xfe]);
         text_append((const char *)label_text);
         SetRect(&rect, 0, 0, 0x34, 0x24);
         OffsetRect(&rect, 1, 1);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
-        ((Sprite *)((iptr)self + 0x978))->grab_from_surface( (i32)surface, 9, 1, 1, 0x34, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)this + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
+        ((Sprite *)((iptr)this + 0x978))->grab_from_surface( (i32)surface, 9, 1, 1, 0x34, 0x24);
         OffsetRect(&rect, 0x35, 0);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
-        ((Sprite *)((iptr)self + 0x9f0))->grab_from_surface( (i32)surface, 9, 0x36, 1, 0x34, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)this + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
+        ((Sprite *)((iptr)this + 0x9f0))->grab_from_surface( (i32)surface, 9, 0x36, 1, 0x34, 0x24);
         OffsetRect(&rect, 0x35, 0);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
-        ((Sprite *)((iptr)self + 0x9b4))->grab_from_surface( (i32)surface, 9, 0x6b, 1, 0x34, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)this + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
+        ((Sprite *)((iptr)this + 0x9b4))->grab_from_surface( (i32)surface, 9, 0x6b, 1, 0x34, 0x24);
         gfx_set_text_color_index(0xc6);
         text_clear();
         if (game_language == 0) {
@@ -226,14 +226,14 @@ void __thiscall spaceship_wnd_make_button_sprites(void *self)
         }
         SetRect(&rect, 0, 0, 0x43, 0x24);
         OffsetRect(&rect, 1, 0x26);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
-        ((Sprite *)((iptr)self + 0xa2c))->grab_from_surface( (i32)surface, 9, 1, 0x26, 0x43, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)this + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
+        ((Sprite *)((iptr)this + 0xa2c))->grab_from_surface( (i32)surface, 9, 1, 0x26, 0x43, 0x24);
         OffsetRect(&rect, 0x44, 0);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
-        ((Sprite *)((iptr)self + 0xaa4))->grab_from_surface( (i32)surface, 9, 0x45, 0x26, 0x43, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)this + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
+        ((Sprite *)((iptr)this + 0xaa4))->grab_from_surface( (i32)surface, 9, 0x45, 0x26, 0x43, 0x24);
         OffsetRect(&rect, 0x44, 0);
-        ((DibSurface *)surface)->draw_text_in_rect( (iptr)self + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
-        ((Sprite *)((iptr)self + 0xa68))->grab_from_surface( (i32)surface, 9, 0x89, 0x26, 0x43, 0x24);
+        ((DibSurface *)surface)->draw_text_in_rect( (iptr)this + 0x8d4, (const char *)((i8 *)&textbuf.buf), &rect, 0);
+        ((Sprite *)((iptr)this + 0xa68))->grab_from_surface( (i32)surface, 9, 0x89, 0x26, 0x43, 0x24);
     }
     /* funclet 004d56ea: lea ecx,[ebp-0x64] */
     surface_dtor((DibSurface *)surface);

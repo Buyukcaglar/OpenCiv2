@@ -393,7 +393,7 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
       ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
       if (choice < 0) return result;
       prefs.rules_choice = (short)choice;
-      if (choice == 0) goto leaders_setup;
+      if (choice == 0) break;  /* the standard rules: no accelerated start */
       game.rules = prefs.game_rules[0];
       if (setup_mode == 1) {
         game.rules = prefs.game_rules[0] & 0x7fff;
@@ -416,8 +416,9 @@ i32 __cdecl setup_new_game_dialogs(int setup_mode)
       snd_play_effect(SND_MENUOK,0,0,0);
       ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
     } while (accel_choice < 0);
-    prefs.accelerated_start = (short)accel_choice;
-leaders_setup:
+    if (choice != 0) {
+      prefs.accelerated_start = (short)accel_choice;
+    }
     do {
       setup_restore_leader_labels();
       ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->show(2,6,6);
@@ -501,30 +502,30 @@ leaders_setup:
             ;
           }
           next_step = setup_custom_tribe_dialogs(dlg);
-          if (next_step == 1) goto leaders_setup;
+          if (next_step == 1) continue;  /* back to the leader's gender */
           if (next_step == 2) return result;
         }
-city_style_dialog:
-        ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->show(1,6,8);
-        dlg.load_game_section((const char *)str_customcity,0x20001);
-        for (style_i = 0; style_i < 4; style_i = style_i + 1) {
-          label_text = label_string(label_table.string_ids[0xf6 + style_i]);
-          dlg.add_sprite(style_i * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 360)),style_i,(const char *)label_text);
-        }
-        dlg.set_default_choice(
-                           (int)leaders[civs[game.player_civ].tribe].city_style);
-        dlg.set_position(
-                           -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3
-                             ) + 1),-(((int)(caption_font_block.screen_height + -0x1e0 +
-                                            (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-        choice = dlg.show_modal(0);
-        snd_play_effect(SND_MENUOK,0,0,0);
-        ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
-        if (-1 < choice) {
+        for (;;) {  /* the city style, again when the opponents dialog goes back */
+          ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->show(1,6,8);
+          dlg.load_game_section((const char *)str_customcity,0x20001);
+          for (style_i = 0; style_i < 4; style_i = style_i + 1) {
+            label_text = label_string(label_table.string_ids[0xf6 + style_i]);
+            dlg.add_sprite(style_i * 0x1e0 + (iptr)(((u8 *)&gfx_sheet_surface_block.city_walled_sprites + 360)),style_i,(const char *)label_text);
+          }
+          dlg.set_default_choice(
+                             (int)leaders[civs[game.player_civ].tribe].city_style);
+          dlg.set_position(
+                             -(((int)(caption_font_block.screen_width + -0x280 + (caption_font_block.screen_width + -0x280 >> 0x1f & 7U)) >> 3
+                               ) + 1),-(((int)(caption_font_block.screen_height + -0x1e0 +
+                                              (caption_font_block.screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
+          choice = dlg.show_modal(0);
+          snd_play_effect(SND_MENUOK,0,0,0);
+          ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
+          if (choice < 0) break;  /* back to the leader's gender */
           civ_names[game.player_civ].city_style = (short)choice;
           game.civs_alive = game.human_players | 1;
           next_step = setup_choose_opponents(dlg,pick_opponents,leader_i);
-          if (next_step != 0) goto city_style_dialog;
+          if (next_step != 0) continue;
           prefs_save_civ2dat();
           rules_load_advances(1);
           rules_load_units(1);

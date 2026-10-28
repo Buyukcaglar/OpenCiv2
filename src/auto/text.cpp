@@ -807,20 +807,20 @@ i32 FileObject::open(const char *path)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __thiscall file_obj_seek_cur(FileSeekView *self,i32 offset)
+i32 FileObject::seek_cur(i32 offset)
 
 {
   i32 result;
   
-  result = file_obj_seek_rel((FileObject *)self,offset);
+  result = file_obj_seek_rel(this,offset);
   return result;
 }
 
 /* 00492a40 auto */
-void __thiscall file_obj_read_line(FileReadLineView *self,char *buf,i32 max_len)
+void FileObject::read_line(char *buf,i32 max_len)
 
 {
-  file_obj_read_line_impl((FileObject *)self,buf,max_len);
+  file_obj_read_line_impl(this,buf,max_len);
   return;
 }
 

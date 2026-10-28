@@ -701,7 +701,7 @@ static int wheel_message(const MSG *m, HWND under, POINT pt)
         int id = -1, kind = 0;
         POINT c = pt;
         ScreenToClient(frame_hwnd(&city_wnd.window), &c);
-        if (clickmap_hit_test((ClickMapHitTestView *)((i8 *)&city_wnd.clickmap), c.x, c.y, (iptr)&id, (iptr)&kind) >= 0 &&
+        if (city_wnd.clickmap.hit_test( c.x, c.y, (iptr)&id, (iptr)&kind) >= 0 &&
             kind == 2)
             return city_specialists(id, notches > 0 ? 1 : -1,
                                     (keys & MK_SHIFT) && extra_ui(X_MASS_SPECIALISTS)) || 1;
@@ -743,7 +743,7 @@ int extras_input(void *msg)
         city_window_open() && m->hwnd == frame_hwnd(&city_wnd.window)) {
         /* X32: Shift+click on a specialist: all of them to its kind */
         int id = -1, kind = 0;
-        if (clickmap_hit_test((ClickMapHitTestView *)((i8 *)&city_wnd.clickmap), (short)LOWORD(m->lParam),
+        if (city_wnd.clickmap.hit_test( (short)LOWORD(m->lParam),
                               (short)HIWORD(m->lParam), (iptr)&id, (iptr)&kind) >= 0 && kind == 2)
             return city_specialists(id, 0, 1);
         return 0;
@@ -947,7 +947,7 @@ void extras_draw_supported_units(CityWindow *w, int blit)
         else
             margin_y = (area_h - gfx_zoom_scale(0x30, zoom)) >> 1;
     }
-    clickmap_remove_by_id((ClickMapRemoveView *)&w->clickmap_head, 6);
+    w->clickmap.remove_by_id( 6);
     first = support_scroll * cols;
     for (i = first; i < n && i < first + cols * rows; i++) {
         int j = order[i], u = list[j], k, col = (i - first) % cols, row = (i - first) / cols;

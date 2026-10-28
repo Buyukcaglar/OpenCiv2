@@ -4378,7 +4378,7 @@ void __cdecl diplo_leader_wnd_launch(iptr civ2,iptr civ)
   snd_cd_stop();
   if (diplo_leader.window != 0) {
     if (diplo_leader.window != 0) {
-      diplo_leader_wnd_scalar_dtor((void *)diplo_leader.window,1);
+      ((DiploLeaderWindow *)diplo_leader.window)->scalar_destruct(1);
     }
     diplo_leader.window = 0;
   }
@@ -4415,7 +4415,7 @@ void __cdecl diplo_leader_wnd_close(void)
     if (diplo_leader.window != 0) {
       diplo_leader.window->teardown();
       if (diplo_leader.window != 0) {
-        diplo_leader_wnd_scalar_dtor((void *)diplo_leader.window,1);
+        ((DiploLeaderWindow *)diplo_leader.window)->scalar_destruct(1);
       }
       diplo_leader.window = 0;
     }
@@ -4462,7 +4462,7 @@ DiploLeaderWindow *DiploLeaderWindow::construct()
 }
 
 /* 004943c9 auto */
-void __thiscall diplo_leader_wnd_dtor(void *self)
+void DiploLeaderWindow::destruct()
 
 {
   i8 *eh_prev;
@@ -4471,17 +4471,17 @@ void __thiscall diplo_leader_wnd_dtor(void *self)
   eh_state = eh_state & 0xff;
   diplo_leader.video_active = 0;
   (*((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 0049444f */ { ((AviPlayer *)(*(int *)&self + 0x65c))->destruct(); }
+  /* inlined unwind funclet 0049444f */ { ((AviPlayer *)(((int)this) + 0x65c))->destruct(); }
   (*((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0049445e */ { ((DllHandle *)(*(int *)&self + 0x658))->free(); }
+  /* inlined unwind funclet 0049445e */ { ((DllHandle *)(((int)this) + 0x658))->free(); }
   (*((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0049446d */ { palette_destroy((GamePalette *)(*(int *)&self + 0x224)); }
+  /* inlined unwind funclet 0049446d */ { ((GamePalette *)(((int)this) + 0x224))->destroy(); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0049447c */ { surface_dtor((DibSurface *)(*(int *)&self + 0x1dc)); }
+  /* inlined unwind funclet 0049447c */ { surface_dtor((DibSurface *)(((int)this) + 0x1dc)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0049448b */ { surfwnd_dtor((SurfaceWindow *)(*(int *)&self + 200)); }
+  /* inlined unwind funclet 0049448b */ { ((SurfaceWindow *)(((int)this) + 200))->SurfaceWindow::destruct(); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0049449a */ { wnd_dtor(*(WndBase **)&self); }
+  /* inlined unwind funclet 0049449a */ { ModalMenuWindow::destruct(); }
   return;
 }
 
@@ -4644,7 +4644,7 @@ uint DiploLeaderWindow::init_main_art()
   i8 *eh_prev;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   wnd_x = (int)(screen_width_value - 0x280) / 3;
   wnd_y = (int)(screen_height_value - 0x1e0) / 3;
   ((DibSurface *)leader_surface)->wnd_create_with_surface((const char *)&str_empty_103,0x800,wnd_x,wnd_y,0x280,0x1e0,
@@ -4687,7 +4687,7 @@ i32 DiploLeaderWindow::init_military()
   sprite_init(&sprite);
   ON_SCOPE_EXIT(sprite_destroy(&sprite));
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   surface_ctor(&surface);
   ON_SCOPE_EXIT(surface_dtor(&surface));
   icon_count = game.power_rank[leader_civ] - 1;
@@ -4931,11 +4931,11 @@ i32 DiploLeaderWindow::init_science()
   i8 *eh_prev;
   
   font2.init(0,0xb);
-  ON_SCOPE_EXIT(font_destroy(&font2));
+  ON_SCOPE_EXIT(font2.destroy());
   crt_vector_ctor_iterator(category_sprites,0x3c,5,sprite_init,sprite_destroy);
   ON_SCOPE_EXIT(crt_vector_dtor_iterator(category_sprites,0x3c,5,sprite_destroy));
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   surface_ctor(&surface);
   ON_SCOPE_EXIT(surface_dtor(&surface));
   text_colors[0] = 0x13;
@@ -5026,7 +5026,7 @@ i32 DiploLeaderWindow::init_portrait()
   sprite_init(&sprite);
   ON_SCOPE_EXIT(sprite_destroy(&sprite));
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   surface_ctor(&surface);
   ON_SCOPE_EXIT(surface_dtor(&surface));
   loaded = surface.load_gif_resource(civs[leader_civ].leader_portrait + 0xdc,10,0xec,
@@ -5060,7 +5060,7 @@ i8 DiploLeaderWindow::init_video()
   i8 *eh_prev;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   leader_tribe = (u8)civs[leader_civ].tribe;
   str_clear((char *)video_path);
   str_append((char *)video_path,(const char *)&str_civ2_kings);
@@ -5087,7 +5087,7 @@ i8 DiploLeaderWindow::init_video()
       ((GamePalette *)leader_palette)->set_rgb(0x92,100,(iptr)rgb_buf);
       ((DibSurface *)video_player)->avi_player_set_palette((iptr)(leader_palette));
       ((WndBase *)video_window)->set_palette((iptr)(leader_palette));
-      avi_player_show_frame(video_player,0);
+      ((AviPlayer *)video_player)->show_frame(0);
       result = 1;
     }
     else {
@@ -5127,14 +5127,14 @@ void __cdecl diplo_leader_video_end_cb(void)
 }
 
 /* 00497bf0 auto */
-void * __thiscall diplo_leader_wnd_scalar_dtor(void *self,uint flags)
+void *DiploLeaderWindow::scalar_destruct(uint flags)
 
 {
-  diplo_leader_wnd_dtor(self);
+  destruct();
   if ((flags & 1) != 0) {
-    operator_delete(self);
+    operator_delete(this);
   }
-  return self;
+  return this;
 }
 
 /* 004b75fb auto */

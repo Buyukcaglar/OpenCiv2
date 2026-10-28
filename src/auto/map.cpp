@@ -1785,6 +1785,7 @@ void __cdecl map_window_ascii(uint key)
   uint raw_key;
   int result;
   uint upper;
+  int city_key;
   
   raw_key = key;
   if (game_session_active == 0) {
@@ -1818,7 +1819,9 @@ void __cdecl map_window_ascii(uint key)
     return;
   }
   result = ((CityWindow *)((i8 *)&city_wnd.window))->city_window_is_closed();
+  city_key = 0;
   if ((result == 0) && (((byte)game.game_options & OPT_ENTER_CLOSES_CITY) != 0)) {
+    city_key = 1;
     switch(key & 0xff) {
     case 0xd:
     case 0x45:
@@ -1828,7 +1831,8 @@ void __cdecl map_window_ascii(uint key)
       city_window_exit_clicked(0);
       break;
     default:
-      goto default_key;
+      city_key = 0;  /* not a city window key */
+      break;
     case 0x41:
     case 0x43:
     case 0x61:
@@ -1860,8 +1864,7 @@ void __cdecl map_window_ascii(uint key)
       city_button_view(0);
     }
   }
-  else {
-default_key:
+  if (city_key == 0) {
     mapview_cancel_drag();
     result = ui_paradrop_cursor_active();
     if ((result == 0) || (mapviews_reset_cursor(), (char)key != 'p')) {
@@ -3769,6 +3772,7 @@ iptr __cdecl map_dir_from_delta(int dx,int dy)
 static void map_path_flood(int x,int y,int max_cost,bool uses_terrain_cost,bool start_on_land,
                                       bool is_naval,int &civ)
 {
+  int along_river;
   byte cur_tile_flags;
   bool has_road;
   bool has_rail;
@@ -3882,6 +3886,7 @@ static void map_path_flood(int x,int y,int max_cost,bool uses_terrain_cost,bool 
               }
               else {
                 if (pathfind.roads_only != 0) continue;
+                along_river = 0;
                 if ((((cur_tile_flags & 0x80) != 0) &&
                     (tile = (byte *)tile_at(x2,y2), (*tile & 0x80) != 0)) &&
                    (check = map_dx_wrapped(y3,x2), check == 1)) {
@@ -3893,23 +3898,24 @@ static void map_path_flood(int x,int y,int max_cost,bool uses_terrain_cost,bool 
                   }
                   if (abs_dy == 1) {
                     new_cost += 4;
-                    goto apply_road_bonus;
+                    along_river = 1;  /* a diagonal step along a river */
                   }
                 }
-                if (uses_terrain_cost) {
-                  new_cost = new_cost +
-                             (int)(char)terrain_types[terrain].move_cost *
-                             (uint)cosmic.road_move_mult * 4;
-                }
-                else {
-                  new_cost += (uint)cosmic.road_move_mult * 4;
+                if (along_river == 0) {
+                  if (uses_terrain_cost) {
+                    new_cost = new_cost +
+                               (int)(char)terrain_types[terrain].move_cost *
+                               (uint)cosmic.road_move_mult * 4;
+                  }
+                  else {
+                    new_cost += (uint)cosmic.road_move_mult * 4;
+                  }
                 }
               }
             }
             else {
               new_cost += 4;
             }
-apply_road_bonus:
             if (((unit_types[pathfind.unit_type].flags & UTYPE_COAST_BOUND) != 0) &&
                (tile = (byte *)tile_at(x2,y2), (*tile & 0x40) != 0)) {
               new_cost += (uint)cosmic.road_move_mult * 4;
@@ -3940,6 +3946,7 @@ apply_road_bonus:
 static void map_path_pick_dir(int x,int y,int rel_x,bool uses_terrain_cost,bool is_naval,int &civ,
                                          iptr &best_dir)
 {
+  int along_river;
   byte cur_tile_flags;
   bool start_on_land;
   bool has_road;
@@ -4030,6 +4037,7 @@ static void map_path_pick_dir(int x,int y,int rel_x,bool uses_terrain_cost,bool 
               }
               else {
                 if (pathfind.roads_only != 0) continue;
+                along_river = 0;
                 if ((((cur_tile_flags & 0x80) != 0) &&
                     (tile = (byte *)tile_at(x3,y3), (*tile & 0x80) != 0)) &&
                    (y2 = map_dx_wrapped(x,x3), y2 == 1)) {
@@ -4041,22 +4049,23 @@ static void map_path_pick_dir(int x,int y,int rel_x,bool uses_terrain_cost,bool 
                   }
                   if (abs_dy2 == 1) {
                     step_cost = 4;
-                    goto apply_step_road_bonus;
+                    along_river = 1;  /* a diagonal step along a river */
                   }
                 }
-                if (uses_terrain_cost) {
-                  step_cost = (int)(char)terrain_types[terrain].move_cost *
-                             (uint)cosmic.road_move_mult * 4;
-                }
-                else {
-                  step_cost = (uint)cosmic.road_move_mult << 2;
+                if (along_river == 0) {
+                  if (uses_terrain_cost) {
+                    step_cost = (int)(char)terrain_types[terrain].move_cost *
+                               (uint)cosmic.road_move_mult * 4;
+                  }
+                  else {
+                    step_cost = (uint)cosmic.road_move_mult << 2;
+                  }
                 }
               }
             }
             else {
               step_cost = 4;
             }
-apply_step_road_bonus:
             if (((unit_types[pathfind.unit_type].flags & UTYPE_COAST_BOUND) != 0) &&
                (tile = (byte *)tile_at(x3,y3), (*tile & 0x40) != 0)) {
               step_cost += (uint)cosmic.road_move_mult * 4;
@@ -5610,7 +5619,7 @@ void EditorWindow::terrain_editor_run()
   GamePalette palette;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
@@ -5778,7 +5787,7 @@ void __cdecl terrain_editor_open(void)
   EditorWindow editor_wnd;
   
   editor_wnd.construct();
-  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
+  ON_SCOPE_EXIT(editor_wnd.destruct());
   editor_wnd.terrain_editor_run();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   return;
@@ -5918,7 +5927,7 @@ void __cdecl map_label_font_reg_atexit(void)
 void __cdecl map_label_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&status_window_block.map_label_font));
+  ((GameFont *)((i8 *)&status_window_block.map_label_font))->destroy();
   return;
 }
 

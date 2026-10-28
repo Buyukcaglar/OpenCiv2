@@ -1231,7 +1231,7 @@ static void ai_assess_count_units(AiCivAssess *o)
           if (((unit_types[units[unit].type].role == ROLE_TRADE) &&
               (units[unit].home_city != -1)) &&
              (cities[(byte)units[unit].home_city].flags =
-                   cities[(byte)units[unit].home_city].flags | CITYF_COMMODITY_PICKED, -1 < continent)) {
+                   cities[(byte)units[unit].home_city].flags | CITYF_HAD_CARAVAN, -1 < continent)) {
             counter = (char *)(continent + (iptr)((u8 *)&civs + 786) + civ * 0x594);
             *counter = *counter + 1;
           }

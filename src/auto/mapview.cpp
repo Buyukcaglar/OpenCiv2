@@ -1192,14 +1192,14 @@ void __cdecl mapviews_destroy_all(void)
 }
 
 /* 0046ab30 auto */
-void * __thiscall clickmap_ctor(void *self)
+ClickMap *ClickMap::construct()
 
 {
-  return self;
+  return this;
 }
 
 /* 0046ab49 auto */
-void __thiscall clickmap_dtor(void *self)
+void ClickMap::destruct()
 
 {
   return;
@@ -1211,38 +1211,38 @@ void __thiscall clickmap_dtor(void *self)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall clickmap_clear(ClickMapClearView *self)
+void ClickMap::clear()
 
 {
-  self->region_count = 0;
+  entry_count = 0;
   return;
 }
 
 /* 0046ab82 auto */
-void __thiscall clickmap_remove_at(ClickMapRemoveView *self,int index)
+void ClickMap::remove_at(int index)
 
 {
   int i;
   
-  for (i = index; i < (int)(self->entry_count - 1); i++) {
-    self->hit_regions[i] = self->hit_regions[i + 1];
+  for (i = index; i < (int)(entry_count - 1); i++) {
+    hit_regions[i] = hit_regions[i + 1];
   }
-  self->entry_count--;
+  entry_count--;
   return;
 }
 
 /* 0046ac89 auto */
-void __thiscall clickmap_remove_by_id(ClickMapRemoveView *self,int id)
+void ClickMap::remove_by_id(int id)
 
 {
   u32 count;
   u32 idx;
   
-  count = self->entry_count;
+  count = entry_count;
   while (idx = count - 1, -1 < (int)idx) {
     count = idx;
-    if (self->hit_regions[idx].value == id) {
-      clickmap_remove_at(self,idx);
+    if (hit_regions[idx].value == id) {
+      remove_at(idx);
     }
   }
   return;
@@ -1266,29 +1266,28 @@ u32 ClickMap::add(iptr id,i32 value,i32 x,i32 y, iptr width,iptr height)
 }
 
 /* 0046ad85 auto */
-int __thiscall
-clickmap_hit_test(ClickMapHitTestView *self,int x,int y,iptr out_id,iptr out_value)
+int ClickMap::hit_test(int x,int y,iptr out_id,iptr out_value)
 
 {
   int hit;
   int i;
   
   hit = -1;
-  for (i = 0; i < (int)self->region_count; i++) {
-    if ((((self->hit_regions[i].left <= x) &&
-         (x < self->hit_regions[i].right)) &&
-        (self->hit_regions[i].top <= y)) &&
-       (y < self->hit_regions[i].bottom)) {
+  for (i = 0; i < (int)entry_count; i++) {
+    if ((((hit_regions[i].left <= x) &&
+         (x < hit_regions[i].right)) &&
+        (hit_regions[i].top <= y)) &&
+       (y < hit_regions[i].bottom)) {
       hit = i;
       break;
     }
   }
   if (-1 < hit) {
     if (out_id != 0) {
-      *(i32 *)out_id = self->hit_regions[hit].id;
+      *(i32 *)out_id = hit_regions[hit].id;
     }
     if (out_value != 0) {
-      *(i32 *)out_value = self->hit_regions[hit].value;
+      *(i32 *)out_value = hit_regions[hit].value;
     }
   }
   return hit;
@@ -2551,7 +2550,7 @@ MapView * __thiscall mapview_ctor(MapView *self)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall mapview_dtor(void *self)
+void __thiscall mapview_dtor(MapView *self)
 
 {
   int eh_state;
@@ -2562,9 +2561,9 @@ void __thiscall mapview_dtor(void *self)
   (*((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 0047de91 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x360)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0047dea0 */ { font_destroy((GameFont *)(*(int *)&self + 0x340)); }
+  /* inlined unwind funclet 0047dea0 */ { ((GameFont *)(*(int *)&self + 0x340))->destroy(); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0047deaf */ { font_destroy((GameFont *)(*(int *)&self + 0x338)); }
+  /* inlined unwind funclet 0047deaf */ { ((GameFont *)(*(int *)&self + 0x338))->destroy(); }
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0047debe */ { (*(FrameWindow **)&self)->FrameWindow::destruct(); }
   return;

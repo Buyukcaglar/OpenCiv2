@@ -159,7 +159,7 @@ message by message and clock event by clock event.
   moved) and access by access (every member access compared function by
   function before and after), plus the suite.  The methods are member
   functions of their classes (tools/cxx_methods.py; old and new names in
-  re/methods.tsv): 927 of the 1,030 `__thiscall` functions.
+  re/methods.tsv): 996 of the 1,030 `__thiscall` functions.
   `void __thiscall wnd_show(Wnd *self, int x)` became `void Wnd::show(int x)`,
   declared in the class, its body using `this` (`self->` dropped where no
   local has the member's name), and every call `wnd_show(w, 3)` became
@@ -174,13 +174,15 @@ message by message and clock event by clock event.
   class (`construct`, `create`) is allowed; a call that could reach the
   other one is qualified (`obj->Control::construct()`), and a global a
   member would now hide inside a member function is written `::name`.  What
-  stays free (the reason in re/methods.tsv): 17 whose address is taken (the
+  stays free (the reason in re/methods.tsv): 29 whose address is taken (the
   array constructor/destructor iterators' ctors and dtors, sprite_init and
-  sprite_destroy passed the same way, two in data tables), 49 whose `self`
-  is `void *` (mostly unwind-funclet destructors), 33 on a decompiler view
-  (a struct one function's accesses describe, `FileSeekView`), 3 that
-  assign `self` (font_destroy, menu_dtor, palette_destroy) and
-  net_session_init.  Two members call rand(): their trace still names them
+  sprite_destroy passed the same way, the DDControl handlers and two more in
+  data tables) and 5 of an object no class describes yet (the movie
+  window's record, the debug log's).  Those first left free as methods of
+  `void *` or of a decompiler view (a struct one function's accesses
+  describe), or as assigning `self`, were given their class (69: the
+  unwind-funclet destructors, ClickMap, PtrListNode, AviAudio ...), the
+  views' fields folded into it.  Two members call rand(): their trace still names them
   by the free name (`crt_rand_at("palette_new_version")`), as the
   original's does.  Checked function by function: the machine code of every
   function is the same as before (tools/cxx_compare.py --map re/methods.tsv:
@@ -222,6 +224,20 @@ message by message and clock event by clock event.
   register and block choices, so most split functions are not identical
   at the instruction level: those were reviewed by hand and by the
   replays.
+  Checked again afterwards, all 86 split functions against the commit
+  before the split (5b6638d^): with every part forced inline, 4 compile to
+  the same machine code and 3 to the same graph but for registers and stack
+  slots (tools/cfg_compare.py --slots); the call automata of 81 are the same
+  at -O2 (tools/calls_compare.py; four of the five others only on paths no
+  input reaches, once gcc's threading is turned off); and each one put back
+  together (the parts' bodies substituted at their calls, the state
+  struct's prefixes dropped) was compared with the original text.  Slips
+  found and fixed: a `return` from the sea raid's 1000 failed tries that
+  left game_spawn_barbarians now left only the part (the city uprising roll
+  then still ran: more rand() calls on maps with no large sea); a part's
+  `_rand()` not named for the original (city_process_production: a branch
+  that cannot run); besides `*score--` and a dropped stale-stack preset in
+  city_calc_commodity_demand, fixed before.
 * **Named constants** (step 6).  The game's magic numbers are enumerations
   and flag constants (src/include/enums.h): unit types, improvements and
   wonders, advances, governments, terrain, unit orders, roles, domains,
@@ -240,7 +256,9 @@ message by message and clock event by clock event.
   enumerator promotes and converts as the int literal did: the machine code
   of every function is the same as before (tools/cxx_compare.py, all
   files), and the suite passes.  Bit meanings come from the functions that
-  set and test them; the uncertain ones are marked "?" in the header.  Left
+  set and test them; two stay uncertain, marked "?" in the header (a city bit
+  nothing sets, CITYF_SAM_UNUSED, and RULE_BASE_1, always set, which only the
+  barbarians' unit choice tests).  Left
   as numbers: sizes, coordinates and arithmetic; ranges (`orders < 4`,
   `improvement < 0x27`); resources (terrain 11..32); masks of more than
   four bits or bits without a name; unsigned literals (`0x8000U`, an
@@ -342,8 +360,35 @@ message by message and clock event by clock event.
   the pool is the original's own bug (its callers keep event pointers
   across events_compact, valid under Wine only because the new pool is
   the block just freed), so events_compact keeps the pool's block.
-* **Unit tests** (step 6, the last part).  `make test` runs 10,485 recorded
-  calls of 832 of the game's functions in 2.5 seconds, without the game's
+* **The last gotos** (step 6).  112 -> 69: the rest became loops with a
+  flag (`while (chosen == 0)`, `stop = 1; break;`), restarts as loops
+  (the player count asked again when the first player backs out, the city
+  style again when the opponents dialog goes back), early returns where the
+  shared tail is a call or two (the city change dialog, the turn loop's
+  timer stop) and breaks where the loop's own test then ends it (the
+  network host's turn loop).  Checked as before (tools/cfg_compare.py, -O0
+  then -O2; it now skips gcc's multi-byte nops): 8 of the 22 functions the
+  same graph at -O2 (gcc threads the flags away); 13 others make the same
+  calls on every path at -O2 (tools/calls_compare.py) and differ in
+  register choice and scheduling, reviewed by hand; in
+  game_mp_host_turn_loop the break after the host's own turn reaches the
+  loop's `turn_loop.active` test, which mp_host_own_turn returns 1 only
+  with clear (a path gcc cannot rule out).  The call comparison caught a
+  slip in a first try: in the parley's unit and city lists a row whose unit
+  or city is gone leaves the drawing loop to rebuild the list and draw it
+  again, not to finish (now the flag `stale`).  Left, by kind:
+  ai_unit_choose_orders (36) and ai_barbarian_unit_move (8): the split
+  parts return codes that send the parent into shared tails (the order's
+  direction, its finish, the guard checks), several entered from many
+  points; unit_move_dir (15): the map lock released and the network told on
+  every path, after a tail (finish_move) that the attack and the
+  no-direction paths share; diplo_meet_ally_war_talk (8): a 25-line ending
+  of the meeting (attitudes, the request count) reached from eight points;
+  moviewnd_wndproc (2): two messages' handlers shared by other messages,
+  whose MCI call passes a stale local by address (moving it into a helper
+  would move that stack slot).
+* **Unit tests** (step 6, the last part).  `make test` runs 10,481 recorded
+  calls of 836 of the game's functions in 2.5 seconds, without the game's
   files (docs/DEVELOPMENT.md "Unit tests"): each call recorded from the
   replays of 35 scenarios (all but `menu`, which runs none that qualify) by
   the recording build (tests/unit_record.c: -finstrument-functions, the
@@ -358,8 +403,8 @@ message by message and clock event by clock event.
   (strengths, odds, the fight, veterans, city defences), movement and paths,
   city food, shields, trade, happiness, workers and production choice, the
   AI's assessments and unit orders, research cost and choice, diplomacy's
-  evaluations and treaties, map generation steps; 206 cases call `rand()`.
-  Of the 2,225 game functions these replays run, 832 have cases: the rest
+  evaluations and treaties, map generation steps; 207 cases call `rand()`.
+  Of the 2,239 game functions these replays run, 836 have cases: the rest
   draw, wait for input or read files, or are called only with pointers into
   the heap.  Not covered: rules parsing and the save/load round trip (they
   read and write files; the replays check them), and the top-level turn

@@ -412,14 +412,14 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
         if (display_palette.palettized == 1) {
             parent = (void *)((Control *)ctrl)->get_parent();
             parent = (void *)((WndBase *)parent)->get_palette();
-            hPal = palette_get_hpalette((PaletteHandleView *)parent);
+            hPal = ((GamePalette *)parent)->get_hpalette();
             SelectPalette(hdc, hPal, 0);
         }
         if (wnd_obj->pressed == 0) {
             ((DibSurface *)((int)ctrl + 0x34))->lock();
             parent = (void *)((Control *)ctrl)->get_parent();
             ctrl_arg = ((WndBase *)parent)->get_palette();
-            ((DibSurface *)((int)ctrl + 0x34))->apply_palette( (PaletteVersionView *)ctrl_arg);
+            ((DibSurface *)((int)ctrl + 0x34))->apply_palette( (GamePalette *)ctrl_arg);
             if (display_palette.palettized == 1)
                 RealizePalette(hdc);
             height = (int)((DibSurface *)((int)ctrl + 0x34))->get_dib();
@@ -433,7 +433,7 @@ i32 __stdcall spritebtn_wndproc(HWND hwnd,uint msg,WPARAM wparam,uint lparam)
             ((DibSurface *)((int)ctrl + 0x7c))->lock();
             parent = (void *)((Control *)ctrl)->get_parent();
             ctrl_arg = ((WndBase *)parent)->get_palette();
-            ((DibSurface *)((int)ctrl + 0x7c))->apply_palette( (PaletteVersionView *)ctrl_arg);
+            ((DibSurface *)((int)ctrl + 0x7c))->apply_palette( (GamePalette *)ctrl_arg);
             RealizePalette(hdc);
             height = (int)((DibSurface *)((int)ctrl + 0x7c))->get_dib();
             hdcSrc = ((GdiDib *)height)->hdc;
@@ -515,7 +515,7 @@ void __cdecl avi_play_start(AviPlayer *avi)
     if (avi->has_audio != 0) {
         t_end = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_play.video_stream), avi->end_frame);
         t_start = AVIStreamSampleToTime((*(PAVISTREAM *)&avi_play.video_stream), avi->cur_frame);
-        avi_audio_prepare_range((AviAudioPrepareView *)&avi->audio, t_start, t_end);
+        avi->audio.prepare_range( t_start, t_end);
     }
     if (avi_play.file_loaded != 0) {
         if (avi->transparent == 0)
@@ -527,7 +527,7 @@ void __cdecl avi_play_start(AviPlayer *avi)
             (*(DWORD *)&avi_play.start_time) = timeGetTime();
         }
         else {
-            avi_audio_start((void *)&avi->audio);
+            avi->audio.start();
             avi->audio_playing = 1;
         }
     }
@@ -816,7 +816,7 @@ uint __stdcall wnd_child_wndproc(HWND hwnd,uint msg,HWND wparam_hwnd,uint lparam
     case 5:         /* WM_SIZE */
         (*(void * *)&modal_wnd.active_child) = child2;
         if (IsIconic(hwnd) == 0) {
-            wnd_on_size_nop(child2, (int)x, (int)y);
+            child2->on_size_nop( (int)x, (int)y);
             ((WndHandlers *)view)->call_size( wp);
         }
         return wnd_base_wndproc(hwnd, msg, wp, lparam);

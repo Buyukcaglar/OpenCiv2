@@ -379,7 +379,7 @@ static NetJoinScenario net_join_load_scenario(Dialog &scen_dlg,GamePalette &scen
     else if (popup_game_flags("SCENARIOLOADED",1) < 0) {
       return JOIN_SCENARIO_CANCELLED;
     }
-    palette_destroy(&scen_palette);
+    scen_palette.destroy();
     scen_dlg.Dialog::destruct();
   }
   return JOIN_GO_ON;
@@ -409,10 +409,9 @@ static void net_join_restore_backdrop(GamePalette *palette)
 /* Joining a network game: the game list (LAN) or the host's address
    (Internet; conn_type 0), the connection, the host's answers, the scenario,
    the player's profile and tribe, then the wait for the game.  1: joined. */
-i32 __thiscall net_session_init(void *self_,int conn_type)
+i32 NetGamelistView::net_session_init(int conn_type)
 
 {
-  NetGamelistView *self = (NetGamelistView *)self_;
   int result;
   int popup;
   int retries;
@@ -424,13 +423,13 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
   dlg.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   retries = 0;
   net_reset_msg_counts();
   if ((conn_type == 2) || (conn_type == 3)) {
     /* (modem, serial: no address) */
-    self->server_address[0] = '\0';
-    result = XD_OpenConnection(self->server_address,net.timeout_seconds * 1000);
+    server_address[0] = '\0';
+    result = XD_OpenConnection(server_address,net.timeout_seconds * 1000);
     if (result < 0) {
       if ((net.net_protocol != 2) && (net.net_protocol != 3)) {
         dbg_logf("ConnectToGame: Open connection failed! Err: %d.",result);
@@ -441,11 +440,11 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
     }
   }
   else if (conn_type == 0) {
-    if (net_join_by_address(self,conn_type,retries,dlg) == 0) return 0;
+    if (net_join_by_address(this,conn_type,retries,dlg) == 0) return 0;
   }
   else {
   /* LAN: the games the hosts announce, in a list */
-    if (net_join_from_list(self,conn_type) == 0) return 0;
+    if (net_join_from_list(this,conn_type) == 0) return 0;
   }
 
   /* the host's id */
@@ -463,7 +462,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
   }
   if ((net.nm_server_reject_count != 0) || (net.nm_server_canceled_count != 0) ||
       (net.nm_server_full_count != 0)) {
-    text_set_string_arg(1,self->server_game_name);
+    text_set_string_arg(1,server_game_name);
     crt_strcpy(((i8 *)&text_args.strings),(*(char * *)&net.connection_title));
     if (net.nm_server_reject_count != 0) {
       popup_game_with_sprite("REJECTEDLAN",(iptr)&popup_info_icon_sprite,0);
@@ -496,7 +495,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
       net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
     }
     else {
-      text_set_string_arg(1,self->server_game_name);
+      text_set_string_arg(1,server_game_name);
       crt_strcpy(((i8 *)&text_args.strings),(*(char * *)&net.connection_title));
       popup_game_with_sprite("SERVERQUIT",(iptr)&popup_info_icon_sprite,0);
     }
@@ -515,7 +514,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
       net_send_message(NM_CLIENT_CANCELED_START,0,0,0,0,0,0,0,0,0);
       net_send_message(NM_UNLOCK_NATION,0,0,human_civ[0],0,0,0,0,0,0);
       XD_FlushSendBuffer(180000);
-      palette_destroy(&scen_palette);
+      scen_palette.destroy();
       scen_dlg.Dialog::destruct();
       return 0;
     }
@@ -558,7 +557,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
   }
   if ((net.nm_server_canceled_count != 0) || (net.nm_lost_server_on_join_count != 0)) {
     net_join_restore_backdrop(&palette);
-    text_set_string_arg(1,self->server_game_name);
+    text_set_string_arg(1,server_game_name);
     crt_strcpy(((i8 *)&text_args.strings),(*(char * *)&net.connection_title));
     if (net.nm_server_canceled_count == 0) {
       popup_game_with_sprite("LOSTSERVER",(iptr)&popup_info_icon_sprite,0);
@@ -582,7 +581,7 @@ i32 __thiscall net_session_init(void *self_,int conn_type)
   }
   if (net.nm_server_canceled_count != 0) {
     net_join_restore_backdrop(&palette);
-    text_set_string_arg(1,self->server_game_name);
+    text_set_string_arg(1,server_game_name);
     crt_strcpy(((i8 *)&text_args.strings),(*(char * *)&net.connection_title));
     popup_game_with_sprite("SERVERQUIT",(iptr)&popup_info_icon_sprite,0);
     return 0;
@@ -1586,7 +1585,7 @@ void *NetGamelistView::view_scalar_destruct(uint flags)
 LobbyList *LobbyList::scalar_destruct(uint flags)
 
 {
-  lobby_list_dtor(this);
+  destruct();
   if ((flags & 1) != 0) {
     operator_delete(this);
   }
@@ -1783,9 +1782,9 @@ void __cdecl parley_advance_list_on_click(int control_id)
   if (((window->list_counts[pane] != 0) &&
       (row = parley_advance_list_hit_test(cursor_x,cursor_y,pane), -1 < row)) &&
      (row < window->list_counts[pane])) {
-    key_down = wnd_is_shift_down((void *)((iptr)window + 0x48));
+    key_down = ((Wnd *)((iptr)window + 0x48))->is_shift_down();
     if (key_down == 0) {
-      key_down = wnd_is_ctrl_down((void *)((iptr)window + 0x48));
+      key_down = ((Wnd *)((iptr)window + 0x48))->is_ctrl_down();
       if (key_down == 0) {
         for (i = 0; i < window->list_counts[pane];
             i = i + 1) {
@@ -2186,9 +2185,9 @@ void __cdecl parley_unit_list_on_click(int control_id)
   if (((window->list_counts[pane] != 0) &&
       (row = parley_unit_list_hit_test(cursor_x,cursor_y,pane), -1 < row)) &&
      (row < window->list_counts[pane])) {
-    key_down = wnd_is_shift_down((void *)((iptr)window + 0x48));
+    key_down = ((Wnd *)((iptr)window + 0x48))->is_shift_down();
     if (key_down == 0) {
-      key_down = wnd_is_ctrl_down((void *)((iptr)window + 0x48));
+      key_down = ((Wnd *)((iptr)window + 0x48))->is_ctrl_down();
       if (key_down == 0) {
         for (i = 0; i < window->list_counts[pane];
             i = i + 1) {
@@ -2271,6 +2270,7 @@ int __cdecl parley_unit_list_hit_test(int px,int py,int pane)
 void __cdecl parley_draw_unit_list(iptr pane)
 
 {
+  int stale;
   u8 *has_sel;
   int tmp;
   int tmp2;
@@ -2339,20 +2339,13 @@ void __cdecl parley_draw_unit_list(iptr pane)
         break;
       }
     }
-    row = 0;
-    do {
-      if (this2->list_rows[pane] <= row) {
-  restore_clip_and_finish:
-        this2->set_clip((RECT *)saved_clip);
-        this2->update_buttons();
-        ((Control *)this2->list_hotspots[pane])->show_and_redraw()
-        ;
-        return;
-      }
+    stale = 0;
+    for (row = 0; row < this2->list_rows[pane]; row++) {
       row_top = (int)this2->list_rects[pane * 4 + 1] + row_height * row;
       SetRect(&row_rect,list_left,row_top,list_width2 + list_left,row_height + row_top);
-      if ((row != 0) && (this2->list_first_row[pane] == -1))
-      goto restore_clip_and_finish;
+      if ((row != 0) && (this2->list_first_row[pane] == -1)) {
+        break;
+      }
       if (this2->list_first_row[pane] + row <
           this2->list_counts[pane]) {
         selected2 = (int)this2->list_selected[pane * 0x801 + (this2->list_first_row[pane] + row)];
@@ -2367,7 +2360,10 @@ void __cdecl parley_draw_unit_list(iptr pane)
         unit = 0;
         if ((0 < this2->list_counts[pane]) &&
            (unit = this2->find_unit_by_id(
-                                  (i32)this2->list_items_b[pane * 0x801 + (this2->list_first_row[pane] + row)]), unit < 0)) break;
+                                  (i32)this2->list_items_b[pane * 0x801 + (this2->list_first_row[pane] + row)]), unit < 0)) {
+          stale = 1;  /* not found: the list is rebuilt and drawn again */
+          break;
+        }
         unit_sprite = (Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + (uint)units[unit].type * 0x3c);
         if (this2->large_layout == 0) {
           tmp = unit_sprite->get_width();
@@ -2448,8 +2444,13 @@ void __cdecl parley_draw_unit_list(iptr pane)
         this2->draw_text((iptr)font2,(const char *)&textbuf.buf,text_x_offset + list_left,
                    text_y_offset + row_top,5);
       }
-      row++;
-    } while( true );
+    }
+    if (stale == 0) {
+      this2->set_clip((RECT *)saved_clip);
+      this2->update_buttons();
+      ((Control *)this2->list_hotspots[pane])->show_and_redraw();
+      return;
+    }
     this2->build_unit_list(pane,1);
     if (this2->list_counts[pane] == 0) {
       has_sel = (u8 *)&this2->list_first_row[pane];
@@ -5821,13 +5822,13 @@ void __cdecl chat_read_macro_line(const char *path,iptr file_offset)
     if (ok <= *(int *)file_offset) {
       *(i32 *)file_offset = 0;
     }
-    ok = file_obj_seek_cur((FileSeekView *)file,*(i32 *)file_offset);
+    ok = ((FileObject *)file)->seek_cur(*(i32 *)file_offset);
     if (ok == 0) {
       *(i32 *)file_offset = 0;
       ((FileObject *)file)->map_close();
     }
     else {
-      file_obj_read_line((FileReadLineView *)file,(char *)&textbuf.buf,0x100);
+      ((FileObject *)file)->read_line((char *)&textbuf.buf,0x100);
       ((FileObject *)file)->map_close();
       line_len = _strlen(((i8 *)&textbuf.buf));
       *(size_t *)file_offset = *(int *)file_offset + line_len + 2;
@@ -6022,9 +6023,9 @@ void __cdecl parley_civ_list_click(int ctrl_id)
   if (((wnd2->list_counts[side] != 0) &&
       (row = parley_civ_list_hit_test(cursor_x,cursor_y,side), -1 < row)) &&
      (row < wnd2->list_counts[side])) {
-    key_down = wnd_is_shift_down((void *)((iptr)wnd2 + 0x48));
+    key_down = ((Wnd *)((iptr)wnd2 + 0x48))->is_shift_down();
     if (key_down == 0) {
-      key_down = wnd_is_ctrl_down((void *)((iptr)wnd2 + 0x48));
+      key_down = ((Wnd *)((iptr)wnd2 + 0x48))->is_ctrl_down();
       if (key_down == 0) {
         for (i = 0; i < wnd2->list_counts[side];
             i = i + 1) {
@@ -6752,7 +6753,7 @@ void ParleyWindow::destruct()
   destroy_controls();
   wnd_destroy_with_surface();
   unwind_state = 0xffffffff;
-  /* inlined unwind funclet 004b4711 */ { surfwnd_dtor(((SurfaceWindow *)this)); }
+  /* inlined unwind funclet 004b4711 */ { ((SurfaceWindow *)this)->SurfaceWindow::destruct(); }
   return;
 }
 
@@ -6808,7 +6809,7 @@ void ParleyWindow::create(u32 mode)
       if (file_size != 0) {
         file_size = ((FileObject *)log_file)->get_size();
         if ((int)(*(UINT *)&font_size16_bold_block.chat_log_capacity) < file_size) {
-          file_obj_seek_cur((FileSeekView *)log_file,file_size - (*(UINT *)&font_size16_bold_block.chat_log_capacity));
+          ((FileObject *)log_file)->seek_cur(file_size - (*(UINT *)&font_size16_bold_block.chat_log_capacity));
         }
         ((FileObject *)log_file)->read(*&chat.log_buffer,(*(UINT *)&font_size16_bold_block.chat_log_capacity));
         ((FileObject *)log_file)->map_close();
@@ -14969,7 +14970,7 @@ LobbyList *LobbyList::construct()
 }
 
 /* 0056e2c9 auto */
-void __thiscall lobby_list_dtor(void *self)
+void LobbyList::destruct()
 
 {
   net.free_game_list();
@@ -15676,9 +15677,9 @@ void __cdecl parley_city_list_click(int control_id)
   if (((parley_wnd2->list_counts[pane] != 0) &&
       (hit_row = parley_city_list_hit_test(cursor_x,cursor_y,pane), 0 < hit_row)) &&
      (hit_row < parley_wnd2->list_counts[pane])) {
-    key_down = wnd_is_shift_down((void *)((iptr)parley_wnd2 + 0x48));
+    key_down = ((Wnd *)((iptr)parley_wnd2 + 0x48))->is_shift_down();
     if (key_down == 0) {
-      key_down = wnd_is_ctrl_down((void *)((iptr)parley_wnd2 + 0x48));
+      key_down = ((Wnd *)((iptr)parley_wnd2 + 0x48))->is_ctrl_down();
       if (key_down == 0) {
         for (row = 0; row < parley_wnd2->list_counts[pane];
             row = row + 1) {
@@ -15814,6 +15815,7 @@ void ParleyWindow::sort_city_list(int first,int last,int pane)
 void __cdecl parley_draw_city_list(int pane)
 
 {
+  int stale;
   u8 *field_ptr;
   int xLeft;
   iptr child;
@@ -15876,20 +15878,13 @@ void __cdecl parley_draw_city_list(int pane)
         break;
       }
     }
-    row = 0;
-    do {
-      if (this2->list_rows[pane] <= row) {
-  restore_clip_and_finish:
-        this2->set_clip((RECT *)saved_clip);
-        this2->update_buttons();
-        ((Control *)this2->list_hotspots[pane])->show_and_redraw()
-        ;
-        return;
-      }
+    stale = 0;
+    for (row = 0; row < this2->list_rows[pane]; row++) {
       row_y = (int)this2->list_rects[pane * 4 + 1] + row * row_height;
       SetRect(&row_rect,xLeft,row_y,width + xLeft,row_y + row_height);
-      if ((row != 0) && (this2->list_first_row[pane] == -1))
-      goto restore_clip_and_finish;
+      if ((row != 0) && (this2->list_first_row[pane] == -1)) {
+        break;
+      }
       if (this2->list_first_row[pane] + row <
           this2->list_counts[pane]) {
         selected = (int)this2->list_selected[pane * 0x801 + (this2->list_first_row[pane] + row)];
@@ -15910,7 +15905,10 @@ void __cdecl parley_draw_city_list(int pane)
         city = 0;
         if ((0 < this2->list_counts[pane]) &&
            (city = this2->find_city_by_id(
-                                  (i32)this2->list_items_b[pane * 0x801 + (this2->list_first_row[pane] + row)]), city == -1)) break;
+                                  (i32)this2->list_items_b[pane * 0x801 + (this2->list_first_row[pane] + row)]), city == -1)) {
+          stale = 1;  /* not found: the list is rebuilt and drawn again */
+          break;
+        }
         text_offset_x = (-(uint)(this2->large_layout == 0) & 0xffffffe2) + 0x5a + panel_layout.margin_x;
         row_rect.left = row_rect.left + text_offset_x - 3;
         if (selected == 0) {
@@ -15990,8 +15988,13 @@ void __cdecl parley_draw_city_list(int pane)
         gfx_set_text_color_index(text_color2);
         this2->draw_text((iptr)font2,(const char *)&textbuf.buf,xLeft + text_offset_x,row_y + text_offset_y,5);
       }
-      row++;
-    } while( true );
+    }
+    if (stale == 0) {
+      this2->set_clip((RECT *)saved_clip);
+      this2->update_buttons();
+      ((Control *)this2->list_hotspots[pane])->show_and_redraw();
+      return;
+    }
     this2->build_city_list(pane,1);
     if (this2->list_counts[pane] == 0) {
       field_ptr = (u8 *)&this2->list_first_row[pane];

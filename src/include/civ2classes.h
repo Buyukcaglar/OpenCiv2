@@ -8,7 +8,7 @@
 #pragma pack(push, 1)
 
 /* Classes the methods' declarations name before their definitions. */
-struct PaletteVersionView;
+struct GamePalette;
 struct EventsParseState;    /* game.cpp: the parts of ScenarioEvents::parse_file */
 
 /* The window classes.  WndBase (wnd_record_init 005db610, 0x10 bytes) is
@@ -174,6 +174,7 @@ typedef struct WndHandlers {
     void call_msg4c8(i32 msg_arg);    /* 005ed4e0 */
     void call_entersizemove();    /* 005ed520 */
     void call_exitsizemove();    /* 005ed550 */
+    void destruct();    /* 0044ca40 */
 } WndHandlers;
 static_assert(sizeof(WndHandlers) == 0x68, "");
 
@@ -213,6 +214,8 @@ typedef struct ModalMenuWindow : WndBase {
     u32 get_vscroll_pos();    /* 005ed660 */
     u32 get_hscroll_page();    /* 005ed680 */
     u32 get_vscroll_page();    /* 005ed6a0 */
+    void on_size_nop(i32 width,i32 height);    /* 005ed580 */
+    i32 destruct();
 } ModalMenuWindow;
 static_assert(sizeof(ModalMenuWindow) == 0xb8, "");
 
@@ -231,6 +234,10 @@ typedef struct Wnd : ModalMenuWindow {
     void remove_all_controls();    /* 005c5aeb */
     void focus_first_control();    /* 005c5b7f */
     u8 keyboard_nav_enabled();    /* 005cbdd0 */
+    i32 destruct();    /* 0044cb20 */
+    i32 dispatch_hotkey_char(i32 ch);    /* 005c5c86 */
+    i32 is_shift_down();    /* 005dba95 */
+    i32 is_ctrl_down();    /* 005dbab8 */
 } Wnd;
 static_assert(sizeof(Wnd) == 0xc8, "");
 
@@ -370,6 +377,7 @@ typedef struct SpaceshipWindow : ModalMenuWindow {
     int render_ship_load_surfaces(ShipSurfaces &sf);    /* part of render_ship */
     void render_ship_draw_part(ShipSurfaces &sf,ShipPartRow *row,i8 *sprite);    /* part of render_ship */
     void render_ship_free_surfaces(ShipSurfaces &sf,int &unwind_state);    /* part of render_ship */
+    void make_button_sprites();
 } SpaceshipWindow;
 static_assert(sizeof(SpaceshipWindow) == 0x2180, "");
 
@@ -449,6 +457,8 @@ typedef struct DiploLeaderWindow : ModalMenuWindow {
     i32 init_portrait();    /* 00495c35 */
     i8 init_video();    /* 00495e0c */
     void wnd_set_bg_tile(DibSurface *tile);    /* 00497cc0 */
+    void destruct();    /* 004943c9 */
+    void *scalar_destruct(uint flags);    /* 00497bf0 */
 } DiploLeaderWindow;
 static_assert(sizeof(DiploLeaderWindow) == 0x108c, "");
 
@@ -613,6 +623,8 @@ typedef struct CityViewWindow : ModalMenuWindow {
     void draw_title();    /* 004560f8 */
     void scroll_right();    /* 0045638b */
     void scroll_left();    /* 004564a8 */
+    void destruct();    /* 00454699 */
+    void *scalar_destruct(uint flags);    /* 00456e90 */
 } CityViewWindow;
 static_assert(sizeof(CityViewWindow) == 0x1cb4, "");
 
@@ -640,6 +652,9 @@ typedef struct EndgameMovieWindow : ModalMenuWindow {
     EndgameMovieWindow *arrival_movie_wnd_construct();    /* 00471362 */
     i32 arrival_movie_wnd_create(iptr civ);    /* 00471565 */
     void arrival_movie_wnd_play();    /* 00471856 */
+    void defeat_movie_wnd_destruct();    /* 004704ec */
+    void arrival_movie_wnd_destruct();    /* 0047147a */
+    void *arrival_movie_wnd_scalar_destruct(uint flags);    /* 004728c0 */
 } EndgameMovieWindow;
 static_assert(sizeof(EndgameMovieWindow) == 0x137c, "");
 
@@ -699,7 +714,7 @@ typedef struct DibSurface {
     uint get_pixel(i32 x,i32 y);    /* 005c0bf2 */
     void set_pixel(i32 x,i32 y,i32 color);    /* 005c0c5d */
     void set_palette(iptr palette);    /* 005c0cc5 */
-    void apply_palette(PaletteVersionView *palette);    /* 005c0d12 */
+    void apply_palette(GamePalette *palette);    /* 005c0d12 */
     void draw_text(iptr font,const char *text,iptr x,int y,uint flags);    /* 005c0f57 */
     void draw_text_in_rect(iptr font,const char *text,RECT *rect,uint flags);    /* 005c1020 */
     void draw_text_rect(iptr font,const char *text,iptr rect,i32 flags);    /* 005c1167 */
@@ -718,6 +733,7 @@ typedef struct DibSurface {
     int prev_row(iptr row_ptr);    /* 005c5710 */
     void avi_player_set_palette(iptr palette);    /* 005dd561 */
     void avi_player_draw_to(iptr dest,int x,int y);    /* 005dd64c */
+    void draw_text_cur_font(const char *text,int x,int y,uint flags);    /* 005c0d69 */
 } DibSurface;
 static_assert(sizeof(DibSurface) == 0x48, "");
 
@@ -1023,6 +1039,7 @@ typedef struct GameFont {
     GameFont *init_empty();    /* 0043c690 */
     void set_styled(i32 face,i32 size,i32 style);    /* 0043c6c0 */
     u32 get_handle();    /* 004d8af0 */
+    GameFont *destroy();    /* 0043c520 */
 } GameFont;
 
 /* The controls' callbacks, called by the control with its id (ctrl_id),
@@ -1263,6 +1280,8 @@ typedef struct PediaLink {
     struct PediaLink *next;
     /* methods */
     PediaLink *construct();    /* 00453b10 */
+    void *scalar_destruct(uint flags);    /* 004fa0f0 */
+    void destruct();    /* 004fa140 */
 } PediaLink;
 static_assert(sizeof(PediaLink) == 0x48, "");
 
@@ -1344,7 +1363,7 @@ typedef struct Sprite {
     union { u32 field_14; u32 bounds_top; };
     union { u8 pad_18[8]; struct { u8 bounds_right[4]; u8 bounds_bottom[4]; }; };
     union { u32 field_20; u32 offset_x; };
-    union { u32 field_24; u32 full_height; };
+    union { u32 field_24; u32 offset_y; };
     union { u32 field_28; u32 load_scale_num; };
     union { u32 field_2c; u32 load_scale_den; };
     union { u8 field_30; u8 key_color; };
@@ -1377,6 +1396,8 @@ typedef struct Sprite {
     int *blit_silhouette_to_surface(int *out_rect,DibSurface *surface,int key_arg,int x, int y,i32 color);    /* 005d10cd */
     void merge_at(Sprite *src,Sprite *dst,i32 unused,int dx, int dy);    /* 005d1612 */
     void clear_fields();    /* 005d1b38 */
+    void set_origin(u32 x,u32 y);    /* 005cf39b */
+    void get_origin(iptr out_x,iptr out_y);    /* 005cf3c5 */
 } Sprite;
 
 /* 11 methods, size 0x98 (file_obj_init clears 0x98 bytes) */
@@ -1395,6 +1416,8 @@ typedef struct FileObject {
     void read(char *buf,i32 size);    /* 004bb370 */
     FileObject *init();    /* 005d7c00 */
     i32 close();    /* 005d7c6e */
+    i32 seek_cur(i32 offset);    /* 00492a00 */
+    void read_line(char *buf,i32 max_len);    /* 00492a40 */
 } FileObject;
 #ifdef __cplusplus
 static_assert(sizeof(FileObject) == 0x98, "");
@@ -1433,6 +1456,7 @@ typedef struct NetGamelistView {
     void start_timer(TimerFn callback);    /* 00425607 */
     void kill_timer();    /* 00425650 */
     void *view_scalar_destruct(uint flags);    /* 00447170 */
+    i32 net_session_init(int conn_type);    /* 00421fcd */
 } NetGamelistView;
 static_assert(sizeof(NetGamelistView) == 0x178, "");
 
@@ -1499,6 +1523,9 @@ typedef struct GamePalette {
     void fade_begin(u32 first,u32 count,u32 steps,iptr target_pal);    /* 005c71f3 */
     void fade_end();    /* 005c72f8 */
     void fade_step(int step);    /* 005c738e */
+    u32 get_version();    /* 005c56f0 */
+    GamePalette *destroy();    /* 005c656b */
+    u32 get_hpalette();    /* 005cbdb0 */
 } GamePalette;
 
 /* The lobby's list of players (0x70 bytes; net.net_lobby_list):
@@ -1524,6 +1551,7 @@ typedef struct LobbyList {
     i32 find_waiting_entry();    /* 0056f372 */
     uptr find_entry_by_id(int entry_id);    /* 0056f3e0 */
     int slot_for_entry_id(int entry_id);    /* 0056f42b */
+    void destruct();    /* 0056e2c9 */
 } LobbyList;
 static_assert(sizeof(LobbyList) == 0x70, "");
 
@@ -1540,18 +1568,6 @@ typedef struct ClickRegion {
 static_assert(sizeof(ClickRegion) == 0x18, "");
 #endif
 
-/* 1 methods, size 0x12c4 */
-typedef struct ClickMapClearView {
-    u8 pad_0[4800];
-    union { u32 field_12c0; u32 region_count; };
-} ClickMapClearView;
-
-/* 3 methods, size 0x12c4 */
-typedef struct ClickMapRemoveView {
-    ClickRegion hit_regions[200];
-    union { u32 field_12c0; u32 entry_count; };
-} ClickMapRemoveView;
-
 /* 3 methods, size 0x12c4 */
 typedef struct ClickMap {
     ClickRegion hit_regions[200];
@@ -1560,13 +1576,13 @@ typedef struct ClickMap {
     u32 add(iptr id,i32 value,i32 x,i32 y, iptr width,iptr height);    /* 0046ace7 */
     void add_xywh(iptr id,i32 left,i32 top,i32 width, i32 height);    /* 004d8b70 */
     void hotspot_add_rect(iptr id,i32 cursor,RECT *rect);    /* 00511460 */
+    ClickMap *construct();    /* 0046ab30 */
+    void destruct();    /* 0046ab49 */
+    void clear();    /* 0046ab5f */
+    void remove_at(int index);    /* 0046ab82 */
+    void remove_by_id(int id);    /* 0046ac89 */
+    int hit_test(int x,int y,iptr out_id,iptr out_value);    /* 0046ad85 */
 } ClickMap;
-
-/* 1 methods, size 0x12c4 */
-typedef struct ClickMapHitTestView {
-    ClickRegion hit_regions[200];
-    union { u32 field_12c0; u32 region_count; };
-} ClickMapHitTestView;
 
 /* 10 methods, size 0x8 */
 typedef struct NetMsgHeader {
@@ -1695,16 +1711,6 @@ static_assert(sizeof(NetServerInfoMsg) == 0x198 && sizeof(NetServerAnswerMsg) ==
 static_assert(sizeof(NetPlayerNodeMsg) == 0x64 && sizeof(NetPlayerListMsg) == 0x280, "");
 static_assert(sizeof(NetWhoseTurnMsg) == 0x14 && sizeof(NetPlayerInfoMsg) == 0x118, "");
 
-/* 1 methods, size 0xa0 */
-typedef struct FileSeekView {
-    u8 pad_0[160];
-} FileSeekView;
-
-/* 1 methods, size 0xa0 */
-typedef struct FileReadLineView {
-    u8 pad_0[160];
-} FileReadLineView;
-
 /* 1 methods, size 0x18 */
 typedef struct DiffEngSection {
     union { u32 field_0; u32 data_size; };
@@ -1793,18 +1799,9 @@ typedef struct GameMenu {
     void native_check(i32 menu_index,i32 item_index,i32 checked);    /* 00579b00 */
     GameMenu *handle_construct();    /* 005dcc10 */
     void handle_destruct();    /* 005dcc32 */
+    void destruct();    /* 00578770 */
+    u32 get_hmenu();    /* 00579b90 */
 } GameMenu;
-
-/* 1 methods, size 0x4 */
-typedef struct MenuHandleView {
-    union { u32 field_0; u32 hmenu; };
-} MenuHandleView;
-
-/* 1 methods, size 0x44 */
-typedef struct SurfaceTextCurFontView {
-    union { u8 pad_0[64]; struct { u8 gap_0[20]; u8 clip_rect_2[44]; }; };
-    union { u32 field_40; GdiDib *dib; };
-} SurfaceTextCurFontView;
 
 /* 1 methods, size 0x44 */
 typedef struct SurfaceTextRectCurFontView {
@@ -1882,6 +1879,8 @@ typedef struct DDSurface {
     union { u32 field_38; u32 bits_per_pixel; };
     union { uptr field_3c; uptr row_ptrs; };
     union { uptr field_40; uptr on_restore; };
+    /* methods */
+    void destruct();    /* 005e5ee0 */
 } DDSurface;
 
 /* 1 methods, size 0xc */
@@ -1889,12 +1888,6 @@ typedef struct DDSurfaceWidthView {
     u8 pad_0[8];
     union { u32 field_8; u32 surf_width; };
 } DDSurfaceWidthView;
-
-/* 1 methods, size 0x40c */
-typedef struct PaletteVersionView {
-    u8 pad_0[1032];
-    union { u32 field_408; u32 pal_version; };
-} PaletteVersionView;
 
 /* 1 methods, size 0x4 */
 typedef struct DDSurfaceIfaceView {
@@ -1982,26 +1975,6 @@ typedef struct ColorKdTreeSearchView {
     u8 pad_820[8];
 } ColorKdTreeSearchView;
 
-/* 1 methods, size 0x408 */
-typedef struct PaletteHandleView {
-    u8 pad_0[1028];
-    union { u32 field_404; u32 hpalette; };
-} PaletteHandleView;
-
-/* 1 methods, size 0x28 */
-typedef struct SpriteOriginSetView {
-    u8 pad_0[32];
-    union { u32 field_20; u32 origin_x; };
-    union { u32 field_24; u32 origin_y; };
-} SpriteOriginSetView;
-
-/* 1 methods, size 0x28 */
-typedef struct SpriteOriginGetView {
-    u8 pad_0[32];
-    union { u32 field_20; u32 origin_x; };
-    union { u32 field_24; u32 origin_y; };
-} SpriteOriginGetView;
-
 /* 1 methods, size 0x30 */
 typedef struct UnusedObjectA {
     u8 pad_0[40];
@@ -2056,6 +2029,7 @@ typedef struct TimerManager {
     void destruct();    /* 005d2182 */
     void game_timer_fire_slot(iptr slot);    /* 005d47d0 */
     TimerManager *scalar_destruct(uint flags);    /* 005dcac0 */
+    TimerManager *construct();    /* 005d211e */
 } TimerManager;
 
 /* TimerManager where the code reaches past its end: the object is larger */
@@ -2064,12 +2038,6 @@ typedef struct TimerManagerExt {
     TimerFn timer_callbacks[17];
     u32 timer_repeat_counts[1];
 } TimerManagerExt;
-
-/* 1 methods, size 0x90 */
-typedef struct TimerManagerCtorView {
-    union { u32 field_0; u32 timer_wnd; };
-    union { u8 pad_4[140]; struct { u8 timer_slot_tables[140]; }; };
-} TimerManagerCtorView;
 
 /* 11 methods, size 0x708 */
 typedef struct ErrorContext {
@@ -2085,6 +2053,7 @@ typedef struct ErrorContext {
     void set_field_708(i32 value);    /* 005db035 */
     void clear_codes();    /* 005db059 */
     ErrorContext *construct();    /* 005db089 */
+    void destruct();    /* 005db0b4 */
 } ErrorContext;
 
 /* ErrorContext where the code reaches past its end: the object is larger */
@@ -2302,10 +2271,17 @@ typedef struct DDWindowNativeView {
 
 /* 1 methods, size 0x8 */
 typedef struct AviAudio {
-    u8 pad_0[4];
+    union { u16 field_0; u16 flags; };      /* 1 stream attached, 2 range prepared, 4 playing */
+    u8 pad_2[2];
     union { u32 field_4; u32 audio_stream; };
     /* methods */
     AviAudio *construct();    /* 005eeca0 */
+    void release();    /* 005eed1b */
+    uint is_playing();    /* 005eed43 */
+    int attach_stream(u32 stream);    /* 005eed76 */
+    i32 get_position_ms();    /* 005eedd1 */
+    int prepare_range(i32 start_time,i32 end_time);    /* 005eedec */
+    i16 start();    /* 005eee4f */
 } AviAudio;
 
 /* 1 methods, size 0x8 */
@@ -2314,36 +2290,6 @@ typedef struct AviAudioSetStreamView {
     u8 pad_2[2];
     union { u32 field_4; u32 avi_stream; };
 } AviAudioSetStreamView;
-
-/* 1 methods, size 0x8 */
-typedef struct AviAudioReleaseView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 audio_stream; };
-} AviAudioReleaseView;
-
-/* 1 methods, size 0x2 */
-typedef struct AviAudioPlayingView {
-    union { u16 field_0; u16 state_flags; };
-} AviAudioPlayingView;
-
-/* 1 methods, size 0x8 */
-typedef struct AviAudioAttachView {
-    union { u16 field_0; u16 stream_flags; };
-    u8 pad_2[2];
-    union { u32 field_4; u32 avi_stream; };
-} AviAudioAttachView;
-
-/* 1 methods, size 0x2 */
-typedef struct AviAudioPrepareView {
-    union { u16 field_0; u16 audio_flags; };
-} AviAudioPrepareView;
-
-/* 1 methods, size 0xc0 */
-typedef struct DDWindowActivateView {
-    u32 field_0;
-    u8 pad_4[184];
-    union { uptr field_bc; WndActivateFn on_activate_app; };
-} DDWindowActivateView;
 
 /* 3 methods, size 0xbc */
 typedef struct DDWindowPaletteView {
@@ -2372,12 +2318,16 @@ typedef struct DdwinAttachBackBufferView {
 
 /* 1 methods, size 0xd0 */
 typedef struct DDWindow {
-    union { u8 pad_0[204]; struct { u8 gap_0[68]; u8 handlers[124]; u8 child_controls[12]; }; };
+    union { u8 pad_0[204]; struct { u8 gap_0[68];
+        union { u8 handlers[124]; struct { u8 gap_44[120]; WndActivateFn on_activate_app; /* 0xbc */ }; };
+        u8 child_controls[12]; }; };
     union { uptr field_cc; uptr hover_control; };
     /* methods */
     void remove_all_controls();    /* 005f029e */
     void deactivate_controls();    /* 005f0342 */
     i8 dispatch_ctrl_msg(int msg,int x,int y);    /* 005f0391 */
+    void call_activate_app(i32 active);    /* 005efd70 */
+    void destruct();
 } DDWindow;
 
 /* DDWindow where the code reaches past its end: the object is larger */
@@ -2414,6 +2364,7 @@ typedef struct PtrList {
     i32 next_impl();    /* 005f0833 */
     void remove_current();    /* 005f0c69 */
     void clear_impl();    /* 005f0e13 */
+    void destruct();    /* 005f04c0 */
 } PtrList;
 
 /* 2 methods, size 0xc */
@@ -2428,19 +2379,15 @@ typedef struct PtrListNode {
     union { u32 field_0; u32 item_ptr; };
     union { u32 field_4; u32 next_node; };
     union { u32 field_8; u32 prev_node; };
+    /* methods */
+    void destruct();    /* 005f0676 */
+    void set_next(iptr next);    /* 005f068c */
+    void set_prev(iptr prev);    /* 005f06ad */
+    u32 data();    /* 005f0e50 */
+    u32 next();    /* 005f0e70 */
+    u32 prev();    /* 005f0e90 */
+    void *scalar_destruct(uint flags);    /* 005f0eb0 */
 } PtrListNode;
-
-/* 1 methods, size 0x8 */
-typedef struct PtrListNodeNextSetView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 next_node; };
-} PtrListNodeNextSetView;
-
-/* 1 methods, size 0xc */
-typedef struct PtrListNodePrevSetView {
-    u8 pad_0[8];
-    union { u32 field_8; u32 prev_node; };
-} PtrListNodePrevSetView;
 
 /* 1 methods, size 0x4 */
 typedef struct PtrListNodeDataSetView {
@@ -2458,23 +2405,6 @@ typedef struct PtrlistPrevImplView {
     u8 pad_0[8];
     union { uptr field_8; uptr cur_node; };
 } PtrlistPrevImplView;
-
-/* 1 methods, size 0x4 */
-typedef struct PtrListNodeDataView {
-    union { u32 field_0; u32 node_data; };
-} PtrListNodeDataView;
-
-/* 1 methods, size 0x8 */
-typedef struct PtrListNodeNextView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 next_node; };
-} PtrListNodeNextView;
-
-/* 1 methods, size 0xc */
-typedef struct PtrListNodePrevView {
-    u8 pad_0[8];
-    union { u32 field_8; u32 prev_node; };
-} PtrListNodePrevView;
 
 /* 1 methods, size 0x35 */
 typedef struct DdctrlCtorView {
@@ -2535,18 +2465,13 @@ typedef struct DdctrlSetParentControlView {
     union { u32 field_c; u32 is_enabled; };
 } DdctrlSetParentControlView;
 
-/* 4 methods, size 0x10 */
-typedef struct DDControlParentView {
-    u8 pad_0[4];
-    union { u32 field_4; u32 owner; };
-    union { uptr field_8; uptr parent_wnd; };
-    union { uptr field_c; uptr parent_control; };
-} DDControlParentView;
-
 /* 2 methods, size 0x48 */
 typedef struct DDControl {
     union { u32 field_0; u32 vtable; };
-    union { u8 pad_4[24]; struct { u8 gap_4[12]; u8 child_controls[12]; }; };
+    union { u32 field_4; u32 control_id; };
+    union { uptr field_8; uptr parent_wnd; };      /* the DDWindow (ddctrl_get_parent_window) */
+    union { uptr field_c; uptr parent_control; };
+    u8 child_controls[12];
     union { uptr field_1c; uptr hover_child; };
     u8 pad_20[20];
     union { u8 field_34; u8 is_active; };
@@ -2561,22 +2486,14 @@ typedef struct DDControl {
     void deactivate();    /* 005f1683 */
     void deactivate_children();    /* 005f19a6 */
     i8 dispatch_to_children(int msg,int x,int y);    /* 005f1a40 */
+    uptr get_parent_window();    /* 005f1514 */
+    void activate();    /* 005f1622 */
 } DDControl;
 
 /* 2 methods, size 0x4 */
 typedef struct DDControlPaintView {
     union { u32 field_0; u32 vtable; };
 } DDControlPaintView;
-
-/* 2 methods, size 0x35 */
-typedef struct DDControlActivateView {
-    union { u32 field_0; u32 vtable; };
-    u8 pad_4[4];
-    union { u32 field_8; u32 owner_ddwin; };
-    union { u32 field_c; u32 parent_control; };
-    u8 pad_10[36];
-    union { u8 field_34; u8 is_active; };
-} DDControlActivateView;
 
 /* 1 methods, size 0x24 */
 typedef struct DdctrlSetClickCbView {
@@ -2670,6 +2587,7 @@ typedef struct SurfaceWindow : DibSurface {
     void on_resize(int width,int height);    /* 005bb621 */
     void resize_clamped(int width,int height);    /* 005bb6c7 */
     void call_paint_cb();    /* 005bb990 */
+    void destruct();
 } SurfaceWindow;
 static_assert(sizeof(SurfaceWindow) == 0x114, "");
 
@@ -2776,6 +2694,7 @@ typedef struct AviPlayer : SurfaceWindow {
     void set_transparent(int enable);    /* 005dd761 */
     void call_end_callback();    /* 005e3550 */
     void call_cue_callback();    /* 005e3580 */
+    void show_frame(i32 frame);    /* 005dd45d */
 } AviPlayer;
 static_assert(sizeof(AviPlayer) == 0xa28, "");
 
@@ -3118,6 +3037,8 @@ typedef struct PediaWindow : SurfaceWindow {
     void draw_unit_page();    /* 005ac9ad */
     void append_unit_fact(iptr unit_type,u32 mask,char *desc_buf,int &has_text);    /* part of draw_unit_page */
     void show_unit_modal(iptr unit_type);    /* 005ad998 */
+    void sort_list(PediaListNode *list_head,i32 *keys,i32 *ids,iptr count);    /* 004f896a */
+    void load_description(int topic2);
 } PediaWindow;
 static_assert(sizeof(PediaWindow) == 0x1f44, "");
 
@@ -3171,6 +3092,8 @@ typedef struct CouncilWindow : SurfaceWindow {
     i32 load_speech(uptr advisor);    /* 005179a3 */
     void draw_speech(int mode);    /* 00517dd3 */
     void draw_advisor_frames();    /* 00518007 */
+    void move_video_to_slot(iptr slot);    /* 00518342 */
+    i32 advisor_from_letter(i8 *token);    /* 00518392 */
 } CouncilWindow;
 static_assert(sizeof(CouncilWindow) == 0x1330, "");
 
@@ -3219,6 +3142,7 @@ typedef struct TaxRateDialog : FrameWindow {
     void paint();    /* 0040c7d0 */
     void run(uptr civ);    /* 0040cd64 */
     TaxRateDialog *construct();    /* 0040f060 */
+    void destruct();    /* 0040f1e0 */
 } TaxRateDialog;
 static_assert(sizeof(TaxRateDialog) == 0x510, "");
 
@@ -3363,6 +3287,7 @@ typedef struct EditorWindow : FrameWindow {
     void unit_editor_create_edit(int index);    /* 005b08e8 */
     void unit_editor_paint();    /* 005b09dc */
     void unit_editor_window_run();    /* 005b1037 */
+    void destruct();    /* 004183d0 */
 } EditorWindow;
 static_assert(sizeof(EditorWindow) == 0xb50, "");
 
@@ -3552,6 +3477,7 @@ typedef struct PictureWindow : FrameWindow {
     void blit();    /* 0042ac18 */
     void advisor_add_close_button();    /* 0042acb0 */
     PictureWindow *construct();    /* 0043c260 */
+    void destruct();    /* 0043c110 */
 } PictureWindow;
 static_assert(sizeof(PictureWindow) == 0x4a4, "");
 
@@ -3561,6 +3487,8 @@ typedef struct CityPicturePopup : PictureWindow {
     union { Dialog dialog; u8 popup_dialog[32]; };
     /* methods */
     CityPicturePopup *construct();    /* 004f3d60 */
+    void *scalar_destruct(uint flags);    /* 004f3e20 */
+    void destruct();
 } CityPicturePopup;
 static_assert(sizeof(CityPicturePopup) == 0x798, "");
 
@@ -3608,6 +3536,7 @@ typedef struct SpritePicker : FrameWindow {
     void draw();    /* 00574522 */
     void run();    /* 00575dec */
     SpritePicker *construct();    /* 005784a0 */
+    void destruct();    /* 00578390 */
 } SpritePicker;
 static_assert(sizeof(SpritePicker) == 0x3ec, "");
 

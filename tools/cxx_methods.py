@@ -18,7 +18,10 @@ in the container:  F="-x c++ -m32 -std=gnu++17 -include native.h -I src/include
 g++ -dM -E $F src/include/auto_common.h > run/methods/macros.txt;
 g++ -E -P $F src/include/auto_common.h > run/methods/pp.txt
 All methods are converted now (2026-10-27); the plan is kept as the map from
-the old names (Ghidra's, re/functions.tsv) to the members.
+the old names (Ghidra's, re/functions.tsv) to the members.  A method left
+free can be converted later: give its free definition the class's `self`,
+fill its class and member in the plan and run apply again for its group
+(only methods still defined free are converted).
 
 What stays free (the plan says why): methods whose address is taken (stored
 in a callback field or table, passed to the platform layer or the array
@@ -96,12 +99,14 @@ PREFIXES = {
     'NetGamelistView': ['net_gamelist_', 'gamelist_'],
     'LobbyList': ['lobby_list_', 'lobby_'],
     'PtrList': ['ptrlist_'],
+    'PtrListNode': ['ptrlist_node_'],
     'FileObject': ['file_obj_', 'file_'],
     'ErrorContext': ['err_ctx_', 'err_'],
     'TimerManager': ['timer_mgr_'],
     'DllHandle': ['dll_handle_', 'dll_'],
     'DDControl': ['ddctrl_'],
     'DDWindow': ['ddwin_'],
+    'DDSurface': ['ddsurf_'],
     'ClickMap': ['clickmap_'],
     'MemBlock': ['memblock_'],
     'PediaLink': ['pedia_link_'],
@@ -113,6 +118,8 @@ PREFIXES = {
 # Free name -> member name, where the rule gives a poor one.
 OVERRIDES = {
     'surfwnd_wnd_ctor': 'construct',
+    'surfwnd_wnd_dtor': 'destruct',
+    'ptrlist_node_delete': 'scalar_destruct',     # `delete` is a keyword; the scalar deleting destructor
     'net_msg_addr_header_init': 'init',
     'net_msg_server_info_init': 'init',
     'net_msg_server_answer_init': 'init',
@@ -128,7 +135,7 @@ REAL_VIEWS = {'NetGamelistView', 'MapView'}
 # Batches: groups of classes converted together.
 GROUPS = {
     'controls': ['Control', 'Button', 'Checkbox', 'Scrollbar', 'EditControl', 'ComboBox', 'ListBox', 'Hotspot',
-                 'Hyperlink', 'RadioGroup', 'SpriteButton', 'ClickMap', 'DDControl', 'DDWindow'],
+                 'Hyperlink', 'RadioGroup', 'SpriteButton', 'ClickMap', 'DDControl', 'DDWindow', 'DDSurface'],
     'windows': ['WndBase', 'WndHandlers', 'ModalMenuWindow', 'Wnd', 'SurfaceWindow', 'DibSurface', 'FrameWindow',
                 'GameMenu', 'Sprite', 'GamePalette', 'GameFont', 'PictureWindow', 'SetupPicWindow', 'SpritePicker',
                 'TaxRateDialog', 'CityPicturePopup', 'PortraitDialog'],
@@ -141,7 +148,7 @@ GROUPS = {
                 'NetNamedMsg', 'NetAddrMsg', 'NetServerInfoMsg', 'NetServerAnswerMsg', 'NetPlayerNodeMsg',
                 'NetPlayerListMsg', 'NetPlayerInfoMsg', 'NetWhoseTurnMsg', 'DiffEngSection'],
     'sound': ['AviPlayer', 'AviAudio'],
-    'rest': ['PtrList', 'FileObject', 'ErrorContext', 'TimerManager', 'DllHandle', 'MemBlock'],
+    'rest': ['PtrList', 'PtrListNode', 'FileObject', 'ErrorContext', 'TimerManager', 'DllHandle', 'MemBlock'],
 }
 
 KEYWORDS = set('''alignas alignof and and_eq asm auto bitand bitor bool break case catch char char8_t char16_t
@@ -618,7 +625,10 @@ def apply(groups):
     members = [r for r in rows if r['member']]
     by_old = {r['old']: r for r in members}
     sel_classes = set(c for g in groups for c in GROUPS[g])
-    now = {r['old']: r for r in members if r['class'] in sel_classes}
+    # the methods still defined as free functions (converted ones are left alone: a member
+    # named as its old name, called on this, must not be taken for a free call)
+    free = {f.name for path in SOURCES for f in find_functions(path) if f.cls is None and f.thiscall}
+    now = {r['old']: r for r in members if r['class'] in sel_classes and r['old'] in free}
     # names declared per class: fields and every planned member (all batches)
     declared = {c: set(ci.fields) for c, ci in classes.items()}
     for r in members:
@@ -655,9 +665,10 @@ def apply(groups):
             edits_total += 1
     # headers: declarations into the classes, prototypes out of protos.h
     decls = {}
-    for r in now.values():
-        decls.setdefault(r['class'], []).append(r)
     sigs = collect_signatures(now)
+    for r in now.values():
+        if r['old'] in sigs:        # converted by this run (not by an earlier one)
+            decls.setdefault(r['class'], []).append(r)
     for path in HEADERS:
         text = open(path).read()
         m = mask(text)
@@ -666,7 +677,8 @@ def apply(groups):
             ci = classes[c]
             if ci.path != path:
                 continue
-            lines = ['', '    /* methods */']
+            # a class with methods already: the new ones after them
+            lines = ['', '    /* methods */'] if '/* methods */' not in text[ci.start:ci.end] else ['']
             for r in sorted(lst, key=lambda r: r['addr'] or '~'):
                 ret, params = sigs[r['old']]
                 decl = '    %s%s%s(%s);' % (ret, '' if ret.endswith('*') else ' ', r['member'], params)

@@ -1495,7 +1495,7 @@ void PediaWindow::destruct()
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004f4763 */ { ctrl_dtor((Button *)(((int)this) + 0x1714)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004f4772 */ { surfwnd_dtor(((SurfaceWindow *)this)); }
+  /* inlined unwind funclet 004f4772 */ { ((SurfaceWindow *)this)->SurfaceWindow::destruct(); }
   return;
 }
 
@@ -1508,7 +1508,7 @@ void PediaWindow::clear_links()
   while (link_list_head != (PediaLink *)0x0) {
     next_link = link_list_head->next;
     if ((void *)link_list_head != (void *)0x0) {
-      pedia_link_scalar_dtor((void *)link_list_head,1);
+      ((PediaLink *)link_list_head)->scalar_destruct(1);
     }
     link_list_head = next_link;
   }
@@ -2080,7 +2080,7 @@ void __cdecl pedia_toggle_describe(i32 unused_arg)
       crt_strcpy(((i8 *)&pedia_wnd.title_text),title);
       ((PediaWindow *)((i8 *)&pedia_wnd.window))->draw_frame();
       ((PediaWindow *)((i8 *)&pedia_wnd.window))->fill_background((RECT *)&pedia_wnd.describe_rect,1);
-      pedia_load_description((PediaWindow *)((i8 *)&pedia_wnd.window),item);
+      ((PediaWindow *)((i8 *)&pedia_wnd.window))->load_description(item);
       break;
     case 7:
       pedia_wnd.page_mode = 2;
@@ -2088,7 +2088,7 @@ void __cdecl pedia_toggle_describe(i32 unused_arg)
       crt_strcpy(((i8 *)&pedia_wnd.title_text),title);
       ((PediaWindow *)((i8 *)&pedia_wnd.window))->draw_frame();
       ((PediaWindow *)((i8 *)&pedia_wnd.window))->fill_background((RECT *)&pedia_wnd.describe_rect,1);
-      pedia_load_description((PediaWindow *)((i8 *)&pedia_wnd.window),item);
+      ((PediaWindow *)((i8 *)&pedia_wnd.window))->load_description(item);
       break;
     default:
       text_append((const char *)&str_this_should_not_happen);
@@ -2101,7 +2101,7 @@ void __cdecl pedia_toggle_describe(i32 unused_arg)
     ((PediaWindow *)((i8 *)&pedia_wnd.window))->update_controls();
     ((PediaWindow *)((i8 *)&pedia_wnd.window))->draw_frame();
     ((PediaWindow *)((i8 *)&pedia_wnd.window))->fill_background((RECT *)&pedia_wnd.describe_rect,0);
-    pedia_load_description((PediaWindow *)((i8 *)&pedia_wnd.window),item);
+    ((PediaWindow *)((i8 *)&pedia_wnd.window))->load_description(item);
   }
   ((PediaWindow *)((i8 *)&pedia_wnd.window))->history_push();
   return;
@@ -2982,7 +2982,7 @@ void PediaWindow::load_advance_index(PediaListNode *&prev_node2)
     }
     text_close_file();
     if (pedia_advance_names != (PediaListNode *)0x0) {
-      pedia_sort_list(this,pedia_advance_names,pedia_advance_keys,pedia_advance_ids,
+      sort_list(pedia_advance_names,pedia_advance_keys,pedia_advance_ids,
                          pedia_advance_count);
     }
   }
@@ -3037,7 +3037,7 @@ void PediaWindow::load_improvement_index(PediaListNode *&prev_node2)
     }
     text_close_file();
     if (pedia_improve_names != (PediaListNode *)0x0) {
-      pedia_sort_list(this,pedia_improve_names,pedia_improve_keys,pedia_improve_ids,
+      sort_list(pedia_improve_names,pedia_improve_keys,pedia_improve_ids,
                          pedia_improve_count);
     }
   }
@@ -3091,7 +3091,7 @@ void PediaWindow::load_wonder_index(PediaListNode *&prev_node2)
     }
     text_close_file();
     if (pedia_wonder_names != (PediaListNode *)0x0) {
-      pedia_sort_list(this,pedia_wonder_names,pedia_wonder_keys,pedia_wonder_ids,
+      sort_list(pedia_wonder_names,pedia_wonder_keys,pedia_wonder_ids,
                          pedia_wonder_count);
     }
   }
@@ -3145,7 +3145,7 @@ void PediaWindow::load_unit_index(PediaListNode *&prev_node2)
     }
     text_close_file();
     if (pedia_unit_names != (PediaListNode *)0x0) {
-      pedia_sort_list(this,pedia_unit_names,pedia_unit_keys,pedia_unit_ids,pedia_unit_count);
+      sort_list(pedia_unit_names,pedia_unit_keys,pedia_unit_ids,pedia_unit_count);
     }
   }
 }
@@ -3196,7 +3196,7 @@ void PediaWindow::load_government_index(PediaListNode *&prev_node2)
     }
     text_close_file();
     if (pedia_government_names != (PediaListNode *)0x0) {
-      pedia_sort_list(this,pedia_government_names,pedia_government_keys,pedia_government_ids,pedia_government_count);
+      sort_list(pedia_government_names,pedia_government_keys,pedia_government_ids,pedia_government_count);
     }
   }
 }
@@ -3257,7 +3257,7 @@ void PediaWindow::load_terrain_index(PediaListNode *&prev_node2)
     }
     text_close_file();
     if (pedia_terrain_names != (PediaListNode *)0x0) {
-      pedia_sort_list(this,pedia_terrain_names,pedia_terrain_keys,pedia_terrain_ids,pedia_terrain_count_2);
+      sort_list(pedia_terrain_names,pedia_terrain_keys,pedia_terrain_ids,pedia_terrain_count_2);
     }
   }
 }
@@ -3311,7 +3311,7 @@ void PediaWindow::load_concept_index(PediaListNode *&prev_node2)
       }
     }
     if (pedia_concept_names != (PediaListNode *)0x0) {
-      pedia_sort_list(this,pedia_concept_names,pedia_concept_keys,pedia_concept_ids,pedia_concept_count);
+      sort_list(pedia_concept_names,pedia_concept_keys,pedia_concept_ids,pedia_concept_count);
     }
   }
 }
@@ -3335,7 +3335,7 @@ void PediaWindow::load_indexes()
 }
 
 /* 004f896a auto */
-void __thiscall pedia_sort_list(void *self,PediaListNode *list_head,i32 *keys,i32 *ids,iptr count)
+void PediaWindow::sort_list(PediaListNode *list_head,i32 *keys,i32 *ids,iptr count)
 
 {
   i32 swap_tmp;
@@ -3458,14 +3458,14 @@ void __cdecl pedia_end_modal(void)
    
    Library: Visual Studio 1998 Debug */
 
-void * __thiscall pedia_link_scalar_dtor(void *self,uint flags)
+void *PediaLink::scalar_destruct(uint flags)
 
 {
-  pedia_link_dtor(self);
+  destruct();
   if ((flags & 1) != 0) {
-    operator_delete(self);
+    operator_delete(this);
   }
-  return self;
+  return this;
 }
 
 /* 004fa140 auto */
@@ -3474,14 +3474,14 @@ void * __thiscall pedia_link_scalar_dtor(void *self,uint flags)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall pedia_link_dtor(void *self)
+void PediaLink::destruct()
 
 {
   i32 exc_link;
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004fa17e */ { ((Hyperlink *)(*(int *)&self + 4))->destruct(); }
+  /* inlined unwind funclet 004fa17e */ { ((Hyperlink *)(((int)this) + 4))->destruct(); }
   return;
 }
 
@@ -4588,7 +4588,7 @@ void __cdecl shared_palette_reg_atexit(void)
 void __cdecl shared_palette_static_dtor(void)
 
 {
-  palette_destroy((GamePalette *)((i8 *)&art_palette));
+  ((GamePalette *)((i8 *)&art_palette))->destroy();
   return;
 }
 

@@ -15,9 +15,8 @@
  * method (ECX = the Civilopedia window); the decompiler took ECX for a value
  * left over from the __chkstk call.
  */
-void __thiscall pedia_load_description(void *self, int topic2)
+void PediaWindow::load_description(int topic2)
 {
-  PediaWindow *obj_addr = (PediaWindow *)self;
   bool section_missing;
   int found;
   char *line;
@@ -31,35 +30,35 @@ void __thiscall pedia_load_description(void *self, int topic2)
   const char *translated;
   
   str_clear((char *)section_name);
-  obj_addr->clear_links();
+  clear_links();
   ui_pump_messages();
-  switch(obj_addr->category) {
+  switch(category) {
   case 1:
-    topic2 = obj_addr->pedia_advance_keys[topic2];
+    topic2 = pedia_advance_keys[topic2];
     crt_strcpy(section_name,str_advance_index);
     break;
   case 2:
-    topic2 = obj_addr->pedia_improve_keys[topic2];
+    topic2 = pedia_improve_keys[topic2];
     crt_strcpy(section_name,str_improvement_index);
     break;
   case 3:
-    topic2 = obj_addr->pedia_wonder_keys[topic2];
+    topic2 = pedia_wonder_keys[topic2];
     crt_strcpy(section_name,str_wonder_index);
     break;
   case 4:
-    topic2 = obj_addr->pedia_unit_keys[topic2];
+    topic2 = pedia_unit_keys[topic2];
     crt_strcpy(section_name,str_unit_index);
     break;
   case 5:
-    topic2 = obj_addr->pedia_terrain_keys[topic2];
+    topic2 = pedia_terrain_keys[topic2];
     crt_strcpy(section_name,str_terrain_index);
     break;
   case 6:
-    topic2 = obj_addr->pedia_government_keys[topic2];
+    topic2 = pedia_government_keys[topic2];
     crt_strcpy(section_name,str_government_index);
     break;
   case 7:
-    topic2 = obj_addr->pedia_concept_keys[topic2];
+    topic2 = pedia_concept_keys[topic2];
     crt_strcpy(section_name,str_concept_descriptions);
     break;
   default:
@@ -128,8 +127,8 @@ void __thiscall pedia_load_description(void *self, int topic2)
       text_append_label(0xe);
       crt_strcpy(desc_text,((i8 *)&textbuf.buf));
     }
-    ((Control *)((iptr)obj_addr + 0x1a98))->set_text((const char *)desc_text);
-    ((Control *)((iptr)obj_addr + 0x1a98))->show_and_redraw();
+    ((Control *)((iptr)this + 0x1a98))->set_text((const char *)desc_text);
+    ((Control *)((iptr)this + 0x1a98))->show_and_redraw();
   }
   return;
 }
@@ -1086,7 +1085,7 @@ static void wnd_frame_on_keydown(Wnd *frame,uint wparam)
   }
   else {
     ctrl_arg = input_map_vkey(wparam);
-    wnd_dispatch_hotkey_char(frame,ctrl_arg);
+    frame->dispatch_hotkey_char(ctrl_arg);
   }
 }
 

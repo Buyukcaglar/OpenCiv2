@@ -66,10 +66,14 @@ def functions(obj):
     for k, v in funcs.items():
         if v is None:
             continue
-        while v and re.match(r'(nop\w*|xchg %ax,%ax|lea 0x0\(%e[a-z]+(,%eiz,1)?\),%e[a-z]+)\b', v[-1][1]):
+        while v and NOP.match(v[-1][1]):
             v = v[:-1]
         res[k] = (v, {a: i for i, (a, _) in enumerate(v)})
     return res
+
+
+# alignment padding (gcc's multi-byte nops), skipped where execution falls into it
+NOP = re.compile(r'(nop\w*|xchg %ax,%ax|lea 0x0\(%e[a-z]+(,%eiz,1)?\),%e[a-z]+)\b')
 
 
 def target(text):
@@ -124,7 +128,7 @@ def compare(fa, fb):
             while 0 <= ia < len(wa.insns) and seen < 50:
                 if wa.insns[ia][1].startswith('jmp ') and target(wa.insns[ia][1]):
                     ia = wa.index.get(target(wa.insns[ia][1])[1], -1)
-                elif wa.insns[ia][1] == 'nop':
+                elif NOP.match(wa.insns[ia][1]):
                     ia += 1
                 else:
                     break
@@ -133,7 +137,7 @@ def compare(fa, fb):
             while 0 <= ib < len(wb.insns) and seen < 50:
                 if wb.insns[ib][1].startswith('jmp ') and target(wb.insns[ib][1]):
                     ib = wb.index.get(target(wb.insns[ib][1])[1], -1)
-                elif wb.insns[ib][1] == 'nop':
+                elif NOP.match(wb.insns[ib][1]):
                     ib += 1
                 else:
                     break

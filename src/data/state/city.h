@@ -374,7 +374,7 @@ extern DibSurface city_window_bg_surface;
 typedef struct CityWindowLayout {
     DibSurface window;  /* 006a91b8 */
     WndBase wnd[41];  /* 006a9200 */
-    ClickMapHitTestView clickmap;  /* 006a9490 */
+    ClickMap clickmap;  /* 006a9490 */
     i32 city;  /* 006aa754 */
     i32 minimized;  /* 006aa758 */
     int closed;  /* 006aa75c */

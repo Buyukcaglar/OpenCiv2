@@ -762,7 +762,7 @@ void PictureWindow::open(uint resource_id,u32 report,u32 style,u32 img_width,u32
   i8 *seh_scope;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   ((PictureWindow *)((i8 *)&advisor_state.window))->close();
   ui_set_button_font((iptr)&advisor_button_font_block.advisor_button_font);
   controls_created = 0;
@@ -849,7 +849,7 @@ void PictureWindow::blit()
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall picwnd_dtor(void *self)
+void PictureWindow::destruct()
 
 {
   i8 *seh_scope;
@@ -857,19 +857,19 @@ void __thiscall picwnd_dtor(void *self)
   
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 5;
-  /* inlined unwind funclet 0043c19c */ { ((Scrollbar *)(*(int *)&self + 0x410))->destruct(); }
+  /* inlined unwind funclet 0043c19c */ { ((Scrollbar *)(((int)this) + 0x410))->destruct(); }
   (*((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 0043c1ab */ { ctrl_dtor((Button *)(*(int *)&self + 0x3d4)); }
+  /* inlined unwind funclet 0043c1ab */ { ctrl_dtor((Button *)(((int)this) + 0x3d4)); }
   (*((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0043c1ba */ { ctrl_dtor((Button *)(*(int *)&self + 0x398)); }
+  /* inlined unwind funclet 0043c1ba */ { ctrl_dtor((Button *)(((int)this) + 0x398)); }
   (*((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0043c1c9 */ { ctrl_dtor((Button *)(*(int *)&self + 0x35c)); }
+  /* inlined unwind funclet 0043c1c9 */ { ctrl_dtor((Button *)(((int)this) + 0x35c)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0043c1d8 */ { ctrl_dtor((Button *)(*(int *)&self + 800)); }
+  /* inlined unwind funclet 0043c1d8 */ { ctrl_dtor((Button *)(((int)this) + 800)); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0043c1e7 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x2d8)); }
+  /* inlined unwind funclet 0043c1e7 */ { surface_dtor((DibSurface *)(((int)this) + 0x2d8)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0043c1f6 */ { (*(FrameWindow **)&self)->FrameWindow::destruct(); }
+  /* inlined unwind funclet 0043c1f6 */ { FrameWindow::destruct(); }
   return;
 }
 
@@ -1398,7 +1398,7 @@ void WndHandlers::clear_handlers()
 }
 
 /* 0044ca40 auto */
-void __thiscall wnd_handlers_dtor(void *self)
+void WndHandlers::destruct()
 
 {
   return;
@@ -1407,7 +1407,7 @@ void __thiscall wnd_handlers_dtor(void *self)
 /* 0044ca60: written by hand in src/game/unwind.cpp */
 
 /* 0044cb20 auto */
-i32 __thiscall surfwnd_wnd_dtor(void *self)
+i32 Wnd::destruct()
 
 {
   i32 seh_handler;
@@ -1415,7 +1415,7 @@ i32 __thiscall surfwnd_wnd_dtor(void *self)
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0044cb5e */ { wnd_dtor(*(WndBase **)&self); }
+  /* inlined unwind funclet 0044cb5e */ { ModalMenuWindow::destruct(); }
   return seh_handler;
 }
 
@@ -3742,7 +3742,7 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
   i32 eh_prev;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   sprite_init(&sprite);
   ON_SCOPE_EXIT(sprite_destroy(&sprite));
   if (autoplay.active == 0) {
@@ -3800,7 +3800,7 @@ int __cdecl popup_city_picture_zoom(const char *section,iptr city,uint picture,i
       city_calc.zoom_requested = 1;
     }
     if (popup != (void *)0x0) {
-      city_picture_popup_scalar_dtor(popup,1);
+      ((CityPicturePopup *)popup)->scalar_destruct(1);
     }
   }
   else {
@@ -4130,7 +4130,7 @@ void __cdecl caption_font_reg_atexit(void)
 void __cdecl caption_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&caption_font_block.caption_font));
+  ((GameFont *)((i8 *)&caption_font_block.caption_font))->destroy();
   return;
 }
 
@@ -4172,7 +4172,7 @@ void __cdecl caption_small_font_reg_atexit(void)
 void __cdecl caption_small_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&caption_small_font_block.caption_small_font));
+  ((GameFont *)((i8 *)&caption_small_font_block.caption_small_font))->destroy();
   return;
 }
 
@@ -4214,7 +4214,7 @@ void __cdecl ui_text_font_reg_atexit(void)
 void __cdecl ui_text_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&ui_text_font));
+  ((GameFont *)((i8 *)&ui_text_font))->destroy();
   return;
 }
 
@@ -4688,7 +4688,7 @@ void FrameWindow::destruct()
   destroy_caption_buttons();
   wnd_destroy_with_surface();
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0055349b */ { surfwnd_dtor(((SurfaceWindow *)this)); }
+  /* inlined unwind funclet 0055349b */ { ((SurfaceWindow *)this)->SurfaceWindow::destruct(); }
   return;
 }
 
@@ -4964,16 +4964,16 @@ GameMenu *GameMenu::construct(i32 size)
 }
 
 /* 00578770 auto */
-void __thiscall menu_dtor(GameMenu *self)
+void GameMenu::destruct()
 
 {
   i32 eh_prev;
   i32 eh_state;
   
   eh_state = 0;
-  memblock_free((MemBlock *)self->item_storage);
+  memblock_free((MemBlock *)item_storage);
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 005787bd */ { (*&self)->handle_destruct(); }
+  /* inlined unwind funclet 005787bd */ { handle_destruct(); }
   return;
 }
 
@@ -5521,7 +5521,7 @@ void ModalMenuWindow::attach_menu(iptr menu_obj)
   i32 hmenu;
   NativeWindow *hwnd;
   
-  hmenu = menu_get_hmenu((MenuHandleView *)menu_obj);
+  hmenu = ((GameMenu *)menu_obj)->get_hmenu();
   hwnd = get_window();
   wnd_obj_attach_menu(hwnd,hmenu);
   menu = menu_obj;
@@ -5529,10 +5529,10 @@ void ModalMenuWindow::attach_menu(iptr menu_obj)
 }
 
 /* 00579b90 auto */
-u32 __thiscall menu_get_hmenu(MenuHandleView *self)
+u32 GameMenu::get_hmenu()
 
 {
-  return self->hmenu;
+  return hmenu;
 }
 
 /* 00579bc0 auto */
@@ -5683,7 +5683,7 @@ void __cdecl dialog_text_font_reg_atexit(void)
 void __cdecl dialog_text_font_atexit_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&dialog_text_font_obj_block.dialog_text_font_obj));
+  ((GameFont *)((i8 *)&dialog_text_font_obj_block.dialog_text_font_obj))->destroy();
   return;
 }
 
@@ -5725,7 +5725,7 @@ void __cdecl dialog_title_font_reg_atexit(void)
 void __cdecl dialog_title_font_atexit_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&dialog_title_font_obj_block.dialog_title_font_obj));
+  ((GameFont *)((i8 *)&dialog_title_font_obj_block.dialog_title_font_obj))->destroy();
   return;
 }
 
@@ -5767,7 +5767,7 @@ void __cdecl dialog_list_font_reg_atexit(void)
 void __cdecl dialog_list_font_atexit_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&dialog_list_font_obj));
+  ((GameFont *)((i8 *)&dialog_list_font_obj))->destroy();
   return;
 }
 
@@ -5809,7 +5809,7 @@ void __cdecl dialog_plain_font_reg_atexit(void)
 void __cdecl dialog_plain_font_atexit_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&dialog_plain_font_obj_block.dialog_plain_font_obj));
+  ((GameFont *)((i8 *)&dialog_plain_font_obj_block.dialog_plain_font_obj))->destroy();
   return;
 }
 
@@ -9511,8 +9511,7 @@ void Dialog::render()
       row_height = edit_row_height();
       zoom = edit_y;
       line_spacing = ((GameFont *)body_font)->line_spacing();
-      surface_draw_text_cur_font
-                ((SurfaceTextCurFontView *)surf_wnd,(const char *)edit_field->label,edit_x,
+      ((DibSurface *)surf_wnd)->draw_text_cur_font((const char *)edit_field->label,edit_x,
                  (tmp + (row_height >> 1) + zoom) - (line_spacing >> 1),size);
       i++;
     }
@@ -9996,7 +9995,7 @@ Hotspot *Hotspot::vector_destruct(uint flags)
 SurfaceWindow *SurfaceWindow::scalar_destruct(uint flags)
 
 {
-  surfwnd_dtor(this);
+  destruct();
   if ((flags & 1) != 0) {
     operator_delete(this);
   }
@@ -10089,7 +10088,7 @@ void SurfaceWindow::on_resize(int width,int height)
   SetRect(&rect,0,0,width,height);
   call_untyped(((code **)vtable)[0], this,&rect);
   palette = ((WndBase *)&window)->get_palette_obj();
-  apply_palette((PaletteVersionView *)palette);
+  apply_palette((GamePalette *)palette);
   if (this == (SurfaceWindow *)0x0) {
     (*(u8 * *)&modal_wnd.active_child) = (u8 *)0x0;
   }
@@ -11089,7 +11088,7 @@ void Wnd::focus_first_control()
 }
 
 /* 005c5c86 auto */
-i32 __thiscall wnd_dispatch_hotkey_char(void *self,i32 ch)
+i32 Wnd::dispatch_hotkey_char(i32 ch)
 
 {
   u8 key;
@@ -11110,7 +11109,7 @@ i32 __thiscall wnd_dispatch_hotkey_char(void *self,i32 ch)
   key_str[1] = 0;
   __strlwr((char *)key_str);
   key = key_str[0];
-  ctrl = *(Control **)((int)self + 0xb8);
+  ctrl = (Control *)control_list;
   do {
     if (ctrl == (Control *)0x0) {
       return handled;
@@ -11453,7 +11452,7 @@ void __cdecl default_draw_font_reg_dtor(void)
 void __cdecl default_draw_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i32 *)&default_draw_font_obj_block.default_draw_font_obj));
+  ((GameFont *)((i32 *)&default_draw_font_obj_block.default_draw_font_obj))->destroy();
   return;
 }
 
@@ -11613,7 +11612,7 @@ void WndBase::create_child(i32 wnd_kind,u32 style,i32 x,i32 y, i32 width,i32 hei
 }
 
 /* 005dba95 auto */
-i32 __thiscall wnd_is_shift_down(void *self)
+i32 Wnd::is_shift_down()
 
 {
   i32 is_down;
@@ -11623,7 +11622,7 @@ i32 __thiscall wnd_is_shift_down(void *self)
 }
 
 /* 005dbab8 auto */
-i32 __thiscall wnd_is_ctrl_down(void *self)
+i32 Wnd::is_ctrl_down()
 
 {
   i32 is_down;
@@ -12604,7 +12603,7 @@ void WndHandlers::call_exitsizemove()
 }
 
 /* 005ed580 auto */
-void __thiscall wnd_on_size_nop(void *self,i32 width,i32 height)
+void ModalMenuWindow::on_size_nop(i32 width,i32 height)
 
 {
   return;
@@ -12768,7 +12767,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
         return def_result;
       }
       if (wparam != ddwin_last_activate_app) {
-        ddwin_call_activate_app((DDWindowActivateView *)self,wparam);
+        self->call_activate_app(wparam);
         ddwin_last_activate_app = wparam;
       }
     }
@@ -12888,11 +12887,11 @@ LRESULT __stdcall ddwin_native_wndproc(HWND hwnd,uint msg,uint wparam,uint lpara
 }
 
 /* 005efd70 auto */
-void __thiscall ddwin_call_activate_app(DDWindowActivateView *self,i32 active)
+void DDWindow::call_activate_app(i32 active)
 
 {
-  if (self->on_activate_app != 0) {
-    self->on_activate_app(active);
+  if (on_activate_app != 0) {
+    on_activate_app(active);
   }
   return;
 }

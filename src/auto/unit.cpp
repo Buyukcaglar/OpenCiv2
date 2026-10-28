@@ -3606,7 +3606,7 @@ void __cdecl unit_pick_caravan_commodity(iptr city,iptr unit)
       units[unit].counter = cities[city].supplies[rand_slot];
     }
   }
-  cities[city].flags = cities[city].flags | CITYF_COMMODITY_PICKED;
+  cities[city].flags = cities[city].flags | CITYF_HAD_CARAVAN;
 }
 
 /* 00531567 auto */
@@ -9005,7 +9005,7 @@ void EditorWindow::unit_editor_window_run()
   i32 eh_next;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
@@ -9168,7 +9168,7 @@ void __cdecl unit_editor_run(void)
   i32 eh_next;
   
   editor_wnd.construct();
-  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
+  ON_SCOPE_EXIT(editor_wnd.destruct());
   editor_wnd.unit_editor_window_run();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   return;
@@ -10373,10 +10373,12 @@ void __cdecl unit_delete_with_cargo(iptr unit,int send_update)
   int result;
   int now_ticks;
   bool at_sea;
+  bool deleted;
   iptr y2;
   iptr x2;
   
   at_sea = false;
+  deleted = false;
   net.unit_delete_cargo_busy = 1;
   if ((2 < game.multiplayer) && (is_host = net.is_host(), is_host == '\0')) {
     net.unit_delete_cargo_busy = 0;
@@ -10405,9 +10407,11 @@ void __cdecl unit_delete_with_cargo(iptr unit,int send_update)
     if (result == 0) {
       if (-x2 == (units[unit].owner * 5 + 5) * 0x28) {
         unit_stack_delete_all(unit,0);
-        goto send_update_done;
+        deleted = true;
       }
-      at_sea = true;
+      else {
+        at_sea = true;
+      }
     }
     else {
       result = tile_is_ocean(x2,y2);
@@ -10419,10 +10423,9 @@ void __cdecl unit_delete_with_cargo(iptr unit,int send_update)
     unit_stack_delete_all(unit,0);
     ((CityWindow *)((i8 *)&city_wnd.window))->on_unit_change(-1,x2,y2);
   }
-  else {
+  else if (!deleted) {
     unit_delete(unit,0);
   }
-send_update_done:
   if ((2 < game.multiplayer) && (send_update != 0)) {
     net_send_state_diff(0xff,2,0,0,0);
     XD_FlushSendBuffer(5000);

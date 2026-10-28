@@ -36,7 +36,7 @@ addr	old	class	member	file	why
 0040efd0	font_text_width	GameFont	text_width	src/auto/graphics.cpp	
 0040f010	surface_delete	DibSurface	surface_delete	src/auto/graphics.cpp	kept whole (delete clashes)
 0040f060	taxrate_dialog_ctor	TaxRateDialog	construct	src/auto/city.cpp	
-0040f1e0	taxrate_dialog_dtor	void		src/auto/city.cpp	self is void (not a class)
+0040f1e0	taxrate_dialog_dtor	TaxRateDialog	destruct	src/auto/city.cpp	
 0040f320	wnd_set_modal_idle_callback	ModalMenuWindow	set_modal_idle_callback	src/auto/window.cpp	
 0040f350	wnd_set_keyboard_nav	Wnd	set_keyboard_nav	src/auto/window.cpp	
 0040f380	ctrl_show_and_redraw	Control	show_and_redraw	src/auto/controls.cpp	
@@ -88,7 +88,7 @@ addr	old	class	member	file	why
 00417ef0	font_set	GameFont	set	src/auto/graphics.cpp	
 00417f70	sprite_get_key_color	Sprite	get_key_color	src/auto/graphics.cpp	
 00417fa0	editor_wnd_ctor	EditorWindow	construct	src/auto/editor.cpp	
-004183d0	editor_wnd_dtor	void		src/auto/editor.cpp	self is void (not a class)
+004183d0	editor_wnd_dtor	EditorWindow	destruct	src/auto/editor.cpp	
 00418740	ctrl_get_id	Control	get_id	src/auto/controls.cpp	
 00418770	control_get_hwnd	Control	get_hwnd	src/auto/controls.cpp	
 004187a0	edit_ctor	EditControl		src/auto/controls.cpp	address taken (src/auto/editor.cpp, src/auto/window.cpp)
@@ -125,7 +125,7 @@ addr	old	class	member	file	why
 00421f40	net_is_host	NetSession	is_host	src/auto/network.cpp	
 00421f70	net_gamelist_view_ctor	NetGamelistView	view_construct	src/auto/network.cpp	
 00421fad	net_gamelist_view_dtor	NetGamelistView	view_destruct	src/auto/network.cpp	
-00421fcd	net_session_init			src/auto/network.cpp	self is not a class pointer
+00421fcd	net_session_init	NetGamelistView	net_session_init	src/auto/network.cpp	
 004244e0	net_gamelist_restore_selection	NetGamelistView	restore_selection	src/auto/network.cpp	
 00424688	net_gamelist_find_option	NetGamelistView	find_option	src/auto/network.cpp	
 0042472a	net_gamelist_update_details	NetGamelistView	update_details	src/auto/network.cpp	
@@ -146,13 +146,13 @@ addr	old	class	member	file	why
 0042abc1	picwnd_blit_at	PictureWindow	blit_at	src/auto/window.cpp	
 0042ac18	picwnd_blit	PictureWindow	blit	src/auto/window.cpp	
 0042acb0	advisor_add_close_button	PictureWindow	advisor_add_close_button	src/auto/reports.cpp	
-0043c110	picwnd_dtor	void		src/auto/window.cpp	self is void (not a class)
+0043c110	picwnd_dtor	PictureWindow	destruct	src/auto/window.cpp	
 0043c260	picwnd_ctor	PictureWindow	construct	src/auto/window.cpp	
 0043c3f0	resource_dll_load	DllHandle	resource_dll_load	src/auto/map.cpp	
 0043c430	dll_free	DllHandle	free	src/auto/text.cpp	
 0043c460	font_init	GameFont	init	src/auto/graphics.cpp	
 0043c4c0	font_init_styled	GameFont	init_styled	src/auto/graphics.cpp	
-0043c520	font_destroy	GameFont		src/auto/graphics.cpp	assigns self or takes its address
+0043c520	font_destroy	GameFont	destroy	src/auto/graphics.cpp	
 0043c560	surface_height	DibSurface	surface_height	src/auto/graphics.cpp	kept whole (height clashes)
 0043c590	surface_width	DibSurface	surface_width	src/auto/graphics.cpp	kept whole (width clashes)
 0043c5c0	wnd_nonclient_height	WndBase	nonclient_height	src/auto/window.cpp	
@@ -176,8 +176,8 @@ addr	old	class	member	file	why
 0044c730	wnd_ctor	ModalMenuWindow	construct	src/auto/window.cpp	
 0044c8b0	wnd_handlers_ctor	WndHandlers	construct	src/auto/window.cpp	
 0044c8e0	wnd_clear_handlers	WndHandlers	clear_handlers	src/auto/window.cpp	
-0044ca40	wnd_handlers_dtor	void		src/auto/window.cpp	self is void (not a class)
-0044cb20	surfwnd_wnd_dtor	void		src/auto/window.cpp	self is void (not a class)
+0044ca40	wnd_handlers_dtor	WndHandlers	destruct	src/auto/window.cpp	
+0044cb20	surfwnd_wnd_dtor	Wnd	destruct	src/auto/window.cpp	
 0044ce16	throneroom_ctor	ThroneRoomWindow	construct	src/auto/reports.cpp	
 0044d027	throneroom_dtor	ThroneRoomWindow	destruct	src/auto/reports.cpp	
 0044d162	throneroom_create_windows	ThroneRoomWindow	create_windows	src/auto/reports.cpp	
@@ -220,7 +220,7 @@ addr	old	class	member	file	why
 00453d40	hyperlink_set_click_callback	Hyperlink	set_click_callback	src/auto/pedia.cpp	
 00453d70	hyperlink_set_dblclick_callback	Hyperlink	set_dblclick_callback	src/auto/pedia.cpp	
 00454354	cityview_ctor	CityViewWindow	construct	src/auto/city.cpp	
-00454699	cityview_dtor	void		src/auto/city.cpp	self is void (not a class)
+00454699	cityview_dtor	CityViewWindow	destruct	src/auto/city.cpp	
 004548a9	cityview_load	CityViewWindow	load	src/auto/city.cpp	
 00454eb2	cityview_run_modal	CityViewWindow	run_modal	src/auto/city.cpp	
 00454f83	cityview_classify_site	CityViewWindow	classify_site	src/auto/city.cpp	
@@ -240,19 +240,19 @@ addr	old	class	member	file	why
 004560f8	cityview_draw_title	CityViewWindow	draw_title	src/auto/city.cpp	
 0045638b	cityview_scroll_right	CityViewWindow	scroll_right	src/auto/city.cpp	
 004564a8	cityview_scroll_left	CityViewWindow	scroll_left	src/auto/city.cpp	
-00456e90	cityview_scalar_dtor	void		src/auto/city.cpp	self is void (not a class)
+00456e90	cityview_scalar_dtor	CityViewWindow	scalar_destruct	src/auto/city.cpp	
 00456ee0	wnd_set_keydown_pre_handler	WndHandlers	set_keydown_pre_handler	src/auto/window.cpp	
 004683f0	parley_create_unit_list_pane	ParleyWindow	create_unit_list_pane	src/auto/network.cpp	
 0046968b	parley_sort_unit_list	ParleyWindow	sort_unit_list	src/auto/network.cpp	
 0046990a	parley_sort_units_by_city	ParleyWindow	sort_units_by_city	src/auto/network.cpp	
 00469bdc	parley_build_unit_list	ParleyWindow	build_unit_list	src/auto/network.cpp	
-0046ab30	clickmap_ctor	void		src/auto/mapview.cpp	self is void (not a class)
-0046ab49	clickmap_dtor	void		src/auto/mapview.cpp	self is void (not a class)
-0046ab5f	clickmap_clear	ClickMapClearView		src/auto/mapview.cpp	self is a decompiler view (ClickMapClearView)
-0046ab82	clickmap_remove_at	ClickMapRemoveView		src/auto/mapview.cpp	self is a decompiler view (ClickMapRemoveView)
-0046ac89	clickmap_remove_by_id	ClickMapRemoveView		src/auto/mapview.cpp	self is a decompiler view (ClickMapRemoveView)
+0046ab30	clickmap_ctor	ClickMap	construct	src/auto/mapview.cpp	
+0046ab49	clickmap_dtor	ClickMap	destruct	src/auto/mapview.cpp	
+0046ab5f	clickmap_clear	ClickMap	clear	src/auto/mapview.cpp	
+0046ab82	clickmap_remove_at	ClickMap	remove_at	src/auto/mapview.cpp	
+0046ac89	clickmap_remove_by_id	ClickMap	remove_by_id	src/auto/mapview.cpp	
 0046ace7	clickmap_add	ClickMap	add	src/auto/mapview.cpp	
-0046ad85	clickmap_hit_test	ClickMapHitTestView		src/auto/mapview.cpp	self is a decompiler view (ClickMapHitTestView)
+0046ad85	clickmap_hit_test	ClickMap	hit_test	src/auto/mapview.cpp	
 0046af70	net_session_send_to	NetSession	send_to	src/auto/network.cpp	
 0046b0a1	net_session_send_to_all	NetSession	send_to_all	src/auto/network.cpp	
 0046d5a0	net_msg_header_init	NetMsgHeader	header_init	src/auto/network.cpp	
@@ -267,17 +267,17 @@ addr	old	class	member	file	why
 0046dff0	avi_player_set_end_callback	AviPlayer	set_end_callback	src/auto/sound.cpp	
 0046f440	palette_get_logpalette	GamePalette	get_logpalette	src/auto/graphics.cpp	
 004703d4	defeat_movie_wnd_ctor	EndgameMovieWindow	defeat_movie_wnd_construct	src/auto/reports.cpp	
-004704ec	defeat_movie_wnd_dtor	void		src/auto/reports.cpp	self is void (not a class)
+004704ec	defeat_movie_wnd_dtor	EndgameMovieWindow	defeat_movie_wnd_destruct	src/auto/reports.cpp	
 004705d7	defeat_movie_wnd_create	EndgameMovieWindow	defeat_movie_wnd_create	src/auto/reports.cpp	
 004708db	defeat_movie_wnd_play	EndgameMovieWindow	defeat_movie_wnd_play	src/auto/reports.cpp	
 00471020	defeat_movie_wnd_scalar_dtor	EndgameMovieWindow	defeat_movie_wnd_scalar_destruct	src/auto/reports.cpp	
 00471070	surface_get_width	DibSurface	get_width	src/auto/graphics.cpp	
 004710a0	surface_get_height	DibSurface	get_height	src/auto/graphics.cpp	
 00471362	arrival_movie_wnd_ctor	EndgameMovieWindow	arrival_movie_wnd_construct	src/auto/reports.cpp	
-0047147a	arrival_movie_wnd_dtor	void		src/auto/reports.cpp	self is void (not a class)
+0047147a	arrival_movie_wnd_dtor	EndgameMovieWindow	arrival_movie_wnd_destruct	src/auto/reports.cpp	
 00471565	arrival_movie_wnd_create	EndgameMovieWindow	arrival_movie_wnd_create	src/auto/reports.cpp	
 00471856	arrival_movie_wnd_play	EndgameMovieWindow	arrival_movie_wnd_play	src/auto/reports.cpp	
-004728c0	arrival_movie_wnd_scalar_dtor	void		src/auto/reports.cpp	self is void (not a class)
+004728c0	arrival_movie_wnd_scalar_dtor	EndgameMovieWindow	arrival_movie_wnd_scalar_destruct	src/auto/reports.cpp	
 00472910	avi_player_set_frame_callback	AviPlayer	set_frame_callback	src/auto/sound.cpp	
 00479ede	mapview_init_state	MapView	init_state	src/auto/mapview.cpp	
 00479fbe	mapview_update_layout	MapView	update_layout	src/auto/mapview.cpp	
@@ -304,7 +304,7 @@ addr	old	class	member	file	why
 0047cd1f	mapview_redraw_tile_neighbors	MapView	redraw_tile_neighbors	src/auto/mapview.cpp	
 0047cd51	mapview_redraw	MapView	redraw	src/auto/mapview.cpp	
 0047dce0	mapview_ctor	MapView		src/auto/mapview.cpp	address taken (src/auto/map.cpp)
-0047de10	mapview_dtor	void		src/auto/mapview.cpp	self is void (not a class)
+0047de10	mapview_dtor	MapView		src/auto/mapview.cpp	address taken (src/auto/map.cpp)
 0047dfb0	mapview_zoom_scale	MapView	zoom_scale	src/auto/mapview.cpp	
 0047dff0	mapview_apply_zoom	MapView	apply_zoom	src/auto/mapview.cpp	
 0047e94e	net_process_messages	NetSession	process_messages	src/auto/network.cpp	
@@ -314,14 +314,14 @@ addr	old	class	member	file	why
 00491c20	pedia_show_terrain_modal	PediaWindow	show_terrain_modal	src/auto/pedia.cpp	
 004923c0	wnd_set_focus	WndBase	set_focus	src/auto/window.cpp	
 004929c0	file_obj_open	FileObject	open	src/auto/text.cpp	
-00492a00	file_obj_seek_cur	FileSeekView		src/auto/text.cpp	self is a decompiler view (FileSeekView)
-00492a40	file_obj_read_line	FileReadLineView		src/auto/text.cpp	self is a decompiler view (FileReadLineView)
+00492a00	file_obj_seek_cur	FileObject	seek_cur	src/auto/text.cpp	
+00492a40	file_obj_read_line	FileObject	read_line	src/auto/text.cpp	
 00492a80	file_obj_get_size	FileObject	get_size	src/auto/text.cpp	
 00492ab0	edit_get_sel_end	EditControl	get_sel_end	src/auto/controls.cpp	
 00492ae0	edit_replace_sel	EditControl	replace_sel	src/auto/controls.cpp	
 00492b20	edit_set_sel	EditControl	set_sel	src/auto/controls.cpp	
 004942a3	diplo_leader_wnd_ctor	DiploLeaderWindow	construct	src/auto/diplomacy.cpp	
-004943c9	diplo_leader_wnd_dtor	void		src/auto/diplomacy.cpp	self is void (not a class)
+004943c9	diplo_leader_wnd_dtor	DiploLeaderWindow	destruct	src/auto/diplomacy.cpp	
 004944bb	diplo_leader_wnd_init	DiploLeaderWindow	init	src/auto/diplomacy.cpp	
 00494704	diplo_leader_wnd_show	DiploLeaderWindow	show	src/auto/diplomacy.cpp	
 004947f0	diplo_leader_wnd_teardown	DiploLeaderWindow	teardown	src/auto/diplomacy.cpp	
@@ -338,7 +338,7 @@ addr	old	class	member	file	why
 004964b3	portrait_dlg_create_buttons	PortraitDialog	create_buttons	src/auto/graphics.cpp	
 004965ff	portrait_dlg_run	PortraitDialog	run	src/auto/graphics.cpp	
 004966c4	portrait_dlg_paint	PortraitDialog	paint	src/auto/graphics.cpp	
-00497bf0	diplo_leader_wnd_scalar_dtor	void		src/auto/diplomacy.cpp	self is void (not a class)
+00497bf0	diplo_leader_wnd_scalar_dtor	DiploLeaderWindow	scalar_destruct	src/auto/diplomacy.cpp	
 00497c40	palette_get_entry	GamePalette	get_entry	src/auto/graphics.cpp	
 00497c90	surface_get_rect	DibSurface	get_rect	src/auto/graphics.cpp	
 00497cc0	wnd_set_bg_tile	DiploLeaderWindow	wnd_set_bg_tile	src/auto/window.cpp	
@@ -418,7 +418,7 @@ addr	old	class	member	file	why
 004def54	parley_describe_treaty	ParleyWindow	describe_treaty	src/auto/network.cpp	
 004e7240	wnd_show_restored	WndBase	show_restored	src/auto/window.cpp	
 004f3d60	city_picture_popup_ctor	CityPicturePopup	construct	src/auto/city.cpp	
-004f3e20	city_picture_popup_scalar_dtor	void		src/auto/city.cpp	self is void (not a class)
+004f3e20	city_picture_popup_scalar_dtor	CityPicturePopup	scalar_destruct	src/auto/city.cpp	
 004f3feb	pedia_window_ctor	PediaWindow	construct	src/auto/pedia.cpp	
 004f44a7	pedia_window_dtor	PediaWindow	destruct	src/auto/pedia.cpp	
 004f4793	pedia_clear_links	PediaWindow	clear_links	src/auto/pedia.cpp	
@@ -432,10 +432,10 @@ addr	old	class	member	file	why
 004f7ac7	pedia_set_category_title	PediaWindow	set_category_title	src/auto/pedia.cpp	
 004f7bd1	pedia_open_category	PediaWindow	open_category	src/auto/pedia.cpp	
 004f7c99	pedia_load_indexes	PediaWindow	load_indexes	src/auto/pedia.cpp	
-004f896a	pedia_sort_list	void		src/auto/pedia.cpp	self is void (not a class)
+004f896a	pedia_sort_list	PediaWindow	sort_list	src/auto/pedia.cpp	
 004f8af9	pedia_history_push	PediaWindow	history_push	src/auto/pedia.cpp	
-004fa0f0	pedia_link_scalar_dtor	void		src/auto/pedia.cpp	self is void (not a class)
-004fa140	pedia_link_dtor	void		src/auto/pedia.cpp	self is void (not a class)
+004fa0f0	pedia_link_scalar_dtor	PediaLink	scalar_destruct	src/auto/pedia.cpp	
+004fa140	pedia_link_dtor	PediaLink	destruct	src/auto/pedia.cpp	
 004fa47e	events_init_string_pool	ScenarioEvents	init_string_pool	src/auto/game.cpp	
 004fa4be	events_ctor	ScenarioEvents	construct	src/auto/game.cpp	
 004fa569	events_dtor	ScenarioEvents	destruct	src/auto/game.cpp	
@@ -541,8 +541,8 @@ addr	old	class	member	file	why
 005179a3	council_load_speech	CouncilWindow	load_speech	src/auto/reports.cpp	
 00517dd3	council_draw_speech	CouncilWindow	draw_speech	src/auto/reports.cpp	
 00518007	council_draw_advisor_frames	CouncilWindow	draw_advisor_frames	src/auto/reports.cpp	
-00518342	council_move_video_to_slot	void		src/auto/reports.cpp	self is void (not a class)
-00518392	council_advisor_from_letter	void		src/auto/reports.cpp	self is void (not a class)
+00518342	council_move_video_to_slot	CouncilWindow	move_video_to_slot	src/auto/reports.cpp	
+00518392	council_advisor_from_letter	CouncilWindow	advisor_from_letter	src/auto/reports.cpp	
 00518e80	wnd_move_xy	WndBase	move_xy	src/auto/window.cpp	
 00518f00	pedia_init_government_list	PediaWindow	init_government_list	src/auto/pedia.cpp	
 0051adfd	terrain_editor_create_combo	EditorWindow	terrain_editor_create_combo	src/auto/map.cpp	
@@ -603,7 +603,7 @@ addr	old	class	member	file	why
 005675b7	pedia_draw_tree_stub	PediaWindow	draw_tree_stub	src/auto/pedia.cpp	
 0056e180	map_view_zoom_scale_round	MapView	zoom_scale_round	src/auto/map.cpp	
 0056e270	lobby_list_ctor	LobbyList	construct	src/auto/network.cpp	
-0056e2c9	lobby_list_dtor	void		src/auto/network.cpp	self is void (not a class)
+0056e2c9	lobby_list_dtor	LobbyList	destruct	src/auto/network.cpp	
 0056e2e9	lobby_host_wait_players	LobbyList	host_wait_players	src/auto/network.cpp	
 0056edd3	lobby_entry_neighbor	LobbyList	entry_neighbor	src/auto/network.cpp	
 0056ee2c	lobby_clear_player_list	LobbyList	clear_player_list	src/auto/network.cpp	
@@ -615,7 +615,7 @@ addr	old	class	member	file	why
 0056f42b	lobby_slot_for_entry_id	LobbyList	slot_for_entry_id	src/auto/network.cpp	
 00574522	sprite_picker_draw	SpritePicker	draw	src/auto/graphics.cpp	
 00575dec	sprite_picker_run	SpritePicker	run	src/auto/graphics.cpp	
-00578390	sprite_picker_dtor	void		src/auto/graphics.cpp	self is void (not a class)
+00578390	sprite_picker_dtor	SpritePicker	destruct	src/auto/graphics.cpp	
 005784a0	sprite_picker_ctor	SpritePicker	construct	src/auto/graphics.cpp	
 005785d0	wnd_set_rbuttondown_handler	WndHandlers	set_rbuttondown_handler	src/auto/window.cpp	
 00578610	wnd_set_rbuttonup_any_handler	WndHandlers	set_rbuttonup_any_handler	src/auto/window.cpp	
@@ -623,7 +623,7 @@ addr	old	class	member	file	why
 0057868c	menu_clear_lists	GameMenu	clear_lists	src/auto/window.cpp	
 005786b6	menu_reset	GameMenu	reset	src/auto/window.cpp	
 005786f1	menu_ctor	GameMenu	construct	src/auto/window.cpp	
-00578770	menu_dtor	GameMenu		src/auto/window.cpp	assigns self or takes its address
+00578770	menu_dtor	GameMenu	destruct	src/auto/window.cpp	
 005787de	menu_find_menu	GameMenu	find_menu	src/auto/window.cpp	
 00578840	menu_visible_index	GameMenu	visible_index	src/auto/window.cpp	
 005788a9	menu_id_at_visible_index	GameMenu	id_at_visible_index	src/auto/window.cpp	
@@ -650,7 +650,7 @@ addr	old	class	member	file	why
 00579ac0	menu_native_enable	GameMenu	native_enable	src/auto/window.cpp	
 00579b00	menu_native_check	GameMenu	native_check	src/auto/window.cpp	
 00579b40	wnd_attach_menu	ModalMenuWindow	attach_menu	src/auto/window.cpp	
-00579b90	menu_get_hmenu	MenuHandleView		src/auto/window.cpp	self is a decompiler view (MenuHandleView)
+00579b90	menu_get_hmenu	GameMenu	get_hmenu	src/auto/window.cpp	
 00579bc0	wnd_set_menu_callback	ModalMenuWindow	set_menu_callback	src/auto/window.cpp	
 00579bf0	wnd_redraw_menu_bar	ModalMenuWindow	redraw_menu_bar	src/auto/window.cpp	
 00586eb0	cosmic_editor_draw_bg	EditorWindow	cosmic_editor_draw_bg	src/auto/civ.cpp	
@@ -796,7 +796,7 @@ addr	old	class	member	file	why
 005c0c5d	surface_set_pixel	DibSurface	set_pixel	src/auto/graphics.cpp	
 005c0cc5	surface_set_palette	DibSurface	set_palette	src/auto/graphics.cpp	
 005c0d12	surface_apply_palette	DibSurface	apply_palette	src/auto/graphics.cpp	
-005c0d69	surface_draw_text_cur_font	SurfaceTextCurFontView		src/auto/graphics.cpp	self is a decompiler view (SurfaceTextCurFontView)
+005c0d69	surface_draw_text_cur_font	DibSurface	draw_text_cur_font	src/auto/graphics.cpp	
 005c0f57	surface_draw_text	DibSurface	draw_text	src/auto/graphics.cpp	
 005c1020	surface_draw_text_in_rect	DibSurface	draw_text_in_rect	src/auto/graphics.cpp	
 005c1167	surface_draw_text_rect	DibSurface	draw_text_rect	src/auto/graphics.cpp	
@@ -812,7 +812,7 @@ addr	old	class	member	file	why
 005c55f0	surface_get_dib	DibSurface	get_dib	src/auto/graphics.cpp	
 005c5610	surface_next_row	DibSurface	next_row	src/auto/graphics.cpp	
 005c5640	surface_get_bits	DibSurface	get_bits	src/auto/graphics.cpp	
-005c56f0	palette_get_version	PaletteVersionView		src/auto/graphics.cpp	self is a decompiler view (PaletteVersionView)
+005c56f0	palette_get_version	GamePalette	get_version	src/auto/graphics.cpp	
 005c5710	surface_prev_row	DibSurface	prev_row	src/auto/graphics.cpp	
 005c5760	wnd_create_framed	WndBase	create_framed	src/auto/window.cpp	
 005c57f9	wnd_create_framed_child	WndBase	create_framed_child	src/auto/window.cpp	
@@ -820,7 +820,7 @@ addr	old	class	member	file	why
 005c5a27	wnd_remove_control	Wnd	remove_control	src/auto/window.cpp	
 005c5aeb	wnd_remove_all_controls	Wnd	remove_all_controls	src/auto/window.cpp	
 005c5b7f	wnd_focus_first_control	Wnd	focus_first_control	src/auto/window.cpp	
-005c5c86	wnd_dispatch_hotkey_char	void		src/auto/window.cpp	self is void (not a class)
+005c5c86	wnd_dispatch_hotkey_char	Wnd	dispatch_hotkey_char	src/auto/window.cpp	
 005c5e60	control_get_type	Control	get_type	src/auto/controls.cpp	
 005c5e80	control_get_next	Control	get_next	src/auto/controls.cpp	
 005c5ea0	ctrl_get_initial_focus	Control	get_initial_focus	src/auto/controls.cpp	
@@ -834,7 +834,7 @@ addr	old	class	member	file	why
 005c63af	wnd_fire_menu_select	ModalMenuWindow	fire_menu_select	src/auto/window.cpp	
 005c6480	palette_commit_range	GamePalette	commit_range	src/auto/graphics.cpp	
 005c64da	palette_init	GamePalette	init	src/auto/graphics.cpp	
-005c656b	palette_destroy	GamePalette		src/auto/graphics.cpp	assigns self or takes its address
+005c656b	palette_destroy	GamePalette	destroy	src/auto/graphics.cpp	
 005c65f9	palette_load_ctab_res	GamePalette	load_ctab_res	src/auto/graphics.cpp	
 005c6a42	palette_new_version	GamePalette	new_version	src/auto/graphics.cpp	
 005c6a8d	palette_reserve_range	GamePalette	reserve_range	src/auto/graphics.cpp	
@@ -851,7 +851,7 @@ addr	old	class	member	file	why
 005c9030	hotspot_fire_press	Hotspot	fire_press	src/auto/window.cpp	
 005c9070	hotspot_fire_dblclick	Hotspot	fire_dblclick	src/auto/window.cpp	
 005c9710	control_set_hwnd	Control	set_hwnd	src/auto/controls.cpp	
-005cbdb0	palette_get_hpalette	PaletteHandleView		src/auto/graphics.cpp	self is a decompiler view (PaletteHandleView)
+005cbdb0	palette_get_hpalette	GamePalette	get_hpalette	src/auto/graphics.cpp	
 005cbdd0	wnd_keyboard_nav_enabled	Wnd	keyboard_nav_enabled	src/auto/window.cpp	
 005cbdf0	button_fire_callback	Button	fire_callback	src/auto/controls.cpp	
 005cbe30	spritebtn_fire_click	SpriteButton	fire_click	src/auto/controls.cpp	
@@ -876,8 +876,8 @@ addr	old	class	member	file	why
 005cf2ff	sprite_lock	Sprite	lock	src/auto/graphics.cpp	
 005cf337	sprite_unlock	Sprite	unlock	src/auto/graphics.cpp	
 005cf36f	sprite_has_data	Sprite	has_data	src/auto/graphics.cpp	
-005cf39b	sprite_set_origin	SpriteOriginSetView		src/auto/graphics.cpp	self is a decompiler view (SpriteOriginSetView)
-005cf3c5	sprite_get_origin	SpriteOriginGetView		src/auto/graphics.cpp	self is a decompiler view (SpriteOriginGetView)
+005cf39b	sprite_set_origin	Sprite	set_origin	src/auto/graphics.cpp	
+005cf3c5	sprite_get_origin	Sprite	get_origin	src/auto/graphics.cpp	
 005cf467	sprite_replace_color	Sprite	replace_color	src/auto/graphics.cpp	
 005cf64c	sprite_encode_from_surface	Sprite	encode_from_surface	src/auto/graphics.cpp	
 005d056c	sprite_blit_to_surface	Sprite	blit_to_surface	src/auto/graphics.cpp	
@@ -886,7 +886,7 @@ addr	old	class	member	file	why
 005d1b38	sprite_clear_fields	Sprite	clear_fields	src/auto/graphics.cpp	
 005d2042	timer_mgr_add	TimerManager	add	src/auto/game.cpp	
 005d20e6	game_timer_kill_slot	TimerManager	game_timer_kill_slot	src/auto/game.cpp	
-005d211e	timer_mgr_ctor	TimerManagerCtorView		src/auto/game.cpp	self is a decompiler view (TimerManagerCtorView)
+005d211e	timer_mgr_ctor	TimerManager	construct	src/auto/game.cpp	
 005d2182	timer_mgr_dtor	TimerManager	destruct	src/auto/game.cpp	
 005d246f	dbg_log_file_ctor	void		src/auto/support.cpp	self is void (not a class)
 005d2498	dbg_log_file_dtor	void		src/auto/support.cpp	self is void (not a class)
@@ -913,15 +913,15 @@ addr	old	class	member	file	why
 005db035	err_ctx_set_field_708	ErrorContext	set_field_708	src/auto/support.cpp	
 005db059	err_ctx_clear_codes	ErrorContext	clear_codes	src/auto/support.cpp	
 005db089	err_ctx_ctor	ErrorContext	construct	src/auto/support.cpp	
-005db0b4	err_ctx_dtor	void		src/auto/support.cpp	self is void (not a class)
+005db0b4	err_ctx_dtor	ErrorContext	destruct	src/auto/support.cpp	
 005db0d0	scrollbar_set_page_size	Scrollbar	set_page_size	src/auto/controls.cpp	
 005db110	scrollbar_get_ctl_range	Scrollbar	get_ctl_range	src/auto/controls.cpp	
 005db610	wnd_record_init	WndBase	init	src/auto/window.cpp	
 005db650	wnd_record_destroy	WndBase	destroy	src/auto/window.cpp	
 005db67b	wnd_record_create	WndBase	create	src/auto/window.cpp	
 005db893	wnd_record_create_child	WndBase	create_child	src/auto/window.cpp	
-005dba95	wnd_is_shift_down	void		src/auto/window.cpp	self is void (not a class)
-005dbab8	wnd_is_ctrl_down	void		src/auto/window.cpp	self is void (not a class)
+005dba95	wnd_is_shift_down	Wnd	is_shift_down	src/auto/window.cpp	
+005dbab8	wnd_is_ctrl_down	Wnd	is_ctrl_down	src/auto/window.cpp	
 005dcac0	timer_mgr_scalar_dtor	TimerManager	scalar_destruct	src/auto/game.cpp	
 005dcc10	menu_handle_ctor	GameMenu	handle_construct	src/auto/window.cpp	
 005dcc32	menu_handle_dtor	GameMenu	handle_destruct	src/auto/window.cpp	
@@ -932,7 +932,7 @@ addr	old	class	member	file	why
 005dd377	avi_player_open	AviPlayer	open	src/auto/sound.cpp	
 005dd3c2	avi_player_play	AviPlayer	play	src/auto/sound.cpp	
 005dd3f1	avi_player_play_range	AviPlayer	play_range	src/auto/sound.cpp	
-005dd45d	avi_player_show_frame	void		src/auto/sound.cpp	self is void (not a class)
+005dd45d	avi_player_show_frame	AviPlayer	show_frame	src/auto/sound.cpp	
 005dd4c2	avi_player_loop_range	AviPlayer	loop_range	src/auto/sound.cpp	
 005dd51d	avi_player_pause	AviPlayer	pause	src/auto/sound.cpp	
 005dd561	avi_player_set_palette	DibSurface	avi_player_set_palette	src/auto/sound.cpp	
@@ -941,7 +941,7 @@ addr	old	class	member	file	why
 005dd761	avi_player_set_transparent	AviPlayer	set_transparent	src/auto/sound.cpp	
 005e3550	avi_player_call_end_callback	AviPlayer	call_end_callback	src/auto/sound.cpp	
 005e3580	avi_player_call_cue_callback	AviPlayer	call_cue_callback	src/auto/sound.cpp	
-005e5ee0	ddsurf_dtor	void		src/auto/graphics.cpp	self is void (not a class)
+005e5ee0	ddsurf_dtor	DDSurface	destruct	src/auto/graphics.cpp	
 005eb2f0	edit_fire_maxtext_callback	EditControl	fire_maxtext_callback	src/auto/controls.cpp	
 005eb330	edit_fire_change_callback	EditControl	fire_change_callback	src/auto/controls.cpp	
 005ecf50	wnd_call_mousemove	WndHandlers	call_mousemove	src/auto/window.cpp	
@@ -970,7 +970,7 @@ addr	old	class	member	file	why
 005ed4e0	wnd_call_msg4c8	WndHandlers	call_msg4c8	src/auto/window.cpp	
 005ed520	wnd_call_entersizemove	WndHandlers	call_entersizemove	src/auto/window.cpp	
 005ed550	wnd_call_exitsizemove	WndHandlers	call_exitsizemove	src/auto/window.cpp	
-005ed580	wnd_on_size_nop	void		src/auto/window.cpp	self is void (not a class)
+005ed580	wnd_on_size_nop	ModalMenuWindow	on_size_nop	src/auto/window.cpp	
 005ed5a0	wnd_call_menu_pos_command	ModalMenuWindow	call_menu_pos_command	src/auto/window.cpp	
 005ed5f0	wnd_call_command	ModalMenuWindow	call_command	src/auto/window.cpp	
 005ed640	wnd_get_hscroll_pos	ModalMenuWindow	get_hscroll_pos	src/auto/window.cpp	
@@ -980,54 +980,54 @@ addr	old	class	member	file	why
 005ed6c0	wnd_get_mci_device	WndMciDeviceView		src/auto/window.cpp	self is a decompiler view (WndMciDeviceView)
 005ed6e0	wnd_call_mci_done	WndOnMciDoneView		src/auto/window.cpp	self is a decompiler view (WndOnMciDoneView)
 005eeca0	avi_audio_ctor	AviAudio	construct	src/auto/sound.cpp	
-005eed1b	avi_audio_release	AviAudioReleaseView		src/auto/sound.cpp	self is a decompiler view (AviAudioReleaseView)
-005eed43	avi_audio_is_playing	AviAudioPlayingView		src/auto/sound.cpp	self is a decompiler view (AviAudioPlayingView)
-005eed76	avi_audio_attach_stream	AviAudioAttachView		src/auto/sound.cpp	self is a decompiler view (AviAudioAttachView)
-005eedd1	avi_audio_get_position_ms	void		src/auto/sound.cpp	self is void (not a class)
-005eedec	avi_audio_prepare_range	AviAudioPrepareView		src/auto/sound.cpp	self is a decompiler view (AviAudioPrepareView)
-005eee4f	avi_audio_start	void		src/auto/sound.cpp	self is void (not a class)
-005efd70	ddwin_call_activate_app	DDWindowActivateView		src/auto/window.cpp	self is a decompiler view (DDWindowActivateView)
+005eed1b	avi_audio_release	AviAudio	release	src/auto/sound.cpp	
+005eed43	avi_audio_is_playing	AviAudio	is_playing	src/auto/sound.cpp	
+005eed76	avi_audio_attach_stream	AviAudio	attach_stream	src/auto/sound.cpp	
+005eedd1	avi_audio_get_position_ms	AviAudio	get_position_ms	src/auto/sound.cpp	
+005eedec	avi_audio_prepare_range	AviAudio	prepare_range	src/auto/sound.cpp	
+005eee4f	avi_audio_start	AviAudio	start	src/auto/sound.cpp	
+005efd70	ddwin_call_activate_app	DDWindow	call_activate_app	src/auto/window.cpp	
 005f029e	ddwin_remove_all_controls	DDWindow	remove_all_controls	src/auto/window.cpp	
 005f0342	ddwin_deactivate_controls	DDWindow	deactivate_controls	src/auto/window.cpp	
 005f0391	ddwin_dispatch_ctrl_msg	DDWindow	dispatch_ctrl_msg	src/auto/window.cpp	
-005f04c0	ptrlist_dtor	void		src/auto/support.cpp	self is void (not a class)
+005f04c0	ptrlist_dtor	PtrList	destruct	src/auto/support.cpp	
 005f0590	ptrlist_first	PtrList	first	src/auto/support.cpp	
 005f05d0	ptrlist_next	PtrList	next	src/auto/support.cpp	
 005f0620	ddctrl_get_rect	DDControl	get_rect	src/auto/controls.cpp	
-005f0676	ptrlist_node_dtor	void		src/auto/support.cpp	self is void (not a class)
-005f068c	ptrlist_node_set_next	PtrListNodeNextSetView		src/auto/support.cpp	self is a decompiler view (PtrListNodeNextSetView)
-005f06ad	ptrlist_node_set_prev	PtrListNodePrevSetView		src/auto/support.cpp	self is a decompiler view (PtrListNodePrevSetView)
+005f0676	ptrlist_node_dtor	PtrListNode	destruct	src/auto/support.cpp	
+005f068c	ptrlist_node_set_next	PtrListNode	set_next	src/auto/support.cpp	
+005f06ad	ptrlist_node_set_prev	PtrListNode	set_prev	src/auto/support.cpp	
 005f0724	ptrlist_clear	PtrList	clear	src/auto/support.cpp	
 005f0742	ptrlist_is_empty	PtrList	is_empty	src/auto/support.cpp	
 005f0770	ptrlist_first_impl	PtrList	first_impl	src/auto/support.cpp	
 005f0833	ptrlist_next_impl	PtrList	next_impl	src/auto/support.cpp	
 005f0c69	ptrlist_remove_current	PtrList	remove_current	src/auto/support.cpp	
 005f0e13	ptrlist_clear_impl	PtrList	clear_impl	src/auto/support.cpp	
-005f0e50	ptrlist_node_data	PtrListNodeDataView		src/auto/support.cpp	self is a decompiler view (PtrListNodeDataView)
-005f0e70	ptrlist_node_next	PtrListNodeNextView		src/auto/support.cpp	self is a decompiler view (PtrListNodeNextView)
-005f0e90	ptrlist_node_prev	PtrListNodePrevView		src/auto/support.cpp	self is a decompiler view (PtrListNodePrevView)
-005f0eb0	ptrlist_node_delete	void		src/auto/support.cpp	self is void (not a class)
+005f0e50	ptrlist_node_data	PtrListNode	data	src/auto/support.cpp	
+005f0e70	ptrlist_node_next	PtrListNode	next	src/auto/support.cpp	
+005f0e90	ptrlist_node_prev	PtrListNode	prev	src/auto/support.cpp	
+005f0eb0	ptrlist_node_delete	PtrListNode	scalar_destruct	src/auto/support.cpp	
 005f130f	ddctrl_dispatch_msg	DDControl	dispatch_msg	src/auto/controls.cpp	
-005f1514	ddctrl_get_parent_window	DDControlParentView		src/auto/controls.cpp	self is a decompiler view (DDControlParentView)
-005f15a9	ddctrl_on_paint_default	DDControlParentView		src/auto/controls.cpp	self is a decompiler view (DDControlParentView)
-005f1622	ddctrl_activate	DDControlActivateView		src/auto/controls.cpp	self is a decompiler view (DDControlActivateView)
+005f1514	ddctrl_get_parent_window	DDControl	get_parent_window	src/auto/controls.cpp	
+005f15a9	ddctrl_on_paint_default	DDControl		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f1622	ddctrl_activate	DDControl	activate	src/auto/controls.cpp	
 005f1683	ddctrl_deactivate	DDControl	deactivate	src/auto/controls.cpp	
-005f179c	ddctrl_on_lbuttondown	DDControlActivateView		src/auto/controls.cpp	self is a decompiler view (DDControlActivateView)
-005f17bc	ddctrl_on_rbuttondown_nop	void		src/auto/controls.cpp	self is void (not a class)
-005f17d4	ddctrl_on_lbuttonup	DdctrlOnLbuttonupView		src/auto/controls.cpp	self is a decompiler view (DdctrlOnLbuttonupView)
-005f1811	ddctrl_on_rbuttonup	DdctrlOnRbuttonupView		src/auto/controls.cpp	self is a decompiler view (DdctrlOnRbuttonupView)
-005f184e	ddctrl_on_mousemove	DdctrlOnMousemoveView		src/auto/controls.cpp	self is a decompiler view (DdctrlOnMousemoveView)
-005f188b	ddctrl_on_dblclick	DdctrlOnDblclickView		src/auto/controls.cpp	self is a decompiler view (DdctrlOnDblclickView)
-005f18c8	ddctrl_on_msg_fff0_nop	void		src/auto/controls.cpp	self is void (not a class)
-005f18e0	ddctrl_on_keydown_nop	void		src/auto/controls.cpp	self is void (not a class)
-005f18f8	ddctrl_on_char_nop	void		src/auto/controls.cpp	self is void (not a class)
-005f1910	ddctrl_on_set_active_nop	void		src/auto/controls.cpp	self is void (not a class)
+005f179c	ddctrl_on_lbuttondown	DDControl		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f17bc	ddctrl_on_rbuttondown_nop	void		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f17d4	ddctrl_on_lbuttonup	DdctrlOnLbuttonupView		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f1811	ddctrl_on_rbuttonup	DdctrlOnRbuttonupView		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f184e	ddctrl_on_mousemove	DdctrlOnMousemoveView		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f188b	ddctrl_on_dblclick	DdctrlOnDblclickView		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f18c8	ddctrl_on_msg_fff0_nop	void		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f18e0	ddctrl_on_keydown_nop	void		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f18f8	ddctrl_on_char_nop	void		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
+005f1910	ddctrl_on_set_active_nop	void		src/auto/controls.cpp	address taken (src/data/gamedata.cpp)
 005f19a6	ddctrl_deactivate_children	DDControl	deactivate_children	src/auto/controls.cpp	
 005f1a40	ddctrl_dispatch_to_children	DDControl	dispatch_to_children	src/auto/controls.cpp	
 	spaceship_wnd_render_ship	SpaceshipWindow	render_ship	src/game/bigframes.cpp	
-	pedia_load_description	void		src/game/retvals.cpp	self is void (not a class)
-	wnd_dtor	void		src/game/unwind.cpp	self is void (not a class)
-	surfwnd_dtor	void		src/game/unwind.cpp	self is void (not a class)
-	city_picture_popup_dtor	void		src/game/unwind.cpp	self is void (not a class)
-	ddwin_dtor	void		src/game/unwind.cpp	self is void (not a class)
-	spaceship_wnd_make_button_sprites	void		src/game/unwind.cpp	self is void (not a class)
+	pedia_load_description	PediaWindow	load_description	src/game/retvals.cpp	
+	wnd_dtor	ModalMenuWindow	destruct	src/game/unwind.cpp	
+	surfwnd_dtor	SurfaceWindow	destruct	src/game/unwind.cpp	
+	city_picture_popup_dtor	CityPicturePopup	destruct	src/game/unwind.cpp	
+	ddwin_dtor	DDWindow	destruct	src/game/unwind.cpp	
+	spaceship_wnd_make_button_sprites	SpaceshipWindow	make_button_sprites	src/game/unwind.cpp	

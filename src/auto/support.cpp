@@ -929,7 +929,7 @@ void __cdecl err_report_ctx_reg_atexit(void)
 void __cdecl err_report_ctx_atexit_dtor(void)
 
 {
-  err_ctx_dtor((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx));
+  ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->destruct();
   return;
 }
 
@@ -1024,7 +1024,7 @@ ErrorContext *ErrorContext::construct()
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall err_ctx_dtor(void *self)
+void ErrorContext::destruct()
 
 {
   return;
@@ -1584,13 +1584,13 @@ i32 __cdecl sys_msgbox_mapped(LPCSTR caption,LPCSTR text,i32 severity,i32 button
 /* 005ef58e: written by hand in src/game/regargs.cpp */
 
 /* 005f04c0 auto */
-void __thiscall ptrlist_dtor(void *self)
+void PtrList::destruct()
 
 {
   i32 eh_state;
   
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 005f04fe */ { (*(PtrList **)&self)->clear(); }
+  /* inlined unwind funclet 005f04fe */ { clear(); }
   return;
 }
 
@@ -1620,25 +1620,25 @@ i32 PtrList::next()
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall ptrlist_node_dtor(void *self)
+void PtrListNode::destruct()
 
 {
   return;
 }
 
 /* 005f068c auto */
-void __thiscall ptrlist_node_set_next(PtrListNodeNextSetView *self,iptr next)
+void PtrListNode::set_next(iptr next)
 
 {
-  self->next_node = next;
+  next_node = next;
   return;
 }
 
 /* 005f06ad auto */
-void __thiscall ptrlist_node_set_prev(PtrListNodePrevSetView *self,iptr prev)
+void PtrListNode::set_prev(iptr prev)
 
 {
-  self->prev_node = prev;
+  prev_node = prev;
   return;
 }
 
@@ -1668,7 +1668,7 @@ i32 PtrList::first_impl()
   }
   else {
     iter_node = head;
-    data = ptrlist_node_data((PtrListNodeDataView *)head);
+    data = ((PtrListNode *)head)->data();
   }
   return data;
 }
@@ -1684,13 +1684,13 @@ i32 PtrList::next_impl()
     data = 0;
   }
   else {
-    next = ptrlist_node_next((PtrListNodeNextView *)iter_node);
+    next = ((PtrListNode *)iter_node)->next();
     iter_node = next;
     if (iter_node == 0) {
       data = 0;
     }
     else {
-      data = ptrlist_node_data((PtrListNodeDataView *)iter_node);
+      data = ((PtrListNode *)iter_node)->data();
     }
   }
   return data;
@@ -1701,43 +1701,43 @@ void PtrList::remove_current()
 
 {
   int empty;
-  PtrListNodeNextSetView *this_00;
-  PtrListNodePrevSetView *this_01;
+  PtrListNode *prev_node;
+  PtrListNode *next_node;
   
   if ((iter_node != 0) && (empty = is_empty(), empty == 0)) {
-    this_00 = (PtrListNodeNextSetView *)ptrlist_node_prev((PtrListNodePrevView *)iter_node);
-    this_01 = (PtrListNodePrevSetView *)ptrlist_node_next((PtrListNodeNextView *)iter_node);
-    if ((this_00 == (PtrListNodeNextSetView *)0x0) && (this_01 == (PtrListNodePrevSetView *)0x0)) {
+    prev_node = (PtrListNode *)((PtrListNode *)iter_node)->prev();
+    next_node = (PtrListNode *)((PtrListNode *)iter_node)->next();
+    if ((prev_node == (PtrListNode *)0x0) && (next_node == (PtrListNode *)0x0)) {
       if ((void *)iter_node != (void *)0x0) {
-        ptrlist_node_delete((void *)iter_node,1);
+        ((PtrListNode *)iter_node)->scalar_destruct(1);
       }
       head = 0;
       tail = 0;
       iter_node = 0;
     }
-    else if (this_00 == (PtrListNodeNextSetView *)0x0) {
-      head = (uptr)this_01;
-      ptrlist_node_set_prev((PtrListNodePrevSetView *)head,0);
+    else if (prev_node == (PtrListNode *)0x0) {
+      head = (uptr)next_node;
+      ((PtrListNode *)head)->set_prev(0);
       if ((void *)iter_node != (void *)0x0) {
-        ptrlist_node_delete((void *)iter_node,1);
+        ((PtrListNode *)iter_node)->scalar_destruct(1);
       }
       iter_node = head;
     }
-    else if (this_01 == (PtrListNodePrevSetView *)0x0) {
-      tail = (uptr)this_00;
-      ptrlist_node_set_next((PtrListNodeNextSetView *)tail,0);
+    else if (next_node == (PtrListNode *)0x0) {
+      tail = (uptr)prev_node;
+      ((PtrListNode *)tail)->set_next(0);
       if ((void *)iter_node != (void *)0x0) {
-        ptrlist_node_delete((void *)iter_node,1);
+        ((PtrListNode *)iter_node)->scalar_destruct(1);
       }
       iter_node = tail;
     }
     else {
-      ptrlist_node_set_next(this_00,(iptr)this_01);
-      ptrlist_node_set_prev(this_01,(iptr)this_00);
+      prev_node->set_next((iptr)next_node);
+      next_node->set_prev((iptr)prev_node);
       if ((void *)iter_node != (void *)0x0) {
-        ptrlist_node_delete((void *)iter_node,1);
+        ((PtrListNode *)iter_node)->scalar_destruct(1);
       }
-      iter_node = (uptr)this_01;
+      iter_node = (uptr)next_node;
     }
   }
   return;
@@ -1755,24 +1755,24 @@ void PtrList::clear_impl()
 }
 
 /* 005f0e50 auto */
-u32 __thiscall ptrlist_node_data(PtrListNodeDataView *self)
+u32 PtrListNode::data()
 
 {
-  return self->node_data;
+  return item_ptr;
 }
 
 /* 005f0e70 auto */
-u32 __thiscall ptrlist_node_next(PtrListNodeNextView *self)
+u32 PtrListNode::next()
 
 {
-  return self->next_node;
+  return next_node;
 }
 
 /* 005f0e90 auto */
-u32 __thiscall ptrlist_node_prev(PtrListNodePrevView *self)
+u32 PtrListNode::prev()
 
 {
-  return self->prev_node;
+  return prev_node;
 }
 
 /* 005f0eb0 auto */
@@ -1781,12 +1781,12 @@ u32 __thiscall ptrlist_node_prev(PtrListNodePrevView *self)
    
    Library: Visual Studio 1998 Debug */
 
-void * __thiscall ptrlist_node_delete(void *self,uint flags)
+void *PtrListNode::scalar_destruct(uint flags)
 
 {
-  ptrlist_node_dtor(self);
+  destruct();
   if ((flags & 1) != 0) {
-    operator_delete(self);
+    operator_delete(this);
   }
-  return self;
+  return this;
 }

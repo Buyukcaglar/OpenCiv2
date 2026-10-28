@@ -710,7 +710,7 @@ void EditorWindow::tech_editor_dialog_run()
   i32 eh_next;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
@@ -856,7 +856,7 @@ void __cdecl tech_editor_run(void)
   EditorWindow editor_wnd;
   
   editor_wnd.construct();
-  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
+  ON_SCOPE_EXIT(editor_wnd.destruct());
   editor_wnd.tech_editor_dialog_run();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   return;
@@ -1726,7 +1726,7 @@ void __cdecl civ_rating_title_font_reg_atexit(void)
 void __cdecl civ_rating_title_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&civ_rating_title_font_block.civ_rating_title_font));
+  ((GameFont *)((i8 *)&civ_rating_title_font_block.civ_rating_title_font))->destroy();
   return;
 }
 
@@ -2037,6 +2037,7 @@ static int civ_score_draw_citizens(iptr civ,int left_x,int text_y3)
   int row_wrapped;
   int era;
   int icon_width;
+  int full;
 
   era = civ_city_style_era(civ);
   draw_y = text_y3;
@@ -2047,6 +2048,7 @@ static int civ_score_draw_citizens(iptr civ,int left_x,int text_y3)
   row_height = 0x12;
   icon_width = 0x14;
   row_wrapped = 0;
+  full = 0;
   for (city = 0; city < game.num_cities; city++) {
     if ((cities[city].id != 0) && (cities[city].owner == civ)) {
       city_recalc(city,1);
@@ -2084,12 +2086,15 @@ static int civ_score_draw_citizens(iptr civ,int left_x,int text_y3)
           row_wrapped = 1;
           draw_x = (icon_width / 2) * (row & 1) + left_x;
           draw_y += row_height;
-          if ((6 < (int)row) || (0xf0 < draw_y)) goto draw_civ_row;
+          if ((6 < (int)row) || (0xf0 < draw_y)) {
+            full = 1;  /* no room for more rows */
+            break;
+          }
         }
       }
+      if (full != 0) break;
     }
   }
-draw_civ_row:
   if (row_wrapped != 0) {
     draw_y -= row_height;
   }
@@ -7851,7 +7856,7 @@ void EditorWindow::cosmic_editor_dialog()
   GamePalette palette;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
@@ -7973,7 +7978,7 @@ void __cdecl cosmic_editor_run(void)
   EditorWindow editor_wnd;
   
   editor_wnd.construct();
-  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
+  ON_SCOPE_EXIT(editor_wnd.destruct());
   editor_wnd.cosmic_editor_dialog();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   return;

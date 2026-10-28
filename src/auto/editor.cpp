@@ -37,7 +37,7 @@ EditorWindow *EditorWindow::construct()
 }
 
 /* 004183d0 auto */
-void __thiscall editor_wnd_dtor(void *self)
+void EditorWindow::destruct()
 
 {
   i8 *eh_prev;
@@ -45,49 +45,49 @@ void __thiscall editor_wnd_dtor(void *self)
   
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 0x14;
-  /* inlined unwind funclet 0041851f */ { ((ListBox *)(*(int *)&self + 0xb0c))->destruct(); }
+  /* inlined unwind funclet 0041851f */ { ((ListBox *)(((int)this) + 0xb0c))->destruct(); }
   (*((char *)&eh_state + 0)) = 0x13;
-  /* inlined unwind funclet 0041852e */ { ((ListBox *)(*(int *)&self + 0xad0))->destruct(); }
+  /* inlined unwind funclet 0041852e */ { ((ListBox *)(((int)this) + 0xad0))->destruct(); }
   (*((char *)&eh_state + 0)) = 0x12;
-  /* inlined unwind funclet 0041853d */ { ((ListBox *)(*(int *)&self + 0xa94))->destruct(); }
+  /* inlined unwind funclet 0041853d */ { ((ListBox *)(((int)this) + 0xa94))->destruct(); }
   (*((char *)&eh_state + 0)) = 0x11;
-  /* inlined unwind funclet 0041854c */ { ctrl_dtor((Button *)(*(int *)&self + 0xa58)); }
+  /* inlined unwind funclet 0041854c */ { ctrl_dtor((Button *)(((int)this) + 0xa58)); }
   (*((char *)&eh_state + 0)) = 0x10;
-  /* inlined unwind funclet 0041855b */ { ctrl_dtor((Button *)(*(int *)&self + 0xa1c)); }
+  /* inlined unwind funclet 0041855b */ { ctrl_dtor((Button *)(((int)this) + 0xa1c)); }
   (*((char *)&eh_state + 0)) = 0xf;
-  /* inlined unwind funclet 0041856a */ { ctrl_dtor((Button *)(*(int *)&self + 0x9e0)); }
+  /* inlined unwind funclet 0041856a */ { ctrl_dtor((Button *)(((int)this) + 0x9e0)); }
   (*((char *)&eh_state + 0)) = 0xe;
-  /* inlined unwind funclet 00418579 */ { ctrl_dtor((Button *)(*(int *)&self + 0x9a4)); }
+  /* inlined unwind funclet 00418579 */ { ctrl_dtor((Button *)(((int)this) + 0x9a4)); }
   (*((char *)&eh_state + 0)) = 0xd;
-  /* inlined unwind funclet 00418588 */ { ctrl_dtor((Button *)(*(int *)&self + 0x968)); }
+  /* inlined unwind funclet 00418588 */ { ctrl_dtor((Button *)(((int)this) + 0x968)); }
   (*((char *)&eh_state + 0)) = 0xc;
-  /* inlined unwind funclet 00418597 */ { ctrl_dtor((Button *)(*(int *)&self + 0x92c)); }
+  /* inlined unwind funclet 00418597 */ { ctrl_dtor((Button *)(((int)this) + 0x92c)); }
   (*((char *)&eh_state + 0)) = 0xb;
-  /* inlined unwind funclet 004185a6 */ { ctrl_dtor((Button *)(*(int *)&self + 0x8f0)); }
+  /* inlined unwind funclet 004185a6 */ { ctrl_dtor((Button *)(((int)this) + 0x8f0)); }
   (*((char *)&eh_state + 0)) = 10;
-  /* inlined unwind funclet 004185b5 */ { ctrl_dtor((Button *)(*(int *)&self + 0x8b4)); }
+  /* inlined unwind funclet 004185b5 */ { ctrl_dtor((Button *)(((int)this) + 0x8b4)); }
   (*((char *)&eh_state + 0)) = 9;
-  /* inlined unwind funclet 004185c4 */ { ctrl_dtor((Button *)(*(int *)&self + 0x878)); }
+  /* inlined unwind funclet 004185c4 */ { ctrl_dtor((Button *)(((int)this) + 0x878)); }
   (*((char *)&eh_state + 0)) = 8;
-  /* inlined unwind funclet 004185d3 */ { ctrl_dtor((Button *)(*(int *)&self + 0x83c)); }
+  /* inlined unwind funclet 004185d3 */ { ctrl_dtor((Button *)(((int)this) + 0x83c)); }
   (*((char *)&eh_state + 0)) = 7;
-  /* inlined unwind funclet 004185e2 */ { ctrl_dtor((Button *)(*(int *)&self + 0x800)); }
+  /* inlined unwind funclet 004185e2 */ { ctrl_dtor((Button *)(((int)this) + 0x800)); }
   (*((char *)&eh_state + 0)) = 6;
-  /* inlined unwind funclet 004185f1 */ { ctrl_dtor((Button *)(*(int *)&self + 0x7c4)); }
+  /* inlined unwind funclet 004185f1 */ { ctrl_dtor((Button *)(((int)this) + 0x7c4)); }
   (*((char *)&eh_state + 0)) = 5;
-  /* inlined unwind funclet 00418600 */ { ctrl_dtor((Button *)(*(int *)&self + 0x788)); }
+  /* inlined unwind funclet 00418600 */ { ctrl_dtor((Button *)(((int)this) + 0x788)); }
   (*((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 0041860f */ { ctrl_dtor((Button *)(*(int *)&self + 0x74c)); }
+  /* inlined unwind funclet 0041860f */ { ctrl_dtor((Button *)(((int)this) + 0x74c)); }
   (*((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0041861e */ { ctrl_dtor((Button *)(*(int *)&self + 0x710)); }
+  /* inlined unwind funclet 0041861e */ { ctrl_dtor((Button *)(((int)this) + 0x710)); }
   (*((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0041862d */ { ctrl_dtor((Button *)(*(int *)&self + 0x6d4)); }
+  /* inlined unwind funclet 0041862d */ { ctrl_dtor((Button *)(((int)this) + 0x6d4)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0041863c */ { crt_vector_dtor_iterator((u8 *)self + 0x44c,0x48,9,edit_dtor); }
+  /* inlined unwind funclet 0041863c */ { crt_vector_dtor_iterator((u8 *)this + 0x44c,0x48,9,edit_dtor); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 00418654 */ { crt_vector_dtor_iterator((u8 *)self + 0x2fc,0x38,6,combo_dtor); }
+  /* inlined unwind funclet 00418654 */ { crt_vector_dtor_iterator((u8 *)this + 0x2fc,0x38,6,combo_dtor); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0041866c */ { (*(FrameWindow **)&self)->FrameWindow::destruct(); }
+  /* inlined unwind funclet 0041866c */ { FrameWindow::destruct(); }
   return;
 }
 
@@ -1060,7 +1060,7 @@ void EditorWindow::tribe_editor_main()
   i8 *eh_prev;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)(operator_new(0x48));
@@ -1200,7 +1200,7 @@ void __cdecl tribe_editor_run(void)
   EditorWindow editor_wnd;
   
   editor_wnd.construct();
-  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
+  ON_SCOPE_EXIT(editor_wnd.destruct());
   editor_wnd.tribe_editor_main();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   return;
@@ -1326,7 +1326,7 @@ void __cdecl editor_font_reg_atexit(void)
 void __cdecl editor_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&editor_font_block.editor_font));
+  ((GameFont *)((i8 *)&editor_font_block.editor_font))->destroy();
   return;
 }
 

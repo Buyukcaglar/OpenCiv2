@@ -235,17 +235,17 @@ enum CityFlag : i32 {
     CITYF_DEFENDER_LOST = 0x20,         /* AI: buy a defender */
     CITYF_AI_SETTLER_NEAR = 0x40,
     CITYF_COASTAL = 0x80,               /* next to ocean */
-    CITYF_WONDER_BUILT = 0x100,         /* ? last completed item was a wonder */
+    CITYF_WONDER_BUILT = 0x100,         /* last item completed was a wonder (AI: another scores x3) */
     CITYF_AI_FERRY_PORT = 0x200,
     CITYF_AI_FERRY_PORT_FRESH = 0x400,  /* the port assignment lasts one refresh */
     CITYF_HYDRO_POSSIBLE = 0x800,       /* river or mountains adjacent */
-    CITYF_COMMODITY_PICKED = 0x1000,    /* ? unit_pick_caravan_commodity; never cleared */
+    CITYF_HAD_CARAVAN = 0x1000,         /* built or supported a caravan (never cleared): the AI builds no more */
     CITYF_DISORDER_2ND_TURN = 0x2000,
     CITYF_ON_EDGE = 0x4000,             /* happy == unhappy */
-    CITYF_AI_SPECIALIST_HELD = 0x8000,  /* ? city_assign_workers */
+    CITYF_AI_SPECIALIST_HELD = 0x8000,  /* AI kept or added an entertainer against disorder */
     CITYF_AIRLIFTED = 0x10000,          /* airlift used this turn */
     CITYF_TRADE_DIRTY = 0x20000,        /* commodity demand to recompute */
-    CITYF_SAM_UNUSED = 0x40000,         /* ? read only (city_choose_production_sam_score) */
+    CITYF_SAM_UNUSED = 0x40000,         /* ? never set; the AI scores a SAM battery 3 lower */
     CITYF_AI_TERRAFORM_GOAL = 0x80000,  /* pollution to clean (city_add_terraform_goals) */
     CITYF_DISORDER_LONG = 0x100000,     /* three turns or more */
     CITYF_OCEAN_ACCESS = 0x200000,      /* water next to it is not a lake */
@@ -282,10 +282,10 @@ enum TreatyFlag : i32 {
     TREATY_PEACE = 0x4,
     TREATY_ALLIANCE = 0x8,
     TREATY_VENDETTA = 0x10,             /* a holds a vendetta against b */
-    TREATY_HOSTILE_INTENT = 0x20,       /* ? AI a means to break with b (trespass, spaceship) */
-    TREATY_BROKEN = 0x40,               /* ? a cancelled its treaty with b: war is near */
+    TREATY_HOSTILE_INTENT = 0x20,       /* AI a means to break its treaty with b soon (trespass, spaceship) */
+    TREATY_BROKEN = 0x40,               /* a cancelled its treaty with b: war is near */
     TREATY_EMBASSY = 0x80,              /* a has an embassy with b */
-    TREATY_NUCLEAR_THREAT = 0x100,      /* ? a may use nuclear weapons on b */
+    TREATY_NUCLEAR_THREAT = 0x100,      /* a showed b its nukes (or b nuked a): a may nuke b */
     TREATY_FIGHTING = 0x200,            /* their units have fought */
     TREATY_RECENT_CONTACT = 0x400,      /* renewed; lapses every 16 turns */
     TREATY_AGGRESSOR = 0x800,           /* a wages war on b; decays after 32 turns */
@@ -307,7 +307,7 @@ enum TreatyFlag : i32 {
 enum CivFlag : u16 {
     CIVF_REVOLUTION = 0x1,              /* government overthrown, anarchy to announce */
     CIVF_AT_WAR = 0x2,                  /* at war with someone (ai_civ_turn_assess) */
-    CIVF_SENATE_ACTIVE = 0x4,           /* ? toggled at random; the senate intervenes */
+    CIVF_SENATE_ACTIVE = 0x4,           /* the Republic's senate sits (toggled at random each turn) */
     CIVF_GOV_CHANGED = 0x8,             /* this turn */
     CIVF_EIFFEL_APPLIED = 0x10,
     CIVF_FREE_ADVANCE = 0x20,           /* first to Philosophy: an advance to give */
@@ -320,14 +320,14 @@ enum CivFlag : u16 {
 /* Spaceship state (Civ.spaceship_flags). */
 enum SpaceshipFlag : u8 {
     SHIP_EXISTS = 0x1, SHIP_LAUNCHED = 0x2, SHIP_ARRIVED = 0x4,
-    SHIP_FUSION = 0x8,                  /* ? Fusion Power known at launch */
+    SHIP_FUSION = 0x8,                  /* Fusion Power known before launch: a faster flight */
     SHIP_WON = 0x10,                    /* arrived first */
 };
 
 /* Custom rules (game.rules; the @ADVANCED dialog).  0x2f is the base
  * value: bits 0x1..0x8 and 0x20 are always set. */
 enum GameRuleFlag : u16 {
-    RULE_BASE_1 = 0x1,                  /* ? always set; tested for stronger barbarians */
+    RULE_BASE_1 = 0x1,                  /* ? always set; gives barbarians more unit types */
     RULE_NORMAL_COMBAT = 0x10,          /* clear: Simplified Combat */
     RULE_BLOODLUST = 0x80,
     RULE_NO_RESTART_ELIMINATED = 0x100,
@@ -359,7 +359,7 @@ enum GameOption : i32 {
 
 /* Game state (game.game_flags). */
 enum GameFlag : u16 {
-    GAME_AI_GANG_UP = 0x1,              /* ? the AIs unite against a leader */
+    GAME_AI_GANG_UP = 0x1,              /* the AIs unite against the leading human (or a human launch) */
     GAME_WON = 0x2,
     GAME_LARGE_MAP = 0x4,
     GAME_SMALL_MAP = 0x8,
@@ -372,7 +372,7 @@ enum GameFlag : u16 {
 /* game.transient_flags. */
 enum TransientFlag : u16 {
     TRANSIENT_END_OF_TURN = 0x1,
-    TRANSIENT_CITY_WINDOW = 0x2,        /* ? a city window is open */
+    TRANSIENT_CITY_WINDOW_OPENED = 0x2, /* a city window was opened: the end of turn waits */
     TRANSIENT_ATTITUDE_DIRTY = 0x4,
 };
 

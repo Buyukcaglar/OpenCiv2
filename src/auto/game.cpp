@@ -36,7 +36,7 @@ i32 __cdecl setup_hotseat_game(void)
   dlg.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   for (i = 0; i < 8; i++) {
     civ_view.intro_shown[i] = 0;
   }
@@ -184,18 +184,20 @@ i32 __cdecl setup_hotseat_game(void)
       break;
     }
     civ_saved_cursor_x_block.net_claimed_civs_mask = 0;
-choose_players:
-    game.civs_alive = '\0';
-    game.human_players = '\0';
-    num_players = setup_choose_hotseat_players();
-    if (num_players != 0) {
+    for (;;) {  /* the number of players, again when the first player backs out */
+      game.civs_alive = '\0';
+      game.human_players = '\0';
+      num_players = setup_choose_hotseat_players();
+      if (num_players == 0) break;
       leaders_reset_custom_names();
       for (i = 0; i < num_players; i++) {
         while (choice = setup_choose_tribe(i,1,0), choice != 0) {
           i--;
-          if (i < 0) goto choose_players;
+          if (i < 0) break;
         }
+        if (i < 0) break;
       }
+      if (i < 0) continue;
       setup_choose_opponents(num_players);
       prefs_save_civ2dat();
       rules_load_advances(1);
@@ -411,8 +413,10 @@ i32 __cdecl setup_choose_map_size(void)
   i32 result;
   Dialog dlg;
   int rc;
+  int chosen;
   
   result = 1;
+  chosen = 0;
   dlg.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   game.game_flags = 0;
@@ -450,7 +454,8 @@ i32 __cdecl setup_choose_map_size(void)
       ;
       if (rc != 0) {
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
-        goto apply_map_size;
+        chosen = 1;
+        break;
       }
       dlg.set_position(0xfffffc19,
                  -(((int)(caption_font_block.screen_height - 0x1e0 + (caption_font_block.screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
@@ -466,11 +471,11 @@ i32 __cdecl setup_choose_map_size(void)
          (((map.height < 0xfb && ((int)map.height * (int)map.width <= extras_map_tiles_limit())) &&  /* X53 */
           (999 < (int)map.height * (int)map.width)))) {
         result = 0;
-        goto apply_map_size;
+        chosen = 1;
+        break;
       }
     }
-  } while( true );
-apply_map_size:
+  } while (chosen == 0);  /* a cancelled custom size: back to the sizes */
   if (5999 < (int)map.height * (int)map.width) {
     game.game_flags = game.game_flags | GAME_LARGE_MAP;
   }
@@ -628,12 +633,14 @@ int __cdecl setup_start_scenario(void)
   i8 dst[256];
   int level;
   int option_civs[8];
+  int started;
   
   dlg.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
-  for (;;) {
+  ON_SCOPE_EXIT(palette.destroy());
+  started = 0;
+  do {
     if (cd_music.available == 0) {
       snd_cd_stop();
       snd_play_effect(SND_MENULOOP,0,1,0);
@@ -750,13 +757,13 @@ int __cdecl setup_start_scenario(void)
             saved_turn.resume_new_game = 1;
             turn_resume_new_game = 1;
             result = 0;
-            goto finish_load_choice;
+            started = 1;
+            break;
           }
         }
       }
     }
-  }
-finish_load_choice:
+  } while (started == 0);  /* cancelled: back to the scenario file */
   if (result != 0) {
     snd_play_effect(SND_MENUOK,0,0,0);
   }
@@ -897,13 +904,15 @@ int __cdecl game_main_menu_loop(void)
   int xd_minor;
   int retry;
   int xd_build;
+  int lobby_failed;
   
   result = 1;
   retry = 1;
+  lobby_failed = 0;
   dlg.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   __chdir(((i8 *)&game_dirs.home));
   crt_strcpy(((i8 *)&net_map_lock_slots_block.scenario_dir_path),((i8 *)&game_dirs.home));
   prefs_load_civ2dat();
@@ -1029,7 +1038,9 @@ int __cdecl game_main_menu_loop(void)
         __chdir(((i8 *)&game_dirs.home));
         rules_load(1);
         retry = setup_choose_multiplayer_type();
-        if ((retry != 0) && (net.lobby_launch_mode != -1)) goto cleanup;
+        if ((retry != 0) && (net.lobby_launch_mode != -1)) {
+          lobby_failed = 1;  /* launched from a lobby: no main menu to go back to */
+        }
       }
       else {
         str_clear((char *)&text_args.strings);
@@ -1065,12 +1076,12 @@ int __cdecl game_main_menu_loop(void)
         snd_play_effect(SND_MENULOOP,0,1,0);
       }
     }
+    if (lobby_failed != 0) break;
     if (retry == 0) {
       result = 0;
       break;
     }
   }
-cleanup:
   snd_play_effect(-0x6b,0,0,0);
   snd_play_effect(-0x6c,0,0,0);
   snd_wave_set_buffer_count(8);
@@ -1168,7 +1179,7 @@ void __cdecl game_main(void)
   dlg.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   dbg_log((const char *)str_ptr_5_4_0f_multiplayer_26_march_99);
   dbg_log((const char *)(*(i8 * *)str_ptr_5_4_0f_multiplayer_26_march_99_rest));
   net.clear();
@@ -1529,7 +1540,7 @@ static int setup_net_join(int conn_type,uint *eh_state)
   }
   *eh_state = (*eh_state & 0xffffff00 | (byte)(1));
   net.gamelist_view = (NetGamelistView *)this2;
-  rc = net_session_init(this2,conn_type);
+  rc = ((NetGamelistView *)this2)->net_session_init(conn_type);
   if (net.gamelist_view != 0) {
     ((NetGamelistView *)(void *)net.gamelist_view)->view_scalar_destruct(1);
   }
@@ -1773,7 +1784,7 @@ i32 __cdecl setup_network_game(int conn_type)
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   first_pass = 1;
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   if ((((conn_type != 0) && (conn_type != 1)) && (conn_type != 4)) && ((conn_type != 2 && (conn_type != 3))))
   {
     ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(7,(iptr)&str_whichnetwork_internet_whichnetwork_local,(iptr)&str_d_ss_franklinton_startup_lan_cpp,0x21);
@@ -1949,7 +1960,7 @@ i32 __cdecl setup_mp_load_scenario(i32 mp_mode)
   dlg.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   for (;;) {
     if (cd_music.available == 0) {
       snd_cd_stop();
@@ -2295,7 +2306,7 @@ void __cdecl main_frame_wnd_reg_atexit(void)
 void __cdecl main_frame_wnd_atexit_dtor(void)
 
 {
-  wnd_dtor(&main_frame_wnd_block.main_frame_wnd);
+  main_frame_wnd_block.main_frame_wnd.ModalMenuWindow::destruct();
   return;
 }
 
@@ -2315,9 +2326,9 @@ void __cdecl intro_play_opening_video(void)
   player.construct();
   ON_SCOPE_EXIT(player.destruct());
   host_wnd.ModalMenuWindow::construct();
-  ON_SCOPE_EXIT(wnd_dtor((WndBase *)&host_wnd));
+  ON_SCOPE_EXIT(host_wnd.ModalMenuWindow::destruct());
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   dll.init();
   ON_SCOPE_EXIT(dll.free());
   gfx_get_screen_rect((iptr)((i8 *)&screen_rect2.left));
@@ -3333,7 +3344,7 @@ int __cdecl game_load_dialog(int is_scenario,i32 unused_arg,int show_title)
   
   failed = 1;
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   if (is_scenario == 0) {
     save_set_file_ext(0);
     net.loaded_file_kind = 1;
@@ -4123,8 +4134,10 @@ static void barbarians_city_uprising(iptr city,uint freq_mask)
 /* Part of game_spawn_barbarians (00485c15): a raid from the sea: an ocean
    tile of a large water body with no units, a ship and its horde (the leader
    and escorts by the advances known). Calls rand() as
-   crt_rand_at("game_spawn_barbarians") for the rand trace. */
-static void barbarians_sea_raid(void)
+   crt_rand_at("game_spawn_barbarians") for the rand trace.  Returns true when no
+   tile was found in 1000 tries: the original returns from game_spawn_barbarians
+   there (no uprising this turn). */
+static bool barbarians_sea_raid(void)
 {
   iptr rand_x;
   iptr is_ocean;
@@ -4167,7 +4180,7 @@ static void barbarians_sea_raid(void)
     }
     tries++;
     if (1000 < tries) {
-      return;
+      return true;
     }
     is_ocean = tile_is_ocean(x2,y2);
   } while (((is_ocean == 0) || (unit = tile_unit_owner(x2,y2), -1 < unit)) ||
@@ -4234,6 +4247,7 @@ static void barbarians_sea_raid(void)
     }
     unit_relocate_in_place(unit3,1);
   }
+  return false;
 }
 
 /* 00485c15 auto */
@@ -4265,7 +4279,7 @@ void __cdecl game_spawn_barbarians(void)
     }
     if (((freq_mask & (int)game.turn + 1U) == 0) &&
        (game.advance_known_by[unit_types[UNIT_ARMOR].prerequisite] == '\0')) {
-      barbarians_sea_raid();
+      if (barbarians_sea_raid()) return;
     }
     if (game.num_cities == 1 || game.num_cities - 1 < 0) {
       city = 0;
@@ -4697,6 +4711,7 @@ void __cdecl game_player_move_loop(void)
   int slot;
   iptr unit2;
   uint waited;
+  int wait_input;
   
   waited = 0;
   last_unit_count = -1;
@@ -4750,36 +4765,37 @@ void __cdecl game_player_move_loop(void)
     last_unit_count = game.num_units;
     unit_move.unanimated_state = '\0';
     map_views_block.unit_focus_done = '\0';
+    wait_input = 1;
     if (game.active_unit < 0) {
       game.transient_flags = game.transient_flags | TRANSIENT_END_OF_TURN;
       if (moving_units_mode == 1) {
         snd_play_effect(SND_ENDOTURN,1,0,0);
       }
       ui_redraw_all_maps(1);
-      if (((waited == 0) || (((*((char *)&game.game_options + 1)) & (OPT_ALWAYS_WAIT >> 8)) != 0)) || ((game.transient_flags & TRANSIENT_CITY_WINDOW) != 0))
-      goto wait_for_input;
-      player_turn_active = '\0';
+      if (((waited != 0) && (((*((char *)&game.game_options + 1)) & (OPT_ALWAYS_WAIT >> 8)) == 0)) && ((game.transient_flags & TRANSIENT_CITY_WINDOW_OPENED) == 0)) {
+        player_turn_active = '\0';  /* the turn ends */
+        wait_input = 0;
+      }
     }
-    else {
-wait_for_input:
+    if (wait_input != 0) {
       blink.unit_active = 1;
       if (game.active_unit < 0) {
-        game.transient_flags = game.transient_flags & ~TRANSIENT_CITY_WINDOW;
+        game.transient_flags = game.transient_flags & ~TRANSIENT_CITY_WINDOW_OPENED;
         game_wait_for_player_input();
       }
       else {
-        game.transient_flags = game.transient_flags & ~(TRANSIENT_END_OF_TURN | TRANSIENT_CITY_WINDOW);
+        game.transient_flags = game.transient_flags & ~(TRANSIENT_END_OF_TURN | TRANSIENT_CITY_WINDOW_OPENED);
         run_result = game_run_active_unit();
         waited = waited | run_result;
       }
       unit = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
       if (unit == -1) {
-        game.transient_flags = game.transient_flags & ~TRANSIENT_CITY_WINDOW;
+        game.transient_flags = game.transient_flags & ~TRANSIENT_CITY_WINDOW_OPENED;
       }
       if (turn_loop.active == '\0') {
         return;
       }
-      if ((game.transient_flags & TRANSIENT_CITY_WINDOW) != 0) {
+      if ((game.transient_flags & TRANSIENT_CITY_WINDOW_OPENED) != 0) {
         waited = 0;
       }
       if (blink.unit_phase != '\0') {
@@ -5167,7 +5183,10 @@ void __cdecl game_play_loop(void)
           }
         }
         else {
-          if (play_loop_human_turn_start(civ,&pbem_saved,&views_hidden) != 0) goto exit_loop;
+          if (play_loop_human_turn_start(civ,&pbem_saved,&views_hidden) != 0) {
+            mp_turn_timer_stop(0);
+            return;
+          }
         }
         status_draw_civ_color(civ);
         if ((game.multiplayer == 1) &&
@@ -5216,7 +5235,10 @@ void __cdecl game_play_loop(void)
         saved_turn.resume_new_game = 0;
         turn_resume_new_game = 0;
         game.transient_flags = game.transient_flags & ~TRANSIENT_END_OF_TURN;
-        if (turn_loop.active == '\0') goto exit_loop;
+        if (turn_loop.active == '\0') {
+          mp_turn_timer_stop(0);
+          return;
+        }
         if (game_over_reason != 0) {
           human_count = bits_count8((uint)game.human_players);
           quit = game_handle_game_over();
@@ -5225,8 +5247,10 @@ void __cdecl game_play_loop(void)
             game.human_players = game.human_players & ~(byte)(1 << ((byte)(*(i8 *)&human_civ) & 0x1f));
           }
           if (((quit != 0) && (game.multiplayer == '\0')) ||
-             ((quit != 0 && ((game.multiplayer == 1 && (human_count < 2))))))
-          goto exit_loop;
+             ((quit != 0 && ((game.multiplayer == 1 && (human_count < 2)))))) {
+            mp_turn_timer_stop(0);
+            return;
+          }
           quit = 0;
         }
       }
@@ -5239,7 +5263,6 @@ void __cdecl game_play_loop(void)
     game.human_players = game.civs_alive & game.human_players;
     if (turn_loop.active == '\0') break;
   }
-exit_loop:
   mp_turn_timer_stop(0);
   return;
 }
@@ -5775,7 +5798,7 @@ void __cdecl game_mp_host_turn_loop(i32 force_process)
         }
         game.turn_civ = (byte)civ;
         if (human_civ[0] == civ) {
-          if (mp_host_own_turn(civ,&dialog2,force_process) != 0) goto end_loop;
+          if (mp_host_own_turn(civ,&dialog2,force_process) != 0) break;  /* the loop ended (turn_loop.active clear) */
         }
         else if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
           mp_host_ai_turn(civ);
@@ -5805,16 +5828,15 @@ void __cdecl game_mp_host_turn_loop(i32 force_process)
         (*((char *)&force_process + 0)) = '\0';
         game.transient_flags = game.transient_flags & ~TRANSIENT_END_OF_TURN;
         ui_pump_messages();
-        if (turn_loop.active == '\0') goto end_loop;
+        if (turn_loop.active == '\0') break;
         if ((turn_loop.active != '\0') && (game_over_reason != 0)) {
           turn_loop.active = '\0';
-          goto end_loop;
+          break;
         }
       }
     }
     if (turn_loop.active == '\0') break;
   } while( true );
-end_loop:
   mp_turn_timer_stop(0);
   net_host_quit_handoff();
   if (game_over_reason != 0) {
@@ -7556,7 +7578,7 @@ void __cdecl main_menu_reg_atexit(void)
 void __cdecl main_menu_static_dtor(void)
 
 {
-  menu_dtor((GameMenu *)((i8 *)&main_menu_block.main_menu));
+  ((GameMenu *)((i8 *)&main_menu_block.main_menu))->destruct();
   return;
 }
 
@@ -7701,7 +7723,7 @@ void __cdecl game_palette_reg_atexit(void)
 void __cdecl game_palette_atexit_dtor(void)
 
 {
-  palette_destroy((GamePalette *)((i8 *)&game_palette_block.game_palette));
+  ((GamePalette *)((i8 *)&game_palette_block.game_palette))->destroy();
   return;
 }
 
@@ -10314,7 +10336,7 @@ int ScenarioEvents::parse_file(const char *filename,const char *section)
             if (events_parse_verbose != 0) {
               _printf(str_failed_to_create_new_event_structure);
             }
-            goto finish;
+            break;
           }
           if (events_parse_verbose != 0) {
             _printf(str_new_event_structure_created);
@@ -10378,15 +10400,16 @@ int ScenarioEvents::parse_file(const char *filename,const char *section)
         }
       }
       else if (state == 2) {
-        if (parse_trigger(&ps) == 0) goto finish;
+        if (parse_trigger(&ps) == 0) break;
       }
       else if (state == 3) {
-        if (parse_action(&ps) == 0) goto finish;
+        if (parse_action(&ps) == 0) break;
       }
     } while (state < 10);
-    failed = 0;
+    if (state == 10) {
+      failed = 0;  /* read to the end (an error leaves the loop earlier) */
+    }
   }
-finish:
   if (failed != 0) {
     __chdir(((i8 *)&game_dirs.home));
     popup_game((const char *)&str_badeventsfile);
@@ -11421,7 +11444,9 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
   iptr title;
   int cancelled;
   TribeStep step;
+  int stop;
   
+  stop = 0;
   leader2 = -1;
   result = 1;
   retry_tribe = -1;
@@ -11453,9 +11478,9 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
     if ((net.nm_server_canceled_count != 0) || (net.nm_lost_server_on_join_count != 0)) {
       setup_tribe_server_lost_popup((const char *)&str_lostserver_2,(const char *)&str_serverquit);
       result = 1;
-      goto finish_choice;
+      break;
     }
-    if (choice < 0) goto finish_choice;
+    if (choice < 0) break;
     prefs.gender = (short)choice;
     net.player_info_gender = (int)prefs.gender;
     if (in_game == 0) {
@@ -11466,12 +11491,12 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
       if (in_game == 0) {
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
       }
-      goto finish_choice;
+      break;
     }
     if ((net.nm_server_canceled_count != 0) || (net.nm_lost_server_on_join_count != 0)) {
       setup_tribe_server_lost_popup((const char *)&str_lostserver_3,(const char *)&str_serverquit_2);
       result = 1;
-      goto finish_choice;
+      break;
     }
     dialog_prepend_title_label((iptr)&dlg,player_slot + 0x25e);
     dlg.set_columns(3);
@@ -11498,7 +11523,8 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
       if (avail_count == 0) {
         popup_game((const char *)&str_joinedmax_2);
         dlg.close();
-        goto finish_choice;
+        stop = 1;
+        break;
       }
       tribe_dialog_preselect(&dlg,&sel_tribe);
       if (in_game == 0) {
@@ -11528,7 +11554,8 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
             ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
           }
           dlg.close();
-          goto finish_choice;
+          stop = 1;
+          break;
         }
       }
       snd_play_effect(SND_MENUOK,0,0,0);
@@ -11539,11 +11566,15 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
       net.player_info_civ = (int)game.player_civ;
       if (2 < game_mode) {
         step = setup_tribe_net_claim(&dlg,leader2,&retry_tribe,&result,in_game);
-        if (step == TRIBE_FINISH) goto finish_choice;
+        if (step == TRIBE_FINISH) {
+          stop = 1;
+          break;
+        }
         if (step == TRIBE_RETRY) continue;
       }
       break;
     }
+    if (stop != 0) break;
     if (leader2 < 0) {
       if (in_game == 0) {
         ((SetupPicWindow *)((i8 *)&setup_picwnd_state.window))->close();
@@ -11580,16 +11611,16 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
       else {
         step = setup_tribe_custom_names(&dlg,&choice,&result,leader2,player_slot,game_mode,in_game);
       }
-      if (step == TRIBE_FINISH) goto finish_choice;
+      if (step == TRIBE_FINISH) break;
       if (step == TRIBE_RETRY) continue;
       step = setup_tribe_city_style(&dlg,input_text,&choice,&result,leader2,player_slot,game_mode,in_game);
-      if (step == TRIBE_FINISH) goto finish_choice;
+      if (step == TRIBE_FINISH) break;
       continue;
     }
     if ((net.nm_server_canceled_count != 0) || (net.nm_lost_server_on_join_count != 0)) {
       setup_tribe_server_lost_popup((const char *)&str_lostserver_6,(const char *)&str_serverquit_5);
       result = 1;
-      goto finish_choice;
+      break;
     }
     snd_play_effect(SND_MENUOK,0,0,0);
     if (in_game == 0) {
@@ -11600,7 +11631,6 @@ int __cdecl setup_choose_tribe(int player_slot,int game_mode,int in_game)
       net_send_message(NM_UNLOCK_NATION,0,leader2,(int)game.player_civ,0,0,0,0,0,0);
     }
   } while( true );
-finish_choice:
   choice = result;
   if ((result == 1) && (-1 < leader2)) {
     tribe_restore_names(leader2);
@@ -11658,7 +11688,7 @@ i32 __cdecl scenario_start_dialog(int game_mode)
   dlg.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dlg.Dialog::destruct());
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   for (;;) {
     do {
       if (cd_music.available == 0) {
@@ -15552,7 +15582,7 @@ void EditorWindow::events_editor_run()
   i8 *seh_scope;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (ScenarioEvents *)operator_new(0x310);
@@ -15748,7 +15778,7 @@ void __cdecl events_editor_open(void)
   i8 *seh_scope;
   
   editor_wnd.construct();
-  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
+  ON_SCOPE_EXIT(editor_wnd.destruct());
   editor_wnd.events_editor_run();
   return;
 }
@@ -17269,7 +17299,7 @@ void __cdecl setup_picwnd_load_image(i32 width,i32 height)
   surface_ctor(&surface);
   ON_SCOPE_EXIT(surface_dtor(&surface));
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   win_flush_pending_msgs();
   surface.load_gif_resource(setup_picwnd_state.image_id + 900,10,0xc0,(iptr)&palette);
   win_flush_pending_msgs();
@@ -17669,7 +17699,7 @@ void __cdecl status_info_font_reg_atexit(void)
 void __cdecl status_info_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&status_wnd.info_font));
+  ((GameFont *)((i8 *)&status_wnd.info_font))->destroy();
   return;
 }
 
@@ -17710,7 +17740,7 @@ void __cdecl status_font_reg_atexit(void)
 void __cdecl status_font_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&status_font_block.status_font));
+  ((GameFont *)((i8 *)&status_font_block.status_font))->destroy();
   return;
 }
 
@@ -18778,7 +18808,7 @@ uint __cdecl main_frame_create(void)
   GamePalette palette;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   text_clear();
   text_append_label(2);
   WritePrivateProfileStringA
@@ -18959,18 +18989,20 @@ i32 __cdecl setup_pbem_game(void)
     default:
       break;
     }
-choose_players:
-    game.civs_alive = '\0';
-    game.human_players = '\0';
-    num_players = setup_choose_hotseat_players();
-    if (num_players != 0) {
+    for (;;) {  /* the number of players, again when the first player backs out */
+      game.civs_alive = '\0';
+      game.human_players = '\0';
+      num_players = setup_choose_hotseat_players();
+      if (num_players == 0) break;
       leaders_reset_custom_names();
       for (i = 0; i < num_players; i++) {
         while (choice = setup_choose_tribe(i,2,0), choice != 0) {
           i--;
-          if (i < 0) goto choose_players;
+          if (i < 0) break;
         }
+        if (i < 0) break;
       }
+      if (i < 0) continue;
       setup_choose_opponents(num_players);
       prefs_save_civ2dat();
       rules_load_advances(1);
@@ -18997,17 +19029,17 @@ choose_players:
 i32 __cdecl game_timer_create(TimerFn callback,i32 interval_ms,i32 repeat_count)
 
 {
-  TimerManagerCtorView *self;
+  TimerManager *mgr;
   i32 slot;
   TimerManager *new_mgr;
   
   if (wnd_modal_stack_below_block.game_timer_mgr == (TimerManager *)0x0) {
-    self = (TimerManagerCtorView *)operator_new(0x90);
-    if (self == (TimerManagerCtorView *)0x0) {
+    mgr = (TimerManager *)operator_new(0x90);
+    if (mgr == (TimerManager *)0x0) {
       new_mgr = (TimerManager *)0x0;
     }
     else {
-      new_mgr = (TimerManager *)timer_mgr_ctor(self);
+      new_mgr = mgr->construct();
     }
     wnd_modal_stack_below_block.game_timer_mgr = new_mgr;
   }
@@ -19065,7 +19097,7 @@ void TimerManager::game_timer_kill_slot(iptr slot)
 }
 
 /* 005d211e auto */
-TimerManagerCtorView * __thiscall timer_mgr_ctor(TimerManagerCtorView *self)
+TimerManager *TimerManager::construct()
 
 {
   u8 *entry;
@@ -19073,20 +19105,20 @@ TimerManagerCtorView * __thiscall timer_mgr_ctor(TimerManagerCtorView *self)
   int i;
   
   for (i = 1; i < 0x11; i++) {
-    entry = self->timer_slot_tables + i * 4;
+    entry = (u8 *)&((TimerManagerExt *)this)->timer_callbacks[i];
     entry[0] = '\0';
     entry[1] = '\0';
     entry[2] = '\0';
     entry[3] = '\0';
-    entry = self->timer_slot_tables + i * 4 + 0x44;
+    entry = (u8 *)&((u32 *)&((TimerManagerExt *)this)->timer_repeat_counts)[i];
     entry[0] = '\0';
     entry[1] = '\0';
     entry[2] = '\0';
     entry[3] = '\0';
   }
-  hwnd = timer_wnd_create((iptr)self);
-  self->timer_wnd = hwnd;
-  return self;
+  hwnd = timer_wnd_create((iptr)this);
+  timer_hwnd = hwnd;
+  return this;
 }
 
 /* 005d2182 auto */

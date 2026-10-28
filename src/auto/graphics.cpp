@@ -181,13 +181,16 @@ GameFont *GameFont::init_styled(i32 face,i32 size,i32 style)
 }
 
 /* 0043c520 auto */
-GameFont * __thiscall font_destroy(GameFont *self)
+GameFont *GameFont::destroy()
 
 {
-  if (self->hfont != 0) {
-    self = (GameFont *)font_handle_destroy(self->hfont);
+  GameFont *result;
+
+  result = this;
+  if (hfont != 0) {
+    result = (GameFont *)font_handle_destroy(hfont);
   }
-  return self;
+  return result;
 }
 
 /* 0043c560 auto */
@@ -242,7 +245,7 @@ void GameFont::set_styled(i32 face,i32 size,i32 style)
 GamePalette *GamePalette::scalar_destruct(uint flags)
 
 {
-  palette_destroy(this);
+  destroy();
   if ((flags & 1) != 0) {
     operator_delete(this);
   }
@@ -1118,7 +1121,7 @@ void __cdecl gfx_load_icon_sprites(void)
   int i;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   loaded = ((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface))->load_gif_resource(0x55,10,0xc0,(iptr)&palette);
   if (loaded == 0) {
@@ -1303,7 +1306,7 @@ void __cdecl gfx_load_game_sprites(void)
   SurfaceWindow surf_wnd2;
   
   surf_wnd2.SurfaceWindow::construct();
-  ON_SCOPE_EXIT(surfwnd_dtor(&surf_wnd2));
+  ON_SCOPE_EXIT(surf_wnd2.SurfaceWindow::destruct());
   gfx_load_city_sprites();
   gfx_load_icon_sprites();
   gfx_load_terrain_sprites();
@@ -1368,7 +1371,7 @@ void __cdecl grey_palette_reg_atexit(void)
 void __cdecl grey_palette_atexit_dtor(void)
 
 {
-  palette_destroy((GamePalette *)((i8 *)&grey_palette_block.grey_palette));
+  ((GamePalette *)((i8 *)&grey_palette_block.grey_palette))->destroy();
   return;
 }
 
@@ -2023,7 +2026,7 @@ void PortraitDialog::destruct()
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 004963d2 */ { surface_dtor((DibSurface *)(((int)this) + 0x114)); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 004963e1 */ { surfwnd_dtor(((SurfaceWindow *)this)); }
+  /* inlined unwind funclet 004963e1 */ { ((SurfaceWindow *)this)->SurfaceWindow::destruct(); }
   return;
 }
 
@@ -2341,7 +2344,7 @@ void __cdecl font_size16_bold_reg_atexit(void)
 void __cdecl font_size16_bold_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
+  ((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold))->destroy();
   return;
 }
 
@@ -2383,7 +2386,7 @@ void __cdecl font_size20_reg_atexit(void)
 void __cdecl font_size20_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&font_size20));
+  ((GameFont *)((i8 *)&font_size20))->destroy();
   return;
 }
 
@@ -2425,7 +2428,7 @@ void __cdecl font_size14_reg_atexit(void)
 void __cdecl font_size14_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&font_size14));
+  ((GameFont *)((i8 *)&font_size14))->destroy();
   return;
 }
 
@@ -2467,7 +2470,7 @@ void __cdecl font_size16_reg_atexit(void)
 void __cdecl font_size16_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&font_size16));
+  ((GameFont *)((i8 *)&font_size16))->destroy();
   return;
 }
 
@@ -2500,7 +2503,7 @@ void __cdecl font_size24_bold_reg_atexit(void)
 void __cdecl font_size24_bold_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&font_size24_bold));
+  ((GameFont *)((i8 *)&font_size24_bold))->destroy();
   return;
 }
 
@@ -2542,7 +2545,7 @@ void __cdecl font_size30_reg_atexit(void)
 void __cdecl font_size30_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&font_size30));
+  ((GameFont *)((i8 *)&font_size30))->destroy();
   return;
 }
 
@@ -2584,7 +2587,7 @@ void __cdecl font_size21_reg_atexit(void)
 void __cdecl font_size21_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&font_size21));
+  ((GameFont *)((i8 *)&font_size21))->destroy();
   return;
 }
 
@@ -2626,7 +2629,7 @@ void __cdecl font_size24_reg_atexit(void)
 void __cdecl font_size24_static_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&font_size24));
+  ((GameFont *)((i8 *)&font_size24))->destroy();
   return;
 }
 
@@ -3692,7 +3695,7 @@ void __cdecl sprite_picker_window_reg_atexit(void)
 void __cdecl sprite_picker_window_static_dtor(void)
 
 {
-  sprite_picker_dtor((SpritePicker *)((i8 *)&sprite_editor.sprite_picker_window));
+  ((SpritePicker *)((i8 *)&sprite_editor.sprite_picker_window))->destruct();
   return;
 }
 
@@ -3741,7 +3744,7 @@ void __cdecl sprite_sheet_save_units(void)
   int x2;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   __getcwd(saved_dir,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_units_bmp_2,10,0xc0,(iptr)&palette);
@@ -3828,7 +3831,7 @@ void __cdecl sprite_sheet_save_cities(void)
   int size_idx;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   __getcwd(saved_dir,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_cities_bmp_2,10,0xc0,(iptr)&palette);
@@ -3967,7 +3970,7 @@ void __cdecl sprite_sheet_save_terrain1(void)
   int i;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_terrain1_bmp_2,10,0xc0,(iptr)&palette);
@@ -4115,7 +4118,7 @@ void __cdecl sprite_sheet_save_terrain2(void)
   uint i;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_terrain2_bmp_2,10,0xc0,(iptr)&palette);
@@ -4251,7 +4254,7 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   int row;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_icons_bmp_2,10,0xc0,(iptr)&palette);
@@ -4314,7 +4317,7 @@ void __cdecl sprite_sheet_save_building_icons(void)
   int i;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   __getcwd(saved_cwd,0x104);
   __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
   result = gfx_load_bmp_640x480((iptr)&sprite_editor.sprite_sheet_surface,(const char *)&str_icons_bmp_6,10,0xc0,(iptr)&palette);
@@ -6087,7 +6090,7 @@ void __cdecl sprite_editor_import_sheet(void)
   char *file_name;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   dialog2.Dialog::construct(0x4000);
   ON_SCOPE_EXIT(dialog2.Dialog::destruct());
   ON_SCOPE_EXIT(((DibSurface *)((i8 *)&sprite_editor.sprite_sheet_surface))->release());
@@ -6215,22 +6218,22 @@ void __cdecl sprite_editor_import_sheet(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall sprite_picker_dtor(void *self)
+void SpritePicker::destruct()
 
 {
   int seh_state;
   
   seh_state = seh_state & 0xff;
   (*((char *)&seh_state + 0)) = 3;
-  /* inlined unwind funclet 00578402 */ { ctrl_dtor((Button *)(*(int *)&self + 0x3b0)); }
+  /* inlined unwind funclet 00578402 */ { ctrl_dtor((Button *)(((int)this) + 0x3b0)); }
   (*((char *)&seh_state + 0)) = 2;
-  /* inlined unwind funclet 00578411 */ { ctrl_dtor((Button *)(*(int *)&self + 0x374)); }
+  /* inlined unwind funclet 00578411 */ { ctrl_dtor((Button *)(((int)this) + 0x374)); }
   (*((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 00578420 */ { ctrl_dtor((Button *)(*(int *)&self + 0x338)); }
+  /* inlined unwind funclet 00578420 */ { ctrl_dtor((Button *)(((int)this) + 0x338)); }
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 0057842f */ { ((Scrollbar *)(*(int *)&self + 0x2f8))->destruct(); }
+  /* inlined unwind funclet 0057842f */ { ((Scrollbar *)(((int)this) + 0x2f8))->destruct(); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 0057843e */ { (*(FrameWindow **)&self)->FrameWindow::destruct(); }
+  /* inlined unwind funclet 0057843e */ { FrameWindow::destruct(); }
   return;
 }
 
@@ -7133,7 +7136,7 @@ void DibSurface::blit_to_wnd(iptr wnd,RECT *src_rect,iptr dest_pt)
       lock();
     }
     dest_y = ((WndBase *)wnd)->get_palette_obj();
-    apply_palette((PaletteVersionView *)dest_y);
+    apply_palette((GamePalette *)dest_y);
     dest_y = *(i32 *)(dest_pt + 4);
     dest_x = *(i32 *)dest_pt;
     window = ((WndBase *)wnd)->get_window();
@@ -7192,26 +7195,26 @@ void DibSurface::set_palette(iptr palette)
 {
   u32 version;
   
-  version = palette_get_version((PaletteVersionView *)palette);
+  version = ((GamePalette *)palette)->get_version();
   if (version != palette_version) {
     dib_set_palette(dib,palette);
-    version = palette_get_version((PaletteVersionView *)palette);
+    version = ((GamePalette *)palette)->get_version();
     palette_version = version;
   }
   return;
 }
 
 /* 005c0d12 auto */
-void DibSurface::apply_palette(PaletteVersionView *palette)
+void DibSurface::apply_palette(GamePalette *palette)
 
 {
   u32 version;
   
-  if (palette != (PaletteVersionView *)0x0) {
-    version = palette_get_version(palette);
+  if (palette != (GamePalette *)0x0) {
+    version = palette->get_version();
     if (version != palette_version) {
       dib_set_palette(dib,(iptr)palette);
-      version = palette_get_version(palette);
+      version = palette->get_version();
       palette_version = version;
     }
   }
@@ -7219,8 +7222,7 @@ void DibSurface::apply_palette(PaletteVersionView *palette)
 }
 
 /* 005c0d69 auto */
-void __thiscall
-surface_draw_text_cur_font(SurfaceTextCurFontView *self,const char *text,int x,int y,uint flags)
+void DibSurface::draw_text_cur_font(const char *text,int x,int y,uint flags)
 
 {
   i8 old_color;
@@ -7231,19 +7233,19 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *self,const char *text,int x,i
   if (draw_target.font == (i8 *)0x0) {
     dbg_log((const char *)&str_error_no_current_font_selected);
   }
-  else if (self->dib != 0) {
+  else if (dib != 0) {
     if ((flags & 0x10) != 0) {
       font_height = font_measure_height(*(i32 *)draw_target.font);
       font_height += (font_height >> 0x1f & 7U);
       shadow_offset = font_height >> 3;
       old_color = gfx_set_text_color_index(CONCAT31((font_height >> 0xb),display_palette.black_index));
       saved_color = (saved_color & 0xffffff00 | (byte)(old_color));
-      dib_draw_text_at(self->dib,*(i32 *)draw_target.font,(char *)text,shadow_offset + x,
-                   shadow_offset + y,(iptr)(self->clip_rect_2),flags);
+      dib_draw_text_at(dib,*(i32 *)draw_target.font,(char *)text,shadow_offset + x,
+                   shadow_offset + y,(iptr)&clip_left,flags);
       gfx_set_text_color_index(saved_color);
     }
-    dib_draw_text_at(self->dib,*(i32 *)draw_target.font,(char *)text,x,y,
-                 (iptr)(self->clip_rect_2),flags);
+    dib_draw_text_at(dib,*(i32 *)draw_target.font,(char *)text,x,y,
+                 (iptr)&clip_left,flags);
   }
   return;
 }
@@ -7632,10 +7634,10 @@ uptr DibSurface::get_bits()
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall palette_get_version(PaletteVersionView *self)
+u32 GamePalette::get_version()
 
 {
-  return self->pal_version;
+  return pal_version;
 }
 
 /* 005c5710 auto */
@@ -7677,20 +7679,23 @@ GamePalette *GamePalette::init()
 }
 
 /* 005c656b auto */
-GamePalette * __thiscall palette_destroy(GamePalette *self)
+GamePalette *GamePalette::destroy()
 
 {
-  logpal_delete_hpalette(self->hpalette);
-  if (self->fade_src_rgb != 0) {
-    mem_handle_free(self->fade_src_rgb);
+  GamePalette *result;
+
+  result = this;
+  logpal_delete_hpalette(hpalette);
+  if (fade_src_rgb != 0) {
+    mem_handle_free(fade_src_rgb);
   }
-  if (self->fade_dst_rgb != 0) {
-    mem_handle_free(self->fade_dst_rgb);
+  if (fade_dst_rgb != 0) {
+    mem_handle_free(fade_dst_rgb);
   }
-  if (self->tint_saved_rgb != 0) {
-    self = (GamePalette *)mem_handle_free(self->tint_saved_rgb);
+  if (tint_saved_rgb != 0) {
+    result = (GamePalette *)mem_handle_free(tint_saved_rgb);
   }
-  return self;
+  return result;
 }
 
 /* 005c65f9 auto */
@@ -8039,10 +8044,10 @@ void __cdecl region_dispose(int region)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall palette_get_hpalette(PaletteHandleView *self)
+u32 GamePalette::get_hpalette()
 
 {
-  return self->hpalette;
+  return hpalette;
 }
 
 /* 005cd6e0 auto */
@@ -8429,20 +8434,20 @@ bool Sprite::has_data()
 }
 
 /* 005cf39b auto */
-void __thiscall sprite_set_origin(SpriteOriginSetView *self,u32 x,u32 y)
+void Sprite::set_origin(u32 x,u32 y)
 
 {
-  self->origin_x = x;
-  self->origin_y = y;
+  offset_x = x;
+  offset_y = y;
   return;
 }
 
 /* 005cf3c5 auto */
-void __thiscall sprite_get_origin(SpriteOriginGetView *self,iptr out_x,iptr out_y)
+void Sprite::get_origin(iptr out_x,iptr out_y)
 
 {
-  *(u32 *)out_x = self->origin_x;
-  *(u32 *)out_y = self->origin_y;
+  *(u32 *)out_x = offset_x;
+  *(u32 *)out_y = offset_y;
   return;
 }
 
@@ -8652,7 +8657,7 @@ int Sprite::encode_from_surface(iptr surface,int key_mode,RECT *src_rect)
             key_color = key2;
           }
           offset_x = 0;
-          full_height = 0;
+          offset_y = 0;
           out = (i32 *)mem_handle_lock(handle);
           for (row = 0; row < last_row - first_row2; row++) {
             *out = run_starts[row];
@@ -8685,7 +8690,7 @@ int Sprite::encode_from_surface(iptr surface,int key_mode,RECT *src_rect)
         key_color = key2;
       }
       offset_x = 0;
-      full_height = 0;
+      offset_y = 0;
       if (was_locked == 0) {
         ((DibSurface *)surface)->unlock();
       }
@@ -8735,7 +8740,7 @@ int *Sprite::blit_to_surface(int *out_rect,DibSurface *surface,int key_arg,int x
     scaled_trim_y = gfx_scale_length(trim_y,0,1);
     tmp = gfx_scale_length(offset_x,0,0);
     dst_x = scaled_trim_x + tmp + x;
-    tmp = gfx_scale_length(full_height,0,0);
+    tmp = gfx_scale_length(offset_y,0,0);
     dst_y = scaled_trim_y + tmp + y;
     clip_h = 0;
     tmp = scaled_trim_y;
@@ -8827,7 +8832,7 @@ int *Sprite::blit_silhouette_to_surface(int *out_rect,DibSurface *surface,int ke
     scaled_trim_y = gfx_scale_length(trim_y,0,1);
     tmp = gfx_scale_length(offset_x,0,0);
     dst_x = x + tmp + scaled_trim_x;
-    tmp = gfx_scale_length(full_height,0,0);
+    tmp = gfx_scale_length(offset_y,0,0);
     dst_y = y + tmp + scaled_trim_y;
     clip_h = 0;
     tmp = scaled_trim_y;
@@ -8918,7 +8923,7 @@ void Sprite::merge_at(Sprite *src,Sprite *dst,i32 unused,int dx, int dy)
       *(i32 *)dst->bounds_bottom = *(i32 *)((iptr)src + 0x1c);
       OffsetRect((LPRECT)&dst->bounds_rect,dx,dy);
       dst->offset_x = (int)src->offset_x + dx;
-      dst->full_height = (int)src->full_height + dy;
+      dst->offset_y = (int)src->offset_y + dy;
       dst->load_scale_num = src->load_scale_num;
       dst->load_scale_den = src->load_scale_den;
       dst->key_color = src->key_color;
@@ -9056,7 +9061,7 @@ void Sprite::clear_fields()
   SetRect((LPRECT)this,0,0,0,0);
   SetRect((LPRECT)&bounds_rect,0,0,0,0);
   offset_x = 0;
-  full_height = 0;
+  offset_y = 0;
   load_scale_num = 1;
   load_scale_den = 1;
   key_color = '\0';
@@ -10319,7 +10324,7 @@ dib_vline8(iptr bits,i32 color,int length,iptr x,int y,int surf_height,
 }
 
 /* 005e5ee0 auto */
-void __thiscall ddsurf_dtor(void *self)
+void DDSurface::destruct()
 
 {
   return;

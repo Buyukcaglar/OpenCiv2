@@ -1948,11 +1948,11 @@ i32 AviPlayer::destruct()
   (*((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(((int)this) + 0x558)); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 005dd23f */ { palette_destroy((GamePalette *)(((int)this) + 0x124)); }
+  /* inlined unwind funclet 005dd23f */ { ((GamePalette *)(((int)this) + 0x124))->destroy(); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 005dd24e */ { avi_audio_release((AviAudioReleaseView *)(((int)this) + 0x11c)); }
+  /* inlined unwind funclet 005dd24e */ { ((AviAudio *)(((int)this) + 0x11c))->release(); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 005dd25d */ { surfwnd_dtor(((SurfaceWindow *)this)); }
+  /* inlined unwind funclet 005dd25d */ { ((SurfaceWindow *)this)->SurfaceWindow::destruct(); }
   return eh_next;
 }
 
@@ -2030,10 +2030,10 @@ void AviPlayer::play_range(u32 first_frame,u32 last_frame)
 }
 
 /* 005dd45d auto */
-void __thiscall avi_player_show_frame(void *self,i32 frame)
+void AviPlayer::show_frame(i32 frame)
 
 {
-  avi_seek_frame((AviPlayer *)self,frame,1);
+  avi_seek_frame(this,frame,1);
   return;
 }
 
@@ -2446,7 +2446,7 @@ int __cdecl avi_open_file(AviPlayer *player,const char *filename)
         result = AVIFileGetStream(avi_play.file[0],((PAVISTREAM *)&avi_play.audio_stream),0x73647561,0);
         if (result == 0) {
           player->audio_playing = 0;
-          attach_result = avi_audio_attach_stream((AviAudioAttachView *)&player->audio,avi_play.audio_stream[0]);
+          attach_result = player->audio.attach_stream(avi_play.audio_stream[0]);
           value = result;
           if (attach_result == 0) {
             player->has_audio = 1;
@@ -2860,7 +2860,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
       }
     }
     else {
-      sample = avi_audio_is_playing((AviAudioPlayingView *)&player->audio);
+      sample = player->audio.is_playing();
       if (sample == 0) {
         if (player->loop == 0) {
           avi_play_pause(player);
@@ -2871,7 +2871,7 @@ void __cdecl avi_update_frame(AviPlayer *player)
         avi_play_start(player);
         return;
       }
-      audio_pos_ms = avi_audio_get_position_ms((void *)&player->audio);
+      audio_pos_ms = player->audio.get_position_ms();
       sample = AVIStreamTimeToSample(avi_play.video_stream[0],audio_pos_ms);
       target_frame = player->start_frame + sample;
       if ((player->paused == 0) || (target_frame < (uint)player->cur_frame)) {
@@ -3238,7 +3238,7 @@ handle_size:
         (*(WndOnMciDoneView * *)&modal_wnd.active_child) = wnd2;
         is_iconic = IsIconic(hwnd);
         if (is_iconic == 0) {
-          wnd_on_size_nop(wnd2,lparam & 0xffff,lparam >> 0x10);
+          ((ModalMenuWindow *)wnd2)->on_size_nop(lparam & 0xffff,lparam >> 0x10);
           ((WndHandlers *)wnd2->handlers)->call_size(wparam);
         }
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
@@ -3436,41 +3436,41 @@ AviAudio *AviAudio::construct()
 }
 
 /* 005eed1b auto */
-void __thiscall avi_audio_release(AviAudioReleaseView *self)
+void AviAudio::release()
 
 {
-  if (self->audio_stream != 0) {
+  if (audio_stream != 0) {
     snd_avi_stream_stop();
   }
   return;
 }
 
 /* 005eed43 auto */
-uint __thiscall avi_audio_is_playing(AviAudioPlayingView *self)
+uint AviAudio::is_playing()
 
 {
-  return (uint)((self->state_flags & 4) != 0);
+  return (uint)((flags & 4) != 0);
 }
 
 /* 005eed76 auto */
-int __thiscall avi_audio_attach_stream(AviAudioAttachView *self,u32 stream)
+int AviAudio::attach_stream(u32 stream)
 
 {
   int result;
   
   result = snd_wave_add_avi_stream(stream);
   if (result == 0) {
-    self->avi_stream = stream;
-    self->stream_flags = self->stream_flags | 1;
+    audio_stream = stream;
+    flags = flags | 1;
   }
   else {
-    self->stream_flags = 0;
+    flags = 0;
   }
   return result;
 }
 
 /* 005eedd1 auto */
-i32 __thiscall avi_audio_get_position_ms(void *self)
+i32 AviAudio::get_position_ms()
 
 {
   i32 position_ms;
@@ -3480,23 +3480,23 @@ i32 __thiscall avi_audio_get_position_ms(void *self)
 }
 
 /* 005eedec auto */
-int __thiscall avi_audio_prepare_range(AviAudioPrepareView *self,i32 start_time,i32 end_time)
+int AviAudio::prepare_range(i32 start_time,i32 end_time)
 
 {
   int result;
   
-  result = snd_avi_stream_prepare(start_time,end_time,(iptr)self);
+  result = snd_avi_stream_prepare(start_time,end_time,(iptr)this);
   if (result == 0) {
-    self->audio_flags = self->audio_flags | 2;
+    flags = flags | 2;
   }
   else {
-    self->audio_flags = self->audio_flags & 0xfffd;
+    flags = flags & 0xfffd;
   }
   return result;
 }
 
 /* 005eee4f auto */
-i16 __thiscall avi_audio_start(void *self)
+i16 AviAudio::start()
 
 {
   snd_avi_stream_start();

@@ -383,7 +383,7 @@ void TaxRateDialog::run(uptr civ)
   
   rates_changed = 0;
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   taxrate_wnd.dlg = this;
   this->civ = civ;
   taxrate_wnd.active = 1;
@@ -609,7 +609,7 @@ void __cdecl taxrate_dialog_show(iptr civ)
   TaxRateDialog dialog2;
   
   dialog2.construct();
-  ON_SCOPE_EXIT(taxrate_dialog_dtor(&dialog2));
+  ON_SCOPE_EXIT(dialog2.destruct());
   if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
     if ((game.multiplayer < 3) || (human_civ[0] == civ)) {
       dialog2.run(civ);
@@ -667,24 +667,24 @@ TaxRateDialog *TaxRateDialog::construct()
 }
 
 /* 0040f1e0 auto */
-void __thiscall taxrate_dialog_dtor(void *self)
+void TaxRateDialog::destruct()
 
 {
   int eh_state;
   
   eh_state = eh_state & 0xff;
   (*((char *)&eh_state + 0)) = 4;
-  /* inlined unwind funclet 0040f25f */ { ctrl_dtor((Button *)(*(int *)&self + 0x4cc)); }
+  /* inlined unwind funclet 0040f25f */ { ctrl_dtor((Button *)(((int)this) + 0x4cc)); }
   (*((char *)&eh_state + 0)) = 3;
-  /* inlined unwind funclet 0040f26e */ { crt_vector_dtor_iterator((void *)(*(int *)&self + 0x418),0x3c,3,checkbox_dtor); }
+  /* inlined unwind funclet 0040f26e */ { crt_vector_dtor_iterator((void *)(((int)this) + 0x418),0x3c,3,checkbox_dtor); }
   (*((char *)&eh_state + 0)) = 2;
-  /* inlined unwind funclet 0040f286 */ { ((Scrollbar *)(*(int *)&self + 0x3d8))->destruct(); }
+  /* inlined unwind funclet 0040f286 */ { ((Scrollbar *)(((int)this) + 0x3d8))->destruct(); }
   (*((char *)&eh_state + 0)) = 1;
-  /* inlined unwind funclet 0040f295 */ { ((Scrollbar *)(*(int *)&self + 0x398))->destruct(); }
+  /* inlined unwind funclet 0040f295 */ { ((Scrollbar *)(((int)this) + 0x398))->destruct(); }
   eh_state = eh_state & 0xffffff00;
-  /* inlined unwind funclet 0040f2a4 */ { ((Scrollbar *)(*(int *)&self + 0x358))->destruct(); }
+  /* inlined unwind funclet 0040f2a4 */ { ((Scrollbar *)(((int)this) + 0x358))->destruct(); }
   eh_state = 0xffffffff;
-  /* inlined unwind funclet 0040f2b3 */ { (*(FrameWindow **)&self)->FrameWindow::destruct(); }
+  /* inlined unwind funclet 0040f2b3 */ { FrameWindow::destruct(); }
   return;
 }
 
@@ -1028,7 +1028,7 @@ void EditorWindow::city_editor_open_window()
   GamePalette palette;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
@@ -1160,7 +1160,7 @@ void __cdecl city_editor_run(void)
   EditorWindow editor_wnd;
   
   editor_wnd.construct();
-  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
+  ON_SCOPE_EXIT(editor_wnd.destruct());
   editor_wnd.city_editor_open_window();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   return;
@@ -4134,7 +4134,7 @@ void __cdecl cityview_open(uptr city)
       this2->run_modal();
     }
     if (this2 != (CityViewWindow *)0x0) {
-      cityview_scalar_dtor(this2,1);
+      this2->scalar_destruct(1);
     }
   }
   return;
@@ -4183,7 +4183,7 @@ CityViewWindow *CityViewWindow::construct()
 }
 
 /* 00454699 auto */
-void __thiscall cityview_dtor(void *self)
+void CityViewWindow::destruct()
 
 {
   int seh_state;
@@ -4191,35 +4191,35 @@ void __thiscall cityview_dtor(void *self)
   seh_state = seh_state & 0xff;
   (*((char *)&seh_state + 0)) = 0xd;
   (*(i32 *)&cityview.wnd) = 0;
-  ((DllHandle *)((int)self + 0x6d8))->dll_handle_free();
+  ((DllHandle *)((int)this + 0x6d8))->dll_handle_free();
   (*((char *)&seh_state + 0)) = 0xc;
-  /* inlined unwind funclet 00454798 */ { font_destroy((GameFont *)(*(int *)&self + 0x1ca8)); }
+  /* inlined unwind funclet 00454798 */ { ((GameFont *)(((int)this) + 0x1ca8))->destroy(); }
   (*((char *)&seh_state + 0)) = 0xb;
-  /* inlined unwind funclet 004547a7 */ { surface_dtor((DibSurface *)(*(int *)&self + 0x199c)); }
+  /* inlined unwind funclet 004547a7 */ { surface_dtor((DibSurface *)(((int)this) + 0x199c)); }
   (*((char *)&seh_state + 0)) = 10;
-  /* inlined unwind funclet 004547b6 */ { crt_vector_dtor_iterator((void *)(*(int *)&self + 0x18ac),0x3c,4,sprite_destroy); }
+  /* inlined unwind funclet 004547b6 */ { crt_vector_dtor_iterator((void *)(((int)this) + 0x18ac),0x3c,4,sprite_destroy); }
   (*((char *)&seh_state + 0)) = 9;
-  /* inlined unwind funclet 004547ce */ { crt_vector_dtor_iterator((void *)(*(int *)&self + 0x17bc),0x3c,4,sprite_destroy); }
+  /* inlined unwind funclet 004547ce */ { crt_vector_dtor_iterator((void *)(((int)this) + 0x17bc),0x3c,4,sprite_destroy); }
   (*((char *)&seh_state + 0)) = 8;
-  /* inlined unwind funclet 004547e6 */ { crt_vector_dtor_iterator((void *)(*(int *)&self + 0x16cc),0x3c,4,sprite_destroy); }
+  /* inlined unwind funclet 004547e6 */ { crt_vector_dtor_iterator((void *)(((int)this) + 0x16cc),0x3c,4,sprite_destroy); }
   (*((char *)&seh_state + 0)) = 7;
-  /* inlined unwind funclet 004547fe */ { crt_vector_dtor_iterator((void *)(*(int *)&self + 0x15dc),0x3c,4,sprite_destroy); }
+  /* inlined unwind funclet 004547fe */ { crt_vector_dtor_iterator((void *)(((int)this) + 0x15dc),0x3c,4,sprite_destroy); }
   (*((char *)&seh_state + 0)) = 6;
-  /* inlined unwind funclet 00454816 */ { crt_vector_dtor_iterator((void *)(*(int *)&self + 0x6dc),0x3c,0x3c,sprite_destroy); }
+  /* inlined unwind funclet 00454816 */ { crt_vector_dtor_iterator((void *)(((int)this) + 0x6dc),0x3c,0x3c,sprite_destroy); }
   (*((char *)&seh_state + 0)) = 5;
-  /* inlined unwind funclet 0045482e */ { ((DllHandle *)(*(int *)&self + 0x6d8))->free(); }
+  /* inlined unwind funclet 0045482e */ { ((DllHandle *)(((int)this) + 0x6d8))->free(); }
   (*((char *)&seh_state + 0)) = 4;
-  /* inlined unwind funclet 0045483d */ { surface_dtor((DibSurface *)(*(int *)&self + 0x690)); }
+  /* inlined unwind funclet 0045483d */ { surface_dtor((DibSurface *)(((int)this) + 0x690)); }
   (*((char *)&seh_state + 0)) = 3;
-  /* inlined unwind funclet 0045484c */ { surface_dtor((DibSurface *)(*(int *)&self + 0x648)); }
+  /* inlined unwind funclet 0045484c */ { surface_dtor((DibSurface *)(((int)this) + 0x648)); }
   (*((char *)&seh_state + 0)) = 2;
-  /* inlined unwind funclet 0045485b */ { palette_destroy((GamePalette *)(*(int *)&self + 0x214)); }
+  /* inlined unwind funclet 0045485b */ { ((GamePalette *)(((int)this) + 0x214))->destroy(); }
   (*((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 0045486a */ { surface_dtor((DibSurface *)(*(int *)&self + 0x1cc)); }
+  /* inlined unwind funclet 0045486a */ { surface_dtor((DibSurface *)(((int)this) + 0x1cc)); }
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 00454879 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)&self + 0xb8)); }
+  /* inlined unwind funclet 00454879 */ { ((SurfaceWindow *)(((int)this) + 0xb8))->SurfaceWindow::destruct(); }
   seh_state = 0xffffffff;
-  /* inlined unwind funclet 00454888 */ { wnd_dtor(*(WndBase **)&self); }
+  /* inlined unwind funclet 00454888 */ { ModalMenuWindow::destruct(); }
   return;
 }
 
@@ -4952,14 +4952,14 @@ void CityViewWindow::scroll_left()
 }
 
 /* 00456e90 auto */
-void * __thiscall cityview_scalar_dtor(void *self,uint flags)
+void *CityViewWindow::scalar_destruct(uint flags)
 
 {
-  cityview_dtor(self);
+  destruct();
   if ((flags & 1) != 0) {
-    operator_delete(self);
+    operator_delete(this);
   }
-  return self;
+  return this;
 }
 
 /* 00490560 auto */
@@ -6613,7 +6613,7 @@ static void city_choose_production_try_special_unit(ChooseProdState *s,iptr city
       if (city_choose_production_diplomat_score(s,city,unit_type,&score,&defensive) == 0) return;
     }
     else if (unit_types[unit_type].role == ROLE_TRADE) {
-      if ((cities[city].flags & CITYF_COMMODITY_PICKED) != 0) return;
+      if ((cities[city].flags & CITYF_HAD_CARAVAN) != 0) return;
       score = 10;
       if ((char)cities[city].trade_routes < 3) {
         score = 10 - ((5 - leaders[civs[s->civ].tribe].expand) * city_calc.total_trade) / 10;
@@ -7109,6 +7109,7 @@ iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_b
   iptr wonder;
   uptr civ2;
   iptr unit_type2;
+  int pref_chosen;
   ChooseProdState st;
 
   st.wonder_builders = wonder_builders;
@@ -7242,6 +7243,7 @@ iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_b
   for (improvement = 1; improvement < 0x27; improvement++) {
     city_choose_production_try_improvement(&st,city,improvement);
   }
+  pref_chosen = 0;
   if (((1 << (st.civ5 & 0x1f) & (uint)game.human_players) != 0) && (citypref.count != 0)) {
     for (unit_type2 = 0; unit_type2 < citypref.count; unit_type2++) {
       improvement = (((i32 *)&map_views_block.citypref_improvements))[unit_type2];
@@ -7249,33 +7251,33 @@ iptr __cdecl city_choose_production(iptr city,iptr out_best_unit,iptr out_best_b
       if ((ret == 0) && (ret = city_can_build_improvement(st.civ,city,improvement), ret != 0)) {
         st.best_build = -improvement;
         st.choice = -improvement;
-        goto choose_military_unit;
+        pref_chosen = 1;
+        break;
       }
     }
   }
-  if ((st.wonder_in_progress != 0) ||
-     (((((civs[st.civ].continent_flags[st.landmass2] & 0x10) == 0 &&
-        (2 < cities[city].size)) && (((byte)(cities[city].flags >> 8) & ((CITYF_ON_EDGE | CITYF_AI_SPECIALIST_HELD) >> 8)) != 0xc0))
-      && ((4 - leaders[civs[st.civ].tribe].civilize <=
-           (int)(uint)civs[st.civ].continent_cities[st.landmass2] ||
-          ((*(char *)&civs[st.civ].continent_flags[st.landmass2] == '\0' &&
-           (4 - leaders[civs[st.civ].tribe].civilize <= (int)civs[st.civ].num_cities)))))))) {
-    for (wonder = 0; wonder < 0x1c; wonder++) {
-      city_choose_production_try_wonder(&st,city,wonder);
+  /* an improvement from the human player's CITYPREF.TXT list skips the wonders and special units */
+  if (pref_chosen == 0) {
+    if ((st.wonder_in_progress != 0) ||
+       (((((civs[st.civ].continent_flags[st.landmass2] & 0x10) == 0 &&
+          (2 < cities[city].size)) && (((byte)(cities[city].flags >> 8) & ((CITYF_ON_EDGE | CITYF_AI_SPECIALIST_HELD) >> 8)) != 0xc0))
+        && ((4 - leaders[civs[st.civ].tribe].civilize <=
+             (int)(uint)civs[st.civ].continent_cities[st.landmass2] ||
+            ((*(char *)&civs[st.civ].continent_flags[st.landmass2] == '\0' &&
+             (4 - leaders[civs[st.civ].tribe].civilize <= (int)civs[st.civ].num_cities)))))))) {
+      for (wonder = 0; wonder < 0x1c; wonder++) {
+        city_choose_production_try_wonder(&st,city,wonder);
+      }
+    }
+    if (civs[st.civ].num_military_units < 0x200) {
+      for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+        city_choose_production_try_special_unit(&st,city,unit_type);
+      }
     }
   }
   if (civs[st.civ].num_military_units < 0x200) {
     for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-      city_choose_production_try_special_unit(&st,city,unit_type);
-    }
-choose_military_unit:
-    if (civs[st.civ].num_military_units < 0x200) {
-      for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-        city_choose_production_try_military_unit(&st,city,unit_type);
-      }
-    }
-    else if (st.choice == 999) {
-      st.choice = -0x26;
+      city_choose_production_try_military_unit(&st,city,unit_type);
     }
   }
   else if (st.choice == 999) {
@@ -7338,7 +7340,7 @@ void WonderMovieWindow::destruct()
   seh_state = seh_state & 0xff;
   font_size16_bold_block.wonder_movie_wnd = 0;
   (*((char *)&seh_state + 0)) = 2;
-  /* inlined unwind funclet 004bbaf1 */ { palette_destroy((GamePalette *)(((int)this) + 0xd4c)); }
+  /* inlined unwind funclet 004bbaf1 */ { ((GamePalette *)(((int)this) + 0xd4c))->destroy(); }
   (*((char *)&seh_state + 0)) = 1;
   /* inlined unwind funclet 004bbb00 */ { surface_dtor((DibSurface *)(((int)this) + 0xd04)); }
   seh_state = seh_state & 0xffffff00;
@@ -8293,7 +8295,7 @@ void EditorWindow::impr_editor_window_run()
   GamePalette palette;
   
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   editor_lists.running = 1;
   editor_active.wnd = this;
   this_00 = (DibSurface *)operator_new(0x48);
@@ -8440,7 +8442,7 @@ void __cdecl impr_editor_run(void)
   EditorWindow editor_wnd;
   
   editor_wnd.construct();
-  ON_SCOPE_EXIT(editor_wnd_dtor(&editor_wnd));
+  ON_SCOPE_EXIT(editor_wnd.destruct());
   editor_wnd.impr_editor_window_run();
   ((SurfaceWindow *)((i8 *)&map_views_block.map_views))->repaint();
   return;
@@ -9208,8 +9210,10 @@ void __cdecl city_assign_workers(iptr city)
   uint specialists2;
   iptr best_tile;
   int tile_taken[21];
+  int kept;
   
   worked_mask = 0;
+  kept = 0;
   city_calc.workers_overflow = 0;
   civ = cities[city].owner;
   (*(uint *)&city_calc.unassigned_citizens) = (int)cities[city].size + 1;
@@ -9272,82 +9276,86 @@ void __cdecl city_assign_workers(iptr city)
         }
       }
     }
-    if (((*(uint *)&city_calc.unassigned_citizens) == specialists2) || ((*(uint *)&city_calc.unassigned_citizens) == 0)) goto store_worked_tiles;
+    if (((*(uint *)&city_calc.unassigned_citizens) == specialists2) || ((*(uint *)&city_calc.unassigned_citizens) == 0)) {
+      kept = 1;
+    }
   }
-  if ((0 < (int)(*(uint *)&city_calc.unassigned_citizens)) && (tile_taken[20] == 0)) {
-    worked_mask = worked_mask | 0x100000;
-    city_calc_tile_yields(city,0x14,1);
-    tile_taken[20] = 1;
-    (*(uint *)&city_calc.unassigned_citizens)--;
-  }
-  best_tile = 0;
-  food_per_citizen = cosmic.food_per_citizen;
-  if (cosmic.food_per_citizen < 2) {
-    food_per_citizen = 1;
-  }
-  while (((city_calc.yield_totals[0] + (int)(*(uint *)&city_calc.unassigned_citizens) / (int)(uint)food_per_citizen <
-           (int)((int)cities[city].size * (uint)cosmic.food_per_citizen +
-                city_calc.settlers_supported * city_calc.settler_food_cost) || (cities[city].size < 3)) &&
-         (((*(uint *)&city_calc.unassigned_citizens) != specialists2 && -1 < (int)((*(uint *)&city_calc.unassigned_citizens) - specialists2) && (-1 < best_tile))))) {
-    best_tile = -1;
-    best_score = 0;
-    best_food = 0;
-    for (tile_index = 0; tile_index < 0x14; tile_index++) {
-      if (tile_taken[tile_index] == 0) {
-        score = city_tile_yield(city,tile_index,0);
-        shield_score = city_tile_yield(city,tile_index,1);
-        if ((((*(uint *)&city_calc.unassigned_citizens) != 1) || (city_calc.total_shields != 0)) || (shield_score * 2 != 0)) {
-          trade_score = city_tile_yield(city,tile_index,2);
-          trade_score = shield_score * 2 + trade_score;
-          if ((best_food < score) || ((score == best_food && (best_score < trade_score)))) {
-            best_tile = tile_index;
-            best_score = trade_score;
-            best_food = score;
+  /* the citizens kept on their tiles: nothing more to place */
+  if (kept == 0) {
+    if ((0 < (int)(*(uint *)&city_calc.unassigned_citizens)) && (tile_taken[20] == 0)) {
+      worked_mask = worked_mask | 0x100000;
+      city_calc_tile_yields(city,0x14,1);
+      tile_taken[20] = 1;
+      (*(uint *)&city_calc.unassigned_citizens)--;
+    }
+    best_tile = 0;
+    food_per_citizen = cosmic.food_per_citizen;
+    if (cosmic.food_per_citizen < 2) {
+      food_per_citizen = 1;
+    }
+    while (((city_calc.yield_totals[0] + (int)(*(uint *)&city_calc.unassigned_citizens) / (int)(uint)food_per_citizen <
+             (int)((int)cities[city].size * (uint)cosmic.food_per_citizen +
+                  city_calc.settlers_supported * city_calc.settler_food_cost) || (cities[city].size < 3)) &&
+           (((*(uint *)&city_calc.unassigned_citizens) != specialists2 && -1 < (int)((*(uint *)&city_calc.unassigned_citizens) - specialists2) && (-1 < best_tile))))) {
+      best_tile = -1;
+      best_score = 0;
+      best_food = 0;
+      for (tile_index = 0; tile_index < 0x14; tile_index++) {
+        if (tile_taken[tile_index] == 0) {
+          score = city_tile_yield(city,tile_index,0);
+          shield_score = city_tile_yield(city,tile_index,1);
+          if ((((*(uint *)&city_calc.unassigned_citizens) != 1) || (city_calc.total_shields != 0)) || (shield_score * 2 != 0)) {
+            trade_score = city_tile_yield(city,tile_index,2);
+            trade_score = shield_score * 2 + trade_score;
+            if ((best_food < score) || ((score == best_food && (best_score < trade_score)))) {
+              best_tile = tile_index;
+              best_score = trade_score;
+              best_food = score;
+            }
           }
         }
       }
+      if (-1 < best_tile) {
+        tile_taken[best_tile] = 1;
+        city_calc_tile_yields(city,best_tile,1);
+        worked_mask = worked_mask | 1 << ((byte)best_tile & 0x1f);
+        (*(uint *)&city_calc.unassigned_citizens)--;
+      }
     }
-    if (-1 < best_tile) {
+    if ((((1 << (civ & 0x1f) & (uint)game.human_players) == 0) && ((cities[city].flags & CITYF_DISORDER) != 0)
+        ) && (city_turn.worker_realloc != 0)) {
+      cities[city].flags = cities[city].flags | CITYF_AI_SPECIALIST_HELD;
+      specialists2++;
+    }
+    for (; (*(uint *)&city_calc.unassigned_citizens) != specialists2 && -1 < (int)((*(uint *)&city_calc.unassigned_citizens) - specialists2);
+        (*(uint *)&city_calc.unassigned_citizens) = (*(uint *)&city_calc.unassigned_citizens) - 1) {
+      best_tile = -1;
+      best_score = 0;
+      for (tile_index = 0; tile_index < 0x14; tile_index++) {
+        if (tile_taken[tile_index] == 0) {
+          city_calc_tile_yields(city,tile_index,0);
+          score = int_clamp((city_calc.yield_totals[0] -
+                                     (int)cities[city].size * (uint)cosmic.food_per_citizen) -
+                                     city_calc.settlers_supported * city_calc.settler_food_cost,1,99);
+          score = (int)(0x10 / (longlong)score) * city_calc.tile_yields[0];
+          size = cities[city].size;
+          shield_score = int_clamp(city_calc.total_shields - city_calc.shield_support,1,99);
+          shield_score = ((size * 3) / shield_score) * city_calc.tile_shields;
+          size = cities[city].size;
+          trade_score = int_clamp(city_calc.total_trade,1,99);
+          score = score + shield_score + ((size * 2) / trade_score) * city_calc.tile_trade;
+          if (best_score < score) {
+            best_tile = tile_index;
+            best_score = score;
+          }
+        }
+      }
+      if (best_tile < 0) break;
       tile_taken[best_tile] = 1;
       city_calc_tile_yields(city,best_tile,1);
       worked_mask = worked_mask | 1 << ((byte)best_tile & 0x1f);
-      (*(uint *)&city_calc.unassigned_citizens)--;
     }
   }
-  if ((((1 << (civ & 0x1f) & (uint)game.human_players) == 0) && ((cities[city].flags & CITYF_DISORDER) != 0)
-      ) && (city_turn.worker_realloc != 0)) {
-    cities[city].flags = cities[city].flags | CITYF_AI_SPECIALIST_HELD;
-    specialists2++;
-  }
-  for (; (*(uint *)&city_calc.unassigned_citizens) != specialists2 && -1 < (int)((*(uint *)&city_calc.unassigned_citizens) - specialists2);
-      (*(uint *)&city_calc.unassigned_citizens) = (*(uint *)&city_calc.unassigned_citizens) - 1) {
-    best_tile = -1;
-    best_score = 0;
-    for (tile_index = 0; tile_index < 0x14; tile_index++) {
-      if (tile_taken[tile_index] == 0) {
-        city_calc_tile_yields(city,tile_index,0);
-        score = int_clamp((city_calc.yield_totals[0] -
-                                   (int)cities[city].size * (uint)cosmic.food_per_citizen) -
-                                   city_calc.settlers_supported * city_calc.settler_food_cost,1,99);
-        score = (int)(0x10 / (longlong)score) * city_calc.tile_yields[0];
-        size = cities[city].size;
-        shield_score = int_clamp(city_calc.total_shields - city_calc.shield_support,1,99);
-        shield_score = ((size * 3) / shield_score) * city_calc.tile_shields;
-        size = cities[city].size;
-        trade_score = int_clamp(city_calc.total_trade,1,99);
-        score = score + shield_score + ((size * 2) / trade_score) * city_calc.tile_trade;
-        if (best_score < score) {
-          best_tile = tile_index;
-          best_score = score;
-        }
-      }
-    }
-    if (best_tile < 0) break;
-    tile_taken[best_tile] = 1;
-    city_calc_tile_yields(city,best_tile,1);
-    worked_mask = worked_mask | 1 << ((byte)best_tile & 0x1f);
-  }
-store_worked_tiles:
   cities[city].worked_tiles = (*(uint *)&city_calc.unassigned_citizens) * 0x4000000 + worked_mask;
   if (city_calc.yield_totals[0] <
       (int)((int)cities[city].size * (uint)cosmic.food_per_citizen + city_calc.settlers_supported * city_calc.settler_food_cost)
@@ -10768,7 +10776,7 @@ static int city_process_production_unit(uptr city,uptr civ)
         }
         else {
           if (unit_types[unit_type].role == ROLE_TRADE) {
-            result = _rand();
+            result = crt_rand_at("city_process_production");
             cost_byte = (byte)(result >> 0x1f);
             units[unit].counter = (((byte)result ^ cost_byte) - cost_byte & 0xf ^ cost_byte) - cost_byte;
           }
@@ -11057,7 +11065,6 @@ void __cdecl city_process_production(uptr city)
         }
         if (((improvement < 0x23) || (0x25 < improvement)) ||
            ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
-complete_improvement:
           city_process_production_complete_improvement(city,civ,cost2,wonder,improvement,acquired);
         }
         else {
@@ -11072,7 +11079,9 @@ complete_improvement:
               cities[city].building = -(char)improvement2;
               cost2 = (uint)improvements[improvement2].cost * city_calc.shield_rows;
               improvement = improvement2;
-              if (cost2 <= cities[city].shield_box) goto complete_improvement;
+              if (cost2 <= cities[city].shield_box) {
+                city_process_production_complete_improvement(city,civ,cost2,wonder,improvement,acquired);
+              }
             }
           }
           else {
@@ -11681,14 +11690,14 @@ CityPicturePopup *CityPicturePopup::construct()
 }
 
 /* 004f3e20 auto */
-void * __thiscall city_picture_popup_scalar_dtor(void *self,uint flags)
+void *CityPicturePopup::scalar_destruct(uint flags)
 
 {
-  city_picture_popup_dtor(self);
+  destruct();
   if ((flags & 1) != 0) {
-    operator_delete(self);
+    operator_delete(this);
   }
-  return self;
+  return this;
 }
 
 /* 004f3e70: written by hand in src/game/unwind.cpp */
@@ -11739,7 +11748,7 @@ void __cdecl city_window_font_reg_atexit(void)
 void __cdecl city_window_font_atexit_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&city_window_font));
+  ((GameFont *)((i8 *)&city_window_font))->destroy();
   return;
 }
 
@@ -11781,7 +11790,7 @@ void __cdecl city_window_small_font_reg_atexit(void)
 void __cdecl city_window_small_font_atexit_dtor(void)
 
 {
-  font_destroy((GameFont *)((i8 *)&city_window_small_font));
+  ((GameFont *)((i8 *)&city_window_small_font))->destroy();
   return;
 }
 
@@ -11924,7 +11933,7 @@ void __cdecl city_window_load_background(void)
   sprite_init(&sprite);
   ON_SCOPE_EXIT(sprite_destroy(&sprite));
   palette.init();
-  ON_SCOPE_EXIT(palette_destroy(&palette));
+  ON_SCOPE_EXIT(palette.destroy());
   if (city_wnd.size_level != city_wnd_state.bg_size_level) {
     city_wnd_state.bg_size_level = city_wnd.size_level;
     ((DibSurface *)((i8 *)&city_window_bg_surface))->release();
@@ -11963,7 +11972,7 @@ void __cdecl city_window_modal_notice(void)
 void CityWindow::reset_state()
 
 {
-  clickmap_clear((ClickMapClearView *)&clickmap_head);
+  clickmap.clear();
   is_closed_b0[0] = 1;
   is_closed_b1[0] = '\0';
   is_closed_b2[0] = '\0';
@@ -12004,7 +12013,7 @@ void CityWindow::reset_state()
 void CityWindow::remove_citizen_hotspots()
 
 {
-  clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,2);
+  clickmap.remove_by_id(2);
   return;
 }
 
@@ -12012,9 +12021,9 @@ void CityWindow::remove_citizen_hotspots()
 void CityWindow::remove_panel_hotspots()
 
 {
-  clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,1);
-  clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,3);
-  clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,4);
+  clickmap.remove_by_id(1);
+  clickmap.remove_by_id(3);
+  clickmap.remove_by_id(4);
   return;
 }
 
@@ -12033,7 +12042,7 @@ CityWindow *CityWindow::construct()
 {
   
   this->FrameWindow::construct();
-  clickmap_ctor(&clickmap_head);
+  clickmap.construct();
   ((GameFont *)&city_font)->init_empty();
   vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3 + 5);
   reset_state();
@@ -12051,9 +12060,9 @@ void CityWindow::destruct()
   (*((char *)&seh_state + 0)) = 2;
   remove_hotspots();
   (*((char *)&seh_state + 0)) = 1;
-  /* inlined unwind funclet 00501673 */ { font_destroy((GameFont *)(((int)this) + 0x16ac)); }
+  /* inlined unwind funclet 00501673 */ { ((GameFont *)(((int)this) + 0x16ac))->destroy(); }
   seh_state = seh_state & 0xffffff00;
-  /* inlined unwind funclet 00501682 */ { clickmap_dtor((void *)(((int)this) + 0x2d8)); }
+  /* inlined unwind funclet 00501682 */ { ((ClickMap *)(((int)this) + 0x2d8))->destruct(); }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00501691 */ { (((FrameWindow *)this))->FrameWindow::destruct(); }
   return;
@@ -12360,7 +12369,7 @@ void CityWindow::draw_citizens(int blit,i32 flag)
   if ((((is_closed == 0) && (redraw_suspended == 0)) &&
       (redraw_deferred == 0)) && (-1 < city_index)) {
     begin_draw((iptr)(&citizens_rect));
-    clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,2);
+    clickmap.remove_by_id(2);
     x2 = citizens_rect;
     top = citizens_rect_top;
     text_set_colors(0x7c,0x12,1,1);
@@ -13506,7 +13515,7 @@ void CityWindow::draw_resource_map(int blit)
     map_left = panel_left + map_left;
     map_top = scale(0xb);
     map_top = panel_top2 + map_top;
-    clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,1);
+    clickmap.remove_by_id(1);
     rect_set_xywh((iptr)map_rect,map_left,half_tile_h + map_top,tile_w << 2,tile_h << 2);
     clickmap.hotspot_add_rect(0,1,(RECT *)map_rect);
     origin_x2 = half_tile_w * 3 + map_left;
@@ -13685,7 +13694,7 @@ void CityWindow::draw_production(int blit)
     box_rect.bottom = production_rect_bottom;
     scaled = scale(0x28);
     box_rect.bottom = box_rect.top + scaled;
-    clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,5);
+    clickmap.remove_by_id(5);
     clickmap.hotspot_add_rect(0,5,(RECT *)&box_rect.left);
     if (cities[city_index].building < '\0') {
       if (cities[city_index].building < 1) {
@@ -13908,7 +13917,7 @@ void CityWindow::draw_supported_units(int blit)
     civ = (iptr)cities[city_index].owner;
     gov_type = (uint)civs[civ].government;
     military_away = 0;
-    clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,6);
+    clickmap.remove_by_id(6);
     for (unit = 0; unit < game.num_units; unit++) {
       if ((units[unit].id != 0) &&
          ((uint)(byte)units[unit].home_city == (uint)city_index)) {
@@ -14104,7 +14113,7 @@ void CityWindow::draw_improvements(int blit)
   if ((((is_closed == 0) && (redraw_suspended == 0)) &&
       (redraw_deferred == 0)) && (-1 < city_index)) {
     begin_draw((iptr)(u8 *)&improvements_rect);
-    clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,4);
+    clickmap.remove_by_id(4);
     list_left = improvement_list_rect;
     list_top = improvement_list_rect_top;
     text_clear();
@@ -14491,7 +14500,7 @@ void CityWindow::draw_units_present()
   margin_x = (scaled - col_w * per_row) / 2;
   offset_y = gfx_zoom_scale(4,zoom2);
   slot_count2 = per_row << 2;
-  clickmap_remove_by_id((ClickMapRemoveView *)&clickmap_head,3);
+  clickmap.remove_by_id(3);
   unit = tile_first_unit((int)cities[city_index].x,
                                 (int)cities[city_index].y);
   col = 0;
@@ -15352,7 +15361,7 @@ void CityWindow::open(iptr city)
        )) && (((net.civ_eliminate_busy == 0 && (net.civ_create_busy == 0)) &&
               ((((net.civ_check_destroyed_busy == 0 && ((net.unit_gather_cargo_busy == 0 && (net.unit_lift_off_map_busy == 0)))) &&
                 (net.unit_delete_cargo_busy == 0)) && (net.unit_destroy_redraw_busy == 0)))))))) {
-    game.transient_flags = game.transient_flags | TRANSIENT_CITY_WINDOW;
+    game.transient_flags = game.transient_flags | TRANSIENT_CITY_WINDOW_OPENED;
     city_index = city;
     city_save_build_state(city_index);
     if (is_closed != 0) {
@@ -15926,6 +15935,7 @@ void __cdecl city_button_change(i32 control_id)
   Dialog improvement_dialog;
   int new_shields;
   iptr unit_type2;
+  int confirmed;
   
   change_dialog.Dialog::construct(0x8000);
   ON_SCOPE_EXIT(change_dialog.Dialog::destruct());
@@ -15991,7 +16001,6 @@ void __cdecl city_button_change(i32 control_id)
           if ((unit_type3 < 0) ||
              (city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city(), city == -1
              )) {
-dialog_cleanup:
             ((CityWindow *)((i8 *)&city_wnd.window))->create_change_button(1);
             return;
           }
@@ -16012,6 +16021,7 @@ dialog_cleanup:
             city3 = unit_type2;
             city4 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
             new_shields = city_shields_after_change(city4,city3);
+            confirmed = 1;
             city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
             if ((new_shields < cities[city].shield_box) && ((game.message_options & MSGOFF_PRODUCTION_PENALTY) == 0)) {
               text_set_number_arg_u8(0,(uint)CONCAT11((char)(game.message_options >> 8),
@@ -16032,33 +16042,40 @@ dialog_cleanup:
                 text_set_label_arg(1,unit_types[unit_type2].name);
               }
               city = popup_game((const char *)&str_prodchange);
-              if (city == 0) goto recalc_city;
+              if (city == 0) {
+                confirmed = 0;  /* the production kept */
+              }
             }
-            city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-            if (-1 < cities[city].building) {
+            if (confirmed != 0) {
               city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-              build_count = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + city2 * 0x594);
-              *build_count = *build_count - 1;
-            }
-            city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-            cities[city].building = (i8)unit_type2;
-            city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-            if (-1 < cities[city].building) {
+              if (-1 < cities[city].building) {
+                city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
+                build_count = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + city2 * 0x594);
+                *build_count = *build_count - 1;
+              }
               city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-              build_count = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + city2 * 0x594);
-              *build_count = *build_count + 1;
+              cities[city].building = (i8)unit_type2;
+              city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
+              if (-1 < cities[city].building) {
+                city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
+                build_count = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + city2 * 0x594);
+                *build_count = *build_count + 1;
+              }
+              city2 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
+              cities[city2].shield_box = (i16)new_shields;
+              advisor_refresh_if_open(1);
+              advisor_refresh_if_open(2);
             }
-            city2 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
-            cities[city2].shield_box = (i16)new_shields;
-            advisor_refresh_if_open(1);
-            advisor_refresh_if_open(2);
           }
           else if (change_dialog.result_extra == 1) {
             if ((1 << (civ & 0x1f) & (uint)game.human_players) != 0) {
               city_load_citypref();
               on = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
               unit_type3 = popup_game_with_city_flags((const char *)&str_automode,1,on);
-              if (unit_type3 < 0) goto dialog_cleanup;
+              if (unit_type3 < 0) {
+                ((CityWindow *)((i8 *)&city_wnd.window))->create_change_button(1);
+                return;
+              }
               city2 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
               cities[city2].flags = cities[city2].flags | CITYF_AUTOBUILD;
               if (unit_type3 == UNIT_ENGINEERS) {
@@ -16074,7 +16091,8 @@ dialog_cleanup:
             city3 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
             city_set_production(city3,on);
             ((CityWindow *)((i8 *)&city_wnd.window))->draw_production(1);
-            goto dialog_cleanup;
+            ((CityWindow *)((i8 *)&city_wnd.window))->create_change_button(1);
+            return;
           }
           else if (change_dialog.result_extra != 2) {
             if (change_dialog.result_extra == 3) {
@@ -16129,13 +16147,13 @@ dialog_cleanup:
             }
             continue;
           }
-recalc_city:
           on = 1;
           city3 = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
           city_recalc(city3,on);
           ((CityWindow *)((i8 *)&city_wnd.window))->draw_production(1);
           ((CityWindow *)((i8 *)&city_wnd.window))->draw_resource_map(1);
-          goto dialog_cleanup;
+          ((CityWindow *)((i8 *)&city_wnd.window))->create_change_button(1);
+          return;
         }
         change_dialog.close();
         unit_dialog.close();
@@ -16503,8 +16521,7 @@ void __cdecl city_window_on_mouse(i32 x,i32 y,i32 button)
              (((net.civ_eliminate_busy == 0 && (net.civ_create_busy == 0)) &&
               ((net.civ_check_destroyed_busy == 0 && ((net.unit_gather_cargo_busy == 0 && (net.unit_lift_off_map_busy == 0)))))))) &&
             ((net.unit_delete_cargo_busy == 0 && (net.unit_destroy_redraw_busy == 0)))))) {
-    hit = clickmap_hit_test
-                        ((ClickMapHitTestView *)((i8 *)&city_wnd.clickmap),x,y,(iptr)&unit,(iptr)&hit_kind)
+    hit = city_wnd.clickmap.hit_test(x,y,(iptr)&unit,(iptr)&hit_kind)
     ;
     if (-1 < hit) {
       switch(hit_kind) {
