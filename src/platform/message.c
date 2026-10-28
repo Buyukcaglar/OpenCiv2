@@ -795,6 +795,7 @@ MMRESULT WINAPI timeEndPeriod(UINT p) { API_TRACE(); (void)p; return TIMERR_NOER
 int plat_replay;
 int plat_normal_desktop = 1;
 int plat_lock_panels;
+int plat_fix_bugs;
 static uint64_t real_start;
 
 /* CIV2_REALTIME: a replay script on the real clock (its waits are real

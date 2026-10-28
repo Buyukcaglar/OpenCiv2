@@ -2894,6 +2894,10 @@ void __cdecl city_calc_commodity_demand(uptr city)
   uint east_dist;
   iptr demand_order[16];
   uint center_dy;
+  /* B1 (docs/BUGS.md): the original never zeroes the road count; its stack
+     held 0 there in 687 of 713 calls probed, a stale address in the rest.
+     0 in every mode. */
+  road_tiles = 0;  /* stale stack the original reads (FRAME_PRESETS) */
   
   if ((((cities[city].flags & CITYF_TRADE_DIRTY) != 0) || (game.reveal_map != '\0')) ||
      (((int)game.turn + city & 0xf) == 0)) {
@@ -10171,7 +10175,14 @@ i32 __cdecl city_process_food(uptr city)
   }
   else {
     box_limit = (cities[city].size + 1) * city_calc.food_box_rows;
-    if (box_limit - cities[city].food_box == 0 || box_limit < cities[city].food_box) {
+    if (bugfix_state() && (0x7e < cities[city].size)) {
+      /* B16: a city stops at 127, the most its size (a signed byte) holds;
+         the original grows on to -128 (docs/BUGS.md) */
+      if (box_limit < cities[city].food_box) {
+        cities[city].food_box = (short)box_limit;
+      }
+    }
+    else if (box_limit - cities[city].food_box == 0 || box_limit < cities[city].food_box) {
       if (city_turn.window_shown != 0) {
         ((CityWindow *)((i8 *)&city_wnd.window))->draw_food_box(1);
       }
@@ -11272,7 +11283,8 @@ void __cdecl city_process_disorder(iptr city)
       else if (((GOV_FUNDAMENTALISM < civs[civ].government) &&
                ((int)((int)cities[city].size * (uint)cosmic.food_per_citizen +
                      city_calc.settlers_supported * city_calc.settler_food_cost) < city_calc.yield_totals[0])) &&
-              (happy_margin = city_needed_size_improvement(city), happy_margin == 0)) {
+              (happy_margin = city_needed_size_improvement(city), happy_margin == 0) &&
+              (!bugfix_state() || (cities[city].size < 0x7f))) {  /* B16 */
         cities[city].size++;
       }
     }
@@ -12364,7 +12376,14 @@ void CityWindow::draw_citizens(int blit,i32 flag)
     pos = top + pos;
     offset = scale(5);
     pos = draw_citizen_row(x2 + offset,pos,row_width,value,unhappy,angry);
-    offset = scale(5);
+    if (bugfix_ui()) {
+      /* B10: each hotspot centred on its citizen, not at its sprite's left edge,
+         which later sprites cover when they are drawn closer (docs/BUGS.md) */
+      offset = scale(5) + scale(0xe) - pos / 2 - 1;
+    }
+    else {
+      offset = scale(5);
+    }
     x2 += offset;
     offset = scale(9);
     for (i = 0; i < cities[city_index].size;
@@ -14196,6 +14215,9 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
           units[unit].goto_x = cities[city].x;
           city = ((CityWindow *)((i8 *)&city_wnd.window))->get_city();
           units[unit].goto_y = cities[city].y;
+          if (bugfix_state()) {
+            units[unit].aux_timer = '\0';  /* B9: the long move count starts again (docs/BUGS.md) */
+          }
         }
         else if (choice == 4) {
           city = city_at((int)units[unit].x,(int)units[unit].y);
@@ -15344,6 +15366,9 @@ void CityWindow::open(iptr city)
     else {
       ((WndBase *)&window)->show_restored();
     }
+    if (bugfix_ui()) {
+      ((WndBase *)&window)->set_focus();  /* B12: the keys go to the city window, not an advisor that opened it (docs/BUGS.md) */
+    }
     if (city_wnd_state.exit_btn_pending != '\0') {
       create_exit_button(1);
       city_wnd_state.exit_btn_pending = '\0';
@@ -15391,7 +15416,12 @@ i32 __cdecl city_window_close(void)
   city_wnd.closed = 1;
   ((WndBase *)((i8 *)&city_wnd.wnd))->hide();
   city_wnd.city = 0xffffffff;
-  main_frame_wnd_block.main_frame_wnd.focus_and_raise();
+  if (bugfix_ui() && (-1 < (int)advisor_state.report_id)) {
+    advisor_state.wnd.focus_and_raise();  /* B12: back to the advisor that opened the city (docs/BUGS.md) */
+  }
+  else {
+    main_frame_wnd_block.main_frame_wnd.focus_and_raise();
+  }
   ui_flush_input();
   return 0;
 }

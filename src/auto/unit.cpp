@@ -6447,6 +6447,9 @@ void __cdecl unit_cmd_goto_city(void)
         units[unit].orders = ORDER_GOTO;
         units[unit].goto_x = cities[city2].x;
         units[unit].goto_y = cities[city2].y;
+        if (bugfix_state()) {
+          units[unit].aux_timer = '\0';  /* B9: the long move count starts again (docs/BUGS.md) */
+        }
         return;
       }
       show_all = (uint)(show_all == 0);
@@ -7925,7 +7928,13 @@ i32 __cdecl unit_move_dir(iptr unit,uptr dir,i32 move_flags)
   uint step_cost;
   uint prev_moves_used;
   i32 unused_c;
-  civ_sees[1] = civ_sees[2] = civ_sees[3] = civ_sees[4] = civ_sees[5] = civ_sees[6] = civ_sees[7] = 1;  /* stale stack the original reads (FRAME_PRESETS) */
+  if (bugfix_ui()) {
+    /* B14: a unit that does not move pauses as if the player saw it (docs/BUGS.md) */
+    memset(civ_sees,0,sizeof civ_sees);
+  }
+  else {
+    civ_sees[1] = civ_sees[2] = civ_sees[3] = civ_sees[4] = civ_sees[5] = civ_sees[6] = civ_sees[7] = 1;  /* stale stack the original reads (FRAME_PRESETS) */
+  }
   
   attack_done = 0;
   map_locked = false;

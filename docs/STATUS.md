@@ -377,6 +377,20 @@ message by message and clock event by clock event.
   to nothing in the others (CIV2_FIXED_DATA: the game's data in a section at
   a fixed address; CIV2_UNITTEST: main() runs the cases); the suite passes
   36 of 36 on linux32, and the portable and Windows builds compile.
+* **The original's bugs** (docs/BUGS.md: 18, from the reconstruction, the
+  compiler's uninitialised-read warnings and the community's lists, CIV2UIA's
+  among them) are fixed by default: the AI's attitude starting from a stale
+  local (the "aggression bug"), border intruders counted on one tile per city,
+  the long-move warning's counter, city names in a second game, citizens'
+  click areas, the focus of a city opened from an advisor, Hall of Fame scores
+  over 32767, cities past size 127, a hot-seat read past the knowledge maps,
+  and smaller ones.  `CIV2_CLASSIC=1` keeps them (the original game, as it
+  keeps its look); replays and unit tests always run the original's code, and
+  network games the original's game rules (the fixes that change only what one
+  player sees stay on).  The suite passes 36 of 36 and `make test` all cases;
+  with the fixes on in the replays (`CIV2_TEST_FIXES=1`, tests only) none
+  crashes, and the WWII scenario's AI goes on calling `rand()` where the
+  original's, gone hostile, stops.
 * **Network play** (multiplayer over TCP/IP).  The original's networking
   library, XDaemon.dll, is replaced by src/platform/xdaemon.c over sockets
   in the host layer (src/host/host_net.c, BSD sockets or Winsock), speaking

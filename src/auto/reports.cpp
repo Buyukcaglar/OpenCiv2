@@ -788,6 +788,9 @@ void __cdecl defense_minister_draw(void)
   i8 frame_rect2[16];
   int rows_per_page;
   
+  if (bugfix_ui()) {
+    lost_x = -0x8000;  /* B17: no casualty listed yet, no frame (docs/BUGS.md) */
+  }
   civ = advisor_state.report_civ;
   ((FrameWindow *)((i8 *)&advisor_state.window))->layout();
   ((FrameWindow *)((i8 *)&advisor_state.window))->FrameWindow::draw_caption();
@@ -876,7 +879,7 @@ void __cdecl defense_minister_draw(void)
         }
         row_index = next_row;
       }
-      if (advisor_state.report_param != 0) {
+      if ((advisor_state.report_param != 0) && (!bugfix_ui() || (lost_x != -0x8000))) {
         rect_set((iptr)frame_rect2,lost_x - 8,list_top,lost_x + 0x10,bottom);
         value = civ_color_primary(civ);
         gfx_draw_rect_frame((iptr)&advisor_state.window,(RECT *)frame_rect2,value);
@@ -1741,6 +1744,9 @@ void __cdecl foreign_minister_show(iptr civ)
           diplo_set_treaty_flags(civ,civ2,0x401);
           advisor_window_block.mp_meeting_reply = -1;
           diplo_meeting.mp_pending = 1;
+          if (bugfix_ui()) {
+            net.nm_parley_cancel_count = 0;  /* B6: a cancel left from an earlier audience does not end this one (docs/BUGS.md) */
+          }
           net_send_text_args(0x3d,net.net_slots[net.net_civ_slots[civ2]].id,0
                              ,0,civ,0);
           text = (iptr)(civ_leader_name(civ2));
@@ -2855,7 +2861,11 @@ void __cdecl hall_of_fame_draw(void)
   entry_y = advisor_state.list_top;
   line_height = advisor_state.row_height;
   for (entry = 0; entry < 6; entry++) {
-    if (((entry != 5) || (highlight == 5)) && (-1 < advisor_window_block.hall_of_fame[entry].score)) {
+    /* B15: a score over 32767 is negative as a signed 16-bit number: the
+       original hides the entry (docs/BUGS.md) */
+    if (((entry != 5) || (highlight == 5)) &&
+        (bugfix_ui() ? (advisor_window_block.hall_of_fame[entry].score != -1)
+                     : (-1 < advisor_window_block.hall_of_fame[entry].score))) {
       if (advisor_window_block.hall_of_fame[entry].leader_female == 0) {
         crt_strcpy(line_buf,str_malefame_2);
       }
@@ -2970,7 +2980,12 @@ void __cdecl hall_of_fame_draw(void)
       text_append_space();
       text_append_label(0x1bc);
       text_append_colon();
-      text_append_int((int)advisor_window_block.hall_of_fame[entry].score);
+      if (bugfix_ui()) {
+        text_append_int((int)(u16)advisor_window_block.hall_of_fame[entry].score);  /* B15 */
+      }
+      else {
+        text_append_int((int)advisor_window_block.hall_of_fame[entry].score);
+      }
       text_append_space();
       text_append_lparen();
       text_append_string_id(difficulty_names[(int)(short)advisor_window_block.hall_of_fame[entry].difficulty & 0xf]);
@@ -3135,6 +3150,9 @@ void __cdecl hall_of_fame_add_entry(iptr civ)
   score = civ_score.total;
   if (civ_score.total <= civ_score.conquest_bonus) {
     score = civ_score.conquest_bonus;
+  }
+  if (bugfix_ui() && (0xfffe < score)) {
+    score = 0xfffe;  /* B15: the most a 16-bit score holds (0xffff: an empty place) */
   }
   advisor_font_block.hof_new_entry.score = (i16)score;
   advisor_font_block.hof_new_entry.difficulty = (ushort)game.difficulty;

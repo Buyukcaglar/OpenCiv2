@@ -14,6 +14,7 @@ usage (from the project root, on the docker host):
                                     network namespace, displays :7 and :8)
            --chat                   Chat with Kings both ways, after the turns
            --diplo                  emissary, audience, peace treaty (after the turns)
+           --after-late fixed|classic  with --diplo: one more audience after the late grant (bug B6)
            --save / --load          the host saves in its turn 2; --load: then loads it, N more turns
            --rejoin                 the client leaves and joins the game in progress
            --third ours|orig        a third player: the host relays
@@ -265,6 +266,7 @@ def to_network_menu(g, inet):
 FEATURES = {'open': 508, 'kill': 540, 'positions': 572, 'chat': 604, 'production': 636, 'movement': 668,
             'simultaneous': 700}   # x 79 (simultaneous: when CIV.INI allows it, --simultaneous)
 SIMULTANEOUS = []
+AFTER_LATE = None                   # --after-late
 
 
 def host_setup(g, inet, name='Alice', game='TestGame', chat=False, rejoin=False, features=(), timer=0):
@@ -735,7 +737,48 @@ def diplomacy(host, client):
     for g in (host, client):
         settle(g, 20)
     late_grant(host, client)
+    if AFTER_LATE:
+        audience_after_late(host, client)
     log('diplomacy done')
+
+
+def audience_after_late(host, client):
+    """After late_grant: one more audience granted.  The requester (the
+    host) still counts the cancel the late window sent; the original (and
+    ours with CIV2_CLASSIC=1) ends this audience at once ('...have broken
+    off negotiations', no parley window, nothing sent); ours, bug B6 fixed
+    (docs/BUGS.md), opens the parley window, whose End Negotiations sends a
+    cancel."""
+    reply = request_audience(host, client)
+    if reply != 1:
+        raise Fail('client: audience after the late grant: reply %d (want 1)' % reply)
+    wait_popup(host, lambda t: t.startswith('Opponent'))
+    host.shot('after-late-granted')
+    host.keys('Return')
+    time.sleep(3)
+    host.shot('after-late-host')
+    client.shot('after-late-client')
+    n = host.count('tx', nm('NM_PARLEYREQUEST_CANCEL'))
+    parley_click(host, 368, 519)                # End Negotiations (the window has its small layout here)
+    try:
+        host.wait_msg('tx', nm('NM_PARLEYREQUEST_CANCEL'), n + 1, timeout=30, what='PARLEYREQUEST_CANCEL')
+        opened = True
+    except Fail:
+        opened = False
+    log('audience after the late grant: the requester\'s parley window %s' % ('opened' if opened else 'did not open'))
+    host.shot('after-late-end')
+    answer_dialogs(host, 5)
+    answer_dialogs(client, 3)
+    if not opened:
+        # (the client's window, opened alone, is closed by hand)
+        parley_click(client, *PARLEY_END)
+        answer_dialogs(client, 3)
+        answer_dialogs(host, 3)
+    for g in (host, client):
+        settle(g, 20)
+    if opened != (AFTER_LATE == 'fixed'):
+        raise Fail('host: audience after the late grant: parley window %s, want %s (B6)' %
+                   ('opened' if opened else 'not opened', 'opened' if AFTER_LATE == 'fixed' else 'not opened'))
 
 
 def late_grant(host, client):
@@ -1181,6 +1224,7 @@ def check(host, client, nturns, result, opts=None):
 
 
 def main():
+    global AFTER_LATE
     ap = argparse.ArgumentParser()
     ap.add_argument('pairing', choices=['ours-ours', 'ours-orig', 'orig-ours', 'orig-orig'])
     ap.add_argument('--turns', type=int, default=3)
@@ -1205,9 +1249,12 @@ def main():
     ap.add_argument('--load', action='store_true', help='then (after quitting) the host loads that game, the client joins, N more turns (implies --save)')
     ap.add_argument('--chat', action='store_true', help='host: chat from the start; the client chats in its turn 2')
     ap.add_argument('--diplo', action='store_true', help='after the turns: emissary, audience, peace treaty (implies --chat: contact)')
+    ap.add_argument('--after-late', choices=['fixed', 'classic'], help='with --diplo: one more audience after the late grant; '
+                    'fixed: the requester\'s parley window must open (bug B6 fixed), classic: must not (the original\'s bug)')
     ap.add_argument('--stop-after', choices=['lobby', 'join', 'civ', 'turns', 'rejoin'], help='stop there (with --keep: drive by hand)')
     opts = ap.parse_args()
     opts.chat = opts.chat or opts.diplo
+    AFTER_LATE = opts.after_late
     if opts.simultaneous:
         SIMULTANEOUS.append(1)
         opts.features = ','.join([f for f in opts.features.split(',') if f] + ['simultaneous'])

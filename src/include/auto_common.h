@@ -57,6 +57,16 @@ typedef struct mmtime_tag mmtime_tag;
 #include "thunks.h"
 /* Scope-bound release: files, DCs, locks, local objects (step 6, RAII). */
 #include "scoped.h"
+/* The original's bugs (docs/BUGS.md) are fixed unless the original game is
+ * wanted: CIV2_CLASSIC=1, replays and unit tests (plat_fix_bugs,
+ * src/platform/main.c).  Each fix: if (bugfix_state()) <fixed> else
+ * <original>, marked B<n>.  bugfix_state: a fix that changes the game's state,
+ * also off in network games (every player, the original game included, must
+ * compute the same game); bugfix_ui: one that changes only what this player
+ * sees. */
+EXTERN_C int plat_fix_bugs;
+static inline int bugfix_ui(void) { return plat_fix_bugs; }
+static inline int bugfix_state(void) { return plat_fix_bugs && game.multiplayer < 3; }
 /* rand() calls name their caller for the rand trace (src/native/crt.cpp). */
 int crt_rand_at(const char *caller);
 #define _rand() crt_rand_at(__func__)

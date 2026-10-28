@@ -1778,6 +1778,9 @@ i32 __cdecl setup_network_game(int conn_type)
   {
     ((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx))->report(7,(iptr)&str_whichnetwork_internet_whichnetwork_local,(iptr)&str_d_ss_franklinton_startup_lan_cpp,0x21);
   }
+  if (bugfix_ui()) {
+    saved_open_game = (int)mp_options.open_game;  /* B18: joining keeps the option (docs/BUGS.md) */
+  }
   net.connection_type = conn_type;
   if ((conn_type == 1) || (conn_type == 4)) {
     dlg.load_game_section((const char *)&str_networktype,1);
@@ -6484,6 +6487,9 @@ void __cdecl game_init_new(void)
   }
   for (leader = 0; leader < 0x15; leader++) {
     leaders[leader].times_used = '\0';
+    if (bugfix_state()) {
+      leaders[leader].city_name_index = '\0';  /* B2: a new game names the cities from the list's start (docs/BUGS.md) */
+    }
   }
   game.turn = 0;
   game.year = -4000;
@@ -18149,7 +18155,10 @@ static void status_draw_tile_info(iptr x2,iptr y2,int text_x,int *text_y2,int li
     gfx_draw_text((const char *)&textbuf.buf,text_x,*text_y2);
     *text_y2 += line_height;
   }
-  if ((game.reveal_map == '\0') && ((*(i8 *)&human_civ) != 0)) {
+  /* B11: between hot-seat players human_civ is -1: the original reads the
+     knowledge map of civilization -1, past the table (docs/BUGS.md) */
+  if ((game.reveal_map == '\0') &&
+      (bugfix_ui() ? 0 < (*(i8 *)&human_civ) : ((*(i8 *)&human_civ) != 0))) {
     tile_ptr = known_at(x2,y2,(*(i8 *)&human_civ));
     terrain = *tile_ptr;
   }

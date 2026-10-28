@@ -157,7 +157,13 @@ int main(int argc, char **argv)
 #else
     const int unit_test = 0;
 #endif
+    int classic = getenv("CIV2_CLASSIC") && *getenv("CIV2_CLASSIC");
     plat_replay = !unit_test && getenv("CIV2_SCRIPT") && *getenv("CIV2_SCRIPT");
+    /* The original's bugs are fixed (docs/BUGS.md) except with CIV2_CLASSIC=1
+       (the original game) and in replays and unit tests, which are compared
+       with the original; CIV2_TEST_FIXES=1 fixes them in a replay (tests). */
+    plat_fix_bugs = !classic && !unit_test &&
+        (!plat_replay || (getenv("CIV2_TEST_FIXES") && *getenv("CIV2_TEST_FIXES")));
     /* Replays reproduce the reference desktop (Wine without a window
        manager) unless CIV2_NORMAL_DESKTOP is set. */
     plat_normal_desktop = !plat_replay || (getenv("CIV2_NORMAL_DESKTOP") && *getenv("CIV2_NORMAL_DESKTOP"));
@@ -177,7 +183,6 @@ int main(int argc, char **argv)
          * desktop in a window. */
         int fullscreen = getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN");
         int windowed = (getenv("CIV2_WINDOW") && *getenv("CIV2_WINDOW")) || scale;
-        int classic = getenv("CIV2_CLASSIC") && *getenv("CIV2_CLASSIC");
         int32_t dw, dh;
         plat_lock_panels = !classic;
         if (!classic && !scale && host_open_native_window(&dw, &dh, fullscreen ? 1 : windowed ? 2 : 0)) {

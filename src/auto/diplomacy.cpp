@@ -5383,7 +5383,9 @@ int __cdecl diplo_count_border_intruders(iptr civ,iptr intruder_civ)
             }
           }
           /* only the first tile with a unit of intruder_civ is examined */
-          break;
+          if (!bugfix_state()) {
+            break;  /* B4: the other tiles are not examined (docs/BUGS.md) */
+          }
         }
         if (3 < intruders) {
           border_intruders.repeat_offenses++;
@@ -5743,6 +5745,9 @@ static void diplo_civs_meet_parley(uptr civ,uptr civ2)
   
   advisor_window_block.mp_meeting_reply = -1;
   diplo_meeting.mp_pending = 1;
+  if (bugfix_ui()) {
+    net.nm_parley_cancel_count = 0;  /* B6: a cancel left from an earlier audience does not end this one (docs/BUGS.md) */
+  }
   net_send_text_args(0x3d,net.net_slots[net.net_civ_slots[civ2]].id,0,0,
                      civ,0);
   civ_name = (iptr)(civ_leader_name(civ2));
@@ -6673,7 +6678,12 @@ void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
 {
   int attitude_delta;
   iptr unit;
-  attitude_delta = 0x6715d7a0;  /* stale stack the original reads (FRAME_PRESETS) */
+  if (bugfix_state()) {
+    attitude_delta = 0;  /* B3: the change starts from stale stack (docs/BUGS.md) */
+  }
+  else {
+    attitude_delta = 0x6715d7a0;  /* stale stack the original reads (FRAME_PRESETS) */
+  }
   
   if (!diplo_review_border_incident(civ,civ2,attitude_delta)) {
     for (unit = 0; unit < game.num_units; unit++) {

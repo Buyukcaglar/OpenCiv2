@@ -53,6 +53,8 @@ extern int plat_native_menu;            /* the main window's menu bar is the hos
                                            the main window without caption or frame of its own */
 extern int plat_lock_panels;            /* the game's panels (child windows: map, world, status) not
                                            moved or sized by the mouse, as the original allows */
+extern int plat_fix_bugs;               /* the original's bugs fixed (docs/BUGS.md): not with
+                                           CIV2_CLASSIC=1, in replays or the unit tests */
 
 /* ---- regions: lists of rectangles ---- */
 
