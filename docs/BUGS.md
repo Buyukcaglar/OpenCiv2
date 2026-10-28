@@ -27,8 +27,8 @@ Status of the list: 18 bugs. Fixed by the flag: B2, B3, B4, B6 and B9 to B18. Fi
 mode: B1 (our build reads the original's usual value) and B8 (a memory error). Not fixed: B5
 (dead code, no effect) and B7 (network popups; see there). Memory errors already fixed in
 every mode, and stale reads of locals that are not bugs, are listed separately. Reports traced
-to code that has no bug are under "Checked, not bugs in MGE". Hot-seat and play-by-email
-games are not network games: the state fixes are on there.
+to code that has no bug are under "Checked, not bugs in MGE". Hot-seat games are not network
+games: the state fixes are on there (MGE has no play by e-mail: docs/STATUS.md).
 
 ## Game rules
 

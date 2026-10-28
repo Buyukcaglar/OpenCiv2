@@ -469,6 +469,23 @@ message by message and clock event by clock event.
   city to give is a capital, and its civilizations meet no third one);
   the chat macros (Ctrl+F1..F5: they did not fire in ours under the test's
   keys, not yet compared with the original).
+* **Play by e-mail** is not in this version of the game, so no scenario can
+  record it on the original.  Multiplayer Gold's Multiplayer Game offers Hot
+  Seat, Network, Internet and Dial-Up only (GAME.TXT's `@MULTITYPE2`; the main
+  menu has no other entry), and the play-by-e-mail setup, setup_pbem_game
+  (005ae580, `@PBEM1`: new game, premade world, custom world, scenario, "Make
+  an EMAIL Move"), is left over from the earlier Civilization II: the only
+  reference to it in civ2.exe is its incremental-link thunk (00403580), which
+  no call and no data points to.  A play-by-e-mail save (the `.eml` type,
+  game.multiplayer 2) loaded through Load a Game, from the main menu or in a
+  game, becomes a single-player game (the loader clears game.multiplayer).  So
+  what that mode would run is unreachable in the original and in ours alike:
+  the e-mail address asked with each tribe (setup_choose_tribe, mode 2), the
+  password set at a player's first turn (civ_password_ensure_set), and at the
+  next human player's turn the game saved (game_save_dialog, `@EMAILSAVED`)
+  and the "EMAIL the Game" popup (`@EMAILDONE1`/`2`, play_loop_human_turn_start)
+  before the turn loop ends.  The game never sends mail itself.  Kept as
+  translated, run by no replay.
 * Coverage of the comparison: the scripts execute 2,520 of the 3,529
   compiled game functions (71%, 58% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never

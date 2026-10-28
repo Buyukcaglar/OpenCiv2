@@ -77,7 +77,7 @@ by default: each is switched on in the same `[OpenCiv2]` section of `CIV.INI`, t
 its key `=1`, a limit by its value (`=0` or no key: the original's). They are off with
 `CIV2_CLASSIC=1`, in replays and unit tests, and in network games (as the state fixes of
 [BUGS.md](BUGS.md): every player, the original game included, must compute the same game);
-they stay on in hot-seat and play-by-email games. The changes for units apply to the human
+they stay on in hot-seat games. The changes for units apply to the human
 players' units only: the computer players play by the original rules.
 
 | Item | Key | What |
