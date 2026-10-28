@@ -28,7 +28,7 @@ Each entry gives an ID, where the code is (file, function, line at the time of w
 goes wrong, the source, and the proposed fix. **Saves** says whether the fix could change what
 is saved or break loading the original's saves.
 
-Status of the list: 19 bugs. Fixed by the flag: B2, B3, B4, B6 and B9 to B19. Fixed in every
+Status of the list: 20 bugs. Fixed by the flag: B2, B3, B4, B6 and B9 to B20. Fixed in every
 mode: B1 (our build reads the original's usual value) and B8 (a memory error). Not fixed: B5
 (dead code, no effect) and B7 (network popups; see there). Memory errors already fixed in
 every mode, and stale reads of locals that are not bugs, are listed separately. Reports traced
@@ -334,6 +334,20 @@ games: the state fixes are on there (MGE has no play by e-mail: docs/STATUS.md).
 - **Status: fixed** (`bugfix_state()`): the map click in goto mode, Go To a city
   (`unit_cmd_goto_city`), and the city window's "go to this city" for a unit
   (`city_window_supported_unit_menu`, which CIV2UIA does not patch).
+
+### B20. Buttons wider than their dialog run past its left edge
+- **Where:** `src/auto/window.cpp`, `Dialog::layout_buttons` (part of `Dialog::compute_layout`,
+  0059fd2a). Every button gets the width of the widest label (or an equal share of the window,
+  if larger) and they are placed from the right edge leftward; the window does not grow when
+  they do not fit.
+- **What goes wrong:** a dialog with a fixed width and a long button label cuts the leftmost
+  button off: the casualties popup at the start of a turn (GAME.TXT `@CASUALTIES`,
+  `@width=220`) shows "...alty Timeline" for "Zoom to Casualty Timeline".
+- **Source:** reported by the user playing the Rome scenario.
+- **Fix:** when the buttons are wider than the window, the window grows to hold them.
+  **UI only.** Test: `harness/extras/x-b20-buttons.txt` (fixed and classic).
+- **Saves:** none.
+- **Status: fixed** (`bugfix_ui()`).
 
 ### B10. Clicking a citizen in the city window changes the one to its right
 - **Where:** `src/auto/city.cpp`, `CityWindow::draw_citizens` (line 12323), which adds one hotspot

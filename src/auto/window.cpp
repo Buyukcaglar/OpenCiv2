@@ -7347,6 +7347,16 @@ void Dialog::layout_buttons(int sprites_height,int content_height)
       button_width = tmp;
     }
   }
+  if (bugfix_ui()) {
+    /* B20: buttons wider than the window: it grows to hold them, instead of
+       the leftmost going past its left edge (docs/BUGS.md) */
+    value = (std_button_count + extra_button_count) * button_width +
+            (std_button_count + extra_button_count - 1) * pad_x + (border_width - bevel_width) * 2;
+    if ((int)wnd_width < value) {
+      wnd_width = value;
+      button_x = wnd_width - (border_width - bevel_width);
+    }
+  }
   value = (wnd_width + (border_width - bevel_width) * -2) -
           (std_button_count + extra_button_count - 1) * pad_x;
   extra_space = value % (int)(std_button_count + extra_button_count);

@@ -1,0 +1,55 @@
+# A dialog whose buttons are wider than it (docs/BUGS.md B20): the
+# casualties popup at the start of the turn ("Zoom to Casualty Timeline"),
+# two Roman losses logged by hand on the autosave.  Fixed: the dialog grows
+# to hold its buttons; classic: the leftmost button runs past its left edge.
+# test: CIV2_TEST_FIXES=1 CIV2_TEST_FULL=640x480
+# test classic: CIV2_TEST_FULL=640x480
+wait 8000
+key Down Down Down Down     # Load a Game
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 3000
+call unit_create 5b3d06 46 1 22 58
+wait 500
+call casualty_log_add 59c575 21 21 100 22 58
+wait 200
+call casualty_log_add 59c575 21 21 100 22 58
+wait 500
+call menu_command 4e2803 0 1168
+wait 2000
+key Return
+wait 2000
+shot b20-00
+wait 2000
+shot b20-01
+wait 2000
+shot b20-02
+wait 2000
+shot b20-03
+wait 2000
+shot b20-04
+wait 2000
+shot b20-05
+wait 2000
+shot b20-06
+wait 2000
+shot b20-07
+wait 2000
+shot b20-08
+wait 2000
+shot b20-09
+wait 2000
+shot b20-10
+wait 2000
+shot b20-11
+wait 2000
+shot b20-12
+wait 2000
+shot b20-13
+wait 2000
+shot b20-14
+wait 2000
+shot b20-15

@@ -377,7 +377,7 @@ message by message and clock event by clock event.
   to nothing in the others (CIV2_FIXED_DATA: the game's data in a section at
   a fixed address; CIV2_UNITTEST: main() runs the cases); the suite passes
   36 of 36 on linux32, and the portable and Windows builds compile.
-* **The original's bugs** (docs/BUGS.md: 19, from the reconstruction, the
+* **The original's bugs** (docs/BUGS.md: 20, from the reconstruction, the
   compiler's uninitialised-read warnings and the community's lists, CIV2UIA's
   among them) are fixed by default: the AI's attitude starting from a stale
   local (the "aggression bug"), border intruders counted on one tile per city,
