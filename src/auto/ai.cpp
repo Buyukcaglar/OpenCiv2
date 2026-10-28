@@ -6122,6 +6122,7 @@ i32 __cdecl ai_unit_choose_orders(void)
   defender_count = 0x108; needed_defenders = 0x64a8c19c; cand_score = 0x3bd; best_score = 0; goal_match = 4;  /* stale stack the original reads (FRAME_PRESETS) */
   if (bugfix_state()) {
     goal_match = 0;  /* B13: a ship's cargo flag starts set from stale stack (docs/BUGS.md) */
+    needed_defenders = 0;  /* B19: away from its own city a ship keeps every defender aboard fortified (docs/BUGS.md) */
   }
   
   near_landmass = -1;

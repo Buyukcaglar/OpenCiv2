@@ -19,11 +19,16 @@ In the code: `plat_fix_bugs` (src/platform/main.c) is set once at start, and two
 as it was. `CIV2_TEST_FIXES=1` turns the fixes on in a replay (tests only: such a replay
 no longer matches the original's recording).
 
+Several bugs read a local the original never set (B1, B3, B13, B19). What such a local holds
+is whatever an earlier call left on the stack, which depends on what ran before. Classic mode
+gives it the value seen in our recordings of the original (under Wine), so it reproduces those
+games exactly, not every possible run of the original.
+
 Each entry gives an ID, where the code is (file, function, line at the time of writing), what
 goes wrong, the source, and the proposed fix. **Saves** says whether the fix could change what
 is saved or break loading the original's saves.
 
-Status of the list: 18 bugs. Fixed by the flag: B2, B3, B4, B6 and B9 to B18. Fixed in every
+Status of the list: 19 bugs. Fixed by the flag: B2, B3, B4, B6 and B9 to B19. Fixed in every
 mode: B1 (our build reads the original's usual value) and B8 (a memory error). Not fixed: B5
 (dead code, no effect) and B7 (network popups; see there). Memory errors already fixed in
 every mode, and stale reads of locals that are not bugs, are listed separately. Reports traced
@@ -58,7 +63,9 @@ games: the state fixes are on there (MGE has no play by e-mail: docs/STATUS.md).
   has started it at 0 since then (the line was lost when the function was split into parts, and
   is back), which is the fix. Classic mode does not reproduce the original's occasional stale
   address (it depends on what ran before, and differs under Windows, where the community saw
-  the bug often); no replay shows a difference.
+  the bug often); no replay shows a difference. Peter Johnson's runs of the original under Windows ([PR #2](https://github.com/richardpenman/civ2/pull/2), from his independent reconstruction) traced the
+  value when it is not 0: the saved frame pointer of an earlier call (pushed at 005ae3bf), a
+  stack address, so the count of roads starts from millions.
 
 ### B2. A new game in the same session keeps the human players' place in the city name list
 - **Where:** `src/auto/game.cpp`, `game_init_new` (004aa9c0), line 6486:
@@ -121,7 +128,12 @@ games: the state fixes are on there (MGE has no play by e-mail: docs/STATUS.md).
 - **Saves:** none.
 - **Status: fixed** (`bugfix_state()`). Classic mode keeps the preset `0x6715d7a0`. With the fix
   on, the WWII replay diverges where expected (the AI keeps calling `rand()` past the point
-  where the original's recording ends).
+  where the original's recording ends). In Peter Johnson's runs of the original under Windows ([PR #2](https://github.com/richardpenman/civ2/pull/2), from his independent reconstruction) the stale value was
+  0x00453e93 instead (a return address left by an earlier call at 00453e8e): different, but
+  also large and positive, so the attitude goes to the same extreme. His comparison of the
+  original with the value started at 0, the game's random numbers the same: an attitude change
+  of +2,268,998 against -3, attitude 100 against 0, and a unit that attacked against one that
+  held.
 
 ### B4. Border intrusions: only the first intruded tile per city is examined
 - **Where:** `src/auto/diplomacy.cpp`, `diplo_count_border_intruders` (0055bbc0), line 5385.
@@ -181,8 +193,38 @@ games: the state fixes are on there (MGE has no play by e-mail: docs/STATUS.md).
   not only those headed for this landmass.
 - **Source:** our code (stale-stack reads found by the reconstruction).
 - **Fix:** start `goal_match` at 0. **State** (AI). Its effect on play is small and not measured.
+  In Peter Johnson's runs of the original under Windows ([PR #2](https://github.com/richardpenman/civ2/pull/2), from his independent reconstruction) the value was 0x013fde70 on two calls: not 4, but
+  non-zero too, so the test passes there as well.
 - **Saves:** none.
 - **Status: fixed** (`bugfix_state()`).
+
+### B19. A ship away from its own city keeps every defender aboard fortified
+- **Where:** `src/auto/ai.cpp`, `ai_unit_choose_orders` (00538a29), its parts
+  `ai_orders_city_guard` and `ai_orders_transport_cargo`. `needed_defenders`, the number of
+  defenders the ship's city needs, is set only when the ship is in its own city (and is a
+  transport): by the city's size, walls, palace and danger. Elsewhere the function never sets it,
+  and `ai_orders_transport_cargo` reads it for each defender aboard that is not fortified:
+  ```cpp
+  else if ((unit_types[units[unit].type].role == ROLE_DEFEND) &&
+          (defender_count < (int)needed_defenders)) {
+    defender_count++;
+    units[unit].orders = ORDER_FORTIFYING;
+  ```
+- **What goes wrong:** the stale value is huge (0x64a8c19c in our recordings, 0x013fde70 in
+  Peter Johnson's runs of the original under Windows ([PR #2](https://github.com/richardpenman/civ2/pull/2), from his independent reconstruction)), so away from its own city every defender aboard is fortified
+  instead of being woken. A fortified defender adds nothing to the roles the ship carries
+  (`tasks_mask`), which choose where it sails: a city to stage at, or an enemy city to attack.
+  A ship carrying only defenders has no destination for them, and they stay aboard until it
+  returns to its own city.
+- **Source:** our code (stale-stack reads found by the reconstruction); the varying value from
+  Peter Johnson's runs of the original under Windows ([PR #2](https://github.com/richardpenman/civ2/pull/2), from his independent reconstruction).
+- **Fix:** start `needed_defenders` at 0: away from its own city no city needs the defenders, so
+  they are woken and count toward the ship's destination, like the other units aboard.
+  **State** (AI). No replay reaches this path (counted over long50, scenario, ww1, napoleon and
+  conquest: no AI ship away from its own city carried a defender that was not fortified), so
+  the effect is not measured.
+- **Saves:** none.
+- **Status: fixed** (`bugfix_state()`). Classic mode keeps the preset `0x64a8c19c`.
 
 ## Diplomacy and multiplayer
 
@@ -405,13 +447,9 @@ stack held (probed with `CIV2_STACKPROBE`; tools/gen_c.py FRAME_PRESETS), in eve
   at 0 (the original's stack: 0 in 3892 of 4300 calls, -1 in 158). The neighbour test then
   compares with the previous tile's owner when the path has no owner (`pathfind.owner_civ` <
   0, distance estimates only). A start of 0 never matches; it is the natural value. Not a bug.
-- `ai_unit_choose_orders` (00538a29, `src/auto/ai.cpp`): besides `goal_match` (B13),
-  `defender_count` (0x108; written before every read), `cand_score` (0x3bd) and `best_score` (0)
-  are set by the paths that read them; `needed_defenders` (0x64a8c19c) is read by
-  `ai_orders_transport_cargo` when the ship is not in its own city or its role does not set
-  it: a huge "defenders the city needs", so defenders aboard are kept fortified rather than
-  woken. What the code meant there is not clear (no city, no defenders needed, would wake
-  them all), so the original's behaviour is kept.
+- `ai_unit_choose_orders` (00538a29, `src/auto/ai.cpp`): besides `goal_match` (B13) and
+  `needed_defenders` (B19), `defender_count` (0x108; written before every read), `cand_score`
+  (0x3bd) and `best_score` (0) are set by the paths that read them.
 
 The native build compiled with `-O2 -Wuninitialized -Wmaybe-uninitialized` (98 warnings) was
 triaged: 2 real stale reads (B17, B18), 15 in the exception-handling scaffolding, 10 harmless
